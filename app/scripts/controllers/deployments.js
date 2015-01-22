@@ -2,36 +2,36 @@
 
 /**
  * @ngdoc function
- * @name openshiftConsole.controller:PodsController
+ * @name openshiftConsole.controller:DeploymentsController
  * @description
  * # ProjectController
  * Controller of the openshiftConsole
  */
 angular.module('openshiftConsole')
-  .controller('PodsController', function ($scope, DataService, $filter, LabelFilter) {
-    $scope.pods = {};
-    $scope.unfilteredPods = {};
+  .controller('DeploymentsController', function ($scope, DataService, $filter, LabelFilter) {
+    $scope.deployments = {};
+    $scope.unfilteredDeployments = {};
     $scope.images = {};
     $scope.imagesByDockerReference = {};
-    $scope.builds = {};    
+    $scope.builds = {};
     $scope.labelSuggestions = {};
-    $scope.alerts = $scope.alerts || {};
+    $scope.alerts = $scope.alerts || {};    
     $scope.emptyMessage = "Loading...";
     var watches = [];
 
-    var podsCallback = function(pods) {
+    var deploymentsCallback = function(deployments) {
       $scope.$apply(function() {
-        $scope.unfilteredPods = pods.by("metadata.name");
-        LabelFilter.addLabelSuggestionsFromResources($scope.unfilteredPods, $scope.labelSuggestions);
+        $scope.unfilteredDeployments = deployments.by("metadata.name");
+        LabelFilter.addLabelSuggestionsFromResources($scope.unfilteredDeployments, $scope.labelSuggestions);
         LabelFilter.setLabelSuggestions($scope.labelSuggestions);
-        $scope.pods = LabelFilter.getLabelSelector().select($scope.unfilteredPods);
-        $scope.emptyMessage = "No pods to show";
+        $scope.deployments = LabelFilter.getLabelSelector().select($scope.unfilteredDeployments);
+        $scope.emptyMessage = "No deployments to show";
         updateFilterWarning();
       });
 
-      console.log("pods (subscribe)", $scope.unfilteredPods);
+      console.log("deployments (subscribe)", $scope.deployments);
     };
-    watches.push(DataService.watch("pods", $scope, podsCallback));    
+    watches.push(DataService.watch("replicationControllers", $scope, deploymentsCallback));    
 
 
     // Also load images and builds to fill out details in the pod template
@@ -53,29 +53,29 @@ angular.module('openshiftConsole')
 
       console.log("builds (subscribe)", $scope.builds);
     };
-    watches.push(DataService.watch("builds", $scope, buildsCallback));   
+    watches.push(DataService.watch("builds", $scope, buildsCallback));  
 
     var updateFilterWarning = function() {
-      if (!LabelFilter.getLabelSelector().isEmpty() && $.isEmptyObject($scope.pods) && !$.isEmptyObject($scope.unfilteredPods)) {
-        $scope.alerts["pods"] = {
+      if (!LabelFilter.getLabelSelector().isEmpty() && $.isEmptyObject($scope.deployments) && !$.isEmptyObject($scope.unfilteredDeployments)) {
+        $scope.alerts["deployments"] = {
           type: "warning",
-          details: "The active filters are hiding all pods."
+          details: "The active filters are hiding all deployments."
         };
       }
       else {
-        delete $scope.alerts["pods"];
-      }       
+        delete $scope.alerts["deployments"];
+      }      
     };
 
     LabelFilter.onActiveFiltersChanged(function(labelSelector) {
       // trigger a digest loop
       $scope.$apply(function() {
-        $scope.pods = labelSelector.select($scope.unfilteredPods);
+        $scope.deployments = labelSelector.select($scope.unfilteredDeployments);
         updateFilterWarning();
       });
     });   
 
     $scope.$on('$destroy', function(){
       DataService.unwatchAll(watches);
-    });     
+    });
   });
