@@ -15,8 +15,6 @@ angular.module('openshiftConsole')
     $scope.templatesByTag = {};
     $scope.templates = [];
 
-    $scope.instantApps = [];
-
     DataService.list("templates", $scope, function(templates) {
       $scope.projectTemplates = templates.by("metadata.name");
       allTemplates();
