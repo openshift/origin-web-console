@@ -1,7 +1,7 @@
 'use strict';
 
 angular.module("openshiftConsole")
-  .directive("deleteButton", function ($modal, $location, $filter, hashSizeFilter, DataService, AlertMessageService, Navigate, Logger) {
+  .directive("deleteLink", function ($modal, $location, $filter, hashSizeFilter, DataService, AlertMessageService, Navigate, Logger) {
     return {
       restrict: "E",
       scope: {
@@ -14,10 +14,18 @@ angular.module("openshiftConsole")
         displayName: "@",
         // Set to true to disable the delete button.
         disableDelete: "=?",
-        // Optional tooltip displayed when disableDelete is true.
-        disabledTooltip: "@?"
+        // Only show the button and no text.
+        buttonOnly: "@"
       },
-      templateUrl: "views/directives/delete-button.html",
+      templateUrl: function(elem, attr) {
+        if (angular.isDefined(attr.buttonOnly)) {
+          return "views/directives/delete-button.html";
+        }
+
+        return "views/directives/delete-link.html";
+      },
+      // Replace so ".dropdown-menu > li > a" styles are applied.
+      replace: true,
       link: function(scope, element, attrs) {
 
         if (attrs.resourceType === 'project') {
@@ -90,3 +98,4 @@ angular.module("openshiftConsole")
       }
     };
   });
+
