@@ -1207,7 +1207,6 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "</dl>\n" +
     "</div>\n" +
     "</div>\n" +
-    "<annotations annotations=\"deployment.metadata.annotations\"></annotations>\n" +
     "<div class=\"row\">\n" +
     "<div class=\"col-lg-6\">\n" +
     "<div class=\"deployment-detail\">\n" +
@@ -1251,7 +1250,10 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "<hpa hpa=\"hpa\" show-scale-target=\"hpa.spec.scaleRef.kind !== 'ReplicationController'\" alerts=\"alerts\">\n" +
     "</hpa>\n" +
     "</div>\n" +
-    "</div>"
+    "</div>\n" +
+    "<h3>Pods</h3>\n" +
+    "<pods-table pods=\"podsForDeployment\"></pods-table>\n" +
+    "<annotations annotations=\"deployment.metadata.annotations\"></annotations>"
   );
 
 
@@ -5710,6 +5712,47 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
   );
 
 
+  $templateCache.put('views/directives/pods-table.html',
+    "<table class=\"table table-bordered table-hover table-mobile\">\n" +
+    "<thead>\n" +
+    "<tr>\n" +
+    "<th>Name</th>\n" +
+    "<th>Status</th>\n" +
+    "<th>Containers Ready</th>\n" +
+    "<th>Container Restarts</th>\n" +
+    "<th>Age</th>\n" +
+    "</tr>\n" +
+    "</thead>\n" +
+    "<tbody ng-if=\"(pods | hashSize) == 0\">\n" +
+    "<tr><td colspan=\"5\"><em>{{emptyMessage || 'No pods to show'}}</em></td></tr>\n" +
+    "</tbody>\n" +
+    "<tbody ng-repeat=\"pod in pods | orderObjectsByDate : true\">\n" +
+    "<tr>\n" +
+    "<td data-title=\"Name\">\n" +
+    "<a href=\"{{pod | navigateResourceURL}}\">{{pod.metadata.name}}</a>\n" +
+    "<span ng-if=\"pod | isTroubledPod\">\n" +
+    "<pod-warnings pod=\"pod\"></pod-warnings>\n" +
+    "</span>\n" +
+    "<span ng-if=\"pod | debugLabel\">\n" +
+    "<i class=\"fa fa-bug info-popover\" aria-hidden=\"true\" data-toggle=\"popover\" data-trigger=\"hover\" dynamic-content=\"Debugging pod {{pod | debugLabel}}\"></i>\n" +
+    "<span class=\"sr-only\">Debugging pod {{pod | debugLabel}}</span>\n" +
+    "</span>\n" +
+    "</td>\n" +
+    "<td data-title=\"Status\">\n" +
+    "<div row class=\"status\">\n" +
+    "<status-icon status=\"pod | podStatus\" disable-animation></status-icon>\n" +
+    "<span flex>{{pod | podStatus | sentenceCase}}</span>\n" +
+    "</div>\n" +
+    "</td>\n" +
+    "<td data-title=\"Ready\">{{pod | numContainersReady}}/{{pod.spec.containers.length}}</td>\n" +
+    "<td data-title=\"Restarts\">{{pod | numContainerRestarts}}</td>\n" +
+    "<td data-title=\"Age\"><relative-timestamp timestamp=\"pod.metadata.creationTimestamp\" drop-suffix=\"true\"></relative-timestamp></td>\n" +
+    "</tr>\n" +
+    "</tbody>\n" +
+    "</table>"
+  );
+
+
   $templateCache.put('views/directives/replicas.html',
     "<span ng-show=\"!model.editing\">\n" +
     "<span ng-if=\"status === undefined\">{{spec}} replica<span ng-if=\"spec !== 1\">s</span></span>\n" +
@@ -7310,43 +7353,7 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "<div class=\"container-fluid\">\n" +
     "<div class=\"row\">\n" +
     "<div class=\"col-md-12 gutter-top\">\n" +
-    "<table class=\"table table-bordered table-hover table-mobile\">\n" +
-    "<thead>\n" +
-    "<tr>\n" +
-    "<th>Name</th>\n" +
-    "<th>Status</th>\n" +
-    "<th>Containers Ready</th>\n" +
-    "<th>Container Restarts</th>\n" +
-    "<th>Age</th>\n" +
-    "</tr>\n" +
-    "</thead>\n" +
-    "<tbody ng-if=\"(pods | hashSize) == 0\">\n" +
-    "<tr><td colspan=\"5\"><em>{{emptyMessage}}</em></td></tr>\n" +
-    "</tbody>\n" +
-    "<tbody ng-repeat=\"pod in pods | orderObjectsByDate : true\">\n" +
-    "<tr>\n" +
-    "<td data-title=\"Name\">\n" +
-    "<a href=\"{{pod | navigateResourceURL}}\">{{pod.metadata.name}}</a>\n" +
-    "<span ng-if=\"pod | isTroubledPod\">\n" +
-    "<pod-warnings pod=\"pod\"></pod-warnings>\n" +
-    "</span>\n" +
-    "<span ng-if=\"pod | debugLabel\">\n" +
-    "<i class=\"fa fa-bug info-popover\" aria-hidden=\"true\" data-toggle=\"popover\" data-trigger=\"hover\" dynamic-content=\"Debugging pod {{pod | debugLabel}}\"></i>\n" +
-    "<span class=\"sr-only\">Debugging pod {{pod | debugLabel}}</span>\n" +
-    "</span>\n" +
-    "</td>\n" +
-    "<td data-title=\"Status\">\n" +
-    "<div row class=\"status\">\n" +
-    "<status-icon status=\"pod | podStatus\" disable-animation></status-icon>\n" +
-    "<span flex>{{pod | podStatus | sentenceCase}}</span>\n" +
-    "</div>\n" +
-    "</td>\n" +
-    "<td data-title=\"Ready\">{{pod | numContainersReady}}/{{pod.spec.containers.length}}</td>\n" +
-    "<td data-title=\"Restarts\">{{pod | numContainerRestarts}}</td>\n" +
-    "<td data-title=\"Age\"><relative-timestamp timestamp=\"pod.metadata.creationTimestamp\" drop-suffix=\"true\"></relative-timestamp></td>\n" +
-    "</tr>\n" +
-    "</tbody>\n" +
-    "</table>\n" +
+    "<pods-table pods=\"pods\" empty-message=\"emptyMessage\"></pods-table>\n" +
     "</div>\n" +
     "</div>\n" +
     "</div>\n" +

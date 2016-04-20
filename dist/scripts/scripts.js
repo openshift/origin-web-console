@@ -6573,6 +6573,15 @@ probe:"="
 },
 templateUrl:"views/directives/_probe.html"
 };
+}).directive("podsTable", function() {
+return {
+restrict:"E",
+scope:{
+pods:"=",
+emptyMessage:"=?"
+},
+templateUrl:"views/directives/pods-table.html"
+};
 }), angular.module("openshiftConsole").directive("overviewDeployment", function() {
 return {
 restrict:"E",
