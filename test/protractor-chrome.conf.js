@@ -81,7 +81,7 @@ exports.config = {
   ],
 
   // Patterns to exclude.
-  exclude: [],
+  exclude: ['integration/e2e.js'], // We are temporarily excluding the e2e tests while we transition to the split merge queue
 
   // Alternatively, suites may be used. When run without a command line
   // parameter, all suites will run. If run with --suite=smoke or
@@ -89,8 +89,8 @@ exports.config = {
   // run.
   suites: {
     // smoke: 'spec/smoketests/*.js',
-    rest_api: 'integration/rest_api/*.js', // This suite of tests should only require a running master api, it should not require a node
-    e2e: 'integration/e2e.js'
+    rest_api: 'integration/rest_api/*.js' // This suite of tests should only require a running master api, it should not require a node
+    //e2e: 'integration/e2e.js'
   },
 
   // ---------------------------------------------------------------------------
@@ -336,4 +336,3 @@ exports.config = {
     format: 'summary'
   }
 };
-

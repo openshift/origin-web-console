@@ -1,6 +1,6 @@
-OpenShift 3 Static Assets
+OpenShift 3 Management Console
 =========================
-The static assets for OpenShift v3.  This includes the web console.
+The management console for [OpenShift Origin](https://github.com/openshift/origin) v3.
 
 Contributing
 ------------
@@ -11,15 +11,15 @@ Contributing
 3. Install [ruby](https://www.ruby-lang.org/en/)
 4. Install bundler `gem install bundler`
 5. Install [Go](https://golang.org/dl/) per [steps 1 - 3](https://github.com/openshift/origin/blob/master/CONTRIBUTING.adoc#develop-locally-on-your-host)
-6. Install dev dependencies by running `hack/install-assets.sh`
-7. Launch the console and start watching for asset changes by running `hack/serve-local-assets.sh`. This should open <https://localhost:9000/> in your default browser.
+6. Install dev dependencies by running `hack/install-deps.sh`
+7. Launch the console and start watching for asset changes by running `grunt serve`. This should open <https://localhost:9000/> in your default browser.
 
     Note: If you see an ENOSPC error, you may need to increase the number of files your user can watch by running this command:
 
     ```
     echo fs.inotify.max_user_watches=524288 | sudo tee -a /etc/sysctl.conf && sudo sysctl -p
     ```
-8. Accept the self-signed certificate for the web console. (For Chrome on OS X, import `assets/server.crt` into Keychain Access or accept the web console certificate in Safari.)
+8. Accept the self-signed certificate for the web console. (For Chrome on OS X, import `server.crt` into Keychain Access or accept the web console certificate in Safari.)
 
 #### Enable / disable console log output
 
@@ -45,18 +45,17 @@ Note: currently most of our logging either goes to INFO or ERROR
 
 #### Local configuration
 
-`assets/app/config.js` is the default configuration file for web console
+`app/config.js` is the default configuration file for web console
 development. If you need to change the configuration, for example, to point to
-a different API server, copy `assets/app/config.js` to
-`assets/app/config.local.js` and edit the copy. `assets/app/config.local.js` is
+a different API server, copy `app/config.js` to
+`app/config.local.js` and edit the copy. `app/config.local.js` is
 not tracked and will be used instead if it exists.
 
 #### Before opening a pull request
-1. If needed, run `hack/build-assets.sh` to update bindata.go
-2. Run the spec tests with `hack/test-assets.sh`
-3. Run the integrations tests (your api server must be running).  cd into the assets directory and run `grunt test-integration --suite rest_api`
-4. (Optional) Run the end to end tests with `TEST_ASSETS=true hack/test-end-to-end.sh`
-5. Rebase and squash changes to a single commit
+1. If needed, run `grunt build` to update the files under the dist directory
+2. Run the spec tests with `grunt test`
+3. Run the integrations tests (your api server must be running) `grunt test-integration`
+4. Rebase and squash changes to a single commit
 
 Note: in order to run the end to end tests you must have [Chrome](http://www.google.com/chrome/) and [chromedriver](https://sites.google.com/a/chromium.org/chromedriver/) installed.  The script below will set this up for you on linux systems.
 
@@ -80,19 +79,20 @@ chmod 755 /usr/bin/chromedriver
 ```
 
 #### Production builds
-1. Make sure all dev dependencies are up to date by running `hack/install-assets.sh`
-2. Run `hack/build-assets.sh`
-3. Run `hack/build-go.sh`
+1. Make sure all dev dependencies are up to date by running `hack/install-deps.sh`
+2. Run `grunt build`
+3. TODO - run script to build bindata.go from the dist in this repo
+4. In your origin repo run `hack/build-go.sh`
 
 The assets served by the OpenShift all-in-one server will now be up to date. By default the assets are served from [http://localhost:8091](http://localhost:8091)
 
-#### Debugging Travis failures
-If Travis complains that bindata.go is different than the committed version, ensure the committed version is correct:
+#### Debugging dist diff failures
+If Jenkins complains that the built dist files are different than the committed version, ensure the committed version is correct:
 
-1. Run `hack/clean-assets.sh`
-2. Run `hack/install-assets.sh`
-3. Run `hack/build-assets.sh`
-4. If bindata.go is changed, add it to your commit and re-push
+1. Run `hack/clean-deps.sh`
+2. Run `hack/install-deps.sh`
+3. Run `grunt build`
+4. If anything under dist or dist.java has changed, add it to your commit and re-push
 
 Architecture
 ------------

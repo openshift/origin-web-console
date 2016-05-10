@@ -1,0 +1,48 @@
+<!doctype html>
+<html class="no-js layout-pf-alt layout-pf-alt-fixed">
+<head>
+<meta http-equiv="X-UA-Compatible" content="IE=EDGE"/>
+<meta charset="utf-8">
+<base href="/">
+<title>OpenShift Web Console</title>
+<meta name="description" content="">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<link rel="icon" type="image/png" href="images/favicon.png"/>
+<link rel="icon" type="image/x-icon" href="images/favicon.ico"/>
+<link rel="apple-touch-icon-precomposed" sizes="144x144" href="images/apple-touch-icon-precomposed.png">
+<meta name="application-name" content="OpenShift">
+<meta name="msapplication-TileColor" content="#000000">
+<meta name="msapplication-TileImage" content="images/mstile-144x144.png">
+<link rel="stylesheet" href="styles/vendor.css">
+<link rel="stylesheet" href="styles/main.css">
+<link rel="stylesheet" type="text/css" href="styles/extensions.css">
+<style type="text/css"></style>
+</head>
+<body class="console-os">
+
+<div ng-view></div>
+<noscript>
+<nav class="navbar navbar-pf-alt" role="navigation">
+<div row>
+<div class="navbar-header">
+<a class="navbar-brand" id="openshift-logo" href="./">
+<div id="header-logo"></div>
+</a>
+</div>
+</div>
+</nav>
+<div class="attention-message">
+<h1>JavaScript Required</h1>
+<p>The OpenShift web console requires JavaScript to provide a rich interactive experience. Please enable JavaScript to continue. If you do not wish to enable JavaScript or are unable to do so, you may use the command-line tools to manage your projects and applications instead.</p>
+</div>
+</noscript>
+<script src="config.js"></script>
+<!--[if lt IE 9]><script src="scripts/oldieshim.js"></script><![endif]-->
+<script src="scripts/vendor.js"></script>
+
+<script src="scripts/templates.js"></script>
+<script src="scripts/scripts.js"></script>
+
+<script src="scripts/extensions.js"></script>
+</body>
+</html>
