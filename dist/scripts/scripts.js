@@ -170,6 +170,9 @@ controller:"EditHealthChecksController"
 }).when("/about", {
 templateUrl:"views/about.html",
 controller:"AboutController"
+}).when("/command-line", {
+templateUrl:"views/command-line.html",
+controller:"CommandLineController"
 }).when("/oauth", {
 templateUrl:"views/util/oauth.html",
 controller:"OAuthController"
@@ -4879,13 +4882,17 @@ b.close("create");
 }, a.cancel = function() {
 b.dismiss("cancel");
 };
-} ]), angular.module("openshiftConsole").controller("AboutController", [ "$scope", "DataService", "AuthService", "Constants", function(a, b, c, d) {
-c.withUser(), a.version = {
+} ]), angular.module("openshiftConsole").controller("AboutController", [ "$scope", "AuthService", "Constants", function(a, b, c) {
+b.withUser(), a.version = {
 master:{
-openshift:d.VERSION.openshift,
-kubernetes:d.VERSION.kubernetes
+openshift:c.VERSION.openshift,
+kubernetes:c.VERSION.kubernetes
 }
-}, a.cliDownloadURL = d.CLI, a.cliDownloadURLPresent = a.cliDownloadURL && !_.isEmpty(a.cliDownloadURL), a.loginBaseURL = b.openshiftAPIBaseUrl(), a.sessionToken = c.UserStore().getToken();
+};
+} ]), angular.module("openshiftConsole").controller("CommandLineController", [ "$scope", "DataService", "AuthService", "Constants", function(a, b, c, d) {
+c.withUser(), a.cliDownloadURL = d.CLI, a.cliDownloadURLPresent = a.cliDownloadURL && !_.isEmpty(a.cliDownloadURL), a.loginBaseURL = b.openshiftAPIBaseUrl(), a.sessionToken = c.UserStore().getToken(), a.showSessionToken = !1, a.toggleShowSessionToken = function() {
+a.showSessionToken = !a.showSessionToken;
+};
 } ]), angular.module("openshiftConsole").directive("relativeTimestamp", function() {
 return {
 restrict:"E",
@@ -8309,6 +8316,9 @@ node:'<li><a href="https://docs.openshift.org/latest/welcome/index.html">Documen
 }, {
 type:"dom",
 node:'<li><a href="about">About</a></li>'
+}, {
+type:"dom",
+node:'<li><a href="command-line">Command Line Tools</a></li>'
 } ];
 });
 } ]), angular.module("openshiftConsole").run([ "extensionRegistry", function(a) {
@@ -8326,6 +8336,9 @@ node:[ "<li>", '<a href="https://docs.openshift.org/latest/welcome/index.html">'
 }, {
 type:"dom",
 node:[ "<li>", '<a href="about">', '<span class="pficon pficon-info fa-fw" aria-hidden="true"></span> About', "</a>", "</li>" ].join("")
+}, {
+type:"dom",
+node:[ "<li>", '<a href="command-line">', '<span class="fa fa-terminal" aria-hidden="true"></span> Command Line Tools', "</a>", "</li>" ].join("")
 }, {
 type:"dom",
 node:_.template([ "<li>", '<a href="logout">', '<span class="pficon pficon-user fa-fw" aria-hidden="true"></span>', 'Log out <span class="username"><%= userName %></span>', "</a>", "</li>" ].join(""))({

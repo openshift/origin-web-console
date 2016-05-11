@@ -3381,7 +3381,7 @@ label.checkbox{font-weight:400}
 .add-to-project .catalog-header-left{padding-right:10px}
 .add-to-project .catalog-legend{padding-left:15px}
 }
-.about .about-icon img,.catalog .tile-image,.catalog .tile-template,.osc-form .flow{width:100%}
+.about .about-icon img,.catalog .tile-image,.catalog .tile-template,.command-line .about-icon img,.osc-form .flow{width:100%}
 @media (min-width:992px){.add-to-project .catalog-header-left{padding-right:15px}
 }
 .drag-and-drop-zone{position:absolute;border-width:3px;visibility:hidden}
