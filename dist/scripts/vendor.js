@@ -38867,9 +38867,15 @@ return this || ("undefined" != typeof window ? window :global);
 "function" == typeof define && define.amd ? define([ "base1/angular", "base1/term" ], b) :b(a.angular, a.Terminal);
 }(this, function(a, b) {
 "use strict";
+function c(a) {
+return window.btoa(window.unescape(encodeURIComponent(a)));
+}
+function d(a) {
+return decodeURIComponent(window.escape(window.atob(a)));
+}
 try {
 a.module("kubernetesUI");
-} catch (c) {
+} catch (e) {
 a.module("kubernetesUI", []);
 }
 return a.module("kubernetesUI").provider("kubernetesContainerSocket", function() {
@@ -38885,7 +38891,7 @@ return 0 === a.indexOf("/") && (a = "http:" === window.location.protocol ? "ws:/
 }, c.$get = [ "$injector", function(a) {
 return b(a, c.WebSocketFactory);
 } ];
-}).directive("kubernetesContainerTerminal", [ "$q", "kubernetesContainerSocket", function(c, d) {
+}).directive("kubernetesContainerTerminal", [ "$q", "kubernetesContainerSocket", function(e, f) {
 return {
 restrict:"E",
 scope:{
@@ -38895,62 +38901,63 @@ command:"@",
 prevent:"=",
 rows:"=",
 cols:"=",
-screenKeys:"="
+screenKeys:"=",
+autofocus:"=?"
 },
-link:function(e, f, g) {
-function h() {
+link:function(g, h, i) {
+function j() {
 function a(a) {
-!a && j && (a = "Could not connect to the container. Do you have sufficient privileges?"), a || (a = "disconnected"), j || (a = "\r\n" + a), o.write("[31m" + a + "[m\r\n"), e.$apply(i);
+!a && j && (a = "Could not connect to the container. Do you have sufficient privileges?"), a || (a = "disconnected"), j || (a = "\r\n" + a), q.write("[31m" + a + "[m\r\n"), g.$apply(k);
 }
-i(), o.reset();
-var b = "", f = e.pod();
-b += f.metadata ? f.metadata.selfLink :f, b += "/exec", -1 === b.indexOf("?") && (b += "?"), b += "stdout=1&stdin=1&stderr=1&tty=1";
-var g = e.container ? e.container() :null;
-g && (b += "&container=" + encodeURIComponent(g));
-var h = e.command;
-h || (h = [ "/bin/sh", "-i" ]), "string" == typeof h && (h = [ h ]), h.forEach(function(a) {
+k(), q.reset();
+var b = "", c = g.pod();
+b += c.metadata ? c.metadata.selfLink :c, b += "/exec", -1 === b.indexOf("?") && (b += "?"), b += "stdout=1&stdin=1&stderr=1&tty=1";
+var h = g.container ? g.container() :null;
+h && (b += "&container=" + encodeURIComponent(h));
+var i = g.command;
+i || (i = [ "/bin/sh", "-i" ]), "string" == typeof i && (i = [ i ]), i.forEach(function(a) {
 b += "&command=" + encodeURIComponent(a);
 });
 var j = !0;
-k.removeClass("hidden"), l.addClass("hidden"), c.when(d(b, "base64.channel.k8s.io"), function(b) {
-n = b, n.onopen = function(a) {
-m = window.setInterval(function() {
-n.send("0");
+m.removeClass("hidden"), n.addClass("hidden"), e.when(f(b, "base64.channel.k8s.io"), function(b) {
+p = b, p.onopen = function(a) {
+o = window.setInterval(function() {
+p.send("0");
 }, 3e4);
-}, n.onmessage = function(a) {
+}, p.onmessage = function(a) {
 var b = a.data.slice(1);
 switch (a.data[0]) {
 case "1":
 case "2":
 case "3":
-o.write(window.atob(b));
+q.write(d(b));
 }
-j && (j = !1, k.addClass("hidden"), l.addClass("hidden"), o.cursorHidden = !1, o.showCursor(), o.refresh(o.y, o.y));
-}, n.onclose = function(b) {
+j && (j = !1, m.addClass("hidden"), n.addClass("hidden"), q.cursorHidden = !1, q.showCursor(), q.refresh(q.y, q.y), g.autofocus && q.element && q.element.focus());
+}, p.onclose = function(b) {
 a(b.reason);
 };
 }, function(b) {
 a(b.message);
 });
 }
-function i() {
-k.addClass("hidden"), l.removeClass("hidden"), o && (o.cursorHidden = !0, o.refresh(o.x, o.y)), n && (n.onopen = n.onmessage = n.onerror = n.onclose = null, n.readyState < 2 && n.close(), n = null), window.clearInterval(m), m = null;
+function k() {
+m.addClass("hidden"), n.removeClass("hidden"), q && (q.cursorHidden = !0, q.refresh(q.x, q.y)), p && (p.onopen = p.onmessage = p.onerror = p.onclose = null, p.readyState < 2 && p.close(), p = null), window.clearInterval(o), o = null;
 }
-var j = a.element("<div class='terminal-wrapper'>");
-f.append(j);
-var k = a.element("<div class='spinner spinner-white hidden'>"), l = a.element("<button class='btn btn-default fa fa-refresh'>");
-l.on("click", h).attr("title", "Connect"), f.append(a.element("<div class='terminal-actions'>").append(k).append(l));
-var m = null, n = null, o = new b({
-cols:e.cols || 80,
-rows:e.rows || 24,
-screenKeys:e.screenKeys || !0
+var l = a.element("<div class='terminal-wrapper'>");
+h.append(l);
+var m = a.element("<div class='spinner spinner-white hidden'>"), n = a.element("<button class='btn btn-default fa fa-refresh'>");
+n.on("click", j).attr("title", "Connect"), h.append(a.element("<div class='terminal-actions'>").append(m).append(n));
+var o = null, p = null, q = new b({
+cols:g.cols || 80,
+rows:g.rows || 24,
+screenKeys:g.screenKeys || !0
 });
-j.empty(), o.open(j[0]), o.cursorHidden = !0, o.refresh(o.x, o.y), o.on("data", function(a) {
-n && 1 === n.readyState && n.send("0" + window.btoa(a));
-}), e.$watch("prevent", function(a) {
-a || h();
-}), e.$on("$destroy", function() {
-o && o.destroy(), i();
+l.empty(), q.open(l[0]), q.cursorHidden = !0, q.refresh(q.x, q.y), q.on("data", function(a) {
+p && 1 === p.readyState && p.send("0" + c(a));
+}), g.$watch("prevent", function(a) {
+a || j();
+}), g.$on("$destroy", function() {
+q && q.destroy(), k();
 });
 }
 };
