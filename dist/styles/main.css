@@ -3607,7 +3607,7 @@ ul.messenger-theme-flat .messenger-message.alert-info .messenger-message-inner:b
 .navbar-pf-alt .navbar-toggle+.navbar-brand{margin-left:0}
 .navbar-pf-alt .navbar-toggle .icon-bar{background:#cfcfcf}
 .navbar-pf-alt .nav-item-iconic{cursor:pointer;line-height:1;position:relative;color:#cfcfcf;margin-right:0;max-height:none;padding:14.5px 14px}
-.navbar-pf-alt .nav-item-iconic .status-issue,.navbar-pf-alt .nav-item-iconic .username{display:inline-block;font-weight:300;line-height:1;max-width:100px;padding:0 2px;position:relative;top:-2px}
+.navbar-pf-alt .nav-item-iconic .status-issue,.navbar-pf-alt .nav-item-iconic .username{display:inline-block;font-weight:300;line-height:1.4;max-width:100px;padding:0 2px;position:relative;top:-2px}
 .navbar-pf-alt .nav-item-iconic:focus,.navbar-pf-alt .nav-item-iconic:hover{background-color:transparent;color:#fff;text-decoration:none}
 .navbar-pf-alt .nav-item-iconic:focus .caret,.navbar-pf-alt .nav-item-iconic:focus .fa,.navbar-pf-alt .nav-item-iconic:focus .glyphicon,.navbar-pf-alt .nav-item-iconic:focus .pf-icon,.navbar-pf-alt .nav-item-iconic:hover .caret,.navbar-pf-alt .nav-item-iconic:hover .fa,.navbar-pf-alt .nav-item-iconic:hover .glyphicon,.navbar-pf-alt .nav-item-iconic:hover .pf-icon{color:#fff}
 .navbar-pf-alt .nav-item-iconic .caret,.navbar-pf-alt .nav-item-iconic .fa,.navbar-pf-alt .nav-item-iconic .pf-icon{color:#cfcfcf;font-size:17px;width:auto}
