@@ -4191,8 +4191,8 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "<label ng-if=\"!renderOptions || !renderOptions.hideFilterWidget\" class=\"control-label sr-only\">Filter by labels</label>\n" +
     "<div class=\"navbar-filter-widget\"></div>\n" +
     "</div>\n" +
-    "<div class=\"active-filters\"></div>\n" +
-    "</div>"
+    "</div>\n" +
+    "<div class=\"active-filters\"></div>"
   );
 
 
@@ -6405,7 +6405,7 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "<div class=\"data-toolbar-filter\">\n" +
     "<project-filter></project-filter>\n" +
     "</div>\n" +
-    "<div class=\"data-toolbar-views\">\n" +
+    "<div class=\"data-toolbar-views pad-left-lg\">\n" +
     "<div class=\"actions\">\n" +
     "<div class=\"btn-group\">\n" +
     "<label class=\"btn btn-default\" ng-model=\"$parent.overviewMode\" uib-btn-radio=\"'tiles'\" title=\"Tile View\">\n" +
