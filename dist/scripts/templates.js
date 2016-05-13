@@ -4447,12 +4447,12 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "<ul class=\"nav navbar-nav navbar-right navbar-iconic\">\n" +
     "<li extension-point extension-name=\"nav-system-status\" extension-types=\"dom\"></li>\n" +
     "<li uib-dropdown>\n" +
-    "<a uib-dropdown-toggle class=\"nav-item-iconic\" id=\"dropdownMenu1\" href=\"\">\n" +
+    "<a uib-dropdown-toggle class=\"nav-item-iconic\" id=\"help-dropdown\" href=\"\">\n" +
     "<span title=\"Help\" class=\"fa pficon-help\" aria-hidden=\"true\"></span>\n" +
     "<span class=\"sr-only\">Help</span>\n" +
     "<span class=\"caret\" aria-hidden=\"true\"></span>\n" +
     "</a>\n" +
-    "<ul class=\"uib-dropdown-menu\" aria-labelledby=\"dropdownMenu1\" extension-point extension-name=\"nav-help-dropdown\" extension-types=\"dom html\"></ul>\n" +
+    "<ul class=\"uib-dropdown-menu\" aria-labelledby=\"help-dropdown\" extension-point extension-name=\"nav-help-dropdown\" extension-types=\"dom html\"></ul>\n" +
     "</li>\n" +
     "<li uib-dropdown ng-cloak ng-if=\"user\">\n" +
     "<a href=\"\" uib-dropdown-toggle id=\"user-dropdown\" class=\"nav-item-iconic\">\n" +
