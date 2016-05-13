@@ -8,7 +8,7 @@ angular.module('openshiftConsole')
           type: 'dom',
           node: [
             '<li>',
-              '<a href="https://docs.openshift.org/latest/welcome/index.html">',
+              '<a href="{{\'default\' | helpLink}}">',
                 '<span class="fa fa-book fa-fw" aria-hidden="true"></span> Documentation',
               '</a>',
             '</li>'

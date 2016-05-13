@@ -8306,7 +8306,7 @@ url:l
 a.add("nav-help-dropdown", function() {
 return [ {
 type:"dom",
-node:'<li><a href="https://docs.openshift.org/latest/welcome/index.html">Documentation</a></li>'
+node:"<li><a href=\"{{'default' | helpLink}}\">Documentation</a></li>"
 }, {
 type:"dom",
 node:'<li><a href="about">About</a></li>'
@@ -8323,7 +8323,7 @@ node:'<li><a href="logout">Log out</a></li>'
 a.add("nav-dropdown-mobile", _.spread(function(a) {
 return [ {
 type:"dom",
-node:[ "<li>", '<a href="https://docs.openshift.org/latest/welcome/index.html">', '<span class="fa fa-book fa-fw" aria-hidden="true"></span> Documentation', "</a>", "</li>" ].join("")
+node:[ "<li>", "<a href=\"{{'default' | helpLink}}\">", '<span class="fa fa-book fa-fw" aria-hidden="true"></span> Documentation', "</a>", "</li>" ].join("")
 }, {
 type:"dom",
 node:[ "<li>", '<a href="about">', '<span class="pficon pficon-info fa-fw" aria-hidden="true"></span> About', "</a>", "</li>" ].join("")
