@@ -7501,10 +7501,11 @@ return function(b, c) {
 var d = b.spec.tls && "" !== b.spec.tls.tlsTerminationType ? "https" :"http", e = d + "://" + (c || a(b));
 return b.spec.path && (e += b.spec.path), e;
 };
-} ]).filter("routeLabel", [ "routeHostFilter", function(a) {
-return function(b, c) {
-var d = c || a(b);
-return b.spec.path && (d += b.spec.path), d || "<unknown host>";
+} ]).filter("routeLabel", [ "routeHostFilter", "routeWebURLFilter", "isWebRouteFilter", function(a, b, c) {
+return function(d, e) {
+if (c(d)) return b(d, e);
+var f = e || a(d);
+return d.spec.path && (f += d.spec.path), f || "<unknown host>";
 };
 } ]).filter("parameterPlaceholder", function() {
 return function(a) {

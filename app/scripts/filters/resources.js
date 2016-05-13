@@ -314,8 +314,11 @@ angular.module('openshiftConsole')
         return url;
     };
   })
-  .filter('routeLabel', function(routeHostFilter) {
+  .filter('routeLabel', function(routeHostFilter, routeWebURLFilter, isWebRouteFilter) {
     return function(route, host) {
+      if (isWebRouteFilter(route)) {
+        return routeWebURLFilter(route, host);
+      }
       var label = (host || routeHostFilter(route));
       if (route.spec.path) {
         label += route.spec.path;
