@@ -33,6 +33,22 @@ angular.module("openshiftConsole")
       }
       return true;
     };
+
+    // checks if the key,value inputs have any text value.
+    // if so, sets the form name="clean" to an 'invalid' state, which will
+    // invalidate any parent form up the chain.  This should result in an
+    // inability to submit that form until the user commits the new key-value pair.
+    $scope.isClean = _.debounce(function() {
+      $scope.$apply(function() {
+        if(!!$scope.key) {
+          $scope.clean.isClean.$setValidity('isClean', false);
+        } else if(!!$scope.value) {
+          $scope.clean.isClean.$setValidity('isClean', false);
+        } else {
+          $scope.clean.isClean.$setValidity('isClean', true);
+        }
+      });
+    }, 50);
     $scope.addEntry = function() {
       if($scope.key && $scope.value){
         var readonly = $scope.readonlyKeys.split(",");
@@ -45,6 +61,7 @@ angular.module("openshiftConsole")
         $scope.value = null;
         $scope.form.$setPristine();
         $scope.form.$setUntouched();
+        $scope.isClean();
       }
     };
     $scope.deleteEntry = function(key) {
