@@ -320,10 +320,13 @@ angular.module('openshiftConsole')
         return routeWebURLFilter(route, host);
       }
       var label = (host || routeHostFilter(route));
+      if (!label) {
+        return '<unknown host>';
+      }
       if (route.spec.path) {
         label += route.spec.path;
       }
-      return label || '<unknown host>';
+      return label;
     };
   })
   .filter('parameterPlaceholder', function() {
