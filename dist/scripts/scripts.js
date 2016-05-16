@@ -5204,7 +5204,8 @@ var b = j.objectToResourceGroupVersion(a);
 return b ? j.apiInfo(b) ? i.get(b, a.metadata.name, k.context, {
 errorNotification:!1
 }).then(function(b) {
-"Template" !== a.kind && (b.spec = a.spec), b.metadata.annotations = a.metadata.annotations, b.metadata.labels = a.metadata.labels, k.updateResources.push(b);
+var c = angular.copy(a), d = angular.copy(b.metadata);
+d.annotations = a.metadata.annotations, d.labels = a.metadata.labels, c.metadata = d, k.updateResources.push(c);
 }, function(b) {
 404 === b.status ? k.createResources.push(a) :(k.alerts.check = {
 type:"error",
