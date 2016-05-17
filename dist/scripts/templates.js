@@ -4939,20 +4939,28 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
 
 
   $templateCache.put('views/directives/osc-key-values.html',
-    "<div ng-controller=\"KeyValuesController\" class=\"labels\">\n" +
+    "<ng-form hidden name=\"clean\">\n" +
+    "<input name=\"isClean\" ng-model=\"keyValuesClean\">\n" +
+    "</ng-form>\n" +
+    "<div class=\"labels\">\n" +
     "<div class=\"form-inline labels-edit\" ng-show=\"editable\">\n" +
     "<ng-form class=\"edit-label\" name=\"form\" novalidate>\n" +
     "<div row cross-axis=\"start\">\n" +
     "<div flex grow=\"5\" shrink=\"5\" class=\"form-group\" ng-class=\"{'has-error': form.key.$error.oscKeyValid}\" style=\"margin-right: 10px\">\n" +
-    "<input class=\"form-control\" type=\"text\" name=\"key\" ng-attr-placeholder=\"{{keyTitle}}\" ng-model=\"key\" ng-model-options=\"{ debounce: 200 }\" autocorrect=\"off\" autocapitalize=\"off\" spellcheck osc-input-validator=\"key\" osc-unique=\"entries\" on-enter=\"form.$valid && addEntry()\">\n" +
+    "<input class=\"form-control\" type=\"text\" name=\"key\" ng-attr-placeholder=\"{{keyTitle}}\" ng-model=\"key\" ng-model-options=\"{ debounce: 200 }\" autocorrect=\"off\" autocapitalize=\"off\" spellcheck osc-input-validator=\"key\" osc-unique=\"entries\" on-enter=\"form.$valid && addEntry()\" ng-keyup=\"isClean()\">\n" +
     "</div>\n" +
     "<div flex grow=\"5\" shrink=\"5\" class=\"form-group\" ng-class=\"{'has-error': form.value.$error.oscValueValid}\" style=\"margin-right: 10px\">\n" +
-    "<input class=\"form-control\" type=\"text\" name=\"value\" ng-attr-placeholder=\"{{valueTitle}}\" ng-model=\"value\" autocorrect=\"off\" autocapitalize=\"off\" spellcheck osc-input-validator=\"value\" on-enter=\"form.$valid && addEntry()\">\n" +
+    "<input class=\"form-control\" type=\"text\" name=\"value\" ng-attr-placeholder=\"{{valueTitle}}\" ng-model=\"value\" autocorrect=\"off\" autocapitalize=\"off\" spellcheck osc-input-validator=\"value\" on-enter=\"form.$valid && addEntry()\" ng-keyup=\"isClean()\">\n" +
     "</div>\n" +
     "\n" +
-    "<a class=\"btn btn-default\" href=\"\" role=\"button\" ng-click=\"addEntry()\" ng-disabled=\"form.$invalid || !key || !value\">\n" +
+    "<a class=\"btn btn-default add-key-value\" href=\"\" role=\"button\" ng-click=\"addEntry()\" ng-disabled=\"form.$invalid || !key || !value\">\n" +
     "Add\n" +
     "</a>\n" +
+    "</div>\n" +
+    "<div ng-if=\"showCommmitWarning\" class=\"has-error\">\n" +
+    "<span class=\"help-block\">\n" +
+    "Please add or <a href=\"\" ng-click=\"clear()\">clear</a> this {{(keyTitle || 'key') | lowercase}}-{{(valueTitle || 'value') | lowercase}} pair\n" +
+    "</span>\n" +
     "</div>\n" +
     "<div row class=\"has-error\" ng-show=\"form.key.$error.oscUnique\">\n" +
     "<span class=\"help-block\">\n" +

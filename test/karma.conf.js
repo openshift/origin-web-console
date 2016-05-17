@@ -56,6 +56,7 @@ module.exports = function(config) {
       "bower_components/ui-select/dist/select.js",
       'app/config.js',
       'app/scripts/**/*.js',
+      'app/views/directives/**/*.html',
       //'test/mock/**/*.js',
       'test/spec/spec-helper.js',
       'test/spec/fixtures/api-discovery.js',
@@ -83,6 +84,7 @@ module.exports = function(config) {
     // Which plugins to enable
     plugins: [
       'karma-phantomjs-launcher',
+      'karma-ng-html2js-preprocessor',
       'karma-jasmine',
       'karma-coverage'
     ],
@@ -108,7 +110,15 @@ module.exports = function(config) {
       // source files, that you wanna generate coverage for
       // do not include tests or libraries
       // (these files will be instrumented by Istanbul)
-      'app/**/*.js': ['coverage']
+      'app/**/*.js': ['coverage'],
+      'app/views/directives/**/*.html': ['ng-html2js']
+    },
+
+    ngHtml2JsPreprocessor: {
+      moduleName: 'openshiftConsoleTemplates',
+      cacheIdFromPath: function(filepath) {
+        return filepath.replace('app/', '');
+      },
     },
 
     reporters: ['progress', 'coverage'],
@@ -118,6 +128,6 @@ module.exports = function(config) {
         {type: 'json', dir:'test/coverage/'},
         {type: 'text-summary', dir:'test/coverage/'}
       ]
-    }    
+    }
   });
 };
