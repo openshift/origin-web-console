@@ -19,7 +19,7 @@ angular.module("openshiftConsole")
       }
     };
   })
-  .controller("KeyValuesController", function($scope){
+  .controller("KeyValuesController", function($scope, $timeout){
     var added = {};
     $scope.allowDelete = function(value){
       if ($scope.preventEmpty && (Object.keys($scope.entries).length === 1)) {
@@ -34,12 +34,25 @@ angular.module("openshiftConsole")
       return true;
     };
 
+    // add/remove 'must commit' message.
+    $scope.onBlur = function() {
+      $timeout(function() {
+        if(!!$scope.key) {
+          $scope.reminder = true;
+        } else if(!!$scope.value) {
+          $scope.reminder = true;
+        } else {
+          $scope.reminder = false;
+        }
+      }, 100);
+    };
+
     // checks if the key,value inputs have any text value.
     // if so, sets the form name="clean" to an 'invalid' state, which will
     // invalidate any parent form up the chain.  This should result in an
     // inability to submit that form until the user commits the new key-value pair.
     $scope.isClean = _.debounce(function() {
-      $scope.$apply(function() {
+      $scope.$applyAsync(function() {
         if(!!$scope.key) {
           $scope.clean.isClean.$setValidity('isClean', false);
         } else if(!!$scope.value) {
@@ -62,6 +75,7 @@ angular.module("openshiftConsole")
         $scope.form.$setPristine();
         $scope.form.$setUntouched();
         $scope.isClean();
+        $scope.onBlur();
       }
     };
     $scope.deleteEntry = function(key) {
