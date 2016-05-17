@@ -7506,7 +7506,7 @@ return b.spec.path && (e += b.spec.path), e;
 return function(d, e) {
 if (c(d)) return b(d, e);
 var f = e || a(d);
-return d.spec.path && (f += d.spec.path), f || "<unknown host>";
+return f ? (d.spec.path && (f += d.spec.path), f) :"<unknown host>";
 };
 } ]).filter("parameterPlaceholder", function() {
 return function(a) {
