@@ -897,35 +897,9 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "<dt>Kubernetes Master:</dt>\n" +
     "<dd>{{version.master.kubernetes || 'unknown'}}</dd>\n" +
     "</dl>\n" +
-    "<h2 id=\"cli\">Command Line Tools</h2>\n" +
-    "<p>\n" +
-    "With the OpenShift command line interface (CLI), you can create applications and manage OpenShift projects from a terminal.\n" +
-    "<span ng-if=\"cliDownloadURLPresent\">\n" +
-    "You can download the <code>oc</code> client tool using the links below. For more information about downloading and installing it, please refer to the <a href=\"{{'get_started_cli' | helpLink}}\">Get Started with the CLI</a> documentation.\n" +
-    "</span>\n" +
-    "<span ng-if=\"!cliDownloadURLPresent\">\n" +
-    "Refer to the <a href=\"{{'get_started_cli' | helpLink}}\">Get Started with the CLI</a> documentation for instructions about downloading and installing the <code>oc</code> client tool.\n" +
-    "</span>\n" +
-    "<div ng-if=\"cliDownloadURLPresent\">\n" +
-    "<label class=\"cli-download-label\">Download <code>oc</code>:</label>\n" +
-    "<div ng-repeat=\"(key, value) in cliDownloadURL\">\n" +
-    "<a href=\"{{value}}\" class=\"cli-download-link\">\n" +
-    "{{key}}\n" +
-    "<i class=\"fa fa-external-link\"></i>\n" +
-    "</a>\n" +
-    "</div>\n" +
-    "</div>\n" +
+    "<p>The <a target=\"_blank\" href=\"{{'welcome' | helpLink}}\">documentation</a> contains information and guides to help you learn about OpenShift and start exploring its features. From getting started with creating your first application, to trying out more advanced build and deployment techniques, it provides what you need to set up and manage your OpenShift environment as an application developer.</p>\n" +
+    "<p>With the OpenShift command line interface (CLI), you can create applications and manage OpenShift projects from a terminal. To get started using the CLI you will need to <a target=\"_blank\" href=\"command-line\">download it and login</a>. For more information about the command line tools, check the <a target=\"_blank\" href=\"{{'cli' | helpLink}}\">CLI Reference</a> and <a target=\"_blank\" href=\"{{'basic_cli_operations' | helpLink}}\">Basic CLI Operations</a>.\n" +
     "</p>\n" +
-    "<p>\n" +
-    "After downloading and installing it, you can start by logging in using<span ng-if=\"sessionToken\"> this current session token</span>:\n" +
-    "<div class=\"code prettyprint ng-binding\" ng-if=\"sessionToken\">\n" +
-    "oc login {{loginBaseURL}} --token=<span ng-show=\"showSessionToken\">{{sessionToken}}</span><a href=\"#\" ng-click=\"showSessionToken = !showSessionToken\" ng-show=\"!showSessionToken\">...click to show token...</a>\n" +
-    "</div>\n" +
-    "<pre class=\"code prettyprint ng-binding\" ng-if=\"!sessionToken\">\n" +
-    "        oc login {{loginBaseURL}}\n" +
-    "        </pre>\n" +
-    "</p>\n" +
-    "<p>For other information about the command line tools, check the <a target=\"_blank\" href=\"{{'cli' | helpLink}}\">CLI Reference</a> and <a target=\"_blank\" href=\"{{'basic_cli_operations' | helpLink}}\">Basic CLI Operations</a>.</p>\n" +
     "</div>\n" +
     "</div>\n" +
     "</div>\n" +
@@ -3184,6 +3158,76 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
   );
 
 
+  $templateCache.put('views/command-line.html',
+    "<default-header class=\"top-header\"></default-header>\n" +
+    "<div class=\"wrap no-sidebar\">\n" +
+    "<div class=\"sidebar-left collapse navbar-collapse navbar-collapse-2\">\n" +
+    "<navbar-utility-mobile></navbar-utility-mobile>\n" +
+    "</div>\n" +
+    "<div class=\"middle\">\n" +
+    "\n" +
+    "<div class=\"middle-section surface-shaded\">\n" +
+    "<div class=\"middle-container has-scroll\">\n" +
+    "<div class=\"middle-content\">\n" +
+    "<div class=\"container surface-shaded gutter-top\">\n" +
+    "<div class=\"row\">\n" +
+    "<div class=\"col-md-12\">\n" +
+    "<div class=\"command-line\">\n" +
+    "<h1 id=\"cli\">Command Line Tools</h1>\n" +
+    "<p>\n" +
+    "With the OpenShift command line interface (CLI), you can create applications and manage OpenShift projects from a terminal.\n" +
+    "<span ng-if=\"cliDownloadURLPresent\">\n" +
+    "You can download the <code>oc</code> client tool using the links below. For more information about downloading and installing it, please refer to the <a href=\"{{'get_started_cli' | helpLink}}\">Get Started with the CLI</a> documentation.\n" +
+    "</span>\n" +
+    "<span ng-if=\"!cliDownloadURLPresent\">\n" +
+    "Refer to the <a href=\"{{'get_started_cli' | helpLink}}\">Get Started with the CLI</a> documentation for instructions about downloading and installing the <code>oc</code> client tool.\n" +
+    "</span>\n" +
+    "<div ng-if=\"cliDownloadURLPresent\">\n" +
+    "<label class=\"cli-download-label\">Download <code>oc</code>:</label>\n" +
+    "<div ng-repeat=\"(key, value) in cliDownloadURL\">\n" +
+    "<a href=\"{{value}}\" class=\"cli-download-link\">\n" +
+    "{{key}}\n" +
+    "<i class=\"fa fa-external-link\"></i>\n" +
+    "</a>\n" +
+    "</div>\n" +
+    "</div>\n" +
+    "</p>\n" +
+    "<p>\n" +
+    "After downloading and installing it, you can start by logging in using<span ng-if=\"sessionToken\"> this current session token</span>:\n" +
+    "<div class=\"code prettyprint ng-binding\" ng-if=\"sessionToken\">\n" +
+    "oc login {{loginBaseURL}} --token=<span ng-show=\"showSessionToken\">{{sessionToken}}</span><a href=\"#\" ng-click=\"toggleShowSessionToken()\" ng-show=\"!showSessionToken\">...click to show token...</a>\n" +
+    "</div>\n" +
+    "<pre class=\"code prettyprint ng-binding\" ng-if=\"!sessionToken\">\n" +
+    "                      oc login {{loginBaseURL}}\n" +
+    "                    </pre>\n" +
+    "</p>\n" +
+    "<div ng-show=\"showSessionToken\" class=\"alert alert-warning\">\n" +
+    "<span class=\"pficon pficon-warning-triangle-o\" aria-hidden=\"true\"></span>\n" +
+    "<strong>A token is a form of a password.</strong>\n" +
+    "Do not share your API token.\n" +
+    "</div>\n" +
+    "<p>After you login to your account you will get a list of projects that you can switch between:\n" +
+    "<pre class=\"code prettyprint\">oc project <i>project-name</i></pre>\n" +
+    "</p>\n" +
+    "<p>If you do not have any existing projects, you can create one:\n" +
+    "<pre class=\"code prettyprint\">oc new-project <i>project-name</i></pre>\n" +
+    "</p>\n" +
+    "<p>To show a high level overview of the current project:\n" +
+    "<pre class=\"code prettyprint\">oc status</pre>\n" +
+    "</p>\n" +
+    "<p>For other information about the command line tools, check the <a target=\"_blank\" href=\"{{'cli' | helpLink}}\">CLI Reference</a> and <a target=\"_blank\" href=\"{{'basic_cli_operations' | helpLink}}\">Basic CLI Operations</a>.</p>\n" +
+    "</div>\n" +
+    "</div>\n" +
+    "</div>\n" +
+    "</div>\n" +
+    "</div>\n" +
+    "</div>\n" +
+    "</div>\n" +
+    "</div>\n" +
+    "</div>"
+  );
+
+
   $templateCache.put('views/create-project.html',
     "<default-header class=\"top-header\"></default-header>\n" +
     "<div class=\"wrap no-sidebar\">\n" +
@@ -3716,7 +3760,7 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "<h2>Things you can do</h2>\n" +
     "<p>Go to the <a href=\"project/{{projectName}}/overview\">overview page</a> to see more details about this project. Make sure you don't already have <a href=\"project/{{projectName}}/browse/services\">services</a>, <a href=\"project/{{projectName}}/browse/builds\">build configs</a>, <a href=\"project/{{projectName}}/browse/deployments\">deployment configs</a>, or other resources with the same names you are trying to create. Refer to the <a target=\"_blank\" href=\"{{'new_app' | helpLink}}\">documentation for creating new applications</a> for more information.</p>\n" +
     "<h3>Command line tools</h3>\n" +
-    "<p>You may want to use the <code>oc</code> command line tool to help with troubleshooting. After <a target=\"_blank\" href=\"about#cli\">downloading and installing</a> it, you can log in, switch to this particular project, and try some commands :</p>\n" +
+    "<p>You may want to use the <code>oc</code> command line tool to help with troubleshooting. After <a target=\"_blank\" href=\"command-line\">downloading and installing</a> it, you can log in, switch to this particular project, and try some commands :</p>\n" +
     "<pre class=\"code prettyprint\">oc login {{loginBaseUrl}}\n" +
     "oc project {{projectName}}\n" +
     "oc logs -h</pre>\n" +
@@ -3726,7 +3770,7 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "<h2>Manage your app</h2>\n" +
     "<p>The web console is convenient, but if you need deeper control you may want to try our command line tools.</p>\n" +
     "<h3>Command line tools</h3>\n" +
-    "<p><a target=\"_blank\" href=\"about#cli\">Download and install</a> the <code>oc</code> command line tool. After that, you can start by logging in, switching to this particular project, and displaying an overview of it, by doing:</p>\n" +
+    "<p><a target=\"_blank\" href=\"command-line\">Download and install</a> the <code>oc</code> command line tool. After that, you can start by logging in, switching to this particular project, and displaying an overview of it, by doing:</p>\n" +
     "<pre class=\"code prettyprint\">oc login {{loginBaseUrl}}\n" +
     "oc project {{projectName}}\n" +
     "oc status</pre>\n" +

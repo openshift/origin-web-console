@@ -24,6 +24,15 @@ angular.module('openshiftConsole')
           ].join('')
         }, {
           type: 'dom',
+          node: [
+            '<li>',
+              '<a href="command-line">',
+                '<span class="fa fa-terminal" aria-hidden="true"></span> Command Line Tools',
+              '</a>',
+            '</li>'
+          ].join('')
+        }, {
+          type: 'dom',
           node: _.template([
             '<li>',
               '<a href="logout">',
