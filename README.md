@@ -2,6 +2,8 @@ OpenShift 3 Management Console
 =========================
 The management console for [OpenShift Origin](https://github.com/openshift/origin) v3.
 
+[![Build Status](https://travis-ci.org/openshift/origin-web-console.svg?branch=master)](https://travis-ci.org/openshift/origin-web-console)
+
 Contributing
 ------------
 
