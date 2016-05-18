@@ -1,0 +1,39 @@
+<span class="pipeline-status" ng-class="status">
+  <span ng-switch="status" class="hide-ng-leave">
+    <!-- See https://github.com/jenkinsci/pipeline-stage-view-plugin/blob/master/rest-api/src/main/java/com/cloudbees/workflow/rest/external/StatusExt.java -->
+    <span ng-switch-when="ABORTED">
+      <i class="fa fa-ban text-muted" aria-hidden="true"></i>
+      <span class="sr-only">Aborted</span>
+    </span>
+    <span ng-switch-when="FAILED">
+      <span class="fa-stack">
+        <i class="fa fa-circle fa-stack-2x"></i>
+        <i class="fa fa-times fa-stack-1x fa-inverse"></i>
+      </span>
+      <span class="sr-only">Failed</span>
+    </span>
+    <span ng-switch-when="IN_PROGRESS">
+      <i class="fa fa-refresh fa-spin" aria-hidden="true"></i>
+      <span class="sr-only">In Progress</span>
+    </span>
+    <span ng-switch-when="NOT_EXECUTED">
+      <span class="no-icon" aria-hidden="true"></span>
+      <span class="sr-only">Not Executed</span>
+    </span>
+    <span ng-switch-when="PAUSED_PENDING_INPUT">
+      <i class="fa fa-pause" aria-hidden="true"></i>
+      <span class="sr-only">Paused Pending Input</span>
+    </span>
+    <span ng-switch-when="SUCCESS">
+      <span class="fa-stack" aria-hidden="true">
+        <i class="fa fa-circle fa-stack-2x"></i>
+        <i class="fa fa-check fa-stack-1x fa-inverse"></i>
+      </span>
+      <span class="sr-only">Success</span>
+    </span>
+    <span ng-switch-default>
+      <span class="no-icon" aria-hidden="true"></span>
+      <span class="sr-only">{{status}}</span>
+    </span>
+  </span>
+</span>
