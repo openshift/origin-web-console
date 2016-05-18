@@ -14,6 +14,7 @@ angular.module('openshiftConsole')
                         AlertMessageService,
                         DataService,
                         HPAService,
+                        MetricsService,
                         ProjectsService,
                         DeploymentsService,
                         ImageStreamResolver,
@@ -72,6 +73,11 @@ angular.module('openshiftConsole')
     AlertMessageService.clearAlerts();
 
     var watches = [];
+
+    // Check if the metrics service is available so we know when to show the tab.
+    MetricsService.isAvailable().then(function(available) {
+      $scope.metricsAvailable = available;
+    });
 
     var setLogVars = function(deployment) {
       $scope.logOptions.container = $filter("annotation")(deployment, "pod");

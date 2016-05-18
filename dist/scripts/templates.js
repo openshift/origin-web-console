@@ -2116,6 +2116,10 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "<em ng-if=\"!container.env.length\">The container specification has no environment variables set.</em>\n" +
     "</div>\n" +
     "</uib-tab>\n" +
+    "<uib-tab ng-if=\"metricsAvailable\" heading=\"Metrics\" active=\"selectedTab.metrics\">\n" +
+    "\n" +
+    "<metrics ng-if=\"selectedTab.metrics\" deployment=\"deployment\"></metrics>\n" +
+    "</uib-tab>\n" +
     "<uib-tab ng-if=\"deploymentConfigName && logOptions.version\" active=\"selectedTab.logs\">\n" +
     "<uib-tab-heading>Logs</uib-tab-heading>\n" +
     "<log-viewer ng-if=\"selectedTab.logs\" follow-affix-top=\"390\" follow-affix-bottom=\"90\" resource=\"deploymentconfigs/log\" name=\"deploymentConfigName\" context=\"projectContext\" options=\"logOptions\" empty=\"logEmpty\" run=\"logCanRun\">\n" +
@@ -2446,8 +2450,8 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "</uib-tab>\n" +
     "<uib-tab ng-if=\"metricsAvailable\" heading=\"Metrics\" active=\"selectedTab.metrics\">\n" +
     "\n" +
-    "<pod-metrics ng-if=\"selectedTab.metrics\" pod=\"pod\">\n" +
-    "</pod-metrics>\n" +
+    "<metrics ng-if=\"selectedTab.metrics\" pod=\"pod\">\n" +
+    "</metrics>\n" +
     "</uib-tab>\n" +
     "<uib-tab active=\"selectedTab.logs\">\n" +
     "<uib-tab-heading>Logs</uib-tab-heading>\n" +
@@ -4133,80 +4137,6 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
   );
 
 
-  $templateCache.put('views/directives/_pod-metrics.html',
-    "<div class=\"pod-metrics\">\n" +
-    "<div ng-if=\"!pod.spec.containers.length\">No containers</div>\n" +
-    "<div ng-if=\"pod.spec.containers.length\">\n" +
-    "<div class=\"metrics-options\">\n" +
-    "<div class=\"form-group\">\n" +
-    "<label for=\"selectContainer\">Container:</label>\n" +
-    "<div class=\"select-container\">\n" +
-    "<span ng-show=\"pod.spec.containers.length === 1\">\n" +
-    "{{pod.spec.containers[0].name}}\n" +
-    "</span>\n" +
-    "<select id=\"selectContainer\" ng-show=\"pod.spec.containers.length > 1\" ng-init=\"options.selectedContainer = pod.spec.containers[0]\" ng-model=\"options.selectedContainer\" ng-options=\"container.name for container in pod.spec.containers track by container.name\">\n" +
-    "</select>\n" +
-    "</div>\n" +
-    "<div class=\"form-group\">\n" +
-    "<label for=\"timeRange\">Time Range:</label>\n" +
-    "<select id=\"timeRange\" ng-model=\"options.timeRange\" ng-options=\"range.label for range in options.rangeOptions\" ng-disabled=\"metricsError\">\n" +
-    "</select>\n" +
-    "</div>\n" +
-    "</div>\n" +
-    "</div>\n" +
-    "<div ng-if=\"!loaded\">Loading...</div>\n" +
-    "<div ng-if=\"loaded && (usageByMetric | hashSize) === 0 && !metricsError\">No metrics to display.</div>\n" +
-    "<div ng-if=\"metricsError\" class=\"empty-state-message text-center\">\n" +
-    "<h2>\n" +
-    "<span class=\"pficon pficon-error-circle-o\" aria-hidden=\"true\"></span>\n" +
-    "Metrics are not available.\n" +
-    "</h2>\n" +
-    "<p>An error occurred getting metrics for container {{options.selectedContainer.name}}<span ng-if=\"metricsURL\">\n" +
-    "from <a ng-href=\"{{metricsURL}}\">{{metricsURL}}</a></span>.\n" +
-    "</p>\n" +
-    "<p ng-if=\"metricsError.status === 0 || metricsError.status === 404\">\n" +
-    "<div>If you have network connectivity, this could indicate a misconfiguration.</div>\n" +
-    "<div>Please contact your system administrator.</div>\n" +
-    "</p>\n" +
-    "<p class=\"text-muted\">\n" +
-    "{{metricsError.details}}\n" +
-    "</p>\n" +
-    "</div>\n" +
-    "<div ng-repeat=\"metric in metrics\" ng-if=\"anyUsageByMetric(metric) && !metricsError\">\n" +
-    "<h3>\n" +
-    "{{metric.label}}\n" +
-    "<small ng-if=\"pod.spec.containers.length > 1\">\n" +
-    "<span ng-if=\"metric.containerMetric\">Container Metrics</span>\n" +
-    "<span ng-if=\"!metric.containerMetric\">Pod Metrics</span>\n" +
-    "</small>\n" +
-    "</h3>\n" +
-    "\n" +
-    "\n" +
-    "<div ng-if=\"usageByMetric[metric.datasets[0].id].total\" class=\"utilization-trend-chart-pf\">\n" +
-    "<div ng-if=\"usageByMetric[metric.datasets[0].id].total\" class=\"current-values\">\n" +
-    "<h1 class=\"available-count pull-left\">\n" +
-    "{{usageByMetric[metric.datasets[0].id].available}}\n" +
-    "</h1>\n" +
-    "<div class=\"available-text pull-left\">\n" +
-    "<div>Available of</div>\n" +
-    "<div>{{usageByMetric[metric.datasets[0].id].total}} {{metric.units}}</div>\n" +
-    "</div>\n" +
-    "</div>\n" +
-    "</div>\n" +
-    "\n" +
-    "<div style=\"clear: both\"></div>\n" +
-    "\n" +
-    "<div ng-if=\"usageByMetric[metric.datasets[0].id].total\" ng-attr-id=\"{{metric.chartPrefix + uniqueID}}-donut\" class=\"metrics-donut\">\n" +
-    "</div>\n" +
-    "\n" +
-    "<div ng-attr-id=\"{{metric.chartPrefix + uniqueID}}-sparkline\" class=\"metrics-sparkline\">\n" +
-    "</div>\n" +
-    "</div>\n" +
-    "</div>\n" +
-    "</div>"
-  );
-
-
   $templateCache.put('views/directives/_probe.html',
     " <span ng-if=\"probe.httpGet\">\n" +
     "GET {{probe.httpGet.path || '/'}} on port {{probe.httpGet.port || 'unknown'}}\n" +
@@ -4726,6 +4656,79 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "<div ng-if=\"errorWhileRunning\" class=\"text-muted\">\n" +
     "An error occurred loading the log.\n" +
     "<a href=\"\" ng-click=\"restartLogs()\">Reload</a>\n" +
+    "</div>"
+  );
+
+
+  $templateCache.put('views/directives/metrics.html',
+    "<div class=\"metrics\" ng-if=\"pod || deployment\">\n" +
+    "<div class=\"metrics-options\">\n" +
+    "\n" +
+    "<div ng-if=\"pod.spec.containers.length\" class=\"form-group\">\n" +
+    "<label for=\"selectContainer\">Container:</label>\n" +
+    "<div class=\"select-container\">\n" +
+    "<span ng-show=\"pod.spec.containers.length === 1\">\n" +
+    "{{pod.spec.containers[0].name}}\n" +
+    "</span>\n" +
+    "<select id=\"selectContainer\" ng-show=\"pod.spec.containers.length > 1\" ng-init=\"options.selectedContainer = pod.spec.containers[0]\" ng-model=\"options.selectedContainer\" ng-options=\"container.name for container in pod.spec.containers track by container.name\">\n" +
+    "</select>\n" +
+    "</div>\n" +
+    "</div>\n" +
+    "<div class=\"form-group\">\n" +
+    "<label for=\"timeRange\">Time Range:</label>\n" +
+    "<select id=\"timeRange\" ng-model=\"options.timeRange\" ng-options=\"range.label for range in options.rangeOptions\" ng-disabled=\"metricsError\">\n" +
+    "</select>\n" +
+    "</div>\n" +
+    "</div>\n" +
+    "<div ng-if=\"!loaded\">Loading...</div>\n" +
+    "<div ng-if=\"loaded && (usageByMetric | hashSize) === 0 && !metricsError\">No metrics to display.</div>\n" +
+    "<div ng-if=\"metricsError\" class=\"empty-state-message text-center\">\n" +
+    "<h2>\n" +
+    "<span class=\"pficon pficon-error-circle-o\" aria-hidden=\"true\"></span>\n" +
+    "Metrics are not available.\n" +
+    "</h2>\n" +
+    "<p>\n" +
+    "An error occurred getting metrics<span ng-if=\"options.selectedContainer.name\">\n" +
+    "for container {{options.selectedContainer.name}}</span><span ng-if=\"metricsURL\">\n" +
+    "from <a ng-href=\"{{metricsURL}}\">{{metricsURL}}</a></span>.\n" +
+    "</p>\n" +
+    "<p class=\"text-muted\">\n" +
+    "{{metricsError.details}}\n" +
+    "</p>\n" +
+    "</div>\n" +
+    "<div ng-repeat=\"metric in metrics\" ng-if=\"anyUsageByMetric(metric) && !metricsError\">\n" +
+    "<h3>\n" +
+    "{{metric.label}}\n" +
+    "<small ng-if=\"pod.spec.containers.length > 1\">\n" +
+    "<span ng-if=\"metric.containerMetric\">Container Metrics</span>\n" +
+    "<span ng-if=\"!metric.containerMetric\">Pod Metrics</span>\n" +
+    "</small>\n" +
+    "<small ng-if=\"deployment\">\n" +
+    "Total for All Pods\n" +
+    "</small>\n" +
+    "</h3>\n" +
+    "\n" +
+    "\n" +
+    "<div ng-if=\"usageByMetric[metric.datasets[0].id].total\" class=\"utilization-trend-chart-pf\">\n" +
+    "<div ng-if=\"usageByMetric[metric.datasets[0].id].total\" class=\"current-values\">\n" +
+    "<h1 class=\"available-count pull-left\">\n" +
+    "{{usageByMetric[metric.datasets[0].id].available}}\n" +
+    "</h1>\n" +
+    "<div class=\"available-text pull-left\">\n" +
+    "<div>Available of</div>\n" +
+    "<div>{{usageByMetric[metric.datasets[0].id].total}} {{metric.units}}</div>\n" +
+    "</div>\n" +
+    "</div>\n" +
+    "</div>\n" +
+    "\n" +
+    "<div style=\"clear: both\"></div>\n" +
+    "\n" +
+    "<div ng-if=\"usageByMetric[metric.datasets[0].id].total\" ng-attr-id=\"{{metric.chartPrefix + uniqueID}}-donut\" class=\"metrics-donut\">\n" +
+    "</div>\n" +
+    "\n" +
+    "<div ng-attr-id=\"{{metric.chartPrefix + uniqueID}}-sparkline\" class=\"metrics-sparkline\">\n" +
+    "</div>\n" +
+    "</div>\n" +
     "</div>"
   );
 

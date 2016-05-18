@@ -86,6 +86,11 @@
                       <em ng-if="!container.env.length">The container specification has no environment variables set.</em>
                     </div>
                   </uib-tab>
+                  <uib-tab ng-if="metricsAvailable" heading="Metrics" active="selectedTab.metrics">
+                    <!-- Use ng-if to remove the metrics directive when the tab is not active so
+                         we don't update in the background. -->
+                    <metrics ng-if="selectedTab.metrics" deployment="deployment"></metrics>
+                  </uib-tab>
                   <uib-tab ng-if="deploymentConfigName && logOptions.version" active="selectedTab.logs">
                     <uib-tab-heading>Logs</uib-tab-heading>
                     <log-viewer
