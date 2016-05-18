@@ -1,0 +1,458 @@
+@overview-border-light-gray: #ededed;
+@overview-border-gray: #d6d6d6;
+@shield-bgcolor:       #ebebeb;
+@shield-border-color:  @overview-border-gray;
+@shield-width:         36px;
+@shield-width-lg:      50px;
+
+.overview {
+  font-weight: 300;
+  h2 {
+    line-height: 1.4;
+  }
+  .container-fluid {
+    margin-top: 20px;
+    @media (min-width: @screen-md-min) {
+      margin-top: 30px;
+    }
+  }
+  /* Can remove some of these styles when we dump the old overview and its old build-block styles */
+  .builds-block {
+    background-color: #fff;
+    margin-left: 0;
+    border-right: 1px solid @overview-border-gray;
+
+    .builds {
+      overflow: inherit;
+
+      .build {
+        padding-bottom: 0;
+        padding-top: 0;
+        padding-left: 14px;
+        border-radius: 0;
+
+        &:first-child {
+          padding-top: 5px;
+        }
+
+        &:last-child {
+          border-bottom: 1px solid @overview-border-gray;
+          padding-bottom: 5px;
+        }
+      }
+    }
+  }
+  .loading-message {
+    font-weight: normal;
+    margin-top: 5px;
+  }
+  .service-group {
+    border-left: 3px solid #00b9e4;
+    margin-bottom: 20px;
+    .alert-wrapper {
+      width: 100%;
+      padding-right: 5px;
+      .alert {
+        width: 100%;
+        border-color: @overview-border-gray;
+        margin-bottom: 0;
+        box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1);
+        .pficon {
+          box-shadow: none;
+          //box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1);
+        }
+        .close {
+          color: #8b8d8f;
+        }
+      }
+      // @media (min-width: @screen-sm-min) {
+      //   width: 50%;
+      // }
+    }
+    // @media (min-width: @screen-sm-min) {
+    //   .odd-alert {
+    //     padding-right: 10px;
+    //   }
+    //   .even-alert {
+    //     padding-right: 5px;
+    //   }
+    // }
+  }
+  .service-group-header,
+  .deployment-tile,
+  .overview-pipeline,
+  .no-deployments-block .service-title {
+    background-color: #ffffff;
+    border: 1px solid @overview-border-gray;
+    border-left-width: 0;
+  }
+  .service-group-header,
+  .deployment-tile,
+  .service-group-triggers,
+  .no-deployments-block .service-title {
+    box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1);
+  }
+  .standalone-service {
+    width: 100%;
+    @media (min-width: @screen-sm-min) {
+      width: 50%;
+      // FIXME: magic number, why 4px?
+      padding-right: 4px;
+    }
+    .service-group-body .overview-services {
+      overview-service {
+        max-width: none;
+      }
+      .deployment-tile {
+        margin-top: 0;
+      }
+    }
+  }
+  .service-group-header {
+    cursor: pointer;
+    .justify-content(@justify: space-between);
+    padding: 10px;
+    .route-title {
+      line-height: 1.4;
+      // Margin at mobile if there is an app name. The route is stacked below the app name.
+      margin: 10px 0 0 6px;
+      &:only-child {
+        // Margin without app name.
+        margin: 0;
+      }
+      @media (min-width: @screen-sm-min) {
+        // At wider screen widths, always 0 margin.
+        margin: 0;
+      }
+    }
+    .app-name {
+      .h3();
+      .truncate();
+      font-weight: 300;
+      margin: 0;
+      text-transform: uppercase;
+    }
+  }
+  .overview-pipeline {
+    border-top-width: 0;
+    .overview-pipeline-details {
+      .flex-wrap(@wrap: wrap);
+    }
+    .build-name, .build-phase {
+      padding: 5px 10px;
+    }
+    .stage {
+      .flex-display(@display: flex);
+      position: relative;
+      .stage-duration {
+        .text-muted();
+        margin-left: 5px;
+      }
+    }
+    .current-stage {
+      margin-left: 10px;
+      padding-left: 10px;
+      border-left: 1px solid #d1d1d1;
+      .flex-display(@display: flex);
+      .align-items(@align: center);
+      .in-progress-stage {
+        width: 150px;
+        margin-left: 5px;
+      }
+    }
+    .log-link, .stages {
+      padding: 5px 10px;
+    }
+    .stages {
+      .flex-display(@display: flex);
+      // @media (max-width: 567px) {
+      //   flex-basis: 100%;
+      // }
+    }
+    .timestamp {
+      .text-muted();
+      .pull-right();
+      padding: 2px 5px 0;
+    }
+    @media (min-width: 568px) {
+      .build-name, .build-phase, .log-link {
+        border-left: 1px solid @overview-border-gray;
+      }
+    }
+    @media (max-width: 567px) {
+      .timestamp {
+        display: none;
+      }
+    }
+  }
+  .service-group-body {
+    border-top-width: 0;
+    padding: 0;
+    .overview-services {
+      .flex-wrap(@wrap: wrap);
+      // Put margins between the services, but make them flush with the left
+      // border even when they wrap.
+      margin-left: -11px;
+      .flex-direction(@direction: column);
+      .deployment-tile {
+        margin-left: 10px;
+        margin-top: 10px;
+        position: relative;
+      }
+    }
+    @media (min-width: 568px) {
+      .overview-services {
+        .flex-direction(@direction: row);
+        overview-service {
+          max-width: 50%;
+          min-width: 50%;
+        }
+      }
+      .no-child-services-message {
+        display: block;
+      }
+    }
+    .no-service {
+      .deployment-tile-wrapper {
+        width: 100%;
+        .deployment-tile {
+          border-left: 3px solid #00b9e4;
+          margin-left: 7px;
+          height: 100%;
+          margin-top: 0;
+        }
+      }
+    }
+  }
+  .component-label {
+    .text-muted();
+    font-size: @component-label;
+    padding: 0 10px 4px 0;
+    text-transform: uppercase;
+  }
+  .build-pipeline {
+    .flex(@columns: 1 1 0%);
+    // Avoid double borders inside the panel.
+    margin: -1px;
+    .build-summary {
+      .flex-grow(@grow: 1);
+      @media (min-width: @screen-md-min) {
+        .flex-grow(@grow: 0);
+      }
+    }
+  }
+  .service-title {
+    .text-muted();
+    .align-items(@align: flex-end);
+    border-bottom: 1px solid @overview-border-gray;
+    .justify-content(@justify: space-between);
+    padding: 5px 10px;
+  }
+  .deployment-tile {
+    border-left: 1px solid @overview-border-gray;
+    .deployment-header {
+      .text-muted();
+      position: relative;
+    }
+    .rc-header {
+      .text-muted();
+      padding: 5px 10px;
+    }
+    .deployment-body {
+      .flex-direction(@direction: column);
+      padding: 10px;
+      min-height: 227px;
+      position: relative;
+      .deployment-donut {
+        .align-items(@align: center);
+      }
+      @media (min-width: @screen-md-min) {
+        .flex-direction(@direction: row);
+        .justify-content(@justify: flex-end);
+        min-height: 164px;
+      }
+    }
+    .overview-donut, .overview-metrics {
+      .align-items(@align: center);
+    }
+    .overview-metrics {
+      @media (max-width: @screen-sm-max) {
+        margin: 0 auto;
+        .text-center();
+      }
+    }
+    .overview-donut-connector {
+      text-align: center;
+      .deployment-connector-arrow {
+        display: none;
+      }
+    }
+    .overview-unsuccessful-state {
+      text-align: center;
+    }
+
+    // fadeSlideOut
+    @keyframes fadeSlideOut {
+      0% { opacity: 1; }
+      50% { opacity: 0; }
+      100% { opacity: 0;
+        margin-left: -300px; }
+    }
+
+    @keyframes flexGrow {
+      to {
+        .flex-basis(@width: 0%);
+        .flex-grow(@grow: 1);
+        .flex-shrink(@shrink: 1);
+      }
+    }
+
+    @media (min-width: @screen-md-min) {
+      .deployment-details {
+        .align-items(@align: flex-start);
+        .flex(@columns: 1 1 0%);
+        padding-left: 30px;
+        max-width: 50%;
+        .flex-order(@order: 1);
+        &.ng-leave {
+          animation: fadeSlideOut .75s ease forwards; // Needs to be faster than flexGrow
+        }
+      }
+      .overview-donut {
+        .flex(@columns: 1 1 0%);
+        overflow: hidden;
+        .flex-order(@order: 2);
+        max-width: 50%;
+        min-height: 150px;
+        &.latest {
+          .flex-order(@order: 4);
+          :last-child.latest.ng-animate {
+            /* 0 does not work so we have to use a small number */
+            .flex-basis(@width: 1);
+            .flex-grow(@grow: 0.00001);
+            .flex-shrink(@shrink: 1);
+            animation: flexGrow 1s ease forwards;
+          }
+        }
+      }
+      .overview-donut-connector {
+        .flex-order(@order: 3);
+        font-size: 300%;
+        color: #ccc;
+        .align-items(@align: center);
+        .justify-content(@justify: center);
+        line-height: 1;
+        .deployment-connector-arrow {
+          display: block;
+        }
+        .finishing-deployment-text {
+          font-size: 18px;
+          text-align: center;
+        }
+      }
+      .overview-unsuccessful-state {
+        .flex-order(@order: 3);
+        .align-items(@align: center);
+        .justify-content(@justify: center);
+        line-height: 1;
+        .unsuccessful-state-text {
+          font-size: 18px;
+          text-align: center;
+        }
+      }
+    }
+    .deployment-tile {
+      @media (min-width: @screen-sm-min) {
+        max-width: 50%;
+      }
+    }
+  }
+  .no-deployments-block {
+    margin-left: 10px;
+  }
+  .no-child-services-message, .no-deployments-message {
+    .text-center();
+    .text-muted();
+    .well();
+    .justify-content(@justify: center);
+    margin: 10px 0 0 10px;
+
+    padding: 30px;
+    // .blank-state-icon {
+    //   font-size: 60px;
+    //   .pficon {
+    //     vertical-align: sub;
+    //   }
+    // }
+    h2 {
+      margin-top: 0;
+    }
+  }
+  .no-child-services-message {
+    display: none;
+    @media (min-width: 568px) {
+      display: block;
+    }
+  }
+  .standalone-service .no-child-services-message {
+    display: none;
+  }
+  .standalone-service .no-deployments-block {
+    margin-left: 0;
+    .no-deployments-message {
+      margin-top: 0;
+    }
+  }
+  .shield {
+    background: @shield-bgcolor;
+    border: 1px solid @shield-border-color;
+    border-bottom: 0;
+    width: @shield-width;
+    position: absolute;
+    .align-items(@align: center);
+    right: 15px;
+    top: -1px;
+    z-index: 9;
+    .shield-number {
+      .flex-display(@display: flex);
+      font-size: 11px;
+      font-weight: 500;
+      height: 30px;
+      position: relative;
+      width: @shield-width;
+      .align-items(@align: center);
+      .justify-content(@justify: center);
+    }
+    .shield-number:before {
+      border-left: (@shield-width / 2) solid transparent;
+      border-right: (@shield-width / 2) solid transparent;
+      border-top: 10px solid @shield-border-color;
+      content: "";
+      height: 0;
+      left: 0;
+      position: absolute;
+      bottom: -10px;
+      width: 0;
+    }
+    .shield-number:after {
+      border-left: (@shield-width / 2) solid transparent;
+      border-right: (@shield-width / 2) solid transparent;
+      border-top: 10px solid @shield-bgcolor;
+      content: "";
+      height: 0;
+      left: 0;
+      position: absolute;
+      bottom: -9px;
+      width: 0;
+    }
+    // Use if deployments > 999
+    &.shield-lg {
+      width: @shield-width-lg;
+      .shield-number {width: @shield-width-lg;}
+      .shield-number:before, .shield-number:after {
+        border-left: (@shield-width-lg / 2) solid transparent;
+        border-right: (@shield-width-lg / 2) solid transparent;
+      }
+    }
+  }
+}

@@ -93,7 +93,8 @@ angular.module('openshiftConsole')
               Empty: "#ffffff",
               Running: "#00b9e4",
               "Not Ready": "#beedf9",
-              Warning: "#f9d67a",
+              // Use a shade of orange that looks good with overview alerts for warning pods.
+              Warning: "#f39d3c",
               Failed: "#d9534f",
               Pulling: "#d1d1d1",
               Pending: "#ededed",

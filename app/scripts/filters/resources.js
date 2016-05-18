@@ -31,6 +31,7 @@ angular.module('openshiftConsole')
       "description":              ["openshift.io/description"],
       "buildNumber":              ["openshift.io/build.number"],
       "buildPod":                 ["openshift.io/build.pod-name"],
+      "jenkinsBuildURL":          ["openshift.io/jenkins-build-uri"],
       "jenkinsLogURL":            ["openshift.io/jenkins-log-url"],
       "jenkinsStatus":            ["openshift.io/jenkins-status-json"]
     };
@@ -472,11 +473,11 @@ angular.module('openshiftConsole')
 
       if (pod.status.phase === 'Unknown') {
         // We always show Unknown pods in a warning state
-        warnings.push({reason: 'Unknown', message: 'The state of this pod could not be obtained. This is typically due to an error communicating with the host of the pod.'});
+        warnings.push({reason: 'Unknown', pod: pod.metadata.name, message: 'The state of the pod could not be obtained. This is typically due to an error communicating with the host of the pod.'});
       }
 
       if (isPodStuckFilter(pod)) {
-        warnings.push({reason: "Stuck", message: "This pod has been stuck in the pending state for more than five minutes."});
+        warnings.push({reason: "Stuck", pod: pod.metadata.name, message: "The pod has been stuck in the pending state for more than five minutes."});
       }
 
       if (pod.status.phase === 'Running' && pod.status.containerStatuses) {
@@ -488,18 +489,33 @@ angular.module('openshiftConsole')
             continue;
           }
           if (isContainerFailedFilter(containerStatus)) {
-            warnings.push({reason: "Failed", message: "The container " + containerStatus.name + " failed with a non-zero exit code " + containerStatus.state.terminated.exitCode + "."});
+            warnings.push({reason: "Failed", pod: pod.metadata.name, container: containerStatus.name, message: "The container " + containerStatus.name + " failed with a non-zero exit code " + containerStatus.state.terminated.exitCode + "."});
           }
           if (isContainerLoopingFilter(containerStatus)) {
-            warnings.push({reason: "Looping", message: "The container " + containerStatus.name + " is crashing frequently. It must wait before it will be restarted again."});
+            warnings.push({reason: "Looping", pod: pod.metadata.name, container: containerStatus.name, message: "The container " + containerStatus.name + " is crashing frequently. It must wait before it will be restarted again."});
           }
           if (isContainerUnpreparedFilter(containerStatus)) {
-            warnings.push({reason: "Unprepared", message: "The container " + containerStatus.name + " has been running for more than five minutes and has not passed its readiness check."});
+            warnings.push({reason: "Unprepared", pod: pod.metadata.name, container: containerStatus.name, message: "The container " + containerStatus.name + " has been running for more than five minutes and has not passed its readiness check."});
           }
         }
       }
 
       return warnings.length > 0 ? warnings : null;
+    };
+  })
+  // Groups pod warnings by reason + container name, all messages in a group are expected to be the same
+  .filter('groupedPodWarnings', function(podWarningsFilter) {
+    return function(pods, existingMap) {
+      var groupedPodWarnings = existingMap || {};
+      _.each(pods, function(pod) {
+        var podWarnings = podWarningsFilter(pod);
+        _.each(podWarnings, function(warning) {
+          var key = warning.reason + (warning.container || '');
+          groupedPodWarnings[key] = groupedPodWarnings[key] || [];
+          groupedPodWarnings[key].push(warning);
+        });
+      });
+      return groupedPodWarnings;
     };
   })
   .filter('troubledPods', function(isTroubledPodFilter) {
@@ -610,16 +626,7 @@ angular.module('openshiftConsole')
       }
 
       var timestamp = build.status.completionTimestamp || build.metadata.creationTimestamp;
-      switch (build.status.phase) {
-        case 'Complete':
-        case 'Cancelled':
-          return ageLessThanFilter(timestamp, 1, 'minutes');
-        case 'Failed':
-        case 'Error':
-          /* falls through */
-        default:
-          return ageLessThanFilter(timestamp, 5, 'minutes');
-      }
+      return ageLessThanFilter(timestamp, 5, 'minutes');
     };
   })
   .filter('deploymentCauses', function(annotationFilter) {
@@ -798,9 +805,19 @@ angular.module('openshiftConsole')
       return ['New', 'Pending', 'Running'].indexOf(deploymentStatusFilter(deployment)) > -1;
     };
   })
+  .filter('anyDeploymentIsInProgress', function(deploymentIsInProgressFilter) {
+    return function(deployments) {
+      return _.some(deployments, deploymentIsInProgressFilter);
+    };
+  })
   .filter('isDeployment', function(annotationFilter) {
     return function(deployment) {
       return (annotationFilter(deployment, 'deploymentConfig')) ? true : false;
+    };
+  })
+  .filter('getActiveDeployment', function(DeploymentsService) {
+    return function(deployments) {
+      return DeploymentsService.getActiveDeployment(deployments);
     };
   })
   .filter('isRecentDeployment', function(deploymentIsLatestFilter, deploymentIsInProgressFilter) {
@@ -851,6 +868,27 @@ angular.module('openshiftConsole')
       return logURL.replace(/\/consoleText$/, '/console');
     };
   })
+  .filter('jenkinsBuildURL', function(annotationFilter, jenkinsLogURLFilter) {
+    return function(build) {
+      var relativeBuildURL = annotationFilter(build, 'jenkinsBuildURL');
+      if (!relativeBuildURL) {
+        return null;
+      }
+
+      // We expect a relative URL, but if it is absolute, just return it.
+      if (URI(relativeBuildURL).is('absolute')) {
+        return relativeBuildURL;
+      }
+
+      // Use the log URL to determine the base URL of Jenkins since the build URL is relative.
+      var logURL = jenkinsLogURLFilter(build);
+      if (!logURL) {
+        return null;
+      }
+
+      return URI(logURL).path(relativeBuildURL).toString();
+    };
+  })
   .filter('buildLogURL', function(isJenkinsPipelineStrategyFilter,
                                   jenkinsLogURLFilter,
                                   navigateResourceURLFilter) {
@@ -865,6 +903,15 @@ angular.module('openshiftConsole')
       }
 
       return new URI(navURL).addSearch('tab', 'logs').toString();
+    };
+  })
+  .filter('pipelineStageComplete', function () {
+    return function(stage) {
+      if (!stage) {
+        return false;
+      }
+
+      return _.indexOf(['ABORTED', 'FAILED', 'SUCCESS'], stage.status) !== -1;
     };
   })
   .filter('humanizeKind', function (startCaseFilter) {
@@ -1007,6 +1054,10 @@ angular.module('openshiftConsole')
   })
   .filter('routeHost', function() {
     return function (route) {
+      if (!_.get(route, 'status.ingress')) {
+        return _.get(route, 'spec.host');
+      }
+
       if (!route.status.ingress) {
         return route.spec.host;
       }

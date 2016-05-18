@@ -120,4 +120,28 @@ angular.module('openshiftConsole')
     return function(duration, unit) {
       return moment.duration(duration, unit).humanize();
     };
+  })
+  .filter('conciseDuration', function() {
+    // Return a duration like "1h" or "30s".
+    return function(value) {
+      var duration = moment.duration(value);
+
+      var days = Math.floor(duration.asDays());
+      if (days) {
+        return days + "d";
+      }
+
+      var hours = Math.floor(duration.asHours());
+      if (hours) {
+        return hours + "h";
+      }
+
+      var minutes = Math.floor(duration.minutes());
+      if (minutes) {
+        return minutes + "m";
+      }
+
+      var seconds = Math.floor(duration.seconds());
+      return seconds + "s";
+    };
   });

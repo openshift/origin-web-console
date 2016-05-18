@@ -26,7 +26,7 @@
   </div>
 
   <div ng-if="!loaded">Loading...</div>
-  <div ng-if="loaded && (usageByMetric | hashSize) === 0 && !metricsError">No metrics to display.</div>
+  <div ng-if="loaded && noData && !metricsError">No metrics to display.</div>
 
   <div ng-if="metricsError" class="empty-state-message text-center">
     <h2>
@@ -45,8 +45,8 @@
     </p>
   </div>
 
-  <div ng-repeat="metric in metrics" ng-if="anyUsageByMetric(metric) && !metricsError">
-    <h3>
+  <div ng-repeat="metric in metrics" ng-if="!noData && !metricsError" class="metrics-full">
+    <h3 class="metric-label">
       {{metric.label}}
       <small ng-if="pod.spec.containers.length > 1">
         <span ng-if="metric.containerMetric">Container Metrics</span>
@@ -59,14 +59,14 @@
 
     <!-- Show a summary of usage above the charts like the patternfly utilization card. -->
     <!-- Reuse the utilization card styles, but only here. -->
-    <div ng-if="usageByMetric[metric.datasets[0].id].total" class="utilization-trend-chart-pf">
-      <div ng-if="usageByMetric[metric.datasets[0].id].total" class="current-values">
+    <div ng-if="metric.datasets[0].total" class="utilization-trend-chart-pf">
+      <div class="current-values">
         <h1 class="available-count pull-left">
-          {{usageByMetric[metric.datasets[0].id].available}}
+          {{metric.datasets[0].available}}
         </h1>
         <div class="available-text pull-left">
           <div>Available of</div>
-          <div>{{usageByMetric[metric.datasets[0].id].total}} {{metric.units}}</div>
+          <div>{{metric.datasets[0].total}} {{metric.units}}</div>
         </div>
       </div>
     </div>
@@ -75,14 +75,9 @@
     <div style="clear: both;"></div>
 
     <!-- Donut -->
-    <div ng-if="usageByMetric[metric.datasets[0].id].total"
-        ng-attr-id="{{metric.chartPrefix + uniqueID}}-donut"
-        class="metrics-donut">
-    </div>
+    <div ng-if="metric.datasets[0].total" ng-attr-id="{{metric.chartPrefix + uniqueID}}-donut" class="metrics-donut"></div>
 
     <!-- Sparkline -->
-    <div ng-attr-id="{{metric.chartPrefix + uniqueID}}-sparkline"
-         class="metrics-sparkline">
-    </div>
+    <div ng-attr-id="{{metric.chartPrefix + uniqueID}}-sparkline" class="metrics-sparkline"></div>
   </div>
 </div>

@@ -44,6 +44,41 @@ angular.module("openshiftConsole")
         debugPod.spec.containers = [container];
 
         return debugPod;
+      },
+
+      groupByReplicationController: function(pods, replicationControllers) {
+        var podsByRC = {};
+        _.each(pods, function(pod) {
+          var rc = _.find(replicationControllers, function(rc) {
+            var rcSelector = new LabelSelector(rc.spec.selector);
+            return rcSelector.matches(pod);
+          });
+
+          var rcName = _.get(rc, 'metadata.name', '');
+          _.set(podsByRC, [rcName, pod.metadata.name], pod);
+        });
+
+        return podsByRC;
+      },
+      
+      // includeFn is an optional filter to only include certain pods in the map
+      // common use case is to hide infrastructure pods like build and deployer
+      groupByService: function(pods, services, includeFn) {
+        var podsBySvc = {};
+        _.each(pods, function(pod) {
+          if (includeFn && !includeFn(pod)) {
+            return;
+          }
+          var svc = _.find(services, function(svc) {
+            var svcSelector = new LabelSelector(svc.spec.selector);
+            return svcSelector.matches(pod);
+          });
+
+          var svcName = _.get(svc, 'metadata.name', '');
+          _.set(podsBySvc, [svcName, pod.metadata.name], pod);
+        });
+
+        return podsBySvc;        
       }
     };
   });

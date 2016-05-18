@@ -56,11 +56,21 @@ angular
      .title(function () { return "Overview"; })
      .template(template)
      .href(projectHref("overview"))
-     .page(function () { return builder.join(templatePath, 'project.html'); })
+     .page(function () { return builder.join(templatePath, 'overview.html'); })
      .build();
     tab.icon = "dashboard";
     tabs.push(tab);
 
+    // Old overview, keep for now in case of emergency
+    // tab = builder.create()
+    //  .id(builder.join(pluginName, "topology"))
+    //  .title(function () { return "Topology"; })
+    //  .template(template)
+    //  .href(projectHref("overview"))
+    //  .page(function () { return builder.join(templatePath, 'project.html'); })
+    //  .build();
+    // tab.icon = "map-o";
+    // tabs.push(tab);
 
     tab = builder.create()
       .id(builder.join(pluginName, "browse"))
@@ -108,9 +118,14 @@ angular
         }
       })
       .when('/project/:project/overview', {
-        templateUrl: 'views/project.html',
+        templateUrl: 'views/overview.html',
         controller: 'OverviewController'
       })
+      // Old overview, keep for now in case of emergency
+      // .when('/project/:project/overview', {
+      //   templateUrl: 'views/project.html',
+      //   controller: 'TopologyController'
+      // })
       .when('/project/:project/settings', {
         templateUrl: 'views/settings.html',
         controller: 'SettingsController'

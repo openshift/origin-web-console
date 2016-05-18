@@ -1,0 +1,105 @@
+<project-header class="top-header"></project-header>
+<project-page class="overview">
+
+  <!-- Middle section -->
+  <div class="middle-section">
+    <div class="middle-container">
+      <div class="middle-content  has-scroll surface-shaded">
+        <div class="container-fluid surface-shaded">
+          <tasks></tasks>
+          <alerts alerts="alerts"></alerts>
+          <div class="row">
+            <div class="col-md-12">
+              <!-- Empty states -->
+              <div ng-if="renderOptions.showGetStarted">
+                <!-- Getting started -->
+                <div class="empty-project text-center">
+                  <h2>Get started with your project.</h2>
+                  <p class="gutter-top">
+                    Use your source or an example repository to build an application
+                    image, or add components like databases and message queues.
+                  </p>
+                  <p class="gutter-top">
+                    <a ng-href="project/{{projectName}}/create" class="btn btn-lg btn-primary">
+                      Add to Project
+                    </a>
+                  </p>
+                </div>
+              </div>
+              <div ng-if="((services | hashSize) === 0 && (deploymentConfigsByService[''] | hashSize) === 0 && (monopodsByService[''] | hashSize) === 0) && !renderOptions.showGetStarted"
+                   class="loading-message">
+                Loading...
+              </div>
+              <div ng-repeat="service in services" ng-if="!isChildService(service) && (service.metadata.labels.app || routesByService[service.metadata.name].length || childServicesByParent[service.metadata.name].length)">
+                <service-group
+                    service="service"
+                    services="services"
+                    child-services="childServicesByParent[service.metadata.name]"
+                    routes="routesByService[service.metadata.name]"
+                    route-warnings="routeWarningsByService[service.metadata.name]"
+                    deployment-configs-by-service="deploymentConfigsByService"
+                    deployments-by-service="deploymentsByService"
+                    visible-deployments-by-config-and-service="visibleDeploymentsByConfigAndService"
+                    recent-pipelines-by-dc="recentPipelinesByDC"
+                    pipelines-by-deployment="pipelinesByDeployment"
+                    pods-by-deployment="podsByDeployment"
+                    hpa-by-dc="hpaByDC"
+                    hpa-by-rc="hpaByRC"
+                    scalable-deployment-by-config="scalableDeploymentByConfig"
+                    monopods-by-service="monopodsByService"
+                    alerts="alerts"
+                    builds-by-output-image="recentBuildsByOutputImage">
+                </service-group>
+              </div>
+
+              <div row wrap>
+                <div
+                    ng-repeat="service in services"
+                    ng-if="!isChildService(service) && !service.metadata.labels.app && !routesByService[service.metadata.name].length && !childServicesByParent[service.metadata.name].length"
+                    class="standalone-service">
+                  <service-group
+                      service="service"
+                      child-services="childServicesByParent[service.metadata.name]"
+                      routes="routesByService[service.metadata.name]"
+                      route-warnings="routeWarningsByService[service.metadata.name]"
+                      deployment-configs-by-service="deploymentConfigsByService"
+                      deployments-by-service="deploymentsByService"
+                      visible-deployments-by-config-and-service="visibleDeploymentsByConfigAndService"
+                      recent-pipelines-by-dc="recentPipelinesByDC"
+                      pipelines-by-deployment="pipelinesByDeployment"
+                      pods-by-deployment="podsByDeployment"
+                      hpa-by-dc="hpaByDC"
+                      hpa-by-rc="hpaByRC"
+                      scalable-deployment-by-config="scalableDeploymentByConfig"
+                      monopods-by-service="monopodsByService"
+                      alerts="alerts"
+                      builds-by-output-image="recentBuildsByOutputImage">
+                  </service-group>
+                </div>
+              </div>
+
+              <!-- Unserviced DCs, RCs, and pods -->
+              <div >
+                <service-group
+                    ng-if="(monopodsByService[''] | hashSize) > 0 || (deploymentConfigsByService[''] | hashSize) > 0 || (deploymentsByService[''] | hashSize) > 0"
+                    deployment-configs-by-service="deploymentConfigsByService"
+                    deployments-by-service="deploymentsByService"
+                    visible-deployments-by-config-and-service="visibleDeploymentsByConfigAndService"
+                    recent-pipelines-by-dc="recentPipelinesByDC"
+                    pipelines-by-deployment="pipelinesByDeployment"
+                    pods-by-deployment="podsByDeployment"
+                    hpa-by-dc="hpaByDC"
+                    hpa-by-rc="hpaByRC"
+                    scalable-deployment-by-config="scalableDeploymentByConfig"
+                    monopods-by-service="monopodsByService"
+                    alerts="alerts"
+                    builds-by-output-image="recentBuildsByOutputImage">
+                </service-group>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</project-page>

@@ -254,15 +254,77 @@
       }
     }
   }
-  .metrics-donut,
-  .metrics-sparkline {
-    margin-top: 20px;
+  .metrics-full {
+    .metrics-donut,
+    .metrics-sparkline {
+      margin-top: 20px;
+    }
   }
 
   // Avoid overlapping tick text at mobile.
   @media (max-width: 500px) {
     .metrics-sparkline .c3-axis-x .tick {
       display: none;
+    }
+  }
+}
+
+.metrics-compact {
+  margin-bottom: 10px;
+  white-space : nowrap;
+  @media (min-width: @screen-lg-min) {
+    margin-bottom: 5px;
+  }
+  .metrics-sparkline {
+    display: none;
+    height: 27px;
+    border-bottom: 1px solid #ededed;
+    @media (min-width: @screen-lg-min) {
+      display: inline-block;
+      width: 150px;
+      vertical-align: -6px;
+    }
+    @media (min-width: 1400px) {
+      width: 240px;
+    }
+  }
+  .metrics-usage {
+    display: block;
+    margin-left: 10px;
+    @media (min-width: @screen-lg-min) {
+      display: inline-block;
+    }
+  }
+  .usage-value {
+    font-size: 22px;
+    font-weight: 300;
+    line-height: 1;
+    margin: 3px 0;
+    .fa {
+      .text-muted();
+      font-size: 10px;
+      vertical-align: 2px;
+    }
+  }
+  .usage-label {
+    .small();
+    .text-muted();
+    // Make sure the labels align with the bottom of the chart.
+    line-height: 1;
+    margin-bottom: -1px;
+  }
+  .c3-line {
+    stroke-width: 1px;
+  }
+
+  @media (max-width: @screen-sm-max) {
+    .text-center();
+    display: inline-block;
+    margin: 10px;
+    .metrics-usage {
+      .usage-value {
+        font-size: 22px;
+      }
     }
   }
 }
@@ -607,6 +669,17 @@ label.checkbox {
   i.pficon, i.fa {
     color: @btn-default-color;
     margin-right: 5px;
+  }
+}
+
+a.subtle-link {
+  color: @gray-light;
+  border-bottom: 1px dotted #BBB;
+
+  &:hover, &:active, &:focus {
+    color: @link-hover-color;
+    border-bottom: 1px dotted @link-hover-color;
+    text-decoration: none;
   }
 }
 
@@ -1063,4 +1136,9 @@ h1 small.meta, .build-config-summary .meta {
 // don't allow copy-to-clipboard .input-groups get bigger than 600px so Github webhook secrets aren't revealed within the input-group
 copy-to-clipboard .input-group {
   max-width: 300px;
+}
+
+// same style as a <strong> tag but used when you want to optionally apply the style based on a condition
+.strong {
+  font-weight: bold;
 }

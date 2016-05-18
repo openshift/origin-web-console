@@ -13,21 +13,36 @@ angular.module('openshiftConsole')
       scope: {
         // Either pod or deployment must be set
         pod: '=?',
-        deployment: '=?'
+        deployment: '=?',
+        // Visual profile, currently either 'compact' or 'full' (default)
+        profile: '@?',
+        sparklineWidth: '=?',
+        sparklineHeight: '=?',
+        includedMetrics: '=?' // defaults to ["cpu", "memory", "network"]
       },
-      templateUrl: 'views/directives/metrics.html',
+      templateUrl: function(elem, attrs) {
+        if (attrs.profile === 'compact') {
+          return 'views/directives/metrics-compact.html';
+        }
+        return 'views/directives/metrics.html';
+      },
       link: function(scope) {
+        scope.includedMetrics = scope.includedMetrics || ["cpu", "memory", "network"];
         var donutByMetric = {}, sparklineByMetric = {};
         var intervalPromise;
         var getMemoryLimit = $parse('resources.limits.memory');
         var getCPULimit = $parse('resources.limits.cpu');
+        var compact = scope.profile === 'compact';
+
+        // Set to true when the route changes so we don't update charts that no longer exist.
+        var destroyed = false;
 
         function bytesToMiB(value) {
           if (!value) {
             return value;
           }
 
-          return value / (1024 * 1024);
+          return _.round(value / (1024 * 1024));
         }
 
         function bytesToKiB(value) {
@@ -42,8 +57,9 @@ angular.module('openshiftConsole')
         scope.uniqueID = _.uniqueId('metrics-chart-');
 
         // Metrics to display.
-        scope.metrics = [
-          {
+        scope.metrics = [];
+        if (_.includes(scope.includedMetrics, "memory")) {
+          scope.metrics.push({
             label: "Memory",
             units: "MiB",
             chartPrefix: "memory-",
@@ -56,11 +72,14 @@ angular.module('openshiftConsole')
                 data: []
               }
             ]
-          },
-          {
+          });
+        }
+        if (_.includes(scope.includedMetrics, "cpu")) {
+          scope.metrics.push({
             label: "CPU",
             units: "millicores",
             chartPrefix: "cpu-",
+            convert: _.round,
             containerMetric: true,
             datasets: [
               {
@@ -69,8 +88,10 @@ angular.module('openshiftConsole')
                 data: []
               }
             ]
-          },
-          {
+          });
+        }
+        if (_.includes(scope.includedMetrics, "network")) {
+          scope.metrics.push({
             label: "Network",
             units: "KiB/s",
             chartPrefix: "network-",
@@ -88,11 +109,12 @@ angular.module('openshiftConsole')
                 data: []
               }
             ]
-          }
-        ];
+          });
+        }
 
         // Set to true when any data has been loaded (or failed to load).
         scope.loaded = false;
+        scope.noData = true;
 
         // Get the URL to show in error messages.
         MetricsService.getMetricsURL().then(function(url) {
@@ -121,19 +143,12 @@ angular.module('openshiftConsole')
         // Show last hour by default.
         scope.options.timeRange = scope.options.rangeOptions[0];
 
-        scope.usageByMetric = {};
-
-        scope.anyUsageByMetric = function(metric) {
-          return _.some(_.map(metric.datasets, 'id'), function(metricID) { return scope.usageByMetric[metricID] !== undefined; });
-        };
-
         var createDonutConfig = function(metric) {
           var chartID = '#' + metric.chartPrefix + scope.uniqueID + '-donut';
           return {
             bindto: chartID,
             onrendered: function() {
-              var used = scope.usageByMetric[metric.datasets[0].id].used;
-              ChartsService.updateDonutCenterText(chartID, used, metric.units);
+              ChartsService.updateDonutCenterText(chartID, metric.datasets[0].used, metric.units);
             },
             donut: {
               label: {
@@ -156,7 +171,7 @@ angular.module('openshiftConsole')
             bindto: '#' + metric.chartPrefix + scope.uniqueID + '-sparkline',
             axis: {
               x: {
-                show: true,
+                show: !compact,
                 type: 'timeseries',
                 // With default padding you can have negative axis tick values.
                 padding: {
@@ -169,6 +184,7 @@ angular.module('openshiftConsole')
                 }
               },
               y: {
+                show: !compact,
                 label: metric.units,
                 min: 0,
                 // With default padding you can have negative axis tick values.
@@ -177,7 +193,6 @@ angular.module('openshiftConsole')
                   top: 0,
                   bottom: 0
                 },
-                show: true,
                 tick: {
                   format: function(value) {
                     return d3.round(value, 2);
@@ -186,13 +201,14 @@ angular.module('openshiftConsole')
               }
             },
             legend: {
-              show: metric.datasets.length > 1
+              show: metric.datasets.length > 1 && !compact
             },
             point: {
               show: false
             },
             size: {
-              height: 160
+              height: scope.sparklineHeight || (compact ? 35 : 160),
+              width: scope.sparklineWidth,
             },
             tooltip: {
               format: {
@@ -222,7 +238,7 @@ angular.module('openshiftConsole')
             var cpuLimit = getCPULimit(container);
             if (cpuLimit) {
               // Convert cores to millicores.
-              return usageValueFilter(cpuLimit) * 1000;
+              return _.round(usageValueFilter(cpuLimit) * 1000);
             }
             break;
           }
@@ -233,14 +249,19 @@ angular.module('openshiftConsole')
         function updateChart(metric) {
           var dates, values = {};
 
+          var missingData = _.some(metric.datasets, function(dataset) {
+            return !dataset.data;
+          });
+          if (missingData) {
+            return;
+          }
+
+          metric.totalUsed = 0;
           angular.forEach(metric.datasets, function(dataset) {
             var metricID = dataset.id, metricData = dataset.data;
-
             dates = ['dates'], values[metricID] = [dataset.label || metricID];
 
-            var usage = scope.usageByMetric[metricID] = {
-              total: getLimit(metricID)
-            };
+            dataset.total = getLimit(metricID);
 
             var lastValue = _.last(metricData).value;
             if (isNaN(lastValue)) {
@@ -250,11 +271,11 @@ angular.module('openshiftConsole')
               lastValue = metric.convert(lastValue);
             }
 
-            // Round to the closest whole number for the utilization chart.
-            usage.used = d3.round(lastValue);
-            if (usage.total) {
-              usage.available = Math.max(usage.total - usage.used, 0);
+            dataset.used = lastValue;
+            if (dataset.total) {
+              dataset.available = Math.max(dataset.total - dataset.used, 0);
             }
+            metric.totalUsed += dataset.used;
 
             angular.forEach(metricData, function(point) {
               dates.push(point.start);
@@ -277,12 +298,12 @@ angular.module('openshiftConsole')
 
             // Donut
             var donutConfig, donutData;
-            if (usage.total) {
+            if (dataset.total) {
               donutData = {
                 type: 'donut',
                 columns: [
-                  ['Used', usage.used],
-                  ['Available', usage.available]
+                  ['Used', dataset.used],
+                  ['Available', dataset.available]
                 ],
                 colors: {
                   Used: "#0088ce",      // Blue
@@ -302,6 +323,8 @@ angular.module('openshiftConsole')
             }
           });
 
+          metric.totalUsed = _.round(metric.totalUsed, 1);
+
           var columns = [dates].concat(_.values(values));
 
           // Sparkline
@@ -320,6 +343,10 @@ angular.module('openshiftConsole')
               sparklineConfig.color = { pattern: metric.chartDataColors };
             }
             $timeout(function() {
+              if (destroyed) {
+                return;
+              }
+
               sparklineByMetric[chartId] = c3.generate(sparklineConfig);
             });
           } else {
@@ -328,14 +355,27 @@ angular.module('openshiftConsole')
         }
 
         function getTimeRangeMillis() {
+          if (compact) {
+            // 15 minutes
+            return 15 * 60 * 1000;
+          }
+
           return scope.options.timeRange.value * 60 * 1000;
+        }
+
+        function getBucketDuration() {
+          if (compact) {
+            return '60s';
+          }
+
+          return Math.floor(getTimeRangeMillis() / 60) + "ms";
         }
 
         function getConfig(metric, dataset, start) {
           var lastPoint;
           var config = {
             metric: dataset.id,
-            bucketDuration: Math.floor(getTimeRangeMillis() / 60) + "ms"
+            bucketDuration: getBucketDuration()
           };
 
           // Leave the end time off to use the server's current time as the
@@ -353,14 +393,15 @@ angular.module('openshiftConsole')
             return _.assign(config, {
               namespace: scope.pod.metadata.namespace,
               pod: scope.pod,
-              containerName: metric.containerMetric ? scope.options.selectedContainer.name : "pod"
+              containerName: metric.containerMetric ? !compact && scope.options.selectedContainer.name : "pod",
+              stacked: true
             });
           }
 
           if (scope.deployment) {
             return _.assign(config, {
               namespace: scope.deployment.metadata.namespace,
-              deployment: scope.deployment.metadata.name
+              deployment: scope.deployment
             });
           }
 
@@ -377,10 +418,12 @@ angular.module('openshiftConsole')
             return true;
           }
 
-          return scope.pod && _.get(scope, 'options.selectedContainer');
+          return scope.pod && (compact || _.get(scope, 'options.selectedContainer'));
         }
 
         function updateData(start, dataset, response) {
+          scope.noData = false;
+
           // Throw out the last data point, which is a partial bucket.
           var newData = _.initial(response.data);
           if (!dataset.data) {
@@ -404,8 +447,10 @@ angular.module('openshiftConsole')
             return;
           }
 
+          // Leave the end time off to use the server's current time as the end
+          // time. This prevents an issue where the donut chart shows 0 for
+          // current usage if the client clock is ahead of the server clock.
           var start = Date.now() - getTimeRangeMillis();
-
           angular.forEach(scope.metrics, function(metric) {
             var promises = [];
 
@@ -413,9 +458,9 @@ angular.module('openshiftConsole')
             // incoming and outgoing traffic) we perform one request for each,
             // but collect and handle all requests in one single promise below.
             // It's important that every metric uses the same 'start' timestamp
-            // and number of buckets, so that the returned data for every metric
-            // fit in the same collection of 'dates' and can be displayed in
-            // exactly the same point in time in the graph.
+            // so that the returned data for every metric fit in the same
+            // collection of 'dates' and can be displayed in exactly the same
+            // point in time in the graph.
             angular.forEach(metric.datasets, function(dataset) {
               var config = getConfig(metric, dataset, start);
               if (!config) {
@@ -430,7 +475,15 @@ angular.module('openshiftConsole')
             $q.all(promises).then(
               // success
               function(responses) {
+                if (destroyed) {
+                  return;
+                }
+
                 angular.forEach(responses, function(response) {
+                  if (!response) {
+                    return;
+                  }
+
                   var dataset = _.find(metric.datasets, {
                     id: response.metricID
                   });
@@ -440,10 +493,16 @@ angular.module('openshiftConsole')
               },
               // failure
               function(responses) {
+                if (destroyed) {
+                  return;
+                }
+
                 angular.forEach(responses, function(response) {
                   scope.metricsError = {
-                    status: response.status,
-                    details: _.get(response, 'data.errorMsg') || response.statusText || "Status code " + response.status
+                    status:  _.get(response, 'status', 0),
+                    details: _.get(response, 'data.errorMsg') ||
+                             _.get(response, 'statusText') ||
+                             "Status code " + _.get(response, 'status', 0)
                   };
                 });
               }
@@ -484,6 +543,8 @@ angular.module('openshiftConsole')
             chart.destroy();
           });
           sparklineByMetric = null;
+
+          destroyed = true;
         });
       }
     };
