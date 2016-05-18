@@ -35334,7 +35334,7 @@ id:b
 }), e = g.getSortFunction(d, b), e && d.items.sort(e), d.total = d.items.length, "number" == typeof b.limit && (d.items = d.items.slice(0, b.limit)), d;
 };
 var b = function(a, b) {
-return "number" == typeof a && "number" == typeof b ? a > b ? 1 :b > a ? -1 :0 :(a = String(a || "").toLowerCase(), b = String(b || "").toLowerCase(), a > b ? 1 :b > a ? -1 :0);
+return "number" == typeof a && "number" == typeof b ? a > b ? 1 :b > a ? -1 :0 :(a = h(String(a || "")), b = h(String(b || "")), a > b ? 1 :b > a ? -1 :0);
 }, c = function(a, b) {
 var c, d, e, f;
 for (c = 1, d = arguments.length; d > c; c++) if (f = arguments[c]) for (e in f) f.hasOwnProperty(e) && (a[e] = f[e]);
@@ -35346,20 +35346,30 @@ return (a + "").replace(/([.?*+^$[\]\\(){}|-])/g, "\\$1");
 }, f = Array.isArray || $ && $.isArray || function(a) {
 return "[object Array]" === Object.prototype.toString.call(a);
 }, g = {
-a:"[aÀÁÂÃÄÅàáâãäåĀā]",
+a:"[aÀÁÂÃÄÅàáâãäåĀāąĄ]",
 c:"[cÇçćĆčČ]",
 d:"[dđĐďĎ]",
-e:"[eÈÉÊËèéêëěĚĒē]",
+e:"[eÈÉÊËèéêëěĚĒēęĘ]",
 i:"[iÌÍÎÏìíîïĪī]",
-n:"[nÑñňŇ]",
+l:"[lłŁ]",
+n:"[nÑñňŇńŃ]",
 o:"[oÒÓÔÕÕÖØòóôõöøŌō]",
 r:"[rřŘ]",
-s:"[sŠš]",
+s:"[sŠšśŚ]",
 t:"[tťŤ]",
 u:"[uÙÚÛÜùúûüůŮŪū]",
 y:"[yŸÿýÝ]",
-z:"[zŽž]"
+z:"[zŽžżŻźŹ]"
+}, h = function() {
+var a, b, c, d, e = "", f = {};
+for (c in g) if (g.hasOwnProperty(c)) for (d = g[c].substring(2, g[c].length - 1), e += d, a = 0, b = d.length; b > a; a++) f[d.charAt(a)] = c;
+var h = new RegExp("[" + e + "]", "g");
+return function(a) {
+return a.replace(h, function(a) {
+return f[a];
+}).toLowerCase();
 };
+}();
 return a;
 }), function(a, b) {
 "function" == typeof define && define.amd ? define(b) :"object" == typeof exports ? module.exports = b() :a.MicroPlugin = b();
@@ -35437,33 +35447,28 @@ if (this._events = this._events || {}, a in this._events != !1) for (var b = 0; 
 }, e.mixin = function(a) {
 for (var b = [ "on", "off", "trigger" ], c = 0; c < b.length; c++) a.prototype[b[c]] = e.prototype[b[c]];
 };
-var f = /Mac/.test(navigator.userAgent), g = 65, h = 13, i = 27, j = 37, k = 38, l = 80, m = 39, n = 40, o = 78, p = 8, q = 46, r = 16, s = f ? 91 :17, t = f ? 18 :17, u = 9, v = 1, w = 2, x = function(a) {
+var f = /Mac/.test(navigator.userAgent), g = 65, h = 13, i = 27, j = 37, k = 38, l = 80, m = 39, n = 40, o = 78, p = 8, q = 46, r = 16, s = f ? 91 :17, t = f ? 18 :17, u = 9, v = 1, w = 2, x = !/android/i.test(window.navigator.userAgent) && !!document.createElement("form").validity, y = function(a) {
 return "undefined" != typeof a;
-}, y = function(a) {
-return "undefined" == typeof a || null === a ? null :"boolean" == typeof a ? a ? "1" :"0" :a + "";
 }, z = function(a) {
-return (a + "").replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;").replace(/"/g, "&quot;");
+return "undefined" == typeof a || null === a ? null :"boolean" == typeof a ? a ? "1" :"0" :a + "";
 }, A = function(a) {
+return (a + "").replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;").replace(/"/g, "&quot;");
+}, B = function(a) {
 return (a + "").replace(/\$/g, "$$$$");
-}, B = {};
-B.before = function(a, b, c) {
+}, C = {};
+C.before = function(a, b, c) {
 var d = a[b];
 a[b] = function() {
 return c.apply(a, arguments), d.apply(a, arguments);
 };
-}, B.after = function(a, b, c) {
+}, C.after = function(a, b, c) {
 var d = a[b];
 a[b] = function() {
 var b = d.apply(a, arguments);
 return c.apply(a, arguments), b;
 };
 };
-var C = function(b, c) {
-if (!a.isArray(c)) return c;
-var d, e, f = {};
-for (d = 0, e = c.length; e > d; d++) c[d].hasOwnProperty(b) && (f[c[d][b]] = c[d]);
-return f;
-}, D = function(a) {
+var D = function(a) {
 var b = !1;
 return function() {
 b || (b = !0, a.apply(this, arguments));
@@ -35520,14 +35525,16 @@ c = c || window.event || {}, d = d || {}, c.metaKey || c.altKey || (d.force || a
 };
 a.on("keydown keyup update blur", c), c();
 }, L = function(c, d) {
-var e, f, g = this;
-f = c[0], f.selectize = g;
-var h = window.getComputedStyle && window.getComputedStyle(f, null);
-e = h ? h.getPropertyValue("direction") :f.currentStyle && f.currentStyle.direction, e = e || c.parents("[dir]:first").attr("dir") || "", a.extend(g, {
+var e, f, g, h, i = this;
+h = c[0], h.selectize = i;
+var j = window.getComputedStyle && window.getComputedStyle(h, null);
+if (g = j ? j.getPropertyValue("direction") :h.currentStyle && h.currentStyle.direction, g = g || c.parents("[dir]:first").attr("dir") || "", a.extend(i, {
+order:0,
 settings:d,
 $input:c,
-tagType:"select" === f.tagName.toLowerCase() ? v :w,
-rtl:/rtl/i.test(e),
+tabIndex:c.attr("tabindex") || "",
+tagType:"select" === h.tagName.toLowerCase() ? v :w,
+rtl:/rtl/i.test(g),
 eventNS:".selectize" + ++L.count,
 highlightedValue:null,
 isOpen:!1,
@@ -35557,73 +35564,85 @@ options:{},
 userOptions:{},
 items:[],
 renderCache:{},
-onSearchChange:null === d.loadThrottle ? g.onSearchChange :E(g.onSearchChange, d.loadThrottle)
-}), g.sifter = new b(this.options, {
+onSearchChange:null === d.loadThrottle ? i.onSearchChange :E(i.onSearchChange, d.loadThrottle)
+}), i.sifter = new b(this.options, {
 diacritics:d.diacritics
-}), a.extend(g.options, C(d.valueField, d.options)), delete g.settings.options, a.extend(g.optgroups, C(d.optgroupValueField, d.optgroups)), delete g.settings.optgroups, g.settings.mode = g.settings.mode || (1 === g.settings.maxItems ? "single" :"multi"), "boolean" != typeof g.settings.hideSelected && (g.settings.hideSelected = "multi" === g.settings.mode), g.initializePlugins(g.settings.plugins), g.setupCallbacks(), g.setupTemplates(), g.setup();
+}), i.settings.options) {
+for (e = 0, f = i.settings.options.length; f > e; e++) i.registerOption(i.settings.options[e]);
+delete i.settings.options;
+}
+if (i.settings.optgroups) {
+for (e = 0, f = i.settings.optgroups.length; f > e; e++) i.registerOptionGroup(i.settings.optgroups[e]);
+delete i.settings.optgroups;
+}
+i.settings.mode = i.settings.mode || (1 === i.settings.maxItems ? "single" :"multi"), "boolean" != typeof i.settings.hideSelected && (i.settings.hideSelected = "multi" === i.settings.mode), i.initializePlugins(i.settings.plugins), i.setupCallbacks(), i.setupTemplates(), i.setup();
 };
 return e.mixin(L), c.mixin(L), a.extend(L.prototype, {
 setup:function() {
-var b, c, d, e, g, h, i, j, k, l, m = this, n = m.settings, o = m.eventNS, p = a(window), q = a(document), u = m.$input;
-i = m.settings.mode, j = u.attr("tabindex") || "", k = u.attr("class") || "", b = a("<div>").addClass(n.wrapperClass).addClass(k).addClass(i), c = a("<div>").addClass(n.inputClass).addClass("items").appendTo(b), d = a('<input type="text" autocomplete="off" />').appendTo(c).attr("tabindex", j), h = a(n.dropdownParent || b), e = a("<div>").addClass(n.dropdownClass).addClass(i).hide().appendTo(h), g = a("<div>").addClass(n.dropdownContentClass).appendTo(e), m.settings.copyClassesToDropdown && e.addClass(k), b.css({
-width:u[0].style.width
-}), m.plugins.names.length && (l = "plugin-" + m.plugins.names.join(" plugin-"), b.addClass(l), e.addClass(l)), (null === n.maxItems || n.maxItems > 1) && m.tagType === v && u.attr("multiple", "multiple"), m.settings.placeholder && d.attr("placeholder", n.placeholder), u.attr("autocorrect") && d.attr("autocorrect", u.attr("autocorrect")), u.attr("autocapitalize") && d.attr("autocapitalize", u.attr("autocapitalize")), m.$wrapper = b, m.$control = c, m.$control_input = d, m.$dropdown = e, m.$dropdown_content = g, e.on("mouseenter", "[data-selectable]", function() {
-return m.onOptionHover.apply(m, arguments);
-}), e.on("mousedown", "[data-selectable]", function() {
-return m.onOptionSelect.apply(m, arguments);
+var b, c, d, e, g, h, i, j, k, l = this, m = l.settings, n = l.eventNS, o = a(window), p = a(document), q = l.$input;
+if (i = l.settings.mode, j = q.attr("class") || "", b = a("<div>").addClass(m.wrapperClass).addClass(j).addClass(i), c = a("<div>").addClass(m.inputClass).addClass("items").appendTo(b), d = a('<input type="text" autocomplete="off" />').appendTo(c).attr("tabindex", q.is(":disabled") ? "-1" :l.tabIndex), h = a(m.dropdownParent || b), e = a("<div>").addClass(m.dropdownClass).addClass(i).hide().appendTo(h), g = a("<div>").addClass(m.dropdownContentClass).appendTo(e), l.settings.copyClassesToDropdown && e.addClass(j), b.css({
+width:q[0].style.width
+}), l.plugins.names.length && (k = "plugin-" + l.plugins.names.join(" plugin-"), b.addClass(k), e.addClass(k)), (null === m.maxItems || m.maxItems > 1) && l.tagType === v && q.attr("multiple", "multiple"), l.settings.placeholder && d.attr("placeholder", m.placeholder), !l.settings.splitOn && l.settings.delimiter) {
+var u = l.settings.delimiter.replace(/[-\/\\^$*+?.()|[\]{}]/g, "\\$&");
+l.settings.splitOn = new RegExp("\\s*" + u + "+\\s*");
+}
+q.attr("autocorrect") && d.attr("autocorrect", q.attr("autocorrect")), q.attr("autocapitalize") && d.attr("autocapitalize", q.attr("autocapitalize")), l.$wrapper = b, l.$control = c, l.$control_input = d, l.$dropdown = e, l.$dropdown_content = g, e.on("mouseenter", "[data-selectable]", function() {
+return l.onOptionHover.apply(l, arguments);
+}), e.on("mousedown click", "[data-selectable]", function() {
+return l.onOptionSelect.apply(l, arguments);
 }), G(c, "mousedown", "*:not(input)", function() {
-return m.onItemSelect.apply(m, arguments);
+return l.onItemSelect.apply(l, arguments);
 }), K(d), c.on({
 mousedown:function() {
-return m.onMouseDown.apply(m, arguments);
+return l.onMouseDown.apply(l, arguments);
 },
 click:function() {
-return m.onClick.apply(m, arguments);
+return l.onClick.apply(l, arguments);
 }
 }), d.on({
 mousedown:function(a) {
 a.stopPropagation();
 },
 keydown:function() {
-return m.onKeyDown.apply(m, arguments);
+return l.onKeyDown.apply(l, arguments);
 },
 keyup:function() {
-return m.onKeyUp.apply(m, arguments);
+return l.onKeyUp.apply(l, arguments);
 },
 keypress:function() {
-return m.onKeyPress.apply(m, arguments);
+return l.onKeyPress.apply(l, arguments);
 },
 resize:function() {
-m.positionDropdown.apply(m, []);
+l.positionDropdown.apply(l, []);
 },
 blur:function() {
-return m.onBlur.apply(m, arguments);
+return l.onBlur.apply(l, arguments);
 },
 focus:function() {
-return m.ignoreBlur = !1, m.onFocus.apply(m, arguments);
+return l.ignoreBlur = !1, l.onFocus.apply(l, arguments);
 },
 paste:function() {
-return m.onPaste.apply(m, arguments);
+return l.onPaste.apply(l, arguments);
 }
-}), q.on("keydown" + o, function(a) {
-m.isCmdDown = a[f ? "metaKey" :"ctrlKey"], m.isCtrlDown = a[f ? "altKey" :"ctrlKey"], m.isShiftDown = a.shiftKey;
-}), q.on("keyup" + o, function(a) {
-a.keyCode === t && (m.isCtrlDown = !1), a.keyCode === r && (m.isShiftDown = !1), a.keyCode === s && (m.isCmdDown = !1);
-}), q.on("mousedown" + o, function(a) {
-if (m.isFocused) {
-if (a.target === m.$dropdown[0] || a.target.parentNode === m.$dropdown[0]) return !1;
-m.$control.has(a.target).length || a.target === m.$control[0] || m.blur();
+}), p.on("keydown" + n, function(a) {
+l.isCmdDown = a[f ? "metaKey" :"ctrlKey"], l.isCtrlDown = a[f ? "altKey" :"ctrlKey"], l.isShiftDown = a.shiftKey;
+}), p.on("keyup" + n, function(a) {
+a.keyCode === t && (l.isCtrlDown = !1), a.keyCode === r && (l.isShiftDown = !1), a.keyCode === s && (l.isCmdDown = !1);
+}), p.on("mousedown" + n, function(a) {
+if (l.isFocused) {
+if (a.target === l.$dropdown[0] || a.target.parentNode === l.$dropdown[0]) return !1;
+l.$control.has(a.target).length || a.target === l.$control[0] || l.blur(a.target);
 }
-}), p.on([ "scroll" + o, "resize" + o ].join(" "), function() {
-m.isOpen && m.positionDropdown.apply(m, arguments);
-}), p.on("mousemove" + o, function() {
-m.ignoreHover = !1;
+}), o.on([ "scroll" + n, "resize" + n ].join(" "), function() {
+l.isOpen && l.positionDropdown.apply(l, arguments);
+}), o.on("mousemove" + n, function() {
+l.ignoreHover = !1;
 }), this.revertSettings = {
-$children:u.children().detach(),
-tabindex:u.attr("tabindex")
-}, u.attr("tabindex", -1).hide().after(m.$wrapper), a.isArray(n.items) && (m.setValue(n.items), delete n.items), u[0].validity && u.on("invalid" + o, function(a) {
-a.preventDefault(), m.isInvalid = !0, m.refreshState();
-}), m.updateOriginalInput(), m.refreshItems(), m.refreshState(), m.updatePlaceholder(), m.isSetup = !0, u.is(":disabled") && m.disable(), m.on("change", this.onChange), u.data("selectize", m), u.addClass("selectized"), m.trigger("initialize"), n.preload === !0 && m.onSearchChange("");
+$children:q.children().detach(),
+tabindex:q.attr("tabindex")
+}, q.attr("tabindex", -1).hide().after(l.$wrapper), a.isArray(m.items) && (l.setValue(m.items), delete m.items), x && q.on("invalid" + n, function(a) {
+a.preventDefault(), l.isInvalid = !0, l.refreshState();
+}), l.updateOriginalInput(), l.refreshItems(), l.refreshState(), l.updatePlaceholder(), l.isSetup = !0, q.is(":disabled") && l.disable(), l.on("change", this.onChange), q.data("selectize", l), q.addClass("selectized"), l.trigger("initialize"), m.preload === !0 && l.onSearchChange("");
 },
 setupTemplates:function() {
 var b = this, c = b.settings.labelField, d = b.settings.optgroupLabelField, e = {
@@ -35655,10 +35674,15 @@ clear:"onClear",
 option_add:"onOptionAdd",
 option_remove:"onOptionRemove",
 option_clear:"onOptionClear",
+optgroup_add:"onOptionGroupAdd",
+optgroup_remove:"onOptionGroupRemove",
+optgroup_clear:"onOptionGroupClear",
 dropdown_open:"onDropdownOpen",
 dropdown_close:"onDropdownClose",
 type:"onType",
-load:"onLoad"
+load:"onLoad",
+focus:"onFocus",
+blur:"onBlur"
 };
 for (a in c) c.hasOwnProperty(a) && (b = this.settings[c[a]], b && this.on(a, b));
 },
@@ -35678,14 +35702,16 @@ c.focus();
 onChange:function() {
 this.$input.trigger("change");
 },
-onPaste:function(a) {
-var b = this;
-(b.isFull() || b.isInputHidden || b.isLocked) && a.preventDefault();
+onPaste:function(b) {
+var c = this;
+c.isFull() || c.isInputHidden || c.isLocked ? b.preventDefault() :c.settings.splitOn && setTimeout(function() {
+for (var b = a.trim(c.$control_input.val() || "").split(c.settings.splitOn), d = 0, e = b.length; e > d; d++) c.createItem(b[d]);
+}, 0);
 },
 onKeyPress:function(a) {
 if (this.isLocked) return a && a.preventDefault();
 var b = String.fromCharCode(a.keyCode || a.which);
-return this.settings.create && b === this.settings.delimiter ? (this.createItem(), a.preventDefault(), !1) :void 0;
+return this.settings.create && "multi" === this.settings.mode && b === this.settings.delimiter ? (this.createItem(), a.preventDefault(), !1) :void 0;
 },
 onKeyDown:function(a) {
 var b = (a.target === this.$control_input[0], this);
@@ -35696,7 +35722,7 @@ if (b.isCmdDown) return void b.selectAll();
 break;
 
 case i:
-return void b.close();
+return void (b.isOpen && (a.preventDefault(), a.stopPropagation(), b.close()));
 
 case o:
 if (!a.ctrlKey || a.altKey) break;
@@ -35721,9 +35747,9 @@ d.length && b.setActiveOption(d, !0, !0);
 return void a.preventDefault();
 
 case h:
-return b.isOpen && b.$activeOption && b.onOptionSelect({
+return void (b.isOpen && b.$activeOption && (b.onOptionSelect({
 currentTarget:b.$activeOption
-}), void a.preventDefault();
+}), a.preventDefault()));
 
 case j:
 return void b.advanceSelection(-1, a);
@@ -35734,7 +35760,7 @@ return void b.advanceSelection(1, a);
 case u:
 return b.settings.selectOnTab && b.isOpen && b.$activeOption && (b.onOptionSelect({
 currentTarget:b.$activeOption
-}), a.preventDefault()), void (b.settings.create && b.createItem() && a.preventDefault());
+}), b.isFull() || a.preventDefault()), void (b.settings.create && b.createItem() && a.preventDefault());
 
 case p:
 case q:
@@ -35755,14 +35781,17 @@ c.apply(b, [ a, d ]);
 })));
 },
 onFocus:function(a) {
-var b = this;
-return b.isFocused = !0, b.isDisabled ? (b.blur(), a && a.preventDefault(), !1) :void (b.ignoreFocus || ("focus" === b.settings.preload && b.onSearchChange(""), b.$activeItems.length || (b.showInput(), b.setActiveItem(null), b.refreshOptions(!!b.settings.openOnFocus)), b.refreshState()));
+var b = this, c = b.isFocused;
+return b.isDisabled ? (b.blur(), a && a.preventDefault(), !1) :void (b.ignoreFocus || (b.isFocused = !0, "focus" === b.settings.preload && b.onSearchChange(""), c || b.trigger("focus"), b.$activeItems.length || (b.showInput(), b.setActiveItem(null), b.refreshOptions(!!b.settings.openOnFocus)), b.refreshState()));
 },
-onBlur:function(a) {
-var b = this;
-if (b.isFocused = !1, !b.ignoreFocus) {
-if (!b.ignoreBlur && document.activeElement === b.$dropdown_content[0]) return b.ignoreBlur = !0, void b.onFocus(a);
-b.settings.create && b.settings.createOnBlur && b.createItem(!1), b.close(), b.setTextboxValue(""), b.setActiveItem(null), b.setActiveOption(null), b.setCaret(b.items.length), b.refreshState();
+onBlur:function(a, b) {
+var c = this;
+if (c.isFocused && (c.isFocused = !1, !c.ignoreFocus)) {
+if (!c.ignoreBlur && document.activeElement === c.$dropdown_content[0]) return c.ignoreBlur = !0, void c.onFocus(a);
+var d = function() {
+c.close(), c.setTextboxValue(""), c.setActiveItem(null), c.setActiveOption(null), c.setCaret(c.items.length), c.refreshState(), (b || document.body).focus(), c.ignoreFocus = !1, c.trigger("blur");
+};
+c.ignoreFocus = !0, c.settings.create && c.settings.createOnBlur ? c.createItem(null, !1, d) :d();
 }
 },
 onOptionHover:function(a) {
@@ -35770,16 +35799,18 @@ this.ignoreHover || this.setActiveOption(a.currentTarget, !1);
 },
 onOptionSelect:function(b) {
 var c, d, e = this;
-b.preventDefault && (b.preventDefault(), b.stopPropagation()), d = a(b.currentTarget), d.hasClass("create") ? e.createItem() :(c = d.attr("data-value"), "undefined" != typeof c && (e.lastQuery = null, e.setTextboxValue(""), e.addItem(c), !e.settings.hideSelected && b.type && /mouse/.test(b.type) && e.setActiveOption(e.getOption(c))));
+b.preventDefault && (b.preventDefault(), b.stopPropagation()), d = a(b.currentTarget), d.hasClass("create") ? e.createItem(null, function() {
+e.settings.closeAfterSelect && e.close();
+}) :(c = d.attr("data-value"), "undefined" != typeof c && (e.lastQuery = null, e.setTextboxValue(""), e.addItem(c), e.settings.closeAfterSelect ? e.close() :!e.settings.hideSelected && b.type && /mouse/.test(b.type) && e.setActiveOption(e.getOption(c))));
 },
 onItemSelect:function(a) {
 var b = this;
 b.isLocked || "multi" === b.settings.mode && (a.preventDefault(), b.setActiveItem(a.currentTarget, a));
 },
 load:function(a) {
-var b = this, c = b.$wrapper.addClass("loading");
+var b = this, c = b.$wrapper.addClass(b.settings.loadingClass);
 b.loading++, a.apply(b, [ function(a) {
-b.loading = Math.max(b.loading - 1, 0), a && a.length && (b.addOption(a), b.refreshOptions(b.isFocused && !b.isInputHidden)), b.loading || c.removeClass("loading"), b.trigger("load", a);
+b.loading = Math.max(b.loading - 1, 0), a && a.length && (b.addOption(a), b.refreshOptions(b.isFocused && !b.isInputHidden)), b.loading || c.removeClass(b.settings.loadingClass), b.trigger("load", a);
 } ]);
 },
 setTextboxValue:function(a) {
@@ -35789,9 +35820,10 @@ c && (b.val(a).triggerHandler("update"), this.lastValue = a);
 getValue:function() {
 return this.tagType === v && this.$input.attr("multiple") ? this.items :this.items.join(this.settings.delimiter);
 },
-setValue:function(a) {
-F(this, [ "change" ], function() {
-this.clear(), this.addItems(a);
+setValue:function(a, b) {
+var c = b ? [] :[ "change" ];
+F(this, c, function() {
+this.clear(b), this.addItems(a, b);
 });
 },
 setActiveItem:function(b, c) {
@@ -35807,7 +35839,7 @@ l.hideInput(), this.isFocused || l.focus();
 },
 setActiveOption:function(b, c, d) {
 var e, f, g, h, i, j = this;
-j.$activeOption && j.$activeOption.removeClass("active"), j.$activeOption = null, b = a(b), b.length && (j.$activeOption = b.addClass("active"), !c && x(c) || (e = j.$dropdown_content.height(), f = j.$activeOption.outerHeight(!0), c = j.$dropdown_content.scrollTop() || 0, g = j.$activeOption.offset().top - j.$dropdown_content.offset().top + c, h = g, i = g - e + f, g + f > e + c ? j.$dropdown_content.stop().animate({
+j.$activeOption && j.$activeOption.removeClass("active"), j.$activeOption = null, b = a(b), b.length && (j.$activeOption = b.addClass("active"), !c && y(c) || (e = j.$dropdown_content.height(), f = j.$activeOption.outerHeight(!0), c = j.$dropdown_content.scrollTop() || 0, g = j.$activeOption.offset().top - j.$dropdown_content.offset().top + c, h = g, i = g - e + f, g + f > e + c ? j.$dropdown_content.stop().animate({
 scrollTop:i
 }, d ? j.settings.scrollDuration :0) :c > g && j.$dropdown_content.stop().animate({
 scrollTop:h
@@ -35838,17 +35870,17 @@ a.isDisabled || (a.ignoreFocus = !0, a.$control_input[0].focus(), window.setTime
 a.ignoreFocus = !1, a.onFocus();
 }, 0));
 },
-blur:function() {
-this.$control_input.trigger("blur");
+blur:function(a) {
+this.$control_input[0].blur(), this.onBlur(null, a);
 },
 getScoreFunction:function(a) {
 return this.sifter.getScoreFunction(a, this.getSearchOptions());
 },
 getSearchOptions:function() {
 var a = this.settings, b = a.sortField;
-return "string" == typeof b && (b = {
+return "string" == typeof b && (b = [ {
 field:b
-}), {
+} ]), {
 fields:a.searchField,
 conjunction:a.searchConjunction,
 sort:b
@@ -35859,16 +35891,18 @@ var c, d, e, f = this, g = f.settings, h = this.getSearchOptions();
 if (g.score && (e = f.settings.score.apply(this, [ b ]), "function" != typeof e)) throw new Error('Selectize "score" setting must be a function that returns a function');
 if (b !== f.lastQuery ? (f.lastQuery = b, d = f.sifter.search(b, a.extend(h, {
 score:e
-})), f.currentResults = d) :d = a.extend(!0, {}, f.currentResults), g.hideSelected) for (c = d.items.length - 1; c >= 0; c--) -1 !== f.items.indexOf(y(d.items[c].id)) && d.items.splice(c, 1);
+})), f.currentResults = d) :d = a.extend(!0, {}, f.currentResults), g.hideSelected) for (c = d.items.length - 1; c >= 0; c--) -1 !== f.items.indexOf(z(d.items[c].id)) && d.items.splice(c, 1);
 return d;
 },
 refreshOptions:function(b) {
 var c, e, f, g, h, i, j, k, l, m, n, o, p, q, r, s;
 "undefined" == typeof b && (b = !0);
-var t = this, u = a.trim(t.$control_input.val()), v = t.search(u), w = t.$dropdown_content, x = t.$activeOption && y(t.$activeOption.attr("data-value"));
-if (g = v.items.length, "number" == typeof t.settings.maxOptions && (g = Math.min(g, t.settings.maxOptions)), h = {}, t.settings.optgroupOrder) for (i = t.settings.optgroupOrder, c = 0; c < i.length; c++) h[i[c]] = []; else i = [];
-for (c = 0; g > c; c++) for (j = t.options[v.items[c].id], k = t.render("option", j), l = j[t.settings.optgroupField] || "", m = a.isArray(l) ? l :[ l ], e = 0, f = m && m.length; f > e; e++) l = m[e], t.optgroups.hasOwnProperty(l) || (l = ""), h.hasOwnProperty(l) || (h[l] = [], i.push(l)), h[l].push(k);
-for (n = [], c = 0, g = i.length; g > c; c++) l = i[c], t.optgroups.hasOwnProperty(l) && h[l].length ? (o = t.render("optgroup_header", t.optgroups[l]) || "", o += h[l].join(""), n.push(t.render("optgroup", a.extend({}, t.optgroups[l], {
+var t = this, u = a.trim(t.$control_input.val()), v = t.search(u), w = t.$dropdown_content, x = t.$activeOption && z(t.$activeOption.attr("data-value"));
+for (g = v.items.length, "number" == typeof t.settings.maxOptions && (g = Math.min(g, t.settings.maxOptions)), h = {}, i = [], c = 0; g > c; c++) for (j = t.options[v.items[c].id], k = t.render("option", j), l = j[t.settings.optgroupField] || "", m = a.isArray(l) ? l :[ l ], e = 0, f = m && m.length; f > e; e++) l = m[e], t.optgroups.hasOwnProperty(l) || (l = ""), h.hasOwnProperty(l) || (h[l] = [], i.push(l)), h[l].push(k);
+for (this.settings.lockOptgroupOrder && i.sort(function(a, b) {
+var c = t.optgroups[a].$order || 0, d = t.optgroups[b].$order || 0;
+return c - d;
+}), n = [], c = 0, g = i.length; g > c; c++) l = i[c], t.optgroups.hasOwnProperty(l) && h[l].length ? (o = t.render("optgroup_header", t.optgroups[l]) || "", o += h[l].join(""), n.push(t.render("optgroup", a.extend({}, t.optgroups[l], {
 html:o
 })))) :n.push(h[l].join(""));
 if (w.html(n.join("")), t.settings.highlight && v.query.length && v.tokens.length) for (c = 0, g = v.tokens.length; g > c; c++) d(w, v.tokens[c].regex);
@@ -35879,23 +35913,37 @@ input:u
 },
 addOption:function(b) {
 var c, d, e, f = this;
-if (a.isArray(b)) for (c = 0, d = b.length; d > c; c++) f.addOption(b[c]); else e = y(b[f.settings.valueField]), "string" != typeof e || f.options.hasOwnProperty(e) || (f.userOptions[e] = !0, f.options[e] = b, f.lastQuery = null, f.trigger("option_add", e, b));
+if (a.isArray(b)) for (c = 0, d = b.length; d > c; c++) f.addOption(b[c]); else (e = f.registerOption(b)) && (f.userOptions[e] = !0, f.lastQuery = null, f.trigger("option_add", e, b));
+},
+registerOption:function(a) {
+var b = z(a[this.settings.valueField]);
+return !b || this.options.hasOwnProperty(b) ? !1 :(a.$order = a.$order || ++this.order, this.options[b] = a, b);
+},
+registerOptionGroup:function(a) {
+var b = z(a[this.settings.optgroupValueField]);
+return b ? (a.$order = a.$order || ++this.order, this.optgroups[b] = a, b) :!1;
 },
 addOptionGroup:function(a, b) {
-this.optgroups[a] = b, this.trigger("optgroup_add", a, b);
+b[this.settings.optgroupValueField] = a, (a = this.registerOptionGroup(b)) && this.trigger("optgroup_add", a, b);
+},
+removeOptionGroup:function(a) {
+this.optgroups.hasOwnProperty(a) && (delete this.optgroups[a], this.renderCache = {}, this.trigger("optgroup_remove", a));
+},
+clearOptionGroups:function() {
+this.optgroups = {}, this.renderCache = {}, this.trigger("optgroup_clear");
 },
 updateOption:function(b, c) {
-var d, e, f, g, h, i, j = this;
-if (b = y(b), f = y(c[j.settings.valueField]), null !== b && j.options.hasOwnProperty(b)) {
+var d, e, f, g, h, i, j, k = this;
+if (b = z(b), f = z(c[k.settings.valueField]), null !== b && k.options.hasOwnProperty(b)) {
 if ("string" != typeof f) throw new Error("Value must be set in option data");
-f !== b && (delete j.options[b], g = j.items.indexOf(b), -1 !== g && j.items.splice(g, 1, f)), j.options[f] = c, h = j.renderCache.item, i = j.renderCache.option, h && (delete h[b], delete h[f]), i && (delete i[b], delete i[f]), -1 !== j.items.indexOf(f) && (d = j.getItem(b), e = a(j.render("item", c)), d.hasClass("active") && e.addClass("active"), d.replaceWith(e)), j.lastQuery = null, j.isOpen && j.refreshOptions(!1);
+j = k.options[b].$order, f !== b && (delete k.options[b], g = k.items.indexOf(b), -1 !== g && k.items.splice(g, 1, f)), c.$order = c.$order || j, k.options[f] = c, h = k.renderCache.item, i = k.renderCache.option, h && (delete h[b], delete h[f]), i && (delete i[b], delete i[f]), -1 !== k.items.indexOf(f) && (d = k.getItem(b), e = a(k.render("item", c)), d.hasClass("active") && e.addClass("active"), d.replaceWith(e)), k.lastQuery = null, k.isOpen && k.refreshOptions(!1);
 }
 },
-removeOption:function(a) {
-var b = this;
-a = y(a);
-var c = b.renderCache.item, d = b.renderCache.option;
-c && delete c[a], d && delete d[a], delete b.userOptions[a], delete b.options[a], b.lastQuery = null, b.trigger("option_remove", a), b.removeItem(a);
+removeOption:function(a, b) {
+var c = this;
+a = z(a);
+var d = c.renderCache.item, e = c.renderCache.option;
+d && delete d[a], e && delete e[a], delete c.userOptions[a], delete c.options[a], c.lastQuery = null, c.trigger("option_remove", a), c.removeItem(a, b);
 },
 clearOptions:function() {
 var a = this;
@@ -35909,43 +35957,48 @@ var d = this.$dropdown.find("[data-selectable]"), e = d.index(b) + c;
 return e >= 0 && e < d.length ? d.eq(e) :a();
 },
 getElementWithValue:function(b, c) {
-if (b = y(b), "undefined" != typeof b && null !== b) for (var d = 0, e = c.length; e > d; d++) if (c[d].getAttribute("data-value") === b) return a(c[d]);
+if (b = z(b), "undefined" != typeof b && null !== b) for (var d = 0, e = c.length; e > d; d++) if (c[d].getAttribute("data-value") === b) return a(c[d]);
 return a();
 },
 getItem:function(a) {
 return this.getElementWithValue(a, this.$control.children());
 },
-addItems:function(b) {
-for (var c = a.isArray(b) ? b :[ b ], d = 0, e = c.length; e > d; d++) this.isPending = e - 1 > d, this.addItem(c[d]);
+addItems:function(b, c) {
+for (var d = a.isArray(b) ? b :[ b ], e = 0, f = d.length; f > e; e++) this.isPending = f - 1 > e, this.addItem(d[e], c);
 },
-addItem:function(b) {
-F(this, [ "change" ], function() {
-var c, d, e, f, g, h = this, i = h.settings.mode;
-return b = y(b), -1 !== h.items.indexOf(b) ? void ("single" === i && h.close()) :void (h.options.hasOwnProperty(b) && ("single" === i && h.clear(), "multi" === i && h.isFull() || (c = a(h.render("item", h.options[b])), g = h.isFull(), h.items.splice(h.caretPos, 0, b), h.insertAtCaret(c), (!h.isPending || !g && h.isFull()) && h.refreshState(), h.isSetup && (e = h.$dropdown_content.find("[data-selectable]"), h.isPending || (d = h.getOption(b), f = h.getAdjacentOption(d, 1).attr("data-value"), h.refreshOptions(h.isFocused && "single" !== i), f && h.setActiveOption(h.getOption(f))), !e.length || h.isFull() ? h.close() :h.positionDropdown(), h.updatePlaceholder(), h.trigger("item_add", b, c), h.updateOriginalInput()))));
+addItem:function(b, c) {
+var d = c ? [] :[ "change" ];
+F(this, d, function() {
+var d, e, f, g, h, i = this, j = i.settings.mode;
+return b = z(b), -1 !== i.items.indexOf(b) ? void ("single" === j && i.close()) :void (i.options.hasOwnProperty(b) && ("single" === j && i.clear(c), "multi" === j && i.isFull() || (d = a(i.render("item", i.options[b])), h = i.isFull(), i.items.splice(i.caretPos, 0, b), i.insertAtCaret(d), (!i.isPending || !h && i.isFull()) && i.refreshState(), i.isSetup && (f = i.$dropdown_content.find("[data-selectable]"), i.isPending || (e = i.getOption(b), g = i.getAdjacentOption(e, 1).attr("data-value"), i.refreshOptions(i.isFocused && "single" !== j), g && i.setActiveOption(i.getOption(g))), !f.length || i.isFull() ? i.close() :i.positionDropdown(), i.updatePlaceholder(), i.trigger("item_add", b, d), i.updateOriginalInput({
+silent:c
+})))));
 });
 },
-removeItem:function(a) {
-var b, c, d, e = this;
-b = "object" == typeof a ? a :e.getItem(a), a = y(b.attr("data-value")), c = e.items.indexOf(a), -1 !== c && (b.remove(), b.hasClass("active") && (d = e.$activeItems.indexOf(b[0]), e.$activeItems.splice(d, 1)), e.items.splice(c, 1), e.lastQuery = null, !e.settings.persist && e.userOptions.hasOwnProperty(a) && e.removeOption(a), c < e.caretPos && e.setCaret(e.caretPos - 1), e.refreshState(), e.updatePlaceholder(), e.updateOriginalInput(), e.positionDropdown(), e.trigger("item_remove", a));
+removeItem:function(a, b) {
+var c, d, e, f = this;
+c = "object" == typeof a ? a :f.getItem(a), a = z(c.attr("data-value")), d = f.items.indexOf(a), -1 !== d && (c.remove(), c.hasClass("active") && (e = f.$activeItems.indexOf(c[0]), f.$activeItems.splice(e, 1)), f.items.splice(d, 1), f.lastQuery = null, !f.settings.persist && f.userOptions.hasOwnProperty(a) && f.removeOption(a, b), d < f.caretPos && f.setCaret(f.caretPos - 1), f.refreshState(), f.updatePlaceholder(), f.updateOriginalInput({
+silent:b
+}), f.positionDropdown(), f.trigger("item_remove", a, c));
 },
-createItem:function(b) {
-var c = this, d = a.trim(c.$control_input.val() || ""), e = c.caretPos;
-if (!c.canCreate(d)) return !1;
-c.lock(), "undefined" == typeof b && (b = !0);
-var f = "function" == typeof c.settings.create ? this.settings.create :function(a) {
+createItem:function(b, c) {
+var d = this, e = d.caretPos;
+b = b || a.trim(d.$control_input.val() || "");
+var f = arguments[arguments.length - 1];
+if ("function" != typeof f && (f = function() {}), "boolean" != typeof c && (c = !0), !d.canCreate(b)) return f(), !1;
+d.lock();
+var g = "function" == typeof d.settings.create ? this.settings.create :function(a) {
 var b = {};
-return b[c.settings.labelField] = a, b[c.settings.valueField] = a, b;
-}, g = D(function(a) {
-if (c.unlock(), a && "object" == typeof a) {
-var d = y(a[c.settings.valueField]);
-"string" == typeof d && (c.setTextboxValue(""), c.addOption(a), c.setCaret(e), c.addItem(d), c.refreshOptions(b && "single" !== c.settings.mode));
-}
-}), h = f.apply(this, [ d, g ]);
-return "undefined" != typeof h && g(h), !0;
+return b[d.settings.labelField] = a, b[d.settings.valueField] = a, b;
+}, h = D(function(a) {
+if (d.unlock(), !a || "object" != typeof a) return f();
+var b = z(a[d.settings.valueField]);
+return "string" != typeof b ? f() :(d.setTextboxValue(""), d.addOption(a), d.setCaret(e), d.addItem(b), d.refreshOptions(c && "single" !== d.settings.mode), void f(a));
+}), i = g.apply(this, [ b, h ]);
+return "undefined" != typeof i && h(i), !0;
 },
 refreshItems:function() {
-if (this.lastQuery = null, this.isSetup) for (var a = 0; a < this.items.length; a++) this.addItem(this.items);
-this.refreshState(), this.updateOriginalInput();
+this.lastQuery = null, this.isSetup && this.addItem(this.items), this.refreshState(), this.updateOriginalInput();
 },
 refreshState:function() {
 var a, b = this;
@@ -35958,13 +36011,13 @@ b.$wrapper.toggleClass("rtl", b.rtl), b.$control.toggleClass("focus", b.isFocuse
 isFull:function() {
 return null !== this.settings.maxItems && this.items.length >= this.settings.maxItems;
 },
-updateOriginalInput:function() {
-var a, b, c, d = this;
-if (d.tagType === v) {
-for (c = [], a = 0, b = d.items.length; b > a; a++) c.push('<option value="' + z(d.items[a]) + '" selected="selected"></option>');
-c.length || this.$input.attr("multiple") || c.push('<option value="" selected="selected"></option>'), d.$input.html(c.join(""));
-} else d.$input.val(d.getValue()), d.$input.attr("value", d.$input.val());
-d.isSetup && d.trigger("change", d.$input.val());
+updateOriginalInput:function(a) {
+var b, c, d, e, f = this;
+if (a = a || {}, f.tagType === v) {
+for (d = [], b = 0, c = f.items.length; c > b; b++) e = f.options[f.items[b]][f.settings.labelField] || "", d.push('<option value="' + A(f.items[b]) + '" selected="selected">' + A(e) + "</option>");
+d.length || this.$input.attr("multiple") || d.push('<option value="" selected="selected"></option>'), f.$input.html(d.join(""));
+} else f.$input.val(f.getValue()), f.$input.attr("value", f.$input.val());
+f.isSetup && (a.silent || f.trigger("change", f.$input.val()));
 },
 updatePlaceholder:function() {
 if (this.settings.placeholder) {
@@ -35995,9 +36048,11 @@ top:b.top,
 left:b.left
 });
 },
-clear:function() {
-var a = this;
-a.items.length && (a.$control.children(":not(input)").remove(), a.items = [], a.lastQuery = null, a.setCaret(0), a.setActiveItem(null), a.updatePlaceholder(), a.updateOriginalInput(), a.refreshState(), a.showInput(), a.trigger("clear"));
+clear:function(a) {
+var b = this;
+b.items.length && (b.$control.children(":not(input)").remove(), b.items = [], b.lastQuery = null, b.setCaret(0), b.setActiveItem(null), b.updatePlaceholder(), b.updateOriginalInput({
+silent:a
+}), b.refreshState(), b.showInput(), b.trigger("clear"));
 },
 insertAtCaret:function(b) {
 var c = Math.min(this.caretPos, this.items.length);
@@ -36037,11 +36092,11 @@ this.isLocked = !1, this.refreshState();
 },
 disable:function() {
 var a = this;
-a.$input.prop("disabled", !0), a.isDisabled = !0, a.lock();
+a.$input.prop("disabled", !0), a.$control_input.prop("disabled", !0).prop("tabindex", -1), a.isDisabled = !0, a.lock();
 },
 enable:function() {
 var a = this;
-a.$input.prop("disabled", !1), a.isDisabled = !1, a.unlock();
+a.$input.prop("disabled", !1), a.$control_input.prop("disabled", !1).prop("tabindex", a.tabIndex), a.isDisabled = !1, a.unlock();
 },
 destroy:function() {
 var b = this, c = b.eventNS, d = b.revertSettings;
@@ -36050,8 +36105,8 @@ tabindex:d.tabindex
 }).show(), b.$control_input.removeData("grow"), b.$input.removeData("selectize"), a(window).off(c), a(document).off(c), a(document.body).off(c), delete b.$input[0].selectize;
 },
 render:function(a, b) {
-var c, d, e = "", f = !1, g = this, h = /^[\t ]*<([a-z][a-z0-9\-_]*(?:\:[a-z][a-z0-9\-_]*)?)/i;
-return "option" !== a && "item" !== a || (c = y(b[g.settings.valueField]), f = !!c), f && (x(g.renderCache[a]) || (g.renderCache[a] = {}), g.renderCache[a].hasOwnProperty(c)) ? g.renderCache[a][c] :(e = g.settings.render[a].apply(this, [ b, z ]), "option" !== a && "option_create" !== a || (e = e.replace(h, "<$1 data-selectable")), "optgroup" === a && (d = b[g.settings.optgroupValueField] || "", e = e.replace(h, '<$1 data-group="' + A(z(d)) + '"')), "option" !== a && "item" !== a || (e = e.replace(h, '<$1 data-value="' + A(z(c || "")) + '"')), f && (g.renderCache[a][c] = e), e);
+var c, d, e = "", f = !1, g = this, h = /^[\t \r\n]*<([a-z][a-z0-9\-_]*(?:\:[a-z][a-z0-9\-_]*)?)/i;
+return "option" !== a && "item" !== a || (c = z(b[g.settings.valueField]), f = !!c), f && (y(g.renderCache[a]) || (g.renderCache[a] = {}), g.renderCache[a].hasOwnProperty(c)) ? g.renderCache[a][c] :(e = g.settings.render[a].apply(this, [ b, A ]), "option" !== a && "option_create" !== a || (e = e.replace(h, "<$1 data-selectable")), "optgroup" === a && (d = b[g.settings.optgroupValueField] || "", e = e.replace(h, '<$1 data-group="' + B(A(d)) + '"')), "option" !== a && "item" !== a || (e = e.replace(h, '<$1 data-value="' + B(A(c || "")) + '"')), f && (g.renderCache[a][c] = e), e);
 },
 clearCache:function(a) {
 var b = this;
@@ -36064,8 +36119,11 @@ var c = b.settings.createFilter;
 return a.length && ("function" != typeof c || c.apply(b, [ a ])) && ("string" != typeof c || new RegExp(c).test(a)) && (!(c instanceof RegExp) || c.test(a));
 }
 }), L.count = 0, L.defaults = {
+options:[],
+optgroups:[],
 plugins:[],
 delimiter:",",
+splitOn:null,
 persist:!0,
 diacritics:!0,
 create:!1,
@@ -36080,15 +36138,17 @@ addPrecedence:!1,
 selectOnTab:!1,
 preload:!1,
 allowEmptyOption:!1,
+closeAfterSelect:!1,
 scrollDuration:60,
 loadThrottle:300,
+loadingClass:"loading",
 dataAttr:"data-data",
 optgroupField:"optgroup",
 valueField:"value",
 labelField:"text",
 optgroupLabelField:"label",
 optgroupValueField:"value",
-optgroupOrder:null,
+lockOptgroupOrder:!1,
 sortField:"$order",
 searchField:[ "text" ],
 searchConjunction:"and",
@@ -36102,24 +36162,32 @@ copyClassesToDropdown:!0,
 render:{}
 }, a.fn.selectize = function(b) {
 var c = a.fn.selectize.defaults, d = a.extend({}, c, b), e = d.dataAttr, f = d.labelField, g = d.valueField, h = d.optgroupField, i = d.optgroupLabelField, j = d.optgroupValueField, k = function(b, c) {
-var e, h, i, j, k = a.trim(b.val() || "");
-if (d.allowEmptyOption || k.length) {
-for (i = k.split(d.delimiter), e = 0, h = i.length; h > e; e++) j = {}, j[f] = i[e], j[g] = i[e], c.options[i[e]] = j;
-c.items = i;
+var h, i, j, k, l = b.attr(e);
+if (l) for (c.options = JSON.parse(l), h = 0, i = c.options.length; i > h; h++) c.items.push(c.options[h][g]); else {
+var m = a.trim(b.val() || "");
+if (!d.allowEmptyOption && !m.length) return;
+for (j = m.split(d.delimiter), h = 0, i = j.length; i > h; h++) k = {}, k[f] = j[h], k[g] = j[h], c.options.push(k);
+c.items = j;
 }
 }, l = function(b, c) {
-var k, l, m, n, o = 0, p = c.options, q = function(a) {
+var k, l, m, n, o = c.options, p = {}, q = function(a) {
 var b = e && a.attr(e);
 return "string" == typeof b && b.length ? JSON.parse(b) :null;
 }, r = function(b, e) {
-var i, j;
-if (b = a(b), i = b.attr("value") || "", i.length || d.allowEmptyOption) {
-if (p.hasOwnProperty(i)) return void (e && (p[i].optgroup ? a.isArray(p[i].optgroup) ? p[i].optgroup.push(e) :p[i].optgroup = [ p[i].optgroup, e ] :p[i].optgroup = e));
-j = q(b) || {}, j[f] = j[f] || b.text(), j[g] = j[g] || i, j[h] = j[h] || e, j.$order = ++o, p[i] = j, b.is(":selected") && c.items.push(i);
+b = a(b);
+var i = z(b.attr("value"));
+if (i || d.allowEmptyOption) if (p.hasOwnProperty(i)) {
+if (e) {
+var j = p[i][h];
+j ? a.isArray(j) ? j.push(e) :p[i][h] = [ j, e ] :p[i][h] = e;
+}
+} else {
+var k = q(b) || {};
+k[f] = k[f] || b.text(), k[g] = k[g] || i, k[h] = k[h] || e, p[i] = k, o.push(k), b.is(":selected") && c.items.push(i);
 }
 }, s = function(b) {
 var d, e, f, g, h;
-for (b = a(b), f = b.attr("label"), f && (g = q(b) || {}, g[i] = f, g[j] = f, c.optgroups[f] = g), h = a("option", b), d = 0, e = h.length; e > d; d++) r(h[d], f);
+for (b = a(b), f = b.attr("label"), f && (g = q(b) || {}, g[i] = f, g[j] = f, c.optgroups.push(g)), h = a("option", b), d = 0, e = h.length; e > d; d++) r(h[d], f);
 };
 for (c.maxItems = b.attr("multiple") ? null :1, n = b.children(), k = 0, l = n.length; l > k; k++) m = n[k].tagName.toLowerCase(), "optgroup" === m ? s(n[k]) :"option" === m && r(n[k]);
 };
@@ -36129,14 +36197,16 @@ var e, f = a(this), g = this.tagName.toLowerCase(), h = f.attr("placeholder") ||
 h || d.allowEmptyOption || (h = f.children('option[value=""]').text());
 var i = {
 placeholder:h,
-options:{},
-optgroups:{},
+options:[],
+optgroups:[],
 items:[]
 };
 "select" === g ? l(f, i) :k(f, i), e = new L(f, a.extend(!0, {}, c, i, b));
 }
 });
-}, a.fn.selectize.defaults = L.defaults, L.define("drag_drop", function(b) {
+}, a.fn.selectize.defaults = L.defaults, a.fn.selectize.support = {
+validity:x
+}, L.define("drag_drop", function(b) {
 if (!a.fn.sortable) throw new Error('The "drag_drop" plugin requires jQuery UI "sortable".');
 if ("multi" === this.settings.mode) {
 var c = this;
@@ -36229,7 +36299,7 @@ width:i
 })));
 }
 };
-(b.equalizeHeight || b.equalizeWidth) && (B.after(this, "positionDropdown", e), B.after(this, "refreshOptions", e));
+(b.equalizeHeight || b.equalizeWidth) && (C.after(this, "positionDropdown", e), C.after(this, "refreshOptions", e));
 }), L.define("remove_button", function(b) {
 if ("single" !== this.settings.mode) {
 b = a.extend({
@@ -36238,7 +36308,7 @@ title:"Remove",
 className:"remove",
 append:!0
 }, b);
-var c = this, d = '<a href="javascript:void(0)" class="' + b.className + '" tabindex="-1" title="' + z(b.title) + '">' + b.label + "</a>", e = function(a, b) {
+var c = this, d = '<a href="javascript:void(0)" class="' + b.className + '" tabindex="-1" title="' + A(b.title) + '">' + b.label + "</a>", e = function(a, b) {
 var c = a.search(/(<\/[^>]+>\s*)$/);
 return a.substring(0, c) + b + a.substring(c);
 };
@@ -36264,11 +36334,11 @@ c.setActiveItem(d), c.deleteSelection() && c.setCaret(c.items.length);
 var b = this;
 a.text = a.text || function(a) {
 return a[this.settings.labelField];
-}, this.onKeyDown = function(c) {
-var d = b.onKeyDown;
+}, this.onKeyDown = function() {
+var c = b.onKeyDown;
 return function(b) {
-var c, e;
-return b.keyCode === p && "" === this.$control_input.val() && !this.$activeItems.length && (c = this.caretPos - 1, c >= 0 && c < this.items.length) ? (e = this.options[this.items[c]], this.deleteSelection(b) && (this.setTextboxValue(a.text.apply(this, [ e ])), this.refreshOptions(!0)), void b.preventDefault()) :d.apply(this, arguments);
+var d, e;
+return b.keyCode === p && "" === this.$control_input.val() && !this.$activeItems.length && (d = this.caretPos - 1, d >= 0 && d < this.items.length) ? (e = this.options[this.items[d]], this.deleteSelection(b) && (this.setTextboxValue(a.text.apply(this, [ e ])), this.refreshOptions(!0)), void b.preventDefault()) :c.apply(this, arguments);
 };
 }();
 }), L;
@@ -36865,9 +36935,10 @@ this._onActiveFiltersChangedCallbacks.add(a);
 var d = this, c = c || {};
 this._labelFilterRootElement = a, this._labelFilterActiveFiltersRootElement = b;
 var e = $("<div>").addClass("label-filter").appendTo(a);
-this._labelFilterKeyInput = $("<select>").addClass("label-filter-key").attr("placeholder", "Filter by label ").appendTo(e), this._labelFilterOperatorInput = $("<select>").addClass("label-filter-operator").attr("placeholder", "matching(...)").hide().appendTo(e), this._labelFilterValuesInput = $("<select>").addClass("label-filter-values").attr("placeholder", "Value(s)").attr("multiple", !0).hide().appendTo(e), this._labelFilterAddBtn = $("<button>").addClass("label-filter-add btn btn-default disabled").attr("disabled", !0).appendTo(a).append($("<span>").text(c.addButtonText || "Add Filter")), this._labelFilterActiveElement = $("<span>").addClass("label-filter-active").hide().appendTo(b).append($("<a>").addClass("label-filtering-remove-all label label-primary").prop("href", "javascript:;").append($("<i>").addClass("fa fa-filter").css("padding-right", "5px")).append($("<span>").text("Clear filters"))).click(function() {
-$(this).hide(), d._labelFilterActiveFiltersElement.empty(), d._clearActiveFilters();
-}), this._labelFilterActiveFiltersElement = $("<span>").addClass("label-filter-active-filters").appendTo(b), this._labelFilterKeyInput.selectize({
+this._labelFilterKeyInput = $("<select>").addClass("label-filter-key").attr("placeholder", "Filter by label ").appendTo(e), this._labelFilterOperatorInput = $("<select>").addClass("label-filter-operator").attr("placeholder", "matching(...)").hide().appendTo(e), this._labelFilterValuesInput = $("<select>").addClass("label-filter-values").attr("placeholder", "Value(s)").attr("multiple", !0).hide().appendTo(e), this._labelFilterAddBtn = $("<button>").addClass("label-filter-add btn btn-default disabled").attr("disabled", !0).appendTo(a).append($("<span>").text(c.addButtonText || "Add Filter")), this._labelFilterActiveFiltersElement = $("<span>").addClass("label-filter-active-filters").appendTo(b), this._labelFilterActiveElement = $("<span>").addClass("label-filter-clear").hide().appendTo(this._labelFilterActiveFiltersElement).append($("<a>").addClass("label-filtering-remove-all label label-primary").prop("href", "javascript:;").append($("<i>").addClass("fa fa-filter")).append($("<span>").text("Clear filters"))).click(function() {
+$(this).hide(), d._labelFilterActiveFiltersElement.find(".label-filter-active-filter").remove(), d._clearActiveFilters();
+}), this._labelFilterKeyInput.selectize({
+dropdownParent:"body",
 valueField:"key",
 labelField:"key",
 searchField:[ "key" ],
@@ -36883,7 +36954,7 @@ var e = d._existingLabels;
 if (!e[c]) return void a({});
 for (var f = 0; f < e[c].length; f++) b.push(e[c][f]);
 a(b);
-}), d._labelFilterOperatorSelectizeInput.css("display", "inline-block");
+}), d._labelFilterOperatorSelectizeInput.css("display", "inline-flex");
 var e = d._labelFilterOperatorSelectize.getValue();
 e ? c.focus() :d._labelFilterOperatorSelectize.focus();
 },
@@ -36892,8 +36963,15 @@ d._labelFilterOperatorSelectizeInput.hide(), d._labelFilterOperatorSelectize.cle
 },
 load:function(a, b) {
 b(d._getLabelFilterKeys());
+},
+onFocus:function() {
+e.addClass("filter-active");
+},
+onBlur:function() {
+e.removeClass("filter-active");
 }
 }), this._labelFilterKeySelectize = this._labelFilterKeyInput.prop("selectize"), this._labelFilterKeySelectizeInput = $(".selectize-control.label-filter-key", e), this._labelFilterOperatorInput.selectize({
+dropdownParent:"body",
 valueField:"type",
 labelField:"label",
 searchField:[ "label" ],
@@ -36908,12 +36986,19 @@ type:"not in",
 label:"not in ..."
 } ],
 onItemAdd:function(a, b) {
-return "exists" == a ? void d._labelFilterAddBtn.removeClass("disabled").prop("disabled", !1).focus() :(d._labelFilterValuesSelectizeInput.css("display", "inline-block"), void d._labelFilterValuesSelectize.focus());
+return "exists" == a ? void d._labelFilterAddBtn.removeClass("disabled").prop("disabled", !1).focus() :(d._labelFilterValuesSelectizeInput.css("display", "inline-flex"), void d._labelFilterValuesSelectize.focus());
 },
 onItemRemove:function(a) {
 d._labelFilterValuesSelectizeInput.hide(), d._labelFilterValuesSelectize.clear(), d._labelFilterAddBtn.addClass("disabled").prop("disabled", !0);
+},
+onFocus:function() {
+e.addClass("filter-active");
+},
+onBlur:function() {
+e.removeClass("filter-active");
 }
 }), this._labelFilterOperatorSelectize = this._labelFilterOperatorInput.prop("selectize"), this._labelFilterOperatorSelectizeInput = $(".selectize-control.label-filter-operator", e), this._labelFilterOperatorSelectizeInput.hide(), this._labelFilterValuesInput.selectize({
+dropdownParent:"body",
 valueField:"value",
 labelField:"value",
 searchField:[ "value" ],
@@ -36932,6 +37017,12 @@ var f = d._existingLabels;
 if (!f[e]) return void b({});
 for (var g = 0; g < f[e].length; g++) c.push(f[e][g]);
 b(c);
+},
+onFocus:function() {
+e.addClass("filter-active");
+},
+onBlur:function() {
+e.removeClass("filter-active");
 }
 }), this._labelFilterValuesSelectize = this._labelFilterValuesInput.prop("selectize"), this._labelFilterValuesSelectizeInput = $(".selectize-control.label-filter-values", e), this._labelFilterValuesSelectizeInput.hide(), this._labelFilterAddBtn.click(function() {
 var a = d._labelFilterKeySelectize.getValue(), b = d._labelFilterOperatorSelectize.getValue(), c = d._labelFilterValuesSelectize.getValue();
@@ -36950,7 +37041,7 @@ this._labelFilterActiveElement.show(), this._addActiveFilter(a, b, c);
 var d = this._labelSelector.addConjunct(a, b, c);
 this._onActiveFiltersChangedCallbacks.fire(this._labelSelector), this._renderActiveFilter(d);
 }, a.prototype._renderActiveFilter = function(a) {
-$("<a>").addClass("label label-default label-filter-active-filter").prop("href", "javascript:;").prop("filter-label-id", a.id).click($.proxy(this, "_removeActiveFilter")).append($("<span>").text(a.string).css("padding-right", "5px")).append($("<i>").addClass("fa fa-times")).appendTo(this._labelFilterActiveFiltersElement);
+$("<a>").addClass("label label-default label-filter-active-filter").prop("href", "javascript:;").prop("filter-label-id", a.id).click($.proxy(this, "_removeActiveFilter")).append($("<span>").text(a.string)).append($("<i>").addClass("fa fa-times")).appendTo(this._labelFilterActiveFiltersElement);
 }, a.prototype._removeActiveFilter = function(a) {
 var b = $(a.target).closest(".label-filter-active-filter"), c = b.prop("filter-label-id");
 b.remove(), 0 == $(".label-filter-active-filter", this._labelFilterActiveFiltersElement).length && this._labelFilterActiveElement.hide(), this._labelSelector.removeConjunct(c), this._onActiveFiltersChangedCallbacks.fire(this._labelSelector);
