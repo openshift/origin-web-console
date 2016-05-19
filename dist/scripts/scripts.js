@@ -7311,7 +7311,35 @@ b.input.args = null;
 };
 }
 };
-} ]), angular.module("openshiftConsole").filter("dateRelative", function() {
+} ]), angular.module("openshiftConsole").directive("buildPipeline", [ "$filter", "Logger", function(a, b) {
+return {
+restrict:"E",
+scope:{
+build:"="
+},
+templateUrl:"views/directives/build-pipeline.html",
+link:function(c) {
+var d = a("annotation");
+c.$watch(function() {
+return d(c.build, "jenkinsStatus");
+}, function(a) {
+if (a) try {
+c.jenkinsStatus = JSON.parse(a);
+} catch (d) {
+b.error("Could not parse Jenkins status as JSON", a);
+}
+});
+}
+};
+} ]).directive("pipelineStatus", function() {
+return {
+restrict:"E",
+scope:{
+status:"="
+},
+templateUrl:"views/directives/pipeline-status.html"
+};
+}), angular.module("openshiftConsole").filter("dateRelative", function() {
 return function(a, b) {
 return a ? moment(a).fromNow(b) :a;
 };
@@ -7359,13 +7387,15 @@ displayName:[ "openshift.io/display-name" ],
 description:[ "openshift.io/description" ],
 buildNumber:[ "openshift.io/build.number" ],
 buildPod:[ "openshift.io/build.pod-name" ],
-jenkinsLogURL:[ "openshift.io/jenkins-log-url" ]
+jenkinsLogURL:[ "openshift.io/jenkins-log-url" ],
+jenkinsStatus:[ "openshift.io/jenkins-status-json" ]
 };
 return function(b) {
 return a[b] || null;
 };
 }).filter("labelName", function() {
 var a = {
+buildConfig:[ "openshift.io/build-config.name" ],
 deploymentConfig:[ "openshift.io/deployment-config.name" ]
 };
 return function(b) {
@@ -7437,7 +7467,12 @@ d.isAfter(c) && (c = d, b = a.items[0].created);
 return function(a, b) {
 return a && a.metadata && a.metadata.labels ? a.metadata.labels[b] :null;
 };
-}).filter("icon", [ "annotationFilter", function(a) {
+}).filter("buildConfigForBuild", [ "labelNameFilter", "labelFilter", function(a, b) {
+var c = a("buildConfig");
+return function(a) {
+return b(a, c);
+};
+} ]).filter("icon", [ "annotationFilter", function(a) {
 return function(b) {
 var c = a(b, "icon");
 return c ? c :"";
@@ -7822,8 +7857,9 @@ return function(a) {
 return "JenkinsPipeline" === _.get(a, "spec.strategy.type");
 };
 }).filter("jenkinsLogURL", [ "annotationFilter", function(a) {
-return function(b) {
-return a(b, "jenkinsLogURL");
+return function(b, c) {
+var d = a(b, "jenkinsLogURL");
+return !d || c ? d :d.replace(/\/consoleText$/, "/console");
 };
 } ]).filter("buildLogURL", [ "isJenkinsPipelineStrategyFilter", "jenkinsLogURLFilter", "navigateResourceURLFilter", function(a, b, c) {
 return function(d) {

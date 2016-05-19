@@ -1,6 +1,6 @@
 <div class='resource-details'>
   <div class="row">
-    <div class="col-lg-6">
+    <div class="col-sm-12">
       <h3>Status</h3>
       <dl class="dl-horizontal left">
         <dt>Status:</dt>
@@ -9,7 +9,7 @@
           {{build.status.phase}}
           <span ng-if="build | jenkinsLogURL">
             <span class="text-muted">&ndash;</span>
-            <a ng-href="{{build | jenkinsLogURL}}">View Log</a>
+            <a ng-href="{{build | jenkinsLogURL}}" target="_blank">View Log</a>
           </span>
         </dd>
         <dt>Started:</dt>

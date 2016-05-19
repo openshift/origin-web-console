@@ -1,0 +1,47 @@
+<div row mobile="column" class="build-pipeline">
+  <div column grow="1" class="build-summary">
+    <!-- spacer -->
+    <div flex></div>
+
+    <div>
+      <a ng-href="{{build | navigateResourceURL}}">Build #{{build | annotation : 'buildNumber'}}</a>
+    </div>
+    <div class="status-icon" ng-class="build.status.phase">
+      <span ng-switch="build.status.phase" class="hide-ng-leave">
+        <span ng-switch-when="Complete" class="inverse fa-stack" aria-hidden="true">
+          <i class="fa fa-circle fa-stack-2x"></i>
+          <i class="fa fa-check fa-stack-1x fa-inverse"></i>
+        </span>
+        <span ng-switch-when="Failed" class="inverse fa-stack" aria-hidden="true">
+          <i class="fa fa-circle fa-stack-2x"></i>
+          <i class="fa fa-times fa-stack-1x fa-inverse"></i>
+        </span>
+        <span ng-switch-default>
+          <status-icon status="build.status.phase"></status-icon>
+        </span>
+      </span>
+    </div>
+    <div class="small text-muted">
+      Started <relative-timestamp timestamp="build.metadata.creationTimestamp"></relative-timestamp>
+    </div>
+    <div ng-if="build | buildLogURL" class="small"><a ng-href="{{build | buildLogURL}}" target="_blank">View Log</a></div>
+    <!-- spacer -->
+    <div flex></div>
+  </div>
+  <div column grow="4" class="stages-block">
+    <div row class="pipeline-label" ng-class="build.status.phase">
+      {{build.status.phase}}
+    </div>
+    <div row mobile="column" class="stages">
+      <div column grow="1" ng-if="!jenkinsStatus.stages.length" class="stage">
+        <div grow="1" class="stage-name">No stages have started.</div>
+      </div>
+      <div column grow="1" ng-repeat="stage in jenkinsStatus.stages" class="stage">
+        <div class="stage-name">{{stage.name}}</div>
+        <pipeline-status ng-if="stage.status" status="stage.status"></pipeline-status>
+        <div ng-if="stage.durationMillis" class="stage-duration">{{stage.durationMillis | humanizeDurationValue}}</div>
+        <div ng-if="!stage.durationMillis" class="stage-duration">not started</div>
+      </div>
+    </div>
+  </div>
+</div>

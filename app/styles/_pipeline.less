@@ -1,0 +1,169 @@
+@build-pipeline-border-color: #d1d1d1;
+
+// Statuses
+@build-pipeline-new-color: #bee1f4;
+@build-pipeline-pending-color: #d1d1d1;
+@build-pipeline-in-progress-color: #0088ce;
+@build-pipeline-success-color: #3f9c35;
+@build-pipeline-failed-color: #cc0000;
+@build-pipeline-aborted-color: #ededed;
+
+.build-pipeline {
+  margin-bottom: 15px;
+  @media (min-width: 480px) {
+    margin-bottom: 0;
+  }
+  .build-summary, .stage {
+    .text-center();
+    min-width: 150px;
+  }
+  .build-summary, .stages-block {
+    border: 1px solid @build-pipeline-border-color;
+  }
+  .build-summary {
+    @media (min-width: 480px) {
+      border-right-width: 0;
+      flex-grow: 0;
+      flex-shrink: 0;
+      flex-basis: 200px;
+    }
+    min-height: 100px;
+    padding: 10px;
+    .status-icon {
+      margin-bottom: 3px;
+      .inverse {
+        font-size: 8px;
+        margin-bottom: 3px;
+      }
+      &.Complete .inverse {
+        color: @build-pipeline-success-color;
+      }
+      &.Failed .inverse {
+        color: @build-pipeline-failed-color;
+      }
+    }
+  }
+  .pipeline-status {
+    display: block;
+    margin: 3px 0;
+    overflow: hidden;
+    text-align: center;
+    &:before,
+    &:after {
+      background-color: #d1d1d1;
+      content: "";
+      display: inline-block;
+      height: 2px;
+      position: relative;
+      vertical-align: top;
+      top: 8px;
+      width: 50%;
+    }
+    &:before {
+      right: 0.5em;
+      margin-left: -50%;
+    }
+    &:after {
+      left: 0.5em;
+      margin-right: -50%;
+    }
+    &.ABORTED {
+      .fa {
+        font-size: 14px;
+        vertical-align: middle;
+      }
+      &:before, &:after {
+        background-color: @build-pipeline-aborted-color;
+      }
+    }
+    &.IN_PROGRESS {
+      .fa {
+        font-size: 13px;
+      }
+      &:before, &:after {
+        background-color: @build-pipeline-in-progress-color;
+      }
+    }
+    &.SUCCESS {
+      color: @build-pipeline-success-color;
+      font-size: 8px;
+      &:before, &:after {
+        background-color: @build-pipeline-success-color;
+      }
+    }
+    &.FAILED {
+      color: @build-pipeline-failed-color;
+      font-size: 8px;
+      &:before, &:after {
+        background-color: @build-pipeline-failed-color;
+      }
+    }
+    &.NOT_EXECUTED {
+      &:before {
+        background-color: @build-pipeline-pending-color;
+      }
+      &:after {
+        background-color: @build-pipeline-pending-color;
+      }
+    }
+    .no-icon {
+      // Add a negative margin so that only a solid gray lines appears.
+      margin: 0 -7px;
+    }
+  }
+
+  .pipeline-label {
+    font-size: @component-label;
+    margin: 0;
+    padding: 2px 5px;
+    text-transform: uppercase;
+    border-bottom: 3px solid #bbbbbb;
+    &.Pending {
+      background-color: @build-pipeline-pending-color;
+    }
+    &.Running {
+      background-color: @build-pipeline-in-progress-color;
+      color: #ffffff;
+      border: none;
+    }
+    &.Complete {
+      background-color: @build-pipeline-success-color;
+      color: #ffffff;
+      border: none;
+    }
+    &.Failed, &.Error {
+      background-color: @build-pipeline-failed-color;
+      color: #ffffff;
+      border: none;
+    }
+    &.New {
+      background-color: #bee1f4;
+    }
+    &.Cancelled {
+      background-color: @build-pipeline-aborted-color;
+    }
+  }
+  .stages {
+    flex-wrap: wrap;
+  }
+  .stage {
+    font-size: @component-label;
+    margin: 10px 0;
+    padding: 0 10px;
+    .stage-duration {
+      .text-muted();
+    }
+  }
+  .stage + .stage {
+    border-top: 1px solid @build-pipeline-border-color;
+    padding-top: 10px;
+    @media (min-width: 480px) {
+      border-top: none;
+      border-left: 1px solid @build-pipeline-border-color;
+      // -1px so the left border blends with the stages-block border when wrapping to the next line.
+      // Otherwise you will see 2px left border when a stage wraps.
+      margin-left: -1px;
+      padding-top: 0;
+    }
+  }
+}

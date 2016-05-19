@@ -85,6 +85,7 @@
                   <uib-tabset>
                     <uib-tab active="selectedTab.details">
                       <uib-tab-heading>Details</uib-tab-heading>
+                      <build-pipeline build="build" ng-if="build | isJenkinsPipelineStrategy"></build-pipeline>
                       <ng-include src=" 'views/browse/_build-details.html' "></ng-include>
                     </uib-tab>
 

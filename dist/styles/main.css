@@ -3645,7 +3645,6 @@ ul.messenger-theme-flat .messenger-message.alert-info .messenger-message-inner:b
 .navbar-flex-btn.project-action{-webkit-flex:0 0 120px;-moz-flex:0 0 120px;-ms-flex:0 0 120px;flex:0 0 120px}
 .navbar-flex-btn.project-action .project-action-btn{border-right:1px solid #050505}
 }
-.font-icon,.font-icon-block,.navbar-project-menu .navbar-project-search{display:inline-block}
 @media (min-width:992px){.navbar-pf-alt .navbar-iconic .username{max-width:150px}
 }
 @media (min-width:1200px){.navbar-pf-alt .navbar-header{width:108px}
@@ -3746,9 +3745,9 @@ ul.messenger-theme-flat .messenger-message.alert-info .messenger-message-inner:b
 .icon-cartridge-cloud:before{content:"\ee52"}
 .icon-cartridge-cloud2:before{content:"\ee53"}
 .icon-cartridge-custom:before{content:"\ee54"}
-.font-icon-block{position:relative}
+.font-icon-block{display:inline-block;position:relative}
 .font-icon-block .font-icon:nth-child(n+2){position:absolute;left:0;top:0;text-shadow:none}
-.font-icon{top:0}
+.font-icon{display:inline-block;top:0}
 .font-icon.font-icon-inline{position:relative}
 .icon-row div:first-child{text-align:center;width:30px}
 @font-face{font-family:openshift-logos-icon;src:url(../styles/fonts/openshift-logos-icon.eot);src:url(../styles/fonts/openshift-logos-icon.eot?#iefix) format('embedded-opentype'),url(../styles/fonts/openshift-logos-icon.woff) format('woff'),url(../styles/fonts/openshift-logos-icon.ttf) format('truetype'),url(../styles/fonts/openshift-logos-icon.svg#openshift-logos-icon) format('svg');font-weight:400;font-style:normal}
@@ -3791,7 +3790,45 @@ ul.messenger-theme-flat .messenger-message.alert-info .messenger-message-inner:b
 .icon-wildfly:before{content:"\f135"}
 .icon-load-balancer:before{content:"\f136"}
 .icon-laravel:before{content:"\f137"}
+.build-pipeline{margin-bottom:15px}
+.build-pipeline .build-summary,.build-pipeline .stage{text-align:center;min-width:150px}
+.build-pipeline .build-summary,.build-pipeline .stages-block{border:1px solid #d1d1d1}
+.build-pipeline .build-summary{min-height:100px;padding:10px}
+@media (min-width:480px){.build-pipeline{margin-bottom:0}
+.build-pipeline .build-summary{border-right-width:0;flex-grow:0;flex-shrink:0;flex-basis:200px}
+}
+.build-pipeline .build-summary .status-icon{margin-bottom:3px}
+.build-pipeline .build-summary .status-icon .inverse{font-size:8px;margin-bottom:3px}
+.build-pipeline .build-summary .status-icon.Complete .inverse{color:#3f9c35}
+.build-pipeline .build-summary .status-icon.Failed .inverse{color:#c00}
+.build-pipeline .pipeline-status{display:block;margin:3px 0;overflow:hidden;text-align:center}
+.build-pipeline .pipeline-status:after,.build-pipeline .pipeline-status:before{background-color:#d1d1d1;content:"";display:inline-block;height:2px;position:relative;vertical-align:top;top:8px;width:50%}
+.build-pipeline .pipeline-status:before{right:.5em;margin-left:-50%}
+.build-pipeline .pipeline-status:after{left:.5em;margin-right:-50%}
+.build-pipeline .pipeline-status.ABORTED .fa{font-size:14px;vertical-align:middle}
+.build-pipeline .pipeline-status.ABORTED:after,.build-pipeline .pipeline-status.ABORTED:before{background-color:#ededed}
+.build-pipeline .pipeline-status.IN_PROGRESS .fa{font-size:13px}
+.build-pipeline .pipeline-status.IN_PROGRESS:after,.build-pipeline .pipeline-status.IN_PROGRESS:before{background-color:#0088ce}
+.build-pipeline .pipeline-status.SUCCESS{color:#3f9c35;font-size:8px}
+.build-pipeline .pipeline-status.SUCCESS:after,.build-pipeline .pipeline-status.SUCCESS:before{background-color:#3f9c35}
+.build-pipeline .pipeline-status.FAILED{color:#c00;font-size:8px}
+.build-pipeline .pipeline-status.FAILED:after,.build-pipeline .pipeline-status.FAILED:before{background-color:#c00}
+.build-pipeline .pipeline-label.Pending,.build-pipeline .pipeline-status.NOT_EXECUTED:after,.build-pipeline .pipeline-status.NOT_EXECUTED:before{background-color:#d1d1d1}
+.build-pipeline .pipeline-status .no-icon{margin:0 -7px}
+.build-pipeline .pipeline-label{font-size:11px;margin:0;padding:2px 5px;text-transform:uppercase;border-bottom:3px solid #bbb}
+.build-pipeline .pipeline-label.Running{background-color:#0088ce;color:#fff;border:none}
+.build-pipeline .pipeline-label.Complete{background-color:#3f9c35;color:#fff;border:none}
+.build-pipeline .pipeline-label.Error,.build-pipeline .pipeline-label.Failed{background-color:#c00;color:#fff;border:none}
+.build-pipeline .pipeline-label.New{background-color:#bee1f4}
+.build-pipeline .pipeline-label.Cancelled{background-color:#ededed}
+.build-pipeline .stages{flex-wrap:wrap}
+.build-pipeline .stage{font-size:11px;margin:10px 0;padding:0 10px}
+.build-pipeline .stage .stage-duration{color:#999}
+.build-pipeline .stage+.stage{border-top:1px solid #d1d1d1;padding-top:10px}
+@media (min-width:480px){.build-pipeline .stage+.stage{border-top:none;border-left:1px solid #d1d1d1;margin-left:-1px;padding-top:0}
+}
 .navbar-project-menu{width:100%}
+.navbar-project-menu .navbar-project-search{display:inline-block}
 .navbar-project-menu .form-group{margin-bottom:0}
 .navbar-project-menu .form-group .form-control{margin-bottom:0;height:auto}
 .navbar-project-menu .bootstrap-select.open.btn-group .btn{background-color:#1e2126}
