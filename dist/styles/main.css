@@ -3346,13 +3346,13 @@ body{padding-right:0px!important}
 .build-trends-responsive .build-trends-container .avg-duration-text{vertical-align:top;font-size:12px}
 @media (max-width:767px){.build-trends-responsive .build-trends-container{border:1px solid #d1d1d1;padding:10px 0}
 }
-.pod-metrics .metrics-options .form-group{margin-bottom:0}
-.pod-metrics .metrics-options .select-container{display:inline-block}
-@media (min-width:768px){.pod-metrics .metrics-options .form-group{display:inline-block}
-.pod-metrics .metrics-options .select-container{margin-right:10px}
+.metrics .metrics-options .form-group{margin-bottom:0}
+.metrics .metrics-options .select-container{display:inline-block}
+@media (min-width:768px){.metrics .metrics-options .form-group{display:inline-block}
+.metrics .metrics-options .select-container{margin-right:10px}
 }
-.pod-metrics .metrics-donut,.pod-metrics .metrics-sparkline{margin-top:20px}
-@media (max-width:500px){.pod-metrics .metrics-sparkline .c3-axis-x .tick{display:none}
+.metrics .metrics-donut,.metrics .metrics-sparkline{margin-top:20px}
+@media (max-width:500px){.metrics .metrics-sparkline .c3-axis-x .tick{display:none}
 }
 .quota-chart{margin:0 20px}
 label.checkbox{font-weight:400}

@@ -1,19 +1,21 @@
 'use strict';
 
 angular.module('openshiftConsole')
-  .directive('podMetrics', function($interval,
-                                    $parse,
-                                    $timeout,
-                                    $q,
-                                    ChartsService,
-                                    MetricsService,
-                                    usageValueFilter) {
+  .directive('metrics', function($interval,
+                                 $parse,
+                                 $timeout,
+                                 $q,
+                                 ChartsService,
+                                 MetricsService,
+                                 usageValueFilter) {
     return {
       restrict: 'E',
       scope: {
-        pod: '='
+        // Either pod or deployment must be set
+        pod: '=?',
+        deployment: '=?'
       },
-      templateUrl: 'views/directives/_pod-metrics.html',
+      templateUrl: 'views/directives/metrics.html',
       link: function(scope) {
         var donutByMetric = {}, sparklineByMetric = {};
         var intervalPromise;
@@ -185,6 +187,10 @@ angular.module('openshiftConsole')
         };
 
         function getLimit(metricID) {
+          if (!scope.pod) {
+            return null;
+          }
+
           var container = scope.options.selectedContainer;
           switch (metricID) {
           case 'memory/usage':
@@ -303,18 +309,52 @@ angular.module('openshiftConsole')
           }
         }
 
-        function update() {
-          var pod = scope.pod,
-              container = scope.options.selectedContainer,
-              start = Date.now() - scope.options.timeRange.value * 60 * 1000;
+        function getConfig(metric, id) {
+          if (scope.pod) {
+            return {
+              pod: scope.pod,
+              // some metrics (network, disk) are not available at container
+              // level (only at pod and node level)
+              containerName: metric.containerMetric ? scope.options.selectedContainer.name : "pod",
+              namespace: scope.pod.metadata.namespace,
+              metric: id
+            };
+          }
 
-          if (!pod || !container || scope.metricsError) {
+          if (scope.deployment) {
+            return {
+              deployment: scope.deployment.metadata.name,
+              namespace: scope.deployment.metadata.namespace,
+              metric: id
+            };
+          }
+
+          return null;
+        }
+
+        // Make sure there are no errors or missing data before updating.
+        function canUpdate() {
+          if (scope.metricsError) {
+            return false;
+          }
+
+          if (scope.deployment) {
+            return true;
+          }
+
+          return scope.pod && _.get(scope, 'options.selectedContainer');
+        }
+
+        function update() {
+          if (!canUpdate()) {
             return;
           }
 
           // Leave the end time off to use the server's current time as the end
           // time. This prevents an issue where the donut chart shows 0 for
           // current usage if the client clock is ahead of the server clock.
+          var start = Date.now() - scope.options.timeRange.value * 60 * 1000;
+
           angular.forEach(scope.metrics, function(metric) {
             var promises = [];
 
@@ -326,14 +366,12 @@ angular.module('openshiftConsole')
             // fit in the same collection of 'dates' and can be displayed in
             // exactly the same point in time in the graph.
             angular.forEach(_.map(metric.datasets, 'id'), function(metricID) {
-              promises.push(MetricsService.get({
-                pod: pod,
-                // some metrics (network, disk) are not available at container
-                // level (only at pod and node level)
-                containerName: metric.containerMetric ? container.name : "pod",
-                metric: metricID,
-                start: start
-              }));
+              var config = getConfig(metric, metricID);
+              if (!config) {
+                return;
+              }
+              config.start = start;
+              promises.push(MetricsService.get(config));
             });
 
             // Collect all promises from every metric requested into one, so we
