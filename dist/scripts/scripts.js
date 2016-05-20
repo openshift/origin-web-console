@@ -1554,7 +1554,49 @@ return a && (b = a), b;
 }, this.OAuthRedirectURI = function(a) {
 return a && (c = a), c;
 }, this.$get = [ "$location", "$q", "Logger", function(d, e, f) {
-var g = f.get("auth");
+var g = f.get("auth"), h = function(a) {
+var b;
+if (window.crypto && window.Uint32Array) try {
+var c = new Uint32Array(a);
+window.crypto.getRandomValues(c), b = [];
+for (var d = 0; a > d; d++) b.push(c[d]);
+} catch (e) {
+g.debug("RedirectLoginService.getRandomInts: ", e), b = null;
+}
+if (!b) {
+b = [];
+for (var f = 0; a > f; f++) b.push(Math.floor(4294967296 * Math.random()));
+}
+return b;
+}, i = "RedirectLoginService.nonce", j = function(a) {
+var b = String(new Date().getTime()) + "-" + h(8).join("");
+try {
+window.localStorage[i] = b;
+} catch (c) {
+g.log("RedirectLoginService.makeState, localStorage error: ", c);
+}
+return JSON.stringify({
+then:a,
+nonce:b
+});
+}, k = function(a) {
+var b = {
+then:null,
+verified:!1
+}, c = "";
+try {
+c = window.localStorage[i], window.localStorage.removeItem(i);
+} catch (d) {
+g.log("RedirectLoginService.parseState, localStorage error: ", d);
+}
+try {
+var e = a ? JSON.parse(a) :{};
+e && e.nonce && c && e.nonce === c && (b.verified = !0, b.then = e.then);
+} catch (d) {
+g.error("RedirectLoginService.parseState, state error: ", d);
+}
+return g.error("RedirectLoginService.parseState", b), b;
+};
 return {
 login:function() {
 if ("" === a) return e.reject({
@@ -1573,7 +1615,7 @@ var f = e.defer(), h = new URI(b), i = new URI(d.url()).fragment("");
 return h.query({
 client_id:a,
 response_type:"token",
-state:i.toString(),
+state:j(i.toString()),
 redirect_uri:c
 }), g.log("RedirectLoginService.login(), redirecting", h.toString()), window.location.href = h.toString(), f.promise;
 },
@@ -1589,13 +1631,15 @@ error_description:h,
 error_uri:i
 });
 }
+var j = k(c.state);
 if (c.access_token && "bearer" === (c.token_type || "").toLowerCase()) {
-var j = e.defer();
-return j.resolve({
+var l = e.defer();
+return l.resolve({
 token:c.access_token,
 ttl:c.expires_in,
-then:c.state
-}), j.promise;
+then:j.state,
+verified:j.verified
+}), l.promise;
 }
 return e.reject({
 error:"invalid_request",
@@ -4478,35 +4522,43 @@ hideFilterWidget:!0
 }, c.get(a.project).then(_.spread(function(a, c) {
 b.project = a, b.projectContext = c;
 }));
-} ]), angular.module("openshiftConsole").controller("OAuthController", [ "$location", "$q", "RedirectLoginService", "DataService", "AuthService", "Logger", function(a, b, c, d, e, f) {
-var g = f.get("auth");
-c.finish().then(function(b) {
-var c = b.token, f = b.then, h = b.ttl, i = {
+} ]), angular.module("openshiftConsole").controller("OAuthController", [ "$scope", "$location", "$q", "RedirectLoginService", "DataService", "AuthService", "Logger", function(a, b, c, d, e, f, g) {
+var h = g.get("auth");
+a.completeLogin = function() {}, a.cancelLogin = function() {
+b.replace(), b.url("./");
+}, d.finish().then(function(c) {
+var d = c.token, g = c.then, i = c.verified, j = c.ttl, k = {
 errorNotification:!1,
 http:{
 auth:{
-token:c,
+token:d,
 triggerLogin:!1
 }
 }
 };
-g.log("OAuthController, got token, fetching user", i), d.get("users", "~", {}, i).then(function(b) {
-g.log("OAuthController, got user", b), e.setUser(b, c, h);
-var d = f || "./";
-URI(d).is("absolute") && (g.log("OAuthController, invalid absolute redirect", d), d = "./"), g.log("OAuthController, redirecting", d), a.url(d);
-})["catch"](function(b) {
+h.log("OAuthController, got token, fetching user", k), e.get("users", "~", {}, k).then(function(c) {
+if (h.log("OAuthController, got user", c), a.completeLogin = function() {
+f.setUser(c, d, j);
+var a = g || "./";
+URI(a).is("absolute") && (h.log("OAuthController, invalid absolute redirect", a), a = "./"), h.log("OAuthController, redirecting", a), b.replace(), b.url(a);
+}, i) a.completeLogin(); else {
+a.confirmUser = c;
+var e = f.UserStore().getUser();
+e && e.metadata.name !== c.metadata.name && (a.overriddenUser = e);
+}
+})["catch"](function(a) {
 var c = URI("error").query({
 error:"user_fetch_failed"
 }).toString();
-g.error("OAuthController, error fetching user", b, "redirecting", c), a.url(c);
+h.error("OAuthController, error fetching user", a, "redirecting", c), b.replace(), b.url(c);
 });
-})["catch"](function(b) {
+})["catch"](function(a) {
 var c = URI("error").query({
-error:b.error || "",
-error_description:b.error_description || "",
-error_uri:b.error_uri || ""
+error:a.error || "",
+error_description:a.error_description || "",
+error_uri:a.error_uri || ""
 }).toString();
-g.error("OAuthController, error", b, "redirecting", c), a.url(c);
+h.error("OAuthController, error", a, "redirecting", c), b.replace(), b.url(c);
 });
 } ]), angular.module("openshiftConsole").controller("ErrorController", [ "$scope", "$window", function(a, b) {
 var c = URI(window.location.href).query(!0), d = c.error;
