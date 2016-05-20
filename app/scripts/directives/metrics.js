@@ -43,6 +43,7 @@ angular.module('openshiftConsole')
             datasets: [
               {
                 id: "memory/usage",
+                label: "Memory",
                 data: []
               }
             ]
@@ -55,6 +56,7 @@ angular.module('openshiftConsole')
             datasets: [
               {
                 id: "cpu/usage",
+                label: "CPU",
                 data: []
               }
             ]
@@ -182,6 +184,13 @@ angular.module('openshiftConsole')
             },
             size: {
               height: 160
+            },
+            tooltip: {
+              format: {
+                value: function(value) {
+                  return value + " " + metric.units;
+                }
+              }
             }
           };
         };

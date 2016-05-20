@@ -6596,6 +6596,7 @@ convert:i,
 containerMetric:!0,
 datasets:[ {
 id:"memory/usage",
+label:"Memory",
 data:[]
 } ]
 }, {
@@ -6605,6 +6606,7 @@ chartPrefix:"cpu-",
 containerMetric:!0,
 datasets:[ {
 id:"cpu/usage",
+label:"CPU",
 data:[]
 } ]
 }, {
@@ -6708,6 +6710,13 @@ show:!1
 },
 size:{
 height:160
+},
+tooltip:{
+format:{
+value:function(b) {
+return b + " " + a.units;
+}
+}
 }
 };
 };
