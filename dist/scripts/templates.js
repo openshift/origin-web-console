@@ -7252,11 +7252,22 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "<div class=\"wrap no-sidebar\">\n" +
     "<div class=\"middle surface-shaded\">\n" +
     "<div class=\"container surface-shaded\">\n" +
-    "<div>\n" +
+    "<div ng-if=\"!confirmUser\">\n" +
     "<h1 style=\"margin-top: 10px\">Logging in&hellip;</h1>\n" +
-    "<div>\n" +
-    "Please wait while you are logged in...\n" +
+    "<p>Please wait while you are logged in&hellip;</p>\n" +
     "</div>\n" +
+    "<div ng-if=\"confirmUser && !overriddenUser\">\n" +
+    "<h1 style=\"margin-top: 10px\">Confirm Login</h1>\n" +
+    "<p>You are being logged in as <code>{{confirmUser.metadata.name}}</code>.</p>\n" +
+    "<button class=\"btn btn-lg btn-primary\" type=\"button\" ng-click=\"completeLogin();\">Continue</button>\n" +
+    "<button class=\"btn btn-lg btn-default\" type=\"button\" ng-click=\"cancelLogin();\">Cancel</button>\n" +
+    "</div>\n" +
+    "<div ng-if=\"confirmUser && overriddenUser\">\n" +
+    "<h1 style=\"margin-top: 10px\">Confirm User Change</h1>\n" +
+    "<p>You are about to change users from <code>{{overriddenUser.metadata.name}}</code> to <code>{{confirmUser.metadata.name}}</code>.</p>\n" +
+    "<p>If this is unexpected, click Cancel. This could be an attempt to trick you into acting as another user.</p>\n" +
+    "<button class=\"btn btn-lg btn-danger\" type=\"button\" ng-click=\"completeLogin();\">Switch Users</button>\n" +
+    "<button class=\"btn btn-lg btn-primary\" type=\"button\" ng-click=\"cancelLogin();\">Cancel</button>\n" +
     "</div>\n" +
     "</div>\n" +
     "</div>\n" +
