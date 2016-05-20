@@ -1444,7 +1444,7 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "<span ng-switch-default>is {{latestBuild.status.phase | lowercase}}.</span>\n" +
     "</span>\n" +
     "</span>\n" +
-    "<a ng-href=\"{{build | buildLogURL}}\" ng-if=\"build | buildLogURL\">View Log</a>\n" +
+    "<a ng-href=\"{{latestBuild | buildLogURL}}\" ng-if=\"latestBuild | buildLogURL\">View Log</a>\n" +
     "</div>\n" +
     "<div class=\"latest-build-timestamp meta text-muted\">\n" +
     "<span ng-if=\"!latestBuild.status.startTimestamp\">\n" +
