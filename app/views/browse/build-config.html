@@ -114,7 +114,7 @@
                             <span ng-switch-default>is {{latestBuild.status.phase | lowercase}}.</span>
                           </span>
                         </span>
-                        <a ng-href="{{build | buildLogURL}}" ng-if="build | buildLogURL">View Log</a>
+                        <a ng-href="{{latestBuild | buildLogURL}}" ng-if="latestBuild | buildLogURL">View Log</a>
                       </div>
                       <div class="latest-build-timestamp meta text-muted">
                         <span ng-if="!latestBuild.status.startTimestamp">
