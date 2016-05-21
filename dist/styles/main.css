@@ -678,7 +678,7 @@ input[type=range]{display:block;width:100%}
 select[multiple],select[size]{height:auto}
 input[type=file]:focus,input[type=checkbox]:focus,input[type=radio]:focus{outline:dotted thin!important;outline:-webkit-focus-ring-color auto 5px!important;outline-offset:-2px!important}
 output{padding-top:3px}
-.form-control{width:100%;height:27px;padding:2px 6px;background-color:#fff;border:1px solid #bababa;border-radius:1px;-webkit-box-shadow:inset 0 1px 1px rgba(0,0,0,.075);box-shadow:inset 0 1px 1px rgba(0,0,0,.075);-webkit-transition:border-color ease-in-out .15s,box-shadow ease-in-out .15s;-o-transition:border-color ease-in-out .15s,box-shadow ease-in-out .15s;transition:border-color ease-in-out .15s,box-shadow ease-in-out .15s}
+.form-control{width:100%;height:27px;padding:2px 6px;background-color:#fff;border:1px solid #BABABA;border-radius:1px;-webkit-box-shadow:inset 0 1px 1px rgba(0,0,0,.075);box-shadow:inset 0 1px 1px rgba(0,0,0,.075);-webkit-transition:border-color ease-in-out .15s,box-shadow ease-in-out .15s;-o-transition:border-color ease-in-out .15s,box-shadow ease-in-out .15s;transition:border-color ease-in-out .15s,box-shadow ease-in-out .15s}
 .form-control:focus{border-color:#66afe9;outline:0;-webkit-box-shadow:inset 0 1px 1px rgba(0,0,0,.075),0 0 8px rgba(102,175,233,.6);box-shadow:inset 0 1px 1px rgba(0,0,0,.075),0 0 8px rgba(102,175,233,.6)}
 .form-control::-moz-placeholder{opacity:1;color:#999;font-style:italic}
 .form-control:-ms-input-placeholder{color:#999;font-style:italic}
@@ -686,7 +686,7 @@ output{padding-top:3px}
 .form-control:-moz-placeholder{color:#999;font-style:italic}
 .has-success .checkbox,.has-success .checkbox-inline,.has-success .control-label,.has-success .form-control-feedback,.has-success .help-block,.has-success .radio,.has-success .radio-inline,.has-success.checkbox label,.has-success.checkbox-inline label,.has-success.radio label,.has-success.radio-inline label{color:#3c763d}
 .form-control::-ms-expand{border:0;background-color:transparent}
-.form-control[disabled],.form-control[readonly],fieldset[disabled] .form-control{background-color:#f8f8f8;opacity:1}
+.form-control[disabled],.form-control[readonly],fieldset[disabled] .form-control{background-color:#F8F8F8;opacity:1}
 .form-control[disabled],fieldset[disabled] .form-control{cursor:not-allowed}
 textarea.form-control{height:auto}
 @media screen and (-webkit-min-device-pixel-ratio:0){input[type=date].form-control,input[type=time].form-control,input[type=datetime-local].form-control,input[type=month].form-control{line-height:27px}
@@ -877,7 +877,7 @@ select[multiple].input-group-sm>.form-control,select[multiple].input-group-sm>.i
 .nav>li,.nav>li>a{display:block;position:relative}
 .input-group .form-control:not(:first-child):not(:last-child),.input-group-addon:not(:first-child):not(:last-child),.input-group-btn:not(:first-child):not(:last-child){border-radius:0}
 .input-group-addon,.input-group-btn{width:1%;white-space:nowrap;vertical-align:middle}
-.input-group-addon{padding:2px 6px;font-size:13px;font-weight:400;line-height:1;color:#333;text-align:center;background-color:#eee;border:1px solid #bababa;border-radius:1px}
+.input-group-addon{padding:2px 6px;font-size:13px;font-weight:400;line-height:1;color:#333;text-align:center;background-color:#eee;border:1px solid #BABABA;border-radius:1px}
 .badge,.close{font-weight:700}
 .input-group-addon.input-sm{padding:2px 6px;font-size:11px;border-radius:1px}
 .input-group-addon.input-lg{padding:6px 10px;font-size:15px;border-radius:1px}
@@ -2101,7 +2101,7 @@ button.close{padding:0;cursor:pointer;background:0 0;border:0;-webkit-appearance
 .datepicker thead tr:first-child .cw{cursor:default;background-color:transparent}
 .input-daterange{width:100%}
 .input-daterange input{text-align:center}
-.input-daterange .input-group-addon{width:auto;min-width:16px;font-weight:400;text-align:center;text-shadow:0 1px 0 #fff;vertical-align:middle;border:solid #bababa;border-width:1px 0;margin-left:-5px;margin-right:-5px}
+.input-daterange .input-group-addon{width:auto;min-width:16px;font-weight:400;text-align:center;text-shadow:0 1px 0 #fff;vertical-align:middle;border:solid #BABABA;border-width:1px 0;margin-left:-5px;margin-right:-5px}
 /*!
  * Datetimepicker for Bootstrap 3
  * version : 4.17.37
@@ -2315,12 +2315,12 @@ select.mobile-device{position:absolute!important;top:0;left:0;display:block!impo
 .combobox-container .input-group-addon.active.focus,.combobox-container .input-group-addon.active:focus,.combobox-container .input-group-addon.active:hover,.combobox-container .input-group-addon:active.focus,.combobox-container .input-group-addon:active:focus,.combobox-container .input-group-addon:active:hover,.open .dropdown-toggle.combobox-container .input-group-addon.focus,.open .dropdown-toggle.combobox-container .input-group-addon:focus,.open .dropdown-toggle.combobox-container .input-group-addon:hover{background-color:#e2e2e2;border-color:#a5a5a5}
 .combobox-container .input-group-addon.disabled,.combobox-container .input-group-addon.disabled.active,.combobox-container .input-group-addon.disabled:active,.combobox-container .input-group-addon.disabled:focus,.combobox-container .input-group-addon.disabled:hover,.combobox-container .input-group-addon[disabled],.combobox-container .input-group-addon[disabled].active,.combobox-container .input-group-addon[disabled]:active,.combobox-container .input-group-addon[disabled]:focus,.combobox-container .input-group-addon[disabled]:hover,fieldset[disabled] .combobox-container .input-group-addon,fieldset[disabled] .combobox-container .input-group-addon.active,fieldset[disabled] .combobox-container .input-group-addon:active,fieldset[disabled] .combobox-container .input-group-addon:focus,fieldset[disabled] .combobox-container .input-group-addon:hover{background-color:#eee;border-color:#b7b7b7}
 .combobox-container .input-group-addon:active{-webkit-box-shadow:inset 0 2px 8px rgba(0,0,0,.2);box-shadow:inset 0 2px 8px rgba(0,0,0,.2)}
-.bootstrap-datepicker.form-control[readonly]{background-color:#fff;border-color:#bababa!important;color:#333;-webkit-box-shadow:inset 0 1px 1px rgba(0,0,0,.075);box-shadow:inset 0 1px 1px rgba(0,0,0,.075)}
+.bootstrap-datepicker.form-control[readonly]{background-color:#fff;border-color:#BABABA!important;color:#333;-webkit-box-shadow:inset 0 1px 1px rgba(0,0,0,.075);box-shadow:inset 0 1px 1px rgba(0,0,0,.075)}
 .bootstrap-datepicker.form-control[readonly]:focus{outline:0;-webkit-box-shadow:inset 0 1px 1px rgba(0,0,0,.075),0 0 8px rgba(102,175,233,.6);box-shadow:inset 0 1px 1px rgba(0,0,0,.075),0 0 8px rgba(102,175,233,.6);border-color:#66afe9!important}
 .has-error .bootstrap-datepicker.form-control[readonly]:focus{border-color:#843534;-webkit-box-shadow:inset 0 1px 1px rgba(0,0,0,.075),0 0 6px #ce8483;box-shadow:inset 0 1px 1px rgba(0,0,0,.075),0 0 6px #ce8483}
 .has-success .bootstrap-datepicker.form-control[readonly]:focus{border-color:#2b542c;-webkit-box-shadow:inset 0 1px 1px rgba(0,0,0,.075),0 0 6px #67b168;box-shadow:inset 0 1px 1px rgba(0,0,0,.075),0 0 6px #67b168}
 .has-warning .bootstrap-datepicker.form-control[readonly]:focus{border-color:#bb6106;-webkit-box-shadow:inset 0 1px 1px rgba(0,0,0,.075),0 0 6px #faad60;box-shadow:inset 0 1px 1px rgba(0,0,0,.075),0 0 6px #faad60}
-.bootstrap-datepicker.form-control[readonly]:hover{border-color:#7bb2dd!important}
+.bootstrap-datepicker.form-control[readonly]:hover{border-color:#7BB2DD!important}
 .has-error .bootstrap-datepicker.form-control[readonly]:hover{border-color:#843534!important}
 .has-success .bootstrap-datepicker.form-control[readonly]:hover{border-color:#2b542c!important}
 .has-warning .bootstrap-datepicker.form-control[readonly]:hover{border-color:#bb6106!important}
@@ -2336,10 +2336,10 @@ select.mobile-device{position:absolute!important;top:0;left:0;display:block!impo
 .datepicker table tr td span:hover,.datepicker tfoot tr th:hover,.datepicker thead tr:first-child th:hover{background:#d4edfa}
 .input-daterange input:first-child{border-radius:1px 0 0 1px}
 .input-daterange input:last-child{border-radius:0 1px 1px 0}
-.input-daterange .input-group-addon{background-color:#eee;border-color:#bababa;line-height:1.66666667;padding:2px 6px}
+.input-daterange .input-group-addon{background-color:#eee;border-color:#BABABA;line-height:1.66666667;padding:2px 6px}
 .bootstrap-select.btn-group.form-control{margin-bottom:0}
 .bootstrap-select.btn-group .btn{-webkit-transition:border-color ease-in-out .15s,box-shadow ease-in-out .15s;-o-transition:border-color ease-in-out .15s,box-shadow ease-in-out .15s;transition:border-color ease-in-out .15s,box-shadow ease-in-out .15s}
-.bootstrap-select.btn-group .btn:hover{border-color:#7bb2dd}
+.bootstrap-select.btn-group .btn:hover{border-color:#7BB2DD}
 .bootstrap-select.btn-group .btn .caret{margin-top:-4px}
 .bootstrap-select.btn-group .btn:focus{border-color:#66afe9;outline:0!important;-webkit-box-shadow:inset 0 1px 1px rgba(0,0,0,.075),0 0 8px rgba(102,175,233,.6);box-shadow:inset 0 1px 1px rgba(0,0,0,.075),0 0 8px rgba(102,175,233,.6)}
 .has-error .bootstrap-select.btn-group .btn{border-color:#a94442}
@@ -2548,7 +2548,7 @@ table.datatable th:active{outline:0}
 .chars-remaining-pf span{font-weight:600;padding-right:5px}
 .chars-warn-remaining-pf{color:#c00}
 .form-control[disabled],.form-control[readonly],fieldset[disabled] .form-control{border-color:#d4d4d4!important;-webkit-box-shadow:none;box-shadow:none;color:#969696}
-.form-control:hover{border-color:#7bb2dd}
+.form-control:hover{border-color:#7BB2DD}
 .has-error .form-control:hover{border-color:#843534}
 .has-success .form-control:hover{border-color:#2b542c}
 .has-warning .form-control:hover{border-color:#bb6106}
@@ -4098,7 +4098,7 @@ body,html{margin:0;padding:0}
 .tile.tile-template a.label{font-size:11px}
 .tile.tile-project{min-height:75px}
 .tile.tile-project h2{margin:10px 0}
-.tile.tile-status{background-color:#e6ecf1;border-top:5px solid #bfcedb;margin-top:40px}
+.tile.tile-status{background-color:#E6ECF1;border-top:5px solid #BFCEDB;margin-top:40px}
 .tile-click{cursor:pointer;position:relative}
 .tile-click:hover{box-shadow:0 2px 12px -1px rgba(0,0,0,.3),0 4px 5px 0 rgba(0,0,0,.11),0 1px 10px 0 rgba(0,0,0,.1)}
 .tile-click:hover .btn{color:#000!important}
