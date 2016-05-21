@@ -5,6 +5,7 @@
 .card-pf-aggregate-status-alt .card-pf-aggregate-status-notifications .card-pf-aggregate-status-notification{border-left:none}
 .card-pf-aggregate-status-alt .card-pf-aggregate-status-notifications .fa,.card-pf-aggregate-status-alt .card-pf-aggregate-status-notifications .pficon{position:relative;top:-1px}
 .card-pf-heading-no-bottom{margin:0 -20px 0px;padding:0 20px}
+.card-pf-icon-image{height:18px;margin:0 5px 5px}
 .empty-chart-content{text-align:center}
 .empty-chart-content .pficon{font-size:24px}
 .empty-chart-content span{vertical-align:middle;width:100%}
@@ -52,6 +53,7 @@
 .sort-pf .form-group .btn-link:hover{color:#0099d3}
 .input-group .input-group-btn .dropdown-menu>.selected>a{background-color:#0099d3!important;border-color:#0076b7!important;color:#fff!important}
 .toolbar-pf-actions .dropdown-kebab-pf{float:right}
+.toolbar-pf-include-actions{display:inline-block;margin:0 5px}
 .utilization-bar-chart-pf .progress-bar{-webkit-transition:width .75s ease-in-out;-moz-transition:width .75s ease-in-out;-o-transition:width .75s ease-in-out;transition:width .75s ease-in-out}
 .utilization-bar-chart-pf .progress-bar.animate{width:0%!important}
 .heatmap-pf-container{position:relative}
