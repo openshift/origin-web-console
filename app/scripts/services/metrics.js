@@ -43,10 +43,29 @@ angular.module("openshiftConsole")
       return point.start + (point.end - point.start) / 2;
     }
 
+    // Is there engouh data to compare min and max values to calculate a usage
+    // rate for a counter metric like CPU or network?
+    function canCalculateRate(point, config) {
+      // If there isn't a min or max, we can't compare.
+      if (!point.min || !point.max) {
+        return false;
+      }
+
+      // For pod metrics, if samples < 2, min and max will always be the same
+      // because there aren't enough samples in the bucket.
+      // For deployment metrics that are "stacked," samples has a different
+      // meaning. It is set to 1 if there is one pod, even when min and max
+      // have different values, so don't ignore this point.
+      if (config.pod && point.samples < 2) {
+        return false;
+      }
+
+      return true;
+    }
+
     // Convert cumulative CPU usage in nanoseconds to millicores.
-    function millicoresUsed(point) {
-      // Is there a gap in the data?
-      if (!point.min || !point.max || point.samples < 2) {
+    function millicoresUsed(point, config) {
+      if (!canCalculateRate(point, config)) {
         return null;
       }
 
@@ -59,19 +78,15 @@ angular.module("openshiftConsole")
     }
 
     // Convert cumulative usage to usage rate, doesn't change units.
-    function bytesUsed(point) {
-      // Is there a gap in the data?
-      if (!point.min || !point.max || point.samples < 2) {
+    function bytesUsed(point, config) {
+      if (!canCalculateRate(point, config)) {
         return null;
       }
 
       return point.max - point.min;
     }
 
-    function normalize(data, metricID) {
-      // Track the previous value for CPU usage calculations.
-      var lastValue;
-
+    function normalize(data, config) {
       if (!data.length) {
         return;
       }
@@ -88,13 +103,13 @@ angular.module("openshiftConsole")
           point.value = (avg && avg !== "NaN") ? avg : null;
         }
 
-        if (metricID === 'cpu/usage') {
-          point.value = millicoresUsed(point, lastValue);
+        if (config.metric === 'cpu/usage') {
+          point.value = millicoresUsed(point, config);
         }
 
         // Network is cumulative, convert to amount per point.
-        if (/network\/rx|tx/.test(metricID)) {
-          point.value = bytesUsed(point);
+        if (/network\/rx|tx/.test(config.metric)) {
+          point.value = bytesUsed(point, config);
         }
       });
 
@@ -177,7 +192,7 @@ angular.module("openshiftConsole")
           }).then(function(response) {
             return _.assign(response, {
               metricID: config.metric,
-              data: normalize(response.data, config.metric)
+              data: normalize(response.data, config)
             });
           });
         });
