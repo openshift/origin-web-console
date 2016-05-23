@@ -34,6 +34,26 @@
             </span>
           </span>
         </dd>
+        <div ng-if='build.spec.triggeredBy.length'>
+          <dt>Triggered by:</dt>
+          <dd>
+            <div ng-repeat="trigger in build.spec.triggeredBy">
+              <div ng-switch="trigger.message">
+                <span ng-switch-when="Manually triggered">Manual build</span>
+                <span ng-switch-when="GitHub WebHook">
+                  <ng-include src=" 'views/_webhook-trigger-cause.html' "></ng-include>
+                </span>
+                <span ng-switch-when="Generic WebHook">
+                  <ng-include src=" 'views/_webhook-trigger-cause.html' "></ng-include>
+                </span>
+                <span ng-switch-when="Image change">
+                  {{trigger.message}} for {{trigger.imageChangeBuild.fromRef.name}}
+                </span>
+                <span ng-switch-default>{{trigger.message}}</span>
+              </div>
+            </div>
+          </dd>
+        </div>
       </dl>
       <h3>Configuration <span class="small" ng-if="buildConfigName">created from <a href="{{buildConfigName | navigateResourceURL : 'BuildConfig' : build.metadata.namespace}}">{{buildConfigName}}</a></span></h3>
       <dl class="dl-horizontal left">

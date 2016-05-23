@@ -3204,7 +3204,7 @@ to{transform:rotate(359deg)}
 .components.components-group .connector{display:inline-block;position:absolute;top:48%;left:-5px}
 .components.components-group .connector i{color:#ccc;-webkit-transform:rotate(137deg);-ms-transform:rotate(137deg);-o-transform:rotate(137deg);transform:rotate(137deg);font-size:9px;position:absolute}
 .components.components-group .connector:before{content:'\f111';font:normal normal normal 6px/1 FontAwesome;display:inline-block;color:#fff;position:absolute;left:2px;top:1px}
-.environment-variables.table.table-bordered>tbody>tr>td:last-child .env-var-value,.modal-resource-edit .editor,.pod-template-block .pod-template .hash{font-family:Menlo,Monaco,Consolas,monospace}
+.environment-variables.table.table-bordered>tbody>tr>td:last-child .env-var-value,.hash,.modal-resource-edit .editor{font-family:Menlo,Monaco,Consolas,monospace}
 .components .components-panel{background-color:#fff;border:1px solid #ddd;position:relative}
 .components .components-panel.deployment-block.none,.components .components-panel.service.none{background-color:transparent}
 @media (min-width:768px){.components.components-group .osc-object-active .connector i{color:#00a8e1}
@@ -3243,10 +3243,10 @@ to{transform:rotate(359deg)}
 .pod-template-block .component-label{font-size:11px;padding:0 10px 4px 0;text-transform:uppercase}
 .pod-template-block .pod-template [row]{border-left:3px solid #eee;padding:2px 0 0 2px}
 .pod-template-block .pod-template .fa,.pod-template-block .pod-template .pficon,.pod-template-block .pod-template span[data-icon]{color:#888}
-.pod-template-block .pod-template .hash{font-size:12px}
 .pod-template-block .pod-template .pod-template-build{word-wrap:break-word;word-break:break-word;overflow-wrap:break-word;min-width:0}
 .pod-template-block .pod-template .pod-template-key{font-weight:700}
 .components .pod-template-block .pod-template .pod-template-key{font-weight:600}
+.hash{font-size:12px}
 .pod-template-container{margin:0 0 20px}
 .components .pod-template-container{margin-bottom:0}
 .pod-container-terminal{margin-top:15px;margin-bottom:15px}

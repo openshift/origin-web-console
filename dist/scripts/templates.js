@@ -867,6 +867,23 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
   );
 
 
+  $templateCache.put('views/_webhook-trigger-cause.html',
+    "{{trigger.message === 'GitHub WebHook' ? 'GitHub webhook' : 'Generic webhook'}}: <span ng-if=\"trigger.githubWebHook.revision || trigger.genericWebHook.revision\"> {{trigger.githubWebHook.revision.git.message || trigger.genericWebHook.revision.git.message}}</span>\n" +
+    "<osc-git-link ng-if=\"trigger.githubWebHook.revision || trigger.genericWebHook.revision\" class=\"hash\" uri=\"build.spec.source.git.uri\" commit=\"trigger.githubWebHook.revision.git.commit || trigger.genericWebHook.revision.git.commit\">{{trigger.githubWebHook.revision.git.commit || trigger.genericWebHook.revision.git.commit | limitTo:7}}\n" +
+    "</osc-git-link>\n" +
+    "<span ng-if=\"trigger.githubWebHook.revision || trigger.genericWebHook.revision\">\n" +
+    "authored by {{trigger.githubWebHook.revision.git.author.name || trigger.genericWebHook.revision.git.author.name}},\n" +
+    "</span>\n" +
+    "<span ng-if=\"trigger.genericWebHook && !trigger.genericWebHook.revision\">\n" +
+    "no revision information,\n" +
+    "</span>\n" +
+    "<a href=\"\" ng-if=\"!showSecret\" ng-click=\"toggleSecret()\"> show obfuscated secret</a>\n" +
+    "<span ng-if=\"showSecret\">\n" +
+    "{{trigger.githubWebHook.secret || trigger.genericWebHook.secret}}\n" +
+    "</span>"
+  );
+
+
   $templateCache.put('views/about.html',
     "<default-header class=\"top-header\"></default-header>\n" +
     "<div class=\"wrap no-sidebar\">\n" +
@@ -1098,6 +1115,26 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "</span>\n" +
     "</span>\n" +
     "</dd>\n" +
+    "<div ng-if=\"build.spec.triggeredBy.length\">\n" +
+    "<dt>Triggered by:</dt>\n" +
+    "<dd>\n" +
+    "<div ng-repeat=\"trigger in build.spec.triggeredBy\">\n" +
+    "<div ng-switch=\"trigger.message\">\n" +
+    "<span ng-switch-when=\"Manually triggered\">Manual build</span>\n" +
+    "<span ng-switch-when=\"GitHub WebHook\">\n" +
+    "<ng-include src=\" 'views/_webhook-trigger-cause.html' \"></ng-include>\n" +
+    "</span>\n" +
+    "<span ng-switch-when=\"Generic WebHook\">\n" +
+    "<ng-include src=\" 'views/_webhook-trigger-cause.html' \"></ng-include>\n" +
+    "</span>\n" +
+    "<span ng-switch-when=\"Image change\">\n" +
+    "{{trigger.message}} for {{trigger.imageChangeBuild.fromRef.name}}\n" +
+    "</span>\n" +
+    "<span ng-switch-default>{{trigger.message}}</span>\n" +
+    "</div>\n" +
+    "</div>\n" +
+    "</dd>\n" +
+    "</div>\n" +
     "</dl>\n" +
     "<h3>Configuration <span class=\"small\" ng-if=\"buildConfigName\">created from <a href=\"{{buildConfigName | navigateResourceURL : 'BuildConfig' : build.metadata.namespace}}\">{{buildConfigName}}</a></span></h3>\n" +
     "<dl class=\"dl-horizontal left\">\n" +
