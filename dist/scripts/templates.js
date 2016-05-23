@@ -4951,7 +4951,11 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "<div ng-show=\"resource | annotation:'provider'\">Provider: {{ resource | annotation:'provider' }}</div>\n" +
     "<div ng-show=\"resource.metadata.namespace\">Namespace: {{ resource.metadata.namespace }}</div>\n" +
     "</div>\n" +
-    "<div class=\"resource-description gutter-bottom\" ng-bind-html=\"resource | description | linky\">\n" +
+    "<div class=\"resource-description\" ng-bind-html=\"resource | description | linky\" ng-class=\"{'gutter-bottom': tag !== 'latest'}\">\n" +
+    "</div>\n" +
+    "<div ng-if=\"tag === 'latest'\" class=\"alert alert-info\">\n" +
+    "<span class=\"pficon pficon-info\" aria-hidden=\"true\"></span>\n" +
+    "This builder image tracks the latest version of the {{name}} image, which could be updated to a newer major version in the future. If your application will not run on a different major version go <a href=\"#\" back>back</a> and choose a specific version.\n" +
     "</div>"
   );
 
