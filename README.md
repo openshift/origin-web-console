@@ -1,6 +1,6 @@
-OpenShift 3 Management Console
+OpenShift Management Console
 =========================
-The management console for [OpenShift Origin](https://github.com/openshift/origin) v3.
+The management console for [OpenShift Origin](https://github.com/openshift/origin).
 
 [![Build Status](https://travis-ci.org/openshift/origin-web-console.svg?branch=master)](https://travis-ci.org/openshift/origin-web-console)
 
@@ -145,10 +145,10 @@ For more details on the expected arguments, see the source under [app/scripts/fi
 * dateRelative - returns the relative date for a timestamp given the current time (ex: '5 minutes ago')
 * ageLessThan - returns whether a timestamp is within a given time amount (ex: 5) and unit (ex: 'minutes').  Refer to the [Moment.js docs](http://momentjs.com/docs/#/manipulating/add/) for the supported units.
 * orderObjectsByDate - given an array or hash of k8s or openshift API objects, return an array of the objects sorted by the creationTimestamp.  By default orders with oldest first, optional reverse param will return ordered by newest first.
-* annotation - for a k8s or openshift api object, lets you get any annotation by key
+* annotation - for a k8s or OpenShift api object, lets you get any annotation by key
 * description - shortcut for annotation | 'description'
 * tags - shortcut for annotation | 'tags'
-* label - for a k8s or openshift api object, lets you get any label by key
+* label - for a k8s or OpenShift api object, lets you get any label by key
 * hashSize - returns the number of subobjects on a javascript hash
 * helpLink - returns the relevant link in the OpenShift docs for a particular help topic, new help topics should be added to the filter.  DO NOT put URLs to help directly into the source in any location except for this filter
 
