@@ -3205,18 +3205,9 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "</p>\n" +
     "<p>\n" +
     "After downloading and installing it, you can start by logging in using<span ng-if=\"sessionToken\"> this current session token</span>:\n" +
-    "<div class=\"code prettyprint ng-binding\" ng-if=\"sessionToken\">\n" +
-    "oc login {{loginBaseURL}} --token=<span ng-show=\"showSessionToken\">{{sessionToken}}</span><a href=\"#\" ng-click=\"toggleShowSessionToken()\" ng-show=\"!showSessionToken\">...click to show token...</a>\n" +
-    "</div>\n" +
-    "<pre class=\"code prettyprint ng-binding\" ng-if=\"!sessionToken\">\n" +
-    "                      oc login {{loginBaseURL}}\n" +
-    "                    </pre>\n" +
+    "<pre class=\"code prettyprint\">oc login {{loginBaseURL}} <span ng-if=\"sessionToken\">--token=<span ng-show=\"showSessionToken\">{{sessionToken}}</span><a href=\"#\" ng-click=\"toggleShowSessionToken()\" ng-show=\"!showSessionToken\">...click to show token...</a></span></pre>\n" +
     "</p>\n" +
-    "<div ng-show=\"showSessionToken\" class=\"alert alert-warning\">\n" +
-    "<span class=\"pficon pficon-warning-triangle-o\" aria-hidden=\"true\"></span>\n" +
-    "<strong>A token is a form of a password.</strong>\n" +
-    "Do not share your API token.\n" +
-    "</div>\n" +
+    "<token-warning show-session-token=\"showSessionToken\"></token-warning>\n" +
     "<p>After you login to your account you will get a list of projects that you can switch between:\n" +
     "<pre class=\"code prettyprint\">oc project <i>project-name</i></pre>\n" +
     "</p>\n" +
@@ -3771,20 +3762,22 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "<h2>Things you can do</h2>\n" +
     "<p>Go to the <a href=\"project/{{projectName}}/overview\">overview page</a> to see more details about this project. Make sure you don't already have <a href=\"project/{{projectName}}/browse/services\">services</a>, <a href=\"project/{{projectName}}/browse/builds\">build configs</a>, <a href=\"project/{{projectName}}/browse/deployments\">deployment configs</a>, or other resources with the same names you are trying to create. Refer to the <a target=\"_blank\" href=\"{{'new_app' | helpLink}}\">documentation for creating new applications</a> for more information.</p>\n" +
     "<h3>Command line tools</h3>\n" +
-    "<p>You may want to use the <code>oc</code> command line tool to help with troubleshooting. After <a target=\"_blank\" href=\"command-line\">downloading and installing</a> it, you can log in, switch to this particular project, and try some commands :</p>\n" +
-    "<pre class=\"code prettyprint\">oc login {{loginBaseUrl}}\n" +
+    "<p>You may want to use the <code>oc</code> command line tool to help with troubleshooting. After <a target=\"_blank\" href=\"command-line\">downloading and installing</a> it, you can log in <span ng-if=\"sessionToken\">using current session token</span>, switch to this particular project, and try some commands :</p>\n" +
+    "<pre class=\"code prettyprint\">oc login {{loginBaseUrl}} <span ng-if=\"sessionToken\">--token=<span ng-show=\"showSessionToken\">{{sessionToken}}</span><a href=\"#\" ng-click=\"toggleShowSessionToken()\" ng-show=\"!showSessionToken\">...click to show token...</a></span>\n" +
     "oc project {{projectName}}\n" +
     "oc logs -h</pre>\n" +
+    "<token-warning show-session-token=\"showSessionToken\"></token-warning>\n" +
     "<p>For more information about the command line tools, check the <a target=\"_blank\" href=\"{{'cli' | helpLink}}\">CLI Reference</a> and <a target=\"_blank\" href=\"{{'basic_cli_operations' | helpLink}}\">Basic CLI Operations</a>.</p>\n" +
     "</div>\n" +
     "<div ng-if=\"allTasksSuccessful(tasks())\" ng-class=\"createdBuildConfigWithGitHubTrigger() ? 'col-md-6' : 'col-md-12'\">\n" +
     "<h2>Manage your app</h2>\n" +
     "<p>The web console is convenient, but if you need deeper control you may want to try our command line tools.</p>\n" +
     "<h3>Command line tools</h3>\n" +
-    "<p><a target=\"_blank\" href=\"command-line\">Download and install</a> the <code>oc</code> command line tool. After that, you can start by logging in, switching to this particular project, and displaying an overview of it, by doing:</p>\n" +
-    "<pre class=\"code prettyprint\">oc login {{loginBaseUrl}}\n" +
+    "<p><a target=\"_blank\" href=\"command-line\">Download and install</a> the <code>oc</code> command line tool. After that, you can start by logging in <span ng-if=\"sessionToken\">using current session token</span>, switching to this particular project, and displaying an overview of it, by doing:</p>\n" +
+    "<pre class=\"code prettyprint\">oc login {{loginBaseUrl}} <span ng-if=\"sessionToken\">--token=<span ng-show=\"showSessionToken\">{{sessionToken}}</span><a href=\"#\" ng-click=\"toggleShowSessionToken()\" ng-show=\"!showSessionToken\">...click to show token...</a></span>\n" +
     "oc project {{projectName}}\n" +
     "oc status</pre>\n" +
+    "<token-warning show-session-token=\"showSessionToken\"></token-warning>\n" +
     "<p>For more information about the command line tools, check the <a target=\"_blank\" href=\"{{'cli' | helpLink}}\">CLI Reference</a> and <a target=\"_blank\" href=\"{{'basic_cli_operations' | helpLink}}\">Basic CLI Operations</a>.</p>\n" +
     "</div>\n" +
     "<div ng-if=\"createdBuildConfig\" class=\"col-md-6\">\n" +

@@ -104,4 +104,13 @@ angular.module('openshiftConsole')
       },
       templateUrl: 'views/directives/_warnings-popover.html'
     };
+  })
+  .directive('tokenWarning', function() {
+    return {
+      restrict: 'E',
+      scope: {
+        showSessionToken: '='
+      },
+      template: '<div ng-show="showSessionToken" class="alert alert-warning"><span class="pficon pficon-warning-triangle-o" aria-hidden="true"></span><strong>A token is a form of a password.</strong>Do not share your API token.</div>'
+    };
   });

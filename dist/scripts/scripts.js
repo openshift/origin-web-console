@@ -4336,31 +4336,33 @@ null !== a && (b.debug("Generated resource definition:", a), d.push(a));
 }), w(d, a.projectName, a).then(x, y);
 };
 }));
-} ]), angular.module("openshiftConsole").controller("NextStepsController", [ "$scope", "$http", "$routeParams", "DataService", "$q", "$location", "TaskList", "$parse", "Navigate", "$filter", "imageObjectRefFilter", "failureObjectNameFilter", "ProjectsService", function(a, b, c, d, e, f, g, h, i, j, k, l, m) {
-function n() {
-return t && s;
-}
+} ]), angular.module("openshiftConsole").controller("NextStepsController", [ "$scope", "$http", "AuthService", "$routeParams", "DataService", "$q", "$location", "TaskList", "$parse", "Navigate", "$filter", "imageObjectRefFilter", "failureObjectNameFilter", "ProjectsService", function(a, b, c, d, e, f, g, h, i, j, k, l, m, n) {
 function o() {
-return q && r && s;
+return u && t;
 }
-var p = (j("displayName"), []);
-a.emptyMessage = "Loading...", a.alerts = [], a.loginBaseUrl = d.openshiftAPIBaseUrl(), a.buildConfigs = {}, a.projectName = c.project;
-var q = c.imageName, r = c.imageTag, s = c.namespace;
-a.fromSampleRepo = c.fromSample;
-var t = c.name, u = "";
-u = o() ? "project/" + a.projectName + "/create/fromimage?imageName=" + q + "&imageTag=" + r + "&namespace=" + s + "&name=" + t :"project/" + a.projectName + "/create/fromtemplate?name=" + t + "&namespace=" + s, a.breadcrumbs = [ {
+function p() {
+return r && s && t;
+}
+var q = (k("displayName"), []);
+a.emptyMessage = "Loading...", a.alerts = [], a.loginBaseUrl = e.openshiftAPIBaseUrl(), a.buildConfigs = {}, c.withUser(), a.sessionToken = c.UserStore().getToken(), a.showSessionToken = !1, a.toggleShowSessionToken = function() {
+a.showSessionToken = !a.showSessionToken;
+}, a.projectName = d.project;
+var r = d.imageName, s = d.imageTag, t = d.namespace;
+a.fromSampleRepo = d.fromSample;
+var u = d.name, v = "";
+v = p() ? "project/" + a.projectName + "/create/fromimage?imageName=" + r + "&imageTag=" + s + "&namespace=" + t + "&name=" + u :"project/" + a.projectName + "/create/fromtemplate?name=" + u + "&namespace=" + t, a.breadcrumbs = [ {
 title:a.projectName,
 link:"project/" + a.projectName
 }, {
 title:"Add to Project",
 link:"project/" + a.projectName + "/create"
 }, {
-title:t,
-link:u
+title:u,
+link:v
 }, {
 title:"Next Steps"
-} ], m.get(c.project).then(_.spread(function(b, e) {
-function g(a) {
+} ], n.get(d.project).then(_.spread(function(b, c) {
+function f(a) {
 var b = [];
 return angular.forEach(a, function(a) {
 a.hasErrors && b.push(a);
@@ -4372,8 +4374,8 @@ return angular.forEach(a, function(a) {
 "completed" !== a.status && b.push(a);
 }), b;
 }
-return a.project = b, a.breadcrumbs[0].title = j("displayName")(b), t && (n(c) || o(c)) ? (p.push(d.watch("buildconfigs", e, function(b) {
-a.buildConfigs = b.by("metadata.name"), a.createdBuildConfig = a.buildConfigs[t], Logger.log("buildconfigs (subscribe)", a.buildConfigs);
+return a.project = b, a.breadcrumbs[0].title = k("displayName")(b), u && (o(d) || p(d)) ? (q.push(e.watch("buildconfigs", c, function(b) {
+a.buildConfigs = b.by("metadata.name"), a.createdBuildConfig = a.buildConfigs[u], Logger.log("buildconfigs (subscribe)", a.buildConfigs);
 })), a.createdBuildConfigWithGitHubTrigger = function() {
 return _.some(_.get(a, "createdBuildConfig.spec.triggers"), {
 type:"GitHub"
@@ -4383,12 +4385,12 @@ return _.some(_.get(a, "createdBuildConfig.spec.triggers"), {
 type:"ConfigChange"
 });
 }, a.allTasksSuccessful = function(a) {
-return !h(a).length && !g(a).length;
-}, a.erroredTasks = g, a.pendingTasks = h, a.goBack = function() {
-o() ? f.path("project/" + encodeURIComponent(this.projectName) + "/create/fromimage") :f.path("project/" + encodeURIComponent(this.projectName) + "/create/fromtemplate");
+return !h(a).length && !f(a).length;
+}, a.erroredTasks = f, a.pendingTasks = h, a.goBack = function() {
+p() ? g.path("project/" + encodeURIComponent(this.projectName) + "/create/fromimage") :g.path("project/" + encodeURIComponent(this.projectName) + "/create/fromtemplate");
 }, void a.$on("$destroy", function() {
-d.unwatchAll(p);
-})) :void i.toProjectOverview(a.projectName);
+e.unwatchAll(q);
+})) :void j.toProjectOverview(a.projectName);
 }));
 } ]), angular.module("openshiftConsole").controller("NewFromTemplateController", [ "$scope", "$http", "$routeParams", "DataService", "AlertMessageService", "ProjectsService", "$q", "$location", "TaskList", "$parse", "Navigate", "$filter", "imageObjectRefFilter", "failureObjectNameFilter", "CachedTemplateService", function(a, b, c, d, e, f, g, h, i, j, k, l, m, n, o) {
 var p = c.name, q = c.namespace || "";
@@ -6152,7 +6154,15 @@ b.$watch("route", c, !0), b.$watch("service", c, !0), b.$watch("warnings", c, !0
 },
 templateUrl:"views/directives/_warnings-popover.html"
 };
-} ]), angular.module("openshiftConsole").directive("takeFocus", [ "$timeout", function(a) {
+} ]).directive("tokenWarning", function() {
+return {
+restrict:"E",
+scope:{
+showSessionToken:"="
+},
+template:'<div ng-show="showSessionToken" class="alert alert-warning"><span class="pficon pficon-warning-triangle-o" aria-hidden="true"></span><strong>A token is a form of a password.</strong>Do not share your API token.</div>'
+};
+}), angular.module("openshiftConsole").directive("takeFocus", [ "$timeout", function(a) {
 return {
 restrict:"A",
 link:function(b, c) {

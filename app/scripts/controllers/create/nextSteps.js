@@ -9,7 +9,7 @@
  * Controller of the openshiftConsole
  */
 angular.module("openshiftConsole")
-  .controller("NextStepsController", function($scope, $http, $routeParams, DataService, $q, $location, TaskList, $parse, Navigate, $filter, imageObjectRefFilter, failureObjectNameFilter, ProjectsService) {
+  .controller("NextStepsController", function($scope, $http, AuthService, $routeParams, DataService, $q, $location, TaskList, $parse, Navigate, $filter, imageObjectRefFilter, failureObjectNameFilter, ProjectsService) {
     var displayNameFilter = $filter('displayName');
     var watches = [];
 
@@ -17,6 +17,14 @@ angular.module("openshiftConsole")
     $scope.alerts = [];
     $scope.loginBaseUrl = DataService.openshiftAPIBaseUrl();
     $scope.buildConfigs = {};
+
+    AuthService.withUser();
+    $scope.sessionToken = AuthService.UserStore().getToken();
+    $scope.showSessionToken = false;
+
+    $scope.toggleShowSessionToken = function() {
+      $scope.showSessionToken = !$scope.showSessionToken;
+    };
 
     $scope.projectName = $routeParams.project;
     var imageName = $routeParams.imageName;

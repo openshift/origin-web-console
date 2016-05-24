@@ -33,19 +33,10 @@
                   </p>
                   <p>
                     After downloading and installing it, you can start by logging in using<span ng-if="sessionToken"> this current session token</span>:
-                    <div class="code prettyprint ng-binding" ng-if="sessionToken">
-                      oc login {{loginBaseURL}} --token=<span ng-show="showSessionToken">{{sessionToken}}</span><a href="#" ng-click="toggleShowSessionToken()" ng-show="!showSessionToken">...click to show token...</a>
-                    </div>
-                    <pre class="code prettyprint ng-binding" ng-if="!sessionToken">
-                      oc login {{loginBaseURL}}
-                    </pre>
+                    <pre class="code prettyprint">oc login {{loginBaseURL}} <span ng-if="sessionToken">--token=<span ng-show="showSessionToken">{{sessionToken}}</span><a href="#" ng-click="toggleShowSessionToken()" ng-show="!showSessionToken">...click to show token...</a></span></pre>
                   </p>
 
-                  <div ng-show="showSessionToken" class="alert alert-warning">
-                    <span class="pficon pficon-warning-triangle-o" aria-hidden="true"></span>
-                    <strong>A token is a form of a password.</strong>
-                    Do not share your API token.
-                  </div>
+                  <token-warning show-session-token='showSessionToken'></token-warning>
 
                   <p>After you login to your account you will get a list of projects that you can switch between:
                      <pre class="code prettyprint">oc project <i>project-name</i></pre>
