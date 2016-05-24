@@ -2749,7 +2749,7 @@ b.routeWarningsByService[c] = {}, angular.forEach(b.routesByService[c], function
 var f = r.getRouteWarnings(d, a);
 f.length && (b.routeWarningsByService[c][e] = r.getRouteWarnings(d, a));
 });
-}), b.emptyMessage = "No services to show", C(), E(), l.log("services (list)", b.services);
+}), b.emptyMessage = "There are no services and no running deployments or pods.", C(), E(), l.log("services (list)", b.services);
 })), v.push(c.watch("routes", e, function(a) {
 b.routes = a.by("metadata.name");
 var c = b.routesByService = {}, d = b.displayRouteByService = {};
