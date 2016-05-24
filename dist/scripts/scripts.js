@@ -2083,36 +2083,38 @@ b[a.tag] = b[a.tag] || {}, b[a.tag].name = a.tag, b[a.tag].status = angular.copy
 };
 }), angular.module("openshiftConsole").factory("MetricsService", [ "$http", "$q", "APIDiscovery", function(a, b, c) {
 function d() {
-return angular.isDefined(j) ? b.when(j) :c.getMetricsURL().then(function(a) {
-return j = (a || "").replace(/\/$/, "");
+return angular.isDefined(k) ? b.when(k) :c.getMetricsURL().then(function(a) {
+return k = (a || "").replace(/\/$/, "");
 });
 }
 function e(a) {
 return a.start + (a.end - a.start) / 2;
 }
-function f(a) {
-if (!a.min || !a.max || a.samples < 2) return null;
-var b = a.end - a.start, c = (a.max - a.min) / 1e6;
-return c / b * 1e3;
+function f(a, b) {
+return a.min && a.max ? !(b.pod && a.samples < 2) :!1;
 }
-function g(a) {
-return !a.min || !a.max || a.samples < 2 ? null :a.max - a.min;
+function g(a, b) {
+if (!f(a, b)) return null;
+var c = a.end - a.start, d = (a.max - a.min) / 1e6;
+return d / c * 1e3;
 }
 function h(a, b) {
-var c;
-if (a.length) return angular.forEach(a, function(a) {
+return f(a, b) ? a.max - a.min :null;
+}
+function i(a, b) {
+return a.length ? (angular.forEach(a, function(a) {
 if (a.timestamp || (a.timestamp = e(a)), !a.value || "NaN" === a.value) {
-var d = a.avg;
-a.value = d && "NaN" !== d ? d :null;
+var c = a.avg;
+a.value = c && "NaN" !== c ? c :null;
 }
-"cpu/usage" === b && (a.value = f(a, c)), /network\/rx|tx/.test(b) && (a.value = g(a));
-}), a;
+"cpu/usage" === b.metric && (a.value = g(a, b)), /network\/rx|tx/.test(b.metric) && (a.value = h(a, b));
+}), a) :void 0;
 }
-function i(a) {
+function j(a) {
 return d().then(function(b) {
 var c;
 if (a.deployment) {
-c = b + p[a.metric];
+c = b + q[a.metric];
 var d;
 switch (a.metric) {
 case "network/rx":
@@ -2129,23 +2131,23 @@ metric:a.metric,
 type:d
 }).toString();
 }
-return c = b + o[a.metric], URI.expand(c, {
+return c = b + p[a.metric], URI.expand(c, {
 podUID:a.pod.metadata.uid,
 containerName:a.containerName,
 metric:a.metric
 }).toString();
 });
 }
-var j, k = "/counters/{containerName}%2F{podUID}%2F{metric}/data", l = "/gauges/{containerName}%2F{podUID}%2F{metric}/data", m = "/counters/data?stacked=true&tags=descriptor_name:{metric},type:{type},labels:.*\\bdeployment:{deployment}\\b.*", n = "/gauges/data?stacked=true&tags=descriptor_name:{metric},type:{type},labels:.*\\bdeployment:{deployment}\\b.*", o = {
-"cpu/usage":k,
-"memory/usage":l,
-"network/rx":k,
-"network/tx":k
-}, p = {
-"cpu/usage":m,
-"memory/usage":n,
-"network/rx":m,
-"network/tx":m
+var k, l = "/counters/{containerName}%2F{podUID}%2F{metric}/data", m = "/gauges/{containerName}%2F{podUID}%2F{metric}/data", n = "/counters/data?stacked=true&tags=descriptor_name:{metric},type:{type},labels:.*\\bdeployment:{deployment}\\b.*", o = "/gauges/data?stacked=true&tags=descriptor_name:{metric},type:{type},labels:.*\\bdeployment:{deployment}\\b.*", p = {
+"cpu/usage":l,
+"memory/usage":m,
+"network/rx":l,
+"network/tx":l
+}, q = {
+"cpu/usage":n,
+"memory/usage":o,
+"network/rx":n,
+"network/tx":n
 };
 return {
 isAvailable:function() {
@@ -2155,7 +2157,7 @@ return !!a;
 },
 getMetricsURL:d,
 get:function(b) {
-return i(b).then(function(c) {
+return j(b).then(function(c) {
 var d = {
 buckets:60,
 start:b.start
@@ -2170,7 +2172,7 @@ params:d
 }).then(function(a) {
 return _.assign(a, {
 metricID:b.metric,
-data:h(a.data, b.metric)
+data:i(a.data, b)
 });
 });
 });
