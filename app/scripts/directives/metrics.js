@@ -30,6 +30,14 @@ angular.module('openshiftConsole')
           return value / (1024 * 1024);
         }
 
+        function bytesToKiB(value) {
+          if (!value) {
+            return value;
+          }
+
+          return value / 1024;
+        }
+
         scope.uniqueID = _.uniqueId('metrics-chart-');
 
         // Metrics to display.
@@ -63,10 +71,10 @@ angular.module('openshiftConsole')
           },
           {
             label: "Network",
-            units: "MiB",
+            units: "KiB/s",
             chartPrefix: "network-",
             chartType: "line",
-            convert: bytesToMiB,
+            convert: bytesToKiB,
             datasets: [
               {
                 id: "network/tx",

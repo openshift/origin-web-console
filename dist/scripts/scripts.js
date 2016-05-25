@@ -2091,15 +2091,21 @@ function e(a) {
 return a.start + (a.end - a.start) / 2;
 }
 function f(a, b) {
-return a.min && a.max ? !(b.pod && a.samples < 2) :!1;
+return a.min && a.max && a.start && a.end ? !(b.pod && a.samples < 2) :!1;
 }
 function g(a, b) {
 if (!f(a, b)) return null;
-var c = a.end - a.start, d = (a.max - a.min) / 1e6;
+var c = a.end - a.start;
+if (0 === c) return null;
+var d = (a.max - a.min) / 1e6;
 return d / c * 1e3;
 }
 function h(a, b) {
-return f(a, b) ? a.max - a.min :null;
+if (!f(a, b)) return null;
+var c = (a.end - a.start) / 1e3;
+if (0 === c) return null;
+var d = a.max - a.min;
+return d / c;
 }
 function i(a, b) {
 return a.length ? (angular.forEach(a, function(a) {
@@ -6434,29 +6440,32 @@ function i(a) {
 return a ? a / 1048576 :a;
 }
 function j(a) {
+return a ? a / 1024 :a;
+}
+function k(a) {
 if (!h.pod) return null;
 var b = h.options.selectedContainer;
 switch (a) {
 case "memory/usage":
-var c = r(b);
+var c = s(b);
 if (c) return i(g(c));
 break;
 
 case "cpu/usage":
-var d = s(b);
+var d = t(b);
 if (d) return 1e3 * g(d);
 }
 return null;
 }
-function k(a) {
+function l(a) {
 var b, d = {};
 angular.forEach(a.datasets, function(e) {
 var f = e.id, g = e.data;
 b = [ "dates" ], d[f] = [ e.label || f ];
 var i = h.usageByMetric[f] = {
-total:j(f)
-}, k = _.last(g).value;
-isNaN(k) && (k = 0), a.convert && (k = a.convert(k)), i.used = d3.round(k), i.total && (i.available = Math.max(i.total - i.used, 0)), angular.forEach(g, function(c) {
+total:k(f)
+}, j = _.last(g).value;
+isNaN(j) && (j = 0), a.convert && (j = a.convert(j)), i.used = d3.round(j), i.total && (i.available = Math.max(i.total - i.used, 0)), angular.forEach(g, function(c) {
 if (b.push(c.timestamp), void 0 === c.value || null === c.value) d[f].push(c.value); else {
 var e = a.convert ? a.convert(c.value) :c.value;
 switch (f) {
@@ -6479,8 +6488,8 @@ colors:{
 Used:"#0088ce",
 Available:"#d1d1d1"
 }
-}, p[f] ? p[f].load(m) :(l = t(a), l.data = m, c(function() {
-p[f] = c3.generate(l);
+}, q[f] ? q[f].load(m) :(l = u(a), l.data = m, c(function() {
+q[f] = c3.generate(l);
 })));
 });
 var e, f = [ b ].concat(_.values(d)), g = {
@@ -6488,13 +6497,13 @@ type:a.chartType || "area",
 x:"dates",
 columns:f
 }, i = a.chartPrefix + "sparkline";
-q[i] ? q[i].load(g) :(e = u(a), e.data = g, a.chartDataColors && (e.color = {
+r[i] ? r[i].load(g) :(e = v(a), e.data = g, a.chartDataColors && (e.color = {
 pattern:a.chartDataColors
 }), c(function() {
-q[i] = c3.generate(e);
+r[i] = c3.generate(e);
 }));
 }
-function l(a, b) {
+function m(a, b) {
 return h.pod ? {
 pod:h.pod,
 containerName:a.containerMetric ? h.options.selectedContainer.name :"pod",
@@ -6506,23 +6515,23 @@ namespace:h.deployment.metadata.namespace,
 metric:b
 } :null;
 }
-function m() {
+function n() {
 return h.metricsError ? !1 :h.deployment ? !0 :h.pod && _.get(h, "options.selectedContainer");
 }
-function n() {
-if (m()) {
+function o() {
+if (n()) {
 var a = Date.now() - 60 * h.options.timeRange.value * 1e3;
 angular.forEach(h.metrics, function(b) {
 var c = [];
 angular.forEach(_.map(b.datasets, "id"), function(d) {
-var e = l(b, d);
+var e = m(b, d);
 e && (e.start = a, c.push(f.get(e)));
 }), d.all(c).then(function(a) {
 angular.forEach(a, function(a) {
 _.find(b.datasets, {
 id:a.metricID
 }).data = a.data;
-}), k(b);
+}), l(b);
 }, function(a) {
 angular.forEach(a, function(a) {
 h.metricsError = {
@@ -6536,7 +6545,7 @@ h.loaded = !0;
 });
 }
 }
-var o, p = {}, q = {}, r = b("resources.limits.memory"), s = b("resources.limits.cpu");
+var p, q = {}, r = {}, s = b("resources.limits.memory"), t = b("resources.limits.cpu");
 h.uniqueID = _.uniqueId("metrics-chart-"), h.metrics = [ {
 label:"Memory",
 units:"MiB",
@@ -6560,10 +6569,10 @@ data:[]
 } ]
 }, {
 label:"Network",
-units:"MiB",
+units:"KiB/s",
 chartPrefix:"network-",
 chartType:"line",
-convert:i,
+convert:j,
 datasets:[ {
 id:"network/tx",
 label:"Sent",
@@ -6597,7 +6606,7 @@ return _.some(_.map(a.datasets, "id"), function(a) {
 return void 0 !== h.usageByMetric[a];
 });
 };
-var t = function(a) {
+var u = function(a) {
 var b = "#" + a.chartPrefix + h.uniqueID + "-donut";
 return {
 bindto:b,
@@ -6619,7 +6628,7 @@ height:175,
 widht:175
 }
 };
-}, u = function(a) {
+}, v = function(a) {
 return {
 bindto:"#" + a.chartPrefix + h.uniqueID + "-sparkline",
 axis:{
@@ -6670,13 +6679,13 @@ return b + " " + a.units;
 };
 };
 h.$watch("options", function() {
-delete h.metricsError, n();
-}, !0), o = a(n, 15e3, !1), h.$on("$destroy", function() {
-o && (a.cancel(o), o = null), angular.forEach(p, function(a) {
+delete h.metricsError, o();
+}, !0), p = a(o, 15e3, !1), h.$on("$destroy", function() {
+p && (a.cancel(p), p = null), angular.forEach(q, function(a) {
 a.destroy();
-}), p = null, angular.forEach(q, function(a) {
+}), q = null, angular.forEach(r, function(a) {
 a.destroy();
-}), q = null;
+}), r = null;
 });
 }
 };

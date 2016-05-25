@@ -51,6 +51,10 @@ angular.module("openshiftConsole")
         return false;
       }
 
+      if (!point.start || !point.end) {
+        return false;
+      }
+
       // For pod metrics, if samples < 2, min and max will always be the same
       // because there aren't enough samples in the bucket.
       // For deployment metrics that are "stacked," samples has a different
@@ -70,6 +74,10 @@ angular.module("openshiftConsole")
       }
 
       var timeInMillis = point.end - point.start;
+      if (timeInMillis === 0) {
+        return null;
+      }
+
       // Find the usage for just this bucket by comparing min and max.
       // Values are in nanoseconds. Calculate usage in millis.
       var usageInMillis = (point.max - point.min) / 1000000;
@@ -78,12 +86,18 @@ angular.module("openshiftConsole")
     }
 
     // Convert cumulative usage to usage rate, doesn't change units.
-    function bytesUsed(point, config) {
+    function bytesUsedPerSecond(point, config) {
       if (!canCalculateRate(point, config)) {
         return null;
       }
 
-      return point.max - point.min;
+      var seconds = (point.end - point.start) / 1000;
+      if (seconds === 0) {
+        return null;
+      }
+
+      var bytesUsed = point.max - point.min;
+      return bytesUsed / seconds;
     }
 
     function normalize(data, config) {
@@ -109,7 +123,7 @@ angular.module("openshiftConsole")
 
         // Network is cumulative, convert to amount per point.
         if (/network\/rx|tx/.test(config.metric)) {
-          point.value = bytesUsed(point, config);
+          point.value = bytesUsedPerSecond(point, config);
         }
       });
 
