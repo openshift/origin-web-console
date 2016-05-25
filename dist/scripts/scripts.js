@@ -3275,18 +3275,18 @@ a.logOptions.container = b("annotation")(c, "pod"), a.logCanRun = !_.includes([ 
 };
 h.get(c.project).then(_.spread(function(d, g) {
 function h() {
-if (a.hpaForRC = f.hpaForRC(s, c.deployment || c.replicationcontroller), a.isActive) {
-var b = f.hpaForDC(s, c.deploymentconfig);
+if (a.hpaForRC = f.hpaForRC(r, c.deployment || c.replicationcontroller), a.isActive) {
+var b = f.hpaForDC(r, c.deploymentconfig);
 a.autoscalers = a.hpaForRC.concat(b);
 } else a.autoscalers = a.hpaForRC;
 }
-function n() {
+function k() {
 angular.forEach(a.deployments, function(b, c) {
 a.podTemplates[c] = b.spec.template;
 });
 }
 a.project = d, a.projectContext = g;
-var o, p, q = function() {
+var n, o, p = function() {
 l.push(e.watch("replicationcontrollers", g, function(c) {
 var d, e = [], f = b("annotation");
 angular.forEach(c.by("metadata.name"), function(b) {
@@ -3294,27 +3294,27 @@ var c = f(b, "deploymentConfig") || "";
 c === a.deploymentConfigName && e.push(b);
 }), d = i.getActiveDeployment(e), a.isActive = d && d.metadata.uid === a.deployment.metadata.uid, h();
 }));
-}, r = function() {
-o && p && (a.podsForDeployment = _.filter(o, function(a) {
-return p.matches(a);
+}, q = function() {
+n && o && (a.podsForDeployment = _.filter(n, function(a) {
+return o.matches(a);
 }));
-}, s = {}, t = {}, u = function() {
-f.getHPAWarnings(a.deployment, a.autoscalers, t, d).then(function(b) {
+}, r = {}, s = {}, t = function() {
+f.getHPAWarnings(a.deployment, a.autoscalers, s, d).then(function(b) {
 a.hpaWarnings = b;
 });
 };
 e.get("replicationcontrollers", c.deployment || c.replicationcontroller, g).then(function(d) {
-a.loaded = !0, a.deployment = d, m(d), u();
+a.loaded = !0, a.deployment = d, m(d), t();
 var f = b("annotation")(d, "deploymentVersion");
 f && (a.breadcrumbs[2].title = "#" + f, a.logOptions.version = f), a.deploymentConfigName = b("annotation")(d, "deploymentConfig"), l.push(e.watchObject("replicationcontrollers", c.deployment || c.replicationcontroller, g, function(b, d) {
 "DELETED" === d && (a.alerts.deleted = {
 type:"warning",
 message:c.deployment ? "This deployment has been deleted." :"This replication controller has been deleted."
-}), a.deployment = b, m(b), u();
-})), a.deploymentConfigName && q(), a.$watch("deployment.spec.selector", function() {
-p = new LabelSelector(a.deployment.spec.selector), r();
+}), a.deployment = b, m(b), t();
+})), a.deploymentConfigName && p(), a.$watch("deployment.spec.selector", function() {
+o = new LabelSelector(a.deployment.spec.selector), q();
 }, !0), l.push(e.watch("pods", g, function(a) {
-o = a.by("metadata.name"), r();
+n = a.by("metadata.name"), q();
 }));
 }, function(d) {
 a.loaded = !0, a.alerts.load = {
@@ -3333,12 +3333,12 @@ message:"The deployment configuration details could not be loaded.",
 details:"Reason: " + b("getErrorDetails")(c)
 });
 }), l.push(e.watch("replicationcontrollers", g, function(c, d, e) {
-a.deployments = c.by("metadata.name"), n(), j.fetchReferencedImageStreamImages(a.podTemplates, a.imagesByDockerReference, a.imageStreamImageRefByDockerReference, g), a.emptyMessage = "No deployments to show", a.deploymentsByDeploymentConfig = i.associateDeploymentsToDeploymentConfig(a.deployments);
+a.deployments = c.by("metadata.name"), k(), j.fetchReferencedImageStreamImages(a.podTemplates, a.imagesByDockerReference, a.imageStreamImageRefByDockerReference, g), a.emptyMessage = "No deployments to show", a.deploymentsByDeploymentConfig = i.associateDeploymentsToDeploymentConfig(a.deployments);
 var f, h;
 if (e && (f = b("annotation")(e, "deploymentConfig"), h = e.metadata.name), d) {
 if ("ADDED" === d || "MODIFIED" === d && [ "New", "Pending", "Running" ].indexOf(b("deploymentStatus")(e)) > -1) a.deploymentConfigDeploymentsInProgress[f] = a.deploymentConfigDeploymentsInProgress[f] || {}, a.deploymentConfigDeploymentsInProgress[f][h] = e; else if ("MODIFIED" === d) {
-var k = b("deploymentStatus")(e);
-"Complete" !== k && "Failed" !== k || delete a.deploymentConfigDeploymentsInProgress[f][h];
+var l = b("deploymentStatus")(e);
+"Complete" !== l && "Failed" !== l || delete a.deploymentConfigDeploymentsInProgress[f][h];
 }
 } else a.deploymentConfigDeploymentsInProgress = i.associateRunningDeploymentToDeploymentConfig(a.deploymentsByDeploymentConfig);
 e ? "DELETED" !== d && (e.causes = b("deploymentCauses")(e)) :angular.forEach(a.deployments, function(a) {
@@ -3352,9 +3352,9 @@ a.builds = b.by("metadata.name"), Logger.log("builds (subscribe)", a.builds);
 group:"extensions",
 resource:"horizontalpodautoscalers"
 }, g, function(a) {
-s = a.by("metadata.name"), h(), u();
+r = a.by("metadata.name"), h(), t();
 })), e.list("limitranges", g, function(a) {
-t = a.by("metadata.name"), u();
+s = a.by("metadata.name"), t();
 }), a.startLatestDeployment = function(b) {
 i.startLatestDeployment(b, g, a);
 }, a.retryFailedDeployment = function(b) {
@@ -3372,8 +3372,10 @@ details:b("getErrorDetails")(c)
 };
 };
 a.deploymentConfig ? i.scaleDC(a.deploymentConfig, c).then(_.noop, d) :i.scaleRC(a.deployment, c).then(_.noop, d);
-}, a.viewPodsForDeployment = function() {
-0 !== b("hashSize")(a.podsForDeployment) && k.toPodsForDeployment(a.deployment);
+};
+var u = b("isDeployment");
+a.isScalable = function() {
+return _.isEmpty(a.autoscalers) && u(a.deployment) ? a.deploymentConfigMissing ? !0 :a.deploymentConfig ? a.isActive :!1 :!0;
 }, a.$on("$destroy", function() {
 e.unwatchAll(l);
 });
@@ -5883,7 +5885,7 @@ probe:"="
 },
 templateUrl:"views/directives/_probe.html"
 };
-}), angular.module("openshiftConsole").directive("overviewDeployment", [ "$filter", "$location", "$timeout", "$uibModal", "DeploymentsService", "HPAService", "LabelFilter", "Navigate", "hashSizeFilter", "isDeploymentFilter", function(a, b, c, d, e, f, g, h, i, j) {
+}), angular.module("openshiftConsole").directive("overviewDeployment", function() {
 return {
 restrict:"E",
 scope:{
@@ -5901,64 +5903,9 @@ builds:"=",
 pods:"=",
 alerts:"="
 },
-templateUrl:"views/_overview-deployment.html",
-controller:[ "$scope", function(b) {
-var c = !1;
-b.$watch("rc.spec.replicas", function() {
-c || (b.desiredReplicas = null);
-});
-var g = function() {
-f.getHPAWarnings(b.rc, b.hpa, b.limitRanges, b.project).then(function(a) {
-b.hpaWarnings = _.map(a, function(a) {
-return _.escape(a.message);
-}).join("<br>");
-});
+templateUrl:"views/_overview-deployment.html"
 };
-b.$watchGroup([ "limitRanges", "hpa", "project" ], g), b.$watch("rc.spec.template.spec.containers", g, !0);
-var k = _.debounce(function() {
-if (c = !1, angular.isNumber(b.desiredReplicas)) {
-var d = function(c) {
-b.alerts = b.alerts || {}, b.desiredReplicas = null, b.alerts.scale = {
-type:"error",
-message:"An error occurred scaling the deployment.",
-details:a("getErrorDetails")(c)
-};
-};
-b.deploymentConfig ? e.scaleDC(b.deploymentConfig, b.desiredReplicas).then(_.noop, d) :e.scaleRC(b.rc, b.desiredReplicas).then(_.noop, d);
-}
-}, 1e3);
-b.viewPodsForDeployment = function(a) {
-0 !== i(b.pods) && h.toPodsForDeployment(a);
-}, b.scaleUp = function() {
-b.scalable && (b.desiredReplicas = b.getDesiredReplicas(), b.desiredReplicas++, k(), c = !0);
-}, b.scaleDown = function() {
-if (b.scalable && (b.desiredReplicas = b.getDesiredReplicas(), 0 !== b.desiredReplicas)) {
-if (1 === b.desiredReplicas) {
-var a = d.open({
-animation:!0,
-templateUrl:"views/modals/confirmScale.html",
-controller:"ConfirmScaleController",
-resolve:{
-resource:function() {
-return b.rc;
-},
-type:function() {
-return j(b.rc) ? "deployment" :"replication controller";
-}
-}
-});
-return void a.result.then(function() {
-b.desiredReplicas = b.getDesiredReplicas() - 1, k(), c = !0;
-});
-}
-b.desiredReplicas--, k();
-}
-}, b.getDesiredReplicas = function() {
-return angular.isDefined(b.desiredReplicas) && null !== b.desiredReplicas ? b.desiredReplicas :b.rc && b.rc.spec && angular.isDefined(b.rc.spec.replicas) ? b.rc.spec.replicas :1;
-};
-} ]
-};
-} ]), angular.module("openshiftConsole").directive("sidebar", [ "HawtioNav", function(a) {
+}), angular.module("openshiftConsole").directive("sidebar", [ "HawtioNav", function(a) {
 return {
 restrict:"E",
 templateUrl:"views/_sidebar.html",
@@ -6911,14 +6858,14 @@ return {
 restrict:"E",
 templateUrl:"views/directives/_ellipsis-loader.html"
 };
-} ]), angular.module("openshiftConsole").directive("podStatusChart", [ "$timeout", "hashSizeFilter", "isPullingImageFilter", "isTerminatingFilter", "isTroubledPodFilter", "numContainersReadyFilter", "Logger", "ChartsService", function(a, b, c, d, e, f, g, h) {
+} ]), angular.module("openshiftConsole").directive("podDonut", [ "$timeout", "hashSizeFilter", "isPullingImageFilter", "isTerminatingFilter", "isTroubledPodFilter", "numContainersReadyFilter", "Logger", "ChartsService", function(a, b, c, d, e, f, g, h) {
 return {
 restrict:"E",
 scope:{
 pods:"=",
 desired:"=?"
 },
-templateUrl:"views/_pod-status-chart.html",
+templateUrl:"views/directives/pod-donut.html",
 link:function(a, g) {
 function i() {
 var c, d = b(a.pods);
@@ -7009,6 +6956,76 @@ a.$watch(m, q, !0), a.$watch("desired", i), a.$on("destroy", function() {
 n && (n = n.destroy());
 });
 }
+};
+} ]), angular.module("openshiftConsole").directive("deploymentDonut", [ "$filter", "$location", "$timeout", "$uibModal", "DeploymentsService", "HPAService", "LabelFilter", "Navigate", "hashSizeFilter", "isDeploymentFilter", function(a, b, c, d, e, f, g, h, i, j) {
+return {
+restrict:"E",
+scope:{
+rc:"=",
+deploymentConfig:"=",
+scalable:"=",
+hpa:"=?",
+limitRanges:"=",
+project:"=",
+pods:"=",
+alerts:"="
+},
+templateUrl:"views/directives/deployment-donut.html",
+controller:[ "$scope", function(b) {
+var c = !1;
+b.$watch("rc.spec.replicas", function() {
+c || (b.desiredReplicas = null);
+});
+var g = function() {
+f.getHPAWarnings(b.rc, b.hpa, b.limitRanges, b.project).then(function(a) {
+b.hpaWarnings = _.map(a, function(a) {
+return _.escape(a.message);
+}).join("<br>");
+});
+};
+b.$watchGroup([ "limitRanges", "hpa", "project" ], g), b.$watch("rc.spec.template.spec.containers", g, !0);
+var k = _.debounce(function() {
+if (c = !1, angular.isNumber(b.desiredReplicas)) {
+var d = function(c) {
+b.alerts = b.alerts || {}, b.desiredReplicas = null, b.alerts.scale = {
+type:"error",
+message:"An error occurred scaling the deployment.",
+details:a("getErrorDetails")(c)
+};
+};
+b.deploymentConfig ? e.scaleDC(b.deploymentConfig, b.desiredReplicas).then(_.noop, d) :e.scaleRC(b.rc, b.desiredReplicas).then(_.noop, d);
+}
+}, 1e3);
+b.viewPodsForDeployment = function(a) {
+0 !== i(b.pods) && h.toPodsForDeployment(a);
+}, b.scaleUp = function() {
+b.scalable && (b.desiredReplicas = b.getDesiredReplicas(), b.desiredReplicas++, k(), c = !0);
+}, b.scaleDown = function() {
+if (b.scalable && (b.desiredReplicas = b.getDesiredReplicas(), 0 !== b.desiredReplicas)) {
+if (1 === b.desiredReplicas) {
+var a = d.open({
+animation:!0,
+templateUrl:"views/modals/confirmScale.html",
+controller:"ConfirmScaleController",
+resolve:{
+resource:function() {
+return b.rc;
+},
+type:function() {
+return j(b.rc) ? "deployment" :"replication controller";
+}
+}
+});
+return void a.result.then(function() {
+b.desiredReplicas = b.getDesiredReplicas() - 1, k(), c = !0;
+});
+}
+b.desiredReplicas--, k();
+}
+}, b.getDesiredReplicas = function() {
+return angular.isDefined(b.desiredReplicas) && null !== b.desiredReplicas ? b.desiredReplicas :b.rc && b.rc.spec && angular.isDefined(b.rc.spec.replicas) ? b.rc.spec.replicas :1;
+};
+} ]
 };
 } ]), angular.module("openshiftConsole").directive("quotaUsageChart", [ "$filter", "ChartsService", function(a, b) {
 return {

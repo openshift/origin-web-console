@@ -3256,6 +3256,7 @@ to{transform:rotate(359deg)}
 .builds-block{margin-left:5px}
 .builds-block .builds{margin:0;overflow:hidden}
 .builds-block .builds .build{border:1px solid transparent;border-radius:5px;padding:5px;position:relative;margin:10px 0 6px;text-align:left}
+.build-well .build-detail .build-detail-label,.build-well .build-detail .deployment-detail-label,.build-well .build-detail .pod-detail-label,.build-well .deployment-detail .build-detail-label,.build-well .deployment-detail .deployment-detail-label,.build-well .deployment-detail .pod-detail-label,.build-well .pod-detail .build-detail-label,.build-well .pod-detail .deployment-detail-label,.build-well .pod-detail .pod-detail-label,.deployment-donut,.deployment-well .build-detail .build-detail-label,.deployment-well .build-detail .deployment-detail-label,.deployment-well .build-detail .pod-detail-label,.deployment-well .deployment-detail .build-detail-label,.deployment-well .deployment-detail .deployment-detail-label,.deployment-well .deployment-detail .pod-detail-label,.deployment-well .pod-detail .build-detail-label,.deployment-well .pod-detail .deployment-detail-label,.deployment-well .pod-detail .pod-detail-label,.pod-well .build-detail .build-detail-label,.pod-well .build-detail .deployment-detail-label,.pod-well .build-detail .pod-detail-label,.pod-well .deployment-detail .build-detail-label,.pod-well .deployment-detail .deployment-detail-label,.pod-well .deployment-detail .pod-detail-label,.pod-well .pod-detail .build-detail-label,.pod-well .pod-detail .deployment-detail-label,.pod-well .pod-detail .pod-detail-label{margin-right:10px}
 @media (min-width:768px){.builds-block .builds .build.osc-object.osc-object-hover{cursor:pointer;border-color:rgba(0,168,225,.5)}
 .builds-block .builds .build.osc-object.osc-object-active{border-color:#00a8e1}
 }
@@ -3264,14 +3265,14 @@ to{transform:rotate(359deg)}
 .deployment-well.detailed .deployment-summary-status,.deployment-well.detailed .deployment-summary-toggler,.deployment-well:not(.detailed) .deployment-details,.hide-ng-leave .ng-leave,.hide-ng-leave.ng-leave{display:none}
 .clickable{cursor:pointer}
 .pod-status-chart path.c3-arc-Empty{stroke:#d1d1d1;cursor:inherit!important}
-.pod-block .overview-pods{margin-right:10px;min-width:200px}
-.pod-block .overview-pods .scaling-controls{font-size:24px}
-.pod-block .overview-pods .scaling-controls a{color:#bbb}
-.pod-block .overview-pods .scaling-controls a:active,.pod-block .overview-pods .scaling-controls a:hover{color:#72767b;text-decoration:none}
-.pod-block .overview-pods .scaling-controls a.disabled{opacity:.4;cursor:not-allowed}
-.pod-block .overview-pods .scaling-controls a.disabled:hover{color:#bbb}
-.pod-block .overview-pods .hpa-details{font-size:84%;color:#999;text-align:center;margin-top:-5px;margin-bottom:7px}
-.pod-block .overview-pods .hpa-details .hpa-warning{cursor:help;margin-left:1px;vertical-align:-1px}
+.deployment-donut{justify-content:center;min-width:200px}
+.deployment-donut .scaling-controls{justify-content:center;font-size:24px}
+.deployment-donut .scaling-controls a{color:#bbb}
+.deployment-donut .scaling-controls a:active,.deployment-donut .scaling-controls a:hover{color:#72767b;text-decoration:none}
+.deployment-donut .scaling-controls a.disabled{opacity:.4;cursor:not-allowed}
+.deployment-donut .scaling-controls a.disabled:hover{color:#bbb}
+.deployment-donut .hpa-details{font-size:84%;color:#999;text-align:center;align-items:center;margin-top:-5px;margin-bottom:7px}
+.deployment-donut .hpa-details .hpa-warning{cursor:help;margin-left:1px;vertical-align:-1px}
 .action-button,[data-toggle=tooltip]{cursor:pointer}
 .deployment-well:not(.active){background-color:#fff}
 .deployment-well:not(.detailed){padding-top:12px;padding-bottom:12px}
@@ -3281,7 +3282,6 @@ to{transform:rotate(359deg)}
 .popover{min-width:300px;font-size:13px;line-height:1.66667}
 .build-well,.deployment-well,.pod-well{overflow:hidden;margin-bottom:10px}
 .build-well .build-detail,.build-well .deployment-detail,.build-well .pod-detail,.deployment-well .build-detail,.deployment-well .deployment-detail,.deployment-well .pod-detail,.pod-well .build-detail,.pod-well .deployment-detail,.pod-well .pod-detail{margin-bottom:3px}
-.build-well .build-detail .build-detail-label,.build-well .build-detail .deployment-detail-label,.build-well .build-detail .pod-detail-label,.build-well .deployment-detail .build-detail-label,.build-well .deployment-detail .deployment-detail-label,.build-well .deployment-detail .pod-detail-label,.build-well .pod-detail .build-detail-label,.build-well .pod-detail .deployment-detail-label,.build-well .pod-detail .pod-detail-label,.deployment-well .build-detail .build-detail-label,.deployment-well .build-detail .deployment-detail-label,.deployment-well .build-detail .pod-detail-label,.deployment-well .deployment-detail .build-detail-label,.deployment-well .deployment-detail .deployment-detail-label,.deployment-well .deployment-detail .pod-detail-label,.deployment-well .pod-detail .build-detail-label,.deployment-well .pod-detail .deployment-detail-label,.deployment-well .pod-detail .pod-detail-label,.pod-well .build-detail .build-detail-label,.pod-well .build-detail .deployment-detail-label,.pod-well .build-detail .pod-detail-label,.pod-well .deployment-detail .build-detail-label,.pod-well .deployment-detail .deployment-detail-label,.pod-well .deployment-detail .pod-detail-label,.pod-well .pod-detail .build-detail-label,.pod-well .pod-detail .deployment-detail-label,.pod-well .pod-detail .pod-detail-label{margin-right:10px}
 .build-well .build-status-button,.deployment-well .build-status-button,.pod-well .build-status-button{margin-left:7px}
 .animate-repeat.ng-enter,.animate-repeat.ng-leave,.animate-repeat.ng-move{-webkit-transition:all 1s;transition:all 1s}
 .animate-repeat.ng-enter,.animate-repeat.ng-leave.ng-leave-active,.animate-repeat.ng-move{opacity:0}

@@ -190,53 +190,9 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "</div>\n" +
     "</div>\n" +
     "<div row mobile=\"column\" axis=\"center center\" class=\"pod-block\">\n" +
-    "\n" +
-    "<div column class=\"overview-pods\" axis=\"center center\">\n" +
-    "<div row>\n" +
-    "\n" +
-    "<div flex></div>\n" +
-    "<div column>\n" +
-    "<pod-status-chart pods=\"pods\" desired=\"getDesiredReplicas()\" ng-click=\"viewPodsForDeployment(rc)\" ng-class=\"{ clickable: (pods | hashSize) > 0 }\">\n" +
-    "</pod-status-chart>\n" +
-    "\n" +
-    "<a href=\"\" class=\"sr-only\" ng-click=\"viewPodsForDeployment(rc)\" ng-if=\"(pods | hashSize) > 0\" role=\"button\">\n" +
-    "View pods for {{rc | displayName}}\n" +
-    "</a>\n" +
-    "</div>\n" +
-    "\n" +
-    "<div column class=\"scaling-controls\" ng-if=\"hpa && !hpa.length\">\n" +
-    "\n" +
-    "<div flex></div>\n" +
-    "<div column>\n" +
-    "<div>\n" +
-    "<a href=\"\" ng-click=\"scaleUp()\" ng-class=\"{ disabled: !scalable }\" ng-attr-title=\"{{!scalable ? undefined : 'Scale up'}}\" ng-attr-aria-disabled=\"{{!scalable ? 'true' : undefined}}\">\n" +
-    "<i class=\"fa fa-chevron-up\"></i>\n" +
-    "<span class=\"sr-only\">Scale up</span>\n" +
-    "</a>\n" +
-    "</div>\n" +
-    "<div>\n" +
-    "\n" +
-    "<a href=\"\" ng-click=\"scaleDown()\" ng-class=\"{ disabled: !scalable || getDesiredReplicas() === 0 }\" ng-attr-title=\"{{(!scalable || getDesiredReplicas() === 0) ? undefined : 'Scale down'}}\" ng-attr-aria-disabled=\"{{(!scalable || getDesiredReplicas() === 0) ? 'true' : undefined}}\" role=\"button\">\n" +
-    "<i class=\"fa fa-chevron-down\"></i>\n" +
-    "<span class=\"sr-only\">Scale down</span>\n" +
-    "</a>\n" +
-    "</div>\n" +
-    "</div>\n" +
-    "\n" +
-    "<div flex></div>\n" +
-    "</div>\n" +
-    "\n" +
-    "<div flex></div>\n" +
-    "</div>\n" +
-    "<div ng-if=\"hpa.length\" class=\"hpa-details\">\n" +
-    "Autoscaled:\n" +
-    "<span class=\"nowrap\">min: {{hpa[0].spec.minReplicas || 1}},</span>\n" +
-    "<span class=\"nowrap\">\n" +
-    "max: {{hpa[0].spec.maxReplicas}}\n" +
-    "<span ng-if=\"hpaWarnings\" dynamic-content=\"{{hpaWarnings}}\" data-toggle=\"popover\" data-trigger=\"hover\" data-html=\"true\" class=\"pficon pficon-warning-triangle-o hpa-warning\" aria-hidden=\"true\">\n" +
-    "</span>\n" +
-    "</span>\n" +
-    "</div>\n" +
+    "<div column class=\"deployment-pods\" axis=\"center center\">\n" +
+    "<deployment-donut rc=\"rc\" deployment-config=\"deploymentConfig\" pods=\"pods\" hpa=\"hpa\" limit-ragnes=\"limitRanges\" scalable=\"scalable\" alerts=\"alerts\">\n" +
+    "</deployment-donut>\n" +
     "</div>\n" +
     "\n" +
     "<div column grow=\"2\" class=\"pod-template-column\">\n" +
@@ -271,7 +227,7 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "<div flex class=\"visible-xs-block\"></div>\n" +
     "<div column class=\"overview-pods\">\n" +
     "<div column>\n" +
-    "<pod-status-chart pods=\"[pod]\" ng-click=\"viewPod()\"></pod-status-chart>\n" +
+    "<pod-donut pods=\"[pod]\" ng-click=\"viewPod()\"></pod-donut>\n" +
     "</div>\n" +
     "</div>\n" +
     "\n" +
@@ -300,19 +256,6 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "<truncate-long-text ng-if=\"error.message\" content=\"error.message\" limit=\"512\" use-word-boundary=\"true\"></truncate-long-text>\n" +
     "<span ng-if=\"error.parsedLine\">Line: {{error.parsedLine}}</span>\n" +
     "<code ng-if=\"error.snippet\">{{error.snippet}}</code>\n" +
-    "</div>\n" +
-    "</div>"
-  );
-
-
-  $templateCache.put('views/_pod-status-chart.html',
-    "<div ng-attr-id=\"{{chartId}}\" class=\"pod-status-chart\"></div>\n" +
-    "\n" +
-    "<div class=\"sr-only\">\n" +
-    "<div ng-if=\"(pods | hashSize) === 0\">No pods.</div>\n" +
-    "<div ng-if=\"(pods | hashSize) !== 0\">\n" +
-    "Pod status:\n" +
-    "<span ng-repeat=\"column in podStatusData\" ng-if=\"column[1]\">{{column[1]}} {{column[0]}}</span>\n" +
     "</div>\n" +
     "</div>"
   );
@@ -1149,12 +1092,8 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
   $templateCache.put('views/browse/_deployment-details.html',
     "<div class=\"row\" style=\"max-width: 650px\">\n" +
     "<div class=\"col-sm-4 col-sm-push-8 text-center\">\n" +
-    "<pod-status-chart pods=\"podsForDeployment\" ng-if=\"podsForDeployment\" desired=\"deployment.spec.replicas\" ng-click=\"viewPodsForDeployment()\" ng-class=\"{ clickable: (podsForDeployment | hashSize) > 0 }\" style=\"display: inline-block\">\n" +
-    "</pod-status-chart>\n" +
-    "\n" +
-    "<a href=\"\" class=\"sr-only\" ng-click=\"viewPodsForDeployment()\" ng-if=\"(podsForDeployment | hashSize) > 0\" role=\"button\">\n" +
-    "View pods for deployment.metadata.name\n" +
-    "</a>\n" +
+    "<deployment-donut rc=\"deployment\" deployment-config=\"deploymentConfig\" pods=\"podsForDeployment\" hpa=\"autoscalers\" scalable=\"isScalable()\" alerts=\"alerts\">\n" +
+    "</deployment-donut>\n" +
     "</div>\n" +
     "<div class=\"col-sm-8 col-sm-pull-4\">\n" +
     "<dl class=\"dl-horizontal left\">\n" +
@@ -1210,7 +1149,7 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "<dt>Replicas:</dt>\n" +
     "<dd>\n" +
     "\n" +
-    "<replicas status=\"deployment.status.replicas\" spec=\"deployment.spec.replicas\" disable-scaling=\"((deployment | isDeployment) && !deploymentConfigMissing && (!isActive || !deploymentConfig)) || autoscalers.length\" scale-fn=\"scale(replicas)\">\n" +
+    "<replicas status=\"deployment.status.replicas\" spec=\"deployment.spec.replicas\" disable-scaling=\"!isScalable()\" scale-fn=\"scale(replicas)\">\n" +
     "</replicas>\n" +
     "<span ng-if=\"autoscalers.length\">(autoscaled)</span>\n" +
     "</dd>\n" +
@@ -4314,6 +4253,49 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
   );
 
 
+  $templateCache.put('views/directives/deployment-donut.html',
+    "<div column class=\"deployment-donut\">\n" +
+    "<div row>\n" +
+    "<div column>\n" +
+    "<pod-donut pods=\"pods\" desired=\"getDesiredReplicas()\" ng-click=\"viewPodsForDeployment(rc)\" ng-class=\"{ clickable: (pods | hashSize) > 0 }\">\n" +
+    "</pod-donut>\n" +
+    "\n" +
+    "<a href=\"\" class=\"sr-only\" ng-click=\"viewPodsForDeployment(rc)\" ng-if=\"(pods | hashSize) > 0\" role=\"button\">\n" +
+    "View pods for {{rc | displayName}}\n" +
+    "</a>\n" +
+    "</div>\n" +
+    "\n" +
+    "<div column class=\"scaling-controls\" ng-if=\"hpa && !hpa.length\">\n" +
+    "<div>\n" +
+    "<a href=\"\" ng-click=\"scaleUp()\" ng-class=\"{ disabled: !scalable }\" ng-attr-title=\"{{!scalable ? undefined : 'Scale up'}}\" ng-attr-aria-disabled=\"{{!scalable ? 'true' : undefined}}\">\n" +
+    "<i class=\"fa fa-chevron-up\"></i>\n" +
+    "<span class=\"sr-only\">Scale up</span>\n" +
+    "</a>\n" +
+    "</div>\n" +
+    "<div>\n" +
+    "\n" +
+    "<a href=\"\" ng-click=\"scaleDown()\" ng-class=\"{ disabled: !scalable || getDesiredReplicas() === 0 }\" ng-attr-title=\"{{(!scalable || getDesiredReplicas() === 0) ? undefined : 'Scale down'}}\" ng-attr-aria-disabled=\"{{(!scalable || getDesiredReplicas() === 0) ? 'true' : undefined}}\" role=\"button\">\n" +
+    "<i class=\"fa fa-chevron-down\"></i>\n" +
+    "<span class=\"sr-only\">Scale down</span>\n" +
+    "</a>\n" +
+    "</div>\n" +
+    "</div>\n" +
+    "</div>\n" +
+    "<div row ng-if=\"hpa.length\" class=\"hpa-details\">\n" +
+    "<div>\n" +
+    "Autoscaled:\n" +
+    "<span class=\"nowrap\">min: {{hpa[0].spec.minReplicas || 1}},</span>\n" +
+    "<span class=\"nowrap\">\n" +
+    "max: {{hpa[0].spec.maxReplicas}}\n" +
+    "<span ng-if=\"hpaWarnings\" dynamic-content=\"{{hpaWarnings}}\" data-toggle=\"popover\" data-trigger=\"hover\" data-html=\"true\" class=\"pficon pficon-warning-triangle-o hpa-warning\" aria-hidden=\"true\">\n" +
+    "</span>\n" +
+    "</span>\n" +
+    "</div>\n" +
+    "</div>\n" +
+    "</div>"
+  );
+
+
   $templateCache.put('views/directives/edit-link.html',
     "<a href=\"\" ng-click=\"openEditModal()\" role=\"button\">Edit YAML</a>"
   );
@@ -5287,6 +5269,19 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "</span>\n" +
     "</span>\n" +
     "</span>"
+  );
+
+
+  $templateCache.put('views/directives/pod-donut.html',
+    "<div ng-attr-id=\"{{chartId}}\" class=\"pod-donut\"></div>\n" +
+    "\n" +
+    "<div class=\"sr-only\">\n" +
+    "<div ng-if=\"(pods | hashSize) === 0\">No pods.</div>\n" +
+    "<div ng-if=\"(pods | hashSize) !== 0\">\n" +
+    "Pod status:\n" +
+    "<span ng-repeat=\"column in podStatusData\" ng-if=\"column[1]\">{{column[1]}} {{column[0]}}</span>\n" +
+    "</div>\n" +
+    "</div>"
   );
 
 
