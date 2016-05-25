@@ -1,14 +1,14 @@
 "use strict";
 
 angular.module('openshiftConsole')
-  .directive('podStatusChart', function($timeout,
-                                        hashSizeFilter,
-                                        isPullingImageFilter,
-                                        isTerminatingFilter,
-                                        isTroubledPodFilter,
-                                        numContainersReadyFilter,
-                                        Logger,
-                                        ChartsService) {
+  .directive('podDonut', function($timeout,
+                                  hashSizeFilter,
+                                  isPullingImageFilter,
+                                  isTerminatingFilter,
+                                  isTroubledPodFilter,
+                                  numContainersReadyFilter,
+                                  Logger,
+                                  ChartsService) {
     // Make sure our charts always have unique IDs even if the same deployment
     // or monopod is shown on the overview more than once.
 
@@ -18,7 +18,7 @@ angular.module('openshiftConsole')
         pods: '=',
         desired: '=?'
       },
-      templateUrl: 'views/_pod-status-chart.html',
+      templateUrl: 'views/directives/pod-donut.html',
       link: function($scope, element) {
         var chart, config;
 

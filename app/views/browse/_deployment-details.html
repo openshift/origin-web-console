@@ -1,21 +1,13 @@
 <div class="row" style="max-width: 650px;">
   <div class="col-sm-4 col-sm-push-8 text-center">
-    <pod-status-chart
+    <deployment-donut
+        rc="deployment"
+        deployment-config="deploymentConfig"
         pods="podsForDeployment"
-        ng-if="podsForDeployment"
-        desired="deployment.spec.replicas"
-        ng-click="viewPodsForDeployment()"
-        ng-class="{ clickable: (podsForDeployment | hashSize) > 0 }"
-        style="display: inline-block;">
-    </pod-status-chart>
-    <!-- Add a link for screen readers. -->
-    <a href=""
-       class="sr-only"
-       ng-click="viewPodsForDeployment()"
-       ng-if="(podsForDeployment | hashSize) > 0"
-       role="button">
-       View pods for deployment.metadata.name
-    </a>
+        hpa="autoscalers"
+        scalable="isScalable()"
+        alerts="alerts">
+    </deployment-donut>
   </div>
   <div class="col-sm-8 col-sm-pull-4">
     <dl class="dl-horizontal left">
@@ -76,7 +68,7 @@
              as long as it doesn't have an HPA. -->
         <replicas status="deployment.status.replicas"
                   spec="deployment.spec.replicas"
-                  disable-scaling="((deployment | isDeployment) && !deploymentConfigMissing && (!isActive || !deploymentConfig)) || autoscalers.length"
+                  disable-scaling="!isScalable()"
                   scale-fn="scale(replicas)">
         </replicas>
         <span ng-if="autoscalers.length">(autoscaled)</span>
