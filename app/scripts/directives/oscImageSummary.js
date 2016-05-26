@@ -6,7 +6,8 @@ angular.module("openshiftConsole")
       restrict: "E",
       scope: {
         resource: "=",
-        name: "="
+        name: "=",
+        tag: "="
       },
       templateUrl: "views/directives/osc-image-summary.html"
     };
