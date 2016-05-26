@@ -6461,7 +6461,7 @@ function i(a) {
 return a ? a / 1048576 :a;
 }
 function j(a) {
-return a ? a / 1024 :a;
+return a ? _.round(a / 1024, 1) :a;
 }
 function k(a) {
 if (!h.pod) return null;
