@@ -5595,21 +5595,6 @@ a.value = a.originalValue, a.editing = !1;
 }, a.update = function(b, c, d) {
 c && (d[b] = c, a.editing = !1);
 };
-} ]).controller("KeyValuesController", [ "$scope", function(a) {
-var b = {};
-a.allowDelete = function(c) {
-return a.preventEmpty && 1 === Object.keys(a.entries).length ? !1 :"never" === a.deletePolicy ? !1 :"added" === a.deletePolicy ? void 0 !== b[c] :!0;
-}, a.addEntry = function() {
-if (a.key && a.value) {
-var c = a.readonlyKeys.split(",");
-if (-1 !== c.indexOf(a.key)) return;
-b[a.key] = "", a.entries[a.key] = a.value, a.key = null, a.value = null, a.form.$setPristine(), a.form.$setUntouched();
-}
-}, a.deleteEntry = function(c) {
-a.entries[c] && (delete a.entries[c], delete b[c], a.form.$setDirty());
-}, a.setErrorText = function(a) {
-return "path" === a ? "absolute path" :"label" === a ? "label" :"key";
-};
 } ]).directive("oscInputValidator", function() {
 var a = {
 always:function(a, b) {
@@ -5669,11 +5654,49 @@ valueValidationTooltip:"@",
 preventEmpty:"=?"
 },
 controller:[ "$scope", function(a) {
-this.scope = a;
+var b, c = {}, d = function() {
+return !!a.key || !!a.value;
+}, e = function() {
+d() ? a.showCommmitWarning = !0 :a.showCommmitWarning = !1;
+}, f = _.debounce(function() {
+a.$applyAsync(function() {
+a.key ? a.clean.isClean.$setValidity("isClean", !1) :a.value ? a.clean.isClean.$setValidity("isClean", !1) :a.clean.isClean.$setValidity("isClean", !0);
+});
+}, 100), g = function(b) {
+return function(c) {
+a.$applyAsync(function() {
+_.includes(b, document.activeElement) || (e(), f());
+});
+};
+};
+a.isClean = f, a.clear = function() {
+a.key = "", a.value = "", e(), f();
+}, a.allowDelete = function(b) {
+return a.preventEmpty && 1 === Object.keys(a.entries).length ? !1 :"never" === a.deletePolicy ? !1 :"added" === a.deletePolicy ? void 0 !== c[b] :!0;
+}, a.addEntry = function() {
+if (a.key && a.value) {
+var d = a.readonlyKeys.split(",");
+if (-1 !== d.indexOf(a.key)) return;
+c[a.key] = "", a.entries[a.key] = a.value, a.key = null, a.value = null, a.form.$setPristine(), a.form.$setUntouched(), e(), f(), b.focus();
+}
+}, a.deleteEntry = function(b) {
+a.entries[b] && (delete a.entries[b], delete c[b], a.form.$setDirty());
+}, a.setErrorText = function(a) {
+return "path" === a ? "absolute path" :"label" === a ? "label" :"key";
+}, this.scope = a, this.init = function(c, d, e) {
+var f = [ c[0], d[0], e[0] ], h = g(f);
+b = c, c.on("blur", h), d.on("blur", h), e.on("blur", h), a.$on("$destroy", function() {
+c.off("blur", h), d.off("blur", h), e.off("blur", h);
+});
+};
 } ],
 templateUrl:"views/directives/osc-key-values.html",
 compile:function(a, b) {
-b.delimiter || (b.delimiter = ":"), b.keyTitle || (b.keyTitle = "Name"), b.valueTitle || (b.valueTitle = "Value"), b.editable && "true" !== b.editable ? b.editable = !1 :b.editable = !0, b.keyValidator || (b.keyValidator = "always"), b.valueValidator || (b.valueValidator = "always"), -1 === [ "always", "added", "none" ].indexOf(b.deletePolicy) && (b.deletePolicy = "always"), b.readonlyKeys || (b.readonlyKeys = "");
+return b.delimiter || (b.delimiter = ":"), b.keyTitle || (b.keyTitle = "Name"), b.valueTitle || (b.valueTitle = "Value"), b.editable && "true" !== b.editable ? b.editable = !1 :b.editable = !0, b.keyValidator || (b.keyValidator = "always"), b.valueValidator || (b.valueValidator = "always"), -1 === [ "always", "added", "none" ].indexOf(b.deletePolicy) && (b.deletePolicy = "always"), b.readonlyKeys || (b.readonlyKeys = ""), {
+post:function(a, b, c, d) {
+d.init(b.find('input[name="key"]'), b.find('input[name="value"]'), b.find("a.add-key-value"));
+}
+};
 }
 };
 }), angular.module("openshiftConsole").directive("oscRouting", function() {
