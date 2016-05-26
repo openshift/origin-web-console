@@ -241,22 +241,22 @@ angular.module('openshiftConsole')
               total: getLimit(metricID)
             };
 
-            var mostRecentValue = _.last(metricData).value;
-            if (isNaN(mostRecentValue)) {
-              mostRecentValue = 0;
+            var lastValue = _.last(metricData).value;
+            if (isNaN(lastValue)) {
+              lastValue = 0;
             }
             if (metric.convert) {
-              mostRecentValue = metric.convert(mostRecentValue);
+              lastValue = metric.convert(lastValue);
             }
 
             // Round to the closest whole number for the utilization chart.
-            usage.used = d3.round(mostRecentValue);
+            usage.used = d3.round(lastValue);
             if (usage.total) {
               usage.available = Math.max(usage.total - usage.used, 0);
             }
 
             angular.forEach(metricData, function(point) {
-              dates.push(point.timestamp);
+              dates.push(point.start);
               if (point.value === undefined || point.value === null) {
                 // Don't attempt to round null values. These appear as gaps in the chart.
                 values[metricID].push(point.value);
@@ -326,24 +326,41 @@ angular.module('openshiftConsole')
           }
         }
 
-        function getConfig(metric, id) {
+        function getTimeRangeMillis() {
+          return scope.options.timeRange.value * 60 * 1000;
+        }
+
+        function getConfig(metric, dataset, start) {
+          var lastPoint;
+          var config = {
+            metric: dataset.id,
+            bucketDuration: Math.floor(getTimeRangeMillis() / 60) + "ms"
+          };
+
+          // Leave the end time off to use the server's current time as the
+          // end time. This prevents an issue where the donut chart shows 0
+          // for current usage if the client clock is ahead of the server
+          // clock.
+          if (dataset.data && dataset.data.length) {
+            lastPoint = _.last(dataset.data);
+            config.start = lastPoint.end;
+          } else {
+            config.start = start;
+          }
+
           if (scope.pod) {
-            return {
-              pod: scope.pod,
-              // some metrics (network, disk) are not available at container
-              // level (only at pod and node level)
-              containerName: metric.containerMetric ? scope.options.selectedContainer.name : "pod",
+            return _.assign(config, {
               namespace: scope.pod.metadata.namespace,
-              metric: id
-            };
+              pod: scope.pod,
+              containerName: metric.containerMetric ? scope.options.selectedContainer.name : "pod"
+            });
           }
 
           if (scope.deployment) {
-            return {
-              deployment: scope.deployment.metadata.name,
+            return _.assign(config, {
               namespace: scope.deployment.metadata.namespace,
-              metric: id
-            };
+              deployment: scope.deployment.metadata.name
+            });
           }
 
           return null;
@@ -362,15 +379,31 @@ angular.module('openshiftConsole')
           return scope.pod && _.get(scope, 'options.selectedContainer');
         }
 
+        function updateData(start, dataset, response) {
+          // Throw out the last data point, which is a partial bucket.
+          var newData = _.initial(response.data);
+          if (!dataset.data) {
+            dataset.data = newData;
+            return;
+          }
+
+          dataset.data =
+            _.chain(dataset.data)
+            // Make sure we're only showing points that are still in the time range.
+            .takeRightWhile(function(point) {
+              return point.start >= start;
+            })
+            // Add the new values.
+            .concat(newData)
+            .value();
+        }
+
         function update() {
           if (!canUpdate()) {
             return;
           }
 
-          // Leave the end time off to use the server's current time as the end
-          // time. This prevents an issue where the donut chart shows 0 for
-          // current usage if the client clock is ahead of the server clock.
-          var start = Date.now() - scope.options.timeRange.value * 60 * 1000;
+          var start = Date.now() - getTimeRangeMillis();
 
           angular.forEach(scope.metrics, function(metric) {
             var promises = [];
@@ -382,12 +415,11 @@ angular.module('openshiftConsole')
             // and number of buckets, so that the returned data for every metric
             // fit in the same collection of 'dates' and can be displayed in
             // exactly the same point in time in the graph.
-            angular.forEach(_.map(metric.datasets, 'id'), function(metricID) {
-              var config = getConfig(metric, metricID);
+            angular.forEach(metric.datasets, function(dataset) {
+              var config = getConfig(metric, dataset, start);
               if (!config) {
                 return;
               }
-              config.start = start;
               promises.push(MetricsService.get(config));
             });
 
@@ -398,7 +430,10 @@ angular.module('openshiftConsole')
               // success
               function(responses) {
                 angular.forEach(responses, function(response) {
-                  _.find(metric.datasets, {'id': response.metricID}).data = response.data;
+                  var dataset = _.find(metric.datasets, {
+                    id: response.metricID
+                  });
+                  updateData(start, dataset, response);
                 });
                 updateChart(metric);
               },
@@ -421,11 +456,17 @@ angular.module('openshiftConsole')
 
         // Updates immediately and then on options changes.
         scope.$watch('options', function() {
+          // Remove any existing data so that we request data for the new container or time range.
+          _.each(scope.metrics, function(metric) {
+            _.each(metric.datasets, function(dataset) {
+              delete dataset.data;
+            });
+          });
           delete scope.metricsError;
           update();
         }, true);
-        // Also update every 15 seconds.
-        intervalPromise = $interval(update, 15 * 1000, false);
+        // Also update every 30 seconds.
+        intervalPromise = $interval(update, 30 * 1000, false);
 
         scope.$on('$destroy', function() {
           if (intervalPromise) {

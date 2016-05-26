@@ -38,11 +38,6 @@ angular.module("openshiftConsole")
       });
     }
 
-    // Calculate the midtime from a point's start and end.
-    function midtime(point) {
-      return point.start + (point.end - point.start) / 2;
-    }
-
     // Is there engouh data to compare min and max values to calculate a usage
     // rate for a counter metric like CPU or network?
     function canCalculateRate(point, config) {
@@ -106,11 +101,6 @@ angular.module("openshiftConsole")
       }
 
       angular.forEach(data, function(point) {
-        // Calculate a timestamp based on the midtime if missing.
-        if (!point.timestamp) {
-          point.timestamp = midtime(point);
-        }
-
         // Set point.value to the average or null if no average.
         if (!point.value || point.value === "NaN") {
           var avg = point.avg;
@@ -188,7 +178,7 @@ angular.module("openshiftConsole")
       get: function(config) {
         return getRequestURL(config).then(function(url) {
           var params = {
-            buckets: 60,
+            bucketDuration: config.bucketDuration,
             start: config.start
           };
 

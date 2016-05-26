@@ -2083,44 +2083,41 @@ b[a.tag] = b[a.tag] || {}, b[a.tag].name = a.tag, b[a.tag].status = angular.copy
 };
 }), angular.module("openshiftConsole").factory("MetricsService", [ "$http", "$q", "APIDiscovery", function(a, b, c) {
 function d() {
-return angular.isDefined(k) ? b.when(k) :c.getMetricsURL().then(function(a) {
-return k = (a || "").replace(/\/$/, "");
+return angular.isDefined(j) ? b.when(j) :c.getMetricsURL().then(function(a) {
+return j = (a || "").replace(/\/$/, "");
 });
 }
-function e(a) {
-return a.start + (a.end - a.start) / 2;
-}
-function f(a, b) {
+function e(a, b) {
 return a.min && a.max && a.start && a.end ? !(b.pod && a.samples < 2) :!1;
 }
-function g(a, b) {
-if (!f(a, b)) return null;
+function f(a, b) {
+if (!e(a, b)) return null;
 var c = a.end - a.start;
 if (0 === c) return null;
 var d = (a.max - a.min) / 1e6;
 return d / c * 1e3;
 }
-function h(a, b) {
-if (!f(a, b)) return null;
+function g(a, b) {
+if (!e(a, b)) return null;
 var c = (a.end - a.start) / 1e3;
 if (0 === c) return null;
 var d = a.max - a.min;
 return d / c;
 }
-function i(a, b) {
+function h(a, b) {
 return a.length ? (angular.forEach(a, function(a) {
-if (a.timestamp || (a.timestamp = e(a)), !a.value || "NaN" === a.value) {
+if (!a.value || "NaN" === a.value) {
 var c = a.avg;
 a.value = c && "NaN" !== c ? c :null;
 }
-"cpu/usage" === b.metric && (a.value = g(a, b)), /network\/rx|tx/.test(b.metric) && (a.value = h(a, b));
+"cpu/usage" === b.metric && (a.value = f(a, b)), /network\/rx|tx/.test(b.metric) && (a.value = g(a, b));
 }), a) :void 0;
 }
-function j(a) {
+function i(a) {
 return d().then(function(b) {
 var c;
 if (a.deployment) {
-c = b + q[a.metric];
+c = b + p[a.metric];
 var d;
 switch (a.metric) {
 case "network/rx":
@@ -2137,23 +2134,23 @@ metric:a.metric,
 type:d
 }).toString();
 }
-return c = b + p[a.metric], URI.expand(c, {
+return c = b + o[a.metric], URI.expand(c, {
 podUID:a.pod.metadata.uid,
 containerName:a.containerName,
 metric:a.metric
 }).toString();
 });
 }
-var k, l = "/counters/{containerName}%2F{podUID}%2F{metric}/data", m = "/gauges/{containerName}%2F{podUID}%2F{metric}/data", n = "/counters/data?stacked=true&tags=descriptor_name:{metric},type:{type},labels:.*\\bdeployment:{deployment}\\b.*", o = "/gauges/data?stacked=true&tags=descriptor_name:{metric},type:{type},labels:.*\\bdeployment:{deployment}\\b.*", p = {
-"cpu/usage":l,
-"memory/usage":m,
-"network/rx":l,
-"network/tx":l
-}, q = {
-"cpu/usage":n,
-"memory/usage":o,
-"network/rx":n,
-"network/tx":n
+var j, k = "/counters/{containerName}%2F{podUID}%2F{metric}/data", l = "/gauges/{containerName}%2F{podUID}%2F{metric}/data", m = "/counters/data?stacked=true&tags=descriptor_name:{metric},type:{type},labels:.*\\bdeployment:{deployment}\\b.*", n = "/gauges/data?stacked=true&tags=descriptor_name:{metric},type:{type},labels:.*\\bdeployment:{deployment}\\b.*", o = {
+"cpu/usage":k,
+"memory/usage":l,
+"network/rx":k,
+"network/tx":k
+}, p = {
+"cpu/usage":m,
+"memory/usage":n,
+"network/rx":m,
+"network/tx":m
 };
 return {
 isAvailable:function() {
@@ -2163,9 +2160,9 @@ return !!a;
 },
 getMetricsURL:d,
 get:function(b) {
-return j(b).then(function(c) {
+return i(b).then(function(c) {
 var d = {
-buckets:60,
+bucketDuration:b.bucketDuration,
 start:b.start
 };
 return b.end && (d.end = b.end), a.get(c, {
@@ -2178,7 +2175,7 @@ params:d
 }).then(function(a) {
 return _.assign(a, {
 metricID:b.metric,
-data:i(a.data, b)
+data:h(a.data, b)
 });
 });
 });
@@ -6471,12 +6468,12 @@ if (!h.pod) return null;
 var b = h.options.selectedContainer;
 switch (a) {
 case "memory/usage":
-var c = s(b);
+var c = u(b);
 if (c) return i(g(c));
 break;
 
 case "cpu/usage":
-var d = t(b);
+var d = v(b);
 if (d) return 1e3 * g(d);
 }
 return null;
@@ -6490,7 +6487,7 @@ var i = h.usageByMetric[f] = {
 total:k(f)
 }, j = _.last(g).value;
 isNaN(j) && (j = 0), a.convert && (j = a.convert(j)), i.used = d3.round(j), i.total && (i.available = Math.max(i.total - i.used, 0)), angular.forEach(g, function(c) {
-if (b.push(c.timestamp), void 0 === c.value || null === c.value) d[f].push(c.value); else {
+if (b.push(c.start), void 0 === c.value || null === c.value) d[f].push(c.value); else {
 var e = a.convert ? a.convert(c.value) :c.value;
 switch (f) {
 case "memory/usage":
@@ -6512,8 +6509,8 @@ colors:{
 Used:"#0088ce",
 Available:"#d1d1d1"
 }
-}, q[f] ? q[f].load(m) :(l = u(a), l.data = m, c(function() {
-q[f] = c3.generate(l);
+}, s[f] ? s[f].load(m) :(l = w(a), l.data = m, c(function() {
+s[f] = c3.generate(l);
 })));
 });
 var e, f = [ b ].concat(_.values(d)), g = {
@@ -6521,40 +6518,52 @@ type:a.chartType || "area",
 x:"dates",
 columns:f
 }, i = a.chartPrefix + "sparkline";
-r[i] ? r[i].load(g) :(e = v(a), e.data = g, a.chartDataColors && (e.color = {
+t[i] ? t[i].load(g) :(e = x(a), e.data = g, a.chartDataColors && (e.color = {
 pattern:a.chartDataColors
 }), c(function() {
-r[i] = c3.generate(e);
+t[i] = c3.generate(e);
 }));
 }
-function m(a, b) {
-return h.pod ? {
-pod:h.pod,
-containerName:a.containerMetric ? h.options.selectedContainer.name :"pod",
-namespace:h.pod.metadata.namespace,
-metric:b
-} :h.deployment ? {
-deployment:h.deployment.metadata.name,
-namespace:h.deployment.metadata.namespace,
-metric:b
-} :null;
+function m() {
+return 60 * h.options.timeRange.value * 1e3;
 }
-function n() {
-return h.metricsError ? !1 :h.deployment ? !0 :h.pod && _.get(h, "options.selectedContainer");
+function n(a, b, c) {
+var d, e = {
+metric:b.id,
+bucketDuration:Math.floor(m() / 60) + "ms"
+};
+return b.data && b.data.length ? (d = _.last(b.data), e.start = d.end) :e.start = c, h.pod ? _.assign(e, {
+namespace:h.pod.metadata.namespace,
+pod:h.pod,
+containerName:a.containerMetric ? h.options.selectedContainer.name :"pod"
+}) :h.deployment ? _.assign(e, {
+namespace:h.deployment.metadata.namespace,
+deployment:h.deployment.metadata.name
+}) :null;
 }
 function o() {
-if (n()) {
-var a = Date.now() - 60 * h.options.timeRange.value * 1e3;
+return h.metricsError ? !1 :h.deployment ? !0 :h.pod && _.get(h, "options.selectedContainer");
+}
+function p(a, b, c) {
+var d = _.initial(c.data);
+return b.data ? void (b.data = _.chain(b.data).takeRightWhile(function(b) {
+return b.start >= a;
+}).concat(d).value()) :void (b.data = d);
+}
+function q() {
+if (o()) {
+var a = Date.now() - m();
 angular.forEach(h.metrics, function(b) {
 var c = [];
-angular.forEach(_.map(b.datasets, "id"), function(d) {
-var e = m(b, d);
-e && (e.start = a, c.push(f.get(e)));
-}), d.all(c).then(function(a) {
-angular.forEach(a, function(a) {
-_.find(b.datasets, {
-id:a.metricID
-}).data = a.data;
+angular.forEach(b.datasets, function(d) {
+var e = n(b, d, a);
+e && c.push(f.get(e));
+}), d.all(c).then(function(c) {
+angular.forEach(c, function(c) {
+var d = _.find(b.datasets, {
+id:c.metricID
+});
+p(a, d, c);
 }), l(b);
 }, function(a) {
 angular.forEach(a, function(a) {
@@ -6569,7 +6578,7 @@ h.loaded = !0;
 });
 }
 }
-var p, q = {}, r = {}, s = b("resources.limits.memory"), t = b("resources.limits.cpu");
+var r, s = {}, t = {}, u = b("resources.limits.memory"), v = b("resources.limits.cpu");
 h.uniqueID = _.uniqueId("metrics-chart-"), h.metrics = [ {
 label:"Memory",
 units:"MiB",
@@ -6630,7 +6639,7 @@ return _.some(_.map(a.datasets, "id"), function(a) {
 return void 0 !== h.usageByMetric[a];
 });
 };
-var u = function(a) {
+var w = function(a) {
 var b = "#" + a.chartPrefix + h.uniqueID + "-donut";
 return {
 bindto:b,
@@ -6652,7 +6661,7 @@ height:175,
 widht:175
 }
 };
-}, v = function(a) {
+}, x = function(a) {
 return {
 bindto:"#" + a.chartPrefix + h.uniqueID + "-sparkline",
 axis:{
@@ -6703,13 +6712,17 @@ return b + " " + a.units;
 };
 };
 h.$watch("options", function() {
-delete h.metricsError, o();
-}, !0), p = a(o, 15e3, !1), h.$on("$destroy", function() {
-p && (a.cancel(p), p = null), angular.forEach(q, function(a) {
+_.each(h.metrics, function(a) {
+_.each(a.datasets, function(a) {
+delete a.data;
+});
+}), delete h.metricsError, q();
+}, !0), r = a(q, 3e4, !1), h.$on("$destroy", function() {
+r && (a.cancel(r), r = null), angular.forEach(s, function(a) {
 a.destroy();
-}), q = null, angular.forEach(r, function(a) {
+}), s = null, angular.forEach(t, function(a) {
 a.destroy();
-}), r = null;
+}), t = null;
 });
 }
 };
