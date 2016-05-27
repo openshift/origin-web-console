@@ -146,7 +146,7 @@ angular.module("openshiftConsole")
               $scope.clean.isClean.$setValidity('isClean', true);
             }
           });
-        }, 100);
+        }, 200);
 
         // returns a new function bound to the set of DOM nodes provided as an array.
         // allows us to treat the osc-key-values directive as a single node on blur
@@ -173,6 +173,7 @@ angular.module("openshiftConsole")
           checkCommitted();
           isClean();
         };
+
         $scope.allowDelete = function(value){
           if ($scope.preventEmpty && (Object.keys($scope.entries).length === 1)) {
             return false;
@@ -185,6 +186,7 @@ angular.module("openshiftConsole")
           }
           return true;
         };
+
         $scope.addEntry = function() {
           if($scope.key && $scope.value){
             var readonly = $scope.readonlyKeys.split(",");
@@ -202,6 +204,7 @@ angular.module("openshiftConsole")
             focusElem.focus();
           }
         };
+
         $scope.deleteEntry = function(key) {
           if ($scope.entries[key]) {
             delete $scope.entries[key];
@@ -209,6 +212,7 @@ angular.module("openshiftConsole")
             $scope.form.$setDirty();
           }
         };
+
         $scope.setErrorText = function(keyTitle) {
           if (keyTitle === 'path') {
             return "absolute path";
