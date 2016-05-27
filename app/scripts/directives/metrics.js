@@ -35,7 +35,8 @@ angular.module('openshiftConsole')
             return value;
           }
 
-          return value / 1024;
+          // Round to one decimal place
+          return _.round(value / 1024, 1);
         }
 
         scope.uniqueID = _.uniqueId('metrics-chart-');
