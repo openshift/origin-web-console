@@ -150,14 +150,14 @@ angular.module('openshiftConsole')
         }
 
         var stateData = parseState(fragmentParams.state);
-        
+
         // Handle an access_token response
         if (fragmentParams.access_token && (fragmentParams.token_type || "").toLowerCase() === "bearer") {
           var deferred = $q.defer();
           deferred.resolve({
             token: fragmentParams.access_token,
             ttl: fragmentParams.expires_in,
-            then: stateData.state,
+            then: stateData.then,
             verified: stateData.verified
           });
           return deferred.promise;
