@@ -1637,7 +1637,7 @@ var l = e.defer();
 return l.resolve({
 token:c.access_token,
 ttl:c.expires_in,
-then:j.state,
+then:j.then,
 verified:j.verified
 }), l.promise;
 }
