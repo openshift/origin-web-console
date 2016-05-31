@@ -8,7 +8,7 @@
 
     <div ng-if="resourceChanged" class="alert alert-warning">
       <span class="pficon pficon-warning-triangle-o" aria-hidden="true"></span>
-      <span class="sr-only">Warning:</span>
+      <span class="sr-only" translate>Warning:</span>
       {{resource.kind | humanizeKind | upperFirst}} <strong>{{resource.metadata.name}}</strong> has
       changed since you started editing it. You'll need to copy any changes you've made and edit the
       {{resource.kind | humanizeKind}} again.
@@ -29,9 +29,9 @@
       <button class="btn btn-lg btn-primary"
               type="button"
               ng-click="save()"
-              ng-disabled="!modified || resourceChanged">Save</button>
+              ng-disabled="!modified || resourceChanged" translate>Save</button>
       <button class="btn btn-lg btn-default"
               type="button"
-              ng-click="cancel()">Cancel</button>
+              ng-click="cancel()" translate>Cancel</button>
   </div>
 </div>

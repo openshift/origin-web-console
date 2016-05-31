@@ -2,28 +2,27 @@
   <div class="sidebar-header right-header">
     <div>
       <h2>
-        Events
+        <translate>Events</translate>
         <small ng-if="warningCount" class="mar-left-sm">
           <span class="pficon pficon-warning-triangle-o"></span>
           {{warningCount}}
           <span class="hidden-xs hidden-sm">
-            <span ng-if="warningCount === 1">warning</span>
-            <span ng-if="warningCount > 1">warnings</span>
+            <span translate translate-n="warningCount" translate-plural="warnings">warning</span>
           </span>
         </small>
       </h2>
     </div>
     <div ng-if="events | hashSize" class="event-details-link">
-      <a ng-href="project/{{projectContext.projectName}}/browse/events">View Details</a>
+      <a ng-href="project/{{projectContext.projectName}}/browse/events" translate>View Details</a>
     </div>
   </div>
   <div class="right-content">
-    <div ng-if="!events">
+    <div ng-if="!events" translate>
       Loading...
     </div>
     <div ng-if="events">
       <div ng-if="!(events | hashSize)">
-        <em>No events.</em>
+        <em translate>No events.</em>
       </div>
       <div ng-repeat="event in events" class="event animate-repeat">
         <span class="sr-only">{{event.type}}</span>

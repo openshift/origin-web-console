@@ -11,58 +11,58 @@
   </div>
   <div class="col-sm-8 col-sm-pull-4">
     <dl class="dl-horizontal left">
-      <dt ng-if-start="deployment | isDeployment">Status:</dt>
+      <dt ng-if-start="deployment | isDeployment" translate>Status:</dt>
       <dd ng-if-end>
         <status-icon status="deployment | deploymentStatus"></status-icon>
         {{deployment | deploymentStatus}}
         <span style="margin-left: 7px;">
-          <button ng-show="!rollBackCollapsed && (deployment | deploymentStatus) == 'Complete' && !(deployment | deploymentIsLatest : deploymentConfig) && !deployment.metadata.deletionTimestamp && 'deploymentconfigrollbacks' | canI : 'create'" ng-disabled="(deploymentConfigDeploymentsInProgress[deploymentConfigName] | hashSize) > 0" type="button" class="btn btn-default btn-xs" ng-click="rollBackCollapsed = !rollBackCollapsed">Roll Back</button>
+          <button ng-show="!rollBackCollapsed && (deployment | deploymentStatus) == 'Complete' && !(deployment | deploymentIsLatest : deploymentConfig) && !deployment.metadata.deletionTimestamp && 'deploymentconfigrollbacks' | canI : 'create'" ng-disabled="(deploymentConfigDeploymentsInProgress[deploymentConfigName] | hashSize) > 0" type="button" class="btn btn-default btn-xs" ng-click="rollBackCollapsed = !rollBackCollapsed" translate>Roll Back</button>
           <div ng-show="rollBackCollapsed" class="well well-sm">
-            Use the following settings from {{deployment.metadata.name}} when rolling back:
+            <translate>Use the following settings from {{deployment.metadata.name}} when rolling back:</translate>
             <div class="checkbox">
               <label>
-                <input type="checkbox" ng-model="changeScaleSettings" ng-disabled="(deploymentConfigDeploymentsInProgress[deploymentConfigName] | hashSize) > 0"> replica count and selector
+                <input type="checkbox" ng-model="changeScaleSettings" ng-disabled="(deploymentConfigDeploymentsInProgress[deploymentConfigName] | hashSize) > 0"> <translate>replica count and selector</translate>
               </label>
             </div>
             <div class="checkbox">
               <label>
-                <input type="checkbox" ng-model="changeStrategy" ng-disabled="(deploymentConfigDeploymentsInProgress[deploymentConfigName] | hashSize) > 0"> deployment strategy
+                <input type="checkbox" ng-model="changeStrategy" ng-disabled="(deploymentConfigDeploymentsInProgress[deploymentConfigName] | hashSize) > 0"> <translate>deployment strategy</translate>
               </label>
             </div>
             <div class="checkbox">
               <label>
-                <input type="checkbox" ng-model="changeTriggers" ng-disabled="(deploymentConfigDeploymentsInProgress[deploymentConfigName] | hashSize) > 0"> deployment trigger
+                <input type="checkbox" ng-model="changeTriggers" ng-disabled="(deploymentConfigDeploymentsInProgress[deploymentConfigName] | hashSize) > 0"> <translate>deployment trigger</translate>
               </label>
             </div>
-            <button type="button" ng-click="rollbackToDeployment(deployment, changeScaleSettings, changeStrategy, changeTriggers)" ng-disabled="(deploymentConfigDeploymentsInProgress[deploymentConfigName] | hashSize) > 0" class="btn btn-default btn-xs">Roll Back</button>
+            <button type="button" ng-click="rollbackToDeployment(deployment, changeScaleSettings, changeStrategy, changeTriggers)" ng-disabled="(deploymentConfigDeploymentsInProgress[deploymentConfigName] | hashSize) > 0" class="btn btn-default btn-xs" translate>Roll Back</button>
           </div>
           <!-- disabled until we have an api endpoint for retry
-          <button ng-show="(deployment | deploymentStatus) == 'Failed'" type="button" ng-click="retryFailedDeployment(deployment)" ng-disabled="(deploymentConfigDeploymentsInProgress[deploymentConfigName] | hashSize) > 0" class="btn btn-default btn-xs" ng-if="(deployment | deploymentIsLatest : deploymentConfig) && !deployment.metadata.deletionTimestamp">Retry</button>
+          <button ng-show="(deployment | deploymentStatus) == 'Failed'" type="button" ng-click="retryFailedDeployment(deployment)" ng-disabled="(deploymentConfigDeploymentsInProgress[deploymentConfigName] | hashSize) > 0" class="btn btn-default btn-xs" ng-if="(deployment | deploymentIsLatest : deploymentConfig) && !deployment.metadata.deletionTimestamp" translate>Retry</button>
           -->
-          <button ng-show="(deployment | deploymentIsInProgress) && !deployment.metadata.deletionTimestamp && 'replicationcontrollers' | canI : 'update'" type="button" ng-click="cancelRunningDeployment(deployment)" class="btn btn-default btn-xs">Cancel</button>
+          <button ng-show="(deployment | deploymentIsInProgress) && !deployment.metadata.deletionTimestamp && 'replicationcontrollers' | canI : 'update'" type="button" ng-click="cancelRunningDeployment(deployment)" class="btn btn-default btn-xs" translate>Cancel</button>
         </span>
       </dd>
-      <dt ng-if-start="deployment | isDeployment">Deployment config:</dt>
+      <dt ng-if-start="deployment | isDeployment" translate>Deployment config:</dt>
       <dd ng-if-end>
         <a ng-href="{{deploymentConfigName | navigateResourceURL : 'DeploymentConfig' : deployment.metadata.namespace}}">{{deploymentConfigName}}</a>
       </dd>
-      <dt ng-if-start="deployment | annotation:'deploymentStatusReason'">Status reason:</dt>
+      <dt ng-if-start="deployment | annotation:'deploymentStatusReason'" translate>Status reason:</dt>
       <dd ng-if-end>
         {{deployment | annotation:'deploymentStatusReason'}}
       </dd>
-      <dt ng-if-start="deployment | deploymentIsInProgress">Duration:</dt>
+      <dt ng-if-start="deployment | deploymentIsInProgress" translate>Duration:</dt>
       <dd ng-if-end>
         <span ng-switch="deployment | deploymentStatus" class="hide-ng-leave">
           <span ng-switch-when="Running">running for <duration-until-now timestamp="deployment.metadata.creationTimestamp"></duration-until-now></span>
           <span ng-switch-default>waiting for <duration-until-now timestamp="deployment.metadata.creationTimestamp"></duration-until-now></span>
         </span>
       </dd>
-      <dt>Selectors:</dt>
+      <dt translate>Selectors:</dt>
       <dd>
-        <span ng-if="!deployment.spec.selector">none</span>
+        <span ng-if="!deployment.spec.selector" translate>none</span>
         <span ng-repeat="(labelKey, labelValue) in deployment.spec.selector" class="word-break">{{labelKey}}={{labelValue}}<span ng-show="!$last">, </span></span>
       </dd>
-      <dt>Replicas:</dt>
+      <dt translate>Replicas:</dt>
       <dd>
         <!-- Enable scaling if this is a plain replication controller or it's the active deployment,
              as long as it doesn't have an HPA. -->
@@ -90,8 +90,8 @@
       </pod-template>
       <h4>Volumes</h4>
       <p ng-if="!deployment.spec.template.spec.volumes.length">
-        <a ng-if="'replicationcontrollers' | canI : 'update'" ng-href="project/{{project.metadata.name}}/attach-pvc?deployment={{deployment.metadata.name}}">Attach storage</a>
-        <span ng-if="!('replicationcontrollers' | canI : 'update')">none</span>
+        <a ng-if="'replicationcontrollers' | canI : 'update'" ng-href="project/{{project.metadata.name}}/attach-pvc?deployment={{deployment.metadata.name}}" translate>Attach storage</a>
+        <span ng-if="!('replicationcontrollers' | canI : 'update')" translate>none</span>
       </p>
       <volumes volumes="deployment.spec.template.spec.volumes" namespace="project.metadata.name"></volumes>
     </div>
@@ -100,12 +100,12 @@
 
 <!-- Autoscaling -->
 <div ng-if="!deploymentConfigName || autoscalers.length">
-  <h3>Autoscaling</h3>
+  <h3 translate>Autoscaling</h3>
 
   <!-- Show any warnings. -->
   <div ng-repeat="warning in hpaWarnings" class="alert alert-warning">
     <span class="pficon pficon-warning-triangle-o" aria-hidden="true"></span>
-    <span class="sr-only">Warning:</span>
+    <span class="sr-only" translate>Warning:</span>
     {{warning.message}}
 
     <!-- If the CPU request is missing, add an action to set one. -->
@@ -126,7 +126,7 @@
   <!-- Create autoscaler -->
   <div ng-if="!autoscalers.length">
     <a ng-href="project/{{projectName}}/edit/autoscaler?kind=ReplicationController&name={{deployment.metadata.name}}"
-       role="button">Add autoscaler</a>
+       role="button" translate>Add autoscaler</a>
   </div>
 
   <!-- HPA details -->

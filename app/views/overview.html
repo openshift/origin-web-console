@@ -15,27 +15,27 @@
                 <!-- Getting started -->
                 <div class="empty-project text-center">
                   <div ng-if="project.metadata.name | canIAddToProject">
-                    <h2>Get started with your project.</h2>
-                    <p class="gutter-top">
+                    <h2 translate>Get started with your project.</h2>
+                    <p class="gutter-top" translate>
                       Use your source or an example repository to build an application
                       image, or add components like databases and message queues.
                     </p>
                     <p class="gutter-top">
-                      <a ng-href="project/{{projectName}}/create" class="btn btn-lg btn-primary">
+                      <a ng-href="project/{{projectName}}/create" class="btn btn-lg btn-primary" translate>
                         Add to Project
                       </a>
                     </p>
                   </div>
                   <div ng-if="!(project.metadata.name | canIAddToProject)">
-                    <h2>Welcome to project {{projectName}}.</h2>
-                    <p class="gutter-top">
+                    <h2 translate>Welcome to project {{projectName}}.</h2>
+                    <p class="gutter-top" translate>
                       If you need to create resources in this project, a project administrator can grant you additional access by running this command:
                     </p>
                     <code>oc policy add-role-to-user &lt;role&gt; {{user.metadata.name}} -n {{projectName}}</code>
                   </div>
                 </div>
               </div>
-              <div ng-if="renderOptions.showLoading" class="loading-message">
+              <div ng-if="renderOptions.showLoading" class="loading-message" translate>
                 Loading...
               </div>
               <div ng-repeat="service in topLevelServices"

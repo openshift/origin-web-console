@@ -18,7 +18,8 @@ angular.module('openshiftConsole')
                         ProjectsService,
                         DeploymentsService,
                         ImageStreamResolver,
-                        Navigate) {
+                        Navigate,
+                        gettextCatalog) {
     $scope.projectName = $routeParams.project;
     $scope.deployment = null;
     $scope.deploymentConfig = null;
@@ -34,7 +35,7 @@ angular.module('openshiftConsole')
     $scope.renderOptions.hideFilterWidget = true;
     $scope.breadcrumbs = [
       {
-        title: "Deployments",
+        title: gettextCatalog.getString("Deployments"),
         link: "project/" + $routeParams.project + "/browse/deployments"
       }
     ];
@@ -159,7 +160,7 @@ angular.module('openshiftConsole')
               if (action === "DELETED") {
                 $scope.alerts["deleted"] = {
                   type: "warning",
-                  message: $routeParams.deployment ? "This deployment has been deleted." : "This replication controller has been deleted."
+                  message: $routeParams.deployment ? gettextCatalog.getString("This deployment has been deleted.") : gettextCatalog.getString("This replication controller has been deleted.")
                 };
               }
               $scope.deployment = deployment;
@@ -187,7 +188,7 @@ angular.module('openshiftConsole')
             $scope.loaded = true;
             $scope.alerts["load"] = {
               type: "error",
-              message: $routeParams.deployment ? "The deployment details could not be loaded." : "The replication controller details could not be loaded.",
+              message: $routeParams.deployment ? gettextCatalog.getString("The deployment details could not be loaded.") : gettextCatalog.getString("The replication controller details could not be loaded."),
               details: "Reason: " + $filter('getErrorDetails')(e)
             };
           }
@@ -210,8 +211,8 @@ angular.module('openshiftConsole')
 
               $scope.alerts["load"] = {
                 type: "error",
-                message: "The deployment configuration details could not be loaded.",
-                details: "Reason: " + $filter('getErrorDetails')(e)
+                message: gettextCatalog.getString("The deployment configuration details could not be loaded."),
+                details: gettextCatalog.getString("Reason: ") + $filter('getErrorDetails')(e)
               };
             }
           );
@@ -228,7 +229,7 @@ angular.module('openshiftConsole')
           $scope.deployments = deployments.by("metadata.name");
           extractPodTemplates();
           ImageStreamResolver.fetchReferencedImageStreamImages($scope.podTemplates, $scope.imagesByDockerReference, $scope.imageStreamImageRefByDockerReference, context);
-          $scope.emptyMessage = "No deployments to show";
+          $scope.emptyMessage = gettextCatalog.getString("No deployments to show");
           $scope.deploymentsByDeploymentConfig = DeploymentsService.associateDeploymentsToDeploymentConfig($scope.deployments);
 
           var deploymentConfigName;

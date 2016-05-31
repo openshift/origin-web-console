@@ -9,11 +9,11 @@
  * Controller of the openshiftConsole
  */
 angular.module("openshiftConsole")
-  .controller("NextStepsController", function($scope, $http, $routeParams, DataService, $q, $location, ProcessedTemplateService, TaskList, $parse, Navigate, $filter, imageObjectRefFilter, failureObjectNameFilter, ProjectsService) {
+  .controller("NextStepsController", function($scope, $http, $routeParams, DataService, $q, $location, ProcessedTemplateService, TaskList, $parse, Navigate, $filter, imageObjectRefFilter, failureObjectNameFilter, ProjectsService, gettextCatalog) {
     var displayNameFilter = $filter('displayName');
     var watches = [];
 
-    $scope.emptyMessage = "Loading...";
+    $scope.emptyMessage = gettextCatalog.getString("Loading...");
     $scope.alerts = [];
     $scope.loginBaseUrl = DataService.openshiftAPIBaseUrl();
     $scope.buildConfigs = {};
@@ -39,7 +39,7 @@ angular.module("openshiftConsole")
         link: "project/" + $scope.projectName
       },
       {
-        title: "Add to Project",
+        title: gettextCatalog.getString("Add to Project"),
         link: "project/" + $scope.projectName + "/create"
       },
       {
@@ -47,7 +47,7 @@ angular.module("openshiftConsole")
         link: nameLink
       },
       {
-        title: "Next Steps"
+        title: gettextCatalog.getString("Next Steps")
       }
     ];
 

@@ -15,48 +15,50 @@
               <div class="col-md-12">
                 <uib-tabset class="mar-top-none">
                   <uib-tab active="selectedTab.fromCatalog">
-                    <uib-tab-heading>Browse Catalog</uib-tab-heading>
+                    <uib-tab-heading translate>Browse Catalog</uib-tab-heading>
 
-                    <p ng-if="emptyCatalog && !loaded">Loading...</p>
+                    <p ng-if="emptyCatalog && !loaded" translate>Loading...</p>
 
                     <div ng-if="emptyCatalog && loaded && !nonBuilderImages.length" class="empty-state-message empty-state-full-page">
-                      <h2 class="text-center">No images or templates.</h2>
+                      <h2 class="text-center" translate>No images or templates.</h2>
 
-                      <p class="gutter-top">
+                      <p class="gutter-top" translate>
                         No images or templates are loaded for this project or the shared
                         <code>openshift</code> namespace. An image or template is
                         required to add content.
                       </p>
 
                       <p>
-                        To add an image stream or template from a file, use the editor in the
-                        <strong>Import YAML / JSON</strong> tab, or run the following command:
+                        <translate>To add an image stream or template from a file, use the editor in the
+                        <strong>Import YAML / JSON</strong> tab, or run the following command:</translate>
                         <div><code>oc create -f &lt;filename&gt; -n {{projectName}}</code></div>
                       </p>
 
-                      <p><a href="{{projectName | projectOverviewURL}}">Back to overview</a></p>
+                      <p><a href="{{projectName | projectOverviewURL}}" translate>Back to overview</a></p>
                     </div>
 
                     <!-- Show an abbreviated message if only non-builders exist in the project.
                          We show a link to view the non-builder images below. -->
-                    <p ng-if="emptyCatalog && loaded && nonBuilderImages.length">No builder images or templates.</p>
+                    <p ng-if="emptyCatalog && loaded && nonBuilderImages.length" translate>No builder images or templates.</p>
 
                     <div ng-show="!emptyCatalog">
 
                       <div class="row">
                         <!-- Right padding to line up cleanly with the left column tiles. -->
                         <div class="col-sm-6 catalog-header-left">
+                          <translate>
                           Choose from web frameworks, databases, and other components to
                           add content to your project.
+                          </translate>
 
                           <div class="filter-group">
                             <!-- Add a hidden label for screen readers. -->
-                            <label for="search" class="sr-only">Filter by keyword</label>
+                            <label for="search" class="sr-only" translate>Filter by keyword</label>
                             <!-- Pull the filter right so the input and dropdown button
                                  can use 100% width on the same line. -->
                             <div uib-dropdown uib-keyboard-nav class="btn-group pull-right">
                               <button class="btn btn-default dropdown-toggle" data-toggle="dropdown" role="menu">
-                                Browse
+                                <translate>Browse</translate>
                                 <span class="caret" aria-hidden="true"></span>
                               </button>
                               <ul class="uib-dropdown-menu">
@@ -76,7 +78,7 @@
                                  ng-model="filter.keyword"
                                  type="search"
                                  id="search"
-                                 placeholder="Filter by keyword"
+                                 placeholder="{{'Filter by keyword'|translate}}"
                                  class="search-input form-control"
                                  autocorrect="off"
                                  autocapitalize="off"
@@ -85,8 +87,8 @@
                              </div>
 
                             <div ng-if="filter.tag">
-                              Tagged with {{filter.tag}}.
-                              <a href="" ng-click="filter.tag = ''">See all tags</a>
+                              <translate>Tagged with {{filter.tag}}.</translate>
+                              <a href="" ng-click="filter.tag = ''" translate>See all tags</a>
                             </div>
                           </div>
                         </div>
@@ -95,24 +97,24 @@
                         <div class="col-sm-6 catalog-legend">
                           <dl aria-hidden="true" class="text-muted">
                             <dt>
-                              <i class="pficon pficon-image fa-fw"></i> Builder Image
+                              <i class="pficon pficon-image fa-fw"></i> <translate>Builder Image</translate>
                             </dt>
-                            <dd>Builds images from source code in a Git repository.</dd>
+                            <dd translate>Builds images from source code in a Git repository.</dd>
                             <dt>
-                              <i class="fa fa-clone fa-fw"></i> Template
+                              <i class="fa fa-clone fa-fw"></i> <translate>Template</translate>
                             </dt>
-                            <dd>Creates a predefined set of resources.</dd>
+                            <dd translate>Creates a predefined set of resources.</dd>
                             <dt>
-                              <i class="fa fa-bolt fa-fw"></i> Quickstart
+                              <i class="fa fa-bolt fa-fw"></i> <translate>Quickstart</translate>
                             </dt>
-                            <dd>Provides a skeleton for developing an application.</dd>
+                            <dd translate>Provides a skeleton for developing an application.</dd>
                           </dl>
                         </div>
                       </div>
 
                       <div ng-if="filteredCategoryTags.length === 0 && !emptyCatalog && loaded" style="margin-top: 5px;">
-                        All builder images and templates are hidden by the current filter.
-                        <a href="" ng-click="filter.keyword = ''; filter.tag = ''">Clear filter</a>
+                        <translate>All builder images and templates are hidden by the current filter.</translate>
+                        <a href="" ng-click="filter.keyword = ''; filter.tag = ''" translate>>Clear filter</a>
                       </div>
 
                       <div class="row gutter-top">
@@ -145,11 +147,11 @@
                       </div>
 
                       <!-- Don't show images without the builder tag by default, by allow the user to pick one. -->
-                      <div ng-if="filteredNonBuilders.length" click-to-reveal link-text="Don't see the image you are looking for?" class="gutter-bottom">
-                        <h2>Additional Images</h2>
+                      <div ng-if="filteredNonBuilders.length" click-to-reveal link-text="{{'Don\'t see the image you are looking for?'|translate}}" class="gutter-bottom">
+                        <h2 translate>Additional Images</h2>
                         <div class="gutter-bottom">
                           <span class="pficon pficon-warning-triangle-o"></span>
-                          Some images in this list may not be able to build source. Use with caution.
+                          <translate>Some images in this list may not be able to build source. Use with caution.</translate>
                         </div>
                         <div class="catalog catalog-fluid">
                           <catalog-image
@@ -168,12 +170,12 @@
                   </uib-tab>
 
                   <uib-tab active="selectedTab.fromDockerImage">
-                    <uib-tab-heading>Deploy Image</uib-tab-heading>
+                    <uib-tab-heading translate>Deploy Image</uib-tab-heading>
                     <deploy-image project="projectName" context="context" alerts="alerts"></deploy-image>
                   </uib-tab>
 
                   <uib-tab active="selectedTab.fromFile">
-                    <uib-tab-heading>Import YAML / JSON</uib-tab-heading>
+                    <uib-tab-heading translate>Import YAML / JSON</uib-tab-heading>
                     <from-file></from-file>
                   </uib-tab>
 

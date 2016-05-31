@@ -19,7 +19,8 @@ angular.module('openshiftConsole')
                         Navigate,
                         ProjectsService,
                         LabelFilter,
-                        labelNameFilter) {
+                        labelNameFilter,
+                        gettextCatalog) {
     $scope.projectName = $routeParams.project;
     $scope.deploymentConfigName = $routeParams.deploymentconfig;
     $scope.deploymentConfig = null;
@@ -39,14 +40,14 @@ angular.module('openshiftConsole')
     $scope.alerts = {};
     $scope.breadcrumbs = [
       {
-        title: "Deployments",
+        title: gettextCatalog.getString("Deployments"),
         link: "project/" + $routeParams.project + "/browse/deployments"
       },
       {
         title: $routeParams.deploymentconfig
       }
     ];
-    $scope.emptyMessage = "Loading...";
+    $scope.emptyMessage = gettextCatalog.getString("Loading...");
     $scope.healthCheckURL = Navigate.healthCheckURL($routeParams.project,
                                                     "DeploymentConfig",
                                                     $routeParams.deploymentconfig);
@@ -108,12 +109,12 @@ angular.module('openshiftConsole')
                   $scope.alerts['saveDCEnvVarsSuccess'] = {
                     type: "success",
                     // TODO:  improve success alert
-                    message: $scope.deploymentConfigName + " was updated."
+                    message: gettextCatalog.getString("{{name}} was updated.", {name: $scope.deploymentConfigName})
                   };
                 }, function error(e){
                   $scope.alerts['saveDCEnvVarsError'] = {
                     type: "error",
-                    message: $scope.deploymentConfigName + " was not updated.",
+                    message: gettextCatalog.getString("{{name}} was not updated.", {name: $scope.deploymentConfigName}),
                     details: "Reason: " + $filter('getErrorDetails')(e)
                   };
                 });
@@ -124,7 +125,7 @@ angular.module('openshiftConsole')
               if (action === "DELETED") {
                 $scope.alerts["deleted"] = {
                   type: "warning",
-                  message: "This deployment configuration has been deleted."
+                  message: gettextCatalog.getString("This deployment configuration has been deleted.")
                 };
               }
               $scope.deploymentConfig = deploymentConfig;
@@ -140,7 +141,7 @@ angular.module('openshiftConsole')
               // TODO we should add this back in and show the pod template on this page
               // extractPodTemplates();
               // ImageStreamResolver.fetchReferencedImageStreamImages($scope.podTemplates, $scope.imagesByDockerReference, $scope.imageStreamImageRefByDockerReference, $scope);
-              $scope.emptyMessage = "No deployments to show";
+              $scope.emptyMessage = gettextCatalog.getString("No deployments to show");
               if (!action) {
                 var deploymentsByDeploymentConfig = DeploymentsService.associateDeploymentsToDeploymentConfig(deployments.by("metadata.name"));
                 $scope.unfilteredDeployments = deploymentsByDeploymentConfig[$routeParams.deploymentconfig] || {};
@@ -198,8 +199,8 @@ angular.module('openshiftConsole')
             $scope.loaded = true;
             $scope.alerts["load"] = {
               type: "error",
-              message: e.status === 404 ? "This deployment configuration can not be found, it may have been deleted." : "The deployment configuration details could not be loaded.",
-              details: e.status === 404 ? "Any remaining deployment history for this deployment will be shown." : "Reason: " + $filter('getErrorDetails')(e)
+              message: e.status === 404 ? gettextCatalog.getString("This deployment configuration can not be found, it may have been deleted.") : gettextCatalog.getString("The deployment configuration details could not be loaded."),
+              details: e.status === 404 ? gettextCatalog.getString("Any remaining deployment history for this deployment will be shown.") : gettextCatalog.getString("Reason: ") + $filter('getErrorDetails')(e)
             };
           }
         );
@@ -246,7 +247,7 @@ angular.module('openshiftConsole')
           if (!LabelFilter.getLabelSelector().isEmpty() && $.isEmptyObject($scope.deployments) && !$.isEmptyObject($scope.unfilteredDeployments)) {
             $scope.alerts["deployments"] = {
               type: "warning",
-              details: "The active filters are hiding all deployments."
+              details: gettextCatalog.getString("The active filters are hiding all deployments.")
             };
           }
           else {
@@ -289,7 +290,7 @@ angular.module('openshiftConsole')
             $scope.alerts = $scope.alerts || {};
             $scope.alerts["scale"] = {
               type: "error",
-              message: "An error occurred scaling the deployment config.",
+              message: gettextCatalog.getString("An error occurred scaling the deployment config."),
               details: $filter('getErrorDetails')(result)
             };
           };

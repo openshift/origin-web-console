@@ -7,7 +7,7 @@
  * Controller of the openshiftConsole
  */
 angular.module('openshiftConsole')
-  .controller('ImageController', function ($scope, $routeParams, DataService, ProjectsService, $filter, ImageStreamsService) {
+  .controller('ImageController', function ($scope, $routeParams, DataService, ProjectsService, $filter, ImageStreamsService, gettextCatalog) {
     $scope.projectName = $routeParams.project;
     $scope.imageStream = null;
     $scope.tagsByName = {};
@@ -17,14 +17,14 @@ angular.module('openshiftConsole')
     $scope.renderOptions.hideFilterWidget = true;
     $scope.breadcrumbs = [
       {
-        title: "Image Streams",
+        title: gettextCatalog.getString("Image Streams"),
         link: "project/" + $routeParams.project + "/browse/images"
       },
       {
         title: $routeParams.image
       }
     ];
-    $scope.emptyMessage = "Loading...";
+    $scope.emptyMessage = gettextCatalog.getString("Loading...");
 
     var watches = [];
 
@@ -37,14 +37,14 @@ angular.module('openshiftConsole')
           function(imageStream) {
             $scope.loaded = true;
             $scope.imageStream = imageStream;
-            $scope.emptyMessage = "No tags to show";
+            $scope.emptyMessage = gettextCatalog.getString("No tags to show");
 
             // If we found the item successfully, watch for changes on it
             watches.push(DataService.watchObject("imagestreams", $routeParams.image, context, function(imageStream, action) {
               if (action === "DELETED") {
                 $scope.alerts["deleted"] = {
                   type: "warning",
-                  message: "This image stream has been deleted."
+                  message: gettextCatalog.getString("This image stream has been deleted.")
                 };
               }
               $scope.imageStream = imageStream;
@@ -56,8 +56,8 @@ angular.module('openshiftConsole')
             $scope.loaded = true;
             $scope.alerts["load"] = {
               type: "error",
-              message: "The image stream details could not be loaded.",
-              details: "Reason: " + $filter('getErrorDetails')(e)
+              message: gettextCatalog.getString("The image stream details could not be loaded."),
+              details: gettextCatalog.getString("Reason: ") + $filter('getErrorDetails')(e)
             };
           });
 

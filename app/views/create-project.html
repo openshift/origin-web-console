@@ -10,17 +10,17 @@
         <div class="middle-content">
           <div class="container surface-shaded gutter-top">
             <div class="col-md-12">
-              <h1>New Project</h1>
+              <h1 translate>New Project</h1>
               <alerts alerts="alerts"></alerts>
               <form name="createProjectForm">
                 <fieldset ng-disabled="disableInputs">
                   <div class="form-group">
-                    <label for="name" class="required">Name</label>
+                    <label for="name" class="required" translate>Name</label>
                     <span ng-class="{'has-error': (createProjectForm.name.$error.pattern && createProjectForm.name.$touched) || nameTaken}">
                       <input class="form-control input-lg"
                           name="name"
                           id="name"
-                          placeholder="my-project"
+                          placeholder="{{'my-project'|translate}}"
                           type="text"
                           required
                           take-focus
@@ -36,35 +36,35 @@
                           spellcheck="false">
                     </span>
                     <div>
-                      <span class="help-block">A unique name for the project.</span>
+                      <span class="help-block" translate>A unique name for the project.</span>
                     </div>
                     <div class="has-error">
-                      <span id="nameHelp" class="help-block" ng-if="createProjectForm.name.$error.pattern && createProjectForm.name.$touched">
+                      <span id="nameHelp" class="help-block" ng-if="createProjectForm.name.$error.pattern && createProjectForm.name.$touched" translate>
                         Project names may only contain lower-case letters, numbers, and dashes.
                         They may not start or end with a dash.</span>
                     </div>
                     <div class="has-error">
-                      <span class="help-block" ng-if="nameTaken">This name is already
+                      <span class="help-block" ng-if="nameTaken" translate>This name is already
                           in use. Please choose a different name.</span>
                     </div>
                   </div>
 
                   <div class="form-group">
-                    <label for="displayName">Display Name</label>
+                    <label for="displayName" translate>Display Name</label>
                     <input class="form-control input-lg"
                         name="displayName"
                         id="displayName"
-                        placeholder="My Project"
+                        placeholder="{{'My Project'|translate}}"
                         type="text"
                         ng-model="displayName">
                   </div>
 
                   <div class="form-group">
-                    <label for="description">Description</label>
+                    <label for="description" translate>Description</label>
                     <textarea class="form-control input-lg"
                         name="description"
                         id="description"
-                        placeholder="A short description."
+                        placeholder="{{'A short description.'|translate}}"
                         ng-model="description"></textarea>
                   </div>
 
@@ -73,8 +73,8 @@
                         class="btn btn-primary btn-lg"
                         ng-click="createProject()"
                         ng-disabled="createProjectForm.$invalid || nameTaken || disableInputs"
-                        value="">Create</button>
-                    <a class="btn btn-default btn-lg" href="#" back>Cancel</a>
+                        value="" translate>Create</button>
+                    <a class="btn btn-default btn-lg" href="#" back translate>Cancel</a>
                   </div>
                 </fieldset>
               </form>

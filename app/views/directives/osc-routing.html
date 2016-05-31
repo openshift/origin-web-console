@@ -3,7 +3,7 @@
 
     <!-- Name -->
     <div ng-show="showNameInput" class="form-group">
-      <label for="route-name" class="required">Name</label>
+      <label for="route-name" class="required" translate>Name</label>
       <!-- regex, maxlength from k8s.io/kubernetes/pkg/util/validation/validation.go -->
       <input
           id="route-name"
@@ -22,10 +22,10 @@
           spellcheck="false"
           aria-describedby="route-name-help">
       <div>
-        <span id="route-name-help" class="help-block">A unique name for the route within the project.</span>
+        <span id="route-name-help" class="help-block" translate>A unique name for the route within the project.</span>
       </div>
       <div class="has-error" ng-show="routeForm.name.$error.pattern && routeForm.name.$touched && !routingDisabled">
-        <span class="help-block">
+        <span class="help-block" translate>
           Route names may only contain lower-case letters, numbers, and dashes.
           They may not start or end with a dash.
         </span>
@@ -34,7 +34,7 @@
 
     <!-- Host -->
     <div class="form-group">
-      <label for="host">Hostname</label>
+      <label for="host" translate>Hostname</label>
       <!-- regex, maxlength from k8s.io/kubernetes/pkg/util/validation/validation.go -->
       <input
           id="host"
@@ -52,13 +52,13 @@
           aria-describedby="route-host-help">
       <div>
         <span id="route-host-help" class="help-block">
-          Public hostname for the route.
-          <span ng-if="!hostReadOnly">If not specified, a hostname is generated.</span>
-          The hostname can't be changed after the route is created.
+          <translate>Public hostname for the route.</translate>
+          <span ng-if="!hostReadOnly" translate>If not specified, a hostname is generated.</span>
+          <translate>The hostname can't be changed after the route is created.</translate>
         </span>
       </div>
       <div class="has-error" ng-show="routeForm.host.$error.pattern && routeForm.host.$touched && !routingDisabled">
-        <span class="help-block">
+        <span class="help-block" translate>
           Hostname must consist of lower-case letters, numbers, periods, and
           hyphens. It must start and end with a letter or number.
         </span>
@@ -67,7 +67,7 @@
 
     <!-- Path -->
     <div class="form-group">
-      <label for="path">Path</label>
+      <label for="path" translate>Path</label>
       <input
           id="path"
           class="form-control"
@@ -82,17 +82,17 @@
           spellcheck="false"
           aria-describedby="route-path-help">
       <div>
-        <span id="route-path-help" class="help-block">
+        <span id="route-path-help" class="help-block" translate>
           Path that the router watches to route traffic to the service.
         </span>
       </div>
       <div class="has-error" ng-show="routeForm.path.$error.pattern && routeForm.path.$touched && !routingDisabled">
-        <span class="help-block">
+        <span class="help-block" translate>
           Path must start with <code>/</code>
         </span>
       </div>
       <div class="has-warning" ng-show="route.path && route.tls.termination === 'passthrough'">
-        <span class="help-block">
+        <span class="help-block" translate>
           Path value will not be used. Paths cannot be set for passthrough TLS.
         </span>
       </div>
@@ -107,12 +107,12 @@
     </div>
 
     <div ng-if="alternateServiceOptions.length && !route.alternateServices.length" class="form-group">
-      <a href="" ng-click="addAlternateService()">Split traffic across multiple services</a>
+      <a href="" ng-click="addAlternateService()" translate>Split traffic across multiple services</a>
     </div>
 
     <!-- Target Port -->
     <div ng-if="route.portOptions.length" class="form-group">
-      <label for="routeTargetPort">Target Port</label>
+      <label for="routeTargetPort" translate>Target Port</label>
       <select
           id="routeTargetPort"
           ng-if="route.portOptions.length"
@@ -122,7 +122,7 @@
           aria-describedby="target-port-help">
       </select>
       <div>
-        <span id="target-port-help" class="help-block">
+        <span id="target-port-help" class="help-block" translate>
           Target port for traffic.
         </span>
       </div>
@@ -130,21 +130,21 @@
 
     <!-- Alternate Services for A/B Traffic -->
     <div ng-if="route.alternateServices.length">
-      <h3>Alternate Services</h3>
+      <h3 translate>Alternate Services</h3>
       <div ng-repeat="alternate in route.alternateServices" class="form-group">
         <osc-routing-service model="alternate"
                              services="alternateServiceOptions"
                              is-alternate="true"
                              show-weight="true">
         </osc-routing-service>
-        <a href="" ng-click="route.alternateServices.splice($index, 1)">Remove service</a>
+        <a href="" ng-click="route.alternateServices.splice($index, 1)" translate>Remove service</a>
         <span ng-if="$last && route.alternateServices.length < alternateServiceOptions.length">
           <span class="action-divider">|</span>
-          <a href="" ng-click="addAlternateService()">Add another service</a>
+          <a href="" ng-click="addAlternateService()" translate>Add another service</a>
         </span>
       </div>
       <div ng-repeat="duplicate in duplicateServices" class="has-error mar-bottom-lg">
-        <span class="help-block">
+        <span class="help-block" translate>
           Service {{duplicate.metadata.name}} cannot be added twice.
         </span>
       </div>
@@ -153,65 +153,65 @@
     <div>
       <a href=""
         ng-click="showSecureRouteOptions = true"
-        ng-show="!showSecureRouteOptions">Show options for secured routes</a>
+        ng-show="!showSecureRouteOptions" translate>Show options for secured routes</a>
     </div>
 
     <div ng-show="showSecureRouteOptions">
-      <h3>Route Type</h3>
+      <h3 translate>Route Type</h3>
       <div>
-        <span class="help-block">
+        <span class="help-block" translate>
           Routes can be secured using several TLS termination types for serving certificates.
         </span>
       </div>
 
       <!-- TLS Termination -->
       <div class="form-group">
-        <label>TLS Termination</label>
+        <label translate>TLS Termination</label>
         <select ng-model="route.tls.termination" class="form-control">
-          <option value="">None</option>
-          <option value="edge">Edge</option>
-          <option value="passthrough">Passthrough</option>
-          <option value="reencrypt">Re-encrypt</option>
+          <option value="" translate>None</option>
+          <option value="edge" translate>Edge</option>
+          <option value="passthrough" translate>Passthrough</option>
+          <option value="reencrypt" translate>Re-encrypt</option>
         </select>
         <div class="learn-more-block help-block">
-          <a href="{{'route-types' | helpLink}}" target="_blank">Learn more <i class="fa fa-external-link"></i></a>
+          <a href="{{'route-types' | helpLink}}" target="_blank"><translate>Learn more</translate> <i class="fa fa-external-link"></i></a>
         </div>
       </div>
 
       <!-- Insecure Edge Termination Policy -->
       <div class="form-group">
-        <label>Insecure Traffic</label>
+        <label translate>Insecure Traffic</label>
         <select
             ng-model="route.tls.insecureEdgeTerminationPolicy"
             ng-disabled="route.tls.termination !== 'edge'"
             class="form-control"
             aria-describedby="route-insecure-policy-help">
-          <option value="">None</option>
-          <option value="Allow">Allow</option>
-          <option value="Redirect">Redirect</option>
+          <option value="" translate>None</option>
+          <option value="Allow" translate>Allow</option>
+          <option value="Redirect" translate>Redirect</option>
         </select>
         <div>
-          <span id="route-insecure-policy-help" class="help-block">
+          <span id="route-insecure-policy-help" class="help-block" translate>
             Policy for traffic on insecure schemes like HTTP for edge termination.
           </span>
         </div>
       </div>
 
       <!-- Key and Certificates -->
-      <h3>Certificates</h3>
+      <h3 translate>Certificates</h3>
       <div>
-        <span class="help-block">
+        <span class="help-block" translate>
           TLS certificates for edge and re-encrypt termination. If not
           specified, the router's default certificate is used.
         </span>
       </div>
       <div ng-if="showCertificatesNotUsedWarning" class="has-warning">
         <span class="help-block">
-          The certificate or key you've set will not be used.
-          <span ng-if="!route.tls.termination">
+          <translate>The certificate or key you've set will not be used.</translate>
+          <span ng-if="!route.tls.termination" translate>
             The route is unsecured.
           </span>
-          <span ng-if="route.tls.termination === 'passthrough'">
+          <span ng-if="route.tls.termination === 'passthrough'" translate>
             Custom certificates cannot be used with passthrough termination.
           </span>
         </span>
@@ -219,7 +219,7 @@
       <fieldset>
         <div>
           <div class="form-group" id="certificate-file">
-            <label>Certificate</label>
+            <label translate>Certificate</label>
             <osc-file-input
               model="route.tls.certificate"
               drop-zone-id="certificate-file"
@@ -229,7 +229,7 @@
             </osc-file-input>
           </div>
           <div class="form-group" id="private-key-file">
-            <label>Private Key</label>
+            <label translate>Private Key</label>
             <osc-file-input
               model="route.tls.key"
               drop-zone-id="private-key-file"
@@ -239,7 +239,7 @@
           </osc-file-input>
           </div>
           <div class="form-group" id="ca-certificate-file">
-            <label>CA Certificate</label>
+            <label translate>CA Certificate</label>
             <osc-file-input
               model="route.tls.caCertificate"
               drop-zone-id="ca-certificate-file"
@@ -249,7 +249,7 @@
             </osc-file-input>
           </div>
           <div class="form-group" id="dest-ca-certificate-file">
-            <label>Destination CA Certificate</label>
+            <label translate>Destination CA Certificate</label>
             <osc-file-input
                 model="route.tls.destinationCACertificate"
                 show-values="true"
@@ -260,7 +260,7 @@
             <!-- Show a warning if the value won't be used, but only if we're
                  not already showing the generic certificate warning above. -->
             <div ng-if="route.tls.destinationCACertificate && route.tls.termination !== 'reencrypt' && !showCertificatesNotUsedWarning" class="has-warning">
-              <span class="help-block">
+              <span class="help-block" translate>
                 The destination CA certificate will not be used. Destination CA
                 certificates are only used for re-encrypt termination.
               </span>

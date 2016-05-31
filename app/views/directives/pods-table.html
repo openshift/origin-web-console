@@ -1,15 +1,15 @@
 <table class="table table-bordered table-hover table-mobile">
   <thead>
     <tr>
-      <th>Name</th>
-      <th>Status</th>
-      <th>Containers Ready</th>
-      <th>Container Restarts</th>
-      <th>Age</th>
+      <th translate>Name</th>
+      <th translate>Status</th>
+      <th translate>Containers Ready</th>
+      <th translate>Container Restarts</th>
+      <th translate>Age</th>
     </tr>
   </thead>
   <tbody ng-if="(pods | hashSize) == 0">
-    <tr><td colspan="5"><em>{{emptyMessage || 'No pods to show'}}</em></td></tr>
+    <tr><td colspan="5"><em>{{emptyMessage || ('No pods to show'|translate)}}</em></td></tr>
   </tbody>
   <tbody ng-repeat="pod in pods | orderObjectsByDate : true">
     <tr>

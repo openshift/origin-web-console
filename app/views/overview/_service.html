@@ -1,8 +1,8 @@
 <div ng-if="!(visibleDeploymentsByConfig | hashSize) && !(monopodsByService[service.metadata.name] | hashSize)" class="no-deployments-block">
   <div column class="no-deployments-message">
     <div class="pad-left-lg pad-right-lg pad-top-lg pad-bottom-lg">
-      <h2>No deployments.</h2>
-      <p>
+      <h2 translate>No deployments.</h2>
+      <p translate>
         There are no deployments or pods for service
         <a ng-href="{{service | navigateResourceURL}}">{{service.metadata.name}}</a>.
       </p>

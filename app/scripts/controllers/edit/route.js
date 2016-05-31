@@ -15,7 +15,8 @@ angular.module('openshiftConsole')
                                                AlertMessageService,
                                                DataService,
                                                Navigate,
-                                               ProjectsService) {
+                                               ProjectsService,
+                                               gettextCatalog) {
     $scope.alerts = {};
     $scope.renderOptions = {
       hideFilterWidget: true
@@ -29,13 +30,13 @@ angular.module('openshiftConsole')
       title: $scope.projectName,
       link: 'project/' + $scope.projectName
     }, {
-      title: 'Routes',
+      title: gettextCatalog.getString('Routes'),
       link: 'project/' + $scope.projectName + '/browse/routes'
     }, {
       title: $scope.routeName,
       link: $scope.routeURL
     }, {
-      title: "Edit"
+      title: gettextCatalog.getString("Edit")
     }];
 
     ProjectsService
@@ -71,7 +72,7 @@ angular.module('openshiftConsole')
               $scope.routing.alternateServices = [];
               _.each(_.get(route, 'spec.alternateBackends'), function(alternateBackend) {
                 if (alternateBackend.kind !== 'Service') {
-                  Navigate.toErrorPage('Editing routes with non-service targets is unsupported. You can edit the route with the "Edit YAML" action instead.');
+                  Navigate.toErrorPage(gettextCatalog.getString('Editing routes with non-service targets is unsupported. You can edit the route with the "Edit YAML" action instead.'));
                   return false;
                 }
 
@@ -83,7 +84,7 @@ angular.module('openshiftConsole')
             });
           },
           function() {
-            Navigate.toErrorPage("Could not load route " + $scope.routeName + ".");
+            Navigate.toErrorPage(gettextCatalog.getString("Could not load route {{name}}.", {name: $scope.routeName}));
           });
 
         // Update the fields in the route from what was entered in the form.
@@ -134,7 +135,7 @@ angular.module('openshiftConsole')
                   name: $scope.routeName,
                   data: {
                     type: "success",
-                    message: "Route " + $scope.routeName + " was successfully updated."
+                    message: gettextCatalog.getString("Route {{name}} was successfully updated.", {name: $scope.routeName})
                   }
                 });
                 $location.path($scope.routeURL);
@@ -142,7 +143,7 @@ angular.module('openshiftConsole')
                 $scope.disableInputs = false;
                 $scope.alerts['update-route'] = {
                   type: "error",
-                  message: "An error occurred updating route " + $scope.routeName + ".",
+                  message: gettextCatalog.getString("An error occurred updating route {{name}}.", {name: $scope.routeName}),
                   details: $filter('getErrorDetails')(response)
                 };
               });

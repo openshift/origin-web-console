@@ -17,8 +17,8 @@
                   <span class="pficon pficon-route icon-xl"></span>
                 </div>
                 <div class="col-md-8">
-                  <h1>Edit Route {{routeName}}</h1>
-                  <div ng-if="loading">
+                  <h1 translate>Edit Route {{routeName}}</h1>
+                  <div ng-if="loading" translate>
                     Loading...
                   </div>
                   <form name="form">
@@ -34,8 +34,8 @@
                             class="btn btn-primary btn-lg"
                             ng-click="updateRoute()"
                             ng-disabled="form.$invalid || disableInputs"
-                            value="">Save</button>
-                        <a class="btn btn-default btn-lg" ng-href="{{routeURL}}">Cancel</a>
+                            value="" translate>Save</button>
+                        <a class="btn btn-default btn-lg" ng-href="{{routeURL}}" translate>Cancel</a>
                       </div>
                     </fieldset>
                   </form>

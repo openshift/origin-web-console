@@ -7,7 +7,7 @@
  * Controller of the openshiftConsole
  */
 angular.module('openshiftConsole')
-  .controller('ServiceController', function ($scope, $routeParams, DataService, ProjectsService, $filter) {
+  .controller('ServiceController', function ($scope, $routeParams, DataService, ProjectsService, $filter, gettextCatalog) {
     $scope.projectName = $routeParams.project;
     $scope.service = null;
     $scope.alerts = {};
@@ -15,7 +15,7 @@ angular.module('openshiftConsole')
     $scope.renderOptions.hideFilterWidget = true;
     $scope.breadcrumbs = [
       {
-        title: "Services",
+        title: gettextCatalog.getString("Services"),
         link: "project/" + $routeParams.project + "/browse/services"
       },
       {
@@ -41,7 +41,7 @@ angular.module('openshiftConsole')
               if (action === "DELETED") {
                 $scope.alerts["deleted"] = {
                   type: "warning",
-                  message: "This service has been deleted."
+                  message: gettextCatalog.getString("This service has been deleted.")
                 };
               }
               $scope.service = service;
@@ -52,8 +52,8 @@ angular.module('openshiftConsole')
             $scope.loaded = true;
             $scope.alerts["load"] = {
               type: "error",
-              message: "The service details could not be loaded.",
-              details: "Reason: " + $filter('getErrorDetails')(e)
+              message: gettextCatalog.getString("The service details could not be loaded."),
+              details: gettextCatalog.getString("Reason: ") + $filter('getErrorDetails')(e)
             };
           }
         );

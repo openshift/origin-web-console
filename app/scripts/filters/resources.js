@@ -527,17 +527,17 @@ angular.module('openshiftConsole')
       return false;
     };
   })
-  .filter('podWarnings', function(isPodStuckFilter, isContainerLoopingFilter, isContainerFailedFilter, isContainerUnpreparedFilter, isTerminatingFilter) {
+  .filter('podWarnings', function(isPodStuckFilter, isContainerLoopingFilter, isContainerFailedFilter, isContainerUnpreparedFilter, isTerminatingFilter, gettextCatalog) {
     return function(pod) {
       var warnings = [];
 
       if (pod.status.phase === 'Unknown') {
         // We always show Unknown pods in a warning state
-        warnings.push({reason: 'Unknown', pod: pod.metadata.name, message: 'The state of the pod could not be obtained. This is typically due to an error communicating with the host of the pod.'});
+        warnings.push({reason: 'Unknown', pod: pod.metadata.name, message: gettextCatalog.getString('The state of the pod could not be obtained. This is typically due to an error communicating with the host of the pod.')});
       }
 
       if (isPodStuckFilter(pod)) {
-        warnings.push({reason: "Stuck", pod: pod.metadata.name, message: "The pod has been stuck in the pending state for more than five minutes."});
+        warnings.push({reason: "Stuck", pod: pod.metadata.name, message: gettextCatalog.getString("The pod has been stuck in the pending state for more than five minutes.")});
       }
 
       if (pod.status.phase === 'Running' && pod.status.containerStatuses) {
@@ -552,14 +552,14 @@ angular.module('openshiftConsole')
                 reason: "NonZeroExitTerminatingPod",
                 pod: pod.metadata.name,
                 container: containerStatus.name,
-                message: "The container " + containerStatus.name + " did not stop cleanly when terminated (exit code " + containerStatus.state.terminated.exitCode + ")."
+                message: gettextCatalog.getString("The container {{name}} did not stop cleanly when terminated (exit code {{exitCode}}).", {name: containerStatus.name, exitCode: containerStatus.state.terminated.exitCode})
               });
             } else {
               warnings.push({
                 reason: "NonZeroExit",
                 pod: pod.metadata.name,
                 container: containerStatus.name,
-                message: "The container " + containerStatus.name + " failed (exit code " + containerStatus.state.terminated.exitCode + ")."
+                message: gettextCatalog.getString("The container {{name}} failed (exit code {{exitCode}}).", {name: containerStatus.name, exitCode: containerStatus.state.terminated.exitCode})
               });
             }
           }
@@ -568,7 +568,7 @@ angular.module('openshiftConsole')
               reason: "Looping",
               pod: pod.metadata.name,
               container: containerStatus.name,
-              message: "The container " + containerStatus.name + " is crashing frequently. It must wait before it will be restarted again."
+              message: gettextCatalog.getString("The container {{name}} is crashing frequently. It must wait before it will be restarted again.", {name: containerStatus.name})
             });
           }
           if (isContainerUnpreparedFilter(containerStatus)) {
@@ -576,7 +576,7 @@ angular.module('openshiftConsole')
               reason: "Unprepared",
               pod: pod.metadata.name,
               container: containerStatus.name,
-              message: "The container " + containerStatus.name + " has been running for more than five minutes and has not passed its readiness check."
+              message: gettextCatalog.getString("The container {{name}} has been running for more than five minutes and has not passed its readiness check.", {name: containerStatus.name})
             });
           }
         });
@@ -1062,40 +1062,40 @@ angular.module('openshiftConsole')
   .filter('kindToResource', function (APIService) {
     return APIService.kindToResource;
   })
-  .filter('humanizeQuotaResource', function() {
+  .filter('humanizeQuotaResource', function(gettextCatalog) {
     return function(resourceType) {
       if (!resourceType) {
         return resourceType;
       }
 
       var nameFormatMap = {
-        'configmaps': 'Config Maps',
-        'cpu': 'CPU (Request)',
-        'limits.cpu': 'CPU (Limit)',
-        'limits.memory': 'Memory (Limit)',
-        'memory': 'Memory (Request)',
-        'openshift.io/imagesize': 'Image Size',
-        'openshift.io/imagestreamsize': 'Image Stream Size',
-        'openshift.io/projectimagessize': 'Project Image Size',
-        'persistentvolumeclaims': 'Persistent Volume Claims',
-        'pods': 'Pods',
-        'replicationcontrollers': 'Replication Controllers',
-        'requests.cpu': 'CPU (Request)',
-        'requests.memory': 'Memory (Request)',
-        'resourcequotas': 'Resource Quotas',
-        'secrets': 'Secrets',
-        'services': 'Services'
+        'configmaps': gettextCatalog.getString('Config Maps'),
+        'cpu': gettextCatalog.getString('CPU (Request)'),
+        'limits.cpu': gettextCatalog.getString('CPU (Limit)'),
+        'limits.memory': gettextCatalog.getString('Memory (Limit)'),
+        'memory': gettextCatalog.getString('Memory (Request)'),
+        'openshift.io/imagesize': gettextCatalog.getString('Image Size'),
+        'openshift.io/imagestreamsize': gettextCatalog.getString('Image Stream Size'),
+        'openshift.io/projectimagessize': gettextCatalog.getString('Project Image Size'),
+        'persistentvolumeclaims': gettextCatalog.getString('Persistent Volume Claims'),
+        'pods': gettextCatalog.getString('Pods'),
+        'replicationcontrollers': gettextCatalog.getString('Replication Controllers'),
+        'requests.cpu': gettextCatalog.getString('CPU (Request)'),
+        'requests.memory': gettextCatalog.getString('Memory (Request)'),
+        'resourcequotas': gettextCatalog.getString('Resource Quotas'),
+        'secrets': gettextCatalog.getString('Secrets'),
+        'services': gettextCatalog.getString('Services')
       };
       return nameFormatMap[resourceType] || resourceType;
     };
   })
-  .filter('routeTargetPortMapping', function(RoutesService) {
+  .filter('routeTargetPortMapping', function(RoutesService, gettextCatalog) {
     var portDisplayValue = function(servicePort, containerPort, protocol) {
-      servicePort = servicePort || "<unknown>";
-      containerPort = containerPort || "<unknown>";
+      servicePort = servicePort || gettextCatalog.getString("<unknown>");
+      containerPort = containerPort || gettextCatalog.getString("<unknown>");
 
       // \u2192 is a right arrow (see examples below)
-      var mapping = "Service Port " + servicePort  + " \u2192 Container Port " + containerPort;
+      var mapping = gettextCatalog.getString("Service Port {{servicePort}} \u2192 Container Port {{containerPort}}", {servicePort: servicePort, containerPort: containerPort});
       if (protocol) {
         mapping += " (" + protocol + ")";
       }
@@ -1133,7 +1133,7 @@ angular.module('openshiftConsole')
       return portDisplayValue(servicePort.port, servicePort.targetPort, servicePort.protocol);
     };
   })
-  .filter('podStatus', function() {
+  .filter('podStatus', function(gettextCatalog) {
     // Return results that match kubernetes/pkg/kubectl/resource_printer.go
     return function(pod) {
       if (!pod || (!pod.metadata.deletionTimestamp && !pod.status)) {
@@ -1160,13 +1160,13 @@ angular.module('openshiftConsole')
 
         signal = _.get(containerStatus, 'state.terminated.signal');
         if (signal) {
-          reason = "Signal: " + signal;
+          reason = gettextCatalog.getString("Signal: ") + signal;
           return;
         }
 
         exitCode = _.get(containerStatus, 'state.terminated.exitCode');
         if (exitCode) {
-          reason = "Exit Code: " + exitCode;
+          reason = gettextCatalog.getString("Exit Code: ") + exitCode;
         }
       });
 
@@ -1236,12 +1236,12 @@ angular.module('openshiftConsole')
       });
     };
   })
-  .filter('scopeDetails', function() {
+  .filter('scopeDetails', function(gettextCatalog) {
     var scopeMessages = {
-      "Terminating": "Matches pods that have an active deadline.",
-      "NotTerminating": "Matches pods that do not have an active deadline.",
-      "BestEffort": "Matches pods that have best effort quality of service.",
-      "NotBestEffort": "Matches pods that do not have best effort quality of service."
+      "Terminating": gettextCatalog.getString("Matches pods that have an active deadline."),
+      "NotTerminating": gettextCatalog.getString("Matches pods that do not have an active deadline."),
+      "BestEffort": gettextCatalog.getString("Matches pods that have best effort quality of service."),
+      "NotBestEffort": gettextCatalog.getString("Matches pods that do not have best effort quality of service.")
     };
     return function(scope) {
       return scopeMessages[scope];

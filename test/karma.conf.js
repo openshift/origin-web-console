@@ -56,6 +56,7 @@ module.exports = function(config) {
       "bower_components/ng-sortable/dist/ng-sortable.js",
       "bower_components/ui-select/dist/select.js",
       "bower_components/angular-inview/angular-inview.js",
+      "bower_components/angular-gettext/dist/angular-gettext.js",
       'app/config.js',
       'app/scripts/**/*.js',
       'app/views/directives/**/*.html',

@@ -7,7 +7,7 @@
  * Controller of the openshiftConsole
  */
 angular.module('openshiftConsole')
-  .controller('BuildConfigController', function ($scope, $routeParams, DataService, ProjectsService, BuildsService, $filter, LabelFilter, AlertMessageService) {
+  .controller('BuildConfigController', function ($scope, $routeParams, DataService, ProjectsService, BuildsService, $filter, LabelFilter, AlertMessageService, gettextCatalog) {
     $scope.projectName = $routeParams.project;
     $scope.buildConfigName = $routeParams.buildconfig;
     $scope.buildConfig = null;
@@ -15,14 +15,14 @@ angular.module('openshiftConsole')
     $scope.alerts = {};
     $scope.breadcrumbs = [
       {
-        title: "Builds",
+        title: gettextCatalog.getString("Builds"),
         link: "project/" + $routeParams.project + "/browse/builds"
       },
       {
         title: $routeParams.buildconfig
       }
     ];
-    $scope.emptyMessage = "Loading...";
+    $scope.emptyMessage = gettextCatalog.getString("Loading...");
 
     AlertMessageService.getAlerts().forEach(function(alert) {
       $scope.alerts[alert.name] = alert.data;
@@ -93,8 +93,8 @@ angular.module('openshiftConsole')
                 }, function error(e){
                   $scope.alerts['saveBCEnvVarsError'] = {
                     type: "error",
-                    message: $scope.buildConfigName + " was not updated.",
-                    details: "Reason: " + $filter('getErrorDetails')(e)
+                    message: gettextCatalog.getString("{{name}} was not updated.", {name: $scope.buildConfigName}),
+                    details: gettextCatalog.getString("Reason: ") + $filter('getErrorDetails')(e)
                   };
                 });
             };
@@ -104,7 +104,7 @@ angular.module('openshiftConsole')
               if (action === "DELETED") {
                 $scope.alerts["deleted"] = {
                   type: "warning",
-                  message: "This build configuration has been deleted."
+                  message: gettextCatalog.getString("This build configuration has been deleted.")
                 };
               }
               $scope.buildConfig = buildConfig;
@@ -119,14 +119,14 @@ angular.module('openshiftConsole')
             $scope.loaded = true;
             $scope.alerts["load"] = {
               type: "error",
-              message: e.status === 404 ? "This build configuration can not be found, it may have been deleted." : "The build configuration details could not be loaded.",
-              details: e.status === 404 ? "Any remaining build history for this build will be shown." : "Reason: " + $filter('getErrorDetails')(e)
+              message: e.status === 404 ? gettextCatalog.getString("This build configuration can not be found, it may have been deleted.") : gettextCatalog.getString("The build configuration details could not be loaded."),
+              details: e.status === 404 ? gettextCatalog.getString("Any remaining build history for this build will be shown.") : gettextCatalog.getString("Reason: ") + $filter('getErrorDetails')(e)
             };
           }
         );
 
       watches.push(DataService.watch("builds", context, function(builds, action, build) {
-        $scope.emptyMessage = "No builds to show";
+        $scope.emptyMessage = gettextCatalog.getString("No builds to show");
         if (!action) {
           $scope.unfilteredBuilds = BuildsService.validatedBuildsForBuildConfig($routeParams.buildconfig, builds.by('metadata.name'));
         } else {
@@ -170,7 +170,7 @@ angular.module('openshiftConsole')
           if (!LabelFilter.getLabelSelector().isEmpty() && $.isEmptyObject($scope.builds) && !$.isEmptyObject($scope.unfilteredBuilds)) {
             $scope.alerts["builds"] = {
               type: "warning",
-              details: "The active filters are hiding all builds."
+              details: gettextCatalog.getString("The active filters are hiding all builds.")
             };
           }
           else {
@@ -195,13 +195,13 @@ angular.module('openshiftConsole')
               // TODO: common alerts service to eliminate duplication
               $scope.alerts["create"] = {
                 type: "success",
-                message: "Build " + build.metadata.name + " has started."
+                message: gettextCatalog.getString("Build {{name}} has started.", {name: build.metadata.name})
               };
             }, function reject(result) {
               // TODO: common alerts service to eliminate duplication
               $scope.alerts["create"] = {
                 type: "error",
-                message: "An error occurred while starting the build.",
+                message: gettextCatalog.getString("An error occurred while starting the build."),
                 details: $filter('getErrorDetails')(result)
               };
             });

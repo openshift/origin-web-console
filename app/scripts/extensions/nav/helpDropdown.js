@@ -9,15 +9,15 @@ angular.module('openshiftConsole')
         return [
           {
             type: 'dom',
-            node: '<li><a target="_blank" href="{{\'default\' | helpLink}}">Documentation</a></li>'
+            node: '<li><a target="_blank" href="{{\'default\' | helpLink}}" translate>Documentation</a></li>'
           },
           {
             type: 'dom',
-            node: '<li><a href="about">About</a></li>'
+            node: '<li><a href="about" translate>About</a></li>'
           },
           {
             type: 'dom',
-            node: '<li><a href="command-line">Command Line Tools</a></li>'
+            node: '<li><a href="command-line" translate>Command Line Tools</a></li>'
           }
         ];
       });

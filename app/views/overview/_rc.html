@@ -1,7 +1,7 @@
 <div class="deployment-tile" ng-if="deployment.kind === 'ReplicationController'">
   <div row class="service-title" ng-if="service">
     <div>
-      Service:
+      <translate>Service:</translate>
       <a ng-href="{{service | navigateResourceURL}}">{{service.metadata.name}}</a>
     </div>
     <div ng-if="weightByService[service.metadata.name]" class="service-metadata">
@@ -11,7 +11,7 @@
   <div class="deployment-header">
     <div class="rc-header">
       <div>
-        Replication Controller:
+        <translate>Replication Controller:</translate>
         <a ng-href="{{deployment | navigateResourceURL}}">{{deployment.metadata.name}}</a>
       </div>
       <div>

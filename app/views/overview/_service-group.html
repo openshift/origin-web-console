@@ -24,11 +24,11 @@
       </span>
       <small ng-if="(primaryServiceRoutes | hashSize) > 1" class="other-routes-msg">
         and
-        <a ng-href="project/{{projectName}}/browse/routes">{{(primaryServiceRoutes | hashSize) - 1}} other route<span ng-if="(primaryServiceRoutes | hashSize) > 2">s</span></a>
+        <a ng-href="project/{{projectName}}/browse/routes" translate translate-n="(primaryServiceRoutes | hashSize) - 1" translate-plural="{{$count}} other routes">{{(primaryServiceRoutes | hashSize) - 1}} other route</a>
       </small>
     </h4>
     <span ng-if="!displayRoute">
-      <a ng-if="'routes' | canI : 'create'" ng-href="project/{{service.metadata.namespace}}/create-route?service={{service.metadata.name}}">Create Route</a>
+      <a ng-if="'routes' | canI : 'create'" ng-href="project/{{service.metadata.namespace}}/create-route?service={{service.metadata.name}}" translate>Create Route</a>
     </span>
   </div>
   <div>
@@ -76,13 +76,13 @@
                 <!-- <div class="blank-state-icon"> -->
                 <!--   <span class="pficon pficon pficon-add-circle-o" aria-hidden="true"></span> -->
                 <!-- </div> -->
-                <h2>No grouped services.</h2>
+                <h2 translate>No grouped services.</h2>
                 <p>
-                  No services are grouped with <a ng-href="{{service | navigateResourceURL}}">{{service.metadata.name}}</a>.
-                  <span ng-if="(services | hashSize) > 1 && 'services' | canI : 'update'">Add a service to group them together.</span>
+                  <translate>No services are grouped with <a ng-href="{{service | navigateResourceURL}}">{{service.metadata.name}}</a>.</translate>
+                  <span ng-if="(services | hashSize) > 1 && 'services' | canI : 'update'" translate>Add a service to group them together.</span>
                 </p>
                 <div ng-if="(services | hashSize) > 1 && 'services' | canI : 'update'">
-                  <button class="btn btn-primary" ng-click="linkService()">
+                  <button class="btn btn-primary" ng-click="linkService()" translate>
                     Group Service
                   </button>
                 </div>

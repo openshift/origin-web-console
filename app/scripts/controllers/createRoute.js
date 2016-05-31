@@ -8,7 +8,7 @@
  * Controller of the openshiftConsole
  */
 angular.module('openshiftConsole')
-  .controller('CreateRouteController', function ($filter, $routeParams, $scope, $window, ApplicationGenerator, DataService, Navigate, ProjectsService) {
+  .controller('CreateRouteController', function ($filter, $routeParams, $scope, $window, ApplicationGenerator, DataService, Navigate, ProjectsService, gettextCatalog) {
     $scope.alerts = {};
     $scope.renderOptions = {
       hideFilterWidget: true
@@ -27,11 +27,11 @@ angular.module('openshiftConsole')
         link: "project/" + $scope.projectName
       },
       {
-         title: "Routes",
+         title: gettextCatalog.getString("Routes"),
          link: "project/" + $scope.projectName + "/browse/routes"
       },
       {
-        title: "Create Route"
+        title: gettextCatalog.getString("Create Route")
       }
     ];
 
@@ -81,7 +81,7 @@ angular.module('openshiftConsole')
                 $scope.disableInputs = false;
                 $scope.alerts['create-route'] = {
                   type: "error",
-                  message: "An error occurred creating the route.",
+                  message: gettextCatalog.getString("An error occurred creating the route."),
                   details: $filter('getErrorDetails')(result)
                 };
               });

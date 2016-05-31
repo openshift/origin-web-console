@@ -8,7 +8,7 @@
  * Controller of the openshiftConsole
  */
 angular.module('openshiftConsole')
-  .controller('CreateController', function ($q, $uibModal, $routeParams, $scope, DataService, ProjectsService, tagsFilter, uidFilter, hashSizeFilter, imageStreamTagAnnotationFilter, descriptionFilter, LabelFilter, $filter, $location, AlertMessageService, Logger) {
+  .controller('CreateController', function ($q, $uibModal, $routeParams, $scope, DataService, ProjectsService, tagsFilter, uidFilter, hashSizeFilter, imageStreamTagAnnotationFilter, descriptionFilter, LabelFilter, $filter, $location, AlertMessageService, Logger, gettextCatalog) {
     var projectImageStreams,
         openshiftImageStreams,
         projectTemplates,
@@ -41,17 +41,17 @@ angular.module('openshiftConsole')
 
     // Map of tags to labels to show in the view.
     $scope.categoryLabels = {
-      "instant-app": "Instant Apps",
-      java: "Java",
-      xpaas: "xPaaS",
-      php: "PHP",
-      ruby: "Ruby",
-      perl: "Perl",
-      python: "Python",
-      nodejs: "NodeJS",
-      database: "Databases",
-      messaging: "Messaging",
-      "": "Other"
+      "instant-app": gettextCatalog.getString("Instant Apps"),
+      java: gettextCatalog.getString("Java"),
+      xpaas: gettextCatalog.getString("xPaaS"),
+      php: gettextCatalog.getString("PHP"),
+      ruby: gettextCatalog.getString("Ruby"),
+      perl: gettextCatalog.getString("Perl"),
+      python: gettextCatalog.getString("Python"),
+      nodejs: gettextCatalog.getString("NodeJS"),
+      database: gettextCatalog.getString("Databases"),
+      messaging: gettextCatalog.getString("Messaging"),
+      "": gettextCatalog.getString("Other")
     };
 
     // Category tags with items that match the current filter.
@@ -95,7 +95,7 @@ angular.module('openshiftConsole')
         link: "project/" + $scope.projectName
       },
       {
-        title: "Add to Project"
+        title: gettextCatalog.getString("Add to Project")
       }
     ];
 

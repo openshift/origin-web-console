@@ -1,11 +1,11 @@
-<h3>General information</h3>
+<h3 translate>General information</h3>
 
 
 <div column ng-if="!show.editing">
 
   <div row mobile="column">
     <div flex class="settings-item">
-      <strong>Name:</strong>
+      <strong translate>Name:</strong>
     </div>
     <div flex grow="4" class="project-name settings-item">
       {{projectName}}
@@ -14,7 +14,7 @@
 
   <div row mobile="column">
     <div flex class="settings-item">
-      <strong>Display Name:</strong>
+      <strong translate>Display Name:</strong>
     </div>
     <div row flex grow="4" class="settings-item">
       <div
@@ -25,13 +25,13 @@
       <div
         class="project-display-name no-display-name"
         ng-if="!(project | displayName: true)">
-        <em>No display name</em>
+        <em translate>No display name</em>
       </div>
     </div>
   </div>
 
   <div row mobile="column">
-    <div flex class="settings-item"><strong>Description:</strong></div>
+    <div flex class="settings-item"><strong translate>Description:</strong></div>
     <div row flex grow="4" class="settings-item">
       <div
         ng-if="project | description">
@@ -43,7 +43,7 @@
       </div>
       <div
         ng-if="!(project | description)">
-        <em>No description</em>
+        <em translate>No description</em>
       </div>
     </div>
   </div>
@@ -58,7 +58,7 @@
   <div row mobile="column">
     <div flex class="settings-item">
       <label>
-        <strong>Name:</strong>
+        <strong translate>Name:</strong>
       </label>
     </div>
     <div flex grow="4" class="settings-item">{{projectName}}</div>
@@ -69,7 +69,7 @@
     mobile="column">
     <div flex class="settings-item">
       <label for="settings_display_name">
-        <strong>Display Name:</strong>
+        <strong translate>Display Name:</strong>
       </label>
     </div>
 
@@ -90,7 +90,7 @@
     class='form-group'>
     <div flex class="settings-item">
       <label for="settings_description">
-        <strong>Description: </strong>
+        <strong translate>Description: </strong>
       </label>
     </div>
     <div flex grow="2">
@@ -110,10 +110,10 @@
       <button
         class="btn btn-default"
         ng-click="update()"
-        ng-disabled="editForm.$pristine">Save</button>
+        ng-disabled="editForm.$pristine" translate>Save</button>
       <button
         class="btn btn-default"
-        ng-click="cancel()">Cancel</button>
+        ng-click="cancel()" translate>Cancel</button>
     </div>
     <div flex grow="2" conceal="mobile"></div>
   </div>

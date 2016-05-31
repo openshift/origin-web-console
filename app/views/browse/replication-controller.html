@@ -8,41 +8,41 @@
         <div class="container-fluid">
           <breadcrumbs breadcrumbs="breadcrumbs"></breadcrumbs>
           <alerts alerts="alerts"></alerts>
-          <div ng-if="!loaded">Loading...</div>
+          <div ng-if="!loaded" translate>Loading...</div>
           <div class="deployment" ng-if="deployment">
             <h1>
               {{deployment.metadata.name}}
               <small class="meta">created <relative-timestamp timestamp="deployment.metadata.creationTimestamp"></relative-timestamp></small>
               <div class="pull-right dropdown" ng-hide="!('replicationControllers' | canIDoAny)">
                 <button type="button" class="dropdown-toggle actions-dropdown-btn btn btn-default hidden-xs" data-toggle="dropdown">
-                  Actions
+                  <translate>Actions</translate>
                   <span class="caret"></span>
                 </button>
                 <a href=""
                    class="dropdown-toggle actions-dropdown-kebab visible-xs-inline"
-                   data-toggle="dropdown"><i class="fa fa-ellipsis-v"></i><span class="sr-only">Actions</span></a>
+                   data-toggle="dropdown"><i class="fa fa-ellipsis-v"></i><span class="sr-only" translate>Actions</span></a>
                 <ul class="dropdown-menu actions action-button">
                   <li ng-if="'replicationcontrollers' | canI : 'update'">
                     <a ng-href="project/{{project.metadata.name}}/attach-pvc?deployment={{deployment.metadata.name}}"
-                       role="botton">Attach Storage</a>
+                       role="botton" translate>Attach Storage</a>
                   </li>
                   <li ng-if="'replicationcontrollers' | canI : 'update'">
                     <a ng-href="project/{{projectName}}/set-limits?rcName={{deployment.metadata.name}}"
-                       role="button">Set Resource Limits</a>
+                       role="button" translate>Set Resource Limits</a>
                   </li>
                   <li ng-if="!autoscalers.length && ('extensions/horizontalpodautoscalers' | canI : 'create')">
                     <!-- Create a new HPA. -->
                     <a ng-href="project/{{projectName}}/edit/autoscaler?kind=ReplicationController&name={{deployment.metadata.name}}"
-                      role="button">Add Autoscaler</a>
+                      role="button" translate>Add Autoscaler</a>
                   </li>
                   <li ng-if="autoscalers.length === 1 && ('extensions/horizontalpodautoscalers' | canI : 'update')">
                     <!-- Edit an existing HPA. -->
                     <a ng-href="project/{{projectName}}/edit/autoscaler?kind=HorizontalPodAutoscaler&group=extensions&name={{autoscalers[0].metadata.name}}"
-                      role="button">Edit Autoscaler</a>
+                      role="button" translate>Edit Autoscaler</a>
                   </li>
                   <li ng-if="'replicationcontrollers' | canI : 'update'">
                     <a ng-href="project/{{projectName}}/edit/health-checks?name={{deployment.metadata.name}}&kind=ReplicationController"
-                       role="button">Edit Health Checks</a>
+                       role="button" translate>Edit Health Checks</a>
                   </li>
                   <li ng-if="'replicationcontrollers' | canI : 'update'">
                     <edit-link
@@ -75,13 +75,13 @@
             <div class="col-md-12">
               <uib-tabset>
                 <uib-tab active="selectedTab.details">
-                  <uib-tab-heading>Details</uib-tab-heading>
+                  <uib-tab-heading translate>Details</uib-tab-heading>
                   <div class="resource-details">
                     <ng-include src=" 'views/browse/_deployment-details.html' "></ng-include>
                   </div>
                 </uib-tab>
                 <uib-tab active="selectedTab.events" ng-if="'events' | canI : 'watch'">
-                  <uib-tab-heading>Events</uib-tab-heading>
+                  <uib-tab-heading translate>Events</uib-tab-heading>
                   <events resource-kind="ReplicationController" resource-name="{{deployment.metadata.name}}" project-context="projectContext" ng-if="selectedTab.events"></events>
                 </uib-tab>
               </uib-tabset>

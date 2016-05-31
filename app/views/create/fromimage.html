@@ -24,7 +24,7 @@
                         <form class="" ng-show="imageStream" novalidate name="form" ng-submit="createApp()">
                           <div style="margin-bottom: 15px;">
                             <div class="form-group">
-                             <label for="appname" class="required">Name</label>
+                             <label for="appname" class="required" translate>Name</label>
                              <!--
                                Only validate the name pattern and minlength if the field has both been changed and blurred.  This
                                avoids a lot of problems clicking on the try it / more options links below.  Don't use $touched,
@@ -49,26 +49,26 @@
                                       autocapitalize="off"
                                       spellcheck="false">
                               </div>
-                              <div class="help-block">Identifies the resources created for this application.</div>
+                              <div class="help-block" translate>Identifies the resources created for this application.</div>
                               <div class="has-error" ng-show="form.appname.$error.required && form.appname.$dirty">
-                                <span class="help-block">A name is required.</span>
+                                <span class="help-block" translate>A name is required.</span>
                               </div>
                               <div class="has-error" ng-show="form.appname.$error.pattern && shouldValidateName">
-                                <span class="help-block"><strong>Please enter a valid name.</strong>
-                                <p>A valid name is applied to all generated resources. It is an alphanumeric (a-z, and 0-9) string with a maximum length of 24 characters, where the first character is a letter (a-z), and the '-' character is allowed anywhere except the first or last character.</p>
+                                <span class="help-block"><strong translate>Please enter a valid name.</strong>
+                                <p translate>A valid name is applied to all generated resources. It is an alphanumeric (a-z, and 0-9) string with a maximum length of 24 characters, where the first character is a letter (a-z), and the '-' character is allowed anywhere except the first or last character.</p>
                                 </span>
                               </div>
                               <div class="has-error" ng-show="form.appname.$error.minlength && shouldValidateName">
-                                <span class="help-block">The name must have at least 2 characters.</span>
+                                <span class="help-block" translate>The name must have at least 2 characters.</span>
                               </div>
                               <div class="has-error" ng-show="nameTaken">
-                                <span class="help-block">This name is already in use within the project. Please choose a different name.</span>
+                                <span class="help-block" translate>This name is already in use within the project. Please choose a different name.</span>
                               </div>
                             </div>
                           </div>
 
                           <div class="form-group">
-                            <label for="sourceUrl" class="required">Git Repository URL</label>
+                            <label for="sourceUrl" class="required" translate>Git Repository URL</label>
                             <div ng-class="{'has-warning': form.sourceUrl.$dirty && !sourceURLPattern.test(buildConfig.sourceUrl), 'has-error': (form.sourceUrl.$error.required && form.sourceUrl.$dirty)}">
                               <!-- Unfortunately, we can't set type="url" because some valid values don't pass browser validation. -->
                               <input class="form-control"
@@ -83,23 +83,23 @@
                                 spellcheck="false">
                             </div>
                             <div ng-if="image.metadata.annotations.sampleRepo" class="help-block">
-                              Sample repository for {{imageName}}: {{image.metadata.annotations.sampleRepo}}<span ng-if="image.metadata.annotations.sampleRef">,
+                              <translate>Sample repository for {{imageName}}:</translate> {{image.metadata.annotations.sampleRepo}}<span ng-if="image.metadata.annotations.sampleRef">,
                                 ref: {{image.metadata.annotations.sampleRef}}</span><span ng-if="image.metadata.annotations.sampleContextDir">,
                                 context dir: {{image.metadata.annotations.sampleContextDir}}</span>
                               <a href="" ng-click="fillSampleRepo()"
-                                style="margin-left: 3px;" class="nowrap">Try it<i class="fa fa-level-up" style="margin-left: 3px; font-size: 17px;"></i></a>
+                                style="margin-left: 3px;" class="nowrap"><translate>Try it</translate><i class="fa fa-level-up" style="margin-left: 3px; font-size: 17px;"></i></a>
                             </div>
                             <div class="has-error" ng-show="form.sourceUrl.$error.required && form.sourceUrl.$dirty">
-                              <span class="help-block">A Git repository URL is required.</span>
+                              <span class="help-block" translate>A Git repository URL is required.</span>
                             </div>
                             <div>
-                              <span class="text-warning" ng-if="form.sourceUrl.$dirty && !sourceURLPattern.test(buildConfig.sourceUrl)">Git repository should be a URL.</span>
+                              <span class="text-warning" ng-if="form.sourceUrl.$dirty && !sourceURLPattern.test(buildConfig.sourceUrl)" translate>Git repository should be a URL.</span>
                             </div>
                           </div>
 
-                          <div click-to-reveal link-text="Show advanced routing, build, and deployment options">
+                          <div click-to-reveal link-text="{{'Show advanced routing, build, and deployment options'|translate}}">
                             <div class="form-group">
-                              <label for="gitref">Git Reference</label>
+                              <label for="gitref" translate>Git Reference</label>
                               <div>
                                 <input
                                   id="gitref"
@@ -111,10 +111,10 @@
                                   spellcheck="false"
                                   class="form-control">
                               </div>
-                              <div class="help-block">Optional branch, tag, or commit.</div>
+                              <div class="help-block" translate>Optional branch, tag, or commit.</div>
                             </div>
                             <div class="form-group">
-                              <label for="contextdir">Context Dir</label>
+                              <label for="contextdir" translate>Context Dir</label>
                               <div>
                                 <input
                                   id="contextdir"
@@ -126,13 +126,13 @@
                                   spellcheck="false"
                                   class="form-control">
                               </div>
-                              <div class="help-block">Optional subdirectory for the application source code, used as the context directory for the build.</div> </div>
+                              <div class="help-block" translate>Optional subdirectory for the application source code, used as the context directory for the build.</div> </div>
 
                             <!-- Only show routing options if the image has exposed ports. -->
                             <osc-form-section
-                              header="Routing"
-                              about-title="Routing"
-                              about="Routing is a way to make your application publicly visible. Otherwise you may only be able to access your application by its IP address, if allowed by the system administrator."
+                              header="{{'Routing'|translate}}"
+                              about-title="{{'Routing'|translate}}"
+                              about="{{'Routing is a way to make your application publicly visible. Otherwise you may only be able to access your application by its IP address, if allowed by the system administrator.'|translate}}"
                               expand="true"
                               can-toggle="false"
                               ng-if="routing.portOptions.length"
@@ -140,7 +140,7 @@
                               <div class="form-group checkbox">
                                 <label>
                                   <input type="checkbox" ng-model="routing.include">
-                                  Create a route to the application
+                                  <translate>Create a route to the application</translate>
                                 </label>
                               </div>
                               <osc-routing
@@ -152,20 +152,20 @@
                             <!-- /routing -->
 
                             <osc-form-section
-                              header="Build Configuration"
-                              about-title="Build Configuration"
-                              about="A build configuration describes how to build your deployable image.  This includes
-                                your source, the base builder image, and when to launch new builds."
+                              header="{{'Build Configuration'|translate}}"
+                              about-title="{{'Build Configuration'|translate}}"
+                              about="{{'A build configuration describes how to build your deployable image.  This includes
+                                your source, the base builder image, and when to launch new builds.'|translate}}"
                               expand="true"
                               can-toggle="false"
                               >
                               <div class="checkbox">
                                 <label>
                                   <input type="checkbox" ng-model="buildConfig.buildOnSourceChange"/>
-                                  Configure a webhook build trigger
+                                  <translate>Configure a webhook build trigger</translate>
                                   <span class="help action-inline">
                                     <a href data-toggle="tooltip"
-                                       data-original-title="The source repository must be configured to use the webhook to trigger a build when source is committed.">
+                                       data-original-title="{{'The source repository must be configured to use the webhook to trigger a build when source is committed.'|translate}}">
                                       <i class="pficon pficon-help"></i>
                                     </a>
                                   </span>
@@ -174,9 +174,9 @@
                               <div class="checkbox">
                                 <label>
                                   <input type="checkbox" ng-model="buildConfig.buildOnImageChange"/>
-                                  Automatically build a new image when the builder image changes
+                                  <translate>Automatically build a new image when the builder image changes</translate>
                                   <span class="help action-inline">
-                                    <a href data-toggle="tooltip" data-original-title="Automatically building a new image when the builder image changes allows your code to always run on the latest updates.">
+                                    <a href data-toggle="tooltip" data-original-title="{{'Automatically building a new image when the builder image changes allows your code to always run on the latest updates.'|translate}}">
                                     <i class="pficon pficon-help"></i>
                                     </a>
                                   </span>
@@ -185,12 +185,12 @@
                               <div class="checkbox">
                                 <label>
                                   <input type="checkbox" ng-model="buildConfig.buildOnConfigChange"/>
-                                  Automatically build a new image when the build configuration changes
+                                  <translate>Automatically build a new image when the build configuration changes</translate>
                                 </label>
                               </div>
-                              <h3>Environment Variables (Build and Runtime) <span class="help action-inline">
+                              <h3><translate>Environment Variables (Build and Runtime)</translate> <span class="help action-inline">
                                 <a href data-toggle="tooltip"
-                                   data-original-title="Environment variables are used to configure and pass information to running containers.  These environment variables will be available during your build and at runtime.">
+                                   data-original-title="{{'Environment variables are used to configure and pass information to running containers.  These environment variables will be available during your build and at runtime.'|translate}}">
                                   <i class="pficon pficon-help"></i>
                                 </a>
                               </span></h3>
@@ -199,7 +199,7 @@
                                 key-placeholder="name"
                                 value-placeholder="value"
                                 key-validator="[a-zA-Z][a-zA-Z0-9_]*"
-                                key-validator-error-tooltip="A valid environment variable name is an alphanumeric (a-z and 0-9) string beginning with a letter that may contain underscores."></key-value-editor>
+                                key-validator-error-tooltip="{{'A valid environment variable name is an alphanumeric (a-z and 0-9) string beginning with a letter that may contain underscores.'|translate}}"></key-value-editor>
 
                             </osc-form-section>
 
@@ -207,30 +207,30 @@
                             <!-- /build config -->
 
                             <osc-form-section
-                              header="Deployment Configuration"
-                              about-title="Deployment Configuration"
-                              about="Deployment configurations describe how your application is configured
-                                by the cluster and under what conditions it should be recreated (e.g. when the image changes)."
+                              header="{{'Deployment Configuration'|translate}}"
+                              about-title="{{'Deployment Configuration'|translate}}"
+                              about="{{'Deployment configurations describe how your application is configured
+                                by the cluster and under what conditions it should be recreated (e.g. when the image changes).'|translate}}"
                               expand="true"
                               can-toggle="false">
                               <div class="animate-drawer" ng-show="$parent.expand">
-                                <h3>Autodeploy when</h3>
+                                <h3 translate>Autodeploy when</h3>
                                 <div class="checkbox">
                                   <label>
                                     <input type="checkbox" ng-model="deploymentConfig.deployOnNewImage">
-                                    New image is available
+                                    <translate>New image is available</translate>
                                   </label>
                                 </div>
                                 <div class="checkbox">
                                 <label>
                                   <input type="checkbox" ng-model="deploymentConfig.deployOnConfigChange">
-                                  Deployment configuration changes
+                                  <translate>Deployment configuration changes</translate>
                                 </label>
                                 </div>
                                 <div>
-                                  <h3>Environment Variables (Runtime only) <span class="help action-inline">
+                                  <h3><translate>Environment Variables (Runtime only)</translate> <span class="help action-inline">
                                     <a href="" data-toggle="tooltip"
-                                       data-original-title="Environment variables are used to configure and pass information to running containers.  These environment variables will only be available at runtime.">
+                                       data-original-title="{{'Environment variables are used to configure and pass information to running containers.  These environment variables will only be available at runtime.'|translate}}">
                                       <i class="pficon pficon-help"></i>
                                     </a>
                                   </span></h3>
@@ -243,7 +243,7 @@
                                   </p>
                                   <div ng-show="showDCEnvs">
                                     <div class="help-block">
-                                      <p>These variables exist on the image and will be available at runtime. You may override them below.</p>
+                                      <p translate>These variables exist on the image and will be available at runtime. You may override them below.</p>
                                     </div>
                                     <key-value-editor
                                       entries="DCEnvVarsFromImage"
@@ -257,7 +257,7 @@
                                     key-placeholder="name"
                                     value-placeholder="value"
                                     key-validator="[a-zA-Z][a-zA-Z0-9_]*"
-                                    key-validator-error-tooltip="A valid environment variable name is an alphanumeric (a-z and 0-9) string beginning with a letter that may contain underscores."></key-value-editor>
+                                    key-validator-error-tooltip="{{'A valid environment variable name is an alphanumeric (a-z and 0-9) string beginning with a letter that may contain underscores.'|translate}}"></key-value-editor>
 
                                 </div>
                               </div>
@@ -266,35 +266,35 @@
                             <!-- /deployment config -->
 
                             <osc-form-section
-                              header="Scaling"
-                              about-title="Scaling"
-                              about="Scaling defines the number of running instances of your built image."
+                              header="{{'Scaling'|translate}}"
+                              about-title="{{'Scaling'|translate}}"
+                              about="{{'Scaling defines the number of running instances of your built image.'|translate}}"
                               expand="true"
                               can-toggle="false"
                               >
                               <div class="form-group">
-                                <label for="scale-type">Strategy</label>
+                                <label for="scale-type" translate>Strategy</label>
                                 <select ng-model="scaling.autoscale"
                                         ng-options="option.value as option.label for option in scaling.autoscaleOptions"
                                         id="scale-type"
                                         class="form-control"
                                         aria-describedby="scale-type-help">
                                 </select>
-                                <div class="help-block" id="scale-type-help">
+                                <div class="help-block" id="scale-type-help" translate>
                                   Scale replicas manually or automatically based on CPU usage.
                                 </div>
                                 <div class="learn-more-block">
-                                  <a href="{{'pod_autoscaling' | helpLink}}" target="_blank">Learn more <i class="fa fa-external-link" aria-hidden> </i></a>
+                                  <a href="{{'pod_autoscaling' | helpLink}}" target="_blank"><translate>Learn more</translate> <i class="fa fa-external-link" aria-hidden> </i></a>
                                 </div>
                                 <div class="has-warning" ng-if="metricsWarning && scaling.autoscale">
-                                  <span class="help-block">
+                                  <span class="help-block" translate>
                                     CPU metrics might not be available. In order to use horizontal pod autoscalers,
                                     your cluster administrator must have properly configured cluster metrics.
                                   </span>
                                 </div>
                               </div>
                               <div class="form-group" ng-if="!scaling.autoscale">
-                                <label class="number">Replicas</label>
+                                <label class="number" translate>Replicas</label>
                                 <input type="number"
                                        class="form-control"
                                        min="0"
@@ -305,10 +305,10 @@
                                        ng-pattern="/^\d+$/"
                                        aria-describedby="replicas-help">
                                 <div id="replicas-help">
-                                  <span class="help-block">The number of instances of your image.</span>
+                                  <span class="help-block" translate>The number of instances of your image.</span>
                                 </div>
                                 <div class="has-error" ng-show="form.replicas.$dirty && form.replicas.$invalid">
-                                  <span class="help-block">Replicas must be an integer value greater than or equal to 0.</span>
+                                  <span class="help-block" translate>Replicas must be an integer value greater than or equal to 0.</span>
                                 </div>
                               </div>
 
@@ -324,7 +324,7 @@
                                   Autoscaling will not work without a CPU
                                   <span ng-if="'cpu' | isRequestCalculated : project">limit.</span>
                                   <span ng-if="!('cpu' | isRequestCalculated : project)">request.</span>
-                                  <span ng-if="'cpu' | isLimitCalculated : project">
+                                  <span ng-if="'cpu' | isLimitCalculated : project" translate>
                                     The CPU limit will be automatically calculated from the container memory limit.
                                   </span>
                                 </span>
@@ -335,9 +335,9 @@
                             <!-- /scaling -->
 
                             <osc-form-section
-                              header="Resource Limits"
-                              about-title="Resource Limits"
-                              about="Resource limits control compute resource usage by a container on a node."
+                              header="{{'Resource Limits'|translate}}"
+                              about-title="{{'Resource Limits'|translate}}"
+                              about="{{'Resource limits control compute resource usage by a container on a node.'|translate}}"
                               expand="true"
                               can-toggle="false"
                               >
@@ -367,7 +367,7 @@
                                 labels="labels"
                                 expand="true"
                                 can-toggle="false"
-                                help-text="Each label is applied to each created resource.">
+                                help-text="{{'Each label is applied to each created resource.'|translate}}">
                             </label-editor>
                           </div>
                           <div class="buttons gutter-top-bottom gutter-top-bottom-2x">
@@ -375,8 +375,8 @@
                             <button type="submit"
                                 class="btn btn-primary btn-lg"
                                 ng-disabled="form.$invalid || nameTaken || cpuProblems.length || memoryProblems.length || disableInputs"
-                                >Create</button>
-                            <a class="btn btn-default btn-lg" href="{{projectName | projectOverviewURL}}">Cancel</a>
+                                translate>Create</button>
+                            <a class="btn btn-default btn-lg" href="{{projectName | projectOverviewURL}}" translate>Cancel</a>
                           </div>
                         </form>
                         <div ng-hide="imageStream">

@@ -8,13 +8,13 @@
  * Controller of the openshiftConsole
  */
 angular.module('openshiftConsole')
-  .controller('StorageController', function ($routeParams, $scope, AlertMessageService, DataService, ProjectsService, $filter, LabelFilter, Logger) {
+  .controller('StorageController', function ($routeParams, $scope, AlertMessageService, DataService, ProjectsService, $filter, LabelFilter, Logger, gettextCatalog) {
     $scope.projectName = $routeParams.project;
     $scope.pvcs = {};
     $scope.unfilteredPVCs = {};
     $scope.labelSuggestions = {};
     $scope.alerts = $scope.alerts || {};
-    $scope.emptyMessage = "Loading...";
+    $scope.emptyMessage = gettextCatalog.getString("Loading...");
 
     // get and clear any alerts
     AlertMessageService.getAlerts().forEach(function(alert) {
@@ -33,7 +33,7 @@ angular.module('openshiftConsole')
           LabelFilter.addLabelSuggestionsFromResources($scope.unfilteredPVCs, $scope.labelSuggestions);
           LabelFilter.setLabelSuggestions($scope.labelSuggestions);
           $scope.pvcs = LabelFilter.getLabelSelector().select($scope.unfilteredPVCs);
-          $scope.emptyMessage = "No persistent volume claims to show";
+          $scope.emptyMessage = gettextCatalog.getString("No persistent volume claims to show");
           updateFilterWarning();
           Logger.log("pvcs (subscribe)", $scope.unfilteredPVCs);
         }));
@@ -42,7 +42,7 @@ angular.module('openshiftConsole')
           if (!LabelFilter.getLabelSelector().isEmpty() && $.isEmptyObject($scope.pvcs)  && !$.isEmptyObject($scope.unfilteredPVCs)) {
             $scope.alerts["storage"] = {
               type: "warning",
-              details: "The active filters are hiding all persistent volume claims."
+              details: gettextCatalog.getString("The active filters are hiding all persistent volume claims.")
             };
           }
           else {

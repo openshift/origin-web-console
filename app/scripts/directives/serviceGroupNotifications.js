@@ -1,7 +1,7 @@
 'use strict';
 
 angular.module('openshiftConsole')
-  .directive('serviceGroupNotifications', function($filter, Navigate) {
+  .directive('serviceGroupNotifications', function($filter, Navigate, gettextCatalog) {
     return {
       restrict: 'E',
       scope: {
@@ -45,7 +45,7 @@ angular.module('openshiftConsole')
                   }
                   alerts[id] = {
                     type: "info",
-                    message: dc.metadata.name + " has containers without health checks, which ensure your application is running correctly.",
+                    message: gettextCatalog.getString("{{name}} has containers without health checks, which ensure your application is running correctly.", {name: dc.metadata.name}),
                     onClose: function() {
                       hideAlert(id);
                     }
@@ -53,7 +53,7 @@ angular.module('openshiftConsole')
                   if ($filter('canI')("deploymentconfigs", "update")) {
                     alerts[id].links = [{
                                           href: Navigate.healthCheckURL(dc.metadata.namespace, "DeploymentConfig", dc.metadata.name),
-                                          label: "Add health checks"
+                                          label: gettextCatalog.getString("Add health checks")
                                         }];
                   }
                 }
@@ -103,7 +103,7 @@ angular.module('openshiftConsole')
               var logLink = URI(podLink).addSearch({ tab: "logs", container: warning.container }).toString();
               alert.links = [{
                 href: logLink,
-                label: "View Log"
+                label: gettextCatalog.getString("View Log")
               }];
               break;
 
@@ -115,7 +115,7 @@ angular.module('openshiftConsole')
 
               alert.links = [{
                 href: "",
-                label: "Don't show me again",
+                label: gettextCatalog.getString("Don't show me again"),
                 onClick: function() {
                   // Hide the alert on future page loads.
                   hideAlert(alertID);

@@ -13,7 +13,8 @@ angular.module('openshiftConsole')
                                            BuildsService,
                                            DataService,
                                            Navigate,
-                                           ProjectsService) {
+                                           ProjectsService,
+                                           gettextCatalog) {
     $scope.projectName = $routeParams.project;
     $scope.build = null;
     $scope.buildConfig = null;
@@ -26,7 +27,7 @@ angular.module('openshiftConsole')
     };
     $scope.breadcrumbs = [
       {
-        title: "Builds",
+        title: gettextCatalog.getString("Builds"),
         link: "project/" + $routeParams.project + "/browse/builds"
       }
     ];
@@ -74,7 +75,7 @@ angular.module('openshiftConsole')
       if (action === "DELETED") {
         $scope.alerts["deleted"] = {
           type: "warning",
-          message: "This build has been deleted."
+          message: gettextCatalog.getString("This build has been deleted.")
         };
       }
     };
@@ -83,8 +84,8 @@ angular.module('openshiftConsole')
       $scope.loaded = true;
       $scope.alerts["load"] = {
         type: "error",
-        message: "The build details could not be loaded.",
-        details: "Reason: " + $filter('getErrorDetails')(e)
+        message: gettextCatalog.getString("The build details could not be loaded."),
+        details: gettextCatalog.getString("Reason: ") + $filter('getErrorDetails')(e)
       };
     };
 
@@ -92,7 +93,7 @@ angular.module('openshiftConsole')
       if (action === "DELETED") {
         $scope.alerts["deleted"] = {
           type: "warning",
-          message: "Build configuration " + $scope.buildConfigName + " has been deleted."
+          message: gettextCatalog.getString("Build configuration {{name}} has been deleted.", {name: $scope.buildConfigName})
         };
       }
       $scope.buildConfig = buildConfig;
@@ -130,13 +131,13 @@ angular.module('openshiftConsole')
               // TODO: common alerts service to eliminate duplication
               $scope.alerts["cancel"] = {
                 type: "success",
-                message: "Cancelling build " + build.metadata.name + " of " + $scope.buildConfigName + "."
+                message: gettextCatalog.getString("Cancelling build {{metaName}} of {{configName}}.", {metaName: build.metadata.name, configName: $scope.buildConfigName})
               };
             }, function reject(result) {
               // TODO: common alerts service to eliminate duplication
               $scope.alerts["cancel"] = {
                 type: "error",
-                message: "An error occurred cancelling the build.",
+                message: gettextCatalog.getString("An error occurred cancelling the build."),
                 details: $filter('getErrorDetails')(result)
               };
             });
@@ -151,7 +152,7 @@ angular.module('openshiftConsole')
               !$filter('canI')('builds/log', 'get')) {
             return [{
               href: Navigate.resourceURL(build),
-              label: "View Build"
+              label: gettextCatalog.getString("View Build")
             }];
           }
 
@@ -162,7 +163,7 @@ angular.module('openshiftConsole')
 
           return [{
             href: logLink,
-            label: "View Log"
+            label: gettextCatalog.getString("View Log")
           }];
         };
 
@@ -176,13 +177,13 @@ angular.module('openshiftConsole')
                 var links = getLinksClonedBuild(build);
                 $scope.alerts["rebuild"] = {
                   type: "success",
-                  message: "Build " + name + " is being rebuilt as " + build.metadata.name + ".",
+                  message: gettextCatalog.getString("Build {{name}} is being rebuilt as {{metaName}}.", {name: name, metaName: build.metaname.name}),
                   links: links
                 };
               }, function reject(result) {
                 $scope.alerts["rebuild"] = {
                   type: "error",
-                  message: "An error occurred while rerunning the build.",
+                  message: gettextCatalog.getString("An error occurred while rerunning the build."),
                   details: $filter('getErrorDetails')(result)
                 };
               });

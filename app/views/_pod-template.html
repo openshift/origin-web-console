@@ -10,22 +10,21 @@
  <!-- Prompt to add health checks if missing. -->
 <div ng-if="detailed && addHealthCheckUrl && !(podTemplate | hasHealthChecks)" class="alert alert-info">
   <span class="pficon pficon-info" aria-hidden="true"></span>
-  <span ng-if="podTemplate.spec.containers.length === 1">This container has no health checks</span>
-  <span ng-if="podTemplate.spec.containers.length > 1">Not all containers have health checks</span>
-  to ensure your application is running correctly.
-  <a ng-href="{{addHealthCheckUrl}}" class="nowrap">Add health checks</a>
+  <span ng-if="podTemplate.spec.containers.length === 1" translate>This container has no health checks to ensure your application is running correctly.</span>
+  <span ng-if="podTemplate.spec.containers.length > 1" translate>Not all containers have health checks to ensure your application is running correctly.</span>
+  <a ng-href="{{addHealthCheckUrl}}" class="nowrap" translate>Add health checks</a>
 </div>
 
 <div class="pod-template-container">
   <div class="pod-template-block" ng-repeat="container in podTemplate.spec.containers">
     <div class="pod-template">
-      <div class="component-label">Container: {{container.name}}</div>
+      <div class="component-label" translate>Container: {{container.name}}</div>
       <div row ng-if="container.image" class="pod-template-image icon-row">
         <div>
           <span class="pficon pficon-image" aria-hidden="true"></span>
         </div>
         <div flex class="word-break">
-          <span class="pod-template-key">Image:</span>
+          <span class="pod-template-key" translate>Image:</span>
           <span ng-if="!imagesByDockerReference[container.image]">{{container.image | imageStreamName}}</span>
           <span ng-if="imagesByDockerReference[container.image]">
             <a ng-href="{{imagesByDockerReference[container.image].imageStreamName | navigateResourceURL : 'ImageStream' : imagesByDockerReference[container.image].imageStreamNamespace}}">{{container.image | imageStreamName}}</a>
@@ -75,7 +74,7 @@
                 </span>
               </span>
               <span ng-switch-default>
-                {{build.spec.source.type || 'Unknown'}}
+                {{build.spec.source.type || ('Unknown'|translate)}}
               </span>
             </span>
           </div>
@@ -87,7 +86,7 @@
           <span data-icon="" aria-hidden="true" style="font-size:16px;line-height:normal"></span>
         </div>
         <div flex class="word-break">
-          <span class="pod-template-key">Ports:</span>
+          <span class="pod-template-key" translate>Ports:</span>
           <span ng-repeat="port in container.ports | orderBy: 'containerPort'">
             <span class="nowrap">{{port.containerPort}}/{{port.protocol}}<span ng-if="port.name">&thinsp;({{port.name}})</span><span ng-if="port.hostPort">&thinsp;<span class="port-icon">&#8594;</span>&thinsp;{{port.hostPort}}</span></span><span ng-if="!$last">, </span>
           </span>
@@ -99,7 +98,7 @@
           <span aria-hidden="true" class="fa fa-database"></span>
         </div>
         <div flex class="word-break">
-          <span class="pod-template-key">Mount:</span>
+          <span class="pod-template-key" translate>Mount:</span>
           <span>
             {{mount.name}}&#8201;&#8594;&#8201;<span>{{mount.mountPath}}</span>
           </span>
@@ -111,7 +110,7 @@
           <i class="fa fa-area-chart" aria-hidden="true"></i>
         </div>
         <div flex>
-          <span class="pod-template-key">CPU:</span>
+          <span class="pod-template-key" translate>CPU:</span>
           <span ng-if="container.resources.requests.cpu && container.resources.limits.cpu">
             {{container.resources.requests.cpu | usageWithUnits: 'cpu'}} to {{container.resources.limits.cpu | usageWithUnits: 'cpu'}}
           </span>
@@ -129,7 +128,7 @@
           <i class="fa fa-area-chart" aria-hidden="true"></i>
         </div>
         <div flex>
-          <span class="pod-template-key">Memory:</span>
+          <span class="pod-template-key" translate>Memory:</span>
           <span ng-if="container.resources.requests.memory && container.resources.limits.memory">
             {{container.resources.requests.memory | usageWithUnits: 'memory'}} to {{container.resources.limits.memory | usageWithUnits: 'memory'}}
           </span>
@@ -147,7 +146,7 @@
           <i class="fa fa-medkit" aria-hidden="true"></i>
         </div>
         <div flex>
-          <span class="pod-template-key">Readiness Probe:</span>
+          <span class="pod-template-key" translate>Readiness Probe:</span>
           <probe probe="container.readinessProbe"></probe>
         </div>
       </div>
@@ -157,7 +156,7 @@
           <i class="fa fa-medkit" aria-hidden="true"></i>
         </div>
         <div flex>
-          <span class="pod-template-key">Liveness Probe:</span>
+          <span class="pod-template-key" translate>Liveness Probe:</span>
           <probe probe="container.livenessProbe"></probe>
         </div>
       </div>

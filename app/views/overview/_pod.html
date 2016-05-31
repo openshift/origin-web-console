@@ -1,7 +1,7 @@
 <div class="deployment-tile" ng-if="pod.kind === 'Pod'">
   <div row class="service-title" ng-if="service">
     <div>
-      Service:
+      <translate>Service:</translate>
       <a ng-href="{{service | navigateResourceURL}}">{{service.metadata.name}}</a>
     </div>
     <div ng-if="weightByService[service.metadata.name]" class="service-metadata">
@@ -10,7 +10,7 @@
   </div>  
   <div class="rc-header"> <!-- TODO may want different treatment for a pod-name? -->
     <div>
-      Pod:
+      <translate>Pod:</translate>
       <a ng-href="{{pod | navigateResourceURL}}">{{pod.metadata.name}}</a>
     </div>
     <div>
@@ -28,7 +28,7 @@
       <a href=""
          class="sr-only"
          ng-click="viewPod()"
-         role="button">
+         role="button" translate>
          View pod
       </a>
     </div>

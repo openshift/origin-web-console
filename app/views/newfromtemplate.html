@@ -23,7 +23,7 @@
                         <alerts alerts="alerts"></alerts>
                         <osc-image-summary resource="template"></osc-image-summary>
                         <div ng-if="templateImages.length" class="images">
-                          <h2>Images</h2>
+                          <h2 translate>Images</h2>
                           <ul class="list-unstyled" ng-repeat="image in templateImages">
                             <li>
                               <i class="pficon pficon-image" aria-hidden="true"></i>
@@ -37,11 +37,11 @@
                               labels="labels"
                               expand="true"
                               can-toggle="false"
-                              help-text="Each label is applied to each created resource.">
+                              help-text="{{'Each label is applied to each created resource.'|translate}}">
                           </label-editor>
                           <div class="buttons gutter-top-bottom">
-                            <button class="btn btn-primary btn-lg" ng-click="createFromTemplate()" ng-disabled="templateForm.$invalid || disableInputs">Create</button>
-                            <a class="btn btn-default btn-lg" href="{{projectName | projectOverviewURL}}">Cancel</a>
+                            <button class="btn btn-primary btn-lg" ng-click="createFromTemplate()" ng-disabled="templateForm.$invalid || disableInputs" translate>Create</button>
+                            <a class="btn btn-default btn-lg" href="{{projectName | projectOverviewURL}}" translate>Cancel</a>
                           </div>
                         </form>
                       </fieldset>

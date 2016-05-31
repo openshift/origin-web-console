@@ -9,7 +9,7 @@
         <!-- Icon -->
         <status-icon status="build.status.phase" style="margin-right: 5px;"></status-icon>
         <!-- Message -->
-        Build
+        <translate>Build</translate>
         <span ng-if="build | annotation : 'buildNumber'">
           <a ng-href="{{build | navigateResourceURL}}">
             <span ng-if="build | buildConfigForBuild">{{build | buildConfigForBuild}}</span>
@@ -20,21 +20,21 @@
           {{build.metadata.name}}
         </span>
         <span ng-switch="build.status.phase" class="hide-ng-leave" style="margin-right: 5px;">
-          <span ng-switch-when="Complete">completed.</span>
-          <span ng-switch-when="Failed">failed.</span>
-          <span ng-switch-when="Error">encountered an error.</span>
-          <span ng-switch-when="Cancelled">was cancelled.</span>
+          <span ng-switch-when="Complete" translate>completed.</span>
+          <span ng-switch-when="Failed" translate>failed.</span>
+          <span ng-switch-when="Error" translate>encountered an error.</span>
+          <span ng-switch-when="Cancelled" translate>was cancelled.</span>
           <span ng-switch-default>is {{build.status.phase | lowercase}}.
-            <span ng-if="trigger.imageChangeParams.automatic">
+            <span ng-if="trigger.imageChangeParams.automatic" transalte>
               A new deployment will be created automatically once the build completes.
             </span>
           </span>
         </span>
         <span ng-if="'builds/log' | canI : 'get'">
-          <a ng-if="!!['New', 'Pending'].indexOf(build.status.phase) && (build | buildLogURL)" ng-href="{{build | buildLogURL}}">View Log</a>
+          <a ng-if="!!['New', 'Pending'].indexOf(build.status.phase) && (build | buildLogURL)" ng-href="{{build | buildLogURL}}" translate>View Log</a>
           <span class="action-divider" ng-show="!!['New', 'Pending'].indexOf(build.status.phase) && (build | buildLogURL) && !(build | isIncompleteBuild)">|</span>
         </span>
-        <a ng-hide="build | isIncompleteBuild" href="" ng-click="hideBuild(build)">Dismiss</a>
+        <a ng-hide="build | isIncompleteBuild" href="" ng-click="hideBuild(build)" translate>Dismiss</a>
       </div>
     </div>
   </div>

@@ -1,7 +1,7 @@
 <div class="deployment-tile">
   <div row class="service-title" ng-if="service">
     <div>
-      Service:
+      <translate>Service:</translate>
       <a ng-href="{{service | navigateResourceURL}}">{{service.metadata.name}}</a>
     </div>
     <div ng-if="weightByService[service.metadata.name]" class="service-metadata">
@@ -11,12 +11,12 @@
   <div class="deployment-header">
     <div class="rc-header">
       <div>
-        Deployment:
+        <translate>Deployment:</translate>
         <a ng-href="{{deploymentConfig | navigateResourceURL}}">{{dcName}}</a>
       </div>
       <div>
         <relative-timestamp ng-if="activeDeployment && !anyDeploymentInProgress" timestamp="activeDeployment.metadata.creationTimestamp"></relative-timestamp>
-        <span ng-if="anyDeploymentInProgress">
+        <span ng-if="anyDeploymentInProgress" translate>
           {{deploymentConfig.spec.strategy.type}} deployment in progress...
         </span>
       </div>
@@ -56,7 +56,7 @@
         Deployment&nbsp;#{{deployments[0] | annotation : 'deploymentVersion'}}
         {{deployments[0] | deploymentStatus | lowercase}}
         <div ng-if="'deploymentconfigs/log' | canI : 'get'" class="deployment-log-link">
-          <a ng-href="{{deployments[0] | navigateResourceURL}}?tab=logs">View Log</a>
+          <a ng-href="{{deployments[0] | navigateResourceURL}}?tab=logs" translate>View Log</a>
         </div>
       </div>
     </div>

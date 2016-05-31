@@ -16,7 +16,8 @@ angular.module('openshiftConsole')
                                          ImageStreamResolver,
                                          MetricsService,
                                          PodsService,
-                                         ProjectsService) {
+                                         ProjectsService,
+                                         gettextCatalog) {
     $scope.projectName = $routeParams.project;
     $scope.pod = null;
     $scope.imageStreams = {};
@@ -30,7 +31,7 @@ angular.module('openshiftConsole')
     $scope.terminalTabWasSelected = false;
     $scope.breadcrumbs = [
       {
-        title: "Pods",
+        title: gettextCatalog.getString("Pods"),
         link: "project/" + $routeParams.project + "/browse/pods"
       },
       {
@@ -164,7 +165,7 @@ angular.module('openshiftConsole')
               if (action === "DELETED") {
                 $scope.alerts["deleted"] = {
                   type: "warning",
-                  message: "This pod has been deleted."
+                  message: gettextCatalog.getString("This pod has been deleted.")
                 };
               }
               $scope.pod = pod;
@@ -180,8 +181,8 @@ angular.module('openshiftConsole')
             $scope.loaded = true;
             $scope.alerts["load"] = {
               type: "error",
-              message: "The pod details could not be loaded.",
-              details: "Reason: " + $filter('getErrorDetails')(e)
+              message: gettextCatalog.getString("The pod details could not be loaded."),
+              details: gettextCatalog.getString("Reason: ") + $filter('getErrorDetails')(e)
             };
           }
         );
@@ -226,8 +227,8 @@ angular.module('openshiftConsole')
               function(result) {
                 $scope.alerts['debug-container-error'] = {
                   type: "error",
-                  message: "Could not delete pod " + debugPod.metadata.name,
-                  details: "Reason: " + $filter('getErrorDetails')(result)
+                  message: gettextCatalog.getString("Could not delete pod {{name}}", {name: debugPod.metadata.name}),
+                  details: gettextCatalog.getString("Reason: ") + $filter('getErrorDetails')(result)
                 };
               });
             $scope.debugPod = null;
@@ -239,7 +240,7 @@ angular.module('openshiftConsole')
           if (!debugPod) {
             $scope.alerts['debug-container-error'] = {
               type: "error",
-              message: "Could not debug container " + containerName
+              message: gettextCatalog.getString("Could not debug container {{name}}", {name: containerName})
             };
             return;
           }
@@ -252,7 +253,7 @@ angular.module('openshiftConsole')
 
               // Warn users when navigating away with the debug pod open. (Removed in `cleanUpDebugPod`.)
               $(window).on('beforeunload.debugPod', function() {
-                return "Are you sure you want to leave with the debug terminal open? The debug pod will not be deleted unless you close the dialog.";
+                return gettextCatalog.getString("Are you sure you want to leave with the debug terminal open? The debug pod will not be deleted unless you close the dialog.");
               });
 
               // Watch the pod so we know when it's running to connect.
@@ -289,8 +290,8 @@ angular.module('openshiftConsole')
             function(result) {
               $scope.alerts['debug-container-error'] = {
                 type: "error",
-                message: "Could not debug container " + containerName,
-                details: "Reason: " + $filter('getErrorDetails')(result)
+                message: gettextCatalog.getString("Could not debug container {{name}}", {name: containerName}),
+                details: gettextCatalog.getString("Reason: ") + $filter('getErrorDetails')(result)
               };
             });
         };

@@ -8,11 +8,11 @@
  * Controller of the openshiftConsole
  */
 angular.module('openshiftConsole')
-  .controller('OtherResourcesController', function ($routeParams, $scope, AlertMessageService, AuthorizationService, DataService, ProjectsService, $filter, LabelFilter, Logger, APIService ) {
+  .controller('OtherResourcesController', function ($routeParams, $scope, AlertMessageService, AuthorizationService, DataService, ProjectsService, $filter, LabelFilter, Logger, APIService, gettextCatalog ) {
     $scope.projectName = $routeParams.project;
     $scope.labelSuggestions = {};
     $scope.alerts = $scope.alerts || {};
-    $scope.emptyMessage = "Select a resource from the list above ...";  
+    $scope.emptyMessage = gettextCatalog.getString("Select a resource from the list above ...");
     $scope.kindSelector = {disabled: true};
     $scope.kinds = _.filter(APIService.availableKinds(), function(kind) {
       switch (kind.kind) {
@@ -61,7 +61,7 @@ angular.module('openshiftConsole')
       if (!LabelFilter.getLabelSelector().isEmpty() && $.isEmptyObject($scope.resources)  && !$.isEmptyObject($scope.unfilteredResources)) {
         $scope.alerts["resources"] = {
           type: "warning",
-          details: "The active filters are hiding all " + APIService.kindToResource($scope.kindSelector.selected.kind, true) + "."
+          details: gettextCatalog.getString("The active filters are hiding all {{kind}}.", {kind: APIService.kindToResource($scope.kindSelector.selected.kind, true)})
         };
       }
       else {
@@ -86,7 +86,7 @@ angular.module('openshiftConsole')
         LabelFilter.addLabelSuggestionsFromResources($scope.unfilteredResources, $scope.labelSuggestions);
         LabelFilter.setLabelSuggestions($scope.labelSuggestions);
         $scope.resources = LabelFilter.getLabelSelector().select($scope.unfilteredResources);
-        $scope.emptyMessage = "No " + APIService.kindToResource(selected.kind, true) + " to show";
+        $scope.emptyMessage = gettextCatalog.getString("No {{kind}} to show", {kind: APIService.kindToResource(selected.kind, true)});
         updateFilterWarning();
       });   
     }

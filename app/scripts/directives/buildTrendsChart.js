@@ -1,7 +1,7 @@
 "use strict";
 
 angular.module('openshiftConsole')
-  .directive('buildTrendsChart', function($filter, $location, $rootScope, $timeout) {
+  .directive('buildTrendsChart', function($filter, $location, $rootScope, $timeout, gettextCatalog) {
     return {
       restrict: 'E',
       scope: {
@@ -62,7 +62,7 @@ angular.module('openshiftConsole')
             x: {
               fit: true,
               label: {
-                text: 'Build Number',
+                text: gettextCatalog.getString('Build Number'),
                 position: 'outer-right'
               },
               tick: {
@@ -76,7 +76,7 @@ angular.module('openshiftConsole')
             },
             y: {
               label: {
-                text: 'Duration',
+                text: gettextCatalog.getString('Duration'),
                 position: 'outer-top'
               },
               min: 0,
@@ -124,7 +124,7 @@ angular.module('openshiftConsole')
             },
             empty: {
               label: {
-                text: "No Completed Builds"
+                text: gettextCatalog.getString("No Completed Builds")
               }
             },
             onclick: function(d) {

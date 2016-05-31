@@ -28,7 +28,8 @@ angular
     'as.sortable',
     'ui.select',
     'key-value-editor',
-    'angular-inview'
+    'angular-inview',
+    'gettext'
   ])
   .config(function ($routeProvider) {
     $routeProvider
@@ -304,6 +305,21 @@ angular
         return durationFilter(timestamp, null, omitSingle, precision) || existing;
       });
     }, 1000);
+  })
+  .run(function($window, gettextCatalog) {
+    gettextCatalog.debug = true;
+    var lang = $window.navigator.language || $window.navigator.userLanguage;
+    var ll = lang.split('-')[0];
+    if (!/^en([_-].*|$)/.test(lang)) {
+      gettextCatalog.loadRemote('languages/' + lang + '.json');
+      // try to load ll.json too
+      gettextCatalog.loadRemote('languages/' + ll + '.json');
+    }
+    if (gettextCatalog.strings[lang]) {
+      gettextCatalog.setCurrentLanguage(lang);
+    } else {
+      gettextCatalog.setCurrentLanguage(ll);
+    }
   });
 
 hawtioPluginLoader.addModule('openshiftConsole');

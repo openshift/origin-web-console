@@ -26,7 +26,8 @@ angular.module('openshiftConsole')
     imageObjectRefFilter,
     failureObjectNameFilter,
     CachedTemplateService,
-    keyValueEditorUtils) {
+    keyValueEditorUtils,
+    gettextCatalog) {
 
 
     var name = $routeParams.name;
@@ -35,11 +36,11 @@ angular.module('openshiftConsole')
     var namespace = $routeParams.namespace || "";
 
     if (!name) {
-      Navigate.toErrorPage("Cannot create from template: a template name was not specified.");
+      Navigate.toErrorPage(gettextCatalog.getString("Cannot create from template: a template name was not specified."));
       return;
     }
 
-    $scope.emptyMessage = "Loading...";
+    $scope.emptyMessage = gettextCatalog.getString("Loading...");
     $scope.alerts = {};
     $scope.projectName = $routeParams.project;
     $scope.projectPromise = $.Deferred();
@@ -51,7 +52,7 @@ angular.module('openshiftConsole')
         link: "project/" + $scope.projectName
       },
       {
-        title: "Add to Project",
+        title: gettextCatalog.getString("Add to Project"),
         link: "project/" + $scope.projectName + "/create"
       },
       {
@@ -180,9 +181,9 @@ angular.module('openshiftConsole')
           DataService.create("processedtemplates", null, $scope.template, context).then(
             function(config) { // success
               var titles = {
-                started: "Creating " + $scope.templateDisplayName() + " in project " + $scope.projectDisplayName(),
-                success: "Created " + $scope.templateDisplayName() + " in project " + $scope.projectDisplayName(),
-                failure: "Failed to create " + $scope.templateDisplayName() + " in project " + $scope.projectDisplayName()
+                started: gettextCatalog.getString("Creating {{name}} in project {{project}}", {name: $scope.templateDisplayName(), project: $scope.projectDisplayName()}),
+                success: gettextCatalog.getString("Created {{name}} in project {{project}}", {name: $scope.templateDisplayName(), project: $scope.projectDisplayName()}),
+                failure: gettextCatalog.getString("Failed to create {{name}} in project {{project}}", {name: $scope.templateDisplayName(), project: $scope.projectDisplayName()})
               };
 
               // Cache template parameters and message so they can be displayed in the nexSteps page
@@ -202,7 +203,7 @@ angular.module('openshiftConsole')
                         function(failure) {
                           alerts.push({
                             type: "error",
-                            message: "Cannot create " + humanize(failure.object.kind).toLowerCase() + " \"" + failure.object.metadata.name + "\". ",
+                            message: gettextCatalog.getString("Cannot create {{kind}} \"{{name}}\". ", {kind: humanize(failure.object.kind).toLowerCase(), name: failure.object.metadata.name}),
                             details: failure.data.message
                           });
                         }
@@ -211,13 +212,12 @@ angular.module('openshiftConsole')
                         function(success) {
                           alerts.push({
                             type: "success",
-                            message: "Created " + humanize(success.kind).toLowerCase() + " \"" + success.metadata.name + "\" successfully. "
+                            message: gettextCatalog.getString("Created {{kind}} \"{{name}}\" successfully. ", {kind: humanize(success.kind).toLowerCase(), name: success.metadata.name})
                           });
                         }
                       );
                     } else {
-                      alerts.push({ type: "success", message: "All items in template " + $scope.templateDisplayName() +
-                        " were created successfully."});
+                      alerts.push({ type: "success", message: gettextCatalog.getString("All items in template {{name}} were created successfully.", {name: $scope.templateDisplayName()})});
                     }
                     d.resolve({alerts: alerts, hasErrors: hasErrors});
                   }
@@ -235,7 +235,7 @@ angular.module('openshiftConsole')
               $scope.alerts["process"] =
                 {
                   type: "error",
-                  message: "An error occurred processing the template.",
+                  message: gettextCatalog.getString("An error occurred processing the template."),
                   details: details
                 };
             }
@@ -261,7 +261,7 @@ angular.module('openshiftConsole')
 
             var redirect = URI('error').query({
               error: "not_found",
-              error_description: "Template wasn't found in cache."
+              error_description: gettextCatalog.getString("Template wasn't found in cache.")
             }).toString();
             $location.url(redirect);
           }
@@ -274,7 +274,7 @@ angular.module('openshiftConsole')
               setTemplateParams();
             },
             function() {
-              Navigate.toErrorPage("Cannot create from template: the specified template could not be retrieved.");
+              Navigate.toErrorPage(gettextCatalog.getString("Cannot create from template: the specified template could not be retrieved."));
             });
         }
 

@@ -7,12 +7,12 @@
  * Controller of the openshiftConsole
  */
 angular.module('openshiftConsole')
-  .controller('EditBuildConfigController', function ($scope, $routeParams, DataService, ProjectsService, $filter, ApplicationGenerator, Navigate, $location, AlertMessageService, SOURCE_URL_PATTERN, keyValueEditorUtils) {
+  .controller('EditBuildConfigController', function ($scope, $routeParams, DataService, ProjectsService, $filter, ApplicationGenerator, Navigate, $location, AlertMessageService, SOURCE_URL_PATTERN, keyValueEditorUtils, gettextCatalog) {
 
     $scope.projectName = $routeParams.project;
     $scope.buildConfig = null;
     $scope.alerts = {};
-    $scope.emptyMessage = "Loading...";
+    $scope.emptyMessage = gettextCatalog.getString("Loading...");
     $scope.sourceURLPattern = SOURCE_URL_PATTERN;
     $scope.options = {};
     $scope.builderOptions = {};
@@ -22,44 +22,44 @@ angular.module('openshiftConsole')
       type: 'path'
     };
     $scope.selectTypes = {
-      ImageStreamTag: "Image Stream Tag",
-      ImageStreamImage: "Image Stream Image",
-      DockerImage: "Docker Image Link"
+      ImageStreamTag: gettextCatalog.getString("Image Stream Tag"),
+      ImageStreamImage: gettextCatalog.getString("Image Stream Image"),
+      DockerImage: gettextCatalog.getString("Docker Image Link")
     };
     $scope.buildFromTypes = [
       {
         "id": "ImageStreamTag",
-        "title": "Image Stream Tag"
+        "title": gettextCatalog.getString("Image Stream Tag")
       },
       {
         "id": "ImageStreamImage",
-        "title": "Image Stream Image"
+        "title": gettextCatalog.getString("Image Stream Image")
       },
       {
         "id": "DockerImage",
-        "title": "Docker Image Link"
+        "title": gettextCatalog.getString("Docker Image Link")
       }
     ];
     $scope.pushToTypes = [
       {
         "id": "ImageStreamTag",
-        "title": "Image Stream Tag"
+        "title": gettextCatalog.getString("Image Stream Tag")
       },
       {
         "id": "DockerImage",
-        "title": "Docker Image Link"
+        "title": gettextCatalog.getString("Docker Image Link")
       },
       {
         "id": "None",
-        "title": "--- None ---"
+        "title": gettextCatalog.getString("--- None ---")
       }
     ];
     $scope.jenkinsfileTypes = [{
       "id": "path",
-      "title": "From Source Repository"
+      "title": gettextCatalog.getString("From Source Repository")
     }, {
       "id": "inline",
-      "title": "Inline"
+      "title": gettextCatalog.getString("Inline")
     }];
     $scope.breadcrumbs = [
       {
@@ -67,7 +67,7 @@ angular.module('openshiftConsole')
         link: "project/" + $routeParams.project
       },
       {
-        title: "Builds",
+        title: gettextCatalog.getString("Builds"),
         link: "project/" + $routeParams.project + "/browse/builds"
       },
       {
@@ -75,7 +75,7 @@ angular.module('openshiftConsole')
         link: "project/" + $routeParams.project + "/browse/builds/" + $routeParams.buildconfig
       },
       {
-        title: "Edit"
+        title: gettextCatalog.getString("Edit")
       }
     ];
     $scope.buildFrom = {
@@ -292,7 +292,7 @@ angular.module('openshiftConsole')
               if (action === "DELETED") {
                 $scope.alerts["deleted"] = {
                   type: "warning",
-                  message: "This build configuration has been deleted."
+                  message: gettextCatalog.getString("This build configuration has been deleted.")
                 };
                 $scope.disableInputs = true;
               }
@@ -304,8 +304,8 @@ angular.module('openshiftConsole')
             $scope.loaded = true;
             $scope.alerts["load"] = {
               type: "error",
-              message: "The build configuration details could not be loaded.",
-              details: "Reason: " + $filter('getErrorDetails')(e)
+              message: gettextCatalog.getString("The build configuration details could not be loaded."),
+              details: gettextCatalog.getString("Reason: ") + $filter('getErrorDetails')(e)
             };
           }
         );
@@ -760,7 +760,7 @@ angular.module('openshiftConsole')
             name: $scope.updatedBuildConfig.metadata.name,
             data: {
               type: "success",
-              message: "Build Config " + $scope.updatedBuildConfig.metadata.name + " was successfully updated."
+              message: gettextCatalog.getString("Build Config {{name}} was successfully updated.", {name: $scope.updatedBuildConfig.metadata.name})
             }
           });
           $location.path(Navigate.resourceURL($scope.updatedBuildConfig, "BuildConfig", $scope.updatedBuildConfig.metadata.namespace));
@@ -770,7 +770,7 @@ angular.module('openshiftConsole')
 
           $scope.alerts["save"] = {
             type: "error",
-            message: "An error occurred updating the build " + $scope.updatedBuildConfig.metadata.name + "Build Config",
+            message: gettextCatalog.getString("An error occurred updating the build {{name}}Build Config", {name: $scope.updatedBuildConfig.metadata.name}),
             details: $filter('getErrorDetails')(result)
           };
         }

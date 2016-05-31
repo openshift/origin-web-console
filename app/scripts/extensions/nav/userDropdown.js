@@ -6,7 +6,7 @@ angular.module('openshiftConsole')
       .add('nav-user-dropdown', function() {
         return [{
           type: 'dom',
-          node: '<li><a href="logout">Log out</a></li>'
+          node: '<li><a href="logout" translate>Log out</a></li>'
         }];
       });
   });
