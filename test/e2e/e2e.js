@@ -1,7 +1,7 @@
 'use strict';
 
 require('jasmine-beforeall');
-var h = require('./helpers.js');
+var h = require('./helpers/helpers.js');
 
 describe('', function() {
   afterAll(function(){
