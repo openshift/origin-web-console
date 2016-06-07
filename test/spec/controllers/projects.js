@@ -55,7 +55,7 @@ describe('Controller: ProjectsController', function () {
       $scope: scope,
       $route: {},
       DataService: {
-        list: function(type, context, callback, opts) {
+        watch: function(type, context, callback, opts) {
           // TODO return mocked project data
           callback({by: function(){return {};}});
         },

@@ -9,6 +9,8 @@
  */
 angular.module('openshiftConsole')
   .controller('ProjectsController', function ($scope, $route, $timeout, $filter, $location, DataService, AuthService, AlertMessageService, Logger, hashSizeFilter) {
+    var watches = [];
+
     $scope.projects = {};
     $scope.alerts = $scope.alerts || {};
     $scope.showGetStarted = false;
@@ -19,24 +21,11 @@ angular.module('openshiftConsole')
     });
     AlertMessageService.clearAlerts();
 
-    $timeout(function() {
-      $('#openshift-logo').on('click.projectsPage', function() {
-        // Force a reload. Angular doesn't reload the view when the URL doesn't change.
-        $route.reload();
-      });
-    });
-
-    $scope.$on('deleteProject', function() {
-      loadProjects();
-    });
-
-    $scope.$on('$destroy', function(){
-      // The click handler is only necessary on the projects page.
-      $('#openshift-logo').off('click.projectsPage');
-    });
-
     AuthService.withUser().then(function() {
-      loadProjects();
+      watches.push(DataService.watch("projects", $scope, function(projects) {
+        $scope.projects = projects.by("metadata.name");
+        $scope.showGetStarted = hashSizeFilter($scope.projects) === 0;
+      }));
     });
 
     // Test if the user can submit project requests. Handle error notifications
@@ -72,10 +61,7 @@ angular.module('openshiftConsole')
       }
     });
 
-    function loadProjects() {
-      DataService.list("projects", $scope, function(projects) {
-        $scope.projects = projects.by("metadata.name");
-        $scope.showGetStarted = hashSizeFilter($scope.projects) === 0;
-      });
-    }
+    $scope.$on('$destroy', function(){
+      DataService.unwatchAll(watches);
+    });
   });
