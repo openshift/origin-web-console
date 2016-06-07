@@ -7,4 +7,4 @@ exports.resize = function(width, height) {
 exports.clearStorage = function() {
   browser.executeScript('window.sessionStorage.clear();');
   browser.executeScript('window.localStorage.clear();');
-}
+};

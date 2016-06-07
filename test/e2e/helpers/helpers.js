@@ -1,7 +1,7 @@
 'use strict';
 
-var win = require('./window.js');
-var user = require('./user.js');
+//var win = require('./window.js');
+//var user = require('./user.js');
 
 
 exports.setInputValue = function(name, value) {
