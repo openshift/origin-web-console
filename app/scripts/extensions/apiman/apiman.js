@@ -11,8 +11,9 @@
   hawtioPluginLoader.addModule(pluginName);
 
   hawtioPluginLoader.registerPreBootstrapTask(function(next) {
-    // TODO need to figure out apiman service discovery
-    APIMAN_URL = 'https://apiman.vagrant.f8';
+    if (window.OPENSHIFT_EXTENSION_PROPERTIES) {
+      APIMAN_URL = window.OPENSHIFT_EXTENSION_PROPERTIES['apimanUrl'];
+    }
     next();
   });
 

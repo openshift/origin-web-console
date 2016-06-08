@@ -33,3 +33,8 @@ window.OPENSHIFT_VERSION = {
   openshift: "dev-mode",
   kubernetes: "dev-mode"
 };
+
+// Uncomment properties in here to work on extensions
+window.OPENSHIFT_EXTENSION_PROPERTIES = {
+  //apimanUrl: "https://apiman.vagrant.f8"
+}
