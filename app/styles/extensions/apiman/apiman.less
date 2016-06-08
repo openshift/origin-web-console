@@ -1,0 +1,24 @@
+// Support for adding a menu item that contains links added by
+// extensions contained by div elements
+.dropdown-menu {
+  & > li.action-extension > * > a {
+    border-color: transparent;
+    border-style: solid;
+    border-width: 1px 0;
+    display: block;
+    padding: 3px 10px;
+    clear: both;
+    font-weight: normal;
+    line-height: @line-height-base;
+    color: @gray-dark;
+    white-space: nowrap;
+  }
+  & > li.action-extension > * > a:hover, 
+  & > li.action-extension > * > a:focus {
+    .reset-filter();
+    text-decoration: none;
+    background-color: @dropdown-link-hover-bg;
+    border-color: @dropdown-link-hover-border-color;
+  }
+}
+
