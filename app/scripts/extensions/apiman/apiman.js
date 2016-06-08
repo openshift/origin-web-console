@@ -23,12 +23,33 @@
 
   function createApimanPageUri(name, namespace) {
     var uri = new URI(APIMAN_URL);
-    uri.path('apimanui/api-manager/orgs/').segment(namespace).segment('apis').segment(name);
+    uri.path('apimanui/api-manager/');
+    if (name && namespace) {
+      uri.segment('orgs/').segment(namespace).segment('apis').segment(name);
+    }
     return uri;
+  }
+
+  function createRedirectLink(name, namespace) {
+    var redirect = createApimanPageUri(name, namespace)
+      .hash('#' + URI.encode('{"backTo": "' + new URI().toString()) + '"}');
+    return redirect;
   }
 
   var _module = angular.module(pluginName, []);
 
+  // Controller used to set the form data for the link in the main navigation
+  _module.controller('Apiman.MainLinkController', ['$scope', '$sce', 'AuthService', function($scope, $sce, AuthService) {
+    $scope.item = {
+      data: {
+        link: $sce.trustAsResourceUrl(createApimanLinkUri().toString()),
+        redirect: $sce.trustAsResourceUrl(createRedirectLink().toString()),
+        accessToken: AuthService.UserStore().getToken()
+      }
+    };
+  }]);
+
+  // Controller that handles submitting the form when the user clicks on the apiman link
   _module.controller('Apiman.LinkController', ['$scope', '$element', function ($scope, $element) {
     $scope.go = function() {
       var form = $element.find('form');
@@ -36,17 +57,16 @@
     }
   }]);
 
-  _module.run(['AuthService', 'BaseHref', 'DataService', 'extensionRegistry', '$sce', function(AuthService, BaseHref, DataService, extensionRegistry, $sce) {
+  _module.run(['AuthService', 'BaseHref', 'DataService', 'extensionRegistry', '$sce', 'HawtioNav', '$templateCache', function(AuthService, BaseHref, DataService, extensionRegistry, $sce, nav, $templateCache) {
     if (!APIMAN_URL) {
       return;
     }
-
-    // This is the page we POST to first
-    var linkUri = createApimanLinkUri();
-    log.debug("apiman link: ", linkUri.toString());
-    var link = $sce.trustAsResourceUrl(linkUri.toString());
-
-    var template = `
+    // main nav item template
+    $templateCache.put('apimanMainLink.html', `
+      <sidebar-nav-item ng-controller="Apiman.MainLinkController" ng-include="'apimanLink.html'"></sidebar-nav-item>
+    `);
+    // link form template
+    $templateCache.put('apimanLink.html', `
       <div ng-controller="Apiman.LinkController">
         <form action="{{item.data.link}}" method="POST">
           <input type="hidden" name="redirect" value="{{item.data.redirect}}">
@@ -54,8 +74,24 @@
         </form>
         <a href="" ng-click="go()">Manage API</a>
       </div>
-    `;
+    `);
+    // set up the main nav item and add it
+    var builder = nav.builder();
+    var tab = builder.id('apiman-main-link')
+      .href(function() { return ''; })
+      .title(function() { return 'Manage API'; })
+      .template(function() { return $templateCache.get('apimanMainLink.html'); })
+      .isValid(function() { return true })
+      .build();
+    tab.icon = "puzzle-piece";
+    nav.add(tab);
 
+    // This is the page we POST to first
+    var linkUri = createApimanLinkUri();
+    log.debug("apiman link: ", linkUri.toString());
+    var link = $sce.trustAsResourceUrl(linkUri.toString());
+
+    // sets up the data used by the form based on the k8s service
     function configureData(service) {
       if (!service.metadata.annotations) {
         return;
@@ -66,9 +102,7 @@
       }
       var name = service.metadata.name;
       var namespace = service.metadata.namespace;
-      var redirect = createApimanPageUri(name, namespace)
-                        .hash('#' + URI.encode('{"backTo": "' + new URI().toString()) + '"}')
-                        .toString();
+      var redirect = createRedirectLink(name, namespace).toString()
       log.debug("target apiman page: ", redirect);
       var token = AuthService.UserStore().getToken();
       return {
@@ -85,7 +119,7 @@
       }
       return {
         type: 'dom',
-        node: template,
+        node: $templateCache.get('apimanLink.html'),
         data: data
       };
     })
