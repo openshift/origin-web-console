@@ -45,7 +45,8 @@
       data: {
         link: $sce.trustAsResourceUrl(createApimanLinkUri().toString()),
         redirect: $sce.trustAsResourceUrl(createRedirectLink().toString()),
-        accessToken: AuthService.UserStore().getToken()
+        accessToken: AuthService.UserStore().getToken(),
+        icon: true
       }
     };
   }]);
@@ -73,7 +74,7 @@
           <input type="hidden" name="redirect" value="{{item.data.redirect}}">
           <input type="hidden" name="access_token" value="{{item.data.accessToken}}">
         </form>
-        <a href="" ng-click="go()">Manage API</a>
+        <a href="" ng-click="go()"><span ng-if="item.data.icon" class="fa fa-puzzle-piece fa-fw"></span> Manage API</a>
       </div>
     `);
     // set up the main nav item and add it
@@ -84,7 +85,6 @@
       .template(function() { return $templateCache.get('apimanMainLink.html'); })
       .isValid(function() { return true })
       .build();
-    tab.icon = "puzzle-piece";
     nav.add(tab);
 
     // This is the page we POST to first

@@ -18969,16 +18969,25 @@ you can use the generic selector below, but it's slower:
 }
 .sidebar-left .navbar-sidebar ul.nav-sidenav-primary > li:focus > a,
 .sidebar-left .navbar-sidebar ul.nav-sidenav-primary > li:hover > a,
-.sidebar-left .navbar-sidebar ul.nav-sidenav-primary > li.open > a {
+.sidebar-left .navbar-sidebar ul.nav-sidenav-primary > li.open > a,
+.sidebar-left .navbar-sidebar ul.nav-sidenav-primary > li:focus > div > a,
+.sidebar-left .navbar-sidebar ul.nav-sidenav-primary > li:hover > div > a,
+.sidebar-left .navbar-sidebar ul.nav-sidenav-primary > li.open > div > a {
   background-color: transparent;
   color: #fcfcfc;
 }
 .sidebar-left .navbar-sidebar ul.nav-sidenav-primary > li:focus > a .fa,
 .sidebar-left .navbar-sidebar ul.nav-sidenav-primary > li:hover > a .fa,
 .sidebar-left .navbar-sidebar ul.nav-sidenav-primary > li.open > a .fa,
+.sidebar-left .navbar-sidebar ul.nav-sidenav-primary > li:focus > div > a .fa,
+.sidebar-left .navbar-sidebar ul.nav-sidenav-primary > li:hover > div > a .fa,
+.sidebar-left .navbar-sidebar ul.nav-sidenav-primary > li.open > div > a .fa,
 .sidebar-left .navbar-sidebar ul.nav-sidenav-primary > li:focus > a .pficon,
 .sidebar-left .navbar-sidebar ul.nav-sidenav-primary > li:hover > a .pficon,
-.sidebar-left .navbar-sidebar ul.nav-sidenav-primary > li.open > a .pficon {
+.sidebar-left .navbar-sidebar ul.nav-sidenav-primary > li.open > a .pficon,
+.sidebar-left .navbar-sidebar ul.nav-sidenav-primary > li:focus > div > a .pficon,
+.sidebar-left .navbar-sidebar ul.nav-sidenav-primary > li:hover > div > a .pficon,
+.sidebar-left .navbar-sidebar ul.nav-sidenav-primary > li.open > div > a .pficon {
   color: #00a8e1;
 }
 .sidebar-left .navbar-sidebar ul.nav-sidenav-primary > li:focus .dropdown-menu,
@@ -18986,22 +18995,38 @@ you can use the generic selector below, but it's slower:
 .sidebar-left .navbar-sidebar ul.nav-sidenav-primary > li.open .dropdown-menu {
   background-color: #3f4750;
 }
-.sidebar-left .navbar-sidebar ul.nav-sidenav-primary > li > a {
+.sidebar-left .navbar-sidebar ul.nav-sidenav-primary > li > a,
+.sidebar-left .navbar-sidebar ul.nav-sidenav-primary > li > div > a {
   color: #dbdada;
 }
 .sidebar-left .navbar-sidebar ul.nav-sidenav-primary > li > a,
+.sidebar-left .navbar-sidebar ul.nav-sidenav-primary > li > div > a,
 .sidebar-left .navbar-sidebar ul.nav-sidenav-primary > li > a:focus,
-.sidebar-left .navbar-sidebar ul.nav-sidenav-primary > li > a:hover {
+.sidebar-left .navbar-sidebar ul.nav-sidenav-primary > li > div > a:focus,
+.sidebar-left .navbar-sidebar ul.nav-sidenav-primary > li > a:hover,
+.sidebar-left .navbar-sidebar ul.nav-sidenav-primary > li > div > a:hover {
   background-color: transparent;
 }
-.sidebar-left .navbar-sidebar ul.nav-sidenav-primary > li > a.dropdown-toggle:focus {
+.sidebar-left .navbar-sidebar ul.nav-sidenav-primary > li > a.dropdown-toggle:focus,
+.sidebar-left .navbar-sidebar ul.nav-sidenav-primary > li > div > a.dropdown-toggle:focus {
   outline: thin dotted;
 }
-.sidebar-left .navbar-sidebar ul.nav-sidenav-primary > li > a .fa {
+.sidebar-left .navbar-sidebar ul.nav-sidenav-primary > li > a .fa,
+.sidebar-left .navbar-sidebar ul.nav-sidenav-primary > li > div > a .fa {
   color: rgba(200, 200, 200, 0.8);
 }
-.sidebar-left .navbar-sidebar ul.nav-sidenav-primary > li > a .fa.fa-angle-right {
+.sidebar-left .navbar-sidebar ul.nav-sidenav-primary > li > a .fa.fa-angle-right,
+.sidebar-left .navbar-sidebar ul.nav-sidenav-primary > li > div > a .fa.fa-angle-right {
   display: none;
+}
+.sidebar-left .navbar-sidebar ul.nav-sidenav-primary > li > div > a {
+  display: block;
+}
+.sidebar-left .navbar-sidebar ul.nav-sidenav-primary > li > div > a:hover {
+  text-decoration: none;
+}
+.sidebar-left .navbar-sidebar ul.nav-sidenav-primary > li > div > a:hover .fa {
+  color: #00a8e1;
 }
 .sidebar-left .navbar-sidebar ul.nav-sidenav-primary > li .dropdown-menu {
   background-color: #3f4750;
@@ -19103,15 +19128,18 @@ you can use the generic selector below, but it's slower:
   .sidebar-left .navbar-sidebar ul.nav-sidenav-primary > li.open.active > a:before {
     background-color: #383f47;
   }
-  .sidebar-left .navbar-sidebar ul.nav-sidenav-primary > li > a {
+  .sidebar-left .navbar-sidebar ul.nav-sidenav-primary > li > a,
+  .sidebar-left .navbar-sidebar ul.nav-sidenav-primary > li > div > a {
     padding: 20px 15px;
     text-align: center;
   }
-  .sidebar-left .navbar-sidebar ul.nav-sidenav-primary > li > a .fa {
+  .sidebar-left .navbar-sidebar ul.nav-sidenav-primary > li > a .fa,
+  .sidebar-left .navbar-sidebar ul.nav-sidenav-primary > li > div > a .fa {
     display: inline;
     font-size: 20px;
   }
-  .sidebar-left .navbar-sidebar ul.nav-sidenav-primary > li > a span {
+  .sidebar-left .navbar-sidebar ul.nav-sidenav-primary > li > a span,
+  .sidebar-left .navbar-sidebar ul.nav-sidenav-primary > li > div > a span {
     display: block;
     margin: 0;
   }
@@ -19130,7 +19158,8 @@ you can use the generic selector below, but it's slower:
   }
 }
 @media (min-width: 768px) and (max-width: 1599px) {
-  ul.nav-sidenav-primary > li > a span {
+  ul.nav-sidenav-primary > li > a span,
+  ul.nav-sidenav-primary > li > div > a span {
     padding: 0 10px;
   }
 }
@@ -19141,22 +19170,26 @@ you can use the generic selector below, but it's slower:
   .sidebar-left .navbar-sidebar .nav-sidenav-secondary.hover-nav.dropdown-menu {
     font-size: 14px;
   }
-  .sidebar-left .navbar-sidebar ul.nav-sidenav-primary > li > a {
+  .sidebar-left .navbar-sidebar ul.nav-sidenav-primary > li > a,
+  .sidebar-left .navbar-sidebar ul.nav-sidenav-primary > li > div > a {
     padding-bottom: 25px;
     padding-top: 25px;
   }
 }
 @media (min-width: 1600px) {
-  .sidebar-left .navbar-sidebar ul.nav-sidenav-primary > li > a {
+  .sidebar-left .navbar-sidebar ul.nav-sidenav-primary > li > a,
+  .sidebar-left .navbar-sidebar ul.nav-sidenav-primary > li > div > a {
     text-align: left;
     padding: 20px;
   }
-  .sidebar-left .navbar-sidebar ul.nav-sidenav-primary > li > a .fa {
+  .sidebar-left .navbar-sidebar ul.nav-sidenav-primary > li > a .fa,
+  .sidebar-left .navbar-sidebar ul.nav-sidenav-primary > li > div > a .fa {
     display: inline-block;
     width: 25px;
     margin-right: 10px;
   }
-  .sidebar-left .navbar-sidebar ul.nav-sidenav-primary > li > a .fa.fa-angle-right {
+  .sidebar-left .navbar-sidebar ul.nav-sidenav-primary > li > a .fa.fa-angle-right,
+  .sidebar-left .navbar-sidebar ul.nav-sidenav-primary > li > div > a .fa.fa-angle-right {
     color: #dbdada;
     display: block;
     font-size: 18px;
