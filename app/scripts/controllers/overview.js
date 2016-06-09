@@ -13,11 +13,9 @@ angular.module('openshiftConsole')
     extensionRegistry.add('service-links', _.spread(function(service, serviceId, project, displayRouteByService) {
       return {
         type: 'dom',
-        node: `
-          <div ng-init="data = item.data" ng-if="!data.displayRouteByService[data.serviceId]">
-            <a ng-href="project/{{data.project.metadata.name}}/create-route?service={{data.service.metadata.name}}">Create Route</a>
-          </div>
-        `,
+        node: '<div ng-init="data = item.data" ng-if="!data.displayRouteByService[data.serviceId]">' +
+              '  <a ng-href="project/{{data.project.metadata.name}}/create-route?service={{data.service.metadata.name}}">Create Route</a>' +
+              '</div>',
         data: {
           service: service,
           serviceId: serviceId,

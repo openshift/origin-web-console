@@ -64,19 +64,16 @@
       return;
     }
     // main nav item template
-    $templateCache.put('apimanMainLink.html', `
-      <sidebar-nav-item ng-controller="Apiman.MainLinkController" ng-include="'apimanLink.html'"></sidebar-nav-item>
-    `);
+    $templateCache.put('apimanMainLink.html', '<sidebar-nav-item ng-controller="Apiman.MainLinkController" ng-include="\'apimanLink.html\'"></sidebar-nav-item>');
     // link form template
-    $templateCache.put('apimanLink.html', `
-      <div ng-controller="Apiman.LinkController">
-        <form action="{{item.data.link}}" method="POST">
-          <input type="hidden" name="redirect" value="{{item.data.redirect}}">
-          <input type="hidden" name="access_token" value="{{item.data.accessToken}}">
-        </form>
-        <a href="" ng-click="go()"><span ng-if="item.data.icon" class="fa fa-puzzle-piece fa-fw"></span> Manage API</a>
-      </div>
-    `);
+    $templateCache.put('apimanLink.html', 
+      '<div ng-controller="Apiman.LinkController">' +
+      '  <form action="{{item.data.link}}" method="POST">' +
+      '    <input type="hidden" name="redirect" value="{{item.data.redirect}}">' +
+      '    <input type="hidden" name="access_token" value="{{item.data.accessToken}}">' +
+      '  </form>' +
+      '  <a href="" ng-click="go()"><span ng-if="item.data.icon" class="fa fa-puzzle-piece fa-fw"></span> Manage API</a>' +
+      '</div>');
     // set up the main nav item and add it
     var builder = nav.builder();
     var tab = builder.id('apiman-main-link')

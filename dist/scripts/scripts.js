@@ -2591,7 +2591,20 @@ a.state && a.state.running && b++;
 f.unwatchAll(k), n();
 });
 }));
-} ]), angular.module("openshiftConsole").controller("OverviewController", [ "$routeParams", "$scope", "DataService", "DeploymentsService", "ProjectsService", "annotationFilter", "hashSizeFilter", "imageObjectRefFilter", "deploymentCausesFilter", "labelFilter", "LabelFilter", "Logger", "ImageStreamResolver", "ObjectDescriber", "$parse", "$filter", "$interval", "RoutesService", "AlertMessageService", function(a, b, c, d, e, f, g, h, i, j, k, l, m, n, o, p, q, r, s) {
+} ]), angular.module("openshiftConsole").run([ "extensionRegistry", function(a) {
+a.add("service-links", _.spread(function(a, b, c, d) {
+return {
+type:"dom",
+node:'<div ng-init="data = item.data" ng-if="!data.displayRouteByService[data.serviceId]">  <a ng-href="project/{{data.project.metadata.name}}/create-route?service={{data.service.metadata.name}}">Create Route</a></div>',
+data:{
+service:a,
+serviceId:b,
+project:c,
+displayRouteByService:d
+}
+};
+}));
+} ]).controller("OverviewController", [ "$routeParams", "$scope", "DataService", "DeploymentsService", "ProjectsService", "annotationFilter", "hashSizeFilter", "imageObjectRefFilter", "deploymentCausesFilter", "labelFilter", "LabelFilter", "Logger", "ImageStreamResolver", "ObjectDescriber", "$parse", "$filter", "$interval", "RoutesService", "AlertMessageService", function(a, b, c, d, e, f, g, h, i, j, k, l, m, n, o, p, q, r, s) {
 b.projectName = a.project, b.pods = {}, b.services = {}, b.routes = {}, b.routesByService = {}, b.displayRouteByService = {}, b.unfilteredServices = {}, b.deployments = {}, b.deploymentConfigs = void 0, b.builds = {}, b.imageStreams = {}, b.imagesByDockerReference = {}, b.imageStreamImageRefByDockerReference = {}, b.podsByService = {}, b.podsByDeployment = {}, b.monopodsByService = {}, b.deploymentsByServiceByDeploymentConfig = {}, b.deploymentsByService = {}, b.deploymentConfigsByService = {}, b.recentBuildsByOutputImage = {}, b.labelSuggestions = {}, b.alerts = b.alerts || {}, b.emptyMessage = "Loading...", b.renderOptions = b.renderOptions || {}, b.renderOptions.showToolbar = !1, b.renderOptions.showSidebarRight = !1, b.renderOptions.showGetStarted = !1, b.overviewMode = "tiles", b.routeWarningsByService = {};
 var t = {};
 b.topologyKinds = {
@@ -8520,6 +8533,79 @@ url:l
 }
 }));
 } ]), hawtioPluginLoader.addModule(a);
+}(), function() {
+function a() {
+var a = new URI(h).path("apimanui/link");
+return a;
+}
+function b(a, b) {
+var c = new URI(h);
+return c.path("apimanui/api-manager/"), a && b && c.segment("orgs/").segment(b).segment("apis").segment(a), c;
+}
+function c(a, c) {
+var d = b(a, c).hash("#" + URI.encode('{"backTo": "' + new URI().toString()) + '"}');
+return d;
+}
+var d = "apimanLinks", e = Logger.get(d), f = "api.service.openshift.io/api-manager", g = "apiman", h = void 0;
+hawtioPluginLoader.addModule(d), hawtioPluginLoader.registerPreBootstrapTask(function(a) {
+window.OPENSHIFT_EXTENSION_PROPERTIES && (h = window.OPENSHIFT_EXTENSION_PROPERTIES.apimanUrl), a();
+});
+var i = angular.module(d, []);
+i.controller("Apiman.MainLinkController", [ "$scope", "$sce", "AuthService", function(b, d, e) {
+b.item = {
+data:{
+link:d.trustAsResourceUrl(a().toString()),
+redirect:d.trustAsResourceUrl(c().toString()),
+accessToken:e.UserStore().getToken(),
+icon:!0
+}
+};
+} ]), i.controller("Apiman.LinkController", [ "$scope", "$element", function(a, b) {
+a.go = function() {
+var a = b.find("form");
+a.submit();
+};
+} ]), i.run([ "AuthService", "BaseHref", "DataService", "extensionRegistry", "$sce", "HawtioNav", "$templateCache", function(b, d, i, j, k, l, m) {
+function n(a) {
+if (a.metadata.annotations) {
+var d = a.metadata.annotations[f];
+if (d && d === g) {
+var h = a.metadata.name, i = a.metadata.namespace, j = c(h, i).toString();
+e.debug("target apiman page: ", j);
+var l = b.UserStore().getToken();
+return {
+link:r,
+redirect:k.trustAsResourceUrl(j),
+accessToken:l
+};
+}
+}
+}
+if (h) {
+m.put("apimanMainLink.html", '<sidebar-nav-item ng-controller="Apiman.MainLinkController" ng-include="\'apimanLink.html\'"></sidebar-nav-item>'), m.put("apimanLink.html", '<div ng-controller="Apiman.LinkController">  <form action="{{item.data.link}}" method="POST">    <input type="hidden" name="redirect" value="{{item.data.redirect}}">    <input type="hidden" name="access_token" value="{{item.data.accessToken}}">  </form>  <a href="" ng-click="go()"><span ng-if="item.data.icon" class="fa fa-puzzle-piece fa-fw"></span> Manage API</a></div>');
+var o = l.builder(), p = o.id("apiman-main-link").href(function() {
+return "";
+}).title(function() {
+return "Manage API";
+}).template(function() {
+return m.get("apimanMainLink.html");
+}).isValid(function() {
+return !0;
+}).build();
+l.add(p);
+var q = a();
+e.debug("apiman link: ", q.toString());
+var r = k.trustAsResourceUrl(q.toString()), s = _.spread(function(a) {
+var b = n(a);
+if (b) return {
+type:"dom",
+node:m.get("apimanLink.html"),
+data:b
+};
+});
+j.add("service-links", s), j.add("service-menu", s);
+}
+} ]);
 }(), angular.module("openshiftConsole").run([ "extensionRegistry", function(a) {
 a.add("nav-help-dropdown", function() {
 return [ {
