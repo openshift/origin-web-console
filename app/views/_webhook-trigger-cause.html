@@ -1,0 +1,18 @@
+{{trigger.message === 'GitHub WebHook' ? 'GitHub webhook' : 'Generic webhook'}}:
+<span ng-if="trigger.githubWebHook.revision || trigger.genericWebHook.revision"> {{trigger.githubWebHook.revision.git.message || trigger.genericWebHook.revision.git.message}}</span>
+<osc-git-link
+  ng-if="trigger.githubWebHook.revision || trigger.genericWebHook.revision"
+  class="hash"
+  uri="build.spec.source.git.uri"
+  commit="trigger.githubWebHook.revision.git.commit || trigger.genericWebHook.revision.git.commit">{{trigger.githubWebHook.revision.git.commit || trigger.genericWebHook.revision.git.commit | limitTo:7}}
+</osc-git-link>
+<span ng-if="trigger.githubWebHook.revision || trigger.genericWebHook.revision">
+  authored by {{trigger.githubWebHook.revision.git.author.name || trigger.genericWebHook.revision.git.author.name}},
+</span>
+<span ng-if="trigger.genericWebHook && !trigger.genericWebHook.revision">
+  no revision information,
+</span>
+<a href="" ng-if="!showSecret" ng-click="toggleSecret()"> show obfuscated secret</a>
+<span ng-if="showSecret">
+  {{trigger.githubWebHook.secret || trigger.genericWebHook.secret}}
+</span>

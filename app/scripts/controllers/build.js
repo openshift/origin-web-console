@@ -14,6 +14,7 @@ angular.module('openshiftConsole')
     $scope.buildConfigName = $routeParams.buildconfig;
     $scope.builds = {};
     $scope.alerts = {};
+    $scope.showSecret = false;
     $scope.renderOptions = {
       hideFilterWidget: true
     };
@@ -132,6 +133,10 @@ angular.module('openshiftConsole')
 
           updateCanBuild();
         }));
+
+        $scope.toggleSecret = function() {
+          $scope.showSecret = true;
+        };
 
         $scope.cancelBuild = function() {
           BuildsService.cancelBuild($scope.build, $scope.buildConfigName, context, $scope);

@@ -3009,7 +3009,7 @@ c.unwatchAll(j);
 });
 }));
 } ]), angular.module("openshiftConsole").controller("BuildController", [ "$scope", "$routeParams", "DataService", "ProjectsService", "BuildsService", "$filter", function(a, b, c, d, e, f) {
-a.projectName = b.project, a.build = null, a.buildConfig = null, a.buildConfigName = b.buildconfig, a.builds = {}, a.alerts = {}, a.renderOptions = {
+a.projectName = b.project, a.build = null, a.buildConfig = null, a.buildConfigName = b.buildconfig, a.builds = {}, a.alerts = {}, a.showSecret = !1, a.renderOptions = {
 hideFilterWidget:!0
 }, a.breadcrumbs = [ {
 title:"Builds",
@@ -3054,7 +3054,9 @@ c.metadata.labels && c.metadata.labels.buildconfig === b.buildconfig && (a.build
 });
 var g, h;
 e && (g = e.metadata.labels.buildconfig, h = e.metadata.name), i();
-})), a.cancelBuild = function() {
+})), a.toggleSecret = function() {
+a.showSecret = !0;
+}, a.cancelBuild = function() {
 e.cancelBuild(a.build, a.buildConfigName, j, a);
 }, a.cloneBuild = function() {
 var b = _.get(a, "build.metadata.name");
