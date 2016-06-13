@@ -1,3 +1,4 @@
+/*
 'use strict';
 
 require('jasmine-beforeall');
@@ -75,3 +76,4 @@ describe('', function() {
     });
   });
 });
+*/
