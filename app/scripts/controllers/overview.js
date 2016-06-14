@@ -8,6 +8,23 @@
  * Controller of the openshiftConsole
  */
 angular.module('openshiftConsole')
+  .run(function(extensionRegistry) {
+    // 'Create route' link for the overview page needs to be an extension
+    extensionRegistry.add('service-links', _.spread(function(service, serviceId, project, displayRouteByService) {
+      return {
+        type: 'dom',
+        node: '<div ng-init="data = item.data" ng-if="!data.displayRouteByService[data.serviceId]">' +
+              '  <a ng-href="project/{{data.project.metadata.name}}/create-route?service={{data.service.metadata.name}}">Create Route</a>' +
+              '</div>',
+        data: {
+          service: service,
+          serviceId: serviceId,
+          project: project,
+          displayRouteByService: displayRouteByService
+        }
+      };
+    }));
+  })
   .controller('OverviewController',
               function ($routeParams,
                         $scope,

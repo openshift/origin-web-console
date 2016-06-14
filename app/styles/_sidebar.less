@@ -88,7 +88,8 @@
       &:hover,
       &.open {
         background-color: @sidebar-os-hover-bg;
-        > a {
+        > a,
+        > div > a {
           background-color: transparent;
           color: @sidebar-os-active-color;
           .fa, .pficon {
@@ -99,7 +100,8 @@
           background-color: @sidebar-os-hover-bg;
         }
       }
-      > a {
+      > a,
+      > div > a {
         color: @sidebar-os-color;
         &,
         &:focus,
@@ -116,6 +118,15 @@
           }
         }
       }
+      > div > a {
+        display: block;
+      }
+      > div > a:hover {
+        text-decoration: none;
+        .fa {
+          color: @sidebar-os-active;
+        }
+      } 
       .dropdown-menu {
         background-color: @sidebar-os-hover-bg;
       }
@@ -225,7 +236,8 @@
               background-color: @sidebar-os-active-bg;
             }
           }
-          > a {
+          > a,
+          > div > a {
             padding: @sidebar-os-padding-x @sidebar-os-padding-y;
             text-align: center;
             .fa {
@@ -266,7 +278,8 @@
 @media (min-width: @screen-sm-min) and (max-width: @screen-lg-max) {
   //Ensure icon and text stack
   ul.nav-sidenav-primary> li {
-    > a {
+    > a,
+    > div > a {
       span {
         padding: 0 10px;
       }
@@ -282,7 +295,8 @@
         font-size:  @font-size-base + 1;
       }
       ul.nav-sidenav-primary > li {
-        > a {
+        > a, 
+        > div > a {
           padding-bottom: @sidebar-os-padding-y + 10;
           padding-top: @sidebar-os-padding-y + 10;
         }
@@ -295,7 +309,8 @@
   .sidebar-left {
     .navbar-sidebar {
       ul.nav-sidenav-primary > li {
-        > a {
+        > a,
+        > div > a {
           text-align: left;
           padding: (@sidebar-os-padding-x);
           .fa {

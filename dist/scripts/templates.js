@@ -2839,6 +2839,7 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "<edit-link resource=\"service\" kind=\"Service\" alerts=\"alerts\">\n" +
     "</edit-link>\n" +
     "</li>\n" +
+    "<li class=\"action-extension\" extension-point extension-name=\"service-menu\" extension-types=\"dom\" extension-args=\"[service]\"></li>\n" +
     "<li>\n" +
     "<delete-link kind=\"Service\" resource-name=\"{{service.metadata.name}}\" project-name=\"{{service.metadata.namespace}}\" alerts=\"alerts\">\n" +
     "</delete-link>\n" +
@@ -6715,9 +6716,8 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "and {{numRemaining}} {{numRemaining == 1 ? \"other\" : \"others\"}}\n" +
     "</span>\n" +
     "</span>\n" +
-    "<div ng-if=\"!displayRouteByService[serviceId]\" class=\"add-route-link\">\n" +
-    "<a ng-href=\"project/{{project.metadata.name}}/create-route?service={{service.metadata.name}}\">Create Route</a>\n" +
-    "</div>\n" +
+    "<div class=\"spacer\">&nbsp;</div>\n" +
+    "<div class=\"service-links\" extension-point extension-name=\"service-links\" extension-types=\"link dom\" extension-args=\"[service, serviceId, project, displayRouteByService]\"></div>\n" +
     "</div>\n" +
     "</div>\n" +
     "</div>\n" +
