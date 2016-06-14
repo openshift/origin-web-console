@@ -2424,23 +2424,13 @@ a = null;
 }
 };
 }), angular.module("openshiftConsole").controller("ProjectsController", [ "$scope", "$route", "$timeout", "$filter", "$location", "DataService", "AuthService", "AlertMessageService", "Logger", "hashSizeFilter", function(a, b, c, d, e, f, g, h, i, j) {
-function k() {
-f.list("projects", a, function(b) {
-a.projects = b.by("metadata.name"), a.showGetStarted = 0 === j(a.projects);
-});
-}
+var k = [];
 a.projects = {}, a.alerts = a.alerts || {}, a.showGetStarted = !1, a.canCreate = void 0, h.getAlerts().forEach(function(b) {
 a.alerts[b.name] = b.data;
-}), h.clearAlerts(), c(function() {
-$("#openshift-logo").on("click.projectsPage", function() {
-b.reload();
-});
-}), a.$on("deleteProject", function() {
-k();
-}), a.$on("$destroy", function() {
-$("#openshift-logo").off("click.projectsPage");
-}), g.withUser().then(function() {
-k();
+}), h.clearAlerts(), g.withUser().then(function() {
+k.push(f.watch("projects", a, function(b) {
+a.projects = b.by("metadata.name"), a.showGetStarted = 0 === j(a.projects);
+}));
 }), f.get("projectrequests", null, a, {
 errorNotification:!1
 }).then(function() {
@@ -2458,6 +2448,8 @@ _.forEach(c.details.causes || [], function(a) {
 a.message && e.push(a.message);
 }), e.length > 0 && (a.newProjectMessage = e.join("\n"));
 }
+}), a.$on("$destroy", function() {
+f.unwatchAll(k);
 });
 } ]), angular.module("openshiftConsole").controller("PodsController", [ "$routeParams", "$scope", "DataService", "ProjectsService", "AlertMessageService", "$filter", "LabelFilter", "Logger", function(a, b, c, d, e, f, g, h) {
 b.projectName = a.project, b.pods = {}, b.unfilteredPods = {}, b.labelSuggestions = {}, b.alerts = b.alerts || {}, b.emptyMessage = "Loading...", e.getAlerts().forEach(function(a) {

@@ -6791,7 +6791,7 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "<h1 style=\"display: inline-block\">Projects</h1>\n" +
     "<a ng-if=\"canCreate\" href=\"create-project\" style=\"margin-top: 10px\" class=\"btn btn-lg btn-primary pull-right\">New Project</a>\n" +
     "<alerts alerts=\"alerts\"></alerts>\n" +
-    "<div ng-repeat=\"project in projects | orderByDisplayName\">\n" +
+    "<div ng-repeat=\"project in projects | orderByDisplayName track by project.metadata.name\" class=\"animate-repeat\">\n" +
     "<div row flex cross-axis=\"center\" class=\"tile tile-project tile-click tile-flex\">\n" +
     "<div flex class=\"project-summary\">\n" +
     "<h2 class=\"project truncate\">\n" +
