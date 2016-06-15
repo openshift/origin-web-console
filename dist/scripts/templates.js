@@ -5471,7 +5471,7 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "<pipeline-status ng-if=\"stage.status\" status=\"stage.status\"></pipeline-status>\n" +
     "</span>\n" +
     "<div ng-if=\"!(stage | pipelineStageComplete)\" class=\"current-stage\">\n" +
-    "<span class=\"hidden-xs\">Stage</span> {{stage.name}}, {{stage.status | camelToLower}}\n" +
+    "Stage {{stage.name}}, {{stage.status | camelToLower}}\n" +
     "<div class=\"in-progress-stage hidden-xs\">\n" +
     "<div class=\"build-stage-animation\">\n" +
     "<div class=\"build-rail\">\n" +

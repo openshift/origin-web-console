@@ -22,7 +22,7 @@
           <pipeline-status ng-if="stage.status" status="stage.status"></pipeline-status>
         </span>
         <div ng-if="!(stage | pipelineStageComplete)" class="current-stage">
-          <span class="hidden-xs">Stage</span> {{stage.name}}, {{stage.status | camelToLower}}
+          Stage {{stage.name}}, {{stage.status | camelToLower}}
           <div class="in-progress-stage hidden-xs">
             <div class="build-stage-animation">
               <div class="build-rail">
