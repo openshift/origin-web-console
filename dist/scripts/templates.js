@@ -1284,7 +1284,7 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
 
   $templateCache.put('views/browse/_deployment-details.html',
     "<div class=\"row\" style=\"max-width: 650px\">\n" +
-    "<div class=\"col-sm-4 col-sm-push-8 text-center\">\n" +
+    "<div class=\"col-sm-4 col-sm-push-8 browse-deployment-donut\">\n" +
     "<deployment-donut rc=\"deployment\" deployment-config=\"deploymentConfig\" pods=\"podsForDeployment\" hpa=\"autoscalers\" scalable=\"isScalable()\" alerts=\"alerts\">\n" +
     "</deployment-donut>\n" +
     "</div>\n" +
