@@ -114,6 +114,10 @@ angular.module("openshiftConsole")
       return (rightScore > leftScore) ? rhs : lhs;
     };
 
+    var groupByService = function(routes) {
+      return _.groupBy(routes, 'spec.to.name');
+    };
+
     return {
       // Gets warnings about a route.
       //
@@ -141,6 +145,7 @@ angular.module("openshiftConsole")
       },
 
       getServicePortForRoute: getServicePortForRoute,
-      getPreferredDisplayRoute: getPreferredDisplayRoute
+      getPreferredDisplayRoute: getPreferredDisplayRoute,
+      groupByService: groupByService
     };
   });

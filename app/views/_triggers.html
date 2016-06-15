@@ -3,7 +3,7 @@
     <div ng-if="trigger.type === 'ImageChange'">
       <div ng-repeat="build in buildsByOutputImage[(trigger.imageChangeParams.from | imageObjectRef : namespace)] | orderObjectsByDate track by (build | uid)"
           ng-if="!isBuildHidden(build)"
-          class="build animate-repeat osc-object"
+          class="build animate-repeat"
           kind="Build"
           resource="build">
         <!-- Icon -->

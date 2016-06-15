@@ -1,0 +1,101 @@
+<div class="service-group">
+  <div row tablet="column" class="service-group-header"
+       ng-if="service.metadata.labels.app || displayRoute"
+       ng-click="toggleCollapse()">
+    <div ng-if="appName" class="app-name">
+      <i class="fa fa-angle-down fa-fw" aria-hidden="true" ng-if="!collapse"></i>
+      <i class="fa fa-angle-right fa-fw" aria-hidden="true" ng-if="collapse"></i>
+      {{appName | startCase}}
+    </div>
+    <h4 class="route-title truncate">
+      <span ng-if="appName && (displayRoute | isWebRoute)">
+        <i class="fa fa-external-link mar-right-sm small" aria-hidden="true"></i>
+      </span>
+      <span ng-if="!appName">
+        <i class="fa fa-angle-down fa-fw" aria-hidden="true" ng-if="!collapse"></i>
+        <i class="fa fa-angle-right fa-fw" aria-hidden="true" ng-if="collapse"></i>
+      </span>
+      <a ng-if="displayRoute | isWebRoute"
+         ng-href="{{displayRoute | routeWebURL}}">{{displayRoute | routeLabel}}</a>
+      <span ng-if="displayRoute && !(displayRoute | isWebRoute)">{{displayRoute | routeLabel}}</span>
+      <span ng-if="routeWarnings && routes.length === 1">
+        <route-warnings warnings="routeWarnings"></route-warnings>
+      </span>
+    </h4>
+    <span ng-if="!displayRoute">
+      <a ng-href="project/{{service.metadata.namespace}}/create-route?service={{service.metadata.name}}">Create Route</a>
+    </span>
+  </div>
+  <div>
+    <div class="service-group-triggers">
+      <div ng-repeat="dc in deploymentConfigsByService[service.metadata.name || '']">
+        <div row ng-repeat="pipeline in recentPipelinesByDc[dc.metadata.name] | orderObjectsByDate : true track by (pipeline | uid)"
+            class="animate-repeat">
+          <build-pipeline flex build="pipeline" overview="true"></build-pipeline>
+        </div>
+        <div>
+          <triggers triggers="dc.spec.triggers" builds-by-output-image="buildsByOutputImage" namespace="dc.metadata.namespace"></triggers>
+        </div>
+      </div>
+    </div>
+    <div uib-collapse="collapse" class="service-group-body">
+      <div row mobile="column" class="overview-services">
+        <overview-service
+            column
+            grow="1"
+            service="service"
+            deployment-configs="deploymentConfigsByService[service.metadata.name || '']"
+            visible-deployments-by-config="visibleDeploymentsByConfigAndService[service.metadata.name || '']"
+            recent-pipelines="recentPipelines"
+            pipelines-by-deployment="pipelinesByDeployment"
+            pods-by-deployment="podsByDeployment"
+            hpa-by-dc="hpaByDc"
+            hpa-by-rc="hpaByRc"
+            scalable-deployment-by-config="scalableDeploymentByConfig"
+            monopods="monopodsByService[service.metadata.name || '']">
+        </overview-service>
+        <overview-service
+            ng-repeat="child in childServices"
+            column
+            grow="1"
+            service="child"
+            deployment-configs="deploymentConfigsByService[child.metadata.name]"
+            visible-deployments-by-config="visibleDeploymentsByConfigAndService[child.metadata.name]"
+            recent-pipelines="recentPipelines"
+            pipelines-by-deployment="pipelinesByDeployment"
+            pods-by-deployment="podsByDeployment"
+            class="child-service"
+            hpa-by-dc="hpaByDc"
+            hpa-by-rc="hpaByRc"
+            scalable-deployment-by-config="scalableDeploymentByConfig"
+            monopods="monopodsByService[service.metadata.name || '']">
+        </overview-service>
+        <div flex column ng-if="(childServices | hashSize) === 0 && service" class="no-child-services-message">
+          <!-- <div class="blank-state-icon"> -->
+          <!--   <span class="pficon pficon pficon-add-circle-o" aria-hidden="true"></span> -->
+          <!-- </div> -->
+          <h2>No linked services.</h2>
+          <p>
+            No services are linked to {{service.metadata.name}}.
+            <span ng-if="(services | hashSize) > 1">Add a service to group them together.</span>
+          </p>
+          <div ng-if="(services | hashSize) > 1">
+            <button class="btn btn-primary" ng-show="(services | hashSize) > 1" ng-click="linkService()">
+              Link Service
+            </button>
+          </div>
+        </div>
+      </div>
+      <!-- FIXME unserviced things should only be getting the notifications that apply to them but reusing service group to show all
+           unserviced things makes the notifications show up as a big block at the end of all of them -->
+      <service-group-notifications 
+          ng-if="service"
+          deployment-configs-by-service="deploymentConfigsByService"
+          deployments-by-service="deploymentsByService"
+          child-services="childServices"
+          service="service"
+          pods-by-deployment="podsByDeployment">
+      </service-group-notifications>
+    </div>
+  </div>
+</div>

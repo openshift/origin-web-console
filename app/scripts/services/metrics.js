@@ -1,14 +1,19 @@
 'use strict';
 
 angular.module("openshiftConsole")
-  .factory("MetricsService", function($http, $q, APIDiscovery) {
+  .factory("MetricsService", function($filter, $http, $q, APIDiscovery) {
     var POD_COUNTER_TEMPLATE = "/counters/{containerName}%2F{podUID}%2F{metric}/data";
     var POD_GAUGE_TEMPLATE = "/gauges/{containerName}%2F{podUID}%2F{metric}/data";
 
-    // Use a regex to match the label deployement=<name> at word boundaries. In Hawkular, it's
-    // stored as a comma-separated list of values in the form name:value.
-    var DEPLOYMENT_COUNTER_TEMPLATE = "/counters/data?stacked=true&tags=descriptor_name:{metric},type:{type},labels:.*\\bdeployment:{deployment}\\b.*";
-    var DEPLOYMENT_GAUGE_TEMPLATE = "/gauges/data?stacked=true&tags=descriptor_name:{metric},type:{type},labels:.*\\bdeployment:{deployment}\\b.*";
+    // Used in compact view.
+    var POD_QUERY = "?stacked=true&tags=descriptor_name:{metric},type:{type},pod_name:{podName}";
+    var POD_STACKED_COUNTER_TEMPLATE = "/counters/data" + POD_QUERY;
+    var POD_STACKED_GAUGE_TEMPLATE = "/gauges/data" + POD_QUERY;
+
+    // Find metrics matching the RC selector.
+    var RC_QUERY = "?stacked=true&tags=descriptor_name:{metric},type:{type},labels:{labels}";
+    var RC_COUNTER_TEMPLATE = "/counters/data" + RC_QUERY;
+    var RC_GAUGE_TEMPLATE = "/gauges/data" + RC_QUERY;
 
     // URL template to show for each type of metric.
     var podURLTemplateByMetric = {
@@ -18,11 +23,19 @@ angular.module("openshiftConsole")
       "network/tx": POD_COUNTER_TEMPLATE
     };
 
+    // URL template to show for each type of metric.
+    var podStackedURLTemplateByMetric = {
+      "cpu/usage": POD_STACKED_COUNTER_TEMPLATE,
+      "memory/usage": POD_STACKED_GAUGE_TEMPLATE,
+      "network/rx": POD_STACKED_COUNTER_TEMPLATE,
+      "network/tx": POD_STACKED_COUNTER_TEMPLATE
+    };
+
     var deploymentURLTemplateByMetric = {
-      "cpu/usage": DEPLOYMENT_COUNTER_TEMPLATE,
-      "memory/usage": DEPLOYMENT_GAUGE_TEMPLATE,
-      "network/rx": DEPLOYMENT_COUNTER_TEMPLATE,
-      "network/tx": DEPLOYMENT_COUNTER_TEMPLATE
+      "cpu/usage": RC_COUNTER_TEMPLATE,
+      "memory/usage": RC_GAUGE_TEMPLATE,
+      "network/rx": RC_COUNTER_TEMPLATE,
+      "network/tx": RC_COUNTER_TEMPLATE
     };
 
     var metricsURL;
@@ -55,7 +68,7 @@ angular.module("openshiftConsole")
       // For deployment metrics that are "stacked," samples has a different
       // meaning. It is set to 1 if there is one pod, even when min and max
       // have different values, so don't ignore this point.
-      if (config.pod && point.samples < 2) {
+      if (config.pod && !config.stacked && point.samples < 2) {
         return false;
       }
 
@@ -120,14 +133,46 @@ angular.module("openshiftConsole")
       return data;
     }
 
+    function labelRegex(selector) {
+      var regex = '^';
+      _.each(selector, function(value, key) {
+        // Use lookarounds to find the labels in any order. They're stored as name:value tags in Hawkular.
+        regex += '(?=.*\\b' + key + ':' + value + '\\b)';
+      });
+      regex += '.*$';
+
+      return regex;
+    }
+
     function getRequestURL(config) {
       return getMetricsURL().then(function(metricsURL) {
         var template;
 
         // Are we requesting deployment-level metrics?
+        var type;
         if (config.deployment) {
           template = metricsURL + deploymentURLTemplateByMetric[config.metric];
-          var type;
+          switch (config.metric) {
+          case 'network/rx':
+          case 'network/tx':
+            type = 'pod';
+            break;
+          default:
+            type = 'pod_container';
+          }
+
+          var selector = _.get(config, 'deployment.spec.selector', {});
+          var labels = labelRegex(selector);
+          return URI.expand(template, {
+            labels: labels,
+            metric: config.metric,
+            type: type
+          }).toString();
+        }
+
+        // Are we requesting stacked pod metrics?
+        if (config.stacked) {
+          template = metricsURL + podStackedURLTemplateByMetric[config.metric];
           switch (config.metric) {
           case 'network/rx':
           case 'network/tx':
@@ -137,11 +182,11 @@ angular.module("openshiftConsole")
             type = 'pod_container';
           }
           return URI.expand(template, {
-            deployment: config.deployment,
+            podName: config.pod.metadata.name,
             metric: config.metric,
             type: type
           }).toString();
-        }
+        }        
 
         // Otherwise, get metrics for a pod.
         template = metricsURL + podURLTemplateByMetric[config.metric];
@@ -153,15 +198,42 @@ angular.module("openshiftConsole")
       });
     }
 
+    var connectionSucceeded, connectionFailed;
+    var isAvailable = function(testConnection) {
+      return getMetricsURL().then(function(url) {
+        if (!url) {
+          return false;
+        }
+
+        if (!testConnection) {
+          return true;
+        }
+
+        // A previous connection succeeded.
+        if (connectionSucceeded) {
+          return true;
+        }
+
+        // A previous connection failed.
+        if (connectionFailed) {
+          return false;
+        }
+
+        return $http.get(url).then(function() {
+          connectionSucceeded = true;
+          return true;
+        }, function() {
+          connectionFailed = true;
+          return false;
+        });
+      });
+    };
+
     return {
       // Check if the metrics service is available. The service is considered
       // available if a metrics URL is set. Returns a promise resolved with a
       // boolean value.
-      isAvailable: function() {
-        return getMetricsURL().then(function(url) {
-          return !!url;
-        });
-      },
+      isAvailable: isAvailable,
 
       getMetricsURL: getMetricsURL,
 
@@ -177,6 +249,10 @@ angular.module("openshiftConsole")
       // Returns a promise resolved with the metrics data.
       get: function(config) {
         return getRequestURL(config).then(function(url) {
+          if (!url) {
+            return null;
+          }
+
           var params = {
             bucketDuration: config.bucketDuration,
             start: config.start

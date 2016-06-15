@@ -296,5 +296,87 @@ angular.module("openshiftConsole")
       });
     };
 
+    var getLabels = function(deployment) {
+      return _.get(deployment, 'spec.template.metadata.labels', {});
+    };
+
+    var isDCAutoscaled = function(name, hpaByDC) {
+      var hpaArray = _.get(hpaByDC, [name]);
+      return !_.isEmpty(hpaArray);
+    };
+
+    var isRCAutoscaled = function(name, hpaByRC) {
+      var hpaArray = _.get(hpaByRC, [name]);
+      return !_.isEmpty(hpaArray);
+    };
+
+    DeploymentsService.prototype.isScalable = function(deployment, deploymentConfigs, hpaByDC, hpaByRC, scalableDeploymentByConfig) {
+      // If this RC has an autoscaler, don't allow manual scaling.
+      if (isRCAutoscaled(deployment.metadata.name, hpaByRC)) {
+        return false;
+      }
+
+      var deploymentConfigId = $filter('annotation')(deployment, 'deploymentConfig');
+
+      // Otherwise allow scaling of RCs with no deployment config.
+      if (!deploymentConfigId) {
+        return true;
+      }
+
+      // Wait for deployment configs to load before allowing scaling of
+      // a deployment with a deployment config.
+      if (!deploymentConfigs) {
+        return false;
+      }
+
+      // Allow scaling of deployments whose deployment config has been deleted.
+      if (!deploymentConfigs[deploymentConfigId]) {
+        return true;
+      }
+
+      // If the deployment config has an autoscaler, don't allow manual scaling.
+      if (isDCAutoscaled(deploymentConfigId, hpaByDC)) {
+        return false;
+      }
+
+      // Otherwise, check the map to find the most recent deployment that's scalable.
+      var scalableName = _.get(scalableDeploymentByConfig, [deploymentConfigId, 'metadata', 'name']);
+      return scalableName === deployment.metadata.name;
+    };
+
+    DeploymentsService.prototype.groupByService = function(/* deployments or deployment configs */ resources, services) {
+      var byService = {};
+      _.each(resources, function(resource) {
+        var selector = new LabelSelector(getLabels(resource));
+        var foundSvc = false;
+        _.each(services, function(service) {
+          var serviceSelector = new LabelSelector(service.spec.selector);
+          if (serviceSelector.covers(selector)) {
+            foundSvc = true;
+            _.set(byService,
+                  [service.metadata.name, resource.metadata.name],
+                  resource);
+          }
+        });
+        if (!foundSvc) {
+          _.set(byService,
+                  ['', resource.metadata.name],
+                  resource);
+        }
+      });
+      return byService;
+    };
+
+    DeploymentsService.prototype.groupByDeploymentConfig = function(deployments) {
+      var byDC = {};
+
+      _.each(deployments, function(deployment) {
+        var deploymentConfigId = $filter('annotation')(deployment, 'deploymentConfig') || '';
+        _.set(byDC, [deploymentConfigId, deployment.metadata.name], deployment);
+      });
+
+      return byDC;
+    };
+
     return new DeploymentsService();
   });

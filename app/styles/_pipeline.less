@@ -6,164 +6,448 @@
 @build-pipeline-in-progress-color: #0088ce;
 @build-pipeline-success-color: #3f9c35;
 @build-pipeline-failed-color: #cc0000;
-@build-pipeline-aborted-color: #ededed;
+@build-pipeline-aborted-color: #e8e8e8;
 
-.build-pipeline {
-  margin-bottom: 15px;
-  @media (min-width: 480px) {
-    margin-bottom: 0;
+
+@keyframes flexGrow {
+  to {
+    .flex-grow(@grow: 1);
+    .flex-shrink(@shrink: 1);
+    .flex-basis(@width: auto);
   }
-  .build-summary, .stage {
-    .text-center();
-    min-width: 150px;
+}
+
+@keyframes flexShrink {
+  to {
+    .flex-basis(@width: 1);
+    .flex-grow(@grow: 0.000001);
+    .flex-shrink(@shrink: 1);
   }
-  .build-summary, .stages-block {
-    border: 1px solid @build-pipeline-border-color;
+}
+
+.pipeline-container {
+  border: 1px solid @build-pipeline-border-color;
+  padding-bottom: @pipeline-margin;
+  .flex(@columns: 1 1 auto);
+  .pipeline-label {
+    border-bottom: 1px solid @build-pipeline-border-color;
+    font-weight: 300;
+    margin-bottom: @pipeline-margin;
+    padding: (@pipeline-margin / 2) @pipeline-margin;
+  }
+}
+.pipeline {
+  .flex-display(@display: flex);
+  .pipeline-stage {
+    border-top: 1px solid @build-pipeline-border-color;
+    .flex(@columns: 1 1 auto);
+    padding: (@pipeline-margin /2) @pipeline-margin;
+    &:first-child {
+      border-top: 0;
+    }
+  }
+}
+
+.new-stage {
+  .flex-basis(@width: 1);
+  .flex-grow(@grow: 0.000001);
+  .flex-shrink(@shrink: 1);
+  animation: flexGrow 0.5s ease forwards;
+}
+
+.remove-stage {
+  .flex(@columns: 1 1 0%);
+  animation: flexShrink 0.5s ease forwards;
+}
+
+.pipeline-stage-name, .pipeline-time {
+  font-size: (@font-size-base - 1);
+  text-align: center;
+}
+.pipeline-stage-name {
+  line-height: initial;
+  margin-bottom: @pipeline-margin + 2px;
+  &.no-stages {
+    margin: @pipeline-margin * 2.25;
+  }
+}
+.pipeline-time {
+  .text-muted();
+  margin-top: 9px;
+}
+
+.build-summary, .stage {
+  .text-center();
+  min-width: 150px;
+}
+.build-summary, .stages-block {
+  border: 1px solid @build-pipeline-border-color;
+}
+.build-summary {
+  border-bottom-width: 0;
+  padding: 10px;
+  .flex-direction(@direction: row);
+  .justify-content(@justify: space-between);
+  .status-icon {
+    &.Complete {
+      color: @build-pipeline-success-color;
+    }
+    &.Failed{
+      color: @build-pipeline-failed-color;
+    }
+  }
+}
+
+@media (min-width: @screen-xs-min) {
+  .build-summary {
+    border-bottom-width: 1px;
+    border-right-width: 0;
+    .flex-direction(@direction: column);
+    .justify-content(@justify: center);
+  }
+}
+
+@media (min-width: @screen-sm-min) {
+  .pipeline {
+    .pipeline-stage {
+      border-left: 1px solid @build-pipeline-border-color;
+      border-top: 0;
+      &:first-child {
+        border-left: 0;
+      }
+    }
   }
   .build-summary {
-    @media (min-width: 480px) {
-      border-right-width: 0;
-      flex-grow: 0;
-      flex-shrink: 0;
-      flex-basis: 200px;
-    }
+    border-right-width: 0;
+    .flex(@columns: 0 0 200px);
+    .flex-direction(@direction: column);
     min-height: 100px;
-    padding: 10px;
-    .status-icon {
-      margin-bottom: 3px;
-      .inverse {
-        font-size: 8px;
-        margin-bottom: 3px;
-      }
-      &.Complete .inverse {
-        color: @build-pipeline-success-color;
-      }
-      &.Failed .inverse {
-        color: @build-pipeline-failed-color;
-      }
-    }
   }
-  .pipeline-status {
-    display: block;
-    margin: 3px 0;
-    overflow: hidden;
-    text-align: center;
-    &:before,
-    &:after {
-      background-color: #d1d1d1;
-      content: "";
-      display: inline-block;
-      height: 2px;
-      position: relative;
-      vertical-align: top;
-      top: 8px;
-      width: 50%;
-    }
-    &:before {
-      right: 0.5em;
-      margin-left: -50%;
-    }
-    &:after {
-      left: 0.5em;
-      margin-right: -50%;
-    }
-    &.ABORTED {
-      .fa {
-        font-size: 14px;
-        vertical-align: middle;
-      }
-      &:before, &:after {
-        background-color: @build-pipeline-aborted-color;
-      }
-    }
-    &.IN_PROGRESS {
-      .fa {
-        font-size: 13px;
-      }
-      &:before, &:after {
-        background-color: @build-pipeline-in-progress-color;
-      }
-    }
-    &.SUCCESS {
-      color: @build-pipeline-success-color;
-      font-size: 8px;
-      &:before, &:after {
-        background-color: @build-pipeline-success-color;
-      }
-    }
-    &.FAILED {
-      color: @build-pipeline-failed-color;
-      font-size: 8px;
-      &:before, &:after {
-        background-color: @build-pipeline-failed-color;
-      }
-    }
-    &.NOT_EXECUTED {
-      &:before {
-        background-color: @build-pipeline-pending-color;
-      }
-      &:after {
-        background-color: @build-pipeline-pending-color;
-      }
-    }
-    .no-icon {
-      // Add a negative margin so that only a solid gray lines appears.
-      margin: 0 -7px;
-    }
-  }
+}
 
-  .pipeline-label {
-    font-size: @component-label;
-    margin: 0;
-    padding: 2px 5px;
-    text-transform: uppercase;
-    border-bottom: 3px solid #bbbbbb;
-    &.Pending {
-      background-color: @build-pipeline-pending-color;
-    }
-    &.Running {
-      background-color: @build-pipeline-in-progress-color;
-      color: #ffffff;
-      border: none;
-    }
-    &.Complete {
-      background-color: @build-pipeline-success-color;
-      color: #ffffff;
-      border: none;
-    }
-    &.Failed, &.Error {
-      background-color: @build-pipeline-failed-color;
-      color: #ffffff;
-      border: none;
-    }
-    &.New {
-      background-color: #bee1f4;
-    }
-    &.Cancelled {
-      background-color: @build-pipeline-aborted-color;
+@media (max-width: @screen-xs-max) {
+  .pipeline {
+    .flex-direction(@direction: column);
+  }
+}
+
+
+// pipeline animation
+// ------------------------------------
+
+@pipeline-margin: 10px;
+@progress-line: 100%;
+@circle-diameter: 18px;
+@line-border-width: 8px;
+@line-height: (@line-border-width / 2);
+
+@line-animation-time: 0.35s;
+@circle-animation-time: 0.35s;
+
+@inner-circle-color: #fff;
+
+@circle-radius: (@circle-diameter / 2);
+@semi-circle-animation-time: (@circle-animation-time / 2);
+@circle-border-width: (@line-border-width / 2);
+
+@keyframes progress-line {
+	from {
+		width: 0;
+	}
+	to {
+		width: @progress-line;
+	}
+}
+@keyframes progress {
+	from {
+		-webkit-transform: rotate(0);
+		transform: rotate(0);
+	}
+	to {
+		-webkit-transform: rotate(180deg);
+		transform: rotate(180deg);
+	}
+}
+@keyframes fadeIn {
+	from {
+		opacity: 0;
+
+	}
+	to {
+		opacity: 1;
+	}
+}
+@keyframes fadeOut {
+	from {
+		background-color: @build-pipeline-pending-color;
+	}
+	to {
+		background-color: transparent;
+	}
+}
+
+// Shared by both the build pipeline and overview pipeline.
+.pipeline-status-bar  {
+  .pipeline-line:before,
+  .clip1:before,
+  .clip2:before {
+    background-color: @build-pipeline-pending-color;
+  }
+  .inner-circle-fill {
+    background-color: @inner-circle-color;
+    opacity: 0;
+  }
+}
+.pipeline-status-bar.SUCCESS  {
+  .pipeline-line:before,
+  .clip1:before,
+  .clip2:before,
+  .inner-circle-fill {
+    background-color: @build-pipeline-success-color;
+  }
+  .pipeline-circle {
+    &:after {
+      content: "\f00c";
     }
   }
-  .stages {
-    flex-wrap: wrap;
+}
+
+.pipeline-status-bar.FAILED  {
+  .pipeline-line:before,
+  .clip1:before,
+  .clip2:before,
+  .inner-circle-fill {
+    background-color: @build-pipeline-failed-color;
+  }
+  .pipeline-circle {
+    &:after {
+      content: "\f00d";
+    }
+  }
+}
+
+.pipeline-status-bar.IN_PROGRESS  {
+  .pipeline-line:before,
+  .clip1:before,
+  .clip2:before,
+  .inner-circle-fill {
+    background-color: @build-pipeline-in-progress-color;
+  }
+  .pipeline-circle {
+    &:after {
+      content: "\f021";
+    }
+  }
+}
+
+.pipeline-status-bar.NOT_EXECUTED  {
+  .pipeline-line:before,
+  .clip1:before,
+  .clip2:before,
+  .inner-circle-fill {
+    background-color: @build-pipeline-pending-color;
+  }
+  .pipeline-circle {
+    &:after {
+      content: ""; // no icon
+    }
+  }
+}
+
+.pipeline-status-bar.PAUSED_PENDING_INPUT  {
+  .pipeline-circle {
+    &:after {
+      content: "\f04c";
+      font-size: 10px;
+    }
+  }
+}
+
+
+.pipeline-status-bar.ABORTED  {
+  .pipeline-line:before,
+  .clip1:before,
+  .clip2:before,
+  .inner-circle-fill {
+    background-color: @build-pipeline-aborted-color;
+  }
+  .pipeline-circle {
+    &:after {
+      content: "\f05e";
+    }
+  }
+}
+
+.pipeline-status-bar {
+  .flex-display(@display: flex);
+  .align-items(@align: center);
+  .flex-direction(@direction: column);
+  margin-bottom: -(@circle-diameter / 2);
+  .pipeline-line {
+    width: @progress-line;
+    height: @line-height;
+    background: @build-pipeline-pending-color;
+    position: relative;
+    &:before {
+      content: '';
+      position: absolute;
+      height: 100%;
+      animation: progress-line @line-animation-time ease-in forwards;
+    }
+  }
+}
+.pipeline-circle {
+  background: @build-pipeline-pending-color;
+  width: @circle-diameter;
+  height: @circle-diameter;
+  border-radius: @circle-radius;
+  margin-top: (-(@circle-diameter / 2) - (@line-height / 2));
+  position: relative;
+  transform: rotate(-90deg);
+  animation: fadeOut 0.1s (@line-animation-time + @circle-animation-time) linear forwards;
+  &:after {
+    position: absolute;
+    color: @inner-circle-color;
+    font-family: 'FontAwesome';
+    font-size: (@font-size-base - 1);
+    transform: translate(-50%, -50%) rotate(90deg);
+    top: 50%;
+    left: 50%;
+    opacity: 0;
+    animation: fadeIn .1s linear forwards;
+    animation-delay: 1s;
+  }
+  .clip1 {
+    position: absolute;
+    clip: rect(0, @circle-diameter, @circle-diameter, @circle-radius);
+    &:before {
+      content: '';
+      position: absolute;
+      width: @circle-diameter;
+      height: @circle-diameter;
+      clip: rect(0, @circle-radius, @circle-diameter, 0);
+      border-radius: @circle-radius;
+      transform: rotate(360deg);
+      animation: progress @semi-circle-animation-time @line-animation-time linear forwards;
+    }
+  }
+  .clip2 {
+    position: absolute;
+    clip: rect(0, @circle-radius, @circle-diameter, 0);
+    &:before {
+      content: '';
+      position: absolute;
+      width: @circle-diameter;
+      height: @circle-diameter;
+      clip: rect(0, @circle-diameter, @circle-diameter, @circle-radius);
+      border-radius: @circle-radius;
+      transform: rotate(360deg);
+      animation: progress @semi-circle-animation-time (@semi-circle-animation-time + @line-animation-time) linear forwards;
+    }
+  }
+  .inner-circle {
+    height: (@circle-diameter - @circle-border-width * 2);
+    width: (@circle-diameter - @circle-border-width * 2);
+    border-radius: @circle-radius;
+    background-color: @inner-circle-color;
+    position: absolute;
+    top: @circle-border-width;
+    left: @circle-border-width;
+    animation: fadeOut 0.1s (@line-animation-time + @circle-animation-time) linear forwards;
+    .inner-circle-fill {
+      box-sizing: border-box;
+      height: 100%;
+      width: 100%;
+      border-radius: 50%;
+      opacity: 0;
+    }
+  }
+}
+
+// Condensed Pipeline on Overview
+// ------------------------------
+
+.overview-pipeline {
+  .pipeline-status-bar {
+    display: inline-block;
+    .pipeline-circle {
+      margin: 3px;
+      &:after {
+        animation-delay: 0;
+      }
+      .inner-circle {
+        background-color: transparent;
+      }
+    }
+    .pipeline-line {
+      display: none;
+    }
   }
   .stage {
-    font-size: @component-label;
-    margin: 10px 0;
-    padding: 0 10px;
-    .stage-duration {
-      .text-muted();
+    min-width: initial;
+  }
+}
+
+
+// Current build stage
+// -------------------
+
+@build-rail-bgcolor: #d6d6d6;
+@build-bar-bgcolor: #00a8e1;
+@build-rail-height: 4px;
+@build-rail-width: 100%;
+@build-bar-width: 50px;
+@build-circle-bgcolor: #fff;
+@build-circle-color: #666;
+@build-circle-border: #d6d6d6;
+
+.build-stage-animation {
+  width: @build-rail-width;
+  padding-top: 8px;
+  padding-left: 5px;
+  position: relative;
+  .flex-display(@display: flex);
+  .flex-direction(@direction: column);
+  .justify-content(@justify: center);
+  .align-items(@align: center);
+  .build-rail {
+    width: @build-rail-width;
+    background: @build-rail-bgcolor;
+    height: @build-rail-height;
+    margin-bottom: -13px;
+    position:relative;
+    overflow:hidden;
+      .build-bar {
+        width: @build-bar-width;
+        position: absolute;
+        height: @build-rail-height;
+        background: @build-bar-bgcolor;
+        animation: slide 7s linear infinite;
+      }
+  }
+  .build-circle {
+    border: 1px solid @build-circle-border;
+    background: @build-circle-bgcolor;
+    width: 22px;
+    height: 22px;
+    border-radius: 22px;
+    .flex-display(@display: flex);
+    .flex-direction(@direction: column);
+    .justify-content(@justify: center);
+    .align-items(@align: center);
+    z-index: 1;
+    .build-time {
+      color: @build-circle-color;
+      font-size: 10px;
     }
   }
-  .stage + .stage {
-    border-top: 1px solid @build-pipeline-border-color;
-    padding-top: 10px;
-    @media (min-width: 480px) {
-      border-top: none;
-      border-left: 1px solid @build-pipeline-border-color;
-      // -1px so the left border blends with the stages-block border when wrapping to the next line.
-      // Otherwise you will see 2px left border when a stage wraps.
-      margin-left: -1px;
-      padding-top: 0;
-    }
+}
+
+@keyframes slide {
+  0% {
+    left: -@build-bar-width;
+  }
+  100% {
+    left: 100%;
   }
 }
