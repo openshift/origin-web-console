@@ -3274,6 +3274,7 @@ to{transform:rotate(359deg)}
 .deployment-donut .hpa-details{font-size:84%;color:#999;text-align:center;align-items:center;margin-top:-5px;margin-bottom:7px}
 .deployment-donut .hpa-details .hpa-warning{cursor:help;margin-left:1px;vertical-align:-1px}
 .action-button,[data-toggle=tooltip]{cursor:pointer}
+.browse-deployment-donut .deployment-donut{-webkit-align-items:center;-moz-align-items:center;align-items:center}
 .deployment-well:not(.active){background-color:#fff}
 .deployment-well:not(.detailed){padding-top:12px;padding-bottom:12px}
 .deployment-well:not(.detailed) .deployment-summary h3{margin-bottom:5px;text-transform:lowercase}
@@ -3306,7 +3307,8 @@ body{padding-right:0px!important}
 .breadcrumb{font-size:12px;padding-bottom:0}
 .breadcrumb strong{font-weight:600}
 .tile.tile-project h2{padding:10px 0}
-@media (min-width:768px){.nav-tabs.nav-justified{border-bottom:1px solid #e9e8e8}
+@media (min-width:768px){.browse-deployment-donut .deployment-donut{-webkit-align-items:flex-end;-moz-align-items:flex-end;align-items:flex-end}
+.nav-tabs.nav-justified{border-bottom:1px solid #e9e8e8}
 }
 .nav-tabs.nav-justified>li:first-child>a{padding-left:15px}
 .nav-tabs>li:first-child>a,.nav-tabs>li>a{padding-left:0}

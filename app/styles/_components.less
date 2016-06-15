@@ -332,6 +332,13 @@
   }
 }
 
+.browse-deployment-donut .deployment-donut {
+  .align-items(@align: center);
+  @media (min-width: @screen-sm-min) {
+    .align-items(@align: flex-end);
+  }
+}
+
 /*
  * These pod-container styles are not currently used since we've switched to
  * the donut chart. Leaving them commented out for now in case we want to show
