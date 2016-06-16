@@ -18,8 +18,8 @@
       <a ng-if="displayRoute | isWebRoute"
          ng-href="{{displayRoute | routeWebURL}}">{{displayRoute | routeLabel}}</a>
       <span ng-if="displayRoute && !(displayRoute | isWebRoute)">{{displayRoute | routeLabel}}</span>
-      <span ng-if="routeWarnings && routes.length === 1">
-        <route-warnings warnings="routeWarnings"></route-warnings>
+      <span ng-if="routeWarningsByService[service.metadata.name] && routesByService[service.metadata.name].length === 1">
+        <route-warnings warnings="routeWarningsByService[service.metadata.name]"></route-warnings>
       </span>
     </h4>
     <span ng-if="!displayRoute">
@@ -29,48 +29,23 @@
   <div>
     <div class="service-group-triggers">
       <div ng-repeat="dc in deploymentConfigsByService[service.metadata.name || '']">
-        <div row ng-repeat="pipeline in recentPipelinesByDc[dc.metadata.name] | orderObjectsByDate : true track by (pipeline | uid)"
+        <div row ng-repeat="pipeline in recentPipelinesByDC[dc.metadata.name] | orderObjectsByDate : true track by (pipeline | uid)"
             class="animate-repeat">
           <build-pipeline flex build="pipeline" overview="true"></build-pipeline>
         </div>
         <div>
-          <triggers triggers="dc.spec.triggers" builds-by-output-image="buildsByOutputImage" namespace="dc.metadata.namespace"></triggers>
+          <triggers triggers="dc.spec.triggers" builds-by-output-image="recentBuildsByOutputImage" namespace="dc.metadata.namespace"></triggers>
         </div>
       </div>
     </div>
     <div uib-collapse="collapse" class="service-group-body">
       <div row mobile="column" class="overview-services">
         <overview-service
-            column
-            grow="1"
-            service="service"
-            deployment-configs="deploymentConfigsByService[service.metadata.name || '']"
-            visible-deployments-by-config="visibleDeploymentsByConfigAndService[service.metadata.name || '']"
-            recent-pipelines="recentPipelines"
-            pipelines-by-deployment="pipelinesByDeployment"
-            pods-by-deployment="podsByDeployment"
-            hpa-by-dc="hpaByDc"
-            hpa-by-rc="hpaByRc"
-            scalable-deployment-by-config="scalableDeploymentByConfig"
-            monopods="monopodsByService[service.metadata.name || '']">
+            ng-repeat="service in groupedServices"
+            column grow="1"
+            ng-class="{'child-service': !$first}">
         </overview-service>
-        <overview-service
-            ng-repeat="child in childServices"
-            column
-            grow="1"
-            service="child"
-            deployment-configs="deploymentConfigsByService[child.metadata.name]"
-            visible-deployments-by-config="visibleDeploymentsByConfigAndService[child.metadata.name]"
-            recent-pipelines="recentPipelines"
-            pipelines-by-deployment="pipelinesByDeployment"
-            pods-by-deployment="podsByDeployment"
-            class="child-service"
-            hpa-by-dc="hpaByDc"
-            hpa-by-rc="hpaByRc"
-            scalable-deployment-by-config="scalableDeploymentByConfig"
-            monopods="monopodsByService[service.metadata.name || '']">
-        </overview-service>
-        <div flex column ng-if="(childServices | hashSize) === 0 && service" class="no-child-services-message">
+        <div flex column ng-if="childServices.length === 0 && service" class="no-child-services-message">
           <!-- <div class="blank-state-icon"> -->
           <!--   <span class="pficon pficon pficon-add-circle-o" aria-hidden="true"></span> -->
           <!-- </div> -->
@@ -88,7 +63,7 @@
       </div>
       <!-- FIXME unserviced things should only be getting the notifications that apply to them but reusing service group to show all
            unserviced things makes the notifications show up as a big block at the end of all of them -->
-      <service-group-notifications 
+      <service-group-notifications
           ng-if="service"
           deployment-configs-by-service="deploymentConfigsByService"
           deployments-by-service="deploymentsByService"

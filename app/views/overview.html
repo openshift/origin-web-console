@@ -31,25 +31,7 @@
                 Loading...
               </div>
               <div ng-repeat="service in services" ng-if="!isChildService(service) && (service.metadata.labels.app || routesByService[service.metadata.name].length || childServicesByParent[service.metadata.name].length)">
-                <service-group
-                    service="service"
-                    services="services"
-                    child-services="childServicesByParent[service.metadata.name]"
-                    routes="routesByService[service.metadata.name]"
-                    route-warnings="routeWarningsByService[service.metadata.name]"
-                    deployment-configs-by-service="deploymentConfigsByService"
-                    deployments-by-service="deploymentsByService"
-                    visible-deployments-by-config-and-service="visibleDeploymentsByConfigAndService"
-                    recent-pipelines-by-dc="recentPipelinesByDC"
-                    pipelines-by-deployment="pipelinesByDeployment"
-                    pods-by-deployment="podsByDeployment"
-                    hpa-by-dc="hpaByDC"
-                    hpa-by-rc="hpaByRC"
-                    scalable-deployment-by-config="scalableDeploymentByConfig"
-                    monopods-by-service="monopodsByService"
-                    alerts="alerts"
-                    builds-by-output-image="recentBuildsByOutputImage">
-                </service-group>
+                <overview-service-group></overview-service-group>
               </div>
 
               <div row wrap>
@@ -57,44 +39,15 @@
                     ng-repeat="service in services"
                     ng-if="!isChildService(service) && !service.metadata.labels.app && !routesByService[service.metadata.name].length && !childServicesByParent[service.metadata.name].length"
                     class="standalone-service">
-                  <service-group
-                      service="service"
-                      child-services="childServicesByParent[service.metadata.name]"
-                      routes="routesByService[service.metadata.name]"
-                      route-warnings="routeWarningsByService[service.metadata.name]"
-                      deployment-configs-by-service="deploymentConfigsByService"
-                      deployments-by-service="deploymentsByService"
-                      visible-deployments-by-config-and-service="visibleDeploymentsByConfigAndService"
-                      recent-pipelines-by-dc="recentPipelinesByDC"
-                      pipelines-by-deployment="pipelinesByDeployment"
-                      pods-by-deployment="podsByDeployment"
-                      hpa-by-dc="hpaByDC"
-                      hpa-by-rc="hpaByRC"
-                      scalable-deployment-by-config="scalableDeploymentByConfig"
-                      monopods-by-service="monopodsByService"
-                      alerts="alerts"
-                      builds-by-output-image="recentBuildsByOutputImage">
-                  </service-group>
+                  <overview-service-group></overview-service-group>
                 </div>
               </div>
 
               <!-- Unserviced DCs, RCs, and pods -->
               <div >
-                <service-group
-                    ng-if="(monopodsByService[''] | hashSize) > 0 || (deploymentConfigsByService[''] | hashSize) > 0 || (deploymentsByService[''] | hashSize) > 0"
-                    deployment-configs-by-service="deploymentConfigsByService"
-                    deployments-by-service="deploymentsByService"
-                    visible-deployments-by-config-and-service="visibleDeploymentsByConfigAndService"
-                    recent-pipelines-by-dc="recentPipelinesByDC"
-                    pipelines-by-deployment="pipelinesByDeployment"
-                    pods-by-deployment="podsByDeployment"
-                    hpa-by-dc="hpaByDC"
-                    hpa-by-rc="hpaByRC"
-                    scalable-deployment-by-config="scalableDeploymentByConfig"
-                    monopods-by-service="monopodsByService"
-                    alerts="alerts"
-                    builds-by-output-image="recentBuildsByOutputImage">
-                </service-group>
+                <overview-service-group
+                  ng-if="(monopodsByService[''] | hashSize) > 0 || (deploymentConfigsByService[''] | hashSize) > 0 || (deploymentsByService[''] | hashSize) > 0">
+                </overview-service-group>
               </div>
             </div>
           </div>

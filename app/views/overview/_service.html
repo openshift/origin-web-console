@@ -141,7 +141,7 @@
     </div>
   </div>
   <!-- monopods -->
-  <div ng-repeat="pod in monopods | orderObjectsByDate : true track by (pod | uid)"
+  <div ng-repeat="pod in monopodsByService[service.metadata.name || ''] | orderObjectsByDate : true track by (pod | uid)"
       class="deployment-tile-wrapper">
     <div class="deployment-tile">
       <div row class="service-title" ng-if="service">

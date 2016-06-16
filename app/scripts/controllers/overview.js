@@ -21,6 +21,7 @@ angular.module('openshiftConsole')
                         ProjectsService,
                         RoutesService,
                         ServicesService) {
+    // scope variables are inherited by overview-service-group and overview-service directives.
     $scope.projectName = $routeParams.project;
     $scope.renderOptions = $scope.renderOptions || {};
     $scope.renderOptions.showGetStarted = false;

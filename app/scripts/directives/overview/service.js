@@ -7,20 +7,10 @@ angular.module('openshiftConsole')
                                          Navigate) {
     return {
       restrict: 'E',
-      scope: {
-        service: '=',
-        deploymentConfigs: '=',
-        visibleDeploymentsByConfig: '=',
-        replicationControllers: '=',
-        recentPipelines: '=',
-        pipelinesByDeployment: '=',
-        podsByDeployment: '=',
-        hpaByDc: '=',
-        hpaByRc: '=',
-        scalableDeploymentByConfig: '=',
-        monopods: '='
-      },
-      templateUrl: 'views/_overview-service.html',
+      // Inherit scope from OverviewController. This directive is only used for the overview.
+      // We want to do all of the grouping of resources once in the overview controller watch callbacks.
+      scope: true,
+      templateUrl: 'views/overview/_service.html',
       link: function($scope) {
         if (!window.OPENSHIFT_CONSTANTS.DISABLE_OVERVIEW_METRICS) {
           MetricsService.isAvailable(true).then(function(available) {
@@ -30,9 +20,24 @@ angular.module('openshiftConsole')
 
         var annotation = $filter('annotation');
 
-        $scope.$watch('visibleDeploymentsByConfig', function(visibleDeploymentsByConfig) {
+        $scope.$watch('deploymentConfigsByService', function(deploymentConfigsByService) {
+          if (!deploymentConfigsByService) {
+            return;
+          }
+
+          var serviceName = _.get($scope, 'service.metadata.name');
+          $scope.deploymentConfigs = deploymentConfigsByService[serviceName];
+        });
+
+        $scope.$watch('visibleDeploymentsByConfigAndService', function(visibleDeploymentsByConfigAndService) {
+          if (!visibleDeploymentsByConfigAndService) {
+            return;
+          }
+
+          var serviceName = _.get($scope, 'service.metadata.name');
           $scope.activeDeploymentByConfig = {};
-          _.each(visibleDeploymentsByConfig, function(deployments, dcName) {
+          $scope.visibleDeploymentsByConfig = visibleDeploymentsByConfigAndService[serviceName];
+          _.each($scope.visibleDeploymentsByConfig, function(deployments, dcName) {
             $scope.activeDeploymentByConfig[dcName] = DeploymentsService.getActiveDeployment(deployments);
           });
         });
@@ -63,8 +68,8 @@ angular.module('openshiftConsole')
         };
 
         $scope.getHPA = function(rcName, dcName) {
-          var hpaByDC = $scope.hpaByDc;
-          var hpaByRC = $scope.hpaByRc;
+          var hpaByDC = $scope.hpaByDC;
+          var hpaByRC = $scope.hpaByRC;
           // Return `null` if the HPAs haven't been loaded.
           if (!hpaByDC || !hpaByRC) {
             return null;
@@ -85,8 +90,8 @@ angular.module('openshiftConsole')
         $scope.isScalableDeployment = function(deployment) {
           return DeploymentsService.isScalable(deployment,
                                                $scope.deploymentConfigs,
-                                               $scope.hpaByDc,
-                                               $scope.hpaByRc,
+                                               $scope.hpaByDC,
+                                               $scope.hpaByRC,
                                                $scope.scalableDeploymentByConfig);
         };
       }
