@@ -6196,51 +6196,7 @@ alerts:"="
 },
 templateUrl:"views/_overview-deployment.html"
 };
-}), angular.module("openshiftConsole").directive("overviewService", [ "$filter", "DeploymentsService", "MetricsService", "Navigate", function(a, b, c, d) {
-return {
-restrict:"E",
-scope:{
-service:"=",
-deploymentConfigs:"=",
-visibleDeploymentsByConfig:"=",
-replicationControllers:"=",
-recentPipelines:"=",
-pipelinesByDeployment:"=",
-podsByDeployment:"=",
-hpaByDc:"=",
-hpaByRc:"=",
-scalableDeploymentByConfig:"=",
-monopods:"="
-},
-templateUrl:"views/_overview-service.html",
-link:function(e) {
-window.OPENSHIFT_CONSTANTS.DISABLE_OVERVIEW_METRICS || c.isAvailable(!0).then(function(a) {
-e.showMetrics = a;
-});
-var f = a("annotation");
-e.$watch("visibleDeploymentsByConfig", function(a) {
-e.activeDeploymentByConfig = {}, _.each(a, function(a, c) {
-e.activeDeploymentByConfig[c] = b.getActiveDeployment(a);
-});
-}), e.isDeploymentLatest = function(a) {
-var b = f(a, "deploymentConfig");
-if (!b) return !0;
-if (!e.deploymentConfigs) return !1;
-var c = parseInt(f(a, "deploymentVersion"));
-return _.some(e.deploymentConfigs, function(a) {
-return a.metadata.name === b && a.status.latestVersion === c;
-});
-}, e.viewPodsForDeployment = function(a) {
-_.isEmpty(e.podsByDeployment[a.metadata.name]) || d.toPodsForDeployment(a);
-}, e.getHPA = function(a, b) {
-var c = e.hpaByDc, d = e.hpaByRc;
-return c && d ? b ? (c[b] = c[b] || [], c[b]) :(d[a] = d[a] || [], d[a]) :null;
-}, e.isScalableDeployment = function(a) {
-return b.isScalable(a, e.deploymentConfigs, e.hpaByDc, e.hpaByRc, e.scalableDeploymentByConfig);
-};
-}
-};
-} ]), angular.module("openshiftConsole").directive("sidebar", [ "HawtioNav", function(a) {
+}), angular.module("openshiftConsole").directive("sidebar", [ "HawtioNav", function(a) {
 return {
 restrict:"E",
 templateUrl:"views/_sidebar.html",
@@ -7849,59 +7805,7 @@ status:"="
 },
 templateUrl:"views/directives/pipeline-status.html"
 };
-}), angular.module("openshiftConsole").directive("serviceGroup", [ "$filter", "$uibModal", "RoutesService", "ServicesService", function(a, b, c, d) {
-return {
-restrict:"E",
-scope:{
-service:"=",
-services:"=",
-childServices:"=",
-routes:"=",
-routeWarnings:"=",
-deploymentConfigsByService:"=",
-deploymentsByService:"=",
-visibleDeploymentsByConfigAndService:"=",
-recentPipelinesByDc:"=",
-pipelinesByDeployment:"=",
-podsByDeployment:"=",
-hpaByDc:"=",
-hpaByRc:"=",
-scalableDeploymentByConfig:"=",
-monopodsByService:"=",
-alerts:"=",
-buildsByOutputImage:"="
-},
-templateUrl:"views/service-group.html",
-link:function(e) {
-e.collapse = d.isInfrastructure(e.service), e.toggleCollapse = function() {
-e.collapse = !e.collapse;
-}, e.linkService = function() {
-var c = b.open({
-animation:!0,
-templateUrl:"views/modals/link-service.html",
-controller:"LinkServiceModalController",
-scope:e
-});
-c.result.then(function(b) {
-d.linkService(e.service, b).then(_.noop, function(b) {
-e.alerts = e.alerts || {}, e.alerts["link-service"] = {
-type:"error",
-message:"Could not link services.",
-details:a("getErrorDetails")(b)
-};
-});
-});
-}, e.$watch("service.metadata.labels.app", function(a) {
-e.appName = a;
-}), e.$watch("routes", function(a) {
-var b;
-_.each(a, function(a) {
-return b ? void (b = c.getPreferredDisplayRoute(b, a)) :void (b = a);
-}), e.displayRoute = b;
-});
-}
-};
-} ]), angular.module("openshiftConsole").directive("serviceGroupNotifications", [ "$filter", "Navigate", function(a, b) {
+}), angular.module("openshiftConsole").directive("serviceGroupNotifications", [ "$filter", "Navigate", function(a, b) {
 return {
 restrict:"E",
 scope:{
@@ -7964,6 +7868,85 @@ i = (c.childServices || []).concat([ c.service ]), j(), k();
 j();
 }), c.$watchGroup([ "podsByDeployment", "deploymentsByService" ], function() {
 k();
+});
+}
+};
+} ]), angular.module("openshiftConsole").directive("overviewService", [ "$filter", "DeploymentsService", "MetricsService", "Navigate", function(a, b, c, d) {
+return {
+restrict:"E",
+scope:!0,
+templateUrl:"views/overview/_service.html",
+link:function(e) {
+window.OPENSHIFT_CONSTANTS.DISABLE_OVERVIEW_METRICS || c.isAvailable(!0).then(function(a) {
+e.showMetrics = a;
+});
+var f = a("annotation");
+e.$watch("deploymentConfigsByService", function(a) {
+if (a) {
+var b = _.get(e, "service.metadata.name");
+e.deploymentConfigs = a[b];
+}
+}), e.$watch("visibleDeploymentsByConfigAndService", function(a) {
+if (a) {
+var c = _.get(e, "service.metadata.name");
+e.activeDeploymentByConfig = {}, e.visibleDeploymentsByConfig = a[c], _.each(e.visibleDeploymentsByConfig, function(a, c) {
+e.activeDeploymentByConfig[c] = b.getActiveDeployment(a);
+});
+}
+}), e.isDeploymentLatest = function(a) {
+var b = f(a, "deploymentConfig");
+if (!b) return !0;
+if (!e.deploymentConfigs) return !1;
+var c = parseInt(f(a, "deploymentVersion"));
+return _.some(e.deploymentConfigs, function(a) {
+return a.metadata.name === b && a.status.latestVersion === c;
+});
+}, e.viewPodsForDeployment = function(a) {
+_.isEmpty(e.podsByDeployment[a.metadata.name]) || d.toPodsForDeployment(a);
+}, e.getHPA = function(a, b) {
+var c = e.hpaByDC, d = e.hpaByRC;
+return c && d ? b ? (c[b] = c[b] || [], c[b]) :(d[a] = d[a] || [], d[a]) :null;
+}, e.isScalableDeployment = function(a) {
+return b.isScalable(a, e.deploymentConfigs, e.hpaByDC, e.hpaByRC, e.scalableDeploymentByConfig);
+};
+}
+};
+} ]), angular.module("openshiftConsole").directive("overviewServiceGroup", [ "$filter", "$uibModal", "RoutesService", "ServicesService", function(a, b, c, d) {
+return {
+restrict:"E",
+scope:!0,
+templateUrl:"views/overview/_service-group.html",
+link:function(e) {
+e.collapse = d.isInfrastructure(e.service), e.toggleCollapse = function() {
+e.collapse = !e.collapse;
+}, e.linkService = function() {
+var c = b.open({
+animation:!0,
+templateUrl:"views/modals/link-service.html",
+controller:"LinkServiceModalController",
+scope:e
+});
+c.result.then(function(b) {
+d.linkService(e.service, b).then(_.noop, function(b) {
+e.alerts = e.alerts || {}, e.alerts["link-service"] = {
+type:"error",
+message:"Could not link services.",
+details:a("getErrorDetails")(b)
+};
+});
+});
+}, e.$watch("service.metadata.labels.app", function(a) {
+e.appName = a;
+}), e.$watch(function() {
+var a = _.get(e, "service.metadata.name");
+return _.get(e, [ "routesByService", a ]);
+}, function(a) {
+var b;
+_.each(a, function(a) {
+return b ? void (b = c.getPreferredDisplayRoute(b, a)) :void (b = a);
+}), e.displayRoute = b;
+}), e.$watchGroup([ "service", "childServicesByParent" ], function() {
+e.childServices = _.get(e, [ "childServicesByParent", e.service.metadata.name ], []), e.groupedServices = [ e.service ].concat(e.childServices);
 });
 }
 };

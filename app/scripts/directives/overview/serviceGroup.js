@@ -1,32 +1,16 @@
 'use strict';
 
 angular.module('openshiftConsole')
-  .directive('serviceGroup', function($filter,
-                                      $uibModal,
-                                      RoutesService,
-                                      ServicesService) {
+  .directive('overviewServiceGroup', function($filter,
+                                              $uibModal,
+                                              RoutesService,
+                                              ServicesService) {
     return {
       restrict: 'E',
-      scope: {
-        service: '=',
-        services: '=',
-        childServices: '=',
-        routes: '=',
-        routeWarnings: '=',
-        deploymentConfigsByService: '=',
-        deploymentsByService: '=',
-        visibleDeploymentsByConfigAndService: '=',
-        recentPipelinesByDc: '=',
-        pipelinesByDeployment: '=',
-        podsByDeployment: '=',
-        hpaByDc: '=',
-        hpaByRc: '=',
-        scalableDeploymentByConfig: '=',
-        monopodsByService: '=',
-        alerts: '=',
-        buildsByOutputImage: '='
-      },
-      templateUrl: 'views/service-group.html',
+      // Inherit scope from OverviewController. This directive is only used for the overview.
+      // We want to do all of the grouping of resources once in the overview controller watch callbacks.
+      scope: true,
+      templateUrl: 'views/overview/_service-group.html',
       link: function($scope) {
         // Collapse infrastructure services like Jenkins by default on page load.
         $scope.collapse = ServicesService.isInfrastructure($scope.service);
@@ -62,7 +46,10 @@ angular.module('openshiftConsole')
           $scope.appName = appName;
         });
 
-        $scope.$watch('routes', function(routes) {
+        $scope.$watch(function() {
+          var serviceName = _.get($scope, 'service.metadata.name');
+          return _.get($scope, ['routesByService', serviceName]);
+        }, function(routes) {
           var displayRoute;
           _.each(routes, function(candidate) {
             if (!displayRoute) {
@@ -75,6 +62,11 @@ angular.module('openshiftConsole')
           });
 
           $scope.displayRoute = displayRoute;
+        });
+
+        $scope.$watchGroup(['service', 'childServicesByParent'], function() {
+          $scope.childServices = _.get($scope, ['childServicesByParent', $scope.service.metadata.name], []);
+          $scope.groupedServices = [$scope.service].concat($scope.childServices);
         });
       }
     };
