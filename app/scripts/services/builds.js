@@ -115,5 +115,39 @@ angular.module("openshiftConsole")
       return true;
     };
 
+    var annotation = $filter('annotation');
+    BuildsService.prototype.usesDeploymentConfigs = function(buildConfig) {
+      var uses = annotation(buildConfig, 'pipeline.alpha.openshift.io/uses');
+      if (!uses) {
+        return [];
+      }
+
+      try {
+        uses = JSON.parse(uses);
+      } catch(e) {
+        Logger.warn('Could not parse "pipeline.alpha.openshift.io/uses" annotation', e);
+        return;
+      }
+
+      var depoymentConfigs = [];
+      _.each(uses, function(resource) {
+        if (!resource.name) {
+          return;
+        }
+
+        if (resource.namespace && resource.namespace !== _.get(buildConfig, 'metadata.namespace')) {
+          return;
+        }
+
+        if (resource.kind !== 'DeploymentConfig') {
+          return;
+        }
+
+        depoymentConfigs.push(resource.name);
+      });
+
+      return depoymentConfigs;
+    };
+
     return new BuildsService();
   });

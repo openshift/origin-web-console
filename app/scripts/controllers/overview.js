@@ -13,6 +13,7 @@ angular.module('openshiftConsole')
                         $routeParams,
                         $scope,
                         AlertMessageService,
+                        BuildsService,
                         DataService,
                         DeploymentsService,
                         Logger,
@@ -211,81 +212,55 @@ angular.module('openshiftConsole')
       });
     };
 
-    var isRecentBuild = $filter('isRecentBuild');
+    var groupBuildByOutputImage = function(build) {
+      var buildOutputImage = imageObjectRef(_.get(build, 'spec.output.to'), build.metadata.namespace);
+      $scope.recentBuildsByOutputImage[buildOutputImage] = $scope.recentBuildsByOutputImage[buildOutputImage] || [];
+      $scope.recentBuildsByOutputImage[buildOutputImage].push(build);
+    };
+
     var buildConfigForBuild = $filter('buildConfigForBuild');
+    var groupPipelineByDC = function(build) {
+      if (!buildConfigs) {
+        return;
+      }
+
+      var bcName = buildConfigForBuild(build);
+      var buildConfig = buildConfigs[bcName];
+      if (!buildConfig) {
+        return;
+      }
+
+      // Index running pipelines by DC name.
+      var dcNames = BuildsService.usesDeploymentConfigs(buildConfig);
+      _.each(dcNames, function(dcName) {
+        $scope.recentPipelinesByDC[dcName] = $scope.recentPipelinesByDC[dcName] || [];
+        $scope.recentPipelinesByDC[dcName].push(build);
+      });
+    };
+
+    var isRecentBuild = $filter('isRecentBuild');
     var groupBuilds = function() {
       if (!builds) {
         return;
       }
 
-      var pipelinesByJenkinsURI = {};
-      $scope.pipelinesByDeployment = {};
       $scope.recentPipelinesByDC = {};
       $scope.recentBuildsByOutputImage = {};
 
       _.each(builds, function(build) {
-        var jenkinsURI, bc, uses;
+        // Only show recent builds on the overview.
+        if (!isRecentBuild(build)) {
+          return;
+        }
+
         if (!isJenkinsPipelineStrategy(build)) {
-          if (isRecentBuild(build)) {
-            var buildOutputImage = imageObjectRef(build.spec.output.to, build.metadata.namespace);
-            $scope.recentBuildsByOutputImage[buildOutputImage] = $scope.recentBuildsByOutputImage[buildOutputImage] || [];
-            $scope.recentBuildsByOutputImage[buildOutputImage].push(build);
-          }
+          groupBuildByOutputImage(build);
+          return;
         }
-        else {
-          // Index pipelines by Jenkins URI first so we can find them quickly later.
-          jenkinsURI = annotation(build, 'openshift.io/jenkins-build-uri');
-          if (jenkinsURI) {
-            pipelinesByJenkinsURI[jenkinsURI] = build;
-          }
 
-          // Index running pipelines by DC so that we can show them before a deployment has started.
-          if (buildConfigs && isRecentBuild(build)) {
-            bc = buildConfigs[buildConfigForBuild(build)];
-            uses = annotation(bc, 'pipeline.alpha.openshift.io/uses') || '';
-            if (!uses) {
-              return;
-            }
-
-            try {
-              uses = JSON.parse(uses);
-            } catch(e) {
-              Logger.warn('Could not pase "pipeline.alpha.openshift.io/uses" annotation', e);
-              return;
-            }
-
-            _.each(uses, function(resource) {
-              if (!resource.name) {
-                return;
-              }
-
-              if (resource.namespace && resource.namespace !== $scope.projectName) {
-                return;
-              }
-
-              if (resource.kind !== 'DeploymentConfig') {
-                return;
-              }
-
-              $scope.recentPipelinesByDC[resource.name] = $scope.recentPipelinesByDC[resource.name] || [];
-              $scope.recentPipelinesByDC[resource.name].push(build);
-            });
-          }
-        }
+        // Handle pipeline builds.
+        groupPipelineByDC(build);
       });
-
-      // Find matching pipeline builds for each deployment.
-      // _.each(deployments, function(rc) {
-      //   var jenkinsBuildURI = annotation(rc, 'openshift.io/jenkins-build-uri');
-      //   if (!jenkinsBuildURI) {
-      //     return;
-      //   }
-
-      //   // Normalize the URI to match the annotation from the Jenkins sync plugin.
-      //   // substring(1) to remove leading slash
-      //   jenkinsBuildURI = URI(jenkinsBuildURI).path().substring(1);
-      //   $scope.pipelinesByDeployment[rc.metadata.name] = pipelinesByJenkinsURI[jenkinsBuildURI];
-      // });
     };
 
     // Show the "Get Started" message if the project is empty.

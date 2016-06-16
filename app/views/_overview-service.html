@@ -46,7 +46,7 @@
               pods="podsByDeployment[deployment.metadata.name]"
               hpa="getHPA(deployment.metadata.name, dcName)"
               limit-ranges="limitRanges"
-              scalable="isScalableDeployment(deployment, deploymentConfigs, hpaByDc, hpaByRc, scalableDeploymentByConfig)"
+              scalable="isScalableDeployment(deployment)"
               alerts="alerts">
           </deployment-donut>
         </div>
@@ -125,7 +125,7 @@
                 pods="podsByDeployment[deployment.metadata.name]"
                 hpa="getHPA(deployment.metadata.name, dcName)"
                 limit-ranges="limitRanges"
-                scalable="isScalableDeployment(deployment, deploymentConfigs, hpaByDc, hpaByRc, scalableDeploymentByConfig)"
+                scalable="isScalableDeployment(deployment)"
                 alerts="alerts">
             </deployment-donut>
           </div>

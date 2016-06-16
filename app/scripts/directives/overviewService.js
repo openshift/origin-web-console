@@ -49,7 +49,7 @@ angular.module('openshiftConsole')
           }
 
           var deploymentVersion = parseInt(annotation(deployment, 'deploymentVersion'));
-          return _.find($scope.deploymentConfigs, function(dc) {
+          return _.some($scope.deploymentConfigs, function(dc) {
             return dc.metadata.name === dcName && dc.status.latestVersion === deploymentVersion;
           });
         };
@@ -82,7 +82,13 @@ angular.module('openshiftConsole')
           return hpaByRC[rcName];
         };
 
-        $scope.isScalableDeployment = DeploymentsService.isScalable;
+        $scope.isScalableDeployment = function(deployment) {
+          return DeploymentsService.isScalable(deployment,
+                                               $scope.deploymentConfigs,
+                                               $scope.hpaByDc,
+                                               $scope.hpaByRc,
+                                               $scope.scalableDeploymentByConfig);
+        };
       }
     };
   });

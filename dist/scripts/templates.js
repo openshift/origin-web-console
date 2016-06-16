@@ -287,7 +287,7 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "<div row class=\"deployment-body\">\n" +
     "\n" +
     "<div column class=\"overview-donut\" ng-repeat=\"deployment in deployments | orderObjectsByDate : true track by (deployment | uid)\" ng-class=\"{ latest: isDeploymentLatest(deployment) }\" ng-if=\"!activeDeploymentByConfig[dcName] || !(isDeploymentLatest(deployment) && ((deployment | deploymentStatus) == 'Cancelled' || (deployment | deploymentStatus) == 'Failed'))\">\n" +
-    "<deployment-donut rc=\"deployment\" deployment-config=\"deploymentConfigs[dcName]\" pods=\"podsByDeployment[deployment.metadata.name]\" hpa=\"getHPA(deployment.metadata.name, dcName)\" limit-ranges=\"limitRanges\" scalable=\"isScalableDeployment(deployment, deploymentConfigs, hpaByDc, hpaByRc, scalableDeploymentByConfig)\" alerts=\"alerts\">\n" +
+    "<deployment-donut rc=\"deployment\" deployment-config=\"deploymentConfigs[dcName]\" pods=\"podsByDeployment[deployment.metadata.name]\" hpa=\"getHPA(deployment.metadata.name, dcName)\" limit-ranges=\"limitRanges\" scalable=\"isScalableDeployment(deployment)\" alerts=\"alerts\">\n" +
     "</deployment-donut>\n" +
     "</div>\n" +
     "\n" +
@@ -355,7 +355,7 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "<div row class=\"deployment-body\">\n" +
     "\n" +
     "<div column class=\"overview-donut\" ng-class=\"{ latest: isDeploymentLatest(deployment) }\">\n" +
-    "<deployment-donut rc=\"deployment\" deployment-config=\"deploymentConfigs[dcName]\" pods=\"podsByDeployment[deployment.metadata.name]\" hpa=\"getHPA(deployment.metadata.name, dcName)\" limit-ranges=\"limitRanges\" scalable=\"isScalableDeployment(deployment, deploymentConfigs, hpaByDc, hpaByRc, scalableDeploymentByConfig)\" alerts=\"alerts\">\n" +
+    "<deployment-donut rc=\"deployment\" deployment-config=\"deploymentConfigs[dcName]\" pods=\"podsByDeployment[deployment.metadata.name]\" hpa=\"getHPA(deployment.metadata.name, dcName)\" limit-ranges=\"limitRanges\" scalable=\"isScalableDeployment(deployment)\" alerts=\"alerts\">\n" +
     "</deployment-donut>\n" +
     "</div>\n" +
     "\n" +
