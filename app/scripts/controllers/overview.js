@@ -24,6 +24,7 @@ angular.module('openshiftConsole')
     // scope variables are inherited by overview-service-group and overview-service directives.
     $scope.projectName = $routeParams.project;
     $scope.renderOptions = $scope.renderOptions || {};
+    $scope.renderOptions.showLoading = true;
     $scope.renderOptions.showGetStarted = false;
 
     $scope.alerts = $scope.alerts || {};
@@ -266,13 +267,18 @@ angular.module('openshiftConsole')
 
     // Show the "Get Started" message if the project is empty.
     var updateShowGetStarted = function() {
+      // Check if there is any data visible in the overview.
       var projectEmpty =
         _.isEmpty(services) &&
         _.isEmpty(pods) &&
         _.isEmpty(deployments) &&
         _.isEmpty(deploymentConfigs);
 
-      $scope.renderOptions.showGetStarted = projectEmpty;
+      // Check if we've loaded everything we show on the overview.
+      var loaded = services && pods && deployments && deploymentConfigs;
+
+      $scope.renderOptions.showGetStarted = loaded && projectEmpty;
+      $scope.renderOptions.showLoading = !loaded && projectEmpty;
     };
 
     ProjectsService

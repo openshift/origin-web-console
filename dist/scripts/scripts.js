@@ -2725,7 +2725,7 @@ f.unwatchAll(k), n();
 });
 }));
 } ]), angular.module("openshiftConsole").controller("OverviewController", [ "$filter", "$routeParams", "$scope", "AlertMessageService", "BuildsService", "DataService", "DeploymentsService", "Logger", "PodsService", "ProjectsService", "RoutesService", "ServicesService", function(a, b, c, d, e, f, g, h, i, j, k, l) {
-c.projectName = b.project, c.renderOptions = c.renderOptions || {}, c.renderOptions.showGetStarted = !1, c.alerts = c.alerts || {}, d.getAlerts().forEach(function(a) {
+c.projectName = b.project, c.renderOptions = c.renderOptions || {}, c.renderOptions.showLoading = !0, c.renderOptions.showGetStarted = !1, c.alerts = c.alerts || {}, d.getAlerts().forEach(function(a) {
 c.alerts[a.name] = a.data;
 }), d.clearAlerts();
 var m, n, o, p, q, r, s, t, u, v, w = [], x = a("isJenkinsPipelineStrategy"), y = a("annotation"), z = a("label"), A = a("imageObjectRef"), B = a("isRecentDeployment"), C = function() {
@@ -2812,8 +2812,8 @@ s && (c.recentPipelinesByDC = {}, c.recentBuildsByOutputImage = {}, _.each(s, fu
 return R(a) ? x(a) ? void Q(a) :void O(a) :void 0;
 }));
 }, T = function() {
-var a = _.isEmpty(n) && _.isEmpty(q) && _.isEmpty(p) && _.isEmpty(o);
-c.renderOptions.showGetStarted = a;
+var a = _.isEmpty(n) && _.isEmpty(q) && _.isEmpty(p) && _.isEmpty(o), b = n && q && p && o;
+c.renderOptions.showGetStarted = b && a, c.renderOptions.showLoading = !b && a;
 };
 j.get(b.project).then(_.spread(function(a, b) {
 c.project = a, w.push(f.watch("pods", b, function(a) {
