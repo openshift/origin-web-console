@@ -177,7 +177,7 @@ angular.module('openshiftConsole')
 
     // Set of child services in this project.
     var childServices = {};
-    $scope.isChildService = function(service) {
+    var isChildService = function(service) {
       return !!childServices[service.metadata.name];
     };
 
@@ -188,7 +188,43 @@ angular.module('openshiftConsole')
       $scope.childServicesByParent[parentName].push(child);
     };
 
+    // Assign each service a score for sorting. Services with routes or app
+    // labels are considered more important.
+    var scoreService = function(service) {
+      var score = 0;
+      var name = _.get(service, 'metadata.name', '');
+      var routes = _.get($scope, ['routesByService', name], []);
+
+      if (!_.isEmpty(routes)) {
+        score += 5;
+      }
+
+      if (_.has(service, 'metadata.labels.app')) {
+        score += 3;
+      }
+
+      if (ServicesService.isInfrastructure(service)) {
+        score -= 5;
+      }
+
+      return score;
+    };
+
+    var compareServices = function(lhs, rhs) {
+      var leftScore = scoreService(lhs), rightScore = scoreService(rhs);
+      if (leftScore === rightScore) {
+        // Fall back to comparing names if two services have the same score.
+        return lhs.metadata.name.localeCompare(rhs.metadata.name);
+      }
+
+      return rightScore - leftScore;
+    };
+
     var groupServices = function() {
+      if (!services || !routes) {
+        return;
+      }
+
       childServices = {};
       $scope.childServicesByParent = {};
       _.each(services, function(service, serviceName) {
@@ -198,6 +234,9 @@ angular.module('openshiftConsole')
           addChildService(serviceName, dependency);
         });
       });
+
+      // Filter out child services and order top-level services by importance.
+      $scope.topLevelServices = _.reject(services, isChildService).sort(compareServices);
     };
 
     var updateRouteWarnings = function() {
@@ -320,6 +359,7 @@ angular.module('openshiftConsole')
         watches.push(DataService.watch("routes", context, function(routesData) {
           routes = routesData.by("metadata.name");
           groupRoutes();
+          groupServices();
           updateRouteWarnings();
           Logger.log("routes (subscribe)", $scope.routesByService);
         }));

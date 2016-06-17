@@ -13,7 +13,10 @@ angular.module('openshiftConsole')
       templateUrl: 'views/overview/_service-group.html',
       link: function($scope) {
         // Collapse infrastructure services like Jenkins by default on page load.
-        $scope.collapse = ServicesService.isInfrastructure($scope.service);
+        if (ServicesService.isInfrastructure($scope.service)) {
+          $scope.collapse = true;
+        }
+
         $scope.toggleCollapse = function() {
           $scope.collapse = !$scope.collapse;
         };

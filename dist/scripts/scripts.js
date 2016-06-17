@@ -2773,33 +2773,37 @@ h.warn("Unexpected HPA scaleRef kind", c);
 return "Succeeded" === a.status.phase || "Terminated" === a.status.phase || "Failed" === a.status.phase ? !1 :z(a, "openshift.io/deployer-pod-for.name") ? !1 :y(a, "openshift.io/build.name") ? !1 :"slave" !== z(a, "jenkins");
 }, J = function() {
 q && p && (c.podsByDeployment = i.groupByReplicationController(q, p), c.monopodsByService = i.groupByService(c.podsByDeployment[""], n, I));
-}, K = {};
-c.isChildService = function(a) {
+}, K = {}, L = function(a) {
 return !!K[a.metadata.name];
-};
-var L = function(a, b) {
+}, M = function(a, b) {
 var d = n[b];
 K[b] = d, c.childServicesByParent[a] = c.childServicesByParent[a] || [], c.childServicesByParent[a].push(d);
-}, M = function() {
-K = {}, c.childServicesByParent = {}, _.each(n, function(a, b) {
+}, N = function(a) {
+var b = 0, d = _.get(a, "metadata.name", ""), e = _.get(c, [ "routesByService", d ], []);
+return _.isEmpty(e) || (b += 5), _.has(a, "metadata.labels.app") && (b += 3), l.isInfrastructure(a) && (b -= 5), b;
+}, O = function(a, b) {
+var c = N(a), d = N(b);
+return c === d ? a.metadata.name.localeCompare(b.metadata.name) :d - c;
+}, P = function() {
+n && m && (K = {}, c.childServicesByParent = {}, _.each(n, function(a, b) {
 var c = l.getDependentServices(a);
 _.each(c, function(a) {
-L(b, a);
+M(b, a);
 });
-});
-}, N = function() {
+}), c.topLevelServices = _.reject(n, L).sort(O));
+}, Q = function() {
 n && m && (c.routeWarningsByService = {}, _.each(n, function(a) {
 _.each(c.routesByService[a.metadata.name], function(b) {
 var d = k.getRouteWarnings(b, a);
 _.set(c, [ "routeWarningsByService", a.metadata.name, b.metadata.name ], d);
 });
 }));
-}, O = function(a) {
+}, R = function(a) {
 var b = A(_.get(a, "spec.output.to"), a.metadata.namespace);
 c.recentBuildsByOutputImage[b] = c.recentBuildsByOutputImage[b] || [], c.recentBuildsByOutputImage[b].push(a);
-}, P = a("buildConfigForBuild"), Q = function(a) {
+}, S = a("buildConfigForBuild"), T = function(a) {
 if (r) {
-var b = P(a), d = r[b];
+var b = S(a), d = r[b];
 if (d) {
 var f = e.usesDeploymentConfigs(d);
 _.each(f, function(b) {
@@ -2807,29 +2811,29 @@ c.recentPipelinesByDC[b] = c.recentPipelinesByDC[b] || [], c.recentPipelinesByDC
 });
 }
 }
-}, R = a("isRecentBuild"), S = function() {
+}, U = a("isRecentBuild"), V = function() {
 s && (c.recentPipelinesByDC = {}, c.recentBuildsByOutputImage = {}, _.each(s, function(a) {
-return R(a) ? x(a) ? void Q(a) :void O(a) :void 0;
+return U(a) ? x(a) ? void T(a) :void R(a) :void 0;
 }));
-}, T = function() {
+}, W = function() {
 var a = _.isEmpty(n) && _.isEmpty(q) && _.isEmpty(p) && _.isEmpty(o), b = n && q && p && o;
 c.renderOptions.showGetStarted = b && a, c.renderOptions.showLoading = !b && a;
 };
 j.get(b.project).then(_.spread(function(a, b) {
 c.project = a, w.push(f.watch("pods", b, function(a) {
-q = a.by("metadata.name"), J(), T(), h.log("pods", q);
+q = a.by("metadata.name"), J(), W(), h.log("pods", q);
 })), w.push(f.watch("services", b, function(a) {
-c.services = n = a.by("metadata.name"), M(), J(), D(), G(), N(), T(), h.log("services (list)", n);
+c.services = n = a.by("metadata.name"), P(), J(), D(), G(), Q(), W(), h.log("services (list)", n);
 })), w.push(f.watch("builds", b, function(a) {
-s = a.by("metadata.name"), S(), T(), h.log("builds (list)", s);
+s = a.by("metadata.name"), V(), W(), h.log("builds (list)", s);
 })), w.push(f.watch("buildConfigs", b, function(a) {
-r = a.by("metadata.name"), S(), h.log("builds (list)", s);
+r = a.by("metadata.name"), V(), h.log("builds (list)", s);
 })), w.push(f.watch("routes", b, function(a) {
-m = a.by("metadata.name"), C(), N(), h.log("routes (subscribe)", c.routesByService);
+m = a.by("metadata.name"), C(), P(), Q(), h.log("routes (subscribe)", c.routesByService);
 })), w.push(f.watch("replicationcontrollers", b, function(a) {
-p = a.by("metadata.name"), G(), J(), S(), T(), h.log("replicationcontrollers (subscribe)", p);
+p = a.by("metadata.name"), G(), J(), V(), W(), h.log("replicationcontrollers (subscribe)", p);
 })), w.push(f.watch("deploymentconfigs", b, function(a) {
-o = a.by("metadata.name"), D(), G(), T(), h.log("deploymentconfigs (subscribe)", c.deploymentConfigs);
+o = a.by("metadata.name"), D(), G(), W(), h.log("deploymentconfigs (subscribe)", c.deploymentConfigs);
 })), w.push(f.watch({
 group:"extensions",
 resource:"horizontalpodautoscalers"
@@ -7917,7 +7921,7 @@ restrict:"E",
 scope:!0,
 templateUrl:"views/overview/_service-group.html",
 link:function(e) {
-e.collapse = d.isInfrastructure(e.service), e.toggleCollapse = function() {
+d.isInfrastructure(e.service) && (e.collapse = !0), e.toggleCollapse = function() {
 e.collapse = !e.collapse;
 }, e.linkService = function() {
 var c = b.open({
