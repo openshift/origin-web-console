@@ -7946,7 +7946,7 @@ _.each(a, function(a) {
 return b ? void (b = c.getPreferredDisplayRoute(b, a)) :void (b = a);
 }), e.displayRoute = b;
 }), e.$watchGroup([ "service", "childServicesByParent" ], function() {
-e.childServices = _.get(e, [ "childServicesByParent", e.service.metadata.name ], []), e.groupedServices = [ e.service ].concat(e.childServices);
+e.service && (e.childServices = _.get(e, [ "childServicesByParent", e.service.metadata.name ], []), e.groupedServices = [ e.service ].concat(e.childServices));
 });
 }
 };
