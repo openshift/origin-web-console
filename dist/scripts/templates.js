@@ -6597,7 +6597,7 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "</p>\n" +
     "</div>\n" +
     "</div>\n" +
-    "<div ng-if=\"((services | hashSize) === 0 && (deploymentConfigsByService[''] | hashSize) === 0 && (monopodsByService[''] | hashSize) === 0) && !renderOptions.showGetStarted\" class=\"loading-message\">\n" +
+    "<div ng-if=\"renderOptions.showLoading\" class=\"loading-message\">\n" +
     "Loading...\n" +
     "</div>\n" +
     "<div ng-repeat=\"service in services\" ng-if=\"!isChildService(service) && (service.metadata.labels.app || routesByService[service.metadata.name].length || childServicesByParent[service.metadata.name].length)\">\n" +

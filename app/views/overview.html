@@ -26,8 +26,7 @@
                   </p>
                 </div>
               </div>
-              <div ng-if="((services | hashSize) === 0 && (deploymentConfigsByService[''] | hashSize) === 0 && (monopodsByService[''] | hashSize) === 0) && !renderOptions.showGetStarted"
-                   class="loading-message">
+              <div ng-if="renderOptions.showLoading" class="loading-message">
                 Loading...
               </div>
               <div ng-repeat="service in services" ng-if="!isChildService(service) && (service.metadata.labels.app || routesByService[service.metadata.name].length || childServicesByParent[service.metadata.name].length)">
@@ -44,7 +43,7 @@
               </div>
 
               <!-- Unserviced DCs, RCs, and pods -->
-              <div >
+              <div>
                 <overview-service-group
                   ng-if="(monopodsByService[''] | hashSize) > 0 || (deploymentConfigsByService[''] | hashSize) > 0 || (deploymentsByService[''] | hashSize) > 0">
                 </overview-service-group>
