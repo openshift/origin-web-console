@@ -6766,7 +6766,8 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "\n" +
     "<div column class=\"deployment-details\" ng-if=\"activeDeploymentByConfig[dcName] && !(deployments | anyDeploymentIsInProgress)\">\n" +
     "\n" +
-    "<metrics ng-if=\"showMetrics\" deployment=\"activeDeploymentByConfig[dcName]\" profile=\"compact\" class=\"overview-metrics\"></metrics>\n" +
+    "\n" +
+    "<metrics ng-if=\"showMetrics && !collapse\" deployment=\"activeDeploymentByConfig[dcName]\" profile=\"compact\" class=\"overview-metrics\"></metrics>\n" +
     "<pod-template ng-if=\"!showMetrics\" pod-template=\"activeDeploymentByConfig[dcName].spec.template\"></pod-template>\n" +
     "\n" +
     "</div>\n" +

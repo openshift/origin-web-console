@@ -89,7 +89,8 @@
         <!-- succeeded state -->
         <div column class="deployment-details" ng-if="activeDeploymentByConfig[dcName] && !(deployments | anyDeploymentIsInProgress)">
           <!-- metrics or pod template -->
-          <metrics ng-if="showMetrics" deployment="activeDeploymentByConfig[dcName]" profile="compact" class="overview-metrics"></metrics>
+          <!-- pause metrics updates when the service group is collapsed -->
+          <metrics ng-if="showMetrics && !collapse" deployment="activeDeploymentByConfig[dcName]" profile="compact" class="overview-metrics"></metrics>
           <pod-template ng-if="!showMetrics" pod-template="activeDeploymentByConfig[dcName].spec.template"></pod-template>
           <!-- /metrics or pod template -->
         </div>
