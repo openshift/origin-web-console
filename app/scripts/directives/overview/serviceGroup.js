@@ -65,6 +65,9 @@ angular.module('openshiftConsole')
         });
 
         $scope.$watchGroup(['service', 'childServicesByParent'], function() {
+          if (!$scope.service) {
+            return;
+          }
           $scope.childServices = _.get($scope, ['childServicesByParent', $scope.service.metadata.name], []);
           $scope.groupedServices = [$scope.service].concat($scope.childServices);
         });
