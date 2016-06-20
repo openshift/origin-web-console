@@ -76,7 +76,6 @@
                     </td>
                     <td data-title="Created">
                       <relative-timestamp timestamp="deployment.metadata.creationTimestamp"></relative-timestamp>
-                      <span>- {{deployment.metadata.creationTimestamp | date : 'short'}}</span>
                     </td>
                     <td data-title="Trigger">
                       <span ng-if="!deployment.causes.length">Unknown</span>
@@ -120,7 +119,6 @@
                       </td>
                       <td data-title="Created">
                         <relative-timestamp timestamp="deployment.metadata.creationTimestamp"></relative-timestamp>
-                        <span>- {{deployment.metadata.creationTimestamp | date : 'short'}}</span>
                       </td>
                     </tr>
                   </tbody>

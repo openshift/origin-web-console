@@ -30,7 +30,7 @@ var a = c.apply(this, d.concat(h.call(arguments)));
 return Object(a) === a ? a :this;
 }
 return c.apply(b, d.concat(h.call(arguments)));
-}, f = Math.max(0, c.length - d.length), g = [], i = 0; f > i; i++) g.push("$" + i);
+}, f = Math.max(0, c.length - d.length), g = [], i = 0; i < f; i++) g.push("$" + i);
 var j = Function("binder", "return function(" + g.join(",") + "){return binder.apply(this,arguments)}")(e);
 return c.prototype && (a.prototype = c.prototype, j.prototype = new a(), a.prototype = null), j;
 });
@@ -41,12 +41,12 @@ for (var b = []; a--; ) b.unshift(a);
 return b;
 }
 var b, c = [];
-return c.splice.bind(c, 0, 0).apply(null, a(20)), c.splice.bind(c, 0, 0).apply(null, a(26)), b = c.length, c.splice(5, 0, "XXX"), b + 1 === c.length ? !0 :void 0;
+if (c.splice.bind(c, 0, 0).apply(null, a(20)), c.splice.bind(c, 0, 0).apply(null, a(26)), b = c.length, c.splice(5, 0, "XXX"), b + 1 === c.length) return !0;
 }() ? Array.prototype.splice = function(a, b) {
 var c, d = h.call(arguments, 2), e = d.length;
 if (!arguments.length) return [];
 if (void 0 === a && (a = 0), void 0 === b && (b = this.length - a), e > 0) {
-if (0 >= b) {
+if (b <= 0) {
 if (a === this.length) return j.apply(this, d), [];
 if (0 === a) return k.apply(this, d), [];
 }
@@ -73,22 +73,22 @@ for (;++e < f; ) e in c && a.call(d, c[e], e, b);
 }), Array.prototype.map && w(Array.prototype.map) || (Array.prototype.map = function(a) {
 var b = S(this), c = v && "[object String]" === t(this) ? this.split("") :b, d = c.length >>> 0, e = Array(d), f = arguments[1];
 if (!l(a)) throw new TypeError(a + " is not a function");
-for (var g = 0; d > g; g++) g in c && (e[g] = a.call(f, c[g], g, b));
+for (var g = 0; g < d; g++) g in c && (e[g] = a.call(f, c[g], g, b));
 return e;
 }), Array.prototype.filter && w(Array.prototype.filter) || (Array.prototype.filter = function(a) {
 var b, c = S(this), d = v && "[object String]" === t(this) ? this.split("") :c, e = d.length >>> 0, f = [], g = arguments[1];
 if (!l(a)) throw new TypeError(a + " is not a function");
-for (var h = 0; e > h; h++) h in d && (b = d[h], a.call(g, b, h, c) && f.push(b));
+for (var h = 0; h < e; h++) h in d && (b = d[h], a.call(g, b, h, c) && f.push(b));
 return f;
 }), Array.prototype.every && w(Array.prototype.every) || (Array.prototype.every = function(a) {
 var b = S(this), c = v && "[object String]" === t(this) ? this.split("") :b, d = c.length >>> 0, e = arguments[1];
 if (!l(a)) throw new TypeError(a + " is not a function");
-for (var f = 0; d > f; f++) if (f in c && !a.call(e, c[f], f, b)) return !1;
+for (var f = 0; f < d; f++) if (f in c && !a.call(e, c[f], f, b)) return !1;
 return !0;
 }), Array.prototype.some && w(Array.prototype.some) || (Array.prototype.some = function(a) {
 var b = S(this), c = v && "[object String]" === t(this) ? this.split("") :b, d = c.length >>> 0, e = arguments[1];
 if (!l(a)) throw new TypeError(a + " is not a function");
-for (var f = 0; d > f; f++) if (f in c && a.call(e, c[f], f, b)) return !0;
+for (var f = 0; f < d; f++) if (f in c && a.call(e, c[f], f, b)) return !0;
 return !1;
 });
 var x = !1;
@@ -106,7 +106,7 @@ break;
 }
 if (++f >= d) throw new TypeError("reduce of empty array with no initial value");
 }
-for (;d > f; f++) f in c && (e = a.call(void 0, e, c[f], f, b));
+for (;f < d; f++) f in c && (e = a.call(void 0, e, c[f], f, b));
 return e;
 }), Array.prototype.reduceRight || (Array.prototype.reduceRight = function(a) {
 var b = S(this), c = v && "[object String]" === t(this) ? this.split("") :b, d = c.length >>> 0;
@@ -120,16 +120,16 @@ break;
 }
 if (--f < 0) throw new TypeError("reduceRight of empty array with no initial value");
 }
-if (0 > f) return e;
+if (f < 0) return e;
 do f in this && (e = a.call(void 0, e, c[f], f, b)); while (f--);
 return e;
-}), Array.prototype.indexOf && -1 === [ 0, 1 ].indexOf(1, 2) || (Array.prototype.indexOf = function(a) {
+}), Array.prototype.indexOf && [ 0, 1 ].indexOf(1, 2) === -1 || (Array.prototype.indexOf = function(a) {
 var c = v && "[object String]" === t(this) ? this.split("") :S(this), d = c.length >>> 0;
 if (!d) return -1;
 var e = 0;
-for (arguments.length > 1 && (e = b(arguments[1])), e = e >= 0 ? e :Math.max(0, d + e); d > e; e++) if (e in c && c[e] === a) return e;
+for (arguments.length > 1 && (e = b(arguments[1])), e = e >= 0 ? e :Math.max(0, d + e); e < d; e++) if (e in c && c[e] === a) return e;
 return -1;
-}), Array.prototype.lastIndexOf && -1 === [ 0, 1 ].lastIndexOf(0, -3) || (Array.prototype.lastIndexOf = function(a) {
+}), Array.prototype.lastIndexOf && [ 0, 1 ].lastIndexOf(0, -3) === -1 || (Array.prototype.lastIndexOf = function(a) {
 var c = v && "[object String]" === t(this) ? this.split("") :S(this), d = c.length >>> 0;
 if (!d) return -1;
 var e = d - 1;
@@ -147,7 +147,7 @@ var b = l(a), c = C(a), d = null !== a && "object" == typeof a, e = d && "[objec
 if (!d && !b && !c) throw new TypeError("Object.keys called on a non-object");
 var f = [], g = z && b;
 if (e || c) for (var h = 0; h < a.length; ++h) f.push(String(h)); else for (var i in a) g && "prototype" === i || !s(a, i) || f.push(String(i));
-if (y) for (var j = a.constructor, k = j && j.prototype === a, m = 0; B > m; m++) {
+if (y) for (var j = a.constructor, k = j && j.prototype === a, m = 0; m < B; m++) {
 var n = A[m];
 k && "constructor" === n || !s(a, n) || f.push(n);
 }
@@ -155,15 +155,15 @@ return f;
 };
 }
 var D = -621987552e5, E = "-000001";
-Date.prototype.toISOString && -1 !== new Date(D).toISOString().indexOf(E) || (Date.prototype.toISOString = function() {
+Date.prototype.toISOString && new Date(D).toISOString().indexOf(E) !== -1 || (Date.prototype.toISOString = function() {
 var a, b, c, d, e;
 if (!isFinite(this)) throw new RangeError("Date.prototype.toISOString called on non-finite value.");
-for (d = this.getUTCFullYear(), e = this.getUTCMonth(), d += Math.floor(e / 12), e = (e % 12 + 12) % 12, a = [ e + 1, this.getUTCDate(), this.getUTCHours(), this.getUTCMinutes(), this.getUTCSeconds() ], d = (0 > d ? "-" :d > 9999 ? "+" :"") + ("00000" + Math.abs(d)).slice(d >= 0 && 9999 >= d ? -4 :-6), b = a.length; b--; ) c = a[b], 10 > c && (a[b] = "0" + c);
+for (d = this.getUTCFullYear(), e = this.getUTCMonth(), d += Math.floor(e / 12), e = (e % 12 + 12) % 12, a = [ e + 1, this.getUTCDate(), this.getUTCHours(), this.getUTCMinutes(), this.getUTCSeconds() ], d = (d < 0 ? "-" :d > 9999 ? "+" :"") + ("00000" + Math.abs(d)).slice(0 <= d && d <= 9999 ? -4 :-6), b = a.length; b--; ) c = a[b], c < 10 && (a[b] = "0" + c);
 return d + "-" + a.slice(0, 2).join("-") + "T" + a.slice(2).join(":") + "." + ("000" + this.getUTCMilliseconds()).slice(-3) + "Z";
 });
 var F = !1;
 try {
-F = Date.prototype.toJSON && null === new Date(NaN).toJSON() && -1 !== new Date(D).toJSON().indexOf(E) && Date.prototype.toJSON.call({
+F = Date.prototype.toJSON && null === new Date(NaN).toJSON() && new Date(D).toJSON().indexOf(E) !== -1 && Date.prototype.toJSON.call({
 toISOString:function() {
 return !0;
 }
@@ -198,13 +198,13 @@ return b.now = a.now, b.UTC = a.UTC, b.prototype = a.prototype, b.prototype.cons
 var f = e.exec(b);
 if (f) {
 var g, h = Number(f[1]), i = Number(f[2] || 1) - 1, j = Number(f[3] || 1) - 1, k = Number(f[4] || 0), l = Number(f[5] || 0), m = Number(f[6] || 0), n = Math.floor(1e3 * Number(f[7] || 0)), o = Boolean(f[4] && !f[8]), p = "-" === f[9] ? 1 :-1, q = Number(f[10] || 0), r = Number(f[11] || 0);
-return (l > 0 || m > 0 || n > 0 ? 24 :25) > k && 60 > l && 60 > m && 1e3 > n && i > -1 && 12 > i && 24 > q && 60 > r && j > -1 && j < c(h, i + 1) - c(h, i) && (g = 60 * (24 * (c(h, i) + j) + k + q * p), g = 1e3 * (60 * (g + l + r * p) + m) + n, o && (g = d(g)), g >= -864e13 && 864e13 >= g) ? g :NaN;
+return k < (l > 0 || m > 0 || n > 0 ? 24 :25) && l < 60 && m < 60 && n < 1e3 && i > -1 && i < 12 && q < 24 && r < 60 && j > -1 && j < c(h, i + 1) - c(h, i) && (g = 60 * (24 * (c(h, i) + j) + k + q * p), g = 1e3 * (60 * (g + l + r * p) + m) + n, o && (g = d(g)), -864e13 <= g && g <= 864e13) ? g :NaN;
 }
 return a.parse.apply(this, arguments);
 }, b;
 }(Date)), Date.now || (Date.now = function() {
 return new Date().getTime();
-}), Number.prototype.toFixed && "0.000" === 8e-5.toFixed(3) && "0" !== .9.toFixed(0) && "1.25" === 1.255.toFixed(2) && "1000000000000000128" === 0xde0b6b3a7640080.toFixed(0) || !function() {
+}), Number.prototype.toFixed && "0.000" === 8e-5.toFixed(3) && "0" !== .9.toFixed(0) && "1.25" === 1.255.toFixed(2) && "1000000000000000128" === (0xde0b6b3a7640080).toFixed(0) || !function() {
 function a(a, b) {
 for (var c = -1; ++c < g; ) b += a * h[c], h[c] = b % f, b = Math.floor(b / f);
 }
@@ -229,15 +229,15 @@ return b;
 var f, g, h;
 f = 1e7, g = 6, h = [ 0, 0, 0, 0, 0, 0 ], Number.prototype.toFixed = function(f) {
 var g, h, i, j, k, l, m, n;
-if (g = Number(f), g = g !== g ? 0 :Math.floor(g), 0 > g || g > 20) throw new RangeError("Number.toFixed called with invalid number of decimals");
+if (g = Number(f), g = g !== g ? 0 :Math.floor(g), g < 0 || g > 20) throw new RangeError("Number.toFixed called with invalid number of decimals");
 if (h = Number(this), h !== h) return "NaN";
-if (-1e21 >= h || h >= 1e21) return String(h);
-if (i = "", 0 > h && (i = "-", h = -h), j = "0", h > 1e-21) if (k = e(h * d(2, 69, 1)) - 69, l = 0 > k ? h * d(2, -k, 1) :h / d(2, k, 1), l *= 4503599627370496, k = 52 - k, k > 0) {
+if (h <= -1e21 || h >= 1e21) return String(h);
+if (i = "", h < 0 && (i = "-", h = -h), j = "0", h > 1e-21) if (k = e(h * d(2, 69, 1)) - 69, l = k < 0 ? h * d(2, -k, 1) :h / d(2, k, 1), l *= 4503599627370496, k = 52 - k, k > 0) {
 for (a(0, l), m = g; m >= 7; ) a(1e7, 0), m -= 7;
 for (a(d(10, m, 1), 0), m = k - 1; m >= 23; ) b(1 << 23), m -= 23;
 b(1 << m), a(1, 1), b(2), j = c();
 } else a(0, l), a(1 << -k, 0), j = c() + "0.00000000000000000000".slice(2, 2 + g);
-return g > 0 ? (n = j.length, j = g >= n ? i + "0.0000000000000000000".slice(0, g - n + 2) + j :i + j.slice(0, n - g) + "." + j.slice(n - g)) :j = i + j, j;
+return g > 0 ? (n = j.length, j = n <= g ? i + "0.0000000000000000000".slice(0, g - n + 2) + j :i + j.slice(0, n - g) + "." + j.slice(n - g)) :j = i + j, j;
 };
 }();
 var K = String.prototype.split;
@@ -277,10 +277,10 @@ return L.apply(this, arguments);
 }), "".substr && "b" !== "0b".substr(-1)) {
 var N = String.prototype.substr;
 String.prototype.substr = function(a, b) {
-return N.call(this, 0 > a && (a = this.length + a) < 0 ? 0 :a, b);
+return N.call(this, a < 0 && (a = this.length + a) < 0 ? 0 :a, b);
 };
 }
-var O = "	\n\x0B\f\r   ᠎             　\u2028\u2029\ufeff", P = "​";
+var O = "\t\n\x0B\f\r   ᠎             　\u2028\u2029\ufeff", P = "​";
 if (!String.prototype.trim || O.trim() || !P.trim()) {
 O = "[" + O + "]";
 var Q = new RegExp("^" + O + O + "*"), R = new RegExp(O + O + "*$");
@@ -314,8 +314,8 @@ return 1;
 }).toJSON = c;
 try {
 k = "0" === i(0) && "0" === i(new g()) && '""' == i(new h()) && i(s) === q && i(q) === q && i() === q && "1" === i(c) && "[1]" == i([ c ]) && "[null]" == i([ q ]) && "null" == i(null) && "[null,null,null]" == i([ q, s, null ]) && i({
-a:[ c, !0, !1, null, "\x00\b\n\f\r	" ]
-}) == e && "1" === i(null, c) && "[\n 1,\n 2\n]" == i([ 1, 2 ], null, 1) && '"-271821-04-20T00:00:00.000Z"' == i(new j(-864e13)) && '"+275760-09-13T00:00:00.000Z"' == i(new j(864e13)) && '"-000001-01-01T00:00:00.000Z"' == i(new j(-621987552e5)) && '"1969-12-31T23:59:59.999Z"' == i(new j(-1));
+a:[ c, !0, !1, null, "\0\b\n\f\r\t" ]
+}) == e && "1" === i(null, c) && "[\n 1,\n 2\n]" == i([ 1, 2 ], null, 1) && '"-271821-04-20T00:00:00.000Z"' == i(new j((-864e13))) && '"+275760-09-13T00:00:00.000Z"' == i(new j(864e13)) && '"-000001-01-01T00:00:00.000Z"' == i(new j((-621987552e5))) && '"1969-12-31T23:59:59.999Z"' == i(new j((-1)));
 } catch (l) {
 k = !1;
 }
@@ -330,7 +330,7 @@ c = m(e);
 var n = 5 == c.a.length && 1 === c.a[0];
 if (n) {
 try {
-n = !m('"	"');
+n = !m('"\t"');
 } catch (l) {}
 if (n) try {
 n = 1 !== m("01");
@@ -351,9 +351,9 @@ return f[a] = !!b;
 b || (b = e.Object()), d || (d = e.Object());
 var g = b.Number || e.Number, h = b.String || e.String, i = b.Object || e.Object, j = b.Date || e.Date, k = b.SyntaxError || e.SyntaxError, l = b.TypeError || e.TypeError, m = b.Math || e.Math, n = b.JSON || e.JSON;
 "object" == typeof n && n && (d.stringify = n.stringify, d.parse = n.parse);
-var o, p, q, r = i.prototype, s = r.toString, t = new j(-0xc782b5b800cec);
+var o, p, q, r = i.prototype, s = r.toString, t = new j((-0xc782b5b800cec));
 try {
-t = -109252 == t.getUTCFullYear() && 0 === t.getUTCMonth() && 1 === t.getUTCDate() && 10 == t.getUTCHours() && 37 == t.getUTCMinutes() && 6 == t.getUTCSeconds() && 708 == t.getUTCMilliseconds();
+t = t.getUTCFullYear() == -109252 && 0 === t.getUTCMonth() && 1 === t.getUTCDate() && 10 == t.getUTCHours() && 37 == t.getUTCMinutes() && 6 == t.getUTCSeconds() && 708 == t.getUTCMilliseconds();
 } catch (u) {}
 if (!f("json")) {
 var v = "[object Function]", w = "[object Date]", x = "[object Number]", y = "[object String]", z = "[object Array]", A = "[object Boolean]", B = f("bug-string-char-index");
@@ -401,7 +401,7 @@ var F = {
 }, G = "000000", H = function(a, b) {
 return (G + (b || 0)).slice(-a);
 }, I = "\\u00", J = function(a) {
-for (var b = '"', c = 0, d = a.length, e = !B || d > 10, f = e && (B ? a.split("") :a); d > c; c++) {
+for (var b = '"', c = 0, d = a.length, e = !B || d > 10, f = e && (B ? a.split("") :a); c < d; c++) {
 var g = a.charCodeAt(c);
 switch (g) {
 case 8:
@@ -415,7 +415,7 @@ b += F[g];
 break;
 
 default:
-if (32 > g) {
+if (g < 32) {
 b += I + H(2, g.toString(16));
 break;
 }
@@ -428,22 +428,22 @@ var h, i, j, k, m, n, r, t, u, v, B, D, F, G, I, L;
 try {
 h = b[a];
 } catch (M) {}
-if ("object" == typeof h && h) if (i = s.call(h), i != w || o.call(h, "toJSON")) "function" == typeof h.toJSON && (i != x && i != y && i != z || o.call(h, "toJSON")) && (h = h.toJSON(a)); else if (h > -1 / 0 && 1 / 0 > h) {
+if ("object" == typeof h && h) if (i = s.call(h), i != w || o.call(h, "toJSON")) "function" == typeof h.toJSON && (i != x && i != y && i != z || o.call(h, "toJSON")) && (h = h.toJSON(a)); else if (h > -1 / 0 && h < 1 / 0) {
 if (E) {
 for (m = C(h / 864e5), j = C(m / 365.2425) + 1970 - 1; E(j + 1, 0) <= m; j++) ;
 for (k = C((m - E(j, 0)) / 30.42); E(j, k + 1) <= m; k++) ;
 m = 1 + m - E(j, k), n = (h % 864e5 + 864e5) % 864e5, r = C(n / 36e5) % 24, t = C(n / 6e4) % 60, u = C(n / 1e3) % 60, v = n % 1e3;
 } else j = h.getUTCFullYear(), k = h.getUTCMonth(), m = h.getUTCDate(), r = h.getUTCHours(), t = h.getUTCMinutes(), u = h.getUTCSeconds(), v = h.getUTCMilliseconds();
-h = (0 >= j || j >= 1e4 ? (0 > j ? "-" :"+") + H(6, 0 > j ? -j :j) :H(4, j)) + "-" + H(2, k + 1) + "-" + H(2, m) + "T" + H(2, r) + ":" + H(2, t) + ":" + H(2, u) + "." + H(3, v) + "Z";
+h = (j <= 0 || j >= 1e4 ? (j < 0 ? "-" :"+") + H(6, j < 0 ? -j :j) :H(4, j)) + "-" + H(2, k + 1) + "-" + H(2, m) + "T" + H(2, r) + ":" + H(2, t) + ":" + H(2, u) + "." + H(3, v) + "Z";
 } else h = null;
 if (c && (h = c.call(b, a, h)), null === h) return "null";
 if (i = s.call(h), i == A) return "" + h;
-if (i == x) return h > -1 / 0 && 1 / 0 > h ? "" + h :"null";
+if (i == x) return h > -1 / 0 && h < 1 / 0 ? "" + h :"null";
 if (i == y) return J("" + h);
 if ("object" == typeof h) {
 for (G = g.length; G--; ) if (g[G] === h) throw l();
 if (g.push(h), B = [], I = f, f += e, i == z) {
-for (F = 0, G = h.length; G > F; F++) D = K(F, h, c, d, e, f, g), B.push(D === q ? "null" :D);
+for (F = 0, G = h.length; F < G; F++) D = K(F, h, c, d, e, f, g), B.push(D === q ? "null" :D);
 L = B.length ? e ? "[\n" + f + B.join(",\n" + f) + "\n" + I + "]" :"[" + B.join(",") + "]" :"[]";
 } else p(d || h, function(a) {
 var b = K(a, h, c, d, e, f, g);
@@ -456,7 +456,7 @@ d.stringify = function(a, b, d) {
 var e, f, g, h;
 if (c[typeof b] && b) if ((h = s.call(b)) == v) f = b; else if (h == z) {
 g = {};
-for (var i, j = 0, k = b.length; k > j; i = b[j++], h = s.call(i), (h == y || h == x) && (g[i] = 1)) ;
+for (var i, j = 0, k = b.length; j < k; i = b[j++], h = s.call(i), (h == y || h == x) && (g[i] = 1)) ;
 }
 if (d) if ((h = s.call(d)) == x) {
 if ((d -= d % 1) > 0) for (e = "", d > 10 && (d = 10); e.length < d; e += " ") ;
@@ -470,14 +470,14 @@ var L, M, N = h.fromCharCode, O = {
 34:'"',
 47:"/",
 98:"\b",
-116:"	",
+116:"\t",
 110:"\n",
 102:"\f",
 114:"\r"
 }, P = function() {
 throw L = M = null, k();
 }, Q = function() {
-for (var a, b, c, d, e, f = M, g = f.length; g > L; ) switch (e = f.charCodeAt(L)) {
+for (var a, b, c, d, e, f = M, g = f.length; L < g; ) switch (e = f.charCodeAt(L)) {
 case 9:
 case 10:
 case 13:
@@ -494,7 +494,7 @@ case 44:
 return a = B ? f.charAt(L) :f[L], L++, a;
 
 case 34:
-for (a = "@", L++; g > L; ) if (e = f.charCodeAt(L), 32 > e) P(); else if (92 == e) switch (e = f.charCodeAt(++L)) {
+for (a = "@", L++; L < g; ) if (e = f.charCodeAt(L), e < 32) P(); else if (92 == e) switch (e = f.charCodeAt(++L)) {
 case 92:
 case 34:
 case 47:
@@ -507,7 +507,7 @@ a += O[e], L++;
 break;
 
 case 117:
-for (b = ++L, c = L + 4; c > L; L++) e = f.charCodeAt(L), e >= 48 && 57 >= e || e >= 97 && 102 >= e || e >= 65 && 70 >= e || P();
+for (b = ++L, c = L + 4; L < c; L++) e = f.charCodeAt(L), e >= 48 && e <= 57 || e >= 97 && e <= 102 || e >= 65 && e <= 70 || P();
 a += N("0x" + f.slice(b, L));
 break;
 
@@ -522,14 +522,14 @@ if (34 == f.charCodeAt(L)) return L++, a;
 P();
 
 default:
-if (b = L, 45 == e && (d = !0, e = f.charCodeAt(++L)), e >= 48 && 57 >= e) {
-for (48 == e && (e = f.charCodeAt(L + 1), e >= 48 && 57 >= e) && P(), d = !1; g > L && (e = f.charCodeAt(L), e >= 48 && 57 >= e); L++) ;
+if (b = L, 45 == e && (d = !0, e = f.charCodeAt(++L)), e >= 48 && e <= 57) {
+for (48 == e && (e = f.charCodeAt(L + 1), e >= 48 && e <= 57) && P(), d = !1; L < g && (e = f.charCodeAt(L), e >= 48 && e <= 57); L++) ;
 if (46 == f.charCodeAt(L)) {
-for (c = ++L; g > c && (e = f.charCodeAt(c), e >= 48 && 57 >= e); c++) ;
+for (c = ++L; c < g && (e = f.charCodeAt(c), e >= 48 && e <= 57); c++) ;
 c == L && P(), L = c;
 }
 if (e = f.charCodeAt(L), 101 == e || 69 == e) {
-for (e = f.charCodeAt(++L), 43 != e && 45 != e || L++, c = L; g > c && (e = f.charCodeAt(c), e >= 48 && 57 >= e); c++) ;
+for (e = f.charCodeAt(++L), 43 != e && 45 != e || L++, c = L; c < g && (e = f.charCodeAt(c), e >= 48 && e <= 57); c++) ;
 c == L && P(), L = c;
 }
 return +f.slice(b, L);

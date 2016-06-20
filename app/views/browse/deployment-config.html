@@ -232,9 +232,8 @@
                                 <!-- TODO would be nice to have the deploymentStatusReason in a popup, when there is one -->
                               </div>
                             </td>
-                            <td data-title="Createed">
+                            <td data-title="Created">
                               <relative-timestamp timestamp="deployment.metadata.creationTimestamp"></relative-timestamp>
-                              <span>- {{deployment.metadata.creationTimestamp | date : 'short'}}</span>
                             </td>
                             <td data-title="Trigger">
                               <span ng-if="!deployment.causes.length">Unknown</span>
