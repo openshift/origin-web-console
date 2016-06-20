@@ -96,8 +96,15 @@
     width: 100%;
     @media (min-width: @screen-sm-min) {
       width: 50%;
-      // FIXME: magic number, why 4px?
-      padding-right: 4px;
+
+      &:nth-child(odd) {
+          padding-right: 5px;
+      }
+
+      &:nth-child(even) {
+          padding-left: 5px;
+      }
+
     }
     .service-group-body .overview-services {
       overview-service {
@@ -108,6 +115,31 @@
       }
     }
   }
+  .no-service {
+    width: 100%;
+    margin-bottom: 10px;
+    
+    @media (min-width: @screen-sm-min) {
+      width: 50%;
+
+      &:nth-child(odd) {
+          padding-right: 5px;
+      }
+
+      &:nth-child(even) {
+          padding-left: 5px;
+      }
+    }    
+    .deployment-tile-wrapper {
+      width: 100%;
+
+      .deployment-tile {
+        border-left: 3px solid #00b9e4;
+        height: 100%;
+        margin-top: 0;
+      }
+    }
+  }  
   .service-group-header {
     cursor: pointer;
     .justify-content(@justify: space-between);
@@ -210,17 +242,6 @@
       }
       .no-child-services-message {
         display: block;
-      }
-    }
-    .no-service {
-      .deployment-tile-wrapper {
-        width: 100%;
-        .deployment-tile {
-          border-left: 3px solid #00b9e4;
-          margin-left: 7px;
-          height: 100%;
-          margin-top: 0;
-        }
       }
     }
   }

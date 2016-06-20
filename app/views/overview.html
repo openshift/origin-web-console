@@ -45,10 +45,29 @@
               </div>
 
               <!-- Unserviced DCs, RCs, and pods -->
-              <div>
-                <overview-service-group
-                  ng-if="(monopodsByService[''] | hashSize) > 0 || (deploymentConfigsByService[''] | hashSize) > 0 || (deploymentsByService[''] | hashSize) > 0">
-                </overview-service-group>
+              <div row wrap ng-if="(monopodsByService[''] | hashSize) > 0 || (deploymentConfigsByService[''] | hashSize) > 0 || (deploymentsByService[''] | hashSize) > 0">
+                <!-- unserviced DC -->
+                <div ng-repeat="(dcName, deploymentConfig) in deploymentConfigsByService[''] track by (deploymentConfig | uid)"
+                    class="no-service"
+                    ng-if="deployments = visibleDeploymentsByConfigAndService[''][dcName]"> <!-- Must be an ng-if, an ng-init will not re-evaluate properly -->
+                  <overview-deployment-config class="deployment-tile-wrapper"></overview-deployment-config>
+                </div>
+                <!-- /unserviced DC -->
+
+                <!-- unserviced RC -->
+                <div ng-repeat="deployment in deploymentsByService[''] | orderObjectsByDate : true track by (deployment | uid)"
+                    ng-if="!(deployment | annotation : 'deploymentConfig') || !deploymentConfigs[(deployment | annotation : 'deploymentConfig')]"
+                    class="no-service">
+                  <overview-replication-controller class="deployment-tile-wrapper"></overview-replication-controller>
+                </div>
+                <!-- /unserviced RC-->
+
+                <!-- unservice monopods -->
+                <div ng-repeat="pod in monopodsByService[''] | orderObjectsByDate : true track by (pod | uid)"
+                    class="no-service">
+                  <overview-pod class="deployment-tile-wrapper"></overview-pod>
+                </div>
+                <!-- /unserviced monopods -->
               </div>
             </div>
           </div>

@@ -37,9 +37,6 @@ angular.module('openshiftConsole')
           var serviceName = _.get($scope, 'service.metadata.name');
           $scope.activeDeploymentByConfig = {};
           $scope.visibleDeploymentsByConfig = visibleDeploymentsByConfigAndService[serviceName];
-          _.each($scope.visibleDeploymentsByConfig, function(deployments, dcName) {
-            $scope.activeDeploymentByConfig[dcName] = DeploymentsService.getActiveDeployment(deployments);
-          });
         });
 
         $scope.isDeploymentLatest = function(deployment) {
