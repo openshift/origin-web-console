@@ -26,21 +26,19 @@
 }
 
 .pipeline-container {
-  border: 1px solid @build-pipeline-border-color;
-  padding-bottom: @pipeline-margin;
   .flex(@columns: 1 1 auto);
-  .pipeline-label {
-    border-bottom: 1px solid @build-pipeline-border-color;
-    font-weight: 300;
-    margin-bottom: @pipeline-margin;
-    padding: (@pipeline-margin / 2) @pipeline-margin;
-  }
+  border: 1px solid @build-pipeline-border-color;
+  overflow: hidden;
 }
 .pipeline {
   .flex-display(@display: flex);
+  .flex-wrap(@wrap: wrap);
+  height: 100%;
   .pipeline-stage {
     border-top: 1px solid @build-pipeline-border-color;
-    .flex(@columns: 1 1 auto);
+    margin: auto 0;
+    min-width: 150px;
+    max-width: 100%;
     padding: (@pipeline-margin /2) @pipeline-margin;
     &:first-child {
       border-top: 0;
@@ -65,20 +63,33 @@
   text-align: center;
 }
 .pipeline-stage-name {
+  .truncate();
   line-height: initial;
-  margin-bottom: @pipeline-margin + 2px;
+  margin-bottom: @pipeline-margin + 5px;
   &.no-stages {
     margin: @pipeline-margin * 2.25;
   }
 }
 .pipeline-time {
   .text-muted();
-  margin-top: 9px;
+  margin-top: 12px;
 }
 
 .build-summary, .stage {
   .text-center();
   min-width: 150px;
+  .pipeline-link {
+    .small();
+    display: inline-block;
+  }
+  .pipeline-link + .pipeline-link:before {
+    content: '';
+    display: inline-block;
+    border-left: 1px solid @build-pipeline-border-color;
+    height: 10px;
+    margin-right: 3px;
+    margin: 0 5px 0 2px;
+  }
 }
 .build-summary, .stages-block {
   border: 1px solid @build-pipeline-border-color;
@@ -87,7 +98,8 @@
   border-bottom-width: 0;
   padding: 10px;
   .flex-direction(@direction: row);
-  .justify-content(@justify: space-between);
+  .flex-wrap(@wrap: wrap);
+  .justify-content(@justify: space-around);
   .status-icon {
     &.Complete {
       color: @build-pipeline-success-color;
@@ -110,11 +122,10 @@
 @media (min-width: @screen-sm-min) {
   .pipeline {
     .pipeline-stage {
-      border-left: 1px solid @build-pipeline-border-color;
       border-top: 0;
-      &:first-child {
-        border-left: 0;
-      }
+      border-left: 1px solid @build-pipeline-border-color;
+      // Prevent double borders when wrapping with -1px left margin.
+      margin: 10px 0 10px -1px;
     }
   }
   .build-summary {
