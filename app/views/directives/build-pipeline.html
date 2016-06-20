@@ -1,45 +1,45 @@
 <div row mobile="column" flex>
   <div column class="build-summary">  
-    <div column>
-      <a ng-href="{{build | navigateResourceURL}}">Build #{{build | annotation : 'buildNumber'}}</a>
-    </div>
-    <div class="status-icon" ng-class="build.status.phase">
-      <span ng-switch="build.status.phase" class="hide-ng-leave">
-        <span ng-switch-when="Complete" aria-hidden="true">
-          <i class="fa fa-check-circle"></i> 
-        </span>
-        <span ng-switch-when="Failed" aria-hidden="true">
-          <i class="fa fa-times-circle"></i>
-        </span>
-        <span ng-switch-default>
-          <status-icon status="build.status.phase"></status-icon>
+    <div>
+      <span class="status-icon" ng-class="build.status.phase">
+        <span ng-switch="build.status.phase" class="hide-ng-leave">
+          <span ng-switch-when="Complete" aria-hidden="true">
+            <i class="fa fa-check-circle"></i> 
+          </span>
+          <span ng-switch-when="Failed" aria-hidden="true">
+            <i class="fa fa-times-circle"></i>
+          </span>
+          <span ng-switch-default>
+            <status-icon status="build.status.phase"></status-icon>
+          </span>
         </span>
       </span>
+      <a ng-href="{{build | navigateResourceURL}}">Build #{{build | annotation : 'buildNumber'}}</a>
     </div>
     <div class="small text-muted">
       Started <relative-timestamp timestamp="build.metadata.creationTimestamp"></relative-timestamp>
     </div>
-    <div ng-if="build | jenkinsBuildURL" class="small"><a ng-href="{{build | jenkinsBuildURL}}" target="_blank">Jenkins Build</a></div>
-    <div ng-if="build | buildLogURL" class="small"><a ng-href="{{build | buildLogURL}}" target="_blank">View Log</a></div>
+    <div>
+      <div ng-if="build | jenkinsBuildURL" class="pipeline-link"><a ng-href="{{build | jenkinsBuildURL}}" target="_blank">Jenkins Build</a></div>
+      <div ng-if="build | buildLogURL" class="pipeline-link"><a ng-href="{{build | buildLogURL}}" target="_blank">View Log</a></div>
+    </div>
   </div>
     <div class="pipeline-container">
-      <div row class="pipeline-label" ng-class="build.status.phase">
-        {{build.status.phase}}
+      <div class="pipeline" ng-if="!jenkinsStatus.stages.length">
+        <div class="pipeline-stage">
+          <div class="pipeline-stage-name no-stages">No stages have started.</div>
+        </div>
       </div>
-        <div class="pipeline" ng-if="!jenkinsStatus.stages.length">
-          <div class="pipeline-stage">
-            <div class="pipeline-stage-name no-stages">No stages have started.</div>
+      <div class="pipeline">
+        <div class="pipeline-stage" grow="1" ng-repeat="stage in jenkinsStatus.stages track by stage.id">
+          <div column class="pipeline-stage-column">
+            <div class="pipeline-stage-name" ng-class="build.status.phase">{{stage.name}}</div>
+            <pipeline-status ng-if="stage.status" status="stage.status"></pipeline-status>
+            <!-- <div class="pipeline-time" ng-if="stage.durationMillis">{{stage.durationMillis | humanizeDurationValue}}</div> -->
+            <div class="pipeline-time" ng-if="stage.durationMillis">{{stage.durationMillis | conciseDuration}}</div>
+            <div class="pipeline-time" ng-if="!stage.durationMillis">not started</div>
           </div>
         </div>
-        <div class="pipeline">
-          <div class="pipeline-stage" ng-repeat="stage in jenkinsStatus.stages track by stage.id">
-            <div column flex>
-              <div class="pipeline-stage-name" ng-class="build.status.phase">{{stage.name}} </div>
-              <pipeline-status ng-if="stage.status" status="stage.status"></pipeline-status>
-              <div class="pipeline-time" ng-if="stage.durationMillis">{{stage.durationMillis | humanizeDurationValue}}</div>
-              <div class="pipeline-time" ng-if="!stage.durationMillis">not started</div>
-            </div>
-          </div>
-        </div>
+      </div>
     </div>
 </div>

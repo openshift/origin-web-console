@@ -4234,10 +4234,8 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
   $templateCache.put('views/directives/build-pipeline.html',
     "<div row mobile=\"column\" flex>\n" +
     "<div column class=\"build-summary\">\n" +
-    "<div column>\n" +
-    "<a ng-href=\"{{build | navigateResourceURL}}\">Build #{{build | annotation : 'buildNumber'}}</a>\n" +
-    "</div>\n" +
-    "<div class=\"status-icon\" ng-class=\"build.status.phase\">\n" +
+    "<div>\n" +
+    "<span class=\"status-icon\" ng-class=\"build.status.phase\">\n" +
     "<span ng-switch=\"build.status.phase\" class=\"hide-ng-leave\">\n" +
     "<span ng-switch-when=\"Complete\" aria-hidden=\"true\">\n" +
     "<i class=\"fa fa-check-circle\"></i>\n" +
@@ -4249,28 +4247,30 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "<status-icon status=\"build.status.phase\"></status-icon>\n" +
     "</span>\n" +
     "</span>\n" +
+    "</span>\n" +
+    "<a ng-href=\"{{build | navigateResourceURL}}\">Build #{{build | annotation : 'buildNumber'}}</a>\n" +
     "</div>\n" +
     "<div class=\"small text-muted\">\n" +
     "Started <relative-timestamp timestamp=\"build.metadata.creationTimestamp\"></relative-timestamp>\n" +
     "</div>\n" +
-    "<div ng-if=\"build | jenkinsBuildURL\" class=\"small\"><a ng-href=\"{{build | jenkinsBuildURL}}\" target=\"_blank\">Jenkins Build</a></div>\n" +
-    "<div ng-if=\"build | buildLogURL\" class=\"small\"><a ng-href=\"{{build | buildLogURL}}\" target=\"_blank\">View Log</a></div>\n" +
+    "<div>\n" +
+    "<div ng-if=\"build | jenkinsBuildURL\" class=\"pipeline-link\"><a ng-href=\"{{build | jenkinsBuildURL}}\" target=\"_blank\">Jenkins Build</a></div>\n" +
+    "<div ng-if=\"build | buildLogURL\" class=\"pipeline-link\"><a ng-href=\"{{build | buildLogURL}}\" target=\"_blank\">View Log</a></div>\n" +
+    "</div>\n" +
     "</div>\n" +
     "<div class=\"pipeline-container\">\n" +
-    "<div row class=\"pipeline-label\" ng-class=\"build.status.phase\">\n" +
-    "{{build.status.phase}}\n" +
-    "</div>\n" +
     "<div class=\"pipeline\" ng-if=\"!jenkinsStatus.stages.length\">\n" +
     "<div class=\"pipeline-stage\">\n" +
     "<div class=\"pipeline-stage-name no-stages\">No stages have started.</div>\n" +
     "</div>\n" +
     "</div>\n" +
     "<div class=\"pipeline\">\n" +
-    "<div class=\"pipeline-stage\" ng-repeat=\"stage in jenkinsStatus.stages track by stage.id\">\n" +
-    "<div column flex>\n" +
-    "<div class=\"pipeline-stage-name\" ng-class=\"build.status.phase\">{{stage.name}} </div>\n" +
+    "<div class=\"pipeline-stage\" grow=\"1\" ng-repeat=\"stage in jenkinsStatus.stages track by stage.id\">\n" +
+    "<div column class=\"pipeline-stage-column\">\n" +
+    "<div class=\"pipeline-stage-name\" ng-class=\"build.status.phase\">{{stage.name}}</div>\n" +
     "<pipeline-status ng-if=\"stage.status\" status=\"stage.status\"></pipeline-status>\n" +
-    "<div class=\"pipeline-time\" ng-if=\"stage.durationMillis\">{{stage.durationMillis | humanizeDurationValue}}</div>\n" +
+    "\n" +
+    "<div class=\"pipeline-time\" ng-if=\"stage.durationMillis\">{{stage.durationMillis | conciseDuration}}</div>\n" +
     "<div class=\"pipeline-time\" ng-if=\"!stage.durationMillis\">not started</div>\n" +
     "</div>\n" +
     "</div>\n" +
