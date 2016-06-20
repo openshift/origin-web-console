@@ -5156,10 +5156,12 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "<div class=\"form-group\">\n" +
     "<label for=\"host\">Hostname</label>\n" +
     "\n" +
-    "<input id=\"host\" class=\"form-control\" type=\"text\" name=\"host\" ng-model=\"route.host\" ng-pattern=\"/^[a-z0-9]([-a-z0-9]*[a-z0-9])?(\\.[a-z0-9]([-a-z0-9]*[a-z0-9])?)*$/\" ng-maxlength=\"253\" placeholder=\"www.example.com\" autocorrect=\"off\" autocapitalize=\"off\" spellcheck aria-describedby=\"route-host-help\">\n" +
+    "<input id=\"host\" class=\"form-control\" type=\"text\" name=\"host\" ng-model=\"route.host\" ng-pattern=\"/^[a-z0-9]([-a-z0-9]*[a-z0-9])?(\\.[a-z0-9]([-a-z0-9]*[a-z0-9])?)*$/\" ng-maxlength=\"253\" ng-readonly=\"hostReadOnly\" placeholder=\"www.example.com\" autocorrect=\"off\" autocapitalize=\"off\" spellcheck aria-describedby=\"route-host-help\">\n" +
     "<div>\n" +
     "<span id=\"route-host-help\" class=\"help-block\">\n" +
-    "Public hostname for the route. If not specified, a hostname is generated.\n" +
+    "Public hostname for the route.\n" +
+    "<span ng-if=\"!hostReadOnly\">If not specified, a hostname is generated.</span>\n" +
+    "The hostname can't be changed after the route is created.\n" +
     "</span>\n" +
     "</div>\n" +
     "<div class=\"has-error\" ng-show=\"routeForm.host.$error.pattern && routeForm.host.$touched && !routingDisabled\">\n" +
@@ -6009,7 +6011,8 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "</div>\n" +
     "<form name=\"form\">\n" +
     "<fieldset ng-disabled=\"disableInputs\" ng-if=\"!loading\">\n" +
-    "<osc-routing model=\"routing\" services=\"services\" show-name-input=\"false\"></osc-routing>\n" +
+    "<osc-routing model=\"routing\" services=\"services\" show-name-input=\"false\" host-read-only=\"true\">\n" +
+    "</osc-routing>\n" +
     "<div class=\"button-group gutter-top gutter-bottom\">\n" +
     "<button type=\"submit\" class=\"btn btn-primary btn-lg\" ng-click=\"updateRoute()\" ng-disabled=\"form.$invalid || disableInputs\" value=\"\">Save</button>\n" +
     "<a class=\"btn btn-default btn-lg\" ng-href=\"{{routeURL}}\">Cancel</a>\n" +
