@@ -870,23 +870,7 @@ angular.module('openshiftConsole')
   })
   .filter('jenkinsBuildURL', function(annotationFilter, jenkinsLogURLFilter) {
     return function(build) {
-      var relativeBuildURL = annotationFilter(build, 'jenkinsBuildURL');
-      if (!relativeBuildURL) {
-        return null;
-      }
-
-      // We expect a relative URL, but if it is absolute, just return it.
-      if (URI(relativeBuildURL).is('absolute')) {
-        return relativeBuildURL;
-      }
-
-      // Use the log URL to determine the base URL of Jenkins since the build URL is relative.
-      var logURL = jenkinsLogURLFilter(build);
-      if (!logURL) {
-        return null;
-      }
-
-      return URI(logURL).path(relativeBuildURL).toString();
+      return annotationFilter(build, 'jenkinsBuildURL');
     };
   })
   .filter('buildLogURL', function(isJenkinsPipelineStrategyFilter,
