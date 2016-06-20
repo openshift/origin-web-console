@@ -6600,11 +6600,11 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "<div ng-if=\"renderOptions.showLoading\" class=\"loading-message\">\n" +
     "Loading...\n" +
     "</div>\n" +
-    "<div ng-repeat=\"service in services\" ng-if=\"!isChildService(service) && (service.metadata.labels.app || routesByService[service.metadata.name].length || childServicesByParent[service.metadata.name].length)\">\n" +
+    "<div ng-repeat=\"service in topLevelServices\" ng-if=\"service.metadata.labels.app || routesByService[service.metadata.name].length || childServicesByParent[service.metadata.name].length\" ng-init=\"collapse = (topLevelServices | hashSize) > 2 && !$first\">\n" +
     "<overview-service-group></overview-service-group>\n" +
     "</div>\n" +
     "<div row wrap>\n" +
-    "<div ng-repeat=\"service in services\" ng-if=\"!isChildService(service) && !service.metadata.labels.app && !routesByService[service.metadata.name].length && !childServicesByParent[service.metadata.name].length\" class=\"standalone-service\">\n" +
+    "<div ng-repeat=\"service in topLevelServices\" ng-if=\"!service.metadata.labels.app && !routesByService[service.metadata.name].length && !childServicesByParent[service.metadata.name].length\" class=\"standalone-service\">\n" +
     "<overview-service-group></overview-service-group>\n" +
     "</div>\n" +
     "</div>\n" +

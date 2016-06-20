@@ -29,14 +29,16 @@
               <div ng-if="renderOptions.showLoading" class="loading-message">
                 Loading...
               </div>
-              <div ng-repeat="service in services" ng-if="!isChildService(service) && (service.metadata.labels.app || routesByService[service.metadata.name].length || childServicesByParent[service.metadata.name].length)">
+              <div ng-repeat="service in topLevelServices"
+                   ng-if="service.metadata.labels.app || routesByService[service.metadata.name].length || childServicesByParent[service.metadata.name].length"
+                   ng-init="collapse = (topLevelServices | hashSize) > 2 && !$first">
                 <overview-service-group></overview-service-group>
               </div>
 
               <div row wrap>
                 <div
-                    ng-repeat="service in services"
-                    ng-if="!isChildService(service) && !service.metadata.labels.app && !routesByService[service.metadata.name].length && !childServicesByParent[service.metadata.name].length"
+                    ng-repeat="service in topLevelServices"
+                    ng-if="!service.metadata.labels.app && !routesByService[service.metadata.name].length && !childServicesByParent[service.metadata.name].length"
                     class="standalone-service">
                   <overview-service-group></overview-service-group>
                 </div>
