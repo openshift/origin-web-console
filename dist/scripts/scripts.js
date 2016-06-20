@@ -8507,12 +8507,8 @@ var d = a(b, "jenkinsLogURL");
 return !d || c ? d :d.replace(/\/consoleText$/, "/console");
 };
 } ]).filter("jenkinsBuildURL", [ "annotationFilter", "jenkinsLogURLFilter", function(a, b) {
-return function(c) {
-var d = a(c, "jenkinsBuildURL");
-if (!d) return null;
-if (URI(d).is("absolute")) return d;
-var e = b(c);
-return e ? URI(e).path(d).toString() :null;
+return function(b) {
+return a(b, "jenkinsBuildURL");
 };
 } ]).filter("buildLogURL", [ "isJenkinsPipelineStrategyFilter", "jenkinsLogURLFilter", "navigateResourceURLFilter", function(a, b, c) {
 return function(d) {
