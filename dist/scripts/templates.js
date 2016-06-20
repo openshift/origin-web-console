@@ -6609,9 +6609,22 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "</div>\n" +
     "</div>\n" +
     "\n" +
-    "<div>\n" +
-    "<overview-service-group ng-if=\"(monopodsByService[''] | hashSize) > 0 || (deploymentConfigsByService[''] | hashSize) > 0 || (deploymentsByService[''] | hashSize) > 0\">\n" +
-    "</overview-service-group>\n" +
+    "<div row wrap ng-if=\"(monopodsByService[''] | hashSize) > 0 || (deploymentConfigsByService[''] | hashSize) > 0 || (deploymentsByService[''] | hashSize) > 0\">\n" +
+    "\n" +
+    "<div ng-repeat=\"(dcName, deploymentConfig) in deploymentConfigsByService[''] track by (deploymentConfig | uid)\" class=\"no-service\" ng-if=\"deployments = visibleDeploymentsByConfigAndService[''][dcName]\"> \n" +
+    "<overview-deployment-config class=\"deployment-tile-wrapper\"></overview-deployment-config>\n" +
+    "</div>\n" +
+    "\n" +
+    "\n" +
+    "<div ng-repeat=\"deployment in deploymentsByService[''] | orderObjectsByDate : true track by (deployment | uid)\" ng-if=\"!(deployment | annotation : 'deploymentConfig') || !deploymentConfigs[(deployment | annotation : 'deploymentConfig')]\" class=\"no-service\">\n" +
+    "<overview-replication-controller class=\"deployment-tile-wrapper\"></overview-replication-controller>\n" +
+    "</div>\n" +
+    "\n" +
+    "\n" +
+    "<div ng-repeat=\"pod in monopodsByService[''] | orderObjectsByDate : true track by (pod | uid)\" class=\"no-service\">\n" +
+    "<overview-pod class=\"deployment-tile-wrapper\"></overview-pod>\n" +
+    "</div>\n" +
+    "\n" +
     "</div>\n" +
     "</div>\n" +
     "</div>\n" +
@@ -6620,6 +6633,145 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "</div>\n" +
     "</div>\n" +
     "</project-page>"
+  );
+
+
+  $templateCache.put('views/overview/_dc.html',
+    "<div class=\"deployment-tile\">\n" +
+    "<div row class=\"service-title\" ng-if=\"service\">\n" +
+    "<div>\n" +
+    "Service:\n" +
+    "<a ng-href=\"{{service | navigateResourceURL}}\">{{service.metadata.name}}</a>\n" +
+    "</div>\n" +
+    "<div>\n" +
+    "<span ng-if=\"!scalableDeploymentByConfig[dcName]\">Deploying...</span>\n" +
+    "<relative-timestamp ng-if=\"scalableDeploymentByConfig[dcName]\" timestamp=\"scalableDeploymentByConfig[dcName].metadata.creationTimestamp\"></relative-timestamp>\n" +
+    "</div>\n" +
+    "</div>\n" +
+    "<div class=\"deployment-header\">\n" +
+    "<div class=\"rc-header\">\n" +
+    "Deployment:\n" +
+    "<a ng-href=\"{{deploymentConfigs[dcName] | navigateResourceURL}}\">{{dcName}}</a>\n" +
+    "</div>\n" +
+    "<div column flex class=\"shield\" ng-if=\"scalableDeploymentByConfig[dcName]\" ng-class=\"{ 'shield-lg': (scalableDeploymentByConfig[dcName] | annotation: 'deploymentVersion').length > 3 }\">\n" +
+    "<a ng-href=\"{{scalableDeploymentByConfig[dcName] | navigateResourceURL}}\">\n" +
+    "<span class=\"shield-number\">#{{scalableDeploymentByConfig[dcName] | annotation: 'deploymentVersion'}}</span>\n" +
+    "</a>\n" +
+    "</div>\n" +
+    "</div>\n" +
+    "<div row class=\"deployment-body\">\n" +
+    "\n" +
+    "<div column class=\"overview-donut\" ng-repeat=\"deployment in deployments | orderObjectsByDate : true track by (deployment | uid)\" ng-class=\"{ latest: isDeploymentLatest(deployment) }\" ng-if=\"!scalableDeploymentByConfig[dcName] || !(isDeploymentLatest(deployment) && ((deployment | deploymentStatus) == 'Cancelled' || (deployment | deploymentStatus) == 'Failed'))\">\n" +
+    "<deployment-donut rc=\"deployment\" deployment-config=\"deploymentConfigs[dcName]\" pods=\"podsByDeployment[deployment.metadata.name]\" hpa=\"getHPA(deployment.metadata.name, dcName)\" limit-ranges=\"limitRanges\" scalable=\"isScalableDeployment(deployment)\" alerts=\"alerts\">\n" +
+    "</deployment-donut>\n" +
+    "</div>\n" +
+    "\n" +
+    "\n" +
+    "<div column class=\"overview-donut-connector\" ng-if=\"(deployments | anyDeploymentIsInProgress)\">\n" +
+    "<div ng-if=\"deployments.length > 1\" class=\"deployment-connector-arrow\">\n" +
+    "&rarr;\n" +
+    "</div>\n" +
+    "<div ng-if=\"deployments.length === 1\" class=\"finishing-deployment-text\">\n" +
+    "<span class=\"text-muted\">\n" +
+    "Running deployment #{{deployments[0] | annotation : 'deploymentVersion'}}...\n" +
+    "</span>\n" +
+    "</div>\n" +
+    "</div>\n" +
+    "\n" +
+    "\n" +
+    "<div column class=\"overview-unsuccessful-state\" ng-if=\"!scalableDeploymentByConfig[dcName] && !(deployments | anyDeploymentIsInProgress)\" ng-switch=\"deployments[0] | deploymentStatus\">\n" +
+    "<div ng-switch-when=\"Cancelled\">\n" +
+    "<span class=\"text-warning unsuccessful-state-text\">\n" +
+    "<i class=\"fa fa-ban\" aria-hidden=\"true\"></i>\n" +
+    "Deployment\n" +
+    "<a ng-href=\"{{deployments[0] | navigateResourceURL}}\">#{{deployments[0] | annotation: 'deploymentVersion'}}</a>\n" +
+    "cancelled\n" +
+    "</span>\n" +
+    "</div>\n" +
+    "<div ng-switch-when=\"Failed\">\n" +
+    "<span class=\"text-danger unsuccessful-state-text\">\n" +
+    "<i class=\"fa fa-times\" aria-hidden=\"true\"></i>\n" +
+    "Deployment\n" +
+    "<a ng-href=\"{{deployments[0] | navigateResourceURL}}\">#{{deployments[0] | annotation: 'deploymentVersion'}}</a>\n" +
+    "failed\n" +
+    "</span>\n" +
+    "</div>\n" +
+    "</div>\n" +
+    "\n" +
+    "\n" +
+    "<div column class=\"deployment-details\" ng-if=\"scalableDeploymentByConfig[dcName] && !(deployments | anyDeploymentIsInProgress)\">\n" +
+    "\n" +
+    "\n" +
+    "<metrics ng-if=\"showMetrics && !collapse\" deployment=\"scalableDeploymentByConfig[dcName]\" profile=\"compact\" class=\"overview-metrics\"></metrics>\n" +
+    "<pod-template ng-if=\"!showMetrics\" pod-template=\"scalableDeploymentByConfig[dcName].spec.template\"></pod-template>\n" +
+    "\n" +
+    "</div>\n" +
+    "\n" +
+    "</div>\n" +
+    "</div>"
+  );
+
+
+  $templateCache.put('views/overview/_pod.html',
+    "<div class=\"deployment-tile\" ng-if=\"pod.kind === 'Pod'\">\n" +
+    "<div row class=\"service-title\" ng-if=\"service\">\n" +
+    "<div>\n" +
+    "Service:\n" +
+    "<a ng-href=\"{{service | navigateResourceURL}}\">{{service.metadata.name}}</a>\n" +
+    "</div>\n" +
+    "<div>\n" +
+    "<relative-timestamp timestamp=\"pod.metadata.creationTimestamp\"></relative-timestamp>\n" +
+    "</div>\n" +
+    "</div>\n" +
+    "<div class=\"rc-header\"> \n" +
+    "Pod:\n" +
+    "<a ng-href=\"{{pod | navigateResourceURL}}\">{{pod.metadata.name}}</a>\n" +
+    "</div>\n" +
+    "<div row class=\"deployment-body\">\n" +
+    "<div column class=\"overview-donut\">\n" +
+    "<pod-donut pods=\"[pod]\"></pod-donut>\n" +
+    "</div>\n" +
+    "<div column class=\"deployment-details\">\n" +
+    "<metrics ng-if=\"showMetrics && !collapse\" pod=\"pod\" profile=\"compact\" class=\"overview-metrics\"></metrics>\n" +
+    "<pod-template ng-if=\"!showMetrics\" pod-template=\"pod\"></pod-template>\n" +
+    "</div>\n" +
+    "</div>\n" +
+    "</div>"
+  );
+
+
+  $templateCache.put('views/overview/_rc.html',
+    "<div class=\"deployment-tile\" ng-if=\"deployment.kind === 'ReplicationController'\">\n" +
+    "<div row class=\"service-title\" ng-if=\"service\">\n" +
+    "<div>\n" +
+    "Service:\n" +
+    "<a ng-href=\"{{service | navigateResourceURL}}\">{{service.metadata.name}}</a>\n" +
+    "</div>\n" +
+    "<div>\n" +
+    "<relative-timestamp timestamp=\"deployment.metadata.creationTimestamp\"></relative-timestamp>\n" +
+    "</div>\n" +
+    "</div>\n" +
+    "<div class=\"deployment-header\">\n" +
+    "<div class=\"rc-header\">\n" +
+    "Replication Controller:\n" +
+    "<a ng-href=\"{{deployment | navigateResourceURL}}\">{{deployment.metadata.name}}</a>\n" +
+    "</div>\n" +
+    "</div>\n" +
+    "<div row class=\"deployment-body\">\n" +
+    "\n" +
+    "<div column class=\"overview-donut\" ng-class=\"{ latest: isDeploymentLatest(deployment) }\">\n" +
+    "<deployment-donut rc=\"deployment\" deployment-config=\"deploymentConfigs[dcName]\" pods=\"podsByDeployment[deployment.metadata.name]\" hpa=\"getHPA(deployment.metadata.name, dcName)\" limit-ranges=\"limitRanges\" scalable=\"isScalableDeployment(deployment)\" alerts=\"alerts\">\n" +
+    "</deployment-donut>\n" +
+    "</div>\n" +
+    "\n" +
+    "\n" +
+    "<div column class=\"deployment-details\">\n" +
+    "<metrics ng-if=\"showMetrics && !collapse\" deployment=\"deployment\" profile=\"compact\" class=\"overview-metrics\"></metrics>\n" +
+    "<pod-template ng-if=\"!showMetrics\" pod-template=\"deployment.spec.template\"></pod-template>\n" +
+    "</div>\n" +
+    "\n" +
+    "</div>\n" +
+    "</div>"
   );
 
 
@@ -6690,7 +6842,7 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
 
 
   $templateCache.put('views/overview/_service.html',
-    "<div ng-if=\"!(visibleDeploymentsByConfig | hashSize) && !(monopods | hashSize)\" class=\"no-deployments-block\">\n" +
+    "<div ng-if=\"!(visibleDeploymentsByConfig | hashSize) && !(monopodsByService[service.metadata.name] | hashSize)\" class=\"no-deployments-block\">\n" +
     "<div class=\"no-deployments-message\">\n" +
     "<h2>No deployments.</h2>\n" +
     "<p>\n" +
@@ -6702,140 +6854,16 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "<div ng-attr-row=\"{{!service ? '' : undefined}}\" ng-attr-wrap=\"{{!service ? '' : undefined}}\" ng-class=\"{'no-service': !service}\">\n" +
     "<div ng-repeat=\"(dcName, deployments) in visibleDeploymentsByConfig\" class=\"deployment-tile-wrapper\">\n" +
     "\n" +
-    "<div class=\"deployment-tile\" ng-if=\"dcName\">\n" +
-    "<div row class=\"service-title\" ng-if=\"service\">\n" +
-    "<div>\n" +
-    "Service:\n" +
-    "<a ng-href=\"{{service | navigateResourceURL}}\">{{service.metadata.name}}</a>\n" +
-    "</div>\n" +
-    "<div>\n" +
-    "<span ng-if=\"!activeDeploymentByConfig[dcName]\">Deploying...</span>\n" +
-    "<relative-timestamp ng-if=\"activeDeploymentByConfig[dcName]\" timestamp=\"activeDeploymentByConfig[dcName].metadata.creationTimestamp\"></relative-timestamp>\n" +
-    "</div>\n" +
-    "</div>\n" +
-    "<div class=\"deployment-header\">\n" +
-    "<div class=\"rc-header\">\n" +
-    "Deployment:\n" +
-    "<a ng-href=\"{{deploymentConfigs[dcName] | navigateResourceURL}}\">{{dcName}}</a>\n" +
-    "</div>\n" +
-    "<div column flex class=\"shield\" ng-if=\"activeDeploymentByConfig[dcName]\" ng-class=\"{ 'shield-lg': (activeDeploymentByConfig[dcName] | annotation: 'deploymentVersion').length > 3 }\">\n" +
-    "<a ng-href=\"{{activeDeploymentByConfig[dcName] | navigateResourceURL}}\">\n" +
-    "<span class=\"shield-number\">#{{activeDeploymentByConfig[dcName] | annotation: 'deploymentVersion'}}</span>\n" +
-    "</a>\n" +
-    "</div>\n" +
-    "</div>\n" +
-    "<div row class=\"deployment-body\">\n" +
-    "\n" +
-    "<div column class=\"overview-donut\" ng-repeat=\"deployment in deployments | orderObjectsByDate : true track by (deployment | uid)\" ng-class=\"{ latest: isDeploymentLatest(deployment) }\" ng-if=\"!activeDeploymentByConfig[dcName] || !(isDeploymentLatest(deployment) && ((deployment | deploymentStatus) == 'Cancelled' || (deployment | deploymentStatus) == 'Failed'))\">\n" +
-    "<deployment-donut rc=\"deployment\" deployment-config=\"deploymentConfigs[dcName]\" pods=\"podsByDeployment[deployment.metadata.name]\" hpa=\"getHPA(deployment.metadata.name, dcName)\" limit-ranges=\"limitRanges\" scalable=\"isScalableDeployment(deployment)\" alerts=\"alerts\">\n" +
-    "</deployment-donut>\n" +
-    "</div>\n" +
-    "\n" +
-    "\n" +
-    "<div column class=\"overview-donut-connector\" ng-if=\"(deployments | anyDeploymentIsInProgress)\">\n" +
-    "<div ng-if=\"deployments.length > 1\" class=\"deployment-connector-arrow\">\n" +
-    "&rarr;\n" +
-    "</div>\n" +
-    "<div ng-if=\"deployments.length === 1\" class=\"finishing-deployment-text\">\n" +
-    "<span class=\"text-muted\">\n" +
-    "Running deployment #{{deployments[0] | annotation : 'deploymentVersion'}}...\n" +
-    "</span>\n" +
-    "</div>\n" +
-    "</div>\n" +
-    "\n" +
-    "\n" +
-    "<div column class=\"overview-unsuccessful-state\" ng-if=\"!activeDeploymentByConfig[dcName] && !(deployments | anyDeploymentIsInProgress)\" ng-switch=\"deployments[0] | deploymentStatus\">\n" +
-    "<div ng-switch-when=\"Cancelled\">\n" +
-    "<span class=\"text-warning unsuccessful-state-text\">\n" +
-    "<i class=\"fa fa-ban\" aria-hidden=\"true\"></i>\n" +
-    "Deployment\n" +
-    "<a ng-href=\"{{deployments[0] | navigateResourceURL}}\">#{{deployments[0] | annotation: 'deploymentVersion'}}</a>\n" +
-    "cancelled\n" +
-    "</span>\n" +
-    "</div>\n" +
-    "<div ng-switch-when=\"Failed\">\n" +
-    "<span class=\"text-danger unsuccessful-state-text\">\n" +
-    "<i class=\"fa fa-times\" aria-hidden=\"true\"></i>\n" +
-    "Deployment\n" +
-    "<a ng-href=\"{{deployments[0] | navigateResourceURL}}\">#{{deployments[0] | annotation: 'deploymentVersion'}}</a>\n" +
-    "failed\n" +
-    "</span>\n" +
-    "</div>\n" +
-    "</div>\n" +
-    "\n" +
-    "\n" +
-    "<div column class=\"deployment-details\" ng-if=\"activeDeploymentByConfig[dcName] && !(deployments | anyDeploymentIsInProgress)\">\n" +
-    "\n" +
-    "\n" +
-    "<metrics ng-if=\"showMetrics && !collapse\" deployment=\"activeDeploymentByConfig[dcName]\" profile=\"compact\" class=\"overview-metrics\"></metrics>\n" +
-    "<pod-template ng-if=\"!showMetrics\" pod-template=\"activeDeploymentByConfig[dcName].spec.template\"></pod-template>\n" +
-    "\n" +
-    "</div>\n" +
-    "\n" +
-    "</div>\n" +
-    "</div>\n" +
+    "<overview-deployment-config ng-if=\"dcName\"></overview-deployment-config>\n" +
     "\n" +
     "\n" +
     "<div class=\"deployment-tile-wrapper\" ng-if=\"!dcName.length\" ng-repeat=\"deployment in deployments | orderObjectsByDate : true track by (deployment | uid)\">\n" +
-    "<div class=\"deployment-tile\">\n" +
-    "<div row class=\"service-title\" ng-if=\"service\">\n" +
-    "<div>\n" +
-    "Service:\n" +
-    "<a ng-href=\"{{service | navigateResourceURL}}\">{{service.metadata.name}}</a>\n" +
-    "</div>\n" +
-    "<div>\n" +
-    "<relative-timestamp timestamp=\"deployment.metadata.creationTimestamp\"></relative-timestamp>\n" +
-    "</div>\n" +
-    "</div>\n" +
-    "<div class=\"deployment-header\">\n" +
-    "<div class=\"rc-header\">\n" +
-    "Replication Controller:\n" +
-    "<a ng-href=\"{{deployment | navigateResourceURL}}\">{{deployment.metadata.name}}</a>\n" +
-    "</div>\n" +
-    "</div>\n" +
-    "<div row class=\"deployment-body\">\n" +
-    "\n" +
-    "<div column class=\"overview-donut\" ng-class=\"{ latest: isDeploymentLatest(deployment) }\">\n" +
-    "<deployment-donut rc=\"deployment\" deployment-config=\"deploymentConfigs[dcName]\" pods=\"podsByDeployment[deployment.metadata.name]\" hpa=\"getHPA(deployment.metadata.name, dcName)\" limit-ranges=\"limitRanges\" scalable=\"isScalableDeployment(deployment)\" alerts=\"alerts\">\n" +
-    "</deployment-donut>\n" +
-    "</div>\n" +
-    "\n" +
-    "\n" +
-    "<div column class=\"deployment-details\">\n" +
-    "<metrics ng-if=\"showMetrics\" deployment=\"deployment\" profile=\"compact\" class=\"overview-metrics\"></metrics>\n" +
-    "<pod-template ng-if=\"!showMetrics\" pod-template=\"deployment.spec.template\"></pod-template>\n" +
-    "</div>\n" +
-    "\n" +
-    "</div>\n" +
-    "</div>\n" +
+    "<overview-replication-controller></overview-replication-controller>\n" +
     "</div>\n" +
     "</div>\n" +
     "\n" +
     "<div ng-repeat=\"pod in monopodsByService[service.metadata.name || ''] | orderObjectsByDate : true track by (pod | uid)\" class=\"deployment-tile-wrapper\">\n" +
-    "<div class=\"deployment-tile\">\n" +
-    "<div row class=\"service-title\" ng-if=\"service\">\n" +
-    "<div>\n" +
-    "Service:\n" +
-    "<a ng-href=\"{{service | navigateResourceURL}}\">{{service.metadata.name}}</a>\n" +
-    "</div>\n" +
-    "<div>\n" +
-    "<relative-timestamp timestamp=\"pod.metadata.creationTimestamp\"></relative-timestamp>\n" +
-    "</div>\n" +
-    "</div>\n" +
-    "<div class=\"rc-header\"> \n" +
-    "Pod:\n" +
-    "<a ng-href=\"{{pod | navigateResourceURL}}\">{{pod.metadata.name}}</a>\n" +
-    "</div>\n" +
-    "<div row class=\"deployment-body\">\n" +
-    "<div column class=\"overview-donut\">\n" +
-    "<pod-donut pods=\"[pod]\"></pod-donut>\n" +
-    "</div>\n" +
-    "<div column class=\"deployment-details\">\n" +
-    "<metrics ng-if=\"showMetrics\" pod=\"pod\" profile=\"compact\" class=\"overview-metrics\"></metrics>\n" +
-    "<pod-template ng-if=\"!showMetrics\" pod-template=\"pod\"></pod-template>\n" +
-    "</div>\n" +
-    "</div>\n" +
-    "</div>\n" +
+    "<overview-pod></overview-pod>\n" +
     "</div>\n" +
     "\n" +
     "</div>"

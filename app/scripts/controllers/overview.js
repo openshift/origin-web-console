@@ -20,7 +20,9 @@ angular.module('openshiftConsole')
                         PodsService,
                         ProjectsService,
                         RoutesService,
-                        ServicesService) {
+                        ServicesService,
+                        Navigate,
+                        MetricsService) {
     // scope variables are inherited by overview-service-group and overview-service directives.
     $scope.projectName = $routeParams.project;
     $scope.renderOptions = $scope.renderOptions || {};
@@ -50,7 +52,8 @@ angular.module('openshiftConsole')
       if (!services || !deploymentConfigs) {
         return;
       }
-
+      
+      $scope.deploymentConfigs = deploymentConfigs;
       $scope.deploymentConfigsByService = DeploymentsService.groupByService(deploymentConfigs, services);
     };
 
@@ -319,6 +322,49 @@ angular.module('openshiftConsole')
       $scope.renderOptions.showGetStarted = loaded && projectEmpty;
       $scope.renderOptions.showLoading = !loaded && projectEmpty;
     };
+
+
+    $scope.viewPodsForDeployment = function(deployment) {
+      if (_.isEmpty($scope.podsByDeployment[deployment.metadata.name])) {
+        return;
+      }
+
+      Navigate.toPodsForDeployment(deployment);
+    };
+
+    $scope.getHPA = function(rcName, dcName) {
+      var hpaByDC = $scope.hpaByDC;
+      var hpaByRC = $scope.hpaByRC;
+      // Return `null` if the HPAs haven't been loaded.
+      if (!hpaByDC || !hpaByRC) {
+        return null;
+      }
+
+      // Set missing values to an empty array if the HPAs have loaded. We
+      // want to use the same empty array for subsequent requests to avoid
+      // triggering watch callbacks in overview-deployment.
+      if (dcName) {
+        hpaByDC[dcName] = hpaByDC[dcName] || [];
+        return hpaByDC[dcName];
+      }
+
+      hpaByRC[rcName] = hpaByRC[rcName] || [];
+      return hpaByRC[rcName];
+    };
+
+    $scope.isScalableDeployment = function(deployment) {
+      return DeploymentsService.isScalable(deployment,
+                                            deploymentConfigs,
+                                            $scope.hpaByDC,
+                                            $scope.hpaByRC,
+                                            $scope.scalableDeploymentByConfig);
+    };
+
+    if (!window.OPENSHIFT_CONSTANTS.DISABLE_OVERVIEW_METRICS) {
+      MetricsService.isAvailable(true).then(function(available) {
+        $scope.showMetrics = available;
+      });
+    }
 
     ProjectsService
       .get($routeParams.project)

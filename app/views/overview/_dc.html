@@ -1,0 +1,86 @@
+<div class="deployment-tile">
+  <div row class="service-title" ng-if="service">
+    <div>
+      Service:
+      <a ng-href="{{service | navigateResourceURL}}">{{service.metadata.name}}</a>
+    </div>
+    <div>
+      <span ng-if="!scalableDeploymentByConfig[dcName]">Deploying...</span>
+      <relative-timestamp ng-if="scalableDeploymentByConfig[dcName]" timestamp="scalableDeploymentByConfig[dcName].metadata.creationTimestamp"></relative-timestamp>
+    </div>
+  </div>
+  <div class="deployment-header">
+    <div class="rc-header">
+      Deployment:
+      <a ng-href="{{deploymentConfigs[dcName] | navigateResourceURL}}">{{dcName}}</a>
+    </div>
+    <div column flex class="shield" ng-if="scalableDeploymentByConfig[dcName]"
+          ng-class="{ 'shield-lg': (scalableDeploymentByConfig[dcName] | annotation: 'deploymentVersion').length > 3 }">
+      <a ng-href="{{scalableDeploymentByConfig[dcName] | navigateResourceURL}}">
+        <span class="shield-number">#{{scalableDeploymentByConfig[dcName] | annotation: 'deploymentVersion'}}</span>
+      </a>
+    </div>
+  </div>
+  <div row class="deployment-body">
+    <!-- all visible deployments -->
+    <div column class="overview-donut"
+        ng-repeat="deployment in deployments | orderObjectsByDate : true track by (deployment | uid)"
+        ng-class="{ latest: isDeploymentLatest(deployment) }"
+        ng-if="!scalableDeploymentByConfig[dcName] || !(isDeploymentLatest(deployment) && ((deployment | deploymentStatus) == 'Cancelled' || (deployment | deploymentStatus) == 'Failed'))">
+      <deployment-donut
+          rc="deployment"
+          deployment-config="deploymentConfigs[dcName]"
+          pods="podsByDeployment[deployment.metadata.name]"
+          hpa="getHPA(deployment.metadata.name, dcName)"
+          limit-ranges="limitRanges"
+          scalable="isScalableDeployment(deployment)"
+          alerts="alerts">
+      </deployment-donut>
+    </div>
+    <!-- /all visible deployments -->
+
+    <!-- deployment in progress (connecting arrow) -->
+    <div column class="overview-donut-connector" ng-if="(deployments | anyDeploymentIsInProgress)">
+      <div ng-if="deployments.length > 1" class="deployment-connector-arrow">
+        &rarr;
+      </div>
+      <div ng-if="deployments.length === 1" class="finishing-deployment-text">
+        <span class="text-muted">
+          Running deployment #{{deployments[0] | annotation : 'deploymentVersion'}}...
+        </span>
+      </div>
+    </div>
+    <!-- /deployment in progress (connecting arrow) -->
+
+    <!-- cancelled/failed state -->
+    <div column class="overview-unsuccessful-state" ng-if="!scalableDeploymentByConfig[dcName] && !(deployments | anyDeploymentIsInProgress)" ng-switch="deployments[0] | deploymentStatus">
+      <div ng-switch-when="Cancelled">
+        <span class="text-warning unsuccessful-state-text">
+          <i class="fa fa-ban" aria-hidden="true"></i>
+          Deployment
+          <a ng-href="{{deployments[0] | navigateResourceURL}}">#{{deployments[0] | annotation: 'deploymentVersion'}}</a>
+          cancelled
+        </span>
+      </div>
+      <div ng-switch-when="Failed">
+        <span class="text-danger unsuccessful-state-text">
+          <i class="fa fa-times" aria-hidden="true"></i>
+          Deployment
+          <a ng-href="{{deployments[0] | navigateResourceURL}}">#{{deployments[0] | annotation: 'deploymentVersion'}}</a>
+          failed
+        </span>
+      </div>
+    </div>
+    <!-- /cancelled/failed state -->
+
+    <!-- succeeded state -->
+    <div column class="deployment-details" ng-if="scalableDeploymentByConfig[dcName] && !(deployments | anyDeploymentIsInProgress)">
+      <!-- metrics or pod template -->
+      <!-- pause metrics updates when the service group is collapsed -->
+      <metrics ng-if="showMetrics && !collapse" deployment="scalableDeploymentByConfig[dcName]" profile="compact" class="overview-metrics"></metrics>
+      <pod-template ng-if="!showMetrics" pod-template="scalableDeploymentByConfig[dcName].spec.template"></pod-template>
+      <!-- /metrics or pod template -->
+    </div>
+    <!-- /succeeded state -->
+  </div>
+</div>
