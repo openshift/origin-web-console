@@ -7184,7 +7184,11 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "</div>\n" +
     "</div>\n" +
     "</div>\n" +
-    "<div ng-if=\"showGetStarted\" class=\"empty-state-message empty-state-full-page text-center\">\n" +
+    "<div ng-if=\"showGetStarted\">\n" +
+    "<div class=\"container gutter-top\" ng-if=\"(alerts | hashSize) > 0\">\n" +
+    "<alerts alerts=\"alerts\"></alerts>\n" +
+    "</div>\n" +
+    "<div class=\"empty-state-message empty-state-full-page text-center\">\n" +
     "<h1>Welcome to OpenShift.</h1>\n" +
     "<p>\n" +
     "OpenShift helps you quickly develop, host, and scale applications.<br>\n" +
@@ -7197,6 +7201,7 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "<code>oadm new-project &lt;projectname&gt; --admin={{user.metadata.name || '&lt;YourUsername&gt;'}}</code></span>\n" +
     "<span ng-if=\"newProjectMessage\" ng-bind-html=\"newProjectMessage | linky\" style=\"white-space:pre\"></span>\n" +
     "</p>\n" +
+    "</div>\n" +
     "</div>\n" +
     "</div>\n" +
     "</div>\n" +

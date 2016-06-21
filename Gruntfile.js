@@ -554,13 +554,16 @@ module.exports = function (grunt) {
         noColor: false, // If true, protractor will not use colors in its output.
         args: {
           // Arguments passed to the command
-          suite: grunt.option('suite') || 'full'
+          suite: grunt.option('suite') || 'full',
+          baseUrl: grunt.option('baseUrl') || "https://localhost:9000/"
         }
       },
       chrome: {
         options: {
           configFile: "test/protractor-chrome.conf.js", // Target-specific config file
-          args: {} // Target-specific arguments
+          args: {
+            baseUrl: grunt.option('baseUrl') || "https://localhost:9000/"
+          } // Target-specific arguments
         }
       }
     },
@@ -619,14 +622,18 @@ module.exports = function (grunt) {
     // 'coverage' - add back if we want to enforce coverage percentages
   ]);
 
-  grunt.registerTask('test-integration', [
-    'clean:server',
-    'concurrent:server',
-    'autoprefixer',
-    'connect:test',
-    'protractor:chrome',
-    'clean:server'
-  ]);
+  grunt.registerTask('test-integration', 
+    grunt.option('baseUrl') ? 
+    ['protractor:chrome'] : // if a baseUrl is defined assume we dont want to run the local grunt server
+    [
+      'clean:server',
+      'concurrent:server',
+      'autoprefixer',
+      'connect:test',
+      'protractor:chrome',
+      'clean:server'
+    ]
+  );
 
   grunt.registerTask('build', [
     'clean:dist',

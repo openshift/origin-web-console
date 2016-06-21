@@ -5,7 +5,7 @@ require('jasmine-beforeall');
 var h = require('../helpers.js');
 
 var goToAddToProjectPage = function(projectName) {
-  var uri = '/project/' + projectName + '/create';
+  var uri = 'project/' + projectName + '/create';
   h.goToPage(uri);
   expect(element(by.cssContainingText('h1', "Create Using Your Code")).isPresent()).toBe(true);
   expect(element(by.cssContainingText('h1', "Create Using a Template")).isPresent()).toBe(true);
@@ -14,7 +14,7 @@ var goToAddToProjectPage = function(projectName) {
 };
 
 var goToCreateProjectPage = function() {
-  h.goToPage('/create-project');
+  h.goToPage('create-project');
   expect(element(by.cssContainingText('h1', "New Project")).isPresent()).toBe(true);
   expect(element(by.model('name')).isPresent()).toBe(true);
   expect(element(by.model('displayName')).isPresent()).toBe(true);
@@ -22,7 +22,7 @@ var goToCreateProjectPage = function() {
 };
 
 var requestCreateFromSource = function(projectName, sourceUrl) {
-  var uri = '/project/' + projectName + '/create';
+  var uri = 'project/' + projectName + '/create';
   h.waitForUri(uri);
   h.setInputValue('from_source_url', sourceUrl);
   var nextButton = element(by.buttonText('Next'));
@@ -31,7 +31,7 @@ var requestCreateFromSource = function(projectName, sourceUrl) {
 };
 
 var requestCreateFromTemplate = function(projectName, templateName) {
-  var uri = '/project/' + projectName + '/create';
+  var uri = 'project/' + projectName + '/create';
   h.waitForUri(uri);
   var template = element(by.cssContainingText('.catalog h3 > a', templateName));
   expect(template.isPresent()).toBe(true);
@@ -39,7 +39,7 @@ var requestCreateFromTemplate = function(projectName, templateName) {
 };
 
 var attachBuilderImageToSource = function(projectName, builderImageName) {
-  var uri = '/project/' + projectName + '/catalog/images';
+  var uri = 'project/' + projectName + '/catalog/images';
   h.waitForUri(uri);
   expect(element(by.cssContainingText('h1', "Select a builder image")).isPresent()).toBe(true);
   var builderImageLink = element(by.cssContainingText('h3 > a', builderImageName));
@@ -48,7 +48,7 @@ var attachBuilderImageToSource = function(projectName, builderImageName) {
 };
 
 var createFromSource = function(projectName, builderImageName, appName) {
-  var uri = '/project/' + projectName + '/create/fromimage';
+  var uri = 'project/' + projectName + '/create/fromimage';
   h.waitForUri(uri);
   expect(element(by.css('.osc-form h1')).getText()).toEqual(builderImageName);
   expect(element(by.cssContainingText('h2', "Name")).isPresent()).toBe(true);
@@ -60,11 +60,11 @@ var createFromSource = function(projectName, builderImageName, appName) {
   var appNameInput = element(by.name('appname'));
   appNameInput.clear();
   appNameInput.sendKeys(appName);
-  h.clickAndGo('Create', '/project/' + projectName + '/overview');
+  h.clickAndGo('Create', 'project/' + projectName + '/overview');
 };
 
 var createFromTemplate = function(projectName, templateName, parameterNames, labelNames) {
-  var uri = '/project/' + projectName + '/create/fromtemplate';
+  var uri = 'project/' + projectName + '/create/fromtemplate';
   h.waitForUri(uri);
   expect(element(by.css('.osc-form h1')).getText()).toEqual(templateName);
   expect(element(by.cssContainingText('h2', "Images")).isPresent()).toBe(true);
@@ -80,18 +80,18 @@ var createFromTemplate = function(projectName, templateName, parameterNames, lab
       expect(element(by.cssContainingText('.label-list span.key', val)).isPresent()).toBe(true);
     });
   }
-  h.clickAndGo('Create', '/project/' + projectName + '/overview');
+  h.clickAndGo('Create', 'project/' + projectName + '/overview');
 };
 
 var checkServiceCreated = function(projectName, serviceName) {
-  h.goToPage('/project/' + projectName + '/overview');
+  h.goToPage('project/' + projectName + '/overview');
   h.waitForPresence('.component .service', serviceName, 10000);
-  h.goToPage('/project/' + projectName + '/browse/services');
+  h.goToPage('project/' + projectName + '/browse/services');
   h.waitForPresence('h3', serviceName, 10000);
 };
 
 var checkProjectSettings = function(projectName, displayName, description) {
-  var uri = '/project/' + projectName + '/settings';
+  var uri = 'project/' + projectName + '/settings';
   h.goToPage(uri);
   expect(element(by.css('.project-name')).getText()).toEqual(projectName);
   expect(element(by.css('.project-display-name')).getText()).toEqual(displayName);
@@ -134,49 +134,49 @@ describe('', function() {
           for (var key in project) {
             h.setInputValue(key, project[key]);
           }
-          h.clickAndGo('Create', '/project/' + project['name'] + '/create');
+          h.clickAndGo('Create', 'project/' + project['name'] + '/create');
           h.waitForPresence('.breadcrumb li a', project['displayName']);
           checkProjectSettings(project['name'], project['displayName'], project['description']);
         });
 
         it('should browse builds', function() {
-          h.goToPage('/project/' + project['name'] + '/browse/builds');
+          h.goToPage('project/' + project['name'] + '/browse/builds');
           h.waitForPresence('h1', 'Builds');
           // TODO: validate presented strategies, images, repos
         });
 
         it('should browse deployments', function() {
-          h.goToPage('/project/' + project['name'] + '/browse/deployments');
+          h.goToPage('project/' + project['name'] + '/browse/deployments');
           h.waitForPresence("h1", "Deployments");
           // TODO: validate presented deployments
         });
 
         it('should browse events', function() {
-          h.goToPage('/project/' + project['name'] + '/browse/events');
+          h.goToPage('project/' + project['name'] + '/browse/events');
           h.waitForPresence("h1", "Events");
           // TODO: validate presented events
         });
 
         it('should browse image streams', function() {
-          h.goToPage('/project/' + project['name'] + '/browse/images');
+          h.goToPage('project/' + project['name'] + '/browse/images');
           h.waitForPresence("h1", "Image Streams");
           // TODO: validate presented images
         });
 
         it('should browse pods', function() {
-          h.goToPage('/project/' + project['name'] + '/browse/pods');
+          h.goToPage('project/' + project['name'] + '/browse/pods');
           h.waitForPresence("h1", "Pods");
           // TODO: validate presented pods, containers, correlated images, builds, source
         });
 
         it('should browse services', function() {
-          h.goToPage('/project/' + project['name'] + '/browse/services');
+          h.goToPage('project/' + project['name'] + '/browse/services');
           h.waitForPresence("h1", "Services");
           // TODO: validate presented ports, routes, selectors
         });
 
         it('should browse settings', function() {
-          h.goToPage('/project/' + project['name'] + '/settings');
+          h.goToPage('project/' + project['name'] + '/settings');
           h.waitForPresence("h1", "Project Settings");
           // TODO: validate presented project info, quota and resource info
         });
@@ -190,7 +190,7 @@ describe('', function() {
         });
 
         it('should delete a project', function() {
-          h.goToPage('/project/' + project['name'] + '/settings');
+          h.goToPage('project/' + project['name'] + '/settings');
           element(by.css('.actions-dropdown-btn')).click();
           element(by.css('.button-delete')).click();
           h.setInputValue('confirmName', project.name);

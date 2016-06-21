@@ -163,7 +163,7 @@ exports.config = {
   //
   // A base URL for your application under test. Calls to protractor.get()
   // with relative paths will be prepended with this.
-  baseUrl: 'https://localhost:9000',
+  // baseUrl: 'https://localhost:9000',
 
   // CSS Selector for the element housing the angular app - this defaults to
   // body, but is necessary if ng-app is on a descendant of <body>.
