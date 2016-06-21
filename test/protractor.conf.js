@@ -106,7 +106,7 @@ exports.config = {
   //
   // In addition, you may specify count, shardTestFiles, and maxInstances.
   capabilities: {
-   browserName: 'chrome',
+   // browserName: 'chrome',
 
    // Name of the process executing this capability.  Not used directly by
    // protractor or the browser, but instead pass directly to third parties

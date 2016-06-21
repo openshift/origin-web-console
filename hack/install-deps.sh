@@ -38,7 +38,6 @@ if ! which grunt > /dev/null 2>&1 ; then
 fi
 
 cmd "npm install --unsafe-perm"
-cmd "node_modules/protractor/bin/webdriver-manager update"
 
 # In case upstream components change things without incrementing versions
 cmd "bower cache clean --allow-root"
