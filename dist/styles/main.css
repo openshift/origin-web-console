@@ -3837,7 +3837,8 @@ ul.messenger-theme-flat .messenger-message.alert-info .messenger-message-inner:b
 .overview .builds-block .builds .build:first-child{padding-top:5px}
 .overview .builds-block .builds .build:last-child{border-bottom:1px solid #d6d6d6;padding-bottom:5px}
 .overview .loading-message{font-weight:400;margin-top:5px}
-.overview .service-group{border-left:3px solid #00b9e4;margin-bottom:20px}
+.overview .service-group{margin-bottom:20px;position:relative}
+.overview .service-group:before{content:"";display:block;height:100%;width:3px;position:absolute;background:#00b9e4;left:0px;z-index:1}
 .overview .service-group .alert-wrapper{width:100%;padding-right:5px}
 .overview .service-group .alert-wrapper .alert{width:100%;border-color:#d6d6d6;margin-bottom:0;box-shadow:0 2px 6px rgba(0,0,0,.1)}
 .overview .service-group .alert-wrapper .alert .pficon{box-shadow:none}
@@ -3879,7 +3880,7 @@ ul.messenger-theme-flat .messenger-message.alert-info .messenger-message-inner:b
 @media (max-width:567px){.overview .overview-pipeline .timestamp{display:none}
 }
 .overview .service-group-body{border-top-width:0;padding:0}
-.overview .service-group-body .overview-services{-webkit-flex-wrap:wrap;-moz-flex-wrap:wrap;-ms-flex-wrap:wrap;flex-wrap:wrap;margin-left:-11px;-webkit-flex-direction:column;-moz-flex-direction:column;-ms-flex-direction:column;flex-direction:column}
+.overview .service-group-body .overview-services{-webkit-flex-wrap:wrap;-moz-flex-wrap:wrap;-ms-flex-wrap:wrap;flex-wrap:wrap;margin-left:-10px;-webkit-flex-direction:column;-moz-flex-direction:column;-ms-flex-direction:column;flex-direction:column}
 .overview .service-group-body .overview-services .deployment-tile{margin-left:10px;margin-top:10px;position:relative}
 @media (min-width:568px){.overview .overview-pipeline .build-name,.overview .overview-pipeline .build-phase,.overview .overview-pipeline .log-link,.overview .overview-pipeline .stages{border-left:1px solid #d6d6d6}
 .overview .service-group-body .overview-services{-webkit-flex-direction:row;-moz-flex-direction:row;-ms-flex-direction:row;flex-direction:row}
