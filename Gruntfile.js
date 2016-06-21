@@ -162,7 +162,11 @@ module.exports = function (grunt) {
         options: {
           jshintrc: 'test/.jshintrc'
         },
-        src: ['test/spec/{,*/}*.js','test/integration/**/*.js']
+        src: [
+          'test/spec/{,*/}*.js',
+          'test/integration/**/*.js',
+          'test/e2e/**/*.js'
+        ]
       }
     },
 
@@ -619,7 +623,12 @@ module.exports = function (grunt) {
     // 'coverage' - add back if we want to enforce coverage percentages
   ]);
 
-  grunt.registerTask('test-integration', [
+  // TODO:
+  // - was test-integraiton
+  // - renamed to test-e2e since its end-to-end tests
+  // - need to decide if this is helpful or not
+  //   and if we will have integration style tests anyway
+  grunt.registerTask('test-e2e', [
     'clean:server',
     'concurrent:server',
     'autoprefixer',

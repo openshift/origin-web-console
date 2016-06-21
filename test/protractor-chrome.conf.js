@@ -77,20 +77,22 @@ exports.config = {
 
   // Spec patterns are relative to the location of this config.
   specs: [
-    'integration/**/*.js'
+    // 'integration/**/*.js'
   ],
 
   // Patterns to exclude.
-  exclude: ['integration/e2e.js'], // We are temporarily excluding the e2e tests while we transition to the split merge queue
+  // exclude: ['integration/e2e.js'], // We are temporarily excluding the e2e tests while we transition to the split merge queue
 
   // Alternatively, suites may be used. When run without a command line
   // parameter, all suites will run. If run with --suite=smoke or
   // --suite=smoke,full only the patterns matched by the specified suites will
   // run.
   suites: {
-    // smoke: 'spec/smoketests/*.js',
-    rest_api: 'integration/rest_api/*.js' // This suite of tests should only require a running master api, it should not require a node
-    //e2e: 'integration/e2e.js'
+    // smoke: 'spec/smoketests/*.js', // for a quick pass ensuring the main features work
+    // TODO: naming.
+    rest_api: 'e2e/rest_api/*.js', // This suite of tests should only require a running master api, it should not require a node
+    // TODO: naming.
+    e2e: 'e2e/e2e.js'
   },
 
   // ---------------------------------------------------------------------------
@@ -111,7 +113,7 @@ exports.config = {
    // Name of the process executing this capability.  Not used directly by
    // protractor or the browser, but instead pass directly to third parties
    // like SauceLabs as the name of the job running this test
-   name: 'Unnamed Job',
+   name: 'Origin Web Console Tests',
 
    // Number of times to run this set of capabilities (in parallel, unless
    // limited by maxSessions). Default is 1.
@@ -222,10 +224,10 @@ exports.config = {
       baseDirectory: './test/tmp/screenshots',
       takeScreenShotsOnlyForFailedSpecs: true,
       pathBuilder: function pathBuilder(spec, descriptions, results, capabilities) {
-        // Return '<specname>' as path for screenshots: 
-        // Example: 'list-should work'. 
+        // Return '<specname>' as path for screenshots:
+        // Example: 'list-should work'.
         return descriptions.reverse().join(' ');
-      }       
+      }
     }));
   },
 
@@ -290,7 +292,7 @@ exports.config = {
   // See the full list at https://github.com/juliemr/minijasminenode/tree/jasmine1
   jasmineNodeOpts: {
     // If true, display spec names.
-    isVerbose: false,
+    isVerbose: true,
     // If true, print colors to the terminal.
     showColors: true,
     // If true, include stack traces in failures.

@@ -1,5 +1,5 @@
 'use strict';
-
+// THE OLD HELPERS FILE
 var commonTeardown = function() {
   browser.executeScript('window.sessionStorage.clear();');
   browser.executeScript('window.localStorage.clear();');
@@ -26,8 +26,8 @@ exports.login = function(loginPageAlreadyLoaded) {
     }, 3000);
   }
 
-  driver.findElement(by.name("username")).sendKeys("e2e-user");
-  driver.findElement(by.name("password")).sendKeys("e2e-user");
+  driver.findElement(by.name("username")).sendKeys("e2e-user"); // inputUsername
+  driver.findElement(by.name("password")).sendKeys("e2e-user"); // inputPassword
   driver.findElement(by.css("button[type='submit']")).click();
 
   driver.wait(function() {
