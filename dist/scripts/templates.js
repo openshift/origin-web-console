@@ -7168,7 +7168,7 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "</div>\n" +
     "</div>\n" +
     "<div row flex main-axis=\"end\" class=\"project-delete\" ng-if=\"project.status.phase == 'Active'\">\n" +
-    "<delete-link class=\"fa-lg\" kind=\"Project\" resource-name=\"{{project.metadata.name}}\" project-name=\"{{project.metadata.name}}\" display-name=\"{{(project | displayName)}}\" type-name-to-confirm=\"true\" alerts=\"alerts\" button-only>\n" +
+    "<delete-link class=\"fa-lg\" kind=\"Project\" resource-name=\"{{project.metadata.name}}\" project-name=\"{{project.metadata.name}}\" display-name=\"{{(project | displayName)}}\" type-name-to-confirm=\"true\" stay-on-current-page=\"true\" alerts=\"alerts\" button-only>\n" +
     "</delete-link>\n" +
     "</div>\n" +
     "</div>\n" +
