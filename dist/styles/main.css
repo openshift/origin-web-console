@@ -3996,18 +3996,17 @@ to{background-color:transparent}
 .pipeline-status-bar .pipeline-line{width:100%;height:4px;background:#d1d1d1;position:relative}
 .pipeline-status-bar .pipeline-line:before{content:'';position:absolute;height:100%;animation:progress-line .35s ease-in forwards}
 .pipeline-circle{background:#d1d1d1;width:18px;height:18px;border-radius:9px;margin-top:-11px;position:relative;transform:rotate(-90deg);animation:fadeOut .1s .7s linear forwards}
-.pipeline-circle:after{position:absolute;color:#fff;font-family:FontAwesome;font-size:12px;transform:translate(-50%,-50%) rotate(90deg);top:50%;left:50%;opacity:0;animation:fadeIn .1s linear forwards;animation-delay:1s}
-.pipeline-circle .clip1:before,.pipeline-circle .clip2:before{width:18px;height:18px;transform:rotate(360deg);border-radius:9px;content:''}
-.pipeline-circle .clip1{position:absolute;clip:rect(0,18px,18px,9px)}
-.pipeline-circle .clip1:before,.pipeline-circle .clip2{clip:rect(0,9px,18px,0);position:absolute}
-.pipeline-circle .clip1:before{animation:progress 175ms .35s linear forwards}
-.pipeline-circle .clip2:before{position:absolute;clip:rect(0,18px,18px,9px);animation:progress 175ms 525ms linear forwards}
+.pipeline-circle:after{position:absolute;color:#fff;font-family:FontAwesome;font-size:12px;transform:translate(-50%,-50%) rotate(90deg);top:50%;left:50%;opacity:0;animation:fadeIn .1s linear forwards;animation-delay:.5s}
+.pipeline-circle .clip1:before,.pipeline-circle .clip2:before{width:18px;height:18px;transform:rotate(360deg);border-radius:9px;position:absolute;content:''}
+.pipeline-circle .clip1{position:absolute;clip:rect(0,18px,18px,9px);z-index:-9}
+.pipeline-circle .clip1:before{clip:rect(0,9px,18px,0);animation:progress 175ms .35s linear forwards}
+.pipeline-circle .clip2{position:absolute;clip:rect(0,9px,18px,0);z-index:-9}
+.pipeline-circle .clip2:before{clip:rect(0,18px,18px,9px);animation:progress 175ms 525ms linear forwards}
 .pipeline-circle .inner-circle{height:10px;width:10px;border-radius:9px;background-color:#fff;position:absolute;top:4px;left:4px;animation:fadeOut .1s .7s linear forwards}
 .pipeline-circle .inner-circle .inner-circle-fill{box-sizing:border-box;height:100%;width:100%;border-radius:50%;opacity:0}
 .overview-pipeline .pipeline-status-bar{display:inline-block}
 .overview-pipeline .pipeline-status-bar .pipeline-circle{margin:3px}
 .overview-pipeline .pipeline-status-bar .pipeline-circle:after{animation-delay:0}
-.overview-pipeline .pipeline-status-bar .pipeline-circle .inner-circle{background-color:transparent}
 .overview-pipeline .pipeline-status-bar .pipeline-line{display:none}
 .overview-pipeline .stage{min-width:initial}
 .build-stage-animation{width:100%;padding-top:8px;padding-left:5px;position:relative;display:flex;-webkit-flex-direction:column;-moz-flex-direction:column;-ms-flex-direction:column;flex-direction:column;-webkit-justify-content:center;-moz-justify-content:center;justify-content:center;-webkit-align-items:center;-moz-align-items:center;align-items:center}

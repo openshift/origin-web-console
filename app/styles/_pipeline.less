@@ -326,11 +326,12 @@
     left: 50%;
     opacity: 0;
     animation: fadeIn .1s linear forwards;
-    animation-delay: 1s;
+    animation-delay: .5s;
   }
   .clip1 {
     position: absolute;
     clip: rect(0, @circle-diameter, @circle-diameter, @circle-radius);
+    z-index: -9;
     &:before {
       content: '';
       position: absolute;
@@ -345,6 +346,7 @@
   .clip2 {
     position: absolute;
     clip: rect(0, @circle-radius, @circle-diameter, 0);
+    z-index: -9;
     &:before {
       content: '';
       position: absolute;
@@ -385,9 +387,6 @@
       margin: 3px;
       &:after {
         animation-delay: 0;
-      }
-      .inner-circle {
-        background-color: transparent;
       }
     }
     .pipeline-line {
