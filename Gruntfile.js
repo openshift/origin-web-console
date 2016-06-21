@@ -235,7 +235,8 @@ module.exports = function (grunt) {
           'bower_components/google-code-prettify/bin/prettify.min.js',
           'bower_components/google-code-prettify/bin/prettify.min.css',
           'bower_components/patternfly/dist/css/patternfly.css',
-          'bower_components/patternfly/dist/css/patternfly-additions.css'
+          'bower_components/patternfly/dist/css/patternfly-additions.css',
+          'bower_components/angular-key-value-editor/dist/angular-key-value-editor.css'
         ]
       }
     },
@@ -624,8 +625,8 @@ module.exports = function (grunt) {
     // 'coverage' - add back if we want to enforce coverage percentages
   ]);
 
-  grunt.registerTask('test-integration', 
-    grunt.option('baseUrl') ? 
+  grunt.registerTask('test-integration',
+    grunt.option('baseUrl') ?
     ['protractor:default'] : // if a baseUrl is defined assume we dont want to run the local grunt server
     [
       'clean:server',

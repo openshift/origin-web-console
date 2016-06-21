@@ -63,6 +63,14 @@ angular.module('openshiftConsole')
     });
     AlertMessageService.clearAlerts();
 
+    // copy deploymentConfig and ensure it has env so that we can edit env vars using key-value-editor
+    var copyDeploymentConfigAndEnsureEnv = function(deploymentConfig) {
+      $scope.updatedDeploymentConfig = angular.copy(deploymentConfig);
+      _.each($scope.updatedDeploymentConfig.spec.template.spec.containers, function(container) {
+        container.env = container.env || [];
+      });
+    };
+
     var watches = [];
 
     ProjectsService
@@ -87,6 +95,29 @@ angular.module('openshiftConsole')
             $scope.deploymentConfig = deploymentConfig;
             updateHPAWarnings();
             ImageStreamResolver.fetchReferencedImageStreamImages([deploymentConfig.spec.template], $scope.imagesByDockerReference, $scope.imageStreamImageRefByDockerReference, context);
+            copyDeploymentConfigAndEnsureEnv(deploymentConfig);
+            $scope.saveEnvVars = function() {
+              _.each($scope.updatedDeploymentConfig.spec.template.spec.containers, function(container) {
+                container.env = _.filter(container.env, 'name');
+              });
+              DataService.update("deploymentconfigs", $routeParams.deploymentconfig, angular.copy($scope.updatedDeploymentConfig), context)
+                .then(function success(){
+                  // TODO:  de-duplicate success and error messages.
+                  // as it stands, multiple messages appear based on how edit
+                  // is made.
+                  $scope.alerts['saveDCEnvVarsSuccess'] = {
+                    type: "success",
+                    // TODO:  improve success alert
+                    message: $scope.deploymentConfigName + " was updated."
+                  };
+                }, function error(e){
+                  $scope.alerts['saveDCEnvVarsError'] = {
+                    type: "error",
+                    message: $scope.deploymentConfigName + " was not updated.",
+                    details: "Reason: " + $filter('getErrorDetails')(e)
+                  };
+                });
+            };
 
             // If we found the item successfully, watch for changes on it
             watches.push(DataService.watchObject("deploymentconfigs", $routeParams.deploymentconfig, context, function(deploymentConfig, action) {
@@ -97,6 +128,7 @@ angular.module('openshiftConsole')
                 };
               }
               $scope.deploymentConfig = deploymentConfig;
+              copyDeploymentConfigAndEnsureEnv(deploymentConfig);
               updateHPAWarnings();
               ImageStreamResolver.fetchReferencedImageStreamImages([deploymentConfig.spec.template], $scope.imagesByDockerReference, $scope.imageStreamImageRefByDockerReference, context);
             }));

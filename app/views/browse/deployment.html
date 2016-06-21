@@ -81,7 +81,7 @@
                   <uib-tab heading="Environment" active="selectedTab.environment">
                     <uib-tab-heading>Environment</uib-tab-heading>
                     <div ng-repeat="container in deployment.spec.template.spec.containers">
-                      <h3>Container {{container.name}}</h3>
+                      <h3>Container {{container.name}} Environment Variables</h3>
                       <environment env-vars="container.env" ng-if="container.env.length"></environment>
                       <em ng-if="!container.env.length">The container specification has no environment variables set.</em>
                     </div>

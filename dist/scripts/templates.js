@@ -1696,8 +1696,11 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "</uib-tab>\n" +
     "<uib-tab heading=\"Environment\" active=\"selectedTab.environment\" ng-if=\"buildConfig && !(buildConfig | isJenkinsPipelineStrategy)\">\n" +
     "<uib-tab-heading>Environment</uib-tab-heading>\n" +
-    "<environment env-vars=\"(buildConfig | buildStrategy).env\"></environment>\n" +
-    "<em ng-if=\"!(buildConfig | buildStrategy).env\">The build strategy had no environment variables defined.</em>\n" +
+    "<h3>Environment Variables</h3>\n" +
+    "<ng-form name=\"bcEnvVars\">\n" +
+    "<key-value-editor entries=\"envVars\" key-placeholder=\"Name\" value-placeholder=\"Value\" key-validator=\"[A-Za-z_][A-Za-z0-9_]*\" key-validator-error=\"Please enter a valid key\" key-validator-error-tooltip=\"A valid environment variable name is an alphanumeric (a-z and 0-9) string beginning with a letter that may contain underscores.\"></key-value-editor>\n" +
+    "<button class=\"btn btn-default\" ng-click=\"saveEnvVars()\" ng-disabled=\"bcEnvVars.$pristine || bcEnvVars.$invalid\">Save</button>\n" +
+    "</ng-form>\n" +
     "</uib-tab>\n" +
     "</uib-tabset>\n" +
     "</div>\n" +
@@ -1773,6 +1776,7 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "</uib-tab>\n" +
     "<uib-tab heading=\"Environment\" active=\"selectedTab.environment\" ng-if=\"!(build | isJenkinsPipelineStrategy)\">\n" +
     "<uib-tab-heading>Environment</uib-tab-heading>\n" +
+    "<h3>Environment Variables</h3>\n" +
     "<environment env-vars=\"(build | buildStrategy).env\"></environment>\n" +
     "<em ng-if=\"!(build | buildStrategy).env\">The build strategy had no environment variables defined.</em>\n" +
     "</uib-tab>\n" +
@@ -2026,11 +2030,13 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "</uib-tab>\n" +
     "<uib-tab heading=\"Environment\" active=\"selectedTab.environment\" ng-if=\"deploymentConfig\">\n" +
     "<uib-tab-heading>Environment</uib-tab-heading>\n" +
-    "<div ng-repeat=\"container in deploymentConfig.spec.template.spec.containers\">\n" +
-    "<h3>Container {{container.name}}</h3>\n" +
-    "<environment env-vars=\"container.env\" ng-if=\"container.env.length\"></environment>\n" +
-    "<em ng-if=\"!container.env.length\">The container specification has no environment variables set.</em>\n" +
+    "<ng-form name=\"dcEnvVars\">\n" +
+    "<div ng-repeat=\"container in updatedDeploymentConfig.spec.template.spec.containers\">\n" +
+    "<h3>Container {{container.name}} Environment Variables</h3>\n" +
+    "<key-value-editor entries=\"container.env\" key-placeholder=\"Name\" value-placeholder=\"Value\" key-validator=\"[A-Za-z_][A-Za-z0-9_]*\" key-validator-error=\"Please enter a valid key\" key-validator-error-tooltip=\"A valid environment variable name is an alphanumeric (a-z and 0-9) string beginning with a letter that may contain underscores.\"></key-value-editor>\n" +
     "</div>\n" +
+    "<button class=\"btn btn-default\" ng-click=\"saveEnvVars()\" ng-disabled=\"dcEnvVars.$pristine || dcEnvVars.$invalid\">Save</button>\n" +
+    "</ng-form>\n" +
     "</uib-tab>\n" +
     "<uib-tab active=\"selectedTab.events\">\n" +
     "<uib-tab-heading>Events</uib-tab-heading>\n" +
@@ -2109,7 +2115,7 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "<uib-tab heading=\"Environment\" active=\"selectedTab.environment\">\n" +
     "<uib-tab-heading>Environment</uib-tab-heading>\n" +
     "<div ng-repeat=\"container in deployment.spec.template.spec.containers\">\n" +
-    "<h3>Container {{container.name}}</h3>\n" +
+    "<h3>Container {{container.name}} Environment Variables</h3>\n" +
     "<environment env-vars=\"container.env\" ng-if=\"container.env.length\"></environment>\n" +
     "<em ng-if=\"!container.env.length\">The container specification has no environment variables set.</em>\n" +
     "</div>\n" +
@@ -2441,7 +2447,7 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "<uib-tab heading=\"Environment\" active=\"selectedTab.environment\">\n" +
     "<uib-tab-heading>Environment</uib-tab-heading>\n" +
     "<div ng-repeat=\"container in pod.spec.containers\">\n" +
-    "<h3>Container {{container.name}}</h3>\n" +
+    "<h3>Container {{container.name}} Environment Variables</h3>\n" +
     "<environment env-vars=\"container.env\" ng-if=\"container.env.length\"></environment>\n" +
     "<em ng-if=\"!container.env.length\">The container specification has no environment variables set.</em>\n" +
     "</div>\n" +

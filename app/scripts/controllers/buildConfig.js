@@ -44,7 +44,14 @@ angular.module('openshiftConsole')
 
     var orderByDate = $filter('orderObjectsByDate');
     var buildConfigForBuild = $filter('buildConfigForBuild');
+    var buildStrategy = $filter('buildStrategy');
     var watches = [];
+
+    // copy buildConfig and ensure it has env so that we can edit env vars using key-value-editor
+    var copyBuildConfigAndEnsureEnv = function(buildConfig) {
+      $scope.updatedBuildConfig = angular.copy(buildConfig);
+      $scope.envVars = buildStrategy($scope.updatedBuildConfig).env || [];
+    };
 
     ProjectsService
       .get($routeParams.project)
@@ -66,6 +73,32 @@ angular.module('openshiftConsole')
               });
             }
 
+            copyBuildConfigAndEnsureEnv(buildConfig);
+
+            $scope.saveEnvVars = function() {
+              $scope.envVars = _.filter($scope.envVars, 'name');
+              buildStrategy($scope.updatedBuildConfig).env = $scope.envVars;
+
+              DataService
+                .update("buildconfigs", $routeParams.buildconfig, $scope.updatedBuildConfig, context)
+                .then(function success(){
+                  // TODO:  de-duplicate success and error messages.
+                  // as it stands, multiple messages appear based on how edit
+                  // is made.
+                  $scope.alerts['saveBCEnvVarsSuccess'] = {
+                    type: "success",
+                    // TODO:  improve success alert
+                    message: $scope.buildConfigName + " was updated."
+                  };
+                }, function error(e){
+                  $scope.alerts['saveBCEnvVarsError'] = {
+                    type: "error",
+                    message: $scope.buildConfigName + " was not updated.",
+                    details: "Reason: " + $filter('getErrorDetails')(e)
+                  };
+                });
+            };
+
             // If we found the item successfully, watch for changes on it
             watches.push(DataService.watchObject("buildconfigs", $routeParams.buildconfig, context, function(buildConfig, action) {
               if (action === "DELETED") {
@@ -75,6 +108,9 @@ angular.module('openshiftConsole')
                 };
               }
               $scope.buildConfig = buildConfig;
+
+              copyBuildConfigAndEnsureEnv(buildConfig);
+
               $scope.paused = BuildsService.isPaused($scope.buildConfig);
             }));
           },
