@@ -8,7 +8,8 @@ angular.module('openshiftConsole')
         status: "=?",
         spec: "=",
         disableScaling: "=?",
-        scaleFn: "&?"
+        scaleFn: "&?",
+        deployment: "="
       },
       templateUrl: 'views/directives/replicas.html',
       link: function(scope) {

@@ -30,8 +30,10 @@
             </span>
           </span>
         </span>
-        <a ng-if="!!['New', 'Pending'].indexOf(build.status.phase) && (build | buildLogURL)" ng-href="{{build | buildLogURL}}">View Log</a>
-        <span class="action-divider" ng-show="!!['New', 'Pending'].indexOf(build.status.phase) && (build | buildLogURL) && !(build | isIncompleteBuild)">|</span>
+        <span ng-if="'builds/log' | canI : 'get'">
+          <a ng-if="!!['New', 'Pending'].indexOf(build.status.phase) && (build | buildLogURL)" ng-href="{{build | buildLogURL}}">View Log</a>
+          <span class="action-divider" ng-show="!!['New', 'Pending'].indexOf(build.status.phase) && (build | buildLogURL) && !(build | isIncompleteBuild)">|</span>
+        </span>
         <a ng-hide="build | isIncompleteBuild" href="" ng-click="hideBuild(build)">Dismiss</a>
       </div>
     </div>

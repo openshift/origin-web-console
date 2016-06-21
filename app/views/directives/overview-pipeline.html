@@ -36,6 +36,6 @@
         </div>
       </div>
     </div>
-    <div ng-if="build | buildLogURL" class="log-link"><a ng-href="{{build | buildLogURL}}" target="_blank">View Log</a></div>
+    <div ng-if="build | buildLogURL" class="log-link"><a ng-href="{{build | buildLogURL}}" ng-if="('builds/log' | canI : 'get')" target="_blank">View Log</a></div>
   </div>
 </div>

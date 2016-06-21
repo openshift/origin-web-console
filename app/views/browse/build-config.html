@@ -16,10 +16,11 @@
                     data-toggle="tooltip"
                     data-original-title="Building from build configuration {{buildConfig.metadata.name}} has been paused.">
               </span>
-              <div class="pull-right dropdown" ng-if="buildConfig">
+              <div class="pull-right dropdown" ng-if="buildConfig" ng-hide="!('buildConfigs' | canIDoAny)">
                 <!-- Primary Actions -->
                 <button
                     class="btn btn-default hidden-xs"
+                    ng-if="'buildconfigs/instantiate' | canI : 'create'"
                     ng-click="startBuild()">
                   Start Build
                 </button>
@@ -33,22 +34,22 @@
                    class="dropdown-toggle actions-dropdown-kebab visible-xs-inline"
                    data-toggle="dropdown"><i class="fa fa-ellipsis-v"></i><span class="sr-only">Actions</span></a>
                 <ul class="dropdown-menu actions action-button">
-                  <li class="visible-xs-inline">
+                  <li class="visible-xs-inline" ng-if="'buildconfigs/instantiate' | canI : 'create'">
                     <a href=""
                       role="button"
                       ng-click="startBuild()">Start Build</a>
                   </li>
-                  <li>
+                  <li ng-if="'buildconfigs' | canI : 'update'">
                     <a ng-href="{{buildConfig | editResourceURL}}" role="button">Edit</a>
                   </li>
-                  <li>
+                  <li ng-if="'buildconfigs' | canI : 'update'">
                     <edit-link
                       resource="buildConfig"
                       kind="BuildConfig"
                       alerts="alerts">
                     </edit-link>
                   </li>
-                  <li>
+                  <li ng-if="'buildconfigs' | canI : 'delete'">
                     <delete-link
                       kind="BuildConfig"
                       resource-name="{{buildConfig.metadata.name}}"
@@ -78,20 +79,26 @@
                     <div ng-if="unfilteredBuilds && (unfilteredBuilds | hashSize) === 0" class="empty-state-message text-center">
                       <h2>No builds.</h2>
 
-                      <p>
-                        Start a new build to create an image from
-                        <span ng-if="buildConfig.spec.source.type === 'Git'">
-                          source repository
-                          <span class="word-break" ng-bind-html='buildConfig.spec.source.git.uri | githubLink : buildConfig.spec.source.git.ref : buildConfig.spec.source.contextDir | linky'></span>
-                        </span>
-                        <span ng-if="buildConfig.spec.source.type !== 'Git'">
-                          build configuration {{buildConfig.metadata.name}}.
-                        </span>
-                      </p>
+                        <p>
+                          <span ng-if="!('buildconfigs/instantiate' | canI : 'create')">
+                            Builds will create an image from
+                          </span>
+                          <span ng-if="'buildconfigs/instantiate' | canI : 'create'">
+                            Start a new build to create an image from
+                          </span>
+                          <span ng-if="buildConfig.spec.source.type === 'Git'">
+                            source repository
+                            <span class="word-break" ng-bind-html='buildConfig.spec.source.git.uri | githubLink : buildConfig.spec.source.git.ref : buildConfig.spec.source.contextDir | linky'></span>
+                          </span>
+                          <span ng-if="buildConfig.spec.source.type !== 'Git'">
+                            build configuration {{buildConfig.metadata.name}}.
+                          </span>
+                        </p>
 
-                      <button class="btn btn-primary btn-lg" ng-click="startBuild(buildConfig.metadata.name)">
-                        Start Build
-                      </button>
+                        <button class="btn btn-primary btn-lg" ng-click="startBuild(buildConfig.metadata.name)" ng-if="'buildconfigs/instantiate' | canI : 'create'">
+                          Start Build
+                        </button>
+
                     </div>
 
                     <!-- Show the latest build and a chart of the recent build duration and status. -->
@@ -114,7 +121,7 @@
                             <span ng-switch-default>is {{latestBuild.status.phase | lowercase}}.</span>
                           </span>
                         </span>
-                        <a ng-href="{{latestBuild | buildLogURL}}" ng-if="latestBuild | buildLogURL">View Log</a>
+                        <a ng-href="{{latestBuild | buildLogURL}}" ng-if="(latestBuild | buildLogURL) && ('builds/log' | canI : 'get')">View Log</a>
                       </div>
                       <div class="latest-build-timestamp meta text-muted">
                         <span ng-if="!latestBuild.status.startTimestamp">

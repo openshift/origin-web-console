@@ -62,7 +62,7 @@
           <dd>{{containerStatus.ready}}</dd>
           <dt>Restart Count:</dt>
           <dd>{{containerStatus.restartCount}}</dd>
-          <div ng-if="(!containerStatus.state.running || !containerStatus.ready) && !(pod | debugLabel)" class="debug-pod-action">
+          <div ng-if="(!containerStatus.state.running || !containerStatus.ready) && !(pod | debugLabel) && ('pods' | canI : 'create')" class="debug-pod-action">
             <a href="" ng-click="debugTerminal(containerStatus.name)" role="button">Debug in terminal</a>
           </div>
         </dl>

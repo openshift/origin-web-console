@@ -8,7 +8,7 @@
  * Controller of the openshiftConsole
  */
 angular.module('openshiftConsole')
-  .controller('OtherResourcesController', function ($routeParams, $scope, AlertMessageService, DataService, ProjectsService, $filter, LabelFilter, Logger, APIService ) {
+  .controller('OtherResourcesController', function ($routeParams, $scope, AlertMessageService, AuthorizationService, DataService, ProjectsService, $filter, LabelFilter, Logger, APIService ) {
     $scope.projectName = $routeParams.project;
     $scope.labelSuggestions = {};
     $scope.alerts = $scope.alerts || {};
@@ -48,6 +48,10 @@ angular.module('openshiftConsole')
     ProjectsService
       .get($routeParams.project)
       .then(_.spread(function(project, context) {
+        $scope.kinds = _.filter($scope.kinds, function(kind){
+          var resource = APIService.kindToResource(kind.kind);
+          return AuthorizationService.canI("list", kind.group ? kind.group + "/" + resource : resource, $scope.projectName);
+        });
         $scope.project = project;
         $scope.context = context;
         $scope.kindSelector.disabled = false;
@@ -70,6 +74,7 @@ angular.module('openshiftConsole')
       if (!selected) {
         return;
       }
+      $scope.selectedResource = (selected.group) ? selected.group + "/" + APIService.kindToResource(selected.kind) : APIService.kindToResource(selected.kind);
       // TODO - We can't watch because some of these resources do not support it (roles and rolebindings)
       DataService.list({
           group: selected.group,

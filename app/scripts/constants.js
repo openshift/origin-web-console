@@ -35,20 +35,10 @@ window.OPENSHIFT_CONSTANTS = {
   // This blacklist hides certain kinds from the "Other Resources" page because they are unpersisted, disallowed for most end users, or not supported by openshift but exist in kubernetes
   AVAILABLE_KINDS_BLACKLIST: [
       // These are k8s kinds that are not supported in the current release of OpenShift
-      "PodTemplate",
       "Binding",
       "Ingress",
-      "ReplicaSet",
-
-      // These are kinds that end users are not allowed to List by default
-      "ThirdPartyResource",
    
-      // These are things like SARs that aren't actually persisted resources
-      "LocalResourceAccessReview",
-      "LocalSubjectAccessReview",
-      "ResourceAccessReview",
-      "SubjectAccessReview",
-      "ReplicationControllerDummy",
+      // These are things like DCPs that aren't actually persisted resources
       "DeploymentConfigRollback"
   ]
 };

@@ -52,9 +52,9 @@
           <h2>No linked services.</h2>
           <p>
             No services are linked to {{service.metadata.name}}.
-            <span ng-if="(services | hashSize) > 1">Add a service to group them together.</span>
+            <span ng-if="(services | hashSize) > 1 && 'services' | canI : 'update'">Add a service to group them together.</span>
           </p>
-          <div ng-if="(services | hashSize) > 1">
+          <div ng-if="(services | hashSize) > 1 && 'services' | canI : 'update'">
             <button class="btn btn-primary" ng-show="(services | hashSize) > 1" ng-click="linkService()">
               Link Service
             </button>

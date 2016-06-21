@@ -2,7 +2,7 @@
 
 angular.module('openshiftConsole')
   .factory('ProjectsService',
-    function($location, $q, $routeParams, AuthService, DataService, annotationNameFilter) {
+    function($location, $q, $routeParams, AuthService, DataService, annotationNameFilter, AuthorizationService) {
 
 
       var cleanEditableAnnotations = function(resource) {
@@ -32,10 +32,20 @@ angular.module('openshiftConsole')
                       return DataService
                               .get('projects', projectName, context, {errorNotification: false})
                               .then(function(project) {
-                                context.project = project;
-                                context.projectPromise.resolve(project);
-                                // TODO: fix need to return context & projectPromise
-                                return [project, context];
+                                return AuthorizationService.getProjectRules(projectName)
+                                        .then(function() {
+                                          context.project = project;
+                                          context.projectPromise.resolve(project);
+                                          // TODO: fix need to return context & projectPromise
+                                          return [project, context];
+                                        }, function() {
+                                          $location.url(URI('error')
+                                                    .query({
+                                                      "error" : 'error',
+                                                      "error_description": 'User permissions for project ' + projectName + ' could not be loaded.'
+                                                    })
+                                                    .toString());
+                                        });
                               }, function(e) {
                                 context.projectPromise.reject(e);
                                 var description = 'The project could not be loaded.';
