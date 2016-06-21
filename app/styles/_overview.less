@@ -47,8 +47,18 @@
     margin-top: 5px;
   }
   .service-group {
-    border-left: 3px solid #00b9e4;
     margin-bottom: 20px;
+    position: relative;
+    &:before {
+      content: "";
+      display: block;
+      height: 100%;
+      width: 3px;
+      position: absolute;
+      background: #00b9e4;
+      left: 0px;
+      z-index: 1;
+    }
     .alert-wrapper {
       width: 100%;
       padding-right: 5px;
@@ -224,7 +234,7 @@
       .flex-wrap(@wrap: wrap);
       // Put margins between the services, but make them flush with the left
       // border even when they wrap.
-      margin-left: -11px;
+      margin-left: -10px;
       .flex-direction(@direction: column);
       .deployment-tile {
         margin-left: 10px;
