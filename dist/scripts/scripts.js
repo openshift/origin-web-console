@@ -5981,7 +5981,8 @@ scope:{
 route:"=model",
 services:"=",
 showNameInput:"=",
-routingDisabled:"="
+routingDisabled:"=",
+hostReadOnly:"="
 },
 templateUrl:"views/directives/osc-routing.html",
 controller:[ "$scope", function(a) {

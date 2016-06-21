@@ -69,6 +69,7 @@
           ng-model="route.host"
           ng-pattern="/^[a-z0-9]([-a-z0-9]*[a-z0-9])?(\.[a-z0-9]([-a-z0-9]*[a-z0-9])?)*$/"
           ng-maxlength="253"
+          ng-readonly="hostReadOnly"
           placeholder="www.example.com"
           autocorrect="off"
           autocapitalize="off"
@@ -76,7 +77,9 @@
           aria-describedby="route-host-help">
       <div>
         <span id="route-host-help" class="help-block">
-          Public hostname for the route. If not specified, a hostname is generated.
+          Public hostname for the route.
+          <span ng-if="!hostReadOnly">If not specified, a hostname is generated.</span>
+          The hostname can't be changed after the route is created.
         </span>
       </div>
       <div class="has-error" ng-show="routeForm.host.$error.pattern && routeForm.host.$touched && !routingDisabled">
