@@ -7048,13 +7048,13 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "<div ng-repeat=\"service in topLevelServices\" ng-if=\"service.metadata.labels.app || routesByService[service.metadata.name].length || childServicesByParent[service.metadata.name].length\">\n" +
     "<overview-service-group></overview-service-group>\n" +
     "</div>\n" +
-    "<div row wrap>\n" +
+    "<div row wrap class=\"overview-standalone-service\">\n" +
     "<div ng-repeat=\"service in topLevelServices\" ng-if=\"!service.metadata.labels.app && !routesByService[service.metadata.name].length && !childServicesByParent[service.metadata.name].length\" class=\"standalone-service\">\n" +
     "<overview-service-group></overview-service-group>\n" +
     "</div>\n" +
     "</div>\n" +
     "\n" +
-    "<div row wrap ng-if=\"(monopodsByService[''] | hashSize) > 0 || (deploymentConfigsByService[''] | hashSize) > 0 || (deploymentsByService[''] | hashSize) > 0\">\n" +
+    "<div row wrap ng-if=\"(monopodsByService[''] | hashSize) > 0 || (deploymentConfigsByService[''] | hashSize) > 0 || (deploymentsByService[''] | hashSize) > 0\" class=\"overview-monopods\">\n" +
     "\n" +
     "<div ng-repeat=\"(dcName, deploymentConfig) in deploymentConfigsByService[''] track by (deploymentConfig | uid)\" class=\"no-service\" ng-if=\"deployments = visibleDeploymentsByConfigAndService[''][dcName]\"> \n" +
     "<overview-deployment-config class=\"deployment-tile-wrapper\"></overview-deployment-config>\n" +
@@ -7246,7 +7246,7 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
 
   $templateCache.put('views/overview/_service-group.html',
     "<div class=\"service-group\">\n" +
-    "<div row tablet=\"column\" class=\"service-group-header\" ng-if=\"service.metadata.labels.app || displayRoute\" ng-click=\"toggleCollapse($event)\" ng-class=\"{ 'has-app-label': appName }\">\n" +
+    "<div class=\"service-group-header\" ng-if=\"service.metadata.labels.app || displayRoute\" ng-click=\"toggleCollapse($event)\" ng-class=\"{ 'has-app-label': appName }\">\n" +
     "<div ng-if=\"appName\" class=\"app-name\">\n" +
     "<i class=\"fa fa-angle-down fa-fw\" aria-hidden=\"true\" ng-if=\"!collapse\"></i>\n" +
     "<i class=\"fa fa-angle-right fa-fw\" aria-hidden=\"true\" ng-if=\"collapse\"></i>\n" +
@@ -7290,13 +7290,14 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "</service-group-notifications>\n" +
     "<div uib-collapse=\"collapse\" class=\"service-group-body\">\n" +
     "\n" +
-    "<div row mobile=\"column\" class=\"overview-services\" ng-class=\"{ 'single-alternate-service': (alternateServices | hashSize) === 1 }\">\n" +
-    "<overview-service column grow=\"1\" class=\"primary-service\"></overview-service>\n" +
-    "<overview-service ng-repeat=\"service in alternateServices\" column grow=\"1\" class=\"alternate-service\">\n" +
+    "<div class=\"overview-services\" ng-class=\"{ 'single-alternate-service': (alternateServices | hashSize) === 1 }\">\n" +
+    "<overview-service class=\"primary-service\"></overview-service>\n" +
+    "<overview-service ng-repeat=\"service in alternateServices\" class=\"alternate-service\">\n" +
     "</overview-service>\n" +
-    "<overview-service ng-repeat=\"service in childServices\" column grow=\"1\">\n" +
+    "<overview-service ng-repeat=\"service in childServices\">\n" +
     "</overview-service>\n" +
     "<div flex column ng-if=\"alternateServices.length === 0 && childServices.length === 0 && service\" class=\"no-child-services-message\">\n" +
+    "<div class=\"pad-left-lg pad-right-lg pad-top-lg pad-bottom-lg\">\n" +
     "\n" +
     "\n" +
     "\n" +
@@ -7314,13 +7315,15 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "</div>\n" +
     "</div>\n" +
     "</div>\n" +
+    "</div>\n" +
     "</div>"
   );
 
 
   $templateCache.put('views/overview/_service.html',
     "<div ng-if=\"!(visibleDeploymentsByConfig | hashSize) && !(monopodsByService[service.metadata.name] | hashSize)\" class=\"no-deployments-block\">\n" +
-    "<div class=\"no-deployments-message\">\n" +
+    "<div column class=\"no-deployments-message\">\n" +
+    "<div class=\"pad-left-lg pad-right-lg pad-top-lg pad-bottom-lg\">\n" +
     "<h2>No deployments.</h2>\n" +
     "<p>\n" +
     "There are no deployments or pods for service\n" +
@@ -7328,7 +7331,8 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "</p>\n" +
     "</div>\n" +
     "</div>\n" +
-    "<div ng-attr-row=\"{{!service ? '' : undefined}}\" ng-attr-wrap=\"{{!service ? '' : undefined}}\" ng-class=\"{'no-service': !service}\">\n" +
+    "</div>\n" +
+    "<div ng-attr-row=\"{{!service ? '' : undefined}}\" ng-attr-wrap=\"{{!service ? '' : undefined}}\" ng-class=\"{'no-service': !service, 'service-multiple-targets': (visibleDeploymentsByConfig | hashSize) + (monopodsByService[service.metadata.name] | hashSize) > 1}\" class=\"deployment-block\">\n" +
     "<div ng-repeat=\"(dcName, deployments) in visibleDeploymentsByConfig\" class=\"deployment-tile-wrapper\">\n" +
     "\n" +
     "<overview-deployment-config ng-if=\"dcName\"></overview-deployment-config>\n" +

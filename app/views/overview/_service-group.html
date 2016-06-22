@@ -1,5 +1,5 @@
 <div class="service-group">
-  <div row tablet="column" class="service-group-header"
+  <div class="service-group-header"
        ng-if="service.metadata.labels.app || displayRoute"
        ng-click="toggleCollapse($event)"
        ng-class="{ 'has-app-label': appName }">
@@ -43,50 +43,51 @@
         </div>
       </div>
     </div>
-    <!-- FIXME unserviced things should only be getting the notifications that apply to them but reusing service group to show all
-         unserviced things makes the notifications show up as a big block at the end of all of them -->
-    <service-group-notifications
-        ng-if="service"
-        collapsed="collapse"
-        deployment-configs-by-service="deploymentConfigsByService"
-        deployments-by-service="deploymentsByService"
-        child-services="childServices"
-        service="service"
-        pods-by-deployment="podsByDeployment">
-    </service-group-notifications>
-    <div uib-collapse="collapse" class="service-group-body">
-      <!--
-        Add a single-alternate-service class if the route has exactly one alternate backend so we
-        can render that common case specially.
-      -->
-      <div row mobile="column" class="overview-services"
-           ng-class="{ 'single-alternate-service': (alternateServices | hashSize) === 1 }">
-        <overview-service column grow="1" class="primary-service"></overview-service>
-        <overview-service
-            ng-repeat="service in alternateServices"
-            column grow="1"
-            class="alternate-service">
-        </overview-service>
-        <overview-service
-            ng-repeat="service in childServices"
-            column grow="1">
-        </overview-service>
-        <div flex column ng-if="alternateServices.length === 0 && childServices.length === 0 && service" class="no-child-services-message">
-          <!-- <div class="blank-state-icon"> -->
-          <!--   <span class="pficon pficon pficon-add-circle-o" aria-hidden="true"></span> -->
-          <!-- </div> -->
-          <h2>No grouped services.</h2>
-          <p>
-            No services are grouped with <a ng-href="{{service | navigateResourceURL}}">{{service.metadata.name}}</a>.
-            <span ng-if="(services | hashSize) > 1 && 'services' | canI : 'update'">Add a service to group them together.</span>
-          </p>
-          <div ng-if="(services | hashSize) > 1 && 'services' | canI : 'update'">
-            <button class="btn btn-primary" ng-click="linkService()">
-              Group Service
-            </button>
+      <!-- FIXME unserviced things should only be getting the notifications that apply to them but reusing service group to show all
+           unserviced things makes the notifications show up as a big block at the end of all of them -->
+      <service-group-notifications
+          ng-if="service"
+          collapsed="collapse"
+          deployment-configs-by-service="deploymentConfigsByService"
+          deployments-by-service="deploymentsByService"
+          child-services="childServices"
+          service="service"
+          pods-by-deployment="podsByDeployment">
+      </service-group-notifications>
+      <div uib-collapse="collapse" class="service-group-body">
+        <!--
+          Add a single-alternate-service class if the route has exactly one alternate backend so we
+          can render that common case specially.
+        -->
+        <div class="overview-services"
+             ng-class="{ 'single-alternate-service': (alternateServices | hashSize) === 1 }">
+          <overview-service class="primary-service"></overview-service>
+          <overview-service
+              ng-repeat="service in alternateServices"
+              class="alternate-service">
+          </overview-service>
+          <overview-service
+              ng-repeat="service in childServices">
+          </overview-service>
+          
+          <div flex column ng-if="alternateServices.length === 0 && childServices.length === 0 && service" class="no-child-services-message">
+            <div class="pad-left-lg pad-right-lg pad-top-lg pad-bottom-lg">
+              <!-- <div class="blank-state-icon"> -->
+              <!--   <span class="pficon pficon pficon-add-circle-o" aria-hidden="true"></span> -->
+              <!-- </div> -->
+              <h2>No grouped services.</h2>
+              <p>
+                No services are grouped with <a ng-href="{{service | navigateResourceURL}}">{{service.metadata.name}}</a>.
+                <span ng-if="(services | hashSize) > 1 && 'services' | canI : 'update'">Add a service to group them together.</span>
+              </p>
+              <div ng-if="(services | hashSize) > 1 && 'services' | canI : 'update'">
+                <button class="btn btn-primary" ng-click="linkService()">
+                  Group Service
+                </button>
+              </div>
+            </div>
           </div>
         </div>
       </div>
-    </div>
   </div>
 </div>
