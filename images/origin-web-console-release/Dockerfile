@@ -5,5 +5,6 @@ FROM openshift/nodejs-010-centos7
 # Firefox requires a machine-id exist so just go ahead and generate a bogus one
 USER root
 RUN yum install -y java-1.?.0-openjdk Xvfb firefox && \
+    yum clean all -y  && \
     dbus-uuidgen > /etc/machine-id
 USER 1001
