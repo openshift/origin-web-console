@@ -15,8 +15,9 @@
 
 .navbar-pf-alt {
   background: @navbar-os-bg-color;
-  border-bottom: 0;
-  border-radius: 0;
+  border-bottom: 1px solid @sidebar-os-border-color;
+  border-left: 1px solid transparent;
+  border-right: 1px solid transparent;
   border-top: 0;
   min-height: inherit;
   .layout-pf-alt-fixed & {
@@ -61,7 +62,7 @@
       }
     }
   }
-  .navbar-iconic {
+  .nav.navbar-iconic {
     margin-right: 20px;
     .dropdown-menu {
       &:before,&:after {
@@ -92,6 +93,7 @@
   .navbar-brand {
     border: 0;
     height: auto;
+    margin-left: 0;
     padding: 0 0 0 10px;
     position: relative;
   }
@@ -111,19 +113,16 @@
       background: @navbar-pf-alt-color;
     }
   }
-  .nav-item-iconic {
+  .nav .nav-item-iconic {
     // utiltity links
     cursor: pointer;
     line-height: 1;
-    max-height: (@navbar-pf-alt-height - @navbar-pf-alt-border-width); // to keep Firefox from oversizing icons
-    padding-left: 14px;
-    padding-right: 14px;
+    max-height: none;
     padding-top: @navbar-padding-vertical;
     padding-bottom: @navbar-padding-vertical;
     position: relative;
     color: @navbar-pf-alt-color;
     margin-right: 0;
-    max-height: none;
     .username, .status-issue {
       display: inline-block;
       font-weight: 300;
@@ -169,7 +168,7 @@
   #header-logo {
     height: @navbar-os-header-height-desktop;
   }
-  .navbar-pf-alt .nav-item-iconic {
+  .navbar-pf-alt .nav .nav-item-iconic {
     display: block;
     padding: 21px 14px;
   }
@@ -255,7 +254,6 @@
 
 @media (max-width: @screen-xs-max) {
   .layout-pf-alt-fixed .navbar-pf-alt {
-    border-bottom: 1px solid @sidebar-os-border-color;
     position: absolute;
     .navbar-brand:after {
         content: '';
@@ -296,7 +294,6 @@
 
 @media (min-width: @screen-sm-min) {
   .navbar-pf-alt {
-    border-bottom: 1px solid @sidebar-os-border-color;
     .navbar-header {
       height: 60px;
       width: 88px;
