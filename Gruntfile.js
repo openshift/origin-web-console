@@ -549,7 +549,7 @@ module.exports = function (grunt) {
 
     protractor: {
       options: {
-        configFile: "test/protractor-chrome.conf.js", // Default config file
+        configFile: "test/protractor.conf.js", // Default config file
         keepAlive: false, // If false, the grunt process stops when the test fails.
         noColor: false, // If true, protractor will not use colors in its output.
         args: {
@@ -558,11 +558,12 @@ module.exports = function (grunt) {
           baseUrl: grunt.option('baseUrl') || "https://localhost:9000/"
         }
       },
-      chrome: {
+      default: {
         options: {
-          configFile: "test/protractor-chrome.conf.js", // Target-specific config file
+          configFile: "test/protractor.conf.js", // Target-specific config file
           args: {
-            baseUrl: grunt.option('baseUrl') || "https://localhost:9000/"
+            baseUrl: grunt.option('baseUrl') || "https://localhost:9000/",
+            browser: grunt.option('browser') || "chrome"
           } // Target-specific arguments
         }
       }
@@ -624,13 +625,13 @@ module.exports = function (grunt) {
 
   grunt.registerTask('test-integration', 
     grunt.option('baseUrl') ? 
-    ['protractor:chrome'] : // if a baseUrl is defined assume we dont want to run the local grunt server
+    ['protractor:default'] : // if a baseUrl is defined assume we dont want to run the local grunt server
     [
       'clean:server',
       'concurrent:server',
       'autoprefixer',
       'connect:test',
-      'protractor:chrome',
+      'protractor:default',
       'clean:server'
     ]
   );
