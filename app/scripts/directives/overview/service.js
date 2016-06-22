@@ -37,6 +37,18 @@ angular.module('openshiftConsole')
           var serviceName = _.get($scope, 'service.metadata.name');
           $scope.activeDeploymentByConfig = {};
           $scope.visibleDeploymentsByConfig = visibleDeploymentsByConfigAndService[serviceName];
+
+          // Determine if this service will show multiple RC tiles on the overview.
+          $scope.rcTileCount = 0;
+          _.each($scope.visibleDeploymentsByConfig, function(deployments, dcName) {
+            if (!dcName) {
+              // Vanilla RCs.
+              $scope.rcTileCount += _.size(deployments);
+            } else {
+              // Deployment config tile.
+              $scope.rcTileCount++;
+            }
+          });
         });
 
         $scope.isDeploymentLatest = function(deployment) {

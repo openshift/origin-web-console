@@ -8546,7 +8546,9 @@ e.deploymentConfigs = a[b];
 }), e.$watch("visibleDeploymentsByConfigAndService", function(a) {
 if (a) {
 var b = _.get(e, "service.metadata.name");
-e.activeDeploymentByConfig = {}, e.visibleDeploymentsByConfig = a[b];
+e.activeDeploymentByConfig = {}, e.visibleDeploymentsByConfig = a[b], e.rcTileCount = 0, _.each(e.visibleDeploymentsByConfig, function(a, b) {
+b ? e.rcTileCount++ :e.rcTileCount += _.size(a);
+});
 }
 }), e.isDeploymentLatest = function(a) {
 var b = f(a, "deploymentConfig");
