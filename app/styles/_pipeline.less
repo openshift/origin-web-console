@@ -424,7 +424,7 @@
     width: @build-rail-width;
     background: @build-rail-bgcolor;
     height: @build-rail-height;
-    margin-bottom: -13px;
+    margin-bottom: -14px;
     position:relative;
     overflow:hidden;
       .build-bar {
@@ -438,13 +438,14 @@
   .build-circle {
     border: 1px solid @build-circle-border;
     background: @build-circle-bgcolor;
-    width: 22px;
+    min-width: 22px;
     height: 22px;
     border-radius: 22px;
     .flex-display(@display: flex);
     .flex-direction(@direction: column);
     .justify-content(@justify: center);
     .align-items(@align: center);
+    padding: 0 2px;
     z-index: 1;
     .build-time {
       color: @build-circle-color;

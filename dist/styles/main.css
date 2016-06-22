@@ -3873,7 +3873,7 @@ ul.messenger-theme-flat .messenger-message.alert-info .messenger-message-inner:b
 .overview .overview-pipeline .stage{display:-webkit-flex;display:-moz-flex;display:-ms-flexbox;display:-ms-flex;display:flex;position:relative}
 .overview .overview-pipeline .stage .stage-duration{color:#999;margin-left:5px}
 .overview .overview-pipeline .current-stage{margin-left:10px;padding-left:10px;border-left:1px solid #d1d1d1;display:-webkit-flex;display:-moz-flex;display:-ms-flexbox;display:-ms-flex;display:flex;-webkit-align-items:center;-moz-align-items:center;align-items:center}
-.overview .overview-pipeline .current-stage .in-progress-stage{width:150px;margin-left:5px}
+.overview .overview-pipeline .current-stage .in-progress-stage{width:150px;margin-bottom:-2px;margin-left:5px}
 .overview .overview-pipeline .log-link,.overview .overview-pipeline .stages{padding:5px 10px}
 .overview .overview-pipeline .stages{display:-webkit-flex;display:-moz-flex;display:-ms-flexbox;display:-ms-flex;display:flex}
 .overview .overview-pipeline .timestamp{color:#999;float:right!important;float:right;padding:2px 5px 0}
@@ -4012,9 +4012,9 @@ to{background-color:transparent}
 .overview-pipeline .stage{min-width:initial}
 .build-stage-animation{width:100%;padding-top:8px;padding-left:5px;position:relative;display:flex;-webkit-flex-direction:column;-moz-flex-direction:column;-ms-flex-direction:column;flex-direction:column;-webkit-justify-content:center;-moz-justify-content:center;justify-content:center;-webkit-align-items:center;-moz-align-items:center;align-items:center}
 .build-stage-animation .build-circle,.console-os .top-header{display:-webkit-flex;display:-moz-flex;display:-ms-flexbox;display:-ms-flex}
-.build-stage-animation .build-rail{width:100%;background:#d6d6d6;height:4px;margin-bottom:-13px;position:relative;overflow:hidden}
+.build-stage-animation .build-rail{width:100%;background:#d6d6d6;height:4px;margin-bottom:-14px;position:relative;overflow:hidden}
 .build-stage-animation .build-rail .build-bar{width:50px;position:absolute;height:4px;background:#00a8e1;animation:slide 7s linear infinite}
-.build-stage-animation .build-circle{border:1px solid #d6d6d6;background:#fff;width:22px;height:22px;border-radius:22px;display:flex;-webkit-flex-direction:column;-moz-flex-direction:column;-ms-flex-direction:column;flex-direction:column;-webkit-justify-content:center;-moz-justify-content:center;justify-content:center;-webkit-align-items:center;-moz-align-items:center;align-items:center;z-index:1}
+.build-stage-animation .build-circle{border:1px solid #d6d6d6;background:#fff;min-width:22px;height:22px;border-radius:22px;display:flex;-webkit-flex-direction:column;-moz-flex-direction:column;-ms-flex-direction:column;flex-direction:column;-webkit-justify-content:center;-moz-justify-content:center;justify-content:center;-webkit-align-items:center;-moz-align-items:center;align-items:center;padding:0 2px;z-index:1}
 .build-stage-animation .build-circle .build-time{color:#666;font-size:10px}
 @keyframes slide{0%{left:-50px}
 100%{left:100%}
