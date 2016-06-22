@@ -889,6 +889,35 @@ angular.module('openshiftConsole')
       return new URI(navURL).addSearch('tab', 'logs').toString();
     };
   })
+  .filter('jenkinsfileLink', function(isJenkinsPipelineStrategyFilter, githubLinkFilter) {
+    // If this is a GitHub repository and the build config uses a Jenkinsfile path, return a URL to the Jenkinsfile.
+    // Returns '' in all other cases.
+    return function(/* buildConfig or build */ buildConfig) {
+      if (!isJenkinsPipelineStrategyFilter(buildConfig) ||
+          _.has(buildConfig, 'spec.strategy.jenkinsPipelineStrategy.jenkinsfile')) {
+        return '';
+      }
+
+      var sourceURI = _.get(buildConfig, 'spec.source.git.uri');
+      if (!sourceURI) {
+        return '';
+      }
+
+      var ref = _.get(buildConfig, 'spec.source.git.ref'),
+          jenkinsfilePath = _.get(buildConfig, 'spec.strategy.jenkinsPipelineStrategy.jenkinsfilePath', 'Jenkinsfile'),
+          contextDir = _.get(buildConfig, 'spec.source.contextDir');
+      if (contextDir) {
+        jenkinsfilePath = URI.joinPaths(contextDir, jenkinsfilePath).path();
+      }
+
+      var link = githubLinkFilter(sourceURI, ref, jenkinsfilePath);
+      if (!URI(link).is('url')) {
+        return '';
+      }
+
+      return link;
+    };
+  })
   .filter('pipelineStageComplete', function () {
     return function(stage) {
       if (!stage) {

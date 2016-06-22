@@ -76,7 +76,14 @@
         <dt ng-if-start="build.spec.strategy.jenkinsPipelineStrategy.jenkinsfilePath">
           Jenkinsfile Path:
         </dt>
-        <dd ng-if-end>{{buildConfig.spec.strategy.jenkinsPipelineStrategy.jenkinsfilePath}}</dd>
+        <dd ng-if-end>
+          <span ng-if="build | jenkinsfileLink">
+            <a ng-href="{{build | jenkinsfileLink}}">{{build.spec.strategy.jenkinsPipelineStrategy.jenkinsfilePath}}</a>
+          </span>
+          <span ng-if="!(build | jenkinsfileLink)">
+            {{build.spec.strategy.jenkinsPipelineStrategy.jenkinsfilePath}}
+          </span>
+        </dd>
         <dt ng-if-start="build.spec.strategy.jenkinsPipelineStrategy.jenkinsfile">
           Jenkinsfile:
         </dt>

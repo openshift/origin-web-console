@@ -1104,7 +1104,14 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "<dt ng-if-start=\"build.spec.strategy.jenkinsPipelineStrategy.jenkinsfilePath\">\n" +
     "Jenkinsfile Path:\n" +
     "</dt>\n" +
-    "<dd ng-if-end>{{buildConfig.spec.strategy.jenkinsPipelineStrategy.jenkinsfilePath}}</dd>\n" +
+    "<dd ng-if-end>\n" +
+    "<span ng-if=\"build | jenkinsfileLink\">\n" +
+    "<a ng-href=\"{{build | jenkinsfileLink}}\">{{build.spec.strategy.jenkinsPipelineStrategy.jenkinsfilePath}}</a>\n" +
+    "</span>\n" +
+    "<span ng-if=\"!(build | jenkinsfileLink)\">\n" +
+    "{{build.spec.strategy.jenkinsPipelineStrategy.jenkinsfilePath}}\n" +
+    "</span>\n" +
+    "</dd>\n" +
     "<dt ng-if-start=\"build.spec.strategy.jenkinsPipelineStrategy.jenkinsfile\">\n" +
     "Jenkinsfile:\n" +
     "</dt>\n" +
@@ -1561,7 +1568,12 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "<div ng-if=\"buildConfig | isJenkinsPipelineStrategy\">\n" +
     "<div ng-if=\"buildConfig.spec.strategy.jenkinsPipelineStrategy.jenkinsfilePath\">\n" +
     "<dt>Jenkinsfile Path:</dt>\n" +
-    "<dd>{{buildConfig.spec.strategy.jenkinsPipelineStrategy.jenkinsfilePath}}</dd>\n" +
+    "<dd ng-if=\"buildConfig | jenkinsfileLink\">\n" +
+    "<a ng-href=\"{{buildConfig | jenkinsfileLink}}\">{{buildConfig.spec.strategy.jenkinsPipelineStrategy.jenkinsfilePath}}</a>\n" +
+    "</dd>\n" +
+    "<dd ng-if=\"!(buildConfig | jenkinsfileLink)\">\n" +
+    "{{buildConfig.spec.strategy.jenkinsPipelineStrategy.jenkinsfilePath}}\n" +
+    "</dd>\n" +
     "</div>\n" +
     "<div ng-if=\"buildConfig.spec.strategy.jenkinsPipelineStrategy.jenkinsfile\">\n" +
     "<dt>Jenkinsfile:</dt><dd></dd>\n" +
