@@ -17,7 +17,12 @@ angular.module('openshiftConsole')
           $scope.collapse = true;
         }
 
-        $scope.toggleCollapse = function() {
+        $scope.toggleCollapse = function(e) {
+          // Don't collapse when clicking on the route link.
+          if (e.target.tagName ==='A') {
+            return;
+          }
+
           $scope.collapse = !$scope.collapse;
         };
 

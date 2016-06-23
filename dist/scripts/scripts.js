@@ -7929,8 +7929,8 @@ restrict:"E",
 scope:!0,
 templateUrl:"views/overview/_service-group.html",
 link:function(e) {
-d.isInfrastructure(e.service) && (e.collapse = !0), e.toggleCollapse = function() {
-e.collapse = !e.collapse;
+d.isInfrastructure(e.service) && (e.collapse = !0), e.toggleCollapse = function(a) {
+"A" !== a.target.tagName && (e.collapse = !e.collapse);
 }, e.linkService = function() {
 var c = b.open({
 animation:!0,

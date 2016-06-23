@@ -6794,7 +6794,7 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "<i class=\"fa fa-angle-down fa-fw\" aria-hidden=\"true\" ng-if=\"!collapse\"></i>\n" +
     "<i class=\"fa fa-angle-right fa-fw\" aria-hidden=\"true\" ng-if=\"collapse\"></i>\n" +
     "</span>\n" +
-    "<a ng-if=\"displayRoute | isWebRoute\" ng-href=\"{{displayRoute | routeWebURL}}\">{{displayRoute | routeLabel}}</a>\n" +
+    "<a ng-if=\"displayRoute | isWebRoute\" target=\"_blank\" ng-href=\"{{displayRoute | routeWebURL}}\">{{displayRoute | routeLabel}}</a>\n" +
     "<span ng-if=\"displayRoute && !(displayRoute | isWebRoute)\">{{displayRoute | routeLabel}}</span>\n" +
     "<span ng-if=\"routeWarningsByService[service.metadata.name] && routesByService[service.metadata.name].length === 1\">\n" +
     "<route-warnings warnings=\"routeWarningsByService[service.metadata.name]\"></route-warnings>\n" +
