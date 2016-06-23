@@ -39,6 +39,9 @@ fi
 
 cmd "npm install --unsafe-perm"
 
+# For debugging...
+cmd "npm list"
+
 # In case upstream components change things without incrementing versions
 cmd "bower cache clean --allow-root"
 cmd "bower update --allow-root" 3
