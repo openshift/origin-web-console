@@ -2564,6 +2564,164 @@ getDependentServices:g,
 linkService:h,
 isInfrastructure:i
 };
+} ]), angular.module("openshiftConsole").factory("ImagesService", [ "$filter", "ApplicationGenerator", "DataService", function(a, b, c) {
+var d = function(a, b) {
+var d = {
+kind:"ImageStreamImport",
+apiVersion:"v1",
+metadata:{
+name:"newapp",
+namespace:b.namespace
+},
+spec:{
+"import":!1,
+images:[ {
+from:{
+kind:"DockerImage",
+name:a
+}
+} ]
+},
+status:{}
+};
+return c.create("imagestreamimports", null, d, b).then(function(a) {
+return {
+name:_.get(a, "spec.images[0].from.name"),
+image:_.get(a, "status.images[0].image"),
+tag:_.get(a, "status.images[0].tag"),
+result:_.get(a, "status.images[0].status")
+};
+});
+}, e = function(a) {
+var b = _.get(a, "dockerImageMetadata.Config.User");
+return !b || "0" === b || "root" === b;
+}, f = function(a) {
+return _.get(a, "dockerImageMetadata.Config.Volumes");
+}, g = function(a) {
+var c = [], d = {
+"openshift.io/generated-by":"OpenShiftWebConsole"
+}, e = [];
+_.forEach(a.env, function(a, b) {
+e.push({
+name:b,
+value:a
+});
+});
+var f = [], g = [], h = 0;
+if (_.forEach(a.volumes, function(b, c) {
+h++;
+var d = a.name + "-" + h;
+f.push({
+name:d,
+emptyDir:{}
+}), g.push({
+name:d,
+mountPath:c
+});
+}), !a.namespace) {
+var i = {
+kind:"ImageStream",
+apiVersion:"v1",
+metadata:{
+name:a.name,
+labels:a.labels
+},
+spec:{
+tags:[ {
+name:a.tag,
+annotations:_.assign({
+"openshift.io/imported-from":a.image
+}, d),
+from:{
+kind:"DockerImage",
+name:a.image
+},
+importPolicy:{}
+} ]
+}
+};
+c.push(i);
+}
+var j = {
+kind:"DeploymentConfig",
+apiVersion:"v1",
+metadata:{
+name:a.name,
+labels:a.labels,
+annotations:d
+},
+spec:{
+strategy:{
+resources:{}
+},
+triggers:[ {
+type:"ConfigChange"
+}, {
+type:"ImageChange",
+imageChangeParams:{
+automatic:!0,
+containerNames:[ a.name ],
+from:{
+kind:"ImageStreamTag",
+name:a.name + ":" + a.tag,
+namespace:a.namespace
+}
+}
+} ],
+replicas:1,
+test:!1,
+selector:{
+app:a.name,
+deploymentconfig:a.name
+},
+template:{
+metadata:{
+labels:_.assign({
+deploymentconfig:a.name
+}, a.labels),
+annotations:d
+},
+spec:{
+volumes:f,
+containers:[ {
+name:a.name,
+image:a.image,
+ports:a.ports,
+env:e,
+volumeMounts:g
+} ],
+resources:{}
+}
+}
+},
+status:{}
+};
+c.push(j);
+var k;
+return a.ports.length && (k = {
+kind:"Service",
+apiVersion:"v1",
+metadata:{
+name:a.name,
+labels:a.labels,
+annotations:d
+},
+spec:{
+selector:{
+deploymentconfig:a.name
+},
+ports:_.map(a.ports, function(a) {
+return b.getServicePort(a);
+})
+}
+}, c.push(k)), c;
+};
+return {
+findImage:d,
+getVolumes:f,
+runsAsRoot:e,
+getResources:g
+};
 } ]), angular.module("openshiftConsole").controller("ProjectsController", [ "$scope", "$route", "$timeout", "$filter", "$location", "DataService", "AuthService", "AlertMessageService", "Logger", "hashSizeFilter", function(a, b, c, d, e, f, g, h, i, j) {
 var k = [];
 a.projects = {}, a.alerts = a.alerts || {}, a.showGetStarted = !1, a.canCreate = void 0, h.getAlerts().forEach(function(b) {
@@ -4622,7 +4780,7 @@ a.emptyMessage = "Loading...", a.alerts = [], a.loginBaseUrl = d.openshiftAPIBas
 var q = c.imageName, r = c.imageTag, s = c.namespace;
 a.fromSampleRepo = c.fromSample;
 var t = c.name, u = "";
-u = o() ? "project/" + a.projectName + "/create/fromimage?imageName=" + q + "&imageTag=" + r + "&namespace=" + s + "&name=" + t :"project/" + a.projectName + "/create/fromtemplate?name=" + t + "&namespace=" + s, a.breadcrumbs = [ {
+o() ? u = "project/" + a.projectName + "/create/fromimage?imageName=" + q + "&imageTag=" + r + "&namespace=" + s + "&name=" + t :n() && (u = "project/" + a.projectName + "/create/fromtemplate?name=" + t + "&namespace=" + s), a.breadcrumbs = [ {
 title:a.projectName,
 link:"project/" + a.projectName
 }, {
@@ -4633,20 +4791,20 @@ title:t,
 link:u
 }, {
 title:"Next Steps"
-} ], m.get(c.project).then(_.spread(function(b, e) {
-function g(a) {
+} ], m.get(c.project).then(_.spread(function(b, c) {
+function e(a) {
 var b = [];
 return angular.forEach(a, function(a) {
 a.hasErrors && b.push(a);
 }), b;
 }
-function h(a) {
+function f(a) {
 var b = [];
 return angular.forEach(a, function(a) {
 "completed" !== a.status && b.push(a);
 }), b;
 }
-return a.project = b, a.breadcrumbs[0].title = j("displayName")(b), t && (n(c) || o(c)) ? (p.push(d.watch("buildconfigs", e, function(b) {
+return a.project = b, a.breadcrumbs[0].title = j("displayName")(b), t ? (p.push(d.watch("buildconfigs", c, function(b) {
 a.buildConfigs = b.by("metadata.name"), a.createdBuildConfig = a.buildConfigs[t], Logger.log("buildconfigs (subscribe)", a.buildConfigs);
 })), a.createdBuildConfigWithGitHubTrigger = function() {
 return _.some(_.get(a, "createdBuildConfig.spec.triggers"), {
@@ -4657,10 +4815,8 @@ return _.some(_.get(a, "createdBuildConfig.spec.triggers"), {
 type:"ConfigChange"
 });
 }, a.allTasksSuccessful = function(a) {
-return !h(a).length && !g(a).length;
-}, a.erroredTasks = g, a.pendingTasks = h, a.goBack = function() {
-o() ? f.path("project/" + encodeURIComponent(this.projectName) + "/create/fromimage") :f.path("project/" + encodeURIComponent(this.projectName) + "/create/fromtemplate");
-}, void a.$on("$destroy", function() {
+return !f(a).length && !e(a).length;
+}, a.erroredTasks = e, a.pendingTasks = f, void a.$on("$destroy", function() {
 d.unwatchAll(p);
 })) :void i.toProjectOverview(a.projectName);
 }));
@@ -7930,7 +8086,7 @@ scope:!0,
 templateUrl:"views/overview/_service-group.html",
 link:function(e) {
 d.isInfrastructure(e.service) && (e.collapse = !0), e.toggleCollapse = function(a) {
-"A" !== a.target.tagName && (e.collapse = !e.collapse);
+a && a.target && "A" === a.target.tagName || (e.collapse = !e.collapse);
 }, e.linkService = function() {
 var c = b.open({
 animation:!0,
@@ -7985,7 +8141,121 @@ restrict:"E",
 scope:!0,
 templateUrl:"views/overview/_dc.html"
 };
-}), angular.module("openshiftConsole").filter("dateRelative", function() {
+}), angular.module("openshiftConsole").directive("istagSelect", [ "DataService", function(a) {
+return {
+require:"^form",
+restrict:"E",
+scope:{
+istag:"=model",
+selectDisabled:"="
+},
+templateUrl:"views/directives/istag-select.html",
+link:function(b) {
+b.isByNamespace = {}, b.isNamesByNamespace = {}, a.list("projects", {}, function(c) {
+b.namespaces = [ "openshift" ].concat(_.keys(c.by("metadata.name")).sort()), b.$watch("istag.namespace", function(c) {
+c && !b.isByNamespace[c] && a.list("imagestreams", {
+namespace:c
+}, function(a) {
+b.isByNamespace[c] = a.by("metadata.name"), b.isNamesByNamespace[c] = _.keys(b.isByNamespace[c]).sort();
+});
+});
+});
+}
+};
+} ]), angular.module("openshiftConsole").directive("deployImage", [ "$filter", "$q", "$window", "ApplicationGenerator", "DataService", "ImagesService", "Navigate", "ProjectsService", "TaskList", function(a, b, c, d, e, f, g, h, i) {
+return {
+restrict:"E",
+scope:{
+project:"=",
+context:"=",
+alerts:"="
+},
+templateUrl:"views/directives/deploy-image.html",
+link:function(c) {
+function h() {
+return f.getResources({
+name:c.app.name,
+image:c["import"].name,
+namespace:c["import"].namespace,
+tag:c["import"].tag || "latest",
+ports:c.ports,
+volumes:c.volumes,
+env:c.app.env,
+labels:c.app.labels
+});
+}
+c.mode = "istag", c.istag = {}, c.app = {
+env:{},
+labels:{}
+};
+var j = a("stripTag"), k = a("stripSHA"), l = a("humanizeKind"), m = function() {
+var a = _.last(c["import"].name.split("/"));
+return a = k(a), a = j(a);
+};
+c.findImage = function() {
+c.loading = !0, f.findImage(c.imageName, c.context).then(function(a) {
+if (c["import"] = a, c.loading = !1, "Success" !== _.get(a, "result.status")) return void (c["import"].error = _.get(a, "result.message", "An error occurred finding the image."));
+var b = c["import"].image;
+b && (c.app.name = m(), c.app.labels = {
+app:c.app.name
+}, c.runsAsRoot = f.runsAsRoot(b), c.ports = d.parsePorts(b), c.volumes = f.getVolumes(b), c.createImageStream = !0);
+}, function(b) {
+c["import"].error = a("getErrorDetails")(b) || "An error occurred finding the image.", c.loading = !1;
+});
+}, c.$watch("app.name", function() {
+_.set(c, "app.labels.app", c.app.name);
+}), c.$watch("mode", function(a, b) {
+a !== b && (delete c["import"], c.istag = {});
+}), c.$watch("istag", function(b, g) {
+if (b !== g) {
+if (!b.namespace || !b.imageStream || !b.tag) return void delete c["import"];
+var h, i = _.get(b, "tag.items[0].image");
+c.app.name = b.imageStream, c["import"] = {
+name:b.imageStream,
+tag:b.tag.tag,
+namespace:b.namespace
+}, i && (h = b.imageStream + "@" + i, c.loading = !0, e.get("imagestreamimages", h, {
+namespace:b.namespace
+}).then(function(a) {
+c.loading = !1, c["import"].image = a.image, c.ports = d.parsePorts(a.image), c.volumes = f.getVolumes(a.image), c.runsAsRoot = !1;
+}, function(b) {
+c["import"].error = a("getErrorDetails")(b) || "An error occurred.", c.loading = !1;
+}));
+}
+}, !0), c.create = function() {
+var a = h(), d = {
+started:"Deploying image " + c.app.name + " to project " + c.project + ".",
+success:"Deployed image " + c.app.name + " to project " + c.project + ".",
+failure:"Failed to deploy image " + c.app.name + " to project " + c.project + "."
+};
+i.clear(), i.add(d, {}, function() {
+var d = b.defer();
+return e.batch(a, c.context).then(function(a) {
+var b, e = !_.isEmpty(a.failure);
+e ? (b = _.map(a.failure, function(a) {
+return {
+type:"error",
+message:"Cannot create " + l(a.object.kind).toLowerCase() + ' "' + a.object.metadata.name + '". ',
+details:a.data.message
+};
+}), b = b.concat(_.map(a.success, function(a) {
+return {
+type:"success",
+message:"Created " + l(a.kind).toLowerCase() + ' "' + a.metadata.name + '" successfully. '
+};
+}))) :b = [ {
+type:"success",
+message:"All resources for image " + c.app.name + " were created successfully."
+} ], d.resolve({
+alerts:b,
+hasErrors:e
+});
+}), d.promise;
+}), g.toNextSteps(c.app.name, c.project);
+};
+}
+};
+} ]), angular.module("openshiftConsole").filter("dateRelative", function() {
 return function(a, b) {
 return a ? moment(a).fromNow(b) :a;
 };
@@ -8154,6 +8424,14 @@ return function(a) {
 if (!a) return "";
 var b, c = a.split("@")[0], d = c.split("/");
 return 3 === d.length ? (b = d[2].split(":"), d[1] + "/" + b[0]) :2 === d.length ? c :1 === d.length ? (b = c.split(":"), b[0]) :void 0;
+};
+}).filter("stripTag", function() {
+return function(a) {
+return a ? a.split(":")[0] :a;
+};
+}).filter("stripSHA", function() {
+return function(a) {
+return a ? a.split("@")[0] :a;
 };
 }).filter("imageEnv", function() {
 return function(a, b) {
@@ -8934,11 +9212,15 @@ return null === a || void 0 === a;
 return function(a) {
 return a ? _.startCase(a).toLowerCase() :a;
 };
-}).filter("sentenceCase", [ "camelToLowerFilter", function(a) {
-return function(b) {
-if (!b) return b;
-var c = a(b);
-return c.charAt(0).toUpperCase() + c.slice(1);
+}).filter("upperFirst", function() {
+return function(a) {
+return a ? a.charAt(0).toUpperCase() + a.slice(1) :a;
+};
+}).filter("sentenceCase", [ "camelToLowerFilter", "upperFirstFilter", function(a, b) {
+return function(c) {
+if (!c) return c;
+var d = a(c);
+return b(d);
 };
 } ]).filter("startCase", function() {
 return function(a) {

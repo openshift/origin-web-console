@@ -13,11 +13,9 @@
             <alerts alerts="alerts"></alerts>
             <div class="row">
               <div class="col-md-12">
-                <h1>Add to Project</h1>
-
-                <uib-tabset>
+                <uib-tabset class="mar-top-none">
                   <uib-tab active="selectedTab.fromCatalog">
-                    <uib-tab-heading>From Catalog</uib-tab-heading>
+                    <uib-tab-heading>Browse Catalog</uib-tab-heading>
 
                     <p ng-if="emptyCatalog && !loaded">Loading...</p>
 
@@ -169,8 +167,13 @@
                     </div>
                   </uib-tab>
 
+                  <uib-tab active="selectedTab.fromDockerImage">
+                    <uib-tab-heading>Deploy Image</uib-tab-heading>
+                    <deploy-image project="projectName" context="context" alerts="alerts"></deploy-image>
+                  </uib-tab>
+
                   <uib-tab active="selectedTab.fromFile">
-                    <uib-tab-heading>From File</uib-tab-heading>
+                    <uib-tab-heading>Import YAML / JSON</uib-tab-heading>
                     <from-file></from-file>
                   </uib-tab>
 

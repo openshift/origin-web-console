@@ -249,6 +249,27 @@ angular.module('openshiftConsole')
       }
     };
   })
+  .filter('stripTag', function() {
+    // Strips the trailing `:tag` if present from an image name. For instance, returns
+    // "jenkins" for "jenkins:latest".
+    return function(imageName) {
+      if (!imageName) {
+        return imageName;
+      }
+
+      return imageName.split(':')[0];
+    };
+  })
+  .filter('stripSHA', function() {
+    // Strips the trailing `@sha:...` if present from an image name.
+    return function(imageName) {
+      if (!imageName) {
+        return imageName;
+      }
+
+      return imageName.split('@')[0];
+    };
+  })
   .filter('imageEnv', function() {
     return function(image, envKey) {
       var envVars = image.dockerImageMetadata.Config.Env;

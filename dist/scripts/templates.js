@@ -3343,10 +3343,9 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "<alerts alerts=\"alerts\"></alerts>\n" +
     "<div class=\"row\">\n" +
     "<div class=\"col-md-12\">\n" +
-    "<h1>Add to Project</h1>\n" +
-    "<uib-tabset>\n" +
+    "<uib-tabset class=\"mar-top-none\">\n" +
     "<uib-tab active=\"selectedTab.fromCatalog\">\n" +
-    "<uib-tab-heading>From Catalog</uib-tab-heading>\n" +
+    "<uib-tab-heading>Browse Catalog</uib-tab-heading>\n" +
     "<p ng-if=\"emptyCatalog && !loaded\">Loading...</p>\n" +
     "<div ng-if=\"emptyCatalog && loaded && !nonBuilderImages.length\" class=\"empty-state-message empty-state-full-page\">\n" +
     "<h2 class=\"text-center\">No images or templates.</h2>\n" +
@@ -3451,8 +3450,12 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "</div>\n" +
     "</div>\n" +
     "</uib-tab>\n" +
+    "<uib-tab active=\"selectedTab.fromDockerImage\">\n" +
+    "<uib-tab-heading>Deploy Image</uib-tab-heading>\n" +
+    "<deploy-image project=\"projectName\" context=\"context\" alerts=\"alerts\"></deploy-image>\n" +
+    "</uib-tab>\n" +
     "<uib-tab active=\"selectedTab.fromFile\">\n" +
-    "<uib-tab-heading>From File</uib-tab-heading>\n" +
+    "<uib-tab-heading>Import YAML / JSON</uib-tab-heading>\n" +
     "<from-file></from-file>\n" +
     "</uib-tab>\n" +
     "</uib-tabset>\n" +
@@ -4224,7 +4227,8 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
   $templateCache.put('views/directives/breadcrumbs.html',
     "<ol class=\"breadcrumb\" ng-if=\"breadcrumbs.length\">\n" +
     "<li ng-repeat=\"breadcrumb in breadcrumbs\" ng-class=\"{'active': !$last}\">\n" +
-    "<a ng-if=\"!$last\" href=\"{{breadcrumb.link}}\">{{breadcrumb.title}}</a>\n" +
+    "<a ng-if=\"!$last && breadcrumb.link\" href=\"{{breadcrumb.link}}\">{{breadcrumb.title}}</a>\n" +
+    "<a ng-if=\"!$last && !breadcrumb.link\" href=\"\" back>{{breadcrumb.title}}</a>\n" +
     "<strong ng-if=\"$last\">{{breadcrumb.title}}</strong>\n" +
     "</li>\n" +
     "</ol>"
@@ -4290,6 +4294,146 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
 
   $templateCache.put('views/directives/delete-link.html',
     "<a href=\"javascript:void(0)\" ng-click=\"openDeleteModal()\" role=\"button\" ng-attr-aria-disabled=\"{{disableDelete ? 'true' : undefined}}\" ng-class=\"{ 'disabled-link': disableDelete }\">{{label || 'Delete'}}</a>"
+  );
+
+
+  $templateCache.put('views/directives/deploy-image.html',
+    "<div class=\"deploy-image\">\n" +
+    "<p>\n" +
+    "Deploy an existing image from an image stream tag or Docker pull spec.\n" +
+    "</p>\n" +
+    "<form>\n" +
+    "<fieldset ng-disabled=\"loading\">\n" +
+    "<div class=\"radio\">\n" +
+    "<label>\n" +
+    "<input type=\"radio\" ng-model=\"mode\" value=\"istag\">\n" +
+    "Image Stream Tag\n" +
+    "</label>\n" +
+    "</div>\n" +
+    "<fieldset ng-disabled=\"mode !== 'istag'\">\n" +
+    "<istag-select model=\"istag\"></istag-select>\n" +
+    "<div ng-if=\"mode == 'istag' && istag.namespace && istag.namespace !== 'openshift' && istag.namespace !== project\" class=\"alert alert-warning\">\n" +
+    "<span class=\"pficon pficon-warning-triangle-o\" aria-hidden=\"true\"></span>\n" +
+    "Service account <strong>default</strong> will need image pull authority to deploy images from <strong>{{istag.namespace}}</strong>. You can grant authority with the command:\n" +
+    "<p>\n" +
+    "<code>oc policy add-role-to-user system:image-puller system:serviceaccount:{{project}}:default -n {{istag.namespace}}</code>\n" +
+    "</p>\n" +
+    "</div>\n" +
+    "</fieldset>\n" +
+    "<div class=\"radio\">\n" +
+    "<label>\n" +
+    "<input type=\"radio\" ng-model=\"mode\" value=\"dockerImage\">\n" +
+    "Image Name\n" +
+    "</label>\n" +
+    "</div>\n" +
+    "<div class=\"form-group\">\n" +
+    "<label for=\"imageName\" class=\"sr-only\">Image name or pull spec</label>\n" +
+    "<div class=\"input-group\">\n" +
+    "<input type=\"search\" id=\"imageName\" ng-model=\"imageName\" required select-on-focus ng-disabled=\"mode !== 'dockerImage'\" placeholder=\"Image name or pull spec\" class=\"form-control\">\n" +
+    "<span class=\"input-group-btn\">\n" +
+    "<button class=\"btn btn-default\" type=\"submit\" ng-disabled=\"!imageName\" ng-click=\"findImage()\">\n" +
+    "<i class=\"fa fa-search\" aria-hidden=\"true\"></i>\n" +
+    "<span class=\"sr-only\">Find</span>\n" +
+    "</button>\n" +
+    "</span>\n" +
+    "</div>\n" +
+    "</div>\n" +
+    "</fieldset>\n" +
+    "</form>\n" +
+    "<div ng-if=\"loading || !import\" class=\"empty-state-message text-muted text-center\">\n" +
+    "<span class=\"fa fa-cube icon-lg hero-icon\" aria-hidden=\"true\"></span>\n" +
+    "<div ng-if=\"!loading\" class=\"h2\">Select an image stream tag or enter an image name.</div>\n" +
+    "<div ng-if=\"loading\" class=\"h2 truncate\">Loading image metadata for {{imageName | stripSHA}}...</div>\n" +
+    "</div>\n" +
+    "<div class=\"row mar-bottom-md\" ng-if-start=\"!loading && import.image\">\n" +
+    "<div class=\"col-sm-12 mar-top-lg mar-bottom-lg\">\n" +
+    "<div class=\"separator\"></div>\n" +
+    "</div>\n" +
+    "<div class=\"col-sm-2 hidden-xs text-right h2\">\n" +
+    "<span class=\"fa fa-cube text-muted\" style=\"font-size: 100px\" aria-hidden=\"true\"></span>\n" +
+    "</div>\n" +
+    "<div class=\"col-sm-10\">\n" +
+    "<div ng-if=\"runsAsRoot\" class=\"alert alert-warning\">\n" +
+    "<span class=\"pficon pficon-warning-triangle-o\" aria-hidden=\"true\"></span>\n" +
+    "Image <strong>{{import.name}}</strong> runs as the\n" +
+    "<strong>root</strong> user which might not be permitted by your cluster administrator.\n" +
+    "</div>\n" +
+    "<h2>\n" +
+    "{{app.name}}<span ng-if=\"import.tag\">:{{import.tag}}</span>\n" +
+    "<small>\n" +
+    "<span ng-if=\"mode === 'dockerImage'\">from {{import.result.ref.registry || \"Docker Hub\"}},</span>\n" +
+    "<relative-timestamp timestamp=\"import.image.dockerImageMetadata.Created\"></relative-timestamp>,\n" +
+    "<span ng-if=\"import.image.dockerImageMetadata.Size\">{{import.image.dockerImageMetadata.Size | humanizeSize}},</span>\n" +
+    "{{import.image.dockerImageLayers.length}} layers\n" +
+    "</small>\n" +
+    "</h2>\n" +
+    "<ul>\n" +
+    "<li ng-if=\"!import.namespace\">Image Stream <strong>{{app.name || \"&lt;name&gt;\"}}:{{import.tag || 'latest'}}</strong> will track this image.</li>\n" +
+    "<li>This image will be deployed in Deployment Config <strong>{{app.name || \"&lt;name&gt;\"}}</strong>.</li>\n" +
+    "<li ng-if=\"ports.length\">\n" +
+    "<span ng-if=\"ports.length === 1\">Port</span>\n" +
+    "<span ng-if=\"ports.length > 1\">Ports</span>\n" +
+    "<span ng-repeat=\"port in ports\">\n" +
+    "<span ng-if=\"!$first && $last\">and</span>\n" +
+    "{{port.containerPort}}/{{port.protocol}}<span ng-if=\"!$last && ports.length > 2\">,</span>\n" +
+    "</span>\n" +
+    "will be load balanced by Service <strong>{{app.name || \"&lt;name&gt;\"}}</strong>.\n" +
+    "<div>Other containers can access this service through the hostname <strong>{{app.name || \"&lt;name&gt;\"}}</strong>.</div>\n" +
+    "</li>\n" +
+    "</ul>\n" +
+    "<div ng-if=\"(volumes | hashSize) > 0\" class=\"help-block\">\n" +
+    "This image declares volumes and will default to use non-persistent, host-local storage. You can add persistent storage later to the deployment config.\n" +
+    "</div>\n" +
+    "</div>\n" +
+    "</div>\n" +
+    "<div class=\"row\" ng-if-end>\n" +
+    "<div class=\"col-sm-12\">\n" +
+    "<form name=\"form\" class=\"osc-form\">\n" +
+    "<div class=\"form-group\">\n" +
+    "<label for=\"name\" class=\"required\">Name</label>\n" +
+    "<div ng-class=\"{'has-error': form.name.$invalid}\">\n" +
+    "<input type=\"text\" required select-on-focus minlength=\"2\" maxlength=\"24\" pattern=\"[a-z]([-a-z0-9]*[a-z0-9])?\" ng-model=\"app.name\" id=\"name\" name=\"name\" class=\"form-control\" autocorrect=\"off\" autocapitalize=\"off\" spellcheck>\n" +
+    "</div>\n" +
+    "<div class=\"help-block\">Identifies the resources created for this image.</div>\n" +
+    "<div class=\"has-error\" ng-show=\"form.name.$invalid\">\n" +
+    "<div class=\"help-block\" ng-show=\"form.name.$error.required\">\n" +
+    "A name is required.\n" +
+    "</div>\n" +
+    "<div class=\"help-block\" ng-show=\"form.name.$error.pattern\">\n" +
+    "Name must be an alphanumeric (a-z, 0-9) string with a maximum length of 24 characters where the first character is a letter (a-z). The '-' character is allowed anywhere except the first or last character.\n" +
+    "</div>\n" +
+    "<div class=\"help-block\" ng-show=\"form.name.$error.minlength\">\n" +
+    "Name must have at least 2 characters.\n" +
+    "</div>\n" +
+    "</div>\n" +
+    "</div>\n" +
+    "<osc-form-section header=\"Environment Variables\" about-title=\"Environment Variables\" about=\"Environment variables are used to configure and pass information to running containers.\" expand=\"true\" can-toggle=\"false\" class=\"first-section\">\n" +
+    "<osc-key-values entries=\"app.env\" delimiter=\"=\" editable=\"true\" key-validator=\"env\" read-only-keys=\"\" key-validation-tooltip=\"A valid environment variable name is an alphanumeric (a-z and 0-9) string beginning with a letter that may contain underscores.\">\n" +
+    "</osc-key-values>\n" +
+    "</osc-form-section>\n" +
+    "<label-editor labels=\"app.labels\" expand=\"true\" can-toggle=\"false\" help-text=\"Each label is applied to each created resource.\">\n" +
+    "</label-editor>\n" +
+    "<div class=\"button-group gutter-top gutter-bottom\">\n" +
+    "<button type=\"submit\" class=\"btn btn-primary btn-lg\" ng-click=\"create()\" value=\"\" ng-disabled=\"form.$invalid\">Create</button>\n" +
+    "<a class=\"btn btn-default btn-lg\" href=\"#\" back>Cancel</a>\n" +
+    "</div>\n" +
+    "</form>\n" +
+    "</div>\n" +
+    "</div>\n" +
+    "<div ng-if=\"!loading && import.error\" class=\"empty-state-message text-center\">\n" +
+    "<h2>\n" +
+    "<i class=\"pficon pficon-error-circle-o\" aria-hidden=\"true\"></i>\n" +
+    "Could not load image metadata.\n" +
+    "</h2>\n" +
+    "<p>{{import.error | upperFirst}}</p>\n" +
+    "</div>\n" +
+    "<div ng-if=\"!loading && import && !import.error && !import.image\" class=\"empty-state-message text-center\">\n" +
+    "<h2>\n" +
+    "No image metadata found.\n" +
+    "</h2>\n" +
+    "<p>Could not find any images for {{import.name | stripTag}}:{{import.tag}}.</p>\n" +
+    "</div>\n" +
+    "</div>"
   );
 
 
@@ -4458,9 +4602,12 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
 
 
   $templateCache.put('views/directives/from-file.html',
+    "<p>\n" +
+    "Create or replace resources from their YAML or JSON definitions. If adding a template, you'll have the option to process the template.\n" +
+    "</p>\n" +
     "<parse-error error=\"error\" ng-show=\"error\"></parse-error>\n" +
     "<div class=\"row\">\n" +
-    "<div class=\"col-sm-12 pad-top-xl pod-bottom-xl\">\n" +
+    "<div class=\"col-sm-12 pod-bottom-xl\">\n" +
     "<form name=\"form\">\n" +
     "<div class=\"form-group\" id=\"from-file\">\n" +
     "<osc-file-input model=\"editorContent\" drop-zone-id=\"from-file\" dragging=\"false\" help-text=\"Upload file by dragging & dropping, selecting it, or pasting from the clipboard.\" ng-disabled=\"false\" show-values=\"false\"></osc-file-input>\n" +
@@ -4616,13 +4763,52 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
   );
 
 
+  $templateCache.put('views/directives/istag-select.html',
+    "<ng-form name=\"istagForm\">\n" +
+    "<fieldset ng-disabled=\"selectDisabled\">\n" +
+    "<div class=\"row\">\n" +
+    "<div class=\"form-group col-sm-4\">\n" +
+    "<label class=\"sr-only\">Namespace</label>\n" +
+    "<ui-select ng-model=\"istag.namespace\" ng-change=\"istag.imageStream = null; istag.tag = null;\">\n" +
+    "<ui-select-match placeholder=\"Namespace\">{{$select.selected}}</ui-select-match>\n" +
+    "<ui-select-choices repeat=\"namespace in (namespaces | filter : $select.search)\">\n" +
+    "<div ng-bind-html=\"namespace | highlight : $select.search\"></div>\n" +
+    "</ui-select-choices>\n" +
+    "</ui-select>\n" +
+    "<div class=\"istag-separator\">/</div>\n" +
+    "</div>\n" +
+    "<div class=\"form-group col-sm-4\">\n" +
+    "<label class=\"sr-only\">Image Stream</label>\n" +
+    "<ui-select ng-model=\"istag.imageStream\" ng-disabled=\"!istag.namespace\" ng-change=\"istag.tag = null\">\n" +
+    "<ui-select-match placeholder=\"Image Stream\">{{$select.selected}}</ui-select-match>\n" +
+    "<ui-select-choices repeat=\"imageStream in (isNamesByNamespace[istag.namespace] | filter : $select.search)\">\n" +
+    "<div ng-bind-html=\"imageStream | highlight : $select.search\"></div>\n" +
+    "</ui-select-choices>\n" +
+    "</ui-select>\n" +
+    "<div class=\"istag-separator\">:</div>\n" +
+    "</div>\n" +
+    "<div class=\"form-group col-sm-4\">\n" +
+    "<label class=\"sr-only\">Tag</label>\n" +
+    "<ui-select ng-model=\"istag.tag\" ng-disabled=\"!istag.imageStream\">\n" +
+    "<ui-select-match placeholder=\"Tag\">{{$select.selected.tag}}</ui-select-match>\n" +
+    "<ui-select-choices repeat=\"statusTag in (isByNamespace[istag.namespace][istag.imageStream].status.tags | filter : { tag: $select.search })\">\n" +
+    "<div ng-bind-html=\"statusTag.tag | highlight : $select.search\"></div>\n" +
+    "</ui-select-choices>\n" +
+    "</ui-select>\n" +
+    "</div>\n" +
+    "</div>\n" +
+    "</fieldset>\n" +
+    "</ng-form>"
+  );
+
+
   $templateCache.put('views/directives/label-editor.html',
     "<osc-form-section header=\"Labels\" about-title=\"labels\" about=\"Labels are used to organize, group, or select objects and resources, such as pods.\" expand=\"expand\" can-toggle=\"canToggle\">\n" +
     "<div ng-if=\"helpText && ((labels | hashSize) !== 0 || $parent.expand)\" class=\"help-block\">\n" +
     "{{helpText}}\n" +
     "</div>\n" +
     "<div ng-show=\"expand\" ng-class=\"{ 'gutter-top': !helpText }\">\n" +
-    "<osc-key-values key-title=\"Name\" entries=\"labels\" key-validator=\"label\" value-validator=\"label\" delete-policy=\"{{deletePolicy || 'added'}}\" key-validation-tooltip=\"A valid object label has the form [domain/]name where a name is an alphanumeric (a-z, and 0-9) string, with a maximum length of 63 characters, with the '-' character allowed anywhere except the first or last character. A domain is a sequence of names separated by the '.' character with a maximum length of 253 characters.\" value-validation-tooltip=\"A valid label value is an alphanumeric (a-z, and 0-9) string, with a maximum length of 63 characters, with the '-' character allowed anywhere except the first or last character.\" readonly-keys=\"template\">\n" +
+    "<osc-key-values key-title=\"Name\" entries=\"labels\" key-validator=\"label\" value-validator=\"label\" delete-policy=\"{{deletePolicy || 'added'}}\" key-validation-tooltip=\"A valid object label has the form [domain/]name where a name is an alphanumeric (a-z, and 0-9) string, with a maximum length of 63 characters, with the '-' character allowed anywhere except the first or last character. A domain is a sequence of names separated by the '.' character with a maximum length of 253 characters.\" value-validation-tooltip=\"A valid label value is an alphanumeric (a-z, and 0-9) string, with a maximum length of 63 characters, with the '-' character allowed anywhere except the first or last character.\" readonly-keys=\"template,app\">\n" +
     "</osc-key-values>\n" +
     "</div>\n" +
     "<div ng-hide=\"expand\">\n" +
