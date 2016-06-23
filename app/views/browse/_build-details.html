@@ -16,7 +16,7 @@
         <dd>
           <span ng-if="build.status.startTimestamp">
             <relative-timestamp timestamp="build.status.startTimestamp"></relative-timestamp>
-            <span><span class="text-muted">&ndash;</span> {{build.status.startTimestamp | date : 'short'}}</span>
+            <span><span class="text-muted">&ndash;</span> {{build.status.startTimestamp | date : 'MMM dd, yyyy h:m a'}} </span>
           </span>
           <span ng-if="!build.status.startTimestamp"><em>not started</em></span>
         </dd>
