@@ -8825,6 +8825,16 @@ if (a(d)) return b(d);
 var e = c(d);
 return e ? new URI(e).addSearch("tab", "logs").toString() :null;
 };
+} ]).filter("jenkinsfileLink", [ "isJenkinsPipelineStrategyFilter", "githubLinkFilter", function(a, b) {
+return function(c) {
+if (!a(c) || _.has(c, "spec.strategy.jenkinsPipelineStrategy.jenkinsfile")) return "";
+var d = _.get(c, "spec.source.git.uri");
+if (!d) return "";
+var e = _.get(c, "spec.source.git.ref"), f = _.get(c, "spec.strategy.jenkinsPipelineStrategy.jenkinsfilePath", "Jenkinsfile"), g = _.get(c, "spec.source.contextDir");
+g && (f = URI.joinPaths(g, f).path());
+var h = b(d, e, f);
+return URI(h).is("url") ? h :"";
+};
 } ]).filter("pipelineStageComplete", function() {
 return function(a) {
 return a ? -1 !== _.indexOf([ "ABORTED", "FAILED", "SUCCESS" ], a.status) :!1;

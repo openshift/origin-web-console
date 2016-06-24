@@ -34153,7 +34153,7 @@ return void 0 === c ? this._parts[a] || "" :(null !== c && (c += "", c.charAt(0)
 };
 }
 var q = d && d.URI;
-e.version = "1.17.1";
+e.version = "1.18.0";
 var r = e.prototype, s = Object.prototype.hasOwnProperty;
 e._parts = function() {
 return {
@@ -34349,7 +34349,7 @@ return a.hostname ? (b += e.ip6_expression.test(a.hostname) ? "[" + a.hostname +
 return e.buildUserinfo(a) + e.buildHost(a);
 }, e.buildUserinfo = function(a) {
 var b = "";
-return a.username && (b += e.encode(a.username), a.password && (b += ":" + e.encode(a.password)), b += "@"), b;
+return a.username && (b += e.encode(a.username)), a.password && (b += ":" + e.encode(a.password)), b && (b += "@"), b;
 }, e.buildQuery = function(a, b, c) {
 var d, f, g, i, j = "";
 for (f in a) if (s.call(a, f) && f) if (h(a[f])) for (d = {}, g = 0, i = a[f].length; i > g; g++) void 0 !== a[f][g] && void 0 === d[a[f][g] + ""] && (j += "&" + e.buildQueryParameter(f, a[f][g], c), b !== !0 && (d[a[f][g] + ""] = !0)); else void 0 !== a[f] && (j += "&" + e.buildQueryParameter(f, a[f], c));
@@ -34412,6 +34412,15 @@ return h(a[b]) ? d ? j(a[b], c) :!1 :a[b] === c;
 default:
 throw new TypeError("URI.hasQuery() accepts undefined, boolean, string, number, RegExp, Function as the value parameter");
 }
+}, e.joinPaths = function() {
+for (var a = [], b = [], c = 0, d = 0; d < arguments.length; d++) {
+var f = new e(arguments[d]);
+a.push(f);
+for (var g = f.segment(), h = 0; h < g.length; h++) "string" == typeof g[h] && b.push(g[h]), g[h] && c++;
+}
+if (!b.length || !c) return new e("");
+var i = new e("").segment(b);
+return "" !== a[0].path() && "/" !== a[0].path().slice(0, 1) || i.path("/" + i.path()), i.normalize();
 }, e.commonPath = function(a, b) {
 var c, d = Math.min(a.length, b.length);
 for (c = 0; d > c; c++) if (a.charAt(c) !== b.charAt(c)) {
@@ -34566,9 +34575,8 @@ return this.build(!b), this;
 }, r.userinfo = function(a, b) {
 if (this._parts.urn) return void 0 === a ? "" :this;
 if (void 0 === a) {
-if (!this._parts.username) return "";
 var c = e.buildUserinfo(this._parts);
-return c.substring(0, c.length - 1);
+return c ? c.substring(0, c.length - 1) :c;
 }
 return "@" !== a[a.length - 1] && (a += "@"), e.parseUserinfo(a, this._parts), this.build(!b), this;
 }, r.resource = function(a, b) {
@@ -34852,9 +34860,12 @@ empty_name_separator:!0,
 encode:"encode"
 }
 };
-return c._cache = {}, c.EXPRESSION_PATTERN = /\{([^a-zA-Z0-9%_]?)([^\}]+)(\}|$)/g, c.VARIABLE_PATTERN = /^([^*:]+)((\*)|:(\d+))?$/, c.VARIABLE_NAME_PATTERN = /[^a-zA-Z0-9%_]/, c.expand = function(a, b) {
+return c._cache = {}, c.EXPRESSION_PATTERN = /\{([^a-zA-Z0-9%_]?)([^\}]+)(\}|$)/g, c.VARIABLE_PATTERN = /^([^*:.](?:\.?[^*:.])*)((\*)|:(\d+))?$/, c.VARIABLE_NAME_PATTERN = /[^a-zA-Z0-9%_.]/, c.LITERAL_PATTERN = /[<>{}'"`^| \\]/, c.expand = function(a, b) {
 var d, e, f, g = h[a.operator], i = g.named ? "Named" :"Unnamed", j = a.variables, k = [];
-for (f = 0; e = j[f]; f++) d = b.get(e.name), d.val.length ? k.push(c["expand" + i](d, g, e.explode, e.explode && g.separator || ",", e.maxlength, e.name)) :d.type && k.push("");
+for (f = 0; e = j[f]; f++) if (d = b.get(e.name), d.val.length) {
+if (d.type > 1 && e.maxlength) throw new Error('Invalid expression: Prefix modifier not applicable to variable "' + e.name + '"');
+k.push(c["expand" + i](d, g, e.explode, e.explode && g.separator || ",", e.maxlength, e.name));
+} else d.type && k.push("");
 return k.length ? g.prefix + k.join(g.separator) :"";
 }, c.expandNamed = function(b, c, d, e, f, g) {
 var h, i, j, k = "", l = c.encode, m = c.empty_name_separator, n = !b[l].length, o = 2 === b.type ? "" :a[l](g);
@@ -34872,32 +34883,35 @@ this.parts && this.parts.length || this.parse(), a instanceof d || (a = new d(a)
 for (var e = 0, f = this.parts.length; f > e; e++) b += "string" == typeof this.parts[e] ? this.parts[e] :c.expand(this.parts[e], a);
 return b;
 }, g.parse = function() {
-var a, b, d, e = this.expression, f = c.EXPRESSION_PATTERN, g = c.VARIABLE_PATTERN, i = c.VARIABLE_NAME_PATTERN, j = [], k = 0;
+var a, b, d, e = this.expression, f = c.EXPRESSION_PATTERN, g = c.VARIABLE_PATTERN, i = c.VARIABLE_NAME_PATTERN, j = c.LITERAL_PATTERN, k = [], l = 0, m = function(a) {
+if (a.match(j)) throw new Error('Invalid Literal "' + a + '"');
+return a;
+};
 for (f.lastIndex = 0; ;) {
 if (b = f.exec(e), null === b) {
-j.push(e.substring(k));
+k.push(m(e.substring(l)));
 break;
 }
-if (j.push(e.substring(k, b.index)), k = b.index + b[0].length, !h[b[1]]) throw new Error('Unknown Operator "' + b[1] + '" in "' + b[0] + '"');
+if (k.push(m(e.substring(l, b.index))), l = b.index + b[0].length, !h[b[1]]) throw new Error('Unknown Operator "' + b[1] + '" in "' + b[0] + '"');
 if (!b[3]) throw new Error('Unclosed Expression "' + b[0] + '"');
 a = b[2].split(",");
-for (var l = 0, m = a.length; m > l; l++) {
-if (d = a[l].match(g), null === d) throw new Error('Invalid Variable "' + a[l] + '" in "' + b[0] + '"');
+for (var n = 0, o = a.length; o > n; n++) {
+if (d = a[n].match(g), null === d) throw new Error('Invalid Variable "' + a[n] + '" in "' + b[0] + '"');
 if (d[1].match(i)) throw new Error('Invalid Variable Name "' + d[1] + '" in "' + b[0] + '"');
-a[l] = {
+a[n] = {
 name:d[1],
 explode:!!d[3],
 maxlength:d[4] && parseInt(d[4], 10)
 };
 }
 if (!a.length) throw new Error('Expression Missing Variable(s) "' + b[0] + '"');
-j.push({
+k.push({
 expression:b[0],
 operator:b[1],
 variables:a
 });
 }
-return j.length || j.push(e), this.parts = j, this;
+return k.length || k.push(m(e)), this.parts = k, this;
 }, d.prototype.get = function(a) {
 var b, c, d, e = this.data, g = {
 type:0,

@@ -252,7 +252,12 @@
                                 <div ng-if="buildConfig | isJenkinsPipelineStrategy">
                                   <div ng-if="buildConfig.spec.strategy.jenkinsPipelineStrategy.jenkinsfilePath">
                                     <dt>Jenkinsfile Path:</dt>
-                                    <dd>{{buildConfig.spec.strategy.jenkinsPipelineStrategy.jenkinsfilePath}}</dd>
+                                    <dd ng-if="buildConfig | jenkinsfileLink">
+                                      <a ng-href="{{buildConfig | jenkinsfileLink}}">{{buildConfig.spec.strategy.jenkinsPipelineStrategy.jenkinsfilePath}}</a>
+                                    </dd>
+                                    <dd ng-if="!(buildConfig | jenkinsfileLink)">
+                                      {{buildConfig.spec.strategy.jenkinsPipelineStrategy.jenkinsfilePath}}
+                                    </dd>
                                   </div>
                                   <div ng-if="buildConfig.spec.strategy.jenkinsPipelineStrategy.jenkinsfile">
                                     <dt>Jenkinsfile:</dt><dd></dd>
