@@ -6930,7 +6930,12 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "</div>\n" +
     "<div row class=\"deployment-body\">\n" +
     "<div column class=\"overview-donut\">\n" +
-    "<pod-donut pods=\"[pod]\"></pod-donut>\n" +
+    "<pod-donut pods=\"[pod]\" class=\"clickable\" ng-click=\"viewPod()\">\n" +
+    "</pod-donut>\n" +
+    "\n" +
+    "<a href=\"\" class=\"sr-only\" ng-click=\"viewPod()\" role=\"button\">\n" +
+    "View pod\n" +
+    "</a>\n" +
     "</div>\n" +
     "<div column class=\"deployment-details\">\n" +
     "<metrics ng-if=\"showMetrics && !collapse\" pod=\"pod\" profile=\"compact\" class=\"overview-metrics\"></metrics>\n" +

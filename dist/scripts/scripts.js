@@ -8118,15 +8118,18 @@ e.service && (e.childServices = _.get(e, [ "childServicesByParent", e.service.me
 });
 }
 };
-} ]), angular.module("openshiftConsole").directive("overviewPod", [ "$filter", "MetricsService", function(a, b) {
+} ]), angular.module("openshiftConsole").directive("overviewPod", [ "$filter", "$location", "MetricsService", "Navigate", function(a, b, c, d) {
 return {
 restrict:"E",
 scope:!0,
 templateUrl:"views/overview/_pod.html",
 link:function(a) {
-window.OPENSHIFT_CONSTANTS.DISABLE_OVERVIEW_METRICS || b.isAvailable(!0).then(function(b) {
+window.OPENSHIFT_CONSTANTS.DISABLE_OVERVIEW_METRICS || c.isAvailable(!0).then(function(b) {
 a.showMetrics = b;
-});
+}), a.viewPod = function() {
+var c = d.resourceURL(a.pod);
+b.url(c);
+};
 }
 };
 } ]), angular.module("openshiftConsole").directive("overviewReplicationController", function() {
