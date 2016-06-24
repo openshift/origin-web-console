@@ -14,7 +14,18 @@
   </div>
   <div row class="deployment-body">
     <div column class="overview-donut">
-      <pod-donut pods="[pod]"></pod-donut>
+      <pod-donut
+          pods="[pod]"
+          class="clickable"
+          ng-click="viewPod()">
+      </pod-donut>
+      <!-- Add a link for screen readers. -->
+      <a href=""
+         class="sr-only"
+         ng-click="viewPod()"
+         role="button">
+         View pod
+      </a>
     </div>
     <div column class="deployment-details">
       <metrics ng-if="showMetrics && !collapse" pod="pod" profile="compact" class="overview-metrics"></metrics>

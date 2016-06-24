@@ -2,7 +2,9 @@
 
 angular.module('openshiftConsole')
   .directive('overviewPod', function($filter,
-                                         MetricsService) {
+                                     $location,
+                                     MetricsService,
+                                     Navigate) {
     return {
       restrict: 'E',
       // Inherit scope from OverviewController. This directive is only used for the overview.
@@ -15,6 +17,10 @@ angular.module('openshiftConsole')
             $scope.showMetrics = available;
           });
         }
+        $scope.viewPod = function() {
+          var url = Navigate.resourceURL($scope.pod);
+          $location.url(url);
+        };
       }
     };
   });
