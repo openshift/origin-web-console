@@ -83,13 +83,26 @@
     font-weight: normal;
   }
   .ui-select-toggle > .caret {
-  font-style: normal;
-  margin-top: -5px;
+    font-style: normal;
+    margin-top: -5px;
+  }
+  .surface-shaded & {
+    .ui-select-match > .btn {
+      background-color: #ffffff;
+      background-image: linear-gradient(to bottom, #ffffff 0%, #fbfbfb 100%);
+    }
+    .ui-select-match-text {
+      font-weight: normal;
+    }
   }
 }
 
 .separator {
   border-top: 1px solid rgba(0, 0, 0, 0.15);
+}
+
+.surface-shaded .nav-tabs {
+  border-color: rgba(0, 0, 0, 0.15);
 }
 
 .breadcrumb {
@@ -157,11 +170,25 @@
   .btn {
     margin: 10px 0 20px;
   }
-}
-
-.empty-state-message.empty-state-full-page {
-  @media (min-height: 500px) {
+  .hero-icon {
+    // Hidden at height <600px.
+    display: none;
+    @media (min-height:600px) {
+      display: inline-block;
+      font-size: 90px;
+    }
+  }
+  @media (min-height:800px) {
     margin-top: 150px;
+    .hero-icon {
+      font-size: 100px;
+    }
+  }
+  @media (min-height:1024px) {
+    margin-top: 200px;
+    .hero-icon {
+      font-size: 120px;
+    }
   }
 }
 
@@ -387,11 +414,9 @@ label.checkbox {
     .catalog-legend {
       padding-left: 15px;
     }
-  }
-  @media (min-width:@screen-md-min) {
-    // Line up the description and filter controls with left column tiles.
-    .catalog-header-left {
-      padding-right: 15px;
+    .middle-content > .container {
+      padding-left: 30px;
+      padding-right: 30px;
     }
   }
 }
@@ -428,8 +453,32 @@ label.checkbox {
   }
 }
 
+.deploy-image {
+  h2 small {
+    display: block;
+    margin-top: 5px;
+    @media (min-width:@screen-md-min) {
+      display: inline-block;
+      margin-top: 0;
+    }
+  }
+  @media (min-height:800px) {
+    .empty-state-message {
+      margin-top: 100px;
+    }
+  }
+}
+
 .icon-xl {
   font-size: 128px;
+}
+
+.istag-separator {
+  .hidden-xs();
+  .text-muted();
+  position: absolute;
+  top: 2px;
+  right: -3px;
 }
 
 .create-route-icon,
@@ -831,6 +880,12 @@ select:invalid {
 .alert {
   margin-bottom: 14px;
   margin-top: 7px;
+  code {
+    // alerts have a clashing background color. Inherit the background and
+    // remove padding, which looks strange without the background color.
+    background-color: inherit;
+    padding: 0;
+  }
 }
 
 .action-button {

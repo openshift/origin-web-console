@@ -28,7 +28,7 @@ angular.module("openshiftConsole")
     var nameLink = "";
     if (creatingFromImage()) {
       nameLink = "project/" + $scope.projectName + "/create/fromimage?imageName=" + imageName + "&imageTag=" + imageTag + "&namespace=" + namespace + "&name=" + name;
-    } else {
+    } else if (creatingFromTemplate()) {
       nameLink = "project/" + $scope.projectName + "/create/fromtemplate?name=" + name + "&namespace=" + namespace;
     }
 
@@ -56,7 +56,7 @@ angular.module("openshiftConsole")
         $scope.project = project;
         // Update project breadcrumb with display name.
         $scope.breadcrumbs[0].title = $filter('displayName')(project);
-        if (!name || (!creatingFromTemplate($routeParams) && !(creatingFromImage($routeParams)))) {
+        if (!name) {
           Navigate.toProjectOverview($scope.projectName);
           return;
         }
@@ -99,14 +99,6 @@ angular.module("openshiftConsole")
           return pendingTasks;
         }
         $scope.pendingTasks = pendingTasks;
-
-        $scope.goBack = function() {
-          if (creatingFromImage()) {
-            $location.path("project/" + encodeURIComponent(this.projectName) + "/create/fromimage");
-          } else {
-            $location.path("project/" + encodeURIComponent(this.projectName) + "/create/fromtemplate");
-          }
-        };
 
         $scope.$on('$destroy', function(){
           DataService.unwatchAll(watches);

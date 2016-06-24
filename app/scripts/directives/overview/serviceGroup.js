@@ -19,7 +19,7 @@ angular.module('openshiftConsole')
 
         $scope.toggleCollapse = function(e) {
           // Don't collapse when clicking on the route link.
-          if (e.target.tagName ==='A') {
+          if (e && e.target && e.target.tagName ==='A') {
             return;
           }
 
