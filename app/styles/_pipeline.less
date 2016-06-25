@@ -196,6 +196,23 @@
 		background-color: transparent;
 	}
 }
+// Solid circle backgrounds
+@keyframes fadeInSuccess {
+  to {background-color: @build-pipeline-success-color;}
+}
+@keyframes fadeInFailed {
+  to {background-color: @build-pipeline-failed-color;}
+}
+@keyframes fadeInProgress {
+  to {background-color: @build-pipeline-in-progress-color;}
+}
+@keyframes fadeInAborted {
+  to {background-color: @build-pipeline-aborted-color;}
+}
+@keyframes fadeInNotExecuted {
+  to {background-color: @build-pipeline-pending-color;}
+}
+
 
 // Shared by both the build pipeline and overview pipeline.
 .pipeline-status-bar  {
@@ -217,6 +234,7 @@
     background-color: @build-pipeline-success-color;
   }
   .pipeline-circle {
+    animation: fadeInSuccess 0s (@line-animation-time + @circle-animation-time) linear forwards;
     &:after {
       content: "\f00c";
     }
@@ -231,6 +249,7 @@
     background-color: @build-pipeline-failed-color;
   }
   .pipeline-circle {
+    animation: fadeInFailed 0s (@line-animation-time + @circle-animation-time) linear forwards;
     &:after {
       content: "\f00d";
     }
@@ -245,6 +264,7 @@
     background-color: @build-pipeline-in-progress-color;
   }
   .pipeline-circle {
+    animation: fadeInProgress 0s (@line-animation-time + @circle-animation-time) linear forwards;
     &:after {
       content: "\f021";
     }
@@ -259,6 +279,7 @@
     background-color: @build-pipeline-pending-color;
   }
   .pipeline-circle {
+    animation: fadeInNotExecuted 0s (@line-animation-time + @circle-animation-time) linear forwards;
     &:after {
       content: ""; // no icon
     }
@@ -283,6 +304,7 @@
     background-color: @build-pipeline-aborted-color;
   }
   .pipeline-circle {
+    animation: fadeInAborted 0s (@line-animation-time + @circle-animation-time) linear forwards;
     &:after {
       content: "\f05e";
     }
