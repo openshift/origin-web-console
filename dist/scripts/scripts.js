@@ -206,7 +206,7 @@ a.aHrefSanitizationWhitelist(/^\s*(https?|mailto|git):/i);
 for (var c = 0; c < a.length; c++) b.add(a[c]);
 } ]).run([ "$rootScope", "LabelFilter", function(a, b) {
 a.$on("$locationChangeSuccess", function(a) {
-b.setLabelSelector(new LabelSelector({}, !0), !0);
+b.setLabelSelector(new LabelSelector({}, (!0)), !0);
 });
 } ]).run([ "dateRelativeFilter", "durationFilter", function(a, b) {
 setInterval(function() {
@@ -457,17 +457,17 @@ return this.group && (a += "/" + this.group), this.version && (a += "/" + this.v
 }, ResourceGroupVersion.prototype.primaryResource = function() {
 if (!this.resource) return "";
 var a = this.resource.indexOf("/");
-return -1 === a ? this.resource :this.resource.substring(0, a);
+return a === -1 ? this.resource :this.resource.substring(0, a);
 }, ResourceGroupVersion.prototype.subresources = function() {
 var a = (this.resource || "").split("/");
 return a.shift(), a;
 }, ResourceGroupVersion.prototype.equals = function(a, b, c) {
-return this.resource !== a ? !1 :1 === arguments.length ? !0 :this.group !== b ? !1 :2 === arguments.length ? !0 :this.version === c;
+return this.resource === a && (1 === arguments.length || this.group === b && (2 === arguments.length || this.version === c));
 }, angular.module("openshiftConsole").factory("APIService", [ "API_CFG", "APIS_CFG", "AuthService", "Constants", "Logger", "$q", "$http", "Navigate", "$filter", function(a, b, c, d, e, f, g, h, i) {
 function j(a) {
 if (!a) return a;
 var b = a.indexOf("/");
-return -1 === b ? a.toLowerCase() :a.substring(0, b).toLowerCase() + a.substring(b);
+return b === -1 ? a.toLowerCase() :a.substring(0, b).toLowerCase() + a.substring(b);
 }
 function k(a, b) {
 if (!a) return "";
@@ -1055,7 +1055,7 @@ time:Date.now()
 }); c.length > q; ) c.shift();
 }, m.prototype._isTooManyWebsocketRetries = function(a) {
 var b = this._websocketEventsMap[a];
-return b ? o(b) ? (i.log("Too many websocket open or close events for resource/context in a short period", a, b), !0) :p(b) ? (i.log("Too many consecutive websocket close events for resource/context", a, b), !0) :!1 :!1;
+return !!b && (o(b) ? (i.log("Too many websocket open or close events for resource/context in a short period", a, b), !0) :!!p(b) && (i.log("Too many consecutive websocket close events for resource/context", a, b), !0));
 };
 var r = function(a) {
 var b = _.keysIn(_.pick(a, [ "fieldSelector", "labelSelector" ])).sort();
@@ -1560,13 +1560,13 @@ var b;
 if (window.crypto && window.Uint32Array) try {
 var c = new Uint32Array(a);
 window.crypto.getRandomValues(c), b = [];
-for (var d = 0; a > d; d++) b.push(c[d]);
+for (var d = 0; d < a; d++) b.push(c[d]);
 } catch (e) {
 g.debug("RedirectLoginService.getRandomInts: ", e), b = null;
 }
 if (!b) {
 b = [];
-for (var f = 0; a > f; f++) b.push(Math.floor(4294967296 * Math.random()));
+for (var f = 0; f < a; f++) b.push(Math.floor(4294967296 * Math.random()));
 }
 return b;
 }, i = "RedirectLoginService.nonce", j = function(a) {
@@ -1691,7 +1691,7 @@ e.name = b, _.isObject(d) && _.extend(e, d), a.path("project/" + encodeURICompon
 },
 toPodsForDeployment:function(b) {
 a.url("/project/" + b.metadata.namespace + "/browse/pods"), c(function() {
-e.setLabelSelector(new LabelSelector(b.spec.selector, !0));
+e.setLabelSelector(new LabelSelector(b.spec.selector, (!0)));
 }, 1);
 },
 resourceURL:function(a, b, c, e) {
@@ -1757,7 +1757,7 @@ name:c
 return {
 suggestFromSourceUrl:function(a) {
 var b = a.substr(a.lastIndexOf("/") + 1, a.length), c = b.indexOf(".");
-return -1 !== c && (b = b.substr(0, c)), b.split("#")[0];
+return c !== -1 && (b = b.substr(0, c)), b.split("#")[0];
 }
 };
 }), angular.module("openshiftConsole").factory("TaskList", [ "$timeout", function(a) {
@@ -1915,7 +1915,7 @@ details:b("getErrorDetails")(a)
 }, c.prototype.isPaused = function(a) {
 return "true" === b("annotation")(a, "openshift.io/build-config.paused");
 }, c.prototype.canBuild = function(a) {
-return a ? a.metadata.deletionTimestamp ? !1 :!this.isPaused(a) :!1;
+return !!a && (!a.metadata.deletionTimestamp && !this.isPaused(a));
 };
 var d = b("annotation");
 return c.prototype.usesDeploymentConfigs = function(a) {
@@ -2040,7 +2040,7 @@ var h = b("annotation")(a, "deploymentConfig");
 f[b] = f[b] || {};
 }), f;
 }, d.prototype.deploymentBelongsToConfig = function(a, c) {
-return a && c ? c === b("annotation")(a, "deploymentConfig") :!1;
+return !(!a || !c) && c === b("annotation")(a, "deploymentConfig");
 }, d.prototype.associateRunningDeploymentToDeploymentConfig = function(a) {
 var c = {};
 return angular.forEach(a, function(a, d) {
@@ -2137,7 +2137,7 @@ return l = (a || "").replace(/\/$/, "");
 });
 }
 function f(a, b) {
-return a.min && a.max && a.start && a.end ? !(b.pod && !b.stacked && a.samples < 2) :!1;
+return !(!a.min || !a.max) && (!(!a.start || !a.end) && !(b.pod && !b.stacked && a.samples < 2));
 }
 function g(a, b) {
 if (!f(a, b)) return null;
@@ -2154,13 +2154,13 @@ var d = a.max - a.min;
 return d / c;
 }
 function i(a, b) {
-return a.length ? (angular.forEach(a, function(a) {
+if (a.length) return angular.forEach(a, function(a) {
 if (!a.value || "NaN" === a.value) {
 var c = a.avg;
 a.value = c && "NaN" !== c ? c :null;
 }
 "cpu/usage" === b.metric && (a.value = g(a, b)), /network\/rx|tx/.test(b.metric) && (a.value = h(a, b));
-}), a) :void 0;
+}), a;
 }
 function j(a) {
 var b = "^";
@@ -2228,11 +2228,11 @@ var l, m, n, o = "/counters/{containerName}%2F{podUID}%2F{metric}/data", p = "/g
 "network/tx":u
 }, z = function(a) {
 return e().then(function(c) {
-return c ? a ? m ? !0 :n ? !1 :b.get(c).then(function() {
+return !!c && (!a || (!!m || !n && b.get(c).then(function() {
 return m = !0, !0;
 }, function() {
 return n = !0, !1;
-}) :!0 :!1;
+})));
 });
 };
 return {
@@ -2283,9 +2283,9 @@ var a = _.clone(window.OPENSHIFT_CONSTANTS || {}), b = _.clone(window.OPENSHIFT_
 return a.VERSION = b, a;
 }), angular.module("openshiftConsole").factory("LimitRangesService", [ "$filter", "LIMIT_REQUEST_OVERRIDES", function(a, b) {
 var c = a("usageValue"), d = a("usageWithUnits"), e = a("amountAndUnit"), f = function(a, b) {
-return a ? b ? c(a) < c(b) :!0 :!1;
+return !!a && (!b || c(a) < c(b));
 }, g = function(a, b) {
-return a ? b ? c(a) > c(b) :!0 :!1;
+return !!a && (!b || c(a) > c(b));
 }, h = function(c) {
 if (!b) return !1;
 var d = a("annotation")(c, "quota.openshift.io/cluster-resource-override-enabled");
@@ -2327,7 +2327,7 @@ var b = a.resources || {}, d = b.requests && b.requests[e] || i.defaultRequest;
 d && (m += c(d));
 var f = b.limits && b.limits[e] || i.defaultLimit;
 f && (n += c(f));
-}), j(e, g) || (o && o > m && q.push(r + " request total for all containers is less than pod minimum (" + d(h.min, e) + ")."), p && m > p && q.push(r + " request total for all containers is greater than pod maximum (" + d(h.max, e) + ").")), k(e, g) || (o && o > n && q.push(r + " limit total for all containers is less than pod minimum (" + d(h.min, e) + ")."), p && n > p && q.push(r + " limit total for all containers is greater than pod maximum (" + d(h.max, e) + ").")), q;
+}), j(e, g) || (o && m < o && q.push(r + " request total for all containers is less than pod minimum (" + d(h.min, e) + ")."), p && m > p && q.push(r + " request total for all containers is greater than pod maximum (" + d(h.max, e) + ").")), k(e, g) || (o && n < o && q.push(r + " limit total for all containers is less than pod minimum (" + d(h.min, e) + ")."), p && n > p && q.push(r + " limit total for all containers is greater than pod maximum (" + d(h.max, e) + ").")), q;
 };
 return {
 getEffectiveLimitRange:l,
@@ -2430,7 +2430,7 @@ return l(a, "defaultLimit", b, c);
 var e;
 return e = c.isLimitCalculated("cpu", d) ? "memory" :"cpu", k(e, a) || n(e, b, d);
 }, p = function(a, b, d) {
-return j("cpu", a) ? !0 :m("cpu", b, d) ? !0 :c.isRequestCalculated("cpu", d) && o(a, b, d);
+return !!j("cpu", a) || (!!m("cpu", b, d) || c.isRequestCalculated("cpu", d) && o(a, b, d));
 }, q = function(a, b, c) {
 return _.filter(a, function(a) {
 return a.spec.scaleRef.kind === b && a.spec.scaleRef.name === c;
@@ -2542,7 +2542,7 @@ var b, c = f(a);
 if (!c) return [];
 b = _.get(a, "metadata.namespace");
 var d = function(a) {
-return a.name ? a.kind && "Service" !== a.kind ? !1 :!a.namespace || a.namespace === b :!1;
+return !!a.name && ((!a.kind || "Service" === a.kind) && (!a.namespace || a.namespace === b));
 };
 return _.chain(c).filter(d).map(function(a) {
 return a.name;
@@ -2898,7 +2898,7 @@ var b = A(a, "deploymentConfig");
 if (!b) return !0;
 if (!q) return !1;
 var c = q[b];
-return c ? D(a, c) :!1;
+return !!c && D(a, c);
 }, I = function() {
 if (p && r) {
 c.deploymentsByService = g.groupByService(r, p), G();
@@ -2928,7 +2928,7 @@ h.warn("Unexpected HPA scaleRef kind", c);
 }
 }), c.hpaByDC = w, c.hpaByRC = x;
 }, K = function(a) {
-return "Succeeded" === a.status.phase || "Terminated" === a.status.phase || "Failed" === a.status.phase ? !1 :B(a, "openshift.io/deployer-pod-for.name") ? !1 :A(a, "openshift.io/build.name") ? !1 :"slave" !== B(a, "jenkins");
+return "Succeeded" !== a.status.phase && "Terminated" !== a.status.phase && "Failed" !== a.status.phase && (!B(a, "openshift.io/deployer-pod-for.name") && (!A(a, "openshift.io/build.name") && "slave" !== B(a, "jenkins")));
 }, L = function() {
 s && r && (c.podsByDeployment = i.groupByReplicationController(s, r), c.monopodsByService = i.groupByService(c.podsByDeployment[""], p, K));
 }, M = {}, N = function(a) {
@@ -2971,7 +2971,7 @@ c.recentPipelinesByDC[b] = c.recentPipelinesByDC[b] || [], c.recentPipelinesByDC
 }
 }, W = a("isRecentBuild"), X = function() {
 u && (c.recentPipelinesByDC = {}, c.recentBuildsByOutputImage = {}, _.each(u, function(a) {
-return W(a) ? z(a) ? void V(a) :void T(a) :void 0;
+if (W(a)) return z(a) ? void V(a) :void T(a);
 }));
 }, Y = function() {
 var a = _.isEmpty(p) && _.isEmpty(s) && _.isEmpty(r) && _.isEmpty(q), b = p && s && r && q;
@@ -3055,7 +3055,7 @@ j = j || b.deploymentsByService[h] && b.deploymentsByService[h][a];
 }), l.log("podsByDeployment", b.podsByDeployment), l.log("podsByService", b.podsByService), l.log("monopodsByService", b.monopodsByService), E();
 }
 function w(a) {
-return "Succeeded" === a.status.phase || "Terminated" === a.status.phase || "Failed" === a.status.phase ? !1 :j(a, "openshift.io/deployer-pod-for.name") ? !1 :!f(a, "openshift.io/build.name");
+return "Succeeded" !== a.status.phase && "Terminated" !== a.status.phase && "Failed" !== a.status.phase && (!j(a, "openshift.io/deployer-pod-for.name") && !f(a, "openshift.io/build.name"));
 }
 function x() {
 b.deploymentConfigsByService = {
@@ -3123,7 +3123,7 @@ if (!c) return !0;
 if (g(b.podsByDeployment[a.metadata.name]) > 0) return !0;
 if (!b.deploymentConfigs) return !1;
 var d = b.deploymentConfigs[c];
-return d ? e(a, d) || b.isScalable(a, c) :!1;
+return !!d && (e(a, d) || b.isScalable(a, c));
 }, [ b.podsByService, b.monopodsByService, b.deploymentsByService, b.deploymentConfigsByService, b.routesByService ].forEach(function(c) {
 angular.forEach(c, function(e, f) {
 var g = b.services[f];
@@ -3218,7 +3218,7 @@ l.warn("Unexpected HPA scaleRef kind", c);
 }
 });
 })), b.isScalable = function(a, c) {
-return J(a.metadata.name) ? !1 :c ? b.deploymentConfigs ? b.deploymentConfigs[c] ? I(c) ? !1 :t[c] === a :!0 :!1 :!0;
+return !J(a.metadata.name) && (!c || !!b.deploymentConfigs && (!b.deploymentConfigs[c] || !I(c) && t[c] === a));
 };
 var K = {};
 v.push(c.watch("replicationcontrollers", e, function(a, c, d) {
@@ -3577,7 +3577,7 @@ a.causes = e("deploymentCauses")(a);
 })), k.push(d.watch("deploymentconfigs", c, function(a) {
 b.unfilteredDeploymentConfigs = a.by("metadata.name"), f.addLabelSuggestionsFromResources(b.unfilteredDeploymentConfigs, b.labelSuggestions), f.setLabelSuggestions(b.labelSuggestions), b.deploymentConfigs = f.getLabelSelector().select(b.unfilteredDeploymentConfigs), b.emptyMessage = "No deployments to show", b.deploymentsByDeploymentConfig = i.associateDeploymentsToDeploymentConfig(b.deployments, b.deploymentConfigs, !0), b.deploymentsByDeploymentConfig[""] && (b.unfilteredReplicationControllers = b.deploymentsByDeploymentConfig[""], b.deploymentsByDeploymentConfig[""] = f.getLabelSelector().select(b.deploymentsByDeploymentConfig[""])), h(), g.log("deploymentconfigs (subscribe)", b.deploymentConfigs);
 })), b.showEmptyMessage = function() {
-return 0 === e("hashSize")(b.deploymentsByDeploymentConfig) ? !0 :!(1 !== e("hashSize")(b.deploymentsByDeploymentConfig) || !b.deploymentsByDeploymentConfig[""]);
+return 0 === e("hashSize")(b.deploymentsByDeploymentConfig) || !(1 !== e("hashSize")(b.deploymentsByDeploymentConfig) || !b.deploymentsByDeploymentConfig[""]);
 }, f.onActiveFiltersChanged(function(a) {
 b.$apply(function() {
 b.deploymentConfigs = a.select(b.unfilteredDeploymentConfigs), b.deploymentsByDeploymentConfig = i.associateDeploymentsToDeploymentConfig(b.deployments, b.deploymentConfigs, !0), b.deploymentsByDeploymentConfig[""] && (b.unfilteredReplicationControllers = b.deploymentsByDeploymentConfig[""], b.deploymentsByDeploymentConfig[""] = f.getLabelSelector().select(b.deploymentsByDeploymentConfig[""])), h();
@@ -3666,7 +3666,7 @@ a.$apply(function() {
 a.deployments = b.select(a.unfilteredDeployments), j();
 });
 }), a.canDeploy = function() {
-return a.deploymentConfig ? a.deploymentConfig.metadata.deletionTimestamp ? !1 :!a.deploymentInProgress :!1;
+return !!a.deploymentConfig && (!a.deploymentConfig.metadata.deletionTimestamp && !a.deploymentInProgress);
 }, a.startLatestDeployment = function() {
 a.canDeploy() && f.startLatestDeployment(a.deploymentConfig, i, a);
 }, a.scale = function(c) {
@@ -3803,7 +3803,7 @@ a.deploymentConfig ? i.scaleDC(a.deploymentConfig, c).then(_.noop, d) :i.scaleRC
 };
 var u = b("isDeployment");
 a.isScalable = function() {
-return _.isEmpty(a.autoscalers) && u(a.deployment) ? a.deploymentConfigMissing ? !0 :a.deploymentConfig ? a.isActive :!1 :!0;
+return !_.isEmpty(a.autoscalers) || (!u(a.deployment) || (!!a.deploymentConfigMissing || !!a.deploymentConfig && a.isActive));
 }, a.$on("$destroy", function() {
 e.unwatchAll(l);
 });
@@ -3996,7 +3996,7 @@ b.alerts = {}, k();
 });
 var l = f("humanizeKind");
 b.matchKind = function(a, b) {
-return -1 !== l(a).toLowerCase().indexOf(b.toLowerCase());
+return l(a).toLowerCase().indexOf(b.toLowerCase()) !== -1;
 }, g.onActiveFiltersChanged(function(a) {
 b.$apply(function() {
 b.resources = a.select(b.unfilteredResources), j();
@@ -4266,7 +4266,7 @@ _.isEmpty(e) ? b !== a.outputImageStream.namespace || d ? (a.imageSourceOptions.
 var e = [];
 c.status.tags && c.status.tags.forEach(function(a) {
 e.push(a.tag);
-}), a.imageSourceBuildFrom.imageStreams.push(d), b === a.imageSourceBuildFrom.namespace && c.metadata.name === a.imageSourceBuildFrom.imageStream && -1 === _.indexOf(e, a.imageSourceBuildFrom.tag) && e.push(a.imageSourceBuildFrom.tag), a.imageSourceBuildFrom.tags[d] = e, d === a.imageSourceOptions.pickedImageStream && _.isEmpty(e) && (a.imageSourceOptions.pickedTag = "");
+}), a.imageSourceBuildFrom.imageStreams.push(d), b === a.imageSourceBuildFrom.namespace && c.metadata.name === a.imageSourceBuildFrom.imageStream && _.indexOf(e, a.imageSourceBuildFrom.tag) === -1 && e.push(a.imageSourceBuildFrom.tag), a.imageSourceBuildFrom.tags[d] = e, d === a.imageSourceOptions.pickedImageStream && _.isEmpty(e) && (a.imageSourceOptions.pickedTag = "");
 }), a.imageSourceBuildFrom.imageStreams.contains(a.imageSourceOptions.pickedImageStream) || (a.imageSourceOptions.pickedTag = ""), d && (a.imageSourceOptions.pickedImageStream = a.imageSourceBuildFrom.imageStreams[0], a.clearSelectedTag(a.imageSourceOptions, a.imageSourceBuildFrom.tags)));
 }) :(a.imageSourceBuildFrom.imageStreams = [], a.imageSourceBuildFrom.tags = {}, a.imageSourceBuildFrom.imageStreams.push(a.imageSourceImageStream.imageStream), a.imageSourceOptions.pickedImageStreamImage = a.imageSourceImageStream.imageStream, a.imageSourceBuildFrom.tags[a.imageSourceImageStream.imageStream] = [ a.imageSourceImageStream.tag ], a.imageSourceOptions.pickedTag = a.imageSourceImageStream.tag);
 }, a.updateBuilderImageStreams = function(b, d) {
@@ -4279,7 +4279,7 @@ _.isEmpty(e) ? b !== a.builderImageStream.namespace || d ? (a.builderOptions.pic
 var e = [];
 c.status.tags && c.status.tags.forEach(function(a) {
 e.push(a.tag);
-}), a.buildFrom.imageStreams.push(d), b === a.builderImageStream.namespace && c.metadata.name === a.builderImageStream.imageStream && -1 === _.indexOf(e, a.builderImageStream.tag) && e.push(a.builderImageStream.tag), a.buildFrom.tags[d] = e, d === a.builderOptions.pickedImageStream && _.isEmpty(e) && (a.builderOptions.pickedTag = "");
+}), a.buildFrom.imageStreams.push(d), b === a.builderImageStream.namespace && c.metadata.name === a.builderImageStream.imageStream && _.indexOf(e, a.builderImageStream.tag) === -1 && e.push(a.builderImageStream.tag), a.buildFrom.tags[d] = e, d === a.builderOptions.pickedImageStream && _.isEmpty(e) && (a.builderOptions.pickedTag = "");
 }), a.buildFrom.imageStreams.contains(a.builderOptions.pickedImageStream) || (a.builderOptions.pickedTag = ""), d && (a.builderOptions.pickedImageStream = a.buildFrom.imageStreams[0], a.clearSelectedTag(a.builderOptions, a.buildFrom.tags)));
 }) :(a.buildFrom.imageStreams = [], a.buildFrom.tags = {}, a.buildFrom.imageStreams.push(a.builderImageStream.imageStream), a.builderOptions.pickedImageStream = a.builderImageStream.imageStream, a.buildFrom.tags[a.builderImageStream.imageStream] = [ a.builderImageStream.tag ], a.builderOptions.pickedTag = a.builderImageStream.tag);
 }, a.updateOutputImageStreams = function(b, d) {
@@ -4406,7 +4406,7 @@ a[c] = !0;
 };
 } ]), angular.module("openshiftConsole").controller("EditAutoscalerController", [ "$scope", "$filter", "$routeParams", "$window", "APIService", "DataService", "HPAService", "MetricsService", "Navigate", "ProjectsService", function(a, b, c, d, e, f, g, h, i, j) {
 if (!c.kind || !c.name) return void i.toErrorPage("Kind or name parameter missing.");
-if (-1 === [ "ReplicationController", "DeploymentConfig", "HorizontalPodAutoscaler" ].indexOf(c.kind)) return void i.toErrorPage("Autoscaling not supported for kind " + c.kind + ".");
+if ([ "ReplicationController", "DeploymentConfig", "HorizontalPodAutoscaler" ].indexOf(c.kind) === -1) return void i.toErrorPage("Autoscaling not supported for kind " + c.kind + ".");
 a.kind = c.kind, a.name = c.name, "HorizontalPodAutoscaler" === c.kind ? a.disableInputs = !0 :(a.targetKind = c.kind, a.targetName = c.name), a.autoscaling = {
 name:a.name,
 labels:{}
@@ -5025,7 +5025,7 @@ if (a === e || c && 0 === e.indexOf(a)) return !0;
 return !1;
 }
 function r(a, b, c, d) {
-return q(d, c, !0) ? !0 :-1 !== a.toLowerCase().indexOf(d) || b && -1 !== b.toLowerCase().indexOf(d);
+return !!q(d, c, !0) || (a.toLowerCase().indexOf(d) !== -1 || b && b.toLowerCase().indexOf(d) !== -1);
 }
 function s(a, b, c) {
 var e, f;
@@ -5682,9 +5682,9 @@ scope:!1,
 templateUrl:"views/directives/from-file.html",
 controller:[ "$scope", function(k) {
 function l(a) {
-return a.kind ? a.metadata ? a.metadata.name || a.kind.endsWith("List") ? a.metadata.namespace && a.metadata.namespace !== k.projectName ? (k.error = {
+return a.kind ? a.metadata ? a.metadata.name || a.kind.endsWith("List") ? !a.metadata.namespace || a.metadata.namespace === k.projectName || (k.error = {
 message:a.kind + " " + a.metadata.name + " can't be created in project " + a.metadata.namespace + ". Can't create resource in different projects."
-}, !1) :!0 :(k.error = {
+}, !1) :(k.error = {
 message:"Resource name is missing in metadata field."
 }, !1) :(k.error = {
 message:"Resource is missing metadata field."
@@ -6032,14 +6032,14 @@ return !0;
 },
 env:function(a, b) {
 var c = /^[A-Za-z_][A-Za-z0-9_]*$/i;
-return void 0 === a || null === a || 0 === a.trim().length ? !0 :c.test(b);
+return void 0 === a || null === a || 0 === a.trim().length || c.test(b);
 },
 label:function(a, b) {
 function c(a) {
-return a.length > h ? !1 :g.test(a);
+return !(a.length > h) && g.test(a);
 }
 function d(a) {
-return a.length > f ? !1 :e.test(a);
+return !(a.length > f) && e.test(a);
 }
 var e = /^(([A-Za-z0-9][-A-Za-z0-9_.]*)?[A-Za-z0-9])?$/, f = 63, g = /^[a-z0-9]([-a-z0-9]*[a-z0-9])?(\.[a-z0-9]([-a-z0-9]*[a-z0-9])?)*$/, h = 253;
 if (void 0 === a || null === a || 0 === a.trim().length) return !0;
@@ -6055,7 +6055,7 @@ return !1;
 },
 path:function(a, b) {
 var c = /^\//;
-return void 0 === a || null === a || 0 === a.trim().length ? !0 :c.test(b);
+return void 0 === a || null === a || 0 === a.trim().length || c.test(b);
 }
 };
 return {
@@ -6102,11 +6102,11 @@ _.includes(b, document.activeElement) || (e(), f());
 a.isClean = f, a.clear = function() {
 a.key = "", a.value = "", e(), f();
 }, a.allowDelete = function(b) {
-return a.preventEmpty && 1 === Object.keys(a.entries).length ? !1 :"never" === a.deletePolicy ? !1 :"added" === a.deletePolicy ? void 0 !== c[b] :!0;
+return (!a.preventEmpty || 1 !== Object.keys(a.entries).length) && ("never" !== a.deletePolicy && ("added" !== a.deletePolicy || void 0 !== c[b]));
 }, a.addEntry = function() {
 if (a.key && a.value) {
 var d = a.readonlyKeys.split(",");
-if (-1 !== d.indexOf(a.key)) return;
+if (d.indexOf(a.key) !== -1) return;
 c[a.key] = "", a.entries[a.key] = a.value, a.key = null, a.value = null, a.form.$setPristine(), a.form.$setUntouched(), e(), f(), b.focus();
 }
 }, a.deleteEntry = function(b) {
@@ -6122,7 +6122,7 @@ c.off("blur", h), d.off("blur", h), e.off("blur", h);
 } ],
 templateUrl:"views/directives/osc-key-values.html",
 compile:function(a, b) {
-return b.delimiter || (b.delimiter = ":"), b.keyTitle || (b.keyTitle = "Name"), b.valueTitle || (b.valueTitle = "Value"), b.editable && "true" !== b.editable ? b.editable = !1 :b.editable = !0, b.keyValidator || (b.keyValidator = "always"), b.valueValidator || (b.valueValidator = "always"), -1 === [ "always", "added", "none" ].indexOf(b.deletePolicy) && (b.deletePolicy = "always"), b.readonlyKeys || (b.readonlyKeys = ""), {
+return b.delimiter || (b.delimiter = ":"), b.keyTitle || (b.keyTitle = "Name"), b.valueTitle || (b.valueTitle = "Value"), b.editable && "true" !== b.editable ? b.editable = !1 :b.editable = !0, b.keyValidator || (b.keyValidator = "always"), b.valueValidator || (b.valueValidator = "always"), [ "always", "added", "none" ].indexOf(b.deletePolicy) === -1 && (b.deletePolicy = "always"), b.readonlyKeys || (b.readonlyKeys = ""), {
 post:function(a, b, c, d) {
 d.init(b.find('input[name="key"]'), b.find('input[name="value"]'), b.find("a.add-key-value"));
 }
@@ -6161,7 +6161,7 @@ a.services && !a.route.service && (a.route.service = _.find(a.services)), a.$wat
 e(a.route.service), b === c && a.route.targetPort || (a.route.targetPort = _.get(a, "route.portOptions[0].port"));
 });
 var f = function() {
-return a.route.tls ? a.route.tls.termination && "passthrough" !== a.route.tls.termination ? !1 :a.route.tls.certificate || a.route.tls.key || a.route.tls.caCertificate || a.route.tls.destinationCACertificate :!1;
+return !!a.route.tls && ((!a.route.tls.termination || "passthrough" === a.route.tls.termination) && (a.route.tls.certificate || a.route.tls.key || a.route.tls.caCertificate || a.route.tls.destinationCACertificate));
 };
 a.$watch("route.tls.termination", function() {
 _.get(a, "route.tls.termination") && (a.showSecureRouteOptions = !0), a.showCertificatesNotUsedWarning = f();
@@ -6707,7 +6707,7 @@ link:function(d) {
 d.filterAndNavigate = function(e, f) {
 d.kind && d.projectName && (d.filterCurrentPage || a.url(d.navigateUrl || "/project/" + d.projectName + "/browse/" + d.kind), b(function() {
 var a = {};
-a[e] = f, c.setLabelSelector(new LabelSelector(a, !0));
+a[e] = f, c.setLabelSelector(new LabelSelector(a, (!0)));
 }, 1));
 };
 }
@@ -6838,11 +6838,11 @@ kind:"@"
 },
 link:function(b, c, d) {
 $(c).on("click.oscobject", function(c) {
-return $(c.target).closest("a").length > 0 ? void 0 :b.resource ? (a.setObject(b.resource, b.kind || b.resource.kind, {
+if (!($(c.target).closest("a").length > 0)) return b.resource ? (a.setObject(b.resource, b.kind || b.resource.kind, {
 source:b
 }), !1) :void 0;
 }), $(c).on("mousemove.oscobject", function() {
-return b.resource || $(this).hasClass("osc-object-stacked") ? ($(".osc-object-hover").not(this).removeClass("osc-object-hover"), $(this).addClass("osc-object-hover"), !1) :void 0;
+if (b.resource || $(this).hasClass("osc-object-stacked")) return $(".osc-object-hover").not(this).removeClass("osc-object-hover"), $(this).addClass("osc-object-hover"), !1;
 }), $(c).on("mouseleave.oscobject", function() {
 (b.resource || $(this).hasClass("osc-object-stacked")) && $(this).removeClass("osc-object-hover");
 });
@@ -6994,7 +6994,7 @@ deployment:h.deployment
 }) :null;
 }
 function p() {
-return h.metricsError ? !1 :h.deployment ? !0 :h.pod && (x || _.get(h, "options.selectedContainer"));
+return !h.metricsError && (!!h.deployment || h.pod && (x || _.get(h, "options.selectedContainer")));
 }
 function q(a, b, c) {
 h.noData = !1;
@@ -7233,7 +7233,7 @@ bottom:j.followAffixBottom || 0
 });
 }, x = function(a) {
 var b = $(".log-view-output"), c = b.offset().top;
-if (!(0 > c)) {
+if (!(c < 0)) {
 var d = Math.floor($(window).height() - c);
 j.chromeless || (d -= 35), a ? b.animate({
 "min-height":d + "px"
@@ -7414,7 +7414,7 @@ onrendered:i,
 tooltip:{
 format:{
 value:function(a, b, c) {
-return a && "Empty" !== c ? a :void 0;
+if (a && "Empty" !== c) return a;
 }
 },
 position:function() {
@@ -7836,7 +7836,7 @@ label:"GiB"
 }
 var j = function() {
 var a = b.amount && f(b.amount + b.unit), c = b.limitRangeMin && f(b.limitRangeMin), d = b.limitRangeMax && f(b.limitRangeMax), e = !0, g = !0;
-a && c && (e = a >= c), a && d && (g = d >= a), b.form.amount.$setValidity("limitRangeMin", e), b.form.amount.$setValidity("limitRangeMax", g);
+a && c && (e = a >= c), a && d && (g = a <= d), b.form.amount.$setValidity("limitRangeMin", e), b.form.amount.$setValidity("limitRangeMax", g);
 }, k = function() {
 var a, c = b.request && f(b.request), d = !0, e = !0;
 b.amount ? a = f(b.amount + b.unit) :b.defaultValue && (a = f(b.defaultValue)), c && a && (d = a >= c, b.maxLimitRequestRatio && (e = a / c <= b.maxLimitRequestRatio)), c && !a && b.maxLimitRequestRatio && (e = !1), b.form.amount.$setValidity("limitLargerThanRequest", d), b.form.amount.$setValidity("limitWithinRatio", e);
@@ -8265,7 +8265,7 @@ return a ? moment(a).fromNow(b) :a;
 }).filter("duration", function() {
 return function(a, b, c, d) {
 function e(a, b, d) {
-return 0 !== a ? 1 === a ? void (c ? h.push(b) :h.push("one " + b)) :void h.push(a + " " + d) :void 0;
+if (0 !== a) return 1 === a ? void (c ? h.push(b) :h.push("one " + b)) :void h.push(a + " " + d);
 }
 if (!a) return a;
 d = d || 2, b = b || new Date();
@@ -8787,7 +8787,7 @@ return a.getActiveDeployment(b);
 };
 } ]).filter("isRecentDeployment", [ "deploymentIsLatestFilter", "deploymentIsInProgressFilter", function(a, b) {
 return function(c, d) {
-return a(c, d) ? !0 :!!b(c);
+return !!a(c, d) || !!b(c);
 };
 } ]).filter("buildStrategy", function() {
 return function(a) {
@@ -8840,7 +8840,7 @@ return URI(h).is("url") ? h :"";
 };
 } ]).filter("pipelineStageComplete", function() {
 return function(a) {
-return a ? -1 !== _.indexOf([ "ABORTED", "FAILED", "SUCCESS" ], a.status) :!1;
+return !!a && _.indexOf([ "ABORTED", "FAILED", "SUCCESS" ], a.status) !== -1;
 };
 }).filter("humanizeKind", [ "startCaseFilter", function(a) {
 return function(a, b) {
@@ -9056,11 +9056,11 @@ return d(a(b, c, !0));
 } ]).filter("humanizeSize", function() {
 return function(a) {
 if (null === a || void 0 === a || "" === a) return a;
-if (a = Number(a), 1024 > a) return a + " bytes";
+if (a = Number(a), a < 1024) return a + " bytes";
 var b = a / 1024;
-if (1024 > b) return b.toFixed(1) + " KiB";
+if (b < 1024) return b.toFixed(1) + " KiB";
 var c = b / 1024;
-if (1024 > c) return c.toFixed(1) + " MiB";
+if (c < 1024) return c.toFixed(1) + " MiB";
 var d = c / 1024;
 return d.toFixed(1) + " GiB";
 };
@@ -9103,7 +9103,7 @@ return function(a, b) {
 if (!b) return {};
 var c = b.split(","), d = {};
 return angular.forEach(a, function(a, b) {
--1 !== c.indexOf(b) && (d[b] = a);
+c.indexOf(b) !== -1 && (d[b] = a);
 }), d;
 };
 }).filter("valuesNotIn", function() {
@@ -9111,7 +9111,7 @@ return function(a, b) {
 if (!b) return a;
 var c = b.split(","), d = {};
 return angular.forEach(a, function(a, b) {
--1 === c.indexOf(b) && (d[b] = a);
+c.indexOf(b) === -1 && (d[b] = a);
 }), d;
 };
 }).filter("toArray", function() {
@@ -9213,7 +9213,7 @@ e = e.substring(0, f);
 }
 if (c !== !1) {
 var g = Math.max(4, b - 10), h = e.lastIndexOf(/\s/, g);
--1 !== h && (e = e.substring(0, h));
+h !== -1 && (e = e.substring(0, h));
 }
 return e;
 };
@@ -9245,7 +9245,7 @@ return _.capitalize(a);
 };
 }).filter("isMultiline", function() {
 return function(a) {
-return a ? -1 !== a.indexOf("\n") :!1;
+return !!a && a.indexOf("\n") !== -1;
 };
 }), angular.module("openshiftConsole").directive("affix", [ "$window", function(a) {
 return {

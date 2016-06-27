@@ -1044,7 +1044,7 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "<dd>\n" +
     "<span ng-if=\"build.status.startTimestamp\">\n" +
     "<relative-timestamp timestamp=\"build.status.startTimestamp\"></relative-timestamp>\n" +
-    "<span><span class=\"text-muted\">&ndash;</span> {{build.status.startTimestamp | date : 'short'}}</span>\n" +
+    "<span><span class=\"text-muted\">&ndash;</span> {{build.status.startTimestamp | date : 'MMM dd, yyyy h:mm a'}}</span>\n" +
     "</span>\n" +
     "<span ng-if=\"!build.status.startTimestamp\"><em>not started</em></span>\n" +
     "</dd>\n" +
@@ -1493,7 +1493,6 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "</td>\n" +
     "<td data-title=\"Created\">\n" +
     "<relative-timestamp timestamp=\"build.metadata.creationTimestamp\"></relative-timestamp>\n" +
-    "<span>- {{build.metadata.creationTimestamp | date : 'short'}}</span>\n" +
     "</td>\n" +
     "</tr>\n" +
     "</tbody>\n" +
@@ -2000,9 +1999,8 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "\n" +
     "</div>\n" +
     "</td>\n" +
-    "<td data-title=\"Createed\">\n" +
+    "<td data-title=\"Created\">\n" +
     "<relative-timestamp timestamp=\"deployment.metadata.creationTimestamp\"></relative-timestamp>\n" +
-    "<span>- {{deployment.metadata.creationTimestamp | date : 'short'}}</span>\n" +
     "</td>\n" +
     "<td data-title=\"Trigger\">\n" +
     "<span ng-if=\"!deployment.causes.length\">Unknown</span>\n" +
@@ -3041,7 +3039,6 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "</td>\n" +
     "<td data-title=\"Created\">\n" +
     "<relative-timestamp timestamp=\"build.metadata.creationTimestamp\"></relative-timestamp>\n" +
-    "<span>- {{build.metadata.creationTimestamp | date : 'short'}}</span>\n" +
     "</td>\n" +
     "<td data-title=\"Type\">{{build.spec.strategy.type | startCase}}</td>\n" +
     "<td data-title=\"Source\" class=\"word-break-all\">\n" +
@@ -3889,7 +3886,6 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "</td>\n" +
     "<td data-title=\"Created\">\n" +
     "<relative-timestamp timestamp=\"deployment.metadata.creationTimestamp\"></relative-timestamp>\n" +
-    "<span>- {{deployment.metadata.creationTimestamp | date : 'short'}}</span>\n" +
     "</td>\n" +
     "<td data-title=\"Trigger\">\n" +
     "<span ng-if=\"!deployment.causes.length\">Unknown</span>\n" +
@@ -3932,7 +3928,6 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "</td>\n" +
     "<td data-title=\"Created\">\n" +
     "<relative-timestamp timestamp=\"deployment.metadata.creationTimestamp\"></relative-timestamp>\n" +
-    "<span>- {{deployment.metadata.creationTimestamp | date : 'short'}}</span>\n" +
     "</td>\n" +
     "</tr>\n" +
     "</tbody>\n" +
