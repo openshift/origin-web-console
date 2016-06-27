@@ -6741,11 +6741,12 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "<td data-title=\"Labels\">\n" +
     "<em ng-if=\"(resource.metadata.labels | hashSize) === 0\">none</em>\n" +
     "<labels labels=\"resource.metadata.labels\" clickable=\"true\" kind=\"{{kindSelector.selected.kind | kindToResource : true }}\" project-name=\"{{resource.metadata.namespace}}\" limit=\"3\" filter-current-page=\"true\"></labels></td>\n" +
-    "<td data-title=\"Actions\" class=\"text-right\">\n" +
+    "<td data-title=\"Actions\" class=\"text-xs-left text-right\">\n" +
     "<span uib-dropdown>\n" +
-    "<a uib-dropdown-toggle id=\"{{resource.metadata.name}}_actions\" href=\"\" class=\"actions-dropdown-kebab\">\n" +
-    "<i class=\"fa fa-ellipsis-v\"></i><span class=\"sr-only\">Actions</span>\n" +
-    "</a>\n" +
+    "<button type=\"button\" class=\"dropdown-toggle btn btn-default\" data-toggle=\"dropdown\">\n" +
+    "Actions\n" +
+    "<span class=\"caret\"></span>\n" +
+    "</button>\n" +
     "<ul class=\"uib-dropdown-menu dropdown-menu-right\" aria-labelledby=\"{{resource.metadata.name}}_actions\">\n" +
     "<li>\n" +
     "<edit-link resource=\"resource\" kind=\"{{kindSelector.selected.kind}}\" alerts=\"alerts\" success=\"loadKind\">\n" +
