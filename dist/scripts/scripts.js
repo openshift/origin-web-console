@@ -3375,7 +3375,7 @@ a.alerts[b.name] = b.data;
 }), h.clearAlerts(), a.aceLoaded = function(a) {
 var b = a.getSession();
 b.setOption("tabSize", 2), b.setOption("useSoftTabs", !0), a.$blockScrolling = 1 / 0;
-};
+}, b.tab && (a.selectedTab = {}, a.selectedTab[b.tab] = !0);
 var i = f("orderObjectsByDate"), j = [];
 d.get(b.project).then(_.spread(function(d, h) {
 function k() {
