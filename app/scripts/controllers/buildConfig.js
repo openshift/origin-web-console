@@ -36,6 +36,12 @@ angular.module('openshiftConsole')
       editor.$blockScrolling = Infinity;
     };
 
+    // Check for a ?tab=<name> query param to allow linking directly to a tab.
+    if ($routeParams.tab) {
+      $scope.selectedTab = {};
+      $scope.selectedTab[$routeParams.tab] = true;
+    }
+
     var orderByDate = $filter('orderObjectsByDate');
     var watches = [];
 
