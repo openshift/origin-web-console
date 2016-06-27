@@ -89,6 +89,18 @@ oc status</pre>
               </div>
             </div>
 
+            <div ng-if="parameters.all.length">
+              <h2>Applied Parameter Values</h2>
+              <p>These parameters often include things like passwords. If you will need to reference these values later, copy them to a safe location.
+                <span ng-if="parameters.generated.length > 1">Parameters <span ng-repeat="paramName in parameters.generated">{{paramName}}<span ng-if="!$last">, </span></span> were generated automatically.</span>
+                <span ng-if="parameters.generated.length === 1">Parameter {{parameters.generated[0]}} was generated automatically.</span>
+              </p>
+              <div ng-if="!showParamsTable" class="center">
+                <a href="" ng-click="toggleParamsTable()">Show parameter values</a>
+              </div>
+              <environment ng-if="showParamsTable" env-vars="parameters.all" class="no-background"></environment>
+            </div>
+
           </div>
         </div><!-- /middle-content -->
       </div><!-- /middle-container -->

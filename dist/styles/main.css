@@ -3570,6 +3570,7 @@ labels+.resource-details{margin-top:10px}
 .ace-bordered{border:1px solid #8b8d8f}
 .ace-bordered.ace-read-only{border-color:#d1d1d1;background-color:#fafafa}
 .action-divider{color:#999}
+.surface-shaded .table{background-color:transparent}
 .environment-variables.table.table-bordered>tbody>tr>td:first-child{font-weight:700;padding-right:10px;vertical-align:top}
 .environment-variables.table.table-bordered>tbody>tr>td:last-child{word-break:break-all;width:100%}
 .environment-variables.table.table-bordered>tbody>tr>td:last-child .env-var-value a{font-family:"Open Sans",Helvetica,Arial,sans-serif}
