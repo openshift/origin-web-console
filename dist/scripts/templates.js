@@ -1393,7 +1393,7 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "<div class=\"row\" ng-if=\"loaded\">\n" +
     "<div class=\"col-md-12\" ng-class=\"{ 'hide-tabs' : !buildConfig }\">\n" +
     "<uib-tabset>\n" +
-    "<uib-tab>\n" +
+    "<uib-tab active=\"selectedTab.summary\">\n" +
     "<uib-tab-heading>Summary</uib-tab-heading>\n" +
     "\n" +
     "<div ng-if=\"!unfilteredBuilds\" class=\"gutter-bottom\">Loading...</div>\n" +
@@ -1505,7 +1505,7 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "</div>\n" +
     "</div>\n" +
     "</uib-tab>\n" +
-    "<uib-tab ng-if=\"buildConfig\">\n" +
+    "<uib-tab active=\"selectedTab.configuration\" ng-if=\"buildConfig\">\n" +
     "<uib-tab-heading>Configuration</uib-tab-heading>\n" +
     "<div class=\"resource-details\">\n" +
     "<div class=\"row\">\n" +

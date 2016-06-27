@@ -68,7 +68,7 @@
             <div class="row" ng-if="loaded">
               <div class="col-md-12" ng-class="{ 'hide-tabs' : !buildConfig }">
                 <uib-tabset>
-                  <uib-tab>
+                  <uib-tab active="selectedTab.summary">
                     <uib-tab-heading>Summary</uib-tab-heading>
 
                     <!-- If unfilteredBuilds is undefined, the builds are still loading. -->
@@ -189,7 +189,7 @@
                       </div>
                     </div>
                   </uib-tab>
-                  <uib-tab ng-if="buildConfig">
+                  <uib-tab active="selectedTab.configuration" ng-if="buildConfig">
                     <uib-tab-heading>Configuration</uib-tab-heading>
                       <div class="resource-details">
                         <div class="row">
