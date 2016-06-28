@@ -55,7 +55,7 @@ module.exports = function (grunt) {
       },
       css: {
         files: '<%= yeoman.app %>/styles/*.less',
-        tasks: ['less']
+        tasks: ['less:development']
       },
       html: {
         files: '<%= yeoman.app %>/views/{,*/}*.html',
