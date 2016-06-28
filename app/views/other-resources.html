@@ -47,11 +47,12 @@
                     <td data-title="Labels">
                       <em ng-if="(resource.metadata.labels | hashSize) === 0">none</em>
                       <labels labels="resource.metadata.labels" clickable="true" kind="{{kindSelector.selected.kind | kindToResource : true }}" project-name="{{resource.metadata.namespace}}" limit="3" filter-current-page="true"></labels></td>
-                    <td data-title="Actions" class="text-right">
+                    <td data-title="Actions" class="text-xs-left text-right">
                       <span uib-dropdown>
-                        <a uib-dropdown-toggle id="{{resource.metadata.name}}_actions" href="" class="actions-dropdown-kebab">
-                          <i class="fa fa-ellipsis-v"></i><span class="sr-only">Actions</span>
-                        </a>
+                        <button type="button" class="dropdown-toggle btn btn-default" data-toggle="dropdown">
+                          Actions
+                          <span class="caret"></span>
+                        </button>
                         <ul class="uib-dropdown-menu dropdown-menu-right" aria-labelledby="{{resource.metadata.name}}_actions">
                           <li>
                               <edit-link
