@@ -18,6 +18,7 @@ angular.module('openshiftConsole')
     // This maps an annotation key to all known synonymous keys to insulate
     // the referring code from key renames across API versions.
     var annotationMap = {
+      "buildConfig":              ["openshift.io/build-config.name"],
       "deploymentConfig":         ["openshift.io/deployment-config.name"],
       "deployment":               ["openshift.io/deployment.name"],
       "pod":                      ["openshift.io/deployer-pod.name"],
@@ -170,10 +171,10 @@ angular.module('openshiftConsole')
       return null;
     };
   })
-  .filter('buildConfigForBuild', function(labelNameFilter, labelFilter) {
+  .filter('buildConfigForBuild', function(annotationFilter, labelNameFilter, labelFilter) {
     var labelName = labelNameFilter('buildConfig');
     return function(build) {
-      return labelFilter(build, labelName);
+      return annotationFilter(build, 'buildConfig') || labelFilter(build, labelName);
     };
   })
   .filter('icon', function(annotationFilter) {

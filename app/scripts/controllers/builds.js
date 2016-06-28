@@ -30,6 +30,8 @@ angular.module('openshiftConsole')
     });
     AlertMessageService.clearAlerts();
 
+    var buildConfigForBuild = $filter('buildConfigForBuild');
+
     var watches = [];
 
     ProjectsService
@@ -44,7 +46,7 @@ angular.module('openshiftConsole')
           var buildConfigName;
           var buildName;
           if (build) {
-            buildConfigName = build.metadata.labels.buildconfig;
+            buildConfigName = buildConfigForBuild(build);
             buildName = build.metadata.name;
           }
 
@@ -78,10 +80,7 @@ angular.module('openshiftConsole')
 
           // If we are filtering, and the build is owned by a build config
           // then the build config will control whether the row is shown
-          var buildConfigName = "";
-          if (build.metadata.labels) {
-            buildConfigName = build.metadata.labels.buildconfig || "";
-          }
+          var buildConfigName = buildConfigForBuild(build) || "";
           if (buildConfigName) {
             return !!$scope.buildConfigs[buildConfigName];
           }
@@ -94,10 +93,7 @@ angular.module('openshiftConsole')
         function associateBuildsToBuildConfig() {
           $scope.buildsByBuildConfig = {};
           angular.forEach($scope.builds, function(build, buildName) {
-            var buildConfigName = "";
-            if (build.metadata.labels) {
-              buildConfigName = build.metadata.labels.buildconfig || "";
-            }
+            var buildConfigName = buildConfigForBuild(build) || "";
             if (showBuild(build)) {
               $scope.buildsByBuildConfig[buildConfigName] = $scope.buildsByBuildConfig[buildConfigName] || {};
               $scope.buildsByBuildConfig[buildConfigName][buildName] = build;

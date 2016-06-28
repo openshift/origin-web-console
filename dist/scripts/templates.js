@@ -300,8 +300,8 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "</div>\n" +
     "<div flex class=\"word-break\">\n" +
     "<span class=\"pod-template-key\">Build:</span>\n" +
-    "<span ng-if=\"build.metadata.labels.buildconfig\">\n" +
-    "<a ng-href=\"{{build.metadata.labels.buildconfig | navigateResourceURL : 'BuildConfig' : build.metadata.namespace}}\">{{build.metadata.labels.buildconfig}}</a>,\n" +
+    "<span ng-if=\"build | buildConfigForBuild\">\n" +
+    "<a ng-href=\"{{(build | buildConfigForBuild) | navigateResourceURL : 'BuildConfig' : build.metadata.namespace}}\">{{build | buildConfigForBuild}}</a>,\n" +
     "</span>\n" +
     "<a ng-href=\"{{build | navigateResourceURL}}\">\n" +
     "<span ng-if=\"(build | annotation : 'buildNumber')\">#{{build | annotation : 'buildNumber'}}</span>\n" +
@@ -698,7 +698,7 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "Build\n" +
     "<span ng-if=\"build | annotation : 'buildNumber'\">\n" +
     "<a ng-href=\"{{build | navigateResourceURL}}\">\n" +
-    "<span ng-if=\"build.metadata.labels.buildconfig\">{{build.metadata.labels.buildconfig}}</span>\n" +
+    "<span ng-if=\"build | buildConfigForBuild\">{{build | buildConfigForBuild}}</span>\n" +
     "#{{build | annotation : 'buildNumber'}}\n" +
     "</a>\n" +
     "</span>\n" +
