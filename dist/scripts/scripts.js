@@ -484,7 +484,7 @@ extensions:"v1beta1"
 }, m = function(a) {
 if (a instanceof ResourceGroupVersion) return a;
 var c, d, e;
-return angular.isString(a) ? (c = j(a), d = "", e = l[d]) :a && a.resource && (c = j(a.resource), d = a.group || "", e = a.version || l[d] || _.get(b.groups[d], "preferredVersion.version")), new ResourceGroupVersion(c, d, e);
+return angular.isString(a) ? (c = j(a), d = "", e = l[d]) :a && a.resource && (c = j(a.resource), d = a.group || "", e = a.version || l[d] || _.get(b, [ "groups", d, "preferredVersion" ])), new ResourceGroupVersion(c, d, e);
 }, n = function(a) {
 if (a) {
 var b = a.split("/");
