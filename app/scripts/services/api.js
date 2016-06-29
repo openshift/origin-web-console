@@ -69,7 +69,7 @@ angular.module('openshiftConsole')
     } else if (r && r.resource) {
       resource = normalizeResource(r.resource);
       group = r.group || '';
-      version = r.version || defaultVersion[group] || _.get(APIS_CFG.groups[group], "preferredVersion.version");
+      version = r.version || defaultVersion[group] || _.get(APIS_CFG, ["groups", group, "preferredVersion"]);
     }
     return new ResourceGroupVersion(resource, group, version);
   };
