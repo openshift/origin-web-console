@@ -3799,6 +3799,17 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "</div>\n" +
     "</div>\n" +
     "</div>\n" +
+    "<div ng-if=\"parameters.all.length\">\n" +
+    "<h2>Applied Parameter Values</h2>\n" +
+    "<p>These parameters often include things like passwords. If you will need to reference these values later, copy them to a safe location.\n" +
+    "<span ng-if=\"parameters.generated.length > 1\">Parameters <span ng-repeat=\"paramName in parameters.generated\">{{paramName}}<span ng-if=\"!$last\">, </span></span> were generated automatically.</span>\n" +
+    "<span ng-if=\"parameters.generated.length === 1\">Parameter {{parameters.generated[0]}} was generated automatically.</span>\n" +
+    "</p>\n" +
+    "<div ng-if=\"!showParamsTable\" class=\"center\">\n" +
+    "<a href=\"\" ng-click=\"toggleParamsTable()\">Show parameter values</a>\n" +
+    "</div>\n" +
+    "<environment ng-if=\"showParamsTable\" env-vars=\"parameters.all\" class=\"no-background\"></environment>\n" +
+    "</div>\n" +
     "</div>\n" +
     "</div>\n" +
     "</div>\n" +
@@ -6736,11 +6747,12 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "<td data-title=\"Labels\">\n" +
     "<em ng-if=\"(resource.metadata.labels | hashSize) === 0\">none</em>\n" +
     "<labels labels=\"resource.metadata.labels\" clickable=\"true\" kind=\"{{kindSelector.selected.kind | kindToResource : true }}\" project-name=\"{{resource.metadata.namespace}}\" limit=\"3\" filter-current-page=\"true\"></labels></td>\n" +
-    "<td data-title=\"Actions\" class=\"text-right\">\n" +
+    "<td data-title=\"Actions\" class=\"text-xs-left text-right\">\n" +
     "<span uib-dropdown>\n" +
-    "<a uib-dropdown-toggle id=\"{{resource.metadata.name}}_actions\" href=\"\" class=\"actions-dropdown-kebab\">\n" +
-    "<i class=\"fa fa-ellipsis-v\"></i><span class=\"sr-only\">Actions</span>\n" +
-    "</a>\n" +
+    "<button type=\"button\" class=\"dropdown-toggle btn btn-default\" data-toggle=\"dropdown\">\n" +
+    "Actions\n" +
+    "<span class=\"caret\"></span>\n" +
+    "</button>\n" +
     "<ul class=\"uib-dropdown-menu dropdown-menu-right\" aria-labelledby=\"{{resource.metadata.name}}_actions\">\n" +
     "<li>\n" +
     "<edit-link resource=\"resource\" kind=\"{{kindSelector.selected.kind}}\" alerts=\"alerts\" success=\"loadKind\">\n" +

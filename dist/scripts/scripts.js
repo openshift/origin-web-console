@@ -484,7 +484,7 @@ extensions:"v1beta1"
 }, m = function(a) {
 if (a instanceof ResourceGroupVersion) return a;
 var c, d, e;
-return angular.isString(a) ? (c = j(a), d = "", e = l[d]) :a && a.resource && (c = j(a.resource), d = a.group || "", e = a.version || l[d] || _.get(b.groups[d], "preferredVersion.version")), new ResourceGroupVersion(c, d, e);
+return angular.isString(a) ? (c = j(a), d = "", e = l[d]) :a && a.resource && (c = j(a.resource), d = a.group || "", e = a.version || l[d] || _.get(b, [ "groups", d, "preferredVersion" ])), new ResourceGroupVersion(c, d, e);
 }, n = function(a) {
 if (a) {
 var b = a.split("/");
@@ -2526,6 +2526,32 @@ return a;
 },
 clearTemplate:function() {
 a = null;
+}
+};
+}).service("ProcessedParametersService", function() {
+var a = {
+all:[],
+generated:[]
+};
+return {
+setParams:function(b, c) {
+_.each(b, function(b) {
+a.all.push({
+name:b.name,
+value:b.value
+});
+}), _.each(c, function(b) {
+b.value || a.generated.push(b.name);
+});
+},
+getParams:function() {
+return a;
+},
+clearParams:function() {
+a = {
+all:[],
+generated:[]
+};
 }
 };
 }), angular.module("openshiftConsole").factory("ServicesService", [ "$filter", "DataService", function(a, b) {
@@ -4768,30 +4794,30 @@ null !== a && (b.debug("Generated resource definition:", a), d.push(a));
 }), w(d, a.projectName, a).then(x, y);
 };
 }));
-} ]), angular.module("openshiftConsole").controller("NextStepsController", [ "$scope", "$http", "$routeParams", "DataService", "$q", "$location", "TaskList", "$parse", "Navigate", "$filter", "imageObjectRefFilter", "failureObjectNameFilter", "ProjectsService", function(a, b, c, d, e, f, g, h, i, j, k, l, m) {
-function n() {
-return t && s;
-}
+} ]), angular.module("openshiftConsole").controller("NextStepsController", [ "$scope", "$http", "$routeParams", "DataService", "$q", "$location", "ProcessedParametersService", "TaskList", "$parse", "Navigate", "$filter", "imageObjectRefFilter", "failureObjectNameFilter", "ProjectsService", function(a, b, c, d, e, f, g, h, i, j, k, l, m, n) {
 function o() {
-return q && r && s;
+return u && t;
 }
-var p = (j("displayName"), []);
-a.emptyMessage = "Loading...", a.alerts = [], a.loginBaseUrl = d.openshiftAPIBaseUrl(), a.buildConfigs = {}, a.projectName = c.project;
-var q = c.imageName, r = c.imageTag, s = c.namespace;
+function p() {
+return r && s && t;
+}
+var q = (k("displayName"), []);
+a.emptyMessage = "Loading...", a.alerts = [], a.loginBaseUrl = d.openshiftAPIBaseUrl(), a.buildConfigs = {}, a.showParamsTable = !1, a.projectName = c.project;
+var r = c.imageName, s = c.imageTag, t = c.namespace;
 a.fromSampleRepo = c.fromSample;
-var t = c.name, u = "";
-o() ? u = "project/" + a.projectName + "/create/fromimage?imageName=" + q + "&imageTag=" + r + "&namespace=" + s + "&name=" + t :n() && (u = "project/" + a.projectName + "/create/fromtemplate?name=" + t + "&namespace=" + s), a.breadcrumbs = [ {
+var u = c.name, v = "";
+p() ? v = "project/" + a.projectName + "/create/fromimage?imageName=" + r + "&imageTag=" + s + "&namespace=" + t + "&name=" + u :o() && (v = "project/" + a.projectName + "/create/fromtemplate?name=" + u + "&namespace=" + t), a.breadcrumbs = [ {
 title:a.projectName,
 link:"project/" + a.projectName
 }, {
 title:"Add to Project",
 link:"project/" + a.projectName + "/create"
 }, {
-title:t,
-link:u
+title:u,
+link:v
 }, {
 title:"Next Steps"
-} ], m.get(c.project).then(_.spread(function(b, c) {
+} ], a.parameters = g.getParams(), g.clearParams(), n.get(c.project).then(_.spread(function(b, c) {
 function e(a) {
 var b = [];
 return angular.forEach(a, function(a) {
@@ -4804,8 +4830,8 @@ return angular.forEach(a, function(a) {
 "completed" !== a.status && b.push(a);
 }), b;
 }
-return a.project = b, a.breadcrumbs[0].title = j("displayName")(b), t ? (p.push(d.watch("buildconfigs", c, function(b) {
-a.buildConfigs = b.by("metadata.name"), a.createdBuildConfig = a.buildConfigs[t], Logger.log("buildconfigs (subscribe)", a.buildConfigs);
+return a.project = b, a.breadcrumbs[0].title = k("displayName")(b), u ? (q.push(d.watch("buildconfigs", c, function(b) {
+a.buildConfigs = b.by("metadata.name"), a.createdBuildConfig = a.buildConfigs[u], Logger.log("buildconfigs (subscribe)", a.buildConfigs);
 })), a.createdBuildConfigWithGitHubTrigger = function() {
 return _.some(_.get(a, "createdBuildConfig.spec.triggers"), {
 type:"GitHub"
@@ -4816,13 +4842,15 @@ type:"ConfigChange"
 });
 }, a.allTasksSuccessful = function(a) {
 return !f(a).length && !e(a).length;
+}, a.toggleParamsTable = function() {
+a.showParamsTable = !0;
 }, a.erroredTasks = e, a.pendingTasks = f, void a.$on("$destroy", function() {
-d.unwatchAll(p);
-})) :void i.toProjectOverview(a.projectName);
+d.unwatchAll(q);
+})) :void j.toProjectOverview(a.projectName);
 }));
-} ]), angular.module("openshiftConsole").controller("NewFromTemplateController", [ "$scope", "$http", "$routeParams", "DataService", "AlertMessageService", "ProjectsService", "$q", "$location", "TaskList", "$parse", "Navigate", "$filter", "imageObjectRefFilter", "failureObjectNameFilter", "CachedTemplateService", function(a, b, c, d, e, f, g, h, i, j, k, l, m, n, o) {
-var p = c.name, q = c.namespace || "";
-if (!p) return void k.toErrorPage("Cannot create from template: a template name was not specified.");
+} ]), angular.module("openshiftConsole").controller("NewFromTemplateController", [ "$scope", "$http", "$routeParams", "DataService", "ProcessedParametersService", "AlertMessageService", "ProjectsService", "$q", "$location", "TaskList", "$parse", "Navigate", "$filter", "imageObjectRefFilter", "failureObjectNameFilter", "CachedTemplateService", function(a, b, c, d, e, f, g, h, i, j, k, l, m, n, o, p) {
+var q = c.name, r = c.namespace || "";
+if (!q) return void l.toErrorPage("Cannot create from template: a template name was not specified.");
 a.emptyMessage = "Loading...", a.alerts = {}, a.projectName = c.project, a.projectPromise = $.Deferred(), a.breadcrumbs = [ {
 title:a.projectName,
 link:"project/" + a.projectName
@@ -4830,37 +4858,37 @@ link:"project/" + a.projectName
 title:"Add to Project",
 link:"project/" + a.projectName + "/create"
 }, {
-title:p
-} ], a.alerts = a.alerts || {}, e.getAlerts().forEach(function(b) {
+title:q
+} ], a.alerts = a.alerts || {}, f.getAlerts().forEach(function(b) {
 a.alerts[b.name] = b.data;
-}), e.clearAlerts();
-var r = l("displayName"), s = l("humanize"), t = j("spec.template.spec.containers"), u = j("spec.strategy.sourceStrategy.from || spec.strategy.dockerStrategy.from || spec.strategy.customStrategy.from"), v = j("spec.output.to");
-f.get(c.project).then(_.spread(function(b, e) {
-function f(a) {
-var b = [], c = t(a);
+}), f.clearAlerts();
+var s = m("displayName"), t = m("humanize"), u = k("spec.template.spec.containers"), v = k("spec.strategy.sourceStrategy.from || spec.strategy.dockerStrategy.from || spec.strategy.customStrategy.from"), w = k("spec.output.to");
+g.get(c.project).then(_.spread(function(b, f) {
+function g(a) {
+var b = [], c = u(a);
 return c && angular.forEach(c, function(a) {
 a.image && b.push(a.image);
 }), b;
 }
-function j(b) {
+function k(b) {
 var c = [], d = [], e = {};
 return angular.forEach(b.objects, function(b) {
 if ("BuildConfig" === b.kind) {
-var g = m(u(b), a.projectName);
-g && c.push({
-name:g
+var f = n(v(b), a.projectName);
+f && c.push({
+name:f
 });
-var h = m(v(b), a.projectName);
+var h = n(w(b), a.projectName);
 h && (e[h] = !0);
 }
-"DeploymentConfig" === b.kind && (d = d.concat(f(b)));
+"DeploymentConfig" === b.kind && (d = d.concat(g(b)));
 }), d.forEach(function(a) {
 e[a] || c.push({
 name:a
 });
 }), c;
 }
-function n(a) {
+function o(a) {
 var b = /^helplink\.(.*)\.title$/, c = /^helplink\.(.*)\.url$/, d = {};
 for (var e in a.annotations) {
 var f, g = e.match(b);
@@ -4868,34 +4896,36 @@ g ? (f = d[g[1]] || {}, f.title = a.annotations[e], d[g[1]] = f) :(g = e.match(c
 }
 return d;
 }
-function w() {
-a.templateImages = j(a.template), a.template.labels = a.template.labels || {};
+function x() {
+a.templateImages = k(a.template), a.template.labels = a.template.labels || {};
 }
-if (a.project = b, a.breadcrumbs[0].title = l("displayName")(b), a.projectDisplayName = function() {
-return r(this.project) || this.projectName;
+if (a.project = b, a.breadcrumbs[0].title = m("displayName")(b), a.projectDisplayName = function() {
+return s(this.project) || this.projectName;
 }, a.templateDisplayName = function() {
-return r(this.template);
+return s(this.template);
 }, a.createFromTemplate = function() {
-a.disableInputs = !0, d.create("processedtemplates", null, a.template, e).then(function(b) {
-var f = {
+a.disableInputs = !0, d.create("processedtemplates", null, a.template, f).then(function(b) {
+var g = {
 started:"Creating " + a.templateDisplayName() + " in project " + a.projectDisplayName(),
 success:"Created " + a.templateDisplayName() + " in project " + a.projectDisplayName(),
 failure:"Failed to create " + a.templateDisplayName() + " in project " + a.projectDisplayName()
-}, h = n(a.template);
-i.clear(), i.add(f, h, function() {
-var c = g.defer();
-return d.batch(b.objects, e).then(function(b) {
+};
+_.isEmpty(b.parameters) || e.setParams(b.parameters, a.template.parameters);
+var i = o(a.template);
+j.clear(), j.add(g, i, function() {
+var c = h.defer();
+return d.batch(b.objects, f).then(function(b) {
 var d = [], e = !1;
 b.failure.length > 0 ? (e = !0, b.failure.forEach(function(a) {
 d.push({
 type:"error",
-message:"Cannot create " + s(a.object.kind).toLowerCase() + ' "' + a.object.metadata.name + '". ',
+message:"Cannot create " + t(a.object.kind).toLowerCase() + ' "' + a.object.metadata.name + '". ',
 details:a.data.message
 });
 }), b.success.forEach(function(a) {
 d.push({
 type:"success",
-message:"Created " + s(a.kind).toLowerCase() + ' "' + a.metadata.name + '" successfully. '
+message:"Created " + t(a.kind).toLowerCase() + ' "' + a.metadata.name + '" successfully. '
 });
 })) :d.push({
 type:"success",
@@ -4905,7 +4935,7 @@ alerts:d,
 hasErrors:e
 });
 }), c.promise;
-}), k.toNextSteps(c.name, a.projectName);
+}), l.toNextSteps(c.name, a.projectName);
 }, function(b) {
 a.disableInputs = !1;
 var c;
@@ -4915,21 +4945,21 @@ message:"An error occurred processing the template.",
 details:c
 };
 });
-}, q) d.get("templates", p, {
-namespace:q || a.projectName
+}, r) d.get("templates", q, {
+namespace:r || a.projectName
 }).then(function(b) {
-a.template = b, w();
+a.template = b, x();
 }, function() {
-k.toErrorPage("Cannot create from template: the specified template could not be retrieved.");
+l.toErrorPage("Cannot create from template: the specified template could not be retrieved.");
 }); else {
-if (a.template = o.getTemplate(), _.isEmpty(a.template)) {
-var x = URI("error").query({
+if (a.template = p.getTemplate(), _.isEmpty(a.template)) {
+var y = URI("error").query({
 error:"not_found",
 error_description:"Template wasn't found in cache."
 }).toString();
-h.url(x);
+i.url(y);
 }
-o.clearTemplate(), w();
+p.clearTemplate(), x();
 }
 }));
 } ]), angular.module("openshiftConsole").controller("LabelsController", [ "$scope", function(a) {

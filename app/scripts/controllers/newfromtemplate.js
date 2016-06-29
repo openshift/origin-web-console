@@ -9,7 +9,7 @@
  * Controller of the openshiftConsole
  */
 angular.module('openshiftConsole')
-  .controller('NewFromTemplateController', function ($scope, $http, $routeParams, DataService, AlertMessageService, ProjectsService, $q, $location, TaskList, $parse, Navigate, $filter, imageObjectRefFilter, failureObjectNameFilter, CachedTemplateService) {
+  .controller('NewFromTemplateController', function ($scope, $http, $routeParams, DataService, ProcessedParametersService, AlertMessageService, ProjectsService, $q, $location, TaskList, $parse, Navigate, $filter, imageObjectRefFilter, failureObjectNameFilter, CachedTemplateService) {
 
 
     var name = $routeParams.name;
@@ -141,6 +141,10 @@ angular.module('openshiftConsole')
                 success: "Created " + $scope.templateDisplayName() + " in project " + $scope.projectDisplayName(),
                 failure: "Failed to create " + $scope.templateDisplayName() + " in project " + $scope.projectDisplayName()
               };
+
+              if (!_.isEmpty(config.parameters)) {
+                ProcessedParametersService.setParams(config.parameters, $scope.template.parameters);
+              }
 
               var helpLinks = getHelpLinks($scope.template);
               TaskList.clear();
