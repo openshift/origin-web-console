@@ -39719,12 +39719,13 @@ prevent:"=",
 rows:"=",
 cols:"=",
 screenKeys:"=",
-autofocus:"=?"
+autofocus:"=?",
+status:"="
 },
 link:function(g, h, i) {
 function j() {
 function a(a) {
-!a && j && (a = "Could not connect to the container. Do you have sufficient privileges?"), a || (a = "disconnected"), j || (a = "\r\n" + a), q.write("[31m" + a + "[m\r\n"), g.$apply(k);
+!a && j && (a = "Could not connect to the container. Do you have sufficient privileges?"), a || (a = "disconnected"), j || (a = "\r\n" + a), q.write("[31m" + a + "[m\r\n"), g.status = "disconnected", g.$apply(k);
 }
 k(), q.reset();
 var b = "", c = g.pod();
@@ -39751,15 +39752,16 @@ q.write(d(b));
 }
 j && (j = !1, m.addClass("hidden"), n.addClass("hidden"), q.cursorHidden = !1, q.showCursor(), q.refresh(q.y, q.y), g.autofocus && q.element && q.element.focus());
 }, p.onclose = function(b) {
-a(b.reason);
+g.status = "disconnected", a(b.reason);
 };
 }, function(b) {
 a(b.message);
-});
+}), g.status = "connected";
 }
 function k() {
-m.addClass("hidden"), n.removeClass("hidden"), q && (q.cursorHidden = !0, q.refresh(q.x, q.y)), p && (p.onopen = p.onmessage = p.onerror = p.onclose = null, p.readyState < 2 && p.close(), p = null), window.clearInterval(o), o = null;
+g.status = "disconnected", m.addClass("hidden"), n.removeClass("hidden"), q && (q.cursorHidden = !0, q.refresh(q.x, q.y)), p && (p.onopen = p.onmessage = p.onerror = p.onclose = null, p.readyState < 2 && p.close(), p = null), window.clearInterval(o), o = null;
 }
+g.status = "disconnected";
 var l = a.element("<div class='terminal-wrapper'>");
 h.append(l);
 var m = a.element("<div class='spinner spinner-white hidden'>"), n = a.element("<button class='btn btn-default fa fa-refresh'>");
