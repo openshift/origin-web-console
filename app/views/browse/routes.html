@@ -24,7 +24,22 @@
         <div class="container-fluid">
           <div class="row">
             <div class="col-md-12 gutter-top">
-              <table class="table table-bordered table-hover table-mobile">
+              <div ng-if="(routes | hashSize) == 0" class="blank-slate-pf">
+                <div class="blank-slate-pf-icon">
+                  <span class="pficon pficon pficon-route"></span>
+                </div>
+                <h1>{{emptyMessage}}</h1>
+                <p>
+                  To create your project's first route select the 'Create Route' button below and follow the on-screen prompts.
+                </p>
+                <p>
+                  For more information or to find out why you might be seeing this message, please visit our <a href="#">Openshift Help Center</a>.
+                </p>
+                <div class="blank-slate-pf-main-action">
+                  <a ng-href="project/{{project.metadata.name}}/create-route"><button class="btn btn-primary btn-lg"> Create Route </button></a>
+                </div>
+              </div>
+              <table ng-if="(routes | hashSize) !== 0" class="table table-bordered table-hover table-mobile">
                 <thead>
                   <tr>
                     <th>Name</th>

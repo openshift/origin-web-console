@@ -21,7 +21,16 @@
         <div class="container-fluid">
           <div class="row">
             <div class="col-md-12 gutter-top">
-              <table class="table table-bordered table-hover table-mobile">
+              <div ng-if="((buildsByBuildConfig | hashSize) == 0)" class="blank-slate-pf">
+                <div class="blank-slate-pf-icon">
+                  <span class="pficon pficon pficon-build"></span>
+                </div>
+                <h1>{{emptyMessage}}</h1>
+                <p>
+                  To create your project's first build, please visit our <a href="#">Build Configuration Wizard</a>.
+                </p>
+              </div>
+              <table ng-if="((buildsByBuildConfig | hashSize) !== 0)" class="table table-bordered table-hover table-mobile">
                 <thead>
                   <tr>
                     <th>Name</th>
@@ -32,9 +41,6 @@
                     <th>Source</th>
                   </tr>
                 </thead>
-                <tbody ng-if="((buildsByBuildConfig | hashSize) == 0)">
-                  <tr><td colspan="6"><em>{{emptyMessage}}</em></td></tr>
-                </tbody>
                 <tbody ng-repeat="(buildConfigName, buildConfigBuilds) in buildsByBuildConfig">
                   <!-- Build config with no builds-->
                   <tr ng-if="(buildConfigBuilds | hashSize) == 0">
