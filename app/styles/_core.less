@@ -405,20 +405,6 @@ label.checkbox {
       }
     }
   }
-  @media (min-width:@screen-sm-min) {
-    // Line up the description and filter controls with left column tiles.
-    .catalog-header-left {
-      padding-right: 10px;
-    }
-    // Line up catalog with right column tiles.
-    .catalog-legend {
-      padding-left: 15px;
-    }
-    .middle-content > .container {
-      padding-left: 30px;
-      padding-right: 30px;
-    }
-  }
 }
 
 .drag-and-drop-zone {
@@ -577,7 +563,7 @@ label.checkbox {
 }
 
 .catalog-col section {
-  margin-bottom: 10px;
+  margin-bottom: 20px;
   > h3 {
     margin-top: 0;
     small {
@@ -585,9 +571,12 @@ label.checkbox {
     }
   }
 }
-@media (min-width:@screen-sm-min) {
+@media (min-width: @screen-md-min) {
+  .catalog-col-1 {
+    padding-right: 10px;
+  }
   .catalog-col-2 {
-    margin-left: 3%;
+    padding-left: 10px;
   }
 }
 
@@ -622,13 +611,7 @@ label.checkbox {
 }
 
 .catalog {
-  .flex-display(@display: flex);
-
-  // Stack at mobile screen sizes
-  .flex-direction(@direction: column);
-
   .tile-template, .tile-image {
-    width: 100%;
     a.tag {
       text-decoration: none;
       &:hover {
@@ -638,7 +621,19 @@ label.checkbox {
       }
     }
   }
+}
 
+.catalog-fluid {
+  .flex-display(@display: flex);
+  // Stack at mobile screen sizes
+  .flex-direction(@direction: column);
+  @media (min-width: @screen-md-min) {
+    .tile-template, .tile-image {
+      &:nth-child(odd) {
+        margin-right: (@grid-gutter-width/2);
+      }
+    }
+  }
   // Arrange in columns >767px
   @media (min-width: @screen-sm-min) {
     .flex-direction(@direction: row);
@@ -649,13 +644,7 @@ label.checkbox {
 
     .tile-template, .tile-image {
       .flex(@columns: 1 0 auto);
-      width: 100%;
-      margin-right: (@grid-gutter-width / 2);
-    }
-    &.catalog-fluid {
-      .tile-template, .tile-image {
-        width: 375px;
-      }
+      width: 375px;
     }
   }
 }

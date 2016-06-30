@@ -3063,7 +3063,7 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
 
 
   $templateCache.put('views/catalog/_catalog-category.html',
-    "<section column>\n" +
+    "<section>\n" +
     "<h3>\n" +
     "{{categoryLabel}}\n" +
     "<small ng-show=\"itemLimit && (builders.length > itemLimit || templates.length > itemLimit)\" class=\"pull-right\">\n" +
@@ -3427,16 +3427,16 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "All builder images and templates are hidden by the current filter.\n" +
     "<a href=\"\" ng-click=\"filter.keyword = ''; filter.tag = ''\">Clear filter</a>\n" +
     "</div>\n" +
-    "<div row md=\"column\" class=\"gutter-top\">\n" +
+    "<div class=\"row gutter-top\">\n" +
     "\n" +
-    "<div column flex class=\"catalog-col catalog-col-1\">\n" +
+    "<div class=\"col-md-6 catalog-col catalog-col-1\">\n" +
     "<div ng-repeat=\"category in leftCategories\">\n" +
     "<catalog-category category-label=\"{{categoryLabels[category] || tag}}\" builders=\"filteredBuildersByCategory[category]\" templates=\"filteredTemplatesByCategory[category]\" project=\"{{projectName}}\" item-limit=\"{{itemLimit}}\" filter-tag=\"filterTag\">\n" +
     "</catalog-category>\n" +
     "</div>\n" +
     "</div>\n" +
     "\n" +
-    "<div column flex class=\"catalog-col catalog-col-2\">\n" +
+    "<div class=\"col-md-6 catalog-col catalog-col-2\">\n" +
     "<div ng-repeat=\"category in rightCategories\">\n" +
     "<catalog-category category-label=\"{{categoryLabels[category] || tag}}\" builders=\"filteredBuildersByCategory[category]\" templates=\"filteredTemplatesByCategory[category]\" project=\"{{projectName}}\" item-limit=\"{{itemLimit}}\" filter-tag=\"filterTag\">\n" +
     "</catalog-category>\n" +
