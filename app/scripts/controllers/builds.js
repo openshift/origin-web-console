@@ -106,15 +106,63 @@ angular.module('openshiftConsole')
         }
 
         $scope.startBuild = function(buildConfigName) {
-          BuildsService.startBuild(buildConfigName, $scope, $scope); // FIXME
+          BuildsService
+            .startBuild(buildConfigName, context)
+            .then(function resolve(build) {
+              // TODO: common alerts service to eliminate duplication
+              $scope.alerts["create"] = {
+                type: "success",
+                message: "Build " + build.metadata.name + " has started."
+              };
+            }, function reject(result) {
+              // TODO: common alerts service to eliminate duplication
+              $scope.alerts["create"] = {
+                type: "error",
+                message: "An error occurred while starting the build.",
+                details: $filter('getErrorDetails')(result)
+              };
+            });
         };
 
         $scope.cancelBuild = function(build, buildConfigName) {
-          BuildsService.cancelBuild(build, buildConfigName, $scope, $scope); // FIXME
+          BuildsService
+            .cancelBuild(build, buildConfigName, context)
+            .then(function resolve(build) {
+              // TODO: common alerts service to eliminate duplication
+              $scope.alerts["cancel"] = {
+                type: "success",
+                message: "Cancelling build " + build.metadata.name + " of " + buildConfigName + "."
+              };
+            }, function reject(result) {
+              // TODO: common alerts service to eliminate duplication
+              $scope.alerts["cancel"] = {
+                type: "error",
+                message: "An error occurred cancelling the build.",
+                details: $filter('getErrorDetails')(result)
+              };
+            });
         };
 
         $scope.cloneBuild = function(buildName) {
-          BuildsService.cloneBuild(buildName, $scope, $scope); // FIXME
+          BuildsService
+            .cloneBuild(buildName, context)
+            .then(function resolve(build) {
+              var logLink = $filter('buildLogURL')(build);
+              $scope.alerts["rebuild"] = {
+                type: "success",
+                message: "Build " + name + " is being rebuilt as " + build.metadata.name + ".",
+                links: logLink ? [{
+                  href: logLink,
+                  label: "View Log"
+                }] : undefined
+              };
+            }, function reject(result) {
+              $scope.alerts["rebuild"] = {
+                type: "error",
+                message: "An error occurred while rerunning the build.",
+                details: $filter('getErrorDetails')(result)
+              };
+            });
         };
 
         LabelFilter.onActiveFiltersChanged(function(labelSelector) {

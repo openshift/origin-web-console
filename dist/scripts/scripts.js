@@ -1923,90 +1923,58 @@ c.image && (b[c.dockerImageReference] = a.metadata.name + "@" + c.image);
 } ]), angular.module("openshiftConsole").factory("BaseHref", [ "$document", function(a) {
 return a.find("base").attr("href") || "/";
 } ]), angular.module("openshiftConsole").factory("BuildsService", [ "DataService", "$filter", function(a, b) {
-function c() {}
-c.prototype.startBuild = function(c, d, e) {
-var f = {
+var c = b("annotation"), d = function(b, c) {
+var d = {
 kind:"BuildRequest",
 apiVersion:"v1",
 metadata:{
-name:c
+name:b
 }
 };
-a.create("buildconfigs/instantiate", c, f, d).then(function(a) {
-e.alerts = e.alerts || {}, e.alerts.create = {
-type:"success",
-message:"Build " + a.metadata.name + " has started."
-};
-}, function(a) {
-e.alerts = e.alerts || {}, e.alerts.create = {
-type:"error",
-message:"An error occurred while starting the build.",
-details:b("getErrorDetails")(a)
-};
-});
-}, c.prototype.cancelBuild = function(c, d, e, f) {
-var g = angular.copy(c);
-g.status.cancelled = !0, a.update("builds", g.metadata.name, g, e).then(function() {
-f.alerts = f.alerts || {}, f.alerts.cancel = {
-type:"success",
-message:"Cancelling build " + c.metadata.name + " of " + d + "."
-};
-}, function(a) {
-f.alerts = f.alerts || {}, f.alerts.cancel = {
-type:"error",
-message:"An error occurred cancelling the build.",
-details:b("getErrorDetails")(a)
-};
-});
-}, c.prototype.cloneBuild = function(c, d, e) {
-var f = {
+return a.create("buildconfigs/instantiate", b, d, c);
+}, e = function(b, c, d) {
+var e = angular.copy(b);
+return e.status.cancelled = !0, a.update("builds", e.metadata.name, e, d);
+}, f = function(b, c) {
+var d = {
 kind:"BuildRequest",
 apiVersion:"v1",
 metadata:{
-name:c
+name:b
 }
 };
-a.create("builds/clone", c, f, d).then(function(a) {
-e.alerts = e.alerts || {};
-var d = b("buildLogURL")(a), f = {
-type:"success",
-message:"Build " + c + " is being rebuilt as " + a.metadata.name + "."
-};
-d && (f.links = [ {
-href:d,
-label:"View Log"
-} ]), e.alerts.rebuild = f;
-}, function(a) {
-e.alerts = e.alerts || {}, e.alerts.rebuild = {
-type:"error",
-message:"An error occurred while rerunning the build.",
-details:b("getErrorDetails")(a)
-};
-});
-}, c.prototype.isPaused = function(a) {
-return "true" === b("annotation")(a, "openshift.io/build-config.paused");
-}, c.prototype.canBuild = function(a) {
-return !!a && (!a.metadata.deletionTimestamp && !this.isPaused(a));
-};
-var d = b("annotation");
-return c.prototype.usesDeploymentConfigs = function(a) {
-var b = d(a, "pipeline.alpha.openshift.io/uses");
+return a.create("builds/clone", b, d, c);
+}, g = function(a) {
+return "true" === c(a, "openshift.io/build-config.paused");
+}, h = function(a) {
+return !!a && (!a.metadata.deletionTimestamp && !g(a));
+}, i = function(a) {
+var b = c(a, "pipeline.alpha.openshift.io/uses");
 if (!b) return [];
 try {
 b = JSON.parse(b);
-} catch (c) {
-return void Logger.warn('Could not parse "pipeline.alpha.openshift.io/uses" annotation', c);
+} catch (d) {
+return void Logger.warn('Could not parse "pipeline.alpha.openshift.io/uses" annotation', d);
 }
 var e = [];
 return _.each(b, function(b) {
 b.name && (b.namespace && b.namespace !== _.get(a, "metadata.namespace") || "DeploymentConfig" === b.kind && e.push(b.name));
 }), e;
-}, c.prototype.validatedBuildsForBuildConfig = function(a, b) {
+}, j = function(a, b) {
 return _.pick(b, function(b) {
-var c = d(b, "buildConfig");
-return !c || c === a;
+var d = c(b, "buildConfig");
+return !d || d === a;
 });
-}, new c();
+};
+return {
+startBuild:d,
+cancelBuild:e,
+cloneBuild:f,
+isPaused:g,
+canBuild:h,
+usesDeploymentConfigs:i,
+validatedBuildsForBuildConfig:j
+};
 } ]), angular.module("openshiftConsole").factory("DeploymentsService", [ "DataService", "$filter", "LabelFilter", function(a, b, c) {
 function d() {}
 d.prototype.startLatestDeployment = function(c, d, e) {
@@ -3484,41 +3452,79 @@ b.alerts[a.name] = a.data;
 }), c.clearAlerts();
 var k = e("buildConfigForBuild"), l = [];
 j.get(a.project).then(_.spread(function(a, c) {
-function e(a) {
+function h(a) {
 var c = f.getLabelSelector();
 if (c.isEmpty()) return !0;
 var d = k(a) || "";
 return d ? !!b.buildConfigs[d] :c.matches(a);
 }
-function h() {
+function j() {
 b.buildsByBuildConfig = {}, angular.forEach(b.builds, function(a, c) {
 var d = k(a) || "";
-e(a) && (b.buildsByBuildConfig[d] = b.buildsByBuildConfig[d] || {}, b.buildsByBuildConfig[d][c] = a);
+h(a) && (b.buildsByBuildConfig[d] = b.buildsByBuildConfig[d] || {}, b.buildsByBuildConfig[d][c] = a);
 }), angular.forEach(b.buildConfigs, function(a, c) {
 b.buildsByBuildConfig[c] = b.buildsByBuildConfig[c] || {};
 });
 }
-function j() {
+function m() {
 !f.getLabelSelector().isEmpty() && $.isEmptyObject(b.buildsByBuildConfig) ? b.alerts.builds = {
 type:"warning",
 details:"The active filters are hiding all builds."
 } :delete b.alerts.builds;
 }
 b.project = a, l.push(d.watch("builds", c, function(a, c, d) {
-b.builds = a.by("metadata.name"), b.emptyMessage = "No builds to show", h();
+b.builds = a.by("metadata.name"), b.emptyMessage = "No builds to show", j();
 var e, f;
 d && (e = k(d), f = d.metadata.name), g.log("builds (subscribe)", b.builds);
 })), l.push(d.watch("buildconfigs", c, function(a) {
-b.unfilteredBuildConfigs = a.by("metadata.name"), f.addLabelSuggestionsFromResources(b.unfilteredBuildConfigs, b.labelSuggestions), f.setLabelSuggestions(b.labelSuggestions), b.buildConfigs = f.getLabelSelector().select(b.unfilteredBuildConfigs), h(), j(), g.log("buildconfigs (subscribe)", b.buildConfigs);
+b.unfilteredBuildConfigs = a.by("metadata.name"), f.addLabelSuggestionsFromResources(b.unfilteredBuildConfigs, b.labelSuggestions), f.setLabelSuggestions(b.labelSuggestions), b.buildConfigs = f.getLabelSelector().select(b.unfilteredBuildConfigs), j(), m(), g.log("buildconfigs (subscribe)", b.buildConfigs);
 })), b.startBuild = function(a) {
-i.startBuild(a, b, b);
-}, b.cancelBuild = function(a, c) {
-i.cancelBuild(a, c, b, b);
+i.startBuild(a, c).then(function(a) {
+b.alerts.create = {
+type:"success",
+message:"Build " + a.metadata.name + " has started."
+};
+}, function(a) {
+b.alerts.create = {
+type:"error",
+message:"An error occurred while starting the build.",
+details:e("getErrorDetails")(a)
+};
+});
+}, b.cancelBuild = function(a, d) {
+i.cancelBuild(a, d, c).then(function(a) {
+b.alerts.cancel = {
+type:"success",
+message:"Cancelling build " + a.metadata.name + " of " + d + "."
+};
+}, function(a) {
+b.alerts.cancel = {
+type:"error",
+message:"An error occurred cancelling the build.",
+details:e("getErrorDetails")(a)
+};
+});
 }, b.cloneBuild = function(a) {
-i.cloneBuild(a, b, b);
+i.cloneBuild(a, c).then(function(a) {
+var c = e("buildLogURL")(a);
+b.alerts.rebuild = {
+type:"success",
+message:"Build " + name + " is being rebuilt as " + a.metadata.name + ".",
+links:c ? [ {
+href:c,
+label:"View Log"
+} ] :void 0
+};
+}, function(a) {
+b.alerts.rebuild = {
+type:"error",
+message:"An error occurred while rerunning the build.",
+details:e("getErrorDetails")(a)
+};
+});
 }, f.onActiveFiltersChanged(function(a) {
 b.$apply(function() {
-b.buildConfigs = a.select(b.unfilteredBuildConfigs), h(), j();
+b.buildConfigs = a.select(b.unfilteredBuildConfigs), j(), m();
 });
 }), b.$on("$destroy", function() {
 d.unwatchAll(l);
@@ -3605,7 +3611,18 @@ a.$apply(function() {
 a.builds = b.select(a.unfilteredBuilds), a.orderedBuilds = i(a.builds, !0), a.latestBuild = a.orderedBuilds.length ? a.orderedBuilds[0] :null, n();
 });
 }), a.startBuild = function() {
-e.startBuild(a.buildConfig.metadata.name, h, a);
+e.startBuild(a.buildConfig.metadata.name, h).then(function(b) {
+a.alerts.create = {
+type:"success",
+message:"Build " + b.metadata.name + " has started."
+};
+}, function(b) {
+a.alerts.create = {
+type:"error",
+message:"An error occurred while starting the build.",
+details:f("getErrorDetails")(b)
+};
+});
 }, a.$on("$destroy", function() {
 c.unwatchAll(l);
 });
@@ -3645,16 +3662,43 @@ type:"warning",
 message:"Build configuration " + a.buildConfigName + " has been deleted."
 }), a.buildConfig = b, a.paused = e.isPaused(a.buildConfig), i();
 };
-d.get(b.project).then(_.spread(function(d, f) {
-a.project = d, a.projectContext = f, a.logOptions = {}, c.get("builds", b.build, f).then(function(a) {
-j(a), g.push(c.watchObject("builds", b.build, f, j)), g.push(c.watchObject("buildconfigs", b.buildconfig, f, l));
+d.get(b.project).then(_.spread(function(d, h) {
+a.project = d, a.projectContext = h, a.logOptions = {}, c.get("builds", b.build, h).then(function(a) {
+j(a), g.push(c.watchObject("builds", b.build, h, j)), g.push(c.watchObject("buildconfigs", b.buildconfig, h, l));
 }, k), a.toggleSecret = function() {
 a.showSecret = !0;
 }, a.cancelBuild = function() {
-e.cancelBuild(a.build, a.buildConfigName, f, a);
+e.cancelBuild(a.build, a.buildConfigName, h).then(function(b) {
+a.alerts.cancel = {
+type:"success",
+message:"Cancelling build " + b.metadata.name + " of " + a.buildConfigName + "."
+};
+}, function(b) {
+a.alerts.cancel = {
+type:"error",
+message:"An error occurred cancelling the build.",
+details:f("getErrorDetails")(b)
+};
+});
 }, a.cloneBuild = function() {
 var b = _.get(a, "build.metadata.name");
-b && a.canBuild && e.cloneBuild(b, f, a);
+b && a.canBuild && e.cloneBuild(b, h).then(function(c) {
+var d = f("buildLogURL")(c);
+a.alerts.rebuild = {
+type:"success",
+message:"Build " + b + " is being rebuilt as " + c.metadata.name + ".",
+links:d ? [ {
+href:d,
+label:"View Log"
+} ] :void 0
+};
+}, function(b) {
+a.alerts.rebuild = {
+type:"error",
+message:"An error occurred while rerunning the build.",
+details:f("getErrorDetails")(b)
+};
+});
 }, a.$on("$destroy", function() {
 c.unwatchAll(g);
 });
