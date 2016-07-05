@@ -6852,15 +6852,22 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "Service:\n" +
     "<a ng-href=\"{{service | navigateResourceURL}}\">{{service.metadata.name}}</a>\n" +
     "</div>\n" +
-    "<div>\n" +
+    "<div class=\"service-metadata\">\n" +
     "<span ng-if=\"!scalableDeploymentByConfig[dcName]\">Deploying...</span>\n" +
-    "<relative-timestamp ng-if=\"scalableDeploymentByConfig[dcName]\" timestamp=\"scalableDeploymentByConfig[dcName].metadata.creationTimestamp\"></relative-timestamp>\n" +
+    "<div ng-if=\"scalableDeploymentByConfig[dcName] && weightByService[service.metadata.name]\">\n" +
+    "<ng-include src=\"'views/overview/_traffic-percent.html'\"></ng-include>\n" +
+    "</div>\n" +
     "</div>\n" +
     "</div>\n" +
     "<div class=\"deployment-header\">\n" +
     "<div class=\"rc-header\">\n" +
+    "<div>\n" +
     "Deployment:\n" +
     "<a ng-href=\"{{deploymentConfigs[dcName] | navigateResourceURL}}\">{{dcName}}</a>\n" +
+    "</div>\n" +
+    "<div>\n" +
+    "<relative-timestamp ng-if=\"scalableDeploymentByConfig[dcName]\" timestamp=\"scalableDeploymentByConfig[dcName].metadata.creationTimestamp\"></relative-timestamp>\n" +
+    "</div>\n" +
     "</div>\n" +
     "<div column flex class=\"shield\" ng-if=\"scalableDeploymentByConfig[dcName]\" ng-class=\"{ 'shield-lg': (scalableDeploymentByConfig[dcName] | annotation: 'deploymentVersion').length > 3 }\">\n" +
     "<a ng-href=\"{{scalableDeploymentByConfig[dcName] | navigateResourceURL}}\">\n" +
@@ -6928,13 +6935,18 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "Service:\n" +
     "<a ng-href=\"{{service | navigateResourceURL}}\">{{service.metadata.name}}</a>\n" +
     "</div>\n" +
-    "<div>\n" +
-    "<relative-timestamp timestamp=\"pod.metadata.creationTimestamp\"></relative-timestamp>\n" +
+    "<div ng-if=\"weightByService[service.metadata.name]\" class=\"service-metadata\">\n" +
+    "<ng-include src=\"'views/overview/_traffic-percent.html'\"></ng-include>\n" +
     "</div>\n" +
     "</div>\n" +
     "<div class=\"rc-header\"> \n" +
+    "<div>\n" +
     "Pod:\n" +
     "<a ng-href=\"{{pod | navigateResourceURL}}\">{{pod.metadata.name}}</a>\n" +
+    "</div>\n" +
+    "<div>\n" +
+    "<relative-timestamp timestamp=\"pod.metadata.creationTimestamp\"></relative-timestamp>\n" +
+    "</div>\n" +
     "</div>\n" +
     "<div row class=\"deployment-body\">\n" +
     "<div column class=\"overview-donut\">\n" +
@@ -6961,14 +6973,19 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "Service:\n" +
     "<a ng-href=\"{{service | navigateResourceURL}}\">{{service.metadata.name}}</a>\n" +
     "</div>\n" +
-    "<div>\n" +
-    "<relative-timestamp timestamp=\"deployment.metadata.creationTimestamp\"></relative-timestamp>\n" +
+    "<div ng-if=\"weightByService[service.metadata.name]\" class=\"service-metadata\">\n" +
+    "<ng-include src=\"'views/overview/_traffic-percent.html'\"></ng-include>\n" +
     "</div>\n" +
     "</div>\n" +
     "<div class=\"deployment-header\">\n" +
     "<div class=\"rc-header\">\n" +
+    "<div>\n" +
     "Replication Controller:\n" +
     "<a ng-href=\"{{deployment | navigateResourceURL}}\">{{deployment.metadata.name}}</a>\n" +
+    "</div>\n" +
+    "<div>\n" +
+    "<relative-timestamp timestamp=\"deployment.metadata.creationTimestamp\"></relative-timestamp>\n" +
+    "</div>\n" +
     "</div>\n" +
     "</div>\n" +
     "<div row class=\"deployment-body\">\n" +
@@ -7027,10 +7044,14 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "</div>\n" +
     "</div>\n" +
     "<div uib-collapse=\"collapse\" class=\"service-group-body\">\n" +
-    "<div row mobile=\"column\" class=\"overview-services\">\n" +
-    "<overview-service ng-repeat=\"service in groupedServices\" column grow=\"1\" ng-class=\"{'child-service': !$first}\">\n" +
+    "\n" +
+    "<div row mobile=\"column\" class=\"overview-services\" ng-class=\"{ 'single-alternate-service': (alternateServices | hashSize) === 1 }\">\n" +
+    "<overview-service column grow=\"1\" class=\"primary-service\"></overview-service>\n" +
+    "<overview-service ng-repeat=\"service in alternateServices\" column grow=\"1\" class=\"alternate-service\">\n" +
     "</overview-service>\n" +
-    "<div flex column ng-if=\"childServices.length === 0 && service\" class=\"no-child-services-message\">\n" +
+    "<overview-service ng-repeat=\"service in childServices\" column grow=\"1\">\n" +
+    "</overview-service>\n" +
+    "<div flex column ng-if=\"alternateServices.length === 0 && childServices.length === 0 && service\" class=\"no-child-services-message\">\n" +
     "\n" +
     "\n" +
     "\n" +
@@ -7080,6 +7101,31 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "<overview-pod></overview-pod>\n" +
     "</div>\n" +
     "\n" +
+    "</div>"
+  );
+
+
+  $templateCache.put('views/overview/_traffic-percent.html',
+    "<div ng-if=\"alternateServices.length\">\n" +
+    "<div ng-if=\"!totalWeight\">\n" +
+    "No Traffic\n" +
+    "</div>\n" +
+    "<div ng-if=\"totalWeight\">\n" +
+    "<span class=\"visible-xs visible-sm\">\n" +
+    "Traffic {{(weightByService[service.metadata.name] / totalWeight) | percent}}\n" +
+    "</span>\n" +
+    "<div class=\"hidden-xs hidden-sm\">\n" +
+    "<span class=\"traffic-label\">Traffic</span>\n" +
+    "\n" +
+    "<div class=\"progress progress-sm\" ng-style=\"{ width: ((weightByService[service.metadata.name] / totalWeight * 250) | number) + 'px'}\">\n" +
+    "<div class=\"progress-bar\">\n" +
+    "<span>\n" +
+    "{{(weightByService[service.metadata.name] / totalWeight) | percent}}\n" +
+    "</span>\n" +
+    "</div>\n" +
+    "</div>\n" +
+    "</div>\n" +
+    "</div>\n" +
     "</div>"
   );
 

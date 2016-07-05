@@ -3995,7 +3995,7 @@ ul.messenger-theme-flat .messenger-message.alert-info .messenger-message-inner:b
 .overview .build-pipeline .build-summary{-webkit-flex-grow:1;-moz-flex-grow:1;-ms-flex-grow:1;flex-grow:1}
 @media (min-width:992px){.overview .build-pipeline .build-summary{-webkit-flex-grow:0;-moz-flex-grow:0;-ms-flex-grow:0;flex-grow:0}
 }
-.overview .service-title{-webkit-align-items:flex-end;-moz-align-items:flex-end;align-items:flex-end;border-bottom:1px solid #d6d6d6;-webkit-justify-content:space-between;-moz-justify-content:space-between;justify-content:space-between}
+.overview .service-title{-webkit-align-items:center;-moz-align-items:center;align-items:center;border-bottom:1px solid #d6d6d6;-webkit-justify-content:space-between;-moz-justify-content:space-between;justify-content:space-between}
 .overview .deployment-tile{border-left:1px solid #d6d6d6}
 .overview .deployment-tile .deployment-header{color:#9c9c9c;position:relative}
 .overview .deployment-tile .deployment-body{-webkit-flex-direction:column;-moz-flex-direction:column;-ms-flex-direction:column;flex-direction:column;padding:10px;min-height:227px;position:relative}
@@ -4028,13 +4028,28 @@ ul.messenger-theme-flat .messenger-message.alert-info .messenger-message-inner:b
 .overview .no-child-services-message,.overview .no-deployments-message{text-align:center;color:#9c9c9c;min-height:20px;background-color:#f5f5f5;border:1px solid #e3e3e3;border-radius:1px;-webkit-box-shadow:inset 0 1px 1px rgba(0,0,0,.05);box-shadow:inset 0 1px 1px rgba(0,0,0,.05);-webkit-justify-content:center;-moz-justify-content:center;justify-content:center;margin:10px 0 0 10px;padding:30px}
 .overview .no-child-services-message blockquote,.overview .no-deployments-message blockquote{border-color:#ddd;border-color:rgba(0,0,0,.15)}
 .overview .no-child-services-message h1:first-child,.overview .no-child-services-message h2:first-child,.overview .no-child-services-message h3:first-child,.overview .no-child-services-message h4:first-child,.overview .no-child-services-message h5:first-child,.overview .no-deployments-message h1:first-child,.overview .no-deployments-message h2:first-child,.overview .no-deployments-message h3:first-child,.overview .no-deployments-message h4:first-child,.overview .no-deployments-message h5:first-child{margin:5px 0 15px}
-.overview .no-child-services-message h2,.overview .no-deployments-message h2,.overview .standalone-service .no-deployments-block .no-deployments-message{margin-top:0}
+.overview .no-child-services-message h2,.overview .no-deployments-message h2{margin-top:0}
 .overview .no-child-services-message{display:none}
 @media (min-width:568px){.overview .no-child-services-message{display:block}
 }
 .overview .standalone-service .no-child-services-message{display:none}
+@media (min-width:992px){.overview .single-alternate-service .primary-service .deployment-tile{border-right:0;margin-right:-5px}
+.overview .single-alternate-service .primary-service .deployment-tile .service-title{padding-right:0}
+.overview .single-alternate-service .alternate-service .deployment-tile{margin-left:5px;box-shadow:2px 3px 6px -1px rgba(0,0,0,.1)}
+.overview .single-alternate-service .alternate-service .deployment-tile .service-title{padding-left:0}
+.overview .single-alternate-service .alternate-service .service-metadata{order:-1}
+.overview .single-alternate-service .alternate-service .service-metadata .traffic-label{display:none}
+.overview .single-alternate-service .alternate-service .service-metadata .progress{margin-left:0}
+.overview .single-alternate-service .alternate-service .service-metadata .progress .progress-bar{background-color:#00659c}
+}
+.overview .deployment-tile .traffic-label{display:inline-block}
+.overview .deployment-tile .progress{background-color:inherit;border:0;box-shadow:none;display:inline-block;margin:0 0 0 5px;min-width:2em;vertical-align:-3px}
+.overview .deployment-tile .progress .progress-bar{width:100%}
+@media (min-width:1200px){.overview .deployment-tile .progress{width:250px}
+}
 .overview .standalone-service .no-deployments-block{margin-left:0}
-.overview .shield{background:#ebebeb;border:1px solid #d6d6d6;border-bottom:0;width:36px;position:absolute;-webkit-align-items:center;-moz-align-items:center;align-items:center;right:15px;top:-1px;z-index:9}
+.overview .standalone-service .no-deployments-block .no-deployments-message{margin-top:0}
+.overview .shield{background:#ebebeb;border:1px solid #d6d6d6;border-bottom:0;width:36px;position:absolute;-webkit-align-items:center;-moz-align-items:center;align-items:center;right:10px;top:-1px;z-index:9}
 .overview .shield .shield-number{display:-webkit-flex;display:-moz-flex;display:-ms-flexbox;display:-ms-flex;display:flex;font-size:11px;font-weight:500;height:30px;position:relative;width:36px;-webkit-align-items:center;-moz-align-items:center;align-items:center;-webkit-justify-content:center;-moz-justify-content:center;justify-content:center}
 .overview .shield .shield-number:after,.overview .shield .shield-number:before{border-left:18px solid transparent;border-right:18px solid transparent;content:"";height:0;left:0;position:absolute;width:0}
 .overview .shield .shield-number:before{border-top:10px solid #d6d6d6;bottom:-10px}

@@ -44,15 +44,34 @@ angular.module('openshiftConsole')
     var imageObjectRef = $filter('imageObjectRef');
     var isRecentDeployment = $filter('isRecentDeployment');
 
+    var alternateServiceSet = {};
+    var findAlternateServices = function() {
+      // Map of service names and a truthy value if this is a alternate service for a route.
+      alternateServiceSet = {};
+      _.each(routes, function(route) {
+        var alternateBackends = _.get(route, 'spec.alternateBackends', []);
+        var alternateServices = _.filter(alternateBackends, { kind: 'Service' });
+        _.each(alternateServices, function(routeTarget) {
+          alternateServiceSet[routeTarget.name] = true;
+        });
+      });
+    };
+
+    var isAlternateService = function(service) {
+      var name = _.get(service, 'metadata.name');
+      return _.has(alternateServiceSet, name);
+    };
+
     var groupRoutes = function() {
       $scope.routesByService = RoutesService.groupByService(routes);
+      findAlternateServices();
     };
 
     var groupDeploymentConfigs = function() {
       if (!services || !deploymentConfigs) {
         return;
       }
-      
+
       $scope.deploymentConfigs = deploymentConfigs;
       $scope.deploymentConfigsByService = DeploymentsService.groupByService(deploymentConfigs, services);
     };
@@ -228,6 +247,8 @@ angular.module('openshiftConsole')
         return;
       }
 
+      $scope.services = services;
+
       childServices = {};
       $scope.childServicesByParent = {};
       _.each(services, function(service, serviceName) {
@@ -238,8 +259,11 @@ angular.module('openshiftConsole')
         });
       });
 
-      // Filter out child services and order top-level services by importance.
-      $scope.topLevelServices = _.reject(services, isChildService).sort(compareServices);
+      // Filter out child services and alternate services. Order top-level
+      // services by importance.
+      $scope.topLevelServices = _.reject(services, function(service) {
+        return isChildService(service) || isAlternateService(service);
+      }).sort(compareServices);
     };
 
     var updateRouteWarnings = function() {
