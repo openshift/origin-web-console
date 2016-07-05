@@ -25,7 +25,8 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "<span class=\"sr-only\">{{alert.type}}</span>\n" +
     "<span ng-if=\"alert.message\" style=\"margin-right: 5px\" ng-class=\"{'strong': !toast}\">{{alert.message}}</span><span ng-if=\"alert.details\">{{alert.details}}</span>\n" +
     "<span ng-repeat=\"link in alert.links\">\n" +
-    "<a ng-href=\"{{link.href}}\">{{link.label}}</a>\n" +
+    "<a ng-if=\"!link.href\" href=\"\" ng-click=\"onClick(alert, link)\" role=\"button\">{{link.label}}</a>\n" +
+    "<a ng-if=\"link.href\" href=\"{{link.href}}\" ng-click=\"onClick(alert, link)\">{{link.label}}</a>\n" +
     "<span ng-if=\"!$last\" class=\"action-divider\">|</span>\n" +
     "</span>\n" +
     "</div>\n" +

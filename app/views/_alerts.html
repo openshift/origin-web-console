@@ -21,7 +21,8 @@
       <span class="sr-only">{{alert.type}}</span>
       <span ng-if="alert.message" style="margin-right: 5px;" ng-class="{'strong': !toast}">{{alert.message}}</span><span ng-if="alert.details">{{alert.details}}</span>
       <span ng-repeat="link in alert.links">
-        <a ng-href="{{link.href}}">{{link.label}}</a>
+        <a ng-if="!link.href" href="" ng-click="onClick(alert, link)" role="button">{{link.label}}</a>
+        <a ng-if="link.href" href="{{link.href}}" ng-click="onClick(alert, link)">{{link.label}}</a>
         <span ng-if="!$last" class="action-divider">|</span>
       </span>
     </div>
