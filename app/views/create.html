@@ -29,7 +29,7 @@
                       </p>
 
                       <p>
-                        To add an image stream or template from a file, use the editor in the 
+                        To add an image stream or template from a file, use the editor in the
                         <strong>From File</strong> tab, or run the following command:
                         <div><code>oc create -f &lt;filename&gt; -n {{projectName}}</code></div>
                       </p>
@@ -115,9 +115,9 @@
                         <a href="" ng-click="filter.keyword = ''; filter.tag = ''">Clear filter</a>
                       </div>
 
-                      <div row md="column" class="gutter-top">
+                      <div class="row gutter-top">
                         <!-- left column -->
-                        <div column flex class="catalog-col catalog-col-1">
+                        <div class="col-md-6 catalog-col catalog-col-1">
                           <div ng-repeat="category in leftCategories">
                             <catalog-category
                               category-label="{{categoryLabels[category] || tag}}"
@@ -130,7 +130,7 @@
                           </div>
                         </div>
                         <!-- right column -->
-                        <div column flex class="catalog-col catalog-col-2">
+                        <div class="col-md-6 catalog-col catalog-col-2">
                           <div ng-repeat="category in rightCategories">
                             <catalog-category
                               category-label="{{categoryLabels[category] || tag}}"
