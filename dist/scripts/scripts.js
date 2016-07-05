@@ -3482,67 +3482,41 @@ link:"project/" + b.project + "/browse/builds/" + b.buildconfig
 }), a.breadcrumbs.push({
 title:b.build
 }), b.tab && (a.selectedTab = {}, a.selectedTab[b.tab] = !0);
-var g = f("buildConfigForBuild"), h = [], i = function(b) {
+var g = [], h = function(b) {
 a.logOptions.container = f("annotation")(b, "buildPod"), a.logCanRun = !_.includes([ "New", "Pending", "Error" ], b.status.phase);
-}, j = function() {
+}, i = function() {
 a.buildConfig ? a.canBuild = e.canBuild(a.buildConfig) :a.canBuild = !1;
-};
-d.get(b.project).then(_.spread(function(d, k) {
-a.project = d, a.projectContext = k, a.logOptions = {}, c.get("builds", b.build, k).then(function(d) {
-a.loaded = !0, a.build = d, i(d);
-var g = f("annotation")(d, "buildNumber");
-g && (a.breadcrumbs[2].title = "#" + g), h.push(c.watchObject("builds", b.build, k, function(b, c) {
-"DELETED" === c && (a.alerts.deleted = {
+}, j = function(b, c) {
+a.loaded = !0, a.build = b, h(b);
+var d = f("annotation")(b, "buildNumber");
+d && (a.breadcrumbs[2].title = "#" + d), "DELETED" === c && (a.alerts.deleted = {
 type:"warning",
 message:"This build has been deleted."
-}), a.build = b, i(b);
-})), h.push(c.watchObject("buildconfigs", b.buildconfig, k, function(b, c) {
-"DELETED" === c && (a.alerts.deleted = {
-type:"warning",
-message:"Build configuration " + a.buildConfigName + " has been deleted."
-}), a.buildConfig = b, a.paused = e.isPaused(a.buildConfig), j();
-}));
-}, function(b) {
+});
+}, k = function(b) {
 a.loaded = !0, a.alerts.load = {
 type:"error",
 message:"The build details could not be loaded.",
 details:"Reason: " + f("getErrorDetails")(b)
 };
-}), h.push(c.watch("builds", k, function(c, d, f) {
-if (d) {
-var h = g(f);
-if (h === b.buildconfig) {
-var i = f.metadata.name;
-switch (d) {
-case "ADDED":
-case "MODIFIED":
-a.builds[i] = f;
-break;
-
-case "DELETED":
-delete a.builds[i];
-}
-}
-} else a.builds = e.validatedBuildsForBuildConfig(b.buildconfig, c.by("metadata.name"));
-j();
-}, {
-http:{
-params:{
-labelSelector:f("labelName")("buildConfig") + "=" + _.trunc(b.buildconfig, {
-length:63,
-omission:""
-})
-}
-}
-})), a.toggleSecret = function() {
+}, l = function(b, c) {
+"DELETED" === c && (a.alerts.deleted = {
+type:"warning",
+message:"Build configuration " + a.buildConfigName + " has been deleted."
+}), a.buildConfig = b, a.paused = e.isPaused(a.buildConfig), i();
+};
+d.get(b.project).then(_.spread(function(d, f) {
+a.project = d, a.projectContext = f, a.logOptions = {}, c.get("builds", b.build, f).then(function(a) {
+j(a), g.push(c.watchObject("builds", b.build, f, j)), g.push(c.watchObject("buildconfigs", b.buildconfig, f, l));
+}, k), a.toggleSecret = function() {
 a.showSecret = !0;
 }, a.cancelBuild = function() {
-e.cancelBuild(a.build, a.buildConfigName, k, a);
+e.cancelBuild(a.build, a.buildConfigName, f, a);
 }, a.cloneBuild = function() {
 var b = _.get(a, "build.metadata.name");
-b && a.canBuild && e.cloneBuild(b, k, a);
+b && a.canBuild && e.cloneBuild(b, f, a);
 }, a.$on("$destroy", function() {
-c.unwatchAll(h);
+c.unwatchAll(g);
 });
 }));
 } ]), angular.module("openshiftConsole").controller("ImagesController", [ "$routeParams", "$scope", "AlertMessageService", "DataService", "ProjectsService", "$filter", "LabelFilter", "Logger", function(a, b, c, d, e, f, g, h) {
