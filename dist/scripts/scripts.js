@@ -6522,6 +6522,11 @@ templateUrl:"views/_alerts.html",
 link:function(a) {
 a.close = function(a) {
 a.hidden = !0, _.isFunction(a.onClose) && a.onClose();
+}, a.onClick = function(a, b) {
+if (_.isFunction(b.onClick)) {
+var c = b.onClick();
+c && (a.hidden = !0);
+}
 };
 }
 };
@@ -8018,7 +8023,8 @@ podsByDeployment:"="
 templateUrl:"views/directives/service-group-notifications.html",
 link:function(c) {
 var d = function(a) {
-return "hide/alert/" + a;
+var b = _.get(c, "service.metadata.namespace");
+return "hide/alert/" + b + "/" + a;
 }, e = function(a) {
 var b = d(a);
 return "true" === localStorage.getItem(b);
@@ -8047,19 +8053,45 @@ f(c);
 });
 });
 }, k = function() {
-var b = {};
+var d = {};
 _.each(h, function(a, b) {
 b.indexOf("pod_warning") >= 0 && delete a[b];
-}), _.each(i, function(d) {
-var e = _.get(d, "metadata.name", "");
-c.deploymentsByService && c.podsByDeployment && _.each(c.deploymentsByService[e], function(d) {
-a("groupedPodWarnings")(c.podsByDeployment[d.metadata.name], b);
+}), _.each(i, function(b) {
+var e = _.get(b, "metadata.name", "");
+c.deploymentsByService && c.podsByDeployment && _.each(c.deploymentsByService[e], function(b) {
+a("groupedPodWarnings")(c.podsByDeployment[b.metadata.name], d);
 });
-}), _.each(b, function(a, b) {
-a.length && (h["pod_warning" + b] = {
+}), _.each(d, function(a, d) {
+var g = _.head(a);
+if (g) {
+var i = "pod_warning" + d, j = {
 type:"warning",
-message:a[0].message
-});
+message:g.message
+};
+switch (g.reason) {
+case "NonZeroExit":
+var k = b.resourceURL(g.pod, "Pod", c.service.metadata.namespace), l = URI(k).addSearch({
+tab:"logs",
+container:g.container
+}).toString();
+j.links = [ {
+href:l,
+label:"View Log"
+} ];
+break;
+
+case "NonZeroExitTerminatingPod":
+if (e(i)) return;
+j.links = [ {
+href:"",
+label:"Don't show me again",
+onClick:function() {
+return f(i), !0;
+}
+} ];
+}
+h[i] = j;
+}
 });
 };
 c.$watchGroup([ "service", "childServices" ], function() {
@@ -8586,40 +8618,40 @@ if (d(g)) return !0;
 }
 return !1;
 };
-} ]).filter("podWarnings", [ "isPodStuckFilter", "isContainerLoopingFilter", "isContainerFailedFilter", "isContainerUnpreparedFilter", function(a, b, c, d) {
-return function(e) {
-var f = [];
-if ("Unknown" === e.status.phase && f.push({
+} ]).filter("podWarnings", [ "isPodStuckFilter", "isContainerLoopingFilter", "isContainerFailedFilter", "isContainerUnpreparedFilter", "isTerminatingFilter", function(a, b, c, d, e) {
+return function(f) {
+var g = [];
+return "Unknown" === f.status.phase && g.push({
 reason:"Unknown",
-pod:e.metadata.name,
+pod:f.metadata.name,
 message:"The state of the pod could not be obtained. This is typically due to an error communicating with the host of the pod."
-}), a(e) && f.push({
+}), a(f) && g.push({
 reason:"Stuck",
-pod:e.metadata.name,
+pod:f.metadata.name,
 message:"The pod has been stuck in the pending state for more than five minutes."
-}), "Running" === e.status.phase && e.status.containerStatuses) {
-var g;
-for (g = 0; g < e.status.containerStatuses.length; ++g) {
-var h = e.status.containerStatuses[g];
-h.state && (c(h) && f.push({
-reason:"Failed",
-pod:e.metadata.name,
-container:h.name,
-message:"The container " + h.name + " failed with a non-zero exit code " + h.state.terminated.exitCode + "."
-}), b(h) && f.push({
+}), "Running" === f.status.phase && f.status.containerStatuses && _.each(f.status.containerStatuses, function(a) {
+return !!a.state && (c(a) && (e(f) ? g.push({
+reason:"NonZeroExitTerminatingPod",
+pod:f.metadata.name,
+container:a.name,
+message:"The container " + a.name + " did not stop cleanly when terminated (exit code " + a.state.terminated.exitCode + ")."
+}) :g.push({
+reason:"NonZeroExit",
+pod:f.metadata.name,
+container:a.name,
+message:"The container " + a.name + " failed (exit code " + a.state.terminated.exitCode + ")."
+})), b(a) && g.push({
 reason:"Looping",
-pod:e.metadata.name,
-container:h.name,
-message:"The container " + h.name + " is crashing frequently. It must wait before it will be restarted again."
-}), d(h) && f.push({
+pod:f.metadata.name,
+container:a.name,
+message:"The container " + a.name + " is crashing frequently. It must wait before it will be restarted again."
+}), void (d(a) && g.push({
 reason:"Unprepared",
-pod:e.metadata.name,
-container:h.name,
-message:"The container " + h.name + " has been running for more than five minutes and has not passed its readiness check."
-}));
-}
-}
-return f.length > 0 ? f :null;
+pod:f.metadata.name,
+container:a.name,
+message:"The container " + a.name + " has been running for more than five minutes and has not passed its readiness check."
+})));
+}), g.length > 0 ? g :null;
 };
 } ]).filter("groupedPodWarnings", [ "podWarningsFilter", function(a) {
 return function(b, c) {

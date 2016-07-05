@@ -488,7 +488,7 @@ angular.module('openshiftConsole')
       return false;
     };
   })
-  .filter('podWarnings', function(isPodStuckFilter, isContainerLoopingFilter, isContainerFailedFilter, isContainerUnpreparedFilter) {
+  .filter('podWarnings', function(isPodStuckFilter, isContainerLoopingFilter, isContainerFailedFilter, isContainerUnpreparedFilter, isTerminatingFilter) {
     return function(pod) {
       var warnings = [];
 
@@ -502,23 +502,45 @@ angular.module('openshiftConsole')
       }
 
       if (pod.status.phase === 'Running' && pod.status.containerStatuses) {
-        // Check container statuses and short circuit when we find any problem.
-        var i;
-        for (i = 0; i < pod.status.containerStatuses.length; ++i) {
-          var containerStatus = pod.status.containerStatuses[i];
+        _.each(pod.status.containerStatuses, function(containerStatus) {
           if (!containerStatus.state) {
-            continue;
+            return false;
           }
+
           if (isContainerFailedFilter(containerStatus)) {
-            warnings.push({reason: "Failed", pod: pod.metadata.name, container: containerStatus.name, message: "The container " + containerStatus.name + " failed with a non-zero exit code " + containerStatus.state.terminated.exitCode + "."});
+            if (isTerminatingFilter(pod)) {
+              warnings.push({
+                reason: "NonZeroExitTerminatingPod",
+                pod: pod.metadata.name,
+                container: containerStatus.name,
+                message: "The container " + containerStatus.name + " did not stop cleanly when terminated (exit code " + containerStatus.state.terminated.exitCode + ")."
+              });
+            } else {
+              warnings.push({
+                reason: "NonZeroExit",
+                pod: pod.metadata.name,
+                container: containerStatus.name,
+                message: "The container " + containerStatus.name + " failed (exit code " + containerStatus.state.terminated.exitCode + ")."
+              });
+            }
           }
           if (isContainerLoopingFilter(containerStatus)) {
-            warnings.push({reason: "Looping", pod: pod.metadata.name, container: containerStatus.name, message: "The container " + containerStatus.name + " is crashing frequently. It must wait before it will be restarted again."});
+            warnings.push({
+              reason: "Looping",
+              pod: pod.metadata.name,
+              container: containerStatus.name,
+              message: "The container " + containerStatus.name + " is crashing frequently. It must wait before it will be restarted again."
+            });
           }
           if (isContainerUnpreparedFilter(containerStatus)) {
-            warnings.push({reason: "Unprepared", pod: pod.metadata.name, container: containerStatus.name, message: "The container " + containerStatus.name + " has been running for more than five minutes and has not passed its readiness check."});
+            warnings.push({
+              reason: "Unprepared",
+              pod: pod.metadata.name,
+              container: containerStatus.name,
+              message: "The container " + containerStatus.name + " has been running for more than five minutes and has not passed its readiness check."
+            });
           }
-        }
+        });
       }
 
       return warnings.length > 0 ? warnings : null;
