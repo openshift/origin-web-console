@@ -463,7 +463,7 @@ var a = (this.resource || "").split("/");
 return a.shift(), a;
 }, ResourceGroupVersion.prototype.equals = function(a, b, c) {
 return this.resource === a && (1 === arguments.length || this.group === b && (2 === arguments.length || this.version === c));
-}, angular.module("openshiftConsole").factory("APIService", [ "API_CFG", "APIS_CFG", "AuthService", "Constants", "Logger", "$q", "$http", "Navigate", "$filter", function(a, b, c, d, e, f, g, h, i) {
+}, angular.module("openshiftConsole").factory("APIService", [ "API_CFG", "APIS_CFG", "AuthService", "Constants", "Logger", "$q", "$http", "$filter", "$window", function(a, b, c, d, e, f, g, h, i) {
 function j(a) {
 if (!a) return a;
 var b = a.indexOf("/");
@@ -473,7 +473,7 @@ function k(a, b) {
 if (!a) return "";
 var c = a;
 if (b) {
-var d = i("humanizeKind");
+var d = h("humanizeKind");
 c = d(c);
 }
 return c = String(c).toLowerCase(), "endpoints" === c || "securitycontextconstraints" === c || ("s" === c[c.length - 1] ? c += "es" :"y" === c[c.length - 1] ? c = c.substring(0, c.length - 1) + "ies" :c += "s"), c;
@@ -514,7 +514,10 @@ if (b.API_DISCOVERY_ERRORS) {
 var e = _.every(b.API_DISCOVERY_ERRORS, function(a) {
 return 0 === _.get(a, "data.status");
 });
-return e && !c.isLoggedIn() ? void c.withUser() :void h.toErrorPage("Unable to load details about the server. If the problem continues, please contact your system administrator.", "API_DISCOVERY", !0);
+return e && !c.isLoggedIn() ? void c.withUser() :void (i.location.href = URI("error").query({
+error_description:"Unable to load details about the server. If the problem continues, please contact your system administrator.",
+error:"API_DISCOVERY"
+}).toString());
 }
 d = m(d);
 var f = d.primaryResource();
@@ -528,7 +531,7 @@ version:d.version
 };
 }
 var g;
-for (var i in a) if (g = a[i], _.get(g, [ "resources", d.version, f ])) return {
+for (var h in a) if (g = a[h], _.get(g, [ "resources", d.version, f ])) return {
 hostPort:g.hostPort,
 prefix:g.prefix,
 version:d.version
@@ -1667,7 +1670,7 @@ return f["delete"]("oauthaccesstokens", e, {}, g);
 }
 };
 } ];
-}), angular.module("openshiftConsole").service("Navigate", [ "$location", "$window", "$timeout", "annotationFilter", "LabelFilter", function(a, b, c, d, e) {
+}), angular.module("openshiftConsole").service("Navigate", [ "$location", "$window", "$timeout", "annotationFilter", "LabelFilter", "$filter", "APIService", function(a, b, c, d, e, f, g) {
 return {
 toErrorPage:function(c, d, e) {
 var f = URI("error").query({
@@ -1697,35 +1700,36 @@ e.setLabelSelector(new LabelSelector(b.spec.selector, (!0)));
 resourceURL:function(a, b, c, e) {
 if (e = e || "browse", !(a && (a.metadata || b && c))) return null;
 b || (b = a.kind), c || (c = a.metadata.namespace);
-var f = encodeURIComponent(c), g = a;
-a.metadata && (g = a.metadata.name);
-var h = encodeURIComponent(g), i = "project/" + f + "/" + e + "/";
+var h = a;
+a.metadata && (h = a.metadata.name);
+var i = URI("").segment("project").segmentCoded(c).segment(e);
 switch (b) {
 case "Build":
-i += a.metadata && a.metadata.labels && a.metadata.labels.buildconfig ? "builds/" + encodeURIComponent(a.metadata.labels.buildconfig) + "/" + h :"builds-noconfig/" + h;
+var j = f("buildConfigForBuild")(a);
+j ? i.segment("builds").segmentCoded(j).segmentCoded(h) :i.segment("builds-noconfig").segmentCoded(h);
 break;
 
 case "BuildConfig":
-i += "builds/" + h;
+i.segment("builds").segmentCoded(h);
 break;
 
 case "DeploymentConfig":
-i += "deployments/" + h;
+i.segment("deployments").segmentCoded(h);
 break;
 
 case "ReplicationController":
-var j = a.metadata ? d(a, "deploymentConfig") :null;
-i += j ? "deployments/" + encodeURIComponent(j) + "/" + h :"deployments-replicationcontrollers/" + h;
+var k = a.metadata ? d(a, "deploymentConfig") :null;
+k ? i.segment("deployments").segmentCoded(k).segmentCoded(h) :i.segment("deployments-replicationcontrollers").segmentCoded(h);
 break;
 
 case "ImageStream":
-i += "images/" + h;
+i.segment("images").segmentCoded(h);
 break;
 
 default:
-i += b.toLowerCase() + "s/" + h;
+i.segment(g.kindToResource(b)).segmentCoded(h);
 }
-return i;
+return i.toString();
 },
 toResourceList:function(b, c) {
 var d = {
@@ -1930,6 +1934,11 @@ var e = [];
 return _.each(b, function(b) {
 b.name && (b.namespace && b.namespace !== _.get(a, "metadata.namespace") || "DeploymentConfig" === b.kind && e.push(b.name));
 }), e;
+}, c.prototype.validatedBuildsForBuildConfig = function(a, b) {
+return _.pick(b, function(b) {
+var c = d(b, "buildConfig");
+return !c || c === a;
+});
 }, new c();
 } ]), angular.module("openshiftConsole").factory("DeploymentsService", [ "DataService", "$filter", "LabelFilter", function(a, b, c) {
 function d() {}
@@ -3348,34 +3357,34 @@ c.unwatchAll(m);
 b.projectName = a.project, b.builds = {}, b.unfilteredBuildConfigs = {}, b.buildConfigs = void 0, b.labelSuggestions = {}, b.alerts = b.alerts || {}, b.emptyMessage = "Loading...", b.expanded = !!h.hash(), b.defaultBuildLimit = 3, b.buildsByBuildConfig = {}, b.expandedBuildConfigRow = {}, c.getAlerts().forEach(function(a) {
 b.alerts[a.name] = a.data;
 }), c.clearAlerts();
-var l = [];
+var l = e("buildConfigForBuild"), m = [];
 k.get(a.project).then(_.spread(function(a, c) {
 function e(a) {
 var c = f.getLabelSelector();
 if (c.isEmpty()) return !0;
-var d = "";
-return a.metadata.labels && (d = a.metadata.labels.buildconfig || ""), d ? !!b.buildConfigs[d] :c.matches(a);
+var d = l(a) || "";
+return d ? !!b.buildConfigs[d] :c.matches(a);
 }
 function k() {
 b.buildsByBuildConfig = {}, angular.forEach(b.builds, function(a, c) {
-var d = "";
-a.metadata.labels && (d = a.metadata.labels.buildconfig || ""), e(a) && (b.buildsByBuildConfig[d] = b.buildsByBuildConfig[d] || {}, b.buildsByBuildConfig[d][c] = a);
+var d = l(a) || "";
+e(a) && (b.buildsByBuildConfig[d] = b.buildsByBuildConfig[d] || {}, b.buildsByBuildConfig[d][c] = a);
 }), angular.forEach(b.buildConfigs, function(a, c) {
 b.buildsByBuildConfig[c] = b.buildsByBuildConfig[c] || {};
 });
 }
-function m() {
+function n() {
 !f.getLabelSelector().isEmpty() && $.isEmptyObject(b.buildsByBuildConfig) ? b.alerts.builds = {
 type:"warning",
 details:"The active filters are hiding all builds."
 } :delete b.alerts.builds;
 }
-b.project = a, l.push(d.watch("builds", c, function(a, c, d) {
+b.project = a, m.push(d.watch("builds", c, function(a, c, d) {
 b.builds = a.by("metadata.name"), b.emptyMessage = "No builds to show", k();
 var e, f;
-d && (e = d.metadata.labels.buildconfig, f = d.metadata.name), !c && h.hash() && setTimeout(i, 10), g.log("builds (subscribe)", b.builds);
-})), l.push(d.watch("buildconfigs", c, function(a) {
-b.unfilteredBuildConfigs = a.by("metadata.name"), f.addLabelSuggestionsFromResources(b.unfilteredBuildConfigs, b.labelSuggestions), f.setLabelSuggestions(b.labelSuggestions), b.buildConfigs = f.getLabelSelector().select(b.unfilteredBuildConfigs), k(), m(), g.log("buildconfigs (subscribe)", b.buildConfigs);
+d && (e = l(d), f = d.metadata.name), !c && h.hash() && setTimeout(i, 10), g.log("builds (subscribe)", b.builds);
+})), m.push(d.watch("buildconfigs", c, function(a) {
+b.unfilteredBuildConfigs = a.by("metadata.name"), f.addLabelSuggestionsFromResources(b.unfilteredBuildConfigs, b.labelSuggestions), f.setLabelSuggestions(b.labelSuggestions), b.buildConfigs = f.getLabelSelector().select(b.unfilteredBuildConfigs), k(), n(), g.log("buildconfigs (subscribe)", b.buildConfigs);
 })), b.startBuild = function(a) {
 j.startBuild(a, b, b);
 }, b.cancelBuild = function(a, c) {
@@ -3384,10 +3393,10 @@ j.cancelBuild(a, c, b, b);
 j.cloneBuild(a, b, b);
 }, f.onActiveFiltersChanged(function(a) {
 b.$apply(function() {
-b.buildConfigs = a.select(b.unfilteredBuildConfigs), k(), m();
+b.buildConfigs = a.select(b.unfilteredBuildConfigs), k(), n();
 });
 }), b.$on("$destroy", function() {
-d.unwatchAll(l);
+d.unwatchAll(m);
 });
 }));
 } ]), angular.module("openshiftConsole").controller("BuildConfigController", [ "$scope", "$routeParams", "DataService", "ProjectsService", "BuildsService", "$filter", "LabelFilter", "AlertMessageService", function(a, b, c, d, e, f, g, h) {
@@ -3402,9 +3411,9 @@ a.alerts[b.name] = b.data;
 var b = a.getSession();
 b.setOption("tabSize", 2), b.setOption("useSoftTabs", !0), a.$blockScrolling = 1 / 0;
 }, b.tab && (a.selectedTab = {}, a.selectedTab[b.tab] = !0);
-var i = f("orderObjectsByDate"), j = [];
+var i = f("orderObjectsByDate"), j = f("buildConfigForBuild"), k = [];
 d.get(b.project).then(_.spread(function(d, h) {
-function k() {
+function l() {
 g.getLabelSelector().isEmpty() || !$.isEmptyObject(a.builds) || $.isEmptyObject(a.unfilteredBuilds) ? delete a.alerts.builds :a.alerts.builds = {
 type:"warning",
 details:"The active filters are hiding all builds."
@@ -3413,7 +3422,7 @@ details:"The active filters are hiding all builds."
 a.project = d, c.get("buildconfigs", b.buildconfig, h).then(function(d) {
 a.loaded = !0, a.buildConfig = d, a.paused = e.isPaused(a.buildConfig), a.buildConfig.spec.source.images && (a.imageSources = a.buildConfig.spec.source.images, a.imageSourcesPaths = [], a.imageSources.forEach(function(b) {
 a.imageSourcesPaths.push(f("destinationSourcePair")(b.paths));
-})), j.push(c.watchObject("buildconfigs", b.buildconfig, h, function(b, c) {
+})), k.push(c.watchObject("buildconfigs", b.buildconfig, h, function(b, c) {
 "DELETED" === c && (a.alerts.deleted = {
 type:"warning",
 message:"This build configuration has been deleted."
@@ -3425,36 +3434,40 @@ type:"error",
 message:404 === b.status ? "This build configuration can not be found, it may have been deleted." :"The build configuration details could not be loaded.",
 details:404 === b.status ? "Any remaining build history for this build will be shown." :"Reason: " + f("getErrorDetails")(b)
 };
-}), j.push(c.watch("builds", h, function(c, d, e) {
+}), k.push(c.watch("builds", h, function(c, d, f) {
 if (a.emptyMessage = "No builds to show", d) {
-if (e.metadata.labels && e.metadata.labels.buildconfig === b.buildconfig) {
-var f = e.metadata.name;
+var h = j(f);
+if (h === b.buildconfig) {
+var k = f.metadata.name;
 switch (d) {
 case "ADDED":
 case "MODIFIED":
-a.unfilteredBuilds[f] = e;
+a.unfilteredBuilds[k] = f;
 break;
 
 case "DELETED":
-delete a.unfilteredBuilds[f];
+delete a.unfilteredBuilds[k];
 }
 }
-} else a.unfilteredBuilds = c.by("metadata.name");
-a.builds = g.getLabelSelector().select(a.unfilteredBuilds), k(), g.addLabelSuggestionsFromResources(a.unfilteredBuilds, a.labelSuggestions), g.setLabelSuggestions(a.labelSuggestions), a.orderedBuilds = i(a.builds, !0), a.latestBuild = a.orderedBuilds.length ? a.orderedBuilds[0] :null;
+} else a.unfilteredBuilds = e.validatedBuildsForBuildConfig(b.buildconfig, c.by("metadata.name"));
+a.builds = g.getLabelSelector().select(a.unfilteredBuilds), l(), g.addLabelSuggestionsFromResources(a.unfilteredBuilds, a.labelSuggestions), g.setLabelSuggestions(a.labelSuggestions), a.orderedBuilds = i(a.builds, !0), a.latestBuild = a.orderedBuilds.length ? a.orderedBuilds[0] :null;
 }, {
 http:{
 params:{
-labelSelector:"buildconfig=" + a.buildConfigName
+labelSelector:f("labelName")("buildConfig") + "=" + _.trunc(a.buildConfigName, {
+length:63,
+omission:""
+})
 }
 }
 })), g.onActiveFiltersChanged(function(b) {
 a.$apply(function() {
-a.builds = b.select(a.unfilteredBuilds), a.orderedBuilds = i(a.builds, !0), a.latestBuild = a.orderedBuilds.length ? a.orderedBuilds[0] :null, k();
+a.builds = b.select(a.unfilteredBuilds), a.orderedBuilds = i(a.builds, !0), a.latestBuild = a.orderedBuilds.length ? a.orderedBuilds[0] :null, l();
 });
 }), a.startBuild = function() {
 e.startBuild(a.buildConfig.metadata.name, h, a);
 }, a.$on("$destroy", function() {
-c.unwatchAll(j);
+c.unwatchAll(k);
 });
 }));
 } ]), angular.module("openshiftConsole").controller("BuildController", [ "$scope", "$routeParams", "DataService", "ProjectsService", "BuildsService", "$filter", function(a, b, c, d, e, f) {
@@ -3469,25 +3482,25 @@ link:"project/" + b.project + "/browse/builds/" + b.buildconfig
 }), a.breadcrumbs.push({
 title:b.build
 }), b.tab && (a.selectedTab = {}, a.selectedTab[b.tab] = !0);
-var g = [], h = function(b) {
+var g = f("buildConfigForBuild"), h = [], i = function(b) {
 a.logOptions.container = f("annotation")(b, "buildPod"), a.logCanRun = !_.includes([ "New", "Pending", "Error" ], b.status.phase);
-}, i = function() {
+}, j = function() {
 a.buildConfig ? a.canBuild = e.canBuild(a.buildConfig) :a.canBuild = !1;
 };
-d.get(b.project).then(_.spread(function(d, j) {
-a.project = d, a.projectContext = j, a.logOptions = {}, c.get("builds", b.build, j).then(function(d) {
-a.loaded = !0, a.build = d, h(d);
-var k = f("annotation")(d, "buildNumber");
-k && (a.breadcrumbs[2].title = "#" + k), g.push(c.watchObject("builds", b.build, j, function(b, c) {
+d.get(b.project).then(_.spread(function(d, k) {
+a.project = d, a.projectContext = k, a.logOptions = {}, c.get("builds", b.build, k).then(function(d) {
+a.loaded = !0, a.build = d, i(d);
+var g = f("annotation")(d, "buildNumber");
+g && (a.breadcrumbs[2].title = "#" + g), h.push(c.watchObject("builds", b.build, k, function(b, c) {
 "DELETED" === c && (a.alerts.deleted = {
 type:"warning",
 message:"This build has been deleted."
-}), a.build = b, h(b);
-})), g.push(c.watchObject("buildconfigs", b.buildconfig, j, function(b, c) {
+}), a.build = b, i(b);
+})), h.push(c.watchObject("buildconfigs", b.buildconfig, k, function(b, c) {
 "DELETED" === c && (a.alerts.deleted = {
 type:"warning",
 message:"Build configuration " + a.buildConfigName + " has been deleted."
-}), a.buildConfig = b, a.paused = e.isPaused(a.buildConfig), i();
+}), a.buildConfig = b, a.paused = e.isPaused(a.buildConfig), j();
 }));
 }, function(b) {
 a.loaded = !0, a.alerts.load = {
@@ -3495,23 +3508,41 @@ type:"error",
 message:"The build details could not be loaded.",
 details:"Reason: " + f("getErrorDetails")(b)
 };
-}), g.push(c.watch("builds", j, function(c, d, e) {
-a.builds = {};
-var f = c.by("metadata.name");
-angular.forEach(f, function(c, d) {
-c.metadata.labels && c.metadata.labels.buildconfig === b.buildconfig && (a.builds[d] = c);
-});
-var g, h;
-e && (g = e.metadata.labels.buildconfig, h = e.metadata.name), i();
+}), h.push(c.watch("builds", k, function(c, d, f) {
+if (d) {
+var h = g(f);
+if (h === b.buildconfig) {
+var i = f.metadata.name;
+switch (d) {
+case "ADDED":
+case "MODIFIED":
+a.builds[i] = f;
+break;
+
+case "DELETED":
+delete a.builds[i];
+}
+}
+} else a.builds = e.validatedBuildsForBuildConfig(b.buildconfig, c.by("metadata.name"));
+j();
+}, {
+http:{
+params:{
+labelSelector:f("labelName")("buildConfig") + "=" + _.trunc(b.buildconfig, {
+length:63,
+omission:""
+})
+}
+}
 })), a.toggleSecret = function() {
 a.showSecret = !0;
 }, a.cancelBuild = function() {
-e.cancelBuild(a.build, a.buildConfigName, j, a);
+e.cancelBuild(a.build, a.buildConfigName, k, a);
 }, a.cloneBuild = function() {
 var b = _.get(a, "build.metadata.name");
-b && a.canBuild && e.cloneBuild(b, j, a);
+b && a.canBuild && e.cloneBuild(b, k, a);
 }, a.$on("$destroy", function() {
-c.unwatchAll(g);
+c.unwatchAll(h);
 });
 }));
 } ]), angular.module("openshiftConsole").controller("ImagesController", [ "$routeParams", "$scope", "AlertMessageService", "DataService", "ProjectsService", "$filter", "LabelFilter", "Logger", function(a, b, c, d, e, f, g, h) {
@@ -8366,6 +8397,7 @@ return a && a.metadata && a.metadata.uid ? a.metadata.uid :a;
 };
 }).filter("annotationName", function() {
 var a = {
+buildConfig:[ "openshift.io/build-config.name" ],
 deploymentConfig:[ "openshift.io/deployment-config.name" ],
 deployment:[ "openshift.io/deployment.name" ],
 pod:[ "openshift.io/deployer-pod.name" ],
@@ -8460,10 +8492,10 @@ d.isAfter(c) && (c = d, b = a.items[0].created);
 return function(a, b) {
 return a && a.metadata && a.metadata.labels ? a.metadata.labels[b] :null;
 };
-}).filter("buildConfigForBuild", [ "labelNameFilter", "labelFilter", function(a, b) {
-var c = a("buildConfig");
-return function(a) {
-return b(a, c);
+}).filter("buildConfigForBuild", [ "annotationFilter", "labelNameFilter", "labelFilter", function(a, b, c) {
+var d = b("buildConfig");
+return function(b) {
+return a(b, "buildConfig") || c(b, d);
 };
 } ]).filter("icon", [ "annotationFilter", function(a) {
 return function(b) {

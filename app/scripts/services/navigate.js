@@ -1,7 +1,13 @@
 "use strict";
 
 angular.module("openshiftConsole")
-  .service("Navigate", function($location, $window, $timeout, annotationFilter, LabelFilter){
+  .service("Navigate", function($location,
+                                $window,
+                                $timeout,
+                                annotationFilter,
+                                LabelFilter,
+                                $filter,
+                                APIService){
     return {
       /**
        * Navigate and display the error page.
@@ -98,47 +104,59 @@ angular.module("openshiftConsole")
         if (!namespace) {
           namespace = resource.metadata.namespace;
         }
-        var encodedNamespace = encodeURIComponent(namespace);
 
         var name = resource;
         if (resource.metadata) {
           name = resource.metadata.name;
         }
 
-        var encodedName = encodeURIComponent(name);
+        var url = URI("")
+          .segment("project")
+          .segmentCoded(namespace)
+          .segment(action);
 
-        var url = "project/" + encodedNamespace + "/" + action + "/";
         switch(kind) {
           case "Build":
-            if (resource.metadata && resource.metadata.labels && resource.metadata.labels.buildconfig) {
-              url += "builds/" + encodeURIComponent(resource.metadata.labels.buildconfig) + "/" + encodedName;
+            var buildConfigName = $filter('buildConfigForBuild')(resource);
+            if (buildConfigName) {
+              url.segment("builds")
+                .segmentCoded(buildConfigName)
+                .segmentCoded(name);
             }
             else {
-              url += "builds-noconfig/" + encodedName;
+              url.segment("builds-noconfig")
+                .segmentCoded(name);
             }
             break;
           case "BuildConfig":
-            url += "builds/" + encodedName;
+            url.segment("builds")
+              .segmentCoded(name);
             break;
           case "DeploymentConfig":
-            url += "deployments/" + encodedName;
+            url.segment("deployments")
+              .segmentCoded(name);
             break;
           case "ReplicationController":
             var depConfig = resource.metadata ? annotationFilter(resource, 'deploymentConfig') : null;
             if (depConfig) {
-              url += "deployments/" + encodeURIComponent(depConfig) + "/" + encodedName;
+              url.segment("deployments")
+                .segmentCoded(depConfig)
+                .segmentCoded(name);
             }
             else {
-              url += "deployments-replicationcontrollers/" + encodedName;
+              url.segment("deployments-replicationcontrollers")
+                .segmentCoded(name);
             }
             break;
           case "ImageStream":
-            url += "images/" + encodedName;
+            url.segment("images")
+              .segmentCoded(name);
             break;
           default:
-            url += kind.toLowerCase() + "s/" + encodedName;
+            url.segment(APIService.kindToResource(kind))
+            .segmentCoded(name);
         }
-        return url;
+        return url.toString();
       },
       /**
        * Navigate to a list view for a resource type

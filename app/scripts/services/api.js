@@ -40,7 +40,15 @@ ResourceGroupVersion.prototype.equals = function(resource, group, version) {
 
 
 angular.module('openshiftConsole')
-.factory('APIService', function(API_CFG, APIS_CFG, AuthService, Constants, Logger, $q, $http, Navigate, $filter) {
+.factory('APIService', function(API_CFG,
+                                APIS_CFG,
+                                AuthService,
+                                Constants,
+                                Logger,
+                                $q,
+                                $http,
+                                $filter,
+                                $window) {
   // Set the default api versions the console will use if otherwise unspecified
   var defaultVersion = {
     "":           "v1",
@@ -191,8 +199,11 @@ angular.module('openshiftConsole')
         AuthService.withUser();
         return;
       }
-      // Otherwise go to the error page, the server might be down.
-      Navigate.toErrorPage("Unable to load details about the server. If the problem continues, please contact your system administrator.", "API_DISCOVERY", true);
+      // Otherwise go to the error page, the server might be down.  Can't use Navigate.toErrorPage or it will create a circular dependency
+      $window.location.href = URI('error').query({
+        error_description: "Unable to load details about the server. If the problem continues, please contact your system administrator.",
+        error: "API_DISCOVERY"
+      }).toString();
       return;
     }
       

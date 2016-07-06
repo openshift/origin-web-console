@@ -42,6 +42,8 @@ angular.module('openshiftConsole')
       $scope.selectedTab[$routeParams.tab] = true;
     }
 
+    var buildConfigForBuild = $filter('buildConfigForBuild');
+
     var watches = [];
 
     var setLogVars = function(build) {
@@ -114,24 +116,36 @@ angular.module('openshiftConsole')
         );
 
         watches.push(DataService.watch("builds", context, function(builds, action, build) {
-          $scope.builds = {};
-          // TODO we should send the ?labelSelector=buildconfig=<name> on the API request
-          // to only load the buildconfig's builds, but this requires some DataService changes
-          var allBuilds = builds.by("metadata.name");
-          angular.forEach(allBuilds, function(build, name) {
-            if (build.metadata.labels && build.metadata.labels.buildconfig === $routeParams.buildconfig) {
-              $scope.builds[name] = build;
+          if (!action) {
+            $scope.builds = BuildsService.validatedBuildsForBuildConfig($routeParams.buildconfig, builds.by('metadata.name'));            
+          } else {
+            var buildConfigName = buildConfigForBuild(build);
+            if (buildConfigName === $routeParams.buildconfig) {
+              var buildName = build.metadata.name;
+              switch (action) {
+                case 'ADDED':
+                case 'MODIFIED':
+                  $scope.builds[buildName] = build;
+                  break;
+                case 'DELETED':
+                  delete $scope.builds[buildName];
+                  break;
+              }
             }
-          });
-
-          var buildConfigName;
-          var buildName;
-          if (build) {
-            buildConfigName = build.metadata.labels.buildconfig;
-            buildName = build.metadata.name;
           }
 
           updateCanBuild();
+        },
+        // params object for filtering
+        {
+          // http is passed to underlying $http calls
+          http: {
+            params: {
+              // because build config names can be > 63 chars but label values can't
+              // and we can't do a fieldSelector on annotations.  Plus old builds dont have the annotation.
+              labelSelector: $filter('labelName')('buildConfig') + '=' + _.trunc($routeParams.buildconfig, {length: 63, omission: ''})
+            }
+          }
         }));
 
         $scope.toggleSecret = function() {

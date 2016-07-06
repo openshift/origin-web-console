@@ -43,6 +43,7 @@ angular.module('openshiftConsole')
     }
 
     var orderByDate = $filter('orderObjectsByDate');
+    var buildConfigForBuild = $filter('buildConfigForBuild');
     var watches = [];
 
     ProjectsService
@@ -91,17 +92,20 @@ angular.module('openshiftConsole')
       watches.push(DataService.watch("builds", context, function(builds, action, build) {
         $scope.emptyMessage = "No builds to show";
         if (!action) {
-          $scope.unfilteredBuilds = builds.by("metadata.name");
-        } else if (build.metadata.labels && build.metadata.labels.buildconfig === $routeParams.buildconfig) {
-          var buildName = build.metadata.name;
-          switch (action) {
-            case 'ADDED':
-            case 'MODIFIED':
-              $scope.unfilteredBuilds[buildName] = build;
-              break;
-            case 'DELETED':
-              delete $scope.unfilteredBuilds[buildName];
-              break;
+          $scope.unfilteredBuilds = BuildsService.validatedBuildsForBuildConfig($routeParams.buildconfig, builds.by('metadata.name'));
+        } else {
+          var buildConfigName = buildConfigForBuild(build);
+          if (buildConfigName === $routeParams.buildconfig) {
+            var buildName = build.metadata.name;
+            switch (action) {
+              case 'ADDED':
+              case 'MODIFIED':
+                $scope.unfilteredBuilds[buildName] = build;
+                break;
+              case 'DELETED':
+                delete $scope.unfilteredBuilds[buildName];
+                break;
+            }
           }
         }
 
@@ -119,7 +123,9 @@ angular.module('openshiftConsole')
         // http is passed to underlying $http calls
         http: {
           params: {
-            labelSelector: 'buildconfig='+$scope.buildConfigName
+            // because build config names can be > 63 chars but label values can't
+            // and we can't do a fieldSelector on annotations.  Plus old builds dont have the annotation.
+            labelSelector: $filter('labelName')('buildConfig') + '=' + _.trunc($scope.buildConfigName, {length: 63, omission: ''})
           }
         }
       }));
