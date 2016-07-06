@@ -79,6 +79,13 @@
 
 /* Fix some styles with the angular-ui-select bootstrap theme that isn't right when combined with all of our styles */
 .ui-select-bootstrap {
+  /* Fixes ui-select's input box extending to 100% page width if the page has been resized after page-load
+   * https://github.com/angular-ui/ui-select/issues/1678
+   */
+  .ui-select-search {
+    width: 100% !important;
+  }
+
   .ui-select-placeholder {
     font-weight: normal;
   }
