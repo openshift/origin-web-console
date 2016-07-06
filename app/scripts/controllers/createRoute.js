@@ -27,6 +27,10 @@ angular.module('openshiftConsole')
         link: "project/" + $scope.projectName
       },
       {
+         title: "Routes",
+         link: "project/" + $scope.projectName + "/browse/routes"
+      },
+      {
         title: "Create Route"
       }
     ];
