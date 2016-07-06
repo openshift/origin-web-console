@@ -3289,7 +3289,7 @@ q.cancel(a);
 });
 }));
 } ]), angular.module("openshiftConsole").controller("SettingsController", [ "$routeParams", "$scope", "DataService", "ProjectsService", "AlertMessageService", "$filter", "$location", "LabelFilter", "$timeout", "Logger", "annotationFilter", "annotationNameFilter", function(a, b, c, d, e, f, g, h, i, j, k, l) {
-b.projectName = a.project, b.quotas = {}, b.limitRanges = {}, b.limitsByType = {}, b.labelSuggestions = {}, b.alerts = b.alerts || {}, b.emptyMessageQuotas = "Loading...", b.quotaHelp = "Limits resource usage within the project.", b.emptyMessageLimitRanges = "Loading...", b.limitRangeHelp = "Defines minimum and maximum constraints for runtime resources such as memory and CPU.", b.renderOptions = b.renderOptions || {}, b.renderOptions.hideFilterWidget = !0;
+b.projectName = a.project, b.limitRanges = {}, b.limitsByType = {}, b.labelSuggestions = {}, b.alerts = b.alerts || {}, b.quotaHelp = "Limits resource usage within this project.", b.emptyMessageLimitRanges = "Loading...", b.limitRangeHelp = "Defines minimum and maximum constraints for runtime resources such as memory and CPU.", b.renderOptions = b.renderOptions || {}, b.renderOptions.hideFilterWidget = !0;
 var m = [];
 d.get(a.project).then(_.spread(function(e, g) {
 var h = function(a) {
@@ -3331,7 +3331,16 @@ details:f("getErrorDetails")(a)
 });
 }
 }), c.list("resourcequotas", g, function(a) {
-b.quotas = a.by("metadata.name"), b.emptyMessageQuotas = "There are no resource quotas set on this project.", j.log("quotas", b.quotas);
+b.quotas = a.by("metadata.name"), j.log("quotas", b.quotas);
+}), c.list("appliedclusterresourcequotas", g, function(c) {
+b.clusterQuotas = c.by("metadata.name"), b.namespaceUsageByClusterQuota = {}, _.each(b.clusterQuotas, function(c, d) {
+if (c.status) {
+var e = _.find(c.status.namespaces, {
+namespace:a.project
+});
+b.namespaceUsageByClusterQuota[d] = e.status;
+}
+}), j.log("cluster quotas", b.clusterQuotas);
 }), c.list("limitranges", g, function(a) {
 b.limitRanges = a.by("metadata.name"), b.emptyMessageLimitRanges = "There are no limit ranges set on this project.", angular.forEach(b.limitRanges, function(a, c) {
 b.limitsByType[c] = {}, angular.forEach(a.spec.limits, function(a) {
@@ -7597,9 +7606,11 @@ return {
 restrict:"E",
 scope:{
 used:"=",
+crossProjectUsed:"=?",
 total:"=",
 type:"@",
-legendPosition:"@?"
+height:"=?",
+width:"=?"
 },
 replace:!0,
 templateUrl:"views/_quota-usage-chart.html",
@@ -7611,7 +7622,7 @@ b.updateDonutCenterText(d[0], a, c);
 a(h(c.total, c.type, !0));
 }
 var f = a("usageValue"), g = a("usageWithUnits"), h = a("amountAndUnit");
-"right" === c.legendPosition ? (c.height = 175, c.width = 250) :(c.height = 200, c.width = 175);
+c.height = c.height || 200, c.width = c.width || 175;
 var i = function(a) {
 return a ? (100 * Number(a)).toFixed(1) + "%" :"0%";
 };
@@ -7662,16 +7673,22 @@ type:"donut",
 order:null
 }
 }, l = function() {
-var a = f(c.used) || 0, b = Math.max(f(c.total) - a, 0), d = {
-columns:[ [ "Used", a ], [ "Available", b ] ],
+var a = void 0 !== c.crossProjectUsed, b = f(c.used) || 0, d = Math.max((f(c.crossProjectUsed) || 0) - b, 0), e = Math.max(f(c.total) - (d + b), 0), g = {
+columns:[ [ "used", b ], [ "available", e ] ],
 colors:{
-Used:b ? "#0088ce" :"#ec7a08",
-Available:"#d1d1d1"
+used:e ? "#0088ce" :"#ec7a08",
+other:e ? "#7dc3e8" :"#f7bd7f",
+available:"#d1d1d1"
+},
+names:{
+used:a ? "Used - This Project" :"Used",
+other:"Used - Other Projects",
+available:"Available"
 }
 };
-j ? j.load(d) :(_.assign(k.data, d), j = c3.generate(k));
+a && g.columns.splice(1, 0, [ "other", d ]), j ? j.load(g) :(_.assign(k.data, g), j = c3.generate(k));
 };
-c.$watchGroup([ "used", "total" ], _.debounce(l, 300));
+c.$watchGroup([ "used", "total", "crossProjectUsed" ], _.debounce(l, 300));
 }
 };
 } ]), angular.module("openshiftConsole").directive("buildTrendsChart", [ "$filter", "$location", "$rootScope", "$timeout", function(a, b, c, d) {
@@ -9024,6 +9041,16 @@ var b = _.get(a, "spec.containers", []);
 return _.every(b, function(a) {
 return a.readinessProbe || a.livenessProbe;
 });
+};
+}).filter("scopeDetails", function() {
+var a = {
+Terminating:"Matches pods that have an active deadline.",
+NotTerminating:"Matches pods that do not have an active deadline.",
+BestEffort:"Matches pods that have best effort quality of service.",
+NotBestEffort:"Matches pods that do not have best effort quality of service."
+};
+return function(b) {
+return a[b];
 };
 }).filter("debugLabel", [ "PodsService", function(a) {
 return function(b) {

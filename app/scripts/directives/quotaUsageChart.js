@@ -6,12 +6,14 @@ angular.module('openshiftConsole')
       restrict: 'E',
       scope: {
         used: '=',
+        crossProjectUsed: '=?',
         total: '=',
         // 'cpu' or 'memory'
         type: '@',
         // Defaults to 'bottom'.
         // http://c3js.org/reference.html#legend-position
-        legendPosition: '@?'
+        height: '=?',
+        width: '=?'
       },
       // Replace the element so it can be centered using class="center-block".
       replace: true,
@@ -28,14 +30,8 @@ angular.module('openshiftConsole')
           replaceText(amountAndUnit($scope.total, $scope.type, true));
         }
 
-        // Adjust size based on legend position.
-        if ($scope.legendPosition === 'right') {
-          $scope.height = 175;
-          $scope.width = 250;
-        } else {
-          $scope.height = 200;
-          $scope.width = 175;
-        }
+        $scope.height = $scope.height || 200;
+        $scope.width = $scope.width || 175;
 
         var percentage = function(value) {
           if (!value) {
@@ -131,21 +127,30 @@ angular.module('openshiftConsole')
 
         var chart;
         var updateChart = function() {
+          var hasCrossProject = $scope.crossProjectUsed !== undefined;
           var used = usageValue($scope.used) || 0,
-              available = Math.max(usageValue($scope.total) - used, 0),
+              crossProjectUsed = Math.max((usageValue($scope.crossProjectUsed) || 0) - used, 0),
+              available = Math.max(usageValue($scope.total) - (crossProjectUsed + used), 0),
               data = {
                 columns: [
-                  ['Used', used],
-                  ['Available', available]
+                  ['used', used],
+                  ['available', available]
                 ],
-                // https://www.patternfly.org/styles/color-palette/
                 colors: {
-                  // Orange if at quota, blue otherwise
-                  Used: available ? "#0088ce" : "#ec7a08",
-                  // Gray
-                  Available: "#d1d1d1"
+                  used: available ? "#0088ce" : "#ec7a08",
+                  other: available ? "#7dc3e8" : "#f7bd7f",
+                  available: "#d1d1d1"
+                },
+                names: {
+                  used: hasCrossProject ? 'Used - This Project' : 'Used',
+                  other: 'Used - Other Projects',
+                  available: "Available"
                 }
               };
+
+          if (hasCrossProject) {
+            data.columns.splice(1, 0, ['other', crossProjectUsed]);
+          }
 
           if (!chart) {
             _.assign(config.data, data);
@@ -154,7 +159,7 @@ angular.module('openshiftConsole')
             chart.load(data);
           }
         };
-        $scope.$watchGroup(['used', 'total'], _.debounce(updateChart, 300));
+        $scope.$watchGroup(['used', 'total', 'crossProjectUsed'], _.debounce(updateChart, 300));
       }
     };
   });

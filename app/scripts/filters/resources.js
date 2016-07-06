@@ -1164,6 +1164,17 @@ angular.module('openshiftConsole')
       });
     };
   })
+  .filter('scopeDetails', function() {
+    var scopeMessages = {
+      "Terminating": "Matches pods that have an active deadline.",
+      "NotTerminating": "Matches pods that do not have an active deadline.",
+      "BestEffort": "Matches pods that have best effort quality of service.",
+      "NotBestEffort": "Matches pods that do not have best effort quality of service."
+    };
+    return function(scope) {
+      return scopeMessages[scope];
+    };
+  })
   .filter('debugLabel', function(PodsService) {
     return function(pod) {
       return PodsService.getDebugLabel(pod);
