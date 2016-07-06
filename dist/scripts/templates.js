@@ -6596,8 +6596,8 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "<label class=\"sr-only\" for=\"childService\">Service:</label>\n" +
     "<ui-select ng-model=\"link.selectedService\" theme=\"bootstrap\" title=\"Choose a service\">\n" +
     "<ui-select-match placeholder=\"Choose a service...\">{{$select.selected.metadata.name}}</ui-select-match>\n" +
-    "<ui-select-choices repeat=\"service in options | toArray | orderBy : 'metadata.name'\">\n" +
-    "<div>{{service.metadata.name}}</div>\n" +
+    "<ui-select-choices repeat=\"service in options | toArray | filter : { metadata: { name: $select.search } } | orderBy : 'metadata.name'\">\n" +
+    "<div ng-bind-html=\"service.metadata.name | highlight : $select.search\"></div>\n" +
     "</ui-select-choices>\n" +
     "</ui-select>\n" +
     "</form>\n" +

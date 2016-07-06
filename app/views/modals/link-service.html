@@ -11,8 +11,8 @@
                  theme="bootstrap"
                  title="Choose a service">
         <ui-select-match placeholder="Choose a service...">{{$select.selected.metadata.name}}</ui-select-match>
-        <ui-select-choices repeat="service in options | toArray | orderBy : 'metadata.name'">
-          <div>{{service.metadata.name}}</div>
+        <ui-select-choices repeat="service in options | toArray | filter : { metadata: { name: $select.search } } | orderBy : 'metadata.name'">
+          <div ng-bind-html="service.metadata.name | highlight : $select.search"></div>
         </ui-select-choices>
       </ui-select>
     </form>
