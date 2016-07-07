@@ -6995,46 +6995,53 @@ var b, d = {}, e = _.some(a.datasets, function(a) {
 return !a.data;
 });
 if (!e) {
-a.totalUsed = 0, angular.forEach(a.datasets, function(e) {
-var f = e.id, g = e.data;
-b = [ "dates" ], d[f] = [ e.label || f ], e.total = k(f);
-var h = _.last(g).value;
-isNaN(h) && (h = 0), a.convert && (h = a.convert(h)), e.used = h, e.total && (e.available = Math.max(e.total - e.used, 0)), a.totalUsed += e.used, angular.forEach(g, function(c) {
-if (b.push(c.start), void 0 === c.value || null === c.value) d[f].push(c.value); else {
+a.totalUsed = 0;
+var f = 0;
+angular.forEach(a.datasets, function(e) {
+var g = e.id, h = e.data;
+b = [ "dates" ], d[g] = [ e.label || g ], e.total = k(g);
+var i = _.last(h).value;
+isNaN(i) && (i = 0), a.convert && (i = a.convert(i)), e.used = i, e.total && (e.available = Math.max(e.total - e.used, 0)), a.totalUsed += e.used, angular.forEach(h, function(c) {
+if (b.push(c.start), void 0 === c.value || null === c.value) d[g].push(c.value); else {
 var e = a.convert ? a.convert(c.value) :c.value;
-switch (f) {
+switch (g) {
 case "memory/usage":
 case "network/rx":
 case "network/tx":
-d[f].push(d3.round(e, 2));
+d[g].push(d3.round(e, 2));
 break;
 
 default:
-d[f].push(d3.round(e));
+d[g].push(d3.round(e));
 }
+f = Math.max(e, f);
 }
 });
-var i, j;
-e.total && (j = {
+var j, l;
+e.total && (l = {
 type:"donut",
 columns:[ [ "Used", e.used ], [ "Available", e.available ] ],
 colors:{
 Used:"#0088ce",
 Available:"#d1d1d1"
 }
-}, t[f] ? t[f].load(j) :(i = z(a), i.data = j, c(function() {
-t[f] = c3.generate(i);
+}, t[g] ? t[g].load(l) :(j = z(a), j.data = l, c(function() {
+t[g] = c3.generate(j);
 })));
 }), a.totalUsed = _.round(a.totalUsed, 1);
-var f, g = [ b ].concat(_.values(d)), h = {
+var g, h = [ b ].concat(_.values(d));
+f < a.smallestYAxisMax && (g = a.smallestYAxisMax);
+var i, j = {
 type:a.chartType || "area",
 x:"dates",
-columns:g
-}, i = a.chartPrefix + "sparkline";
-u[i] ? u[i].load(h) :(f = A(a), f.data = h, a.chartDataColors && (f.color = {
+columns:h
+}, l = a.chartPrefix + "sparkline";
+u[l] ? (u[l].load(j), u[l].axis.max({
+y:g
+})) :(i = A(a), i.axis.y.max = g, i.data = j, a.chartDataColors && (i.color = {
 pattern:a.chartDataColors
 }), c(function() {
-y || (u[i] = c3.generate(f));
+y || (u[l] = c3.generate(i));
 }));
 }
 }
@@ -7107,6 +7114,7 @@ units:"MiB",
 chartPrefix:"memory-",
 convert:i,
 containerMetric:!0,
+smallestYAxisMax:100,
 datasets:[ {
 id:"memory/usage",
 label:"Memory",
@@ -7118,6 +7126,7 @@ units:"millicores",
 chartPrefix:"cpu-",
 convert:_.round,
 containerMetric:!0,
+smallestYAxisMax:10,
 datasets:[ {
 id:"cpu/usage",
 label:"CPU",
@@ -7129,6 +7138,7 @@ units:"KiB/s",
 chartPrefix:"network-",
 chartType:"line",
 convert:j,
+smallestYAxisMax:1,
 datasets:[ {
 id:"network/tx",
 label:"Sent",
