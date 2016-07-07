@@ -59,7 +59,7 @@ angular.module("openshiftConsole")
       var dependencies = getDependenciesJSON(updatedService) || [];
       dependencies.push({
         name: child.metadata.name,
-        namespace: child.metadata.namespace,
+        namespace: (parent.metadata.namespace === child.metadata.namespace) ? '' : child.metadata.namespace,
         kind: child.kind
       });
 

@@ -2586,7 +2586,7 @@ return a.name;
 var e = angular.copy(a), g = f(e) || [];
 return g.push({
 name:d.metadata.name,
-namespace:d.metadata.namespace,
+namespace:a.metadata.namespace === d.metadata.namespace ? "" :d.metadata.namespace,
 kind:d.kind
 }), _.set(e, [ "metadata", "annotations", c ], JSON.stringify(g)), b.update("services", e.metadata.name, e, {
 namespace:e.metadata.namespace
