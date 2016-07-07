@@ -3404,6 +3404,7 @@ body{padding-right:0px!important}
 }
 @-moz-document url-prefix(){.console-os fieldset{display:table-cell}
 }
+.ui-select-bootstrap .ui-select-search{width:100%!important}
 .ui-select-bootstrap .ui-select-toggle>.caret{font-style:normal;margin-top:-5px}
 .surface-shaded .ui-select-bootstrap .ui-select-match>.btn{background-color:#fff;background-image:linear-gradient(to bottom,#fff 0%,#fbfbfb 100%)}
 .separator{border-top:1px solid rgba(0,0,0,.15)}
