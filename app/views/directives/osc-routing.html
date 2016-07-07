@@ -32,31 +32,6 @@
       </div>
     </div>
 
-    <div ng-if="services" class="form-group">
-      <label for="service-select" class="required">Service</label>
-      <select
-          id="service-select"
-          ng-model="route.service"
-          ng-options="service as service.metadata.name for service in services"
-          required
-          class="form-control"
-          aria-describedby="service-help">
-      </select>
-      <div>
-        <span id="service-help" class="help-block">Service to route to.</span>
-      </div>
-      <div ng-if="(services | hashSize) === 0" class="has-error">
-        <span class="help-block">There are no services in your project to expose with a route.</span>
-      </div>
-      <div ng-if="unnamedServicePort" class="has-warning">
-        <span class="help-block">
-          Service {{route.service.metadata.name}} has a single, unnamed port. A route cannot specifically target
-          an unnamed service port. If more service ports are added later, the route will also direct
-          traffic to them.
-        </span>
-      </div>
-    </div>
-
     <!-- Host -->
     <div class="form-group">
       <label for="host">Hostname</label>
@@ -123,6 +98,18 @@
       </div>
     </div>
 
+    <!-- Service -->
+    <div ng-if="services">
+      <osc-routing-service model="route.to"
+                           services="services"
+                           show-weight="route.alternateServices.length">
+      </osc-routing-service>
+    </div>
+
+    <div ng-if="alternateServiceOptions.length && !route.alternateServices.length" class="form-group">
+      <a href="" ng-click="addAlternateService()">Split traffic across multiple services</a>
+    </div>
+
     <!-- Target Port -->
     <div ng-if="route.portOptions.length" class="form-group">
       <label for="routeTargetPort">Target Port</label>
@@ -137,6 +124,23 @@
       <div>
         <span id="target-port-help" class="help-block">
           Target port for traffic.
+        </span>
+      </div>
+    </div>
+
+    <!-- Alternate Services for A/B Traffic -->
+    <div ng-if="route.alternateServices.length">
+      <h3>Alternate Services</h3>
+      <div ng-repeat="alternate in route.alternateServices" class="form-group">
+        <osc-routing-service model="alternate"
+                             services="alternateServiceOptions"
+                             is-alternate="true"
+                             show-weight="true">
+        </osc-routing-service>
+        <a href="" ng-click="route.alternateServices.splice($index, 1)">Remove service</a>
+        <span ng-if="$last">
+          <span class="action-divider">|</span>
+          <a href="" ng-click="addAlternateService()">Add another service</a>
         </span>
       </div>
     </div>

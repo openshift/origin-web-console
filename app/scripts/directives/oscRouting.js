@@ -10,7 +10,8 @@ angular.module("openshiftConsole")
    *       name: "",
    *       host: "",
    *       path: "",
-   *       service: {}, // selected service object if services passed to directive
+   *       to: {}, // object with service and weight properties
+   *       alternateServices: [], // alternate backend objects, each with service and weight properties
    *       tls.termination: "",
    *       tls.insecureEdgeTerminationPolicy: "",
    *       tls.certificate: "",
@@ -28,7 +29,7 @@ angular.module("openshiftConsole")
    * routingDisabled:
    *   An expression that will disable the form (default: false)
    */
-  .directive("oscRouting", function(){
+  .directive("oscRouting", function() {
     return {
       require: '^form',
       restrict: 'E',
@@ -46,7 +47,7 @@ angular.module("openshiftConsole")
           return !termination || termination === 'passthrough';
         };
       },
-      link: function(scope, element, attrs, formCtl){
+      link: function(scope, element, attrs, formCtl) {
         scope.form = formCtl;
 
         var updatePortOptions = function(service) {
@@ -79,12 +80,19 @@ angular.module("openshiftConsole")
           scope.route.service = _.find(scope.services);
         }
 
-        scope.$watch('route.service', function(newValue, oldValue) {
-          updatePortOptions(scope.route.service);
+        scope.$watch('route.to.service', function(newValue, oldValue) {
+          updatePortOptions(newValue);
           // Don't overwrite the target port when editing an existing route unless the user picked a
           // different service.
           if (newValue !== oldValue || !scope.route.targetPort) {
             scope.route.targetPort = _.get(scope, 'route.portOptions[0].port');
+          }
+
+          if (scope.services) {
+            // Update the options for alternate services.
+            scope.alternateServiceOptions = _.reject(scope.services, function(service) {
+              return newValue === service;
+            });
           }
         });
 
@@ -112,6 +120,43 @@ angular.module("openshiftConsole")
             scope.showSecureRouteOptions = true;
           }
           scope.showCertificatesNotUsedWarning = showCertificateWarning();
+        });
+
+        scope.addAlternateService = function() {
+          scope.route.alternateServices = scope.route.alternateServices || [];
+          // Add a new empty value.
+          scope.route.alternateServices.push({});
+        };
+      }
+    };
+  })
+  // Prompts for a service and optionally a weight for A/B traffic.
+  .directive("oscRoutingService", function() {
+    return {
+      restrict: 'E',
+      scope: {
+        // The model, an object with properties `service` and `weight`
+        model: "=",
+        // Collection of service objects
+        services: "=",
+        // `true` if this is an alternate route target for A/B traffic
+        // (optional). Changes the labels and help text.
+        isAlternate: "=?",
+        // Show a weight field (optional)
+        showWeight: "=?"
+      },
+      templateUrl: 'views/directives/osc-routing-service.html',
+      link: function(scope, element, attrs, formCtl) {
+        scope.form = formCtl;
+        scope.id = _.uniqueId('osc-routing-service-');
+
+        scope.$watchGroup(['model.service', 'services'], function() {
+          if (_.has(scope, 'model.service') && !_.isEmpty(scope.services)) {
+            return;
+          }
+
+          // Use _.find to get the first item.
+          _.set(scope, 'model.service', _.find(scope.services));
         });
       }
     };

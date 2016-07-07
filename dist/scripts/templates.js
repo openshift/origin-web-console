@@ -2628,7 +2628,7 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "<div class=\"middle-content gutter-top\">\n" +
     "<div class=\"container-fluid\">\n" +
     "<div class=\"row\" ng-if=\"route\">\n" +
-    "<div class=\"col-md-12\">\n" +
+    "<div class=\"col-sm-12\">\n" +
     "<div class=\"resource-details\">\n" +
     "<dl class=\"dl-horizontal left\">\n" +
     "<dt>Hostname<span ng-if=\"route.status.ingress.length > 1\">s</span>:</dt>\n" +
@@ -2679,6 +2679,45 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "This target port will route to {{route | routeTargetPortMapping : services[route.spec.to.name]}}.\n" +
     "</div>\n" +
     "</dl>\n" +
+    "<div ng-if=\"route.spec.alternateBackends.length\" class=\"row\">\n" +
+    "<div class=\"col-sm-12 mar-bottom-lg\">\n" +
+    "<h4>Traffic</h4>\n" +
+    "<div class=\"help-block\">\n" +
+    "This route splits traffic across multiple services.\n" +
+    "</div>\n" +
+    "</div>\n" +
+    "<div class=\"col-sm-5 col-sm-push-7 mar-bottom-lg\">\n" +
+    "<route-service-pie route=\"route\"></route-service-pie>\n" +
+    "</div>\n" +
+    "<div class=\"col-sm-7 col-sm-pull-5\">\n" +
+    "<table class=\"table table-bordered\">\n" +
+    "<thead>\n" +
+    "<tr>\n" +
+    "<th>Service</th>\n" +
+    "<th>Weight</th>\n" +
+    "</tr>\n" +
+    "</thead>\n" +
+    "<tbody>\n" +
+    "<tr>\n" +
+    "<td>\n" +
+    "<a ng-href=\"{{route.spec.to.name | navigateResourceURL : route.spec.to.kind : route.metadata.namespace}}\">{{route.spec.to.name}}</a>\n" +
+    "</td>\n" +
+    "<td>\n" +
+    "{{route.spec.to.weight}}\n" +
+    "</td>\n" +
+    "</tr>\n" +
+    "<tr ng-repeat=\"alternate in route.spec.alternateBackends\">\n" +
+    "<td>\n" +
+    "<a ng-href=\"{{alternate.name | navigateResourceURL : alternate.kind : route.metadata.namespace}}\">{{alternate.name}}</a>\n" +
+    "</td>\n" +
+    "<td>\n" +
+    "{{alternate.weight}}\n" +
+    "</td>\n" +
+    "</tr>\n" +
+    "</tbody>\n" +
+    "</table>\n" +
+    "</div>\n" +
+    "</div>\n" +
     "<div style=\"margin-bottom: 10px\">\n" +
     "<h4>TLS Settings</h4>\n" +
     "<dl class=\"dl-horizontal left\" ng-if=\"route.spec.tls\">\n" +
@@ -2729,9 +2768,9 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "</dl>\n" +
     "<div ng-if=\"!route.spec.tls\"><em>TLS is not enabled for this route</em></div>\n" +
     "</div>\n" +
+    "</div>\n" +
+    "</div>\n" +
     "<annotations annotations=\"route.metadata.annotations\"></annotations>\n" +
-    "</div>\n" +
-    "</div>\n" +
     "</div>\n" +
     "</div>\n" +
     "</div>\n" +
@@ -5330,6 +5369,57 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
   );
 
 
+  $templateCache.put('views/directives/osc-routing-service.html',
+    "<ng-form name=\"routingServiceForm\">\n" +
+    "<div class=\"row\">\n" +
+    "<div class=\"form-group\" ng-class=\"{ 'col-sm-6': showWeight, 'col-sm-12': !showWeight }\">\n" +
+    "<label for=\"{{id}}-service-select\" class=\"required\">\n" +
+    "Service\n" +
+    "</label>\n" +
+    "<select id=\"{{id}}-service-select\" ng-model=\"model.service\" ng-options=\"service as service.metadata.name for service in services\" required class=\"form-control\" ng-attr-aria-describedby=\"{{id}}-service-help\">\n" +
+    "</select>\n" +
+    "<div>\n" +
+    "<span ng-attr-id=\"{{id}}-service-help\" class=\"help-block\">\n" +
+    "<span ng-if=\"!isAlternate\">Service to route to.</span>\n" +
+    "<span ng-if=\"isAlternate\">Alternate service for route traffic.</span>\n" +
+    "</span>\n" +
+    "</div>\n" +
+    "<div ng-if=\"(services | hashSize) === 0\" class=\"has-error\">\n" +
+    "<span class=\"help-block\">\n" +
+    "There are no <span ng-if=\"is-alternate\">additional</span> services in your project to expose with a route.\n" +
+    "</span>\n" +
+    "</div>\n" +
+    "<div ng-if=\"unnamedServicePort\" class=\"has-warning\">\n" +
+    "<span class=\"help-block\">\n" +
+    "Service {{route.service.metadata.name}} has a single, unnamed port. A route cannot specifically target an unnamed service port. If more service ports are added later, the route will also direct traffic to them.\n" +
+    "</span>\n" +
+    "</div>\n" +
+    "</div>\n" +
+    "<div ng-if=\"showWeight\" class=\"form-group col-sm-6\">\n" +
+    "<label for=\"{{id}}-service-weight\" class=\"required\">Weight</label>\n" +
+    "<input ng-model=\"model.weight\" name=\"weight\" id=\"{{id}}-service-weight\" type=\"number\" required min=\"1\" max=\"256\" ng-pattern=\"/^\\d+$/\" class=\"form-control\" aria-describedby=\"{{id}}-weight-help\">\n" +
+    "<div>\n" +
+    "<span id=\"{{id}}-weight-help\" class=\"help-block\">\n" +
+    "Weight is a number between 1 and 256 that specifies the relative weight against other route services.\n" +
+    "</span>\n" +
+    "<div ng-if=\"routingServiceForm.weight.$dirty && routingServiceForm.weight.$invalid\" class=\"has-error\">\n" +
+    "<div ng-if=\"routingServiceForm.weight.$error.number\" class=\"help-block\">\n" +
+    "Must be a number.\n" +
+    "</div>\n" +
+    "<div ng-if=\"routingServiceForm.weight.$error.min\" class=\"help-block\">\n" +
+    "Must be greater than or equal to 1.\n" +
+    "</div>\n" +
+    "<div ng-if=\"routingServiceForm.weight.$error.pattern\" class=\"help-block\">\n" +
+    "Must be a positive whole number.\n" +
+    "</div>\n" +
+    "</div>\n" +
+    "</div>\n" +
+    "</div>\n" +
+    "</div>\n" +
+    "</ng-form>"
+  );
+
+
   $templateCache.put('views/directives/osc-routing.html',
     "<ng-form name=\"routeForm\">\n" +
     "<fieldset ng-disabled=\"routingDisabled\">\n" +
@@ -5344,22 +5434,6 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "<div class=\"has-error\" ng-show=\"routeForm.name.$error.pattern && routeForm.name.$touched && !routingDisabled\">\n" +
     "<span class=\"help-block\">\n" +
     "Route names may only contain lower-case letters, numbers, and dashes. They may not start or end with a dash.\n" +
-    "</span>\n" +
-    "</div>\n" +
-    "</div>\n" +
-    "<div ng-if=\"services\" class=\"form-group\">\n" +
-    "<label for=\"service-select\" class=\"required\">Service</label>\n" +
-    "<select id=\"service-select\" ng-model=\"route.service\" ng-options=\"service as service.metadata.name for service in services\" required class=\"form-control\" aria-describedby=\"service-help\">\n" +
-    "</select>\n" +
-    "<div>\n" +
-    "<span id=\"service-help\" class=\"help-block\">Service to route to.</span>\n" +
-    "</div>\n" +
-    "<div ng-if=\"(services | hashSize) === 0\" class=\"has-error\">\n" +
-    "<span class=\"help-block\">There are no services in your project to expose with a route.</span>\n" +
-    "</div>\n" +
-    "<div ng-if=\"unnamedServicePort\" class=\"has-warning\">\n" +
-    "<span class=\"help-block\">\n" +
-    "Service {{route.service.metadata.name}} has a single, unnamed port. A route cannot specifically target an unnamed service port. If more service ports are added later, the route will also direct traffic to them.\n" +
     "</span>\n" +
     "</div>\n" +
     "</div>\n" +
@@ -5402,6 +5476,14 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "</div>\n" +
     "</div>\n" +
     "\n" +
+    "<div ng-if=\"services\">\n" +
+    "<osc-routing-service model=\"route.to\" services=\"services\" show-weight=\"route.alternateServices.length\">\n" +
+    "</osc-routing-service>\n" +
+    "</div>\n" +
+    "<div ng-if=\"alternateServiceOptions.length && !route.alternateServices.length\" class=\"form-group\">\n" +
+    "<a href=\"\" ng-click=\"addAlternateService()\">Split traffic across multiple services</a>\n" +
+    "</div>\n" +
+    "\n" +
     "<div ng-if=\"route.portOptions.length\" class=\"form-group\">\n" +
     "<label for=\"routeTargetPort\">Target Port</label>\n" +
     "<select id=\"routeTargetPort\" ng-if=\"route.portOptions.length\" ng-model=\"route.targetPort\" ng-options=\"portOption.port as portOption.label for portOption in route.portOptions\" class=\"form-control\" aria-describedby=\"target-port-help\">\n" +
@@ -5409,6 +5491,19 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "<div>\n" +
     "<span id=\"target-port-help\" class=\"help-block\">\n" +
     "Target port for traffic.\n" +
+    "</span>\n" +
+    "</div>\n" +
+    "</div>\n" +
+    "\n" +
+    "<div ng-if=\"route.alternateServices.length\">\n" +
+    "<h3>Alternate Services</h3>\n" +
+    "<div ng-repeat=\"alternate in route.alternateServices\" class=\"form-group\">\n" +
+    "<osc-routing-service model=\"alternate\" services=\"alternateServiceOptions\" is-alternate=\"true\" show-weight=\"true\">\n" +
+    "</osc-routing-service>\n" +
+    "<a href=\"\" ng-click=\"route.alternateServices.splice($index, 1)\">Remove service</a>\n" +
+    "<span ng-if=\"$last\">\n" +
+    "<span class=\"action-divider\">|</span>\n" +
+    "<a href=\"\" ng-click=\"addAlternateService()\">Add another service</a>\n" +
     "</span>\n" +
     "</div>\n" +
     "</div>\n" +

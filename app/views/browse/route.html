@@ -54,7 +54,7 @@
       <div class="middle-content gutter-top">
         <div class="container-fluid">
           <div class="row" ng-if="route">
-            <div class="col-md-12">
+            <div class="col-sm-12">
               <div class="resource-details">
                 <dl class="dl-horizontal left">
                   <dt>Hostname<span ng-if="route.status.ingress.length > 1">s</span>:</dt>
@@ -105,6 +105,45 @@
                     This target port will route to {{route | routeTargetPortMapping : services[route.spec.to.name]}}.
                   </div>
                 </dl>
+                <div ng-if="route.spec.alternateBackends.length" class="row">
+                  <div class="col-sm-12 mar-bottom-lg">
+                    <h4>Traffic</h4>
+                    <div class="help-block">
+                      This route splits traffic across multiple services.
+                    </div>
+                  </div>
+                  <div class="col-sm-5 col-sm-push-7 mar-bottom-lg">
+                    <route-service-pie route="route"></route-service-pie>
+                  </div>
+                  <div class="col-sm-7 col-sm-pull-5">
+                    <table class="table table-bordered">
+                      <thead>
+                        <tr>
+                          <th>Service</th>
+                          <th>Weight</th>
+                        </tr>
+                      </thead>
+                      <tbody>
+                        <tr>
+                          <td>
+                            <a ng-href="{{route.spec.to.name | navigateResourceURL : route.spec.to.kind : route.metadata.namespace}}">{{route.spec.to.name}}</a>
+                          </td>
+                          <td>
+                            {{route.spec.to.weight}}
+                          </td>
+                        </tr>
+                        <tr ng-repeat="alternate in route.spec.alternateBackends">
+                          <td>
+                            <a ng-href="{{alternate.name | navigateResourceURL : alternate.kind : route.metadata.namespace}}">{{alternate.name}}</a>
+                          </td>
+                          <td>
+                            {{alternate.weight}}
+                          </td>
+                        </tr>
+                      </tbody>
+                    </table>
+                  </div>
+                </div>
                 <div style="margin-bottom: 10px;">
                   <h4>TLS Settings</h4>
                   <dl class="dl-horizontal left" ng-if="route.spec.tls">
@@ -155,9 +194,9 @@
                   </dl>
                   <div ng-if="!route.spec.tls"><em>TLS is not enabled for this route</em></div>
                 </div>
-                <annotations annotations="route.metadata.annotations"></annotations>
               </div>
             </div><!-- /col-* -->
+            <annotations annotations="route.metadata.annotations"></annotations>
           </div>
         </div>
       </div><!-- /middle-content -->

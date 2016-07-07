@@ -51,7 +51,6 @@ angular.module('openshiftConsole')
         DataService.get("routes", $scope.routeName, context).then(
           function(original) {
             route = angular.copy(original);
-            var serviceName = _.get(route, 'spec.to.name');
             $scope.routing = {
               service: _.get(route, 'spec.to.name'),
               host: _.get(route, 'spec.host'),
@@ -62,9 +61,25 @@ angular.module('openshiftConsole')
 
             DataService.list("services", context, function(services) {
               var servicesByName = services.by("metadata.name");
+              var to = _.get(route, 'spec.to', {});
               $scope.loading = false;
               $scope.services = orderByDisplayName(servicesByName);
-              $scope.routing.service = servicesByName[serviceName];
+              $scope.routing.to = {
+                service: servicesByName[to.name],
+                weight: to.weight
+              };
+              $scope.routing.alternateServices = [];
+              _.each(_.get(route, 'spec.alternateBackends'), function(alternateBackend) {
+                if (alternateBackend.kind !== 'Service') {
+                  Navigate.toErrorPage('Editing routes with non-service targets is unsupported. You can edit the route with the "Edit YAML" action instead.');
+                  return false;
+                }
+
+                $scope.routing.alternateServices.push({
+                  service: servicesByName[alternateBackend.name],
+                  weight: alternateBackend.weight
+                });
+              });
             });
           },
           function() {
@@ -73,16 +88,13 @@ angular.module('openshiftConsole')
 
         // Update the fields in the route from what was entered in the form.
         var updateRouteFields = function() {
-          var serviceName = _.get($scope, 'routing.service.metadata.name');
+          var serviceName = _.get($scope, 'routing.to.service.metadata.name');
           _.set(route, 'spec.to.name', serviceName);
-
-          // Remove the host.generated annotation if the host was edited.
-          if (_.get(route, ['metadata', 'annotations', 'openshift.io/host.generated']) === 'true' &&
-              _.get(route, 'spec.host') !== $scope.routing.host) {
-            delete route.metadata.annotations['openshift.io/host.generated'];
+          var weight = _.get($scope, 'routing.to.weight');
+          if (!isNaN(weight)) {
+            _.set(route, 'spec.to.weight', weight);
           }
 
-          route.spec.host = $scope.routing.host;
           route.spec.path = $scope.routing.path;
 
           var targetPort = $scope.routing.targetPort;
@@ -96,6 +108,19 @@ angular.module('openshiftConsole')
             route.spec.tls = $scope.routing.tls;
           } else {
             delete route.spec.tls;
+          }
+
+          var alternateServices = _.get($scope, 'routing.alternateServices', []);
+          if (_.isEmpty(alternateServices)) {
+            delete route.spec.alternateBackends;
+          } else {
+            route.spec.alternateBackends = _.map(alternateServices, function(alternate) {
+              return {
+                kind: 'Service',
+                name: _.get(alternate, 'service.metadata.name'),
+                weight: alternate.weight
+              };
+            });
           }
         };
 
