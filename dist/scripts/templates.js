@@ -7593,16 +7593,98 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "</div>\n" +
     "</div>\n" +
     "</div>\n" +
-    "<div ng-if=\"(quotas | hashSize) === 0\">\n" +
+    "<div ng-if=\"!(quotas | hashSize) && !(clusterQuotas | hashSize)\">\n" +
     "<h2>\n" +
     "<span>Quota</span>\n" +
     "</h2>\n" +
     "<div class=\"help-block\">{{quotaHelp}}</div>\n" +
-    "<p><em>{{emptyMessageQuotas}}</em></p>\n" +
+    "<p><em ng-if=\"!quotas && !clusterQuotas\">Loading...</em><em ng-if=\"quotas || clusterQuotas\">There are no resource quotas set on this project.</em></p>\n" +
+    "</div>\n" +
+    "<div ng-repeat=\"quota in clusterQuotas | orderBy: 'metadata.name'\" class=\"gutter-bottom\">\n" +
+    "<h2>\n" +
+    "Cluster Quota <span ng-if=\"(clusterQuotas | hashSize) > 1\">{{quota.metadata.name}}</span>\n" +
+    "</h2>\n" +
+    "<div ng-if=\"$first\" class=\"help-block\">Limits resource usage across a set of projects.</div>\n" +
+    "<dl ng-if=\"quota.spec.quota.scopes.length\">\n" +
+    "<dt>Scopes:</dt>\n" +
+    "<dd>\n" +
+    "<div ng-repeat=\"scope in quota.spec.quota.scopes\">\n" +
+    "{{scope | startCase}}\n" +
+    "<span class=\"text-muted small\" ng-if=\"scope | scopeDetails\">&mdash; {{scope | scopeDetails}}</span>\n" +
+    "</div>\n" +
+    "</dd>\n" +
+    "</dl>\n" +
+    "<div>\n" +
+    "<div row wrap style=\"justify-content: center\">\n" +
+    "<div ng-if=\"quota.status.total.hard.cpu\" class=\"mar-lg\">\n" +
+    "<h3 class=\"text-center\">CPU <small>Request</small></h3>\n" +
+    "<quota-usage-chart height=\"240\" used=\"namespaceUsageByClusterQuota[quota.metadata.name].used.cpu\" total=\"quota.status.total.hard.cpu\" cross-project-used=\"quota.status.total.used.cpu\" type=\"cpu\" class=\"quota-chart\"></quota-usage-chart>\n" +
+    "</div>\n" +
+    "<div ng-if=\"quota.status.total.hard.memory\" class=\"mar-lg\">\n" +
+    "<h3 class=\"text-center\">Memory <small>Request</small></h3>\n" +
+    "<quota-usage-chart height=\"240\" used=\"namespaceUsageByClusterQuota[quota.metadata.name].used.memory\" cross-project-used=\"quota.status.total.used.memory\" total=\"quota.status.total.hard.memory\" type=\"memory\" class=\"quota-chart\"></quota-usage-chart>\n" +
+    "</div>\n" +
+    "<div ng-if=\"quota.status.total.hard['requests.cpu']\" class=\"mar-lg\">\n" +
+    "<h3 class=\"text-center\">CPU <small>Request</small></h3>\n" +
+    "<quota-usage-chart height=\"240\" used=\"namespaceUsageByClusterQuota[quota.metadata.name].used['requests.cpu']\" cross-project-used=\"quota.status.total.used['requests.cpu']\" total=\"quota.status.total.hard['requests.cpu']\" type=\"cpu\" class=\"quota-chart\"></quota-usage-chart>\n" +
+    "</div>\n" +
+    "<div ng-if=\"quota.status.total.hard['requests.memory']\" class=\"mar-lg\">\n" +
+    "<h3 class=\"text-center\">Memory <small>Request</small></h3>\n" +
+    "<quota-usage-chart height=\"240\" used=\"namespaceUsageByClusterQuota[quota.metadata.name].used['requests.memory']\" cross-project-used=\"quota.status.total.used['requests.memory']\" total=\"quota.status.total.hard['requests.memory']\" type=\"memory\" class=\"quota-chart\"></quota-usage-chart>\n" +
+    "</div>\n" +
+    "<div ng-if=\"quota.status.total.hard['limits.cpu']\" class=\"mar-lg\">\n" +
+    "<h3 class=\"text-center\">CPU <small>Limit</small></h3>\n" +
+    "<quota-usage-chart height=\"240\" used=\"namespaceUsageByClusterQuota[quota.metadata.name].used['limits.cpu']\" cross-project-used=\"quota.status.total.used['limits.cpu']\" total=\"quota.status.total.hard['limits.cpu']\" type=\"cpu\" class=\"quota-chart\"></quota-usage-chart>\n" +
+    "</div>\n" +
+    "<div ng-if=\"quota.status.total.hard['limits.memory']\" class=\"mar-lg\">\n" +
+    "<h3 class=\"text-center\">Memory <small>Limit</small></h3>\n" +
+    "<quota-usage-chart height=\"240\" used=\"namespaceUsageByClusterQuota[quota.metadata.name].used['limits.memory']\" cross-project-used=\"quota.status.total.used['limits.memory']\" total=\"quota.status.total.hard['limits.memory']\" type=\"memory\" class=\"quota-chart\"></quota-usage-chart>\n" +
+    "</div>\n" +
+    "</div>\n" +
+    "</div>\n" +
+    "<div class=\"table-responsive\">\n" +
+    "<table class=\"table\">\n" +
+    "<thead>\n" +
+    "<th>Resource type</th>\n" +
+    "<th>Used (this project)</th>\n" +
+    "<th>Used (all projects)</th>\n" +
+    "<th>Max</th>\n" +
+    "</thead>\n" +
+    "<tbody>\n" +
+    "<tr ng-if=\"!quota.status.total.used\" class=\"danger\">\n" +
+    "<td colspan=\"5\">\n" +
+    "<span data-toggle=\"tooltip\" title=\"Missing quota status\" class=\"pficon pficon-error-circle-o\" style=\"cursor: help\"></span>\n" +
+    "Status has not been reported on this quota usage record. Any resources limited by this quota record can not be allocated.\n" +
+    "</td>\n" +
+    "</tr>\n" +
+    "\n" +
+    "<tr ng-repeat=\"(resourceType, specMax) in quota.spec.quota.hard\" ng-if=\"resourceType !== 'resourcequotas'\" ng-class=\"{\n" +
+    "                              warning: (quota.status.total.used[resourceType] | usageValue) >= (quota.status.total.hard[resourceType] | usageValue)\n" +
+    "                            }\">\n" +
+    "<td>\n" +
+    "{{resourceType | humanizeQuotaResource}}\n" +
+    "<span ng-if=\"(quota.status.total.used[resourceType] | usageValue) >= (quota.status.total.hard[resourceType] | usageValue)\" data-toggle=\"tooltip\" title=\"Quota limit reached\" class=\"pficon pficon-warning-triangle-o\" style=\"cursor: help; vertical-align: middle\"></span>\n" +
+    "</td>\n" +
+    "<td>\n" +
+    "<span ng-if=\"!namespaceUsageByClusterQuota[quota.metadata.name].used\">&mdash;</span>\n" +
+    "<span ng-if=\"namespaceUsageByClusterQuota[quota.metadata.name].used\">{{namespaceUsageByClusterQuota[quota.metadata.name].used[resourceType] | usageWithUnits : resourceType}}</span>\n" +
+    "</td>\n" +
+    "<td>\n" +
+    "<span ng-if=\"!quota.status.total.used\">&mdash;</span>\n" +
+    "<span ng-if=\"quota.status.total.used\">{{quota.status.total.used[resourceType] | usageWithUnits : resourceType}}</span>\n" +
+    "</td>\n" +
+    "<td>\n" +
+    "<span ng-if=\"!quota.status.total.hard\">{{specMax | usageWithUnits : resourceType}}</span>\n" +
+    "<span ng-if=\"quota.status.total.hard\">{{quota.status.total.hard[resourceType] | usageWithUnits : resourceType}}</span>\n" +
+    "</td>\n" +
+    "</tr>\n" +
+    "</tbody>\n" +
+    "</table>\n" +
+    "</div>\n" +
     "</div>\n" +
     "<div ng-repeat=\"quota in quotas | orderBy: 'metadata.name'\" class=\"gutter-bottom\">\n" +
     "<h2>\n" +
-    "Quota <span ng-if=\"(quotas | hashSize) > 1\">{{quota.metadata.name}}</span>\n" +
+    "<span ng-if=\"(clusterQuotas | hashSize)\">Project </span>Quota <span ng-if=\"(quotas | hashSize) > 1\">{{quota.metadata.name}}</span>\n" +
     "</h2>\n" +
     "<div ng-if=\"$first\" class=\"help-block\">{{quotaHelp}}</div>\n" +
     "<dl ng-if=\"quota.spec.scopes.length\">\n" +
@@ -7610,53 +7692,36 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "<dd>\n" +
     "<div ng-repeat=\"scope in quota.spec.scopes\">\n" +
     "{{scope | startCase}}\n" +
-    "<span class=\"text-muted small\">\n" +
-    "<span ng-switch=\"scope\" class=\"hide-ng-leave\">\n" +
-    "<span ng-switch-when=\"Terminating\">&mdash; Matches pods that have an active deadline.</span>\n" +
-    "<span ng-switch-when=\"NotTerminating\">&mdash; Matches pods that do not have an active deadline.</span>\n" +
-    "<span ng-switch-when=\"BestEffort\">&mdash; Matches pods that have best effort quality of service.</span>\n" +
-    "<span ng-switch-when=\"NotBestEffort\">&mdash; Matches pods that do not have best effort quality of service.</span>\n" +
-    "</span>\n" +
-    "</span>\n" +
+    "<span class=\"text-muted small\" ng-if=\"scope | scopeDetails\">&mdash; {{scope | scopeDetails}}</span>\n" +
     "</div>\n" +
     "</dd>\n" +
     "</dl>\n" +
     "<div>\n" +
-    "<div row wrap mobile=\"column\">\n" +
-    "<div flex></div>\n" +
-    "<div column ng-if=\"quota.status.hard.cpu\" class=\"center-block gutter-bottom\">\n" +
+    "<div row wrap style=\"justify-content: center\">\n" +
+    "<div column ng-if=\"quota.status.hard.cpu\" class=\"mar-lg\">\n" +
     "<h3 class=\"text-center\">CPU <small>Request</small></h3>\n" +
     "<quota-usage-chart used=\"quota.status.used.cpu\" total=\"quota.status.hard.cpu\" type=\"cpu\" class=\"quota-chart\"></quota-usage-chart>\n" +
     "</div>\n" +
-    "<div column ng-if=\"quota.status.hard.memory\" class=\"center-block gutter-bottom\">\n" +
+    "<div column ng-if=\"quota.status.hard.memory\" class=\"mar-lg\">\n" +
     "<h3 class=\"text-center\">Memory <small>Request</small></h3>\n" +
     "<quota-usage-chart used=\"quota.status.used.memory\" total=\"quota.status.hard.memory\" type=\"memory\" class=\"quota-chart\"></quota-usage-chart>\n" +
     "</div>\n" +
-    "<div flex></div>\n" +
-    "</div>\n" +
-    "<div row wrap mobile=\"column\">\n" +
-    "<div flex></div>\n" +
-    "<div column ng-if=\"quota.status.hard['requests.cpu']\" class=\"center-block gutter-bottom\">\n" +
+    "<div column ng-if=\"quota.status.hard['requests.cpu']\" class=\"mar-lg\">\n" +
     "<h3 class=\"text-center\">CPU <small>Request</small></h3>\n" +
     "<quota-usage-chart used=\"quota.status.used['requests.cpu']\" total=\"quota.status.hard['requests.cpu']\" type=\"cpu\" class=\"quota-chart\"></quota-usage-chart>\n" +
     "</div>\n" +
-    "<div column ng-if=\"quota.status.hard['requests.memory']\" class=\"center-block gutter-bottom\">\n" +
+    "<div column ng-if=\"quota.status.hard['requests.memory']\" class=\"mar-lg\">\n" +
     "<h3 class=\"text-center\">Memory <small>Request</small></h3>\n" +
     "<quota-usage-chart used=\"quota.status.used['requests.memory']\" total=\"quota.status.hard['requests.memory']\" type=\"memory\" class=\"quota-chart\"></quota-usage-chart>\n" +
     "</div>\n" +
-    "<div flex></div>\n" +
-    "</div>\n" +
-    "<div row wrap mobile=\"column\">\n" +
-    "<div flex></div>\n" +
-    "<div column ng-if=\"quota.status.hard['limits.cpu']\" class=\"center-block gutter-bottom\">\n" +
+    "<div ng-if=\"quota.status.hard['limits.cpu']\" class=\"mar-lg\">\n" +
     "<h3 class=\"text-center\">CPU <small>Limit</small></h3>\n" +
     "<quota-usage-chart used=\"quota.status.used['limits.cpu']\" total=\"quota.status.hard['limits.cpu']\" type=\"cpu\" class=\"quota-chart\"></quota-usage-chart>\n" +
     "</div>\n" +
-    "<div column ng-if=\"quota.status.hard['limits.memory']\" class=\"center-block gutter-bottom\">\n" +
+    "<div ng-if=\"quota.status.hard['limits.memory']\" class=\"mar-lg\">\n" +
     "<h3 class=\"text-center\">Memory <small>Limit</small></h3>\n" +
     "<quota-usage-chart used=\"quota.status.used['limits.memory']\" total=\"quota.status.hard['limits.memory']\" type=\"memory\" class=\"quota-chart\"></quota-usage-chart>\n" +
     "</div>\n" +
-    "<div flex></div>\n" +
     "</div>\n" +
     "</div>\n" +
     "<div class=\"table-responsive\">\n" +

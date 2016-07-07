@@ -11,13 +11,11 @@
 angular.module('openshiftConsole')
   .controller('SettingsController', function ($routeParams, $scope, DataService, ProjectsService, AlertMessageService, $filter, $location, LabelFilter, $timeout, Logger, annotationFilter, annotationNameFilter) {
     $scope.projectName = $routeParams.project;
-    $scope.quotas = {};
     $scope.limitRanges = {};
     $scope.limitsByType = {};
     $scope.labelSuggestions = {};
     $scope.alerts = $scope.alerts || {};
-    $scope.emptyMessageQuotas = "Loading...";
-    $scope.quotaHelp = "Limits resource usage within the project.";
+    $scope.quotaHelp = "Limits resource usage within this project.";
     $scope.emptyMessageLimitRanges = "Loading...";
     $scope.limitRangeHelp = "Defines minimum and maximum constraints for runtime resources such as memory and CPU.";
     $scope.renderOptions = $scope.renderOptions || {};
@@ -83,8 +81,19 @@ angular.module('openshiftConsole')
 
         DataService.list("resourcequotas", context, function(quotas) {
           $scope.quotas = quotas.by("metadata.name");
-          $scope.emptyMessageQuotas = "There are no resource quotas set on this project.";
           Logger.log("quotas", $scope.quotas);
+        });
+
+        DataService.list("appliedclusterresourcequotas", context, function(quotas) {
+          $scope.clusterQuotas = quotas.by("metadata.name");
+          $scope.namespaceUsageByClusterQuota = {};
+          _.each($scope.clusterQuotas, function(quota, quotaName) {
+            if (quota.status) {
+              var namespaceUsage = _.find(quota.status.namespaces, { namespace: $routeParams.project });
+              $scope.namespaceUsageByClusterQuota[quotaName] = namespaceUsage.status;
+            }
+          });
+          Logger.log("cluster quotas", $scope.clusterQuotas);
         });
 
         DataService.list("limitranges", context, function(limitRanges) {
