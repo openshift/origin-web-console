@@ -379,8 +379,20 @@
                   </uib-tab>
                   <uib-tab heading="Environment" active="selectedTab.environment" ng-if="buildConfig && !(buildConfig | isJenkinsPipelineStrategy)">
                     <uib-tab-heading>Environment</uib-tab-heading>
-                    <environment env-vars="(buildConfig | buildStrategy).env"></environment>
-                    <em ng-if="!(buildConfig | buildStrategy).env">The build strategy had no environment variables defined.</em>
+                    <h3>Environment Variables</h3>
+                    <ng-form name="bcEnvVars">
+                      <key-value-editor
+                        entries="envVars"
+                        key-placeholder="Name"
+                        value-placeholder="Value"
+                        key-validator="[A-Za-z_][A-Za-z0-9_]*"
+                        key-validator-error="Please enter a valid key"
+                        key-validator-error-tooltip="A valid environment variable name is an alphanumeric (a-z and 0-9) string beginning with a letter that may contain underscores."></key-value-editor>
+                      <button
+                        class="btn btn-default"
+                        ng-click="saveEnvVars()"
+                        ng-disabled="bcEnvVars.$pristine || bcEnvVars.$invalid">Save</button>
+                    </ng-form>
                   </uib-tab>
                 </uib-tabset>
               </div><!-- /col-* -->

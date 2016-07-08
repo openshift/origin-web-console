@@ -52,6 +52,7 @@ module.exports = function(config) {
       "bower_components/openshift-object-describer/dist/object-describer.js",
       "bower_components/angular-ui-ace/ui-ace.js",
       "bower_components/angular-extension-registry/dist/angular-extension-registry.min.js",
+      "bower_components/angular-key-value-editor/dist/angular-key-value-editor.min.js",
       "bower_components/ng-sortable/dist/ng-sortable.js",
       "bower_components/ui-select/dist/select.js",
       'app/config.js',
