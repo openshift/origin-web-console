@@ -2767,7 +2767,22 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "<div class=\"container-fluid\">\n" +
     "<div class=\"row\">\n" +
     "<div class=\"col-md-12 gutter-top\">\n" +
-    "<table class=\"table table-bordered table-hover table-mobile\">\n" +
+    "<div ng-if=\"(routes | hashSize) == 0\" class=\"blank-slate-pf\">\n" +
+    "<div class=\"blank-slate-pf-icon\">\n" +
+    "<span class=\"pficon pficon pficon-route\"></span>\n" +
+    "</div>\n" +
+    "<h1>{{emptyMessage}}</h1>\n" +
+    "<p>\n" +
+    "To create your project's first route select the 'Create Route' button below and follow the on-screen prompts.\n" +
+    "</p>\n" +
+    "<p>\n" +
+    "For more information or to find out why you might be seeing this message, please visit our <a href=\"#\">Openshift Help Center</a>.\n" +
+    "</p>\n" +
+    "<div class=\"blank-slate-pf-main-action\">\n" +
+    "<a ng-href=\"project/{{project.metadata.name}}/create-route\"><button class=\"btn btn-primary btn-lg\"> Create Route </button></a>\n" +
+    "</div>\n" +
+    "</div>\n" +
+    "<table ng-if=\"(routes | hashSize) !== 0\" class=\"table table-bordered table-hover table-mobile\">\n" +
     "<thead>\n" +
     "<tr>\n" +
     "<th>Name</th>\n" +
@@ -2975,7 +2990,16 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "<div class=\"container-fluid\">\n" +
     "<div class=\"row\">\n" +
     "<div class=\"col-md-12 gutter-top\">\n" +
-    "<table class=\"table table-bordered table-hover table-mobile\">\n" +
+    "<div ng-if=\"((buildsByBuildConfig | hashSize) == 0)\" class=\"blank-slate-pf\">\n" +
+    "<div class=\"blank-slate-pf-icon\">\n" +
+    "<span class=\"pficon pficon pficon-build\"></span>\n" +
+    "</div>\n" +
+    "<h1>{{emptyMessage}}</h1>\n" +
+    "<p>\n" +
+    "To create your project's first build, please visit our <a href=\"#\">Build Configuration Wizard</a>.\n" +
+    "</p>\n" +
+    "</div>\n" +
+    "<table ng-if=\"((buildsByBuildConfig | hashSize) !== 0)\" class=\"table table-bordered table-hover table-mobile\">\n" +
     "<thead>\n" +
     "<tr>\n" +
     "<th>Name</th>\n" +
@@ -2986,9 +3010,6 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "<th>Source</th>\n" +
     "</tr>\n" +
     "</thead>\n" +
-    "<tbody ng-if=\"((buildsByBuildConfig | hashSize) == 0)\">\n" +
-    "<tr><td colspan=\"6\"><em>{{emptyMessage}}</em></td></tr>\n" +
-    "</tbody>\n" +
     "<tbody ng-repeat=\"(buildConfigName, buildConfigBuilds) in buildsByBuildConfig\">\n" +
     "\n" +
     "<tr ng-if=\"(buildConfigBuilds | hashSize) == 0\">\n" +
