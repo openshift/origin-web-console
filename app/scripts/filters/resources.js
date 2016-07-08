@@ -34,7 +34,8 @@ angular.module('openshiftConsole')
       "buildPod":                 ["openshift.io/build.pod-name"],
       "jenkinsBuildURL":          ["openshift.io/jenkins-build-uri"],
       "jenkinsLogURL":            ["openshift.io/jenkins-log-url"],
-      "jenkinsStatus":            ["openshift.io/jenkins-status-json"]
+      "jenkinsStatus":            ["openshift.io/jenkins-status-json"],
+      "idledAt":                  ["idling.alpha.openshift.io/idled-at"]
     };
     return function(annotationKey) {
       return annotationMap[annotationKey] || null;

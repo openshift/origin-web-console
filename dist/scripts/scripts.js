@@ -2557,7 +2557,7 @@ groupByService:k
 return {
 updateDonutCenterText:function(b, c, d) {
 var e = d3.select(b).select("text.c3-chart-arcs-title");
-return e ? (e.selectAll("*").remove(), e.insert("tspan").text(c).classed("donut-title-big-pf", !0).attr("dy", 0).attr("x", 0), void e.insert("tspan").text(d).classed("donut-title-small-pf", !0).attr("dy", 20).attr("x", 0)) :void a.warn("Can't select donut title element");
+return e ? (e.selectAll("*").remove(), e.insert("tspan").text(c).classed(d ? "donut-title-big-pf" :"donut-title-med-pf", !0).attr("dy", d ? 0 :5).attr("x", 0), void (d && e.insert("tspan").text(d).classed("donut-title-small-pf", !0).attr("dy", 20).attr("x", 0))) :void a.warn("Can't select donut title element");
 }
 };
 } ]), angular.module("openshiftConsole").factory("HPAService", [ "$filter", "$q", "LimitRangesService", "MetricsService", "Logger", function(a, b, c, d, e) {
@@ -7985,13 +7985,14 @@ return {
 restrict:"E",
 scope:{
 pods:"=",
-desired:"=?"
+desired:"=?",
+idled:"=?"
 },
 templateUrl:"views/directives/pod-donut.html",
 link:function(a, g) {
 function i() {
 var c, d = b(a.pods);
-c = angular.isNumber(a.desired) && a.desired !== d ? "scaling to " + a.desired + "..." :1 === d ? "pod" :"pods", h.updateDonutCenterText(g[0], d, c);
+c = angular.isNumber(a.desired) && a.desired !== d ? "scaling to " + a.desired + "..." :1 === d ? "pod" :"pods", a.idled ? h.updateDonutCenterText(g[0], "Idle") :h.updateDonutCenterText(g[0], d, c);
 }
 function j(c) {
 var d = {
@@ -8074,7 +8075,7 @@ enabled:!1
 var q = _.debounce(j, 350, {
 maxWait:500
 });
-a.$watch(m, q, !0), a.$watch("desired", i), a.$on("destroy", function() {
+a.$watch(m, q, !0), a.$watchGroup([ "desired", "idled" ], i), a.$on("destroy", function() {
 n && (n = n.destroy());
 });
 }
@@ -8157,22 +8158,19 @@ return _.escape(a.message);
 });
 };
 b.$watchGroup([ "limitRanges", "hpa", "project" ], g), b.$watch("rc.spec.template.spec.containers", g, !0);
-var k = _.debounce(function() {
-if (c = !1, angular.isNumber(b.desiredReplicas)) {
-var d = function(c) {
+var k = function(c) {
 b.alerts = b.alerts || {}, b.desiredReplicas = null, b.alerts.scale = {
 type:"error",
 message:"An error occurred scaling the deployment.",
 details:a("getErrorDetails")(c)
 };
-};
-b.deploymentConfig ? e.scaleDC(b.deploymentConfig, b.desiredReplicas).then(_.noop, d) :e.scaleRC(b.rc, b.desiredReplicas).then(_.noop, d);
-}
-}, 1e3);
+}, l = function() {
+if (c = !1, angular.isNumber(b.desiredReplicas)) return b.deploymentConfig ? e.scaleDC(b.deploymentConfig, b.desiredReplicas).then(_.noop, k) :e.scaleRC(b.rc, b.desiredReplicas).then(_.noop, k);
+}, m = _.debounce(l, 1e3);
 b.viewPodsForDeployment = function(a) {
 0 !== i(b.pods) && h.toPodsForDeployment(a);
 }, b.scaleUp = function() {
-b.scalable && (b.desiredReplicas = b.getDesiredReplicas(), b.desiredReplicas++, k(), c = !0);
+b.scalable && (b.desiredReplicas = b.getDesiredReplicas(), b.desiredReplicas++, m(), c = !0);
 }, b.scaleDown = function() {
 if (b.scalable && (b.desiredReplicas = b.getDesiredReplicas(), 0 !== b.desiredReplicas)) {
 if (1 === b.desiredReplicas) {
@@ -8190,13 +8188,21 @@ return j(b.rc) ? "deployment" :"replication controller";
 }
 });
 return void a.result.then(function() {
-b.desiredReplicas = b.getDesiredReplicas() - 1, k(), c = !0;
+b.desiredReplicas = b.getDesiredReplicas() - 1, m(), c = !0;
 });
 }
-b.desiredReplicas--, k();
+b.desiredReplicas--, m();
 }
 }, b.getDesiredReplicas = function() {
 return angular.isDefined(b.desiredReplicas) && null !== b.desiredReplicas ? b.desiredReplicas :b.rc && b.rc.spec && angular.isDefined(b.rc.spec.replicas) ? b.rc.spec.replicas :1;
+}, b.$watch(function() {
+return b.deploymentConfig ? a("annotation")(b.deploymentConfig, "idledAt") :a("annotation")(b.rc, "idledAt");
+}, function(a) {
+b.isIdled = !!a;
+}), b.unIdle = function() {
+b.desiredReplicas = _.get(_.first(b.hpa), "spec.minReplicas") || 1, l().then(function() {
+b.isIdle = !1;
+}, k);
 };
 } ]
 };
@@ -9057,7 +9063,8 @@ buildNumber:[ "openshift.io/build.number" ],
 buildPod:[ "openshift.io/build.pod-name" ],
 jenkinsBuildURL:[ "openshift.io/jenkins-build-uri" ],
 jenkinsLogURL:[ "openshift.io/jenkins-log-url" ],
-jenkinsStatus:[ "openshift.io/jenkins-status-json" ]
+jenkinsStatus:[ "openshift.io/jenkins-status-json" ],
+idledAt:[ "idling.alpha.openshift.io/idled-at" ]
 };
 return function(b) {
 return a[b] || null;

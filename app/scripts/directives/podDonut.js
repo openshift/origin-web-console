@@ -16,7 +16,8 @@ angular.module('openshiftConsole')
       restrict: 'E',
       scope: {
         pods: '=',
-        desired: '=?'
+        desired: '=?',
+        idled: '=?'
       },
       templateUrl: 'views/directives/pod-donut.html',
       link: function($scope, element) {
@@ -28,14 +29,19 @@ angular.module('openshiftConsole')
         $scope.chartId = _.uniqueId('pods-donut-chart-');
 
         function updateCenterText() {
-          var total = hashSizeFilter($scope.pods), smallText;
+          var total = hashSizeFilter($scope.pods);
+          var smallText;
           if (!angular.isNumber($scope.desired) || $scope.desired === total) {
             smallText = (total === 1) ? "pod" : "pods";
           } else {
             smallText = "scaling to " + $scope.desired + "...";
           }
 
-          ChartsService.updateDonutCenterText(element[0], total, smallText);
+          if($scope.idled) {
+            ChartsService.updateDonutCenterText(element[0], 'Idle');
+          } else {
+            ChartsService.updateDonutCenterText(element[0], total, smallText);
+          }
         }
 
         // c3.js config for the pods donut chart
@@ -176,7 +182,7 @@ angular.module('openshiftConsole')
 
         var debounceUpdate = _.debounce(updateChart, 350, { maxWait: 500 });
         $scope.$watch(countPodPhases, debounceUpdate, true);
-        $scope.$watch('desired', updateCenterText);
+        $scope.$watchGroup(['desired','idled'], updateCenterText);
 
         $scope.$on('destroy', function() {
           if (chart) {

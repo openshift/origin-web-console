@@ -4,6 +4,7 @@
       <pod-donut
           pods="pods"
           desired="getDesiredReplicas()"
+          idled="isIdled"
           ng-click="viewPodsForDeployment(rc)"
           ng-class="{ clickable: (pods | hashSize) > 0 }">
       </pod-donut>
@@ -19,7 +20,10 @@
     </div>
 
     <!-- Don't show the scaling controls until the HPAs load so they don't appear and quickly disappear. -->
-    <div column class="scaling-controls fade-inline" ng-if="hpa && !hpa.length && (rc | canIScale)">
+    <div
+      column
+      class="scaling-controls fade-inline"
+      ng-if="(hpa && !hpa.length) && (rc | canIScale) && !isIdled">
       <div>
         <a href=""
            ng-click="scaleUp()"
@@ -44,7 +48,8 @@
       </div>
     </div>
   </div>
-  <div row ng-if="hpa.length" class="hpa-details">
+
+  <div row ng-if="hpa.length" class="scaling-details">
     <div>
       Autoscaled:
       <span class="nowrap">min: {{hpa[0].spec.minReplicas || 1}},</span>
@@ -59,6 +64,16 @@
               aria-hidden="true">
         </span>
       </span>
+    </div>
+  </div>
+  <div
+    class="scaling-details"
+    ng-if="isIdled && (!getDesiredReplicas())">
+    <div ng-if="(!resuming)">
+      <span>Idled due to inactivity.</span>
+      <a
+        href=""
+        ng-click="unIdle()">Start {{hpa[0].spec.minReplicas || 1}} pod{{ (hpa[0].spec.minReplicas || 1) > 1 ? 's' : ''}}</a>
     </div>
   </div>
 </div>

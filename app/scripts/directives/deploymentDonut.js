@@ -53,31 +53,32 @@ angular.module('openshiftConsole')
         $scope.$watchGroup(['limitRanges', 'hpa', 'project'], updateHPAWarnings);
         $scope.$watch('rc.spec.template.spec.containers', updateHPAWarnings, true);
 
-        // Debounce scaling so multiple clicks within 500 milliseconds only result in one request.
-        var scale = _.debounce(function () {
-          scaleRequestPending = false;
+        var showScalingError = function(result) {
+          $scope.alerts = $scope.alerts || {};
+          $scope.desiredReplicas = null;
+          $scope.alerts["scale"] =
+            {
+              type: "error",
+              message: "An error occurred scaling the deployment.",
+              details: $filter('getErrorDetails')(result)
+            };
+        };
 
+        // use debouncedScale() unless the returned promise is needed
+        var scale = function () {
+          scaleRequestPending = false;
           if (!angular.isNumber($scope.desiredReplicas)) {
             return;
           }
-
-          var showScalingError = function(result) {
-            $scope.alerts = $scope.alerts || {};
-            $scope.desiredReplicas = null;
-            $scope.alerts["scale"] =
-              {
-                type: "error",
-                message: "An error occurred scaling the deployment.",
-                details: $filter('getErrorDetails')(result)
-              };
-          };
-
           if ($scope.deploymentConfig) {
-            DeploymentsService.scaleDC($scope.deploymentConfig, $scope.desiredReplicas).then(_.noop, showScalingError);
+            return DeploymentsService.scaleDC($scope.deploymentConfig, $scope.desiredReplicas).then(_.noop, showScalingError);
           } else {
-            DeploymentsService.scaleRC($scope.rc, $scope.desiredReplicas).then(_.noop, showScalingError);
+            return DeploymentsService.scaleRC($scope.rc, $scope.desiredReplicas).then(_.noop, showScalingError);
           }
-        }, 1000);
+        };
+
+        // Debounce scaling so multiple clicks within 1000 milliseconds only result in one request
+        var debouncedScale = _.debounce(scale, 1000);
 
         $scope.viewPodsForDeployment = function(deployment) {
           if (hashSizeFilter($scope.pods) === 0) {
@@ -94,7 +95,7 @@ angular.module('openshiftConsole')
 
           $scope.desiredReplicas = $scope.getDesiredReplicas();
           $scope.desiredReplicas++;
-          scale();
+          debouncedScale();
           scaleRequestPending = true;
         };
 
@@ -133,7 +134,7 @@ angular.module('openshiftConsole')
               // rc.spec.replicas changed since the dialog was shown, so call
               // getDesiredReplicas() again.
               $scope.desiredReplicas = $scope.getDesiredReplicas() - 1;
-              scale();
+              debouncedScale();
               scaleRequestPending = true;
             });
 
@@ -141,7 +142,7 @@ angular.module('openshiftConsole')
           }
 
           $scope.desiredReplicas--;
-          scale();
+          debouncedScale();
         };
 
         $scope.getDesiredReplicas = function() {
@@ -156,6 +157,25 @@ angular.module('openshiftConsole')
 
           return 1;
         };
+
+        $scope.$watch(
+          function() {
+            return $scope.deploymentConfig ?
+                    $filter('annotation')($scope.deploymentConfig, 'idledAt') :
+                    $filter('annotation')($scope.rc, 'idledAt');
+          },
+          function(isIdled) {
+            $scope.isIdled = !!isIdled;
+          });
+
+        $scope.unIdle = function() {
+          $scope.desiredReplicas = _.get(_.first($scope.hpa), 'spec.minReplicas') || 1;
+          scale()
+            .then(function() {
+              $scope.isIdle = false;
+            },showScalingError);
+        };
+
       }
     };
   });

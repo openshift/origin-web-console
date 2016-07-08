@@ -15,16 +15,18 @@ angular.module("openshiftConsole")
         donutChartTitle
           .insert('tspan')
           .text(titleBig)
-          .classed('donut-title-big-pf', true)
-          .attr('dy', 0)
+          .classed(titleSmall ? 'donut-title-big-pf' : 'donut-title-med-pf', true)
+          .attr('dy', titleSmall ? 0 : 5)
           .attr('x', 0);
-        donutChartTitle
-          .insert('tspan')
-          .text(titleSmall)
-          .classed('donut-title-small-pf', true)
-          .attr('dy', 20)
-          .attr('x', 0);
+
+        if(titleSmall) {
+          donutChartTitle
+            .insert('tspan')
+            .text(titleSmall)
+            .classed('donut-title-small-pf', true)
+            .attr('dy', 20)
+            .attr('x', 0);
+        }
       }
     };
   });
-

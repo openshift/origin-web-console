@@ -3385,8 +3385,8 @@ code.probe-command{display:inline-block;line-height:1.3;margin-right:2px}
 .deployment-donut .scaling-controls a:active,.deployment-donut .scaling-controls a:hover{color:#72767b;text-decoration:none}
 .deployment-donut .scaling-controls a.disabled{opacity:.4;cursor:not-allowed}
 .deployment-donut .scaling-controls a.disabled:hover{color:#bbb}
-.deployment-donut .hpa-details{font-size:84%;color:#9c9c9c;text-align:center;align-items:center;margin-top:-5px;margin-bottom:7px}
-.deployment-donut .hpa-details .hpa-warning{cursor:help;margin-left:1px;vertical-align:-1px}
+.deployment-donut .scaling-details{font-size:84%;color:#9c9c9c;text-align:center;align-items:center;margin-top:-5px;margin-bottom:7px}
+.deployment-donut .scaling-details .hpa-warning{cursor:help;margin-left:1px;vertical-align:-1px}
 .browse-deployment-donut .deployment-donut{-webkit-align-items:center;-moz-align-items:center;align-items:center}
 .deployment-well:not(.active){background-color:#fff}
 .deployment-well:not(.detailed){padding-top:12px;padding-bottom:12px}
@@ -4651,3 +4651,4 @@ kubernetes-topology-graph{height:700px}
 .table-log-pods>tbody+tbody{border-top-width:1px}
 .settings-item{margin:4px 8px 4px 0}
 .hide-if-empty:empty{display:none!important}
+.donut-title-med-pf{font-size:22.5px;font-weight:300}
