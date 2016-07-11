@@ -12,7 +12,7 @@
           <div ng-if="service">
             <h1>
               {{service.metadata.name}}
-              <div class="pull-right dropdown">
+              <div class="pull-right dropdown" ng-hide="!('services' | canIDoAny)">
                 <button type="button" class="dropdown-toggle btn btn-default actions-dropdown-btn hidden-xs" data-toggle="dropdown">
                   Actions
                   <span class="caret"></span>
@@ -21,18 +21,18 @@
                    class="dropdown-toggle actions-dropdown-kebab visible-xs-inline"
                    data-toggle="dropdown"><i class="fa fa-ellipsis-v"></i><span class="sr-only">Actions</span></a>
                 <ul class="dropdown-menu actions action-link">
-                  <li>
+                  <li ng-if="'services' | canI : 'create'">
                     <a ng-href="project/{{project.metadata.name}}/create-route?service={{service.metadata.name}}"
                        role="button">Create Route</a>
                   </li>
-                  <li>
+                  <li ng-if="'services' | canI : 'update'">
                     <edit-link
                       resource="service"
                       kind="Service"
                       alerts="alerts">
                     </edit-link>
                   </li>
-                  <li>
+                  <li ng-if="'services' | canI : 'delete'">
                     <delete-link
                       kind="Service"
                       resource-name="{{service.metadata.name}}"
@@ -76,7 +76,7 @@
                       <dt>Routes:</dt>
                       <dd>
                         <span ng-if="!routesForService.length">
-                          <a ng-href="project/{{project.metadata.name}}/create-route?service={{service.metadata.name}}">Create route</a>
+                          <a ng-href="project/{{project.metadata.name}}/create-route?service={{service.metadata.name}}"  ng-if="'services' | canI : 'create'">Create route</a>
                         </span>
                         <span ng-repeat="route in routesForService">
                             <span ng-if="route | isWebRoute"><a ng-href="{{route | routeWebURL}}">{{route | routeLabel}}</a></span>
@@ -114,7 +114,7 @@
                     <annotations annotations="service.metadata.annotations"></annotations>
                   </div>
                 </uib-tab>
-                <uib-tab active="selectedTab.events">
+                <uib-tab active="selectedTab.events" ng-if="'events' | canI : 'watch'">
                   <uib-tab-heading>Events</uib-tab-heading>
                   <events resource-kind="Service" resource-name="{{service.metadata.name}}" project-context="projectContext" ng-if="selectedTab.events"></events>
                 </uib-tab>

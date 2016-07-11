@@ -13,7 +13,7 @@
             <h1>
               {{deployment.metadata.name}}
               <small class="meta">created <relative-timestamp timestamp="deployment.metadata.creationTimestamp"></relative-timestamp></small>
-              <div class="pull-right dropdown">
+              <div class="pull-right dropdown" ng-hide="!('replicationControllers' | canIDoAny)">
                 <button type="button" class="dropdown-toggle actions-dropdown-btn btn btn-default hidden-xs" data-toggle="dropdown">
                   Actions
                   <span class="caret"></span>
@@ -22,36 +22,37 @@
                    class="dropdown-toggle actions-dropdown-kebab visible-xs-inline"
                    data-toggle="dropdown"><i class="fa fa-ellipsis-v"></i><span class="sr-only">Actions</span></a>
                 <ul class="dropdown-menu actions action-button">
-                  <li>
+                  <li ng-if="'replicationcontrollers' | canI : 'update'">
                     <a ng-href="project/{{project.metadata.name}}/attach-pvc?deployment={{deployment.metadata.name}}"
                        role="botton">Attach Storage</a>
                   </li>
-                  <li>
+                  <li ng-if="'replicationcontrollers' | canI : 'update'">
                     <a ng-href="project/{{projectName}}/set-limits?rcName={{deployment.metadata.name}}"
                        role="button">Set Resource Limits</a>
                   </li>
-                  <li ng-if="!autoscalers.length">
+                  <li ng-if="!autoscalers.length && ('extensions/horizontalpodautoscalers' | canI : 'create')">
                     <!-- Create a new HPA. -->
                     <a ng-href="project/{{projectName}}/edit/autoscaler?kind=ReplicationController&name={{deployment.metadata.name}}"
                       role="button">Add Autoscaler</a>
                   </li>
-                  <li ng-if="autoscalers.length === 1">
+                  <li ng-if="autoscalers.length === 1 && ('extensions/horizontalpodautoscalers' | canI : 'update')">
                     <!-- Edit an existing HPA. -->
                     <a ng-href="project/{{projectName}}/edit/autoscaler?kind=HorizontalPodAutoscaler&group=extensions&name={{autoscalers[0].metadata.name}}"
                       role="button">Edit Autoscaler</a>
                   </li>
-                  <li>
+                  <li ng-if="'replicationcontrollers' | canI : 'update'">
                     <a ng-href="project/{{projectName}}/edit/health-checks?name={{deployment.metadata.name}}&kind=ReplicationController"
                        role="button">Edit Health Checks</a>
                   </li>
-                  <li>
+                  <li ng-if="'replicationcontrollers' | canI : 'update'">
                     <edit-link
                       resource="deployment"
                       kind="ReplicationController"
                       alerts="alerts">
                     </edit-link>
                   </li>
-                  <li ng-class="{disabled: deployment.status.replicas}">
+                  <li ng-class="{disabled: deployment.status.replicas}"
+                     ng-if="'replicationcontrollers' | canI : 'delete'">
                     <delete-link
                       kind="ReplicationController"
                       resource-name="{{deployment.metadata.name}}"
@@ -79,7 +80,7 @@
                     <ng-include src=" 'views/browse/_deployment-details.html' "></ng-include>
                   </div>
                 </uib-tab>
-                <uib-tab active="selectedTab.events">
+                <uib-tab active="selectedTab.events" ng-if="'events' | canI : 'watch'">
                   <uib-tab-heading>Events</uib-tab-heading>
                   <events resource-kind="ReplicationController" resource-name="{{deployment.metadata.name}}" project-context="projectContext" ng-if="selectedTab.events"></events>
                 </uib-tab>

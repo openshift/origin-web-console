@@ -16,7 +16,7 @@
         <status-icon status="deployment | deploymentStatus"></status-icon>
         {{deployment | deploymentStatus}}
         <span style="margin-left: 7px;">
-          <button ng-show="!rollBackCollapsed && (deployment | deploymentStatus) == 'Complete' && !(deployment | deploymentIsLatest : deploymentConfig) && !deployment.metadata.deletionTimestamp" ng-disabled="(deploymentConfigDeploymentsInProgress[deploymentConfigName] | hashSize) > 0" type="button" class="btn btn-default btn-xs" ng-click="rollBackCollapsed = !rollBackCollapsed">Roll Back</button>
+          <button ng-if="'deploymentconfigrollbacks' | canI : 'create'" ng-show="!rollBackCollapsed && (deployment | deploymentStatus) == 'Complete' && !(deployment | deploymentIsLatest : deploymentConfig) && !deployment.metadata.deletionTimestamp" ng-disabled="(deploymentConfigDeploymentsInProgress[deploymentConfigName] | hashSize) > 0" type="button" class="btn btn-default btn-xs" ng-click="rollBackCollapsed = !rollBackCollapsed">Roll Back</button>
           <div ng-show="rollBackCollapsed" class="well well-sm">
             Use the following settings from {{deployment.metadata.name}} when rolling back:
             <div class="checkbox">
@@ -39,7 +39,7 @@
           <!-- disabled until we have an api endpoint for retry
           <button ng-show="(deployment | deploymentStatus) == 'Failed'" type="button" ng-click="retryFailedDeployment(deployment)" ng-disabled="(deploymentConfigDeploymentsInProgress[deploymentConfigName] | hashSize) > 0" class="btn btn-default btn-xs" ng-if="(deployment | deploymentIsLatest : deploymentConfig) && !deployment.metadata.deletionTimestamp">Retry</button>
           -->
-          <button ng-show="(deployment | deploymentIsInProgress) && !deployment.metadata.deletionTimestamp" type="button" ng-click="cancelRunningDeployment(deployment)" class="btn btn-default btn-xs">Cancel</button>
+          <button ng-if="'replicationcontrollers' | canI : 'update'" ng-show="(deployment | deploymentIsInProgress) && !deployment.metadata.deletionTimestamp" type="button" ng-click="cancelRunningDeployment(deployment)" class="btn btn-default btn-xs">Cancel</button>
         </span>
       </dd>
       <dt ng-if-start="deployment | isDeployment">Deployment config:</dt>
@@ -69,7 +69,8 @@
         <replicas status="deployment.status.replicas"
                   spec="deployment.spec.replicas"
                   disable-scaling="!isScalable()"
-                  scale-fn="scale(replicas)">
+                  scale-fn="scale(replicas)"
+                  deployment="deployment">
         </replicas>
         <span ng-if="autoscalers.length">(autoscaled)</span>
       </dd>
@@ -86,11 +87,12 @@
         images-by-docker-reference="imagesByDockerReference"
         builds="builds"
         detailed="true"
-        add-health-check-url="{{(!deploymentConfig || isActive) ? healthCheckURL : ''}}">
+        add-health-check-url="{{((!deploymentConfig || isActive) && ('deploymentconfigs' | canI : 'update')) ? healthCheckURL : ''}}">
       </pod-template>
       <h4>Volumes</h4>
       <p ng-if="!deployment.spec.template.spec.volumes.length">
-        <a ng-href="project/{{project.metadata.name}}/attach-pvc?deployment={{deployment.metadata.name}}">Attach storage</a>
+        <a ng-if="'replicationcontrollers' | canI : 'update'" ng-href="project/{{project.metadata.name}}/attach-pvc?deployment={{deployment.metadata.name}}">Attach storage</a>
+        <span ng-if="!('replicationcontrollers' | canI : 'update')">none</span>
       </p>
       <volumes volumes="deployment.spec.template.spec.volumes" namespace="project.metadata.name"></volumes>
     </div>
@@ -111,12 +113,12 @@
     <span ng-if="warning.reason === 'NoCPURequest'">
       <!-- Prompt to set CPU request on the DC if this is a deployment. -->
       <a ng-href="project/{{projectName}}/set-limits?dcName={{deploymentConfigName}}"
-         ng-if="deploymentConfigName && !deploymentConfigMissing"
+         ng-if="deploymentConfigName && !deploymentConfigMissing && ('deploymentconfigs' | canI : 'update')"
          role="button">Set resource
         <span ng-if="!('cpu' | isRequestCalculated : project)">requests and</span> limits</a>
       <!-- Prompt to set CPU request on the RC if not a deployment. -->
       <a ng-href="project/{{projectName}}/set-limits?rcName={{deployment.metadata.name}}"
-         ng-if="!deploymentConfigName"
+         ng-if="!deploymentConfigName && ('replicationcontrollers' | canI : 'update')"
          role="button">Set resource
         <span ng-if="!('cpu' | isRequestCalculated : project)">requests and</span> limits</a>
     </span>

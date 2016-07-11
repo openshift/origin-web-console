@@ -45,14 +45,16 @@ angular.module('openshiftConsole')
                   alerts[id] = {
                     type: "info",
                     message: dc.metadata.name + " has containers without health checks, which ensure your application is running correctly.",
-                    links: [{
-                      href: Navigate.healthCheckURL(dc.metadata.namespace, "DeploymentConfig", dc.metadata.name),
-                      label: "Add health checks"
-                    }],
                     onClose: function() {
                       hideAlert(id);
                     }
                   };
+                  if ($filter('canI')("deploymentconfigs", "update")) {
+                    alerts[id].links = [{
+                                          href: Navigate.healthCheckURL(dc.metadata.namespace, "DeploymentConfig", dc.metadata.name),
+                                          label: "Add health checks"
+                                        }];
+                  }
                 }
                 else {
                   delete alerts[id];

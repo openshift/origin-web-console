@@ -19,7 +19,7 @@
                   <span ng-if="!pvc.spec.resources.requests['storage']">waiting for allocation,</span>
               </small>
               <small class="meta">created <relative-timestamp timestamp="pvc.metadata.creationTimestamp"></relative-timestamp></small>
-              <div class="pull-right dropdown">
+              <div class="pull-right dropdown" ng-hide="!('persistentVolumeClaims' | canIDoAny)">
                 <button type="button" class="dropdown-toggle btn btn-default actions-dropdown-btn hidden-xs" data-toggle="dropdown">
                   Actions
                   <span class="caret" aria-hidden="true"></span>
@@ -30,6 +30,7 @@
                 <ul class="dropdown-menu actions action-button">
                   <li ng-if="!pvc.spec.volumeName">
                     <edit-link
+                      ng-if="'persistentvolumeclaims' | canI : 'update'"
                       resource="pvc"
                       kind="PersistentVolumeClaim"
                       alerts="alerts">
@@ -37,6 +38,7 @@
                   </li>
                   <li>
                     <delete-link
+                      ng-if="'persistentvolumeclaims' | canI : 'delete'"
                       kind="PersistentVolumeClaim"
                       resource-name="{{pvc.metadata.name}}"
                       project-name="{{pvc.metadata.namespace}}"

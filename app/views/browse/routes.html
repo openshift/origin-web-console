@@ -7,7 +7,7 @@
       <div class="middle-header header-light">
         <div class="container-fluid">
           <div class="page-header page-header-bleed-right page-header-bleed-left">
-            <div class="pull-right">
+            <div class="pull-right" ng-if="'routes' | canI : 'create'">
               <a ng-href="project/{{project.metadata.name}}/create-route" class="btn btn-default">Create Route</a>
             </div>
             <h1>Routes</h1>

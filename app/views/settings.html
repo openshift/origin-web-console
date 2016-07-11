@@ -10,7 +10,7 @@
             <alerts alerts="alerts"></alerts>
             <h1>
               Project Settings
-              <div class="pull-right dropdown">
+              <div class="pull-right dropdown" ng-hide="!project || !('projects' | canIDoAny)">
                 <button type="button" class="dropdown-toggle btn btn-default actions-dropdown-btn hidden-xs" data-toggle="dropdown">
                   Actions
                   <span class="caret" aria-hidden="true"></span>
@@ -19,7 +19,7 @@
                    class="dropdown-toggle actions-dropdown-kebab visible-xs-inline"
                    data-toggle="dropdown"><i class="fa fa-ellipsis-v"></i><span class="sr-only">Actions</span></a>
                 <ul class="dropdown-menu actions action-button">
-                  <li>
+                  <li ng-if="!project || 'projects' | canI : 'update'">
                     <a
                       href=""
                       role="button"
@@ -27,7 +27,7 @@
                       ng-click="setEditing(true)"
                       ng-class="{ 'disabled-link': show.editing }">Edit</a>
                   </li>
-                  <li>
+                  <li ng-if="!project || 'projects' | canI : 'delete'">
                     <delete-link
                       class="button-delete"
                       kind="Project"

@@ -23,7 +23,7 @@ CLI:{
 },
 DEFAULT_HPA_CPU_TARGET_PERCENT:80,
 DISABLE_OVERVIEW_METRICS:!1,
-AVAILABLE_KINDS_BLACKLIST:[ "PodTemplate", "Binding", "Ingress", "ReplicaSet", "ThirdPartyResource", "LocalResourceAccessReview", "LocalSubjectAccessReview", "ResourceAccessReview", "SubjectAccessReview", "ReplicationControllerDummy", "DeploymentConfigRollback" ]
+AVAILABLE_KINDS_BLACKLIST:[ "Binding", "Ingress", "DeploymentConfigRollback" ]
 }, angular.module("openshiftConsole", [ "ngAnimate", "ngCookies", "ngResource", "ngRoute", "ngSanitize", "ngTouch", "openshiftUI", "kubernetesUI", "ui.bootstrap", "patternfly.charts", "patternfly.sort", "openshiftConsoleTemplates", "ui.ace", "extension-registry", "as.sortable", "ui.select", "key-value-editor" ]).constant("mainNavTabs", []).config([ "mainNavTabs", "$routeProvider", "HawtioNavBuilderProvider", function(a, b, c) {
 var d = function() {
 return "<sidebar-nav-item></sidebar-nav-item>";
@@ -689,6 +689,66 @@ return a.reject(d);
 }
 }
 };
+} ]), angular.module("openshiftConsole").factory("AuthorizationService", [ "$q", "$cacheFactory", "Logger", "$interval", "DataService", function(a, b, c, d, e) {
+var f = null, g = b("rulesCache", {
+number:10
+}), h = [ "localresourceaccessreviews", "localsubjectaccessreviews", "resourceaccessreviews", "selfsubjectrulesreviews", "subjectaccessreviews" ], i = function(a) {
+var b = {};
+return _.each(a, function(a) {
+_.each(a.resources, function(c) {
+_.each(a.apiGroups, function(d) {
+b["" === d ? c :d + "/" + c] = a.verbs;
+});
+});
+}), b;
+}, j = function(a) {
+return "projectrequests" !== a && !_.contains(a, "/") && !_.contains(h, a);
+}, k = function(a) {
+return _.some(a, function(a) {
+return _.some(a.resources, function(b) {
+return j(b) && !_.isEmpty(_.intersection(a.verbs, [ "*", "create", "update" ]));
+});
+});
+}, l = function(b) {
+var d = a.defer();
+f = b;
+var h = g.get(b);
+if (!h || h.forceRefresh) {
+c.log("AuthorizationService, loading user rules for " + b + " project");
+var j = {
+kind:"SelfSubjectRulesReview",
+apiVersion:"v1"
+};
+e.create("selfsubjectrulesreviews", null, j, {
+namespace:b
+}).then(function(a) {
+var c = i(a.status.rules), e = k(a.status.rules);
+g.put(b, {
+rules:c,
+canAddToProject:e,
+forceRefresh:!1,
+cacheTimestamp:_.now()
+}), d.resolve();
+}, function() {
+d.reject();
+});
+} else c.log("AuthorizationService, using cached rules for " + b + " project"), _.now() - h.cacheTimestamp >= 6e5 && (h.forceRefresh = !0), d.resolve();
+return d.promise;
+}, m = function(a) {
+return _.get(g.get(a || f), [ "rules" ]);
+}, n = function(a, b, c) {
+c = c || f;
+var d = m(c);
+return !!d && (d[b] ? _.contains(d[b], a) || _.contains(d[b], "*") :!!d["*"] && (_.contains(d["*"], a) || _.contains(d["*"], "*")));
+}, o = function(a) {
+return !!_.get(g.get(a || f), [ "canAddToProject" ]);
+};
+return {
+getProjectRules:l,
+canI:n,
+canIAddToProject:o,
+getRulesForProject:m
+};
 } ]), angular.module("openshiftConsole").factory("DataService", [ "$cacheFactory", "$http", "$ws", "$rootScope", "$q", "API_CFG", "APIService", "Notification", "Logger", "$timeout", function(a, b, c, d, e, f, g, h, i, j) {
 function k(a) {
 this._data = {}, this._objectsByAttribute(a, "metadata.name", this._data);
@@ -1246,8 +1306,8 @@ getMetricsURL:function() {
 return c.when(b);
 }
 };
-} ]), angular.module("openshiftConsole").factory("ProjectsService", [ "$location", "$q", "$routeParams", "AuthService", "DataService", "annotationNameFilter", function(a, b, c, d, e, f) {
-var g = function(a) {
+} ]), angular.module("openshiftConsole").factory("ProjectsService", [ "$location", "$q", "$routeParams", "AuthService", "DataService", "annotationNameFilter", "AuthorizationService", function(a, b, c, d, e, f, g) {
+var h = function(a) {
 var b = [ f("description"), f("displayName") ];
 return _.each(b, function(b) {
 a.metadata.annotations[b] || delete a.metadata.annotations[b];
@@ -1263,8 +1323,15 @@ project:void 0
 };
 return e.get("projects", b, c, {
 errorNotification:!1
-}).then(function(a) {
-return c.project = a, c.projectPromise.resolve(a), [ a, c ];
+}).then(function(d) {
+return g.getProjectRules(b).then(function() {
+return c.project = d, c.projectPromise.resolve(d), [ d, c ];
+}, function() {
+a.url(URI("error").query({
+error:"error",
+error_description:"User permissions for project " + b + " could not be loaded."
+}).toString());
+});
 }, function(b) {
 c.projectPromise.reject(b);
 var d = "The project could not be loaded.", e = "error";
@@ -1276,7 +1343,7 @@ error_description:d
 });
 },
 update:function(a, b) {
-return e.update("projects", a, g(b), {
+return e.update("projects", a, h(b), {
 projectName:a
 }, {
 errorNotification:!1
@@ -4035,25 +4102,25 @@ b.pvcs = a.select(b.unfilteredPVCs), e();
 d.unwatchAll(i);
 });
 }));
-} ]), angular.module("openshiftConsole").controller("OtherResourcesController", [ "$routeParams", "$scope", "AlertMessageService", "DataService", "ProjectsService", "$filter", "LabelFilter", "Logger", "APIService", function(a, b, c, d, e, f, g, h, i) {
-function j() {
-g.getLabelSelector().isEmpty() || !$.isEmptyObject(b.resources) || $.isEmptyObject(b.unfilteredResources) ? delete b.alerts.resources :b.alerts.resources = {
+} ]), angular.module("openshiftConsole").controller("OtherResourcesController", [ "$routeParams", "$scope", "AlertMessageService", "AuthorizationService", "DataService", "ProjectsService", "$filter", "LabelFilter", "Logger", "APIService", function(a, b, c, d, e, f, g, h, i, j) {
+function k() {
+h.getLabelSelector().isEmpty() || !$.isEmptyObject(b.resources) || $.isEmptyObject(b.unfilteredResources) ? delete b.alerts.resources :b.alerts.resources = {
 type:"warning",
-details:"The active filters are hiding all " + i.kindToResource(b.kindSelector.selected.kind, !0) + "."
+details:"The active filters are hiding all " + j.kindToResource(b.kindSelector.selected.kind, !0) + "."
 };
 }
-function k() {
+function l() {
 var a = b.kindSelector.selected;
-a && d.list({
+a && (b.selectedResource = a.group ? a.group + "/" + j.kindToResource(a.kind) :j.kindToResource(a.kind), e.list({
 group:a.group,
-resource:i.kindToResource(a.kind)
+resource:j.kindToResource(a.kind)
 }, b.context, function(c) {
-b.unfilteredResources = c.by("metadata.name"), b.labelSuggestions = {}, g.addLabelSuggestionsFromResources(b.unfilteredResources, b.labelSuggestions), g.setLabelSuggestions(b.labelSuggestions), b.resources = g.getLabelSelector().select(b.unfilteredResources), b.emptyMessage = "No " + i.kindToResource(a.kind, !0) + " to show", j();
-});
+b.unfilteredResources = c.by("metadata.name"), b.labelSuggestions = {}, h.addLabelSuggestionsFromResources(b.unfilteredResources, b.labelSuggestions), h.setLabelSuggestions(b.labelSuggestions), b.resources = h.getLabelSelector().select(b.unfilteredResources), b.emptyMessage = "No " + j.kindToResource(a.kind, !0) + " to show", k();
+}));
 }
 b.projectName = a.project, b.labelSuggestions = {}, b.alerts = b.alerts || {}, b.emptyMessage = "Select a resource from the list above ...", b.kindSelector = {
 disabled:!0
-}, b.kinds = _.filter(i.availableKinds(), function(a) {
+}, b.kinds = _.filter(j.availableKinds(), function(a) {
 switch (a.kind) {
 case "ReplicationController":
 case "DeploymentConfig":
@@ -4079,17 +4146,20 @@ return !0;
 }
 }), c.getAlerts().forEach(function(a) {
 b.alerts[a.name] = a.data;
-}), c.clearAlerts(), e.get(a.project).then(_.spread(function(a, c) {
-b.project = a, b.context = c, b.kindSelector.disabled = !1;
-})), b.loadKind = k, b.$watch("kindSelector.selected", function() {
-b.alerts = {}, k();
+}), c.clearAlerts(), f.get(a.project).then(_.spread(function(a, c) {
+b.kinds = _.filter(b.kinds, function(a) {
+var c = j.kindToResource(a.kind);
+return d.canI("list", a.group ? a.group + "/" + c :c, b.projectName);
+}), b.project = a, b.context = c, b.kindSelector.disabled = !1;
+})), b.loadKind = l, b.$watch("kindSelector.selected", function() {
+b.alerts = {}, l();
 });
-var l = f("humanizeKind");
+var m = g("humanizeKind");
 b.matchKind = function(a, b) {
-return l(a).toLowerCase().indexOf(b.toLowerCase()) !== -1;
-}, g.onActiveFiltersChanged(function(a) {
+return m(a).toLowerCase().indexOf(b.toLowerCase()) !== -1;
+}, h.onActiveFiltersChanged(function(a) {
 b.$apply(function() {
-b.resources = a.select(b.unfilteredResources), j();
+b.resources = a.select(b.unfilteredResources), k();
 });
 });
 } ]), angular.module("openshiftConsole").controller("PersistentVolumeClaimController", [ "$scope", "$routeParams", "DataService", "ProjectsService", "$filter", function(a, b, c, d, e) {
@@ -6361,7 +6431,8 @@ scope:{
 status:"=?",
 spec:"=",
 disableScaling:"=?",
-scaleFn:"&?"
+scaleFn:"&?",
+deployment:"="
 },
 templateUrl:"views/directives/replicas.html",
 link:function(a) {
@@ -8211,23 +8282,22 @@ return "true" === localStorage.getItem(b);
 var b = d(a);
 localStorage.setItem(b, "true");
 }, g = a("hasHealthChecks"), h = c.alerts = {}, i = [], j = function() {
-_.each(i, function(a) {
-var d = _.get(a, "metadata.name", "");
-c.deploymentConfigsByService && _.each(c.deploymentConfigsByService[d], function(a) {
-var c = "health_checks_" + a.metadata.uid;
-if (g(a.spec.template)) delete h[c]; else {
-if (e(c)) return;
-h[c] = {
+_.each(i, function(d) {
+var i = _.get(d, "metadata.name", "");
+c.deploymentConfigsByService && _.each(c.deploymentConfigsByService[i], function(c) {
+var d = "health_checks_" + c.metadata.uid;
+if (g(c.spec.template)) delete h[d]; else {
+if (e(d)) return;
+h[d] = {
 type:"info",
-message:a.metadata.name + " has containers without health checks, which ensure your application is running correctly.",
-links:[ {
-href:b.healthCheckURL(a.metadata.namespace, "DeploymentConfig", a.metadata.name),
-label:"Add health checks"
-} ],
+message:c.metadata.name + " has containers without health checks, which ensure your application is running correctly.",
 onClose:function() {
-f(c);
+f(d);
 }
-};
+}, a("canI")("deploymentconfigs", "update") && (h[d].links = [ {
+href:b.healthCheckURL(c.metadata.namespace, "DeploymentConfig", c.metadata.name),
+label:"Add health checks"
+} ]);
 }
 });
 });
@@ -8629,6 +8699,69 @@ c[e] = (c[e] || 0) + 1;
 return function(c, d) {
 var e = a(c), f = c.metadata.name;
 return e !== f && b(d)[e] > 1 ? e + " (" + f + ")" :e;
+};
+} ]).filter("canI", [ "AuthorizationService", function(a) {
+return function(b, c, d) {
+return a.canI(c, b, d);
+};
+} ]).filter("canIAddToProject", [ "AuthorizationService", function(a) {
+return function(b) {
+return a.canIAddToProject(b);
+};
+} ]).filter("canIDoAny", [ "canIFilter", function(a) {
+var b = {
+buildConfigs:{
+buildconfigs:[ "delete", "update" ],
+"buildconfigs/instantiate":[ "create" ]
+},
+builds:{
+"builds/clone":[ "create" ],
+builds:[ "delete", "update" ]
+},
+deploymentConfigs:{
+"extensions/horizontalpodautoscalers":[ "create", "update" ],
+deploymentconfigs:[ "create", "update" ]
+},
+deployments:{
+replicationcontrollers:[ "update", "delete" ]
+},
+horizontalPodAutoscalers:{
+"extensions/horizontalpodautoscalers":[ "update", "delete" ]
+},
+imageStreams:{
+imagestreams:[ "update", "delete" ]
+},
+persistentVolumeClaims:{
+persistentvolumeclaims:[ "update", "delete" ]
+},
+pods:{
+pods:[ "update", "delete" ],
+deploymentconfigs:[ "update" ]
+},
+replicationControllers:{
+horizontalpodautoscalers:[ "create", "update" ],
+replicationcontrollers:[ "create", "update" ]
+},
+routes:{
+routes:[ "update", "delete" ]
+},
+services:{
+services:[ "update", "create", "delete" ]
+},
+projects:{
+projects:[ "delete", "update" ]
+}
+};
+return function(c) {
+return _.some(b[c], function(b, c) {
+return _.some(b, function(b) {
+return a(c, b);
+});
+});
+};
+} ]).filter("canIScale", [ "canIFilter", "isDeploymentFilter", function(a, b) {
+return function(c) {
+return a(b(c) ? "deploymentconfigs/scale" :"replicationcontrollers", "update");
 };
 } ]).filter("tags", [ "annotationFilter", function(a) {
 return function(b, c) {

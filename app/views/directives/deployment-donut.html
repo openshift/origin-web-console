@@ -19,7 +19,7 @@
     </div>
 
     <!-- Don't show the scaling controls until the HPAs load so they don't appear and quickly disappear. -->
-    <div column class="scaling-controls fade-inline" ng-if="hpa && !hpa.length">
+    <div column class="scaling-controls fade-inline" ng-if="hpa && !hpa.length && (rc | canIScale)">
       <div>
         <a href=""
            ng-click="scaleUp()"

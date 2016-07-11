@@ -48,13 +48,13 @@
                       <em ng-if="(resource.metadata.labels | hashSize) === 0">none</em>
                       <labels labels="resource.metadata.labels" clickable="true" kind="{{kindSelector.selected.kind | kindToResource : true }}" project-name="{{resource.metadata.namespace}}" limit="3" filter-current-page="true"></labels></td>
                     <td data-title="Actions" class="text-xs-left text-right">
-                      <span uib-dropdown>
+                      <span uib-dropdown ng-hide="!(selectedResource | canI : 'update') && !(selectedResource | canI : 'delete')">
                         <button type="button" class="dropdown-toggle btn btn-default" data-toggle="dropdown">
                           Actions
                           <span class="caret"></span>
                         </button>
                         <ul class="uib-dropdown-menu dropdown-menu-right" aria-labelledby="{{resource.metadata.name}}_actions">
-                          <li>
+                          <li ng-if="selectedResource | canI : 'update'">
                               <edit-link
                                 resource="resource"
                                 kind="{{kindSelector.selected.kind}}"
@@ -62,7 +62,7 @@
                                 success="loadKind">
                               </edit-link>
                             </li>
-                            <li>
+                            <li ng-if="selectedResource | canI : 'delete'">
                               <delete-link
                                 kind="{{kindSelector.selected.kind}}"
                                 group="{{kindSelector.selected.group}}"

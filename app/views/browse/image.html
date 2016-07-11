@@ -12,7 +12,7 @@
           <div ng-if="imageStream">
             <h1>
               {{imageStream.metadata.name}}
-              <div class="pull-right dropdown">
+              <div class="pull-right dropdown" ng-hide="!('imageStreams' | canIDoAny)">
                 <button type="button" class="dropdown-toggle btn btn-default actions-dropdown-btn hidden-xs" data-toggle="dropdown">
                   Actions
                   <span class="caret" aria-hidden="true"></span>
@@ -21,14 +21,14 @@
                    class="dropdown-toggle actions-dropdown-kebab visible-xs-inline"
                    data-toggle="dropdown"><i class="fa fa-ellipsis-v"></i><span class="sr-only">Actions</span></a>
                 <ul class="dropdown-menu actions action-button">
-                  <li>
+                  <li ng-if="'imagestreams' | canI : 'update'">
                     <edit-link
                       resource="imageStream"
                       kind="ImageStream"
                       alerts="alerts">
                     </edit-link>
                   </li>
-                  <li>
+                  <li ng-if="'imagestreams' | canI : 'delete'">
                     <delete-link
                       kind="ImageStream"
                       resource-name="{{imageStream.metadata.name}}"

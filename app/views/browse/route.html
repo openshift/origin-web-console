@@ -17,7 +17,7 @@
                               service="services[route.spec.to.name]">
               </route-warnings>
               <small class="meta">created <relative-timestamp timestamp="route.metadata.creationTimestamp"></relative-timestamp></small>
-              <div class="pull-right dropdown">
+              <div class="pull-right dropdown" ng-hide="!('routes' | canIDoAny)">
                 <button type="button" class="dropdown-toggle btn btn-default actions-dropdown-btn hidden-xs" data-toggle="dropdown">
                   Actions
                   <span class="caret" aria-hidden="true"></span>
@@ -26,17 +26,17 @@
                    class="dropdown-toggle actions-dropdown-kebab visible-xs-inline"
                    data-toggle="dropdown"><i class="fa fa-ellipsis-v"></i><span class="sr-only">Actions</span></a>
                 <ul class="dropdown-menu actions action-button">
-                  <li>
+                  <li ng-if="'routes' | canI : 'update'">
                     <a ng-href="{{route | editResourceURL}}" role="button">Edit</a>
                   </li>
-                  <li>
+                  <li ng-if="'routes' | canI : 'update'">
                     <edit-link
                       resource="route"
                       kind="Route"
                       alerts="alerts">
                     </edit-link>
                   </li>
-                  <li>
+                  <li ng-if="'routes' | canI : 'delete'">
                     <delete-link
                       kind="Route"
                       resource-name="{{route.metadata.name}}"
