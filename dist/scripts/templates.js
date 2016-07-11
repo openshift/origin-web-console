@@ -3989,15 +3989,14 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "<p ng-show=\"input.args.length\" as-sortable ng-model=\"input.args\" class=\"command-args\">\n" +
     "<span ng-repeat=\"arg in input.args\" as-sortable-item class=\"form-group\">\n" +
     "<span class=\"input-group\">\n" +
-    "<span as-sortable-item-handle class=\"input-group-addon drag-handle\">\n" +
-    "\n" +
-    "<i class=\"fa fa-ellipsis-v\" aria-hidden=\"true\"></i><i class=\"fa fa-ellipsis-v\" aria-hidden=\"true\"></i>\n" +
-    "</span>\n" +
     "\n" +
     "<input type=\"text\" ng-model=\"arg.value\" ng-if=\"!arg.multiline\" required class=\"form-control\" autocorrect=\"off\" autocapitalize=\"off\" spellcheck>\n" +
     "\n" +
     "<textarea ng-model=\"arg.value\" ng-if=\"arg.multiline\" rows=\"5\" required class=\"form-control\" autocorrect=\"off\" autocapitalize=\"off\" spellcheck>\n" +
     "        </textarea>\n" +
+    "<span as-sortable-item-handle class=\"input-group-addon action-button drag-handle\">\n" +
+    "<i class=\"fa fa-bars\" aria-hidden=\"true\"></i>\n" +
+    "</span>\n" +
     "<a href=\"\" ng-click=\"removeArg($index)\" class=\"input-group-addon action-button remove-arg\" title=\"Remove argument\">\n" +
     "<span class=\"sr-only\">Remove argument</span>\n" +
     "<i class=\"fa fa-times\" aria-hidden=\"true\"></i>\n" +

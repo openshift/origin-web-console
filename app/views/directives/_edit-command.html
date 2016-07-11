@@ -3,10 +3,6 @@
   <p ng-show="input.args.length" as-sortable ng-model="input.args" class="command-args">
     <span ng-repeat="arg in input.args" as-sortable-item class="form-group">
       <span class="input-group">
-        <span as-sortable-item-handle class="input-group-addon drag-handle">
-          <!-- Use two kebabs to make a drag handle. -->
-          <i class="fa fa-ellipsis-v" aria-hidden="true"></i><i class="fa fa-ellipsis-v" aria-hidden="true"></i>
-        </span>
         <!-- Args with no newlines. -->
         <input type="text"
                ng-model="arg.value"
@@ -26,6 +22,9 @@
                   autocapitalize="off"
                   spellcheck="false">
         </textarea>
+        <span as-sortable-item-handle class="input-group-addon action-button drag-handle">
+          <i class="fa fa-bars" aria-hidden="true"></i>
+        </span>
         <a href="" ng-click="removeArg($index)" class="input-group-addon action-button remove-arg" title="Remove argument">
           <span class="sr-only">Remove argument</span>
           <i class="fa fa-times" aria-hidden="true"></i>
