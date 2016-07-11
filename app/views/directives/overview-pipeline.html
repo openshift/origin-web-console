@@ -1,41 +1,55 @@
-<div class="overview-pipeline">
-  <div class="timestamp">
-    <relative-timestamp timestamp="build.metadata.creationTimestamp"></relative-timestamp>
-  </div>
-  <div row class="overview-pipeline-details" ng-class="build.status.phase">
-    <div class="build-name">
-      <a ng-href="{{buildConfigName | navigateResourceURL : 'BuildConfig' : build.metadata.namespace}}">{{buildConfigName}}</a>,
-      <a ng-href="{{build | navigateResourceURL}}">#{{build | annotation : 'buildNumber'}}</a>
+<div>
+  <div class="overview-pipeline">
+    <div class="timestamp">
+      <relative-timestamp timestamp="build.metadata.creationTimestamp"></relative-timestamp>
     </div>
-    <div class="build-phase">
-      {{build.status.phase}}
-    </div>
-    <div class="stages">
-      <div ng-if="!jenkinsStatus.stages.length">
-        <div>No stages have started.</div>
+    <div row class="overview-pipeline-details" ng-class="build.status.phase">
+      <div class="build-name">
+        <a ng-href="{{buildConfigName | navigateResourceURL : 'BuildConfig' : build.metadata.namespace}}">{{buildConfigName}}</a>,
+        <a ng-href="{{build | navigateResourceURL}}">#{{build | annotation : 'buildNumber'}}</a>
       </div>
-      <div ng-repeat="stage in jenkinsStatus.stages track by stage.id" class="stage">
-        <span
-            data-toggle="tooltip"
-            data-trigger="hover"
-            dynamic-content="{{stage.name}}, {{stage.status | sentenceCase}}">
-          <pipeline-status ng-if="stage.status" status="stage.status"></pipeline-status>
-        </span>
-        <div ng-if="!(stage | pipelineStageComplete)" class="current-stage">
-          Stage {{stage.name}}, {{stage.status | camelToLower}}
-          <div class="in-progress-stage hidden-xs">
-            <div class="build-stage-animation">
-              <div class="build-rail">
-                <div class="build-bar"></div>
-              </div>
-              <div class="build-circle">
-                <span ng-if="stage.durationMillis" class="build-time">{{stage.durationMillis | timeOnlyDuration}}</span>
+      <div class="build-phase">
+        {{build.status.phase}}
+      </div>
+      <div class="stages">
+        <div ng-if="!jenkinsStatus.stages.length">
+          <div>No stages have started.</div>
+        </div>
+        <div ng-repeat="stage in jenkinsStatus.stages track by stage.id" class="stage">
+          <span
+              data-toggle="tooltip"
+              data-trigger="hover"
+              dynamic-content="{{stage.name}}, {{stage.status | sentenceCase}}">
+            <pipeline-status ng-if="stage.status" status="stage.status"></pipeline-status>
+          </span>
+          <div ng-if="!(stage | pipelineStageComplete)" class="current-stage">
+            Stage '{{stage.name}}', {{stage.status | camelToLower}}
+            <div class="in-progress-stage hidden-xs">
+              <div class="build-stage-animation">
+                <div class="build-rail">
+                  <div class="build-bar"></div>
+                </div>
+                <div class="build-circle">
+                  <span ng-if="stage.durationMillis" class="build-time">{{stage.durationMillis | timeOnlyDuration}}</span>
+                </div>
               </div>
             </div>
           </div>
         </div>
       </div>
+      <div ng-repeat="stage in jenkinsStatus.stages track by stage.id">
+        <div ng-if="stage | pipelineStagePendingInput" class="input-link">
+          <a ng-href="{{build | jenkinsInputURL}}" target="_blank">Input Required</a>
+        </div>
+      </div>
+      <div ng-if="build | buildLogURL" class="log-link"><a ng-href="{{build | buildLogURL}}" ng-if="('builds/log' | canI : 'get')" target="_blank">View Log</a></div>
     </div>
-    <div ng-if="build | buildLogURL" class="log-link"><a ng-href="{{build | buildLogURL}}" ng-if="('builds/log' | canI : 'get')" target="_blank">View Log</a></div>
+  </div>
+  <div ng-repeat="stage in jenkinsStatus.stages track by stage.id" class="alert-wrapper" ng-class-odd="'odd-alert'" ng-class-even="'even-alert'" >
+    <div ng-if="stage | pipelineStagePendingInput" class="alert alert-warning toast-pf mar-left-sm">
+      <span class="pficon pficon-warning-triangle-o" aria-hidden="true"></span>
+      <span class="mar-right-sm">Stage '{{stage.name}}' requires user input to continue.</span>
+      <a ng-href="{{build | jenkinsInputURL}}" target="_blank">Provide input</a>
+    </div>
   </div>
 </div>

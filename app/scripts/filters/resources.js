@@ -955,6 +955,17 @@ angular.module('openshiftConsole')
       return annotationFilter(build, 'jenkinsBuildURL');
     };
   })
+  .filter('jenkinsInputURL', function(jenkinsBuildURLFilter) {
+    return function(build) {
+      // TODO we should have a jenkinsInputURL annotation, waiting on
+      // https://github.com/fabric8io/openshift-jenkins-sync-plugin/issues/94
+      var buildURL = jenkinsBuildURLFilter(build);
+      if (!buildURL) {
+        return null;
+      }
+      return new URI(buildURL).segment("/input/").toString();
+    };
+  })
   .filter('buildLogURL', function(isJenkinsPipelineStrategyFilter,
                                   jenkinsLogURLFilter,
                                   navigateResourceURLFilter) {
@@ -1007,6 +1018,14 @@ angular.module('openshiftConsole')
       }
 
       return _.indexOf(['ABORTED', 'FAILED', 'SUCCESS'], stage.status) !== -1;
+    };
+  })
+  .filter('pipelineStagePendingInput', function () {
+    return function(stage) {
+      if (!stage) {
+        return false;
+      }
+      return 'PAUSED_PENDING_INPUT' === stage.status;
     };
   })
   .filter('humanizeKind', function (startCaseFilter) {

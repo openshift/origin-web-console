@@ -9227,6 +9227,11 @@ return !d || c ? d :d.replace(/\/consoleText$/, "/console");
 return function(b) {
 return a(b, "jenkinsBuildURL");
 };
+} ]).filter("jenkinsInputURL", [ "jenkinsBuildURLFilter", function(a) {
+return function(b) {
+var c = a(b);
+return c ? new URI(c).segment("/input/").toString() :null;
+};
 } ]).filter("buildLogURL", [ "isJenkinsPipelineStrategyFilter", "jenkinsLogURLFilter", "navigateResourceURLFilter", function(a, b, c) {
 return function(d) {
 if (a(d)) return b(d);
@@ -9246,6 +9251,10 @@ return URI(h).is("url") ? h :"";
 } ]).filter("pipelineStageComplete", function() {
 return function(a) {
 return !!a && _.indexOf([ "ABORTED", "FAILED", "SUCCESS" ], a.status) !== -1;
+};
+}).filter("pipelineStagePendingInput", function() {
+return function(a) {
+return !!a && "PAUSED_PENDING_INPUT" === a.status;
 };
 }).filter("humanizeKind", [ "startCaseFilter", function(a) {
 return function(a, b) {

@@ -3993,7 +3993,7 @@ ul.messenger-theme-flat .messenger-message.alert-info .messenger-message-inner:b
 .overview .overview-pipeline .stage .stage-duration{color:#9c9c9c;margin-left:5px}
 .overview .overview-pipeline .current-stage{margin-left:10px;padding-left:10px;border-left:1px solid #d1d1d1;display:-webkit-flex;display:-moz-flex;display:-ms-flexbox;display:-ms-flex;display:flex;-webkit-align-items:center;-moz-align-items:center;align-items:center}
 .overview .overview-pipeline .current-stage .in-progress-stage{width:150px;margin-bottom:-2px;margin-left:5px}
-.overview .overview-pipeline .log-link,.overview .overview-pipeline .stages{padding:5px 10px}
+.overview .overview-pipeline .input-link,.overview .overview-pipeline .log-link,.overview .overview-pipeline .stages{padding:5px 10px}
 .overview .overview-pipeline .stages{display:-webkit-flex;display:-moz-flex;display:-ms-flexbox;display:-ms-flex;display:flex}
 .overview .overview-pipeline .timestamp{color:#9c9c9c;float:right!important;float:right;padding:2px 5px 0}
 @media (max-width:567px){.overview .overview-pipeline .timestamp{display:none}
@@ -4001,7 +4001,7 @@ ul.messenger-theme-flat .messenger-message.alert-info .messenger-message-inner:b
 .overview .service-group-body{border-top-width:0;padding:0}
 .overview .service-group-body .overview-services{-webkit-flex-wrap:wrap;-moz-flex-wrap:wrap;-ms-flex-wrap:wrap;flex-wrap:wrap;margin-left:-10px;-webkit-flex-direction:column;-moz-flex-direction:column;-ms-flex-direction:column;flex-direction:column}
 .overview .service-group-body .overview-services .deployment-tile{margin-left:10px;margin-top:10px;position:relative}
-@media (min-width:568px){.overview .overview-pipeline .build-name,.overview .overview-pipeline .build-phase,.overview .overview-pipeline .log-link,.overview .overview-pipeline .stages{border-left:1px solid #d6d6d6}
+@media (min-width:568px){.overview .overview-pipeline .build-name,.overview .overview-pipeline .build-phase,.overview .overview-pipeline .input-link,.overview .overview-pipeline .log-link,.overview .overview-pipeline .stages{border-left:1px solid #d6d6d6}
 .overview .service-group-body .overview-services{-webkit-flex-direction:row;-moz-flex-direction:row;-ms-flex-direction:row;flex-direction:row}
 .overview .service-group-body .overview-services overview-service{max-width:50%;min-width:50%}
 .overview .service-group-body .no-child-services-message{display:block}
@@ -4107,11 +4107,11 @@ to{background-color:transparent}
 .pipeline .pipeline-stage:first-child{border-top:0}
 .new-stage{animation:flexGrow .5s ease forwards;-webkit-flex-basis:1;-moz-flex-basis:1;-ms-flex-basis:1;flex-basis:1;-webkit-flex-grow:.000001;-moz-flex-grow:.000001;-ms-flex-grow:.000001;flex-grow:.000001;-webkit-flex-shrink:1;-moz-flex-shrink:1;-ms-flex-shrink:1;flex-shrink:1}
 .remove-stage{animation:flexShrink .5s ease forwards;-webkit-flex:1 1 0%;-moz-flex:1 1 0%;-ms-flex:1 1 0%;flex:1 1 0%}
-.pipeline-stage-name,.pipeline-time{font-size:12px;text-align:center}
+.pipeline-actions,.pipeline-stage-name,.pipeline-time{font-size:12px;text-align:center}
 .pipeline-stage-name{overflow:hidden;text-overflow:ellipsis;white-space:nowrap;line-height:initial;margin-bottom:15px}
 .pipeline-stage-name.no-stages{margin:22.5px}
-.pipeline-time{margin-top:12px;color:#9c9c9c}
-.pipeline-time.IN_PROGRESS{color:#555}
+.pipeline-actions,.pipeline-time{margin-top:12px;color:#9c9c9c}
+.pipeline-actions.IN_PROGRESS,.pipeline-time.IN_PROGRESS{color:#555}
 .build-summary,.stage{text-align:center;min-width:150px}
 .build-summary .pipeline-link,.stage .pipeline-link{font-size:84%;display:inline-block}
 .build-summary .pipeline-link+.pipeline-link:before,.stage .pipeline-link+.pipeline-link:before{content:'';display:inline-block;border-left:1px solid #d1d1d1;height:10px;margin:0 5px 0 2px}
@@ -4143,6 +4143,7 @@ to{background-color:transparent}
 .pipeline-status-bar.NOT_EXECUTED .clip1:before,.pipeline-status-bar.NOT_EXECUTED .clip2:before,.pipeline-status-bar.NOT_EXECUTED .inner-circle-fill,.pipeline-status-bar.NOT_EXECUTED .pipeline-line:before{background-color:#d1d1d1}
 .pipeline-status-bar.NOT_EXECUTED .pipeline-circle{animation:fadeInNotExecuted 0s .7s linear forwards}
 .pipeline-status-bar.NOT_EXECUTED .pipeline-circle:after{content:""}
+.pipeline-status-bar.PAUSED_PENDING_INPUT .clip1:before,.pipeline-status-bar.PAUSED_PENDING_INPUT .clip2:before,.pipeline-status-bar.PAUSED_PENDING_INPUT .inner-circle-fill,.pipeline-status-bar.PAUSED_PENDING_INPUT .pipeline-line:before{background-color:#f0ab00}
 .pipeline-status-bar.PAUSED_PENDING_INPUT .pipeline-circle:after{content:"\f04c";font-size:10px}
 .pipeline-status-bar.ABORTED .clip1:before,.pipeline-status-bar.ABORTED .clip2:before,.pipeline-status-bar.ABORTED .inner-circle-fill,.pipeline-status-bar.ABORTED .pipeline-line:before{background-color:#e8e8e8}
 .pipeline-status-bar.ABORTED .pipeline-circle{animation:fadeInAborted 0s .7s linear forwards}

@@ -5,6 +5,7 @@
 @build-pipeline-new-color: #bee1f4;
 @build-pipeline-pending-color: #d1d1d1;
 @build-pipeline-success-color: #3f9c35;
+@build-pipeline-require-attention-color: @color-pf-gold;
 @circle-animation-time: 0.35s;
 @circle-diameter: 18px;
 @circle-border-width: (@line-border-width / 2);
@@ -137,7 +138,7 @@
   .flex(@columns: 1 1 0%);
 }
 
-.pipeline-stage-name, .pipeline-time {
+.pipeline-stage-name, .pipeline-time, .pipeline-actions {
   font-size: (@font-size-base - 1);
   text-align: center;
 }
@@ -149,7 +150,7 @@
     margin: @pipeline-margin * 2.25;
   }
 }
-.pipeline-time {
+.pipeline-time, .pipeline-actions {
   margin-top: 12px;
   .text-muted();
   &.IN_PROGRESS {
@@ -305,6 +306,12 @@
 }
 
 .pipeline-status-bar.PAUSED_PENDING_INPUT  {
+  .pipeline-line:before,
+  .clip1:before,
+  .clip2:before,
+  .inner-circle-fill {
+    background-color: @build-pipeline-require-attention-color;
+  }
   .pipeline-circle {
     &:after {
       content: "\f04c";
