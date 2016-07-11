@@ -4658,26 +4658,42 @@ title:"Edit"
 d.project = c, d.breadcrumbs[0].title = a("displayName")(c);
 var i, j = a("orderByDisplayName");
 f.get("routes", d.routeName, h).then(function(a) {
-i = angular.copy(a);
-var b = _.get(i, "spec.to.name");
-d.routing = {
+i = angular.copy(a), d.routing = {
 service:_.get(i, "spec.to.name"),
 host:_.get(i, "spec.host"),
 path:_.get(i, "spec.path"),
 targetPort:_.get(i, "spec.port.targetPort"),
 tls:angular.copy(_.get(i, "spec.tls"))
 }, f.list("services", h, function(a) {
-var c = a.by("metadata.name");
-d.loading = !1, d.services = j(c), d.routing.service = c[b];
+var b = a.by("metadata.name"), c = _.get(i, "spec.to", {});
+d.loading = !1, d.services = j(b), d.routing.to = {
+service:b[c.name],
+weight:c.weight
+}, d.routing.alternateServices = [], _.each(_.get(i, "spec.alternateBackends"), function(a) {
+return "Service" !== a.kind ? (g.toErrorPage('Editing routes with non-service targets is unsupported. You can edit the route with the "Edit YAML" action instead.'), !1) :void d.routing.alternateServices.push({
+service:b[a.name],
+weight:a.weight
+});
+});
 });
 }, function() {
 g.toErrorPage("Could not load route " + d.routeName + ".");
 });
 var k = function() {
-var a = _.get(d, "routing.service.metadata.name");
-_.set(i, "spec.to.name", a), "true" === _.get(i, [ "metadata", "annotations", "openshift.io/host.generated" ]) && _.get(i, "spec.host") !== d.routing.host && delete i.metadata.annotations["openshift.io/host.generated"], i.spec.host = d.routing.host, i.spec.path = d.routing.path;
-var b = d.routing.targetPort;
-b ? _.set(i, "spec.port.targetPort", b) :delete i.spec.port, _.get(d, "routing.tls.termination") ? i.spec.tls = d.routing.tls :delete i.spec.tls;
+var a = _.get(d, "routing.to.service.metadata.name");
+_.set(i, "spec.to.name", a);
+var b = _.get(d, "routing.to.weight");
+isNaN(b) || _.set(i, "spec.to.weight", b), i.spec.path = d.routing.path;
+var c = d.routing.targetPort;
+c ? _.set(i, "spec.port.targetPort", c) :delete i.spec.port, _.get(d, "routing.tls.termination") ? i.spec.tls = d.routing.tls :delete i.spec.tls;
+var e = _.get(d, "routing.alternateServices", []);
+_.isEmpty(e) ? delete i.spec.alternateBackends :i.spec.alternateBackends = _.map(e, function(a) {
+return {
+kind:"Service",
+name:_.get(a, "service.metadata.name"),
+weight:a.weight
+};
+});
 };
 d.updateRoute = function() {
 d.form.$valid && (d.disableInputs = !0, k(), f.update("routes", d.routeName, i, h).then(function() {
@@ -5264,7 +5280,7 @@ title:"Create Route"
 c.project = b, c.breadcrumbs[0].title = a("displayName")(b);
 var h = {}, i = a("orderByDisplayName");
 f.list("services", g, function(a) {
-c.services = i(a.by("metadata.name")), c.routing.service = _.find(c.services, function(a) {
+c.services = i(a.by("metadata.name")), c.routing.to = {}, c.routing.to.service = _.find(c.services, function(a) {
 return !c.serviceName || a.metadata.name === c.serviceName;
 }), c.$watch("routing.service", function() {
 h = angular.copy(c.routing.service.metadata.labels);
@@ -5272,8 +5288,14 @@ h = angular.copy(c.routing.service.metadata.labels);
 }), c.createRoute = function() {
 if (c.createRouteForm.$valid) {
 c.disableInputs = !0;
-var b = c.routing.service.metadata.name, i = e.createRoute(c.routing, b, h);
-f.create("routes", null, i, g).then(function() {
+var b = c.routing.service.metadata.name, i = e.createRoute(c.routing, b, h), j = _.get(c, "routing.alternateServices", []);
+_.isEmpty(j) || (i.spec.to.weight = _.get(c, "routing.to.weight"), i.spec.alternateBackends = _.map(j, function(a) {
+return {
+kind:"Service",
+name:_.get(a, "service.metadata.name"),
+weight:a.weight
+};
+})), f.create("routes", null, i, g).then(function() {
 d.history.back();
 }, function(b) {
 c.disableInputs = !1, c.alerts["create-route"] = {
@@ -6255,14 +6277,34 @@ label:a.port + " → " + a.targetPort + " (" + a.protocol + ")"
 };
 }) :a.route.portOptions = []);
 };
-a.services && !a.route.service && (a.route.service = _.find(a.services)), a.$watch("route.service", function(b, c) {
-e(a.route.service), b === c && a.route.targetPort || (a.route.targetPort = _.get(a, "route.portOptions[0].port"));
+a.services && !a.route.service && (a.route.service = _.find(a.services)), a.$watch("route.to.service", function(b, c) {
+e(b), b === c && a.route.targetPort || (a.route.targetPort = _.get(a, "route.portOptions[0].port")), a.services && (a.alternateServiceOptions = _.reject(a.services, function(a) {
+return b === a;
+}));
 });
 var f = function() {
 return !!a.route.tls && ((!a.route.tls.termination || "passthrough" === a.route.tls.termination) && (a.route.tls.certificate || a.route.tls.key || a.route.tls.caCertificate || a.route.tls.destinationCACertificate));
 };
 a.$watch("route.tls.termination", function() {
 _.get(a, "route.tls.termination") && (a.showSecureRouteOptions = !0), a.showCertificatesNotUsedWarning = f();
+}), a.addAlternateService = function() {
+a.route.alternateServices = a.route.alternateServices || [], a.route.alternateServices.push({});
+};
+}
+};
+}).directive("oscRoutingService", function() {
+return {
+restrict:"E",
+scope:{
+model:"=",
+services:"=",
+isAlternate:"=?",
+showWeight:"=?"
+},
+templateUrl:"views/directives/osc-routing-service.html",
+link:function(a, b, c, d) {
+a.form = d, a.id = _.uniqueId("osc-routing-service-"), a.$watchGroup([ "model.service", "services" ], function() {
+_.has(a, "model.service") && !_.isEmpty(a.services) || _.set(a, "model.service", _.find(a.services));
 });
 }
 };
@@ -7569,7 +7611,58 @@ n && (n = n.destroy());
 });
 }
 };
-} ]), angular.module("openshiftConsole").directive("deploymentDonut", [ "$filter", "$location", "$timeout", "$uibModal", "DeploymentsService", "HPAService", "LabelFilter", "Navigate", "hashSizeFilter", "isDeploymentFilter", function(a, b, c, d, e, f, g, h, i, j) {
+} ]), angular.module("openshiftConsole").directive("routeServicePie", function() {
+return {
+restrict:"E",
+scope:{
+route:"="
+},
+template:'<div ng-attr-id="{{chartId}}"></div>',
+link:function(a) {
+function b() {
+var b = {
+columns:[]
+};
+a.route && (b.columns.push(e(a.route.spec.to)), _.each(a.route.spec.alternateBackends, function(a) {
+b.columns.push(e(a));
+})), c ? c.load(b) :(d.data.columns = b.columns, c = c3.generate(d));
+}
+var c, d;
+a.chartId = _.uniqueId("route-service-chart-"), d = {
+bindto:"#" + a.chartId,
+color:{
+pattern:[ $.pfPaletteColors.blue, $.pfPaletteColors.orange, $.pfPaletteColors.green, $.pfPaletteColors.red ]
+},
+legend:{
+show:!0,
+position:"right"
+},
+pie:{
+label:{
+show:!1
+}
+},
+size:{
+height:115,
+width:260
+},
+data:{
+type:"pie",
+order:null,
+selection:{
+enabled:!1
+}
+}
+};
+var e = function(a) {
+return [ a.name, a.weight ];
+};
+a.$watch("route", b), a.$on("destroy", function() {
+c && (c = c.destroy());
+});
+}
+};
+}), angular.module("openshiftConsole").directive("deploymentDonut", [ "$filter", "$location", "$timeout", "$uibModal", "DeploymentsService", "HPAService", "LabelFilter", "Navigate", "hashSizeFilter", "isDeploymentFilter", function(a, b, c, d, e, f, g, h, i, j) {
 return {
 restrict:"E",
 scope:{

@@ -43,7 +43,8 @@ angular.module('openshiftConsole')
 
         DataService.list("services", context, function(services) {
           $scope.services = orderByDisplayName(services.by("metadata.name"));
-          $scope.routing.service = _.find($scope.services, function(service) {
+          $scope.routing.to = {};
+          $scope.routing.to.service = _.find($scope.services, function(service) {
             return !$scope.serviceName || service.metadata.name === $scope.serviceName;
           });
           $scope.$watch('routing.service', function() {
@@ -56,6 +57,18 @@ angular.module('openshiftConsole')
             $scope.disableInputs = true;
             var serviceName = $scope.routing.service.metadata.name;
             var route = ApplicationGenerator.createRoute($scope.routing, serviceName, labels);
+            var alternateServices = _.get($scope, 'routing.alternateServices', []);
+            if (!_.isEmpty(alternateServices)) {
+              route.spec.to.weight = _.get($scope, 'routing.to.weight');
+              route.spec.alternateBackends = _.map(alternateServices, function(alternate) {
+                return {
+                  kind: 'Service',
+                  name: _.get(alternate, 'service.metadata.name'),
+                  weight: alternate.weight
+                };
+              });
+            }
+
             DataService.create('routes', null, route, context)
               .then(function() { // Success
                 // Return to the previous page
