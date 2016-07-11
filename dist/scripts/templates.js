@@ -6572,6 +6572,11 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "<div class=\"modal-body\">\n" +
     "\n" +
     "<parse-error error=\"error\" ng-if=\"error\"></parse-error>\n" +
+    "<div ng-if=\"resourceChanged\" class=\"alert alert-warning\">\n" +
+    "<span class=\"pficon pficon-warning-triangle-o\" aria-hidden=\"true\"></span>\n" +
+    "<span class=\"sr-only\">Warning:</span>\n" +
+    "{{resource.kind | humanizeKind | upperFirst}} <strong>{{resource.metadata.name}}</strong> has changed since you started editing it. You'll need to copy any changes you've made and edit the {{resource.kind | humanizeKind}} again.\n" +
+    "</div>\n" +
     "\n" +
     "<div ui-ace=\"{\n" +
     "      mode: 'yaml',\n" +
@@ -6584,7 +6589,7 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "    }\" ng-model=\"model\" class=\"editor yaml-mode\"></div>\n" +
     "</div>\n" +
     "<div class=\"modal-footer\">\n" +
-    "<button class=\"btn btn-lg btn-primary\" type=\"button\" ng-click=\"save()\" ng-disabled=\"!modified\">Save</button>\n" +
+    "<button class=\"btn btn-lg btn-primary\" type=\"button\" ng-click=\"save()\" ng-disabled=\"!modified || resourceChanged\">Save</button>\n" +
     "<button class=\"btn btn-lg btn-default\" type=\"button\" ng-click=\"cancel()\">Cancel</button>\n" +
     "</div>\n" +
     "</div>"

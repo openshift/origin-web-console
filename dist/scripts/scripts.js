@@ -5398,19 +5398,23 @@ b.close("delete");
 b.dismiss("cancel");
 };
 } ]), angular.module("openshiftConsole").controller("EditModalController", [ "$scope", "$filter", "$uibModalInstance", "APIService", "DataService", function(a, b, c, d, e) {
-var f = angular.copy(a.resource);
-f = angular.extend({
+var f = angular.copy(a.resource), g = function(a) {
+return _.get(a, "metadata.resourceVersion");
+};
+a.$watch("resource", function(b) {
+a.resourceChanged = g(b) !== g(f);
+}), f = angular.extend({
 apiVersion:f.apiVersion,
 kind:f.kind
 }, f), a.model = YAML.stringify(f, 8, 2);
-var g = _.throttle(function() {
+var h = _.throttle(function() {
 a.$eval(function() {
 a.modified = !0;
 });
 }, 1e3);
 a.aceLoaded = function(b) {
 var c = b.getSession();
-c.setOption("tabSize", 2), c.setOption("useSoftTabs", !0), b.getSession().on("change", g);
+c.setOption("tabSize", 2), c.setOption("useSoftTabs", !0), b.getSession().on("change", h);
 var d = function() {
 var a = $(".modal-resource-edit .modal-header").outerHeight(), c = $(".modal-resource-edit .modal-footer").outerHeight(), d = window.innerHeight - a - c, e = Math.floor(.8 * d);
 $(".modal-resource-edit .editor").animate({
