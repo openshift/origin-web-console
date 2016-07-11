@@ -1451,13 +1451,12 @@ errorNotification:!1
 }
 };
 } ]), angular.module("openshiftConsole").service("ApplicationGenerator", [ "DataService", "Logger", "$parse", function(a, b, c) {
-var d = {};
-return d._generateSecret = function() {
+var d = function() {
 function a() {
 return Math.floor(65536 * (1 + Math.random())).toString(16).substring(1);
 }
 return a() + a() + a() + a();
-}, d.parsePorts = function(a) {
+}, e = function(a) {
 var d = function(d) {
 var e = [];
 return angular.forEach(d, function(d, f) {
@@ -1473,34 +1472,7 @@ return a.containerPort - b.containerPort;
 }), e;
 }, e = c("dockerImageMetadata.Config.ExposedPorts")(a) || c("dockerImageMetadata.ContainerConfig.ExposedPorts")(a) || [];
 return d(e);
-}, d.generate = function(a) {
-var b = d.parsePorts(a.image);
-a.labels.app = a.name, a.annotations["openshift.io/generated-by"] = "OpenShiftWebConsole";
-var c;
-null !== a.buildConfig.sourceUrl && (c = {
-name:a.name,
-tag:"latest",
-kind:"ImageStreamTag",
-toString:function() {
-return this.name + ":" + this.tag;
-}
-});
-var e = {
-imageStream:d._generateImageStream(a),
-buildConfig:d._generateBuildConfig(a, c, a.labels),
-deploymentConfig:d._generateDeploymentConfig(a, c, b, a.labels)
-};
-a.scaling.autoscale && (e.hpa = d._generateHPA(a, e.deploymentConfig));
-var f = d._generateService(a, a.name, b);
-return f && (e.service = f, e.route = d._generateRoute(a, a.name, e.service.metadata.name)), e;
-}, d.createRoute = function(a, b, c) {
-return d._generateRoute({
-labels:c || {},
-routing:angular.extend({
-include:!0
-}, a)
-}, a.name, b);
-}, d._generateRoute = function(a, b, c) {
+}, f = function(a, b, c) {
 if (!a.routing.include) return null;
 var d = {
 kind:"Route",
@@ -1524,7 +1496,14 @@ var e = a.routing.tls;
 return e && e.termination && (d.spec.tls = {
 termination:e.termination
 }, "passthrough" !== e.termination && ("edge" === e.termination && e.insecureEdgeTerminationPolicy && (d.spec.tls.insecureEdgeTerminationPolicy = e.insecureEdgeTerminationPolicy), e.certificate && (d.spec.tls.certificate = e.certificate), e.key && (d.spec.tls.key = e.key), e.caCertificate && (d.spec.tls.caCertificate = e.caCertificate), e.destinationCACertificate && "reencrypt" === e.termination && (d.spec.tls.destinationCACertificate = e.destinationCACertificate))), d;
-}, d._generateDeploymentConfig = function(a, b, c) {
+}, g = function(a, b, c) {
+return f({
+labels:c || {},
+routing:angular.extend({
+include:!0
+}, a)
+}, a.name, b);
+}, h = function(a, b, c) {
 var d = [];
 angular.forEach(a.deploymentConfig.envVars, function(a, b) {
 d.push({
@@ -1579,7 +1558,7 @@ name:b.toString()
 }), a.deploymentConfig.deployOnConfigChange && h.spec.triggers.push({
 type:"ConfigChange"
 }), h;
-}, d._generateHPA = function(a, b) {
+}, i = function(a, b) {
 var c = {
 apiVersion:"extensions/v1beta1",
 kind:"HorizontalPodAutoscaler",
@@ -1603,7 +1582,7 @@ targetPercentage:a.scaling.targetCPU || a.scaling.defaultTargetCPU
 }
 };
 return c;
-}, d._generateBuildConfig = function(a, b) {
+}, j = function(a, b) {
 var c = [];
 angular.forEach(a.buildConfig.envVars, function(a, b) {
 c.push({
@@ -1613,13 +1592,13 @@ value:a
 });
 var e = [ {
 generic:{
-secret:d._generateSecret()
+secret:d()
 },
 type:"Generic"
 } ];
 a.buildConfig.buildOnSourceChange && e.push({
 github:{
-secret:d._generateSecret()
+secret:d()
 },
 type:"GitHub"
 }), a.buildConfig.buildOnImageChange && e.push({
@@ -1667,7 +1646,7 @@ triggers:e
 }
 };
 return a.buildConfig.contextDir && (i.spec.source.contextDir = a.buildConfig.contextDir), i;
-}, d._generateImageStream = function(a) {
+}, k = function(a) {
 return {
 apiVersion:"v1",
 kind:"ImageStream",
@@ -1677,16 +1656,16 @@ labels:a.labels,
 annotations:a.annotations
 }
 };
-}, d.getServicePort = function(a) {
+}, l = function(a) {
 return {
 port:a.containerPort,
 targetPort:a.containerPort,
 protocol:a.protocol,
 name:(a.containerPort + "-" + a.protocol).toLowerCase()
 };
-}, d._generateService = function(a, b, c) {
+}, m = function(a, b, c) {
 if (!c || !c.length) return null;
-var e = {
+var d = {
 kind:"Service",
 apiVersion:"v1",
 metadata:{
@@ -1698,11 +1677,44 @@ spec:{
 selector:{
 deploymentconfig:a.name
 },
-ports:_.map(c, d.getServicePort)
+ports:_.map(c, l)
 }
 };
-return e;
-}, d;
+return d;
+}, n = function(a) {
+var b = e(a.image);
+a.labels.app = a.name, a.annotations["openshift.io/generated-by"] = "OpenShiftWebConsole";
+var c;
+null !== a.buildConfig.sourceUrl && (c = {
+name:a.name,
+tag:"latest",
+kind:"ImageStreamTag",
+toString:function() {
+return this.name + ":" + this.tag;
+}
+});
+var d = {
+imageStream:k(a),
+buildConfig:j(a, c, a.labels),
+deploymentConfig:h(a, c, b, a.labels)
+};
+a.scaling.autoscale && (d.hpa = i(a, d.deploymentConfig));
+var g = m(a, a.name, b);
+return g && (d.service = g, d.route = f(a, a.name, d.service.metadata.name)), d;
+};
+return {
+createRoute:g,
+generate:n,
+parsePorts:e,
+generateSecret:d,
+getServicePort:l,
+_generateService:m,
+_generateRoute:f,
+_generateDeploymentConfig:h,
+_generateBuildConfig:j,
+_generateImageStream:k,
+_generateHPA:i
+};
 } ]), angular.module("openshiftConsole").service("AlertMessageService", function() {
 var a = [];
 return {
@@ -5037,7 +5049,7 @@ var d = {
 type:b
 };
 d["GitHub" === b ? "github" :"generic"] = {
-secret:f._generateSecret()
+secret:f.generateSecret()
 }, c.push(d);
 }
 return c;
