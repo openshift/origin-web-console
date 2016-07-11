@@ -856,7 +856,7 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "<div class=\"col-md-9\">\n" +
     "<h1>OpenShift by Red Hat&reg;</h1>\n" +
     "<h2>About</h2>\n" +
-    "<p><a href=\"https://openshift.com\">OpenShift</a> is Red Hat's Platform-as-a-Service (PaaS) that allows developers to quickly develop, host, and scale applications in a cloud environment.</p>\n" +
+    "<p><a target=\"_blank\" href=\"https://openshift.com\">OpenShift</a> is Red Hat's Platform-as-a-Service (PaaS) that allows developers to quickly develop, host, and scale applications in a cloud environment.</p>\n" +
     "<h2 id=\"version\">Version</h2>\n" +
     "<dl class=\"dl-horizontal left\">\n" +
     "<dt>OpenShift Master:</dt>\n" +
@@ -907,7 +907,7 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "but none are loaded on this project.\n" +
     "</p>\n" +
     "<p>\n" +
-    "To claim storage from a persistent volume, refer to the documentation on <a ng-href=\"{{'persistent_volumes' | helpLink}}\">using persistent volumes</a>.\n" +
+    "To claim storage from a persistent volume, refer to the documentation on <a target=\"_blank\" ng-href=\"{{'persistent_volumes' | helpLink}}\">using persistent volumes</a>.\n" +
     "</p>\n" +
     "<p ng-if=\"attach.deploymentConfig\"><a href=\"{{attach.deploymentConfig | navigateResourceURL}}\">Back to deployment config</a></p>\n" +
     "<p ng-if=\"attach.deployment\"><a href=\"{{attach.deployment | navigateResourceURL}}\">Back to deployment</a></p>\n" +
@@ -3233,10 +3233,10 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "<p>\n" +
     "With the OpenShift command line interface (CLI), you can create applications and manage OpenShift projects from a terminal.\n" +
     "<span ng-if=\"cliDownloadURLPresent\">\n" +
-    "You can download the <code>oc</code> client tool using the links below. For more information about downloading and installing it, please refer to the <a href=\"{{'get_started_cli' | helpLink}}\">Get Started with the CLI</a> documentation.\n" +
+    "You can download the <code>oc</code> client tool using the links below. For more information about downloading and installing it, please refer to the <a target=\"_blank\" href=\"{{'get_started_cli' | helpLink}}\">Get Started with the CLI</a> documentation.\n" +
     "</span>\n" +
     "<span ng-if=\"!cliDownloadURLPresent\">\n" +
-    "Refer to the <a href=\"{{'get_started_cli' | helpLink}}\">Get Started with the CLI</a> documentation for instructions about downloading and installing the <code>oc</code> client tool.\n" +
+    "Refer to the <a target=\"_blank\" href=\"{{'get_started_cli' | helpLink}}\">Get Started with the CLI</a> documentation for instructions about downloading and installing the <code>oc</code> client tool.\n" +
     "</span>\n" +
     "<div ng-if=\"cliDownloadURLPresent\">\n" +
     "<label class=\"cli-download-label\">Download <code>oc</code>:</label>\n" +
@@ -7569,7 +7569,7 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "<span ng-if=\"canCreate\">Create a project for your application.</span>\n" +
     "</p>\n" +
     "<a ng-if=\"canCreate\" href=\"create-project\" class=\"btn btn-lg btn-primary\">New Project</a>\n" +
-    "<p>To learn more, visit the OpenShift <a ng-href=\"{{'' | helpLink}}\">documentation</a>.</p>\n" +
+    "<p>To learn more, visit the OpenShift <a target=\"_blank\" ng-href=\"{{'' | helpLink}}\">documentation</a>.</p>\n" +
     "<p ng-if=\"canCreate === false\">\n" +
     "<span ng-if=\"!newProjectMessage\">A cluster admin can create a project for you by running the command<br>\n" +
     "<code>oadm new-project &lt;projectname&gt; --admin={{user.metadata.name || '&lt;YourUsername&gt;'}}</code></span>\n" +

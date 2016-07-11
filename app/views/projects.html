@@ -68,7 +68,7 @@
 
               <a ng-if="canCreate" href="create-project" class="btn btn-lg btn-primary">New Project</a>
 
-              <p>To learn more, visit the OpenShift <a ng-href="{{'' | helpLink}}">documentation</a>.</p>
+              <p>To learn more, visit the OpenShift <a target="_blank" ng-href="{{'' | helpLink}}">documentation</a>.</p>
 
               <p ng-if="canCreate === false">
                 <span ng-if="!newProjectMessage">A cluster admin can create a project for you by running the command<br>

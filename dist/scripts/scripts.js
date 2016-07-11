@@ -9741,7 +9741,7 @@ url:l
 a.add("nav-help-dropdown", function() {
 return [ {
 type:"dom",
-node:"<li><a href=\"{{'default' | helpLink}}\">Documentation</a></li>"
+node:'<li><a target="_blank" href="{{\'default\' | helpLink}}">Documentation</a></li>'
 }, {
 type:"dom",
 node:'<li><a href="about">About</a></li>'
