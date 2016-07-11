@@ -94,6 +94,11 @@ angular.module("openshiftConsole")
     var scoreRoute = function(route) {
       var score = 0;
       if (isAdmitted(route)) {
+        score += 11;
+      }
+
+      var alternateBackends = _.get(route, 'spec.alternateBackends');
+      if (!_.isEmpty(alternateBackends)) {
         score += 5;
       }
 

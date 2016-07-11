@@ -54,10 +54,7 @@ angular.module('openshiftConsole')
           $scope.appName = appName;
         });
 
-        $scope.$watch(function() {
-          var serviceName = _.get($scope, 'service.metadata.name');
-          return _.get($scope, ['routesByService', serviceName]);
-        }, function(routes) {
+        var getDisplayRoute = function(routes) {
           var displayRoute;
           _.each(routes, function(candidate) {
             if (!displayRoute) {
@@ -69,7 +66,43 @@ angular.module('openshiftConsole')
             displayRoute = RoutesService.getPreferredDisplayRoute(displayRoute, candidate);
           });
 
-          $scope.displayRoute = displayRoute;
+          return displayRoute;
+        };
+
+        var addAlternateServices = function() {
+          $scope.weightByService = {};
+          $scope.alternateServices = [];
+
+          // Keep track of the total weight of all services so we can show A/B
+          // traffic as percentages.
+          $scope.totalWeight = 0;
+
+          var primaryServiceWeight = _.get($scope.displayRoute, 'spec.to.weight');
+          $scope.weightByService[$scope.service.metadata.name] = primaryServiceWeight;
+          $scope.totalWeight += primaryServiceWeight;
+
+          var alternateBackends = _.get($scope.displayRoute, 'spec.alternateBackends', []);
+          _.each(alternateBackends, function(routeTarget) {
+            if (routeTarget.kind !== 'Service') {
+              return;
+            }
+
+            var service = $scope.services[routeTarget.name];
+            if (service) {
+              $scope.alternateServices.push(service);
+            }
+
+            $scope.weightByService[routeTarget.name] = routeTarget.weight;
+            $scope.totalWeight += routeTarget.weight;
+          });
+        };
+
+        $scope.$watch(function() {
+          var serviceName = _.get($scope, 'service.metadata.name');
+          return _.get($scope, ['routesByService', serviceName]);
+        }, function(routes) {
+          $scope.displayRoute = getDisplayRoute(routes);
+          addAlternateServices();
         });
 
         $scope.$watchGroup(['service', 'childServicesByParent'], function() {
@@ -77,7 +110,6 @@ angular.module('openshiftConsole')
             return;
           }
           $scope.childServices = _.get($scope, ['childServicesByParent', $scope.service.metadata.name], []);
-          $scope.groupedServices = [$scope.service].concat($scope.childServices);
         });
       }
     };

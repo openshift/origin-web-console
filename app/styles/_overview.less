@@ -275,7 +275,7 @@
   }
   .service-title {
     .text-muted();
-    .align-items(@align: flex-end);
+    .align-items(@align: center);
     border-bottom: 1px solid @overview-border-gray;
     .justify-content(@justify: space-between);
     padding: 5px 10px;
@@ -429,6 +429,62 @@
   .standalone-service .no-child-services-message {
     display: none;
   }
+  @media (min-width: @screen-md-min) {
+    .single-alternate-service {
+      .primary-service .deployment-tile {
+        border-right: 0;
+        // Remove the gap between the tiles.
+        margin-right: -5px;
+        .service-title {
+          padding-right: 0;
+        }
+      }
+      .alternate-service {
+        .deployment-tile {
+          // Remove the gap between the tiles.
+          margin-left: 5px;
+          // Prevent the left box-shadow from appearing over the primary service tile.
+          box-shadow: 2px 3px 6px -1px rgba(0, 0, 0, 0.1);
+          .service-title {
+            padding-left: 0;
+          }
+        }
+        .service-metadata {
+          order: -1;
+          .traffic-label {
+            display: none;
+          }
+          .progress {
+            margin-left: 0;
+            .progress-bar {
+              background-color: @color-pf-blue-500;
+            }
+          }
+        }
+      }
+    }
+  }
+  .deployment-tile {
+    .traffic-label {
+      display: inline-block;
+    }
+    .progress {
+      background-color: inherit;
+      border: 0;
+      box-shadow: none;
+      display: inline-block;
+      margin: 0 0 0 5px;
+      // Make sure the bar is wide enough to show the label for small percentages like 2%.
+      min-width: 2em;
+      vertical-align: -3px;
+      .progress-bar {
+        width: 100%;
+      }
+      @media (min-width: @screen-lg-min) {
+        width: 250px;
+      }
+    }
+  }
   .standalone-service .no-deployments-block {
     margin-left: 0;
     .no-deployments-message {
@@ -442,7 +498,7 @@
     width: @shield-width;
     position: absolute;
     .align-items(@align: center);
-    right: 15px;
+    right: 10px;
     top: -1px;
     z-index: 9;
     .shield-number {

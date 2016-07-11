@@ -39,13 +39,23 @@
       </div>
     </div>
     <div uib-collapse="collapse" class="service-group-body">
-      <div row mobile="column" class="overview-services">
+      <!--
+        Add a single-alternate-service class if the route has exactly one alternate backend so we
+        can render that common case specially.
+      -->
+      <div row mobile="column" class="overview-services"
+           ng-class="{ 'single-alternate-service': (alternateServices | hashSize) === 1 }">
+        <overview-service column grow="1" class="primary-service"></overview-service>
         <overview-service
-            ng-repeat="service in groupedServices"
+            ng-repeat="service in alternateServices"
             column grow="1"
-            ng-class="{'child-service': !$first}">
+            class="alternate-service">
         </overview-service>
-        <div flex column ng-if="childServices.length === 0 && service" class="no-child-services-message">
+        <overview-service
+            ng-repeat="service in childServices"
+            column grow="1">
+        </overview-service>
+        <div flex column ng-if="alternateServices.length === 0 && childServices.length === 0 && service" class="no-child-services-message">
           <!-- <div class="blank-state-icon"> -->
           <!--   <span class="pficon pficon pficon-add-circle-o" aria-hidden="true"></span> -->
           <!-- </div> -->

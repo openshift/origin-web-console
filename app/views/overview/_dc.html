@@ -4,15 +4,22 @@
       Service:
       <a ng-href="{{service | navigateResourceURL}}">{{service.metadata.name}}</a>
     </div>
-    <div>
+    <div class="service-metadata">
       <span ng-if="!scalableDeploymentByConfig[dcName]">Deploying...</span>
-      <relative-timestamp ng-if="scalableDeploymentByConfig[dcName]" timestamp="scalableDeploymentByConfig[dcName].metadata.creationTimestamp"></relative-timestamp>
+      <div ng-if="scalableDeploymentByConfig[dcName] && weightByService[service.metadata.name]">
+        <ng-include src="'views/overview/_traffic-percent.html'"></ng-include>
+      </div>
     </div>
   </div>
   <div class="deployment-header">
     <div class="rc-header">
-      Deployment:
-      <a ng-href="{{deploymentConfigs[dcName] | navigateResourceURL}}">{{dcName}}</a>
+      <div>
+        Deployment:
+        <a ng-href="{{deploymentConfigs[dcName] | navigateResourceURL}}">{{dcName}}</a>
+      </div>
+      <div>
+        <relative-timestamp ng-if="scalableDeploymentByConfig[dcName]" timestamp="scalableDeploymentByConfig[dcName].metadata.creationTimestamp"></relative-timestamp>
+      </div>
     </div>
     <div column flex class="shield" ng-if="scalableDeploymentByConfig[dcName]"
           ng-class="{ 'shield-lg': (scalableDeploymentByConfig[dcName] | annotation: 'deploymentVersion').length > 3 }">

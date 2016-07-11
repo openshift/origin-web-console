@@ -486,4 +486,14 @@ angular.module('openshiftConsole')
     return function(value) {
       return value === null || value === undefined;
     };
+  })
+  .filter('percent', function() {
+    // Takes a number like 0.33 and returns "33%". `precision` is the optional
+    // number of digits to appear after the decimal point.
+    return function(value, precision) {
+      if (value === null || value === undefined) {
+        return value;
+      }
+      return _.round(Number(value) * 100, precision) + "%";
+    };
   });
