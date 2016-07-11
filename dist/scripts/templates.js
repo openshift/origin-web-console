@@ -7129,7 +7129,7 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
 
   $templateCache.put('views/overview/_service-group.html',
     "<div class=\"service-group\">\n" +
-    "<div row tablet=\"column\" class=\"service-group-header\" ng-if=\"service.metadata.labels.app || displayRoute\" ng-click=\"toggleCollapse()\">\n" +
+    "<div row tablet=\"column\" class=\"service-group-header\" ng-if=\"service.metadata.labels.app || displayRoute\" ng-click=\"toggleCollapse()\" ng-class=\"{ 'has-app-label': appName }\">\n" +
     "<div ng-if=\"appName\" class=\"app-name\">\n" +
     "<i class=\"fa fa-angle-down fa-fw\" aria-hidden=\"true\" ng-if=\"!collapse\"></i>\n" +
     "<i class=\"fa fa-angle-right fa-fw\" aria-hidden=\"true\" ng-if=\"collapse\"></i>\n" +
@@ -7148,6 +7148,10 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "<span ng-if=\"routeWarningsByService[service.metadata.name] && routesByService[service.metadata.name].length === 1\">\n" +
     "<route-warnings warnings=\"routeWarningsByService[service.metadata.name]\"></route-warnings>\n" +
     "</span>\n" +
+    "<small ng-if=\"(primaryServiceRoutes | hashSize) > 1\" class=\"other-routes-msg\">\n" +
+    "and\n" +
+    "<a ng-href=\"project/{{projectName}}/browse/routes\">{{(primaryServiceRoutes | hashSize) - 1}} other route<span ng-if=\"(primaryServiceRoutes | hashSize) > 2\">s</span></a>\n" +
+    "</small>\n" +
     "</h4>\n" +
     "<span ng-if=\"!displayRoute\">\n" +
     "<a ng-href=\"project/{{service.metadata.namespace}}/create-route?service={{service.metadata.name}}\">Create Route</a>\n" +

@@ -8446,7 +8446,7 @@ e.$watch(function() {
 var a = _.get(e, "service.metadata.name");
 return _.get(e, [ "routesByService", a ]);
 }, function(a) {
-e.displayRoute = f(a), g();
+e.displayRoute = f(a), e.primaryServiceRoutes = a, g();
 }), e.$watchGroup([ "service", "childServicesByParent" ], function() {
 e.service && (e.childServices = _.get(e, [ "childServicesByParent", e.service.metadata.name ], []));
 });
