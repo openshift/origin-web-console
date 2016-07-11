@@ -594,24 +594,21 @@ label.checkbox {
 
 // `edit-command` directive
 .command-args {
-  .input-group-addon.drag-handle {
-    padding-left: 4px;
-    padding-right: 4px;
-    .fa {
-      .text-muted();
-    }
-    .fa + .fa {
-      // 1px margin between the two kebabs that make the drag handle
-      margin-left: 1px;
-    }
-  }
   textarea {
     // Resize does not work well with drag and drop reordering.
     resize: none;
   }
-  .remove-arg {
-    border: 0;
+  .drag-handle {
+    cursor: move;
+    .fa {
+      padding-left: 5px;
+    }
+  }
+  .drag-handle, .remove-arg {
     background-color: inherit;
+    border: 0;
+    font-size: 15px;
+    padding-top: 5px;
     vertical-align: top;
   }
 }

@@ -3386,7 +3386,6 @@ to{transform:rotate(359deg)}
 .deployment-donut .scaling-controls a.disabled:hover{color:#bbb}
 .deployment-donut .hpa-details{font-size:84%;color:#9c9c9c;text-align:center;align-items:center;margin-top:-5px;margin-bottom:7px}
 .deployment-donut .hpa-details .hpa-warning{cursor:help;margin-left:1px;vertical-align:-1px}
-.action-button,[data-toggle=tooltip]{cursor:pointer}
 .browse-deployment-donut .deployment-donut{-webkit-align-items:center;-moz-align-items:center;align-items:center}
 .deployment-well:not(.active){background-color:#fff}
 .deployment-well:not(.detailed){padding-top:12px;padding-bottom:12px}
@@ -3548,11 +3547,11 @@ label.checkbox{font-weight:400}
 .catalog-col section{margin-bottom:20px}
 .catalog-col section>h3 small{font-size:13px}
 .tag{color:#999;text-transform:uppercase;margin-right:10px}
-.command-args .input-group-addon.drag-handle{padding-left:4px;padding-right:4px}
-.command-args .input-group-addon.drag-handle .fa{color:#9c9c9c}
-.command-args .input-group-addon.drag-handle .fa+.fa{margin-left:1px}
 .command-args textarea{resize:none}
-.command-args .remove-arg{border:0;background-color:inherit;vertical-align:top}
+.command-args .drag-handle{cursor:move}
+.action-button,[data-toggle=tooltip]{cursor:pointer}
+.command-args .drag-handle .fa{padding-left:5px}
+.command-args .drag-handle,.command-args .remove-arg{background-color:inherit;border:0;font-size:15px;padding-top:5px;vertical-align:top}
 .catalog .tile-image a.tag,.catalog .tile-template a.tag{text-decoration:none}
 .catalog .tile-image a.tag:hover,.catalog .tile-template a.tag:hover{color:#000;background:#dfdfdf;text-decoration:none}
 .catalog-fluid{display:-webkit-flex;display:-moz-flex;display:-ms-flexbox;display:-ms-flex;display:flex;-webkit-flex-direction:column;-moz-flex-direction:column;-ms-flex-direction:column;flex-direction:column}
