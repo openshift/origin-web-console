@@ -12,6 +12,15 @@ angular.module('openshiftConsole')
     // Use angular.copy to avoid $$hashKey properties inserted by ng-repeat.
     var resource = angular.copy($scope.resource);
 
+    var getVersion = function(resource) {
+      return _.get(resource, 'metadata.resourceVersion');
+    };
+
+    // Watch for updates to the resource to warn users before the save fails.
+    $scope.$watch('resource', function(newValue) {
+      $scope.resourceChanged = getVersion(newValue) !== getVersion(resource);
+    });
+
     // Hack to make `apiVersion` and `kind` appear at the top.
     //
     // Since these properties are inserted by DataService for list operations,

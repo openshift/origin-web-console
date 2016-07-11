@@ -6,6 +6,14 @@
     <!-- Error messages -->
     <parse-error error="error" ng-if="error"></parse-error>
 
+    <div ng-if="resourceChanged" class="alert alert-warning">
+      <span class="pficon pficon-warning-triangle-o" aria-hidden="true"></span>
+      <span class="sr-only">Warning:</span>
+      {{resource.kind | humanizeKind | upperFirst}} <strong>{{resource.metadata.name}}</strong> has
+      changed since you started editing it. You'll need to copy any changes you've made and edit the
+      {{resource.kind | humanizeKind}} again.
+    </div>
+
     <!-- Editor -->
     <div ui-ace="{
       mode: 'yaml',
@@ -21,7 +29,7 @@
       <button class="btn btn-lg btn-primary"
               type="button"
               ng-click="save()"
-              ng-disabled="!modified">Save</button>
+              ng-disabled="!modified || resourceChanged">Save</button>
       <button class="btn btn-lg btn-default"
               type="button"
               ng-click="cancel()">Cancel</button>
