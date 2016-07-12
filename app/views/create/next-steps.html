@@ -40,6 +40,11 @@
               </div>
             </div>
 
+            <div class="template-message" ng-if="templateMessage.length">
+              <span class="pficon pficon-info" aria-hidden="true"></span>
+              <div class="resource-description" ng-bind-html="templateMessage | linky"></div>
+            </div>
+
             <div class="row" ng-controller="TasksController">
               <div ng-if="!pendingTasks(tasks()).length && erroredTasks(tasks()).length" class="col-md-12">
                 <h2>Things you can do</h2>

@@ -16,35 +16,42 @@ angular.module("openshiftConsole")
       }
     };
 
-  }).service("ProcessedParametersService", function(){
-
-    var params = {
-      all: [],
-      generated: []
+  }).service("ProcessedTemplateService", function(){
+    
+    var cleanTemplateData = function() {
+      return {
+        params: {
+          all: [],
+          generated: []
+        },
+        message: null
+      };
     };
 
+    var templateData = cleanTemplateData();
+
     return {
-      setParams: function(allParameters, generatedParametersName) {
+      setTemplateData: function(allParameters, generatedParametersName, msg) {
         _.each(allParameters, function(param) {
-          params.all.push({
+          templateData.params.all.push({
             name: param.name,
             value: param.value
           });
         });
         _.each(generatedParametersName, function(param) {
           if (!param.value) {
-            params.generated.push(param.name);
+            templateData.params.generated.push(param.name);
           }
         });
+        if (msg) {
+          templateData.message = msg;
+        }
       },
-      getParams: function() {
-        return params;
+      getTemplateData: function() {
+        return templateData;
       },
-      clearParams: function() {
-        params = {
-          all: [],
-          generated: []
-        };
+      clearTemplateData: function() {
+        templateData = cleanTemplateData();
       }
     };
   });

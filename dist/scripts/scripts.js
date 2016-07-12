@@ -2606,30 +2606,32 @@ clearTemplate:function() {
 a = null;
 }
 };
-}).service("ProcessedParametersService", function() {
-var a = {
-all:[],
-generated:[]
-};
+}).service("ProcessedTemplateService", function() {
+var a = function() {
 return {
-setParams:function(b, c) {
-_.each(b, function(b) {
-a.all.push({
-name:b.name,
-value:b.value
-});
-}), _.each(c, function(b) {
-b.value || a.generated.push(b.name);
-});
-},
-getParams:function() {
-return a;
-},
-clearParams:function() {
-a = {
+params:{
 all:[],
 generated:[]
+},
+message:null
 };
+}, b = a();
+return {
+setTemplateData:function(a, c, d) {
+_.each(a, function(a) {
+b.params.all.push({
+name:a.name,
+value:a.value
+});
+}), _.each(c, function(a) {
+a.value || b.params.generated.push(a.name);
+}), d && (b.message = d);
+},
+getTemplateData:function() {
+return b;
+},
+clearTemplateData:function() {
+b = a();
 }
 };
 }), angular.module("openshiftConsole").factory("ServicesService", [ "$filter", "DataService", function(a, b) {
@@ -4944,7 +4946,7 @@ null !== a && (b.debug("Generated resource definition:", a), d.push(a));
 }), w(d, a.projectName, a).then(x, y);
 };
 }));
-} ]), angular.module("openshiftConsole").controller("NextStepsController", [ "$scope", "$http", "$routeParams", "DataService", "$q", "$location", "ProcessedParametersService", "TaskList", "$parse", "Navigate", "$filter", "imageObjectRefFilter", "failureObjectNameFilter", "ProjectsService", function(a, b, c, d, e, f, g, h, i, j, k, l, m, n) {
+} ]), angular.module("openshiftConsole").controller("NextStepsController", [ "$scope", "$http", "$routeParams", "DataService", "$q", "$location", "ProcessedTemplateService", "TaskList", "$parse", "Navigate", "$filter", "imageObjectRefFilter", "failureObjectNameFilter", "ProjectsService", function(a, b, c, d, e, f, g, h, i, j, k, l, m, n) {
 function o() {
 return u && t;
 }
@@ -4967,7 +4969,9 @@ title:u,
 link:v
 }, {
 title:"Next Steps"
-} ], a.parameters = g.getParams(), g.clearParams(), n.get(c.project).then(_.spread(function(b, c) {
+} ];
+var w = g.getTemplateData();
+a.parameters = w.params, a.templateMessage = w.message, g.clearTemplateData(), n.get(c.project).then(_.spread(function(b, c) {
 function e(a) {
 var b = [];
 return angular.forEach(a, function(a) {
@@ -4998,7 +5002,7 @@ a.showParamsTable = !0;
 d.unwatchAll(q);
 })) :void j.toProjectOverview(a.projectName);
 }));
-} ]), angular.module("openshiftConsole").controller("NewFromTemplateController", [ "$scope", "$http", "$routeParams", "DataService", "ProcessedParametersService", "AlertMessageService", "ProjectsService", "$q", "$location", "TaskList", "$parse", "Navigate", "$filter", "imageObjectRefFilter", "failureObjectNameFilter", "CachedTemplateService", function(a, b, c, d, e, f, g, h, i, j, k, l, m, n, o, p) {
+} ]), angular.module("openshiftConsole").controller("NewFromTemplateController", [ "$scope", "$http", "$routeParams", "DataService", "ProcessedTemplateService", "AlertMessageService", "ProjectsService", "$q", "$location", "TaskList", "$parse", "Navigate", "$filter", "imageObjectRefFilter", "failureObjectNameFilter", "CachedTemplateService", function(a, b, c, d, e, f, g, h, i, j, k, l, m, n, o, p) {
 var q = c.name, r = c.namespace || "";
 if (!q) return void l.toErrorPage("Cannot create from template: a template name was not specified.");
 a.emptyMessage = "Loading...", a.alerts = {}, a.projectName = c.project, a.projectPromise = $.Deferred(), a.breadcrumbs = [ {
@@ -5060,7 +5064,7 @@ started:"Creating " + a.templateDisplayName() + " in project " + a.projectDispla
 success:"Created " + a.templateDisplayName() + " in project " + a.projectDisplayName(),
 failure:"Failed to create " + a.templateDisplayName() + " in project " + a.projectDisplayName()
 };
-_.isEmpty(b.parameters) || e.setParams(b.parameters, a.template.parameters);
+e.setTemplateData(b.parameters, a.template.parameters, b.message);
 var i = o(a.template);
 j.clear(), j.add(g, i, function() {
 var c = h.defer();

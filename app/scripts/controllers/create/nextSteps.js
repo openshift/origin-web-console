@@ -9,7 +9,7 @@
  * Controller of the openshiftConsole
  */
 angular.module("openshiftConsole")
-  .controller("NextStepsController", function($scope, $http, $routeParams, DataService, $q, $location, ProcessedParametersService, TaskList, $parse, Navigate, $filter, imageObjectRefFilter, failureObjectNameFilter, ProjectsService) {
+  .controller("NextStepsController", function($scope, $http, $routeParams, DataService, $q, $location, ProcessedTemplateService, TaskList, $parse, Navigate, $filter, imageObjectRefFilter, failureObjectNameFilter, ProjectsService) {
     var displayNameFilter = $filter('displayName');
     var watches = [];
 
@@ -51,8 +51,10 @@ angular.module("openshiftConsole")
       }
     ];
 
-    $scope.parameters = ProcessedParametersService.getParams();
-    ProcessedParametersService.clearParams();
+    var processedTemplateData = ProcessedTemplateService.getTemplateData();
+    $scope.parameters = processedTemplateData.params;
+    $scope.templateMessage = processedTemplateData.message;
+    ProcessedTemplateService.clearTemplateData();
 
     ProjectsService
       .get($routeParams.project)
