@@ -6705,9 +6705,9 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
   $templateCache.put('views/modals/link-service.html',
     "<div class=\"modal-resource-action\">\n" +
     "<div class=\"modal-body\">\n" +
-    "<h4>Link Service: {{service.metadata.name}}</h4>\n" +
-    "<div class=\"help-block\">\n" +
-    "Choose a service that {{service.metadata.name}} uses. This groups the services together in the overview.\n" +
+    "<h4>Group Service to {{service.metadata.name}}</h4>\n" +
+    "<div class=\"help-block mar-bottom-md\">\n" +
+    "Choose a service that <strong>{{service.metadata.name}}</strong> uses. This groups the services together in the overview.\n" +
     "</div>\n" +
     "<form>\n" +
     "<label class=\"sr-only\" for=\"childService\">Service:</label>\n" +
@@ -7172,14 +7172,14 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "\n" +
     "\n" +
     "\n" +
-    "<h2>No linked services.</h2>\n" +
+    "<h2>No grouped services.</h2>\n" +
     "<p>\n" +
-    "No services are linked to {{service.metadata.name}}.\n" +
+    "No services are grouped with <a ng-href=\"{{service | navigateResourceURL}}\">{{service.metadata.name}}</a>.\n" +
     "<span ng-if=\"(services | hashSize) > 1 && 'services' | canI : 'update'\">Add a service to group them together.</span>\n" +
     "</p>\n" +
     "<div ng-if=\"(services | hashSize) > 1 && 'services' | canI : 'update'\">\n" +
     "<button class=\"btn btn-primary\" ng-show=\"(services | hashSize) > 1\" ng-click=\"linkService()\">\n" +
-    "Link Service\n" +
+    "Group Service\n" +
     "</button>\n" +
     "</div>\n" +
     "</div>\n" +
