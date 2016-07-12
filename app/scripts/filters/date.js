@@ -121,27 +121,32 @@ angular.module('openshiftConsole')
       return moment.duration(duration, unit).humanize();
     };
   })
-  .filter('conciseDuration', function() {
-    // Return a duration like "1h" or "30s".
+  .filter('timeOnlyDuration', function(){
     return function(value) {
+      var result = [];
       var duration = moment.duration(value);
-
-      var days = Math.floor(duration.asDays());
-      if (days) {
-        return days + "d";
-      }
-
       var hours = Math.floor(duration.asHours());
+      var minutes = duration.minutes();
+      var seconds = duration.seconds();
+
+      if (!hours && !minutes && !seconds) {
+        return '';
+      }
+
       if (hours) {
-        return hours + "h";
+        result.push(hours + "h");
       }
 
-      var minutes = Math.floor(duration.minutes());
       if (minutes) {
-        return minutes + "m";
+        result.push(minutes + "m");
       }
 
-      var seconds = Math.floor(duration.seconds());
-      return seconds + "s";
+      // Only show seconds if not duration doesn't include hours.
+      // Always show seconds otherwise (even 0s).
+      if (!hours) {
+        result.push(seconds + "s");
+      }
+
+      return result.join(" ");
     };
   });

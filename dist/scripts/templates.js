@@ -4351,8 +4351,8 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "<div class=\"pipeline-stage-name\" ng-class=\"build.status.phase\">{{stage.name}}</div>\n" +
     "<pipeline-status ng-if=\"stage.status\" status=\"stage.status\"></pipeline-status>\n" +
     "\n" +
-    "<div class=\"pipeline-time\" ng-if=\"stage.durationMillis\">{{stage.durationMillis | conciseDuration}}</div>\n" +
-    "<div class=\"pipeline-time\" ng-if=\"!stage.durationMillis\">not started</div>\n" +
+    "<div class=\"pipeline-time\" ng-class=\"stage.status\" ng-if=\"stage.durationMillis\">{{stage.durationMillis | timeOnlyDuration}}</div>\n" +
+    "<div class=\"pipeline-time\" ng-class=\"stage.status\" ng-if=\"!stage.durationMillis\">not started</div>\n" +
     "</div>\n" +
     "</div>\n" +
     "</div>\n" +
@@ -5649,7 +5649,7 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "<div class=\"build-bar\"></div>\n" +
     "</div>\n" +
     "<div class=\"build-circle\">\n" +
-    "<span ng-if=\"stage.durationMillis\" class=\"build-time\">{{stage.durationMillis | conciseDuration}}</span>\n" +
+    "<span ng-if=\"stage.durationMillis\" class=\"build-time\">{{stage.durationMillis | timeOnlyDuration}}</span>\n" +
     "</div>\n" +
     "</div>\n" +
     "</div>\n" +

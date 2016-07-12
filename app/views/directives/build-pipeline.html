@@ -1,10 +1,10 @@
 <div row mobile="column" flex>
-  <div column class="build-summary">  
+  <div column class="build-summary">
     <div>
       <span class="status-icon" ng-class="build.status.phase">
         <span ng-switch="build.status.phase" class="hide-ng-leave">
           <span ng-switch-when="Complete" aria-hidden="true">
-            <i class="fa fa-check-circle"></i> 
+            <i class="fa fa-check-circle"></i>
           </span>
           <span ng-switch-when="Failed" aria-hidden="true">
             <i class="fa fa-times-circle"></i>
@@ -36,8 +36,8 @@
             <div class="pipeline-stage-name" ng-class="build.status.phase">{{stage.name}}</div>
             <pipeline-status ng-if="stage.status" status="stage.status"></pipeline-status>
             <!-- <div class="pipeline-time" ng-if="stage.durationMillis">{{stage.durationMillis | humanizeDurationValue}}</div> -->
-            <div class="pipeline-time" ng-if="stage.durationMillis">{{stage.durationMillis | conciseDuration}}</div>
-            <div class="pipeline-time" ng-if="!stage.durationMillis">not started</div>
+            <div class="pipeline-time" ng-class="stage.status" ng-if="stage.durationMillis">{{stage.durationMillis | timeOnlyDuration}}</div>
+            <div class="pipeline-time" ng-class="stage.status" ng-if="!stage.durationMillis">not started</div>
           </div>
         </div>
       </div>
