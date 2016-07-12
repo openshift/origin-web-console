@@ -4742,6 +4742,9 @@ name:c.serviceName || ""
 title:c.projectName,
 link:"project/" + c.projectName
 }, {
+title:"Routes",
+link:"project/" + c.projectName + "/browse/routes"
+}, {
 title:"Create Route"
 } ], h.get(b.project).then(_.spread(function(b, g) {
 c.project = b, c.breadcrumbs[0].title = a("displayName")(b);
