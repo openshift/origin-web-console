@@ -7945,9 +7945,6 @@ padding:{
 bottom:0
 },
 tick:{
-count:5,
-culling:!0,
-fit:!0,
 format:h
 }
 }
@@ -7963,7 +7960,7 @@ onclick:_.noop
 }
 },
 size:{
-height:200
+height:250
 },
 tooltip:{
 format:{
@@ -8011,18 +8008,22 @@ return n(), e.completeBuilds.length;
 var b = p(a, "buildNumber") || parseInt(a.metadata.name.match(/(\d+)$/), 10);
 return isNaN(b) ? null :b;
 }, r = function(a) {
-var b = i(a), c = a.status.completionTimestamp;
-return b && c ? moment(c).diff(moment(b)) :0;
-}, s = !1, t = function() {
-k && s ? j.ygrids([ {
+return _.round(a / 1e3 / 1e3);
+}, s = function(a) {
+var b = _.get(a, "status.duration");
+if (b) return r(b);
+var c = i(a), d = a.status.completionTimestamp;
+return c && d ? moment(d).diff(moment(c)) :0;
+}, t = !1, u = function() {
+k && t ? j.ygrids([ {
 value:k,
 "class":"build-trends-avg-line"
 } ]) :j.ygrids.remove();
 };
 e.toggleAvgLine = function() {
-s = !s, t();
+t = !t, u();
 };
-var u = function() {
+var v = function() {
 f = {
 json:[],
 keys:{
@@ -8033,7 +8034,7 @@ var a = 0, b = 0;
 angular.forEach(e.completeBuilds, function(c) {
 var d = q(c);
 if (d) {
-var e = r(c);
+var e = s(c);
 a += e, b++;
 var g = {
 buildNumber:d,
@@ -8056,11 +8057,11 @@ c[a] ? i.push(a) :n.push(a);
 setTimeout(function() {
 j.flush();
 }, l() + 25);
-}, j.load(f), t()) :(m.data = angular.extend(f, m.data), d(function() {
-j = c3.generate(m), t();
+}, j.load(f), u()) :(m.data = angular.extend(f, m.data), d(function() {
+j = c3.generate(m), u();
 }));
 };
-e.$watch(o, u), e.$on("destroy", function() {
+e.$watch(o, v), e.$on("destroy", function() {
 j && (j = j.destroy());
 });
 }
