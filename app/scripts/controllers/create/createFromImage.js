@@ -17,7 +17,8 @@ angular.module("openshiftConsole")
       failureObjectNameFilter,
       $filter,
       $parse,
-      SOURCE_URL_PATTERN
+      SOURCE_URL_PATTERN,
+      keyValueEditorUtils
     ){
     var displayNameFilter = $filter('displayName');
     var humanize = $filter('humanize');
@@ -62,16 +63,15 @@ angular.module("openshiftConsole")
           scope.buildConfig = {
             buildOnSourceChange: true,
             buildOnImageChange: true,
-            buildOnConfigChange: true,
-            envVars : {
-            }
+            buildOnConfigChange: true
           };
+          scope.buildConfigEnvVars = [];
           scope.deploymentConfig = {
             deployOnNewImage: true,
-            deployOnConfigChange: true,
-            envVars : {
-            }
+            deployOnConfigChange: true
           };
+          scope.DCEnvVarsFromImage;
+          scope.DCEnvVarsFromUser = [];
           scope.routing = {
             include: true,
             portOptions: []
@@ -124,12 +124,15 @@ angular.module("openshiftConsole")
               var imageName = scope.imageTag;
               DataService.get("imagestreamtags", imageStream.metadata.name + ":" + imageName, {namespace: scope.namespace}).then(function(imageStreamTag){
                   scope.image = imageStreamTag.image;
-                  var env = $parse('dockerImageMetadata.ContainerConfig.Env')(imageStreamTag.image) || [];
-                  angular.forEach(env, function(entry){
-                    var pair = entry.split("=");
-                    scope.deploymentConfig.envVars[pair[0]] = pair[1];
-                  });
-
+                  scope.DCEnvVarsFromImage = _.map(
+                                              _.get(imageStreamTag, 'image.dockerImageMetadata.Config.Env'),
+                                              function(entry) {
+                                                var pair = entry.split('=');
+                                                return {
+                                                  name: _.head(pair),
+                                                  value:_.last(pair)
+                                                };
+                                              });
                   var ports = ApplicationGenerator.parsePorts(imageStreamTag.image);
                   if (ports.length === 0) {
                     scope.routing.include = false;
@@ -299,6 +302,9 @@ angular.module("openshiftConsole")
 
         $scope.createApp = function(){
           $scope.disableInputs = true;
+          $scope.buildConfig.envVars = keyValueEditorUtils.mapEntries($scope.buildConfigEnvVars);
+          $scope.deploymentConfig.envVars = keyValueEditorUtils.mapEntries($scope.DCEnvVarsFromUser);
+
           var resourceMap = ApplicationGenerator.generate($scope);
           //init tasks
           var resources = [];
@@ -314,4 +320,3 @@ angular.module("openshiftConsole")
         };
       }));
   });
-

@@ -4815,10 +4815,10 @@ details:a("getErrorDetails")(b)
 }));
 };
 }));
-} ]), angular.module("openshiftConsole").controller("CreateFromImageController", [ "$scope", "Logger", "$q", "$routeParams", "APIService", "DataService", "ProjectsService", "Navigate", "ApplicationGenerator", "LimitRangesService", "MetricsService", "HPAService", "TaskList", "failureObjectNameFilter", "$filter", "$parse", "SOURCE_URL_PATTERN", function(a, b, c, d, e, f, g, h, i, j, k, l, m, n, o, p, q) {
-var r = o("displayName"), s = o("humanize");
+} ]), angular.module("openshiftConsole").controller("CreateFromImageController", [ "$scope", "Logger", "$q", "$routeParams", "APIService", "DataService", "ProjectsService", "Navigate", "ApplicationGenerator", "LimitRangesService", "MetricsService", "HPAService", "TaskList", "failureObjectNameFilter", "$filter", "$parse", "SOURCE_URL_PATTERN", "keyValueEditorUtils", function(a, b, c, d, e, f, g, h, i, j, k, l, m, n, o, p, q, r) {
+var s = o("displayName"), t = o("humanize");
 a.projectName = d.project, a.sourceURLPattern = q;
-var t = d.imageName;
+var u = d.imageName;
 a.breadcrumbs = [ {
 title:a.projectName,
 link:"project/" + a.projectName
@@ -4826,19 +4826,17 @@ link:"project/" + a.projectName
 title:"Add to Project",
 link:"project/" + a.projectName + "/create"
 }, {
-title:t
+title:u
 } ], g.get(d.project).then(_.spread(function(g, n) {
-function q(b) {
-t || h.toErrorPage("Cannot create from source: a base image was not specified"), d.imageTag || h.toErrorPage("Cannot create from source: a base image tag was not specified"), b.emptyMessage = "Loading...", b.imageName = t, b.imageTag = d.imageTag, b.namespace = d.namespace, b.buildConfig = {
+function p(b) {
+u || h.toErrorPage("Cannot create from source: a base image was not specified"), d.imageTag || h.toErrorPage("Cannot create from source: a base image tag was not specified"), b.emptyMessage = "Loading...", b.imageName = u, b.imageTag = d.imageTag, b.namespace = d.namespace, b.buildConfig = {
 buildOnSourceChange:!0,
 buildOnImageChange:!0,
-buildOnConfigChange:!0,
-envVars:{}
-}, b.deploymentConfig = {
+buildOnConfigChange:!0
+}, b.buildConfigEnvVars = [], b.deploymentConfig = {
 deployOnNewImage:!0,
-deployOnConfigChange:!0,
-envVars:{}
-}, b.routing = {
+deployOnConfigChange:!0
+}, b.DCEnvVarsFromImage, b.DCEnvVarsFromUser = [], b.routing = {
 include:!0,
 portOptions:[]
 }, b.labels = {}, b.annotations = {}, b.scaling = {
@@ -4868,14 +4866,15 @@ var c = b.imageTag;
 f.get("imagestreamtags", a.metadata.name + ":" + c, {
 namespace:b.namespace
 }).then(function(a) {
-b.image = a.image;
-var c = p("dockerImageMetadata.ContainerConfig.Env")(a.image) || [];
-angular.forEach(c, function(a) {
-var c = a.split("=");
-b.deploymentConfig.envVars[c[0]] = c[1];
+b.image = a.image, b.DCEnvVarsFromImage = _.map(_.get(a, "image.dockerImageMetadata.Config.Env"), function(a) {
+var b = a.split("=");
+return {
+name:_.head(b),
+value:_.last(b)
+};
 });
-var d = i.parsePorts(a.image);
-0 === d.length ? (b.routing.include = !1, b.routing.portOptions = []) :(b.routing.portOptions = _.map(d, function(a) {
+var c = i.parsePorts(a.image);
+0 === c.length ? (b.routing.include = !1, b.routing.portOptions = []) :(b.routing.portOptions = _.map(c, function(a) {
 var b = i.getServicePort(a);
 return {
 port:b.name,
@@ -4890,16 +4889,16 @@ h.toErrorPage("Cannot create from source: the specified image could not be retri
 });
 }
 a.project = g, a.breadcrumbs[0].title = o("displayName")(g);
-var u = function() {
+var q = function() {
 a.hideCPU || (a.cpuProblems = j.validatePodLimits(a.limitRanges, "cpu", [ a.container ], g)), a.memoryProblems = j.validatePodLimits(a.limitRanges, "memory", [ a.container ], g);
 };
 f.list("limitranges", n, function(b) {
-a.limitRanges = b.by("metadata.name"), 0 !== o("hashSize")(b) && a.$watch("container", u, !0);
+a.limitRanges = b.by("metadata.name"), 0 !== o("hashSize")(b) && a.$watch("container", q, !0);
 });
 var v = function() {
 return a.scaling.autoscale ? void (a.showCPURequestWarning = !l.hasCPURequest([ a.container ], a.limitRanges, g)) :void (a.showCPURequestWarning = !1);
 };
-a.$watch("scaling.autoscale", v), a.$watch("container", v, !0), q(a);
+a.$watch("scaling.autoscale", v), a.$watch("container", v, !0), p(a);
 var w = function(a, b) {
 function g() {
 0 === k && (i.length > 0 ? h.reject(i) :h.resolve(a));
@@ -4938,13 +4937,13 @@ var c = [], e = !1;
 b.failure.length > 0 ? (e = !0, b.failure.forEach(function(a) {
 c.push({
 type:"error",
-message:"Cannot create " + s(a.object.kind).toLowerCase() + ' "' + a.object.metadata.name + '". ',
+message:"Cannot create " + t(a.object.kind).toLowerCase() + ' "' + a.object.metadata.name + '". ',
 details:a.data.message
 });
 }), b.success.forEach(function(a) {
 c.push({
 type:"success",
-message:"Created " + s(a.kind).toLowerCase() + ' "' + a.metadata.name + '" successfully. '
+message:"Created " + t(a.kind).toLowerCase() + ' "' + a.metadata.name + '" successfully. '
 });
 })) :c.push({
 type:"success",
@@ -4967,9 +4966,9 @@ fromSample:!0
 a.nameTaken = !0, a.disableInputs = !1;
 };
 a.projectDisplayName = function() {
-return r(this.project) || this.projectName;
+return s(this.project) || this.projectName;
 }, a.createApp = function() {
-a.disableInputs = !0;
+a.disableInputs = !0, a.buildConfig.envVars = r.mapEntries(a.buildConfigEnvVars), a.deploymentConfig.envVars = r.mapEntries(a.DCEnvVarsFromUser);
 var c = i.generate(a), d = [];
 angular.forEach(c, function(a) {
 null !== a && (b.debug("Generated resource definition:", a), d.push(a));
