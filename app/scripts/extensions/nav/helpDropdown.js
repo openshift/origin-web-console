@@ -9,7 +9,7 @@ angular.module('openshiftConsole')
         return [
           {
             type: 'dom',
-            node: '<li><a href="{{\'default\' | helpLink}}">Documentation</a></li>'
+            node: '<li><a target="_blank" href="{{\'default\' | helpLink}}">Documentation</a></li>'
           },
           {
             type: 'dom',
