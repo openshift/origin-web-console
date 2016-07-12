@@ -53900,13 +53900,33 @@ a.put("selectize/choices.tpl.html", '<div ng-show="$select.open" class="ui-selec
 angular.module("key-value-editor", [ "as.sortable" ]);
 }(), function() {
 "use strict";
-angular.module("key-value-editor").directive("keyValueEditor", [ "$compile", "$log", "$templateCache", "$timeout", "$window", "keyValueEditorConfig", "keyValueEditorUtils", function(a, b, c, d, e, f, g) {
-var h = g.first, i = g.contains, j = function(a) {
+angular.module("key-value-editor").directive("keyValueEditorFocus", [ "$timeout", function(a) {
+return {
+restrict:"A",
+link:function(b, c) {
+a(function() {
+c && c[0].focus();
+});
+}
+};
+} ]).directive("keyValueEditorAfterRender", [ "$timeout", function(a) {
+return {
+restrict:"A",
+terminal:!0,
+scope:{
+afterRender:"&afterRender"
+},
+link:function(b) {
+b.afterRender = b.afterRender || function() {}, a(b.afterRender, 0);
+}
+};
+} ]).directive("keyValueEditor", [ "$compile", "$log", "$templateCache", "$timeout", "$window", "keyValueEditorConfig", "keyValueEditorUtils", function(a, b, c, d, e, f, g) {
+var h = g.first, i = g.contains, j = g.each, k = function(a) {
 a && a.push({
 name:"",
 value:""
 });
-}, k = function(a) {
+}, l = function(a) {
 d(function() {
 var b = h(e.document.querySelectorAll(a));
 b && b.focus();
@@ -53935,25 +53955,30 @@ secretValueIcon:"@",
 cannotAdd:"=?",
 cannotSort:"=?",
 cannotDelete:"=?",
-isReadonly:"=?"
+isReadonly:"=?",
+isReadonlyKeys:"=?"
 },
 link:function(b, d, e) {
-var g = c.get("key-value-editor.html");
-"cannotAdd" in e && (b.cannotAdd = !0), "cannotDelete" in e && (b.cannotDeleteAny = !0), "isReadonly" in e && (b.isReadonlyAny = !0), "cannotSort" in e && (g = g.replace(/as-sortable/g, "as-sortable-DISABLED"), b.cannotSort = !0), b.keyMinlength = f.keyMinlength || e.keyMinlength, b.keyMaxlength = f.keyMaxlength || e.keyMaxlength, b.valueMinlength = f.valueMinlength || e.valueMinlength, b.valueMaxlength = f.valueMaxlength || e.valueMaxlength, b.keyValidator = f.keyValidator || e.keyValidator, b.valueValidator = f.valueValidator || e.valueValidator, b.keyValidatorError = f.keyValidatorError || e.keyValidatorError, b.valueValidatorError = f.valueValidatorError || e.valueValidatorError, b.keyValidatorErrorTooltip = f.keyValidatorErrorTooltip || e.keyValidatorErrorTooltip, b.keyValidatorErrorTooltipIcon = f.keyValidatorErrorTooltipIcon || e.keyValidatorErrorTooltipIcon, b.valueValidatorErrorTooltip = f.valueValidatorErrorTooltip || e.valueValidatorErrorTooltip, b.valueValidatorErrorTooltipIcon = f.valueValidatorErrorTooltipIcon || e.valueValidatorErrorTooltipIcon, 
-b.secretValueTooltip = f.secretValueTooltip || e.secretValueTooltip, b.secretValueIcon = f.secretValueIcon || e.secretValueIcon, b.keyPlaceholder = f.keyPlaceholder || e.keyPlaceholder, b.valuePlaceholder = f.valuePlaceholder || e.valuePlaceholder, d.append(a(g)(b));
+var g, h = c.get("key-value-editor.html");
+"cannotAdd" in e && (b.cannotAdd = !0), "cannotDelete" in e && (b.cannotDeleteAny = !0), "isReadonly" in e && (b.isReadonlyAny = !0), "isReadonlyKeys" in e && (g = b.$watch("entries", function(a) {
+a && (j(b.entries, function(a) {
+a.isReadonlyKey = !0;
+}), g());
+})), "cannotSort" in e && (h = h.replace(/as-sortable/g, "as-sortable-DISABLED"), b.cannotSort = !0), b.keyMinlength = f.keyMinlength || e.keyMinlength, b.keyMaxlength = f.keyMaxlength || e.keyMaxlength, b.valueMinlength = f.valueMinlength || e.valueMinlength, b.valueMaxlength = f.valueMaxlength || e.valueMaxlength, b.keyValidator = f.keyValidator || e.keyValidator, b.valueValidator = f.valueValidator || e.valueValidator, b.keyValidatorError = f.keyValidatorError || e.keyValidatorError, b.valueValidatorError = f.valueValidatorError || e.valueValidatorError, b.keyValidatorErrorTooltip = f.keyValidatorErrorTooltip || e.keyValidatorErrorTooltip, b.keyValidatorErrorTooltipIcon = f.keyValidatorErrorTooltipIcon || e.keyValidatorErrorTooltipIcon, b.valueValidatorErrorTooltip = f.valueValidatorErrorTooltip || e.valueValidatorErrorTooltip, b.valueValidatorErrorTooltipIcon = f.valueValidatorErrorTooltipIcon || e.valueValidatorErrorTooltipIcon, b.secretValueTooltip = f.secretValueTooltip || e.secretValueTooltip, 
+b.secretValueIcon = f.secretValueIcon || e.secretValueIcon, b.keyPlaceholder = f.keyPlaceholder || e.keyPlaceholder, b.valuePlaceholder = f.valuePlaceholder || e.valuePlaceholder, d.append(a(h)(b));
 },
 controller:[ "$scope", function(a) {
 a.forms = {};
 var b = [], c = [], d = "key-value-editor-set-focus-" + Date.now();
 a.setFocusClass = d, a.onFocusLast = function() {
-a.cannotAdd || a.isReadonly || (j(a.entries), k("." + d));
+a.cannotAdd || a.isReadonly || (k(a.entries), l("." + d));
 }, a.deleteEntry = function(b, c) {
 a.entries.splice(b, c), a.forms.keyValueEditor.$setDirty();
 }, a.dragControlListeners = {
 accept:function(a, b) {
 return a.itemScope.sortableScope.$id === b.$id;
 },
-orderChanged:function(b) {
+orderChanged:function() {
 a.forms.keyValueEditor.$setDirty();
 }
 }, a.$watch("cannotDelete", function(b) {
@@ -53999,32 +54024,48 @@ return a;
 "use strict";
 angular.module("key-value-editor").factory("keyValueEditorUtils", [ function() {
 var a = function(a, b, c) {
-for (var d = 0; d < a.length; d++) c = b(c, a[d], d, a);
+for (var d = a && a.length || 0, e = 0; e < d; e++) c = b(c, a[e], e, a);
 return c;
-}, b = function(b) {
-return a(b, function(a, b) {
-return b.length && a.push(b), a;
-}, []);
+}, b = function(a, b) {
+for (var c = a && a.length || 0, d = 0; d < c; d++) b(a[d], d, a);
 }, c = function(a, b) {
+for (var c = a && a.length || 0, d = [], e = 0; e < c; e++) d.push(b(a[e], e, a));
+return d;
+}, d = function(b) {
+return a(b, function(a, b) {
+return b && a.push(b), a;
+}, []);
+}, e = function(a, b) {
 return a.indexOf(b) !== -1;
-}, d = function(a) {
+}, f = function(a) {
 return a && a[a.length - 1];
-}, e = function(a) {
+}, g = function(a) {
 return a && a[0];
-}, f = function(a, b) {
+}, h = function(a, b) {
 return a && a[b];
+}, i = function(a) {
+return d(c(a, function(a) {
+return a.name && a.value ? a :void 0;
+}));
+}, j = function(b) {
+return a(i(b), function(a, b) {
+return a[b.name] = b.value, a;
+}, {});
 };
 return {
+each:b,
 reduce:a,
-compact:b,
-contains:c,
-first:e,
-last:d,
-get:f
+compact:d,
+contains:e,
+first:g,
+last:f,
+get:h,
+compactEntries:i,
+mapEntries:j
 };
 } ]);
 }(), angular.module("key-value-editor").run([ "$templateCache", function(a) {
-a.put("key-value-editor.html", '<ng-form name="forms.keyValueEditor" novalidate ng-if="entries">\n  <!-- may use ng-messages for better validation, if needed -->\n  <div class="key-value-editor" ng-model="entries" as-sortable="dragControlListeners">\n    <div\n      class="key-value-editor-entry"\n      ng-class-odd="\'odd\'"\n      ng-class-even="\'even\'"\n      ng-repeat="entry in entries"\n      as-sortable-item>\n      <div\n        class="form-group key-value-editor-input"\n        ng-class="{ \'has-error\' :  (forms.keyValueEditor[\'key-\' + $index].$invalid) }">\n        <input\n          type="text"\n          class="form-control"\n          ng-class="{ \'{{setFocusClass}}\' : $last  }"\n          id="key-{{$index}}"\n          name="key-{{$index}}"\n          placeholder="{{keyPlaceholder}}"\n          ng-minlength="{{keyMinlength}}"\n          maxlength="{{keyMaxlength}}"\n          ng-model="entry.name"\n          ng-readonly="isReadonlyAny || isReadonlySome(entry.name) || entry.isReadonly || entry.containsSecret"\n          ng-pattern="keyValidator"\n          ng-value>\n        <span\n          class="help-block"\n          ng-show="(forms.keyValueEditor[\'key-\' + $index].$error.pattern)">\n          <span>{{ entry.keyValidatorError || keyValidatorError ||  \'validation error\' }}</span>\n          <span ng-if="entry.keyValidatorErrorTooltip || keyValidatorErrorTooltip" class="help action-inline">\n            <a aria-hidden="true" data-toggle="tooltip" data-placement="top" data-original-title="{{entry.keyValidatorErrorTooltip || keyValidatorErrorTooltip}}">\n              <i class="{{entry.keyValidatorErrorTooltipIcon || keyValidatorErrorTooltipIcon}}"></i>\n            </a>\n          </span>\n        </span>\n        <span\n          class="help-block"\n          ng-show="(forms.keyValueEditor[\'key-\' + $index].$error.minlength)">\n          <span>Minimum character count is {{keyMinlength}}</span>\n        </span>\n      </div>\n      <div\n        class="form-group key-value-editor-input"\n        ng-class="(forms.keyValueEditor[\'value-\' + $index].$invalid && forms.keyValueEditor[\'value-\' + $index].$dirty) ? \'has-error\' : \'\'">\n        <div class="input-group" ng-if="entry.containsSecret">\n          <span class="input-group-addon">\n            <span class="{{entry.secretValueIcon || secretValueIcon}}" aria-hidden="true" data-toggle="tooltip" data-placement="top" title="{{entry.secretValueTooltip || secretValueTooltip}}"></span>\n          </span>\n          <input\n            type="text"\n            class="form-control"\n            id="value-{{$index}}"\n            name="value-{{$index}}"\n            placeholder="{{valuePlaceholder}}"\n            ng-minlength="{{valueMinlength}}"\n            ng-maxlength="{{valueMaxlength}}"\n            ng-model="entry.value"\n            ng-readonly="isReadonlyAny || isReadonlySome(entry.name) || entry.isReadonly || entry.containsSecret"\n            ng-pattern="valueValidator">\n        </div>\n        <input\n          type="text"\n          class="form-control"\n          id="value-{{$index}}"\n          name="value-{{$index}}"\n          placeholder="{{valuePlaceholder}}"\n          ng-minlength="{{valueMinlength}}"\n          maxlength="{{valueMaxlength}}"\n          ng-model="entry.value"\n          ng-readonly="isReadonlyAny || isReadonlySome(entry.name) || entry.isReadonly || entry.containsSecret"\n          ng-pattern="valueValidator"\n          ng-if="!entry.containsSecret">\n        <span\n          class="help-block"\n          ng-show="(forms.keyValueEditor[\'value-\' + $index].$error.pattern)">\n          <span>{{ entry.valueValidatorError || valueValidatorError ||  \'validation error\' }}</span>\n          <span ng-if="entry.valueValidatorErrorTooltip || valueValidatorErrorTooltip" class="help action-inline">\n            <a aria-hidden="true" data-toggle="tooltip" data-placement="top" data-original-title="{{entry.valueValidatorErrorTooltip || valueValidatorErrorTooltip}}">\n              <i class="{{entry.valueValidatorErrorTooltipIcon || valueValidatorErrorTooltipIcon}}"></i>\n            </a>\n          </span>\n        </span>\n        <span\n          class="help-block"\n          ng-show="(forms.keyValueEditor[\'value-\' + $index].$error.minlength)">\n          <span>Minimum character count is {{valueMinlength}}</span>\n        </span>\n      </div>\n      <div class="key-value-editor-buttons">\n        <span\n          ng-if="(!cannotSort)"\n          class="fa fa-bars"\n          role="button"\n          aria-label="Move row"\n          aria-grabbed="false"\n          as-sortable-item-handle></span>\n        <span\n          class="pficon pficon-close as-sortable-item-delete"\n          role="button"\n          aria-label="Delete row"\n          ng-hide="cannotDeleteAny || cannotDeleteSome(entry.name) || entry.cannotDelete"\n          ng-click="deleteEntry($index, 1)"></span>\n      </div>\n    </div>\n\n    <!-- the last one, placeholder -->\n    <div\n      class="key-value-editor-entry"\n      ng-if="!cannotAdd">\n      <div\n        class="form-group key-value-editor-input">\n        <input\n          type="text"\n          class="form-control"\n          placeholder="{{keyPlaceholder}}"\n          ng-focus="onFocusLast()">\n      </div>\n      <div\n        class="form-group key-value-editor-input">\n        <input\n          type="text"\n          class="form-control"\n          placeholder="{{valuePlaceholder}}"\n          ng-focus="onFocusLast()">\n      </div>\n    </div>\n  </div>\n\n</ng-form>\n');
+a.put("key-value-editor.html", '<ng-form name="forms.keyValueEditor" novalidate ng-if="entries">\n  <!-- may use ng-messages for better validation, if needed -->\n  <div class="key-value-editor" ng-model="entries" as-sortable="dragControlListeners">\n    <div\n      class="key-value-editor-entry"\n      ng-class-odd="\'odd\'"\n      ng-class-even="\'even\'"\n      ng-repeat="entry in entries"\n      as-sortable-item>\n      <div\n        class="form-group key-value-editor-input"\n        ng-class="{ \'has-error\' :  (forms.keyValueEditor[\'key-\' + $index].$invalid) }">\n        <input\n          type="text"\n          class="form-control"\n          ng-class="{ \'{{setFocusClass}}\' : $last  }"\n          id="key-{{$index}}"\n          name="key-{{$index}}"\n          placeholder="{{keyPlaceholder}}"\n          ng-minlength="{{keyMinlength}}"\n          maxlength="{{keyMaxlength}}"\n          ng-model="entry.name"\n          ng-readonly="isReadonlyAny || isReadonlySome(entry.name) || entry.isReadonlyKey || entry.isReadonly || entry.containsSecret"\n          ng-pattern="keyValidator"\n          ng-value\n          ng-attr-key-value-editor-focus="{{$last}}">\n        <span\n          class="help-block"\n          ng-show="(forms.keyValueEditor[\'key-\' + $index].$error.pattern)">\n          <span>{{ entry.keyValidatorError || keyValidatorError ||  \'validation error\' }}</span>\n          <span ng-if="entry.keyValidatorErrorTooltip || keyValidatorErrorTooltip" class="help action-inline">\n            <a aria-hidden="true" data-toggle="tooltip" data-placement="top" data-original-title="{{entry.keyValidatorErrorTooltip || keyValidatorErrorTooltip}}">\n              <i class="{{entry.keyValidatorErrorTooltipIcon || keyValidatorErrorTooltipIcon}}"></i>\n            </a>\n          </span>\n        </span>\n        <span\n          class="help-block"\n          ng-show="(forms.keyValueEditor[\'key-\' + $index].$error.minlength)">\n          <span>Minimum character count is {{keyMinlength}}</span>\n        </span>\n      </div>\n      <div\n        class="form-group key-value-editor-input"\n        ng-class="(forms.keyValueEditor[\'value-\' + $index].$invalid && forms.keyValueEditor[\'value-\' + $index].$dirty) ? \'has-error\' : \'\'">\n        <div class="input-group" ng-if="entry.containsSecret">\n          <span class="input-group-addon">\n            <span class="{{entry.secretValueIcon || secretValueIcon}}" aria-hidden="true" data-toggle="tooltip" data-placement="top" title="{{entry.secretValueTooltip || secretValueTooltip}}"></span>\n          </span>\n          <input\n            type="text"\n            class="form-control"\n            id="value-{{$index}}"\n            name="value-{{$index}}"\n            placeholder="{{valuePlaceholder}}"\n            ng-minlength="{{valueMinlength}}"\n            ng-maxlength="{{valueMaxlength}}"\n            ng-model="entry.value"\n            ng-readonly="isReadonlyAny || isReadonlySome(entry.name) || entry.isReadonly || entry.containsSecret"\n            ng-pattern="valueValidator">\n        </div>\n        <input\n          type="text"\n          class="form-control"\n          id="value-{{$index}}"\n          name="value-{{$index}}"\n          placeholder="{{valuePlaceholder}}"\n          ng-minlength="{{valueMinlength}}"\n          maxlength="{{valueMaxlength}}"\n          ng-model="entry.value"\n          ng-readonly="isReadonlyAny || isReadonlySome(entry.name) || entry.isReadonly || entry.containsSecret"\n          ng-pattern="valueValidator"\n          ng-if="!entry.containsSecret">\n        <span\n          class="help-block"\n          ng-show="(forms.keyValueEditor[\'value-\' + $index].$error.pattern)">\n          <span>{{ entry.valueValidatorError || valueValidatorError ||  \'validation error\' }}</span>\n          <span ng-if="entry.valueValidatorErrorTooltip || valueValidatorErrorTooltip" class="help action-inline">\n            <a aria-hidden="true" data-toggle="tooltip" data-placement="top" data-original-title="{{entry.valueValidatorErrorTooltip || valueValidatorErrorTooltip}}">\n              <i class="{{entry.valueValidatorErrorTooltipIcon || valueValidatorErrorTooltipIcon}}"></i>\n            </a>\n          </span>\n        </span>\n        <span\n          class="help-block"\n          ng-show="(forms.keyValueEditor[\'value-\' + $index].$error.minlength)">\n          <span>Minimum character count is {{valueMinlength}}</span>\n        </span>\n      </div>\n      <div class="key-value-editor-buttons">\n        <span\n          ng-if="(!cannotSort)"\n          class="fa fa-bars"\n          role="button"\n          aria-label="Move row"\n          aria-grabbed="false"\n          as-sortable-item-handle></span>\n        <span\n          class="pficon pficon-close as-sortable-item-delete"\n          role="button"\n          aria-label="Delete row"\n          ng-hide="cannotDeleteAny || cannotDeleteSome(entry.name) || entry.cannotDelete"\n          ng-click="deleteEntry($index, 1)"></span>\n      </div>\n    </div>\n\n    <!-- the last one, placeholder -->\n    <div\n      class="key-value-editor-entry"\n      ng-if="!cannotAdd">\n      <div\n        class="form-group key-value-editor-input">\n        <input\n          type="text"\n          class="form-control"\n          placeholder="{{keyPlaceholder}}"\n          ng-focus="onFocusLast()">\n      </div>\n      <div\n        class="form-group key-value-editor-input">\n        <input\n          type="text"\n          class="form-control"\n          placeholder="{{valuePlaceholder}}"\n          ng-focus="onFocusLast()">\n      </div>\n    </div>\n  </div>\n\n</ng-form>\n');
 } ]), function() {
 "use strict";
 var a, b, c, d, e, f, g, h, i, j, k, l, m, n, o, p, q, r, s, t = [].slice;

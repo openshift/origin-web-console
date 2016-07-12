@@ -7,7 +7,7 @@
  * Controller of the openshiftConsole
  */
 angular.module('openshiftConsole')
-  .controller('EditBuildConfigController', function ($scope, $routeParams, DataService, ProjectsService, $filter, ApplicationGenerator, Navigate, $location, AlertMessageService, SOURCE_URL_PATTERN) {
+  .controller('EditBuildConfigController', function ($scope, $routeParams, DataService, ProjectsService, $filter, ApplicationGenerator, Navigate, $location, AlertMessageService, SOURCE_URL_PATTERN, keyValueEditorUtils) {
 
     $scope.projectName = $routeParams.project;
     $scope.buildConfig = null;
@@ -135,7 +135,14 @@ angular.module('openshiftConsole')
             $scope.updatedBuildConfig = angular.copy($scope.buildConfig);
             $scope.buildStrategy = $filter('buildStrategy')($scope.updatedBuildConfig);
             $scope.strategyType = $scope.buildConfig.spec.strategy.type;
-            $scope.envVars = $filter('envVarsPair')($scope.buildStrategy.env);
+            $scope.envVars = _.map(
+                              $filter('envVarsPair')($scope.buildStrategy.env),
+                              function(val, key) {
+                                return {
+                                  name: key,
+                                  value: val
+                                }
+                              });
             $scope.triggers = $scope.getTriggerMap($scope.triggers, $scope.buildConfig.spec.triggers);
             $scope.sources = $scope.getSourceMap($scope.sources, $scope.buildConfig.spec.source);
 
@@ -196,7 +203,12 @@ angular.module('openshiftConsole')
                   imageStreams: [],
                   tags: {},
                 };
-                $scope.imageSourcePaths = $filter('destinationSourcePair')($scope.sourceImage.paths);
+                $scope.imageSourcePaths = _.map($scope.sourceImage.paths, function(path) {
+                  return {
+                    name: path.sourcePath,
+                    value: path.destinationDir
+                  };
+                });
                 $scope.imageSourceTypes = angular.copy($scope.buildFromTypes);
                 var imageSourceFrom = $scope.sourceImage.from;
                 $scope.imageSourceOptions = $scope.setPickedVariables(
@@ -599,27 +611,14 @@ angular.module('openshiftConsole')
     };
 
     $scope.updatedImageSourcePath = function(imageSourcePaths) {
-      var updatedImageSourcePath = [];
-      angular.forEach(imageSourcePaths, function(v, k) {
-        var env = {
-          sourcePath: k,
-          destinationDir: v
-        };
-        updatedImageSourcePath.push(env);
-      });
-      return updatedImageSourcePath;
-    };
-
-    $scope.updateEnvVars = function(envVars) {
-      var updatedEnvVars = [];
-      angular.forEach(envVars, function(v, k) {
-        var env = {
-          name: k,
-          value: v
-        };
-        updatedEnvVars.push(env);
-      });
-      return updatedEnvVars;
+      return _.map(
+              keyValueEditorUtils.compactEntries(imageSourcePaths), 
+              function(path) {
+              	return {
+                  sourcePath: path.name,
+                  destinationDir: path.value
+                };
+              });
     };
 
     $scope.updateBinarySource = function() {
@@ -748,7 +747,7 @@ angular.module('openshiftConsole')
       }
 
       // Update envVars
-      $filter('buildStrategy')($scope.updatedBuildConfig).env = $scope.updateEnvVars($scope.envVars);
+      $filter('buildStrategy')($scope.updatedBuildConfig).env = $scope.envVars;
 
       // Update triggers
       $scope.updatedBuildConfig.spec.triggers = $scope.updateTriggers();

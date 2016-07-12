@@ -4244,7 +4244,7 @@ g.list("limitranges", d, function(b) {
 e.limitRanges = b.by("metadata.name"), 0 !== a("hashSize")(b) && e.$watch("containers", i, !0);
 });
 }));
-} ]), angular.module("openshiftConsole").controller("EditBuildConfigController", [ "$scope", "$routeParams", "DataService", "ProjectsService", "$filter", "ApplicationGenerator", "Navigate", "$location", "AlertMessageService", "SOURCE_URL_PATTERN", function(a, b, c, d, e, f, g, h, i, j) {
+} ]), angular.module("openshiftConsole").controller("EditBuildConfigController", [ "$scope", "$routeParams", "DataService", "ProjectsService", "$filter", "ApplicationGenerator", "Navigate", "$location", "AlertMessageService", "SOURCE_URL_PATTERN", "keyValueEditorUtils", function(a, b, c, d, e, f, g, h, i, j, k) {
 a.projectName = b.project, a.buildConfig = null, a.alerts = {}, a.emptyMessage = "Loading...", a.sourceURLPattern = j, a.options = {}, a.builderOptions = {}, a.outputOptions = {}, a.imageSourceOptions = {}, a.jenkinsfileOptions = {
 type:"path"
 }, a.selectTypes = {
@@ -4313,10 +4313,15 @@ imageChangeTriggers:[]
 }, a.runPolicyTypes = [ "Serial", "Parallel", "SerialLatestOnly" ], a.availableProjects = [], i.getAlerts().forEach(function(b) {
 a.alerts[b.name] = b.data;
 }), i.clearAlerts();
-var k = [];
+var l = [];
 d.get(b.project).then(_.spread(function(d, f) {
 a.project = d, a.breadcrumbs[0].title = e("displayName")(d), c.get("buildconfigs", b.buildconfig, f).then(function(d) {
-if (a.buildConfig = d, a.updatedBuildConfig = angular.copy(a.buildConfig), a.buildStrategy = e("buildStrategy")(a.updatedBuildConfig), a.strategyType = a.buildConfig.spec.strategy.type, a.envVars = e("envVarsPair")(a.buildStrategy.env), a.triggers = a.getTriggerMap(a.triggers, a.buildConfig.spec.triggers), a.sources = a.getSourceMap(a.sources, a.buildConfig.spec.source), _.has(d, "spec.strategy.jenkinsPipelineStrategy.jenkinsfile") && (a.jenkinsfileOptions.type = "inline"), a.buildStrategy.from) {
+if (a.buildConfig = d, a.updatedBuildConfig = angular.copy(a.buildConfig), a.buildStrategy = e("buildStrategy")(a.updatedBuildConfig), a.strategyType = a.buildConfig.spec.strategy.type, a.envVars = _.map(e("envVarsPair")(a.buildStrategy.env), function(a, b) {
+return {
+name:b,
+value:a
+};
+}), a.triggers = a.getTriggerMap(a.triggers, a.buildConfig.spec.triggers), a.sources = a.getSourceMap(a.sources, a.buildConfig.spec.source), _.has(d, "spec.strategy.jenkinsPipelineStrategy.jenkinsfile") && (a.jenkinsfileOptions.type = "inline"), a.buildStrategy.from) {
 var g = a.buildStrategy.from;
 a.builderOptions = a.setPickedVariables(a.builderOptions, g.kind, g.namespace || d.metadata.namespace, g.name.split(":")[0], g.name.split(":")[1], "ImageStreamImage" === g.kind ? g.name :"", "ImageStreamTag" === g.kind ? d.metadata.namespace + "/" + g.name :g.name);
 } else a.builderOptions = a.setPickedVariables(a.builderOptions, "None", d.metadata.namespace, "", "", "", "");
@@ -4337,7 +4342,12 @@ a.sourceImage = a.buildConfig.spec.source.images[0], a.imageSourceBuildFrom = {
 projects:[],
 imageStreams:[],
 tags:{}
-}, a.imageSourcePaths = e("destinationSourcePair")(a.sourceImage.paths), a.imageSourceTypes = angular.copy(a.buildFromTypes);
+}, a.imageSourcePaths = _.map(a.sourceImage.paths, function(a) {
+return {
+name:a.sourcePath,
+value:a.destinationDir
+};
+}), a.imageSourceTypes = angular.copy(a.buildFromTypes);
 var i = a.sourceImage.from;
 a.imageSourceOptions = a.setPickedVariables(a.imageSourceOptions, i.kind, i.namespace || d.metadata.namespace, i.name.split(":")[0], i.name.split(":")[1], "ImageStreamImage" === i.kind ? i.name :"", "ImageStreamTag" === i.kind ? d.metadata.namespace + "/" + i.name :i.name), a.imageSourceImageStream = {
 namespace:a.imageSourceOptions.pickedNamespace,
@@ -4355,7 +4365,7 @@ var c = b.by("metadata.name");
 for (var d in c) a.buildFrom.projects.push(d), a.pushTo.projects.push(d);
 a.availableProjects = angular.copy(a.buildFrom.projects), a.buildFrom.projects.contains(a.builderOptions.pickedNamespace) || (a.checkNamespaceAvailability(a.builderOptions.pickedNamespace), a.buildFrom.projects.push(a.builderOptions.pickedNamespace)), a.pushTo.projects.contains(a.outputOptions.pickedNamespace) || (a.checkNamespaceAvailability(a.outputOptions.pickedNamespace), a.pushTo.projects.push(a.outputOptions.pickedNamespace)), "ImageStreamTag" === a.builderOptions.pickedType && a.updateBuilderImageStreams(a.builderOptions.pickedNamespace, !1), "ImageStreamTag" === a.outputOptions.pickedType && a.updateOutputImageStreams(a.outputOptions.pickedNamespace, !1), a.sources.images && a.sourceImage && (a.imageSourceBuildFrom.projects = angular.copy(a.buildFrom.projects), a.imageSourceBuildFrom.projects.contains(a.imageSourceOptions.pickedNamespace) || (a.checkNamespaceAvailability(a.imageSourceOptions.pickedNamespace), a.imageSourceBuildFrom.projects.push(a.imageSourceOptions.pickedNamespace)), 
 "ImageStreamTag" === a.imageSourceOptions.pickedType && a.updateImageSourceImageStreams(a.imageSourceOptions.pickedNamespace, !1)), a.loaded = !0;
-}), k.push(c.watchObject("buildconfigs", b.buildconfig, f, function(b, c) {
+}), l.push(c.watchObject("buildconfigs", b.buildconfig, f, function(b, c) {
 "DELETED" === c && (a.alerts.deleted = {
 type:"warning",
 message:"This build configuration has been deleted."
@@ -4469,23 +4479,12 @@ errorNotification:!1
 a.availableProjects.push(b);
 }, function() {});
 }, a.updatedImageSourcePath = function(a) {
-var b = [];
-return angular.forEach(a, function(a, c) {
-var d = {
-sourcePath:c,
-destinationDir:a
+return _.map(k.compactEntries(a), function(a) {
+return {
+sourcePath:a.name,
+destinationDir:a.value
 };
-b.push(d);
-}), b;
-}, a.updateEnvVars = function(a) {
-var b = [];
-return angular.forEach(a, function(a, c) {
-var d = {
-name:c,
-value:a
-};
-b.push(d);
-}), b;
+});
 }, a.updateBinarySource = function() {
 a.sources.binary && ("" !== a.options.binaryAsFile ? a.updatedBuildConfig.spec.source.binary.asFile = a.options.binaryAsFile :a.updatedBuildConfig.spec.source.binary = {});
 }, a.constructImageObject = function(a) {
@@ -4532,7 +4531,7 @@ break;
 case "JenkinsPipeline":
 "path" === a.jenkinsfileOptions.type ? delete a.updatedBuildConfig.spec.strategy.jenkinsPipelineStrategy.jenkinsfile :delete a.updatedBuildConfig.spec.strategy.jenkinsPipelineStrategy.jenkinsfilePath;
 }
-a.updateBinarySource(), a.sources.images && a.sourceImage && (a.updatedBuildConfig.spec.source.images[0].paths = a.updatedImageSourcePath(a.imageSourcePaths), a.updatedBuildConfig.spec.source.images[0].from = a.constructImageObject(a.imageSourceOptions)), "None" === a.builderOptions.pickedType ? delete e("buildStrategy")(a.updatedBuildConfig).from :e("buildStrategy")(a.updatedBuildConfig).from = a.constructImageObject(a.builderOptions), "None" === a.outputOptions.pickedType ? delete a.updatedBuildConfig.spec.output.to :a.updatedBuildConfig.spec.output.to = a.constructImageObject(a.outputOptions), e("buildStrategy")(a.updatedBuildConfig).env = a.updateEnvVars(a.envVars), a.updatedBuildConfig.spec.triggers = a.updateTriggers(), c.update("buildconfigs", a.updatedBuildConfig.metadata.name, a.updatedBuildConfig, {
+a.updateBinarySource(), a.sources.images && a.sourceImage && (a.updatedBuildConfig.spec.source.images[0].paths = a.updatedImageSourcePath(a.imageSourcePaths), a.updatedBuildConfig.spec.source.images[0].from = a.constructImageObject(a.imageSourceOptions)), "None" === a.builderOptions.pickedType ? delete e("buildStrategy")(a.updatedBuildConfig).from :e("buildStrategy")(a.updatedBuildConfig).from = a.constructImageObject(a.builderOptions), "None" === a.outputOptions.pickedType ? delete a.updatedBuildConfig.spec.output.to :a.updatedBuildConfig.spec.output.to = a.constructImageObject(a.outputOptions), e("buildStrategy")(a.updatedBuildConfig).env = a.envVars, a.updatedBuildConfig.spec.triggers = a.updateTriggers(), c.update("buildconfigs", a.updatedBuildConfig.metadata.name, a.updatedBuildConfig, {
 namespace:a.updatedBuildConfig.metadata.namespace
 }).then(function() {
 i.addAlert({
