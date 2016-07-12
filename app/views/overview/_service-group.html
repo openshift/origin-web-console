@@ -59,14 +59,14 @@
           <!-- <div class="blank-state-icon"> -->
           <!--   <span class="pficon pficon pficon-add-circle-o" aria-hidden="true"></span> -->
           <!-- </div> -->
-          <h2>No linked services.</h2>
+          <h2>No grouped services.</h2>
           <p>
-            No services are linked to {{service.metadata.name}}.
+            No services are grouped with <a ng-href="{{service | navigateResourceURL}}">{{service.metadata.name}}</a>.
             <span ng-if="(services | hashSize) > 1 && 'services' | canI : 'update'">Add a service to group them together.</span>
           </p>
           <div ng-if="(services | hashSize) > 1 && 'services' | canI : 'update'">
             <button class="btn btn-primary" ng-show="(services | hashSize) > 1" ng-click="linkService()">
-              Link Service
+              Group Service
             </button>
           </div>
         </div>
