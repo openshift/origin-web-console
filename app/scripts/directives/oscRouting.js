@@ -96,6 +96,14 @@ angular.module("openshiftConsole")
           }
         });
 
+        scope.$watch('route.alternateServices', function(alternateServices) {
+          // Find any duplicates.
+          scope.duplicateServices = _(alternateServices).map('service').filter(function(value, index, iteratee) {
+            return _.includes(iteratee, value, index + 1);
+          }).value();
+          formCtl.$setValidity("duplicateServices", !scope.duplicateServices.length);
+        }, true);
+
         var showCertificateWarning = function() {
           if (!scope.route.tls) {
             return false;
@@ -124,8 +132,14 @@ angular.module("openshiftConsole")
 
         scope.addAlternateService = function() {
           scope.route.alternateServices = scope.route.alternateServices || [];
-          // Add a new empty value.
-          scope.route.alternateServices.push({});
+          var firstUnselected = _.find(scope.services, function(service) {
+            return service !== scope.route.to.service && !_.some(scope.route.alternateServices, { service: service });
+          });
+
+          // Add a new value.
+          scope.route.alternateServices.push({
+            service: firstUnselected
+          });
         };
       }
     };

@@ -6354,14 +6354,26 @@ a.services && !a.route.service && (a.route.service = _.find(a.services)), a.$wat
 e(b), b === c && a.route.targetPort || (a.route.targetPort = _.get(a, "route.portOptions[0].port")), a.services && (a.alternateServiceOptions = _.reject(a.services, function(a) {
 return b === a;
 }));
-});
+}), a.$watch("route.alternateServices", function(b) {
+a.duplicateServices = _(b).map("service").filter(function(a, b, c) {
+return _.includes(c, a, b + 1);
+}).value(), d.$setValidity("duplicateServices", !a.duplicateServices.length);
+}, !0);
 var f = function() {
 return !!a.route.tls && ((!a.route.tls.termination || "passthrough" === a.route.tls.termination) && (a.route.tls.certificate || a.route.tls.key || a.route.tls.caCertificate || a.route.tls.destinationCACertificate));
 };
 a.$watch("route.tls.termination", function() {
 _.get(a, "route.tls.termination") && (a.showSecureRouteOptions = !0), a.showCertificatesNotUsedWarning = f();
 }), a.addAlternateService = function() {
-a.route.alternateServices = a.route.alternateServices || [], a.route.alternateServices.push({});
+a.route.alternateServices = a.route.alternateServices || [];
+var b = _.find(a.services, function(b) {
+return b !== a.route.to.service && !_.some(a.route.alternateServices, {
+service:b
+});
+});
+a.route.alternateServices.push({
+service:b
+});
 };
 }
 };
