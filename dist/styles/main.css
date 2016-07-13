@@ -3284,7 +3284,6 @@ to{transform:rotate(359deg)}
 .force-hide-secondary-nav-pf .persistent-secondary .nav-pf-persistent-secondary{display:none!important}
 .key-value-editor.as-sortable-dragging .as-sortable-item-delete,.key-value-editor.as-sortable-dragging .input-group-addon,.key-value-editor.as-sortable-dragging input{opacity:.65}
 .key-value-editor .as-sortable-DISABLED-item-delete:hover,.key-value-editor .as-sortable-item-delete:hover,.key-value-editor .as-sortable-item-handle:hover,.key-value-editor.as-sortable-dragging .as-sortable-item-handle{opacity:1}
-.key-value-editor.cannot-delete.cannot-sort .key-value-editor-entry{padding-right:0}
 .key-value-editor .as-sortable-DISABLED-item-delete,.key-value-editor .as-sortable-item-delete,.key-value-editor .as-sortable-item-handle{display:inline-block;font-size:15px;opacity:.65;padding:6px;vertical-align:middle}
 .key-value-editor .as-sortable-item-handle{cursor:move}
 .key-value-editor .as-sortable-placeholder{border-top:2px solid #0088ce;clear:left;width:100%!important}
