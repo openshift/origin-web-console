@@ -3557,7 +3557,7 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "</div>\n" +
     "<div class=\"col-md-8\">\n" +
     "<fieldset ng-disabled=\"disableInputs\">\n" +
-    "<osc-image-summary resource=\"image\" name=\"imageName\"></osc-image-summary>\n" +
+    "<osc-image-summary resource=\"image\" name=\"imageName\" tag=\"imageTag\"></osc-image-summary>\n" +
     "<div class=\"clearfix visible-xs-block\"></div>\n" +
     "<form class=\"\" ng-show=\"imageStream\" novalidate name=\"form\" ng-submit=\"createApp()\">\n" +
     "<div style=\"margin-bottom: 15px\">\n" +
