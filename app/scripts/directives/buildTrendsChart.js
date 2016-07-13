@@ -84,9 +84,6 @@ angular.module('openshiftConsole')
                 bottom: 0
               },
               tick: {
-                count: 5,
-                culling: true,
-                fit: true,
                 format: humanize
               }
             }
@@ -103,7 +100,7 @@ angular.module('openshiftConsole')
             }
           },
           size: {
-            height: 200
+            height: 250
           },
           tooltip: {
             format: {
@@ -171,7 +168,22 @@ angular.module('openshiftConsole')
           return buildNumber;
         };
 
+        var nsToMS = function(duration) {
+          // build.duration is returned in nanoseconds. Convert to ms.
+          // 1000 nanoseconds per microsecond
+          // 1000 microseconds per millisecond
+          return _.round(duration / 1000 / 1000);
+        };
+
         var getBuildDuration = function(build) {
+          // Use build.status.duration if available.
+          var duration = _.get(build, 'status.duration');
+          if (duration) {
+            // Convert duration from ns to ms.
+            return nsToMS(duration);
+          }
+
+          // Fall back to comparing start timestamp to end timestamp.
           var startTimestamp = getStartTimestsamp(build);
           var endTimestamp = build.status.completionTimestamp;
           if (!startTimestamp || !endTimestamp) {
