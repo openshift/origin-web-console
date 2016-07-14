@@ -2779,8 +2779,8 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "<div ng-if=\"!route.spec.tls\"><em>TLS is not enabled for this route</em></div>\n" +
     "</div>\n" +
     "</div>\n" +
-    "</div>\n" +
     "<annotations annotations=\"route.metadata.annotations\"></annotations>\n" +
+    "</div>\n" +
     "</div>\n" +
     "</div>\n" +
     "</div>\n" +
