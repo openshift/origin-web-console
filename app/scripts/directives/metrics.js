@@ -34,6 +34,11 @@ angular.module('openshiftConsole')
         var getCPULimit = $parse('resources.limits.cpu');
         var compact = scope.profile === 'compact';
 
+        // For compact metrics, wait for the element to scroll into view before updating.
+        var paused = compact;
+        var lastUpdated;
+        var updateInterval = 30 * 1000; // 30 seconds
+
         // Set to true when the route changes so we don't update charts that no longer exist.
         var destroyed = false;
 
@@ -468,14 +473,17 @@ angular.module('openshiftConsole')
         }
 
         function update() {
-          if (!canUpdate()) {
+          if (paused || !canUpdate()) {
             return;
           }
+
+          var now = Date.now();
+          lastUpdated = now;
 
           // Leave the end time off to use the server's current time as the end
           // time. This prevents an issue where the donut chart shows 0 for
           // current usage if the client clock is ahead of the server clock.
-          var start = Date.now() - getTimeRangeMillis();
+          var start = now - getTimeRangeMillis();
           angular.forEach(scope.metrics, function(metric) {
             var promises = [];
 
@@ -551,7 +559,18 @@ angular.module('openshiftConsole')
           update();
         }, true);
         // Also update every 30 seconds.
-        intervalPromise = $interval(update, 30 * 1000, false);
+        intervalPromise = $interval(update, updateInterval, false);
+
+        // Pause or resume metrics updates when the element scrolls into and
+        // out of view.
+        scope.updateInView = function(inview) {
+          paused = !inview;
+
+          // Update now if in view and it's been longer than updateInterval.
+          if (inview && (!lastUpdated || Date.now() > (lastUpdated + updateInterval))) {
+            update();
+          }
+        };
 
         scope.$on('$destroy', function() {
           if (intervalPromise) {

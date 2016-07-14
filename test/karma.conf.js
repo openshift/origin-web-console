@@ -55,6 +55,7 @@ module.exports = function(config) {
       "bower_components/angular-key-value-editor/dist/angular-key-value-editor.min.js",
       "bower_components/ng-sortable/dist/ng-sortable.js",
       "bower_components/ui-select/dist/select.js",
+      "bower_components/angular-inview/angular-inview.js",
       'app/config.js',
       'app/scripts/**/*.js',
       'app/views/directives/**/*.html',

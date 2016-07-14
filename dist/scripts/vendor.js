@@ -54025,4 +54025,146 @@ get:f
 } ]);
 }(), angular.module("key-value-editor").run([ "$templateCache", function(a) {
 a.put("key-value-editor.html", '<ng-form name="forms.keyValueEditor" novalidate ng-if="entries">\n  <!-- may use ng-messages for better validation, if needed -->\n  <div class="key-value-editor" ng-model="entries" as-sortable="dragControlListeners">\n    <div\n      class="key-value-editor-entry"\n      ng-class-odd="\'odd\'"\n      ng-class-even="\'even\'"\n      ng-repeat="entry in entries"\n      as-sortable-item>\n      <div\n        class="form-group key-value-editor-input"\n        ng-class="{ \'has-error\' :  (forms.keyValueEditor[\'key-\' + $index].$invalid) }">\n        <input\n          type="text"\n          class="form-control"\n          ng-class="{ \'{{setFocusClass}}\' : $last  }"\n          id="key-{{$index}}"\n          name="key-{{$index}}"\n          placeholder="{{keyPlaceholder}}"\n          ng-minlength="{{keyMinlength}}"\n          maxlength="{{keyMaxlength}}"\n          ng-model="entry.name"\n          ng-readonly="isReadonlyAny || isReadonlySome(entry.name) || entry.isReadonly || entry.containsSecret"\n          ng-pattern="keyValidator"\n          ng-value>\n        <span\n          class="help-block"\n          ng-show="(forms.keyValueEditor[\'key-\' + $index].$error.pattern)">\n          <span>{{ entry.keyValidatorError || keyValidatorError ||  \'validation error\' }}</span>\n          <span ng-if="entry.keyValidatorErrorTooltip || keyValidatorErrorTooltip" class="help action-inline">\n            <a aria-hidden="true" data-toggle="tooltip" data-placement="top" data-original-title="{{entry.keyValidatorErrorTooltip || keyValidatorErrorTooltip}}">\n              <i class="{{entry.keyValidatorErrorTooltipIcon || keyValidatorErrorTooltipIcon}}"></i>\n            </a>\n          </span>\n        </span>\n        <span\n          class="help-block"\n          ng-show="(forms.keyValueEditor[\'key-\' + $index].$error.minlength)">\n          <span>Minimum character count is {{keyMinlength}}</span>\n        </span>\n      </div>\n      <div\n        class="form-group key-value-editor-input"\n        ng-class="(forms.keyValueEditor[\'value-\' + $index].$invalid && forms.keyValueEditor[\'value-\' + $index].$dirty) ? \'has-error\' : \'\'">\n        <div class="input-group" ng-if="entry.containsSecret">\n          <span class="input-group-addon">\n            <span class="{{entry.secretValueIcon || secretValueIcon}}" aria-hidden="true" data-toggle="tooltip" data-placement="top" title="{{entry.secretValueTooltip || secretValueTooltip}}"></span>\n          </span>\n          <input\n            type="text"\n            class="form-control"\n            id="value-{{$index}}"\n            name="value-{{$index}}"\n            placeholder="{{valuePlaceholder}}"\n            ng-minlength="{{valueMinlength}}"\n            ng-maxlength="{{valueMaxlength}}"\n            ng-model="entry.value"\n            ng-readonly="isReadonlyAny || isReadonlySome(entry.name) || entry.isReadonly || entry.containsSecret"\n            ng-pattern="valueValidator">\n        </div>\n        <input\n          type="text"\n          class="form-control"\n          id="value-{{$index}}"\n          name="value-{{$index}}"\n          placeholder="{{valuePlaceholder}}"\n          ng-minlength="{{valueMinlength}}"\n          maxlength="{{valueMaxlength}}"\n          ng-model="entry.value"\n          ng-readonly="isReadonlyAny || isReadonlySome(entry.name) || entry.isReadonly || entry.containsSecret"\n          ng-pattern="valueValidator"\n          ng-if="!entry.containsSecret">\n        <span\n          class="help-block"\n          ng-show="(forms.keyValueEditor[\'value-\' + $index].$error.pattern)">\n          <span>{{ entry.valueValidatorError || valueValidatorError ||  \'validation error\' }}</span>\n          <span ng-if="entry.valueValidatorErrorTooltip || valueValidatorErrorTooltip" class="help action-inline">\n            <a aria-hidden="true" data-toggle="tooltip" data-placement="top" data-original-title="{{entry.valueValidatorErrorTooltip || valueValidatorErrorTooltip}}">\n              <i class="{{entry.valueValidatorErrorTooltipIcon || valueValidatorErrorTooltipIcon}}"></i>\n            </a>\n          </span>\n        </span>\n        <span\n          class="help-block"\n          ng-show="(forms.keyValueEditor[\'value-\' + $index].$error.minlength)">\n          <span>Minimum character count is {{valueMinlength}}</span>\n        </span>\n      </div>\n      <div class="key-value-editor-buttons">\n        <span\n          ng-if="(!cannotSort)"\n          class="fa fa-bars"\n          role="button"\n          aria-label="Move row"\n          aria-grabbed="false"\n          as-sortable-item-handle></span>\n        <span\n          class="pficon pficon-close as-sortable-item-delete"\n          role="button"\n          aria-label="Delete row"\n          ng-hide="cannotDeleteAny || cannotDeleteSome(entry.name) || entry.cannotDelete"\n          ng-click="deleteEntry($index, 1)"></span>\n      </div>\n    </div>\n\n    <!-- the last one, placeholder -->\n    <div\n      class="key-value-editor-entry"\n      ng-if="!cannotAdd">\n      <div\n        class="form-group key-value-editor-input">\n        <input\n          type="text"\n          class="form-control"\n          placeholder="{{keyPlaceholder}}"\n          ng-focus="onFocusLast()">\n      </div>\n      <div\n        class="form-group key-value-editor-input">\n        <input\n          type="text"\n          class="form-control"\n          placeholder="{{valuePlaceholder}}"\n          ng-focus="onFocusLast()">\n      </div>\n    </div>\n  </div>\n\n</ng-form>\n');
-} ]);
+} ]), function() {
+"use strict";
+var a, b, c, d, e, f, g, h, i, j, k, l, m, n, o, p, q, r, s, t = [].slice;
+e = angular.module("angular-inview", []).directive("inView", [ "$parse", function(a) {
+return {
+restrict:"A",
+require:"?^inViewContainer",
+link:function(b, c, e, f) {
+var i, j, k, l, n, o;
+if (e.inView) return i = a(e.inView), j = {
+element:c,
+wasInView:!1,
+offset:0,
+customDebouncedCheck:null,
+callback:function(a, d, e) {
+return null == a && (a = {}), b.$evalAsync(function(f) {
+return function() {
+return a.inViewTarget = c[0], i(b, {
+$event:a,
+$inview:d,
+$inviewpart:e
+});
+};
+}(this));
+}
+}, null != e.inViewOptions && (k = b.$eval(e.inViewOptions)) && (j.offset = k.offset || [ k.offsetTop || 0, k.offsetBottom || 0 ], k.debounce && (j.customDebouncedCheck = h(function(a) {
+return g([ j ], c[0], a);
+}, k.debounce))), l = null != (n = null != (o = j.customDebouncedCheck) ? o :null != f ? f.checkInView :void 0) ? n :r, null != f ? f.addItem(j) :d(j), setTimeout(l), b.$on("$destroy", function() {
+return null != f && f.removeItem(j), m(j);
+});
+}
+};
+} ]).directive("inViewContainer", function() {
+return {
+restrict:"AC",
+controller:[ "$element", function(a) {
+return this.items = [], this.addItem = function(a) {
+return this.items.push(a);
+}, this.removeItem = function(a) {
+var b;
+return this.items = function() {
+var c, d, e, f;
+for (e = this.items, f = [], c = 0, d = e.length; c < d; c++) b = e[c], b !== a && f.push(b);
+return f;
+}.call(this);
+}, this.checkInView = function(b) {
+return function(c) {
+var d, e, f, h;
+for (h = b.items, e = 0, f = h.length; e < f; e++) d = h[e], null != d.customDebouncedCheck && d.customDebouncedCheck();
+return g(function() {
+var a, b, c, e;
+for (c = this.items, e = [], a = 0, b = c.length; a < b; a++) d = c[a], null == d.customDebouncedCheck && e.push(d);
+return e;
+}.call(b), a[0], c);
+};
+}(this), this;
+} ],
+link:function(a, b, c, d) {
+return b.bind("scroll", d.checkInView), n(d), a.$on("$destroy", function() {
+return b.unbind("scroll", d.checkInView), q(d);
+});
+}
+};
+}), c = [], d = function(a) {
+return c.push(a), f();
+}, m = function(a) {
+var b;
+return c = function() {
+var d, e, f;
+for (f = [], d = 0, e = c.length; d < e; d++) b = c[d], b !== a && f.push(b);
+return f;
+}(), p();
+}, a = [], n = function(b) {
+return a.push(b), f();
+}, q = function(b) {
+var c;
+return a = function() {
+var d, e, f;
+for (f = [], d = 0, e = a.length; d < e; d++) c = a[d], c !== b && f.push(c);
+return f;
+}(), p();
+}, b = !1, s = function(b) {
+var d, e, f;
+for (e = 0, f = a.length; e < f; e++) d = a[e], d.checkInView(b);
+if (c.length) return r(b);
+}, f = function() {
+if (!b) return b = !0, angular.element(window).bind("checkInView click ready wheel mousewheel DomMouseScroll MozMousePixelScroll resize scroll touchmove mouseup", s);
+}, p = function() {
+if (b && !c.length && !a.length) return b = !1, angular.element(window).unbind("checkInView click ready wheel mousewheel DomMouseScroll MozMousePixelScroll resize scroll touchmove mouseup", s);
+}, o = function(a, b, c, d, e) {
+var f, g;
+if (c) {
+if (f = i(b.element[0]).top + window.pageYOffset, g = d && e && "neither" || d && "top" || e && "bottom" || "both", !b.wasInView || b.wasInView !== g || f !== b.lastOffsetTop) return b.lastOffsetTop = f, b.wasInView = g, b.callback(a, !0, g);
+} else if (b.wasInView) return b.wasInView = !1, b.callback(a, !1);
+}, g = function(a, b, c) {
+var d, e, f, g, h, m, n, p, q, r, s, t, u, v, w;
+if (w = {
+top:0,
+bottom:k()
+}, b && b !== window) {
+if (d = i(b), d.top > w.bottom || d.bottom < w.top) {
+for (m = 0, p = a.length; m < p; m++) h = a[m], o(c, h, !1);
+return;
+}
+d.top > w.top && (w.top = d.top), d.bottom < w.bottom && (w.bottom = d.bottom);
+}
+for (v = [], n = 0, q = a.length; n < q; n++) h = a[n], g = h.element[0], d = i(g), f = d.top + (l(h.offset) ? j(d, h.offset) :parseInt(null != (r = null != (s = h.offset) ? s[0] :void 0) ? r :h.offset)), e = d.bottom + (l(h.offset) ? j(d, h.offset) :parseInt(null != (t = null != (u = h.offset) ? u[1] :void 0) ? t :h.offset)), f < w.bottom && e >= w.top ? v.push(o(c, h, !0, e > w.bottom, f < w.top)) :v.push(o(c, h, !1));
+return v;
+}, l = function(a) {
+return "string" == typeof a && "%" === a.slice(-1);
+}, j = function(a, b) {
+var c;
+return c = b.substring(0, b.length - 1), (a.bottom - a.top) * (c / 100);
+}, k = function() {
+var a, b, c;
+return (a = window.innerHeight) ? a :(b = document.compatMode, !b && ("undefined" != typeof $ && null !== $ && null != (c = $.support) ? c.boxModel :void 0) || (a = "CSS1Compat" === b ? document.documentElement.clientHeight :document.body.clientHeight), a);
+}, i = function(a) {
+var b, c, d;
+if (null != a.getBoundingClientRect) return a.getBoundingClientRect();
+for (d = 0, b = a; b; ) d += b.offsetTop, b = b.offsetParent;
+for (c = a.parentElement; c; ) null != c.scrollTop && (d -= c.scrollTop), c = c.parentElement;
+return {
+top:d,
+bottom:d + a.offsetHeight
+};
+}, h = function(a, b) {
+var c;
+return c = null, function() {
+var d;
+return d = 1 <= arguments.length ? t.call(arguments, 0) :[], null != c && clearTimeout(c), c = setTimeout(function() {
+return a.apply(null, d);
+}, null != b ? b :100);
+};
+}, r = function(a) {
+var b, d, e;
+for (d = 0, e = c.length; d < e; d++) b = c[d], null != b.customDebouncedCheck && b.customDebouncedCheck();
+return g(function() {
+var a, d, e;
+for (e = [], a = 0, d = c.length; a < d; a++) b = c[a], null == b.customDebouncedCheck && e.push(b);
+return e;
+}(), null, a);
+}, "function" == typeof define && define.amd ? define([ "angular" ], e) :"undefined" != typeof module && module && module.exports && (module.exports = e);
+}.call(this);

@@ -27,7 +27,8 @@ angular
     'extension-registry',
     'as.sortable',
     'ui.select',
-    'key-value-editor'
+    'key-value-editor',
+    'angular-inview'
   ])
   .constant("mainNavTabs", [])  // even though its not really a "constant", it has to be created as a constant and not a value
                          // or it can't be referenced during module config
