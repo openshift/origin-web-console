@@ -51,15 +51,15 @@ angular.module('openshiftConsole')
           $scope.routing.to.service = _.find($scope.services, function(service) {
             return !$scope.serviceName || service.metadata.name === $scope.serviceName;
           });
-          $scope.$watch('routing.service', function() {
-            labels = angular.copy($scope.routing.service.metadata.labels);
+          $scope.$watch('routing.to.service', function() {
+            labels = angular.copy($scope.routing.to.service.metadata.labels);
           });
         });
 
         $scope.createRoute = function() {
           if ($scope.createRouteForm.$valid) {
             $scope.disableInputs = true;
-            var serviceName = $scope.routing.service.metadata.name;
+            var serviceName = $scope.routing.to.service.metadata.name;
             var route = ApplicationGenerator.createRoute($scope.routing, serviceName, labels);
             var alternateServices = _.get($scope, 'routing.alternateServices', []);
             if (!_.isEmpty(alternateServices)) {

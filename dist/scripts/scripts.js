@@ -5359,13 +5359,13 @@ var h = {}, i = a("orderByDisplayName");
 f.list("services", g, function(a) {
 c.services = i(a.by("metadata.name")), c.routing.to = {}, c.routing.to.service = _.find(c.services, function(a) {
 return !c.serviceName || a.metadata.name === c.serviceName;
-}), c.$watch("routing.service", function() {
-h = angular.copy(c.routing.service.metadata.labels);
+}), c.$watch("routing.to.service", function() {
+h = angular.copy(c.routing.to.service.metadata.labels);
 });
 }), c.createRoute = function() {
 if (c.createRouteForm.$valid) {
 c.disableInputs = !0;
-var b = c.routing.service.metadata.name, i = e.createRoute(c.routing, b, h), j = _.get(c, "routing.alternateServices", []);
+var b = c.routing.to.service.metadata.name, i = e.createRoute(c.routing, b, h), j = _.get(c, "routing.alternateServices", []);
 _.isEmpty(j) || (i.spec.to.weight = _.get(c, "routing.to.weight"), i.spec.alternateBackends = _.map(j, function(a) {
 return {
 kind:"Service",
