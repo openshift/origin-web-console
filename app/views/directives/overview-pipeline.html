@@ -29,7 +29,7 @@
                 <div class="build-bar"></div>
               </div>
               <div class="build-circle">
-                <span ng-if="stage.durationMillis" class="build-time">{{stage.durationMillis | conciseDuration}}</span>
+                <span ng-if="stage.durationMillis" class="build-time">{{stage.durationMillis | timeOnlyDuration}}</span>
               </div>
             </div>
           </div>

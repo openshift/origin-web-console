@@ -8621,16 +8621,10 @@ return a.metadata.creationTimestamp < b.metadata.creationTimestamp ? c ? 1 :-1 :
 return function(a, b) {
 return moment.duration(a, b).humanize();
 };
-}).filter("conciseDuration", function() {
+}).filter("timeOnlyDuration", function() {
 return function(a) {
-var b = moment.duration(a), c = Math.floor(b.asDays());
-if (c) return c + "d";
-var d = Math.floor(b.asHours());
-if (d) return d + "h";
-var e = Math.floor(b.minutes());
-if (e) return e + "m";
-var f = Math.floor(b.seconds());
-return f + "s";
+var b = [], c = moment.duration(a), d = Math.floor(c.asHours()), e = c.minutes(), f = c.seconds();
+return d || e || f ? (d && b.push(d + "h"), e && b.push(e + "m"), d || b.push(f + "s"), b.join(" ")) :"";
 };
 }), angular.module("openshiftConsole").filter("uid", function() {
 return function(a) {
