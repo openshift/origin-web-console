@@ -3814,6 +3814,10 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "</div>\n" +
     "</div>\n" +
     "</div>\n" +
+    "<div class=\"template-message\" ng-if=\"templateMessage.length\">\n" +
+    "<span class=\"pficon pficon-info\" aria-hidden=\"true\"></span>\n" +
+    "<div class=\"resource-description\" ng-bind-html=\"templateMessage | linky\"></div>\n" +
+    "</div>\n" +
     "<div class=\"row\" ng-controller=\"TasksController\">\n" +
     "<div ng-if=\"!pendingTasks(tasks()).length && erroredTasks(tasks()).length\" class=\"col-md-12\">\n" +
     "<h2>Things you can do</h2>\n" +
