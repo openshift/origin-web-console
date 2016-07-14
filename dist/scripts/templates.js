@@ -5005,6 +5005,7 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
 
 
   $templateCache.put('views/directives/metrics-compact.html',
+    "<div in-view=\"updateInView($inview)\" in-view-options=\"{ debounce: 50 }\">\n" +
     "<div ng-repeat=\"metric in metrics\" class=\"metrics-compact\">\n" +
     "<div ng-attr-id=\"{{metric.chartPrefix + uniqueID}}-sparkline\" class=\"metrics-sparkline\"></div>\n" +
     "<div class=\"metrics-usage\">\n" +
@@ -5016,6 +5017,7 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "</div>\n" +
     "<div class=\"usage-label\">\n" +
     "{{metric.units | capitalize}} {{metric.label}}\n" +
+    "</div>\n" +
     "</div>\n" +
     "</div>\n" +
     "</div>"
@@ -6906,7 +6908,7 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "\n" +
     "<div class=\"middle-section\">\n" +
     "<div class=\"middle-container\">\n" +
-    "<div class=\"middle-content has-scroll surface-shaded\">\n" +
+    "<div class=\"middle-content has-scroll surface-shaded\" in-view-container>\n" +
     "<div class=\"container-fluid surface-shaded\">\n" +
     "<tasks></tasks>\n" +
     "<alerts alerts=\"alerts\"></alerts>\n" +

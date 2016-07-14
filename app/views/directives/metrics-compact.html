@@ -1,14 +1,16 @@
-<div ng-repeat="metric in metrics" class="metrics-compact">
-  <div ng-attr-id="{{metric.chartPrefix + uniqueID}}-sparkline" class="metrics-sparkline"></div>
-  <div class="metrics-usage">
-    <div class="usage-value">
-      <span class="fade-inline" ng-hide="metric.totalUsed | isNil">{{metric.totalUsed}}</span>
-      <span ng-if="metric.totalUsed | isNil" class="text-muted" aria-hidden="true">
-        --
-      </span>
-    </div>
-    <div class="usage-label">
-      {{metric.units | capitalize}} {{metric.label}}
+<div in-view="updateInView($inview)" in-view-options="{ debounce: 50 }">
+  <div ng-repeat="metric in metrics" class="metrics-compact">
+    <div ng-attr-id="{{metric.chartPrefix + uniqueID}}-sparkline" class="metrics-sparkline"></div>
+    <div class="metrics-usage">
+      <div class="usage-value">
+        <span class="fade-inline" ng-hide="metric.totalUsed | isNil">{{metric.totalUsed}}</span>
+        <span ng-if="metric.totalUsed | isNil" class="text-muted" aria-hidden="true">
+          --
+        </span>
+      </div>
+      <div class="usage-label">
+        {{metric.units | capitalize}} {{metric.label}}
+      </div>
     </div>
   </div>
 </div>
