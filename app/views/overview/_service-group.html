@@ -1,7 +1,8 @@
 <div class="service-group">
   <div row tablet="column" class="service-group-header"
        ng-if="service.metadata.labels.app || displayRoute"
-       ng-click="toggleCollapse()">
+       ng-click="toggleCollapse()"
+       ng-class="{ 'has-app-label': appName }">
     <div ng-if="appName" class="app-name">
       <i class="fa fa-angle-down fa-fw" aria-hidden="true" ng-if="!collapse"></i>
       <i class="fa fa-angle-right fa-fw" aria-hidden="true" ng-if="collapse"></i>
@@ -21,6 +22,10 @@
       <span ng-if="routeWarningsByService[service.metadata.name] && routesByService[service.metadata.name].length === 1">
         <route-warnings warnings="routeWarningsByService[service.metadata.name]"></route-warnings>
       </span>
+      <small ng-if="(primaryServiceRoutes | hashSize) > 1" class="other-routes-msg">
+        and
+        <a ng-href="project/{{projectName}}/browse/routes">{{(primaryServiceRoutes | hashSize) - 1}} other route<span ng-if="(primaryServiceRoutes | hashSize) > 2">s</span></a>
+      </small>
     </h4>
     <span ng-if="!displayRoute">
       <a ng-if="'routes' | canI : 'create'" ng-href="project/{{service.metadata.namespace}}/create-route?service={{service.metadata.name}}">Create Route</a>

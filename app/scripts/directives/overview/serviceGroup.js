@@ -102,6 +102,7 @@ angular.module('openshiftConsole')
           return _.get($scope, ['routesByService', serviceName]);
         }, function(routes) {
           $scope.displayRoute = getDisplayRoute(routes);
+          $scope.primaryServiceRoutes = routes;
           addAlternateServices();
         });
 

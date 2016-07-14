@@ -149,7 +149,7 @@
         margin-top: 0;
       }
     }
-  }  
+  }
   .service-group-header {
     cursor: pointer;
     .justify-content(@justify: space-between);
@@ -173,6 +173,23 @@
       font-weight: 300;
       margin: 0;
       text-transform: uppercase;
+    }
+    .other-routes-msg {
+      display: block;
+      line-height: 1.1;
+      margin: 3px 20px;
+    }
+    @media (min-width: @screen-sm-min) {
+      align-items: center;
+      .other-routes-msg {
+        display: inline-block;
+        margin: 0;
+      }
+      &.has-app-label .other-routes-msg {
+        // Display the message below the route when there is an app label.
+        display: block;
+        .text-right();
+      }
     }
   }
   .overview-pipeline {
