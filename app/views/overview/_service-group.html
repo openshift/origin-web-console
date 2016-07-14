@@ -23,7 +23,7 @@
       </span>
     </h4>
     <span ng-if="!displayRoute">
-      <a ng-href="project/{{service.metadata.namespace}}/create-route?service={{service.metadata.name}}">Create Route</a>
+      <a ng-if="'routes' | canI : 'create'" ng-href="project/{{service.metadata.namespace}}/create-route?service={{service.metadata.name}}">Create Route</a>
     </span>
   </div>
   <div>
@@ -65,7 +65,7 @@
             <span ng-if="(services | hashSize) > 1 && 'services' | canI : 'update'">Add a service to group them together.</span>
           </p>
           <div ng-if="(services | hashSize) > 1 && 'services' | canI : 'update'">
-            <button class="btn btn-primary" ng-show="(services | hashSize) > 1" ng-click="linkService()">
+            <button class="btn btn-primary" ng-click="linkService()">
               Group Service
             </button>
           </div>

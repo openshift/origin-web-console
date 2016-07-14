@@ -7150,7 +7150,7 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "</span>\n" +
     "</h4>\n" +
     "<span ng-if=\"!displayRoute\">\n" +
-    "<a ng-href=\"project/{{service.metadata.namespace}}/create-route?service={{service.metadata.name}}\">Create Route</a>\n" +
+    "<a ng-if=\"'routes' | canI : 'create'\" ng-href=\"project/{{service.metadata.namespace}}/create-route?service={{service.metadata.name}}\">Create Route</a>\n" +
     "</span>\n" +
     "</div>\n" +
     "<div>\n" +
@@ -7182,7 +7182,7 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "<span ng-if=\"(services | hashSize) > 1 && 'services' | canI : 'update'\">Add a service to group them together.</span>\n" +
     "</p>\n" +
     "<div ng-if=\"(services | hashSize) > 1 && 'services' | canI : 'update'\">\n" +
-    "<button class=\"btn btn-primary\" ng-show=\"(services | hashSize) > 1\" ng-click=\"linkService()\">\n" +
+    "<button class=\"btn btn-primary\" ng-click=\"linkService()\">\n" +
     "Group Service\n" +
     "</button>\n" +
     "</div>\n" +
