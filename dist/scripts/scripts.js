@@ -5018,13 +5018,22 @@ a.alerts[b.name] = b.data;
 }), f.clearAlerts();
 var s = m("displayName"), t = m("humanize"), u = k("spec.template.spec.containers"), v = k("spec.strategy.sourceStrategy.from || spec.strategy.dockerStrategy.from || spec.strategy.customStrategy.from"), w = k("spec.output.to");
 g.get(c.project).then(_.spread(function(b, f) {
-function g(a) {
+function g(a, b) {
+var c = _.get(a, "spec.triggers", []), d = _.find(c, function(a) {
+if ("ImageChange" !== a.type) return !1;
+var c = _.get(a, "imageChangeParams.containerNames", []);
+return _.includes(c, b.name);
+});
+return _.get(d, "imageChangeParams.from.name");
+}
+function k(a) {
 var b = [], c = u(a);
-return c && angular.forEach(c, function(a) {
-a.image && b.push(a.image);
+return c && angular.forEach(c, function(c) {
+var d = c.image;
+_.trim(d) || (d = g(a, c)), d && b.push(d);
 }), b;
 }
-function k(b) {
+function o(b) {
 var c = [], d = [], e = {};
 return angular.forEach(b.objects, function(b) {
 if ("BuildConfig" === b.kind) {
@@ -5032,17 +5041,17 @@ var f = n(v(b), a.projectName);
 f && c.push({
 name:f
 });
-var h = n(w(b), a.projectName);
-h && (e[h] = !0);
+var g = n(w(b), a.projectName);
+g && (e[g] = !0);
 }
-"DeploymentConfig" === b.kind && (d = d.concat(g(b)));
+"DeploymentConfig" === b.kind && (d = d.concat(k(b)));
 }), d.forEach(function(a) {
 e[a] || c.push({
 name:a
 });
 }), c;
 }
-function o(a) {
+function x(a) {
 var b = /^helplink\.(.*)\.title$/, c = /^helplink\.(.*)\.url$/, d = {};
 for (var e in a.annotations) {
 var f, g = e.match(b);
@@ -5050,8 +5059,8 @@ g ? (f = d[g[1]] || {}, f.title = a.annotations[e], d[g[1]] = f) :(g = e.match(c
 }
 return d;
 }
-function x() {
-a.templateImages = k(a.template), a.template.labels = a.template.labels || {};
+function y() {
+a.templateImages = o(a.template), a.template.labels = a.template.labels || {};
 }
 if (a.project = b, a.breadcrumbs[0].title = m("displayName")(b), a.projectDisplayName = function() {
 return s(this.project) || this.projectName;
@@ -5065,7 +5074,7 @@ success:"Created " + a.templateDisplayName() + " in project " + a.projectDisplay
 failure:"Failed to create " + a.templateDisplayName() + " in project " + a.projectDisplayName()
 };
 e.setTemplateData(b.parameters, a.template.parameters, b.message);
-var i = o(a.template);
+var i = x(a.template);
 j.clear(), j.add(g, i, function() {
 var c = h.defer();
 return d.batch(b.objects, f).then(function(b) {
@@ -5102,18 +5111,18 @@ details:c
 }, r) d.get("templates", q, {
 namespace:r || a.projectName
 }).then(function(b) {
-a.template = b, x();
+a.template = b, y();
 }, function() {
 l.toErrorPage("Cannot create from template: the specified template could not be retrieved.");
 }); else {
 if (a.template = p.getTemplate(), _.isEmpty(a.template)) {
-var y = URI("error").query({
+var z = URI("error").query({
 error:"not_found",
 error_description:"Template wasn't found in cache."
 }).toString();
-i.url(y);
+i.url(z);
 }
-p.clearTemplate(), x();
+p.clearTemplate(), y();
 }
 }));
 } ]), angular.module("openshiftConsole").controller("LabelsController", [ "$scope", function(a) {
