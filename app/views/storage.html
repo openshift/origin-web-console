@@ -22,7 +22,13 @@
           <div class="row">
             <div class="col-md-12">
               <h2>Persistent Volume Claims</h2>
-              <table class="table table-bordered table-hover table-mobile">
+              <div ng-if="(pvcs | hashSize) == 0" class="blank-slate-pf table-log-pods">
+                <div class="blank-slate-pf-icon">
+                  <span class="pficon pficon-storage-domain"></span>
+                </div>
+                <h1>{{emptyMessage}}</h1>
+              </div>
+              <table ng-if="(pvcs | hashSize) !== 0" class="table table-bordered table-hover table-mobile">
                 <thead>
                   <tr>
                     <th>Name</th>
@@ -32,9 +38,6 @@
                     <th>Age</th>
                   </tr>
                 </thead>
-                <tbody ng-if="(pvcs | hashSize) == 0">
-                  <tr><td colspan="5"><em>{{emptyMessage}}</em></td></tr>
-                </tbody>
                 <tbody ng-repeat="pvc in pvcs | orderObjectsByDate : true">
                   <tr>
                     <td data-title="Name"><a ng-href="{{pvc | navigateResourceURL}}">{{pvc.metadata.name}}</a></td>

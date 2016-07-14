@@ -15,7 +15,20 @@
     <!-- TODO: Change to pf-sort in angular-patternfly 3.0 -->
     <div pf-sort config="sortConfig" class="sort-controls"></div>
   </div>
-  <table class="table table-bordered table-condensed table-mobile table-hover events-table">
+
+  <div ng-if="(unfilteredEvents | hashSize) === 0" class="blank-slate-pf table-log-pods">
+    <div class="blank-slate-pf-icon">
+      <span class="pficon pficon-image"></span>
+    </div>
+    <h1 ng-if="(unfilteredEvents | hashSize) === 0">No events to show.</h1>
+    <span ng-if="(unfilteredEvents | hashSize) > 0">
+      <h1>All events hidden by filter.</h1>
+      <div class="blank-slate-pf-main-action">
+        <button ng-click="filter.text = ''" class="btn btn-primary btn-lg"> Clear Filter </button>
+      </div>
+    </span>
+  </div>
+  <table ng-if="(unfilteredEvents | hashSize) !== 0" class="table table-bordered table-condensed table-mobile table-hover events-table">
     <thead>
       <tr>
         <th>Time</th>
@@ -32,17 +45,6 @@
         <th><span class="hidden-xs-inline visible-sm-inline visible-md-inline hidden-lg-inline">Reason and </span>Message</th>
       </tr>
     </thead>
-    <tbody ng-if="(filteredEvents | hashSize) === 0">
-      <tr>
-        <td colspan="6">
-          <span ng-if="(unfilteredEvents | hashSize) === 0"><em>No events to show.</em></span>
-          <span ng-if="(unfilteredEvents | hashSize) > 0">
-            All events hidden by filter.
-            <a href="" ng-click="filter.text = ''" role="button">Clear filter</a>
-          </span>
-        </td>
-      </tr>
-    </tbody>
     <tbody ng-repeat="event in filteredEvents">
       <tr>
         <td data-title="Time" class="nowrap">{{event.lastTimestamp | date:'mediumTime'}}</td>

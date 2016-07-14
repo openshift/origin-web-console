@@ -21,7 +21,13 @@
         <div class="container-fluid">
           <div class="row">
             <div class="col-md-12 gutter-top">
-              <table class="table table-bordered table-hover table-mobile">
+              <div ng-if="(deploymentConfigDeployments | hashSize) == 0" class="blank-slate-pf table-log-pods">
+                <div class="blank-slate-pf-icon">
+                  <span class="pficon pficon-image"></span>
+                </div>
+                <h1>{{emptyMessage}}</h1>
+              </div>
+              <table ng-if="(deploymentConfigDeployments | hashSize) !== 0" class="table table-bordered table-hover table-mobile">
                 <thead>
                   <tr>
                     <th>Name</th>

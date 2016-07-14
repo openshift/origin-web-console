@@ -21,14 +21,11 @@
         <div class="container-fluid">
           <div class="row">
             <div class="col-md-12 gutter-top">
-              <div ng-if="((buildsByBuildConfig | hashSize) == 0)" class="blank-slate-pf">
+              <div ng-if="((buildsByBuildConfig | hashSize) == 0)" class="blank-slate-pf table-log-pods">
                 <div class="blank-slate-pf-icon">
-                  <span class="pficon pficon pficon-build"></span>
+                  <span class="pficon pficon-build"></span>
                 </div>
                 <h1>{{emptyMessage}}</h1>
-                <p>
-                  To create your project's first build, please visit our <a href="#">Build Configuration Wizard</a>.
-                </p>
               </div>
               <table ng-if="((buildsByBuildConfig | hashSize) !== 0)" class="table table-bordered table-hover table-mobile">
                 <thead>

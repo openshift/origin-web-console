@@ -21,7 +21,13 @@
         <div class="container-fluid">
           <div class="row">
             <div class="col-md-12 gutter-top">
-              <table class="table table-bordered table-hover table-mobile">
+              <div ng-if="(imageStreams | hashSize) == 0" class="blank-slate-pf table-log-pods">
+                <div class="blank-slate-pf-icon">
+                  <span class="pficon pficon-image"></span>
+                </div>
+                <h1>{{emptyMessage}}</h1>
+              </div>
+              <table ng-if="(imageStreams | hashSize) !== 0" class="table table-bordered table-hover table-mobile">
                 <thead>
                   <tr>
                     <th>Name</th>
@@ -30,9 +36,6 @@
                     <th>Updated</th>
                   </tr>
                 </thead>
-                <tbody ng-if="(imageStreams | hashSize) == 0">
-                  <tr><td colspan="4"><em>{{emptyMessage}}</em></td></tr>
-                </tbody>
                 <tbody ng-repeat="imageStream in imageStreams | orderObjectsByDate : true">
                   <tr>
                     <td data-title="Name"><a href="{{imageStream | navigateResourceURL}}">{{imageStream.metadata.name}}</a></td>

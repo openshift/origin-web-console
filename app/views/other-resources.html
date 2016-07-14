@@ -28,7 +28,13 @@
         <div class="container-fluid">
           <div class="row">
             <div class="col-md-12 gutter-top">
-              <table class="table table-bordered table-mobile">
+              <div ng-if="(resources | hashSize) == 0" class="blank-slate-pf table-log-pods">
+                <div class="blank-slate-pf-icon">
+                  <span class="pficon pficon-resource-pool"></span>
+                </div>
+                <h1>{{emptyMessage}}</h1>
+              </div>
+              <table ng-if="(resources | hashSize) !== 0" class="table table-bordered table-mobile">
                 <thead>
                   <tr>
                     <th>Name</th>
@@ -37,9 +43,6 @@
                     <th><span class="sr-only">Actions</span></th>
                   </tr>
                 </thead>
-                <tbody ng-if="(resources | hashSize) == 0">
-                  <tr><td colspan="6"><em>{{emptyMessage}}</em></td></tr>
-                </tbody>
                 <tbody ng-repeat="resource in resources | orderObjectsByDate : true">
                   <tr>
                     <td data-title="Name">{{resource.metadata.name}}</td>
