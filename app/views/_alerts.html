@@ -1,5 +1,5 @@
 <div ng-attr-row="{{toast}}"  ng-attr-wrap="{{toast}}">
-  <div ng-repeat="alert in alerts" ng-if="!alert.hidden" class="alert-wrapper" ng-class-odd="'odd-alert'" ng-class-even="'even-alert'" >
+  <div ng-repeat="alert in (alerts | filterCollection : filter)" ng-if="!alert.hidden" class="alert-wrapper">
     <div class="alert" ng-class="{
       'alert-danger': alert.type === 'error',
       'alert-warning': alert.type === 'warning',

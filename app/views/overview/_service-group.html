@@ -43,6 +43,17 @@
         </div>
       </div>
     </div>
+    <!-- FIXME unserviced things should only be getting the notifications that apply to them but reusing service group to show all
+         unserviced things makes the notifications show up as a big block at the end of all of them -->
+    <service-group-notifications
+        ng-if="service"
+        collapsed="collapse"
+        deployment-configs-by-service="deploymentConfigsByService"
+        deployments-by-service="deploymentsByService"
+        child-services="childServices"
+        service="service"
+        pods-by-deployment="podsByDeployment">
+    </service-group-notifications>
     <div uib-collapse="collapse" class="service-group-body">
       <!--
         Add a single-alternate-service class if the route has exactly one alternate backend so we
@@ -76,16 +87,6 @@
           </div>
         </div>
       </div>
-      <!-- FIXME unserviced things should only be getting the notifications that apply to them but reusing service group to show all
-           unserviced things makes the notifications show up as a big block at the end of all of them -->
-      <service-group-notifications
-          ng-if="service"
-          deployment-configs-by-service="deploymentConfigsByService"
-          deployments-by-service="deploymentsByService"
-          child-services="childServices"
-          service="service"
-          pods-by-deployment="podsByDeployment">
-      </service-group-notifications>
     </div>
   </div>
 </div>

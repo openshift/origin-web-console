@@ -9,7 +9,8 @@ angular.module('openshiftConsole')
         childServices: '=',
         deploymentConfigsByService: '=',
         deploymentsByService: '=',
-        podsByDeployment: '='
+        podsByDeployment: '=',
+        collapsed: '='
       },
       templateUrl: 'views/directives/service-group-notifications.html',
       link: function($scope) {
@@ -128,6 +129,15 @@ angular.module('openshiftConsole')
 
             alerts[alertID] = alert;
           });
+        };
+
+        $scope.showAlert = function(alert) {
+          if (!$scope.collapsed) {
+            return true;
+          }
+
+          // Hide info alerts when collapsed.
+          return alert.type !== 'info';
         };
 
         // TODO worried about how this will perform

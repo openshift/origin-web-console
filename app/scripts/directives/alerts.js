@@ -17,6 +17,8 @@ angular.module('openshiftConsole')
         //   onClick:  handler to call when the link if clicked (optional)
         //             If onClick returns true, dismisses the alert
         alerts: '=',
+        // Filter function (optional).
+        filter: '=?',
         hideCloseButton: '=?',
         toast: '=?'
       },
