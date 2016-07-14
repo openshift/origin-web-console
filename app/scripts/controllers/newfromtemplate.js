@@ -60,13 +60,37 @@ angular.module('openshiftConsole')
         $scope.project = project;
         // Update project breadcrumb with display name.
         $scope.breadcrumbs[0].title = $filter('displayName')(project);
+
+        function findImageFromTrigger(dc, container) {
+          var triggers = _.get(dc, 'spec.triggers', []);
+          // Find an image change trigger whose container name matches.
+          var matchingTrigger = _.find(triggers, function(trigger) {
+            if (trigger.type !== 'ImageChange') {
+              return false;
+            }
+
+            var containerNames = _.get(trigger, 'imageChangeParams.containerNames', []);
+            return _.includes(containerNames, container.name);
+          });
+
+          return _.get(matchingTrigger, 'imageChangeParams.from.name');
+        }
+
         function deploymentConfigImages(dc) {
           var images = [];
           var containers = dcContainers(dc);
           if (containers) {
             angular.forEach(containers, function(container) {
-              if (container.image) {
-                images.push(container.image);
+              var image = container.image;
+              // If `container.image` is empty, look to see if it's set from an
+              // image change trigger. Trim the string as some templates set
+              // container image to " ".
+              if (!_.trim(image)) {
+                image = findImageFromTrigger(dc, container);
+              }
+
+              if (image) {
+                images.push(image);
               }
             });
           }
