@@ -3,7 +3,7 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
 
   $templateCache.put('views/_alerts.html',
     "<div ng-attr-row=\"{{toast}}\" ng-attr-wrap=\"{{toast}}\">\n" +
-    "<div ng-repeat=\"alert in alerts\" ng-if=\"!alert.hidden\" class=\"alert-wrapper\" ng-class-odd=\"'odd-alert'\" ng-class-even=\"'even-alert'\">\n" +
+    "<div ng-repeat=\"alert in (alerts | filterCollection : filter)\" ng-if=\"!alert.hidden\" class=\"alert-wrapper\">\n" +
     "<div class=\"alert\" ng-class=\"{\n" +
     "      'alert-danger': alert.type === 'error',\n" +
     "      'alert-warning': alert.type === 'warning',\n" +
@@ -5730,7 +5730,7 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
 
 
   $templateCache.put('views/directives/service-group-notifications.html',
-    "<alerts alerts=\"alerts\" toast=\"true\"></alerts>"
+    "<alerts alerts=\"alerts\" filter=\"showAlert\" toast=\"true\"></alerts>"
   );
 
 
@@ -7181,6 +7181,9 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "</div>\n" +
     "</div>\n" +
     "</div>\n" +
+    "\n" +
+    "<service-group-notifications ng-if=\"service\" collapsed=\"collapse\" deployment-configs-by-service=\"deploymentConfigsByService\" deployments-by-service=\"deploymentsByService\" child-services=\"childServices\" service=\"service\" pods-by-deployment=\"podsByDeployment\">\n" +
+    "</service-group-notifications>\n" +
     "<div uib-collapse=\"collapse\" class=\"service-group-body\">\n" +
     "\n" +
     "<div row mobile=\"column\" class=\"overview-services\" ng-class=\"{ 'single-alternate-service': (alternateServices | hashSize) === 1 }\">\n" +
@@ -7205,9 +7208,6 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "</div>\n" +
     "</div>\n" +
     "</div>\n" +
-    "\n" +
-    "<service-group-notifications ng-if=\"service\" deployment-configs-by-service=\"deploymentConfigsByService\" deployments-by-service=\"deploymentsByService\" child-services=\"childServices\" service=\"service\" pods-by-deployment=\"podsByDeployment\">\n" +
-    "</service-group-notifications>\n" +
     "</div>\n" +
     "</div>\n" +
     "</div>"

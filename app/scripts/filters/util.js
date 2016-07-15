@@ -496,4 +496,14 @@ angular.module('openshiftConsole')
       }
       return _.round(Number(value) * 100, precision) + "%";
     };
+  })
+  // Wraps _.filter. Works with hashes, unlike ngFilter, which only works
+  // with arrays.
+  .filter('filterCollection', function() {
+    return function(collection, predicate) {
+      if (!collection || !predicate) {
+        return collection;
+      }
+      return _.filter(collection, predicate);
+    };
   });

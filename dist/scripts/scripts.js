@@ -6712,6 +6712,7 @@ return {
 restrict:"E",
 scope:{
 alerts:"=",
+filter:"=?",
 hideCloseButton:"=?",
 toast:"=?"
 },
@@ -8289,7 +8290,8 @@ service:"=",
 childServices:"=",
 deploymentConfigsByService:"=",
 deploymentsByService:"=",
-podsByDeployment:"="
+podsByDeployment:"=",
+collapsed:"="
 },
 templateUrl:"views/directives/service-group-notifications.html",
 link:function(c) {
@@ -8364,7 +8366,9 @@ h[i] = j;
 }
 });
 };
-c.$watchGroup([ "service", "childServices" ], function() {
+c.showAlert = function(a) {
+return !c.collapsed || "info" !== a.type;
+}, c.$watchGroup([ "service", "childServices" ], function() {
 i = (c.childServices || []).concat([ c.service ]), j(), k();
 }), c.$watch("deploymentConfigsByService", function() {
 j();
@@ -9647,6 +9651,10 @@ return null === a || void 0 === a;
 }).filter("percent", function() {
 return function(a, b) {
 return null === a || void 0 === a ? a :_.round(100 * Number(a), b) + "%";
+};
+}).filter("filterCollection", function() {
+return function(a, b) {
+return a && b ? _.filter(a, b) :a;
 };
 }), angular.module("openshiftConsole").filter("camelToLower", function() {
 return function(a) {
