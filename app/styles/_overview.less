@@ -394,19 +394,20 @@
         .deployment-connector-arrow {
           display: block;
         }
-        .finishing-deployment-text {
-          font-size: 18px;
-          text-align: center;
-        }
       }
       .overview-unsuccessful-state {
         .flex-order(@order: 3);
         .align-items(@align: center);
         .justify-content(@justify: center);
         line-height: 1;
-        .unsuccessful-state-text {
-          font-size: 18px;
-          text-align: center;
+      }
+      .deployment-status-msg {
+        .text-muted();
+        font-size: 16px;
+        line-height: normal;
+        margin-bottom: 10px;
+        .deployment-log-link {
+          font-size: 14px;
         }
       }
     }

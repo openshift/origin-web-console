@@ -4,36 +4,36 @@
       Service:
       <a ng-href="{{service | navigateResourceURL}}">{{service.metadata.name}}</a>
     </div>
-    <div class="service-metadata">
-      <span ng-if="!scalableDeploymentByConfig[dcName]">Deploying...</span>
-      <div ng-if="scalableDeploymentByConfig[dcName] && weightByService[service.metadata.name]">
-        <ng-include src="'views/overview/_traffic-percent.html'"></ng-include>
-      </div>
+    <div ng-if="weightByService[service.metadata.name]" class="service-metadata">
+      <ng-include src="'views/overview/_traffic-percent.html'"></ng-include>
     </div>
   </div>
   <div class="deployment-header">
     <div class="rc-header">
       <div>
         Deployment:
-        <a ng-href="{{deploymentConfigs[dcName] | navigateResourceURL}}">{{dcName}}</a>
+        <a ng-href="{{deploymentConfig | navigateResourceURL}}">{{dcName}}</a>
       </div>
       <div>
-        <relative-timestamp ng-if="scalableDeploymentByConfig[dcName]" timestamp="scalableDeploymentByConfig[dcName].metadata.creationTimestamp"></relative-timestamp>
+        <relative-timestamp ng-if="activeDeployment && !anyDeploymentInProgress" timestamp="activeDeployment.metadata.creationTimestamp"></relative-timestamp>
+        <span ng-if="anyDeploymentInProgress">
+          {{deploymentConfig.spec.strategy.type}} deployment in progress...
+        </span>
       </div>
     </div>
-    <div column flex class="shield" ng-if="scalableDeploymentByConfig[dcName]"
-          ng-class="{ 'shield-lg': (scalableDeploymentByConfig[dcName] | annotation: 'deploymentVersion').length > 3 }">
-      <a ng-href="{{scalableDeploymentByConfig[dcName] | navigateResourceURL}}">
-        <span class="shield-number">#{{scalableDeploymentByConfig[dcName] | annotation: 'deploymentVersion'}}</span>
+    <div column flex class="shield" ng-if="activeDeployment"
+          ng-class="{ 'shield-lg': (activeDeployment | annotation: 'deploymentVersion').length > 3 }">
+      <a ng-href="{{activeDeployment | navigateResourceURL}}">
+        <span class="shield-number">#{{activeDeployment | annotation: 'deploymentVersion'}}</span>
       </a>
     </div>
   </div>
   <div row class="deployment-body">
     <!-- all visible deployments -->
     <div column class="overview-donut"
-        ng-repeat="deployment in deployments | orderObjectsByDate : true track by (deployment | uid)"
+        ng-repeat="deployment in orderedDeployments track by (deployment | uid)"
         ng-class="{ latest: isDeploymentLatest(deployment) }"
-        ng-if="!scalableDeploymentByConfig[dcName] || !(isDeploymentLatest(deployment) && ((deployment | deploymentStatus) == 'Cancelled' || (deployment | deploymentStatus) == 'Failed'))">
+        ng-if="!activeDeployment || !(isDeploymentLatest(deployment) && ((deployment | deploymentStatus) == 'Cancelled' || (deployment | deploymentStatus) == 'Failed'))">
       <deployment-donut
           rc="deployment"
           deployment-config="deploymentConfigs[dcName]"
@@ -47,32 +47,35 @@
     <!-- /all visible deployments -->
 
     <!-- deployment in progress (connecting arrow) -->
-    <div column class="overview-donut-connector" ng-if="(deployments | anyDeploymentIsInProgress)">
+    <div column class="overview-donut-connector" ng-if="anyDeploymentInProgress">
       <div ng-if="deployments.length > 1" class="deployment-connector-arrow">
         &rarr;
       </div>
-      <div ng-if="deployments.length === 1" class="finishing-deployment-text">
-        <span class="text-muted">
-          Running deployment #{{deployments[0] | annotation : 'deploymentVersion'}}...
-        </span>
+      <div ng-if="deployments.length === 1" class="deployment-status-msg">
+        <status-icon status="deployments[0] | deploymentStatus" class="mar-right-xs"></status-icon>
+        Deployment&nbsp;#{{deployments[0] | annotation : 'deploymentVersion'}}
+        {{deployments[0] | deploymentStatus | lowercase}}
+        <div ng-if="'deploymentconfigs/log' | canI : 'get'" class="deployment-log-link">
+          <a ng-href="{{deployments[0] | navigateResourceURL}}?tab=logs">View Log</a>
+        </div>
       </div>
     </div>
     <!-- /deployment in progress (connecting arrow) -->
 
     <!-- cancelled/failed state -->
-    <div column class="overview-unsuccessful-state" ng-if="!scalableDeploymentByConfig[dcName] && !(deployments | anyDeploymentIsInProgress)" ng-switch="deployments[0] | deploymentStatus">
+    <div column class="overview-unsuccessful-state" ng-if="!activeDeployment && !anyDeploymentInProgress" ng-switch="deployments[0] | deploymentStatus">
       <div ng-switch-when="Cancelled">
-        <span class="text-warning unsuccessful-state-text">
+        <span class="text-warning deployment-status-msg">
           <i class="fa fa-ban" aria-hidden="true"></i>
-          Deployment
+          {{dcName}}
           <a ng-href="{{deployments[0] | navigateResourceURL}}">#{{deployments[0] | annotation: 'deploymentVersion'}}</a>
           cancelled
         </span>
       </div>
       <div ng-switch-when="Failed">
-        <span class="text-danger unsuccessful-state-text">
+        <span class="text-danger deployment-status-msg">
           <i class="fa fa-times" aria-hidden="true"></i>
-          Deployment
+          {{dcName}}
           <a ng-href="{{deployments[0] | navigateResourceURL}}">#{{deployments[0] | annotation: 'deploymentVersion'}}</a>
           failed
         </span>
@@ -81,11 +84,11 @@
     <!-- /cancelled/failed state -->
 
     <!-- succeeded state -->
-    <div column class="deployment-details" ng-if="scalableDeploymentByConfig[dcName] && !(deployments | anyDeploymentIsInProgress)">
+    <div column class="deployment-details" ng-if="activeDeployment && !anyDeploymentInProgress">
       <!-- metrics or pod template -->
       <!-- pause metrics updates when the service group is collapsed -->
-      <metrics ng-if="showMetrics && !collapse" deployment="scalableDeploymentByConfig[dcName]" profile="compact" class="overview-metrics"></metrics>
-      <pod-template ng-if="!showMetrics" pod-template="scalableDeploymentByConfig[dcName].spec.template"></pod-template>
+      <metrics ng-if="showMetrics && !collapse" deployment="activeDeployment" profile="compact" class="overview-metrics"></metrics>
+      <pod-template ng-if="!showMetrics" pod-template="activeDeployment.spec.template"></pod-template>
       <!-- /metrics or pod template -->
     </div>
     <!-- /succeeded state -->

@@ -8485,13 +8485,21 @@ restrict:"E",
 scope:!0,
 templateUrl:"views/overview/_rc.html"
 };
-}), angular.module("openshiftConsole").directive("overviewDeploymentConfig", function() {
+}), angular.module("openshiftConsole").directive("overviewDeploymentConfig", [ "$filter", function(a) {
 return {
 restrict:"E",
 scope:!0,
-templateUrl:"views/overview/_dc.html"
+templateUrl:"views/overview/_dc.html",
+link:function(b) {
+var c = a("orderObjectsByDate"), d = a("anyDeploymentIsInProgress");
+b.$watch("deploymentConfigs", function(a) {
+b.deploymentConfig = _.get(a, b.dcName);
+}), b.$watch("deployments", function(a) {
+b.orderedDeployments = c(a, !0), b.activeDeployment = _.get(b, [ "scalableDeploymentByConfig", b.dcName ]), b.anyDeploymentInProgress = d(a);
+});
+}
 };
-}), angular.module("openshiftConsole").directive("istagSelect", [ "DataService", function(a) {
+} ]), angular.module("openshiftConsole").directive("istagSelect", [ "DataService", function(a) {
 return {
 require:"^form",
 restrict:"E",
