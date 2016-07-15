@@ -79,7 +79,7 @@
             top: -1px;
             width: 3px;
           }
-          .fa {
+          .fa, .pficon {
             color: @sidebar-os-active;
           }
         }
@@ -109,7 +109,7 @@
         &.dropdown-toggle:focus {
           outline: thin dotted;
         }
-        .fa {
+        .fa, .pficon {
           color: @sidebar-os-icon-color;
           &.fa-angle-right {
             display: none;
@@ -139,6 +139,13 @@
       }
     }
   }
+}
+.nav-sidenav-secondary .divider-header {
+  margin-top: 20px;
+  color: #dbdada;
+  font-weight: 600;
+  margin-left: 14px;
+  font-size: 14px;
 }
 .show-sidebar-right {
   .right-content {
@@ -203,12 +210,12 @@
         min-width: 230px;
         position: absolute;
         padding: 10px;
-        top: 0;
+        top: -2px;
       }
       ul.nav-sidenav-primary {
         border-bottom: 1px solid @sidebar-os-border-inset-color;
         > li {
-          position: static;
+          position: relative;
           &.open {
             > a:before {
               // connect tab and hover-nav
@@ -228,7 +235,7 @@
           > a {
             padding: @sidebar-os-padding-x @sidebar-os-padding-y;
             text-align: center;
-            .fa {
+            .fa, .pficon {
               display: inline;
               font-size: 20px;
             }
@@ -298,7 +305,7 @@
         > a {
           text-align: left;
           padding: (@sidebar-os-padding-x);
-          .fa {
+          .fa, .pficon {
             .primary-nav-icon-xl();
             &.fa-angle-right {
               color: @sidebar-os-color;

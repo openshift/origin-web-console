@@ -28,6 +28,12 @@
                     </div>
                   </div>
                   <div row flex main-axis="end" class="project-delete" ng-if="project.status.phase == 'Active'">
+                    <span class="fa-lg mar-right-lg">
+                      <a ng-href="project/{{project.metadata.name}}/edit" class="action-button">
+                        <i class="fa fa-pencil" aria-hidden="true"></i>
+                        <span class="sr-only">Edit Project</span>
+                      </a>
+                    </span>
                     <delete-link
                       class="fa-lg"
                       kind="Project"

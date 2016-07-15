@@ -1,23 +1,38 @@
 'use strict';
 
 angular.module('openshiftConsole')
-  .directive('sidebar', function(HawtioNav) {
+  .directive('sidebar', function($location, Constants) {
+    var itemMatchesPath = function(item, path) {
+      return (item.href === path) || _.some(item.prefixes, function(prefix) {
+            return _.startsWith(path, prefix);
+          });
+    };
     return {
       restrict: 'E',
       templateUrl: 'views/_sidebar.html',
-      link: function($scope) {
-        var selectedTab = HawtioNav.selected();
-        if (selectedTab) {
-          $scope.sidebarHeading = selectedTab.title();
-        }
+      controller: function($scope) {
+        var path = $location.path().replace("/project/" + $scope.projectName, "");
+        $scope.activeSecondary;
+        $scope.navItems = Constants.PROJECT_NAVIGATION;
+        $scope.activePrimary = _.find($scope.navItems, function(primaryItem) {
+          if (itemMatchesPath(primaryItem, path)) {
+            $scope.activeSecondary = null;
+            return true;
+          }
+
+          // Check if there is a secondary nav item that is active
+          return _.some(primaryItem.secondaryNavSections, function(secondarySection) {
+            var activeSecondary = _.find(secondarySection.items, function(secondaryItem) {
+              return itemMatchesPath(secondaryItem, path);
+            });
+            if (activeSecondary) {
+              $scope.activeSecondary = activeSecondary;
+              return true;
+            }
+            return false;
+          });
+        });
       }
-    };
-  })
-  .directive('sidebarNavItem', function() {
-    return {
-      restrict: 'E',
-      replace: true,
-      templateUrl: "views/_sidebar-main-nav-item.html"
     };
   })
   .directive('projectHeader', function($timeout, $location, $filter, DataService, projectOverviewURLFilter) {
@@ -173,13 +188,4 @@ angular.module('openshiftConsole')
         });
       }
     };
-  }])
-  .directive('oscSecondaryNav', function() {
-    return {
-      restrict: 'A',
-      scope: {
-        tabs: '='
-      },
-      templateUrl: 'views/directives/osc-secondary-nav.html'
-    };
-  });
+  }]);
