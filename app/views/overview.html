@@ -39,8 +39,7 @@
                 Loading...
               </div>
               <div ng-repeat="service in topLevelServices"
-                   ng-if="service.metadata.labels.app || routesByService[service.metadata.name].length || childServicesByParent[service.metadata.name].length"
-                   ng-init="collapse = (topLevelServices | hashSize) > 2 && !$first">
+                   ng-if="service.metadata.labels.app || routesByService[service.metadata.name].length || childServicesByParent[service.metadata.name].length">
                 <overview-service-group></overview-service-group>
               </div>
 

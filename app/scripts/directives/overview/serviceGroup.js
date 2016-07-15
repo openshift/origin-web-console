@@ -12,10 +12,35 @@ angular.module('openshiftConsole')
       scope: true,
       templateUrl: 'views/overview/_service-group.html',
       link: function($scope) {
-        // Collapse infrastructure services like Jenkins by default on page load.
-        if (ServicesService.isInfrastructure($scope.service)) {
-          $scope.collapse = true;
-        }
+        var localStorageCollapseKey = function() {
+          var uid = _.get($scope, 'service.metadata.uid');
+          if (!uid) {
+            return null;
+          }
+          return 'collapse/service/' + uid;
+        };
+
+        var wasCollapsed = function() {
+          var key = localStorageCollapseKey();
+          if (!key) {
+            return false;
+          }
+
+          return localStorage.getItem(key) === 'true';
+        };
+
+        var saveCollapsedState = function() {
+          var key = localStorageCollapseKey();
+          if (!key) {
+            return;
+          }
+
+          var value = $scope.collapse ? 'true' : 'false';
+          localStorage.setItem(key, value);
+        };
+
+        // Restore previous collapsed state.
+        $scope.collapse = wasCollapsed();
 
         $scope.toggleCollapse = function(e) {
           // Don't collapse when clicking on the route link.
@@ -24,6 +49,7 @@ angular.module('openshiftConsole')
           }
 
           $scope.collapse = !$scope.collapse;
+          saveCollapsedState();
         };
 
         $scope.linkService = function() {

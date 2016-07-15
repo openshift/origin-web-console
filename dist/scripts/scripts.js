@@ -8417,8 +8417,21 @@ restrict:"E",
 scope:!0,
 templateUrl:"views/overview/_service-group.html",
 link:function(e) {
-d.isInfrastructure(e.service) && (e.collapse = !0), e.toggleCollapse = function(a) {
-a && a.target && "A" === a.target.tagName || (e.collapse = !e.collapse);
+var f = function() {
+var a = _.get(e, "service.metadata.uid");
+return a ? "collapse/service/" + a :null;
+}, g = function() {
+var a = f();
+return !!a && "true" === localStorage.getItem(a);
+}, h = function() {
+var a = f();
+if (a) {
+var b = e.collapse ? "true" :"false";
+localStorage.setItem(a, b);
+}
+};
+e.collapse = g(), e.toggleCollapse = function(a) {
+a && a.target && "A" === a.target.tagName || (e.collapse = !e.collapse, h());
 }, e.linkService = function() {
 var c = b.open({
 animation:!0,
@@ -8438,12 +8451,12 @@ details:a("getErrorDetails")(b)
 }, e.$watch("service.metadata.labels.app", function(a) {
 e.appName = a;
 });
-var f = function(a) {
+var i = function(a) {
 var b;
 return _.each(a, function(a) {
 return b ? void (b = c.getPreferredDisplayRoute(b, a)) :void (b = a);
 }), b;
-}, g = function() {
+}, j = function() {
 e.weightByService = {}, e.alternateServices = [], e.totalWeight = 0;
 var a = _.get(e.displayRoute, "spec.to.weight");
 e.weightByService[e.service.metadata.name] = a, e.totalWeight += a;
@@ -8459,7 +8472,7 @@ e.$watch(function() {
 var a = _.get(e, "service.metadata.name");
 return _.get(e, [ "routesByService", a ]);
 }, function(a) {
-e.displayRoute = f(a), e.primaryServiceRoutes = a, g();
+e.displayRoute = i(a), e.primaryServiceRoutes = a, j();
 }), e.$watchGroup([ "service", "childServicesByParent" ], function() {
 e.service && (e.childServices = _.get(e, [ "childServicesByParent", e.service.metadata.name ], []));
 });
