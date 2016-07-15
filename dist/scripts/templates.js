@@ -6918,6 +6918,7 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "<div ng-if=\"renderOptions.showGetStarted\">\n" +
     "\n" +
     "<div class=\"empty-project text-center\">\n" +
+    "<div ng-if=\"project.metadata.name | canIAddToProject\">\n" +
     "<h2>Get started with your project.</h2>\n" +
     "<p class=\"gutter-top\">\n" +
     "Use your source or an example repository to build an application image, or add components like databases and message queues.\n" +
@@ -6927,6 +6928,14 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "Add to Project\n" +
     "</a>\n" +
     "</p>\n" +
+    "</div>\n" +
+    "<div ng-if=\"!(project.metadata.name | canIAddToProject)\">\n" +
+    "<h2>Welcome to project {{projectName}}.</h2>\n" +
+    "<p class=\"gutter-top\">\n" +
+    "If you need to create resources in this project, a project administrator can grant you additional access by running this command:\n" +
+    "</p>\n" +
+    "<code>oc policy add-role-to-user &lt;role&gt; {{user.metadata.name}} -n {{projectName}}</code>\n" +
+    "</div>\n" +
     "</div>\n" +
     "</div>\n" +
     "<div ng-if=\"renderOptions.showLoading\" class=\"loading-message\">\n" +
