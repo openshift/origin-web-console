@@ -6984,62 +6984,64 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "Service:\n" +
     "<a ng-href=\"{{service | navigateResourceURL}}\">{{service.metadata.name}}</a>\n" +
     "</div>\n" +
-    "<div class=\"service-metadata\">\n" +
-    "<span ng-if=\"!scalableDeploymentByConfig[dcName]\">Deploying...</span>\n" +
-    "<div ng-if=\"scalableDeploymentByConfig[dcName] && weightByService[service.metadata.name]\">\n" +
+    "<div ng-if=\"weightByService[service.metadata.name]\" class=\"service-metadata\">\n" +
     "<ng-include src=\"'views/overview/_traffic-percent.html'\"></ng-include>\n" +
-    "</div>\n" +
     "</div>\n" +
     "</div>\n" +
     "<div class=\"deployment-header\">\n" +
     "<div class=\"rc-header\">\n" +
     "<div>\n" +
     "Deployment:\n" +
-    "<a ng-href=\"{{deploymentConfigs[dcName] | navigateResourceURL}}\">{{dcName}}</a>\n" +
+    "<a ng-href=\"{{deploymentConfig | navigateResourceURL}}\">{{dcName}}</a>\n" +
     "</div>\n" +
     "<div>\n" +
-    "<relative-timestamp ng-if=\"scalableDeploymentByConfig[dcName]\" timestamp=\"scalableDeploymentByConfig[dcName].metadata.creationTimestamp\"></relative-timestamp>\n" +
+    "<relative-timestamp ng-if=\"activeDeployment && !anyDeploymentInProgress\" timestamp=\"activeDeployment.metadata.creationTimestamp\"></relative-timestamp>\n" +
+    "<span ng-if=\"anyDeploymentInProgress\">\n" +
+    "{{deploymentConfig.spec.strategy.type}} deployment in progress...\n" +
+    "</span>\n" +
     "</div>\n" +
     "</div>\n" +
-    "<div column flex class=\"shield\" ng-if=\"scalableDeploymentByConfig[dcName]\" ng-class=\"{ 'shield-lg': (scalableDeploymentByConfig[dcName] | annotation: 'deploymentVersion').length > 3 }\">\n" +
-    "<a ng-href=\"{{scalableDeploymentByConfig[dcName] | navigateResourceURL}}\">\n" +
-    "<span class=\"shield-number\">#{{scalableDeploymentByConfig[dcName] | annotation: 'deploymentVersion'}}</span>\n" +
+    "<div column flex class=\"shield\" ng-if=\"activeDeployment\" ng-class=\"{ 'shield-lg': (activeDeployment | annotation: 'deploymentVersion').length > 3 }\">\n" +
+    "<a ng-href=\"{{activeDeployment | navigateResourceURL}}\">\n" +
+    "<span class=\"shield-number\">#{{activeDeployment | annotation: 'deploymentVersion'}}</span>\n" +
     "</a>\n" +
     "</div>\n" +
     "</div>\n" +
     "<div row class=\"deployment-body\">\n" +
     "\n" +
-    "<div column class=\"overview-donut\" ng-repeat=\"deployment in deployments | orderObjectsByDate : true track by (deployment | uid)\" ng-class=\"{ latest: isDeploymentLatest(deployment) }\" ng-if=\"!scalableDeploymentByConfig[dcName] || !(isDeploymentLatest(deployment) && ((deployment | deploymentStatus) == 'Cancelled' || (deployment | deploymentStatus) == 'Failed'))\">\n" +
+    "<div column class=\"overview-donut\" ng-repeat=\"deployment in orderedDeployments track by (deployment | uid)\" ng-class=\"{ latest: isDeploymentLatest(deployment) }\" ng-if=\"!activeDeployment || !(isDeploymentLatest(deployment) && ((deployment | deploymentStatus) == 'Cancelled' || (deployment | deploymentStatus) == 'Failed'))\">\n" +
     "<deployment-donut rc=\"deployment\" deployment-config=\"deploymentConfigs[dcName]\" pods=\"podsByDeployment[deployment.metadata.name]\" hpa=\"getHPA(deployment.metadata.name, dcName)\" limit-ranges=\"limitRanges\" scalable=\"isScalableDeployment(deployment)\" alerts=\"alerts\">\n" +
     "</deployment-donut>\n" +
     "</div>\n" +
     "\n" +
     "\n" +
-    "<div column class=\"overview-donut-connector\" ng-if=\"(deployments | anyDeploymentIsInProgress)\">\n" +
+    "<div column class=\"overview-donut-connector\" ng-if=\"anyDeploymentInProgress\">\n" +
     "<div ng-if=\"deployments.length > 1\" class=\"deployment-connector-arrow\">\n" +
     "&rarr;\n" +
     "</div>\n" +
-    "<div ng-if=\"deployments.length === 1\" class=\"finishing-deployment-text\">\n" +
-    "<span class=\"text-muted\">\n" +
-    "Running deployment #{{deployments[0] | annotation : 'deploymentVersion'}}...\n" +
-    "</span>\n" +
+    "<div ng-if=\"deployments.length === 1\" class=\"deployment-status-msg\">\n" +
+    "<status-icon status=\"deployments[0] | deploymentStatus\" class=\"mar-right-xs\"></status-icon>\n" +
+    "Deployment&nbsp;#{{deployments[0] | annotation : 'deploymentVersion'}} {{deployments[0] | deploymentStatus | lowercase}}\n" +
+    "<div ng-if=\"'deploymentconfigs/log' | canI : 'get'\" class=\"deployment-log-link\">\n" +
+    "<a ng-href=\"{{deployments[0] | navigateResourceURL}}?tab=logs\">View Log</a>\n" +
+    "</div>\n" +
     "</div>\n" +
     "</div>\n" +
     "\n" +
     "\n" +
-    "<div column class=\"overview-unsuccessful-state\" ng-if=\"!scalableDeploymentByConfig[dcName] && !(deployments | anyDeploymentIsInProgress)\" ng-switch=\"deployments[0] | deploymentStatus\">\n" +
+    "<div column class=\"overview-unsuccessful-state\" ng-if=\"!activeDeployment && !anyDeploymentInProgress\" ng-switch=\"deployments[0] | deploymentStatus\">\n" +
     "<div ng-switch-when=\"Cancelled\">\n" +
-    "<span class=\"text-warning unsuccessful-state-text\">\n" +
+    "<span class=\"text-warning deployment-status-msg\">\n" +
     "<i class=\"fa fa-ban\" aria-hidden=\"true\"></i>\n" +
-    "Deployment\n" +
+    "{{dcName}}\n" +
     "<a ng-href=\"{{deployments[0] | navigateResourceURL}}\">#{{deployments[0] | annotation: 'deploymentVersion'}}</a>\n" +
     "cancelled\n" +
     "</span>\n" +
     "</div>\n" +
     "<div ng-switch-when=\"Failed\">\n" +
-    "<span class=\"text-danger unsuccessful-state-text\">\n" +
+    "<span class=\"text-danger deployment-status-msg\">\n" +
     "<i class=\"fa fa-times\" aria-hidden=\"true\"></i>\n" +
-    "Deployment\n" +
+    "{{dcName}}\n" +
     "<a ng-href=\"{{deployments[0] | navigateResourceURL}}\">#{{deployments[0] | annotation: 'deploymentVersion'}}</a>\n" +
     "failed\n" +
     "</span>\n" +
@@ -7047,11 +7049,11 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "</div>\n" +
     "\n" +
     "\n" +
-    "<div column class=\"deployment-details\" ng-if=\"scalableDeploymentByConfig[dcName] && !(deployments | anyDeploymentIsInProgress)\">\n" +
+    "<div column class=\"deployment-details\" ng-if=\"activeDeployment && !anyDeploymentInProgress\">\n" +
     "\n" +
     "\n" +
-    "<metrics ng-if=\"showMetrics && !collapse\" deployment=\"scalableDeploymentByConfig[dcName]\" profile=\"compact\" class=\"overview-metrics\"></metrics>\n" +
-    "<pod-template ng-if=\"!showMetrics\" pod-template=\"scalableDeploymentByConfig[dcName].spec.template\"></pod-template>\n" +
+    "<metrics ng-if=\"showMetrics && !collapse\" deployment=\"activeDeployment\" profile=\"compact\" class=\"overview-metrics\"></metrics>\n" +
+    "<pod-template ng-if=\"!showMetrics\" pod-template=\"activeDeployment.spec.template\"></pod-template>\n" +
     "\n" +
     "</div>\n" +
     "\n" +
