@@ -4348,11 +4348,16 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "<div class=\"pipeline\">\n" +
     "<div class=\"pipeline-stage\" grow=\"1\" ng-repeat=\"stage in jenkinsStatus.stages track by stage.id\">\n" +
     "<div column class=\"pipeline-stage-column\">\n" +
-    "<div class=\"pipeline-stage-name\" ng-class=\"build.status.phase\">{{stage.name}}</div>\n" +
+    "<div class=\"pipeline-stage-name\" ng-class=\"build.status.phase\">\n" +
+    "{{stage.name}}\n" +
+    "</div>\n" +
     "<pipeline-status ng-if=\"stage.status\" status=\"stage.status\"></pipeline-status>\n" +
     "\n" +
-    "<div class=\"pipeline-time\" ng-class=\"stage.status\" ng-if=\"stage.durationMillis\">{{stage.durationMillis | timeOnlyDuration}}</div>\n" +
-    "<div class=\"pipeline-time\" ng-class=\"stage.status\" ng-if=\"!stage.durationMillis\">not started</div>\n" +
+    "<div class=\"pipeline-actions\" ng-if=\"stage | pipelineStagePendingInput\">\n" +
+    "<a ng-href=\"{{build | jenkinsInputURL}}\" target=\"_blank\">Input Required</a>\n" +
+    "</div>\n" +
+    "<div class=\"pipeline-time\" ng-class=\"stage.status\" ng-if=\"stage.durationMillis && !(stage | pipelineStagePendingInput)\">{{stage.durationMillis | timeOnlyDuration}}</div>\n" +
+    "<div class=\"pipeline-time\" ng-class=\"stage.status\" ng-if=\"!stage.durationMillis && !(stage | pipelineStagePendingInput)\">not started</div>\n" +
     "</div>\n" +
     "</div>\n" +
     "</div>\n" +
@@ -5623,6 +5628,7 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
 
 
   $templateCache.put('views/directives/overview-pipeline.html',
+    "<div>\n" +
     "<div class=\"overview-pipeline\">\n" +
     "<div class=\"timestamp\">\n" +
     "<relative-timestamp timestamp=\"build.metadata.creationTimestamp\"></relative-timestamp>\n" +
@@ -5644,7 +5650,7 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "<pipeline-status ng-if=\"stage.status\" status=\"stage.status\"></pipeline-status>\n" +
     "</span>\n" +
     "<div ng-if=\"!(stage | pipelineStageComplete)\" class=\"current-stage\">\n" +
-    "Stage {{stage.name}}, {{stage.status | camelToLower}}\n" +
+    "Stage '{{stage.name}}', {{stage.status | camelToLower}}\n" +
     "<div class=\"in-progress-stage hidden-xs\">\n" +
     "<div class=\"build-stage-animation\">\n" +
     "<div class=\"build-rail\">\n" +
@@ -5658,7 +5664,20 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "</div>\n" +
     "</div>\n" +
     "</div>\n" +
+    "<div ng-repeat=\"stage in jenkinsStatus.stages track by stage.id\">\n" +
+    "<div ng-if=\"stage | pipelineStagePendingInput\" class=\"input-link\">\n" +
+    "<a ng-href=\"{{build | jenkinsInputURL}}\" target=\"_blank\">Input Required</a>\n" +
+    "</div>\n" +
+    "</div>\n" +
     "<div ng-if=\"build | buildLogURL\" class=\"log-link\"><a ng-href=\"{{build | buildLogURL}}\" ng-if=\"('builds/log' | canI : 'get')\" target=\"_blank\">View Log</a></div>\n" +
+    "</div>\n" +
+    "</div>\n" +
+    "<div ng-repeat=\"stage in jenkinsStatus.stages track by stage.id\" class=\"alert-wrapper\" ng-class-odd=\"'odd-alert'\" ng-class-even=\"'even-alert'\">\n" +
+    "<div ng-if=\"stage | pipelineStagePendingInput\" class=\"alert alert-warning toast-pf mar-left-sm\">\n" +
+    "<span class=\"pficon pficon-warning-triangle-o\" aria-hidden=\"true\"></span>\n" +
+    "<span class=\"mar-right-sm\">Stage '{{stage.name}}' requires user input to continue.</span>\n" +
+    "<a ng-href=\"{{build | jenkinsInputURL}}\" target=\"_blank\">Provide input</a>\n" +
+    "</div>\n" +
     "</div>\n" +
     "</div>"
   );

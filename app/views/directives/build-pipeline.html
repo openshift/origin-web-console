@@ -33,11 +33,16 @@
       <div class="pipeline">
         <div class="pipeline-stage" grow="1" ng-repeat="stage in jenkinsStatus.stages track by stage.id">
           <div column class="pipeline-stage-column">
-            <div class="pipeline-stage-name" ng-class="build.status.phase">{{stage.name}}</div>
+            <div class="pipeline-stage-name" ng-class="build.status.phase">
+              {{stage.name}}
+            </div>
             <pipeline-status ng-if="stage.status" status="stage.status"></pipeline-status>
             <!-- <div class="pipeline-time" ng-if="stage.durationMillis">{{stage.durationMillis | humanizeDurationValue}}</div> -->
-            <div class="pipeline-time" ng-class="stage.status" ng-if="stage.durationMillis">{{stage.durationMillis | timeOnlyDuration}}</div>
-            <div class="pipeline-time" ng-class="stage.status" ng-if="!stage.durationMillis">not started</div>
+            <div class="pipeline-actions" ng-if="stage | pipelineStagePendingInput">
+              <a ng-href="{{build | jenkinsInputURL}}" target="_blank">Input Required</a>
+            </div>
+            <div class="pipeline-time" ng-class="stage.status" ng-if="stage.durationMillis && !(stage | pipelineStagePendingInput)">{{stage.durationMillis | timeOnlyDuration}}</div>
+            <div class="pipeline-time" ng-class="stage.status" ng-if="!stage.durationMillis && !(stage | pipelineStagePendingInput)">not started</div>
           </div>
         </div>
       </div>
