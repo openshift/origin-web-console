@@ -2909,15 +2909,46 @@ containerEndTime:_.get(c, [ d, "finishedAt" ])
 });
 }
 };
+a.onTerminalSelectChange = function(b) {
+_.each(a.containerTerminals, function(a) {
+a.isVisible = !1;
+}), b.isVisible = !0, b.isUsed = !0;
+};
+var n = function(a) {
+var b = _.get(a, "state", {});
+return _.head(_.keys(b));
+}, o = function() {
+var b = [];
+_.each(a.pod.spec.containers, function(c) {
+var d = _.find(a.pod.status.containerStatuses, {
+name:c.name
+}), e = n(d);
+b.push({
+containerName:c.name,
+isVisible:!1,
+isUsed:!1,
+containerState:e
+});
+});
+var c = _.head(b);
+return c.isVisible = !0, c.isUsed = !0, a.selectedTerminalContainer = c, b;
+}, p = function(b) {
+_.each(b, function(b) {
+var c = _.find(a.pod.status.containerStatuses, {
+name:b.containerName
+}), d = n(c);
+b.containerState = d;
+});
+};
 j.get(c.project).then(_.spread(function(d, h) {
 a.project = d, a.projectContext = h, f.get("pods", c.pod, h).then(function(b) {
 a.loaded = !0, a.pod = b, l(b), m();
 var d = {};
-d[b.metadata.name] = b, g.fetchReferencedImageStreamImages(d, a.imagesByDockerReference, a.imageStreamImageRefByDockerReference, h), k.push(f.watchObject("pods", c.pod, h, function(b, c) {
+d[b.metadata.name] = b, g.fetchReferencedImageStreamImages(d, a.imagesByDockerReference, a.imageStreamImageRefByDockerReference, h), a.containerTerminals = o(), k.push(f.watchObject("pods", c.pod, h, function(b, c) {
 "DELETED" === c && (a.alerts.deleted = {
 type:"warning",
 message:"This pod has been deleted."
-}), a.pod = b, l(b), m();
+}), a.pod = b, l(b), m(), p(a.containerTerminals);
 }));
 }, function(c) {
 a.loaded = !0, a.alerts.load = {

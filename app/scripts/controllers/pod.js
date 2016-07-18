@@ -87,6 +87,57 @@ angular.module('openshiftConsole')
       }
     };
 
+    /**
+     *  Will set the newTerm's isVisible/isUsed to true, while hiding the previous
+     */
+    $scope.onTerminalSelectChange = function(newTerm) {
+      // Make all terminals invisible (Becuase we don't have a pointer to the terminal that is currently visible)
+      _.each($scope.containerTerminals, function(term) {
+        term.isVisible = false;
+      });
+
+      newTerm.isVisible = true;
+      newTerm.isUsed = true;
+    };
+
+    var getState = function(containerStatus) {
+      var state = _.get(containerStatus, 'state', {});
+      return _.head(_.keys(state));
+    };
+
+    var makeTerminals = function() {
+      var terminals = [];
+
+      _.each($scope.pod.spec.containers, function(container) {
+        var thisContainerStatus = _.find($scope.pod.status.containerStatuses, { name: container.name });
+        var thisContainerState = getState(thisContainerStatus);
+
+        terminals.push({
+          containerName: container.name,
+          isVisible: false,
+          isUsed: false,
+          containerState: thisContainerState
+        });
+      });
+
+      var currentlyVisible = _.head(terminals);
+      currentlyVisible.isVisible = true;
+      currentlyVisible.isUsed = true;
+
+      $scope.selectedTerminalContainer = currentlyVisible;
+
+      return terminals;
+    };
+
+    var updateTerminals = function(terminals) {
+      _.each(terminals, function(term) {
+        var thisContainerStatus = _.find($scope.pod.status.containerStatuses, { name: term.containerName });
+        var thisContainerState = getState(thisContainerStatus);
+
+        term.containerState = thisContainerState;
+      });
+    };
+
     ProjectsService
       .get($routeParams.project)
       .then(_.spread(function(project, context) {
@@ -106,6 +157,8 @@ angular.module('openshiftConsole')
             pods[pod.metadata.name] = pod;
             ImageStreamResolver.fetchReferencedImageStreamImages(pods, $scope.imagesByDockerReference, $scope.imageStreamImageRefByDockerReference, context);
 
+            $scope.containerTerminals = makeTerminals();
+
             // If we found the item successfully, watch for changes on it
             watches.push(DataService.watchObject("pods", $routeParams.pod, context, function(pod, action) {
               if (action === "DELETED") {
@@ -117,6 +170,9 @@ angular.module('openshiftConsole')
               $scope.pod = pod;
               setLogVars(pod);
               setContainerVars();
+
+              updateTerminals($scope.containerTerminals);
+
             }));
           },
           // failure
