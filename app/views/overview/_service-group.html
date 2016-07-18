@@ -1,7 +1,7 @@
 <div class="service-group">
   <div row tablet="column" class="service-group-header"
        ng-if="service.metadata.labels.app || displayRoute"
-       ng-click="toggleCollapse()"
+       ng-click="toggleCollapse($event)"
        ng-class="{ 'has-app-label': appName }">
     <div ng-if="appName" class="app-name">
       <i class="fa fa-angle-down fa-fw" aria-hidden="true" ng-if="!collapse"></i>

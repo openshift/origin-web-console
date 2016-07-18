@@ -7029,7 +7029,7 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "<div ng-if=\"renderOptions.showLoading\" class=\"loading-message\">\n" +
     "Loading...\n" +
     "</div>\n" +
-    "<div ng-repeat=\"service in topLevelServices\" ng-if=\"service.metadata.labels.app || routesByService[service.metadata.name].length || childServicesByParent[service.metadata.name].length\" ng-init=\"collapse = (topLevelServices | hashSize) > 2 && !$first\">\n" +
+    "<div ng-repeat=\"service in topLevelServices\" ng-if=\"service.metadata.labels.app || routesByService[service.metadata.name].length || childServicesByParent[service.metadata.name].length\">\n" +
     "<overview-service-group></overview-service-group>\n" +
     "</div>\n" +
     "<div row wrap>\n" +
@@ -7230,7 +7230,7 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
 
   $templateCache.put('views/overview/_service-group.html',
     "<div class=\"service-group\">\n" +
-    "<div row tablet=\"column\" class=\"service-group-header\" ng-if=\"service.metadata.labels.app || displayRoute\" ng-click=\"toggleCollapse()\" ng-class=\"{ 'has-app-label': appName }\">\n" +
+    "<div row tablet=\"column\" class=\"service-group-header\" ng-if=\"service.metadata.labels.app || displayRoute\" ng-click=\"toggleCollapse($event)\" ng-class=\"{ 'has-app-label': appName }\">\n" +
     "<div ng-if=\"appName\" class=\"app-name\">\n" +
     "<i class=\"fa fa-angle-down fa-fw\" aria-hidden=\"true\" ng-if=\"!collapse\"></i>\n" +
     "<i class=\"fa fa-angle-right fa-fw\" aria-hidden=\"true\" ng-if=\"collapse\"></i>\n" +
