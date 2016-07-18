@@ -52,7 +52,7 @@
                   <tr ng-repeat="deployment in deploymentConfigDeployments | orderObjectsByDate : true | limitTo : 1" ng-if="deploymentConfigName">
                     <td data-title="Name">
                       <a href="{{deploymentConfigName | navigateResourceURL : 'DeploymentConfig' : deployment.metadata.namespace}}">{{deploymentConfigName}}</a>
-                      <span ng-if="deploymentConfigs[deploymentConfigName].status.details.message" class="pficon pficon-warning-triangle-o" style="cursor: help;" data-toggle="popover" data-trigger="hover" dynamic-content="{{deploymentConfigs[deploymentConfigName].status.details.message}}"></span>
+                      <!-- <span ng-if="deploymentConfigs[deploymentConfigName].status.details.message" class="pficon pficon-warning-triangle-o" style="cursor: help;" data-toggle="popover" data-trigger="hover" dynamic-content="{{deploymentConfigs[deploymentConfigName].status.details.message}}"></span> -->
                       <span ng-if="deploymentConfigs && !deploymentConfigs[deploymentConfigName]" class="pficon pficon-warning-triangle-o" data-toggle="tooltip" title="This deployment config no longer exists" style="cursor: help;"></span>
                     </td>
                     <td data-title="Last">
