@@ -2799,7 +2799,7 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "<div class=\"middle-header header-light\">\n" +
     "<div class=\"container-fluid\">\n" +
     "<div class=\"page-header page-header-bleed-right page-header-bleed-left\">\n" +
-    "<div class=\"pull-right\" ng-if=\"'routes' | canI : 'create'\">\n" +
+    "<div class=\"pull-right\" ng-if=\"project && 'routes' | canI : 'create'\">\n" +
     "<a ng-href=\"project/{{project.metadata.name}}/create-route\" class=\"btn btn-default\">Create Route</a>\n" +
     "</div>\n" +
     "<h1>Routes</h1>\n" +
@@ -2902,7 +2902,7 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "</button>\n" +
     "<a href=\"\" class=\"dropdown-toggle actions-dropdown-kebab visible-xs-inline\" data-toggle=\"dropdown\"><i class=\"fa fa-ellipsis-v\"></i><span class=\"sr-only\">Actions</span></a>\n" +
     "<ul class=\"dropdown-menu actions action-link\">\n" +
-    "<li ng-if=\"'services' | canI : 'create'\">\n" +
+    "<li ng-if=\"'routes' | canI : 'create'\">\n" +
     "<a ng-href=\"project/{{project.metadata.name}}/create-route?service={{service.metadata.name}}\" role=\"button\">Create Route</a>\n" +
     "</li>\n" +
     "<li ng-if=\"'services' | canI : 'update'\">\n" +
@@ -2948,7 +2948,7 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "<dt>Routes:</dt>\n" +
     "<dd>\n" +
     "<span ng-if=\"!routesForService.length\">\n" +
-    "<a ng-href=\"project/{{project.metadata.name}}/create-route?service={{service.metadata.name}}\" ng-if=\"'services' | canI : 'create'\">Create route</a>\n" +
+    "<a ng-href=\"project/{{project.metadata.name}}/create-route?service={{service.metadata.name}}\" ng-if=\"'routes' | canI : 'create'\">Create route</a>\n" +
     "</span>\n" +
     "<span ng-repeat=\"route in routesForService\">\n" +
     "<span ng-if=\"route | isWebRoute\"><a ng-href=\"{{route | routeWebURL}}\">{{route | routeLabel}}</a></span>\n" +
@@ -7773,10 +7773,10 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "</button>\n" +
     "<a href=\"\" class=\"dropdown-toggle actions-dropdown-kebab visible-xs-inline\" data-toggle=\"dropdown\"><i class=\"fa fa-ellipsis-v\"></i><span class=\"sr-only\">Actions</span></a>\n" +
     "<ul class=\"dropdown-menu actions action-button\">\n" +
-    "<li ng-if=\"!project || 'projects' | canI : 'update'\">\n" +
+    "<li ng-if=\"project && 'projects' | canI : 'update'\">\n" +
     "<a href=\"\" role=\"button\" class=\"button-edit\" ng-click=\"setEditing(true)\" ng-class=\"{ 'disabled-link': show.editing }\">Edit</a>\n" +
     "</li>\n" +
-    "<li ng-if=\"!project || 'projects' | canI : 'delete'\">\n" +
+    "<li ng-if=\"project && 'projects' | canI : 'delete'\">\n" +
     "<delete-link class=\"button-delete\" kind=\"Project\" resource-name=\"{{project.metadata.name}}\" project-name=\"{{project.metadata.name}}\" display-name=\"{{(project | displayName)}}\" type-name-to-confirm=\"true\" alerts=\"alerts\">\n" +
     "</delete-link>\n" +
     "</li>\n" +

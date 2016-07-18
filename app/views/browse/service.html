@@ -21,7 +21,7 @@
                    class="dropdown-toggle actions-dropdown-kebab visible-xs-inline"
                    data-toggle="dropdown"><i class="fa fa-ellipsis-v"></i><span class="sr-only">Actions</span></a>
                 <ul class="dropdown-menu actions action-link">
-                  <li ng-if="'services' | canI : 'create'">
+                  <li ng-if="'routes' | canI : 'create'">
                     <a ng-href="project/{{project.metadata.name}}/create-route?service={{service.metadata.name}}"
                        role="button">Create Route</a>
                   </li>
@@ -76,7 +76,7 @@
                       <dt>Routes:</dt>
                       <dd>
                         <span ng-if="!routesForService.length">
-                          <a ng-href="project/{{project.metadata.name}}/create-route?service={{service.metadata.name}}"  ng-if="'services' | canI : 'create'">Create route</a>
+                          <a ng-href="project/{{project.metadata.name}}/create-route?service={{service.metadata.name}}"  ng-if="'routes' | canI : 'create'">Create route</a>
                         </span>
                         <span ng-repeat="route in routesForService">
                             <span ng-if="route | isWebRoute"><a ng-href="{{route | routeWebURL}}">{{route | routeLabel}}</a></span>
