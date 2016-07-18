@@ -3689,7 +3689,7 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "<i class=\"pficon pficon-help\"></i>\n" +
     "</a>\n" +
     "</span></h3>\n" +
-    "<osc-key-values entries=\"buildConfig.envVars\" delimiter=\"=\" key-validator=\"env\" delete-policy=\"added\" key-validation-tooltip=\"A valid environment variable name is an alphanumeric (a-z and 0-9) string beginning with a letter that may contain underscores.\"></osc-key-values>\n" +
+    "<key-value-editor entries=\"buildConfigEnvVars\" key-placeholder=\"name\" value-placeholder=\"value\" key-validator=\"[a-zA-Z][a-zA-Z0-9_]*\" key-validator-error-tooltip=\"A valid environment variable name is an alphanumeric (a-z and 0-9) string beginning with a letter that may contain underscores.\"></key-value-editor>\n" +
     "</osc-form-section>\n" +
     "\n" +
     "<osc-form-section header=\"Deployment Configuration\" about-title=\"Deployment Configuration\" about=\"Deployment configurations describe how your application is configured\n" +
@@ -3710,11 +3710,22 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "</div>\n" +
     "<div>\n" +
     "<h3>Environment Variables (Runtime only) <span class=\"help action-inline\">\n" +
-    "<a href data-toggle=\"tooltip\" data-original-title=\"Environment variables are used to configure and pass information to running containers.  These environment variables will only be available at runtime.\">\n" +
+    "<a href=\"\" data-toggle=\"tooltip\" data-original-title=\"Environment variables are used to configure and pass information to running containers.  These environment variables will only be available at runtime.\">\n" +
     "<i class=\"pficon pficon-help\"></i>\n" +
     "</a>\n" +
     "</span></h3>\n" +
-    "<osc-key-values entries=\"deploymentConfig.envVars\" delimiter=\"=\" key-validator=\"env\" delete-policy=\"added\" key-validation-tooltip=\"A valid environment variable name is an alphanumeric (a-z and 0-9) string beginning with a letter that may contain underscores.\"></osc-key-values>\n" +
+    "<p ng-show=\"DCEnvVarsFromImage.length\">\n" +
+    "<a href=\"\" ng-click=\"showDCEnvs = (!showDCEnvs)\">\n" +
+    "{{showDCEnvs ? 'Hide' : 'Show'}} image environment variables\n" +
+    "</a>\n" +
+    "</p>\n" +
+    "<div ng-show=\"showDCEnvs\">\n" +
+    "<div class=\"help-block\">\n" +
+    "<p>These variables exist on the image and will be available at runtime. You may override them below.</p>\n" +
+    "</div>\n" +
+    "<key-value-editor entries=\"DCEnvVarsFromImage\" is-readonly cannot-add cannot-sort cannot-delete></key-value-editor>\n" +
+    "</div>\n" +
+    "<key-value-editor entries=\"DCEnvVarsFromUser\" key-placeholder=\"name\" value-placeholder=\"value\" key-validator=\"[a-zA-Z][a-zA-Z0-9_]*\" key-validator-error-tooltip=\"A valid environment variable name is an alphanumeric (a-z and 0-9) string beginning with a letter that may contain underscores.\"></key-value-editor>\n" +
     "</div>\n" +
     "</div>\n" +
     "</osc-form-section>\n" +
