@@ -3447,50 +3447,50 @@ d[b] = d[b] || {}, d[b].maxLimitRequestRatio = a;
 c.unwatchAll(m);
 });
 }));
-} ]), angular.module("openshiftConsole").controller("BuildsController", [ "$routeParams", "$scope", "AlertMessageService", "DataService", "$filter", "LabelFilter", "Logger", "$location", "$anchorScroll", "BuildsService", "ProjectsService", function(a, b, c, d, e, f, g, h, i, j, k) {
-b.projectName = a.project, b.builds = {}, b.unfilteredBuildConfigs = {}, b.buildConfigs = void 0, b.labelSuggestions = {}, b.alerts = b.alerts || {}, b.emptyMessage = "Loading...", b.expanded = !!h.hash(), b.defaultBuildLimit = 3, b.buildsByBuildConfig = {}, b.expandedBuildConfigRow = {}, c.getAlerts().forEach(function(a) {
+} ]), angular.module("openshiftConsole").controller("BuildsController", [ "$routeParams", "$scope", "AlertMessageService", "DataService", "$filter", "LabelFilter", "Logger", "$location", "BuildsService", "ProjectsService", function(a, b, c, d, e, f, g, h, i, j) {
+b.projectName = a.project, b.builds = {}, b.unfilteredBuildConfigs = {}, b.buildConfigs = void 0, b.labelSuggestions = {}, b.alerts = b.alerts || {}, b.emptyMessage = "Loading...", b.buildsByBuildConfig = {}, c.getAlerts().forEach(function(a) {
 b.alerts[a.name] = a.data;
 }), c.clearAlerts();
-var l = e("buildConfigForBuild"), m = [];
-k.get(a.project).then(_.spread(function(a, c) {
+var k = e("buildConfigForBuild"), l = [];
+j.get(a.project).then(_.spread(function(a, c) {
 function e(a) {
 var c = f.getLabelSelector();
 if (c.isEmpty()) return !0;
-var d = l(a) || "";
+var d = k(a) || "";
 return d ? !!b.buildConfigs[d] :c.matches(a);
 }
-function k() {
+function h() {
 b.buildsByBuildConfig = {}, angular.forEach(b.builds, function(a, c) {
-var d = l(a) || "";
+var d = k(a) || "";
 e(a) && (b.buildsByBuildConfig[d] = b.buildsByBuildConfig[d] || {}, b.buildsByBuildConfig[d][c] = a);
 }), angular.forEach(b.buildConfigs, function(a, c) {
 b.buildsByBuildConfig[c] = b.buildsByBuildConfig[c] || {};
 });
 }
-function n() {
+function j() {
 !f.getLabelSelector().isEmpty() && $.isEmptyObject(b.buildsByBuildConfig) ? b.alerts.builds = {
 type:"warning",
 details:"The active filters are hiding all builds."
 } :delete b.alerts.builds;
 }
-b.project = a, m.push(d.watch("builds", c, function(a, c, d) {
-b.builds = a.by("metadata.name"), b.emptyMessage = "No builds to show", k();
+b.project = a, l.push(d.watch("builds", c, function(a, c, d) {
+b.builds = a.by("metadata.name"), b.emptyMessage = "No builds to show", h();
 var e, f;
-d && (e = l(d), f = d.metadata.name), !c && h.hash() && setTimeout(i, 10), g.log("builds (subscribe)", b.builds);
-})), m.push(d.watch("buildconfigs", c, function(a) {
-b.unfilteredBuildConfigs = a.by("metadata.name"), f.addLabelSuggestionsFromResources(b.unfilteredBuildConfigs, b.labelSuggestions), f.setLabelSuggestions(b.labelSuggestions), b.buildConfigs = f.getLabelSelector().select(b.unfilteredBuildConfigs), k(), n(), g.log("buildconfigs (subscribe)", b.buildConfigs);
+d && (e = k(d), f = d.metadata.name), g.log("builds (subscribe)", b.builds);
+})), l.push(d.watch("buildconfigs", c, function(a) {
+b.unfilteredBuildConfigs = a.by("metadata.name"), f.addLabelSuggestionsFromResources(b.unfilteredBuildConfigs, b.labelSuggestions), f.setLabelSuggestions(b.labelSuggestions), b.buildConfigs = f.getLabelSelector().select(b.unfilteredBuildConfigs), h(), j(), g.log("buildconfigs (subscribe)", b.buildConfigs);
 })), b.startBuild = function(a) {
-j.startBuild(a, b, b);
+i.startBuild(a, b, b);
 }, b.cancelBuild = function(a, c) {
-j.cancelBuild(a, c, b, b);
+i.cancelBuild(a, c, b, b);
 }, b.cloneBuild = function(a) {
-j.cloneBuild(a, b, b);
+i.cloneBuild(a, b, b);
 }, f.onActiveFiltersChanged(function(a) {
 b.$apply(function() {
-b.buildConfigs = a.select(b.unfilteredBuildConfigs), k(), n();
+b.buildConfigs = a.select(b.unfilteredBuildConfigs), h(), j();
 });
 }), b.$on("$destroy", function() {
-d.unwatchAll(m);
+d.unwatchAll(l);
 });
 }));
 } ]), angular.module("openshiftConsole").controller("BuildConfigController", [ "$scope", "$routeParams", "DataService", "ProjectsService", "BuildsService", "$filter", "LabelFilter", "AlertMessageService", function(a, b, c, d, e, f, g, h) {
@@ -3967,11 +3967,11 @@ return !_.isEmpty(a.autoscalers) || (!u(a.deployment) || (!!a.deploymentConfigMi
 e.unwatchAll(l);
 });
 }));
-} ]), angular.module("openshiftConsole").controller("ServicesController", [ "$routeParams", "$scope", "AlertMessageService", "DataService", "ProjectsService", "$filter", "LabelFilter", "Logger", "$location", "$anchorScroll", function(a, b, c, d, e, f, g, h, i, j) {
+} ]), angular.module("openshiftConsole").controller("ServicesController", [ "$routeParams", "$scope", "AlertMessageService", "DataService", "ProjectsService", "$filter", "LabelFilter", "Logger", function(a, b, c, d, e, f, g, h) {
 b.projectName = a.project, b.services = {}, b.unfilteredServices = {}, b.routesByService = {}, b.routes = {}, b.labelSuggestions = {}, b.alerts = b.alerts || {}, b.emptyMessage = "Loading...", b.emptyMessageRoutes = "Loading...", c.getAlerts().forEach(function(a) {
 b.alerts[a.name] = a.data;
 }), c.clearAlerts();
-var k = [];
+var i = [];
 e.get(a.project).then(_.spread(function(a, c) {
 function e(a) {
 var b = {};
@@ -3986,16 +3986,16 @@ type:"warning",
 details:"The active filters are hiding all services."
 };
 }
-b.project = a, k.push(d.watch("services", c, function(a, c) {
-b.unfilteredServices = a.by("metadata.name"), g.addLabelSuggestionsFromResources(b.unfilteredServices, b.labelSuggestions), g.setLabelSuggestions(b.labelSuggestions), b.services = g.getLabelSelector().select(b.unfilteredServices), b.emptyMessage = "No services to show", f(), !c && i.hash() && setTimeout(j, 10), h.log("services (subscribe)", b.unfilteredServices);
-})), k.push(d.watch("routes", c, function(a) {
+b.project = a, i.push(d.watch("services", c, function(a) {
+b.unfilteredServices = a.by("metadata.name"), g.addLabelSuggestionsFromResources(b.unfilteredServices, b.labelSuggestions), g.setLabelSuggestions(b.labelSuggestions), b.services = g.getLabelSelector().select(b.unfilteredServices), b.emptyMessage = "No services to show", f(), h.log("services (subscribe)", b.unfilteredServices);
+})), i.push(d.watch("routes", c, function(a) {
 b.routes = a.by("metadata.name"), b.emptyMessageRoutes = "No routes to show", b.routesByService = e(b.routes), h.log("routes (subscribe)", b.routesByService);
 })), g.onActiveFiltersChanged(function(a) {
 b.$apply(function() {
 b.services = a.select(b.unfilteredServices), f();
 });
 }), b.$on("$destroy", function() {
-d.unwatchAll(k);
+d.unwatchAll(i);
 });
 }));
 } ]), angular.module("openshiftConsole").controller("ServiceController", [ "$scope", "$routeParams", "DataService", "ProjectsService", "$filter", function(a, b, c, d, e) {
