@@ -6099,7 +6099,7 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "<i class=\"pficon pficon-help\" data-toggle=\"tooltip\" aria-hidden=\"true\" data-original-title=\"Paths is a list of source and destination paths to copy from the image. At least one pair has to be specified.\"></i>\n" +
     "</a>\n" +
     "</span></label>\n" +
-    "<osc-key-values entries=\"imageSourcePaths\" readonly-keys=\"\" delimiter=\"=\" delete-policy=\"always\" key-validator=\"path\" key-title=\"Source Path\" value-title=\"Destination Dir\" prevent-empty=\"true\" key-validation-tooltip=\"A valid Source Path is an absoluth path beginning with '/'\"></osc-key-values>\n" +
+    "<key-value-editor entries=\"imageSourcePaths\" key-placeholder=\"Source Path\" key-validator=\"\\/.*?$\" value-placeholder=\"Destination Dir\" key-validator-error-tooltip=\"A valid Source Path is an absolute path beginning with '/'\"></key-value-editor>\n" +
     "</div>\n" +
     "</div>\n" +
     "<div class=\"multiple-image-source\" ng-if=\"sourceImages.length !== 1\">\n" +
@@ -6226,7 +6226,8 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "</a>\n" +
     "</span></h3>\n" +
     "<div>\n" +
-    "<osc-key-values entries=\"envVars\" delimiter=\"=\" key-validator=\"env\" delete-policy=\"always\" key-title=\"Name\" key-validation-tooltip=\"A valid environment variable name is an alphanumeric (a-z and 0-9) string beginning with a letter that may contain underscores.\"></osc-key-values>\n" +
+    "<key-value-editor entries=\"envVars\" key-validator=\"[a-zA-Z][a-zA-Z0-9_]*\" key-validator-error-tooltip=\"A valid environment variable name is an alphanumeric (a-z and 0-9) string beginning with a letter that may contain underscores.\">\n" +
+    "</key-value-editor>\n" +
     "</div>\n" +
     "</div>\n" +
     "<div class=\"section\">\n" +

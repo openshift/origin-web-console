@@ -294,16 +294,12 @@
                                   <i class="pficon pficon-help" data-toggle="tooltip" aria-hidden="true" data-original-title="Paths is a list of source and destination paths to copy from the image. At least one pair has to be specified."></i>
                                   </a>
                                 </span></label>
-                                <osc-key-values
+                                <key-value-editor
                                   entries="imageSourcePaths"
-                                  readonly-keys=""
-                                  delimiter="="
-                                  delete-policy="always"
-                                  key-validator="path"
-                                  key-title="Source Path"
-                                  value-title="Destination Dir"
-                                  prevent-empty="true"
-                                  key-validation-tooltip="A valid Source Path is an absoluth path beginning with '/'"></osc-key-values>
+                                  key-placeholder="Source Path"
+                                  key-validator="\/.*?$"
+                                  value-placeholder="Destination Dir"
+                                  key-validator-error-tooltip="A valid Source Path is an absolute path beginning with '/'"></key-value-editor>
                               </div>
                             </div>
 
@@ -514,13 +510,11 @@
                           </a>
                         </span></h3>
                         <div>
-                          <osc-key-values
+                          <key-value-editor
                             entries="envVars"
-                            delimiter="="
-                            key-validator="env"
-                            delete-policy="always"
-                            key-title="Name"
-                            key-validation-tooltip="A valid environment variable name is an alphanumeric (a-z and 0-9) string beginning with a letter that may contain underscores."></osc-key-values>
+                            key-validator="[a-zA-Z][a-zA-Z0-9_]*"
+                            key-validator-error-tooltip="A valid environment variable name is an alphanumeric (a-z and 0-9) string beginning with a letter that may contain underscores.">
+                          </key-value-editor>
                         </div>
                       </div>
                       <div class="section">
