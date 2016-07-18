@@ -170,4 +170,15 @@ angular.module('openshiftConsole')
       },
       templateUrl: 'views/directives/_probe.html'
     };
+  })
+  .directive('podsTable', function() {
+    return {
+      restrict: 'E',
+      scope: {
+        pods: '=',
+        // Optional empty message to display when there are no pods.
+        emptyMessage: '=?'
+      },
+      templateUrl: 'views/directives/pods-table.html'
+    };
   });
