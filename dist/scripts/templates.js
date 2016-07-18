@@ -1875,7 +1875,7 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "</li>\n" +
     "</ul>\n" +
     "</div>\n" +
-    "<span ng-if=\"deploymentConfig.status.details.message\" class=\"pficon pficon-warning-triangle-o\" style=\"cursor: help\" data-toggle=\"popover\" data-trigger=\"hover\" dynamic-content=\"{{deploymentConfig.status.details.message}}\"></span>\n" +
+    "\n" +
     "<small class=\"meta\" ng-if=\"deploymentConfig\">created <relative-timestamp timestamp=\"deploymentConfig.metadata.creationTimestamp\"></relative-timestamp></small>\n" +
     "</h1>\n" +
     "<labels labels=\"deploymentConfig.metadata.labels\" clickable=\"true\" kind=\"deployments\" title-kind=\"deployment configs\" project-name=\"{{deploymentConfig.metadata.namespace}}\" limit=\"3\"></labels>\n" +
@@ -3935,7 +3935,7 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "<tr ng-repeat=\"deployment in deploymentConfigDeployments | orderObjectsByDate : true | limitTo : 1\" ng-if=\"deploymentConfigName\">\n" +
     "<td data-title=\"Name\">\n" +
     "<a href=\"{{deploymentConfigName | navigateResourceURL : 'DeploymentConfig' : deployment.metadata.namespace}}\">{{deploymentConfigName}}</a>\n" +
-    "<span ng-if=\"deploymentConfigs[deploymentConfigName].status.details.message\" class=\"pficon pficon-warning-triangle-o\" style=\"cursor: help\" data-toggle=\"popover\" data-trigger=\"hover\" dynamic-content=\"{{deploymentConfigs[deploymentConfigName].status.details.message}}\"></span>\n" +
+    "\n" +
     "<span ng-if=\"deploymentConfigs && !deploymentConfigs[deploymentConfigName]\" class=\"pficon pficon-warning-triangle-o\" data-toggle=\"tooltip\" title=\"This deployment config no longer exists\" style=\"cursor: help\"></span>\n" +
     "</td>\n" +
     "<td data-title=\"Last\">\n" +
