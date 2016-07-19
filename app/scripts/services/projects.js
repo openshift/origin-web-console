@@ -38,13 +38,6 @@ angular.module('openshiftConsole')
                                           context.projectPromise.resolve(project);
                                           // TODO: fix need to return context & projectPromise
                                           return [project, context];
-                                        }, function() {
-                                          $location.url(URI('error')
-                                                    .query({
-                                                      "error" : 'error',
-                                                      "error_description": 'User permissions for project ' + projectName + ' could not be loaded.'
-                                                    })
-                                                    .toString());
                                         });
                               }, function(e) {
                                 context.projectPromise.reject(e);

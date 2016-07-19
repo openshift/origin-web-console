@@ -689,10 +689,10 @@ return a.reject(d);
 }
 }
 };
-} ]), angular.module("openshiftConsole").factory("AuthorizationService", [ "$q", "$cacheFactory", "Logger", "$interval", "DataService", function(a, b, c, d, e) {
-var f = null, g = b("rulesCache", {
+} ]), angular.module("openshiftConsole").factory("AuthorizationService", [ "$q", "$cacheFactory", "Logger", "$interval", "APIService", "DataService", function(a, b, c, d, e, f) {
+var g = null, h = b("rulesCache", {
 number:10
-}), h = [ "localresourceaccessreviews", "localsubjectaccessreviews", "resourceaccessreviews", "selfsubjectrulesreviews", "subjectaccessreviews" ], i = function(a) {
+}), i = !1, j = [ "localresourceaccessreviews", "localsubjectaccessreviews", "resourceaccessreviews", "selfsubjectrulesreviews", "subjectaccessreviews" ], k = function(a) {
 var b = {};
 return _.each(a, function(a) {
 _.each(a.resources, function(c) {
@@ -701,53 +701,53 @@ b["" === d ? c :d + "/" + c] = a.verbs;
 });
 });
 }), b;
-}, j = function(a) {
-return "projectrequests" !== a && !_.contains(a, "/") && !_.contains(h, a);
-}, k = function(a) {
+}, l = function(a) {
+return "projectrequests" !== a && !_.contains(a, "/") && !_.contains(j, a);
+}, m = function(a) {
 return _.some(a, function(a) {
 return _.some(a.resources, function(b) {
-return j(b) && !_.isEmpty(_.intersection(a.verbs, [ "*", "create", "update" ]));
+return l(b) && !_.isEmpty(_.intersection(a.verbs, [ "*", "create", "update" ]));
 });
 });
-}, l = function(b) {
+}, n = function(b) {
 var d = a.defer();
-f = b;
-var h = g.get(b);
-if (!h || h.forceRefresh) {
+g = b;
+var j = h.get(b), l = "selfsubjectrulesreviews";
+if (!j || j.forceRefresh) if (e.apiInfo(l)) {
 c.log("AuthorizationService, loading user rules for " + b + " project");
-var j = {
+var n = {
 kind:"SelfSubjectRulesReview",
 apiVersion:"v1"
 };
-e.create("selfsubjectrulesreviews", null, j, {
+f.create(l, null, n, {
 namespace:b
 }).then(function(a) {
-var c = i(a.status.rules), e = k(a.status.rules);
-g.put(b, {
+var c = k(a.status.rules), e = m(a.status.rules);
+h.put(b, {
 rules:c,
 canAddToProject:e,
 forceRefresh:!1,
 cacheTimestamp:_.now()
 }), d.resolve();
 }, function() {
-d.reject();
+i = !0, d.resolve();
 });
-} else c.log("AuthorizationService, using cached rules for " + b + " project"), _.now() - h.cacheTimestamp >= 6e5 && (h.forceRefresh = !0), d.resolve();
+} else c.log("AuthorizationService, resource 'selfsubjectrulesreviews' is not part of APIserver. Switching into permissive mode."), i = !0, d.resolve(); else c.log("AuthorizationService, using cached rules for " + b + " project"), _.now() - j.cacheTimestamp >= 6e5 && (j.forceRefresh = !0), d.resolve();
 return d.promise;
-}, m = function(a) {
-return _.get(g.get(a || f), [ "rules" ]);
-}, n = function(a, b, c) {
-c = c || f;
-var d = m(c);
-return !!d && (d[b] ? _.contains(d[b], a) || _.contains(d[b], "*") :!!d["*"] && (_.contains(d["*"], a) || _.contains(d["*"], "*")));
 }, o = function(a) {
-return !!_.get(g.get(a || f), [ "canAddToProject" ]);
+return _.get(h.get(a || g), [ "rules" ]);
+}, p = function(a, b, c) {
+c = c || g;
+var d = o(c);
+return !!i || !!d && (d[b] ? _.contains(d[b], a) || _.contains(d[b], "*") :!!d["*"] && (_.contains(d["*"], a) || _.contains(d["*"], "*")));
+}, q = function(a) {
+return !!i || !!_.get(h.get(a || g), [ "canAddToProject" ]);
 };
 return {
-getProjectRules:l,
-canI:n,
-canIAddToProject:o,
-getRulesForProject:m
+getProjectRules:n,
+canI:p,
+canIAddToProject:q,
+getRulesForProject:o
 };
 } ]), angular.module("openshiftConsole").factory("DataService", [ "$cacheFactory", "$http", "$ws", "$rootScope", "$q", "API_CFG", "APIService", "Notification", "Logger", "$timeout", function(a, b, c, d, e, f, g, h, i, j) {
 function k(a) {
@@ -1323,14 +1323,9 @@ project:void 0
 };
 return e.get("projects", b, c, {
 errorNotification:!1
-}).then(function(d) {
+}).then(function(a) {
 return g.getProjectRules(b).then(function() {
-return c.project = d, c.projectPromise.resolve(d), [ d, c ];
-}, function() {
-a.url(URI("error").query({
-error:"error",
-error_description:"User permissions for project " + b + " could not be loaded."
-}).toString());
+return c.project = a, c.projectPromise.resolve(a), [ a, c ];
 });
 }, function(b) {
 c.projectPromise.reject(b);
