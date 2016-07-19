@@ -296,7 +296,7 @@
   .navbar-pf-alt {
     .navbar-header {
       height: 60px;
-      width: 88px;
+      width: (@sidebar-left-width-sm - @navbar-header-offset);
       .navbar-brand {
         padding: 0;
         margin-left: 30px;
@@ -338,7 +338,7 @@
 @media (min-width: @screen-lg-min) {
   .navbar-pf-alt {
     .navbar-header {
-      width: 108px;
+      width: (@sidebar-left-width-md - @navbar-header-offset);
     }
     .navbar-iconic {
       .username {
@@ -350,7 +350,7 @@
 @media (min-width: @screen-xlg-min) {
   .navbar-pf-alt {
     .navbar-header {
-      width: 208px;
+      width: (@sidebar-left-width-lg - @navbar-header-offset);
       .navbar-home {
         .justify-content(@justify: flex-start);
         // remove ie prefixes when PostCSS Autoprefixer is included for github issue #7559

@@ -9,26 +9,26 @@
         </a>
         <div ng-if="primaryItem.secondaryNavSections.length" class="hover-nav dropdown-menu hidden-xs">
           <ul class="nav nav-sidenav-secondary">
-            <li ng-repeat-start="secondarySection in primaryItem.secondaryNavSections" ng-if="secondarySection.header" class="divider-header">
+            <li ng-repeat-start="secondarySection in primaryItem.secondaryNavSections" ng-if="secondarySection.header" class="dropdown-header">
               {{secondarySection.header}}
             </li>
             <li ng-repeat="secondaryItem in secondarySection.items" ng-class="{ active: secondaryItem === activeSecondary }">
               <a ng-href="{{secondaryItem.href ? ('/project/' + projectName + secondaryItem.href) : ''}}">{{secondaryItem.label}}</a>
             </li>
-            <li ng-repeat-end style="display:none;">
+            <li ng-repeat-end style="display:none;"></li>
           </ul>
         </div>
         <div ng-if="primaryItem.secondaryNavSections.length" class="hover-nav visible-xs-block">
           <ul class="nav nav-sidenav-secondary">
-            <li ng-repeat-start="secondarySection in primaryItem.secondaryNavSections" ng-if="secondarySection.header" class="divider-header">
+            <li ng-repeat-start="secondarySection in primaryItem.secondaryNavSections" ng-if="secondarySection.header" class="dropdown-header">
               {{secondarySection.header}}
             </li>
             <li ng-repeat="secondaryItem in secondarySection.items" ng-class="{ active: secondaryItem === activeSecondary }">
               <a ng-href="{{secondaryItem.href ? ('/project/' + projectName + secondaryItem.href) : ''}}">{{secondaryItem.label}}</a>
             </li>
-            <li ng-repeat-end style="display:none;">
+            <li ng-repeat-end style="display:none;"></li>
           </ul>
-        </div>          
+        </div>
       </li>
     </ul>
     <!-- Group utility links into single nav -->
