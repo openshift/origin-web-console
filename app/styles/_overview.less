@@ -272,15 +272,8 @@
     text-transform: uppercase;
   }
   .build-pipeline {
-    .flex(@columns: 1 1 0%);
     // Avoid double borders inside the panel.
-    margin: -1px;
-    .build-summary {
-      .flex-grow(@grow: 1);
-      @media (min-width: @screen-md-min) {
-        .flex-grow(@grow: 0);
-      }
-    }
+    margin-top: -1px;
   }
   .service-title {
     .text-muted();
