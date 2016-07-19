@@ -3445,6 +3445,7 @@ body{padding-right:0px!important}
 .empty-project .fa{width:16px;text-align:center}
 .empty-project dd{margin-left:20px;margin-bottom:10px}
 .empty-state-message{margin:60px auto;max-width:600px;padding:0 20px}
+.empty-state-message .h2,.empty-state-message h2{line-height:1.4}
 .empty-state-message .btn{margin:10px 0 20px}
 @media (min-height:600px){.empty-state-message .hero-icon{display:inline-block;font-size:90px}
 }
