@@ -1,0 +1,132 @@
+// -------------
+// Projects page
+// -------------
+
+.projects-content {
+  padding-left: 0px;
+  padding-right: 0px;
+  display: block;
+}
+
+.project-background {
+  background-color: white;
+}
+
+.project-bar {
+  .project-sort {
+    .form-group {
+      margin: 0 0 0 0;
+    }
+  }
+
+  .projectSearch {
+    flex: 1;
+    padding-left: 8px;
+
+    @media (min-width: @screen-sm-min) {
+      flex: 0;
+      min-width: 200px;
+    }
+  }
+
+  .vertical-divider {
+    border-left: 1px solid #bbbbbb;
+    display: inline-block;
+    height: 25px;
+    margin: 0 7px;
+    vertical-align: middle;
+    width: 1px;
+  }
+}
+
+.list-view-pf .list-group-item.project-tile {
+  &:hover {
+    background-color: #bee1f4;
+  }
+
+  @media (min-width: @screen-sm-min) {
+    .vertical-divider-lg {
+      border-left: 1px solid #bbbbbb;
+      display: inline-block;
+      height: 55px;
+      margin: 0 7px;
+      vertical-align: middle;
+      width: 1px;
+    }
+  }
+}
+
+.project-tile-border {
+  border-style: solid;
+  border-width: 0 0 .3px 0;
+  border-color: #ececec;
+  margin-right: 0px;
+  margin-left: 0px;
+  margin-bottom: 0px;
+}
+
+.project-info {
+  position: relative;
+  margin-right: 15px;
+  margin-left: 15px;
+
+  .project-names {
+    @media (min-width: @screen-sm-max) {
+      max-width: 40%;
+    }
+  }
+
+  .project-name-items {
+    .h1 {
+      margin-bottom: 5px;
+    }
+  }
+
+  .project-description {
+    max-width: 70%;
+
+    @media (max-width: @screen-sm-max) {
+      max-width: 100%;
+      display: flex;
+    }
+  }
+
+  .project-apps {
+    padding-right: 7px;
+    padding-left: 7px;
+  }
+
+  .project-status {
+    padding-right: 7px;
+    padding-left: 7px;
+  }
+
+  .project-age {
+    min-width: 200px;
+    margin-left: auto;
+    margin-right: 0px;
+
+    .h1 {
+      margin: 0px 0px 0px 0px;
+    }
+
+    .h2 {
+      margin-top: 10px;
+      text-align: center;
+    }
+  }
+
+  .project-actions {
+    margin-left: 5px;
+    margin-right: 8px;
+    max-width: 40px;
+
+    @media (max-width: @screen-sm-max) {
+      margin-top: 32px;
+    }
+
+    .project-action-item {
+      margin-right: 5px;
+    }
+  }
+}

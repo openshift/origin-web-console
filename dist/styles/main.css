@@ -4351,7 +4351,6 @@ to{background-color:transparent}
 .navbar-project-menu .form-group .form-control{background-color:transparent;margin-bottom:0;height:auto}
 .navbar-project-menu .bootstrap-select.open.btn-group .btn{background-color:#1e2126}
 .navbar-project-menu .bootstrap-select.btn-group .btn{border-color:#050505;border-radius:0;color:#dbdada;font-size:19px;font-weight:300;background:#292e34;border-bottom:0;box-shadow:none;border-top:0;line-height:1.66666667;padding:7px 50px 7px 20px;transition:none}
-.tile,.tile-flex{transition:.3s cubic-bezier(.25,.8,.25,1)}
 .navbar-project-menu .bootstrap-select.btn-group .btn:focus,.navbar-project-menu .bootstrap-select.btn-group .btn:hover{background-color:#1e2126;color:#fcfcfc}
 .navbar-project-menu .bootstrap-select.btn-group .btn:focus{outline:dotted thin!important;outline:-webkit-focus-ring-color auto 5px!important;outline-offset:-2px!important}
 .navbar-project-menu .bootstrap-select.btn-group .btn:focus:active{outline:0!important}
@@ -4661,7 +4660,6 @@ body,html{margin:0;padding:0}
 .tile.tile-project h2{margin:10px 0}
 .tile.tile-status{background-color:#E6ECF1;border-top:5px solid #BFCEDB;margin-top:40px}
 .tile-click{cursor:pointer;position:relative}
-.tile-click:hover{box-shadow:0 2px 12px -1px rgba(0,0,0,.3),0 4px 5px 0 rgba(0,0,0,.11),0 1px 10px 0 rgba(0,0,0,.1)}
 .tile-click:hover .btn{color:#000!important}
 .tile-click:hover .tile-target,.tile-flex:hover a.tile-target{color:#00659c}
 .tile-click:hover .tile-target:hover{text-decoration:none}
@@ -4823,7 +4821,8 @@ kubernetes-topology-graph{height:700px}
 .log-line-number{-moz-user-select:none;-webkit-user-select:none;-ms-user-select:none;border-right:1px #272b30 solid;padding-right:10px;vertical-align:top;white-space:nowrap;width:60px;color:#72767b}
 .log-line-text{padding:0 10px;white-space:pre-wrap;width:100%;overflow-wrap:break-word}
 .log-line-text::-moz-selection{color:#101214;background:#e5e5e5}
-.table-log-pods{background-color:#fff;border:1px solid #D1D1D1}
+.project-background,.table-log-pods{background-color:#fff}
+.table-log-pods{border:1px solid #D1D1D1}
 .table-log-pods>tbody+tbody{border-top-width:1px}
 .log-fixed-height.empty-state-message{margin-top:0}
 .chromeless .log-loading-msg{font-family:inherit;line-height:1.1;color:inherit;font-size:19px;font-weight:300;margin:60px auto;max-width:600px;padding:0 20px;text-align:center}
@@ -4842,7 +4841,30 @@ kubernetes-topology-graph{height:700px}
 .settings-item{margin:4px 8px 4px 0}
 .hide-if-empty:empty{display:none!important}
 .donut-title-med-pf{font-size:22.5px;font-weight:300}
-.terminal-font,kubernetes-container-terminal .terminal{font-family:"Monospace Regular","DejaVu Sans Mono",Menlo,Monaco,Consolas,monospace;line-height:1em;font-size:12px}
-@media (min-width:768px){.container-terminal-wrapper{background-color:#000}
+.projects-content{padding-left:0px;padding-right:0px;display:block}
+.project-bar .project-sort .form-group{margin:0}
+.project-bar .projectSearch{flex:1;padding-left:8px}
+.project-bar .vertical-divider{border-left:1px solid #bbb;display:inline-block;height:25px;margin:0 7px;vertical-align:middle;width:1px}
+.list-view-pf .list-group-item.project-tile:hover{background-color:#bee1f4}
+@media (min-width:768px){.project-bar .projectSearch{flex:0;min-width:200px}
+.list-view-pf .list-group-item.project-tile .vertical-divider-lg{border-left:1px solid #bbb;display:inline-block;height:55px;margin:0 7px;vertical-align:middle;width:1px}
+.container-terminal-wrapper{background-color:#000}
 }
+.project-tile-border{border-style:solid;border-width:0 0 .3px;border-color:#ececec;margin-right:0px;margin-left:0px;margin-bottom:0px}
+.project-info{position:relative;margin-right:15px;margin-left:15px}
+@media (min-width:991px){.project-info .project-names{max-width:40%}
+}
+.project-info .project-name-items .h1{margin-bottom:5px}
+.project-info .project-description{max-width:70%}
+@media (max-width:991px){.project-info .project-description{max-width:100%;display:flex}
+}
+.project-info .project-apps,.project-info .project-status{padding-right:7px;padding-left:7px}
+.project-info .project-age{min-width:200px;margin-left:auto;margin-right:0px}
+.project-info .project-age .h1{margin:0px}
+.project-info .project-age .h2{margin-top:10px;text-align:center}
+.project-info .project-actions{margin-left:5px;margin-right:8px;max-width:40px}
+@media (max-width:991px){.project-info .project-actions{margin-top:32px}
+}
+.project-info .project-actions .project-action-item{margin-right:5px}
+.terminal-font,kubernetes-container-terminal .terminal{font-family:"Monospace Regular","DejaVu Sans Mono",Menlo,Monaco,Consolas,monospace;line-height:1em;font-size:12px}
 .key-value-editor .key-value-editor-header{margin-bottom:5px}

@@ -3383,7 +3383,30 @@ _.set(e, [ c, b.metadata.name ], b);
 };
 }), angular.module("openshiftConsole").controller("ProjectsController", [ "$scope", "$route", "$timeout", "$filter", "$location", "DataService", "AuthService", "AlertMessageService", "Logger", "hashSizeFilter", function(a, b, c, d, e, f, g, h, i, j) {
 var k = [];
-a.projects = {}, a.alerts = a.alerts || {}, a.showGetStarted = !1, a.canCreate = void 0, h.getAlerts().forEach(function(b) {
+a.projects = {}, a.alerts = a.alerts || {}, a.showGetStarted = !1, a.canCreate = void 0;
+var l = function() {
+var b = _.get(a, "sortConfig.currentField.id", "metadata.name"), c = a.sortConfig.isAscending;
+"metadata.creationTimestamp" === b && (c = !c), a.projects = _.sortByOrder(a.projects, function(a) {
+return _.get(a, b).toLowerCase();
+}, [ c ? "asc" :"desc" ]);
+};
+a.sortConfig = {
+fields:[ {
+id:"metadata.name",
+title:"Name",
+sortType:"alpha"
+}, {
+id:'metadata.annotations["openshift.io/display-name"]',
+title:"Display Name",
+sortType:"alpha"
+}, {
+id:"metadata.creationTimestamp",
+title:"Age",
+sortType:"numeric"
+} ],
+isAscending:!0,
+onSortChange:l
+}, h.getAlerts().forEach(function(b) {
 a.alerts[b.name] = b.data;
 }), h.clearAlerts(), g.withUser().then(function() {
 k.push(f.watch("projects", a, function(b) {
@@ -11796,6 +11819,14 @@ return function(b) {
 if (!b) return "";
 var c = a(b, "deployment.kubernetes.io/revision");
 return c ? "#" + c :"Unknown";
+};
+} ]), angular.module("openshiftConsole").filter("findProject", [ "annotationFilter", function(a) {
+return function(b, c) {
+if (!c) return b;
+var d = c.toLowerCase();
+return _.filter(b, function(b) {
+return b.metadata.name.toLowerCase().includes(d) || _.includes(a(b, "displayName").toLowerCase(), d) || _.includes(a(b, "description").toLowerCase(), d) || _.includes(moment(b.metadata.creationTimestamp).from(moment()).toLowerCase(), d);
+});
 };
 } ]), angular.module("openshiftConsole").filter("underscore", function() {
 return function(a) {

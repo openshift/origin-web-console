@@ -8,52 +8,117 @@
     <div class="middle-section">
       <div class="middle-container">
         <div class="middle-content">
+          <div ng-if="!showGetStarted" class="container-fluid surface-shaded projects-content mar-left-none mar-right-none"> <!-- Safari needs surface-shaded at mobile -->
+            <div ng-if="(projects | hashSize) === 0" class="text-muted">Loading...</div>
+            <div ng-if="(projects | hashSize) !== 0" class="gutter-top pad-top-none">
+              <div class="project-background mar-bottom-xl">
+                <div class="pad-top-lg pad-left-xl pad-right-xl">
+                  <span class="h1">Projects</span>
+                  <a ng-if="canCreate" href="create-project" class="visible-xs btn btn-md btn-primary pull-right">
+                    <span>New project</span>
+                  </a>
+                </div>
 
-          <div ng-if="!showGetStarted" class="container surface-shaded"> <!-- Safari needs surface-shaded at mobile -->
-            <div ng-if="(projects | hashSize) === 0" class="text-muted" style="margin-top: 50px;">Loading...</div>
-            <div ng-if="(projects | hashSize) !== 0" class="gutter-top">
-              <h1 style="display: inline-block;">Projects</h1>
-              <a ng-if="canCreate" href="create-project" style="margin-top: 10px;" class="btn btn-lg btn-primary pull-right">New Project</a>
-              <alerts alerts="alerts"></alerts>
-              <div ng-repeat="project in projects | orderByDisplayName track by project.metadata.name"
-                   class="animate-repeat">
-                <div row flex cross-axis="center" class="tile tile-project tile-click tile-flex">
-                  <div flex class="project-summary">
-                    <h2 class="project truncate">
-                      <a class="tile-target" href="project/{{project.metadata.name}}">{{(project | uniqueDisplayName : projects)}}</a>
-                      <span ng-if="project.status.phase != 'Active'" data-toggle="tooltip" title="This project has been marked for deletion." class="pficon pficon-warning-triangle-o" style="cursor: help; vertical-align: top; margin-left: 5px;"></span>
-                    </h2>
-                    <div class="muted" style="margin-top: -5px;" ng-if="project | description">
-                      <truncate-long-text content="project | description" limit="512" use-word-boundary="true"></truncate-long-text>
-                    </div>
+                <div row cross-axis="center" class="project-bar pad-lg table-toolbar form-inline">
+                  <input class="projectSearch" placeholder="Search projects" ng-model="filterStr">
+
+                  <span class="mar-left-sm mar-right-sm">
+                    <span class="hidden-xs vertical-divider"></span>
+                  </span>
+
+                  <div class="project-sort">
+                    <div pf-sort config="sortConfig" class="sort-controls"></div>
                   </div>
-                  <div row flex main-axis="end" class="project-actions" ng-if="project.status.phase == 'Active'">
-                    <span class="fa-lg mar-right-lg">
-                      <a ng-href="project/{{project.metadata.name}}/edit" class="action-button">
-                        <i class="fa fa-pencil" aria-hidden="true"></i>
-                        <span class="sr-only">Edit Project</span>
-                      </a>
-                    </span>
-                    <delete-link
-                      class="fa-lg"
-                      kind="Project"
-                      resource-name="{{project.metadata.name}}"
-                      project-name="{{project.metadata.name}}"
-                      display-name="{{(project | displayName)}}"
-                      type-name-to-confirm="true"
-                      stay-on-current-page="true"
-                      alerts="alerts"
-                      button-only>
-                    </delete-link>
+
+                  <span class="hidden-xs mar-left-sm mar-right-sm">
+                    <span class="vertical-divider"></span>
+                  </span>
+
+                  <span flex class="hidden-xs"></span>
+
+                  <div>
+                    <a ng-if="canCreate" href="create-project" class="hidden-xs btn btn-md btn-primary pull-right">
+                      <span>New project</span>
+                    </a>
                   </div>
                 </div>
               </div>
-              <div ng-if="canCreate === false" style="margin-top: 10px;">
+              <div ng-if="alerts" class="mar-left-xl mar-right-xl">
+                <alerts alerts="alerts"></alerts>
+              </div>
+
+              <div ng-repeat="project in projects | findProject:filterStr"
+                   class="list-group list-view-pf tile-click project-tile-border">
+                <div class="list-group-item project-info project-tile">
+                  <div row class="list-view-pf-actions project-actions"
+                       ng-if="project.status.phase == 'Active'">
+                   <span class="fa-lg project-action-item">
+                     <a ng-href="project/{{project.metadata.name}}/edit" class="action-button">
+                       <i class="fa fa-pencil" aria-hidden="true"></i>
+                       <span class="sr-only">Edit Project</span>
+                     </a>
+                   </span>
+                   <span>
+                     <delete-link
+                       class="fa-lg project-action-item"
+                       kind="Project"
+                       resource-name="{{project.metadata.name}}"
+                       project-name="{{project.metadata.name}}"
+                       display-name="{{(project | displayName)}}"
+                       type-name-to-confirm="true"
+                       stay-on-current-page="true"
+                       alerts="alerts"
+                       button-only>
+                     </delete-link>
+                   </span>
+                  </div>
+
+                  <div class="list-view-pf-main-info">
+                    <div class="list-view-pf-body">
+                      <div class="list-view-pf-description project-info project-names">
+                        <div class="list-group-item-heading project-name-item">
+                          <div class="project-summary">
+                            <div class="h1">
+                              <a class="tile-target" href="project/{{project.metadata.name}}">{{project.metadata.annotations["openshift.io/display-name"]}}</a> <!-- {{(project | uniqueDisplayName : projects)}} -->
+                              <span ng-if="project.status.phase != 'Active'"
+                                    data-toggle="tooltip"
+                                    title="This project has been marked for deletion."
+                                    class="pficon pficon-warning-triangle-o"
+                                    style="cursor: help; vertical-align: top; margin-left: 5px;"></span>
+                            </div>
+                          </div>
+                          <div class="project-name-item">
+                            <p>{{project.metadata.name}}</p>
+                          </div>
+                        </div>
+                      </div>
+
+                      <div row mobile="column" class="list-view-pf-additional-info project-info">
+                        <span flex class="hidden-xs hidden-sm"></span>
+                        <span flex class="list-group-item-text project-description muted word-break" ng-if="project | description">
+                          <truncate-long-text content="project | description" limit="200" use-word-boundary="true"></truncate-long-text>
+                        </span>
+                        <span mobile="flex">
+                          <span class="list-view-pf-additional-info-item project-age">
+                            <div row class="h1">
+                              <span flex></span>
+                              <relative-timestamp timestamp="project.metadata.creationTimestamp"></relative-timestamp>
+                              <span flex></span>
+                            </div>
+                            <div class="h2">Created</div>
+                          </span>
+                        </span>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+              <div ng-if="canCreate === false" class="mar-top-md mar-left-xl mar-right-xl">
                 <span ng-if="!newProjectMessage">A cluster admin can create a project for you by running the command
                   <code>oadm new-project &lt;projectname&gt; --admin={{user.metadata.name || '&lt;YourUsername&gt;'}}</code></span>
                 <span ng-if="newProjectMessage" ng-bind-html="newProjectMessage | linky" style="white-space:pre;"></span>
               </div>
-              <div style="margin-top: 10px;">
+              <div class="mar-top-md mar-left-xl mar-right-xl">
                 A project admin can add you to a role on a project by running the command
                 <code>oc policy add-role-to-user &lt;role&gt; {{user.metadata.name || '&lt;YourUsername&gt;'}} -n &lt;projectname&gt;</code>
               </div>
@@ -66,25 +131,19 @@
             </div>
             <div class="empty-state-message empty-state-full-page text-center">
               <h1>Welcome to OpenShift.</h1>
-
               <p>
                 OpenShift helps you quickly develop, host, and scale applications.<br>
                 <span ng-if="canCreate">Create a project for your application.</span>
               </p>
-
               <a ng-if="canCreate" href="create-project" class="btn btn-lg btn-primary">New Project</a>
-
               <p>To learn more, visit the OpenShift <a target="_blank" ng-href="{{'' | helpLink}}">documentation</a>.</p>
-
               <p ng-if="canCreate === false">
                 <span ng-if="!newProjectMessage">A cluster admin can create a project for you by running the command<br>
                   <code>oadm new-project &lt;projectname&gt; --admin={{user.metadata.name || '&lt;YourUsername&gt;'}}</code></span>
                 <span ng-if="newProjectMessage" ng-bind-html="newProjectMessage | linky" style="white-space:pre;"></span>
               </p>
-
             </div>
           </div>
-
         </div><!-- /middle-content -->
       </div><!-- /middle-container -->
     </div><!-- /middle-section -->
