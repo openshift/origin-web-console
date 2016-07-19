@@ -76,7 +76,7 @@ angular.module("openshiftConsole")
             include: true,
             portOptions: []
           };
-          scope.labels = {};
+          scope.labels = [];
           scope.annotations = {};
           scope.scaling = {
             replicas: 1,
@@ -302,8 +302,9 @@ angular.module("openshiftConsole")
 
         $scope.createApp = function(){
           $scope.disableInputs = true;
-          $scope.buildConfig.envVars = keyValueEditorUtils.mapEntries($scope.buildConfigEnvVars);
-          $scope.deploymentConfig.envVars = keyValueEditorUtils.mapEntries($scope.DCEnvVarsFromUser);
+          $scope.buildConfig.envVars = keyValueEditorUtils.mapEntries(keyValueEditorUtils.compactEntries($scope.buildConfigEnvVars));
+          $scope.deploymentConfig.envVars = keyValueEditorUtils.mapEntries(keyValueEditorUtils.compactEntries($scope.DCEnvVarsFromUser));
+          $scope.labels = keyValueEditorUtils.mapEntries(keyValueEditorUtils.compactEntries($scope.labels));
 
           var resourceMap = ApplicationGenerator.generate($scope);
           //init tasks

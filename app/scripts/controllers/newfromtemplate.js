@@ -9,7 +9,24 @@
  * Controller of the openshiftConsole
  */
 angular.module('openshiftConsole')
-  .controller('NewFromTemplateController', function ($scope, $http, $routeParams, DataService, ProcessedTemplateService, AlertMessageService, ProjectsService, $q, $location, TaskList, $parse, Navigate, $filter, imageObjectRefFilter, failureObjectNameFilter, CachedTemplateService) {
+  .controller('NewFromTemplateController', function (
+    $scope,
+    $http,
+    $routeParams,
+    DataService,
+    ProcessedTemplateService,
+    AlertMessageService,
+    ProjectsService,
+    $q,
+    $location,
+    TaskList,
+    $parse,
+    Navigate,
+    $filter,
+    imageObjectRefFilter,
+    failureObjectNameFilter,
+    CachedTemplateService,
+    keyValueEditorUtils) {
 
 
     var name = $routeParams.name;
@@ -26,6 +43,7 @@ angular.module('openshiftConsole')
     $scope.alerts = {};
     $scope.projectName = $routeParams.project;
     $scope.projectPromise = $.Deferred();
+    $scope.labels = [];
 
     $scope.breadcrumbs = [
       {
@@ -158,6 +176,7 @@ angular.module('openshiftConsole')
 
         $scope.createFromTemplate = function() {
           $scope.disableInputs = true;
+          $scope.template.labels = keyValueEditorUtils.mapEntries(keyValueEditorUtils.compactEntries($scope.labels));
           DataService.create("processedtemplates", null, $scope.template, context).then(
             function(config) { // success
               var titles = {
@@ -223,13 +242,18 @@ angular.module('openshiftConsole')
           );
         };
 
-        function setTemplateParams() {
+        function setTemplateParams(labels) {
           $scope.templateImages = imageItems($scope.template);
-          $scope.template.labels = $scope.template.labels || {};
+          $scope.labels = _.map($scope.template.labels, function(value, key) {
+            return {
+              name: key,
+              value: value
+            };
+          });
         }
 
         // Missing namespace indicates that the template should be received from from the 'CachedTemplateService'.
-        // Otherwise get it via GET call. 
+        // Otherwise get it via GET call.
         if (!namespace) {
           $scope.template = CachedTemplateService.getTemplate();
           // In case the template can be loaded from 'CachedTemaplteService', show an alert and disable "Create" button.

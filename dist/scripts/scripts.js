@@ -4639,13 +4639,12 @@ return "None" === b.type ? a :(a.none = !1, angular.forEach(b, function(b, c) {
 a[c] = !0;
 }), a);
 };
-} ]), angular.module("openshiftConsole").controller("EditAutoscalerController", [ "$scope", "$filter", "$routeParams", "$window", "APIService", "DataService", "HPAService", "MetricsService", "Navigate", "ProjectsService", function(a, b, c, d, e, f, g, h, i, j) {
+} ]), angular.module("openshiftConsole").controller("EditAutoscalerController", [ "$scope", "$filter", "$routeParams", "$window", "APIService", "DataService", "HPAService", "MetricsService", "Navigate", "ProjectsService", "keyValueEditorUtils", function(a, b, c, d, e, f, g, h, i, j, k) {
 if (!c.kind || !c.name) return void i.toErrorPage("Kind or name parameter missing.");
 if ([ "ReplicationController", "DeploymentConfig", "HorizontalPodAutoscaler" ].indexOf(c.kind) === -1) return void i.toErrorPage("Autoscaling not supported for kind " + c.kind + ".");
 a.kind = c.kind, a.name = c.name, "HorizontalPodAutoscaler" === c.kind ? a.disableInputs = !0 :(a.targetKind = c.kind, a.targetName = c.name), a.autoscaling = {
-name:a.name,
-labels:{}
-}, h.isAvailable().then(function(b) {
+name:a.name
+}, a.labels = [], h.isAvailable().then(function(b) {
 a.metricsWarning = !b;
 }), a.alerts = {}, a.breadcrumbs = [ {
 title:c.project,
@@ -4656,23 +4655,23 @@ link:"project/" + c.project + "/browse/deployments"
 }, {
 title:"Autoscale"
 } ];
-var k = b("getErrorDetails"), l = function(b, c) {
+var l = b("getErrorDetails"), m = function(b, c) {
 a.alerts.autoscaling = {
 type:"error",
 message:b,
-details:k(c)
+details:l(c)
 };
 };
 j.get(c.project).then(_.spread(function(h, j) {
 a.breadcrumbs[0].title = b("displayName")(h), a.project = h;
-var k = function() {
+var l = function() {
 a.disableInputs = !0;
 var b = {
 apiVersion:"extensions/v1beta1",
 kind:"HorizontalPodAutoscaler",
 metadata:{
 name:a.autoscaling.name,
-labels:a.autoscaling.labels
+labels:k.mapEntries(k.compactEntries(a.labels))
 },
 spec:{
 scaleRef:{
@@ -4694,10 +4693,10 @@ group:"extensions"
 }, null, b, j).then(function() {
 d.history.back();
 }, function(b) {
-a.disableInputs = !1, l("An error occurred creating the horizontal pod autoscaler.", b);
+a.disableInputs = !1, m("An error occurred creating the horizontal pod autoscaler.", b);
 });
-}, m = function(b) {
-a.disableInputs = !0, b = angular.copy(b), b.metadata.labels = a.autoscaling.labels, b.spec.minReplicas = a.autoscaling.minReplicas, b.spec.maxReplicas = a.autoscaling.maxReplicas, b.spec.cpuUtilization = {
+}, n = function(b) {
+a.disableInputs = !0, b = angular.copy(b), b.metadata.labels = k.mapEntries(k.compactEntries(a.labels)), b.spec.minReplicas = a.autoscaling.minReplicas, b.spec.maxReplicas = a.autoscaling.maxReplicas, b.spec.cpuUtilization = {
 targetPercentage:a.autoscaling.targetCPU || a.autoscaling.defaultTargetCPU
 }, f.update({
 resource:"horizontalpodautoscalers",
@@ -4705,14 +4704,19 @@ group:"extensions"
 }, b.metadata.name, b, j).then(function() {
 d.history.back();
 }, function(c) {
-a.disableInputs = !1, l('An error occurred updating horizontal pod autoscaler "' + b.metadata.name + '".', c);
+a.disableInputs = !1, m('An error occurred updating horizontal pod autoscaler "' + b.metadata.name + '".', c);
 });
-}, n = {
+}, o = {
 resource:e.kindToResource(c.kind),
 group:c.group
 };
-f.get(n, c.name, j).then(function(b) {
-if (a.autoscaling.labels = _.get(b, "metadata.labels", {}), "HorizontalPodAutoscaler" === c.kind) a.targetKind = _.get(b, "spec.scaleRef.kind"), a.targetName = _.get(b, "spec.scaleRef.name"), _.assign(a.autoscaling, {
+f.get(o, c.name, j).then(function(b) {
+if (a.labels = _.map(_.get(b, "metadata.labels", {}), function(a, b) {
+return {
+name:b,
+value:a
+};
+}), "HorizontalPodAutoscaler" === c.kind) a.targetKind = _.get(b, "spec.scaleRef.kind"), a.targetName = _.get(b, "spec.scaleRef.name"), _.assign(a.autoscaling, {
 minReplicas:_.get(b, "spec.minReplicas"),
 maxReplicas:_.get(b, "spec.maxReplicas"),
 targetCPU:_.get(b, "spec.cpuUtilization.targetPercentage")
@@ -4720,12 +4724,12 @@ targetCPU:_.get(b, "spec.cpuUtilization.targetPercentage")
 title:a.targetName,
 link:i.resourceURL(a.targetName, a.targetKind, c.project)
 }), a.save = function() {
-m(b);
+n(b);
 }; else {
 a.breadcrumbs.splice(2, 0, {
 title:b.metadata.name,
 link:i.resourceURL(b)
-}), a.save = k;
+}), a.save = l;
 var d = {}, e = function() {
 var c = _.get(b, "spec.template.spec.containers", []);
 a.showCPURequestWarning = !g.hasCPURequest(c, d, h);
@@ -4882,7 +4886,7 @@ deployOnConfigChange:!0
 }, b.DCEnvVarsFromImage, b.DCEnvVarsFromUser = [], b.routing = {
 include:!0,
 portOptions:[]
-}, b.labels = {}, b.annotations = {}, b.scaling = {
+}, b.labels = [], b.annotations = {}, b.scaling = {
 replicas:1,
 autoscale:!1,
 autoscaleOptions:[ {
@@ -5011,7 +5015,7 @@ a.nameTaken = !0, a.disableInputs = !1;
 a.projectDisplayName = function() {
 return s(this.project) || this.projectName;
 }, a.createApp = function() {
-a.disableInputs = !0, a.buildConfig.envVars = r.mapEntries(a.buildConfigEnvVars), a.deploymentConfig.envVars = r.mapEntries(a.DCEnvVarsFromUser);
+a.disableInputs = !0, a.buildConfig.envVars = r.mapEntries(r.compactEntries(a.buildConfigEnvVars)), a.deploymentConfig.envVars = r.mapEntries(r.compactEntries(a.DCEnvVarsFromUser)), a.labels = r.mapEntries(r.compactEntries(a.labels));
 var c = i.generate(a), d = [];
 angular.forEach(c, function(a) {
 null !== a && (b.debug("Generated resource definition:", a), d.push(a));
@@ -5074,21 +5078,21 @@ a.showParamsTable = !0;
 d.unwatchAll(q);
 })) :void j.toProjectOverview(a.projectName);
 }));
-} ]), angular.module("openshiftConsole").controller("NewFromTemplateController", [ "$scope", "$http", "$routeParams", "DataService", "ProcessedTemplateService", "AlertMessageService", "ProjectsService", "$q", "$location", "TaskList", "$parse", "Navigate", "$filter", "imageObjectRefFilter", "failureObjectNameFilter", "CachedTemplateService", function(a, b, c, d, e, f, g, h, i, j, k, l, m, n, o, p) {
-var q = c.name, r = c.namespace || "";
-if (!q) return void l.toErrorPage("Cannot create from template: a template name was not specified.");
-a.emptyMessage = "Loading...", a.alerts = {}, a.projectName = c.project, a.projectPromise = $.Deferred(), a.breadcrumbs = [ {
+} ]), angular.module("openshiftConsole").controller("NewFromTemplateController", [ "$scope", "$http", "$routeParams", "DataService", "ProcessedTemplateService", "AlertMessageService", "ProjectsService", "$q", "$location", "TaskList", "$parse", "Navigate", "$filter", "imageObjectRefFilter", "failureObjectNameFilter", "CachedTemplateService", "keyValueEditorUtils", function(a, b, c, d, e, f, g, h, i, j, k, l, m, n, o, p, q) {
+var r = c.name, s = c.namespace || "";
+if (!r) return void l.toErrorPage("Cannot create from template: a template name was not specified.");
+a.emptyMessage = "Loading...", a.alerts = {}, a.projectName = c.project, a.projectPromise = $.Deferred(), a.labels = [], a.breadcrumbs = [ {
 title:a.projectName,
 link:"project/" + a.projectName
 }, {
 title:"Add to Project",
 link:"project/" + a.projectName + "/create"
 }, {
-title:q
+title:r
 } ], a.alerts = a.alerts || {}, f.getAlerts().forEach(function(b) {
 a.alerts[b.name] = b.data;
 }), f.clearAlerts();
-var s = m("displayName"), t = m("humanize"), u = k("spec.template.spec.containers"), v = k("spec.strategy.sourceStrategy.from || spec.strategy.dockerStrategy.from || spec.strategy.customStrategy.from"), w = k("spec.output.to");
+var t = m("displayName"), u = m("humanize"), v = k("spec.template.spec.containers"), w = k("spec.strategy.sourceStrategy.from || spec.strategy.dockerStrategy.from || spec.strategy.customStrategy.from"), x = k("spec.output.to");
 g.get(c.project).then(_.spread(function(b, f) {
 function g(a, b) {
 var c = _.get(a, "spec.triggers", []), d = _.find(c, function(a) {
@@ -5099,7 +5103,7 @@ return _.includes(c, b.name);
 return _.get(d, "imageChangeParams.from.name");
 }
 function k(a) {
-var b = [], c = u(a);
+var b = [], c = v(a);
 return c && angular.forEach(c, function(c) {
 var d = c.image;
 _.trim(d) || (d = g(a, c)), d && b.push(d);
@@ -5109,11 +5113,11 @@ function o(b) {
 var c = [], d = [], e = {};
 return angular.forEach(b.objects, function(b) {
 if ("BuildConfig" === b.kind) {
-var f = n(v(b), a.projectName);
+var f = n(w(b), a.projectName);
 f && c.push({
 name:f
 });
-var g = n(w(b), a.projectName);
+var g = n(x(b), a.projectName);
 g && (e[g] = !0);
 }
 "DeploymentConfig" === b.kind && (d = d.concat(k(b)));
@@ -5123,7 +5127,7 @@ name:a
 });
 }), c;
 }
-function x(a) {
+function y(a) {
 var b = /^helplink\.(.*)\.title$/, c = /^helplink\.(.*)\.url$/, d = {};
 for (var e in a.annotations) {
 var f, g = e.match(b);
@@ -5131,22 +5135,27 @@ g ? (f = d[g[1]] || {}, f.title = a.annotations[e], d[g[1]] = f) :(g = e.match(c
 }
 return d;
 }
-function y() {
-a.templateImages = o(a.template), a.template.labels = a.template.labels || {};
+function z(b) {
+a.templateImages = o(a.template), a.labels = _.map(a.template.labels, function(a, b) {
+return {
+name:b,
+value:a
+};
+});
 }
 if (a.project = b, a.breadcrumbs[0].title = m("displayName")(b), a.projectDisplayName = function() {
-return s(this.project) || this.projectName;
+return t(this.project) || this.projectName;
 }, a.templateDisplayName = function() {
-return s(this.template);
+return t(this.template);
 }, a.createFromTemplate = function() {
-a.disableInputs = !0, d.create("processedtemplates", null, a.template, f).then(function(b) {
+a.disableInputs = !0, a.template.labels = q.mapEntries(q.compactEntries(a.labels)), d.create("processedtemplates", null, a.template, f).then(function(b) {
 var g = {
 started:"Creating " + a.templateDisplayName() + " in project " + a.projectDisplayName(),
 success:"Created " + a.templateDisplayName() + " in project " + a.projectDisplayName(),
 failure:"Failed to create " + a.templateDisplayName() + " in project " + a.projectDisplayName()
 };
 e.setTemplateData(b.parameters, a.template.parameters, b.message);
-var i = x(a.template);
+var i = y(a.template);
 j.clear(), j.add(g, i, function() {
 var c = h.defer();
 return d.batch(b.objects, f).then(function(b) {
@@ -5154,13 +5163,13 @@ var d = [], e = !1;
 b.failure.length > 0 ? (e = !0, b.failure.forEach(function(a) {
 d.push({
 type:"error",
-message:"Cannot create " + t(a.object.kind).toLowerCase() + ' "' + a.object.metadata.name + '". ',
+message:"Cannot create " + u(a.object.kind).toLowerCase() + ' "' + a.object.metadata.name + '". ',
 details:a.data.message
 });
 }), b.success.forEach(function(a) {
 d.push({
 type:"success",
-message:"Created " + t(a.kind).toLowerCase() + ' "' + a.metadata.name + '" successfully. '
+message:"Created " + u(a.kind).toLowerCase() + ' "' + a.metadata.name + '" successfully. '
 });
 })) :d.push({
 type:"success",
@@ -5180,21 +5189,21 @@ message:"An error occurred processing the template.",
 details:c
 };
 });
-}, r) d.get("templates", q, {
-namespace:r || a.projectName
+}, s) d.get("templates", r, {
+namespace:s || a.projectName
 }).then(function(b) {
-a.template = b, y();
+a.template = b, z();
 }, function() {
 l.toErrorPage("Cannot create from template: the specified template could not be retrieved.");
 }); else {
 if (a.template = p.getTemplate(), _.isEmpty(a.template)) {
-var z = URI("error").query({
+var A = URI("error").query({
 error:"not_found",
 error_description:"Template wasn't found in cache."
 }).toString();
-i.url(z);
+i.url(A);
 }
-p.clearTemplate(), y();
+p.clearTemplate(), z();
 }
 }));
 } ]), angular.module("openshiftConsole").controller("LabelsController", [ "$scope", function(a) {
@@ -7083,6 +7092,13 @@ a[e] = f, c.setLabelSelector(new LabelSelector(a, (!0)));
 }
 };
 } ]).directive("labelEditor", function() {
+function a(a) {
+return !(a.length > f) && e.test(a);
+}
+function b(a) {
+return !(a.length > d) && c.test(a);
+}
+var c = /^(([A-Za-z0-9][-A-Za-z0-9_.]*)?[A-Za-z0-9])?$/, d = 63, e = /^[a-z0-9]([-a-z0-9]*[a-z0-9])?(\.[a-z0-9]([-a-z0-9]*[a-z0-9])?)*$/, f = 253;
 return {
 restrict:"E",
 scope:{
@@ -7095,7 +7111,28 @@ helpText:"@?"
 templateUrl:"views/directives/label-editor.html",
 link:function(a, b, c) {
 angular.isDefined(c.canToggle) || (a.canToggle = !0);
+},
+controller:[ "$scope", function(c) {
+var d = {
+test:function(c) {
+var d = c.split("/");
+switch (d.length) {
+case 1:
+return b(d[0]);
+
+case 2:
+return a(d[0]) && b(d[1]);
 }
+return !1;
+}
+};
+angular.extend(c, {
+validator:{
+key:d,
+value:d
+}
+});
+} ]
 };
 }), angular.module("openshiftConsole").directive("templateOptions", function() {
 return {
@@ -8674,7 +8711,7 @@ b.isByNamespace[c] = a.by("metadata.name"), b.isNamesByNamespace[c] = _.keys(b.i
 });
 }
 };
-} ]), angular.module("openshiftConsole").directive("deployImage", [ "$filter", "$q", "$window", "ApplicationGenerator", "DataService", "ImagesService", "Navigate", "ProjectsService", "TaskList", function(a, b, c, d, e, f, g, h, i) {
+} ]), angular.module("openshiftConsole").directive("deployImage", [ "$filter", "$q", "$window", "ApplicationGenerator", "DataService", "ImagesService", "Navigate", "ProjectsService", "TaskList", "keyValueEditorUtils", function(a, b, c, d, e, f, g, h, i, j) {
 return {
 restrict:"E",
 scope:{
@@ -8692,30 +8729,30 @@ namespace:c["import"].namespace,
 tag:c["import"].tag || "latest",
 ports:c.ports,
 volumes:c.volumes,
-env:c.app.env,
-labels:c.app.labels
+env:j.mapEntries(j.compactEntries(c.env)),
+labels:j.mapEntries(j.compactEntries(c.labels))
 });
 }
-c.mode = "istag", c.istag = {}, c.app = {
-env:{},
-labels:{}
-};
-var j = a("stripTag"), k = a("stripSHA"), l = a("humanizeKind"), m = function() {
+c.mode = "istag", c.istag = {}, c.app = {}, c.env = [], c.labels = [];
+var k = a("stripTag"), l = a("stripSHA"), m = a("humanizeKind"), n = function() {
 var a = _.last(c["import"].name.split("/"));
-return a = k(a), a = j(a);
+return a = l(a), a = k(a);
 };
 c.findImage = function() {
 c.loading = !0, f.findImage(c.imageName, c.context).then(function(a) {
 if (c["import"] = a, c.loading = !1, "Success" !== _.get(a, "result.status")) return void (c["import"].error = _.get(a, "result.message", "An error occurred finding the image."));
 var b = c["import"].image;
-b && (c.app.name = m(), c.app.labels = {
-app:c.app.name
-}, c.runsAsRoot = f.runsAsRoot(b), c.ports = d.parsePorts(b), c.volumes = f.getVolumes(b), c.createImageStream = !0);
+b && (c.app.name = n(), c.labels = [ {
+name:"app",
+value:c.app.name
+} ], c.runsAsRoot = f.runsAsRoot(b), c.ports = d.parsePorts(b), c.volumes = f.getVolumes(b), c.createImageStream = !0);
 }, function(b) {
 c["import"].error = a("getErrorDetails")(b) || "An error occurred finding the image.", c.loading = !1;
 });
 }, c.$watch("app.name", function() {
-_.set(c, "app.labels.app", c.app.name);
+_.set(_.find(c.labels, function(a) {
+return "app" === a.name;
+}), "value", c.app.name);
 }), c.$watch("mode", function(a, b) {
 a !== b && (delete c["import"], c.istag = {});
 }), c.$watch("istag", function(b, g) {
@@ -8747,13 +8784,13 @@ var b, e = !_.isEmpty(a.failure);
 e ? (b = _.map(a.failure, function(a) {
 return {
 type:"error",
-message:"Cannot create " + l(a.object.kind).toLowerCase() + ' "' + a.object.metadata.name + '". ',
+message:"Cannot create " + m(a.object.kind).toLowerCase() + ' "' + a.object.metadata.name + '". ',
 details:a.data.message
 };
 }), b = b.concat(_.map(a.success, function(a) {
 return {
 type:"success",
-message:"Created " + l(a.kind).toLowerCase() + ' "' + a.metadata.name + '" successfully. '
+message:"Created " + m(a.kind).toLowerCase() + ' "' + a.metadata.name + '" successfully. '
 };
 }))) :b = [ {
 type:"success",
