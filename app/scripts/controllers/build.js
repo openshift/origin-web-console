@@ -118,13 +118,46 @@ angular.module('openshiftConsole')
         };
 
         $scope.cancelBuild = function() {
-          BuildsService.cancelBuild($scope.build, $scope.buildConfigName, context, $scope);
+          BuildsService
+            .cancelBuild($scope.build, $scope.buildConfigName, context)
+            .then(function resolve(build) {
+              // TODO: common alerts service to eliminate duplication
+              $scope.alerts["cancel"] = {
+                type: "success",
+                message: "Cancelling build " + build.metadata.name + " of " + $scope.buildConfigName + "."
+              };
+            }, function reject(result) {
+              // TODO: common alerts service to eliminate duplication
+              $scope.alerts["cancel"] = {
+                type: "error",
+                message: "An error occurred cancelling the build.",
+                details: $filter('getErrorDetails')(result)
+              };
+            });
         };
 
         $scope.cloneBuild = function() {
           var name = _.get($scope, 'build.metadata.name');
           if (name && $scope.canBuild) {
-            BuildsService.cloneBuild(name, context, $scope);
+            BuildsService
+              .cloneBuild(name, context)
+              .then(function resolve(build) {
+                var logLink = $filter('buildLogURL')(build);
+                $scope.alerts["rebuild"] = {
+                  type: "success",
+                  message: "Build " + name + " is being rebuilt as " + build.metadata.name + ".",
+                  links: logLink ? [{
+                    href: logLink,
+                    label: "View Log"
+                  }] : undefined
+                };
+              }, function reject(result) {
+                $scope.alerts["rebuild"] = {
+                  type: "error",
+                  message: "An error occurred while rerunning the build.",
+                  details: $filter('getErrorDetails')(result)
+                };
+              });
           }
         };
 
