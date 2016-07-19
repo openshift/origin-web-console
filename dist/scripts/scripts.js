@@ -6835,7 +6835,9 @@ case "popover":
 $(b).popover("destroy"), setTimeout(function() {
 $(b).attr("data-content", a.dynamicContent).popover(d);
 }, 200);
-}), $(b).popover(d);
+}), $(b).popover(d), a.$on("$destroy", function() {
+$(b).popover("destroy");
+});
 break;
 
 case "tooltip":
@@ -6843,7 +6845,9 @@ case "tooltip":
 $(b).tooltip("destroy"), setTimeout(function() {
 $(b).attr("title", a.dynamicContent).tooltip(d);
 }, 200);
-}), $(b).tooltip(d);
+}), $(b).tooltip(d), a.$on("$destroy", function() {
+$(b).tooltip("destroy");
+});
 break;
 
 case "dropdown":
