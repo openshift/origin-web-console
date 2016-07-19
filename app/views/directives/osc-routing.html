@@ -138,9 +138,14 @@
                              show-weight="true">
         </osc-routing-service>
         <a href="" ng-click="route.alternateServices.splice($index, 1)">Remove service</a>
-        <span ng-if="$last">
+        <span ng-if="$last && route.alternateServices.length < alternateServiceOptions.length">
           <span class="action-divider">|</span>
           <a href="" ng-click="addAlternateService()">Add another service</a>
+        </span>
+      </div>
+      <div ng-repeat="duplicate in duplicateServices" class="has-error mar-bottom-lg">
+        <span class="help-block">
+          Service {{duplicate.metadata.name}} cannot be added twice.
         </span>
       </div>
     </div>
@@ -215,7 +220,7 @@
         <div>
           <div class="form-group" id="certificate-file">
             <label>Certificate</label>
-            <osc-file-input 
+            <osc-file-input
               model="route.tls.certificate"
               drop-zone-id="certificate-file"
               show-values="true"
@@ -225,7 +230,7 @@
           </div>
           <div class="form-group" id="private-key-file">
             <label>Private Key</label>
-            <osc-file-input 
+            <osc-file-input
               model="route.tls.key"
               drop-zone-id="private-key-file"
               show-values="true"
@@ -235,7 +240,7 @@
           </div>
           <div class="form-group" id="ca-certificate-file">
             <label>CA Certificate</label>
-            <osc-file-input 
+            <osc-file-input
               model="route.tls.caCertificate"
               drop-zone-id="ca-certificate-file"
               show-values="true"

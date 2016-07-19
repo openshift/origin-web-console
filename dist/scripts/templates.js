@@ -5561,9 +5561,14 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "<osc-routing-service model=\"alternate\" services=\"alternateServiceOptions\" is-alternate=\"true\" show-weight=\"true\">\n" +
     "</osc-routing-service>\n" +
     "<a href=\"\" ng-click=\"route.alternateServices.splice($index, 1)\">Remove service</a>\n" +
-    "<span ng-if=\"$last\">\n" +
+    "<span ng-if=\"$last && route.alternateServices.length < alternateServiceOptions.length\">\n" +
     "<span class=\"action-divider\">|</span>\n" +
     "<a href=\"\" ng-click=\"addAlternateService()\">Add another service</a>\n" +
+    "</span>\n" +
+    "</div>\n" +
+    "<div ng-repeat=\"duplicate in duplicateServices\" class=\"has-error mar-bottom-lg\">\n" +
+    "<span class=\"help-block\">\n" +
+    "Service {{duplicate.metadata.name}} cannot be added twice.\n" +
     "</span>\n" +
     "</div>\n" +
     "</div>\n" +
