@@ -8,6 +8,25 @@ angular.module("openshiftConsole")
                                 LabelFilter,
                                 $filter,
                                 APIService){
+    var annotation = $filter('annotation');
+    var buildConfigForBuild = $filter('buildConfigForBuild');
+    var isPipeline = $filter('isJenkinsPipelineStrategy');
+
+    // Get the type segment for build URLs. `resource` can be a build or build config.
+    var getBuildURLType = function(resource, opts) {
+      if (_.get(opts, 'isPipeline')) {
+        return "pipelines";
+      }
+
+      if (_.isObject(resource) && isPipeline(resource)) {
+        // Use "pipelines" instead of "builds" in the URL so the right nav item is highlighted
+        // for pipeline builds.
+        return "pipelines";
+      }
+
+      return "builds";
+    };
+
     return {
       /**
        * Navigate and display the error page.
@@ -88,10 +107,10 @@ angular.module("openshiftConsole")
       // Resource is either a resource object, or a name.  If resource is a name, kind and namespace must be specified
       // Note that builds and deployments can only have their URL built correctly (including their config in the URL)
       // if resource is an object, otherwise they will fall back to the non-nested URL.
-      // TODO - if we do ever need to create a build URL without the build object but with a known build (deployment)
-      // name and buildConfig (deploymentConfig) name, then we will need either a specialized method for that, or an
-      // additional opts param for extra opts.
-      resourceURL: function(resource, kind, namespace, action) {
+      //
+      // `opts` is for additional options. Currently only `opts.isPipeline` is supported for building URLs with a
+      // pipeline path segment.
+      resourceURL: function(resource, kind, namespace, action, opts) {
         action = action || "browse";
         if (!resource || (!resource.metadata && (!kind || !namespace))) {
           return null;
@@ -118,18 +137,19 @@ angular.module("openshiftConsole")
         switch(kind) {
           case "Build":
             var buildConfigName = $filter('buildConfigForBuild')(resource);
+            var typeSegment = getBuildURLType(resource, opts);
             if (buildConfigName) {
-              url.segment("builds")
+              url.segment(typeSegment)
                 .segmentCoded(buildConfigName)
                 .segmentCoded(name);
             }
             else {
-              url.segment("builds-noconfig")
+              url.segment(typeSegment + "-noconfig")
                 .segmentCoded(name);
             }
             break;
           case "BuildConfig":
-            url.segment("builds")
+            url.segment(getBuildURLType(resource, opts))
               .segmentCoded(name);
             break;
           case "DeploymentConfig":
@@ -158,6 +178,38 @@ angular.module("openshiftConsole")
         }
         return url.toString();
       },
+
+      // Returns the build config URL for a build or the deployment config URL for a deployment.
+      configURLForResource: function(resource, /* optional */ action) {
+        var bc, dc,
+            kind = _.get(resource, 'kind'),
+            namespace = _.get(resource, 'metadata.namespace');
+        if (!kind || !namespace) {
+          return null;
+        }
+
+        switch (kind) {
+        case 'Build':
+          bc = buildConfigForBuild(resource);
+          if (!bc) {
+            return null;
+          }
+
+          return this.resourceURL(bc, 'BuildConfig', namespace, action, {
+            isPipeline: isPipeline(resource)
+          });
+
+        case 'ReplicationController':
+          dc = annotation(resource, 'deploymentConfig');
+          if (!dc) {
+            return null;
+          }
+          return this.resourceURL(dc, 'DeploymentConfig', namespace, action);
+        }
+
+        return null;
+      },
+
       /**
        * Navigate to a list view for a resource type
        *

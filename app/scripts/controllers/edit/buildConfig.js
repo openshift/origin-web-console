@@ -61,23 +61,38 @@ angular.module('openshiftConsole')
       "id": "inline",
       "title": "Inline"
     }];
+
     $scope.breadcrumbs = [
       {
         title: $routeParams.project,
         link: "project/" + $routeParams.project
-      },
-      {
-        title: "Builds",
-        link: "project/" + $routeParams.project + "/browse/builds"
-      },
-      {
-        title: $routeParams.buildconfig,
-        link: "project/" + $routeParams.project + "/browse/builds/" + $routeParams.buildconfig
-      },
-      {
-        title: "Edit"
       }
     ];
+
+    if ($routeParams.isPipeline) {
+      $scope.breadcrumbs.push({
+        title: "Pipelines",
+        link: "project/" + $routeParams.project + "/browse/pipelines"
+      });
+      $scope.breadcrumbs.push({
+        title: $routeParams.buildconfig,
+        link: "project/" + $routeParams.project + "/browse/pipelines/" + $routeParams.buildconfig
+      });
+    } else {
+      $scope.breadcrumbs.push({
+        title: "Builds",
+        link: "project/" + $routeParams.project + "/browse/builds"
+      });
+      $scope.breadcrumbs.push({
+        title: $routeParams.buildconfig,
+        link: "project/" + $routeParams.project + "/browse/builds/" + $routeParams.buildconfig
+      });
+    }
+
+    $scope.breadcrumbs.push({
+      title: "Edit"
+    });
+
     $scope.buildFrom = {
       projects: [],
       imageStreams: [],

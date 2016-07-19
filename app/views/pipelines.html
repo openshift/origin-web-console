@@ -1,0 +1,96 @@
+<project-header class="top-header"></project-header>
+<project-page>
+
+<!-- Middle section -->
+<div class="middle-section">
+  <div id="scrollable-content" class="middle-container has-scroll">
+    <div class="middle-content pipelines-page">
+      <div class="container-fluid">
+        <div class="row">
+          <div class="col-md-12">
+            <div class="page-header page-header-bleed-right page-header-bleed-left">
+              <h1>Pipelines</h1>
+            </div>
+            <alerts alerts="alerts"></alerts>
+            <div ng-if="!(buildConfigs | hashSize)" class="mar-top-lg">
+              <div ng-if="!buildConfigsLoaded">
+                Loading...
+              </div>
+              <div ng-if="buildConfigsLoaded" class="empty-state-message text-center">
+                <h2>No pipelines.</h2>
+                <p>
+                  No pipelines have been added to project {{projectName}}.
+                </p>
+                <p>
+                  <a ng-href="project/{{projectName}}/create" class="btn btn-lg btn-primary">
+                    Add to Project
+                  </a>
+                </p>
+              </div>
+            </div>
+            <div ng-repeat="(buildConfigName, buildConfig) in buildConfigs"
+                 ng-if="!buildConfig || (buildConfig | isJenkinsPipelineStrategy)"
+                 class="animate-repeat">
+              <div ng-if="buildConfig">
+                <div class="pull-right">
+                  <button
+                      class="btn btn-default"
+                      ng-if="'buildconfigs/instantiate' | canI : 'create'"
+                      ng-click="startBuild(buildConfigName)">
+                    Start Pipeline
+                  </button>
+                </div>
+                <h2>
+                  <a ng-href="{{buildConfig | navigateResourceURL}}">{{buildConfigName}}</a>
+                  <small>created <relative-timestamp timestamp="buildConfig.metadata.creationTimestamp"></relative-timestamp></small>
+                </h2>
+                <div ng-if="buildConfig.spec.source.git.uri">
+                  Source Repository:
+                  <span ng-bind-html='buildConfigs[buildConfigName].spec.source.git.uri | githubLink : buildConfigs[buildConfigName].spec.source.git.ref : buildConfigs[buildConfigName].spec.source.contextDir | linky' class="source-repo"></span>
+                </div>
+              </div>
+              <!-- Handle missing build configs -->
+              <div ng-if="!buildConfig">
+                <h2>{{buildConfigName}}</h2>
+                <!-- Only show the alert once the build configs have loaded to avoid flicker if builds load first. -->
+                <div ng-if="buildConfigsLoaded" class="alert alert-warning">
+                  <span class="pficon pficon-warning-triangle-o" aria-hidden="true"></span>
+                  <span class="sr-only">Warning:</span>
+                  Build config <strong>{{buildConfigName}}</strong> no longer exists.
+                </div>
+              </div>
+              <div ng-if="buildsLoaded && !(interestingBuildsByConfig[buildConfigName] | hashSize)">
+                <em>No pipeline builds have run for {{buildConfigName}}.</em>
+              </div>
+              <div ng-if="interestingBuildsByConfig[buildConfigName] | hashSize">
+                <div ng-if="!(statsByConfig[buildConfigName].avgDuration | isNil)" class="hidden-xs pull-right text-muted">
+                  Average Duration:
+                  {{statsByConfig[buildConfigName].avgDuration | timeOnlyDuration}}
+                </div>
+                <h4>
+                  Recent Runs
+                  <small ng-if="!(statsByConfig[buildConfigName].avgDuration | isNil)" class="visible-xs-block mar-top-xs text-muted">
+                    Average Duration:
+                    {{statsByConfig[buildConfigName].avgDuration | timeOnlyDuration}}
+                  </small>
+                </h4>
+                <div ng-repeat="build in (interestingBuildsByConfig[buildConfigName] | orderObjectsByDate : true) track by (build | uid)"
+                     class="animate-repeat">
+                  <build-pipeline build="build"></build-pipeline>
+                </div>
+                <div ng-if="buildConfig" class="mar-top-sm">
+                  <a ng-href="{{buildConfigs[buildConfigName] | navigateResourceURL}}">View History</a>
+                  <span ng-if="'buildconfigs' | canI : 'update'">
+                    <span class="action-divider">|</span>
+                    <a ng-href="{{buildConfig | editResourceURL}}" role="button">Edit Pipeline</a>
+                  </span>
+                </div>
+              </div>
+            </div>
+          </div><!-- /col-* -->
+        </div>
+      </div>
+    </div><!-- /middle-content -->
+  </div><!-- /middle-container -->
+</div><!-- /middle-section -->
+</project-page>

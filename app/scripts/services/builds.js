@@ -4,6 +4,7 @@ angular.module("openshiftConsole")
   .factory("BuildsService", function(DataService, $filter){
 
     var annotation = $filter('annotation');
+    var buildConfigForBuild = $filter('buildConfigForBuild');
 
     var startBuild = function(buildConfigName, context) {
       var req = {
@@ -89,6 +90,61 @@ angular.module("openshiftConsole")
           });
     };
 
+    var isNewer = $filter('isNewerResource');
+    var latestBuildByConfig = function(builds, /* optional */ filter) {
+      var latestByConfig = {};
+      _.each(builds, function(build) {
+        var buildConfigName = buildConfigForBuild(build) || "";
+        if (filter && !filter(build)) {
+          return;
+        }
+
+        if (isNewer(build, latestByConfig[buildConfigName])) {
+          latestByConfig[buildConfigName] = build;
+        }
+      });
+
+      return latestByConfig;
+    };
+
+    var getBuildNumber = function(build) {
+      var buildNumber = annotation(build, 'buildNumber') || parseInt(build.metadata.name.match(/(\d+)$/), 10);
+      if (isNaN(buildNumber)) {
+        return null;
+      }
+
+      return buildNumber;
+    };
+
+    var getStartTimestsamp = function(build) {
+      return build.status.startTimestamp || build.metadata.creationTimestamp;
+    };
+
+    var nsToMS = function(duration) {
+      // build.duration is returned in nanoseconds. Convert to ms.
+      // 1000 nanoseconds per microsecond
+      // 1000 microseconds per millisecond
+      return _.round(duration / 1000 / 1000);
+    };
+
+    var getDuration = function(build) {
+      // Use build.status.duration if available.
+      var duration = _.get(build, 'status.duration');
+      if (duration) {
+        // Convert duration from ns to ms.
+        return nsToMS(duration);
+      }
+
+      // Fall back to comparing start timestamp to end timestamp.
+      var startTimestamp = getStartTimestsamp(build);
+      var endTimestamp = build.status.completionTimestamp;
+      if (!startTimestamp || !endTimestamp) {
+        return 0;
+      }
+
+      return moment(endTimestamp).diff(moment(startTimestamp));
+    };
+
     return {
       startBuild: startBuild,
       cancelBuild: cancelBuild,
@@ -96,7 +152,10 @@ angular.module("openshiftConsole")
       isPaused: isPaused,
       canBuild: canBuild,
       usesDeploymentConfigs: usesDeploymentConfigs,
-      validatedBuildsForBuildConfig: validatedBuildsForBuildConfig
+      validatedBuildsForBuildConfig: validatedBuildsForBuildConfig,
+      latestBuildByConfig: latestBuildByConfig,
+      getBuildNumber: getBuildNumber,
+      getStartTimestsamp: getStartTimestsamp,
+      getDuration: getDuration
     };
-
   });

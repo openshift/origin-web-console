@@ -43,8 +43,8 @@
           </div>
           <div flex class="word-break">
             <span class="pod-template-key">Build:</span>
-            <span ng-if="build | buildConfigForBuild">
-              <a ng-href="{{(build | buildConfigForBuild) | navigateResourceURL : 'BuildConfig' : build.metadata.namespace}}">{{build | buildConfigForBuild}}</a>,
+            <span ng-if="build | configURLForResource">
+              <a ng-href="{{build | configURLForResource}}">{{build | buildConfigForBuild}}</a>,
             </span>
             <a ng-href="{{build | navigateResourceURL}}">
               <span ng-if="(build | annotation : 'buildNumber')">#{{build | annotation : 'buildNumber'}}</span>

@@ -55,7 +55,7 @@
           </dd>
         </div>
       </dl>
-      <h3>Configuration <span class="small" ng-if="buildConfigName">created from <a href="{{buildConfigName | navigateResourceURL : 'BuildConfig' : build.metadata.namespace}}">{{buildConfigName}}</a></span></h3>
+      <h3>Configuration <span class="small" ng-if="buildConfigName">created from <a href="{{build | configURLForResource}}">{{buildConfigName}}</a></span></h3>
       <dl class="dl-horizontal left">
         <dt>Build strategy:</dt>
         <dd>{{build.spec.strategy.type | startCase}}</dd>

@@ -7,21 +7,36 @@
  * Controller of the openshiftConsole
  */
 angular.module('openshiftConsole')
-  .controller('BuildConfigController', function ($scope, $routeParams, DataService, ProjectsService, BuildsService, $filter, LabelFilter, AlertMessageService) {
+  .controller('BuildConfigController', function ($scope,
+                                                 $filter,
+                                                 $routeParams,
+                                                 AlertMessageService,
+                                                 BuildsService,
+                                                 DataService,
+                                                 LabelFilter,
+                                                 ProjectsService) {
     $scope.projectName = $routeParams.project;
     $scope.buildConfigName = $routeParams.buildconfig;
     $scope.buildConfig = null;
     $scope.labelSuggestions = {};
     $scope.alerts = {};
-    $scope.breadcrumbs = [
-      {
+    $scope.breadcrumbs = [];
+
+    if ($routeParams.isPipeline) {
+      $scope.breadcrumbs.push({
+        title: "Pipelines",
+        link: "project/" + $routeParams.project + "/browse/pipelines"
+      });
+    } else {
+      $scope.breadcrumbs.push({
         title: "Builds",
         link: "project/" + $routeParams.project + "/browse/builds"
-      },
-      {
-        title: $routeParams.buildconfig
-      }
-    ];
+      });
+    }
+    $scope.breadcrumbs.push({
+      title: $routeParams.buildconfig
+    });
+
     $scope.emptyMessage = "Loading...";
 
     AlertMessageService.getAlerts().forEach(function(alert) {
@@ -64,7 +79,6 @@ angular.module('openshiftConsole')
             $scope.loaded = true;
             $scope.buildConfig = buildConfig;
             $scope.paused = BuildsService.isPaused($scope.buildConfig);
-
             if ($scope.buildConfig.spec.source.images) {
               $scope.imageSources = $scope.buildConfig.spec.source.images;
               $scope.imageSourcesPaths = [];

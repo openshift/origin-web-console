@@ -24,18 +24,33 @@ angular.module('openshiftConsole')
     $scope.renderOptions = {
       hideFilterWidget: true
     };
-    $scope.breadcrumbs = [
-      {
+
+    $scope.breadcrumbs = [];
+
+    if ($routeParams.isPipeline) {
+      $scope.breadcrumbs.push({
+        title: "Pipelines",
+        link: "project/" + $routeParams.project + "/browse/pipelines"
+      });
+
+      if ($routeParams.buildconfig) {
+        $scope.breadcrumbs.push({
+          title: $routeParams.buildconfig,
+          link: "project/" + $routeParams.project + "/browse/pipelines/" + $routeParams.buildconfig
+        });
+      }
+    } else {
+      $scope.breadcrumbs.push({
         title: "Builds",
         link: "project/" + $routeParams.project + "/browse/builds"
-      }
-    ];
-
-    if ($routeParams.buildconfig) {
-      $scope.breadcrumbs.push({
-        title: $routeParams.buildconfig,
-        link: "project/" + $routeParams.project + "/browse/builds/" + $routeParams.buildconfig
       });
+
+      if ($routeParams.buildconfig) {
+        $scope.breadcrumbs.push({
+          title: $routeParams.buildconfig,
+          link: "project/" + $routeParams.project + "/browse/builds/" + $routeParams.buildconfig
+        });
+      }
     }
 
     $scope.breadcrumbs.push({
@@ -67,6 +82,7 @@ angular.module('openshiftConsole')
       $scope.loaded = true;
       $scope.build = build;
       setLogVars(build);
+
       var buildNumber = $filter("annotation")(build, "buildNumber");
       if (buildNumber) {
         $scope.breadcrumbs[2].title = "#" + buildNumber;
