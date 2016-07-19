@@ -4099,7 +4099,7 @@ to{background-color:transparent}
 }
 @keyframes fadeInProgress{to{background-color:#0088ce}
 }
-@keyframes fadeInAborted{to{background-color:#e8e8e8}
+@keyframes fadeInAborted{to{background-color:#d1d1d1}
 }
 @keyframes fadeInNotExecuted{to{background-color:#d1d1d1}
 }
@@ -4147,7 +4147,7 @@ to{background-color:transparent}
 .pipeline-status-bar.NOT_EXECUTED .pipeline-circle:after{content:""}
 .pipeline-status-bar.PAUSED_PENDING_INPUT .clip1:before,.pipeline-status-bar.PAUSED_PENDING_INPUT .clip2:before,.pipeline-status-bar.PAUSED_PENDING_INPUT .inner-circle-fill,.pipeline-status-bar.PAUSED_PENDING_INPUT .pipeline-line:before{background-color:#f0ab00}
 .pipeline-status-bar.PAUSED_PENDING_INPUT .pipeline-circle:after{content:"\f04c";font-size:10px}
-.pipeline-status-bar.ABORTED .clip1:before,.pipeline-status-bar.ABORTED .clip2:before,.pipeline-status-bar.ABORTED .inner-circle-fill,.pipeline-status-bar.ABORTED .pipeline-line:before{background-color:#e8e8e8}
+.pipeline-status-bar.ABORTED .clip1:before,.pipeline-status-bar.ABORTED .clip2:before,.pipeline-status-bar.ABORTED .inner-circle-fill,.pipeline-status-bar.ABORTED .pipeline-line:before{background-color:#d1d1d1}
 .pipeline-status-bar.ABORTED .pipeline-circle{animation:fadeInAborted 0s .7s linear forwards}
 .pipeline-status-bar.ABORTED .pipeline-circle:after{content:"\f05e"}
 .pipeline-status-bar{display:flex;-webkit-align-items:center;-moz-align-items:center;align-items:center;-webkit-flex-direction:column;-moz-flex-direction:column;-ms-flex-direction:column;flex-direction:column;margin-bottom:-9px}
