@@ -19,7 +19,7 @@
                    class="dropdown-toggle actions-dropdown-kebab visible-xs-inline"
                    data-toggle="dropdown"><i class="fa fa-ellipsis-v"></i><span class="sr-only">Actions</span></a>
                 <ul class="dropdown-menu actions action-button">
-                  <li ng-if="!project || 'projects' | canI : 'update'">
+                  <li ng-if="project && 'projects' | canI : 'update'">
                     <a
                       href=""
                       role="button"
@@ -27,7 +27,7 @@
                       ng-click="setEditing(true)"
                       ng-class="{ 'disabled-link': show.editing }">Edit</a>
                   </li>
-                  <li ng-if="!project || 'projects' | canI : 'delete'">
+                  <li ng-if="project && 'projects' | canI : 'delete'">
                     <delete-link
                       class="button-delete"
                       kind="Project"
