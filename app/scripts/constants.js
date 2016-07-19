@@ -107,14 +107,15 @@ window.OPENSHIFT_CONSTANTS = {
                 "/browse/builds-noconfig/"
               ]
             },
-            {
-              label: "Pipeline Builds",
-              href: "/browse/builds", // TODO new page for this
-              prefixes: [
-                "/browse/builds/",
-                "/browse/builds-noconfig/"
-              ]
-            },
+            // TODO uncomment when new pipeline page is available and fixup URLs and prefixes
+            // {
+            //   label: "Pipeline Builds",
+            //   href: "/browse/builds",
+            //   prefixes: [
+            //     "/browse/builds/",
+            //     "/browse/builds-noconfig/"
+            //   ]
+            // },
             {
               label: "Images",
               href: "/browse/images",
@@ -134,7 +135,7 @@ window.OPENSHIFT_CONSTANTS = {
           items: [
             {
               label: "Quota",
-              href: "/quota"  // TODO need a new page fo this
+              href: "/quota"
             },
             {
               label: "Other Resources",
@@ -155,24 +156,26 @@ window.OPENSHIFT_CONSTANTS = {
     {
       label: "Monitoring",
       iconClass: "pficon pficon-screen",
-      secondaryNavSections: [
-        {
-          items: [
-            {
-              label: "Events",
-              href: "/browse/events"
-            },
-            {
-              label: "Logs",
-              href: "#" // TODO
-            },
-            {
-              label: "Metrics",
-              href: "#" // TODO
-            }         
-          ]
-        }
-      ]
+      href: "/browse/events"
+      // TODO uncomment when we have at least one of metrics or logs pages and then take off the href going straight to events
+      // secondaryNavSections: [
+      //   {
+      //     items: [
+      //       {
+      //         label: "Events",
+      //         href: "/browse/events"
+      //       },
+      //       {
+      //         label: "Logs",
+      //         href: "#" // TODO
+      //       },
+      //       {
+      //         label: "Metrics",
+      //         href: "#" // TODO
+      //       }         
+      //     ]
+      //   }
+      // ]
     }
   ]
 };

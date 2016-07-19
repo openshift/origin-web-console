@@ -2,9 +2,9 @@
 
 /**
  * @ngdoc function
- * @name openshiftConsole.controller:CreateProjectController
+ * @name openshiftConsole.controller:EditProjectController
  * @description
- * # CreateProjectController
+ * # EditProjectController
  * Controller of the openshiftConsole
  */
 angular.module('openshiftConsole')

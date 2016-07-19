@@ -1,7 +1,7 @@
 'use strict';
 
 angular.module('openshiftConsole')
-  .directive('sidebar', function($location, Constants) {
+  .directive('sidebar', function($location, $filter, Constants) {
     var itemMatchesPath = function(item, path) {
       return (item.href === path) || _.some(item.prefixes, function(prefix) {
             return _.startsWith(path, prefix);
@@ -32,6 +32,16 @@ angular.module('openshiftConsole')
             return false;
           });
         });
+
+        $scope.navURL = function(href) {
+          if (!href) {
+            return '';
+          }
+          if ($filter('isAbsoluteURL')(href)) {
+            return href;
+          }
+          return "/project/" + $scope.projectName + href;
+        };
       }
     };
   })

@@ -3,9 +3,9 @@
 
 /**
  * @ngdoc function
- * @name openshiftConsole.controller:ServicesController
+ * @name openshiftConsole.controller:QuotaController
  * @description
- * # ProjectController
+ * # QuotaController
  * Controller of the openshiftConsole
  */
 angular.module('openshiftConsole')

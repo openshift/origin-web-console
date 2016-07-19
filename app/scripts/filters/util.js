@@ -506,4 +506,12 @@ angular.module('openshiftConsole')
       }
       return _.filter(collection, predicate);
     };
+  })
+  .filter('isAbsoluteURL', function() {
+    return function(url) {
+      if (!url) {
+        return false;
+      }
+      return URI(url).is("absolute");
+    };
   });

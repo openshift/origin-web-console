@@ -91,11 +91,11 @@ var checkServiceCreated = function(projectName, serviceName) {
 };
 
 var checkProjectSettings = function(projectName, displayName, description) {
-  var uri = 'project/' + projectName + '/settings';
+  var uri = 'project/' + projectName + '/edit';
   h.goToPage(uri);
-  expect(element(by.css('.project-name')).getText()).toEqual(projectName);
-  expect(element(by.css('.project-display-name')).getText()).toEqual(displayName);
-  expect(element(by.css('.project-description')).getText()).toEqual(description);
+  expect(element(by.css('h1')).getText()).toEqual("Edit Project " + projectName);
+  expect(element(by.css('#displayName')).getAttribute('value')).toEqual(displayName);
+  expect(element(by.css('#description')).getAttribute('value')).toEqual(description);
 };
 
 
@@ -175,12 +175,6 @@ describe('', function() {
           // TODO: validate presented ports, routes, selectors
         });
 
-        it('should browse settings', function() {
-          h.goToPage('project/' + project['name'] + '/settings');
-          h.waitForPresence("h1", "Project Settings");
-          // TODO: validate presented project info, quota and resource info
-        });
-
         it('should validate taken name when trying to create', function() {
           goToCreateProjectPage();
           element(by.model('name')).clear().sendKeys(project['name']);
@@ -190,9 +184,9 @@ describe('', function() {
         });
 
         it('should delete a project', function() {
-          h.goToPage('project/' + project['name'] + '/settings');
-          element(by.css('.actions-dropdown-btn')).click();
-          element(by.css('.button-delete')).click();
+          h.goToPage('/');
+          var projectTile = element(by.cssContainingText(".tile-project", project.displayName));
+          projectTile.element(by.css('.fa-trash-o')).click();
           h.setInputValue('confirmName', project.name);
           var deleteButton = element(by.cssContainingText(".modal-dialog .btn", "Delete"));
           browser.wait(protractor.ExpectedConditions.elementToBeClickable(deleteButton), 2000);

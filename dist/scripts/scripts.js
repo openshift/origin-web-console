@@ -23,32 +23,73 @@ CLI:{
 },
 DEFAULT_HPA_CPU_TARGET_PERCENT:80,
 DISABLE_OVERVIEW_METRICS:!1,
-AVAILABLE_KINDS_BLACKLIST:[ "Binding", "Ingress", "DeploymentConfigRollback" ]
-}, angular.module("openshiftConsole", [ "ngAnimate", "ngCookies", "ngResource", "ngRoute", "ngSanitize", "ngTouch", "openshiftUI", "kubernetesUI", "ui.bootstrap", "patternfly.charts", "patternfly.sort", "openshiftConsoleTemplates", "ui.ace", "extension-registry", "as.sortable", "ui.select", "key-value-editor", "angular-inview" ]).constant("mainNavTabs", []).config([ "mainNavTabs", "$routeProvider", "HawtioNavBuilderProvider", function(a, b, c) {
-var d = function() {
-return "<sidebar-nav-item></sidebar-nav-item>";
-}, e = function(a) {
-return function() {
-var b = HawtioCore.injector;
-if (b) {
-var c = b.get("$routeParams");
-if (c.project) return "project/" + encodeURIComponent(c.project) + "/" + a;
-}
-return "project/:project/" + a;
-};
-}, f = "views", g = "openshiftConsole", h = c.create().id(c.join(g, "overview")).title(function() {
-return "Overview";
-}).template(d).href(e("overview")).page(function() {
-return c.join(f, "overview.html");
-}).build();
-h.icon = "dashboard", a.push(h), h = c.create().id(c.join(g, "browse")).title(function() {
-return "Browse";
-}).template(d).href(e("browse")).subPath("Builds", "builds", c.join(f, "builds.html")).subPath("Deployments", "deployments", c.join(f, "deployments.html")).subPath("Events", "events", c.join(f, "events.html")).subPath("Image Streams", "images", c.join(f, "images.html")).subPath("Pods", "pods", c.join(f, "pods.html")).subPath("Routes", "routes", c.join(f, "browse/routes.html")).subPath("Services", "services", c.join(f, "services.html")).subPath("Storage", "storage", c.join(f, "storage.html")).subPath("Other Resources", "other", c.join(f, "other-resources.html")).build(), h.icon = "sitemap", a.push(h), h = c.create().id(c.join(g, "settings")).title(function() {
-return "Settings";
-}).template(d).href(e("settings")).page(function() {
-return c.join(f, "settings.html");
-}).build(), h.icon = "sliders", a.push(h);
-} ]).config([ "$routeProvider", function(a) {
+AVAILABLE_KINDS_BLACKLIST:[ "Binding", "Ingress", "DeploymentConfigRollback" ],
+PROJECT_NAVIGATION:[ {
+label:"Overview",
+iconClass:"fa fa-dashboard",
+href:"/overview"
+}, {
+label:"Applications",
+iconClass:"fa fa-cubes",
+secondaryNavSections:[ {
+items:[ {
+label:"Deployments",
+href:"/browse/deployments",
+prefixes:[ "/browse/deployments/", "/browse/deployments-replicationcontrollers/" ]
+}, {
+label:"Pods",
+href:"/browse/pods",
+prefixes:[ "/browse/pods/" ]
+} ]
+}, {
+header:"Networking",
+items:[ {
+label:"Services",
+href:"/browse/services",
+prefixes:[ "/browse/services/" ]
+}, {
+label:"Routes",
+href:"/browse/routes",
+prefixes:[ "/browse/routes/" ]
+} ]
+} ]
+}, {
+label:"Builds",
+iconClass:"pficon pficon-build",
+secondaryNavSections:[ {
+items:[ {
+label:"Builds",
+href:"/browse/builds",
+prefixes:[ "/browse/builds/", "/browse/builds-noconfig/" ]
+}, {
+label:"Images",
+href:"/browse/images",
+prefixes:[ "/browse/images/" ]
+} ]
+} ]
+}, {
+label:"Resources",
+iconClass:"fa fa-files-o",
+secondaryNavSections:[ {
+items:[ {
+label:"Quota",
+href:"/quota"
+}, {
+label:"Other Resources",
+href:"/browse/other"
+} ]
+} ]
+}, {
+label:"Storage",
+iconClass:"pficon pficon-container-node",
+href:"/browse/storage",
+prefixes:[ "/browse/storage/" ]
+}, {
+label:"Monitoring",
+iconClass:"pficon pficon-screen",
+href:"/browse/events"
+} ]
+}, angular.module("openshiftConsole", [ "ngAnimate", "ngCookies", "ngResource", "ngRoute", "ngSanitize", "ngTouch", "openshiftUI", "kubernetesUI", "ui.bootstrap", "patternfly.charts", "patternfly.sort", "openshiftConsoleTemplates", "ui.ace", "extension-registry", "as.sortable", "ui.select", "key-value-editor", "angular-inview" ]).config([ "$routeProvider", function(a) {
 a.when("/", {
 templateUrl:"views/projects.html",
 controller:"ProjectsController"
@@ -62,9 +103,9 @@ return "/project/" + encodeURIComponent(a.project) + "/overview";
 }).when("/project/:project/overview", {
 templateUrl:"views/overview.html",
 controller:"OverviewController"
-}).when("/project/:project/settings", {
-templateUrl:"views/settings.html",
-controller:"SettingsController"
+}).when("/project/:project/quota", {
+templateUrl:"views/quota.html",
+controller:"QuotaController"
 }).when("/project/:project/browse", {
 redirectTo:function(a) {
 return "/project/" + encodeURIComponent(a.project) + "/browse/pods";
@@ -144,6 +185,9 @@ controller:"RouteController"
 }).when("/project/:project/create-route", {
 templateUrl:"views/create-route.html",
 controller:"CreateRouteController"
+}).when("/project/:project/edit", {
+templateUrl:"views/edit/project.html",
+controller:"EditProjectController"
 }).when("/project/:project/attach-pvc", {
 templateUrl:"views/attach-pvc.html",
 controller:"AttachPVCController"
@@ -202,8 +246,6 @@ screenXlgMin:1600
 a.interceptors.push("AuthInterceptor"), b.LoginService("RedirectLoginService"), b.LogoutService("DeleteTokenLogoutService"), b.UserStore("LocalStorageUserStore"), c.OAuthClientID(d.oauth_client_id), c.OAuthAuthorizeURI(d.oauth_authorize_uri), c.OAuthRedirectURI(URI(d.oauth_redirect_base).segment("oauth").toString()), f.WebSocketFactory = "ContainerWebSocket";
 } ]).config([ "$compileProvider", function(a) {
 a.aHrefSanitizationWhitelist(/^\s*(https?|mailto|git):/i);
-} ]).run([ "mainNavTabs", "HawtioNav", function(a, b) {
-for (var c = 0; c < a.length; c++) b.add(a[c]);
 } ]).run([ "$rootScope", "LabelFilter", function(a, b) {
 a.$on("$locationChangeSuccess", function(a) {
 b.setLabelSelector(new LabelSelector({}, (!0)), !0);
@@ -3367,50 +3409,12 @@ q.cancel(a);
 });
 });
 }));
-} ]), angular.module("openshiftConsole").controller("SettingsController", [ "$routeParams", "$scope", "DataService", "ProjectsService", "AlertMessageService", "$filter", "$location", "LabelFilter", "$timeout", "Logger", "annotationFilter", "annotationNameFilter", function(a, b, c, d, e, f, g, h, i, j, k, l) {
+} ]), angular.module("openshiftConsole").controller("QuotaController", [ "$routeParams", "$scope", "DataService", "ProjectsService", "Logger", function(a, b, c, d, e) {
 b.projectName = a.project, b.limitRanges = {}, b.limitsByType = {}, b.labelSuggestions = {}, b.alerts = b.alerts || {}, b.quotaHelp = "Limits resource usage within this project.", b.emptyMessageLimitRanges = "Loading...", b.limitRangeHelp = "Defines minimum and maximum constraints for runtime resources such as memory and CPU.", b.renderOptions = b.renderOptions || {}, b.renderOptions.hideFilterWidget = !0;
-var m = [];
-d.get(a.project).then(_.spread(function(e, g) {
-var h = function(a) {
-return {
-description:k(a, "description"),
-displayName:k(a, "displayName")
-};
-}, i = function(a, b) {
-var c = angular.copy(a);
-return c.metadata.annotations[l("description")] = b.description, c.metadata.annotations[l("displayName")] = b.displayName, c;
-};
-angular.extend(b, {
-project:e,
-editableFields:h(e),
-show:{
-editing:!1
-},
-actions:{
-canSubmit:!1
-},
-canSubmit:function(a) {
-b.actions.canSubmit = a;
-},
-setEditing:function(a) {
-b.show.editing = a;
-},
-cancel:function() {
-b.setEditing(!1), b.editableFields = h(e);
-},
-update:function() {
-b.setEditing(!1), d.update(a.project, i(e, b.editableFields)).then(function(a) {
-e = b.project = a, b.editableFields = h(a), b.$emit("project.settings.update", a);
-}, function(a) {
-b.editableFields = h(e), b.alerts.update = {
-type:"error",
-message:"An error occurred while updating the project",
-details:f("getErrorDetails")(a)
-};
-});
-}
-}), c.list("resourcequotas", g, function(a) {
-b.quotas = a.by("metadata.name"), j.log("quotas", b.quotas);
+var f = [];
+d.get(a.project).then(_.spread(function(d, g) {
+b.project = d, c.list("resourcequotas", g, function(a) {
+b.quotas = a.by("metadata.name"), e.log("quotas", b.quotas);
 }), c.list("appliedclusterresourcequotas", g, function(c) {
 b.clusterQuotas = c.by("metadata.name"), b.namespaceUsageByClusterQuota = {}, _.each(b.clusterQuotas, function(c, d) {
 if (c.status) {
@@ -3419,7 +3423,7 @@ namespace:a.project
 });
 b.namespaceUsageByClusterQuota[d] = e.status;
 }
-}), j.log("cluster quotas", b.clusterQuotas);
+}), e.log("cluster quotas", b.clusterQuotas);
 }), c.list("limitranges", g, function(a) {
 b.limitRanges = a.by("metadata.name"), b.emptyMessageLimitRanges = "There are no limit ranges set on this project.", angular.forEach(b.limitRanges, function(a, c) {
 b.limitsByType[c] = {}, angular.forEach(a.spec.limits, function(a) {
@@ -3436,9 +3440,9 @@ d[b] = d[b] || {}, d[b].defaultRequest = a;
 d[b] = d[b] || {}, d[b].maxLimitRequestRatio = a;
 });
 });
-}), j.log("limitRanges", b.limitRanges);
+}), e.log("limitRanges", b.limitRanges);
 }), b.$on("$destroy", function() {
-c.unwatchAll(m);
+c.unwatchAll(f);
 });
 }));
 } ]), angular.module("openshiftConsole").controller("BuildsController", [ "$routeParams", "$scope", "AlertMessageService", "DataService", "$filter", "LabelFilter", "Logger", "$location", "BuildsService", "ProjectsService", function(a, b, c, d, e, f, g, h, i, j) {
@@ -5417,6 +5421,46 @@ message:d
 }
 });
 };
+} ]), angular.module("openshiftConsole").controller("EditProjectController", [ "$scope", "$routeParams", "$filter", "$location", "DataService", "AlertMessageService", "ProjectsService", "Navigate", function(a, b, c, d, e, f, g, h) {
+a.alerts = {}, f.getAlerts().forEach(function(b) {
+a.alerts[b.name] = b.data;
+}), f.clearAlerts();
+var i = c("annotation"), j = c("annotationName");
+g.get(b.project).then(_.spread(function(e, f) {
+var k = function(a) {
+return {
+description:i(a, "description"),
+displayName:i(a, "displayName")
+};
+}, l = function(a, b) {
+var c = angular.copy(a);
+return c.metadata.annotations[j("description")] = b.description, c.metadata.annotations[j("displayName")] = b.displayName, c;
+};
+angular.extend(a, {
+project:e,
+editableFields:k(e),
+show:{
+editing:!1
+},
+actions:{
+canSubmit:!1
+},
+canSubmit:function(b) {
+a.actions.canSubmit = b;
+},
+update:function() {
+a.disableInputs = !0, g.update(b.project, l(e, a.editableFields)).then(function() {
+b.then ? d.path(b.then) :h.toProjectOverview(e.metadata.name);
+}, function(b) {
+a.disableInputs = !1, a.editableFields = k(e), a.alerts.update = {
+type:"error",
+message:"An error occurred while updating the project",
+details:c("getErrorDetails")(b)
+};
+});
+}
+});
+}));
 } ]), angular.module("openshiftConsole").controller("CreateRouteController", [ "$filter", "$routeParams", "$scope", "$window", "ApplicationGenerator", "DataService", "Navigate", "ProjectsService", function(a, b, c, d, e, f, g, h) {
 c.alerts = {}, c.renderOptions = {
 hideFilterWidget:!0
@@ -6682,22 +6726,30 @@ alerts:"="
 },
 templateUrl:"views/_overview-deployment.html"
 };
-}), angular.module("openshiftConsole").directive("sidebar", [ "HawtioNav", function(a) {
+}), angular.module("openshiftConsole").directive("sidebar", [ "$location", "$filter", "Constants", function(a, b, c) {
+var d = function(a, b) {
+return a.href === b || _.some(a.prefixes, function(a) {
+return _.startsWith(b, a);
+});
+};
 return {
 restrict:"E",
 templateUrl:"views/_sidebar.html",
-link:function(b) {
-var c = a.selected();
-c && (b.sidebarHeading = c.title());
-}
+controller:[ "$scope", function(e) {
+var f = a.path().replace("/project/" + e.projectName, "");
+e.activeSecondary, e.navItems = c.PROJECT_NAVIGATION, e.activePrimary = _.find(e.navItems, function(a) {
+return d(a, f) ? (e.activeSecondary = null, !0) :_.some(a.secondaryNavSections, function(a) {
+var b = _.find(a.items, function(a) {
+return d(a, f);
+});
+return !!b && (e.activeSecondary = b, !0);
+});
+}), e.navURL = function(a) {
+return a ? b("isAbsoluteURL")(a) ? a :"/project/" + e.projectName + a :"";
 };
-} ]).directive("sidebarNavItem", function() {
-return {
-restrict:"E",
-replace:!0,
-templateUrl:"views/_sidebar-main-nav-item.html"
+} ]
 };
-}).directive("projectHeader", [ "$timeout", "$location", "$filter", "DataService", "projectOverviewURLFilter", function(a, b, c, d, e) {
+} ]).directive("projectHeader", [ "$timeout", "$location", "$filter", "DataService", "projectOverviewURLFilter", function(a, b, c, d, e) {
 var f = {}, g = [];
 return {
 restrict:"EA",
@@ -6788,15 +6840,7 @@ a.history.back();
 });
 }
 };
-} ]).directive("oscSecondaryNav", function() {
-return {
-restrict:"A",
-scope:{
-tabs:"="
-},
-templateUrl:"views/directives/osc-secondary-nav.html"
-};
-}), angular.module("openshiftConsole").directive("alerts", function() {
+} ]), angular.module("openshiftConsole").directive("alerts", function() {
 return {
 restrict:"E",
 scope:{
@@ -9766,6 +9810,10 @@ return null === a || void 0 === a ? a :_.round(100 * Number(a), b) + "%";
 }).filter("filterCollection", function() {
 return function(a, b) {
 return a && b ? _.filter(a, b) :a;
+};
+}).filter("isAbsoluteURL", function() {
+return function(a) {
+return !!a && URI(a).is("absolute");
 };
 }), angular.module("openshiftConsole").filter("camelToLower", function() {
 return function(a) {

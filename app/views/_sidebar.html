@@ -1,7 +1,7 @@
 <nav class="navbar navbar-sidebar">
     <ul class="nav nav-sidenav-primary">
-      <li ng-repeat="primaryItem in navItems" ng-class="{ active: primaryItem === activePrimary }"> <!-- TODO active -->
-        <a ng-if="primaryItem.href" ng-href="/project/{{projectName}}{{primaryItem.href}}">
+      <li ng-repeat="primaryItem in navItems" ng-class="{ active: primaryItem === activePrimary }">
+        <a ng-if="primaryItem.href" ng-href="{{navURL(primaryItem.href)}}">
           <span class="{{primaryItem.iconClass}}"></span> {{primaryItem.label}}
         </a>
         <a ng-if="!primaryItem.href" href="" data-toggle="dropdown" class="dropdown-toggle">
@@ -13,7 +13,7 @@
               {{secondarySection.header}}
             </li>
             <li ng-repeat="secondaryItem in secondarySection.items" ng-class="{ active: secondaryItem === activeSecondary }">
-              <a ng-href="{{secondaryItem.href ? ('/project/' + projectName + secondaryItem.href) : ''}}">{{secondaryItem.label}}</a>
+              <a ng-href="{{navURL(secondaryItem.href)}}">{{secondaryItem.label}}</a>
             </li>
             <li ng-repeat-end style="display:none;"></li>
           </ul>
@@ -24,7 +24,7 @@
               {{secondarySection.header}}
             </li>
             <li ng-repeat="secondaryItem in secondarySection.items" ng-class="{ active: secondaryItem === activeSecondary }">
-              <a ng-href="{{secondaryItem.href ? ('/project/' + projectName + secondaryItem.href) : ''}}">{{secondaryItem.label}}</a>
+              <a ng-href="{{navURL(secondaryItem.href)}}">{{secondaryItem.label}}</a>
             </li>
             <li ng-repeat-end style="display:none;"></li>
           </ul>
