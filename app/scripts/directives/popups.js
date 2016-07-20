@@ -34,6 +34,9 @@ angular.module('openshiftConsole')
                 });
               }
               $(element).popover(popupConfig);
+              $scope.$on('$destroy', function(){
+                $(element).popover("destroy");
+              });
               break;
             case "tooltip":
               // If dynamic-content attr is set at all, even if it hasn't evaluated to a value
@@ -54,6 +57,9 @@ angular.module('openshiftConsole')
                 });
               }
               $(element).tooltip(popupConfig);
+              $scope.$on('$destroy', function(){
+                $(element).tooltip("destroy");
+              });
               break;
             case "dropdown":
               if (attrs.hover === "dropdown") {
@@ -64,6 +70,7 @@ angular.module('openshiftConsole')
           }
         }
       }
+
     };
   })
   .directive('podWarnings', function(podWarningsFilter) {
