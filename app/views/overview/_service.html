@@ -1,14 +1,16 @@
 <div ng-if="!(visibleDeploymentsByConfig | hashSize) && !(monopodsByService[service.metadata.name] | hashSize)" class="no-deployments-block">
-  <div class="no-deployments-message">
-    <h2>No deployments.</h2>
-    <p>
-      There are no deployments or pods for service
-      <a ng-href="{{service | navigateResourceURL}}">{{service.metadata.name}}</a>.
-    </p>
+  <div column class="no-deployments-message">
+    <div class="pad-left-lg pad-right-lg pad-top-lg pad-bottom-lg">
+      <h2>No deployments.</h2>
+      <p>
+        There are no deployments or pods for service
+        <a ng-href="{{service | navigateResourceURL}}">{{service.metadata.name}}</a>.
+      </p>
+    </div>
   </div>
 </div>
 
-<div ng-attr-row="{{!service ? '' : undefined}}" ng-attr-wrap="{{!service ? '' : undefined}}" ng-class="{'no-service': !service}">
+<div ng-attr-row="{{!service ? '' : undefined}}" ng-attr-wrap="{{!service ? '' : undefined}}" ng-class="{'no-service': !service, 'service-multiple-targets': (visibleDeploymentsByConfig | hashSize) + (monopodsByService[service.metadata.name] | hashSize) > 1}" class="deployment-block">
   <div ng-repeat="(dcName, deployments) in visibleDeploymentsByConfig" class="deployment-tile-wrapper">
     <!-- visible deployments with a dc -->
     <overview-deployment-config ng-if="dcName"></overview-deployment-config>

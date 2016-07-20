@@ -4,6 +4,7 @@
 @shield-border-color:  @overview-border-gray;
 @shield-width:         36px;
 @shield-width-lg:      50px;
+@service-group-margin: 4px;
 
 .overview {
   font-weight: 300;
@@ -47,8 +48,9 @@
     margin-top: 5px;
   }
   .service-group {
-    margin-bottom: 20px;
+    margin-bottom: 25px;
     position: relative;
+    width: 100%;
     &:before {
       content: "";
       display: block;
@@ -56,7 +58,7 @@
       width: 3px;
       position: absolute;
       background: #00b9e4;
-      left: 0px;
+      left: -2px;
       z-index: 1;
     }
     .alert-wrapper {
@@ -66,6 +68,7 @@
         width: 100%;
         border-color: @overview-border-gray;
         margin-bottom: 0;
+        margin-top: @service-group-margin;
         box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1);
         .pficon {
           box-shadow: none;
@@ -79,6 +82,12 @@
       //   width: 50%;
       // }
     }
+  }
+  overview-replication-controller,
+  overview-pod,
+  overview-deployment-config {
+    .flex-display(@display: flex);
+    width: 100%;
   }
   .service-group-header,
   .deployment-tile,
@@ -97,59 +106,94 @@
   .standalone-service {
     width: 100%;
     @media (min-width: @screen-sm-min) {
-      width: 50%;
-
-      &:nth-child(odd) {
-          padding-right: 5px;
-      }
-
-      &:nth-child(even) {
-          padding-left: 5px;
-      }
-
+      .flex(@columns: 0 0 49%);
+    } 
+    @media (min-width: @screen-md-min) {
+      .flex(@columns: 0 0 49.375%);
     }
-    .service-group-body .overview-services {
-      overview-service {
-        max-width: none;
+    .no-child-services-message {
+      display: none;
+    }
+    overview-service {
+      .flex(@columns: 0 0 100%) !important;
+    }
+    overview-service-group {
+      .flex-display(@display: flex);
+    }
+    .service-group > div {
+      .flex-display(@display: flex);
+      .flex-direction(@direction: column);
+      height: 100%;
+    }
+    .service-group-body {
+      margin-top: 0;
+      .overview-services .primary-service {
+        .deployment-block {
+          .flex-display(@display: flex);
+        }
       }
-      .deployment-tile {
-        margin-top: 0;
+    }
+    .alert-wrapper .alert {
+      margin-bottom: @service-group-margin;
+      margin-top: 0;
+    }
+    .service-group-body {
+      .flex-display(@display: flex);
+      .flex-direction(@direction: column);
+      width: 100%;
+      .overview-services {
+        .flex-direction(@direction: row);
+        @media (min-width: @screen-sm-min) {
+          min-height: 345px;
+        }
+        @media (min-width: @screen-md-min) {
+          min-height: 255px;
+        }
+        overview-service,.no-child-services-message {
+          max-width: none;
+          margin-top: 0;
+        }
       }
     }
   }
+  .overview-monopods {
+    .justify-content(@justify: space-between);
+  }
   .no-service {
+    .flex-display(@display: flex);
     width: 100%;
-    margin-bottom: 10px;
-
-    @media (min-width: @screen-sm-min) {
-      width: 50%;
-
-      &:nth-child(odd) {
-          padding-right: 5px;
-      }
-
-      &:nth-child(even) {
-          padding-left: 5px;
-      }
+    margin-bottom: 20px;
+    position: relative;
+    &:before {
+      content: "";
+      display: block;
+      height: 100%;
+      width: 3px;
+      position: absolute;
+      background: #00b9e4;
+      left: -2px;
+      top: 0;
+      z-index: 1;
     }
+    @media (min-width: @screen-sm-min) {
+      .flex(@columns: 0 0 49%);
+    } 
+    @media (min-width: @screen-md-min) {
+      .flex(@columns: 0 0 49.375%);
+    }   
     .deployment-tile-wrapper {
       width: 100%;
-
-      .deployment-tile {
-        border-left: 3px solid #00b9e4;
-        height: 100%;
-        margin-top: 0;
-      }
     }
   }
   .service-group-header {
     cursor: pointer;
+    .flex-display(@display: flex);
     .justify-content(@justify: space-between);
     padding: 10px;
     .route-title {
       line-height: 1.4;
       // Margin at mobile if there is an app name. The route is stacked below the app name.
-      margin: 10px 0 0 6px;
+      margin: 0 0 0 6px;
       &:only-child {
         // Margin without app name.
         margin: 0;
@@ -217,9 +261,6 @@
     }
     .stages {
       .flex-display(@display: flex);
-      // @media (max-width: 567px) {
-      //   flex-basis: 100%;
-      // }
     }
     .timestamp {
       .text-muted();
@@ -239,16 +280,39 @@
   }
   .service-group-body {
     border-top-width: 0;
+    margin-top: @service-group-margin;
     padding: 0;
     .overview-services {
+      .justify-content(@justify: space-between);
+      .flex-display(@display: flex);
       .flex-wrap(@wrap: wrap);
-      // Put margins between the services, but make them flush with the left
-      // border even when they wrap.
-      margin-left: -10px;
       .flex-direction(@direction: column);
+      overview-service {
+        &:nth-child(n+3) {
+          margin-top: @service-group-margin;
+        }
+        @media (max-width: 567px) {
+          &:nth-child(n+2) {
+            margin-top: @service-group-margin;
+          }
+        }
+      }
+      .deployment-block {
+        .flex-display(@display: flex);
+        .flex(@columns: 1 0 0%);
+        &.service-multiple-targets {
+          display: block;
+        }
+      }
+      .deployment-tile-wrapper {
+        .flex-display(@display: flex);
+        .flex(@columns: 1 0 0%);
+        + .deployment-tile-wrapper {
+          margin-top: @service-group-margin;
+        }
+      }
       .deployment-tile {
-        margin-left: 10px;
-        margin-top: 10px;
+        .flex(@columns: 1 0 0%);
         position: relative;
       }
     }
@@ -256,12 +320,29 @@
       .overview-services {
         .flex-direction(@direction: row);
         overview-service {
-          max-width: 50%;
-          min-width: 50%;
+          .flex-display(@display: flex);
+          .flex(@columns: 0 0 49%);
+          .flex-direction(@direction: row);
+          &:nth-child(even) {
+            margin-left: 10px;
+          }
+        }
+        &.grouped overview-service {
+          .flex(@columns: 0 0 50%);
+          &:nth-child(even) {
+            margin-left: 0;
+            .deployment-tile {
+              border-left: 0;
+            }
+          }
         }
       }
-      .no-child-services-message {
-        display: block;
+    }
+    @media (min-width: @screen-md-min) {
+      .overview-services {
+        overview-service {
+         .flex(@columns: 0 0 49.375%);
+        }
       }
     }
   }
@@ -291,6 +372,7 @@
   }
   .deployment-tile {
     border-left: 1px solid @overview-border-gray;
+    width: 100%;
     .deployment-header {
       .text-muted();
       position: relative;
@@ -302,7 +384,6 @@
     .deployment-body {
       .flex-direction(@direction: column);
       padding: 10px;
-      min-height: 227px;
       position: relative;
       .deployment-donut {
         .align-items(@align: center);
@@ -310,7 +391,6 @@
       @media (min-width: @screen-md-min) {
         .flex-direction(@direction: row);
         .justify-content(@justify: flex-end);
-        min-height: 164px;
       }
     }
     .overview-donut, .overview-metrics {
@@ -361,7 +441,6 @@
       }
       .overview-donut {
         .flex(@columns: 1 1 0%);
-        overflow: hidden;
         .flex-order(@order: 2);
         max-width: 50%;
         min-height: 150px;
@@ -410,33 +489,44 @@
     }
   }
   .no-deployments-block {
-    margin-left: 10px;
+    .flex-display(@display: flex);
+    width: 100%;
   }
   .no-child-services-message, .no-deployments-message {
     .text-center();
     .text-muted();
     .well();
     .justify-content(@justify: center);
-    margin: 10px 0 0 10px;
-
-    padding: 30px;
-    // .blank-state-icon {
-    //   font-size: 60px;
-    //   .pficon {
-    //     vertical-align: sub;
-    //   }
-    // }
+    margin-bottom: 0;
+    padding: 0; // negate .well default padding to maintain equal widths
     h2 {
-      margin-top: 0;
+      &:first-child {
+        margin-top: 15px;
+      }
+      @media (min-width: 568px) {
+        margin-top: 0;
+      }
+    }
+  }
+  .no-deployments-message {
+    .flex(@columns: 1 0 0%); // the parent overview-service is where width with flex-basis is set.
+  }
+  .no-child-services-message {
+    @media (min-width: @screen-sm-min) {
+      .flex(@columns: 0 0 49%);
+    } 
+    @media (min-width: @screen-md-min) {
+      .flex(@columns: 0 0 49.375%);
     }
   }
   .no-child-services-message {
     display: none;
     @media (min-width: 568px) {
-      display: block;
+      .flex-display(@display: flex);
+      margin: 0 0 0 10px;
     }
   }
-  .standalone-service .no-child-services-message {
+  .no-service .no-child-services-message {
     display: none;
   }
   @media (min-width: @screen-md-min) {
@@ -494,6 +584,9 @@
         width: 250px;
       }
     }
+  }
+  .overview-standalone-service {
+    .justify-content(@justify: space-between);
   }
   .standalone-service .no-deployments-block {
     margin-left: 0;
