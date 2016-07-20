@@ -583,26 +583,39 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
   );
 
 
-  $templateCache.put('views/_sidebar-main-nav-item.html',
-    "<li ng-class=\"{ active: item.isSelected() }\">\n" +
-    "<a ng-href=\"{{item.href()}}\" ng-click=\"item.click($event);\" ng-attr-data-toggle=\"{{item.tabs.length ? 'dropdown' : undefined}}\" ng-class=\"{'dropdown-toggle': item.tabs.length}\">\n" +
-    "<span class=\"fa fa-{{item.icon}} fa-fw\"></span> {{item.title()}} <span class=\"fa fa-angle-right\" ng-if=\"item.tabs.length\"></span>\n" +
-    "</a>\n" +
-    "<div ng-if=\"item.tabs.length\" class=\"hover-nav dropdown-menu hidden-xs\">\n" +
-    "<ul class=\"nav nav-sidenav-secondary\" osc-secondary-nav tabs=\"item.tabs\">\n" +
-    "</ul>\n" +
-    "</div>\n" +
-    "<div ng-if=\"item.tabs.length\" class=\"hover-nav visible-xs-block\">\n" +
-    "<ul class=\"nav nav-sidenav-secondary\" osc-secondary-nav tabs=\"item.tabs\">\n" +
-    "</ul>\n" +
-    "</div>\n" +
-    "</li>"
-  );
-
-
   $templateCache.put('views/_sidebar.html',
     "<nav class=\"navbar navbar-sidebar\">\n" +
-    "<ul class=\"nav nav-sidenav-primary\" hawtio-main-nav>\n" +
+    "<ul class=\"nav nav-sidenav-primary\">\n" +
+    "<li ng-repeat=\"primaryItem in navItems\" ng-class=\"{ active: primaryItem === activePrimary }\">\n" +
+    "<a ng-if=\"primaryItem.href\" ng-href=\"{{navURL(primaryItem.href)}}\">\n" +
+    "<span class=\"{{primaryItem.iconClass}}\"></span> {{primaryItem.label}}\n" +
+    "</a>\n" +
+    "<a ng-if=\"!primaryItem.href\" href=\"\" data-toggle=\"dropdown\" class=\"dropdown-toggle\">\n" +
+    "<span class=\"{{primaryItem.iconClass}}\"></span> {{primaryItem.label}} <span class=\"fa fa-angle-right\"></span>\n" +
+    "</a>\n" +
+    "<div ng-if=\"primaryItem.secondaryNavSections.length\" class=\"hover-nav dropdown-menu hidden-xs\">\n" +
+    "<ul class=\"nav nav-sidenav-secondary\">\n" +
+    "<li ng-repeat-start=\"secondarySection in primaryItem.secondaryNavSections\" ng-if=\"secondarySection.header\" class=\"dropdown-header\">\n" +
+    "{{secondarySection.header}}\n" +
+    "</li>\n" +
+    "<li ng-repeat=\"secondaryItem in secondarySection.items\" ng-class=\"{ active: secondaryItem === activeSecondary }\">\n" +
+    "<a ng-href=\"{{navURL(secondaryItem.href)}}\">{{secondaryItem.label}}</a>\n" +
+    "</li>\n" +
+    "<li ng-repeat-end style=\"display:none\"></li>\n" +
+    "</ul>\n" +
+    "</div>\n" +
+    "<div ng-if=\"primaryItem.secondaryNavSections.length\" class=\"hover-nav visible-xs-block\">\n" +
+    "<ul class=\"nav nav-sidenav-secondary\">\n" +
+    "<li ng-repeat-start=\"secondarySection in primaryItem.secondaryNavSections\" ng-if=\"secondarySection.header\" class=\"dropdown-header\">\n" +
+    "{{secondarySection.header}}\n" +
+    "</li>\n" +
+    "<li ng-repeat=\"secondaryItem in secondarySection.items\" ng-class=\"{ active: secondaryItem === activeSecondary }\">\n" +
+    "<a ng-href=\"{{navURL(secondaryItem.href)}}\">{{secondaryItem.label}}</a>\n" +
+    "</li>\n" +
+    "<li ng-repeat-end style=\"display:none\"></li>\n" +
+    "</ul>\n" +
+    "</div>\n" +
+    "</li>\n" +
     "</ul>\n" +
     "\n" +
     "<navbar-utility-mobile></navbar-utility-mobile>\n" +
@@ -5663,13 +5676,6 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
   );
 
 
-  $templateCache.put('views/directives/osc-secondary-nav.html',
-    "<li ng-repeat=\"tab in tabs\" ng-class=\"{ active: tab.isSelected() }\">\n" +
-    "<a ng-href=\"{{tab.href()}}\" ng-click=\"tab.click($event);\">{{tab.title()}}</a>\n" +
-    "</li>"
-  );
-
-
   $templateCache.put('views/directives/overview-pipeline.html',
     "<div>\n" +
     "<div class=\"overview-pipeline\">\n" +
@@ -6402,6 +6408,48 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "</fieldset>\n" +
     "</form>\n" +
     "</div>\n" +
+    "</div>\n" +
+    "</div>\n" +
+    "</div>\n" +
+    "</div>\n" +
+    "</div>\n" +
+    "</div>\n" +
+    "</div>"
+  );
+
+
+  $templateCache.put('views/edit/project.html',
+    "<default-header class=\"top-header\"></default-header>\n" +
+    "<div class=\"wrap no-sidebar\">\n" +
+    "<div class=\"sidebar-left collapse navbar-collapse navbar-collapse-2\">\n" +
+    "<navbar-utility-mobile></navbar-utility-mobile>\n" +
+    "</div>\n" +
+    "<div class=\"middle\">\n" +
+    "\n" +
+    "<div class=\"middle-section surface-shaded\">\n" +
+    "<div class=\"middle-container has-scroll\">\n" +
+    "<div class=\"middle-content\">\n" +
+    "<div class=\"container surface-shaded gutter-top\">\n" +
+    "<div class=\"col-md-12\">\n" +
+    "<h1 style=\"margin-bottom: 5px\">Edit Project {{project.metadata.name}}</h1>\n" +
+    "<div class=\"help-block mar-bottom-lg\">Update the display name and description of your project. The project's unique name cannot be modified.</div>\n" +
+    "<alerts alerts=\"alerts\"></alerts>\n" +
+    "<form name=\"editProjectForm\">\n" +
+    "<fieldset ng-disabled=\"disableInputs\">\n" +
+    "<div class=\"form-group\">\n" +
+    "<label for=\"displayName\">Display Name</label>\n" +
+    "<input class=\"form-control input-lg\" name=\"displayName\" id=\"displayName\" placeholder=\"My Project\" type=\"text\" ng-model=\"editableFields.displayName\">\n" +
+    "</div>\n" +
+    "<div class=\"form-group\">\n" +
+    "<label for=\"description\">Description</label>\n" +
+    "<textarea class=\"form-control input-lg\" name=\"description\" id=\"description\" placeholder=\"A short description.\" ng-model=\"editableFields.description\"></textarea>\n" +
+    "</div>\n" +
+    "<div class=\"button-group\">\n" +
+    "<button type=\"submit\" class=\"btn btn-primary btn-lg\" ng-click=\"update()\" ng-disabled=\"editProjectForm.$invalid || disableInputs\" value=\"\">Save</button>\n" +
+    "<a class=\"btn btn-default btn-lg\" href=\"#\" back>Cancel</a>\n" +
+    "</div>\n" +
+    "</fieldset>\n" +
+    "</form>\n" +
     "</div>\n" +
     "</div>\n" +
     "</div>\n" +
@@ -7630,7 +7678,13 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "<truncate-long-text content=\"project | description\" limit=\"512\" use-word-boundary=\"true\"></truncate-long-text>\n" +
     "</div>\n" +
     "</div>\n" +
-    "<div row flex main-axis=\"end\" class=\"project-delete\" ng-if=\"project.status.phase == 'Active'\">\n" +
+    "<div row flex main-axis=\"end\" class=\"project-actions\" ng-if=\"project.status.phase == 'Active'\">\n" +
+    "<span class=\"fa-lg mar-right-lg\">\n" +
+    "<a ng-href=\"project/{{project.metadata.name}}/edit\" class=\"action-button\">\n" +
+    "<i class=\"fa fa-pencil\" aria-hidden=\"true\"></i>\n" +
+    "<span class=\"sr-only\">Edit Project</span>\n" +
+    "</a>\n" +
+    "</span>\n" +
     "<delete-link class=\"fa-lg\" kind=\"Project\" resource-name=\"{{project.metadata.name}}\" project-name=\"{{project.metadata.name}}\" display-name=\"{{(project | displayName)}}\" type-name-to-confirm=\"true\" stay-on-current-page=\"true\" alerts=\"alerts\" button-only>\n" +
     "</delete-link>\n" +
     "</div>\n" +
@@ -7671,6 +7725,256 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "</div>\n" +
     "</div>\n" +
     "</div>"
+  );
+
+
+  $templateCache.put('views/quota.html',
+    "<project-header class=\"top-header\"></project-header>\n" +
+    "<project-page>\n" +
+    "\n" +
+    "<div class=\"middle-section\">\n" +
+    "<div id=\"scrollable-content\" class=\"middle-container has-scroll\">\n" +
+    "<div class=\"middle-header\">\n" +
+    "<div class=\"container-fluid\">\n" +
+    "<breadcrumbs breadcrumbs=\"breadcrumbs\"></breadcrumbs>\n" +
+    "<alerts alerts=\"alerts\"></alerts>\n" +
+    "</div>\n" +
+    "</div>\n" +
+    "<div class=\"middle-content\">\n" +
+    "<div class=\"container-fluid\">\n" +
+    "<div class=\"row\">\n" +
+    "<div class=\"col-md-12\">\n" +
+    "<h1>\n" +
+    "<span ng-if=\"clusterQuotas | hashSize\">Cluster </span>Quota\n" +
+    "</h1>\n" +
+    "<div ng-if=\"!(quotas | hashSize) && !(clusterQuotas | hashSize)\">\n" +
+    "<div class=\"help-block\">{{quotaHelp}}</div>\n" +
+    "<p><em ng-if=\"!quotas && !clusterQuotas\">Loading...</em><em ng-if=\"quotas || clusterQuotas\">There are no resource quotas set on this project.</em></p>\n" +
+    "</div>\n" +
+    "<div ng-repeat=\"quota in clusterQuotas | orderBy: 'metadata.name'\" class=\"gutter-bottom\">\n" +
+    "<h2 ng-if=\"(clusterQuotas | hashSize) > 1\">{{quota.metadata.name}}</h2>\n" +
+    "<div ng-if=\"$first\" class=\"help-block\">Limits resource usage across a set of projects.</div>\n" +
+    "<dl ng-if=\"quota.spec.quota.scopes.length\">\n" +
+    "<dt>Scopes:</dt>\n" +
+    "<dd>\n" +
+    "<div ng-repeat=\"scope in quota.spec.quota.scopes\">\n" +
+    "{{scope | startCase}}\n" +
+    "<span class=\"text-muted small\" ng-if=\"scope | scopeDetails\">&mdash; {{scope | scopeDetails}}</span>\n" +
+    "</div>\n" +
+    "</dd>\n" +
+    "</dl>\n" +
+    "<div>\n" +
+    "<div row wrap style=\"justify-content: center\">\n" +
+    "<div ng-if=\"quota.status.total.hard.cpu\" class=\"mar-lg\">\n" +
+    "<h3 class=\"text-center\">CPU <small>Request</small></h3>\n" +
+    "<quota-usage-chart height=\"240\" used=\"namespaceUsageByClusterQuota[quota.metadata.name].used.cpu\" total=\"quota.status.total.hard.cpu\" cross-project-used=\"quota.status.total.used.cpu\" type=\"cpu\" class=\"quota-chart\"></quota-usage-chart>\n" +
+    "</div>\n" +
+    "<div ng-if=\"quota.status.total.hard.memory\" class=\"mar-lg\">\n" +
+    "<h3 class=\"text-center\">Memory <small>Request</small></h3>\n" +
+    "<quota-usage-chart height=\"240\" used=\"namespaceUsageByClusterQuota[quota.metadata.name].used.memory\" cross-project-used=\"quota.status.total.used.memory\" total=\"quota.status.total.hard.memory\" type=\"memory\" class=\"quota-chart\"></quota-usage-chart>\n" +
+    "</div>\n" +
+    "<div ng-if=\"quota.status.total.hard['requests.cpu']\" class=\"mar-lg\">\n" +
+    "<h3 class=\"text-center\">CPU <small>Request</small></h3>\n" +
+    "<quota-usage-chart height=\"240\" used=\"namespaceUsageByClusterQuota[quota.metadata.name].used['requests.cpu']\" cross-project-used=\"quota.status.total.used['requests.cpu']\" total=\"quota.status.total.hard['requests.cpu']\" type=\"cpu\" class=\"quota-chart\"></quota-usage-chart>\n" +
+    "</div>\n" +
+    "<div ng-if=\"quota.status.total.hard['requests.memory']\" class=\"mar-lg\">\n" +
+    "<h3 class=\"text-center\">Memory <small>Request</small></h3>\n" +
+    "<quota-usage-chart height=\"240\" used=\"namespaceUsageByClusterQuota[quota.metadata.name].used['requests.memory']\" cross-project-used=\"quota.status.total.used['requests.memory']\" total=\"quota.status.total.hard['requests.memory']\" type=\"memory\" class=\"quota-chart\"></quota-usage-chart>\n" +
+    "</div>\n" +
+    "<div ng-if=\"quota.status.total.hard['limits.cpu']\" class=\"mar-lg\">\n" +
+    "<h3 class=\"text-center\">CPU <small>Limit</small></h3>\n" +
+    "<quota-usage-chart height=\"240\" used=\"namespaceUsageByClusterQuota[quota.metadata.name].used['limits.cpu']\" cross-project-used=\"quota.status.total.used['limits.cpu']\" total=\"quota.status.total.hard['limits.cpu']\" type=\"cpu\" class=\"quota-chart\"></quota-usage-chart>\n" +
+    "</div>\n" +
+    "<div ng-if=\"quota.status.total.hard['limits.memory']\" class=\"mar-lg\">\n" +
+    "<h3 class=\"text-center\">Memory <small>Limit</small></h3>\n" +
+    "<quota-usage-chart height=\"240\" used=\"namespaceUsageByClusterQuota[quota.metadata.name].used['limits.memory']\" cross-project-used=\"quota.status.total.used['limits.memory']\" total=\"quota.status.total.hard['limits.memory']\" type=\"memory\" class=\"quota-chart\"></quota-usage-chart>\n" +
+    "</div>\n" +
+    "</div>\n" +
+    "</div>\n" +
+    "<div class=\"table-responsive\">\n" +
+    "<table class=\"table\">\n" +
+    "<thead>\n" +
+    "<th>Resource type</th>\n" +
+    "<th>Used (this project)</th>\n" +
+    "<th>Used (all projects)</th>\n" +
+    "<th>Max</th>\n" +
+    "</thead>\n" +
+    "<tbody>\n" +
+    "<tr ng-if=\"!quota.status.total.used\" class=\"danger\">\n" +
+    "<td colspan=\"5\">\n" +
+    "<span data-toggle=\"tooltip\" title=\"Missing quota status\" class=\"pficon pficon-error-circle-o\" style=\"cursor: help\"></span>\n" +
+    "Status has not been reported on this quota usage record. Any resources limited by this quota record can not be allocated.\n" +
+    "</td>\n" +
+    "</tr>\n" +
+    "\n" +
+    "<tr ng-repeat=\"(resourceType, specMax) in quota.spec.quota.hard\" ng-if=\"resourceType !== 'resourcequotas'\" ng-class=\"{\n" +
+    "                              warning: (quota.status.total.used[resourceType] | usageValue) >= (quota.status.total.hard[resourceType] | usageValue)\n" +
+    "                            }\">\n" +
+    "<td>\n" +
+    "{{resourceType | humanizeQuotaResource}}\n" +
+    "<span ng-if=\"(quota.status.total.used[resourceType] | usageValue) >= (quota.status.total.hard[resourceType] | usageValue)\" data-toggle=\"tooltip\" title=\"Quota limit reached\" class=\"pficon pficon-warning-triangle-o\" style=\"cursor: help; vertical-align: middle\"></span>\n" +
+    "</td>\n" +
+    "<td>\n" +
+    "<span ng-if=\"!namespaceUsageByClusterQuota[quota.metadata.name].used\">&mdash;</span>\n" +
+    "<span ng-if=\"namespaceUsageByClusterQuota[quota.metadata.name].used\">{{namespaceUsageByClusterQuota[quota.metadata.name].used[resourceType] | usageWithUnits : resourceType}}</span>\n" +
+    "</td>\n" +
+    "<td>\n" +
+    "<span ng-if=\"!quota.status.total.used\">&mdash;</span>\n" +
+    "<span ng-if=\"quota.status.total.used\">{{quota.status.total.used[resourceType] | usageWithUnits : resourceType}}</span>\n" +
+    "</td>\n" +
+    "<td>\n" +
+    "<span ng-if=\"!quota.status.total.hard\">{{specMax | usageWithUnits : resourceType}}</span>\n" +
+    "<span ng-if=\"quota.status.total.hard\">{{quota.status.total.hard[resourceType] | usageWithUnits : resourceType}}</span>\n" +
+    "</td>\n" +
+    "</tr>\n" +
+    "</tbody>\n" +
+    "</table>\n" +
+    "</div>\n" +
+    "</div>\n" +
+    "<h1 ng-if=\"clusterQuotas | hashSize\">Project Quota</h1>\n" +
+    "<div ng-repeat=\"quota in quotas | orderBy: 'metadata.name'\" class=\"gutter-bottom\">\n" +
+    "<h2 ng-if=\"(quotas | hashSize) > 1\">{{quota.metadata.name}}</h2>\n" +
+    "<div ng-if=\"$first\" class=\"help-block mar-bottom-md\">{{quotaHelp}}</div>\n" +
+    "<dl ng-if=\"quota.spec.scopes.length\">\n" +
+    "<dt>Scopes:</dt>\n" +
+    "<dd>\n" +
+    "<div ng-repeat=\"scope in quota.spec.scopes\">\n" +
+    "{{scope | startCase}}\n" +
+    "<span class=\"text-muted small\" ng-if=\"scope | scopeDetails\">&mdash; {{scope | scopeDetails}}</span>\n" +
+    "</div>\n" +
+    "</dd>\n" +
+    "</dl>\n" +
+    "<div>\n" +
+    "<div row wrap style=\"justify-content: center\">\n" +
+    "<div column ng-if=\"quota.status.hard.cpu\" class=\"mar-lg\">\n" +
+    "<h3 class=\"text-center\">CPU <small>Request</small></h3>\n" +
+    "<quota-usage-chart used=\"quota.status.used.cpu\" total=\"quota.status.hard.cpu\" type=\"cpu\" class=\"quota-chart\"></quota-usage-chart>\n" +
+    "</div>\n" +
+    "<div column ng-if=\"quota.status.hard.memory\" class=\"mar-lg\">\n" +
+    "<h3 class=\"text-center\">Memory <small>Request</small></h3>\n" +
+    "<quota-usage-chart used=\"quota.status.used.memory\" total=\"quota.status.hard.memory\" type=\"memory\" class=\"quota-chart\"></quota-usage-chart>\n" +
+    "</div>\n" +
+    "<div column ng-if=\"quota.status.hard['requests.cpu']\" class=\"mar-lg\">\n" +
+    "<h3 class=\"text-center\">CPU <small>Request</small></h3>\n" +
+    "<quota-usage-chart used=\"quota.status.used['requests.cpu']\" total=\"quota.status.hard['requests.cpu']\" type=\"cpu\" class=\"quota-chart\"></quota-usage-chart>\n" +
+    "</div>\n" +
+    "<div column ng-if=\"quota.status.hard['requests.memory']\" class=\"mar-lg\">\n" +
+    "<h3 class=\"text-center\">Memory <small>Request</small></h3>\n" +
+    "<quota-usage-chart used=\"quota.status.used['requests.memory']\" total=\"quota.status.hard['requests.memory']\" type=\"memory\" class=\"quota-chart\"></quota-usage-chart>\n" +
+    "</div>\n" +
+    "<div ng-if=\"quota.status.hard['limits.cpu']\" class=\"mar-lg\">\n" +
+    "<h3 class=\"text-center\">CPU <small>Limit</small></h3>\n" +
+    "<quota-usage-chart used=\"quota.status.used['limits.cpu']\" total=\"quota.status.hard['limits.cpu']\" type=\"cpu\" class=\"quota-chart\"></quota-usage-chart>\n" +
+    "</div>\n" +
+    "<div ng-if=\"quota.status.hard['limits.memory']\" class=\"mar-lg\">\n" +
+    "<h3 class=\"text-center\">Memory <small>Limit</small></h3>\n" +
+    "<quota-usage-chart used=\"quota.status.used['limits.memory']\" total=\"quota.status.hard['limits.memory']\" type=\"memory\" class=\"quota-chart\"></quota-usage-chart>\n" +
+    "</div>\n" +
+    "</div>\n" +
+    "</div>\n" +
+    "<div class=\"table-responsive\">\n" +
+    "<table class=\"table\">\n" +
+    "<thead>\n" +
+    "<th>Resource type</th>\n" +
+    "<th>Used</th>\n" +
+    "<th>Max</th>\n" +
+    "</thead>\n" +
+    "<tbody>\n" +
+    "<tr ng-if=\"!quota.status.used\" class=\"danger\">\n" +
+    "<td colspan=\"5\">\n" +
+    "<span data-toggle=\"tooltip\" title=\"Missing quota status\" class=\"pficon pficon-error-circle-o\" style=\"cursor: help\"></span>\n" +
+    "Status has not been reported on this quota usage record. Any resources limited by this quota record can not be allocated.\n" +
+    "</td>\n" +
+    "</tr>\n" +
+    "\n" +
+    "<tr ng-repeat=\"(resourceType, specMax) in quota.spec.hard\" ng-if=\"resourceType !== 'resourcequotas'\" ng-class=\"{\n" +
+    "                              warning: (quota.status.used[resourceType] | usageValue) >= (quota.status.hard[resourceType] | usageValue)\n" +
+    "                            }\">\n" +
+    "<td>\n" +
+    "{{resourceType | humanizeQuotaResource}}\n" +
+    "<span ng-if=\"(quota.status.used[resourceType] | usageValue) >= (quota.status.hard[resourceType] | usageValue)\" data-toggle=\"tooltip\" title=\"Quota limit reached\" class=\"pficon pficon-warning-triangle-o\" style=\"cursor: help; vertical-align: middle\"></span>\n" +
+    "</td>\n" +
+    "<td>\n" +
+    "<span ng-if=\"!quota.status.used\">&mdash;</span>\n" +
+    "<span ng-if=\"quota.status.used\">{{quota.status.used[resourceType] | usageWithUnits : resourceType}}</span>\n" +
+    "</td>\n" +
+    "<td>\n" +
+    "<span ng-if=\"!quota.status.hard\">{{specMax | usageWithUnits : resourceType}}</span>\n" +
+    "<span ng-if=\"quota.status.hard\">{{quota.status.hard[resourceType] | usageWithUnits : resourceType}}</span>\n" +
+    "</td>\n" +
+    "</tr>\n" +
+    "</tbody>\n" +
+    "</table>\n" +
+    "</div>\n" +
+    "</div>\n" +
+    "<h1>Limit Range</h1>\n" +
+    "<div ng-if=\"!(limitRanges | hashSize)\">\n" +
+    "<div class=\"help-block\">{{limitRangeHelp}}</div>\n" +
+    "<p><em>{{emptyMessageLimitRanges}}</em></p>\n" +
+    "</div>\n" +
+    "<div ng-repeat=\"(limitRangeName, limitRange) in limitRanges\">\n" +
+    "<h2 ng-if=\"(limitRanges | hashSize) > 1\">{{limitRangeName}}</h2>\n" +
+    "<div ng-if=\"$first\" class=\"help-block mar-bottom-md\">{{limitRangeHelp}}</div>\n" +
+    "<div class=\"table-responsive\">\n" +
+    "<table class=\"table\">\n" +
+    "<thead>\n" +
+    "<th>Resource type</th>\n" +
+    "<th>\n" +
+    "<span class=\"nowrap\">\n" +
+    "Min\n" +
+    "<i class=\"small pficon pficon-help\" data-toggle=\"tooltip\" title=\"The minimum amount of this compute resource that can be requested.\"></i>\n" +
+    "</span>\n" +
+    "</th>\n" +
+    "<th>\n" +
+    "<span class=\"nowrap\">\n" +
+    "Max\n" +
+    "<i class=\"small pficon pficon-help\" data-toggle=\"tooltip\" title=\"The maximum amount of this compute resource that can be requested.  The limit must also be below the maximum value.\"></i>\n" +
+    "</span>\n" +
+    "</th>\n" +
+    "<th>\n" +
+    "Default\n" +
+    "<span class=\"nowrap\">\n" +
+    "Request\n" +
+    "<i class=\"small pficon pficon-help\" data-toggle=\"tooltip\" title=\"A container will default to request this amount of a compute resource if no request is specified. The system will guarantee the requested amount of compute resource when scheduling a container for execution. If a quota is enabled for this compute resource, the quota usage is incremented by the requested value.\"></i>\n" +
+    "</span>\n" +
+    "</th>\n" +
+    "<th>\n" +
+    "Default\n" +
+    "<span class=\"nowrap\">\n" +
+    "Limit\n" +
+    "<i class=\"small pficon pficon-help\" data-toggle=\"tooltip\" title=\"The default limit defines the maximum amount of compute resource the container may have access to during execution if no limit is specified. If no request is made for the compute resource on the container or via a Default Request value, the container will default to request the limit.\"></i>\n" +
+    "</span>\n" +
+    "</th>\n" +
+    "<th>\n" +
+    "Max Limit/Request\n" +
+    "<span class=\"nowrap\">\n" +
+    "Ratio\n" +
+    "<i class=\"small pficon pficon-help\" data-toggle=\"tooltip\" title=\"If specified, the compute resource must have a request and limit that are both non-zero, where limit divided by request is less than or equal to the specified amount; this represents the max burst for the compute resource during execution.\"></i>\n" +
+    "</span>\n" +
+    "</th>\n" +
+    "</thead>\n" +
+    "<tbody>\n" +
+    "<tr ng-repeat-start=\"limit in limitRange.spec.limits\"></tr>\n" +
+    "<tr ng-repeat=\"(type, typeLimits) in limitsByType[limitRangeName][limit.type]\">\n" +
+    "<td>{{limit.type}} {{type | computeResourceLabel : true}}</td>\n" +
+    "<td>{{(typeLimits.min | usageWithUnits : type) || \"&mdash;\"}}</td>\n" +
+    "<td>{{(typeLimits.max | usageWithUnits : type) || \"&mdash;\"}}</td>\n" +
+    "<td>{{(typeLimits.defaultRequest | usageWithUnits : type) || \"&mdash;\"}}</td>\n" +
+    "<td>{{(typeLimits[\"default\"] | usageWithUnits : type) || \"&mdash;\"}}</td>\n" +
+    "<td>{{typeLimits.maxLimitRequestRatio || \"&mdash;\"}}</td>\n" +
+    "</tr>\n" +
+    "<tr ng-repeat-end></tr>\n" +
+    "</tbody>\n" +
+    "</table>\n" +
+    "</div>\n" +
+    "</div>\n" +
+    "</div>\n" +
+    "</div>\n" +
+    "</div>\n" +
+    "</div>\n" +
+    "</div>\n" +
+    "</div>\n" +
+    "</project-page>"
   );
 
 

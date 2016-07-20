@@ -40,5 +40,142 @@ window.OPENSHIFT_CONSTANTS = {
    
       // These are things like DCPs that aren't actually persisted resources
       "DeploymentConfigRollback"
+  ],
+
+  // href's will be prefixed with /project/{{projectName}} unless they are absolute URLs
+  PROJECT_NAVIGATION: [
+    {
+      label: "Overview",
+      iconClass: "fa fa-dashboard",
+      href: "/overview"
+    },
+    {
+      label: "Applications",
+      iconClass: "fa fa-cubes",
+      secondaryNavSections: [
+        {
+          items: [
+            {
+              label: "Deployments",
+              href: "/browse/deployments",
+              prefixes: [
+                "/browse/deployments/",
+                "/browse/deployments-replicationcontrollers/"
+              ]
+            },
+            {
+              label: "Pods",
+              href: "/browse/pods",
+              prefixes: [
+                "/browse/pods/"
+              ]              
+            }            
+          ]
+        },
+        {
+          header: "Networking",
+          items: [
+            {
+              label: "Services",
+              href: "/browse/services",
+              prefixes: [
+                "/browse/services/"
+              ]
+            },
+            {
+              label: "Routes",
+              href: "/browse/routes",
+              prefixes: [
+                "/browse/routes/"
+              ]              
+            }            
+          ]
+        }        
+      ]
+    },
+    {
+      label: "Builds",
+      iconClass: "pficon pficon-build",
+      secondaryNavSections: [
+        {
+          items: [
+            {
+              label: "Builds",
+              href: "/browse/builds",
+              prefixes: [
+                "/browse/builds/",
+                "/browse/builds-noconfig/"
+              ]
+            },
+            // TODO uncomment when new pipeline page is available and fixup URLs and prefixes
+            // {
+            //   label: "Pipeline Builds",
+            //   href: "/browse/builds",
+            //   prefixes: [
+            //     "/browse/builds/",
+            //     "/browse/builds-noconfig/"
+            //   ]
+            // },
+            {
+              label: "Images",
+              href: "/browse/images",
+              prefixes: [
+                "/browse/images/"
+              ]
+            }         
+          ]
+        }
+      ]
+    },
+    {
+      label: "Resources",
+      iconClass: "fa fa-files-o",
+      secondaryNavSections: [
+        {
+          items: [
+            {
+              label: "Quota",
+              href: "/quota"
+            },
+            {
+              label: "Other Resources",
+              href: "/browse/other"
+            }        
+          ]
+        }
+      ]
+    },
+    {
+      label: "Storage",
+      iconClass: "pficon pficon-container-node",
+      href: "/browse/storage",
+      prefixes: [
+        "/browse/storage/"
+      ]
+    },
+    {
+      label: "Monitoring",
+      iconClass: "pficon pficon-screen",
+      href: "/browse/events"
+      // TODO uncomment when we have at least one of metrics or logs pages and then take off the href going straight to events
+      // secondaryNavSections: [
+      //   {
+      //     items: [
+      //       {
+      //         label: "Events",
+      //         href: "/browse/events"
+      //       },
+      //       {
+      //         label: "Logs",
+      //         href: "#" // TODO
+      //       },
+      //       {
+      //         label: "Metrics",
+      //         href: "#" // TODO
+      //       }         
+      //     ]
+      //   }
+      // ]
+    }
   ]
 };
