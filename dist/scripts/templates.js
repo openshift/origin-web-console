@@ -1153,7 +1153,7 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "<status-icon status=\"deployment | deploymentStatus\"></status-icon>\n" +
     "{{deployment | deploymentStatus}}\n" +
     "<span style=\"margin-left: 7px\">\n" +
-    "<button ng-if=\"'deploymentconfigrollbacks' | canI : 'create'\" ng-show=\"!rollBackCollapsed && (deployment | deploymentStatus) == 'Complete' && !(deployment | deploymentIsLatest : deploymentConfig) && !deployment.metadata.deletionTimestamp\" ng-disabled=\"(deploymentConfigDeploymentsInProgress[deploymentConfigName] | hashSize) > 0\" type=\"button\" class=\"btn btn-default btn-xs\" ng-click=\"rollBackCollapsed = !rollBackCollapsed\">Roll Back</button>\n" +
+    "<button ng-show=\"!rollBackCollapsed && (deployment | deploymentStatus) == 'Complete' && !(deployment | deploymentIsLatest : deploymentConfig) && !deployment.metadata.deletionTimestamp && 'deploymentconfigrollbacks' | canI : 'create'\" ng-disabled=\"(deploymentConfigDeploymentsInProgress[deploymentConfigName] | hashSize) > 0\" type=\"button\" class=\"btn btn-default btn-xs\" ng-click=\"rollBackCollapsed = !rollBackCollapsed\">Roll Back</button>\n" +
     "<div ng-show=\"rollBackCollapsed\" class=\"well well-sm\">\n" +
     "Use the following settings from {{deployment.metadata.name}} when rolling back:\n" +
     "<div class=\"checkbox\">\n" +
@@ -1174,7 +1174,7 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "<button type=\"button\" ng-click=\"rollbackToDeployment(deployment, changeScaleSettings, changeStrategy, changeTriggers)\" ng-disabled=\"(deploymentConfigDeploymentsInProgress[deploymentConfigName] | hashSize) > 0\" class=\"btn btn-default btn-xs\">Roll Back</button>\n" +
     "</div>\n" +
     "\n" +
-    "<button ng-if=\"'replicationcontrollers' | canI : 'update'\" ng-show=\"(deployment | deploymentIsInProgress) && !deployment.metadata.deletionTimestamp\" type=\"button\" ng-click=\"cancelRunningDeployment(deployment)\" class=\"btn btn-default btn-xs\">Cancel</button>\n" +
+    "<button ng-show=\"(deployment | deploymentIsInProgress) && !deployment.metadata.deletionTimestamp && 'replicationcontrollers' | canI : 'update'\" type=\"button\" ng-click=\"cancelRunningDeployment(deployment)\" class=\"btn btn-default btn-xs\">Cancel</button>\n" +
     "</span>\n" +
     "</dd>\n" +
     "<dt ng-if-start=\"deployment | isDeployment\">Deployment config:</dt>\n" +
