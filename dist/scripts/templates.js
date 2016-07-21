@@ -7831,7 +7831,7 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "</table>\n" +
     "</div>\n" +
     "</div>\n" +
-    "<h1 ng-if=\"clusterQuotas | hashSize\">Project Quota</h1>\n" +
+    "<h1 ng-if=\"(clusterQuotas | hashSize) && (quotas | hashSize)\">Project Quota</h1>\n" +
     "<div ng-repeat=\"quota in quotas | orderBy: 'metadata.name'\" class=\"gutter-bottom\">\n" +
     "<h2 ng-if=\"(quotas | hashSize) > 1\">{{quota.metadata.name}}</h2>\n" +
     "<div ng-if=\"$first\" class=\"help-block mar-bottom-md\">{{quotaHelp}}</div>\n" +

@@ -108,7 +108,7 @@
                   </div>
                 </div>
 
-                <h1 ng-if="clusterQuotas | hashSize">Project Quota</h1>
+                <h1 ng-if="(clusterQuotas | hashSize) && (quotas | hashSize)">Project Quota</h1>
                 <div ng-repeat="quota in quotas | orderBy: 'metadata.name'" class="gutter-bottom">
                   <h2 ng-if="(quotas | hashSize) > 1">{{quota.metadata.name}}</h2>
                   <div ng-if="$first" class="help-block mar-bottom-md">{{quotaHelp}}</div>
