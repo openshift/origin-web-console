@@ -9879,8 +9879,8 @@ var b = {
 view:"chromeless"
 };
 a && a.container && (b.container = a.container), h(b);
-}, j = new URITemplate([ "/#/discover?", "_g=(", "time:(", "from:now-1w,", "mode:relative,", "to:now", ")", ")", "&_a=(", "columns:!(kubernetes_container_name,{containername}),", "index:'{namespace}.*',", "query:(", "query_string:(", "analyze_wildcard:!t,", "query:'kubernetes_pod_name: {podname} %26%26 kubernetes_namespace_name: {namespace}'", ")", "),", "sort:!(time,desc)", ")", "#console_container_name={containername}", "&console_back_url={backlink}" ].join("")), k = function(a) {
-return j.expand(a);
+}, j = _.template([ "/#/discover?", "_g=(", "time:(", "from:now-1w,", "mode:relative,", "to:now", ")", ")", "&_a=(", "columns:!(kubernetes_container_name,<%= containername %>),", "index:'<%= namespace %>.*',", "query:(", "query_string:(", "analyze_wildcard:!t,", "query:'kubernetes_pod_name: <%= podname %> %26%26 kubernetes_namespace_name: <%= namespace %>'", ")", "),", "sort:!(time,desc)", ")", "#console_container_name=<%= containername %>", "&console_back_url=<%= backlink %>" ].join("")), k = function(a) {
+return j(a);
 };
 return {
 scrollTop:e,

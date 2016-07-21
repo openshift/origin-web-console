@@ -60,7 +60,7 @@ angular.module('openshiftConsole')
       };
 
       // broken up for readability:
-      var template = new URITemplate([
+      var template = _.template([
         "/#/discover?",
         "_g=(",
           "time:(",
@@ -71,25 +71,25 @@ angular.module('openshiftConsole')
         ")",
         "&_a=(",
           //"columns:!(_source),",
-          "columns:!(kubernetes_container_name,{containername}),",
-          "index:'{namespace}.*',",
+          "columns:!(kubernetes_container_name,<%= containername %>),", 
+          "index:'<%= namespace %>.*',",
           "query:(",
             "query_string:(",
               "analyze_wildcard:!t,",
-              "query:'kubernetes_pod_name: {podname} %26%26 kubernetes_namespace_name: {namespace}'",
+              "query:'kubernetes_pod_name: <%= podname %> %26%26 kubernetes_namespace_name: <%= namespace %>'",
             ")",
           "),",
           "sort:!(time,desc)",
         ")",
         // NOTE: slightly older versions of kibana require openshift_ prefix, not console_
-        "#console_container_name={containername}",
+        "#console_container_name=<%= containername %>",
         // backlink should be encoded.  passing URI.encode(backlink) should be sufficient
-        "&console_back_url={backlink}"
+        "&console_back_url=<%= backlink %>"
       ].join(''));
 
 
       var archiveUri = function(opts) {
-        return template.expand(opts);
+        return template(opts);
       };
 
       return {
