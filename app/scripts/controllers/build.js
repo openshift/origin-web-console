@@ -7,7 +7,13 @@
  * Controller of the openshiftConsole
  */
 angular.module('openshiftConsole')
-  .controller('BuildController', function ($scope, $routeParams, DataService, ProjectsService, BuildsService, $filter) {
+  .controller('BuildController', function ($scope,
+                                           $filter,
+                                           $routeParams,
+                                           BuildsService,
+                                           DataService,
+                                           Navigate,
+                                           ProjectsService) {
     $scope.projectName = $routeParams.project;
     $scope.build = null;
     $scope.buildConfig = null;
@@ -136,20 +142,42 @@ angular.module('openshiftConsole')
             });
         };
 
+        var getLinksClonedBuild = function(build) {
+          // When the build is first cloned, the Jenkins annotations are not
+          // yet updated, so the Jenkins log link is wrong. Give a link to the
+          // build instead of the log. Also link to the build if the user
+          // doesn't have authority to view the log.
+          if ($filter('isJenkinsPipelineStrategy')($scope.build) ||
+              !$filter('canI')('builds/log', 'get')) {
+            return [{
+              href: Navigate.resourceURL(build),
+              label: "View Build"
+            }];
+          }
+
+          var logLink = $filter('buildLogURL')(build);
+          if (!logLink) {
+            return [];
+          }
+
+          return [{
+            href: logLink,
+            label: "View Log"
+          }];
+        };
+
         $scope.cloneBuild = function() {
           var name = _.get($scope, 'build.metadata.name');
           if (name && $scope.canBuild) {
             BuildsService
               .cloneBuild(name, context)
               .then(function resolve(build) {
-                var logLink = $filter('buildLogURL')(build);
+                // Add a view log link.
+                var links = getLinksClonedBuild(build);
                 $scope.alerts["rebuild"] = {
                   type: "success",
                   message: "Build " + name + " is being rebuilt as " + build.metadata.name + ".",
-                  links: logLink ? [{
-                    href: logLink,
-                    label: "View Log"
-                  }] : undefined
+                  links: links
                 };
               }, function reject(result) {
                 $scope.alerts["rebuild"] = {

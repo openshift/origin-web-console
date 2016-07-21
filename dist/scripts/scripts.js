@@ -3626,80 +3626,89 @@ details:f("getErrorDetails")(b)
 c.unwatchAll(l);
 });
 }));
-} ]), angular.module("openshiftConsole").controller("BuildController", [ "$scope", "$routeParams", "DataService", "ProjectsService", "BuildsService", "$filter", function(a, b, c, d, e, f) {
-a.projectName = b.project, a.build = null, a.buildConfig = null, a.buildConfigName = b.buildconfig, a.builds = {}, a.alerts = {}, a.showSecret = !1, a.renderOptions = {
+} ]), angular.module("openshiftConsole").controller("BuildController", [ "$scope", "$filter", "$routeParams", "BuildsService", "DataService", "Navigate", "ProjectsService", function(a, b, c, d, e, f, g) {
+a.projectName = c.project, a.build = null, a.buildConfig = null, a.buildConfigName = c.buildconfig, a.builds = {}, a.alerts = {}, a.showSecret = !1, a.renderOptions = {
 hideFilterWidget:!0
 }, a.breadcrumbs = [ {
 title:"Builds",
-link:"project/" + b.project + "/browse/builds"
-} ], b.buildconfig && a.breadcrumbs.push({
-title:b.buildconfig,
-link:"project/" + b.project + "/browse/builds/" + b.buildconfig
+link:"project/" + c.project + "/browse/builds"
+} ], c.buildconfig && a.breadcrumbs.push({
+title:c.buildconfig,
+link:"project/" + c.project + "/browse/builds/" + c.buildconfig
 }), a.breadcrumbs.push({
-title:b.build
-}), b.tab && (a.selectedTab = {}, a.selectedTab[b.tab] = !0);
-var g = [], h = function(b) {
-a.logOptions.container = f("annotation")(b, "buildPod"), a.logCanRun = !_.includes([ "New", "Pending", "Error" ], b.status.phase);
-}, i = function() {
-a.buildConfig ? a.canBuild = e.canBuild(a.buildConfig) :a.canBuild = !1;
-}, j = function(b, c) {
-a.loaded = !0, a.build = b, h(b);
-var d = f("annotation")(b, "buildNumber");
-d && (a.breadcrumbs[2].title = "#" + d), "DELETED" === c && (a.alerts.deleted = {
+title:c.build
+}), c.tab && (a.selectedTab = {}, a.selectedTab[c.tab] = !0);
+var h = [], i = function(c) {
+a.logOptions.container = b("annotation")(c, "buildPod"), a.logCanRun = !_.includes([ "New", "Pending", "Error" ], c.status.phase);
+}, j = function() {
+a.buildConfig ? a.canBuild = d.canBuild(a.buildConfig) :a.canBuild = !1;
+}, k = function(c, d) {
+a.loaded = !0, a.build = c, i(c);
+var e = b("annotation")(c, "buildNumber");
+e && (a.breadcrumbs[2].title = "#" + e), "DELETED" === d && (a.alerts.deleted = {
 type:"warning",
 message:"This build has been deleted."
 });
-}, k = function(b) {
+}, l = function(c) {
 a.loaded = !0, a.alerts.load = {
 type:"error",
 message:"The build details could not be loaded.",
-details:"Reason: " + f("getErrorDetails")(b)
+details:"Reason: " + b("getErrorDetails")(c)
 };
-}, l = function(b, c) {
+}, m = function(b, c) {
 "DELETED" === c && (a.alerts.deleted = {
 type:"warning",
 message:"Build configuration " + a.buildConfigName + " has been deleted."
-}), a.buildConfig = b, a.paused = e.isPaused(a.buildConfig), i();
+}), a.buildConfig = b, a.paused = d.isPaused(a.buildConfig), j();
 };
-d.get(b.project).then(_.spread(function(d, h) {
-a.project = d, a.projectContext = h, a.logOptions = {}, c.get("builds", b.build, h).then(function(a) {
-j(a), g.push(c.watchObject("builds", b.build, h, j)), g.push(c.watchObject("buildconfigs", b.buildconfig, h, l));
-}, k), a.toggleSecret = function() {
+g.get(c.project).then(_.spread(function(g, i) {
+a.project = g, a.projectContext = i, a.logOptions = {}, e.get("builds", c.build, i).then(function(a) {
+k(a), h.push(e.watchObject("builds", c.build, i, k)), h.push(e.watchObject("buildconfigs", c.buildconfig, i, m));
+}, l), a.toggleSecret = function() {
 a.showSecret = !0;
 }, a.cancelBuild = function() {
-e.cancelBuild(a.build, a.buildConfigName, h).then(function(b) {
+d.cancelBuild(a.build, a.buildConfigName, i).then(function(b) {
 a.alerts.cancel = {
 type:"success",
 message:"Cancelling build " + b.metadata.name + " of " + a.buildConfigName + "."
 };
-}, function(b) {
+}, function(c) {
 a.alerts.cancel = {
 type:"error",
 message:"An error occurred cancelling the build.",
-details:f("getErrorDetails")(b)
+details:b("getErrorDetails")(c)
 };
 });
-}, a.cloneBuild = function() {
-var b = _.get(a, "build.metadata.name");
-b && a.canBuild && e.cloneBuild(b, h).then(function(c) {
-var d = f("buildLogURL")(c);
-a.alerts.rebuild = {
-type:"success",
-message:"Build " + b + " is being rebuilt as " + c.metadata.name + ".",
-links:d ? [ {
+};
+var j = function(c) {
+if (b("isJenkinsPipelineStrategy")(a.build) || !b("canI")("builds/log", "get")) return [ {
+href:f.resourceURL(c),
+label:"View Build"
+} ];
+var d = b("buildLogURL")(c);
+return d ? [ {
 href:d,
 label:"View Log"
-} ] :void 0
+} ] :[];
 };
-}, function(b) {
+a.cloneBuild = function() {
+var c = _.get(a, "build.metadata.name");
+c && a.canBuild && d.cloneBuild(c, i).then(function(b) {
+var d = j(b);
+a.alerts.rebuild = {
+type:"success",
+message:"Build " + c + " is being rebuilt as " + b.metadata.name + ".",
+links:d
+};
+}, function(c) {
 a.alerts.rebuild = {
 type:"error",
 message:"An error occurred while rerunning the build.",
-details:f("getErrorDetails")(b)
+details:b("getErrorDetails")(c)
 };
 });
 }, a.$on("$destroy", function() {
-c.unwatchAll(g);
+e.unwatchAll(h);
 });
 }));
 } ]), angular.module("openshiftConsole").controller("ImagesController", [ "$routeParams", "$scope", "AlertMessageService", "DataService", "ProjectsService", "$filter", "LabelFilter", "Logger", function(a, b, c, d, e, f, g, h) {
