@@ -3460,7 +3460,7 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "</p>\n" +
     "<p>\n" +
     "To add an image stream or template from a file, use the editor in the\n" +
-    "<strong>From File</strong> tab, or run the following command:\n" +
+    "<strong>Import YAML / JSON</strong> tab, or run the following command:\n" +
     "<div><code>oc create -f &lt;filename&gt; -n {{projectName}}</code></div>\n" +
     "</p>\n" +
     "<p><a href=\"{{projectName | projectOverviewURL}}\">Back to overview</a></p>\n" +
