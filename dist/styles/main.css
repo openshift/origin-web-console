@@ -3965,6 +3965,7 @@ ul.messenger-theme-flat .messenger-message.alert-info .messenger-message-inner:b
 .overview .standalone-service:nth-child(odd){padding-right:5px}
 .overview .standalone-service:nth-child(even){padding-left:5px}
 }
+.overview .standalone-service .service-group .alert{margin:0 0 7px 5px}
 .overview .standalone-service .service-group-body .overview-services overview-service{max-width:none}
 .overview .standalone-service .service-group-body .overview-services .deployment-tile{margin-top:0}
 .overview .no-service{width:100%;margin-bottom:10px}
