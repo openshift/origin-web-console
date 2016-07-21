@@ -18,14 +18,14 @@
     </div>
   </div>
   <div class="right-content">
-    <div ng-if="!events">
+    <div ng-if="!events" class="events pad-left-xl">
       Loading...
     </div>
-    <div ng-if="events">
-      <div ng-if="!(events | hashSize)">
+    <div ng-if="events" class="events">
+      <div ng-if="!(events | hashSize)" class="mar-left-xl">
         <em>No events.</em>
       </div>
-      <div ng-repeat="event in events" class="event animate-repeat">
+      <div ng-repeat="event in events" class="event animate-repeat" ng-class="{'highlight': highlightedEvents[event.involvedObject.kind + '/' + event.involvedObject.name]}">
         <span class="sr-only">{{event.type}}</span>
         <div class="event-icon" aria-hidden="true">
           <div ng-switch="event.type" class="hide-ng-leave">

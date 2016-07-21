@@ -122,17 +122,40 @@
       table-layout: fixed;
       width: 100%;
     }
-    .ellipsis-loader {
-      // Show the loading dots at the bottom, even when the log content doesn't fill the page.
-      position: absolute;
-      bottom: 10px;
-      // Center the dots.
-      margin-left: auto;
-      margin-right: auto;
-      left: 0;
-      right: 0;
-    }
   }
+  &.log-fixed-height {
+
+    .log-view-output {
+      padding: 25px 0;
+      position: relative;
+      overflow: auto;      
+    }
+
+    .log-scroll-top {
+      z-index: 100;
+    }
+
+    .log-end-msg {
+      position: relative;
+      margin-bottom: -25px;     
+    }
+
+    .ellipsis-loader {
+      
+      background-color: @log-bg-color;
+      
+    }
+  }  
+}
+.ellipsis-loader {
+  // Show the loading dots at the bottom, even when the log content doesn't fill the page.
+  position: absolute;
+  bottom: 10px;
+  // Center the dots.
+  margin-left: auto;
+  margin-right: auto;
+  left: 0;
+  right: 0;
 }
 .log-end-msg {
   font-family: @font-family-base;
@@ -201,4 +224,8 @@
   }
   background-color: #fff;
   border: 1px solid #D1D1D1;
+}
+
+.log-fixed-height.empty-state-message {
+  margin-top: 0;
 }

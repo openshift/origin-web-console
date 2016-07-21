@@ -139,6 +139,16 @@ angular.module('openshiftConsole')
       return moment.duration(duration, unit).humanize();
     };
   })
+  .filter('timeOnlyDurationFromTimestamps', function(timeOnlyDurationFilter) {
+    return function(timestampLhs, timestampRhs) {
+      if (!timestampLhs) {
+        return timestampLhs;
+      }
+      timestampRhs = timestampRhs || new Date(); // moment expects either an ISO format string or a Date object
+
+      return timeOnlyDurationFilter(moment(timestampRhs).diff(timestampLhs));
+    };
+  })
   .filter('timeOnlyDuration', function(){
     return function(value) {
       var result = [];

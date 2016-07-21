@@ -154,7 +154,10 @@ window.OPENSHIFT_CONSTANTS = {
     {
       label: "Monitoring",
       iconClass: "pficon pficon-screen",
-      href: "/browse/events"
+      href: "/monitoring",
+      prefixes: [
+        "/browse/events"
+      ]
       // TODO uncomment when we have at least one of metrics or logs pages and then take off the href going straight to events
       // secondaryNavSections: [
       //   {

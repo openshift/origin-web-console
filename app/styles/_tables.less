@@ -162,3 +162,32 @@
     padding-right: 0;
   }
 }
+
+.list-group-item-expandable {
+  &.expanded {
+    border: 1px solid @table-border-color;
+
+    &:first-child {
+      border-top: 1px solid @table-border-color;
+    }
+  }
+
+  .list-view-pf-checkbox {
+    font-size: 22px;
+    width: 25px;
+
+    a {
+      color: #555;
+    }
+  }
+}
+.list-group-expanded-section {
+  border-left: 1px solid @table-border-color;  // todo use the patternfly variable for this
+  border-right: 1px solid @table-border-color;
+  border-bottom: 1px solid @table-border-color;
+  padding: 15px;
+}
+.list-view-pf .list-group-item.expanded {
+    color: #555;
+    background-color: #f5f5f5;
+}
