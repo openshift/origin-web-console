@@ -6745,7 +6745,7 @@ return d(a, f);
 return !!b && (e.activeSecondary = b, !0);
 });
 }), e.navURL = function(a) {
-return a ? b("isAbsoluteURL")(a) ? a :"/project/" + e.projectName + a :"";
+return a ? b("isAbsoluteURL")(a) ? a :"project/" + e.projectName + a :"";
 };
 } ]
 };

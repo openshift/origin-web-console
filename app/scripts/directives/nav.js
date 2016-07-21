@@ -40,7 +40,7 @@ angular.module('openshiftConsole')
           if ($filter('isAbsoluteURL')(href)) {
             return href;
           }
-          return "/project/" + $scope.projectName + href;
+          return "project/" + $scope.projectName + href;
         };
       }
     };
