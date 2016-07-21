@@ -53643,4 +53643,19 @@ for (e = [], a = 0, d = c.length; a < d; a++) b = c[a], null == b.customDebounce
 return e;
 }(), null, a);
 }, "function" == typeof define && define.amd ? define([ "angular" ], e) :"undefined" != typeof module && module && module.exports && (module.exports = e);
-}.call(this);
+}.call(this), angular.module("angular-toArrayFilter", []).filter("toArray", function() {
+return function(a, b) {
+return angular.isObject(a) ? b === !1 ? Object.keys(a).map(function(b) {
+return a[b];
+}) :Object.keys(a).map(function(b) {
+var c = a[b];
+return angular.isObject(c) ? Object.defineProperty(c, "$key", {
+enumerable:!1,
+value:b
+}) :{
+$key:b,
+$value:c
+};
+}) :a;
+};
+});

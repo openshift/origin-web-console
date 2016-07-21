@@ -7666,8 +7666,15 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "<div ng-if=\"(projects | hashSize) !== 0\" class=\"gutter-top\">\n" +
     "<h1 style=\"display: inline-block\">Projects</h1>\n" +
     "<a ng-if=\"canCreate\" href=\"create-project\" style=\"margin-top: 10px\" class=\"btn btn-lg btn-primary pull-right\">New Project</a>\n" +
+    "<div class=\"row\">\n" +
+    "<form class=\"col-md-5\">\n" +
+    "<div class=\"form-group\">\n" +
+    "<input type=\"text\" ng-model=\"projectSearch\" class=\"form-control\" placeholder=\"Search projects by keyword\" id=\"projectSearch\">\n" +
+    "</div>\n" +
+    "</form>\n" +
+    "</div>\n" +
     "<alerts alerts=\"alerts\"></alerts>\n" +
-    "<div ng-repeat=\"project in projects | orderByDisplayName track by project.metadata.name\" class=\"animate-repeat\">\n" +
+    "<div ng-repeat=\"project in projects | toArray | filter:projectSearch | orderByDisplayName track by project.metadata.name\" class=\"animate-repeat\">\n" +
     "<div row flex cross-axis=\"center\" class=\"tile tile-project tile-click tile-flex\">\n" +
     "<div flex class=\"project-summary\">\n" +
     "<h2 class=\"project truncate\">\n" +
