@@ -90,7 +90,6 @@
   }
   .service-group-header,
   .deployment-tile,
-  .overview-pipeline,
   .no-deployments-block .service-title {
     background-color: #ffffff;
     border: 1px solid @overview-border-gray;
@@ -189,7 +188,7 @@
             left: 3px;
           }
         }
-      }  
+      }
       .deployment-tile-wrapper {
         width: 100%;
       }
@@ -236,56 +235,6 @@
         // Display the message below the route when there is an app label.
         display: block;
         .text-right();
-      }
-    }
-  }
-  .overview-pipeline {
-    border-top-width: 0;
-    .overview-pipeline-details {
-      .flex-wrap(@wrap: wrap);
-    }
-    .build-name, .build-phase {
-      padding: 5px 10px;
-    }
-    .stage {
-      .flex-display(@display: flex);
-      position: relative;
-      .stage-duration {
-        .text-muted();
-        margin-left: 5px;
-      }
-    }
-    .current-stage {
-      margin-left: 10px;
-      padding-left: 10px;
-      border-left: 1px solid #d1d1d1;
-      .flex-display(@display: flex);
-      .align-items(@align: center);
-      .in-progress-stage {
-        width: 150px;
-        margin-bottom: -2px;
-        margin-left: 5px;
-      }
-    }
-    .log-link, .input-link, .stages {
-      padding: 5px 10px;
-    }
-    .stages {
-      .flex-display(@display: flex);
-    }
-    .timestamp {
-      .text-muted();
-      .pull-right();
-      padding: 2px 5px 0;
-    }
-    @media (min-width: @two-column-min-width) {
-      .build-name, .build-phase, .stages, .log-link, .input-link {
-        border-left: 1px solid @overview-border-gray;
-      }
-    }
-    @media (max-width: 567px) {
-      .timestamp {
-        display: none;
       }
     }
   }
@@ -512,7 +461,7 @@
       .flex-display(@display: flex);
       .flex(@columns: 1 0 0%);
       .flex-direction(@direction: column);
-    } 
+    }
   }
   @media (min-width: @screen-md-min) {
     .overview-services.single-alternate-service {

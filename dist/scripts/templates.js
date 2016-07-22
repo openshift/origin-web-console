@@ -704,39 +704,35 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
 
 
   $templateCache.put('views/_triggers.html',
-    "<div class=\"builds-block\">\n" +
+    "<div class=\"triggers\">\n" +
     "<div class=\"builds\" ng-repeat=\"trigger in triggers\">\n" +
     "<div ng-if=\"trigger.type === 'ImageChange'\">\n" +
     "<div ng-repeat=\"build in buildsByOutputImage[(trigger.imageChangeParams.from | imageObjectRef : namespace)] | orderObjectsByDate track by (build | uid)\" ng-if=\"!isBuildHidden(build)\" class=\"build animate-repeat\" kind=\"Build\" resource=\"build\">\n" +
-    "\n" +
-    "<status-icon status=\"build.status.phase\" style=\"margin-right: 5px\"></status-icon>\n" +
-    "\n" +
-    "Build\n" +
+    "<div class=\"build-summary\" ng-class=\"{'dismissible' : !(build | isIncompleteBuild)}\">\n" +
+    "<div class=\"build-name\">\n" +
     "<span ng-if=\"build | annotation : 'buildNumber'\">\n" +
+    "<a ng-if=\"build | buildConfigForBuild\" ng-href=\"{{(build | buildConfigForBuild) | navigateResourceURL : 'BuildConfig' : build.metadata.namespace}}\">{{build | buildConfigForBuild}}</a><span ng-if=\"build | buildConfigForBuild\">,</span>\n" +
     "<a ng-href=\"{{build | navigateResourceURL}}\">\n" +
-    "<span ng-if=\"build | buildConfigForBuild\">{{build | buildConfigForBuild}}</span>\n" +
     "#{{build | annotation : 'buildNumber'}}\n" +
     "</a>\n" +
     "</span>\n" +
     "<span ng-if=\"!(build | annotation : 'buildNumber')\">\n" +
     "{{build.metadata.name}}\n" +
     "</span>\n" +
-    "<span ng-switch=\"build.status.phase\" class=\"hide-ng-leave\" style=\"margin-right: 5px\">\n" +
-    "<span ng-switch-when=\"Complete\">completed.</span>\n" +
-    "<span ng-switch-when=\"Failed\">failed.</span>\n" +
-    "<span ng-switch-when=\"Error\">encountered an error.</span>\n" +
-    "<span ng-switch-when=\"Cancelled\">was cancelled.</span>\n" +
-    "<span ng-switch-default>is {{build.status.phase | lowercase}}.\n" +
-    "<span ng-if=\"trigger.imageChangeParams.automatic\">\n" +
-    "A new deployment will be created automatically once the build completes.\n" +
-    "</span>\n" +
-    "</span>\n" +
-    "</span>\n" +
-    "<span ng-if=\"'builds/log' | canI : 'get'\">\n" +
+    "</div>\n" +
+    "<div class=\"build-phase\">\n" +
+    "<status-icon status=\"build.status.phase\"></status-icon>\n" +
+    "{{build.status.phase}}<span ng-if=\"build | isIncompleteBuild\">. A new deployment will be created automatically once the build completes.</span>\n" +
+    "</div>\n" +
+    "<relative-timestamp timestamp=\"build.metadata.creationTimestamp\" class=\"build-timestamp\"></relative-timestamp>\n" +
+    "<div ng-if=\"'builds/log' | canI : 'get'\" class=\"build-links\">\n" +
     "<a ng-if=\"!!['New', 'Pending'].indexOf(build.status.phase) && (build | buildLogURL)\" ng-href=\"{{build | buildLogURL}}\">View Log</a>\n" +
-    "<span class=\"action-divider\" ng-show=\"!!['New', 'Pending'].indexOf(build.status.phase) && (build | buildLogURL) && !(build | isIncompleteBuild)\">|</span>\n" +
-    "</span>\n" +
-    "<a ng-hide=\"build | isIncompleteBuild\" href=\"\" ng-click=\"hideBuild(build)\">Dismiss</a>\n" +
+    "</div>\n" +
+    "<button ng-hide=\"build | isIncompleteBuild\" ng-click=\"hideBuild(build)\" type=\"button\" class=\"close\">\n" +
+    "<span class=\"pficon pficon-close\" aria-hidden=\"true\"></span>\n" +
+    "<span class=\"sr-only\">Dismiss</span>\n" +
+    "</button>\n" +
+    "</div>\n" +
     "</div>\n" +
     "</div>\n" +
     "</div>\n" +
@@ -4084,6 +4080,85 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
   );
 
 
+  $templateCache.put('views/directives/_build-pipeline-collapsed.html',
+    "<div class=\"build-pipeline-collapsed\">\n" +
+    "<div class=\"build-summary\">\n" +
+    "<div class=\"build-name\">\n" +
+    "<a ng-href=\"{{buildConfigName | navigateResourceURL : 'BuildConfig' : build.metadata.namespace}}\">{{buildConfigName}}</a>,\n" +
+    "<a ng-href=\"{{build | navigateResourceURL}}\">#{{build | annotation : 'buildNumber'}}</a>\n" +
+    "</div>\n" +
+    "<div class=\"build-phase\">\n" +
+    "<status-icon status=\"build.status.phase\"></status-icon>\n" +
+    "{{build.status.phase}}\n" +
+    "</div>\n" +
+    "<relative-timestamp timestamp=\"build.metadata.creationTimestamp\" class=\"build-timestamp\"></relative-timestamp>\n" +
+    "<div ng-include=\"'views/directives/_build-pipeline-links.html'\" class=\"build-links\"></div>\n" +
+    "<button ng-hide=\"build | isIncompleteBuild\" ng-click=\"hideBuild(build)\" type=\"button\" class=\"close\">\n" +
+    "<span class=\"pficon pficon-close\" aria-hidden=\"true\"></span>\n" +
+    "<span class=\"sr-only\">Dismiss</span>\n" +
+    "</button>\n" +
+    "</div>\n" +
+    "</div>"
+  );
+
+
+  $templateCache.put('views/directives/_build-pipeline-expanded.html',
+    "<div flex class=\"build-pipeline\">\n" +
+    "<div class=\"build-summary\">\n" +
+    "<div ng-if=\"buildConfigNameOnExpanded\" class=\"build-name\">\n" +
+    "<a ng-href=\"{{buildConfigName | navigateResourceURL : 'BuildConfig' : build.metadata.namespace}}\">{{buildConfigName}}</a>\n" +
+    "</div>\n" +
+    "<div class=\"build-phase\">\n" +
+    "<span class=\"status-icon\" ng-class=\"build.status.phase\">\n" +
+    "<span ng-switch=\"build.status.phase\" class=\"hide-ng-leave\">\n" +
+    "<span ng-switch-when=\"Complete\" aria-hidden=\"true\">\n" +
+    "<i class=\"fa fa-check-circle\"></i>\n" +
+    "</span>\n" +
+    "<span ng-switch-when=\"Failed\" aria-hidden=\"true\">\n" +
+    "<i class=\"fa fa-times-circle\"></i>\n" +
+    "</span>\n" +
+    "<span ng-switch-default>\n" +
+    "<status-icon status=\"build.status.phase\"></status-icon>\n" +
+    "</span>\n" +
+    "</span>\n" +
+    "</span>\n" +
+    "<a ng-href=\"{{build | navigateResourceURL}}\">Build #{{build | annotation : 'buildNumber'}}</a>\n" +
+    "</div>\n" +
+    "<relative-timestamp timestamp=\"build.metadata.creationTimestamp\" class=\"build-timestamp\"></relative-timestamp>\n" +
+    "<div ng-include=\"'views/directives/_build-pipeline-links.html'\" class=\"build-links\"></div>\n" +
+    "</div>\n" +
+    "<div class=\"pipeline-container\">\n" +
+    "<div class=\"pipeline\" ng-if=\"!jenkinsStatus.stages.length\">\n" +
+    "<div class=\"pipeline-stage no-stages\">\n" +
+    "<div class=\"pipeline-stage-name\">No stages have started.</div>\n" +
+    "</div>\n" +
+    "</div>\n" +
+    "<div class=\"pipeline\">\n" +
+    "<div class=\"pipeline-stage\" ng-repeat=\"stage in jenkinsStatus.stages track by stage.id\">\n" +
+    "<div column class=\"pipeline-stage-column\">\n" +
+    "<div class=\"pipeline-stage-name\" ng-class=\"build.status.phase\">\n" +
+    "{{stage.name}}\n" +
+    "</div>\n" +
+    "<pipeline-status ng-if=\"stage.status\" status=\"stage.status\"></pipeline-status>\n" +
+    "<div class=\"pipeline-actions\" ng-if=\"stage | pipelineStagePendingInput\">\n" +
+    "<a ng-href=\"{{build | jenkinsInputURL}}\" target=\"_blank\">Input Required</a>\n" +
+    "</div>\n" +
+    "<div class=\"pipeline-time\" ng-class=\"stage.status\" ng-if=\"stage.durationMillis && !(stage | pipelineStagePendingInput)\">{{stage.durationMillis | timeOnlyDuration}}</div>\n" +
+    "<div class=\"pipeline-time\" ng-class=\"stage.status\" ng-if=\"!stage.durationMillis && !(stage | pipelineStagePendingInput)\">not started</div>\n" +
+    "</div>\n" +
+    "</div>\n" +
+    "</div>\n" +
+    "</div>\n" +
+    "</div>"
+  );
+
+
+  $templateCache.put('views/directives/_build-pipeline-links.html',
+    "<div ng-if=\"build | jenkinsBuildURL\" class=\"pipeline-link\"><a ng-href=\"{{build | jenkinsBuildURL}}\" target=\"_blank\">Jenkins Build</a></div>\n" +
+    "<div ng-if=\"(build | buildLogURL) && ('builds/log' | canI : 'get')\" class=\"pipeline-link\"><a ng-href=\"{{build | buildLogURL}}\" target=\"_blank\">View Log</a></div>"
+  );
+
+
   $templateCache.put('views/directives/_click-to-reveal.html',
     "<a class=\"reveal-contents-link\" href=\"javascript:;\">{{linkText || \"Show\"}}</a>\n" +
     "<span style=\"display: none\" class=\"reveal-contents\" ng-transclude></span>"
@@ -4383,54 +4458,12 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
 
 
   $templateCache.put('views/directives/build-pipeline.html',
-    "<div flex class=\"build-pipeline\">\n" +
-    "<div column class=\"build-summary\">\n" +
     "<div>\n" +
-    "<span class=\"status-icon\" ng-class=\"build.status.phase\">\n" +
-    "<span ng-switch=\"build.status.phase\" class=\"hide-ng-leave\">\n" +
-    "<span ng-switch-when=\"Complete\" aria-hidden=\"true\">\n" +
-    "<i class=\"fa fa-check-circle\"></i>\n" +
-    "</span>\n" +
-    "<span ng-switch-when=\"Failed\" aria-hidden=\"true\">\n" +
-    "<i class=\"fa fa-times-circle\"></i>\n" +
-    "</span>\n" +
-    "<span ng-switch-default>\n" +
-    "<status-icon status=\"build.status.phase\"></status-icon>\n" +
-    "</span>\n" +
-    "</span>\n" +
-    "</span>\n" +
-    "<a ng-href=\"{{build | navigateResourceURL}}\">Build #{{build | annotation : 'buildNumber'}}</a>\n" +
+    "<div ng-if=\"collapseStagesOnCompletion\">\n" +
+    "<div ng-if=\"build | isIncompleteBuild\" ng-include=\"'views/directives/_build-pipeline-expanded.html'\"></div>\n" +
+    "<div ng-if=\"!(build | isIncompleteBuild)\" ng-include=\"'views/directives/_build-pipeline-collapsed.html'\"></div>\n" +
     "</div>\n" +
-    "<div class=\"small text-muted\">\n" +
-    "Started <relative-timestamp timestamp=\"build.metadata.creationTimestamp\"></relative-timestamp>\n" +
-    "</div>\n" +
-    "<div>\n" +
-    "<div ng-if=\"build | jenkinsBuildURL\" class=\"pipeline-link\"><a ng-href=\"{{build | jenkinsBuildURL}}\" target=\"_blank\">Jenkins Build</a></div>\n" +
-    "<div ng-if=\"(build | buildLogURL) && ('builds/log' | canI : 'get')\" class=\"pipeline-link\"><a ng-href=\"{{build | buildLogURL}}\" target=\"_blank\">View Log</a></div>\n" +
-    "</div>\n" +
-    "</div>\n" +
-    "<div class=\"pipeline-container\">\n" +
-    "<div class=\"pipeline\" ng-if=\"!jenkinsStatus.stages.length\">\n" +
-    "<div class=\"pipeline-stage no-stages\">\n" +
-    "<div class=\"pipeline-stage-name\">No stages have started.</div>\n" +
-    "</div>\n" +
-    "</div>\n" +
-    "<div class=\"pipeline\">\n" +
-    "<div class=\"pipeline-stage\" ng-repeat=\"stage in jenkinsStatus.stages track by stage.id\">\n" +
-    "<div column class=\"pipeline-stage-column\">\n" +
-    "<div class=\"pipeline-stage-name\" ng-class=\"build.status.phase\">\n" +
-    "{{stage.name}}\n" +
-    "</div>\n" +
-    "<pipeline-status ng-if=\"stage.status\" status=\"stage.status\"></pipeline-status>\n" +
-    "<div class=\"pipeline-actions\" ng-if=\"stage | pipelineStagePendingInput\">\n" +
-    "<a ng-href=\"{{build | jenkinsInputURL}}\" target=\"_blank\">Input Required</a>\n" +
-    "</div>\n" +
-    "<div class=\"pipeline-time\" ng-class=\"stage.status\" ng-if=\"stage.durationMillis && !(stage | pipelineStagePendingInput)\">{{stage.durationMillis | timeOnlyDuration}}</div>\n" +
-    "<div class=\"pipeline-time\" ng-class=\"stage.status\" ng-if=\"!stage.durationMillis && !(stage | pipelineStagePendingInput)\">not started</div>\n" +
-    "</div>\n" +
-    "</div>\n" +
-    "</div>\n" +
-    "</div>\n" +
+    "<div ng-if=\"!collapseStagesOnCompletion\" ng-include=\"'views/directives/_build-pipeline-expanded.html'\"></div>\n" +
     "</div>"
   );
 
@@ -5758,62 +5791,6 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "</div>\n" +
     "</fieldset>\n" +
     "</ng-form>"
-  );
-
-
-  $templateCache.put('views/directives/overview-pipeline.html',
-    "<div>\n" +
-    "<div class=\"overview-pipeline\">\n" +
-    "<div class=\"timestamp\">\n" +
-    "<relative-timestamp timestamp=\"build.metadata.creationTimestamp\"></relative-timestamp>\n" +
-    "</div>\n" +
-    "<div row class=\"overview-pipeline-details\" ng-class=\"build.status.phase\">\n" +
-    "<div class=\"build-name\">\n" +
-    "<a ng-href=\"{{buildConfigName | navigateResourceURL : 'BuildConfig' : build.metadata.namespace}}\">{{buildConfigName}}</a>,\n" +
-    "<a ng-href=\"{{build | navigateResourceURL}}\">#{{build | annotation : 'buildNumber'}}</a>\n" +
-    "</div>\n" +
-    "<div class=\"build-phase\">\n" +
-    "{{build.status.phase}}\n" +
-    "</div>\n" +
-    "<div class=\"stages\">\n" +
-    "<div ng-if=\"!jenkinsStatus.stages.length\">\n" +
-    "<div>No stages have started.</div>\n" +
-    "</div>\n" +
-    "<div ng-repeat=\"stage in jenkinsStatus.stages track by stage.id\" class=\"stage\">\n" +
-    "<span data-toggle=\"tooltip\" data-trigger=\"hover\" dynamic-content=\"{{stage.name}}, {{stage.status | sentenceCase}}\">\n" +
-    "<pipeline-status ng-if=\"stage.status\" status=\"stage.status\"></pipeline-status>\n" +
-    "</span>\n" +
-    "<div ng-if=\"!(stage | pipelineStageComplete)\" class=\"current-stage\">\n" +
-    "Stage '{{stage.name}}', {{stage.status | camelToLower}}\n" +
-    "<div class=\"in-progress-stage hidden-xs\">\n" +
-    "<div class=\"build-stage-animation\">\n" +
-    "<div class=\"build-rail\">\n" +
-    "<div class=\"build-bar\"></div>\n" +
-    "</div>\n" +
-    "<div class=\"build-circle\">\n" +
-    "<span ng-if=\"stage.durationMillis\" class=\"build-time\">{{stage.durationMillis | timeOnlyDuration}}</span>\n" +
-    "</div>\n" +
-    "</div>\n" +
-    "</div>\n" +
-    "</div>\n" +
-    "</div>\n" +
-    "</div>\n" +
-    "<div ng-repeat=\"stage in jenkinsStatus.stages track by stage.id\">\n" +
-    "<div ng-if=\"stage | pipelineStagePendingInput\" class=\"input-link\">\n" +
-    "<a ng-href=\"{{build | jenkinsInputURL}}\" target=\"_blank\">Input Required</a>\n" +
-    "</div>\n" +
-    "</div>\n" +
-    "<div ng-if=\"build | buildLogURL\" class=\"log-link\"><a ng-href=\"{{build | buildLogURL}}\" ng-if=\"('builds/log' | canI : 'get')\" target=\"_blank\">View Log</a></div>\n" +
-    "</div>\n" +
-    "</div>\n" +
-    "<div ng-repeat=\"stage in jenkinsStatus.stages track by stage.id\" class=\"alert-wrapper\" ng-class-odd=\"'odd-alert'\" ng-class-even=\"'even-alert'\">\n" +
-    "<div ng-if=\"stage | pipelineStagePendingInput\" class=\"alert alert-warning toast-pf mar-left-sm\">\n" +
-    "<span class=\"pficon pficon-warning-triangle-o\" aria-hidden=\"true\"></span>\n" +
-    "<span class=\"mar-right-sm\">Stage '{{stage.name}}' requires user input to continue.</span>\n" +
-    "<a ng-href=\"{{build | jenkinsInputURL}}\" target=\"_blank\">Provide input</a>\n" +
-    "</div>\n" +
-    "</div>\n" +
-    "</div>"
   );
 
 
@@ -7411,7 +7388,7 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "<div class=\"service-group-triggers\">\n" +
     "<div ng-repeat=\"dc in deploymentConfigsByService[service.metadata.name || '']\">\n" +
     "<div row ng-repeat=\"pipeline in recentPipelinesByDC[dc.metadata.name] | orderObjectsByDate : true track by (pipeline | uid)\" class=\"animate-repeat\">\n" +
-    "<build-pipeline flex build=\"pipeline\" overview=\"true\"></build-pipeline>\n" +
+    "<build-pipeline flex build=\"pipeline\" collapse-stages-on-completion=\"true\" build-config-name-on-expanded=\"true\"></build-pipeline>\n" +
     "</div>\n" +
     "<div>\n" +
     "<triggers triggers=\"dc.spec.triggers\" builds-by-output-image=\"recentBuildsByOutputImage\" namespace=\"dc.metadata.namespace\"></triggers>\n" +

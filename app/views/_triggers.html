@@ -1,4 +1,4 @@
-<div class="builds-block">
+<div class="triggers">
   <div class="builds" ng-repeat="trigger in triggers">
     <div ng-if="trigger.type === 'ImageChange'">
       <div ng-repeat="build in buildsByOutputImage[(trigger.imageChangeParams.from | imageObjectRef : namespace)] | orderObjectsByDate track by (build | uid)"
@@ -6,39 +6,32 @@
           class="build animate-repeat"
           kind="Build"
           resource="build">
-        <!-- Icon -->
-        <status-icon status="build.status.phase" style="margin-right: 5px;"></status-icon>
-        <!-- Message -->
-        Build
-        <span ng-if="build | annotation : 'buildNumber'">
-          <a ng-href="{{build | navigateResourceURL}}">
-            <span ng-if="build | buildConfigForBuild">{{build | buildConfigForBuild}}</span>
-            #{{build | annotation : 'buildNumber'}}
-          </a>
-        </span>
-        <span ng-if="!(build | annotation : 'buildNumber')">
-          {{build.metadata.name}}
-        </span>
-        <span ng-switch="build.status.phase" class="hide-ng-leave" style="margin-right: 5px;">
-          <span ng-switch-when="Complete">completed.</span>
-          <span ng-switch-when="Failed">failed.</span>
-          <span ng-switch-when="Error">encountered an error.</span>
-          <span ng-switch-when="Cancelled">was cancelled.</span>
-          <span ng-switch-default>is {{build.status.phase | lowercase}}.
-            <span ng-if="trigger.imageChangeParams.automatic">
-              A new deployment will be created automatically once the build completes.
+        <div class="build-summary" ng-class="{'dismissible' : !(build | isIncompleteBuild)}">
+          <div class="build-name">
+            <span ng-if="build | annotation : 'buildNumber'">
+              <a ng-if="build | buildConfigForBuild" ng-href="{{(build | buildConfigForBuild) | navigateResourceURL : 'BuildConfig' : build.metadata.namespace}}">{{build | buildConfigForBuild}}</a><span ng-if="build | buildConfigForBuild">,</span>
+              <a ng-href="{{build | navigateResourceURL}}">
+                #{{build | annotation : 'buildNumber'}}
+              </a>
             </span>
-          </span>
-        </span>
-        <span ng-if="'builds/log' | canI : 'get'">
-          <a ng-if="!!['New', 'Pending'].indexOf(build.status.phase) && (build | buildLogURL)" ng-href="{{build | buildLogURL}}">View Log</a>
-          <span class="action-divider" ng-show="!!['New', 'Pending'].indexOf(build.status.phase) && (build | buildLogURL) && !(build | isIncompleteBuild)">|</span>
-        </span>
-        <a ng-hide="build | isIncompleteBuild" href="" ng-click="hideBuild(build)">Dismiss</a>
+            <span ng-if="!(build | annotation : 'buildNumber')">
+              {{build.metadata.name}}
+            </span>
+          </div>
+          <div class="build-phase">
+            <status-icon status="build.status.phase"></status-icon>
+            {{build.status.phase}}<span ng-if="build | isIncompleteBuild">. A new deployment will be created automatically once the build completes.</span>
+          </div>
+          <relative-timestamp timestamp="build.metadata.creationTimestamp" class="build-timestamp"></relative-timestamp>
+          <div ng-if="'builds/log' | canI : 'get'" class="build-links">
+            <a ng-if="!!['New', 'Pending'].indexOf(build.status.phase) && (build | buildLogURL)" ng-href="{{build | buildLogURL}}">View Log</a>
+          </div>
+          <button ng-hide="build | isIncompleteBuild" ng-click="hideBuild(build)" type="button" class="close">
+            <span class="pficon pficon-close" aria-hidden="true"></span>
+            <span class="sr-only">Dismiss</span>
+          </button>
+        </div>
       </div>
     </div>
   </div>
 </div>
-
-
-

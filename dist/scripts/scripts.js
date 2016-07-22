@@ -8460,13 +8460,11 @@ return {
 restrict:"E",
 scope:{
 build:"=",
-collapseStages:"=?",
-overview:"=?"
+collapseStagesOnCompletion:"=?",
+buildConfigNameOnExpanded:"=?"
 },
 replace:!0,
-templateUrl:function(a, b) {
-return b.overview ? "views/directives/overview-pipeline.html" :"views/directives/build-pipeline.html";
-},
+templateUrl:"views/directives/build-pipeline.html",
 link:function(c) {
 var d = a("annotation");
 c.$watch(function() {
