@@ -4364,7 +4364,7 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
 
 
   $templateCache.put('views/directives/build-pipeline.html',
-    "<div row mobile=\"column\" flex>\n" +
+    "<div flex class=\"build-pipeline\">\n" +
     "<div column class=\"build-summary\">\n" +
     "<div>\n" +
     "<span class=\"status-icon\" ng-class=\"build.status.phase\">\n" +
@@ -4392,18 +4392,17 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "</div>\n" +
     "<div class=\"pipeline-container\">\n" +
     "<div class=\"pipeline\" ng-if=\"!jenkinsStatus.stages.length\">\n" +
-    "<div class=\"pipeline-stage\">\n" +
-    "<div class=\"pipeline-stage-name no-stages\">No stages have started.</div>\n" +
+    "<div class=\"pipeline-stage no-stages\">\n" +
+    "<div class=\"pipeline-stage-name\">No stages have started.</div>\n" +
     "</div>\n" +
     "</div>\n" +
     "<div class=\"pipeline\">\n" +
-    "<div class=\"pipeline-stage\" grow=\"1\" ng-repeat=\"stage in jenkinsStatus.stages track by stage.id\">\n" +
+    "<div class=\"pipeline-stage\" ng-repeat=\"stage in jenkinsStatus.stages track by stage.id\">\n" +
     "<div column class=\"pipeline-stage-column\">\n" +
     "<div class=\"pipeline-stage-name\" ng-class=\"build.status.phase\">\n" +
     "{{stage.name}}\n" +
     "</div>\n" +
     "<pipeline-status ng-if=\"stage.status\" status=\"stage.status\"></pipeline-status>\n" +
-    "\n" +
     "<div class=\"pipeline-actions\" ng-if=\"stage | pipelineStagePendingInput\">\n" +
     "<a ng-href=\"{{build | jenkinsInputURL}}\" target=\"_blank\">Input Required</a>\n" +
     "</div>\n" +

@@ -17,9 +17,9 @@
 @line-border-width: 8px;
 @line-grow-animation-time: 0.5s;
 @line-height: (@line-border-width / 2);
-@pipeline-margin: 10px;
+@pipeline-padding: 10px;
 @progress-line: 100%;
-@progress-rail-animation-time: 6s;
+@progress-rail-animation-time: 5s;
 @semi-circle-animation-time: (@circle-animation-time / 2);
 
 // Animations
@@ -105,23 +105,60 @@
   to {background-color: @build-pipeline-pending-color;}
 }
 
+.build-pipeline {
+  border: 1px solid @build-pipeline-border-color;
+  border-top-width: 2px;
+  &:first-child {
+    border-top-width: 1px;
+  }
+}
+
 .pipeline-container {
   .flex(@columns: 1 1 auto);
-  border: 1px solid @build-pipeline-border-color;
   overflow: hidden;
 }
 .pipeline {
   .flex-display(@display: flex);
   .flex-wrap(@wrap: wrap);
   height: 100%;
+  padding: 0 (@pipeline-padding / 2);
+  .overview & {
+    background-color: #fff;
+  }
   .pipeline-stage {
-    border-top: 1px solid @build-pipeline-border-color;
-    margin: auto 0;
-    min-width: 150px;
-    max-width: 100%;
-    padding: (@pipeline-margin /2) @pipeline-margin;
-    &:first-child {
-      border-top: 0;
+    // need to use flex-basis: auto and width because of IE11 bug
+    .flex(@columns: 0 0 auto);
+    min-height: 96px;
+    padding: (@pipeline-padding + 5) @pipeline-padding  (@pipeline-padding * 3) @pipeline-padding;
+    position: relative;
+    width: 100%;
+    // add arrow after each stage
+    &:before {
+      bottom: 0;
+      color:  darken(@build-pipeline-border-color, 5%);
+      content: '\2193';
+      font-size: 22px;
+      left: 0;
+      line-height: 1;
+      position: absolute;
+      right: 0;
+      text-align: center;
+    }
+    // hide arrow on last stage
+    &:last-child:before {
+      display: none;
+    }
+    &.no-stages {
+      align-items: center;
+      display: flex;
+      // so that .pipeline-stage-name doesn't truncate
+      width: auto !important;
+      &:before {
+        display: none;
+      }
+      .pipeline-stage-name {
+        margin-bottom: 0;
+      }
     }
   }
 }
@@ -145,16 +182,16 @@
 .pipeline-stage-name {
   .truncate();
   line-height: initial;
-  margin-bottom: @pipeline-margin + 5px;
-  &.no-stages {
-    margin: @pipeline-margin * 2.25;
-  }
+  margin-bottom: @pipeline-padding + 5px;
 }
 .pipeline-time, .pipeline-actions {
   margin-top: 12px;
   .text-muted();
   &.IN_PROGRESS {
     color: @gray;
+  }
+  .overview & {
+    background-color: #fff;
   }
 }
 
@@ -166,23 +203,24 @@
     display: inline-block;
   }
   .pipeline-link + .pipeline-link:before {
+    border-left: 1px solid @build-pipeline-border-color;
     content: '';
     display: inline-block;
-    border-left: 1px solid @build-pipeline-border-color;
-    height: 10px;
+    height: 12px;
     margin-right: 3px;
-    margin: 0 5px 0 2px;
+    margin: 0 5px -2px 2px;
   }
 }
-.build-summary, .stages-block {
-  border: 1px solid @build-pipeline-border-color;
-}
+
 .build-summary {
-  border-bottom-width: 0;
-  padding: 10px;
+  border-bottom: 1px solid @build-pipeline-border-color;
   .flex-direction(@direction: row);
   .flex-wrap(@wrap: wrap);
   .justify-content(@justify: space-around);
+  padding: 10px;
+  .small {
+    margin-top: 2px;
+  }
   .status-icon {
     &.Complete {
       color: @build-pipeline-success-color;
@@ -191,37 +229,52 @@
       color: @build-pipeline-failed-color;
     }
   }
-}
-
-@media (min-width: @screen-xs-min) {
-  .build-summary {
-    border-bottom-width: 1px;
-    border-right-width: 0;
-    .flex-direction(@direction: column);
-    .justify-content(@justify: center);
+  .overview & {
+    background-color: #fff;
   }
 }
 
-@media (min-width: @screen-sm-min) {
-  .pipeline {
-    .pipeline-stage {
-      border-top: 0;
-      border-left: 1px solid @build-pipeline-border-color;
-      // Prevent double borders when wrapping with -1px left margin.
-      margin: 10px 0 10px -1px;
+@media (min-width: 400px) {
+  .pipeline .pipeline-stage {
+    padding-right: (@pipeline-padding * 5.2);
+    padding-bottom: (@pipeline-padding + 5);
+    width: 50%;
+    &:before {
+      bottom: auto;
+      content: '\2192';
+      left: auto;
+      right: 10px;
+      top: 37%;
     }
   }
+}
+
+@media (min-width: 600px) {
+  .build-pipeline {
+    .flex-direction(@direction: row);
+    .flex-display(@display: flex);
+  }
   .build-summary {
-    border-right-width: 0;
-    .flex(@columns: 0 0 200px);
+    border-bottom-width: 0;
+    border-right: 1px solid @build-pipeline-border-color;
+    .flex(@columns: 0 0 175px);
     .flex-direction(@direction: column);
-    min-height: 100px;
+    .justify-content(@justify: center);
+    .small {
+      margin-top: 0;
+    }
   }
 }
 
-@media (max-width: @screen-xs-max) {
-  .pipeline {
-    .flex-direction(@direction: column);
+@media (min-width: @screen-md-min) {
+  .pipeline .pipeline-stage {
+    width: 33.333333%;
+  }
+}
+
+@media (min-width: @screen-lg-min) {
+  .pipeline .pipeline-stage {
+    width: 25%;
   }
 }
 
