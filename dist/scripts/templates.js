@@ -474,7 +474,7 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
 
 
   $templateCache.put('views/_project-page.html',
-    "<div ng-class=\"{'show-sidebar-right': renderOptions.showSidebarRight}\" class=\"wrap\">\n" +
+    "<div ng-class=\"{'show-sidebar-right': renderOptions.showEventsSidebar}\" class=\"wrap\">\n" +
     "<div class=\"sidebar-left collapse navbar-collapse navbar-collapse-1\">\n" +
     "<sidebar></sidebar>\n" +
     "</div>\n" +
@@ -482,16 +482,9 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "<div ng-transclude>\n" +
     "</div>\n" +
     "</div>\n" +
-    "<div class=\"sidebar-right sidebar-pf sidebar-pf-right\">\n" +
+    "<div ng-if=\"renderOptions.showEventsSidebar\" class=\"sidebar-right sidebar-pf sidebar-pf-right\">\n" +
     "<div class=\"right-section\">\n" +
-    "<div class=\"right-container\">\n" +
-    "<div class=\"sidebar-header right-header\">\n" +
-    "<h2 class=\"h5\">Details</h2>\n" +
-    "</div>\n" +
-    "<div class=\"right-content\">\n" +
-    "<osc-object-describer></osc-object-describer>\n" +
-    "</div>\n" +
-    "</div>\n" +
+    "<events-sidebar ng-if=\"projectContext\" project-context=\"projectContext\"></events-sidebar>\n" +
     "</div>\n" +
     "</div>\n" +
     "</div>"
@@ -4662,6 +4655,73 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "</tr>\n" +
     "</tbody>\n" +
     "</table>\n" +
+    "</div>"
+  );
+
+
+  $templateCache.put('views/directives/events-sidebar.html',
+    "<div class=\"right-container events-sidebar\">\n" +
+    "<div class=\"sidebar-header right-header\">\n" +
+    "<div>\n" +
+    "<h2>\n" +
+    "Events\n" +
+    "<small ng-if=\"warningCount\" class=\"mar-left-sm\">\n" +
+    "<span class=\"pficon pficon-warning-triangle-o\"></span>\n" +
+    "{{warningCount}}\n" +
+    "<span class=\"hidden-xs hidden-sm\">\n" +
+    "<span ng-if=\"warningCount === 1\">warning</span>\n" +
+    "<span ng-if=\"warningCount > 1\">warnings</span>\n" +
+    "</span>\n" +
+    "</small>\n" +
+    "</h2>\n" +
+    "</div>\n" +
+    "<div ng-if=\"events | hashSize\" class=\"event-details-link\">\n" +
+    "<a ng-href=\"project/{{projectContext.projectName}}/browse/events\">View Details</a>\n" +
+    "</div>\n" +
+    "</div>\n" +
+    "<div class=\"right-content\">\n" +
+    "<div ng-if=\"!events\">\n" +
+    "Loading...\n" +
+    "</div>\n" +
+    "<div ng-if=\"events\">\n" +
+    "<div ng-if=\"!(events | hashSize)\">\n" +
+    "<em>No events.</em>\n" +
+    "</div>\n" +
+    "<div ng-repeat=\"event in events\" class=\"event animate-repeat\">\n" +
+    "<span class=\"sr-only\">{{event.type}}</span>\n" +
+    "<div class=\"event-icon\" aria-hidden=\"true\">\n" +
+    "<div ng-switch=\"event.type\" class=\"hide-ng-leave\">\n" +
+    "<span ng-switch-when=\"Warning\" class=\"pficon pficon-warning-triangle-o\"></span>\n" +
+    "<span ng-switch-when=\"Normal\" class=\"pficon pficon-info text-muted\"></span>\n" +
+    "</div>\n" +
+    "</div>\n" +
+    "<div class=\"event-details\">\n" +
+    "<div class=\"detail-group\">\n" +
+    "<div class=\"event-reason\">\n" +
+    "{{event.reason | sentenceCase}}\n" +
+    "</div>\n" +
+    "<div class=\"event-object\">\n" +
+    "{{event.involvedObject.kind | abbreviateKind}}/{{event.involvedObject.name}}\n" +
+    "</div>\n" +
+    "</div>\n" +
+    "<div class=\"detail-group\">\n" +
+    "<div class=\"event-message\">\n" +
+    "{{event.message}}\n" +
+    "</div>\n" +
+    "<div class=\"event-timestamp\">\n" +
+    "<relative-timestamp timestamp=\"event.lastTimestamp\"></relative-timestamp>\n" +
+    "</div>\n" +
+    "</div>\n" +
+    "<div ng-if=\"event.count > 1\" class=\"text-muted small\">\n" +
+    "{{event.count}} times in the last\n" +
+    "<duration-until-now timestamp=\"event.firstTimestamp\" omit-single=\"true\" precision=\"1\"></duration-until-now>\n" +
+    "</div>\n" +
+    "<div>\n" +
+    "</div>\n" +
+    "</div>\n" +
+    "</div>\n" +
+    "</div>\n" +
+    "</div>\n" +
     "</div>"
   );
 

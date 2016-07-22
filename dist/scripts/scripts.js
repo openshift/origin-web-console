@@ -6011,6 +6011,25 @@ c.unwatchAll(m);
 });
 } ]
 };
+} ]), angular.module("openshiftConsole").directive("eventsSidebar", [ "$filter", "DataService", "Logger", function(a, b, c) {
+return {
+restrict:"E",
+scope:{
+projectContext:"="
+},
+templateUrl:"views/directives/events-sidebar.html",
+controller:[ "$scope", function(d) {
+var e = [], f = a("orderObjectsByDate");
+e.push(b.watch("events", d.projectContext, function(a) {
+var b = a.by("metadata.name");
+d.events = f(b, !0), d.warningCount = _.size(_.filter(b, {
+type:"Warning"
+})), c.log("events (subscribe)", d.events);
+})), d.$on("$destroy", function() {
+b.unwatchAll(e);
+});
+} ]
+};
 } ]), angular.module("openshiftConsole").directive("fromFile", [ "$q", "$uibModal", "$location", "$filter", "CachedTemplateService", "AlertMessageService", "Navigate", "TaskList", "DataService", "APIService", function(a, b, c, d, e, f, g, h, i, j) {
 return {
 restrict:"E",
@@ -9477,7 +9496,21 @@ if (!a) return a;
 var c = _.startCase(a);
 return b ? c :c.toLowerCase();
 };
-} ]).filter("kindToResource", [ "APIService", function(a) {
+} ]).filter("abbreviateKind", function() {
+var a = {
+Build:"build",
+BuildConfig:"bc",
+DeploymentConfig:"dc",
+ImageStream:"is",
+Pod:"pod",
+ReplicationController:"rc",
+Route:"route",
+Service:"svc"
+};
+return function(b) {
+return a[b] || b;
+};
+}).filter("kindToResource", [ "APIService", function(a) {
 return a.kindToResource;
 } ]).filter("humanizeQuotaResource", function() {
 return function(a) {

@@ -173,18 +173,6 @@
         padding-top: 0;
       }
     }
-    .dl-horizontal {
-      margin: 0 0 @line-height-computed;
-      dt {
-        text-align: left;
-      }
-      dd {
-        .word-break();
-      }
-    }
-    .sidebar-help {
-      color: @gray-light;
-    }
   }
 }
 
@@ -268,23 +256,6 @@
   }
 }
 
-@media (min-width: @screen-sm-min) and (max-width: @screen-md-max) {
-  .show-sidebar-right {
-    .sidebar-right {
-      .dl-horizontal {
-        dt {
-          float: none;
-          width: auto;
-        }
-        dd {
-          margin-left: 0;
-          margin-bottom: (@line-height-computed / 2);
-        }
-      }
-    }
-  }
-}
-
 @media (min-width: @screen-lg-min) {
   .sidebar-left {
     .navbar-sidebar {
@@ -331,16 +302,73 @@
       }
     }
   }
-  .show-sidebar-right {
-    .sidebar-right {
-        .dl-horizontal {
-          dt {
-            width: 49%;
+}
+
+.events-sidebar {
+  .pficon {
+    vertical-align: middle;
+  }
+  .sidebar-header {
+    align-items: center;
+    display: flex;
+    justify-content: space-between;
+    h2 {
+      .h5();
+      display: inline-block;
+    }
+    .event-details-link {
+      .small();
+      margin-right: 30px;
+    }
+  }
+  .right-content {
+    .event {
+      display: flex;
+      align-items: center;
+      margin-bottom: 10px;
+      .event-icon {
+        font-size: 18px;
+        margin-right: 10px;
+      }
+      .event-details {
+        .truncate();
+        flex-grow: 1;
+        .detail-group {
+          display: flex;
+          flex-direction: column;
+          justify-content: space-between;
+        }
+        .event-reason, .event-object, .event-message {
+          .truncate();
+        }
+        .event-message {
+          .small();
+        }
+        .event-timestamp {
+          .small();
+          .text-muted();
+        }
+        @media (min-width: @screen-lg-min) {
+          .detail-group {
+            flex-direction: row;
           }
-          dd {
-            margin-left: 50%;
+          .event-object {
+            order: 1;
+          }
+          .event-reason {
+            order: 2;
+          }
+          .event-timestamp {
+            .text-right();
+            margin-left: 5px;
+            min-width: 100px;
           }
         }
+      }
+    }
+    .event + .event {
+      border-top: 1px solid #ededed;
+      padding-top: 10px;
     }
   }
 }
