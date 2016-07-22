@@ -4188,7 +4188,7 @@ to{background-color:transparent}
 .navbar-project-menu{width:100%}
 .navbar-project-menu .navbar-project-search{display:inline-block}
 .navbar-project-menu .form-group{margin-bottom:0}
-.navbar-project-menu .form-group .form-control{margin-bottom:0;height:auto}
+.navbar-project-menu .form-group .form-control{background-color:transparent;margin-bottom:0;height:auto}
 .navbar-project-menu .bootstrap-select.open.btn-group .btn{background-color:#1e2126}
 .navbar-project-menu .bootstrap-select.btn-group .btn{border-color:#050505;border-radius:0;color:#dbdada;font-size:19px;font-weight:300;background:#292e34;border-bottom:0;box-shadow:none;border-top:0;line-height:1.66666667;padding:7px 50px 7px 20px;transition:none}
 .tile,.tile-flex{transition:.3s cubic-bezier(.25,.8,.25,1)}
@@ -4218,7 +4218,7 @@ to{background-color:transparent}
 .navbar-project-menu .bootstrap-select.btn-group .btn:before{color:#9c9c9c;content:'Project';font-size:10px;left:30px;position:absolute;top:8px}
 .navbar-project-menu .bootstrap-select.btn-group .btn .filter-option{max-width:470px}
 .navbar-project-menu .bootstrap-select.btn-group .dropdown-toggle .caret{right:30px}
-.navbar-project-menu .bootstrap-select .dropdown-toggle{height:60px;max-width:330px;min-width:280px}
+.navbar-project-menu .bootstrap-select .dropdown-toggle{height:60px;max-width:400px;min-width:280px}
 }
 @media (min-width:992px){.navbar-project-menu,.navbar-project-menu .bootstrap-select .dropdown-toggle{max-width:500px}
 }
