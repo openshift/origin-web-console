@@ -4692,8 +4692,8 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "<tbody ng-if=\"(filteredEvents | hashSize) === 0\">\n" +
     "<tr>\n" +
     "<td colspan=\"6\">\n" +
-    "<span ng-if=\"(unfilteredEvents | hashSize) === 0\"><em>No events to show.</em></span>\n" +
-    "<span ng-if=\"(unfilteredEvents | hashSize) > 0\">\n" +
+    "<span ng-if=\"(events | hashSize) === 0\"><em>No events to show.</em></span>\n" +
+    "<span ng-if=\"(events | hashSize) > 0\">\n" +
     "All events hidden by filter.\n" +
     "<a href=\"\" ng-click=\"filter.text = ''\" role=\"button\">Clear filter</a>\n" +
     "</span>\n" +
