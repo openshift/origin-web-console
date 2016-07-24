@@ -251,8 +251,8 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
 
 
   $templateCache.put('views/_parse-error.html',
-    "<div ng-show=\"error\" class=\"alert alert-danger\">\n" +
-    "<button ng-click=\"error = null\" type=\"button\" class=\"close\" aria-hidden=\"true\">\n" +
+    "<div ng-show=\"error && !hidden\" class=\"alert alert-danger\">\n" +
+    "<button ng-click=\"hidden = true\" type=\"button\" class=\"close\" aria-hidden=\"true\">\n" +
     "<span class=\"pficon pficon-close\"></span>\n" +
     "</button>\n" +
     "<span class=\"pficon pficon-error-circle-o\"></span>\n" +

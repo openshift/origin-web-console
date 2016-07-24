@@ -6867,7 +6867,12 @@ restrict:"E",
 scope:{
 error:"="
 },
-templateUrl:"views/_parse-error.html"
+templateUrl:"views/_parse-error.html",
+link:function(a) {
+a.$watch("error", function() {
+a.hidden = !1;
+});
+}
 };
 }), angular.module("openshiftConsole").directive("toggle", function() {
 return {
