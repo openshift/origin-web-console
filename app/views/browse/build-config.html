@@ -121,7 +121,16 @@
                             <span ng-switch-default>is {{latestBuild.status.phase | lowercase}}.</span>
                           </span>
                         </span>
-                        <a ng-href="{{latestBuild | buildLogURL}}" ng-if="(latestBuild | buildLogURL) && ('builds/log' | canI : 'get')">View Log</a>
+                        <span ng-if="latestBuild | buildLogURL">
+                          <!-- Always show a log link for pipeline builds. -->
+                          <span ng-if="latestBuild | isJenkinsPipelineStrategy">
+                            <a ng-href="{{latestBuild | buildLogURL}}" target="_blank">View Log</a>
+                          </span>
+                          <!-- Show a log link for other builds if the user can view. -->
+                          <span ng-if="!(latestBuild | isJenkinsPipelineStrategy) && ('builds/log' | canI : 'get')">
+                            <a ng-href="{{latestBuild | buildLogURL}}">View Log</a>
+                          </span>
+                        </span>
                       </div>
                       <div class="latest-build-timestamp meta text-muted">
                         <span ng-if="!latestBuild.status.startTimestamp">

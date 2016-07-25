@@ -1455,7 +1455,16 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "<span ng-switch-default>is {{latestBuild.status.phase | lowercase}}.</span>\n" +
     "</span>\n" +
     "</span>\n" +
-    "<a ng-href=\"{{latestBuild | buildLogURL}}\" ng-if=\"(latestBuild | buildLogURL) && ('builds/log' | canI : 'get')\">View Log</a>\n" +
+    "<span ng-if=\"latestBuild | buildLogURL\">\n" +
+    "\n" +
+    "<span ng-if=\"latestBuild | isJenkinsPipelineStrategy\">\n" +
+    "<a ng-href=\"{{latestBuild | buildLogURL}}\" target=\"_blank\">View Log</a>\n" +
+    "</span>\n" +
+    "\n" +
+    "<span ng-if=\"!(latestBuild | isJenkinsPipelineStrategy) && ('builds/log' | canI : 'get')\">\n" +
+    "<a ng-href=\"{{latestBuild | buildLogURL}}\">View Log</a>\n" +
+    "</span>\n" +
+    "</span>\n" +
     "</div>\n" +
     "<div class=\"latest-build-timestamp meta text-muted\">\n" +
     "<span ng-if=\"!latestBuild.status.startTimestamp\">\n" +
