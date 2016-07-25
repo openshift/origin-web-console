@@ -14,9 +14,15 @@
             <div ng-if="(projects | hashSize) !== 0" class="gutter-top">
               <h1 style="display: inline-block;">Projects</h1>
               <a ng-if="canCreate" href="create-project" style="margin-top: 10px;" class="btn btn-lg btn-primary pull-right">New Project</a>
+              <div class="row">
+                <form class="col-md-5">
+                  <div class="form-group">
+                    <input type="text" ng-model="projectSearch" class="form-control" placeholder="Search projects by keyword" id="projectSearch">
+                  </div>
+                </form>
+              </div>
               <alerts alerts="alerts"></alerts>
-              <div ng-repeat="project in projects | orderByDisplayName track by project.metadata.name"
-                   class="animate-repeat">
+              <div ng-repeat="project in projects | toArray | filter:projectSearch | orderByDisplayName track by project.metadata.name" class="animate-repeat">
                 <div row flex cross-axis="center" class="tile tile-project tile-click tile-flex">
                   <div flex class="project-summary">
                     <h2 class="project truncate">
