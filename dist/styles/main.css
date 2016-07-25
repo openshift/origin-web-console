@@ -3573,6 +3573,7 @@ label.checkbox{font-weight:400}
 .env-variable-list li .btn,.label-list li .btn{vertical-align:top}
 .label+.label{margin-left:3px}
 .template-message{background-color:#d9edf7;border-color:#31708f;border-width:1px;color:#000;border-style:solid;padding:21px}
+.attention-message,.tasks,div.code,pre.code{background-color:#fff}
 .template-message .pficon-info{float:left;font-size:18px;margin-right:6px;color:#31708f}
 .resource-description{overflow-wrap:break-word;min-width:0;white-space:pre-wrap}
 .action-inline{margin-left:5px;font-size:11px}
@@ -3581,12 +3582,18 @@ a.subtle-link{color:#9c9c9c;border-bottom:1px dotted #BBB}
 a.subtle-link:active,a.subtle-link:focus,a.subtle-link:hover{color:#00659c;border-bottom:1px dotted #00659c;text-decoration:none}
 .project-summary{-webkit-flex:1 0 90%;-moz-flex:1 0 90%;-ms-flex:1 0 90%;flex:1 0 90%;max-width:90%}
 .project-actions{width:50px}
+.tasks{margin-bottom:20px;padding-left:15px;padding-right:15px;padding-bottom:10px}
+.tasks.success{border:1px solid #3f9c35;border-left:3px solid #3f9c35}
+.tasks.failure{border:1px solid #c00;border-left:3px solid #c00}
+.tasks .task-icon{font-size:45px;position:absolute}
+.tasks .task-content{min-height:45px}
+.tasks .task-info{margin-left:55px}
 label.required:before{content:'*';position:absolute;left:10px}
 .btn-group-xs>.btn,.btn-xs{padding:0 4px}
 .btn-group-lg>.btn,.btn-lg{line-height:1.334}
 code{white-space:normal}
 .nowrap,.truncate{white-space:nowrap}
-div.code,pre.code{background-color:#fff;border:none;border-left:2px solid #ccc}
+div.code,pre.code{border:none;border-left:2px solid #ccc}
 abbr[data-original-title],abbr[title]{text-decoration:none}
 .dl-horizontal.left dt{text-align:left}
 .dl-horizontal.indent{margin-left:20px}
@@ -3601,7 +3608,7 @@ select:invalid{box-shadow:none}
 .well h1:first-child,.well h2:first-child,.well h3:first-child,.well h4:first-child,.well h5:first-child{margin:5px 0 15px}
 .spinner.spinner-xs{height:12px;width:12px}
 .spinner.spinner-inverse{border-color:rgba(0,153,211,.25);border-top-color:rgba(0,153,211,.75)}
-.attention-message{background-color:#fff;border:1px solid #228bc0;position:absolute;left:50%;margin-top:100px;transform:translateX(-50%);padding:1em 1em 2em;min-width:85%}
+.attention-message{border:1px solid #228bc0;position:absolute;left:50%;margin-top:100px;transform:translateX(-50%);padding:1em 1em 2em;min-width:85%}
 .attention-message h1,.attention-message p{text-align:center}
 .attention-message p{max-width:70em;margin:auto}
 .actions-dropdown-btn,.alert .close{margin-left:5px}

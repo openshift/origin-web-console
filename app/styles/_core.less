@@ -756,6 +756,32 @@ a.subtle-link {
   width: 50px;
 }
 
+.tasks {
+  margin-bottom: 20px;
+  padding-left: 15px;
+  padding-right: 15px;
+  padding-bottom: 10px;
+  background-color: #ffffff;
+  &.success {
+    border: 1px solid #3f9c35;
+    border-left: 3px solid #3f9c35;
+  }
+  &.failure {
+    border: 1px solid #cc0000;
+    border-left: 3px solid #cc0000;
+  }
+  .task-icon {
+    font-size: 45px;
+    position: absolute;
+  }
+  .task-content {
+    min-height: 45px;
+  }
+  .task-info {
+    margin-left: 55px;
+  }
+}
+
 label.required:before {
   content: '*';
   position: absolute;
