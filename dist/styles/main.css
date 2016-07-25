@@ -3457,6 +3457,8 @@ body{padding-right:0px!important}
 }
 .service-table{text-align:center;max-width:650px}
 .service-table thead tr th{text-align:center}
+@media (max-width:991px){.service-table{min-width:100%}
+}
 .build-config-summary .latest-build-status{margin-right:5px}
 .build-config-summary .latest-build-status .status-icon{width:20px}
 .build-config-summary .latest-build-timestamp{margin-left:25px}

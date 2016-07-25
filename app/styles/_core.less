@@ -211,6 +211,11 @@
       .text-center;
     }
   }
+  @media (max-width: @screen-sm-max) {
+    // The `table-responsive` div adds a 100% border. Make sure the table is at
+    // least 100% to avoid a white block at some screen sizes.
+    min-width: 100%;
+  }
 }
 
 .build-config-summary {
