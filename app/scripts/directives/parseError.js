@@ -7,6 +7,11 @@ angular.module('openshiftConsole')
       scope: {
         error: '='
       },
-      templateUrl: 'views/_parse-error.html'
+      templateUrl: 'views/_parse-error.html',
+      link: function($scope) {
+        $scope.$watch('error', function() {
+          $scope.hidden = false;
+        });
+      }
     };
   });

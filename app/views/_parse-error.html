@@ -1,5 +1,5 @@
-<div ng-show="error" class="alert alert-danger">
-  <button ng-click="error = null" type="button" class="close" aria-hidden="true">
+<div ng-show="error && !hidden" class="alert alert-danger">
+  <button ng-click="hidden = true" type="button" class="close" aria-hidden="true">
     <span class="pficon pficon-close"></span>
   </button>
   <span class="pficon pficon-error-circle-o"></span>
