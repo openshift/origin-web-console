@@ -42,8 +42,8 @@
                    ng-if="service.metadata.labels.app || routesByService[service.metadata.name].length || childServicesByParent[service.metadata.name].length">
                 <overview-service-group></overview-service-group>
               </div>
-
-              <div row wrap>
+              
+              <div row wrap class="standalone-service-row">
                 <div
                     ng-repeat="service in topLevelServices"
                     ng-if="!service.metadata.labels.app && !routesByService[service.metadata.name].length && !childServicesByParent[service.metadata.name].length"
@@ -51,9 +51,9 @@
                   <overview-service-group></overview-service-group>
                 </div>
               </div>
-
+            
               <!-- Unserviced DCs, RCs, and pods -->
-              <div row wrap ng-if="(monopodsByService[''] | hashSize) > 0 || (deploymentConfigsByService[''] | hashSize) > 0 || (deploymentsByService[''] | hashSize) > 0">
+              <div row wrap ng-if="(monopodsByService[''] | hashSize) > 0 || (deploymentConfigsByService[''] | hashSize) > 0 || (deploymentsByService[''] | hashSize) > 0" class="unserviced-row">
                 <!-- unserviced DC -->
                 <div ng-repeat="(dcName, deploymentConfig) in deploymentConfigsByService[''] track by (deploymentConfig | uid)"
                     class="no-service"
@@ -77,6 +77,7 @@
                 </div>
                 <!-- /unserviced monopods -->
               </div>
+              
             </div>
           </div>
         </div>

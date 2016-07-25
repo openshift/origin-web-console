@@ -16413,7 +16413,7 @@ return ab;
 if (+function(a) {
 "use strict";
 var b = a.fn.jquery.split(" ")[0].split(".");
-if (b[0] < 2 && b[1] < 9 || 1 == b[0] && 9 == b[1] && b[2] < 1 || b[0] > 2) throw new Error("Bootstrap's JavaScript requires jQuery version 1.9.1 or higher, but lower than version 3");
+if (b[0] < 2 && b[1] < 9 || 1 == b[0] && 9 == b[1] && b[2] < 1 || b[0] > 3) throw new Error("Bootstrap's JavaScript requires jQuery version 1.9.1 or higher, but lower than version 4");
 }(jQuery), +function(a) {
 "use strict";
 function b() {
@@ -16457,13 +16457,13 @@ e || c.data("bs.alert", e = new d(this)), "string" == typeof b && e[b].call(c);
 var c = '[data-dismiss="alert"]', d = function(b) {
 a(b).on("click", c, this.close);
 };
-d.VERSION = "3.3.6", d.TRANSITION_DURATION = 150, d.prototype.close = function(b) {
+d.VERSION = "3.3.7", d.TRANSITION_DURATION = 150, d.prototype.close = function(b) {
 function c() {
 g.detach().trigger("closed.bs.alert").remove();
 }
 var e = a(this), f = e.attr("data-target");
 f || (f = e.attr("href"), f = f && f.replace(/.*(?=#[^\s]*$)/, ""));
-var g = a(f);
+var g = a("#" === f ? [] :f);
 b && b.preventDefault(), g.length || (g = e.closest(".alert")), g.trigger(b = a.Event("close.bs.alert")), b.isDefaultPrevented() || (g.removeClass("in"), a.support.transition && g.hasClass("fade") ? g.one("bsTransitionEnd", c).emulateTransitionEnd(d.TRANSITION_DURATION) :c());
 };
 var e = a.fn.alert;
@@ -16481,12 +16481,12 @@ e || d.data("bs.button", e = new c(this, f)), "toggle" == b ? e.toggle() :b && e
 var c = function(b, d) {
 this.$element = a(b), this.options = a.extend({}, c.DEFAULTS, d), this.isLoading = !1;
 };
-c.VERSION = "3.3.6", c.DEFAULTS = {
+c.VERSION = "3.3.7", c.DEFAULTS = {
 loadingText:"loading..."
 }, c.prototype.setState = function(b) {
 var c = "disabled", d = this.$element, e = d.is("input") ? "val" :"html", f = d.data();
 b += "Text", null == f.resetText && d.data("resetText", d[e]()), setTimeout(a.proxy(function() {
-d[e](null == f[b] ? this.options[b] :f[b]), "loadingText" == b ? (this.isLoading = !0, d.addClass(c).attr(c, c)) :this.isLoading && (this.isLoading = !1, d.removeClass(c).removeAttr(c));
+d[e](null == f[b] ? this.options[b] :f[b]), "loadingText" == b ? (this.isLoading = !0, d.addClass(c).attr(c, c).prop(c, !0)) :this.isLoading && (this.isLoading = !1, d.removeClass(c).removeAttr(c).prop(c, !1));
 }, this), 0);
 }, c.prototype.toggle = function() {
 var a = !0, b = this.$element.closest('[data-toggle="buttons"]');
@@ -16499,8 +16499,8 @@ var d = a.fn.button;
 a.fn.button = b, a.fn.button.Constructor = c, a.fn.button.noConflict = function() {
 return a.fn.button = d, this;
 }, a(document).on("click.bs.button.data-api", '[data-toggle^="button"]', function(c) {
-var d = a(c.target);
-d.hasClass("btn") || (d = d.closest(".btn")), b.call(d, "toggle"), a(c.target).is('input[type="radio"]') || a(c.target).is('input[type="checkbox"]') || c.preventDefault();
+var d = a(c.target).closest(".btn");
+b.call(d, "toggle"), a(c.target).is('input[type="radio"], input[type="checkbox"]') || (c.preventDefault(), d.is("input,button") ? d.trigger("focus") :d.find("input:visible,button:visible").first().trigger("focus"));
 }).on("focus.bs.button.data-api blur.bs.button.data-api", '[data-toggle^="button"]', function(b) {
 a(b.target).closest(".btn").toggleClass("focus", /^focus(in)?$/.test(b.type));
 });
@@ -16515,7 +16515,7 @@ e || d.data("bs.carousel", e = new c(this, f)), "number" == typeof b ? e.to(b) :
 var c = function(b, c) {
 this.$element = a(b), this.$indicators = this.$element.find(".carousel-indicators"), this.options = c, this.paused = null, this.sliding = null, this.interval = null, this.$active = null, this.$items = null, this.options.keyboard && this.$element.on("keydown.bs.carousel", a.proxy(this.keydown, this)), "hover" == this.options.pause && !("ontouchstart" in document.documentElement) && this.$element.on("mouseenter.bs.carousel", a.proxy(this.pause, this)).on("mouseleave.bs.carousel", a.proxy(this.cycle, this));
 };
-c.VERSION = "3.3.6", c.TRANSITION_DURATION = 600, c.DEFAULTS = {
+c.VERSION = "3.3.7", c.TRANSITION_DURATION = 600, c.DEFAULTS = {
 interval:5e3,
 pause:"hover",
 wrap:!0,
@@ -16612,7 +16612,7 @@ var c = a(this), e = c.data("bs.collapse"), f = a.extend({}, d.DEFAULTS, c.data(
 var d = function(b, c) {
 this.$element = a(b), this.options = a.extend({}, d.DEFAULTS, c), this.$trigger = a('[data-toggle="collapse"][href="#' + b.id + '"],[data-toggle="collapse"][data-target="#' + b.id + '"]'), this.transitioning = null, this.options.parent ? this.$parent = this.getParent() :this.addAriaAndCollapsedClass(this.$element, this.$trigger), this.options.toggle && this.toggle();
 };
-d.VERSION = "3.3.6", d.TRANSITION_DURATION = 350, d.DEFAULTS = {
+d.VERSION = "3.3.7", d.TRANSITION_DURATION = 350, d.DEFAULTS = {
 toggle:!0
 }, d.prototype.dimension = function() {
 var a = this.$element.hasClass("width");
@@ -16692,7 +16692,7 @@ d || c.data("bs.dropdown", d = new g(this)), "string" == typeof b && d[b].call(c
 var e = ".dropdown-backdrop", f = '[data-toggle="dropdown"]', g = function(b) {
 a(b).on("click.bs.dropdown", this.toggle);
 };
-g.VERSION = "3.3.6", g.prototype.toggle = function(d) {
+g.VERSION = "3.3.7", g.prototype.toggle = function(d) {
 var e = a(this);
 if (!e.is(".disabled, :disabled")) {
 var f = b(e), g = f.hasClass("open");
@@ -16739,7 +16739,7 @@ this.options = c, this.$body = a(document.body), this.$element = a(b), this.$dia
 this.$element.trigger("loaded.bs.modal");
 }, this));
 };
-c.VERSION = "3.3.6", c.TRANSITION_DURATION = 300, c.BACKDROP_TRANSITION_DURATION = 150, c.DEFAULTS = {
+c.VERSION = "3.3.7", c.TRANSITION_DURATION = 300, c.BACKDROP_TRANSITION_DURATION = 150, c.DEFAULTS = {
 backdrop:!0,
 keyboard:!0,
 show:!0
@@ -16767,7 +16767,7 @@ d.$element.trigger("focus").trigger(f);
 b && b.preventDefault(), b = a.Event("hide.bs.modal"), this.$element.trigger(b), this.isShown && !b.isDefaultPrevented() && (this.isShown = !1, this.escape(), this.resize(), a(document).off("focusin.bs.modal"), this.$element.removeClass("in").off("click.dismiss.bs.modal").off("mouseup.dismiss.bs.modal"), this.$dialog.off("mousedown.dismiss.bs.modal"), a.support.transition && this.$element.hasClass("fade") ? this.$element.one("bsTransitionEnd", a.proxy(this.hideModal, this)).emulateTransitionEnd(c.TRANSITION_DURATION) :this.hideModal());
 }, c.prototype.enforceFocus = function() {
 a(document).off("focusin.bs.modal").on("focusin.bs.modal", a.proxy(function(a) {
-this.$element[0] === a.target || this.$element.has(a.target).length || this.$element.trigger("focus");
+document === a.target || this.$element[0] === a.target || this.$element.has(a.target).length || this.$element.trigger("focus");
 }, this));
 }, c.prototype.escape = function() {
 this.isShown && this.options.keyboard ? this.$element.on("keydown.dismiss.bs.modal", a.proxy(function(a) {
@@ -16852,7 +16852,7 @@ var d = a(this), e = d.data("bs.tooltip"), f = "object" == typeof b && b;
 var c = function(a, b) {
 this.type = null, this.options = null, this.enabled = null, this.timeout = null, this.hoverState = null, this.$element = null, this.inState = null, this.init("tooltip", a, b);
 };
-c.VERSION = "3.3.6", c.TRANSITION_DURATION = 150, c.DEFAULTS = {
+c.VERSION = "3.3.7", c.TRANSITION_DURATION = 150, c.DEFAULTS = {
 animation:!0,
 placement:"top",
 selector:!1,
@@ -16958,7 +16958,7 @@ var a = this.tip(), b = this.getTitle();
 a.find(".tooltip-inner")[this.options.html ? "html" :"text"](b), a.removeClass("fade in top bottom left right");
 }, c.prototype.hide = function(b) {
 function d() {
-"in" != e.hoverState && f.detach(), e.$element.removeAttr("aria-describedby").trigger("hidden.bs." + e.type), b && b();
+"in" != e.hoverState && f.detach(), e.$element && e.$element.removeAttr("aria-describedby").trigger("hidden.bs." + e.type), b && b();
 }
 var e = this, f = a(this.$tip), g = a.Event("hide.bs." + this.type);
 if (this.$element.trigger(g), !g.isDefaultPrevented()) return f.removeClass("in"), a.support.transition && f.hasClass("fade") ? f.one("bsTransitionEnd", d).emulateTransitionEnd(c.TRANSITION_DURATION) :d(), this.hoverState = null, this;
@@ -16974,16 +16974,16 @@ null == e.width && (e = a.extend({}, e, {
 width:e.right - e.left,
 height:e.bottom - e.top
 }));
-var f = d ? {
+var f = window.SVGElement && c instanceof window.SVGElement, g = d ? {
 top:0,
 left:0
-} :b.offset(), g = {
+} :f ? null :b.offset(), h = {
 scroll:d ? document.documentElement.scrollTop || document.body.scrollTop :b.scrollTop()
-}, h = d ? {
+}, i = d ? {
 width:a(window).width(),
 height:a(window).height()
 } :null;
-return a.extend({}, e, g, h, f);
+return a.extend({}, e, h, i, g);
 }, c.prototype.getCalculatedOffset = function(a, b, c, d) {
 return "bottom" == a ? {
 top:b.top + b.height,
@@ -17036,7 +17036,7 @@ b && (c = a(b.currentTarget).data("bs." + this.type), c || (c = new this.constru
 }, c.prototype.destroy = function() {
 var a = this;
 clearTimeout(this.timeout), this.hide(function() {
-a.$element.off("." + a.type).removeData("bs." + a.type), a.$tip && a.$tip.detach(), a.$tip = null, a.$arrow = null, a.$viewport = null;
+a.$element.off("." + a.type).removeData("bs." + a.type), a.$tip && a.$tip.detach(), a.$tip = null, a.$arrow = null, a.$viewport = null, a.$element = null;
 });
 };
 var d = a.fn.tooltip;
@@ -17055,7 +17055,7 @@ var c = function(a, b) {
 this.init("popover", a, b);
 };
 if (!a.fn.tooltip) throw new Error("Popover requires tooltip.js");
-c.VERSION = "3.3.6", c.DEFAULTS = a.extend({}, a.fn.tooltip.Constructor.DEFAULTS, {
+c.VERSION = "3.3.7", c.DEFAULTS = a.extend({}, a.fn.tooltip.Constructor.DEFAULTS, {
 placement:"right",
 trigger:"click",
 content:"",
@@ -17088,7 +17088,7 @@ var d = a(this), e = d.data("bs.scrollspy"), f = "object" == typeof c && c;
 e || d.data("bs.scrollspy", e = new b(this, f)), "string" == typeof c && e[c]();
 });
 }
-b.VERSION = "3.3.6", b.DEFAULTS = {
+b.VERSION = "3.3.7", b.DEFAULTS = {
 offset:10
 }, b.prototype.getScrollHeight = function() {
 return this.$scrollElement[0].scrollHeight || Math.max(this.$body[0].scrollHeight, document.documentElement.scrollHeight);
@@ -17134,7 +17134,7 @@ e || d.data("bs.tab", e = new c(this)), "string" == typeof b && e[b]();
 var c = function(b) {
 this.element = a(b);
 };
-c.VERSION = "3.3.6", c.TRANSITION_DURATION = 150, c.prototype.show = function() {
+c.VERSION = "3.3.7", c.TRANSITION_DURATION = 150, c.prototype.show = function() {
 var b = this.element, c = b.closest("ul:not(.dropdown-menu)"), d = b.data("target");
 if (d || (d = b.attr("href"), d = d && d.replace(/.*(?=#[^\s]*$)/, "")), !b.parent("li").hasClass("active")) {
 var e = c.find(".active:last a"), f = a.Event("hide.bs.tab", {
@@ -17181,7 +17181,7 @@ e || d.data("bs.affix", e = new c(this, f)), "string" == typeof b && e[b]();
 var c = function(b, d) {
 this.options = a.extend({}, c.DEFAULTS, d), this.$target = a(this.options.target).on("scroll.bs.affix.data-api", a.proxy(this.checkPosition, this)).on("click.bs.affix.data-api", a.proxy(this.checkPositionWithEventLoop, this)), this.$element = a(b), this.affixed = null, this.unpin = null, this.pinnedOffset = null, this.checkPosition();
 };
-c.VERSION = "3.3.6", c.RESET = "affix affix-top affix-bottom", c.DEFAULTS = {
+c.VERSION = "3.3.7", c.RESET = "affix affix-top affix-bottom", c.DEFAULTS = {
 offset:0,
 target:window
 }, c.prototype.getState = function(a, b, c, d) {
