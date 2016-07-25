@@ -18,7 +18,8 @@ angular.module('openshiftConsole')
                         HPAService,
                         MetricsService,
                         Navigate,
-                        ProjectsService) {
+                        ProjectsService,
+                        keyValueEditorUtils) {
     if (!$routeParams.kind || !$routeParams.name) {
       Navigate.toErrorPage("Kind or name parameter missing.");
       return;
@@ -43,9 +44,10 @@ angular.module('openshiftConsole')
     }
 
     $scope.autoscaling = {
-      name: $scope.name,
-      labels: {}
+      name: $scope.name
     };
+
+    $scope.labels = [];
 
     // Warn if metrics aren't configured when setting autoscaling options.
     MetricsService.isAvailable().then(function(available) {
@@ -89,7 +91,7 @@ angular.module('openshiftConsole')
             kind: "HorizontalPodAutoscaler",
             metadata: {
               name: $scope.autoscaling.name,
-              labels: $scope.autoscaling.labels
+              labels: keyValueEditorUtils.mapEntries(keyValueEditorUtils.compactEntries($scope.labels))
             },
             spec: {
               scaleRef: {
@@ -123,7 +125,7 @@ angular.module('openshiftConsole')
           $scope.disableInputs = true;
 
           hpa = angular.copy(hpa);
-          hpa.metadata.labels = $scope.autoscaling.labels;
+          hpa.metadata.labels = keyValueEditorUtils.mapEntries(keyValueEditorUtils.compactEntries($scope.labels));
           hpa.spec.minReplicas = $scope.autoscaling.minReplicas;
           hpa.spec.maxReplicas = $scope.autoscaling.maxReplicas;
           hpa.spec.cpuUtilization = {
@@ -149,7 +151,14 @@ angular.module('openshiftConsole')
         };
 
         DataService.get(resourceGroup, $routeParams.name, context).then(function(resource) {
-          $scope.autoscaling.labels = _.get(resource, 'metadata.labels', {});
+          $scope.labels = _.map(
+                            _.get(resource, 'metadata.labels', {}),
+                            function(val, key) {
+                              return {
+                                name: key,
+                                value: val
+                              };
+                            });
 
           // Are we editing an existing HPA?
           if ($routeParams.kind === "HorizontalPodAutoscaler") {
@@ -196,4 +205,3 @@ angular.module('openshiftConsole')
         });
     }));
   });
-

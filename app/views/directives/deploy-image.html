@@ -144,18 +144,16 @@
             expand="true"
             can-toggle="false"
             class="first-section">
-          <osc-key-values
-              entries="app.env"
-              delimiter="="
-              editable="true"
-              key-validator="env"
-              read-only-keys=""
-              key-validation-tooltip="A valid environment variable name is an alphanumeric (a-z and 0-9) string beginning with a letter that may contain underscores.">
-          </osc-key-values>
+          <key-value-editor
+            entries="env"
+            key-placeholder="Name"
+            key-validator="[A-Za-z_][A-Za-z0-9_]*"
+            key-validator-error="A valid environment variable name is an alphanumeric (a-z and 0-9) string beginning with a letter that may contain underscores."
+            value-placeholder="Value"></key-value-editor>
         </osc-form-section>
 
         <label-editor
-            labels="app.labels"
+            labels="labels"
             expand="true"
             can-toggle="false"
             help-text="Each label is applied to each created resource.">

@@ -9,7 +9,8 @@ angular.module("openshiftConsole")
                                      ImagesService,
                                      Navigate,
                                      ProjectsService,
-                                     TaskList) {
+                                     TaskList,
+                                     keyValueEditorUtils) {
     return {
       restrict: 'E',
       scope: {
@@ -25,10 +26,9 @@ angular.module("openshiftConsole")
         // Selected image stream tag.
         $scope.istag = {};
 
-        $scope.app = {
-          env: {},
-          labels: {}
-        };
+        $scope.app = {};
+        $scope.env = [];
+        $scope.labels = [];
 
         var stripTag = $filter('stripTag');
         var stripSHA = $filter('stripSHA');
@@ -54,8 +54,8 @@ angular.module("openshiftConsole")
             tag: $scope.import.tag || 'latest',
             ports: $scope.ports,
             volumes: $scope.volumes,
-            env: $scope.app.env,
-            labels: $scope.app.labels
+            env: keyValueEditorUtils.mapEntries(keyValueEditorUtils.compactEntries($scope.env)),
+            labels: keyValueEditorUtils.mapEntries(keyValueEditorUtils.compactEntries($scope.labels))
           });
         }
 
@@ -76,9 +76,10 @@ angular.module("openshiftConsole")
                 var image = $scope.import.image;
                 if (image) {
                   $scope.app.name = getName();
-                  $scope.app.labels = {
-                    app: $scope.app.name
-                  };
+                  $scope.labels = [{
+                    name: 'app',
+                    value: $scope.app.name
+                  }];
                   $scope.runsAsRoot = ImagesService.runsAsRoot(image);
                   $scope.ports = ApplicationGenerator.parsePorts(image);
                   $scope.volumes = ImagesService.getVolumes(image);
@@ -93,7 +94,12 @@ angular.module("openshiftConsole")
           };
 
           $scope.$watch('app.name', function() {
-            _.set($scope, 'app.labels.app', $scope.app.name);
+            _.set(
+              _.find($scope.labels, function(label) {
+                return label.name === 'app';
+              }),
+              'value',
+              $scope.app.name);
           });
 
           $scope.$watch('mode', function(newMode, oldMode) {

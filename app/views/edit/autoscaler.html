@@ -54,7 +54,12 @@
                         show-name-input="true"
                         name-read-only="kind === 'HorizontalPodAutoscaler'">
                     </osc-autoscaling>
-                    <label-editor labels="autoscaling.labels" expand="true" can-toggle="false"></label-editor>
+
+                    <label-editor
+                      labels="labels"
+                      expand="true"
+                      can-toggle="false"></label-editor>
+
                     <div class="buttons gutter-top">
                       <button
                           type="submit"

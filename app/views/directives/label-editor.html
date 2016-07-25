@@ -3,33 +3,33 @@
   about-title="labels"
   about="Labels are used to organize, group, or select objects and resources, such as pods."
   expand="expand"
-  can-toggle="canToggle"
-  >
+  can-toggle="canToggle">
+
   <div ng-if="helpText && ((labels | hashSize) !== 0 || $parent.expand)" class="help-block">
     {{helpText}}
   </div>
+
   <div ng-show="expand" ng-class="{ 'gutter-top': !helpText }">
-
-    <osc-key-values
-      key-title="Name"
+    <key-value-editor
       entries="labels"
-      key-validator="label"
-      value-validator="label"
-      delete-policy="{{deletePolicy || 'added'}}"
-      key-validation-tooltip="A valid object label has the form [domain/]name where a name is an alphanumeric (a-z, and 0-9) string, with a maximum length of 63 characters, with the '-' character allowed anywhere except the first or last character. A domain is a sequence of names separated by the '.' character with a maximum length of 253 characters."
-      value-validation-tooltip="A valid label value is an alphanumeric (a-z, and 0-9) string, with a maximum length of 63 characters, with the '-' character allowed anywhere except the first or last character."
-      readonly-keys="template,app"
-      >
-
-    </osc-key-values>
+      is-readonly="['template','app']"
+      key-placeholder="Name"
+      key-maxlength="63"
+      key-validator-regex="validator.key"
+      value-placeholder="Value"
+      value-maxlength="63"
+      value-validator-regex="validator.val"
+      key-validator-error-tooltip="A valid object label has the form [domain/]name where a name is an alphanumeric (a-z, and 0-9) string,
+                                   with a maximum length of 63 characters, with the '-' character allowed anywhere except the first or last
+                                   character. A domain is a sequence of names separated by the '.' character with a maximum length of 253 characters."
+      value-validator-error-tooltip="A valid label value is an alphanumeric (a-z, and 0-9) string, with a maximum length of 63 characters, with the '-'
+                                     character allowed anywhere except the first or last character."></key-value-editor>
   </div>
+
   <div ng-hide="expand">
-    <osc-key-values
-      key-title="Labels"
+    <key-value-editor
       entries="labels"
-      editable="false"
-      can-toggle="canToggle"
-      >
-    </osc-key-values>
+      key-placeholder="Labels"
+      is-readonly></key-value-editor>
   </div>
 </osc-form-section>
