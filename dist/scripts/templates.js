@@ -7326,7 +7326,7 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "<a ng-href=\"project/{{projectName}}/browse/routes\">{{(primaryServiceRoutes | hashSize) - 1}} other route<span ng-if=\"(primaryServiceRoutes | hashSize) > 2\">s</span></a>\n" +
     "</small>\n" +
     "</h4>\n" +
-    "<span ng-if=\"!displayRoute\">\n" +
+    "<span ng-if=\"!displayRoute\" class=\"nowrap\">\n" +
     "<a ng-if=\"'routes' | canI : 'create'\" ng-href=\"project/{{service.metadata.namespace}}/create-route?service={{service.metadata.name}}\">Create Route</a>\n" +
     "</span>\n" +
     "</div>\n" +

@@ -3967,6 +3967,7 @@ ul.messenger-theme-flat .messenger-message.alert-info .messenger-message-inner:b
 .overview .deployment-tile,.overview .no-deployments-block .service-title,.overview .service-group-header,.overview .service-group-triggers{box-shadow:0 2px 6px rgba(0,0,0,.1)}
 .overview .standalone-service{width:100%}
 .overview .standalone-service overview-service{-webkit-flex:0 0 100%;-moz-flex:0 0 100%;-ms-flex:0 0 100%;flex:0 0 100%}
+.overview .standalone-service .service-group-triggers>:last-child{margin-bottom:6px}
 .overview .standalone-service .service-group-body .overview-services overview-service{max-width:none}
 .overview .standalone-service .service-group-body .overview-services .deployment-tile{margin-top:0}
 .overview .standalone-service overview-service-group{display:-webkit-flex;display:-moz-flex;display:-ms-flexbox;display:-ms-flex;display:flex}
@@ -3992,7 +3993,7 @@ ul.messenger-theme-flat .messenger-message.alert-info .messenger-message-inner:b
 .overview .service-group-header .route-title:only-child{margin:0}
 @media (min-width:768px){.overview .service-group-header .route-title{margin:0}
 }
-.overview .service-group-header .app-name{font-family:inherit;line-height:1.1;color:inherit;font-size:16px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;font-weight:300;margin:0;text-transform:uppercase}
+.overview .service-group-header .app-name{font-family:inherit;line-height:1.1;color:inherit;font-size:16px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;font-weight:300;margin:0;text-transform:uppercase;min-width:130px}
 .overview .service-group-header .app-name .small,.overview .service-group-header .app-name small{font-weight:400;line-height:1;color:#9c9c9c;font-size:65%}
 .overview .service-group-header .other-routes-msg{display:block;line-height:1.1;margin:3px 20px}
 @media (min-width:768px){.overview .service-group-header{align-items:center}
@@ -4000,7 +4001,7 @@ ul.messenger-theme-flat .messenger-message.alert-info .messenger-message-inner:b
 .overview .service-group-header.has-app-label .other-routes-msg{display:block;text-align:right}
 .overview .deployment-tile .deployment-tile{max-width:50%}
 }
-.overview .service-group-body .overview-services .deployment-tile-wrapper+.deployment-tile-wrapper,.overview .service-group-body .overview-services overview-service:nth-child(n+3),.overview service-group-notifications{margin-top:6px}
+.overview .service-group-body .overview-services .deployment-tile-wrapper+.deployment-tile-wrapper,.overview .service-group-body .overview-services overview-service:nth-child(n+3){margin-top:6px}
 .overview .overview-pipeline{border-top-width:0}
 .overview .overview-pipeline .overview-pipeline-details{-webkit-flex-wrap:wrap;-moz-flex-wrap:wrap;-ms-flex-wrap:wrap;flex-wrap:wrap}
 .overview .overview-pipeline .build-name,.overview .overview-pipeline .build-phase{padding:5px 10px}
