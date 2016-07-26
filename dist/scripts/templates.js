@@ -3331,6 +3331,56 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
   );
 
 
+  $templateCache.put('views/create-persistent-volume-claim.html',
+    "<default-header class=\"top-header\"></default-header>\n" +
+    "<div class=\"wrap no-sidebar\">\n" +
+    "<div class=\"sidebar-left collapse navbar-collapse navbar-collapse-2\">\n" +
+    "<navbar-utility-mobile></navbar-utility-mobile>\n" +
+    "</div>\n" +
+    "<div class=\"middle\">\n" +
+    "\n" +
+    "<div class=\"middle-section surface-shaded\">\n" +
+    "<div class=\"middle-container has-scroll\">\n" +
+    "<div class=\"middle-content\">\n" +
+    "<div class=\"container surface-shaded\">\n" +
+    "<div class=\"col-md-12\">\n" +
+    "<breadcrumbs breadcrumbs=\"breadcrumbs\"></breadcrumbs>\n" +
+    "<alerts alerts=\"alerts\"></alerts>\n" +
+    "<div class=\"row\">\n" +
+    "<div class=\"create-route-icon col-md-2 gutter-top hidden-sm hidden-xs\">\n" +
+    "<span class=\"fa fa-hdd-o icon-xl\"></span>\n" +
+    "</div>\n" +
+    "<div class=\"col-md-8\">\n" +
+    "<h1>Request Storage</h1>\n" +
+    "<div>\n" +
+    "<span class=\"help-block\">\n" +
+    "Create a request for an administrator defined storage asset by requesting size and access mode attributes for a best fit.\n" +
+    "</span>\n" +
+    "</div>\n" +
+    "<form name=\"createPersistentVolumeClaimForm\">\n" +
+    "<div>\n" +
+    "<fieldset ng-disabled=\"disableInputs\">\n" +
+    "<osc-persistent-volume-claim model=\"claim\">\n" +
+    "</osc-persistent-volume-claim>\n" +
+    "<div class=\"button-group gutter-top gutter-bottom\">\n" +
+    "<button type=\"submit\" class=\"btn btn-primary btn-lg\" ng-click=\"createPersistentVolumeClaim()\" ng-disabled=\"createPersistentVolumeClaimForm.$invalid || disableInputs\" value=\"\">Create</button>\n" +
+    "<a class=\"btn btn-default btn-lg\" href=\"\" back>Cancel</a>\n" +
+    "</div>\n" +
+    "</fieldset>\n" +
+    "</div>\n" +
+    "</form>\n" +
+    "</div>\n" +
+    "</div>\n" +
+    "</div>\n" +
+    "</div>\n" +
+    "</div>\n" +
+    "</div>\n" +
+    "</div>\n" +
+    "</div>\n" +
+    "</div>"
+  );
+
+
   $templateCache.put('views/create-project.html',
     "<default-header class=\"top-header\"></default-header>\n" +
     "<div class=\"wrap no-sidebar\">\n" +
@@ -5557,6 +5607,70 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "</div>\n" +
     "<kubernetes-object-describer kind=\"{{kind}}\" resource=\"resource\" ng-if=\"resource\"></kubernetes-object-describer>\n" +
     "</div>"
+  );
+
+
+  $templateCache.put('views/directives/osc-persistent-volume-claim.html',
+    "<ng-form name=\"persistentVolumeClaimForm\">\n" +
+    "<fieldset ng-disabled=\"claimDisabled\">\n" +
+    "\n" +
+    "<div class=\"form-group\">\n" +
+    "<label for=\"claim-name\" class=\"required\">Name</label>\n" +
+    "<input id=\"claim-name\" class=\"form-control\" type=\"text\" name=\"name\" ng-model=\"claim.name\" ng-required=\"true\" ng-pattern=\"/^[a-z0-9]([-a-z0-9]*[a-z0-9])?$/\" ng-maxlength=\"253\" ng-minlength=\"2\" placeholder=\"my-storage-request\" select-on-focus autocorrect=\"off\" autocapitalize=\"off\" spellcheck aria-describedby=\"claim-name-help\">\n" +
+    "<div>\n" +
+    "<span id=\"claim-name-help\" class=\"help-block\">A unique name for the storage claim within the project.</span>\n" +
+    "</div>\n" +
+    "<div class=\"has-error\" ng-show=\"persistentVolumeClaimForm.name.$error.pattern && persistentVolumeClaimForm.name.$touched && !claimDisabled\">\n" +
+    "<span class=\"help-block\">\n" +
+    "Claim names may only contain lower-case letters, numbers, and dashes. They may not start or end with a dash. Max length of 253.\n" +
+    "</span>\n" +
+    "</div>\n" +
+    "</div>\n" +
+    "<div class=\"form-group\">\n" +
+    "<label class=\"required\">Access Mode</label><br/>\n" +
+    "<div class=\"radio\">\n" +
+    "<label class=\"radio-inline\">\n" +
+    "<input type=\"radio\" name=\"accessModes\" ng-model=\"claim.accessModes\" value=\"ReadWriteOnce\" aria-describedby=\"access-modes-help\" ng-checked=\"true\">\n" +
+    "Single User (RWO)\n" +
+    "</label>\n" +
+    "<label class=\"radio-inline\">\n" +
+    "<input type=\"radio\" id=\"accessModes\" name=\"accessModes\" ng-model=\"claim.accessModes\" value=\"ReadWriteMany\" aria-describedby=\"access-modes-help\">\n" +
+    "Shared Access (RWX)\n" +
+    "</label>\n" +
+    "<label class=\"radio-inline\">\n" +
+    "<input type=\"radio\" name=\"accessModes\" ng-model=\"claim.accessModes\" value=\"ReadOnlyMany\" aria-describedby=\"access-modes-help\">\n" +
+    "Read Only (ROX)\n" +
+    "</label>\n" +
+    "</div>\n" +
+    "<div>\n" +
+    "<span id=\"access-modes-help\" class=\"help-block\">Permissions to the mounted volume.</span>\n" +
+    "</div>\n" +
+    "</div>\n" +
+    "\n" +
+    "<div class=\"form-group\">\n" +
+    "<fieldset class=\"form-inline compute-resource\">\n" +
+    "<label class=\"required\">Capacity</label>\n" +
+    "<div ng-class=\"{ 'has-error': form.$invalid }\">\n" +
+    "<label class=\"sr-only\">Amount</label>\n" +
+    "<input type=\"number\" name=\"amount\" ng-attr-id=\"claim-amount\" ng-model=\"claim.amount\" ng-required=\"true\" min=\"0\" ng-attr-placeholder=\"10\" class=\"form-control\" ng-attr-aria-describedby=\"claim-capacity-help\">\n" +
+    "<label class=\"sr-only\">Unit</label>\n" +
+    "<select ng-model=\"claim.unit\" name=\"unit\" ng-options=\"option.value as option.label for option in units\" ng-attr-id=\"claim-capacity-unit\" class=\"form-control inline-select\">\n" +
+    "</select>\n" +
+    "</div>\n" +
+    "<div>\n" +
+    "<span id=\"claim-capacity-help\" class=\"help-block\">\n" +
+    "Size of the storage request.\n" +
+    "</span>\n" +
+    "</div>\n" +
+    "<div class=\"has-error\" ng-show=\"persistentVolumeClaimForm.capacity.$error.pattern && persistentVolumeClaimForm.capacity.$touched && !claimDisabled\">\n" +
+    "<span class=\"help-block\">\n" +
+    "Must be a postive integer.\n" +
+    "</span>\n" +
+    "</div>\n" +
+    "</fieldset>\n" +
+    "</div>\n" +
+    "</fieldset>\n" +
+    "</ng-form>"
   );
 
 
@@ -8573,7 +8687,12 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "<div class=\"container-fluid\">\n" +
     "<div class=\"row\">\n" +
     "<div class=\"col-md-12\">\n" +
+    "<div class=\"page-header page-header-bleed-right page-header-bleed-left\">\n" +
+    "<div class=\"pull-right\">\n" +
+    "<a ng-href=\"project/{{project.metadata.name}}/create-pvc\" class=\"btn btn-default\">Request Storage</a>\n" +
+    "</div>\n" +
     "<h2>Persistent Volume Claims</h2>\n" +
+    "</div>\n" +
     "<table class=\"table table-bordered table-hover table-mobile\">\n" +
     "<thead>\n" +
     "<tr>\n" +

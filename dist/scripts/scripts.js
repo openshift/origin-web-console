@@ -227,6 +227,9 @@ controller:"CreateRouteController"
 }).when("/project/:project/edit", {
 templateUrl:"views/edit/project.html",
 controller:"EditProjectController"
+}).when("/project/:project/create-pvc", {
+templateUrl:"views/create-persistent-volume-claim.html",
+controller:"CreatePersistentVolumeClaimController"
 }).when("/project/:project/attach-pvc", {
 templateUrl:"views/attach-pvc.html",
 controller:"AttachPVCController"
@@ -5847,6 +5850,50 @@ kubernetes:c.VERSION.kubernetes
 c.withUser(), a.cliDownloadURL = d.CLI, a.cliDownloadURLPresent = a.cliDownloadURL && !_.isEmpty(a.cliDownloadURL), a.loginBaseURL = b.openshiftAPIBaseUrl(), a.sessionToken = c.UserStore().getToken(), a.showSessionToken = !1, a.toggleShowSessionToken = function() {
 a.showSessionToken = !a.showSessionToken;
 };
+} ]), angular.module("openshiftConsole").controller("CreatePersistentVolumeClaimController", [ "$filter", "$routeParams", "$scope", "$window", "ApplicationGenerator", "DataService", "Navigate", "ProjectsService", function(a, b, c, d, e, f, g, h) {
+c.alerts = {}, c.projectName = b.project, c.accessModes = "ReadWriteOnce", c.claim = {}, c.breadcrumbs = [ {
+title:c.projectName,
+link:"project/" + c.projectName
+}, {
+title:"Storage",
+link:"project/" + c.projectName + "/browse/storage"
+}, {
+title:"Request Storage"
+} ], h.get(b.project).then(_.spread(function(b, e) {
+function g() {
+var a = {
+kind:"PersistentVolumeClaim",
+apiVersion:"v1",
+metadata:{
+name:c.claim.name,
+labels:{}
+},
+spec:{
+resources:{
+requests:{}
+}
+}
+};
+a.spec.accessModes = [ c.claim.accessModes || "ReadWriteOnce" ];
+var b = c.claim.unit || "Mi";
+return a.spec.resources.requests.storage = c.claim.amount + b, a;
+}
+c.project = b, c.breadcrumbs[0].title = a("displayName")(b), c.createPersistentVolumeClaim = function() {
+if (c.createPersistentVolumeClaimForm.$valid) {
+c.disableInputs = !0;
+var b = g();
+f.create("persistentvolumeclaims", null, b, e).then(function() {
+d.history.back();
+}, function(b) {
+c.disableInputs = !1, c.alerts["create-persistent-volume-claim"] = {
+type:"error",
+message:"An error occurred requesting storage claim.",
+details:a("getErrorDetails")(b)
+};
+});
+}
+};
+}));
 } ]), angular.module("openshiftConsole").directive("relativeTimestamp", function() {
 return {
 restrict:"E",
@@ -6652,6 +6699,29 @@ link:function(a, b, c, d) {
 a.form = d, a.id = _.uniqueId("osc-routing-service-"), a.$watchGroup([ "model.service", "services" ], function() {
 _.has(a, "model.service") && !_.isEmpty(a.services) || _.set(a, "model.service", _.find(a.services));
 });
+}
+};
+}), angular.module("openshiftConsole").directive("oscPersistentVolumeClaim", function() {
+return {
+restrict:"E",
+scope:{
+claim:"=model"
+},
+templateUrl:"views/directives/osc-persistent-volume-claim.html",
+link:function(a) {
+a.claim.unit = "Mi", a.units = [ {
+value:"Mi",
+label:"MiB"
+}, {
+value:"Gi",
+label:"GiB"
+}, {
+value:"Ti",
+label:"TiB"
+}, {
+value:"Pi",
+label:"PiB"
+} ];
 }
 };
 }), angular.module("openshiftConsole").directive("oscUnique", function() {

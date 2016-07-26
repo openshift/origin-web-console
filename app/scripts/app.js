@@ -219,7 +219,11 @@ angular
       .when('/project/:project/edit', {
         templateUrl: 'views/edit/project.html',
         controller: 'EditProjectController'
-      })      
+      })
+      .when('/project/:project/create-pvc', {
+        templateUrl: 'views/create-persistent-volume-claim.html',
+        controller: 'CreatePersistentVolumeClaimController'
+      })
       .when('/project/:project/attach-pvc', {
         templateUrl: 'views/attach-pvc.html',
         controller: 'AttachPVCController'
