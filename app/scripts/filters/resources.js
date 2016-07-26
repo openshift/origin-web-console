@@ -1044,6 +1044,21 @@ angular.module('openshiftConsole')
       return humanized.toLowerCase();
     };
   })
+  .filter('abbreviateKind', function() {
+    var abbreviated = {
+      Build: 'build',
+      BuildConfig: 'bc',
+      DeploymentConfig: 'dc',
+      ImageStream: 'is',
+      Pod: 'pod',
+      ReplicationController: 'rc',
+      Route: 'route',
+      Service: 'svc',
+    };
+    return function(kind) {
+      return abbreviated[kind] || kind;
+    };
+  })
   .filter('kindToResource', function (APIService) {
     return APIService.kindToResource;
   })

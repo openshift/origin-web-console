@@ -1,4 +1,4 @@
-<div ng-class="{'show-sidebar-right': renderOptions.showSidebarRight}" class="wrap">
+<div ng-class="{'show-sidebar-right': renderOptions.showEventsSidebar}" class="wrap">
   <div class="sidebar-left collapse navbar-collapse navbar-collapse-1">
     <sidebar></sidebar>
   </div>
@@ -7,16 +7,9 @@
 
     </div>
   </div>
-  <div class="sidebar-right sidebar-pf sidebar-pf-right">
+  <div ng-if="renderOptions.showEventsSidebar" class="sidebar-right sidebar-pf sidebar-pf-right">
     <div class="right-section">
-      <div class="right-container">
-        <div class="sidebar-header right-header">
-            <h2 class="h5">Details</h2>
-        </div>
-        <div class="right-content">
-          <osc-object-describer></osc-object-describer>
-        </div>
-      </div>
+      <events-sidebar ng-if="projectContext" project-context="projectContext"></events-sidebar>
     </div><!-- /right-section -->
   </div>
 </div>
