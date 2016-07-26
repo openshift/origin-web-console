@@ -186,9 +186,9 @@ controller:"EventsController"
 }).when("/project/:project/browse/images", {
 templateUrl:"views/images.html",
 controller:"ImagesController"
-}).when("/project/:project/browse/images/:image", {
-templateUrl:"views/browse/image.html",
-controller:"ImageController"
+}).when("/project/:project/browse/images/:imagestream", {
+templateUrl:"views/browse/imagestream.html",
+controller:"ImageStreamController"
 }).when("/project/:project/browse/pods", {
 templateUrl:"views/pods.html",
 controller:"PodsController"
@@ -3833,17 +3833,17 @@ b.imageStreams = a.select(b.unfilteredImageStreams), f();
 d.unwatchAll(i);
 });
 }));
-} ]), angular.module("openshiftConsole").controller("ImageController", [ "$scope", "$routeParams", "DataService", "ProjectsService", "$filter", "ImageStreamsService", function(a, b, c, d, e, f) {
+} ]), angular.module("openshiftConsole").controller("ImageStreamController", [ "$scope", "$routeParams", "DataService", "ProjectsService", "$filter", "ImageStreamsService", function(a, b, c, d, e, f) {
 a.projectName = b.project, a.imageStream = null, a.tagsByName = {}, a.tagShowOlder = {}, a.alerts = {}, a.renderOptions = a.renderOptions || {}, a.renderOptions.hideFilterWidget = !0, a.breadcrumbs = [ {
 title:"Image Streams",
 link:"project/" + b.project + "/browse/images"
 }, {
-title:b.image
+title:b.imagestream
 } ], a.emptyMessage = "Loading...";
 var g = [];
 d.get(b.project).then(_.spread(function(d, h) {
-a.project = d, c.get("imagestreams", b.image, h).then(function(d) {
-a.loaded = !0, a.imageStream = d, a.emptyMessage = "No tags to show", g.push(c.watchObject("imagestreams", b.image, h, function(b, c) {
+a.project = d, c.get("imagestreams", b.imagestream, h).then(function(d) {
+a.loaded = !0, a.imageStream = d, a.emptyMessage = "No tags to show", g.push(c.watchObject("imagestreams", b.imagestream, h, function(b, c) {
 "DELETED" === c && (a.alerts.deleted = {
 type:"warning",
 message:"This image stream has been deleted."

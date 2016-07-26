@@ -7,7 +7,7 @@
  * Controller of the openshiftConsole
  */
 angular.module('openshiftConsole')
-  .controller('ImageController', function ($scope, $routeParams, DataService, ProjectsService, $filter, ImageStreamsService) {
+  .controller('ImageStreamController', function ($scope, $routeParams, DataService, ProjectsService, $filter, ImageStreamsService) {
     $scope.projectName = $routeParams.project;
     $scope.imageStream = null;
     $scope.tagsByName = {};
@@ -21,7 +21,7 @@ angular.module('openshiftConsole')
         link: "project/" + $routeParams.project + "/browse/images"
       },
       {
-        title: $routeParams.image
+        title: $routeParams.imagestream
       }
     ];
     $scope.emptyMessage = "Loading...";
@@ -32,7 +32,7 @@ angular.module('openshiftConsole')
       .get($routeParams.project)
       .then(_.spread(function(project, context) {
         $scope.project = project;
-        DataService.get("imagestreams", $routeParams.image, context).then(
+        DataService.get("imagestreams", $routeParams.imagestream, context).then(
           // success
           function(imageStream) {
             $scope.loaded = true;
@@ -40,7 +40,7 @@ angular.module('openshiftConsole')
             $scope.emptyMessage = "No tags to show";
 
             // If we found the item successfully, watch for changes on it
-            watches.push(DataService.watchObject("imagestreams", $routeParams.image, context, function(imageStream, action) {
+            watches.push(DataService.watchObject("imagestreams", $routeParams.imagestream, context, function(imageStream, action) {
               if (action === "DELETED") {
                 $scope.alerts["deleted"] = {
                   type: "warning",
