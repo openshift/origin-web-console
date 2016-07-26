@@ -15,4 +15,8 @@ angular.module('openshiftConsole')
     $scope.delete = function(task) {
       TaskList.deleteTask(task);
     };
+    $scope.hasTaskWithError = function() {
+      var tasks = TaskList.taskList();
+      return _.some(tasks, {hasErrors: true});
+    };
   });

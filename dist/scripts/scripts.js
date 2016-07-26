@@ -5228,6 +5228,11 @@ a.tasks = function() {
 return b.taskList();
 }, a["delete"] = function(a) {
 b.deleteTask(a);
+}, a.hasTaskWithError = function() {
+var a = b.taskList();
+return _.some(a, {
+hasErrors:!0
+});
 };
 } ]), angular.module("openshiftConsole").controller("EventsController", [ "$routeParams", "$scope", "ProjectsService", function(a, b, c) {
 b.projectName = a.project, b.renderOptions = {
