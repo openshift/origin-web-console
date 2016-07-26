@@ -107,6 +107,9 @@
     overview-service {
       .flex(@columns: 0 0 100%);
     }
+    .service-group-triggers > :last-child {
+      margin-bottom: @service-group-margin;
+    }
     .service-group-body .overview-services {
       overview-service {
         max-width: none;
@@ -216,6 +219,7 @@
       font-weight: 300;
       margin: 0;
       text-transform: uppercase;
+      min-width: 130px; // prevent name from complete truncation at mobile
     }
     .other-routes-msg {
       display: block;
@@ -234,9 +238,6 @@
         .text-right();
       }
     }
-  }
-  service-group-notifications {
-    margin-top: @service-group-margin;
   }
   .overview-pipeline {
     border-top-width: 0;
