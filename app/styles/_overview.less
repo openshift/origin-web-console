@@ -97,7 +97,7 @@
   }
   .service-group-header,
   .deployment-tile,
-  .service-group-triggers,
+  .standalone-service .builds-block,
   .no-deployments-block .service-title {
     box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1);
   }
@@ -106,7 +106,7 @@
     overview-service {
       .flex(@columns: 0 0 100%);
     }
-    .service-group-triggers > :last-child {
+    .builds-block .builds .build:last-child {
       margin-bottom: @service-group-margin;
     }
     .service-group-body .overview-services {
