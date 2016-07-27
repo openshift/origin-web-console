@@ -4674,7 +4674,7 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "<div column class=\"deployment-donut\">\n" +
     "<div row>\n" +
     "<div column>\n" +
-    "<pod-donut pods=\"pods\" desired=\"getDesiredReplicas()\" ng-click=\"viewPodsForDeployment(rc)\" ng-class=\"{ clickable: (pods | hashSize) > 0 }\">\n" +
+    "<pod-donut pods=\"pods\" desired=\"getDesiredReplicas()\" idled=\"isIdled\" ng-click=\"viewPodsForDeployment(rc)\" ng-class=\"{ clickable: (pods | hashSize) > 0 }\">\n" +
     "</pod-donut>\n" +
     "\n" +
     "<a href=\"\" class=\"sr-only\" ng-click=\"viewPodsForDeployment(rc)\" ng-if=\"(pods | hashSize) > 0\" role=\"button\">\n" +
@@ -4682,7 +4682,7 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "</a>\n" +
     "</div>\n" +
     "\n" +
-    "<div column class=\"scaling-controls fade-inline\" ng-if=\"hpa && !hpa.length && (rc | canIScale)\">\n" +
+    "<div column class=\"scaling-controls fade-inline\" ng-if=\"(hpa && !hpa.length) && (rc | canIScale) && !isIdled\">\n" +
     "<div>\n" +
     "<a href=\"\" ng-click=\"scaleUp()\" ng-class=\"{ disabled: !scalable }\" ng-attr-title=\"{{!scalable ? undefined : 'Scale up'}}\" ng-attr-aria-disabled=\"{{!scalable ? 'true' : undefined}}\">\n" +
     "<i class=\"fa fa-chevron-up\"></i>\n" +
@@ -4698,7 +4698,7 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "</div>\n" +
     "</div>\n" +
     "</div>\n" +
-    "<div row ng-if=\"hpa.length\" class=\"hpa-details\">\n" +
+    "<div row ng-if=\"hpa.length\" class=\"scaling-details\">\n" +
     "<div>\n" +
     "Autoscaled:\n" +
     "<span class=\"nowrap\">min: {{hpa[0].spec.minReplicas || 1}},</span>\n" +
@@ -4707,6 +4707,12 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "<span ng-if=\"hpaWarnings\" dynamic-content=\"{{hpaWarnings}}\" data-toggle=\"popover\" data-trigger=\"hover\" data-html=\"true\" class=\"pficon pficon-warning-triangle-o hpa-warning\" aria-hidden=\"true\">\n" +
     "</span>\n" +
     "</span>\n" +
+    "</div>\n" +
+    "</div>\n" +
+    "<div class=\"scaling-details\" ng-if=\"isIdled && (!getDesiredReplicas())\">\n" +
+    "<div ng-if=\"(!resuming)\">\n" +
+    "<span>Idled due to inactivity.</span>\n" +
+    "<a href=\"\" ng-click=\"unIdle()\">Start {{hpa[0].spec.minReplicas || 1}} pod{{ (hpa[0].spec.minReplicas || 1) > 1 ? 's' : ''}}</a>\n" +
     "</div>\n" +
     "</div>\n" +
     "</div>"
