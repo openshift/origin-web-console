@@ -19,6 +19,7 @@ angular
     'ngTouch',
     'openshiftUI',
     'kubernetesUI',
+    'registryUI.images',
     'ui.bootstrap',
     'patternfly.charts',
     'patternfly.sort',

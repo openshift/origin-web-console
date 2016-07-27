@@ -40709,7 +40709,255 @@ q && q.destroy(), k();
 }
 };
 } ]);
+}), function(a) {
+function b(d) {
+if (c[d]) return c[d].exports;
+var e = c[d] = {
+exports:{},
+id:d,
+loaded:!1
+};
+return a[d].call(e.exports, e, e.exports, b), e.loaded = !0, e.exports;
+}
+var c = {};
+return b.m = a, b.c = c, b.p = "", b(0);
+}([ function(a, b, c) {
+c(4), c(5), c(6), c(7), c(8), c(10), c(11), c(12), c(13), c(14), a.exports = c(15);
+}, , , , function(a, b) {
+!function() {
+"use strict";
+angular.module("registryUI.images", [ "registryUI.client", "registryUI.date" ]).factory("imageDockerManifest", [ "WeakMap", function(a) {
+var b = new a();
+return function(a) {
+if (!a) return {};
+var c = b.get(a);
+return c || (c = JSON.parse(a.dockerImageManifest || "{ }"), angular.forEach(c.history || [], function(a) {
+"string" == typeof a.v1Compatibility && (a.v1Compatibility = JSON.parse(a.v1Compatibility));
+}), b.set(a, c)), c;
+};
+} ]).factory("imageDockerConfig", [ "WeakMap", "imageLayers", function(a, b) {
+var c = new a();
+return function(a) {
+if (!a) return {};
+var d, e, f, g = c.get(a);
+return g || (e = b(a), e.length && (f = e[0].v1Compatibility), f && f.config ? g = f.config :(d = a.dockerImageMetadata || {}, d.Config && (g = d.Config)), c.set(a, g)), g || {};
+};
+} ]).factory("imageLayers", [ "WeakMap", "imageDockerManifest", function(a, b) {
+var c = new a();
+return function(a) {
+if (!a) return [];
+var d, e = c.get(a);
+return e || (d = b(a), e = d.history ? d.history :a.dockerImageLayers ? a.dockerImageLayers :[], c.set(a, e)), e;
+};
+} ]).directive("registryImageBody", [ "imageLayers", "imageDockerConfig", function(a, b) {
+return {
+restrict:"E",
+scope:{
+image:"=",
+names:"="
+},
+templateUrl:"registry-image-widgets/views/image-body.html",
+link:function(c, d, e) {
+c.$watch("image", function(d) {
+c.layers = a(d), c.config = b(d), c.labels = c.config.Labels, angular.equals({}, c.labels) && (c.labels = null);
 });
+}
+};
+} ]).directive("registryImagePull", [ function() {
+return {
+restrict:"E",
+scope:{
+settings:"=",
+names:"="
+},
+templateUrl:"registry-image-widgets/views/image-pull.html"
+};
+} ]).directive("registryImageConfig", [ "imageDockerConfig", function(a) {
+return {
+restrict:"E",
+scope:{
+image:"="
+},
+templateUrl:"registry-image-widgets/views/image-config.html",
+link:function(b, c, d) {
+b.configCommand = function(a) {
+var b = [];
+if (!a) return "";
+a.Entrypoint && b.push.apply(b, a.Entrypoint), a.Cmd && b.push.apply(b, a.Cmd);
+var c = b.join(" ");
+return a.User && "root" != a.User.split(":")[0] ? "$ " + c :"# " + c;
+}, b.$watch("image", function(c) {
+b.config = a(c);
+});
+}
+};
+} ]).directive("registryImageMeta", [ "imageDockerConfig", function(a) {
+return {
+restrict:"E",
+scope:{
+image:"="
+},
+templateUrl:"registry-image-widgets/views/image-meta.html",
+link:function(b, c, d) {
+b.$watch("image", function(c) {
+b.config = a(c), b.labels = b.config.Labels, angular.equals({}, b.labels) && (b.labels = null);
+});
+}
+};
+} ]);
+}();
+}, function(a, b) {
+angular.module("registryUI.client", []).factory("WeakMap", function() {
+function a() {
+var a = "weakmap" + c;
+c += 1, b || (b = Math.random().toString(36).slice(2));
+var d = this;
+d["delete"] = function(c) {
+var d = c[b];
+d && delete d[a];
+}, d.has = function(c) {
+var d = c[b];
+return d && a in d;
+}, d.get = function(c) {
+var d = c[b];
+if (d) return d[a];
+}, d.set = function(c, d) {
+var e = c[b];
+e || (e = function() {}, Object.defineProperty(c, b, {
+enumerable:!1,
+configurable:!1,
+writable:!1,
+value:e
+})), e[a] = d;
+};
+}
+if ("function" == typeof window.WeakMap) return window.WeakMap;
+var b, c = 1;
+return a;
+});
+}, function(a, b) {
+!function() {
+angular.module("registryUI.date", []).factory("dateRefreshMinute", [ "$rootScope", function(a) {
+var b = null;
+return {
+enable:function() {
+null === b && (b = window.setInterval(function() {
+a.$applyAsync();
+}, 6e4));
+},
+disable:function() {
+null !== b && (window.clearInterval(b), b = null);
+}
+};
+} ]).filter("dateRelative", [ "dateRefreshMinute", function() {
+function a(a) {
+return a ? moment(a).fromNow() :a;
+}
+function b(a) {
+return a;
+}
+return a.$stateful = !0, "function" == typeof moment ? a :b;
+} ]);
+}();
+}, function(a, b) {
+!function() {
+"use strict";
+function a(a, b) {
+var c, d;
+return a.v1Compatibility.container_config && (c = a.v1Compatibility.container_config.Cmd) ? (d = c[c.length - 1], 0 === d.indexOf("#(nop)") ? d.substring(6).trim() :1 == c.length && 0 === c[0].indexOf("/bin/sh -c #(nop)") ? c[0].substring(17).trim() :c.join(" ")) :a.v1Compatibility.id;
+}
+function b(b, c, d) {
+var e;
+return e = b.v1Compatibility ? {
+id:b.v1Compatibility.id,
+size:b.v1Compatibility.Size || 0,
+label:a(b, d[c + 1])
+} :b.name && b.size ? {
+id:b.name,
+size:b.size || 0,
+label:b.name
+} :{
+size:0,
+id:c,
+label:"Unknown layer"
+}, 0 === e.label.indexOf("RUN ") ? e.hint = "run" :0 === e.label.indexOf("ADD ") || e.size > 8192 ? e.hint = "add" :e.hint = "other", e;
+}
+angular.module("registryUI.images").directive("registryImageLayers", [ "imageLayers", function(a) {
+return {
+restrict:"E",
+scope:{
+image:"=",
+data:"=?layers"
+},
+templateUrl:"registry-image-widgets/views/image-layers.html",
+link:function(c, d, e) {
+c.formatSize = function(a) {
+return a ? a > 1024 && "undefined" != typeof cockpit ? cockpit.format_bytes(a) :a > 1048576 ? (a / 1048576).toFixed(1) + " MB" :a + " B" :"";
+}, c.$watch("data", function(a) {
+a && a.length && (a = a.map(b).reverse()), c.layers = a;
+}), c.$watch("image", function(b) {
+c.data = a(b);
+});
+}
+};
+} ]);
+}();
+}, function(a, b) {}, , function(a, b) {}, function(a, b) {
+var c, d = window.angular;
+try {
+c = d.module([ "ng" ]);
+} catch (e) {
+c = d.module("ng", []);
+}
+var f = '<dl class="dl-horizontal left"> <dt ng-if="labels.name" translatable="yes">Name</dt> <dd ng-if="labels.name">{{ labels.name }}</dd> <dt ng-if="labels.summary" translatable="yes">Summary</dt> <dd ng-if="labels.summary">{{ labels.summary }}</dd> <dt ng-if="labels.description" translatable="yes">Description</dt> <dd ng-if="labels.description">{{ labels.description }}</dd> <dt ng-if="labels.url" translatable="yes">Source URL</dt> <dd ng-if="labels.url" translatable="yes"> <a href="labels.url"><i class="fa fa-external-link"></i> {{ labels.url }}</a> </dd> <dt translatable="yes">Author</dt> <dd ng-if="config.author">{{config.author}}</dd> <dd ng-if="!config.author && image.dockerImageMetadata.Author">{{image.dockerImageMetadata.Author}}</dd> <dd ng-if="!config.author && !image.dockerImageMetadata.Author"><em translatable="yes">Unknown</em></dd> <dt ng-if="labels[\'build-date\'] || layers[0].v1Compatibility.created || image.dockerImageMetadata.Created" translatable="yes">Built</dt> <dd ng-if="labels[\'build-date\']" title="{{labels[\'build-date\']}}">{{ labels[\'build-date\'] | dateRelative}}</dd> <dd ng-if="!labels[\'build-date\'] && layers[0].v1Compatibility.created" title="{{layers[0].v1Compatibility.created}}">{{ layers[0].v1Compatibility.created | dateRelative}}</dd> <dd ng-if="!labels[\'build-date\'] && !layers[0].v1Compatibility.created && image.dockerImageMetadata.Created" title="{{image.dockerImageMetadata.Created}}">{{image.dockerImageMetadata.Created | dateRelative}}</dd> <dt translatable="yes">Digest</dt> <dd><tt>{{ image.metadata.name }}</tt></dd> <dt translatable="yes">Identifier</dt> <dd><tt>{{ config.Image }}</tt></dd> </dl> <dl class="registry-image-tags" ng-if="names"> <dt translatable="yes">Tags</dt> <dd><span class="registry-image-tag" ng-repeat="name in names">{{name}}</span></dd> </dl>';
+c.run([ "$templateCache", function(a) {
+a.put("registry-image-widgets/views/image-body.html", f);
+} ]), a.exports = f;
+}, function(a, b) {
+var c, d = window.angular;
+try {
+c = d.module([ "ng" ]);
+} catch (e) {
+c = d.module("ng", []);
+}
+var f = '<dl class="dl-horizontal"> <dt translatable="yes">Command:</dt> <dd><code>{{ configCommand(config) }}</code></dd> </dl> <div class="row"> <dl class="col-xs-12 col-sm-12 col-md-4 dl-horizontal"> <dt translatable="yes">Run as</dt> <dd ng-if="config.User">{{config.User}}</dd> <dd ng-if="!config.User"><em translatable="yes">Default</em></dd> <dt translatable="yes">Directory</dt> <dd ng-if="config.WorkingDir">{{config.WorkingDir}}</dd> <dd ng-if="!config.WorkingDir">/</dd> <dt ng-if="config.StopSignal" translatable="yes">Stop with</dt> <dd ng-if="config.StopSignal">{{config.StopSignal}}</dd> <dt translatable="yes">Architecture</dt> <dd ng-if="config.architecture">{{config.architecture}}</dd> <dd ng-if="!config.architecture">{{image.dockerImageMetadata.Architecture}}</dd> </dl> <dl class="col-xs-12 col-sm-12 col-md-8 dl-horizontal full-width"> <dt ng-if="config.Env.length" translatable="yes">Environment</dt> <dd ng-repeat="env in config.Env"><tt>{{env}}</tt></dd> </dl> </div> <div class="row"> <dl class="col-xs-12 col-sm-12 col-md-4 dl-horizontal"> <dt translatable="yes">Ports</dt> <dd ng-repeat="(port, data) in config.ExposedPorts">{{port}}</dd> <dd ng-if="!config.ExposedPorts"><em translatable="yes">None</em></dd> </dl> <dl class="col-xs-12 col-sm-12 col-md-8 dl-horizontal full-width"> <dt ng-if="config.Volumes" translatable="yes">Volumes</dt> <dd ng-repeat="(volume, data) in config.Volumes">{{volume}}</dd> </dl> </div>';
+c.run([ "$templateCache", function(a) {
+a.put("registry-image-widgets/views/image-config.html", f);
+} ]), a.exports = f;
+}, function(a, b) {
+var c, d = window.angular;
+try {
+c = d.module([ "ng" ]);
+} catch (e) {
+c = d.module("ng", []);
+}
+var f = '<div> <dl class="dl-horizontal left"> <dt ng-if="labels" translatable="yes">Labels</dt> <dd ng-repeat="(name, value) in labels" ng-show="name != \'description\' && name != \'name\'"> <tt>{{name}}={{value}}</tt> </dd> <dt ng-if="config.OnBuild.length" translatable="yes">On Build</dt> <dd ng-repeat="line in config.OnBuild"><tt>{{line}}</tt></dd> <dt ng-if="image.metadata.annotations" translatable="yes">Annotations</dt> <dd ng-repeat="(name, value) in image.metadata.annotations">{{name}}: {{value}}</dd> <dt translatable="yes">Docker Version</dt> <dd>{{image.dockerImageMetadata.DockerVersion}}</dd> </dl> </div>';
+c.run([ "$templateCache", function(a) {
+a.put("registry-image-widgets/views/image-meta.html", f);
+} ]), a.exports = f;
+}, function(a, b) {
+var c, d = window.angular;
+try {
+c = d.module([ "ng" ]);
+} catch (e) {
+c = d.module("ng", []);
+}
+var f = '<ul class="registry-image-layers"> <li ng-repeat="layer in layers" class="hint-{{ layer.hint }}"> <span title="{{ layer.size }}">{{ formatSize(layer.size) }}</span> <p>{{ layer.label}}</p> </li> </ul>';
+c.run([ "$templateCache", function(a) {
+a.put("registry-image-widgets/views/image-layers.html", f);
+} ]), a.exports = f;
+}, function(a, b) {
+var c, d = window.angular;
+try {
+c = d.module([ "ng" ]);
+} catch (e) {
+c = d.module("ng", []);
+}
+var f = '<div ng-if="names" class="registry-image-pull"> <p> <i class="fa fa-info-circle"></i>\n<span translatable="yes">To pull this image:</span> </p> <code ng-if="!settings.registry.host">$ sudo docker pull <span class="placeholder">registry</span>/{{names[0]}}</code>\n<code ng-if="settings.registry.host">$ sudo docker pull <span>{{settings.registry.host}}</span>/{{names[0]}}</code> </div>';
+c.run([ "$templateCache", function(a) {
+a.put("registry-image-widgets/views/image-pull.html", f);
+} ]), a.exports = f;
+} ]);
 
 try {
 angular.module("kubernetesUI");
