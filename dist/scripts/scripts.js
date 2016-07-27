@@ -5894,6 +5894,32 @@ details:a("getErrorDetails")(b)
 }
 };
 }));
+} ]), angular.module("openshiftConsole").directive("buildClose", [ "$window", function(a) {
+var b = function(a) {
+return "hide/build/" + a.metadata.uid;
+}, c = function(a) {
+var c = b(a);
+return "true" === sessionStorage.getItem(c);
+};
+return {
+restrict:"AE",
+scope:{
+build:"=",
+hideBuild:"="
+},
+controller:[ "$scope", function(a) {
+a.onHideBuild = function() {
+var c = b(a.build);
+a.hideBuild = !0, sessionStorage.setItem(c, "true");
+};
+} ],
+link:function(a, b, d, e) {
+a.hideBuild = !1, a.$watch("build", function(b) {
+a.hideBuild = c(b);
+});
+},
+templateUrl:"views/directives/_build-close.html"
+};
 } ]), angular.module("openshiftConsole").directive("relativeTimestamp", function() {
 return {
 restrict:"E",
@@ -6820,24 +6846,12 @@ addHealthCheckUrl:"@?"
 templateUrl:"views/_pod-template.html"
 };
 }).directive("triggers", function() {
-var a = function(a) {
-return "hide/build/" + a.metadata.uid;
-};
 return {
 restrict:"E",
 scope:{
 triggers:"=",
 buildsByOutputImage:"=",
 namespace:"="
-},
-link:function(b) {
-b.isBuildHidden = function(b) {
-var c = a(b);
-return "true" === sessionStorage.getItem(c);
-}, b.hideBuild = function(b) {
-var c = a(b);
-sessionStorage.setItem(c, "true");
-};
 },
 templateUrl:"views/_triggers.html"
 };

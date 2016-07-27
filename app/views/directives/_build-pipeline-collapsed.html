@@ -1,5 +1,5 @@
-<div class="build-pipeline-collapsed">
-  <div class="build-summary">
+<div class="build-pipeline-collapsed" ng-show="!hideBuild">
+  <div class="build-summary" ng-class="{'dismissible' : !(build | isIncompleteBuild)}">
     <div class="build-name">
       <a ng-href="{{buildConfigName | navigateResourceURL : 'BuildConfig' : build.metadata.namespace}}">{{buildConfigName}}</a>,
       <a ng-href="{{build | navigateResourceURL}}">#{{build | annotation : 'buildNumber'}}</a>
@@ -10,9 +10,6 @@
     </div>
     <relative-timestamp timestamp="build.metadata.creationTimestamp" class="build-timestamp"></relative-timestamp>
     <div ng-include="'views/directives/_build-pipeline-links.html'" class="build-links"></div>
-    <button ng-hide="build | isIncompleteBuild" ng-click="hideBuild(build)" type="button" class="close">
-      <span class="pficon pficon-close" aria-hidden="true"></span>
-      <span class="sr-only">Dismiss</span>
-    </button>
+    <build-close build="build" hide-build="hideBuild"></build-close>
   </div>
 </div>

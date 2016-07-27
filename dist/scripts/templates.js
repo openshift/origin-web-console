@@ -707,7 +707,7 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "<div class=\"triggers\">\n" +
     "<div class=\"builds\" ng-repeat=\"trigger in triggers\">\n" +
     "<div ng-if=\"trigger.type === 'ImageChange'\">\n" +
-    "<div ng-repeat=\"build in buildsByOutputImage[(trigger.imageChangeParams.from | imageObjectRef : namespace)] | orderObjectsByDate track by (build | uid)\" ng-if=\"!isBuildHidden(build)\" class=\"build animate-repeat\" kind=\"Build\" resource=\"build\">\n" +
+    "<div ng-repeat=\"build in buildsByOutputImage[(trigger.imageChangeParams.from | imageObjectRef : namespace)] | orderObjectsByDate : true track by (build | uid)\" ng-show=\"!(hideBuild)\" class=\"build animate-repeat hide-ng-leave\" kind=\"Build\" resource=\"build\">\n" +
     "<div class=\"build-summary\" ng-class=\"{'dismissible' : !(build | isIncompleteBuild)}\">\n" +
     "<div class=\"build-name\">\n" +
     "<span ng-if=\"build | annotation : 'buildNumber'\">\n" +
@@ -728,10 +728,7 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "<div ng-if=\"'builds/log' | canI : 'get'\" class=\"build-links\">\n" +
     "<a ng-if=\"!!['New', 'Pending'].indexOf(build.status.phase) && (build | buildLogURL)\" ng-href=\"{{build | buildLogURL}}\">View Log</a>\n" +
     "</div>\n" +
-    "<button ng-hide=\"build | isIncompleteBuild\" ng-click=\"hideBuild(build)\" type=\"button\" class=\"close\">\n" +
-    "<span class=\"pficon pficon-close\" aria-hidden=\"true\"></span>\n" +
-    "<span class=\"sr-only\">Dismiss</span>\n" +
-    "</button>\n" +
+    "<build-close build=\"build\" hide-build=\"hideBuild\"></build-close>\n" +
     "</div>\n" +
     "</div>\n" +
     "</div>\n" +
@@ -4130,9 +4127,17 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
   );
 
 
+  $templateCache.put('views/directives/_build-close.html',
+    "<button ng-hide=\"build | isIncompleteBuild\" ng-click=\"onHideBuild()\" type=\"button\" class=\"close\">\n" +
+    "<span class=\"pficon pficon-close\" aria-hidden=\"true\"></span>\n" +
+    "<span class=\"sr-only\">Dismiss</span>\n" +
+    "</button>"
+  );
+
+
   $templateCache.put('views/directives/_build-pipeline-collapsed.html',
-    "<div class=\"build-pipeline-collapsed\">\n" +
-    "<div class=\"build-summary\">\n" +
+    "<div class=\"build-pipeline-collapsed\" ng-show=\"!hideBuild\">\n" +
+    "<div class=\"build-summary\" ng-class=\"{'dismissible' : !(build | isIncompleteBuild)}\">\n" +
     "<div class=\"build-name\">\n" +
     "<a ng-href=\"{{buildConfigName | navigateResourceURL : 'BuildConfig' : build.metadata.namespace}}\">{{buildConfigName}}</a>,\n" +
     "<a ng-href=\"{{build | navigateResourceURL}}\">#{{build | annotation : 'buildNumber'}}</a>\n" +
@@ -4143,10 +4148,7 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "</div>\n" +
     "<relative-timestamp timestamp=\"build.metadata.creationTimestamp\" class=\"build-timestamp\"></relative-timestamp>\n" +
     "<div ng-include=\"'views/directives/_build-pipeline-links.html'\" class=\"build-links\"></div>\n" +
-    "<button ng-hide=\"build | isIncompleteBuild\" ng-click=\"hideBuild(build)\" type=\"button\" class=\"close\">\n" +
-    "<span class=\"pficon pficon-close\" aria-hidden=\"true\"></span>\n" +
-    "<span class=\"sr-only\">Dismiss</span>\n" +
-    "</button>\n" +
+    "<build-close build=\"build\" hide-build=\"hideBuild\"></build-close>\n" +
     "</div>\n" +
     "</div>"
   );
@@ -7501,7 +7503,7 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "<div>\n" +
     "<div class=\"service-group-triggers\">\n" +
     "<div ng-repeat=\"dc in deploymentConfigsByService[service.metadata.name || '']\">\n" +
-    "<div row ng-repeat=\"pipeline in recentPipelinesByDC[dc.metadata.name] | orderObjectsByDate : true track by (pipeline | uid)\" class=\"animate-repeat\">\n" +
+    "<div row ng-repeat=\"pipeline in recentPipelinesByDC[dc.metadata.name] | orderObjectsByDate : true track by (pipeline | uid)\" class=\"animate-repeat hide-ng-leave\">\n" +
     "<build-pipeline flex build=\"pipeline\" collapse-stages-on-completion=\"true\" build-config-name-on-expanded=\"true\"></build-pipeline>\n" +
     "</div>\n" +
     "<div>\n" +

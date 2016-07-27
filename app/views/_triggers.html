@@ -1,9 +1,9 @@
 <div class="triggers">
   <div class="builds" ng-repeat="trigger in triggers">
     <div ng-if="trigger.type === 'ImageChange'">
-      <div ng-repeat="build in buildsByOutputImage[(trigger.imageChangeParams.from | imageObjectRef : namespace)] | orderObjectsByDate track by (build | uid)"
-          ng-if="!isBuildHidden(build)"
-          class="build animate-repeat"
+      <div ng-repeat="build in buildsByOutputImage[(trigger.imageChangeParams.from | imageObjectRef : namespace)] | orderObjectsByDate : true track by (build | uid)"
+          ng-show="!(hideBuild)"
+          class="build animate-repeat hide-ng-leave"
           kind="Build"
           resource="build">
         <div class="build-summary" ng-class="{'dismissible' : !(build | isIncompleteBuild)}">
@@ -26,10 +26,7 @@
           <div ng-if="'builds/log' | canI : 'get'" class="build-links">
             <a ng-if="!!['New', 'Pending'].indexOf(build.status.phase) && (build | buildLogURL)" ng-href="{{build | buildLogURL}}">View Log</a>
           </div>
-          <button ng-hide="build | isIncompleteBuild" ng-click="hideBuild(build)" type="button" class="close">
-            <span class="pficon pficon-close" aria-hidden="true"></span>
-            <span class="sr-only">Dismiss</span>
-          </button>
+          <build-close build="build" hide-build="hideBuild"></build-close>
         </div>
       </div>
     </div>

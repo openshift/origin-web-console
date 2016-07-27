@@ -35,7 +35,7 @@
     <div class="service-group-triggers">
       <div ng-repeat="dc in deploymentConfigsByService[service.metadata.name || '']">
         <div row ng-repeat="pipeline in recentPipelinesByDC[dc.metadata.name] | orderObjectsByDate : true track by (pipeline | uid)"
-            class="animate-repeat">
+            class="animate-repeat hide-ng-leave">
           <build-pipeline flex build="pipeline" collapse-stages-on-completion="true" build-config-name-on-expanded="true"></build-pipeline>
         </div>
         <div>
@@ -69,7 +69,7 @@
           <overview-service
               ng-repeat="service in childServices">
           </overview-service>
-          
+
           <div flex column ng-if="alternateServices.length === 0 && childServices.length === 0 && service" class="no-child-services-block">
             <div class="no-child-services-message">
               <div class="pad-left-lg pad-right-lg pad-top-lg pad-bottom-lg">
