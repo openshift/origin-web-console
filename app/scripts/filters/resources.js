@@ -129,8 +129,8 @@ angular.module('openshiftConsole')
     };
   })
   .filter('canI', function(AuthorizationService) {
-    return function(resource, verb, namespace) {
-      return AuthorizationService.canI(verb, resource, namespace);
+    return function(resource, verb, projectName) {
+      return AuthorizationService.canI(resource, verb, projectName);
     };
   })
   .filter('canIAddToProject', function(AuthorizationService) {
@@ -140,30 +140,59 @@ angular.module('openshiftConsole')
   })
   .filter('canIDoAny', function(canIFilter) {
     var resourceRulesMap = {
-      "buildConfigs": {"buildconfigs": ["delete", "update"], "buildconfigs/instantiate": ["create"]},
-      "builds": {"builds/clone": ["create"], "builds": ["delete", "update"]},
-      "deploymentConfigs": {"extensions/horizontalpodautoscalers": ["create", "update"], "deploymentconfigs": ["create", "update"]},
-      "deployments": {"replicationcontrollers": ["update", "delete"]},
-      "horizontalPodAutoscalers": {"extensions/horizontalpodautoscalers": ["update", "delete"]},
-      "imageStreams": {"imagestreams": ["update", "delete"]},
-      "persistentVolumeClaims": {"persistentvolumeclaims": ["update", "delete"]},
-      "pods": {"pods": ["update", "delete"], "deploymentconfigs": ["update"]},
-      "replicationControllers": {"horizontalpodautoscalers": ["create", "update"], "replicationcontrollers": ["create", "update"]},
-      "routes": {"routes": ["update", "delete"]},
-      "services": {"services": ["update", "create", "delete"]},
-      "projects": {'projects': ['delete', 'update']}
+      'buildConfigs': [
+        {group: '', resource: 'buildconfigs',             verbs: ['delete', 'update']},
+        {group: '', resource: 'buildconfigs/instantiate', verbs: ['create']}
+      ],
+      'builds': [
+        {group: '', resource: 'builds/clone', verbs: ['create']},
+        {group: '', resource: 'builds',       verbs: ['delete', 'update']}
+      ],
+      'deploymentConfigs': [
+        {group: 'extensions', resource: 'horizontalpodautoscalers', verbs: ['create', 'update']},
+        {group: '',            resource: 'deploymentconfigs',        verbs: ['create', 'update']}
+      ],
+      'deployments': [
+        {group: '', resource: 'replicationcontrollers', verbs: ['update', 'delete']}
+      ],
+      'horizontalPodAutoscalers': [
+        {group: 'extensions', resource: 'horizontalpodautoscalers', verbs: ['update', 'delete']}
+      ],
+      'imageStreams': [
+        {group: '', resource: 'imagestreams', verbs: ['update', 'delete']}
+      ],
+      'persistentVolumeClaims': [
+        {group: '', resource: 'persistentvolumeclaims', verbs: ['update', 'delete']}
+      ],
+      'pods': [
+        {group: '', resource: 'pods',              verbs: ['update', 'delete']},
+        {group: '', resource: 'deploymentconfigs', verbs: ['update']}
+      ],
+      'replicationControllers': [
+        {group: 'extensions', resource: 'horizontalpodautoscalers', verbs: ['create', 'update']},
+        {group: '',            resource: 'replicationcontrollers',   verbs: ['create', 'update']}
+      ],
+      'routes': [
+        {group: '', resource: 'routes', verbs: ['update', 'delete']}
+      ],
+      'services': [
+        {group: '', resource: 'services', verbs: ['update', 'create', 'delete']}
+      ],
+      'projects': [
+        {group: '', resource: 'projects', verbs: ['delete', 'update']}
+      ]
     };
     return function(resource) {
-      return _.some(resourceRulesMap[resource], function(verbs, resource) {
-        return _.some(verbs, function(verb) {
-          return canIFilter(resource,verb);
+      return _.some(resourceRulesMap[resource], function(rule) {
+        return _.some(rule.verbs, function(verb) {
+          return canIFilter({resource: rule.resource, group: rule.group}, verb);
         });
       });
     };
   })
   .filter('canIScale', function(canIFilter, isDeploymentFilter) {
     return function(deployment) {
-      return canIFilter(isDeploymentFilter(deployment) ? "deploymentconfigs/scale" : "replicationcontrollers", "update");
+      return canIFilter(isDeploymentFilter(deployment) ? 'deploymentconfigs/scale' : 'replicationcontrollers', 'update');
     };
   })
   .filter('tags', function(annotationFilter) {

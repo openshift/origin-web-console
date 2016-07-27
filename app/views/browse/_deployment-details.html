@@ -16,7 +16,7 @@
         <status-icon status="deployment | deploymentStatus"></status-icon>
         {{deployment | deploymentStatus}}
         <span style="margin-left: 7px;">
-          <button ng-show="!rollBackCollapsed && (deployment | deploymentStatus) == 'Complete' && !(deployment | deploymentIsLatest : deploymentConfig) && !deployment.metadata.deletionTimestamp && 'deploymentconfigrollbacks' | canI : 'create'" ng-disabled="(deploymentConfigDeploymentsInProgress[deploymentConfigName] | hashSize) > 0" type="button" class="btn btn-default btn-xs" ng-click="rollBackCollapsed = !rollBackCollapsed">Roll Back</button>
+          <button ng-show="!rollBackCollapsed && (deployment | deploymentStatus) == 'Complete' && !(deployment | deploymentIsLatest : deploymentConfig) && !deployment.metadata.deletionTimestamp && ('deploymentconfigrollbacks' | canI : 'create')" ng-disabled="(deploymentConfigDeploymentsInProgress[deploymentConfigName] | hashSize) > 0" type="button" class="btn btn-default btn-xs" ng-click="rollBackCollapsed = !rollBackCollapsed">Roll Back</button>
           <div ng-show="rollBackCollapsed" class="well well-sm">
             Use the following settings from {{deployment.metadata.name}} when rolling back:
             <div class="checkbox">
@@ -39,7 +39,7 @@
           <!-- disabled until we have an api endpoint for retry
           <button ng-show="(deployment | deploymentStatus) == 'Failed'" type="button" ng-click="retryFailedDeployment(deployment)" ng-disabled="(deploymentConfigDeploymentsInProgress[deploymentConfigName] | hashSize) > 0" class="btn btn-default btn-xs" ng-if="(deployment | deploymentIsLatest : deploymentConfig) && !deployment.metadata.deletionTimestamp">Retry</button>
           -->
-          <button ng-show="(deployment | deploymentIsInProgress) && !deployment.metadata.deletionTimestamp && 'replicationcontrollers' | canI : 'update'" type="button" ng-click="cancelRunningDeployment(deployment)" class="btn btn-default btn-xs">Cancel</button>
+          <button ng-show="(deployment | deploymentIsInProgress) && !deployment.metadata.deletionTimestamp && ('replicationcontrollers' | canI : 'update')" type="button" ng-click="cancelRunningDeployment(deployment)" class="btn btn-default btn-xs">Cancel</button>
         </span>
       </dd>
       <dt ng-if-start="deployment | isDeployment">Deployment config:</dt>

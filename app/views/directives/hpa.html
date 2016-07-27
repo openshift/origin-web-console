@@ -29,11 +29,11 @@
 
 <!-- HPA actions -->
 <div ng-hide="!('horizontalPodAutoscalers' | canIDoAny)">
-  <a ng-if="'extensions/horizontalpodautoscalers' | canI : 'update'" ng-href="project/{{hpa.metadata.namespace}}/edit/autoscaler?kind=HorizontalPodAutoscaler&group=extensions&name={{hpa.metadata.name}}"
+  <a ng-if="{resource: 'horizontalpodautoscalers', group: 'extensions'} | canI : 'update'" ng-href="project/{{hpa.metadata.namespace}}/edit/autoscaler?kind=HorizontalPodAutoscaler&group=extensions&name={{hpa.metadata.name}}"
      role="button">Edit</a>
   <span class="action-divider">|</span>
   <delete-link
-      ng-if="'extensions/horizontalpodautoscalers' | canI : 'delete'"
+      ng-if="{resource: 'horizontalpodautoscalers', group: 'extensions'} | canI : 'delete'"
       kind="HorizontalPodAutoscaler"
       group="extensions"
       resource-name="{{hpa.metadata.name}}"

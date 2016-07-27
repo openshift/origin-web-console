@@ -49,8 +49,16 @@ angular.module('openshiftConsole')
       .get($routeParams.project)
       .then(_.spread(function(project, context) {
         $scope.kinds = _.filter($scope.kinds, function(kind){
-          var resource = APIService.kindToResource(kind.kind);
-          return AuthorizationService.canI("list", kind.group ? kind.group + "/" + resource : resource, $scope.projectName);
+          var resourceAndGroup  = {
+            resource: APIService.kindToResource(kind.kind),
+            group: kind.group || ''
+          };
+          // exclude 'projectrequests', subresources, and REVIEW_RESOURCES from the list
+          if (AuthorizationService.checkResource(resourceAndGroup.resource)) {
+            return AuthorizationService.canI(resourceAndGroup, "list", $scope.projectName);
+          } else {
+            return false;
+          }
         });
         $scope.project = project;
         $scope.context = context;
@@ -74,7 +82,7 @@ angular.module('openshiftConsole')
       if (!selected) {
         return;
       }
-      $scope.selectedResource = (selected.group) ? selected.group + "/" + APIService.kindToResource(selected.kind) : APIService.kindToResource(selected.kind);
+      $scope.selectedResource = {resource: APIService.kindToResource(selected.kind), group: (selected.group || '')};
       // TODO - We can't watch because some of these resources do not support it (roles and rolebindings)
       DataService.list({
           group: selected.group,
