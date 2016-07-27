@@ -66,7 +66,8 @@
                         kind="Build"
                         resource-name="{{build.metadata.name}}"
                         project-name="{{build.metadata.namespace}}"
-                        alerts="alerts">
+                        alerts="alerts"
+                        redirect-url="{{build | configURLForResource}}">
                       </delete-link>
                     </li>
                   </ul>

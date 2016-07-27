@@ -238,6 +238,18 @@
   }
 }
 
+.pipelines-page {
+  @media (max-width: @screen-xs-max) {
+    h2 small {
+      display: block;
+      margin-top: 3px;
+    }
+    .source-repo {
+      display: block;
+    }
+  }
+}
+
 // The chart gets too compressed at narrow widths. Use an approach
 // similar to table-responsive on mobile where the user can scroll.
 .build-trends-responsive {

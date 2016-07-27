@@ -32,7 +32,9 @@ angular.module("openshiftConsole")
         // Array of associated HPAs for this resource. If set, prompts the user to delete the HPA resources as well.
         hpaList: "=?",
         // Optional callback when the delete succeeds
-        success: "=?"
+        success: "=?",
+        // Optional redirect URL when the delete succeeds
+        redirectUrl: "@?"
       },
       templateUrl: function(elem, attr) {
         if (angular.isDefined(attr.buttonOnly)) {
@@ -92,17 +94,23 @@ angular.module("openshiftConsole")
             return;
           }
 
+          if (scope.redirectUrl) {
+            $location.url(scope.redirectUrl);
+            return;
+          }
+
           if (scope.kind !== 'Project') {
             Navigate.toResourceList(APIService.kindToResource(scope.kind), scope.projectName);
+            return;
           }
-          else {
-            if ($location.path() === '/') {
-              scope.$emit('deleteProject');
-            } else if ($location.path().indexOf('settings') > '-1') {
-              var homeRedirect = URI('/');
-              $location.url(homeRedirect);
-            }
+
+          if ($location.path() === '/') {
+            scope.$emit('deleteProject');
+            return;
           }
+
+          var homeRedirect = URI('/');
+          $location.url(homeRedirect);
         };
 
         scope.openDeleteModal = function() {

@@ -57,7 +57,8 @@
                         project-name="{{deployment.metadata.namespace}}"
                         alerts="alerts"
                         disable-delete="!!deployment.status.replicas"
-                        hpa-list="hpaForRC">
+                        hpa-list="hpaForRC"
+                        redirect-url="{{deployment | configURLForResource}}">
                       </delete-link>
                     </li>
                   </ul>

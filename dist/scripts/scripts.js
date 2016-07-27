@@ -62,6 +62,10 @@ label:"Builds",
 href:"/browse/builds",
 prefixes:[ "/browse/builds/", "/browse/builds-noconfig/" ]
 }, {
+label:"Pipelines",
+href:"/browse/pipelines",
+prefixes:[ "/browse/pipelines/" ]
+}, {
 label:"Images",
 href:"/browse/images",
 prefixes:[ "/browse/images/" ]
@@ -113,20 +117,55 @@ return "/project/" + encodeURIComponent(a.project) + "/browse/pods";
 }).when("/project/:project/browse/builds", {
 templateUrl:"views/builds.html",
 controller:"BuildsController"
+}).when("/project/:project/browse/pipelines", {
+templateUrl:"views/pipelines.html",
+controller:"PipelinesController"
 }).when("/project/:project/browse/builds/:buildconfig", {
 templateUrl:"views/browse/build-config.html",
 controller:"BuildConfigController"
+}).when("/project/:project/browse/pipelines/:buildconfig", {
+templateUrl:"views/browse/build-config.html",
+controller:"BuildConfigController",
+resolve:{
+isPipeline:[ "$route", function(a) {
+a.current.params.isPipeline = !0;
+} ]
+}
 }).when("/project/:project/edit/builds/:buildconfig", {
 templateUrl:"views/edit/build-config.html",
 controller:"EditBuildConfigController"
+}).when("/project/:project/edit/pipelines/:buildconfig", {
+templateUrl:"views/edit/build-config.html",
+controller:"EditBuildConfigController",
+resolve:{
+isPipeline:[ "$route", function(a) {
+a.current.params.isPipeline = !0;
+} ]
+}
 }).when("/project/:project/browse/builds/:buildconfig/:build", {
 templateUrl:function(a) {
 return "chromeless" === a.view ? "views/logs/chromeless-build-log.html" :"views/browse/build.html";
 },
 controller:"BuildController"
+}).when("/project/:project/browse/pipelines/:buildconfig/:build", {
+templateUrl:"views/browse/build.html",
+controller:"BuildController",
+resolve:{
+isPipeline:[ "$route", function(a) {
+a.current.params.isPipeline = !0;
+} ]
+}
 }).when("/project/:project/browse/builds-noconfig/:build", {
 templateUrl:"views/browse/build.html",
 controller:"BuildController"
+}).when("/project/:project/browse/pipelines-noconfig/:build", {
+templateUrl:"views/browse/build.html",
+controller:"BuildController",
+resolve:{
+isPipeline:[ "$route", function(a) {
+a.current.params.isPipeline = !0;
+} ]
+}
 }).when("/project/:project/browse/deployments", {
 templateUrl:"views/deployments.html",
 controller:"DeploymentsController"
@@ -1775,6 +1814,9 @@ return f["delete"]("oauthaccesstokens", e, {}, g);
 };
 } ];
 }), angular.module("openshiftConsole").service("Navigate", [ "$location", "$window", "$timeout", "annotationFilter", "LabelFilter", "$filter", "APIService", function(a, b, c, d, e, f, g) {
+var h = f("annotation"), i = f("buildConfigForBuild"), j = f("isJenkinsPipelineStrategy"), k = function(a, b) {
+return _.get(b, "isPipeline") ? "pipelines" :_.isObject(a) && j(a) ? "pipelines" :"builds";
+};
 return {
 toErrorPage:function(c, d, e) {
 var f = URI("error").query({
@@ -1801,39 +1843,53 @@ a.url("/project/" + b.metadata.namespace + "/browse/pods"), c(function() {
 e.setLabelSelector(new LabelSelector(b.spec.selector, (!0)));
 }, 1);
 },
-resourceURL:function(a, b, c, e) {
+resourceURL:function(a, b, c, e, h) {
 if (e = e || "browse", !(a && (a.metadata || b && c))) return null;
 b || (b = a.kind), c || (c = a.metadata.namespace);
-var h = a;
-a.metadata && (h = a.metadata.name);
-var i = URI("").segment("project").segmentCoded(c).segment(e);
+var i = a;
+a.metadata && (i = a.metadata.name);
+var j = URI("").segment("project").segmentCoded(c).segment(e);
 switch (b) {
 case "Build":
-var j = f("buildConfigForBuild")(a);
-j ? i.segment("builds").segmentCoded(j).segmentCoded(h) :i.segment("builds-noconfig").segmentCoded(h);
+var l = f("buildConfigForBuild")(a), m = k(a, h);
+l ? j.segment(m).segmentCoded(l).segmentCoded(i) :j.segment(m + "-noconfig").segmentCoded(i);
 break;
 
 case "BuildConfig":
-i.segment("builds").segmentCoded(h);
+j.segment(k(a, h)).segmentCoded(i);
 break;
 
 case "DeploymentConfig":
-i.segment("deployments").segmentCoded(h);
+j.segment("deployments").segmentCoded(i);
 break;
 
 case "ReplicationController":
-var k = a.metadata ? d(a, "deploymentConfig") :null;
-k ? i.segment("deployments").segmentCoded(k).segmentCoded(h) :i.segment("deployments-replicationcontrollers").segmentCoded(h);
+var n = a.metadata ? d(a, "deploymentConfig") :null;
+n ? j.segment("deployments").segmentCoded(n).segmentCoded(i) :j.segment("deployments-replicationcontrollers").segmentCoded(i);
 break;
 
 case "ImageStream":
-i.segment("images").segmentCoded(h);
+j.segment("images").segmentCoded(i);
 break;
 
 default:
-i.segment(g.kindToResource(b)).segmentCoded(h);
+j.segment(g.kindToResource(b)).segmentCoded(i);
 }
-return i.toString();
+return j.toString();
+},
+configURLForResource:function(a, b) {
+var c, d, e = _.get(a, "kind"), f = _.get(a, "metadata.namespace");
+if (!e || !f) return null;
+switch (e) {
+case "Build":
+return c = i(a), c ? this.resourceURL(c, "BuildConfig", f, b, {
+isPipeline:j(a)
+}) :null;
+
+case "ReplicationController":
+return d = h(a, "deploymentConfig"), d ? this.resourceURL(d, "DeploymentConfig", f, b) :null;
+}
+return null;
 },
 toResourceList:function(b, c) {
 var d = {
@@ -1960,7 +2016,7 @@ c.image && (b[c.dockerImageReference] = a.metadata.name + "@" + c.image);
 } ]), angular.module("openshiftConsole").factory("BaseHref", [ "$document", function(a) {
 return a.find("base").attr("href") || "/";
 } ]), angular.module("openshiftConsole").factory("BuildsService", [ "DataService", "$filter", function(a, b) {
-var c = b("annotation"), d = function(b, c) {
+var c = b("annotation"), d = b("buildConfigForBuild"), e = function(b, c) {
 var d = {
 kind:"BuildRequest",
 apiVersion:"v1",
@@ -1969,10 +2025,10 @@ name:b
 }
 };
 return a.create("buildconfigs/instantiate", b, d, c);
-}, e = function(b, c, d) {
+}, f = function(b, c, d) {
 var e = angular.copy(b);
 return e.status.cancelled = !0, a.update("builds", e.metadata.name, e, d);
-}, f = function(b, c) {
+}, g = function(b, c) {
 var d = {
 kind:"BuildRequest",
 apiVersion:"v1",
@@ -1981,11 +2037,11 @@ name:b
 }
 };
 return a.create("builds/clone", b, d, c);
-}, g = function(a) {
-return "true" === c(a, "openshift.io/build-config.paused");
 }, h = function(a) {
-return !!a && (!a.metadata.deletionTimestamp && !g(a));
+return "true" === c(a, "openshift.io/build-config.paused");
 }, i = function(a) {
+return !!a && (!a.metadata.deletionTimestamp && !h(a));
+}, j = function(a) {
 var b = c(a, "pipeline.alpha.openshift.io/uses");
 if (!b) return [];
 try {
@@ -1997,20 +2053,42 @@ var e = [];
 return _.each(b, function(b) {
 b.name && (b.namespace && b.namespace !== _.get(a, "metadata.namespace") || "DeploymentConfig" === b.kind && e.push(b.name));
 }), e;
-}, j = function(a, b) {
+}, k = function(a, b) {
 return _.pick(b, function(b) {
 var d = c(b, "buildConfig");
 return !d || d === a;
 });
+}, l = b("isNewerResource"), m = function(a, b) {
+var c = {};
+return _.each(a, function(a) {
+var e = d(a) || "";
+b && !b(a) || l(a, c[e]) && (c[e] = a);
+}), c;
+}, n = function(a) {
+var b = c(a, "buildNumber") || parseInt(a.metadata.name.match(/(\d+)$/), 10);
+return isNaN(b) ? null :b;
+}, o = function(a) {
+return a.status.startTimestamp || a.metadata.creationTimestamp;
+}, p = function(a) {
+return _.round(a / 1e3 / 1e3);
+}, q = function(a) {
+var b = _.get(a, "status.duration");
+if (b) return p(b);
+var c = o(a), d = a.status.completionTimestamp;
+return c && d ? moment(d).diff(moment(c)) :0;
 };
 return {
-startBuild:d,
-cancelBuild:e,
-cloneBuild:f,
-isPaused:g,
-canBuild:h,
-usesDeploymentConfigs:i,
-validatedBuildsForBuildConfig:j
+startBuild:e,
+cancelBuild:f,
+cloneBuild:g,
+isPaused:h,
+canBuild:i,
+usesDeploymentConfigs:j,
+validatedBuildsForBuildConfig:k,
+latestBuildByConfig:m,
+getBuildNumber:n,
+getStartTimestsamp:o,
+getDuration:q
 };
 } ]), angular.module("openshiftConsole").factory("DeploymentsService", [ "DataService", "$filter", "LabelFilter", function(a, b, c) {
 function d() {}
@@ -3446,7 +3524,7 @@ c.unwatchAll(f);
 });
 }));
 } ]), angular.module("openshiftConsole").controller("BuildsController", [ "$routeParams", "$scope", "AlertMessageService", "DataService", "$filter", "LabelFilter", "Logger", "$location", "BuildsService", "ProjectsService", function(a, b, c, d, e, f, g, h, i, j) {
-b.projectName = a.project, b.builds = {}, b.unfilteredBuildConfigs = {}, b.buildConfigs = void 0, b.labelSuggestions = {}, b.alerts = b.alerts || {}, b.emptyMessage = "Loading...", b.buildsByBuildConfig = {}, c.getAlerts().forEach(function(a) {
+b.projectName = a.project, b.builds = {}, b.unfilteredBuildConfigs = {}, b.buildConfigs = void 0, b.labelSuggestions = {}, b.alerts = b.alerts || {}, b.emptyMessage = "Loading...", b.latestByConfig = {}, c.getAlerts().forEach(function(a) {
 b.alerts[a.name] = a.data;
 }), c.clearAlerts();
 var k = e("buildConfigForBuild"), l = [];
@@ -3455,73 +3533,27 @@ function h(a) {
 var c = f.getLabelSelector();
 if (c.isEmpty()) return !0;
 var d = k(a) || "";
-return d ? !!b.buildConfigs[d] :c.matches(a);
+return d && b.unfilteredBuildConfigs[d] ? !!b.buildConfigs[d] :c.matches(a);
 }
 function j() {
-b.buildsByBuildConfig = {}, angular.forEach(b.builds, function(a, c) {
-var d = k(a) || "";
-h(a) && (b.buildsByBuildConfig[d] = b.buildsByBuildConfig[d] || {}, b.buildsByBuildConfig[d][c] = a);
-}), angular.forEach(b.buildConfigs, function(a, c) {
-b.buildsByBuildConfig[c] = b.buildsByBuildConfig[c] || {};
+b.latestByConfig = i.latestBuildByConfig(b.builds, h), angular.forEach(b.buildConfigs, function(a, c) {
+b.latestByConfig[c] = b.latestByConfig[c] || null;
 });
 }
 function m() {
-!f.getLabelSelector().isEmpty() && $.isEmptyObject(b.buildsByBuildConfig) ? b.alerts.builds = {
+var a = _.omit(b.latestByConfig, _.isNull);
+!f.getLabelSelector().isEmpty() && _.isEmpty(b.buildConfigs) && _.isEmpty(a) ? b.alerts.builds = {
 type:"warning",
 details:"The active filters are hiding all builds."
 } :delete b.alerts.builds;
 }
-b.project = a, l.push(d.watch("builds", c, function(a, c, d) {
-b.builds = a.by("metadata.name"), b.emptyMessage = "No builds to show", j();
-var e, f;
-d && (e = k(d), f = d.metadata.name), g.log("builds (subscribe)", b.builds);
+b.project = a;
+var n = e("isJenkinsPipelineStrategy");
+l.push(d.watch("builds", c, function(a) {
+b.builds = _.omit(a.by("metadata.name"), n), b.emptyMessage = "No builds to show", j(), f.addLabelSuggestionsFromResources(b.builds, b.labelSuggestions), g.log("builds (subscribe)", b.builds);
 })), l.push(d.watch("buildconfigs", c, function(a) {
-b.unfilteredBuildConfigs = a.by("metadata.name"), f.addLabelSuggestionsFromResources(b.unfilteredBuildConfigs, b.labelSuggestions), f.setLabelSuggestions(b.labelSuggestions), b.buildConfigs = f.getLabelSelector().select(b.unfilteredBuildConfigs), j(), m(), g.log("buildconfigs (subscribe)", b.buildConfigs);
-})), b.startBuild = function(a) {
-i.startBuild(a, c).then(function(a) {
-b.alerts.create = {
-type:"success",
-message:"Build " + a.metadata.name + " has started."
-};
-}, function(a) {
-b.alerts.create = {
-type:"error",
-message:"An error occurred while starting the build.",
-details:e("getErrorDetails")(a)
-};
-});
-}, b.cancelBuild = function(a, d) {
-i.cancelBuild(a, d, c).then(function(a) {
-b.alerts.cancel = {
-type:"success",
-message:"Cancelling build " + a.metadata.name + " of " + d + "."
-};
-}, function(a) {
-b.alerts.cancel = {
-type:"error",
-message:"An error occurred cancelling the build.",
-details:e("getErrorDetails")(a)
-};
-});
-}, b.cloneBuild = function(a) {
-i.cloneBuild(a, c).then(function(a) {
-var c = e("buildLogURL")(a);
-b.alerts.rebuild = {
-type:"success",
-message:"Build " + name + " is being rebuilt as " + a.metadata.name + ".",
-links:c ? [ {
-href:c,
-label:"View Log"
-} ] :void 0
-};
-}, function(a) {
-b.alerts.rebuild = {
-type:"error",
-message:"An error occurred while rerunning the build.",
-details:e("getErrorDetails")(a)
-};
-});
-}, f.onActiveFiltersChanged(function(a) {
+b.unfilteredBuildConfigs = _.omit(a.by("metadata.name"), n), f.addLabelSuggestionsFromResources(b.unfilteredBuildConfigs, b.labelSuggestions), f.setLabelSuggestions(b.labelSuggestions), b.buildConfigs = f.getLabelSelector().select(b.unfilteredBuildConfigs), j(), m(), g.log("buildconfigs (subscribe)", b.buildConfigs);
+})), f.onActiveFiltersChanged(function(a) {
 b.$apply(function() {
 b.buildConfigs = a.select(b.unfilteredBuildConfigs), j(), m();
 });
@@ -3529,60 +3561,106 @@ b.buildConfigs = a.select(b.unfilteredBuildConfigs), j(), m();
 d.unwatchAll(l);
 });
 }));
-} ]), angular.module("openshiftConsole").controller("BuildConfigController", [ "$scope", "$routeParams", "DataService", "ProjectsService", "BuildsService", "$filter", "LabelFilter", "AlertMessageService", function(a, b, c, d, e, f, g, h) {
-a.projectName = b.project, a.buildConfigName = b.buildconfig, a.buildConfig = null, a.labelSuggestions = {}, a.alerts = {}, a.breadcrumbs = [ {
+} ]), angular.module("openshiftConsole").controller("PipelinesController", [ "$filter", "$routeParams", "$scope", "AlertMessageService", "BuildsService", "DataService", "Logger", "ProjectsService", function(a, b, c, d, e, f, g, h) {
+c.projectName = b.project, c.alerts = c.alerts || {}, c.buildConfigs = {}, d.getAlerts().forEach(function(a) {
+c.alerts[a.name] = a.data;
+}), d.clearAlerts();
+var i = [];
+h.get(b.project).then(_.spread(function(b, d) {
+c.project = b;
+var g = {}, h = a("buildConfigForBuild"), j = a("isIncompleteBuild"), k = a("isJenkinsPipelineStrategy"), l = a("isNewerResource"), m = function(a, b) {
+if (!j(b)) {
+c.statsByConfig[a] || (c.statsByConfig[a] = {
+count:0,
+totalDuration:0
+});
+var d = c.statsByConfig[a];
+d.count++, d.totalDuration += e.getDuration(b), d.avgDuration = _.round(d.totalDuration / d.count);
+}
+}, n = function() {
+var a = {}, b = {};
+c.statsByConfig = {}, _.each(g, function(d) {
+if (k(d)) {
+var e = h(d) || "";
+c.buildConfigs[e] || (c.buildConfigs[e] = null), j(d) ? _.set(a, [ e, d.metadata.name ], d) :l(d, b[e]) && (b[e] = d), m(e, d);
+}
+}), _.each(b, function(b, c) {
+_.set(a, [ c, b.metadata.name ], b);
+}), c.interestingBuildsByConfig = a;
+};
+i.push(f.watch("builds", d, function(a) {
+c.buildsLoaded = !0, g = a.by("metadata.name"), n();
+})), i.push(f.watch("buildconfigs", d, function(a) {
+c.buildConfigsLoaded = !0, c.buildConfigs = _.pick(a.by("metadata.name"), k), n();
+})), c.startBuild = function(b) {
+e.startBuild(b, d).then(_.noop, function(b) {
+c.alerts["start-build"] = {
+type:"error",
+message:"An error occurred while starting the build.",
+details:a("getErrorDetails")(b)
+};
+});
+}, c.$on("$destroy", function() {
+f.unwatchAll(i);
+});
+}));
+} ]), angular.module("openshiftConsole").controller("BuildConfigController", [ "$scope", "$filter", "$routeParams", "AlertMessageService", "BuildsService", "DataService", "LabelFilter", "ProjectsService", function(a, b, c, d, e, f, g, h) {
+a.projectName = c.project, a.buildConfigName = c.buildconfig, a.buildConfig = null, a.labelSuggestions = {}, a.alerts = {}, a.breadcrumbs = [], c.isPipeline ? a.breadcrumbs.push({
+title:"Pipelines",
+link:"project/" + c.project + "/browse/pipelines"
+}) :a.breadcrumbs.push({
 title:"Builds",
-link:"project/" + b.project + "/browse/builds"
-}, {
-title:b.buildconfig
-} ], a.emptyMessage = "Loading...", h.getAlerts().forEach(function(b) {
+link:"project/" + c.project + "/browse/builds"
+}), a.breadcrumbs.push({
+title:c.buildconfig
+}), a.emptyMessage = "Loading...", d.getAlerts().forEach(function(b) {
 a.alerts[b.name] = b.data;
-}), h.clearAlerts(), a.aceLoaded = function(a) {
+}), d.clearAlerts(), a.aceLoaded = function(a) {
 var b = a.getSession();
 b.setOption("tabSize", 2), b.setOption("useSoftTabs", !0), a.$blockScrolling = 1 / 0;
-}, b.tab && (a.selectedTab = {}, a.selectedTab[b.tab] = !0);
-var i = f("orderObjectsByDate"), j = f("buildConfigForBuild"), k = f("buildStrategy"), l = [], m = function(b) {
+}, c.tab && (a.selectedTab = {}, a.selectedTab[c.tab] = !0);
+var i = b("orderObjectsByDate"), j = b("buildConfigForBuild"), k = b("buildStrategy"), l = [], m = function(b) {
 a.updatedBuildConfig = angular.copy(b), a.envVars = k(a.updatedBuildConfig).env || [];
 };
-d.get(b.project).then(_.spread(function(d, h) {
+h.get(c.project).then(_.spread(function(d, h) {
 function n() {
 g.getLabelSelector().isEmpty() || !$.isEmptyObject(a.builds) || $.isEmptyObject(a.unfilteredBuilds) ? delete a.alerts.builds :a.alerts.builds = {
 type:"warning",
 details:"The active filters are hiding all builds."
 };
 }
-a.project = d, c.get("buildconfigs", b.buildconfig, h).then(function(d) {
-a.loaded = !0, a.buildConfig = d, a.paused = e.isPaused(a.buildConfig), a.buildConfig.spec.source.images && (a.imageSources = a.buildConfig.spec.source.images, a.imageSourcesPaths = [], a.imageSources.forEach(function(b) {
-a.imageSourcesPaths.push(f("destinationSourcePair")(b.paths));
+a.project = d, f.get("buildconfigs", c.buildconfig, h).then(function(d) {
+a.loaded = !0, a.buildConfig = d, a.paused = e.isPaused(a.buildConfig), a.buildConfig.spec.source.images && (a.imageSources = a.buildConfig.spec.source.images, a.imageSourcesPaths = [], a.imageSources.forEach(function(c) {
+a.imageSourcesPaths.push(b("destinationSourcePair")(c.paths));
 })), m(d), a.saveEnvVars = function() {
-a.envVars = _.filter(a.envVars, "name"), k(a.updatedBuildConfig).env = a.envVars, c.update("buildconfigs", b.buildconfig, a.updatedBuildConfig, h).then(function() {
+a.envVars = _.filter(a.envVars, "name"), k(a.updatedBuildConfig).env = a.envVars, f.update("buildconfigs", c.buildconfig, a.updatedBuildConfig, h).then(function() {
 a.alerts.saveBCEnvVarsSuccess = {
 type:"success",
 message:a.buildConfigName + " was updated."
 };
-}, function(b) {
+}, function(c) {
 a.alerts.saveBCEnvVarsError = {
 type:"error",
 message:a.buildConfigName + " was not updated.",
-details:"Reason: " + f("getErrorDetails")(b)
+details:"Reason: " + b("getErrorDetails")(c)
 };
 });
-}, l.push(c.watchObject("buildconfigs", b.buildconfig, h, function(b, c) {
+}, l.push(f.watchObject("buildconfigs", c.buildconfig, h, function(b, c) {
 "DELETED" === c && (a.alerts.deleted = {
 type:"warning",
 message:"This build configuration has been deleted."
 }), a.buildConfig = b, m(b), a.paused = e.isPaused(a.buildConfig);
 }));
-}, function(b) {
+}, function(c) {
 a.loaded = !0, a.alerts.load = {
 type:"error",
-message:404 === b.status ? "This build configuration can not be found, it may have been deleted." :"The build configuration details could not be loaded.",
-details:404 === b.status ? "Any remaining build history for this build will be shown." :"Reason: " + f("getErrorDetails")(b)
+message:404 === c.status ? "This build configuration can not be found, it may have been deleted." :"The build configuration details could not be loaded.",
+details:404 === c.status ? "Any remaining build history for this build will be shown." :"Reason: " + b("getErrorDetails")(c)
 };
-}), l.push(c.watch("builds", h, function(c, d, f) {
+}), l.push(f.watch("builds", h, function(b, d, f) {
 if (a.emptyMessage = "No builds to show", d) {
 var h = j(f);
-if (h === b.buildconfig) {
+if (h === c.buildconfig) {
 var k = f.metadata.name;
 switch (d) {
 case "ADDED":
@@ -3594,12 +3672,12 @@ case "DELETED":
 delete a.unfilteredBuilds[k];
 }
 }
-} else a.unfilteredBuilds = e.validatedBuildsForBuildConfig(b.buildconfig, c.by("metadata.name"));
+} else a.unfilteredBuilds = e.validatedBuildsForBuildConfig(c.buildconfig, b.by("metadata.name"));
 a.builds = g.getLabelSelector().select(a.unfilteredBuilds), n(), g.addLabelSuggestionsFromResources(a.unfilteredBuilds, a.labelSuggestions), g.setLabelSuggestions(a.labelSuggestions), a.orderedBuilds = i(a.builds, !0), a.latestBuild = a.orderedBuilds.length ? a.orderedBuilds[0] :null;
 }, {
 http:{
 params:{
-labelSelector:f("labelName")("buildConfig") + "=" + _.trunc(a.buildConfigName, {
+labelSelector:b("labelName")("buildConfig") + "=" + _.trunc(a.buildConfigName, {
 length:63,
 omission:""
 })
@@ -3615,27 +3693,33 @@ a.alerts.create = {
 type:"success",
 message:"Build " + b.metadata.name + " has started."
 };
-}, function(b) {
+}, function(c) {
 a.alerts.create = {
 type:"error",
 message:"An error occurred while starting the build.",
-details:f("getErrorDetails")(b)
+details:b("getErrorDetails")(c)
 };
 });
 }, a.$on("$destroy", function() {
-c.unwatchAll(l);
+f.unwatchAll(l);
 });
 }));
 } ]), angular.module("openshiftConsole").controller("BuildController", [ "$scope", "$filter", "$routeParams", "BuildsService", "DataService", "Navigate", "ProjectsService", function(a, b, c, d, e, f, g) {
 a.projectName = c.project, a.build = null, a.buildConfig = null, a.buildConfigName = c.buildconfig, a.builds = {}, a.alerts = {}, a.showSecret = !1, a.renderOptions = {
 hideFilterWidget:!0
-}, a.breadcrumbs = [ {
+}, a.breadcrumbs = [], c.isPipeline ? (a.breadcrumbs.push({
+title:"Pipelines",
+link:"project/" + c.project + "/browse/pipelines"
+}), c.buildconfig && a.breadcrumbs.push({
+title:c.buildconfig,
+link:"project/" + c.project + "/browse/pipelines/" + c.buildconfig
+})) :(a.breadcrumbs.push({
 title:"Builds",
 link:"project/" + c.project + "/browse/builds"
-} ], c.buildconfig && a.breadcrumbs.push({
+}), c.buildconfig && a.breadcrumbs.push({
 title:c.buildconfig,
 link:"project/" + c.project + "/browse/builds/" + c.buildconfig
-}), a.breadcrumbs.push({
+})), a.breadcrumbs.push({
 title:c.build
 }), c.tab && (a.selectedTab = {}, a.selectedTab[c.tab] = !0);
 var h = [], i = function(c) {
@@ -4361,15 +4445,21 @@ title:"Inline"
 } ], a.breadcrumbs = [ {
 title:b.project,
 link:"project/" + b.project
-}, {
+} ], b.isPipeline ? (a.breadcrumbs.push({
+title:"Pipelines",
+link:"project/" + b.project + "/browse/pipelines"
+}), a.breadcrumbs.push({
+title:b.buildconfig,
+link:"project/" + b.project + "/browse/pipelines/" + b.buildconfig
+})) :(a.breadcrumbs.push({
 title:"Builds",
 link:"project/" + b.project + "/browse/builds"
-}, {
+}), a.breadcrumbs.push({
 title:b.buildconfig,
 link:"project/" + b.project + "/browse/builds/" + b.buildconfig
-}, {
+})), a.breadcrumbs.push({
 title:"Edit"
-} ], a.buildFrom = {
+}), a.buildFrom = {
 projects:[],
 imageStreams:[],
 tags:{}
@@ -5793,7 +5883,8 @@ label:"@?",
 buttonOnly:"@",
 stayOnCurrentPage:"=?",
 hpaList:"=?",
-success:"=?"
+success:"=?",
+redirectUrl:"@?"
 },
 templateUrl:function(a, b) {
 return angular.isDefined(b.buttonOnly) ? "views/directives/delete-button.html" :"views/directives/delete-link.html";
@@ -5829,7 +5920,10 @@ message:"Horizontal Pod Autoscaler " + a.metadata.name + " could not be deleted.
 }), j.error("HPA " + a.metadata.name + " could not be deleted.", b);
 });
 }, o = function() {
-if (!e.stayOnCurrentPage) if ("Project" !== e.kind) i.toResourceList(f.kindToResource(e.kind), e.projectName); else if ("/" === b.path()) e.$emit("deleteProject"); else if (b.path().indexOf("settings") > "-1") {
+if (!e.stayOnCurrentPage) {
+if (e.redirectUrl) return void b.url(e.redirectUrl);
+if ("Project" !== e.kind) return void i.toResourceList(f.kindToResource(e.kind), e.projectName);
+if ("/" === b.path()) return void e.$emit("deleteProject");
 var a = URI("/");
 b.url(a);
 }
@@ -8126,25 +8220,23 @@ a && g.columns.splice(1, 0, [ "other", d ]), j ? j.load(g) :(_.assign(k.data, g)
 c.$watchGroup([ "used", "total", "crossProjectUsed" ], _.debounce(l, 300));
 }
 };
-} ]), angular.module("openshiftConsole").directive("buildTrendsChart", [ "$filter", "$location", "$rootScope", "$timeout", function(a, b, c, d) {
+} ]), angular.module("openshiftConsole").directive("buildTrendsChart", [ "$filter", "$location", "$rootScope", "$timeout", "BuildsService", function(a, b, c, d, e) {
 return {
 restrict:"E",
 scope:{
 builds:"="
 },
 templateUrl:"views/_build-trends-chart.html",
-link:function(e) {
-var f, g = [ "Complete", "Failed", "Cancelled", "Error" ];
-e.minBuilds = _.constant(4);
-var h = function(a) {
+link:function(f) {
+var g, h = [ "Complete", "Failed", "Cancelled", "Error" ];
+f.minBuilds = _.constant(4);
+var i = function(a) {
 var b = [], c = moment.duration(a), d = Math.floor(c.asHours()), e = c.minutes(), f = c.seconds();
 return d || e || f ? (d && b.push(d + "h"), e && b.push(e + "m"), d || b.push(f + "s"), b.join(" ")) :"";
-}, i = function(a) {
-return a.status.startTimestamp || a.metadata.creationTimestamp;
 };
-e.chartID = _.uniqueId("build-trends-chart-");
+f.chartID = _.uniqueId("build-trends-chart-");
 var j, k, l = _.constant(350), m = {
-bindto:"#" + e.chartID,
+bindto:"#" + f.chartID,
 padding:{
 right:30,
 left:80
@@ -8159,7 +8251,7 @@ position:"outer-right"
 tick:{
 culling:!0,
 format:function(a) {
-return "#" + f.json[a].buildNumber;
+return "#" + g.json[a].buildNumber;
 },
 width:30
 },
@@ -8175,7 +8267,7 @@ padding:{
 bottom:0
 },
 tick:{
-format:h
+format:i
 }
 }
 },
@@ -8195,7 +8287,7 @@ height:250
 tooltip:{
 format:{
 title:function(a) {
-var b = f.json[a], c = i(b.build);
+var b = g.json[a], c = e.getStartTimestsamp(b.build);
 return "#" + b.buildNumber + " (" + moment(c).fromNow() + ")";
 }
 }
@@ -8216,9 +8308,9 @@ text:"No Completed Builds"
 }
 },
 onclick:function(d) {
-var e = f.json[d.x].build, g = a("navigateResourceURL")(e);
-g && c.$apply(function() {
-b.path(g);
+var e = g.json[d.x].build, f = a("navigateResourceURL")(e);
+f && c.$apply(function() {
+b.path(f);
 });
 },
 selection:{
@@ -8227,71 +8319,61 @@ enabled:!0
 type:"bar"
 }
 }, n = function() {
-e.completeBuilds = [];
+f.completeBuilds = [];
 var b = a("isIncompleteBuild");
-angular.forEach(e.builds, function(a) {
-b(a) || e.completeBuilds.push(a);
+angular.forEach(f.builds, function(a) {
+b(a) || f.completeBuilds.push(a);
 });
 }, o = function() {
-return n(), e.completeBuilds.length;
-}, p = a("annotation"), q = function(a) {
-var b = p(a, "buildNumber") || parseInt(a.metadata.name.match(/(\d+)$/), 10);
-return isNaN(b) ? null :b;
-}, r = function(a) {
-return _.round(a / 1e3 / 1e3);
-}, s = function(a) {
-var b = _.get(a, "status.duration");
-if (b) return r(b);
-var c = i(a), d = a.status.completionTimestamp;
-return c && d ? moment(d).diff(moment(c)) :0;
-}, t = !1, u = function() {
-k && t ? j.ygrids([ {
+return n(), f.completeBuilds.length;
+}, p = !1, q = function() {
+k && p ? j.ygrids([ {
 value:k,
 "class":"build-trends-avg-line"
 } ]) :j.ygrids.remove();
 };
-e.toggleAvgLine = function() {
-t = !t, u();
+f.toggleAvgLine = function() {
+p = !p, q();
 };
-var v = function() {
-f = {
+var r = function() {
+g = {
 json:[],
 keys:{
 x:"buildNumber"
 }
 };
 var a = 0, b = 0;
-angular.forEach(e.completeBuilds, function(c) {
-var d = q(c);
+angular.forEach(f.completeBuilds, function(c) {
+var d = e.getBuildNumber(c);
 if (d) {
-var e = s(c);
-a += e, b++;
-var g = {
+var f = e.getDuration(c);
+a += f, b++;
+var h = {
 buildNumber:d,
 phase:c.status.phase,
 build:c
 };
-g[c.status.phase] = e, f.json.push(g);
+h[c.status.phase] = f, g.json.push(h);
 }
-}), f.json.sort(function(a, b) {
+}), g.json.sort(function(a, b) {
 return a.buildNumber - b.buildNumber;
-}), f.json.length > 50 && (f.json = f.json.slice(f.json.length - 50));
+}), g.json.length > 50 && (g.json = g.json.slice(g.json.length - 50));
 var c = {};
-angular.forEach(f.json, function(a) {
+angular.forEach(g.json, function(a) {
 c[a.phase] = !0;
-}), b ? (k = a / b, e.averageDurationText = h(k)) :(k = null, e.averageDurationText = null);
-var i = [], n = [];
-angular.forEach(g, function(a) {
-c[a] ? i.push(a) :n.push(a);
-}), f.keys.value = i, f.groups = [ i ], j ? (f.unload = n, f.done = function() {
+}), b ? (k = a / b, f.averageDurationText = i(k)) :(k = null, f.averageDurationText = null);
+var n = [], o = [];
+angular.forEach(h, function(a) {
+c[a] ? n.push(a) :o.push(a);
+}), g.keys.value = n, g.groups = [ n ], j ? (g.unload = o, g.done = function() {
 setTimeout(function() {
 j.flush();
 }, l() + 25);
-}, j.load(f), u()) :(m.data = angular.extend(f, m.data), d(function() {
-j = c3.generate(m), u();
+}, j.load(g), q()) :(m.data = angular.extend(g, m.data), d(function() {
+j = c3.generate(m), q();
 }));
 };
-e.$watch(o, v), e.$on("destroy", function() {
+f.$watch(o, r), f.$on("destroy", function() {
 j && (j = j.destroy());
 });
 }
@@ -8859,6 +8941,13 @@ return e(i, "year", "years"), e(j, "month", "months"), e(k, "day", "days"), e(l,
 }).filter("ageLessThan", function() {
 return function(a, b, c) {
 return moment().subtract(b, c).diff(moment(a)) < 0;
+};
+}).filter("isNewerResource", function() {
+return function(a, b) {
+var c = _.get(a, "metadata.creationTimestamp");
+if (!c) return !1;
+var d = _.get(b, "metadata.creationTimestamp");
+return !d || c > d;
 };
 }).filter("orderObjectsByDate", [ "toArrayFilter", function(a) {
 return function(b, c) {
@@ -9837,6 +9926,10 @@ return c ? JSON.stringify(c, null, 4) :b;
 } ]).filter("navigateResourceURL", [ "Navigate", function(a) {
 return function(b, c, d) {
 return a.resourceURL(b, c, d);
+};
+} ]).filter("configURLForResource", [ "Navigate", function(a) {
+return function(b, c) {
+return a.configURLForResource(b, c);
 };
 } ]).filter("editResourceURL", [ "Navigate", function(a) {
 return function(b, c, d) {

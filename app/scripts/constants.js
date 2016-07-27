@@ -37,7 +37,7 @@ window.OPENSHIFT_CONSTANTS = {
       // These are k8s kinds that are not supported in the current release of OpenShift
       "Binding",
       "Ingress",
-   
+
       // These are things like DCPs that aren't actually persisted resources
       "DeploymentConfigRollback"
   ],
@@ -68,8 +68,8 @@ window.OPENSHIFT_CONSTANTS = {
               href: "/browse/pods",
               prefixes: [
                 "/browse/pods/"
-              ]              
-            }            
+              ]
+            }
           ]
         },
         {
@@ -87,10 +87,10 @@ window.OPENSHIFT_CONSTANTS = {
               href: "/browse/routes",
               prefixes: [
                 "/browse/routes/"
-              ]              
-            }            
+              ]
+            }
           ]
-        }        
+        }
       ]
     },
     {
@@ -107,22 +107,20 @@ window.OPENSHIFT_CONSTANTS = {
                 "/browse/builds-noconfig/"
               ]
             },
-            // TODO uncomment when new pipeline page is available and fixup URLs and prefixes
-            // {
-            //   label: "Pipeline Builds",
-            //   href: "/browse/builds",
-            //   prefixes: [
-            //     "/browse/builds/",
-            //     "/browse/builds-noconfig/"
-            //   ]
-            // },
+            {
+              label: "Pipelines",
+              href: "/browse/pipelines",
+              prefixes: [
+                "/browse/pipelines/"
+              ]
+            },
             {
               label: "Images",
               href: "/browse/images",
               prefixes: [
                 "/browse/images/"
               ]
-            }         
+            }
           ]
         }
       ]
@@ -140,7 +138,7 @@ window.OPENSHIFT_CONSTANTS = {
             {
               label: "Other Resources",
               href: "/browse/other"
-            }        
+            }
           ]
         }
       ]
@@ -172,7 +170,7 @@ window.OPENSHIFT_CONSTANTS = {
       //       {
       //         label: "Metrics",
       //         href: "#" // TODO
-      //       }         
+      //       }
       //     ]
       //   }
       // ]

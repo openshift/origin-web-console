@@ -301,8 +301,8 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "</div>\n" +
     "<div flex class=\"word-break\">\n" +
     "<span class=\"pod-template-key\">Build:</span>\n" +
-    "<span ng-if=\"build | buildConfigForBuild\">\n" +
-    "<a ng-href=\"{{(build | buildConfigForBuild) | navigateResourceURL : 'BuildConfig' : build.metadata.namespace}}\">{{build | buildConfigForBuild}}</a>,\n" +
+    "<span ng-if=\"build | configURLForResource\">\n" +
+    "<a ng-href=\"{{build | configURLForResource}}\">{{build | buildConfigForBuild}}</a>,\n" +
     "</span>\n" +
     "<a ng-href=\"{{build | navigateResourceURL}}\">\n" +
     "<span ng-if=\"(build | annotation : 'buildNumber')\">#{{build | annotation : 'buildNumber'}}</span>\n" +
@@ -1097,7 +1097,7 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "</dd>\n" +
     "</div>\n" +
     "</dl>\n" +
-    "<h3>Configuration <span class=\"small\" ng-if=\"buildConfigName\">created from <a href=\"{{buildConfigName | navigateResourceURL : 'BuildConfig' : build.metadata.namespace}}\">{{buildConfigName}}</a></span></h3>\n" +
+    "<h3>Configuration <span class=\"small\" ng-if=\"buildConfigName\">created from <a href=\"{{build | configURLForResource}}\">{{buildConfigName}}</a></span></h3>\n" +
     "<dl class=\"dl-horizontal left\">\n" +
     "<dt>Build strategy:</dt>\n" +
     "<dd>{{build.spec.strategy.type | startCase}}</dd>\n" +
@@ -1783,7 +1783,7 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "</edit-link>\n" +
     "</li>\n" +
     "<li ng-if=\"('builds' | canI : 'delete')\">\n" +
-    "<delete-link kind=\"Build\" resource-name=\"{{build.metadata.name}}\" project-name=\"{{build.metadata.namespace}}\" alerts=\"alerts\">\n" +
+    "<delete-link kind=\"Build\" resource-name=\"{{build.metadata.name}}\" project-name=\"{{build.metadata.namespace}}\" alerts=\"alerts\" redirect-url=\"{{build | configURLForResource}}\">\n" +
     "</delete-link>\n" +
     "</li>\n" +
     "</ul>\n" +
@@ -2122,7 +2122,7 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "</edit-link>\n" +
     "</li>\n" +
     "<li ng-class=\"{disabled: deployment.status.replicas}\" ng-if=\"'replicationcontrollers' | canI : 'delete'\">\n" +
-    "<delete-link kind=\"ReplicationController\" type-display-name=\"Deployment\" resource-name=\"{{deployment.metadata.name}}\" project-name=\"{{deployment.metadata.namespace}}\" alerts=\"alerts\" disable-delete=\"!!deployment.status.replicas\" hpa-list=\"hpaForRC\">\n" +
+    "<delete-link kind=\"ReplicationController\" type-display-name=\"Deployment\" resource-name=\"{{deployment.metadata.name}}\" project-name=\"{{deployment.metadata.namespace}}\" alerts=\"alerts\" disable-delete=\"!!deployment.status.replicas\" hpa-list=\"hpaForRC\" redirect-url=\"{{deployment | configURLForResource}}\">\n" +
     "</delete-link>\n" +
     "</li>\n" +
     "</ul>\n" +
@@ -3082,14 +3082,14 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "<th>Source</th>\n" +
     "</tr>\n" +
     "</thead>\n" +
-    "<tbody ng-if=\"((buildsByBuildConfig | hashSize) == 0)\">\n" +
+    "<tbody ng-if=\"!(latestByConfig | hashSize)\">\n" +
     "<tr><td colspan=\"6\"><em>{{emptyMessage}}</em></td></tr>\n" +
     "</tbody>\n" +
-    "<tbody ng-repeat=\"(buildConfigName, buildConfigBuilds) in buildsByBuildConfig\">\n" +
+    "<tbody ng-repeat=\"(buildConfigName, latestBuild) in latestByConfig\">\n" +
     "\n" +
-    "<tr ng-if=\"(buildConfigBuilds | hashSize) == 0\">\n" +
+    "<tr ng-if=\"!latestBuild\">\n" +
     "<td data-title=\"Name\">\n" +
-    "<a href=\"{{buildConfigName | navigateResourceURL : 'BuildConfig' : projectName}}\">{{buildConfigName}}</a>\n" +
+    "<a href=\"{{buildConfigs[buildConfigName] | navigateResourceURL}}\">{{buildConfigName}}</a>\n" +
     "</td>\n" +
     "<td data-title=\"Last Build\"><em>No builds</em></td>\n" +
     "<td class=\"hidden-xs\">&nbsp;</td>\n" +
@@ -3101,55 +3101,55 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "</tr>\n" +
     "\n" +
     "\n" +
-    "<tr ng-repeat=\"build in buildConfigBuilds | orderObjectsByDate : true | limitTo : 1\" ng-if=\"buildConfigs[buildConfigName] || !unfilteredBuildConfigs[buildConfigName]\">\n" +
+    "<tr ng-if=\"latestBuild && (buildConfigs[buildConfigName] || !unfilteredBuildConfigs[buildConfigName])\">\n" +
     "<td data-title=\"Name\">\n" +
-    "<a ng-if=\"buildConfigName\" href=\"{{buildConfigName | navigateResourceURL : 'BuildConfig' : projectName}}\">{{buildConfigName}}</a>\n" +
+    "<a ng-if=\"buildConfigName\" href=\"{{latestBuild | configURLForResource}}\">{{buildConfigName}}</a>\n" +
     "<span ng-if=\"buildConfigs && buildConfigName && !buildConfigs[buildConfigName]\" class=\"pficon pficon-warning-triangle-o\" data-toggle=\"tooltip\" title=\"This build config no longer exists\" style=\"cursor: help\"></span>\n" +
     "<span ng-if=\"buildConfigName == ''\"><em>none</em></span>\n" +
     "</td>\n" +
     "<td data-title=\"Last Build\">\n" +
     "\n" +
-    "<span ng-if=\"(build | annotation : 'buildNumber') && buildConfigName\">\n" +
-    "<a ng-href=\"{{build | navigateResourceURL}}\">#{{build | annotation : 'buildNumber'}}</a>\n" +
+    "<span ng-if=\"(latestBuild | annotation : 'buildNumber') && buildConfigName\">\n" +
+    "<a ng-href=\"{{latestBuild | navigateResourceURL}}\">#{{latestBuild | annotation : 'buildNumber'}}</a>\n" +
     "</span>\n" +
-    "<span ng-if=\"!(build | annotation : 'buildNumber') && buildConfigName\">\n" +
-    "<a ng-href=\"{{build | navigateResourceURL}}\">{{build.metadata.name}}</a>\n" +
+    "<span ng-if=\"!(latestBuild | annotation : 'buildNumber') && buildConfigName\">\n" +
+    "<a ng-href=\"{{latestBuild | navigateResourceURL}}\">{{latestBuild.metadata.name}}</a>\n" +
     "</span>\n" +
     "<span ng-if=\"buildConfigName == ''\">\n" +
-    "<a ng-href=\"{{build | navigateResourceURL}}\">{{build.metadata.name}}</a>\n" +
+    "<a ng-href=\"{{latestBuild | navigateResourceURL}}\">{{latestBuild.metadata.name}}</a>\n" +
     "</span>\n" +
     "</td>\n" +
     "<td data-title=\"Status\">\n" +
     "<div row class=\"status\">\n" +
-    "<status-icon status=\"build.status.phase\" disable-animation></status-icon>\n" +
+    "<status-icon status=\"latestBuild.status.phase\" disable-animation></status-icon>\n" +
     "<span flex>\n" +
-    "<span>{{build.status.phase}}</span>\n" +
+    "<span>{{latestBuild.status.phase}}</span>\n" +
     "\n" +
-    "<span ng-switch=\"build.status.phase\" class=\"hide-ng-leave\">\n" +
-    "<span ng-switch-when=\"Complete\"> in {{(build.status.startTimestamp || build.metadata.creationTimestamp) | duration : build.status.completionTimestamp}}</span>\n" +
-    "<span ng-switch-when=\"Failed\">after <span ng-if=\"!build.status.startTimestamp\">waiting </span>{{(build.status.startTimestamp || build.metadata.creationTimestamp) | duration : build.status.completionTimestamp}}</span>\n" +
-    "<span ng-switch-when=\"Cancelled\"> after {{(build.status.startTimestamp || build.metadata.creationTimestamp) | duration : build.status.completionTimestamp}}</span>\n" +
-    "<span ng-switch-when=\"Running\"> for <duration-until-now timestamp=\"build.status.startTimestamp\"></duration-until-now></span>\n" +
-    "<span ng-switch-when=\"New\">, waiting for <duration-until-now timestamp=\"build.metadata.creationTimestamp\"></duration-until-now></span>\n" +
-    "<span ng-switch-when=\"Pending\"> for <duration-until-now timestamp=\"build.metadata.creationTimestamp\"></duration-until-now></span>\n" +
+    "<span ng-switch=\"latestBuild.status.phase\" class=\"hide-ng-leave\">\n" +
+    "<span ng-switch-when=\"Complete\"> in {{(latestBuild.status.startTimestamp || latestBuild.metadata.creationTimestamp) | duration : latestBuild.status.completionTimestamp}}</span>\n" +
+    "<span ng-switch-when=\"Failed\">after <span ng-if=\"!latestBuild.status.startTimestamp\">waiting </span>{{(latestBuild.status.startTimestamp || latestBuild.metadata.creationTimestamp) | duration : latestBuild.status.completionTimestamp}}</span>\n" +
+    "<span ng-switch-when=\"Cancelled\"> after {{(latestBuild.status.startTimestamp || latestBuild.metadata.creationTimestamp) | duration : latestBuild.status.completionTimestamp}}</span>\n" +
+    "<span ng-switch-when=\"Running\"> for <duration-until-now timestamp=\"latestBuild.status.startTimestamp\"></duration-until-now></span>\n" +
+    "<span ng-switch-when=\"New\">, waiting for <duration-until-now timestamp=\"latestBuild.metadata.creationTimestamp\"></duration-until-now></span>\n" +
+    "<span ng-switch-when=\"Pending\"> for <duration-until-now timestamp=\"latestBuild.metadata.creationTimestamp\"></duration-until-now></span>\n" +
     "<span ng-switch-default>\n" +
-    "<span ng-if=\"build.status.startTimestamp\">, finished in {{build.status.startTimestamp | duration : build.status.completionTimestamp}}</span>\n" +
-    "<span ng-if=\"!build.status.startTimestamp\">, waited for {{build.metadata.creationTimestamp | duration : build.status.completionTimestamp}}</span>\n" +
+    "<span ng-if=\"latestBuild.status.startTimestamp\">, finished in {{latestBuild.status.startTimestamp | duration : latestBuild.status.completionTimestamp}}</span>\n" +
+    "<span ng-if=\"!latestBuild.status.startTimestamp\">, waited for {{latestBuild.metadata.creationTimestamp | duration : latestBuild.status.completionTimestamp}}</span>\n" +
     "</span>\n" +
     "</span>\n" +
     "</span>\n" +
     "</div>\n" +
     "</td>\n" +
     "<td data-title=\"Created\">\n" +
-    "<relative-timestamp timestamp=\"build.metadata.creationTimestamp\"></relative-timestamp>\n" +
+    "<relative-timestamp timestamp=\"latestBuild.metadata.creationTimestamp\"></relative-timestamp>\n" +
     "</td>\n" +
-    "<td data-title=\"Type\">{{build.spec.strategy.type | startCase}}</td>\n" +
+    "<td data-title=\"Type\">{{latestBuild.spec.strategy.type | startCase}}</td>\n" +
     "<td data-title=\"Source\" class=\"word-break-all\">\n" +
-    "<span ng-if=\"build.spec.source\">\n" +
-    "<span ng-if=\"build.spec.source.type == 'None'\">\n" +
+    "<span ng-if=\"latestBuild.spec.source\">\n" +
+    "<span ng-if=\"latestBuild.spec.source.type == 'None'\">\n" +
     "<i>none</i>\n" +
     "</span>\n" +
-    "<span class=\"word-break\" ng-if=\"build.spec.source.type == 'Git'\" ng-bind-html=\"build.spec.source.git.uri | githubLink : build.spec.source.git.ref : build.spec.source.contextDir | linky\"></span>\n" +
+    "<span class=\"word-break\" ng-if=\"latestBuild.spec.source.type == 'Git'\" ng-bind-html=\"latestBuild.spec.source.git.uri | githubLink : latestBuild.spec.source.git.ref : latestBuild.spec.source.contextDir | linky\"></span>\n" +
     "</span>\n" +
     "</td>\n" +
     "</tr>\n" +
@@ -6390,7 +6390,7 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "<button type=\"submit\" class=\"btn btn-primary btn-lg\" ng-disabled=\"form.$invalid || form.$pristine || disableInputs\">\n" +
     "Save\n" +
     "</button>\n" +
-    "<a class=\"btn btn-default btn-lg\" href=\"{{buildConfig.metadata.name | navigateResourceURL : 'BuildConfig' : projectName}}\">\n" +
+    "<a class=\"btn btn-default btn-lg\" href=\"{{updatedBuildConfig | navigateResourceURL}}\">\n" +
     "Cancel\n" +
     "</a>\n" +
     "</div>\n" +
@@ -7488,6 +7488,97 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "</div>\n" +
     "</div>\n" +
     "</div>"
+  );
+
+
+  $templateCache.put('views/pipelines.html',
+    "<project-header class=\"top-header\"></project-header>\n" +
+    "<project-page>\n" +
+    "\n" +
+    "<div class=\"middle-section\">\n" +
+    "<div id=\"scrollable-content\" class=\"middle-container has-scroll\">\n" +
+    "<div class=\"middle-content pipelines-page\">\n" +
+    "<div class=\"container-fluid\">\n" +
+    "<div class=\"row\">\n" +
+    "<div class=\"col-md-12\">\n" +
+    "<div class=\"page-header page-header-bleed-right page-header-bleed-left\">\n" +
+    "<h1>Pipelines</h1>\n" +
+    "</div>\n" +
+    "<alerts alerts=\"alerts\"></alerts>\n" +
+    "<div ng-if=\"!(buildConfigs | hashSize)\" class=\"mar-top-lg\">\n" +
+    "<div ng-if=\"!buildConfigsLoaded\">\n" +
+    "Loading...\n" +
+    "</div>\n" +
+    "<div ng-if=\"buildConfigsLoaded\" class=\"empty-state-message text-center\">\n" +
+    "<h2>No pipelines.</h2>\n" +
+    "<p>\n" +
+    "No pipelines have been added to project {{projectName}}.\n" +
+    "</p>\n" +
+    "<p>\n" +
+    "<a ng-href=\"project/{{projectName}}/create\" class=\"btn btn-lg btn-primary\">\n" +
+    "Add to Project\n" +
+    "</a>\n" +
+    "</p>\n" +
+    "</div>\n" +
+    "</div>\n" +
+    "<div ng-repeat=\"(buildConfigName, buildConfig) in buildConfigs\" ng-if=\"!buildConfig || (buildConfig | isJenkinsPipelineStrategy)\" class=\"animate-repeat\">\n" +
+    "<div ng-if=\"buildConfig\">\n" +
+    "<div class=\"pull-right\">\n" +
+    "<button class=\"btn btn-default\" ng-if=\"'buildconfigs/instantiate' | canI : 'create'\" ng-click=\"startBuild(buildConfigName)\">\n" +
+    "Start Pipeline\n" +
+    "</button>\n" +
+    "</div>\n" +
+    "<h2>\n" +
+    "<a ng-href=\"{{buildConfig | navigateResourceURL}}\">{{buildConfigName}}</a>\n" +
+    "<small>created <relative-timestamp timestamp=\"buildConfig.metadata.creationTimestamp\"></relative-timestamp></small>\n" +
+    "</h2>\n" +
+    "<div ng-if=\"buildConfig.spec.source.git.uri\">\n" +
+    "Source Repository:\n" +
+    "<span ng-bind-html=\"buildConfigs[buildConfigName].spec.source.git.uri | githubLink : buildConfigs[buildConfigName].spec.source.git.ref : buildConfigs[buildConfigName].spec.source.contextDir | linky\" class=\"source-repo\"></span>\n" +
+    "</div>\n" +
+    "</div>\n" +
+    "\n" +
+    "<div ng-if=\"!buildConfig\">\n" +
+    "<h2>{{buildConfigName}}</h2>\n" +
+    "\n" +
+    "<div ng-if=\"buildConfigsLoaded\" class=\"alert alert-warning\">\n" +
+    "<span class=\"pficon pficon-warning-triangle-o\" aria-hidden=\"true\"></span>\n" +
+    "<span class=\"sr-only\">Warning:</span>\n" +
+    "Build config <strong>{{buildConfigName}}</strong> no longer exists.\n" +
+    "</div>\n" +
+    "</div>\n" +
+    "<div ng-if=\"buildsLoaded && !(interestingBuildsByConfig[buildConfigName] | hashSize)\">\n" +
+    "<em>No pipeline builds have run for {{buildConfigName}}.</em>\n" +
+    "</div>\n" +
+    "<div ng-if=\"interestingBuildsByConfig[buildConfigName] | hashSize\">\n" +
+    "<div ng-if=\"!(statsByConfig[buildConfigName].avgDuration | isNil)\" class=\"hidden-xs pull-right text-muted\">\n" +
+    "Average Duration: {{statsByConfig[buildConfigName].avgDuration | timeOnlyDuration}}\n" +
+    "</div>\n" +
+    "<h4>\n" +
+    "Recent Runs\n" +
+    "<small ng-if=\"!(statsByConfig[buildConfigName].avgDuration | isNil)\" class=\"visible-xs-block mar-top-xs text-muted\">\n" +
+    "Average Duration: {{statsByConfig[buildConfigName].avgDuration | timeOnlyDuration}}\n" +
+    "</small>\n" +
+    "</h4>\n" +
+    "<div ng-repeat=\"build in (interestingBuildsByConfig[buildConfigName] | orderObjectsByDate : true) track by (build | uid)\" class=\"animate-repeat\">\n" +
+    "<build-pipeline build=\"build\"></build-pipeline>\n" +
+    "</div>\n" +
+    "<div ng-if=\"buildConfig\" class=\"mar-top-sm\">\n" +
+    "<a ng-href=\"{{buildConfigs[buildConfigName] | navigateResourceURL}}\">View History</a>\n" +
+    "<span ng-if=\"'buildconfigs' | canI : 'update'\">\n" +
+    "<span class=\"action-divider\">|</span>\n" +
+    "<a ng-href=\"{{buildConfig | editResourceURL}}\" role=\"button\">Edit Pipeline</a>\n" +
+    "</span>\n" +
+    "</div>\n" +
+    "</div>\n" +
+    "</div>\n" +
+    "</div>\n" +
+    "</div>\n" +
+    "</div>\n" +
+    "</div>\n" +
+    "</div>\n" +
+    "</div>\n" +
+    "</project-page>"
   );
 
 

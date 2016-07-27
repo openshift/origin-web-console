@@ -1,7 +1,7 @@
 "use strict";
 
 angular.module('openshiftConsole')
-  .directive('buildTrendsChart', function($filter, $location, $rootScope, $timeout) {
+  .directive('buildTrendsChart', function($filter, $location, $rootScope, $timeout, BuildsService) {
     return {
       restrict: 'E',
       scope: {
@@ -42,10 +42,6 @@ angular.module('openshiftConsole')
           }
 
           return result.join(" ");
-        };
-
-        var getStartTimestsamp = function(build) {
-          return build.status.startTimestamp || build.metadata.creationTimestamp;
         };
 
         // Chart configuration, see http://c3js.org/reference.html
@@ -106,7 +102,7 @@ angular.module('openshiftConsole')
             format: {
               title: function(x) {
                 var json = data.json[x];
-                var startTimestamp = getStartTimestsamp(json.build);
+                var startTimestamp = BuildsService.getStartTimestsamp(json.build);
                 return '#' + json.buildNumber + ' (' + moment(startTimestamp).fromNow() + ')';
               }
             }
@@ -158,41 +154,6 @@ angular.module('openshiftConsole')
           return $scope.completeBuilds.length;
         };
 
-        var annotationFilter = $filter('annotation');
-        var getBuildNumber = function(build) {
-          var buildNumber = annotationFilter(build, 'buildNumber') || parseInt(build.metadata.name.match(/(\d+)$/), 10);
-          if (isNaN(buildNumber)) {
-            return null;
-          }
-
-          return buildNumber;
-        };
-
-        var nsToMS = function(duration) {
-          // build.duration is returned in nanoseconds. Convert to ms.
-          // 1000 nanoseconds per microsecond
-          // 1000 microseconds per millisecond
-          return _.round(duration / 1000 / 1000);
-        };
-
-        var getBuildDuration = function(build) {
-          // Use build.status.duration if available.
-          var duration = _.get(build, 'status.duration');
-          if (duration) {
-            // Convert duration from ns to ms.
-            return nsToMS(duration);
-          }
-
-          // Fall back to comparing start timestamp to end timestamp.
-          var startTimestamp = getStartTimestsamp(build);
-          var endTimestamp = build.status.completionTimestamp;
-          if (!startTimestamp || !endTimestamp) {
-            return 0;
-          }
-
-          return moment(endTimestamp).diff(moment(startTimestamp));
-        };
-
         var chart, averageDuration, showAverageLine = false;
         var updateAvgLine = function() {
           if (averageDuration && showAverageLine) {
@@ -221,12 +182,12 @@ angular.module('openshiftConsole')
 
           var sum = 0, count = 0;
           angular.forEach($scope.completeBuilds, function(build) {
-            var buildNumber = getBuildNumber(build);
+            var buildNumber = BuildsService.getBuildNumber(build);
             if (!buildNumber) {
               return;
             }
 
-            var duration = getBuildDuration(build);
+            var duration = BuildsService.getDuration(build);
 
             // Track the sum and count to calculate the average duration.
             sum += duration;

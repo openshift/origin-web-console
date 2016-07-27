@@ -3465,6 +3465,10 @@ body{padding-right:0px!important}
 .build-config-summary .latest-build-status .status-icon{width:20px}
 .build-config-summary .latest-build-timestamp{margin-left:25px}
 .image-sources .destination-dir:before,.image-sources .source-path:after{content:"\00a0 "}
+@media (max-width:767px){.pipelines-page h2 small{display:block;margin-top:3px}
+.pipelines-page .source-repo{display:block}
+.build-trends-responsive .build-trends-container{border:1px solid #d1d1d1;padding:10px 0}
+}
 .build-trends-responsive{width:100%;margin-top:20px;overflow:auto}
 .build-trends-responsive .build-trends-container{min-width:600px;height:235px}
 .build-trends-responsive .build-trends-container .c3-tooltip-container{top:0;left:0}
@@ -3472,8 +3476,6 @@ body{padding-right:0px!important}
 .build-trends-responsive .build-trends-container .build-trends-avg-line{stroke:#d1d1d1;stroke-dasharray:8,5;stroke-width:1}
 .build-trends-responsive .build-trends-container .avg-duration{margin-right:30px}
 .build-trends-responsive .build-trends-container .avg-duration-text{vertical-align:top;font-size:12px}
-@media (max-width:767px){.build-trends-responsive .build-trends-container{border:1px solid #d1d1d1;padding:10px 0}
-}
 .metrics .metrics-options .form-group{margin-bottom:0}
 .metrics .metrics-options .select-container{display:inline-block}
 @media (min-width:768px){.metrics .metrics-options .form-group{display:inline-block}

@@ -398,6 +398,11 @@ angular.module('openshiftConsole')
       return Navigate.resourceURL(resource, kind, namespace);
     };
   })
+  .filter('configURLForResource', function(Navigate) {
+    return function(resource, /* optional */ action) {
+      return Navigate.configURLForResource(resource, action);
+    };
+  })
   .filter('editResourceURL', function(Navigate) {
     return function(resource, kind, namespace) {
       var url = Navigate.resourceURL(resource, kind, namespace, "edit");

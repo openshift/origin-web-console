@@ -67,13 +67,35 @@ angular
         templateUrl: 'views/builds.html',
         controller: 'BuildsController'
       })
+      .when('/project/:project/browse/pipelines', {
+        templateUrl: 'views/pipelines.html',
+        controller: 'PipelinesController'
+      })
       .when('/project/:project/browse/builds/:buildconfig', {
         templateUrl: 'views/browse/build-config.html',
         controller: 'BuildConfigController'
       })
+      .when('/project/:project/browse/pipelines/:buildconfig', {
+        templateUrl: 'views/browse/build-config.html',
+        controller: 'BuildConfigController',
+        resolve: {
+          isPipeline: function ($route) {
+            $route.current.params.isPipeline = true;
+          }
+        }
+      })
       .when('/project/:project/edit/builds/:buildconfig', {
         templateUrl: 'views/edit/build-config.html',
         controller: 'EditBuildConfigController'
+      })
+      .when('/project/:project/edit/pipelines/:buildconfig', {
+        templateUrl: 'views/edit/build-config.html',
+        controller: 'EditBuildConfigController',
+        resolve: {
+          isPipeline: function ($route) {
+            $route.current.params.isPipeline = true;
+          }
+        }
       })
       .when('/project/:project/browse/builds/:buildconfig/:build', {
         templateUrl: function(params) {
@@ -85,11 +107,29 @@ angular
         },
         controller: 'BuildController'
       })
+      .when('/project/:project/browse/pipelines/:buildconfig/:build', {
+        templateUrl: 'views/browse/build.html',
+        controller: 'BuildController',
+        resolve: {
+          isPipeline: function ($route) {
+            $route.current.params.isPipeline = true;
+          }
+        }
+      })
       // For when a build is missing a buildconfig label
       // Needs to still be prefixed with browse/builds so the secondary nav active state is correct
       .when('/project/:project/browse/builds-noconfig/:build', {
         templateUrl: 'views/browse/build.html',
         controller: 'BuildController'
+      })
+      .when('/project/:project/browse/pipelines-noconfig/:build', {
+        templateUrl: 'views/browse/build.html',
+        controller: 'BuildController',
+        resolve: {
+          isPipeline: function ($route) {
+            $route.current.params.isPipeline = true;
+          }
+        }
       })
       .when('/project/:project/browse/deployments', {
         templateUrl: 'views/deployments.html',
