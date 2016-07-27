@@ -11,16 +11,36 @@
           <div ng-if="!loaded">Loading...</div>
           <div ng-if="imageStream">
             <h1>
-              {{imageStream.metadata.name}}
+              {{imageStream.metadata.name}}:{{tagName}}
             </h1>
           </div>
         </div>
       </div><!-- /middle-header-->
       <div class="middle-content gutter-top">
         <div class="container-fluid">
-          <div class="row" ng-if="imageStream">
+          <div class="row" ng-if="image">
             <div class="col-md-12">
-              Image TODO
+              <registry-image-pull settings="settings" names="[ imageStream.metadata.name + ':' + tagName ]">
+              </registry-image-pull>
+              <uib-tabset>
+                <uib-tab heading="Details" active="selectedTab.body">
+                  <uib-tab-heading>Details</uib-tab-heading>
+                  <registry-image-body image="image">
+                  </registry-image-body>
+                  <registry-image-meta image="image">
+                  </registry-image-meta>
+                </uib-tab>
+                <uib-tab heading="Config" active="selectedTab.config">
+                  <uib-tab-heading>Config</uib-tab-heading>
+                  <registry-image-config image="image">
+                  </registry-image-config>
+                </uib-tab>
+                <uib-tab heading="Layers" active="selectedTab.meta">
+                  <uib-tab-heading>Layers</uib-tab-heading>
+                  <registry-image-layers image="image">
+                  </registry-image-layers>
+                </uib-tab>
+              </uib-tabset>
             </div><!-- /col-* -->
           </div>
         </div>

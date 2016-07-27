@@ -40,23 +40,7 @@ angular.module('openshiftConsole')
 
     var watches = [];
 
-    function populateWithImageStream(imageStream, context) {
-      var tagsByName = ImageStreamsService.tagsByName(imageStream);
-
-      $scope.imageStream = imageStream;
-      $scope.tagsByName = tagsByName;
-      $scope.tagName = $routeParams.tag;
-
-      var tagData = tagsByName[$routeParams.tag];
-      if (!tagData) {
-        $scope.alerts["load"] = {
-          type: "error",
-          message: "The image tag was not found in the stream.",
-        };
-        return;
-      }
-
-      delete $scope.alerts["load"];
+    var fetchImageStreamTag = _.debounce(function(tagData, context) {
       var name;
       if (tagData.spec) {
         name = tagData.spec.from.name;
@@ -79,6 +63,26 @@ angular.module('openshiftConsole')
           };
         }
       );
+    }, 200);
+
+    function populateWithImageStream(imageStream, context) {
+      var tagsByName = ImageStreamsService.tagsByName(imageStream);
+
+      $scope.imageStream = imageStream;
+      $scope.tagsByName = tagsByName;
+      $scope.tagName = $routeParams.tag;
+
+      var tagData = tagsByName[$routeParams.tag];
+      if (!tagData) {
+        $scope.alerts["load"] = {
+          type: "error",
+          message: "The image tag was not found in the stream.",
+        };
+        return;
+      }
+
+      delete $scope.alerts["load"];
+      fetchImageStreamTag(tagData, context);
     }
 
     ProjectsService

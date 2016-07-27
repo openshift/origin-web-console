@@ -3802,24 +3802,13 @@ e.unwatchAll(h);
 });
 }));
 } ]), angular.module("openshiftConsole").controller("ImageController", [ "$scope", "$routeParams", "DataService", "ProjectsService", "$filter", "ImageStreamsService", function(a, b, c, d, e, f) {
-function g(d, g) {
-var h = f.tagsByName(d);
-a.imageStream = d, a.tagsByName = h, a.tagName = b.tag;
-var i = h[b.tag];
-if (!i) return void (a.alerts.load = {
+function g(c, d) {
+var e = f.tagsByName(c);
+a.imageStream = c, a.tagsByName = e, a.tagName = b.tag;
+var g = e[b.tag];
+return g ? (delete a.alerts.load, void i(g, d)) :void (a.alerts.load = {
 type:"error",
 message:"The image tag was not found in the stream."
-});
-delete a.alerts.load;
-var j;
-j = i.spec ? i.spec.from.name :b.imagestream + ":" + b.tag, c.get("imagestreamtags", j, g).then(function(b) {
-a.loaded = !0, a.image = b.image;
-}, function(b) {
-a.loaded = !0, a.alerts.load = {
-type:"error",
-message:"The image details could not be loaded.",
-details:"Reason: " + e("getErrorDetails")(b)
-};
 });
 }
 a.projectName = b.project, a.imageStream = null, a.image = null, a.tagsByName = {}, a.alerts = {}, a.renderOptions = a.renderOptions || {}, a.renderOptions.hideFilterWidget = !0, a.breadcrumbs = [ {
@@ -3831,7 +3820,18 @@ link:"project/" + b.project + "/browse/images/" + b.imagestream
 }, {
 title:":" + b.tag
 } ], a.emptyMessage = "Loading...", b.tab && (a.selectedTab = {}, a.selectedTab[b.tab] = !0);
-var h = [];
+var h = [], i = _.debounce(function(d, f) {
+var g;
+g = d.spec ? d.spec.from.name :b.imagestream + ":" + b.tag, c.get("imagestreamtags", g, f).then(function(b) {
+a.loaded = !0, a.image = b.image;
+}, function(b) {
+a.loaded = !0, a.alerts.load = {
+type:"error",
+message:"The image details could not be loaded.",
+details:"Reason: " + e("getErrorDetails")(b)
+};
+});
+}, 200);
 d.get(b.project).then(_.spread(function(d, f) {
 a.project = d, c.get("imagestreams", b.imagestream, f).then(function(d) {
 a.emptyMessage = "", g(d, f), h.push(c.watchObject("imagestreams", b.imagestream, f, function(b, c) {
