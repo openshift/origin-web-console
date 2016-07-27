@@ -1,49 +1,7 @@
-<div flex class="build-pipeline">
-  <div column class="build-summary">
-    <div>
-      <span class="status-icon" ng-class="build.status.phase">
-        <span ng-switch="build.status.phase" class="hide-ng-leave">
-          <span ng-switch-when="Complete" aria-hidden="true">
-            <i class="fa fa-check-circle"></i>
-          </span>
-          <span ng-switch-when="Failed" aria-hidden="true">
-            <i class="fa fa-times-circle"></i>
-          </span>
-          <span ng-switch-default>
-            <status-icon status="build.status.phase"></status-icon>
-          </span>
-        </span>
-      </span>
-      <a ng-href="{{build | navigateResourceURL}}">Build #{{build | annotation : 'buildNumber'}}</a>
-    </div>
-    <div class="small text-muted">
-      Started <relative-timestamp timestamp="build.metadata.creationTimestamp"></relative-timestamp>
-    </div>
-    <div>
-      <div ng-if="build | jenkinsBuildURL" class="pipeline-link"><a ng-href="{{build | jenkinsBuildURL}}" target="_blank">Jenkins Build</a></div>
-      <div ng-if="(build | buildLogURL) && ('builds/log' | canI : 'get')" class="pipeline-link"><a ng-href="{{build | buildLogURL}}" target="_blank">View Log</a></div>
-    </div>
+<div>
+  <div ng-if="collapseStagesOnCompletion">
+    <div ng-if="build | isIncompleteBuild" ng-include="'views/directives/_build-pipeline-expanded.html'"></div>
+    <div ng-if="!(build | isIncompleteBuild)" ng-include="'views/directives/_build-pipeline-collapsed.html'"></div>
   </div>
-  <div class="pipeline-container">
-    <div class="pipeline" ng-if="!jenkinsStatus.stages.length">
-      <div class="pipeline-stage no-stages">
-        <div class="pipeline-stage-name">No stages have started.</div>
-      </div>
-    </div>
-    <div class="pipeline">
-      <div class="pipeline-stage" ng-repeat="stage in jenkinsStatus.stages track by stage.id">
-        <div column class="pipeline-stage-column">
-          <div class="pipeline-stage-name" ng-class="build.status.phase">
-            {{stage.name}}
-          </div>
-          <pipeline-status ng-if="stage.status" status="stage.status"></pipeline-status>
-          <div class="pipeline-actions" ng-if="stage | pipelineStagePendingInput">
-            <a ng-href="{{build | jenkinsInputURL}}" target="_blank">Input Required</a>
-          </div>
-          <div class="pipeline-time" ng-class="stage.status" ng-if="stage.durationMillis && !(stage | pipelineStagePendingInput)">{{stage.durationMillis | timeOnlyDuration}}</div>
-          <div class="pipeline-time" ng-class="stage.status" ng-if="!stage.durationMillis && !(stage | pipelineStagePendingInput)">not started</div>
-        </div>
-      </div>
-    </div>
-  </div>
+  <div ng-if="!collapseStagesOnCompletion" ng-include="'views/directives/_build-pipeline-expanded.html'"></div>
 </div>
