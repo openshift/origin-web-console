@@ -1,0 +1,52 @@
+<default-header class="top-header"></default-header>
+<div class="wrap no-sidebar">
+  <div class="sidebar-left collapse navbar-collapse navbar-collapse-2">
+    <navbar-utility-mobile></navbar-utility-mobile>
+  </div>
+  <div class="middle">
+    <!-- Middle section -->
+    <div class="middle-section surface-shaded">
+      <div class="middle-container has-scroll">
+        <div class="middle-content">
+          <div class="container surface-shaded">
+            <div class="col-md-12">
+              <breadcrumbs breadcrumbs="breadcrumbs"></breadcrumbs>
+              <alerts alerts="alerts"></alerts>
+
+              <div class="row">
+                <div class="create-route-icon col-md-2 gutter-top hidden-sm hidden-xs">
+                  <span class="fa fa-hdd-o icon-xl"></span>
+                </div>
+                <div class="col-md-8">
+                  <h1>Request Storage</h1>
+                  <div>
+                    <span class="help-block">
+                      Create a request for an administrator defined storage asset by requesting size and access mode attributes for a best fit.
+                    </span>
+                  </div>
+                  <form name="createPersistentVolumeClaimForm">
+                    <div>
+                      <fieldset ng-disabled="disableInputs">
+                        <osc-persistent-volume-claim
+                          model="claim">
+                        </osc-persistent-volume-claim>
+                        <div class="button-group gutter-top gutter-bottom">
+                          <button type="submit"
+                                  class="btn btn-primary btn-lg"
+                                  ng-click="createPersistentVolumeClaim()"
+                                  ng-disabled="createPersistentVolumeClaimForm.$invalid || disableInputs"
+                                  value="">Create</button>
+                          <a class="btn btn-default btn-lg" href="" back>Cancel</a>
+                        </div>
+                      </fieldset>
+                    </div>
+                  </form>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div><!-- /middle-content -->
+      </div><!-- /middle-container -->
+    </div><!-- /middle-section -->
+  </div><!-- /middle -->
+</div><!-- /wrap -->

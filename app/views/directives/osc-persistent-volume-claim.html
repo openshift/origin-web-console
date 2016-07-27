@@ -1,0 +1,95 @@
+<ng-form name="persistentVolumeClaimForm">
+  <fieldset ng-disabled="claimDisabled">
+
+    <!-- Name -->
+    <div class="form-group">
+      <label for="claim-name" class="required">Name</label>
+      <input
+        id="claim-name"
+        class="form-control"
+        type="text"
+        name="name"
+        ng-model="claim.name"
+        ng-required="true"
+        ng-pattern="/^[a-z0-9]([-a-z0-9]*[a-z0-9])?$/"
+        ng-maxlength="253"
+        ng-minlength="2"
+        placeholder="my-storage-request"
+        select-on-focus
+        autocorrect="off"
+        autocapitalize="off"
+        spellcheck="false"
+        aria-describedby="claim-name-help">
+      <div>
+        <span id="claim-name-help" class="help-block">A unique name for the storage claim within the project.</span>
+      </div>
+      <div class="has-error" ng-show="persistentVolumeClaimForm.name.$error.pattern && persistentVolumeClaimForm.name.$touched && !claimDisabled">
+        <span class="help-block">
+          Claim names may only contain lower-case letters, numbers, and dashes.
+          They may not start or end with a dash. Max length of 253.
+        </span>
+      </div>
+    </div>
+
+    <div class="form-group" >
+      <label class="required">Access Mode</label><br/>
+      <div class="radio">
+
+        <label class="radio-inline">
+            <input type="radio" name="accessModes" ng-model="claim.accessModes" value="ReadWriteOnce" aria-describedby="access-modes-help" ng-checked="true" >
+            Single User (RWO)
+        </label>
+
+        <label class="radio-inline">
+          <input type="radio" id="accessModes" name="accessModes" ng-model="claim.accessModes" value="ReadWriteMany" aria-describedby="access-modes-help" >
+            Shared Access (RWX)
+        </label>
+
+        <label class="radio-inline">
+            <input type="radio" name="accessModes" ng-model="claim.accessModes" value="ReadOnlyMany" aria-describedby="access-modes-help">
+            Read Only (ROX)
+        </label>
+
+      </div>
+      <div>
+        <span id="access-modes-help" class="help-block">Permissions to the mounted volume.</span>
+      </div>
+    </div>
+
+    <!-- capacity -->
+    <div class="form-group">
+      <fieldset class="form-inline compute-resource">
+      <label class="required">Capacity</label>
+      <div ng-class="{ 'has-error': form.$invalid }">
+        <label class="sr-only">Amount</label>
+        <input type="number"
+               name="amount"
+               ng-attr-id="claim-amount"
+               ng-model="claim.amount"
+               ng-required="true"
+               min="0"
+               ng-attr-placeholder="10"
+               class="form-control"
+               ng-attr-aria-describedby="claim-capacity-help">
+        <label class="sr-only" >Unit</label>
+        <select ng-model="claim.unit"
+                name="unit"
+                ng-options="option.value as option.label for option in units"
+                ng-attr-id="claim-capacity-unit"
+                class="form-control inline-select">
+        </select>
+        </div>
+      <div>
+         <span id="claim-capacity-help" class="help-block">
+           Size of the storage request.
+        </span>
+      </div>
+      <div class="has-error" ng-show="persistentVolumeClaimForm.capacity.$error.pattern && persistentVolumeClaimForm.capacity.$touched && !claimDisabled">
+        <span class="help-block">
+          Must be a postive integer.
+        </span>
+      </div>
+      </fieldset>
+    </div>
+  </fieldset>
+</ng-form>
