@@ -72,7 +72,7 @@
                 </tbody>
                 <tbody ng-repeat-start="tag in tagsByName | orderBy : 'name'">
                   <tr>
-                    <td data-title="Tag">{{tag.name}}</td>
+                    <td data-title="Tag"><a href="{{imageStream | navigateResourceURL}}/{{tag.name}}">{{tag.name}}</a></td>
                     <td data-title="From">
                       <!-- this value can get long when its an ImageStreamImage. Use max width and class truncate to elide some
                            of the SHA1 for long values. They can still be copied even when elided. -->

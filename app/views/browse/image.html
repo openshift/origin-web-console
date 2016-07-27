@@ -1,0 +1,30 @@
+<project-header class="top-header"></project-header>
+  <project-page>
+
+  <!-- Middle section -->
+  <div class="middle-section">
+    <div id="scrollable-content" class="middle-container has-scroll">
+      <div class="middle-header">
+        <div class="container-fluid">
+          <breadcrumbs breadcrumbs="breadcrumbs"></breadcrumbs>
+          <alerts alerts="alerts"></alerts>
+          <div ng-if="!loaded">Loading...</div>
+          <div ng-if="imageStream">
+            <h1>
+              {{imageStream.metadata.name}}
+            </h1>
+          </div>
+        </div>
+      </div><!-- /middle-header-->
+      <div class="middle-content gutter-top">
+        <div class="container-fluid">
+          <div class="row" ng-if="imageStream">
+            <div class="col-md-12">
+              Image TODO
+            </div><!-- /col-* -->
+          </div>
+        </div>
+      </div><!-- /middle-content -->
+    </div><!-- /middle-container -->
+  </div><!-- /middle-section -->
+  </project-page>

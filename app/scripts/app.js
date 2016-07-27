@@ -166,6 +166,10 @@ angular
         templateUrl: 'views/browse/imagestream.html',
         controller: 'ImageStreamController'
       })
+      .when('/project/:project/browse/images/:imagestream/:tag', {
+        templateUrl: 'views/browse/image.html',
+        controller: 'ImageController'
+      })
       .when('/project/:project/browse/pods', {
         templateUrl: 'views/pods.html',
         controller: 'PodsController'

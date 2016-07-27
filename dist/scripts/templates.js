@@ -2183,6 +2183,39 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
   );
 
 
+  $templateCache.put('views/browse/image.html',
+    "<project-header class=\"top-header\"></project-header>\n" +
+    "<project-page>\n" +
+    "\n" +
+    "<div class=\"middle-section\">\n" +
+    "<div id=\"scrollable-content\" class=\"middle-container has-scroll\">\n" +
+    "<div class=\"middle-header\">\n" +
+    "<div class=\"container-fluid\">\n" +
+    "<breadcrumbs breadcrumbs=\"breadcrumbs\"></breadcrumbs>\n" +
+    "<alerts alerts=\"alerts\"></alerts>\n" +
+    "<div ng-if=\"!loaded\">Loading...</div>\n" +
+    "<div ng-if=\"imageStream\">\n" +
+    "<h1>\n" +
+    "{{imageStream.metadata.name}}\n" +
+    "</h1>\n" +
+    "</div>\n" +
+    "</div>\n" +
+    "</div>\n" +
+    "<div class=\"middle-content gutter-top\">\n" +
+    "<div class=\"container-fluid\">\n" +
+    "<div class=\"row\" ng-if=\"imageStream\">\n" +
+    "<div class=\"col-md-12\">\n" +
+    "Image TODO\n" +
+    "</div>\n" +
+    "</div>\n" +
+    "</div>\n" +
+    "</div>\n" +
+    "</div>\n" +
+    "</div>\n" +
+    "</project-page>"
+  );
+
+
   $templateCache.put('views/browse/imagestream.html',
     "<project-header class=\"top-header\"></project-header>\n" +
     "<project-page>\n" +
@@ -2248,7 +2281,7 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "</tbody>\n" +
     "<tbody ng-repeat-start=\"tag in tagsByName | orderBy : 'name'\">\n" +
     "<tr>\n" +
-    "<td data-title=\"Tag\">{{tag.name}}</td>\n" +
+    "<td data-title=\"Tag\"><a href=\"{{imageStream | navigateResourceURL}}/{{tag.name}}\">{{tag.name}}</a></td>\n" +
     "<td data-title=\"From\">\n" +
     "\n" +
     "<div style=\"max-width: 400px\" class=\"truncate\">\n" +
