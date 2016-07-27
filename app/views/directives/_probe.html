@@ -3,7 +3,7 @@
   GET {{probe.httpGet.path || '/'}} on port {{probe.httpGet.port || 'unknown'}}
 </span>
 <span ng-if="probe.exec.command">
-  <code>
+  <code class="probe-command">
     <span ng-repeat="arg in probe.exec.command">
       <truncate-long-text
           content="arg"
@@ -20,6 +20,6 @@
 </span>
 
 <small class="text-muted">
-  <span ng-if="probe.initialDelaySeconds">{{probe.initialDelaySeconds}}s delay, </span>
-  {{probe.timeoutSeconds || 1}}s timeout
+  <span ng-if="probe.initialDelaySeconds" class="nowrap">{{probe.initialDelaySeconds}}s delay,</span>
+  <span class="nowrap">{{probe.timeoutSeconds || 1}}s timeout</span>
 </small>

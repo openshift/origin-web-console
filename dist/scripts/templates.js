@@ -4279,7 +4279,7 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "GET {{probe.httpGet.path || '/'}} on port {{probe.httpGet.port || 'unknown'}}\n" +
     "</span>\n" +
     "<span ng-if=\"probe.exec.command\">\n" +
-    "<code>\n" +
+    "<code class=\"probe-command\">\n" +
     "<span ng-repeat=\"arg in probe.exec.command\">\n" +
     "<truncate-long-text content=\"arg\" limit=\"80\" newline-limit=\"1\" expandable=\"false\" use-word-boundary=\"false\">\n" +
     "</truncate-long-text>\n" +
@@ -4290,8 +4290,8 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "Open socket on port {{probe.tcpSocket.port}}\n" +
     "</span>\n" +
     "<small class=\"text-muted\">\n" +
-    "<span ng-if=\"probe.initialDelaySeconds\">{{probe.initialDelaySeconds}}s delay, </span>\n" +
-    "{{probe.timeoutSeconds || 1}}s timeout\n" +
+    "<span ng-if=\"probe.initialDelaySeconds\" class=\"nowrap\">{{probe.initialDelaySeconds}}s delay,</span>\n" +
+    "<span class=\"nowrap\">{{probe.timeoutSeconds || 1}}s timeout</span>\n" +
     "</small>"
   );
 
