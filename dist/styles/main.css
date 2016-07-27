@@ -3359,6 +3359,7 @@ to{transform:rotate(359deg)}
 .pod-template-block .pod-template .pod-template-key{font-weight:700}
 .components .pod-template-block .pod-template .pod-template-key,.overview .pod-template-block .pod-template .pod-template-key{font-weight:600}
 .surface-shaded .ui-select-bootstrap .ui-select-match-text,.ui-select-bootstrap .ui-select-placeholder{font-weight:400}
+code.probe-command{display:inline-block;line-height:1.3;margin-right:2px}
 .hash{font-size:12px}
 .pod-template-container{margin:0 0 20px}
 .components .pod-template-container{margin-bottom:0}
