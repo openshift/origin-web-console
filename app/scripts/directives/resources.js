@@ -79,25 +79,12 @@ angular.module('openshiftConsole')
   //})
 
   .directive('triggers', function() {
-    var hideBuildKey = function(build) {
-      return 'hide/build/' + build.metadata.uid;
-    };
     return {
       restrict: 'E',
       scope: {
         triggers: '=',
         buildsByOutputImage: '=',
         namespace: '='
-      },
-      link: function(scope) {
-        scope.isBuildHidden = function(build) {
-          var key = hideBuildKey(build);
-          return sessionStorage.getItem(key) === 'true';
-        };
-        scope.hideBuild = function(build) {
-          var key = hideBuildKey(build);
-          sessionStorage.setItem(key, 'true');
-        };
       },
       templateUrl: 'views/_triggers.html'
     };
