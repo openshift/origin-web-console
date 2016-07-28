@@ -6139,7 +6139,7 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "<div class=\"resource-details\">\n" +
     "<div class=\"row\">\n" +
     "<div class=\"col-lg-6\">\n" +
-    "<div class=\"section\">\n" +
+    "<div ng-if=\"buildConfig.spec.source.type !== 'None'\" class=\"section\">\n" +
     "<h3>Source Configuration</h3>\n" +
     "<dl class=\"dl-horizontal left\">\n" +
     "<div ng-if=\"sources.git\">\n" +
@@ -6215,41 +6215,6 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "</div>\n" +
     "</div>\n" +
     "</div>\n" +
-    "<div ng-if=\"updatedBuildConfig | isJenkinsPipelineStrategy\">\n" +
-    "<h3>Jenkins Pipeline Configuration</h3>\n" +
-    "<div class=\"form-group\">\n" +
-    "<label for=\"jenkinsfile-type\">Jenkinsfile Type</label>\n" +
-    "<select id=\"jenkinsfile-type\" class=\"form-control\" ng-model=\"jenkinsfileOptions.type\" ng-options=\"type.id as type.title for type in jenkinsfileTypes\" aria-describedby=\"jenkinsfile-type-help\">\n" +
-    "</select>\n" +
-    "<div class=\"help-block\" id=\"jenkinsfile-type-help\">\n" +
-    "Use a Jenkinsfile from the source repository or specify the Jenkinsfile content directly in the build configuration.\n" +
-    "</div>\n" +
-    "</div>\n" +
-    "<div ng-if=\"jenkinsfileOptions.type === 'path'\" class=\"form-group\">\n" +
-    "<label for=\"jenkinsfilePath\">Jenkinsfile Source Path</label>\n" +
-    "<input class=\"form-control\" id=\"jenkinsfilePath\" name=\"jenkinsfilePath\" type=\"text\" ng-model=\"updatedBuildConfig.spec.strategy.jenkinsPipelineStrategy.jenkinsfilePath\" autocorrect=\"off\" autocapitalize=\"off\" spellcheck aria-describedby=\"jenkinsfile-path-help\">\n" +
-    "<div class=\"help-block\" id=\"jenkinsfile-path-help\">\n" +
-    "Optional path to the Jenkinsfile relative to the context dir. Defaults to the Jenkinsfile in context dir.\n" +
-    "</div>\n" +
-    "</div>\n" +
-    "<div ng-if=\"jenkinsfileOptions.type === 'inline'\">\n" +
-    "<label>Jenkinsfile</label>\n" +
-    "<div ui-ace=\"{\n" +
-    "                                  mode: 'groovy',\n" +
-    "                                  theme: 'eclipse',\n" +
-    "                                  onLoad: aceLoaded,\n" +
-    "                                  rendererOptions: {\n" +
-    "                                    fadeFoldWidgets: true,\n" +
-    "                                    showPrintMargin: false\n" +
-    "                                  }\n" +
-    "                                }\" ng-model=\"updatedBuildConfig.spec.strategy.jenkinsPipelineStrategy.jenkinsfile\" class=\"ace-bordered ace-inline\"></div>\n" +
-    "</div>\n" +
-    "</div>\n" +
-    "<div ng-if=\"sources.none\">\n" +
-    "<div class=\"form-group\">\n" +
-    "<i>No source inputs have been defined for this build configuration.</i>\n" +
-    "</div>\n" +
-    "</div>\n" +
     "<div class=\"form-groups\" ng-show=\"sources.images\">\n" +
     "<div class=\"single-image-source\" ng-if=\"sourceImages.length === 1\">\n" +
     "<div class=\"form-group\">\n" +
@@ -6319,6 +6284,41 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "</div>\n" +
     "</div>\n" +
     "</dl>\n" +
+    "</div>\n" +
+    "<div ng-if=\"updatedBuildConfig | isJenkinsPipelineStrategy\" class=\"section\">\n" +
+    "<h3>Jenkins Pipeline Configuration</h3>\n" +
+    "<div class=\"form-group\" ng-if=\"buildConfig.spec.source.type === 'Git'\">\n" +
+    "<label for=\"jenkinsfile-type\">Jenkinsfile Type</label>\n" +
+    "<select id=\"jenkinsfile-type\" class=\"form-control\" ng-model=\"jenkinsfileOptions.type\" ng-options=\"type.id as type.title for type in jenkinsfileTypes\" aria-describedby=\"jenkinsfile-type-help\">\n" +
+    "</select>\n" +
+    "<div class=\"help-block\" id=\"jenkinsfile-type-help\">\n" +
+    "Use a Jenkinsfile from the source repository or specify the Jenkinsfile content directly in the build configuration.\n" +
+    "</div>\n" +
+    "</div>\n" +
+    "<div ng-if=\"jenkinsfileOptions.type === 'path'\" class=\"form-group\">\n" +
+    "<label for=\"jenkinsfilePath\">Jenkinsfile Source Path</label>\n" +
+    "<input class=\"form-control\" id=\"jenkinsfilePath\" name=\"jenkinsfilePath\" type=\"text\" ng-model=\"updatedBuildConfig.spec.strategy.jenkinsPipelineStrategy.jenkinsfilePath\" autocorrect=\"off\" autocapitalize=\"off\" spellcheck aria-describedby=\"jenkinsfile-path-help\">\n" +
+    "<div class=\"help-block\" id=\"jenkinsfile-path-help\">\n" +
+    "Optional path to the Jenkinsfile relative to the context dir. Defaults to the Jenkinsfile in context dir.\n" +
+    "</div>\n" +
+    "</div>\n" +
+    "<div ng-if=\"jenkinsfileOptions.type === 'inline'\">\n" +
+    "<label>Jenkinsfile</label>\n" +
+    "<div ui-ace=\"{\n" +
+    "                              mode: 'groovy',\n" +
+    "                              theme: 'eclipse',\n" +
+    "                              onLoad: aceLoaded,\n" +
+    "                              rendererOptions: {\n" +
+    "                                fadeFoldWidgets: true,\n" +
+    "                                showPrintMargin: false\n" +
+    "                              }\n" +
+    "                            }\" ng-model=\"updatedBuildConfig.spec.strategy.jenkinsPipelineStrategy.jenkinsfile\" class=\"ace-bordered ace-inline\"></div>\n" +
+    "</div>\n" +
+    "</div>\n" +
+    "<div ng-if=\"sources.none\">\n" +
+    "<div class=\"form-group\">\n" +
+    "<i>No source inputs have been defined for this build configuration.</i>\n" +
+    "</div>\n" +
     "</div>\n" +
     "<div ng-if=\"updatedBuildConfig.spec.strategy.type !== 'JenkinsPipeline'\" class=\"section\">\n" +
     "<h3>Image Configuration</h3>\n" +
