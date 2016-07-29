@@ -17,6 +17,7 @@ angular.module('openshiftConsole')
                                            MetricsService,
                                            BuildsService,
                                            PodsService,
+                                           KeywordService,
                                            Logger,
                                            ImageStreamResolver,
                                            $rootScope) {
@@ -24,6 +25,8 @@ angular.module('openshiftConsole')
     $scope.alerts = $scope.alerts || {};
     $scope.renderOptions = $scope.renderOptions || {};
     $scope.renderOptions.showEventsSidebar = true;
+    $scope.renderOptions.collapseEventsSidebar = localStorage.getItem('monitoring.eventsidebar.collapsed') === 'true';
+
 
     var watches = [];
 
@@ -67,7 +70,7 @@ angular.module('openshiftConsole')
     };
 
     $scope.filters = {
-      showOlderResources: false,
+      hideOlderResources: true,
       text: ''
     };
 
@@ -80,59 +83,17 @@ angular.module('openshiftConsole')
 
     var orderByDate = $filter('orderObjectsByDate');
 
-    var filterExpressions = [];
-    var updateKeywords = function() {
-      if (!$scope.filters.text) {
-        filterExpressions = [];
-        return;
-      }
-
-      var keywords = _.uniq($scope.filters.text.split(/\s+/));
-      // Sort the longest keyword first.
-      keywords.sort(function(a, b){
-        return b.length - a.length;
-      });
-
-      // Convert the keyword to a case-insensitive regular expression for the filter.
-      filterExpressions = _.map(keywords, function(keyword) {
-        return new RegExp(_.escapeRegExp(keyword), "i");
-      });
-    };
-
     // Only filter by keyword on certain fields.
     var filterFields = [
       'metadata.name'
     ];
 
-    var filterForKeyword = function(resources) {
-      var filteredResources = resources;
-      if (!filterExpressions.length) {
-        return filteredResources;
-      }
-
-      // Find events that match all keywords.
-      angular.forEach(filterExpressions, function(regex) {
-        var matchesKeyword = function(event) {
-          var i;
-          for (i = 0; i < filterFields.length; i++) {
-            var value = _.get(event, filterFields[i]);
-            if (value && regex.test(value)) {
-              return true;
-            }
-          }
-
-          return false;
-        };
-
-        filteredResources = _.filter(filteredResources, matchesKeyword);
-      });
-      return filteredResources;
-    };
+    var filterKeywords = [];
 
     var filterAllResourcesForKeyword = function() {
-      $scope.filteredPods = filterForKeyword(ageFilteredPods);
-      $scope.filteredDeployments = filterForKeyword(ageFilteredDeployments);
-      $scope.filteredBuilds = filterForKeyword(ageFilteredBuilds);      
+      $scope.filteredPods = KeywordService.filterForKeywords(ageFilteredPods, filterFields, filterKeywords);
+      $scope.filteredDeployments = KeywordService.filterForKeywords(ageFilteredDeployments, filterFields, filterKeywords);
+      $scope.filteredBuilds = KeywordService.filterForKeywords(ageFilteredBuilds, filterFields, filterKeywords);
     };
 
     var setPodLogVars = function(pod) {
@@ -162,22 +123,21 @@ angular.module('openshiftConsole')
 
     var filterPods = function() {
       ageFilteredPods = _.filter($scope.pods, function(pod) {
-        if ($scope.filters.showOlderResources) {
+        if (!$scope.filters.hideOlderResources) {
           return true;
         }
-        if (pod.status.phase !== 'Succeeded' && pod.status.phase !== 'Failed') {
-          return true;
-        }
-        return false;
+        return pod.status.phase !== 'Succeeded' && pod.status.phase !== 'Failed';
       });
+      $scope.filteredPods = KeywordService.filterForKeywords(ageFilteredPods, filterFields, filterKeywords);
     };
 
     var isIncompleteBuild = $filter('isIncompleteBuild');
     var buildConfigForBuild = $filter('buildConfigForBuild');
+    var isRecentBuild = $filter('isRecentBuild');
     var filterBuilds = function() {
       var fiveMinutesAgo = moment().subtract(5, 'm');
       ageFilteredBuilds = _.filter($scope.builds, function(build) {
-        if ($scope.filters.showOlderResources) {
+        if (!$scope.filters.hideOlderResources) {
           return true;
         }        
         if (isIncompleteBuild(build)) {
@@ -188,50 +148,49 @@ angular.module('openshiftConsole')
           return $scope.latestBuildByConfig[buildConfigName].metadata.name === build.metadata.name;
         }
         
-        // Otherwise this is a one-off build, keep any of those that finished in the last 5 minutes, if we
-        // don't have a completionTimestamp for some reason then fallback to creationTimestamp
-        var completed = moment(build.status.completionTimestamp || build.metadata.creationTimestamp);
-        return completed.isAfter(fiveMinutesAgo);        
+        // Otherwise this is a one-off build, fallback to the isRecentBuild logic
+        return isRecentBuild(build);     
       });
+      $scope.filteredBuilds = KeywordService.filterForKeywords(ageFilteredBuilds, filterFields, filterKeywords);
     };
 
     var deploymentStatus = $filter('deploymentStatus');
+    var deploymentIsInProgress = $filter('deploymentIsInProgress');
     var filterDeployments = function() {
       ageFilteredDeployments = _.filter($scope.deployments, function(deployment) {
-        if ($scope.filters.showOlderResources) {
+        if (!$scope.filters.hideOlderResources) {
           return true;
         }        
-        var status = deploymentStatus(deployment);
-        if (status !== 'Complete' && status !== 'Failed') {
-          return true;
-        }
-        return false;
+        return deploymentIsInProgress(deployment) || deploymentStatus(deployment) === 'Active';
       });
+      $scope.filteredDeployments = KeywordService.filterForKeywords(ageFilteredDeployments, filterFields, filterKeywords);
     };        
 
     $scope.toggleItem = function(resource, expanded) {
       var event = expanded ? 'event.resource.highlight' : 'event.resource.clear-highlight';
       $rootScope.$emit(event, resource);
-      if (resource.kind === 'Build') {
-        var buildPod = _.get($scope.podsByName, $filter('annotation')(resource, 'buildPod'));
-        if (buildPod) {
-          $rootScope.$emit(event, buildPod);
-        }
-      }
-      if (resource.kind === 'ReplicationController') {
-        var deployerPodName = $filter('annotation')(resource, 'deployerPod');
-        if (deployerPodName) {
-          // The deployer pod is deleted immediately so mock the resource to send to the event highlighter
-          $rootScope.$emit(event, {
-            kind: "Pod",
-            metadata: {
-              name: deployerPodName
-            }
+      switch(resource.kind) {
+        case 'Build':
+          var buildPod = _.get($scope.podsByName, $filter('annotation')(resource, 'buildPod'));
+          if (buildPod) {
+            $rootScope.$emit(event, buildPod);
+          }
+          break;
+        case 'ReplicationController':
+          var deployerPodName = $filter('annotation')(resource, 'deployerPod');
+          if (deployerPodName) {
+            // The deployer pod is deleted immediately so mock the resource to send to the event highlighter
+            $rootScope.$emit(event, {
+              kind: "Pod",
+              metadata: {
+                name: deployerPodName
+              }
+            });
+          }
+          _.each($scope.podsByDeployment[resource.metadata.name], function(pod) {
+            $rootScope.$emit(event, pod);
           });
-        }
-        _.each($scope.podsByDeployment[resource.metadata.name], function(pod) {
-          $rootScope.$emit(event, pod);
-        });
+          break;
       }
     };
 
@@ -253,9 +212,7 @@ angular.module('openshiftConsole')
           $scope.podsByName = pods.by("metadata.name");
           $scope.pods = orderByDate($scope.podsByName, true);
           groupPods();
-          _.each($scope.pods, function(pod) {
-            setPodLogVars(pod);
-          });
+          _.each($scope.pods, setPodLogVars);
           filterPods();
           Logger.log("pods", $scope.pods);
         });
@@ -263,9 +220,7 @@ angular.module('openshiftConsole')
         DataService.watch("replicationcontrollers", context, function(deployments) {
           $scope.deployments = orderByDate(deployments.by("metadata.name"), true);
           groupPods();
-          _.each($scope.deployments, function(deployment) {
-            setDeploymentLogVars(deployment);
-          });
+          _.each($scope.deployments, setDeploymentLogVars);
           filterDeployments();
           Logger.log("deployments", $scope.deployments);
         });
@@ -273,9 +228,7 @@ angular.module('openshiftConsole')
         DataService.watch("builds", context, function(builds) {
           $scope.builds = orderByDate(builds.by("metadata.name"), true);
           $scope.latestBuildByConfig = BuildsService.latestBuildByConfig($scope.builds);          
-          _.each($scope.builds, function(build) {
-            setBuildLogVars(build);
-          });
+          _.each($scope.builds, setBuildLogVars);
           filterBuilds();
           Logger.log("builds", $scope.builds);
         });
@@ -284,17 +237,23 @@ angular.module('openshiftConsole')
           DataService.unwatchAll(watches);
         });
 
-        $scope.$watchGroup(['filters.showOlderResources'], function() {
+        $scope.$watch('filters.hideOlderResources', function() {
           filterPods();
           filterBuilds();
-          filterDeployments();
-          filterAllResourcesForKeyword();          
+          filterDeployments();        
         });
 
         $scope.$watch('filters.text', _.debounce(function() {
-              updateKeywords();
+              filterKeywords = KeywordService.generateKeywords($scope.filters.text);
               $scope.$apply(filterAllResourcesForKeyword);
             }, 50, { maxWait: 250 }));        
+
+        $scope.$watch('renderOptions.collapseEventsSidebar', function(newValue, oldValue) {
+          if (newValue === oldValue) {
+            return;
+          }
+          localStorage.setItem('monitoring.eventsidebar.collapsed', $scope.renderOptions.collapseEventsSidebar ? 'true' : 'false');
+        });
 
       }));
   });

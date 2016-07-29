@@ -5,7 +5,8 @@ angular.module('openshiftConsole')
     return {
       restrict: 'E',
       scope: {
-        projectContext: "="
+        projectContext: "=",
+        collapsed: "="
       },
       templateUrl: 'views/directives/events-sidebar.html',
       controller: function($scope) {
@@ -19,6 +20,10 @@ angular.module('openshiftConsole')
         }));
 
         $scope.highlightedEvents = {};
+
+        $scope.collapseSidebar = function(){
+          $scope.collapsed = true;
+        };
 
         $rootScope.$on('event.resource.highlight', function(evt, data) {
           var targetKind = _.get(data, 'kind');

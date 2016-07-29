@@ -1,7 +1,7 @@
 'use strict';
 
 angular.module('openshiftConsole')
-  .factory('logLinks', function($anchorScroll, $document, $location, $window, Navigate) {
+  .factory('logLinks', function($anchorScroll, $document, $location, $window) {
       // TODO (bpeterse): a lot of these functions are generic and could be moved/renamed to
       // a navigation oriented service.
 

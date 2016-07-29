@@ -5,7 +5,8 @@ angular.module('openshiftConsole')
     return {
       restrict: 'E',
       scope: {
-        projectContext: "="
+        projectContext: "=",
+        sidebarCollapsed: "="
       },
       templateUrl: 'views/directives/events-badge.html',
       controller: function($scope) {
@@ -18,6 +19,10 @@ angular.module('openshiftConsole')
           $scope.normalCount = _.size(_.filter(events, { type: 'Normal' }));
           Logger.log("events (subscribe)", $scope.events);
         }));
+
+        $scope.expandSidebar = function() {
+          $scope.sidebarCollapsed = false;
+        };
 
         $scope.$on('$destroy', function() {
           DataService.unwatchAll(watches);

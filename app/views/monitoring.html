@@ -9,7 +9,7 @@
             <div class="page-header page-header-bleed-right page-header-bleed-left">
               <h1>
                 Monitoring
-                <events-badge project-context="projectContext" ng-if="projectContext" class="pull-right visible-xs"></events-badge>
+                <events-badge project-context="projectContext" ng-if="projectContext" class="pull-right" sidebar-collapsed="renderOptions.collapseEventsSidebar"></events-badge>
               </h1>
             </div>
             <alerts alerts="alerts"></alerts>
@@ -31,9 +31,9 @@
                         ng-model="filters.text">
                 </div>
               </div>
-              <div class="data-toolbar-checkbox">
+              <div class="checkbox">
                 <label>
-                  <input type="checkbox" ng-model="filters.showOlderResources">Show older resources
+                  <input type="checkbox" ng-model="filters.hideOlderResources">Hide older resources
                 </label>
               </div>
             </div>
@@ -61,7 +61,6 @@
                     <div class="list-group-item list-group-item-expandable"
                          ng-repeat-start="build in filteredBuilds track by (build | uid)"
                          ng-click="expanded = !expanded; toggleItem(build, expanded)"
-                         style="cursor: pointer;"
                          ng-class="{'expanded': expanded}">
                       <div class="list-view-pf-checkbox">
                         <a href="">
@@ -77,10 +76,6 @@
                       </div>
 
                       <div class="list-view-pf-main-info">
-                        <!-- <div class="list-view-pf-left">
-                          <status-icon status="build.status.phase" disable-animation></status-icon>
-                          <span class="sr-only">{{build.status.phase | sentenceCase}}</span>
-                        </div> -->
                         <div class="list-view-pf-body">
                           <div class="list-view-pf-description">
                             <div class="list-group-item-heading">
@@ -88,20 +83,7 @@
                               <small>created <relative-timestamp timestamp="build.metadata.creationTimestamp"></relative-timestamp></small>
                             </div>
                             <div class="list-group-item-text">
-                              <status-icon status="build.status.phase" disable-animation></status-icon>
-                              {{build.status.phase | sentenceCase}}
-                              <span ng-switch="build.status.phase" class="hide-ng-leave">
-                                <span ng-switch-when="Complete"> in {{(build.status.startTimestamp || build.metadata.creationTimestamp) | timeOnlyDurationFromTimestamps : build.status.completionTimestamp}}</span>
-                                <span ng-switch-when="Failed">after <span ng-if="!build.status.startTimestamp">waiting </span>{{(build.status.startTimestamp || build.metadata.creationTimestamp) | timeOnlyDurationFromTimestamps : build.status.completionTimestamp}}</span>
-                                <span ng-switch-when="Cancelled"> after {{(build.status.startTimestamp || build.metadata.creationTimestamp) | timeOnlyDurationFromTimestamps : build.status.completionTimestamp}}</span>
-                                <span ng-switch-when="Running"> for <time-only-duration-until-now timestamp="build.status.startTimestamp" time-only></time-only-duration-until-now></span>
-                                <span ng-switch-when="New">, waiting for <time-only-duration-until-now timestamp="build.metadata.creationTimestamp"></time-only-duration-until-now></span>
-                                <span ng-switch-when="Pending"> for <time-only-duration-until-now timestamp="build.metadata.creationTimestamp"></time-only-duration-until-now></span>
-                                <span ng-switch-default>
-                                  <span ng-if="build.status.startTimestamp">, finished in {{build.status.startTimestamp | timeOnlyDurationFromTimestamps : build.status.completionTimestamp}}</span>
-                                  <span ng-if="!build.status.startTimestamp">, waited for {{build.metadata.creationTimestamp | timeOnlyDurationFromTimestamps : build.status.completionTimestamp}}</span>
-                                </span>
-                              </span>
+                              <build-status build="build"></build-status>
                             </div>
                           </div>
                           <div class="list-view-pf-additional-info">
@@ -151,8 +133,8 @@
                         </div>
 
                       </log-viewer>
-                      <div class="mar-top-lg" ng-if="metricsAvailable" ng-if="pods[(build | annotation : 'buildPod')]">
-                        <metrics pod="pods[(build | annotation : 'buildPod')]"></metrics>
+                      <div class="mar-top-lg" ng-if="metricsAvailable && podsByName[(build | annotation : 'buildPod')]">
+                        <metrics pod="podsByName[(build | annotation : 'buildPod')]"></metrics>
                       </div>
                     </div>
                   </div>
@@ -175,7 +157,6 @@
                     <div class="list-group-item list-group-item-expandable"
                          ng-repeat-start="deployment in filteredDeployments track by (deployment | uid)"
                          ng-click="expanded = !expanded; toggleItem(deployment, expanded)"
-                         style="cursor: pointer;"
                          ng-class="{'expanded': expanded}">
                       <div class="list-view-pf-checkbox">
                         <a href="">
@@ -191,10 +172,6 @@
                       </div>
 
                       <div class="list-view-pf-main-info">
-                        <!-- <div class="list-view-pf-left">
-                          <status-icon status="deployment | deploymentStatus" disable-animation></status-icon>
-                          <span class="sr-only">{{deployment | deploymentStatus | sentenceCase}}</span>
-                        </div> -->
                         <div class="list-view-pf-body">
                           <div class="list-view-pf-description">
                             <div class="list-group-item-heading">
@@ -213,7 +190,7 @@
                               <span ng-if="sha = (deployment.spec.template.spec.containers[0].image | imageSHA)" title="{{sha}}">
                                 <span>@</span><span class="hash">{{sha | stripSHAPrefix | limitTo: 7}}</span>
                               </span>
-                              <span ng-if="deployment.spec.template.spec.containers.length > 1"> and {{deployment.spec.template.spec.containers.length - 1}} other image<span ng-if="(deployment.spec.template.spec.containers.length - 1) !== 1">s</span></span>
+                              <span ng-if="deployment.spec.template.spec.containers.length > 1"> and {{deployment.spec.template.spec.containers.length - 1}} other image<span ng-if="deployment.spec.template.spec.containers.length > 2">s</span></span>
                             </div>
                           </div>
                         </div>
@@ -263,7 +240,6 @@
                     <div class="list-group-item list-group-item-expandable"
                          ng-repeat-start="pod in filteredPods track by (pod | uid)"
                          ng-click="expanded = !expanded; toggleItem(pod, expanded)"
-                         style="cursor: pointer;"
                          ng-class="{'expanded': expanded}">
                       <div class="list-view-pf-checkbox">
                         <a href="">
@@ -279,10 +255,6 @@
                       </div>
 
                       <div class="list-view-pf-main-info">
-                        <!-- <div class="list-view-pf-left">
-                          <status-icon status="pod | podStatus" disable-animation></status-icon>
-                          <span class="sr-only">{{pod | podStatus | sentenceCase}}</span>
-                        </div> -->
                         <div class="list-view-pf-body">
                           <div class="list-view-pf-description">
                             <div class="list-group-item-heading">
@@ -290,7 +262,7 @@
                               <small>created <relative-timestamp timestamp="pod.metadata.creationTimestamp"></relative-timestamp></small>
                             </div>
                             <div class="list-group-item-text">
-                              <status-icon status="pod | podStatus" disable-animation></status-icon>
+                              <status-icon status="pod | podStatus" disable-animation fixed-width="true"></status-icon>
                               {{pod | podStatus | sentenceCase}}
                             </div>
                           </div>
@@ -301,7 +273,7 @@
                               <span ng-if="sha = (pod.spec.containers[0].image | imageSHA)" title="{{sha}}">
                                 <span>@</span><span class="hash">{{sha | stripSHAPrefix | limitTo: 7}}</span>
                               </span>
-                              <span ng-if="pod.spec.containers.length > 1" class="mar-left-xs">and {{pod.spec.containers.length - 1}} other image<span ng-if="(pod.spec.containers.length - 1) !== 1">s</span></span>
+                              <span ng-if="pod.spec.containers.length > 1" class="mar-left-xs">and {{pod.spec.containers.length - 1}} other image<span ng-if="pod.spec.containers.length > 2">s</span></span>
                             </div>
                           </div>
                         </div>
@@ -345,7 +317,7 @@
 
                       </log-viewer>
                       <!-- Until the metrics directive pulls the metrics from the time range of the life of the pod, hide the metrics for old stuff -->
-                      <div class="mar-top-lg" ng-if="metricsAvailable && pod.status.phase !== 'Failed' && pod.status.phase !== 'Succeeded'">
+                      <div class="mar-top-lg" ng-if="metricsAvailable">
                         <metrics pod="pod"></metrics>
                       </div>
                     </div>
