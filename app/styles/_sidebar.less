@@ -323,18 +323,18 @@
       padding-top: 10px;
     }
     .event {
+      border: 1px solid transparent;
       display: flex;
       align-items: center;
-      padding-bottom: 10px;
-      padding-left: 20px;
-      padding-right: 20px;
-
+      padding: 10px 20px;
       &.highlight {
-        background-color: #f5f5f5;
-        border-left: 1px solid #d1d1d1;
-        border-right: 1px solid #d1d1d1;
+        background-color: @list-view-expanded-bg;
+        border-bottom-width: 0;
+        border-color:  @table-border-color !important;
       }
-
+      + .event {
+        border-top: 1px solid #ededed;
+      }
       .event-icon {
         font-size: 18px;
         margin-right: 10px;
@@ -375,14 +375,6 @@
         }
       }
     }
-    .event + .event {
-      border-top: 1px solid #ededed;
-      padding-top: 10px;
-
-      &.highlight {
-        border-top: 1px solid #d1d1d1;
-      }
-    }
 
     .event.highlight + .event {
       border-top: 1px solid #d1d1d1;
@@ -391,18 +383,17 @@
 }
 
 .events-badge {
-  color: #363636;
-  text-decoration: none;
   font-size: 14px;
-
-  &:active, &:hover, &:visited {
-    color: #363636;
-  }
-  &:active, &:hover {
-    text-decoration: underline;
-
-    .fa {
+  &:hover {
+    text-decoration: none;
+    .event-label {
       text-decoration: underline;
     }
+  }
+  .event-count {
+    color: @text-color;
+  }
+  .pficon-info {
+    color: @text-muted;
   }
 }

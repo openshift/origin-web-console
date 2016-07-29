@@ -1,13 +1,1 @@
-<a ng-href="project/{{projectContext.projectName}}/browse/events" class="events-badge">
-  Events
-  <span ng-if="warningCount" class="mar-left-sm">
-    <span class="pficon pficon-warning-triangle-o" aria-hidden="true"></span>
-    <span class="sr-only">Warning </span>
-    {{warningCount}}
-  </span>
-  <span ng-if="normalCount" class="mar-left-sm">
-    <span class="pficon pficon-info" aria-hidden="true"></span>
-    <span class="sr-only">Normal </span>
-    {{normalCount}}
-  </span>
-</span>
+<a ng-href="project/{{projectContext.projectName}}/browse/events" class="events-badge"><span class="event-label">Events</span><span ng-if="warningCount" class="mar-left-md"><span class="pficon pficon-warning-triangle-o mar-right-sm" aria-hidden="true"></span><span class="sr-only">Warning</span><span class="event-count">{{warningCount}}</span></span><span ng-if="normalCount" class="mar-left-sm"><span class="pficon pficon-info mar-right-sm" aria-hidden="true"></span><span class="sr-only">Normal</span><span class="event-count">{{normalCount}}</span></span></span>

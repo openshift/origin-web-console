@@ -11,11 +11,11 @@
                 Monitoring
                 <events-badge project-context="projectContext" ng-if="projectContext" class="pull-right visible-xs"></events-badge>
               </h1>
-            </div>            
+            </div>
             <alerts alerts="alerts"></alerts>
             <div class="data-toolbar">
-              <ui-select ng-model="kindSelector.selected" theme="bootstrap" search-enabled="true" ng-disabled="kindSelector.disabled" title="Choose a resource" style="width: 250px;">
-                <ui-select-match placeholder="Choose a resource to list...">{{$select.selected.label ? $select.selected.label : ($select.selected.kind | humanizeKind : true)}}</ui-select-match>
+              <ui-select ng-model="kindSelector.selected" theme="bootstrap" search-enabled="true" ng-disabled="kindSelector.disabled" title="Choose a resource" class="data-toolbar-dropdown">
+                <ui-select-match placeholder="Choose a resource">{{$select.selected.label ? $select.selected.label : ($select.selected.kind | humanizeKind : true)}}</ui-select-match>
                 <ui-select-choices repeat="kind in kinds | filter : {kind: $select.search} : matchKind | orderBy : 'kind'">
                   <div ng-bind-html="(kind.label ? kind.label : (kind.kind | humanizeKind : true)) | highlight: $select.search"></div>
                 </ui-select-choices>
@@ -31,12 +31,12 @@
                         ng-model="filters.text">
                 </div>
               </div>
-              <div class="checkbox">
+              <div class="data-toolbar-checkbox">
                 <label>
                   <input type="checkbox" ng-model="filters.showOlderResources">Show older resources
                 </label>
-              </div>              
-            </div>            
+              </div>
+            </div>
           </div>
         </div><!-- /middle-header-->
         <div class="middle-content">
@@ -45,7 +45,7 @@
               <div class="col-md-12">
                 <div ng-if="kindSelector.selected.kind === 'All' || kindSelector.selected.kind === 'Builds'">
                   <h2>Builds</h2>
-                  <div class="list-group list-view-pf">
+                  <div class="list-view-pf">
                     <div class="list-group-item" ng-if="!(filteredBuilds | hashSize)">
                       <div class="list-view-pf-main-info">
                         <em>
@@ -128,9 +128,9 @@
                             </div>
                           </div>
                         </div>
-                      </div>                
+                      </div>
                     </div>
-                    <div ng-repeat-end ng-if="expanded" class="list-group-expanded-section">
+                    <div ng-repeat-end ng-if="expanded" class="list-group-expanded-section" ng-class="{'expanded': expanded}">
                       <!-- TODO fix vanilla RCs -->
                       <log-viewer
                         ng-if="'builds/log' | canI : 'get'"
@@ -151,15 +151,15 @@
                         </div>
 
                       </log-viewer>
-                      <div class="mar-top-lg" ng-if="metricsAvailable" ng-if="pods[(build | annotation : 'buildPod')]">   
+                      <div class="mar-top-lg" ng-if="metricsAvailable" ng-if="pods[(build | annotation : 'buildPod')]">
                         <metrics pod="pods[(build | annotation : 'buildPod')]"></metrics>
-                      </div>                         
-                    </div>                         
-                  </div>                    
+                      </div>
+                    </div>
+                  </div>
                 </div>
                 <div ng-if="kindSelector.selected.kind === 'All' || kindSelector.selected.kind === 'ReplicationControllers'">
                   <h2>Deployments</h2>
-                  <div class="list-group list-view-pf">
+                  <div class="list-view-pf">
                     <div class="list-group-item" ng-if="!(filteredDeployments | hashSize)">
                       <div class="list-view-pf-main-info">
                         <em>
@@ -171,8 +171,8 @@
                           </span>
                         </em>
                       </div>
-                    </div>                    
-                    <div class="list-group-item list-group-item-expandable" 
+                    </div>
+                    <div class="list-group-item list-group-item-expandable"
                          ng-repeat-start="deployment in filteredDeployments track by (deployment | uid)"
                          ng-click="expanded = !expanded; toggleItem(deployment, expanded)"
                          style="cursor: pointer;"
@@ -217,9 +217,9 @@
                             </div>
                           </div>
                         </div>
-                      </div>                
+                      </div>
                     </div>
-                    <div ng-repeat-end ng-if="expanded" class="list-group-expanded-section">
+                    <div ng-repeat-end ng-if="expanded" class="list-group-expanded-section" ng-class="{'expanded': expanded}">
                       <!-- TODO fix vanilla RCs -->
                       <log-viewer
                         ng-if="'deploymentconfigs/log' | canI : 'get'"
@@ -239,15 +239,15 @@
                         </div>
 
                       </log-viewer>
-                      <div class="mar-top-lg" ng-if="metricsAvailable">   
+                      <div class="mar-top-lg" ng-if="metricsAvailable">
                         <metrics deployment="deployment"></metrics>
-                      </div>                         
-                    </div>                         
-                  </div>                  
+                      </div>
+                    </div>
+                  </div>
                 </div>
                 <div ng-if="kindSelector.selected.kind === 'All' || kindSelector.selected.kind === 'Pods'">
                   <h2>Pods</h2>
-                  <div class="list-group list-view-pf">
+                  <div class="list-view-pf">
                     <div class="list-group-item" ng-if="!(filteredPods | hashSize)">
                       <div class="list-view-pf-main-info">
                         <em>
@@ -259,7 +259,7 @@
                           </span>
                         </em>
                       </div>
-                    </div>                    
+                    </div>
                     <div class="list-group-item list-group-item-expandable"
                          ng-repeat-start="pod in filteredPods track by (pod | uid)"
                          ng-click="expanded = !expanded; toggleItem(pod, expanded)"
@@ -305,9 +305,9 @@
                             </div>
                           </div>
                         </div>
-                      </div>                
+                      </div>
                     </div>
-                    <div ng-repeat-end ng-if="expanded" class="list-group-expanded-section">
+                    <div ng-repeat-end ng-if="expanded" class="list-group-expanded-section" ng-class="{'expanded': expanded}">
                       <log-viewer
                         ng-if="'pods/log' | canI : 'get'"
                         resource="pods/log"
@@ -345,10 +345,10 @@
 
                       </log-viewer>
                       <!-- Until the metrics directive pulls the metrics from the time range of the life of the pod, hide the metrics for old stuff -->
-                      <div class="mar-top-lg" ng-if="metricsAvailable && pod.status.phase !== 'Failed' && pod.status.phase !== 'Succeeded'">   
+                      <div class="mar-top-lg" ng-if="metricsAvailable && pod.status.phase !== 'Failed' && pod.status.phase !== 'Succeeded'">
                         <metrics pod="pod"></metrics>
-                      </div>                         
-                    </div>                         
+                      </div>
+                    </div>
                   </div>
                 </div>
               </div><!-- /col-* -->

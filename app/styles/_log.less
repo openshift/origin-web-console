@@ -24,7 +24,7 @@
   }
   @media (min-width: @screen-sm-min) {
     .log-status {
-      display: inline-block;
+      display: inline;
     }
     .log-timestamps {
       .small();
@@ -76,7 +76,7 @@
   .log-scroll-top {
     position: absolute;
     right: 0;
-    border-right: 0;
+    border-right-width: 0;
     border-top: 0;
   }
   // starting position
@@ -103,7 +103,7 @@
   .log-scroll-bottom {
     position: absolute;
     border-bottom: 0;
-    border-right: 0;
+    border-right-width: 0;
     bottom: 0;
     right: 0;
   }
@@ -124,28 +124,30 @@
     }
   }
   &.log-fixed-height {
-
-    .log-view-output {
-      padding: 25px 0;
-      position: relative;
-      overflow: auto;      
-    }
-
-    .log-scroll-top {
-      z-index: 100;
-    }
-
-    .log-end-msg {
-      position: relative;
-      margin-bottom: -25px;     
-    }
-
     .ellipsis-loader {
-      
       background-color: @log-bg-color;
-      
+      bottom: 0;
+      height: 30px;
+      right: @scrollbar-width-log-viewer;
+      width: auto;
+      &.dots div {
+        left: 50%;
+        top: 12px;
+      }
     }
-  }  
+    .log-end-msg {
+      margin: 20px 0 -35px 10px;
+      position: static;
+    }
+    .log-scroll-bottom, .log-scroll-top {
+      border-right-width: 1px;
+      right: @scrollbar-width-log-viewer; // width of IE11 scrollbar
+    }
+    .log-view-output {
+      overflow: auto;
+      padding-top: 30px;
+    }
+  }
 }
 .ellipsis-loader {
   // Show the loading dots at the bottom, even when the log content doesn't fill the page.
@@ -170,7 +172,7 @@
   right: 0px; // override
 }
 .chromeless .log-scroll-top.affix.target-logger-node {
-  right: 10px;  // override
+  right: @scrollbar-width;  // override
 }
 
 .log-link-external {
