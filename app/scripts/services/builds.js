@@ -5,6 +5,8 @@ angular.module("openshiftConsole")
 
     var annotation = $filter('annotation');
     var buildConfigForBuild = $filter('buildConfigForBuild');
+    var isIncompleteBuild = $filter('isIncompleteBuild');
+    var isNewer = $filter('isNewerResource');
 
     var startBuild = function(buildConfigName, context) {
       var req = {
@@ -90,7 +92,6 @@ angular.module("openshiftConsole")
           });
     };
 
-    var isNewer = $filter('isNewerResource');
     var latestBuildByConfig = function(builds, /* optional */ filter) {
       var latestByConfig = {};
       _.each(builds, function(build) {
@@ -145,6 +146,60 @@ angular.module("openshiftConsole")
       return moment(endTimestamp).diff(moment(startTimestamp));
     };
 
+    var incompleteBuilds = function(builds) {
+      return _.map(builds, function(build) {
+        return isIncompleteBuild(build);
+      });
+    };
+
+    var completeBuilds = function(builds) {
+      return _.map(builds, function(build) {
+        return !isIncompleteBuild(build);
+      });
+    };
+
+    var lastCompleteByBuildConfig = function(builds) {
+      return _.reduce(
+                builds,
+                function(result, build) {
+                  if(isIncompleteBuild(build)) {
+                    return result;
+                  }
+                  var bc = $filter('annotation')(build, 'buildConfig');
+                  if(isNewer(build, result[bc])) {
+                    result[bc] = build;
+                  }
+                  return result;
+                }, {});
+
+    };
+
+    // result: incomplete builds + the single latest build for each build config.
+    var interestingBuilds = function(builds) {
+      var latestCompleteByConfig = {};
+      var incompleteBuilds = _.filter(
+                              builds,
+                              function(build) {
+                                if(isIncompleteBuild(build)) {
+                                  return true;
+                                }
+                                // for efficiency, since we have a loop, if the build is
+                                // complete we can build a map of latest complete builds by bcs
+                                var bc = $filter('annotation')(build, 'buildConfig');
+                                if(isNewer(build, latestCompleteByConfig[bc])) {
+                                  latestCompleteByConfig[bc] = build;
+                                }
+                              });
+      // in the end we want a single list for ng-repeating
+      return incompleteBuilds
+               .concat(
+                _.map(
+                    latestCompleteByConfig,
+                    function(build) {
+                      return build;
+                    }));
+    };
+
     return {
       startBuild: startBuild,
       cancelBuild: cancelBuild,
@@ -156,6 +211,10 @@ angular.module("openshiftConsole")
       latestBuildByConfig: latestBuildByConfig,
       getBuildNumber: getBuildNumber,
       getStartTimestsamp: getStartTimestsamp,
-      getDuration: getDuration
+      getDuration: getDuration,
+      incompleteBuilds: incompleteBuilds,
+      completeBuilds: completeBuilds,
+      lastCompleteByBuildConfig: lastCompleteByBuildConfig,
+      interestingBuilds: interestingBuilds
     };
   });

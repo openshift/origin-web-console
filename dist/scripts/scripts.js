@@ -2019,7 +2019,7 @@ c.image && (b[c.dockerImageReference] = a.metadata.name + "@" + c.image);
 } ]), angular.module("openshiftConsole").factory("BaseHref", [ "$document", function(a) {
 return a.find("base").attr("href") || "/";
 } ]), angular.module("openshiftConsole").factory("BuildsService", [ "DataService", "$filter", function(a, b) {
-var c = b("annotation"), d = b("buildConfigForBuild"), e = function(b, c) {
+var c = b("annotation"), d = b("buildConfigForBuild"), e = b("isIncompleteBuild"), f = b("isNewerResource"), g = function(b, c) {
 var d = {
 kind:"BuildRequest",
 apiVersion:"v1",
@@ -2028,10 +2028,10 @@ name:b
 }
 };
 return a.create("buildconfigs/instantiate", b, d, c);
-}, f = function(b, c, d) {
+}, h = function(b, c, d) {
 var e = angular.copy(b);
 return e.status.cancelled = !0, a.update("builds", e.metadata.name, e, d);
-}, g = function(b, c) {
+}, i = function(b, c) {
 var d = {
 kind:"BuildRequest",
 apiVersion:"v1",
@@ -2040,11 +2040,11 @@ name:b
 }
 };
 return a.create("builds/clone", b, d, c);
-}, h = function(a) {
-return "true" === c(a, "openshift.io/build-config.paused");
-}, i = function(a) {
-return !!a && (!a.metadata.deletionTimestamp && !h(a));
 }, j = function(a) {
+return "true" === c(a, "openshift.io/build-config.paused");
+}, k = function(a) {
+return !!a && (!a.metadata.deletionTimestamp && !j(a));
+}, l = function(a) {
 var b = c(a, "pipeline.alpha.openshift.io/uses");
 if (!b) return [];
 try {
@@ -2056,42 +2056,69 @@ var e = [];
 return _.each(b, function(b) {
 b.name && (b.namespace && b.namespace !== _.get(a, "metadata.namespace") || "DeploymentConfig" === b.kind && e.push(b.name));
 }), e;
-}, k = function(a, b) {
+}, m = function(a, b) {
 return _.pick(b, function(b) {
 var d = c(b, "buildConfig");
 return !d || d === a;
 });
-}, l = b("isNewerResource"), m = function(a, b) {
+}, n = function(a, b) {
 var c = {};
 return _.each(a, function(a) {
 var e = d(a) || "";
-b && !b(a) || l(a, c[e]) && (c[e] = a);
+b && !b(a) || f(a, c[e]) && (c[e] = a);
 }), c;
-}, n = function(a) {
+}, o = function(a) {
 var b = c(a, "buildNumber") || parseInt(a.metadata.name.match(/(\d+)$/), 10);
 return isNaN(b) ? null :b;
-}, o = function(a) {
-return a.status.startTimestamp || a.metadata.creationTimestamp;
 }, p = function(a) {
-return _.round(a / 1e3 / 1e3);
+return a.status.startTimestamp || a.metadata.creationTimestamp;
 }, q = function(a) {
+return _.round(a / 1e3 / 1e3);
+}, r = function(a) {
 var b = _.get(a, "status.duration");
-if (b) return p(b);
-var c = o(a), d = a.status.completionTimestamp;
+if (b) return q(b);
+var c = p(a), d = a.status.completionTimestamp;
 return c && d ? moment(d).diff(moment(c)) :0;
+}, s = function(a) {
+return _.map(a, function(a) {
+return e(a);
+});
+}, t = function(a) {
+return _.map(a, function(a) {
+return !e(a);
+});
+}, u = function(a) {
+return _.reduce(a, function(a, c) {
+if (e(c)) return a;
+var d = b("annotation")(c, "buildConfig");
+return f(c, a[d]) && (a[d] = c), a;
+}, {});
+}, v = function(a) {
+var c = {}, d = _.filter(a, function(a) {
+if (e(a)) return !0;
+var d = b("annotation")(a, "buildConfig");
+f(a, c[d]) && (c[d] = a);
+});
+return d.concat(_.map(c, function(a) {
+return a;
+}));
 };
 return {
-startBuild:e,
-cancelBuild:f,
-cloneBuild:g,
-isPaused:h,
-canBuild:i,
-usesDeploymentConfigs:j,
-validatedBuildsForBuildConfig:k,
-latestBuildByConfig:m,
-getBuildNumber:n,
-getStartTimestsamp:o,
-getDuration:q
+startBuild:g,
+cancelBuild:h,
+cloneBuild:i,
+isPaused:j,
+canBuild:k,
+usesDeploymentConfigs:l,
+validatedBuildsForBuildConfig:m,
+latestBuildByConfig:n,
+getBuildNumber:o,
+getStartTimestsamp:p,
+getDuration:r,
+incompleteBuilds:s,
+completeBuilds:t,
+lastCompleteByBuildConfig:u,
+interestingBuilds:v
 };
 } ]), angular.module("openshiftConsole").factory("DeploymentsService", [ "DataService", "$filter", "LabelFilter", function(a, b, c) {
 function d() {}
@@ -3206,11 +3233,11 @@ c.recentPipelinesByDC[b] = c.recentPipelinesByDC[b] || [], c.recentPipelinesByDC
 });
 }
 }
-}, Z = a("isRecentBuild"), $ = function() {
-u && (c.recentPipelinesByDC = {}, c.recentBuildsByOutputImage = {}, _.each(u, function(a) {
-if (Z(a)) return z(a) ? void Y(a) :void W(a);
+}, Z = function() {
+u && (c.recentPipelinesByDC = {}, c.recentBuildsByOutputImage = {}, _.each(e.interestingBuilds(u), function(a) {
+return z(a) ? void Y(a) :void W(a);
 }));
-}, aa = function() {
+}, $ = function() {
 var a = _.isEmpty(p) && _.isEmpty(s) && _.isEmpty(r) && _.isEmpty(q), b = p && s && r && q;
 c.renderOptions.showGetStarted = b && a, c.renderOptions.showLoading = !b && a;
 };
@@ -3225,19 +3252,19 @@ return g.isScalable(a, q, c.hpaByDC, c.hpaByRC, c.scalableDeploymentByConfig);
 c.showMetrics = a;
 }), j.get(b.project).then(_.spread(function(a, b) {
 c.project = a, y.push(f.watch("pods", b, function(a) {
-s = a.by("metadata.name"), O(), aa(), h.log("pods", s);
+s = a.by("metadata.name"), O(), $(), h.log("pods", s);
 })), y.push(f.watch("services", b, function(a) {
-c.services = p = a.by("metadata.name"), U(), O(), I(), L(), V(), aa(), h.log("services (list)", p);
+c.services = p = a.by("metadata.name"), U(), O(), I(), L(), V(), $(), h.log("services (list)", p);
 })), y.push(f.watch("builds", b, function(a) {
-u = a.by("metadata.name"), $(), aa(), h.log("builds (list)", u);
+u = a.by("metadata.name"), Z(), $(), h.log("builds (list)", u);
 })), y.push(f.watch("buildConfigs", b, function(a) {
-t = a.by("metadata.name"), $(), h.log("builds (list)", u);
+t = a.by("metadata.name"), Z(), h.log("builds (list)", u);
 })), y.push(f.watch("routes", b, function(a) {
 o = a.by("metadata.name"), H(), U(), V(), h.log("routes (subscribe)", c.routesByService);
 })), y.push(f.watch("replicationcontrollers", b, function(a) {
-r = a.by("metadata.name"), L(), O(), $(), aa(), h.log("replicationcontrollers (subscribe)", r);
+r = a.by("metadata.name"), L(), O(), Z(), $(), h.log("replicationcontrollers (subscribe)", r);
 })), y.push(f.watch("deploymentconfigs", b, function(a) {
-q = a.by("metadata.name"), I(), L(), aa(), h.log("deploymentconfigs (subscribe)", c.deploymentConfigs);
+q = a.by("metadata.name"), I(), L(), $(), h.log("deploymentconfigs (subscribe)", c.deploymentConfigs);
 })), y.push(f.watch({
 group:"extensions",
 resource:"horizontalpodautoscalers"
