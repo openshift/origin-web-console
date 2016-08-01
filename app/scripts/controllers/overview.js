@@ -306,30 +306,24 @@ angular.module('openshiftConsole')
       });
     };
 
-    var isRecentBuild = $filter('isRecentBuild');
     var groupBuilds = function() {
-      if (!builds) {
+      if(!builds) {
         return;
       }
-
+      // reset these maps
       $scope.recentPipelinesByDC = {};
       $scope.recentBuildsByOutputImage = {};
-
-      _.each(builds, function(build) {
-        // Only show recent builds on the overview.
-        if (!isRecentBuild(build)) {
-          return;
-        }
-
-        if (!isJenkinsPipelineStrategy(build)) {
-          groupBuildByOutputImage(build);
-          return;
-        }
-
-        // Handle pipeline builds.
-        groupPipelineByDC(build);
-      });
+      _.each(
+        BuildsService.interestingBuilds(builds),
+        function(build) {
+          if(!isJenkinsPipelineStrategy(build)) {
+            groupBuildByOutputImage(build);
+            return;
+          }
+          groupPipelineByDC(build);
+        });
     };
+
 
     // Show the "Get Started" message if the project is empty.
     var updateShowGetStarted = function() {
