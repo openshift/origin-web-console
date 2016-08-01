@@ -25,8 +25,8 @@
     </div>
   </div>
 
-  <div ng-if="!loaded">Loading...</div>
-  <div ng-if="loaded && noData && !metricsError">No metrics to display.</div>
+  <div ng-if="!loaded" class="mar-top-md">Loading...</div>
+  <div ng-if="loaded && noData && !metricsError" class="mar-top-md">No metrics to display.</div>
 
   <div ng-if="metricsError" class="empty-state-message text-center">
     <h2>

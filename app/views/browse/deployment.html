@@ -91,7 +91,10 @@
                   <uib-tab ng-if="metricsAvailable" heading="Metrics" active="selectedTab.metrics">
                     <!-- Use ng-if to remove the metrics directive when the tab is not active so
                          we don't update in the background. -->
-                    <metrics ng-if="selectedTab.metrics" deployment="deployment"></metrics>
+                    <deployment-metrics
+                        ng-if="selectedTab.metrics && podsForDeployment"
+                        pods="podsForDeployment" containers="deployment.spec.template.spec.containers">
+                    </deployment-metrics>
                   </uib-tab>
                   <uib-tab ng-if="deploymentConfigName && logOptions.version && ('deploymentconfigs/log' | canI : 'get')" active="selectedTab.logs">
                     <uib-tab-heading>Logs</uib-tab-heading>

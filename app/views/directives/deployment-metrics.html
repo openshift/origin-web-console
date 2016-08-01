@@ -1,0 +1,59 @@
+<div class="metrics">
+  <div class="metrics-options">
+    <div ng-if="containers.length" class="form-group">
+      <label for="selectContainer">Container:</label>
+      <div class="select-container">
+        <span ng-show="containers.length === 1">
+          {{options.selectedContainer.name}}
+        </span>
+        <select id="selectContainer"
+                ng-show="containers.length > 1"
+                ng-model="options.selectedContainer"
+                ng-options="container.name for container in containers track by container.name">
+        </select>
+      </div>
+    </div>
+    <div class="form-group">
+      <label for="timeRange">Time Range:</label>
+      <select id="timeRange"
+              ng-model="options.timeRange"
+              ng-options="range.label for range in options.rangeOptions"
+              ng-disabled="metricsError">
+      </select>
+    </div>
+  </div>
+
+  <div ng-if="!loaded" class="mar-top-md">Loading...</div>
+  <div ng-if="loaded && noData && !metricsError" class="mar-top-md">
+    No metrics to display.
+  </div>
+
+  <div ng-if="metricsError" class="empty-state-message text-center">
+    <h2>
+      <span class="pficon pficon-error-circle-o" aria-hidden="true"></span>
+      Metrics are not available.
+    </h2>
+
+    <p>
+      An error occurred getting metrics<span ng-if="options.selectedContainer.name">
+        for container {{options.selectedContainer.name}}</span><span ng-if="metricsURL">
+        from <a ng-href="{{metricsURL}}">{{metricsURL}}</a></span>.
+    </p>
+
+    <p class="text-muted">
+      {{metricsError.details}}
+    </p>
+  </div>
+
+  <div ng-repeat="metric in metrics" ng-if="!noData && !metricsError" class="metrics-full">
+    <h3 class="metric-label">
+      {{metric.label}}
+      <small ng-if="showAverage">
+        Average per pod
+      </small>
+    </h3>
+
+    <!-- Sparkline -->
+    <div ng-attr-id="{{metric.chartPrefix + uniqueID}}-sparkline" class="metrics-sparkline"></div>
+  </div>
+</div>

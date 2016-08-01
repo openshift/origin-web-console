@@ -217,7 +217,10 @@
 
                       </log-viewer>
                       <div class="mar-top-lg" ng-if="metricsAvailable">
-                        <metrics deployment="deployment"></metrics>
+                        <deployment-metrics
+                            pods="podsByDeployment[deployment.metadata.name]"
+                            containers="deployment.spec.template.spec.containers">
+                        </deployment-metrics>
                       </div>
                     </div>
                   </div>
