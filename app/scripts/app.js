@@ -19,6 +19,7 @@ angular
     'ngTouch',
     'openshiftUI',
     'kubernetesUI',
+    'registryUI.images',
     'ui.bootstrap',
     'patternfly.charts',
     'patternfly.sort',
@@ -162,7 +163,11 @@ angular
         templateUrl: 'views/images.html',
         controller: 'ImagesController'
       })
-      .when('/project/:project/browse/images/:image', {
+      .when('/project/:project/browse/images/:imagestream', {
+        templateUrl: 'views/browse/imagestream.html',
+        controller: 'ImageStreamController'
+      })
+      .when('/project/:project/browse/images/:imagestream/:tag', {
         templateUrl: 'views/browse/image.html',
         controller: 'ImageController'
       })

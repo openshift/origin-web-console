@@ -2196,6 +2196,59 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "<div ng-if=\"!loaded\">Loading...</div>\n" +
     "<div ng-if=\"imageStream\">\n" +
     "<h1>\n" +
+    "{{imageStream.metadata.name}}:{{tagName}}\n" +
+    "</h1>\n" +
+    "</div>\n" +
+    "</div>\n" +
+    "</div>\n" +
+    "<div class=\"middle-content gutter-top\">\n" +
+    "<div class=\"container-fluid\">\n" +
+    "<div class=\"row\" ng-if=\"image\">\n" +
+    "<div class=\"col-md-12\">\n" +
+    "<registry-image-pull settings=\"settings\" names=\"[ imageStream.metadata.name + ':' + tagName ]\">\n" +
+    "</registry-image-pull>\n" +
+    "<uib-tabset>\n" +
+    "<uib-tab heading=\"Details\" active=\"selectedTab.body\">\n" +
+    "<uib-tab-heading>Details</uib-tab-heading>\n" +
+    "<registry-image-body image=\"image\">\n" +
+    "</registry-image-body>\n" +
+    "<registry-image-meta image=\"image\">\n" +
+    "</registry-image-meta>\n" +
+    "</uib-tab>\n" +
+    "<uib-tab heading=\"Config\" active=\"selectedTab.config\">\n" +
+    "<uib-tab-heading>Config</uib-tab-heading>\n" +
+    "<registry-image-config image=\"image\">\n" +
+    "</registry-image-config>\n" +
+    "</uib-tab>\n" +
+    "<uib-tab heading=\"Layers\" active=\"selectedTab.meta\">\n" +
+    "<uib-tab-heading>Layers</uib-tab-heading>\n" +
+    "<registry-image-layers image=\"image\">\n" +
+    "</registry-image-layers>\n" +
+    "</uib-tab>\n" +
+    "</uib-tabset>\n" +
+    "</div>\n" +
+    "</div>\n" +
+    "</div>\n" +
+    "</div>\n" +
+    "</div>\n" +
+    "</div>\n" +
+    "</project-page>"
+  );
+
+
+  $templateCache.put('views/browse/imagestream.html',
+    "<project-header class=\"top-header\"></project-header>\n" +
+    "<project-page>\n" +
+    "\n" +
+    "<div class=\"middle-section\">\n" +
+    "<div id=\"scrollable-content\" class=\"middle-container has-scroll\">\n" +
+    "<div class=\"middle-header\">\n" +
+    "<div class=\"container-fluid\">\n" +
+    "<breadcrumbs breadcrumbs=\"breadcrumbs\"></breadcrumbs>\n" +
+    "<alerts alerts=\"alerts\"></alerts>\n" +
+    "<div ng-if=\"!loaded\">Loading...</div>\n" +
+    "<div ng-if=\"imageStream\">\n" +
+    "<h1>\n" +
     "{{imageStream.metadata.name}}\n" +
     "<div class=\"pull-right dropdown\" ng-hide=\"!('imageStreams' | canIDoAny)\">\n" +
     "<button type=\"button\" class=\"dropdown-toggle btn btn-default actions-dropdown-btn hidden-xs\" data-toggle=\"dropdown\">\n" +
@@ -2248,7 +2301,7 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "</tbody>\n" +
     "<tbody ng-repeat-start=\"tag in tagsByName | orderBy : 'name'\">\n" +
     "<tr>\n" +
-    "<td data-title=\"Tag\">{{tag.name}}</td>\n" +
+    "<td data-title=\"Tag\"><a href=\"{{imageStream | navigateResourceURL}}/{{tag.name}}\">{{tag.name}}</a></td>\n" +
     "<td data-title=\"From\">\n" +
     "\n" +
     "<div style=\"max-width: 400px\" class=\"truncate\">\n" +

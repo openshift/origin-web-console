@@ -93,7 +93,7 @@ label:"Monitoring",
 iconClass:"pficon pficon-screen",
 href:"/browse/events"
 } ]
-}, angular.module("openshiftConsole", [ "ngAnimate", "ngCookies", "ngResource", "ngRoute", "ngSanitize", "ngTouch", "openshiftUI", "kubernetesUI", "ui.bootstrap", "patternfly.charts", "patternfly.sort", "openshiftConsoleTemplates", "ui.ace", "extension-registry", "as.sortable", "ui.select", "key-value-editor", "angular-inview" ]).config([ "$routeProvider", function(a) {
+}, angular.module("openshiftConsole", [ "ngAnimate", "ngCookies", "ngResource", "ngRoute", "ngSanitize", "ngTouch", "openshiftUI", "kubernetesUI", "registryUI.images", "ui.bootstrap", "patternfly.charts", "patternfly.sort", "openshiftConsoleTemplates", "ui.ace", "extension-registry", "as.sortable", "ui.select", "key-value-editor", "angular-inview" ]).config([ "$routeProvider", function(a) {
 a.when("/", {
 templateUrl:"views/projects.html",
 controller:"ProjectsController"
@@ -186,7 +186,10 @@ controller:"EventsController"
 }).when("/project/:project/browse/images", {
 templateUrl:"views/images.html",
 controller:"ImagesController"
-}).when("/project/:project/browse/images/:image", {
+}).when("/project/:project/browse/images/:imagestream", {
+templateUrl:"views/browse/imagestream.html",
+controller:"ImageStreamController"
+}).when("/project/:project/browse/images/:imagestream/:tag", {
 templateUrl:"views/browse/image.html",
 controller:"ImageController"
 }).when("/project/:project/browse/pods", {
@@ -3798,6 +3801,55 @@ details:b("getErrorDetails")(c)
 e.unwatchAll(h);
 });
 }));
+} ]), angular.module("openshiftConsole").controller("ImageController", [ "$scope", "$routeParams", "DataService", "ProjectsService", "$filter", "ImageStreamsService", function(a, b, c, d, e, f) {
+function g(c, d) {
+var e = f.tagsByName(c);
+a.imageStream = c, a.tagsByName = e, a.tagName = b.tag;
+var g = e[b.tag];
+return g ? (delete a.alerts.load, void i(g, d)) :void (a.alerts.load = {
+type:"error",
+message:"The image tag was not found in the stream."
+});
+}
+a.projectName = b.project, a.imageStream = null, a.image = null, a.tagsByName = {}, a.alerts = {}, a.renderOptions = a.renderOptions || {}, a.renderOptions.hideFilterWidget = !0, a.breadcrumbs = [ {
+title:"Image Streams",
+link:"project/" + b.project + "/browse/images"
+}, {
+title:b.imagestream,
+link:"project/" + b.project + "/browse/images/" + b.imagestream
+}, {
+title:":" + b.tag
+} ], a.emptyMessage = "Loading...", b.tab && (a.selectedTab = {}, a.selectedTab[b.tab] = !0);
+var h = [], i = _.debounce(function(d, f) {
+var g;
+g = d.spec ? d.spec.from.name :b.imagestream + ":" + b.tag, c.get("imagestreamtags", g, f).then(function(b) {
+a.loaded = !0, a.image = b.image;
+}, function(b) {
+a.loaded = !0, a.alerts.load = {
+type:"error",
+message:"The image details could not be loaded.",
+details:"Reason: " + e("getErrorDetails")(b)
+};
+});
+}, 200);
+d.get(b.project).then(_.spread(function(d, f) {
+a.project = d, c.get("imagestreams", b.imagestream, f).then(function(d) {
+a.emptyMessage = "", g(d, f), h.push(c.watchObject("imagestreams", b.imagestream, f, function(b, c) {
+"DELETED" === c && (a.alerts.deleted = {
+type:"warning",
+message:"This image stream has been deleted."
+}), g(b, f);
+}));
+}, function(b) {
+a.loaded = !0, a.alerts.load = {
+type:"error",
+message:"The image stream details could not be loaded.",
+details:"Reason: " + e("getErrorDetails")(b)
+};
+}), a.$on("$destroy", function() {
+c.unwatchAll(h);
+});
+}));
 } ]), angular.module("openshiftConsole").controller("ImagesController", [ "$routeParams", "$scope", "AlertMessageService", "DataService", "ProjectsService", "$filter", "LabelFilter", "Logger", function(a, b, c, d, e, f, g, h) {
 b.projectName = a.project, b.imageStreams = {}, b.unfilteredImageStreams = {}, b.missingStatusTagsByImageStream = {}, b.builds = {}, b.labelSuggestions = {}, b.alerts = b.alerts || {}, b.emptyMessage = "Loading...", c.getAlerts().forEach(function(a) {
 b.alerts[a.name] = a.data;
@@ -3833,17 +3885,17 @@ b.imageStreams = a.select(b.unfilteredImageStreams), f();
 d.unwatchAll(i);
 });
 }));
-} ]), angular.module("openshiftConsole").controller("ImageController", [ "$scope", "$routeParams", "DataService", "ProjectsService", "$filter", "ImageStreamsService", function(a, b, c, d, e, f) {
+} ]), angular.module("openshiftConsole").controller("ImageStreamController", [ "$scope", "$routeParams", "DataService", "ProjectsService", "$filter", "ImageStreamsService", function(a, b, c, d, e, f) {
 a.projectName = b.project, a.imageStream = null, a.tagsByName = {}, a.tagShowOlder = {}, a.alerts = {}, a.renderOptions = a.renderOptions || {}, a.renderOptions.hideFilterWidget = !0, a.breadcrumbs = [ {
 title:"Image Streams",
 link:"project/" + b.project + "/browse/images"
 }, {
-title:b.image
+title:b.imagestream
 } ], a.emptyMessage = "Loading...";
 var g = [];
 d.get(b.project).then(_.spread(function(d, h) {
-a.project = d, c.get("imagestreams", b.image, h).then(function(d) {
-a.loaded = !0, a.imageStream = d, a.emptyMessage = "No tags to show", g.push(c.watchObject("imagestreams", b.image, h, function(b, c) {
+a.project = d, c.get("imagestreams", b.imagestream, h).then(function(d) {
+a.loaded = !0, a.imageStream = d, a.emptyMessage = "No tags to show", g.push(c.watchObject("imagestreams", b.imagestream, h, function(b, c) {
 "DELETED" === c && (a.alerts.deleted = {
 type:"warning",
 message:"This image stream has been deleted."
