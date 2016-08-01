@@ -3193,7 +3193,7 @@ h.warn("Unexpected HPA scaleRef kind", c);
 }
 }), c.hpaByDC = w, c.hpaByRC = x;
 }, N = function(a) {
-return "Succeeded" !== a.status.phase && "Terminated" !== a.status.phase && "Failed" !== a.status.phase && (!B(a, "openshift.io/deployer-pod-for.name") && (!A(a, "openshift.io/build.name") && "slave" !== B(a, "jenkins")));
+return "Succeeded" !== a.status.phase && "Terminated" !== a.status.phase && (!B(a, "openshift.io/deployer-pod-for.name") && (!A(a, "openshift.io/build.name") && "slave" !== B(a, "jenkins")));
 }, O = function() {
 s && r && (c.podsByDeployment = i.groupByReplicationController(s, r), c.monopodsByService = i.groupByService(c.podsByDeployment[""], p, N));
 }, P = {}, Q = function(a) {
