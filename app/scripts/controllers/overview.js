@@ -158,11 +158,10 @@ angular.module('openshiftConsole')
 
     // Filter out monopods we know we don't want to see
     var showMonopod = function(pod) {
-      // Hide pods in the Succeeded, Terminated, and Failed phases since these
+      // Hide pods in the Succeeded & Terminated phases since these
       // are run once pods that are done.
       if (pod.status.phase === 'Succeeded' ||
-          pod.status.phase === 'Terminated' ||
-          pod.status.phase === 'Failed') {
+          pod.status.phase === 'Terminated') {
         // TODO we may want to show pods for X amount of time after they have completed
         return false;
       }
