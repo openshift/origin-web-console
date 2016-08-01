@@ -2135,7 +2135,8 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "</uib-tab>\n" +
     "<uib-tab ng-if=\"metricsAvailable\" heading=\"Metrics\" active=\"selectedTab.metrics\">\n" +
     "\n" +
-    "<metrics ng-if=\"selectedTab.metrics\" deployment=\"deployment\"></metrics>\n" +
+    "<deployment-metrics ng-if=\"selectedTab.metrics && podsForDeployment\" pods=\"podsForDeployment\" containers=\"deployment.spec.template.spec.containers\">\n" +
+    "</deployment-metrics>\n" +
     "</uib-tab>\n" +
     "<uib-tab ng-if=\"deploymentConfigName && logOptions.version && ('deploymentconfigs/log' | canI : 'get')\" active=\"selectedTab.logs\">\n" +
     "<uib-tab-heading>Logs</uib-tab-heading>\n" +
@@ -2658,6 +2659,11 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "<div class=\"resource-details\">\n" +
     "<ng-include src=\" 'views/browse/_deployment-details.html' \"></ng-include>\n" +
     "</div>\n" +
+    "</uib-tab>\n" +
+    "<uib-tab ng-if=\"metricsAvailable\" heading=\"Metrics\" active=\"selectedTab.metrics\">\n" +
+    "\n" +
+    "<deployment-metrics ng-if=\"selectedTab.metrics && podsForDeployment\" pods=\"podsForDeployment\" containers=\"deployment.spec.template.spec.containers\">\n" +
+    "</deployment-metrics>\n" +
     "</uib-tab>\n" +
     "<uib-tab active=\"selectedTab.events\" ng-if=\"'events' | canI : 'watch'\">\n" +
     "<uib-tab-heading>Events</uib-tab-heading>\n" +
@@ -4760,6 +4766,57 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
   );
 
 
+  $templateCache.put('views/directives/deployment-metrics.html',
+    "<div class=\"metrics\">\n" +
+    "<div class=\"metrics-options\">\n" +
+    "<div ng-if=\"containers.length\" class=\"form-group\">\n" +
+    "<label for=\"selectContainer\">Container:</label>\n" +
+    "<div class=\"select-container\">\n" +
+    "<span ng-show=\"containers.length === 1\">\n" +
+    "{{options.selectedContainer.name}}\n" +
+    "</span>\n" +
+    "<select id=\"selectContainer\" ng-show=\"containers.length > 1\" ng-model=\"options.selectedContainer\" ng-options=\"container.name for container in containers track by container.name\">\n" +
+    "</select>\n" +
+    "</div>\n" +
+    "</div>\n" +
+    "<div class=\"form-group\">\n" +
+    "<label for=\"timeRange\">Time Range:</label>\n" +
+    "<select id=\"timeRange\" ng-model=\"options.timeRange\" ng-options=\"range.label for range in options.rangeOptions\" ng-disabled=\"metricsError\">\n" +
+    "</select>\n" +
+    "</div>\n" +
+    "</div>\n" +
+    "<div ng-if=\"!loaded\" class=\"mar-top-md\">Loading...</div>\n" +
+    "<div ng-if=\"loaded && noData && !metricsError\" class=\"mar-top-md\">\n" +
+    "No metrics to display.\n" +
+    "</div>\n" +
+    "<div ng-if=\"metricsError\" class=\"empty-state-message text-center\">\n" +
+    "<h2>\n" +
+    "<span class=\"pficon pficon-error-circle-o\" aria-hidden=\"true\"></span>\n" +
+    "Metrics are not available.\n" +
+    "</h2>\n" +
+    "<p>\n" +
+    "An error occurred getting metrics<span ng-if=\"options.selectedContainer.name\">\n" +
+    "for container {{options.selectedContainer.name}}</span><span ng-if=\"metricsURL\">\n" +
+    "from <a ng-href=\"{{metricsURL}}\">{{metricsURL}}</a></span>.\n" +
+    "</p>\n" +
+    "<p class=\"text-muted\">\n" +
+    "{{metricsError.details}}\n" +
+    "</p>\n" +
+    "</div>\n" +
+    "<div ng-repeat=\"metric in metrics\" ng-if=\"!noData && !metricsError\" class=\"metrics-full\">\n" +
+    "<h3 class=\"metric-label\">\n" +
+    "{{metric.label}}\n" +
+    "<small ng-if=\"showAverage\">\n" +
+    "Average per pod\n" +
+    "</small>\n" +
+    "</h3>\n" +
+    "\n" +
+    "<div ng-attr-id=\"{{metric.chartPrefix + uniqueID}}-sparkline\" class=\"metrics-sparkline\"></div>\n" +
+    "</div>\n" +
+    "</div>"
+  );
+
+
   $templateCache.put('views/directives/edit-link.html',
     "<a href=\"\" ng-click=\"openEditModal()\" role=\"button\">Edit YAML</a>"
   );
@@ -5320,8 +5377,8 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "</select>\n" +
     "</div>\n" +
     "</div>\n" +
-    "<div ng-if=\"!loaded\">Loading...</div>\n" +
-    "<div ng-if=\"loaded && noData && !metricsError\">No metrics to display.</div>\n" +
+    "<div ng-if=\"!loaded\" class=\"mar-top-md\">Loading...</div>\n" +
+    "<div ng-if=\"loaded && noData && !metricsError\" class=\"mar-top-md\">No metrics to display.</div>\n" +
     "<div ng-if=\"metricsError\" class=\"empty-state-message text-center\">\n" +
     "<h2>\n" +
     "<span class=\"pficon pficon-error-circle-o\" aria-hidden=\"true\"></span>\n" +
@@ -7324,7 +7381,8 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "</div>\n" +
     "</log-viewer>\n" +
     "<div class=\"mar-top-lg\" ng-if=\"metricsAvailable\">\n" +
-    "<metrics deployment=\"deployment\"></metrics>\n" +
+    "<deployment-metrics pods=\"podsByDeployment[deployment.metadata.name]\" containers=\"deployment.spec.template.spec.containers\">\n" +
+    "</deployment-metrics>\n" +
     "</div>\n" +
     "</div>\n" +
     "</div>\n" +

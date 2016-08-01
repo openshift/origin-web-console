@@ -144,6 +144,21 @@ angular.module("openshiftConsole")
       return regex;
     }
 
+    // values must not contain regex special characters.
+    // Otherwise use _.map(values, _.escapeRegExp)
+    function matchValues(values) {
+      return values.join("|");
+    }
+
+    function getStatsQueryURL() {
+      return getMetricsURL().then(function(metricsURL) {
+        if (!metricsURL) {
+          return metricsURL;
+        }
+        return metricsURL + "/metrics/stats/query";
+      });
+    }
+
     function getRequestURL(config) {
       return getMetricsURL().then(function(metricsURL) {
         var template;
@@ -186,7 +201,7 @@ angular.module("openshiftConsole")
             metric: config.metric,
             type: type
           }).toString();
-        }        
+        }
 
         // Otherwise, get metrics for a pod.
         template = metricsURL + podURLTemplateByMetric[config.metric];
@@ -229,6 +244,84 @@ angular.module("openshiftConsole")
       });
     };
 
+    var getMetricInfo = function(metricID) {
+      // Example descriptor:
+      //   ruby-helloworld/6f7881e1-52c4-11e6-a5dc-080027893417/memory/usage
+      var segments = metricID.split('/');
+      return {
+        podUID: segments[1],
+        descriptor: segments[2] + '/' + segments[3]
+      };
+    };
+
+    var query = function(url, data, config) {
+      var podsByUID = _.indexBy(config.pods, 'metadata.uid');
+      return $http.post(url, data, {
+        auth: {},
+        headers: {
+          Accept: 'application/json',
+          'Content-Type': 'application/json',
+          'Hawkular-Tenant': config.namespace
+        }
+      }).then(function(response) {
+        var result = {};
+        var processResponse = function(data, metricID) {
+          var info = getMetricInfo(metricID);
+          var podName = _.get(podsByUID, [info.podUID, 'metadata', 'name']);
+          var normalizedData = normalize(data, _.assign(config, {
+            metric: info.descriptor
+          }));
+          _.set(result, [info.descriptor, podName], normalizedData);
+        };
+
+        _.each(response.data.counter, processResponse);
+        _.each(response.data.gauge, processResponse);
+
+        return result;
+      });
+    };
+
+    // Network metrics are collected at the pod level.
+    var podQueryTemplate = _.template("descriptor_name:network/tx|network/rx,type:pod,pod_id:<%= uid %>");
+    var containerQueryTemplate = _.template("descriptor_name:memory/usage|cpu/usage,type:pod_container,pod_id:<%= uid %>,container_name:<%= containerName %>");
+    var getPodMetrics = function(config) {
+      return getStatsQueryURL().then(function(url) {
+        var request = {
+          bucketDuration: config.bucketDuration,
+          start: config.start
+        };
+
+        if (config.end) {
+          request.end = config.end;
+        }
+
+        var promises = [];
+        var matchPods = matchValues(_.map(config.pods, 'metadata.uid'));
+        var containerQuery = _.assign({
+          tags: containerQueryTemplate({
+            uid: matchPods,
+            containerName: config.containerName
+          })
+        }, request);
+        promises.push(query(url, containerQuery, config));
+
+        var podQuery = _.assign({
+          tags: podQueryTemplate({
+            uid: matchPods
+          })
+        }, request);
+        promises.push(query(url, podQuery, config));
+        return $q.all(promises).then(function(results) {
+          var result = {};
+          _.each(results, function(next) {
+            _.assign(result, next);
+          });
+          return result;
+        });
+      });
+    };
+
+
     return {
       // Check if the metrics service is available. The service is considered
       // available if a metrics URL is set. Returns a promise resolved with a
@@ -239,12 +332,13 @@ angular.module("openshiftConsole")
 
       // Get metrics data for a container.
       //
-      // config keyword arguments
+      // config keyword arguments (only one of pod or deployment can be specified)
       //   pod:            the pod object
+      //   deployment:     the replication controller object
       //   containerName:  the container name
       //   metric:         the metric to check, e.g. "memory/usage"
       //   start:          start time in millis
-      //   end:            end time in millis
+      //   end:            end time in millis (optional)
       //
       // Returns a promise resolved with the metrics data.
       get: function(config) {
@@ -276,6 +370,17 @@ angular.module("openshiftConsole")
             });
           });
         });
-      }
+      },
+
+      // Get metrics data for a collection of pods (memory, CPU, network send and received).
+      //
+      // config keyword arguments
+      //   pods:           the pods collection (hash or array)
+      //   containerName:  the container name
+      //   start:          start time in millis
+      //   end:            end time in millis (optional)
+      //
+      // Returns a promise resolved with the metrics data.
+      getPodMetrics: getPodMetrics,
     };
   });

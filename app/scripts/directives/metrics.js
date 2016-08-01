@@ -6,6 +6,7 @@ angular.module('openshiftConsole')
                                  $timeout,
                                  $q,
                                  ChartsService,
+                                 ConversionService,
                                  MetricsService,
                                  usageValueFilter) {
     return {
@@ -42,23 +43,6 @@ angular.module('openshiftConsole')
         // Set to true when the route changes so we don't update charts that no longer exist.
         var destroyed = false;
 
-        function bytesToMiB(value) {
-          if (!value) {
-            return value;
-          }
-
-          return _.round(value / (1024 * 1024));
-        }
-
-        function bytesToKiB(value) {
-          if (!value) {
-            return value;
-          }
-
-          // Round to one decimal place
-          return _.round(value / 1024, 1);
-        }
-
         scope.uniqueID = _.uniqueId('metrics-chart-');
 
         // Metrics to display.
@@ -68,7 +52,7 @@ angular.module('openshiftConsole')
             label: "Memory",
             units: "MiB",
             chartPrefix: "memory-",
-            convert: bytesToMiB,
+            convert: ConversionService.bytesToMiB,
             containerMetric: true,
             // The sparkline y-axis will always extend to at least this value.
             smallestYAxisMax: 100,
@@ -105,8 +89,8 @@ angular.module('openshiftConsole')
             label: "Network",
             units: "KiB/s",
             chartPrefix: "network-",
-            chartType: "line",
-            convert: bytesToKiB,
+            chartType: "spline",
+            convert: ConversionService.bytesToKiB,
             // The sparkline y-axis will always extend to at least this value.
             // Avoid spikey charts when rounding very small network usage values.
             smallestYAxisMax: 1,
@@ -154,7 +138,7 @@ angular.module('openshiftConsole')
           }]
         };
         // Show last hour by default.
-        scope.options.timeRange = scope.options.rangeOptions[0];
+        scope.options.timeRange = _.head(scope.options.rangeOptions);
 
         var createDonutConfig = function(metric) {
           var chartID = '#' + metric.chartPrefix + scope.uniqueID + '-donut';
@@ -203,12 +187,12 @@ angular.module('openshiftConsole')
                 // With default padding you can have negative axis tick values.
                 padding: {
                   left: 0,
-                  top: 0,
+                  top: compact ? 5 : 20,
                   bottom: 0
                 },
                 tick: {
                   format: function(value) {
-                    return d3.round(value, 2);
+                    return d3.round(value, 3);
                   }
                 }
               }
@@ -220,13 +204,13 @@ angular.module('openshiftConsole')
               show: false
             },
             size: {
-              height: scope.sparklineHeight || (compact ? 35 : 160),
+              height: scope.sparklineHeight || (compact ? 35 : 175),
               width: scope.sparklineWidth,
             },
             tooltip: {
               format: {
                 value: function(value) {
-                  return value + " " + metric.units;
+                  return d3.round(value, 2) + " " + metric.units;
                 }
               }
             }
@@ -244,7 +228,7 @@ angular.module('openshiftConsole')
             var memLimit = getMemoryLimit(container);
             if (memLimit) {
               // Convert to MiB. usageValueFilter returns bytes.
-              return bytesToMiB(usageValueFilter(memLimit));
+              return ConversionService.bytesToMiB(usageValueFilter(memLimit));
             }
             break;
           case 'cpu/usage':
@@ -311,6 +295,10 @@ angular.module('openshiftConsole')
               }
             });
 
+            dataset.used = _.round(dataset.used);
+            dataset.total = _.round(dataset.total);
+            dataset.available = _.round(dataset.available);
+
             // Donut
             var donutConfig, donutData;
             if (dataset.total) {
@@ -355,7 +343,7 @@ angular.module('openshiftConsole')
           }
 
           var sparklineConfig, sparklineData = {
-            type: metric.chartType || 'area',
+            type: metric.chartType || (compact ? 'area-spline' : 'spline'),
             x: 'dates',
             columns: columns
           };

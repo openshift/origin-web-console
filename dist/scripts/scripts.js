@@ -2328,8 +2328,8 @@ b[a.tag] = b[a.tag] || {}, b[a.tag].name = a.tag, b[a.tag].status = angular.copy
 };
 }), angular.module("openshiftConsole").factory("MetricsService", [ "$filter", "$http", "$q", "APIDiscovery", function(a, b, c, d) {
 function e() {
-return angular.isDefined(l) ? c.when(l) :d.getMetricsURL().then(function(a) {
-return l = (a || "").replace(/\/$/, "");
+return angular.isDefined(n) ? c.when(n) :d.getMetricsURL().then(function(a) {
+return n = (a || "").replace(/\/$/, "");
 });
 }
 function f(a, b) {
@@ -2365,10 +2365,18 @@ b += "(?=.*\\b" + c + ":" + a + "\\b)";
 }), b += ".*$";
 }
 function k(a) {
+return a.join("|");
+}
+function l() {
+return e().then(function(a) {
+return a ? a + "/metrics/stats/query" :a;
+});
+}
+function m(a) {
 return e().then(function(b) {
 var c, d;
 if (a.deployment) {
-switch (c = b + y[a.metric], a.metric) {
+switch (c = b + A[a.metric], a.metric) {
 case "network/rx":
 case "network/tx":
 d = "pod";
@@ -2385,7 +2393,7 @@ type:d
 }).toString();
 }
 if (a.stacked) {
-switch (c = b + x[a.metric], a.metric) {
+switch (c = b + z[a.metric], a.metric) {
 case "network/rx":
 case "network/tx":
 d = "pod";
@@ -2400,42 +2408,92 @@ metric:a.metric,
 type:d
 }).toString();
 }
-return c = b + w[a.metric], URI.expand(c, {
+return c = b + y[a.metric], URI.expand(c, {
 podUID:a.pod.metadata.uid,
 containerName:a.containerName,
 metric:a.metric
 }).toString();
 });
 }
-var l, m, n, o = "/counters/{containerName}%2F{podUID}%2F{metric}/data", p = "/gauges/{containerName}%2F{podUID}%2F{metric}/data", q = "?stacked=true&tags=descriptor_name:{metric},type:{type},pod_name:{podName}", r = "/counters/data" + q, s = "/gauges/data" + q, t = "?stacked=true&tags=descriptor_name:{metric},type:{type},labels:{labels}", u = "/counters/data" + t, v = "/gauges/data" + t, w = {
-"cpu/usage":o,
-"memory/usage":p,
-"network/rx":o,
-"network/tx":o
-}, x = {
-"cpu/usage":r,
-"memory/usage":s,
-"network/rx":r,
-"network/tx":r
-}, y = {
-"cpu/usage":u,
-"memory/usage":v,
-"network/rx":u,
-"network/tx":u
-}, z = function(a) {
+var n, o, p, q = "/counters/{containerName}%2F{podUID}%2F{metric}/data", r = "/gauges/{containerName}%2F{podUID}%2F{metric}/data", s = "?stacked=true&tags=descriptor_name:{metric},type:{type},pod_name:{podName}", t = "/counters/data" + s, u = "/gauges/data" + s, v = "?stacked=true&tags=descriptor_name:{metric},type:{type},labels:{labels}", w = "/counters/data" + v, x = "/gauges/data" + v, y = {
+"cpu/usage":q,
+"memory/usage":r,
+"network/rx":q,
+"network/tx":q
+}, z = {
+"cpu/usage":t,
+"memory/usage":u,
+"network/rx":t,
+"network/tx":t
+}, A = {
+"cpu/usage":w,
+"memory/usage":x,
+"network/rx":w,
+"network/tx":w
+}, B = function(a) {
 return e().then(function(c) {
-return !!c && (!a || (!!m || !n && b.get(c).then(function() {
-return m = !0, !0;
+return !!c && (!a || (!!o || !p && b.get(c).then(function() {
+return o = !0, !0;
 }, function() {
-return n = !0, !1;
+return p = !0, !1;
 })));
+});
+}, C = function(a) {
+var b = a.split("/");
+return {
+podUID:b[1],
+descriptor:b[2] + "/" + b[3]
+};
+}, D = function(a, c, d) {
+var e = _.indexBy(d.pods, "metadata.uid");
+return b.post(a, c, {
+auth:{},
+headers:{
+Accept:"application/json",
+"Content-Type":"application/json",
+"Hawkular-Tenant":d.namespace
+}
+}).then(function(a) {
+var b = {}, c = function(a, c) {
+var f = C(c), g = _.get(e, [ f.podUID, "metadata", "name" ]), h = i(a, _.assign(d, {
+metric:f.descriptor
+}));
+_.set(b, [ f.descriptor, g ], h);
+};
+return _.each(a.data.counter, c), _.each(a.data.gauge, c), b;
+});
+}, E = _.template("descriptor_name:network/tx|network/rx,type:pod,pod_id:<%= uid %>"), F = _.template("descriptor_name:memory/usage|cpu/usage,type:pod_container,pod_id:<%= uid %>,container_name:<%= containerName %>"), G = function(a) {
+return l().then(function(b) {
+var d = {
+bucketDuration:a.bucketDuration,
+start:a.start
+};
+a.end && (d.end = a.end);
+var e = [], f = k(_.map(a.pods, "metadata.uid")), g = _.assign({
+tags:F({
+uid:f,
+containerName:a.containerName
+})
+}, d);
+e.push(D(b, g, a));
+var h = _.assign({
+tags:E({
+uid:f
+})
+}, d);
+return e.push(D(b, h, a)), c.all(e).then(function(a) {
+var b = {};
+return _.each(a, function(a) {
+_.assign(b, a);
+}), b;
+});
 });
 };
 return {
-isAvailable:z,
+isAvailable:B,
 getMetricsURL:e,
 get:function(a) {
-return k(a).then(function(c) {
+return m(a).then(function(c) {
 if (!c) return null;
 var d = {
 bucketDuration:a.bucketDuration,
@@ -2455,7 +2513,8 @@ data:i(b.data, a)
 });
 });
 });
-}
+},
+getPodMetrics:G
 };
 } ]), angular.module("openshiftConsole").factory("StorageService", function() {
 return {
@@ -2974,6 +3033,16 @@ d = _.filter(d, c);
 return {
 filterForKeywords:b,
 generateKeywords:a
+};
+}), angular.module("openshiftConsole").factory("ConversionService", function() {
+var a = function(a) {
+return a ? a / 1048576 :a;
+}, b = function(a) {
+return a ? a / 1024 :a;
+};
+return {
+bytesToMiB:a,
+bytesToKiB:b
 };
 }), angular.module("openshiftConsole").controller("ProjectsController", [ "$scope", "$route", "$timeout", "$filter", "$location", "DataService", "AuthService", "AlertMessageService", "Logger", "hashSizeFilter", function(a, b, c, d, e, f, g, h, i, j) {
 var k = [];
@@ -7784,7 +7853,7 @@ b(c.resource, c.kind);
 }, b.prototype.removeResourceChangedCallback = function(a) {
 this.callbacks.remove(a);
 }, new b();
-} ]), angular.module("openshiftConsole").directive("metrics", [ "$interval", "$parse", "$timeout", "$q", "ChartsService", "MetricsService", "usageValueFilter", function(a, b, c, d, e, f, g) {
+} ]), angular.module("openshiftConsole").directive("metrics", [ "$interval", "$parse", "$timeout", "$q", "ChartsService", "ConversionService", "MetricsService", "usageValueFilter", function(a, b, c, d, e, f, g, h) {
 return {
 restrict:"E",
 scope:{
@@ -7798,29 +7867,23 @@ includedMetrics:"=?"
 templateUrl:function(a, b) {
 return "compact" === b.profile ? "views/directives/metrics-compact.html" :"views/directives/metrics.html";
 },
-link:function(h) {
-function i(a) {
-return a ? _.round(a / 1048576) :a;
-}
+link:function(i) {
 function j(a) {
-return a ? _.round(a / 1024, 1) :a;
-}
-function k(a) {
-if (!h.pod) return null;
-var b = h.options.selectedContainer;
+if (!i.pod) return null;
+var b = i.options.selectedContainer;
 switch (a) {
 case "memory/usage":
-var c = w(b);
-if (c) return i(g(c));
+var c = v(b);
+if (c) return f.bytesToMiB(h(c));
 break;
 
 case "cpu/usage":
-var d = x(b);
-if (d) return _.round(1e3 * g(d));
+var d = w(b);
+if (d) return _.round(1e3 * h(d));
 }
 return null;
 }
-function l(a) {
+function k(a) {
 var b, d = {}, e = _.some(a.datasets, function(a) {
 return !a.data;
 });
@@ -7829,7 +7892,7 @@ a.totalUsed = 0;
 var f = 0;
 angular.forEach(a.datasets, function(e) {
 var g = e.id, h = e.data;
-b = [ "dates" ], d[g] = [ e.label || g ], e.total = k(g);
+b = [ "dates" ], d[g] = [ e.label || g ], e.total = j(g);
 var i = _.last(h).value;
 isNaN(i) && (i = 0), a.convert && (i = a.convert(i)), e.used = i, e.total && (e.available = Math.max(e.total - e.used, 0)), a.totalUsed += e.used, angular.forEach(h, function(c) {
 if (b.push(c.start), void 0 === c.value || null === c.value) d[g].push(c.value); else {
@@ -7846,8 +7909,8 @@ d[g].push(d3.round(e));
 }
 f = Math.max(e, f);
 }
-});
-var j, l;
+}), e.used = _.round(e.used), e.total = _.round(e.total), e.available = _.round(e.available);
+var k, l;
 e.total && (l = {
 type:"donut",
 columns:[ [ "Used", e.used ], [ "Available", e.available ] ],
@@ -7855,96 +7918,96 @@ colors:{
 Used:"#0088ce",
 Available:"#d1d1d1"
 }
-}, u[g] ? u[g].load(l) :(j = C(a), j.data = l, c(function() {
-u[g] = c3.generate(j);
+}, t[g] ? t[g].load(l) :(k = B(a), k.data = l, c(function() {
+t[g] = c3.generate(k);
 })));
 }), a.totalUsed = _.round(a.totalUsed, 1);
 var g, h = [ b ].concat(_.values(d));
 f < a.smallestYAxisMax && (g = a.smallestYAxisMax);
-var i, j = {
-type:a.chartType || "area",
+var i, k = {
+type:a.chartType || (x ? "area-spline" :"spline"),
 x:"dates",
 columns:h
 }, l = a.chartPrefix + "sparkline";
-v[l] ? (v[l].load(j), v[l].axis.max({
+u[l] ? (u[l].load(k), u[l].axis.max({
 y:g
-})) :(i = D(a), i.axis.y.max = g, i.data = j, a.chartDataColors && (i.color = {
+})) :(i = C(a), i.axis.y.max = g, i.data = k, a.chartDataColors && (i.color = {
 pattern:a.chartDataColors
 }), c(function() {
-B || (v[l] = c3.generate(i));
+A || (u[l] = c3.generate(i));
 }));
 }
 }
+function l() {
+return x ? 9e5 :60 * i.options.timeRange.value * 1e3;
+}
 function m() {
-return y ? 9e5 :60 * h.options.timeRange.value * 1e3;
+return x ? "60s" :Math.floor(l() / 60) + "ms";
 }
-function n() {
-return y ? "60s" :Math.floor(m() / 60) + "ms";
-}
-function o(a, b, c) {
+function n(a, b, c) {
 var d, e = {
 metric:b.id,
-bucketDuration:n()
+bucketDuration:m()
 };
-return b.data && b.data.length ? (d = _.last(b.data), e.start = d.end) :e.start = c, h.pod ? _.assign(e, {
-namespace:h.pod.metadata.namespace,
-pod:h.pod,
-containerName:a.containerMetric ? !y && h.options.selectedContainer.name :"pod",
+return b.data && b.data.length ? (d = _.last(b.data), e.start = d.end) :e.start = c, i.pod ? _.assign(e, {
+namespace:i.pod.metadata.namespace,
+pod:i.pod,
+containerName:a.containerMetric ? !x && i.options.selectedContainer.name :"pod",
 stacked:!0
-}) :h.deployment ? _.assign(e, {
-namespace:h.deployment.metadata.namespace,
-deployment:h.deployment
+}) :i.deployment ? _.assign(e, {
+namespace:i.deployment.metadata.namespace,
+deployment:i.deployment
 }) :null;
 }
-function p() {
-return !h.metricsError && (!!h.deployment || h.pod && (y || _.get(h, "options.selectedContainer")));
+function o() {
+return !i.metricsError && (!!i.deployment || i.pod && (x || _.get(i, "options.selectedContainer")));
 }
-function q(a, b, c) {
-h.noData = !1;
+function p(a, b, c) {
+i.noData = !1;
 var d = _.initial(c.data);
 return b.data ? void (b.data = _.chain(b.data).takeRightWhile(function(b) {
 return b.start >= a;
 }).concat(d).value()) :void (b.data = d);
 }
-function r() {
-if (!z && p()) {
+function q() {
+if (!y && o()) {
 var a = Date.now();
-t = a;
-var b = a - m();
-angular.forEach(h.metrics, function(a) {
+s = a;
+var b = a - l();
+angular.forEach(i.metrics, function(a) {
 var c = [];
 angular.forEach(a.datasets, function(d) {
-var e = o(a, d, b);
-e && c.push(f.get(e));
+var e = n(a, d, b);
+e && c.push(g.get(e));
 }), d.all(c).then(function(c) {
-B || (angular.forEach(c, function(c) {
+A || (angular.forEach(c, function(c) {
 if (c) {
 var d = _.find(a.datasets, {
 id:c.metricID
 });
-q(b, d, c);
+p(b, d, c);
 }
-}), l(a));
+}), k(a));
 }, function(a) {
-B || angular.forEach(a, function(a) {
-h.metricsError = {
+A || angular.forEach(a, function(a) {
+i.metricsError = {
 status:_.get(a, "status", 0),
 details:_.get(a, "data.errorMsg") || _.get(a, "statusText") || "Status code " + _.get(a, "status", 0)
 };
 });
 })["finally"](function() {
-h.loaded = !0;
+i.loaded = !0;
 });
 });
 }
 }
-h.includedMetrics = h.includedMetrics || [ "cpu", "memory", "network" ];
-var s, t, u = {}, v = {}, w = b("resources.limits.memory"), x = b("resources.limits.cpu"), y = "compact" === h.profile, z = y, A = 3e4, B = !1;
-h.uniqueID = _.uniqueId("metrics-chart-"), h.metrics = [], _.includes(h.includedMetrics, "memory") && h.metrics.push({
+i.includedMetrics = i.includedMetrics || [ "cpu", "memory", "network" ];
+var r, s, t = {}, u = {}, v = b("resources.limits.memory"), w = b("resources.limits.cpu"), x = "compact" === i.profile, y = x, z = 3e4, A = !1;
+i.uniqueID = _.uniqueId("metrics-chart-"), i.metrics = [], _.includes(i.includedMetrics, "memory") && i.metrics.push({
 label:"Memory",
 units:"MiB",
 chartPrefix:"memory-",
-convert:i,
+convert:f.bytesToMiB,
 containerMetric:!0,
 smallestYAxisMax:100,
 datasets:[ {
@@ -7952,7 +8015,7 @@ id:"memory/usage",
 label:"Memory",
 data:[]
 } ]
-}), _.includes(h.includedMetrics, "cpu") && h.metrics.push({
+}), _.includes(i.includedMetrics, "cpu") && i.metrics.push({
 label:"CPU",
 units:"millicores",
 chartPrefix:"cpu-",
@@ -7964,12 +8027,12 @@ id:"cpu/usage",
 label:"CPU",
 data:[]
 } ]
-}), _.includes(h.includedMetrics, "network") && h.metrics.push({
+}), _.includes(i.includedMetrics, "network") && i.metrics.push({
 label:"Network",
 units:"KiB/s",
 chartPrefix:"network-",
-chartType:"line",
-convert:j,
+chartType:"spline",
+convert:f.bytesToKiB,
 smallestYAxisMax:1,
 datasets:[ {
 id:"network/tx",
@@ -7980,9 +8043,9 @@ id:"network/rx",
 label:"Received",
 data:[]
 } ]
-}), h.loaded = !1, h.noData = !0, f.getMetricsURL().then(function(a) {
-h.metricsURL = a;
-}), h.options = {
+}), i.loaded = !1, i.noData = !0, g.getMetricsURL().then(function(a) {
+i.metricsURL = a;
+}), i.options = {
 rangeOptions:[ {
 label:"Last hour",
 value:60
@@ -7999,9 +8062,9 @@ value:4320
 label:"Last week",
 value:10080
 } ]
-}, h.options.timeRange = h.options.rangeOptions[0];
-var C = function(a) {
-var b = "#" + a.chartPrefix + h.uniqueID + "-donut";
+}, i.options.timeRange = _.head(i.options.rangeOptions);
+var B = function(a) {
+var b = "#" + a.chartPrefix + i.uniqueID + "-donut";
 return {
 bindto:b,
 onrendered:function() {
@@ -8021,12 +8084,12 @@ height:175,
 widht:175
 }
 };
-}, D = function(a) {
+}, C = function(a) {
 return {
-bindto:"#" + a.chartPrefix + h.uniqueID + "-sparkline",
+bindto:"#" + a.chartPrefix + i.uniqueID + "-sparkline",
 axis:{
 x:{
-show:!y,
+show:!x,
 type:"timeseries",
 padding:{
 left:0,
@@ -8038,54 +8101,267 @@ format:"%a %H:%M"
 }
 },
 y:{
-show:!y,
+show:!x,
 label:a.units,
 min:0,
 padding:{
 left:0,
-top:0,
+top:x ? 5 :20,
 bottom:0
 },
 tick:{
 format:function(a) {
-return d3.round(a, 2);
+return d3.round(a, 3);
 }
 }
 }
 },
 legend:{
-show:a.datasets.length > 1 && !y
+show:a.datasets.length > 1 && !x
 },
 point:{
 show:!1
 },
 size:{
-height:h.sparklineHeight || (y ? 35 :160),
-width:h.sparklineWidth
+height:i.sparklineHeight || (x ? 35 :175),
+width:i.sparklineWidth
 },
 tooltip:{
 format:{
 value:function(b) {
-return b + " " + a.units;
+return d3.round(b, 2) + " " + a.units;
 }
 }
 }
 };
 };
-h.$watch("options", function() {
-_.each(h.metrics, function(a) {
+i.$watch("options", function() {
+_.each(i.metrics, function(a) {
 _.each(a.datasets, function(a) {
 delete a.data;
 });
-}), delete h.metricsError, r();
-}, !0), s = a(r, A, !1), h.updateInView = function(a) {
-z = !a, a && (!t || Date.now() > t + A) && r();
-}, h.$on("$destroy", function() {
-s && (a.cancel(s), s = null), angular.forEach(u, function(a) {
+}), delete i.metricsError, q();
+}, !0), r = a(q, z, !1), i.updateInView = function(a) {
+y = !a, a && (!s || Date.now() > s + z) && q();
+}, i.$on("$destroy", function() {
+r && (a.cancel(r), r = null), angular.forEach(t, function(a) {
 a.destroy();
-}), u = null, angular.forEach(v, function(a) {
+}), t = null, angular.forEach(u, function(a) {
 a.destroy();
-}), v = null, B = !0;
+}), u = null, A = !0;
+});
+}
+};
+} ]), angular.module("openshiftConsole").directive("deploymentMetrics", [ "$interval", "$parse", "$timeout", "$q", "ChartsService", "ConversionService", "MetricsService", function(a, b, c, d, e, f, g) {
+return {
+restrict:"E",
+scope:{
+pods:"=",
+containers:"="
+},
+templateUrl:"views/directives/deployment-metrics.html",
+link:function(b) {
+function d(a) {
+return null === a.value || void 0 === a.value;
+}
+function e(a) {
+var b = {}, c = [ "Date" ], e = [ "Average Usage" ], f = [ c, e ], g = function(a) {
+var c = "" + a.start;
+return b[c] || (b[c] = {
+total:0,
+count:0
+}), b[c];
+};
+return _.each(v[a.descriptor], function(a) {
+_.each(a, function(a) {
+var b = g(a);
+(!u || u < a.end) && (u = a.end), d(a) || (b.total += a.value, b.count = b.count + 1);
+});
+}), _.each(b, function(b, d) {
+var f;
+f = b.count ? b.total / b.count :null, c.push(Number(d)), e.push(a.convert ? a.convert(f) :f);
+}), f;
+}
+function h(a, c) {
+var f = [], g = {
+type:"spline"
+};
+return b.showAverage ? (_.each(a[c.descriptor], function(a, b) {
+n(c.descriptor, b, a);
+}), g.type = "area-spline", g.x = "Date", g.columns = e(c), g) :(_.each(a[c.descriptor], function(a, b) {
+n(c.descriptor, b, a);
+var e = b + "-dates";
+_.set(g, [ "xs", b ], e);
+var h = [ e ], i = [ b ];
+f.push(h), f.push(i), _.each(v[c.descriptor][b], function(a) {
+if (h.push(a.start), (!u || u < a.end) && (u = a.end), d(a)) i.push(a.value); else {
+var b = c.convert ? c.convert(a.value) :a.value;
+i.push(b);
+}
+});
+}), g.columns = _.sortBy(f, function(a) {
+return a[0];
+}), g);
+}
+function i(a) {
+t || (b.loaded = !0, b.showAverage = _.size(b.pods) > 5, _.each(b.metrics, function(d) {
+var e, f = h(a, d);
+r[d.descriptor] ? (r[d.descriptor].load(f), b.showAverage ? r[d.descriptor].legend.hide() :r[d.descriptor].legend.show()) :(e = w(d), e.data = f, c(function() {
+t || (r[d.descriptor] = c3.generate(e));
+}));
+}));
+}
+function j() {
+return 60 * b.options.timeRange.value * 1e3;
+}
+function k() {
+return Math.floor(j() / 30) + "ms";
+}
+function l() {
+var a = _.find(b.pods, "metadata.namespace");
+if (a) {
+var c = {
+pods:b.pods,
+containerName:b.options.selectedContainer.name,
+namespace:a.metadata.namespace,
+bucketDuration:k()
+};
+return u ? c.start = u :c.start = Date.now() - j(), c;
+}
+}
+function m() {
+var a = _.isEmpty(b.pods);
+return a ? (b.loaded = !0, !1) :!b.metricsError;
+}
+function n(a, c, d) {
+b.noData = !1;
+var e = _.initial(d), f = _.get(v, [ a, c ]);
+if (!f) return void _.set(v, [ a, c ], e);
+var g = Date.now() - j();
+f = _.takeRightWhile(f, function(a) {
+return a.start >= g;
+});
+var h = f.concat(e);
+_.set(v, [ a, c ], h);
+}
+function o(a) {
+b.loaded = !0, b.metricsError = {
+status:_.get(a, "status", 0),
+details:_.get(a, "data.errorMsg") || _.get(a, "statusText") || "Status code " + _.get(a, "status", 0)
+};
+}
+function p() {
+if (m()) {
+var a = l();
+g.getPodMetrics(a).then(i, o);
+}
+}
+var q, r = {}, s = 6e4, t = !1;
+b.uniqueID = _.uniqueId("metrics-");
+var u, v = {};
+b.metrics = [ {
+label:"Memory",
+units:"MiB",
+chartPrefix:"memory-",
+convert:f.bytesToMiB,
+descriptor:"memory/usage",
+type:"pod_container"
+}, {
+label:"CPU",
+units:"millicores",
+chartPrefix:"cpu-",
+descriptor:"cpu/usage",
+type:"pod_container"
+}, {
+label:"Network (Sent)",
+units:"KiB/s",
+chartPrefix:"network-sent-",
+convert:f.bytesToKiB,
+descriptor:"network/tx",
+type:"pod"
+}, {
+label:"Network (Received)",
+units:"KiB/s",
+chartPrefix:"network-received-",
+convert:f.bytesToKiB,
+descriptor:"network/rx",
+type:"pod"
+} ], b.loaded = !1, b.noData = !0, g.getMetricsURL().then(function(a) {
+b.metricsURL = a;
+}), b.options = {
+rangeOptions:[ {
+label:"Last hour",
+value:60
+}, {
+label:"Last 4 hours",
+value:240
+}, {
+label:"Last day",
+value:1440
+}, {
+label:"Last 3 days",
+value:4320
+}, {
+label:"Last week",
+value:10080
+} ]
+}, b.options.timeRange = _.head(b.options.rangeOptions), b.options.selectedContainer = _.head(b.containers);
+var w = function(a) {
+return {
+bindto:"#" + a.chartPrefix + b.uniqueID + "-sparkline",
+axis:{
+x:{
+show:!0,
+type:"timeseries",
+padding:{
+left:0,
+bottom:0
+},
+tick:{
+type:"timeseries",
+format:"%a %H:%M"
+}
+},
+y:{
+show:!0,
+label:a.units,
+min:0,
+padding:{
+left:0,
+bottom:0,
+top:20
+},
+tick:{
+format:function(a) {
+return d3.round(a, 3);
+}
+}
+}
+},
+legend:{
+show:!b.showAverage
+},
+point:{
+show:!1
+},
+size:{
+height:175
+},
+tooltip:{
+format:{
+value:function(b) {
+return d3.round(b, 2) + " " + a.units;
+}
+}
+}
+};
+};
+b.$watch("options", function() {
+v = {}, u = null, delete b.metricsError, p();
+}, !0), q = a(p, s, !1), b.$on("$destroy", function() {
+q && (a.cancel(q), q = null), angular.forEach(r, function(a) {
+a.destroy();
+}), r = null, t = !0;
 });
 }
 };
