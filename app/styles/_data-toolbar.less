@@ -7,10 +7,25 @@
  .flex(@columns: 1 1 0%);
  .flex-wrap(@wrap: wrap);
  padding: 5px 0;
+ .checkbox {
+   margin-top: 3px;
+   margin-bottom: 0;
+ }
+ .data-toolbar-dropdown {
+    width: 150px;
+ }
  .data-toolbar-filter {
    .flex-display(@display: flex);
    .flex(@columns: 1 1 0%);
-    min-width: 0;
+    min-width: 75px;
+    .form-group {
+      margin-bottom: 0;
+      margin-right: 10px;
+      min-width: 75px;
+      input {
+        width: 100%;
+      }
+    }
  }
  .data-toolbar-views {
    .flex(@columns: 0 1 auto);

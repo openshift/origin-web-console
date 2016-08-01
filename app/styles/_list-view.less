@@ -1,0 +1,120 @@
+//
+// List view
+// --------------------------------------------------
+
+.list-group-expanded-section {
+  border: 1px solid @table-border-color;
+  border-top: 0;
+  padding: 15px;
+  &.expanded + .list-group-item-expandable,
+  + .list-group-item-expandable.expanded {
+    border-top: 0;
+  }
+  .log-fixed-height.empty-state-message {
+    margin-bottom: 0;
+    h2 {
+      margin-top: 0;
+    }
+  }
+}
+
+.list-group-item {
+  padding-left: 10px;
+  padding-right: 10px;
+}
+
+.list-view-pf-checkbox {
+  border-right-color: #ddd;
+  font-size: 22px;
+  margin-bottom: (@grid-gutter-width / 4);
+  margin-top: (@grid-gutter-width / 4);
+  width: 25px;
+  a {
+    color: #555;
+  }
+}
+
+.list-group-item-expandable {
+  cursor: pointer;
+  border: 1px solid #eaeaea;
+  border-left-color: transparent;
+  border-right-color: transparent;
+  &.expanded {
+    border-color: @table-border-color;
+    &, &:hover {
+      background-color: @list-view-expanded-bg;
+    }
+    .list-view-pf-checkbox {
+    border-right-color: @table-border-color;
+    }
+  }
+}
+
+.list-group-item-text, .list-view-pf-additional-info {
+  .fa, .pficon {
+    font-size: @font-size-base;
+    margin-right: 3px;
+  }
+}
+
+.list-view-pf {
+  margin-bottom: 50px;
+  h2 + & {
+    margin-top: 20px;
+  }
+  .list-group-item-heading {
+    font-size: @font-size-base;
+  }
+  .list-group-item-text {
+    margin-bottom: 5px;
+  }
+}
+
+.list-view-pf-additional-info-item {
+  display: inline-block;
+  text-align: left;
+}
+
+.list-view-pf-description {
+  // overrides for rules in patternfly/less/list-view.less, hence the -ms-flex
+  -ms-flex: 1 0 55%;
+  flex: 1 0 55%;
+}
+
+.list-view-pf-main-info {
+  padding-bottom: (@grid-gutter-width / 4);
+  padding-top: (@grid-gutter-width / 4);
+}
+
+.list-view-pf .list-group-item-heading small {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  .text-muted();
+}
+
+
+@media (min-width: @screen-md-min) {
+  // overrides for rules in patternfly/less/list-view.less, hence the -ms-flex
+  .list-view-pf {
+    .list-group-item-heading {
+      -ms-flex: 1 0 auto;
+      flex: 1 0 auto;
+      margin: 0;
+      padding: 0 20px 0 0;
+      width: 50%;
+    }
+    .list-group-item-text {;
+      -ms-flex: 1 0 auto;
+      flex: 1 0 auto;
+      margin: 0;
+      padding: 0 20px 0 0;
+      width: 50%;
+    }
+  }
+  .list-view-pf-additional-info {
+    width: 40%;
+  }
+  .list-view-pf-description {
+    width: 60%;
+  }
+}

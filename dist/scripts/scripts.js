@@ -91,7 +91,8 @@ prefixes:[ "/browse/storage/" ]
 }, {
 label:"Monitoring",
 iconClass:"pficon pficon-screen",
-href:"/browse/events"
+href:"/monitoring",
+prefixes:[ "/browse/events" ]
 } ]
 }, angular.module("openshiftConsole", [ "ngAnimate", "ngCookies", "ngResource", "ngRoute", "ngSanitize", "ngTouch", "openshiftUI", "kubernetesUI", "registryUI.images", "ui.bootstrap", "patternfly.charts", "patternfly.sort", "openshiftConsoleTemplates", "ui.ace", "extension-registry", "as.sortable", "ui.select", "key-value-editor", "angular-inview" ]).config([ "$routeProvider", function(a) {
 a.when("/", {
@@ -110,6 +111,9 @@ controller:"OverviewController"
 }).when("/project/:project/quota", {
 templateUrl:"views/quota.html",
 controller:"QuotaController"
+}).when("/project/:project/monitoring", {
+templateUrl:"views/monitoring.html",
+controller:"MonitoringController"
 }).when("/project/:project/browse", {
 redirectTo:function(a) {
 return "/project/" + encodeURIComponent(a.project) + "/browse/pods";
@@ -295,15 +299,15 @@ a.aHrefSanitizationWhitelist(/^\s*(https?|mailto|git):/i);
 a.$on("$locationChangeSuccess", function(a) {
 b.setLabelSelector(new LabelSelector({}, (!0)), !0);
 });
-} ]).run([ "dateRelativeFilter", "durationFilter", function(a, b) {
+} ]).run([ "dateRelativeFilter", "durationFilter", "timeOnlyDurationFromTimestampsFilter", function(a, b, c) {
 setInterval(function() {
 $(".timestamp[data-timestamp]").text(function(b, c) {
 return a($(this).attr("data-timestamp"), $(this).attr("data-drop-suffix")) || c;
 });
 }, 3e4), setInterval(function() {
-$(".duration[data-timestamp]").text(function(a, c) {
-var d = $(this).data("timestamp"), e = $(this).data("omit-single"), f = $(this).data("precision");
-return b(d, null, e, f) || c;
+$(".duration[data-timestamp]").text(function(a, d) {
+var e = $(this).data("timestamp"), f = $(this).data("omit-single"), g = $(this).data("precision"), h = $(this).data("time-only");
+return h ? c(e, null) || d :b(e, null, f, g) || d;
 });
 }, 1e3);
 } ]), hawtioPluginLoader.addModule("openshiftConsole"), hawtioPluginLoader.registerPreBootstrapTask(function(a) {
@@ -2944,7 +2948,34 @@ getVolumes:f,
 runsAsRoot:e,
 getResources:g
 };
-} ]), angular.module("openshiftConsole").controller("ProjectsController", [ "$scope", "$route", "$timeout", "$filter", "$location", "DataService", "AuthService", "AlertMessageService", "Logger", "hashSizeFilter", function(a, b, c, d, e, f, g, h, i, j) {
+} ]), angular.module("openshiftConsole").service("KeywordService", function() {
+var a = function(a) {
+if (!a) return [];
+var b = _.uniq(a.split(/\s+/));
+return b.sort(function(a, b) {
+return b.length - a.length;
+}), _.map(b, function(a) {
+return new RegExp(_.escapeRegExp(a), "i");
+});
+}, b = function(a, b, c) {
+var d = a;
+return c.length ? (angular.forEach(c, function(a) {
+var c = function(c) {
+var d;
+for (d = 0; d < b.length; d++) {
+var e = _.get(c, b[d]);
+if (e && a.test(e)) return !0;
+}
+return !1;
+};
+d = _.filter(d, c);
+}), d) :d;
+};
+return {
+filterForKeywords:b,
+generateKeywords:a
+};
+}), angular.module("openshiftConsole").controller("ProjectsController", [ "$scope", "$route", "$timeout", "$filter", "$location", "DataService", "AuthService", "AlertMessageService", "Logger", "hashSizeFilter", function(a, b, c, d, e, f, g, h, i, j) {
 var k = [];
 a.projects = {}, a.alerts = a.alerts || {}, a.showGetStarted = !1, a.canCreate = void 0, h.getAlerts().forEach(function(b) {
 a.alerts[b.name] = b.data;
@@ -3554,6 +3585,117 @@ d[b] = d[b] || {}, d[b].maxLimitRequestRatio = a;
 }), e.log("limitRanges", b.limitRanges);
 }), b.$on("$destroy", function() {
 c.unwatchAll(f);
+});
+}));
+} ]), angular.module("openshiftConsole").controller("MonitoringController", [ "$routeParams", "$scope", "$filter", "DataService", "ProjectsService", "MetricsService", "BuildsService", "PodsService", "KeywordService", "Logger", "ImageStreamResolver", "$rootScope", function(a, b, c, d, e, f, g, h, i, j, k, l) {
+b.projectName = a.project, b.alerts = b.alerts || {}, b.renderOptions = b.renderOptions || {}, b.renderOptions.showEventsSidebar = !0, b.renderOptions.collapseEventsSidebar = "true" === localStorage.getItem("monitoring.eventsidebar.collapsed");
+var m = [];
+b.kindSelector = {
+selected:{
+kind:"All"
+}
+}, b.kinds = [ {
+kind:"Pods"
+}, {
+kind:"Builds"
+}, {
+label:"Deployments",
+kind:"ReplicationControllers"
+}, {
+kind:"All"
+} ], b.logOptions = {
+pods:{},
+deployments:{},
+builds:{}
+}, b.logCanRun = {
+pods:{},
+deployments:{},
+builds:{}
+}, b.logEmpty = {
+pods:{},
+deployments:{},
+builds:{}
+}, b.filters = {
+hideOlderResources:!0,
+text:""
+};
+var n, o, p;
+f.isAvailable().then(function(a) {
+b.metricsAvailable = a;
+});
+var q = c("orderObjectsByDate"), r = [ "metadata.name" ], s = [], t = function() {
+b.filteredPods = i.filterForKeywords(p, r, s), b.filteredDeployments = i.filterForKeywords(o, r, s), b.filteredBuilds = i.filterForKeywords(n, r, s);
+}, u = function(a) {
+b.logOptions.pods[a.metadata.name] = {
+container:a.spec.containers[0].name
+}, b.logCanRun.pods[a.metadata.name] = !_.includes([ "New", "Pending", "Unknown" ], a.status.phase);
+}, v = function(a) {
+b.logOptions.deployments[a.metadata.name] = {
+container:c("annotation")(a, "pod")
+};
+var d = c("annotation")(a, "deploymentVersion");
+d && (b.logOptions.deployments[a.metadata.name].version = d), b.logCanRun.deployments[a.metadata.name] = !_.includes([ "New", "Pending" ], c("deploymentStatus")(a));
+}, w = function(a) {
+b.logOptions.builds[a.metadata.name] = {
+container:c("annotation")(a, "buildPod")
+}, b.logCanRun.builds[a.metadata.name] = !_.includes([ "New", "Pending", "Error" ], a.status.phase);
+}, x = function() {
+p = _.filter(b.pods, function(a) {
+return !b.filters.hideOlderResources || "Succeeded" !== a.status.phase && "Failed" !== a.status.phase;
+}), b.filteredPods = i.filterForKeywords(p, r, s);
+}, y = c("isIncompleteBuild"), z = c("buildConfigForBuild"), A = c("isRecentBuild"), B = function() {
+moment().subtract(5, "m");
+n = _.filter(b.builds, function(a) {
+if (!b.filters.hideOlderResources) return !0;
+if (y(a)) return !0;
+var c = z(a);
+return c ? b.latestBuildByConfig[c].metadata.name === a.metadata.name :A(a);
+}), b.filteredBuilds = i.filterForKeywords(n, r, s);
+}, C = c("deploymentStatus"), D = c("deploymentIsInProgress"), E = function() {
+o = _.filter(b.deployments, function(a) {
+return !b.filters.hideOlderResources || (D(a) || "Active" === C(a));
+}), b.filteredDeployments = i.filterForKeywords(o, r, s);
+};
+b.toggleItem = function(a, d) {
+var e = d ? "event.resource.highlight" :"event.resource.clear-highlight";
+switch (l.$emit(e, a), a.kind) {
+case "Build":
+var f = _.get(b.podsByName, c("annotation")(a, "buildPod"));
+f && l.$emit(e, f);
+break;
+
+case "ReplicationController":
+var g = c("annotation")(a, "deployerPod");
+g && l.$emit(e, {
+kind:"Pod",
+metadata:{
+name:g
+}
+}), _.each(b.podsByDeployment[a.metadata.name], function(a) {
+l.$emit(e, a);
+});
+}
+};
+var F = function() {
+b.pods && b.deployments && (b.podsByDeployment = h.groupByReplicationController(b.pods, b.deployments));
+};
+e.get(a.project).then(_.spread(function(a, c) {
+b.project = a, b.projectContext = c, d.watch("pods", c, function(a) {
+b.podsByName = a.by("metadata.name"), b.pods = q(b.podsByName, !0), F(), _.each(b.pods, u), x(), j.log("pods", b.pods);
+}), d.watch("replicationcontrollers", c, function(a) {
+b.deployments = q(a.by("metadata.name"), !0), F(), _.each(b.deployments, v), E(), j.log("deployments", b.deployments);
+}), d.watch("builds", c, function(a) {
+b.builds = q(a.by("metadata.name"), !0), b.latestBuildByConfig = g.latestBuildByConfig(b.builds), _.each(b.builds, w), B(), j.log("builds", b.builds);
+}), b.$on("$destroy", function() {
+d.unwatchAll(m);
+}), b.$watch("filters.hideOlderResources", function() {
+x(), B(), E();
+}), b.$watch("filters.text", _.debounce(function() {
+s = i.generateKeywords(b.filters.text), b.$apply(t);
+}, 50, {
+maxWait:250
+})), b.$watch("renderOptions.collapseEventsSidebar", function(a, c) {
+a !== c && localStorage.setItem("monitoring.eventsidebar.collapsed", b.renderOptions.collapseEventsSidebar ? "true" :"false");
 });
 }));
 } ]), angular.module("openshiftConsole").controller("BuildsController", [ "$routeParams", "$scope", "AlertMessageService", "DataService", "$filter", "LabelFilter", "Logger", "$location", "BuildsService", "ProjectsService", function(a, b, c, d, e, f, g, h, i, j) {
@@ -5409,7 +5551,12 @@ hasErrors:!0
 } ]), angular.module("openshiftConsole").controller("EventsController", [ "$routeParams", "$scope", "ProjectsService", function(a, b, c) {
 b.projectName = a.project, b.renderOptions = {
 hideFilterWidget:!0
-}, c.get(a.project).then(_.spread(function(a, c) {
+}, b.breadcrumbs = [ {
+title:"Monitoring",
+link:"project/" + a.project + "/monitoring"
+}, {
+title:"Events"
+} ], c.get(a.project).then(_.spread(function(a, c) {
 b.project = a, b.projectContext = c;
 }));
 } ]), angular.module("openshiftConsole").controller("OAuthController", [ "$scope", "$location", "$q", "RedirectLoginService", "DataService", "AuthService", "Logger", function(a, b, c, d, e, f, g) {
@@ -6008,6 +6155,16 @@ dropSuffix:"=?"
 },
 template:'<span data-timestamp="{{timestamp}}" data-drop-suffix="{{dropSuffix}}" class="timestamp" title="{{timestamp | date : \'short\'}}">{{timestamp | dateRelative : dropSuffix}}</span>'
 };
+}).directive("timeOnlyDurationUntilNow", function() {
+return {
+restrict:"E",
+scope:{
+timestamp:"=",
+omitSingle:"=?",
+precision:"=?"
+},
+template:'<span data-timestamp="{{timestamp}}" data-time-only="true" class="duration">{{timestamp | timeOnlyDurationFromTimestamps : null}}</span>'
+};
 }).directive("durationUntilNow", function() {
 return {
 restrict:"E",
@@ -6262,21 +6419,58 @@ c.unwatchAll(m);
 });
 } ]
 };
-} ]), angular.module("openshiftConsole").directive("eventsSidebar", [ "$filter", "DataService", "Logger", function(a, b, c) {
+} ]), angular.module("openshiftConsole").directive("eventsSidebar", [ "$filter", "DataService", "Logger", "$rootScope", function(a, b, c, d) {
 return {
 restrict:"E",
 scope:{
-projectContext:"="
+projectContext:"=",
+collapsed:"="
 },
 templateUrl:"views/directives/events-sidebar.html",
+controller:[ "$scope", function(e) {
+var f = [], g = a("orderObjectsByDate");
+f.push(b.watch("events", e.projectContext, function(a) {
+var b = a.by("metadata.name");
+e.events = g(b, !0), e.warningCount = _.size(_.filter(b, {
+type:"Warning"
+})), c.log("events (subscribe)", e.events);
+})), e.highlightedEvents = {}, e.collapseSidebar = function() {
+e.collapsed = !0;
+}, d.$on("event.resource.highlight", function(a, b) {
+var c = _.get(b, "kind"), d = _.get(b, "metadata.name");
+c && d && _.each(e.events, function(a) {
+a.involvedObject.kind === c && a.involvedObject.name === d && (e.highlightedEvents[c + "/" + d] = !0);
+});
+}), d.$on("event.resource.clear-highlight", function(a, b) {
+var c = _.get(b, "kind"), d = _.get(b, "metadata.name");
+c && d && _.each(e.events, function(a) {
+a.involvedObject.kind === c && a.involvedObject.name === d && (e.highlightedEvents[c + "/" + d] = !1);
+});
+}), e.$on("$destroy", function() {
+b.unwatchAll(f);
+});
+} ]
+};
+} ]), angular.module("openshiftConsole").directive("eventsBadge", [ "$filter", "DataService", "Logger", function(a, b, c) {
+return {
+restrict:"E",
+scope:{
+projectContext:"=",
+sidebarCollapsed:"="
+},
+templateUrl:"views/directives/events-badge.html",
 controller:[ "$scope", function(d) {
 var e = [], f = a("orderObjectsByDate");
 e.push(b.watch("events", d.projectContext, function(a) {
 var b = a.by("metadata.name");
 d.events = f(b, !0), d.warningCount = _.size(_.filter(b, {
 type:"Warning"
+})), d.normalCount = _.size(_.filter(b, {
+type:"Normal"
 })), c.log("events (subscribe)", d.events);
-})), d.$on("$destroy", function() {
+})), d.expandSidebar = function() {
+d.sidebarCollapsed = !1;
+}, d.$on("$destroy", function() {
 b.unwatchAll(e);
 });
 } ]
@@ -7910,22 +8104,24 @@ scope:{
 followAffixTop:"=?",
 followAffixBottom:"=?",
 resource:"@",
+fullLogUrl:"=?",
 name:"=",
 context:"=",
 options:"=?",
+fixedHeight:"=?",
 chromeless:"=?",
 empty:"=?",
 run:"=?"
 },
 controller:[ "$scope", function(j) {
 var l, m, n, o, p, q = document.documentElement;
-j.empty = !0;
+j.logViewerID = _.uniqueId("log-viewer"), j.empty = !0;
 var r = function() {
 o = window.innerWidth < h.screenSmMin ? null :m;
 }, s = function() {
 j.$apply(function() {
 var a = l.getBoundingClientRect();
-j.showScrollLinks = a && (a.top < 0 || a.bottom > q.clientHeight);
+j.fixedHeight ? j.showScrollLinks = a && a.height > j.fixedHeight :j.showScrollLinks = a && (a.top < 0 || a.bottom > q.clientHeight);
 });
 }, t = !1, u = function() {
 t ? t = !1 :j.$evalAsync(function() {
@@ -7934,7 +8130,7 @@ j.autoScrollActive = !1;
 }, v = function() {
 n.off("scroll", u), i.off("scroll", u), window.innerWidth <= h.screenSmMin ? i.on("scroll", u) :n.on("scroll", u);
 }, w = function() {
-window.innerWidth < h.screenSmMin ? p.removeClass("target-logger-node").affix({
+j.fixedHeight || (window.innerWidth < h.screenSmMin ? p.removeClass("target-logger-node").affix({
 target:window,
 offset:{
 top:j.followAffixTop || 0,
@@ -7946,14 +8142,14 @@ offset:{
 top:j.followAffixTop || 0,
 bottom:j.followAffixBottom || 0
 }
-});
+}));
 }, x = function(a) {
-var b = $(".log-view-output"), c = b.offset().top;
+var b = $("#" + j.logViewerID + " .log-view-output"), c = b.offset().top;
 if (!(c < 0)) {
-var d = Math.floor($(window).height() - c);
-j.chromeless || (d -= 35), a ? b.animate({
+var d = j.fixedHeight ? j.fixedHeight :Math.floor($(window).height() - c);
+j.chromeless || j.fixedHeight || (d -= 35), a ? b.animate({
 "min-height":d + "px"
-}, "fast") :b.css("min-height", d + "px");
+}, "fast") :b.css("min-height", d + "px"), j.fixedHeight && b.css("max-height", d);
 }
 }, y = _.debounce(function() {
 x(!0), r(), v(), s(), w(), u();
@@ -8010,23 +8206,7 @@ autoScroll:!1
 }), z.start();
 }
 };
-angular.extend(j, {
-ready:!0,
-loading:!0,
-autoScroll:!1,
-state:!1,
-onScrollBottom:function() {
-g.scrollBottom(o);
-},
-onScrollTop:function() {
-j.autoScrollActive = !1, g.scrollTop(o);
-},
-toggleAutoScroll:B,
-goChromeless:g.chromelessLink,
-restartLogs:F
-}), j.$watchGroup([ "name", "options.container", "run" ], F), j.$on("$destroy", function() {
-E(), i.off("resize", y), i.off("scroll", u), n.off("scroll", u);
-}), e.getLoggingURL().then(function(b) {
+return e.getLoggingURL().then(function(b) {
 var e = _.get(j.context, "project.metadata.name"), f = _.get(j.options, "container");
 e && f && j.name && b && (angular.extend(j, {
 kibanaAuthUrl:a.trustAsResourceUrl(URI(b).segment("auth").segment("token").normalizePathname().toString()),
@@ -8041,7 +8221,7 @@ backlink:URI.encode(c.location.href)
 }))
 });
 }));
-}), this.cacheScollableNode = function(a) {
+}), this.cacheScrollableNode = function(a) {
 m = a, n = $(m);
 }, this.cacheLogNode = function(a) {
 l = a;
@@ -8049,11 +8229,29 @@ l = a;
 p = $(a);
 }, this.start = function() {
 r(), v(), w();
-};
+}, angular.extend(j, {
+ready:!0,
+loading:!0,
+autoScroll:!1,
+state:!1,
+onScrollBottom:function() {
+g.scrollBottom(o);
+},
+onScrollTop:function() {
+j.autoScrollActive = !1, g.scrollTop(o);
+},
+toggleAutoScroll:B,
+goChromeless:g.chromelessLink,
+restartLogs:F
+}), j.$on("$destroy", function() {
+E(), i.off("resize", y), i.off("scroll", u), n.off("scroll", u);
+}), "deploymentconfigs/log" !== j.resource || j.name ? void j.$watchGroup([ "name", "options.container", "run" ], F) :(j.state = "empty", void (j.emptyStateMessage = "Logs are not available for this replication controller because it was not generated from a deployment configuration."));
 } ],
 require:"logViewer",
-link:function(a, b, c, d) {
-d.cacheScollableNode(document.getElementById("scrollable-content")), d.cacheLogNode(document.getElementById("logContent")), d.cacheAffixable(document.getElementById("affixedFollow")), d.start();
+link:function(a, c, d, e) {
+b(function() {
+e.cacheScrollableNode(document.getElementById(a.fixedHeight ? a.logViewerID + "-fixed-scrollable" :"scrollable-content")), e.cacheLogNode(document.getElementById(a.logViewerID + "-logContent")), e.cacheAffixable(document.getElementById(a.logViewerID + "-affixedFollow")), e.start();
+}, 0);
 }
 };
 } ]), angular.module("openshiftConsole").directive("statusIcon", [ function() {
@@ -8062,7 +8260,8 @@ restrict:"E",
 templateUrl:"views/directives/_status-icon.html",
 scope:{
 status:"=",
-disableAnimation:"@"
+disableAnimation:"@",
+fixedWidth:"=?"
 },
 link:function(a, b, c) {
 a.spinning = !angular.isDefined(c.disableAnimation);
@@ -8743,6 +8942,14 @@ status:"="
 },
 templateUrl:"views/directives/pipeline-status.html"
 };
+}), angular.module("openshiftConsole").directive("buildStatus", function() {
+return {
+restrict:"E",
+scope:{
+build:"="
+},
+templateUrl:"views/directives/build-status.html"
+};
 }), angular.module("openshiftConsole").directive("serviceGroupNotifications", [ "$filter", "Navigate", function(a, b) {
 return {
 restrict:"E",
@@ -9129,7 +9336,11 @@ return a.metadata.creationTimestamp < b.metadata.creationTimestamp ? c ? 1 :-1 :
 return function(a, b) {
 return moment.duration(a, b).humanize();
 };
-}).filter("timeOnlyDuration", function() {
+}).filter("timeOnlyDurationFromTimestamps", [ "timeOnlyDurationFilter", function(a) {
+return function(b, c) {
+return b ? (c = c || new Date(), a(moment(c).diff(b))) :b;
+};
+} ]).filter("timeOnlyDuration", function() {
 return function(a) {
 var b = [], c = moment.duration(a), d = Math.floor(c.asHours()), e = c.minutes(), f = c.seconds();
 return d || e || f ? (d && b.push(d + "h"), e && b.push(e + "m"), d || b.push(f + "s"), b.join(" ")) :"";
@@ -9144,6 +9355,7 @@ buildConfig:[ "openshift.io/build-config.name" ],
 deploymentConfig:[ "openshift.io/deployment-config.name" ],
 deployment:[ "openshift.io/deployment.name" ],
 pod:[ "openshift.io/deployer-pod.name" ],
+deployerPod:[ "openshift.io/deployer-pod.name" ],
 deployerPodFor:[ "openshift.io/deployer-pod-for.name" ],
 deploymentStatus:[ "openshift.io/deployment.phase" ],
 deploymentStatusReason:[ "openshift.io/deployment.status-reason" ],
@@ -9336,6 +9548,12 @@ return a ? a.split(":")[0] :a;
 }).filter("stripSHA", function() {
 return function(a) {
 return a ? a.split("@")[0] :a;
+};
+}).filter("imageSHA", function() {
+return function(a) {
+if (!a) return a;
+var b = a.split("@");
+return b.length > 1 ? b[1] :"";
 };
 }).filter("imageEnv", function() {
 return function(a, b) {
@@ -9668,7 +9886,7 @@ return d === e;
 return function(c) {
 if (a(c, "deploymentCancelled")) return "Cancelled";
 var d = a(c, "deploymentStatus");
-return !b(c) || "Complete" === d && c.spec.replicas > 0 ? "Deployed" :d;
+return !b(c) || "Complete" === d && c.spec.replicas > 0 ? "Active" :d;
 };
 } ]).filter("deploymentIsInProgress", [ "deploymentStatusFilter", function(a) {
 return function(b) {
@@ -10220,27 +10438,25 @@ a ? a.scrollTop = 0 :window.scrollTo(null, 0);
 a ? a.scrollTop = a.scrollHeight :window.scrollTo(0, document.body.scrollHeight - document.body.clientHeight);
 }, g = function(b, d) {
 d.preventDefault(), d.stopPropagation(), c.hash(b), a(b);
-}, h = function(a) {
-a = _.flatten([ a ]);
-var b = new URI();
-_.each(a, function(a) {
-b.addSearch(a);
-}), d.open(b.toString(), "_blank");
-}, i = function(a) {
-var b = {
+}, h = function(a, b) {
+if (b) return void d.open(b, "_blank");
+var c = {
 view:"chromeless"
 };
-a && a.container && (b.container = a.container), h(b);
-}, j = _.template([ "/#/discover?", "_g=(", "time:(", "from:now-1w,", "mode:relative,", "to:now", ")", ")", "&_a=(", "columns:!(kubernetes_container_name,<%= containername %>),", "index:'<%= namespace %>.*',", "query:(", "query_string:(", "analyze_wildcard:!t,", "query:'kubernetes_pod_name: <%= podname %> %26%26 kubernetes_namespace_name: <%= namespace %>'", ")", "),", "sort:!(time,desc)", ")", "#console_container_name=<%= containername %>", "&console_back_url=<%= backlink %>" ].join("")), k = function(a) {
-return j(a);
+a && a.container && (c.container = a.container), c = _.flatten([ c ]);
+var e = new URI();
+_.each(c, function(a) {
+e.addSearch(a);
+}), d.open(e.toString(), "_blank");
+}, i = _.template([ "/#/discover?", "_g=(", "time:(", "from:now-1w,", "mode:relative,", "to:now", ")", ")", "&_a=(", "columns:!(kubernetes_container_name,<%= containername %>),", "index:'<%= namespace %>.*',", "query:(", "query_string:(", "analyze_wildcard:!t,", "query:'kubernetes_pod_name: <%= podname %> %26%26 kubernetes_namespace_name: <%= namespace %>'", ")", "),", "sort:!(time,desc)", ")", "#console_container_name=<%= containername %>", "&console_back_url=<%= backlink %>" ].join("")), j = function(a) {
+return i(a);
 };
 return {
 scrollTop:e,
 scrollBottom:f,
 scrollTo:g,
-newTab:h,
-chromelessLink:i,
-archiveUri:k
+chromelessLink:h,
+archiveUri:j
 };
 } ]), function() {
 var a = "javaLinkExtension";

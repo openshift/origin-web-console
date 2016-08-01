@@ -1,7 +1,8 @@
-<div class="right-container events-sidebar">
+<div class="right-container events-sidebar" ng-hide="sidebarCollapsed">
   <div class="sidebar-header right-header">
-    <div>
+    <div>      
       <h2>
+        <span class="events-sidebar-collapse"><a href="" class="fa fa-arrow-circle-o-right" title="Collapse event sidebar" ng-click="collapseSidebar()"><span class="sr-only">Collapse event sidebar</span></a></span>        
         Events
         <small ng-if="warningCount" class="mar-left-sm">
           <span class="pficon pficon-warning-triangle-o"></span>
@@ -18,14 +19,14 @@
     </div>
   </div>
   <div class="right-content">
-    <div ng-if="!events">
+    <div ng-if="!events" class="events pad-left-xl">
       Loading...
     </div>
-    <div ng-if="events">
-      <div ng-if="!(events | hashSize)">
+    <div ng-if="events" class="events">
+      <div ng-if="!(events | hashSize)" class="mar-left-xl">
         <em>No events.</em>
       </div>
-      <div ng-repeat="event in events" class="event animate-repeat">
+      <div ng-repeat="event in events" class="event animate-repeat" ng-class="{'highlight': highlightedEvents[event.involvedObject.kind + '/' + event.involvedObject.name]}">
         <span class="sr-only">{{event.type}}</span>
         <div class="event-icon" aria-hidden="true">
           <div ng-switch="event.type" class="hide-ng-leave">

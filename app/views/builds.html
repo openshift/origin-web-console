@@ -71,23 +71,7 @@
                     </td>
                     <td data-title="Status">
                       <div row class="status">
-                        <status-icon status="latestBuild.status.phase" disable-animation></status-icon>
-                        <span flex>
-                          <span>{{latestBuild.status.phase}}</span>
-                          <!-- Build duration -->
-                          <span ng-switch="latestBuild.status.phase" class="hide-ng-leave">
-                            <span ng-switch-when="Complete"> in {{(latestBuild.status.startTimestamp || latestBuild.metadata.creationTimestamp) | duration : latestBuild.status.completionTimestamp}}</span>
-                            <span ng-switch-when="Failed">after <span ng-if="!latestBuild.status.startTimestamp">waiting </span>{{(latestBuild.status.startTimestamp || latestBuild.metadata.creationTimestamp) | duration : latestBuild.status.completionTimestamp}}</span>
-                            <span ng-switch-when="Cancelled"> after {{(latestBuild.status.startTimestamp || latestBuild.metadata.creationTimestamp) | duration : latestBuild.status.completionTimestamp}}</span>
-                            <span ng-switch-when="Running"> for <duration-until-now timestamp="latestBuild.status.startTimestamp"></duration-until-now></span>
-                            <span ng-switch-when="New">, waiting for <duration-until-now timestamp="latestBuild.metadata.creationTimestamp"></duration-until-now></span>
-                            <span ng-switch-when="Pending"> for <duration-until-now timestamp="latestBuild.metadata.creationTimestamp"></duration-until-now></span>
-                            <span ng-switch-default>
-                              <span ng-if="latestBuild.status.startTimestamp">, finished in {{latestBuild.status.startTimestamp | duration : latestBuild.status.completionTimestamp}}</span>
-                              <span ng-if="!latestBuild.status.startTimestamp">, waited for {{latestBuild.metadata.creationTimestamp | duration : latestBuild.status.completionTimestamp}}</span>
-                            </span>
-                          </span>
-                        </span>
+                        <build-status build="latestBuild"></build-status>
                       </div>
                     </td>
                     <td data-title="Created">

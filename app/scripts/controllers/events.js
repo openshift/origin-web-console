@@ -14,6 +14,16 @@ angular.module('openshiftConsole')
       hideFilterWidget: true
     };
 
+    $scope.breadcrumbs = [
+      {
+        title: "Monitoring",
+        link: "project/" + $routeParams.project + "/monitoring"
+      },
+      {
+        title: 'Events'
+      }
+    ];
+
     ProjectsService
       .get($routeParams.project)
       .then(_.spread(function(project, context) {

@@ -22,6 +22,7 @@ angular.module('openshiftConsole')
       "deploymentConfig":         ["openshift.io/deployment-config.name"],
       "deployment":               ["openshift.io/deployment.name"],
       "pod":                      ["openshift.io/deployer-pod.name"],
+      "deployerPod":              ["openshift.io/deployer-pod.name"],      
       "deployerPodFor":           ["openshift.io/deployer-pod-for.name"],
       "deploymentStatus":         ["openshift.io/deployment.phase"],
       "deploymentStatusReason":   ["openshift.io/deployment.status-reason"],
@@ -310,6 +311,16 @@ angular.module('openshiftConsole')
       return imageName.split('@')[0];
     };
   })
+  .filter('imageSHA', function() {
+    // Returns the trailing @sha:`...` if present from an image name.
+    return function(imageName) {
+      if (!imageName) {
+        return imageName;
+      }
+      var parts = imageName.split('@');
+      return parts.length > 1 ? parts[1] : '';
+    };
+  })  
   .filter('imageEnv', function() {
     return function(image, envKey) {
       var envVars = image.dockerImageMetadata.Config.Env;
@@ -878,7 +889,7 @@ angular.module('openshiftConsole')
       var status = annotationFilter(deployment, 'deploymentStatus');
       // If it is just an RC (non-deployment) or it is a deployment with more than 0 replicas
       if (!isDeploymentFilter(deployment) || status === "Complete" && deployment.spec.replicas > 0) {
-        return "Deployed";
+        return "Active";
       }
       return status;
     };

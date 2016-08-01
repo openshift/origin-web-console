@@ -11,6 +11,17 @@ angular.module('openshiftConsole')
       template: '<span data-timestamp="{{timestamp}}" data-drop-suffix="{{dropSuffix}}" class="timestamp" title="{{timestamp | date : \'short\'}}">{{timestamp | dateRelative : dropSuffix}}</span>'
     };
   })
+  .directive("timeOnlyDurationUntilNow", function() {
+    return {
+      restrict: 'E',
+      scope: {
+        timestamp: '=',
+        omitSingle: '=?',
+        precision: '=?'
+      },
+      template: '<span data-timestamp="{{timestamp}}" data-time-only="true" class="duration">{{timestamp | timeOnlyDurationFromTimestamps : null}}</span>'
+    };
+  })  
   .directive("durationUntilNow", function() {
     return {
       restrict: 'E',

@@ -482,9 +482,9 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "<div ng-transclude>\n" +
     "</div>\n" +
     "</div>\n" +
-    "<div ng-if=\"renderOptions.showEventsSidebar\" class=\"sidebar-right sidebar-pf sidebar-pf-right\">\n" +
+    "<div ng-if=\"renderOptions.showEventsSidebar && !renderOptions.collapseEventsSidebar\" class=\"sidebar-right sidebar-pf sidebar-pf-right\">\n" +
     "<div class=\"right-section\">\n" +
-    "<events-sidebar ng-if=\"projectContext\" project-context=\"projectContext\"></events-sidebar>\n" +
+    "<events-sidebar ng-if=\"projectContext\" project-context=\"projectContext\" collapsed=\"renderOptions.collapseEventsSidebar\"></events-sidebar>\n" +
     "</div>\n" +
     "</div>\n" +
     "</div>"
@@ -1500,23 +1500,7 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "</td>\n" +
     "<td data-title=\"Status\">\n" +
     "<div row class=\"status\">\n" +
-    "<status-icon status=\"build.status.phase\" disable-animation></status-icon>\n" +
-    "<span flex>\n" +
-    "<span>{{build.status.phase}}</span>\n" +
-    "\n" +
-    "<span ng-switch=\"build.status.phase\" class=\"hide-ng-leave\">\n" +
-    "<span ng-switch-when=\"Complete\"> in {{(build.status.startTimestamp || build.metadata.creationTimestamp) | duration : build.status.completionTimestamp}}</span>\n" +
-    "<span ng-switch-when=\"Failed\">after <span ng-if=\"!build.status.startTimestamp\">waiting </span>{{(build.status.startTimestamp || build.metadata.creationTimestamp) | duration : build.status.completionTimestamp}}</span>\n" +
-    "<span ng-switch-when=\"Cancelled\"> after {{(build.status.startTimestamp || build.metadata.creationTimestamp) | duration : build.status.completionTimestamp}}</span>\n" +
-    "<span ng-switch-when=\"Running\"> for <duration-until-now timestamp=\"build.status.startTimestamp\"></duration-until-now></span>\n" +
-    "<span ng-switch-when=\"New\">, waiting for <duration-until-now timestamp=\"build.metadata.creationTimestamp\"></duration-until-now></span>\n" +
-    "<span ng-switch-when=\"Pending\">, waiting for <duration-until-now timestamp=\"build.metadata.creationTimestamp\"></duration-until-now></span>\n" +
-    "<span ng-switch-default>\n" +
-    "<span ng-if=\"build.status.startTimestamp\"> in {{build.status.startTimestamp | duration : build.status.completionTimestamp}}</span>\n" +
-    "<span ng-if=\"!build.status.startTimestamp\"> waited for {{build.metadata.creationTimestamp | duration : build.status.completionTimestamp}}</span>\n" +
-    "</span>\n" +
-    "</span>\n" +
-    "</span>\n" +
+    "<build-status build=\"build\"></build-status>\n" +
     "</div>\n" +
     "</td>\n" +
     "<td data-title=\"Created\">\n" +
@@ -3171,23 +3155,7 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "</td>\n" +
     "<td data-title=\"Status\">\n" +
     "<div row class=\"status\">\n" +
-    "<status-icon status=\"latestBuild.status.phase\" disable-animation></status-icon>\n" +
-    "<span flex>\n" +
-    "<span>{{latestBuild.status.phase}}</span>\n" +
-    "\n" +
-    "<span ng-switch=\"latestBuild.status.phase\" class=\"hide-ng-leave\">\n" +
-    "<span ng-switch-when=\"Complete\"> in {{(latestBuild.status.startTimestamp || latestBuild.metadata.creationTimestamp) | duration : latestBuild.status.completionTimestamp}}</span>\n" +
-    "<span ng-switch-when=\"Failed\">after <span ng-if=\"!latestBuild.status.startTimestamp\">waiting </span>{{(latestBuild.status.startTimestamp || latestBuild.metadata.creationTimestamp) | duration : latestBuild.status.completionTimestamp}}</span>\n" +
-    "<span ng-switch-when=\"Cancelled\"> after {{(latestBuild.status.startTimestamp || latestBuild.metadata.creationTimestamp) | duration : latestBuild.status.completionTimestamp}}</span>\n" +
-    "<span ng-switch-when=\"Running\"> for <duration-until-now timestamp=\"latestBuild.status.startTimestamp\"></duration-until-now></span>\n" +
-    "<span ng-switch-when=\"New\">, waiting for <duration-until-now timestamp=\"latestBuild.metadata.creationTimestamp\"></duration-until-now></span>\n" +
-    "<span ng-switch-when=\"Pending\"> for <duration-until-now timestamp=\"latestBuild.metadata.creationTimestamp\"></duration-until-now></span>\n" +
-    "<span ng-switch-default>\n" +
-    "<span ng-if=\"latestBuild.status.startTimestamp\">, finished in {{latestBuild.status.startTimestamp | duration : latestBuild.status.completionTimestamp}}</span>\n" +
-    "<span ng-if=\"!latestBuild.status.startTimestamp\">, waited for {{latestBuild.metadata.creationTimestamp | duration : latestBuild.status.completionTimestamp}}</span>\n" +
-    "</span>\n" +
-    "</span>\n" +
-    "</span>\n" +
+    "<build-status build=\"latestBuild\"></build-status>\n" +
     "</div>\n" +
     "</td>\n" +
     "<td data-title=\"Created\">\n" +
@@ -4489,35 +4457,35 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
 
   $templateCache.put('views/directives/_status-icon.html',
     "<span ng-switch=\"status\" class=\"hide-ng-leave status-icon\">\n" +
-    "<span ng-switch-when=\"Cancelled\" class=\"fa fa-ban text-muted\" aria-hidden=\"true\"></span>\n" +
-    "<span ng-switch-when=\"Complete\" class=\"fa fa-check text-success\" aria-hidden=\"true\"></span>\n" +
-    "<span ng-switch-when=\"Completed\" class=\"fa fa-check text-success\" aria-hidden=\"true\"></span>\n" +
-    "<span ng-switch-when=\"Deployed\" class=\"fa fa-check text-success\" aria-hidden=\"true\"></span>\n" +
-    "<span ng-switch-when=\"Error\" class=\"fa fa-times text-danger\" aria-hidden=\"true\"></span>\n" +
-    "<span ng-switch-when=\"Failed\" class=\"fa fa-times text-danger\" aria-hidden=\"true\"></span>\n" +
-    "<span ng-switch-when=\"New\" class=\"spinner spinner-xs spinner-inline\" aria-hidden=\"true\"></span>\n" +
-    "<span ng-switch-when=\"Pending\" class=\"spinner spinner-xs spinner-inline\" aria-hidden=\"true\"></span>\n" +
-    "<span ng-switch-when=\"Running\" class=\"fa fa-refresh\" ng-class=\"{'fa-spin' : spinning }\" aria-hidden=\"true\"></span>\n" +
-    "<span ng-switch-when=\"Succeeded\" class=\"fa fa-check text-success\" aria-hidden=\"true\"></span>\n" +
-    "<span ng-switch-when=\"Bound\" class=\"fa fa-check text-success\" aria-hidden=\"true\"></span>\n" +
-    "<span ng-switch-when=\"Terminating\" class=\"fa fa-times text-danger\" aria-hidden=\"true\"></span>\n" +
-    "<span ng-switch-when=\"Terminated\" class=\"fa fa-times text-danger\" aria-hidden=\"true\"></span>\n" +
-    "<span ng-switch-when=\"Unknown\" class=\"fa fa-question text-danger\" aria-hidden=\"true\"></span>\n" +
+    "<span ng-switch-when=\"Cancelled\" class=\"fa fa-ban text-muted\" aria-hidden=\"true\" ng-class=\"{'fa-fw': fixedWidth}\"></span>\n" +
+    "<span ng-switch-when=\"Complete\" class=\"fa fa-check text-success\" aria-hidden=\"true\" ng-class=\"{'fa-fw': fixedWidth}\"></span>\n" +
+    "<span ng-switch-when=\"Completed\" class=\"fa fa-check text-success\" aria-hidden=\"true\" ng-class=\"{'fa-fw': fixedWidth}\"></span>\n" +
+    "<span ng-switch-when=\"Active\" class=\"fa fa-refresh\" aria-hidden=\"true\" ng-class=\"{'fa-fw': fixedWidth}\"></span>\n" +
+    "<span ng-switch-when=\"Error\" class=\"fa fa-times text-danger\" aria-hidden=\"true\" ng-class=\"{'fa-fw': fixedWidth}\"></span>\n" +
+    "<span ng-switch-when=\"Failed\" class=\"fa fa-times text-danger\" aria-hidden=\"true\" ng-class=\"{'fa-fw': fixedWidth}\"></span>\n" +
+    "<span ng-switch-when=\"New\" class=\"spinner spinner-xs spinner-inline\" aria-hidden=\"true\" ng-class=\"{'fa-fw': fixedWidth}\"></span>\n" +
+    "<span ng-switch-when=\"Pending\" class=\"spinner spinner-xs spinner-inline\" aria-hidden=\"true\" ng-class=\"{'fa-fw': fixedWidth}\"></span>\n" +
+    "<span ng-switch-when=\"Running\" class=\"fa fa-refresh\" aria-hidden=\"true\" ng-class=\"{'fa-spin' : spinning, 'fa-fw': fixedWidth}\"></span>\n" +
+    "<span ng-switch-when=\"Succeeded\" class=\"fa fa-check text-success\" aria-hidden=\"true\" ng-class=\"{'fa-fw': fixedWidth}\"></span>\n" +
+    "<span ng-switch-when=\"Bound\" class=\"fa fa-check text-success\" aria-hidden=\"true\" ng-class=\"{'fa-fw': fixedWidth}\"></span>\n" +
+    "<span ng-switch-when=\"Terminating\" class=\"fa fa-times text-danger\" aria-hidden=\"true\" ng-class=\"{'fa-fw': fixedWidth}\"></span>\n" +
+    "<span ng-switch-when=\"Terminated\" class=\"fa fa-times text-danger\" aria-hidden=\"true\" ng-class=\"{'fa-fw': fixedWidth}\"></span>\n" +
+    "<span ng-switch-when=\"Unknown\" class=\"fa fa-question text-danger\" aria-hidden=\"true\" ng-class=\"{'fa-fw': fixedWidth}\"></span>\n" +
     "\n" +
-    "<span ng-switch-when=\"ContainerCreating\" class=\"spinner spinner-xs spinner-inline\" aria-hidden=\"true\"></span>\n" +
-    "<span ng-switch-when=\"CrashLoopBackOff\" class=\"fa fa-times text-danger\" aria-hidden=\"true\"></span>\n" +
-    "<span ng-switch-when=\"ImagePullBackOff\" class=\"fa fa-times text-danger\" aria-hidden=\"true\"></span>\n" +
-    "<span ng-switch-when=\"ImageInspectError\" class=\"fa fa-times text-danger\" aria-hidden=\"true\"></span>\n" +
-    "<span ng-switch-when=\"ErrImagePull\" class=\"fa fa-times text-danger\" aria-hidden=\"true\"></span>\n" +
-    "<span ng-switch-when=\"ErrImageNeverPull\" class=\"fa fa-times text-danger\" aria-hidden=\"true\"></span>\n" +
-    "<span ng-switch-when=\"no matching container\" class=\"fa fa-times text-danger\" aria-hidden=\"true\"></span>\n" +
-    "<span ng-switch-when=\"RegistryUnavailable\" class=\"fa fa-times text-danger\" aria-hidden=\"true\"></span>\n" +
-    "<span ng-switch-when=\"RunContainerError\" class=\"fa fa-times text-danger\" aria-hidden=\"true\"></span>\n" +
-    "<span ng-switch-when=\"KillContainerError\" class=\"fa fa-times text-danger\" aria-hidden=\"true\"></span>\n" +
-    "<span ng-switch-when=\"VerifyNonRootError\" class=\"fa fa-times text-danger\" aria-hidden=\"true\"></span>\n" +
-    "<span ng-switch-when=\"SetupNetworkError\" class=\"fa fa-times text-danger\" aria-hidden=\"true\"></span>\n" +
-    "<span ng-switch-when=\"TeardownNetworkError\" class=\"fa fa-times text-danger\" aria-hidden=\"true\"></span>\n" +
-    "<span ng-switch-when=\"DeadlineExceeded\" class=\"fa fa-times text-danger\" aria-hidden=\"true\"></span>\n" +
+    "<span ng-switch-when=\"ContainerCreating\" class=\"spinner spinner-xs spinner-inline\" aria-hidden=\"true\" ng-class=\"{'fa-fw': fixedWidth}\"></span>\n" +
+    "<span ng-switch-when=\"CrashLoopBackOff\" class=\"fa fa-times text-danger\" aria-hidden=\"true\" ng-class=\"{'fa-fw': fixedWidth}\"></span>\n" +
+    "<span ng-switch-when=\"ImagePullBackOff\" class=\"fa fa-times text-danger\" aria-hidden=\"true\" ng-class=\"{'fa-fw': fixedWidth}\"></span>\n" +
+    "<span ng-switch-when=\"ImageInspectError\" class=\"fa fa-times text-danger\" aria-hidden=\"true\" ng-class=\"{'fa-fw': fixedWidth}\"></span>\n" +
+    "<span ng-switch-when=\"ErrImagePull\" class=\"fa fa-times text-danger\" aria-hidden=\"true\" ng-class=\"{'fa-fw': fixedWidth}\"></span>\n" +
+    "<span ng-switch-when=\"ErrImageNeverPull\" class=\"fa fa-times text-danger\" aria-hidden=\"true\" ng-class=\"{'fa-fw': fixedWidth}\"></span>\n" +
+    "<span ng-switch-when=\"no matching container\" class=\"fa fa-times text-danger\" aria-hidden=\"true\" ng-class=\"{'fa-fw': fixedWidth}\"></span>\n" +
+    "<span ng-switch-when=\"RegistryUnavailable\" class=\"fa fa-times text-danger\" aria-hidden=\"true\" ng-class=\"{'fa-fw': fixedWidth}\"></span>\n" +
+    "<span ng-switch-when=\"RunContainerError\" class=\"fa fa-times text-danger\" aria-hidden=\"true\" ng-class=\"{'fa-fw': fixedWidth}\"></span>\n" +
+    "<span ng-switch-when=\"KillContainerError\" class=\"fa fa-times text-danger\" aria-hidden=\"true\" ng-class=\"{'fa-fw': fixedWidth}\"></span>\n" +
+    "<span ng-switch-when=\"VerifyNonRootError\" class=\"fa fa-times text-danger\" aria-hidden=\"true\" ng-class=\"{'fa-fw': fixedWidth}\"></span>\n" +
+    "<span ng-switch-when=\"SetupNetworkError\" class=\"fa fa-times text-danger\" aria-hidden=\"true\" ng-class=\"{'fa-fw': fixedWidth}\"></span>\n" +
+    "<span ng-switch-when=\"TeardownNetworkError\" class=\"fa fa-times text-danger\" aria-hidden=\"true\" ng-class=\"{'fa-fw': fixedWidth}\"></span>\n" +
+    "<span ng-switch-when=\"DeadlineExceeded\" class=\"fa fa-times text-danger\" aria-hidden=\"true\" ng-class=\"{'fa-fw': fixedWidth}\"></span>\n" +
     "</span>"
   );
 
@@ -4570,6 +4538,24 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "</div>\n" +
     "<div ng-if=\"!collapseStagesOnCompletion\" ng-include=\"'views/directives/_build-pipeline-expanded.html'\"></div>\n" +
     "</div>"
+  );
+
+
+  $templateCache.put('views/directives/build-status.html',
+    "<status-icon status=\"build.status.phase\" disable-animation fixed-width=\"true\"></status-icon>\n" +
+    "{{build.status.phase | sentenceCase}}\n" +
+    "<span ng-switch=\"build.status.phase\" class=\"hide-ng-leave\">\n" +
+    "<span ng-switch-when=\"Complete\"> in {{(build.status.startTimestamp || build.metadata.creationTimestamp) | timeOnlyDurationFromTimestamps : build.status.completionTimestamp}}</span>\n" +
+    "<span ng-switch-when=\"Failed\">after <span ng-if=\"!build.status.startTimestamp\">waiting </span>{{(build.status.startTimestamp || build.metadata.creationTimestamp) | timeOnlyDurationFromTimestamps : build.status.completionTimestamp}}</span>\n" +
+    "<span ng-switch-when=\"Cancelled\"> after {{(build.status.startTimestamp || build.metadata.creationTimestamp) | timeOnlyDurationFromTimestamps : build.status.completionTimestamp}}</span>\n" +
+    "<span ng-switch-when=\"Running\"> for <time-only-duration-until-now timestamp=\"build.status.startTimestamp\" time-only></time-only-duration-until-now></span>\n" +
+    "<span ng-switch-when=\"New\">, waiting for <time-only-duration-until-now timestamp=\"build.metadata.creationTimestamp\"></time-only-duration-until-now></span>\n" +
+    "<span ng-switch-when=\"Pending\"> for <time-only-duration-until-now timestamp=\"build.metadata.creationTimestamp\"></time-only-duration-until-now></span>\n" +
+    "<span ng-switch-default>\n" +
+    "<span ng-if=\"build.status.startTimestamp\">, finished in {{build.status.startTimestamp | timeOnlyDurationFromTimestamps : build.status.completionTimestamp}}</span>\n" +
+    "<span ng-if=\"!build.status.startTimestamp\">, waited for {{build.metadata.creationTimestamp | timeOnlyDurationFromTimestamps : build.status.completionTimestamp}}</span>\n" +
+    "</span>\n" +
+    "</span>"
   );
 
 
@@ -4820,11 +4806,18 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
   );
 
 
+  $templateCache.put('views/directives/events-badge.html',
+    "<a ng-href=\"project/{{projectContext.projectName}}/browse/events\" class=\"events-badge visible-xs\"><span class=\"event-label\">Events</span><span ng-if=\"warningCount\" class=\"mar-left-md\"><span class=\"pficon pficon-warning-triangle-o mar-right-sm\" aria-hidden=\"true\"></span><span class=\"sr-only\">Warning</span><span class=\"event-count\">{{warningCount}}</span></span><span ng-if=\"normalCount\" class=\"mar-left-sm\"><span class=\"pficon pficon-info mar-right-sm\" aria-hidden=\"true\"></span><span class=\"sr-only\">Normal</span><span class=\"event-count\">{{normalCount}}</span></span></a>\n" +
+    "<a href=\"\" ng-click=\"expandSidebar()\" ng-if=\"sidebarCollapsed\" class=\"events-badge hidden-xs\"><span class=\"events-sidebar-expand fa fa-arrow-circle-o-left mar-right-md\"><span class=\"sr-only\">Expand event sidebar</span></span><span class=\"event-label\">Events</span><span ng-if=\"warningCount\" class=\"mar-left-md\"><span class=\"pficon pficon-warning-triangle-o mar-right-sm\" aria-hidden=\"true\"></span><span class=\"sr-only\">Warning</span><span class=\"event-count\">{{warningCount}}</span></span><span ng-if=\"normalCount\" class=\"mar-left-sm\"><span class=\"pficon pficon-info mar-right-sm\" aria-hidden=\"true\"></span><span class=\"sr-only\">Normal</span><span class=\"event-count\">{{normalCount}}</span></span></a>"
+  );
+
+
   $templateCache.put('views/directives/events-sidebar.html',
-    "<div class=\"right-container events-sidebar\">\n" +
+    "<div class=\"right-container events-sidebar\" ng-hide=\"sidebarCollapsed\">\n" +
     "<div class=\"sidebar-header right-header\">\n" +
     "<div>\n" +
     "<h2>\n" +
+    "<span class=\"events-sidebar-collapse\"><a href=\"\" class=\"fa fa-arrow-circle-o-right\" title=\"Collapse event sidebar\" ng-click=\"collapseSidebar()\"><span class=\"sr-only\">Collapse event sidebar</span></a></span>\n" +
     "Events\n" +
     "<small ng-if=\"warningCount\" class=\"mar-left-sm\">\n" +
     "<span class=\"pficon pficon-warning-triangle-o\"></span>\n" +
@@ -4841,14 +4834,14 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "</div>\n" +
     "</div>\n" +
     "<div class=\"right-content\">\n" +
-    "<div ng-if=\"!events\">\n" +
+    "<div ng-if=\"!events\" class=\"events pad-left-xl\">\n" +
     "Loading...\n" +
     "</div>\n" +
-    "<div ng-if=\"events\">\n" +
-    "<div ng-if=\"!(events | hashSize)\">\n" +
+    "<div ng-if=\"events\" class=\"events\">\n" +
+    "<div ng-if=\"!(events | hashSize)\" class=\"mar-left-xl\">\n" +
     "<em>No events.</em>\n" +
     "</div>\n" +
-    "<div ng-repeat=\"event in events\" class=\"event animate-repeat\">\n" +
+    "<div ng-repeat=\"event in events\" class=\"event animate-repeat\" ng-class=\"{'highlight': highlightedEvents[event.involvedObject.kind + '/' + event.involvedObject.name]}\">\n" +
     "<span class=\"sr-only\">{{event.type}}</span>\n" +
     "<div class=\"event-icon\" aria-hidden=\"true\">\n" +
     "<div ng-switch=\"event.type\" class=\"hide-ng-leave\">\n" +
@@ -5219,7 +5212,7 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "</form>\n" +
     "<span ng-if=\"state !== 'empty'\" class=\"action-divider\">|</span>\n" +
     "</span>\n" +
-    "<a ng-if=\"state !== 'empty'\" href=\"\" ng-click=\"goChromeless(options)\" role=\"button\">\n" +
+    "<a ng-if=\"state !== 'empty'\" href=\"\" ng-click=\"goChromeless(options, fullLogUrl)\" role=\"button\">\n" +
     "Expand\n" +
     "<i class=\"fa fa-external-link\"></i>\n" +
     "</a>\n" +
@@ -5233,7 +5226,7 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "<div class=\"text-center gutter-top\" ng-if=\"(!state)\">\n" +
     "<ellipsis-loader></ellipsis-loader>\n" +
     "</div>\n" +
-    "<div class=\"empty-state-message text-center\" ng-if=\"state=='empty'\">\n" +
+    "<div class=\"empty-state-message text-center\" ng-if=\"state=='empty'\" ng-class=\"{'log-fixed-height': fixedHeight}\">\n" +
     "<h2>Logs are not available.</h2>\n" +
     "<p>\n" +
     "{{emptyStateMessage}}\n" +
@@ -5250,9 +5243,8 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "</div>\n" +
     "\n" +
     "<div ng-show=\"state=='logs'\">\n" +
-    "<a name=\"logTop\" id=\"logTop\"></a>\n" +
-    "<div class=\"log-view\">\n" +
-    "<div ng-show=\"showScrollLinks\" id=\"affixedFollow\" class=\"log-scroll log-scroll-top\">\n" +
+    "<div class=\"log-view\" id=\"{{logViewerID}}\" ng-class=\"{'log-fixed-height': fixedHeight}\">\n" +
+    "<div ng-show=\"showScrollLinks\" id=\"{{logViewerID}}-affixedFollow\" class=\"log-scroll log-scroll-top\">\n" +
     "<a ng-if=\"loading\" href=\"\" ng-click=\"toggleAutoScroll()\">\n" +
     "<span ng-if=\"!autoScrollActive\">Follow</span>\n" +
     "<span ng-if=\"autoScrollActive\">Stop following</span>\n" +
@@ -5261,21 +5253,20 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "Go to end\n" +
     "</a>\n" +
     "</div>\n" +
-    "<div class=\"log-view-output\">\n" +
+    "<div class=\"log-view-output\" id=\"{{logViewerID}}-fixed-scrollable\">\n" +
     "<table>\n" +
-    "<tbody id=\"logContent\"></tbody>\n" +
+    "<tbody id=\"{{logViewerID}}-logContent\"></tbody>\n" +
     "</table>\n" +
-    "\n" +
-    "<ellipsis-loader ng-show=\"loading\"></ellipsis-loader>\n" +
     "<div ng-if=\"(!loading) && (!limitReached) && (!errorWhileRunning) && state=='logs'\" class=\"log-end-msg\">\n" +
     "End of log\n" +
     "</div>\n" +
     "</div>\n" +
+    "\n" +
+    "<ellipsis-loader ng-show=\"loading\"></ellipsis-loader>\n" +
     "<div ng-show=\"showScrollLinks\" class=\"log-scroll log-scroll-bottom\">\n" +
     "<a href=\"\" ng-click=\"onScrollTop()\">Go to top</a>\n" +
     "</div>\n" +
     "</div>\n" +
-    "<a id=\"logBottom\" name=\"logBottom\"></a>\n" +
     "</div>\n" +
     "\n" +
     "<div ng-if=\"limitReached\" class=\"text-muted\">\n" +
@@ -6751,6 +6742,7 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "<div id=\"scrollable-content\" class=\"middle-container has-scroll\">\n" +
     "<div class=\"middle-header\">\n" +
     "<div class=\"container-fluid\">\n" +
+    "<breadcrumbs breadcrumbs=\"breadcrumbs\"></breadcrumbs>\n" +
     "<div class=\"page-header page-header-bleed-right page-header-bleed-left\">\n" +
     "<h1>Events</h1>\n" +
     "</div>\n" +
@@ -7147,6 +7139,280 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "<button class=\"btn btn-lg btn-default\" type=\"button\" ng-click=\"cancel();\">Cancel</button>\n" +
     "</div>\n" +
     "</div>"
+  );
+
+
+  $templateCache.put('views/monitoring.html',
+    "<project-header class=\"top-header\"></project-header>\n" +
+    "<project-page>\n" +
+    "\n" +
+    "<div class=\"middle-section\">\n" +
+    "<div id=\"scrollable-content\" class=\"middle-container has-scroll\">\n" +
+    "<div class=\"middle-header header-light\">\n" +
+    "<div class=\"container-fluid\">\n" +
+    "<div class=\"page-header page-header-bleed-right page-header-bleed-left\">\n" +
+    "<h1>\n" +
+    "Monitoring\n" +
+    "<events-badge project-context=\"projectContext\" ng-if=\"projectContext\" class=\"pull-right\" sidebar-collapsed=\"renderOptions.collapseEventsSidebar\"></events-badge>\n" +
+    "</h1>\n" +
+    "</div>\n" +
+    "<alerts alerts=\"alerts\"></alerts>\n" +
+    "<div class=\"data-toolbar\">\n" +
+    "<ui-select ng-model=\"kindSelector.selected\" theme=\"bootstrap\" search-enabled=\"true\" ng-disabled=\"kindSelector.disabled\" title=\"Choose a resource\" class=\"data-toolbar-dropdown\">\n" +
+    "<ui-select-match placeholder=\"Choose a resource\">{{$select.selected.label ? $select.selected.label : ($select.selected.kind | humanizeKind : true)}}</ui-select-match>\n" +
+    "<ui-select-choices repeat=\"kind in kinds | filter : {kind: $select.search} : matchKind | orderBy : 'kind'\">\n" +
+    "<div ng-bind-html=\"(kind.label ? kind.label : (kind.kind | humanizeKind : true)) | highlight: $select.search\"></div>\n" +
+    "</ui-select-choices>\n" +
+    "</ui-select>\n" +
+    "<div class=\"vertical-divider\"></div>\n" +
+    "<div class=\"data-toolbar-filter form-inline\">\n" +
+    "<div class=\"form-group filter-controls\">\n" +
+    "<label for=\"events-filter\" class=\"sr-only\">Filter by name</label>\n" +
+    "<input type=\"search\" placeholder=\"Filter by name\" class=\"form-control\" id=\"events-filter\" ng-model=\"filters.text\">\n" +
+    "</div>\n" +
+    "</div>\n" +
+    "<div class=\"checkbox\">\n" +
+    "<label>\n" +
+    "<input type=\"checkbox\" ng-model=\"filters.hideOlderResources\">Hide older resources\n" +
+    "</label>\n" +
+    "</div>\n" +
+    "</div>\n" +
+    "</div>\n" +
+    "</div>\n" +
+    "<div class=\"middle-content\">\n" +
+    "<div class=\"container-fluid\">\n" +
+    "<div class=\"row\">\n" +
+    "<div class=\"col-md-12\">\n" +
+    "<div ng-if=\"kindSelector.selected.kind === 'All' || kindSelector.selected.kind === 'Builds'\">\n" +
+    "<h2>Builds</h2>\n" +
+    "<div class=\"list-view-pf\">\n" +
+    "<div class=\"list-group-item\" ng-if=\"!(filteredBuilds | hashSize)\">\n" +
+    "<div class=\"list-view-pf-main-info\">\n" +
+    "<em>\n" +
+    "<span ng-if=\"!(builds | hashSize)\">\n" +
+    "There are no builds in this project.\n" +
+    "</span>\n" +
+    "<span ng-if=\"builds | hashSize\">\n" +
+    "The current filters are hiding all builds.\n" +
+    "</span>\n" +
+    "</em>\n" +
+    "</div>\n" +
+    "</div>\n" +
+    "<div class=\"list-group-item list-group-item-expandable\" ng-repeat-start=\"build in filteredBuilds track by (build | uid)\" ng-click=\"expanded = !expanded; toggleItem(build, expanded)\" ng-class=\"{'expanded': expanded}\">\n" +
+    "<div class=\"list-view-pf-checkbox\">\n" +
+    "<a href=\"\">\n" +
+    "<span ng-if=\"expanded\">\n" +
+    "<span class=\"fa fa-angle-down\"></span>\n" +
+    "<span class=\"sr-only\">Collapse</span>\n" +
+    "</span>\n" +
+    "<span ng-if=\"!expanded\">\n" +
+    "<span class=\"fa fa-angle-right\"></span>\n" +
+    "<span class=\"sr-only\">Expand</span>\n" +
+    "</span>\n" +
+    "</a>\n" +
+    "</div>\n" +
+    "<div class=\"list-view-pf-main-info\">\n" +
+    "<div class=\"list-view-pf-body\">\n" +
+    "<div class=\"list-view-pf-description\">\n" +
+    "<div class=\"list-group-item-heading\">\n" +
+    "{{build.metadata.name}}\n" +
+    "<small>created <relative-timestamp timestamp=\"build.metadata.creationTimestamp\"></relative-timestamp></small>\n" +
+    "</div>\n" +
+    "<div class=\"list-group-item-text\">\n" +
+    "<build-status build=\"build\"></build-status>\n" +
+    "</div>\n" +
+    "</div>\n" +
+    "<div class=\"list-view-pf-additional-info\">\n" +
+    "<div class=\"list-view-pf-additional-info-item\">\n" +
+    "<span ng-if=\"build.spec.source.type || build.spec.revision.git.commit || build.spec.source.git.uri\">\n" +
+    "<span class=\"fa fa-code\"></span>\n" +
+    "<span ng-if=\"build.spec.revision.git.commit\">\n" +
+    "{{build.spec.revision.git.message}}\n" +
+    "<osc-git-link class=\"hash\" uri=\"build.spec.source.git.uri\" commit=\"build.spec.revision.git.commit\">{{build.spec.revision.git.commit | limitTo:7}}</osc-git-link>\n" +
+    "<span ng-if=\"detailed && build.spec.revision.git.author\">\n" +
+    "authored by {{build.spec.revision.git.author.name}}\n" +
+    "</span>\n" +
+    "</span>\n" +
+    "<span ng-if=\"!build.spec.revision.git.commit && build.spec.source.git.uri\">\n" +
+    "<osc-git-link uri=\"build.spec.source.git.uri\">{{build.spec.source.git.uri}}</osc-git-link>\n" +
+    "</span>\n" +
+    "<span ng-if=\"build.spec.source.type && !build.spec.source.git\">\n" +
+    "Source: {{build.spec.source.type}}\n" +
+    "</span>\n" +
+    "</span>\n" +
+    "</div>\n" +
+    "</div>\n" +
+    "</div>\n" +
+    "</div>\n" +
+    "</div>\n" +
+    "<div ng-repeat-end ng-if=\"expanded\" class=\"list-group-expanded-section\" ng-class=\"{'expanded': expanded}\">\n" +
+    "\n" +
+    "<log-viewer ng-if=\"'builds/log' | canI : 'get'\" resource=\"builds/log\" name=\"build.metadata.name\" context=\"projectContext\" options=\"logOptions.builds[build.metadata.name]\" empty=\"logEmpty.builds[build.metadata.name]\" run=\"logCanRun.builds[build.metadata.name]\" fixed-height=\"250\" full-log-url=\"(build | navigateResourceURL) + '?view=chromeless'\">\n" +
+    "<div ng-if=\"build.status.startTimestamp && !logEmpty.builds[build.metadata.name]\" class=\"log-timestamps\" style=\"margin-left: 0\">\n" +
+    "Log from {{build.status.startTimestamp | date : 'short'}}\n" +
+    "<span ng-if=\"build.status.completionTimestamp\">\n" +
+    "to {{build.status.completionTimestamp | date : 'short'}}\n" +
+    "</span>\n" +
+    "</div>\n" +
+    "</log-viewer>\n" +
+    "<div class=\"mar-top-lg\" ng-if=\"metricsAvailable && podsByName[(build | annotation : 'buildPod')]\">\n" +
+    "<metrics pod=\"podsByName[(build | annotation : 'buildPod')]\"></metrics>\n" +
+    "</div>\n" +
+    "</div>\n" +
+    "</div>\n" +
+    "</div>\n" +
+    "<div ng-if=\"kindSelector.selected.kind === 'All' || kindSelector.selected.kind === 'ReplicationControllers'\">\n" +
+    "<h2>Deployments</h2>\n" +
+    "<div class=\"list-view-pf\">\n" +
+    "<div class=\"list-group-item\" ng-if=\"!(filteredDeployments | hashSize)\">\n" +
+    "<div class=\"list-view-pf-main-info\">\n" +
+    "<em>\n" +
+    "<span ng-if=\"!(deployments | hashSize)\">\n" +
+    "There are no deployments in this project.\n" +
+    "</span>\n" +
+    "<span ng-if=\"deployments | hashSize\">\n" +
+    "The current filters are hiding all deployments.\n" +
+    "</span>\n" +
+    "</em>\n" +
+    "</div>\n" +
+    "</div>\n" +
+    "<div class=\"list-group-item list-group-item-expandable\" ng-repeat-start=\"deployment in filteredDeployments track by (deployment | uid)\" ng-click=\"expanded = !expanded; toggleItem(deployment, expanded)\" ng-class=\"{'expanded': expanded}\">\n" +
+    "<div class=\"list-view-pf-checkbox\">\n" +
+    "<a href=\"\">\n" +
+    "<span ng-if=\"expanded\">\n" +
+    "<span class=\"fa fa-angle-down\"></span>\n" +
+    "<span class=\"sr-only\">Collapse</span>\n" +
+    "</span>\n" +
+    "<span ng-if=\"!expanded\">\n" +
+    "<span class=\"fa fa-angle-right\"></span>\n" +
+    "<span class=\"sr-only\">Expand</span>\n" +
+    "</span>\n" +
+    "</a>\n" +
+    "</div>\n" +
+    "<div class=\"list-view-pf-main-info\">\n" +
+    "<div class=\"list-view-pf-body\">\n" +
+    "<div class=\"list-view-pf-description\">\n" +
+    "<div class=\"list-group-item-heading\">\n" +
+    "{{deployment.metadata.name}}\n" +
+    "<small>created <relative-timestamp timestamp=\"deployment.metadata.creationTimestamp\"></relative-timestamp></small>\n" +
+    "</div>\n" +
+    "<div class=\"list-group-item-text\">\n" +
+    "<status-icon status=\"deployment | deploymentStatus\" disable-animation fixed-width=\"true\"></status-icon>\n" +
+    "{{deployment | deploymentStatus | sentenceCase}}<span ng-if=\"(deployment | deploymentStatus) === 'Active'\">, {{deployment.status.replicas}} replica<span ng-if=\"deployment.status.replicas !== 1\">s</span></span>\n" +
+    "</div>\n" +
+    "</div>\n" +
+    "<div class=\"list-view-pf-additional-info\">\n" +
+    "<div class=\"list-view-pf-additional-info-item\">\n" +
+    "<span class=\"pficon pficon-image\"></span>\n" +
+    "<span>{{deployment.spec.template.spec.containers[0].image | imageStreamName}}</span>\n" +
+    "<span ng-if=\"sha = (deployment.spec.template.spec.containers[0].image | imageSHA)\" title=\"{{sha}}\">\n" +
+    "<span>@</span><span class=\"hash\">{{sha | stripSHAPrefix | limitTo: 7}}</span>\n" +
+    "</span>\n" +
+    "<span ng-if=\"deployment.spec.template.spec.containers.length > 1\"> and {{deployment.spec.template.spec.containers.length - 1}} other image<span ng-if=\"deployment.spec.template.spec.containers.length > 2\">s</span></span>\n" +
+    "</div>\n" +
+    "</div>\n" +
+    "</div>\n" +
+    "</div>\n" +
+    "</div>\n" +
+    "<div ng-repeat-end ng-if=\"expanded\" class=\"list-group-expanded-section\" ng-class=\"{'expanded': expanded}\">\n" +
+    "\n" +
+    "<log-viewer ng-if=\"'deploymentconfigs/log' | canI : 'get'\" resource=\"deploymentconfigs/log\" name=\"deployment | annotation : 'deploymentConfig'\" context=\"projectContext\" options=\"logOptions.deployments[deployment.metadata.name]\" empty=\"logEmpty.deployments[deployment.metadata.name]\" run=\"logCanRun.deployments[deployment.metadata.name]\" fixed-height=\"250\" full-log-url=\"(deployment | navigateResourceURL) + '?view=chromeless'\">\n" +
+    "<div ng-if=\"deployment.metadata.creationTimestamp && !logEmpty.deployments[deployment.metadata.name]\" class=\"log-timestamps\" style=\"margin-left: 0\">\n" +
+    "<div ng-if=\"(deployment | deploymentStatus) !== 'Deployed'\">\n" +
+    "Log from {{deployment.metadata.creationTimestamp | date : 'short'}}\n" +
+    "</div>\n" +
+    "</div>\n" +
+    "</log-viewer>\n" +
+    "<div class=\"mar-top-lg\" ng-if=\"metricsAvailable\">\n" +
+    "<metrics deployment=\"deployment\"></metrics>\n" +
+    "</div>\n" +
+    "</div>\n" +
+    "</div>\n" +
+    "</div>\n" +
+    "<div ng-if=\"kindSelector.selected.kind === 'All' || kindSelector.selected.kind === 'Pods'\">\n" +
+    "<h2>Pods</h2>\n" +
+    "<div class=\"list-view-pf\">\n" +
+    "<div class=\"list-group-item\" ng-if=\"!(filteredPods | hashSize)\">\n" +
+    "<div class=\"list-view-pf-main-info\">\n" +
+    "<em>\n" +
+    "<span ng-if=\"!(pods | hashSize)\">\n" +
+    "There are no pods in this project.\n" +
+    "</span>\n" +
+    "<span ng-if=\"pods | hashSize\">\n" +
+    "The current filters are hiding all pods.\n" +
+    "</span>\n" +
+    "</em>\n" +
+    "</div>\n" +
+    "</div>\n" +
+    "<div class=\"list-group-item list-group-item-expandable\" ng-repeat-start=\"pod in filteredPods track by (pod | uid)\" ng-click=\"expanded = !expanded; toggleItem(pod, expanded)\" ng-class=\"{'expanded': expanded}\">\n" +
+    "<div class=\"list-view-pf-checkbox\">\n" +
+    "<a href=\"\">\n" +
+    "<span ng-if=\"expanded\">\n" +
+    "<span class=\"fa fa-angle-down\"></span>\n" +
+    "<span class=\"sr-only\">Collapse</span>\n" +
+    "</span>\n" +
+    "<span ng-if=\"!expanded\">\n" +
+    "<span class=\"fa fa-angle-right\"></span>\n" +
+    "<span class=\"sr-only\">Expand</span>\n" +
+    "</span>\n" +
+    "</a>\n" +
+    "</div>\n" +
+    "<div class=\"list-view-pf-main-info\">\n" +
+    "<div class=\"list-view-pf-body\">\n" +
+    "<div class=\"list-view-pf-description\">\n" +
+    "<div class=\"list-group-item-heading\">\n" +
+    "{{pod.metadata.name}}\n" +
+    "<small>created <relative-timestamp timestamp=\"pod.metadata.creationTimestamp\"></relative-timestamp></small>\n" +
+    "</div>\n" +
+    "<div class=\"list-group-item-text\">\n" +
+    "<status-icon status=\"pod | podStatus\" disable-animation fixed-width=\"true\"></status-icon>\n" +
+    "{{pod | podStatus | sentenceCase}}\n" +
+    "</div>\n" +
+    "</div>\n" +
+    "<div class=\"list-view-pf-additional-info\">\n" +
+    "<div class=\"list-view-pf-additional-info-item\">\n" +
+    "<span class=\"pficon pficon-image\"></span>\n" +
+    "<span>{{pod.spec.containers[0].image | imageStreamName}}</span>\n" +
+    "<span ng-if=\"sha = (pod.spec.containers[0].image | imageSHA)\" title=\"{{sha}}\">\n" +
+    "<span>@</span><span class=\"hash\">{{sha | stripSHAPrefix | limitTo: 7}}</span>\n" +
+    "</span>\n" +
+    "<span ng-if=\"pod.spec.containers.length > 1\" class=\"mar-left-xs\">and {{pod.spec.containers.length - 1}} other image<span ng-if=\"pod.spec.containers.length > 2\">s</span></span>\n" +
+    "</div>\n" +
+    "</div>\n" +
+    "</div>\n" +
+    "</div>\n" +
+    "</div>\n" +
+    "<div ng-repeat-end ng-if=\"expanded\" class=\"list-group-expanded-section\" ng-class=\"{'expanded': expanded}\">\n" +
+    "<log-viewer ng-if=\"'pods/log' | canI : 'get'\" resource=\"pods/log\" name=\"pod.metadata.name\" context=\"projectContext\" options=\"logOptions.pods[pod.metadata.name]\" empty=\"logEmpty.pods[pod.metadata.name]\" run=\"logCanRun.pods[pod.metadata.name]\" fixed-height=\"250\" full-log-url=\"(pod | navigateResourceURL) + '?view=chromeless'\">\n" +
+    "<label for=\"selectLogContainer\">Container:</label>\n" +
+    "<span ng-if=\"pod.spec.containers.length === 1\">\n" +
+    "{{pod.spec.containers[0].name}}\n" +
+    "</span>\n" +
+    "<select id=\"selectLogContainer\" ng-if=\"pod.spec.containers.length > 1\" ng-model=\"logOptions.pods[pod.metadata.name].container\" ng-options=\"container.name as container.name for container in pod.spec.containers\" ng-init=\"logOptions.pods[pod.metadata.name].container = pod.spec.containers[0].name\">\n" +
+    "</select>\n" +
+    "<span ng-if=\"containerStateReason || containerStatusKey\">\n" +
+    "<span class=\"dash\">&mdash;</span>\n" +
+    "<status-icon status=\"containerStateReason || (containerStatusKey | capitalize)\"></status-icon>\n" +
+    "<span>{{containerStateReason || containerStatusKey | sentenceCase}}</span>\n" +
+    "</span>\n" +
+    "<span ng-if=\"containerStartTime && !logEmpty.pods[pod.metadata.name]\">\n" +
+    "<span class=\"log-timestamps\">Log from {{containerStartTime | date : 'short'}} <span ng-if=\"containerEndTime\">to {{containerEndTime | date : 'short'}}</span></span>\n" +
+    "</span>\n" +
+    "</log-viewer>\n" +
+    "\n" +
+    "<div class=\"mar-top-lg\" ng-if=\"metricsAvailable\">\n" +
+    "<metrics pod=\"pod\"></metrics>\n" +
+    "</div>\n" +
+    "</div>\n" +
+    "</div>\n" +
+    "</div>\n" +
+    "</div>\n" +
+    "</div>\n" +
+    "</div>\n" +
+    "</div>\n" +
+    "</div>\n" +
+    "</div>\n" +
+    "</project-page>"
   );
 
 

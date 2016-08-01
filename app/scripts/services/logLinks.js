@@ -1,12 +1,7 @@
 'use strict';
 
 angular.module('openshiftConsole')
-  .factory('logLinks', [
-    '$anchorScroll',
-    '$document',
-    '$location',
-    '$window',
-    function($anchorScroll, $document, $location, $window) {
+  .factory('logLinks', function($anchorScroll, $document, $location, $window) {
       // TODO (bpeterse): a lot of these functions are generic and could be moved/renamed to
       // a navigation oriented service.
 
@@ -38,25 +33,24 @@ angular.module('openshiftConsole')
       };
 
 
-      // @params an object or array of objects
-      var newTab = function(params) {
-        params = _.flatten([params]);
-        var uri = new URI();
-        _.each(params, function(param) {
-          uri.addSearch(param);
-        });
-        $window.open(uri.toString(), '_blank');
-      };
-
       // new tab: path/to/current?view=chromeless
-      var chromelessLink = function(options) {
+      var chromelessLink = function(options, fullLogURL) {
+        if (fullLogURL) {
+          $window.open(fullLogURL, '_blank');
+          return;
+        }
         var params = {
           view: 'chromeless'
         };
         if (options && options.container) {
           params.container = options.container;
         }
-        newTab(params);
+        params = _.flatten([params]);
+        var uri = new URI();
+        _.each(params, function(param) {
+          uri.addSearch(param);
+        });        
+        $window.open(uri.toString(), '_blank');
       };
 
       // broken up for readability:
@@ -96,9 +90,8 @@ angular.module('openshiftConsole')
         scrollTop: scrollTop,
         scrollBottom: scrollBottom,
         scrollTo: scrollTo,
-        newTab: newTab,
         chromelessLink: chromelessLink,
         archiveUri: archiveUri
       };
     }
-  ]);
+  );

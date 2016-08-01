@@ -151,9 +151,6 @@
 }
 
 .show-sidebar-right {
-  .right-content {
-    padding: 20px;
-  }
   .sidebar-right {
     background-color: @body-bg;
     .sidebar-header {
@@ -304,16 +301,32 @@
   }
 }
 
+.events-sidebar-expand {
+  font-size: 16px;
+
+  a {
+    text-decoration: none;
+  }
+} 
+
 .events-sidebar {
   .pficon {
     vertical-align: middle;
   }
+  .events-sidebar-collapse {
+    font-size: 16px;
+    margin-right: 12px;
+
+    a {
+      text-decoration: none;
+    }
+  }  
   .sidebar-header {
     align-items: center;
     display: flex;
     justify-content: space-between;
     h2 {
-      .h5();
+      .h4();
       display: inline-block;
     }
     .event-details-link {
@@ -322,10 +335,22 @@
     }
   }
   .right-content {
+    .events {
+      padding-top: 10px;
+    }
     .event {
+      border: 1px solid transparent;
       display: flex;
       align-items: center;
-      margin-bottom: 10px;
+      padding: 10px 20px;
+      &.highlight {
+        background-color: @list-view-expanded-bg;
+        border-bottom-width: 0;
+        border-color:  @table-border-color !important;
+      }
+      + .event {
+        border-top: 1px solid #ededed;
+      }
       .event-icon {
         font-size: 18px;
         margin-right: 10px;
@@ -366,9 +391,25 @@
         }
       }
     }
-    .event + .event {
-      border-top: 1px solid #ededed;
-      padding-top: 10px;
+
+    .event.highlight + .event {
+      border-top: 1px solid #d1d1d1;
     }
+  }
+}
+
+.events-badge {
+  font-size: 14px;
+  &:hover {
+    text-decoration: none;
+    .event-label {
+      text-decoration: underline;
+    }
+  }
+  .event-count {
+    color: @text-color;
+  }
+  .pficon-info {
+    color: @text-muted;
   }
 }

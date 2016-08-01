@@ -58,7 +58,11 @@ angular
       .when('/project/:project/quota', {
         templateUrl: 'views/quota.html',
         controller: 'QuotaController'
-      })      
+      })
+      .when('/project/:project/monitoring', {
+        templateUrl: 'views/monitoring.html',
+        controller: 'MonitoringController'
+      })         
       .when('/project/:project/browse', {
         redirectTo: function(params) {
           return '/project/' + encodeURIComponent(params.project) + "/browse/pods";  // TODO decide what subtab to default to here
@@ -336,7 +340,7 @@ angular
       LabelFilter.setLabelSelector(new LabelSelector({}, true), true);
     });
   })
-  .run(function(dateRelativeFilter, durationFilter) {
+  .run(function(dateRelativeFilter, durationFilter, timeOnlyDurationFromTimestampsFilter) {
     // Use setInterval instead of $interval because we're directly manipulating the DOM and don't want scope.$apply overhead
     setInterval(function() {
       // Set by relative-timestamp directive.
@@ -350,7 +354,13 @@ angular
         var timestamp = $(this).data("timestamp");
         var omitSingle = $(this).data("omit-single");
         var precision = $(this).data("precision");
-        return durationFilter(timestamp, null, omitSingle, precision) || existing;
+        var timeOnly  = $(this).data("time-only");
+        if (timeOnly) {
+          return timeOnlyDurationFromTimestampsFilter(timestamp, null) || existing;
+        }
+        else {
+          return durationFilter(timestamp, null, omitSingle, precision) || existing;
+        }
       });
     }, 1000);
   });
