@@ -3992,32 +3992,31 @@ ul.messenger-theme-flat .messenger-message.alert-info .messenger-message-inner:b
 .overview .builds-block .builds .build:first-child{padding-top:5px}
 .overview .builds-block .builds .build:last-child{border-bottom:1px solid #d6d6d6;padding-bottom:5px}
 .overview .loading-message{font-weight:400;margin-top:5px}
-.overview .service-group{margin-bottom:25px;position:relative;width:100%}
-.overview .service-group:before{content:"";display:block;height:100%;width:3px;position:absolute;background:#00b9e4;left:-2px;z-index:1}
-.overview .service-group .alert-wrapper{width:100%;padding-right:5px}
-.overview .service-group .alert-wrapper .alert{width:100%;border-color:#d6d6d6;margin-bottom:0;margin-left:6px;margin-top:6px;box-shadow:0 2px 6px rgba(0,0,0,.1)}
-.overview .service-group .alert-wrapper .alert .pficon{box-shadow:none}
-.overview .service-group .alert-wrapper .alert .close{color:#8b8d8f}
+.overview .service-group-with-route-row .service-group,.overview .standalone-service-row .service-group{margin-bottom:25px;position:relative;width:100%}
+.overview .service-group-with-route-row .service-group:before,.overview .standalone-service-row .service-group:before{content:"";display:block;height:100%;width:3px;position:absolute;background:#00b9e4;left:0;z-index:1}
+.overview .service-group-with-route-row .service-group .alert-wrapper,.overview .standalone-service-row .service-group .alert-wrapper{width:100%;padding-right:5px}
+.overview .service-group-with-route-row .service-group .alert-wrapper .alert,.overview .standalone-service-row .service-group .alert-wrapper .alert{width:100%;border-color:#d6d6d6;margin-bottom:0;margin-left:6px;margin-top:6px;box-shadow:0 2px 6px rgba(0,0,0,.1)}
+.overview .service-group-with-route-row .service-group .alert-wrapper .alert .pficon,.overview .standalone-service-row .service-group .alert-wrapper .alert .pficon{box-shadow:none}
+.overview .service-group-with-route-row .service-group .alert-wrapper .alert .close,.overview .standalone-service-row .service-group .alert-wrapper .alert .close{color:#8b8d8f}
 .overview overview-deployment-config,.overview overview-pod,.overview overview-replication-controller{display:-webkit-flex;display:-moz-flex;display:-ms-flexbox;display:-ms-flex;display:flex;width:100%}
 .overview .deployment-tile,.overview .no-deployments-block .service-title,.overview .service-group-header{background-color:#fff;border:1px solid #d6d6d6;border-left-width:0}
-.overview .deployment-tile,.overview .no-deployments-block .service-title,.overview .service-group-header,.overview .standalone-service .builds-block{box-shadow:0 2px 6px rgba(0,0,0,.1)}
-.overview .standalone-service{width:100%}
+.overview .deployment-tile,.overview .no-deployments-block .service-title,.overview .service-group-header,.overview .service-group-triggers,.overview .standalone-service .builds-block{box-shadow:0 2px 6px rgba(0,0,0,.1)}
+.overview .standalone-service{width:100%;display:flex;position:relative}
 .overview .standalone-service overview-service{-webkit-flex:0 0 100%;-moz-flex:0 0 100%;-ms-flex:0 0 100%;flex:0 0 100%}
 .overview .standalone-service .builds-block .builds .build:last-child{margin-bottom:6px}
 .overview .standalone-service .service-group-body .overview-services overview-service{max-width:none}
 .overview .standalone-service .service-group-body .overview-services .deployment-tile{margin-top:0}
-.overview .standalone-service overview-service-group{display:-webkit-flex;display:-moz-flex;display:-ms-flexbox;display:-ms-flex;display:flex}
+.overview .standalone-service overview-service-group{width:100%}
 .overview .standalone-service .service-group>div{display:-webkit-flex;display:-moz-flex;display:-ms-flexbox;display:-ms-flex;display:flex;-webkit-flex-direction:column;-moz-flex-direction:column;-ms-flex-direction:column;flex-direction:column;height:100%}
 .overview .standalone-service .service-group-body .overview-services .primary-service .deployment-block{display:-webkit-flex;display:-moz-flex;display:-ms-flexbox;display:-ms-flex;display:flex}
 .overview .standalone-service .alert-wrapper .alert{margin-bottom:6px;margin-top:0}
 .overview .standalone-service .service-group-body{margin-top:0;display:-webkit-flex;display:-moz-flex;display:-ms-flexbox;display:-ms-flex;display:flex;-webkit-flex-direction:column;-moz-flex-direction:column;-ms-flex-direction:column;flex-direction:column;width:100%}
 .overview .standalone-service .service-group-body .overview-services{-webkit-flex-direction:row;-moz-flex-direction:row;-ms-flex-direction:row;flex-direction:row}
 .overview .standalone-service .service-group-body .overview-services .no-child-services-message,.overview .standalone-service .service-group-body .overview-services overview-service{max-width:none;margin-top:0}
-@media (min-width:568px){.overview .standalone-service .service-group-body .overview-services .no-child-services-message,.overview .standalone-service .service-group-body .overview-services overview-service{-webkit-flex:1 0 0%;-moz-flex:1 0 0%;-ms-flex:1 0 0%;flex:1 0 0%}
-}
+.overview .standalone-service .service-group-body .overview-services .no-child-services-message{display:none}
 .overview .unserviced-row{-webkit-justify-content:space-between;-moz-justify-content:space-between;justify-content:space-between}
 .overview .unserviced-row .no-service{display:-webkit-flex;display:-moz-flex;display:-ms-flexbox;display:-ms-flex;display:flex;width:100%;margin-bottom:20px;position:relative}
-.overview .unserviced-row .no-service:before{content:"";display:block;height:100%;width:3px;position:absolute;background:#00b9e4;left:-2px;top:0;z-index:1}
+.overview .unserviced-row .no-service:before{content:"";display:block;height:100%;width:3px;position:absolute;background:#00b9e4;left:0;top:0;z-index:1}
 @media (min-width:568px){.overview .unserviced-row .no-service{width:50%}
 .overview .unserviced-row .no-service:nth-child(odd){padding-right:3px}
 .overview .unserviced-row .no-service:nth-child(even){padding-left:3px}
@@ -4046,10 +4045,14 @@ ul.messenger-theme-flat .messenger-message.alert-info .messenger-message-inner:b
 .overview .service-group-body .overview-services .deployment-block.service-multiple-targets,.overview .service-group-body .overview-services .deployment-block.service-multiple-targets .deployment-tile-wrapper{display:block}
 .overview .service-group-body .overview-services .deployment-tile-wrapper{display:-webkit-flex;display:-moz-flex;display:-ms-flexbox;display:-ms-flex;display:flex;-webkit-flex:1 0 0%;-moz-flex:1 0 0%;-ms-flex:1 0 0%;flex:1 0 0%}
 .overview .service-group-body .overview-services .deployment-tile{-webkit-flex:1 0 0%;-moz-flex:1 0 0%;-ms-flex:1 0 0%;flex:1 0 0%;position:relative}
-@media (min-width:568px){.overview .service-group-body .overview-services{-webkit-flex-direction:row;-moz-flex-direction:row;-ms-flex-direction:row;flex-direction:row}
-.overview .service-group-body .overview-services overview-service{display:-webkit-flex;display:-moz-flex;display:-ms-flexbox;display:-ms-flex;display:flex;width:50%;-webkit-flex-direction:row;-moz-flex-direction:row;-ms-flex-direction:row;flex-direction:row}
-.overview .service-group-body .overview-services overview-service:nth-child(even){padding-left:3px}
-.overview .service-group-body .overview-services overview-service:nth-child(odd){padding-right:3px}
+@media (min-width:568px){.overview .service-group-with-route-row .overview-services{-webkit-flex-direction:row;-moz-flex-direction:row;-ms-flex-direction:row;flex-direction:row}
+.overview .service-group-with-route-row .overview-services overview-service{width:50%}
+.overview .service-group-with-route-row .overview-services overview-service:nth-child(even){padding-left:3px}
+.overview .service-group-with-route-row .overview-services overview-service:nth-child(odd){padding-right:3px}
+}
+@media (min-width:568px) and (min-width:568px){.overview .standalone-service-row .standalone-service{width:50%}
+.overview .standalone-service-row .standalone-service:nth-child(odd){padding-right:3px}
+.overview .standalone-service-row .standalone-service:nth-child(even){padding-left:3px}
 }
 .overview .component-label{color:#9c9c9c;font-size:11px;padding:0 10px 4px 0;text-transform:uppercase}
 .overview .deployment-tile .rc-header,.overview .service-title{color:#9c9c9c;padding:5px 10px}
@@ -4085,7 +4088,7 @@ ul.messenger-theme-flat .messenger-message.alert-info .messenger-message-inner:b
 .overview .deployment-tile .deployment-status-msg .deployment-log-link{font-size:14px}
 }
 .overview .no-deployments-block,.overview .shield .shield-number{display:-webkit-flex;display:-moz-flex;display:-ms-flexbox;display:-ms-flex}
-.overview .no-deployments-block{display:flex;width:100%}
+.overview .no-deployments-block{display:flex;height:100%;width:100%}
 .overview .no-child-services-block{padding-left:3px;width:50%}
 .overview .no-child-services-message,.overview .no-deployments-message{text-align:center;color:#9c9c9c;min-height:20px;background-color:#f5f5f5;border:1px solid #e3e3e3;border-radius:1px;-webkit-box-shadow:inset 0 1px 1px rgba(0,0,0,.05);box-shadow:inset 0 1px 1px rgba(0,0,0,.05);-webkit-justify-content:center;-moz-justify-content:center;justify-content:center;margin-bottom:0;padding:0}
 .overview .no-child-services-message blockquote,.overview .no-deployments-message blockquote{border-color:#ddd;border-color:rgba(0,0,0,.15)}

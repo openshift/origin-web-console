@@ -48,7 +48,8 @@
     font-weight: normal;
     margin-top: 5px;
   }
-  .service-group {
+  .service-group-with-route-row .service-group,
+  .standalone-service-row .service-group {
     margin-bottom: 25px;
     position: relative;
     width: 100%;
@@ -59,7 +60,7 @@
       width: 3px;
       position: absolute;
       background: @color-pf-light-blue-400;
-      left: -2px;
+      left: 0;
       z-index: 1;
     }
     .alert-wrapper {
@@ -98,11 +99,14 @@
   .service-group-header,
   .deployment-tile,
   .standalone-service .builds-block,
-  .no-deployments-block .service-title {
+  .no-deployments-block .service-title,
+  .service-group-triggers {
     box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1);
   }
   .standalone-service {
     width: 100%;
+    display: flex;
+    position: relative;
     overview-service {
       .flex(@columns: 0 0 100%);
     }
@@ -118,7 +122,7 @@
       }
     }
     overview-service-group {
-      .flex-display(@display: flex);
+      width: 100%;
     }
     .service-group > div {
       .flex-display(@display: flex);
@@ -150,11 +154,11 @@
           min-height: 255px;
         }
         overview-service,.no-child-services-message {
-          @media(min-width: @two-column-min-width) {
-            .flex(@columns: 1 0 0%);
-          }
           max-width: none;
           margin-top: 0;
+        }
+        .no-child-services-message {
+          display: none;
         }
       }
     }
@@ -173,7 +177,7 @@
         width: 3px;
         position: absolute;
         background: @color-pf-light-blue-400;
-        left: -2px;
+        left: 0;
         top: 0;
         z-index: 1;
       }
@@ -276,19 +280,30 @@
         position: relative;
       }
     }
-    @media (min-width: @two-column-min-width) {
-      .overview-services {
-        .flex-direction(@direction: row);
-        overview-service {
-          .flex-display(@display: flex);
-          width: 50%;
-          .flex-direction(@direction: row);
-          &:nth-child(even) {
-            padding-left: 3px;
-          }
-          &:nth-child(odd) {
-            padding-right: 3px;
-          }
+  }
+  // Set 2 column widths and padding
+  @media (min-width: @two-column-min-width) {
+    .service-group-with-route-row .overview-services {
+      .flex-direction(@direction: row);
+      overview-service {
+        width: 50%;
+        
+        &:nth-child(even) {
+          padding-left: 3px;
+        }
+        &:nth-child(odd) {
+          padding-right: 3px;
+        }
+      }
+    }
+    @media (min-width: @two-column-min-width) { 
+      .standalone-service-row .standalone-service {
+        width: 50%;
+        &:nth-child(odd) {
+          padding-right: 3px;
+        }
+        &:nth-child(even) {
+          padding-left: 3px;
         }
       }
     }
@@ -430,6 +445,7 @@
   }
   .no-deployments-block {
     .flex-display(@display: flex);
+    height: 100%;
     width: 100%;
   }
   .no-child-services-block {

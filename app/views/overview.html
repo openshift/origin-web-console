@@ -38,7 +38,7 @@
               <div ng-if="renderOptions.showLoading" class="loading-message">
                 Loading...
               </div>
-              <div ng-repeat="service in topLevelServices"
+              <div class="service-group-with-route-row" ng-repeat="service in topLevelServices"
                    ng-if="service.metadata.labels.app || routesByService[service.metadata.name].length || childServicesByParent[service.metadata.name].length">
                 <overview-service-group></overview-service-group>
               </div>
