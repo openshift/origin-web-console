@@ -71,7 +71,7 @@ angular.module('openshiftConsole')
 
             // are we going to scroll the window, or the DOM node?
             var detectScrollableNode = function() {
-              if(window.innerWidth < BREAKPOINTS.screenSmMin) {
+              if(window.innerWidth < BREAKPOINTS.screenSmMin && !$scope.fixedHeight) {
                 scrollableDOMNode = null;
               } else {
                 scrollableDOMNode = cachedScrollableNode;
@@ -119,7 +119,7 @@ angular.module('openshiftConsole')
               $win.off('scroll', onScroll);
 
               // only add the appropriate event
-              if(window.innerWidth <= BREAKPOINTS.screenSmMin) {
+              if(window.innerWidth <= BREAKPOINTS.screenSmMin && !$scope.fixedHeight) {
                 $win.on('scroll', onScroll);
               } else {
                 $cachedScrollableNode.on('scroll', onScroll);
@@ -136,7 +136,7 @@ angular.module('openshiftConsole')
               if ($scope.fixedHeight) {
                 return;
               }
-              if(window.innerWidth < BREAKPOINTS.screenSmMin) {
+              if(window.innerWidth < BREAKPOINTS.screenSmMin && !$scope.fixedHeight) {
                 $affixableNode
                   .removeClass('target-logger-node')
                   .affix({

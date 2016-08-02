@@ -8405,7 +8405,7 @@ controller:[ "$scope", function(j) {
 var l, m, n, o, p, q = document.documentElement;
 j.logViewerID = _.uniqueId("log-viewer"), j.empty = !0;
 var r = function() {
-o = window.innerWidth < h.screenSmMin ? null :m;
+o = window.innerWidth < h.screenSmMin && !j.fixedHeight ? null :m;
 }, s = function() {
 j.$apply(function() {
 var a = l.getBoundingClientRect();
@@ -8416,9 +8416,9 @@ t ? t = !1 :j.$evalAsync(function() {
 j.autoScrollActive = !1;
 });
 }, v = function() {
-n.off("scroll", u), i.off("scroll", u), window.innerWidth <= h.screenSmMin ? i.on("scroll", u) :n.on("scroll", u);
+n.off("scroll", u), i.off("scroll", u), window.innerWidth <= h.screenSmMin && !j.fixedHeight ? i.on("scroll", u) :n.on("scroll", u);
 }, w = function() {
-j.fixedHeight || (window.innerWidth < h.screenSmMin ? p.removeClass("target-logger-node").affix({
+j.fixedHeight || (window.innerWidth < h.screenSmMin && !j.fixedHeight ? p.removeClass("target-logger-node").affix({
 target:window,
 offset:{
 top:j.followAffixTop || 0,

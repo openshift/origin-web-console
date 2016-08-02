@@ -5270,7 +5270,7 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "<span ng-if=\"state !== 'empty'\" class=\"action-divider\">|</span>\n" +
     "</span>\n" +
     "<a ng-if=\"state !== 'empty'\" href=\"\" ng-click=\"goChromeless(options, fullLogUrl)\" role=\"button\">\n" +
-    "Expand\n" +
+    "Expand log\n" +
     "<i class=\"fa fa-external-link\"></i>\n" +
     "</a>\n" +
     "</div>\n" +
