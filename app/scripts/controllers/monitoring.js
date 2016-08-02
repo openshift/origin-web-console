@@ -253,6 +253,7 @@ angular.module('openshiftConsole')
             return;
           }
           localStorage.setItem('monitoring.eventsidebar.collapsed', $scope.renderOptions.collapseEventsSidebar ? 'true' : 'false');
+          $rootScope.$emit('metrics.charts.resize');
         });
 
       }));

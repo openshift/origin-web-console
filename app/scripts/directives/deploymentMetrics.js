@@ -5,6 +5,7 @@ angular.module('openshiftConsole')
                                            $parse,
                                            $timeout,
                                            $q,
+                                           $rootScope,
                                            ChartsService,
                                            ConversionService,
                                            MetricsService) {
@@ -387,6 +388,14 @@ angular.module('openshiftConsole')
         }, true);
         // Also update every 30 seconds.
         intervalPromise = $interval(update, updateInterval, false);
+
+        $rootScope.$on('metrics.charts.resize', function(){
+          $timeout(function() {
+            _.each(chartByMetric, function(chart) {
+              chart.flush();
+            });
+          }, 0);
+        });
 
         scope.$on('$destroy', function() {
           if (intervalPromise) {
