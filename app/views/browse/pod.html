@@ -169,16 +169,23 @@
                           </div>
                         </div>
 
-                        <div class="row" ng-repeat="term in containerTerminals">
-                          <kubernetes-container-terminal
-                            prevent="!terminalTabWasSelected"
-                            ng-if="term.isUsed"
-                            ng-show="term.isVisible"
-                            pod="pod"
-                            container="term.containerName"
-                            status="term.status"
-                            >
-                          </kubernetes-container-terminal>
+                        <div class="container-terminal-wrapper">
+                          <div class="row" ng-repeat="term in containerTerminals">
+                            <div class="column">
+                              <kubernetes-container-terminal
+                                prevent="!terminalTabWasSelected"
+                                ng-if="term.isUsed"
+                                ng-show="term.isVisible"
+                                pod="pod"
+                                container="term.containerName"
+                                status="term.status"
+                                rows="terminalRows"
+                                cols="terminalCols"
+                                autofocus="true"
+                                >
+                              </kubernetes-container-terminal>
+                            </div>
+                          </div>
                         </div>
                       </div>
     	            </uib-tab>

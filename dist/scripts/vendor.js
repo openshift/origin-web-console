@@ -40653,9 +40653,9 @@ status:"="
 link:function(g, h, i) {
 function j() {
 function a(a) {
-!a && j && (a = "Could not connect to the container. Do you have sufficient privileges?"), a || (a = "disconnected"), j || (a = "\r\n" + a), q.write("[31m" + a + "[m\r\n"), g.status = "disconnected", g.$apply(k);
+!a && j && (a = "Could not connect to the container. Do you have sufficient privileges?"), a || (a = "disconnected"), j || (a = "\r\n" + a), s.write("[31m" + a + "[m\r\n"), g.status = "disconnected", g.$apply(k);
 }
-k(), q.reset();
+k(), s.reset();
 var b = "", c = g.pod();
 b += c.metadata ? c.metadata.selfLink :c, b += "/exec", b.indexOf("?") === -1 && (b += "?"), b += "stdout=1&stdin=1&stderr=1&tty=1";
 var h = g.container ? g.container() :null;
@@ -40669,16 +40669,16 @@ m.removeClass("hidden"), n.addClass("hidden"), e.when(f(b, "base64.channel.k8s.i
 p = b, p.onopen = function(a) {
 o = window.setInterval(function() {
 p.send("0");
-}, 3e4);
+}, 3e4), t();
 }, p.onmessage = function(a) {
 var b = a.data.slice(1);
 switch (a.data[0]) {
 case "1":
 case "2":
 case "3":
-q.write(d(b));
+s.write(d(b));
 }
-j && (j = !1, m.addClass("hidden"), n.addClass("hidden"), q.cursorHidden = !1, q.showCursor(), q.refresh(q.y, q.y), g.autofocus && q.element && q.element.focus());
+j && (j = !1, m.addClass("hidden"), n.addClass("hidden"), s.cursorHidden = !1, s.showCursor(), s.refresh(s.y, s.y), g.autofocus && s.element && s.element.focus());
 }, p.onclose = function(b) {
 g.status = "disconnected", a(b.reason);
 };
@@ -40687,24 +40687,29 @@ a(b.message);
 }), g.status = "connected";
 }
 function k() {
-g.status = "disconnected", m.addClass("hidden"), n.removeClass("hidden"), q && (q.cursorHidden = !0, q.refresh(q.x, q.y)), p && (p.onopen = p.onmessage = p.onerror = p.onclose = null, p.readyState < 2 && p.close(), p = null), window.clearInterval(o), o = null;
+g.status = "disconnected", m.addClass("hidden"), n.removeClass("hidden"), s && (s.cursorHidden = !0, s.refresh(s.x, s.y)), p && (p.onopen = p.onmessage = p.onerror = p.onclose = null, p.readyState < 2 && p.close(), p = null), window.clearInterval(o), o = null;
 }
 g.status = "disconnected";
 var l = a.element("<div class='terminal-wrapper'>");
 h.append(l);
 var m = a.element("<div class='spinner spinner-white hidden'>"), n = a.element("<button class='btn btn-default fa fa-refresh'>");
 n.on("click", j).attr("title", "Connect"), h.append(a.element("<div class='terminal-actions'>").append(m).append(n));
-var o = null, p = null, q = new b({
-cols:g.cols || 80,
-rows:g.rows || 24,
+var o = null, p = null, q = 80, r = 24, s = new b({
+cols:g.cols || q,
+rows:g.rows || r,
 screenKeys:g.screenKeys || !0
 });
-l.empty(), q.open(l[0]), q.cursorHidden = !0, q.refresh(q.x, q.y), q.on("data", function(a) {
+l.empty(), s.open(l[0]), s.cursorHidden = !0, s.refresh(s.x, s.y), s.on("data", function(a) {
 p && 1 === p.readyState && p.send("0" + c(a));
-}), g.$watch("prevent", function(a) {
+});
+var t = function() {
+var a = g.cols || q, b = g.rows || r;
+s.resize(a, b), p && 1 === p.readyState && p.send("4" + window.btoa('{"Width":' + a + ',"Height":' + b + "}"));
+};
+g.$watchGroup([ "cols", "rows" ], t), g.$watch("prevent", function(a) {
 a || j();
 }), g.$on("$destroy", function() {
-q && q.destroy(), k();
+s && s.destroy(), k();
 });
 }
 };

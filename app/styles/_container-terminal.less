@@ -1,0 +1,17 @@
+.terminal-font {
+  font-family: "Monospace Regular", "DejaVu Sans Mono", Menlo, Monaco, Consolas, monospace;
+  line-height: 1em;
+  font-size: 12px;
+}
+
+// Control what fonts are used in the container terminal since we need the terminal-font class for row/col character calculations
+kubernetes-container-terminal .terminal {
+  .terminal-font();
+}
+
+// Fill the extra right border we get when we cant quite fit the last col so it lines up with the Actions dropdown button
+@media(min-width: @screen-sm-min) {
+  .container-terminal-wrapper {
+    background-color: #000;
+  }
+}
