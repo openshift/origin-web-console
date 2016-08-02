@@ -786,9 +786,9 @@ number:10
 }), i = !1, j = [ "localresourceaccessreviews", "localsubjectaccessreviews", "resourceaccessreviews", "selfsubjectrulesreviews", "subjectaccessreviews" ], k = function(a) {
 var b = {};
 return _.each(a, function(a) {
-_.each(a.resources, function(c) {
-_.each(a.apiGroups, function(d) {
-b["" === d ? c :d + "/" + c] = a.verbs;
+_.each(a.apiGroups, function(c) {
+b[c] || (b[c] = {}), _.each(a.resources, function(d) {
+b[c][d] = a.verbs;
 });
 });
 }), b;
@@ -827,17 +827,23 @@ i = !0, d.resolve();
 return d.promise;
 }, o = function(a) {
 return _.get(h.get(a || g), [ "rules" ]);
-}, p = function(a, b, c) {
-c = c || g;
-var d = o(c);
-return !!i || !!d && (d[b] ? _.contains(d[b], a) || _.contains(d[b], "*") :!!d["*"] && (_.contains(d["*"], a) || _.contains(d["*"], "*")));
-}, q = function(a) {
+}, p = function(a, b, c, d) {
+var e = a[c];
+if (!e) return !1;
+var f = e[d];
+return !!f && (_.contains(f, b) || _.contains(f, "*"));
+}, q = function(a, b, c) {
+if (i) return !0;
+var d = e.toResourceGroupVersion(a), f = o(c || g);
+return !!f && (p(f, b, d.group, d.resource) || p(f, b, "*", "*") || p(f, b, d.group, "*") || p(f, b, "*", d.resource));
+}, r = function(a) {
 return !!i || !!_.get(h.get(a || g), [ "canAddToProject" ]);
 };
 return {
+checkResource:l,
 getProjectRules:n,
-canI:p,
-canIAddToProject:q,
+canI:q,
+canIAddToProject:r,
 getRulesForProject:o
 };
 } ]), angular.module("openshiftConsole").factory("DataService", [ "$cacheFactory", "$http", "$ws", "$rootScope", "$q", "API_CFG", "APIService", "Notification", "Logger", "$timeout", function(a, b, c, d, e, f, g, h, i, j) {
@@ -4573,7 +4579,10 @@ details:"The active filters are hiding all " + j.kindToResource(b.kindSelector.s
 }
 function l() {
 var a = b.kindSelector.selected;
-a && (b.selectedResource = a.group ? a.group + "/" + j.kindToResource(a.kind) :j.kindToResource(a.kind), e.list({
+a && (b.selectedResource = {
+resource:j.kindToResource(a.kind),
+group:a.group || ""
+}, e.list({
 group:a.group,
 resource:j.kindToResource(a.kind)
 }, b.context, function(c) {
@@ -4610,8 +4619,11 @@ return !0;
 b.alerts[a.name] = a.data;
 }), c.clearAlerts(), f.get(a.project).then(_.spread(function(a, c) {
 b.kinds = _.filter(b.kinds, function(a) {
-var c = j.kindToResource(a.kind);
-return d.canI("list", a.group ? a.group + "/" + c :c, b.projectName);
+var c = {
+resource:j.kindToResource(a.kind),
+group:a.group || ""
+};
+return !!d.checkResource(c.resource) && d.canI(c, "list", b.projectName);
 }), b.project = a, b.context = c, b.kindSelector.disabled = !1;
 })), b.loadKind = l, b.$watch("kindSelector.selected", function() {
 b.alerts = {}, l();
@@ -9713,7 +9725,7 @@ return e !== f && b(d)[e] > 1 ? e + " (" + f + ")" :e;
 };
 } ]).filter("canI", [ "AuthorizationService", function(a) {
 return function(b, c, d) {
-return a.canI(c, b, d);
+return a.canI(b, c, d);
 };
 } ]).filter("canIAddToProject", [ "AuthorizationService", function(a) {
 return function(b) {
@@ -9721,52 +9733,94 @@ return a.canIAddToProject(b);
 };
 } ]).filter("canIDoAny", [ "canIFilter", function(a) {
 var b = {
-buildConfigs:{
-buildconfigs:[ "delete", "update" ],
-"buildconfigs/instantiate":[ "create" ]
-},
-builds:{
-"builds/clone":[ "create" ],
-builds:[ "delete", "update" ]
-},
-deploymentConfigs:{
-"extensions/horizontalpodautoscalers":[ "create", "update" ],
-deploymentconfigs:[ "create", "update" ]
-},
-deployments:{
-replicationcontrollers:[ "update", "delete" ]
-},
-horizontalPodAutoscalers:{
-"extensions/horizontalpodautoscalers":[ "update", "delete" ]
-},
-imageStreams:{
-imagestreams:[ "update", "delete" ]
-},
-persistentVolumeClaims:{
-persistentvolumeclaims:[ "update", "delete" ]
-},
-pods:{
-pods:[ "update", "delete" ],
-deploymentconfigs:[ "update" ]
-},
-replicationControllers:{
-horizontalpodautoscalers:[ "create", "update" ],
-replicationcontrollers:[ "create", "update" ]
-},
-routes:{
-routes:[ "update", "delete" ]
-},
-services:{
-services:[ "update", "create", "delete" ]
-},
-projects:{
-projects:[ "delete", "update" ]
-}
+buildConfigs:[ {
+group:"",
+resource:"buildconfigs",
+verbs:[ "delete", "update" ]
+}, {
+group:"",
+resource:"buildconfigs/instantiate",
+verbs:[ "create" ]
+} ],
+builds:[ {
+group:"",
+resource:"builds/clone",
+verbs:[ "create" ]
+}, {
+group:"",
+resource:"builds",
+verbs:[ "delete", "update" ]
+} ],
+deploymentConfigs:[ {
+group:"extensions",
+resource:"horizontalpodautoscalers",
+verbs:[ "create", "update" ]
+}, {
+group:"",
+resource:"deploymentconfigs",
+verbs:[ "create", "update" ]
+} ],
+deployments:[ {
+group:"",
+resource:"replicationcontrollers",
+verbs:[ "update", "delete" ]
+} ],
+horizontalPodAutoscalers:[ {
+group:"extensions",
+resource:"horizontalpodautoscalers",
+verbs:[ "update", "delete" ]
+} ],
+imageStreams:[ {
+group:"",
+resource:"imagestreams",
+verbs:[ "update", "delete" ]
+} ],
+persistentVolumeClaims:[ {
+group:"",
+resource:"persistentvolumeclaims",
+verbs:[ "update", "delete" ]
+} ],
+pods:[ {
+group:"",
+resource:"pods",
+verbs:[ "update", "delete" ]
+}, {
+group:"",
+resource:"deploymentconfigs",
+verbs:[ "update" ]
+} ],
+replicationControllers:[ {
+group:"extensions",
+resource:"horizontalpodautoscalers",
+verbs:[ "create", "update" ]
+}, {
+group:"",
+resource:"replicationcontrollers",
+verbs:[ "create", "update" ]
+} ],
+routes:[ {
+group:"",
+resource:"routes",
+verbs:[ "update", "delete" ]
+} ],
+services:[ {
+group:"",
+resource:"services",
+verbs:[ "update", "create", "delete" ]
+} ],
+projects:[ {
+group:"",
+resource:"projects",
+verbs:[ "delete", "update" ]
+} ]
 };
 return function(c) {
-return _.some(b[c], function(b, c) {
-return _.some(b, function(b) {
-return a(c, b);
+return _.some(b[c], function(b) {
+return _.some(b.verbs, function(c) {
+return a({
+resource:b.resource,
+group:b.group
+}, c);
 });
 });
 };

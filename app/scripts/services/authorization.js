@@ -15,14 +15,16 @@ angular.module("openshiftConsole")
     // Transform data from:
     // rules = {resources: ["jobs"], apiGroups: ["extensions"], verbs:["create","delete","get","list","update"]}
     // into:
-    // normalizedRules = {"extensions/jobs": ["create","delete","get","list","update"]}
+    // normalizedRules = {"extensions": {"jobs": ["create","delete","get","list","update"]}}
     var normalizeRules = function(rules) {
       var normalizedRules = {};
-
       _.each(rules, function(rule) {
-        _.each(rule.resources, function(resource) {
-          _.each(rule.apiGroups, function(apiGroup) {
-            normalizedRules[(apiGroup === "") ? resource : apiGroup + "/" + resource] = rule.verbs;
+        _.each(rule.apiGroups, function(apiGroup) {
+          if (!normalizedRules[apiGroup]) {
+            normalizedRules[apiGroup] = {};
+          }
+          _.each(rule.resources, function(resource) {
+            normalizedRules[apiGroup][resource] = rule.verbs;
           });
         });
       });
@@ -96,23 +98,36 @@ angular.module("openshiftConsole")
       return _.get(cachedRulesByProject.get(projectName || currentProject), ['rules']);
     };
 
-    var canI = function(verb, resource, projectName) {
-      projectName = projectName || currentProject;
-      var rules = getRulesForProject(projectName);
+    // _canI checks whether any rule allows the specified verb (directly or via a wildcard verb) on the literal group and resource.
+    var _canI = function(rules, verb, group, resource) {
+        var resources = rules[group];
+        if (!resources) { 
+          return false;
+        }
+        var verbs = resources[resource];
+        if (!verbs) { 
+          return false;
+        }
+        return _.contains(verbs, verb) || _.contains(verbs, '*');
+    };
+
+    // canI checks whether any rule allows the specified verb on the specified group-resource (directly or via a wildcard rule).
+    var canI = function(resource, verb, projectName) {
       if (permissiveMode) {
         return true;
-      } else if (rules) {
-        if (rules[resource]) {
-          return _.contains(rules[resource], verb) || _.contains(rules[resource], '*');
-        } else if (rules['*']) {
-          return _.contains(rules['*'], verb) || _.contains(rules['*'], '*');
-        } else {
-          return false;
-        }    
-      } else {
+      }
+
+      // normalize to structured form
+      var r = APIService.toResourceGroupVersion(resource);
+      var rules = getRulesForProject(projectName || currentProject);
+      if (!rules) {
         return false;
       }
-    };
+      return _canI(rules, verb, r.group, r.resource) ||
+             _canI(rules, verb, '*',     '*'       ) ||
+             _canI(rules, verb, r.group, '*'       ) ||
+             _canI(rules, verb, '*',     r.resource);
+    }; 
 
     var canIAddToProject = function(projectName) {
       if (permissiveMode) {
@@ -123,6 +138,7 @@ angular.module("openshiftConsole")
     };
 
     return {
+      checkResource: checkResource,
       getProjectRules: getProjectRules,
       canI: canI,
       canIAddToProject: canIAddToProject,

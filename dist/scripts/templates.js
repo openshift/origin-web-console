@@ -1161,7 +1161,7 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "<status-icon status=\"deployment | deploymentStatus\"></status-icon>\n" +
     "{{deployment | deploymentStatus}}\n" +
     "<span style=\"margin-left: 7px\">\n" +
-    "<button ng-show=\"!rollBackCollapsed && (deployment | deploymentStatus) == 'Complete' && !(deployment | deploymentIsLatest : deploymentConfig) && !deployment.metadata.deletionTimestamp && 'deploymentconfigrollbacks' | canI : 'create'\" ng-disabled=\"(deploymentConfigDeploymentsInProgress[deploymentConfigName] | hashSize) > 0\" type=\"button\" class=\"btn btn-default btn-xs\" ng-click=\"rollBackCollapsed = !rollBackCollapsed\">Roll Back</button>\n" +
+    "<button ng-show=\"!rollBackCollapsed && (deployment | deploymentStatus) == 'Complete' && !(deployment | deploymentIsLatest : deploymentConfig) && !deployment.metadata.deletionTimestamp && ('deploymentconfigrollbacks' | canI : 'create')\" ng-disabled=\"(deploymentConfigDeploymentsInProgress[deploymentConfigName] | hashSize) > 0\" type=\"button\" class=\"btn btn-default btn-xs\" ng-click=\"rollBackCollapsed = !rollBackCollapsed\">Roll Back</button>\n" +
     "<div ng-show=\"rollBackCollapsed\" class=\"well well-sm\">\n" +
     "Use the following settings from {{deployment.metadata.name}} when rolling back:\n" +
     "<div class=\"checkbox\">\n" +
@@ -1182,7 +1182,7 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "<button type=\"button\" ng-click=\"rollbackToDeployment(deployment, changeScaleSettings, changeStrategy, changeTriggers)\" ng-disabled=\"(deploymentConfigDeploymentsInProgress[deploymentConfigName] | hashSize) > 0\" class=\"btn btn-default btn-xs\">Roll Back</button>\n" +
     "</div>\n" +
     "\n" +
-    "<button ng-show=\"(deployment | deploymentIsInProgress) && !deployment.metadata.deletionTimestamp && 'replicationcontrollers' | canI : 'update'\" type=\"button\" ng-click=\"cancelRunningDeployment(deployment)\" class=\"btn btn-default btn-xs\">Cancel</button>\n" +
+    "<button ng-show=\"(deployment | deploymentIsInProgress) && !deployment.metadata.deletionTimestamp && ('replicationcontrollers' | canI : 'update')\" type=\"button\" ng-click=\"cancelRunningDeployment(deployment)\" class=\"btn btn-default btn-xs\">Cancel</button>\n" +
     "</span>\n" +
     "</dd>\n" +
     "<dt ng-if-start=\"deployment | isDeployment\">Deployment config:</dt>\n" +
@@ -1855,11 +1855,11 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "<li ng-if=\"'deploymentconfigs' | canI : 'update'\">\n" +
     "<a ng-href=\"project/{{projectName}}/set-limits?dcName={{deploymentConfig.metadata.name}}\" role=\"button\">Set Resource Limits</a>\n" +
     "</li>\n" +
-    "<li ng-if=\"!autoscalers.length && ('extensions/horizontalpodautoscalers' | canI : 'create')\">\n" +
+    "<li ng-if=\"!autoscalers.length && ({resource: 'horizontalpodautoscalers', group: 'extensions'} | canI : 'create')\">\n" +
     "\n" +
     "<a ng-href=\"project/{{projectName}}/edit/autoscaler?kind=DeploymentConfig&name={{deploymentConfig.metadata.name}}\" role=\"button\">Add Autoscaler</a>\n" +
     "</li>\n" +
-    "<li ng-if=\"autoscalers.length === 1 && ('extensions/horizontalpodautoscalers' | canI : 'update')\">\n" +
+    "<li ng-if=\"autoscalers.length === 1 && ({resource: 'horizontalpodautoscalers', group: 'extensions'} | canI : 'update')\">\n" +
     "\n" +
     "<a ng-href=\"project/{{projectName}}/edit/autoscaler?kind=HorizontalPodAutoscaler&group=extensions&name={{autoscalers[0].metadata.name}}\" role=\"button\">Edit Autoscaler</a>\n" +
     "</li>\n" +
@@ -1944,8 +1944,8 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "</div>\n" +
     "\n" +
     "<div ng-if=\"!autoscalers.length\">\n" +
-    "<a ng-if=\"'extensions/horizontalpodautoscalers' | canI : 'create'\" ng-href=\"project/{{projectName}}/edit/autoscaler?kind=DeploymentConfig&name={{deploymentConfig.metadata.name}}\" role=\"button\">Add autoscaler</a>\n" +
-    "<span ng-if=\"!('extensions/horizontalpodautoscalers' | canI : 'create')\">none</span>\n" +
+    "<a ng-if=\"{resource: 'horizontalpodautoscalers', group: 'extensions'} | canI : 'create'\" ng-href=\"project/{{projectName}}/edit/autoscaler?kind=DeploymentConfig&name={{deploymentConfig.metadata.name}}\" role=\"button\">Add autoscaler</a>\n" +
+    "<span ng-if=\"!({resource: 'horizontalpodautoscalers', group: 'extensions'} | canI : 'create')\">none</span>\n" +
     "</div>\n" +
     "\n" +
     "<div ng-repeat=\"hpa in autoscalers\">\n" +
@@ -2623,11 +2623,11 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "<li ng-if=\"'replicationcontrollers' | canI : 'update'\">\n" +
     "<a ng-href=\"project/{{projectName}}/set-limits?rcName={{deployment.metadata.name}}\" role=\"button\">Set Resource Limits</a>\n" +
     "</li>\n" +
-    "<li ng-if=\"!autoscalers.length && ('extensions/horizontalpodautoscalers' | canI : 'create')\">\n" +
+    "<li ng-if=\"!autoscalers.length && ({resource: 'horizontalpodautoscalers', group: 'extensions'} | canI : 'create')\">\n" +
     "\n" +
     "<a ng-href=\"project/{{projectName}}/edit/autoscaler?kind=ReplicationController&name={{deployment.metadata.name}}\" role=\"button\">Add Autoscaler</a>\n" +
     "</li>\n" +
-    "<li ng-if=\"autoscalers.length === 1 && ('extensions/horizontalpodautoscalers' | canI : 'update')\">\n" +
+    "<li ng-if=\"autoscalers.length === 1 && ({resource: 'horizontalpodautoscalers', group: 'extensions'} | canI : 'update')\">\n" +
     "\n" +
     "<a ng-href=\"project/{{projectName}}/edit/autoscaler?kind=HorizontalPodAutoscaler&group=extensions&name={{autoscalers[0].metadata.name}}\" role=\"button\">Edit Autoscaler</a>\n" +
     "</li>\n" +
@@ -5168,9 +5168,9 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "</dl>\n" +
     "\n" +
     "<div ng-hide=\"!('horizontalPodAutoscalers' | canIDoAny)\">\n" +
-    "<a ng-if=\"'extensions/horizontalpodautoscalers' | canI : 'update'\" ng-href=\"project/{{hpa.metadata.namespace}}/edit/autoscaler?kind=HorizontalPodAutoscaler&group=extensions&name={{hpa.metadata.name}}\" role=\"button\">Edit</a>\n" +
+    "<a ng-if=\"{resource: 'horizontalpodautoscalers', group: 'extensions'} | canI : 'update'\" ng-href=\"project/{{hpa.metadata.namespace}}/edit/autoscaler?kind=HorizontalPodAutoscaler&group=extensions&name={{hpa.metadata.name}}\" role=\"button\">Edit</a>\n" +
     "<span class=\"action-divider\">|</span>\n" +
-    "<delete-link ng-if=\"'extensions/horizontalpodautoscalers' | canI : 'delete'\" kind=\"HorizontalPodAutoscaler\" group=\"extensions\" resource-name=\"{{hpa.metadata.name}}\" project-name=\"{{hpa.metadata.namespace}}\" label=\"Remove\" alerts=\"alerts\" stay-on-current-page=\"true\">\n" +
+    "<delete-link ng-if=\"{resource: 'horizontalpodautoscalers', group: 'extensions'} | canI : 'delete'\" kind=\"HorizontalPodAutoscaler\" group=\"extensions\" resource-name=\"{{hpa.metadata.name}}\" project-name=\"{{hpa.metadata.namespace}}\" label=\"Remove\" alerts=\"alerts\" stay-on-current-page=\"true\">\n" +
     "</delete-link>\n" +
     "</div>"
   );
@@ -8787,10 +8787,10 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "</button>\n" +
     "<a href=\"\" class=\"dropdown-toggle actions-dropdown-kebab visible-xs-inline\" data-toggle=\"dropdown\"><i class=\"fa fa-ellipsis-v\"></i><span class=\"sr-only\">Actions</span></a>\n" +
     "<ul class=\"dropdown-menu actions action-button\">\n" +
-    "<li ng-if=\"project && 'projects' | canI : 'update'\">\n" +
+    "<li ng-if=\"project && ('projects' | canI : 'update')\">\n" +
     "<a href=\"\" role=\"button\" class=\"button-edit\" ng-click=\"setEditing(true)\" ng-class=\"{ 'disabled-link': show.editing }\">Edit</a>\n" +
     "</li>\n" +
-    "<li ng-if=\"project && 'projects' | canI : 'delete'\">\n" +
+    "<li ng-if=\"project && ('projects' | canI : 'delete)'\">\n" +
     "<delete-link class=\"button-delete\" kind=\"Project\" resource-name=\"{{project.metadata.name}}\" project-name=\"{{project.metadata.name}}\" display-name=\"{{(project | displayName)}}\" type-name-to-confirm=\"true\" alerts=\"alerts\">\n" +
     "</delete-link>\n" +
     "</li>\n" +
