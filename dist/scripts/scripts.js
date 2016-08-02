@@ -3370,6 +3370,8 @@ u = a.by("metadata.name"), Z(), $(), h.log("builds (list)", u);
 t = a.by("metadata.name"), Z(), h.log("builds (list)", u);
 })), y.push(f.watch("routes", b, function(a) {
 o = a.by("metadata.name"), H(), U(), V(), h.log("routes (subscribe)", c.routesByService);
+})), y.push(f.watch("endpoints", b, function(a) {
+c.endpoints = a.by("metadata.name"), h.log("endpoints (subscribe)", c.endpoints);
 })), y.push(f.watch("replicationcontrollers", b, function(a) {
 r = a.by("metadata.name"), L(), O(), Z(), $(), h.log("replicationcontrollers (subscribe)", r);
 })), y.push(f.watch("deploymentconfigs", b, function(a) {
@@ -7638,6 +7640,18 @@ a.$eval(c.onEnter);
 }), b.preventDefault());
 });
 };
+}).directive("linkDisabled", function() {
+return {
+restrict:"A",
+scope:{
+linkDisabled:"="
+},
+link:function(a, b) {
+b.bind("click", function(b) {
+a.linkDisabled && b.preventDefault();
+});
+}
+};
 }), angular.module("openshiftConsole").directive("labels", [ "$location", "$timeout", "LabelFilter", function(a, b, c) {
 return {
 restrict:"E",
@@ -9950,7 +9964,15 @@ if (c(d)) return b(d, e);
 var f = e || a(d);
 return f ? (d.spec.path && (f += d.spec.path), f) :"<unknown host>";
 };
-} ]).filter("parameterPlaceholder", function() {
+} ]).filter("hasRouteEndpoints", function() {
+return function(a, b) {
+if (!b || !b[a]) return !1;
+var c = b[a].subsets;
+return !_.isEmpty(c) && _.some(c, function(a) {
+return !_.isEmpty(a.addresses) && !_.isEmpty(a.ports);
+});
+};
+}).filter("parameterPlaceholder", function() {
 return function(a) {
 return a.generate ? "(generated if empty)" :"";
 };
