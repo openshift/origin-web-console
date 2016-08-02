@@ -7654,7 +7654,7 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "<div ng-if=\"renderOptions.showLoading\" class=\"loading-message\">\n" +
     "Loading...\n" +
     "</div>\n" +
-    "<div ng-repeat=\"service in topLevelServices\" ng-if=\"service.metadata.labels.app || routesByService[service.metadata.name].length || childServicesByParent[service.metadata.name].length\">\n" +
+    "<div class=\"service-group-with-route-row\" ng-repeat=\"service in topLevelServices\" ng-if=\"service.metadata.labels.app || routesByService[service.metadata.name].length || childServicesByParent[service.metadata.name].length\">\n" +
     "<overview-service-group></overview-service-group>\n" +
     "</div>\n" +
     "<div row wrap class=\"standalone-service-row\">\n" +
