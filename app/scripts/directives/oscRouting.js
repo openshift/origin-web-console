@@ -164,13 +164,21 @@ angular.module("openshiftConsole")
         scope.form = formCtl;
         scope.id = _.uniqueId('osc-routing-service-');
 
+        // Set an initial value for `model.service` if not set.
         scope.$watchGroup(['model.service', 'services'], function() {
-          if (_.has(scope, 'model.service') && !_.isEmpty(scope.services)) {
+          if (_.isEmpty(scope.services)) {
+            return;
+          }
+
+          // If the selected item is in the list, do nothing.
+          var selected = _.get(scope, 'model.service');
+          if (selected && _.includes(scope.services, selected)) {
             return;
           }
 
           // Use _.find to get the first item.
-          _.set(scope, 'model.service', _.find(scope.services));
+          var firstService = _.find(scope.services);
+          _.set(scope, 'model.service', firstService);
         });
       }
     };

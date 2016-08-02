@@ -7065,7 +7065,13 @@ showWeight:"=?"
 templateUrl:"views/directives/osc-routing-service.html",
 link:function(a, b, c, d) {
 a.form = d, a.id = _.uniqueId("osc-routing-service-"), a.$watchGroup([ "model.service", "services" ], function() {
-_.has(a, "model.service") && !_.isEmpty(a.services) || _.set(a, "model.service", _.find(a.services));
+if (!_.isEmpty(a.services)) {
+var b = _.get(a, "model.service");
+if (!b || !_.includes(a.services, b)) {
+var c = _.find(a.services);
+_.set(a, "model.service", c);
+}
+}
 });
 }
 };
