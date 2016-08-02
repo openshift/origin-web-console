@@ -410,6 +410,21 @@ angular.module('openshiftConsole')
       return label;
     };
   })
+  .filter('hasRouteEndpoints', function() {
+    return function(routeName, endpoints) {
+      if (!endpoints || !endpoints[routeName]) {
+        return false;
+      }
+      var subsets = endpoints[routeName].subsets;
+      if (_.isEmpty(subsets)) {
+        return false;
+      } else {
+        return _.some(subsets, function(subset) {
+          return (!_.isEmpty(subset.addresses) && !_.isEmpty(subset.ports));
+        });
+      }
+    };
+  })
   .filter('parameterPlaceholder', function() {
     return function(parameter) {
       if (parameter.generate) {

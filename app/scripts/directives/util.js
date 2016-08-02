@@ -177,4 +177,18 @@ angular.module('openshiftConsole')
         }
       });
     };
+  }).directive('linkDisabled', function(){
+    return {
+      restrict: 'A',
+      scope: {
+        linkDisabled: '='
+      },
+      link: function(scope, element) {
+        element.bind('click', function(event) {
+          if(scope.linkDisabled) {
+            event.preventDefault();
+          }
+        });
+      }
+    };
   });

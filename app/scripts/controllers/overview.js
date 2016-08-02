@@ -340,7 +340,6 @@ angular.module('openshiftConsole')
       $scope.renderOptions.showLoading = !loaded && projectEmpty;
     };
 
-
     $scope.viewPodsForDeployment = function(deployment) {
       if (_.isEmpty($scope.podsByDeployment[deployment.metadata.name])) {
         return;
@@ -425,6 +424,11 @@ angular.module('openshiftConsole')
           groupServices();
           updateRouteWarnings();
           Logger.log("routes (subscribe)", $scope.routesByService);
+        }));
+
+        watches.push(DataService.watch("endpoints", context, function(endpointsData) {
+          $scope.endpoints = endpointsData.by("metadata.name");
+          Logger.log("endpoints (subscribe)", $scope.endpoints);
         }));
 
         // Sets up subscription for deployments
