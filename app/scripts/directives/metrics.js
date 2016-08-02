@@ -5,6 +5,7 @@ angular.module('openshiftConsole')
                                  $parse,
                                  $timeout,
                                  $q,
+                                 $rootScope,
                                  ChartsService,
                                  ConversionService,
                                  MetricsService,
@@ -559,6 +560,14 @@ angular.module('openshiftConsole')
             update();
           }
         };
+
+        $rootScope.$on('metrics.charts.resize', function(){
+          $timeout(function() {
+            _.each(sparklineByMetric, function(chart) {
+              chart.flush();
+            });
+          }, 0);
+        });
 
         scope.$on('$destroy', function() {
           if (intervalPromise) {
