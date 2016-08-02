@@ -38,9 +38,10 @@ angular.module('openshiftConsole')
       }
     ];
 
-    // Check for a ?tab=<name> query param to allow linking directly to a tab.
+    // Must always be initialized so we can check the selectedTab elsewhere
+    $scope.selectedTab = {};
+    // Check for a ?tab=<name> query param to allow linking directly to a tab.    
     if ($routeParams.tab) {
-      $scope.selectedTab = {};
       $scope.selectedTab[$routeParams.tab] = true;
     }
 
@@ -86,6 +87,54 @@ angular.module('openshiftConsole')
         });
       }
     };
+
+    var calculateCharacterBoundingBox = function() {
+      var calcSpan = $("<span>")
+      .css({
+        position: "absolute",
+        top: "-100px"
+      })
+      .addClass("terminal-font")
+      .text(_.repeat('x', 10))
+      .appendTo('body');
+      var vals = {
+        width: calcSpan.width() / 10, // average across several characters to take into account internal spacing
+        height: calcSpan.height()
+      };
+      calcSpan.remove();
+      return vals;
+    };
+
+    var characterBoundingBox = calculateCharacterBoundingBox();
+    var win = $( window );
+    var calculateTerminalSize = function(){
+      if (!characterBoundingBox.height || !characterBoundingBox.width) {
+        return;
+      }
+      $scope.$apply(function() {
+        var terminalWrapper = $('.container-terminal-wrapper').get(0);
+        var r = terminalWrapper.getBoundingClientRect();
+        var windowWidth = win.width();
+        var windowHeight = win.height();
+        var termWidth = windowWidth - r.left - 40; // we want 40px right padding, includes 20px padding within the container terminal
+        var termHeight = windowHeight - r.top - 50; // we want 50px bottom padding, includes 20px padding within the container terminal
+        $scope.terminalCols = Math.max(_.floor(termWidth / characterBoundingBox.width), 80);
+        $scope.terminalRows = Math.max(_.floor(termHeight / characterBoundingBox.height), 24);
+      });
+    };
+
+    if (!characterBoundingBox.height || !characterBoundingBox.width) {
+      Logger.warn("Unable to calculate the bounding box for a character.  Terminal will not be able to resize.");
+    }
+    else {   
+      $(window).on('resize.terminalsize', _.debounce(calculateTerminalSize, 100));
+    }
+
+    $scope.$watch('selectedTab.terminal', function(terminalTabSelected) {
+      if (!!terminalTabSelected) {
+        $timeout(calculateTerminalSize, 0);
+      }
+    });
 
     /**
      *  Will set the newTerm's isVisible/isUsed to true, while hiding the previous
@@ -310,6 +359,7 @@ angular.module('openshiftConsole')
         $scope.$on('$destroy', function(){
           DataService.unwatchAll(watches);
           cleanUpDebugPod();
+          $(window).off('resize.terminalsize');
         });
     }));
   });

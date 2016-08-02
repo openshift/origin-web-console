@@ -3100,7 +3100,7 @@ title:"Pods",
 link:"project/" + c.project + "/browse/pods"
 }, {
 title:c.pod
-} ], c.tab && (a.selectedTab = {}, a.selectedTab[c.tab] = !0);
+} ], a.selectedTab = {}, c.tab && (a.selectedTab[c.tab] = !0);
 var k = [];
 h.isAvailable().then(function(b) {
 a.metricsAvailable = b;
@@ -3124,21 +3124,37 @@ containerStartTime:_.get(c, [ d, "startedAt" ]),
 containerEndTime:_.get(c, [ d, "finishedAt" ])
 });
 }
+}, n = function() {
+var a = $("<span>").css({
+position:"absolute",
+top:"-100px"
+}).addClass("terminal-font").text(_.repeat("x", 10)).appendTo("body"), b = {
+width:a.width() / 10,
+height:a.height()
 };
-a.onTerminalSelectChange = function(b) {
+return a.remove(), b;
+}, o = n(), p = $(window), q = function() {
+o.height && o.width && a.$apply(function() {
+var b = $(".container-terminal-wrapper").get(0), c = b.getBoundingClientRect(), d = p.width(), e = p.height(), f = d - c.left - 40, g = e - c.top - 50;
+a.terminalCols = Math.max(_.floor(f / o.width), 80), a.terminalRows = Math.max(_.floor(g / o.height), 24);
+});
+};
+o.height && o.width ? $(window).on("resize.terminalsize", _.debounce(q, 100)) :Logger.warn("Unable to calculate the bounding box for a character.  Terminal will not be able to resize."), a.$watch("selectedTab.terminal", function(a) {
+a && d(q, 0);
+}), a.onTerminalSelectChange = function(b) {
 _.each(a.containerTerminals, function(a) {
 a.isVisible = !1;
 }), b.isVisible = !0, b.isUsed = !0;
 };
-var n = function(a) {
+var r = function(a) {
 var b = _.get(a, "state", {});
 return _.head(_.keys(b));
-}, o = function() {
+}, s = function() {
 var b = [];
 _.each(a.pod.spec.containers, function(c) {
 var d = _.find(a.pod.status.containerStatuses, {
 name:c.name
-}), e = n(d);
+}), e = r(d);
 b.push({
 containerName:c.name,
 isVisible:!1,
@@ -3148,11 +3164,11 @@ containerState:e
 });
 var c = _.head(b);
 return c.isVisible = !0, c.isUsed = !0, a.selectedTerminalContainer = c, b;
-}, p = function(b) {
+}, t = function(b) {
 _.each(b, function(b) {
 var c = _.find(a.pod.status.containerStatuses, {
 name:b.containerName
-}), d = n(c);
+}), d = r(c);
 b.containerState = d;
 });
 };
@@ -3160,11 +3176,11 @@ j.get(c.project).then(_.spread(function(d, h) {
 a.project = d, a.projectContext = h, f.get("pods", c.pod, h).then(function(b) {
 a.loaded = !0, a.pod = b, l(b), m();
 var d = {};
-d[b.metadata.name] = b, g.fetchReferencedImageStreamImages(d, a.imagesByDockerReference, a.imageStreamImageRefByDockerReference, h), a.containerTerminals = o(), k.push(f.watchObject("pods", c.pod, h, function(b, c) {
+d[b.metadata.name] = b, g.fetchReferencedImageStreamImages(d, a.imagesByDockerReference, a.imageStreamImageRefByDockerReference, h), a.containerTerminals = s(), k.push(f.watchObject("pods", c.pod, h, function(b, c) {
 "DELETED" === c && (a.alerts.deleted = {
 type:"warning",
 message:"This pod has been deleted."
-}), a.pod = b, l(b), m(), p(a.containerTerminals);
+}), a.pod = b, l(b), m(), t(a.containerTerminals);
 }));
 }, function(c) {
 a.loaded = !0, a.alerts.load = {
@@ -3232,7 +3248,7 @@ return a && a.forEach(function(a) {
 a.state && a.state.running && b++;
 }), b;
 }, a.$on("$destroy", function() {
-f.unwatchAll(k), n();
+f.unwatchAll(k), n(), $(window).off("resize.terminalsize");
 });
 }));
 } ]), angular.module("openshiftConsole").controller("OverviewController", [ "$filter", "$routeParams", "$scope", "AlertMessageService", "BuildsService", "DataService", "DeploymentsService", "Logger", "PodsService", "ProjectsService", "RoutesService", "ServicesService", "Navigate", "MetricsService", function(a, b, c, d, e, f, g, h, i, j, k, l, m, n) {

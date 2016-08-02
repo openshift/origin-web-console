@@ -4699,3 +4699,6 @@ kubernetes-topology-graph{height:700px}
 .settings-item{margin:4px 8px 4px 0}
 .hide-if-empty:empty{display:none!important}
 .donut-title-med-pf{font-size:22.5px;font-weight:300}
+.terminal-font,kubernetes-container-terminal .terminal{font-family:"Monospace Regular","DejaVu Sans Mono",Menlo,Monaco,Consolas,monospace;line-height:1em;font-size:12px}
+@media (min-width:768px){.container-terminal-wrapper{background-color:#000}
+}
