@@ -4,19 +4,19 @@ return this.resource = a, this.group = b, this.version = c, this;
 
 window.OPENSHIFT_CONSTANTS = {
 HELP:{
-cli:"https://docs.openshift.org/latest/cli_reference/overview.html",
-get_started_cli:"https://docs.openshift.org/latest/cli_reference/get_started_cli.html",
-basic_cli_operations:"https://docs.openshift.org/latest/cli_reference/basic_cli_operations.html",
-webhooks:"https://docs.openshift.org/latest/dev_guide/builds.html#webhook-triggers",
-new_app:"https://docs.openshift.org/latest/dev_guide/new_app.html",
-"start-build":"https://docs.openshift.org/latest/dev_guide/builds.html#starting-a-build",
-"deployment-operations":"https://docs.openshift.org/latest/cli_reference/basic_cli_operations.html#build-and-deployment-cli-operations",
-"route-types":"https://docs.openshift.org/latest/architecture/core_concepts/routes.html#route-types",
-persistent_volumes:"https://docs.openshift.org/latest/dev_guide/persistent_volumes.html",
-compute_resources:"https://docs.openshift.org/latest/dev_guide/compute_resources.html",
-pod_autoscaling:"https://docs.openshift.org/latest/dev_guide/pod_autoscaling.html",
-application_health:"https://docs.openshift.org/latest/dev_guide/application_health.html",
-"default":"https://docs.openshift.org/latest/welcome/index.html"
+cli:"https://docs.openshift.com/container-platform/3.3/cli_reference/overview.html",
+get_started_cli:"https://docs.openshift.com/container-platform/3.3/cli_reference/get_started_cli.html",
+basic_cli_operations:"https://docs.openshift.com/container-platform/3.3/cli_reference/basic_cli_operations.html",
+webhooks:"https://docs.openshift.com/container-platform/3.3/dev_guide/builds.html#webhook-triggers",
+new_app:"https://docs.openshift.com/container-platform/3.3/dev_guide/new_app.html",
+"start-build":"https://docs.openshift.com/container-platform/3.3/dev_guide/builds.html#starting-a-build",
+"deployment-operations":"https://docs.openshift.com/container-platform/3.3/cli_reference/basic_cli_operations.html#build-and-deployment-cli-operations",
+"route-types":"https://docs.openshift.com/container-platform/3.3/architecture/core_concepts/routes.html#route-types",
+persistent_volumes:"https://docs.openshift.com/container-platform/3.3/dev_guide/persistent_volumes.html",
+compute_resources:"https://docs.openshift.com/container-platform/3.3/dev_guide/compute_resources.html",
+pod_autoscaling:"https://docs.openshift.com/container-platform/3.3/dev_guide/pod_autoscaling.html",
+application_health:"https://docs.openshift.com/container-platform/3.3/dev_guide/application_health.html",
+"default":"https://docs.openshift.com/container-platform/3.3/welcome/index.html"
 },
 CLI:{
 "Latest Release":"https://github.com/openshift/origin/releases/latest"
