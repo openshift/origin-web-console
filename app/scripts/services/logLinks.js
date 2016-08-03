@@ -49,7 +49,7 @@ angular.module('openshiftConsole')
         var uri = new URI();
         _.each(params, function(param) {
           uri.addSearch(param);
-        });        
+        });
         $window.open(uri.toString(), '_blank');
       };
 
@@ -65,12 +65,12 @@ angular.module('openshiftConsole')
         ")",
         "&_a=(",
           //"columns:!(_source),",
-          "columns:!(kubernetes_container_name,<%= containername %>),", 
-          "index:'<%= namespace %>.*',",
+          "columns:!(kubernetes_container_name,message),",
+          "index:'<%= namespace %>.<%= namespaceUid %>.*',",
           "query:(",
             "query_string:(",
               "analyze_wildcard:!t,",
-              "query:'kubernetes_pod_name: <%= podname %> %26%26 kubernetes_namespace_name: <%= namespace %>'",
+              "query:'kubernetes_pod_name:\"<%= podname %>\" AND kubernetes_namespace_name:\"<%= namespace %>\"'",
             ")",
           "),",
           "sort:!(time,desc)",
