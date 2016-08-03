@@ -389,6 +389,7 @@ angular.module('openshiftConsole')
                     // Need to explicitly tell it to trust this location or it will throw errors.
                     kibanaArchiveUrl: $sce.trustAsResourceUrl(logLinks.archiveUri({
                                         namespace: $scope.context.project.metadata.name,
+                                        namespaceUid: $scope.context.project.metadata.uid,
                                         podname: $scope.name,
                                         containername: $scope.options.container,
                                         backlink: URI.encode($window.location.href)
