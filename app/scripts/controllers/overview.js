@@ -329,7 +329,7 @@ angular.module('openshiftConsole')
       // Check if there is any data visible in the overview.
       var projectEmpty =
         _.isEmpty(services) &&
-        _.isEmpty(pods) &&
+        _.isEmpty($scope.monopodsByService) &&
         _.isEmpty(deployments) &&
         _.isEmpty(deploymentConfigs);
 
