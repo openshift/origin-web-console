@@ -6902,7 +6902,7 @@ uri:"=",
 commit:"="
 },
 transclude:!0,
-template:'<a ng-href="{{uri | githubLink : commit}}" ng-transclude></a>'
+template:'<a ng-href="{{uri | githubLink : commit}}" ng-transclude target="_blank"></a>'
 };
 }), angular.module("openshiftConsole").directive("oscImageSummary", function() {
 return {

@@ -9,6 +9,6 @@ angular.module('openshiftConsole')
       commit: "="
     },
     transclude: true,
-    template: '<a ng-href="{{uri | githubLink : commit}}" ng-transclude></a>'
+    template: '<a ng-href="{{uri | githubLink : commit}}" ng-transclude target="_blank"></a>'
   };
 });
