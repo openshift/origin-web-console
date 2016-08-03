@@ -6516,7 +6516,7 @@ c.unwatchAll(m);
 });
 } ]
 };
-} ]), angular.module("openshiftConsole").directive("eventsSidebar", [ "$filter", "DataService", "Logger", "$rootScope", function(a, b, c, d) {
+} ]), angular.module("openshiftConsole").directive("eventsSidebar", [ "DataService", "Logger", "$rootScope", function(a, b, c) {
 return {
 restrict:"E",
 scope:{
@@ -6524,27 +6524,27 @@ projectContext:"=",
 collapsed:"="
 },
 templateUrl:"views/directives/events-sidebar.html",
-controller:[ "$scope", function(e) {
-var f = [], g = a("orderObjectsByDate");
-f.push(b.watch("events", e.projectContext, function(a) {
-var b = a.by("metadata.name");
-e.events = g(b, !0), e.warningCount = _.size(_.filter(b, {
+controller:[ "$scope", function(d) {
+var e = [];
+e.push(a.watch("events", d.projectContext, function(a) {
+var c = a.by("metadata.name");
+d.events = _.sortByOrder(c, [ "lastTimestamp" ], [ "desc" ]), d.warningCount = _.size(_.filter(c, {
 type:"Warning"
-})), c.log("events (subscribe)", e.events);
-})), e.highlightedEvents = {}, e.collapseSidebar = function() {
-e.collapsed = !0;
-}, d.$on("event.resource.highlight", function(a, b) {
-var c = _.get(b, "kind"), d = _.get(b, "metadata.name");
-c && d && _.each(e.events, function(a) {
-a.involvedObject.kind === c && a.involvedObject.name === d && (e.highlightedEvents[c + "/" + d] = !0);
+})), b.log("events (subscribe)", d.events);
+})), d.highlightedEvents = {}, d.collapseSidebar = function() {
+d.collapsed = !0;
+}, c.$on("event.resource.highlight", function(a, b) {
+var c = _.get(b, "kind"), e = _.get(b, "metadata.name");
+c && e && _.each(d.events, function(a) {
+a.involvedObject.kind === c && a.involvedObject.name === e && (d.highlightedEvents[c + "/" + e] = !0);
 });
-}), d.$on("event.resource.clear-highlight", function(a, b) {
-var c = _.get(b, "kind"), d = _.get(b, "metadata.name");
-c && d && _.each(e.events, function(a) {
-a.involvedObject.kind === c && a.involvedObject.name === d && (e.highlightedEvents[c + "/" + d] = !1);
+}), c.$on("event.resource.clear-highlight", function(a, b) {
+var c = _.get(b, "kind"), e = _.get(b, "metadata.name");
+c && e && _.each(d.events, function(a) {
+a.involvedObject.kind === c && a.involvedObject.name === e && (d.highlightedEvents[c + "/" + e] = !1);
 });
-}), e.$on("$destroy", function() {
-b.unwatchAll(f);
+}), d.$on("$destroy", function() {
+a.unwatchAll(e);
 });
 } ]
 };
