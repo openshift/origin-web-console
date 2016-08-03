@@ -46,7 +46,7 @@
                 </h2>
                 <div ng-if="buildConfig.spec.source.git.uri">
                   Source Repository:
-                  <span ng-bind-html='buildConfigs[buildConfigName].spec.source.git.uri | githubLink : buildConfigs[buildConfigName].spec.source.git.ref : buildConfigs[buildConfigName].spec.source.contextDir | linky' class="source-repo"></span>
+                  <span ng-bind-html='buildConfigs[buildConfigName].spec.source.git.uri | githubLink : buildConfigs[buildConfigName].spec.source.git.ref : buildConfigs[buildConfigName].spec.source.contextDir | linky : "_blank"' class="source-repo"></span>
                 </div>
               </div>
               <!-- Handle missing build configs -->

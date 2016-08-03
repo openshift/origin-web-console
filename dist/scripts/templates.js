@@ -1103,7 +1103,7 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "<dt>Source type:</dt>\n" +
     "<dd>{{build.spec.source.type}}</dd>\n" +
     "<dt ng-if-start=\"build.spec.source.git.uri\">Source repo:</dt>\n" +
-    "<dd ng-if-end><span class=\"word-break\" ng-bind-html=\"build.spec.source.git.uri | githubLink : build.spec.source.git.ref : build.spec.source.contextDir | linky\"></span></dd>\n" +
+    "<dd ng-if-end><span class=\"word-break\" ng-bind-html=\"build.spec.source.git.uri | githubLink : build.spec.source.git.ref : build.spec.source.contextDir | linky : &quot;_blank&quot;\"></span></dd>\n" +
     "<dt ng-if-start=\"build.spec.source.git.ref\">Source ref:</dt>\n" +
     "<dd ng-if-end>{{build.spec.source.git.ref}}</dd>\n" +
     "<dt ng-if-start=\"build.spec.source.contextDir\">Source context dir:</dt>\n" +
@@ -1423,7 +1423,7 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "</span>\n" +
     "<span ng-if=\"buildConfig.spec.source.type === 'Git'\">\n" +
     "source repository\n" +
-    "<span class=\"word-break\" ng-bind-html=\"buildConfig.spec.source.git.uri | githubLink : buildConfig.spec.source.git.ref : buildConfig.spec.source.contextDir | linky\"></span>\n" +
+    "<span class=\"word-break\" ng-bind-html=\"buildConfig.spec.source.git.uri | githubLink : buildConfig.spec.source.git.ref : buildConfig.spec.source.contextDir | linky : &quot;_blank&quot;\"></span>\n" +
     "</span>\n" +
     "<span ng-if=\"buildConfig.spec.source.type !== 'Git'\">\n" +
     "build configuration {{buildConfig.metadata.name}}.\n" +
@@ -1570,7 +1570,7 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "<div ng-if=\"buildConfig.spec.source\">\n" +
     "<div ng-if=\"buildConfig.spec.source.type == 'Git'\">\n" +
     "<dt>Source repo:</dt>\n" +
-    "<dd class=\"word-break\" ng-bind-html=\"buildConfig.spec.source.git.uri | githubLink : buildConfig.spec.source.git.ref : buildConfig.spec.source.contextDir | linky\"></dd>\n" +
+    "<dd class=\"word-break\" ng-bind-html=\"buildConfig.spec.source.git.uri | githubLink : buildConfig.spec.source.git.ref : buildConfig.spec.source.contextDir | linky : &quot;_blank&quot;\"></dd>\n" +
     "<dt ng-if=\"buildConfig.spec.source.git.ref\">Source ref:</dt>\n" +
     "<dd ng-if=\"buildConfig.spec.source.git.ref\">{{buildConfig.spec.source.git.ref}}</dd>\n" +
     "<dt ng-if=\"buildConfig.spec.source.contextDir\">Source context dir:</dt>\n" +
@@ -3141,7 +3141,7 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "<td data-title=\"Type\">{{buildConfigs[buildConfigName].spec.strategy.type | startCase}}</td>\n" +
     "<td data-title=\"Source\">\n" +
     "<span ng-if=\"buildConfigs[buildConfigName].spec.source.type == 'None'\"><i>none</i></span>\n" +
-    "<span class=\"word-break\" ng-if=\"buildConfigs[buildConfigName].spec.source.type == 'Git'\" ng-bind-html=\"buildConfigs[buildConfigName].spec.source.git.uri | githubLink : buildConfigs[buildConfigName].spec.source.git.ref : buildConfigs[buildConfigName].spec.source.contextDir | linky\"></span></td>\n" +
+    "<span class=\"word-break\" ng-if=\"buildConfigs[buildConfigName].spec.source.type == 'Git'\" ng-bind-html=\"buildConfigs[buildConfigName].spec.source.git.uri | githubLink : buildConfigs[buildConfigName].spec.source.git.ref : buildConfigs[buildConfigName].spec.source.contextDir | linky : &quot;_blank&quot;\"></span></td>\n" +
     "</tr>\n" +
     "\n" +
     "\n" +
@@ -3177,7 +3177,7 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "<span ng-if=\"latestBuild.spec.source.type == 'None'\">\n" +
     "<i>none</i>\n" +
     "</span>\n" +
-    "<span class=\"word-break\" ng-if=\"latestBuild.spec.source.type == 'Git'\" ng-bind-html=\"latestBuild.spec.source.git.uri | githubLink : latestBuild.spec.source.git.ref : latestBuild.spec.source.contextDir | linky\"></span>\n" +
+    "<span class=\"word-break\" ng-if=\"latestBuild.spec.source.type == 'Git'\" ng-bind-html=\"latestBuild.spec.source.git.uri | githubLink : latestBuild.spec.source.git.ref : latestBuild.spec.source.contextDir | linky : &quot;_blank&quot;\"></span>\n" +
     "</span>\n" +
     "</td>\n" +
     "</tr>\n" +
@@ -8037,7 +8037,7 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "</h2>\n" +
     "<div ng-if=\"buildConfig.spec.source.git.uri\">\n" +
     "Source Repository:\n" +
-    "<span ng-bind-html=\"buildConfigs[buildConfigName].spec.source.git.uri | githubLink : buildConfigs[buildConfigName].spec.source.git.ref : buildConfigs[buildConfigName].spec.source.contextDir | linky\" class=\"source-repo\"></span>\n" +
+    "<span ng-bind-html=\"buildConfigs[buildConfigName].spec.source.git.uri | githubLink : buildConfigs[buildConfigName].spec.source.git.ref : buildConfigs[buildConfigName].spec.source.contextDir | linky : &quot;_blank&quot;\" class=\"source-repo\"></span>\n" +
     "</div>\n" +
     "</div>\n" +
     "\n" +
