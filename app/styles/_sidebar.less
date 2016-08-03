@@ -307,7 +307,7 @@
   a {
     text-decoration: none;
   }
-} 
+}
 
 .events-sidebar {
   .pficon {
@@ -320,18 +320,27 @@
     a {
       text-decoration: none;
     }
-  }  
-  .sidebar-header {
+  }
+  .sidebar-header.right-header {
     align-items: center;
     display: flex;
     justify-content: space-between;
+    // So that sidebar bottom border aligns with main content header bottom border.
+    margin-top: 17.5px;
     h2 {
       .h4();
       display: inline-block;
     }
+    .warning-count {
+      .nowrap();
+      margin-left: 2px;
+      .pficon {
+        vertical-align: -1px;
+      }
+    }
     .event-details-link {
       .small();
-      margin-right: 30px;
+      margin-right: 20px;
     }
   }
   .right-content {
@@ -354,6 +363,7 @@
       .event-icon {
         font-size: 18px;
         margin-right: 10px;
+        min-width: 18px;
       }
       .event-details {
         .truncate();
