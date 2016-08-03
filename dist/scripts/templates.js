@@ -4880,7 +4880,7 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "<h2>\n" +
     "<span class=\"events-sidebar-collapse\"><a href=\"\" class=\"fa fa-arrow-circle-o-right\" title=\"Collapse event sidebar\" ng-click=\"collapseSidebar()\"><span class=\"sr-only\">Collapse event sidebar</span></a></span>\n" +
     "Events\n" +
-    "<small ng-if=\"warningCount\" class=\"mar-left-sm\">\n" +
+    "<small ng-if=\"warningCount\" class=\"warning-count\">\n" +
     "<span class=\"pficon pficon-warning-triangle-o\"></span>\n" +
     "{{warningCount}}\n" +
     "<span class=\"hidden-xs hidden-sm\">\n" +
