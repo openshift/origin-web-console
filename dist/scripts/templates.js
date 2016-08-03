@@ -5593,7 +5593,9 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "<div ng-show=\"resource | annotation:'provider'\">Provider: {{ resource | annotation:'provider' }}</div>\n" +
     "<div ng-show=\"resource.metadata.namespace\">Namespace: {{ resource.metadata.namespace }}</div>\n" +
     "</div>\n" +
-    "<div class=\"resource-description\" ng-bind-html=\"resource | description | linky\" ng-class=\"{'gutter-bottom': tag !== 'latest'}\">\n" +
+    "<div class=\"resource-description pad-bottom-none\" ng-bind-html=\"resource | description | linky\" ng-class=\"{'gutter-bottom': tag !== 'latest'}\">\n" +
+    "</div>\n" +
+    "<div ng-show=\"resource | annotation:'sampleRepo'\" class=\"mar-bottom-md\" ng-bind-html=\"resource | annotation:'sampleRepo' | linky\">\n" +
     "</div>\n" +
     "<div ng-if=\"tag === 'latest'\" class=\"alert alert-info\">\n" +
     "<span class=\"pficon pficon-info\" aria-hidden=\"true\"></span>\n" +
