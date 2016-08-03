@@ -119,4 +119,15 @@ describe("CreateFromImageController", function(){
     var match = 'git@@example.com:dir1/dir2'.match($scope.sourceURLPattern);
     expect(match).toBeNull();
   });
+
+  it("valid ssh URL", function(){
+    var match = 'ssh://git@example.com/dir1/dir2'.match($scope.sourceURLPattern);
+    expect(match).not.toBeNull();
+  });
+
+  it("valid ssh URL with custom port", function(){
+    var match = 'ssh://git@example.com:8080/dir1/dir2'.match($scope.sourceURLPattern);
+    expect(match).not.toBeNull();
+  });
+  
 });
