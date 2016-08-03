@@ -4902,7 +4902,7 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "<div ng-if=\"!(events | hashSize)\" class=\"mar-left-xl\">\n" +
     "<em>No events.</em>\n" +
     "</div>\n" +
-    "<div ng-repeat=\"event in events\" class=\"event animate-repeat\" ng-class=\"{'highlight': highlightedEvents[event.involvedObject.kind + '/' + event.involvedObject.name]}\">\n" +
+    "<div ng-repeat=\"event in events track by (event | uid)\" class=\"event animate-repeat\" ng-class=\"{'highlight': highlightedEvents[event.involvedObject.kind + '/' + event.involvedObject.name]}\">\n" +
     "<span class=\"sr-only\">{{event.type}}</span>\n" +
     "<div class=\"event-icon\" aria-hidden=\"true\">\n" +
     "<div ng-switch=\"event.type\" class=\"hide-ng-leave\">\n" +
