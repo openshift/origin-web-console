@@ -3700,6 +3700,7 @@ project-filter{display:flex;-webkit-flex:1 0 0%;-moz-flex:1 0 0%;-ms-flex:1 0 0%
 @media (max-width:767px){project-filter{min-width:initial}
 }
 project-filter .label-filtering-remove-all{background-color:#39a5dc!important}
+.monitoring-toolbar{justify-content:space-between}
 .ellipsis-loader{display:inline-block;vertical-align:middle}
 .ellipsis-loader div{position:absolute}
 .ellipsis-loader div:after,.ellipsis-loader div:before{content:"";position:absolute}
