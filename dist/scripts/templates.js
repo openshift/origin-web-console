@@ -7218,7 +7218,8 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "</h1>\n" +
     "</div>\n" +
     "<alerts alerts=\"alerts\"></alerts>\n" +
-    "<div class=\"data-toolbar\">\n" +
+    "<div fit class=\"data-toolbar monitoring-toolbar\">\n" +
+    "<div row>\n" +
     "<ui-select ng-model=\"kindSelector.selected\" theme=\"bootstrap\" search-enabled=\"true\" ng-disabled=\"kindSelector.disabled\" title=\"Choose a resource\" class=\"data-toolbar-dropdown\">\n" +
     "<ui-select-match placeholder=\"Choose a resource\">{{$select.selected.label ? $select.selected.label : ($select.selected.kind | humanizeKind : true)}}</ui-select-match>\n" +
     "<ui-select-choices repeat=\"kind in kinds | filter : {kind: $select.search} : matchKind | orderBy : 'kind'\">\n" +
@@ -7232,7 +7233,8 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "<input type=\"search\" placeholder=\"Filter by name\" class=\"form-control\" id=\"events-filter\" ng-model=\"filters.text\">\n" +
     "</div>\n" +
     "</div>\n" +
-    "<div class=\"checkbox\">\n" +
+    "</div>\n" +
+    "<div class=\"checkbox nowrap\">\n" +
     "<label>\n" +
     "<input type=\"checkbox\" ng-model=\"filters.hideOlderResources\">Hide older resources\n" +
     "</label>\n" +
