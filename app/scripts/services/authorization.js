@@ -100,15 +100,15 @@ angular.module("openshiftConsole")
 
     // _canI checks whether any rule allows the specified verb (directly or via a wildcard verb) on the literal group and resource.
     var _canI = function(rules, verb, group, resource) {
-        var resources = rules[group];
-        if (!resources) { 
-          return false;
-        }
-        var verbs = resources[resource];
-        if (!verbs) { 
-          return false;
-        }
-        return _.contains(verbs, verb) || _.contains(verbs, '*');
+      var resources = rules[group];
+      if (!resources) {
+        return false;
+      }
+      var verbs = resources[resource];
+      if (!verbs) {
+        return false;
+      }
+      return _.contains(verbs, verb) || _.contains(verbs, '*');
     };
 
     // canI checks whether any rule allows the specified verb on the specified group-resource (directly or via a wildcard rule).
