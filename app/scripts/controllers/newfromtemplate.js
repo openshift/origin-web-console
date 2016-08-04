@@ -250,6 +250,10 @@ angular.module('openshiftConsole')
               value: value
             };
           });
+          $scope.labels.push({
+            name: 'app',
+            value: $scope.template.metadata.name
+          });
         }
 
         // Missing namespace indicates that the template should be received from from the 'CachedTemplateService'.

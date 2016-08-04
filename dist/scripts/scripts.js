@@ -5561,6 +5561,9 @@ return {
 name:b,
 value:a
 };
+}), a.labels.push({
+name:"app",
+value:a.template.metadata.name
 });
 }
 if (a.project = b, a.breadcrumbs[0].title = m("displayName")(b), a.projectDisplayName = function() {
