@@ -5254,7 +5254,7 @@ _.set(i, "spec.to.name", a);
 var b = _.get(d, "routing.to.weight");
 isNaN(b) || _.set(i, "spec.to.weight", b), i.spec.path = d.routing.path;
 var c = d.routing.targetPort;
-c ? _.set(i, "spec.port.targetPort", c) :delete i.spec.port, _.get(d, "routing.tls.termination") ? i.spec.tls = d.routing.tls :delete i.spec.tls;
+c ? _.set(i, "spec.port.targetPort", c) :delete i.spec.port, _.get(d, "routing.tls.termination") ? (i.spec.tls = d.routing.tls, "edge" !== i.spec.tls.termination && delete i.spec.tls.insecureEdgeTerminationPolicy) :delete i.spec.tls;
 var e = _.get(d, "routing.alternateServices", []);
 _.isEmpty(e) ? delete i.spec.alternateBackends :i.spec.alternateBackends = _.map(e, function(a) {
 return {
