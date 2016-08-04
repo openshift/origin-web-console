@@ -84,6 +84,38 @@ angular.module('openshiftConsole')
       $scope.logCanRun = !(_.includes(['New', 'Pending'], $filter('deploymentStatus')(deployment)));
     };
 
+    var ensureEnvs = function(deployment) {
+      _.each(deployment.spec.template.spec.containers, function(container) {
+        container.env = container.env || [];
+      });
+      return deployment;
+    };
+
+    $scope.saveEnvVars = function() {
+      _.each($scope.updatedDeployment.spec.template.spec.containers, function(container) {
+        container.env = _.filter(container.env, 'name');
+      });
+      DataService
+        .update(
+          "replicationcontrollers",
+          $routeParams.replicationcontroller,
+          angular.copy($scope.updatedDeployment),
+          $scope.projectContext)
+        .then(function() {
+          $scope.alerts['saveEnvSuccess'] = {
+            type: "success",
+            // TODO:  improve success alert
+            message: $scope.deployment.metadata.name + " was updated."
+          };
+        }, function(e) {
+          $scope.alerts['saveEnvError'] = {
+            type: "error",
+            message: $scope.deployment.metadata.name + " was not updated.",
+            details: "Reason: " + $filter('getErrorDetails')(e)
+          };
+        });
+    };
+
     ProjectsService
       .get($routeParams.project)
       .then(_.spread(function(project, context) {
@@ -163,6 +195,8 @@ angular.module('openshiftConsole')
                 };
               }
               $scope.deployment = deployment;
+              // for manipulation such as editing env vars
+              $scope.updatedDeployment = ensureEnvs(deployment);
               setLogVars(deployment);
               updateHPAWarnings();
             }));

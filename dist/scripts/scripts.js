@@ -4354,11 +4354,30 @@ a.metricsAvailable = b;
 });
 var m = function(c) {
 a.logOptions.container = b("annotation")(c, "pod"), a.logCanRun = !_.includes([ "New", "Pending" ], b("deploymentStatus")(c));
+}, n = function(a) {
+return _.each(a.spec.template.spec.containers, function(a) {
+a.env = a.env || [];
+}), a;
 };
-h.get(c.project).then(_.spread(function(d, g) {
+a.saveEnvVars = function() {
+_.each(a.updatedDeployment.spec.template.spec.containers, function(a) {
+a.env = _.filter(a.env, "name");
+}), e.update("replicationcontrollers", c.replicationcontroller, angular.copy(a.updatedDeployment), a.projectContext).then(function() {
+a.alerts.saveEnvSuccess = {
+type:"success",
+message:a.deployment.metadata.name + " was updated."
+};
+}, function(c) {
+a.alerts.saveEnvError = {
+type:"error",
+message:a.deployment.metadata.name + " was not updated.",
+details:"Reason: " + b("getErrorDetails")(c)
+};
+});
+}, h.get(c.project).then(_.spread(function(d, g) {
 function h() {
-if (a.hpaForRC = f.hpaForRC(r, c.deployment || c.replicationcontroller), a.isActive) {
-var b = f.hpaForDC(r, c.deploymentconfig);
+if (a.hpaForRC = f.hpaForRC(s, c.deployment || c.replicationcontroller), a.isActive) {
+var b = f.hpaForDC(s, c.deploymentconfig);
 a.autoscalers = a.hpaForRC.concat(b);
 } else a.autoscalers = a.hpaForRC;
 }
@@ -4368,7 +4387,7 @@ a.podTemplates[c] = b.spec.template;
 });
 }
 a.project = d, a.projectContext = g;
-var n, o, p = function() {
+var o, p, q = function() {
 l.push(e.watch("replicationcontrollers", g, function(c) {
 var d, e = [], f = b("annotation");
 angular.forEach(c.by("metadata.name"), function(b) {
@@ -4376,27 +4395,27 @@ var c = f(b, "deploymentConfig") || "";
 c === a.deploymentConfigName && e.push(b);
 }), d = i.getActiveDeployment(e), a.isActive = d && d.metadata.uid === a.deployment.metadata.uid, h();
 }));
-}, q = function() {
-n && o && (a.podsForDeployment = _.filter(n, function(a) {
-return o.matches(a);
+}, r = function() {
+o && p && (a.podsForDeployment = _.filter(o, function(a) {
+return p.matches(a);
 }));
-}, r = {}, s = {}, t = function() {
-f.getHPAWarnings(a.deployment, a.autoscalers, s, d).then(function(b) {
+}, s = {}, t = {}, u = function() {
+f.getHPAWarnings(a.deployment, a.autoscalers, t, d).then(function(b) {
 a.hpaWarnings = b;
 });
 };
 e.get("replicationcontrollers", c.deployment || c.replicationcontroller, g).then(function(d) {
-a.loaded = !0, a.deployment = d, m(d), t();
+a.loaded = !0, a.deployment = d, m(d), u();
 var f = b("annotation")(d, "deploymentVersion");
 f && (a.breadcrumbs[2].title = "#" + f, a.logOptions.version = f), a.deploymentConfigName = b("annotation")(d, "deploymentConfig"), l.push(e.watchObject("replicationcontrollers", c.deployment || c.replicationcontroller, g, function(b, d) {
 "DELETED" === d && (a.alerts.deleted = {
 type:"warning",
 message:c.deployment ? "This deployment has been deleted." :"This replication controller has been deleted."
-}), a.deployment = b, m(b), t();
-})), a.deploymentConfigName && p(), a.$watch("deployment.spec.selector", function() {
-o = new LabelSelector(a.deployment.spec.selector), q();
+}), a.deployment = b, a.updatedDeployment = n(b), m(b), u();
+})), a.deploymentConfigName && q(), a.$watch("deployment.spec.selector", function() {
+p = new LabelSelector(a.deployment.spec.selector), r();
 }, !0), l.push(e.watch("pods", g, function(a) {
-n = a.by("metadata.name"), q();
+o = a.by("metadata.name"), r();
 }));
 }, function(d) {
 a.loaded = !0, a.alerts.load = {
@@ -4434,9 +4453,9 @@ a.builds = b.by("metadata.name"), Logger.log("builds (subscribe)", a.builds);
 group:"extensions",
 resource:"horizontalpodautoscalers"
 }, g, function(a) {
-r = a.by("metadata.name"), h(), t();
+s = a.by("metadata.name"), h(), u();
 })), e.list("limitranges", g, function(a) {
-s = a.by("metadata.name"), t();
+t = a.by("metadata.name"), u();
 }), a.startLatestDeployment = function(b) {
 i.startLatestDeployment(b, g, a);
 }, a.retryFailedDeployment = function(b) {
@@ -4455,9 +4474,9 @@ details:b("getErrorDetails")(c)
 };
 a.deploymentConfig ? i.scaleDC(a.deploymentConfig, c).then(_.noop, d) :i.scaleRC(a.deployment, c).then(_.noop, d);
 };
-var u = b("isDeployment");
+var v = b("isDeployment");
 a.isScalable = function() {
-return !_.isEmpty(a.autoscalers) || (!u(a.deployment) || (!!a.deploymentConfigMissing || !!a.deploymentConfig && a.isActive));
+return !_.isEmpty(a.autoscalers) || (!v(a.deployment) || (!!a.deploymentConfigMissing || !!a.deploymentConfig && a.isActive));
 }, a.$on("$destroy", function() {
 e.unwatchAll(l);
 });
