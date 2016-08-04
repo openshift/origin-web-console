@@ -3486,7 +3486,7 @@ body{padding-right:0px!important}
 @media (min-width:1200px){.metrics-compact{margin-bottom:5px}
 .metrics-compact .metrics-sparkline{display:inline-block;width:150px;vertical-align:-6px}
 }
-@media (min-width:1400px){.metrics-compact .metrics-sparkline{width:240px}
+@media (min-width:1400px){.metrics-compact .metrics-sparkline{width:230px}
 }
 .metrics-compact .metrics-usage{display:block;margin-left:10px}
 @media (min-width:1200px){.metrics-compact .metrics-usage{display:inline-block}
