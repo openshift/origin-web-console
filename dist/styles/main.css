@@ -4514,13 +4514,13 @@ body,html{margin:0;padding:0}
 .table-filter-wrapper{display:-webkit-flex;display:-moz-flex;display:-ms-flexbox;display:-ms-flex;display:flex;padding:10px 10px 5px;border-top:1px solid #d1d1d1;border-left:1px solid #d1d1d1;border-right:1px solid #d1d1d1;background-color:#f9f9f9}
 .label-tags a.label,.log-header .log-actions form{display:inline-block}
 .events-table{table-layout:fixed}
-.events-table th:nth-child(1){width:90px}
-.events-table th:nth-child(2){width:190px}
-.events-table th:nth-child(3){width:160px}
-.events-table th:nth-child(4){width:10px;padding:0}
-.events-table th:nth-child(5){width:150px}
-.events-table th:last-child{width:100%}
-.events-table td:last-child,.events-table td:nth-child(2){word-wrap:break-word;word-break:break-word;overflow-wrap:break-word;min-width:0}
+.events-table th#time{width:90px}
+.events-table th#kind-name{width:190px}
+.events-table th#kind{width:160px}
+.events-table th#severity{width:10px;padding:0}
+.events-table th#reason{width:150px}
+.events-table th#message{width:100%}
+.events-table th#kind-name,.events-table th#message{word-wrap:break-word;word-break:break-word;overflow-wrap:break-word;min-width:0}
 .events-table .pficon{vertical-align:middle}
 .events-table .severity-icon-td{padding-left:0;padding-right:0}
 .tile{background:#fff;box-shadow:0 3px 1px -2px rgba(0,0,0,.15),0 2px 2px 0 rgba(0,0,0,.1),0 1px 5px 0 rgba(0,0,0,.09);padding:10px 20px;margin-bottom:20px;word-wrap:break-word;-webkit-box-sizing:border-box;-moz-box-sizing:border-box;box-sizing:border-box;overflow-x:hidden}

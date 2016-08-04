@@ -145,13 +145,13 @@
 // table for events
 .events-table {
   table-layout: fixed;
-  th:nth-child(1) {width:90px;} // time
-  th:nth-child(2) {width:190px;} // name
-  th:nth-child(3) {width:160px;} // kind
-  th:nth-child(4) {width:10px;padding:0;} // icon
-  th:nth-child(5) {width:150px;} // reason
-  th:last-child   {width:100%;} // message; ensures it gets remaining width
-  td:nth-child(2),td:last-child {
+  th#time {width:90px;}
+  th#kind-name {width:190px;}
+  th#kind {width:160px;}
+  th#severity {width:10px;padding:0;}
+  th#reason {width:150px;}
+  th#message   {width:100%;} // ensures it gets remaining width
+  th#kind-name,th#message  {
     .word-break;
   }
   .pficon {

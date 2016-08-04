@@ -4958,18 +4958,18 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "<table class=\"table table-bordered table-condensed table-mobile table-hover events-table\">\n" +
     "<thead>\n" +
     "<tr>\n" +
-    "<th>Time</th>\n" +
+    "<th id=\"time\">Time</th>\n" +
     "\n" +
-    "<th ng-if=\"!resourceKind || !resourceName\">\n" +
+    "<th id=\"kind-name\" ng-if=\"!resourceKind || !resourceName\">\n" +
     "<span class=\"hidden-xs-inline visible-sm-inline visible-md-inline hidden-lg-inline\">Kind and Name</span>\n" +
     "<span class=\"visible-lg-inline\">Name</span>\n" +
     "</th>\n" +
-    "<th ng-if=\"!resourceKind || !resourceName\" class=\"hidden-sm hidden-md\">\n" +
+    "<th id=\"kind\" ng-if=\"!resourceKind || !resourceName\" class=\"hidden-sm hidden-md\">\n" +
     "<span class=\"visible-lg-inline\">Kind</span>\n" +
     "</th>\n" +
-    "<th class=\"hidden-xs hidden-sm hidden-md\"><span class=\"sr-only\">Severity</span></th>\n" +
-    "<th class=\"hidden-sm hidden-md\"><span class=\"visible-lg-inline\">Reason</span></th>\n" +
-    "<th><span class=\"hidden-xs-inline visible-sm-inline visible-md-inline hidden-lg-inline\">Reason and </span>Message</th>\n" +
+    "<th id=\"severity\" class=\"hidden-xs hidden-sm hidden-md\"><span class=\"sr-only\">Severity</span></th>\n" +
+    "<th id=\"reason\" class=\"hidden-sm hidden-md\"><span class=\"visible-lg-inline\">Reason</span></th>\n" +
+    "<th id=\"message\"><span class=\"hidden-xs-inline visible-sm-inline visible-md-inline hidden-lg-inline\">Reason and </span>Message</th>\n" +
     "</tr>\n" +
     "</thead>\n" +
     "<tbody ng-if=\"(filteredEvents | hashSize) === 0\">\n" +
