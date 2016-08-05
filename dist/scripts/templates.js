@@ -7426,6 +7426,9 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "<div class=\"list-view-pf-description\">\n" +
     "<div class=\"list-group-item-heading\">\n" +
     "{{pod.metadata.name}}\n" +
+    "<span ng-if=\"pod | isTroubledPod\">\n" +
+    "<pod-warnings pod=\"pod\"></pod-warnings>\n" +
+    "</span>\n" +
     "<small>created <relative-timestamp timestamp=\"pod.metadata.creationTimestamp\"></relative-timestamp></small>\n" +
     "</div>\n" +
     "<div class=\"list-group-item-text\">\n" +
