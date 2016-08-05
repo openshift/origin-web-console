@@ -79,38 +79,32 @@ angular.module("openshiftConsole")
       return hasDefault(computeResource, 'defaultLimit', limitRanges, project);
     };
 
-    // Is the corresponding limit value set to calculate a request?
-    var canCalculateCPURequest = function(containers, limitRanges, project) {
-      var limitComputeResource;
-      if (LimitRangesService.isLimitCalculated('cpu', project)) {
-        // If CPU limit is calculated from a memory limit, we need to check if memory limit is set.
-        limitComputeResource = 'memory';
-      } else {
-        limitComputeResource = 'cpu';
-      }
-
-      // Check if the corresponding limit is set or defaulted.
-      return hasLimitSet(limitComputeResource, containers) ||
-             hasDefaultLimit(limitComputeResource, limitRanges, project);
-    };
-
     // Checks if a CPU request is currently set or will be defaulted for any
-    // container. A CPU request is required for autoscaling.
+    // container when the pod is created. A CPU request is required for autoscaling.
     //
     // containers       - array of containters from a deployment config or replication controller
     // limitRanges      - collection of LimitRange objects (hash or array)
     // project          - the project to determine if a request/limit ratio is set
     var hasCPURequest = function(containers, limitRanges, project) {
-      if (hasRequestSet('cpu', containers)) {
+      if (hasRequestSet('cpu', containers) ||
+          hasDefaultRequest('cpu', limitRanges, project)) {
         return true;
       }
 
-      if (hasDefaultRequest('cpu', limitRanges, project)) {
+      // The request will be defaulted from the limit when the pod is created.
+      if (hasLimitSet('cpu', containers) ||
+          hasDefaultLimit('cpu', limitRanges, containers)) {
         return true;
       }
 
-      return LimitRangesService.isRequestCalculated('cpu', project) &&
-             canCalculateCPURequest(containers, limitRanges, project);
+      // Even if CPU limit is not set, it might be calculated. Check if the CPU
+      // limit will be set as a ratio of the memory limit.
+      if (LimitRangesService.isLimitCalculated('cpu', project)) {
+        return hasLimitSet('memory', containers) ||
+               hasDefaultLimit('memory', limitRanges, project);
+      }
+
+      return false;
     };
 
     // Filters the HPAs for those referencing kind/name.

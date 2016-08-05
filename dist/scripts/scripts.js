@@ -2690,19 +2690,16 @@ return l(a, "defaultRequest", b, c);
 }, n = function(a, b, c) {
 return l(a, "defaultLimit", b, c);
 }, o = function(a, b, d) {
-var e;
-return e = c.isLimitCalculated("cpu", d) ? "memory" :"cpu", k(e, a) || n(e, b, d);
-}, p = function(a, b, d) {
-return !!j("cpu", a) || (!!m("cpu", b, d) || c.isRequestCalculated("cpu", d) && o(a, b, d));
-}, q = function(a, b, c) {
+return !(!j("cpu", a) && !m("cpu", b, d)) || (!(!k("cpu", a) && !n("cpu", b, a)) || !!c.isLimitCalculated("cpu", d) && (k("memory", a) || n("memory", b, d)));
+}, p = function(a, b, c) {
 return _.filter(a, function(a) {
 return a.spec.scaleRef.kind === b && a.spec.scaleRef.name === c;
 });
+}, q = function(a, b) {
+return p(a, "DeploymentConfig", b);
 }, r = function(a, b) {
-return q(a, "DeploymentConfig", b);
-}, s = function(a, b) {
-return q(a, "ReplicationController", b);
-}, t = a("humanizeKind"), u = a("isDeployment"), v = function(a, e, f, g) {
+return p(a, "ReplicationController", b);
+}, s = a("humanizeKind"), t = a("isDeployment"), u = function(a, e, f, g) {
 return !a || _.isEmpty(e) ? b.when([]) :d.isAvailable().then(function(b) {
 var d = [];
 b || d.push({
@@ -2710,7 +2707,7 @@ message:"Metrics might not be configured by your cluster administrator. Metrics 
 reason:"MetricsNotAvailable"
 });
 var h, i, j = _.get(a, "spec.template.spec.containers", []);
-p(j, f, g) || (h = t(a.kind), c.isRequestCalculated("cpu", g) ? (i = "This " + h + " does not have any containers with a CPU limit set. Autoscaling will not work without a CPU limit.", c.isLimitCalculated("cpu", g) && (i += " The CPU limit will be automatically calculated from the container memory limit.")) :i = "This " + h + " does not have any containers with a CPU request set. Autoscaling will not work without a CPU request.", d.push({
+o(j, f, g) || (h = s(a.kind), c.isRequestCalculated("cpu", g) ? (i = "This " + h + " does not have any containers with a CPU limit set. Autoscaling will not work without a CPU limit.", c.isLimitCalculated("cpu", g) && (i += " The CPU limit will be automatically calculated from the container memory limit.")) :i = "This " + h + " does not have any containers with a CPU request set. Autoscaling will not work without a CPU request.", d.push({
 message:i,
 reason:"NoCPURequest"
 })), _.size(e) > 1 && d.push({
@@ -2722,7 +2719,7 @@ return _.some(e, function(a) {
 return "ReplicationController" === _.get(a, "spec.scaleRef.kind");
 });
 };
-return "ReplicationController" === a.kind && u(a) && _.some(e, k) && d.push({
+return "ReplicationController" === a.kind && t(a) && _.some(e, k) && d.push({
 message:"This deployment is scaled by both a deployment configuration and an autoscaler. This is not recommended because they might compete with each other.",
 reason:"DeploymentHasHPA"
 }), d;
@@ -2731,10 +2728,10 @@ reason:"DeploymentHasHPA"
 return {
 convertRequestPercentToLimit:g,
 convertLimitPercentToRequest:h,
-hasCPURequest:p,
-hpaForDC:r,
-hpaForRC:s,
-getHPAWarnings:v
+hasCPURequest:o,
+hpaForDC:q,
+hpaForRC:r,
+getHPAWarnings:u
 };
 } ]), angular.module("openshiftConsole").factory("PodsService", [ "$filter", function(a) {
 var b = a("label"), c = _.constant("debug.openshift.io/name");
