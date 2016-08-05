@@ -24,9 +24,6 @@ angular.module('openshiftConsole')
           if (!deploymentConfigsByService) {
             return;
           }
-
-          var serviceName = _.get($scope, 'service.metadata.name');
-          $scope.deploymentConfigs = deploymentConfigsByService[serviceName];
         });
 
         $scope.$watch('visibleDeploymentsByConfigAndService', function(visibleDeploymentsByConfigAndService) {

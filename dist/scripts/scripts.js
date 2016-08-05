@@ -9382,10 +9382,6 @@ e.showMetrics = a;
 });
 var f = a("annotation");
 e.$watch("deploymentConfigsByService", function(a) {
-if (a) {
-var b = _.get(e, "service.metadata.name");
-e.deploymentConfigs = a[b];
-}
 }), e.$watch("visibleDeploymentsByConfigAndService", function(a) {
 if (a) {
 var b = _.get(e, "service.metadata.name");
