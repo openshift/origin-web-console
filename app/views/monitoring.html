@@ -264,6 +264,9 @@
                           <div class="list-view-pf-description">
                             <div class="list-group-item-heading">
                               {{pod.metadata.name}}
+                              <span ng-if="pod | isTroubledPod">
+                                <pod-warnings pod="pod"></pod-warnings>
+                              </span>
                               <small>created <relative-timestamp timestamp="pod.metadata.creationTimestamp"></relative-timestamp></small>
                             </div>
                             <div class="list-group-item-text">
