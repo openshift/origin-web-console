@@ -4,9 +4,13 @@
   <div ng-show="resource | annotation:'provider'">Provider: {{ resource | annotation:'provider' }}</div>
   <div ng-show="resource.metadata.namespace">Namespace: {{ resource.metadata.namespace }}</div>
 </div>
-<div class="resource-description"
+<div class="resource-description pad-bottom-none"
      ng-bind-html="resource | description | linky"
      ng-class="{'gutter-bottom': tag !== 'latest'}">
+</div>
+<div ng-show="resource | annotation:'sampleRepo'"
+     class="mar-bottom-md"
+     ng-bind-html="resource | annotation:'sampleRepo' | linky">
 </div>
 
 <div ng-if="tag === 'latest'" class="alert alert-info">
