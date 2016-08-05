@@ -3730,8 +3730,9 @@ project-filter .label-filtering-remove-all{background-color:#39a5dc!important}
 }
 .list-group-expanded-section{border:1px solid #d1d1d1;border-top:0;padding:15px}
 .list-group-expanded-section+.list-group-item-expandable.expanded,.list-group-expanded-section.expanded+.list-group-item-expandable{border-top:0}
-.list-group-expanded-section .log-fixed-height.empty-state-message{margin-bottom:0}
-.list-group-expanded-section .log-fixed-height.empty-state-message h2{margin-top:0}
+.monitoring-page .list-group-expanded-section .log-fixed-height.empty-state-message,.monitoring-page .list-group-expanded-section .metrics .empty-state-message{margin:10px 0 0;padding:0;text-align:left}
+.monitoring-page .list-group-expanded-section .log-fixed-height.empty-state-message h2,.monitoring-page .list-group-expanded-section .metrics .empty-state-message h2{margin-top:0}
+.monitoring-page .list-group-expanded-section .metrics .empty-state-message .pficon-error-circle-o{display:none}
 .list-group-item{padding-left:10px;padding-right:10px}
 .list-view-pf-checkbox{border-right-color:#ddd;font-size:22px;margin-bottom:10px;margin-top:10px;width:25px}
 .list-view-pf-checkbox a{color:#555}

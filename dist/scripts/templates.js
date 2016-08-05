@@ -4837,7 +4837,7 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
 
   $templateCache.put('views/directives/deployment-metrics.html',
     "<div class=\"metrics\">\n" +
-    "<div class=\"metrics-options\">\n" +
+    "<div ng-if=\"!metricsError\" class=\"metrics-options\">\n" +
     "<div ng-if=\"containers.length\" class=\"form-group\">\n" +
     "<label for=\"selectContainer\">Container:</label>\n" +
     "<div class=\"select-container\">\n" +
@@ -5472,7 +5472,7 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
 
   $templateCache.put('views/directives/metrics.html',
     "<div class=\"metrics\" ng-if=\"pod || deployment\">\n" +
-    "<div class=\"metrics-options\">\n" +
+    "<div ng-show=\"!metricsError\" class=\"metrics-options\">\n" +
     "\n" +
     "<div ng-if=\"pod.spec.containers.length\" class=\"form-group\">\n" +
     "<label for=\"selectContainer\">Container:</label>\n" +
@@ -7323,7 +7323,7 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "<project-header class=\"top-header\"></project-header>\n" +
     "<project-page>\n" +
     "\n" +
-    "<div class=\"middle-section\">\n" +
+    "<div class=\"middle-section monitoring-page\">\n" +
     "<div id=\"scrollable-content\" class=\"middle-container has-scroll\">\n" +
     "<div class=\"middle-header header-light\">\n" +
     "<div class=\"container-fluid\">\n" +
