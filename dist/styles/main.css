@@ -4543,7 +4543,7 @@ body,html{margin:0;padding:0}
 .tile-click:hover .tile-target,.tile-flex:hover a.tile-target{color:#00659c}
 .tile-click:hover .tile-target:hover{text-decoration:none}
 .tile-click:hover .font-icon.logo{opacity:.75}
-.tile-flex .tile-badge-icon{cursor:help;font-size:13px;opacity:.38}
+.tile-flex .tile-badge-icon{cursor:help;font-size:13px;opacity:.38;padding-left:1px}
 .tile-flex .image-icon,.tile-flex .template-icon{width:30px;margin-right:20px;font-size:33px;opacity:.38}
 .tile-flex:hover .image-icon,.tile-flex:hover .template-icon,.tile-flex:hover .tile-badge-icon{opacity:.75}
 .tile-flex h3{margin:3px 0px 2px}
