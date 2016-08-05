@@ -7492,7 +7492,6 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "<div id=\"scrollable-content\" class=\"middle-container has-scroll\">\n" +
     "<div class=\"middle-content\">\n" +
     "<div class=\"container surface-shaded\">\n" +
-    "<tasks></tasks>\n" +
     "<div class=\"row\">\n" +
     "<div class=\"col-md-12\">\n" +
     "<breadcrumbs breadcrumbs=\"breadcrumbs\"></breadcrumbs>\n" +
