@@ -3203,7 +3203,7 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "</h3>\n" +
     "<div class=\"catalog\">\n" +
     "\n" +
-    "<catalog-image image-stream=\"builder.imageStream\" image-tag=\"builder.imageStreamTag\" project=\"{{project}}\" version=\"builder.version\" filter-tag=\"filterTag\" is-builder=\"true\" ng-repeat=\"builder in builders | orderBy : ['name', 'imageStream.metadata.namespace'] | limitToOrAll: itemLimit track by builderID(builder)\">\n" +
+    "<catalog-image image-stream=\"builder.imageStream\" image-tag=\"builder.imageStreamTag\" project=\"{{project}}\" version=\"builder.version\" filter-tag=\"filterTag\" is-builder=\"true\" ng-repeat=\"builder in builders | limitToOrAll: itemLimit track by builderID(builder)\">\n" +
     "</catalog-image>\n" +
     "\n" +
     "<catalog-template template=\"template\" project=\"{{project}}\" filter-tag=\"filterTag\" ng-repeat=\"template in templates | orderBy : ['metadata.name', 'metadata.namespace'] | limitToOrAll: itemLimit track by (template | uid)\">\n" +
