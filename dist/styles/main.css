@@ -4265,12 +4265,14 @@ to{background-color:transparent}
 }
 @media (min-width:480px){.navbar-project-menu .bootstrap-select.btn-group .btn .filter-option{max-width:310px}
 }
-@media (min-width:768px){.navbar-project-menu{border-bottom:0;border-top:0;float:left;margin:0;padding-top:0;max-width:400px}
+@media (min-width:768px){.navbar-project-menu{border-bottom:0;border-top:0;float:left;margin:0;padding-top:0;max-width:280px}
 .navbar-project-menu .bootstrap-select.btn-group .btn{padding:15px 50px 15px 30px}
 .navbar-project-menu .bootstrap-select.btn-group .btn:before{color:#9c9c9c;content:'Project';font-size:10px;left:30px;position:absolute;top:8px}
 .navbar-project-menu .bootstrap-select.btn-group .btn .filter-option{max-width:470px}
 .navbar-project-menu .bootstrap-select.btn-group .dropdown-toggle .caret{right:30px}
-.navbar-project-menu .bootstrap-select .dropdown-toggle{height:60px;max-width:400px;min-width:280px}
+.navbar-project-menu .bootstrap-select .dropdown-toggle{height:60px;max-width:280px;min-width:280px}
+}
+@media (min-width:900px){.navbar-project-menu,.navbar-project-menu .bootstrap-select .dropdown-toggle{max-width:400px}
 }
 @media (min-width:992px){.navbar-project-menu,.navbar-project-menu .bootstrap-select .dropdown-toggle{max-width:500px}
 }
