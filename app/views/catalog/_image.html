@@ -6,6 +6,12 @@
     <div flex>
       <h3>
         <a class="tile-target" ng-href="{{imageStream | createFromImageURL : imageTag : project}}">{{imageStream.metadata.name}}:{{imageTag}}</a>
+        <small ng-if="referencedBy.length">
+          &ndash;
+          <span ng-repeat="otherTag in referencedBy">
+            {{otherTag}}<span ng-if="!$last">,</span>
+          </span>
+        </small>
       </h3>
       <div ng-if="imageStream | imageStreamTagAnnotation : 'provider' : imageTag">
         <label style="margin-right: 5px;">Provider:</label>

@@ -157,6 +157,7 @@
                               image-tag="image.imageStreamTag"
                               project="{{projectName}}"
                               version="image.version"
+                              referenced-by="image.referencedBy"
                               ng-repeat="image in filteredNonBuilders | orderBy : ['name', 'imageStream.metadata.namespace']">
                           </catalog-image>
 

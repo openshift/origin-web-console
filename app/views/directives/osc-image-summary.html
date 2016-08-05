@@ -4,12 +4,4 @@
   <div ng-show="resource | annotation:'provider'">Provider: {{ resource | annotation:'provider' }}</div>
   <div ng-show="resource.metadata.namespace">Namespace: {{ resource.metadata.namespace }}</div>
 </div>
-<div class="resource-description"
-     ng-bind-html="resource | description | linky"
-     ng-class="{'gutter-bottom': tag !== 'latest'}">
-</div>
-
-<div ng-if="tag === 'latest'" class="alert alert-info">
-  <span class="pficon pficon-info" aria-hidden="true"></span>
-  This builder image tracks the latest version of the {{name}} image, which could be updated to a newer major version in the future.  If your application will not run on a different major version go <a href="#" back>back</a> and choose a specific version.
-</div>
+<div class="resource-description gutter-bottom" ng-bind-html="resource | description | linky"></div>

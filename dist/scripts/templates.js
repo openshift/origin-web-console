@@ -3203,7 +3203,7 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "</h3>\n" +
     "<div class=\"catalog\">\n" +
     "\n" +
-    "<catalog-image image-stream=\"builder.imageStream\" image-tag=\"builder.imageStreamTag\" project=\"{{project}}\" version=\"builder.version\" filter-tag=\"filterTag\" is-builder=\"true\" ng-repeat=\"builder in builders | limitToOrAll: itemLimit track by builderID(builder)\">\n" +
+    "<catalog-image image-stream=\"builder.imageStream\" image-tag=\"builder.imageStreamTag\" project=\"{{project}}\" version=\"builder.version\" filter-tag=\"filterTag\" referenced-by=\"builder.referencedBy\" is-builder=\"true\" ng-repeat=\"builder in builders | limitToOrAll: itemLimit track by builderID(builder)\">\n" +
     "</catalog-image>\n" +
     "\n" +
     "<catalog-template template=\"template\" project=\"{{project}}\" filter-tag=\"filterTag\" ng-repeat=\"template in templates | orderBy : ['metadata.name', 'metadata.namespace'] | limitToOrAll: itemLimit track by (template | uid)\">\n" +
@@ -3222,6 +3222,12 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "<div flex>\n" +
     "<h3>\n" +
     "<a class=\"tile-target\" ng-href=\"{{imageStream | createFromImageURL : imageTag : project}}\">{{imageStream.metadata.name}}:{{imageTag}}</a>\n" +
+    "<small ng-if=\"referencedBy.length\">\n" +
+    "&ndash;\n" +
+    "<span ng-repeat=\"otherTag in referencedBy\">\n" +
+    "{{otherTag}}<span ng-if=\"!$last\">,</span>\n" +
+    "</span>\n" +
+    "</small>\n" +
     "</h3>\n" +
     "<div ng-if=\"imageStream | imageStreamTagAnnotation : 'provider' : imageTag\">\n" +
     "<label style=\"margin-right: 5px\">Provider:</label>\n" +
@@ -3632,7 +3638,7 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "Some images in this list may not be able to build source. Use with caution.\n" +
     "</div>\n" +
     "<div class=\"catalog catalog-fluid\">\n" +
-    "<catalog-image image-stream=\"image.imageStream\" image-tag=\"image.imageStreamTag\" project=\"{{projectName}}\" version=\"image.version\" ng-repeat=\"image in filteredNonBuilders | orderBy : ['name', 'imageStream.metadata.namespace']\">\n" +
+    "<catalog-image image-stream=\"image.imageStream\" image-tag=\"image.imageStreamTag\" project=\"{{projectName}}\" version=\"image.version\" referenced-by=\"image.referencedBy\" ng-repeat=\"image in filteredNonBuilders | orderBy : ['name', 'imageStream.metadata.namespace']\">\n" +
     "</catalog-image>\n" +
     "\n" +
     "<div style=\"height: 0\" class=\"tile-image\"></div>\n" +
@@ -5593,12 +5599,7 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "<div ng-show=\"resource | annotation:'provider'\">Provider: {{ resource | annotation:'provider' }}</div>\n" +
     "<div ng-show=\"resource.metadata.namespace\">Namespace: {{ resource.metadata.namespace }}</div>\n" +
     "</div>\n" +
-    "<div class=\"resource-description\" ng-bind-html=\"resource | description | linky\" ng-class=\"{'gutter-bottom': tag !== 'latest'}\">\n" +
-    "</div>\n" +
-    "<div ng-if=\"tag === 'latest'\" class=\"alert alert-info\">\n" +
-    "<span class=\"pficon pficon-info\" aria-hidden=\"true\"></span>\n" +
-    "This builder image tracks the latest version of the {{name}} image, which could be updated to a newer major version in the future. If your application will not run on a different major version go <a href=\"#\" back>back</a> and choose a specific version.\n" +
-    "</div>"
+    "<div class=\"resource-description gutter-bottom\" ng-bind-html=\"resource | description | linky\"></div>"
   );
 
 
