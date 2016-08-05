@@ -3555,6 +3555,7 @@ label.checkbox{font-weight:400}
 .action-button,[data-toggle=tooltip]{cursor:pointer}
 .command-args .drag-handle .fa{padding-left:5px}
 .command-args .drag-handle,.command-args .remove-arg{background-color:inherit;border:0;font-size:15px;padding-top:5px;vertical-align:top}
+.catalog .tile-image h3 small,.catalog .tile-template h3 small{vertical-align:1px}
 .catalog .tile-image a.tag,.catalog .tile-template a.tag{text-decoration:none}
 .catalog .tile-image a.tag:hover,.catalog .tile-template a.tag:hover{color:#000;background:#dfdfdf;text-decoration:none}
 .catalog-fluid{display:-webkit-flex;display:-moz-flex;display:-ms-flexbox;display:-ms-flex;display:flex;-webkit-flex-direction:column;-moz-flex-direction:column;-ms-flex-direction:column;flex-direction:column}

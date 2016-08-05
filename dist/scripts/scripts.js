@@ -5763,19 +5763,22 @@ return s(a.name, a.description, a.categoryTags);
 function w(a) {
 angular.forEach(a, function(a) {
 if (a.status) {
-var b = {};
+var b = {}, c = {}, d = {};
 a.spec && a.spec.tags && angular.forEach(a.spec.tags, function(a) {
-a.annotations && a.annotations.tags && (b[a.name] = a.annotations.tags.split(/\s*,\s*/));
-}), angular.forEach(a.status.tags, function(c) {
-var d, e = c.tag, f = b[e] || [], g = {
+a.annotations && a.annotations.tags && (b[a.name] = a.annotations.tags.split(/\s*,\s*/)), a.from && "ImageStreamTag" === a.from.kind && a.from.name.indexOf(":") === -1 && !a.from.namespace && (c[a.name] = !0, d[a.from.name] = d[a.from.name] || [], d[a.from.name].push(a.name));
+}), angular.forEach(a.status.tags, function(e) {
+if (!c[e.tag]) {
+var f, g = e.tag, h = b[g] || [], i = {
 imageStream:a,
-imageStreamTag:e,
-name:a.metadata.name + ":" + e,
-description:j(a, "description", e),
-version:j(a, "version", e),
-categoryTags:f
+imageStreamTag:g,
+name:a.metadata.name + ":" + g,
+description:j(a, "description", g),
+version:j(a, "version", g),
+categoryTags:h,
+referencedBy:d[g]
 };
-f.indexOf("builder") >= 0 ? (d = y(f), E[d] = E[d] || [], E[d].push(g)) :G.push(g);
+h.indexOf("builder") >= 0 ? (f = y(h), E[f] = E[f] || [], E[f].push(i)) :G.push(i);
+}
 });
 }
 });
@@ -7808,6 +7811,7 @@ imageTag:"=",
 version:"=",
 project:"@",
 filterTag:"=",
+referencedBy:"=",
 isBuilder:"=?"
 },
 templateUrl:"views/catalog/_image.html"

@@ -47,6 +47,7 @@ angular.module('openshiftConsole')
         version: '=',
         project: '@',
         filterTag: "=",
+        referencedBy: "=",
         isBuilder: "=?"
       },
       templateUrl: 'views/catalog/_image.html'
