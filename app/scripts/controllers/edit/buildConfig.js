@@ -24,7 +24,7 @@ angular.module('openshiftConsole')
     $scope.selectTypes = {
       ImageStreamTag: "Image Stream Tag",
       ImageStreamImage: "Image Stream Image",
-      DockerImage: "Docker Image Link"
+      DockerImage: "Docker Image Repository"
     };
     $scope.buildFromTypes = [
       {
@@ -37,7 +37,7 @@ angular.module('openshiftConsole')
       },
       {
         "id": "DockerImage",
-        "title": "Docker Image Link"
+        "title": "Docker Image Repository"
       }
     ];
     $scope.pushToTypes = [
@@ -47,7 +47,7 @@ angular.module('openshiftConsole')
       },
       {
         "id": "DockerImage",
-        "title": "Docker Image Link"
+        "title": "Docker Image Repository"
       },
       {
         "id": "None",

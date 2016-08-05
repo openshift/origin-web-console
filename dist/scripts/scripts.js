@@ -4738,7 +4738,7 @@ type:"path"
 }, a.selectTypes = {
 ImageStreamTag:"Image Stream Tag",
 ImageStreamImage:"Image Stream Image",
-DockerImage:"Docker Image Link"
+DockerImage:"Docker Image Repository"
 }, a.buildFromTypes = [ {
 id:"ImageStreamTag",
 title:"Image Stream Tag"
@@ -4747,13 +4747,13 @@ id:"ImageStreamImage",
 title:"Image Stream Image"
 }, {
 id:"DockerImage",
-title:"Docker Image Link"
+title:"Docker Image Repository"
 } ], a.pushToTypes = [ {
 id:"ImageStreamTag",
 title:"Image Stream Tag"
 }, {
 id:"DockerImage",
-title:"Docker Image Link"
+title:"Docker Image Repository"
 }, {
 id:"None",
 title:"--- None ---"

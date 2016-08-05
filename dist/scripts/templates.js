@@ -6364,7 +6364,7 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "</div>\n" +
     "</div>\n" +
     "<div ng-if=\"imageSourceOptions.pickedType==='DockerImage'\" class=\"form-group\">\n" +
-    "<label for=\"imageSourceLink\">Docker Image Link</label>\n" +
+    "<label for=\"imageSourceLink\">Docker Image Repository</label>\n" +
     "<div>\n" +
     "<input class=\"form-control\" id=\"imageSourceLink\" name=\"imageSourceLink\" type=\"text\" ng-model=\"imageSourceOptions.pickedDockerImage\" placeholder=\"example: openshift/ruby-20-centos7:latest\" autocorrect=\"off\" autocapitalize=\"off\" spellcheck required>\n" +
     "</div>\n" +
@@ -6465,7 +6465,7 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "</div>\n" +
     "</div>\n" +
     "<div ng-if=\"builderOptions.pickedType==='DockerImage'\" class=\"form-group\">\n" +
-    "<label for=\"FromTypeLink\">Docker Image Link</label>\n" +
+    "<label for=\"FromTypeLink\">Docker Image Repository</label>\n" +
     "<div>\n" +
     "<input class=\"form-control\" type=\"text\" ng-model=\"builderOptions.pickedDockerImage\" placeholder=\"example: openshift/ruby-20-centos7:latest\" autocorrect=\"off\" autocapitalize=\"off\" spellcheck required>\n" +
     "</div>\n" +
@@ -6520,7 +6520,7 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "</div>\n" +
     "</div>\n" +
     "<div ng-if=\"outputOptions.pickedType==='DockerImage'\" class=\"form-group\">\n" +
-    "<label for=\"pushToLink\">Docker Image Link</label>\n" +
+    "<label for=\"pushToLink\">Docker Image Repository</label>\n" +
     "<div>\n" +
     "<input class=\"form-control\" id=\"pushToLink\" name=\"pushToLink\" type=\"text\" ng-model=\"outputOptions.pickedDockerImage\" autocorrect=\"off\" autocapitalize=\"off\" spellcheck required>\n" +
     "</div>\n" +
