@@ -4,7 +4,8 @@
 @shield-border-color:  @overview-border-gray;
 @shield-width:         36px;
 @shield-width-lg:      50px;
-@service-group-margin: 6px;
+@service-group-vertical-margin: 6px;
+@service-group-horizontal-margin: 8px;
 @two-column-min-width: 568px;
 
 .overview {
@@ -65,13 +66,13 @@
     }
     .alert-wrapper {
       width: 100%;
-      padding-right: 5px;
+      // offset to left margin so alert right edge aligns
+      padding-right: @service-group-horizontal-margin;
       .alert {
         width: 100%;
         border-color: @overview-border-gray;
         margin-bottom: 0;
-        margin-left: @service-group-margin;
-        margin-top: @service-group-margin;
+        margin-left: @service-group-horizontal-margin;
         box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1);
         .pficon {
           box-shadow: none;
@@ -82,6 +83,12 @@
         }
       }
     }
+  }
+  .service-group-with-route-row .service-group .alert-wrapper .alert {
+    margin-top: @service-group-vertical-margin;
+  }
+  .standalone-service-row .service-group .alert-wrapper .alert {
+    margin-bottom: @service-group-vertical-margin;
   }
   overview-replication-controller,
   overview-pod,
@@ -111,7 +118,7 @@
       .flex(@columns: 0 0 100%);
     }
     .builds-block .builds .build:last-child {
-      margin-bottom: @service-group-margin;
+      margin-bottom: @service-group-vertical-margin;
     }
     .service-group-body .overview-services {
       overview-service {
@@ -138,7 +145,7 @@
       }
     }
     .alert-wrapper .alert {
-      margin-bottom: @service-group-margin;
+      margin-bottom: @service-group-vertical-margin;
       margin-top: 0;
     }
     .service-group-body {
@@ -244,7 +251,7 @@
   }
   .service-group-body {
     border-top-width: 0;
-    margin-top: @service-group-margin;
+    margin-top: @service-group-vertical-margin;
     padding: 0;
     .overview-services {
       .justify-content(@justify: space-between);
@@ -253,11 +260,11 @@
       .flex-direction(@direction: column);
       overview-service {
         &:nth-child(n+3) {
-          margin-top: @service-group-margin;
+          margin-top: @service-group-vertical-margin;
         }
         @media (max-width: 567px) {
           &:nth-child(n+2) {
-            margin-top: @service-group-margin;
+            margin-top: @service-group-vertical-margin;
           }
         }
       }
@@ -272,7 +279,7 @@
         .flex-display(@display: flex);
         .flex(@columns: 1 0 0%);
         + .deployment-tile-wrapper {
-          margin-top: @service-group-margin;
+          margin-top: @service-group-vertical-margin;
         }
       }
       .deployment-tile {
@@ -345,6 +352,7 @@
       }
       @media (min-width: @screen-md-min) {
         .flex-direction(@direction: row);
+        // .justify-content(@justify: space-between);
         .justify-content(@justify: flex-end);
       }
     }
@@ -394,9 +402,9 @@
           animation: fadeSlideOut .75s ease forwards; // Needs to be faster than flexGrow
         }
       }
-      .overview-donut {
+      .overview-donut { 
         .flex(@columns: 1 1 0%);
-        .flex-order(@order: 2);
+        .flex-order(@order: 3);
         max-width: 50%;
         min-height: 150px;
         &.latest {
@@ -411,7 +419,7 @@
         }
       }
       .overview-donut-connector {
-        .flex-order(@order: 3);
+        .flex-order(@order: 2);
         font-size: 300%;
         color: #ccc;
         .align-items(@align: center);
@@ -422,7 +430,8 @@
         }
       }
       .overview-unsuccessful-state {
-        .flex-order(@order: 3);
+        .flex(@columns: 1 1 0%);
+        .flex-order(@order: 2);
         .align-items(@align: center);
         .justify-content(@justify: center);
         line-height: 1;
