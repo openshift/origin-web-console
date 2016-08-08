@@ -41,12 +41,7 @@ angular.module('openshiftConsole')
     var watches = [];
 
     var fetchImageStreamTag = _.debounce(function(tagData, context) {
-      var name;
-      if (tagData.spec) {
-        name = tagData.spec.from.name;
-      } else {
-        name = $routeParams.imagestream + ":" + $routeParams.tag;
-      }
+      var name = $routeParams.imagestream + ":" + $routeParams.tag;
       DataService.get("imagestreamtags", name, context).then(
         // success
         function(imageStreamTag) {

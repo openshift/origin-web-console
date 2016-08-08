@@ -4078,8 +4078,8 @@ link:"project/" + b.project + "/browse/images/" + b.imagestream
 title:":" + b.tag
 } ], a.emptyMessage = "Loading...", b.tab && (a.selectedTab = {}, a.selectedTab[b.tab] = !0);
 var h = [], i = _.debounce(function(d, f) {
-var g;
-g = d.spec ? d.spec.from.name :b.imagestream + ":" + b.tag, c.get("imagestreamtags", g, f).then(function(b) {
+var g = b.imagestream + ":" + b.tag;
+c.get("imagestreamtags", g, f).then(function(b) {
 a.loaded = !0, a.image = b.image;
 }, function(b) {
 a.loaded = !0, a.alerts.load = {
