@@ -320,7 +320,7 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "<span ng-switch-when=\"Git\">\n" +
     "<span ng-if=\"build.spec.revision.git.commit\">\n" +
     "{{build.spec.revision.git.message}}\n" +
-    "<osc-git-link class=\"hash\" uri=\"build.spec.source.git.uri\" commit=\"build.spec.revision.git.commit\">{{build.spec.revision.git.commit | limitTo:7}}</osc-git-link>\n" +
+    "<osc-git-link class=\"hash\" uri=\"build.spec.source.git.uri\" ref=\"build.spec.revision.git.commit\">{{build.spec.revision.git.commit | limitTo:7}}</osc-git-link>\n" +
     "<span ng-if=\"detailed && build.spec.revision.git.author\">\n" +
     "authored by {{build.spec.revision.git.author.name}}\n" +
     "</span>\n" +
@@ -827,7 +827,7 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
 
   $templateCache.put('views/_webhook-trigger-cause.html',
     "{{trigger.message === 'GitHub WebHook' ? 'GitHub webhook' : 'Generic webhook'}}: <span ng-if=\"trigger.githubWebHook.revision || trigger.genericWebHook.revision\"> {{trigger.githubWebHook.revision.git.message || trigger.genericWebHook.revision.git.message}}</span>\n" +
-    "<osc-git-link ng-if=\"trigger.githubWebHook.revision || trigger.genericWebHook.revision\" class=\"hash\" uri=\"build.spec.source.git.uri\" commit=\"trigger.githubWebHook.revision.git.commit || trigger.genericWebHook.revision.git.commit\">{{trigger.githubWebHook.revision.git.commit || trigger.genericWebHook.revision.git.commit | limitTo:7}}\n" +
+    "<osc-git-link ng-if=\"trigger.githubWebHook.revision || trigger.genericWebHook.revision\" class=\"hash\" uri=\"build.spec.source.git.uri\" ref=\"trigger.githubWebHook.revision.git.commit || trigger.genericWebHook.revision.git.commit\">{{trigger.githubWebHook.revision.git.commit || trigger.genericWebHook.revision.git.commit | limitTo:7}}\n" +
     "</osc-git-link>\n" +
     "<span ng-if=\"trigger.githubWebHook.revision || trigger.genericWebHook.revision\">\n" +
     "authored by {{trigger.githubWebHook.revision.git.author.name || trigger.genericWebHook.revision.git.author.name}},\n" +
@@ -1103,7 +1103,7 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "<dt>Source type:</dt>\n" +
     "<dd>{{build.spec.source.type}}</dd>\n" +
     "<dt ng-if-start=\"build.spec.source.git.uri\">Source repo:</dt>\n" +
-    "<dd ng-if-end><span class=\"word-break\" ng-bind-html=\"build.spec.source.git.uri | githubLink : build.spec.source.git.ref : build.spec.source.contextDir | linky : &quot;_blank&quot;\"></span></dd>\n" +
+    "<dd ng-if-end><span class=\"word-break\"><osc-git-link uri=\"build.spec.source.git.uri\" ref=\"build.spec.source.git.ref\" context-dir=\"build.spec.source.contextDir\">{{build.spec.source.git.uri}}</osc-git-link></span></dd>\n" +
     "<dt ng-if-start=\"build.spec.source.git.ref\">Source ref:</dt>\n" +
     "<dd ng-if-end>{{build.spec.source.git.ref}}</dd>\n" +
     "<dt ng-if-start=\"build.spec.source.contextDir\">Source context dir:</dt>\n" +
@@ -1423,7 +1423,7 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "</span>\n" +
     "<span ng-if=\"buildConfig.spec.source.type === 'Git'\">\n" +
     "source repository\n" +
-    "<span class=\"word-break\" ng-bind-html=\"buildConfig.spec.source.git.uri | githubLink : buildConfig.spec.source.git.ref : buildConfig.spec.source.contextDir | linky : &quot;_blank&quot;\"></span>\n" +
+    "<span class=\"word-break\"><osc-git-link uri=\"buildConfig.spec.source.git.uri\" ref=\"buildConfig.spec.source.git.ref\" context-dir=\"buildConfig.spec.source.contextDir\">{{buildConfig.spec.source.git.uri}}</osc-git-link></span>\n" +
     "</span>\n" +
     "<span ng-if=\"buildConfig.spec.source.type !== 'Git'\">\n" +
     "build configuration {{buildConfig.metadata.name}}.\n" +
@@ -1570,7 +1570,7 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "<div ng-if=\"buildConfig.spec.source\">\n" +
     "<div ng-if=\"buildConfig.spec.source.type == 'Git'\">\n" +
     "<dt>Source repo:</dt>\n" +
-    "<dd class=\"word-break\" ng-bind-html=\"buildConfig.spec.source.git.uri | githubLink : buildConfig.spec.source.git.ref : buildConfig.spec.source.contextDir | linky : &quot;_blank&quot;\"></dd>\n" +
+    "<dd><span class=\"word-break\"><osc-git-link uri=\"buildConfig.spec.source.git.uri\" ref=\"buildConfig.spec.source.git.ref\" context-dir=\"buildConfig.spec.source.contextDir\">{{buildConfig.spec.source.git.uri}}</osc-git-link></span></dd>\n" +
     "<dt ng-if=\"buildConfig.spec.source.git.ref\">Source ref:</dt>\n" +
     "<dd ng-if=\"buildConfig.spec.source.git.ref\">{{buildConfig.spec.source.git.ref}}</dd>\n" +
     "<dt ng-if=\"buildConfig.spec.source.contextDir\">Source context dir:</dt>\n" +
@@ -3141,7 +3141,7 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "<td data-title=\"Type\">{{buildConfigs[buildConfigName].spec.strategy.type | startCase}}</td>\n" +
     "<td data-title=\"Source\">\n" +
     "<span ng-if=\"buildConfigs[buildConfigName].spec.source.type == 'None'\"><i>none</i></span>\n" +
-    "<span class=\"word-break\" ng-if=\"buildConfigs[buildConfigName].spec.source.type == 'Git'\" ng-bind-html=\"buildConfigs[buildConfigName].spec.source.git.uri | githubLink : buildConfigs[buildConfigName].spec.source.git.ref : buildConfigs[buildConfigName].spec.source.contextDir | linky : &quot;_blank&quot;\"></span></td>\n" +
+    "<span class=\"word-break\" ng-if=\"buildConfigs[buildConfigName].spec.source.type == 'Git'\"><osc-git-link uri=\"buildConfigs[buildConfigName].spec.source.git.uri\" ref=\"buildConfigs[buildConfigName].spec.source.git.ref\" context-dir=\"buildConfigs[buildConfigName].spec.source.contextDir\">{{buildConfigs[buildConfigName].spec.source.git.uri}}</osc-git-link></span></td>\n" +
     "</tr>\n" +
     "\n" +
     "\n" +
@@ -3177,7 +3177,7 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "<span ng-if=\"latestBuild.spec.source.type == 'None'\">\n" +
     "<i>none</i>\n" +
     "</span>\n" +
-    "<span class=\"word-break\" ng-if=\"latestBuild.spec.source.type == 'Git'\" ng-bind-html=\"latestBuild.spec.source.git.uri | githubLink : latestBuild.spec.source.git.ref : latestBuild.spec.source.contextDir | linky : &quot;_blank&quot;\"></span>\n" +
+    "<span class=\"word-break\"><osc-git-link uri=\"latestBuild.spec.source.git.uri\" ref=\"latestBuild.spec.source.git.ref\" context-dir=\"latestBuild.spec.source.contextDir\">{{latestBuild.spec.source.git.uri}}</osc-git-link></span>\n" +
     "</span>\n" +
     "</td>\n" +
     "</tr>\n" +
@@ -3992,7 +3992,7 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "<div ng-if=\"createdBuildConfig\" class=\"col-md-6\">\n" +
     "<h2>Making code changes</h2>\n" +
     "<p ng-if=\"fromSampleRepo\">\n" +
-    "You are set up to use the example git repository. If you would like to modify the source code, fork the <a class=\"word-break\" target=\"_blank\" href=\"{{createdBuildConfig.spec.source.git.uri | githubLink}}\">{{createdBuildConfig.spec.source.git.uri | githubLink}}</a> repository to an OpenShift-visible git account and <a href=\"{{createdBuildConfig | editResourceURL}}\">edit the <strong>{{createdBuildConfig.metadata.name}}</strong> build config</a> to point to your fork.\n" +
+    "You are set up to use the example git repository. If you would like to modify the source code, fork the <osc-git-link uri=\"createdBuildConfig.spec.source.git.uri\">{{createdBuildConfig.spec.source.git.uri}}</osc-git-link> repository to an OpenShift-visible git account and <a href=\"{{createdBuildConfig | editResourceURL}}\">edit the <strong>{{createdBuildConfig.metadata.name}}</strong> build config</a> to point to your fork.\n" +
     "<span ng-if=\"createdBuildConfigWithConfigChangeTrigger()\">Note that this will start a new build.</span>\n" +
     "</p>\n" +
     "<div ng-repeat=\"trigger in createdBuildConfig.spec.triggers\" ng-if=\"trigger.type == 'GitHub'\">\n" +
@@ -4003,7 +4003,12 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "You can configure the webhook in the forked repository's settings, using the following payload URL:\n" +
     "</p>\n" +
     "<p ng-if=\"!fromSampleRepo\">\n" +
+    "<span ng-if=\"createdBuildConfig.spec.source.git.uri | isGithubLink\">\n" +
     "You can now set up the webhook in the GitHub repository settings if you own it, in <a target=\"_blank\" class=\"word-break\" href=\"{{createdBuildConfig.spec.source.git.uri | githubLink}}/settings/hooks\">{{createdBuildConfig.spec.source.git.uri | githubLink}}/settings/hooks</a>, using the following payload URL:\n" +
+    "</span>\n" +
+    "<span ng-if=\"!(createdBuildConfig.spec.source.git.uri | isGithubLink)\">\n" +
+    "Your source does not appear to be a URL to a GitHub repository. If you have a GitHub repository that you want to trigger this build from then use the following payload URL:\n" +
+    "</span>\n" +
     "</p>\n" +
     "<copy-to-clipboard clipboard-text=\"createdBuildConfig.metadata.name | webhookURL : trigger.type : trigger.github.secret : projectName\"></copy-to-clipboard>\n" +
     "</div>\n" +
@@ -7292,7 +7297,7 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "<span class=\"fa fa-code\"></span>\n" +
     "<span ng-if=\"build.spec.revision.git.commit\">\n" +
     "{{build.spec.revision.git.message}}\n" +
-    "<osc-git-link class=\"hash\" uri=\"build.spec.source.git.uri\" commit=\"build.spec.revision.git.commit\">{{build.spec.revision.git.commit | limitTo:7}}</osc-git-link>\n" +
+    "<osc-git-link class=\"hash\" uri=\"build.spec.source.git.uri\" ref=\"build.spec.revision.git.commit\">{{build.spec.revision.git.commit | limitTo:7}}</osc-git-link>\n" +
     "<span ng-if=\"detailed && build.spec.revision.git.author\">\n" +
     "authored by {{build.spec.revision.git.author.name}}\n" +
     "</span>\n" +
@@ -8042,7 +8047,7 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "</h2>\n" +
     "<div ng-if=\"buildConfig.spec.source.git.uri\">\n" +
     "Source Repository:\n" +
-    "<span ng-bind-html=\"buildConfigs[buildConfigName].spec.source.git.uri | githubLink : buildConfigs[buildConfigName].spec.source.git.ref : buildConfigs[buildConfigName].spec.source.contextDir | linky : &quot;_blank&quot;\" class=\"source-repo\"></span>\n" +
+    "<span class=\"word-break\" ng-if=\"buildConfigs[buildConfigName].spec.source.type == 'Git'\"><osc-git-link uri=\"buildConfigs[buildConfigName].spec.source.git.uri\" ref=\"buildConfigs[buildConfigName].spec.source.git.ref\" context-dir=\"buildConfigs[buildConfigName].spec.source.contextDir\">{{buildConfigs[buildConfigName].spec.source.git.uri}}</osc-git-link></span>\n" +
     "</div>\n" +
     "</div>\n" +
     "\n" +

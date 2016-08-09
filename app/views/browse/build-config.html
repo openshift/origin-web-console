@@ -88,7 +88,10 @@
                           </span>
                           <span ng-if="buildConfig.spec.source.type === 'Git'">
                             source repository
-                            <span class="word-break" ng-bind-html='buildConfig.spec.source.git.uri | githubLink : buildConfig.spec.source.git.ref : buildConfig.spec.source.contextDir | linky : "_blank"'></span>
+                            <span class="word-break"><osc-git-link
+                                            uri="buildConfig.spec.source.git.uri"
+                                            ref="buildConfig.spec.source.git.ref"
+                                            context-dir="buildConfig.spec.source.contextDir">{{buildConfig.spec.source.git.uri}}</osc-git-link></span>
                           </span>
                           <span ng-if="buildConfig.spec.source.type !== 'Git'">
                             build configuration {{buildConfig.metadata.name}}.
@@ -242,7 +245,10 @@
                               <div ng-if="buildConfig.spec.source">
                                 <div ng-if="buildConfig.spec.source.type == 'Git'">
                                   <dt>Source repo:</dt>
-                                  <dd class="word-break" ng-bind-html='buildConfig.spec.source.git.uri | githubLink : buildConfig.spec.source.git.ref : buildConfig.spec.source.contextDir | linky : "_blank"'></dd>
+                                  <dd><span class="word-break"><osc-git-link
+                                            uri="buildConfig.spec.source.git.uri"
+                                            ref="buildConfig.spec.source.git.ref"
+                                            context-dir="buildConfig.spec.source.contextDir">{{buildConfig.spec.source.git.uri}}</osc-git-link></span></dd>
                                   <dt ng-if="buildConfig.spec.source.git.ref">Source ref:</dt>
                                   <dd ng-if="buildConfig.spec.source.git.ref">{{buildConfig.spec.source.git.ref}}</dd>
                                   <dt ng-if="buildConfig.spec.source.contextDir">Source context dir:</dt>

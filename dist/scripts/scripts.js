@@ -6897,17 +6897,24 @@ a.expand = !a.expand;
 };
 }
 };
-}), angular.module("openshiftConsole").directive("oscGitLink", function() {
+}), angular.module("openshiftConsole").directive("oscGitLink", [ "$filter", function(a) {
 return {
 restrict:"E",
 scope:{
 uri:"=",
-commit:"="
+ref:"=",
+contextDir:"="
 },
 transclude:!0,
-template:'<a ng-href="{{uri | githubLink : commit}}" ng-transclude target="_blank"></a>'
+link:function(b) {
+var c = a("isAbsoluteURL"), d = a("githubLink");
+b.$watchGroup([ "uri", "ref", "contextDir" ], function() {
+b.gitLink = d(b.uri, b.ref, b.contextDir), b.isLink = c(b.gitLink);
+});
+},
+template:'<a ng-if="isLink" ng-href="{{gitLink}}" ng-transclude target="_blank"></a><span ng-if="!isLink" ng-transclude></span>'
 };
-}), angular.module("openshiftConsole").directive("oscImageSummary", function() {
+} ]), angular.module("openshiftConsole").directive("oscImageSummary", function() {
 return {
 restrict:"E",
 scope:{
@@ -10606,6 +10613,11 @@ return "completed" !== a.status ? a.titles.started :a.hasErrors ? a.titles.failu
 return function(a) {
 return a ? "https://" :"http://";
 };
+}).filter("isGithubLink", function() {
+var a = /^(?:https?:\/\/|git:\/\/|git\+ssh:\/\/|git\+https:\/\/)?(?:[^@]+@)?github\.com[:\/]([^\/]+\/[^\/]+?)(\/|(?:\.git(#.*)?))?$/;
+return function(b) {
+return b ? a.test(b) :b;
+};
 }).filter("githubLink", function() {
 return function(a, b, c) {
 var d = a.match(/^(?:https?:\/\/|git:\/\/|git\+ssh:\/\/|git\+https:\/\/)?(?:[^@]+@)?github\.com[:\/]([^\/]+\/[^\/]+?)(\/|(?:\.git(#.*)?))?$/);
@@ -10752,7 +10764,9 @@ return a && b ? _.filter(a, b) :a;
 };
 }).filter("isAbsoluteURL", function() {
 return function(a) {
-return !!a && URI(a).is("absolute");
+if (!a) return !1;
+var b = new URI(a), c = b.protocol();
+return b.is("absolute") && ("http" === c || "https" === c);
 };
 }), angular.module("openshiftConsole").filter("camelToLower", function() {
 return function(a) {
