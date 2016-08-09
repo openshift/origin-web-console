@@ -215,6 +215,15 @@ angular.module('openshiftConsole')
         return isSecure ? 'https://' : 'http://';
     };
   })
+  .filter('isGithubLink', function() {
+    var GITHUB_LINK_REGEXP = /^(?:https?:\/\/|git:\/\/|git\+ssh:\/\/|git\+https:\/\/)?(?:[^@]+@)?github\.com[:\/]([^\/]+\/[^\/]+?)(\/|(?:\.git(#.*)?))?$/;
+    return function(link) {
+      if (!link) {
+        return link;
+      }
+      return GITHUB_LINK_REGEXP.test(link);
+    };
+  })
   .filter('githubLink', function() {
     return function(link, ref, contextDir) {
       var m = link.match(/^(?:https?:\/\/|git:\/\/|git\+ssh:\/\/|git\+https:\/\/)?(?:[^@]+@)?github\.com[:\/]([^\/]+\/[^\/]+?)(\/|(?:\.git(#.*)?))?$/);
@@ -517,6 +526,8 @@ angular.module('openshiftConsole')
       if (!url) {
         return false;
       }
-      return URI(url).is("absolute");
+      var uri = new URI(url);
+      var protocol = uri.protocol();
+      return uri.is('absolute') && (protocol === 'http' || protocol === 'https');      
     };
   });

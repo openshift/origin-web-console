@@ -51,7 +51,10 @@
                 </h2>
                 <div ng-if="buildConfig.spec.source.git.uri">
                   Source Repository:
-                  <span ng-bind-html='buildConfigs[buildConfigName].spec.source.git.uri | githubLink : buildConfigs[buildConfigName].spec.source.git.ref : buildConfigs[buildConfigName].spec.source.contextDir | linky : "_blank"' class="source-repo"></span>
+                  <span class="word-break" ng-if="buildConfigs[buildConfigName].spec.source.type == 'Git'" ><osc-git-link
+                        uri="buildConfigs[buildConfigName].spec.source.git.uri"
+                        ref="buildConfigs[buildConfigName].spec.source.git.ref"
+                        context-dir="buildConfigs[buildConfigName].spec.source.contextDir">{{buildConfigs[buildConfigName].spec.source.git.uri}}</osc-git-link></span>                  
                 </div>
               </div>
               <!-- Handle missing build configs -->
