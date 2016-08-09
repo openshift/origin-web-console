@@ -26,7 +26,12 @@
                     but none are loaded on this project.
                   </p>
 
-                  <p>
+                  <div ng-if="project && ('persistentvolumeclaims' | canI : 'create')" class="text-center">
+                    <a ng-href="project/{{project.metadata.name}}/create-pvc"
+                       class="btn btn-primary">Request Storage</a>
+                  </div>
+
+                  <p ng-if="project && !('persistentvolumeclaims' | canI : 'create')">
                     To claim storage from a persistent volume, refer to the documentation on <a target="_blank" ng-href="{{'persistent_volumes' | helpLink}}">using persistent volumes</a>.
                   </p>
 
