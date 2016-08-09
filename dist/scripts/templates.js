@@ -497,6 +497,14 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
   );
 
 
+  $templateCache.put('views/_request-access.html',
+    "<p class=\"gutter-top\">\n" +
+    "If you need to create resources in this project, a project administrator can grant you additional access by running this command:\n" +
+    "</p>\n" +
+    "<code>oc policy add-role-to-user &lt;role&gt; {{user.metadata.name}} -n {{projectName}}</code>"
+  );
+
+
   $templateCache.put('views/_settings-general-info.html',
     "<h3>General information</h3>\n" +
     "<div column ng-if=\"!show.editing\">\n" +
@@ -2890,7 +2898,7 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "<div class=\"middle-header header-light\">\n" +
     "<div class=\"container-fluid\">\n" +
     "<div class=\"page-header page-header-bleed-right page-header-bleed-left\">\n" +
-    "<div class=\"pull-right\" ng-if=\"project && 'routes' | canI : 'create'\">\n" +
+    "<div class=\"pull-right\" ng-if=\"project && ('routes' | canI : 'create')\">\n" +
     "<a ng-href=\"project/{{project.metadata.name}}/create-route\" class=\"btn btn-default\">Create Route</a>\n" +
     "</div>\n" +
     "<h1>Routes</h1>\n" +
@@ -7653,10 +7661,7 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "</div>\n" +
     "<div ng-if=\"!(project.metadata.name | canIAddToProject)\">\n" +
     "<h2>Welcome to project {{projectName}}.</h2>\n" +
-    "<p class=\"gutter-top\">\n" +
-    "If you need to create resources in this project, a project administrator can grant you additional access by running this command:\n" +
-    "</p>\n" +
-    "<code>oc policy add-role-to-user &lt;role&gt; {{user.metadata.name}} -n {{projectName}}</code>\n" +
+    "<ng-include src=\"'views/_request-access.html'\"></ng-include>\n" +
     "</div>\n" +
     "</div>\n" +
     "</div>\n" +
@@ -8019,14 +8024,19 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "</div>\n" +
     "<div ng-if=\"buildConfigsLoaded\" class=\"empty-state-message text-center\">\n" +
     "<h2>No pipelines.</h2>\n" +
+    "<div ng-if=\"project.metadata.name | canIAddToProject\">\n" +
     "<p>\n" +
     "No pipelines have been added to project {{projectName}}.\n" +
     "</p>\n" +
-    "<p>\n" +
+    "<p ng-if=\"project.metadata.name | canIAddToProject\">\n" +
     "<a ng-href=\"project/{{projectName}}/create\" class=\"btn btn-lg btn-primary\">\n" +
     "Add to Project\n" +
     "</a>\n" +
     "</p>\n" +
+    "</div>\n" +
+    "<div ng-if=\"!(project.metadata.name | canIAddToProject)\">\n" +
+    "<ng-include src=\"'views/_request-access.html'\"></ng-include>\n" +
+    "</div>\n" +
     "</div>\n" +
     "</div>\n" +
     "<div ng-repeat=\"(buildConfigName, buildConfig) in buildConfigs\" ng-if=\"!buildConfig || (buildConfig | isJenkinsPipelineStrategy)\" class=\"animate-repeat\">\n" +
@@ -9082,7 +9092,7 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "<div class=\"row\">\n" +
     "<div class=\"col-md-12\">\n" +
     "<div class=\"page-header page-header-bleed-right page-header-bleed-left\">\n" +
-    "<div class=\"pull-right\">\n" +
+    "<div class=\"pull-right\" ng-if=\"project && ('persistentvolumeclaims' | canI : 'create')\">\n" +
     "<a ng-href=\"project/{{project.metadata.name}}/create-pvc\" class=\"btn btn-default\">Request Storage</a>\n" +
     "</div>\n" +
     "<h2>Persistent Volume Claims</h2>\n" +

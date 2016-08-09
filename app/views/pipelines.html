@@ -18,14 +18,19 @@
               </div>
               <div ng-if="buildConfigsLoaded" class="empty-state-message text-center">
                 <h2>No pipelines.</h2>
-                <p>
-                  No pipelines have been added to project {{projectName}}.
-                </p>
-                <p>
-                  <a ng-href="project/{{projectName}}/create" class="btn btn-lg btn-primary">
-                    Add to Project
-                  </a>
-                </p>
+                <div ng-if="project.metadata.name | canIAddToProject">
+                  <p>
+                    No pipelines have been added to project {{projectName}}.
+                  </p>
+                  <p ng-if="project.metadata.name | canIAddToProject">
+                    <a ng-href="project/{{projectName}}/create" class="btn btn-lg btn-primary">
+                      Add to Project
+                    </a>
+                  </p>
+                </div>
+                <div ng-if="!(project.metadata.name | canIAddToProject)">
+                  <ng-include src="'views/_request-access.html'"></ng-include>
+                </div>
               </div>
             </div>
             <div ng-repeat="(buildConfigName, buildConfig) in buildConfigs"

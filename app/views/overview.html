@@ -28,10 +28,7 @@
                   </div>
                   <div ng-if="!(project.metadata.name | canIAddToProject)">
                     <h2>Welcome to project {{projectName}}.</h2>
-                    <p class="gutter-top">
-                      If you need to create resources in this project, a project administrator can grant you additional access by running this command:
-                    </p>
-                    <code>oc policy add-role-to-user &lt;role&gt; {{user.metadata.name}} -n {{projectName}}</code>
+                    <ng-include src="'views/_request-access.html'"></ng-include>
                   </div>
                 </div>
               </div>

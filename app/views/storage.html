@@ -22,7 +22,7 @@
           <div class="row">
             <div class="col-md-12">
               <div class="page-header page-header-bleed-right page-header-bleed-left">
-                <div class="pull-right">
+                <div class="pull-right" ng-if="project && ('persistentvolumeclaims' | canI : 'create')">
                   <a ng-href="project/{{project.metadata.name}}/create-pvc" class="btn btn-default">Request Storage</a>
                 </div>
                 <h2>Persistent Volume Claims</h2>
