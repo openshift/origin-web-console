@@ -47,7 +47,7 @@ angular.module('openshiftConsole')
       link: function($scope, element) {
         $(element).click(function (evt) {
           var t = $(evt.target);
-          if (t && t.is('a')){
+          if (t && t.closest("a", element).length) {
             return;
           }
           $('a.tile-target', element).trigger("click");

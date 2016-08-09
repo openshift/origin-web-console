@@ -28,7 +28,7 @@ angular.module('openshiftConsole')
 
     ProjectsService
       .get($routeParams.project)
-      .then(_.spread(function(project, context) {
+      .then(_.spread(function(project) {
 
         var editableFields = function(resource) {
           return {

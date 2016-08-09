@@ -5868,19 +5868,19 @@ a.alerts = {}, f.getAlerts().forEach(function(b) {
 a.alerts[b.name] = b.data;
 }), f.clearAlerts();
 var i = c("annotation"), j = c("annotationName");
-g.get(b.project).then(_.spread(function(e, f) {
-var k = function(a) {
+g.get(b.project).then(_.spread(function(e) {
+var f = function(a) {
 return {
 description:i(a, "description"),
 displayName:i(a, "displayName")
 };
-}, l = function(a, b) {
+}, k = function(a, b) {
 var c = angular.copy(a);
 return c.metadata.annotations[j("description")] = b.description, c.metadata.annotations[j("displayName")] = b.displayName, c;
 };
 angular.extend(a, {
 project:e,
-editableFields:k(e),
+editableFields:f(e),
 show:{
 editing:!1
 },
@@ -5891,10 +5891,10 @@ canSubmit:function(b) {
 a.actions.canSubmit = b;
 },
 update:function() {
-a.disableInputs = !0, g.update(b.project, l(e, a.editableFields)).then(function() {
+a.disableInputs = !0, g.update(b.project, k(e, a.editableFields)).then(function() {
 b.then ? d.path(b.then) :h.toProjectOverview(e.metadata.name);
 }, function(b) {
-a.disableInputs = !1, a.editableFields = k(e), a.alerts.update = {
+a.disableInputs = !1, a.editableFields = f(e), a.alerts.update = {
 type:"error",
 message:"An error occurred while updating the project",
 details:c("getErrorDetails")(b)
@@ -7580,7 +7580,7 @@ restrict:"AC",
 link:function(a, b) {
 $(b).click(function(a) {
 var c = $(a.target);
-c && c.is("a") || $("a.tile-target", b).trigger("click");
+c && c.closest("a", b).length || $("a.tile-target", b).trigger("click");
 });
 }
 };
