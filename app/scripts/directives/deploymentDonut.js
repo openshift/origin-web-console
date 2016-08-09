@@ -77,8 +77,8 @@ angular.module('openshiftConsole')
           }
         };
 
-        // Debounce scaling so multiple clicks within 1000 milliseconds only result in one request
-        var debouncedScale = _.debounce(scale, 1000);
+        // Debounce scaling so multiple consecutive clicks only result in one request
+        var debouncedScale = _.debounce(scale, 650);
 
         $scope.viewPodsForDeployment = function(deployment) {
           if (hashSizeFilter($scope.pods) === 0) {

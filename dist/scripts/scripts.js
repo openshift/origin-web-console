@@ -8785,7 +8785,7 @@ details:a("getErrorDetails")(c)
 };
 }, l = function() {
 if (c = !1, angular.isNumber(b.desiredReplicas)) return b.deploymentConfig ? e.scaleDC(b.deploymentConfig, b.desiredReplicas).then(_.noop, k) :e.scaleRC(b.rc, b.desiredReplicas).then(_.noop, k);
-}, m = _.debounce(l, 1e3);
+}, m = _.debounce(l, 650);
 b.viewPodsForDeployment = function(a) {
 0 !== i(b.pods) && h.toPodsForDeployment(a);
 }, b.scaleUp = function() {
