@@ -402,9 +402,9 @@
           animation: fadeSlideOut .75s ease forwards; // Needs to be faster than flexGrow
         }
       }
-      .overview-donut { 
+      .overview-donut {
         .flex(@columns: 1 1 0%);
-        .flex-order(@order: 3);
+        .flex-order(@order: 2);
         max-width: 50%;
         min-height: 150px;
         &.latest {
@@ -419,7 +419,7 @@
         }
       }
       .overview-donut-connector {
-        .flex-order(@order: 2);
+        .flex-order(@order: 3);
         font-size: 300%;
         color: #ccc;
         .align-items(@align: center);
@@ -431,7 +431,7 @@
       }
       .overview-unsuccessful-state {
         .flex(@columns: 1 1 0%);
-        .flex-order(@order: 2);
+        .flex-order(@order: 3);
         .align-items(@align: center);
         .justify-content(@justify: center);
         line-height: 1;

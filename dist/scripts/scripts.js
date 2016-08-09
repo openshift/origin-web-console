@@ -3370,6 +3370,14 @@ var d = c.hpaByDC, e = c.hpaByRC;
 return d && e ? b ? (d[b] = d[b] || [], d[b]) :(e[a] = e[a] || [], e[a]) :null;
 }, c.isScalableDeployment = function(a) {
 return g.isScalable(a, q, c.hpaByDC, c.hpaByRC, c.scalableDeploymentByConfig);
+}, c.isDeploymentLatest = function(a) {
+var b = A(a, "deploymentConfig");
+if (!b) return !0;
+if (!c.deploymentConfigs) return !1;
+var d = parseInt(A(a, "deploymentVersion"));
+return _.some(c.deploymentConfigs, function(a) {
+return a.metadata.name === b && a.status.latestVersion === d;
+});
 }, window.OPENSHIFT_CONSTANTS.DISABLE_OVERVIEW_METRICS || n.isAvailable(!0).then(function(a) {
 c.showMetrics = a;
 }), j.get(b.project).then(_.spread(function(a, b) {
@@ -9381,7 +9389,7 @@ link:function(e) {
 window.OPENSHIFT_CONSTANTS.DISABLE_OVERVIEW_METRICS || c.isAvailable(!0).then(function(a) {
 e.showMetrics = a;
 });
-var f = a("annotation");
+a("annotation");
 e.$watch("deploymentConfigsByService", function(a) {
 }), e.$watch("visibleDeploymentsByConfigAndService", function(a) {
 if (a) {
@@ -9390,15 +9398,7 @@ e.activeDeploymentByConfig = {}, e.visibleDeploymentsByConfig = a[b], e.rcTileCo
 b ? e.rcTileCount++ :e.rcTileCount += _.size(a);
 });
 }
-}), e.isDeploymentLatest = function(a) {
-var b = f(a, "deploymentConfig");
-if (!b) return !0;
-if (!e.deploymentConfigs) return !1;
-var c = parseInt(f(a, "deploymentVersion"));
-return _.some(e.deploymentConfigs, function(a) {
-return a.metadata.name === b && a.status.latestVersion === c;
-});
-}, e.viewPodsForDeployment = function(a) {
+}), e.viewPodsForDeployment = function(a) {
 _.isEmpty(e.podsByDeployment[a.metadata.name]) || d.toPodsForDeployment(a);
 }, e.getHPA = function(a, b) {
 var c = e.hpaByDC, d = e.hpaByRC;
