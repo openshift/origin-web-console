@@ -922,7 +922,10 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "<span ng-if=\"attach.deployment\">deployment,</span>\n" +
     "but none are loaded on this project.\n" +
     "</p>\n" +
-    "<p>\n" +
+    "<div ng-if=\"project && ('persistentvolumeclaims' | canI : 'create')\" class=\"text-center\">\n" +
+    "<a ng-href=\"project/{{project.metadata.name}}/create-pvc\" class=\"btn btn-primary\">Request Storage</a>\n" +
+    "</div>\n" +
+    "<p ng-if=\"project && !('persistentvolumeclaims' | canI : 'create')\">\n" +
     "To claim storage from a persistent volume, refer to the documentation on <a target=\"_blank\" ng-href=\"{{'persistent_volumes' | helpLink}}\">using persistent volumes</a>.\n" +
     "</p>\n" +
     "<p ng-if=\"attach.deploymentConfig\"><a href=\"{{attach.deploymentConfig | navigateResourceURL}}\">Back to deployment config</a></p>\n" +
