@@ -7911,12 +7911,12 @@ if (!j.pod) return null;
 var b = j.options.selectedContainer;
 switch (a) {
 case "memory/usage":
-var c = w(b);
+var c = x(b);
 if (c) return g.bytesToMiB(i(c));
 break;
 
 case "cpu/usage":
-var d = x(b);
+var d = y(b);
 if (d) return _.round(1e3 * i(d));
 }
 return null;
@@ -7956,78 +7956,81 @@ colors:{
 Used:"#0088ce",
 Available:"#d1d1d1"
 }
-}, u[g] ? u[g].load(l) :(j = C(a), j.data = l, c(function() {
-u[g] = c3.generate(j);
+}, v[g] ? v[g].load(l) :(j = D(a), j.data = l, c(function() {
+v[g] = c3.generate(j);
 })));
 }), a.totalUsed = _.round(a.totalUsed, 1);
 var g, h = [ b ].concat(_.values(d));
 f < a.smallestYAxisMax && (g = a.smallestYAxisMax);
 var i, j = {
-type:a.chartType || (y ? "area-spline" :"spline"),
+type:a.chartType || (z ? "area-spline" :"spline"),
 x:"dates",
 columns:h
 }, l = a.chartPrefix + "sparkline";
-v[l] ? (v[l].load(j), v[l].axis.max({
+w[l] ? (w[l].load(j), w[l].axis.max({
 y:g
-})) :(i = D(a), i.axis.y.max = g, i.data = j, a.chartDataColors && (i.color = {
+})) :(i = E(a), i.axis.y.max = g, i.data = j, a.chartDataColors && (i.color = {
 pattern:a.chartDataColors
 }), c(function() {
-B || (v[l] = c3.generate(i));
+C || (w[l] = c3.generate(i));
 }));
 }
 }
 function m() {
-return y ? 9e5 :60 * j.options.timeRange.value * 1e3;
+return z ? "-15mn" :"-" + j.options.timeRange.value + "mn";
 }
 function n() {
-return y ? "60s" :Math.floor(m() / 60) + "ms";
+return z ? 9e5 :60 * j.options.timeRange.value * 1e3;
 }
-function o(a, b, c) {
+function o() {
+return z ? "60s" :Math.floor(n() / 60) + "ms";
+}
+function p(a, b, c) {
 var d, e = {
 metric:b.id,
-bucketDuration:n()
+bucketDuration:o()
 };
 return b.data && b.data.length ? (d = _.last(b.data), e.start = d.end) :e.start = c, j.pod ? _.assign(e, {
 namespace:j.pod.metadata.namespace,
 pod:j.pod,
-containerName:a.containerMetric ? !y && j.options.selectedContainer.name :"pod",
+containerName:a.containerMetric ? !z && j.options.selectedContainer.name :"pod",
 stacked:!0
 }) :j.deployment ? _.assign(e, {
 namespace:j.deployment.metadata.namespace,
 deployment:j.deployment
 }) :null;
 }
-function p() {
-return !j.metricsError && (!!j.deployment || j.pod && (y || _.get(j, "options.selectedContainer")));
+function q() {
+return !j.metricsError && (!!j.deployment || j.pod && (z || _.get(j, "options.selectedContainer")));
 }
-function q(a, b, c) {
+function r(a, b, c) {
 j.noData = !1;
 var d = _.initial(c.data);
 return b.data ? void (b.data = _.chain(b.data).takeRightWhile(function(b) {
 return b.start >= a;
 }).concat(d).value()) :void (b.data = d);
 }
-function r() {
-if (!z && p()) {
+function s() {
+if (!A && q()) {
 var a = Date.now();
-t = a;
-var b = a - m();
+u = a;
+var b = m();
 angular.forEach(j.metrics, function(a) {
 var c = [];
 angular.forEach(a.datasets, function(d) {
-var e = o(a, d, b);
+var e = p(a, d, b);
 e && c.push(h.get(e));
 }), d.all(c).then(function(c) {
-B || (angular.forEach(c, function(c) {
+C || (angular.forEach(c, function(c) {
 if (c) {
 var d = _.find(a.datasets, {
 id:c.metricID
 });
-q(b, d, c);
+r(b, d, c);
 }
 }), l(a));
 }, function(a) {
-B || angular.forEach(a, function(a) {
+C || angular.forEach(a, function(a) {
 j.metricsError = {
 status:_.get(a, "status", 0),
 details:_.get(a, "data.errorMsg") || _.get(a, "statusText") || "Status code " + _.get(a, "status", 0)
@@ -8040,7 +8043,7 @@ j.loaded = !0;
 }
 }
 j.includedMetrics = j.includedMetrics || [ "cpu", "memory", "network" ];
-var s, t, u = {}, v = {}, w = b("resources.limits.memory"), x = b("resources.limits.cpu"), y = "compact" === j.profile, z = y, A = 3e4, B = !1;
+var t, u, v = {}, w = {}, x = b("resources.limits.memory"), y = b("resources.limits.cpu"), z = "compact" === j.profile, A = z, B = 3e4, C = !1;
 j.uniqueID = _.uniqueId("metrics-chart-"), j.metrics = [], _.includes(j.includedMetrics, "memory") && j.metrics.push({
 label:"Memory",
 units:"MiB",
@@ -8101,7 +8104,7 @@ label:"Last week",
 value:10080
 } ]
 }, j.options.timeRange = _.head(j.options.rangeOptions);
-var C = function(a) {
+var D = function(a) {
 var b = "#" + a.chartPrefix + j.uniqueID + "-donut";
 return {
 bindto:b,
@@ -8122,12 +8125,12 @@ height:175,
 widht:175
 }
 };
-}, D = function(a) {
+}, E = function(a) {
 return {
 bindto:"#" + a.chartPrefix + j.uniqueID + "-sparkline",
 axis:{
 x:{
-show:!y,
+show:!z,
 type:"timeseries",
 padding:{
 left:0,
@@ -8139,12 +8142,12 @@ format:"%a %H:%M"
 }
 },
 y:{
-show:!y,
+show:!z,
 label:a.units,
 min:0,
 padding:{
 left:0,
-top:y ? 5 :20,
+top:z ? 5 :20,
 bottom:0
 },
 tick:{
@@ -8155,13 +8158,13 @@ return d3.round(a, 3);
 }
 },
 legend:{
-show:a.datasets.length > 1 && !y
+show:a.datasets.length > 1 && !z
 },
 point:{
 show:!1
 },
 size:{
-height:j.sparklineHeight || (y ? 35 :175),
+height:j.sparklineHeight || (z ? 35 :175),
 width:j.sparklineWidth
 },
 tooltip:{
@@ -8178,21 +8181,21 @@ _.each(j.metrics, function(a) {
 _.each(a.datasets, function(a) {
 delete a.data;
 });
-}), delete j.metricsError, r();
-}, !0), s = a(r, A, !1), j.updateInView = function(a) {
-z = !a, a && (!t || Date.now() > t + A) && r();
+}), delete j.metricsError, s();
+}, !0), t = a(s, B, !1), j.updateInView = function(a) {
+A = !a, a && (!u || Date.now() > u + B) && s();
 }, e.$on("metrics.charts.resize", function() {
 c(function() {
-_.each(v, function(a) {
+_.each(w, function(a) {
 a.flush();
 });
 }, 0);
 }), j.$on("$destroy", function() {
-s && (a.cancel(s), s = null), angular.forEach(u, function(a) {
+t && (a.cancel(t), t = null), angular.forEach(v, function(a) {
 a.destroy();
-}), u = null, angular.forEach(v, function(a) {
+}), v = null, angular.forEach(w, function(a) {
 a.destroy();
-}), v = null, B = !0;
+}), w = null, C = !0;
 });
 }
 };
@@ -8216,10 +8219,10 @@ total:0,
 count:0
 }), b[c];
 };
-return _.each(w[a.descriptor], function(a) {
+return _.each(x[a.descriptor], function(a) {
 _.each(a, function(a) {
 var b = g(a);
-(!v || v < a.end) && (v = a.end), d(a) || (b.total += a.value, b.count = b.count + 1);
+(!w || w < a.end) && (w = a.end), d(a) || (b.total += a.value, b.count = b.count + 1);
 });
 }), _.each(b, function(b, d) {
 var f;
@@ -8231,14 +8234,14 @@ var e = [], g = {
 type:"spline"
 };
 return b.showAverage ? (_.each(a[c.descriptor], function(a, b) {
-o(c.descriptor, b, a);
+p(c.descriptor, b, a);
 }), g.type = "area-spline", g.x = "Date", g.columns = f(c), g) :(_.each(a[c.descriptor], function(a, b) {
-o(c.descriptor, b, a);
+p(c.descriptor, b, a);
 var f = b + "-dates";
 _.set(g, [ "xs", b ], f);
 var h = [ f ], i = [ b ];
-e.push(h), e.push(i), _.each(w[c.descriptor][b], function(a) {
-if (h.push(a.start), (!v || v < a.end) && (v = a.end), d(a)) i.push(a.value); else {
+e.push(h), e.push(i), _.each(x[c.descriptor][b], function(a) {
+if (h.push(a.start), (!w || w < a.end) && (w = a.end), d(a)) i.push(a.value); else {
 var b = c.convert ? c.convert(a.value) :a.value;
 i.push(b);
 }
@@ -8248,61 +8251,64 @@ return a[0];
 }), g);
 }
 function j(a) {
-u || (b.loaded = !0, b.showAverage = _.size(b.pods) > 5, _.each(b.metrics, function(d) {
+v || (b.loaded = !0, b.showAverage = _.size(b.pods) > 5, _.each(b.metrics, function(d) {
 var e, f = i(a, d);
-s[d.descriptor] ? (s[d.descriptor].load(f), b.showAverage ? s[d.descriptor].legend.hide() :s[d.descriptor].legend.show()) :(e = x(d), e.data = f, c(function() {
-u || (s[d.descriptor] = c3.generate(e));
+t[d.descriptor] ? (t[d.descriptor].load(f), b.showAverage ? t[d.descriptor].legend.hide() :t[d.descriptor].legend.show()) :(e = y(d), e.data = f, c(function() {
+v || (t[d.descriptor] = c3.generate(e));
 }));
 }));
 }
 function k() {
-return 60 * b.options.timeRange.value * 1e3;
+return "-" + b.options.timeRange.value + "mn";
 }
 function l() {
-return Math.floor(k() / 30) + "ms";
+return 60 * b.options.timeRange.value * 1e3;
 }
 function m() {
+return Math.floor(l() / 30) + "ms";
+}
+function n() {
 var a = _.find(b.pods, "metadata.namespace");
 if (a) {
 var c = {
 pods:b.pods,
 containerName:b.options.selectedContainer.name,
 namespace:a.metadata.namespace,
-bucketDuration:l()
+bucketDuration:m()
 };
-return v ? c.start = v :c.start = Date.now() - k(), c;
+return w ? c.start = w :c.start = k(), c;
 }
 }
-function n() {
+function o() {
 var a = _.isEmpty(b.pods);
 return a ? (b.loaded = !0, !1) :!b.metricsError;
 }
-function o(a, c, d) {
+function p(a, c, d) {
 b.noData = !1;
-var e = _.initial(d), f = _.get(w, [ a, c ]);
-if (!f) return void _.set(w, [ a, c ], e);
-var g = Date.now() - k();
+var e = _.initial(d), f = _.get(x, [ a, c ]);
+if (!f) return void _.set(x, [ a, c ], e);
+var g = Date.now() - l();
 f = _.takeRightWhile(f, function(a) {
 return a.start >= g;
 });
 var h = f.concat(e);
-_.set(w, [ a, c ], h);
+_.set(x, [ a, c ], h);
 }
-function p(a) {
+function q(a) {
 b.loaded = !0, b.metricsError = {
 status:_.get(a, "status", 0),
 details:_.get(a, "data.errorMsg") || _.get(a, "statusText") || "Status code " + _.get(a, "status", 0)
 };
 }
-function q() {
-if (n()) {
-var a = m();
-h.getPodMetrics(a).then(j, p);
+function r() {
+if (o()) {
+var a = n();
+h.getPodMetrics(a).then(j, q);
 }
 }
-var r, s = {}, t = 6e4, u = !1;
+var s, t = {}, u = 6e4, v = !1;
 b.uniqueID = _.uniqueId("metrics-");
-var v, w = {};
+var w, x = {};
 b.metrics = [ {
 label:"Memory",
 units:"MiB",
@@ -8350,7 +8356,7 @@ label:"Last week",
 value:10080
 } ]
 }, b.options.timeRange = _.head(b.options.rangeOptions), b.options.selectedContainer = _.head(b.containers);
-var x = function(a) {
+var y = function(a) {
 return {
 bindto:"#" + a.chartPrefix + b.uniqueID + "-sparkline",
 axis:{
@@ -8401,17 +8407,17 @@ return d3.round(b, 2) + " " + a.units;
 };
 };
 b.$watch("options", function() {
-w = {}, v = null, delete b.metricsError, q();
-}, !0), r = a(q, t, !1), e.$on("metrics.charts.resize", function() {
+x = {}, w = null, delete b.metricsError, r();
+}, !0), s = a(r, u, !1), e.$on("metrics.charts.resize", function() {
 c(function() {
-_.each(s, function(a) {
+_.each(t, function(a) {
 a.flush();
 });
 }, 0);
 }), b.$on("$destroy", function() {
-r && (a.cancel(r), r = null), angular.forEach(s, function(a) {
+s && (a.cancel(s), s = null), angular.forEach(t, function(a) {
 a.destroy();
-}), s = null, u = !0;
+}), t = null, v = !0;
 });
 }
 };
