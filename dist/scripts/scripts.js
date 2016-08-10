@@ -6299,6 +6299,7 @@ typeNameToConfirm:"=?",
 label:"@?",
 buttonOnly:"@",
 stayOnCurrentPage:"=?",
+rcReplicas:"=?",
 hpaList:"=?",
 success:"=?",
 redirectUrl:"@?"

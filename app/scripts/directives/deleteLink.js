@@ -29,6 +29,8 @@ angular.module("openshiftConsole")
         buttonOnly: "@",
         // Stay on the current page without redirecting to the resource list.
         stayOnCurrentPage: "=?",
+        // Optional replica count for a replication controller to display a warning.
+        rcReplicas: '=?',
         // Array of associated HPAs for this resource. If set, prompts the user to delete the HPA resources as well.
         hpaList: "=?",
         // Optional callback when the delete succeeds
