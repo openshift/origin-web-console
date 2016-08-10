@@ -128,77 +128,84 @@
                   <uib-tab
                     active="selectedTab.terminal"
                     select="terminalTabWasSelected = true"
-                    ng-init="containers = pod.status.containerStatuses"
-                    ng-if="containersRunning(pod.status.containerStatuses) > 0">
+                    ng-init="containers = pod.status.containerStatuses">
                       <uib-tab-heading>Terminal</uib-tab-heading>
 
-                      <div class="mar-bottom-md">
-                        <span class="pficon pficon-info" aria-hidden="true"></span>
-                        When you navigate away from this pod, any open terminal connections will be closed.
-                        This will kill any foreground processes you started from the terminal.
+                      <div ng-if="noContainersYet" class="empty-state-message text-center">
+                        <h2>
+                          No running containers
+                        </h2>
                       </div>
 
-                      <alerts ng-if="selectedTerminalContainer.status === 'disconnected'" alerts="terminalDisconnectAlert"></alerts>
-
-                      <div class="mar-left-xl mar-bottom-lg">
-                        <div class="row">
-                          <div class="pad-left-none pad-bottom-md col-sm-6 col-lg-4">
-                            <span ng-if="pod.spec.containers.length === 1">
-                              <label for="selectLogContainer">Container:</label>
-                              {{pod.spec.containers[0].name}}
-                            </span>
-
-                            <ui-select
-                              ng-model="selectedTerminalContainer"
-                              on-select="onTerminalSelectChange(selectedTerminalContainer)"
-                              ng-if="pod.spec.containers.length > 1"
-                              class="mar-left-none pad-left-none pad-right-none">
-                             <ui-select-match
-                                class="truncate"
-                                placeholder="Container Name">
-                                  <span class="pad-left-md">
-                                    {{selectedTerminalContainer.containerName}}
-                                  </span>
-                              </ui-select-match>
-                              <ui-select-choices
-                                repeat="term in containerTerminals | filter: $select.search"
-                                ui-disable-choice="(term.containerState !== 'running') && !term.isUsed">
-                                <div row>
-                                  <span ng-bind-html="term.containerName | highlight: $select.search">
-                                  </span>
-                                  <span flex></span>
-                                  <span
-                                    ng-if="term.isUsed && (term.containerState === 'running')"
-                                    ng-class="{'text-muted' : (term.status === 'disconnected')}">
-                                      {{term.status}}
-                                  </span>
-                                  <span
-                                    ng-if="term.containerState !== 'running'"
-                                    ng-class="{'text-muted' : !term.isUsed}">
-                                      {{term.containerState}}
-                                  </span>
-                                </div>
-                              </ui-select-choices>
-                            </ui-select>
-                          </div>
+                      <div ng-if="!noContainersYet">
+                        <div class="mar-bottom-md">
+                          <span class="pficon pficon-info" aria-hidden="true"></span>
+                          When you navigate away from this pod, any open terminal connections will be closed.
+                          This will kill any foreground processes you started from the terminal.
                         </div>
 
-                        <div class="container-terminal-wrapper">
-                          <div class="row" ng-repeat="term in containerTerminals">
-                            <div class="column">
-                              <kubernetes-container-terminal
-                                prevent="!terminalTabWasSelected"
-                                ng-if="term.isUsed"
-                                ng-show="term.isVisible"
-                                pod="pod"
-                                container="term.containerName"
-                                status="term.status"
-                                rows="terminalRows"
-                                cols="terminalCols"
-                                autofocus="true"
-                                command='["/bin/sh", "-i", "-c", "TERM=xterm /bin/sh"]'
-                                >
-                              </kubernetes-container-terminal>
+                        <alerts ng-if="selectedTerminalContainer.status === 'disconnected'" alerts="terminalDisconnectAlert"></alerts>
+
+                        <div class="mar-left-xl mar-bottom-lg">
+                          <div class="row">
+                            <div class="pad-left-none pad-bottom-md col-sm-6 col-lg-4">
+                              <span ng-if="pod.spec.containers.length === 1">
+                                <label for="selectLogContainer">Container:</label>
+                                {{pod.spec.containers[0].name}}
+                               </span>
+
+                              <ui-select
+                                ng-model="selectedTerminalContainer"
+                                on-select="onTerminalSelectChange(selectedTerminalContainer)"
+                                ng-if="pod.spec.containers.length > 1"
+                                class="mar-left-none pad-left-none pad-right-none">
+                               <ui-select-match
+                                  class="truncate"
+                                  placeholder="Container Name">
+                                    <span class="pad-left-md">
+                                      {{selectedTerminalContainer.containerName}}
+                                    </span>
+                                </ui-select-match>
+                                <ui-select-choices
+                                  repeat="term in containerTerminals | filter: $select.search"
+                                  ui-disable-choice="(term.containerState !== 'running') && !term.isUsed">
+                                  <div row>
+                                    <span ng-bind-html="term.containerName | highlight: $select.search">
+                                    </span>
+                                    <span flex></span>
+                                    <span
+                                      ng-if="term.isUsed && (term.containerState === 'running')"
+                                      ng-class="{'text-muted' : (term.status === 'disconnected')}">
+                                        {{term.status}}
+                                    </span>
+                                    <span
+                                      ng-if="term.containerState !== 'running'"
+                                      ng-class="{'text-muted' : !term.isUsed}">
+                                        {{term.containerState}}
+                                    </span>
+                                  </div>
+                                </ui-select-choices>
+                              </ui-select>
+                            </div>
+                          </div>
+
+                          <div class="container-terminal-wrapper">
+                            <div class="row" ng-repeat="term in containerTerminals">
+                              <div class="column">
+                                <kubernetes-container-terminal
+                                  prevent="!terminalTabWasSelected"
+                                  ng-if="term.isUsed"
+                                  ng-show="term.isVisible"
+                                  pod="pod"
+                                  container="term.containerName"
+                                  status="term.status"
+                                  rows="terminalRows"
+                                  cols="terminalCols"
+                                  autofocus="true"
+                                  command='["/bin/sh", "-i", "-c", "TERM=xterm /bin/sh"]'
+                                  >
+                                </kubernetes-container-terminal>
+                              </div>
                             </div>
                           </div>
                         </div>

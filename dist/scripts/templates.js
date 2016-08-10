@@ -2784,8 +2784,14 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "</span>\n" +
     "</log-viewer>\n" +
     "</uib-tab>\n" +
-    "<uib-tab active=\"selectedTab.terminal\" select=\"terminalTabWasSelected = true\" ng-init=\"containers = pod.status.containerStatuses\" ng-if=\"containersRunning(pod.status.containerStatuses) > 0\">\n" +
+    "<uib-tab active=\"selectedTab.terminal\" select=\"terminalTabWasSelected = true\" ng-init=\"containers = pod.status.containerStatuses\">\n" +
     "<uib-tab-heading>Terminal</uib-tab-heading>\n" +
+    "<div ng-if=\"noContainersYet\" class=\"empty-state-message text-center\">\n" +
+    "<h2>\n" +
+    "No running containers\n" +
+    "</h2>\n" +
+    "</div>\n" +
+    "<div ng-if=\"!noContainersYet\">\n" +
     "<div class=\"mar-bottom-md\">\n" +
     "<span class=\"pficon pficon-info\" aria-hidden=\"true\"></span>\n" +
     "When you navigate away from this pod, any open terminal connections will be closed. This will kill any foreground processes you started from the terminal.\n" +
@@ -2825,6 +2831,7 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "<div class=\"column\">\n" +
     "<kubernetes-container-terminal prevent=\"!terminalTabWasSelected\" ng-if=\"term.isUsed\" ng-show=\"term.isVisible\" pod=\"pod\" container=\"term.containerName\" status=\"term.status\" rows=\"terminalRows\" cols=\"terminalCols\" autofocus command=\"[&quot;/bin/sh&quot;, &quot;-i&quot;, &quot;-c&quot;, &quot;TERM=xterm /bin/sh&quot;]\">\n" +
     "</kubernetes-container-terminal>\n" +
+    "</div>\n" +
     "</div>\n" +
     "</div>\n" +
     "</div>\n" +

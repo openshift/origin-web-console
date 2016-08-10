@@ -3160,7 +3160,7 @@ title:c.pod
 } ], a.terminalDisconnectAlert.disconnect = {
 type:"warning",
 message:"This terminal has been disconnected. If you reconnect, your terminal history will be lost."
-}, a.selectedTab = {}, c.tab && (a.selectedTab[c.tab] = !0);
+}, a.noContainersYet = !0, a.selectedTab = {}, c.tab && (a.selectedTab[c.tab] = !0);
 var k = [];
 h.isAvailable().then(function(b) {
 a.metricsAvailable = b;
@@ -3228,6 +3228,8 @@ containerState:e
 var c = _.head(b);
 return c.isVisible = !0, c.isUsed = !0, a.selectedTerminalContainer = c, b;
 }, t = function(b) {
+a.noContainersYet && (a.noContainersYet = 0 === a.containersRunning(b.status.containerStatuses));
+}, u = function(b) {
 _.each(b, function(b) {
 var c = _.find(a.pod.status.containerStatuses, {
 name:b.containerName
@@ -3239,11 +3241,11 @@ j.get(c.project).then(_.spread(function(d, h) {
 a.project = d, a.projectContext = h, f.get("pods", c.pod, h).then(function(b) {
 a.loaded = !0, a.pod = b, l(b), m();
 var d = {};
-d[b.metadata.name] = b, g.fetchReferencedImageStreamImages(d, a.imagesByDockerReference, a.imageStreamImageRefByDockerReference, h), a.containerTerminals = s(), k.push(f.watchObject("pods", c.pod, h, function(b, c) {
+d[b.metadata.name] = b, g.fetchReferencedImageStreamImages(d, a.imagesByDockerReference, a.imageStreamImageRefByDockerReference, h), a.containerTerminals = s(), t(b), k.push(f.watchObject("pods", c.pod, h, function(b, c) {
 "DELETED" === c && (a.alerts.deleted = {
 type:"warning",
 message:"This pod has been deleted."
-}), a.pod = b, l(b), m(), t(a.containerTerminals);
+}), a.pod = b, l(b), m(), u(a.containerTerminals), t(b);
 }));
 }, function(c) {
 a.loaded = !0, a.alerts.load = {
