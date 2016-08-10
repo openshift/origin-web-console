@@ -1053,7 +1053,7 @@ select[multiple].input-group-sm>.form-control,select[multiple].input-group-sm>.i
 .navbar-inverse .btn-link{color:#c2c2c2}
 .navbar-inverse .btn-link:focus,.navbar-inverse .btn-link:hover{color:#fff}
 .navbar-inverse .btn-link[disabled]:focus,.navbar-inverse .btn-link[disabled]:hover,fieldset[disabled] .navbar-inverse .btn-link:focus,fieldset[disabled] .navbar-inverse .btn-link:hover{color:#444}
-.breadcrumb{padding:8px 15px;margin-bottom:21px;list-style:none;background-color:transparent;border-radius:1px}
+.breadcrumb{padding:8px 15px;list-style:none;background-color:transparent;border-radius:1px}
 .breadcrumb>.active{color:#4d5258}
 .pagination{display:inline-block;padding-left:0;margin:21px 0;border-radius:1px}
 .pager li,.pagination>li{display:inline}
@@ -3418,7 +3418,7 @@ body{padding-right:0px!important}
 .surface-shaded .ui-select-bootstrap .ui-select-match>.btn{background-color:#fff;background-image:linear-gradient(to bottom,#fff 0%,#fbfbfb 100%)}
 .separator{border-top:1px solid rgba(0,0,0,.15)}
 .surface-shaded .nav-tabs{border-color:rgba(0,0,0,.15)}
-.breadcrumb{font-size:12px;padding-bottom:0}
+.breadcrumb{font-size:12px;padding-bottom:0;margin-bottom:0}
 .breadcrumb strong{font-weight:600}
 .tile.tile-project h2{padding:10px 0}
 @media (min-width:768px){.browse-deployment-donut .deployment-donut{-webkit-align-items:flex-end;-moz-align-items:flex-end;align-items:flex-end}
@@ -3688,6 +3688,7 @@ labels+.resource-details{margin-top:10px}
 .info-popover,.warnings-popover{cursor:help;vertical-align:middle;margin-left:2px}
 copy-to-clipboard .input-group{max-width:300px}
 .strong{font-weight:700}
+.tech-preview-header{justify-content:space-between}
 .data-toolbar{display:flex;-webkit-flex:1 1 0%;-moz-flex:1 1 0%;-ms-flex:1 1 0%;flex:1 1 0%;-webkit-flex-wrap:wrap;-moz-flex-wrap:wrap;-ms-flex-wrap:wrap;flex-wrap:wrap;padding:5px 0}
 .data-toolbar .checkbox{margin-top:3px;margin-bottom:0}
 .data-toolbar .data-toolbar-dropdown{width:150px}

@@ -5,7 +5,10 @@
       <div id="scrollable-content" class="middle-container has-scroll">
         <div class="middle-header">
           <div class="container-fluid">
-            <breadcrumbs breadcrumbs="breadcrumbs"></breadcrumbs>
+            <div row mobile="column" class="tech-preview-header">
+              <breadcrumbs breadcrumbs="breadcrumbs"></breadcrumbs>
+              <span ng-if="buildConfig | isJenkinsPipelineStrategy" class="pad-top-md"><span class="label label-warning">Technology Preview</span></span>              
+            </div>
             <alerts alerts="alerts"></alerts>
             <div ng-if="!loaded">Loading...</div>
             <h1>
