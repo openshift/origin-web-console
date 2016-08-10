@@ -4,7 +4,18 @@
     <div class="modal-body">
       <h1>Are you sure you want to delete the {{typeDisplayName || (kind | humanizeKind)}}
         '<strong>{{displayName ? displayName : resourceName}}</strong>'?</h1>
-      <p>This<span ng-if="isProject"> will <strong>delete all resources</strong> associated with the project {{displayName ? displayName : resourceName}} and</span> <strong>cannot be undone</strong>.  Make sure this is something you really want to do!</p>
+      <div ng-if="kind === 'ReplicationController' && rcReplicas" class="alert alert-warning">
+        <span class="pficon pficon-warning-triangle-o" aria-hidden="true"></span>
+        <span class="sr-only">Warning:</span>
+        <strong>{{resourceName}}</strong> has running pods.  Deleting the
+        {{typeDisplayName || (kind | humanizeKind)}} will <strong>not</strong> delete the pods
+        it controls. Consider scaling the {{typeDisplayName || (kind | humanizeKind)}} down to
+        0 before continuing.
+      </div>
+
+      <p>This<span ng-if="isProject"> will <strong>delete all resources</strong> associated with
+      the project {{displayName ? displayName : resourceName}} and</span> <strong>cannot be
+      undone</strong>.  Make sure this is something you really want to do!</p>
 
       <div ng-show="typeNameToConfirm">
         <p>Type the name of the {{typeDisplayName || (kind | humanizeKind)}} to confirm.</p>
@@ -20,6 +31,24 @@
               spellcheck="false"
               autofocus>
         </p>
+      </div>
+
+      <div ng-switch="kind">
+        <div ng-switch-when="DeploymentConfig">
+          <strong>Note:</strong> None of the deployments created by this deployment config will be deleted.
+
+          To delete the deployment config and all of its deployments, you can run the command
+          <pre class="code prettyprint mar-top-md">oc delete dc {{resourceName}} -n {{projectName}}</pre>
+          Learn more about the <a href="command-line">command line tools</a>.
+        </div>
+
+        <div ng-switch-when="BuildConfig">
+          <strong>Note:</strong> None of the builds created by this build config will be deleted.
+
+          To delete the build config and all of its builds, you can run the command
+          <pre class="code prettyprint mar-top-md">oc delete bc {{resourceName}} -n {{projectName}}</pre>
+          Learn more about the <a href="command-line">command line tools</a>.
+        </div>
       </div>
 
       <!--

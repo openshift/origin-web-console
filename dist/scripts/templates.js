@@ -2113,8 +2113,8 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "<edit-link resource=\"deployment\" kind=\"ReplicationController\" alerts=\"alerts\">\n" +
     "</edit-link>\n" +
     "</li>\n" +
-    "<li ng-class=\"{disabled: deployment.status.replicas}\" ng-if=\"'replicationcontrollers' | canI : 'delete'\">\n" +
-    "<delete-link kind=\"ReplicationController\" type-display-name=\"Deployment\" resource-name=\"{{deployment.metadata.name}}\" project-name=\"{{deployment.metadata.namespace}}\" alerts=\"alerts\" disable-delete=\"!!deployment.status.replicas\" hpa-list=\"hpaForRC\" redirect-url=\"{{deployment | configURLForResource}}\">\n" +
+    "<li ng-if=\"'replicationcontrollers' | canI : 'delete'\">\n" +
+    "<delete-link kind=\"ReplicationController\" type-display-name=\"deployment\" resource-name=\"{{deployment.metadata.name}}\" project-name=\"{{deployment.metadata.namespace}}\" alerts=\"alerts\" rc-replicas=\"deployment.status.replicas\" hpa-list=\"hpaForRC\" redirect-url=\"{{deployment | configURLForResource}}\">\n" +
     "</delete-link>\n" +
     "</li>\n" +
     "</ul>\n" +
@@ -2653,8 +2653,8 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "<edit-link resource=\"deployment\" kind=\"ReplicationController\" alerts=\"alerts\">\n" +
     "</edit-link>\n" +
     "</li>\n" +
-    "<li ng-class=\"{disabled: deployment.status.replicas}\" ng-if=\"'replicationcontrollers' | canI : 'delete'\">\n" +
-    "<delete-link kind=\"ReplicationController\" resource-name=\"{{deployment.metadata.name}}\" project-name=\"{{deployment.metadata.namespace}}\" alerts=\"alerts\" disable-delete=\"!!deployment.status.replicas\" hpa-list=\"hpaForRC\">\n" +
+    "<li ng-if=\"'replicationcontrollers' | canI : 'delete'\">\n" +
+    "<delete-link kind=\"ReplicationController\" resource-name=\"{{deployment.metadata.name}}\" project-name=\"{{deployment.metadata.namespace}}\" alerts=\"alerts\" rc-replicas=\"deployment.status.replicas\" hpa-list=\"hpaForRC\">\n" +
     "</delete-link>\n" +
     "</li>\n" +
     "</ul>\n" +
@@ -7095,6 +7095,11 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "<form>\n" +
     "<div class=\"modal-body\">\n" +
     "<h1>Are you sure you want to delete the {{typeDisplayName || (kind | humanizeKind)}} '<strong>{{displayName ? displayName : resourceName}}</strong>'?</h1>\n" +
+    "<div ng-if=\"kind === 'ReplicationController' && rcReplicas\" class=\"alert alert-warning\">\n" +
+    "<span class=\"pficon pficon-warning-triangle-o\" aria-hidden=\"true\"></span>\n" +
+    "<span class=\"sr-only\">Warning:</span>\n" +
+    "<strong>{{resourceName}}</strong> has running pods. Deleting the {{typeDisplayName || (kind | humanizeKind)}} will <strong>not</strong> delete the pods it controls. Consider scaling the {{typeDisplayName || (kind | humanizeKind)}} down to 0 before continuing.\n" +
+    "</div>\n" +
     "<p>This<span ng-if=\"isProject\"> will <strong>delete all resources</strong> associated with the project {{displayName ? displayName : resourceName}} and</span> <strong>cannot be undone</strong>. Make sure this is something you really want to do!</p>\n" +
     "<div ng-show=\"typeNameToConfirm\">\n" +
     "<p>Type the name of the {{typeDisplayName || (kind | humanizeKind)}} to confirm.</p>\n" +
@@ -7102,6 +7107,18 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "<label class=\"sr-only\" for=\"resource-to-delete\">{{typeDisplayName || (kind | humanizeKind)}} to delete</label>\n" +
     "<input ng-model=\"confirmName\" id=\"resource-to-delete\" type=\"text\" class=\"form-control input-lg\" autocorrect=\"off\" autocapitalize=\"off\" spellcheck autofocus>\n" +
     "</p>\n" +
+    "</div>\n" +
+    "<div ng-switch=\"kind\">\n" +
+    "<div ng-switch-when=\"DeploymentConfig\">\n" +
+    "<strong>Note:</strong> None of the deployments created by this deployment config will be deleted. To delete the deployment config and all of its deployments, you can run the command\n" +
+    "<pre class=\"code prettyprint mar-top-md\">oc delete dc {{resourceName}} -n {{projectName}}</pre>\n" +
+    "Learn more about the <a href=\"command-line\">command line tools</a>.\n" +
+    "</div>\n" +
+    "<div ng-switch-when=\"BuildConfig\">\n" +
+    "<strong>Note:</strong> None of the builds created by this build config will be deleted. To delete the build config and all of its builds, you can run the command\n" +
+    "<pre class=\"code prettyprint mar-top-md\">oc delete bc {{resourceName}} -n {{projectName}}</pre>\n" +
+    "Learn more about the <a href=\"command-line\">command line tools</a>.\n" +
+    "</div>\n" +
     "</div>\n" +
     "\n" +
     "<div ng-if=\"hpaList.length > 0\">\n" +
