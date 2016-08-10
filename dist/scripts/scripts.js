@@ -2824,17 +2824,17 @@ clearTemplateData:function() {
 b = a();
 }
 };
-}), angular.module("openshiftConsole").factory("ServicesService", [ "$filter", "DataService", function(a, b) {
-var c = "service.alpha.openshift.io/dependencies", d = "service.openshift.io/infrastructure", e = a("annotation"), f = function(a) {
-var b = e(a, c);
+}), angular.module("openshiftConsole").factory("ServicesService", [ "$filter", "$q", "DataService", function(a, b, c) {
+var d = "service.alpha.openshift.io/dependencies", e = "service.openshift.io/infrastructure", f = a("annotation"), g = function(a) {
+var b = f(a, d);
 if (!b) return null;
 try {
 return JSON.parse(b);
-} catch (d) {
-return Logger.warn('Could not pase "service.alpha.openshift.io/dependencies" annotation', d), null;
+} catch (c) {
+return Logger.warn('Could not pase "service.alpha.openshift.io/dependencies" annotation', c), null;
 }
-}, g = function(a) {
-var b, c = f(a);
+}, h = function(a) {
+var b, c = g(a);
 if (!c) return [];
 b = _.get(a, "metadata.namespace");
 var d = function(a) {
@@ -2843,22 +2843,34 @@ return !!a.name && ((!a.kind || "Service" === a.kind) && (!a.namespace || a.name
 return _.chain(c).filter(d).map(function(a) {
 return a.name;
 }).value();
-}, h = function(a, d) {
-var e = angular.copy(a), g = f(e) || [];
-return g.push({
-name:d.metadata.name,
-namespace:a.metadata.namespace === d.metadata.namespace ? "" :d.metadata.namespace,
-kind:d.kind
-}), _.set(e, [ "metadata", "annotations", c ], JSON.stringify(g)), b.update("services", e.metadata.name, e, {
-namespace:e.metadata.namespace
+}, i = function(a, b) {
+return b.length ? void _.set(a, [ "metadata", "annotations", d ], JSON.stringify(b)) :void (_.has(a, [ "metadata", "annotations", d ]) && delete a.metadata.annotations[d]);
+}, j = function(a, b) {
+var d = angular.copy(a), e = g(d) || [];
+return e.push({
+name:b.metadata.name,
+namespace:a.metadata.namespace === b.metadata.namespace ? "" :b.metadata.namespace,
+kind:b.kind
+}), i(d, e), c.update("services", d.metadata.name, d, {
+namespace:d.metadata.namespace
 });
-}, i = function(a) {
-return "true" === e(a, d);
+}, k = function(a, d) {
+var e = angular.copy(a), f = g(e) || [], h = _.reject(f, function(b) {
+if (b.kind !== d.kind) return !1;
+var c = b.namespace || a.metadata.namespace;
+return c === d.metadata.namespace && b.name === d.metadata.name;
+});
+return h.length === f.length ? b.when(!0) :(i(e, h), c.update("services", e.metadata.name, e, {
+namespace:e.metadata.namespace
+}));
+}, l = function(a) {
+return "true" === f(a, e);
 };
 return {
-getDependentServices:g,
-linkService:h,
-isInfrastructure:i
+getDependentServices:h,
+linkService:j,
+removeServiceLink:k,
+isInfrastructure:l
 };
 } ]), angular.module("openshiftConsole").factory("ImagesService", [ "$filter", "ApplicationGenerator", "DataService", function(a, b, c) {
 var d = function(a, b) {
@@ -6079,6 +6091,12 @@ o("An error occurred attaching the persistent volume claim to deployment.", l(a)
 }
 };
 }));
+} ]), angular.module("openshiftConsole").controller("ConfirmModalController", [ "$scope", "$uibModalInstance", "message", "details", "buttonText", "buttonClass", function(a, b, c, d, e, f) {
+a.message = c, a.details = d, a.buttonText = e, a.buttonClass = f, a.confirm = function() {
+b.close("confirm");
+}, a.cancel = function() {
+b.dismiss("cancel");
+};
 } ]), angular.module("openshiftConsole").controller("ConfirmScaleController", [ "$scope", "$uibModalInstance", "resource", "type", function(a, b, c, d) {
 a.resource = c, a.type = d, a.confirmScale = function() {
 b.close("confirmScale");
@@ -6171,10 +6189,11 @@ b.close("create");
 }, a.cancel = function() {
 b.dismiss("cancel");
 };
-} ]), angular.module("openshiftConsole").controller("LinkServiceModalController", [ "$scope", "$uibModalInstance", function(a, b) {
+} ]), angular.module("openshiftConsole").controller("LinkServiceModalController", [ "$scope", "$uibModalInstance", "ServicesService", function(a, b, c) {
 a.$watch("services", function(b) {
+var d = c.getDependentServices(a.service);
 a.options = _.filter(b, function(b) {
-return b !== a.service;
+return b !== a.service && !_.includes(d, b.metadata.name);
 });
 }), a.link = function() {
 b.close(_.get(a, "link.selectedService"));
@@ -9401,26 +9420,24 @@ return {
 restrict:"E",
 scope:!0,
 templateUrl:"views/overview/_service.html",
-link:function(e) {
-window.OPENSHIFT_CONSTANTS.DISABLE_OVERVIEW_METRICS || c.isAvailable(!0).then(function(a) {
-e.showMetrics = a;
-});
-a("annotation");
-e.$watch("deploymentConfigsByService", function(a) {
-}), e.$watch("visibleDeploymentsByConfigAndService", function(a) {
-if (a) {
-var b = _.get(e, "service.metadata.name");
-e.activeDeploymentByConfig = {}, e.visibleDeploymentsByConfig = a[b], e.rcTileCount = 0, _.each(e.visibleDeploymentsByConfig, function(a, b) {
-b ? e.rcTileCount++ :e.rcTileCount += _.size(a);
+link:function(a) {
+window.OPENSHIFT_CONSTANTS.DISABLE_OVERVIEW_METRICS || c.isAvailable(!0).then(function(b) {
+a.showMetrics = b;
+}), a.$watch("deploymentConfigsByService", function(a) {
+}), a.$watch("visibleDeploymentsByConfigAndService", function(b) {
+if (b) {
+var c = _.get(a, "service.metadata.name");
+a.activeDeploymentByConfig = {}, a.visibleDeploymentsByConfig = b[c], a.rcTileCount = 0, _.each(a.visibleDeploymentsByConfig, function(b, c) {
+c ? a.rcTileCount++ :a.rcTileCount += _.size(b);
 });
 }
-}), e.viewPodsForDeployment = function(a) {
-_.isEmpty(e.podsByDeployment[a.metadata.name]) || d.toPodsForDeployment(a);
-}, e.getHPA = function(a, b) {
-var c = e.hpaByDC, d = e.hpaByRC;
-return c && d ? b ? (c[b] = c[b] || [], c[b]) :(d[a] = d[a] || [], d[a]) :null;
-}, e.isScalableDeployment = function(a) {
-return b.isScalable(a, e.deploymentConfigs, e.hpaByDC, e.hpaByRC, e.scalableDeploymentByConfig);
+}), a.viewPodsForDeployment = function(b) {
+_.isEmpty(a.podsByDeployment[b.metadata.name]) || d.toPodsForDeployment(b);
+}, a.getHPA = function(b, c) {
+var d = a.hpaByDC, e = a.hpaByRC;
+return d && e ? c ? (d[c] = d[c] || [], d[c]) :(e[b] = e[b] || [], e[b]) :null;
+}, a.isScalableDeployment = function(c) {
+return b.isScalable(c, a.deploymentConfigs, a.hpaByDC, a.hpaByRC, a.scalableDeploymentByConfig);
 };
 }
 };
@@ -9461,6 +9478,35 @@ details:a("getErrorDetails")(b)
 };
 });
 });
+}, e.removeLink = function(c) {
+var f = b.open({
+animation:!0,
+templateUrl:"views/modals/confirm.html",
+controller:"ConfirmModalController",
+resolve:{
+message:function() {
+return "Remove service '" + c.metadata.name + "' from group?";
+},
+details:function() {
+return "Services '" + e.primaryService.metadata.name + "' and '" + c.metadata.name + "' will no longer be displayed together on the overview.";
+},
+buttonText:function() {
+return "Remove";
+},
+buttonClass:function() {
+return "btn-danger";
+}
+}
+});
+f.result.then(function() {
+d.removeServiceLink(e.primaryService, c).then(_.noop, function(b) {
+e.alerts = e.alerts || {}, e.alerts["remove-service-link"] = {
+type:"error",
+message:"Could not remove service link.",
+details:a("getErrorDetails")(b)
+};
+});
+});
 }, e.$watch("service.metadata.labels.app", function(a) {
 e.appName = a;
 });
@@ -9487,7 +9533,7 @@ return _.get(e, [ "routesByService", a ]);
 }, function(a) {
 e.displayRoute = i(a), e.primaryServiceRoutes = a, j();
 }), e.$watchGroup([ "service", "childServicesByParent" ], function() {
-e.service && (e.childServices = _.get(e, [ "childServicesByParent", e.service.metadata.name ], []));
+e.service && (e.primaryService = e.service, e.childServices = _.get(e, [ "childServicesByParent", e.service.metadata.name ], []));
 });
 }
 };

@@ -7014,6 +7014,20 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
   );
 
 
+  $templateCache.put('views/modals/confirm.html',
+    "<div class=\"modal-resource-action\">\n" +
+    "<div class=\"modal-body\">\n" +
+    "<h1>{{message}}</h1>\n" +
+    "<p ng-if=\"details\">{{details}}</p>\n" +
+    "</div>\n" +
+    "<div class=\"modal-footer\">\n" +
+    "<button class=\"btn btn-lg\" ng-class=\"buttonClass\" type=\"button\" ng-click=\"confirm()\">{{buttonText}}</button>\n" +
+    "<button class=\"btn btn-lg btn-default\" type=\"button\" ng-click=\"cancel()\">Cancel</button>\n" +
+    "</div>\n" +
+    "</div>"
+  );
+
+
   $templateCache.put('views/modals/confirmScale.html',
     "<div class=\"modal-resource-action\">\n" +
     "<div class=\"modal-body\">\n" +
@@ -7738,15 +7752,7 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
 
   $templateCache.put('views/overview/_dc.html',
     "<div class=\"deployment-tile\">\n" +
-    "<div row class=\"service-title\" ng-if=\"service\">\n" +
-    "<div>\n" +
-    "Service:\n" +
-    "<a ng-href=\"{{service | navigateResourceURL}}\">{{service.metadata.name}}</a>\n" +
-    "</div>\n" +
-    "<div ng-if=\"weightByService[service.metadata.name]\" class=\"service-metadata\">\n" +
-    "<ng-include src=\"'views/overview/_traffic-percent.html'\"></ng-include>\n" +
-    "</div>\n" +
-    "</div>\n" +
+    "<ng-include src=\"'views/overview/_service-header.html'\"></ng-include>\n" +
     "<div class=\"deployment-header\">\n" +
     "<div class=\"rc-header\">\n" +
     "<div>\n" +
@@ -7823,15 +7829,7 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
 
   $templateCache.put('views/overview/_pod.html',
     "<div class=\"deployment-tile\" ng-if=\"pod.kind === 'Pod'\">\n" +
-    "<div row class=\"service-title\" ng-if=\"service\">\n" +
-    "<div>\n" +
-    "Service:\n" +
-    "<a ng-href=\"{{service | navigateResourceURL}}\">{{service.metadata.name}}</a>\n" +
-    "</div>\n" +
-    "<div ng-if=\"weightByService[service.metadata.name]\" class=\"service-metadata\">\n" +
-    "<ng-include src=\"'views/overview/_traffic-percent.html'\"></ng-include>\n" +
-    "</div>\n" +
-    "</div>\n" +
+    "<ng-include src=\"'views/overview/_service-header.html'\"></ng-include>\n" +
     "<div class=\"rc-header\"> \n" +
     "<div>\n" +
     "Pod:\n" +
@@ -7861,15 +7859,7 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
 
   $templateCache.put('views/overview/_rc.html',
     "<div class=\"deployment-tile\" ng-if=\"deployment.kind === 'ReplicationController'\">\n" +
-    "<div row class=\"service-title\" ng-if=\"service\">\n" +
-    "<div>\n" +
-    "Service:\n" +
-    "<a ng-href=\"{{service | navigateResourceURL}}\">{{service.metadata.name}}</a>\n" +
-    "</div>\n" +
-    "<div ng-if=\"weightByService[service.metadata.name]\" class=\"service-metadata\">\n" +
-    "<ng-include src=\"'views/overview/_traffic-percent.html'\"></ng-include>\n" +
-    "</div>\n" +
-    "</div>\n" +
+    "<ng-include src=\"'views/overview/_service-header.html'\"></ng-include>\n" +
     "<div class=\"deployment-header\">\n" +
     "<div class=\"rc-header\">\n" +
     "<div>\n" +
@@ -7946,10 +7936,10 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "<div uib-collapse=\"collapse\" class=\"service-group-body\">\n" +
     "\n" +
     "<div class=\"overview-services\" ng-class=\"{ 'single-alternate-service': (alternateServices | hashSize) === 1 }\">\n" +
-    "<overview-service class=\"primary-service\"></overview-service>\n" +
-    "<overview-service ng-repeat=\"service in alternateServices\" class=\"alternate-service\">\n" +
+    "<overview-service ng-init=\"isPrimary = true\" class=\"primary-service\"></overview-service>\n" +
+    "<overview-service ng-init=\"isAlternate = true\" ng-repeat=\"service in alternateServices\" class=\"alternate-service\">\n" +
     "</overview-service>\n" +
-    "<overview-service ng-repeat=\"service in childServices\">\n" +
+    "<overview-service ng-init=\"isChild = true\" ng-repeat=\"service in childServices\">\n" +
     "</overview-service>\n" +
     "<div flex column ng-if=\"alternateServices.length === 0 && childServices.length === 0 && service\" class=\"no-child-services-block\">\n" +
     "<div class=\"no-child-services-message\">\n" +
@@ -7974,6 +7964,35 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "</div>\n" +
     "</div>\n" +
     "</div>"
+  );
+
+
+  $templateCache.put('views/overview/_service-header.html',
+    "<div row class=\"service-title\" ng-if=\"service\">\n" +
+    "<div>\n" +
+    "Service:\n" +
+    "<a ng-href=\"{{service | navigateResourceURL}}\">{{service.metadata.name}}</a>\n" +
+    "\n" +
+    "<span ng-if=\"!isAlternate && alternateServices.length && !isChild\" class=\"mar-left-sm\">\n" +
+    "<ng-include src=\"'views/overview/_service-linking-button.html'\"></ng-include>\n" +
+    "</span>\n" +
+    "</div>\n" +
+    "<div ng-if=\"alternateServices.length && !isChild\" class=\"service-metadata\">\n" +
+    "<ng-include src=\"'views/overview/_traffic-percent.html'\"></ng-include>\n" +
+    "</div>\n" +
+    "\n" +
+    "<div ng-if=\"!alternateServices.length || isChild\">\n" +
+    "<ng-include src=\"'views/overview/_service-linking-button.html'\"></ng-include>\n" +
+    "</div>\n" +
+    "</div>"
+  );
+
+
+  $templateCache.put('views/overview/_service-linking-button.html',
+    " <span ng-if=\"'services' | canI : 'update'\">\n" +
+    "<a href=\"\" ng-if=\"isPrimary && (services | hashSize) > ((childServices | hashSize) + 1)\" ng-click=\"linkService()\" role=\"button\" ng-attr-title=\"Group service to {{service.metadata.name}}\"><i class=\"fa fa-chain action-button\" aria-hidden=\"true\"></i><span class=\"sr-only\">Group service to {{service.metadata.name}}</span></a>\n" +
+    "<a href=\"\" ng-if=\"isChild\" ng-click=\"removeLink(service)\" role=\"button\" ng-attr-title=\"Remove {{service.metadata.name}} from service group\"><i class=\"fa fa-chain-broken action-button\" aria-hidden=\"true\"></i><span class=\"sr-only\">Remove {{service.metadata.name}} from service group</span></a>\n" +
+    "</span>"
   );
 
 
@@ -8012,7 +8031,6 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
 
 
   $templateCache.put('views/overview/_traffic-percent.html',
-    "<div ng-if=\"alternateServices.length\">\n" +
     "<div ng-if=\"!totalWeight\">\n" +
     "No Traffic\n" +
     "</div>\n" +
@@ -8028,7 +8046,6 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "<span>\n" +
     "{{(weightByService[service.metadata.name] / totalWeight) | percent}}\n" +
     "</span>\n" +
-    "</div>\n" +
     "</div>\n" +
     "</div>\n" +
     "</div>\n" +

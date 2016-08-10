@@ -18,8 +18,6 @@ angular.module('openshiftConsole')
           });
         }
 
-        var annotation = $filter('annotation');
-
         $scope.$watch('deploymentConfigsByService', function(deploymentConfigsByService) {
           if (!deploymentConfigsByService) {
             return;
