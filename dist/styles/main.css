@@ -3300,6 +3300,7 @@ to{transform:rotate(359deg)}
 .btn-file input[type=file]{position:absolute;top:0;right:0;min-width:100%;min-height:100%;font-size:100px;text-align:right;filter:alpha(opacity=0);opacity:0;cursor:inherit;display:block}
 .btn-flat-default{border:1px solid transparent}
 .btn-flat-default:focus,.btn-flat-default:hover{background-color:#f7f7f7;border-color:#e7e7e7}
+.copy-to-clipboard input.form-control:read-only{background-color:#fff;color:#363636}
 .show-hide.fade{opacity:0;-webkit-transition:opacity .2s ease 0s;-o-transition:opacity .2s ease 0s;transition:opacity .2s ease 0s}
 .show-hide.fade.in{opacity:1}
 .collapse{display:none}

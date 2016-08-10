@@ -1,5 +1,5 @@
-<div class="input-group">
-  <input id="{{id}}" type="text" class="form-control" value="{{clipboardText}}">
+<div class="input-group copy-to-clipboard">
+  <input id="{{id}}" type="text" class="form-control" value="{{clipboardText}}" readonly select-on-focus>
   <span class="input-group-btn" ng-hide="hidden">
     <button data-clipboard-target="#{{id}}"
             data-toggle="tooltip"

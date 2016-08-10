@@ -4271,8 +4271,8 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
 
 
   $templateCache.put('views/directives/_copy-to-clipboard.html',
-    "<div class=\"input-group\">\n" +
-    "<input id=\"{{id}}\" type=\"text\" class=\"form-control\" value=\"{{clipboardText}}\">\n" +
+    "<div class=\"input-group copy-to-clipboard\">\n" +
+    "<input id=\"{{id}}\" type=\"text\" class=\"form-control\" value=\"{{clipboardText}}\" readonly select-on-focus>\n" +
     "<span class=\"input-group-btn\" ng-hide=\"hidden\">\n" +
     "<button data-clipboard-target=\"#{{id}}\" data-toggle=\"tooltip\" title=\"Copy to clipboard\" class=\"btn btn-default\"><i class=\"fa fa-clipboard\"/></button>\n" +
     "</span>\n" +
