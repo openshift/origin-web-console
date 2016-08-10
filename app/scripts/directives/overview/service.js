@@ -24,9 +24,6 @@ angular.module('openshiftConsole')
           if (!deploymentConfigsByService) {
             return;
           }
-
-          var serviceName = _.get($scope, 'service.metadata.name');
-          $scope.deploymentConfigs = deploymentConfigsByService[serviceName];
         });
 
         $scope.$watch('visibleDeploymentsByConfigAndService', function(visibleDeploymentsByConfigAndService) {
@@ -50,23 +47,6 @@ angular.module('openshiftConsole')
             }
           });
         });
-
-        $scope.isDeploymentLatest = function(deployment) {
-          var dcName = annotation(deployment, 'deploymentConfig');
-          if (!dcName) {
-            return true;
-          }
-
-          // Wait for deployment configs to load.
-          if (!$scope.deploymentConfigs) {
-            return false;
-          }
-
-          var deploymentVersion = parseInt(annotation(deployment, 'deploymentVersion'));
-          return _.some($scope.deploymentConfigs, function(dc) {
-            return dc.metadata.name === dcName && dc.status.latestVersion === deploymentVersion;
-          });
-        };
 
         $scope.viewPodsForDeployment = function(deployment) {
           if (_.isEmpty($scope.podsByDeployment[deployment.metadata.name])) {

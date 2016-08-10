@@ -320,7 +320,7 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "<span ng-switch-when=\"Git\">\n" +
     "<span ng-if=\"build.spec.revision.git.commit\">\n" +
     "{{build.spec.revision.git.message}}\n" +
-    "<osc-git-link class=\"hash\" uri=\"build.spec.source.git.uri\" commit=\"build.spec.revision.git.commit\">{{build.spec.revision.git.commit | limitTo:7}}</osc-git-link>\n" +
+    "<osc-git-link class=\"hash\" uri=\"build.spec.source.git.uri\" ref=\"build.spec.revision.git.commit\">{{build.spec.revision.git.commit | limitTo:7}}</osc-git-link>\n" +
     "<span ng-if=\"detailed && build.spec.revision.git.author\">\n" +
     "authored by {{build.spec.revision.git.author.name}}\n" +
     "</span>\n" +
@@ -494,6 +494,14 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
   $templateCache.put('views/_quota-usage-chart.html',
     "<div ng-attr-id=\"{{chartID}}\" ng-style=\"{ width: width + 'px', height: height + 'px' }\" aria-hidden=\"true\">\n" +
     "</div>"
+  );
+
+
+  $templateCache.put('views/_request-access.html',
+    "<p class=\"gutter-top\">\n" +
+    "If you need to create resources in this project, a project administrator can grant you additional access by running this command:\n" +
+    "</p>\n" +
+    "<code>oc policy add-role-to-user &lt;role&gt; {{user.metadata.name}} -n {{projectName}}</code>"
   );
 
 
@@ -827,7 +835,7 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
 
   $templateCache.put('views/_webhook-trigger-cause.html',
     "{{trigger.message === 'GitHub WebHook' ? 'GitHub webhook' : 'Generic webhook'}}: <span ng-if=\"trigger.githubWebHook.revision || trigger.genericWebHook.revision\"> {{trigger.githubWebHook.revision.git.message || trigger.genericWebHook.revision.git.message}}</span>\n" +
-    "<osc-git-link ng-if=\"trigger.githubWebHook.revision || trigger.genericWebHook.revision\" class=\"hash\" uri=\"build.spec.source.git.uri\" commit=\"trigger.githubWebHook.revision.git.commit || trigger.genericWebHook.revision.git.commit\">{{trigger.githubWebHook.revision.git.commit || trigger.genericWebHook.revision.git.commit | limitTo:7}}\n" +
+    "<osc-git-link ng-if=\"trigger.githubWebHook.revision || trigger.genericWebHook.revision\" class=\"hash\" uri=\"build.spec.source.git.uri\" ref=\"trigger.githubWebHook.revision.git.commit || trigger.genericWebHook.revision.git.commit\">{{trigger.githubWebHook.revision.git.commit || trigger.genericWebHook.revision.git.commit | limitTo:7}}\n" +
     "</osc-git-link>\n" +
     "<span ng-if=\"trigger.githubWebHook.revision || trigger.genericWebHook.revision\">\n" +
     "authored by {{trigger.githubWebHook.revision.git.author.name || trigger.genericWebHook.revision.git.author.name}},\n" +
@@ -914,7 +922,10 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "<span ng-if=\"attach.deployment\">deployment,</span>\n" +
     "but none are loaded on this project.\n" +
     "</p>\n" +
-    "<p>\n" +
+    "<div ng-if=\"project && ('persistentvolumeclaims' | canI : 'create')\" class=\"text-center\">\n" +
+    "<a ng-href=\"project/{{project.metadata.name}}/create-pvc\" class=\"btn btn-primary\">Request Storage</a>\n" +
+    "</div>\n" +
+    "<p ng-if=\"project && !('persistentvolumeclaims' | canI : 'create')\">\n" +
     "To claim storage from a persistent volume, refer to the documentation on <a target=\"_blank\" ng-href=\"{{'persistent_volumes' | helpLink}}\">using persistent volumes</a>.\n" +
     "</p>\n" +
     "<p ng-if=\"attach.deploymentConfig\"><a href=\"{{attach.deploymentConfig | navigateResourceURL}}\">Back to deployment config</a></p>\n" +
@@ -1103,7 +1114,7 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "<dt>Source type:</dt>\n" +
     "<dd>{{build.spec.source.type}}</dd>\n" +
     "<dt ng-if-start=\"build.spec.source.git.uri\">Source repo:</dt>\n" +
-    "<dd ng-if-end><span class=\"word-break\" ng-bind-html=\"build.spec.source.git.uri | githubLink : build.spec.source.git.ref : build.spec.source.contextDir | linky : &quot;_blank&quot;\"></span></dd>\n" +
+    "<dd ng-if-end><span class=\"word-break\"><osc-git-link uri=\"build.spec.source.git.uri\" ref=\"build.spec.source.git.ref\" context-dir=\"build.spec.source.contextDir\">{{build.spec.source.git.uri}}</osc-git-link></span></dd>\n" +
     "<dt ng-if-start=\"build.spec.source.git.ref\">Source ref:</dt>\n" +
     "<dd ng-if-end>{{build.spec.source.git.ref}}</dd>\n" +
     "<dt ng-if-start=\"build.spec.source.contextDir\">Source context dir:</dt>\n" +
@@ -1423,7 +1434,7 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "</span>\n" +
     "<span ng-if=\"buildConfig.spec.source.type === 'Git'\">\n" +
     "source repository\n" +
-    "<span class=\"word-break\" ng-bind-html=\"buildConfig.spec.source.git.uri | githubLink : buildConfig.spec.source.git.ref : buildConfig.spec.source.contextDir | linky : &quot;_blank&quot;\"></span>\n" +
+    "<span class=\"word-break\"><osc-git-link uri=\"buildConfig.spec.source.git.uri\" ref=\"buildConfig.spec.source.git.ref\" context-dir=\"buildConfig.spec.source.contextDir\">{{buildConfig.spec.source.git.uri}}</osc-git-link></span>\n" +
     "</span>\n" +
     "<span ng-if=\"buildConfig.spec.source.type !== 'Git'\">\n" +
     "build configuration {{buildConfig.metadata.name}}.\n" +
@@ -1570,7 +1581,7 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "<div ng-if=\"buildConfig.spec.source\">\n" +
     "<div ng-if=\"buildConfig.spec.source.type == 'Git'\">\n" +
     "<dt>Source repo:</dt>\n" +
-    "<dd class=\"word-break\" ng-bind-html=\"buildConfig.spec.source.git.uri | githubLink : buildConfig.spec.source.git.ref : buildConfig.spec.source.contextDir | linky : &quot;_blank&quot;\"></dd>\n" +
+    "<dd><span class=\"word-break\"><osc-git-link uri=\"buildConfig.spec.source.git.uri\" ref=\"buildConfig.spec.source.git.ref\" context-dir=\"buildConfig.spec.source.contextDir\">{{buildConfig.spec.source.git.uri}}</osc-git-link></span></dd>\n" +
     "<dt ng-if=\"buildConfig.spec.source.git.ref\">Source ref:</dt>\n" +
     "<dd ng-if=\"buildConfig.spec.source.git.ref\">{{buildConfig.spec.source.git.ref}}</dd>\n" +
     "<dt ng-if=\"buildConfig.spec.source.contextDir\">Source context dir:</dt>\n" +
@@ -2890,7 +2901,7 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "<div class=\"middle-header header-light\">\n" +
     "<div class=\"container-fluid\">\n" +
     "<div class=\"page-header page-header-bleed-right page-header-bleed-left\">\n" +
-    "<div class=\"pull-right\" ng-if=\"project && 'routes' | canI : 'create'\">\n" +
+    "<div class=\"pull-right\" ng-if=\"project && ('routes' | canI : 'create')\">\n" +
     "<a ng-href=\"project/{{project.metadata.name}}/create-route\" class=\"btn btn-default\">Create Route</a>\n" +
     "</div>\n" +
     "<h1>Routes</h1>\n" +
@@ -3141,7 +3152,7 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "<td data-title=\"Type\">{{buildConfigs[buildConfigName].spec.strategy.type | startCase}}</td>\n" +
     "<td data-title=\"Source\">\n" +
     "<span ng-if=\"buildConfigs[buildConfigName].spec.source.type == 'None'\"><i>none</i></span>\n" +
-    "<span class=\"word-break\" ng-if=\"buildConfigs[buildConfigName].spec.source.type == 'Git'\" ng-bind-html=\"buildConfigs[buildConfigName].spec.source.git.uri | githubLink : buildConfigs[buildConfigName].spec.source.git.ref : buildConfigs[buildConfigName].spec.source.contextDir | linky : &quot;_blank&quot;\"></span></td>\n" +
+    "<span class=\"word-break\" ng-if=\"buildConfigs[buildConfigName].spec.source.type == 'Git'\"><osc-git-link uri=\"buildConfigs[buildConfigName].spec.source.git.uri\" ref=\"buildConfigs[buildConfigName].spec.source.git.ref\" context-dir=\"buildConfigs[buildConfigName].spec.source.contextDir\">{{buildConfigs[buildConfigName].spec.source.git.uri}}</osc-git-link></span></td>\n" +
     "</tr>\n" +
     "\n" +
     "\n" +
@@ -3177,7 +3188,7 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "<span ng-if=\"latestBuild.spec.source.type == 'None'\">\n" +
     "<i>none</i>\n" +
     "</span>\n" +
-    "<span class=\"word-break\" ng-if=\"latestBuild.spec.source.type == 'Git'\" ng-bind-html=\"latestBuild.spec.source.git.uri | githubLink : latestBuild.spec.source.git.ref : latestBuild.spec.source.contextDir | linky : &quot;_blank&quot;\"></span>\n" +
+    "<span class=\"word-break\"><osc-git-link uri=\"latestBuild.spec.source.git.uri\" ref=\"latestBuild.spec.source.git.ref\" context-dir=\"latestBuild.spec.source.contextDir\">{{latestBuild.spec.source.git.uri}}</osc-git-link></span>\n" +
     "</span>\n" +
     "</td>\n" +
     "</tr>\n" +
@@ -3203,7 +3214,7 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "</h3>\n" +
     "<div class=\"catalog\">\n" +
     "\n" +
-    "<catalog-image image-stream=\"builder.imageStream\" image-tag=\"builder.imageStreamTag\" project=\"{{project}}\" version=\"builder.version\" filter-tag=\"filterTag\" is-builder=\"true\" ng-repeat=\"builder in builders | orderBy : ['name', 'imageStream.metadata.namespace'] | limitToOrAll: itemLimit track by builderID(builder)\">\n" +
+    "<catalog-image image-stream=\"builder.imageStream\" image-tag=\"builder.imageStreamTag\" project=\"{{project}}\" version=\"builder.version\" filter-tag=\"filterTag\" referenced-by=\"builder.referencedBy\" is-builder=\"true\" ng-repeat=\"builder in builders | limitToOrAll: itemLimit track by builderID(builder)\">\n" +
     "</catalog-image>\n" +
     "\n" +
     "<catalog-template template=\"template\" project=\"{{project}}\" filter-tag=\"filterTag\" ng-repeat=\"template in templates | orderBy : ['metadata.name', 'metadata.namespace'] | limitToOrAll: itemLimit track by (template | uid)\">\n" +
@@ -3222,6 +3233,12 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "<div flex>\n" +
     "<h3>\n" +
     "<a class=\"tile-target\" ng-href=\"{{imageStream | createFromImageURL : imageTag : project}}\">{{imageStream.metadata.name}}:{{imageTag}}</a>\n" +
+    "<small ng-if=\"referencedBy.length\">\n" +
+    "&ndash;\n" +
+    "<span ng-repeat=\"otherTag in referencedBy\">\n" +
+    "{{otherTag}}<span ng-if=\"!$last\">,</span>\n" +
+    "</span>\n" +
+    "</small>\n" +
     "</h3>\n" +
     "<div ng-if=\"imageStream | imageStreamTagAnnotation : 'provider' : imageTag\">\n" +
     "<label style=\"margin-right: 5px\">Provider:</label>\n" +
@@ -3632,7 +3649,7 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "Some images in this list may not be able to build source. Use with caution.\n" +
     "</div>\n" +
     "<div class=\"catalog catalog-fluid\">\n" +
-    "<catalog-image image-stream=\"image.imageStream\" image-tag=\"image.imageStreamTag\" project=\"{{projectName}}\" version=\"image.version\" ng-repeat=\"image in filteredNonBuilders | orderBy : ['name', 'imageStream.metadata.namespace']\">\n" +
+    "<catalog-image image-stream=\"image.imageStream\" image-tag=\"image.imageStreamTag\" project=\"{{projectName}}\" version=\"image.version\" referenced-by=\"image.referencedBy\" ng-repeat=\"image in filteredNonBuilders | orderBy : ['name', 'imageStream.metadata.namespace']\">\n" +
     "</catalog-image>\n" +
     "\n" +
     "<div style=\"height: 0\" class=\"tile-image\"></div>\n" +
@@ -3986,7 +4003,7 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "<div ng-if=\"createdBuildConfig\" class=\"col-md-6\">\n" +
     "<h2>Making code changes</h2>\n" +
     "<p ng-if=\"fromSampleRepo\">\n" +
-    "You are set up to use the example git repository. If you would like to modify the source code, fork the <a class=\"word-break\" target=\"_blank\" href=\"{{createdBuildConfig.spec.source.git.uri | githubLink}}\">{{createdBuildConfig.spec.source.git.uri | githubLink}}</a> repository to an OpenShift-visible git account and <a href=\"{{createdBuildConfig | editResourceURL}}\">edit the <strong>{{createdBuildConfig.metadata.name}}</strong> build config</a> to point to your fork.\n" +
+    "You are set up to use the example git repository. If you would like to modify the source code, fork the <osc-git-link uri=\"createdBuildConfig.spec.source.git.uri\">{{createdBuildConfig.spec.source.git.uri}}</osc-git-link> repository to an OpenShift-visible git account and <a href=\"{{createdBuildConfig | editResourceURL}}\">edit the <strong>{{createdBuildConfig.metadata.name}}</strong> build config</a> to point to your fork.\n" +
     "<span ng-if=\"createdBuildConfigWithConfigChangeTrigger()\">Note that this will start a new build.</span>\n" +
     "</p>\n" +
     "<div ng-repeat=\"trigger in createdBuildConfig.spec.triggers\" ng-if=\"trigger.type == 'GitHub'\">\n" +
@@ -3997,7 +4014,12 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "You can configure the webhook in the forked repository's settings, using the following payload URL:\n" +
     "</p>\n" +
     "<p ng-if=\"!fromSampleRepo\">\n" +
+    "<span ng-if=\"createdBuildConfig.spec.source.git.uri | isGithubLink\">\n" +
     "You can now set up the webhook in the GitHub repository settings if you own it, in <a target=\"_blank\" class=\"word-break\" href=\"{{createdBuildConfig.spec.source.git.uri | githubLink}}/settings/hooks\">{{createdBuildConfig.spec.source.git.uri | githubLink}}/settings/hooks</a>, using the following payload URL:\n" +
+    "</span>\n" +
+    "<span ng-if=\"!(createdBuildConfig.spec.source.git.uri | isGithubLink)\">\n" +
+    "Your source does not appear to be a URL to a GitHub repository. If you have a GitHub repository that you want to trigger this build from then use the following payload URL:\n" +
+    "</span>\n" +
     "</p>\n" +
     "<copy-to-clipboard clipboard-text=\"createdBuildConfig.metadata.name | webhookURL : trigger.type : trigger.github.secret : projectName\"></copy-to-clipboard>\n" +
     "</div>\n" +
@@ -4902,7 +4924,7 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "<div ng-if=\"!(events | hashSize)\" class=\"mar-left-xl\">\n" +
     "<em>No events.</em>\n" +
     "</div>\n" +
-    "<div ng-repeat=\"event in events\" class=\"event animate-repeat\" ng-class=\"{'highlight': highlightedEvents[event.involvedObject.kind + '/' + event.involvedObject.name]}\">\n" +
+    "<div ng-repeat=\"event in events track by (event | uid)\" class=\"event animate-repeat\" ng-class=\"{'highlight': highlightedEvents[event.involvedObject.kind + '/' + event.involvedObject.name]}\">\n" +
     "<span class=\"sr-only\">{{event.type}}</span>\n" +
     "<div class=\"event-icon\" aria-hidden=\"true\">\n" +
     "<div ng-switch=\"event.type\" class=\"hide-ng-leave\">\n" +
@@ -4958,18 +4980,18 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "<table class=\"table table-bordered table-condensed table-mobile table-hover events-table\">\n" +
     "<thead>\n" +
     "<tr>\n" +
-    "<th>Time</th>\n" +
+    "<th id=\"time\">Time</th>\n" +
     "\n" +
-    "<th ng-if=\"!resourceKind || !resourceName\">\n" +
+    "<th id=\"kind-name\" ng-if=\"!resourceKind || !resourceName\">\n" +
     "<span class=\"hidden-xs-inline visible-sm-inline visible-md-inline hidden-lg-inline\">Kind and Name</span>\n" +
     "<span class=\"visible-lg-inline\">Name</span>\n" +
     "</th>\n" +
-    "<th ng-if=\"!resourceKind || !resourceName\" class=\"hidden-sm hidden-md\">\n" +
+    "<th id=\"kind\" ng-if=\"!resourceKind || !resourceName\" class=\"hidden-sm hidden-md\">\n" +
     "<span class=\"visible-lg-inline\">Kind</span>\n" +
     "</th>\n" +
-    "<th class=\"hidden-xs hidden-sm hidden-md\"><span class=\"sr-only\">Severity</span></th>\n" +
-    "<th class=\"hidden-sm hidden-md\"><span class=\"visible-lg-inline\">Reason</span></th>\n" +
-    "<th><span class=\"hidden-xs-inline visible-sm-inline visible-md-inline hidden-lg-inline\">Reason and </span>Message</th>\n" +
+    "<th id=\"severity\" class=\"hidden-xs hidden-sm hidden-md\"><span class=\"sr-only\">Severity</span></th>\n" +
+    "<th id=\"reason\" class=\"hidden-sm hidden-md\"><span class=\"visible-lg-inline\">Reason</span></th>\n" +
+    "<th id=\"message\"><span class=\"hidden-xs-inline visible-sm-inline visible-md-inline hidden-lg-inline\">Reason and </span>Message</th>\n" +
     "</tr>\n" +
     "</thead>\n" +
     "<tbody ng-if=\"(filteredEvents | hashSize) === 0\">\n" +
@@ -5593,12 +5615,7 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "<div ng-show=\"resource | annotation:'provider'\">Provider: {{ resource | annotation:'provider' }}</div>\n" +
     "<div ng-show=\"resource.metadata.namespace\">Namespace: {{ resource.metadata.namespace }}</div>\n" +
     "</div>\n" +
-    "<div class=\"resource-description\" ng-bind-html=\"resource | description | linky\" ng-class=\"{'gutter-bottom': tag !== 'latest'}\">\n" +
-    "</div>\n" +
-    "<div ng-if=\"tag === 'latest'\" class=\"alert alert-info\">\n" +
-    "<span class=\"pficon pficon-info\" aria-hidden=\"true\"></span>\n" +
-    "This builder image tracks the latest version of the {{name}} image, which could be updated to a newer major version in the future. If your application will not run on a different major version go <a href=\"#\" back>back</a> and choose a specific version.\n" +
-    "</div>"
+    "<div class=\"resource-description gutter-bottom\" ng-bind-html=\"resource | description | linky\"></div>"
   );
 
 
@@ -6364,7 +6381,7 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "</div>\n" +
     "</div>\n" +
     "<div ng-if=\"imageSourceOptions.pickedType==='DockerImage'\" class=\"form-group\">\n" +
-    "<label for=\"imageSourceLink\">Docker Image Link</label>\n" +
+    "<label for=\"imageSourceLink\">Docker Image Repository</label>\n" +
     "<div>\n" +
     "<input class=\"form-control\" id=\"imageSourceLink\" name=\"imageSourceLink\" type=\"text\" ng-model=\"imageSourceOptions.pickedDockerImage\" placeholder=\"example: openshift/ruby-20-centos7:latest\" autocorrect=\"off\" autocapitalize=\"off\" spellcheck required>\n" +
     "</div>\n" +
@@ -6465,7 +6482,7 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "</div>\n" +
     "</div>\n" +
     "<div ng-if=\"builderOptions.pickedType==='DockerImage'\" class=\"form-group\">\n" +
-    "<label for=\"FromTypeLink\">Docker Image Link</label>\n" +
+    "<label for=\"FromTypeLink\">Docker Image Repository</label>\n" +
     "<div>\n" +
     "<input class=\"form-control\" type=\"text\" ng-model=\"builderOptions.pickedDockerImage\" placeholder=\"example: openshift/ruby-20-centos7:latest\" autocorrect=\"off\" autocapitalize=\"off\" spellcheck required>\n" +
     "</div>\n" +
@@ -6520,7 +6537,7 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "</div>\n" +
     "</div>\n" +
     "<div ng-if=\"outputOptions.pickedType==='DockerImage'\" class=\"form-group\">\n" +
-    "<label for=\"pushToLink\">Docker Image Link</label>\n" +
+    "<label for=\"pushToLink\">Docker Image Repository</label>\n" +
     "<div>\n" +
     "<input class=\"form-control\" id=\"pushToLink\" name=\"pushToLink\" type=\"text\" ng-model=\"outputOptions.pickedDockerImage\" autocorrect=\"off\" autocapitalize=\"off\" spellcheck required>\n" +
     "</div>\n" +
@@ -7218,7 +7235,8 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "</h1>\n" +
     "</div>\n" +
     "<alerts alerts=\"alerts\"></alerts>\n" +
-    "<div class=\"data-toolbar\">\n" +
+    "<div fit class=\"data-toolbar monitoring-toolbar\">\n" +
+    "<div row>\n" +
     "<ui-select ng-model=\"kindSelector.selected\" theme=\"bootstrap\" search-enabled=\"true\" ng-disabled=\"kindSelector.disabled\" title=\"Choose a resource\" class=\"data-toolbar-dropdown\">\n" +
     "<ui-select-match placeholder=\"Choose a resource\">{{$select.selected.label ? $select.selected.label : ($select.selected.kind | humanizeKind : true)}}</ui-select-match>\n" +
     "<ui-select-choices repeat=\"kind in kinds | filter : {kind: $select.search} : matchKind | orderBy : 'kind'\">\n" +
@@ -7232,7 +7250,8 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "<input type=\"search\" placeholder=\"Filter by name\" class=\"form-control\" id=\"events-filter\" ng-model=\"filters.text\">\n" +
     "</div>\n" +
     "</div>\n" +
-    "<div class=\"checkbox\">\n" +
+    "</div>\n" +
+    "<div class=\"checkbox nowrap\">\n" +
     "<label>\n" +
     "<input type=\"checkbox\" ng-model=\"filters.hideOlderResources\">Hide older resources\n" +
     "</label>\n" +
@@ -7289,7 +7308,7 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "<span class=\"fa fa-code\"></span>\n" +
     "<span ng-if=\"build.spec.revision.git.commit\">\n" +
     "{{build.spec.revision.git.message}}\n" +
-    "<osc-git-link class=\"hash\" uri=\"build.spec.source.git.uri\" commit=\"build.spec.revision.git.commit\">{{build.spec.revision.git.commit | limitTo:7}}</osc-git-link>\n" +
+    "<osc-git-link class=\"hash\" uri=\"build.spec.source.git.uri\" ref=\"build.spec.revision.git.commit\">{{build.spec.revision.git.commit | limitTo:7}}</osc-git-link>\n" +
     "<span ng-if=\"detailed && build.spec.revision.git.author\">\n" +
     "authored by {{build.spec.revision.git.author.name}}\n" +
     "</span>\n" +
@@ -7424,6 +7443,9 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "<div class=\"list-view-pf-description\">\n" +
     "<div class=\"list-group-item-heading\">\n" +
     "{{pod.metadata.name}}\n" +
+    "<span ng-if=\"pod | isTroubledPod\">\n" +
+    "<pod-warnings pod=\"pod\"></pod-warnings>\n" +
+    "</span>\n" +
     "<small>created <relative-timestamp timestamp=\"pod.metadata.creationTimestamp\"></relative-timestamp></small>\n" +
     "</div>\n" +
     "<div class=\"list-group-item-text\">\n" +
@@ -7490,7 +7512,6 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "<div id=\"scrollable-content\" class=\"middle-container has-scroll\">\n" +
     "<div class=\"middle-content\">\n" +
     "<div class=\"container surface-shaded\">\n" +
-    "<tasks></tasks>\n" +
     "<div class=\"row\">\n" +
     "<div class=\"col-md-12\">\n" +
     "<breadcrumbs breadcrumbs=\"breadcrumbs\"></breadcrumbs>\n" +
@@ -7648,10 +7669,7 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "</div>\n" +
     "<div ng-if=\"!(project.metadata.name | canIAddToProject)\">\n" +
     "<h2>Welcome to project {{projectName}}.</h2>\n" +
-    "<p class=\"gutter-top\">\n" +
-    "If you need to create resources in this project, a project administrator can grant you additional access by running this command:\n" +
-    "</p>\n" +
-    "<code>oc policy add-role-to-user &lt;role&gt; {{user.metadata.name}} -n {{projectName}}</code>\n" +
+    "<ng-include src=\"'views/_request-access.html'\"></ng-include>\n" +
     "</div>\n" +
     "</div>\n" +
     "</div>\n" +
@@ -8014,14 +8032,19 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "</div>\n" +
     "<div ng-if=\"buildConfigsLoaded\" class=\"empty-state-message text-center\">\n" +
     "<h2>No pipelines.</h2>\n" +
+    "<div ng-if=\"project.metadata.name | canIAddToProject\">\n" +
     "<p>\n" +
     "No pipelines have been added to project {{projectName}}.\n" +
     "</p>\n" +
-    "<p>\n" +
+    "<p ng-if=\"project.metadata.name | canIAddToProject\">\n" +
     "<a ng-href=\"project/{{projectName}}/create\" class=\"btn btn-lg btn-primary\">\n" +
     "Add to Project\n" +
     "</a>\n" +
     "</p>\n" +
+    "</div>\n" +
+    "<div ng-if=\"!(project.metadata.name | canIAddToProject)\">\n" +
+    "<ng-include src=\"'views/_request-access.html'\"></ng-include>\n" +
+    "</div>\n" +
     "</div>\n" +
     "</div>\n" +
     "<div ng-repeat=\"(buildConfigName, buildConfig) in buildConfigs\" ng-if=\"!buildConfig || (buildConfig | isJenkinsPipelineStrategy)\" class=\"animate-repeat\">\n" +
@@ -8037,7 +8060,7 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "</h2>\n" +
     "<div ng-if=\"buildConfig.spec.source.git.uri\">\n" +
     "Source Repository:\n" +
-    "<span ng-bind-html=\"buildConfigs[buildConfigName].spec.source.git.uri | githubLink : buildConfigs[buildConfigName].spec.source.git.ref : buildConfigs[buildConfigName].spec.source.contextDir | linky : &quot;_blank&quot;\" class=\"source-repo\"></span>\n" +
+    "<span class=\"word-break\" ng-if=\"buildConfigs[buildConfigName].spec.source.type == 'Git'\"><osc-git-link uri=\"buildConfigs[buildConfigName].spec.source.git.uri\" ref=\"buildConfigs[buildConfigName].spec.source.git.ref\" context-dir=\"buildConfigs[buildConfigName].spec.source.contextDir\">{{buildConfigs[buildConfigName].spec.source.git.uri}}</osc-git-link></span>\n" +
     "</div>\n" +
     "</div>\n" +
     "\n" +
@@ -9077,7 +9100,7 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "<div class=\"row\">\n" +
     "<div class=\"col-md-12\">\n" +
     "<div class=\"page-header page-header-bleed-right page-header-bleed-left\">\n" +
-    "<div class=\"pull-right\">\n" +
+    "<div class=\"pull-right\" ng-if=\"project && ('persistentvolumeclaims' | canI : 'create')\">\n" +
     "<a ng-href=\"project/{{project.metadata.name}}/create-pvc\" class=\"btn btn-default\">Request Storage</a>\n" +
     "</div>\n" +
     "<h2>Persistent Volume Claims</h2>\n" +

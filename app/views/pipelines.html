@@ -18,14 +18,19 @@
               </div>
               <div ng-if="buildConfigsLoaded" class="empty-state-message text-center">
                 <h2>No pipelines.</h2>
-                <p>
-                  No pipelines have been added to project {{projectName}}.
-                </p>
-                <p>
-                  <a ng-href="project/{{projectName}}/create" class="btn btn-lg btn-primary">
-                    Add to Project
-                  </a>
-                </p>
+                <div ng-if="project.metadata.name | canIAddToProject">
+                  <p>
+                    No pipelines have been added to project {{projectName}}.
+                  </p>
+                  <p ng-if="project.metadata.name | canIAddToProject">
+                    <a ng-href="project/{{projectName}}/create" class="btn btn-lg btn-primary">
+                      Add to Project
+                    </a>
+                  </p>
+                </div>
+                <div ng-if="!(project.metadata.name | canIAddToProject)">
+                  <ng-include src="'views/_request-access.html'"></ng-include>
+                </div>
               </div>
             </div>
             <div ng-repeat="(buildConfigName, buildConfig) in buildConfigs"
@@ -46,7 +51,10 @@
                 </h2>
                 <div ng-if="buildConfig.spec.source.git.uri">
                   Source Repository:
-                  <span ng-bind-html='buildConfigs[buildConfigName].spec.source.git.uri | githubLink : buildConfigs[buildConfigName].spec.source.git.ref : buildConfigs[buildConfigName].spec.source.contextDir | linky : "_blank"' class="source-repo"></span>
+                  <span class="word-break" ng-if="buildConfigs[buildConfigName].spec.source.type == 'Git'" ><osc-git-link
+                        uri="buildConfigs[buildConfigName].spec.source.git.uri"
+                        ref="buildConfigs[buildConfigName].spec.source.git.ref"
+                        context-dir="buildConfigs[buildConfigName].spec.source.contextDir">{{buildConfigs[buildConfigName].spec.source.git.uri}}</osc-git-link></span>                  
                 </div>
               </div>
               <!-- Handle missing build configs -->

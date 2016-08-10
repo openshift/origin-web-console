@@ -291,7 +291,7 @@ screenSmMin:768,
 screenMdMin:992,
 screenLgMin:1200,
 screenXlgMin:1600
-}).constant("SOURCE_URL_PATTERN", /^((ftp|http|https|git):\/\/(\w+:{0,1}[^\s@]*@)|git@)?([^\s@]+)(:[0-9]+)?(\/|\/([\w#!:.?+=&%@!\-\/]))?$/).constant("IS_IOS", /iPad|iPhone|iPod/.test(navigator.userAgent) && !window.MSStream).config([ "$httpProvider", "AuthServiceProvider", "RedirectLoginServiceProvider", "AUTH_CFG", "API_CFG", "kubernetesContainerSocketProvider", function(a, b, c, d, e, f) {
+}).constant("SOURCE_URL_PATTERN", /^((ftp|http|https|git|ssh):\/\/(\w+:{0,1}[^\s@]*@)|git@)?([^\s@]+)(:[0-9]+)?(\/|\/([\w#!:.?+=&%@!\-\/]))?$/).constant("IS_IOS", /iPad|iPhone|iPod/.test(navigator.userAgent) && !window.MSStream).config([ "$httpProvider", "AuthServiceProvider", "RedirectLoginServiceProvider", "AUTH_CFG", "API_CFG", "kubernetesContainerSocketProvider", function(a, b, c, d, e, f) {
 a.interceptors.push("AuthInterceptor"), b.LoginService("RedirectLoginService"), b.LogoutService("DeleteTokenLogoutService"), b.UserStore("LocalStorageUserStore"), c.OAuthClientID(d.oauth_client_id), c.OAuthAuthorizeURI(d.oauth_authorize_uri), c.OAuthRedirectURI(URI(d.oauth_redirect_base).segment("oauth").toString()), f.WebSocketFactory = "ContainerWebSocket";
 } ]).config([ "$compileProvider", function(a) {
 a.aHrefSanitizationWhitelist(/^\s*(https?|mailto|git):/i);
@@ -2690,19 +2690,16 @@ return l(a, "defaultRequest", b, c);
 }, n = function(a, b, c) {
 return l(a, "defaultLimit", b, c);
 }, o = function(a, b, d) {
-var e;
-return e = c.isLimitCalculated("cpu", d) ? "memory" :"cpu", k(e, a) || n(e, b, d);
-}, p = function(a, b, d) {
-return !!j("cpu", a) || (!!m("cpu", b, d) || c.isRequestCalculated("cpu", d) && o(a, b, d));
-}, q = function(a, b, c) {
+return !(!j("cpu", a) && !m("cpu", b, d)) || (!(!k("cpu", a) && !n("cpu", b, a)) || !!c.isLimitCalculated("cpu", d) && (k("memory", a) || n("memory", b, d)));
+}, p = function(a, b, c) {
 return _.filter(a, function(a) {
 return a.spec.scaleRef.kind === b && a.spec.scaleRef.name === c;
 });
+}, q = function(a, b) {
+return p(a, "DeploymentConfig", b);
 }, r = function(a, b) {
-return q(a, "DeploymentConfig", b);
-}, s = function(a, b) {
-return q(a, "ReplicationController", b);
-}, t = a("humanizeKind"), u = a("isDeployment"), v = function(a, e, f, g) {
+return p(a, "ReplicationController", b);
+}, s = a("humanizeKind"), t = a("isDeployment"), u = function(a, e, f, g) {
 return !a || _.isEmpty(e) ? b.when([]) :d.isAvailable().then(function(b) {
 var d = [];
 b || d.push({
@@ -2710,7 +2707,7 @@ message:"Metrics might not be configured by your cluster administrator. Metrics 
 reason:"MetricsNotAvailable"
 });
 var h, i, j = _.get(a, "spec.template.spec.containers", []);
-p(j, f, g) || (h = t(a.kind), c.isRequestCalculated("cpu", g) ? (i = "This " + h + " does not have any containers with a CPU limit set. Autoscaling will not work without a CPU limit.", c.isLimitCalculated("cpu", g) && (i += " The CPU limit will be automatically calculated from the container memory limit.")) :i = "This " + h + " does not have any containers with a CPU request set. Autoscaling will not work without a CPU request.", d.push({
+o(j, f, g) || (h = s(a.kind), c.isRequestCalculated("cpu", g) ? (i = "This " + h + " does not have any containers with a CPU limit set. Autoscaling will not work without a CPU limit.", c.isLimitCalculated("cpu", g) && (i += " The CPU limit will be automatically calculated from the container memory limit.")) :i = "This " + h + " does not have any containers with a CPU request set. Autoscaling will not work without a CPU request.", d.push({
 message:i,
 reason:"NoCPURequest"
 })), _.size(e) > 1 && d.push({
@@ -2722,7 +2719,7 @@ return _.some(e, function(a) {
 return "ReplicationController" === _.get(a, "spec.scaleRef.kind");
 });
 };
-return "ReplicationController" === a.kind && u(a) && _.some(e, k) && d.push({
+return "ReplicationController" === a.kind && t(a) && _.some(e, k) && d.push({
 message:"This deployment is scaled by both a deployment configuration and an autoscaler. This is not recommended because they might compete with each other.",
 reason:"DeploymentHasHPA"
 }), d;
@@ -2731,10 +2728,10 @@ reason:"DeploymentHasHPA"
 return {
 convertRequestPercentToLimit:g,
 convertLimitPercentToRequest:h,
-hasCPURequest:p,
-hpaForDC:r,
-hpaForRC:s,
-getHPAWarnings:v
+hasCPURequest:o,
+hpaForDC:q,
+hpaForRC:r,
+getHPAWarnings:u
 };
 } ]), angular.module("openshiftConsole").factory("PodsService", [ "$filter", function(a) {
 var b = a("label"), c = _.constant("debug.openshift.io/name");
@@ -3373,6 +3370,14 @@ var d = c.hpaByDC, e = c.hpaByRC;
 return d && e ? b ? (d[b] = d[b] || [], d[b]) :(e[a] = e[a] || [], e[a]) :null;
 }, c.isScalableDeployment = function(a) {
 return g.isScalable(a, q, c.hpaByDC, c.hpaByRC, c.scalableDeploymentByConfig);
+}, c.isDeploymentLatest = function(a) {
+var b = A(a, "deploymentConfig");
+if (!b) return !0;
+if (!c.deploymentConfigs) return !1;
+var d = parseInt(A(a, "deploymentVersion"));
+return _.some(c.deploymentConfigs, function(a) {
+return a.metadata.name === b && a.status.latestVersion === d;
+});
 }, window.OPENSHIFT_CONSTANTS.DISABLE_OVERVIEW_METRICS || n.isAvailable(!0).then(function(a) {
 c.showMetrics = a;
 }), j.get(b.project).then(_.spread(function(a, b) {
@@ -4081,8 +4086,8 @@ link:"project/" + b.project + "/browse/images/" + b.imagestream
 title:":" + b.tag
 } ], a.emptyMessage = "Loading...", b.tab && (a.selectedTab = {}, a.selectedTab[b.tab] = !0);
 var h = [], i = _.debounce(function(d, f) {
-var g;
-g = d.spec ? d.spec.from.name :b.imagestream + ":" + b.tag, c.get("imagestreamtags", g, f).then(function(b) {
+var g = b.imagestream + ":" + b.tag;
+c.get("imagestreamtags", g, f).then(function(b) {
 a.loaded = !0, a.image = b.image;
 }, function(b) {
 a.loaded = !0, a.alerts.load = {
@@ -4738,7 +4743,7 @@ type:"path"
 }, a.selectTypes = {
 ImageStreamTag:"Image Stream Tag",
 ImageStreamImage:"Image Stream Image",
-DockerImage:"Docker Image Link"
+DockerImage:"Docker Image Repository"
 }, a.buildFromTypes = [ {
 id:"ImageStreamTag",
 title:"Image Stream Tag"
@@ -4747,13 +4752,13 @@ id:"ImageStreamImage",
 title:"Image Stream Image"
 }, {
 id:"DockerImage",
-title:"Docker Image Link"
+title:"Docker Image Repository"
 } ], a.pushToTypes = [ {
 id:"ImageStreamTag",
 title:"Image Stream Tag"
 }, {
 id:"DockerImage",
-title:"Docker Image Link"
+title:"Docker Image Repository"
 }, {
 id:"None",
 title:"--- None ---"
@@ -5254,7 +5259,7 @@ _.set(i, "spec.to.name", a);
 var b = _.get(d, "routing.to.weight");
 isNaN(b) || _.set(i, "spec.to.weight", b), i.spec.path = d.routing.path;
 var c = d.routing.targetPort;
-c ? _.set(i, "spec.port.targetPort", c) :delete i.spec.port, _.get(d, "routing.tls.termination") ? i.spec.tls = d.routing.tls :delete i.spec.tls;
+c ? _.set(i, "spec.port.targetPort", c) :delete i.spec.port, _.get(d, "routing.tls.termination") ? (i.spec.tls = d.routing.tls, "edge" !== i.spec.tls.termination && delete i.spec.tls.insecureEdgeTerminationPolicy) :delete i.spec.tls;
 var e = _.get(d, "routing.alternateServices", []);
 _.isEmpty(e) ? delete i.spec.alternateBackends :i.spec.alternateBackends = _.map(e, function(a) {
 return {
@@ -5561,6 +5566,9 @@ return {
 name:b,
 value:a
 };
+}), a.labels.push({
+name:"app",
+value:a.template.metadata.name
 });
 }
 if (a.project = b, a.breadcrumbs[0].title = m("displayName")(b), a.projectDisplayName = function() {
@@ -5763,19 +5771,22 @@ return s(a.name, a.description, a.categoryTags);
 function w(a) {
 angular.forEach(a, function(a) {
 if (a.status) {
-var b = {};
+var b = {}, c = {}, d = {};
 a.spec && a.spec.tags && angular.forEach(a.spec.tags, function(a) {
-a.annotations && a.annotations.tags && (b[a.name] = a.annotations.tags.split(/\s*,\s*/));
-}), angular.forEach(a.status.tags, function(c) {
-var d, e = c.tag, f = b[e] || [], g = {
+a.annotations && a.annotations.tags && (b[a.name] = a.annotations.tags.split(/\s*,\s*/)), a.from && "ImageStreamTag" === a.from.kind && a.from.name.indexOf(":") === -1 && !a.from.namespace && (c[a.name] = !0, d[a.from.name] = d[a.from.name] || [], d[a.from.name].push(a.name));
+}), angular.forEach(a.status.tags, function(e) {
+if (!c[e.tag]) {
+var f, g = e.tag, h = b[g] || [], i = {
 imageStream:a,
-imageStreamTag:e,
-name:a.metadata.name + ":" + e,
-description:j(a, "description", e),
-version:j(a, "version", e),
-categoryTags:f
+imageStreamTag:g,
+name:a.metadata.name + ":" + g,
+description:j(a, "description", g),
+version:j(a, "version", g),
+categoryTags:h,
+referencedBy:d[g]
 };
-f.indexOf("builder") >= 0 ? (d = y(f), E[d] = E[d] || [], E[d].push(g)) :G.push(g);
+h.indexOf("builder") >= 0 ? (f = y(h), E[f] = E[f] || [], E[f].push(i)) :G.push(i);
+}
 });
 }
 });
@@ -5865,19 +5876,19 @@ a.alerts = {}, f.getAlerts().forEach(function(b) {
 a.alerts[b.name] = b.data;
 }), f.clearAlerts();
 var i = c("annotation"), j = c("annotationName");
-g.get(b.project).then(_.spread(function(e, f) {
-var k = function(a) {
+g.get(b.project).then(_.spread(function(e) {
+var f = function(a) {
 return {
 description:i(a, "description"),
 displayName:i(a, "displayName")
 };
-}, l = function(a, b) {
+}, k = function(a, b) {
 var c = angular.copy(a);
 return c.metadata.annotations[j("description")] = b.description, c.metadata.annotations[j("displayName")] = b.displayName, c;
 };
 angular.extend(a, {
 project:e,
-editableFields:k(e),
+editableFields:f(e),
 show:{
 editing:!1
 },
@@ -5888,10 +5899,10 @@ canSubmit:function(b) {
 a.actions.canSubmit = b;
 },
 update:function() {
-a.disableInputs = !0, g.update(b.project, l(e, a.editableFields)).then(function() {
+a.disableInputs = !0, g.update(b.project, k(e, a.editableFields)).then(function() {
 b.then ? d.path(b.then) :h.toProjectOverview(e.metadata.name);
 }, function(b) {
-a.disableInputs = !1, a.editableFields = k(e), a.alerts.update = {
+a.disableInputs = !1, a.editableFields = f(e), a.alerts.update = {
 type:"error",
 message:"An error occurred while updating the project",
 details:c("getErrorDetails")(b)
@@ -6516,7 +6527,7 @@ c.unwatchAll(m);
 });
 } ]
 };
-} ]), angular.module("openshiftConsole").directive("eventsSidebar", [ "$filter", "DataService", "Logger", "$rootScope", function(a, b, c, d) {
+} ]), angular.module("openshiftConsole").directive("eventsSidebar", [ "DataService", "Logger", "$rootScope", function(a, b, c) {
 return {
 restrict:"E",
 scope:{
@@ -6524,27 +6535,27 @@ projectContext:"=",
 collapsed:"="
 },
 templateUrl:"views/directives/events-sidebar.html",
-controller:[ "$scope", function(e) {
-var f = [], g = a("orderObjectsByDate");
-f.push(b.watch("events", e.projectContext, function(a) {
-var b = a.by("metadata.name");
-e.events = g(b, !0), e.warningCount = _.size(_.filter(b, {
+controller:[ "$scope", function(d) {
+var e = [];
+e.push(a.watch("events", d.projectContext, function(a) {
+var c = a.by("metadata.name");
+d.events = _.sortByOrder(c, [ "lastTimestamp" ], [ "desc" ]), d.warningCount = _.size(_.filter(c, {
 type:"Warning"
-})), c.log("events (subscribe)", e.events);
-})), e.highlightedEvents = {}, e.collapseSidebar = function() {
-e.collapsed = !0;
-}, d.$on("event.resource.highlight", function(a, b) {
-var c = _.get(b, "kind"), d = _.get(b, "metadata.name");
-c && d && _.each(e.events, function(a) {
-a.involvedObject.kind === c && a.involvedObject.name === d && (e.highlightedEvents[c + "/" + d] = !0);
+})), b.log("events (subscribe)", d.events);
+})), d.highlightedEvents = {}, d.collapseSidebar = function() {
+d.collapsed = !0;
+}, c.$on("event.resource.highlight", function(a, b) {
+var c = _.get(b, "kind"), e = _.get(b, "metadata.name");
+c && e && _.each(d.events, function(a) {
+a.involvedObject.kind === c && a.involvedObject.name === e && (d.highlightedEvents[c + "/" + e] = !0);
 });
-}), d.$on("event.resource.clear-highlight", function(a, b) {
-var c = _.get(b, "kind"), d = _.get(b, "metadata.name");
-c && d && _.each(e.events, function(a) {
-a.involvedObject.kind === c && a.involvedObject.name === d && (e.highlightedEvents[c + "/" + d] = !1);
+}), c.$on("event.resource.clear-highlight", function(a, b) {
+var c = _.get(b, "kind"), e = _.get(b, "metadata.name");
+c && e && _.each(d.events, function(a) {
+a.involvedObject.kind === c && a.involvedObject.name === e && (d.highlightedEvents[c + "/" + e] = !1);
 });
-}), e.$on("$destroy", function() {
-b.unwatchAll(f);
+}), d.$on("$destroy", function() {
+a.unwatchAll(e);
 });
 } ]
 };
@@ -6894,17 +6905,24 @@ a.expand = !a.expand;
 };
 }
 };
-}), angular.module("openshiftConsole").directive("oscGitLink", function() {
+}), angular.module("openshiftConsole").directive("oscGitLink", [ "$filter", function(a) {
 return {
 restrict:"E",
 scope:{
 uri:"=",
-commit:"="
+ref:"=",
+contextDir:"="
 },
 transclude:!0,
-template:'<a ng-href="{{uri | githubLink : commit}}" ng-transclude target="_blank"></a>'
+link:function(b) {
+var c = a("isAbsoluteURL"), d = a("githubLink");
+b.$watchGroup([ "uri", "ref", "contextDir" ], function() {
+b.gitLink = d(b.uri, b.ref, b.contextDir), b.isLink = c(b.gitLink);
+});
+},
+template:'<a ng-if="isLink" ng-href="{{gitLink}}" ng-transclude target="_blank"></a><span ng-if="!isLink" ng-transclude></span>'
 };
-}), angular.module("openshiftConsole").directive("oscImageSummary", function() {
+} ]), angular.module("openshiftConsole").directive("oscImageSummary", function() {
 return {
 restrict:"E",
 scope:{
@@ -7577,7 +7595,7 @@ restrict:"AC",
 link:function(a, b) {
 $(b).click(function(a) {
 var c = $(a.target);
-c && c.is("a") || $("a.tile-target", b).trigger("click");
+c && c.closest("a", b).length || $("a.tile-target", b).trigger("click");
 });
 }
 };
@@ -7808,6 +7826,7 @@ imageTag:"=",
 version:"=",
 project:"@",
 filterTag:"=",
+referencedBy:"=",
 isBuilder:"=?"
 },
 templateUrl:"views/catalog/_image.html"
@@ -8537,6 +8556,7 @@ access_token:d.UserStore().getToken()
 angular.extend(j, {
 kibanaArchiveUrl:a.trustAsResourceUrl(g.archiveUri({
 namespace:j.context.project.metadata.name,
+namespaceUid:j.context.project.metadata.uid,
 podname:j.name,
 containername:j.options.container,
 backlink:URI.encode(c.location.href)
@@ -8780,7 +8800,7 @@ details:a("getErrorDetails")(c)
 };
 }, l = function() {
 if (c = !1, angular.isNumber(b.desiredReplicas)) return b.deploymentConfig ? e.scaleDC(b.deploymentConfig, b.desiredReplicas).then(_.noop, k) :e.scaleRC(b.rc, b.desiredReplicas).then(_.noop, k);
-}, m = _.debounce(l, 1e3);
+}, m = _.debounce(l, 650);
 b.viewPodsForDeployment = function(a) {
 0 !== i(b.pods) && h.toPodsForDeployment(a);
 }, b.scaleUp = function() {
@@ -9376,12 +9396,8 @@ link:function(e) {
 window.OPENSHIFT_CONSTANTS.DISABLE_OVERVIEW_METRICS || c.isAvailable(!0).then(function(a) {
 e.showMetrics = a;
 });
-var f = a("annotation");
+a("annotation");
 e.$watch("deploymentConfigsByService", function(a) {
-if (a) {
-var b = _.get(e, "service.metadata.name");
-e.deploymentConfigs = a[b];
-}
 }), e.$watch("visibleDeploymentsByConfigAndService", function(a) {
 if (a) {
 var b = _.get(e, "service.metadata.name");
@@ -9389,15 +9405,7 @@ e.activeDeploymentByConfig = {}, e.visibleDeploymentsByConfig = a[b], e.rcTileCo
 b ? e.rcTileCount++ :e.rcTileCount += _.size(a);
 });
 }
-}), e.isDeploymentLatest = function(a) {
-var b = f(a, "deploymentConfig");
-if (!b) return !0;
-if (!e.deploymentConfigs) return !1;
-var c = parseInt(f(a, "deploymentVersion"));
-return _.some(e.deploymentConfigs, function(a) {
-return a.metadata.name === b && a.status.latestVersion === c;
-});
-}, e.viewPodsForDeployment = function(a) {
+}), e.viewPodsForDeployment = function(a) {
 _.isEmpty(e.podsByDeployment[a.metadata.name]) || d.toPodsForDeployment(a);
 }, e.getHPA = function(a, b) {
 var c = e.hpaByDC, d = e.hpaByRC;
@@ -10605,6 +10613,11 @@ return "completed" !== a.status ? a.titles.started :a.hasErrors ? a.titles.failu
 return function(a) {
 return a ? "https://" :"http://";
 };
+}).filter("isGithubLink", function() {
+var a = /^(?:https?:\/\/|git:\/\/|git\+ssh:\/\/|git\+https:\/\/)?(?:[^@]+@)?github\.com[:\/]([^\/]+\/[^\/]+?)(\/|(?:\.git(#.*)?))?$/;
+return function(b) {
+return b ? a.test(b) :b;
+};
 }).filter("githubLink", function() {
 return function(a, b, c) {
 var d = a.match(/^(?:https?:\/\/|git:\/\/|git\+ssh:\/\/|git\+https:\/\/)?(?:[^@]+@)?github\.com[:\/]([^\/]+\/[^\/]+?)(\/|(?:\.git(#.*)?))?$/);
@@ -10751,7 +10764,9 @@ return a && b ? _.filter(a, b) :a;
 };
 }).filter("isAbsoluteURL", function() {
 return function(a) {
-return !!a && URI(a).is("absolute");
+if (!a) return !1;
+var b = new URI(a), c = b.protocol();
+return b.is("absolute") && ("http" === c || "https" === c);
 };
 }), angular.module("openshiftConsole").filter("camelToLower", function() {
 return function(a) {
@@ -10812,7 +10827,7 @@ var e = new URI();
 _.each(c, function(a) {
 e.addSearch(a);
 }), d.open(e.toString(), "_blank");
-}, i = _.template([ "/#/discover?", "_g=(", "time:(", "from:now-1w,", "mode:relative,", "to:now", ")", ")", "&_a=(", "columns:!(kubernetes_container_name,<%= containername %>),", "index:'<%= namespace %>.*',", "query:(", "query_string:(", "analyze_wildcard:!t,", "query:'kubernetes_pod_name: <%= podname %> %26%26 kubernetes_namespace_name: <%= namespace %>'", ")", "),", "sort:!(time,desc)", ")", "#console_container_name=<%= containername %>", "&console_back_url=<%= backlink %>" ].join("")), j = function(a) {
+}, i = _.template([ "/#/discover?", "_g=(", "time:(", "from:now-1w,", "mode:relative,", "to:now", ")", ")", "&_a=(", "columns:!(kubernetes_container_name,message),", "index:'<%= namespace %>.<%= namespaceUid %>.*',", "query:(", "query_string:(", "analyze_wildcard:!t,", 'query:\'kubernetes_pod_name:"<%= podname %>" AND kubernetes_namespace_name:"<%= namespace %>"\'', ")", "),", "sort:!(time,desc)", ")", "#console_container_name=<%= containername %>", "&console_back_url=<%= backlink %>" ].join("")), j = function(a) {
 return i(a);
 };
 return {

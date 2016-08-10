@@ -13,25 +13,27 @@
               </h1>
             </div>
             <alerts alerts="alerts"></alerts>
-            <div class="data-toolbar">
-              <ui-select ng-model="kindSelector.selected" theme="bootstrap" search-enabled="true" ng-disabled="kindSelector.disabled" title="Choose a resource" class="data-toolbar-dropdown">
-                <ui-select-match placeholder="Choose a resource">{{$select.selected.label ? $select.selected.label : ($select.selected.kind | humanizeKind : true)}}</ui-select-match>
-                <ui-select-choices repeat="kind in kinds | filter : {kind: $select.search} : matchKind | orderBy : 'kind'">
-                  <div ng-bind-html="(kind.label ? kind.label : (kind.kind | humanizeKind : true)) | highlight: $select.search"></div>
-                </ui-select-choices>
-              </ui-select>
-              <div class="vertical-divider"></div>
-              <div class="data-toolbar-filter form-inline">
-                <div class="form-group filter-controls">
-                  <label for="events-filter" class="sr-only">Filter by name</label>
-                  <input type="search"
-                        placeholder="Filter by name"
-                        class="form-control"
-                        id="events-filter"
-                        ng-model="filters.text">
+            <div fit class="data-toolbar monitoring-toolbar">
+              <div row>
+                <ui-select ng-model="kindSelector.selected" theme="bootstrap" search-enabled="true" ng-disabled="kindSelector.disabled" title="Choose a resource" class="data-toolbar-dropdown">
+                  <ui-select-match placeholder="Choose a resource">{{$select.selected.label ? $select.selected.label : ($select.selected.kind | humanizeKind : true)}}</ui-select-match>
+                  <ui-select-choices repeat="kind in kinds | filter : {kind: $select.search} : matchKind | orderBy : 'kind'">
+                    <div ng-bind-html="(kind.label ? kind.label : (kind.kind | humanizeKind : true)) | highlight: $select.search"></div>
+                  </ui-select-choices>
+                </ui-select>
+                <div class="vertical-divider"></div>
+                <div class="data-toolbar-filter form-inline">
+                  <div class="form-group filter-controls">
+                    <label for="events-filter" class="sr-only">Filter by name</label>
+                    <input type="search"
+                          placeholder="Filter by name"
+                          class="form-control"
+                          id="events-filter"
+                          ng-model="filters.text">
+                  </div>
                 </div>
               </div>
-              <div class="checkbox">
+              <div class="checkbox nowrap">
                 <label>
                   <input type="checkbox" ng-model="filters.hideOlderResources">Hide older resources
                 </label>
@@ -95,7 +97,7 @@
                                   <osc-git-link
                                     class="hash"
                                     uri="build.spec.source.git.uri"
-                                    commit="build.spec.revision.git.commit">{{build.spec.revision.git.commit | limitTo:7}}</osc-git-link>
+                                    ref="build.spec.revision.git.commit">{{build.spec.revision.git.commit | limitTo:7}}</osc-git-link>
                                   <span ng-if="detailed && build.spec.revision.git.author">
                                     authored by {{build.spec.revision.git.author.name}}
                                   </span>
@@ -262,6 +264,9 @@
                           <div class="list-view-pf-description">
                             <div class="list-group-item-heading">
                               {{pod.metadata.name}}
+                              <span ng-if="pod | isTroubledPod">
+                                <pod-warnings pod="pod"></pod-warnings>
+                              </span>
                               <small>created <relative-timestamp timestamp="pod.metadata.creationTimestamp"></relative-timestamp></small>
                             </div>
                             <div class="list-group-item-text">

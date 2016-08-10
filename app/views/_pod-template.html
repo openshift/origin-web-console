@@ -65,7 +65,7 @@
                   <osc-git-link
                     class="hash"
                     uri="build.spec.source.git.uri"
-                    commit="build.spec.revision.git.commit">{{build.spec.revision.git.commit | limitTo:7}}</osc-git-link>
+                    ref="build.spec.revision.git.commit">{{build.spec.revision.git.commit | limitTo:7}}</osc-git-link>
                   <span ng-if="detailed && build.spec.revision.git.author">
                     authored by {{build.spec.revision.git.author.name}}
                   </span>

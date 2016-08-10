@@ -222,19 +222,41 @@ angular.module('openshiftConsole')
           return;
         }
 
-        // Create a map of spec tags so we can find them efficiently later when
-        // looking at status tags.
+        // Map of spec tags so we can find them efficiently later when looking
+        // at status tags.
         var specTags = {};
+
+        // Set of tags that reference other tags from the same image stream.
+        var referenceTags = {};
+
+        // Key is the tag being referenced, value is the tag that tracks it.
+        var referencedBy = {};
+
         if (imageStream.spec && imageStream.spec.tags) {
           angular.forEach(imageStream.spec.tags, function(tag) {
             if (tag.annotations && tag.annotations.tags) {
               specTags[tag.name] = tag.annotations.tags.split(/\s*,\s*/);
+            }
+
+            // Find tags that reference other tags in the same image stream.
+            if (tag.from &&
+                tag.from.kind === 'ImageStreamTag' &&
+                tag.from.name.indexOf(':') === -1 &&
+               !tag.from.namespace) {
+              referenceTags[tag.name] = true;
+              referencedBy[tag.from.name] = referencedBy[tag.from.name] || [];
+              referencedBy[tag.from.name].push(tag.name);
             }
           });
         }
 
         // Loop over status tags to categorize the images.
         angular.forEach(imageStream.status.tags, function(tag) {
+          if (referenceTags[tag.tag]) {
+            // Hide these tags. We'll annotate the tags they reference in the UI.
+            return;
+          }
+
           var imageStreamTag = tag.tag;
           var category;
           var categoryTags = specTags[imageStreamTag] || [];
@@ -244,7 +266,8 @@ angular.module('openshiftConsole')
             name: imageStream.metadata.name + ":" + imageStreamTag,
             description: imageStreamTagAnnotationFilter(imageStream, 'description', imageStreamTag),
             version: imageStreamTagAnnotationFilter(imageStream, 'version', imageStreamTag),
-            categoryTags: categoryTags
+            categoryTags: categoryTags,
+            referencedBy: referencedBy[imageStreamTag]
           };
           if (categoryTags.indexOf("builder") >= 0) {
             // Add the builder image to its category.
