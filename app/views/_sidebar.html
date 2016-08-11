@@ -1,6 +1,6 @@
 <nav class="navbar navbar-sidebar">
     <ul class="nav nav-sidenav-primary">
-      <li ng-repeat="primaryItem in navItems" ng-class="{ active: primaryItem === activePrimary }">
+      <li ng-repeat="primaryItem in navItems" ng-class="{ active: primaryItem === activePrimary }" ng-if="!primaryItem.isValid || primaryItem.isValid()">
         <a ng-if="primaryItem.href" ng-href="{{navURL(primaryItem.href)}}">
           <span class="{{primaryItem.iconClass}}"></span> {{primaryItem.label}}
         </a>
@@ -12,7 +12,7 @@
             <li ng-repeat-start="secondarySection in primaryItem.secondaryNavSections" ng-if="secondarySection.header" class="dropdown-header">
               {{secondarySection.header}}
             </li>
-            <li ng-repeat="secondaryItem in secondarySection.items" ng-class="{ active: secondaryItem === activeSecondary }">
+            <li ng-repeat="secondaryItem in secondarySection.items" ng-class="{ active: secondaryItem === activeSecondary }" ng-if="!secondaryItem.isValid || secondaryItem.isValid()">
               <a ng-href="{{navURL(secondaryItem.href)}}">{{secondaryItem.label}}</a>
             </li>
             <li ng-repeat-end style="display:none;"></li>
@@ -23,7 +23,7 @@
             <li ng-repeat-start="secondarySection in primaryItem.secondaryNavSections" ng-if="secondarySection.header" class="dropdown-header">
               {{secondarySection.header}}
             </li>
-            <li ng-repeat="secondaryItem in secondarySection.items" ng-class="{ active: secondaryItem === activeSecondary }">
+            <li ng-repeat="secondaryItem in secondarySection.items" ng-class="{ active: secondaryItem === activeSecondary }" ng-if="!secondaryItem.isValid || secondaryItem.isValid()">
               <a ng-href="{{navURL(secondaryItem.href)}}">{{secondaryItem.label}}</a>
             </li>
             <li ng-repeat-end style="display:none;"></li>

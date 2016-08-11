@@ -1,3 +1,5 @@
+"use strict";
+
 function ResourceGroupVersion(a, b, c) {
 return this.resource = a, this.group = b, this.version = c, this;
 }
@@ -24,6 +26,9 @@ CLI:{
 DEFAULT_HPA_CPU_TARGET_PERCENT:80,
 DISABLE_OVERVIEW_METRICS:!1,
 AVAILABLE_KINDS_BLACKLIST:[ "Binding", "Ingress", "DeploymentConfigRollback" ],
+ENABLE_TECH_PREVIEW_FEATURE:{
+pipelines:!1
+},
 PROJECT_NAVIGATION:[ {
 label:"Overview",
 iconClass:"fa fa-dashboard",
@@ -64,7 +69,10 @@ prefixes:[ "/browse/builds/", "/browse/builds-noconfig/" ]
 }, {
 label:"Pipelines",
 href:"/browse/pipelines",
-prefixes:[ "/browse/pipelines/" ]
+prefixes:[ "/browse/pipelines/" ],
+isValid:function() {
+return !!_.get(window.OPENSHIFT_CONSTANTS, "ENABLE_TECH_PREVIEW_FEATURE.pipelines");
+}
 }, {
 label:"Images",
 href:"/browse/images",

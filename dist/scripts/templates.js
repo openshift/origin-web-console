@@ -587,7 +587,7 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
   $templateCache.put('views/_sidebar.html',
     "<nav class=\"navbar navbar-sidebar\">\n" +
     "<ul class=\"nav nav-sidenav-primary\">\n" +
-    "<li ng-repeat=\"primaryItem in navItems\" ng-class=\"{ active: primaryItem === activePrimary }\">\n" +
+    "<li ng-repeat=\"primaryItem in navItems\" ng-class=\"{ active: primaryItem === activePrimary }\" ng-if=\"!primaryItem.isValid || primaryItem.isValid()\">\n" +
     "<a ng-if=\"primaryItem.href\" ng-href=\"{{navURL(primaryItem.href)}}\">\n" +
     "<span class=\"{{primaryItem.iconClass}}\"></span> {{primaryItem.label}}\n" +
     "</a>\n" +
@@ -599,7 +599,7 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "<li ng-repeat-start=\"secondarySection in primaryItem.secondaryNavSections\" ng-if=\"secondarySection.header\" class=\"dropdown-header\">\n" +
     "{{secondarySection.header}}\n" +
     "</li>\n" +
-    "<li ng-repeat=\"secondaryItem in secondarySection.items\" ng-class=\"{ active: secondaryItem === activeSecondary }\">\n" +
+    "<li ng-repeat=\"secondaryItem in secondarySection.items\" ng-class=\"{ active: secondaryItem === activeSecondary }\" ng-if=\"!secondaryItem.isValid || secondaryItem.isValid()\">\n" +
     "<a ng-href=\"{{navURL(secondaryItem.href)}}\">{{secondaryItem.label}}</a>\n" +
     "</li>\n" +
     "<li ng-repeat-end style=\"display:none\"></li>\n" +
@@ -610,7 +610,7 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "<li ng-repeat-start=\"secondarySection in primaryItem.secondaryNavSections\" ng-if=\"secondarySection.header\" class=\"dropdown-header\">\n" +
     "{{secondarySection.header}}\n" +
     "</li>\n" +
-    "<li ng-repeat=\"secondaryItem in secondarySection.items\" ng-class=\"{ active: secondaryItem === activeSecondary }\">\n" +
+    "<li ng-repeat=\"secondaryItem in secondarySection.items\" ng-class=\"{ active: secondaryItem === activeSecondary }\" ng-if=\"!secondaryItem.isValid || secondaryItem.isValid()\">\n" +
     "<a ng-href=\"{{navURL(secondaryItem.href)}}\">{{secondaryItem.label}}</a>\n" +
     "</li>\n" +
     "<li ng-repeat-end style=\"display:none\"></li>\n" +
@@ -1373,7 +1373,10 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "<div id=\"scrollable-content\" class=\"middle-container has-scroll\">\n" +
     "<div class=\"middle-header\">\n" +
     "<div class=\"container-fluid\">\n" +
+    "<div row mobile=\"column\" class=\"tech-preview-header\">\n" +
     "<breadcrumbs breadcrumbs=\"breadcrumbs\"></breadcrumbs>\n" +
+    "<span ng-if=\"buildConfig | isJenkinsPipelineStrategy\" class=\"pad-top-md\"><span class=\"label label-warning\">Technology Preview</span></span>\n" +
+    "</div>\n" +
     "<alerts alerts=\"alerts\"></alerts>\n" +
     "<div ng-if=\"!loaded\">Loading...</div>\n" +
     "<h1>\n" +
@@ -1743,7 +1746,10 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "<div id=\"scrollable-content\" class=\"middle-container has-scroll\">\n" +
     "<div class=\"middle-header\">\n" +
     "<div class=\"container-fluid\">\n" +
+    "<div row mobile=\"column\" class=\"tech-preview-header\">\n" +
     "<breadcrumbs breadcrumbs=\"breadcrumbs\"></breadcrumbs>\n" +
+    "<span ng-if=\"build | isJenkinsPipelineStrategy\" class=\"pad-top-md\"><span class=\"label label-warning\">Technology Preview</span></span>\n" +
+    "</div>\n" +
     "<alerts alerts=\"alerts\"></alerts>\n" +
     "<div ng-if=\"!loaded\">Loading...</div>\n" +
     "<div ng-if=\"build\">\n" +
@@ -8041,7 +8047,10 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "<div class=\"row\">\n" +
     "<div class=\"col-md-12\">\n" +
     "<div class=\"page-header page-header-bleed-right page-header-bleed-left\">\n" +
-    "<h1>Pipelines</h1>\n" +
+    "<div row mobile=\"column\" class=\"tech-preview-header\">\n" +
+    "<h1 class=\"mar-top-none\">Pipelines</h1>\n" +
+    "<span><span class=\"label label-warning\">Technology Preview</span></span>\n" +
+    "</div>\n" +
     "</div>\n" +
     "<alerts alerts=\"alerts\"></alerts>\n" +
     "<div ng-if=\"!(buildConfigs | hashSize)\" class=\"mar-top-lg\">\n" +
