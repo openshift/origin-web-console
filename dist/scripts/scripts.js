@@ -5828,7 +5828,7 @@ title:d.projectName,
 link:"project/" + d.projectName
 }, {
 title:"Add to Project"
-} ], d.filterTag = function(a) {
+} ], d.selectedTab = {}, c.tab && (d.selectedTab[c.tab] = !0), d.filterTag = function(a) {
 d.filter.tag = a;
 }, d.$watch("filter", v, !0), f.get(c.project).then(_.spread(function(a, b) {
 d.project = a, d.context = b, d.breadcrumbs[0].title = m("displayName")(a), e.list("templates", b, function(a) {
