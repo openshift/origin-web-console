@@ -18,7 +18,8 @@ angular.module('openshiftConsole')
                         ProjectsService,
                         DeploymentsService,
                         ImageStreamResolver,
-                        Navigate) {
+                        Navigate,
+                        keyValueEditorUtils) {
     $scope.projectName = $routeParams.project;
     $scope.deployment = null;
     $scope.deploymentConfig = null;
@@ -93,7 +94,7 @@ angular.module('openshiftConsole')
 
     $scope.saveEnvVars = function() {
       _.each($scope.updatedDeployment.spec.template.spec.containers, function(container) {
-        container.env = _.filter(container.env, 'name');
+        container.env = keyValueEditorUtils.compactEntries(angular.copy(container.env));
       });
       DataService
         .update(

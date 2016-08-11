@@ -19,7 +19,8 @@ angular.module('openshiftConsole')
                         Navigate,
                         ProjectsService,
                         LabelFilter,
-                        labelNameFilter) {
+                        labelNameFilter,
+                        keyValueEditorUtils) {
     $scope.projectName = $routeParams.project;
     $scope.deploymentConfigName = $routeParams.deploymentconfig;
     $scope.deploymentConfig = null;
@@ -68,6 +69,10 @@ angular.module('openshiftConsole')
       $scope.updatedDeploymentConfig = angular.copy(deploymentConfig);
       _.each($scope.updatedDeploymentConfig.spec.template.spec.containers, function(container) {
         container.env = container.env || [];
+        // check valueFrom attribs and set an alt text for display if present
+        _.each(container.env, function(env) {
+          $filter('altTextForValueFrom')(env);
+        });
       });
     };
 
@@ -98,7 +103,7 @@ angular.module('openshiftConsole')
             copyDeploymentConfigAndEnsureEnv(deploymentConfig);
             $scope.saveEnvVars = function() {
               _.each($scope.updatedDeploymentConfig.spec.template.spec.containers, function(container) {
-                container.env = _.filter(container.env, 'name');
+                container.env = keyValueEditorUtils.compactEntries(angular.copy(container.env));
               });
               DataService.update("deploymentconfigs", $routeParams.deploymentconfig, angular.copy($scope.updatedDeploymentConfig), context)
                 .then(function success(){

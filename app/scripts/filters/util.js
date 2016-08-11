@@ -528,6 +528,36 @@ angular.module('openshiftConsole')
       }
       var uri = new URI(url);
       var protocol = uri.protocol();
-      return uri.is('absolute') && (protocol === 'http' || protocol === 'https');      
+      return uri.is('absolute') && (protocol === 'http' || protocol === 'https');
+    };
+  })
+  // currently used to set an alt text value for an env var that has a
+  // valueFrom attribute instead of a value.
+  .filter('altTextForValueFrom', function() {
+    return function(envVar) {
+      if(envVar.value) {
+        return;
+      }
+      if(!envVar.valueFrom) {
+        return;
+      }
+      envVar.valueIcon = 'pficon pficon-help';
+      envVar.valueIconTooltip = 'This is a referenced value that will be generated when a container is created.  On running pods you can check the resolved values by going to the Terminal tab and echoing the environment variable.';
+      _.each(envVar.valueFrom, function(from, refType) {
+        switch(refType) {
+          case 'configMapKeyRef':
+            envVar.valueAlt = 'Set to the key ' + from.key + ' in config map ' + from.name;
+            break;
+          case 'secretKeyRef':
+            envVar.valueAlt = 'Set to the key ' + from.key + ' in secret ' + from.name;
+            envVar.valueIcon = 'fa fa-user-secret';
+            break;
+          case 'fieldRef':
+            envVar.valueAlt = 'Set to the field ' + from.fieldPath + ' in current object';
+            break;
+          default:
+           envVar.valueAlt = 'Set to a reference on a ' + refType;
+        }
+      });
     };
   });
