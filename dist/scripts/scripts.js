@@ -3360,7 +3360,7 @@ u && (c.recentPipelinesByDC = {}, c.recentBuildsByOutputImage = {}, _.each(e.int
 return z(a) ? void Y(a) :void W(a);
 }));
 }, $ = function() {
-var a = _.isEmpty(p) && _.isEmpty(c.monopodsByService) && _.isEmpty(r) && _.isEmpty(q), b = p && s && r && q;
+var a = _.isEmpty(p) && _.isEmpty(c.monopodsByService) && _.isEmpty(r), b = p && s && r && q;
 c.renderOptions.showGetStarted = b && a, c.renderOptions.showLoading = !b && a;
 };
 c.viewPodsForDeployment = function(a) {
