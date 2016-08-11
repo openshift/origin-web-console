@@ -3644,9 +3644,11 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "\n" +
     "<div ng-if=\"filteredNonBuilders.length\" click-to-reveal link-text=\"Don't see the image you are looking for?\" class=\"gutter-bottom\">\n" +
     "<h2>Additional Images</h2>\n" +
-    "<div class=\"gutter-bottom\">\n" +
-    "<span class=\"pficon pficon-warning-triangle-o\"></span>\n" +
-    "Some images in this list may not be able to build source. Use with caution.\n" +
+    "<div class=\"alert alert-warning\">\n" +
+    "<span class=\"pficon pficon-warning-triangle-o\" aria-hidden=\"true\"></span>\n" +
+    "<span class=\"sr-only\">Warning:</span>\n" +
+    "These images are not tagged as builder images. Selecting one will attempt to use it to build source code from a Git repository. If you want to deploy an image without building source code, select an image from the\n" +
+    "<a href=\"\" ng-click=\"selectedTab.deployImage = true\">Deploy Image</a> tab.\n" +
     "</div>\n" +
     "<div class=\"catalog catalog-fluid\">\n" +
     "<catalog-image image-stream=\"image.imageStream\" image-tag=\"image.imageStreamTag\" project=\"{{projectName}}\" version=\"image.version\" referenced-by=\"image.referencedBy\" ng-repeat=\"image in filteredNonBuilders | orderBy : ['name', 'imageStream.metadata.namespace']\">\n" +
@@ -3657,7 +3659,7 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "</div>\n" +
     "</div>\n" +
     "</uib-tab>\n" +
-    "<uib-tab active=\"selectedTab.fromDockerImage\">\n" +
+    "<uib-tab active=\"selectedTab.deployImage\">\n" +
     "<uib-tab-heading>Deploy Image</uib-tab-heading>\n" +
     "<deploy-image project=\"projectName\" context=\"context\" alerts=\"alerts\"></deploy-image>\n" +
     "</uib-tab>\n" +
