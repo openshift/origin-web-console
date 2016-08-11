@@ -330,8 +330,7 @@ angular.module('openshiftConsole')
       var projectEmpty =
         _.isEmpty(services) &&
         _.isEmpty($scope.monopodsByService) &&
-        _.isEmpty(deployments) &&
-        _.isEmpty(deploymentConfigs);
+        _.isEmpty(deployments);
 
       // Check if we've loaded everything we show on the overview.
       var loaded = services && pods && deployments && deploymentConfigs;
