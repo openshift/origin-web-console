@@ -9536,7 +9536,8 @@ selectDisabled:"="
 templateUrl:"views/directives/istag-select.html",
 link:function(b) {
 b.isByNamespace = {}, b.isNamesByNamespace = {}, a.list("projects", {}, function(c) {
-b.namespaces = [ "openshift" ].concat(_.keys(c.by("metadata.name")).sort()), b.$watch("istag.namespace", function(c) {
+var d = _.keys(c.by("metadata.name")).sort();
+b.namespaces = _.uniq([ "openshift" ].concat(d)), b.$watch("istag.namespace", function(c) {
 c && !b.isByNamespace[c] && a.list("imagestreams", {
 namespace:c
 }, function(a) {
