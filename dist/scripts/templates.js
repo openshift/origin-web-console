@@ -719,7 +719,9 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "<div class=\"build-summary\" ng-class=\"{'dismissible' : !(build | isIncompleteBuild)}\">\n" +
     "<div class=\"build-name\">\n" +
     "<span ng-if=\"build | annotation : 'buildNumber'\">\n" +
-    "<a ng-if=\"build | buildConfigForBuild\" ng-href=\"{{(build | buildConfigForBuild) | navigateResourceURL : 'BuildConfig' : build.metadata.namespace}}\">{{build | buildConfigForBuild}}</a><span ng-if=\"build | buildConfigForBuild\">,</span>\n" +
+    "<span ng-if=\"build | buildConfigForBuild\">\n" +
+    "<a ng-href=\"{{build | configURLForResource}}\">{{build | buildConfigForBuild}}</a>,\n" +
+    "</span>\n" +
     "<a ng-href=\"{{build | navigateResourceURL}}\">\n" +
     "#{{build | annotation : 'buildNumber'}}\n" +
     "</a>\n" +
@@ -4200,7 +4202,7 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "<div class=\"build-pipeline-collapsed\" ng-show=\"!hideBuild\">\n" +
     "<div class=\"build-summary\" ng-class=\"{'dismissible' : !(build | isIncompleteBuild)}\">\n" +
     "<div class=\"build-name\">\n" +
-    "<a ng-href=\"{{buildConfigName | navigateResourceURL : 'BuildConfig' : build.metadata.namespace}}\">{{buildConfigName}}</a>,\n" +
+    "<a ng-href=\"{{build | configURLForResource}}\">{{buildConfigName}}</a>,\n" +
     "<a ng-href=\"{{build | navigateResourceURL}}\">#{{build | annotation : 'buildNumber'}}</a>\n" +
     "</div>\n" +
     "<div class=\"build-phase\">\n" +
@@ -4219,7 +4221,7 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "<div flex class=\"build-pipeline\">\n" +
     "<div class=\"build-summary\">\n" +
     "<div ng-if=\"buildConfigNameOnExpanded\" class=\"build-name\">\n" +
-    "<a ng-href=\"{{buildConfigName | navigateResourceURL : 'BuildConfig' : build.metadata.namespace}}\">{{buildConfigName}}</a>\n" +
+    "<a ng-href=\"{{build | configURLForResource}}\">{{buildConfigName}}</a>\n" +
     "</div>\n" +
     "<div class=\"build-phase\">\n" +
     "<span class=\"status-icon\" ng-class=\"build.status.phase\">\n" +
