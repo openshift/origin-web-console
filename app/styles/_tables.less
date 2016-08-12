@@ -78,10 +78,17 @@
   .filter-controls input {
     width: 100%;
   }
+  .sort-label {
+    margin-right: 4px;
+    vertical-align: -1px;
+  }
+  .sort-controls {
+    display: inline-block;
+  }
   @media (min-width: @screen-sm-min) {
     // Only needed at larger sizes since form-group has a bottom margin at mobile.
     .gutter-bottom;
-    .filter-controls, .sort-controls {
+    .filter-controls, .sort-group {
       // Inline controls at wider widths.
       display: inline-block;
     }

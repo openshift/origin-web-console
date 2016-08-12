@@ -4983,8 +4983,10 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "<input type=\"search\" placeholder=\"Filter by keyword\" class=\"form-control\" id=\"events-filter\" ng-model=\"filter.text\">\n" +
     "</div>\n" +
     "<div class=\"vertical-divider\"></div>\n" +
-    "\n" +
+    "<div class=\"sort-group\">\n" +
+    "<span class=\"sort-label\">Sort by</span>\n" +
     "<div pf-sort config=\"sortConfig\" class=\"sort-controls\"></div>\n" +
+    "</div>\n" +
     "</div>\n" +
     "<table class=\"table table-bordered table-condensed table-mobile table-hover events-table\">\n" +
     "<thead>\n" +
