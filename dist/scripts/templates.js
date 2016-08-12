@@ -2572,6 +2572,7 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "<span class=\"pficon pficon-info\" aria-hidden=\"true\"></span>\n" +
     "When you navigate away from this pod, any open terminal connections will be closed. This will kill any foreground processes you started from the terminal.\n" +
     "</div>\n" +
+    "<alerts ng-if=\"selectedTerminalContainer.status === 'disconnected'\" alerts=\"terminalDisconnectAlert\"></alerts>\n" +
     "<div class=\"mar-left-xl mar-bottom-lg\">\n" +
     "<div class=\"row\">\n" +
     "<div class=\"pad-left-none pad-bottom-lg col-xs-4 col-lg-3\">\n" +

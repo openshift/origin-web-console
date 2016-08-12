@@ -3106,12 +3106,15 @@ c.unwatchAll(i);
 });
 }));
 } ]), angular.module("openshiftConsole").controller("PodController", [ "$scope", "$filter", "$routeParams", "$timeout", "$uibModal", "DataService", "ImageStreamResolver", "MetricsService", "PodsService", "ProjectsService", function(a, b, c, d, e, f, g, h, i, j) {
-a.projectName = c.project, a.pod = null, a.imageStreams = {}, a.imagesByDockerReference = {}, a.imageStreamImageRefByDockerReference = {}, a.builds = {}, a.alerts = {}, a.renderOptions = a.renderOptions || {}, a.renderOptions.hideFilterWidget = !0, a.logOptions = {}, a.terminalTabWasSelected = !1, a.breadcrumbs = [ {
+a.projectName = c.project, a.pod = null, a.imageStreams = {}, a.imagesByDockerReference = {}, a.imageStreamImageRefByDockerReference = {}, a.builds = {}, a.alerts = {}, a.terminalDisconnectAlert = {}, a.renderOptions = a.renderOptions || {}, a.renderOptions.hideFilterWidget = !0, a.logOptions = {}, a.terminalTabWasSelected = !1, a.breadcrumbs = [ {
 title:"Pods",
 link:"project/" + c.project + "/browse/pods"
 }, {
 title:c.pod
-} ], a.selectedTab = {}, c.tab && (a.selectedTab[c.tab] = !0);
+} ], a.terminalDisconnectAlert.disconnect = {
+type:"warning",
+message:"This terminal has been disconnected. If you reconnect, your terminal history will be lost."
+}, a.selectedTab = {}, c.tab && (a.selectedTab[c.tab] = !0);
 var k = [];
 h.isAvailable().then(function(b) {
 a.metricsAvailable = b;
@@ -3155,7 +3158,7 @@ a && d(q, 0);
 }), a.onTerminalSelectChange = function(b) {
 _.each(a.containerTerminals, function(a) {
 a.isVisible = !1;
-}), b.isVisible = !0, b.isUsed = !0;
+}), b.isVisible = !0, b.isUsed = !0, a.selectedTerminalContainer = b;
 };
 var r = function(a) {
 var b = _.get(a, "state", {});
