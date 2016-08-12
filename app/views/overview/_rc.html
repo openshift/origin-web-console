@@ -1,13 +1,5 @@
 <div class="deployment-tile" ng-if="deployment.kind === 'ReplicationController'">
-  <div row class="service-title" ng-if="service">
-    <div>
-      Service:
-      <a ng-href="{{service | navigateResourceURL}}">{{service.metadata.name}}</a>
-    </div>
-    <div ng-if="weightByService[service.metadata.name]" class="service-metadata">
-      <ng-include src="'views/overview/_traffic-percent.html'"></ng-include>
-    </div>
-  </div>
+  <ng-include src="'views/overview/_service-header.html'"></ng-include>
   <div class="deployment-header">
     <div class="rc-header">
       <div>

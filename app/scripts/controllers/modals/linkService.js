@@ -8,11 +8,12 @@
  * Controller of the openshiftConsole
  */
 angular.module('openshiftConsole')
-  .controller('LinkServiceModalController', function ($scope, $uibModalInstance) {
+  .controller('LinkServiceModalController', function ($scope, $uibModalInstance, ServicesService) {
     $scope.$watch('services', function(services) {
-      // Filter out the same service from the list.
+      var dependentServices = ServicesService.getDependentServices($scope.service);
+      // Filter out the same service and any existing links from the list.
       $scope.options = _.filter(services, function(service) {
-        return service !== $scope.service;
+        return service !== $scope.service && !_.includes(dependentServices, service.metadata.name);
       });
     });
     $scope.link = function() {
