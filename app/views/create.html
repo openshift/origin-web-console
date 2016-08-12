@@ -147,9 +147,13 @@
                       <!-- Don't show images without the builder tag by default, by allow the user to pick one. -->
                       <div ng-if="filteredNonBuilders.length" click-to-reveal link-text="Don't see the image you are looking for?" class="gutter-bottom">
                         <h2>Additional Images</h2>
-                        <div class="gutter-bottom">
-                          <span class="pficon pficon-warning-triangle-o"></span>
-                          Some images in this list may not be able to build source. Use with caution.
+                        <div class="alert alert-warning">
+                          <span class="pficon pficon-warning-triangle-o" aria-hidden="true"></span>
+                          <span class="sr-only">Warning:</span>
+                          These images are not tagged as builder images. Selecting one will attempt
+                          to use it to build source code from a Git repository. If you want to
+                          deploy an image without building source code, select an image from the
+                          <a href="" ng-click="selectedTab.deployImage = true">Deploy Image</a> tab.
                         </div>
                         <div class="catalog catalog-fluid">
                           <catalog-image
@@ -168,7 +172,7 @@
                     </div>
                   </uib-tab>
 
-                  <uib-tab active="selectedTab.fromDockerImage">
+                  <uib-tab active="selectedTab.deployImage">
                     <uib-tab-heading>Deploy Image</uib-tab-heading>
                     <deploy-image project="projectName" context="context" alerts="alerts"></deploy-image>
                   </uib-tab>

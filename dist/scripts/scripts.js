@@ -1,3 +1,5 @@
+"use strict";
+
 function ResourceGroupVersion(a, b, c) {
 return this.resource = a, this.group = b, this.version = c, this;
 }
@@ -24,6 +26,9 @@ CLI:{
 DEFAULT_HPA_CPU_TARGET_PERCENT:80,
 DISABLE_OVERVIEW_METRICS:!1,
 AVAILABLE_KINDS_BLACKLIST:[ "Binding", "Ingress", "DeploymentConfigRollback" ],
+ENABLE_TECH_PREVIEW_FEATURE:{
+pipelines:!1
+},
 PROJECT_NAVIGATION:[ {
 label:"Overview",
 iconClass:"fa fa-dashboard",
@@ -64,7 +69,10 @@ prefixes:[ "/browse/builds/", "/browse/builds-noconfig/" ]
 }, {
 label:"Pipelines",
 href:"/browse/pipelines",
-prefixes:[ "/browse/pipelines/" ]
+prefixes:[ "/browse/pipelines/" ],
+isValid:function() {
+return !!_.get(window.OPENSHIFT_CONSTANTS, "ENABLE_TECH_PREVIEW_FEATURE.pipelines");
+}
 }, {
 label:"Images",
 href:"/browse/images",
@@ -3360,7 +3368,7 @@ u && (c.recentPipelinesByDC = {}, c.recentBuildsByOutputImage = {}, _.each(e.int
 return z(a) ? void Y(a) :void W(a);
 }));
 }, $ = function() {
-var a = _.isEmpty(p) && _.isEmpty(c.monopodsByService) && _.isEmpty(r) && _.isEmpty(q), b = p && s && r && q;
+var a = _.isEmpty(p) && _.isEmpty(c.monopodsByService) && _.isEmpty(r), b = p && s && r && q;
 c.renderOptions.showGetStarted = b && a, c.renderOptions.showLoading = !b && a;
 };
 c.viewPodsForDeployment = function(a) {
@@ -5828,7 +5836,7 @@ title:d.projectName,
 link:"project/" + d.projectName
 }, {
 title:"Add to Project"
-} ], d.filterTag = function(a) {
+} ], d.selectedTab = {}, c.tab && (d.selectedTab[c.tab] = !0), d.filterTag = function(a) {
 d.filter.tag = a;
 }, d.$watch("filter", v, !0), f.get(c.project).then(_.spread(function(a, b) {
 d.project = a, d.context = b, d.breadcrumbs[0].title = m("displayName")(a), e.list("templates", b, function(a) {
@@ -6299,6 +6307,7 @@ typeNameToConfirm:"=?",
 label:"@?",
 buttonOnly:"@",
 stayOnCurrentPage:"=?",
+rcReplicas:"=?",
 hpaList:"=?",
 success:"=?",
 redirectUrl:"@?"

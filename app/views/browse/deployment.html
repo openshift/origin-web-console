@@ -48,15 +48,14 @@
                         alerts="alerts">
                       </edit-link>
                     </li>
-                    <li ng-class="{disabled: deployment.status.replicas}"
-                      ng-if="'replicationcontrollers' | canI : 'delete'">
+                    <li ng-if="'replicationcontrollers' | canI : 'delete'">
                       <delete-link
                         kind="ReplicationController"
-                        type-display-name="Deployment"
+                        type-display-name="deployment"
                         resource-name="{{deployment.metadata.name}}"
                         project-name="{{deployment.metadata.namespace}}"
                         alerts="alerts"
-                        disable-delete="!!deployment.status.replicas"
+                        rc-replicas="deployment.status.replicas"
                         hpa-list="hpaForRC"
                         redirect-url="{{deployment | configURLForResource}}">
                       </delete-link>

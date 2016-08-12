@@ -1,3 +1,5 @@
+'use strict';
+
 // Assigns global constants to things like external documentation, links to external resources, annotations and naming, etc.
 // Can be customized using custom scripts in the master config file that override one or multiple of these objects.
 // Reference: https://docs.openshift.com/container-platform/3.3/install_config/web_console_customization.html#loading-custom-scripts-and-stylesheets
@@ -41,6 +43,10 @@ window.OPENSHIFT_CONSTANTS = {
       // These are things like DCPs that aren't actually persisted resources
       "DeploymentConfigRollback"
   ],
+
+  ENABLE_TECH_PREVIEW_FEATURE: {
+    pipelines: false
+  },
 
   // href's will be prefixed with /project/{{projectName}} unless they are absolute URLs
   PROJECT_NAVIGATION: [
@@ -112,7 +118,10 @@ window.OPENSHIFT_CONSTANTS = {
               href: "/browse/pipelines",
               prefixes: [
                 "/browse/pipelines/"
-              ]
+              ],
+              isValid: function() {
+                return !!_.get(window.OPENSHIFT_CONSTANTS, 'ENABLE_TECH_PREVIEW_FEATURE.pipelines');
+              }
             },
             {
               label: "Images",
