@@ -29,7 +29,11 @@ angular.module("openshiftConsole")
         $scope.isNamesByNamespace = {};
 
         DataService.list("projects", {}, function(projectData) {
-          $scope.namespaces = ['openshift'].concat(_.keys(projectData.by('metadata.name')).sort());
+          var sortedNamespaces = _.keys(projectData.by('metadata.name')).sort();
+
+          // Use _.uniq to avoid adding "openshift" twice if the user is a
+          // member of the openshift namespace.
+          $scope.namespaces = _.uniq(['openshift'].concat(sortedNamespaces));
 
           // Fetch image streams when a new namespace is picked.
           $scope.$watch('istag.namespace', function(namespace) {
