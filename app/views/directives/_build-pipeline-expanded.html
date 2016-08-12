@@ -1,7 +1,7 @@
 <div flex class="build-pipeline">
   <div class="build-summary">
     <div ng-if="buildConfigNameOnExpanded" class="build-name">
-      <a ng-href="{{buildConfigName | navigateResourceURL : 'BuildConfig' : build.metadata.namespace}}">{{buildConfigName}}</a>
+      <a ng-href="{{build | configURLForResource}}">{{buildConfigName}}</a>
     </div>
     <div class="build-phase">
       <span class="status-icon" ng-class="build.status.phase">
