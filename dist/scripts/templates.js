@@ -9126,7 +9126,7 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "<div class=\"container-fluid\">\n" +
     "<div class=\"row\">\n" +
     "<div class=\"col-md-12\">\n" +
-    "<div class=\"page-header page-header-bleed-right page-header-bleed-left\">\n" +
+    "<div class=\"section-header page-header-bleed-right page-header-bleed-left\">\n" +
     "<div class=\"pull-right\" ng-if=\"project && ('persistentvolumeclaims' | canI : 'create')\">\n" +
     "<a ng-href=\"project/{{project.metadata.name}}/create-pvc\" class=\"btn btn-default\">Request Storage</a>\n" +
     "</div>\n" +
