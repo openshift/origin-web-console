@@ -8839,12 +8839,12 @@ b.desiredReplicas--, m();
 }, b.getDesiredReplicas = function() {
 return angular.isDefined(b.desiredReplicas) && null !== b.desiredReplicas ? b.desiredReplicas :b.rc && b.rc.spec && angular.isDefined(b.rc.spec.replicas) ? b.rc.spec.replicas :1;
 }, b.$watch(function() {
-return b.deploymentConfig ? a("annotation")(b.deploymentConfig, "idledAt") :a("annotation")(b.rc, "idledAt");
+return !_.get(b.rc, "spec.replicas") && !!(b.deploymentConfig ? a("annotation")(b.deploymentConfig, "idledAt") :a("annotation")(b.rc, "idledAt"));
 }, function(a) {
 b.isIdled = !!a;
 }), b.unIdle = function() {
 b.desiredReplicas = _.get(_.first(b.hpa), "spec.minReplicas") || 1, l().then(function() {
-b.isIdle = !1;
+b.isIdled = !1;
 }, k);
 };
 } ]
