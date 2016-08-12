@@ -7046,8 +7046,8 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "<p ng-if=\"details\">{{details}}</p>\n" +
     "</div>\n" +
     "<div class=\"modal-footer\">\n" +
-    "<button class=\"btn btn-lg\" ng-class=\"buttonClass\" type=\"button\" ng-click=\"confirm()\">{{buttonText}}</button>\n" +
-    "<button class=\"btn btn-lg btn-default\" type=\"button\" ng-click=\"cancel()\">Cancel</button>\n" +
+    "<button class=\"btn btn-lg\" ng-class=\"okButtonClass\" type=\"button\" ng-click=\"confirm()\">{{okButtonText}}</button>\n" +
+    "<button class=\"btn btn-lg btn-default\" type=\"button\" ng-click=\"cancel()\">{{cancelButtonText}}</button>\n" +
     "</div>\n" +
     "</div>"
   );
@@ -7788,6 +7788,7 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "<relative-timestamp ng-if=\"activeDeployment && !anyDeploymentInProgress\" timestamp=\"activeDeployment.metadata.creationTimestamp\"></relative-timestamp>\n" +
     "<span ng-if=\"anyDeploymentInProgress\">\n" +
     "{{deploymentConfig.spec.strategy.type}} deployment in progress...\n" +
+    "<a href=\"\" ng-click=\"cancelDeployment()\" role=\"button\">Cancel</a>\n" +
     "</span>\n" +
     "</div>\n" +
     "</div>\n" +

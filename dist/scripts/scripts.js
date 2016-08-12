@@ -3409,7 +3409,7 @@ return a.metadata.name === b && a.status.latestVersion === d;
 }, window.OPENSHIFT_CONSTANTS.DISABLE_OVERVIEW_METRICS || n.isAvailable(!0).then(function(a) {
 c.showMetrics = a;
 }), j.get(b.project).then(_.spread(function(a, b) {
-c.project = a, y.push(f.watch("pods", b, function(a) {
+c.project = a, c.projectContext = b, y.push(f.watch("pods", b, function(a) {
 s = a.by("metadata.name"), O(), aa(), h.log("pods", s);
 })), y.push(f.watch("services", b, function(a) {
 c.services = p = a.by("metadata.name"), V(), O(), I(), L(), W(), aa(), h.log("services (list)", p);
@@ -3420,7 +3420,7 @@ t = a.by("metadata.name"), $(), h.log("builds (list)", u);
 })), y.push(f.watch("routes", b, function(a) {
 o = a.by("metadata.name"), H(), V(), W(), h.log("routes (subscribe)", c.routesByService);
 })), y.push(f.watch("replicationcontrollers", b, function(a) {
-r = a.by("metadata.name"), L(), O(), $(), aa(), h.log("replicationcontrollers (subscribe)", r);
+c.deploymentsByName = r = a.by("metadata.name"), L(), O(), $(), aa(), h.log("replicationcontrollers (subscribe)", r);
 })), y.push(f.watch("deploymentconfigs", b, function(a) {
 q = a.by("metadata.name"), I(), L(), aa(), h.log("deploymentconfigs (subscribe)", c.deploymentConfigs);
 })), y.push(f.watch({
@@ -6122,8 +6122,8 @@ o("An error occurred attaching the persistent volume claim to deployment.", l(a)
 }
 };
 }));
-} ]), angular.module("openshiftConsole").controller("ConfirmModalController", [ "$scope", "$uibModalInstance", "message", "details", "buttonText", "buttonClass", function(a, b, c, d, e, f) {
-a.message = c, a.details = d, a.buttonText = e, a.buttonClass = f, a.confirm = function() {
+} ]), angular.module("openshiftConsole").controller("ConfirmModalController", [ "$scope", "$uibModalInstance", "message", "details", "okButtonText", "okButtonClass", "cancelButtonText", function(a, b, c, d, e, f, g) {
+a.message = c, a.details = d, a.okButtonText = e, a.okButtonClass = f, a.cancelButtonText = g, a.confirm = function() {
 b.close("confirm");
 }, a.cancel = function() {
 b.dismiss("cancel");
@@ -9527,11 +9527,14 @@ return "Remove service '" + c.metadata.name + "' from group?";
 details:function() {
 return "Services '" + e.primaryService.metadata.name + "' and '" + c.metadata.name + "' will no longer be displayed together on the overview.";
 },
-buttonText:function() {
+okButtonText:function() {
 return "Remove";
 },
-buttonClass:function() {
+okButtonClass:function() {
 return "btn-danger";
+},
+cancelButtonText:function() {
+return "Cancel";
 }
 }
 });
@@ -9594,18 +9597,55 @@ restrict:"E",
 scope:!0,
 templateUrl:"views/overview/_rc.html"
 };
-}), angular.module("openshiftConsole").directive("overviewDeploymentConfig", [ "$filter", function(a) {
+}), angular.module("openshiftConsole").directive("overviewDeploymentConfig", [ "$filter", "$uibModal", "DeploymentsService", function(a, b, c) {
 return {
 restrict:"E",
 scope:!0,
 templateUrl:"views/overview/_dc.html",
-link:function(b) {
-var c = a("orderObjectsByDate"), d = a("anyDeploymentIsInProgress");
-b.$watch("deploymentConfigs", function(a) {
-b.deploymentConfig = _.get(a, b.dcName);
-}), b.$watch("deployments", function(a) {
-b.orderedDeployments = c(a, !0), b.activeDeployment = _.get(b, [ "scalableDeploymentByConfig", b.dcName ]), b.anyDeploymentInProgress = d(a);
+link:function(d) {
+var e = a("orderObjectsByDate"), f = a("deploymentIsInProgress"), g = a("anyDeploymentIsInProgress");
+d.$watch("deploymentConfigs", function(a) {
+d.deploymentConfig = _.get(a, d.dcName);
+}), d.$watch("deployments", function(a) {
+d.orderedDeployments = e(a, !0), d.activeDeployment = _.get(d, [ "scalableDeploymentByConfig", d.dcName ]), d.anyDeploymentInProgress = g(a);
+}), d.cancelDeployment = function() {
+var a = _.find(d.orderedDeployments, f);
+if (a) {
+var e = a.metadata.name, g = b.open({
+animation:!0,
+templateUrl:"views/modals/confirm.html",
+controller:"ConfirmModalController",
+resolve:{
+message:function() {
+return "Cancel deployment " + e + "?";
+},
+details:function() {
+var a = _.get(d, "deploymentConfig.status.latestVersion");
+return a ? "This will attempt to stop the in-progress deployment and rollback to the previous deployment, #" + a + ". It may take some time to complete." :"This will attempt to stop the in-progress deployment and may take some time to complete.";
+},
+okButtonText:function() {
+return "Yes, cancel";
+},
+okButtonClass:function() {
+return "btn-danger";
+},
+cancelButtonText:function() {
+return "No, don't cancel";
+}
+}
 });
+g.result.then(function() {
+var a = _.get(d, [ "deploymentsByName", e ]);
+return a ? f(a) ? void c.cancelRunningDeployment(a, d.projectContext, d) :void (d.alerts["cancel-deployment"] = {
+type:"error",
+message:"Deployment " + e + " is no longer in progress."
+}) :void (d.alerts["cancel-deployment"] = {
+type:"error",
+message:"Deployment " + e + " no longer exists."
+});
+});
+}
+};
 }
 };
 } ]), angular.module("openshiftConsole").directive("istagSelect", [ "DataService", function(a) {

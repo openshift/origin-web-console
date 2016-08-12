@@ -10,6 +10,7 @@
         <relative-timestamp ng-if="activeDeployment && !anyDeploymentInProgress" timestamp="activeDeployment.metadata.creationTimestamp"></relative-timestamp>
         <span ng-if="anyDeploymentInProgress">
           {{deploymentConfig.spec.strategy.type}} deployment in progress...
+          <a href="" ng-click="cancelDeployment()" role="button">Cancel</a>
         </span>
       </div>
     </div>
