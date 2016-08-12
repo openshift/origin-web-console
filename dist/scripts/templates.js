@@ -2148,7 +2148,11 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "<uib-tab-heading>Environment</uib-tab-heading>\n" +
     "<div ng-repeat=\"container in deployment.spec.template.spec.containers\">\n" +
     "<h3>Container {{container.name}} Environment Variables</h3>\n" +
-    "<environment env-vars=\"container.env\" ng-if=\"container.env.length\"></environment>\n" +
+    "<p>\n" +
+    "<span class=\"pficon pficon-info\" aria-hidden=\"true\"></span>\n" +
+    "Environment variables can be edited on the <a ng-href=\"{{deployment | configURLForResource}}?tab=environment\">deployment configuration</a>.\n" +
+    "</p>\n" +
+    "<key-value-editor ng-if=\"container.env.length\" entries=\"container.env\" cannot-add cannot-delete cannot-sort is-readonly></key-value-editor>\n" +
     "<em ng-if=\"!container.env.length\">The container specification has no environment variables set.</em>\n" +
     "</div>\n" +
     "</uib-tab>\n" +
@@ -2682,6 +2686,22 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "<div class=\"resource-details\">\n" +
     "<ng-include src=\" 'views/browse/_deployment-details.html' \"></ng-include>\n" +
     "</div>\n" +
+    "</uib-tab>\n" +
+    "<uib-tab heading=\"Environment\" active=\"selectedTab.environment\">\n" +
+    "<uib-tab-heading>Environment</uib-tab-heading>\n" +
+    "<ng-form name=\"envForm\">\n" +
+    "<div ng-repeat=\"container in updatedDeployment.spec.template.spec.containers\">\n" +
+    "<h3>Container {{container.name}} Environment Variables</h3>\n" +
+    "<p>\n" +
+    "<span class=\"pficon pficon-info\" aria-hidden=\"true\"></span>\n" +
+    "Environment variable updates will only apply to new pods.\n" +
+    "</p>\n" +
+    "<div>\n" +
+    "<key-value-editor entries=\"container.env\" key-placeholder=\"Name\" value-placeholder=\"Value\" key-validator=\"[A-Za-z_][A-Za-z0-9_]*\" key-validator-error=\"Please enter a valid key\" key-validator-error-tooltip=\"A valid environment variable name is an alphanumeric (a-z and 0-9) string beginning with a letter that may contain underscores.\"></key-value-editor>\n" +
+    "<button class=\"btn btn-default\" ng-click=\"saveEnvVars()\" ng-disabled=\"envForm.$pristine || envForm.$invalid\">Save</button>\n" +
+    "</div>\n" +
+    "</div>\n" +
+    "</ng-form>\n" +
     "</uib-tab>\n" +
     "<uib-tab ng-if=\"metricsAvailable\" heading=\"Metrics\" active=\"selectedTab.metrics\">\n" +
     "\n" +
