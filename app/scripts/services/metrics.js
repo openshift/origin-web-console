@@ -337,7 +337,7 @@ angular.module("openshiftConsole")
       //   deployment:     the replication controller object
       //   containerName:  the container name
       //   metric:         the metric to check, e.g. "memory/usage"
-      //   start:          start time in millis
+      //   start:          start time in millis, or relative time like "-60mn"
       //   end:            end time in millis (optional)
       //
       // Returns a promise resolved with the metrics data.
