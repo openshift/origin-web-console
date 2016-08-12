@@ -160,9 +160,9 @@ angular.module('openshiftConsole')
 
         $scope.$watch(
           function() {
-            return $scope.deploymentConfig ?
+            return !_.get($scope.rc, 'spec.replicas') && !!($scope.deploymentConfig ?
                     $filter('annotation')($scope.deploymentConfig, 'idledAt') :
-                    $filter('annotation')($scope.rc, 'idledAt');
+                    $filter('annotation')($scope.rc, 'idledAt'));
           },
           function(isIdled) {
             $scope.isIdled = !!isIdled;
@@ -172,7 +172,7 @@ angular.module('openshiftConsole')
           $scope.desiredReplicas = _.get(_.first($scope.hpa), 'spec.minReplicas') || 1;
           scale()
             .then(function() {
-              $scope.isIdle = false;
+              $scope.isIdled = false;
             },showScalingError);
         };
 
