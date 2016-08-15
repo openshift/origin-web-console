@@ -1725,8 +1725,11 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "<uib-tab-heading>Environment</uib-tab-heading>\n" +
     "<h3>Environment Variables</h3>\n" +
     "<ng-form name=\"bcEnvVars\">\n" +
+    "<div ng-if=\"'buildconfigs' | canI : 'update'\">\n" +
     "<key-value-editor entries=\"envVars\" key-placeholder=\"Name\" value-placeholder=\"Value\" key-validator=\"[A-Za-z_][A-Za-z0-9_]*\" key-validator-error=\"Please enter a valid key\" key-validator-error-tooltip=\"A valid environment variable name is an alphanumeric (a-z and 0-9) string beginning with a letter that may contain underscores.\"></key-value-editor>\n" +
     "<button class=\"btn btn-default\" ng-click=\"saveEnvVars()\" ng-disabled=\"bcEnvVars.$pristine || bcEnvVars.$invalid\">Save</button>\n" +
+    "</div>\n" +
+    "<key-value-editor entries=\"envVars\" is-readonly cannot-add cannot-sort cannot-delete ng-if=\"!('buildconfigs' | canI : 'update')\"></key-value-editor>\n" +
     "</ng-form>\n" +
     "</uib-tab>\n" +
     "</uib-tabset>\n" +
@@ -1807,7 +1810,12 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "<uib-tab heading=\"Environment\" active=\"selectedTab.environment\" ng-if=\"!(build | isJenkinsPipelineStrategy)\">\n" +
     "<uib-tab-heading>Environment</uib-tab-heading>\n" +
     "<h3>Environment Variables</h3>\n" +
-    "<environment env-vars=\"(build | buildStrategy).env\"></environment>\n" +
+    "<p ng-if=\"'buildconfigs' | canI : 'update'\">\n" +
+    "<span class=\"pficon pficon-info\" aria-hidden=\"true\"></span>\n" +
+    "Environment variables can be edited on the <a ng-href=\"{{build | configURLForResource}}?tab=environment\">build configuration</a>.\n" +
+    "</p>\n" +
+    "<key-value-editor entries=\"(build | buildStrategy).env\" cannot-add cannot-delete cannot-sort is-readonly>\n" +
+    "</key-value-editor>\n" +
     "<em ng-if=\"!(build | buildStrategy).env\">The build strategy had no environment variables defined.</em>\n" +
     "</uib-tab>\n" +
     "<uib-tab active=\"selectedTab.logs\" ng-if=\"!(build | isJenkinsPipelineStrategy) && ('builds/log' | canI : 'get')\">\n" +
@@ -2065,9 +2073,10 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "<ng-form name=\"dcEnvVars\">\n" +
     "<div ng-repeat=\"container in updatedDeploymentConfig.spec.template.spec.containers\">\n" +
     "<h3>Container {{container.name}} Environment Variables</h3>\n" +
-    "<key-value-editor entries=\"container.env\" key-placeholder=\"Name\" value-placeholder=\"Value\" key-validator=\"[A-Za-z_][A-Za-z0-9_]*\" key-validator-error=\"Please enter a valid key\" key-validator-error-tooltip=\"A valid environment variable name is an alphanumeric (a-z and 0-9) string beginning with a letter that may contain underscores.\"></key-value-editor>\n" +
+    "<key-value-editor entries=\"container.env\" cannot-add cannot-sort cannot-delete is-readonly ng-if=\"!('deploymentconfigs' | canI : 'update')\"></key-value-editor>\n" +
+    "<key-value-editor entries=\"container.env\" ng-if=\"'deploymentconfigs' | canI : 'update'\" key-placeholder=\"Name\" value-placeholder=\"Value\" key-validator=\"[A-Za-z_][A-Za-z0-9_]*\" key-validator-error=\"Please enter a valid key\" key-validator-error-tooltip=\"A valid environment variable name is an alphanumeric (a-z and 0-9) string beginning with a letter that may contain underscores.\"></key-value-editor>\n" +
     "</div>\n" +
-    "<button class=\"btn btn-default\" ng-click=\"saveEnvVars()\" ng-disabled=\"dcEnvVars.$pristine || dcEnvVars.$invalid\">Save</button>\n" +
+    "<button class=\"btn btn-default\" ng-if=\"'deploymentconfigs' | canI : 'update'\" ng-click=\"saveEnvVars()\" ng-disabled=\"dcEnvVars.$pristine || dcEnvVars.$invalid\">Save</button>\n" +
     "</ng-form>\n" +
     "</uib-tab>\n" +
     "<uib-tab active=\"selectedTab.events\" ng-if=\"'events' | canI : 'watch'\">\n" +
@@ -2146,12 +2155,12 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "</uib-tab>\n" +
     "<uib-tab heading=\"Environment\" active=\"selectedTab.environment\">\n" +
     "<uib-tab-heading>Environment</uib-tab-heading>\n" +
-    "<div ng-repeat=\"container in deployment.spec.template.spec.containers\">\n" +
-    "<h3>Container {{container.name}} Environment Variables</h3>\n" +
-    "<p>\n" +
+    "<p ng-if=\"'deploymentconfigs' | canI : 'update'\">\n" +
     "<span class=\"pficon pficon-info\" aria-hidden=\"true\"></span>\n" +
     "Environment variables can be edited on the <a ng-href=\"{{deployment | configURLForResource}}?tab=environment\">deployment configuration</a>.\n" +
     "</p>\n" +
+    "<div ng-repeat=\"container in deployment.spec.template.spec.containers\">\n" +
+    "<h3>Container {{container.name}} Environment Variables</h3>\n" +
     "<key-value-editor ng-if=\"container.env.length\" entries=\"container.env\" cannot-add cannot-delete cannot-sort is-readonly></key-value-editor>\n" +
     "<em ng-if=\"!container.env.length\">The container specification has no environment variables set.</em>\n" +
     "</div>\n" +
@@ -2538,7 +2547,7 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "<uib-tab-heading>Environment</uib-tab-heading>\n" +
     "<div ng-repeat=\"container in pod.spec.containers\">\n" +
     "<h3>Container {{container.name}} Environment Variables</h3>\n" +
-    "<environment env-vars=\"container.env\" ng-if=\"container.env.length\"></environment>\n" +
+    "<key-value-editor entries=\"container.env\" is-readonly cannot-add cannot-sort cannot-delete ng-if=\"container.env.length\"></key-value-editor>\n" +
     "<em ng-if=\"!container.env.length\">The container specification has no environment variables set.</em>\n" +
     "</div>\n" +
     "</uib-tab>\n" +

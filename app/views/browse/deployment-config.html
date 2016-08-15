@@ -267,6 +267,14 @@
                         <h3>Container {{container.name}} Environment Variables</h3>
                         <key-value-editor
                           entries="container.env"
+                          cannot-add
+                          cannot-sort
+                          cannot-delete
+                          is-readonly
+                          ng-if="!('deploymentconfigs' | canI : 'update')"></key-value-editor>
+                        <key-value-editor
+                          entries="container.env"
+                          ng-if="'deploymentconfigs' | canI : 'update'"
                           key-placeholder="Name"
                           value-placeholder="Value"
                           key-validator="[A-Za-z_][A-Za-z0-9_]*"
@@ -275,6 +283,7 @@
                       </div>
                       <button
                         class="btn btn-default"
+                        ng-if="'deploymentconfigs' | canI : 'update'"
                         ng-click="saveEnvVars()"
                         ng-disabled="dcEnvVars.$pristine || dcEnvVars.$invalid">Save</button>
                     </ng-form>
