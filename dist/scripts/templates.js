@@ -343,7 +343,11 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "<div flex class=\"word-break\">\n" +
     "<span class=\"pod-template-key\">Ports:</span>\n" +
     "<span ng-repeat=\"port in container.ports | orderBy: 'containerPort'\">\n" +
-    "<span class=\"nowrap\">{{port.containerPort}}/{{port.protocol}}<span ng-if=\"port.name\">&thinsp;({{port.name}})</span><span ng-if=\"port.hostPort\">&thinsp;<span class=\"port-icon\">&#8594;</span>&thinsp;{{port.hostPort}}</span></span><span ng-if=\"!$last\">, </span>\n" +
+    "<span><span class=\"nowrap\">{{port.containerPort}}/{{port.protocol}}</span>\n" +
+    "<span ng-if=\"port.name\"> <span class=\"nowrap\">({{port.name}})</span></span>\n" +
+    "<span ng-if=\"port.hostPort\"> <span class=\"nowrap\"><span class=\"port-icon\">&#8594;</span> {{port.hostPort}}</span></span>\n" +
+    "</span>\n" +
+    "<span ng-if=\"!$last\">, </span>\n" +
     "</span>\n" +
     "</div>\n" +
     "</div>\n" +
