@@ -3943,7 +3943,7 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "</div>\n" +
     "</osc-form-section>\n" +
     "\n" +
-    "<label-editor labels=\"labels\" expand=\"true\" can-toggle=\"false\" help-text=\"Each label is applied to each created resource.\">\n" +
+    "<label-editor labels=\"labels\" system-labels=\"systemLabels\" expand=\"true\" can-toggle=\"false\" help-text=\"Each label is applied to each created resource.\">\n" +
     "</label-editor>\n" +
     "</div>\n" +
     "<div class=\"buttons gutter-top-bottom gutter-top-bottom-2x\">\n" +
@@ -4760,7 +4760,7 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "<osc-form-section header=\"Environment Variables\" about-title=\"Environment Variables\" about=\"Environment variables are used to configure and pass information to running containers.\" expand=\"true\" can-toggle=\"false\" class=\"first-section\">\n" +
     "<key-value-editor entries=\"env\" key-placeholder=\"Name\" key-validator=\"[A-Za-z_][A-Za-z0-9_]*\" key-validator-error=\"A valid environment variable name is an alphanumeric (a-z and 0-9) string beginning with a letter that may contain underscores.\" value-placeholder=\"Value\"></key-value-editor>\n" +
     "</osc-form-section>\n" +
-    "<label-editor labels=\"labels\" expand=\"true\" can-toggle=\"false\" help-text=\"Each label is applied to each created resource.\">\n" +
+    "<label-editor labels=\"labels\" system-labels=\"systemLabels\" expand=\"true\" can-toggle=\"false\" help-text=\"Each label is applied to each created resource.\">\n" +
     "</label-editor>\n" +
     "<div class=\"button-group gutter-top gutter-bottom\">\n" +
     "<button type=\"submit\" class=\"btn btn-primary btn-lg\" ng-click=\"create()\" value=\"\" ng-disabled=\"form.$invalid\">Create</button>\n" +
@@ -5288,11 +5288,17 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
 
   $templateCache.put('views/directives/label-editor.html',
     "<osc-form-section header=\"Labels\" about-title=\"labels\" about=\"Labels are used to organize, group, or select objects and resources, such as pods.\" expand=\"expand\" can-toggle=\"canToggle\">\n" +
+    "<div ng-if=\"systemLabels.length\">\n" +
+    "<div class=\"help-block\">\n" +
+    "The following labels are being added automatically. If you want to override them, you can do so below.\n" +
+    "</div>\n" +
+    "<key-value-editor entries=\"systemLabels\" is-readonly cannot-sort cannot-delete cannot-add key-placeholder=\"Name\"></key-value-editor>\n" +
+    "</div>\n" +
     "<div ng-if=\"helpText && ((labels | hashSize) !== 0 || $parent.expand)\" class=\"help-block\">\n" +
     "{{helpText}}\n" +
     "</div>\n" +
     "<div ng-show=\"expand\" ng-class=\"{ 'gutter-top': !helpText }\">\n" +
-    "<key-value-editor entries=\"labels\" is-readonly=\"['template','app']\" key-placeholder=\"Name\" key-maxlength=\"63\" key-validator-regex=\"validator.key\" value-placeholder=\"Value\" value-maxlength=\"63\" value-validator-regex=\"validator.val\" key-validator-error-tooltip=\"A valid object label has the form [domain/]name where a name is an alphanumeric (a-z, and 0-9) string,\n" +
+    "<key-value-editor entries=\"labels\" key-placeholder=\"Name\" key-maxlength=\"63\" key-validator-regex=\"validator.key\" value-placeholder=\"Value\" value-maxlength=\"63\" value-validator-regex=\"validator.val\" key-validator-error-tooltip=\"A valid object label has the form [domain/]name where a name is an alphanumeric (a-z, and 0-9) string,\n" +
     "                                   with a maximum length of 63 characters, with the '-' character allowed anywhere except the first or last\n" +
     "                                   character. A domain is a sequence of names separated by the '.' character with a maximum length of 253 characters.\" value-validator-error-tooltip=\"A valid label value is an alphanumeric (a-z, and 0-9) string, with a maximum length of 63 characters, with the '-'\n" +
     "                                     character allowed anywhere except the first or last character.\"></key-value-editor>\n" +
@@ -7611,7 +7617,7 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "</div>\n" +
     "<form name=\"templateForm\">\n" +
     "<template-options parameters=\"template.parameters\" expand=\"true\" can-toggle=\"false\"></template-options>\n" +
-    "<label-editor labels=\"labels\" expand=\"true\" can-toggle=\"false\" help-text=\"Each label is applied to each created resource.\">\n" +
+    "<label-editor labels=\"labels\" system-labels=\"systemLabels\" expand=\"true\" can-toggle=\"false\" help-text=\"Each label is applied to each created resource.\">\n" +
     "</label-editor>\n" +
     "<div class=\"buttons gutter-top-bottom\">\n" +
     "<button class=\"btn btn-primary btn-lg\" ng-click=\"createFromTemplate()\" ng-disabled=\"templateForm.$invalid || disableInputs\">Create</button>\n" +
