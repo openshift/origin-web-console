@@ -931,6 +931,13 @@ select:invalid {
   font-weight: normal;
 }
 
+.learn-more-inline {
+  display: inline;
+  font-size: @font-size-small;
+  font-weight: normal;
+  margin-left: 5px;
+}
+
 .short-id {
   background-color: #f1f1f1;
   color: #666;
@@ -1096,6 +1103,23 @@ a.disabled-link {
   .checkbox {
     margin: 10px;
   }
+
+  .trigger-info {
+    margin: 10px 0px 10px 10px;
+    .trigger-url {
+      display: inline-block;
+      vertical-align: middle;
+    }
+    .trigger-actions {
+      display: inline-block;
+      margin-left: 5px;
+      .action-icon,
+      .action-icon:hover {
+        color: @color-pf-black-700;
+      }
+    }
+  }
+
   .section {
     padding-bottom: 15px;
   }

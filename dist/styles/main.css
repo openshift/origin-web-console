@@ -3619,6 +3619,7 @@ select:invalid{box-shadow:none}
 .attention-message p{max-width:70em;margin:auto}
 .actions-dropdown-btn,.alert .close{margin-left:5px}
 .learn-more-block{display:block;font-size:11px;font-weight:400}
+.learn-more-inline{display:inline;font-size:11px;font-weight:400;margin-left:5px}
 .short-id{background-color:#f1f1f1;color:#666}
 .input-number{width:60px}
 .alert{margin-bottom:14px;margin-top:7px}
@@ -3654,6 +3655,10 @@ a.disabled-link:active,a.disabled-link:focus,a.disabled-link:hover{color:#bbb;te
 .edit-form .labels .form-group{width:44%}
 .edit-form .labels .form-group .form-control{width:100%}
 .edit-form .checkbox{margin:10px}
+.edit-form .trigger-info{margin:10px 0px 10px 10px}
+.edit-form .trigger-info .trigger-url{display:inline-block;vertical-align:middle}
+.edit-form .trigger-info .trigger-actions{display:inline-block;margin-left:5px}
+.edit-form .trigger-info .trigger-actions .action-icon,.edit-form .trigger-info .trigger-actions .action-icon:hover{color:#4d5258}
 .edit-form .section{padding-bottom:15px}
 @media (max-width:768px){.edit-form .labels .form-group{width:100%}
 }
