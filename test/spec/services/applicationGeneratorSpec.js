@@ -3,13 +3,23 @@
 describe("ApplicationGenerator", function(){
   var ApplicationGenerator;
   var inputTemplate;
+  var mathFloor = Math.floor;
 
   beforeEach(function(){
 
     inject(function(_ApplicationGenerator_){
       ApplicationGenerator = _ApplicationGenerator_;
-      ApplicationGenerator._generateSecret = function(){
-        return "secret101";
+      // monkey patch Math.floor so generateSecret() returns an expected result
+      Math.floor = function() {
+        return {
+          toString: function() {
+            return {
+              substring: function() {
+                return '01';
+              }
+            };
+          }
+        };
       };
     });
 
@@ -116,6 +126,11 @@ describe("ApplicationGenerator", function(){
         }
       }
     };
+  });
+
+  afterEach(function() {
+    // return the monkey patch to original functionality
+    Math.floor = mathFloor;
   });
 
   describe("#_generateService", function(){
@@ -243,7 +258,8 @@ describe("ApplicationGenerator", function(){
                     "sourceStrategy" : {
                       "from": {
                         "kind": "ImageStreamTag",
-                        "name": "origin-ruby-sample:latest"
+                        "name": "origin-ruby-sample:latest",
+                        "namespace": undefined
                       },
                       "env": [
                         {
@@ -260,13 +276,13 @@ describe("ApplicationGenerator", function(){
                 "triggers": [
                     {
                         "generic": {
-                            "secret": "secret101"
+                            "secret": "01010101"
                         },
                         "type": "Generic"
                     },
                     {
                         "github": {
-                            "secret": "secret101"
+                            "secret": "01010101"
                         },
                         "type": "GitHub"
                     },

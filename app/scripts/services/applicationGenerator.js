@@ -4,9 +4,7 @@ angular.module("openshiftConsole")
 
   .service("ApplicationGenerator", function(DataService, Logger, $parse){
 
-    var scope = {};
-
-    scope._generateSecret = function(){
+    var generateSecret = function(){
         //http://stackoverflow.com/questions/105034/create-guid-uuid-in-javascript
         function s4() {
           return Math.floor((1 + Math.random()) * 0x10000)
@@ -16,7 +14,7 @@ angular.module("openshiftConsole")
         return s4()+s4()+s4()+s4();
       };
 
-    scope.parsePorts = function(image) {
+    var parsePorts = function(image) {
       //map ports to k8s structure
       var parsePortsFromSpec = function(portSpec){
         var ports = [];
@@ -53,61 +51,7 @@ angular.module("openshiftConsole")
       return parsePortsFromSpec(specPorts);
     };
 
-    /**
-     * Generate resource definitions to support the given input
-     * @param {type} input
-     * @returns Hash of resource definitions
-     */
-    scope.generate = function(input){
-      var ports = scope.parsePorts(input.image);
-
-      //augment labels
-      input.labels.app = input.name;
-      input.annotations["openshift.io/generated-by"] = "OpenShiftWebConsole";
-
-      var imageSpec;
-      if(input.buildConfig.sourceUrl !== null){
-        imageSpec = {
-          name: input.name,
-          tag: "latest",
-          kind: "ImageStreamTag",
-          toString: function(){
-            return this.name + ":" + this.tag;
-          }
-        };
-      }
-
-      var resources = {
-        imageStream: scope._generateImageStream(input),
-        buildConfig: scope._generateBuildConfig(input, imageSpec, input.labels),
-        deploymentConfig: scope._generateDeploymentConfig(input, imageSpec, ports, input.labels)
-      };
-
-      if (input.scaling.autoscale) {
-        resources.hpa = scope._generateHPA(input, resources.deploymentConfig);
-      }
-
-      var service = scope._generateService(input, input.name, ports);
-      if (service) {
-        resources.service = service;
-
-        // Only attempt to generate a route if there is a service.
-        resources.route = scope._generateRoute(input, input.name, resources.service.metadata.name);
-      }
-
-      return resources;
-    };
-
-    // Public method for creating a route.
-    // Expects routeOptions from the osc-routing directive.
-    scope.createRoute = function(routeOptions, serviceName, labels) {
-      return scope._generateRoute({
-        labels: labels || {},
-        routing: angular.extend({ include: true }, routeOptions)
-      }, routeOptions.name, serviceName);
-    };
-
-    scope._generateRoute = function(input, name, serviceName){
+    var _generateRoute = function(input, name, serviceName){
       if(!input.routing.include) {
         return null;
       }
@@ -170,7 +114,17 @@ angular.module("openshiftConsole")
       return route;
     };
 
-    scope._generateDeploymentConfig = function(input, imageSpec, ports){
+    // Public method for creating a route.
+    // Expects routeOptions from the osc-routing directive.
+    var createRoute = function(routeOptions, serviceName, labels) {
+      return _generateRoute({
+        labels: labels || {},
+        routing: angular.extend({ include: true }, routeOptions)
+      }, routeOptions.name, serviceName);
+    };
+
+
+    var _generateDeploymentConfig = function(input, imageSpec, ports){
       var env = [];
       angular.forEach(input.deploymentConfig.envVars, function(value, key){
         env.push({name: key, value: value});
@@ -241,7 +195,7 @@ angular.module("openshiftConsole")
       return deploymentConfig;
     };
 
-    scope._generateHPA = function(input, dc) {
+    var _generateHPA = function(input, dc) {
       var hpa = {
         apiVersion: "extensions/v1beta1",
         kind: "HorizontalPodAutoscaler",
@@ -268,7 +222,7 @@ angular.module("openshiftConsole")
       return hpa;
     };
 
-    scope._generateBuildConfig = function(input, imageSpec){
+    var _generateBuildConfig = function(input, imageSpec){
       var env = [];
       angular.forEach(input.buildConfig.envVars, function(value, key){
         env.push({name: key, value: value});
@@ -276,7 +230,7 @@ angular.module("openshiftConsole")
       var triggers = [
         {
           generic: {
-            secret: scope._generateSecret()
+            secret: generateSecret()
           },
           type: "Generic"
         }
@@ -284,7 +238,7 @@ angular.module("openshiftConsole")
       if (input.buildConfig.buildOnSourceChange) {
         triggers.push({
             github: {
-              secret: scope._generateSecret()
+              secret: generateSecret()
             },
             type: "GitHub"
           }
@@ -356,7 +310,7 @@ angular.module("openshiftConsole")
       return bc;
     };
 
-    scope._generateImageStream = function(input){
+    var _generateImageStream = function(input){
       return {
         apiVersion: "v1",
         kind: "ImageStream",
@@ -368,7 +322,7 @@ angular.module("openshiftConsole")
       };
     };
 
-    scope.getServicePort = function(portSpec) {
+    var getServicePort = function(portSpec) {
       return {
         port: portSpec.containerPort,
         targetPort: portSpec.containerPort,
@@ -378,7 +332,7 @@ angular.module("openshiftConsole")
       };
     };
 
-    scope._generateService  = function(input, serviceName, ports){
+    var _generateService = function(input, serviceName, ports){
       if (!ports || !ports.length) {
         return null;
       }
@@ -395,13 +349,71 @@ angular.module("openshiftConsole")
           selector: {
             deploymentconfig: input.name
           },
-          ports: _.map(ports, scope.getServicePort)
+          ports: _.map(ports, getServicePort)
         }
       };
 
       return service;
     };
 
-    return scope;
-  }
-);
+    /**
+     * Generate resource definitions to support the given input
+     * @param {type} input
+     * @returns Hash of resource definitions
+     */
+    var generate = function(input){
+      var ports = parsePorts(input.image);
+
+      //augment labels
+      input.labels.app = input.name;
+      input.annotations["openshift.io/generated-by"] = "OpenShiftWebConsole";
+
+      var imageSpec;
+      if(input.buildConfig.sourceUrl !== null){
+        imageSpec = {
+          name: input.name,
+          tag: "latest",
+          kind: "ImageStreamTag",
+          toString: function(){
+            return this.name + ":" + this.tag;
+          }
+        };
+      }
+
+      var resources = {
+        imageStream: _generateImageStream(input),
+        buildConfig: _generateBuildConfig(input, imageSpec, input.labels),
+        deploymentConfig: _generateDeploymentConfig(input, imageSpec, ports, input.labels)
+      };
+
+      if (input.scaling.autoscale) {
+        resources.hpa = _generateHPA(input, resources.deploymentConfig);
+      }
+
+      var service = _generateService(input, input.name, ports);
+      if (service) {
+        resources.service = service;
+
+        // Only attempt to generate a route if there is a service.
+        resources.route = _generateRoute(input, input.name, resources.service.metadata.name);
+      }
+
+      return resources;
+    };
+
+    return {
+      createRoute: createRoute,
+      generate: generate,
+      parsePorts: parsePorts,
+      generateSecret: generateSecret,
+      getServicePort: getServicePort,
+      // pseudo private. each of these methods is tested, but none are used in app code
+      _generateService: _generateService,
+      _generateRoute: _generateRoute,
+      _generateDeploymentConfig: _generateDeploymentConfig,
+      _generateBuildConfig: _generateBuildConfig,
+      _generateImageStream: _generateImageStream,
+      _generateHPA: _generateHPA
+    };
+
+  });

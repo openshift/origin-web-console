@@ -680,7 +680,7 @@ angular.module('openshiftConsole')
             type: type
           };
           webhook[(type === "GitHub") ? "github" : "generic"] = {
-            secret: ApplicationGenerator._generateSecret()
+            secret: ApplicationGenerator.generateSecret()
           };
           webhooks.push(webhook);
         }
