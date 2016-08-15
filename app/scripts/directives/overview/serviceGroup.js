@@ -92,11 +92,14 @@ angular.module('openshiftConsole')
                        service.metadata.name +
                        "' will no longer be displayed together on the overview.";
               },
-              buttonText: function() {
+              okButtonText: function() {
                 return "Remove";
               },
-              buttonClass: function() {
+              okButtonClass: function() {
                 return "btn-danger";
+              },
+              cancelButtonText: function() {
+                return "Cancel";
               }
             }
           });

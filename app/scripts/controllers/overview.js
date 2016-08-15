@@ -420,6 +420,7 @@ angular.module('openshiftConsole')
       .get($routeParams.project)
       .then(_.spread(function(project, context) {
         $scope.project = project;
+        $scope.projectContext = context;
 
         watches.push(DataService.watch("pods", context, function(podsData) {
           pods = podsData.by("metadata.name");
@@ -462,7 +463,7 @@ angular.module('openshiftConsole')
 
         // Sets up subscription for deployments
         watches.push(DataService.watch("replicationcontrollers", context, function(rcData) {
-          deployments = rcData.by("metadata.name");
+          $scope.deploymentsByName = deployments = rcData.by("metadata.name");
           groupDeployments();
           groupPods();
           groupBuilds();
