@@ -3340,37 +3340,42 @@ return "Succeeded" !== a.status.phase && "Terminated" !== a.status.phase && (!B(
 s && r && (c.podsByDeployment = i.groupByReplicationController(s, r), c.monopodsByService = i.groupByService(c.podsByDeployment[""], p, N));
 }, P = {}, Q = function(a) {
 return !!P[a.metadata.name];
-}, R = function(a, b) {
+}, R = function(a) {
+var b = _.get(a, "metadata.name");
+if (!b) return !1;
+var d = _.get(c, [ "childServicesByParent", b ], []);
+return !_.isEmpty(d);
+}, S = function(a, b) {
 var d = p[b];
 P[b] = d, c.childServicesByParent[a] = c.childServicesByParent[a] || [], c.childServicesByParent[a].push(d);
-}, S = function(a) {
+}, T = function(a) {
 var b = 0, d = _.get(a, "metadata.name", ""), e = _.get(c, [ "routesByService", d ], []);
 return _.isEmpty(e) || (b += 5), _.has(a, "metadata.labels.app") && (b += 3), l.isInfrastructure(a) && (b -= 5), b;
-}, T = function(a, b) {
-var c = S(a), d = S(b);
+}, U = function(a, b) {
+var c = T(a), d = T(b);
 return c === d ? a.metadata.name.localeCompare(b.metadata.name) :d - c;
-}, U = function() {
+}, V = function() {
 p && o && (c.services = p, P = {}, c.childServicesByParent = {}, _.each(p, function(a, b) {
 var c = l.getDependentServices(a);
 _.each(c, function(a) {
-R(b, a);
+S(b, a);
 });
-}), c.topLevelServices = _.reject(p, function(a) {
-return Q(a) || G(a);
-}).sort(T));
-}, V = function() {
+}), c.topLevelServices = _.filter(p, function(a) {
+return !!R(a) || !Q(a) && !G(a);
+}).sort(U));
+}, W = function() {
 p && o && (c.routeWarningsByService = {}, _.each(p, function(a) {
 _.each(c.routesByService[a.metadata.name], function(b) {
 var d = k.getRouteWarnings(b, a);
 _.set(c, [ "routeWarningsByService", a.metadata.name, b.metadata.name ], d);
 });
 }));
-}, W = function(a) {
+}, X = function(a) {
 var b = C(_.get(a, "spec.output.to"), a.metadata.namespace);
 c.recentBuildsByOutputImage[b] = c.recentBuildsByOutputImage[b] || [], c.recentBuildsByOutputImage[b].push(a);
-}, X = a("buildConfigForBuild"), Y = function(a) {
+}, Y = a("buildConfigForBuild"), Z = function(a) {
 if (t) {
-var b = X(a), d = t[b];
+var b = Y(a), d = t[b];
 if (d) {
 var f = e.usesDeploymentConfigs(d);
 _.each(f, function(b) {
@@ -3378,11 +3383,11 @@ c.recentPipelinesByDC[b] = c.recentPipelinesByDC[b] || [], c.recentPipelinesByDC
 });
 }
 }
-}, Z = function() {
-u && (c.recentPipelinesByDC = {}, c.recentBuildsByOutputImage = {}, _.each(e.interestingBuilds(u), function(a) {
-return z(a) ? void Y(a) :void W(a);
-}));
 }, $ = function() {
+u && (c.recentPipelinesByDC = {}, c.recentBuildsByOutputImage = {}, _.each(e.interestingBuilds(u), function(a) {
+return z(a) ? void Z(a) :void X(a);
+}));
+}, aa = function() {
 var a = _.isEmpty(p) && _.isEmpty(c.monopodsByService) && _.isEmpty(r), b = p && s && r && q;
 c.renderOptions.showGetStarted = b && a, c.renderOptions.showLoading = !b && a;
 };
@@ -3405,19 +3410,19 @@ return a.metadata.name === b && a.status.latestVersion === d;
 c.showMetrics = a;
 }), j.get(b.project).then(_.spread(function(a, b) {
 c.project = a, y.push(f.watch("pods", b, function(a) {
-s = a.by("metadata.name"), O(), $(), h.log("pods", s);
+s = a.by("metadata.name"), O(), aa(), h.log("pods", s);
 })), y.push(f.watch("services", b, function(a) {
-c.services = p = a.by("metadata.name"), U(), O(), I(), L(), V(), $(), h.log("services (list)", p);
+c.services = p = a.by("metadata.name"), V(), O(), I(), L(), W(), aa(), h.log("services (list)", p);
 })), y.push(f.watch("builds", b, function(a) {
-u = a.by("metadata.name"), Z(), $(), h.log("builds (list)", u);
+u = a.by("metadata.name"), $(), aa(), h.log("builds (list)", u);
 })), y.push(f.watch("buildConfigs", b, function(a) {
-t = a.by("metadata.name"), Z(), h.log("builds (list)", u);
+t = a.by("metadata.name"), $(), h.log("builds (list)", u);
 })), y.push(f.watch("routes", b, function(a) {
-o = a.by("metadata.name"), H(), U(), V(), h.log("routes (subscribe)", c.routesByService);
+o = a.by("metadata.name"), H(), V(), W(), h.log("routes (subscribe)", c.routesByService);
 })), y.push(f.watch("replicationcontrollers", b, function(a) {
-r = a.by("metadata.name"), L(), O(), Z(), $(), h.log("replicationcontrollers (subscribe)", r);
+r = a.by("metadata.name"), L(), O(), $(), aa(), h.log("replicationcontrollers (subscribe)", r);
 })), y.push(f.watch("deploymentconfigs", b, function(a) {
-q = a.by("metadata.name"), I(), L(), $(), h.log("deploymentconfigs (subscribe)", c.deploymentConfigs);
+q = a.by("metadata.name"), I(), L(), aa(), h.log("deploymentconfigs (subscribe)", c.deploymentConfigs);
 })), y.push(f.watch({
 group:"extensions",
 resource:"horizontalpodautoscalers"
