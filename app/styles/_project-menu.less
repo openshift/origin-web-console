@@ -154,7 +154,7 @@
     float: left;
     margin: 0;
     padding-top: 0;
-    max-width: 280px; // Leave enough space for the status indicator extension point
+    max-width: 360px; // Leave enough space for the status indicator extension point
     .bootstrap-select.btn-group {
       .btn {
         padding: 15px 50px 15px 30px;
@@ -176,24 +176,23 @@
     }
     .bootstrap-select .dropdown-toggle {
       height: 60px;
-      max-width: 280px;
-      min-width: 280px;
+      max-width: 240px;
     }
   }
 }
 
-// At 900 there is enough space to make the menu bigger and still have space for the status indicator extension
-@media (min-width: 900px) {
+// At 890 there is enough space to make the menu bigger and still have space for the status indicator extension
+@media (min-width: 890px) {
   .navbar-project-menu .bootstrap-select .dropdown-toggle,
   .navbar-project-menu {
-    max-width: 400px;
+    max-width: 380px;
   }
 }
 
 @media (min-width: @screen-md-min) {
   .navbar-project-menu .bootstrap-select .dropdown-toggle,
   .navbar-project-menu {
-    max-width: 500px;
+    max-width: 470px;
   }
 }
 
