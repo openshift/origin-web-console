@@ -22,6 +22,7 @@ angular.module('openshiftConsole')
         var chartByMetric = {};
         var intervalPromise;
         var updateInterval = 60 * 1000; // 60 seconds
+        var numDataPoints = 30;
 
         // Set to true when the route changes so we don't update charts that no longer exist.
         var destroyed = false;
@@ -300,7 +301,7 @@ angular.module('openshiftConsole')
         }
 
         function getBucketDuration() {
-          return Math.floor(getTimeRangeMillis() / 30) + "ms";
+          return Math.floor(getTimeRangeMillis() / numDataPoints) + "ms";
         }
 
         function getConfig() {
@@ -352,13 +353,8 @@ angular.module('openshiftConsole')
             return;
           }
 
-          // Make sure we're only showing points that are still in the time range.
-          var start = Date.now() - getTimeRangeMillis();
-          previous = _.takeRightWhile(previous, function(point) {
-            return point.start >= start;
-          });
-
-          var updated = previous.concat(current);
+          // Don't include more than then last `numDataPoints`
+          var updated = _.takeRight(previous.concat(current), numDataPoints);
           _.set(data, [metricType, podName], updated);
         }
 
