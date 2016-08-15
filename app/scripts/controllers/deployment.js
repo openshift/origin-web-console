@@ -18,7 +18,8 @@ angular.module('openshiftConsole')
                         ProjectsService,
                         DeploymentsService,
                         ImageStreamResolver,
-                        Navigate) {
+                        Navigate,
+                        keyValueEditorUtils) {
     $scope.projectName = $routeParams.project;
     $scope.deployment = null;
     $scope.deploymentConfig = null;
@@ -82,6 +83,38 @@ angular.module('openshiftConsole')
     var setLogVars = function(deployment) {
       $scope.logOptions.container = $filter("annotation")(deployment, "pod");
       $scope.logCanRun = !(_.includes(['New', 'Pending'], $filter('deploymentStatus')(deployment)));
+    };
+
+    var ensureEnvs = function(deployment) {
+      _.each(deployment.spec.template.spec.containers, function(container) {
+        container.env = container.env || [];
+      });
+      return deployment;
+    };
+
+    $scope.saveEnvVars = function() {
+      _.each($scope.updatedDeployment.spec.template.spec.containers, function(container) {
+        container.env = keyValueEditorUtils.compactEntries(angular.copy(container.env));
+      });
+      DataService
+        .update(
+          "replicationcontrollers",
+          $routeParams.replicationcontroller,
+          angular.copy($scope.updatedDeployment),
+          $scope.projectContext)
+        .then(function() {
+          $scope.alerts['saveEnvSuccess'] = {
+            type: "success",
+            // TODO:  improve success alert
+            message: $scope.deployment.metadata.name + " was updated."
+          };
+        }, function(e) {
+          $scope.alerts['saveEnvError'] = {
+            type: "error",
+            message: $scope.deployment.metadata.name + " was not updated.",
+            details: "Reason: " + $filter('getErrorDetails')(e)
+          };
+        });
     };
 
     ProjectsService
@@ -163,6 +196,8 @@ angular.module('openshiftConsole')
                 };
               }
               $scope.deployment = deployment;
+              // for manipulation such as editing env vars
+              $scope.updatedDeployment = ensureEnvs(deployment);
               setLogVars(deployment);
               updateHPAWarnings();
             }));

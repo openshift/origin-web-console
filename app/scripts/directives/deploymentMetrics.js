@@ -291,6 +291,10 @@ angular.module('openshiftConsole')
           });
         }
 
+        function getStartTime() {
+          return "-" + scope.options.timeRange.value + "mn";
+        }
+
         function getTimeRangeMillis() {
           return scope.options.timeRange.value * 60 * 1000;
         }
@@ -320,7 +324,7 @@ angular.module('openshiftConsole')
           if (lastTimestamp) {
             config.start = lastTimestamp;
           } else {
-            config.start = Date.now() - getTimeRangeMillis();
+            config.start = getStartTime();
           }
 
           return config;

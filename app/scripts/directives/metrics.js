@@ -373,6 +373,15 @@ angular.module('openshiftConsole')
           }
         }
 
+        function getStartTime() {
+          if (compact) {
+            // 15 minutes ago
+            return "-15mn";
+          }
+
+          return "-" + scope.options.timeRange.value + "mn";
+        }
+
         function getTimeRangeMillis() {
           if (compact) {
             // 15 minutes
@@ -472,7 +481,7 @@ angular.module('openshiftConsole')
           // Leave the end time off to use the server's current time as the end
           // time. This prevents an issue where the donut chart shows 0 for
           // current usage if the client clock is ahead of the server clock.
-          var start = now - getTimeRangeMillis();
+          var start = getStartTime();
           angular.forEach(scope.metrics, function(metric) {
             var promises = [];
 

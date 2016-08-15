@@ -14,7 +14,8 @@ angular.module('openshiftConsole')
                                                  BuildsService,
                                                  DataService,
                                                  LabelFilter,
-                                                 ProjectsService) {
+                                                 ProjectsService,
+                                                 keyValueEditorUtils) {
     $scope.projectName = $routeParams.project;
     $scope.buildConfigName = $routeParams.buildconfig;
     $scope.buildConfig = null;
@@ -66,6 +67,10 @@ angular.module('openshiftConsole')
     var copyBuildConfigAndEnsureEnv = function(buildConfig) {
       $scope.updatedBuildConfig = angular.copy(buildConfig);
       $scope.envVars = buildStrategy($scope.updatedBuildConfig).env || [];
+      // check valueFrom attribs and set an alt text for display if present
+      _.each($scope.envVars, function(env) {
+        $filter('altTextForValueFrom')(env);
+      });
     };
 
     ProjectsService
@@ -91,8 +96,7 @@ angular.module('openshiftConsole')
 
             $scope.saveEnvVars = function() {
               $scope.envVars = _.filter($scope.envVars, 'name');
-              buildStrategy($scope.updatedBuildConfig).env = $scope.envVars;
-
+              buildStrategy($scope.updatedBuildConfig).env = keyValueEditorUtils.compactEntries(angular.copy($scope.envVars));
               DataService
                 .update("buildconfigs", $routeParams.buildconfig, $scope.updatedBuildConfig, context)
                 .then(function success(){

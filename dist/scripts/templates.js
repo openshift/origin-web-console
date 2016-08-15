@@ -719,7 +719,9 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "<div class=\"build-summary\" ng-class=\"{'dismissible' : !(build | isIncompleteBuild)}\">\n" +
     "<div class=\"build-name\">\n" +
     "<span ng-if=\"build | annotation : 'buildNumber'\">\n" +
-    "<a ng-if=\"build | buildConfigForBuild\" ng-href=\"{{(build | buildConfigForBuild) | navigateResourceURL : 'BuildConfig' : build.metadata.namespace}}\">{{build | buildConfigForBuild}}</a><span ng-if=\"build | buildConfigForBuild\">,</span>\n" +
+    "<span ng-if=\"build | buildConfigForBuild\">\n" +
+    "<a ng-href=\"{{build | configURLForResource}}\">{{build | buildConfigForBuild}}</a>,\n" +
+    "</span>\n" +
     "<a ng-href=\"{{build | navigateResourceURL}}\">\n" +
     "#{{build | annotation : 'buildNumber'}}\n" +
     "</a>\n" +
@@ -2146,7 +2148,11 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "<uib-tab-heading>Environment</uib-tab-heading>\n" +
     "<div ng-repeat=\"container in deployment.spec.template.spec.containers\">\n" +
     "<h3>Container {{container.name}} Environment Variables</h3>\n" +
-    "<environment env-vars=\"container.env\" ng-if=\"container.env.length\"></environment>\n" +
+    "<p>\n" +
+    "<span class=\"pficon pficon-info\" aria-hidden=\"true\"></span>\n" +
+    "Environment variables can be edited on the <a ng-href=\"{{deployment | configURLForResource}}?tab=environment\">deployment configuration</a>.\n" +
+    "</p>\n" +
+    "<key-value-editor ng-if=\"container.env.length\" entries=\"container.env\" cannot-add cannot-delete cannot-sort is-readonly></key-value-editor>\n" +
     "<em ng-if=\"!container.env.length\">The container specification has no environment variables set.</em>\n" +
     "</div>\n" +
     "</uib-tab>\n" +
@@ -2566,6 +2572,7 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "<span class=\"pficon pficon-info\" aria-hidden=\"true\"></span>\n" +
     "When you navigate away from this pod, any open terminal connections will be closed. This will kill any foreground processes you started from the terminal.\n" +
     "</div>\n" +
+    "<alerts ng-if=\"selectedTerminalContainer.status === 'disconnected'\" alerts=\"terminalDisconnectAlert\"></alerts>\n" +
     "<div class=\"mar-left-xl mar-bottom-lg\">\n" +
     "<div class=\"row\">\n" +
     "<div class=\"pad-left-none pad-bottom-lg col-xs-4 col-lg-3\">\n" +
@@ -2680,6 +2687,22 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "<div class=\"resource-details\">\n" +
     "<ng-include src=\" 'views/browse/_deployment-details.html' \"></ng-include>\n" +
     "</div>\n" +
+    "</uib-tab>\n" +
+    "<uib-tab heading=\"Environment\" active=\"selectedTab.environment\">\n" +
+    "<uib-tab-heading>Environment</uib-tab-heading>\n" +
+    "<ng-form name=\"envForm\">\n" +
+    "<div ng-repeat=\"container in updatedDeployment.spec.template.spec.containers\">\n" +
+    "<h3>Container {{container.name}} Environment Variables</h3>\n" +
+    "<p>\n" +
+    "<span class=\"pficon pficon-info\" aria-hidden=\"true\"></span>\n" +
+    "Environment variable updates will only apply to new pods.\n" +
+    "</p>\n" +
+    "<div>\n" +
+    "<key-value-editor entries=\"container.env\" key-placeholder=\"Name\" value-placeholder=\"Value\" key-validator=\"[A-Za-z_][A-Za-z0-9_]*\" key-validator-error=\"Please enter a valid key\" key-validator-error-tooltip=\"A valid environment variable name is an alphanumeric (a-z and 0-9) string beginning with a letter that may contain underscores.\"></key-value-editor>\n" +
+    "<button class=\"btn btn-default\" ng-click=\"saveEnvVars()\" ng-disabled=\"envForm.$pristine || envForm.$invalid\">Save</button>\n" +
+    "</div>\n" +
+    "</div>\n" +
+    "</ng-form>\n" +
     "</uib-tab>\n" +
     "<uib-tab ng-if=\"metricsAvailable\" heading=\"Metrics\" active=\"selectedTab.metrics\">\n" +
     "\n" +
@@ -4200,7 +4223,7 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "<div class=\"build-pipeline-collapsed\" ng-show=\"!hideBuild\">\n" +
     "<div class=\"build-summary\" ng-class=\"{'dismissible' : !(build | isIncompleteBuild)}\">\n" +
     "<div class=\"build-name\">\n" +
-    "<a ng-href=\"{{buildConfigName | navigateResourceURL : 'BuildConfig' : build.metadata.namespace}}\">{{buildConfigName}}</a>,\n" +
+    "<a ng-href=\"{{build | configURLForResource}}\">{{buildConfigName}}</a>,\n" +
     "<a ng-href=\"{{build | navigateResourceURL}}\">#{{build | annotation : 'buildNumber'}}</a>\n" +
     "</div>\n" +
     "<div class=\"build-phase\">\n" +
@@ -4219,7 +4242,7 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "<div flex class=\"build-pipeline\">\n" +
     "<div class=\"build-summary\">\n" +
     "<div ng-if=\"buildConfigNameOnExpanded\" class=\"build-name\">\n" +
-    "<a ng-href=\"{{buildConfigName | navigateResourceURL : 'BuildConfig' : build.metadata.namespace}}\">{{buildConfigName}}</a>\n" +
+    "<a ng-href=\"{{build | configURLForResource}}\">{{buildConfigName}}</a>\n" +
     "</div>\n" +
     "<div class=\"build-phase\">\n" +
     "<span class=\"status-icon\" ng-class=\"build.status.phase\">\n" +
@@ -4981,8 +5004,10 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "<input type=\"search\" placeholder=\"Filter by keyword\" class=\"form-control\" id=\"events-filter\" ng-model=\"filter.text\">\n" +
     "</div>\n" +
     "<div class=\"vertical-divider\"></div>\n" +
-    "\n" +
+    "<div class=\"sort-group\">\n" +
+    "<span class=\"sort-label\">Sort by</span>\n" +
     "<div pf-sort config=\"sortConfig\" class=\"sort-controls\"></div>\n" +
+    "</div>\n" +
     "</div>\n" +
     "<table class=\"table table-bordered table-condensed table-mobile table-hover events-table\">\n" +
     "<thead>\n" +
@@ -7014,6 +7039,20 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
   );
 
 
+  $templateCache.put('views/modals/confirm.html',
+    "<div class=\"modal-resource-action\">\n" +
+    "<div class=\"modal-body\">\n" +
+    "<h1>{{message}}</h1>\n" +
+    "<p ng-if=\"details\">{{details}}</p>\n" +
+    "</div>\n" +
+    "<div class=\"modal-footer\">\n" +
+    "<button class=\"btn btn-lg\" ng-class=\"buttonClass\" type=\"button\" ng-click=\"confirm()\">{{buttonText}}</button>\n" +
+    "<button class=\"btn btn-lg btn-default\" type=\"button\" ng-click=\"cancel()\">Cancel</button>\n" +
+    "</div>\n" +
+    "</div>"
+  );
+
+
   $templateCache.put('views/modals/confirmScale.html',
     "<div class=\"modal-resource-action\">\n" +
     "<div class=\"modal-body\">\n" +
@@ -7738,15 +7777,7 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
 
   $templateCache.put('views/overview/_dc.html',
     "<div class=\"deployment-tile\">\n" +
-    "<div row class=\"service-title\" ng-if=\"service\">\n" +
-    "<div>\n" +
-    "Service:\n" +
-    "<a ng-href=\"{{service | navigateResourceURL}}\">{{service.metadata.name}}</a>\n" +
-    "</div>\n" +
-    "<div ng-if=\"weightByService[service.metadata.name]\" class=\"service-metadata\">\n" +
-    "<ng-include src=\"'views/overview/_traffic-percent.html'\"></ng-include>\n" +
-    "</div>\n" +
-    "</div>\n" +
+    "<ng-include src=\"'views/overview/_service-header.html'\"></ng-include>\n" +
     "<div class=\"deployment-header\">\n" +
     "<div class=\"rc-header\">\n" +
     "<div>\n" +
@@ -7823,15 +7854,7 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
 
   $templateCache.put('views/overview/_pod.html',
     "<div class=\"deployment-tile\" ng-if=\"pod.kind === 'Pod'\">\n" +
-    "<div row class=\"service-title\" ng-if=\"service\">\n" +
-    "<div>\n" +
-    "Service:\n" +
-    "<a ng-href=\"{{service | navigateResourceURL}}\">{{service.metadata.name}}</a>\n" +
-    "</div>\n" +
-    "<div ng-if=\"weightByService[service.metadata.name]\" class=\"service-metadata\">\n" +
-    "<ng-include src=\"'views/overview/_traffic-percent.html'\"></ng-include>\n" +
-    "</div>\n" +
-    "</div>\n" +
+    "<ng-include src=\"'views/overview/_service-header.html'\"></ng-include>\n" +
     "<div class=\"rc-header\"> \n" +
     "<div>\n" +
     "Pod:\n" +
@@ -7861,15 +7884,7 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
 
   $templateCache.put('views/overview/_rc.html',
     "<div class=\"deployment-tile\" ng-if=\"deployment.kind === 'ReplicationController'\">\n" +
-    "<div row class=\"service-title\" ng-if=\"service\">\n" +
-    "<div>\n" +
-    "Service:\n" +
-    "<a ng-href=\"{{service | navigateResourceURL}}\">{{service.metadata.name}}</a>\n" +
-    "</div>\n" +
-    "<div ng-if=\"weightByService[service.metadata.name]\" class=\"service-metadata\">\n" +
-    "<ng-include src=\"'views/overview/_traffic-percent.html'\"></ng-include>\n" +
-    "</div>\n" +
-    "</div>\n" +
+    "<ng-include src=\"'views/overview/_service-header.html'\"></ng-include>\n" +
     "<div class=\"deployment-header\">\n" +
     "<div class=\"rc-header\">\n" +
     "<div>\n" +
@@ -7946,10 +7961,10 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "<div uib-collapse=\"collapse\" class=\"service-group-body\">\n" +
     "\n" +
     "<div class=\"overview-services\" ng-class=\"{ 'single-alternate-service': (alternateServices | hashSize) === 1 }\">\n" +
-    "<overview-service class=\"primary-service\"></overview-service>\n" +
-    "<overview-service ng-repeat=\"service in alternateServices\" class=\"alternate-service\">\n" +
+    "<overview-service ng-init=\"isPrimary = true\" class=\"primary-service\"></overview-service>\n" +
+    "<overview-service ng-init=\"isAlternate = true\" ng-repeat=\"service in alternateServices\" class=\"alternate-service\">\n" +
     "</overview-service>\n" +
-    "<overview-service ng-repeat=\"service in childServices\">\n" +
+    "<overview-service ng-init=\"isChild = true\" ng-repeat=\"service in childServices\">\n" +
     "</overview-service>\n" +
     "<div flex column ng-if=\"alternateServices.length === 0 && childServices.length === 0 && service\" class=\"no-child-services-block\">\n" +
     "<div class=\"no-child-services-message\">\n" +
@@ -7974,6 +7989,35 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "</div>\n" +
     "</div>\n" +
     "</div>"
+  );
+
+
+  $templateCache.put('views/overview/_service-header.html',
+    "<div row class=\"service-title\" ng-if=\"service\">\n" +
+    "<div>\n" +
+    "Service:\n" +
+    "<a ng-href=\"{{service | navigateResourceURL}}\">{{service.metadata.name}}</a>\n" +
+    "\n" +
+    "<span ng-if=\"!isAlternate && alternateServices.length && !isChild\" class=\"mar-left-sm\">\n" +
+    "<ng-include src=\"'views/overview/_service-linking-button.html'\"></ng-include>\n" +
+    "</span>\n" +
+    "</div>\n" +
+    "<div ng-if=\"alternateServices.length && !isChild\" class=\"service-metadata\">\n" +
+    "<ng-include src=\"'views/overview/_traffic-percent.html'\"></ng-include>\n" +
+    "</div>\n" +
+    "\n" +
+    "<div ng-if=\"!alternateServices.length || isChild\">\n" +
+    "<ng-include src=\"'views/overview/_service-linking-button.html'\"></ng-include>\n" +
+    "</div>\n" +
+    "</div>"
+  );
+
+
+  $templateCache.put('views/overview/_service-linking-button.html',
+    " <span ng-if=\"'services' | canI : 'update'\">\n" +
+    "<a href=\"\" ng-if=\"isPrimary && (services | hashSize) > ((childServices | hashSize) + 1)\" ng-click=\"linkService()\" role=\"button\" ng-attr-title=\"Group service to {{service.metadata.name}}\"><i class=\"fa fa-chain action-button\" aria-hidden=\"true\"></i><span class=\"sr-only\">Group service to {{service.metadata.name}}</span></a>\n" +
+    "<a href=\"\" ng-if=\"isChild\" ng-click=\"removeLink(service)\" role=\"button\" ng-attr-title=\"Remove {{service.metadata.name}} from service group\"><i class=\"fa fa-chain-broken action-button\" aria-hidden=\"true\"></i><span class=\"sr-only\">Remove {{service.metadata.name}} from service group</span></a>\n" +
+    "</span>"
   );
 
 
@@ -8012,7 +8056,6 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
 
 
   $templateCache.put('views/overview/_traffic-percent.html',
-    "<div ng-if=\"alternateServices.length\">\n" +
     "<div ng-if=\"!totalWeight\">\n" +
     "No Traffic\n" +
     "</div>\n" +
@@ -8028,7 +8071,6 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "<span>\n" +
     "{{(weightByService[service.metadata.name] / totalWeight) | percent}}\n" +
     "</span>\n" +
-    "</div>\n" +
     "</div>\n" +
     "</div>\n" +
     "</div>\n" +
@@ -9126,7 +9168,7 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "<div class=\"container-fluid\">\n" +
     "<div class=\"row\">\n" +
     "<div class=\"col-md-12\">\n" +
-    "<div class=\"page-header page-header-bleed-right page-header-bleed-left\">\n" +
+    "<div class=\"section-header page-header-bleed-right page-header-bleed-left\">\n" +
     "<div class=\"pull-right\" ng-if=\"project && ('persistentvolumeclaims' | canI : 'create')\">\n" +
     "<a ng-href=\"project/{{project.metadata.name}}/create-pvc\" class=\"btn btn-default\">Request Storage</a>\n" +
     "</div>\n" +

@@ -76,6 +76,48 @@ angular.module('openshiftConsole')
           });
         };
 
+        $scope.removeLink = function(service) {
+          var modalInstance = $uibModal.open({
+            animation: true,
+            templateUrl: 'views/modals/confirm.html',
+            controller: 'ConfirmModalController',
+            resolve: {
+              message: function() {
+                return "Remove service '" + service.metadata.name + "' from group?";
+              },
+              details: function() {
+                return "Services '" +
+                       $scope.primaryService.metadata.name +
+                       "' and '" +
+                       service.metadata.name +
+                       "' will no longer be displayed together on the overview.";
+              },
+              buttonText: function() {
+                return "Remove";
+              },
+              buttonClass: function() {
+                return "btn-danger";
+              }
+            }
+          });
+
+          modalInstance.result.then(function() {
+            ServicesService.removeServiceLink($scope.primaryService, service).then(
+              // success
+              _.noop,
+              // failure
+              function(result) {
+                $scope.alerts = $scope.alerts || {};
+                $scope.alerts["remove-service-link"] = {
+                  type: "error",
+                  message: "Could not remove service link.",
+                  details: $filter('getErrorDetails')(result)
+                };
+              }
+            );
+          });
+        };
+
         $scope.$watch('service.metadata.labels.app', function(appName) {
           $scope.appName = appName;
         });
@@ -136,6 +178,7 @@ angular.module('openshiftConsole')
           if (!$scope.service) {
             return;
           }
+          $scope.primaryService = $scope.service;
           $scope.childServices = _.get($scope, ['childServicesByParent', $scope.service.metadata.name], []);
         });
       }

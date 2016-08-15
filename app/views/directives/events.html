@@ -12,8 +12,10 @@
              ng-model="filter.text">
     </div>
     <div class="vertical-divider"></div>
-    <!-- TODO: Change to pf-sort in angular-patternfly 3.0 -->
-    <div pf-sort config="sortConfig" class="sort-controls"></div>
+    <div class="sort-group">
+      <span class="sort-label">Sort by</span>
+      <div pf-sort config="sortConfig" class="sort-controls"></div>
+    </div>
   </div>
   <table class="table table-bordered table-condensed table-mobile table-hover events-table">
     <thead>

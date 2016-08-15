@@ -1,21 +1,19 @@
-<div ng-if="alternateServices.length">
-  <div ng-if="!totalWeight">
-    No Traffic
-  </div>
-  <div ng-if="totalWeight">
-    <span class="visible-xs visible-sm">
-      Traffic {{(weightByService[service.metadata.name] / totalWeight) | percent}}
-    </span>
-    <div class="hidden-xs hidden-sm">
-      <span class="traffic-label">Traffic</span>
-      <!-- Calculate the width of the progress bar in px (max 250px) -->
-      <div class="progress progress-sm"
-           ng-style="{ width: ((weightByService[service.metadata.name] / totalWeight * 250) | number) + 'px'}">
-        <div class="progress-bar">
-          <span>
-            {{(weightByService[service.metadata.name] / totalWeight) | percent}}
-          </span>
-        </div>
+<div ng-if="!totalWeight">
+  No Traffic
+</div>
+<div ng-if="totalWeight">
+  <span class="visible-xs visible-sm">
+    Traffic {{(weightByService[service.metadata.name] / totalWeight) | percent}}
+  </span>
+  <div class="hidden-xs hidden-sm">
+    <span class="traffic-label">Traffic</span>
+    <!-- Calculate the width of the progress bar in px (max 250px) -->
+    <div class="progress progress-sm"
+         ng-style="{ width: ((weightByService[service.metadata.name] / totalWeight * 250) | number) + 'px'}">
+      <div class="progress-bar">
+        <span>
+          {{(weightByService[service.metadata.name] / totalWeight) | percent}}
+        </span>
       </div>
     </div>
   </div>

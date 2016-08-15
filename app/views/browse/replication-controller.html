@@ -65,7 +65,7 @@
               </div>
             </h1>
             <labels labels="deployment.metadata.labels" clickable="true" kind="deployments" project-name="{{deployment.metadata.namespace}}" limit="3"></labels>
-          </div><!-- /deployment -->          
+          </div><!-- /deployment -->
         </div>
       </div><!-- /middle-header-->
       <div class="middle-content">
@@ -78,6 +78,31 @@
                   <div class="resource-details">
                     <ng-include src=" 'views/browse/_deployment-details.html' "></ng-include>
                   </div>
+                </uib-tab>
+                <uib-tab heading="Environment" active="selectedTab.environment">
+                  <uib-tab-heading>Environment</uib-tab-heading>
+                  <ng-form name="envForm">
+                    <div ng-repeat="container in updatedDeployment.spec.template.spec.containers">
+                      <h3>Container {{container.name}} Environment Variables</h3>
+                      <p>
+                        <span class="pficon pficon-info" aria-hidden="true"></span>
+                        Environment variable updates will only apply to new pods.
+                      </p>
+                      <div>
+                        <key-value-editor
+                          entries="container.env"
+                          key-placeholder="Name"
+                          value-placeholder="Value"
+                          key-validator="[A-Za-z_][A-Za-z0-9_]*"
+                          key-validator-error="Please enter a valid key"
+                          key-validator-error-tooltip="A valid environment variable name is an alphanumeric (a-z and 0-9) string beginning with a letter that may contain underscores."></key-value-editor>
+                        <button
+                          class="btn btn-default"
+                          ng-click="saveEnvVars()"
+                          ng-disabled="envForm.$pristine || envForm.$invalid">Save</button>
+                      </div>
+                    </div>
+                  </ng-form>
                 </uib-tab>
                 <uib-tab ng-if="metricsAvailable" heading="Metrics" active="selectedTab.metrics">
                   <!-- Use ng-if to remove the metrics directive when the tab is not active so

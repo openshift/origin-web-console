@@ -83,7 +83,17 @@
                     <uib-tab-heading>Environment</uib-tab-heading>
                     <div ng-repeat="container in deployment.spec.template.spec.containers">
                       <h3>Container {{container.name}} Environment Variables</h3>
-                      <environment env-vars="container.env" ng-if="container.env.length"></environment>
+                      <p>
+                        <span class="pficon pficon-info" aria-hidden="true"></span>
+                        Environment variables can be edited on the <a ng-href="{{deployment | configURLForResource}}?tab=environment">deployment configuration</a>.
+                      </p>
+                      <key-value-editor
+                        ng-if="container.env.length"
+                        entries="container.env"
+                        cannot-add
+                        cannot-delete
+                        cannot-sort
+                        is-readonly></key-value-editor>
                       <em ng-if="!container.env.length">The container specification has no environment variables set.</em>
                     </div>
                   </uib-tab>

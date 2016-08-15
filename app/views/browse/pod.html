@@ -132,6 +132,8 @@
                         This will kill any foreground processes you started from the terminal.
                       </div>
 
+                      <alerts ng-if="selectedTerminalContainer.status === 'disconnected'" alerts="terminalDisconnectAlert"></alerts>
+
                       <div class="mar-left-xl mar-bottom-lg">
                         <div class="row">
                           <div class="pad-left-none pad-bottom-lg col-xs-4 col-lg-3">

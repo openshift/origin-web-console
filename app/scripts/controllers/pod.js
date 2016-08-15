@@ -24,6 +24,7 @@ angular.module('openshiftConsole')
     $scope.imageStreamImageRefByDockerReference = {}; // lets us determine if a particular container's docker image reference belongs to an imageStream
     $scope.builds = {};
     $scope.alerts = {};
+    $scope.terminalDisconnectAlert = {};
     $scope.renderOptions = $scope.renderOptions || {};
     $scope.renderOptions.hideFilterWidget = true;
     $scope.logOptions = {};
@@ -37,10 +38,14 @@ angular.module('openshiftConsole')
         title: $routeParams.pod
       }
     ];
+    $scope.terminalDisconnectAlert["disconnect"] = {
+      type: "warning",
+      message: "This terminal has been disconnected. If you reconnect, your terminal history will be lost."
+    };
 
     // Must always be initialized so we can check the selectedTab elsewhere
     $scope.selectedTab = {};
-    // Check for a ?tab=<name> query param to allow linking directly to a tab.    
+    // Check for a ?tab=<name> query param to allow linking directly to a tab.
     if ($routeParams.tab) {
       $scope.selectedTab[$routeParams.tab] = true;
     }
@@ -126,7 +131,7 @@ angular.module('openshiftConsole')
     if (!characterBoundingBox.height || !characterBoundingBox.width) {
       Logger.warn("Unable to calculate the bounding box for a character.  Terminal will not be able to resize.");
     }
-    else {   
+    else {
       $(window).on('resize.terminalsize', _.debounce(calculateTerminalSize, 100));
     }
 
@@ -147,6 +152,7 @@ angular.module('openshiftConsole')
 
       newTerm.isVisible = true;
       newTerm.isUsed = true;
+      $scope.selectedTerminalContainer = newTerm;
     };
 
     var getState = function(containerStatus) {
@@ -221,7 +227,6 @@ angular.module('openshiftConsole')
               setContainerVars();
 
               updateTerminals($scope.containerTerminals);
-
             }));
           },
           // failure

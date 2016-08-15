@@ -9,7 +9,9 @@
         <div class="build-summary" ng-class="{'dismissible' : !(build | isIncompleteBuild)}">
           <div class="build-name">
             <span ng-if="build | annotation : 'buildNumber'">
-              <a ng-if="build | buildConfigForBuild" ng-href="{{(build | buildConfigForBuild) | navigateResourceURL : 'BuildConfig' : build.metadata.namespace}}">{{build | buildConfigForBuild}}</a><span ng-if="build | buildConfigForBuild">,</span>
+              <span ng-if="build | buildConfigForBuild">
+                <a ng-href="{{build | configURLForResource}}">{{build | buildConfigForBuild}}</a>,
+              </span>
               <a ng-href="{{build | navigateResourceURL}}">
                 #{{build | annotation : 'buildNumber'}}
               </a>

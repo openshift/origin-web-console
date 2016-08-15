@@ -61,12 +61,14 @@
         -->
         <div class="overview-services"
              ng-class="{ 'single-alternate-service': (alternateServices | hashSize) === 1 }">
-          <overview-service class="primary-service"></overview-service>
+          <overview-service ng-init="isPrimary = true" class="primary-service"></overview-service>
           <overview-service
+              ng-init="isAlternate = true"
               ng-repeat="service in alternateServices"
               class="alternate-service">
           </overview-service>
           <overview-service
+              ng-init="isChild = true"
               ng-repeat="service in childServices">
           </overview-service>
 
