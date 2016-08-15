@@ -1475,7 +1475,7 @@ return a.containerPort - b.containerPort;
 return d(e);
 }, d.generate = function(a) {
 var b = d.parsePorts(a.image);
-a.labels.app = a.name, a.annotations["openshift.io/generated-by"] = "OpenShiftWebConsole";
+a.annotations["openshift.io/generated-by"] = "OpenShiftWebConsole";
 var c;
 null !== a.buildConfig.sourceUrl && (c = {
 name:a.name,
@@ -5345,7 +5345,12 @@ title:"Add to Project",
 link:"project/" + a.projectName + "/create"
 }, {
 title:u
-} ], g.get(d.project).then(_.spread(function(g, n) {
+} ];
+var v = {
+name:"app",
+value:""
+};
+g.get(d.project).then(_.spread(function(g, n) {
 function p(b) {
 u || h.toErrorPage("Cannot create from source: a base image was not specified"), d.imageTag || h.toErrorPage("Cannot create from source: a base image tag was not specified"), b.emptyMessage = "Loading...", b.imageName = u, b.imageTag = d.imageTag, b.namespace = d.namespace, b.buildConfig = {
 buildOnSourceChange:!0,
@@ -5357,7 +5362,7 @@ deployOnConfigChange:!0
 }, b.DCEnvVarsFromImage, b.DCEnvVarsFromUser = [], b.routing = {
 include:!0,
 portOptions:[]
-}, b.labels = [], b.annotations = {}, b.scaling = {
+}, b.labels = [], b.systemLabels = [ v ], b.annotations = {}, b.scaling = {
 replicas:1,
 autoscale:!1,
 autoscaleOptions:[ {
@@ -5413,11 +5418,13 @@ a.hideCPU || (a.cpuProblems = j.validatePodLimits(a.limitRanges, "cpu", [ a.cont
 f.list("limitranges", n, function(b) {
 a.limitRanges = b.by("metadata.name"), 0 !== o("hashSize")(b) && a.$watch("container", q, !0);
 });
-var v = function() {
+var w = function() {
 return a.scaling.autoscale ? void (a.showCPURequestWarning = !l.hasCPURequest([ a.container ], a.limitRanges, g)) :void (a.showCPURequestWarning = !1);
 };
-a.$watch("scaling.autoscale", v), a.$watch("container", v, !0), p(a);
-var w = function(a, b) {
+a.$watch("scaling.autoscale", w), a.$watch("container", w, !0), a.$watch("name", function(a) {
+v.value = a;
+}), p(a);
+var x = function(a, b) {
 function g() {
 0 === k && (i.length > 0 ? h.reject(i) :h.resolve(a));
 }
@@ -5442,7 +5449,7 @@ message:e.invalidObjectKindOrVersion(a)
 }
 }), k--, void g());
 }), h.promise;
-}, x = function(b) {
+}, y = function(b) {
 var d = {
 started:"Creating application " + a.name + " in project " + a.projectDisplayName(),
 success:"Created application " + a.name + " in project " + a.projectDisplayName(),
@@ -5480,17 +5487,19 @@ details:"Status: " + b.status + ". " + b.data
 }), h.toNextSteps(a.name, a.projectName, a.usingSampleRepo() ? {
 fromSample:!0
 } :null);
-}, y = function() {
+}, z = function() {
 a.nameTaken = !0, a.disableInputs = !1;
 };
 a.projectDisplayName = function() {
 return s(this.project) || this.projectName;
 }, a.createApp = function() {
-a.disableInputs = !0, a.buildConfig.envVars = r.mapEntries(r.compactEntries(a.buildConfigEnvVars)), a.deploymentConfig.envVars = r.mapEntries(r.compactEntries(a.DCEnvVarsFromUser)), a.labels = r.mapEntries(r.compactEntries(a.labels));
-var c = i.generate(a), d = [];
-angular.forEach(c, function(a) {
-null !== a && (b.debug("Generated resource definition:", a), d.push(a));
-}), w(d, a.projectName, a).then(x, y);
+a.disableInputs = !0, a.buildConfig.envVars = r.mapEntries(r.compactEntries(a.buildConfigEnvVars)), a.deploymentConfig.envVars = r.mapEntries(r.compactEntries(a.DCEnvVarsFromUser));
+var c = r.mapEntries(r.compactEntries(a.labels)), d = r.mapEntries(r.compactEntries(a.systemLabels));
+a.labels = _.extend(d, c);
+var e = i.generate(a), f = [];
+angular.forEach(e, function(a) {
+null !== a && (b.debug("Generated resource definition:", a), f.push(a));
+}), x(f, a.projectName, a).then(y, z);
 };
 }));
 } ]), angular.module("openshiftConsole").controller("NextStepsController", [ "$scope", "$http", "$routeParams", "DataService", "$q", "$location", "ProcessedTemplateService", "TaskList", "$parse", "Navigate", "$filter", "imageObjectRefFilter", "failureObjectNameFilter", "ProjectsService", function(a, b, c, d, e, f, g, h, i, j, k, l, m, n) {
@@ -5552,7 +5561,7 @@ d.unwatchAll(q);
 } ]), angular.module("openshiftConsole").controller("NewFromTemplateController", [ "$scope", "$http", "$routeParams", "DataService", "ProcessedTemplateService", "AlertMessageService", "ProjectsService", "$q", "$location", "TaskList", "$parse", "Navigate", "$filter", "imageObjectRefFilter", "failureObjectNameFilter", "CachedTemplateService", "keyValueEditorUtils", function(a, b, c, d, e, f, g, h, i, j, k, l, m, n, o, p, q) {
 var r = c.name, s = c.namespace || "";
 if (!r) return void l.toErrorPage("Cannot create from template: a template name was not specified.");
-a.emptyMessage = "Loading...", a.alerts = {}, a.projectName = c.project, a.projectPromise = $.Deferred(), a.labels = [], a.breadcrumbs = [ {
+a.emptyMessage = "Loading...", a.alerts = {}, a.projectName = c.project, a.projectPromise = $.Deferred(), a.labels = [], a.systemLabels = [], a.breadcrumbs = [ {
 title:a.projectName,
 link:"project/" + a.projectName
 }, {
@@ -5607,12 +5616,12 @@ g ? (f = d[g[1]] || {}, f.title = a.annotations[e], d[g[1]] = f) :(g = e.match(c
 return d;
 }
 function z(b) {
-a.templateImages = o(a.template), a.labels = _.map(a.template.labels, function(a, b) {
+a.templateImages = o(a.template), a.systemLabels = _.map(a.template.labels, function(a, b) {
 return {
 name:b,
 value:a
 };
-}), a.labels.push({
+}), a.systemLabels.push({
 name:"app",
 value:a.template.metadata.name
 });
@@ -5622,7 +5631,9 @@ return t(this.project) || this.projectName;
 }, a.templateDisplayName = function() {
 return t(this.template);
 }, a.createFromTemplate = function() {
-a.disableInputs = !0, a.template.labels = q.mapEntries(q.compactEntries(a.labels)), d.create("processedtemplates", null, a.template, f).then(function(b) {
+a.disableInputs = !0;
+var b = q.mapEntries(q.compactEntries(a.labels)), g = q.mapEntries(q.compactEntries(a.systemLabels));
+a.template.labels = _.extend(g, b), d.create("processedtemplates", null, a.template, f).then(function(b) {
 var g = {
 started:"Creating " + a.templateDisplayName() + " in project " + a.projectDisplayName(),
 success:"Created " + a.templateDisplayName() + " in project " + a.projectDisplayName(),
@@ -7767,6 +7778,7 @@ return {
 restrict:"E",
 scope:{
 labels:"=",
+systemLabels:"=",
 expand:"=?",
 canToggle:"=?",
 deletePolicy:"@?",
@@ -9636,6 +9648,7 @@ alerts:"="
 templateUrl:"views/directives/deploy-image.html",
 link:function(c) {
 function h() {
+var a = j.mapEntries(j.compactEntries(c.labels)), b = j.mapEntries(j.compactEntries(c.systemLabels));
 return f.getResources({
 name:c.app.name,
 image:c["import"].name,
@@ -9644,10 +9657,13 @@ tag:c["import"].tag || "latest",
 ports:c.ports,
 volumes:c.volumes,
 env:j.mapEntries(j.compactEntries(c.env)),
-labels:j.mapEntries(j.compactEntries(c.labels))
+labels:_.extend(b, a)
 });
 }
-c.mode = "istag", c.istag = {}, c.app = {}, c.env = [], c.labels = [];
+c.mode = "istag", c.istag = {}, c.app = {}, c.env = [], c.labels = [], c.systemLabels = [ {
+name:"app",
+value:""
+} ];
 var k = a("stripTag"), l = a("stripSHA"), m = a("humanizeKind"), n = function() {
 var a = _.last(c["import"].name.split("/"));
 return a = l(a), a = k(a);
@@ -9656,16 +9672,13 @@ c.findImage = function() {
 c.loading = !0, f.findImage(c.imageName, c.context).then(function(a) {
 if (c["import"] = a, c.loading = !1, "Success" !== _.get(a, "result.status")) return void (c["import"].error = _.get(a, "result.message", "An error occurred finding the image."));
 var b = c["import"].image;
-b && (c.app.name = n(), c.labels = [ {
-name:"app",
-value:c.app.name
-} ], c.runsAsRoot = f.runsAsRoot(b), c.ports = d.parsePorts(b), c.volumes = f.getVolumes(b), c.createImageStream = !0);
+b && (c.app.name = n(), c.runsAsRoot = f.runsAsRoot(b), c.ports = d.parsePorts(b), c.volumes = f.getVolumes(b), c.createImageStream = !0);
 }, function(b) {
 c["import"].error = a("getErrorDetails")(b) || "An error occurred finding the image.", c.loading = !1;
 });
 }, c.$watch("app.name", function() {
-_.set(_.find(c.labels, function(a) {
-return "app" === a.name;
+_.set(_.find(c.systemLabels, {
+name:"app"
 }), "value", c.app.name);
 }), c.$watch("mode", function(a, b) {
 a !== b && (delete c["import"], c.istag = {});

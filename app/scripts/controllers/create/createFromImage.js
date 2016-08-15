@@ -41,6 +41,8 @@ angular.module("openshiftConsole")
       }
     ];
 
+    var appLabel = {name: 'app', value: ''};
+
     ProjectsService
       .get($routeParams.project)
       .then(_.spread(function(project, context) {
@@ -77,6 +79,7 @@ angular.module("openshiftConsole")
             portOptions: []
           };
           scope.labels = [];
+          scope.systemLabels = [appLabel];
           scope.annotations = {};
           scope.scaling = {
             replicas: 1,
@@ -183,6 +186,9 @@ angular.module("openshiftConsole")
 
         $scope.$watch('scaling.autoscale', checkCPURequest);
         $scope.$watch('container', checkCPURequest, true);
+        $scope.$watch('name', function(newValue) {
+          appLabel.value = newValue;
+        });
 
         initAndValidate($scope);
 
@@ -304,7 +310,9 @@ angular.module("openshiftConsole")
           $scope.disableInputs = true;
           $scope.buildConfig.envVars = keyValueEditorUtils.mapEntries(keyValueEditorUtils.compactEntries($scope.buildConfigEnvVars));
           $scope.deploymentConfig.envVars = keyValueEditorUtils.mapEntries(keyValueEditorUtils.compactEntries($scope.DCEnvVarsFromUser));
-          $scope.labels = keyValueEditorUtils.mapEntries(keyValueEditorUtils.compactEntries($scope.labels));
+          var userLabels = keyValueEditorUtils.mapEntries(keyValueEditorUtils.compactEntries($scope.labels));
+          var systemLabels = keyValueEditorUtils.mapEntries(keyValueEditorUtils.compactEntries($scope.systemLabels));
+          $scope.labels = _.extend(systemLabels, userLabels);
 
           var resourceMap = ApplicationGenerator.generate($scope);
           //init tasks

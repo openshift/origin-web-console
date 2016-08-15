@@ -61,8 +61,6 @@ angular.module("openshiftConsole")
     scope.generate = function(input){
       var ports = scope.parsePorts(input.image);
 
-      //augment labels
-      input.labels.app = input.name;
       input.annotations["openshift.io/generated-by"] = "OpenShiftWebConsole";
 
       var imageSpec;
