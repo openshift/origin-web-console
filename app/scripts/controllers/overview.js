@@ -202,6 +202,16 @@ angular.module('openshiftConsole')
       return !!childServices[service.metadata.name];
     };
 
+    var hasChildren = function(service) {
+      var serviceName = _.get(service, 'metadata.name');
+      if (!serviceName) {
+        return false;
+      }
+
+      var childServices = _.get($scope, ['childServicesByParent', serviceName], []);
+      return !_.isEmpty(childServices);
+    };
+
     var addChildService = function(parentName, childName) {
       var child = services[childName];
       childServices[childName] = child;
@@ -260,8 +270,15 @@ angular.module('openshiftConsole')
 
       // Filter out child services and alternate services. Order top-level
       // services by importance.
-      $scope.topLevelServices = _.reject(services, function(service) {
-        return isChildService(service) || isAlternateService(service);
+      $scope.topLevelServices = _.filter(services, function(service) {
+        // If this service has any child services, always show it in top level
+        // services. Otherwise, children of children will not show up anywhere
+        // on the overview.
+        if (hasChildren(service)) {
+          return true;
+        }
+
+        return !isChildService(service) && !isAlternateService(service);
       }).sort(compareServices);
     };
 
