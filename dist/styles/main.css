@@ -4697,11 +4697,12 @@ kubernetes-topology-graph{height:700px}
 @media only screen and (max-device-width:736px) and (-webkit-min-device-pixel-ratio:0){.log-view .log-view-output{padding-bottom:70px}
 }
 .log-view .log-view-output table{table-layout:fixed;width:100%}
-.log-view.log-fixed-height .ellipsis-loader{background-color:#101214;bottom:0;height:30px;right:17px;width:auto}
+.log-view.log-fixed-height .ellipsis-loader{bottom:0;background-image:-webkit-linear-gradient(top,transparent 0%,#101214 15%);background-image:-o-linear-gradient(top,transparent 0%,#101214 15%);background-image:linear-gradient(to bottom,transparent 0%,#101214 15%);background-repeat:repeat-x;filter:progid:DXImageTransform.Microsoft.gradient(startColorstr='#00000000', endColorstr='#ff101214', GradientType=0);height:30px;right:17px;width:auto}
 .log-view.log-fixed-height .ellipsis-loader.dots div{left:50%;top:12px}
 .log-view.log-fixed-height .log-end-msg{margin:20px 0 -35px 10px;position:static}
 .log-view.log-fixed-height .log-scroll-bottom,.log-view.log-fixed-height .log-scroll-top{border-right-width:1px;right:17px}
-.log-view.log-fixed-height .log-view-output{overflow:auto;padding-top:30px}
+.log-view.log-fixed-height .log-view-output{overflow:auto;padding-bottom:0;padding-top:0}
+.log-view.log-fixed-height .log-view-output table{margin-bottom:40px;margin-top:30px}
 .ellipsis-loader{position:absolute;bottom:10px;margin-left:auto;margin-right:auto;left:0;right:0}
 .log-end-msg{font-size:12px;color:#72767b;position:absolute;bottom:5px;left:10px}
 .chromeless .log-scroll-top.affix{right:0px}
