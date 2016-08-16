@@ -3648,6 +3648,7 @@ a.disabled-link:active,a.disabled-link:focus,a.disabled-link:hover{color:#bbb;te
 .modal-debug-terminal .modal-header h2{margin-bottom:5px}
 .modal-debug-terminal .modal-body{border-top:1px solid #bbb;border-bottom:1px solid #bbb;padding:5px 15px 15px}
 .modal-debug-terminal .modal-body .original-cmd-msg{margin-bottom:10px}
+.modal-debug-terminal .modal-body .empty-state-message{margin-top:60px}
 .modal-debug-terminal .modal-body kubernetes-container-terminal{text-align:center;overflow:hidden}
 .modal-debug-terminal .modal-footer{padding-top:0}
 .ace-inline{height:300px}
