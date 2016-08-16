@@ -7845,7 +7845,6 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "\n" +
     "<div column class=\"overview-donut-connector\" ng-class=\"{'contains-deployment-status-msg':deployments.length === 1}\" ng-if=\"anyDeploymentInProgress\">\n" +
     "<div ng-if=\"deployments.length > 1\" class=\"deployment-connector-arrow\">\n" +
-    "&rarr;\n" +
     "</div>\n" +
     "<div ng-if=\"deployments.length === 1\" class=\"deployment-status-msg\">\n" +
     "<status-icon status=\"deployments[0] | deploymentStatus\" class=\"mar-right-xs\"></status-icon>\n" +
