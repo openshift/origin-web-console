@@ -6236,7 +6236,7 @@ a.$watch("services", function(b) {
 var d = c.getDependentServices(a.service);
 a.options = _.filter(b, function(b) {
 return b !== a.service && !_.includes(d, b.metadata.name);
-});
+}), 1 === _.size(a.options) && _.set(a, "link.selectedService", _.head(a.options));
 }), a.link = function() {
 b.close(_.get(a, "link.selectedService"));
 }, a.cancel = function() {
