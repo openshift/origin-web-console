@@ -27,7 +27,7 @@
     "messenger": "1.4.1",
     "kubernetes-label-selector": "1.0.2",
     "kubernetes-topology-graph": "0.0.23",
-    "kubernetes-container-terminal": "0.0.16",
+    "kubernetes-container-terminal": "0.0.17",
     "registry-image-widgets": "0.0.1",
     "openshift-object-describer": "1.1.2",
     "layout.attrs": "2.1.1",
