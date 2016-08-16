@@ -7432,9 +7432,6 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "</span>\n" +
     "</div>\n" +
     "</log-viewer>\n" +
-    "<div class=\"mar-top-lg\" ng-if=\"metricsAvailable && podsByName[(build | annotation : 'buildPod')]\">\n" +
-    "<metrics pod=\"podsByName[(build | annotation : 'buildPod')]\"></metrics>\n" +
-    "</div>\n" +
     "</div>\n" +
     "</div>\n" +
     "</div>\n" +
