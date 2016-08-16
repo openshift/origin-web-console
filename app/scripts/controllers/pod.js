@@ -118,6 +118,11 @@ angular.module('openshiftConsole')
       }
       $scope.$apply(function() {
         var terminalWrapper = $('.container-terminal-wrapper').get(0);
+        // `terminalWrapper` won't exist until the user selects the terminal tab.
+        if (!terminalWrapper) {
+          return;
+        }
+
         var r = terminalWrapper.getBoundingClientRect();
         var windowWidth = win.width();
         var windowHeight = win.height();

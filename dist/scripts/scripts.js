@@ -3162,8 +3162,11 @@ height:a.height()
 return a.remove(), b;
 }, o = n(), p = $(window), q = function() {
 o.height && o.width && a.$apply(function() {
-var b = $(".container-terminal-wrapper").get(0), c = b.getBoundingClientRect(), d = p.width(), e = p.height(), f = d - c.left - 40, g = e - c.top - 50;
+var b = $(".container-terminal-wrapper").get(0);
+if (b) {
+var c = b.getBoundingClientRect(), d = p.width(), e = p.height(), f = d - c.left - 40, g = e - c.top - 50;
 a.terminalCols = Math.max(_.floor(f / o.width), 80), a.terminalRows = Math.max(_.floor(g / o.height), 24);
+}
 });
 };
 o.height && o.width ? $(window).on("resize.terminalsize", _.debounce(q, 100)) :Logger.warn("Unable to calculate the bounding box for a character.  Terminal will not be able to resize."), a.$watch("selectedTab.terminal", function(a) {
