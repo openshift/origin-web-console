@@ -6539,7 +6539,7 @@ a.filter = {
 text:""
 };
 var b = function(b) {
-return a.resourceKind && a.resourceName ? _.filter(b, function(b) {
+return a.resourceKind ? _.filter(b, function(b) {
 return b.involvedObject.kind === a.resourceKind && b.involvedObject.name === a.resourceName;
 }) :b;
 }, d = [], f = function() {
