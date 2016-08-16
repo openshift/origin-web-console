@@ -9703,7 +9703,15 @@ message:"Deployment " + e + " no longer exists."
 };
 }
 };
-} ]), angular.module("openshiftConsole").directive("istagSelect", [ "DataService", function(a) {
+} ]), angular.module("openshiftConsole").directive("imageNames", function() {
+return {
+restrict:"E",
+scope:{
+podTemplate:"="
+},
+templateUrl:"views/overview/_image-names.html"
+};
+}), angular.module("openshiftConsole").directive("istagSelect", [ "DataService", function(a) {
 return {
 require:"^form",
 restrict:"E",

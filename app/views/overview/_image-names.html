@@ -1,0 +1,7 @@
+<div class="small">
+  <span>{{podTemplate.spec.containers[0].image | imageStreamName}}</span>
+  <span ng-if="sha = (podTemplate.spec.containers[0].image | imageSHA)" title="{{sha}}">
+    <span class="hash">{{sha | stripSHAPrefix | limitTo: 7}}</span>
+  </span>
+  <span ng-if="podTemplate.spec.containers.length > 1"> and {{podTemplate.spec.containers.length - 1}} other image<span ng-if="podTemplate.spec.containers.length > 2">s</span></span>
+</div>

@@ -1,20 +1,30 @@
 @overview-border-light-gray: #ededed;
 @overview-border-gray: #d6d6d6;
+@overview-font-weight: 300;
 @shield-bgcolor:       #ebebeb;
 @shield-border-color:  @overview-border-gray;
 @shield-width:         36px;
 @shield-width-lg:      50px;
 @service-group-vertical-margin: 6px;
 @service-group-horizontal-margin: 8px;
-@two-column-min-width: 568px;
+@two-column-min-width: 750px;
+@two-column-max-width: 749px;
 @tile-min-height:      256px;
 @tile-min-height-lg:   346px;
 
 
 .overview {
-  font-weight: 300;
+  font-weight: @overview-font-weight;
   h2 {
     line-height: 1.4;
+  }
+  .link-service-button {
+    font-size: 13px;
+  }
+  .overview-timestamp {
+    @media (max-width: @screen-xs-max) {
+      display: block;
+    }
   }
   .container-fluid {
     margin-top: 20px;
@@ -210,10 +220,12 @@
   }
   .service-group-header {
     cursor: pointer;
+    .flex-direction(@direction: column);
     .flex-display(@display: flex);
     .justify-content(@justify: space-between);
-    padding: 10px;
+    padding: 7px;
     .route-title {
+      font-weight: @overview-font-weight;
       line-height: 1.4;
       // Margin at mobile if there is an app name. The route is stacked below the app name.
       margin: 0 0 0 6px;
@@ -221,15 +233,22 @@
         // Margin without app name.
         margin: 0;
       }
+      .fa-external-link {
+        margin-left: 2px;
+        margin-right: 6px;
+      }
       @media (min-width: @screen-sm-min) {
         // At wider screen widths, always 0 margin.
         margin: 0;
+        .fa-external-link {
+          margin-left: 0;
+          margin-right: 5px;
+        }
       }
     }
     .app-name {
-      .h3();
       .truncate();
-      font-weight: 300;
+      font-weight: @overview-font-weight;
       margin: 0;
       text-transform: uppercase;
       min-width: 130px; // prevent name from complete truncation at mobile
@@ -237,9 +256,10 @@
     .other-routes-msg {
       display: block;
       line-height: 1.1;
-      margin: 3px 20px;
+      margin: 3px 25px;
     }
     @media (min-width: @screen-sm-min) {
+      .flex-direction(@direction: row);
       align-items: center;
       .other-routes-msg {
         display: inline-block;
@@ -265,7 +285,7 @@
         &:nth-child(n+3) {
           margin-top: @service-group-vertical-margin;
         }
-        @media (max-width: 567px) {
+        @media (max-width: @two-column-max-width) {
           &:nth-child(n+2) {
             margin-top: @service-group-vertical-margin;
           }
@@ -335,6 +355,16 @@
     border-bottom: 1px solid @overview-border-gray;
     .justify-content(@justify: space-between);
     padding: 5px 10px;
+    .service-name {
+      .h3();
+      font-weight: @overview-font-weight;
+      margin-top: 3px;
+      margin-bottom: 3px;
+      .pficon {
+        margin-right: 7px;
+        vertical-align: -2px;
+      }
+    }
   }
   .deployment-tile {
     border-left: 1px solid @overview-border-gray;
@@ -346,6 +376,8 @@
     .rc-header {
       .text-muted();
       padding: 5px 10px;
+      // Prevent the content from overlapping the deployment shield
+      margin-right: @shield-width-lg;
     }
     .deployment-body {
       .flex-direction(@direction: column);
@@ -576,6 +608,10 @@
     .no-deployments-message {
       margin-top: 0;
     }
+  }
+  .hash {
+    font-size: 10px;
+    margin-left: 3px;
   }
   .shield {
     background: @shield-bgcolor;
