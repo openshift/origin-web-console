@@ -7273,7 +7273,7 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "</div>\n" +
     "<form>\n" +
     "<label class=\"sr-only\" for=\"childService\">Service:</label>\n" +
-    "<ui-select ng-model=\"link.selectedService\" theme=\"bootstrap\" title=\"Choose a service\">\n" +
+    "<ui-select ng-model=\"link.selectedService\" autofocus theme=\"bootstrap\" title=\"Choose a service\">\n" +
     "<ui-select-match placeholder=\"Choose a service...\">{{$select.selected.metadata.name}}</ui-select-match>\n" +
     "<ui-select-choices repeat=\"service in options | toArray | filter : { metadata: { name: $select.search } } | orderBy : 'metadata.name'\">\n" +
     "<div ng-bind-html=\"service.metadata.name | highlight : $select.search\"></div>\n" +

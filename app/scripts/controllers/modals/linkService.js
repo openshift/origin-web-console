@@ -15,6 +15,11 @@ angular.module('openshiftConsole')
       $scope.options = _.filter(services, function(service) {
         return service !== $scope.service && !_.includes(dependentServices, service.metadata.name);
       });
+
+      // If there is only one service, start with it selected.
+      if (_.size($scope.options) === 1) {
+        _.set($scope, 'link.selectedService', _.head($scope.options));
+      }
     });
     $scope.link = function() {
       $uibModalInstance.close(_.get($scope, 'link.selectedService'));
