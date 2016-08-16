@@ -356,8 +356,7 @@
       }
       @media (min-width: @screen-md-min) {
         .flex-direction(@direction: row);
-        // .justify-content(@justify: space-between);
-        .justify-content(@justify: flex-end);
+        .justify-content(@justify: space-between);
       }
     }
     .overview-donut, .overview-metrics {
@@ -379,47 +378,31 @@
       text-align: center;
     }
 
-    // fadeSlideOut
-    @keyframes fadeSlideOut {
-      0% { opacity: 1; }
-      50% { opacity: 0; }
-      100% { opacity: 0;
-        margin-left: -300px; }
-    }
-
-    @keyframes flexGrow {
-      to {
-        .flex-basis(@width: 0%);
-        .flex-grow(@grow: 1);
-        .flex-shrink(@shrink: 1);
+    @keyframes simpleSlide {
+      0% {
+        margin-left: 0%;
+      }
+      100% {
+        margin-left: -50%;
       }
     }
 
     @media (min-width: @screen-md-min) {
       .deployment-details {
-        .align-items(@align: flex-start);
-        .flex(@columns: 1 1 0%);
         padding-left: 30px;
-        max-width: 50%;
+        width: 50%;
         .flex-order(@order: 1);
         &.ng-leave {
-          animation: fadeSlideOut .75s ease forwards; // Needs to be faster than flexGrow
+          animation: simpleSlide 1s ease forwards;
         }
       }
-      .overview-donut {
-        .flex(@columns: 1 1 0%);
+      .overview-donut { 
         .flex-order(@order: 2);
-        max-width: 50%;
         min-height: 150px;
-        &.latest {
+        width: 50%;
+        &.latest { 
+          max-width: 50%;
           .flex-order(@order: 4);
-          :last-child.latest.ng-animate {
-            /* 0 does not work so we have to use a small number */
-            .flex-basis(@width: 1);
-            .flex-grow(@grow: 0.00001);
-            .flex-shrink(@shrink: 1);
-            animation: flexGrow 1s ease forwards;
-          }
         }
       }
       .overview-donut-connector {
@@ -429,8 +412,16 @@
         .align-items(@align: center);
         .justify-content(@justify: center);
         line-height: 1;
+        position: relative;
+        &.contains-deployment-status-msg {
+          width: 50%;
+        }
         .deployment-connector-arrow {
           display: block;
+          left: -20px;
+          line-height: 0;
+          position: absolute;
+          top: 47%;
         }
       }
       .overview-unsuccessful-state {
