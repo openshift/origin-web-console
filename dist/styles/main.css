@@ -3995,6 +3995,9 @@ ul.messenger-theme-flat .messenger-message.alert-info .messenger-message-inner:b
 .icon-laravel:before{content:"\f137"}
 .overview{font-weight:300}
 .overview h2{line-height:1.4}
+.overview .link-service-button{font-size:13px}
+@media (max-width:767px){.overview .overview-timestamp{display:block}
+}
 .overview .container-fluid{margin-top:20px}
 @media (min-width:992px){.overview .container-fluid{margin-top:30px}
 .overview .standalone-service .service-group-body .overview-services{min-height:256px}
@@ -4031,21 +4034,22 @@ ul.messenger-theme-flat .messenger-message.alert-info .messenger-message-inner:b
 .overview .unserviced-row{-webkit-justify-content:space-between;-moz-justify-content:space-between;justify-content:space-between}
 .overview .unserviced-row .no-service{display:-webkit-flex;display:-moz-flex;display:-ms-flexbox;display:-ms-flex;display:flex;width:100%;margin-bottom:20px;position:relative}
 .overview .unserviced-row .no-service:before{content:"";display:block;height:100%;width:3px;position:absolute;background:#00b9e4;left:0;top:0;z-index:1}
-@media (min-width:568px){.overview .unserviced-row .no-service{width:50%}
+@media (min-width:750px){.overview .unserviced-row .no-service{width:50%}
 .overview .unserviced-row .no-service:nth-child(odd){padding-right:3px}
 .overview .unserviced-row .no-service:nth-child(even){padding-left:3px}
 .overview .unserviced-row .no-service:nth-child(even):before{left:3px}
 }
 .overview .unserviced-row .no-service .deployment-tile-wrapper{width:100%}
-.overview .service-group-header{cursor:pointer;display:-webkit-flex;display:-moz-flex;display:-ms-flexbox;display:-ms-flex;display:flex;-webkit-justify-content:space-between;-moz-justify-content:space-between;justify-content:space-between;padding:10px}
-.overview .service-group-header .route-title{line-height:1.4;margin:0 0 0 6px}
+.overview .service-group-header{cursor:pointer;-webkit-flex-direction:column;-moz-flex-direction:column;-ms-flex-direction:column;flex-direction:column;display:-webkit-flex;display:-moz-flex;display:-ms-flexbox;display:-ms-flex;display:flex;-webkit-justify-content:space-between;-moz-justify-content:space-between;justify-content:space-between;padding:7px}
+.overview .service-group-header .route-title{font-weight:300;line-height:1.4;margin:0 0 0 6px}
 .overview .service-group-header .route-title:only-child{margin:0}
+.overview .service-group-header .route-title .fa-external-link{margin-left:2px;margin-right:6px}
 @media (min-width:768px){.overview .service-group-header .route-title{margin:0}
+.overview .service-group-header .route-title .fa-external-link{margin-left:0;margin-right:5px}
 }
-.overview .service-group-header .app-name{font-family:inherit;line-height:1.1;color:inherit;font-size:16px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;font-weight:300;margin:0;text-transform:uppercase;min-width:130px}
-.overview .service-group-header .app-name .small,.overview .service-group-header .app-name small{font-weight:400;line-height:1;color:#9c9c9c;font-size:65%}
-.overview .service-group-header .other-routes-msg{display:block;line-height:1.1;margin:3px 20px}
-@media (min-width:768px){.overview .service-group-header{align-items:center}
+.overview .service-group-header .app-name{overflow:hidden;text-overflow:ellipsis;white-space:nowrap;font-weight:300;margin:0;text-transform:uppercase;min-width:130px}
+.overview .service-group-header .other-routes-msg{display:block;line-height:1.1;margin:3px 25px}
+@media (min-width:768px){.overview .service-group-header{-webkit-flex-direction:row;-moz-flex-direction:row;-ms-flex-direction:row;flex-direction:row;align-items:center}
 .overview .service-group-header .other-routes-msg{display:inline-block;margin:0}
 .overview .service-group-header.has-app-label .other-routes-msg{display:block;text-align:right}
 .overview .deployment-tile .deployment-tile{max-width:50%}
@@ -4053,28 +4057,31 @@ ul.messenger-theme-flat .messenger-message.alert-info .messenger-message-inner:b
 .overview .service-group-body .overview-services .deployment-tile-wrapper+.deployment-tile-wrapper,.overview .service-group-body .overview-services overview-service:nth-child(n+3){margin-top:6px}
 .overview .service-group-body{border-top-width:0;margin-top:6px;padding:0}
 .overview .service-group-body .overview-services{-webkit-justify-content:space-between;-moz-justify-content:space-between;justify-content:space-between;display:-webkit-flex;display:-moz-flex;display:-ms-flexbox;display:-ms-flex;display:flex;-webkit-flex-wrap:wrap;-moz-flex-wrap:wrap;-ms-flex-wrap:wrap;flex-wrap:wrap;-webkit-flex-direction:column;-moz-flex-direction:column;-ms-flex-direction:column;flex-direction:column}
-@media (max-width:567px){.overview .service-group-body .overview-services overview-service:nth-child(n+2){margin-top:6px}
+@media (max-width:749px){.overview .service-group-body .overview-services overview-service:nth-child(n+2){margin-top:6px}
 }
 .overview .service-group-body .overview-services .deployment-block{display:-webkit-flex;display:-moz-flex;display:-ms-flexbox;display:-ms-flex;display:flex;-webkit-flex:1 0 0%;-moz-flex:1 0 0%;-ms-flex:1 0 0%;flex:1 0 0%;height:100%}
 .overview .service-group-body .overview-services .deployment-block.service-multiple-targets,.overview .service-group-body .overview-services .deployment-block.service-multiple-targets .deployment-tile-wrapper{display:block}
 .overview .service-group-body .overview-services .deployment-tile-wrapper{display:-webkit-flex;display:-moz-flex;display:-ms-flexbox;display:-ms-flex;display:flex;-webkit-flex:1 0 0%;-moz-flex:1 0 0%;-ms-flex:1 0 0%;flex:1 0 0%}
 .overview .no-deployments-block,.overview .shield .shield-number{display:-webkit-flex;display:-moz-flex;display:-ms-flexbox;display:-ms-flex}
 .overview .service-group-body .overview-services .deployment-tile{-webkit-flex:1 0 0%;-moz-flex:1 0 0%;-ms-flex:1 0 0%;flex:1 0 0%;position:relative}
-@media (min-width:568px){.overview .service-group-with-route-row .overview-services{-webkit-flex-direction:row;-moz-flex-direction:row;-ms-flex-direction:row;flex-direction:row}
+@media (min-width:750px){.overview .service-group-with-route-row .overview-services{-webkit-flex-direction:row;-moz-flex-direction:row;-ms-flex-direction:row;flex-direction:row}
 .overview .service-group-with-route-row .overview-services overview-service{width:50%}
 .overview .service-group-with-route-row .overview-services overview-service:nth-child(even){padding-left:3px}
 .overview .service-group-with-route-row .overview-services overview-service:nth-child(odd){padding-right:3px}
 }
-@media (min-width:568px) and (min-width:568px){.overview .standalone-service-row .standalone-service{width:50%}
+@media (min-width:750px) and (min-width:750px){.overview .standalone-service-row .standalone-service{width:50%}
 .overview .standalone-service-row .standalone-service:nth-child(odd){padding-right:3px}
 .overview .standalone-service-row .standalone-service:nth-child(even){padding-left:3px}
 }
 .overview .component-label{color:#9c9c9c;font-size:11px;padding:0 10px 4px 0;text-transform:uppercase}
-.overview .deployment-tile .rc-header,.overview .service-title{color:#9c9c9c;padding:5px 10px}
 .overview .build-pipeline{margin-top:-1px}
-.overview .service-title{-webkit-align-items:center;-moz-align-items:center;align-items:center;border-bottom:1px solid #d6d6d6;-webkit-justify-content:space-between;-moz-justify-content:space-between;justify-content:space-between}
+.overview .service-title{color:#9c9c9c;-webkit-align-items:center;-moz-align-items:center;align-items:center;border-bottom:1px solid #d6d6d6;-webkit-justify-content:space-between;-moz-justify-content:space-between;justify-content:space-between;padding:5px 10px}
+.overview .service-title .service-name{font-family:inherit;line-height:1.1;color:inherit;font-size:16px;font-weight:300;margin-top:3px;margin-bottom:3px}
+.overview .service-title .service-name .small,.overview .service-title .service-name small{font-weight:400;line-height:1;color:#9c9c9c;font-size:65%}
+.overview .service-title .service-name .pficon{margin-right:7px;vertical-align:-2px}
 .overview .deployment-tile{border-left:1px solid #d6d6d6;width:100%}
 .overview .deployment-tile .deployment-header{color:#9c9c9c;position:relative}
+.overview .deployment-tile .rc-header{color:#9c9c9c;padding:5px 10px;margin-right:50px}
 .overview .deployment-tile .deployment-body{-webkit-flex-direction:column;-moz-flex-direction:column;-ms-flex-direction:column;flex-direction:column;padding:10px;position:relative}
 .overview .deployment-tile .deployment-body .deployment-donut{-webkit-align-items:center;-moz-align-items:center;align-items:center}
 @media (min-width:992px){.overview .deployment-tile .deployment-body{-webkit-flex-direction:row;-moz-flex-direction:row;-ms-flex-direction:row;flex-direction:row;-webkit-justify-content:space-between;-moz-justify-content:space-between;justify-content:space-between}
@@ -4113,7 +4120,7 @@ ul.messenger-theme-flat .messenger-message.alert-info .messenger-message-inner:b
 .overview .no-child-services-message h2:first-child,.overview .no-deployments-message h2:first-child{margin-top:15px}
 .overview .no-deployments-message{-webkit-flex:1 0 0%;-moz-flex:1 0 0%;-ms-flex:1 0 0%;flex:1 0 0%}
 .overview .no-child-services-message{display:none}
-@media (min-width:568px){.overview .no-child-services-message h2,.overview .no-deployments-message h2{margin-top:0}
+@media (min-width:750px){.overview .no-child-services-message h2,.overview .no-deployments-message h2{margin-top:0}
 .overview .no-child-services-message{display:-webkit-flex;display:-moz-flex;display:-ms-flexbox;display:-ms-flex;display:flex;-webkit-flex:1 0 0%;-moz-flex:1 0 0%;-ms-flex:1 0 0%;flex:1 0 0%;-webkit-flex-direction:column;-moz-flex-direction:column;-ms-flex-direction:column;flex-direction:column}
 }
 @media (min-width:992px){.overview .overview-services.single-alternate-service .alternate-service .deployment-tile .service-title,.overview .overview-services.single-alternate-service overview-service:nth-child(even){padding-left:0}
@@ -4137,6 +4144,7 @@ ul.messenger-theme-flat .messenger-message.alert-info .messenger-message-inner:b
 @media (min-width:992px){.overview .standalone-service .no-deployments-block{min-height:256px}
 }
 .overview .standalone-service .no-deployments-block .no-deployments-message{margin-top:0}
+.overview .hash{font-size:10px;margin-left:3px}
 .overview .shield{background:#ebebeb;border:1px solid #d6d6d6;border-bottom:0;width:36px;position:absolute;-webkit-align-items:center;-moz-align-items:center;align-items:center;right:10px;top:-1px;z-index:9}
 .overview .shield .shield-number{display:flex;font-size:11px;font-weight:500;height:30px;position:relative;width:36px;-webkit-align-items:center;-moz-align-items:center;align-items:center;-webkit-justify-content:center;-moz-justify-content:center;justify-content:center}
 .overview .shield .shield-number:after,.overview .shield .shield-number:before{border-left:18px solid transparent;border-right:18px solid transparent;content:"";height:0;position:absolute;width:0;left:0}

@@ -1,9 +1,10 @@
 <div row class="service-title" ng-if="service">
-  <div>
-    Service:
+  <div class="service-name">
+    <span class="pficon pficon-service" aria-hidden="true" title="Service"></span>
+    <span class="sr-only">Service</span>
     <a ng-href="{{service | navigateResourceURL}}">{{service.metadata.name}}</a>
     <!-- Put the linking button next to the service name if we show traffic percent to the right. -->
-    <span ng-if="!isAlternate && alternateServices.length && !isChild" class="mar-left-sm">
+    <span ng-if="!isAlternate && alternateServices.length && !isChild" class="mar-left-sm small">
       <ng-include src="'views/overview/_service-linking-button.html'"></ng-include>
     </span>
   </div>

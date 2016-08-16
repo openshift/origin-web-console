@@ -7818,12 +7818,17 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "<div class=\"deployment-header\">\n" +
     "<div class=\"rc-header\">\n" +
     "<div>\n" +
-    "Deployment:\n" +
+    "Deployment\n" +
     "<a ng-href=\"{{deploymentConfig | navigateResourceURL}}\">{{dcName}}</a>\n" +
+    "<small class=\"overview-timestamp\">\n" +
+    "<span class=\"hidden-xs\">&ndash;</span>\n" +
+    "<relative-timestamp timestamp=\"activeDeployment.metadata.creationTimestamp\"></relative-timestamp>\n" +
+    "</small>\n" +
     "</div>\n" +
     "<div>\n" +
-    "<relative-timestamp ng-if=\"activeDeployment && !anyDeploymentInProgress\" timestamp=\"activeDeployment.metadata.creationTimestamp\"></relative-timestamp>\n" +
-    "<span ng-if=\"anyDeploymentInProgress\">\n" +
+    "<image-names ng-if=\"activeDeployment && !anyDeploymentInProgress && showMetrics\" pod-template=\"activeDeployment.spec.template\">\n" +
+    "</image-names>\n" +
+    "<span ng-if=\"anyDeploymentInProgress\" class=\"small\">\n" +
     "{{deploymentConfig.spec.strategy.type}} deployment in progress...\n" +
     "<a href=\"\" ng-click=\"cancelDeployment()\" role=\"button\">Cancel</a>\n" +
     "</span>\n" +
@@ -7889,17 +7894,30 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
   );
 
 
+  $templateCache.put('views/overview/_image-names.html',
+    "<div class=\"small\">\n" +
+    "<span>{{podTemplate.spec.containers[0].image | imageStreamName}}</span>\n" +
+    "<span ng-if=\"sha = (podTemplate.spec.containers[0].image | imageSHA)\" title=\"{{sha}}\">\n" +
+    "<span class=\"hash\">{{sha | stripSHAPrefix | limitTo: 7}}</span>\n" +
+    "</span>\n" +
+    "<span ng-if=\"podTemplate.spec.containers.length > 1\"> and {{podTemplate.spec.containers.length - 1}} other image<span ng-if=\"podTemplate.spec.containers.length > 2\">s</span></span>\n" +
+    "</div>"
+  );
+
+
   $templateCache.put('views/overview/_pod.html',
     "<div class=\"deployment-tile\" ng-if=\"pod.kind === 'Pod'\">\n" +
     "<ng-include src=\"'views/overview/_service-header.html'\"></ng-include>\n" +
     "<div class=\"rc-header\"> \n" +
     "<div>\n" +
-    "Pod:\n" +
+    "Pod\n" +
     "<a ng-href=\"{{pod | navigateResourceURL}}\">{{pod.metadata.name}}</a>\n" +
-    "</div>\n" +
-    "<div>\n" +
+    "<small class=\"overview-timestamp\">\n" +
+    "<span class=\"hidden-xs\">&ndash;</span>\n" +
     "<relative-timestamp timestamp=\"pod.metadata.creationTimestamp\"></relative-timestamp>\n" +
+    "</small>\n" +
     "</div>\n" +
+    "<image-names ng-if=\"showMetrics\" pod-template=\"pod\"></image-names>\n" +
     "</div>\n" +
     "<div row class=\"deployment-body\">\n" +
     "<div column class=\"overview-donut\">\n" +
@@ -7925,12 +7943,14 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "<div class=\"deployment-header\">\n" +
     "<div class=\"rc-header\">\n" +
     "<div>\n" +
-    "Replication Controller:\n" +
+    "Replication Controller\n" +
     "<a ng-href=\"{{deployment | navigateResourceURL}}\">{{deployment.metadata.name}}</a>\n" +
-    "</div>\n" +
-    "<div>\n" +
+    "<small class=\"overview-timestamp\">\n" +
+    "<span class=\"hidden-xs\">&ndash;</span>\n" +
     "<relative-timestamp timestamp=\"deployment.metadata.creationTimestamp\"></relative-timestamp>\n" +
+    "</small>\n" +
     "</div>\n" +
+    "<image-names ng-if=\"showMetrics\" pod-template=\"deployment.spec.template\"></image-names>\n" +
     "</div>\n" +
     "</div>\n" +
     "<div row class=\"deployment-body\">\n" +
@@ -7954,14 +7974,14 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
   $templateCache.put('views/overview/_service-group.html',
     "<div class=\"service-group\">\n" +
     "<div class=\"service-group-header\" ng-if=\"service.metadata.labels.app || displayRoute\" ng-click=\"toggleCollapse($event)\" ng-class=\"{ 'has-app-label': appName }\">\n" +
-    "<div ng-if=\"appName\" class=\"app-name\">\n" +
+    "<h2 ng-if=\"appName\" class=\"app-name\">\n" +
     "<i class=\"fa fa-angle-down fa-fw\" aria-hidden=\"true\" ng-if=\"!collapse\"></i>\n" +
     "<i class=\"fa fa-angle-right fa-fw\" aria-hidden=\"true\" ng-if=\"collapse\"></i>\n" +
     "{{appName | startCase}}\n" +
-    "</div>\n" +
-    "<h4 class=\"route-title truncate\">\n" +
+    "</h2>\n" +
+    "<h3 class=\"route-title truncate\">\n" +
     "<span ng-if=\"appName && (displayRoute | isWebRoute)\">\n" +
-    "<i class=\"fa fa-external-link mar-right-sm small\" aria-hidden=\"true\"></i>\n" +
+    "<i class=\"fa fa-external-link small\" aria-hidden=\"true\"></i>\n" +
     "</span>\n" +
     "<span ng-if=\"!appName\">\n" +
     "<i class=\"fa fa-angle-down fa-fw\" aria-hidden=\"true\" ng-if=\"!collapse\"></i>\n" +
@@ -7976,7 +7996,7 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "and\n" +
     "<a ng-href=\"project/{{projectName}}/browse/routes\">{{(primaryServiceRoutes | hashSize) - 1}} other route<span ng-if=\"(primaryServiceRoutes | hashSize) > 2\">s</span></a>\n" +
     "</small>\n" +
-    "</h4>\n" +
+    "</h3>\n" +
     "<span ng-if=\"!displayRoute\" class=\"nowrap\">\n" +
     "<a ng-if=\"'routes' | canI : 'create'\" ng-href=\"project/{{service.metadata.namespace}}/create-route?service={{service.metadata.name}}\">Create Route</a>\n" +
     "</span>\n" +
@@ -8031,11 +8051,12 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
 
   $templateCache.put('views/overview/_service-header.html',
     "<div row class=\"service-title\" ng-if=\"service\">\n" +
-    "<div>\n" +
-    "Service:\n" +
+    "<div class=\"service-name\">\n" +
+    "<span class=\"pficon pficon-service\" aria-hidden=\"true\" title=\"Service\"></span>\n" +
+    "<span class=\"sr-only\">Service</span>\n" +
     "<a ng-href=\"{{service | navigateResourceURL}}\">{{service.metadata.name}}</a>\n" +
     "\n" +
-    "<span ng-if=\"!isAlternate && alternateServices.length && !isChild\" class=\"mar-left-sm\">\n" +
+    "<span ng-if=\"!isAlternate && alternateServices.length && !isChild\" class=\"mar-left-sm small\">\n" +
     "<ng-include src=\"'views/overview/_service-linking-button.html'\"></ng-include>\n" +
     "</span>\n" +
     "</div>\n" +
@@ -8052,8 +8073,8 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
 
   $templateCache.put('views/overview/_service-linking-button.html',
     " <span ng-if=\"'services' | canI : 'update'\">\n" +
-    "<a href=\"\" ng-if=\"isPrimary && (services | hashSize) > ((childServices | hashSize) + 1)\" ng-click=\"linkService()\" role=\"button\" ng-attr-title=\"Group service to {{service.metadata.name}}\"><i class=\"fa fa-chain action-button\" aria-hidden=\"true\"></i><span class=\"sr-only\">Group service to {{service.metadata.name}}</span></a>\n" +
-    "<a href=\"\" ng-if=\"isChild\" ng-click=\"removeLink(service)\" role=\"button\" ng-attr-title=\"Remove {{service.metadata.name}} from service group\"><i class=\"fa fa-chain-broken action-button\" aria-hidden=\"true\"></i><span class=\"sr-only\">Remove {{service.metadata.name}} from service group</span></a>\n" +
+    "<a href=\"\" ng-if=\"isPrimary && (services | hashSize) > ((childServices | hashSize) + 1)\" ng-click=\"linkService()\" role=\"button\" ng-attr-title=\"Group service to {{service.metadata.name}}\"><i class=\"fa fa-chain action-button link-service-button\" aria-hidden=\"true\"></i><span class=\"sr-only\">Group service to {{service.metadata.name}}</span></a>\n" +
+    "<a href=\"\" ng-if=\"isChild\" ng-click=\"removeLink(service)\" role=\"button\" ng-attr-title=\"Remove {{service.metadata.name}} from service group\"><i class=\"fa fa-chain-broken action-button link-service-button\" aria-hidden=\"true\"></i><span class=\"sr-only\">Remove {{service.metadata.name}} from service group</span></a>\n" +
     "</span>"
   );
 
