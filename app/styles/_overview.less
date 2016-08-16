@@ -400,8 +400,10 @@
         .text-center();
       }
     }
-    .deployment-details {
-      .flex-order(@order: 1);
+    @media (max-width: @screen-sm-max) {
+      .deployment-details {
+        .flex-order(@order: 5);
+      }
     }
     .overview-donut {
       .flex-order(@order: 2);
