@@ -13,10 +13,12 @@
     </span>
     <span class="visible-xs-inline trigger-actions">
       <a href="" ng-if="!trigger.disabled" class="action-icon" ng-click="trigger.disabled = true; form.$setDirty()" role="button">
-        <span class="pficon pficon-close sr-only" aria-hidden="true" title="Remove"></span>
+        <span class="pficon pficon-close" aria-hidden="true" title="Remove"></span>
+        <span class="sr-only">Remove</span>
       </a>
       <a href="" ng-if="trigger.disabled" class="action-icon" ng-click="trigger.disabled = false" role="button">
-        <span class="fa fa-repeat sr-only" aria-hidden="true" title="Undo"></span>
+        <span class="fa fa-repeat" aria-hidden="true" title="Undo"></span>
+        <span class="sr-only">Undo</span>
       </a>
     </span>
     <span class="hidden-xs trigger-actions">
