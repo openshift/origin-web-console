@@ -4907,10 +4907,12 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "</span>\n" +
     "<span class=\"visible-xs-inline trigger-actions\">\n" +
     "<a href=\"\" ng-if=\"!trigger.disabled\" class=\"action-icon\" ng-click=\"trigger.disabled = true; form.$setDirty()\" role=\"button\">\n" +
-    "<span class=\"pficon pficon-close sr-only\" aria-hidden=\"true\" title=\"Remove\"></span>\n" +
+    "<span class=\"pficon pficon-close\" aria-hidden=\"true\" title=\"Remove\"></span>\n" +
+    "<span class=\"sr-only\">Remove</span>\n" +
     "</a>\n" +
     "<a href=\"\" ng-if=\"trigger.disabled\" class=\"action-icon\" ng-click=\"trigger.disabled = false\" role=\"button\">\n" +
-    "<span class=\"fa fa-repeat sr-only\" aria-hidden=\"true\" title=\"Undo\"></span>\n" +
+    "<span class=\"fa fa-repeat\" aria-hidden=\"true\" title=\"Undo\"></span>\n" +
+    "<span class=\"sr-only\">Undo</span>\n" +
     "</a>\n" +
     "</span>\n" +
     "<span class=\"hidden-xs trigger-actions\">\n" +
