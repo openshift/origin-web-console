@@ -62,26 +62,23 @@
                     </div>
                     <div class="list-group-item list-group-item-expandable"
                          ng-repeat-start="build in filteredBuilds track by (build | uid)"
-                         ng-click="expanded = !expanded; toggleItem(build, expanded)"
-                         ng-class="{'expanded': expanded}">
+                         ng-click="toggleItem($event, this, build)"
+                         ng-class="{'expanded': expanded.builds[build.metadata.name]}">
                       <div class="list-view-pf-checkbox">
-                        <a href="">
-                          <span ng-if="expanded">
-                            <span class="fa fa-angle-down"></span>
-                            <span class="sr-only">Collapse</span>
-                          </span>
-                          <span ng-if="!expanded">
-                            <span class="fa fa-angle-right"></span>
-                            <span class="sr-only">Expand</span>
-                          </span>
-                        </a>
+                        <button class="sr-only">{{expanded.builds[build.metadata.name] ? 'Collapse' : 'Expand'}}</button>
+                        <span ng-if="expanded.builds[build.metadata.name]">
+                          <span class="fa fa-angle-down"></span>
+                        </span>
+                        <span ng-if="!expanded.builds[build.metadata.name]">
+                          <span class="fa fa-angle-right"></span>
+                        </span>
                       </div>
 
                       <div class="list-view-pf-main-info">
                         <div class="list-view-pf-body">
                           <div class="list-view-pf-description">
                             <div class="list-group-item-heading">
-                              {{build.metadata.name}}
+                              <a ng-href="{{build | navigateResourceURL}}">{{build.metadata.name}}</a>
                               <small>created <relative-timestamp timestamp="build.metadata.creationTimestamp"></relative-timestamp></small>
                             </div>
                             <div class="list-group-item-text">
@@ -114,7 +111,7 @@
                         </div>
                       </div>
                     </div>
-                    <div ng-repeat-end ng-if="expanded" class="list-group-expanded-section" ng-class="{'expanded': expanded}">
+                    <div ng-repeat-end ng-if="expanded.builds[build.metadata.name]" class="list-group-expanded-section" ng-class="{'expanded': expanded.builds[build.metadata.name]}">
                       <!-- TODO fix vanilla RCs -->
                       <log-viewer
                         ng-if="'builds/log' | canI : 'get'"
@@ -155,26 +152,23 @@
                     </div>
                     <div class="list-group-item list-group-item-expandable"
                          ng-repeat-start="deployment in filteredDeployments track by (deployment | uid)"
-                         ng-click="expanded = !expanded; toggleItem(deployment, expanded)"
-                         ng-class="{'expanded': expanded}">
+                         ng-click="toggleItem($event, this, deployment)"
+                         ng-class="{'expanded': expanded.deployments[deployment.metadata.name]}">
                       <div class="list-view-pf-checkbox">
-                        <a href="">
-                          <span ng-if="expanded">
-                            <span class="fa fa-angle-down"></span>
-                            <span class="sr-only">Collapse</span>
-                          </span>
-                          <span ng-if="!expanded">
-                            <span class="fa fa-angle-right"></span>
-                            <span class="sr-only">Expand</span>
-                          </span>
-                        </a>
+                        <button class="sr-only">{{expanded.deployments[deployment.metadata.name] ? 'Collapse' : 'Expand'}}</button>
+                        <span ng-if="expanded.deployments[deployment.metadata.name]">
+                          <span class="fa fa-angle-down"></span>
+                        </span>
+                        <span ng-if="!expanded.deployments[deployment.metadata.name]">
+                          <span class="fa fa-angle-right"></span>
+                        </span>
                       </div>
 
                       <div class="list-view-pf-main-info">
                         <div class="list-view-pf-body">
                           <div class="list-view-pf-description">
                             <div class="list-group-item-heading">
-                              {{deployment.metadata.name}}
+                              <a ng-href="{{deployment | navigateResourceURL}}">{{deployment.metadata.name}}</a>
                               <small>created <relative-timestamp timestamp="deployment.metadata.creationTimestamp"></relative-timestamp></small>
                             </div>
                             <div class="list-group-item-text">
@@ -195,7 +189,7 @@
                         </div>
                       </div>
                     </div>
-                    <div ng-repeat-end ng-if="expanded" class="list-group-expanded-section" ng-class="{'expanded': expanded}">
+                    <div ng-repeat-end ng-if="expanded.deployments[deployment.metadata.name]" class="list-group-expanded-section" ng-class="{'expanded': expanded.deployments[deployment.metadata.name]}">
                       <!-- TODO fix vanilla RCs -->
                       <log-viewer
                         ng-if="'deploymentconfigs/log' | canI : 'get'"
@@ -241,26 +235,23 @@
                     </div>
                     <div class="list-group-item list-group-item-expandable"
                          ng-repeat-start="pod in filteredPods track by (pod | uid)"
-                         ng-click="expanded = !expanded; toggleItem(pod, expanded)"
-                         ng-class="{'expanded': expanded}">
+                         ng-click="toggleItem($event, this, pod)"
+                         ng-class="{'expanded': expanded.pods[pod.metadata.name]}">
                       <div class="list-view-pf-checkbox">
-                        <a href="">
-                          <span ng-if="expanded">
-                            <span class="fa fa-angle-down"></span>
-                            <span class="sr-only">Collapse</span>
-                          </span>
-                          <span ng-if="!expanded">
-                            <span class="fa fa-angle-right"></span>
-                            <span class="sr-only">Expand</span>
-                          </span>
-                        </a>
+                        <button class="sr-only">{{expanded.pods[pod.metadata.name] ? 'Collapse' : 'Expand'}}</button>
+                        <span ng-if="expanded.pods[pod.metadata.name]">
+                          <span class="fa fa-angle-down"></span>
+                        </span>
+                        <span ng-if="!expanded.pods[pod.metadata.name]">
+                          <span class="fa fa-angle-right"></span>
+                        </span>
                       </div>
 
                       <div class="list-view-pf-main-info">
                         <div class="list-view-pf-body">
                           <div class="list-view-pf-description">
                             <div class="list-group-item-heading">
-                              {{pod.metadata.name}}
+                              <a ng-href="{{pod | navigateResourceURL}}">{{pod.metadata.name}}</a>
                               <span ng-if="pod | isTroubledPod">
                                 <pod-warnings pod="pod"></pod-warnings>
                               </span>
@@ -284,7 +275,7 @@
                         </div>
                       </div>
                     </div>
-                    <div ng-repeat-end ng-if="expanded" class="list-group-expanded-section" ng-class="{'expanded': expanded}">
+                    <div ng-repeat-end ng-if="expanded.pods[pod.metadata.name]" class="list-group-expanded-section" ng-class="{'expanded': expanded.pods[pod.metadata.name]}">
                       <log-viewer
                         ng-if="'pods/log' | canI : 'get'"
                         resource="pods/log"

@@ -7381,24 +7381,21 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "</em>\n" +
     "</div>\n" +
     "</div>\n" +
-    "<div class=\"list-group-item list-group-item-expandable\" ng-repeat-start=\"build in filteredBuilds track by (build | uid)\" ng-click=\"expanded = !expanded; toggleItem(build, expanded)\" ng-class=\"{'expanded': expanded}\">\n" +
+    "<div class=\"list-group-item list-group-item-expandable\" ng-repeat-start=\"build in filteredBuilds track by (build | uid)\" ng-click=\"toggleItem($event, this, build)\" ng-class=\"{'expanded': expanded.builds[build.metadata.name]}\">\n" +
     "<div class=\"list-view-pf-checkbox\">\n" +
-    "<a href=\"\">\n" +
-    "<span ng-if=\"expanded\">\n" +
+    "<button class=\"sr-only\">{{expanded.builds[build.metadata.name] ? 'Collapse' : 'Expand'}}</button>\n" +
+    "<span ng-if=\"expanded.builds[build.metadata.name]\">\n" +
     "<span class=\"fa fa-angle-down\"></span>\n" +
-    "<span class=\"sr-only\">Collapse</span>\n" +
     "</span>\n" +
-    "<span ng-if=\"!expanded\">\n" +
+    "<span ng-if=\"!expanded.builds[build.metadata.name]\">\n" +
     "<span class=\"fa fa-angle-right\"></span>\n" +
-    "<span class=\"sr-only\">Expand</span>\n" +
     "</span>\n" +
-    "</a>\n" +
     "</div>\n" +
     "<div class=\"list-view-pf-main-info\">\n" +
     "<div class=\"list-view-pf-body\">\n" +
     "<div class=\"list-view-pf-description\">\n" +
     "<div class=\"list-group-item-heading\">\n" +
-    "{{build.metadata.name}}\n" +
+    "<a ng-href=\"{{build | navigateResourceURL}}\">{{build.metadata.name}}</a>\n" +
     "<small>created <relative-timestamp timestamp=\"build.metadata.creationTimestamp\"></relative-timestamp></small>\n" +
     "</div>\n" +
     "<div class=\"list-group-item-text\">\n" +
@@ -7428,7 +7425,7 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "</div>\n" +
     "</div>\n" +
     "</div>\n" +
-    "<div ng-repeat-end ng-if=\"expanded\" class=\"list-group-expanded-section\" ng-class=\"{'expanded': expanded}\">\n" +
+    "<div ng-repeat-end ng-if=\"expanded.builds[build.metadata.name]\" class=\"list-group-expanded-section\" ng-class=\"{'expanded': expanded.builds[build.metadata.name]}\">\n" +
     "\n" +
     "<log-viewer ng-if=\"'builds/log' | canI : 'get'\" resource=\"builds/log\" name=\"build.metadata.name\" context=\"projectContext\" options=\"logOptions.builds[build.metadata.name]\" empty=\"logEmpty.builds[build.metadata.name]\" run=\"logCanRun.builds[build.metadata.name]\" fixed-height=\"250\" full-log-url=\"(build | navigateResourceURL) + '?view=chromeless'\">\n" +
     "<div ng-if=\"build.status.startTimestamp && !logEmpty.builds[build.metadata.name]\" class=\"log-timestamps\" style=\"margin-left: 0\">\n" +
@@ -7456,24 +7453,21 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "</em>\n" +
     "</div>\n" +
     "</div>\n" +
-    "<div class=\"list-group-item list-group-item-expandable\" ng-repeat-start=\"deployment in filteredDeployments track by (deployment | uid)\" ng-click=\"expanded = !expanded; toggleItem(deployment, expanded)\" ng-class=\"{'expanded': expanded}\">\n" +
+    "<div class=\"list-group-item list-group-item-expandable\" ng-repeat-start=\"deployment in filteredDeployments track by (deployment | uid)\" ng-click=\"toggleItem($event, this, deployment)\" ng-class=\"{'expanded': expanded.deployments[deployment.metadata.name]}\">\n" +
     "<div class=\"list-view-pf-checkbox\">\n" +
-    "<a href=\"\">\n" +
-    "<span ng-if=\"expanded\">\n" +
+    "<button class=\"sr-only\">{{expanded.deployments[deployment.metadata.name] ? 'Collapse' : 'Expand'}}</button>\n" +
+    "<span ng-if=\"expanded.deployments[deployment.metadata.name]\">\n" +
     "<span class=\"fa fa-angle-down\"></span>\n" +
-    "<span class=\"sr-only\">Collapse</span>\n" +
     "</span>\n" +
-    "<span ng-if=\"!expanded\">\n" +
+    "<span ng-if=\"!expanded.deployments[deployment.metadata.name]\">\n" +
     "<span class=\"fa fa-angle-right\"></span>\n" +
-    "<span class=\"sr-only\">Expand</span>\n" +
     "</span>\n" +
-    "</a>\n" +
     "</div>\n" +
     "<div class=\"list-view-pf-main-info\">\n" +
     "<div class=\"list-view-pf-body\">\n" +
     "<div class=\"list-view-pf-description\">\n" +
     "<div class=\"list-group-item-heading\">\n" +
-    "{{deployment.metadata.name}}\n" +
+    "<a ng-href=\"{{deployment | navigateResourceURL}}\">{{deployment.metadata.name}}</a>\n" +
     "<small>created <relative-timestamp timestamp=\"deployment.metadata.creationTimestamp\"></relative-timestamp></small>\n" +
     "</div>\n" +
     "<div class=\"list-group-item-text\">\n" +
@@ -7494,7 +7488,7 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "</div>\n" +
     "</div>\n" +
     "</div>\n" +
-    "<div ng-repeat-end ng-if=\"expanded\" class=\"list-group-expanded-section\" ng-class=\"{'expanded': expanded}\">\n" +
+    "<div ng-repeat-end ng-if=\"expanded.deployments[deployment.metadata.name]\" class=\"list-group-expanded-section\" ng-class=\"{'expanded': expanded.deployments[deployment.metadata.name]}\">\n" +
     "\n" +
     "<log-viewer ng-if=\"'deploymentconfigs/log' | canI : 'get'\" resource=\"deploymentconfigs/log\" name=\"deployment | annotation : 'deploymentConfig'\" context=\"projectContext\" options=\"logOptions.deployments[deployment.metadata.name]\" empty=\"logEmpty.deployments[deployment.metadata.name]\" run=\"logCanRun.deployments[deployment.metadata.name]\" fixed-height=\"250\" full-log-url=\"(deployment | navigateResourceURL) + '?view=chromeless'\">\n" +
     "<div ng-if=\"deployment.metadata.creationTimestamp && !logEmpty.deployments[deployment.metadata.name]\" class=\"log-timestamps\" style=\"margin-left: 0\">\n" +
@@ -7525,24 +7519,21 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "</em>\n" +
     "</div>\n" +
     "</div>\n" +
-    "<div class=\"list-group-item list-group-item-expandable\" ng-repeat-start=\"pod in filteredPods track by (pod | uid)\" ng-click=\"expanded = !expanded; toggleItem(pod, expanded)\" ng-class=\"{'expanded': expanded}\">\n" +
+    "<div class=\"list-group-item list-group-item-expandable\" ng-repeat-start=\"pod in filteredPods track by (pod | uid)\" ng-click=\"toggleItem($event, this, pod)\" ng-class=\"{'expanded': expanded.pods[pod.metadata.name]}\">\n" +
     "<div class=\"list-view-pf-checkbox\">\n" +
-    "<a href=\"\">\n" +
-    "<span ng-if=\"expanded\">\n" +
+    "<button class=\"sr-only\">{{expanded.pods[pod.metadata.name] ? 'Collapse' : 'Expand'}}</button>\n" +
+    "<span ng-if=\"expanded.pods[pod.metadata.name]\">\n" +
     "<span class=\"fa fa-angle-down\"></span>\n" +
-    "<span class=\"sr-only\">Collapse</span>\n" +
     "</span>\n" +
-    "<span ng-if=\"!expanded\">\n" +
+    "<span ng-if=\"!expanded.pods[pod.metadata.name]\">\n" +
     "<span class=\"fa fa-angle-right\"></span>\n" +
-    "<span class=\"sr-only\">Expand</span>\n" +
     "</span>\n" +
-    "</a>\n" +
     "</div>\n" +
     "<div class=\"list-view-pf-main-info\">\n" +
     "<div class=\"list-view-pf-body\">\n" +
     "<div class=\"list-view-pf-description\">\n" +
     "<div class=\"list-group-item-heading\">\n" +
-    "{{pod.metadata.name}}\n" +
+    "<a ng-href=\"{{pod | navigateResourceURL}}\">{{pod.metadata.name}}</a>\n" +
     "<span ng-if=\"pod | isTroubledPod\">\n" +
     "<pod-warnings pod=\"pod\"></pod-warnings>\n" +
     "</span>\n" +
@@ -7566,7 +7557,7 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "</div>\n" +
     "</div>\n" +
     "</div>\n" +
-    "<div ng-repeat-end ng-if=\"expanded\" class=\"list-group-expanded-section\" ng-class=\"{'expanded': expanded}\">\n" +
+    "<div ng-repeat-end ng-if=\"expanded.pods[pod.metadata.name]\" class=\"list-group-expanded-section\" ng-class=\"{'expanded': expanded.pods[pod.metadata.name]}\">\n" +
     "<log-viewer ng-if=\"'pods/log' | canI : 'get'\" resource=\"pods/log\" name=\"pod.metadata.name\" context=\"projectContext\" options=\"logOptions.pods[pod.metadata.name]\" empty=\"logEmpty.pods[pod.metadata.name]\" run=\"logCanRun.pods[pod.metadata.name]\" fixed-height=\"250\" full-log-url=\"(pod | navigateResourceURL) + '?view=chromeless'\">\n" +
     "<label for=\"selectLogContainer\">Container:</label>\n" +
     "<span ng-if=\"pod.spec.containers.length === 1\">\n" +

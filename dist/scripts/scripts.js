@@ -3743,6 +3743,10 @@ builds:{}
 pods:{},
 deployments:{},
 builds:{}
+}, b.expanded = {
+pods:{},
+deployments:{},
+builds:{}
 }, b.filters = {
 hideOlderResources:!0,
 text:""
@@ -3784,24 +3788,33 @@ o = _.filter(b.deployments, function(a) {
 return !b.filters.hideOlderResources || (D(a) || "Active" === C(a));
 }), b.filteredDeployments = i.filterForKeywords(o, r, s);
 };
-b.toggleItem = function(a, d) {
-var e = d ? "event.resource.highlight" :"event.resource.clear-highlight";
-switch (l.$emit(e, a), a.kind) {
+b.toggleItem = function(a, d, e) {
+var f = $(a.target);
+if (!f || !f.closest("a", d).length) {
+var g, h;
+switch (e.kind) {
 case "Build":
-var f = _.get(b.podsByName, c("annotation")(a, "buildPod"));
-f && l.$emit(e, f);
+g = !b.expanded.builds[e.metadata.name], b.expanded.builds[e.metadata.name] = g, h = g ? "event.resource.highlight" :"event.resource.clear-highlight", l.$emit(h, e);
+var i = _.get(b.podsByName, c("annotation")(e, "buildPod"));
+i && l.$emit(h, i);
 break;
 
 case "ReplicationController":
-var g = c("annotation")(a, "deployerPod");
-g && l.$emit(e, {
+g = !b.expanded.deployments[e.metadata.name], b.expanded.deployments[e.metadata.name] = g, h = g ? "event.resource.highlight" :"event.resource.clear-highlight", l.$emit(h, e);
+var j = c("annotation")(e, "deployerPod");
+j && l.$emit(h, {
 kind:"Pod",
 metadata:{
-name:g
+name:j
 }
-}), _.each(b.podsByDeployment[a.metadata.name], function(a) {
-l.$emit(e, a);
+}), _.each(b.podsByDeployment[e.metadata.name], function(a) {
+l.$emit(h, a);
 });
+break;
+
+case "Pod":
+g = !b.expanded.pods[e.metadata.name], b.expanded.pods[e.metadata.name] = g, h = g ? "event.resource.highlight" :"event.resource.clear-highlight", l.$emit(h, e);
+}
 }
 };
 var F = function() {
