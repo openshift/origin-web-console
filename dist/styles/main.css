@@ -3796,9 +3796,8 @@ ul.messenger-theme-flat .messenger-message.alert-info .messenger-message-inner:b
 .navbar-pf-alt .navbar-header .navbar-home .pficon{color:#A8A9AA;font-size:20px}
 .navbar-pf-alt .navbar-header .navbar-home:focus,.navbar-pf-alt .navbar-header .navbar-home:focus .pficon,.navbar-pf-alt .navbar-header .navbar-home:hover,.navbar-pf-alt .navbar-header .navbar-home:hover .pficon{background-color:#1e2126;color:#fcfcfc}
 .navbar-pf-alt .nav.navbar-iconic{margin-right:20px}
-.navbar-pf-alt .nav.navbar-iconic .dropdown-menu:after,.navbar-pf-alt .nav.navbar-iconic .dropdown-menu:before{display:block;position:absolute;right:15px;vertical-align:middle;content:"";width:0;height:0}
-.navbar-pf-alt .nav.navbar-iconic .dropdown-menu:before{top:-10px;border-left:10px solid transparent;border-right:10px solid transparent;border-bottom:10px solid rgba(50,50,50,.15);border-style:none double solid}
-.navbar-pf-alt .nav.navbar-iconic .dropdown-menu:after{top:-8px;border-left:10px solid transparent;border-right:10px solid transparent;border-bottom:10px solid #fff;border-style:none double solid}
+.navbar-pf-alt .nav.navbar-iconic .dropdown-menu{margin-top:-10px;right:-5px}
+.navbar-pf-alt .nav.navbar-iconic .dropdown-menu:after{border:6px solid transparent;border-bottom-color:#fff;border-top-width:0;content:"";display:block;height:0;position:absolute;right:7px;top:-6px;vertical-align:middle;width:0}
 .navbar-pf-alt .navbar-brand{border:0;height:auto;margin-left:0;padding:0 0 0 10px;position:relative}
 .navbar-pf-alt .navbar-toggle{border:0;display:block;float:left}
 .navbar-pf-alt .navbar-toggle:focus .icon-bar,.navbar-pf-alt .navbar-toggle:hover .icon-bar{background:#fff}
