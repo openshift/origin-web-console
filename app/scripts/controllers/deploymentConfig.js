@@ -31,6 +31,7 @@ angular.module('openshiftConsole')
     $scope.imageStreamImageRefByDockerReference = {}; // lets us determine if a particular container's docker image reference belongs to an imageStream
     $scope.builds = {};
     $scope.labelSuggestions = {};
+    $scope.forms = {};
     // TODO we should add this back in and show the pod template on this page
     //$scope.podTemplates = {};
     //$scope.imageStreams = {};
@@ -115,6 +116,7 @@ angular.module('openshiftConsole')
                     // TODO:  improve success alert
                     message: $scope.deploymentConfigName + " was updated."
                   };
+                  $scope.forms.dcEnvVars.$setPristine();
                 }, function error(e){
                   $scope.alerts['saveDCEnvVarsError'] = {
                     type: "error",
@@ -122,6 +124,10 @@ angular.module('openshiftConsole')
                     details: "Reason: " + $filter('getErrorDetails')(e)
                   };
                 });
+            };
+            $scope.clearEnvVarUpdates = function() {
+              copyDeploymentConfigAndEnsureEnv($scope.deploymentConfig);
+              $scope.forms.dcEnvVars.$setPristine();
             };
 
             // If we found the item successfully, watch for changes on it

@@ -389,7 +389,7 @@
                   <uib-tab heading="Environment" active="selectedTab.environment" ng-if="buildConfig && !(buildConfig | isJenkinsPipelineStrategy)">
                     <uib-tab-heading>Environment</uib-tab-heading>
                     <h3>Environment Variables</h3>
-                    <ng-form name="bcEnvVars">
+                    <ng-form name="forms.bcEnvVars">
                       <div ng-if="'buildconfigs' | canI : 'update'">
                         <key-value-editor
                           entries="envVars"
@@ -401,7 +401,13 @@
                         <button
                           class="btn btn-default"
                           ng-click="saveEnvVars()"
-                          ng-disabled="bcEnvVars.$pristine || bcEnvVars.$invalid">Save</button>
+                          ng-disabled="forms.bcEnvVars.$pristine || forms.bcEnvVars.$invalid">Save</button>
+                        <a 
+                          ng-if="!forms.bcEnvVars.$pristine"
+                          href="" 
+                          ng-click="clearEnvVarUpdates()"
+                          class="mar-left-sm"
+                          style="vertical-align: -2px;">Clear changes</a>
                       </div>
                       <key-value-editor
                         entries="envVars"
