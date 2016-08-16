@@ -46,7 +46,12 @@
         <!-- Don't add the copy-to-clipboard button for now since we have problems with paste in the terminal. -->
         <!-- <copy-to-clipboard clipboard-text="container | entrypoint : image"></copy-to-clipboard> -->
       </div>
-      <kubernetes-container-terminal pod="debugPod" container="container.name"></kubernetes-container-terminal>
+      <kubernetes-container-terminal
+        pod="debugPod"
+        container="container.name"
+        autofocus="true"
+        command='["/bin/sh", "-i", "-c", "TERM=xterm /bin/sh"]'>
+      </kubernetes-container-terminal>
     </div>
   </div>
   <div class="modal-footer">

@@ -2614,7 +2614,7 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "<div class=\"container-terminal-wrapper\">\n" +
     "<div class=\"row\" ng-repeat=\"term in containerTerminals\">\n" +
     "<div class=\"column\">\n" +
-    "<kubernetes-container-terminal prevent=\"!terminalTabWasSelected\" ng-if=\"term.isUsed\" ng-show=\"term.isVisible\" pod=\"pod\" container=\"term.containerName\" status=\"term.status\" rows=\"terminalRows\" cols=\"terminalCols\" autofocus>\n" +
+    "<kubernetes-container-terminal prevent=\"!terminalTabWasSelected\" ng-if=\"term.isUsed\" ng-show=\"term.isVisible\" pod=\"pod\" container=\"term.containerName\" status=\"term.status\" rows=\"terminalRows\" cols=\"terminalCols\" autofocus command=\"[&quot;/bin/sh&quot;, &quot;-i&quot;, &quot;-c&quot;, &quot;TERM=xterm /bin/sh&quot;]\">\n" +
     "</kubernetes-container-terminal>\n" +
     "</div>\n" +
     "</div>\n" +
@@ -7148,7 +7148,8 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "\n" +
     "\n" +
     "</div>\n" +
-    "<kubernetes-container-terminal pod=\"debugPod\" container=\"container.name\"></kubernetes-container-terminal>\n" +
+    "<kubernetes-container-terminal pod=\"debugPod\" container=\"container.name\" autofocus command=\"[&quot;/bin/sh&quot;, &quot;-i&quot;, &quot;-c&quot;, &quot;TERM=xterm /bin/sh&quot;]\">\n" +
+    "</kubernetes-container-terminal>\n" +
     "</div>\n" +
     "</div>\n" +
     "<div class=\"modal-footer\">\n" +

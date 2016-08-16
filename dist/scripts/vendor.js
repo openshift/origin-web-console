@@ -40642,13 +40642,13 @@ restrict:"E",
 scope:{
 pod:"&",
 container:"&",
-command:"@",
-prevent:"=",
-rows:"=",
-cols:"=",
-screenKeys:"=",
+command:"=?",
+prevent:"=?",
+rows:"=?",
+cols:"=?",
+screenKeys:"=?",
 autofocus:"=?",
-status:"="
+status:"=?"
 },
 link:function(g, h, i) {
 function j() {
