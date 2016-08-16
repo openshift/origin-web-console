@@ -16,7 +16,11 @@ angular.module('openshiftConsole')
         };
 
         var filterForResource = function(events) {
-          if (!$scope.resourceKind || !$scope.resourceName) {
+          // If there is a kind, but no name, assume that the name hasn't been
+          // set yet and none of the events should match. This is the case with
+          // build resources and that have a build pod annotation, which isn't
+          // set until the build starts running.
+          if (!$scope.resourceKind) {
             return events;
           }
 
