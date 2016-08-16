@@ -7,6 +7,9 @@
 @service-group-vertical-margin: 6px;
 @service-group-horizontal-margin: 8px;
 @two-column-min-width: 568px;
+@tile-min-height:      256px;
+@tile-min-height-lg:   346px;
+
 
 .overview {
   font-weight: 300;
@@ -155,10 +158,10 @@
       .overview-services {
         .flex-direction(@direction: row);
         @media (min-width: @screen-sm-min) {
-          min-height: 345px;
+          min-height: @tile-min-height-lg;
         }
         @media (min-width: @screen-md-min) {
-          min-height: 255px;
+          min-height: @tile-min-height;
         }
         overview-service,.no-child-services-message {
           max-width: none;
@@ -271,6 +274,7 @@
       .deployment-block {
         .flex-display(@display: flex);
         .flex(@columns: 1 0 0%);
+        height: 100%;
         &.service-multiple-targets, &.service-multiple-targets .deployment-tile-wrapper {
           display: block;
         }
@@ -552,6 +556,13 @@
   }
   .standalone-service .no-deployments-block {
     margin-left: 0;
+    // Min heights matching .overview-services
+    @media (min-width: @screen-sm-min) {
+      min-height: @tile-min-height-lg;
+    }
+    @media (min-width: @screen-md-min) {
+      min-height: @tile-min-height;
+    }
     .no-deployments-message {
       margin-top: 0;
     }
