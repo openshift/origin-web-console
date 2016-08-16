@@ -7402,7 +7402,7 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "<div class=\"list-view-pf-additional-info\">\n" +
     "<div class=\"list-view-pf-additional-info-item\">\n" +
     "<span ng-if=\"build.spec.source.type || build.spec.revision.git.commit || build.spec.source.git.uri\">\n" +
-    "<span class=\"fa fa-code\"></span>\n" +
+    "<span class=\"fa fa-fw fa-code\"></span>\n" +
     "<span ng-if=\"build.spec.revision.git.commit\">\n" +
     "{{build.spec.revision.git.message}}\n" +
     "<osc-git-link class=\"hash\" uri=\"build.spec.source.git.uri\" ref=\"build.spec.revision.git.commit\">{{build.spec.revision.git.commit | limitTo:7}}</osc-git-link>\n" +
@@ -7480,7 +7480,7 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "</div>\n" +
     "<div class=\"list-view-pf-additional-info\">\n" +
     "<div class=\"list-view-pf-additional-info-item\">\n" +
-    "<span class=\"pficon pficon-image\"></span>\n" +
+    "<span class=\"pficon fa-fw pficon-image\"></span>\n" +
     "<span>{{deployment.spec.template.spec.containers[0].image | imageStreamName}}</span>\n" +
     "<span ng-if=\"sha = (deployment.spec.template.spec.containers[0].image | imageSHA)\" title=\"{{sha}}\">\n" +
     "<span>@</span><span class=\"hash\">{{sha | stripSHAPrefix | limitTo: 7}}</span>\n" +
@@ -7552,7 +7552,7 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "</div>\n" +
     "<div class=\"list-view-pf-additional-info\">\n" +
     "<div class=\"list-view-pf-additional-info-item\">\n" +
-    "<span class=\"pficon pficon-image\"></span>\n" +
+    "<span class=\"pficon fa-fw pficon-image\"></span>\n" +
     "<span>{{pod.spec.containers[0].image | imageStreamName}}</span>\n" +
     "<span ng-if=\"sha = (pod.spec.containers[0].image | imageSHA)\" title=\"{{sha}}\">\n" +
     "<span>@</span><span class=\"hash\">{{sha | stripSHAPrefix | limitTo: 7}}</span>\n" +

@@ -91,7 +91,7 @@
                           <div class="list-view-pf-additional-info">
                             <div class="list-view-pf-additional-info-item">
                               <span ng-if="build.spec.source.type || build.spec.revision.git.commit || build.spec.source.git.uri">
-                                <span class="fa fa-code"></span>
+                                <span class="fa fa-fw fa-code"></span>
                                 <span ng-if="build.spec.revision.git.commit">
                                   {{build.spec.revision.git.message}}
                                   <osc-git-link
@@ -187,7 +187,7 @@
                           </div>
                           <div class="list-view-pf-additional-info">
                             <div class="list-view-pf-additional-info-item">
-                              <span class="pficon pficon-image"></span>
+                              <span class="pficon fa-fw pficon-image"></span>
                               <span>{{deployment.spec.template.spec.containers[0].image | imageStreamName}}</span>
                               <span ng-if="sha = (deployment.spec.template.spec.containers[0].image | imageSHA)" title="{{sha}}">
                                 <span>@</span><span class="hash">{{sha | stripSHAPrefix | limitTo: 7}}</span>
@@ -276,7 +276,7 @@
                           </div>
                           <div class="list-view-pf-additional-info">
                             <div class="list-view-pf-additional-info-item">
-                              <span class="pficon pficon-image"></span>
+                              <span class="pficon fa-fw pficon-image"></span>
                               <span>{{pod.spec.containers[0].image | imageStreamName}}</span>
                               <span ng-if="sha = (pod.spec.containers[0].image | imageSHA)" title="{{sha}}">
                                 <span>@</span><span class="hash">{{sha | stripSHAPrefix | limitTo: 7}}</span>
