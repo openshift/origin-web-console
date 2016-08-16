@@ -22,6 +22,7 @@ angular.module('openshiftConsole')
     $scope.labelSuggestions = {};
     $scope.alerts = {};
     $scope.breadcrumbs = [];
+    $scope.forms = {};
 
     if ($routeParams.isPipeline) {
       $scope.breadcrumbs.push({
@@ -108,6 +109,7 @@ angular.module('openshiftConsole')
                     // TODO:  improve success alert
                     message: $scope.buildConfigName + " was updated."
                   };
+                  $scope.forms.bcEnvVars.$setPristine();
                 }, function error(e){
                   $scope.alerts['saveBCEnvVarsError'] = {
                     type: "error",
@@ -116,6 +118,11 @@ angular.module('openshiftConsole')
                   };
                 });
             };
+
+            $scope.clearEnvVarUpdates = function() {
+              copyBuildConfigAndEnsureEnv($scope.buildConfig);
+              $scope.forms.bcEnvVars.$setPristine();
+            };            
 
             // If we found the item successfully, watch for changes on it
             watches.push(DataService.watchObject("buildconfigs", $routeParams.buildconfig, context, function(buildConfig, action) {

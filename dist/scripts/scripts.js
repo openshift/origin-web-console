@@ -3908,7 +3908,7 @@ f.unwatchAll(i);
 });
 }));
 } ]), angular.module("openshiftConsole").controller("BuildConfigController", [ "$scope", "$filter", "$routeParams", "AlertMessageService", "BuildsService", "DataService", "LabelFilter", "ProjectsService", "keyValueEditorUtils", function(a, b, c, d, e, f, g, h, i) {
-a.projectName = c.project, a.buildConfigName = c.buildconfig, a.buildConfig = null, a.labelSuggestions = {}, a.alerts = {}, a.breadcrumbs = [], c.isPipeline ? a.breadcrumbs.push({
+a.projectName = c.project, a.buildConfigName = c.buildconfig, a.buildConfig = null, a.labelSuggestions = {}, a.alerts = {}, a.breadcrumbs = [], a.forms = {}, c.isPipeline ? a.breadcrumbs.push({
 title:"Pipelines",
 link:"project/" + c.project + "/browse/pipelines"
 }) :a.breadcrumbs.push({
@@ -3942,7 +3942,7 @@ a.envVars = _.filter(a.envVars, "name"), l(a.updatedBuildConfig).env = i.compact
 a.alerts.saveBCEnvVarsSuccess = {
 type:"success",
 message:a.buildConfigName + " was updated."
-};
+}, a.forms.bcEnvVars.$setPristine();
 }, function(c) {
 a.alerts.saveBCEnvVarsError = {
 type:"error",
@@ -3950,6 +3950,8 @@ message:a.buildConfigName + " was not updated.",
 details:"Reason: " + b("getErrorDetails")(c)
 };
 });
+}, a.clearEnvVarUpdates = function() {
+n(a.buildConfig), a.forms.bcEnvVars.$setPristine();
 }, m.push(f.watchObject("buildconfigs", c.buildconfig, h, function(b, c) {
 "DELETED" === c && (a.alerts.deleted = {
 type:"warning",
@@ -4248,7 +4250,7 @@ d.unwatchAll(k);
 });
 }));
 } ]), angular.module("openshiftConsole").controller("DeploymentConfigController", [ "$scope", "$filter", "$routeParams", "AlertMessageService", "DataService", "DeploymentsService", "HPAService", "ImageStreamResolver", "Navigate", "ProjectsService", "LabelFilter", "labelNameFilter", "keyValueEditorUtils", function(a, b, c, d, e, f, g, h, i, j, k, l, m) {
-a.projectName = c.project, a.deploymentConfigName = c.deploymentconfig, a.deploymentConfig = null, a.deployments = {}, a.unfilteredDeployments = {}, a.imageStreams = {}, a.imagesByDockerReference = {}, a.imageStreamImageRefByDockerReference = {}, a.builds = {}, a.labelSuggestions = {}, a.alerts = {}, a.breadcrumbs = [ {
+a.projectName = c.project, a.deploymentConfigName = c.deploymentconfig, a.deploymentConfig = null, a.deployments = {}, a.unfilteredDeployments = {}, a.imageStreams = {}, a.imagesByDockerReference = {}, a.imageStreamImageRefByDockerReference = {}, a.builds = {}, a.labelSuggestions = {}, a.forms = {}, a.alerts = {}, a.breadcrumbs = [ {
 title:"Deployments",
 link:"project/" + c.project + "/browse/deployments"
 }, {
@@ -4284,7 +4286,7 @@ a.env = m.compactEntries(angular.copy(a.env));
 a.alerts.saveDCEnvVarsSuccess = {
 type:"success",
 message:a.deploymentConfigName + " was updated."
-};
+}, a.forms.dcEnvVars.$setPristine();
 }, function(c) {
 a.alerts.saveDCEnvVarsError = {
 type:"error",
@@ -4292,6 +4294,8 @@ message:a.deploymentConfigName + " was not updated.",
 details:"Reason: " + b("getErrorDetails")(c)
 };
 });
+}, a.clearEnvVarUpdates = function() {
+n(a.deploymentConfig), a.forms.dcEnvVars.$setPristine();
 }, o.push(e.watchObject("deploymentconfigs", c.deploymentconfig, i, function(b, c) {
 "DELETED" === c && (a.alerts.deleted = {
 type:"warning",
@@ -4365,7 +4369,7 @@ e.unwatchAll(o);
 });
 }));
 } ]), angular.module("openshiftConsole").controller("DeploymentController", [ "$scope", "$filter", "$routeParams", "AlertMessageService", "DataService", "HPAService", "MetricsService", "ProjectsService", "DeploymentsService", "ImageStreamResolver", "Navigate", "keyValueEditorUtils", function(a, b, c, d, e, f, g, h, i, j, k, l) {
-a.projectName = c.project, a.deployment = null, a.deploymentConfig = null, a.deploymentConfigMissing = !1, a.deployments = {}, a.podTemplates = {}, a.imageStreams = {}, a.imagesByDockerReference = {}, a.imageStreamImageRefByDockerReference = {}, a.builds = {}, a.alerts = {}, a.renderOptions = a.renderOptions || {}, a.renderOptions.hideFilterWidget = !0, a.breadcrumbs = [ {
+a.projectName = c.project, a.deployment = null, a.deploymentConfig = null, a.deploymentConfigMissing = !1, a.deployments = {}, a.podTemplates = {}, a.imageStreams = {}, a.imagesByDockerReference = {}, a.imageStreamImageRefByDockerReference = {}, a.builds = {}, a.alerts = {}, a.renderOptions = a.renderOptions || {}, a.renderOptions.hideFilterWidget = !0, a.forms = {}, a.breadcrumbs = [ {
 title:"Deployments",
 link:"project/" + c.project + "/browse/deployments"
 } ], c.deploymentconfig ? (a.breadcrumbs.push({
@@ -4382,10 +4386,10 @@ a.metricsAvailable = b;
 });
 var n = function(c) {
 a.logOptions.container = b("annotation")(c, "pod"), a.logCanRun = !_.includes([ "New", "Pending" ], b("deploymentStatus")(c));
-}, o = function(a) {
-return _.each(a.spec.template.spec.containers, function(a) {
+}, o = function(b) {
+a.updatedDeployment = angular.copy(b), _.each(a.updatedDeployment.spec.template.spec.containers, function(a) {
 a.env = a.env || [];
-}), a;
+});
 };
 a.saveEnvVars = function() {
 _.each(a.updatedDeployment.spec.template.spec.containers, function(a) {
@@ -4394,7 +4398,7 @@ a.env = l.compactEntries(angular.copy(a.env));
 a.alerts.saveEnvSuccess = {
 type:"success",
 message:a.deployment.metadata.name + " was updated."
-};
+}, a.forms.envForm.$setPristine();
 }, function(c) {
 a.alerts.saveEnvError = {
 type:"error",
@@ -4402,6 +4406,8 @@ message:a.deployment.metadata.name + " was not updated.",
 details:"Reason: " + b("getErrorDetails")(c)
 };
 });
+}, a.clearEnvVarUpdates = function() {
+o(a.deployment), a.forms.envForm.$setPristine();
 }, h.get(c.project).then(_.spread(function(d, g) {
 function h() {
 if (a.hpaForRC = f.hpaForRC(s, c.deployment || c.replicationcontroller), a.isActive) {
@@ -4439,7 +4445,7 @@ f && (a.breadcrumbs[2].title = "#" + f, a.logOptions.version = f), a.deploymentC
 "DELETED" === d && (a.alerts.deleted = {
 type:"warning",
 message:c.deployment ? "This deployment has been deleted." :"This replication controller has been deleted."
-}), a.deployment = b, a.updatedDeployment = o(b), n(b), u();
+}), a.deployment = b, o(b), n(b), u();
 })), a.deploymentConfigName && q(), a.$watch("deployment.spec.selector", function() {
 p = new LabelSelector(a.deployment.spec.selector), r();
 }, !0), m.push(e.watch("pods", g, function(a) {

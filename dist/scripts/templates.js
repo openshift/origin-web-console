@@ -1728,10 +1728,11 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "<uib-tab heading=\"Environment\" active=\"selectedTab.environment\" ng-if=\"buildConfig && !(buildConfig | isJenkinsPipelineStrategy)\">\n" +
     "<uib-tab-heading>Environment</uib-tab-heading>\n" +
     "<h3>Environment Variables</h3>\n" +
-    "<ng-form name=\"bcEnvVars\">\n" +
+    "<ng-form name=\"forms.bcEnvVars\">\n" +
     "<div ng-if=\"'buildconfigs' | canI : 'update'\">\n" +
     "<key-value-editor entries=\"envVars\" key-placeholder=\"Name\" value-placeholder=\"Value\" key-validator=\"[A-Za-z_][A-Za-z0-9_]*\" key-validator-error=\"Please enter a valid key\" key-validator-error-tooltip=\"A valid environment variable name is an alphanumeric (a-z and 0-9) string beginning with a letter that may contain underscores.\"></key-value-editor>\n" +
-    "<button class=\"btn btn-default\" ng-click=\"saveEnvVars()\" ng-disabled=\"bcEnvVars.$pristine || bcEnvVars.$invalid\">Save</button>\n" +
+    "<button class=\"btn btn-default\" ng-click=\"saveEnvVars()\" ng-disabled=\"forms.bcEnvVars.$pristine || forms.bcEnvVars.$invalid\">Save</button>\n" +
+    "<a ng-if=\"!forms.bcEnvVars.$pristine\" href=\"\" ng-click=\"clearEnvVarUpdates()\" class=\"mar-left-sm\" style=\"vertical-align: -2px\">Clear changes</a>\n" +
     "</div>\n" +
     "<key-value-editor entries=\"envVars\" is-readonly cannot-add cannot-sort cannot-delete ng-if=\"!('buildconfigs' | canI : 'update')\"></key-value-editor>\n" +
     "</ng-form>\n" +
@@ -2074,13 +2075,14 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "</uib-tab>\n" +
     "<uib-tab heading=\"Environment\" active=\"selectedTab.environment\" ng-if=\"deploymentConfig\">\n" +
     "<uib-tab-heading>Environment</uib-tab-heading>\n" +
-    "<ng-form name=\"dcEnvVars\">\n" +
+    "<ng-form name=\"forms.dcEnvVars\">\n" +
     "<div ng-repeat=\"container in updatedDeploymentConfig.spec.template.spec.containers\">\n" +
     "<h3>Container {{container.name}} Environment Variables</h3>\n" +
     "<key-value-editor entries=\"container.env\" cannot-add cannot-sort cannot-delete is-readonly ng-if=\"!('deploymentconfigs' | canI : 'update')\"></key-value-editor>\n" +
     "<key-value-editor entries=\"container.env\" ng-if=\"'deploymentconfigs' | canI : 'update'\" key-placeholder=\"Name\" value-placeholder=\"Value\" key-validator=\"[A-Za-z_][A-Za-z0-9_]*\" key-validator-error=\"Please enter a valid key\" key-validator-error-tooltip=\"A valid environment variable name is an alphanumeric (a-z and 0-9) string beginning with a letter that may contain underscores.\"></key-value-editor>\n" +
     "</div>\n" +
-    "<button class=\"btn btn-default\" ng-if=\"'deploymentconfigs' | canI : 'update'\" ng-click=\"saveEnvVars()\" ng-disabled=\"dcEnvVars.$pristine || dcEnvVars.$invalid\">Save</button>\n" +
+    "<button class=\"btn btn-default\" ng-if=\"'deploymentconfigs' | canI : 'update'\" ng-click=\"saveEnvVars()\" ng-disabled=\"forms.dcEnvVars.$pristine || forms.dcEnvVars.$invalid\">Save</button>\n" +
+    "<a ng-if=\"!forms.dcEnvVars.$pristine\" href=\"\" ng-click=\"clearEnvVarUpdates()\" class=\"mar-left-sm\" style=\"vertical-align: -2px\">Clear changes</a>\n" +
     "</ng-form>\n" +
     "</uib-tab>\n" +
     "<uib-tab active=\"selectedTab.events\" ng-if=\"'events' | canI : 'watch'\">\n" +
@@ -2703,7 +2705,7 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "</uib-tab>\n" +
     "<uib-tab heading=\"Environment\" active=\"selectedTab.environment\">\n" +
     "<uib-tab-heading>Environment</uib-tab-heading>\n" +
-    "<ng-form name=\"envForm\">\n" +
+    "<ng-form name=\"forms.envForm\">\n" +
     "<div ng-repeat=\"container in updatedDeployment.spec.template.spec.containers\">\n" +
     "<h3>Container {{container.name}} Environment Variables</h3>\n" +
     "<p>\n" +
@@ -2712,7 +2714,8 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "</p>\n" +
     "<div>\n" +
     "<key-value-editor entries=\"container.env\" key-placeholder=\"Name\" value-placeholder=\"Value\" key-validator=\"[A-Za-z_][A-Za-z0-9_]*\" key-validator-error=\"Please enter a valid key\" key-validator-error-tooltip=\"A valid environment variable name is an alphanumeric (a-z and 0-9) string beginning with a letter that may contain underscores.\"></key-value-editor>\n" +
-    "<button class=\"btn btn-default\" ng-click=\"saveEnvVars()\" ng-disabled=\"envForm.$pristine || envForm.$invalid\">Save</button>\n" +
+    "<button class=\"btn btn-default\" ng-click=\"saveEnvVars()\" ng-disabled=\"forms.envForm.$pristine || forms.envForm.$invalid\">Save</button>\n" +
+    "<a ng-if=\"!forms.envForm.$pristine\" href=\"\" ng-click=\"clearEnvVarUpdates()\" class=\"mar-left-sm\" style=\"vertical-align: -2px\">Clear changes</a>\n" +
     "</div>\n" +
     "</div>\n" +
     "</ng-form>\n" +
