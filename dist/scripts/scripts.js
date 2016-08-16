@@ -3166,8 +3166,8 @@ var b = $(".container-terminal-wrapper").get(0), c = b.getBoundingClientRect(), 
 a.terminalCols = Math.max(_.floor(f / o.width), 80), a.terminalRows = Math.max(_.floor(g / o.height), 24);
 });
 };
-o.height && o.width ? $(window).on("resize.terminalsize", _.debounce(q, 100)) :Logger.warn("Unable to calculate the bounding box for a character.  Terminal will not be able to resize."), a.$watch("selectedTab.terminal", function(a) {
-a && d(q, 0);
+a.$watch("selectedTab.terminal", function(a) {
+a ? (o.height && o.width ? $(window).on("resize.terminalsize", _.debounce(q, 100)) :Logger.warn("Unable to calculate the bounding box for a character.  Terminal will not be able to resize."), d(q, 0)) :$(window).off("resize.terminalsize");
 }), a.onTerminalSelectChange = function(b) {
 _.each(a.containerTerminals, function(a) {
 a.isVisible = !1;
