@@ -4076,7 +4076,7 @@ ul.messenger-theme-flat .messenger-message.alert-info .messenger-message-inner:b
 .overview .deployment-tile .deployment-header{color:#9c9c9c;position:relative}
 .overview .deployment-tile .deployment-body{-webkit-flex-direction:column;-moz-flex-direction:column;-ms-flex-direction:column;flex-direction:column;padding:10px;position:relative}
 .overview .deployment-tile .deployment-body .deployment-donut{-webkit-align-items:center;-moz-align-items:center;align-items:center}
-@media (min-width:992px){.overview .deployment-tile .deployment-body{-webkit-flex-direction:row;-moz-flex-direction:row;-ms-flex-direction:row;flex-direction:row;-webkit-justify-content:flex-end;-moz-justify-content:flex-end;justify-content:flex-end}
+@media (min-width:992px){.overview .deployment-tile .deployment-body{-webkit-flex-direction:row;-moz-flex-direction:row;-ms-flex-direction:row;flex-direction:row;-webkit-justify-content:space-between;-moz-justify-content:space-between;justify-content:space-between}
 }
 .overview .deployment-tile .overview-donut,.overview .deployment-tile .overview-metrics{-webkit-align-items:center;-moz-align-items:center;align-items:center}
 @media (max-width:991px){.overview .deployment-tile .overview-metrics{margin:0 auto;text-align:center}
@@ -4084,19 +4084,16 @@ ul.messenger-theme-flat .messenger-message.alert-info .messenger-message-inner:b
 .overview .deployment-tile .overview-donut-connector{text-align:center}
 .overview .deployment-tile .overview-donut-connector .deployment-connector-arrow{display:none}
 .overview .deployment-tile .overview-unsuccessful-state{text-align:center}
-@keyframes fadeSlideOut{0%{opacity:1}
-50%{opacity:0}
-100%{opacity:0;margin-left:-300px}
+@keyframes simpleSlide{0%{margin-left:0%}
+100%{margin-left:-50%}
 }
-@keyframes flexGrow{to{-webkit-flex-basis:0%;-moz-flex-basis:0%;-ms-flex-basis:0%;flex-basis:0%;-webkit-flex-grow:1;-moz-flex-grow:1;-ms-flex-grow:1;flex-grow:1;-webkit-flex-shrink:1;-moz-flex-shrink:1;-ms-flex-shrink:1;flex-shrink:1}
-}
-@media (min-width:992px){.overview .deployment-tile .deployment-details{-webkit-align-items:flex-start;-moz-align-items:flex-start;align-items:flex-start;-webkit-flex:1 1 0%;-moz-flex:1 1 0%;-ms-flex:1 1 0%;flex:1 1 0%;padding-left:30px;max-width:50%;-webkit-order:1;-moz-order:1;-ms-order:1;order:1}
-.overview .deployment-tile .deployment-details.ng-leave{animation:fadeSlideOut .75s ease forwards}
-.overview .deployment-tile .overview-donut{-webkit-flex:1 1 0%;-moz-flex:1 1 0%;-ms-flex:1 1 0%;flex:1 1 0%;-webkit-order:2;-moz-order:2;-ms-order:2;order:2;max-width:50%;min-height:150px}
-.overview .deployment-tile .overview-donut.latest{-webkit-order:4;-moz-order:4;-ms-order:4;order:4}
-.overview .deployment-tile .overview-donut.latest :last-child.latest.ng-animate{-webkit-flex-basis:1;-moz-flex-basis:1;-ms-flex-basis:1;flex-basis:1;-webkit-flex-grow:.00001;-moz-flex-grow:.00001;-ms-flex-grow:.00001;flex-grow:.00001;-webkit-flex-shrink:1;-moz-flex-shrink:1;-ms-flex-shrink:1;flex-shrink:1;animation:flexGrow 1s ease forwards}
-.overview .deployment-tile .overview-donut-connector{-webkit-order:3;-moz-order:3;-ms-order:3;order:3;font-size:300%;color:#ccc;-webkit-align-items:center;-moz-align-items:center;align-items:center;-webkit-justify-content:center;-moz-justify-content:center;justify-content:center;line-height:1}
-.overview .deployment-tile .overview-donut-connector .deployment-connector-arrow{display:block}
+@media (min-width:992px){.overview .deployment-tile .deployment-details{padding-left:30px;width:50%;-webkit-order:1;-moz-order:1;-ms-order:1;order:1}
+.overview .deployment-tile .deployment-details.ng-leave{animation:simpleSlide 1s ease forwards}
+.overview .deployment-tile .overview-donut{-webkit-order:2;-moz-order:2;-ms-order:2;order:2;min-height:150px;width:50%}
+.overview .deployment-tile .overview-donut.latest{max-width:50%;-webkit-order:4;-moz-order:4;-ms-order:4;order:4}
+.overview .deployment-tile .overview-donut-connector{-webkit-order:3;-moz-order:3;-ms-order:3;order:3;font-size:300%;color:#ccc;-webkit-align-items:center;-moz-align-items:center;align-items:center;-webkit-justify-content:center;-moz-justify-content:center;justify-content:center;line-height:1;position:relative}
+.overview .deployment-tile .overview-donut-connector.contains-deployment-status-msg{width:50%}
+.overview .deployment-tile .overview-donut-connector .deployment-connector-arrow{display:block;left:-20px;line-height:0;position:absolute;top:47%}
 .overview .deployment-tile .overview-unsuccessful-state{-webkit-flex:1 1 0%;-moz-flex:1 1 0%;-ms-flex:1 1 0%;flex:1 1 0%;-webkit-order:3;-moz-order:3;-ms-order:3;order:3;-webkit-align-items:center;-moz-align-items:center;align-items:center;-webkit-justify-content:center;-moz-justify-content:center;justify-content:center;line-height:1}
 .overview .deployment-tile .deployment-status-msg{color:#9c9c9c;font-size:16px;line-height:normal;margin-bottom:10px}
 .overview .deployment-tile .deployment-status-msg .deployment-log-link{font-size:14px}
