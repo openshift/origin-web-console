@@ -368,10 +368,33 @@
         .text-center();
       }
     }
+    .deployment-details {
+      .flex-order(@order: 1);
+    }
+    .overview-donut {
+      .flex-order(@order: 2);
+      &.latest {
+        .flex-order(@order: 4);
+      }
+    }
     .overview-donut-connector {
+      .align-items(@align: center);
+      color: #ccc;
+      .flex-order(@order: 3);
+      .justify-content(@justify: center);
+      line-height: 1;
+      padding-bottom: 10px;
+      position: relative;
       text-align: center;
+      &.contains-deployment-status-msg {
+        .flex-order(@order: 5);
+      }
       .deployment-connector-arrow {
-        display: none;
+        font-size: 200%;
+        &:before {
+          content: '\2193';
+          padding-right: 23px; // align down arrow with donuts
+        }
       }
     }
     .overview-unsuccessful-state {
@@ -391,37 +414,33 @@
       .deployment-details {
         padding-left: 30px;
         width: 50%;
-        .flex-order(@order: 1);
         &.ng-leave {
           animation: simpleSlide 1s ease forwards;
         }
       }
-      .overview-donut { 
-        .flex-order(@order: 2);
+      .overview-donut {
         min-height: 150px;
         width: 50%;
-        &.latest { 
+        &.latest {
           max-width: 50%;
-          .flex-order(@order: 4);
         }
       }
       .overview-donut-connector {
-        .flex-order(@order: 3);
-        font-size: 300%;
-        color: #ccc;
-        .align-items(@align: center);
-        .justify-content(@justify: center);
-        line-height: 1;
-        position: relative;
+        padding-bottom: 0;
         &.contains-deployment-status-msg {
+          .flex-order(@order: 3);
           width: 50%;
         }
         .deployment-connector-arrow {
-          display: block;
+          font-size: 300%;
           left: -20px;
           line-height: 0;
           position: absolute;
           top: 47%;
+          &:before {
+            content: '\2192';
+            padding-right: 0;
+          }
         }
       }
       .overview-unsuccessful-state {

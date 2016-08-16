@@ -42,7 +42,7 @@
     <!-- deployment in progress (connecting arrow) -->
     <div column class="overview-donut-connector" ng-class="{'contains-deployment-status-msg':deployments.length === 1}" ng-if="anyDeploymentInProgress">
       <div ng-if="deployments.length > 1" class="deployment-connector-arrow">
-        &rarr;
+        
       </div>
       <div ng-if="deployments.length === 1" class="deployment-status-msg">
         <status-icon status="deployments[0] | deploymentStatus" class="mar-right-xs"></status-icon>
