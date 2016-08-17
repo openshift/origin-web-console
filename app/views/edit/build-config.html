@@ -518,56 +518,55 @@
                         </div>
                       </div>
                       <div class="section">
-                        <h3>Triggers</h3>
+                        <h3>Triggers
+                          <a href="{{'build-triggers' | helpLink}}" aria-hidden="true" target="_blank"><span class="learn-more-inline">Learn more<i class="fa fa-external-link"></i></span></a>
+                        </h3>
                         <dl class="dl-horizontal left">
                           <div>
-                            <div ng-if="sources.git">
-                              <div class="checkbox">
-                                <label>
-                                  <input type="checkbox" ng-model="triggers.present.githubWebhook"/>
-                                  Enable the GitHub webhook build trigger
-                                  <span class="help action-inline">
-                                    <a href>
-                                      <i class="pficon pficon-help" data-toggle="tooltip" aria-hidden="true" data-original-title="The GitHub source repository must be configured to use the webhook to trigger a build when source is committed.">
-                                      </i>
-                                    </a>
-                                  </span>
-                                </label>
-                              </div>
 
-                              <div class="checkbox">
-                                <label>
-                                  <input type="checkbox" ng-model="triggers.present.genericWebhook"/>
-                                  Enable the Generic webhook build trigger
-                                  <span class="help action-inline">
-                                    <a href>
-                                      <i class="pficon pficon-help" data-toggle="tooltip" aria-hidden="true" data-original-title="A generic webhook can be triggered by any system capable of making a web request.">
-                                      </i>
-                                    </a>
-                                  </span>
-                                </label>
-                              </div>
+                            <div ng-if="sources.git">
+                              <edit-webhook-triggers
+                                type="GitHub"
+                                type-info="The GitHub source repository must be configured to use the webhook to trigger a build when source is committed."
+                                triggers="triggers.githubWebhooks"
+                                form="form"
+                                bc-name="buildConfig.metadata.name"
+                                project-name="project.metadata.name">
+                              </edit-webhook-triggers>
+                              <edit-webhook-triggers 
+                                type="Generic"
+                                type-info="A generic webhook can be triggered by any system capable of making a web request."
+                                triggers="triggers.genericWebhooks" 
+                                form="form" 
+                                bc-name="buildConfig.metadata.name" 
+                                project-name="project.metadata.name">
+                              </edit-webhook-triggers>
                             </div>
 
+                            <!-- TODO: Uncomment once ConfigChange trigger will work. Based on https://github.com/openshift/origin-web-console/issues/321  -->
+                            <!-- <h5>Config change</h5>
                             <div class="checkbox">
                               <label>
-                                <input type="checkbox" ng-model="triggers.present.configChange"/>
-                                Automatically build a new image when the build configuration changes
+                                <input type="checkbox" ng-model="triggers.configChangeTrigger.present"/>
+                                  Automatically build a new image when the build configuration changes
                               </label>
-                            </div>
+                            </div> -->
 
-                            <div ng-if="!(updatedBuildConfig | isJenkinsPipelineStrategy)" class="checkbox">
-                              <label>
-                                <input type="checkbox" ng-model="triggers.present.imageChange" ng-disabled="builderOptions.pickedType === 'None'"/>
-                                  Automatically build a new image when the builder image changes
-                                  <span class="help action-inline">
-                                    <a href>
-                                      <i class="pficon pficon-help" aria-hidden="true"
-                                      data-toggle="tooltip" data-original-title="Automatically building a new image when the builder image changes allows your code to always run on the latest updates.">
-                                    </i>
-                                    </a>
-                                  </span>
-                              </label>
+                            <div ng-if="!(updatedBuildConfig | isJenkinsPipelineStrategy)">
+                              <h5>Image change</h5>
+                              <div class="checkbox">
+                                <label>
+                                  <input type="checkbox" ng-model="triggers.builderImageChangeTrigger.present" ng-disabled="builderOptions.pickedType === 'None'"/>
+                                    Automatically build a new image when the builder image changes
+                                    <span class="help action-inline">
+                                      <a href>
+                                        <i class="pficon pficon-help" aria-hidden="true"
+                                        data-toggle="tooltip" data-original-title="Automatically building a new image when the builder image changes allows your code to always run on the latest updates.">
+                                      </i>
+                                      </a>
+                                    </span>
+                                </label>
+                              </div>
                             </div>
                           </div>
                         </dl>

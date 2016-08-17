@@ -10,11 +10,21 @@
   + .list-group-item-expandable.expanded {
     border-top: 0;
   }
-  .log-fixed-height.empty-state-message {
-    margin-bottom: 0;
+}
+
+.monitoring-page .list-group-expanded-section {
+  .log-fixed-height.empty-state-message,
+  .metrics .empty-state-message {
+    margin: 10px 0 0;
+    padding: 0;
+    text-align: left;
     h2 {
       margin-top: 0;
     }
+  }
+  .metrics .empty-state-message .pficon-error-circle-o {
+    // Hide the icon so the message is consistent with logs, which doesn't have an error icon.
+    display: none;
   }
 }
 

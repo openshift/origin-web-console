@@ -389,18 +389,33 @@
                   <uib-tab heading="Environment" active="selectedTab.environment" ng-if="buildConfig && !(buildConfig | isJenkinsPipelineStrategy)">
                     <uib-tab-heading>Environment</uib-tab-heading>
                     <h3>Environment Variables</h3>
-                    <ng-form name="bcEnvVars">
+                    <ng-form name="forms.bcEnvVars">
+                      <div ng-if="'buildconfigs' | canI : 'update'">
+                        <key-value-editor
+                          entries="envVars"
+                          key-placeholder="Name"
+                          value-placeholder="Value"
+                          key-validator="[A-Za-z_][A-Za-z0-9_]*"
+                          key-validator-error="Please enter a valid key"
+                          key-validator-error-tooltip="A valid environment variable name is an alphanumeric (a-z and 0-9) string beginning with a letter that may contain underscores."></key-value-editor>
+                        <button
+                          class="btn btn-default"
+                          ng-click="saveEnvVars()"
+                          ng-disabled="forms.bcEnvVars.$pristine || forms.bcEnvVars.$invalid">Save</button>
+                        <a 
+                          ng-if="!forms.bcEnvVars.$pristine"
+                          href="" 
+                          ng-click="clearEnvVarUpdates()"
+                          class="mar-left-sm"
+                          style="vertical-align: -2px;">Clear changes</a>
+                      </div>
                       <key-value-editor
                         entries="envVars"
-                        key-placeholder="Name"
-                        value-placeholder="Value"
-                        key-validator="[A-Za-z_][A-Za-z0-9_]*"
-                        key-validator-error="Please enter a valid key"
-                        key-validator-error-tooltip="A valid environment variable name is an alphanumeric (a-z and 0-9) string beginning with a letter that may contain underscores."></key-value-editor>
-                      <button
-                        class="btn btn-default"
-                        ng-click="saveEnvVars()"
-                        ng-disabled="bcEnvVars.$pristine || bcEnvVars.$invalid">Save</button>
+                        is-readonly
+                        cannot-add
+                        cannot-sort
+                        cannot-delete
+                        ng-if="!('buildconfigs' | canI : 'update')"></key-value-editor>
                     </ng-form>
                   </uib-tab>
                 </uib-tabset>

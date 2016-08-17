@@ -65,7 +65,13 @@
                     <uib-tab-heading>Environment</uib-tab-heading>
                     <div ng-repeat="container in pod.spec.containers">
                       <h3>Container {{container.name}} Environment Variables</h3>
-                      <environment env-vars="container.env" ng-if="container.env.length"></environment>
+                      <key-value-editor
+                        entries="container.env"
+                        is-readonly
+                        cannot-add
+                        cannot-sort
+                        cannot-delete
+                        ng-if="container.env.length"></key-value-editor>
                       <em ng-if="!container.env.length">The container specification has no environment variables set.</em>
                     </div>
                   </uib-tab>
@@ -184,6 +190,7 @@
                                 rows="terminalRows"
                                 cols="terminalCols"
                                 autofocus="true"
+                                command='["/bin/sh", "-i", "-c", "TERM=xterm /bin/sh"]'
                                 >
                               </kubernetes-container-terminal>
                             </div>

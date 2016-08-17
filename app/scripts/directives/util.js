@@ -75,7 +75,8 @@ angular.module('openshiftConsole')
     return {
       restrict: 'E',
       scope: {
-        clipboardText: "="
+        clipboardText: "=",
+        isDisabled: "=?"
       },
       templateUrl: 'views/directives/_copy-to-clipboard.html',
       controller: function($scope) {
@@ -87,7 +88,7 @@ angular.module('openshiftConsole')
           return;
         }
 
-        var node = $('button', element);
+        var node = $('a', element);
         var clipboard = new Clipboard( node.get(0) );
         clipboard.on('success', function (e) {
           $(e.trigger)

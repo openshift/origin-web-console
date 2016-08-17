@@ -125,8 +125,8 @@
   }
   &.log-fixed-height {
     .ellipsis-loader {
-      background-color: @log-bg-color;
       bottom: 0;
+      #gradient > .vertical(transparent, @log-bg-color, 0%, 15%);
       height: 30px;
       right: @scrollbar-width-log-viewer;
       width: auto;
@@ -145,7 +145,16 @@
     }
     .log-view-output {
       overflow: auto;
-      padding-top: 30px;
+      // Firefox collapses the bottom padding, so use margin on the child
+      // table instead
+      padding-bottom: 0;
+      padding-top: 0;
+      table {
+        // Firefox collapses the bottom padding on .log-view-output, so use
+        // margin on this child table instead
+        margin-bottom: 40px;
+        margin-top: 30px;
+      }
     }
   }
 }

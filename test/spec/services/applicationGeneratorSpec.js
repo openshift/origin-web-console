@@ -217,8 +217,7 @@ describe("ApplicationGenerator", function(){
                 "name": "ruby-hello-world",
                 "labels": {
                   "foo" : "bar",
-                  "abc" : "xyz",
-                  "app": "ruby-hello-world"
+                  "abc" : "xyz"
                 },
                 "annotations": {
                   "openshift.io/generated-by": "OpenShiftWebConsole"
@@ -292,8 +291,7 @@ describe("ApplicationGenerator", function(){
               "name": "ruby-hello-world",
               labels : {
                 "foo" : "bar",
-                "abc" : "xyz",
-                "app" : "ruby-hello-world",
+                "abc" : "xyz"
               },
               "annotations": {
                 "openshift.io/generated-by": "OpenShiftWebConsole"
@@ -312,8 +310,7 @@ describe("ApplicationGenerator", function(){
                 "name": "ruby-hello-world",
                 "labels" : {
                   "foo" : "bar",
-                  "abc" : "xyz",
-                  "app" : "ruby-hello-world"
+                  "abc" : "xyz"
                 },
                 "annotations": {
                   "openshift.io/generated-by": "OpenShiftWebConsole"
@@ -349,8 +346,7 @@ describe("ApplicationGenerator", function(){
             "name": "ruby-hello-world",
             "labels": {
               "foo" : "bar",
-              "abc" : "xyz",
-              "app" : "ruby-hello-world"
+              "abc" : "xyz"
             },
             "annotations": {
               "openshift.io/generated-by": "OpenShiftWebConsole"
@@ -384,7 +380,6 @@ describe("ApplicationGenerator", function(){
                 "labels": {
                   "foo" : "bar",
                   "abc" : "xyz",
-                  "app" : "ruby-hello-world",
                   "deploymentconfig": "ruby-hello-world"
                 }
               },
@@ -458,8 +453,7 @@ describe("ApplicationGenerator", function(){
                 "name": "ruby-hello-world",
                 "labels" : {
                   "foo" : "bar",
-                  "abc" : "xyz",
-                  "app" : "ruby-hello-world"
+                  "abc" : "xyz"
                 },
                 "annotations": {
                   "openshift.io/generated-by": "OpenShiftWebConsole"

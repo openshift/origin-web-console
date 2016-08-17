@@ -2,12 +2,14 @@
   <ng-include src="'views/overview/_service-header.html'"></ng-include>
   <div class="rc-header"> <!-- TODO may want different treatment for a pod-name? -->
     <div>
-      Pod:
+      Pod
       <a ng-href="{{pod | navigateResourceURL}}">{{pod.metadata.name}}</a>
+      <small class="overview-timestamp">
+        <span class="hidden-xs">&ndash;</span>
+        <relative-timestamp timestamp="pod.metadata.creationTimestamp"></relative-timestamp>
+      </small>
     </div>
-    <div>
-      <relative-timestamp timestamp="pod.metadata.creationTimestamp"></relative-timestamp>
-    </div>
+    <image-names ng-if="showMetrics" pod-template="pod"></image-names>
   </div>
   <div row class="deployment-body">
     <div column class="overview-donut">

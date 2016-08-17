@@ -81,7 +81,7 @@
                 </uib-tab>
                 <uib-tab heading="Environment" active="selectedTab.environment">
                   <uib-tab-heading>Environment</uib-tab-heading>
-                  <ng-form name="envForm">
+                  <ng-form name="forms.envForm">
                     <div ng-repeat="container in updatedDeployment.spec.template.spec.containers">
                       <h3>Container {{container.name}} Environment Variables</h3>
                       <p>
@@ -99,7 +99,13 @@
                         <button
                           class="btn btn-default"
                           ng-click="saveEnvVars()"
-                          ng-disabled="envForm.$pristine || envForm.$invalid">Save</button>
+                          ng-disabled="forms.envForm.$pristine || forms.envForm.$invalid">Save</button>
+                        <a 
+                          ng-if="!forms.envForm.$pristine"
+                          href="" 
+                          ng-click="clearEnvVarUpdates()"
+                          class="mar-left-sm"
+                          style="vertical-align: -2px;">Clear changes</a>
                       </div>
                     </div>
                   </ng-form>

@@ -54,6 +54,7 @@ angular.module('openshiftConsole')
       restrict: 'E',
       scope: {
         labels: "=",
+        systemLabels: "=",
         expand: "=?",
         canToggle: "=?",
         // Delete policy for osc-key-values (default: "added")

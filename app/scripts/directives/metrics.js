@@ -39,7 +39,9 @@ angular.module('openshiftConsole')
         // For compact metrics, wait for the element to scroll into view before updating.
         var paused = compact;
         var lastUpdated;
-        var updateInterval = 30 * 1000; // 30 seconds
+        var updateInterval = 60 * 1000; // 60 seconds
+        // Number of data points to display on the chart.
+        var numDataPoints = compact ? 15 : 30;
 
         // Set to true when the route changes so we don't update charts that no longer exist.
         var destroyed = false;
@@ -392,11 +394,7 @@ angular.module('openshiftConsole')
         }
 
         function getBucketDuration() {
-          if (compact) {
-            return '60s';
-          }
-
-          return Math.floor(getTimeRangeMillis() / 60) + "ms";
+          return Math.floor(getTimeRangeMillis() / numDataPoints) + "ms";
         }
 
         function getConfig(metric, dataset, start) {
@@ -449,7 +447,7 @@ angular.module('openshiftConsole')
           return scope.pod && (compact || _.get(scope, 'options.selectedContainer'));
         }
 
-        function updateData(start, dataset, response) {
+        function updateData(dataset, response) {
           scope.noData = false;
 
           // Throw out the last data point, which is a partial bucket.
@@ -461,10 +459,8 @@ angular.module('openshiftConsole')
 
           dataset.data =
             _.chain(dataset.data)
-            // Make sure we're only showing points that are still in the time range.
-            .takeRightWhile(function(point) {
-              return point.start >= start;
-            })
+            // Don't include more than then last `numDataPoints`
+            .takeRight(numDataPoints)
             // Add the new values.
             .concat(newData)
             .value();
@@ -518,7 +514,7 @@ angular.module('openshiftConsole')
                   var dataset = _.find(metric.datasets, {
                     id: response.metricID
                   });
-                  updateData(start, dataset, response);
+                  updateData(dataset, response);
                 });
                 updateChart(metric);
               },

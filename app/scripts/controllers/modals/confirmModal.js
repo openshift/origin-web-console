@@ -13,12 +13,14 @@ angular.module('openshiftConsole')
                                                  $uibModalInstance,
                                                  message,
                                                  details,
-                                                 buttonText,
-                                                 buttonClass) {
+                                                 okButtonText,
+                                                 okButtonClass,
+                                                 cancelButtonText) {
     $scope.message = message;
     $scope.details = details;
-    $scope.buttonText = buttonText;
-    $scope.buttonClass = buttonClass;
+    $scope.okButtonText = okButtonText;
+    $scope.okButtonClass = okButtonClass;
+    $scope.cancelButtonText = cancelButtonText;
 
     $scope.confirm = function() {
       $uibModalInstance.close('confirm');

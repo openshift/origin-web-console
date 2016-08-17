@@ -29,6 +29,10 @@ angular.module("openshiftConsole")
         $scope.app = {};
         $scope.env = [];
         $scope.labels = [];
+        $scope.systemLabels = [{
+          name: 'app',
+          value: ''
+        }];
 
         var stripTag = $filter('stripTag');
         var stripSHA = $filter('stripSHA');
@@ -47,6 +51,9 @@ angular.module("openshiftConsole")
         };
 
         function getResources() {
+          var userLabels = keyValueEditorUtils.mapEntries(keyValueEditorUtils.compactEntries($scope.labels));
+          var systemLabels = keyValueEditorUtils.mapEntries(keyValueEditorUtils.compactEntries($scope.systemLabels));
+
           return ImagesService.getResources({
             name: $scope.app.name,
             image: $scope.import.name,
@@ -55,7 +62,7 @@ angular.module("openshiftConsole")
             ports: $scope.ports,
             volumes: $scope.volumes,
             env: keyValueEditorUtils.mapEntries(keyValueEditorUtils.compactEntries($scope.env)),
-            labels: keyValueEditorUtils.mapEntries(keyValueEditorUtils.compactEntries($scope.labels))
+            labels: _.extend(systemLabels, userLabels)
           });
         }
 
@@ -75,11 +82,7 @@ angular.module("openshiftConsole")
 
                 var image = $scope.import.image;
                 if (image) {
-                  $scope.app.name = getName();
-                  $scope.labels = [{
-                    name: 'app',
-                    value: $scope.app.name
-                  }];
+                  $scope.app.name = getName();                 
                   $scope.runsAsRoot = ImagesService.runsAsRoot(image);
                   $scope.ports = ApplicationGenerator.parsePorts(image);
                   $scope.volumes = ImagesService.getVolumes(image);
@@ -95,9 +98,7 @@ angular.module("openshiftConsole")
 
           $scope.$watch('app.name', function() {
             _.set(
-              _.find($scope.labels, function(label) {
-                return label.name === 'app';
-              }),
+              _.find($scope.systemLabels, { name: 'app' }),
               'value',
               $scope.app.name);
           });

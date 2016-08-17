@@ -12,6 +12,7 @@ window.OPENSHIFT_CONSTANTS = {
     "cli":                     "https://docs.openshift.com/container-platform/3.3/cli_reference/overview.html",
     "get_started_cli":         "https://docs.openshift.com/container-platform/3.3/cli_reference/get_started_cli.html",
     "basic_cli_operations":    "https://docs.openshift.com/container-platform/3.3/cli_reference/basic_cli_operations.html",
+    "build-triggers":          "https://docs.openshift.org/container-platform/3.3/dev_guide/builds.html#build-triggers",
     "webhooks":                "https://docs.openshift.com/container-platform/3.3/dev_guide/builds.html#webhook-triggers",
     "new_app":                 "https://docs.openshift.com/container-platform/3.3/dev_guide/new_app.html",
     "start-build":             "https://docs.openshift.com/container-platform/3.3/dev_guide/builds.html#starting-a-build",

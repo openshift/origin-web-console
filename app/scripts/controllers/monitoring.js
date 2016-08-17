@@ -69,6 +69,12 @@ angular.module('openshiftConsole')
       builds: {}
     };
 
+    $scope.expanded = {
+      pods: {},
+      deployments: {},
+      builds: {}
+    };    
+
     $scope.filters = {
       hideOlderResources: true,
       text: ''
@@ -166,17 +172,31 @@ angular.module('openshiftConsole')
       $scope.filteredDeployments = KeywordService.filterForKeywords(ageFilteredDeployments, filterFields, filterKeywords);
     };        
 
-    $scope.toggleItem = function(resource, expanded) {
-      var event = expanded ? 'event.resource.highlight' : 'event.resource.clear-highlight';
-      $rootScope.$emit(event, resource);
+    $scope.toggleItem = function(evt, element, resource) {
+      var t = $(evt.target);
+      if (t && t.closest("a", element).length) {
+        return;
+      }
+
+      var expanded, event;
       switch(resource.kind) {
         case 'Build':
+          expanded = !$scope.expanded.builds[resource.metadata.name];
+          $scope.expanded.builds[resource.metadata.name] = expanded;
+          event = expanded ? 'event.resource.highlight' : 'event.resource.clear-highlight';
+          $rootScope.$emit(event, resource);
+
           var buildPod = _.get($scope.podsByName, $filter('annotation')(resource, 'buildPod'));
           if (buildPod) {
             $rootScope.$emit(event, buildPod);
           }
           break;
         case 'ReplicationController':
+          expanded = !$scope.expanded.deployments[resource.metadata.name];
+          $scope.expanded.deployments[resource.metadata.name] = expanded;
+          event = expanded ? 'event.resource.highlight' : 'event.resource.clear-highlight';
+          $rootScope.$emit(event, resource);
+
           var deployerPodName = $filter('annotation')(resource, 'deployerPod');
           if (deployerPodName) {
             // The deployer pod is deleted immediately so mock the resource to send to the event highlighter
@@ -190,6 +210,12 @@ angular.module('openshiftConsole')
           _.each($scope.podsByDeployment[resource.metadata.name], function(pod) {
             $rootScope.$emit(event, pod);
           });
+          break;
+        case 'Pod':
+          expanded = !$scope.expanded.pods[resource.metadata.name];
+          $scope.expanded.pods[resource.metadata.name] = expanded;
+          event = expanded ? 'event.resource.highlight' : 'event.resource.clear-highlight';
+          $rootScope.$emit(event, resource);
           break;
       }
     };

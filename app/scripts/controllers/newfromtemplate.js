@@ -44,6 +44,7 @@ angular.module('openshiftConsole')
     $scope.projectName = $routeParams.project;
     $scope.projectPromise = $.Deferred();
     $scope.labels = [];
+    $scope.systemLabels = [];
 
     $scope.breadcrumbs = [
       {
@@ -176,7 +177,10 @@ angular.module('openshiftConsole')
 
         $scope.createFromTemplate = function() {
           $scope.disableInputs = true;
-          $scope.template.labels = keyValueEditorUtils.mapEntries(keyValueEditorUtils.compactEntries($scope.labels));
+          var userLabels = keyValueEditorUtils.mapEntries(keyValueEditorUtils.compactEntries($scope.labels));
+          var systemLabels = keyValueEditorUtils.mapEntries(keyValueEditorUtils.compactEntries($scope.systemLabels));
+          $scope.template.labels = _.extend(systemLabels, userLabels);
+          
           DataService.create("processedtemplates", null, $scope.template, context).then(
             function(config) { // success
               var titles = {
@@ -244,13 +248,13 @@ angular.module('openshiftConsole')
 
         function setTemplateParams(labels) {
           $scope.templateImages = imageItems($scope.template);
-          $scope.labels = _.map($scope.template.labels, function(value, key) {
+          $scope.systemLabels = _.map($scope.template.labels, function(value, key) {
             return {
               name: key,
               value: value
             };
           });
-          $scope.labels.push({
+          $scope.systemLabels.push({
             name: 'app',
             value: $scope.template.metadata.name
           });

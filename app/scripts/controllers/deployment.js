@@ -33,6 +33,7 @@ angular.module('openshiftConsole')
     $scope.alerts = {};
     $scope.renderOptions = $scope.renderOptions || {};
     $scope.renderOptions.hideFilterWidget = true;
+    $scope.forms = {};
     $scope.breadcrumbs = [
       {
         title: "Deployments",
@@ -85,12 +86,12 @@ angular.module('openshiftConsole')
       $scope.logCanRun = !(_.includes(['New', 'Pending'], $filter('deploymentStatus')(deployment)));
     };
 
-    var ensureEnvs = function(deployment) {
-      _.each(deployment.spec.template.spec.containers, function(container) {
+    var copyDeploymentAndEnsureEnv = function(deployment) {
+      $scope.updatedDeployment = angular.copy(deployment);
+      _.each($scope.updatedDeployment.spec.template.spec.containers, function(container) {
         container.env = container.env || [];
       });
-      return deployment;
-    };
+    };    
 
     $scope.saveEnvVars = function() {
       _.each($scope.updatedDeployment.spec.template.spec.containers, function(container) {
@@ -108,6 +109,7 @@ angular.module('openshiftConsole')
             // TODO:  improve success alert
             message: $scope.deployment.metadata.name + " was updated."
           };
+          $scope.forms.envForm.$setPristine();
         }, function(e) {
           $scope.alerts['saveEnvError'] = {
             type: "error",
@@ -116,6 +118,11 @@ angular.module('openshiftConsole')
           };
         });
     };
+
+    $scope.clearEnvVarUpdates = function() {
+      copyDeploymentAndEnsureEnv($scope.deployment);
+      $scope.forms.envForm.$setPristine();
+    };    
 
     ProjectsService
       .get($routeParams.project)
@@ -196,8 +203,7 @@ angular.module('openshiftConsole')
                 };
               }
               $scope.deployment = deployment;
-              // for manipulation such as editing env vars
-              $scope.updatedDeployment = ensureEnvs(deployment);
+              copyDeploymentAndEnsureEnv(deployment);
               setLogVars(deployment);
               updateHPAWarnings();
             }));

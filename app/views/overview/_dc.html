@@ -3,13 +3,21 @@
   <div class="deployment-header">
     <div class="rc-header">
       <div>
-        Deployment:
+        Deployment
         <a ng-href="{{deploymentConfig | navigateResourceURL}}">{{dcName}}</a>
+        <small class="overview-timestamp">
+          <span class="hidden-xs">&ndash;</span>
+          <relative-timestamp timestamp="activeDeployment.metadata.creationTimestamp"></relative-timestamp>
+        </small>
       </div>
       <div>
-        <relative-timestamp ng-if="activeDeployment && !anyDeploymentInProgress" timestamp="activeDeployment.metadata.creationTimestamp"></relative-timestamp>
-        <span ng-if="anyDeploymentInProgress">
+        <image-names
+            ng-if="activeDeployment && !anyDeploymentInProgress && showMetrics"
+            pod-template="activeDeployment.spec.template">
+        </image-names>
+        <span ng-if="anyDeploymentInProgress" class="small">
           {{deploymentConfig.spec.strategy.type}} deployment in progress...
+          <a href="" ng-click="cancelDeployment()" role="button">Cancel</a>
         </span>
       </div>
     </div>
@@ -39,9 +47,9 @@
     <!-- /all visible deployments -->
 
     <!-- deployment in progress (connecting arrow) -->
-    <div column class="overview-donut-connector" ng-if="anyDeploymentInProgress">
+    <div column class="overview-donut-connector" ng-class="{'contains-deployment-status-msg':deployments.length === 1}" ng-if="anyDeploymentInProgress">
       <div ng-if="deployments.length > 1" class="deployment-connector-arrow">
-        &rarr;
+        
       </div>
       <div ng-if="deployments.length === 1" class="deployment-status-msg">
         <status-icon status="deployments[0] | deploymentStatus" class="mar-right-xs"></status-icon>

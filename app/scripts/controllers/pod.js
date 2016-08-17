@@ -118,6 +118,11 @@ angular.module('openshiftConsole')
       }
       $scope.$apply(function() {
         var terminalWrapper = $('.container-terminal-wrapper').get(0);
+        // `terminalWrapper` won't exist until the user selects the terminal tab.
+        if (!terminalWrapper) {
+          return;
+        }
+
         var r = terminalWrapper.getBoundingClientRect();
         var windowWidth = win.width();
         var windowHeight = win.height();
@@ -128,16 +133,18 @@ angular.module('openshiftConsole')
       });
     };
 
-    if (!characterBoundingBox.height || !characterBoundingBox.width) {
-      Logger.warn("Unable to calculate the bounding box for a character.  Terminal will not be able to resize.");
-    }
-    else {
-      $(window).on('resize.terminalsize', _.debounce(calculateTerminalSize, 100));
-    }
-
     $scope.$watch('selectedTab.terminal', function(terminalTabSelected) {
       if (!!terminalTabSelected) {
+        if (!characterBoundingBox.height || !characterBoundingBox.width) {
+          Logger.warn("Unable to calculate the bounding box for a character.  Terminal will not be able to resize.");
+        }
+        else {
+          $(window).on('resize.terminalsize', _.debounce(calculateTerminalSize, 100));
+        }        
         $timeout(calculateTerminalSize, 0);
+      }
+      else {
+        $(window).off('resize.terminalsize');
       }
     });
 

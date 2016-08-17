@@ -111,17 +111,15 @@ angular.module('openshiftConsole')
       "contextDir": false,
       "none": true
     };
-    // $scope.triggers.present.imageChange points to builder imageChange trigger.
+
     $scope.triggers = {
-      present: {
-        "githubWebhook": false,
-        "genericWebhook": false,
-        "imageChange": false,
-        "configChange": false
-      },
+      githubWebhooks: [],
+      genericWebhooks: [],
+      imageChangeTriggers: [],
       builderImageChangeTrigger: {},
-      imageChangeTriggers: []
+      configChangeTrigger: {}
     };
+
     $scope.runPolicyTypes = [
       "Serial",
       "Parallel",
@@ -340,24 +338,25 @@ angular.module('openshiftConsole')
       triggers.forEach(function(trigger) {
         switch (trigger.type) {
           case "Generic":
-            triggerMap.present.genericWebhook = true;
+            triggerMap.genericWebhooks.push({disabled: false, data: trigger});
             break;
           case "GitHub":
-            triggerMap.present.githubWebhook = true;
+            triggerMap.githubWebhooks.push({disabled: false, data: trigger});
             break;
           case "ImageChange":
             var imageChangeFrom = trigger.imageChange.from;
             if (!imageChangeFrom) {
               imageChangeFrom = buildConfigFrom;
             }
+            var triggerRecord =  {present: true, data: trigger};
             if (isBuilder(imageChangeFrom, buildConfigFrom)) {
-              triggerMap.present.imageChange = true;
-              triggerMap.builderImageChangeTrigger = trigger;
+              triggerMap.builderImageChangeTrigger = triggerRecord;
+            } else {
+              triggerMap.imageChangeTriggers.push(triggerRecord);
             }
-            triggerMap.imageChangeTriggers.push(trigger);
             break;
           case "ConfigChange":
-            triggerMap.present.configChange = true;
+            triggerMap.configChangeTrigger = {present: true, data: trigger};
             break;
         }
       });
@@ -365,12 +364,10 @@ angular.module('openshiftConsole')
       // If the builder imageChange trigger is not present, pre-populate the imageChangeTriggers array with it
       // and set the builderImageChangeTrigger object with it.
       if (_.isEmpty(triggerMap.builderImageChangeTrigger)) {
-        var builderTrigger = {
-          imageChange: {},
-          type: "ImageChange"
-        };
-        triggerMap.imageChangeTriggers.push(builderTrigger);
-        triggerMap.builderImageChangeTrigger = builderTrigger;
+        triggerMap.builderImageChangeTrigger = {present: false, data: {imageChange: {}, type: "ImageChange"}};
+      }
+      if (_.isEmpty(triggerMap.configChangeTrigger)) {
+        triggerMap.configChangeTrigger = {present: false, data: {type: "ConfigChange"}};
       }
       return triggerMap;
     };
@@ -671,49 +668,17 @@ angular.module('openshiftConsole')
     };
 
     $scope.updateTriggers = function() {
-
-      // Helper for checking webhook objects in the buildConfig spec and creating if missing.
-      function reuseOrCreateWebhook(type) {
-        var webhooks = _.filter($scope.buildConfig.spec.triggers, function(obj) { return obj.type === type; });
-        if (_.isEmpty(webhooks)) {
-          var webhook = {
-            type: type
-          };
-          webhook[(type === "GitHub") ? "github" : "generic"] = {
-            secret: ApplicationGenerator._generateSecret()
-          };
-          webhooks.push(webhook);
-        }
-        return webhooks;
-      }
-
-      var presentTriggers = $scope.triggers.present;
-      var triggers = [];
-
-      if (presentTriggers.githubWebhook) {
-        triggers = triggers.concat(reuseOrCreateWebhook("GitHub"));
-      }
-
-      if (presentTriggers.genericWebhook) {
-        triggers = triggers.concat(reuseOrCreateWebhook("Generic"));
-      }
-
-      if (presentTriggers.configChange) {
-        triggers.push({
-          type: "ConfigChange"
-        });
-      }
-
-      // Add all imageChange triggers to the triggers array. The imageChange trigger for the builder is added in getTriggerMap()
-      // method into imageChangeTriggers array, even if the buildConfig doesn't contain it. If builder imageChange trigger is checked,
-      // keep the trigger, otherwise delete it.
-      triggers = triggers.concat($scope.triggers.imageChangeTriggers);
-      if (!presentTriggers.imageChange) {
-        _.remove(triggers, function(trigger) {
-          return trigger === $scope.triggers.builderImageChangeTrigger;
-        });
-      }
-
+      var triggers = [].concat($scope.triggers.githubWebhooks, 
+                              $scope.triggers.genericWebhooks, 
+                              $scope.triggers.imageChangeTriggers,
+                              $scope.triggers.builderImageChangeTrigger,
+                              $scope.triggers.configChangeTrigger);
+      // Filter webhook triggers that are not disabled or imageChange triggers that are present
+      triggers = _.filter(triggers, function(trigger) {
+        // The condition has to check if the value exist and  is set to 'false' in case of webhook triggers and 'true' in case of imageChange and configChange triggers.
+        return (_.has(trigger, 'disabled') && !trigger.disabled) || trigger.present;
+      });
+      triggers = _.map(triggers, 'data');
       return triggers;
     };
 

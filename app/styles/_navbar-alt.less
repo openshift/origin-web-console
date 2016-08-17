@@ -68,28 +68,20 @@
   .nav.navbar-iconic {
     margin-right: 20px;
     .dropdown-menu {
-      &:before,&:after {
-        display: block;
-        position: absolute;
-        right: 15px;
-        vertical-align: middle;
-        content: "";
-        width: 0;
-        height: 0;
-      }
-      &:before {
-        top: -10px;
-        border-left: 10px solid transparent;
-        border-right: 10px solid transparent;
-        border-bottom: 10px solid rgba(50,50,50,.15);
-        border-style: none double solid;
-      }
+      margin-top: -10px;
+      right: -5px;
       &:after {
-        top: -8px;
-        border-left: 10px solid transparent;
-        border-right: 10px solid transparent;
-        border-bottom: 10px solid #fff;
-        border-style: none double solid;
+        border: 6px solid transparent;
+        border-bottom-color: #fff;
+        border-top-width: 0;
+        content: "";
+        display: block;
+        height: 0;
+        position: absolute;
+        right: 7px;
+        top: -6px;
+        vertical-align: middle;
+        width: 0;
       }
     }
   }

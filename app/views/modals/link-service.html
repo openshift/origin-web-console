@@ -8,6 +8,7 @@
     <form>
       <label class="sr-only" for="childService">Service:</label>
       <ui-select ng-model="link.selectedService"
+                 autofocus
                  theme="bootstrap"
                  title="Choose a service">
         <ui-select-match placeholder="Choose a service...">{{$select.selected.metadata.name}}</ui-select-match>
