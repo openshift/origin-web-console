@@ -4089,6 +4089,7 @@ ul.messenger-theme-flat .messenger-message.alert-info .messenger-message-inner:b
 .overview .deployment-tile .overview-donut,.overview .deployment-tile .overview-metrics{-webkit-align-items:center;-moz-align-items:center;align-items:center}
 @media (max-width:991px){.overview .deployment-tile .overview-metrics{margin:0 auto;text-align:center}
 .overview .deployment-tile .deployment-details{-webkit-order:5;-moz-order:5;-ms-order:5;order:5}
+.overview .deployment-tile .deployment-details pod-template{margin:20px auto 5px}
 }
 .overview .deployment-tile .overview-donut{-webkit-order:2;-moz-order:2;-ms-order:2;order:2}
 .overview .deployment-tile .overview-donut.latest{-webkit-order:4;-moz-order:4;-ms-order:4;order:4}
