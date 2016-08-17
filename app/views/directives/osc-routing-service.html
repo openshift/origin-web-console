@@ -40,25 +40,24 @@
              id="{{id}}-service-weight"
              type="number"
              required
-             min="1"
+             min="0"
              max="256"
              ng-pattern="/^\d+$/"
              class="form-control"
              aria-describedby="{{id}}-weight-help">
       <div>
         <span id="{{id}}-weight-help" class="help-block">
-          Weight is a number between 1 and 256 that specifies the relative weight against other
+          Weight is a number between 0 and 256 that specifies the relative weight against other
           route services.
         </span>
         <div ng-if="routingServiceForm.weight.$dirty && routingServiceForm.weight.$invalid" class="has-error">
           <div ng-if="routingServiceForm.weight.$error.number" class="help-block">
             Must be a number.
           </div>
-          <div ng-if="routingServiceForm.weight.$error.min" class="help-block">
-            Must be greater than or equal to 1.
-          </div>
+          <!-- This message will also display for values less than the min (e.g., -1) since they
+               don't match the pattern. -->
           <div ng-if="routingServiceForm.weight.$error.pattern" class="help-block">
-            Must be a positive whole number.
+            Must be a whole number greater than or equal to 0.
           </div>
         </div>
       </div>
