@@ -3485,6 +3485,10 @@ body{padding-right:0px!important}
 .metrics .metrics-full .metrics-donut,.metrics .metrics-full .metrics-sparkline{margin-top:20px}
 @media (max-width:500px){.metrics .metrics-sparkline .c3-axis-x .tick{display:none}
 }
+@media (max-width:550px){.monitoring-page .metrics-sparkline .c3-axis-x .tick{display:none}
+}
+@media (max-width:950px){.monitoring-page.sidebar-open .metrics-sparkline .c3-axis-x .tick{display:none}
+}
 .metrics-compact{margin-bottom:10px;white-space:nowrap}
 .metrics-compact .metrics-sparkline{display:none;height:27px;border-bottom:1px solid #ededed}
 @media (min-width:1200px){.metrics-compact{margin-bottom:5px}
