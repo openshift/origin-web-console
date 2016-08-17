@@ -527,6 +527,10 @@
         margin-top: 0;
       }
     }
+    @media (min-width: @screen-sm-min) {
+      // Content can overflow the well in Safari without a min-height.
+      min-height: @tile-min-height;
+    }
   }
   .no-deployments-message {
     .flex(@columns: 1 0 0%); // the parent overview-service is where width with flex-basis is set.
