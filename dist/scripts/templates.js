@@ -4857,7 +4857,7 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "</select>\n" +
     "</div>\n" +
     "</div>\n" +
-    "<div ng-if=\"!loaded\" class=\"mar-top-md\">Loading...</div>\n" +
+    "<div ng-if=\"!loaded\" class=\"mar-top-md\">Loading metrics...</div>\n" +
     "<div ng-if=\"loaded && noData && !metricsError\" class=\"mar-top-md\">\n" +
     "No metrics to display.\n" +
     "</div>\n" +
@@ -5385,7 +5385,7 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "</form>\n" +
     "<span ng-if=\"state !== 'empty'\" class=\"action-divider\">|</span>\n" +
     "</span>\n" +
-    "<a ng-if=\"state !== 'empty'\" href=\"\" ng-click=\"goChromeless(options, fullLogUrl)\" role=\"button\">\n" +
+    "<a ng-if=\"state && state !== 'empty'\" href=\"\" ng-click=\"goChromeless(options, fullLogUrl)\" role=\"button\">\n" +
     "Expand log\n" +
     "<i class=\"fa fa-external-link\"></i>\n" +
     "</a>\n" +
@@ -5396,8 +5396,8 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "Only the previous {{options.tailLines || 5000}} log lines and new log messages will be displayed because of the large log size.\n" +
     "</div>\n" +
     "\n" +
-    "<div class=\"text-center gutter-top\" ng-if=\"(!state)\">\n" +
-    "<ellipsis-loader></ellipsis-loader>\n" +
+    "<div ng-if=\"(!state)\" class=\"mar-top-sm log-loading-msg\">\n" +
+    "Loading log...\n" +
     "</div>\n" +
     "<div class=\"empty-state-message text-center\" ng-if=\"state=='empty'\" ng-class=\"{'log-fixed-height': fixedHeight}\">\n" +
     "<h2>Logs are not available.</h2>\n" +
@@ -5493,7 +5493,7 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "</select>\n" +
     "</div>\n" +
     "</div>\n" +
-    "<div ng-if=\"!loaded\" class=\"mar-top-md\">Loading...</div>\n" +
+    "<div ng-if=\"!loaded\" class=\"mar-top-md\">Loading metrics...</div>\n" +
     "<div ng-if=\"loaded && noData && !metricsError\" class=\"mar-top-md\">No metrics to display.</div>\n" +
     "<div ng-if=\"metricsError\" class=\"empty-state-message text-center\">\n" +
     "<h2>\n" +
