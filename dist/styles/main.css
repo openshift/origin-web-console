@@ -4140,7 +4140,8 @@ ul.messenger-theme-flat .messenger-message.alert-info .messenger-message-inner:b
 }
 .overview .standalone-service-row{-webkit-justify-content:space-between;-moz-justify-content:space-between;justify-content:space-between}
 .overview .standalone-service .no-deployments-block{margin-left:0}
-@media (min-width:768px){.overview .standalone-service .no-deployments-block{min-height:346px}
+@media (min-width:768px){.overview .no-child-services-message,.overview .no-deployments-message{min-height:256px}
+.overview .standalone-service .no-deployments-block{min-height:346px}
 }
 @media (min-width:992px){.overview .standalone-service .no-deployments-block{min-height:256px}
 }
