@@ -4739,6 +4739,19 @@ kubernetes-topology-graph{height:700px}
 .table-log-pods{background-color:#fff;border:1px solid #D1D1D1}
 .table-log-pods>tbody+tbody{border-top-width:1px}
 .log-fixed-height.empty-state-message{margin-top:0}
+.chromeless .log-loading-msg{font-family:inherit;line-height:1.1;color:inherit;font-size:19px;font-weight:300;margin:60px auto;max-width:600px;padding:0 20px;text-align:center}
+.chromeless .log-loading-msg .small,.chromeless .log-loading-msg small{font-weight:400;line-height:1;color:#9c9c9c;font-size:65%}
+.chromeless .log-loading-msg .h2,.chromeless .log-loading-msg h2{line-height:1.4}
+.chromeless .log-loading-msg .btn{margin:10px 0 20px}
+.chromeless .log-loading-msg .hero-icon{display:none}
+@media (min-height:600px){.chromeless .log-loading-msg .hero-icon{display:inline-block;font-size:90px}
+}
+@media (min-height:800px){.chromeless .log-loading-msg{margin-top:150px}
+.chromeless .log-loading-msg .hero-icon{font-size:100px}
+}
+@media (min-height:1024px){.chromeless .log-loading-msg{margin-top:200px}
+.chromeless .log-loading-msg .hero-icon{font-size:120px}
+}
 .settings-item{margin:4px 8px 4px 0}
 .hide-if-empty:empty{display:none!important}
 .donut-title-med-pf{font-size:22.5px;font-weight:300}
