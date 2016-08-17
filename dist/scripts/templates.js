@@ -7325,7 +7325,7 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "<project-header class=\"top-header\"></project-header>\n" +
     "<project-page>\n" +
     "\n" +
-    "<div class=\"middle-section monitoring-page\">\n" +
+    "<div class=\"middle-section monitoring-page\" ng-class=\"{ 'sidebar-open': !renderOptions.collapseEventsSidebar }\">\n" +
     "<div id=\"scrollable-content\" class=\"middle-container has-scroll\">\n" +
     "<div class=\"middle-header header-light\">\n" +
     "<div class=\"container-fluid\">\n" +
