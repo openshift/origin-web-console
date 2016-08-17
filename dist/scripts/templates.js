@@ -7809,7 +7809,7 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "<div>\n" +
     "Deployment\n" +
     "<a ng-href=\"{{deploymentConfig | navigateResourceURL}}\">{{dcName}}</a>\n" +
-    "<small class=\"overview-timestamp\">\n" +
+    "<small class=\"overview-timestamp\" ng-if=\"activeDeployment && !anyDeploymentInProgress\">\n" +
     "<span class=\"hidden-xs\">&ndash;</span>\n" +
     "<relative-timestamp timestamp=\"activeDeployment.metadata.creationTimestamp\"></relative-timestamp>\n" +
     "</small>\n" +
