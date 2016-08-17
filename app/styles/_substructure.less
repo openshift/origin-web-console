@@ -162,15 +162,10 @@ html,body {
 
       height: 100%;
       position: absolute;
-      overflow: hidden; //make scrollable
       top: 0;
       right: 0;
       bottom: 0;
       left: 0;
-      &.has-scroll {
-      overflow-x: hidden;
-      overflow-y: auto;
-      }
       .middle-header {
         .flex(@columns: 0 0 auto);
         width: 100%;
@@ -179,11 +174,6 @@ html,body {
         .flex(@columns: 1 1 auto);
         position: relative;
         width: 100%;
-
-        &.has-scroll {
-        overflow-x: hidden;
-        overflow-y: auto;
-        }
       }
     }
   }
@@ -202,7 +192,7 @@ html,body {
       // remove ie prefixes when PostCSS Autoprefixer is included for github issue #7559
       -ms-flex-align: start;
       -ms-flex-pack: start;
-      
+
       height: 100%;
       position: absolute;
       overflow: hidden;
