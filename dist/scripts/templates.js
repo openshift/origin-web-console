@@ -5922,20 +5922,18 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "</div>\n" +
     "<div ng-if=\"showWeight\" class=\"form-group col-sm-6\">\n" +
     "<label for=\"{{id}}-service-weight\" class=\"required\">Weight</label>\n" +
-    "<input ng-model=\"model.weight\" name=\"weight\" id=\"{{id}}-service-weight\" type=\"number\" required min=\"1\" max=\"256\" ng-pattern=\"/^\\d+$/\" class=\"form-control\" aria-describedby=\"{{id}}-weight-help\">\n" +
+    "<input ng-model=\"model.weight\" name=\"weight\" id=\"{{id}}-service-weight\" type=\"number\" required min=\"0\" max=\"256\" ng-pattern=\"/^\\d+$/\" class=\"form-control\" aria-describedby=\"{{id}}-weight-help\">\n" +
     "<div>\n" +
     "<span id=\"{{id}}-weight-help\" class=\"help-block\">\n" +
-    "Weight is a number between 1 and 256 that specifies the relative weight against other route services.\n" +
+    "Weight is a number between 0 and 256 that specifies the relative weight against other route services.\n" +
     "</span>\n" +
     "<div ng-if=\"routingServiceForm.weight.$dirty && routingServiceForm.weight.$invalid\" class=\"has-error\">\n" +
     "<div ng-if=\"routingServiceForm.weight.$error.number\" class=\"help-block\">\n" +
     "Must be a number.\n" +
     "</div>\n" +
-    "<div ng-if=\"routingServiceForm.weight.$error.min\" class=\"help-block\">\n" +
-    "Must be greater than or equal to 1.\n" +
-    "</div>\n" +
+    "\n" +
     "<div ng-if=\"routingServiceForm.weight.$error.pattern\" class=\"help-block\">\n" +
-    "Must be a positive whole number.\n" +
+    "Must be a whole number greater than or equal to 0.\n" +
     "</div>\n" +
     "</div>\n" +
     "</div>\n" +
