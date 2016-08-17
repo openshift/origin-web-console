@@ -169,7 +169,7 @@ angular.module('openshiftConsole')
           });
 
         $scope.unIdle = function() {
-          $scope.desiredReplicas = _.get(_.first($scope.hpa), 'spec.minReplicas') || 1;
+          $scope.desiredReplicas = $filter('unidleTargetReplicas')($scope.deploymentConfig || $scope.rc, $scope.hpa);
           scale()
             .then(function() {
               $scope.isIdled = false;
