@@ -4831,7 +4831,7 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "<div class=\"scaling-details\" ng-if=\"isIdled && (!getDesiredReplicas())\">\n" +
     "<div ng-if=\"(!resuming)\">\n" +
     "<span>Idled due to inactivity.</span>\n" +
-    "<a href=\"\" ng-click=\"unIdle()\">Start {{hpa[0].spec.minReplicas || 1}} pod{{ (hpa[0].spec.minReplicas || 1) > 1 ? 's' : ''}}</a>\n" +
+    "<a href=\"\" ng-click=\"unIdle()\">Start {{(deploymentConfig || rc) | unidleTargetReplicas : hpa}} pod{{ ((deploymentConfig || rc) | unidleTargetReplicas : hpa) > 1 ? 's' : ''}}</a>\n" +
     "</div>\n" +
     "</div>\n" +
     "</div>"

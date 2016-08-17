@@ -36,7 +36,8 @@ angular.module('openshiftConsole')
       "jenkinsBuildURL":          ["openshift.io/jenkins-build-uri"],
       "jenkinsLogURL":            ["openshift.io/jenkins-log-url"],
       "jenkinsStatus":            ["openshift.io/jenkins-status-json"],
-      "idledAt":                  ["idling.alpha.openshift.io/idled-at"]
+      "idledAt":                  ["idling.alpha.openshift.io/idled-at"],
+      "idledPreviousScale":       ["idling.alpha.openshift.io/previous-scale"]
     };
     return function(annotationKey) {
       return annotationMap[annotationKey] || null;
@@ -1336,5 +1337,19 @@ angular.module('openshiftConsole')
       }
 
       return null;
+    };
+  })
+  .filter('unidleTargetReplicas', function(annotationFilter) {
+    return function(resource, hpa) {
+      var previousScale;
+      if (resource) {
+        try {
+          previousScale = parseInt(annotationFilter(resource, 'idledPreviousScale'));
+        }
+        catch (e) {
+          Logger.error("Unable to parse previous scale annotation as a number.");
+        }
+      }
+      return previousScale || _.get(_.first(hpa), 'spec.minReplicas') || 1;
     };
   });

@@ -8954,7 +8954,7 @@ return !_.get(b.rc, "spec.replicas") && !!(b.deploymentConfig ? a("annotation")(
 }, function(a) {
 b.isIdled = !!a;
 }), b.unIdle = function() {
-b.desiredReplicas = _.get(_.first(b.hpa), "spec.minReplicas") || 1, l().then(function() {
+b.desiredReplicas = a("unidleTargetReplicas")(b.deploymentConfig || b.rc, b.hpa), l().then(function() {
 b.isIdled = !1;
 }, k);
 };
@@ -9896,7 +9896,8 @@ buildPod:[ "openshift.io/build.pod-name" ],
 jenkinsBuildURL:[ "openshift.io/jenkins-build-uri" ],
 jenkinsLogURL:[ "openshift.io/jenkins-log-url" ],
 jenkinsStatus:[ "openshift.io/jenkins-status-json" ],
-idledAt:[ "idling.alpha.openshift.io/idled-at" ]
+idledAt:[ "idling.alpha.openshift.io/idled-at" ],
+idledPreviousScale:[ "idling.alpha.openshift.io/previous-scale" ]
 };
 return function(b) {
 return a[b] || null;
@@ -10665,7 +10666,17 @@ if (!b || !c) return null;
 var d, e = a(b.command), f = a(b.args);
 return e && f ? e + " " + f :e ? e :(d = a(_.get(c, "dockerImageMetadata.Config.Entrypoint") || [ "/bin/sh", "-c" ]), f ? d + " " + f :(e = a(_.get(c, "dockerImageMetadata.Config.Cmd")), e ? d + " " + e :null));
 };
-}), angular.module("openshiftConsole").filter("underscore", function() {
+}).filter("unidleTargetReplicas", [ "annotationFilter", function(a) {
+return function(b, c) {
+var d;
+if (b) try {
+d = parseInt(a(b, "idledPreviousScale"));
+} catch (e) {
+Logger.error("Unable to parse previous scale annotation as a number.");
+}
+return d || _.get(_.first(c), "spec.minReplicas") || 1;
+};
+} ]), angular.module("openshiftConsole").filter("underscore", function() {
 return function(a) {
 return a.replace(/\./g, "_");
 };
