@@ -28,7 +28,7 @@
     "kubernetes-label-selector": "1.0.2",
     "kubernetes-topology-graph": "0.0.23",
     "kubernetes-container-terminal": "1.0.1",
-    "registry-image-widgets": "0.0.1",
+    "registry-image-widgets": "0.0.2",
     "openshift-object-describer": "1.1.2",
     "layout.attrs": "2.1.1",
     "bootstrap-hover-dropdown": "2.1.3",
