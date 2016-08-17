@@ -4049,6 +4049,9 @@ ul.messenger-theme-flat .messenger-message.alert-info .messenger-message-inner:b
 }
 .overview .service-group-header .app-name{overflow:hidden;text-overflow:ellipsis;white-space:nowrap;font-weight:300;margin:0;text-transform:uppercase;min-width:130px}
 .overview .service-group-header .other-routes-msg{display:block;line-height:1.1;margin:3px 25px}
+.overview .service-group-header .create-route-link{white-space:nowrap}
+@media (max-width:991px){.overview .service-group-header .create-route-link{margin-left:30px}
+}
 @media (min-width:768px){.overview .service-group-header{-webkit-flex-direction:row;-moz-flex-direction:row;-ms-flex-direction:row;flex-direction:row;align-items:center}
 .overview .service-group-header .other-routes-msg{display:inline-block;margin:0}
 .overview .service-group-header.has-app-label .other-routes-msg{display:block;text-align:right}
