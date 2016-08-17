@@ -1730,7 +1730,7 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "<h3>Environment Variables</h3>\n" +
     "<ng-form name=\"forms.bcEnvVars\">\n" +
     "<div ng-if=\"'buildconfigs' | canI : 'update'\">\n" +
-    "<key-value-editor entries=\"envVars\" key-placeholder=\"Name\" value-placeholder=\"Value\" key-validator=\"[A-Za-z_][A-Za-z0-9_]*\" key-validator-error=\"Please enter a valid key\" key-validator-error-tooltip=\"A valid environment variable name is an alphanumeric (a-z and 0-9) string beginning with a letter that may contain underscores.\"></key-value-editor>\n" +
+    "<key-value-editor entries=\"envVars\" key-placeholder=\"Name\" value-placeholder=\"Value\" key-validator=\"[A-Za-z_][A-Za-z0-9_]*\" key-validator-error=\"Please enter a valid key\" key-validator-error-tooltip=\"A valid environment variable name is an alphanumeric (a-z and 0-9) string beginning with a letter that may contain underscores.\" add-row-link=\"Add environment variable\"></key-value-editor>\n" +
     "<button class=\"btn btn-default\" ng-click=\"saveEnvVars()\" ng-disabled=\"forms.bcEnvVars.$pristine || forms.bcEnvVars.$invalid\">Save</button>\n" +
     "<a ng-if=\"!forms.bcEnvVars.$pristine\" href=\"\" ng-click=\"clearEnvVarUpdates()\" class=\"mar-left-sm\" style=\"vertical-align: -2px\">Clear changes</a>\n" +
     "</div>\n" +
@@ -2079,7 +2079,7 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "<div ng-repeat=\"container in updatedDeploymentConfig.spec.template.spec.containers\">\n" +
     "<h3>Container {{container.name}} Environment Variables</h3>\n" +
     "<key-value-editor entries=\"container.env\" cannot-add cannot-sort cannot-delete is-readonly ng-if=\"!('deploymentconfigs' | canI : 'update')\"></key-value-editor>\n" +
-    "<key-value-editor entries=\"container.env\" ng-if=\"'deploymentconfigs' | canI : 'update'\" key-placeholder=\"Name\" value-placeholder=\"Value\" key-validator=\"[A-Za-z_][A-Za-z0-9_]*\" key-validator-error=\"Please enter a valid key\" key-validator-error-tooltip=\"A valid environment variable name is an alphanumeric (a-z and 0-9) string beginning with a letter that may contain underscores.\"></key-value-editor>\n" +
+    "<key-value-editor entries=\"container.env\" ng-if=\"'deploymentconfigs' | canI : 'update'\" key-placeholder=\"Name\" value-placeholder=\"Value\" key-validator=\"[A-Za-z_][A-Za-z0-9_]*\" key-validator-error=\"Please enter a valid key\" key-validator-error-tooltip=\"A valid environment variable name is an alphanumeric (a-z and 0-9) string beginning with a letter that may contain underscores.\" add-row-link=\"Add environment variable\"></key-value-editor>\n" +
     "</div>\n" +
     "<button class=\"btn btn-default\" ng-if=\"'deploymentconfigs' | canI : 'update'\" ng-click=\"saveEnvVars()\" ng-disabled=\"forms.dcEnvVars.$pristine || forms.dcEnvVars.$invalid\">Save</button>\n" +
     "<a ng-if=\"!forms.dcEnvVars.$pristine\" href=\"\" ng-click=\"clearEnvVarUpdates()\" class=\"mar-left-sm\" style=\"vertical-align: -2px\">Clear changes</a>\n" +
@@ -2713,7 +2713,7 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "Environment variable updates will only apply to new pods.\n" +
     "</p>\n" +
     "<div>\n" +
-    "<key-value-editor entries=\"container.env\" key-placeholder=\"Name\" value-placeholder=\"Value\" key-validator=\"[A-Za-z_][A-Za-z0-9_]*\" key-validator-error=\"Please enter a valid key\" key-validator-error-tooltip=\"A valid environment variable name is an alphanumeric (a-z and 0-9) string beginning with a letter that may contain underscores.\"></key-value-editor>\n" +
+    "<key-value-editor entries=\"container.env\" key-placeholder=\"Name\" value-placeholder=\"Value\" key-validator=\"[A-Za-z_][A-Za-z0-9_]*\" key-validator-error=\"Please enter a valid key\" key-validator-error-tooltip=\"A valid environment variable name is an alphanumeric (a-z and 0-9) string beginning with a letter that may contain underscores.\" add-row-link=\"Add environment variable\"></key-value-editor>\n" +
     "<button class=\"btn btn-default\" ng-click=\"saveEnvVars()\" ng-disabled=\"forms.envForm.$pristine || forms.envForm.$invalid\">Save</button>\n" +
     "<a ng-if=\"!forms.envForm.$pristine\" href=\"\" ng-click=\"clearEnvVarUpdates()\" class=\"mar-left-sm\" style=\"vertical-align: -2px\">Clear changes</a>\n" +
     "</div>\n" +
@@ -3851,7 +3851,7 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "<i class=\"pficon pficon-help\"></i>\n" +
     "</a>\n" +
     "</span></h3>\n" +
-    "<key-value-editor entries=\"buildConfigEnvVars\" key-placeholder=\"name\" value-placeholder=\"value\" key-validator=\"[a-zA-Z][a-zA-Z0-9_]*\" key-validator-error-tooltip=\"A valid environment variable name is an alphanumeric (a-z and 0-9) string beginning with a letter that may contain underscores.\"></key-value-editor>\n" +
+    "<key-value-editor entries=\"buildConfigEnvVars\" key-placeholder=\"name\" value-placeholder=\"value\" key-validator=\"[a-zA-Z][a-zA-Z0-9_]*\" key-validator-error-tooltip=\"A valid environment variable name is an alphanumeric (a-z and 0-9) string beginning with a letter that may contain underscores.\" add-row-link=\"Add environment variable\"></key-value-editor>\n" +
     "</osc-form-section>\n" +
     "\n" +
     "<osc-form-section header=\"Deployment Configuration\" about-title=\"Deployment Configuration\" about=\"Deployment configurations describe how your application is configured\n" +
@@ -4761,7 +4761,7 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "</div>\n" +
     "</div>\n" +
     "<osc-form-section header=\"Environment Variables\" about-title=\"Environment Variables\" about=\"Environment variables are used to configure and pass information to running containers.\" expand=\"true\" can-toggle=\"false\" class=\"first-section\">\n" +
-    "<key-value-editor entries=\"env\" key-placeholder=\"Name\" key-validator=\"[A-Za-z_][A-Za-z0-9_]*\" key-validator-error=\"A valid environment variable name is an alphanumeric (a-z and 0-9) string beginning with a letter that may contain underscores.\" value-placeholder=\"Value\"></key-value-editor>\n" +
+    "<key-value-editor entries=\"env\" key-placeholder=\"Name\" key-validator=\"[A-Za-z_][A-Za-z0-9_]*\" key-validator-error=\"A valid environment variable name is an alphanumeric (a-z and 0-9) string beginning with a letter that may contain underscores.\" value-placeholder=\"Value\" add-row-link=\"Add environment variable\"></key-value-editor>\n" +
     "</osc-form-section>\n" +
     "<label-editor labels=\"labels\" system-labels=\"systemLabels\" expand=\"true\" can-toggle=\"false\" help-text=\"Each label is applied to each created resource.\">\n" +
     "</label-editor>\n" +
@@ -5340,10 +5340,10 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "<key-value-editor entries=\"labels\" key-placeholder=\"Name\" key-maxlength=\"63\" key-validator-regex=\"validator.key\" value-placeholder=\"Value\" value-maxlength=\"63\" value-validator-regex=\"validator.val\" key-validator-error-tooltip=\"A valid object label has the form [domain/]name where a name is an alphanumeric (a-z, and 0-9) string,\n" +
     "                                   with a maximum length of 63 characters, with the '-' character allowed anywhere except the first or last\n" +
     "                                   character. A domain is a sequence of names separated by the '.' character with a maximum length of 253 characters.\" value-validator-error-tooltip=\"A valid label value is an alphanumeric (a-z, and 0-9) string, with a maximum length of 63 characters, with the '-'\n" +
-    "                                     character allowed anywhere except the first or last character.\"></key-value-editor>\n" +
+    "                                     character allowed anywhere except the first or last character.\" add-row-link=\"Add label\"></key-value-editor>\n" +
     "</div>\n" +
     "<div ng-hide=\"expand\">\n" +
-    "<key-value-editor entries=\"labels\" key-placeholder=\"Labels\" is-readonly></key-value-editor>\n" +
+    "<key-value-editor entries=\"labels\" key-placeholder=\"Labels\" cannot-sort cannot-delete cannot-add is-readonly></key-value-editor>\n" +
     "</div>\n" +
     "</osc-form-section>"
   );
@@ -6482,7 +6482,7 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "<i class=\"pficon pficon-help\" data-toggle=\"tooltip\" aria-hidden=\"true\" data-original-title=\"Paths is a list of source and destination paths to copy from the image. At least one pair has to be specified.\"></i>\n" +
     "</a>\n" +
     "</span></label>\n" +
-    "<key-value-editor entries=\"imageSourcePaths\" key-placeholder=\"Source Path\" key-validator=\"\\/.*?$\" value-placeholder=\"Destination Dir\" key-validator-error-tooltip=\"A valid Source Path is an absolute path beginning with '/'\"></key-value-editor>\n" +
+    "<key-value-editor entries=\"imageSourcePaths\" key-placeholder=\"Source Path\" key-validator=\"\\/.*?$\" value-placeholder=\"Destination Dir\" key-validator-error-tooltip=\"A valid Source Path is an absolute path beginning with '/'\" add-row-link=\"Add image source path\"></key-value-editor>\n" +
     "</div>\n" +
     "</div>\n" +
     "<div class=\"multiple-image-source\" ng-if=\"sourceImages.length !== 1\">\n" +
