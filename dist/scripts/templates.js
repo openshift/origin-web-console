@@ -7802,7 +7802,7 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
 
 
   $templateCache.put('views/overview/_dc.html',
-    "<div class=\"deployment-tile\">\n" +
+    "<div class=\"deployment-tile\" ng-class=\"{ 'deployment-in-progress': anyDeploymentInProgress }\">\n" +
     "<ng-include src=\"'views/overview/_service-header.html'\"></ng-include>\n" +
     "<div class=\"deployment-header\">\n" +
     "<div class=\"rc-header\">\n" +

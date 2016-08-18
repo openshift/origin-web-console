@@ -4089,10 +4089,11 @@ ul.messenger-theme-flat .messenger-message.alert-info .messenger-message-inner:b
 .overview .deployment-tile{border-left:1px solid #d6d6d6;width:100%}
 .overview .deployment-tile .deployment-header{color:#9c9c9c;position:relative}
 .overview .deployment-tile .rc-header{color:#9c9c9c;padding:5px 10px;margin-right:50px}
-.overview .deployment-tile .deployment-body{-webkit-flex-direction:column;-moz-flex-direction:column;-ms-flex-direction:column;flex-direction:column;overflow:hidden;padding:10px;position:relative}
+.overview .deployment-tile .deployment-body{-webkit-flex-direction:column;-moz-flex-direction:column;-ms-flex-direction:column;flex-direction:column;padding:10px;position:relative}
 .overview .deployment-tile .deployment-body .deployment-donut{-webkit-align-items:center;-moz-align-items:center;align-items:center;min-width:0}
 @media (min-width:992px){.overview .deployment-tile .deployment-body{-webkit-flex-direction:row;-moz-flex-direction:row;-ms-flex-direction:row;flex-direction:row;-webkit-justify-content:space-between;-moz-justify-content:space-between;justify-content:space-between}
 }
+.overview .deployment-tile.deployment-in-progress{overflow:hidden}
 .overview .deployment-tile .overview-donut,.overview .deployment-tile .overview-metrics{-webkit-align-items:center;-moz-align-items:center;align-items:center}
 @media (min-width:1200px){.overview .deployment-tile .overview-metrics .metrics-sparkline{width:60%}
 }

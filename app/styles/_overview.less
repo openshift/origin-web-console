@@ -387,7 +387,6 @@
     }
     .deployment-body {
       .flex-direction(@direction: column);
-      overflow: hidden;
       padding: 10px;
       position: relative;
       .deployment-donut {
@@ -398,6 +397,12 @@
         .flex-direction(@direction: row);
         .justify-content(@justify: space-between);
       }
+    }
+    &.deployment-in-progress {
+      // Prevent the metrics from being shown outside tile as they slide out.
+      // Only use this style when a deployment is in progress so that chart
+      // tooltips aren't clipped.
+      overflow: hidden;
     }
     .overview-donut, .overview-metrics {
       .align-items(@align: center);
