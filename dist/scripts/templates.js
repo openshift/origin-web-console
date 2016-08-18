@@ -912,7 +912,7 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "<div class=\"add-to-project middle surface-shaded\">\n" +
     "\n" +
     "<div class=\"middle-section\">\n" +
-    "<div id=\"scrollable-content\" class=\"middle-container\">\n" +
+    "<div class=\"middle-container\">\n" +
     "<div class=\"middle-content\">\n" +
     "<div class=\"container surface-shaded\">\n" +
     "<breadcrumbs breadcrumbs=\"breadcrumbs\"></breadcrumbs>\n" +
@@ -1376,7 +1376,7 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "<project-page>\n" +
     "\n" +
     "<div class=\"middle-section\">\n" +
-    "<div id=\"scrollable-content\" class=\"middle-container\">\n" +
+    "<div class=\"middle-container\">\n" +
     "<div class=\"middle-header\">\n" +
     "<div class=\"container-fluid\">\n" +
     "<div row mobile=\"column\" class=\"tech-preview-header\">\n" +
@@ -1753,7 +1753,7 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "<project-page>\n" +
     "\n" +
     "<div class=\"middle-section\">\n" +
-    "<div id=\"scrollable-content\" class=\"middle-container\">\n" +
+    "<div class=\"middle-container\">\n" +
     "<div class=\"middle-header\">\n" +
     "<div class=\"container-fluid\">\n" +
     "<div row mobile=\"column\" class=\"tech-preview-header\">\n" +
@@ -1857,7 +1857,7 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "<project-page>\n" +
     "\n" +
     "<div class=\"middle-section\">\n" +
-    "<div id=\"scrollable-content\" class=\"middle-container\">\n" +
+    "<div class=\"middle-container\">\n" +
     "<div class=\"middle-header\">\n" +
     "<div class=\"container-fluid\">\n" +
     "<breadcrumbs breadcrumbs=\"breadcrumbs\"></breadcrumbs>\n" +
@@ -2105,7 +2105,7 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "<project-page>\n" +
     "\n" +
     "<div class=\"middle-section\">\n" +
-    "<div id=\"scrollable-content\" class=\"middle-container\">\n" +
+    "<div class=\"middle-container\">\n" +
     "<div class=\"middle-header\">\n" +
     "<div class=\"container-fluid\">\n" +
     "<breadcrumbs breadcrumbs=\"breadcrumbs\"></breadcrumbs>\n" +
@@ -2211,7 +2211,7 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "<project-page>\n" +
     "\n" +
     "<div class=\"middle-section\">\n" +
-    "<div id=\"scrollable-content\" class=\"middle-container\">\n" +
+    "<div class=\"middle-container\">\n" +
     "<div class=\"middle-header\">\n" +
     "<div class=\"container-fluid\">\n" +
     "<breadcrumbs breadcrumbs=\"breadcrumbs\"></breadcrumbs>\n" +
@@ -2264,7 +2264,7 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "<project-page>\n" +
     "\n" +
     "<div class=\"middle-section\">\n" +
-    "<div id=\"scrollable-content\" class=\"middle-container\">\n" +
+    "<div class=\"middle-container\">\n" +
     "<div class=\"middle-header\">\n" +
     "<div class=\"container-fluid\">\n" +
     "<breadcrumbs breadcrumbs=\"breadcrumbs\"></breadcrumbs>\n" +
@@ -2419,7 +2419,7 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "<project-page>\n" +
     "\n" +
     "<div class=\"middle-section\">\n" +
-    "<div id=\"scrollable-content\" class=\"middle-container\">\n" +
+    "<div class=\"middle-container\">\n" +
     "<div class=\"middle-header\">\n" +
     "<div class=\"container-fluid\">\n" +
     "<breadcrumbs breadcrumbs=\"breadcrumbs\"></breadcrumbs>\n" +
@@ -2502,7 +2502,7 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "<project-page>\n" +
     "\n" +
     "<div class=\"middle-section\">\n" +
-    "<div id=\"scrollable-content\" class=\"middle-container\">\n" +
+    "<div class=\"middle-container\">\n" +
     "<div class=\"middle-header\">\n" +
     "<div class=\"container-fluid\">\n" +
     "<breadcrumbs breadcrumbs=\"breadcrumbs\"></breadcrumbs>\n" +
@@ -2643,7 +2643,7 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "<project-page>\n" +
     "\n" +
     "<div class=\"middle-section\">\n" +
-    "<div id=\"scrollable-content\" class=\"middle-container\">\n" +
+    "<div class=\"middle-container\">\n" +
     "<div class=\"middle-header\">\n" +
     "<div class=\"container-fluid\">\n" +
     "<breadcrumbs breadcrumbs=\"breadcrumbs\"></breadcrumbs>\n" +
@@ -2745,7 +2745,7 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "<project-page>\n" +
     "\n" +
     "<div class=\"middle-section\">\n" +
-    "<div id=\"scrollable-content\" class=\"middle-container\">\n" +
+    "<div class=\"middle-container\">\n" +
     "<div class=\"middle-header\">\n" +
     "<div class=\"container-fluid\">\n" +
     "<breadcrumbs breadcrumbs=\"breadcrumbs\"></breadcrumbs>\n" +
@@ -2942,7 +2942,7 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "<project-page>\n" +
     "\n" +
     "<div class=\"middle-section\">\n" +
-    "<div id=\"scrollable-content\" class=\"middle-container\">\n" +
+    "<div class=\"middle-container\">\n" +
     "<div class=\"middle-header header-light\">\n" +
     "<div class=\"container-fluid\">\n" +
     "<div class=\"page-header page-header-bleed-right page-header-bleed-left\">\n" +
@@ -3033,7 +3033,7 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "<project-page>\n" +
     "\n" +
     "<div class=\"middle-section\">\n" +
-    "<div id=\"scrollable-content\" class=\"middle-container\">\n" +
+    "<div class=\"middle-container\">\n" +
     "<div class=\"middle-header\">\n" +
     "<div class=\"container-fluid\">\n" +
     "<breadcrumbs breadcrumbs=\"breadcrumbs\"></breadcrumbs>\n" +
@@ -3153,7 +3153,7 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "<project-page>\n" +
     "\n" +
     "<div class=\"middle-section\">\n" +
-    "<div id=\"scrollable-content\" class=\"middle-container\">\n" +
+    "<div class=\"middle-container\">\n" +
     "<div class=\"middle-header header-light\">\n" +
     "<div class=\"container-fluid\">\n" +
     "<div class=\"page-header page-header-bleed-right page-header-bleed-left\">\n" +
@@ -3588,7 +3588,7 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "<div class=\"add-to-project middle surface-shaded\">\n" +
     "\n" +
     "<div class=\"middle-section\">\n" +
-    "<div id=\"scrollable-content\" class=\"middle-container\">\n" +
+    "<div class=\"middle-container\">\n" +
     "<div class=\"middle-content\">\n" +
     "<div class=\"container surface-shaded\">\n" +
     "<breadcrumbs breadcrumbs=\"breadcrumbs\"></breadcrumbs>\n" +
@@ -3733,7 +3733,7 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "<div class=\"middle surface-shaded\">\n" +
     "\n" +
     "<div class=\"middle-section\">\n" +
-    "<div id=\"scrollable-content\" class=\"middle-container\">\n" +
+    "<div class=\"middle-container\">\n" +
     "<div class=\"middle-content\">\n" +
     "<div class=\"container surface-shaded\">\n" +
     "<breadcrumbs breadcrumbs=\"breadcrumbs\"></breadcrumbs>\n" +
@@ -3982,7 +3982,7 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "<div class=\"middle surface-shaded\">\n" +
     "\n" +
     "<div class=\"middle-section\">\n" +
-    "<div id=\"scrollable-content\" class=\"middle-container\">\n" +
+    "<div class=\"middle-container\">\n" +
     "<div class=\"middle-content\">\n" +
     "<div class=\"container surface-shaded next-steps\">\n" +
     "<breadcrumbs breadcrumbs=\"breadcrumbs\"></breadcrumbs>\n" +
@@ -4097,7 +4097,7 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "<project-page>\n" +
     "\n" +
     "<div class=\"middle-section\">\n" +
-    "<div id=\"scrollable-content\" class=\"middle-container\">\n" +
+    "<div class=\"middle-container\">\n" +
     "<div class=\"middle-header header-light\">\n" +
     "<div class=\"container-fluid\">\n" +
     "<div class=\"page-header page-header-bleed-right page-header-bleed-left\">\n" +
@@ -6336,7 +6336,7 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "<div class=\"middle surface-shaded\">\n" +
     "\n" +
     "<div class=\"middle-section\" ng-show=\"buildConfig\">\n" +
-    "<div id=\"scrollable-content\" class=\"middle-container\">\n" +
+    "<div class=\"middle-container\">\n" +
     "<div class=\"middle-content\">\n" +
     "<div class=\"container surface-shaded\">\n" +
     "<breadcrumbs breadcrumbs=\"breadcrumbs\"></breadcrumbs>\n" +
@@ -6885,7 +6885,7 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "<project-page>\n" +
     "\n" +
     "<div class=\"middle-section\">\n" +
-    "<div id=\"scrollable-content\" class=\"middle-container\">\n" +
+    "<div class=\"middle-container\">\n" +
     "<div class=\"middle-header\">\n" +
     "<div class=\"container-fluid\">\n" +
     "<breadcrumbs breadcrumbs=\"breadcrumbs\"></breadcrumbs>\n" +
@@ -6915,7 +6915,7 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "<project-page>\n" +
     "\n" +
     "<div class=\"middle-section\">\n" +
-    "<div id=\"scrollable-content\" class=\"middle-container\">\n" +
+    "<div class=\"middle-container\">\n" +
     "<div class=\"middle-header header-light\">\n" +
     "<div class=\"container-fluid\">\n" +
     "<div class=\"page-header page-header-bleed-right page-header-bleed-left\">\n" +
@@ -6977,9 +6977,10 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "<navbar-utility-mobile></navbar-utility-mobile>\n" +
     "</div>\n" +
     "<div class=\"wrap chromeless\">\n" +
-    "<div class=\"middle\">\n" +
+    "\n" +
+    "<div id=\"container-main\" class=\"middle\">\n" +
     "<div class=\"middle-section\">\n" +
-    "<div id=\"scrollable-content\" class=\"middle-container\">\n" +
+    "<div class=\"middle-container\">\n" +
     "<div class=\"middle-header\">\n" +
     "<div class=\"container-fluid\">\n" +
     "<alerts alerts=\"alerts\"></alerts>\n" +
@@ -7002,9 +7003,10 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "<navbar-utility-mobile></navbar-utility-mobile>\n" +
     "</div>\n" +
     "<div class=\"wrap chromeless\">\n" +
-    "<div class=\"middle\">\n" +
+    "\n" +
+    "<div id=\"container-main\" class=\"middle\">\n" +
     "<div class=\"middle-section\">\n" +
-    "<div id=\"scrollable-content\" class=\"middle-container\">\n" +
+    "<div class=\"middle-container\">\n" +
     "<div class=\"middle-header\">\n" +
     "<div class=\"container-fluid\">\n" +
     "<alerts alerts=\"alerts\"></alerts>\n" +
@@ -7027,9 +7029,10 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "<navbar-utility-mobile></navbar-utility-mobile>\n" +
     "</div>\n" +
     "<div class=\"wrap chromeless\">\n" +
-    "<div class=\"middle\">\n" +
+    "\n" +
+    "<div id=\"container-main\" class=\"middle\">\n" +
     "<div class=\"middle-section\">\n" +
-    "<div id=\"scrollable-content\" class=\"middle-container\">\n" +
+    "<div class=\"middle-container\">\n" +
     "<div class=\"middle-header\">\n" +
     "<div class=\"container-fluid\">\n" +
     "<alerts alerts=\"alerts\"></alerts>\n" +
@@ -7325,7 +7328,7 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "<project-page>\n" +
     "\n" +
     "<div class=\"middle-section monitoring-page\" ng-class=\"{ 'sidebar-open': !renderOptions.collapseEventsSidebar }\">\n" +
-    "<div id=\"scrollable-content\" class=\"middle-container\">\n" +
+    "<div class=\"middle-container\">\n" +
     "<div class=\"middle-header header-light\">\n" +
     "<div class=\"container-fluid\">\n" +
     "<div class=\"page-header page-header-bleed-right page-header-bleed-left\">\n" +
@@ -7597,7 +7600,7 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "<div class=\"middle surface-shaded\">\n" +
     "\n" +
     "<div class=\"middle-section\">\n" +
-    "<div id=\"scrollable-content\" class=\"middle-container\">\n" +
+    "<div class=\"middle-container\">\n" +
     "<div class=\"middle-content\">\n" +
     "<div class=\"container surface-shaded\">\n" +
     "<div class=\"row\">\n" +
@@ -7653,7 +7656,7 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "<project-page>\n" +
     "\n" +
     "<div class=\"middle-section\">\n" +
-    "<div id=\"scrollable-content\" class=\"middle-container\">\n" +
+    "<div class=\"middle-container\">\n" +
     "<div class=\"middle-header header-light\">\n" +
     "<div class=\"container-fluid\">\n" +
     "<div class=\"page-header page-header-bleed-right page-header-bleed-left\">\n" +
@@ -8129,7 +8132,7 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "<project-page>\n" +
     "\n" +
     "<div class=\"middle-section\">\n" +
-    "<div id=\"scrollable-content\" class=\"middle-container\">\n" +
+    "<div class=\"middle-container\">\n" +
     "<div class=\"middle-content pipelines-page\">\n" +
     "<div class=\"container-fluid\">\n" +
     "<div class=\"row\">\n" +
@@ -8228,7 +8231,7 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "<project-page>\n" +
     "\n" +
     "<div class=\"middle-section\">\n" +
-    "<div id=\"scrollable-content\" class=\"middle-container\">\n" +
+    "<div class=\"middle-container\">\n" +
     "<div class=\"middle-header header-light\">\n" +
     "<div class=\"container-fluid\">\n" +
     "<div class=\"page-header page-header-bleed-right page-header-bleed-left\">\n" +
@@ -8536,7 +8539,7 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "<project-page>\n" +
     "\n" +
     "<div class=\"middle-section\">\n" +
-    "<div id=\"scrollable-content\" class=\"middle-container\">\n" +
+    "<div class=\"middle-container\">\n" +
     "<div class=\"middle-header\">\n" +
     "<div class=\"container-fluid\">\n" +
     "<breadcrumbs breadcrumbs=\"breadcrumbs\"></breadcrumbs>\n" +
@@ -8786,7 +8789,7 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "<project-page>\n" +
     "\n" +
     "<div class=\"middle-section\">\n" +
-    "<div id=\"scrollable-content\" class=\"middle-container\">\n" +
+    "<div class=\"middle-container\">\n" +
     "<div class=\"middle-header header-light\">\n" +
     "<div class=\"container-fluid\">\n" +
     "<div class=\"page-header page-header-bleed-right page-header-bleed-left\">\n" +
@@ -8915,7 +8918,7 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "<project-page>\n" +
     "\n" +
     "<div class=\"middle-section\">\n" +
-    "<div id=\"scrollable-content\" class=\"middle-container\">\n" +
+    "<div class=\"middle-container\">\n" +
     "<div class=\"middle-header\">\n" +
     "<div class=\"container-fluid\">\n" +
     "<breadcrumbs breadcrumbs=\"breadcrumbs\"></breadcrumbs>\n" +
@@ -9196,7 +9199,7 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "<project-page>\n" +
     "\n" +
     "<div class=\"middle-section\">\n" +
-    "<div id=\"scrollable-content\" class=\"middle-container\">\n" +
+    "<div class=\"middle-container\">\n" +
     "<div class=\"middle-header header-light\">\n" +
     "<div class=\"container-fluid\">\n" +
     "<div class=\"page-header page-header-bleed-right page-header-bleed-left\">\n" +

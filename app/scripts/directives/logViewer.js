@@ -403,7 +403,7 @@ angular.module('openshiftConsole')
 
             // PUBLIC API ----------------------------------------------------
 
-            // scrollable node is a parent div#scrollable-content, but may be window
+            // scrollable node is a parent div#container-main, but may be window
             // if we are currently mobile
             this.cacheScrollableNode = function(node) {
               cachedScrollableNode = node;
@@ -474,7 +474,7 @@ angular.module('openshiftConsole')
           // would be better if 'scrollable' was a directive on a parent div
           // and we were sending it messages telling it when to scroll.
           $timeout(function() {
-            ctrl.cacheScrollableNode(document.getElementById($scope.fixedHeight ? ($scope.logViewerID + '-fixed-scrollable') : 'scrollable-content'));
+            ctrl.cacheScrollableNode(document.getElementById($scope.fixedHeight ? ($scope.logViewerID + '-fixed-scrollable') : 'container-main'));
             ctrl.cacheLogNode(document.getElementById($scope.logViewerID+'-logContent'));
             ctrl.cacheAffixable(document.getElementById($scope.logViewerID+'-affixedFollow'));
             ctrl.start();
