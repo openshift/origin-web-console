@@ -1272,7 +1272,7 @@ if (e.kind && e.kind.indexOf("List") === e.kind.length - 4 && angular.forEach(f,
 a.kind || (a.kind = e.kind.slice(0, -4)), a.apiVersion || (a.apiVersion = e.apiVersion);
 }), this._resourceVersion(a, e.resourceVersion || e.metadata.resourceVersion), this._data(a, f), this._listCallbacks(a).fire(this._data(a)), this._listCallbacks(a).empty(), this._watchCallbacks(a).fire(this._data(a)), this._listInFlight(a, !1), this._watchCallbacks(a).has()) {
 var g = this._watchOptions(a) || {};
-g.poll ? (this._watchInFlight(a, !0), this._watchPollTimeouts(a, setTimeout($.proxy(this, "_startListOp", a), g.pollInterval || 5e3))) :this._watchInFlight(a) || this._startWatchOp(a, b, c, d, this._resourceVersion(a));
+g.poll ? (this._watchInFlight(a, !0), this._watchPollTimeouts(a, setTimeout($.proxy(this, "_startListOp", b, c), g.pollInterval || 5e3))) :this._watchInFlight(a) || this._startWatchOp(a, b, c, d, this._resourceVersion(a));
 }
 }, m.prototype._startWatchOp = function(a, b, d, e, f) {
 if (this._watchInFlight(a, !0), c.available()) {
@@ -3412,7 +3412,9 @@ return a.metadata.name === b && a.status.latestVersion === d;
 });
 }, window.OPENSHIFT_CONSTANTS.DISABLE_OVERVIEW_METRICS || n.isAvailable(!0).then(function(a) {
 c.showMetrics = a;
-}), j.get(b.project).then(_.spread(function(a, b) {
+});
+var ba = a("isIE")() || a("isEdge")();
+j.get(b.project).then(_.spread(function(a, b) {
 c.project = a, c.projectContext = b, y.push(f.watch("pods", b, function(a) {
 s = a.by("metadata.name"), O(), aa(), h.log("pods", s);
 })), y.push(f.watch("services", b, function(a) {
@@ -3423,6 +3425,9 @@ u = a.by("metadata.name"), $(), aa(), h.log("builds (list)", u);
 t = a.by("metadata.name"), $(), h.log("builds (list)", u);
 })), y.push(f.watch("routes", b, function(a) {
 o = a.by("metadata.name"), H(), V(), W(), h.log("routes (subscribe)", c.routesByService);
+}, {
+poll:ba,
+pollInterval:6e4
 })), y.push(f.watch("replicationcontrollers", b, function(a) {
 c.deploymentsByName = r = a.by("metadata.name"), L(), O(), $(), aa(), h.log("replicationcontrollers (subscribe)", r);
 })), y.push(f.watch("deploymentconfigs", b, function(a) {
@@ -3432,6 +3437,9 @@ group:"extensions",
 resource:"horizontalpodautoscalers"
 }, b, function(a) {
 v = a.by("metadata.name"), M();
+}, {
+poll:ba,
+pollInterval:6e4
 })), f.list("limitranges", b, function(a) {
 c.limitRanges = a.by("metadata.name");
 }), c.$on("$destroy", function() {
@@ -4421,10 +4429,12 @@ details:"Reason: " + b("getErrorDetails")(c)
 });
 }, a.clearEnvVarUpdates = function() {
 o(a.deployment), a.forms.envForm.$setPristine();
-}, h.get(c.project).then(_.spread(function(d, g) {
+};
+var p = b("isIE")() || b("isEdge")();
+h.get(c.project).then(_.spread(function(d, g) {
 function h() {
-if (a.hpaForRC = f.hpaForRC(s, c.deployment || c.replicationcontroller), a.isActive) {
-var b = f.hpaForDC(s, c.deploymentconfig);
+if (a.hpaForRC = f.hpaForRC(t, c.deployment || c.replicationcontroller), a.isActive) {
+var b = f.hpaForDC(t, c.deploymentconfig);
 a.autoscalers = a.hpaForRC.concat(b);
 } else a.autoscalers = a.hpaForRC;
 }
@@ -4434,7 +4444,7 @@ a.podTemplates[c] = b.spec.template;
 });
 }
 a.project = d, a.projectContext = g;
-var l, p, q = function() {
+var l, q, r = function() {
 m.push(e.watch("replicationcontrollers", g, function(c) {
 var d, e = [], f = b("annotation");
 angular.forEach(c.by("metadata.name"), function(b) {
@@ -4442,27 +4452,27 @@ var c = f(b, "deploymentConfig") || "";
 c === a.deploymentConfigName && e.push(b);
 }), d = i.getActiveDeployment(e), a.isActive = d && d.metadata.uid === a.deployment.metadata.uid, h();
 }));
-}, r = function() {
-l && p && (a.podsForDeployment = _.filter(l, function(a) {
-return p.matches(a);
+}, s = function() {
+l && q && (a.podsForDeployment = _.filter(l, function(a) {
+return q.matches(a);
 }));
-}, s = {}, t = {}, u = function() {
-f.getHPAWarnings(a.deployment, a.autoscalers, t, d).then(function(b) {
+}, t = {}, u = {}, v = function() {
+f.getHPAWarnings(a.deployment, a.autoscalers, u, d).then(function(b) {
 a.hpaWarnings = b;
 });
 };
 e.get("replicationcontrollers", c.deployment || c.replicationcontroller, g).then(function(d) {
-a.loaded = !0, a.deployment = d, n(d), u();
+a.loaded = !0, a.deployment = d, n(d), v();
 var f = b("annotation")(d, "deploymentVersion");
 f && (a.breadcrumbs[2].title = "#" + f, a.logOptions.version = f), a.deploymentConfigName = b("annotation")(d, "deploymentConfig"), m.push(e.watchObject("replicationcontrollers", c.deployment || c.replicationcontroller, g, function(b, d) {
 "DELETED" === d && (a.alerts.deleted = {
 type:"warning",
 message:c.deployment ? "This deployment has been deleted." :"This replication controller has been deleted."
-}), a.deployment = b, o(b), n(b), u();
-})), a.deploymentConfigName && q(), a.$watch("deployment.spec.selector", function() {
-p = new LabelSelector(a.deployment.spec.selector), r();
+}), a.deployment = b, o(b), n(b), v();
+})), a.deploymentConfigName && r(), a.$watch("deployment.spec.selector", function() {
+q = new LabelSelector(a.deployment.spec.selector), s();
 }, !0), m.push(e.watch("pods", g, function(a) {
-l = a.by("metadata.name"), r();
+l = a.by("metadata.name"), s();
 }));
 }, function(d) {
 a.loaded = !0, a.alerts.load = {
@@ -4500,9 +4510,12 @@ a.builds = b.by("metadata.name"), Logger.log("builds (subscribe)", a.builds);
 group:"extensions",
 resource:"horizontalpodautoscalers"
 }, g, function(a) {
-s = a.by("metadata.name"), h(), u();
+t = a.by("metadata.name"), h(), v();
+}, {
+poll:p,
+pollInterval:6e4
 })), e.list("limitranges", g, function(a) {
-t = a.by("metadata.name"), u();
+u = a.by("metadata.name"), v();
 }), a.startLatestDeployment = function(b) {
 i.startLatestDeployment(b, g, a);
 }, a.retryFailedDeployment = function(b) {
@@ -4521,9 +4534,9 @@ details:b("getErrorDetails")(c)
 };
 a.deploymentConfig ? i.scaleDC(a.deploymentConfig, c).then(_.noop, d) :i.scaleRC(a.deployment, c).then(_.noop, d);
 };
-var v = b("isDeployment");
+var w = b("isDeployment");
 a.isScalable = function() {
-return !_.isEmpty(a.autoscalers) || (!v(a.deployment) || (!!a.deploymentConfigMissing || !!a.deploymentConfig && a.isActive));
+return !_.isEmpty(a.autoscalers) || (!w(a.deployment) || (!!a.deploymentConfigMissing || !!a.deploymentConfig && a.isActive));
 }, a.$on("$destroy", function() {
 e.unwatchAll(m);
 });
@@ -10996,6 +11009,16 @@ default:
 a.valueAlt = "Set to a reference on a " + c;
 }
 }));
+};
+}).filter("isIE", function() {
+var a = navigator.userAgent, b = /msie|trident/i.test(a);
+return function() {
+return b;
+};
+}).filter("isEdge", function() {
+var a = navigator.userAgent, b = /chrome.+? edge/i.test(a);
+return function() {
+return b;
 };
 }), angular.module("openshiftConsole").filter("camelToLower", function() {
 return function(a) {

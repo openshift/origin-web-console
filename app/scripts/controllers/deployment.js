@@ -124,6 +124,8 @@ angular.module('openshiftConsole')
       $scope.forms.envForm.$setPristine();
     };    
 
+    var limitWatches = $filter('isIE')() || $filter('isEdge')();
+
     ProjectsService
       .get($routeParams.project)
       .then(_.spread(function(project, context) {
@@ -326,7 +328,7 @@ angular.module('openshiftConsole')
           allHPA = data.by("metadata.name");
           updateHPA();
           updateHPAWarnings();
-        }));
+        }, {poll: limitWatches, pollInterval: 60 * 1000}));
 
         // List limit ranges in this project to determine if there is a default
         // CPU request for autoscaling.
