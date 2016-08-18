@@ -4124,11 +4124,13 @@ ul.messenger-theme-flat .messenger-message.alert-info .messenger-message-inner:b
 .overview .deployment-tile .overview-donut.ng-enter{animation:simpleSlideIn 1s ease forwards}
 .overview .deployment-tile .overview-donut-connector{padding-bottom:0}
 .overview .deployment-tile .overview-donut-connector.contains-deployment-status-msg{-webkit-order:3;-moz-order:3;-ms-order:3;order:3;width:50%}
-.overview .deployment-tile .overview-donut-connector .deployment-connector-arrow{font-size:300%;left:-20px;line-height:0;position:absolute;top:47%}
+.overview .deployment-tile .overview-donut-connector .deployment-connector-arrow{font-size:300%;left:-20px;line-height:0;position:absolute;top:10%}
 .overview .deployment-tile .overview-donut-connector .deployment-connector-arrow:before{content:'\2192';padding-right:0}
 .overview .deployment-tile .overview-unsuccessful-state{-webkit-flex:1 1 0%;-moz-flex:1 1 0%;-ms-flex:1 1 0%;flex:1 1 0%;-webkit-order:3;-moz-order:3;-ms-order:3;order:3;-webkit-align-items:center;-moz-align-items:center;align-items:center;-webkit-justify-content:center;-moz-justify-content:center;justify-content:center;line-height:1}
 .overview .deployment-tile .deployment-status-msg{font-size:16px}
 .overview .deployment-tile .deployment-status-msg .deployment-log-link{font-size:14px}
+}
+@media (min-width:992px) and (min-width:1200px){.overview .deployment-tile .overview-donut-connector .deployment-connector-arrow{top:47%}
 }
 .overview .no-deployments-block{display:flex;height:100%;width:100%}
 .overview .no-child-services-block{padding-left:3px;width:50%}

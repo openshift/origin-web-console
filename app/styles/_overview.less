@@ -506,7 +506,10 @@
           left: -20px;
           line-height: 0;
           position: absolute;
-          top: 47%;
+          top: 10%; // position arrow higher at narrow width
+          @media (min-width: @screen-lg-min) {
+            top: 47%;
+          }
           &:before {
             content: '\2192';
             padding-right: 0;
