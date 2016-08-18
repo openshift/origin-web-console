@@ -416,6 +416,8 @@ angular.module('openshiftConsole')
       });
     }
 
+    var limitWatches = $filter('isIE')() || $filter('isEdge')();
+
     ProjectsService
       .get($routeParams.project)
       .then(_.spread(function(project, context) {
@@ -459,7 +461,7 @@ angular.module('openshiftConsole')
           groupServices();
           updateRouteWarnings();
           Logger.log("routes (subscribe)", $scope.routesByService);
-        }));
+        }, {poll: limitWatches, pollInterval: 60 * 1000}));
 
         // Sets up subscription for deployments
         watches.push(DataService.watch("replicationcontrollers", context, function(rcData) {
@@ -486,7 +488,7 @@ angular.module('openshiftConsole')
         }, context, function(hpaData) {
           horizontalPodAutoscalers = hpaData.by("metadata.name");
           groupHPAs();
-        }));
+        }, {poll: limitWatches, pollInterval: 60 * 1000}));
 
         // List limit ranges in this project to determine if there is a default
         // CPU request for autoscaling.

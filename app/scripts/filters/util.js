@@ -560,4 +560,19 @@ angular.module('openshiftConsole')
         }
       });
     };
+  })
+  // Use of isIE and isEdge is HIGHLY discouraged, only use if absolutely required
+  .filter('isIE', function() {
+    var ua = navigator.userAgent;
+    var isIE = /msie|trident/i.test(ua);
+    return function() {
+      return isIE;
+    };
+  })
+  .filter('isEdge', function() {
+    var ua = navigator.userAgent;
+    var isEdge = /chrome.+? edge/i.test(ua);
+    return function() {
+      return isEdge;
+    };
   });

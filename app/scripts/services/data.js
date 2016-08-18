@@ -963,7 +963,7 @@ DataService.prototype.createStream = function(resource, name, context, opts, isR
       var watchOpts = this._watchOptions(key) || {};
       if (watchOpts.poll) {
         this._watchInFlight(key, true);
-        this._watchPollTimeouts(key, setTimeout($.proxy(this, "_startListOp", key), watchOpts.pollInterval || 5000));
+        this._watchPollTimeouts(key, setTimeout($.proxy(this, "_startListOp", resource, context), watchOpts.pollInterval || 5000));
       }
       else if (!this._watchInFlight(key)) {
         this._startWatchOp(key, resource, context, opts, this._resourceVersion(key));
