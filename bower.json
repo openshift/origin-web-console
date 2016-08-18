@@ -41,7 +41,7 @@
     "ng-sortable": "1.3.4",
     "ui-select": "angular-ui-select#0.16.1",
     "matchHeight": "0.6.0",
-    "angular-key-value-editor": "2.4.0",
+    "angular-key-value-editor": "2.4.1",
     "angular-inview": "1.5.7"
   },
   "devDependencies": {
