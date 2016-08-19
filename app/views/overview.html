@@ -4,7 +4,7 @@
   <!-- Middle section -->
   <div class="middle-section">
     <div class="middle-container">
-      <div class="middle-content  has-scroll surface-shaded" in-view-container>
+      <div class="middle-content surface-shaded" in-view-container>
         <div class="container-fluid surface-shaded">
           <tasks></tasks>
           <alerts alerts="alerts"></alerts>
@@ -39,7 +39,7 @@
                    ng-if="service.metadata.labels.app || routesByService[service.metadata.name].length || childServicesByParent[service.metadata.name].length">
                 <overview-service-group></overview-service-group>
               </div>
-              
+
               <div row wrap class="standalone-service-row">
                 <div
                     ng-repeat="service in topLevelServices"
@@ -48,7 +48,7 @@
                   <overview-service-group></overview-service-group>
                 </div>
               </div>
-            
+
               <!-- Unserviced DCs, RCs, and pods -->
               <div row wrap ng-if="(monopodsByService[''] | hashSize) > 0 || (deploymentConfigsByService[''] | hashSize) > 0 || (deploymentsByService[''] | hashSize) > 0" class="unserviced-row">
                 <!-- unserviced DC -->
@@ -74,7 +74,7 @@
                 </div>
                 <!-- /unserviced monopods -->
               </div>
-              
+
             </div>
           </div>
         </div>

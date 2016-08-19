@@ -2,12 +2,12 @@
   <project-page>
     <!-- Middle section -->
     <div class="middle-section">
-      <div id="scrollable-content" class="middle-container has-scroll">
+      <div class="middle-container">
         <div class="middle-header">
           <div class="container-fluid">
             <div row mobile="column" class="tech-preview-header">
               <breadcrumbs breadcrumbs="breadcrumbs"></breadcrumbs>
-              <span ng-if="buildConfig | isJenkinsPipelineStrategy" class="pad-top-md"><span class="label label-warning">Technology Preview</span></span>              
+              <span ng-if="buildConfig | isJenkinsPipelineStrategy" class="pad-top-md"><span class="label label-warning">Technology Preview</span></span>
             </div>
             <alerts alerts="alerts"></alerts>
             <div ng-if="!loaded">Loading...</div>
@@ -397,7 +397,8 @@
                           value-placeholder="Value"
                           key-validator="[A-Za-z_][A-Za-z0-9_]*"
                           key-validator-error="Please enter a valid key"
-                          key-validator-error-tooltip="A valid environment variable name is an alphanumeric (a-z and 0-9) string beginning with a letter that may contain underscores."></key-value-editor>
+                          key-validator-error-tooltip="A valid environment variable name is an alphanumeric (a-z and 0-9) string beginning with a letter that may contain underscores."
+                          add-row-link="Add environment variable"></key-value-editor>
                         <button
                           class="btn btn-default"
                           ng-click="saveEnvVars()"

@@ -27,7 +27,7 @@
         <a ng-href="project/{{projectName}}/browse/routes">{{(primaryServiceRoutes | hashSize) - 1}} other route<span ng-if="(primaryServiceRoutes | hashSize) > 2">s</span></a>
       </small>
     </h3>
-    <span ng-if="!displayRoute" class="nowrap">
+    <span ng-if="!displayRoute" class="create-route-link">
       <a ng-if="'routes' | canI : 'create'" ng-href="project/{{service.metadata.namespace}}/create-route?service={{service.metadata.name}}">Create Route</a>
     </span>
   </div>

@@ -11,7 +11,7 @@
       </form>
       <span ng-if="state !== 'empty'" class="action-divider">|</span>
     </span>
-    <a ng-if="state !== 'empty'"
+    <a ng-if="state && state !== 'empty'"
        href=""
        ng-click="goChromeless(options, fullLogUrl)"
        role="button">
@@ -28,9 +28,9 @@
 </div>
 
 
-<!-- show this spinner until the log viewer starts. important for pending state, etc -->
-<div class="text-center gutter-top" ng-if="(!state)">
-  <ellipsis-loader></ellipsis-loader>
+<!-- show this message until the log viewer starts. important for pending state, etc -->
+<div ng-if="(!state)" class="mar-top-sm log-loading-msg">
+  Loading log...
 </div>
 
 <div class="empty-state-message text-center" ng-if="state=='empty'" ng-class="{'log-fixed-height': fixedHeight}">

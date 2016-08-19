@@ -258,6 +258,12 @@
       line-height: 1.1;
       margin: 3px 25px;
     }
+    .create-route-link {
+      .nowrap();
+      @media (max-width: @screen-sm-max) {
+        margin-left: 30px;
+      }
+    }
     @media (min-width: @screen-sm-min) {
       .flex-direction(@direction: row);
       align-items: center;
@@ -385,16 +391,28 @@
       position: relative;
       .deployment-donut {
         .align-items(@align: center);
+        min-width: 0;
       }
       @media (min-width: @screen-md-min) {
         .flex-direction(@direction: row);
         .justify-content(@justify: space-between);
       }
     }
+    &.deployment-in-progress {
+      // Prevent the metrics from being shown outside tile as they slide out.
+      // Only use this style when a deployment is in progress so that chart
+      // tooltips aren't clipped.
+      overflow: hidden;
+    }
     .overview-donut, .overview-metrics {
       .align-items(@align: center);
     }
     .overview-metrics {
+      .metrics-sparkline {
+        @media (min-width: @screen-lg-min) {
+          width: 60%;
+        }
+      }
       @media (max-width: @screen-sm-max) {
         margin: 0 auto;
         .text-center();
@@ -403,6 +421,9 @@
     @media (max-width: @screen-sm-max) {
       .deployment-details {
         .flex-order(@order: 5);
+        pod-template {
+          margin: 20px auto 5px;
+        }
       }
     }
     .overview-donut {
@@ -413,7 +434,6 @@
     }
     .overview-donut-connector {
       .align-items(@align: center);
-      color: #ccc;
       .flex-order(@order: 3);
       .justify-content(@justify: center);
       line-height: 1;
@@ -424,6 +444,7 @@
         .flex-order(@order: 5);
       }
       .deployment-connector-arrow {
+        color: #ccc;
         font-size: 200%;
         &:before {
           content: '\2193';
@@ -434,13 +455,28 @@
     .overview-unsuccessful-state {
       text-align: center;
     }
+    .deployment-status-msg {
+      .text-muted();
+      line-height: normal;
+      margin-bottom: 10px;
+    }
 
-    @keyframes simpleSlide {
+    @keyframes simpleSlideOut {
       0% {
         margin-left: 0%;
+        opacity: 1;
       }
       100% {
         margin-left: -50%;
+        opacity: 0;
+      }
+    }
+    @keyframes simpleSlideIn {
+      0% {
+        margin-right: -50%;
+      }
+      100% {
+        margin-right: 0%;
       }
     }
 
@@ -449,14 +485,14 @@
         padding-left: 30px;
         width: 50%;
         &.ng-leave {
-          animation: simpleSlide 1s ease forwards;
+          animation: simpleSlideOut 1s ease forwards;
         }
       }
       .overview-donut {
         min-height: 150px;
         width: 50%;
-        &.latest {
-          max-width: 50%;
+        &.ng-enter {
+          animation: simpleSlideIn 1s ease forwards;
         }
       }
       .overview-donut-connector {
@@ -470,7 +506,10 @@
           left: -20px;
           line-height: 0;
           position: absolute;
-          top: 47%;
+          top: 10%; // position arrow higher at narrow width
+          @media (min-width: @screen-lg-min) {
+            top: 47%;
+          }
           &:before {
             content: '\2192';
             padding-right: 0;
@@ -485,10 +524,7 @@
         line-height: 1;
       }
       .deployment-status-msg {
-        .text-muted();
         font-size: 16px;
-        line-height: normal;
-        margin-bottom: 10px;
         .deployment-log-link {
           font-size: 14px;
         }
@@ -523,6 +559,10 @@
       @media (min-width: @two-column-min-width) {
         margin-top: 0;
       }
+    }
+    @media (min-width: @screen-sm-min) {
+      // Content can overflow the well in Safari without a min-height.
+      min-height: @tile-min-height;
     }
   }
   .no-deployments-message {

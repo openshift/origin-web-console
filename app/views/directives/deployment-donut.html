@@ -73,7 +73,7 @@
       <span>Idled due to inactivity.</span>
       <a
         href=""
-        ng-click="unIdle()">Start {{hpa[0].spec.minReplicas || 1}} pod{{ (hpa[0].spec.minReplicas || 1) > 1 ? 's' : ''}}</a>
+        ng-click="unIdle()">Start {{(deploymentConfig || rc) | unidleTargetReplicas : hpa}} pod{{ ((deploymentConfig || rc) | unidleTargetReplicas : hpa) > 1 ? 's' : ''}}</a>
     </div>
   </div>
 </div>

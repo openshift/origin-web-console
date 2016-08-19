@@ -329,6 +329,20 @@
   }
 }
 
+// Since the monitoring page has additional padding, we need to stop showing ticks sooner.
+@media (max-width: 550px) {
+  .monitoring-page .metrics-sparkline .c3-axis-x .tick {
+    display: none;
+  }
+}
+
+// The sidebar takes additional width from the chart when open.
+@media (max-width: 950px) {
+  .monitoring-page.sidebar-open .metrics-sparkline .c3-axis-x .tick {
+    display: none;
+  }
+}
+
 .metrics-compact {
   margin-bottom: 10px;
   white-space : nowrap;
