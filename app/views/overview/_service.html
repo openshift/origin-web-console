@@ -12,6 +12,7 @@
 
 <div ng-attr-row="{{!service ? '' : undefined}}"
      ng-attr-wrap="{{!service ? '' : undefined}}"
+     ng-if="(visibleDeploymentsByConfig | hashSize) || (monopodsByService[service.metadata.name || ''] | hashSize)"
      class="deployment-block"
      ng-class="{
        'no-service': !service,
