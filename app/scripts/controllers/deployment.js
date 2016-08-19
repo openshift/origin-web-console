@@ -206,7 +206,7 @@ angular.module('openshiftConsole')
               }
               $scope.deployment = deployment;
 
-              if ($scope.forms.envForm.$pristine) { 
+              if (!$scope.forms.envForm || $scope.forms.envForm.$pristine) { 
                 copyDeploymentAndEnsureEnv(deployment);
               } else {
                 $scope.alerts["background_update"] = {

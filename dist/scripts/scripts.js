@@ -4486,7 +4486,7 @@ f && (a.breadcrumbs[2].title = "#" + f, a.logOptions.version = f), a.deploymentC
 "DELETED" === d && (a.alerts.deleted = {
 type:"warning",
 message:c.deployment ? "This deployment has been deleted." :"This replication controller has been deleted."
-}), a.deployment = b, a.forms.envForm.$pristine ? o(b) :a.alerts.background_update = {
+}), a.deployment = b, !a.forms.envForm || a.forms.envForm.$pristine ? o(b) :a.alerts.background_update = {
 type:"warning",
 message:"This replication controller has been updated in the background. Saving your changes may create a conflict or cause loss of data.",
 links:[ {
