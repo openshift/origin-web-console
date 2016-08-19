@@ -722,6 +722,7 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "<div ng-repeat=\"build in buildsByOutputImage[(trigger.imageChangeParams.from | imageObjectRef : namespace)] | orderObjectsByDate : true track by (build | uid)\" ng-show=\"!(hideBuild)\" class=\"build animate-repeat hide-ng-leave\" kind=\"Build\" resource=\"build\">\n" +
     "<div class=\"build-summary\" ng-class=\"{'dismissible' : !(build | isIncompleteBuild)}\">\n" +
     "<div class=\"build-name\">\n" +
+    "Build\n" +
     "<span ng-if=\"build | annotation : 'buildNumber'\">\n" +
     "<span ng-if=\"build | buildConfigForBuild\">\n" +
     "<a ng-href=\"{{build | configURLForResource}}\">{{build | buildConfigForBuild}}</a>,\n" +
@@ -4240,6 +4241,7 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "<div class=\"build-pipeline-collapsed\" ng-show=\"!hideBuild\">\n" +
     "<div class=\"build-summary\" ng-class=\"{'dismissible' : !(build | isIncompleteBuild)}\">\n" +
     "<div class=\"build-name\">\n" +
+    "Pipeline\n" +
     "<a ng-href=\"{{build | configURLForResource}}\">{{buildConfigName}}</a>,\n" +
     "<a ng-href=\"{{build | navigateResourceURL}}\">#{{build | annotation : 'buildNumber'}}</a>\n" +
     "</div>\n" +

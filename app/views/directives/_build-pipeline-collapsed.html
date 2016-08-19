@@ -1,6 +1,7 @@
 <div class="build-pipeline-collapsed" ng-show="!hideBuild">
   <div class="build-summary" ng-class="{'dismissible' : !(build | isIncompleteBuild)}">
     <div class="build-name">
+      Pipeline
       <a ng-href="{{build | configURLForResource}}">{{buildConfigName}}</a>,
       <a ng-href="{{build | navigateResourceURL}}">#{{build | annotation : 'buildNumber'}}</a>
     </div>
