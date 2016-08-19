@@ -8083,7 +8083,7 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "</div>\n" +
     "</div>\n" +
     "</div>\n" +
-    "<div ng-attr-row=\"{{!service ? '' : undefined}}\" ng-attr-wrap=\"{{!service ? '' : undefined}}\" class=\"deployment-block\" ng-class=\"{\n" +
+    "<div ng-attr-row=\"{{!service ? '' : undefined}}\" ng-attr-wrap=\"{{!service ? '' : undefined}}\" ng-if=\"(visibleDeploymentsByConfig | hashSize) || (monopodsByService[service.metadata.name || ''] | hashSize)\" class=\"deployment-block\" ng-class=\"{\n" +
     "       'no-service': !service,\n" +
     "       'service-multiple-targets': (rcTileCount + (monopodsByService[service.metadata.name] | hashSize) > 1)\n" +
     "     }\">\n" +
