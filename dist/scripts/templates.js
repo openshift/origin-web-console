@@ -2243,9 +2243,9 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "<registry-image-config image=\"image\">\n" +
     "</registry-image-config>\n" +
     "</uib-tab>\n" +
-    "<uib-tab heading=\"Layers\" active=\"selectedTab.meta\">\n" +
+    "<uib-tab heading=\"Layers\" active=\"selectedTab.meta\" ng-show=\"layers && layers.length > 0\">\n" +
     "<uib-tab-heading>Layers</uib-tab-heading>\n" +
-    "<registry-image-layers image=\"image\">\n" +
+    "<registry-image-layers layers=\"layers\">\n" +
     "</registry-image-layers>\n" +
     "</uib-tab>\n" +
     "</uib-tabset>\n" +

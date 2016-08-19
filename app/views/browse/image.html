@@ -35,9 +35,9 @@
                   <registry-image-config image="image">
                   </registry-image-config>
                 </uib-tab>
-                <uib-tab heading="Layers" active="selectedTab.meta">
+                <uib-tab heading="Layers" active="selectedTab.meta" ng-show="layers && layers.length > 0">
                   <uib-tab-heading>Layers</uib-tab-heading>
-                  <registry-image-layers image="image">
+                  <registry-image-layers layers="layers">
                   </registry-image-layers>
                 </uib-tab>
               </uib-tabset>
