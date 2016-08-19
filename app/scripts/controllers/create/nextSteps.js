@@ -53,6 +53,9 @@ angular.module("openshiftConsole")
 
     var processedTemplateData = ProcessedTemplateService.getTemplateData();
     $scope.parameters = processedTemplateData.params;
+    _.each($scope.parameters, function(env) {
+      $filter('altTextForValueFrom')(env);
+    });
     $scope.templateMessage = processedTemplateData.message;
     ProcessedTemplateService.clearTemplateData();
 
@@ -86,7 +89,7 @@ angular.module("openshiftConsole")
 
         $scope.toggleParamsTable = function() {
           $scope.showParamsTable = true;
-        }
+        };
 
         function erroredTasks(tasks) {
           var erroredTasks = [];
