@@ -3290,7 +3290,7 @@ to{transform:rotate(359deg)}
 .key-value-editor .input-group-addon span[title]:not([data-original-title=""]){cursor:help}
 .key-value-editor .key-value-editor-buttons{position:absolute;right:0;top:0;width:52px}
 .key-value-editor .key-value-editor-entry{display:table;padding-right:52px;position:relative;width:100%}
-.key-value-editor .key-value-editor-input{float:left;padding-right:5px;width:50%}
+.key-value-editor .key-value-editor-header,.key-value-editor .key-value-editor-input{float:left;padding-right:5px;width:50%}
 .word-break-all{word-break:break-all;word-break:break-word;overflow-wrap:break-word}
 .modal-resource-action h1,.resource-description,.word-break{word-wrap:break-word;word-break:break-word}
 .word-break{overflow-wrap:break-word;min-width:0}
@@ -4773,3 +4773,4 @@ kubernetes-topology-graph{height:700px}
 .terminal-font,kubernetes-container-terminal .terminal{font-family:"Monospace Regular","DejaVu Sans Mono",Menlo,Monaco,Consolas,monospace;line-height:1em;font-size:12px}
 @media (min-width:768px){.container-terminal-wrapper{background-color:#000}
 }
+.key-value-editor .key-value-editor-header{margin-bottom:5px}
