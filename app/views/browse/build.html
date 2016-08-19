@@ -8,7 +8,7 @@
           <div class="container-fluid">
             <div row mobile="column" class="tech-preview-header">
               <breadcrumbs breadcrumbs="breadcrumbs"></breadcrumbs>
-              <span ng-if="build | isJenkinsPipelineStrategy" class="pad-top-md"><span class="label label-warning">Technology Preview</span></span>              
+              <span ng-if="build | isJenkinsPipelineStrategy" class="pad-top-md"><span class="label label-warning">Technology Preview</span></span>
             </div>
             <alerts alerts="alerts"></alerts>
             <div ng-if="!loaded">Loading...</div>
@@ -102,11 +102,13 @@
                       </p>
                       <key-value-editor
                         entries="(build | buildStrategy).env"
+                        key-placeholder="Name"
+                        value-placeholder="Value"
                         cannot-add
                         cannot-delete
                         cannot-sort
-                        is-readonly>
-                      </key-value-editor>
+                        is-readonly
+                        show-header></key-value-editor>
                       <em ng-if="!(build | buildStrategy).env">The build strategy had no environment variables defined.</em>
                     </uib-tab>
 

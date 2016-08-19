@@ -90,10 +90,13 @@
                       <key-value-editor
                         ng-if="container.env.length"
                         entries="container.env"
+                        key-placeholder="Name"
+                        value-placeholder="Value"
                         cannot-add
                         cannot-delete
                         cannot-sort
-                        is-readonly></key-value-editor>
+                        is-readonly
+                        show-header></key-value-editor>
                       <em ng-if="!container.env.length">The container specification has no environment variables set.</em>
                     </div>
                   </uib-tab>
