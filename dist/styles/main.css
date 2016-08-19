@@ -4000,6 +4000,7 @@ ul.messenger-theme-flat .messenger-message.alert-info .messenger-message-inner:b
 .icon-load-balancer:before{content:"\f136"}
 .icon-laravel:before{content:"\f137"}
 .overview{font-weight:300}
+.overview .middle{background-color:#f2f2f2}
 .overview h2{line-height:1.4}
 .overview .link-service-button{font-size:13px}
 @media (max-width:767px){.overview .overview-timestamp{display:block}
