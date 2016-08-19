@@ -15,6 +15,9 @@
 
 .overview {
   font-weight: @overview-font-weight;
+  .middle { // hack to quickly, safely fix bugs where all of the overview page isn't gray; TODO: fix using .surface-shaded
+    background-color: @panel-shaded;
+  }
   h2 {
     line-height: 1.4;
   }
@@ -324,7 +327,7 @@
       .flex-direction(@direction: row);
       overview-service {
         width: 50%;
-        
+
         &:nth-child(even) {
           padding-left: 3px;
         }
@@ -333,7 +336,7 @@
         }
       }
     }
-    @media (min-width: @two-column-min-width) { 
+    @media (min-width: @two-column-min-width) {
       .standalone-service-row .standalone-service {
         width: 50%;
         &:nth-child(odd) {
