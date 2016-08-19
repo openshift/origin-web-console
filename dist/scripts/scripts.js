@@ -3977,7 +3977,16 @@ n(a.buildConfig), a.forms.bcEnvVars.$setPristine();
 "DELETED" === c && (a.alerts.deleted = {
 type:"warning",
 message:"This build configuration has been deleted."
-}), a.buildConfig = b, n(b), a.paused = e.isPaused(a.buildConfig);
+}), a.buildConfig = b, a.forms.bcEnvVars.$pristine ? n(b) :a.alerts.background_update = {
+type:"warning",
+message:"This build configuration has been updated in the background. Saving your changes may create a conflict or cause loss of data.",
+links:[ {
+label:"Reload environment variables",
+onClick:function() {
+return a.clearEnvVarUpdates(), !0;
+}
+} ]
+}, a.paused = e.isPaused(a.buildConfig);
 }));
 }, function(c) {
 a.loaded = !0, a.alerts.load = {
@@ -4321,7 +4330,16 @@ n(a.deploymentConfig), a.forms.dcEnvVars.$setPristine();
 "DELETED" === c && (a.alerts.deleted = {
 type:"warning",
 message:"This deployment configuration has been deleted."
-}), a.deploymentConfig = b, n(b), q(), h.fetchReferencedImageStreamImages([ b.spec.template ], a.imagesByDockerReference, a.imageStreamImageRefByDockerReference, i);
+}), a.deploymentConfig = b, a.forms.dcEnvVars.$pristine ? n(b) :a.alerts.background_update = {
+type:"warning",
+message:"This deployment configuration has been updated in the background. Saving your changes may create a conflict or cause loss of data.",
+links:[ {
+label:"Reload environment variables",
+onClick:function() {
+return a.clearEnvVarUpdates(), !0;
+}
+} ]
+}, q(), h.fetchReferencedImageStreamImages([ b.spec.template ], a.imagesByDockerReference, a.imageStreamImageRefByDockerReference, i);
 })), o.push(e.watch("replicationcontrollers", i, function(d, e, g) {
 var h = c.deploymentconfig;
 if (a.emptyMessage = "No deployments to show", e) {
@@ -4468,7 +4486,16 @@ f && (a.breadcrumbs[2].title = "#" + f, a.logOptions.version = f), a.deploymentC
 "DELETED" === d && (a.alerts.deleted = {
 type:"warning",
 message:c.deployment ? "This deployment has been deleted." :"This replication controller has been deleted."
-}), a.deployment = b, o(b), n(b), v();
+}), a.deployment = b, a.forms.envForm.$pristine ? o(b) :a.alerts.background_update = {
+type:"warning",
+message:"This replication controller has been updated in the background. Saving your changes may create a conflict or cause loss of data.",
+links:[ {
+label:"Reload environment variables",
+onClick:function() {
+return a.clearEnvVarUpdates(), !0;
+}
+} ]
+}, n(b), v();
 })), a.deploymentConfigName && r(), a.$watch("deployment.spec.selector", function() {
 q = new LabelSelector(a.deployment.spec.selector), s();
 }, !0), m.push(e.watch("pods", g, function(a) {
@@ -4949,7 +4976,10 @@ for (var d in c) a.buildFrom.projects.push(d), a.pushTo.projects.push(d);
 a.availableProjects = angular.copy(a.buildFrom.projects), a.buildFrom.projects.contains(a.builderOptions.pickedNamespace) || (a.checkNamespaceAvailability(a.builderOptions.pickedNamespace), a.buildFrom.projects.push(a.builderOptions.pickedNamespace)), a.pushTo.projects.contains(a.outputOptions.pickedNamespace) || (a.checkNamespaceAvailability(a.outputOptions.pickedNamespace), a.pushTo.projects.push(a.outputOptions.pickedNamespace)), "ImageStreamTag" === a.builderOptions.pickedType && a.updateBuilderImageStreams(a.builderOptions.pickedNamespace, !1), "ImageStreamTag" === a.outputOptions.pickedType && a.updateOutputImageStreams(a.outputOptions.pickedNamespace, !1), a.sources.images && a.sourceImage && (a.imageSourceBuildFrom.projects = angular.copy(a.buildFrom.projects), a.imageSourceBuildFrom.projects.contains(a.imageSourceOptions.pickedNamespace) || (a.checkNamespaceAvailability(a.imageSourceOptions.pickedNamespace), a.imageSourceBuildFrom.projects.push(a.imageSourceOptions.pickedNamespace)), 
 "ImageStreamTag" === a.imageSourceOptions.pickedType && a.updateImageSourceImageStreams(a.imageSourceOptions.pickedNamespace, !1)), a.loaded = !0;
 }), l.push(c.watchObject("buildconfigs", b.buildconfig, f, function(b, c) {
-"DELETED" === c && (a.alerts.deleted = {
+"MODIFIED" === c && (a.alerts.background_update = {
+type:"warning",
+message:"This build configuration has changed since you started editing it. You'll need to copy any changes you've made and edit again."
+}), "DELETED" === c && (a.alerts.deleted = {
 type:"warning",
 message:"This build configuration has been deleted."
 }, a.disableInputs = !0), a.buildConfig = b;
