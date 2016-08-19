@@ -4082,7 +4082,7 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "<div ng-if=\"!showParamsTable\" class=\"center\">\n" +
     "<a href=\"\" ng-click=\"toggleParamsTable()\">Show parameter values</a>\n" +
     "</div>\n" +
-    "<environment ng-if=\"showParamsTable\" env-vars=\"parameters.all\" class=\"no-background\"></environment>\n" +
+    "<key-value-editor ng-if=\"showParamsTable\" entries=\"parameters.all\" key-placeholder=\"Name\" value-placeholder=\"Value\" cannot-add cannot-delete cannot-sort show-header is-readonly></key-value-editor>\n" +
     "</div>\n" +
     "</div>\n" +
     "</div>\n" +

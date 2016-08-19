@@ -5567,7 +5567,9 @@ link:v
 title:"Next Steps"
 } ];
 var w = g.getTemplateData();
-a.parameters = w.params, a.templateMessage = w.message, g.clearTemplateData(), n.get(c.project).then(_.spread(function(b, c) {
+a.parameters = w.params, _.each(a.parameters, function(a) {
+k("altTextForValueFrom")(a);
+}), a.templateMessage = w.message, g.clearTemplateData(), n.get(c.project).then(_.spread(function(b, c) {
 function e(a) {
 var b = [];
 return angular.forEach(a, function(a) {
