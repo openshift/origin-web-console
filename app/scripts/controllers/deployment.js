@@ -205,7 +205,25 @@ angular.module('openshiftConsole')
                 };
               }
               $scope.deployment = deployment;
-              copyDeploymentAndEnsureEnv(deployment);
+
+              if ($scope.forms.envForm.$pristine) { 
+                copyDeploymentAndEnsureEnv(deployment);
+              } else {
+                $scope.alerts["background_update"] = {
+                  type: "warning",
+                  message: "This replication controller has been updated in the background. Saving your changes may create a conflict or cause loss of data.",
+                  links: [
+                    {
+                      label: 'Reload environment variables',
+                      onClick: function() {
+                        $scope.clearEnvVarUpdates();
+                        return true;
+                      }
+                    }
+                  ]
+                };
+              }
+
               setLogVars(deployment);
               updateHPAWarnings();
             }));
