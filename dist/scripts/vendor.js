@@ -53663,13 +53663,13 @@ valuePlaceholder:f.valuePlaceholder || g.valuePlaceholder
 }), e.append(a(i)(b));
 },
 controller:[ "$scope", "$timeout", function(a) {
-var b = [], c = [];
+var b = [], c = [], d = k++;
 angular.extend(a, {
-unique:k++,
+unique:d,
 forms:{},
 placeholder:l(),
-setFocusKeyClass:"key-value-editor-set-focus-key-" + a.unique,
-setFocusValClass:"key-value-editor-set-focus-value-" + a.unique,
+setFocusKeyClass:"key-value-editor-set-focus-key-" + d,
+setFocusValClass:"key-value-editor-set-focus-value-" + d,
 dragControlListeners:{
 accept:function(a, b) {
 return a.itemScope.sortableScope.$id === b.$id;
@@ -53694,7 +53694,7 @@ onFocusLastValue:function() {
 m(a.entries), n("." + a.setFocusValClass);
 },
 onAddRow:function() {
-m(a.entries);
+m(a.entries), n("." + a.setFocusKeyClass);
 }
 }), a.$watch("cannotDelete", function(b) {
 angular.isArray(b) && (a.cannotDeleteAny = !1, c = b);
