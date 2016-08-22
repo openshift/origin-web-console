@@ -16,7 +16,6 @@ angular
     'ngResource',
     'ngRoute',
     'ngSanitize',
-    'ngTouch',
     'openshiftUI',
     'kubernetesUI',
     'registryUI.images',
