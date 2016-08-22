@@ -882,7 +882,7 @@ DataService.prototype.createStream = function(resource, name, context, opts, isR
     var ns = context && context.namespace ||
              _.get(context, 'project.metadata.name') ||
              context.projectName;
-    return this._urlForResource(resource, name, context, null, angular.extend({}, {}, {namespace: ns})).toString() + paramsForKey(params);
+    return this._urlForResource(resource, name, context, null, angular.extend({}, {}, {namespace: ns})).toString() + paramsForKey(params || {});
   };
 
 
