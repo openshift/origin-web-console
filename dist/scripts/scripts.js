@@ -1236,7 +1236,7 @@ m.prototype._uniqueKey = function(a, b, c, d) {
 var e = c && c.namespace || _.get(c, "project.metadata.name") || c.projectName;
 return this._urlForResource(a, b, c, null, angular.extend({}, {}, {
 namespace:e
-})).toString() + r(d);
+})).toString() + r(d || {});
 }, m.prototype._startListOp = function(a, c, d) {
 d = d || {};
 var e = this._uniqueKey(a, null, c, _.get(d, "http.params"));
