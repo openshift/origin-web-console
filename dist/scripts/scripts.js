@@ -8112,7 +8112,7 @@ angular.forEach(a.datasets, function(e) {
 var g = e.id, h = e.data;
 b = [ "dates" ], d[g] = [ e.label || g ], e.total = k(g);
 var i = _.last(h).value;
-isNaN(i) && (i = 0), a.convert && (i = a.convert(i)), e.used = i, e.total && (e.available = Math.max(e.total - e.used, 0)), a.totalUsed += e.used, angular.forEach(h, function(c) {
+isNaN(i) && (i = 0), a.convert && (i = a.convert(i)), e.used = i, e.total && (e.available = e.total - e.used), a.totalUsed += e.used, angular.forEach(h, function(c) {
 if (b.push(c.start), void 0 === c.value || null === c.value) d[g].push(c.value); else {
 var e = a.convert ? a.convert(c.value) :c.value;
 switch (g) {
@@ -8131,9 +8131,9 @@ f = Math.max(e, f);
 var j, l;
 e.total && (l = {
 type:"donut",
-columns:[ [ "Used", e.used ], [ "Available", e.available ] ],
+columns:[ [ "Used", e.used ], [ "Available", Math.max(e.available, 0) ] ],
 colors:{
-Used:"#0088ce",
+Used:e.available > 0 ? "#0088ce" :"#ec7a08",
 Available:"#d1d1d1"
 }
 }, v[g] ? v[g].load(l) :(j = E(a), j.data = l, c(function() {
@@ -11051,6 +11051,10 @@ return b;
 var a = navigator.userAgent, b = /chrome.+? edge/i.test(a);
 return function() {
 return b;
+};
+}).filter("abs", function() {
+return function(a) {
+return Math.abs(a);
 };
 }), angular.module("openshiftConsole").filter("camelToLower", function() {
 return function(a) {

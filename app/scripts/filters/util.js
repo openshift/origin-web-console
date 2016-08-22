@@ -575,4 +575,9 @@ angular.module('openshiftConsole')
     return function() {
       return isEdge;
     };
+  })
+  .filter('abs', function() {
+    return function(number) {
+      return Math.abs(number);
+    };
   });

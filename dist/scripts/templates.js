@@ -5525,12 +5525,21 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "\n" +
     "\n" +
     "<div ng-if=\"metric.datasets[0].total\" class=\"utilization-trend-chart-pf\">\n" +
-    "<div class=\"current-values\">\n" +
+    "<div class=\"current-values\" ng-if=\"metric.datasets[0].available >= 0\">\n" +
     "<h1 class=\"available-count pull-left\">\n" +
     "{{metric.datasets[0].available}}\n" +
     "</h1>\n" +
     "<div class=\"available-text pull-left\">\n" +
     "<div>Available of</div>\n" +
+    "<div>{{metric.datasets[0].total}} {{metric.units}}</div>\n" +
+    "</div>\n" +
+    "</div>\n" +
+    "<div class=\"current-values\" ng-if=\"metric.datasets[0].available < 0\">\n" +
+    "<h1 class=\"available-count pull-left\">\n" +
+    "{{metric.datasets[0].available | abs}}\n" +
+    "</h1>\n" +
+    "<div class=\"available-text pull-left\">\n" +
+    "<div><strong>Over limit of</strong></div>\n" +
     "<div>{{metric.datasets[0].total}} {{metric.units}}</div>\n" +
     "</div>\n" +
     "</div>\n" +
