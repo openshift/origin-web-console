@@ -8027,7 +8027,7 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "</overview-service>\n" +
     "<div flex column ng-if=\"alternateServices.length === 0 && childServices.length === 0 && service\" class=\"no-child-services-block\">\n" +
     "<div class=\"no-child-services-message\">\n" +
-    "<div class=\"pad-left-lg pad-right-lg pad-top-lg pad-bottom-lg\">\n" +
+    "<div class=\"pad-xxl\">\n" +
     "\n" +
     "\n" +
     "\n" +
@@ -8084,7 +8084,8 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
   $templateCache.put('views/overview/_service.html',
     "<div ng-if=\"!(visibleDeploymentsByConfig | hashSize) && !(monopodsByService[service.metadata.name] | hashSize)\" class=\"no-deployments-block\">\n" +
     "<div column class=\"no-deployments-message\">\n" +
-    "<div class=\"pad-left-lg pad-right-lg pad-top-lg pad-bottom-lg\">\n" +
+    "<ng-include src=\"'views/overview/_service-header.html'\"></ng-include>\n" +
+    "<div class=\"pad-xxl\">\n" +
     "<h2>No deployments.</h2>\n" +
     "<p>\n" +
     "There are no deployments or pods for service\n" +

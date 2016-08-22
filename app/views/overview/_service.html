@@ -1,6 +1,7 @@
 <div ng-if="!(visibleDeploymentsByConfig | hashSize) && !(monopodsByService[service.metadata.name] | hashSize)" class="no-deployments-block">
   <div column class="no-deployments-message">
-    <div class="pad-left-lg pad-right-lg pad-top-lg pad-bottom-lg">
+    <ng-include src="'views/overview/_service-header.html'"></ng-include>
+    <div class="pad-xxl">
       <h2>No deployments.</h2>
       <p>
         There are no deployments or pods for service

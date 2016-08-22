@@ -116,13 +116,18 @@
   .deployment-tile,
   .no-deployments-block .service-title {
     background-color: #ffffff;
-    border: 1px solid @overview-border-gray;
     border-left-width: 0;
+  }
+  .service-group-header,
+  .deployment-tile {
+    border: 1px solid @overview-border-gray;
+  }
+  .no-deployments-block .service-title {
+    border-bottom: 1px solid @overview-border-gray;
   }
   .service-group-header,
   .deployment-tile,
   .standalone-service .builds-block,
-  .no-deployments-block .service-title,
   .service-group-triggers {
     box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1);
   }
@@ -552,7 +557,6 @@
     .text-center();
     .text-muted();
     .well();
-    .justify-content(@justify: center);
     margin-bottom: 0;
     padding: 0; // negate .well default padding to maintain equal widths
     h2 {
@@ -573,6 +577,8 @@
   }
   .no-child-services-message {
     display: none;
+    // Account for missing service header height so messages align.
+    padding-top: 35px;
     @media (min-width: @two-column-min-width) {
       .flex-display(@display: flex);
       .flex(@columns: 1 0 0%);
