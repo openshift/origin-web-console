@@ -8885,15 +8885,15 @@ restrict:"E",
 scope:{
 route:"="
 },
-template:'<div ng-attr-id="{{chartId}}"></div>',
+template:'<div ng-show="totalWeight" ng-attr-id="{{chartId}}"></div>',
 link:function(a) {
 function b() {
 var b = {
 columns:[]
 };
-a.route && (b.columns.push(e(a.route.spec.to)), _.each(a.route.spec.alternateBackends, function(a) {
-b.columns.push(e(a));
-})), c ? c.load(b) :(d.data.columns = b.columns, c = c3.generate(d));
+a.route && (b.columns.push(e(a.route.spec.to)), a.totalWeight = a.route.spec.to.weight, _.each(a.route.spec.alternateBackends, function(c) {
+b.columns.push(e(c)), a.totalWeight += c.weight;
+})), a.totalWeight && (c ? c.load(b) :(d.data.columns = b.columns, c = c3.generate(d)));
 }
 var c, d;
 a.chartId = _.uniqueId("route-service-chart-"), d = {
