@@ -630,7 +630,7 @@ angular.module('openshiftConsole')
 
     $scope.updatedImageSourcePath = function(imageSourcePaths) {
       return _.map(
-              keyValueEditorUtils.compactEntries(imageSourcePaths), 
+              keyValueEditorUtils.compactEntries(imageSourcePaths),
               function(path) {
               	return {
                   sourcePath: path.name,
@@ -674,8 +674,8 @@ angular.module('openshiftConsole')
     };
 
     $scope.updateTriggers = function() {
-      var triggers = [].concat($scope.triggers.githubWebhooks, 
-                              $scope.triggers.genericWebhooks, 
+      var triggers = [].concat($scope.triggers.githubWebhooks,
+                              $scope.triggers.genericWebhooks,
                               $scope.triggers.imageChangeTriggers,
                               $scope.triggers.builderImageChangeTrigger,
                               $scope.triggers.configChangeTrigger);
@@ -733,7 +733,7 @@ angular.module('openshiftConsole')
       }
 
       // Update envVars
-      $filter('buildStrategy')($scope.updatedBuildConfig).env = $scope.envVars;
+      $filter('buildStrategy')($scope.updatedBuildConfig).env = keyValueEditorUtils.compactEntries($scope.envVars);
 
       // Update triggers
       $scope.updatedBuildConfig.spec.triggers = $scope.updateTriggers();
