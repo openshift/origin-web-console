@@ -60,7 +60,7 @@
           can render that common case specially.
         -->
         <div class="overview-services"
-             ng-class="{ 'single-alternate-service': (alternateServices | hashSize) === 1 }">
+             ng-class="{ 'single-alternate-service': (alternateServices | hashSize) === 1 && totalWeight }">
           <overview-service ng-init="isPrimary = true" class="primary-service"></overview-service>
           <overview-service
               ng-init="isAlternate = true"

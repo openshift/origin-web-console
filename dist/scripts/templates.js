@@ -8019,7 +8019,7 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "</service-group-notifications>\n" +
     "<div uib-collapse=\"collapse\" class=\"service-group-body\">\n" +
     "\n" +
-    "<div class=\"overview-services\" ng-class=\"{ 'single-alternate-service': (alternateServices | hashSize) === 1 }\">\n" +
+    "<div class=\"overview-services\" ng-class=\"{ 'single-alternate-service': (alternateServices | hashSize) === 1 && totalWeight }\">\n" +
     "<overview-service ng-init=\"isPrimary = true\" class=\"primary-service\"></overview-service>\n" +
     "<overview-service ng-init=\"isAlternate = true\" ng-repeat=\"service in alternateServices\" class=\"alternate-service\">\n" +
     "</overview-service>\n" +

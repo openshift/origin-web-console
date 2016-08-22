@@ -7,7 +7,7 @@ angular.module('openshiftConsole')
       scope: {
         route: '=',
       },
-      template: '<div ng-attr-id="{{chartId}}"></div>',
+      template: '<div ng-show="totalWeight" ng-attr-id="{{chartId}}"></div>',
       link: function($scope) {
         var chart, config;
 
@@ -55,9 +55,15 @@ angular.module('openshiftConsole')
 
           if ($scope.route) {
             data.columns.push(getData($scope.route.spec.to));
+            $scope.totalWeight = $scope.route.spec.to.weight;
             _.each($scope.route.spec.alternateBackends, function(routeTarget) {
               data.columns.push(getData(routeTarget));
+              $scope.totalWeight += routeTarget.weight;
             });
+          }
+
+          if (!$scope.totalWeight) {
+            return;
           }
 
           if (!chart) {
