@@ -11,7 +11,7 @@
           </div>
           <alerts alerts="alerts"></alerts>
           <div class="data-toolbar">
-            <ui-select ng-model="kindSelector.selected" theme="bootstrap" search-enabled="true" ng-disabled="kindSelector.disabled" title="Choose a resource" style="width: 250px;">
+            <ui-select class="other-resources-toolbar" ng-model="kindSelector.selected" theme="bootstrap" search-enabled="true" ng-disabled="kindSelector.disabled" title="Choose a resource">
               <ui-select-match placeholder="Choose a resource to list...">{{$select.selected.kind | humanizeKind : true}}</ui-select-match>
               <ui-select-choices repeat="kind in kinds | filter : {kind: $select.search} : matchKind | orderBy : 'kind'">
                 <div ng-bind-html="(kind.kind | humanizeKind : true) | highlight: $select.search"></div>
@@ -28,7 +28,7 @@
         <div class="container-fluid">
           <div class="row">
             <div class="col-md-12 gutter-top">
-              <table class="table table-bordered table-mobile">
+              <table class="table table-bordered table-mobile" ng-class="{ 'table-empty': (resources | hashSize) === 0 }">
                 <thead>
                   <tr>
                     <th>Name</th>
@@ -38,7 +38,7 @@
                   </tr>
                 </thead>
                 <tbody ng-if="(resources | hashSize) == 0">
-                  <tr><td colspan="6"><em>{{emptyMessage}}</em></td></tr>
+                  <tr><td colspan="4"><em>{{emptyMessage}}</em></td></tr>
                 </tbody>
                 <tbody ng-repeat="resource in resources | orderObjectsByDate : true">
                   <tr>

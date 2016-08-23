@@ -3,9 +3,13 @@
 ---------------------------------------------------------------------------- */
 
 .data-toolbar {
+  .flex-direction(@direction: column);
  .flex-display(@display: flex);
  .flex(@columns: 1 1 0%);
  .flex-wrap(@wrap: wrap);
+ @media (min-width: @screen-sm-min) {
+    .flex-direction(@direction: row);
+ }
  padding: 5px 0;
  .checkbox {
    margin-top: 3px;
@@ -15,12 +19,13 @@
     width: 150px;
  }
  .data-toolbar-filter {
-   .flex-display(@display: flex);
-   .flex(@columns: 1 1 0%);
+   margin-top: 10px;
+   @media (min-width: @screen-sm-min) {
+     margin-top: 0;
+   }
     min-width: 75px;
     .form-group {
       margin-bottom: 0;
-      margin-right: 10px;
       min-width: 75px;
       input {
         width: 100%;
@@ -34,6 +39,10 @@
    }
    text-align: right;
  }
+ // Set min-widths to prevent clipping when option lengths are known
+ .other-resources-toolbar {
+   min-width: 250px;
+ }
 }
 
 project-filter {
@@ -45,6 +54,13 @@ project-filter {
   }
   .label-filtering-remove-all {
     background-color: @brand-primary !important;
+  }
+  .filter .navbar-filter-widget .label-filter  {
+    width: 100%;
+    @media (min-width: @screen-sm-min) {
+      min-width: 50%;
+      width: auto;
+    }
   }
 }
 
