@@ -4657,7 +4657,7 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "</label>\n" +
     "</div>\n" +
     "<fieldset ng-disabled=\"mode !== 'istag'\">\n" +
-    "<istag-select model=\"istag\"></istag-select>\n" +
+    "<istag-select model=\"istag\" include-shared-namespace=\"true\"></istag-select>\n" +
     "<div ng-if=\"mode == 'istag' && istag.namespace && istag.namespace !== 'openshift' && istag.namespace !== project\" class=\"alert alert-warning\">\n" +
     "<span class=\"pficon pficon-warning-triangle-o\" aria-hidden=\"true\"></span>\n" +
     "Service account <strong>default</strong> will need image pull authority to deploy images from <strong>{{istag.namespace}}</strong>. You can grant authority with the command:\n" +
@@ -5295,7 +5295,7 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "<div class=\"row\">\n" +
     "<div class=\"form-group col-sm-4\">\n" +
     "<label class=\"sr-only\">Namespace</label>\n" +
-    "<ui-select ng-model=\"istag.namespace\" ng-change=\"istag.imageStream = null; istag.tag = null;\">\n" +
+    "<ui-select required ng-model=\"istag.namespace\" ng-change=\"istag.imageStream = null; istag.tagObject = null;\">\n" +
     "<ui-select-match placeholder=\"Namespace\">{{$select.selected}}</ui-select-match>\n" +
     "<ui-select-choices repeat=\"namespace in (namespaces | filter : $select.search)\">\n" +
     "<div ng-bind-html=\"namespace | highlight : $select.search\"></div>\n" +
@@ -5305,7 +5305,7 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "</div>\n" +
     "<div class=\"form-group col-sm-4\">\n" +
     "<label class=\"sr-only\">Image Stream</label>\n" +
-    "<ui-select ng-model=\"istag.imageStream\" ng-disabled=\"!istag.namespace\" ng-change=\"istag.tag = null\">\n" +
+    "<ui-select required ng-model=\"istag.imageStream\" ng-disabled=\"!istag.namespace\" ng-change=\"istag.tagObject = null\">\n" +
     "<ui-select-match placeholder=\"Image Stream\">{{$select.selected}}</ui-select-match>\n" +
     "<ui-select-choices repeat=\"imageStream in (isNamesByNamespace[istag.namespace] | filter : $select.search)\">\n" +
     "<div ng-bind-html=\"imageStream | highlight : $select.search\"></div>\n" +
@@ -5315,9 +5315,9 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "</div>\n" +
     "<div class=\"form-group col-sm-4\">\n" +
     "<label class=\"sr-only\">Tag</label>\n" +
-    "<ui-select ng-model=\"istag.tag\" ng-disabled=\"!istag.imageStream\">\n" +
+    "<ui-select required ng-model=\"istag.tagObject\" ng-disabled=\"!istag.imageStream\">\n" +
     "<ui-select-match placeholder=\"Tag\">{{$select.selected.tag}}</ui-select-match>\n" +
-    "<ui-select-choices repeat=\"statusTag in (isByNamespace[istag.namespace][istag.imageStream].status.tags | filter : { tag: $select.search })\">\n" +
+    "<ui-select-choices group-by=\"groupTags\" repeat=\"statusTag in (isByNamespace[istag.namespace][istag.imageStream].status.tags | filter : { tag: $select.search })\" refresh=\"getTags($select.search)\" refresh-delay=\"0\">\n" +
     "<div ng-bind-html=\"statusTag.tag | highlight : $select.search\"></div>\n" +
     "</ui-select-choices>\n" +
     "</ui-select>\n" +
@@ -6442,48 +6442,27 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "<div class=\"form-groups\" ng-show=\"sources.images\">\n" +
     "<div class=\"single-image-source\" ng-if=\"sourceImages.length === 1\">\n" +
     "<div class=\"form-group\">\n" +
-    "<label for=\"imageSourceFrom\">Image Source From</label>\n" +
-    "<select class=\"form-control simpleselector\" ng-model=\"imageSourceOptions.pickedType\" ng-options=\"type.id as type.title for type in imageSourceTypes\" ng-change=\"assambleInputType('imageSource', imageSourceOptions.pickedType)\">\n" +
-    "</select>\n" +
+    "<label>Image Source From</label>\n" +
+    "<ui-select required ng-model=\"imageOptions.fromSource.type\" search-enabled=\"false\">\n" +
+    "<ui-select-match>{{$select.selected | startCase}}</ui-select-match>\n" +
+    "<ui-select-choices repeat=\"type in imageSourceTypes\">\n" +
+    "{{type | startCase}}\n" +
+    "</ui-select-choices>\n" +
+    "</ui-select>\n" +
     "</div>\n" +
-    "<div class=\"row form-group\" ng-if=\"imageSourceOptions.pickedType==='ImageStreamTag'\">\n" +
-    "<div class=\"col-sm-4\">\n" +
-    "<div class=\"form-group\">\n" +
-    "<label>Namespace</label>\n" +
-    "<span ng-if=\"!isNamespaceAvailable(imageSourceOptions.pickedNamespace)\" data-toggle=\"tooltip\" title=\"Selected Namespace is not available.\" class=\"pficon pficon-error-circle-o\" style=\"cursor: help\"></span>\n" +
-    "<select name=\"imageSourceNamespace\" class=\"form-control\" ng-model=\"imageSourceOptions.pickedNamespace\" ng-options=\"name for name in imageSourceBuildFrom.projects track by name\" ng-change=\"updateImageSourceImageStreams(imageSourceOptions.pickedNamespace, true)\" required>\n" +
-    "</select>\n" +
+    "<div class=\"form-group\" ng-if=\"imageOptions.fromSource.type==='ImageStreamTag'\">\n" +
+    "<istag-select include-shared-namespace=\"true\" model=\"imageOptions.fromSource.imageStreamTag\"></istag-select>\n" +
     "</div>\n" +
-    "</div>\n" +
-    "<div class=\"col-sm-4\">\n" +
-    "<div class=\"form-group\">\n" +
-    "<label>Image Stream</label>\n" +
-    "<span ng-if=\"inspectNamespace(imageSourceBuildFrom.imageStreams, imageSourceOptions.pickedImageStream) === 'empty'\" data-toggle=\"tooltip\" title=\"Selected Namespace doesn't contain any Image Streams to build from.\" class=\"pficon pficon-error-circle-o\" style=\"cursor: help\"></span>\n" +
-    "<span ng-if=\"inspectNamespace(imageSourceBuildFrom.imageStreams, imageSourceOptions.pickedImageStream) === 'noMatch'\" data-toggle=\"tooltip\" title=\"Selected Namespace doesn't contain Image Stream choosen Tag\" class=\"pficon pficon-error-circle-o\" style=\"cursor: help\"></span>\n" +
-    "<select name=\"imageSourceImageStream\" class=\"form-control\" ng-model=\"imageSourceOptions.pickedImageStream\" ng-options=\"name as name for name in imageSourceBuildFrom.imageStreams track by name\" ng-change=\"clearSelectedTag(imageSourceOptions, imageSourceBuildFrom.tags)\" required>\n" +
-    "</select>\n" +
-    "</div>\n" +
-    "</div>\n" +
-    "<div class=\"col-sm-4\">\n" +
-    "<div class=\"form-group\">\n" +
-    "<label>Tag</label>\n" +
-    "<span ng-if=\"inspectTags(imageSourceBuildFrom.tags, imageSourceOptions.pickedImageStream, imageSourceOptions.pickedTag) === 'empty'\" data-toggle=\"tooltip\" title=\"Selected Image Stream doesn't contain any tagged image to build from.\" class=\"pficon pficon-error-circle-o\" style=\"cursor: help\"></span>\n" +
-    "<span ng-if=\"inspectTags(imageSourceBuildFrom.tags, imageSourceOptions.pickedImageStream, imageSourceOptions.pickedTag) === 'noMatch'\" data-toggle=\"tooltip\" title=\"Selected Image Stream doesn't contain choosen Tag.\" class=\"pficon pficon-error-circle-o\" style=\"cursor: help\"></span>\n" +
-    "<select name=\"imageSourceTag\" class=\"form-control\" ng-model=\"imageSourceOptions.pickedTag\" ng-options=\"name as name for name in imageSourceBuildFrom.tags[imageSourceOptions.pickedImageStream] track by name\" ng-disabled=\"imageSourceOptions.pickedImageStream === ''\" required>\n" +
-    "</select>\n" +
-    "</div>\n" +
-    "</div>\n" +
-    "</div>\n" +
-    "<div ng-if=\"imageSourceOptions.pickedType==='ImageStreamImage'\" class=\"form-group\">\n" +
+    "<div ng-if=\"imageOptions.fromSource.type==='ImageStreamImage'\" class=\"form-group\">\n" +
     "<label for=\"imageSourceImage\">Image Stream Image</label>\n" +
     "<div>\n" +
-    "<input class=\"form-control\" type=\"text\" ng-model=\"imageSourceOptions.pickedImageStreamImage\" placeholder=\"example: ruby-20-centos7@603bfa418\" autocorrect=\"off\" autocapitalize=\"off\" spellcheck required>\n" +
+    "<input class=\"form-control\" type=\"text\" ng-model=\"imageOptions.fromSource.imageStreamImage\" placeholder=\"example: openshift/ruby-20-centos7@603bfa418\" autocorrect=\"off\" autocapitalize=\"off\" spellcheck required>\n" +
     "</div>\n" +
     "</div>\n" +
-    "<div ng-if=\"imageSourceOptions.pickedType==='DockerImage'\" class=\"form-group\">\n" +
+    "<div ng-if=\"imageOptions.fromSource.type==='DockerImage'\" class=\"form-group\">\n" +
     "<label for=\"imageSourceLink\">Docker Image Repository</label>\n" +
     "<div>\n" +
-    "<input class=\"form-control\" id=\"imageSourceLink\" name=\"imageSourceLink\" type=\"text\" ng-model=\"imageSourceOptions.pickedDockerImage\" placeholder=\"example: openshift/ruby-20-centos7:latest\" autocorrect=\"off\" autocapitalize=\"off\" spellcheck required>\n" +
+    "<input class=\"form-control\" id=\"imageSourceLink\" name=\"imageSourceLink\" type=\"text\" ng-model=\"imageOptions.fromSource.dockerImage\" placeholder=\"example: centos/ruby-20-centos7:latest\" autocorrect=\"off\" autocapitalize=\"off\" spellcheck required>\n" +
     "</div>\n" +
     "</div>\n" +
     "<div class=\"form-group\">\n" +
@@ -6550,47 +6529,26 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "<div>\n" +
     "<div class=\"form-group\">\n" +
     "<label for=\"buildFrom\">Build From</label>\n" +
-    "<select class=\"form-control simpleselector\" ng-model=\"builderOptions.pickedType\" ng-options=\"type.id as type.title for type in buildFromTypes\" ng-change=\"assambleInputType('builder', builderOptions.pickedType)\">\n" +
-    "</select>\n" +
+    "<ui-select required ng-model=\"imageOptions.from.type\" search-enabled=\"false\">\n" +
+    "<ui-select-match>{{$select.selected | startCase}}</ui-select-match>\n" +
+    "<ui-select-choices repeat=\"type in buildFromTypes\">\n" +
+    "{{type | startCase}}\n" +
+    "</ui-select-choices>\n" +
+    "</ui-select>\n" +
     "</div>\n" +
-    "<div class=\"row form-group\" ng-if=\"builderOptions.pickedType==='ImageStreamTag'\">\n" +
-    "<div class=\"col-sm-4\">\n" +
-    "<div class=\"form-group\">\n" +
-    "<label>Namespace</label>\n" +
-    "<span ng-if=\"!isNamespaceAvailable(builderOptions.pickedNamespace)\" data-toggle=\"tooltip\" title=\"Selected Namespace is not available.\" class=\"pficon pficon-error-circle-o\" style=\"cursor: help\"></span>\n" +
-    "<select class=\"form-control\" ng-model=\"builderOptions.pickedNamespace\" ng-options=\"name for name in buildFrom.projects track by name\" ng-change=\"updateBuilderImageStreams(builderOptions.pickedNamespace, true)\" required>\n" +
-    "</select>\n" +
+    "<div class=\"form-group\" ng-if=\"imageOptions.from.type==='ImageStreamTag'\">\n" +
+    "<istag-select include-shared-namespace=\"true\" model=\"imageOptions.from.imageStreamTag\"></istag-select>\n" +
     "</div>\n" +
-    "</div>\n" +
-    "<div class=\"col-sm-4\">\n" +
-    "<div class=\"form-group\">\n" +
-    "<label>Image Stream</label>\n" +
-    "<span ng-if=\"inspectNamespace(buildFrom.imageStreams, builderOptions.pickedImageStream) === 'empty'\" data-toggle=\"tooltip\" title=\"Selected Namespace doesn't contain any Image Streams to build from.\" class=\"pficon pficon-error-circle-o\" style=\"cursor: help\"></span>\n" +
-    "<span ng-if=\"inspectNamespace(buildFrom.imageStreams, builderOptions.pickedImageStream) === 'noMatch'\" data-toggle=\"tooltip\" title=\"Selected Namespace doesn't contain Image Stream choosen Tag\" class=\"pficon pficon-error-circle-o\" style=\"cursor: help\"></span>\n" +
-    "<select class=\"form-control\" ng-model=\"builderOptions.pickedImageStream\" ng-options=\"name as name for name in buildFrom.imageStreams track by name\" ng-change=\"clearSelectedTag(builderOptions, buildFrom.tags)\" required>\n" +
-    "</select>\n" +
-    "</div>\n" +
-    "</div>\n" +
-    "<div class=\"col-sm-4\">\n" +
-    "<div class=\"form-group\">\n" +
-    "<label>Tag</label>\n" +
-    "<span ng-if=\"inspectTags(buildFrom.tags, builderOptions.pickedImageStream, builderOptions.pickedTag) === 'empty'\" data-toggle=\"tooltip\" title=\"Selected Image Stream doesn't contain any tagged image to build from.\" class=\"pficon pficon-error-circle-o\" style=\"cursor: help\"></span>\n" +
-    "<span ng-if=\"inspectTags(buildFrom.tags, builderOptions.pickedImageStream, builderOptions.pickedTag) === 'noMatch'\" data-toggle=\"tooltip\" title=\"Selected Image Stream doesn't contain choosen Tag.\" class=\"pficon pficon-error-circle-o\" style=\"cursor: help\"></span>\n" +
-    "<select class=\"form-control\" ng-model=\"builderOptions.pickedTag\" ng-options=\"name as name for name in buildFrom.tags[builderOptions.pickedImageStream] track by name\" ng-disabled=\"builderOptions.pickedImageStream === ''\" required>\n" +
-    "</select>\n" +
-    "</div>\n" +
-    "</div>\n" +
-    "</div>\n" +
-    "<div ng-if=\"builderOptions.pickedType==='DockerImage'\" class=\"form-group\">\n" +
+    "<div ng-if=\"imageOptions.from.type==='DockerImage'\" class=\"form-group\">\n" +
     "<label for=\"FromTypeLink\">Docker Image Repository</label>\n" +
     "<div>\n" +
-    "<input class=\"form-control\" type=\"text\" ng-model=\"builderOptions.pickedDockerImage\" placeholder=\"example: openshift/ruby-20-centos7:latest\" autocorrect=\"off\" autocapitalize=\"off\" spellcheck required>\n" +
+    "<input class=\"form-control\" type=\"text\" ng-model=\"imageOptions.from.dockerImage\" autocorrect=\"off\" autocapitalize=\"off\" placeholder=\"example: centos/ruby-20-centos7:latest\" spellcheck required>\n" +
     "</div>\n" +
     "</div>\n" +
-    "<div ng-if=\"builderOptions.pickedType==='ImageStreamImage'\" class=\"form-group\">\n" +
+    "<div ng-if=\"imageOptions.from.type==='ImageStreamImage'\" class=\"form-group\">\n" +
     "<label for=\"FromTypeImage\">Image Stream Image</label>\n" +
     "<div>\n" +
-    "<input class=\"form-control\" type=\"text\" ng-model=\"builderOptions.pickedImageStreamImage\" placeholder=\"example: ruby-20-centos7@603bfa418\" autocorrect=\"off\" autocapitalize=\"off\" spellcheck required>\n" +
+    "<input class=\"form-control\" type=\"text\" ng-model=\"imageOptions.from.imageStreamImage\" placeholder=\"example: openshift/ruby-20-centos7@603bfa418\" autocorrect=\"off\" autocapitalize=\"off\" spellcheck required>\n" +
     "</div>\n" +
     "</div>\n" +
     "</div>\n" +
@@ -6605,41 +6563,20 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "<div>\n" +
     "<div class=\"form-group\">\n" +
     "<label for=\"buildFrom\">Push To</label>\n" +
-    "<select class=\"form-control simpleselector\" ng-model=\"outputOptions.pickedType\" ng-options=\"type.id as type.title for type in pushToTypes\" ng-change=\"assambleInputType('output', outputOptions.pickedType)\">\n" +
-    "</select>\n" +
+    "<ui-select required ng-model=\"imageOptions.to.type\" search-enabled=\"false\">\n" +
+    "<ui-select-match>{{$select.selected | startCase}}</ui-select-match>\n" +
+    "<ui-select-choices repeat=\"type in pushToTypes\">\n" +
+    "{{type | startCase}}\n" +
+    "</ui-select-choices>\n" +
+    "</ui-select>\n" +
     "</div>\n" +
-    "<div class=\"row form-group\" ng-if=\"outputOptions.pickedType==='ImageStreamTag'\">\n" +
-    "<div class=\"col-sm-4\">\n" +
-    "<div class=\"form-group\">\n" +
-    "<label>Namespace</label>\n" +
-    "<span ng-if=\"!isNamespaceAvailable(outputOptions.pickedNamespace)\" data-toggle=\"tooltip\" title=\"Selected Namespace is not available.\" class=\"pficon pficon-error-circle-o\" style=\"cursor: help\"></span>\n" +
-    "<select class=\"form-control\" id=\"outputNamespace\" name=\"outputNamespace\" ng-model=\"outputOptions.pickedNamespace\" ng-options=\"name for name in pushTo.projects track by name\" ng-change=\"updateOutputImageStreams(outputOptions.pickedNamespace, true)\" required>\n" +
-    "</select>\n" +
+    "<div class=\"form-group\" ng-if=\"imageOptions.to.type==='ImageStreamTag'\">\n" +
+    "<istag-select model=\"imageOptions.to.imageStreamTag\" allow-custom-tag=\"true\"></istag-select>\n" +
     "</div>\n" +
-    "</div>\n" +
-    "<div class=\"col-sm-4\">\n" +
-    "<div class=\"form-group\">\n" +
-    "<label>Image Stream</label>\n" +
-    "<span ng-if=\"inspectNamespace(pushTo.imageStreams, outputOptions.pickedImageStream) === 'empty'\" data-toggle=\"tooltip\" title=\"Selected Namespace doesn't contain any Image Streams to build from.\" class=\"pficon pficon-error-circle-o\" style=\"cursor: help\"></span>\n" +
-    "<span ng-if=\"inspectNamespace(pushTo.imageStreams, outputOptions.pickedImageStream) === 'noMatch'\" data-toggle=\"tooltip\" title=\"Selected Namespace doesn't contain Image Stream choosen Tag\" class=\"pficon pficon-error-circle-o\" style=\"cursor: help\"></span>\n" +
-    "<select class=\"form-control\" id=\"outputImageStream\" name=\"outputImageStream\" ng-model=\"outputOptions.pickedImageStream\" ng-options=\"name as name for name in pushTo.imageStreams track by name\" ng-change=\"clearSelectedTag(outputOptions, pushTo.tags, true)\" required>\n" +
-    "</select>\n" +
-    "</div>\n" +
-    "</div>\n" +
-    "<div class=\"col-sm-4\">\n" +
-    "<div class=\"form-group\">\n" +
-    "<label>Tag</label>\n" +
-    "<span ng-if=\"showOutputTagWarning(form)\" data-toggle=\"tooltip\" title=\"Tag is already created and will be overridden on build.\" class=\"pficon pficon-warning-triangle-o\" style=\"cursor: help\"></span>\n" +
-    "<div>\n" +
-    "<input class=\"form-control\" id=\"outputTag\" name=\"outputTag\" type=\"text\" ng-model=\"outputOptions.pickedTag\" ng-disabled=\"outputOptions.pickedImageStream === ''\" autocorrect=\"off\" autocapitalize=\"off\" spellcheck required>\n" +
-    "</div>\n" +
-    "</div>\n" +
-    "</div>\n" +
-    "</div>\n" +
-    "<div ng-if=\"outputOptions.pickedType==='DockerImage'\" class=\"form-group\">\n" +
+    "<div ng-if=\"imageOptions.to.type==='DockerImage'\" class=\"form-group\">\n" +
     "<label for=\"pushToLink\">Docker Image Repository</label>\n" +
     "<div>\n" +
-    "<input class=\"form-control\" id=\"pushToLink\" name=\"pushToLink\" type=\"text\" ng-model=\"outputOptions.pickedDockerImage\" autocorrect=\"off\" autocapitalize=\"off\" spellcheck required>\n" +
+    "<input class=\"form-control\" id=\"pushToLink\" name=\"pushToLink\" type=\"text\" ng-model=\"imageOptions.to.dockerImage\" placeholder=\"example: centos/ruby-20-centos7:latest\" autocorrect=\"off\" autocapitalize=\"off\" spellcheck required>\n" +
     "</div>\n" +
     "</div>\n" +
     "</div>\n" +
@@ -6675,7 +6612,7 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "<h5>Image change</h5>\n" +
     "<div class=\"checkbox\">\n" +
     "<label>\n" +
-    "<input type=\"checkbox\" ng-model=\"triggers.builderImageChangeTrigger.present\" ng-disabled=\"builderOptions.pickedType === 'None'\"/>\n" +
+    "<input type=\"checkbox\" ng-model=\"triggers.builderImageChangeTrigger.present\" ng-disabled=\"imageOptions.from.type === 'None'\"/>\n" +
     "Automatically build a new image when the builder image changes\n" +
     "<span class=\"help action-inline\">\n" +
     "<a href>\n" +
@@ -6698,8 +6635,13 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "</span>\n" +
     "</h3>\n" +
     "<div class=\"form-group\">\n" +
-    "<select class=\"form-control\" ng-model=\"updatedBuildConfig.spec.runPolicy\" ng-options=\"type as (type | sentenceCase) for type in runPolicyTypes\">\n" +
-    "</select>\n" +
+    "<label class=\"sr-only\">Run policy type</label>\n" +
+    "<ui-select required ng-model=\"updatedBuildConfig.spec.runPolicy\" search-enabled=\"false\">\n" +
+    "<ui-select-match>{{$select.selected | sentenceCase}}</ui-select-match>\n" +
+    "<ui-select-choices repeat=\"type in runPolicyTypes\">\n" +
+    "{{type | sentenceCase}}\n" +
+    "</ui-select-choices>\n" +
+    "</ui-select>\n" +
     "</div>\n" +
     "<div ng-switch=\"updatedBuildConfig.spec.runPolicy\">\n" +
     "<div ng-switch-when=\"Serial\">Builds triggered from this Build Configuration will run one at the time, in the order they have been triggered.</div>\n" +

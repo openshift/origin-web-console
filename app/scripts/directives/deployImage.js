@@ -126,17 +126,17 @@ angular.module("openshiftConsole")
               return;
             }
 
-            if (!istag.namespace || !istag.imageStream || !istag.tag) {
+            if (!istag.namespace || !istag.imageStream || !istag.tagObject) {
               delete $scope.import;
               return;
             }
 
-            var dockerRef, image = _.get(istag, 'tag.items[0].image');
+            var dockerRef, image = _.get(istag, 'tagObject.items[0].image');
             $scope.app.name = trimNameToLength(istag.imageStream);
 
             $scope.import = {
               name: istag.imageStream,
-              tag: istag.tag.tag,
+              tag: istag.tagObject.tag,
               namespace: istag.namespace
             };
 

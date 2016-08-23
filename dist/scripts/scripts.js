@@ -4848,31 +4848,13 @@ e.limitRanges = b.by("metadata.name"), 0 !== a("hashSize")(b) && e.$watch("conta
 });
 }));
 } ]), angular.module("openshiftConsole").controller("EditBuildConfigController", [ "$scope", "$routeParams", "DataService", "ProjectsService", "$filter", "ApplicationGenerator", "Navigate", "$location", "AlertMessageService", "SOURCE_URL_PATTERN", "keyValueEditorUtils", function(a, b, c, d, e, f, g, h, i, j, k) {
-a.projectName = b.project, a.buildConfig = null, a.alerts = {}, a.emptyMessage = "Loading...", a.sourceURLPattern = j, a.options = {}, a.builderOptions = {}, a.outputOptions = {}, a.imageSourceOptions = {}, a.jenkinsfileOptions = {
+a.projectName = b.project, a.buildConfig = null, a.alerts = {}, a.emptyMessage = "Loading...", a.sourceURLPattern = j, a.options = {}, a.jenkinsfileOptions = {
 type:"path"
 }, a.selectTypes = {
 ImageStreamTag:"Image Stream Tag",
 ImageStreamImage:"Image Stream Image",
 DockerImage:"Docker Image Repository"
-}, a.buildFromTypes = [ {
-id:"ImageStreamTag",
-title:"Image Stream Tag"
-}, {
-id:"ImageStreamImage",
-title:"Image Stream Image"
-}, {
-id:"DockerImage",
-title:"Docker Image Repository"
-} ], a.pushToTypes = [ {
-id:"ImageStreamTag",
-title:"Image Stream Tag"
-}, {
-id:"DockerImage",
-title:"Docker Image Repository"
-}, {
-id:"None",
-title:"--- None ---"
-} ], a.jenkinsfileTypes = [ {
+}, a.buildFromTypes = [ "ImageStreamTag", "ImageStreamImage", "DockerImage" ], a.pushToTypes = [ "ImageStreamTag", "DockerImage", "None" ], a.jenkinsfileTypes = [ {
 id:"path",
 title:"From Source Repository"
 }, {
@@ -4895,14 +4877,10 @@ title:b.buildconfig,
 link:"project/" + b.project + "/browse/builds/" + b.buildconfig
 })), a.breadcrumbs.push({
 title:"Edit"
-}), a.buildFrom = {
-projects:[],
-imageStreams:[],
-tags:{}
-}, a.pushTo = {
-projects:[],
-imageStreams:[],
-tags:{}
+}), a.imageOptions = {
+from:{},
+to:{},
+fromSource:{}
 }, a.sources = {
 binary:!1,
 dockerfile:!1,
@@ -4916,59 +4894,40 @@ genericWebhooks:[],
 imageChangeTriggers:[],
 builderImageChangeTrigger:{},
 configChangeTrigger:{}
-}, a.runPolicyTypes = [ "Serial", "Parallel", "SerialLatestOnly" ], a.availableProjects = [], i.getAlerts().forEach(function(b) {
+}, a.runPolicyTypes = [ "Serial", "Parallel", "SerialLatestOnly" ], i.getAlerts().forEach(function(b) {
 a.alerts[b.name] = b.data;
 }), i.clearAlerts();
 var l = [], m = e("buildStrategy");
 d.get(b.project).then(_.spread(function(d, f) {
 a.project = d, a.breadcrumbs[0].title = e("displayName")(d), c.get("buildconfigs", b.buildconfig, f).then(function(d) {
-if (a.buildConfig = d, a.updatedBuildConfig = angular.copy(a.buildConfig), a.buildStrategy = m(a.updatedBuildConfig), a.strategyType = a.buildConfig.spec.strategy.type, a.envVars = a.buildStrategy.env || [], _.each(a.envVars, function(a) {
+a.buildConfig = d, a.updatedBuildConfig = angular.copy(a.buildConfig), a.buildStrategy = m(a.updatedBuildConfig), a.strategyType = a.buildConfig.spec.strategy.type, a.envVars = a.buildStrategy.env || [], _.each(a.envVars, function(a) {
 e("altTextForValueFrom")(a);
-}), a.triggers = a.getTriggerMap(a.triggers, a.buildConfig.spec.triggers), a.sources = a.getSourceMap(a.sources, a.buildConfig.spec.source), _.has(d, "spec.strategy.jenkinsPipelineStrategy.jenkinsfile") && (a.jenkinsfileOptions.type = "inline"), a.buildStrategy.from) {
-var g = a.buildStrategy.from;
-a.builderOptions = a.setPickedVariables(a.builderOptions, g.kind, g.namespace || d.metadata.namespace, g.name.split(":")[0], g.name.split(":")[1], "ImageStreamImage" === g.kind ? g.name :"", "ImageStreamTag" === g.kind ? d.metadata.namespace + "/" + g.name :g.name);
-} else a.builderOptions = a.setPickedVariables(a.builderOptions, "None", d.metadata.namespace, "", "", "", "");
-if (a.updatedBuildConfig.spec.output.to) {
-var h = a.updatedBuildConfig.spec.output.to;
-a.outputOptions = a.setPickedVariables(a.outputOptions, h.kind, h.namespace || d.metadata.namespace, h.name.split(":")[0], h.name.split(":")[1], void 0, "ImageStreamTag" === h.kind ? d.metadata.namespace + "/" + h.name :h.name);
-} else a.outputOptions = a.setPickedVariables(a.outputOptions, "None", d.metadata.namespace, "", "", void 0, "");
-if (a.builderImageStream = {
-namespace:a.builderOptions.pickedNamespace,
-imageStream:a.builderOptions.pickedImageStream,
-tag:a.builderOptions.pickedTag
-}, a.outputImageStream = {
-namespace:a.outputOptions.pickedNamespace,
-imageStream:a.outputOptions.pickedImageStream,
-tag:a.outputOptions.pickedTag
-}, a.options.forcePull = !!a.buildStrategy.forcePull, a.sources.images) if (a.sourceImages = a.buildConfig.spec.source.images, 1 === a.sourceImages.length) {
-a.sourceImage = a.buildConfig.spec.source.images[0], a.imageSourceBuildFrom = {
-projects:[],
-imageStreams:[],
-tags:{}
-}, a.imageSourcePaths = _.map(a.sourceImage.paths, function(a) {
+}), a.triggers = n(a.triggers, a.buildConfig.spec.triggers), a.sources = s(a.sources, a.buildConfig.spec.source), _.has(d, "spec.strategy.jenkinsPipelineStrategy.jenkinsfile") && (a.jenkinsfileOptions.type = "inline");
+var g = function(a, b) {
+a.type = b && b.kind ? b.kind :"None";
+var c = {}, e = "", f = "";
+c = "ImageStreamTag" === a.type ? {
+namespace:b.namespace || d.metadata.namespace,
+imageStream:b.name.split(":")[0],
+tagObject:{
+tag:b.name.split(":")[1]
+}
+} :{
+namespace:"",
+imageStream:"",
+tagObject:{
+tag:""
+}
+}, e = "ImageStreamImage" === a.type ? (b.namespace || d.metadata.namespace) + "/" + b.name :"", f = "DockerImage" === a.type ? b.name :"", a.imageStreamTag = c, a.imageStreamImage = e, a.dockerImage = f;
+};
+g(a.imageOptions.from, a.buildStrategy.from), g(a.imageOptions.to, a.updatedBuildConfig.spec.output.to), a.sources.images && (a.sourceImages = a.buildConfig.spec.source.images, 1 === a.sourceImages.length ? (a.imageSourceTypes = angular.copy(a.buildFromTypes), g(a.imageOptions.fromSource, a.sourceImages[0].from), a.imageSourcePaths = _.map(a.sourceImages[0].paths, function(a) {
 return {
 name:a.sourcePath,
 value:a.destinationDir
 };
-}), a.imageSourceTypes = angular.copy(a.buildFromTypes);
-var i = a.sourceImage.from;
-a.imageSourceOptions = a.setPickedVariables(a.imageSourceOptions, i.kind, i.namespace || d.metadata.namespace, i.name.split(":")[0], i.name.split(":")[1], "ImageStreamImage" === i.kind ? i.name :"", "ImageStreamTag" === i.kind ? d.metadata.namespace + "/" + i.name :i.name), a.imageSourceImageStream = {
-namespace:a.imageSourceOptions.pickedNamespace,
-imageStream:a.imageSourceOptions.pickedImageStream,
-tag:a.imageSourceOptions.pickedTag
-};
-} else a.imageSourceFromObjects = [], a.sourceImages.forEach(function(b) {
+})) :(a.imageSourceFromObjects = [], a.sourceImages.forEach(function(b) {
 a.imageSourceFromObjects.push(b.from);
-});
-a.sources.binary && (a.options.binaryAsFile = a.buildConfig.spec.source.binary.asFile ? a.buildConfig.spec.source.binary.asFile :""), "Docker" === a.strategyType && (a.options.noCache = !!a.buildConfig.spec.strategy.dockerStrategy.noCache, a.buildFromTypes.push({
-id:"None",
-title:"--- None ---"
-})), a.buildFrom.projects = [ "openshift" ], c.list("projects", a, function(b) {
-var c = b.by("metadata.name");
-for (var d in c) a.buildFrom.projects.push(d), a.pushTo.projects.push(d);
-a.availableProjects = angular.copy(a.buildFrom.projects), a.buildFrom.projects.contains(a.builderOptions.pickedNamespace) || (a.checkNamespaceAvailability(a.builderOptions.pickedNamespace), a.buildFrom.projects.push(a.builderOptions.pickedNamespace)), a.pushTo.projects.contains(a.outputOptions.pickedNamespace) || (a.checkNamespaceAvailability(a.outputOptions.pickedNamespace), a.pushTo.projects.push(a.outputOptions.pickedNamespace)), "ImageStreamTag" === a.builderOptions.pickedType && a.updateBuilderImageStreams(a.builderOptions.pickedNamespace, !1), "ImageStreamTag" === a.outputOptions.pickedType && a.updateOutputImageStreams(a.outputOptions.pickedNamespace, !1), a.sources.images && a.sourceImage && (a.imageSourceBuildFrom.projects = angular.copy(a.buildFrom.projects), a.imageSourceBuildFrom.projects.contains(a.imageSourceOptions.pickedNamespace) || (a.checkNamespaceAvailability(a.imageSourceOptions.pickedNamespace), a.imageSourceBuildFrom.projects.push(a.imageSourceOptions.pickedNamespace)), 
-"ImageStreamTag" === a.imageSourceOptions.pickedType && a.updateImageSourceImageStreams(a.imageSourceOptions.pickedNamespace, !1)), a.loaded = !0;
-}), l.push(c.watchObject("buildconfigs", b.buildconfig, f, function(b, c) {
+}))), a.options.forcePull = !!a.buildStrategy.forcePull, a.sources.binary && (a.options.binaryAsFile = a.buildConfig.spec.source.binary.asFile ? a.buildConfig.spec.source.binary.asFile :""), "Docker" === a.strategyType && (a.options.noCache = !!a.buildConfig.spec.strategy.dockerStrategy.noCache, a.buildFromTypes.push("None")), l.push(c.watchObject("buildconfigs", b.buildconfig, f, function(b, c) {
 "MODIFIED" === c && (a.alerts.background_update = {
 type:"warning",
 message:"This build configuration has changed since you started editing it. You'll need to copy any changes you've made and edit again."
@@ -4976,7 +4935,7 @@ message:"This build configuration has changed since you started editing it. You'
 type:"warning",
 message:"This build configuration has been deleted."
 }, a.disableInputs = !0), a.buildConfig = b;
-}));
+})), a.loaded = !0;
 }, function(b) {
 a.loaded = !0, a.alerts.load = {
 type:"error",
@@ -4984,12 +4943,13 @@ message:"The build configuration details could not be loaded.",
 details:"Reason: " + e("getErrorDetails")(b)
 };
 });
-})), a.getTriggerMap = function(b, c) {
+}));
+var n = function(b, c) {
 function d(b, c) {
 var d = e("imageObjectRef")(b, a.projectName), f = e("imageObjectRef")(c, a.projectName);
 return d === f;
 }
-var f = e("buildStrategy")(a.buildConfig).from;
+var f = m(a.buildConfig).from;
 return c.forEach(function(a) {
 switch (a.type) {
 case "Generic":
@@ -5034,112 +4994,65 @@ data:{
 type:"ConfigChange"
 }
 }), b;
-}, a.setPickedVariables = function(a, b, c, d, e, f, g) {
-return a.pickedType = b, a.pickedNamespace = c, a.pickedImageStream = d, a.pickedTag = e, f && (a.pickedImageStreamImage = f), a.pickedDockerImage = g, a;
-}, a.assambleInputType = function(b, c) {
-switch (b) {
-case "builder":
-"DockerImage" === c ? a.builderOptions.pickedDockerImage = a.builderOptions.pickedNamespace + "/" + a.builderOptions.pickedImageStream + ":" + a.builderOptions.pickedTag :"ImageStreamTag" === c && (a.builderOptions.pickedTag = "", a.updateBuilderImageStreams(a.builderOptions.pickedNamespace, !0));
-break;
-
-case "output":
-"DockerImage" === c ? a.outputOptions.pickedDockerImage = a.outputOptions.pickedNamespace + "/" + a.outputOptions.pickedImageStream + ":" + a.outputOptions.pickedTag :"ImageStreamTag" === c && a.updateOutputImageStreams(a.outputOptions.pickedNamespace, !0);
-break;
-
-case "imageSource":
-"DockerImage" === c ? a.imageSourceOptions.pickedDockerImage = a.imageSourceOptions.pickedNamespace + "/" + a.imageSourceOptions.pickedImageStream + ":" + a.imageSourceOptions.pickedTag :"ImageStreamTag" === c && a.updateImageSourceImageStreams(a.imageSourceOptions.pickedNamespace, !0);
-}
-}, a.aceLoaded = function(a) {
+};
+a.aceLoaded = function(a) {
 var b = a.getSession();
 b.setOption("tabSize", 2), b.setOption("useSoftTabs", !0), a.$blockScrolling = 1 / 0;
-}, a.updateImageSourceImageStreams = function(b, d) {
-a.availableProjects.contains(b) ? c.list("imagestreams", {
-namespace:b
-}, function(c) {
-a.imageSourceBuildFrom.imageStreams = [], a.imageSourceBuildFrom.tags = {};
-var e = c.by("metadata.name");
-_.isEmpty(e) ? b !== a.outputImageStream.namespace || d ? (a.imageSourceOptions.pickedImageStream = "", a.imageSourceOptions.pickedTag = "") :(a.imageSourceBuildFrom.imageStreams.push(a.imageSourceImageStream.imageStream), a.imageSourceOptions.pickedImageStream = a.imageSourceImageStream.imageStream, a.imageSourceBuildFrom.tags[a.imageSourceImageStream.imageStream] = [ a.imageSourceImageStream.tag ], a.imageSourceOptions.pickedTag = a.imageSourceImageStream.tag) :(_.has(e, a.imageSourceBuildFrom.imageStream) || b !== a.imageSourceBuildFrom.namespace || d || (a.imageSourceBuildFrom.imageStreams.push(a.imageSourceImageStream.imageStream), a.imageSourceOptions.pickedImageStream = a.imageSourceImageStream.imageStream, a.imageSourceBuildFrom.tags[a.imageSourceImageStream.imageStream] = [ a.imageSourceImageStream.tag ], a.imageSourceOptions.pickedTag = a.imageSourceImageStream.tag), angular.forEach(e, function(c, d) {
-var e = [];
-c.status.tags && c.status.tags.forEach(function(a) {
-e.push(a.tag);
-}), a.imageSourceBuildFrom.imageStreams.push(d), b === a.imageSourceBuildFrom.namespace && c.metadata.name === a.imageSourceBuildFrom.imageStream && _.indexOf(e, a.imageSourceBuildFrom.tag) === -1 && e.push(a.imageSourceBuildFrom.tag), a.imageSourceBuildFrom.tags[d] = e, d === a.imageSourceOptions.pickedImageStream && _.isEmpty(e) && (a.imageSourceOptions.pickedTag = "");
-}), a.imageSourceBuildFrom.imageStreams.contains(a.imageSourceOptions.pickedImageStream) || (a.imageSourceOptions.pickedTag = ""), d && (a.imageSourceOptions.pickedImageStream = a.imageSourceBuildFrom.imageStreams[0], a.clearSelectedTag(a.imageSourceOptions, a.imageSourceBuildFrom.tags)));
-}) :(a.imageSourceBuildFrom.imageStreams = [], a.imageSourceBuildFrom.tags = {}, a.imageSourceBuildFrom.imageStreams.push(a.imageSourceImageStream.imageStream), a.imageSourceOptions.pickedImageStreamImage = a.imageSourceImageStream.imageStream, a.imageSourceBuildFrom.tags[a.imageSourceImageStream.imageStream] = [ a.imageSourceImageStream.tag ], a.imageSourceOptions.pickedTag = a.imageSourceImageStream.tag);
-}, a.updateBuilderImageStreams = function(b, d) {
-a.availableProjects.contains(b) ? c.list("imagestreams", {
-namespace:b
-}, function(c) {
-a.buildFrom.imageStreams = [], a.buildFrom.tags = {};
-var e = c.by("metadata.name");
-_.isEmpty(e) ? b !== a.builderImageStream.namespace || d ? (a.builderOptions.pickedImageStream = "", a.builderOptions.pickedTag = "") :(a.buildFrom.imageStreams.push(a.builderImageStream.imageStream), a.builderOptions.pickedImageStream = a.builderImageStream.imageStream, a.buildFrom.tags[a.builderImageStream.imageStream] = [ a.builderImageStream.tag ], a.builderOptions.pickedTag = a.builderImageStream.tag) :(_.has(e, a.builderImageStream.imageStream) || b !== a.builderImageStream.namespace || d || (a.buildFrom.imageStreams.push(a.builderImageStream.imageStream), a.builderOptions.pickedImageStream = a.builderImageStream.imageStream, a.buildFrom.tags[a.builderImageStream.imageStream] = [ a.builderImageStream.tag ], a.builderOptions.pickedTag = a.builderImageStream.tag), angular.forEach(e, function(c, d) {
-var e = [];
-c.status.tags && c.status.tags.forEach(function(a) {
-e.push(a.tag);
-}), a.buildFrom.imageStreams.push(d), b === a.builderImageStream.namespace && c.metadata.name === a.builderImageStream.imageStream && _.indexOf(e, a.builderImageStream.tag) === -1 && e.push(a.builderImageStream.tag), a.buildFrom.tags[d] = e, d === a.builderOptions.pickedImageStream && _.isEmpty(e) && (a.builderOptions.pickedTag = "");
-}), a.buildFrom.imageStreams.contains(a.builderOptions.pickedImageStream) || (a.builderOptions.pickedTag = ""), d && (a.builderOptions.pickedImageStream = a.buildFrom.imageStreams[0], a.clearSelectedTag(a.builderOptions, a.buildFrom.tags)));
-}) :(a.buildFrom.imageStreams = [], a.buildFrom.tags = {}, a.buildFrom.imageStreams.push(a.builderImageStream.imageStream), a.builderOptions.pickedImageStream = a.builderImageStream.imageStream, a.buildFrom.tags[a.builderImageStream.imageStream] = [ a.builderImageStream.tag ], a.builderOptions.pickedTag = a.builderImageStream.tag);
-}, a.updateOutputImageStreams = function(b, d) {
-a.availableProjects.contains(b) ? c.list("imagestreams", {
-namespace:b
-}, function(c) {
-a.pushTo.imageStreams = [], a.pushTo.tags = {};
-var e = c.by("metadata.name");
-_.isEmpty(e) ? b !== a.outputImageStream.namespace || d ? (a.outputOptions.pickedImageStream = "", a.outputOptions.pickedTag = "") :(a.pushTo.imageStreams.push(a.outputImageStream.imageStream), a.outputOptions.pickedImageStream = a.outputImageStream.imageStream, a.outputOptions.pickedTag = a.outputImageStream.tag) :(_.has(e, a.outputImageStream.imageStream) || b !== a.outputImageStream.namespace || d || (a.pushTo.imageStreams.push(a.outputImageStream.imageStream), a.outputOptions.pickedImageStream = a.outputImageStream.imageStream, a.outputOptions.pickedTag = a.outputImageStream.tag), angular.forEach(e, function(b, c) {
-var d = [];
-b.status.tags && b.status.tags.forEach(function(a) {
-d.push(a.tag);
-}), a.pushTo.imageStreams.push(c), a.pushTo.tags[c] = d;
-}), d ? (a.outputOptions.pickedImageStream = a.pushTo.imageStreams[0], a.clearSelectedTag(a.outputOptions, a.pushTo.tags, !0)) :a.pushTo.imageStreams.contains(a.outputOptions.pickedImageStream) || (a.outputOptions.pickedTag = ""));
-}) :(a.pushTo.imageStreams = [], a.pushTo.tags = {}, a.pushTo.imageStreams.push(a.outputImageStream.imageStream), a.outputOptions.pickedImageStream = a.outputImageStream.imageStream, a.outputOptions.pickedTag = a.outputImageStream.tag);
-}, a.clearSelectedTag = function(a, b, c) {
-var d = b[a.pickedImageStream];
-d.length > 0 ? a.pickedTag = _.find(d, function(a) {
-return "latest" === a;
-}) || d[0] :c ? a.pickedTag = "latest" :a.pickedTag = "";
-}, a.checkNamespaceAvailability = function(b) {
-c.get("projects", b, {}, {
-errorNotification:!1
-}).then(function() {
-a.availableProjects.push(b);
-}, function() {});
-}, a.updatedImageSourcePath = function(a) {
+};
+var o = function(a) {
 return _.map(k.compactEntries(a), function(a) {
 return {
 sourcePath:a.name,
 destinationDir:a.value
 };
 });
-}, a.updateBinarySource = function() {
+}, p = function() {
 a.sources.binary && ("" !== a.options.binaryAsFile ? a.updatedBuildConfig.spec.source.binary.asFile = a.options.binaryAsFile :a.updatedBuildConfig.spec.source.binary = {});
-}, a.constructImageObject = function(a) {
-var b = {};
-return "ImageStreamTag" === a.pickedType ? b = {
-kind:a.pickedType,
-namespace:a.pickedNamespace,
-name:a.pickedImageStream + ":" + a.pickedTag
-} :"DockerImage" === a.pickedType ? b = {
-kind:a.pickedType,
-name:a.pickedDockerImage
-} :"ImageStreamImage" === a.pickedType && (b = {
-kind:a.pickedType,
-namespace:a.pickedNamespace,
-name:a.pickedImageStreamImage
-}), b;
-}, a.updateTriggers = function() {
+}, q = function(b) {
+var c = {};
+switch (b.type) {
+case "ImageStreamTag":
+c = {
+kind:b.type,
+name:b.imageStreamTag.imageStream + ":" + b.imageStreamTag.tagObject.tag
+}, b.imageStreamTag.namespace !== a.buildConfig.metadata.namespace && (c.namespace = b.imageStreamTag.namespace);
+break;
+
+case "DockerImage":
+c = {
+kind:b.type,
+name:b.dockerImage
+};
+break;
+
+case "ImageStreamImage":
+var d = b.imageStreamImage.split("/");
+c = {
+kind:b.type,
+name:_.last(d)
+}, c.namespace = 1 !== d.length ? d[0] :a.buildConfig.metadata.namespace;
+}
+return c;
+}, r = function() {
 var b = [].concat(a.triggers.githubWebhooks, a.triggers.genericWebhooks, a.triggers.imageChangeTriggers, a.triggers.builderImageChangeTrigger, a.triggers.configChangeTrigger);
 return b = _.filter(b, function(a) {
 return _.has(a, "disabled") && !a.disabled || a.present;
 }), b = _.map(b, "data");
-}, a.save = function() {
-switch (a.disableInputs = !0, e("buildStrategy")(a.updatedBuildConfig).forcePull = a.options.forcePull, a.strategyType) {
+}, s = function(a, b) {
+return "None" === b.type ? a :(a.none = !1, angular.forEach(b, function(b, c) {
+a[c] = !0;
+}), a);
+};
+a.save = function() {
+switch (a.disableInputs = !0, m(a.updatedBuildConfig).forcePull = a.options.forcePull, a.strategyType) {
 case "Docker":
-e("buildStrategy")(a.updatedBuildConfig).noCache = a.options.noCache;
+m(a.updatedBuildConfig).noCache = a.options.noCache;
 break;
 
 case "JenkinsPipeline":
 "path" === a.jenkinsfileOptions.type ? delete a.updatedBuildConfig.spec.strategy.jenkinsPipelineStrategy.jenkinsfile :delete a.updatedBuildConfig.spec.strategy.jenkinsPipelineStrategy.jenkinsfilePath;
 }
-a.updateBinarySource(), a.sources.images && a.sourceImage && (a.updatedBuildConfig.spec.source.images[0].paths = a.updatedImageSourcePath(a.imageSourcePaths), a.updatedBuildConfig.spec.source.images[0].from = a.constructImageObject(a.imageSourceOptions)), "None" === a.builderOptions.pickedType ? delete e("buildStrategy")(a.updatedBuildConfig).from :e("buildStrategy")(a.updatedBuildConfig).from = a.constructImageObject(a.builderOptions), "None" === a.outputOptions.pickedType ? delete a.updatedBuildConfig.spec.output.to :a.updatedBuildConfig.spec.output.to = a.constructImageObject(a.outputOptions), e("buildStrategy")(a.updatedBuildConfig).env = k.compactEntries(a.envVars), a.updatedBuildConfig.spec.triggers = a.updateTriggers(), c.update("buildconfigs", a.updatedBuildConfig.metadata.name, a.updatedBuildConfig, {
+p(), a.sources.images && !_.isEmpty(a.sourceImages) && (a.updatedBuildConfig.spec.source.images[0].paths = o(a.imageSourcePaths), a.updatedBuildConfig.spec.source.images[0].from = q(a.imageOptions.fromSource)), "None" === a.imageOptions.from.type ? delete m(a.updatedBuildConfig).from :m(a.updatedBuildConfig).from = q(a.imageOptions.from), "None" === a.imageOptions.to.type ? delete a.updatedBuildConfig.spec.output.to :a.updatedBuildConfig.spec.output.to = q(a.imageOptions.to), m(a.updatedBuildConfig).env = k.compactEntries(a.envVars), a.updatedBuildConfig.spec.triggers = r(), c.update("buildconfigs", a.updatedBuildConfig.metadata.name, a.updatedBuildConfig, {
 namespace:a.updatedBuildConfig.metadata.namespace
 }).then(function() {
 i.addAlert({
@@ -5156,22 +5069,6 @@ message:"An error occurred updating the build " + a.updatedBuildConfig.metadata.
 details:e("getErrorDetails")(b)
 };
 });
-}, a.isNamespaceAvailable = function(b) {
-return a.availableProjects.contains(b);
-}, a.inspectNamespace = function(a, b) {
-return 0 === a.length ? "empty" :0 === a.length || a.contains(b) ? "" :"noMatch";
-}, a.inspectTags = function(a, b, c) {
-if (a[b] && "" !== b) {
-if (0 === a[b].length) return "empty";
-if (0 !== a[b].length && !a[b].contains(c)) return "noMatch";
-}
-return "";
-}, a.showOutputTagWarning = function(b) {
-return !!((b.outputNamespace.$dirty || b.outputImageStream.$dirty || b.outputTag.$dirty) && a.pushTo.tags[a.outputOptions.pickedImageStream] && a.pushTo.tags[a.outputOptions.pickedImageStream].contains(a.outputOptions.pickedTag));
-}, a.getSourceMap = function(a, b) {
-return "None" === b.type ? a :(a.none = !1, angular.forEach(b, function(b, c) {
-a[c] = !0;
-}), a);
 };
 } ]), angular.module("openshiftConsole").controller("EditAutoscalerController", [ "$scope", "$filter", "$routeParams", "$window", "APIService", "DataService", "HPAService", "MetricsService", "Navigate", "ProjectsService", "keyValueEditorUtils", function(a, b, c, d, e, f, g, h, i, j, k) {
 if (!c.kind || !c.name) return void i.toErrorPage("Kind or name parameter missing.");
@@ -9755,21 +9652,58 @@ require:"^form",
 restrict:"E",
 scope:{
 istag:"=model",
-selectDisabled:"="
+selectDisabled:"=",
+includeSharedNamespace:"=",
+allowCustomTag:"="
 },
 templateUrl:"views/directives/istag-select.html",
-link:function(b) {
-b.isByNamespace = {}, b.isNamesByNamespace = {}, a.list("projects", {}, function(c) {
-var d = _.keys(c.by("metadata.name")).sort();
-b.namespaces = _.uniq([ "openshift" ].concat(d)), b.$watch("istag.namespace", function(c) {
-c && !b.isByNamespace[c] && a.list("imagestreams", {
+controller:[ "$scope", function(b) {
+b.isByNamespace = {}, b.isNamesByNamespace = {};
+var c = !!(b.istag.namespace && b.istag.imageStream && b.istag.tagObject.tag), d = function(c) {
+return b.isByNamespace[c] = {}, b.isNamesByNamespace[c] = [], _.contains(b.namespaces, c) ? void a.list("imagestreams", {
 namespace:c
 }, function(a) {
-b.isByNamespace[c] = a.by("metadata.name"), b.isNamesByNamespace[c] = _.keys(b.isByNamespace[c]).sort();
+b.isByNamespace[c] = a.by("metadata.name"), b.isNamesByNamespace[c] = _.keys(b.isByNamespace[c]).sort(), _.contains(b.isNamesByNamespace[c], b.istag.imageStream) || (b.isNamesByNamespace[c] = b.isNamesByNamespace[c].concat(b.istag.imageStream), b.isByNamespace[c][b.istag.imageStream] = {
+status:{}
+}), b.isByNamespace[c][b.istag.imageStream].status.tags || (b.isByNamespace[c][b.istag.imageStream].status = {
+tags:[]
+}), _.find(b.isByNamespace[c][b.istag.imageStream].status.tags, {
+tag:b.istag.tagObject.tag
+}) || b.isByNamespace[c][b.istag.imageStream].status.tags.push({
+tag:b.istag.tagObject.tag
 });
-});
-});
+}) :(b.namespaces.push(c), b.isNamesByNamespace[c] = b.isNamesByNamespace[c].concat(b.istag.imageStream), void (b.isByNamespace[c][b.istag.imageStream] = {
+status:{
+tags:[ {
+tag:b.istag.tagObject.tag
+} ]
 }
+}));
+};
+a.list("projects", {}, function(e) {
+b.namespaces = _.keys(e.by("metadata.name")).sort(), b.includeSharedNamespace && (b.namespaces = _.uniq([ "openshift" ].concat(b.namespaces))), b.$watch("istag.namespace", function(e) {
+if (e && !b.isByNamespace[e]) return c ? (d(e), void (c = !1)) :void a.list("imagestreams", {
+namespace:e
+}, function(a) {
+b.isByNamespace[e] = a.by("metadata.name"), _.each(_.keys(b.isByNamespace[e]), function(a) {
+b.isByNamespace[e][a].status.tags || (b.isByNamespace[e][a].status = {
+tags:[]
+});
+}), b.isNamesByNamespace[e] = _.keys(b.isByNamespace[e]).sort();
+});
+});
+}), b.getTags = function(a) {
+b.allowCustomTag && a && !_.find(b.isByNamespace[b.istag.namespace][b.istag.imageStream].status.tags, {
+tag:a
+}) && (_.remove(b.isByNamespace[b.istag.namespace][b.istag.imageStream].status.tags, function(a) {
+return !a.items;
+}), b.isByNamespace[b.istag.namespace][b.istag.imageStream].status.tags.unshift({
+tag:a
+}));
+}, b.groupTags = function(a) {
+return b.allowCustomTag ? a.items ? "Current Tags" :"New Tag" :"";
+};
+} ]
 };
 } ]), angular.module("openshiftConsole").directive("deployImage", [ "$filter", "$q", "$window", "ApplicationGenerator", "DataService", "ImagesService", "Navigate", "ProjectsService", "TaskList", "keyValueEditorUtils", function(a, b, c, d, e, f, g, h, i, j) {
 return {
@@ -9820,11 +9754,11 @@ name:"app"
 a !== b && (delete c["import"], c.istag = {});
 }), c.$watch("istag", function(b, g) {
 if (b !== g) {
-if (!b.namespace || !b.imageStream || !b.tag) return void delete c["import"];
-var h, i = _.get(b, "tag.items[0].image");
+if (!b.namespace || !b.imageStream || !b.tagObject) return void delete c["import"];
+var h, i = _.get(b, "tagObject.items[0].image");
 c.app.name = n(b.imageStream), c["import"] = {
 name:b.imageStream,
-tag:b.tag.tag,
+tag:b.tagObject.tag,
 namespace:b.namespace
 }, i && (h = b.imageStream + "@" + i, c.loading = !0, e.get("imagestreamimages", h, {
 namespace:b.namespace
