@@ -1348,7 +1348,7 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "<dd>{{containerStatus.ready}}</dd>\n" +
     "<dt>Restart Count:</dt>\n" +
     "<dd>{{containerStatus.restartCount}}</dd>\n" +
-    "<div ng-if=\"(!containerStatus.state.running || !containerStatus.ready) && !(pod | debugLabel) && ('pods' | canI : 'create')\" class=\"debug-pod-action\">\n" +
+    "<div ng-if=\"pod.status.phase !== 'Completed' && !(pod | annotation : 'openshift.io/build.name') && (!containerStatus.state.running || !containerStatus.ready) && !(pod | debugLabel) && ('pods' | canI : 'create')\" class=\"debug-pod-action\">\n" +
     "<a href=\"\" ng-click=\"debugTerminal(containerStatus.name)\" role=\"button\">Debug in terminal</a>\n" +
     "</div>\n" +
     "</dl>\n" +
