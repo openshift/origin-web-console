@@ -5063,7 +5063,7 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "<div pf-sort config=\"sortConfig\" class=\"sort-controls\"></div>\n" +
     "</div>\n" +
     "</div>\n" +
-    "<table class=\"table table-bordered table-condensed table-mobile table-hover events-table\">\n" +
+    "<table class=\"table table-bordered table-condensed table-mobile table-hover events-table\" ng-class=\"{ 'table-empty': (filteredEvents | hashSize) === 0 }\">\n" +
     "<thead>\n" +
     "<tr>\n" +
     "<th id=\"time\">Time</th>\n" +
@@ -5082,7 +5082,14 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "</thead>\n" +
     "<tbody ng-if=\"(filteredEvents | hashSize) === 0\">\n" +
     "<tr>\n" +
-    "<td colspan=\"6\">\n" +
+    "<td class=\"hidden-lg\" colspan=\"3\">\n" +
+    "<span ng-if=\"(events | hashSize) === 0\"><em>No events to show.</em></span>\n" +
+    "<span ng-if=\"(events | hashSize) > 0\">\n" +
+    "All events hidden by filter.\n" +
+    "<a href=\"\" ng-click=\"filter.text = ''\" role=\"button\">Clear filter</a>\n" +
+    "</span>\n" +
+    "</td>\n" +
+    "<td class=\"hidden-xs hidden-sm hidden-md\" colspan=\"6\">\n" +
     "<span ng-if=\"(events | hashSize) === 0\"><em>No events to show.</em></span>\n" +
     "<span ng-if=\"(events | hashSize) > 0\">\n" +
     "All events hidden by filter.\n" +
@@ -7675,7 +7682,7 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "</div>\n" +
     "<alerts alerts=\"alerts\"></alerts>\n" +
     "<div class=\"data-toolbar\">\n" +
-    "<ui-select ng-model=\"kindSelector.selected\" theme=\"bootstrap\" search-enabled=\"true\" ng-disabled=\"kindSelector.disabled\" title=\"Choose a resource\" style=\"width: 250px\">\n" +
+    "<ui-select class=\"other-resources-toolbar\" ng-model=\"kindSelector.selected\" theme=\"bootstrap\" search-enabled=\"true\" ng-disabled=\"kindSelector.disabled\" title=\"Choose a resource\">\n" +
     "<ui-select-match placeholder=\"Choose a resource to list...\">{{$select.selected.kind | humanizeKind : true}}</ui-select-match>\n" +
     "<ui-select-choices repeat=\"kind in kinds | filter : {kind: $select.search} : matchKind | orderBy : 'kind'\">\n" +
     "<div ng-bind-html=\"(kind.kind | humanizeKind : true) | highlight: $select.search\"></div>\n" +
@@ -7692,7 +7699,7 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "<div class=\"container-fluid\">\n" +
     "<div class=\"row\">\n" +
     "<div class=\"col-md-12 gutter-top\">\n" +
-    "<table class=\"table table-bordered table-mobile\">\n" +
+    "<table class=\"table table-bordered table-mobile\" ng-class=\"{ 'table-empty': (resources | hashSize) === 0 }\">\n" +
     "<thead>\n" +
     "<tr>\n" +
     "<th>Name</th>\n" +
@@ -7702,7 +7709,7 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "</tr>\n" +
     "</thead>\n" +
     "<tbody ng-if=\"(resources | hashSize) == 0\">\n" +
-    "<tr><td colspan=\"6\"><em>{{emptyMessage}}</em></td></tr>\n" +
+    "<tr><td colspan=\"4\"><em>{{emptyMessage}}</em></td></tr>\n" +
     "</tbody>\n" +
     "<tbody ng-repeat=\"resource in resources | orderObjectsByDate : true\">\n" +
     "<tr>\n" +

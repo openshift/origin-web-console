@@ -110,6 +110,17 @@
       /* Hide table headers (but not display: none;, for accessibility) */
       .sr-only();
     }
+    &.table-empty {
+      border: 0;
+      > tbody {
+        > tr {
+          > td {
+            border: 0;
+            padding-left: 0;
+          }
+        }
+      }
+    }
     > tbody {
       + tbody {
         border-top-width: 2px;
