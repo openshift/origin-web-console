@@ -4057,8 +4057,8 @@ link:"project/" + c.project + "/browse/builds/" + c.buildconfig
 })), a.breadcrumbs.push({
 title:c.build
 }), c.tab && (a.selectedTab = {}, a.selectedTab[c.tab] = !0);
-var h = [], i = function(c) {
-a.logOptions.container = b("annotation")(c, "buildPod"), a.logCanRun = !_.includes([ "New", "Pending", "Error" ], c.status.phase);
+var h = [], i = function(b) {
+a.logCanRun = !_.includes([ "New", "Pending", "Error" ], b.status.phase);
 }, j = function() {
 a.buildConfig ? a.canBuild = d.canBuild(a.buildConfig) :a.canBuild = !1;
 }, k = function(c, d) {
