@@ -82,7 +82,6 @@ angular.module('openshiftConsole')
     });
 
     var setLogVars = function(deployment) {
-      $scope.logOptions.container = $filter("annotation")(deployment, "pod");
       $scope.logCanRun = !(_.includes(['New', 'Pending'], $filter('deploymentStatus')(deployment)));
     };
 

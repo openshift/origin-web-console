@@ -110,9 +110,7 @@ angular.module('openshiftConsole')
     };
 
     var setDeploymentLogVars = function(deployment) {   
-      $scope.logOptions.deployments[deployment.metadata.name] = {
-        container: $filter("annotation")(deployment, "pod")
-      };
+      $scope.logOptions.deployments[deployment.metadata.name] = {};
       var deploymentVersion = $filter("annotation")(deployment, "deploymentVersion");
       if (deploymentVersion) {
         $scope.logOptions.deployments[deployment.metadata.name].version = deploymentVersion;
