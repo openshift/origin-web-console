@@ -2591,7 +2591,7 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "<alerts ng-if=\"selectedTerminalContainer.status === 'disconnected'\" alerts=\"terminalDisconnectAlert\"></alerts>\n" +
     "<div class=\"mar-left-xl mar-bottom-lg\">\n" +
     "<div class=\"row\">\n" +
-    "<div class=\"pad-left-none pad-bottom-lg col-xs-4 col-lg-3\">\n" +
+    "<div class=\"pad-left-none pad-bottom-lg col-sm-6 col-lg-4\">\n" +
     "<ui-select ng-model=\"selectedTerminalContainer\" on-select=\"onTerminalSelectChange(selectedTerminalContainer)\" class=\"mar-left-none pad-left-none pad-right-none\">\n" +
     "<ui-select-match class=\"truncate\" placeholder=\"Container Name\">\n" +
     "<span class=\"pad-left-md\">\n" +
