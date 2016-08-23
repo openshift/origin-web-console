@@ -10,9 +10,7 @@
           <div class="build-name">
             Build
             <span ng-if="build | annotation : 'buildNumber'">
-              <span ng-if="build | buildConfigForBuild">
-                <a ng-href="{{build | configURLForResource}}">{{build | buildConfigForBuild}}</a>,
-              </span>
+              <span ng-if="build | buildConfigForBuild"><a ng-href="{{build | configURLForResource}}">{{build | buildConfigForBuild}}</a>,</span>
               <a ng-href="{{build | navigateResourceURL}}">
                 #{{build | annotation : 'buildNumber'}}
               </a>
