@@ -33,6 +33,7 @@ angular.module('openshiftConsole')
         case "Deployment":
         case "LimitRange":
         case "ResourceQuota":
+        case "AppliedClusterResourceQuota":
           return false;
         default:
           return true;

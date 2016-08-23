@@ -4745,6 +4745,7 @@ case "ImageStreamMapping":
 case "Deployment":
 case "LimitRange":
 case "ResourceQuota":
+case "AppliedClusterResourceQuota":
 return !1;
 
 default:
