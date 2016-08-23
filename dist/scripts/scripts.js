@@ -1141,7 +1141,7 @@ var e = this._uniqueKey(a, null, b, _.get(d, "http.params"));
 if (c) this._watchCallbacks(e).add(c); else if (!this._watchCallbacks(e).has()) return {};
 var f = this._watchOptions(e);
 if (f) {
-if (f.poll != d.poll) throw "A watch already exists for " + a + " with a different polling option.";
+if (!!f.poll != !!d.poll) throw "A watch already exists for " + a + " with a different polling option.";
 } else this._watchOptions(e, d);
 var h = this;
 if (this._isCached(e)) c && j(function() {
@@ -1177,16 +1177,16 @@ e[b] && i._watchObjectCallbacks(h).fire(e[b]);
 var j = this.watch(a, c, f, e);
 return j.objectCallback = d, j.objectName = b, j;
 }, m.prototype.unwatch = function(a) {
-var b = a.resource, c = a.objectName, d = a.context, e = a.callback, f = a.objectCallback, g = a.opts, h = this._uniqueKey(b, c, d, _.get(g, "http.params"));
+var b = a.resource, c = a.objectName, d = a.context, e = a.callback, f = a.objectCallback, g = a.opts, h = this._uniqueKey(b, null, d, _.get(g, "http.params"));
 if (f && c) {
-var i = this._watchObjectCallbacks(h);
-i.remove(f);
+var i = this._uniqueKey(b, c, d, _.get(g, "http.params")), j = this._watchObjectCallbacks(i);
+j.remove(f);
 }
-var j = this._watchCallbacks(h);
-if (e && j.remove(e), !j.has()) {
+var k = this._watchCallbacks(h);
+if (e && k.remove(e), !k.has()) {
 if (g && g.poll) clearTimeout(this._watchPollTimeouts(h)), this._watchPollTimeouts(h, null); else if (this._watchWebsockets(h)) {
-var k = this._watchWebsockets(h);
-k.shouldClose = !0, k.close(), this._watchWebsockets(h, null);
+var l = this._watchWebsockets(h);
+l.shouldClose = !0, l.close(), this._watchWebsockets(h, null);
 }
 this._watchInFlight(h, !1), this._watchOptions(h, null);
 }
