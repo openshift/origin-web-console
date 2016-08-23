@@ -8058,7 +8058,7 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "<span class=\"sr-only\">Service</span>\n" +
     "<a ng-href=\"{{service | navigateResourceURL}}\">{{service.metadata.name}}</a>\n" +
     "\n" +
-    "<span ng-if=\"!isAlternate && alternateServices.length && !isChild\" class=\"mar-left-sm small\">\n" +
+    "<span ng-if=\"!isAlternate && alternateServices.length && !isChild\" class=\"small mar-left-sm mar-right-sm\">\n" +
     "<ng-include src=\"'views/overview/_service-linking-button.html'\"></ng-include>\n" +
     "</span>\n" +
     "</div>\n" +
