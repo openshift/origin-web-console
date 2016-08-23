@@ -7865,7 +7865,7 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "\n" +
     "<div column class=\"overview-unsuccessful-state\" ng-if=\"!activeDeployment && !anyDeploymentInProgress\" ng-switch=\"deployments[0] | deploymentStatus\">\n" +
     "<div ng-switch-when=\"Cancelled\">\n" +
-    "<span class=\"text-warning deployment-status-msg\">\n" +
+    "<span class=\"deployment-status-msg\">\n" +
     "<i class=\"fa fa-ban\" aria-hidden=\"true\"></i>\n" +
     "{{dcName}}\n" +
     "<a ng-href=\"{{deployments[0] | navigateResourceURL}}\">#{{deployments[0] | annotation: 'deploymentVersion'}}</a>\n" +

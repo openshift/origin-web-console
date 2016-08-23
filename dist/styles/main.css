@@ -4113,6 +4113,7 @@ ul.messenger-theme-flat .messenger-message.alert-info .messenger-message-inner:b
 .overview .deployment-tile .overview-donut-connector .deployment-connector-arrow{color:#ccc;font-size:200%}
 .overview .deployment-tile .overview-donut-connector .deployment-connector-arrow:before{content:'\2193';padding-right:23px}
 .overview .deployment-tile .overview-unsuccessful-state{text-align:center}
+.overview .deployment-tile .overview-unsuccessful-state .text-danger{color:#c00}
 .overview .deployment-tile .deployment-status-msg{color:#9c9c9c;line-height:normal;margin-bottom:10px}
 @keyframes simpleSlideOut{0%{margin-left:0%;opacity:1}
 100%{margin-left:-50%;opacity:0}

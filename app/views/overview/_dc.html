@@ -49,7 +49,7 @@
     <!-- deployment in progress (connecting arrow) -->
     <div column class="overview-donut-connector" ng-class="{'contains-deployment-status-msg':deployments.length === 1}" ng-if="anyDeploymentInProgress">
       <div ng-if="deployments.length > 1" class="deployment-connector-arrow">
-        
+
       </div>
       <div ng-if="deployments.length === 1" class="deployment-status-msg">
         <status-icon status="deployments[0] | deploymentStatus" class="mar-right-xs"></status-icon>
@@ -65,7 +65,7 @@
     <!-- cancelled/failed state -->
     <div column class="overview-unsuccessful-state" ng-if="!activeDeployment && !anyDeploymentInProgress" ng-switch="deployments[0] | deploymentStatus">
       <div ng-switch-when="Cancelled">
-        <span class="text-warning deployment-status-msg">
+        <span class="deployment-status-msg">
           <i class="fa fa-ban" aria-hidden="true"></i>
           {{dcName}}
           <a ng-href="{{deployments[0] | navigateResourceURL}}">#{{deployments[0] | annotation: 'deploymentVersion'}}</a>
