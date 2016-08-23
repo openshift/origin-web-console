@@ -3770,9 +3770,7 @@ b.logOptions.pods[a.metadata.name] = {
 container:a.spec.containers[0].name
 }, b.logCanRun.pods[a.metadata.name] = !_.includes([ "New", "Pending", "Unknown" ], a.status.phase);
 }, v = function(a) {
-b.logOptions.deployments[a.metadata.name] = {
-container:c("annotation")(a, "pod")
-};
+b.logOptions.deployments[a.metadata.name] = {};
 var d = c("annotation")(a, "deploymentVersion");
 d && (b.logOptions.deployments[a.metadata.name].version = d), b.logCanRun.deployments[a.metadata.name] = !_.includes([ "New", "Pending" ], c("deploymentStatus")(a));
 }, w = function(a) {
@@ -4424,7 +4422,7 @@ g.isAvailable().then(function(b) {
 a.metricsAvailable = b;
 });
 var n = function(c) {
-a.logOptions.container = b("annotation")(c, "pod"), a.logCanRun = !_.includes([ "New", "Pending" ], b("deploymentStatus")(c));
+a.logCanRun = !_.includes([ "New", "Pending" ], b("deploymentStatus")(c));
 }, o = function(b) {
 a.updatedDeployment = angular.copy(b), _.each(a.updatedDeployment.spec.template.spec.containers, function(a) {
 a.env = a.env || [];
