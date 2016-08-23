@@ -4923,14 +4923,11 @@ configChangeTrigger:{}
 }, a.runPolicyTypes = [ "Serial", "Parallel", "SerialLatestOnly" ], a.availableProjects = [], i.getAlerts().forEach(function(b) {
 a.alerts[b.name] = b.data;
 }), i.clearAlerts();
-var l = [];
+var l = [], m = e("buildStrategy");
 d.get(b.project).then(_.spread(function(d, f) {
 a.project = d, a.breadcrumbs[0].title = e("displayName")(d), c.get("buildconfigs", b.buildconfig, f).then(function(d) {
-if (a.buildConfig = d, a.updatedBuildConfig = angular.copy(a.buildConfig), a.buildStrategy = e("buildStrategy")(a.updatedBuildConfig), a.strategyType = a.buildConfig.spec.strategy.type, a.envVars = _.map(e("envVarsPair")(a.buildStrategy.env), function(a, b) {
-return {
-name:b,
-value:a
-};
+if (a.buildConfig = d, a.updatedBuildConfig = angular.copy(a.buildConfig), a.buildStrategy = m(a.updatedBuildConfig), a.strategyType = a.buildConfig.spec.strategy.type, a.envVars = a.buildStrategy.env || [], _.each(a.envVars, function(a) {
+e("altTextForValueFrom")(a);
 }), a.triggers = a.getTriggerMap(a.triggers, a.buildConfig.spec.triggers), a.sources = a.getSourceMap(a.sources, a.buildConfig.spec.source), _.has(d, "spec.strategy.jenkinsPipelineStrategy.jenkinsfile") && (a.jenkinsfileOptions.type = "inline"), a.buildStrategy.from) {
 var g = a.buildStrategy.from;
 a.builderOptions = a.setPickedVariables(a.builderOptions, g.kind, g.namespace || d.metadata.namespace, g.name.split(":")[0], g.name.split(":")[1], "ImageStreamImage" === g.kind ? g.name :"", "ImageStreamTag" === g.kind ? d.metadata.namespace + "/" + g.name :g.name);
@@ -10177,13 +10174,6 @@ var e = c[d].split("=");
 if (e[0] === b) return e[1];
 }
 return null;
-};
-}).filter("envVarsPair", function() {
-return function(a) {
-var b = {};
-return angular.forEach(a, function(a) {
-b[a.name] = a.value;
-}), b;
 };
 }).filter("destinationSourcePair", function() {
 return function(a) {

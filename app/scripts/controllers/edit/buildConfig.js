@@ -133,6 +133,8 @@ angular.module('openshiftConsole')
     AlertMessageService.clearAlerts();
     var watches = [];
 
+    var buildStrategy = $filter('buildStrategy');
+
     ProjectsService
       .get($routeParams.project)
       .then(_.spread(function(project, context) {
@@ -146,16 +148,12 @@ angular.module('openshiftConsole')
           function(buildConfig) {
             $scope.buildConfig = buildConfig;
             $scope.updatedBuildConfig = angular.copy($scope.buildConfig);
-            $scope.buildStrategy = $filter('buildStrategy')($scope.updatedBuildConfig);
+            $scope.buildStrategy = buildStrategy($scope.updatedBuildConfig);
             $scope.strategyType = $scope.buildConfig.spec.strategy.type;
-            $scope.envVars = _.map(
-                              $filter('envVarsPair')($scope.buildStrategy.env),
-                              function(val, key) {
-                                return {
-                                  name: key,
-                                  value: val
-                                }
-                              });
+            $scope.envVars = $scope.buildStrategy.env || [];
+            _.each($scope.envVars, function(env) {
+              $filter('altTextForValueFrom')(env);
+            });
             $scope.triggers = $scope.getTriggerMap($scope.triggers, $scope.buildConfig.spec.triggers);
             $scope.sources = $scope.getSourceMap($scope.sources, $scope.buildConfig.spec.source);
 
