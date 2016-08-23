@@ -4025,8 +4025,8 @@ ul.messenger-theme-flat .messenger-message.alert-info .messenger-message-inner:b
 .overview .service-group-with-route-row .service-group .alert-wrapper .alert .close,.overview .standalone-service-row .service-group .alert-wrapper .alert .close{color:#8b8d8f}
 .overview .service-group-with-route-row .service-group .alert-wrapper .alert{margin-top:6px}
 .overview overview-deployment-config,.overview overview-pod,.overview overview-replication-controller{display:-webkit-flex;display:-moz-flex;display:-ms-flexbox;display:-ms-flex;display:flex;width:100%}
-.overview .deployment-tile,.overview .no-deployments-block .service-title,.overview .service-group-header{background-color:#fff;border-left-width:0}
 .overview .deployment-tile,.overview .service-group-header{border:1px solid #d6d6d6}
+.overview .deployment-tile,.overview .no-deployments-block .service-title,.overview .service-group-header{background-color:#fff;border-left-width:0}
 .overview .deployment-tile,.overview .service-group-header,.overview .service-group-triggers,.overview .standalone-service .builds-block{box-shadow:0 2px 6px rgba(0,0,0,.1)}
 .overview .standalone-service{width:100%;display:flex;position:relative}
 .overview .standalone-service overview-service{-webkit-flex:0 0 100%;-moz-flex:0 0 100%;-ms-flex:0 0 100%;flex:0 0 100%}
