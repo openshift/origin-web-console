@@ -66,7 +66,6 @@ angular.module('openshiftConsole')
     var watches = [];
 
     var setLogVars = function(build) {
-      $scope.logOptions.container = $filter("annotation")(build, "buildPod");
       $scope.logCanRun = !(_.includes(['New', 'Pending', 'Error'], build.status.phase));
     };
 
