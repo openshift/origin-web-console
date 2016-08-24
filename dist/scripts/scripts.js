@@ -9803,7 +9803,7 @@ value:""
 } ];
 var k = a("stripTag"), l = a("stripSHA"), m = a("humanizeKind"), n = function() {
 var a = _.last(c["import"].name.split("/"));
-return a = l(a), a = k(a);
+return a = l(a), a = k(a), a.length > 24 && (a = a.substring(0, 24)), a;
 };
 c.findImage = function() {
 c.loading = !0, f.findImage(c.imageName, c.context).then(function(a) {
