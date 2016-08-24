@@ -46,6 +46,9 @@ angular.module("openshiftConsole")
           // Strip the SHA or tag if present.
           name = stripSHA(name);
           name = stripTag(name);
+          if (name.length > 24) {
+            name = name.substring(0, 24);
+          }
 
           return name;
         };
