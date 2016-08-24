@@ -11135,7 +11135,7 @@ return a.name === c.name;
 if (i && i.ready) {
 var j = d.metadata.name, k = d.metadata.namespace, l = f(k, j, g.containerPort).toString(), m = function(d) {
 d.preventDefault(), d.stopPropagation();
-var e = window.location.href, f = c.name || "Untitled Container", g = a.UserStore().getToken() || "", h = new URI().path(b).segment("java/").hash(g).query({
+var e = window.location.href, f = c.name || "Untitled Container", g = a.UserStore().getToken() || "", h = new URI().path(b).segment("java").segment("").hash(g).query({
 jolokiaUrl:l,
 title:f,
 returnTo:e
