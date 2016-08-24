@@ -66,7 +66,9 @@
             var title = container.name || 'Untitled Container';
             var token = AuthService.UserStore().getToken() || '';
             var targetURI = new URI().path(BaseHref)
-                                     .segment('java/') // Must have a trailing slash to avoid runtime errors in Safari
+                                     .segment('java')
+                                     // Add an empty segment to force a trailing slash, which is required.
+                                     .segment('')
                                      .hash(token)
                                      .query({
                                        jolokiaUrl: jolokiaUrl,
