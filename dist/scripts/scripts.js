@@ -8687,11 +8687,11 @@ c++, C.appendChild(k(c, a)), D();
 z.onMessage(function(b, e, f) {
 j.$evalAsync(function() {
 j.empty = !1, "logs" !== j.state && (j.state = "logs", setTimeout(x));
-}), a.limitBytes && f >= a.limitBytes && (j.$evalAsync(function() {
+}), b && (a.limitBytes && f >= a.limitBytes && (j.$evalAsync(function() {
 j.limitReached = !0, j.loading = !1;
 }), E(!0)), d(b), !j.largeLog && c >= a.tailLines && j.$evalAsync(function() {
 j.largeLog = !0;
-});
+}));
 }), z.onClose(function() {
 z = null, j.$evalAsync(function() {
 j.autoScrollActive = !1, 0 !== c || j.emptyStateMessage || (j.state = "empty", j.emptyStateMessage = "The logs are no longer available or could not be loaded.");
