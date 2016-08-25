@@ -519,7 +519,7 @@
                             add-row-link="Add environment variable"></key-value-editor>
                         </div>
                       </div>
-                      <div class="section">
+                      <div ng-if="sources.git || !(updatedBuildConfig | isJenkinsPipelineStrategy)" class="section">
                         <h3>Triggers
                           <a href="{{'build-triggers' | helpLink}}" aria-hidden="true" target="_blank"><span class="learn-more-inline">Learn more<i class="fa fa-external-link"></i></span></a>
                         </h3>
