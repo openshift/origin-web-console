@@ -134,7 +134,7 @@ angular.module('openshiftConsole')
               }
               $scope.buildConfig = buildConfig;
 
-              if ($scope.forms.bcEnvVars.$pristine) { 
+              if (!$scope.forms.bcEnvVars || $scope.forms.bcEnvVars.$pristine) { 
                 copyBuildConfigAndEnsureEnv(buildConfig);
               } else {
                 $scope.alerts["background_update"] = {
