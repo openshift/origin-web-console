@@ -3594,7 +3594,9 @@ label.checkbox{font-weight:400}
 .action-inline i.fa,.action-inline i.pficon{color:#4d5258;margin-right:5px}
 a.subtle-link{color:#9c9c9c;border-bottom:1px dotted #BBB}
 a.subtle-link:active,a.subtle-link:focus,a.subtle-link:hover{color:#00659c;border-bottom:1px dotted #00659c;text-decoration:none}
-.project-summary{-webkit-flex:1 0 90%;-moz-flex:1 0 90%;-ms-flex:1 0 90%;flex:1 0 90%;max-width:90%}
+.project-summary{-webkit-flex:1 0 80%;-moz-flex:1 0 80%;-ms-flex:1 0 80%;flex:1 0 80%;max-width:80%}
+@media (min-width:768px){.project-summary{-webkit-flex:1 0 90%;-moz-flex:1 0 90%;-ms-flex:1 0 90%;flex:1 0 90%;max-width:90%}
+}
 .project-actions{width:50px}
 .tasks{margin-bottom:20px;padding-left:15px;padding-right:15px;padding-bottom:10px}
 .tasks.success{border:1px solid #3f9c35;border-left:3px solid #3f9c35}
