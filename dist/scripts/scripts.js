@@ -3975,7 +3975,7 @@ n(a.buildConfig), a.forms.bcEnvVars.$setPristine();
 "DELETED" === c && (a.alerts.deleted = {
 type:"warning",
 message:"This build configuration has been deleted."
-}), a.buildConfig = b, a.forms.bcEnvVars.$pristine ? n(b) :a.alerts.background_update = {
+}), a.buildConfig = b, !a.forms.bcEnvVars || a.forms.bcEnvVars.$pristine ? n(b) :a.alerts.background_update = {
 type:"warning",
 message:"This build configuration has been updated in the background. Saving your changes may create a conflict or cause loss of data.",
 links:[ {
