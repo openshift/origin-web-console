@@ -25,9 +25,15 @@ angular.module('openshiftConsole')
       return;
     }
 
-    if (['ReplicationController',
-         'DeploymentConfig',
-         'HorizontalPodAutoscaler'].indexOf($routeParams.kind) === -1) {
+    var supportedKinds = [
+      'Deployment',
+      'DeploymentConfig',
+      'HorizontalPodAutoscaler',
+      'ReplicaSet',
+      'ReplicationController'
+    ];
+
+    if (!_.includes(supportedKinds, $routeParams.kind)) {
       Navigate.toErrorPage("Autoscaling not supported for kind " + $routeParams.kind + ".");
       return;
     }

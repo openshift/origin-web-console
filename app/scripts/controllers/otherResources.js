@@ -17,6 +17,7 @@ angular.module('openshiftConsole')
     $scope.kinds = _.filter(APIService.availableKinds(), function(kind) {
       switch (kind.kind) {
         case "ReplicationController":
+        case "Deployment":
         case "DeploymentConfig":
         case "BuildConfig":
         case "Build":
@@ -31,6 +32,7 @@ angular.module('openshiftConsole')
         case "ImageStreamImport":
         case "ImageStreamMapping":
         case "LimitRange":
+        case "ReplicaSet":
         case "ResourceQuota":
         case "AppliedClusterResourceQuota":
           return false;

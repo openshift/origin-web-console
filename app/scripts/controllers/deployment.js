@@ -13,52 +13,33 @@ angular.module('openshiftConsole')
                         $routeParams,
                         AlertMessageService,
                         DataService,
-                        HPAService,
-                        MetricsService,
-                        ProjectsService,
                         DeploymentsService,
+                        HPAService,
                         ImageStreamResolver,
                         Navigate,
+                        ProjectsService,
                         keyValueEditorUtils) {
     $scope.projectName = $routeParams.project;
-    $scope.deployment = null;
-    $scope.deploymentConfig = null;
-    $scope.deploymentConfigMissing = false;
-    $scope.deployments = {};
-    $scope.podTemplates = {};
+    $scope.name = $routeParams.deployment;
+    $scope.forms = {};
+    $scope.alerts = {};
     $scope.imageStreams = {};
     $scope.imagesByDockerReference = {};
     $scope.imageStreamImageRefByDockerReference = {}; // lets us determine if a particular container's docker image reference belongs to an imageStream
-    $scope.builds = {};
-    $scope.alerts = {};
-    $scope.renderOptions = $scope.renderOptions || {};
-    $scope.renderOptions.hideFilterWidget = true;
-    $scope.forms = {};
     $scope.breadcrumbs = [
       {
         title: "Deployments",
         link: "project/" + $routeParams.project + "/browse/deployments"
+      },
+      {
+        title: $routeParams.deployment
       }
     ];
-
-    // if this is an RC it won't have deploymentconfig
-    if ($routeParams.deploymentconfig){
-      $scope.breadcrumbs.push({
-        title: $routeParams.deploymentconfig,
-        link: "project/" + $routeParams.project + "/browse/deployments/" + $routeParams.deploymentconfig
-      });
-      $scope.healthCheckURL = Navigate.healthCheckURL($routeParams.project,
-                                                      "DeploymentConfig",
-                                                      $routeParams.deploymentconfig);
-    } else {
-      $scope.healthCheckURL = Navigate.healthCheckURL($routeParams.project,
-                                                      "ReplicationController",
-                                                      $routeParams.replicationcontroller);
-    }
-
-    $scope.breadcrumbs.push({
-      title: $routeParams.deployment || $routeParams.replicationcontroller
-    });
+    $scope.emptyMessage = "Loading...";
+    $scope.healthCheckURL = Navigate.healthCheckURL($routeParams.project,
+                                                    "Deployment",
+                                                    $routeParams.deployment,
+                                                    "extensions");
 
     // Check for a ?tab=<name> query param to allow linking directly to a tab.
     if ($routeParams.tab) {
@@ -66,115 +47,34 @@ angular.module('openshiftConsole')
       $scope.selectedTab[$routeParams.tab] = true;
     }
 
-    $scope.logOptions = {};
-
     // get and clear any alerts
     AlertMessageService.getAlerts().forEach(function(alert) {
       $scope.alerts[alert.name] = alert.data;
     });
     AlertMessageService.clearAlerts();
 
-    var watches = [];
-
-    // Check if the metrics service is available so we know when to show the tab.
-    MetricsService.isAvailable().then(function(available) {
-      $scope.metricsAvailable = available;
-    });
-
-    var setLogVars = function(deployment) {
-      $scope.logCanRun = !(_.includes(['New', 'Pending'], $filter('deploymentStatus')(deployment)));
-    };
-
+    // copy deploymentConfig and ensure it has env so that we can edit env vars using key-value-editor
     var copyDeploymentAndEnsureEnv = function(deployment) {
       $scope.updatedDeployment = angular.copy(deployment);
       _.each($scope.updatedDeployment.spec.template.spec.containers, function(container) {
         container.env = container.env || [];
-      });
-    };    
-
-    $scope.saveEnvVars = function() {
-      _.each($scope.updatedDeployment.spec.template.spec.containers, function(container) {
-        container.env = keyValueEditorUtils.compactEntries(angular.copy(container.env));
-      });
-      DataService
-        .update(
-          "replicationcontrollers",
-          $routeParams.replicationcontroller,
-          angular.copy($scope.updatedDeployment),
-          $scope.projectContext)
-        .then(function() {
-          $scope.alerts['saveEnvSuccess'] = {
-            type: "success",
-            // TODO:  improve success alert
-            message: $scope.deployment.metadata.name + " was updated."
-          };
-          $scope.forms.envForm.$setPristine();
-        }, function(e) {
-          $scope.alerts['saveEnvError'] = {
-            type: "error",
-            message: $scope.deployment.metadata.name + " was not updated.",
-            details: "Reason: " + $filter('getErrorDetails')(e)
-          };
+        // check valueFrom attribs and set an alt text for display if present
+        _.each(container.env, function(env) {
+          $filter('altTextForValueFrom')(env);
         });
+      });
     };
 
-    $scope.clearEnvVarUpdates = function() {
-      copyDeploymentAndEnsureEnv($scope.deployment);
-      $scope.forms.envForm.$setPristine();
-    };    
-
-    var limitWatches = $filter('isIE')() || $filter('isEdge')();
+    var watches = [];
 
     ProjectsService
       .get($routeParams.project)
       .then(_.spread(function(project, context) {
         $scope.project = project;
-        // FIXME: DataService.createStream() requires a scope with a
-        // projectPromise rather than just a namespace, so we have to pass the
-        // context into the log-viewer directive.
         $scope.projectContext = context;
 
-        var watchActiveDeployment = function() {
-          // Watch all replication controllers so we know if this is the active deployment to enable scaling.
-          watches.push(DataService.watch("replicationcontrollers", context, function(deployments) {
-            var activeDeployment,
-                deploymentsForConfig = [],
-                getAnnotation = $filter("annotation");
-            // Filter the list to just those deployments for this config.
-            angular.forEach(deployments.by("metadata.name"), function(deployment) {
-              var depConfigName = getAnnotation(deployment, 'deploymentConfig') || "";
-              if (depConfigName === $scope.deploymentConfigName) {
-                deploymentsForConfig.push(deployment);
-              }
-            });
-            activeDeployment = DeploymentsService.getActiveDeployment(deploymentsForConfig);
-            $scope.isActive = activeDeployment && activeDeployment.metadata.uid === $scope.deployment.metadata.uid;
-            updateHPA();
-          }));
-        };
+        var limitRanges = {};
 
-        var pods, selector;
-        var updatePodsForDeployment = function() {
-          if (!pods || !selector) {
-            return;
-          }
-
-          $scope.podsForDeployment = _.filter(pods, function(pod) {
-            return selector.matches(pod);
-          });
-        };
-
-        var allHPA = {}, limitRanges = {};
-        function updateHPA() {
-          $scope.hpaForRC = HPAService.hpaForRC(allHPA, $routeParams.deployment || $routeParams.replicationcontroller);
-          if ($scope.isActive) {
-            // Show both HPAs that target the RC and the DC if this is the active deployment.
-            var hpaForDC = HPAService.hpaForDC(allHPA, $routeParams.deploymentconfig);
-            $scope.autoscalers = $scope.hpaForRC.concat(hpaForDC);
-          } else {
-            $scope.autoscalers = $scope.hpaForRC;
-          }
-        }
         var updateHPAWarnings = function() {
             HPAService.getHPAWarnings($scope.deployment, $scope.autoscalers, limitRanges, project)
                       .then(function(warnings) {
@@ -182,35 +82,67 @@ angular.module('openshiftConsole')
             });
         };
 
-        DataService.get("replicationcontrollers", $routeParams.deployment || $routeParams.replicationcontroller, context).then(
+        DataService.get({
+          group: 'extensions',
+          resource: 'deployments'
+        }, $routeParams.deployment, context).then(
           // success
           function(deployment) {
             $scope.loaded = true;
             $scope.deployment = deployment;
-            setLogVars(deployment);
             updateHPAWarnings();
-            var deploymentVersion = $filter("annotation")(deployment, "deploymentVersion");
-            if (deploymentVersion) {
-              $scope.breadcrumbs[2].title = "#" + deploymentVersion;
-              $scope.logOptions.version = deploymentVersion;
-            }
-            $scope.deploymentConfigName = $filter("annotation")(deployment, "deploymentConfig");
+            ImageStreamResolver.fetchReferencedImageStreamImages([deployment.spec.template], $scope.imagesByDockerReference, $scope.imageStreamImageRefByDockerReference, context);
+
+            $scope.saveEnvVars = function() {
+              _.each($scope.updatedDeployment.spec.template.spec.containers, function(container) {
+                container.env = keyValueEditorUtils.compactEntries(angular.copy(container.env));
+              });
+              DataService.update({
+                group: 'extensions',
+                resource: 'deployments'
+              }, $routeParams.deployment, $scope.updatedDeployment, context)
+                .then(function success(){
+                  // TODO:  de-duplicate success and error messages.
+                  // as it stands, multiple messages appear based on how edit
+                  // is made.
+                  $scope.alerts['saveDCEnvVarsSuccess'] = {
+                    type: "success",
+                    message: $routeParams.deployment + " was updated."
+                  };
+                  $scope.forms.deploymentEnvVars.$setPristine();
+                }, function error(e){
+                  $scope.alerts['saveDCEnvVarsError'] = {
+                    type: "error",
+                    message: $routeParams.deployment + " was not updated.",
+                    details: "Reason: " + $filter('getErrorDetails')(e)
+                  };
+                });
+            };
+
+            $scope.clearEnvVarUpdates = function() {
+              copyDeploymentAndEnsureEnv($scope.deployment);
+              $scope.forms.deploymentEnvVars.$setPristine();
+            };
+
             // If we found the item successfully, watch for changes on it
-            watches.push(DataService.watchObject("replicationcontrollers", $routeParams.deployment || $routeParams.replicationcontroller, context, function(deployment, action) {
+            watches.push(DataService.watchObject({
+              group: 'extensions',
+              resource: 'deployments'
+            }, $routeParams.deployment, context, function(deployment, action) {
               if (action === "DELETED") {
                 $scope.alerts["deleted"] = {
                   type: "warning",
-                  message: $routeParams.deployment ? "This deployment has been deleted." : "This replication controller has been deleted."
+                  message: "This deployment has been deleted."
                 };
               }
               $scope.deployment = deployment;
 
-              if (!$scope.forms.envForm || $scope.forms.envForm.$pristine) { 
+              if ($scope.forms.deploymentEnvVars.$pristine) {
                 copyDeploymentAndEnsureEnv(deployment);
               } else {
                 $scope.alerts["background_update"] = {
                   type: "warning",
-                  message: "This replication controller has been updated in the background. Saving your changes may create a conflict or cause loss of data.",
+                  message: "This deployment has been updated in the background. Saving your changes may create a conflict or cause loss of data.",
                   links: [
                     {
                       label: 'Reload environment variables',
@@ -223,23 +155,25 @@ angular.module('openshiftConsole')
                 };
               }
 
-              setLogVars(deployment);
               updateHPAWarnings();
             }));
 
-            if ($scope.deploymentConfigName) {
-              // Check if we're the active deployment to enable or disable scaling.
-              watchActiveDeployment();
-            }
-
-            $scope.$watch('deployment.spec.selector', function() {
-              selector = new LabelSelector($scope.deployment.spec.selector);
-              updatePodsForDeployment();
-            }, true);
-
-            watches.push(DataService.watch("pods", context, function(podData) {
-              pods = podData.by('metadata.name');
-              updatePodsForDeployment();
+            // Watch replica sets for this deployment
+            // TODO: Use the label selector
+            var annotation = $filter('annotation');
+            var revision = function(replicaSet) {
+              return annotation(replicaSet, 'deployment.kubernetes.io/revision');
+            };
+            watches.push(DataService.watch({
+              group: 'extensions',
+              resource: 'replicasets'
+            }, context, function(replicaSetData) {
+              var replicaSets = replicaSetData.by('metadata.name');
+              var deploymentSelector = new LabelSelector(deployment.spec.selector);
+              replicaSets = _.filter(replicaSets, function(replicaSet) {
+                return deploymentSelector.matches(replicaSet);
+              });
+              $scope.replicaSetsForDeployment = _.sortByOrder(replicaSets, [ revision ], [ 'desc' ]);
             }));
           },
           // failure
@@ -247,105 +181,11 @@ angular.module('openshiftConsole')
             $scope.loaded = true;
             $scope.alerts["load"] = {
               type: "error",
-              message: $routeParams.deployment ? "The deployment details could not be loaded." : "The replication controller details could not be loaded.",
-              details: "Reason: " + $filter('getErrorDetails')(e)
+              message: e.status === 404 ? "This deployment can not be found, it may have been deleted." : "The deployment details could not be loaded.",
+              details: e.status === 404 ? "Any remaining deployment history for this deployment will be shown." : "Reason: " + $filter('getErrorDetails')(e)
             };
           }
         );
-
-        if ($routeParams.deploymentconfig) {
-          DataService.get("deploymentconfigs", $routeParams.deploymentconfig, context, {
-            errorNotification: false
-          }).then(
-            // success
-            function(deploymentConfig) {
-              $scope.deploymentConfig = deploymentConfig;
-            },
-            // failure
-            function(e) {
-              if (e.status === 404) {
-                $scope.deploymentConfigMissing = true;
-                return;
-              }
-
-              $scope.alerts["load"] = {
-                type: "error",
-                message: "The deployment configuration details could not be loaded.",
-                details: "Reason: " + $filter('getErrorDetails')(e)
-              };
-            }
-          );
-        }
-
-
-        function extractPodTemplates() {
-          angular.forEach($scope.deployments, function(deployment, deploymentId){
-            $scope.podTemplates[deploymentId] = deployment.spec.template;
-          });
-        }
-
-        watches.push(DataService.watch("replicationcontrollers", context, function(deployments, action, deployment) {
-          $scope.deployments = deployments.by("metadata.name");
-          extractPodTemplates();
-          ImageStreamResolver.fetchReferencedImageStreamImages($scope.podTemplates, $scope.imagesByDockerReference, $scope.imageStreamImageRefByDockerReference, context);
-          $scope.emptyMessage = "No deployments to show";
-          $scope.deploymentsByDeploymentConfig = DeploymentsService.associateDeploymentsToDeploymentConfig($scope.deployments);
-
-          var deploymentConfigName;
-          var deploymentName;
-          if (deployment) {
-            deploymentConfigName = $filter('annotation')(deployment, 'deploymentConfig');
-            deploymentName = deployment.metadata.name;
-          }
-          if (!action) {
-            // Loading of the page that will create deploymentConfigDeploymentsInProgress structure, which will associate running deployment to his deploymentConfig.
-            $scope.deploymentConfigDeploymentsInProgress = DeploymentsService.associateRunningDeploymentToDeploymentConfig($scope.deploymentsByDeploymentConfig);
-          } else if (action === 'ADDED' || (action === 'MODIFIED' && ['New', 'Pending', 'Running'].indexOf($filter('deploymentStatus')(deployment)) > -1)) {
-            // When new deployment id instantiated/cloned, or in case of a retry, associate him to his deploymentConfig and add him into deploymentConfigDeploymentsInProgress structure.
-            $scope.deploymentConfigDeploymentsInProgress[deploymentConfigName] = $scope.deploymentConfigDeploymentsInProgress[deploymentConfigName] || {};
-            $scope.deploymentConfigDeploymentsInProgress[deploymentConfigName][deploymentName] = deployment;
-          } else if (action === 'MODIFIED') {
-            // After the deployment ends remove him from the deploymentConfigDeploymentsInProgress structure.
-            var status = $filter('deploymentStatus')(deployment);
-            if (status === "Complete" || status === "Failed"){
-              delete $scope.deploymentConfigDeploymentsInProgress[deploymentConfigName][deploymentName];
-            }
-          }
-
-          // Extract the causes from the encoded deployment config
-          if (deployment) {
-            if (action !== "DELETED") {
-              deployment.causes = $filter('deploymentCauses')(deployment);
-            }
-          }
-          else {
-            angular.forEach($scope.deployments, function(deployment) {
-              deployment.causes = $filter('deploymentCauses')(deployment);
-            });
-          }
-        }));
-
-        // Sets up subscription for imageStreams
-        watches.push(DataService.watch("imagestreams", context, function(imageStreams) {
-          $scope.imageStreams = imageStreams.by("metadata.name");
-          ImageStreamResolver.buildDockerRefMapForImageStreams($scope.imageStreams, $scope.imageStreamImageRefByDockerReference);
-          ImageStreamResolver.fetchReferencedImageStreamImages($scope.podTemplates, $scope.imagesByDockerReference, $scope.imageStreamImageRefByDockerReference, context);
-          Logger.log("imagestreams (subscribe)", $scope.imageStreams);
-        }));
-
-        watches.push(DataService.watch("builds", context, function(builds) {
-          $scope.builds = builds.by("metadata.name");
-          Logger.log("builds (subscribe)", $scope.builds);
-        }));
-
-        watches.push(DataService.watch({
-          group: "extensions",
-          resource: "horizontalpodautoscalers"
-        }, context, function(data) {
-          allHPA = data.by("metadata.name");
-          updateHPA();
-          updateHPAWarnings();
-        }, {poll: limitWatches, pollInterval: 60 * 1000}));
 
         // List limit ranges in this project to determine if there is a default
         // CPU request for autoscaling.
@@ -354,59 +194,41 @@ angular.module('openshiftConsole')
           updateHPAWarnings();
         });
 
-        $scope.startLatestDeployment = function(deploymentConfig) {
-          DeploymentsService.startLatestDeployment(deploymentConfig, context, $scope);
-        };
+        watches.push(DataService.watch("imagestreams", context, function(imageStreams) {
+          $scope.imageStreams = imageStreams.by("metadata.name");
+          ImageStreamResolver.buildDockerRefMapForImageStreams($scope.imageStreams, $scope.imageStreamImageRefByDockerReference);
+          // If the dep config has been loaded already
+          if ($scope.deployment) {
+            ImageStreamResolver.fetchReferencedImageStreamImages([$scope.deployment.spec.template], $scope.imagesByDockerReference, $scope.imageStreamImageRefByDockerReference, context);
+          }
+          Logger.log("imagestreams (subscribe)", $scope.imageStreams);
+        }));
 
-        $scope.retryFailedDeployment = function(deployment) {
-          DeploymentsService.retryFailedDeployment(deployment, context, $scope);
-        };
+        watches.push(DataService.watch({
+          group: "extensions",
+          resource: "horizontalpodautoscalers"
+        }, context, function(hpa) {
+          $scope.autoscalers =
+            HPAService.filterHPA(hpa.by("metadata.name"), 'Deployment', $routeParams.deployment);
+          updateHPAWarnings();
+        }));
 
-        $scope.rollbackToDeployment = function(deployment, changeScaleSettings, changeStrategy, changeTriggers) {
-          DeploymentsService.rollbackToDeployment(deployment, changeScaleSettings, changeStrategy, changeTriggers, context, $scope);
-        };
-
-        $scope.cancelRunningDeployment = function(deployment) {
-          DeploymentsService.cancelRunningDeployment(deployment, context, $scope);
-        };
+        watches.push(DataService.watch("builds", context, function(builds) {
+          $scope.builds = builds.by("metadata.name");
+          Logger.log("builds (subscribe)", $scope.builds);
+        }));
 
         $scope.scale = function(replicas) {
           var showScalingError = function(result) {
             $scope.alerts = $scope.alerts || {};
             $scope.alerts["scale"] = {
               type: "error",
-              message: "An error occurred scaling the deployment.",
+              message: "An error occurred scaling the deployment config.",
               details: $filter('getErrorDetails')(result)
             };
           };
 
-          if ($scope.deploymentConfig) {
-            DeploymentsService.scaleDC($scope.deploymentConfig, replicas).then(_.noop, showScalingError);
-          } else {
-            DeploymentsService.scaleRC($scope.deployment, replicas).then(_.noop, showScalingError);
-          }
-        };
-
-        var isDeployment = $filter('isDeployment');
-        $scope.isScalable = function() {
-          if (!_.isEmpty($scope.autoscalers)) {
-            return false;
-          }
-
-          if (!isDeployment($scope.deployment)) {
-            return true;
-          }
-
-          if ($scope.deploymentConfigMissing) {
-            return true;
-          }
-
-          if (!$scope.deploymentConfig) {
-            // Wait for deployment config to load.
-            return false;
-          }
-
-          return $scope.isActive;
+          DeploymentsService.scale($scope.deployment, replicas).then(_.noop, showScalingError);
         };
 
         $scope.$on('$destroy', function(){

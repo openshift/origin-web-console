@@ -8,27 +8,40 @@
  * Controller of the openshiftConsole
  */
 angular.module('openshiftConsole')
-  .controller('SetLimitsController', function ($filter, $location, $parse, $routeParams, $scope, AlertMessageService, DataService, LimitRangesService, Navigate, ProjectsService) {
-    if ($routeParams.dcName && $routeParams.rcName) {
-      Navigate.toErrorPage("Replication controller and deployment config can't both be provided.");
+  .controller('SetLimitsController', function ($filter,
+                                               $location,
+                                               $parse,
+                                               $routeParams,
+                                               $scope,
+                                               AlertMessageService,
+                                               APIService,
+                                               DataService,
+                                               LimitRangesService,
+                                               Navigate,
+                                               ProjectsService) {
+    if (!$routeParams.kind || !$routeParams.name) {
+      Navigate.toErrorPage("Kind or name parameter missing.");
       return;
     }
 
-    var type, displayName;
-    if ($routeParams.dcName) {
-      type = "deploymentconfigs";
-      $scope.name = $routeParams.dcName;
-      displayName = 'Deployment Configuration "' + $scope.name + '"';
-      $scope.resourceURL = Navigate.resourceURL($scope.name, "DeploymentConfig", $routeParams.project);
-    } else if ($routeParams.rcName) {
-      type = "replicationcontrollers";
-      $scope.name = $routeParams.rcName;
-      displayName = 'Replication Controller "' + $scope.name + '"';
-      $scope.resourceURL = Navigate.resourceURL($scope.name, "ReplicationController", $routeParams.project);
-      $scope.showPodWarning = true;
-    } else {
-      Navigate.toErrorPage("A replication controller or deployment config must be provided.");
+    var supportedKinds = [
+      'Deployment',
+      'DeploymentConfig',
+      'ReplicaSet',
+      'ReplicationController'
+    ];
+
+    if (!_.includes(supportedKinds, $routeParams.kind)) {
+      Navigate.toErrorPage("Health checks are not supported for kind " + $routeParams.kind + ".");
       return;
+    }
+
+    var humanizeKind = $filter('humanizeKind');
+    var displayName = humanizeKind($routeParams.kind, true) + " " + $routeParams.name;
+
+    $scope.name = $routeParams.name;
+    if ($routeParams.kind === 'ReplicationController' || $routeParams.kind === 'ReplicaSet') {
+      $scope.showPodWarning = true;
     }
 
     $scope.alerts = {};
@@ -65,13 +78,18 @@ angular.module('openshiftConsole')
         // Update project breadcrumb with display name.
         $scope.breadcrumbs[0].title = $filter('displayName')(project);
 
-        DataService.get(type, $scope.name, context).then(
+        var resourceGroupVersion = {
+          resource: APIService.kindToResource($routeParams.kind),
+          group: $routeParams.group
+        };
+        DataService.get(resourceGroupVersion, $scope.name, context).then(
           function(result) {
             var resource = angular.copy(result);
+            $scope.resourceURL = Navigate.resourceURL(resource);
             $scope.containers = _.get(resource, 'spec.template.spec.containers');
             $scope.save = function() {
               $scope.disableInputs = true;
-              DataService.update(type, $scope.name, resource, context).then(
+              DataService.update(resourceGroupVersion, $scope.name, resource, context).then(
                 function() {
                   AlertMessageService.addAlert({
                     name: $scope.name,

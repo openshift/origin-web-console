@@ -264,7 +264,7 @@ angular.module('openshiftConsole')
           resource: "horizontalpodautoscalers"
         }, context, function(hpa) {
           $scope.autoscalers =
-            HPAService.hpaForDC(hpa.by("metadata.name"), $routeParams.deploymentconfig);
+            HPAService.filterHPA(hpa.by("metadata.name"), 'DeploymentConfig', $routeParams.deploymentconfig);
           updateHPAWarnings();
         }));
 
@@ -320,7 +320,7 @@ angular.module('openshiftConsole')
             };
           };
 
-          DeploymentsService.scaleDC($scope.deploymentConfig, replicas).then(_.noop, showScalingError);
+          DeploymentsService.scale($scope.deploymentConfig, replicas).then(_.noop, showScalingError);
         };
 
         $scope.$on('$destroy', function(){

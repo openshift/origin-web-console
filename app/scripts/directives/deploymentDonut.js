@@ -11,7 +11,7 @@ angular.module('openshiftConsole')
                                          LabelFilter,
                                          Navigate,
                                          hashSizeFilter,
-                                         isDeploymentFilter) {
+                                         hasDeploymentConfigFilter) {
     return {
       restrict: 'E',
       scope: {
@@ -70,11 +70,7 @@ angular.module('openshiftConsole')
           if (!angular.isNumber($scope.desiredReplicas)) {
             return;
           }
-          if ($scope.deploymentConfig) {
-            return DeploymentsService.scaleDC($scope.deploymentConfig, $scope.desiredReplicas).then(_.noop, showScalingError);
-          } else {
-            return DeploymentsService.scaleRC($scope.rc, $scope.desiredReplicas).then(_.noop, showScalingError);
-          }
+          return DeploymentsService.scale($scope.deploymentConfig || $scope.rc, $scope.desiredReplicas).then(_.noop, showScalingError);
         };
 
         // Debounce scaling so multiple consecutive clicks only result in one request
@@ -120,7 +116,7 @@ angular.module('openshiftConsole')
                   return $scope.rc;
                 },
                 type: function() {
-                  if (isDeploymentFilter($scope.rc)) {
+                  if (hasDeploymentConfigFilter($scope.rc)) {
                     return "deployment";
                   }
 

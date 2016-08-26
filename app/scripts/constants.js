@@ -66,8 +66,10 @@ window.OPENSHIFT_CONSTANTS = {
               label: "Deployments",
               href: "/browse/deployments",
               prefixes: [
-                "/browse/deployments/",
-                "/browse/deployments-replicationcontrollers/"
+                "/browse/deployment/",
+                "/browse/dc/",
+                "/browse/rs/",
+                "/browse/rc/"
               ]
             },
             {

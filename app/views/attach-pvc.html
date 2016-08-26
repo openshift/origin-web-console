@@ -14,15 +14,13 @@
             <div class="row">
               <div class="col-md-12">
                 <alerts alerts="alerts"></alerts>
-                <div ng-show="!pvcs || !(attach.deploymentConfig || attach.deployment)">Loading...</div>
+                <div ng-show="!pvcs || !attach.resource">Loading...</div>
 
-                <div ng-show="pvcs && !pvcs.length && (attach.deploymentConfig || attach.deployment)" class="empty-state-message empty-state-full-page">
+                <div ng-show="pvcs && !pvcs.length && attach.resource" class="empty-state-message empty-state-full-page">
                   <h2 class="text-center">No persistent volume claims.</h2>
 
                   <p class="gutter-top">
-                    A <b>persistent volume claim</b> is required to attach to this
-                    <span ng-if="attach.deploymentConfig">deployment config,</span>
-                    <span ng-if="attach.deployment">deployment,</span>
+                    A <b>persistent volume claim</b> is required to attach to this {{kind | humanizeKind}},
                     but none are loaded on this project.
                   </p>
 
@@ -35,11 +33,10 @@
                     To claim storage from a persistent volume, refer to the documentation on <a target="_blank" ng-href="{{'persistent_volumes' | helpLink}}">using persistent volumes</a>.
                   </p>
 
-                  <p ng-if="attach.deploymentConfig"><a href="{{attach.deploymentConfig | navigateResourceURL}}">Back to deployment config</a></p>
-                  <p ng-if="attach.deployment"><a href="{{attach.deployment | navigateResourceURL}}">Back to deployment</a></p>
+                  <p ng-if="attach.resource"><a ng-href="{{attach.resource | navigateResourceURL}}">Back to {{name}}</a></p>
                 </div>
 
-                <div class="row" ng-show="pvcs && pvcs.length && (attach.deploymentConfig || attach.deployment)">
+                <div class="row" ng-show="pvcs && pvcs.length && attach.resource">
                   <div class="create-storage-icon col-md-2 gutter-top hidden-sm hidden-xs">
                     <span class="fa fa-hdd-o icon-xl"></span>
                   </div>
@@ -48,9 +45,7 @@
                     <h1>Attach Storage</h1>
                     <div>
                       <span class="help-block">
-                        Attach an existing persistent volume claim to the template of
-                        <span ng-if="attach.deploymentConfig">deployment config <b>{{attach.deploymentConfig.metadata.name}}</b>.</span>
-                        <span ng-if="attach.deployment">deployment <b>{{attach.deployment.metadata.name}}</b>.</span>
+                        Attach an existing persistent volume claim to the template of {{kind | humanizeKind}} <b>{{name}}</b>.
                       </span>
                     </div>
                     <form name="attachPVCForm">

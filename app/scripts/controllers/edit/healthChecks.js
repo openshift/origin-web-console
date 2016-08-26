@@ -23,7 +23,14 @@ angular.module('openshiftConsole')
       return;
     }
 
-    if ($routeParams.kind !== 'DeploymentConfig' && $routeParams.kind !== 'ReplicationController') {
+    var supportedKinds = [
+      'Deployment',
+      'DeploymentConfig',
+      'ReplicaSet',
+      'ReplicationController'
+    ];
+
+    if (!_.includes(supportedKinds, $routeParams.kind)) {
       Navigate.toErrorPage("Health checks are not supported for kind " + $routeParams.kind + ".");
       return;
     }
@@ -65,7 +72,11 @@ angular.module('openshiftConsole')
       .get($routeParams.project)
       .then(_.spread(function(project, context) {
         var displayName = $filter('humanizeKind')($routeParams.kind) + ' "' + $scope.name + '"';
-        DataService.get(APIService.kindToResource($routeParams.kind), $scope.name, context).then(
+        var resourceGroupVersion = {
+          resource: APIService.kindToResource($routeParams.kind),
+          group: $routeParams.group
+        };
+        DataService.get(resourceGroupVersion, $scope.name, context).then(
           function(result) {
             // Modify a copy of the resource.
             var resource = angular.copy(result);

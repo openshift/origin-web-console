@@ -40,11 +40,11 @@
                         ng-click="startLatestDeployment()">Deploy</a>
                     </li>
                     <li ng-if="'deploymentconfigs' | canI : 'update'">
-                      <a ng-href="project/{{project.metadata.name}}/attach-pvc?deploymentconfig={{deploymentConfig.metadata.name}}"
+                      <a ng-href="project/{{project.metadata.name}}/attach-pvc?kind=DeploymentConfig&name={{deploymentConfig.metadata.name}}"
                          role="button">Attach Storage</a>
                     </li>
                     <li ng-if="'deploymentconfigs' | canI : 'update'">
-                      <a ng-href="project/{{projectName}}/set-limits?dcName={{deploymentConfig.metadata.name}}"
+                      <a ng-href="project/{{projectName}}/set-limits?kind=DeploymentConfig&name={{deploymentConfig.metadata.name}}"
                         role="button">Set Resource Limits</a>
                     </li>
                     <li ng-if="!autoscalers.length && ({resource: 'horizontalpodautoscalers', group: 'extensions'} | canI : 'create')">
@@ -97,8 +97,10 @@
                         <div class="col-lg-6">
                           <h3>Configuration</h3>
                           <dl class="dl-horizontal left">
-                            <dt>Selectors:</dt><dd ng-if="!deploymentConfig.spec.selector">none</dd>
-                            <dd ng-repeat="(selectorLabel, selectorValue) in deploymentConfig.spec.selector">{{selectorLabel}}={{selectorValue}}<span ng-show="!$last">, </span></dd>
+                            <dt>Selectors:</dt>
+                            <dd>
+                              <selector selector="deploymentConfig.spec.selector"></selector>
+                            </dd>
                             <dt>Replicas:</dt>
                             <dd>
                               <replicas spec="deploymentConfig.spec.replicas"
@@ -135,7 +137,8 @@
                           </pod-template>
                           <h4>Volumes</h4>
                           <p ng-if="!deploymentConfig.spec.template.spec.volumes.length">
-                            <a ng-if="'deploymentconfigs' | canI : 'update'" ng-href="project/{{project.metadata.name}}/attach-pvc?deploymentconfig={{deploymentConfig.metadata.name}}">Attach storage</a>
+                            <a ng-if="'deploymentconfigs' | canI : 'update'"
+                              ng-href="project/{{project.metadata.name}}/attach-pvc?kind=DeploymentConfig&name={{deploymentConfig.metadata.name}}">Attach storage</a>
                             <span ng-if="!('deploymentconfigs' | canI : 'update')">none</span>
                           </p>
                           <volumes volumes="deploymentConfig.spec.template.spec.volumes" namespace="project.metadata.name"></volumes>

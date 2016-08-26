@@ -15,7 +15,7 @@
  -->
 <div class="osc-object components-panel deployment-block"
      kind="ReplicationController" resource="rc"
-     ng-init="isDeployment = (deploymentConfigId && (rc | annotation:'deploymentConfig') && (rc | annotation:'deploymentVersion'))">
+     ng-init="hasDeploymentConfig = (deploymentConfigId && (rc | annotation:'deploymentConfig') && (rc | annotation:'deploymentVersion'))">
 
   <!--
   Connector to the containing service block.
@@ -26,7 +26,7 @@
   </div>
 
   <!-- Header for deployments. Surface deployment config and trigger info. -->
-  <div class="component-block component-meta" ng-if="isDeployment">
+  <div class="component-block component-meta" ng-if="hasDeploymentConfig">
     <div class="component">
       <div class="component-label">
         <span>Deployment: </span>
@@ -70,7 +70,7 @@
   </div>
 
   <!-- Header for replication controllers. Name and timestamp only. -->
-  <div class="component-block component-meta" ng-if="!isDeployment">
+  <div class="component-block component-meta" ng-if="!hasDeploymentConfig">
     <div class="component">
       <div class="component-label">
         Replication Controller:
