@@ -2589,8 +2589,12 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "<alerts ng-if=\"selectedTerminalContainer.status === 'disconnected'\" alerts=\"terminalDisconnectAlert\"></alerts>\n" +
     "<div class=\"mar-left-xl mar-bottom-lg\">\n" +
     "<div class=\"row\">\n" +
-    "<div class=\"pad-left-none pad-bottom-lg col-sm-6 col-lg-4\">\n" +
-    "<ui-select ng-model=\"selectedTerminalContainer\" on-select=\"onTerminalSelectChange(selectedTerminalContainer)\" class=\"mar-left-none pad-left-none pad-right-none\">\n" +
+    "<div class=\"pad-left-none pad-bottom-md col-sm-6 col-lg-4\">\n" +
+    "<span ng-if=\"pod.spec.containers.length === 1\">\n" +
+    "<label for=\"selectLogContainer\">Container:</label>\n" +
+    "{{pod.spec.containers[0].name}}\n" +
+    "</span>\n" +
+    "<ui-select ng-model=\"selectedTerminalContainer\" on-select=\"onTerminalSelectChange(selectedTerminalContainer)\" ng-if=\"pod.spec.containers.length > 1\" class=\"mar-left-none pad-left-none pad-right-none\">\n" +
     "<ui-select-match class=\"truncate\" placeholder=\"Container Name\">\n" +
     "<span class=\"pad-left-md\">\n" +
     "{{selectedTerminalContainer.containerName}}\n" +
