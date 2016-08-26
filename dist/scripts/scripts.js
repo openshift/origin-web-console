@@ -4561,7 +4561,7 @@ a.deploymentConfig ? i.scaleDC(a.deploymentConfig, c).then(_.noop, d) :i.scaleRC
 };
 var w = b("isDeployment");
 a.isScalable = function() {
-return !_.isEmpty(a.autoscalers) || (!w(a.deployment) || (!!a.deploymentConfigMissing || !!a.deploymentConfig && a.isActive));
+return !!_.isEmpty(a.autoscalers) && (!w(a.deployment) || (!!a.deploymentConfigMissing || !!a.deploymentConfig && a.isActive));
 }, a.$on("$destroy", function() {
 e.unwatchAll(m);
 });
