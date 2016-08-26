@@ -30,7 +30,6 @@ angular.module('openshiftConsole')
         case "ImageStreamImage":
         case "ImageStreamImport":
         case "ImageStreamMapping":
-        case "Deployment":
         case "LimitRange":
         case "ResourceQuota":
         case "AppliedClusterResourceQuota":
