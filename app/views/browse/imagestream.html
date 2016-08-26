@@ -57,7 +57,12 @@
                 </dl>
                 <annotations annotations="imageStream.metadata.annotations"></annotations>
               </div>
-              <table class="table table-bordered table-hover table-mobile">
+              <div class="empty-state-message text-center" ng-if="(tagsByName | hashSize) == 0">
+                <h2>{{emptyMessage}}</h2>
+              </div>
+              <table
+                class="table table-bordered table-hover table-mobile"
+                ng-if="(tagsByName | hashSize) !== 0">
                 <thead>
                   <tr>
                     <th>Tag</th>
@@ -67,9 +72,6 @@
                     <th>Pull Spec</th>
                   </tr>
                 </thead>
-                <tbody ng-if="(tagsByName | hashSize) == 0">
-                  <tr><td colspan="5"><em>{{emptyMessage}}</em></td></tr>
-                </tbody>
                 <tbody ng-repeat-start="tag in tagsByName | orderBy : 'name'">
                   <tr>
                     <td data-title="Tag"><a href="{{imageStream | navigateResourceURL}}/{{tag.name}}">{{tag.name}}</a></td>
@@ -127,7 +129,7 @@
                         <div class="pull-spec truncate hidden-xs"
                          ng-attr-title="{{tag.status.items[0].dockerImageReference}}">
                           {{tag.status.items[0].dockerImageReference}}
-                        </div>                      
+                        </div>
                       </div>
                     </td>
                   </tr>
@@ -150,8 +152,8 @@
                         <div class="pull-spec truncate hidden-xs"
                          ng-attr-title="{{item.dockerImageReference}}">
                           {{item.dockerImageReference}}
-                        </div>                      
-                      </div>                      
+                        </div>
+                      </div>
                     </td>
                   </tr>
                 </tbody>

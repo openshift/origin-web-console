@@ -21,7 +21,12 @@
         <div class="container-fluid">
           <div class="row">
             <div class="col-md-12 gutter-top">
-              <table class="table table-bordered table-hover table-mobile">
+              <div class="empty-state-message text-center" ng-if="showEmptyMessage()">
+                <h2>{{emptyMessage}}</h2>
+              </div>
+              <table
+                class="table table-bordered table-hover table-mobile"
+                ng-if="!showEmptyMessage()">
                 <thead>
                   <tr>
                     <th>Name</th>
@@ -31,11 +36,6 @@
                     <th>Trigger</th>
                   </tr>
                 </thead>
-                <!-- message doesnt show right when there are both dcs and rcs and they are all filtered -->
-                <tbody ng-if="showEmptyMessage()">
-                  <!-- If there are no deployment configs, and if the only 'deployments' are just replication controllers -->
-                  <tr><td colspan="5"><em>{{emptyMessage}}</em></td></tr>
-                </tbody>
                 <tbody ng-repeat="(deploymentConfigName, deploymentConfigDeployments) in deploymentsByDeploymentConfig" ng-if="deploymentConfigName && (deploymentConfigs[deploymentConfigName] || !unfilteredDeploymentConfigs[deploymentConfigName])">
                   <!-- Deployment config with no deployments-->
                   <tr ng-if="(deploymentConfigDeployments | hashSize) == 0 && deploymentConfigName">

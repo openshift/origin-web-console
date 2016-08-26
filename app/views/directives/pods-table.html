@@ -1,4 +1,9 @@
-<table class="table table-bordered table-hover table-mobile">
+<div class="empty-state-message text-center" ng-if="(pods | hashSize) == 0">
+  <h2>{{emptyMessage}}</h2>
+</div>
+<table
+  class="table table-bordered table-hover table-mobile"
+  ng-if="(pods | hashSize) !== 0">
   <thead>
     <tr>
       <th>Name</th>
@@ -8,9 +13,6 @@
       <th>Age</th>
     </tr>
   </thead>
-  <tbody ng-if="(pods | hashSize) == 0">
-    <tr><td colspan="5"><em>{{emptyMessage || 'No pods to show'}}</em></td></tr>
-  </tbody>
   <tbody ng-repeat="pod in pods | orderObjectsByDate : true">
     <tr>
       <td data-title="Name">
