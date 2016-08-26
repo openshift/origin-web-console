@@ -390,7 +390,7 @@ angular.module('openshiftConsole')
         var isDeployment = $filter('isDeployment');
         $scope.isScalable = function() {
           if (!_.isEmpty($scope.autoscalers)) {
-            return true;
+            return false;
           }
 
           if (!isDeployment($scope.deployment)) {
