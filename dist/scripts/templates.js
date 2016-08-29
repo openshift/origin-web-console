@@ -2127,7 +2127,7 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "<a ng-href=\"project/{{project.metadata.name}}/attach-pvc?deployment={{deployment.metadata.name}}\" role=\"button\">Attach Storage</a>\n" +
     "</li>\n" +
     "\n" +
-    "<li ng-if=\"(!deploymentConfigName || isActive) && (deployment | canIScale)\">\n" +
+    "<li ng-if=\"(!deploymentConfigName && ('replicationcontrollers' | canI : 'update')) || (deploymentConfigName && isActive && ('deploymentconfigs' | canI : 'update'))\">\n" +
     "<a ng-href=\"{{healthCheckURL}}\" role=\"button\">Edit Health Checks</a>\n" +
     "</li>\n" +
     "<li ng-if=\"'replicationcontrollers' | canI : 'update'\">\n" +
