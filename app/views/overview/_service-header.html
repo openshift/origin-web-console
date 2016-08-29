@@ -4,7 +4,8 @@
     <span class="sr-only">Service</span>
     <a ng-href="{{service | navigateResourceURL}}">{{service.metadata.name}}</a>
     <!-- Put the linking button next to the service name if we show traffic percent to the right. -->
-    <span ng-if="!isAlternate && alternateServices.length && !isChild" class="small mar-left-sm mar-right-sm">
+    <span ng-if="!isAlternate && alternateServices.length && !isChild && ('services' | canI : 'update')"
+          class="small mar-left-sm mar-right-sm">
       <ng-include src="'views/overview/_service-linking-button.html'"></ng-include>
     </span>
   </div>
@@ -12,7 +13,7 @@
     <ng-include src="'views/overview/_traffic-percent.html'"></ng-include>
   </div>
   <!-- Show the button in the upper right corner if we're not showing traffic percent there. -->
-  <div ng-if="!alternateServices.length || isChild">
+  <div ng-if="(!alternateServices.length || isChild) && ('services' | canI : 'update')">
     <ng-include src="'views/overview/_service-linking-button.html'"></ng-include>
   </div>
 </div>
