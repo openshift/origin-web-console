@@ -37,7 +37,8 @@
                 </uib-tab>
                 <uib-tab heading="Layers" active="selectedTab.meta">
                   <uib-tab-heading>Layers</uib-tab-heading>
-                  <registry-image-layers image="image">
+                  <div ng-if="!layers.length"><em>No layer information is available for this image.</em></div>
+                  <registry-image-layers layers="layers" ng-if="layers.length">
                   </registry-image-layers>
                 </uib-tab>
               </uib-tabset>

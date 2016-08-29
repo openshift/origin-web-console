@@ -116,7 +116,16 @@ oc status</pre>
               <div ng-if="!showParamsTable" class="center">
                 <a href="" ng-click="toggleParamsTable()">Show parameter values</a>
               </div>
-              <environment ng-if="showParamsTable" env-vars="parameters.all" class="no-background"></environment>
+              <key-value-editor
+                ng-if="showParamsTable"
+                entries="parameters.all"
+                key-placeholder="Name"
+                value-placeholder="Value"
+                cannot-add
+                cannot-delete
+                cannot-sort
+                show-header
+                is-readonly></key-value-editor>
             </div>
 
           </div>

@@ -133,6 +133,8 @@ angular.module('openshiftConsole')
     AlertMessageService.clearAlerts();
     var watches = [];
 
+    var buildStrategy = $filter('buildStrategy');
+
     ProjectsService
       .get($routeParams.project)
       .then(_.spread(function(project, context) {
@@ -146,16 +148,12 @@ angular.module('openshiftConsole')
           function(buildConfig) {
             $scope.buildConfig = buildConfig;
             $scope.updatedBuildConfig = angular.copy($scope.buildConfig);
-            $scope.buildStrategy = $filter('buildStrategy')($scope.updatedBuildConfig);
+            $scope.buildStrategy = buildStrategy($scope.updatedBuildConfig);
             $scope.strategyType = $scope.buildConfig.spec.strategy.type;
-            $scope.envVars = _.map(
-                              $filter('envVarsPair')($scope.buildStrategy.env),
-                              function(val, key) {
-                                return {
-                                  name: key,
-                                  value: val
-                                }
-                              });
+            $scope.envVars = $scope.buildStrategy.env || [];
+            _.each($scope.envVars, function(env) {
+              $filter('altTextForValueFrom')(env);
+            });
             $scope.triggers = $scope.getTriggerMap($scope.triggers, $scope.buildConfig.spec.triggers);
             $scope.sources = $scope.getSourceMap($scope.sources, $scope.buildConfig.spec.source);
 
@@ -302,6 +300,12 @@ angular.module('openshiftConsole')
             });
             // If we found the item successfully, watch for changes on it
             watches.push(DataService.watchObject("buildconfigs", $routeParams.buildconfig, context, function(buildConfig, action) {
+              if (action === 'MODIFIED') {
+                $scope.alerts["background_update"] = {
+                  type: "warning",
+                  message: "This build configuration has changed since you started editing it. You'll need to copy any changes you've made and edit again."
+                };
+              }
               if (action === "DELETED") {
                 $scope.alerts["deleted"] = {
                   type: "warning",
@@ -624,7 +628,7 @@ angular.module('openshiftConsole')
 
     $scope.updatedImageSourcePath = function(imageSourcePaths) {
       return _.map(
-              keyValueEditorUtils.compactEntries(imageSourcePaths), 
+              keyValueEditorUtils.compactEntries(imageSourcePaths),
               function(path) {
               	return {
                   sourcePath: path.name,
@@ -668,8 +672,8 @@ angular.module('openshiftConsole')
     };
 
     $scope.updateTriggers = function() {
-      var triggers = [].concat($scope.triggers.githubWebhooks, 
-                              $scope.triggers.genericWebhooks, 
+      var triggers = [].concat($scope.triggers.githubWebhooks,
+                              $scope.triggers.genericWebhooks,
                               $scope.triggers.imageChangeTriggers,
                               $scope.triggers.builderImageChangeTrigger,
                               $scope.triggers.configChangeTrigger);
@@ -727,7 +731,7 @@ angular.module('openshiftConsole')
       }
 
       // Update envVars
-      $filter('buildStrategy')($scope.updatedBuildConfig).env = $scope.envVars;
+      $filter('buildStrategy')($scope.updatedBuildConfig).env = keyValueEditorUtils.compactEntries($scope.envVars);
 
       // Update triggers
       $scope.updatedBuildConfig.spec.triggers = $scope.updateTriggers();

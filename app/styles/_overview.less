@@ -15,6 +15,9 @@
 
 .overview {
   font-weight: @overview-font-weight;
+  .middle { // hack to quickly, safely fix bugs where all of the overview page isn't gray; TODO: fix using .surface-shaded
+    background-color: @panel-shaded;
+  }
   h2 {
     line-height: 1.4;
   }
@@ -110,16 +113,21 @@
     width: 100%;
   }
   .service-group-header,
+  .deployment-tile {
+    border: 1px solid @overview-border-gray;
+  }
+  .service-group-header,
   .deployment-tile,
   .no-deployments-block .service-title {
     background-color: #ffffff;
-    border: 1px solid @overview-border-gray;
     border-left-width: 0;
+  }
+  .no-deployments-block .service-title {
+    border-bottom: 1px solid @overview-border-gray;
   }
   .service-group-header,
   .deployment-tile,
   .standalone-service .builds-block,
-  .no-deployments-block .service-title,
   .service-group-triggers {
     box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1);
   }
@@ -177,7 +185,7 @@
           max-width: none;
           margin-top: 0;
         }
-        .no-child-services-message {
+        .no-child-services-block {
           display: none;
         }
       }
@@ -324,7 +332,7 @@
       .flex-direction(@direction: row);
       overview-service {
         width: 50%;
-        
+
         &:nth-child(even) {
           padding-left: 3px;
         }
@@ -333,7 +341,7 @@
         }
       }
     }
-    @media (min-width: @two-column-min-width) { 
+    @media (min-width: @two-column-min-width) {
       .standalone-service-row .standalone-service {
         width: 50%;
         &:nth-child(odd) {
@@ -454,6 +462,9 @@
     }
     .overview-unsuccessful-state {
       text-align: center;
+      & .text-danger {
+        color: @brand-danger;
+      }
     }
     .deployment-status-msg {
       .text-muted();
@@ -549,7 +560,6 @@
     .text-center();
     .text-muted();
     .well();
-    .justify-content(@justify: center);
     margin-bottom: 0;
     padding: 0; // negate .well default padding to maintain equal widths
     h2 {
@@ -570,6 +580,8 @@
   }
   .no-child-services-message {
     display: none;
+    // Account for missing service header height so messages align.
+    padding-top: 35px;
     @media (min-width: @two-column-min-width) {
       .flex-display(@display: flex);
       .flex(@columns: 1 0 0%);

@@ -134,7 +134,23 @@ angular.module('openshiftConsole')
               }
               $scope.buildConfig = buildConfig;
 
-              copyBuildConfigAndEnsureEnv(buildConfig);
+              if (!$scope.forms.bcEnvVars || $scope.forms.bcEnvVars.$pristine) { 
+                copyBuildConfigAndEnsureEnv(buildConfig);
+              } else {
+                $scope.alerts["background_update"] = {
+                  type: "warning",
+                  message: "This build configuration has been updated in the background. Saving your changes may create a conflict or cause loss of data.",
+                  links: [
+                    {
+                      label: 'Reload environment variables',
+                      onClick: function() {
+                        $scope.clearEnvVarUpdates();
+                        return true;
+                      }
+                    }
+                  ]
+                };
+              }
 
               $scope.paused = BuildsService.isPaused($scope.buildConfig);
             }));

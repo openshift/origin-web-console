@@ -60,12 +60,21 @@
     <!-- Show a summary of usage above the charts like the patternfly utilization card. -->
     <!-- Reuse the utilization card styles, but only here. -->
     <div ng-if="metric.datasets[0].total" class="utilization-trend-chart-pf">
-      <div class="current-values">
+      <div class="current-values" ng-if="metric.datasets[0].available >= 0">
         <h1 class="available-count pull-left">
           {{metric.datasets[0].available}}
         </h1>
         <div class="available-text pull-left">
           <div>Available of</div>
+          <div>{{metric.datasets[0].total}} {{metric.units}}</div>
+        </div>
+      </div>
+      <div class="current-values" ng-if="metric.datasets[0].available < 0">
+        <h1 class="available-count pull-left">
+          {{metric.datasets[0].available | abs}}
+        </h1>
+        <div class="available-text pull-left">
+          <div><strong>Over limit of</strong></div>
           <div>{{metric.datasets[0].total}} {{metric.units}}</div>
         </div>
       </div>

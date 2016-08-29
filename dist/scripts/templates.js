@@ -722,10 +722,9 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "<div ng-repeat=\"build in buildsByOutputImage[(trigger.imageChangeParams.from | imageObjectRef : namespace)] | orderObjectsByDate : true track by (build | uid)\" ng-show=\"!(hideBuild)\" class=\"build animate-repeat hide-ng-leave\" kind=\"Build\" resource=\"build\">\n" +
     "<div class=\"build-summary\" ng-class=\"{'dismissible' : !(build | isIncompleteBuild)}\">\n" +
     "<div class=\"build-name\">\n" +
+    "Build\n" +
     "<span ng-if=\"build | annotation : 'buildNumber'\">\n" +
-    "<span ng-if=\"build | buildConfigForBuild\">\n" +
-    "<a ng-href=\"{{build | configURLForResource}}\">{{build | buildConfigForBuild}}</a>,\n" +
-    "</span>\n" +
+    "<span ng-if=\"build | buildConfigForBuild\"><a ng-href=\"{{build | configURLForResource}}\">{{build | buildConfigForBuild}}</a>,</span>\n" +
     "<a ng-href=\"{{build | navigateResourceURL}}\">\n" +
     "#{{build | annotation : 'buildNumber'}}\n" +
     "</a>\n" +
@@ -1347,7 +1346,7 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "<dd>{{containerStatus.ready}}</dd>\n" +
     "<dt>Restart Count:</dt>\n" +
     "<dd>{{containerStatus.restartCount}}</dd>\n" +
-    "<div ng-if=\"(!containerStatus.state.running || !containerStatus.ready) && !(pod | debugLabel) && ('pods' | canI : 'create')\" class=\"debug-pod-action\">\n" +
+    "<div ng-if=\"pod.status.phase !== 'Completed' && !(pod | annotation : 'openshift.io/build.name') && (!containerStatus.state.running || !containerStatus.ready) && !(pod | debugLabel) && ('pods' | canI : 'create')\" class=\"debug-pod-action\">\n" +
     "<a href=\"\" ng-click=\"debugTerminal(containerStatus.name)\" role=\"button\">Debug in terminal</a>\n" +
     "</div>\n" +
     "</dl>\n" +
@@ -1730,11 +1729,11 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "<h3>Environment Variables</h3>\n" +
     "<ng-form name=\"forms.bcEnvVars\">\n" +
     "<div ng-if=\"'buildconfigs' | canI : 'update'\">\n" +
-    "<key-value-editor entries=\"envVars\" key-placeholder=\"Name\" value-placeholder=\"Value\" key-validator=\"[A-Za-z_][A-Za-z0-9_]*\" key-validator-error=\"Please enter a valid key\" key-validator-error-tooltip=\"A valid environment variable name is an alphanumeric (a-z and 0-9) string beginning with a letter that may contain underscores.\" add-row-link=\"Add environment variable\"></key-value-editor>\n" +
+    "<key-value-editor entries=\"envVars\" key-placeholder=\"Name\" value-placeholder=\"Value\" key-validator=\"[A-Za-z_][A-Za-z0-9_]*\" key-validator-error=\"Please enter a valid key\" key-validator-error-tooltip=\"A valid environment variable name is an alphanumeric (a-z and 0-9) string beginning with a letter that may contain underscores.\" add-row-link=\"Add environment variable\" show-header></key-value-editor>\n" +
     "<button class=\"btn btn-default\" ng-click=\"saveEnvVars()\" ng-disabled=\"forms.bcEnvVars.$pristine || forms.bcEnvVars.$invalid\">Save</button>\n" +
     "<a ng-if=\"!forms.bcEnvVars.$pristine\" href=\"\" ng-click=\"clearEnvVarUpdates()\" class=\"mar-left-sm\" style=\"vertical-align: -2px\">Clear changes</a>\n" +
     "</div>\n" +
-    "<key-value-editor entries=\"envVars\" is-readonly cannot-add cannot-sort cannot-delete ng-if=\"!('buildconfigs' | canI : 'update')\"></key-value-editor>\n" +
+    "<key-value-editor ng-if=\"!('buildconfigs' | canI : 'update')\" entries=\"envVars\" key-placeholder=\"Name\" value-placeholder=\"Value\" is-readonly cannot-add cannot-sort cannot-delete show-header></key-value-editor>\n" +
     "</ng-form>\n" +
     "</uib-tab>\n" +
     "</uib-tabset>\n" +
@@ -1819,8 +1818,7 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "<span class=\"pficon pficon-info\" aria-hidden=\"true\"></span>\n" +
     "Environment variables can be edited on the <a ng-href=\"{{build | configURLForResource}}?tab=environment\">build configuration</a>.\n" +
     "</p>\n" +
-    "<key-value-editor entries=\"(build | buildStrategy).env\" cannot-add cannot-delete cannot-sort is-readonly>\n" +
-    "</key-value-editor>\n" +
+    "<key-value-editor entries=\"(build | buildStrategy).env\" key-placeholder=\"Name\" value-placeholder=\"Value\" cannot-add cannot-delete cannot-sort is-readonly show-header></key-value-editor>\n" +
     "<em ng-if=\"!(build | buildStrategy).env\">The build strategy had no environment variables defined.</em>\n" +
     "</uib-tab>\n" +
     "<uib-tab active=\"selectedTab.logs\" ng-if=\"!(build | isJenkinsPipelineStrategy) && ('builds/log' | canI : 'get')\">\n" +
@@ -2078,8 +2076,8 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "<ng-form name=\"forms.dcEnvVars\">\n" +
     "<div ng-repeat=\"container in updatedDeploymentConfig.spec.template.spec.containers\">\n" +
     "<h3>Container {{container.name}} Environment Variables</h3>\n" +
-    "<key-value-editor entries=\"container.env\" cannot-add cannot-sort cannot-delete is-readonly ng-if=\"!('deploymentconfigs' | canI : 'update')\"></key-value-editor>\n" +
-    "<key-value-editor entries=\"container.env\" ng-if=\"'deploymentconfigs' | canI : 'update'\" key-placeholder=\"Name\" value-placeholder=\"Value\" key-validator=\"[A-Za-z_][A-Za-z0-9_]*\" key-validator-error=\"Please enter a valid key\" key-validator-error-tooltip=\"A valid environment variable name is an alphanumeric (a-z and 0-9) string beginning with a letter that may contain underscores.\" add-row-link=\"Add environment variable\"></key-value-editor>\n" +
+    "<key-value-editor ng-if=\"!('deploymentconfigs' | canI : 'update')\" entries=\"container.env\" key-placeholder=\"Name\" value-placeholder=\"Value\" cannot-add cannot-sort cannot-delete is-readonly show-header></key-value-editor>\n" +
+    "<key-value-editor ng-if=\"'deploymentconfigs' | canI : 'update'\" entries=\"container.env\" key-placeholder=\"Name\" value-placeholder=\"Value\" key-validator=\"[A-Za-z_][A-Za-z0-9_]*\" key-validator-error=\"Please enter a valid key\" key-validator-error-tooltip=\"A valid environment variable name is an alphanumeric (a-z and 0-9) string beginning with a letter that may contain underscores.\" add-row-link=\"Add environment variable\" show-header></key-value-editor>\n" +
     "</div>\n" +
     "<button class=\"btn btn-default\" ng-if=\"'deploymentconfigs' | canI : 'update'\" ng-click=\"saveEnvVars()\" ng-disabled=\"forms.dcEnvVars.$pristine || forms.dcEnvVars.$invalid\">Save</button>\n" +
     "<a ng-if=\"!forms.dcEnvVars.$pristine\" href=\"\" ng-click=\"clearEnvVarUpdates()\" class=\"mar-left-sm\" style=\"vertical-align: -2px\">Clear changes</a>\n" +
@@ -2167,7 +2165,7 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "</p>\n" +
     "<div ng-repeat=\"container in deployment.spec.template.spec.containers\">\n" +
     "<h3>Container {{container.name}} Environment Variables</h3>\n" +
-    "<key-value-editor ng-if=\"container.env.length\" entries=\"container.env\" cannot-add cannot-delete cannot-sort is-readonly></key-value-editor>\n" +
+    "<key-value-editor ng-if=\"container.env.length\" entries=\"container.env\" key-placeholder=\"Name\" value-placeholder=\"Value\" cannot-add cannot-delete cannot-sort is-readonly show-header></key-value-editor>\n" +
     "<em ng-if=\"!container.env.length\">The container specification has no environment variables set.</em>\n" +
     "</div>\n" +
     "</uib-tab>\n" +
@@ -2245,7 +2243,8 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "</uib-tab>\n" +
     "<uib-tab heading=\"Layers\" active=\"selectedTab.meta\">\n" +
     "<uib-tab-heading>Layers</uib-tab-heading>\n" +
-    "<registry-image-layers image=\"image\">\n" +
+    "<div ng-if=\"!layers.length\"><em>No layer information is available for this image.</em></div>\n" +
+    "<registry-image-layers layers=\"layers\" ng-if=\"layers.length\">\n" +
     "</registry-image-layers>\n" +
     "</uib-tab>\n" +
     "</uib-tabset>\n" +
@@ -2590,7 +2589,7 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "<alerts ng-if=\"selectedTerminalContainer.status === 'disconnected'\" alerts=\"terminalDisconnectAlert\"></alerts>\n" +
     "<div class=\"mar-left-xl mar-bottom-lg\">\n" +
     "<div class=\"row\">\n" +
-    "<div class=\"pad-left-none pad-bottom-lg col-xs-4 col-lg-3\">\n" +
+    "<div class=\"pad-left-none pad-bottom-lg col-sm-6 col-lg-4\">\n" +
     "<ui-select ng-model=\"selectedTerminalContainer\" on-select=\"onTerminalSelectChange(selectedTerminalContainer)\" class=\"mar-left-none pad-left-none pad-right-none\">\n" +
     "<ui-select-match class=\"truncate\" placeholder=\"Container Name\">\n" +
     "<span class=\"pad-left-md\">\n" +
@@ -2713,7 +2712,7 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "Environment variable updates will only apply to new pods.\n" +
     "</p>\n" +
     "<div>\n" +
-    "<key-value-editor entries=\"container.env\" key-placeholder=\"Name\" value-placeholder=\"Value\" key-validator=\"[A-Za-z_][A-Za-z0-9_]*\" key-validator-error=\"Please enter a valid key\" key-validator-error-tooltip=\"A valid environment variable name is an alphanumeric (a-z and 0-9) string beginning with a letter that may contain underscores.\" add-row-link=\"Add environment variable\"></key-value-editor>\n" +
+    "<key-value-editor entries=\"container.env\" key-placeholder=\"Name\" value-placeholder=\"Value\" key-validator=\"[A-Za-z_][A-Za-z0-9_]*\" key-validator-error=\"Please enter a valid key\" key-validator-error-tooltip=\"A valid environment variable name is an alphanumeric (a-z and 0-9) string beginning with a letter that may contain underscores.\" add-row-link=\"Add environment variable\" show-header></key-value-editor>\n" +
     "<button class=\"btn btn-default\" ng-click=\"saveEnvVars()\" ng-disabled=\"forms.envForm.$pristine || forms.envForm.$invalid\">Save</button>\n" +
     "<a ng-if=\"!forms.envForm.$pristine\" href=\"\" ng-click=\"clearEnvVarUpdates()\" class=\"mar-left-sm\" style=\"vertical-align: -2px\">Clear changes</a>\n" +
     "</div>\n" +
@@ -4081,7 +4080,7 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "<div ng-if=\"!showParamsTable\" class=\"center\">\n" +
     "<a href=\"\" ng-click=\"toggleParamsTable()\">Show parameter values</a>\n" +
     "</div>\n" +
-    "<environment ng-if=\"showParamsTable\" env-vars=\"parameters.all\" class=\"no-background\"></environment>\n" +
+    "<key-value-editor ng-if=\"showParamsTable\" entries=\"parameters.all\" key-placeholder=\"Name\" value-placeholder=\"Value\" cannot-add cannot-delete cannot-sort show-header is-readonly></key-value-editor>\n" +
     "</div>\n" +
     "</div>\n" +
     "</div>\n" +
@@ -4239,6 +4238,7 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "<div class=\"build-pipeline-collapsed\" ng-show=\"!hideBuild\">\n" +
     "<div class=\"build-summary\" ng-class=\"{'dismissible' : !(build | isIncompleteBuild)}\">\n" +
     "<div class=\"build-name\">\n" +
+    "Pipeline\n" +
     "<a ng-href=\"{{build | configURLForResource}}\">{{buildConfigName}}</a>,\n" +
     "<a ng-href=\"{{build | navigateResourceURL}}\">#{{build | annotation : 'buildNumber'}}</a>\n" +
     "</div>\n" +
@@ -5061,7 +5061,7 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "<div pf-sort config=\"sortConfig\" class=\"sort-controls\"></div>\n" +
     "</div>\n" +
     "</div>\n" +
-    "<table class=\"table table-bordered table-condensed table-mobile table-hover events-table\">\n" +
+    "<table class=\"table table-bordered table-condensed table-mobile table-hover events-table\" ng-class=\"{ 'table-empty': (filteredEvents | hashSize) === 0 }\">\n" +
     "<thead>\n" +
     "<tr>\n" +
     "<th id=\"time\">Time</th>\n" +
@@ -5080,7 +5080,14 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "</thead>\n" +
     "<tbody ng-if=\"(filteredEvents | hashSize) === 0\">\n" +
     "<tr>\n" +
-    "<td colspan=\"6\">\n" +
+    "<td class=\"hidden-lg\" colspan=\"3\">\n" +
+    "<span ng-if=\"(events | hashSize) === 0\"><em>No events to show.</em></span>\n" +
+    "<span ng-if=\"(events | hashSize) > 0\">\n" +
+    "All events hidden by filter.\n" +
+    "<a href=\"\" ng-click=\"filter.text = ''\" role=\"button\">Clear filter</a>\n" +
+    "</span>\n" +
+    "</td>\n" +
+    "<td class=\"hidden-xs hidden-sm hidden-md\" colspan=\"6\">\n" +
     "<span ng-if=\"(events | hashSize) === 0\"><em>No events to show.</em></span>\n" +
     "<span ng-if=\"(events | hashSize) > 0\">\n" +
     "All events hidden by filter.\n" +
@@ -5523,12 +5530,21 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "\n" +
     "\n" +
     "<div ng-if=\"metric.datasets[0].total\" class=\"utilization-trend-chart-pf\">\n" +
-    "<div class=\"current-values\">\n" +
+    "<div class=\"current-values\" ng-if=\"metric.datasets[0].available >= 0\">\n" +
     "<h1 class=\"available-count pull-left\">\n" +
     "{{metric.datasets[0].available}}\n" +
     "</h1>\n" +
     "<div class=\"available-text pull-left\">\n" +
     "<div>Available of</div>\n" +
+    "<div>{{metric.datasets[0].total}} {{metric.units}}</div>\n" +
+    "</div>\n" +
+    "</div>\n" +
+    "<div class=\"current-values\" ng-if=\"metric.datasets[0].available < 0\">\n" +
+    "<h1 class=\"available-count pull-left\">\n" +
+    "{{metric.datasets[0].available | abs}}\n" +
+    "</h1>\n" +
+    "<div class=\"available-text pull-left\">\n" +
+    "<div><strong>Over limit of</strong></div>\n" +
     "<div>{{metric.datasets[0].total}} {{metric.units}}</div>\n" +
     "</div>\n" +
     "</div>\n" +
@@ -6642,10 +6658,10 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "</a>\n" +
     "</span></h3>\n" +
     "<div>\n" +
-    "<key-value-editor entries=\"envVars\" key-validator=\"[a-zA-Z][a-zA-Z0-9_]*\" key-validator-error-tooltip=\"A valid environment variable name is an alphanumeric (a-z and 0-9) string beginning with a letter that may contain underscores.\" add-row-link=\"Add environment variable\"></key-value-editor>\n" +
+    "<key-value-editor ng-if=\"envVars\" entries=\"envVars\" key-validator=\"[a-zA-Z][a-zA-Z0-9_]*\" key-validator-error-tooltip=\"A valid environment variable name is an alphanumeric (a-z and 0-9) string beginning with a letter that may contain underscores.\" add-row-link=\"Add environment variable\"></key-value-editor>\n" +
     "</div>\n" +
     "</div>\n" +
-    "<div class=\"section\">\n" +
+    "<div ng-if=\"sources.git || !(updatedBuildConfig | isJenkinsPipelineStrategy)\" class=\"section\">\n" +
     "<h3>Triggers\n" +
     "<a href=\"{{'build-triggers' | helpLink}}\" aria-hidden=\"true\" target=\"_blank\"><span class=\"learn-more-inline\">Learn more<i class=\"fa fa-external-link\"></i></span></a>\n" +
     "</h3>\n" +
@@ -7664,7 +7680,7 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "</div>\n" +
     "<alerts alerts=\"alerts\"></alerts>\n" +
     "<div class=\"data-toolbar\">\n" +
-    "<ui-select ng-model=\"kindSelector.selected\" theme=\"bootstrap\" search-enabled=\"true\" ng-disabled=\"kindSelector.disabled\" title=\"Choose a resource\" style=\"width: 250px\">\n" +
+    "<ui-select class=\"other-resources-toolbar\" ng-model=\"kindSelector.selected\" theme=\"bootstrap\" search-enabled=\"true\" ng-disabled=\"kindSelector.disabled\" title=\"Choose a resource\">\n" +
     "<ui-select-match placeholder=\"Choose a resource to list...\">{{$select.selected.kind | humanizeKind : true}}</ui-select-match>\n" +
     "<ui-select-choices repeat=\"kind in kinds | filter : {kind: $select.search} : matchKind | orderBy : 'kind'\">\n" +
     "<div ng-bind-html=\"(kind.kind | humanizeKind : true) | highlight: $select.search\"></div>\n" +
@@ -7681,7 +7697,7 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "<div class=\"container-fluid\">\n" +
     "<div class=\"row\">\n" +
     "<div class=\"col-md-12 gutter-top\">\n" +
-    "<table class=\"table table-bordered table-mobile\">\n" +
+    "<table class=\"table table-bordered table-mobile\" ng-class=\"{ 'table-empty': (resources | hashSize) === 0 }\">\n" +
     "<thead>\n" +
     "<tr>\n" +
     "<th>Name</th>\n" +
@@ -7691,7 +7707,7 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "</tr>\n" +
     "</thead>\n" +
     "<tbody ng-if=\"(resources | hashSize) == 0\">\n" +
-    "<tr><td colspan=\"6\"><em>{{emptyMessage}}</em></td></tr>\n" +
+    "<tr><td colspan=\"4\"><em>{{emptyMessage}}</em></td></tr>\n" +
     "</tbody>\n" +
     "<tbody ng-repeat=\"resource in resources | orderObjectsByDate : true\">\n" +
     "<tr>\n" +
@@ -7854,7 +7870,7 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "\n" +
     "<div column class=\"overview-unsuccessful-state\" ng-if=\"!activeDeployment && !anyDeploymentInProgress\" ng-switch=\"deployments[0] | deploymentStatus\">\n" +
     "<div ng-switch-when=\"Cancelled\">\n" +
-    "<span class=\"text-warning deployment-status-msg\">\n" +
+    "<span class=\"deployment-status-msg\">\n" +
     "<i class=\"fa fa-ban\" aria-hidden=\"true\"></i>\n" +
     "{{dcName}}\n" +
     "<a ng-href=\"{{deployments[0] | navigateResourceURL}}\">#{{deployments[0] | annotation: 'deploymentVersion'}}</a>\n" +
@@ -8008,7 +8024,7 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "</service-group-notifications>\n" +
     "<div uib-collapse=\"collapse\" class=\"service-group-body\">\n" +
     "\n" +
-    "<div class=\"overview-services\" ng-class=\"{ 'single-alternate-service': (alternateServices | hashSize) === 1 }\">\n" +
+    "<div class=\"overview-services\" ng-class=\"{ 'single-alternate-service': (alternateServices | hashSize) === 1 && totalWeight }\">\n" +
     "<overview-service ng-init=\"isPrimary = true\" class=\"primary-service\"></overview-service>\n" +
     "<overview-service ng-init=\"isAlternate = true\" ng-repeat=\"service in alternateServices\" class=\"alternate-service\">\n" +
     "</overview-service>\n" +
@@ -8016,7 +8032,7 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "</overview-service>\n" +
     "<div flex column ng-if=\"alternateServices.length === 0 && childServices.length === 0 && service\" class=\"no-child-services-block\">\n" +
     "<div class=\"no-child-services-message\">\n" +
-    "<div class=\"pad-left-lg pad-right-lg pad-top-lg pad-bottom-lg\">\n" +
+    "<div class=\"pad-xxl\">\n" +
     "\n" +
     "\n" +
     "\n" +
@@ -8047,7 +8063,7 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "<span class=\"sr-only\">Service</span>\n" +
     "<a ng-href=\"{{service | navigateResourceURL}}\">{{service.metadata.name}}</a>\n" +
     "\n" +
-    "<span ng-if=\"!isAlternate && alternateServices.length && !isChild\" class=\"mar-left-sm small\">\n" +
+    "<span ng-if=\"!isAlternate && alternateServices.length && !isChild\" class=\"small mar-left-sm mar-right-sm\">\n" +
     "<ng-include src=\"'views/overview/_service-linking-button.html'\"></ng-include>\n" +
     "</span>\n" +
     "</div>\n" +
@@ -8073,7 +8089,8 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
   $templateCache.put('views/overview/_service.html',
     "<div ng-if=\"!(visibleDeploymentsByConfig | hashSize) && !(monopodsByService[service.metadata.name] | hashSize)\" class=\"no-deployments-block\">\n" +
     "<div column class=\"no-deployments-message\">\n" +
-    "<div class=\"pad-left-lg pad-right-lg pad-top-lg pad-bottom-lg\">\n" +
+    "<ng-include src=\"'views/overview/_service-header.html'\"></ng-include>\n" +
+    "<div class=\"pad-xxl\">\n" +
     "<h2>No deployments.</h2>\n" +
     "<p>\n" +
     "There are no deployments or pods for service\n" +
@@ -8082,7 +8099,7 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "</div>\n" +
     "</div>\n" +
     "</div>\n" +
-    "<div ng-attr-row=\"{{!service ? '' : undefined}}\" ng-attr-wrap=\"{{!service ? '' : undefined}}\" class=\"deployment-block\" ng-class=\"{\n" +
+    "<div ng-attr-row=\"{{!service ? '' : undefined}}\" ng-attr-wrap=\"{{!service ? '' : undefined}}\" ng-if=\"(visibleDeploymentsByConfig | hashSize) || (monopodsByService[service.metadata.name || ''] | hashSize)\" class=\"deployment-block\" ng-class=\"{\n" +
     "       'no-service': !service,\n" +
     "       'service-multiple-targets': (rcTileCount + (monopodsByService[service.metadata.name] | hashSize) > 1)\n" +
     "     }\">\n" +
@@ -9218,12 +9235,15 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "<div class=\"row\">\n" +
     "<div class=\"col-md-12\">\n" +
     "<div class=\"section-header page-header-bleed-right page-header-bleed-left\">\n" +
-    "<div class=\"pull-right\" ng-if=\"project && ('persistentvolumeclaims' | canI : 'create')\">\n" +
+    "<div class=\"hidden-xs pull-right\" ng-if=\"project && ('persistentvolumeclaims' | canI : 'create')\">\n" +
     "<a ng-href=\"project/{{project.metadata.name}}/create-pvc\" class=\"btn btn-default\">Request Storage</a>\n" +
     "</div>\n" +
     "<h2>Persistent Volume Claims</h2>\n" +
+    "<div class=\"visible-xs-block mar-bottom-sm\" ng-if=\"project && ('persistentvolumeclaims' | canI : 'create')\">\n" +
+    "<a ng-href=\"project/{{project.metadata.name}}/create-pvc\" class=\"btn btn-default\">Request Storage</a>\n" +
     "</div>\n" +
-    "<table class=\"table table-bordered table-hover table-mobile\">\n" +
+    "</div>\n" +
+    "<table class=\"table table-bordered table-hover table-mobile\" ng-class=\"{ 'table-empty': (pvcs | hashSize) === 0 }\">\n" +
     "<thead>\n" +
     "<tr>\n" +
     "<th>Name</th>\n" +
@@ -9233,7 +9253,7 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "<th>Age</th>\n" +
     "</tr>\n" +
     "</thead>\n" +
-    "<tbody ng-if=\"(pvcs | hashSize) == 0\">\n" +
+    "<tbody ng-if=\"(pvcs | hashSize) === 0\">\n" +
     "<tr><td colspan=\"5\"><em>{{emptyMessage}}</em></td></tr>\n" +
     "</tbody>\n" +
     "<tbody ng-repeat=\"pvc in pvcs | orderObjectsByDate : true\">\n" +

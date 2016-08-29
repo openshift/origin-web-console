@@ -22,7 +22,7 @@ angular.module('openshiftConsole')
       "deploymentConfig":         ["openshift.io/deployment-config.name"],
       "deployment":               ["openshift.io/deployment.name"],
       "pod":                      ["openshift.io/deployer-pod.name"],
-      "deployerPod":              ["openshift.io/deployer-pod.name"],      
+      "deployerPod":              ["openshift.io/deployer-pod.name"],
       "deployerPodFor":           ["openshift.io/deployer-pod-for.name"],
       "deploymentStatus":         ["openshift.io/deployment.phase"],
       "deploymentStatusReason":   ["openshift.io/deployment.status-reason"],
@@ -350,7 +350,7 @@ angular.module('openshiftConsole')
       var parts = imageName.split('@');
       return parts.length > 1 ? parts[1] : '';
     };
-  })  
+  })
   .filter('imageEnv', function() {
     return function(image, envKey) {
       var envVars = image.dockerImageMetadata.Config.Env;
@@ -361,15 +361,6 @@ angular.module('openshiftConsole')
         }
       }
       return null;
-    };
-  })
-  .filter('envVarsPair', function() {
-    return function(configEnvVars) {
-      var pairs = {};
-      angular.forEach(configEnvVars, function(env) {
-        pairs[env.name] = env.value;
-      });
-      return pairs;
     };
   })
   .filter('destinationSourcePair', function() {

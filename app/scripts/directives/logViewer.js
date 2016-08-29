@@ -298,6 +298,11 @@ angular.module('openshiftConsole')
                   }
                 });
 
+                // Completely empty messages (without even a newline character) should not add lines
+                if (!msg) {
+                  return;
+                }
+
                 if (options.limitBytes && cumulativeBytes >= options.limitBytes) {
                   $scope.$evalAsync(function() {
                     $scope.limitReached = true;

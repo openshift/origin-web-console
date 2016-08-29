@@ -139,7 +139,25 @@ angular.module('openshiftConsole')
                 };
               }
               $scope.deploymentConfig = deploymentConfig;
-              copyDeploymentConfigAndEnsureEnv(deploymentConfig);
+
+              if ($scope.forms.dcEnvVars.$pristine) { 
+                copyDeploymentConfigAndEnsureEnv(deploymentConfig);
+              } else {
+                $scope.alerts["background_update"] = {
+                  type: "warning",
+                  message: "This deployment configuration has been updated in the background. Saving your changes may create a conflict or cause loss of data.",
+                  links: [
+                    {
+                      label: 'Reload environment variables',
+                      onClick: function() {
+                        $scope.clearEnvVarUpdates();
+                        return true;
+                      }
+                    }
+                  ]
+                };
+              }
+
               updateHPAWarnings();
               ImageStreamResolver.fetchReferencedImageStreamImages([deploymentConfig.spec.template], $scope.imagesByDockerReference, $scope.imageStreamImageRefByDockerReference, context);
             }));

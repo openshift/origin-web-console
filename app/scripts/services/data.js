@@ -559,7 +559,7 @@ DataService.prototype.createStream = function(resource, name, context, opts, isR
     var existingWatchOpts = this._watchOptions(key);
     if (existingWatchOpts) {
       // Check any options for compatibility with existing watch
-      if (existingWatchOpts.poll != opts.poll) {
+      if (!!existingWatchOpts.poll !== !!opts.poll) { // jshint ignore:line
         throw "A watch already exists for " + resource + " with a different polling option.";
       }
     }
@@ -662,10 +662,11 @@ DataService.prototype.createStream = function(resource, name, context, opts, isR
     var callback = handle.callback;
     var objectCallback = handle.objectCallback;
     var opts = handle.opts;
-    var key = this._uniqueKey(resource, objectName, context, _.get(opts, 'http.params'));
+    var key = this._uniqueKey(resource, null, context, _.get(opts, 'http.params'));
 
     if (objectCallback && objectName) {
-      var objCallbacks = this._watchObjectCallbacks(key);
+      var objectKey = this._uniqueKey(resource, objectName, context, _.get(opts, 'http.params'));      
+      var objCallbacks = this._watchObjectCallbacks(objectKey);
       objCallbacks.remove(objectCallback);
     }
 
@@ -882,7 +883,7 @@ DataService.prototype.createStream = function(resource, name, context, opts, isR
     var ns = context && context.namespace ||
              _.get(context, 'project.metadata.name') ||
              context.projectName;
-    return this._urlForResource(resource, name, context, null, angular.extend({}, {}, {namespace: ns})).toString() + paramsForKey(params);
+    return this._urlForResource(resource, name, context, null, angular.extend({}, {}, {namespace: ns})).toString() + paramsForKey(params || {});
   };
 
 

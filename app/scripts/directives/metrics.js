@@ -274,7 +274,7 @@ angular.module('openshiftConsole')
 
             dataset.used = lastValue;
             if (dataset.total) {
-              dataset.available = Math.max(dataset.total - dataset.used, 0);
+              dataset.available = dataset.total - dataset.used;
             }
             metric.totalUsed += dataset.used;
 
@@ -309,11 +309,12 @@ angular.module('openshiftConsole')
                 type: 'donut',
                 columns: [
                   ['Used', dataset.used],
-                  ['Available', dataset.available]
+                  ['Available', Math.max(dataset.available, 0)]
                 ],
                 colors: {
-                  Used: "#0088ce",      // Blue
-                  Available: "#d1d1d1"  // Gray
+                  // Blue if not at limit, orange if at or over limit
+                  Used: (dataset.available > 0) ? "#0088ce" : "#ec7a08",
+                  Available: "#d1d1d1"
                 }
               };
 

@@ -512,13 +512,14 @@
                         </span></h3>
                         <div>
                           <key-value-editor
+                            ng-if="envVars"
                             entries="envVars"
                             key-validator="[a-zA-Z][a-zA-Z0-9_]*"
                             key-validator-error-tooltip="A valid environment variable name is an alphanumeric (a-z and 0-9) string beginning with a letter that may contain underscores."
                             add-row-link="Add environment variable"></key-value-editor>
                         </div>
                       </div>
-                      <div class="section">
+                      <div ng-if="sources.git || !(updatedBuildConfig | isJenkinsPipelineStrategy)" class="section">
                         <h3>Triggers
                           <a href="{{'build-triggers' | helpLink}}" aria-hidden="true" target="_blank"><span class="learn-more-inline">Learn more<i class="fa fa-external-link"></i></span></a>
                         </h3>
