@@ -162,7 +162,7 @@
                           <div ng-if="!autoscalers.length">
                             <a ng-if="{resource: 'horizontalpodautoscalers', group: 'extensions'} | canI : 'create'" ng-href="project/{{projectName}}/edit/autoscaler?kind=DeploymentConfig&name={{deploymentConfig.metadata.name}}"
                                role="button">Add autoscaler</a>
-                            <span ng-if="!({resource: 'horizontalpodautoscalers', group: 'extensions'} | canI : 'create')">none</span>
+                            <span ng-if="!({resource: 'horizontalpodautoscalers', group: 'extensions'} | canI : 'create')">Autoscaling is not enabled. There are no autoscalers for this deployment config.</span>
                           </div>
 
                           <!-- HPA details -->
