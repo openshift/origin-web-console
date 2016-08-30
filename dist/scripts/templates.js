@@ -9291,14 +9291,28 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "<div ng-if=\"(projects | hashSize) === 0\" class=\"text-muted\">Loading...</div>\n" +
     "<div ng-if=\"(projects | hashSize) !== 0\" class=\"gutter-top pad-top-none\">\n" +
     "<div class=\"project-background mar-bottom-xl\">\n" +
-    "<div class=\"pad-top-lg pad-left-xl pad-right-xl\">\n" +
-    "<span class=\"h1\">Projects</span>\n" +
-    "<a ng-if=\"canCreate\" href=\"create-project\" class=\"visible-xs btn btn-md btn-primary pull-right\">\n" +
+    "<div class=\"pad-top-xl pad-left-xl pad-right-xl\">\n" +
+    "<div>\n" +
+    "<div>\n" +
+    "<h1>Projects</h1>\n" +
+    "<a ng-if=\"canCreate\" href=\"create-project\" class=\"btn btn-md btn-primary pull-right\">\n" +
     "<span>New project</span>\n" +
     "</a>\n" +
     "</div>\n" +
-    "<div row cross-axis=\"center\" class=\"project-bar pad-lg table-toolbar form-inline\">\n" +
-    "<input class=\"projectSearch\" placeholder=\"Search projects\" ng-model=\"filterStr\">\n" +
+    "</div>\n" +
+    "</div>\n" +
+    "<div row cross-axis=\"center\" class=\"project-bar pad-top-lg pad-right-xl pad-bottom-lg pad-left-xl table-toolbar form-inline\">\n" +
+    "<form role=\"form\" class=\"search-pf has-button\">\n" +
+    "<div class=\"form-group has-clear\">\n" +
+    "<div class=\"search-pf-input-group\">\n" +
+    "<label for=\"search1\" class=\"sr-only\">Search</label>\n" +
+    "<input type=\"search\" class=\"form-control\" placeholder=\"Search\" ng-init=\"search.text = ''\" ng-model=\"search.text\">\n" +
+    "<button type=\"button\" class=\"clear\" aria-hidden=\"true\" ng-if=\"search.text\" ng-click=\"search.text = ''\">\n" +
+    "<span class=\"pficon pficon-close\"></span>\n" +
+    "</button>\n" +
+    "</div>\n" +
+    "</div>\n" +
+    "</form>\n" +
     "<span class=\"mar-left-sm mar-right-sm\">\n" +
     "<span class=\"hidden-xs vertical-divider\"></span>\n" +
     "</span>\n" +
@@ -9308,19 +9322,16 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "<span class=\"hidden-xs mar-left-sm mar-right-sm\">\n" +
     "<span class=\"vertical-divider\"></span>\n" +
     "</span>\n" +
-    "<span flex class=\"hidden-xs\"></span>\n" +
-    "<div>\n" +
-    "<a ng-if=\"canCreate\" href=\"create-project\" class=\"hidden-xs btn btn-md btn-primary pull-right\">\n" +
-    "<span>New project</span>\n" +
-    "</a>\n" +
-    "</div>\n" +
     "</div>\n" +
     "</div>\n" +
     "<div ng-if=\"alerts\" class=\"mar-left-xl mar-right-xl\">\n" +
     "<alerts alerts=\"alerts\"></alerts>\n" +
     "</div>\n" +
-    "<div ng-repeat=\"project in projects | findProject:filterStr\" class=\"list-group list-view-pf tile-click project-tile-border\">\n" +
-    "<div class=\"list-group-item project-info project-tile\">\n" +
+    "<div class=\"empty-state-message text-center\" ng-if=\"(projects | findProject:search.text).length === 0\">\n" +
+    "<h2>{{emptyMessage}}</h2>\n" +
+    "</div>\n" +
+    "<div class=\"list-group list-view-pf projects-list tile-click\">\n" +
+    "<div ng-repeat=\"project in projects | findProject:search.text\" class=\"list-group-item project-info mar-left-xl mar-right-xl\">\n" +
     "<div row class=\"list-view-pf-actions project-actions\" ng-if=\"project.status.phase == 'Active'\">\n" +
     "<span class=\"fa-lg project-action-item\">\n" +
     "<a ng-href=\"project/{{project.metadata.name}}/edit\" class=\"action-button\">\n" +
@@ -9334,34 +9345,21 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "</span>\n" +
     "</div>\n" +
     "<div class=\"list-view-pf-main-info\">\n" +
-    "<div class=\"list-view-pf-body\">\n" +
-    "<div class=\"list-view-pf-description project-info project-names\">\n" +
+    "<div class=\"list-view-pf-description project-names\">\n" +
     "<div class=\"list-group-item-heading project-name-item\">\n" +
     "<div class=\"project-summary\">\n" +
     "<div class=\"h1\">\n" +
-    "<a class=\"tile-target\" href=\"project/{{project.metadata.name}}\">{{project.metadata.annotations[\"openshift.io/display-name\"]}}</a> \n" +
+    "<a class=\"tile-target\" href=\"project/{{project.metadata.name}}\">{{project.metadata.annotations[\"openshift.io/display-name\"] || project.metadata.name}}</a> \n" +
     "<span ng-if=\"project.status.phase != 'Active'\" data-toggle=\"tooltip\" title=\"This project has been marked for deletion.\" class=\"pficon pficon-warning-triangle-o\" style=\"cursor: help; vertical-align: top; margin-left: 5px\"></span>\n" +
     "</div>\n" +
     "</div>\n" +
-    "<div class=\"project-name-item\">\n" +
+    "<div class=\"hidden-xs project-name-item\">\n" +
     "<p>{{project.metadata.name}}</p>\n" +
     "</div>\n" +
     "</div>\n" +
-    "</div>\n" +
-    "<div row mobile=\"column\" class=\"list-view-pf-additional-info project-info\">\n" +
-    "<span flex class=\"hidden-xs hidden-sm\"></span>\n" +
-    "<span flex class=\"list-group-item-text project-description muted word-break\" ng-if=\"project | description\">\n" +
-    "<truncate-long-text content=\"project | description\" limit=\"200\" use-word-boundary=\"true\"></truncate-long-text>\n" +
-    "</span>\n" +
-    "<span mobile=\"flex\">\n" +
-    "<span class=\"list-view-pf-additional-info-item project-age\">\n" +
-    "<div row class=\"h1\">\n" +
-    "<span flex></span>\n" +
-    "<relative-timestamp timestamp=\"project.metadata.creationTimestamp\"></relative-timestamp>\n" +
-    "<span flex></span>\n" +
-    "</div>\n" +
-    "<div class=\"h2\">Created</div>\n" +
-    "</span>\n" +
+    "<div flex row mobile=\"column\" class=\"list-view-pf-additional-info project-additional-info\">\n" +
+    "<span flex class=\"list-group-item-text project-description\">\n" +
+    "<truncate-long-text content=\"project | description\" limit=\"265\" use-word-boundary=\"true\"></truncate-long-text>\n" +
     "</span>\n" +
     "</div>\n" +
     "</div>\n" +
@@ -9373,7 +9371,7 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "<code>oadm new-project &lt;projectname&gt; --admin={{user.metadata.name || '&lt;YourUsername&gt;'}}</code></span>\n" +
     "<span ng-if=\"newProjectMessage\" ng-bind-html=\"newProjectMessage | linky\" style=\"white-space:pre\"></span>\n" +
     "</div>\n" +
-    "<div class=\"mar-top-md mar-left-xl mar-right-xl\">\n" +
+    "<div class=\"mar-top-md mar-left-xl mar-right-xl\" ng-if=\"(projects | findProject:$search.text).length !== 0\">\n" +
     "A project admin can add you to a role on a project by running the command\n" +
     "<code>oc policy add-role-to-user &lt;role&gt; {{user.metadata.name || '&lt;YourUsername&gt;'}} -n &lt;projectname&gt;</code>\n" +
     "</div>\n" +

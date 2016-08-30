@@ -55,6 +55,7 @@ angular.module('openshiftConsole')
 
     AuthService.withUser().then(function() {
       watches.push(DataService.watch("projects", $scope, function(projects) {
+        $scope.emptyMessage = "No projects to show";
         $scope.projects = projects.by("metadata.name");
         $scope.showGetStarted = hashSizeFilter($scope.projects) === 0;
       }));

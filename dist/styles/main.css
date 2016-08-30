@@ -3616,10 +3616,6 @@ label.checkbox{font-weight:400}
 .action-inline i.fa,.action-inline i.pficon{color:#4d5258;margin-right:5px}
 a.subtle-link{color:#9c9c9c;border-bottom:1px dotted #BBB}
 a.subtle-link:active,a.subtle-link:focus,a.subtle-link:hover{color:#00659c;border-bottom:1px dotted #00659c;text-decoration:none}
-.project-summary{-webkit-flex:1 0 80%;-moz-flex:1 0 80%;-ms-flex:1 0 80%;flex:1 0 80%;max-width:80%}
-@media (min-width:768px){.project-summary{-webkit-flex:1 0 90%;-moz-flex:1 0 90%;-ms-flex:1 0 90%;flex:1 0 90%;max-width:90%}
-}
-.project-actions{width:50px}
 .tasks{margin-bottom:20px;padding-left:15px;padding-right:15px;padding-bottom:10px}
 .tasks.success{border:1px solid #3f9c35;border-left:3px solid #3f9c35}
 .tasks.failure{border:1px solid #c00;border-left:3px solid #c00}
@@ -4841,30 +4837,38 @@ kubernetes-topology-graph{height:700px}
 .settings-item{margin:4px 8px 4px 0}
 .hide-if-empty:empty{display:none!important}
 .donut-title-med-pf{font-size:22.5px;font-weight:300}
-.projects-content{padding-left:0px;padding-right:0px;display:block}
+.project-actions{margin:16px 0 0}
+@media (min-width:992px){.project-actions{margin-top:0}
+.project-name-item.list-group-item-heading{white-space:normal}
+}
+.project-actions .project-action-item{margin-left:10px}
+.project-additional-info.list-view-pf-additional-info{-webkit-align-items:flex-start;-moz-align-items:flex-start;align-items:flex-start}
+@media (min-width:480px){.project-additional-info.list-view-pf-additional-info{-webkit-align-items:center;-moz-align-items:center;align-items:center}
+}
+.project-age{-webkit-align-items:flex-start;-moz-align-items:flex-start;align-items:flex-start;-webkit-flex:1 1 auto;-moz-flex:1 1 auto;-ms-flex:1 1 auto;flex:1 1 auto;display:-webkit-flex;display:-moz-flex;display:-ms-flexbox;display:-ms-flex;display:flex}
+@media (min-width:480px){.project-age{-webkit-align-items:center;-moz-align-items:center;align-items:center;width:45%}
+}
+.project-age .h1{margin:0;text-align:center}
+.project-age .h2{margin-bottom:0;margin-top:10px}
+.project-age .h3{text-align:left;font-size:14px;margin-top:8px;margin-bottom:0}
+.project-background h1{display:inline-block;margin-bottom:0;margin-top:0}
+.project-bar .form-control{-webkit-flex:1;-moz-flex:1;-ms-flex:1;flex:1;padding-left:8px}
+@media (min-width:768px){.project-bar .form-control{-webkit-flex:0;-moz-flex:0;-ms-flex:0;flex:0;min-width:200px}
+}
 .project-bar .project-sort .form-group{margin:0}
-.project-bar .projectSearch{flex:1;padding-left:8px}
 .project-bar .vertical-divider{border-left:1px solid #bbb;display:inline-block;height:25px;margin:0 7px;vertical-align:middle;width:1px}
-.list-view-pf .list-group-item.project-tile:hover{background-color:#bee1f4}
-@media (min-width:768px){.project-bar .projectSearch{flex:0;min-width:200px}
-.list-view-pf .list-group-item.project-tile .vertical-divider-lg{border-left:1px solid #bbb;display:inline-block;height:55px;margin:0 7px;vertical-align:middle;width:1px}
-.container-terminal-wrapper{background-color:#000}
+.projects-content{padding-left:0;padding-right:0}
+.project-description.list-group-item-text{-webkit-flex:1 1 auto;-moz-flex:1 1 auto;-ms-flex:1 1 auto;flex:1 1 auto;margin-bottom:0px;width:100%}
+@media (min-width:480px){.project-description.list-group-item-text{margin-bottom:0;width:55%}
 }
-.project-tile-border{border-style:solid;border-width:0 0 .3px;border-color:#ececec;margin-right:0px;margin-left:0px;margin-bottom:0px}
-.project-info{position:relative;margin-right:15px;margin-left:15px}
-@media (min-width:991px){.project-info .project-names{max-width:40%}
+.project-info.list-group-item{border-bottom:0;padding:10px 20px}
+.project-names.list-view-pf-description{-webkit-flex:1 1 auto;-moz-flex:1 1 auto;-ms-flex:1 1 auto;flex:1 1 auto;width:100%}
+@media (min-width:992px){.project-names.list-view-pf-description{width:50%}
 }
-.project-info .project-name-items .h1{margin-bottom:5px}
-.project-info .project-description{max-width:70%}
-@media (max-width:991px){.project-info .project-description{max-width:100%;display:flex}
-}
-.project-info .project-apps,.project-info .project-status{padding-right:7px;padding-left:7px}
-.project-info .project-age{min-width:200px;margin-left:auto;margin-right:0px}
-.project-info .project-age .h1{margin:0px}
-.project-info .project-age .h2{margin-top:10px;text-align:center}
-.project-info .project-actions{margin-left:5px;margin-right:8px;max-width:40px}
-@media (max-width:991px){.project-info .project-actions{margin-top:32px}
-}
-.project-info .project-actions .project-action-item{margin-right:5px}
+.project-summary .h1{margin-top:0}
+.projects-list{border-top:0;margin-bottom:20px}
+.projects-list .project-info:hover{background-color:#bee1f4}
 .terminal-font,kubernetes-container-terminal .terminal{font-family:"Monospace Regular","DejaVu Sans Mono",Menlo,Monaco,Consolas,monospace;line-height:1em;font-size:12px}
+@media (min-width:768px){.container-terminal-wrapper{background-color:#000}
+}
 .key-value-editor .key-value-editor-header{margin-bottom:5px}

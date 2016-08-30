@@ -3410,7 +3410,7 @@ onSortChange:l
 a.alerts[b.name] = b.data;
 }), h.clearAlerts(), g.withUser().then(function() {
 k.push(f.watch("projects", a, function(b) {
-a.projects = b.by("metadata.name"), a.showGetStarted = 0 === j(a.projects);
+a.emptyMessage = "No projects to show", a.projects = b.by("metadata.name"), a.showGetStarted = 0 === j(a.projects);
 }));
 }), f.get("projectrequests", null, a, {
 errorNotification:!1
@@ -11825,7 +11825,7 @@ return function(b, c) {
 if (!c) return b;
 var d = c.toLowerCase();
 return _.filter(b, function(b) {
-return b.metadata.name.toLowerCase().includes(d) || _.includes(a(b, "displayName").toLowerCase(), d) || _.includes(a(b, "description").toLowerCase(), d) || _.includes(moment(b.metadata.creationTimestamp).from(moment()).toLowerCase(), d);
+return b.metadata.name.toLowerCase().includes(d) || _.includes((a(b, "displayName") || "").toLowerCase(), d) || _.includes((a(b, "description") || "").toLowerCase(), d) || _.includes(moment(b.metadata.creationTimestamp).from(moment()).toLowerCase(), d);
 });
 };
 } ]), angular.module("openshiftConsole").filter("underscore", function() {
