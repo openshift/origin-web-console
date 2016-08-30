@@ -725,9 +725,7 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "Build\n" +
     "<span ng-if=\"build | annotation : 'buildNumber'\">\n" +
     "<span ng-if=\"build | buildConfigForBuild\"><a ng-href=\"{{build | configURLForResource}}\">{{build | buildConfigForBuild}}</a>,</span>\n" +
-    "<a ng-href=\"{{build | navigateResourceURL}}\">\n" +
-    "#{{build | annotation : 'buildNumber'}}\n" +
-    "</a>\n" +
+    "<a ng-href=\"{{build | navigateResourceURL}}\">#{{build | annotation : 'buildNumber'}}</a>\n" +
     "</span>\n" +
     "<span ng-if=\"!(build | annotation : 'buildNumber')\">\n" +
     "{{build.metadata.name}}\n" +
