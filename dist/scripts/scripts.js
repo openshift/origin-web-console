@@ -4328,7 +4328,7 @@ n(a.deploymentConfig), a.forms.dcEnvVars.$setPristine();
 "DELETED" === c && (a.alerts.deleted = {
 type:"warning",
 message:"This deployment configuration has been deleted."
-}), a.deploymentConfig = b, a.forms.dcEnvVars.$pristine ? n(b) :a.alerts.background_update = {
+}), a.deploymentConfig = b, !a.forms.dcEnvVars || a.forms.dcEnvVars.$pristine ? n(b) :a.alerts.background_update = {
 type:"warning",
 message:"This deployment configuration has been updated in the background. Saving your changes may create a conflict or cause loss of data.",
 links:[ {
@@ -4338,7 +4338,14 @@ return a.clearEnvVarUpdates(), !0;
 }
 } ]
 }, q(), h.fetchReferencedImageStreamImages([ b.spec.template ], a.imagesByDockerReference, a.imageStreamImageRefByDockerReference, i);
-})), o.push(e.watch("replicationcontrollers", i, function(d, e, g) {
+}));
+}, function(c) {
+a.loaded = !0, a.alerts.load = {
+type:"error",
+message:404 === c.status ? "This deployment configuration can not be found, it may have been deleted." :"The deployment configuration details could not be loaded.",
+details:404 === c.status ? "Any remaining deployment history for this deployment will be shown." :"Reason: " + b("getErrorDetails")(c)
+};
+}), o.push(e.watch("replicationcontrollers", i, function(d, e, g) {
 var h = c.deploymentconfig;
 if (a.emptyMessage = "No deployments to show", e) {
 if (f.deploymentBelongsToConfig(g, c.deploymentconfig)) {
@@ -4366,14 +4373,7 @@ params:{
 labelSelector:l("deploymentConfig") + "=" + a.deploymentConfigName
 }
 }
-}));
-}, function(c) {
-a.loaded = !0, a.alerts.load = {
-type:"error",
-message:404 === c.status ? "This deployment configuration can not be found, it may have been deleted." :"The deployment configuration details could not be loaded.",
-details:404 === c.status ? "Any remaining deployment history for this deployment will be shown." :"Reason: " + b("getErrorDetails")(c)
-};
-}), e.list("limitranges", i, function(a) {
+})), e.list("limitranges", i, function(a) {
 p = a.by("metadata.name"), q();
 }), o.push(e.watch("imagestreams", i, function(b) {
 a.imageStreams = b.by("metadata.name"), h.buildDockerRefMapForImageStreams(a.imageStreams, a.imageStreamImageRefByDockerReference), a.deploymentConfig && h.fetchReferencedImageStreamImages([ a.deploymentConfig.spec.template ], a.imagesByDockerReference, a.imageStreamImageRefByDockerReference, i), Logger.log("imagestreams (subscribe)", a.imageStreams);
