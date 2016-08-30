@@ -5406,7 +5406,7 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "</p>\n" +
     "<div ng-if=\"kibanaAuthUrl\">\n" +
     "<form action=\"{{kibanaAuthUrl}}\" method=\"POST\">\n" +
-    "<input type=\"hidden\" name=\"redirect\" value=\"{{archiveLocation}}\">\n" +
+    "<input type=\"hidden\" name=\"redirect\" value=\"{{kibanaArchiveUrl}}\">\n" +
     "<input type=\"hidden\" name=\"access_token\" value=\"{{access_token}}\">\n" +
     "<button class=\"btn btn-primary btn-lg\">\n" +
     "View Archive\n" +
