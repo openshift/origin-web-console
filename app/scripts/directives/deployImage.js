@@ -38,6 +38,14 @@ angular.module("openshiftConsole")
         var stripSHA = $filter('stripSHA');
         var humanizeKind = $filter('humanizeKind');
 
+        var trimNameToLength = function(name) {
+          if (name.length > 24) {
+            return name.substring(0, 24);
+          }
+
+          return name;
+        };
+
         // Change image names like "openshift/hello-openshift:latest" to "hello-openshift", which can be used as an app name.
         var getName = function() {
           // Remove everything through the last '/'.
@@ -46,9 +54,7 @@ angular.module("openshiftConsole")
           // Strip the SHA or tag if present.
           name = stripSHA(name);
           name = stripTag(name);
-          if (name.length > 24) {
-            name = name.substring(0, 24);
-          }
+          name = trimNameToLength(name);
 
           return name;
         };
@@ -85,7 +91,7 @@ angular.module("openshiftConsole")
 
                 var image = $scope.import.image;
                 if (image) {
-                  $scope.app.name = getName();                 
+                  $scope.app.name = getName();
                   $scope.runsAsRoot = ImagesService.runsAsRoot(image);
                   $scope.ports = ApplicationGenerator.parsePorts(image);
                   $scope.volumes = ImagesService.getVolumes(image);
@@ -126,7 +132,7 @@ angular.module("openshiftConsole")
             }
 
             var dockerRef, image = _.get(istag, 'tag.items[0].image');
-            $scope.app.name = istag.imageStream;
+            $scope.app.name = trimNameToLength(istag.imageStream);
 
             $scope.import = {
               name: istag.imageStream,
