@@ -725,9 +725,7 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "Build\n" +
     "<span ng-if=\"build | annotation : 'buildNumber'\">\n" +
     "<span ng-if=\"build | buildConfigForBuild\"><a ng-href=\"{{build | configURLForResource}}\">{{build | buildConfigForBuild}}</a>,</span>\n" +
-    "<a ng-href=\"{{build | navigateResourceURL}}\">\n" +
-    "#{{build | annotation : 'buildNumber'}}\n" +
-    "</a>\n" +
+    "<a ng-href=\"{{build | navigateResourceURL}}\">#{{build | annotation : 'buildNumber'}}</a>\n" +
     "</span>\n" +
     "<span ng-if=\"!(build | annotation : 'buildNumber')\">\n" +
     "{{build.metadata.name}}\n" +
@@ -2039,9 +2037,9 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "</td>\n" +
     "<td data-title=\"Status\">\n" +
     "<div row class=\"status\">\n" +
-    "<status-icon status=\"deployment | deploymentStatus\" disable-animation></status-icon>\n" +
+    "<status-icon status=\"deployment | deploymentStatus\" disable-animation fixed-width=\"true\"></status-icon>\n" +
     "<span flex>\n" +
-    "{{deployment | deploymentStatus}}<span ng-if=\"(deployment | deploymentStatus) == 'Deployed' || (deployment | deploymentStatus) == 'Running'\">,\n" +
+    "{{deployment | deploymentStatus}}<span ng-if=\"(deployment | deploymentStatus) == 'Active' || (deployment | deploymentStatus) == 'Running'\">,\n" +
     "<span ng-if=\"deployment.spec.replicas !== deployment.status.replicas\">{{deployment.status.replicas}}/</span>{{deployment.spec.replicas}} replica<span ng-if=\"deployment.spec.replicas != 1\">s</span></span>\n" +
     "</span>\n" +
     "\n" +
@@ -2182,11 +2180,6 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "<status-icon status=\"deployment | deploymentStatus\"></status-icon>\n" +
     "{{deployment | deploymentStatus}}\n" +
     "</span>\n" +
-    "<div ng-if=\"deployment.metadata.creationTimestamp && !logEmpty\" class=\"log-timestamps\">\n" +
-    "<div ng-if=\"(deployment | deploymentStatus) !== 'Deployed'\">\n" +
-    "Log from {{deployment.metadata.creationTimestamp | date : 'short'}}\n" +
-    "</div>\n" +
-    "</div>\n" +
     "</log-viewer>\n" +
     "</uib-tab>\n" +
     "<uib-tab active=\"selectedTab.events\" ng-if=\"'events' | canI : 'watch'\">\n" +
@@ -4159,9 +4152,9 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "</td>\n" +
     "<td data-title=\"Status\">\n" +
     "<div row class=\"status\">\n" +
-    "<status-icon status=\"deployment | deploymentStatus\" disable-animation></status-icon>\n" +
+    "<status-icon status=\"deployment | deploymentStatus\" disable-animation fixed-width=\"true\"></status-icon>\n" +
     "<span flex>\n" +
-    "{{deployment | deploymentStatus}}<span ng-if=\"(deployment | deploymentStatus) == 'Deployed' || (deployment | deploymentStatus) == 'Running'\">,\n" +
+    "{{deployment | deploymentStatus}}<span ng-if=\"(deployment | deploymentStatus) == 'Active' || (deployment | deploymentStatus) == 'Running'\">,\n" +
     "<span ng-if=\"deployment.spec.replicas !== deployment.status.replicas\">{{deployment.status.replicas}}/</span>{{deployment.spec.replicas}} replica<span ng-if=\"deployment.spec.replicas != 1\">s</span></span>\n" +
     "</span>\n" +
     "</div>\n" +
@@ -5413,7 +5406,7 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "</p>\n" +
     "<div ng-if=\"kibanaAuthUrl\">\n" +
     "<form action=\"{{kibanaAuthUrl}}\" method=\"POST\">\n" +
-    "<input type=\"hidden\" name=\"redirect\" value=\"{{archiveLocation}}\">\n" +
+    "<input type=\"hidden\" name=\"redirect\" value=\"{{kibanaArchiveUrl}}\">\n" +
     "<input type=\"hidden\" name=\"access_token\" value=\"{{access_token}}\">\n" +
     "<button class=\"btn btn-primary btn-lg\">\n" +
     "View Archive\n" +
@@ -7507,11 +7500,6 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "<div ng-repeat-end ng-if=\"expanded.deployments[deployment.metadata.name]\" class=\"list-group-expanded-section\" ng-class=\"{'expanded': expanded.deployments[deployment.metadata.name]}\">\n" +
     "\n" +
     "<log-viewer ng-if=\"'deploymentconfigs/log' | canI : 'get'\" resource=\"deploymentconfigs/log\" name=\"deployment | annotation : 'deploymentConfig'\" context=\"projectContext\" options=\"logOptions.deployments[deployment.metadata.name]\" empty=\"logEmpty.deployments[deployment.metadata.name]\" run=\"logCanRun.deployments[deployment.metadata.name]\" fixed-height=\"250\" full-log-url=\"(deployment | navigateResourceURL) + '?view=chromeless'\">\n" +
-    "<div ng-if=\"deployment.metadata.creationTimestamp && !logEmpty.deployments[deployment.metadata.name]\" class=\"log-timestamps\" style=\"margin-left: 0\">\n" +
-    "<div ng-if=\"(deployment | deploymentStatus) !== 'Deployed'\">\n" +
-    "Log from {{deployment.metadata.creationTimestamp | date : 'short'}}\n" +
-    "</div>\n" +
-    "</div>\n" +
     "</log-viewer>\n" +
     "<div class=\"mar-top-lg\" ng-if=\"metricsAvailable\">\n" +
     "<deployment-metrics pods=\"podsByDeployment[deployment.metadata.name]\" containers=\"deployment.spec.template.spec.containers\">\n" +

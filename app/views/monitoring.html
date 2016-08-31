@@ -202,13 +202,6 @@
                         run="logCanRun.deployments[deployment.metadata.name]"
                         fixed-height="250"
                         full-log-url="(deployment | navigateResourceURL) + '?view=chromeless'">
-
-                        <div ng-if="deployment.metadata.creationTimestamp && !logEmpty.deployments[deployment.metadata.name]" class="log-timestamps" style="margin-left: 0;">
-                          <div ng-if="(deployment | deploymentStatus) !== 'Deployed'">
-                            Log from {{deployment.metadata.creationTimestamp  | date : 'short'}}
-                          </div>
-                        </div>
-
                       </log-viewer>
                       <div class="mar-top-lg" ng-if="metricsAvailable">
                         <deployment-metrics

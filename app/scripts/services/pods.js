@@ -32,6 +32,7 @@ angular.module("openshiftConsole")
 
         // Never restart.
         debugPod.spec.restartPolicy = "Never";
+        delete debugPod.spec.nodeName;
         debugPod.status = {};
         delete container.readinessProbe;
         delete container.livenessProbe;

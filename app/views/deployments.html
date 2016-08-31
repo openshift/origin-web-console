@@ -66,9 +66,9 @@
                     </td>
                     <td data-title="Status">
                       <div row class="status">
-                        <status-icon status="deployment | deploymentStatus" disable-animation></status-icon>
+                        <status-icon status="deployment | deploymentStatus" disable-animation fixed-width="true"></status-icon>
                         <span flex>
-                          {{deployment | deploymentStatus}}<span ng-if="(deployment | deploymentStatus) == 'Deployed' || (deployment | deploymentStatus) == 'Running'">,
+                          {{deployment | deploymentStatus}}<span ng-if="(deployment | deploymentStatus) == 'Active' || (deployment | deploymentStatus) == 'Running'">,
                           <span ng-if="deployment.spec.replicas !== deployment.status.replicas">{{deployment.status.replicas}}/</span>{{deployment.spec.replicas}} replica<span ng-if="deployment.spec.replicas != 1">s</span></span>
                         </span>
                       </div>

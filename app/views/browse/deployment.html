@@ -126,12 +126,6 @@
                         <status-icon status="deployment | deploymentStatus"></status-icon>
                         {{deployment | deploymentStatus}}
                       </span>
-                      <div ng-if="deployment.metadata.creationTimestamp && !logEmpty" class="log-timestamps">
-                        <div ng-if="(deployment | deploymentStatus) !== 'Deployed'">
-                          Log from {{deployment.metadata.creationTimestamp  | date : 'short'}}
-                        </div>
-                      </div>
-
                     </log-viewer>
                   </uib-tab>
                   <uib-tab active="selectedTab.events" ng-if="'events' | canI : 'watch'">
