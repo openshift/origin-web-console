@@ -16,7 +16,7 @@
             pod-template="activeDeployment.spec.template">
         </image-names>
         <span ng-if="anyDeploymentInProgress" class="small">
-          {{deploymentConfig.spec.strategy.type}} deployment in progress...
+          {{deploymentConfig.spec.strategy.type}} <ellipsis-pulser color="dark" size="sm" display="inline" msg="deployment in progress"></ellipsis-pulser>
           <a href="" ng-click="cancelDeployment()" role="button">Cancel</a>
         </span>
       </div>

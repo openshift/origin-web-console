@@ -234,6 +234,7 @@ angular.module('openshiftConsole')
           $scope.podsByName = pods.by("metadata.name");
           $scope.pods = orderByDate($scope.podsByName, true);
           groupPods();
+          $scope.podsLoaded = true;
           _.each($scope.pods, setPodLogVars);
           filterPods();
           Logger.log("pods", $scope.pods);
@@ -242,6 +243,7 @@ angular.module('openshiftConsole')
         DataService.watch("replicationcontrollers", context, function(deployments) {
           $scope.deployments = orderByDate(deployments.by("metadata.name"), true);
           groupPods();
+          $scope.deploymentsLoaded = true;
           _.each($scope.deployments, setDeploymentLogVars);
           filterDeployments();
           Logger.log("deployments", $scope.deployments);
@@ -249,7 +251,8 @@ angular.module('openshiftConsole')
 
         DataService.watch("builds", context, function(builds) {
           $scope.builds = orderByDate(builds.by("metadata.name"), true);
-          $scope.latestBuildByConfig = BuildsService.latestBuildByConfig($scope.builds);          
+          $scope.latestBuildByConfig = BuildsService.latestBuildByConfig($scope.builds);
+          $scope.buildsLoaded = true;        
           _.each($scope.builds, setBuildLogVars);
           filterBuilds();
           Logger.log("builds", $scope.builds);

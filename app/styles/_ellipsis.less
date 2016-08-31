@@ -1,126 +1,135 @@
-// Ellipsis Loader
-// --------------------------------------------------
+// Ellipsis Pulser ...
+// options:   3 sizes (sm, md, lg)
+//            light and dark versions
+//            supports prepended [text]...
+// examples:  http://codepen.io/sg00dwin/pen/WxXYEN
+// -------------------------------------------------------------
 
-@ellipsis-color : #797f86;
-
-/**
- * Mixins
- */
-.dimensions(@w, @h) {
-    width: @w;
-    height: @h;
-}
-
-.position(@x, @y) {
-    top: @y;
-    left: @x;
-}
-
-.border-radius(@args) {
-    -webkit-border-radius: @args;
-    border-radius: @args;
-    background-clip: padding-box;
-}
-
-.opacity(@factor) {
-    @iefactor: @factor*100;
-    -ms-filter: "progid:DXImageTransform.Microsoft.Alpha(Opacity=@{iefactor})";
-    filter: ~"alpha(opacity=(@{iefactor}))";
-    opacity: @factor;
-}
-
-.box-shadow(@args) {
-    -webkit-box-shadow: @args;
-    box-shadow: @args;
-}
-
-.animation(@args) {
-    -webkit-animation: @args;
-    -moz-animation: @args;
-    -ms-animation: @args;
-    -o-animation: @args;
-    animation: @args;
-}
+@dot-size-sm: 4px;
+@dot-size-md: 8px;
+@dot-size-lg: 12px;
+@dot-size-default: @dot-size-sm;
+@transform-scale: 1;
+@font-size-default: @font-size-base;
+@ellipsis-color-dark: hsla(200, 0%, 20%, 1); // #333333
+@ellipsis-color-light: hsla(200, 0%, 70%, 1); // #b3b3b3
 
 
-/**
-* 3-dot animation
-*/
-.ellipsis-loader {
+.ellipsis-pulser {
+  padding: 10px;
+  text-align: center;
+  // Use on light backgrounds
+  &.ellipsis-dark {
+    .dot {
+      &.pulse:before, &.pulse:after {
+        background: @ellipsis-color-dark;
+      }
+    }
+    .ellipsis-msg {
+      color: @ellipsis-color-dark;
+    }
+  }
+  // Use on dark backgrounds
+  &.ellipsis-light {
+    .dot {
+      &.pulse:before, &.pulse:after {
+        background: @ellipsis-color-light;
+      }
+    }
+    .ellipsis-msg {
+      color: @ellipsis-color-light;
+    }
+  }
+  // Use when inline and/or not centered
+  &.ellipsis-inline {
     display: inline-block;
+    padding: 0 3px 0 0;
+  }
+  .dot {
+    display: inline-block;
+    height: @dot-size-default;
     position: relative;
-    vertical-align: middle;
-    div {
-        position: absolute;
-        &:before, &:after {
-            content: "";
-            position: absolute;
-        }
+    width: @dot-size-default;
+    &:before {
+      animation-name: anim;
+      animation-duration: 1.5s;
+      animation-timing-function: linear;
+      animation-iteration-count: infinite;
+      animation-direction: normal;
+      border-radius: 100em;
+      content: " ";
+      display: block;
+      height: 100%;
+      left: 0px;
+      opacity: .33;
+      position: absolute;
+      top: 0px;
+      transform-origin: 50% 50%;
+      transform: scale(@transform-scale * .66);
+      width: 100%;
     }
-    // Properties for this particular animation
-    &.dots {
-        .dimensions(48px, 16px);
-        div {
-            &:before {
-                .position(-15px, 0);
-                .dimensions(6px, 6px);
-                background-color: @ellipsis-color;
-                .border-radius(5px);
-                .animation(~"growDot 1.25s linear 0s infinite");
-            }
-            .position(21px, 5px);
-            .dimensions(6px, 6px);
-            background-color:@ellipsis-color;
-            .border-radius(5px);
-            .animation(~"growDot 1.25s linear .2s infinite");
-            &:after {
-                .position(15px, 0);
-                .dimensions(6px, 6px);
-                background-color: @ellipsis-color;
-                .border-radius(5px);
-                .animation(~"growDot 1.25s linear .4s infinite");
-            }
-        }
+    &:nth-of-type(+1):before {
+      animation-delay : .25s;
     }
+    &:nth-of-type(+2):before {
+      animation-delay : .5s;
+    }
+    &:nth-of-type(+3):before {
+      animation-delay : .75s;
+    }
+  }
+
+  // Ellipsis sizes
+  &.ellipsis-sm {
+    .dot {
+      height: @dot-size-sm;
+      width: @dot-size-sm;
+    }
+    .ellipsis-msg {
+      // Small defaults to use parent font-size and color
+      color: inherit;
+    }
+  }
+  &.ellipsis-md {
+    .dot {
+      height: @dot-size-md;
+      margin-bottom: -2px;
+      width: @dot-size-md;
+    }
+    .ellipsis-msg {
+      font-size: (@font-size-default + 4);
+      font-weight: 300;
+      margin-right: 3px;
+    }
+  }
+  &.ellipsis-lg {
+    .dot {
+      height: @dot-size-lg;
+      margin-bottom: -2px;
+      width: @dot-size-lg;
+    }
+    .ellipsis-msg {
+      font-size: (@font-size-default + 12);
+      font-weight: 300;
+      margin-right: 6px;
+    }
+  }
 }
 
-/**
- * Animation frames
- */
-@-webkit-keyframes growDot {
+@keyframes anim {
   0% {
-      .opacity(0.7);
-      .box-shadow(0px 0px 0px 0px @ellipsis-color);
+    opacity: .33;
+    transform: scale(@transform-scale * .66);
   }
-  25% {
-      .opacity(1.0);
-      .box-shadow(0px 0px 0px 2px @ellipsis-color);
+  35% {
+    opacity: 1;
+    transform: scale(@transform-scale);
   }
-  50% {
-      .opacity(0.7);
-      .box-shadow(0px 0px 0px 0px @ellipsis-color);
+  70% {
+    transform: scale(@transform-scale * .66);
   }
   100% {
-      .opacity(0.6);
-      .box-shadow(0px 0px 0px 0px @ellipsis-color);
-  }
-}
-
-@keyframes growDot {
-  0% {
-      .opacity(0.7);
-      .box-shadow(0px 0px 0px 0px @ellipsis-color);
-  }
-  25% {
-      .opacity(1.0);
-      .box-shadow(0px 0px 0px 2px @ellipsis-color);
-  }
-  50% {
-      .opacity(0.7);
-      .box-shadow(0px 0px 0px 0px @ellipsis-color);
-  }
-  100% {
-      .opacity(0.6);
-      .box-shadow(0px 0px 0px 0px @ellipsis-color);
+    opacity: .33;
+    z-index: 1;
   }
 }

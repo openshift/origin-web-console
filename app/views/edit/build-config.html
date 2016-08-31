@@ -143,74 +143,30 @@
                           </div>
 
                           <div class="form-groups" ng-show="sources.images">
-
                             <div class="single-image-source" ng-if="sourceImages.length === 1">
+
                               <div class="form-group">
-                                <label for="imageSourceFrom">Image Source From</label>
-                                <select
-                                  class="form-control simpleselector"
-                                  ng-model="imageSourceOptions.pickedType"
-                                  ng-options="type.id as type.title for type in imageSourceTypes"
-                                  ng-change="assambleInputType('imageSource', imageSourceOptions.pickedType)">
-                                </select>
+                                <label>Image Source From</label>
+                                <ui-select required ng-model="imageOptions.fromSource.type" search-enabled="false">
+                                  <ui-select-match>{{$select.selected | startCase}}</ui-select-match>
+                                  <ui-select-choices repeat="type in imageSourceTypes">
+                                    {{type | startCase}}
+                                  </ui-select-choices>
+                                </ui-select>
                               </div>
 
-                              <div class="row form-group" ng-if="imageSourceOptions.pickedType==='ImageStreamTag'" >
-                                <div class="col-sm-4">
-                                 <div class="form-group">
-                                    <label>Namespace</label>
-                                    <span ng-if="!isNamespaceAvailable(imageSourceOptions.pickedNamespace)" data-toggle="tooltip" title="Selected Namespace is not available." class="pficon pficon-error-circle-o" style="cursor: help;"></span>
-                                    <select
-                                      name="imageSourceNamespace"
-                                      class="form-control"
-                                      ng-model="imageSourceOptions.pickedNamespace"
-                                      ng-options="name for name in imageSourceBuildFrom.projects track by name"
-                                      ng-change="updateImageSourceImageStreams(imageSourceOptions.pickedNamespace, true)"
-                                      required>
-                                    </select>
-                                  </div>
-                                </div>
-
-                                <div class="col-sm-4">
-                                  <div class="form-group">
-                                    <label>Image Stream</label>
-                                    <span  ng-if="inspectNamespace(imageSourceBuildFrom.imageStreams, imageSourceOptions.pickedImageStream) === 'empty'" data-toggle="tooltip" title="Selected Namespace doesn't contain any Image Streams to build from." class="pficon pficon-error-circle-o" style="cursor: help;"></span>
-                                    <span  ng-if="inspectNamespace(imageSourceBuildFrom.imageStreams, imageSourceOptions.pickedImageStream) === 'noMatch'" data-toggle="tooltip" title="Selected Namespace doesn't contain Image Stream choosen Tag" class="pficon pficon-error-circle-o" style="cursor: help;"></span>
-                                    <select
-                                      name="imageSourceImageStream"
-                                      class="form-control"
-                                      ng-model="imageSourceOptions.pickedImageStream"
-                                      ng-options="name as name for name in imageSourceBuildFrom.imageStreams track by name"
-                                      ng-change="clearSelectedTag(imageSourceOptions, imageSourceBuildFrom.tags)"
-                                      required>
-                                    </select>
-                                  </div>
-                                </div>
-
-                                <div class="col-sm-4">
-                                  <div class="form-group">
-                                    <label>Tag</label>
-                                    <span ng-if="inspectTags(imageSourceBuildFrom.tags, imageSourceOptions.pickedImageStream, imageSourceOptions.pickedTag) === 'empty'" data-toggle="tooltip" title="Selected Image Stream doesn't contain any tagged image to build from." class="pficon pficon-error-circle-o" style="cursor: help;"></span>
-                                    <span ng-if="inspectTags(imageSourceBuildFrom.tags, imageSourceOptions.pickedImageStream, imageSourceOptions.pickedTag) === 'noMatch'" data-toggle="tooltip" title="Selected Image Stream doesn't contain choosen Tag." class="pficon pficon-error-circle-o" style="cursor: help;"></span>
-                                    <select
-                                      name="imageSourceTag"
-                                      class="form-control"
-                                      ng-model="imageSourceOptions.pickedTag"
-                                      ng-options="name as name for name in imageSourceBuildFrom.tags[imageSourceOptions.pickedImageStream] track by name"
-                                      ng-disabled="imageSourceOptions.pickedImageStream === ''"
-                                      required>
-                                    </select>
-                                  </div>
-                                </div>
+                              <div class="form-group" ng-if="imageOptions.fromSource.type==='ImageStreamTag'" >
+                                <istag-select include-shared-namespace="true"
+                                              model="imageOptions.fromSource.imageStreamTag"></istag-select>
                               </div>
 
-                              <div ng-if="imageSourceOptions.pickedType==='ImageStreamImage'" class="form-group">
+                              <div ng-if="imageOptions.fromSource.type==='ImageStreamImage'" class="form-group">
                                 <label for="imageSourceImage">Image Stream Image</label>
                                 <div>
                                   <input class="form-control"
                                     type="text"
-                                    ng-model="imageSourceOptions.pickedImageStreamImage"
-                                    placeholder="example: ruby-20-centos7@603bfa418"
+                                    ng-model="imageOptions.fromSource.imageStreamImage"
+                                    placeholder="example: openshift/ruby-20-centos7@603bfa418"
                                     autocorrect="off"
                                     autocapitalize="off"
                                     spellcheck="false"
@@ -219,15 +175,15 @@
                               </div>
 
 
-                              <div ng-if="imageSourceOptions.pickedType==='DockerImage'" class="form-group">
+                              <div ng-if="imageOptions.fromSource.type==='DockerImage'" class="form-group">
                                 <label for="imageSourceLink">Docker Image Repository</label>
                                 <div>
                                   <input class="form-control"
                                     id="imageSourceLink"
                                     name="imageSourceLink"
                                     type="text"
-                                    ng-model="imageSourceOptions.pickedDockerImage"
-                                    placeholder="example: openshift/ruby-20-centos7:latest"
+                                    ng-model="imageOptions.fromSource.dockerImage"
+                                    placeholder="example: centos/ruby-20-centos7:latest"
                                     autocorrect="off"
                                     autocapitalize="off"
                                     spellcheck="false"
@@ -327,87 +283,47 @@
                           <div>
                             <div class="form-group">
                               <label for="buildFrom">Build From</label>
-                              <select
-                                class="form-control simpleselector"
-                                ng-model="builderOptions.pickedType"
-                                ng-options="type.id as type.title for type in buildFromTypes"
-                                ng-change="assambleInputType('builder', builderOptions.pickedType)">
-                              </select>
+                              <ui-select required ng-model="imageOptions.from.type" search-enabled="false">
+                                <ui-select-match>{{$select.selected | startCase}}</ui-select-match>
+                                <ui-select-choices repeat="type in buildFromTypes">
+                                  {{type | startCase}}
+                                </ui-select-choices>
+                              </ui-select>
                             </div>
 
-                            <div class="row form-group" ng-if="builderOptions.pickedType==='ImageStreamTag'">
-                              <div class="col-sm-4">
-                                <div class="form-group">
-                                  <label>Namespace</label>
-                                  <span  ng-if="!isNamespaceAvailable(builderOptions.pickedNamespace)" data-toggle="tooltip" title="Selected Namespace is not available." class="pficon pficon-error-circle-o" style="cursor: help;"></span>
-                                  <select
-                                    class="form-control"
-                                    ng-model="builderOptions.pickedNamespace"
-                                    ng-options="name for name in buildFrom.projects track by name"
-                                    ng-change="updateBuilderImageStreams(builderOptions.pickedNamespace, true)"
-                                    required>
-                                  </select>
-                                </div>
-                              </div>
-                              <div class="col-sm-4">
-                                <div class="form-group">
-                                  <label>Image Stream</label>
-                                  <span  ng-if="inspectNamespace(buildFrom.imageStreams, builderOptions.pickedImageStream) === 'empty'" data-toggle="tooltip" title="Selected Namespace doesn't contain any Image Streams to build from." class="pficon pficon-error-circle-o" style="cursor: help;"></span>
-                                  <span  ng-if="inspectNamespace(buildFrom.imageStreams, builderOptions.pickedImageStream) === 'noMatch'" data-toggle="tooltip" title="Selected Namespace doesn't contain Image Stream choosen Tag" class="pficon pficon-error-circle-o" style="cursor: help;"></span>
-                                  <select
-                                    class="form-control"
-                                    ng-model="builderOptions.pickedImageStream"
-                                    ng-options="name as name for name in buildFrom.imageStreams track by name"
-                                    ng-change="clearSelectedTag(builderOptions, buildFrom.tags)"
-                                    required>
-                                  </select>
-                                </div>
-                              </div>
 
-                              <div class="col-sm-4">
-                                <div class="form-group">
-                                  <label>Tag</label>
-                                  <span ng-if="inspectTags(buildFrom.tags, builderOptions.pickedImageStream, builderOptions.pickedTag) === 'empty'" data-toggle="tooltip" title="Selected Image Stream doesn't contain any tagged image to build from." class="pficon pficon-error-circle-o" style="cursor: help;"></span>
-                                  <span ng-if="inspectTags(buildFrom.tags, builderOptions.pickedImageStream, builderOptions.pickedTag) === 'noMatch'" data-toggle="tooltip" title="Selected Image Stream doesn't contain choosen Tag." class="pficon pficon-error-circle-o" style="cursor: help;"></span>
-                                  <select
-                                    class="form-control"
-                                    ng-model="builderOptions.pickedTag"
-                                    ng-options="name as name for name in buildFrom.tags[builderOptions.pickedImageStream] track by name"
-                                    ng-disabled="builderOptions.pickedImageStream === ''"
-                                    required>
-                                  </select>
-                                </div>
-                              </div>
+                            <div class="form-group" ng-if="imageOptions.from.type==='ImageStreamTag'">
+                              <istag-select include-shared-namespace="true"
+                                            model="imageOptions.from.imageStreamTag"></istag-select>
                             </div>
 
-                            <div ng-if="builderOptions.pickedType==='DockerImage'" class="form-group">
+                            <div ng-if="imageOptions.from.type==='DockerImage'" class="form-group">
                               <label for="FromTypeLink">Docker Image Repository</label>
                               <div>
                                 <input class="form-control"
                                   type="text"
-                                  ng-model="builderOptions.pickedDockerImage"
-                                  placeholder="example: openshift/ruby-20-centos7:latest"
+                                  ng-model="imageOptions.from.dockerImage"
                                   autocorrect="off"
                                   autocapitalize="off"
+                                  placeholder="example: centos/ruby-20-centos7:latest"
                                   spellcheck="false"
                                   required>
                               </div>
                             </div>
 
-                            <div ng-if="builderOptions.pickedType==='ImageStreamImage'" class="form-group">
+                            <div ng-if="imageOptions.from.type==='ImageStreamImage'" class="form-group">
                               <label for="FromTypeImage">Image Stream Image</label>
                               <div>
                                 <input class="form-control"
                                   type="text"
-                                  ng-model="builderOptions.pickedImageStreamImage"
-                                  placeholder="example: ruby-20-centos7@603bfa418"
+                                  ng-model="imageOptions.from.imageStreamImage"
+                                  placeholder="example: openshift/ruby-20-centos7@603bfa418"
                                   autocorrect="off"
                                   autocapitalize="off"
                                   spellcheck="false"
                                   required>
                               </div>
                             </div>
-
                           </div>
 
                           <div class="form-group">
@@ -422,75 +338,27 @@
                           <div>
                             <div class="form-group">
                               <label for="buildFrom">Push To</label>
-                              <select
-                                class="form-control simpleselector"
-                                ng-model="outputOptions.pickedType"
-                                ng-options="type.id as type.title for type in pushToTypes"
-                                ng-change="assambleInputType('output', outputOptions.pickedType)">
-                              </select>
+                              <ui-select required ng-model="imageOptions.to.type" search-enabled="false">
+                                <ui-select-match>{{$select.selected | startCase}}</ui-select-match>
+                                <ui-select-choices repeat="type in pushToTypes">
+                                  {{type | startCase}}
+                                </ui-select-choices>
+                              </ui-select>
+                            </div>
+                            <div class="form-group" ng-if="imageOptions.to.type==='ImageStreamTag'">
+                              <istag-select model="imageOptions.to.imageStreamTag"
+                                            allow-custom-tag="true"></istag-select>
                             </div>
 
-                            <div class="row form-group" ng-if="outputOptions.pickedType==='ImageStreamTag'">
-                              <div class="col-sm-4">
-                               <div class="form-group">
-                                  <label>Namespace</label>
-                                  <span  ng-if="!isNamespaceAvailable(outputOptions.pickedNamespace)" data-toggle="tooltip" title="Selected Namespace is not available." class="pficon pficon-error-circle-o" style="cursor: help;"></span>
-                                  <select
-                                    class="form-control"
-                                    id="outputNamespace"
-                                    name="outputNamespace"
-                                    ng-model="outputOptions.pickedNamespace"
-                                    ng-options="name for name in pushTo.projects track by name"
-                                    ng-change="updateOutputImageStreams(outputOptions.pickedNamespace, true)"
-                                    required>
-                                  </select>
-                                </div>
-                              </div>
-                              <div class="col-sm-4">
-                                <div class="form-group">
-                                  <label>Image Stream</label>
-                                  <span  ng-if="inspectNamespace(pushTo.imageStreams, outputOptions.pickedImageStream) === 'empty'" data-toggle="tooltip" title="Selected Namespace doesn't contain any Image Streams to build from." class="pficon pficon-error-circle-o" style="cursor: help;"></span>
-                                  <span  ng-if="inspectNamespace(pushTo.imageStreams, outputOptions.pickedImageStream) === 'noMatch'" data-toggle="tooltip" title="Selected Namespace doesn't contain Image Stream choosen Tag" class="pficon pficon-error-circle-o" style="cursor: help;"></span>
-                                  <select
-                                    class="form-control"
-                                    id="outputImageStream"
-                                    name="outputImageStream"
-                                    ng-model="outputOptions.pickedImageStream"
-                                    ng-options="name as name for name in pushTo.imageStreams track by name"
-                                    ng-change="clearSelectedTag(outputOptions, pushTo.tags, true)"
-                                    required>
-                                  </select>
-                                </div>
-                              </div>
-
-                              <div class="col-sm-4">
-                                <div class="form-group">
-                                  <label>Tag</label>
-                                  <span  ng-if="showOutputTagWarning(form)" data-toggle="tooltip" title="Tag is already created and will be overridden on build." class="pficon pficon-warning-triangle-o" style="cursor: help;"></span>
-                                  <div>
-                                  <input class="form-control"
-                                    id="outputTag"
-                                    name="outputTag"
-                                    type="text"
-                                    ng-model="outputOptions.pickedTag"
-                                    ng-disabled="outputOptions.pickedImageStream === ''"
-                                    autocorrect="off"
-                                    autocapitalize="off"
-                                    spellcheck="false"
-                                    required>
-                                  </div>
-                                </div>
-                              </div>
-                            </div>
-
-                            <div ng-if="outputOptions.pickedType==='DockerImage'" class="form-group">
+                            <div ng-if="imageOptions.to.type==='DockerImage'" class="form-group">
                               <label for="pushToLink">Docker Image Repository</label>
                               <div>
                                 <input class="form-control"
                                   id="pushToLink"
                                   name="pushToLink"
                                   type="text"
-                                  ng-model="outputOptions.pickedDockerImage"
+                                  ng-model="imageOptions.to.dockerImage"
+                                  placeholder="example: centos/ruby-20-centos7:latest"
                                   autocorrect="off"
                                   autocapitalize="off"
                                   spellcheck="false"
@@ -558,7 +426,7 @@
                               <h5>Image change</h5>
                               <div class="checkbox">
                                 <label>
-                                  <input type="checkbox" ng-model="triggers.builderImageChangeTrigger.present" ng-disabled="builderOptions.pickedType === 'None'"/>
+                                  <input type="checkbox" ng-model="triggers.builderImageChangeTrigger.present" ng-disabled="imageOptions.from.type === 'None'"/>
                                     Automatically build a new image when the builder image changes
                                     <span class="help action-inline">
                                       <a href>
@@ -582,11 +450,14 @@
                           </span>
                         </h3>
                         <div class="form-group">
-                          <select
-                            class="form-control"
-                            ng-model="updatedBuildConfig.spec.runPolicy"
-                            ng-options="type as (type | sentenceCase) for type in runPolicyTypes">
-                          </select>
+                          <label class="sr-only">Run policy type</label>
+                          <ui-select required ng-model="updatedBuildConfig.spec.runPolicy" search-enabled="false">
+                            <ui-select-match>{{$select.selected | sentenceCase}}</ui-select-match>
+                            <ui-select-choices repeat="type in runPolicyTypes">
+                              {{type | sentenceCase}}
+                            </ui-select-choices>
+                          </ui-select>
+
                         </div>
                         <div ng-switch="updatedBuildConfig.spec.runPolicy">
                           <div ng-switch-when="Serial">Builds triggered from this Build Configuration will run one at the time, in the order they have been triggered.</div>

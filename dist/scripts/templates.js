@@ -1973,7 +1973,7 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "\n" +
     "<div ng-if=\"!autoscalers.length\">\n" +
     "<a ng-if=\"{resource: 'horizontalpodautoscalers', group: 'extensions'} | canI : 'create'\" ng-href=\"project/{{projectName}}/edit/autoscaler?kind=DeploymentConfig&name={{deploymentConfig.metadata.name}}\" role=\"button\">Add autoscaler</a>\n" +
-    "<span ng-if=\"!({resource: 'horizontalpodautoscalers', group: 'extensions'} | canI : 'create')\">none</span>\n" +
+    "<span ng-if=\"!({resource: 'horizontalpodautoscalers', group: 'extensions'} | canI : 'create')\">Autoscaling is not enabled. There are no autoscalers for this deployment config.</span>\n" +
     "</div>\n" +
     "\n" +
     "<div ng-repeat=\"hpa in autoscalers\">\n" +
@@ -2125,7 +2125,7 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "<a ng-href=\"project/{{project.metadata.name}}/attach-pvc?deployment={{deployment.metadata.name}}\" role=\"button\">Attach Storage</a>\n" +
     "</li>\n" +
     "\n" +
-    "<li ng-if=\"(!deploymentConfigName || isActive) && (deployment | canIScale)\">\n" +
+    "<li ng-if=\"(!deploymentConfigName && ('replicationcontrollers' | canI : 'update')) || (deploymentConfigName && isActive && ('deploymentconfigs' | canI : 'update'))\">\n" +
     "<a ng-href=\"{{healthCheckURL}}\" role=\"button\">Edit Health Checks</a>\n" +
     "</li>\n" +
     "<li ng-if=\"'replicationcontrollers' | canI : 'update'\">\n" +
@@ -4476,6 +4476,16 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
   );
 
 
+  $templateCache.put('views/directives/_ellipsis-pulser.html',
+    "<div class=\"ellipsis-pulser ellipsis-{{size || 'md'}} ellipsis-{{color || 'dark'}} ellipsis-{{display || 'block'}}\">\n" +
+    "<span ng-if=\"msg\" class=\"ellipsis-msg\">{{msg}}</span>\n" +
+    "<div class=\"dot pulse\"></div>\n" +
+    "<div class=\"dot pulse\"></div>\n" +
+    "<div class=\"dot pulse\"></div>\n" +
+    "</div>"
+  );
+
+
   $templateCache.put('views/directives/_pod-content.html',
     "<div class=\"pod-text\" ng-switch=\"pod.status.phase\">\n" +
     "<strong class=\"pod-status-label\">{{pod.status.phase}}</strong>\n" +
@@ -4483,9 +4493,9 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "<pod-warnings pod=\"pod\" style=\"margin-right: -15px\"></pod-warnings>\n" +
     "</span>\n" +
     "<div ng-switch-when=\"Pending\">\n" +
-    "<span ng-if=\"!pod.spec.nodeName\">scheduling...</span>\n" +
+    "<ellipsis-pulser color=\"dark\" size=\"sm\" msg=\"scheduling\" display=\"inline\" ng-if=\"!pod.spec.nodeName\"></ellipsis-pulser>\n" +
     "<span ng-if=\"pod.spec.nodeName && !pod.status.startTime\">scheduled</span>\n" +
-    "<span ng-if=\"pod.spec.nodeName && pod.status.startTime\">pulling...</span>\n" +
+    "<ellipsis-pulser color=\"dark\" size=\"sm\" msg=\"pulling\" display=\"inline\" ng-if=\"pod.spec.nodeName && pod.status.startTime\"></ellipsis-pulser>\n" +
     "</div>\n" +
     "<div ng-switch-default>\n" +
     "&nbsp;\n" +
@@ -4857,7 +4867,7 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "</select>\n" +
     "</div>\n" +
     "</div>\n" +
-    "<div ng-if=\"!loaded\" class=\"mar-top-md\">Loading metrics...</div>\n" +
+    "<ellipsis-pulser color=\"dark\" size=\"sm\" msg=\"Loading metrics\" ng-if=\"!loaded\"></ellipsis-pulser>\n" +
     "<div ng-if=\"loaded && noData && !metricsError\" class=\"mar-top-md\">\n" +
     "No metrics to display.\n" +
     "</div>\n" +
@@ -4999,9 +5009,7 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "</div>\n" +
     "</div>\n" +
     "<div class=\"right-content\">\n" +
-    "<div ng-if=\"!events\" class=\"events pad-left-xl\">\n" +
-    "Loading...\n" +
-    "</div>\n" +
+    "<ellipsis-pulser color=\"dark\" size=\"sm\" msg=\"Loading\" ng-if=\"!events\" class=\"events\"></ellipsis-pulser>\n" +
     "<div ng-if=\"events\" class=\"events\">\n" +
     "<div ng-if=\"!(events | hashSize)\" class=\"mar-left-xl\">\n" +
     "<em>No events.</em>\n" +
@@ -5403,9 +5411,7 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "Only the previous {{options.tailLines || 5000}} log lines and new log messages will be displayed because of the large log size.\n" +
     "</div>\n" +
     "\n" +
-    "<div ng-if=\"(!state)\" class=\"mar-top-sm log-loading-msg\">\n" +
-    "Loading log...\n" +
-    "</div>\n" +
+    "<ellipsis-pulser color=\"dark\" size=\"sm\" display=\"inline\" msg=\"Loading log\" ng-if=\"(!state)\"></ellipsis-pulser>\n" +
     "<div class=\"empty-state-message text-center\" ng-if=\"state=='empty'\" ng-class=\"{'log-fixed-height': fixedHeight}\">\n" +
     "<h2>Logs are not available.</h2>\n" +
     "<p>\n" +
@@ -5442,7 +5448,7 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "</div>\n" +
     "</div>\n" +
     "\n" +
-    "<ellipsis-loader ng-show=\"loading\"></ellipsis-loader>\n" +
+    "<ellipsis-pulser color=\"light\" size=\"md\" ng-show=\"loading\"></ellipsis-pulser>\n" +
     "<div ng-show=\"showScrollLinks\" class=\"log-scroll log-scroll-bottom\">\n" +
     "<a href=\"\" ng-click=\"onScrollTop()\">Go to top</a>\n" +
     "</div>\n" +
@@ -5500,7 +5506,7 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "</select>\n" +
     "</div>\n" +
     "</div>\n" +
-    "<div ng-if=\"!loaded\" class=\"mar-top-md\">Loading metrics...</div>\n" +
+    "<ellipsis-pulser color=\"dark\" size=\"sm\" msg=\"Loading metrics\" ng-if=\"!loaded\"></ellipsis-pulser>\n" +
     "<div ng-if=\"loaded && noData && !metricsError\" class=\"mar-top-md\">No metrics to display.</div>\n" +
     "<div ng-if=\"metricsError\" class=\"empty-state-message text-center\">\n" +
     "<h2>\n" +
@@ -6446,48 +6452,27 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "<div class=\"form-groups\" ng-show=\"sources.images\">\n" +
     "<div class=\"single-image-source\" ng-if=\"sourceImages.length === 1\">\n" +
     "<div class=\"form-group\">\n" +
-    "<label for=\"imageSourceFrom\">Image Source From</label>\n" +
-    "<select class=\"form-control simpleselector\" ng-model=\"imageSourceOptions.pickedType\" ng-options=\"type.id as type.title for type in imageSourceTypes\" ng-change=\"assambleInputType('imageSource', imageSourceOptions.pickedType)\">\n" +
-    "</select>\n" +
+    "<label>Image Source From</label>\n" +
+    "<ui-select required ng-model=\"imageOptions.fromSource.type\" search-enabled=\"false\">\n" +
+    "<ui-select-match>{{$select.selected | startCase}}</ui-select-match>\n" +
+    "<ui-select-choices repeat=\"type in imageSourceTypes\">\n" +
+    "{{type | startCase}}\n" +
+    "</ui-select-choices>\n" +
+    "</ui-select>\n" +
     "</div>\n" +
-    "<div class=\"row form-group\" ng-if=\"imageSourceOptions.pickedType==='ImageStreamTag'\">\n" +
-    "<div class=\"col-sm-4\">\n" +
-    "<div class=\"form-group\">\n" +
-    "<label>Namespace</label>\n" +
-    "<span ng-if=\"!isNamespaceAvailable(imageSourceOptions.pickedNamespace)\" data-toggle=\"tooltip\" title=\"Selected Namespace is not available.\" class=\"pficon pficon-error-circle-o\" style=\"cursor: help\"></span>\n" +
-    "<select name=\"imageSourceNamespace\" class=\"form-control\" ng-model=\"imageSourceOptions.pickedNamespace\" ng-options=\"name for name in imageSourceBuildFrom.projects track by name\" ng-change=\"updateImageSourceImageStreams(imageSourceOptions.pickedNamespace, true)\" required>\n" +
-    "</select>\n" +
+    "<div class=\"form-group\" ng-if=\"imageOptions.fromSource.type==='ImageStreamTag'\">\n" +
+    "<istag-select include-shared-namespace=\"true\" model=\"imageOptions.fromSource.imageStreamTag\"></istag-select>\n" +
     "</div>\n" +
-    "</div>\n" +
-    "<div class=\"col-sm-4\">\n" +
-    "<div class=\"form-group\">\n" +
-    "<label>Image Stream</label>\n" +
-    "<span ng-if=\"inspectNamespace(imageSourceBuildFrom.imageStreams, imageSourceOptions.pickedImageStream) === 'empty'\" data-toggle=\"tooltip\" title=\"Selected Namespace doesn't contain any Image Streams to build from.\" class=\"pficon pficon-error-circle-o\" style=\"cursor: help\"></span>\n" +
-    "<span ng-if=\"inspectNamespace(imageSourceBuildFrom.imageStreams, imageSourceOptions.pickedImageStream) === 'noMatch'\" data-toggle=\"tooltip\" title=\"Selected Namespace doesn't contain Image Stream choosen Tag\" class=\"pficon pficon-error-circle-o\" style=\"cursor: help\"></span>\n" +
-    "<select name=\"imageSourceImageStream\" class=\"form-control\" ng-model=\"imageSourceOptions.pickedImageStream\" ng-options=\"name as name for name in imageSourceBuildFrom.imageStreams track by name\" ng-change=\"clearSelectedTag(imageSourceOptions, imageSourceBuildFrom.tags)\" required>\n" +
-    "</select>\n" +
-    "</div>\n" +
-    "</div>\n" +
-    "<div class=\"col-sm-4\">\n" +
-    "<div class=\"form-group\">\n" +
-    "<label>Tag</label>\n" +
-    "<span ng-if=\"inspectTags(imageSourceBuildFrom.tags, imageSourceOptions.pickedImageStream, imageSourceOptions.pickedTag) === 'empty'\" data-toggle=\"tooltip\" title=\"Selected Image Stream doesn't contain any tagged image to build from.\" class=\"pficon pficon-error-circle-o\" style=\"cursor: help\"></span>\n" +
-    "<span ng-if=\"inspectTags(imageSourceBuildFrom.tags, imageSourceOptions.pickedImageStream, imageSourceOptions.pickedTag) === 'noMatch'\" data-toggle=\"tooltip\" title=\"Selected Image Stream doesn't contain choosen Tag.\" class=\"pficon pficon-error-circle-o\" style=\"cursor: help\"></span>\n" +
-    "<select name=\"imageSourceTag\" class=\"form-control\" ng-model=\"imageSourceOptions.pickedTag\" ng-options=\"name as name for name in imageSourceBuildFrom.tags[imageSourceOptions.pickedImageStream] track by name\" ng-disabled=\"imageSourceOptions.pickedImageStream === ''\" required>\n" +
-    "</select>\n" +
-    "</div>\n" +
-    "</div>\n" +
-    "</div>\n" +
-    "<div ng-if=\"imageSourceOptions.pickedType==='ImageStreamImage'\" class=\"form-group\">\n" +
+    "<div ng-if=\"imageOptions.fromSource.type==='ImageStreamImage'\" class=\"form-group\">\n" +
     "<label for=\"imageSourceImage\">Image Stream Image</label>\n" +
     "<div>\n" +
-    "<input class=\"form-control\" type=\"text\" ng-model=\"imageSourceOptions.pickedImageStreamImage\" placeholder=\"example: ruby-20-centos7@603bfa418\" autocorrect=\"off\" autocapitalize=\"off\" spellcheck required>\n" +
+    "<input class=\"form-control\" type=\"text\" ng-model=\"imageOptions.fromSource.imageStreamImage\" placeholder=\"example: openshift/ruby-20-centos7@603bfa418\" autocorrect=\"off\" autocapitalize=\"off\" spellcheck required>\n" +
     "</div>\n" +
     "</div>\n" +
-    "<div ng-if=\"imageSourceOptions.pickedType==='DockerImage'\" class=\"form-group\">\n" +
+    "<div ng-if=\"imageOptions.fromSource.type==='DockerImage'\" class=\"form-group\">\n" +
     "<label for=\"imageSourceLink\">Docker Image Repository</label>\n" +
     "<div>\n" +
-    "<input class=\"form-control\" id=\"imageSourceLink\" name=\"imageSourceLink\" type=\"text\" ng-model=\"imageSourceOptions.pickedDockerImage\" placeholder=\"example: openshift/ruby-20-centos7:latest\" autocorrect=\"off\" autocapitalize=\"off\" spellcheck required>\n" +
+    "<input class=\"form-control\" id=\"imageSourceLink\" name=\"imageSourceLink\" type=\"text\" ng-model=\"imageOptions.fromSource.dockerImage\" placeholder=\"example: centos/ruby-20-centos7:latest\" autocorrect=\"off\" autocapitalize=\"off\" spellcheck required>\n" +
     "</div>\n" +
     "</div>\n" +
     "<div class=\"form-group\">\n" +
@@ -6554,47 +6539,26 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "<div>\n" +
     "<div class=\"form-group\">\n" +
     "<label for=\"buildFrom\">Build From</label>\n" +
-    "<select class=\"form-control simpleselector\" ng-model=\"builderOptions.pickedType\" ng-options=\"type.id as type.title for type in buildFromTypes\" ng-change=\"assambleInputType('builder', builderOptions.pickedType)\">\n" +
-    "</select>\n" +
+    "<ui-select required ng-model=\"imageOptions.from.type\" search-enabled=\"false\">\n" +
+    "<ui-select-match>{{$select.selected | startCase}}</ui-select-match>\n" +
+    "<ui-select-choices repeat=\"type in buildFromTypes\">\n" +
+    "{{type | startCase}}\n" +
+    "</ui-select-choices>\n" +
+    "</ui-select>\n" +
     "</div>\n" +
-    "<div class=\"row form-group\" ng-if=\"builderOptions.pickedType==='ImageStreamTag'\">\n" +
-    "<div class=\"col-sm-4\">\n" +
-    "<div class=\"form-group\">\n" +
-    "<label>Namespace</label>\n" +
-    "<span ng-if=\"!isNamespaceAvailable(builderOptions.pickedNamespace)\" data-toggle=\"tooltip\" title=\"Selected Namespace is not available.\" class=\"pficon pficon-error-circle-o\" style=\"cursor: help\"></span>\n" +
-    "<select class=\"form-control\" ng-model=\"builderOptions.pickedNamespace\" ng-options=\"name for name in buildFrom.projects track by name\" ng-change=\"updateBuilderImageStreams(builderOptions.pickedNamespace, true)\" required>\n" +
-    "</select>\n" +
+    "<div class=\"form-group\" ng-if=\"imageOptions.from.type==='ImageStreamTag'\">\n" +
+    "<istag-select include-shared-namespace=\"true\" model=\"imageOptions.from.imageStreamTag\"></istag-select>\n" +
     "</div>\n" +
-    "</div>\n" +
-    "<div class=\"col-sm-4\">\n" +
-    "<div class=\"form-group\">\n" +
-    "<label>Image Stream</label>\n" +
-    "<span ng-if=\"inspectNamespace(buildFrom.imageStreams, builderOptions.pickedImageStream) === 'empty'\" data-toggle=\"tooltip\" title=\"Selected Namespace doesn't contain any Image Streams to build from.\" class=\"pficon pficon-error-circle-o\" style=\"cursor: help\"></span>\n" +
-    "<span ng-if=\"inspectNamespace(buildFrom.imageStreams, builderOptions.pickedImageStream) === 'noMatch'\" data-toggle=\"tooltip\" title=\"Selected Namespace doesn't contain Image Stream choosen Tag\" class=\"pficon pficon-error-circle-o\" style=\"cursor: help\"></span>\n" +
-    "<select class=\"form-control\" ng-model=\"builderOptions.pickedImageStream\" ng-options=\"name as name for name in buildFrom.imageStreams track by name\" ng-change=\"clearSelectedTag(builderOptions, buildFrom.tags)\" required>\n" +
-    "</select>\n" +
-    "</div>\n" +
-    "</div>\n" +
-    "<div class=\"col-sm-4\">\n" +
-    "<div class=\"form-group\">\n" +
-    "<label>Tag</label>\n" +
-    "<span ng-if=\"inspectTags(buildFrom.tags, builderOptions.pickedImageStream, builderOptions.pickedTag) === 'empty'\" data-toggle=\"tooltip\" title=\"Selected Image Stream doesn't contain any tagged image to build from.\" class=\"pficon pficon-error-circle-o\" style=\"cursor: help\"></span>\n" +
-    "<span ng-if=\"inspectTags(buildFrom.tags, builderOptions.pickedImageStream, builderOptions.pickedTag) === 'noMatch'\" data-toggle=\"tooltip\" title=\"Selected Image Stream doesn't contain choosen Tag.\" class=\"pficon pficon-error-circle-o\" style=\"cursor: help\"></span>\n" +
-    "<select class=\"form-control\" ng-model=\"builderOptions.pickedTag\" ng-options=\"name as name for name in buildFrom.tags[builderOptions.pickedImageStream] track by name\" ng-disabled=\"builderOptions.pickedImageStream === ''\" required>\n" +
-    "</select>\n" +
-    "</div>\n" +
-    "</div>\n" +
-    "</div>\n" +
-    "<div ng-if=\"builderOptions.pickedType==='DockerImage'\" class=\"form-group\">\n" +
+    "<div ng-if=\"imageOptions.from.type==='DockerImage'\" class=\"form-group\">\n" +
     "<label for=\"FromTypeLink\">Docker Image Repository</label>\n" +
     "<div>\n" +
-    "<input class=\"form-control\" type=\"text\" ng-model=\"builderOptions.pickedDockerImage\" placeholder=\"example: openshift/ruby-20-centos7:latest\" autocorrect=\"off\" autocapitalize=\"off\" spellcheck required>\n" +
+    "<input class=\"form-control\" type=\"text\" ng-model=\"imageOptions.from.dockerImage\" autocorrect=\"off\" autocapitalize=\"off\" placeholder=\"example: centos/ruby-20-centos7:latest\" spellcheck required>\n" +
     "</div>\n" +
     "</div>\n" +
-    "<div ng-if=\"builderOptions.pickedType==='ImageStreamImage'\" class=\"form-group\">\n" +
+    "<div ng-if=\"imageOptions.from.type==='ImageStreamImage'\" class=\"form-group\">\n" +
     "<label for=\"FromTypeImage\">Image Stream Image</label>\n" +
     "<div>\n" +
-    "<input class=\"form-control\" type=\"text\" ng-model=\"builderOptions.pickedImageStreamImage\" placeholder=\"example: ruby-20-centos7@603bfa418\" autocorrect=\"off\" autocapitalize=\"off\" spellcheck required>\n" +
+    "<input class=\"form-control\" type=\"text\" ng-model=\"imageOptions.from.imageStreamImage\" placeholder=\"example: openshift/ruby-20-centos7@603bfa418\" autocorrect=\"off\" autocapitalize=\"off\" spellcheck required>\n" +
     "</div>\n" +
     "</div>\n" +
     "</div>\n" +
@@ -6609,41 +6573,20 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "<div>\n" +
     "<div class=\"form-group\">\n" +
     "<label for=\"buildFrom\">Push To</label>\n" +
-    "<select class=\"form-control simpleselector\" ng-model=\"outputOptions.pickedType\" ng-options=\"type.id as type.title for type in pushToTypes\" ng-change=\"assambleInputType('output', outputOptions.pickedType)\">\n" +
-    "</select>\n" +
+    "<ui-select required ng-model=\"imageOptions.to.type\" search-enabled=\"false\">\n" +
+    "<ui-select-match>{{$select.selected | startCase}}</ui-select-match>\n" +
+    "<ui-select-choices repeat=\"type in pushToTypes\">\n" +
+    "{{type | startCase}}\n" +
+    "</ui-select-choices>\n" +
+    "</ui-select>\n" +
     "</div>\n" +
-    "<div class=\"row form-group\" ng-if=\"outputOptions.pickedType==='ImageStreamTag'\">\n" +
-    "<div class=\"col-sm-4\">\n" +
-    "<div class=\"form-group\">\n" +
-    "<label>Namespace</label>\n" +
-    "<span ng-if=\"!isNamespaceAvailable(outputOptions.pickedNamespace)\" data-toggle=\"tooltip\" title=\"Selected Namespace is not available.\" class=\"pficon pficon-error-circle-o\" style=\"cursor: help\"></span>\n" +
-    "<select class=\"form-control\" id=\"outputNamespace\" name=\"outputNamespace\" ng-model=\"outputOptions.pickedNamespace\" ng-options=\"name for name in pushTo.projects track by name\" ng-change=\"updateOutputImageStreams(outputOptions.pickedNamespace, true)\" required>\n" +
-    "</select>\n" +
+    "<div class=\"form-group\" ng-if=\"imageOptions.to.type==='ImageStreamTag'\">\n" +
+    "<istag-select model=\"imageOptions.to.imageStreamTag\" allow-custom-tag=\"true\"></istag-select>\n" +
     "</div>\n" +
-    "</div>\n" +
-    "<div class=\"col-sm-4\">\n" +
-    "<div class=\"form-group\">\n" +
-    "<label>Image Stream</label>\n" +
-    "<span ng-if=\"inspectNamespace(pushTo.imageStreams, outputOptions.pickedImageStream) === 'empty'\" data-toggle=\"tooltip\" title=\"Selected Namespace doesn't contain any Image Streams to build from.\" class=\"pficon pficon-error-circle-o\" style=\"cursor: help\"></span>\n" +
-    "<span ng-if=\"inspectNamespace(pushTo.imageStreams, outputOptions.pickedImageStream) === 'noMatch'\" data-toggle=\"tooltip\" title=\"Selected Namespace doesn't contain Image Stream choosen Tag\" class=\"pficon pficon-error-circle-o\" style=\"cursor: help\"></span>\n" +
-    "<select class=\"form-control\" id=\"outputImageStream\" name=\"outputImageStream\" ng-model=\"outputOptions.pickedImageStream\" ng-options=\"name as name for name in pushTo.imageStreams track by name\" ng-change=\"clearSelectedTag(outputOptions, pushTo.tags, true)\" required>\n" +
-    "</select>\n" +
-    "</div>\n" +
-    "</div>\n" +
-    "<div class=\"col-sm-4\">\n" +
-    "<div class=\"form-group\">\n" +
-    "<label>Tag</label>\n" +
-    "<span ng-if=\"showOutputTagWarning(form)\" data-toggle=\"tooltip\" title=\"Tag is already created and will be overridden on build.\" class=\"pficon pficon-warning-triangle-o\" style=\"cursor: help\"></span>\n" +
-    "<div>\n" +
-    "<input class=\"form-control\" id=\"outputTag\" name=\"outputTag\" type=\"text\" ng-model=\"outputOptions.pickedTag\" ng-disabled=\"outputOptions.pickedImageStream === ''\" autocorrect=\"off\" autocapitalize=\"off\" spellcheck required>\n" +
-    "</div>\n" +
-    "</div>\n" +
-    "</div>\n" +
-    "</div>\n" +
-    "<div ng-if=\"outputOptions.pickedType==='DockerImage'\" class=\"form-group\">\n" +
+    "<div ng-if=\"imageOptions.to.type==='DockerImage'\" class=\"form-group\">\n" +
     "<label for=\"pushToLink\">Docker Image Repository</label>\n" +
     "<div>\n" +
-    "<input class=\"form-control\" id=\"pushToLink\" name=\"pushToLink\" type=\"text\" ng-model=\"outputOptions.pickedDockerImage\" autocorrect=\"off\" autocapitalize=\"off\" spellcheck required>\n" +
+    "<input class=\"form-control\" id=\"pushToLink\" name=\"pushToLink\" type=\"text\" ng-model=\"imageOptions.to.dockerImage\" placeholder=\"example: centos/ruby-20-centos7:latest\" autocorrect=\"off\" autocapitalize=\"off\" spellcheck required>\n" +
     "</div>\n" +
     "</div>\n" +
     "</div>\n" +
@@ -6679,7 +6622,7 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "<h5>Image change</h5>\n" +
     "<div class=\"checkbox\">\n" +
     "<label>\n" +
-    "<input type=\"checkbox\" ng-model=\"triggers.builderImageChangeTrigger.present\" ng-disabled=\"builderOptions.pickedType === 'None'\"/>\n" +
+    "<input type=\"checkbox\" ng-model=\"triggers.builderImageChangeTrigger.present\" ng-disabled=\"imageOptions.from.type === 'None'\"/>\n" +
     "Automatically build a new image when the builder image changes\n" +
     "<span class=\"help action-inline\">\n" +
     "<a href>\n" +
@@ -6702,8 +6645,13 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "</span>\n" +
     "</h3>\n" +
     "<div class=\"form-group\">\n" +
-    "<select class=\"form-control\" ng-model=\"updatedBuildConfig.spec.runPolicy\" ng-options=\"type as (type | sentenceCase) for type in runPolicyTypes\">\n" +
-    "</select>\n" +
+    "<label class=\"sr-only\">Run policy type</label>\n" +
+    "<ui-select required ng-model=\"updatedBuildConfig.spec.runPolicy\" search-enabled=\"false\">\n" +
+    "<ui-select-match>{{$select.selected | sentenceCase}}</ui-select-match>\n" +
+    "<ui-select-choices repeat=\"type in runPolicyTypes\">\n" +
+    "{{type | sentenceCase}}\n" +
+    "</ui-select-choices>\n" +
+    "</ui-select>\n" +
     "</div>\n" +
     "<div ng-switch=\"updatedBuildConfig.spec.runPolicy\">\n" +
     "<div ng-switch-when=\"Serial\">Builds triggered from this Build Configuration will run one at the time, in the order they have been triggered.</div>\n" +
@@ -7387,13 +7335,10 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "<div class=\"list-view-pf\">\n" +
     "<div class=\"list-group-item\" ng-if=\"!(filteredBuilds | hashSize)\">\n" +
     "<div class=\"list-view-pf-main-info\">\n" +
+    "<ellipsis-pulser color=\"dark\" size=\"sm\" msg=\"Loading builds\" ng-if=\"!buildsLoaded\"></ellipsis-pulser>\n" +
     "<em>\n" +
-    "<span ng-if=\"!(builds | hashSize)\">\n" +
-    "There are no builds in this project.\n" +
-    "</span>\n" +
-    "<span ng-if=\"builds | hashSize\">\n" +
-    "The current filters are hiding all builds.\n" +
-    "</span>\n" +
+    "<div ng-if=\"(builds | hashSize) > 0\">The current filters are hiding all builds.</div>\n" +
+    "<span ng-if=\"buildsLoaded && (builds | hashSize) === 0\">There are no builds in this project.</span>\n" +
     "</em>\n" +
     "</div>\n" +
     "</div>\n" +
@@ -7459,13 +7404,10 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "<div class=\"list-view-pf\">\n" +
     "<div class=\"list-group-item\" ng-if=\"!(filteredDeployments | hashSize)\">\n" +
     "<div class=\"list-view-pf-main-info\">\n" +
+    "<ellipsis-pulser color=\"dark\" size=\"sm\" msg=\"Loading deployments\" ng-if=\"!deploymentsLoaded\"></ellipsis-pulser>\n" +
     "<em>\n" +
-    "<span ng-if=\"!(deployments | hashSize)\">\n" +
-    "There are no deployments in this project.\n" +
-    "</span>\n" +
-    "<span ng-if=\"deployments | hashSize\">\n" +
-    "The current filters are hiding all deployments.\n" +
-    "</span>\n" +
+    "<div ng-if=\"(deployments | hashSize) > 0\">The current filters are hiding all deployments.</div>\n" +
+    "<span ng-if=\"deploymentsLoaded && (deployments | hashSize) === 0\">There are no deployments in this project.</span>\n" +
     "</em>\n" +
     "</div>\n" +
     "</div>\n" +
@@ -7520,13 +7462,10 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "<div class=\"list-view-pf\">\n" +
     "<div class=\"list-group-item\" ng-if=\"!(filteredPods | hashSize)\">\n" +
     "<div class=\"list-view-pf-main-info\">\n" +
+    "<ellipsis-pulser color=\"dark\" size=\"sm\" msg=\"Loading pods\" ng-if=\"!podsLoaded\"></ellipsis-pulser>\n" +
     "<em>\n" +
-    "<span ng-if=\"!(pods | hashSize)\">\n" +
-    "There are no pods in this project.\n" +
-    "</span>\n" +
-    "<span ng-if=\"pods | hashSize\">\n" +
-    "The current filters are hiding all pods.\n" +
-    "</span>\n" +
+    "<div ng-if=\"(pods | hashSize) > 0\">The current filters are hiding all pods.</div>\n" +
+    "<span ng-if=\"podsLoaded && (pods | hashSize) === 0\">There are no pods in this project.</span>\n" +
     "</em>\n" +
     "</div>\n" +
     "</div>\n" +
@@ -7831,7 +7770,7 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "<image-names ng-if=\"activeDeployment && !anyDeploymentInProgress && showMetrics\" pod-template=\"activeDeployment.spec.template\">\n" +
     "</image-names>\n" +
     "<span ng-if=\"anyDeploymentInProgress\" class=\"small\">\n" +
-    "{{deploymentConfig.spec.strategy.type}} deployment in progress...\n" +
+    "{{deploymentConfig.spec.strategy.type}} <ellipsis-pulser color=\"dark\" size=\"sm\" display=\"inline\" msg=\"deployment in progress\"></ellipsis-pulser>\n" +
     "<a href=\"\" ng-click=\"cancelDeployment()\" role=\"button\">Cancel</a>\n" +
     "</span>\n" +
     "</div>\n" +

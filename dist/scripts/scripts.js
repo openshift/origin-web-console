@@ -3826,11 +3826,11 @@ b.pods && b.deployments && (b.podsByDeployment = h.groupByReplicationController(
 };
 e.get(a.project).then(_.spread(function(a, c) {
 b.project = a, b.projectContext = c, d.watch("pods", c, function(a) {
-b.podsByName = a.by("metadata.name"), b.pods = q(b.podsByName, !0), F(), _.each(b.pods, u), x(), j.log("pods", b.pods);
+b.podsByName = a.by("metadata.name"), b.pods = q(b.podsByName, !0), F(), b.podsLoaded = !0, _.each(b.pods, u), x(), j.log("pods", b.pods);
 }), d.watch("replicationcontrollers", c, function(a) {
-b.deployments = q(a.by("metadata.name"), !0), F(), _.each(b.deployments, v), E(), j.log("deployments", b.deployments);
+b.deployments = q(a.by("metadata.name"), !0), F(), b.deploymentsLoaded = !0, _.each(b.deployments, v), E(), j.log("deployments", b.deployments);
 }), d.watch("builds", c, function(a) {
-b.builds = q(a.by("metadata.name"), !0), b.latestBuildByConfig = g.latestBuildByConfig(b.builds), _.each(b.builds, w), B(), j.log("builds", b.builds);
+b.builds = q(a.by("metadata.name"), !0), b.latestBuildByConfig = g.latestBuildByConfig(b.builds), b.buildsLoaded = !0, _.each(b.builds, w), B(), j.log("builds", b.builds);
 }), b.$on("$destroy", function() {
 d.unwatchAll(m);
 }), b.$watch("filters.hideOlderResources", function() {
@@ -8767,10 +8767,16 @@ link:function(a, b, c) {
 a.spinning = !angular.isDefined(c.disableAnimation);
 }
 };
-} ]), angular.module("openshiftConsole").directive("ellipsisLoader", [ function() {
+} ]), angular.module("openshiftConsole").directive("ellipsisPulser", [ function() {
 return {
 restrict:"E",
-templateUrl:"views/directives/_ellipsis-loader.html"
+scope:{
+color:"@",
+display:"@",
+size:"@",
+msg:"@"
+},
+templateUrl:"views/directives/_ellipsis-pulser.html"
 };
 } ]), angular.module("openshiftConsole").directive("podDonut", [ "$timeout", "hashSizeFilter", "isPullingImageFilter", "isTerminatingFilter", "isTroubledPodFilter", "numContainersReadyFilter", "Logger", "ChartsService", function(a, b, c, d, e, f, g, h) {
 return {

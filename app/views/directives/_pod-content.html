@@ -4,9 +4,9 @@
     <pod-warnings pod="pod" style="margin-right: -15px;"></pod-warnings>
   </span>   
   <div ng-switch-when="Pending">
-    <span ng-if="!pod.spec.nodeName">scheduling...</span>
+    <ellipsis-pulser color="dark" size="sm" msg="scheduling" display="inline" ng-if="!pod.spec.nodeName"></ellipsis-pulser>
     <span ng-if="pod.spec.nodeName && !pod.status.startTime">scheduled</span>
-    <span ng-if="pod.spec.nodeName && pod.status.startTime">pulling...</span>
+    <ellipsis-pulser color="dark" size="sm" msg="pulling" display="inline" ng-if="pod.spec.nodeName && pod.status.startTime"></ellipsis-pulser>
   </div>
   <div ng-switch-default>
     &nbsp;
