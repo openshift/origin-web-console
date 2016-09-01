@@ -3774,9 +3774,7 @@ b.logOptions.deployments[a.metadata.name] = {};
 var d = c("annotation")(a, "deploymentVersion");
 d && (b.logOptions.deployments[a.metadata.name].version = d), b.logCanRun.deployments[a.metadata.name] = !_.includes([ "New", "Pending" ], c("deploymentStatus")(a));
 }, w = function(a) {
-b.logOptions.builds[a.metadata.name] = {
-container:c("annotation")(a, "buildPod")
-}, b.logCanRun.builds[a.metadata.name] = !_.includes([ "New", "Pending", "Error" ], a.status.phase);
+b.logOptions.builds[a.metadata.name] = {}, b.logCanRun.builds[a.metadata.name] = !_.includes([ "New", "Pending", "Error" ], a.status.phase);
 }, x = function() {
 p = _.filter(b.pods, function(a) {
 return !b.filters.hideOlderResources || "Succeeded" !== a.status.phase && "Failed" !== a.status.phase;
