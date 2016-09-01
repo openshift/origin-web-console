@@ -119,9 +119,7 @@ angular.module('openshiftConsole')
     };
 
     var setBuildLogVars = function(build) {
-      $scope.logOptions.builds[build.metadata.name] = {
-        container: $filter("annotation")(build, "buildPod")
-      };
+      $scope.logOptions.builds[build.metadata.name] = {};
       $scope.logCanRun.builds[build.metadata.name] = !(_.includes(['New', 'Pending', 'Error'], build.status.phase));
     };
 
