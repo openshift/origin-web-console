@@ -36,7 +36,16 @@ angular.module('openshiftConsole')
     AlertMessageService.clearAlerts();
 
     var watches = [];
-    var routes, services, deploymentConfigs, deployments, pods, buildConfigs, builds, horizontalPodAutoscalers, hpaByDC, hpaByRC;
+    var routes,
+        services,
+        deploymentConfigs,
+        deployments,
+        replicaSets,
+        pods,
+        buildConfigs,
+        builds,
+        horizontalPodAutoscalers,
+        hpaByResource;
 
     var isJenkinsPipelineStrategy = $filter('isJenkinsPipelineStrategy');
     var annotation = $filter('annotation');
@@ -130,30 +139,35 @@ angular.module('openshiftConsole')
       });
     };
 
+    var groupReplicaSets = function() {
+      if (!services || !replicaSets) {
+        return;
+      }
+
+      $scope.replicaSetsByService = DeploymentsService.groupByService(replicaSets, services);
+    };
+
     var groupHPAs = function() {
-      hpaByDC = {};
-      hpaByRC = {};
-      angular.forEach(horizontalPodAutoscalers, function(hpa) {
+      hpaByResource = {};
+      _.each(horizontalPodAutoscalers, function(hpa) {
         var name = hpa.spec.scaleRef.name, kind = hpa.spec.scaleRef.kind;
         if (!name || !kind) {
           return;
         }
 
-        switch (kind) {
-        case "DeploymentConfig":
-          hpaByDC[name] = hpaByDC[name] || [];
-          hpaByDC[name].push(hpa);
-          break;
-        case "ReplicationController":
-          hpaByRC[name] = hpaByRC[name] || [];
-          hpaByRC[name].push(hpa);
-          break;
-        default:
-          Logger.warn("Unexpected HPA scaleRef kind", kind);
+        // TODO: Handle groups and subresources in hpa.spec.scaleRef
+        // var groupVersion = APIService.parseGroupVersion(hpa.spec.scaleRef.apiVersion) || {};
+        // var group = groupVersion.group || '';
+        // if (!_.has(hpaByResource, [group, kind, name])) {
+        //   _.set(hpaByResource, [group, kind, name], []);
+        // }
+        // hpaByResource[group][kind][name].push(hpa);
+
+        if (!_.has(hpaByResource, [kind, name])) {
+          _.set(hpaByResource, [kind, name], []);
         }
+        hpaByResource[kind][name].push(hpa);
       });
-      $scope.hpaByDC = hpaByDC;
-      $scope.hpaByRC = hpaByRC;
     };
 
     // Filter out monopods we know we don't want to see
@@ -188,12 +202,13 @@ angular.module('openshiftConsole')
     };
 
     var groupPods = function() {
-      if (!pods || !deployments) {
+      if (!pods || !deployments || !replicaSets) {
         return;
       }
 
-      $scope.podsByDeployment = PodsService.groupByReplicationController(pods, deployments);
-      $scope.monopodsByService = PodsService.groupByService($scope.podsByDeployment[''], services, showMonopod);
+      var allOwners = _.toArray(deployments).concat(_.toArray(replicaSets));
+      $scope.podsByOwnerUID = PodsService.groupByOwnerUID(pods, allOwners);
+      $scope.monopodsByService = PodsService.groupByService($scope.podsByOwnerUID[''], services, showMonopod);
     };
 
     // Set of child services in this project.
@@ -347,10 +362,11 @@ angular.module('openshiftConsole')
       var projectEmpty =
         _.isEmpty(services) &&
         _.isEmpty($scope.monopodsByService) &&
-        _.isEmpty(deployments);
+        _.isEmpty(deployments) &&
+        _.isEmpty(replicaSets);
 
       // Check if we've loaded everything we show on the overview.
-      var loaded = services && pods && deployments && deploymentConfigs;
+      var loaded = services && pods && deployments && deploymentConfigs && replicaSets;
 
       $scope.renderOptions.showGetStarted = loaded && projectEmpty;
       $scope.renderOptions.showLoading = !loaded && projectEmpty;
@@ -358,39 +374,20 @@ angular.module('openshiftConsole')
 
 
     $scope.viewPodsForDeployment = function(deployment) {
-      if (_.isEmpty($scope.podsByDeployment[deployment.metadata.name])) {
+      if (_.isEmpty($scope.podsByOwnerUID[deployment.metadata.uid])) {
         return;
       }
 
       Navigate.toPodsForDeployment(deployment);
     };
 
-    $scope.getHPA = function(rcName, dcName) {
-      var hpaByDC = $scope.hpaByDC;
-      var hpaByRC = $scope.hpaByRC;
-      // Return `null` if the HPAs haven't been loaded.
-      if (!hpaByDC || !hpaByRC) {
-        return null;
-      }
-
-      // Set missing values to an empty array if the HPAs have loaded. We
-      // want to use the same empty array for subsequent requests to avoid
-      // triggering watch callbacks in overview-deployment.
-      if (dcName) {
-        hpaByDC[dcName] = hpaByDC[dcName] || [];
-        return hpaByDC[dcName];
-      }
-
-      hpaByRC[rcName] = hpaByRC[rcName] || [];
-      return hpaByRC[rcName];
-    };
-
     $scope.isScalableDeployment = function(deployment) {
       return DeploymentsService.isScalable(deployment,
-                                            deploymentConfigs,
-                                            $scope.hpaByDC,
-                                            $scope.hpaByRC,
-                                            $scope.scalableDeploymentByConfig);
+                                           deploymentConfigs,
+                                           // TODO: Handle groups
+                                           _.get(hpaByResource, 'DeploymentConfig'),
+                                           _.get(hpaByResource, 'ReplicationController'),
+                                           $scope.scalableDeploymentByConfig);
     };
 
     $scope.isDeploymentLatest = function(deployment) {
@@ -408,6 +405,22 @@ angular.module('openshiftConsole')
       return _.some($scope.deploymentConfigs, function(dc) {
         return dc.metadata.name === dcName && dc.status.latestVersion === deploymentVersion;
       });
+    };
+
+    // Return the same empty array each time to avoid triggering
+    // $scope.$watch updates. Otherwise, digest loop errors occur.
+    var NO_HPA = [];
+    $scope.getHPA = function(object) {
+      if (!horizontalPodAutoscalers) {
+        return null;
+      }
+
+      // TODO: Handle groups and subresources
+      var kind = _.get(object, 'kind'),
+          name = _.get(object, 'metadata.name');
+          // groupVersion = APIService.parseGroupVersion(object.apiVersion) || {},
+          // group = groupVersion.group || '';
+      return _.get(hpaByResource, [kind, name], NO_HPA);
     };
 
     if (!window.OPENSHIFT_CONSTANTS.DISABLE_OVERVIEW_METRICS) {
@@ -437,10 +450,11 @@ angular.module('openshiftConsole')
           groupPods();
           groupDeploymentConfigs();
           groupDeployments();
+          groupReplicaSets();
           updateRouteWarnings();
           updateShowGetStarted();
           Logger.log("services (list)", services);
-        }));
+        }, {poll: limitWatches, pollInterval: 60 * 1000}));
 
         watches.push(DataService.watch("builds", context, function(buildData) {
           builds = buildData.by("metadata.name");
@@ -480,6 +494,17 @@ angular.module('openshiftConsole')
           groupDeployments();
           updateShowGetStarted();
           Logger.log("deploymentconfigs (subscribe)", $scope.deploymentConfigs);
+        }));
+
+        watches.push(DataService.watch({
+          group: "extensions",
+          resource: "replicasets"
+        }, context, function(replicaSetData) {
+          replicaSets = replicaSetData.by('metadata.name');
+          groupPods();
+          groupReplicaSets();
+          updateShowGetStarted();
+          Logger.log("replicasets (subscribe)", $scope.replicaSets);
         }));
 
         watches.push(DataService.watch({

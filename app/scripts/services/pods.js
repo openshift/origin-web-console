@@ -40,6 +40,39 @@ angular.module("openshiftConsole")
         return debugPod;
       },
 
+      // Takes in a collection of pods and a collection of resources that
+      // control pods (replication controllers, replica sets, pet sets) and
+      // matches each pod to its owner.
+      //
+      // Returns: hash where the UID of the owner is the key and a hash of pods
+      //          is the value
+      groupByOwnerUID: function(pods, owners) {
+        var podsByOwnerUID = {};
+        var selectorByOnwerUID = {};
+        _.each(owners, function(owner) {
+          selectorByOnwerUID[owner.metadata.uid] = new LabelSelector(owner.spec.selector);
+        });
+
+        // Look at each pod.
+        _.each(pods, function(pod) {
+          var foundOwner = false;
+          _.each(owners, function(owner) {
+            var uid = owner.metadata.uid;
+            var selector = selectorByOnwerUID[uid];
+            if (selector.matches(pod)) {
+              _.set(podsByOwnerUID, [uid, pod.metadata.name], pod);
+              foundOwner = true;
+            }
+          });
+
+          if (!foundOwner) {
+            _.set(podsByOwnerUID, ['', pod.metadata.name], pod);
+          }
+        });
+
+        return podsByOwnerUID;
+      },
+
       groupByReplicationController: function(pods, replicationControllers) {
         var podsByRC = {};
         _.each(pods, function(pod) {

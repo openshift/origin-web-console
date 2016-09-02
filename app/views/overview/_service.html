@@ -1,4 +1,4 @@
-<div ng-if="!(visibleDeploymentsByConfig | hashSize) && !(monopodsByService[service.metadata.name] | hashSize)" class="no-deployments-block">
+<div ng-if="!(visibleDeploymentsByConfig | hashSize) && !(visibleReplicaSets | hashSize) && !(monopodsByService[service.metadata.name] | hashSize)" class="no-deployments-block">
   <div column class="no-deployments-message">
     <ng-include src="'views/overview/_service-header.html'"></ng-include>
     <div class="pad-xxl">
@@ -13,11 +13,11 @@
 
 <div ng-attr-row="{{!service ? '' : undefined}}"
      ng-attr-wrap="{{!service ? '' : undefined}}"
-     ng-if="(visibleDeploymentsByConfig | hashSize) || (monopodsByService[service.metadata.name || ''] | hashSize)"
+     ng-if="(visibleDeploymentsByConfig | hashSize) || (visibleReplicaSets | hashSize) || (monopodsByService[service.metadata.name || ''] | hashSize)"
      class="deployment-block"
      ng-class="{
        'no-service': !service,
-       'service-multiple-targets': (rcTileCount + (monopodsByService[service.metadata.name] | hashSize) > 1)
+       'service-multiple-targets': rcTileCount + (visibleReplicaSets | hashSize) + (monopodsByService[service.metadata.name] | hashSize) > 1
      }">
   <div ng-repeat="(dcName, deployments) in visibleDeploymentsByConfig" class="deployment-tile-wrapper">
     <!-- visible deployments with a dc -->
@@ -28,7 +28,13 @@
     <div class="deployment-tile-wrapper" ng-if="!dcName.length" ng-repeat="deployment in deployments | orderObjectsByDate : true track by (deployment | uid)">
       <overview-replication-controller></overview-replication-controller>
     </div>
+
   </div>
+
+  <div class="deployment-tile-wrapper" ng-repeat="deployment in visibleReplicaSets track by (deployment | uid)">
+    <overview-replication-controller></overview-replication-controller>
+  </div>
+
   <!-- monopods -->
   <div ng-repeat="pod in monopodsByService[service.metadata.name || ''] | orderObjectsByDate : true track by (pod | uid)"
       class="deployment-tile-wrapper">

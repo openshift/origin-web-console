@@ -1,9 +1,9 @@
-<div class="deployment-tile" ng-if="deployment.kind === 'ReplicationController'">
+<div class="deployment-tile">
   <ng-include src="'views/overview/_service-header.html'"></ng-include>
   <div class="deployment-header">
     <div class="rc-header">
       <div>
-        Replication Controller
+        {{deployment.kind | humanizeKind : true}}
         <a ng-href="{{deployment | navigateResourceURL}}">{{deployment.metadata.name}}</a>
         <small class="overview-timestamp">
           <span class="hidden-xs">&ndash;</span>
@@ -19,8 +19,8 @@
       <deployment-donut
           rc="deployment"
           deployment-config="deploymentConfigs[dcName]"
-          pods="podsByDeployment[deployment.metadata.name]"
-          hpa="getHPA(deployment.metadata.name, dcName)"
+          pods="podsByOwnerUID[deployment.metadata.uid]"
+          hpa="getHPA(deployment)"
           limit-ranges="limitRanges"
           scalable="isScalableDeployment(deployment)"
           alerts="alerts">
@@ -31,7 +31,7 @@
     <div column class="deployment-details">
       <deployment-metrics
         ng-if="showMetrics && !collapse"
-        pods="podsByDeployment[deployment.metadata.name]"
+        pods="podsByOwnerUID[deployment.metadata.uid]"
         containers="deployment.spec.template.spec.containers"
         compact="true"
         class="overview-metrics">

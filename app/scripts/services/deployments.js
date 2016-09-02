@@ -367,24 +367,26 @@ angular.module("openshiftConsole")
       return scalableName === deployment.metadata.name;
     };
 
-    DeploymentsService.prototype.groupByService = function(/* deployments or deployment configs */ resources, services) {
+    // Group objects by service using the service selector and pod template labels.
+    // Objects should have spec.template.metadata.labels.
+    DeploymentsService.prototype.groupByService = function(objects, services) {
       var byService = {};
-      _.each(resources, function(resource) {
-        var selector = new LabelSelector(getLabels(resource));
+      _.each(objects, function(object) {
+        var selector = new LabelSelector(getLabels(object));
         var foundSvc = false;
         _.each(services, function(service) {
           var serviceSelector = new LabelSelector(service.spec.selector);
           if (serviceSelector.covers(selector)) {
             foundSvc = true;
             _.set(byService,
-                  [service.metadata.name, resource.metadata.name],
-                  resource);
+                  [service.metadata.name, object.metadata.name],
+                  object);
           }
         });
         if (!foundSvc) {
           _.set(byService,
-                  ['', resource.metadata.name],
-                  resource);
+                  ['', object.metadata.name],
+                  object);
         }
       });
       return byService;

@@ -18,10 +18,16 @@ angular.module('openshiftConsole')
           });
         }
 
-        $scope.$watch('deploymentConfigsByService', function(deploymentConfigsByService) {
-          if (!deploymentConfigsByService) {
-            return;
-          }
+        var annotation = $filter('annotation');
+        var orderByDate = $filter('orderObjectsByDate');
+        var isVisibleReplicaSet = function(replicaSet) {
+          return _.get(replicaSet, 'status.replicas') ||
+                 !annotation(replicaSet, 'deployment.kubernetes.io/revision');
+        };
+        $scope.$watch('replicaSetsByService', function(replicaSetsByService) {
+          var serviceName = _.get($scope, 'service.metadata.name');
+          var replicaSets = _.get(replicaSetsByService, [ serviceName ], []);
+          $scope.visibleReplicaSets = orderByDate(_.filter(replicaSets, isVisibleReplicaSet), true);
         });
 
         $scope.$watch('visibleDeploymentsByConfigAndService', function(visibleDeploymentsByConfigAndService) {
@@ -45,42 +51,6 @@ angular.module('openshiftConsole')
             }
           });
         });
-
-        $scope.viewPodsForDeployment = function(deployment) {
-          if (_.isEmpty($scope.podsByDeployment[deployment.metadata.name])) {
-            return;
-          }
-
-          Navigate.toPodsForDeployment(deployment);
-        };
-
-        $scope.getHPA = function(rcName, dcName) {
-          var hpaByDC = $scope.hpaByDC;
-          var hpaByRC = $scope.hpaByRC;
-          // Return `null` if the HPAs haven't been loaded.
-          if (!hpaByDC || !hpaByRC) {
-            return null;
-          }
-
-          // Set missing values to an empty array if the HPAs have loaded. We
-          // want to use the same empty array for subsequent requests to avoid
-          // triggering watch callbacks in overview-deployment.
-          if (dcName) {
-            hpaByDC[dcName] = hpaByDC[dcName] || [];
-            return hpaByDC[dcName];
-          }
-
-          hpaByRC[rcName] = hpaByRC[rcName] || [];
-          return hpaByRC[rcName];
-        };
-
-        $scope.isScalableDeployment = function(deployment) {
-          return DeploymentsService.isScalable(deployment,
-                                               $scope.deploymentConfigs,
-                                               $scope.hpaByDC,
-                                               $scope.hpaByRC,
-                                               $scope.scalableDeploymentByConfig);
-        };
       }
     };
   });

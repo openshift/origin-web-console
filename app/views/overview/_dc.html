@@ -43,8 +43,8 @@
       <deployment-donut
           rc="deployment"
           deployment-config="deploymentConfigs[dcName]"
-          pods="podsByDeployment[deployment.metadata.name]"
-          hpa="getHPA(deployment.metadata.name, dcName)"
+          pods="podsByOwnerUID[deployment.metadata.uid]"
+          hpa="getHPA(deploymentConfig) || getHPA(deployment)"
           limit-ranges="limitRanges"
           scalable="isScalableDeployment(deployment)"
           alerts="alerts">
@@ -92,7 +92,7 @@
       <!-- pause metrics updates when the service group is collapsed -->
       <deployment-metrics
         ng-if="showMetrics && !collapse"
-        pods="podsByDeployment[activeDeployment.metadata.name]"
+        pods="podsByOwnerUID[activeDeployment.metadata.uid]"
         containers="activeDeployment.spec.template.spec.containers"
         compact="true"
         class="overview-metrics">
