@@ -54,6 +54,22 @@ a different API server, copy `app/config.js` to
 not tracked and will be used instead if it exists.
 
 #### Before opening a pull request
+
+Please configure your editor to use the
+following settings to avoid common code inconsistencies and dirty
+diffs:
+
+* Use soft-tabs set to two spaces.
+* Trim trailing white space on save.
+* Set encoding to UTF-8.
+* Add new line at end of files.
+
+Or [configure your editor](http://editorconfig.org/#download) to
+utilize [`.editorconfig`](https://github.com/openshift/origin-web-console/blob/master/.editorconfig),
+which will apply these settings automatically.
+
+Then:
+
 1. If needed, run `grunt build` to update the files under the dist directory
 2. Run the spec tests with `grunt test`
 3. Run the integrations tests (your api server must be running) `grunt test-integration`
