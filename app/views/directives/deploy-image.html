@@ -135,6 +135,9 @@
             <div class="help-block" ng-show="form.name.$error.minlength">
               Name must have at least 2 characters.
             </div>
+            <div class="help-block" ng-show="form.name.$error.maxlength">
+              Name can't have more than 24 characters.
+            </div>
           </div>
         </div>
         <osc-form-section

@@ -3774,9 +3774,7 @@ b.logOptions.deployments[a.metadata.name] = {};
 var d = c("annotation")(a, "deploymentVersion");
 d && (b.logOptions.deployments[a.metadata.name].version = d), b.logCanRun.deployments[a.metadata.name] = !_.includes([ "New", "Pending" ], c("deploymentStatus")(a));
 }, w = function(a) {
-b.logOptions.builds[a.metadata.name] = {
-container:c("annotation")(a, "buildPod")
-}, b.logCanRun.builds[a.metadata.name] = !_.includes([ "New", "Pending", "Error" ], a.status.phase);
+b.logOptions.builds[a.metadata.name] = {}, b.logCanRun.builds[a.metadata.name] = !_.includes([ "New", "Pending", "Error" ], a.status.phase);
 }, x = function() {
 p = _.filter(b.pods, function(a) {
 return !b.filters.hideOlderResources || "Succeeded" !== a.status.phase && "Failed" !== a.status.phase;
@@ -9800,15 +9798,17 @@ c.mode = "istag", c.istag = {}, c.app = {}, c.env = [], c.labels = [], c.systemL
 name:"app",
 value:""
 } ];
-var k = a("stripTag"), l = a("stripSHA"), m = a("humanizeKind"), n = function() {
+var k = a("stripTag"), l = a("stripSHA"), m = a("humanizeKind"), n = function(a) {
+return a.length > 24 ? a.substring(0, 24) :a;
+}, o = function() {
 var a = _.last(c["import"].name.split("/"));
-return a = l(a), a = k(a), a.length > 24 && (a = a.substring(0, 24)), a;
+return a = l(a), a = k(a), a = n(a);
 };
 c.findImage = function() {
 c.loading = !0, f.findImage(c.imageName, c.context).then(function(a) {
 if (c["import"] = a, c.loading = !1, "Success" !== _.get(a, "result.status")) return void (c["import"].error = _.get(a, "result.message", "An error occurred finding the image."));
 var b = c["import"].image;
-b && (c.app.name = n(), c.runsAsRoot = f.runsAsRoot(b), c.ports = d.parsePorts(b), c.volumes = f.getVolumes(b), c.createImageStream = !0);
+b && (c.app.name = o(), c.runsAsRoot = f.runsAsRoot(b), c.ports = d.parsePorts(b), c.volumes = f.getVolumes(b), c.createImageStream = !0);
 }, function(b) {
 c["import"].error = a("getErrorDetails")(b) || "An error occurred finding the image.", c.loading = !1;
 });
@@ -9822,7 +9822,7 @@ a !== b && (delete c["import"], c.istag = {});
 if (b !== g) {
 if (!b.namespace || !b.imageStream || !b.tag) return void delete c["import"];
 var h, i = _.get(b, "tag.items[0].image");
-c.app.name = b.imageStream, c["import"] = {
+c.app.name = n(b.imageStream), c["import"] = {
 name:b.imageStream,
 tag:b.tag.tag,
 namespace:b.namespace

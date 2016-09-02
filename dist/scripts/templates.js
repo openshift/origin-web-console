@@ -4751,6 +4751,9 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "<div class=\"help-block\" ng-show=\"form.name.$error.minlength\">\n" +
     "Name must have at least 2 characters.\n" +
     "</div>\n" +
+    "<div class=\"help-block\" ng-show=\"form.name.$error.maxlength\">\n" +
+    "Name can't have more than 24 characters.\n" +
+    "</div>\n" +
     "</div>\n" +
     "</div>\n" +
     "<osc-form-section header=\"Environment Variables\" about-title=\"Environment Variables\" about=\"Environment variables are used to configure and pass information to running containers.\" expand=\"true\" can-toggle=\"false\" class=\"first-section\">\n" +
