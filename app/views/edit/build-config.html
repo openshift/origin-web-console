@@ -18,49 +18,64 @@
             </h1>
             <fieldset ng-disabled="disableInputs">
               <form class="edit-form" name="form" novalidate ng-submit="save()">
-                <div class="resource-details">
-                  <div class="row">
-                    <div class="col-lg-6">
-                      <div ng-if="buildConfig.spec.source.type !== 'None'" class="section">
-                        <h3>Source Configuration</h3>
-                        <dl class="dl-horizontal left">
-                          <div ng-if="sources.git">
-                            <div class="form-group">
-                              <label for="sourceUrl">Source Repository URL</label>
-                              <div>
-                                <!-- Unfortunately, we can't set type="url" because some valid values don't pass browser validation. -->
-                                <input class="form-control"
-                                  id="sourceUrl"
-                                  name="sourceUrl"
-                                  ng-model="updatedBuildConfig.spec.source.git.uri"
-                                  type="text"
-                                  autocorrect="off"
-                                  autocapitalize="off"
-                                  spellcheck="false"
-                                  required>
+                <div class="row">
+                  <div class="col-lg-12">
+                    <div ng-if="buildConfig.spec.source.type !== 'None'" class="section">
+                      <h3>Source Configuration</h3>
+                      <dl class="dl-horizontal left">
+                        <div ng-if="sources.git">
+                          <div class="row">
+                            <div ng-class="{
+                              'col-lg-8': view.advancedOptions,
+                              'col-lg-12': !view.advancedOptions}">
+                              <div class="form-group">
+                                <label for="sourceUrl" class="required">Git Repository URL</label>
+                                <div>
+                                  <!-- Unfortunately, we can't set type="url" because some valid values don't pass browser validation. -->
+                                  <input class="form-control"
+                                    id="sourceUrl"
+                                    name="sourceUrl"
+                                    ng-model="updatedBuildConfig.spec.source.git.uri"
+                                    type="text"
+                                    autocorrect="off"
+                                    autocapitalize="off"
+                                    spellcheck="false"
+                                    aria-describedby="source-url-help"
+                                    required>
+                                </div>
+                                <div>
+                                  <span class="text-warning" ng-if="form.sourceUrl.$dirty && !sourceURLPattern.test(updatedBuildConfig.spec.source.git.uri)">Git repository should be a URL.</span>
+                                </div>
+                                <div class="help-block" id="source-url-help">
+                                  Git URL of the source code to build.
+                                  <span ng-if="!view.advancedOptions">If your Git repository is private, view the <a href="" ng-click="view.advancedOptions = true">advanced options</a> to set up authentication.</span>
+                                </div>
                               </div>
-                              <div>
-                                <span class="text-warning" ng-if="form.sourceUrl.$dirty && !sourceURLPattern.test(updatedBuildConfig.spec.source.git.uri)">Git repository should be a URL.</span>
+
+                            </div>
+                            <div class="col-lg-4" ng-if="view.advancedOptions">
+                              <div class="form-group editor">
+                                <label for="sourceRef">Git Reference</label>
+                                <div>
+                                  <input class="form-control"
+                                    id="sourceRef"
+                                    name="sourceRef"
+                                    type="text"
+                                    ng-model="updatedBuildConfig.spec.source.git.ref"
+                                    placeholder="master"
+                                    autocorrect="off"
+                                    autocapitalize="off"
+                                    spellcheck="false"
+                                    aria-describedby="source-ref-help">
+                                </div>
+                                <div class="help-block" id="source-ref-help">Optional branch, tag, or commit.</div>
                               </div>
                             </div>
+                          </div>
 
-                            <div class="form-group editor">
-                              <label for="sourceRef">Source Repository Ref</label>
-                              <div>
-                                <input class="form-control"
-                                  id="sourceRef"
-                                  name="sourceRef"
-                                  type="text"
-                                  ng-model="updatedBuildConfig.spec.source.git.ref"
-                                  placeholder="master"
-                                  autocorrect="off"
-                                  autocapitalize="off"
-                                  spellcheck="false">
-                              </div>
-                            </div>
-
+                          <div ng-if="view.advancedOptions">
                             <div class="form-group">
-                              <label for="sourceContextDir">Source Context Dir</label>
+                              <label for="sourceContextDir">Context Dir</label>
                               <div>
                                 <input class="form-control"
                                   id="sourceContextDir"
@@ -70,53 +85,65 @@
                                   placeholder="/"
                                   autocorrect="off"
                                   autocapitalize="off"
-                                  spellcheck="false">
+                                  spellcheck="false"
+                                  aria-describedby="context-dir-help">
                               </div>
+                              <div class="help-block" id="context-dir-help">Optional subdirectory for the application source code, used as the context directory for the build.</div>
                             </div>
-                          </div>
-
-                          <div ng-if="sources.dockerfile">
                             <div class="form-group">
-                            <label for="buildFrom">Dockerfile</label>
-                              <div ui-ace="{
-                                mode: 'dockerfile',
-                                theme: 'dreamweaver',
-                                onLoad: aceLoaded,
-                                rendererOptions: {
-                                  fadeFoldWidgets: true,
-                                  showPrintMargin: false
-                                }
-                              }" ng-model="updatedBuildConfig.spec.source.dockerfile" class="ace-bordered ace-inline dockerfile-mode"></div>
-                            </div>
-
-                            <div class="form-group" ng-if="updatedBuildConfig.spec.strategy.dockerStrategy.dockerfilePath">
-                              <label for="dockerfilePath">Dockerfile Path</label>
-                              <div>
-                                <input class="form-control"
-                                  id="dockerfilePath"
-                                  name="dockerfilePath"
-                                  type="text"
-                                  ng-model="updatedBuildConfig.spec.strategy.dockerStrategy.dockerfilePath"
-                                  autocorrect="off"
-                                  autocapitalize="off"
-                                  spellcheck="false">
-                              </div>
+                              <osc-secrets model="secrets.picked.gitSecret" 
+                                          namespace="projectName"
+                                          display-type="source"
+                                          type="source"
+                                          service-account-to-link="builder"
+                                          secrets-by-type="secrets.secretsByType"
+                                          alerts="alerts">
+                              </osc-secrets>
                             </div>
                           </div>
+                        </div>
 
-                          <div class="form-group" ng-if="strategyType === 'Docker'">
-                            <div class="checkbox">
-                              <label>
-                                <input type="checkbox" ng-model="options.noCache"/>
-                                Execute docker build without reusing cached instructions.
-                                <span class="help action-inline">
-                                  <a href>
-                                    <i class="pficon pficon-help" data-toggle="tooltip" aria-hidden="true" data-original-title="Will run the docker build with '--no-cache=true' flag">
-                                    </i>
-                                  </a>
-                                </span>
-                              </label>
+                        <div ng-if="sources.dockerfile">
+                          <div class="form-group">
+                          <label for="buildFrom">Dockerfile</label>
+                            <div ui-ace="{
+                              mode: 'dockerfile',
+                              theme: 'dreamweaver',
+                              onLoad: aceLoaded,
+                              rendererOptions: {
+                                fadeFoldWidgets: true,
+                                showPrintMargin: false
+                              }
+                            }" ng-model="updatedBuildConfig.spec.source.dockerfile" class="ace-bordered ace-inline dockerfile-mode"></div>
+                          </div>
+
+                          <div class="form-group" ng-if="updatedBuildConfig.spec.strategy.dockerStrategy.dockerfilePath && view.advancedOptions">
+                            <label for="dockerfilePath">Dockerfile Path</label>
+                            <div>
+                              <input class="form-control"
+                                id="dockerfilePath"
+                                name="dockerfilePath"
+                                type="text"
+                                ng-model="updatedBuildConfig.spec.strategy.dockerStrategy.dockerfilePath"
+                                autocorrect="off"
+                                autocapitalize="off"
+                                spellcheck="false">
                             </div>
+                          </div>
+                        </div>
+
+                        <div class="form-group" ng-if="strategyType === 'Docker' && view.advancedOptions">
+                          <div class="checkbox">
+                            <label>
+                              <input type="checkbox" ng-model="options.noCache">
+                              Execute docker build without reusing cached instructions.
+                              <span class="help action-inline">
+                                <a href="">
+                                  <i class="pficon pficon-help" data-toggle="tooltip" aria-hidden="true" data-original-title="Will run the docker build with '--no-cache=true' flag">
+                                  </i>
+                                </a>
+                              </span>
+                            </label>
                           </div>
 
                           <div ng-if="sources.binary && updatedBuildConfig.spec.source">
@@ -124,7 +151,7 @@
                               <label for="binaryAsBuild">
                                 Binary Input As File
                                 <span class="help action-inline">
-                                  <a href>
+                                  <a href="">
                                     <i class="pficon pficon-help" data-toggle="tooltip" aria-hidden="true" data-original-title="Indicates that the provided binary input should be considered a single file within the build input. For example, specifying 'webapp.war' would place the provided binary as '/webapp.war' for the builder. If left empty, the Docker and Source build strategies assume this file is a zip, tar, or tar.gz file and extract it as the source. The custom strategy receives this binary as standard input. This filename may not contain slashes or be '..' or '.'."></i>
                                   </a>
                                 </span>
@@ -141,182 +168,32 @@
                               </div>
                             </div>
                           </div>
-
-                          <div class="form-groups" ng-show="sources.images">
-                            <div class="single-image-source" ng-if="sourceImages.length === 1">
-
-                              <div class="form-group">
-                                <label>Image Source From</label>
-                                <ui-select required ng-model="imageOptions.fromSource.type" search-enabled="false">
-                                  <ui-select-match>{{$select.selected | startCase}}</ui-select-match>
-                                  <ui-select-choices repeat="type in imageSourceTypes">
-                                    {{type | startCase}}
-                                  </ui-select-choices>
-                                </ui-select>
-                              </div>
-
-                              <div class="form-group" ng-if="imageOptions.fromSource.type==='ImageStreamTag'" >
-                                <istag-select include-shared-namespace="true"
-                                              model="imageOptions.fromSource.imageStreamTag"></istag-select>
-                              </div>
-
-                              <div ng-if="imageOptions.fromSource.type==='ImageStreamImage'" class="form-group">
-                                <label for="imageSourceImage">Image Stream Image</label>
-                                <div>
-                                  <input class="form-control"
-                                    type="text"
-                                    ng-model="imageOptions.fromSource.imageStreamImage"
-                                    placeholder="example: openshift/ruby-20-centos7@603bfa418"
-                                    autocorrect="off"
-                                    autocapitalize="off"
-                                    spellcheck="false"
-                                    required>
-                                </div>
-                              </div>
-
-
-                              <div ng-if="imageOptions.fromSource.type==='DockerImage'" class="form-group">
-                                <label for="imageSourceLink">Docker Image Repository</label>
-                                <div>
-                                  <input class="form-control"
-                                    id="imageSourceLink"
-                                    name="imageSourceLink"
-                                    type="text"
-                                    ng-model="imageOptions.fromSource.dockerImage"
-                                    placeholder="example: centos/ruby-20-centos7:latest"
-                                    autocorrect="off"
-                                    autocapitalize="off"
-                                    spellcheck="false"
-                                    required>
-                                </div>
-                              </div>
-
-                              <div class="form-group">
-                                <label for="buildFrom">Source and Destination Paths<span class="help action-inline">
-                                  <a href>
-                                  <i class="pficon pficon-help" data-toggle="tooltip" aria-hidden="true" data-original-title="Paths is a list of source and destination paths to copy from the image. At least one pair has to be specified."></i>
-                                  </a>
-                                </span></label>
-                                <key-value-editor
-                                  entries="imageSourcePaths"
-                                  key-placeholder="Source Path"
-                                  key-validator="\/.*?$"
-                                  value-placeholder="Destination Dir"
-                                  key-validator-error-tooltip="A valid Source Path is an absolute path beginning with '/'"
-                                  add-row-link="Add image source path"></key-value-editor>
-                              </div>
-                            </div>
-
-
-                            <div class="multiple-image-source" ng-if="sourceImages.length !== 1">
-                              <label for="imageSourceFrom">Image Source From<span class="help action-inline">
-                                <a href>
-                                  <i class="pficon pficon-info" style="cursor: help;" aria-hidden="true" data-toggle="tooltip" data-original-title="This Build Config contains more then one Image Source. To edit them use the YAML editor.">
-                                </i>
-                                </a>
-                              </span></label>
-                              <div ng-repeat="fromObject in imageSourceFromObjects" class="imageSourceItem">
-                                {{selectTypes[fromObject.kind]}}: {{fromObject | imageObjectRef : buildConfig.metadata.namespace}}
-                              </div>
-                            </div>
-                          </div>
-                        </dl>
-                      </div>
-
-                      <div ng-if="updatedBuildConfig | isJenkinsPipelineStrategy" class="section">
-                        <h3>Jenkins Pipeline Configuration</h3>
-                        <div class="form-group" ng-if="buildConfig.spec.source.type === 'Git'">
-                          <label for="jenkinsfile-type">Jenkinsfile Type</label>
-                          <select
-                            id="jenkinsfile-type"
-                            class="form-control"
-                            ng-model="jenkinsfileOptions.type"
-                            ng-options="type.id as type.title for type in jenkinsfileTypes"
-                            aria-describedby="jenkinsfile-type-help">
-                          </select>
-                          <div class="help-block" id="jenkinsfile-type-help">
-                            Use a Jenkinsfile from the source repository or specify the
-                            Jenkinsfile content directly in the build configuration.
-                          </div>
                         </div>
 
-                        <div ng-if="jenkinsfileOptions.type === 'path'" class="form-group">
-                          <label for="jenkinsfilePath">Jenkinsfile Source Path</label>
-                          <input class="form-control"
-                                 id="jenkinsfilePath"
-                                 name="jenkinsfilePath"
-                                 type="text"
-                                 ng-model="updatedBuildConfig.spec.strategy.jenkinsPipelineStrategy.jenkinsfilePath"
-                                 autocorrect="off"
-                                 autocapitalize="off"
-                                 spellcheck="false"
-                                 aria-describedby="jenkinsfile-path-help">
-                          <div class="help-block" id="jenkinsfile-path-help">
-                            Optional path to the Jenkinsfile relative to the context dir.
-                            Defaults to the Jenkinsfile in context dir.
-                          </div>
-                        </div>
+                        <div class="form-groups" ng-show="sources.images">
+                          <div class="single-image-source" ng-if="sourceImages.length === 1">
 
-                        <div ng-if="jenkinsfileOptions.type === 'inline'">
-                          <label>Jenkinsfile</label>
-                            <div ui-ace="{
-                              mode: 'groovy',
-                              theme: 'eclipse',
-                              onLoad: aceLoaded,
-                              rendererOptions: {
-                                fadeFoldWidgets: true,
-                                showPrintMargin: false
-                              }
-                            }" ng-model="updatedBuildConfig.spec.strategy.jenkinsPipelineStrategy.jenkinsfile" class="ace-bordered ace-inline"></div>
-                        </div>
-                      </div>
-                      <div ng-if="sources.none">
-                        <div class="form-group">
-                          <i>No source inputs have been defined for this build configuration.</i>
-                        </div>
-                      </div>
-
-                      <div ng-if="updatedBuildConfig.spec.strategy.type !== 'JenkinsPipeline'" class="section">
-                        <h3>Image Configuration</h3>
-                        <dl class="dl-horizontal left">
-
-                          <div>
                             <div class="form-group">
-                              <label for="buildFrom">Build From</label>
-                              <ui-select required ng-model="imageOptions.from.type" search-enabled="false">
+                              <label>Image Source From</label>
+                              <ui-select required ng-model="imageOptions.fromSource.type" search-enabled="false">
                                 <ui-select-match>{{$select.selected | startCase}}</ui-select-match>
-                                <ui-select-choices repeat="type in buildFromTypes">
+                                <ui-select-choices repeat="type in imageSourceTypes">
                                   {{type | startCase}}
                                 </ui-select-choices>
                               </ui-select>
                             </div>
 
-
-                            <div class="form-group" ng-if="imageOptions.from.type==='ImageStreamTag'">
+                            <div class="form-group" ng-if="imageOptions.fromSource.type==='ImageStreamTag'" >
                               <istag-select include-shared-namespace="true"
-                                            model="imageOptions.from.imageStreamTag"></istag-select>
+                                            model="imageOptions.fromSource.imageStreamTag"></istag-select>
                             </div>
 
-                            <div ng-if="imageOptions.from.type==='DockerImage'" class="form-group">
-                              <label for="FromTypeLink">Docker Image Repository</label>
+                            <div ng-if="imageOptions.fromSource.type==='ImageStreamImage'" class="form-group">
+                              <label for="imageSourceImage">Image Stream Image</label>
                               <div>
                                 <input class="form-control"
                                   type="text"
-                                  ng-model="imageOptions.from.dockerImage"
-                                  autocorrect="off"
-                                  autocapitalize="off"
-                                  placeholder="example: centos/ruby-20-centos7:latest"
-                                  spellcheck="false"
-                                  required>
-                              </div>
-                            </div>
-
-                            <div ng-if="imageOptions.from.type==='ImageStreamImage'" class="form-group">
-                              <label for="FromTypeImage">Image Stream Image</label>
-                              <div>
-                                <input class="form-control"
-                                  type="text"
-                                  ng-model="imageOptions.from.imageStreamImage"
+                                  ng-model="imageOptions.fromSource.imageStreamImage"
                                   placeholder="example: openshift/ruby-20-centos7@603bfa418"
                                   autocorrect="off"
                                   autocapitalize="off"
@@ -324,40 +201,16 @@
                                   required>
                               </div>
                             </div>
-                          </div>
 
-                          <div class="form-group">
-                            <div class="checkbox">
-                              <label>
-                                <input type="checkbox" ng-model="options.forcePull"/>
-                                Always pull the builder image from the docker registry, even if it is present locally
-                              </label>
-                            </div>
-                          </div>
 
-                          <div>
-                            <div class="form-group">
-                              <label for="buildFrom">Push To</label>
-                              <ui-select required ng-model="imageOptions.to.type" search-enabled="false">
-                                <ui-select-match>{{$select.selected | startCase}}</ui-select-match>
-                                <ui-select-choices repeat="type in pushToTypes">
-                                  {{type | startCase}}
-                                </ui-select-choices>
-                              </ui-select>
-                            </div>
-                            <div class="form-group" ng-if="imageOptions.to.type==='ImageStreamTag'">
-                              <istag-select model="imageOptions.to.imageStreamTag"
-                                            allow-custom-tag="true"></istag-select>
-                            </div>
-
-                            <div ng-if="imageOptions.to.type==='DockerImage'" class="form-group">
-                              <label for="pushToLink">Docker Image Repository</label>
+                            <div ng-if="imageOptions.fromSource.type==='DockerImage'" class="form-group">
+                              <label for="imageSourceLink">Docker Image Repository</label>
                               <div>
                                 <input class="form-control"
-                                  id="pushToLink"
-                                  name="pushToLink"
+                                  id="imageSourceLink"
+                                  name="imageSourceLink"
                                   type="text"
-                                  ng-model="imageOptions.to.dockerImage"
+                                  ng-model="imageOptions.fromSource.dockerImage"
                                   placeholder="example: centos/ruby-20-centos7:latest"
                                   autocorrect="off"
                                   autocapitalize="off"
@@ -365,31 +218,229 @@
                                   required>
                               </div>
                             </div>
+
+                            <div class="form-group">
+                              <label for="buildFrom">Source and Destination Paths<span class="help action-inline">
+                                <a href="">
+                                <i class="pficon pficon-help" data-toggle="tooltip" aria-hidden="true" data-original-title="Paths is a list of source and destination paths to copy from the image. At least one pair has to be specified."></i>
+                                </a>
+                              </span></label>
+                              <key-value-editor
+                                entries="imageSourcePaths"
+                                key-placeholder="Source Path"
+                                key-validator="\/.*?$"
+                                value-placeholder="Destination Dir"
+                                key-validator-error-tooltip="A valid Source Path is an absolute path beginning with '/'"
+                                add-row-link="Add image source path"></key-value-editor>
+                            </div>
                           </div>
-                        </dl>
+
+
+                          <div class="multiple-image-source" ng-if="sourceImages.length !== 1">
+                            <label for="imageSourceFrom">Image Source From<span class="help action-inline">
+                              <a href="">
+                                <i class="pficon pficon-info" style="cursor: help;" aria-hidden="true" data-toggle="tooltip" data-original-title="This Build Config contains more then one Image Source. To edit them use the YAML editor.">
+                              </i>
+                              </a>
+                            </span></label>
+                            <div ng-repeat="fromObject in imageSourceFromObjects" class="imageSourceItem">
+                              {{selectTypes[fromObject.kind]}}: {{fromObject | imageObjectRef : buildConfig.metadata.namespace}}
+                            </div>
+                          </div>
+                        </div>
+                      </dl>
+                    </div>
+
+                    <div ng-if="updatedBuildConfig | isJenkinsPipelineStrategy" class="section">
+                      <h3 class="with-divider">Jenkins Pipeline Configuration</h3>
+                      <div class="form-group" ng-if="buildConfig.spec.source.type === 'Git'">
+                        <label for="jenkinsfile-type">Jenkinsfile Type</label>
+                        <select
+                          id="jenkinsfile-type"
+                          class="form-control"
+                          ng-model="jenkinsfileOptions.type"
+                          ng-options="type.id as type.title for type in jenkinsfileTypes"
+                          aria-describedby="jenkinsfile-type-help">
+                        </select>
+                        <div class="help-block" id="jenkinsfile-type-help">
+                          Use a Jenkinsfile from the source repository or specify the
+                          Jenkinsfile content directly in the build configuration.
+                        </div>
+                      </div>
+
+                      <div ng-if="jenkinsfileOptions.type === 'path'" class="form-group">
+                        <label for="jenkinsfilePath">Jenkinsfile Source Path</label>
+                        <input class="form-control"
+                               id="jenkinsfilePath"
+                               name="jenkinsfilePath"
+                               type="text"
+                               ng-model="updatedBuildConfig.spec.strategy.jenkinsPipelineStrategy.jenkinsfilePath"
+                               autocorrect="off"
+                               autocapitalize="off"
+                               spellcheck="false"
+                               aria-describedby="jenkinsfile-path-help">
+                        <div class="help-block" id="jenkinsfile-path-help">
+                          Optional path to the Jenkinsfile relative to the context dir.
+                          Defaults to the Jenkinsfile in context dir.
+                        </div>
+                      </div>
+
+                      <div ng-if="jenkinsfileOptions.type === 'inline'">
+                        <label>Jenkinsfile</label>
+                          <div ui-ace="{
+                            mode: 'groovy',
+                            theme: 'eclipse',
+                            onLoad: aceLoaded,
+                            rendererOptions: {
+                              fadeFoldWidgets: true,
+                              showPrintMargin: false
+                            }
+                          }" ng-model="updatedBuildConfig.spec.strategy.jenkinsPipelineStrategy.jenkinsfile" class="ace-bordered ace-inline"></div>
+                      </div>
+                    </div>
+                    <div ng-if="sources.none">
+                      <div class="form-group">
+                        <i>No source inputs have been defined for this build configuration.</i>
                       </div>
                     </div>
 
+                    <div ng-if="strategyType !== 'JenkinsPipeline'" class="section">
+                      <h3 class="with-divider">Image Configuration</h3>
+                      <dl class="dl-horizontal left">
 
-                    <div class="col-lg-6">
-                      <div ng-if="!(updatedBuildConfig | isJenkinsPipelineStrategy)" class="section">
-                        <h3>Environment Variables<span class="help action-inline">
-                          <a href>
-                          <i class="pficon pficon-help" data-toggle="tooltip" aria-hidden="true" data-original-title="Environment variables are used to configure and pass information to running containers.  These environment variables will be available during your build and at runtime."></i>
-                          </a>
-                        </span></h3>
                         <div>
-                          <key-value-editor
-                            ng-if="envVars"
-                            entries="envVars"
-                            key-validator="[a-zA-Z][a-zA-Z0-9_]*"
-                            key-validator-error-tooltip="A valid environment variable name is an alphanumeric (a-z and 0-9) string beginning with a letter that may contain underscores."
-                            add-row-link="Add environment variable"></key-value-editor>
+                          <div class="form-group">
+                            <label for="buildFrom">Build From</label>
+                            <ui-select required ng-model="imageOptions.from.type" search-enabled="false">
+                              <ui-select-match>{{$select.selected | startCase}}</ui-select-match>
+                              <ui-select-choices repeat="type in buildFromTypes">
+                                {{type | startCase}}
+                              </ui-select-choices>
+                            </ui-select>
+                          </div>
+
+
+                          <div class="form-group" ng-if="imageOptions.from.type==='ImageStreamTag'">
+                            <istag-select include-shared-namespace="true"
+                                          model="imageOptions.from.imageStreamTag"></istag-select>
+                          </div>
+
+                          <div ng-if="imageOptions.from.type==='DockerImage'" class="form-group">
+                            <label for="FromTypeLink">Docker Image Repository</label>
+                            <div>
+                              <input class="form-control"
+                                type="text"
+                                ng-model="imageOptions.from.dockerImage"
+                                autocorrect="off"
+                                autocapitalize="off"
+                                placeholder="example: centos/ruby-20-centos7:latest"
+                                spellcheck="false"
+                                required>
+                            </div>
+                          </div>
+
+                          <div ng-if="imageOptions.from.type==='ImageStreamImage'" class="form-group">
+                            <label for="FromTypeImage">Image Stream Image</label>
+                            <div>
+                              <input class="form-control"
+                                type="text"
+                                ng-model="imageOptions.from.imageStreamImage"
+                                placeholder="example: openshift/ruby-20-centos7@603bfa418"
+                                autocorrect="off"
+                                autocapitalize="off"
+                                spellcheck="false"
+                                required>
+                            </div>
+                          </div>
                         </div>
+
+                        <div class="form-group" ng-if="view.advancedOptions && strategyType !== 'JenkinsPipeline'">
+                          <osc-secrets model="secrets.picked.pullSecret"
+                                      namespace="projectName"
+                                      display-type="pull"
+                                      type="image"
+                                      secrets-by-type="secrets.secretsByType"
+                                      service-account-to-link="builder"
+                                      alerts="alerts">
+                          </osc-secrets>
+                        </div>
+
+                        <div class="form-group" ng-if="view.advancedOptions">
+                          <div class="checkbox">
+                            <label>
+                              <input type="checkbox" ng-model="options.forcePull">
+                              Always pull the builder image from the docker registry, even if it is present locally
+                            </label>
+                          </div>
+                        </div>
+
+                        <div>
+                          <div class="form-group">
+                            <label for="buildFrom">Push To</label>
+                            <ui-select required ng-model="imageOptions.to.type" search-enabled="false">
+                              <ui-select-match>{{$select.selected | startCase}}</ui-select-match>
+                              <ui-select-choices repeat="type in pushToTypes">
+                                {{type | startCase}}
+                              </ui-select-choices>
+                            </ui-select>
+                          </div>
+                          <div class="form-group" ng-if="imageOptions.to.type==='ImageStreamTag'">
+                            <istag-select model="imageOptions.to.imageStreamTag"
+                                          allow-custom-tag="true"></istag-select>
+                          </div>
+
+                          <div ng-if="imageOptions.to.type==='DockerImage'" class="form-group">
+                            <label for="pushToLink">Docker Image Repository</label>
+                            <div>
+                              <input class="form-control"
+                                id="pushToLink"
+                                name="pushToLink"
+                                type="text"
+                                ng-model="imageOptions.to.dockerImage"
+                                placeholder="example: centos/ruby-20-centos7:latest"
+                                autocorrect="off"
+                                autocapitalize="off"
+                                spellcheck="false"
+                                required>
+                            </div>
+                          </div>
+
+                          <div class="form-group" ng-if="view.advancedOptions">
+                            <osc-secrets model="secrets.picked.pushSecret"
+                                        namespace="projectName"
+                                        display-type="push"
+                                        type="image"
+                                        service-account-to-link="builder"
+                                        secrets-by-type="secrets.secretsByType"
+                                        alerts="alerts">
+                            </osc-secrets>
+                          </div>
+
+                        </div>
+                      </dl>
+                    </div>
+
+
+
+                    <div ng-if="!(updatedBuildConfig | isJenkinsPipelineStrategy)" class="section">
+                      <h3 class="with-divider">Environment Variables<span class="help action-inline">
+                        <a href="">
+                        <i class="pficon pficon-help" data-toggle="tooltip" aria-hidden="true" data-original-title="Environment variables are used to configure and pass information to running containers.  These environment variables will be available during your build and at runtime."></i>
+                        </a>
+                      </span></h3>
+                      <div>
+                        <key-value-editor
+                          ng-if="envVars"
+                          entries="envVars"
+                          key-validator="[a-zA-Z][a-zA-Z0-9_]*"
+                          key-validator-error-tooltip="A valid environment variable name is an alphanumeric (a-z and 0-9) string beginning with a letter that may contain underscores."
+                          add-row-link="Add environment variable"></key-value-editor>
                       </div>
-                      <div ng-if="sources.git || !(updatedBuildConfig | isJenkinsPipelineStrategy)" class="section">
-                        <h3>Triggers
-                          <a href="{{'build-triggers' | helpLink}}" aria-hidden="true" target="_blank"><span class="learn-more-inline">Learn more<i class="fa fa-external-link"></i></span></a>
+                    </div>
+                    <div ng-if="sources.git || !(updatedBuildConfig | isJenkinsPipelineStrategy)" class="section">
+                      <div ng-if="view.advancedOptions">
+                        <h3 class="with-divider">Triggers
+                          <a href="{{'build-triggers' | helpLink}}" aria-hidden="true" target="_blank"><span class="learn-more-inline">Learn more&nbsp;<i class="fa fa-external-link"></i></span></a>
                         </h3>
                         <dl class="dl-horizontal left">
                           <div>
@@ -417,7 +468,7 @@
                             <!-- <h5>Config change</h5>
                             <div class="checkbox">
                               <label>
-                                <input type="checkbox" ng-model="triggers.configChangeTrigger.present"/>
+                                <input type="checkbox" ng-model="triggers.configChangeTrigger.present">
                                   Automatically build a new image when the build configuration changes
                               </label>
                             </div> -->
@@ -426,7 +477,7 @@
                               <h5>Image change</h5>
                               <div class="checkbox">
                                 <label>
-                                  <input type="checkbox" ng-model="triggers.builderImageChangeTrigger.present" ng-disabled="imageOptions.from.type === 'None'"/>
+                                  <input type="checkbox" ng-model="triggers.builderImageChangeTrigger.present" ng-disabled="imageOptions.from.type === 'None'">
                                     Automatically build a new image when the builder image changes
                                     <span class="help action-inline">
                                       <a href>
@@ -441,44 +492,66 @@
                           </div>
                         </dl>
                       </div>
-                      <div class="section">
-                        <h3>Run Policy
-                          <span class="help action-inline">
-                            <a href>
-                              <i class="pficon pficon-help" data-toggle="tooltip" aria-hidden="true" data-original-title="The build run policy describes the order in which the builds created from the build configuration should run."></i>
-                            </a>
-                          </span>
-                        </h3>
-                        <div class="form-group">
-                          <label class="sr-only">Run policy type</label>
-                          <ui-select required ng-model="updatedBuildConfig.spec.runPolicy" search-enabled="false">
-                            <ui-select-match>{{$select.selected | sentenceCase}}</ui-select-match>
-                            <ui-select-choices repeat="type in runPolicyTypes">
-                              {{type | sentenceCase}}
-                            </ui-select-choices>
-                          </ui-select>
+                    </div>
+                    <div class="section" ng-if="!(updatedBuildConfig | isJenkinsPipelineStrategy) && view.advancedOptions">
+                      <h3 class="with-divider">
+                        Build Secrets
+                        <a href="{{'source_secrets' | helpLink}}" aria-hidden="true" target="_blank"><span class="learn-more-inline">Learn more&nbsp;<i class="fa fa-external-link"></i></span></a>
+                      </h3>
+                      <div class="form-group">
+                        <osc-source-secrets model="secrets.picked.sourceSecrets" 
+                                    namespace="projectName"
+                                    secrets-by-type="secrets.secretsByType"
+                                    strategy-type="strategyType"
+                                    service-account-to-link="builder"
+                                    alerts="alerts"
+                                    display-type="source"
+                                    type="source">
+                        </osc-source-secrets>
+                      </div>
 
-                        </div>
-                        <div ng-switch="updatedBuildConfig.spec.runPolicy">
-                          <div ng-switch-when="Serial">Builds triggered from this Build Configuration will run one at the time, in the order they have been triggered.</div>
-                          <div ng-switch-when="Parallel">Builds triggered from this Build Configuration will run all at the same time. The order in which they will finish is not guranteed.</div>
-                          <div ng-switch-when="SerialLatestOnly">Builds triggered from this Build Configuration will run one at the time. When a currently running build completes, the next build that will run is the latest build created. Other queued builds will be cancelled.</div>
-                          <div ng-switch-default>Builds triggered from this Build Configuration will run using the {{updatedBuildConfig.spec.runPolicy | sentenceCase}} policy.</div>
-                        </div>
+                    </div>
+                    <div class="section" ng-if="view.advancedOptions">
+                      <h3 class="with-divider">Run Policy
+                        <span class="help action-inline">
+                          <a href="">
+                            <i class="pficon pficon-help" data-toggle="tooltip" aria-hidden="true" data-original-title="The build run policy describes the order in which the builds created from the build configuration should run."></i>
+                          </a>
+                        </span>
+                      </h3>
+                      <div class="form-group">
+                        <label class="sr-only">Run policy type</label>
+                        <ui-select required ng-model="updatedBuildConfig.spec.runPolicy" search-enabled="false">
+                          <ui-select-match>{{$select.selected | sentenceCase}}</ui-select-match>
+                          <ui-select-choices repeat="type in runPolicyTypes">
+                            {{type | sentenceCase}}
+                          </ui-select-choices>
+                        </ui-select>
+
+                      </div>
+                      <div ng-switch="updatedBuildConfig.spec.runPolicy">
+                        <div class="help-block" ng-switch-when="Serial">Builds triggered from this Build Configuration will run one at the time, in the order they have been triggered.</div>
+                        <div class="help-block" ng-switch-when="Parallel">Builds triggered from this Build Configuration will run all at the same time. The order in which they will finish is not guranteed.</div>
+                        <div class="help-block" ng-switch-when="SerialLatestOnly">Builds triggered from this Build Configuration will run one at the time. When a currently running build completes, the next build that will run is the latest build created. Other queued builds will be cancelled.</div>
+                        <div class="help-block" ng-switch-default>Builds triggered from this Build Configuration will run using the {{updatedBuildConfig.spec.runPolicy | sentenceCase}} policy.</div>
                       </div>
                     </div>
-                  </div>
-                  <div class="buttons gutter-top-bottom">
-                    <button
-                      type="submit"
-                      class="btn btn-primary btn-lg"
-                        ng-disabled="form.$invalid || form.$pristine || disableInputs">
-                        Save
-                    </button>
-                    <a class="btn btn-default btn-lg"
-                      href="{{updatedBuildConfig | navigateResourceURL}}">
-                      Cancel
-                    </a>
+                  
+                    <div class="gutter-top">
+                      <a href="" ng-click="view.advancedOptions = !view.advancedOptions" role="button">{{view.advancedOptions ? 'Hide' : 'Show'}} advanced options</a>
+                    </div>
+                    <div class="buttons gutter-top-bottom">
+                      <button
+                        type="submit"
+                        class="btn btn-primary btn-lg"
+                          ng-disabled="form.$invalid || form.$pristine || disableInputs">
+                          Save
+                      </button>
+                      <a class="btn btn-default btn-lg"
+                        href="{{updatedBuildConfig | navigateResourceURL}}">
+                        Cancel
+                      </a>
+                    </div>
                   </div>
                 </div>
               </form>

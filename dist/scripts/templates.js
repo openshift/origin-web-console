@@ -3960,6 +3960,10 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "</div>\n" +
     "</div>\n" +
     "</div>\n" +
+    "<div class=\"row\">\n" +
+    "<div ng-class=\"{\n" +
+    "                              'col-md-8': advancedOptions,\n" +
+    "                              'col-lg-12': !advancedOptions}\">\n" +
     "<div class=\"form-group\">\n" +
     "<label for=\"sourceUrl\" class=\"required\">Git Repository URL</label>\n" +
     "<div ng-class=\"{'has-warning': form.sourceUrl.$dirty && !sourceURLPattern.test(buildConfig.sourceUrl), 'has-error': (form.sourceUrl.$error.required && form.sourceUrl.$dirty)}\">\n" +
@@ -3977,7 +3981,8 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "<span class=\"text-warning\" ng-if=\"form.sourceUrl.$dirty && !sourceURLPattern.test(buildConfig.sourceUrl)\">Git repository should be a URL.</span>\n" +
     "</div>\n" +
     "</div>\n" +
-    "<div click-to-reveal link-text=\"Show advanced routing, build, and deployment options\">\n" +
+    "</div>\n" +
+    "<div class=\"col-md-4\" ng-if=\"advancedOptions\">\n" +
     "<div class=\"form-group\">\n" +
     "<label for=\"gitref\">Git Reference</label>\n" +
     "<div>\n" +
@@ -3985,6 +3990,9 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "</div>\n" +
     "<div class=\"help-block\">Optional branch, tag, or commit.</div>\n" +
     "</div>\n" +
+    "</div>\n" +
+    "</div>\n" +
+    "<div ng-if=\"advancedOptions\">\n" +
     "<div class=\"form-group\">\n" +
     "<label for=\"contextdir\">Context Dir</label>\n" +
     "<div>\n" +
@@ -4137,6 +4145,9 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "</label-editor>\n" +
     "</div>\n" +
     "<alerts alerts=\"alerts\"></alerts>\n" +
+    "<div class=\"gutter-top\">\n" +
+    "<a href=\"\" ng-click=\"advancedOptions = !advancedOptions\" role=\"button\">{{advancedOptions ? 'Hide' : 'Show'}} advanced routing, build, and deployment options</a>\n" +
+    "</div>\n" +
     "<div class=\"buttons gutter-bottom\" ng-class=\"{'gutter-top': !alerts.length}\">\n" +
     "\n" +
     "<button type=\"submit\" class=\"btn btn-primary btn-lg\" ng-disabled=\"form.$invalid || nameTaken || cpuProblems.length || memoryProblems.length || disableInputs\">Create</button>\n" +
@@ -4895,6 +4906,214 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
   );
 
 
+  $templateCache.put('views/directives/create-secret.html',
+    "<alerts alerts=\"alerts\"></alerts>\n" +
+    "<ng-form name=\"secretForm\">\n" +
+    "<div for=\"secretType\" ng-if=\"!type\" class=\"form-group\">\n" +
+    "<label>Secret Type</label>\n" +
+    "<ui-select required ng-model=\"newSecret.type\" search-enabled=\"false\" ng-change=\"newSecret.authType = secretAuthTypeMap[newSecret.type].authTypes[0].id\">\n" +
+    "<ui-select-match>{{$select.selected | upperFirst}} Secret</ui-select-match>\n" +
+    "<ui-select-choices repeat=\"type in secretTypes\">\n" +
+    "{{type | upperFirst}} Secret\n" +
+    "</ui-select-choices>\n" +
+    "</ui-select>\n" +
+    "</div>\n" +
+    "<div class=\"form-group\">\n" +
+    "<label for=\"secretName\" class=\"required\">Secret Name</label>\n" +
+    "<span ng-class=\"{'has-error': nameTaken || (secretForm.secretName.$error.pattern && secretForm.secretName.$touched)}\">\n" +
+    "<input class=\"form-control\" id=\"secretName\" name=\"secretName\" ng-model=\"newSecret.data.secretName\" type=\"text\" autocorrect=\"off\" autocapitalize=\"off\" spellcheck aria-describedby=\"secret-name-help\" ng-maxlength=\"253\" ng-pattern=\"/^[a-z0-9]([-a-z0-9]*[a-z0-9])?(\\.[a-z0-9]([-a-z0-9]*[a-z0-9])?)*$/\" required>\n" +
+    "</span>\n" +
+    "<div class=\"has-error\" ng-show=\"nameTaken\">\n" +
+    "<span class=\"help-block\">\n" +
+    "This name is already in use. Please choose a different name.\n" +
+    "</span>\n" +
+    "</div>\n" +
+    "<div class=\"has-error\" ng-show=\"secretForm.secretName.$error.pattern && secretForm.secretName.$touched\">\n" +
+    "<span class=\"help-block\">\n" +
+    "Secret name must consist of lower-case letters, numbers, periods, and hyphens. It must start and end with a letter or number.\n" +
+    "</span>\n" +
+    "</div>\n" +
+    "<div class=\"help-block\" id=\"secret-name-help\">\n" +
+    "Unique name of the new secret.\n" +
+    "</div>\n" +
+    "</div>\n" +
+    "<div class=\"form-group\">\n" +
+    "<label for=\"authentificationType\">Authetication Type</label>\n" +
+    "<ui-select required ng-model=\"newSecret.authType\" search-enabled=\"false\">\n" +
+    "<ui-select-match>{{$select.selected.label}}</ui-select-match>\n" +
+    "<ui-select-choices repeat=\"type.id as type in secretAuthTypeMap[newSecret.type].authTypes\">\n" +
+    "{{type.label}}\n" +
+    "</ui-select-choices>\n" +
+    "</ui-select>\n" +
+    "</div>\n" +
+    "<div ng-if=\"newSecret.authType === 'kubernetes.io/basic-auth'\">\n" +
+    "<div class=\"form-group\">\n" +
+    "<label for=\"username\">Username</label>\n" +
+    "<div>\n" +
+    "<input class=\"form-control\" id=\"username\" name=\"username\" ng-model=\"newSecret.data.username\" type=\"text\" autocorrect=\"off\" autocapitalize=\"off\" spellcheck aria-describedby=\"username-help\">\n" +
+    "</div>\n" +
+    "<div class=\"help-block\" id=\"username-help\">\n" +
+    "Optional username for SCM servers authentication.\n" +
+    "</div>\n" +
+    "</div>\n" +
+    "<div class=\"form-group\">\n" +
+    "<label for=\"passwordToken\" class=\"required\">Password or Token</label>\n" +
+    "<div>\n" +
+    "<input class=\"form-control\" id=\"passwordToken\" name=\"passwordToken\" ng-model=\"newSecret.data.passwordToken\" autocorrect=\"off\" autocapitalize=\"off\" spellcheck aria-describedby=\"password-token-help\" type=\"password\" required>\n" +
+    "</div>\n" +
+    "<div class=\"help-block\" id=\"password-token-help\">\n" +
+    "Password or token for SCM servers authentication.\n" +
+    "</div>\n" +
+    "</div>\n" +
+    "</div>\n" +
+    "<div ng-if=\"newSecret.authType === 'kubernetes.io/ssh-auth'\">\n" +
+    "<div class=\"form-group\" id=\"private-key\">\n" +
+    "<label for=\"privateKey\" class=\"required\">SSH Private Key</label>\n" +
+    "<osc-file-input id=\"private-key-file-input\" model=\"newSecret.data.privateKey\" drop-zone-id=\"private-key\" dragging=\"false\" help-text=\"Upload your private SSH key file.\" show-values=\"false\"></osc-file-input>\n" +
+    "<div ui-ace=\"{\n" +
+    "        theme: 'eclipse',\n" +
+    "        onLoad: aceLoaded,\n" +
+    "        rendererOptions: {\n" +
+    "          fadeFoldWidgets: true,\n" +
+    "          showPrintMargin: false \n" +
+    "        }\n" +
+    "      }\" ng-model=\"newSecret.data.privateKey\" class=\"create-secret-editor ace-bordered\" id=\"private-key-editor\" required></div>\n" +
+    "<div class=\"help-block\">\n" +
+    "Private SSH key file for SCM servers authentication.\n" +
+    "</div>\n" +
+    "</div>\n" +
+    "</div>\n" +
+    "<div ng-if=\"newSecret.type === 'source'\">\n" +
+    "<div class=\"form-group\">\n" +
+    "<div class=\"checkbox\">\n" +
+    "<label>\n" +
+    "<input type=\"checkbox\" ng-model=\"addGitconfig\">\n" +
+    "Use a custom .gitconfig file\n" +
+    "</label>\n" +
+    "</div>\n" +
+    "</div>\n" +
+    "<div class=\"form-group\" ng-if=\"addGitconfig\" id=\"gitconfig\" ng-show=\"addGitconfig\">\n" +
+    "<label class=\"required\" for=\"gitconfig\">Git Configuration File</label>\n" +
+    "<osc-file-input id=\"gitconfig-file-input\" model=\"newSecret.data.gitconfig\" drop-zone-id=\"gitconfig\" dragging=\"false\" help-text=\"Upload your .gitconfig or  file.\" show-values=\"false\" required></osc-file-input>\n" +
+    "<div ui-ace=\"{\n" +
+    "        mode: 'ini',\n" +
+    "        theme: 'eclipse',\n" +
+    "        onLoad: aceLoaded,\n" +
+    "        rendererOptions: {\n" +
+    "          fadeFoldWidgets: true,\n" +
+    "          showPrintMargin: false \n" +
+    "        }\n" +
+    "      }\" ng-model=\"newSecret.data.gitconfig\" class=\"create-secret-editor ace-bordered\" id=\"gitconfig-editor\"></div>\n" +
+    "</div>\n" +
+    "</div>\n" +
+    "<div ng-if=\"newSecret.authType === 'kubernetes.io/dockercfg'\">\n" +
+    "<div class=\"form-group\">\n" +
+    "<label for=\"dockerServer\" class=\"required\">Image Registry Server Address</label>\n" +
+    "<div>\n" +
+    "<input class=\"form-control\" id=\"dockerServer\" name=\"dockerServer\" ng-model=\"newSecret.data.dockerServer\" type=\"text\" autocorrect=\"off\" autocapitalize=\"off\" spellcheck required>\n" +
+    "</div>\n" +
+    "</div>\n" +
+    "<div class=\"form-group\">\n" +
+    "<label for=\"dockerUsername\" class=\"required\">Username</label>\n" +
+    "<div>\n" +
+    "<input class=\"form-control\" id=\"dockerUsername\" name=\"dockerUsername\" ng-model=\"newSecret.data.dockerUsername\" type=\"text\" autocorrect=\"off\" autocapitalize=\"off\" spellcheck required>\n" +
+    "</div>\n" +
+    "</div>\n" +
+    "<div class=\"form-group\">\n" +
+    "<label for=\"dockerPassword\" class=\"required\">Password</label>\n" +
+    "<div>\n" +
+    "<input class=\"form-control\" id=\"dockerPassword\" name=\"dockerPassword\" ng-model=\"newSecret.data.dockerPassword\" type=\"password\" autocorrect=\"off\" autocapitalize=\"off\" spellcheck required>\n" +
+    "</div>\n" +
+    "</div>\n" +
+    "<div class=\"form-group\">\n" +
+    "<label for=\"dockerEmail\" class=\"required\">Email</label>\n" +
+    "<div>\n" +
+    "<input class=\"form-control\" type=\"email\" id=\"dockerEmail\" name=\"dockerEmail\" ng-model=\"newSecret.data.dockerMail\" autocorrect=\"off\" autocapitalize=\"off\" spellcheck required>\n" +
+    "</div>\n" +
+    "</div>\n" +
+    "</div>\n" +
+    "<div ng-if=\"newSecret.authType === 'kubernetes.io/dockerconfigjson'\">\n" +
+    "<div class=\"form-group\" id=\"docker-config\">\n" +
+    "<label for=\"dockerConfig\" class=\"required\">Configuration File</label>\n" +
+    "<osc-file-input if=\"dockercfg-file-input\" model=\"newSecret.data.dockerConfig\" drop-zone-id=\"docker-config\" dragging=\"false\" help-text=\"Upload a .dockercfg or .docker/config.json file\" show-values=\"false\" required></osc-file-input>\n" +
+    "<div ui-ace=\"{\n" +
+    "        mode: 'json',\n" +
+    "        theme: 'eclipse',\n" +
+    "        onLoad: aceLoaded,\n" +
+    "        rendererOptions: {\n" +
+    "          fadeFoldWidgets: true,\n" +
+    "          showPrintMargin: false \n" +
+    "        }\n" +
+    "      }\" ng-model=\"newSecret.data.dockerConfig\" class=\"create-secret-editor ace-bordered\" id=\"dockerconfig-editor\" required></div>\n" +
+    "<div class=\"help-block\">\n" +
+    "File with credentials and other configuration for connecting to a secured image registry.\n" +
+    "</div>\n" +
+    "</div>\n" +
+    "</div>\n" +
+    "<div ng-if=\"'serviceaccounts' | canI : 'update'\">\n" +
+    "<div class=\"form-group\">\n" +
+    "<div class=\"checkbox\">\n" +
+    "<label>\n" +
+    "<input type=\"checkbox\" ng-model=\"newSecret.linkSecret\">\n" +
+    "Use this secret automatically for other builds.\n" +
+    "</label>\n" +
+    "</div>\n" +
+    "</div>\n" +
+    "<div ng-if=\"!serviceAccountToLink && newSecret.linkSecret\">\n" +
+    "<div class=\"form-group\">\n" +
+    "<label for=\"serviceAccount\" class=\"required\">Service Account</label>\n" +
+    "<ui-select required ng-model=\"newSecret.pickedServiceAccountToLink\">\n" +
+    "<ui-select-match placeholder=\"Service Account Name\">{{$select.selected}}</ui-select-match>\n" +
+    "<ui-select-choices repeat=\"sa in (serviceAccountsNames | filter : $select.search)\">\n" +
+    "<div ng-bind-html=\"sa | highlight : $select.search\"></div>\n" +
+    "</ui-select-choices>\n" +
+    "</ui-select>\n" +
+    "</div>\n" +
+    "<div class=\"form-group\">\n" +
+    "<label class=\"required\">Link as</label>\n" +
+    "<div class=\"form-group\">\n" +
+    "<div class=\"checkbox\">\n" +
+    "<label>\n" +
+    "<input type=\"checkbox\" ng-model=\"newSecret.linkAs.secrets\" ng-checked=\"newSecret.linkAs.secrets\">\n" +
+    "Link with {{newSecret.pickedServiceAccountToLink}} service account as a <b>source</b> secret.\n" +
+    "<span class=\"help action-inline\">\n" +
+    "<a href=\"\">\n" +
+    "<i class=\"pficon pficon-help\" aria-hidden=\"true\" data-toggle=\"tooltip\" data-original-title=\"Pods using this service account will mount the content of secret into their containers for pulling sources during build time.\">\n" +
+    "</i>\n" +
+    "</a>\n" +
+    "</span>\n" +
+    "</label>\n" +
+    "</div>\n" +
+    "</div>\n" +
+    "<div class=\"form-group\">\n" +
+    "<div class=\"checkbox\">\n" +
+    "<label>\n" +
+    "<input type=\"checkbox\" ng-model=\"newSecret.linkAs.imagePullSecrets\" ng-checked=\"newSecret.linkAs.imagePullSecrets\">\n" +
+    "Link with {{newSecret.pickedServiceAccountToLink}} service account as a <b>image pull</b> secret.\n" +
+    "<span class=\"help action-inline\">\n" +
+    "<a href=\"\">\n" +
+    "<i class=\"pficon pficon-help\" aria-hidden=\"true\" data-toggle=\"tooltip\" data-original-title=\"Pods using this service account will use provided creadentials to pull images for the pod’s containers.\">\n" +
+    "</i>\n" +
+    "</a>\n" +
+    "</span>\n" +
+    "</label>\n" +
+    "</div>\n" +
+    "</div>\n" +
+    "<div class=\"help-block\">\n" +
+    "Linking a secret enables a service account to automatically use that secret for some forms of authentication.\n" +
+    "<a href=\"{{'managing_secrets' | helpLink}}\" target=\"_blank\"><span class=\"learn-more-inline\">Learn more&nbsp;<i class=\"fa fa-external-link\" aria-hidden=\"true\"></i></span></a>\n" +
+    "</div>\n" +
+    "</div>\n" +
+    "</div>\n" +
+    "</div>\n" +
+    "<div class=\"buttons gutter-top-bottom\">\n" +
+    "<button class=\"btn btn-lg btn-primary\" type=\"button\" ng-disabled=\"secretForm.$invalid || secretForm.$pristine\" ng-click=\"create()\">Create</button>\n" +
+    "<button class=\"btn btn-lg btn-default\" type=\"button\" ng-click=\"cancel()\">Cancel</button>\n" +
+    "</div>\n" +
+    "</ng-form>"
+  );
+
+
   $templateCache.put('views/directives/delete-button.html',
     "<div class=\"actions\">\n" +
     "\n" +
@@ -5184,7 +5403,7 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "</span>\n" +
     "</div>\n" +
     "</div>\n" +
-    "<span class=\"learn-more-inline checkbox\">\n" +
+    "<span>\n" +
     "<a href=\"\" role=\"button\" ng-click=\"addWebhookTrigger(type)\">Add {{type}} webhook</a>\n" +
     "</span>"
   );
@@ -6319,6 +6538,135 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
   );
 
 
+  $templateCache.put('views/directives/osc-secrets.html',
+    "<ng-form name=\"secretsForm\" class=\"osc-secrets-form\">\n" +
+    "<div class=\"form-group\">\n" +
+    "<label class=\"picker-label\">{{displayType | startCase}} Secret</label>\n" +
+    "<ui-select ng-model=\"pickedSecret.name\">\n" +
+    "<ui-select-match placeholder=\"Secret name\">{{$select.selected}}</ui-select-match>\n" +
+    "<ui-select-choices repeat=\"secret in (secretsByType[type] | filter : $select.search)\">\n" +
+    "<div ng-bind-html=\"secret | highlight : $select.search\"></div>\n" +
+    "</ui-select-choices>\n" +
+    "</ui-select>\n" +
+    "<div ng-switch=\"displayType\">\n" +
+    "<div class=\"help-block\" ng-switch-when=\"source\">\n" +
+    "Secret with credentials for pulling your source code.\n" +
+    "<a href=\"{{'git_secret' | helpLink}}\" target=\"_blank\"><span class=\"learn-more-inline\">Learn more&nbsp;<i class=\"fa fa-external-link\" aria-hidden=\"true\"></i></span></a>\n" +
+    "</div>\n" +
+    "<div class=\"help-block\" ng-switch-when=\"pull\">\n" +
+    "Secret for authentication when pulling images from a secured registry.\n" +
+    "<a href=\"{{'pull_secret' | helpLink}}\" target=\"_blank\"><span class=\"learn-more-inline\">Learn more&nbsp;<i class=\"fa fa-external-link\" aria-hidden=\"true\"></i></span></a>\n" +
+    "</div>\n" +
+    "<div class=\"help-block\" ng-switch-when=\"push\">\n" +
+    "Secret for authentication when pushing images to a secured registry.\n" +
+    "<a href=\"{{'pull_secret' | helpLink}}\" target=\"_blank\"><span class=\"learn-more-inline\">Learn more&nbsp;<i class=\"fa fa-external-link\" aria-hidden=\"true\"></i></span></a>\n" +
+    "</div>\n" +
+    "</div>\n" +
+    "</div>\n" +
+    "<span>\n" +
+    "<a href=\"\" ng-if=\"'secrets' | canI : 'create'\" role=\"button\" ng-click=\"openCreateSecretModal()\">Create {{displayType}} secret</a>\n" +
+    "</span>\n" +
+    "</ng-form>"
+  );
+
+
+  $templateCache.put('views/directives/osc-source-secrets.html',
+    "<ng-form name=\"secretsForm\" class=\"osc-secrets-form\">\n" +
+    "<div ng-if=\"strategyType !== 'Custom'\">\n" +
+    "<div ng-repeat=\"pickedSecret in pickedSecrets\">\n" +
+    "<div class=\"form-group\">\n" +
+    "<div class=\"row picked-secret\">\n" +
+    "<div class=\"col-lg-6\">\n" +
+    "<label class=\"picker-label\" ng-if=\"$first\">Build Secret</label>\n" +
+    "<ui-select ng-required=\"pickedSecret.destinationDir\" ng-model=\"pickedSecret.secret.name\">\n" +
+    "<ui-select-match placeholder=\"Secret name\">{{$select.selected}}</ui-select-match>\n" +
+    "<ui-select-choices repeat=\"secret in (secretsByType[type] | filter : $select.search)\">\n" +
+    "<div ng-bind-html=\"secret | highlight : $select.search\"></div>\n" +
+    "</ui-select-choices>\n" +
+    "</ui-select>\n" +
+    "</div>\n" +
+    "<div class=\"col-lg-6\">\n" +
+    "<div class=\"directory\">\n" +
+    "<label for=\"destinationDir\" ng-if=\"$first\">\n" +
+    "Destination Directory\n" +
+    "</label>\n" +
+    "<div>\n" +
+    "<input class=\"form-control\" id=\"destinationDir\" name=\"destinationDir\" ng-model=\"pickedSecret.destinationDir\" type=\"text\" placeholder=\"/\" autocorrect=\"off\" autocapitalize=\"off\" spellcheck ng-required=\"pickedSecret.secret.name\">\n" +
+    "</div>\n" +
+    "</div>\n" +
+    "<div class=\"remove-secret-row\">\n" +
+    "<a ng-click=\"removeSecret($index)\" href=\"\" role=\"button\">\n" +
+    "<span class=\"pficon pficon-close remove-btn\" aria-hidden=\"true\"></span>\n" +
+    "<span class=\"sr-only\">Remove build secret</span>\n" +
+    "</a>\n" +
+    "</div>\n" +
+    "</div>\n" +
+    "</div>\n" +
+    "<div class=\"row\" ng-if=\"$last\">\n" +
+    "<div class=\"col-lg-6\">\n" +
+    "<div class=\"help-block\">Source secret to copy into the builder pod at build time.</div>\n" +
+    "</div>\n" +
+    "<div class=\"col-lg-6\">\n" +
+    "<div class=\"directory\">\n" +
+    "<div class=\"help-block\">Directory where the files will be available at build time.</div>\n" +
+    "</div>\n" +
+    "</div>\n" +
+    "</div>\n" +
+    "</div>\n" +
+    "</div>\n" +
+    "</div>\n" +
+    "<div ng-if=\"strategyType === 'Custom'\">\n" +
+    "<div ng-repeat=\"pickedSecret in pickedSecrets\">\n" +
+    "<div class=\"form-group\">\n" +
+    "<div class=\"row picked-secret\">\n" +
+    "<div class=\"col-lg-6\">\n" +
+    "<label class=\"picker-label\" ng-if=\"$first\">Build Secret</label>\n" +
+    "<ui-select ng-required=\"pickedSecret.mountPath !== ''\" ng-model=\"pickedSecret.secretSource.name\">\n" +
+    "<ui-select-match placeholder=\"Secret name\">{{$select.selected}}</ui-select-match>\n" +
+    "<ui-select-choices repeat=\"secret in (secretsByType | filter : $select.search)\">\n" +
+    "<div ng-bind-html=\"secret | highlight : $select.search\"></div>\n" +
+    "</ui-select-choices>\n" +
+    "</ui-select>\n" +
+    "</div>\n" +
+    "<div class=\"col-lg-6\">\n" +
+    "<div class=\"directory\">\n" +
+    "<label for=\"mountPath\" ng-if=\"$first\">\n" +
+    "Mount path\n" +
+    "</label>\n" +
+    "<div>\n" +
+    "<input class=\"form-control\" id=\"mountPath\" name=\"mountPath\" ng-model=\"pickedSecret.mountPath\" type=\"text\" placeholder=\"/\" autocorrect=\"off\" autocapitalize=\"off\" spellcheck ng-required=\"pickedSecret.sourceSecret.name\">\n" +
+    "</div>\n" +
+    "</div>\n" +
+    "<div class=\"remove-secret-row\">\n" +
+    "<label class=\"sr-only\">Remove Build Secret</label>\n" +
+    "<a class=\"pficon pficon-close remove-btn\" aria-label=\"Delete row\" role=\"button\" ng-click=\"removeSecret($index)\" href=\"\"></a>\n" +
+    "</div>\n" +
+    "</div>\n" +
+    "</div>\n" +
+    "<div class=\"row\" ng-if=\"$last\">\n" +
+    "<div class=\"col-lg-6\">\n" +
+    "<div class=\"help-block\">Source secret to mount into the builder pod at build time.</div>\n" +
+    "</div>\n" +
+    "<div class=\"col-lg-6\">\n" +
+    "<div class=\"directory\">\n" +
+    "<div class=\"help-block\">Path at which to mount the secret.</div>\n" +
+    "</div>\n" +
+    "</div>\n" +
+    "</div>\n" +
+    "</div>\n" +
+    "</div>\n" +
+    "</div>\n" +
+    "<div class=\"osc-secret-actions\">\n" +
+    "<span ng-if=\"canAddSourceSecret()\">\n" +
+    "<a href=\"\" role=\"button\" ng-click=\"addSourceSecret()\">Add build secret</a>\n" +
+    "<span ng-if=\"'secrets' | canI : 'create'\" class=\"action-divider\">|</span>\n" +
+    "</span>\n" +
+    "<a href=\"\" ng-if=\"'secrets' | canI : 'create'\" role=\"button\" ng-click=\"openCreateSecretModal()\">Create source secret</a>\n" +
+    "</div>\n" +
+    "</ng-form>"
+  );
+
+
   $templateCache.put('views/directives/pipeline-status.html',
     "<div class=\"pipeline-status-bar\" ng-class=\"status\">\n" +
     "<div class=\"pipeline-line\"></div>\n" +
@@ -6644,33 +6992,52 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "</h1>\n" +
     "<fieldset ng-disabled=\"disableInputs\">\n" +
     "<form class=\"edit-form\" name=\"form\" novalidate ng-submit=\"save()\">\n" +
-    "<div class=\"resource-details\">\n" +
     "<div class=\"row\">\n" +
-    "<div class=\"col-lg-6\">\n" +
+    "<div class=\"col-lg-12\">\n" +
     "<div ng-if=\"buildConfig.spec.source.type !== 'None'\" class=\"section\">\n" +
     "<h3>Source Configuration</h3>\n" +
     "<dl class=\"dl-horizontal left\">\n" +
     "<div ng-if=\"sources.git\">\n" +
+    "<div class=\"row\">\n" +
+    "<div ng-class=\"{\n" +
+    "                              'col-lg-8': view.advancedOptions,\n" +
+    "                              'col-lg-12': !view.advancedOptions}\">\n" +
     "<div class=\"form-group\">\n" +
-    "<label for=\"sourceUrl\">Source Repository URL</label>\n" +
+    "<label for=\"sourceUrl\" class=\"required\">Git Repository URL</label>\n" +
     "<div>\n" +
     "\n" +
-    "<input class=\"form-control\" id=\"sourceUrl\" name=\"sourceUrl\" ng-model=\"updatedBuildConfig.spec.source.git.uri\" type=\"text\" autocorrect=\"off\" autocapitalize=\"off\" spellcheck required>\n" +
+    "<input class=\"form-control\" id=\"sourceUrl\" name=\"sourceUrl\" ng-model=\"updatedBuildConfig.spec.source.git.uri\" type=\"text\" autocorrect=\"off\" autocapitalize=\"off\" spellcheck aria-describedby=\"source-url-help\" required>\n" +
     "</div>\n" +
     "<div>\n" +
     "<span class=\"text-warning\" ng-if=\"form.sourceUrl.$dirty && !sourceURLPattern.test(updatedBuildConfig.spec.source.git.uri)\">Git repository should be a URL.</span>\n" +
     "</div>\n" +
+    "<div class=\"help-block\" id=\"source-url-help\">\n" +
+    "Git URL of the source code to build.\n" +
+    "<span ng-if=\"!view.advancedOptions\">If your Git repository is private, view the <a href=\"\" ng-click=\"view.advancedOptions = true\">advanced options</a> to set up authentication.</span>\n" +
     "</div>\n" +
+    "</div>\n" +
+    "</div>\n" +
+    "<div class=\"col-lg-4\" ng-if=\"view.advancedOptions\">\n" +
     "<div class=\"form-group editor\">\n" +
-    "<label for=\"sourceRef\">Source Repository Ref</label>\n" +
+    "<label for=\"sourceRef\">Git Reference</label>\n" +
     "<div>\n" +
-    "<input class=\"form-control\" id=\"sourceRef\" name=\"sourceRef\" type=\"text\" ng-model=\"updatedBuildConfig.spec.source.git.ref\" placeholder=\"master\" autocorrect=\"off\" autocapitalize=\"off\" spellcheck>\n" +
+    "<input class=\"form-control\" id=\"sourceRef\" name=\"sourceRef\" type=\"text\" ng-model=\"updatedBuildConfig.spec.source.git.ref\" placeholder=\"master\" autocorrect=\"off\" autocapitalize=\"off\" spellcheck aria-describedby=\"source-ref-help\">\n" +
     "</div>\n" +
+    "<div class=\"help-block\" id=\"source-ref-help\">Optional branch, tag, or commit.</div>\n" +
+    "</div>\n" +
+    "</div>\n" +
+    "</div>\n" +
+    "<div ng-if=\"view.advancedOptions\">\n" +
+    "<div class=\"form-group\">\n" +
+    "<label for=\"sourceContextDir\">Context Dir</label>\n" +
+    "<div>\n" +
+    "<input class=\"form-control\" id=\"sourceContextDir\" name=\"sourceContextDir\" type=\"text\" ng-model=\"updatedBuildConfig.spec.source.contextDir\" placeholder=\"/\" autocorrect=\"off\" autocapitalize=\"off\" spellcheck aria-describedby=\"context-dir-help\">\n" +
+    "</div>\n" +
+    "<div class=\"help-block\" id=\"context-dir-help\">Optional subdirectory for the application source code, used as the context directory for the build.</div>\n" +
     "</div>\n" +
     "<div class=\"form-group\">\n" +
-    "<label for=\"sourceContextDir\">Source Context Dir</label>\n" +
-    "<div>\n" +
-    "<input class=\"form-control\" id=\"sourceContextDir\" name=\"sourceContextDir\" type=\"text\" ng-model=\"updatedBuildConfig.spec.source.contextDir\" placeholder=\"/\" autocorrect=\"off\" autocapitalize=\"off\" spellcheck>\n" +
+    "<osc-secrets model=\"secrets.picked.gitSecret\" namespace=\"projectName\" display-type=\"source\" type=\"source\" service-account-to-link=\"builder\" secrets-by-type=\"secrets.secretsByType\" alerts=\"alerts\">\n" +
+    "</osc-secrets>\n" +
     "</div>\n" +
     "</div>\n" +
     "</div>\n" +
@@ -6678,48 +7045,48 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "<div class=\"form-group\">\n" +
     "<label for=\"buildFrom\">Dockerfile</label>\n" +
     "<div ui-ace=\"{\n" +
-    "                                mode: 'dockerfile',\n" +
-    "                                theme: 'dreamweaver',\n" +
-    "                                onLoad: aceLoaded,\n" +
-    "                                rendererOptions: {\n" +
-    "                                  fadeFoldWidgets: true,\n" +
-    "                                  showPrintMargin: false\n" +
-    "                                }\n" +
-    "                              }\" ng-model=\"updatedBuildConfig.spec.source.dockerfile\" class=\"ace-bordered ace-inline dockerfile-mode\"></div>\n" +
+    "                              mode: 'dockerfile',\n" +
+    "                              theme: 'dreamweaver',\n" +
+    "                              onLoad: aceLoaded,\n" +
+    "                              rendererOptions: {\n" +
+    "                                fadeFoldWidgets: true,\n" +
+    "                                showPrintMargin: false\n" +
+    "                              }\n" +
+    "                            }\" ng-model=\"updatedBuildConfig.spec.source.dockerfile\" class=\"ace-bordered ace-inline dockerfile-mode\"></div>\n" +
     "</div>\n" +
-    "<div class=\"form-group\" ng-if=\"updatedBuildConfig.spec.strategy.dockerStrategy.dockerfilePath\">\n" +
+    "<div class=\"form-group\" ng-if=\"updatedBuildConfig.spec.strategy.dockerStrategy.dockerfilePath && view.advancedOptions\">\n" +
     "<label for=\"dockerfilePath\">Dockerfile Path</label>\n" +
     "<div>\n" +
     "<input class=\"form-control\" id=\"dockerfilePath\" name=\"dockerfilePath\" type=\"text\" ng-model=\"updatedBuildConfig.spec.strategy.dockerStrategy.dockerfilePath\" autocorrect=\"off\" autocapitalize=\"off\" spellcheck>\n" +
     "</div>\n" +
     "</div>\n" +
     "</div>\n" +
-    "<div class=\"form-group\" ng-if=\"strategyType === 'Docker'\">\n" +
+    "<div class=\"form-group\" ng-if=\"strategyType === 'Docker' && view.advancedOptions\">\n" +
     "<div class=\"checkbox\">\n" +
     "<label>\n" +
-    "<input type=\"checkbox\" ng-model=\"options.noCache\"/>\n" +
+    "<input type=\"checkbox\" ng-model=\"options.noCache\">\n" +
     "Execute docker build without reusing cached instructions.\n" +
     "<span class=\"help action-inline\">\n" +
-    "<a href>\n" +
+    "<a href=\"\">\n" +
     "<i class=\"pficon pficon-help\" data-toggle=\"tooltip\" aria-hidden=\"true\" data-original-title=\"Will run the docker build with '--no-cache=true' flag\">\n" +
     "</i>\n" +
     "</a>\n" +
     "</span>\n" +
     "</label>\n" +
     "</div>\n" +
-    "</div>\n" +
     "<div ng-if=\"sources.binary && updatedBuildConfig.spec.source\">\n" +
     "<div class=\"form-group\">\n" +
     "<label for=\"binaryAsBuild\">\n" +
     "Binary Input As File\n" +
     "<span class=\"help action-inline\">\n" +
-    "<a href>\n" +
+    "<a href=\"\">\n" +
     "<i class=\"pficon pficon-help\" data-toggle=\"tooltip\" aria-hidden=\"true\" data-original-title=\"Indicates that the provided binary input should be considered a single file within the build input. For example, specifying 'webapp.war' would place the provided binary as '/webapp.war' for the builder. If left empty, the Docker and Source build strategies assume this file is a zip, tar, or tar.gz file and extract it as the source. The custom strategy receives this binary as standard input. This filename may not contain slashes or be '..' or '.'.\"></i>\n" +
     "</a>\n" +
     "</span>\n" +
     "</label>\n" +
     "<div>\n" +
     "<input class=\"form-control\" id=\"binaryAsBuild\" name=\"binaryAsBuild\" type=\"text\" ng-model=\"options.binaryAsFile\" autocorrect=\"off\" autocapitalize=\"off\" spellcheck>\n" +
+    "</div>\n" +
     "</div>\n" +
     "</div>\n" +
     "</div>\n" +
@@ -6751,7 +7118,7 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "</div>\n" +
     "<div class=\"form-group\">\n" +
     "<label for=\"buildFrom\">Source and Destination Paths<span class=\"help action-inline\">\n" +
-    "<a href>\n" +
+    "<a href=\"\">\n" +
     "<i class=\"pficon pficon-help\" data-toggle=\"tooltip\" aria-hidden=\"true\" data-original-title=\"Paths is a list of source and destination paths to copy from the image. At least one pair has to be specified.\"></i>\n" +
     "</a>\n" +
     "</span></label>\n" +
@@ -6760,7 +7127,7 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "</div>\n" +
     "<div class=\"multiple-image-source\" ng-if=\"sourceImages.length !== 1\">\n" +
     "<label for=\"imageSourceFrom\">Image Source From<span class=\"help action-inline\">\n" +
-    "<a href>\n" +
+    "<a href=\"\">\n" +
     "<i class=\"pficon pficon-info\" style=\"cursor: help\" aria-hidden=\"true\" data-toggle=\"tooltip\" data-original-title=\"This Build Config contains more then one Image Source. To edit them use the YAML editor.\">\n" +
     "</i>\n" +
     "</a>\n" +
@@ -6773,7 +7140,7 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "</dl>\n" +
     "</div>\n" +
     "<div ng-if=\"updatedBuildConfig | isJenkinsPipelineStrategy\" class=\"section\">\n" +
-    "<h3>Jenkins Pipeline Configuration</h3>\n" +
+    "<h3 class=\"with-divider\">Jenkins Pipeline Configuration</h3>\n" +
     "<div class=\"form-group\" ng-if=\"buildConfig.spec.source.type === 'Git'\">\n" +
     "<label for=\"jenkinsfile-type\">Jenkinsfile Type</label>\n" +
     "<select id=\"jenkinsfile-type\" class=\"form-control\" ng-model=\"jenkinsfileOptions.type\" ng-options=\"type.id as type.title for type in jenkinsfileTypes\" aria-describedby=\"jenkinsfile-type-help\">\n" +
@@ -6792,14 +7159,14 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "<div ng-if=\"jenkinsfileOptions.type === 'inline'\">\n" +
     "<label>Jenkinsfile</label>\n" +
     "<div ui-ace=\"{\n" +
-    "                              mode: 'groovy',\n" +
-    "                              theme: 'eclipse',\n" +
-    "                              onLoad: aceLoaded,\n" +
-    "                              rendererOptions: {\n" +
-    "                                fadeFoldWidgets: true,\n" +
-    "                                showPrintMargin: false\n" +
-    "                              }\n" +
-    "                            }\" ng-model=\"updatedBuildConfig.spec.strategy.jenkinsPipelineStrategy.jenkinsfile\" class=\"ace-bordered ace-inline\"></div>\n" +
+    "                            mode: 'groovy',\n" +
+    "                            theme: 'eclipse',\n" +
+    "                            onLoad: aceLoaded,\n" +
+    "                            rendererOptions: {\n" +
+    "                              fadeFoldWidgets: true,\n" +
+    "                              showPrintMargin: false\n" +
+    "                            }\n" +
+    "                          }\" ng-model=\"updatedBuildConfig.spec.strategy.jenkinsPipelineStrategy.jenkinsfile\" class=\"ace-bordered ace-inline\"></div>\n" +
     "</div>\n" +
     "</div>\n" +
     "<div ng-if=\"sources.none\">\n" +
@@ -6807,8 +7174,8 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "<i>No source inputs have been defined for this build configuration.</i>\n" +
     "</div>\n" +
     "</div>\n" +
-    "<div ng-if=\"updatedBuildConfig.spec.strategy.type !== 'JenkinsPipeline'\" class=\"section\">\n" +
-    "<h3>Image Configuration</h3>\n" +
+    "<div ng-if=\"strategyType !== 'JenkinsPipeline'\" class=\"section\">\n" +
+    "<h3 class=\"with-divider\">Image Configuration</h3>\n" +
     "<dl class=\"dl-horizontal left\">\n" +
     "<div>\n" +
     "<div class=\"form-group\">\n" +
@@ -6836,10 +7203,14 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "</div>\n" +
     "</div>\n" +
     "</div>\n" +
-    "<div class=\"form-group\">\n" +
+    "<div class=\"form-group\" ng-if=\"view.advancedOptions && strategyType !== 'JenkinsPipeline'\">\n" +
+    "<osc-secrets model=\"secrets.picked.pullSecret\" namespace=\"projectName\" display-type=\"pull\" type=\"image\" secrets-by-type=\"secrets.secretsByType\" service-account-to-link=\"builder\" alerts=\"alerts\">\n" +
+    "</osc-secrets>\n" +
+    "</div>\n" +
+    "<div class=\"form-group\" ng-if=\"view.advancedOptions\">\n" +
     "<div class=\"checkbox\">\n" +
     "<label>\n" +
-    "<input type=\"checkbox\" ng-model=\"options.forcePull\"/>\n" +
+    "<input type=\"checkbox\" ng-model=\"options.forcePull\">\n" +
     "Always pull the builder image from the docker registry, even if it is present locally\n" +
     "</label>\n" +
     "</div>\n" +
@@ -6863,14 +7234,16 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "<input class=\"form-control\" id=\"pushToLink\" name=\"pushToLink\" type=\"text\" ng-model=\"imageOptions.to.dockerImage\" placeholder=\"example: centos/ruby-20-centos7:latest\" autocorrect=\"off\" autocapitalize=\"off\" spellcheck required>\n" +
     "</div>\n" +
     "</div>\n" +
+    "<div class=\"form-group\" ng-if=\"view.advancedOptions\">\n" +
+    "<osc-secrets model=\"secrets.picked.pushSecret\" namespace=\"projectName\" display-type=\"push\" type=\"image\" service-account-to-link=\"builder\" secrets-by-type=\"secrets.secretsByType\" alerts=\"alerts\">\n" +
+    "</osc-secrets>\n" +
+    "</div>\n" +
     "</div>\n" +
     "</dl>\n" +
     "</div>\n" +
-    "</div>\n" +
-    "<div class=\"col-lg-6\">\n" +
     "<div ng-if=\"!(updatedBuildConfig | isJenkinsPipelineStrategy)\" class=\"section\">\n" +
-    "<h3>Environment Variables<span class=\"help action-inline\">\n" +
-    "<a href>\n" +
+    "<h3 class=\"with-divider\">Environment Variables<span class=\"help action-inline\">\n" +
+    "<a href=\"\">\n" +
     "<i class=\"pficon pficon-help\" data-toggle=\"tooltip\" aria-hidden=\"true\" data-original-title=\"Environment variables are used to configure and pass information to running containers.  These environment variables will be available during your build and at runtime.\"></i>\n" +
     "</a>\n" +
     "</span></h3>\n" +
@@ -6879,8 +7252,9 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "</div>\n" +
     "</div>\n" +
     "<div ng-if=\"sources.git || !(updatedBuildConfig | isJenkinsPipelineStrategy)\" class=\"section\">\n" +
-    "<h3>Triggers\n" +
-    "<a href=\"{{'build-triggers' | helpLink}}\" aria-hidden=\"true\" target=\"_blank\"><span class=\"learn-more-inline\">Learn more<i class=\"fa fa-external-link\"></i></span></a>\n" +
+    "<div ng-if=\"view.advancedOptions\">\n" +
+    "<h3 class=\"with-divider\">Triggers\n" +
+    "<a href=\"{{'build-triggers' | helpLink}}\" aria-hidden=\"true\" target=\"_blank\"><span class=\"learn-more-inline\">Learn more&nbsp;<i class=\"fa fa-external-link\"></i></span></a>\n" +
     "</h3>\n" +
     "<dl class=\"dl-horizontal left\">\n" +
     "<div>\n" +
@@ -6896,7 +7270,7 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "<h5>Image change</h5>\n" +
     "<div class=\"checkbox\">\n" +
     "<label>\n" +
-    "<input type=\"checkbox\" ng-model=\"triggers.builderImageChangeTrigger.present\" ng-disabled=\"imageOptions.from.type === 'None'\"/>\n" +
+    "<input type=\"checkbox\" ng-model=\"triggers.builderImageChangeTrigger.present\" ng-disabled=\"imageOptions.from.type === 'None'\">\n" +
     "Automatically build a new image when the builder image changes\n" +
     "<span class=\"help action-inline\">\n" +
     "<a href>\n" +
@@ -6910,10 +7284,21 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "</div>\n" +
     "</dl>\n" +
     "</div>\n" +
-    "<div class=\"section\">\n" +
-    "<h3>Run Policy\n" +
+    "</div>\n" +
+    "<div class=\"section\" ng-if=\"!(updatedBuildConfig | isJenkinsPipelineStrategy) && view.advancedOptions\">\n" +
+    "<h3 class=\"with-divider\">\n" +
+    "Build Secrets\n" +
+    "<a href=\"{{'source_secrets' | helpLink}}\" aria-hidden=\"true\" target=\"_blank\"><span class=\"learn-more-inline\">Learn more&nbsp;<i class=\"fa fa-external-link\"></i></span></a>\n" +
+    "</h3>\n" +
+    "<div class=\"form-group\">\n" +
+    "<osc-source-secrets model=\"secrets.picked.sourceSecrets\" namespace=\"projectName\" secrets-by-type=\"secrets.secretsByType\" strategy-type=\"strategyType\" service-account-to-link=\"builder\" alerts=\"alerts\" display-type=\"source\" type=\"source\">\n" +
+    "</osc-source-secrets>\n" +
+    "</div>\n" +
+    "</div>\n" +
+    "<div class=\"section\" ng-if=\"view.advancedOptions\">\n" +
+    "<h3 class=\"with-divider\">Run Policy\n" +
     "<span class=\"help action-inline\">\n" +
-    "<a href>\n" +
+    "<a href=\"\">\n" +
     "<i class=\"pficon pficon-help\" data-toggle=\"tooltip\" aria-hidden=\"true\" data-original-title=\"The build run policy describes the order in which the builds created from the build configuration should run.\"></i>\n" +
     "</a>\n" +
     "</span>\n" +
@@ -6928,13 +7313,14 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "</ui-select>\n" +
     "</div>\n" +
     "<div ng-switch=\"updatedBuildConfig.spec.runPolicy\">\n" +
-    "<div ng-switch-when=\"Serial\">Builds triggered from this Build Configuration will run one at the time, in the order they have been triggered.</div>\n" +
-    "<div ng-switch-when=\"Parallel\">Builds triggered from this Build Configuration will run all at the same time. The order in which they will finish is not guranteed.</div>\n" +
-    "<div ng-switch-when=\"SerialLatestOnly\">Builds triggered from this Build Configuration will run one at the time. When a currently running build completes, the next build that will run is the latest build created. Other queued builds will be cancelled.</div>\n" +
-    "<div ng-switch-default>Builds triggered from this Build Configuration will run using the {{updatedBuildConfig.spec.runPolicy | sentenceCase}} policy.</div>\n" +
+    "<div class=\"help-block\" ng-switch-when=\"Serial\">Builds triggered from this Build Configuration will run one at the time, in the order they have been triggered.</div>\n" +
+    "<div class=\"help-block\" ng-switch-when=\"Parallel\">Builds triggered from this Build Configuration will run all at the same time. The order in which they will finish is not guranteed.</div>\n" +
+    "<div class=\"help-block\" ng-switch-when=\"SerialLatestOnly\">Builds triggered from this Build Configuration will run one at the time. When a currently running build completes, the next build that will run is the latest build created. Other queued builds will be cancelled.</div>\n" +
+    "<div class=\"help-block\" ng-switch-default>Builds triggered from this Build Configuration will run using the {{updatedBuildConfig.spec.runPolicy | sentenceCase}} policy.</div>\n" +
     "</div>\n" +
     "</div>\n" +
-    "</div>\n" +
+    "<div class=\"gutter-top\">\n" +
+    "<a href=\"\" ng-click=\"view.advancedOptions = !view.advancedOptions\" role=\"button\">{{view.advancedOptions ? 'Hide' : 'Show'}} advanced options</a>\n" +
     "</div>\n" +
     "<div class=\"buttons gutter-top-bottom\">\n" +
     "<button type=\"submit\" class=\"btn btn-primary btn-lg\" ng-disabled=\"form.$invalid || form.$pristine || disableInputs\">\n" +
@@ -6943,6 +7329,7 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "<a class=\"btn btn-default btn-lg\" href=\"{{updatedBuildConfig | navigateResourceURL}}\">\n" +
     "Cancel\n" +
     "</a>\n" +
+    "</div>\n" +
     "</div>\n" +
     "</div>\n" +
     "</form>\n" +
@@ -7390,6 +7777,25 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "<div class=\"modal-footer\">\n" +
     "<button class=\"btn btn-lg btn-danger\" type=\"button\" ng-click=\"confirmScale()\">Scale Down</button>\n" +
     "<button class=\"btn btn-lg btn-default\" type=\"button\" ng-click=\"cancel()\">Cancel</button>\n" +
+    "</div>\n" +
+    "</div>"
+  );
+
+
+  $templateCache.put('views/modals/create-secret.html',
+    "<div class=\"create-secret-modal\">\n" +
+    "<div class=\"modal-header\">\n" +
+    "<h2>\n" +
+    "Create {{type | capitalize}} Secret\n" +
+    "<span ng-switch=\"type\">\n" +
+    "<a ng-switch-when=\"source\" ng-href=\"{{'git_secret' | helpLink}}\" target=\"_blank\"><span class=\"learn-more-inline\">Learn more&nbsp;<i class=\"fa fa-external-link\" aria-hidden=\"true\"></i></span></a>\n" +
+    "<a ng-switch-when=\"image\" ng-href=\"{{'pull_secret' | helpLink}}\" target=\"_blank\"><span class=\"learn-more-inline\">Learn more&nbsp;<i class=\"fa fa-external-link\" aria-hidden=\"true\"></i></span></a>\n" +
+    "<a ng-switch-default ng-href=\"{{'source_secrets' | helpLink}}\" target=\"_blank\"><span class=\"learn-more-inline\">Learn more&nbsp;<i class=\"fa fa-external-link\" aria-hidden=\"true\"></i></span></a>\n" +
+    "</span>\n" +
+    "</h2>\n" +
+    "</div>\n" +
+    "<div class=\"modal-body\">\n" +
+    "<create-secret type=\"type\" service-account-to-link=\"serviceAccountToLink\" namespace=\"namespace\" alerts=\"alerts\" post-create-action=\"postCreateAction(newSecret, creationAlert)\" cancel=\"cancel()\"></create-secret>\n" +
     "</div>\n" +
     "</div>"
   );
