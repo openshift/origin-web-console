@@ -1018,40 +1018,27 @@ object:a
 }), h.promise;
 }, m.prototype.get = function(a, c, d, f) {
 a = g.toResourceGroupVersion(a), f = f || {};
-var i = this._uniqueKey(a, c, d, _.get(f, "http.params")), k = !!f.force;
+var i = this._uniqueKey(a, c, d, _.get(f, "http.params"));
+!!f.force;
 delete f.force;
-var l = e.defer(), m = this._data(i);
-if (this._hasImmutable(a, m, c)) j(function() {
-l.resolve(m.by("metadata.name")[c]);
-}, 0); else if (!k && this._isCached(i)) {
-var n = m.by("metadata.name")[c];
-n ? j(function() {
-l.resolve(n);
-}, 0) :j(function() {
-l.reject({
-data:{},
-status:404,
-headers:function() {
-return null;
-},
-config:{}
-});
-}, 0);
-} else {
-var o = this;
+var k = e.defer(), l = this._data(i);
+if (this._hasImmutable(a, l, c)) j(function() {
+k.resolve(l.by("metadata.name")[c]);
+}, 0); else {
+var m = this;
 this._getNamespace(a, d, f).then(function(e) {
 b(angular.extend({
 method:"GET",
 auth:{},
-url:o._urlForResource(a, c, d, !1, e)
+url:m._urlForResource(a, c, d, !1, e)
 }, f.http || {})).success(function(b, c, d, e, f) {
-o._isImmutable(a) && (m ? m.update(b, "ADDED") :o._data(i, [ b ])), l.resolve(b);
+m._isImmutable(a) && (l ? l.update(b, "ADDED") :m._data(i, [ b ])), k.resolve(b);
 }).error(function(b, d, e, g) {
 if (f.errorNotification !== !1) {
 var i = "Failed to get " + a + "/" + c;
 0 !== d && (i += " (" + d + ")"), h.error(i);
 }
-l.reject({
+k.reject({
 data:b,
 status:d,
 headers:e,
@@ -1060,7 +1047,7 @@ config:g
 });
 });
 }
-return l.promise;
+return k.promise;
 }, m.prototype.createStream = function(a, b, d, e, f) {
 var h = this;
 a = g.toResourceGroupVersion(a);
@@ -1148,9 +1135,9 @@ if (this._isCached(e)) c && j(function() {
 c(h._data(e));
 }, 0); else {
 if (c) {
-var i = this._data(e);
-i && j(function() {
-c(i);
+var i = this._resourceVersion(e);
+this._data(e) && j(function() {
+i === h._resourceVersion(e) && c(h._data(e));
 }, 0);
 }
 this._listInFlight(e) || this._startListOp(a, b, d);

@@ -334,27 +334,9 @@ angular.module('openshiftConsole')
     // special case, if we have an immutable item, we can return it immediately
     if (this._hasImmutable(resource, existingData, name)) {
       $timeout(function() {
+        // we can be guaranteed this wont change on us, just send what we have in existingData
         deferred.resolve(existingData.by('metadata.name')[name]);
       }, 0);
-    }
-    else if (!force && this._isCached(key)) {
-      var obj = existingData.by('metadata.name')[name];
-      if (obj) {
-        $timeout(function() {
-          deferred.resolve(obj);
-        }, 0);
-      }
-      else {
-        $timeout(function() {
-          // simulation of API object not found
-          deferred.reject({
-            data: {},
-            status: 404,
-            headers: function() { return null; },
-            config: {}
-          });
-        }, 0);
-      }
     }
     else {
       var self = this;
@@ -577,10 +559,13 @@ DataService.prototype.createStream = function(resource, name, context, opts, isR
     }
     else {
       if (callback) {
-        var existingData = this._data(key);
-        if (existingData) {
+        var resourceVersion = this._resourceVersion(key);
+        if (this._data(key)) {
           $timeout(function() {
-            callback(existingData);
+            // If the cached data is still the latest that we have, send it to the callback
+            if (resourceVersion === self._resourceVersion(key)) {
+              callback(self._data(key)); // but just in case, still pull from the current data map
+            }
           }, 0);
         }
       }
