@@ -3,7 +3,7 @@
     <div class="row">
       <div class="form-group col-sm-4">
         <label class="sr-only">Namespace</label>
-        <ui-select ng-model="istag.namespace" ng-change="istag.imageStream = null; istag.tag = null;">
+        <ui-select required ng-model="istag.namespace" ng-change="istag.imageStream = null; istag.tagObject = null;">
           <ui-select-match placeholder="Namespace">{{$select.selected}}</ui-select-match>
           <ui-select-choices repeat="namespace in (namespaces | filter : $select.search)">
             <div ng-bind-html="namespace | highlight : $select.search"></div>
@@ -14,7 +14,7 @@
 
       <div class="form-group col-sm-4">
         <label class="sr-only">Image Stream</label>
-        <ui-select ng-model="istag.imageStream" ng-disabled="!istag.namespace" ng-change="istag.tag = null">
+        <ui-select required ng-model="istag.imageStream" ng-disabled="!istag.namespace" ng-change="istag.tagObject = null">
           <ui-select-match placeholder="Image Stream">{{$select.selected}}</ui-select-match>
           <ui-select-choices repeat="imageStream in (isNamesByNamespace[istag.namespace] | filter : $select.search)">
             <div ng-bind-html="imageStream | highlight : $select.search"></div>
@@ -25,9 +25,9 @@
 
       <div class="form-group col-sm-4">
         <label class="sr-only">Tag</label>
-        <ui-select ng-model="istag.tag" ng-disabled="!istag.imageStream">
+        <ui-select required ng-model="istag.tagObject" ng-disabled="!istag.imageStream">
           <ui-select-match placeholder="Tag">{{$select.selected.tag}}</ui-select-match>
-          <ui-select-choices repeat="statusTag in (isByNamespace[istag.namespace][istag.imageStream].status.tags | filter : { tag: $select.search })">
+          <ui-select-choices group-by="groupTags" repeat="statusTag in (isByNamespace[istag.namespace][istag.imageStream].status.tags | filter : { tag: $select.search })" refresh="getTags($select.search)" refresh-delay="0">
             <div ng-bind-html="statusTag.tag | highlight : $select.search"></div>
           </ui-select-choices>
         </ui-select>
