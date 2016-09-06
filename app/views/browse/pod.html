@@ -142,10 +142,16 @@
 
                       <div class="mar-left-xl mar-bottom-lg">
                         <div class="row">
-                          <div class="pad-left-none pad-bottom-lg col-sm-6 col-lg-4">
+                          <div class="pad-left-none pad-bottom-md col-sm-6 col-lg-4">
+                            <span ng-if="pod.spec.containers.length === 1">
+                              <label for="selectLogContainer">Container:</label>
+                              {{pod.spec.containers[0].name}}
+                            </span>
+
                             <ui-select
                               ng-model="selectedTerminalContainer"
                               on-select="onTerminalSelectChange(selectedTerminalContainer)"
+                              ng-if="pod.spec.containers.length > 1"
                               class="mar-left-none pad-left-none pad-right-none">
                              <ui-select-match
                                 class="truncate"
