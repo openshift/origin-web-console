@@ -3,7 +3,7 @@
     <div ng-if="trigger.type === 'ImageChange'">
       <div ng-repeat="build in buildsByOutputImage[(trigger.imageChangeParams.from | imageObjectRef : namespace)] | orderObjectsByDate : true track by (build | uid)"
           ng-show="!(hideBuild)"
-          class="build animate-repeat hide-ng-leave"
+          class="build animate-show animate-hide animate-slide"
           kind="Build"
           resource="build">
         <div class="build-summary" ng-class="{'dismissible' : !(build | isIncompleteBuild)}">

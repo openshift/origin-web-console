@@ -35,7 +35,7 @@
     <div class="service-group-triggers">
       <div ng-repeat="dc in deploymentConfigsByService[service.metadata.name || '']">
         <div row ng-repeat="pipeline in recentPipelinesByDC[dc.metadata.name] | orderObjectsByDate : true track by (pipeline | uid)"
-            class="animate-repeat hide-ng-leave">
+            class="build-pipeline-wrapper animate-repeat animate-slide">
           <build-pipeline flex build="pipeline" collapse-stages-on-completion="true" build-config-name-on-expanded="true"></build-pipeline>
         </div>
         <div>

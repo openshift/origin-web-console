@@ -1,13 +1,6 @@
 //
 // Component animations
 // --------------------------------------------------
-.show-hide.fade {
-  opacity: 0;
-  .transition(opacity 0.2s ease 0s);
-  &.in {
-    opacity: 1;
-  }
-}
 .collapse {
   display: none;
   &.in {
@@ -15,10 +8,10 @@
   }
 }
 .collapsing {
-  position: relative;
   height: 0;
   overflow: hidden;
-  .transition(height .10s ease);
+  position: relative;
+  .transition(height (@animate-default-speed / 2) ease);
 }
 
 .fade-inline.ng-hide {
@@ -36,4 +29,164 @@
 
 .fade-inline.ng-hide-remove, .fade-inline.ng-hide-add {
   .transition(opacity 0.2s ease 0.5s);
+}
+
+.fade-in {
+  &.ng-enter,
+  &.ng-hide-remove {
+    animation: @animate-default-speed appear @easeInCubic;
+  }
+}
+.fade-out {
+  &.ng-leave,
+  &.ng-hide-add {
+    animation: (@animate-default-speed / 2) disappear @easeOutCubic;
+  }
+}
+
+
+// These receive the default fade in/out
+.animate-repeat,
+.animate-show,
+.animate-hide,
+.animate-if {
+  .fade-in();
+  .fade-out();
+}
+
+@keyframes appear {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+@keyframes disappear {
+  from {
+    opacity: 1;
+  }
+  to {
+    opacity: 0;
+  }
+}
+
+/*
+  animate-repeat and animate-if => adds ng-animate && ng-enter, ng-enter-active || ng-leave, ng-leave-active
+  - Use with ng-repeat or ng-if
+  animate-show => adds ng-animate && ng-hide-animate, ng-hide, ng-hide-add, ng-hide-add-active || ng-hide-remove, ng-hide-remove-active
+  - Use with ng-show or uib-collapse="isCollapsed"
+  animate-hide => adds ng-hide
+*/
+
+// Subtle visual cues to select elements via slide in/out movement
+// animate-slide detatached rulesets
+// takes a custom @slide-distance (height) value offset
+// ---------------------------------------------------------------
+
+// start animation enter
+@slide-in: {
+  margin-bottom: @slide-distance;
+  transition:margin-bottom (@animate-default-speed + 50);
+};
+// end animation enter
+@slide-in-active: {
+  margin-bottom: 0;
+};
+// start animation exit
+@slide-out: {
+  margin-bottom: 0;
+  transition:margin-bottom (@animate-default-speed + 50);
+};
+// end animation exit
+@slide-out-active: {
+  margin-bottom: @slide-distance;
+};
+
+// Build & pipeline collapsed state animation on the overview page
+.build.animate-slide,
+.build-pipeline-collapsed.animate-slide {
+  &.ng-enter {
+    @slide-distance: -32px;
+    @slide-in();
+    &.ng-enter-active {
+      @slide-in-active();
+    }
+  }
+  &.ng-leave {
+    opacity: 0; // Prevent flash
+    @slide-out();
+    &.ng-leave-active {
+      @slide-distance: -32px;
+      @slide-out-active();
+    }
+  }
+  // Since we use ng-show to show/hide the build, then these associated ngAnimate classes are also needed.
+  &.ng-hide-add {
+    opacity: 0; // Prevent flash
+    @slide-out();
+    &.ng-hide-add-active {
+      @slide-distance: -32px;
+      @slide-out-active();
+    }
+  }
+}
+
+// Alert animation on the overview page
+.alert-wrapper.animate-slide {
+  &.ng-enter {
+    @slide-distance: -100px;
+    @slide-in();
+    &.ng-enter-active {
+      @slide-in-active();
+    }
+  }
+  &.ng-leave {
+    opacity: 0;
+    @slide-out();
+    &.ng-leave-active {
+      @slide-distance: -100px;
+      @slide-out-active();
+    }
+  }
+}
+
+
+.service-group-triggers {
+  overflow: hidden;
+}
+.build-pipeline-wrapper {
+  margin-bottom: 0;
+  overflow: hidden;
+}
+// Pipeline expanded animation on the overview page
+.build-pipeline-wrapper.animate-slide {
+  &.ng-enter {
+    @slide-distance: -97px;
+    @slide-in();
+    &.ng-enter-active {
+      @slide-in-active();
+    }
+  }
+}
+
+/* Angular automatically animates things by creating
+   transition periods between elements showing and hiding.
+   In some cases we do not want to see both elements at the same time
+   so we disable the transitions/animations by adding .hide-ng-leave class.
+   When ngAnimate does a detection on the element it will skip
+   the leave animations and be hidden with ng-hide.
+   https://github.com/angular/angular.js/issues/5172#issuecomment-29834711
+ */
+.hide-ng-leave.ng-leave,
+.hide-ng-leave.ng-animate {
+  animation: none 0s;
+  transition: none;
+  --webkit-transition: none;
+}
+.hide-ng-leave .ng-leave,
+.hide-ng-leave .ng-animate {
+  animation: none 0s;
+  transition: none;
+  --webkit-transition: none;
 }

@@ -19,6 +19,7 @@ angular.module('openshiftConsole')
         alerts: '=',
         // Filter function (optional).
         filter: '=?',
+        animateSlide: '=?',
         hideCloseButton: '=?',
         toast: '=?'
       },

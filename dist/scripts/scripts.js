@@ -8286,6 +8286,7 @@ restrict:"E",
 scope:{
 alerts:"=",
 filter:"=?",
+animateSlide:"=?",
 hideCloseButton:"=?",
 toast:"=?"
 },
