@@ -41,7 +41,8 @@ angular.module("openshiftConsole")
           error: errorCode
         }).toString();
         if (!reload) {
-          $location.url(redirect);
+          // Use replace() to avoid breaking the browser back button.
+          $location.url(redirect).replace();
         }
         else {
           $window.location.href = redirect;
