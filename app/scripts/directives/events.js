@@ -31,10 +31,20 @@ angular.module('openshiftConsole')
         };
 
         var sortedEvents = [];
+        var currentID = _.get($scope, 'sortConfig.currentField.id');
+        var defaultIsReversed = {
+          lastTimestamp: true
+        };
         var sortEvents = function() {
-          // TODO: currentField is renamed in angular-patternfly 3.0
-          var sortID = _.get($scope, 'sortConfig.currentField.id', 'lastTimestamp'),
-              order = $scope.sortConfig.isAscending ? 'asc' : 'desc';
+          var sortID = _.get($scope, 'sortConfig.currentField.id', 'lastTimestamp');
+          // only change if sort dropdown field is changed
+          if (currentID !== sortID) {
+            // set currentID to sortID
+            currentID = sortID;
+            // reverse the sort
+            $scope.sortConfig.isAscending = !(defaultIsReversed[currentID]);
+          }
+          var order = $scope.sortConfig.isAscending ? 'asc' : 'desc';
           sortedEvents = _.sortByOrder($scope.events, [sortID], [order]);
         };
 
@@ -134,7 +144,7 @@ angular.module('openshiftConsole')
             title: 'Count',
             sortType: 'numeric'
           }],
-          isAscending: false,
+          isAscending: true,
           onSortChange: update
         };
 

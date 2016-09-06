@@ -6499,25 +6499,29 @@ var b = function(b) {
 return a.resourceKind ? _.filter(b, function(b) {
 return b.involvedObject.kind === a.resourceKind && b.involvedObject.name === a.resourceName;
 }) :b;
-}, d = [], f = function() {
-var b = _.get(a, "sortConfig.currentField.id", "lastTimestamp"), c = a.sortConfig.isAscending ? "asc" :"desc";
+}, d = [], f = _.get(a, "sortConfig.currentField.id"), g = {
+lastTimestamp:!0
+}, h = function() {
+var b = _.get(a, "sortConfig.currentField.id", "lastTimestamp");
+f !== b && (f = b, a.sortConfig.isAscending = !g[f]);
+var c = a.sortConfig.isAscending ? "asc" :"desc";
 d = _.sortByOrder(a.events, [ b ], [ c ]);
-}, g = [], h = function() {
-if (!a.filter.text) return void (g = []);
+}, i = [], j = function() {
+if (!a.filter.text) return void (i = []);
 var b = _.uniq(a.filter.text.split(/\s+/));
 b.sort(function(a, b) {
 return b.length - a.length;
-}), g = _.map(b, function(a) {
+}), i = _.map(b, function(a) {
 return new RegExp(_.escapeRegExp(a), "i");
 });
-}, i = [ "reason", "message", "type" ];
-a.resourceKind && a.resourceName || i.splice(0, 0, "involvedObject.name", "involvedObject.kind");
-var j = function() {
-a.filteredEvents = d, g.length && angular.forEach(g, function(b) {
+}, k = [ "reason", "message", "type" ];
+a.resourceKind && a.resourceName || k.splice(0, 0, "involvedObject.name", "involvedObject.kind");
+var l = function() {
+a.filteredEvents = d, i.length && angular.forEach(i, function(b) {
 var c = function(a) {
 var c;
-for (c = 0; c < i.length; c++) {
-var d = _.get(a, i[c]);
+for (c = 0; c < k.length; c++) {
+var d = _.get(a, k[c]);
 if (d && b.test(d)) return !0;
 }
 return !1;
@@ -6526,14 +6530,14 @@ a.filteredEvents = _.filter(a.filteredEvents, c);
 });
 };
 a.$watch("filter.text", _.debounce(function() {
-h(), a.$apply(j);
+j(), a.$apply(l);
 }, 50, {
 maxWait:250
 }));
-var k = function() {
-f(), j();
-}, l = _.debounce(function() {
-a.$evalAsync(k);
+var m = function() {
+h(), l();
+}, n = _.debounce(function() {
+a.$evalAsync(m);
 }, 250, {
 leading:!0,
 trailing:!1,
@@ -6561,8 +6565,8 @@ id:"count",
 title:"Count",
 sortType:"numeric"
 } ],
-isAscending:!1,
-onSortChange:k
+isAscending:!0,
+onSortChange:m
 }, a.resourceKind && a.resourceName || a.sortConfig.fields.splice(1, 0, {
 id:"involvedObject.name",
 title:"Name",
@@ -6572,11 +6576,11 @@ id:"involvedObject.kind",
 title:"Kind",
 sortType:"alpha"
 });
-var m = [];
-m.push(c.watch("events", a.projectContext, function(c) {
-a.events = b(c.by("metadata.name")), l(), e.log("events (subscribe)", a.filteredEvents);
+var o = [];
+o.push(c.watch("events", a.projectContext, function(c) {
+a.events = b(c.by("metadata.name")), n(), e.log("events (subscribe)", a.filteredEvents);
 })), a.$on("$destroy", function() {
-c.unwatchAll(m);
+c.unwatchAll(o);
 });
 } ]
 };
