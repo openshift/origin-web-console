@@ -4481,6 +4481,16 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
   );
 
 
+  $templateCache.put('views/directives/_ellipsis-pulser.html',
+    "<div class=\"ellipsis-pulser ellipsis-{{size || 'md'}} ellipsis-{{color || 'dark'}} ellipsis-{{display || 'block'}}\">\n" +
+    "<span ng-if=\"msg\" class=\"ellipsis-msg\">{{msg}}</span>\n" +
+    "<div class=\"dot pulse\"></div>\n" +
+    "<div class=\"dot pulse\"></div>\n" +
+    "<div class=\"dot pulse\"></div>\n" +
+    "</div>"
+  );
+
+
   $templateCache.put('views/directives/_pod-content.html',
     "<div class=\"pod-text\" ng-switch=\"pod.status.phase\">\n" +
     "<strong class=\"pod-status-label\">{{pod.status.phase}}</strong>\n" +
@@ -4488,9 +4498,9 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "<pod-warnings pod=\"pod\" style=\"margin-right: -15px\"></pod-warnings>\n" +
     "</span>\n" +
     "<div ng-switch-when=\"Pending\">\n" +
-    "<span ng-if=\"!pod.spec.nodeName\">scheduling...</span>\n" +
+    "<ellipsis-pulser color=\"dark\" size=\"sm\" msg=\"scheduling\" display=\"inline\" ng-if=\"!pod.spec.nodeName\"></ellipsis-pulser>\n" +
     "<span ng-if=\"pod.spec.nodeName && !pod.status.startTime\">scheduled</span>\n" +
-    "<span ng-if=\"pod.spec.nodeName && pod.status.startTime\">pulling...</span>\n" +
+    "<ellipsis-pulser color=\"dark\" size=\"sm\" msg=\"pulling\" display=\"inline\" ng-if=\"pod.spec.nodeName && pod.status.startTime\"></ellipsis-pulser>\n" +
     "</div>\n" +
     "<div ng-switch-default>\n" +
     "&nbsp;\n" +
@@ -4862,7 +4872,7 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "</select>\n" +
     "</div>\n" +
     "</div>\n" +
-    "<div ng-if=\"!loaded\" class=\"mar-top-md\">Loading metrics...</div>\n" +
+    "<ellipsis-pulser color=\"dark\" size=\"sm\" msg=\"Loading metrics\" ng-if=\"!loaded\"></ellipsis-pulser>\n" +
     "<div ng-if=\"loaded && noData && !metricsError\" class=\"mar-top-md\">\n" +
     "No metrics to display.\n" +
     "</div>\n" +
@@ -5004,9 +5014,7 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "</div>\n" +
     "</div>\n" +
     "<div class=\"right-content\">\n" +
-    "<div ng-if=\"!events\" class=\"events pad-left-xl\">\n" +
-    "Loading...\n" +
-    "</div>\n" +
+    "<ellipsis-pulser color=\"dark\" size=\"sm\" msg=\"Loading\" ng-if=\"!events\" class=\"events\"></ellipsis-pulser>\n" +
     "<div ng-if=\"events\" class=\"events\">\n" +
     "<div ng-if=\"!(events | hashSize)\" class=\"mar-left-xl\">\n" +
     "<em>No events.</em>\n" +
@@ -5408,9 +5416,7 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "Only the previous {{options.tailLines || 5000}} log lines and new log messages will be displayed because of the large log size.\n" +
     "</div>\n" +
     "\n" +
-    "<div ng-if=\"(!state)\" class=\"mar-top-sm log-loading-msg\">\n" +
-    "Loading log...\n" +
-    "</div>\n" +
+    "<ellipsis-pulser color=\"dark\" size=\"sm\" display=\"inline\" msg=\"Loading log\" ng-if=\"(!state)\"></ellipsis-pulser>\n" +
     "<div class=\"empty-state-message text-center\" ng-if=\"state=='empty'\" ng-class=\"{'log-fixed-height': fixedHeight}\">\n" +
     "<h2>Logs are not available.</h2>\n" +
     "<p>\n" +
@@ -5447,7 +5453,7 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "</div>\n" +
     "</div>\n" +
     "\n" +
-    "<ellipsis-loader ng-show=\"loading\"></ellipsis-loader>\n" +
+    "<ellipsis-pulser color=\"light\" size=\"md\" ng-show=\"loading\"></ellipsis-pulser>\n" +
     "<div ng-show=\"showScrollLinks\" class=\"log-scroll log-scroll-bottom\">\n" +
     "<a href=\"\" ng-click=\"onScrollTop()\">Go to top</a>\n" +
     "</div>\n" +
@@ -5505,7 +5511,7 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "</select>\n" +
     "</div>\n" +
     "</div>\n" +
-    "<div ng-if=\"!loaded\" class=\"mar-top-md\">Loading metrics...</div>\n" +
+    "<ellipsis-pulser color=\"dark\" size=\"sm\" msg=\"Loading metrics\" ng-if=\"!loaded\"></ellipsis-pulser>\n" +
     "<div ng-if=\"loaded && noData && !metricsError\" class=\"mar-top-md\">No metrics to display.</div>\n" +
     "<div ng-if=\"metricsError\" class=\"empty-state-message text-center\">\n" +
     "<h2>\n" +
@@ -7334,13 +7340,10 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "<div class=\"list-view-pf\">\n" +
     "<div class=\"list-group-item\" ng-if=\"!(filteredBuilds | hashSize)\">\n" +
     "<div class=\"list-view-pf-main-info\">\n" +
+    "<ellipsis-pulser color=\"dark\" size=\"sm\" msg=\"Loading builds\" ng-if=\"!buildsLoaded\"></ellipsis-pulser>\n" +
     "<em>\n" +
-    "<span ng-if=\"!(builds | hashSize)\">\n" +
-    "There are no builds in this project.\n" +
-    "</span>\n" +
-    "<span ng-if=\"builds | hashSize\">\n" +
-    "The current filters are hiding all builds.\n" +
-    "</span>\n" +
+    "<div ng-if=\"(builds | hashSize) > 0\">The current filters are hiding all builds.</div>\n" +
+    "<span ng-if=\"buildsLoaded && (builds | hashSize) === 0\">There are no builds in this project.</span>\n" +
     "</em>\n" +
     "</div>\n" +
     "</div>\n" +
@@ -7406,13 +7409,10 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "<div class=\"list-view-pf\">\n" +
     "<div class=\"list-group-item\" ng-if=\"!(filteredDeployments | hashSize)\">\n" +
     "<div class=\"list-view-pf-main-info\">\n" +
+    "<ellipsis-pulser color=\"dark\" size=\"sm\" msg=\"Loading deployments\" ng-if=\"!deploymentsLoaded\"></ellipsis-pulser>\n" +
     "<em>\n" +
-    "<span ng-if=\"!(deployments | hashSize)\">\n" +
-    "There are no deployments in this project.\n" +
-    "</span>\n" +
-    "<span ng-if=\"deployments | hashSize\">\n" +
-    "The current filters are hiding all deployments.\n" +
-    "</span>\n" +
+    "<div ng-if=\"(deployments | hashSize) > 0\">The current filters are hiding all deployments.</div>\n" +
+    "<span ng-if=\"deploymentsLoaded && (deployments | hashSize) === 0\">There are no deployments in this project.</span>\n" +
     "</em>\n" +
     "</div>\n" +
     "</div>\n" +
@@ -7467,13 +7467,10 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "<div class=\"list-view-pf\">\n" +
     "<div class=\"list-group-item\" ng-if=\"!(filteredPods | hashSize)\">\n" +
     "<div class=\"list-view-pf-main-info\">\n" +
+    "<ellipsis-pulser color=\"dark\" size=\"sm\" msg=\"Loading pods\" ng-if=\"!podsLoaded\"></ellipsis-pulser>\n" +
     "<em>\n" +
-    "<span ng-if=\"!(pods | hashSize)\">\n" +
-    "There are no pods in this project.\n" +
-    "</span>\n" +
-    "<span ng-if=\"pods | hashSize\">\n" +
-    "The current filters are hiding all pods.\n" +
-    "</span>\n" +
+    "<div ng-if=\"(pods | hashSize) > 0\">The current filters are hiding all pods.</div>\n" +
+    "<span ng-if=\"podsLoaded && (pods | hashSize) === 0\">There are no pods in this project.</span>\n" +
     "</em>\n" +
     "</div>\n" +
     "</div>\n" +
@@ -7778,7 +7775,7 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "<image-names ng-if=\"activeDeployment && !anyDeploymentInProgress && showMetrics\" pod-template=\"activeDeployment.spec.template\">\n" +
     "</image-names>\n" +
     "<span ng-if=\"anyDeploymentInProgress\" class=\"small\">\n" +
-    "{{deploymentConfig.spec.strategy.type}} deployment in progress...\n" +
+    "{{deploymentConfig.spec.strategy.type}} <ellipsis-pulser color=\"dark\" size=\"sm\" display=\"inline\" msg=\"deployment in progress\"></ellipsis-pulser>\n" +
     "<a href=\"\" ng-click=\"cancelDeployment()\" role=\"button\">Cancel</a>\n" +
     "</span>\n" +
     "</div>\n" +

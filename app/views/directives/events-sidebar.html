@@ -19,9 +19,7 @@
     </div>
   </div>
   <div class="right-content">
-    <div ng-if="!events" class="events pad-left-xl">
-      Loading...
-    </div>
+    <ellipsis-pulser color="dark" size="sm" msg="Loading" ng-if="!events" class="events"></ellipsis-pulser>
     <div ng-if="events" class="events">
       <div ng-if="!(events | hashSize)" class="mar-left-xl">
         <em>No events.</em>
