@@ -1264,7 +1264,12 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "</div>\n" +
     "\n" +
     "<div ng-if=\"!autoscalers.length\">\n" +
-    "<a ng-href=\"project/{{projectName}}/edit/autoscaler?kind=ReplicationController&name={{deployment.metadata.name}}\" role=\"button\">Add autoscaler</a>\n" +
+    "<a ng-href=\"project/{{projectName}}/edit/autoscaler?kind=ReplicationController&name={{deployment.metadata.name}}\" ng-if=\"{resource: 'horizontalpodautoscalers', group: 'extensions'} | canI : 'create'\" role=\"button\">Add autoscaler</a>\n" +
+    "<span ng-if=\"!({resource: 'horizontalpodautoscalers', group: 'extensions'} | canI : 'create')\">\n" +
+    "Autoscaling is not enabled. There are no autoscalers for this\n" +
+    "<span ng-if=\"deploymentConfigName\">deployment config or deployment.</span>\n" +
+    "<span ng-if=\"!deploymentConfigName\">replication controller.</span>\n" +
+    "</span>\n" +
     "</div>\n" +
     "\n" +
     "<div ng-repeat=\"hpa in autoscalers | orderBy : 'name'\">\n" +
@@ -1973,7 +1978,7 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "\n" +
     "<div ng-if=\"!autoscalers.length\">\n" +
     "<a ng-if=\"{resource: 'horizontalpodautoscalers', group: 'extensions'} | canI : 'create'\" ng-href=\"project/{{projectName}}/edit/autoscaler?kind=DeploymentConfig&name={{deploymentConfig.metadata.name}}\" role=\"button\">Add autoscaler</a>\n" +
-    "<span ng-if=\"!({resource: 'horizontalpodautoscalers', group: 'extensions'} | canI : 'create')\">none</span>\n" +
+    "<span ng-if=\"!({resource: 'horizontalpodautoscalers', group: 'extensions'} | canI : 'create')\">Autoscaling is not enabled. There are no autoscalers for this deployment config.</span>\n" +
     "</div>\n" +
     "\n" +
     "<div ng-repeat=\"hpa in autoscalers\">\n" +

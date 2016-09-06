@@ -126,7 +126,13 @@
   <!-- Create autoscaler -->
   <div ng-if="!autoscalers.length">
     <a ng-href="project/{{projectName}}/edit/autoscaler?kind=ReplicationController&name={{deployment.metadata.name}}"
+       ng-if="{resource: 'horizontalpodautoscalers', group: 'extensions'} | canI : 'create'"
        role="button">Add autoscaler</a>
+    <span ng-if="!({resource: 'horizontalpodautoscalers', group: 'extensions'} | canI : 'create')">
+      Autoscaling is not enabled. There are no autoscalers for this
+      <span ng-if="deploymentConfigName">deployment config or deployment.</span>
+      <span ng-if="!deploymentConfigName">replication controller.</span>
+    </span>
   </div>
 
   <!-- HPA details -->
