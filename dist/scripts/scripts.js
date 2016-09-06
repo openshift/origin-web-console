@@ -1848,7 +1848,7 @@ var f = URI("error").query({
 error_description:c,
 error:d
 }).toString();
-e ? b.location.href = f :a.url(f);
+e ? b.location.href = f :a.url(f).replace();
 },
 toProjectOverview:function(b) {
 a.path(this.projectOverviewURL(b));
