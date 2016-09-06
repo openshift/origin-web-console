@@ -13,6 +13,7 @@ angular.module('openshiftConsole')
                                               $scope,
                                               $window,
                                               APIService,
+                                              BreadcrumbsService,
                                               DataService,
                                               Navigate,
                                               ProjectsService,
@@ -58,15 +59,13 @@ angular.module('openshiftConsole')
       }
     };
 
-    $scope.breadcrumbs = [
-      {
-        title: $routeParams.project,
-        link: "project/" + $routeParams.project
-      },
-      {
-        title: "Attach Storage"
-      }
-    ];
+    $scope.breadcrumbs = BreadcrumbsService.getBreadcrumbs({
+      name: $routeParams.name,
+      kind: $routeParams.kind,
+      namespace: $routeParams.project,
+      subpage: 'Attach Storage',
+      includeProject: true
+    });
 
     ProjectsService
       .get($routeParams.project)
@@ -78,7 +77,6 @@ angular.module('openshiftConsole')
 
         var orderByDisplayName = $filter('orderByDisplayName');
         var getErrorDetails = $filter('getErrorDetails');
-        var navigateResourceURL = $filter('navigateResourceURL');
         var generateName = $filter('generateName');
 
         var displayError = function(errorMessage, errorDetails) {
@@ -98,7 +96,12 @@ angular.module('openshiftConsole')
                 $scope.attach.containers.individual[container.name] = true;
               });
               $scope.attach.resource = resource;
-              rebuildBreadcrumb();
+              $scope.breadcrumbs = BreadcrumbsService.getBreadcrumbs({
+                object: resource,
+                project: project,
+                subpage: 'Edit Health Checks',
+                includeProject: true
+              });
             },
             function(e) {
               displayError($routeParams.name + " could not be loaded.", getErrorDetails(e));
@@ -154,38 +157,6 @@ angular.module('openshiftConsole')
           $scope.isVolumeMountPathUsed = false;
           return false;
         };
-
-        // breadcrumb must react depending on what we are attaching to (deployment or dc)
-        function rebuildBreadcrumb() {
-          $scope.breadcrumbs.splice(1, 0, {
-            title: "Deployments",
-            link: "project/" + $routeParams.project + "/browse/deployments"
-          });
-
-          var deploymentConfig = $scope.attach.deploymentConfig;
-          if (deploymentConfig) {
-            $scope.breadcrumbs.splice(2, 0, {
-              title: deploymentConfig.metadata.name,
-              link: navigateResourceURL(deploymentConfig)
-            });
-          }
-
-          var deployment = $scope.attach.deployment;
-          if (deployment) {
-            var deploymentVersion = $filter("annotation")(deployment, "deploymentVersion");
-            $scope.breadcrumbs.splice(2, 0, {
-              title: deploymentVersion ? "#" + deploymentVersion : deployment.metadata.name
-            });
-            var deploymentDeploymentConfigName = $filter("annotation")(deployment, "deploymentConfig");
-            if (deploymentDeploymentConfigName) {
-              $scope.breadcrumbs[2].link = navigateResourceURL(deployment);
-              $scope.breadcrumbs.splice(2, 0, {
-                title: deploymentDeploymentConfigName,
-                link: navigateResourceURL(deploymentDeploymentConfigName, "deploymentConfig", $routeParams.project)
-              });
-            }
-          }
-        }
 
         load();
 

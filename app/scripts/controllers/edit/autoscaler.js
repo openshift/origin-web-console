@@ -14,6 +14,7 @@ angular.module('openshiftConsole')
                         $routeParams,
                         $window,
                         APIService,
+                        BreadcrumbsService,
                         DataService,
                         HPAService,
                         MetricsService,
@@ -62,17 +63,6 @@ angular.module('openshiftConsole')
 
     $scope.alerts = {};
 
-    // More breadcrumbs inserted later as data loads.
-    $scope.breadcrumbs = [{
-      title: $routeParams.project,
-      link: "project/" + $routeParams.project
-    }, {
-      title: "Deployments",
-      link: "project/" + $routeParams.project + "/browse/deployments"
-    }, {
-      title: "Autoscale"
-    }];
-
     var getErrorDetails = $filter('getErrorDetails');
 
     var displayError = function(errorMessage, result) {
@@ -87,7 +77,6 @@ angular.module('openshiftConsole')
       .get($routeParams.project)
       .then(_.spread(function(project, context) {
         // Update project breadcrumb with display name.
-        $scope.breadcrumbs[0].title = $filter('displayName')(project);
         $scope.project = project;
 
         var createHPA = function() {
@@ -177,19 +166,26 @@ angular.module('openshiftConsole')
             });
             $scope.disableInputs = false;
 
-            $scope.breadcrumbs.splice(2, 0, {
-              title: $scope.targetName,
-              link: Navigate.resourceURL($scope.targetName, $scope.targetKind, $routeParams.project)
-            });
-
             // Update the existing HPA.
             $scope.save = function() {
               updateHPA(resource);
             };
+
+            // Build the breadcrumb for the target resource. (HPAs don't have a dedicated page.)
+            $scope.breadcrumbs = BreadcrumbsService.getBreadcrumbs({
+              name: $scope.targetName,
+              kind: $scope.targetKind,
+              namespace: $routeParams.project,
+              project: project,
+              subpage: 'Autoscale',
+              includeProject: true
+            });
           } else {
-            $scope.breadcrumbs.splice(2, 0, {
-              title: resource.metadata.name,
-              link: Navigate.resourceURL(resource)
+            $scope.breadcrumbs = BreadcrumbsService.getBreadcrumbs({
+              object: resource,
+              project: project,
+              subpage: 'Autoscale',
+              includeProject: true
             });
 
             // Create a new HPA.

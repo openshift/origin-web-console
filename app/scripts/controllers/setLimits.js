@@ -15,6 +15,7 @@ angular.module('openshiftConsole')
                                                $scope,
                                                AlertMessageService,
                                                APIService,
+                                               BreadcrumbsService,
                                                DataService,
                                                LimitRangesService,
                                                Navigate,
@@ -49,18 +50,13 @@ angular.module('openshiftConsole')
       hideFilterWidget: true
     };
 
-    $scope.breadcrumbs = [{
-      title: $routeParams.project,
-      link: "project/" + $routeParams.project
-    }, {
-      title: "Deployments",
-      link: "project/" + $routeParams.project + "/browse/deployments"
-    }, {
-      title: $scope.name,
-      link: $scope.resourceURL
-    }, {
-      title: "Set Resource Limits"
-    }];
+    $scope.breadcrumbs = BreadcrumbsService.getBreadcrumbs({
+      name: $routeParams.name,
+      kind: $routeParams.kind,
+      namespace: $routeParams.project,
+      subpage: 'Set Resource Limits',
+      includeProject: true
+    });
 
     var getErrorDetails = $filter('getErrorDetails');
 
@@ -85,6 +81,12 @@ angular.module('openshiftConsole')
         DataService.get(resourceGroupVersion, $scope.name, context).then(
           function(result) {
             var resource = angular.copy(result);
+            $scope.breadcrumbs = BreadcrumbsService.getBreadcrumbs({
+              object: resource,
+              project: project,
+              subpage: 'Set Resource Limits',
+              includeProject: true
+            });
             $scope.resourceURL = Navigate.resourceURL(resource);
             $scope.containers = _.get(resource, 'spec.template.spec.containers');
             $scope.save = function() {

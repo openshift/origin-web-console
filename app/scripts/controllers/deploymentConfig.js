@@ -12,6 +12,7 @@ angular.module('openshiftConsole')
                         $filter,
                         $routeParams,
                         AlertMessageService,
+                        BreadcrumbsService,
                         DataService,
                         DeploymentsService,
                         HPAService,
@@ -39,15 +40,11 @@ angular.module('openshiftConsole')
     //$scope.imageStreamImageRefByDockerReference = {}; // lets us determine if a particular container's docker image reference belongs to an imageStream
     //$scope.builds = {};
     $scope.alerts = {};
-    $scope.breadcrumbs = [
-      {
-        title: "Deployments",
-        link: "project/" + $routeParams.project + "/browse/deployments"
-      },
-      {
-        title: $routeParams.deploymentconfig
-      }
-    ];
+    $scope.breadcrumbs = BreadcrumbsService.getBreadcrumbs({
+      name: $routeParams.deploymentconfig,
+      kind: 'DeploymentConfig',
+      namespace: $routeParams.project
+    });
     $scope.emptyMessage = "Loading...";
     $scope.healthCheckURL = Navigate.healthCheckURL($routeParams.project,
                                                     "DeploymentConfig",

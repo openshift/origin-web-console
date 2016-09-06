@@ -2828,7 +2828,7 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "<div class=\"container-fluid\">\n" +
     "<breadcrumbs breadcrumbs=\"breadcrumbs\"></breadcrumbs>\n" +
     "<alerts alerts=\"alerts\"></alerts>\n" +
-    "<div ng-if=\"!loaded\">Loading...</div>\n" +
+    "<div ng-if=\"!loaded\" class=\"mar-top-md\">Loading...</div>\n" +
     "<div ng-if=\"deployment\">\n" +
     "<h1>\n" +
     "{{deployment.metadata.name}}\n" +
@@ -6550,12 +6550,12 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "<div class=\"row\">\n" +
     "<div class=\"col-md-12\">\n" +
     "<alerts alerts=\"alerts\"></alerts>\n" +
-    "<div ng-if=\"!targetKind || !targetName || !project\">\n" +
+    "<div ng-if=\"!targetKind || !targetName || !project\" class=\"mar-top-md\">\n" +
     "Loading...\n" +
     "</div>\n" +
     "<form name=\"form\" ng-submit=\"save()\" class=\"osc-form\" ng-show=\"targetKind && targetName\">\n" +
     "<h1>\n" +
-    "Autoscale {{targetKind | humanizeKind}} {{targetName}}\n" +
+    "Autoscale {{targetKind | humanizeKind : true}} {{targetName}}\n" +
     "</h1>\n" +
     "<div class=\"help-block\">\n" +
     "Scale replicas automatically based on CPU usage.\n" +
@@ -6952,7 +6952,7 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "<div class=\"row\">\n" +
     "<div class=\"col-md-12\">\n" +
     "<alerts alerts=\"alerts\"></alerts>\n" +
-    "<div ng-show=\"!containers.length\">Loading...</div>\n" +
+    "<div ng-show=\"!containers.length\" class=\"mar-top-md\">Loading...</div>\n" +
     "<form ng-show=\"containers.length\" name=\"form\">\n" +
     "<h1>Health Checks: {{name}}</h1>\n" +
     "<div class=\"help-block\">\n" +

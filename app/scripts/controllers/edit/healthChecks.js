@@ -14,6 +14,7 @@ angular.module('openshiftConsole')
                         $routeParams,
                         $scope,
                         AlertMessageService,
+                        BreadcrumbsService,
                         APIService,
                         DataService,
                         Navigate,
@@ -42,18 +43,13 @@ angular.module('openshiftConsole')
       hideFilterWidget: true
     };
 
-    $scope.breadcrumbs = [{
-      title: $routeParams.project,
-      link: "project/" + $routeParams.project
-    }, {
-      title: "Deployments",
-      link: "project/" + $routeParams.project + "/browse/deployments"
-    }, {
-      title: $scope.name,
-      link: $scope.resourceURL
-    }, {
-      title: "Edit Health Checks"
-    }];
+    $scope.breadcrumbs = BreadcrumbsService.getBreadcrumbs({
+      name: $routeParams.name,
+      kind: $routeParams.kind,
+      namespace: $routeParams.project,
+      subpage: 'Edit Health Checks',
+      includeProject: true
+    });
 
     // Map of removed probes so that removing and adding back a probe remembers what was previously set.
     $scope.previousProbes = {};
@@ -80,6 +76,13 @@ angular.module('openshiftConsole')
           function(result) {
             // Modify a copy of the resource.
             var resource = angular.copy(result);
+            $scope.breadcrumbs = BreadcrumbsService.getBreadcrumbs({
+              object: resource,
+              project: project,
+              subpage: 'Edit Health Checks',
+              includeProject: true
+            });
+
             $scope.containers = _.get(resource, 'spec.template.spec.containers');
 
             $scope.addProbe = function(container, probe) {

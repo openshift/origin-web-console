@@ -211,14 +211,7 @@ angular.module("openshiftConsole")
         return null;
       },
 
-      /**
-       * Navigate to a list view for a resource type
-       *
-       * @param {String} resource      the resource (e.g., builds or replicationcontrollers)
-       * @param {String} projectName   the project name
-       * @returns {undefined}
-       */
-      toResourceList: function(resource, projectName) {
+      resourceListURL: function(resource, projectName) {
         var routeMap = {
           'builds': 'builds',
           'buildconfigs': 'builds',
@@ -233,13 +226,23 @@ angular.module("openshiftConsole")
           'persistentvolumeclaims': 'storage'
         };
 
-        var redirect = URI.expand("project/{projectName}/browse/{browsePath}", {
+        return URI.expand("project/{projectName}/browse/{browsePath}", {
           projectName: projectName,
           browsePath: routeMap[resource]
-        });
-
-        $location.url(redirect);
+        }).toString();
       },
+
+      /**
+       * Navigate to a list view for a resource type
+       *
+       * @param {String} resource      the resource (e.g., builds or replicationcontrollers)
+       * @param {String} projectName   the project name
+       * @returns {undefined}
+       */
+      toResourceList: function(resource, projectName) {
+        $location.url(this.resourceListURL(resource, projectName));
+      },
+
       healthCheckURL: function(projectName, kind, name, group) {
         return URI.expand("project/{projectName}/edit/health-checks?kind={kind}&name={name}&group={group}", {
           projectName: projectName,

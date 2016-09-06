@@ -12,6 +12,7 @@ angular.module('openshiftConsole')
                         $filter,
                         $routeParams,
                         AlertMessageService,
+                        BreadcrumbsService,
                         DataService,
                         HPAService,
                         MetricsService,
@@ -25,13 +26,6 @@ angular.module('openshiftConsole')
     var displayKind = $filter('humanizeKind')(kind);
     switch (kind) {
     case 'ReplicaSet':
-      $scope.breadcrumbs = [
-        {
-          title: "Replica Sets",
-          link: "project/" + $routeParams.project + "/browse/deployments"
-        }
-      ];
-
       $scope.resource = {
         group: "extensions",
         resource: "replicasets"
@@ -42,13 +36,6 @@ angular.module('openshiftConsole')
                                                       "extensions");
       break;
     case 'ReplicationController':
-      $scope.breadcrumbs = [
-        {
-          title: "Replication Controllers",
-          link: "project/" + $routeParams.project + "/browse/deployments"
-        }
-      ];
-
       $scope.resource = 'replicationcontrollers';
       $scope.healthCheckURL = Navigate.healthCheckURL($routeParams.project,
                                                       "ReplicationController",
@@ -73,9 +60,6 @@ angular.module('openshiftConsole')
     $scope.renderOptions = $scope.renderOptions || {};
     $scope.renderOptions.hideFilterWidget = true;
     $scope.forms = {};
-    $scope.breadcrumbs.push({
-      title: $routeParams.replicaSet
-    });
 
     // Check for a ?tab=<name> query param to allow linking directly to a tab.
     if ($routeParams.tab) {
@@ -208,17 +192,9 @@ angular.module('openshiftConsole')
 
           hasDC = true;
           $scope.deploymentConfigName = dcName;
-          $scope.breadcrumbs.splice(0, 1, {
-            title: "Deployments",
-            link: "project/" + $routeParams.project + "/browse/deployments"
-          }, {
-            title: $scope.deploymentConfigName,
-            link: "project/" + $routeParams.project + "/browse/dc/" + dcName
-          });
 
           var deploymentVersion = $filter("annotation")(rc, "deploymentVersion");
           if (deploymentVersion) {
-            $scope.breadcrumbs[2].title = "#" + deploymentVersion;
             $scope.logOptions.version = deploymentVersion;
           }
           $scope.healthCheckURL = Navigate.healthCheckURL($routeParams.project,
@@ -255,6 +231,8 @@ angular.module('openshiftConsole')
             setLogVars(deployment);
             updateDC(deployment);
             updateHPAWarnings();
+
+            $scope.breadcrumbs = BreadcrumbsService.getBreadcrumbs({ object: deployment });
 
             // If we found the item successfully, watch for changes on it
             watches.push(DataService.watchObject($scope.resource, $routeParams.replicaSet, context, function(deployment, action) {
@@ -308,9 +286,14 @@ angular.module('openshiftConsole')
             $scope.loaded = true;
             $scope.alerts["load"] = {
               type: "error",
-              message: "The " + kind + " details could not be loaded.",
+              message: "The " + displayKind + " details could not be loaded.",
               details: "Reason: " + $filter('getErrorDetails')(e)
             };
+            $scope.breadcrumbs = BreadcrumbsService.getBreadcrumbs({
+              name: $routeParams.replicaSet,
+              kind: kind,
+              namespace: $routeParams.project
+            });
           }
         );
 
