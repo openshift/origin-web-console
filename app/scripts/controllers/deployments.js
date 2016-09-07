@@ -56,6 +56,8 @@ angular.module('openshiftConsole')
           $scope.deploymentsByDeploymentConfig = DeploymentsService.associateDeploymentsToDeploymentConfig($scope.deployments, $scope.deploymentConfigs, true);
           if ($scope.deploymentsByDeploymentConfig['']) {
             $scope.unfilteredReplicationControllers = $scope.deploymentsByDeploymentConfig[''];
+            LabelFilter.addLabelSuggestionsFromResources($scope.unfilteredReplicationControllers, $scope.labelSuggestions);
+            LabelFilter.setLabelSuggestions($scope.labelSuggestions);
             $scope.deploymentsByDeploymentConfig[''] = LabelFilter.getLabelSelector().select($scope.deploymentsByDeploymentConfig['']);
           }
           updateFilterWarning();
@@ -94,6 +96,7 @@ angular.module('openshiftConsole')
           group: "extensions",
           resource: "replicasets"
         }, context, function(replicaSets) {
+          // TODO: This should be updated to only include replica sets that do not have a deployment.
           $scope.unfilteredReplicaSets = replicaSets.by("metadata.name");
           LabelFilter.addLabelSuggestionsFromResources($scope.unfilteredReplicaSets, $scope.labelSuggestions);
           LabelFilter.setLabelSuggestions($scope.labelSuggestions);
@@ -129,30 +132,35 @@ angular.module('openshiftConsole')
 
         function updateFilterWarning() {
           var isFiltering = !LabelFilter.getLabelSelector().isEmpty();
-          var isFilteringAllDCs = $.isEmptyObject($scope.deploymentConfigs) && !$.isEmptyObject($scope.unfilteredDeploymentConfigs);
-          var thereAreDCs = !$.isEmptyObject($scope.unfilteredDeploymentConfigs);
-          var isFilteringAllRCs = $.isEmptyObject($scope.deploymentsByDeploymentConfig['']) && !$.isEmptyObject($scope.unfilteredReplicationControllers);
-          var thereAreRCs = !$.isEmptyObject($scope.unfilteredReplicationControllers);
-          var isFilteringAllK8SDeployments = $.isEmptyObject($scope.k8sDeployments) && !$.isEmptyObject($scope.unfilteredK8SDeployments);
-          var thereAreK8SDeployments = !$.isEmptyObject($scope.unfilteredK8SDeployments);
-          var isFilteringAllReplicaSets = $.isEmptyObject($scope.replicaSets) && !$.isEmptyObject($scope.unfilteredReplicaSets);
-          var thereAreReplicaSets = !$.isEmptyObject($scope.unfilteredReplicaSets);
-
-          // TODO: Update warnings for k8s deployments and replica sets.
-          if (isFiltering &&
-              (isFilteringAllDCs || !thereAreDCs) &&
-              (isFilteringAllRCs || !thereAreRCs) &&
-              (isFilteringAllK8SDeployments || !thereAreK8SDeployments) &&
-              (isFilteringAllReplicaSets || !thereAreReplicaSets) &&
-              (thereAreDCs || thereAreRCs || thereAreK8SDeployments || thereAreReplicaSets)) {
-            $scope.alerts["deployments"] = {
-              type: "warning",
-              details: "The active filters are hiding all deployments."
-            };
-          }
-          else {
+          if (!isFiltering) {
             delete $scope.alerts["deployments"];
+            return;
           }
+
+          var unfilteredDeploymentsEmpty =
+            _.isEmpty($scope.unfilteredDeploymentConfigs) &&
+            _.isEmpty($scope.unfilteredReplicationControllers) &&
+            _.isEmpty($scope.unfilteredK8SDeployments) &&
+            _.isEmpty($scope.unfilteredReplicaSets);
+          if (unfilteredDeploymentsEmpty) {
+            delete $scope.alerts["deployments"];
+            return;
+          }
+
+          var filteredDeploymentsEmpty =
+            _.isEmpty($scope.deploymentConfigs) &&
+            _.isEmpty($scope.deploymentsByDeploymentConfig['']) &&
+            _.isEmpty($scope.k8sDeployments) &&
+            _.isEmpty($scope.replicaSets);
+          if (!filteredDeploymentsEmpty) {
+            delete $scope.alerts["deployments"];
+            return;
+          }
+
+          $scope.alerts["deployments"] = {
+            type: "warning",
+            details: "The active filters are hiding all deployments."
+          };
         }
 
         $scope.showEmptyMessage = function() {

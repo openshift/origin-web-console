@@ -53,7 +53,7 @@ angular.module('openshiftConsole')
     });
     AlertMessageService.clearAlerts();
 
-    // copy deploymentConfig and ensure it has env so that we can edit env vars using key-value-editor
+    // copy deployment and ensure it has env so that we can edit env vars using key-value-editor
     var copyDeploymentAndEnsureEnv = function(deployment) {
       $scope.updatedDeployment = angular.copy(deployment);
       _.each($scope.updatedDeployment.spec.template.spec.containers, function(container) {
@@ -159,7 +159,7 @@ angular.module('openshiftConsole')
             }));
 
             // Watch replica sets for this deployment
-            // TODO: Use the label selector
+            // TODO: Use controller ref
             var annotation = $filter('annotation');
             var revision = function(replicaSet) {
               return annotation(replicaSet, 'deployment.kubernetes.io/revision');
@@ -197,7 +197,7 @@ angular.module('openshiftConsole')
         watches.push(DataService.watch("imagestreams", context, function(imageStreams) {
           $scope.imageStreams = imageStreams.by("metadata.name");
           ImageStreamResolver.buildDockerRefMapForImageStreams($scope.imageStreams, $scope.imageStreamImageRefByDockerReference);
-          // If the dep config has been loaded already
+          // If the deployment has been loaded already
           if ($scope.deployment) {
             ImageStreamResolver.fetchReferencedImageStreamImages([$scope.deployment.spec.template], $scope.imagesByDockerReference, $scope.imageStreamImageRefByDockerReference, context);
           }
@@ -223,7 +223,7 @@ angular.module('openshiftConsole')
             $scope.alerts = $scope.alerts || {};
             $scope.alerts["scale"] = {
               type: "error",
-              message: "An error occurred scaling the deployment config.",
+              message: "An error occurred scaling the deployment.",
               details: $filter('getErrorDetails')(result)
             };
           };

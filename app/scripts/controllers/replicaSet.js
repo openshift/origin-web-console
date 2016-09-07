@@ -184,6 +184,7 @@ angular.module('openshiftConsole')
             });
         };
 
+        // TODO: Handle replica sets owned by k8s deployments.
         var updateDC = function(rc) {
           var dcName = $filter("annotation")(rc, "deploymentConfig");
           if (!dcName) {
@@ -313,6 +314,7 @@ angular.module('openshiftConsole')
           var deploymentConfigName;
           var deploymentName;
           if (deployment) {
+            // TODO: Handle replica sets owned by k8s deployments
             deploymentConfigName = $filter('annotation')(deployment, 'deploymentConfig');
             deploymentName = deployment.metadata.name;
           }
@@ -372,10 +374,6 @@ angular.module('openshiftConsole')
           limitRanges = response.by("metadata.name");
           updateHPAWarnings();
         });
-
-        $scope.startLatestDeployment = function(deploymentConfig) {
-          DeploymentsService.startLatestDeployment(deploymentConfig, context, $scope);
-        };
 
         $scope.retryFailedDeployment = function(deployment) {
           DeploymentsService.retryFailedDeployment(deployment, context, $scope);

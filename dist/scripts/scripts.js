@@ -4323,16 +4323,20 @@ a.alerts[b.name] = b.data;
 var k = [];
 j.get(c.project).then(_.spread(function(c, d) {
 function g() {
-var b = !h.getLabelSelector().isEmpty(), c = $.isEmptyObject(a.deploymentConfigs) && !$.isEmptyObject(a.unfilteredDeploymentConfigs), d = !$.isEmptyObject(a.unfilteredDeploymentConfigs), e = $.isEmptyObject(a.deploymentsByDeploymentConfig[""]) && !$.isEmptyObject(a.unfilteredReplicationControllers), f = !$.isEmptyObject(a.unfilteredReplicationControllers), g = $.isEmptyObject(a.k8sDeployments) && !$.isEmptyObject(a.unfilteredK8SDeployments), i = !$.isEmptyObject(a.unfilteredK8SDeployments), j = $.isEmptyObject(a.replicaSets) && !$.isEmptyObject(a.unfilteredReplicaSets), k = !$.isEmptyObject(a.unfilteredReplicaSets);
-!b || !c && d || !e && f || !g && i || !j && k || !(d || f || i || k) ? delete a.alerts.deployments :a.alerts.deployments = {
+var b = !h.getLabelSelector().isEmpty();
+if (!b) return void delete a.alerts.deployments;
+var c = _.isEmpty(a.unfilteredDeploymentConfigs) && _.isEmpty(a.unfilteredReplicationControllers) && _.isEmpty(a.unfilteredK8SDeployments) && _.isEmpty(a.unfilteredReplicaSets);
+if (c) return void delete a.alerts.deployments;
+var d = _.isEmpty(a.deploymentConfigs) && _.isEmpty(a.deploymentsByDeploymentConfig[""]) && _.isEmpty(a.k8sDeployments) && _.isEmpty(a.replicaSets);
+return d ? void (a.alerts.deployments = {
 type:"warning",
 details:"The active filters are hiding all deployments."
-};
+}) :void delete a.alerts.deployments;
 }
 a.project = c, k.push(e.watch("replicationcontrollers", d, function(c, d, e) {
 a.deployments = c.by("metadata.name");
 var j, k;
-if (e && (j = b("annotation")(e, "deploymentConfig"), k = e.metadata.name), a.deploymentsByDeploymentConfig = f.associateDeploymentsToDeploymentConfig(a.deployments, a.deploymentConfigs, !0), a.deploymentsByDeploymentConfig[""] && (a.unfilteredReplicationControllers = a.deploymentsByDeploymentConfig[""], a.deploymentsByDeploymentConfig[""] = h.getLabelSelector().select(a.deploymentsByDeploymentConfig[""])), g(), d) {
+if (e && (j = b("annotation")(e, "deploymentConfig"), k = e.metadata.name), a.deploymentsByDeploymentConfig = f.associateDeploymentsToDeploymentConfig(a.deployments, a.deploymentConfigs, !0), a.deploymentsByDeploymentConfig[""] && (a.unfilteredReplicationControllers = a.deploymentsByDeploymentConfig[""], h.addLabelSuggestionsFromResources(a.unfilteredReplicationControllers, a.labelSuggestions), h.setLabelSuggestions(a.labelSuggestions), a.deploymentsByDeploymentConfig[""] = h.getLabelSelector().select(a.deploymentsByDeploymentConfig[""])), g(), d) {
 if ("ADDED" === d || "MODIFIED" === d && [ "New", "Pending", "Running" ].indexOf(b("deploymentStatus")(e)) > -1) a.deploymentConfigDeploymentsInProgress[j] = a.deploymentConfigDeploymentsInProgress[j] || {}, a.deploymentConfigDeploymentsInProgress[j][k] = e; else if ("MODIFIED" === d) {
 var l = b("deploymentStatus")(e);
 "Complete" !== l && "Failed" !== l || delete a.deploymentConfigDeploymentsInProgress[j][k];
@@ -4461,7 +4465,7 @@ a.builds = b.by("metadata.name"), Logger.log("builds (subscribe)", a.builds);
 var d = function(c) {
 a.alerts = a.alerts || {}, a.alerts.scale = {
 type:"error",
-message:"An error occurred scaling the deployment config.",
+message:"An error occurred scaling the deployment.",
 details:b("getErrorDetails")(c)
 };
 };
@@ -4747,9 +4751,7 @@ poll:t,
 pollInterval:6e4
 })), f.list("limitranges", h, function(a) {
 w = a.by("metadata.name"), A();
-}), a.startLatestDeployment = function(b) {
-j.startLatestDeployment(b, h, a);
-}, a.retryFailedDeployment = function(b) {
+}), a.retryFailedDeployment = function(b) {
 j.retryFailedDeployment(b, h, a);
 }, a.rollbackToDeployment = function(b, c, d, e) {
 j.rollbackToDeployment(b, c, d, e, h, a);
@@ -6229,7 +6231,7 @@ c.attach.containers.individual[a.name] = !0;
 }), c.attach.resource = a, c.breadcrumbs = f.getBreadcrumbs({
 object:a,
 project:e,
-subpage:"Edit Health Checks",
+subpage:"Attach Storage",
 includeProject:!0
 });
 }, function(a) {
@@ -6262,22 +6264,22 @@ return !1;
 }, c.attachPVC = function() {
 if (c.disableInputs = !0, c.attachPVCForm.$valid) {
 c.attach.volumeName || (c.attach.volumeName = m("volume-"));
-var a = c.attach.resource, b = _.get(a, "spec.template"), e = c.attach.persistentVolumeClaim, f = c.attach.volumeName, i = c.attach.mountPath;
-if (p(f, b)) return void (c.disableInputs = !1);
-if (i) {
-if (q(f, i, b)) return void (c.disableInputs = !1);
-angular.forEach(b.spec.containers, function(a) {
+var e = c.attach.resource, f = _.get(e, "spec.template"), i = c.attach.persistentVolumeClaim, o = c.attach.volumeName, r = c.attach.mountPath;
+if (p(o, f)) return void (c.disableInputs = !1);
+if (r) {
+if (q(o, r, f)) return void (c.disableInputs = !1);
+angular.forEach(f.spec.containers, function(a) {
 if (c.attach.containers.all || c.attach.containers.individual[a.name]) {
-var b = j.createVolumeMount(f, i);
+var b = j.createVolumeMount(o, r);
 a.volumeMounts || (a.volumeMounts = []), a.volumeMounts.push(b);
 }
 });
 }
-var o = j.createVolume(f, e);
-b.spec.volumes || (b.spec.volumes = []), b.spec.volumes.push(o), c.alerts = {}, g.update(l, a.metadata.name, c.attach.resource, h).then(function() {
+var s = j.createVolume(o, i);
+f.spec.volumes || (f.spec.volumes = []), f.spec.volumes.push(s), c.alerts = {}, g.update(l, e.metadata.name, c.attach.resource, h).then(function() {
 d.history.back();
-}, function(a) {
-n("An error occurred attaching the persistent volume claim to deployment config.", k(a));
+}, function(c) {
+n("An error occurred attaching the persistent volume claim to the " + a("humanizeKind")(b.kind) + ".", k(c));
 });
 }
 };
@@ -10162,7 +10164,7 @@ group:"extensions",
 resource:"horizontalpodautoscalers",
 verbs:[ "create", "update" ]
 }, {
-group:"",
+group:"extensions",
 resource:"deployments",
 verbs:[ "create", "update" ]
 } ],
@@ -10727,23 +10729,22 @@ if (!a) return a;
 var c = _.startCase(a);
 return b ? c :c.toLowerCase();
 };
-} ]).filter("abbreviateKind", function() {
-var a = {
-Build:"build",
-BuildConfig:"bc",
-DeploymentConfig:"dc",
-ImageStream:"is",
-Pod:"pod",
-ReplicaSet:"rs",
-ReplicationController:"rc",
-Route:"route",
-Service:"svc"
-};
-return function(b) {
-return b ? a[b] || b.toLowerCase() :b;
-};
-}).filter("kindToResource", [ "APIService", function(a) {
+} ]).filter("kindToResource", [ "APIService", function(a) {
 return a.kindToResource;
+} ]).filter("abbreviateResource", [ "APIService", function(a) {
+var b = {
+buildconfigs:"bc",
+deploymentconfigs:"dc",
+horizontalpodautoscalers:"hpa",
+imagestreams:"is",
+imagestreamtags:"istag",
+replicasets:"rs",
+replicationcontrollers:"rc",
+services:"svc"
+};
+return function(a) {
+return b[a] || a;
+};
 } ]).filter("humanizeQuotaResource", function() {
 return function(a) {
 if (!a) return a;
@@ -10857,6 +10858,12 @@ d = parseInt(a(b, "idledPreviousScale"));
 Logger.error("Unable to parse previous scale annotation as a number.");
 }
 return d || _.get(_.first(c), "spec.minReplicas") || 1;
+};
+} ]).filter("lastDeploymentRevision", [ "annotationFilter", function(a) {
+return function(b) {
+if (!b) return "";
+var c = a(b, "deployment.kubernetes.io/revision");
+return c ? "#" + c :"Unknown";
 };
 } ]), angular.module("openshiftConsole").filter("underscore", function() {
 return function(a) {

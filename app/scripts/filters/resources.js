@@ -151,7 +151,7 @@ angular.module('openshiftConsole')
       ],
       'deployments': [
         {group: 'extensions', resource: 'horizontalpodautoscalers', verbs: ['create', 'update']},
-        {group: '',            resource: 'deployments',             verbs: ['create', 'update']}
+        {group: 'extensions', resource: 'deployments',              verbs: ['create', 'update']}
       ],
       'deploymentConfigs': [
         {group: 'extensions', resource: 'horizontalpodautoscalers', verbs: ['create', 'update']},
@@ -1082,27 +1082,23 @@ angular.module('openshiftConsole')
       return humanized.toLowerCase();
     };
   })
-  .filter('abbreviateKind', function() {
-    var abbreviated = {
-      Build: 'build',
-      BuildConfig: 'bc',
-      DeploymentConfig: 'dc',
-      ImageStream: 'is',
-      Pod: 'pod',
-      ReplicaSet: 'rs',
-      ReplicationController: 'rc',
-      Route: 'route',
-      Service: 'svc',
-    };
-    return function(kind) {
-      if (!kind) {
-        return kind;
-      }
-      return abbreviated[kind] || kind.toLowerCase();
-    };
-  })
   .filter('kindToResource', function (APIService) {
     return APIService.kindToResource;
+  })
+  .filter('abbreviateResource', function(APIService) {
+    var abbreviated = {
+      buildconfigs: 'bc',
+      deploymentconfigs: 'dc',
+      horizontalpodautoscalers: 'hpa',
+      imagestreams: 'is',
+      imagestreamtags: 'istag',
+      replicasets: 'rs',
+      replicationcontrollers: 'rc',
+      services: 'svc',
+    };
+    return function(resource) {
+      return abbreviated[resource] || resource;
+    };
   })
   .filter('humanizeQuotaResource', function() {
     return function(resourceType) {
@@ -1351,5 +1347,15 @@ angular.module('openshiftConsole')
         }
       }
       return previousScale || _.get(_.first(hpa), 'spec.minReplicas') || 1;
+    };
+  })
+  .filter('lastDeploymentRevision', function(annotationFilter) {
+    return function(deployment) {
+      if (!deployment) {
+        return '';
+      }
+
+      var revision = annotationFilter(deployment, 'deployment.kubernetes.io/revision');
+      return revision ? "#" + revision : 'Unknown';
     };
   });

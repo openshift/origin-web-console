@@ -99,7 +99,7 @@ angular.module('openshiftConsole')
               $scope.breadcrumbs = BreadcrumbsService.getBreadcrumbs({
                 object: resource,
                 project: project,
-                subpage: 'Edit Health Checks',
+                subpage: 'Attach Storage',
                 includeProject: true
               });
             },
@@ -220,13 +220,12 @@ angular.module('openshiftConsole')
             podTemplate.spec.volumes.push(newVolume);
             $scope.alerts = {};
 
-            // save deployment or deployment config
             DataService.update(resourceGroupVersion, resource.metadata.name, $scope.attach.resource, context).then(
               function() {
                 $window.history.back();
               },
               function(result) {
-                displayError("An error occurred attaching the persistent volume claim to deployment config.", getErrorDetails(result));
+                displayError("An error occurred attaching the persistent volume claim to the " + $filter('humanizeKind')($routeParams.kind) + ".", getErrorDetails(result));
               }
             );
           }

@@ -116,7 +116,7 @@
                         <a ng-href="{{k8sDeployment | navigateResourceURL}}">{{k8sDeployment.metadata.name}}</a>
                       </td>
                       <td data-title="Last Version">
-                        #{{k8sDeployment | annotation : 'deployment.kubernetes.io/revision'}}
+                        {{k8sDeployment | lastDeploymentRevision}}
                       </td>
                       <td data-title="Replicas">
                         <span ng-if="k8sDeployment.status.replicas !== k8sDeployment.spec.replicas">{{k8sDeployment.status.replicas}}/</span>{{k8sDeployment.spec.replicas}} replica<span ng-if="k8sDeployment.spec.replicas != 1">s</span>

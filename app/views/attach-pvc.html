@@ -33,7 +33,7 @@
                     To claim storage from a persistent volume, refer to the documentation on <a target="_blank" ng-href="{{'persistent_volumes' | helpLink}}">using persistent volumes</a>.
                   </p>
 
-                  <p ng-if="attach.resource"><a ng-href="{{attach.resource | navigateResourceURL}}">Back to {{name}}</a></p>
+                  <p ng-if="attach.resource"><a ng-href="{{attach.resource | navigateResourceURL}}">Back to {{kind | humanizeKind}} {{name}}</a></p>
                 </div>
 
                 <div class="row" ng-show="pvcs && pvcs.length && attach.resource">

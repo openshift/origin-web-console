@@ -40,7 +40,7 @@
               {{event.reason | sentenceCase}}
             </div>
             <div class="event-object">
-              {{event.involvedObject.kind | abbreviateKind}}/{{event.involvedObject.name}}
+              {{event.involvedObject.kind | kindToResource | abbreviateResource}}/{{event.involvedObject.name}}
             </div>
           </div>
           <div class="detail-group">

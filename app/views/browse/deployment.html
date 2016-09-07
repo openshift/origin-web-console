@@ -63,7 +63,7 @@
               </div>
               <small class="meta" ng-if="deployment">created <relative-timestamp timestamp="deployment.metadata.creationTimestamp"></relative-timestamp></small>
             </h1>
-            <labels labels="deployment.metadata.labels" clickable="true" kind="deployments" title-kind="deployment configs" project-name="{{deployment.metadata.namespace}}" limit="3"></labels>
+            <labels labels="deployment.metadata.labels" clickable="true" kind="deployments" project-name="{{deployment.metadata.namespace}}" limit="3"></labels>
           </div>
         </div>
       </div><!-- /middle-header-->
@@ -80,7 +80,7 @@
                         <h3>Status</h3>
                         <dl class="dl-horizontal left">
                           <dt>Last Version:</dt>
-                          <dd>{{deployment | annotation : 'deployment.kubernetes.io/revision'}}</dd>
+                          <dd>{{deployment | lastDeploymentRevision}}</dd>
                           <dt>Replicas:</dt>
                           <dd>
                             <replicas spec="deployment.spec.replicas"
@@ -97,7 +97,7 @@
                             </div>
                           </dd>
                           <dt>Paused:</dt>
-                          <dd>{{!!deployment.spec.paused}}</dd>
+                          <dd>{{deployment.spec.paused | yesNo}}</dd>
                         </dl>
                       </div>
                       <div class="col-lg-6">
@@ -109,26 +109,38 @@
                           </dd>
                           <dt>Strategy:</dt>
                           <dd>{{deployment.spec.strategy.type | sentenceCase}}</dd>
-                          <dt ng-if-start="deployment.spec.strategy.rollingUpdate">Max Unavailable:</dt>
-                          <dd>
-                            {{deployment.spec.strategy.rollingUpdate.maxUnavailable}}
+                          <dt ng-if-start="deployment.spec.strategy.rollingUpdate">
+                            Max Unavailable:
                             <span data-toggle="tooltip"
                               title="The maximum number of pods that can be unavailable during the update process."
                               class="pficon pficon-help text-muted small"></span>
+                          </dt>
+                          <dd>
+                            <span ng-if="deployment.spec.strategy.rollingUpdate.maxUnavailable | isNil">1</span>
+                            <span ng-if="!(deployment.spec.strategy.rollingUpdate.maxUnavailable | isNil)">
+                              {{deployment.spec.strategy.rollingUpdate.maxUnavailable}}
+                            </span>
                           </dd>
-                          <dt>Max Surge:</dt>
-                          <dd ng-if-end>
-                            {{deployment.spec.strategy.rollingUpdate.maxSurge}}
+                          <dt>
+                            Max Surge:
                             <span data-toggle="tooltip"
                               title="The maximum number of pods that can be created above the desired number of pods."
                               class="pficon pficon-help text-muted small"></span>
+                          </dt>
+                          <dd ng-if-end>
+                            <span ng-if="deployment.spec.strategy.rollingUpdate.maxSurge | isNil">1</span>
+                            <span ng-if="!(deployment.spec.strategy.rollingUpdate.maxSurge | isNil)">
+                              {{deployment.spec.strategy.rollingUpdate.maxSurge}}
+                            </span>
                           </dd>
-                          <dt>Min Ready:</dt>
+                          <dt>
+                            Min Ready:
+                            <span data-toggle="tooltip"
+                              title="The minimum number of seconds a new pod must be ready before it is considered available."
+                              class="pficon pficon-help text-muted small"></span>
+                          </dt>
                           <dd>
                             {{deployment.spec.minReadySeconds || 0}} sec
-                            <span data-toggle="tooltip"
-                              title="The minimum number of seconds for which a newly created pod should be ready without any of its containers crashing for it to be considered available."
-                              class="pficon pficon-help text-muted small"></span>
                           </dd>
                         </dl>
                       </div>

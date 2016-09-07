@@ -7,9 +7,17 @@
      class="dropdown-toggle actions-dropdown-kebab visible-xs-inline"
      data-toggle="dropdown"><i class="fa fa-ellipsis-v"></i><span class="sr-only">Actions</span></a>
   <ul class="dropdown-menu actions action-button">
-    <li ng-if="'replicationcontrollers' | canI : 'update'">
+    <li ng-if="!deploymentConfigName && 'replicationcontrollers' | canI : 'update'">
       <a ng-href="project/{{project.metadata.name}}/attach-pvc?kind=ReplicationController&name={{deployment.metadata.name}}"
          role="button">Attach Storage</a>
+    </li>
+    <li ng-if="deploymentConfigName && ('deploymentconfigs' | canI : 'update')">
+      <a ng-href="project/{{project.metadata.name}}/attach-pvc?kind=DeploymentConfig&name={{deploymentConfigName}}"
+         role="button">Attach Storage</a>
+    </li>
+    <li ng-if="deploymentConfigName && ('deploymentconfigs' | canI : 'update')">
+      <a ng-href="project/{{projectName}}/set-limits?kind=DeploymentConfig&name={{deploymentConfigName}}"
+         role="button">Set Resource Limits</a>
     </li>
     <li ng-if="!deploymentConfigName && ('replicationcontrollers' | canI : 'update')">
       <a ng-href="project/{{projectName}}/set-limits?kind=ReplicationController&name={{deployment.metadata.name}}"

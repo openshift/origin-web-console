@@ -76,13 +76,17 @@
         builds="builds"
         detailed="true">
       </pod-template>
-      <div ng-if="pod.spec.volumes.length">
-        <h4>Volumes</h4>
-        <p ng-if="(pod | annotation:'deploymentConfig') && !pod.spec.volumes.length">
+
+      <h4>Volumes</h4>
+      <div ng-if="!pod.spec.volumes.length">
+        <p ng-if="(pod | annotation:'deploymentConfig') && ('deploymentconfigs' | canI : 'update')">
           <a ng-href="project/{{project.metadata.name}}/attach-pvc?kind=DeploymentConfig&name={{pod | annotation:'deploymentConfig'}}">Attach storage and redeploy</a>
         </p>
-        <volumes volumes="pod.spec.volumes" namespace="project.metadata.name"></volumes>
+        <p ng-if="!(pod | annotation:'deploymentConfig') || !('deploymentconfigs' | canI : 'update')">
+          None
+        </p>
       </div>
+      <volumes ng-if="pod.spec.volumes.length" volumes="pod.spec.volumes" namespace="project.metadata.name"></volumes>
     </div>
   </div>
   <annotations annotations="pod.metadata.annotations"></annotations>

@@ -90,14 +90,21 @@
       <h4>Volumes</h4>
       <div ng-if="!deployment.spec.template.spec.volumes.length">
         <div ng-if="kind === 'ReplicaSet'">
-          <a ng-if="{ group: 'extensions', resource: 'replicasets' } | canI : 'update'"
+          <a ng-if="resource | canI : 'update'"
              ng-href="project/{{project.metadata.name}}/attach-pvc?kind=ReplicaSet&name={{deployment.metadata.name}}&group=extensions">Attach storage</a>
-          <span ng-if="!({ group: 'extensions', resource: 'replicasets' } | canI : 'update')">none</span>
+          <span ng-if="!(resource | canI : 'update')">none</span>
         </div>
         <div ng-if="kind === 'ReplicationController'">
-          <a ng-if="'replicationcontrollers' | canI : 'update'"
-             ng-href="project/{{project.metadata.name}}/attach-pvc?kind=ReplicationController&name={{deployment.metadata.name}}">Attach storage</a>
-          <span ng-if="!('replicationcontrollers' | canI : 'update')">none</span>
+          <div ng-if="deploymentConfigName">
+            <a ng-if="'deploymentconfigs' | canI : 'update'"
+               ng-href="project/{{project.metadata.name}}/attach-pvc?kind=DeploymentConfig&name={{deploymentConfigName}}">Attach storage and redeploy</a>
+            <span ng-if="!('deploymentconfigs' | canI : 'update')">none</span>
+          </div>
+          <div ng-if="!deploymentConfigName">
+            <a ng-if="resource | canI : 'update'"
+               ng-href="project/{{project.metadata.name}}/attach-pvc?kind=ReplicationController&name={{deployment.metadata.name}}">Attach storage</a>
+            <span ng-if="!(resource | canI : 'update')">none</span>
+          </div>
         </div>
       </div>
       <volumes volumes="deployment.spec.template.spec.volumes" namespace="project.metadata.name"></volumes>

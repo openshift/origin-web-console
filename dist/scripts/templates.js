@@ -928,7 +928,7 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "<p ng-if=\"project && !('persistentvolumeclaims' | canI : 'create')\">\n" +
     "To claim storage from a persistent volume, refer to the documentation on <a target=\"_blank\" ng-href=\"{{'persistent_volumes' | helpLink}}\">using persistent volumes</a>.\n" +
     "</p>\n" +
-    "<p ng-if=\"attach.resource\"><a ng-href=\"{{attach.resource | navigateResourceURL}}\">Back to {{name}}</a></p>\n" +
+    "<p ng-if=\"attach.resource\"><a ng-href=\"{{attach.resource | navigateResourceURL}}\">Back to {{kind | humanizeKind}} {{name}}</a></p>\n" +
     "</div>\n" +
     "<div class=\"row\" ng-show=\"pvcs && pvcs.length && attach.resource\">\n" +
     "<div class=\"create-storage-icon col-md-2 gutter-top hidden-sm hidden-xs\">\n" +
@@ -1231,13 +1231,16 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "<h3>Template</h3>\n" +
     "<pod-template pod-template=\"pod\" images-by-docker-reference=\"imagesByDockerReference\" builds=\"builds\" detailed=\"true\">\n" +
     "</pod-template>\n" +
-    "<div ng-if=\"pod.spec.volumes.length\">\n" +
     "<h4>Volumes</h4>\n" +
-    "<p ng-if=\"(pod | annotation:'deploymentConfig') && !pod.spec.volumes.length\">\n" +
+    "<div ng-if=\"!pod.spec.volumes.length\">\n" +
+    "<p ng-if=\"(pod | annotation:'deploymentConfig') && ('deploymentconfigs' | canI : 'update')\">\n" +
     "<a ng-href=\"project/{{project.metadata.name}}/attach-pvc?kind=DeploymentConfig&name={{pod | annotation:'deploymentConfig'}}\">Attach storage and redeploy</a>\n" +
     "</p>\n" +
-    "<volumes volumes=\"pod.spec.volumes\" namespace=\"project.metadata.name\"></volumes>\n" +
+    "<p ng-if=\"!(pod | annotation:'deploymentConfig') || !('deploymentconfigs' | canI : 'update')\">\n" +
+    "None\n" +
+    "</p>\n" +
     "</div>\n" +
+    "<volumes ng-if=\"pod.spec.volumes.length\" volumes=\"pod.spec.volumes\" namespace=\"project.metadata.name\"></volumes>\n" +
     "</div>\n" +
     "</div>\n" +
     "<annotations annotations=\"pod.metadata.annotations\"></annotations>\n" +
@@ -1354,12 +1357,18 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "<h4>Volumes</h4>\n" +
     "<div ng-if=\"!deployment.spec.template.spec.volumes.length\">\n" +
     "<div ng-if=\"kind === 'ReplicaSet'\">\n" +
-    "<a ng-if=\"{ group: 'extensions', resource: 'replicasets' } | canI : 'update'\" ng-href=\"project/{{project.metadata.name}}/attach-pvc?kind=ReplicaSet&name={{deployment.metadata.name}}&group=extensions\">Attach storage</a>\n" +
-    "<span ng-if=\"!({ group: 'extensions', resource: 'replicasets' } | canI : 'update')\">none</span>\n" +
+    "<a ng-if=\"resource | canI : 'update'\" ng-href=\"project/{{project.metadata.name}}/attach-pvc?kind=ReplicaSet&name={{deployment.metadata.name}}&group=extensions\">Attach storage</a>\n" +
+    "<span ng-if=\"!(resource | canI : 'update')\">none</span>\n" +
     "</div>\n" +
     "<div ng-if=\"kind === 'ReplicationController'\">\n" +
-    "<a ng-if=\"'replicationcontrollers' | canI : 'update'\" ng-href=\"project/{{project.metadata.name}}/attach-pvc?kind=ReplicationController&name={{deployment.metadata.name}}\">Attach storage</a>\n" +
-    "<span ng-if=\"!('replicationcontrollers' | canI : 'update')\">none</span>\n" +
+    "<div ng-if=\"deploymentConfigName\">\n" +
+    "<a ng-if=\"'deploymentconfigs' | canI : 'update'\" ng-href=\"project/{{project.metadata.name}}/attach-pvc?kind=DeploymentConfig&name={{deploymentConfigName}}\">Attach storage and redeploy</a>\n" +
+    "<span ng-if=\"!('deploymentconfigs' | canI : 'update')\">none</span>\n" +
+    "</div>\n" +
+    "<div ng-if=\"!deploymentConfigName\">\n" +
+    "<a ng-if=\"resource | canI : 'update'\" ng-href=\"project/{{project.metadata.name}}/attach-pvc?kind=ReplicationController&name={{deployment.metadata.name}}\">Attach storage</a>\n" +
+    "<span ng-if=\"!(resource | canI : 'update')\">none</span>\n" +
+    "</div>\n" +
     "</div>\n" +
     "</div>\n" +
     "<volumes volumes=\"deployment.spec.template.spec.volumes\" namespace=\"project.metadata.name\"></volumes>\n" +
@@ -1419,8 +1428,14 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "</button>\n" +
     "<a href=\"\" class=\"dropdown-toggle actions-dropdown-kebab visible-xs-inline\" data-toggle=\"dropdown\"><i class=\"fa fa-ellipsis-v\"></i><span class=\"sr-only\">Actions</span></a>\n" +
     "<ul class=\"dropdown-menu actions action-button\">\n" +
-    "<li ng-if=\"'replicationcontrollers' | canI : 'update'\">\n" +
+    "<li ng-if=\"!deploymentConfigName && 'replicationcontrollers' | canI : 'update'\">\n" +
     "<a ng-href=\"project/{{project.metadata.name}}/attach-pvc?kind=ReplicationController&name={{deployment.metadata.name}}\" role=\"button\">Attach Storage</a>\n" +
+    "</li>\n" +
+    "<li ng-if=\"deploymentConfigName && ('deploymentconfigs' | canI : 'update')\">\n" +
+    "<a ng-href=\"project/{{project.metadata.name}}/attach-pvc?kind=DeploymentConfig&name={{deploymentConfigName}}\" role=\"button\">Attach Storage</a>\n" +
+    "</li>\n" +
+    "<li ng-if=\"deploymentConfigName && ('deploymentconfigs' | canI : 'update')\">\n" +
+    "<a ng-href=\"project/{{projectName}}/set-limits?kind=DeploymentConfig&name={{deploymentConfigName}}\" role=\"button\">Set Resource Limits</a>\n" +
     "</li>\n" +
     "<li ng-if=\"!deploymentConfigName && ('replicationcontrollers' | canI : 'update')\">\n" +
     "<a ng-href=\"project/{{projectName}}/set-limits?kind=ReplicationController&name={{deployment.metadata.name}}\" role=\"button\">Set Resource Limits</a>\n" +
@@ -2226,7 +2241,7 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "</div>\n" +
     "<small class=\"meta\" ng-if=\"deployment\">created <relative-timestamp timestamp=\"deployment.metadata.creationTimestamp\"></relative-timestamp></small>\n" +
     "</h1>\n" +
-    "<labels labels=\"deployment.metadata.labels\" clickable=\"true\" kind=\"deployments\" title-kind=\"deployment configs\" project-name=\"{{deployment.metadata.namespace}}\" limit=\"3\"></labels>\n" +
+    "<labels labels=\"deployment.metadata.labels\" clickable=\"true\" kind=\"deployments\" project-name=\"{{deployment.metadata.namespace}}\" limit=\"3\"></labels>\n" +
     "</div>\n" +
     "</div>\n" +
     "</div>\n" +
@@ -2243,7 +2258,7 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "<h3>Status</h3>\n" +
     "<dl class=\"dl-horizontal left\">\n" +
     "<dt>Last Version:</dt>\n" +
-    "<dd>{{deployment | annotation : 'deployment.kubernetes.io/revision'}}</dd>\n" +
+    "<dd>{{deployment | lastDeploymentRevision}}</dd>\n" +
     "<dt>Replicas:</dt>\n" +
     "<dd>\n" +
     "<replicas spec=\"deployment.spec.replicas\" disable-scaling=\"autoscalers.length\" scale-fn=\"scale(replicas)\" deployment=\"deployment\"></replicas>\n" +
@@ -2257,7 +2272,7 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "</div>\n" +
     "</dd>\n" +
     "<dt>Paused:</dt>\n" +
-    "<dd>{{!!deployment.spec.paused}}</dd>\n" +
+    "<dd>{{deployment.spec.paused | yesNo}}</dd>\n" +
     "</dl>\n" +
     "</div>\n" +
     "<div class=\"col-lg-6\">\n" +
@@ -2269,20 +2284,32 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "</dd>\n" +
     "<dt>Strategy:</dt>\n" +
     "<dd>{{deployment.spec.strategy.type | sentenceCase}}</dd>\n" +
-    "<dt ng-if-start=\"deployment.spec.strategy.rollingUpdate\">Max Unavailable:</dt>\n" +
-    "<dd>\n" +
-    "{{deployment.spec.strategy.rollingUpdate.maxUnavailable}}\n" +
+    "<dt ng-if-start=\"deployment.spec.strategy.rollingUpdate\">\n" +
+    "Max Unavailable:\n" +
     "<span data-toggle=\"tooltip\" title=\"The maximum number of pods that can be unavailable during the update process.\" class=\"pficon pficon-help text-muted small\"></span>\n" +
+    "</dt>\n" +
+    "<dd>\n" +
+    "<span ng-if=\"deployment.spec.strategy.rollingUpdate.maxUnavailable | isNil\">1</span>\n" +
+    "<span ng-if=\"!(deployment.spec.strategy.rollingUpdate.maxUnavailable | isNil)\">\n" +
+    "{{deployment.spec.strategy.rollingUpdate.maxUnavailable}}\n" +
+    "</span>\n" +
     "</dd>\n" +
-    "<dt>Max Surge:</dt>\n" +
-    "<dd ng-if-end>\n" +
-    "{{deployment.spec.strategy.rollingUpdate.maxSurge}}\n" +
+    "<dt>\n" +
+    "Max Surge:\n" +
     "<span data-toggle=\"tooltip\" title=\"The maximum number of pods that can be created above the desired number of pods.\" class=\"pficon pficon-help text-muted small\"></span>\n" +
+    "</dt>\n" +
+    "<dd ng-if-end>\n" +
+    "<span ng-if=\"deployment.spec.strategy.rollingUpdate.maxSurge | isNil\">1</span>\n" +
+    "<span ng-if=\"!(deployment.spec.strategy.rollingUpdate.maxSurge | isNil)\">\n" +
+    "{{deployment.spec.strategy.rollingUpdate.maxSurge}}\n" +
+    "</span>\n" +
     "</dd>\n" +
-    "<dt>Min Ready:</dt>\n" +
+    "<dt>\n" +
+    "Min Ready:\n" +
+    "<span data-toggle=\"tooltip\" title=\"The minimum number of seconds a new pod must be ready before it is considered available.\" class=\"pficon pficon-help text-muted small\"></span>\n" +
+    "</dt>\n" +
     "<dd>\n" +
     "{{deployment.spec.minReadySeconds || 0}} sec\n" +
-    "<span data-toggle=\"tooltip\" title=\"The minimum number of seconds for which a newly created pod should be ready without any of its containers crashing for it to be considered available.\" class=\"pficon pficon-help text-muted small\"></span>\n" +
     "</dd>\n" +
     "</dl>\n" +
     "</div>\n" +
@@ -4384,7 +4411,7 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "<a ng-href=\"{{k8sDeployment | navigateResourceURL}}\">{{k8sDeployment.metadata.name}}</a>\n" +
     "</td>\n" +
     "<td data-title=\"Last Version\">\n" +
-    "#{{k8sDeployment | annotation : 'deployment.kubernetes.io/revision'}}\n" +
+    "{{k8sDeployment | lastDeploymentRevision}}\n" +
     "</td>\n" +
     "<td data-title=\"Replicas\">\n" +
     "<span ng-if=\"k8sDeployment.status.replicas !== k8sDeployment.spec.replicas\">{{k8sDeployment.status.replicas}}/</span>{{k8sDeployment.spec.replicas}} replica<span ng-if=\"k8sDeployment.spec.replicas != 1\">s</span>\n" +
@@ -4835,8 +4862,9 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
   $templateCache.put('views/directives/breadcrumbs.html',
     "<ol class=\"breadcrumb\" ng-if=\"breadcrumbs.length\">\n" +
     "<li ng-repeat=\"breadcrumb in breadcrumbs\" ng-class=\"{'active': !$last}\">\n" +
-    "<a ng-if=\"breadcrumb.link\" ng-href=\"{{breadcrumb.link}}\">{{breadcrumb.title}}</a>\n" +
-    "<strong ng-if=\"!breadcrumb.link\">{{breadcrumb.title}}</strong>\n" +
+    "<a ng-if=\"!$last && breadcrumb.link\" href=\"{{breadcrumb.link}}\">{{breadcrumb.title}}</a>\n" +
+    "<a ng-if=\"!$last && !breadcrumb.link\" href=\"\" back>{{breadcrumb.title}}</a>\n" +
+    "<strong ng-if=\"$last\">{{breadcrumb.title}}</strong>\n" +
     "</li>\n" +
     "</ol>"
   );
@@ -5257,7 +5285,7 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "{{event.reason | sentenceCase}}\n" +
     "</div>\n" +
     "<div class=\"event-object\">\n" +
-    "{{event.involvedObject.kind | abbreviateKind}}/{{event.involvedObject.name}}\n" +
+    "{{event.involvedObject.kind | kindToResource | abbreviateResource}}/{{event.involvedObject.name}}\n" +
     "</div>\n" +
     "</div>\n" +
     "<div class=\"detail-group\">\n" +
