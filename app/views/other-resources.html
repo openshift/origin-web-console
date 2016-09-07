@@ -28,7 +28,13 @@
         <div class="container-fluid">
           <div class="row">
             <div class="col-md-12 gutter-top">
-              <table class="table table-bordered table-mobile" ng-class="{ 'table-empty': (resources | hashSize) === 0 }">
+              <div class="empty-state-message text-center" ng-if="(resources | hashSize) == 0">
+                <h2>{{emptyMessage}}</h2>
+              </div>
+              <table
+                class="table table-bordered table-mobile"
+                ng-class="{ 'table-empty': (resources | hashSize) === 0 }"
+                ng-if="(resources | hashSize) !== 0">
                 <thead>
                   <tr>
                     <th>Name</th>
@@ -37,9 +43,6 @@
                     <th><span class="sr-only">Actions</span></th>
                   </tr>
                 </thead>
-                <tbody ng-if="(resources | hashSize) == 0">
-                  <tr><td colspan="4"><em>{{emptyMessage}}</em></td></tr>
-                </tbody>
                 <tbody ng-repeat="resource in resources | orderObjectsByDate : true">
                   <tr>
                     <td data-title="Name">{{resource.metadata.name}}</td>

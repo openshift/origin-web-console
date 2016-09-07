@@ -149,44 +149,46 @@
 
                       <build-trends-chart builds="builds"></build-trends-chart>
                     </div>
+                    <div class="empty-state-message text-center" ng-if="(builds | hashSize) == 0">
+                      <h2>{{emptyMessage}}</h2>
+                    </div>
                     <div ng-if="loaded && (unfilteredBuilds | hashSize) > 0">
-                      <div class="table-filter-wrapper">
-                        <project-filter></project-filter>
+                      <div ng-if="(builds | hashSize) !== 0">
+                        <div class="table-filter-wrapper">
+                          <project-filter></project-filter>
+                        </div>
+                        <table ng-if="!(buildConfig | isJenkinsPipelineStrategy)" class="table table-bordered table-hover table-mobile">
+                          <thead>
+                            <tr>
+                              <th>Build</th>
+                              <th>Status</th>
+                              <th>Created</th>
+                            </tr>
+                          </thead>
+                          <tbody ng-repeat="build in orderedBuilds">
+                            <tr>
+                              <td data-title="Build">
+                                <!-- Build number and link -->
+                                <span ng-if="build | annotation : 'buildNumber'">
+                                  <a ng-href="{{build | navigateResourceURL}}">#{{build | annotation : 'buildNumber'}}</a>
+                                </span>
+                                <span ng-if="!(build | annotation : 'buildNumber')">
+                                  <a ng-href="{{build | navigateResourceURL}}">{{build.metadata.name}}</a>
+                                </span>
+                                <span ng-if="build.status.message" class="pficon pficon-warning-triangle-o" style="cursor: help;" data-toggle="popover" data-trigger="hover" dynamic-content="{{build.status.message}}"></span>
+                              </td>
+                              <td data-title="Status">
+                                <div row class="status">
+                                  <build-status build="build"></build-status>
+                                </div>
+                              </td>
+                              <td data-title="Created">
+                                <relative-timestamp timestamp="build.metadata.creationTimestamp"></relative-timestamp>
+                              </td>
+                            </tr>
+                          </tbody>
+                        </table>
                       </div>
-                      <table ng-if="!(buildConfig | isJenkinsPipelineStrategy)" class="table table-bordered table-hover table-mobile">
-                        <thead>
-                          <tr>
-                            <th>Build</th>
-                            <th>Status</th>
-                            <th>Created</th>
-                          </tr>
-                        </thead>
-                        <tbody ng-if="(builds | hashSize) == 0">
-                          <tr><td colspan="3"><em>{{emptyMessage}}</em></td></tr>
-                        </tbody>
-                        <tbody ng-repeat="build in orderedBuilds">
-                          <tr>
-                            <td data-title="Build">
-                              <!-- Build number and link -->
-                              <span ng-if="build | annotation : 'buildNumber'">
-                                <a ng-href="{{build | navigateResourceURL}}">#{{build | annotation : 'buildNumber'}}</a>
-                              </span>
-                              <span ng-if="!(build | annotation : 'buildNumber')">
-                                <a ng-href="{{build | navigateResourceURL}}">{{build.metadata.name}}</a>
-                              </span>
-                              <span ng-if="build.status.message" class="pficon pficon-warning-triangle-o" style="cursor: help;" data-toggle="popover" data-trigger="hover" dynamic-content="{{build.status.message}}"></span>
-                            </td>
-                            <td data-title="Status">
-                              <div row class="status">
-                                <build-status build="build"></build-status>
-                              </div>
-                            </td>
-                            <td data-title="Created">
-                              <relative-timestamp timestamp="build.metadata.creationTimestamp"></relative-timestamp>
-                            </td>
-                          </tr>
-                        </tbody>
-                      </table>
                       <div ng-if="buildConfig | isJenkinsPipelineStrategy">
                         <build-pipeline build="build" ng-repeat="build in orderedBuilds track by (build | uid)"></build-pipeline>
                         <table ng-if="(builds | hashSize) === 0" class="table table-bordered table-hover table-mobile">

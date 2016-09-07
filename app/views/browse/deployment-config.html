@@ -202,10 +202,17 @@
                       <annotations annotations="deploymentConfig.metadata.annotations"></annotations>
                     </div>
                     <div ng-if="loaded">
-                      <div class="table-filter-wrapper">
+                      <div class="empty-state-message text-center" ng-if="(deployments | hashSize) == 0">
+                        <h2>{{emptyMessage}}</h2>
+                      </div>
+                      <div
+                        class="table-filter-wrapper"
+                        ng-if="(deployments | hashSize) !== 0">
                         <project-filter></project-filter>
                       </div>
-                      <table class="table table-bordered table-hover table-mobile">
+                      <table
+                        class="table table-bordered table-hover table-mobile"
+                        ng-if="(deployments | hashSize) !== 0">
                         <thead>
                           <tr>
                             <th>Deployment</th>
@@ -214,9 +221,6 @@
                             <th>Trigger</th>
                           </tr>
                         </thead>
-                        <tbody ng-if="(deployments | hashSize) == 0">
-                          <tr><td colspan="4"><em>{{emptyMessage}}</em></td></tr>
-                        </tbody>
                         <tbody ng-repeat="deployment in deployments | orderObjectsByDate : true">
                           <tr>
                             <td data-title="Deployment">

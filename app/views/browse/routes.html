@@ -24,7 +24,12 @@
         <div class="container-fluid">
           <div class="row">
             <div class="col-md-12 gutter-top">
-              <table class="table table-bordered table-hover table-mobile">
+              <div class="empty-state-message text-center" ng-if="(routes | hashSize) == 0">
+                <h2>{{emptyMessage}}</h2>
+              </div>
+              <table
+                class="table table-bordered table-hover table-mobile"
+                ng-if="(routes | hashSize) !== 0">
                 <thead>
                   <tr>
                     <th>Name</th>
@@ -34,9 +39,6 @@
                     <th>TLS Termination</th>
                   </tr>
                 </thead>
-                <tbody ng-if="(routes | hashSize) == 0">
-                  <tr><td colspan="5"><em>{{emptyMessage}}</em></td></tr>
-                </tbody>
                 <tbody ng-repeat="route in routes | orderObjectsByDate : true">
                   <tr>
                     <td data-title="Name">

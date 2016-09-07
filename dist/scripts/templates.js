@@ -1493,7 +1493,11 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "</div>\n" +
     "<build-trends-chart builds=\"builds\"></build-trends-chart>\n" +
     "</div>\n" +
+    "<div class=\"empty-state-message text-center\" ng-if=\"(builds | hashSize) == 0\">\n" +
+    "<h2>{{emptyMessage}}</h2>\n" +
+    "</div>\n" +
     "<div ng-if=\"loaded && (unfilteredBuilds | hashSize) > 0\">\n" +
+    "<div ng-if=\"(builds | hashSize) !== 0\">\n" +
     "<div class=\"table-filter-wrapper\">\n" +
     "<project-filter></project-filter>\n" +
     "</div>\n" +
@@ -1505,9 +1509,6 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "<th>Created</th>\n" +
     "</tr>\n" +
     "</thead>\n" +
-    "<tbody ng-if=\"(builds | hashSize) == 0\">\n" +
-    "<tr><td colspan=\"3\"><em>{{emptyMessage}}</em></td></tr>\n" +
-    "</tbody>\n" +
     "<tbody ng-repeat=\"build in orderedBuilds\">\n" +
     "<tr>\n" +
     "<td data-title=\"Build\">\n" +
@@ -1531,6 +1532,7 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "</tr>\n" +
     "</tbody>\n" +
     "</table>\n" +
+    "</div>\n" +
     "<div ng-if=\"buildConfig | isJenkinsPipelineStrategy\">\n" +
     "<build-pipeline build=\"build\" ng-repeat=\"build in orderedBuilds track by (build | uid)\"></build-pipeline>\n" +
     "<table ng-if=\"(builds | hashSize) === 0\" class=\"table table-bordered table-hover table-mobile\">\n" +
@@ -2016,10 +2018,13 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "<annotations annotations=\"deploymentConfig.metadata.annotations\"></annotations>\n" +
     "</div>\n" +
     "<div ng-if=\"loaded\">\n" +
-    "<div class=\"table-filter-wrapper\">\n" +
+    "<div class=\"empty-state-message text-center\" ng-if=\"(deployments | hashSize) == 0\">\n" +
+    "<h2>{{emptyMessage}}</h2>\n" +
+    "</div>\n" +
+    "<div class=\"table-filter-wrapper\" ng-if=\"(deployments | hashSize) !== 0\">\n" +
     "<project-filter></project-filter>\n" +
     "</div>\n" +
-    "<table class=\"table table-bordered table-hover table-mobile\">\n" +
+    "<table class=\"table table-bordered table-hover table-mobile\" ng-if=\"(deployments | hashSize) !== 0\">\n" +
     "<thead>\n" +
     "<tr>\n" +
     "<th>Deployment</th>\n" +
@@ -2028,9 +2033,6 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "<th>Trigger</th>\n" +
     "</tr>\n" +
     "</thead>\n" +
-    "<tbody ng-if=\"(deployments | hashSize) == 0\">\n" +
-    "<tr><td colspan=\"4\"><em>{{emptyMessage}}</em></td></tr>\n" +
-    "</tbody>\n" +
     "<tbody ng-repeat=\"deployment in deployments | orderObjectsByDate : true\">\n" +
     "<tr>\n" +
     "<td data-title=\"Deployment\">\n" +
@@ -2306,7 +2308,10 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "</dl>\n" +
     "<annotations annotations=\"imageStream.metadata.annotations\"></annotations>\n" +
     "</div>\n" +
-    "<table class=\"table table-bordered table-hover table-mobile\">\n" +
+    "<div class=\"empty-state-message text-center\" ng-if=\"(tagsByName | hashSize) == 0\">\n" +
+    "<h2>{{emptyMessage}}</h2>\n" +
+    "</div>\n" +
+    "<table class=\"table table-bordered table-hover table-mobile\" ng-if=\"(tagsByName | hashSize) !== 0\">\n" +
     "<thead>\n" +
     "<tr>\n" +
     "<th>Tag</th>\n" +
@@ -2316,9 +2321,6 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "<th>Pull Spec</th>\n" +
     "</tr>\n" +
     "</thead>\n" +
-    "<tbody ng-if=\"(tagsByName | hashSize) == 0\">\n" +
-    "<tr><td colspan=\"5\"><em>{{emptyMessage}}</em></td></tr>\n" +
-    "</tbody>\n" +
     "<tbody ng-repeat-start=\"tag in tagsByName | orderBy : 'name'\">\n" +
     "<tr>\n" +
     "<td data-title=\"Tag\"><a href=\"{{imageStream | navigateResourceURL}}/{{tag.name}}\">{{tag.name}}</a></td>\n" +
@@ -2964,7 +2966,10 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "<div class=\"container-fluid\">\n" +
     "<div class=\"row\">\n" +
     "<div class=\"col-md-12 gutter-top\">\n" +
-    "<table class=\"table table-bordered table-hover table-mobile\">\n" +
+    "<div class=\"empty-state-message text-center\" ng-if=\"(routes | hashSize) == 0\">\n" +
+    "<h2>{{emptyMessage}}</h2>\n" +
+    "</div>\n" +
+    "<table class=\"table table-bordered table-hover table-mobile\" ng-if=\"(routes | hashSize) !== 0\">\n" +
     "<thead>\n" +
     "<tr>\n" +
     "<th>Name</th>\n" +
@@ -2974,9 +2979,6 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "<th>TLS Termination</th>\n" +
     "</tr>\n" +
     "</thead>\n" +
-    "<tbody ng-if=\"(routes | hashSize) == 0\">\n" +
-    "<tr><td colspan=\"5\"><em>{{emptyMessage}}</em></td></tr>\n" +
-    "</tbody>\n" +
     "<tbody ng-repeat=\"route in routes | orderObjectsByDate : true\">\n" +
     "<tr>\n" +
     "<td data-title=\"Name\">\n" +
@@ -3172,7 +3174,10 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "<div class=\"container-fluid\">\n" +
     "<div class=\"row\">\n" +
     "<div class=\"col-md-12 gutter-top\">\n" +
-    "<table class=\"table table-bordered table-hover table-mobile\">\n" +
+    "<div class=\"empty-state-message text-center\" ng-if=\"!(latestByConfig | hashSize)\">\n" +
+    "<h2>{{emptyMessage}}</h2>\n" +
+    "</div>\n" +
+    "<table class=\"table table-bordered table-hover table-mobile\" ng-if=\"(latestByConfig | hashSize)\">\n" +
     "<thead>\n" +
     "<tr>\n" +
     "<th>Name</th>\n" +
@@ -3183,9 +3188,6 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "<th>Source</th>\n" +
     "</tr>\n" +
     "</thead>\n" +
-    "<tbody ng-if=\"!(latestByConfig | hashSize)\">\n" +
-    "<tr><td colspan=\"6\"><em>{{emptyMessage}}</em></td></tr>\n" +
-    "</tbody>\n" +
     "<tbody ng-repeat=\"(buildConfigName, latestBuild) in latestByConfig\">\n" +
     "\n" +
     "<tr ng-if=\"!latestBuild\">\n" +
@@ -4116,7 +4118,10 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "<div class=\"container-fluid\">\n" +
     "<div class=\"row\">\n" +
     "<div class=\"col-md-12 gutter-top\">\n" +
-    "<table class=\"table table-bordered table-hover table-mobile\">\n" +
+    "<div class=\"empty-state-message text-center\" ng-if=\"showEmptyMessage()\">\n" +
+    "<h2>{{emptyMessage}}</h2>\n" +
+    "</div>\n" +
+    "<table class=\"table table-bordered table-hover table-mobile\" ng-if=\"!showEmptyMessage()\">\n" +
     "<thead>\n" +
     "<tr>\n" +
     "<th>Name</th>\n" +
@@ -4126,11 +4131,6 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "<th>Trigger</th>\n" +
     "</tr>\n" +
     "</thead>\n" +
-    "\n" +
-    "<tbody ng-if=\"showEmptyMessage()\">\n" +
-    "\n" +
-    "<tr><td colspan=\"5\"><em>{{emptyMessage}}</em></td></tr>\n" +
-    "</tbody>\n" +
     "<tbody ng-repeat=\"(deploymentConfigName, deploymentConfigDeployments) in deploymentsByDeploymentConfig\" ng-if=\"deploymentConfigName && (deploymentConfigs[deploymentConfigName] || !unfilteredDeploymentConfigs[deploymentConfigName])\">\n" +
     "\n" +
     "<tr ng-if=\"(deploymentConfigDeployments | hashSize) == 0 && deploymentConfigName\">\n" +
@@ -5066,7 +5066,10 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "<div pf-sort config=\"sortConfig\" class=\"sort-controls\"></div>\n" +
     "</div>\n" +
     "</div>\n" +
-    "<table class=\"table table-bordered table-condensed table-mobile table-hover events-table\" ng-class=\"{ 'table-empty': (filteredEvents | hashSize) === 0 }\">\n" +
+    "<div class=\"empty-state-message text-center\" ng-if=\"(filteredEvents | hashSize) === 0\">\n" +
+    "<h2>{{emptyMessage}}</h2>\n" +
+    "</div>\n" +
+    "<table class=\"table table-bordered table-condensed table-mobile table-hover events-table\" ng-class=\"{ 'table-empty': (filteredEvents | hashSize) === 0 }\" ng-if=\"(filteredEvents | hashSize) !== 0\">\n" +
     "<thead>\n" +
     "<tr>\n" +
     "<th id=\"time\">Time</th>\n" +
@@ -5083,24 +5086,6 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "<th id=\"message\"><span class=\"hidden-xs-inline visible-sm-inline visible-md-inline hidden-lg-inline\">Reason and </span>Message</th>\n" +
     "</tr>\n" +
     "</thead>\n" +
-    "<tbody ng-if=\"(filteredEvents | hashSize) === 0\">\n" +
-    "<tr>\n" +
-    "<td class=\"hidden-lg\" colspan=\"3\">\n" +
-    "<span ng-if=\"(events | hashSize) === 0\"><em>No events to show.</em></span>\n" +
-    "<span ng-if=\"(events | hashSize) > 0\">\n" +
-    "All events hidden by filter.\n" +
-    "<a href=\"\" ng-click=\"filter.text = ''\" role=\"button\">Clear filter</a>\n" +
-    "</span>\n" +
-    "</td>\n" +
-    "<td class=\"hidden-xs hidden-sm hidden-md\" colspan=\"6\">\n" +
-    "<span ng-if=\"(events | hashSize) === 0\"><em>No events to show.</em></span>\n" +
-    "<span ng-if=\"(events | hashSize) > 0\">\n" +
-    "All events hidden by filter.\n" +
-    "<a href=\"\" ng-click=\"filter.text = ''\" role=\"button\">Clear filter</a>\n" +
-    "</span>\n" +
-    "</td>\n" +
-    "</tr>\n" +
-    "</tbody>\n" +
     "<tbody ng-repeat=\"event in filteredEvents\">\n" +
     "<tr>\n" +
     "<td data-title=\"Time\" class=\"nowrap\">{{event.lastTimestamp | date:'mediumTime'}}</td>\n" +
@@ -6175,7 +6160,10 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
 
 
   $templateCache.put('views/directives/pods-table.html',
-    "<table class=\"table table-bordered table-hover table-mobile\">\n" +
+    "<div class=\"empty-state-message text-center\" ng-if=\"(pods | hashSize) == 0\">\n" +
+    "<h2>{{emptyMessage}}</h2>\n" +
+    "</div>\n" +
+    "<table class=\"table table-bordered table-hover table-mobile\" ng-if=\"(pods | hashSize) !== 0\">\n" +
     "<thead>\n" +
     "<tr>\n" +
     "<th>Name</th>\n" +
@@ -6185,9 +6173,6 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "<th>Age</th>\n" +
     "</tr>\n" +
     "</thead>\n" +
-    "<tbody ng-if=\"(pods | hashSize) == 0\">\n" +
-    "<tr><td colspan=\"5\"><em>{{emptyMessage || 'No pods to show'}}</em></td></tr>\n" +
-    "</tbody>\n" +
     "<tbody ng-repeat=\"pod in pods | orderObjectsByDate : true\">\n" +
     "<tr>\n" +
     "<td data-title=\"Name\">\n" +
@@ -6896,7 +6881,10 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "<div class=\"container-fluid\">\n" +
     "<div class=\"row\">\n" +
     "<div class=\"col-md-12 gutter-top\">\n" +
-    "<table class=\"table table-bordered table-hover table-mobile\">\n" +
+    "<div class=\"empty-state-message text-center\" ng-if=\"(imageStreams | hashSize) == 0\">\n" +
+    "<h2>{{emptyMessage}}</h2>\n" +
+    "</div>\n" +
+    "<table class=\"table table-bordered table-hover table-mobile\" ng-if=\"(imageStreams | hashSize) !== 0\">\n" +
     "<thead>\n" +
     "<tr>\n" +
     "<th>Name</th>\n" +
@@ -6905,9 +6893,6 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "<th>Updated</th>\n" +
     "</tr>\n" +
     "</thead>\n" +
-    "<tbody ng-if=\"(imageStreams | hashSize) == 0\">\n" +
-    "<tr><td colspan=\"4\"><em>{{emptyMessage}}</em></td></tr>\n" +
-    "</tbody>\n" +
     "<tbody ng-repeat=\"imageStream in imageStreams | orderObjectsByDate : true\">\n" +
     "<tr>\n" +
     "<td data-title=\"Name\"><a href=\"{{imageStream | navigateResourceURL}}\">{{imageStream.metadata.name}}</a></td>\n" +
@@ -7639,7 +7624,10 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "<div class=\"container-fluid\">\n" +
     "<div class=\"row\">\n" +
     "<div class=\"col-md-12 gutter-top\">\n" +
-    "<table class=\"table table-bordered table-mobile\" ng-class=\"{ 'table-empty': (resources | hashSize) === 0 }\">\n" +
+    "<div class=\"empty-state-message text-center\" ng-if=\"(resources | hashSize) == 0\">\n" +
+    "<h2>{{emptyMessage}}</h2>\n" +
+    "</div>\n" +
+    "<table class=\"table table-bordered table-mobile\" ng-class=\"{ 'table-empty': (resources | hashSize) === 0 }\" ng-if=\"(resources | hashSize) !== 0\">\n" +
     "<thead>\n" +
     "<tr>\n" +
     "<th>Name</th>\n" +
@@ -7648,9 +7636,6 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "<th><span class=\"sr-only\">Actions</span></th>\n" +
     "</tr>\n" +
     "</thead>\n" +
-    "<tbody ng-if=\"(resources | hashSize) == 0\">\n" +
-    "<tr><td colspan=\"4\"><em>{{emptyMessage}}</em></td></tr>\n" +
-    "</tbody>\n" +
     "<tbody ng-repeat=\"resource in resources | orderObjectsByDate : true\">\n" +
     "<tr>\n" +
     "<td data-title=\"Name\">{{resource.metadata.name}}</td>\n" +
@@ -8764,7 +8749,10 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "<div class=\"container-fluid\">\n" +
     "<div class=\"row\">\n" +
     "<div class=\"col-md-12 gutter-top\">\n" +
-    "<table class=\"table table-bordered table-hover table-mobile\">\n" +
+    "<div class=\"empty-state-message text-center\" ng-if=\"(services | hashSize) == 0\">\n" +
+    "<h2>{{emptyMessage}}</h2>\n" +
+    "</div>\n" +
+    "<table class=\"table table-bordered table-hover table-mobile\" ng-if=\"(services | hashSize) !== 0\">\n" +
     "<thead>\n" +
     "<tr>\n" +
     "<th>Name</th>\n" +
@@ -8775,9 +8763,6 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "<th>Age</th>\n" +
     "</tr>\n" +
     "</thead>\n" +
-    "<tbody ng-if=\"(services | hashSize) == 0\">\n" +
-    "<tr><td colspan=\"6\"><em>{{emptyMessage}}</em></td></tr>\n" +
-    "</tbody>\n" +
     "<tbody ng-repeat=\"service in services | orderObjectsByDate : true\">\n" +
     "<tr>\n" +
     "<td data-title=\"Name\"><a href=\"{{service | navigateResourceURL}}\">{{service.metadata.name}}</a></td>\n" +
@@ -9174,7 +9159,10 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "<div class=\"container-fluid\">\n" +
     "<div class=\"row\">\n" +
     "<div class=\"col-md-12\">\n" +
-    "<div class=\"section-header page-header-bleed-right page-header-bleed-left\">\n" +
+    "<div class=\"empty-state-message text-center\" ng-if=\"(pvcs | hashSize) === 0\">\n" +
+    "<h2>{{emptyMessage}}</h2>\n" +
+    "</div>\n" +
+    "<div class=\"section-header page-header-bleed-right page-header-bleed-left\" ng-if=\"(pvcs | hashSize) !== 0\">\n" +
     "<div class=\"hidden-xs pull-right\" ng-if=\"project && ('persistentvolumeclaims' | canI : 'create')\">\n" +
     "<a ng-href=\"project/{{project.metadata.name}}/create-pvc\" class=\"btn btn-default\">Request Storage</a>\n" +
     "</div>\n" +
@@ -9183,7 +9171,7 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "<a ng-href=\"project/{{project.metadata.name}}/create-pvc\" class=\"btn btn-default\">Request Storage</a>\n" +
     "</div>\n" +
     "</div>\n" +
-    "<table class=\"table table-bordered table-hover table-mobile\" ng-class=\"{ 'table-empty': (pvcs | hashSize) === 0 }\">\n" +
+    "<table class=\"table table-bordered table-hover table-mobile\" ng-class=\"{ 'table-empty': (pvcs | hashSize) === 0 }\" ng-if=\"(pvcs | hashSize) !== 0\">\n" +
     "<thead>\n" +
     "<tr>\n" +
     "<th>Name</th>\n" +
@@ -9193,9 +9181,6 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "<th>Age</th>\n" +
     "</tr>\n" +
     "</thead>\n" +
-    "<tbody ng-if=\"(pvcs | hashSize) === 0\">\n" +
-    "<tr><td colspan=\"5\"><em>{{emptyMessage}}</em></td></tr>\n" +
-    "</tbody>\n" +
     "<tbody ng-repeat=\"pvc in pvcs | orderObjectsByDate : true\">\n" +
     "<tr>\n" +
     "<td data-title=\"Name\"><a ng-href=\"{{pvc | navigateResourceURL}}\">{{pvc.metadata.name}}</a></td>\n" +
