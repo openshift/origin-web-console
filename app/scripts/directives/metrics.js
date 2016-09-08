@@ -80,7 +80,7 @@ angular.module('openshiftConsole')
             smallestYAxisMax: 10,
             datasets: [
               {
-                id: "cpu/usage",
+                id: "cpu/usage_rate",
                 label: "CPU",
                 data: []
               }
@@ -99,12 +99,12 @@ angular.module('openshiftConsole')
             smallestYAxisMax: 1,
             datasets: [
               {
-                id: "network/tx",
+                id: "network/tx_rate",
                 label: "Sent",
                 data: []
               },
               {
-                id: "network/rx",
+                id: "network/rx_rate",
                 label: "Received",
                 data: []
               }

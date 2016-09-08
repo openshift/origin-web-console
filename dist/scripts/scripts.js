@@ -2380,123 +2380,80 @@ b[a.tag] = b[a.tag] || {}, b[a.tag].name = a.tag, b[a.tag].status = angular.copy
 };
 }), angular.module("openshiftConsole").factory("MetricsService", [ "$filter", "$http", "$q", "APIDiscovery", function(a, b, c, d) {
 function e() {
-return angular.isDefined(n) ? c.when(n) :d.getMetricsURL().then(function(a) {
-return n = (a || "").replace(/\/$/, "");
+return angular.isDefined(l) ? c.when(l) :d.getMetricsURL().then(function(a) {
+return l = (a || "").replace(/\/$/, "");
 });
 }
-function f(a, b) {
-return !(!a.min || !a.max) && (!(!a.start || !a.end) && !(b.pod && !b.stacked && a.samples < 2));
-}
-function g(a, b) {
-if (!f(a, b)) return null;
-var c = a.end - a.start;
-if (0 === c) return null;
-var d = (a.max - a.min) / 1e6;
-return d / c * 1e3;
-}
-function h(a, b) {
-if (!f(a, b)) return null;
-var c = (a.end - a.start) / 1e3;
-if (0 === c) return null;
-var d = a.max - a.min;
-return d / c;
-}
-function i(a, b) {
-if (a.length) return angular.forEach(a, function(a) {
+function f(a) {
+if (a.length) return _.each(a, function(a) {
 if (!a.value || "NaN" === a.value) {
-var c = a.avg;
-a.value = c && "NaN" !== c ? c :null;
+var b = a.avg;
+a.value = b && "NaN" !== b ? b :null;
 }
-"cpu/usage" === b.metric && (a.value = g(a, b)), /network\/rx|tx/.test(b.metric) && (a.value = h(a, b));
 }), a;
 }
-function j(a) {
+function g(a) {
 var b = "^";
 return _.each(a, function(a, c) {
 b += "(?=.*\\b" + c + ":" + a + "\\b)";
 }), b += ".*$";
 }
-function k(a) {
+function h(a) {
 return a.join("|");
 }
-function l() {
+function i() {
 return e().then(function(a) {
 return a ? a + "/metrics/stats/query" :a;
 });
 }
-function m(a) {
-return e().then(function(b) {
-var c, d;
-if (a.deployment) {
-switch (c = b + A[a.metric], a.metric) {
-case "network/rx":
-case "network/tx":
-d = "pod";
-break;
+function j(a) {
+switch (a) {
+case "network/rx_rate":
+case "network/tx_rate":
+return "pod";
 
 default:
-d = "pod_container";
+return "pod_container";
 }
-var e = _.get(a, "deployment.spec.selector", {}), f = j(e);
+}
+function k(a) {
+return e().then(function(b) {
+var c, d = j(a.metric);
+if (a.deployment) {
+c = b + q;
+var e = _.get(a, "deployment.spec.selector", {}), f = g(e);
 return URI.expand(c, {
 labels:f,
 metric:a.metric,
 type:d
 }).toString();
 }
-if (a.stacked) {
-switch (c = b + z[a.metric], a.metric) {
-case "network/rx":
-case "network/tx":
-d = "pod";
-break;
-
-default:
-d = "pod_container";
-}
-return URI.expand(c, {
+return a.stacked ? (c = b + p, URI.expand(c, {
 podName:a.pod.metadata.name,
 metric:a.metric,
 type:d
-}).toString();
-}
-return c = b + y[a.metric], URI.expand(c, {
+}).toString()) :(c = b + o, URI.expand(c, {
 podUID:a.pod.metadata.uid,
 containerName:a.containerName,
 metric:a.metric
-}).toString();
+}).toString());
 });
 }
-var n, o, p, q = "/counters/{containerName}%2F{podUID}%2F{metric}/data", r = "/gauges/{containerName}%2F{podUID}%2F{metric}/data", s = "?stacked=true&tags=descriptor_name:{metric},type:{type},pod_name:{podName}", t = "/counters/data" + s, u = "/gauges/data" + s, v = "?stacked=true&tags=descriptor_name:{metric},type:{type},labels:{labels}", w = "/counters/data" + v, x = "/gauges/data" + v, y = {
-"cpu/usage":q,
-"memory/usage":r,
-"network/rx":q,
-"network/tx":q
-}, z = {
-"cpu/usage":t,
-"memory/usage":u,
-"network/rx":t,
-"network/tx":t
-}, A = {
-"cpu/usage":w,
-"memory/usage":x,
-"network/rx":w,
-"network/tx":w
-}, B = function(a) {
+var l, m, n, o = "/gauges/{containerName}%2F{podUID}%2F{metric}/data", p = "/gauges/data?stacked=true&tags=descriptor_name:{metric},type:{type},pod_name:{podName}", q = "/gauges/data?stacked=true&tags=descriptor_name:{metric},type:{type},labels:{labels}", r = function(a) {
 return e().then(function(c) {
-return !!c && (!a || (!!o || !p && b.get(c).then(function() {
-return o = !0, !0;
+return !!c && (!a || (!!m || !n && b.get(c).then(function() {
+return m = !0, !0;
 }, function() {
-return p = !0, !1;
+return n = !0, !1;
 })));
 });
-}, C = function(a) {
+}, s = function(a) {
 var b = a.split("/");
 return {
 podUID:b[1],
 descriptor:b[2] + "/" + b[3]
 };
-}, D = function(a, c, d) {
+}, t = function(a, c, d) {
 var e = _.indexBy(d.pods, "metadata.uid");
 return b.post(a, c, {
 auth:{},
@@ -2507,33 +2464,31 @@ Accept:"application/json",
 }
 }).then(function(a) {
 var b = {}, c = function(a, c) {
-var f = C(c), g = _.get(e, [ f.podUID, "metadata", "name" ]), h = i(a, _.assign(d, {
-metric:f.descriptor
-}));
-_.set(b, [ f.descriptor, g ], h);
+var d = s(c), g = _.get(e, [ d.podUID, "metadata", "name" ]), h = f(a);
+_.set(b, [ d.descriptor, g ], h);
 };
 return _.each(a.data.counter, c), _.each(a.data.gauge, c), b;
 });
-}, E = _.template("descriptor_name:network/tx|network/rx,type:pod,pod_id:<%= uid %>"), F = _.template("descriptor_name:memory/usage|cpu/usage,type:pod_container,pod_id:<%= uid %>,container_name:<%= containerName %>"), G = function(a) {
-return l().then(function(b) {
+}, u = _.template("descriptor_name:network/tx_rate|network/rx_rate,type:pod,pod_id:<%= uid %>"), v = _.template("descriptor_name:memory/usage|cpu/usage_rate,type:pod_container,pod_id:<%= uid %>,container_name:<%= containerName %>"), w = function(a) {
+return i().then(function(b) {
 var d = {
 bucketDuration:a.bucketDuration,
 start:a.start
 };
 a.end && (d.end = a.end);
-var e = [], f = k(_.map(a.pods, "metadata.uid")), g = _.assign({
-tags:F({
+var e = [], f = h(_.map(a.pods, "metadata.uid")), g = _.assign({
+tags:v({
 uid:f,
 containerName:a.containerName
 })
 }, d);
-e.push(D(b, g, a));
-var h = _.assign({
-tags:E({
+e.push(t(b, g, a));
+var i = _.assign({
+tags:u({
 uid:f
 })
 }, d);
-return e.push(D(b, h, a)), c.all(e).then(function(a) {
+return e.push(t(b, i, a)), c.all(e).then(function(a) {
 var b = {};
 return _.each(a, function(a) {
 _.assign(b, a);
@@ -2542,10 +2497,10 @@ _.assign(b, a);
 });
 };
 return {
-isAvailable:B,
+isAvailable:r,
 getMetricsURL:e,
 get:function(a) {
-return m(a).then(function(c) {
+return k(a).then(function(c) {
 if (!c) return null;
 var d = {
 bucketDuration:a.bucketDuration,
@@ -2561,12 +2516,12 @@ params:d
 }).then(function(b) {
 return _.assign(b, {
 metricID:a.metric,
-data:i(b.data, a)
+data:f(b.data)
 });
 });
 });
 },
-getPodMetrics:G
+getPodMetrics:w
 };
 } ]), angular.module("openshiftConsole").factory("StorageService", function() {
 return {
@@ -8330,7 +8285,7 @@ convert:_.round,
 containerMetric:!0,
 smallestYAxisMax:10,
 datasets:[ {
-id:"cpu/usage",
+id:"cpu/usage_rate",
 label:"CPU",
 data:[]
 } ]
@@ -8342,11 +8297,11 @@ chartType:"spline",
 convert:g.bytesToKiB,
 smallestYAxisMax:1,
 datasets:[ {
-id:"network/tx",
+id:"network/tx_rate",
 label:"Sent",
 data:[]
 }, {
-id:"network/rx",
+id:"network/rx_rate",
 label:"Received",
 data:[]
 } ]
@@ -8582,21 +8537,21 @@ type:"pod_container"
 label:"CPU",
 units:"millicores",
 chartPrefix:"cpu-",
-descriptor:"cpu/usage",
+descriptor:"cpu/usage_rate",
 type:"pod_container"
 }, {
 label:"Network (Sent)",
 units:"KiB/s",
 chartPrefix:"network-sent-",
 convert:g.bytesToKiB,
-descriptor:"network/tx",
+descriptor:"network/tx_rate",
 type:"pod"
 }, {
 label:"Network (Received)",
 units:"KiB/s",
 chartPrefix:"network-received-",
 convert:g.bytesToKiB,
-descriptor:"network/rx",
+descriptor:"network/rx_rate",
 type:"pod"
 } ], b.loaded = !1, b.noData = !0, h.getMetricsURL().then(function(a) {
 b.metricsURL = a;

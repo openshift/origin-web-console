@@ -47,21 +47,21 @@ angular.module('openshiftConsole')
           label: "CPU",
           units: "millicores",
           chartPrefix: "cpu-",
-          descriptor: 'cpu/usage',
+          descriptor: 'cpu/usage_rate',
           type: 'pod_container'
         }, {
           label: "Network (Sent)",
           units: "KiB/s",
           chartPrefix: "network-sent-",
           convert: ConversionService.bytesToKiB,
-          descriptor: 'network/tx',
+          descriptor: 'network/tx_rate',
           type: 'pod'
         }, {
           label: "Network (Received)",
           units: "KiB/s",
           chartPrefix: "network-received-",
           convert: ConversionService.bytesToKiB,
-          descriptor: 'network/rx',
+          descriptor: 'network/rx_rate',
           type: 'pod'
         }];
 

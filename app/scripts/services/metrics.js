@@ -2,41 +2,11 @@
 
 angular.module("openshiftConsole")
   .factory("MetricsService", function($filter, $http, $q, APIDiscovery) {
-    var POD_COUNTER_TEMPLATE = "/counters/{containerName}%2F{podUID}%2F{metric}/data";
     var POD_GAUGE_TEMPLATE = "/gauges/{containerName}%2F{podUID}%2F{metric}/data";
-
     // Used in compact view.
-    var POD_QUERY = "?stacked=true&tags=descriptor_name:{metric},type:{type},pod_name:{podName}";
-    var POD_STACKED_COUNTER_TEMPLATE = "/counters/data" + POD_QUERY;
-    var POD_STACKED_GAUGE_TEMPLATE = "/gauges/data" + POD_QUERY;
-
+    var POD_STACKED_TEMPLATE = "/gauges/data?stacked=true&tags=descriptor_name:{metric},type:{type},pod_name:{podName}";
     // Find metrics matching the RC selector.
-    var RC_QUERY = "?stacked=true&tags=descriptor_name:{metric},type:{type},labels:{labels}";
-    var RC_COUNTER_TEMPLATE = "/counters/data" + RC_QUERY;
-    var RC_GAUGE_TEMPLATE = "/gauges/data" + RC_QUERY;
-
-    // URL template to show for each type of metric.
-    var podURLTemplateByMetric = {
-      "cpu/usage": POD_COUNTER_TEMPLATE,
-      "memory/usage": POD_GAUGE_TEMPLATE,
-      "network/rx": POD_COUNTER_TEMPLATE,
-      "network/tx": POD_COUNTER_TEMPLATE
-    };
-
-    // URL template to show for each type of metric.
-    var podStackedURLTemplateByMetric = {
-      "cpu/usage": POD_STACKED_COUNTER_TEMPLATE,
-      "memory/usage": POD_STACKED_GAUGE_TEMPLATE,
-      "network/rx": POD_STACKED_COUNTER_TEMPLATE,
-      "network/tx": POD_STACKED_COUNTER_TEMPLATE
-    };
-
-    var deploymentURLTemplateByMetric = {
-      "cpu/usage": RC_COUNTER_TEMPLATE,
-      "memory/usage": RC_GAUGE_TEMPLATE,
-      "network/rx": RC_COUNTER_TEMPLATE,
-      "network/tx": RC_COUNTER_TEMPLATE
-    };
+    var RC_TEMPLATE = "/gauges/data?stacked=true&tags=descriptor_name:{metric},type:{type},labels:{labels}";
 
     var metricsURL;
     function getMetricsURL() {
@@ -51,82 +21,16 @@ angular.module("openshiftConsole")
       });
     }
 
-    // Is there engouh data to compare min and max values to calculate a usage
-    // rate for a counter metric like CPU or network?
-    function canCalculateRate(point, config) {
-      // If there isn't a min or max, we can't compare.
-      if (!point.min || !point.max) {
-        return false;
-      }
-
-      if (!point.start || !point.end) {
-        return false;
-      }
-
-      // For pod metrics, if samples < 2, min and max will always be the same
-      // because there aren't enough samples in the bucket.
-      // For deployment metrics that are "stacked," samples has a different
-      // meaning. It is set to 1 if there is one pod, even when min and max
-      // have different values, so don't ignore this point.
-      if (config.pod && !config.stacked && point.samples < 2) {
-        return false;
-      }
-
-      return true;
-    }
-
-    // Convert cumulative CPU usage in nanoseconds to millicores.
-    function millicoresUsed(point, config) {
-      if (!canCalculateRate(point, config)) {
-        return null;
-      }
-
-      var timeInMillis = point.end - point.start;
-      if (timeInMillis === 0) {
-        return null;
-      }
-
-      // Find the usage for just this bucket by comparing min and max.
-      // Values are in nanoseconds. Calculate usage in millis.
-      var usageInMillis = (point.max - point.min) / 1000000;
-      // Convert to millicores.
-      return (usageInMillis / timeInMillis) * 1000;
-    }
-
-    // Convert cumulative usage to usage rate, doesn't change units.
-    function bytesUsedPerSecond(point, config) {
-      if (!canCalculateRate(point, config)) {
-        return null;
-      }
-
-      var seconds = (point.end - point.start) / 1000;
-      if (seconds === 0) {
-        return null;
-      }
-
-      var bytesUsed = point.max - point.min;
-      return bytesUsed / seconds;
-    }
-
-    function normalize(data, config) {
+    function normalize(data) {
       if (!data.length) {
         return;
       }
 
-      angular.forEach(data, function(point) {
+      _.each(data, function(point) {
         // Set point.value to the average or null if no average.
         if (!point.value || point.value === "NaN") {
           var avg = point.avg;
           point.value = (avg && avg !== "NaN") ? avg : null;
-        }
-
-        if (config.metric === 'cpu/usage') {
-          point.value = millicoresUsed(point, config);
-        }
-
-        // Network is cumulative, convert to amount per point.
-        if (/network\/rx|tx/.test(config.metric)) {
-          point.value = bytesUsedPerSecond(point, config);
         }
       });
 
@@ -159,23 +63,24 @@ angular.module("openshiftConsole")
       });
     }
 
+    function getMetricType(metric) {
+      switch (metric) {
+        case 'network/rx_rate':
+        case 'network/tx_rate':
+          return 'pod';
+        default:
+          return 'pod_container';
+      }
+    }
+
     function getRequestURL(config) {
       return getMetricsURL().then(function(metricsURL) {
         var template;
+        var type = getMetricType(config.metric);
 
         // Are we requesting deployment-level metrics?
-        var type;
         if (config.deployment) {
-          template = metricsURL + deploymentURLTemplateByMetric[config.metric];
-          switch (config.metric) {
-          case 'network/rx':
-          case 'network/tx':
-            type = 'pod';
-            break;
-          default:
-            type = 'pod_container';
-          }
-
+          template = metricsURL + RC_TEMPLATE;
           var selector = _.get(config, 'deployment.spec.selector', {});
           var labels = labelRegex(selector);
           return URI.expand(template, {
@@ -187,15 +92,7 @@ angular.module("openshiftConsole")
 
         // Are we requesting stacked pod metrics?
         if (config.stacked) {
-          template = metricsURL + podStackedURLTemplateByMetric[config.metric];
-          switch (config.metric) {
-          case 'network/rx':
-          case 'network/tx':
-            type = 'pod';
-            break;
-          default:
-            type = 'pod_container';
-          }
+          template = metricsURL + POD_STACKED_TEMPLATE;
           return URI.expand(template, {
             podName: config.pod.metadata.name,
             metric: config.metric,
@@ -204,7 +101,7 @@ angular.module("openshiftConsole")
         }
 
         // Otherwise, get metrics for a pod.
-        template = metricsURL + podURLTemplateByMetric[config.metric];
+        template = metricsURL + POD_GAUGE_TEMPLATE;
         return URI.expand(template, {
           podUID: config.pod.metadata.uid,
           containerName: config.containerName,
@@ -268,9 +165,7 @@ angular.module("openshiftConsole")
         var processResponse = function(data, metricID) {
           var info = getMetricInfo(metricID);
           var podName = _.get(podsByUID, [info.podUID, 'metadata', 'name']);
-          var normalizedData = normalize(data, _.assign(config, {
-            metric: info.descriptor
-          }));
+          var normalizedData = normalize(data);
           _.set(result, [info.descriptor, podName], normalizedData);
         };
 
@@ -282,8 +177,8 @@ angular.module("openshiftConsole")
     };
 
     // Network metrics are collected at the pod level.
-    var podQueryTemplate = _.template("descriptor_name:network/tx|network/rx,type:pod,pod_id:<%= uid %>");
-    var containerQueryTemplate = _.template("descriptor_name:memory/usage|cpu/usage,type:pod_container,pod_id:<%= uid %>,container_name:<%= containerName %>");
+    var podQueryTemplate = _.template("descriptor_name:network/tx_rate|network/rx_rate,type:pod,pod_id:<%= uid %>");
+    var containerQueryTemplate = _.template("descriptor_name:memory/usage|cpu/usage_rate,type:pod_container,pod_id:<%= uid %>,container_name:<%= containerName %>");
     var getPodMetrics = function(config) {
       return getStatsQueryURL().then(function(url) {
         var request = {
@@ -366,7 +261,7 @@ angular.module("openshiftConsole")
           }).then(function(response) {
             return _.assign(response, {
               metricID: config.metric,
-              data: normalize(response.data, config)
+              data: normalize(response.data)
             });
           });
         });
