@@ -11,7 +11,7 @@
   </div>
   <div class="col-sm-8 col-sm-pull-4">
     <dl class="dl-horizontal left">
-      <dt ng-if-start="deployment | isDeployment">Status:</dt>
+      <dt ng-if-start="deployment | hasDeploymentConfig">Status:</dt>
       <dd ng-if-end>
         <status-icon status="deployment | deploymentStatus"></status-icon>
         {{deployment | deploymentStatus}}
@@ -42,7 +42,7 @@
           <button ng-show="(deployment | deploymentIsInProgress) && !deployment.metadata.deletionTimestamp && ('replicationcontrollers' | canI : 'update')" type="button" ng-click="cancelRunningDeployment(deployment)" class="btn btn-default btn-xs">Cancel</button>
         </span>
       </dd>
-      <dt ng-if-start="deployment | isDeployment">Deployment config:</dt>
+      <dt ng-if-start="deployment | hasDeploymentConfig">Deployment config:</dt>
       <dd ng-if-end>
         <a ng-href="{{deploymentConfigName | navigateResourceURL : 'DeploymentConfig' : deployment.metadata.namespace}}">{{deploymentConfigName}}</a>
       </dd>
@@ -59,8 +59,7 @@
       </dd>
       <dt>Selectors:</dt>
       <dd>
-        <span ng-if="!deployment.spec.selector">none</span>
-        <span ng-repeat="(labelKey, labelValue) in deployment.spec.selector" class="word-break">{{labelKey}}={{labelValue}}<span ng-show="!$last">, </span></span>
+        <selector selector="deployment.spec.selector"></selector>
       </dd>
       <dt>Replicas:</dt>
       <dd>
@@ -89,10 +88,25 @@
         add-health-check-url="{{((!deploymentConfig || isActive) && ('deploymentconfigs' | canI : 'update')) ? healthCheckURL : ''}}">
       </pod-template>
       <h4>Volumes</h4>
-      <p ng-if="!deployment.spec.template.spec.volumes.length">
-        <a ng-if="'replicationcontrollers' | canI : 'update'" ng-href="project/{{project.metadata.name}}/attach-pvc?deployment={{deployment.metadata.name}}">Attach storage</a>
-        <span ng-if="!('replicationcontrollers' | canI : 'update')">none</span>
-      </p>
+      <div ng-if="!deployment.spec.template.spec.volumes.length">
+        <div ng-if="kind === 'ReplicaSet'">
+          <a ng-if="resource | canI : 'update'"
+             ng-href="project/{{project.metadata.name}}/attach-pvc?kind=ReplicaSet&name={{deployment.metadata.name}}&group=extensions">Attach storage</a>
+          <span ng-if="!(resource | canI : 'update')">none</span>
+        </div>
+        <div ng-if="kind === 'ReplicationController'">
+          <div ng-if="deploymentConfigName">
+            <a ng-if="'deploymentconfigs' | canI : 'update'"
+               ng-href="project/{{project.metadata.name}}/attach-pvc?kind=DeploymentConfig&name={{deploymentConfigName}}">Attach storage and redeploy</a>
+            <span ng-if="!('deploymentconfigs' | canI : 'update')">none</span>
+          </div>
+          <div ng-if="!deploymentConfigName">
+            <a ng-if="resource | canI : 'update'"
+               ng-href="project/{{project.metadata.name}}/attach-pvc?kind=ReplicationController&name={{deployment.metadata.name}}">Attach storage</a>
+            <span ng-if="!(resource | canI : 'update')">none</span>
+          </div>
+        </div>
+      </div>
       <volumes volumes="deployment.spec.template.spec.volumes" namespace="project.metadata.name"></volumes>
     </div>
   </div>
@@ -111,13 +125,17 @@
     <!-- If the CPU request is missing, add an action to set one. -->
     <span ng-if="warning.reason === 'NoCPURequest'">
       <!-- Prompt to set CPU request on the DC if this is a deployment. -->
-      <a ng-href="project/{{projectName}}/set-limits?dcName={{deploymentConfigName}}"
+      <a ng-href="project/{{projectName}}/set-limits?kind=DeploymentConfig&name={{deploymentConfigName}}"
          ng-if="deploymentConfigName && !deploymentConfigMissing && ('deploymentconfigs' | canI : 'update')"
          role="button">Set resource
         <span ng-if="!('cpu' | isRequestCalculated : project)">requests and</span> limits</a>
       <!-- Prompt to set CPU request on the RC if not a deployment. -->
-      <a ng-href="project/{{projectName}}/set-limits?rcName={{deployment.metadata.name}}"
-         ng-if="!deploymentConfigName && ('replicationcontrollers' | canI : 'update')"
+      <a ng-href="project/{{projectName}}/set-limits?kind=ReplicationController&name={{deployment.metadata.name}}"
+         ng-if="!deploymentConfigName && kind === 'ReplicationController' && (resource | canI : 'update')"
+         role="button">Set resource
+        <span ng-if="!('cpu' | isRequestCalculated : project)">requests and</span> limits</a>
+      <a ng-href="project/{{projectName}}/set-limits?kind=ReplicaSet&name={{deployment.metadata.name}}&group=extensions"
+         ng-if="!deploymentConfigName && kind === 'ReplicaSet' && (resource | canI : 'update')"
          role="button">Set resource
         <span ng-if="!('cpu' | isRequestCalculated : project)">requests and</span> limits</a>
     </span>
@@ -125,9 +143,14 @@
 
   <!-- Create autoscaler -->
   <div ng-if="!autoscalers.length">
-    <a ng-href="project/{{projectName}}/edit/autoscaler?kind=ReplicationController&name={{deployment.metadata.name}}"
-       ng-if="{resource: 'horizontalpodautoscalers', group: 'extensions'} | canI : 'create'"
-       role="button">Add autoscaler</a>
+    <span ng-if="{resource: 'horizontalpodautoscalers', group: 'extensions'} | canI : 'create'">
+      <a ng-if="deployment.kind === 'ReplicaSet'"
+         ng-href="project/{{projectName}}/edit/autoscaler?kind=ReplicaSet&name={{deployment.metadata.name}}&group=extensions"
+         role="button">Add autoscaler</a>
+      <a ng-if="deployment.kind === 'ReplicationController'"
+         ng-href="project/{{projectName}}/edit/autoscaler?kind=ReplicationController&name={{deployment.metadata.name}}"
+         role="button">Add autoscaler</a>
+    </span>
     <span ng-if="!({resource: 'horizontalpodautoscalers', group: 'extensions'} | canI : 'create')">
       Autoscaling is not enabled. There are no autoscalers for this
       <span ng-if="deploymentConfigName">deployment config or deployment.</span>

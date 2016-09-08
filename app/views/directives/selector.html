@@ -1,0 +1,20 @@
+<div ng-if="!selector">none</div>
+<div ng-if="selector">
+  <div ng-if="selector.matchLabels || selector.matchExpressions">
+    <div ng-repeat="(selectorLabel, selectorValue) in selector.matchLabels">
+      {{selectorLabel}}={{selectorValue}}
+    </div>
+    <div ng-repeat="requirement in selector.matchExpressions">
+      {{requirement.key}}
+      {{requirement.operator | startCase | lowercase}}
+      <span ng-repeat="value in requirement.values">
+        <span ng-if="$first">(</span>{{value}}<span ng-if="!$last">, </span><span ng-if="$last">)</span>
+      </span>
+    </div>
+  </div>
+  <div ng-if="!selector.matchLabels && !selector.matchExpressions">
+    <div ng-repeat="(selectorLabel, selectorValue) in selector">
+      {{selectorLabel}}={{selectorValue}}
+    </div>
+  </div>
+</div>

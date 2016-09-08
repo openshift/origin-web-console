@@ -1,0 +1,151 @@
+<project-header class="top-header"></project-header>
+  <project-page>
+
+    <!-- Middle section -->
+    <div class="middle-section">
+      <div class="middle-container">
+        <div class="middle-header">
+          <div class="container-fluid">
+            <breadcrumbs breadcrumbs="breadcrumbs"></breadcrumbs>
+            <alerts alerts="alerts"></alerts>
+            <div ng-if="!loaded" class="mar-top-md">Loading...</div>
+            <div ng-if="deployment">
+              <h1>
+                {{deployment.metadata.name}}
+                <span
+                  ng-if="deploymentConfigMissing"
+                  class="pficon pficon-warning-triangle-o"
+                  style="cursor: help; vertical-align: middle;"
+                  data-toggle="tooltip"
+                  data-trigger="hover"
+                  title="The deployment's deployment config is missing."
+                  aria-hidden="true">
+                </span>
+                <span ng-if="deploymentConfigMissing" class="sr-only">Warning: The deployment's deployment config is missing.</span>
+                <small class="meta">created <relative-timestamp timestamp="deployment.metadata.creationTimestamp"></relative-timestamp></small>
+
+                <!-- Actions -->
+                <ng-include ng-if="kind === 'ReplicaSet'"
+                            src=" 'views/browse/_replica-set-actions.html' ">
+                </ng-include>
+                <ng-include ng-if="kind === 'ReplicationController'"
+                            src=" 'views/browse/_replication-controller-actions.html' ">
+                </ng-include>
+              </h1>
+              <labels ng-if="deploymentConfigName" labels="deployment.metadata.labels" clickable="true" kind="deployments" title-kind="deployments for deployment config {{deploymentConfigName}}" project-name="{{deployment.metadata.namespace}}" limit="3" navigate-url="{{deployment | configURLForResource}}"></labels>
+              <labels ng-if="!deploymentConfigName" labels="deployment.metadata.labels" clickable="true" kind="deployments" project-name="{{deployment.metadata.namespace}}" limit="3"></labels>
+            </div>
+          </div>
+        </div><!-- /middle-header-->
+        <div class="middle-content">
+          <div class="container-fluid">
+            <div class="row" ng-if="deployment">
+              <div class="col-md-12">
+                <uib-tabset>
+                  <uib-tab active="selectedTab.details">
+                    <uib-tab-heading>Details</uib-tab-heading>
+                    <div class="resource-details">
+                      <ng-include src=" 'views/browse/_replica-set-details.html' "></ng-include>
+                    </div>
+                  </uib-tab>
+                  <uib-tab heading="Environment" active="selectedTab.environment">
+                    <uib-tab-heading>Environment</uib-tab-heading>
+                    <div ng-if="deployment | hasDeploymentConfig">
+                      <p ng-if="'deploymentconfigs' | canI : 'update'">
+                        <span class="pficon pficon-info" aria-hidden="true"></span>
+                        Environment variables can be edited on the <a ng-href="{{deployment | configURLForResource}}?tab=environment">deployment configuration</a>.
+                      </p>
+                      <div ng-repeat="container in deployment.spec.template.spec.containers">
+                        <h3>Container {{container.name}} Environment Variables</h3>
+                        <key-value-editor
+                          ng-if="container.env.length"
+                          entries="container.env"
+                          key-placeholder="Name"
+                          value-placeholder="Value"
+                          cannot-add
+                          cannot-delete
+                          cannot-sort
+                          is-readonly
+                          show-header></key-value-editor>
+                        <em ng-if="!container.env.length">The container specification has no environment variables set.</em>
+                      </div>
+                    </div>
+                    <ng-form ng-show="!(deployment | hasDeploymentConfig)" name="forms.envForm">
+                      <div ng-repeat="container in updatedDeployment.spec.template.spec.containers">
+                        <div ng-if="resource | canI : 'update'">
+                          <key-value-editor
+                            entries="container.env"
+                            key-placeholder="Name"
+                            value-placeholder="Value"
+                            key-validator="[A-Za-z_][A-Za-z0-9_]*"
+                            key-validator-error="Please enter a valid key"
+                            key-validator-error-tooltip="A valid environment variable name is an alphanumeric (a-z and 0-9) string beginning with a letter that may contain underscores."
+                            add-row-link="Add environment variable"
+                            show-header></key-value-editor>
+                          <button
+                            class="btn btn-default"
+                            ng-click="saveEnvVars()"
+                            ng-disabled="forms.envForm.$pristine || forms.envForm.$invalid">Save</button>
+                          <a
+                            ng-if="!forms.envForm.$pristine"
+                            href=""
+                            ng-click="clearEnvVarUpdates()"
+                            class="mar-left-sm"
+                            style="vertical-align: -2px;">Clear changes</a>
+                        </div>
+                        <div ng-if="!(resource | canI : 'update')">
+                          <key-value-editor
+                            ng-if="container.env.length"
+                            entries="container.env"
+                            key-placeholder="Name"
+                            value-placeholder="Value"
+                            cannot-add
+                            cannot-delete
+                            cannot-sort
+                            is-readonly
+                            show-header></key-value-editor>
+                          <em ng-if="!container.env.length">The container specification has no environment variables set.</em>
+                        </div>
+                      </div>
+                    </ng-form>
+                  </uib-tab>
+                  <uib-tab ng-if="metricsAvailable" heading="Metrics" active="selectedTab.metrics">
+                    <!-- Use ng-if to remove the metrics directive when the tab is not active so
+                         we don't update in the background. -->
+                    <deployment-metrics
+                        ng-if="selectedTab.metrics && podsForDeployment"
+                        pods="podsForDeployment" containers="deployment.spec.template.spec.containers">
+                    </deployment-metrics>
+                  </uib-tab>
+                  <uib-tab ng-if="deploymentConfigName && logOptions.version && ('deploymentconfigs/log' | canI : 'get')" active="selectedTab.logs">
+                    <uib-tab-heading>Logs</uib-tab-heading>
+                    <log-viewer
+                      ng-if="selectedTab.logs"
+                      follow-affix-top="390"
+                      follow-affix-bottom="90"
+                      resource="deploymentconfigs/log"
+                      name="deploymentConfigName"
+                      context="projectContext"
+                      options="logOptions"
+                      empty="logEmpty"
+                      run="logCanRun">
+
+                      <span ng-if="deployment | deploymentStatus">
+                        <label>Status:</label>
+                        <status-icon status="deployment | deploymentStatus"></status-icon>
+                        {{deployment | deploymentStatus}}
+                      </span>
+                    </log-viewer>
+                  </uib-tab>
+                  <uib-tab active="selectedTab.events" ng-if="'events' | canI : 'watch'">
+                    <uib-tab-heading>Events</uib-tab-heading>
+                    <events resource-kind="ReplicaSet" resource-name="{{deployment.metadata.name}}" project-context="projectContext" ng-if="selectedTab.events"></events>
+                  </uib-tab>
+                </uib-tabset>
+              </div><!-- /col-* -->
+            </div>
+          </div>
+        </div><!-- /middle-content -->
+      </div><!-- /middle-container -->
+    </div><!-- /middle-section -->
+  </project-page>

@@ -13,12 +13,12 @@
             <div class="row">
               <div class="col-md-12">
                 <alerts alerts="alerts"></alerts>
-                <div ng-if="!targetKind || !targetName || !project">
+                <div ng-if="!targetKind || !targetName || !project" class="mar-top-md">
                   Loading...
                 </div>
                 <form name="form" ng-submit="save()" class="osc-form" ng-show="targetKind && targetName">
                   <h1>
-                    Autoscale {{targetKind | humanizeKind}} {{targetName}}
+                    Autoscale {{targetKind | humanizeKind : true}} {{targetName}}
                   </h1>
                   <div class="help-block">
                     Scale replicas automatically based on CPU usage.

@@ -153,21 +153,21 @@ angular.module("openshiftConsole")
             url.segment(getBuildURLType(resource, opts))
               .segmentCoded(name);
             break;
+          case "Deployment":
+            url.segment("deployment")
+              .segmentCoded(name);
+            break;
           case "DeploymentConfig":
-            url.segment("deployments")
+            url.segment("dc")
+              .segmentCoded(name);
+            break;
+          case "ReplicaSet":
+            url.segment("rs")
               .segmentCoded(name);
             break;
           case "ReplicationController":
-            var depConfig = resource.metadata ? annotationFilter(resource, 'deploymentConfig') : null;
-            if (depConfig) {
-              url.segment("deployments")
-                .segmentCoded(depConfig)
-                .segmentCoded(name);
-            }
-            else {
-              url.segment("deployments-replicationcontrollers")
-                .segmentCoded(name);
-            }
+            url.segment("rc")
+              .segmentCoded(name);
             break;
           case "ImageStream":
             url.segment("images")
@@ -211,6 +211,27 @@ angular.module("openshiftConsole")
         return null;
       },
 
+      resourceListURL: function(resource, projectName) {
+        var routeMap = {
+          'builds': 'builds',
+          'buildconfigs': 'builds',
+          'deployments': 'deployments',
+          'deploymentconfigs': 'deployments',
+          'imagestreams': 'images',
+          'pods': 'pods',
+          'replicasets': 'deployments',
+          'replicationcontrollers': 'deployments',
+          'routes': 'routes',
+          'services': 'services',
+          'persistentvolumeclaims': 'storage'
+        };
+
+        return URI.expand("project/{projectName}/browse/{browsePath}", {
+          projectName: projectName,
+          browsePath: routeMap[resource]
+        }).toString();
+      },
+
       /**
        * Navigate to a list view for a resource type
        *
@@ -219,31 +240,15 @@ angular.module("openshiftConsole")
        * @returns {undefined}
        */
       toResourceList: function(resource, projectName) {
-        var routeMap = {
-          'builds': 'builds',
-          'buildconfigs': 'builds',
-          'deployments': 'deployments',
-          'deploymentconfigs': 'deployments',
-          'imagestreams': 'images',
-          'pods': 'pods',
-          'replicationcontrollers': 'deployments',
-          'routes': 'routes',
-          'services': 'services',
-          'persistentvolumeclaims': 'storage'
-        };
-
-        var redirect = URI.expand("project/{projectName}/browse/{browsePath}", {
-          projectName: projectName,
-          browsePath: routeMap[resource]
-        });
-
-        $location.url(redirect);
+        $location.url(this.resourceListURL(resource, projectName));
       },
-      healthCheckURL: function(projectName, kind, name) {
-        return URI.expand("project/{projectName}/edit/health-checks?kind={kind}&name={name}", {
+
+      healthCheckURL: function(projectName, kind, name, group) {
+        return URI.expand("project/{projectName}/edit/health-checks?kind={kind}&name={name}&group={group}", {
           projectName: projectName,
           kind: kind,
-          name: name
+          name: name,
+          group: group || ''
         }).toString();
       }
     };

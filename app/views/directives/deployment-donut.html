@@ -23,7 +23,7 @@
     <div
       column
       class="scaling-controls fade-inline"
-      ng-if="(hpa && !hpa.length) && (rc | canIScale) && !isIdled">
+      ng-if="(hpa && !hpa.length) && ((deploymentConfig || rc) | canIScale) && !isIdled">
       <div>
         <a href=""
            ng-click="scaleUp()"

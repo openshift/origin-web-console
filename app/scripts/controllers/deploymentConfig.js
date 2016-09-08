@@ -12,6 +12,7 @@ angular.module('openshiftConsole')
                         $filter,
                         $routeParams,
                         AlertMessageService,
+                        BreadcrumbsService,
                         DataService,
                         DeploymentsService,
                         HPAService,
@@ -39,15 +40,11 @@ angular.module('openshiftConsole')
     //$scope.imageStreamImageRefByDockerReference = {}; // lets us determine if a particular container's docker image reference belongs to an imageStream
     //$scope.builds = {};
     $scope.alerts = {};
-    $scope.breadcrumbs = [
-      {
-        title: "Deployments",
-        link: "project/" + $routeParams.project + "/browse/deployments"
-      },
-      {
-        title: $routeParams.deploymentconfig
-      }
-    ];
+    $scope.breadcrumbs = BreadcrumbsService.getBreadcrumbs({
+      name: $routeParams.deploymentconfig,
+      kind: 'DeploymentConfig',
+      namespace: $routeParams.project
+    });
     $scope.emptyMessage = "Loading...";
     $scope.healthCheckURL = Navigate.healthCheckURL($routeParams.project,
                                                     "DeploymentConfig",
@@ -264,7 +261,7 @@ angular.module('openshiftConsole')
           resource: "horizontalpodautoscalers"
         }, context, function(hpa) {
           $scope.autoscalers =
-            HPAService.hpaForDC(hpa.by("metadata.name"), $routeParams.deploymentconfig);
+            HPAService.filterHPA(hpa.by("metadata.name"), 'DeploymentConfig', $routeParams.deploymentconfig);
           updateHPAWarnings();
         }));
 
@@ -320,7 +317,7 @@ angular.module('openshiftConsole')
             };
           };
 
-          DeploymentsService.scaleDC($scope.deploymentConfig, replicas).then(_.noop, showScalingError);
+          DeploymentsService.scale($scope.deploymentConfig, replicas).then(_.noop, showScalingError);
         };
 
         $scope.$on('$destroy', function(){

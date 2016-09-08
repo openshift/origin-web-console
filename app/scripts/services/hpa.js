@@ -114,22 +114,8 @@ angular.module("openshiftConsole")
       });
     };
 
-    // Filters the HPAs to those for a deployment config.
-    // hpaResources  - map of HPA by name
-    // dcName        - deployment config name
-    var hpaForDC = function(hpaResources, dcName) {
-      return filterHPA(hpaResources, "DeploymentConfig", dcName);
-    };
-
-    // Filters the HPAs to those for a replication controller.
-    // hpaResources  - map of HPA by name
-    // rcName        - replication controller name
-    var hpaForRC = function(hpaResources, rcName) {
-      return filterHPA(hpaResources, "ReplicationController", rcName);
-    };
-
     var humanizeKind = $filter('humanizeKind');
-    var isDeployment = $filter('isDeployment');
+    var hasDeploymentConfig = $filter('hasDeploymentConfig');
 
     // Gets HPA warnings.
     //
@@ -194,7 +180,7 @@ angular.module("openshiftConsole")
         };
 
         if (scaleTarget.kind === 'ReplicationController' &&
-            isDeployment(scaleTarget) &&
+            hasDeploymentConfig(scaleTarget) &&
             _.some(hpaResources, targetsRC)) {
           warnings.push({
             message: 'This deployment is scaled by both a deployment configuration and an autoscaler. ' +
@@ -211,8 +197,7 @@ angular.module("openshiftConsole")
       convertRequestPercentToLimit: convertRequestPercentToLimit,
       convertLimitPercentToRequest: convertLimitPercentToRequest,
       hasCPURequest: hasCPURequest,
-      hpaForDC: hpaForDC,
-      hpaForRC: hpaForRC,
+      filterHPA: filterHPA,
       getHPAWarnings: getHPAWarnings
     };
   });

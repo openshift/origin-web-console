@@ -139,24 +139,40 @@ angular
         templateUrl: 'views/deployments.html',
         controller: 'DeploymentsController'
       })
-      .when('/project/:project/browse/deployments/:deploymentconfig', {
+      // Can't be /deployments/ (plural) because we used that previously for deployment config URLs. See redirect below.
+      .when('/project/:project/browse/deployment/:deployment', {
+        templateUrl: 'views/browse/deployment.html',
+        controller: 'DeploymentController'
+      })
+      .when('/project/:project/browse/dc/:deploymentconfig', {
         templateUrl: 'views/browse/deployment-config.html',
         controller: 'DeploymentConfigController'
       })
-      .when('/project/:project/browse/deployments/:deploymentconfig/:deployment', {
+      .when('/project/:project/browse/rs/:replicaSet', {
+        templateUrl: 'views/browse/replica-set.html',
+        resolve: {
+          // The ReplicaSetController handles both ReplicaSet and ReplicationController.
+          kind: function () {
+            return 'ReplicaSet';
+          }
+        },
+        controller: 'ReplicaSetController'
+      })
+      .when('/project/:project/browse/rc/:replicaSet', {
         templateUrl: function(params) {
           if (params.view === 'chromeless') {
             return 'views/logs/chromeless-deployment-log.html';
           }
 
-          return 'views/browse/deployment.html';
+          return 'views/browse/replica-set.html';
         },
-        controller: 'DeploymentController'
-      })
-      // Needs to still be prefixed with browse/deployments so the secondary nav active state is correct
-      .when('/project/:project/browse/deployments-replicationcontrollers/:replicationcontroller', {
-        templateUrl: 'views/browse/replication-controller.html',
-        controller: 'DeploymentController'
+        resolve: {
+          // The ReplicaSetController handles both ReplicaSet and ReplicationController.
+          kind: function () {
+            return 'ReplicationController';
+          }
+        },
+        controller: 'ReplicaSetController'
       })
       .when('/project/:project/browse/events', {
         templateUrl: 'views/events.html',
@@ -293,6 +309,15 @@ angular
       })
       .when('/project/:project/attachPVC', {
         redirectTo: '/project/:project/attach-pvc'
+      })
+      .when('/project/:project/browse/deployments/:deploymentconfig', {
+        redirectTo: '/project/:project/browse/dc/:deploymentconfig'
+      })
+      .when('/project/:project/browse/deployments/:deploymentconfig/:rc', {
+        redirectTo: '/project/:project/browse/rc/:rc'
+      })
+      .when('/project/:project/browse/deployments-replicationcontrollers/:rc', {
+        redirectTo: '/project/:project/browse/rc/:rc'
       })
       .otherwise({
         redirectTo: '/'

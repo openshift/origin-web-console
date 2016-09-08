@@ -25,7 +25,7 @@
     "microplugin": "0.0.3",
     "selectize": "0.12.1",
     "messenger": "1.4.1",
-    "kubernetes-label-selector": "1.0.2",
+    "kubernetes-label-selector": "1.1.0",
     "kubernetes-topology-graph": "0.0.23",
     "kubernetes-container-terminal": "1.0.1",
     "registry-image-widgets": "0.0.2",

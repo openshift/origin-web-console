@@ -1,5 +1,5 @@
 <project-header class="top-header"></project-header>
-  <project-page>
+<project-page>
 
   <!-- Middle section -->
   <div class="middle-section">
@@ -20,12 +20,14 @@
       <div class="middle-content">
         <div class="container-fluid">
           <div class="row">
-            <div class="col-md-12 gutter-top">
+            <div class="col-md-12"
+                 ng-class="{ 'gutter-top': !(k8sDeployments | hashSize) && !(replicaSets | hashSize) }">
+              <h3 ng-if="(k8sDeployments | hashSize) || (replicaSets | hashSize)">Deployment Configurations</h3>
               <table class="table table-bordered table-hover table-mobile">
                 <thead>
                   <tr>
                     <th>Name</th>
-                    <th>Last Deployment</th>
+                    <th>Last Version</th>
                     <th>Status</th>
                     <th>Created</th>
                     <th>Trigger</th>
@@ -43,7 +45,7 @@
                       <a ng-if="deploymentConfigs[deploymentConfigName]" href="{{deploymentConfigName | navigateResourceURL : 'DeploymentConfig' : projectName}}">{{deploymentConfigName}}</a>
                       <span ng-if="deploymentConfigs[deploymentConfigName].status.details.message" class="pficon pficon-warning-triangle-o" style="cursor: help;" data-toggle="popover" data-trigger="hover" dynamic-content="{{deploymentConfigs[deploymentConfigName].status.details.message}}"></span>
                     </td>
-                    <td data-title="Last"><em>No deployments</em></td>
+                    <td data-title="Last Version"><em>No deployments</em></td>
                     <td class="hidden-xs">&nbsp;</td>
                     <td class="hidden-xs">&nbsp;</td>
                     <td class="hidden-xs">&nbsp;</td>
@@ -55,7 +57,7 @@
                       <!-- <span ng-if="deploymentConfigs[deploymentConfigName].status.details.message" class="pficon pficon-warning-triangle-o" style="cursor: help;" data-toggle="popover" data-trigger="hover" dynamic-content="{{deploymentConfigs[deploymentConfigName].status.details.message}}"></span> -->
                       <span ng-if="deploymentConfigs && !deploymentConfigs[deploymentConfigName]" class="pficon pficon-warning-triangle-o" data-toggle="tooltip" title="This deployment config no longer exists" style="cursor: help;"></span>
                     </td>
-                    <td data-title="Last">
+                    <td data-title="Last Version">
                       <!-- Deployment number and link -->
                       <span ng-if="deployment | annotation : 'deploymentVersion'">
                         <a ng-href="{{deployment | navigateResourceURL}}">#{{deployment | annotation : 'deploymentVersion'}}</a>
@@ -96,8 +98,66 @@
                   </tr>
                 </tbody>
               </table>
-              <div ng-if="(unfilteredReplicationControllers | hashSize) > 0">
-                <h3>Other replication controllers</h3>
+              <div ng-if="k8sDeployments | hashSize">
+                <h3>Deployments</h3>
+                <table class="table table-bordered table-hover table-mobile">
+                  <thead>
+                    <tr>
+                      <th>Name</th>
+                      <th>Last Version</th>
+                      <th>Replicas</th>
+                      <th>Created</th>
+                      <th>Strategy</th>
+                    </tr>
+                  </thead>
+                  <tbody ng-repeat="k8sDeployment in k8sDeployments | orderObjectsByDate : true">
+                    <tr>
+                      <td data-title="Name">
+                        <a ng-href="{{k8sDeployment | navigateResourceURL}}">{{k8sDeployment.metadata.name}}</a>
+                      </td>
+                      <td data-title="Last Version">
+                        {{k8sDeployment | lastDeploymentRevision}}
+                      </td>
+                      <td data-title="Replicas">
+                        <span ng-if="k8sDeployment.status.replicas !== k8sDeployment.spec.replicas">{{k8sDeployment.status.replicas}}/</span>{{k8sDeployment.spec.replicas}} replica<span ng-if="k8sDeployment.spec.replicas != 1">s</span>
+                      </td>
+                      <td data-title="Created">
+                        <relative-timestamp timestamp="k8sDeployment.metadata.creationTimestamp"></relative-timestamp>
+                      </td>
+                      <td data-title="Strategy">
+                        {{k8sDeployment.spec.strategy.type | sentenceCase}}
+                      </td>
+                    </tr>
+                  </tbody>
+                </table>
+              </div>
+              <div ng-if="replicaSets | hashSize" id="replica-sets">
+                <h3>Replica Sets</h3>
+                <table class="table table-bordered table-hover table-mobile">
+                  <thead>
+                    <tr>
+                      <th>Name</th>
+                      <th>Replicas</th>
+                      <th>Created</th>
+                    </tr>
+                  </thead>
+                  <tbody ng-repeat="replicaSet in replicaSets | orderObjectsByDate : true">
+                    <tr>
+                      <td data-title="Name">
+                        <a ng-href="{{replicaSet | navigateResourceURL}}">{{replicaSet.metadata.name}}</a>
+                      </td>
+                      <td data-title="Replicas">
+                        <span ng-if="replicaSet.status.replicas !== replicaSet.spec.replicas">{{replicaSet.status.replicas}}/</span>{{replicaSet.spec.replicas}} replica<span ng-if="replicaSet.spec.replicas != 1">s</span>
+                      </td>
+                      <td data-title="Created">
+                        <relative-timestamp timestamp="replicaSet.metadata.creationTimestamp"></relative-timestamp>
+                      </td>
+                    </tr>
+                  </tbody>
+                </table>
+              </div>
+              <div ng-if="(unfilteredReplicationControllers | hashSize) > 0" id="replica-controllers">
+                <h3>Other Replication Controllers</h3>
                 <table class="table table-bordered table-hover table-mobile">
                   <thead>
                     <tr>
@@ -130,4 +190,4 @@
       </div><!-- /middle-content -->
     </div><!-- /middle-container -->
   </div><!-- /middle-section -->
-  </project-page>
+</project-page>

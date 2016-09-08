@@ -1,7 +1,7 @@
 'use strict';
 
 angular.module("openshiftConsole")
-  .factory("DeploymentsService", function(DataService, $filter, LabelFilter){
+  .factory("DeploymentsService", function(APIService, DataService, $filter, $q, LabelFilter){
     function DeploymentsService() {}
 
     DeploymentsService.prototype.startLatestDeployment = function(deploymentConfig, context, $scope) {
@@ -270,30 +270,53 @@ angular.module("openshiftConsole")
       return activeDeployment;
     };
 
-    DeploymentsService.prototype.scaleDC = function(dc, replicas) {
-      var scale = {
+    DeploymentsService.prototype.getScaleResource = function(object) {
+      var resourceGroupVersion = {
+        resource: APIService.kindToResource(object.kind) + '/scale'
+      };
+
+      switch (object.kind) {
+      case 'DeploymentConfig':
+        // Deployment config scale subresources don't use group extensions.
+        break;
+      case 'Deployment':
+      case 'ReplicaSet':
+      case 'ReplicationController':
+        resourceGroupVersion.group = 'extensions';
+        break;
+      default:
+        return null;
+      }
+
+      return resourceGroupVersion;
+    };
+
+    DeploymentsService.prototype.scale = function(object, replicas) {
+      var resourceGroupVersion = this.getScaleResource(object);
+      if (!resourceGroupVersion) {
+        return $q.reject({
+          data: {
+            message: "Cannot scale kind " + object.kind + "."
+          }
+        });
+      }
+
+      var scaleObject = {
         apiVersion: "extensions/v1beta1",
         kind: "Scale",
         metadata: {
-          name: dc.metadata.name,
-          namespace: dc.metadata.namespace,
-          creationTimestamp: dc.metadata.creationTimestamp
+          name: object.metadata.name,
+          namespace: object.metadata.namespace,
+          creationTimestamp: object.metadata.creationTimestamp
         },
         spec: {
           replicas: replicas
         }
       };
-      return DataService.update("deploymentconfigs/scale", dc.metadata.name, scale, {
-        namespace: dc.metadata.namespace
-      });
-    };
-
-    DeploymentsService.prototype.scaleRC = function(rc, replicas) {
-      var req = angular.copy(rc);
-      req.spec.replicas = replicas;
-      return DataService.update("replicationcontrollers", rc.metadata.name, req, {
-        namespace: rc.metadata.namespace
-      });
+      return DataService.update(resourceGroupVersion,
+                                object.metadata.name,
+                                scaleObject,
+                                { namespace: object.metadata.namespace });
     };
 
     var getLabels = function(deployment) {

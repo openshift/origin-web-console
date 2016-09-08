@@ -4,7 +4,7 @@
     <div class="modal-body">
       <h1>Are you sure you want to delete the {{typeDisplayName || (kind | humanizeKind)}}
         '<strong>{{displayName ? displayName : resourceName}}</strong>'?</h1>
-      <div ng-if="kind === 'ReplicationController' && rcReplicas" class="alert alert-warning">
+      <div ng-if="replicas" class="alert alert-warning">
         <span class="pficon pficon-warning-triangle-o" aria-hidden="true"></span>
         <span class="sr-only">Warning:</span>
         <strong>{{resourceName}}</strong> has running pods.  Deleting the
@@ -34,6 +34,14 @@
       </div>
 
       <div ng-switch="kind">
+        <div ng-switch-when="Deployment">
+          <strong>Note:</strong> None of the replica sets created by this deployment will be deleted.
+
+          To delete the deployment and all of its replica sets, you can run the command
+          <pre class="code prettyprint mar-top-md">oc delete deployment {{resourceName}} -n {{projectName}}</pre>
+          Learn more about the <a href="command-line">command line tools</a>.
+        </div>
+
         <div ng-switch-when="DeploymentConfig">
           <strong>Note:</strong> None of the deployments created by this deployment config will be deleted.
 

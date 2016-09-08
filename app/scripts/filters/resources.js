@@ -149,12 +149,13 @@ angular.module('openshiftConsole')
         {group: '', resource: 'builds/clone', verbs: ['create']},
         {group: '', resource: 'builds',       verbs: ['delete', 'update']}
       ],
+      'deployments': [
+        {group: 'extensions', resource: 'horizontalpodautoscalers', verbs: ['create', 'update']},
+        {group: 'extensions', resource: 'deployments',              verbs: ['create', 'update']}
+      ],
       'deploymentConfigs': [
         {group: 'extensions', resource: 'horizontalpodautoscalers', verbs: ['create', 'update']},
-        {group: '',            resource: 'deploymentconfigs',        verbs: ['create', 'update']}
-      ],
-      'deployments': [
-        {group: '', resource: 'replicationcontrollers', verbs: ['update', 'delete']}
+        {group: '',            resource: 'deploymentconfigs',       verbs: ['create', 'update']}
       ],
       'horizontalPodAutoscalers': [
         {group: 'extensions', resource: 'horizontalpodautoscalers', verbs: ['update', 'delete']}
@@ -169,9 +170,12 @@ angular.module('openshiftConsole')
         {group: '', resource: 'pods',              verbs: ['update', 'delete']},
         {group: '', resource: 'deploymentconfigs', verbs: ['update']}
       ],
-      'replicationControllers': [
+      'replicaSets': [
         {group: 'extensions', resource: 'horizontalpodautoscalers', verbs: ['create', 'update']},
-        {group: '',            resource: 'replicationcontrollers',   verbs: ['create', 'update']}
+        {group: 'extensions', resource: 'replicasets',              verbs: ['update', 'delete']}
+      ],
+      'replicationControllers': [
+        {group: '',           resource: 'replicationcontrollers',   verbs: ['update', 'delete']}
       ],
       'routes': [
         {group: '', resource: 'routes', verbs: ['update', 'delete']}
@@ -191,9 +195,10 @@ angular.module('openshiftConsole')
       });
     };
   })
-  .filter('canIScale', function(canIFilter, isDeploymentFilter) {
-    return function(deployment) {
-      return canIFilter(isDeploymentFilter(deployment) ? 'deploymentconfigs/scale' : 'replicationcontrollers', 'update');
+  .filter('canIScale', function(canIFilter, hasDeploymentConfigFilter, DeploymentsService) {
+    return function(object) {
+      var resourceGroupVersion = DeploymentsService.getScaleResource(object);
+      return canIFilter(resourceGroupVersion, 'update');
     };
   })
   .filter('tags', function(annotationFilter) {
@@ -901,7 +906,7 @@ angular.module('openshiftConsole')
       return deploymentVersion === deploymentConfigVersion;
     };
   })
-  .filter('deploymentStatus', function(annotationFilter, isDeploymentFilter) {
+  .filter('deploymentStatus', function(annotationFilter, hasDeploymentConfigFilter) {
     return function(deployment) {
       // We should show Cancelled as an actual status instead of showing Failed
       if (annotationFilter(deployment, 'deploymentCancelled')) {
@@ -909,7 +914,7 @@ angular.module('openshiftConsole')
       }
       var status = annotationFilter(deployment, 'deploymentStatus');
       // If it is just an RC (non-deployment) or it is a deployment with more than 0 replicas
-      if (!isDeploymentFilter(deployment) || status === "Complete" && deployment.spec.replicas > 0) {
+      if (!hasDeploymentConfigFilter(deployment) || status === "Complete" && deployment.spec.replicas > 0) {
         return "Active";
       }
       return status;
@@ -925,7 +930,7 @@ angular.module('openshiftConsole')
       return _.some(deployments, deploymentIsInProgressFilter);
     };
   })
-  .filter('isDeployment', function(annotationFilter) {
+  .filter('hasDeploymentConfig', function(annotationFilter) {
     return function(deployment) {
       return (annotationFilter(deployment, 'deploymentConfig')) ? true : false;
     };
@@ -1077,23 +1082,23 @@ angular.module('openshiftConsole')
       return humanized.toLowerCase();
     };
   })
-  .filter('abbreviateKind', function() {
-    var abbreviated = {
-      Build: 'build',
-      BuildConfig: 'bc',
-      DeploymentConfig: 'dc',
-      ImageStream: 'is',
-      Pod: 'pod',
-      ReplicationController: 'rc',
-      Route: 'route',
-      Service: 'svc',
-    };
-    return function(kind) {
-      return abbreviated[kind] || kind;
-    };
-  })
   .filter('kindToResource', function (APIService) {
     return APIService.kindToResource;
+  })
+  .filter('abbreviateResource', function(APIService) {
+    var abbreviated = {
+      buildconfigs: 'bc',
+      deploymentconfigs: 'dc',
+      horizontalpodautoscalers: 'hpa',
+      imagestreams: 'is',
+      imagestreamtags: 'istag',
+      replicasets: 'rs',
+      replicationcontrollers: 'rc',
+      services: 'svc',
+    };
+    return function(resource) {
+      return abbreviated[resource] || resource;
+    };
   })
   .filter('humanizeQuotaResource', function() {
     return function(resourceType) {
@@ -1342,5 +1347,15 @@ angular.module('openshiftConsole')
         }
       }
       return previousScale || _.get(_.first(hpa), 'spec.minReplicas') || 1;
+    };
+  })
+  .filter('lastDeploymentRevision', function(annotationFilter) {
+    return function(deployment) {
+      if (!deployment) {
+        return '';
+      }
+
+      var revision = annotationFilter(deployment, 'deployment.kubernetes.io/revision');
+      return revision ? "#" + revision : 'Unknown';
     };
   });

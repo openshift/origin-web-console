@@ -63,9 +63,20 @@ a[c] && a[c].constructor && a[c].constructor === Object ? mergeDeep(a[c], b) :a[
 }
 
 function LabelSelector(a, b) {
-this._conjuncts = {}, this._emptySelectsAll = !!b, a && angular.forEach(a, function(a, b) {
+this._conjuncts = {}, this._emptySelectsAll = !!b;
+var c = {
+In:"in",
+NotIn:"not in",
+Exists:"exists",
+DoesNotExist:"does not exist"
+};
+a && (a.matchLabels || a.matchExpressions ? (angular.forEach(a.matchLabels, function(a, b) {
+this.addConjunct(b, "in", [ a ]);
+}, this), angular.forEach(a.matchExpressions, function(a) {
+this.addConjunct(a.key, c[a.operator], a.values);
+}, this)) :angular.forEach(a, function(a, b) {
 a || "" === a ? this.addConjunct(b, "in", [ a ]) :this.addConjunct(b, "exists", []);
-}, this);
+}, this));
 }
 
 var g = void 0, j = !0, k = null, l = !1, n = window, o, p = Object.prototype, da = Function.prototype.apply, q = Array.prototype.slice, r = String.prototype.split, ea = Array.prototype.splice, s, fa, ga, t = Function.prototype.bind || function(a, b) {
@@ -38509,6 +38520,10 @@ case "exists":
 if (!b[d.key] && "" !== b[d.key]) return !1;
 break;
 
+case "does not exist":
+if (b[d.key] || "" === b[d.key]) return !1;
+break;
+
 case "in":
 var e = !1;
 if (b[d.key] || "" === b[d.key]) for (var f = 0; !e && f < d.values.length; f++) b[d.key] == d.values[f] && (e = !0);
@@ -38530,14 +38545,14 @@ for (var b in this._conjuncts) if (!a.hasConjunct(this._conjuncts[b])) return !1
 return !0;
 }, LabelSelector.prototype._getStringForConjunct = function(a) {
 var b = a.key;
-if ("exists" != a.operator) {
+if ("exists" == a.operator) return b + " exists";
+if ("does not exist" == a.operator) return b + " does not exist";
 "not in" == a.operator && (b += " not"), b += " in (";
 for (var c = 0; c < a.values.length; c++) b += "" === a.values[c] ? '""' :a.values[c], c != a.values.length - 1 && (b += ", ");
-b += ")";
-}
-return b;
+return b += ")";
 }, LabelSelector.prototype._getIdForConjunct = function(a) {
-return a.key + "-" + a.operator + "-" + a.values.join(",");
+var b = a.key + "-" + a.operator;
+return a.values && (b += "-" + a.values.join(",")), b;
 };
 
 try {
@@ -38633,6 +38648,9 @@ options:[ {
 type:"exists",
 label:"exists"
 }, {
+type:"does not exist",
+label:"does not exist"
+}, {
 type:"in",
 label:"in ..."
 }, {
@@ -38640,7 +38658,7 @@ type:"not in",
 label:"not in ..."
 } ],
 onItemAdd:function(a, b) {
-return "exists" == a ? void d._labelFilterAddBtn.removeClass("disabled").prop("disabled", !1).focus() :(d._labelFilterValuesSelectizeInput.css("display", "inline-flex"), void d._labelFilterValuesSelectize.focus());
+return "exists" == a || "does not exist" == a ? void d._labelFilterAddBtn.removeClass("disabled").prop("disabled", !1).focus() :(d._labelFilterValuesSelectizeInput.css("display", "inline-flex"), void d._labelFilterValuesSelectize.focus());
 },
 onItemRemove:function(a) {
 d._labelFilterValuesSelectizeInput.hide(), d._labelFilterValuesSelectize.clear(), d._labelFilterAddBtn.addClass("disabled").prop("disabled", !0);
