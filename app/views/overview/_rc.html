@@ -29,7 +29,13 @@
     <!-- /all visible deployments -->
     <!-- metrics or pod template -->
     <div column class="deployment-details">
-      <metrics ng-if="showMetrics && !collapse" deployment="deployment" profile="compact" class="overview-metrics"></metrics>
+      <deployment-metrics
+        ng-if="showMetrics && !collapse"
+        pods="podsByDeployment[deployment.metadata.name]"
+        containers="deployment.spec.template.spec.containers"
+        compact="true"
+        class="overview-metrics">
+      </deployment-metrics>
       <pod-template ng-if="!showMetrics" pod-template="deployment.spec.template"></pod-template>
     </div>
     <!-- /metrics or pod template -->

@@ -2380,8 +2380,8 @@ b[a.tag] = b[a.tag] || {}, b[a.tag].name = a.tag, b[a.tag].status = angular.copy
 };
 }), angular.module("openshiftConsole").factory("MetricsService", [ "$filter", "$http", "$q", "APIDiscovery", function(a, b, c, d) {
 function e() {
-return angular.isDefined(l) ? c.when(l) :d.getMetricsURL().then(function(a) {
-return l = (a || "").replace(/\/$/, "");
+return angular.isDefined(k) ? c.when(k) :d.getMetricsURL().then(function(a) {
+return k = (a || "").replace(/\/$/, "");
 });
 }
 function f(a) {
@@ -2393,20 +2393,14 @@ a.value = b && "NaN" !== b ? b :null;
 }), a;
 }
 function g(a) {
-var b = "^";
-return _.each(a, function(a, c) {
-b += "(?=.*\\b" + c + ":" + a + "\\b)";
-}), b += ".*$";
-}
-function h(a) {
 return a.join("|");
 }
-function i() {
+function h() {
 return e().then(function(a) {
 return a ? a + "/metrics/stats/query" :a;
 });
 }
-function j(a) {
+function i(a) {
 switch (a) {
 case "network/rx_rate":
 case "network/tx_rate":
@@ -2416,44 +2410,35 @@ default:
 return "pod_container";
 }
 }
-function k(a) {
+function j(a) {
 return e().then(function(b) {
-var c, d = j(a.metric);
-if (a.deployment) {
-c = b + q;
-var e = _.get(a, "deployment.spec.selector", {}), f = g(e);
-return URI.expand(c, {
-labels:f,
-metric:a.metric,
-type:d
-}).toString();
-}
-return a.stacked ? (c = b + p, URI.expand(c, {
+var c, d = i(a.metric);
+return a.stacked ? (c = b + o, URI.expand(c, {
 podName:a.pod.metadata.name,
 metric:a.metric,
 type:d
-}).toString()) :(c = b + o, URI.expand(c, {
+}).toString()) :(c = b + n, URI.expand(c, {
 podUID:a.pod.metadata.uid,
 containerName:a.containerName,
 metric:a.metric
 }).toString());
 });
 }
-var l, m, n, o = "/gauges/{containerName}%2F{podUID}%2F{metric}/data", p = "/gauges/data?stacked=true&tags=descriptor_name:{metric},type:{type},pod_name:{podName}", q = "/gauges/data?stacked=true&tags=descriptor_name:{metric},type:{type},labels:{labels}", r = function(a) {
+var k, l, m, n = "/gauges/{containerName}%2F{podUID}%2F{metric}/data", o = "/gauges/data?stacked=true&tags=descriptor_name:{metric},type:{type},pod_name:{podName}", p = function(a) {
 return e().then(function(c) {
-return !!c && (!a || (!!m || !n && b.get(c).then(function() {
-return m = !0, !0;
+return !!c && (!a || (!!l || !m && b.get(c).then(function() {
+return l = !0, !0;
 }, function() {
-return n = !0, !1;
+return m = !0, !1;
 })));
 });
-}, s = function(a) {
+}, q = function(a) {
 var b = a.split("/");
 return {
 podUID:b[1],
 descriptor:b[2] + "/" + b[3]
 };
-}, t = function(a, c, d) {
+}, r = function(a, c, d) {
 var e = _.indexBy(d.pods, "metadata.uid");
 return b.post(a, c, {
 auth:{},
@@ -2464,31 +2449,31 @@ Accept:"application/json",
 }
 }).then(function(a) {
 var b = {}, c = function(a, c) {
-var d = s(c), g = _.get(e, [ d.podUID, "metadata", "name" ]), h = f(a);
+var d = q(c), g = _.get(e, [ d.podUID, "metadata", "name" ]), h = f(a);
 _.set(b, [ d.descriptor, g ], h);
 };
 return _.each(a.data.counter, c), _.each(a.data.gauge, c), b;
 });
-}, u = _.template("descriptor_name:network/tx_rate|network/rx_rate,type:pod,pod_id:<%= uid %>"), v = _.template("descriptor_name:memory/usage|cpu/usage_rate,type:pod_container,pod_id:<%= uid %>,container_name:<%= containerName %>"), w = function(a) {
-return i().then(function(b) {
+}, s = _.template("descriptor_name:network/tx_rate|network/rx_rate,type:pod,pod_id:<%= uid %>"), t = _.template("descriptor_name:memory/usage|cpu/usage_rate,type:pod_container,pod_id:<%= uid %>,container_name:<%= containerName %>"), u = function(a) {
+return h().then(function(b) {
 var d = {
 bucketDuration:a.bucketDuration,
 start:a.start
 };
 a.end && (d.end = a.end);
-var e = [], f = h(_.map(a.pods, "metadata.uid")), g = _.assign({
-tags:v({
+var e = [], f = g(_.map(a.pods, "metadata.uid")), h = _.assign({
+tags:t({
 uid:f,
 containerName:a.containerName
 })
 }, d);
-e.push(t(b, g, a));
+e.push(r(b, h, a));
 var i = _.assign({
-tags:u({
+tags:s({
 uid:f
 })
 }, d);
-return e.push(t(b, i, a)), c.all(e).then(function(a) {
+return e.push(r(b, i, a)), c.all(e).then(function(a) {
 var b = {};
 return _.each(a, function(a) {
 _.assign(b, a);
@@ -2497,10 +2482,10 @@ _.assign(b, a);
 });
 };
 return {
-isAvailable:r,
+isAvailable:p,
 getMetricsURL:e,
 get:function(a) {
-return k(a).then(function(c) {
+return j(a).then(function(c) {
 if (!c) return null;
 var d = {
 bucketDuration:a.bucketDuration,
@@ -2521,7 +2506,7 @@ data:f(b.data)
 });
 });
 },
-getPodMetrics:w
+getPodMetrics:u
 };
 } ]), angular.module("openshiftConsole").factory("StorageService", function() {
 return {
@@ -8114,32 +8099,28 @@ b(c.resource, c.kind);
 }, b.prototype.removeResourceChangedCallback = function(a) {
 this.callbacks.remove(a);
 }, new b();
-} ]), angular.module("openshiftConsole").directive("metrics", [ "$interval", "$parse", "$timeout", "$q", "$rootScope", "ChartsService", "ConversionService", "MetricsService", "usageValueFilter", function(a, b, c, d, e, f, g, h, i) {
+} ]), angular.module("openshiftConsole").directive("podMetrics", [ "$interval", "$parse", "$timeout", "$q", "$rootScope", "ChartsService", "ConversionService", "MetricsService", "usageValueFilter", function(a, b, c, d, e, f, g, h, i) {
 return {
 restrict:"E",
 scope:{
-pod:"=?",
-deployment:"=?",
-profile:"@?",
+pod:"=",
 sparklineWidth:"=?",
 sparklineHeight:"=?",
 includedMetrics:"=?"
 },
-templateUrl:function(a, b) {
-return "compact" === b.profile ? "views/directives/metrics-compact.html" :"views/directives/metrics.html";
-},
+templateUrl:"views/directives/pod-metrics.html",
 link:function(j) {
 function k(a) {
 if (!j.pod) return null;
 var b = j.options.selectedContainer;
 switch (a) {
 case "memory/usage":
-var c = x(b);
+var c = w(b);
 if (c) return g.bytesToMiB(i(c));
 break;
 
 case "cpu/usage":
-var d = y(b);
+var d = x(b);
 if (d) return _.round(1e3 * i(d));
 }
 return null;
@@ -8179,34 +8160,34 @@ colors:{
 Used:e.available > 0 ? "#0088ce" :"#ec7a08",
 Available:"#d1d1d1"
 }
-}, v[g] ? v[g].load(l) :(j = E(a), j.data = l, c(function() {
-v[g] = c3.generate(j);
+}, u[g] ? u[g].load(l) :(j = B(a), j.data = l, c(function() {
+u[g] = c3.generate(j);
 })));
 }), a.totalUsed = _.round(a.totalUsed, 1);
 var g, h = [ b ].concat(_.values(d));
 f < a.smallestYAxisMax && (g = a.smallestYAxisMax);
 var i, j = {
-type:a.chartType || (z ? "area-spline" :"spline"),
+type:a.chartType || "spline",
 x:"dates",
 columns:h
 }, l = a.chartPrefix + "sparkline";
-w[l] ? (w[l].load(j), w[l].axis.max({
+v[l] ? (v[l].load(j), v[l].axis.max({
 y:g
-})) :(i = F(a), i.axis.y.max = g, i.data = j, a.chartDataColors && (i.color = {
+})) :(i = C(a), i.axis.y.max = g, i.data = j, a.chartDataColors && (i.color = {
 pattern:a.chartDataColors
 }), c(function() {
-D || (w[l] = c3.generate(i));
+A || (v[l] = c3.generate(i));
 }));
 }
 }
 function m() {
-return z ? "-15mn" :"-" + j.options.timeRange.value + "mn";
+return "-" + j.options.timeRange.value + "mn";
 }
 function n() {
-return z ? 9e5 :60 * j.options.timeRange.value * 1e3;
+return 60 * j.options.timeRange.value * 1e3;
 }
 function o() {
-return Math.floor(n() / C) + "ms";
+return Math.floor(n() / z) + "ms";
 }
 function p(a, b, c) {
 var d, e = {
@@ -8216,42 +8197,37 @@ bucketDuration:o()
 return b.data && b.data.length ? (d = _.last(b.data), e.start = d.end) :e.start = c, j.pod ? _.assign(e, {
 namespace:j.pod.metadata.namespace,
 pod:j.pod,
-containerName:a.containerMetric ? !z && j.options.selectedContainer.name :"pod",
+containerName:a.containerMetric ? j.options.selectedContainer.name :"pod",
 stacked:!0
-}) :j.deployment ? _.assign(e, {
-namespace:j.deployment.metadata.namespace,
-deployment:j.deployment
 }) :null;
 }
 function q() {
-return !j.metricsError && (!!j.deployment || j.pod && (z || _.get(j, "options.selectedContainer")));
+return !j.metricsError && (j.pod && _.get(j, "options.selectedContainer"));
 }
 function r(a, b) {
 j.noData = !1;
 var c = _.initial(b.data);
-return a.data ? void (a.data = _.chain(a.data).takeRight(C).concat(c).value()) :void (a.data = c);
+return a.data ? void (a.data = _.chain(a.data).takeRight(z).concat(c).value()) :void (a.data = c);
 }
 function s() {
-if (!A && q()) {
-var a = Date.now();
-u = a;
-var b = m();
-angular.forEach(j.metrics, function(a) {
+if (q()) {
+var a = m();
+angular.forEach(j.metrics, function(b) {
 var c = [];
-angular.forEach(a.datasets, function(d) {
-var e = p(a, d, b);
+angular.forEach(b.datasets, function(d) {
+var e = p(b, d, a);
 e && c.push(h.get(e));
-}), d.all(c).then(function(b) {
-D || (angular.forEach(b, function(b) {
-if (b) {
-var c = _.find(a.datasets, {
-id:b.metricID
+}), d.all(c).then(function(a) {
+A || (angular.forEach(a, function(a) {
+if (a) {
+var c = _.find(b.datasets, {
+id:a.metricID
 });
-r(c, b);
+r(c, a);
 }
-}), l(a));
+}), l(b));
 }, function(a) {
-D || angular.forEach(a, function(a) {
+A || angular.forEach(a, function(a) {
 j.metricsError = {
 status:_.get(a, "status", 0),
 details:_.get(a, "data.errorMsg") || _.get(a, "statusText") || "Status code " + _.get(a, "status", 0)
@@ -8264,7 +8240,7 @@ j.loaded = !0;
 }
 }
 j.includedMetrics = j.includedMetrics || [ "cpu", "memory", "network" ];
-var t, u, v = {}, w = {}, x = b("resources.limits.memory"), y = b("resources.limits.cpu"), z = "compact" === j.profile, A = z, B = 6e4, C = z ? 15 :30, D = !1;
+var t, u = {}, v = {}, w = b("resources.limits.memory"), x = b("resources.limits.cpu"), y = 6e4, z = 30, A = !1;
 j.uniqueID = _.uniqueId("metrics-chart-"), j.metrics = [], _.includes(j.includedMetrics, "memory") && j.metrics.push({
 label:"Memory",
 units:"MiB",
@@ -8325,7 +8301,7 @@ label:"Last week",
 value:10080
 } ]
 }, j.options.timeRange = _.head(j.options.rangeOptions);
-var E = function(a) {
+var B = function(a) {
 var b = "#" + a.chartPrefix + j.uniqueID + "-donut";
 return {
 bindto:b,
@@ -8346,12 +8322,12 @@ height:175,
 widht:175
 }
 };
-}, F = function(a) {
+}, C = function(a) {
 return {
 bindto:"#" + a.chartPrefix + j.uniqueID + "-sparkline",
 axis:{
 x:{
-show:!z,
+show:!0,
 type:"timeseries",
 padding:{
 left:0,
@@ -8363,12 +8339,12 @@ format:"%a %H:%M"
 }
 },
 y:{
-show:!z,
+show:!0,
 label:a.units,
 min:0,
 padding:{
 left:0,
-top:z ? 5 :20,
+top:20,
 bottom:0
 },
 tick:{
@@ -8379,13 +8355,13 @@ return d3.round(a, 3);
 }
 },
 legend:{
-show:a.datasets.length > 1 && !z
+show:a.datasets.length > 1
 },
 point:{
 show:!1
 },
 size:{
-height:j.sparklineHeight || (z ? 35 :175),
+height:j.sparklineHeight || 175,
 width:j.sparklineWidth
 },
 tooltip:{
@@ -8403,20 +8379,18 @@ _.each(a.datasets, function(a) {
 delete a.data;
 });
 }), delete j.metricsError, s();
-}, !0), t = a(s, B, !1), j.updateInView = function(a) {
-A = !a, a && (!u || Date.now() > u + B) && s();
-}, e.$on("metrics.charts.resize", function() {
+}, !0), t = a(s, y, !1), e.$on("metrics.charts.resize", function() {
 c(function() {
-_.each(w, function(a) {
+_.each(v, function(a) {
 a.flush();
 });
 }, 0);
 }), j.$on("$destroy", function() {
-t && (a.cancel(t), t = null), angular.forEach(v, function(a) {
+t && (a.cancel(t), t = null), angular.forEach(u, function(a) {
 a.destroy();
-}), v = null, angular.forEach(w, function(a) {
+}), u = null, angular.forEach(v, function(a) {
 a.destroy();
-}), w = null, D = !0;
+}), v = null, A = !0;
 });
 }
 };
@@ -8425,30 +8399,35 @@ return {
 restrict:"E",
 scope:{
 pods:"=",
-containers:"="
+containers:"=",
+compact:"="
 },
-templateUrl:"views/directives/deployment-metrics.html",
+templateUrl:function(a, b) {
+return b.compact ? "views/directives/metrics-compact.html" :"views/directives/deployment-metrics.html";
+},
 link:function(b) {
 function d(a) {
 return null === a.value || void 0 === a.value;
 }
 function f(a) {
-var b = {}, c = [ "Date" ], e = [ "Average Usage" ], f = [ c, e ], g = function(a) {
-var c = "" + a.start;
-return b[c] || (b[c] = {
+var c;
+c = b.compact ? a.compactDatasetLabel || a.label :"Average Usage";
+var e = {}, f = [ "Date" ], g = [ c ], h = [ f, g ], i = function(a) {
+var b = "" + a.start;
+return e[b] || (e[b] = {
 total:0,
 count:0
-}), b[c];
+}), e[b];
 };
-return _.each(y[a.descriptor], function(a) {
+return _.each(z[a.descriptor], function(a) {
 _.each(a, function(a) {
-var b = g(a);
+var b = i(a);
 (!x || x < a.end) && (x = a.end), d(a) || (b.total += a.value, b.count = b.count + 1);
 });
-}), _.each(b, function(b, d) {
-var f;
-f = b.count ? b.total / b.count :null, c.push(Number(d)), e.push(a.convert ? a.convert(f) :f);
-}), f;
+}), _.each(e, function(b, c) {
+var d;
+d = b.count ? b.total / b.count :null, f.push(Number(c)), g.push(a.convert ? a.convert(d) :d);
+}), a.lastValue = _.last(g) || 0, h;
 }
 function i(a, c) {
 var e = [], g = {
@@ -8456,12 +8435,12 @@ type:"spline"
 };
 return b.showAverage ? (_.each(a[c.descriptor], function(a, b) {
 p(c.descriptor, b, a);
-}), g.type = "area-spline", g.x = "Date", g.columns = f(c), g) :(_.each(a[c.descriptor], function(a, b) {
+}), g.type = "area-spline", b.compact && c.compactType && (g.type = c.compactType), g.x = "Date", g.columns = f(c), g) :(_.each(a[c.descriptor], function(a, b) {
 p(c.descriptor, b, a);
 var f = b + "-dates";
 _.set(g, [ "xs", b ], f);
 var h = [ f ], i = [ b ];
-e.push(h), e.push(i), _.each(y[c.descriptor][b], function(a) {
+e.push(h), e.push(i), _.each(z[c.descriptor][b], function(a) {
 if (h.push(a.start), (!x || x < a.end) && (x = a.end), d(a)) i.push(a.value); else {
 var b = c.convert ? c.convert(a.value) :a.value;
 i.push(b);
@@ -8472,21 +8451,19 @@ return a[0];
 }), g);
 }
 function j(a) {
-w || (b.loaded = !0, b.showAverage = _.size(b.pods) > 5, _.each(b.metrics, function(d) {
-var e, f = i(a, d);
-t[d.descriptor] ? (t[d.descriptor].load(f), b.showAverage ? t[d.descriptor].legend.hide() :t[d.descriptor].legend.show()) :(e = z(d), e.data = f, c(function() {
-w || (t[d.descriptor] = c3.generate(e));
-}));
+w || (b.loaded = !0, b.showAverage = _.size(b.pods) > 5 || b.compact, _.each(b.metrics, function(c) {
+var d, e = i(a, c), f = c.descriptor;
+b.compact && c.compactCombineWith && (f = c.compactCombineWith, B[f].lastValue += c.lastValue), t[f] ? (t[f].load(e), b.showAverage ? t[f].legend.hide() :t[f].legend.show()) :(d = C(c), d.data = e, t[f] = c3.generate(d));
 }));
 }
 function k() {
-return "-" + b.options.timeRange.value + "mn";
+return b.compact ? "-15mn" :"-" + b.options.timeRange.value + "mn";
 }
 function l() {
 return 60 * b.options.timeRange.value * 1e3;
 }
 function m() {
-return Math.floor(l() / v) + "ms";
+return b.compact ? "1mn" :Math.floor(l() / v) + "ms";
 }
 function n() {
 var a = _.find(b.pods, "metadata.namespace");
@@ -8506,10 +8483,10 @@ return a ? (b.loaded = !0, !1) :!b.metricsError;
 }
 function p(a, c, d) {
 b.noData = !1;
-var e = _.initial(d), f = _.get(y, [ a, c ]);
-if (!f) return void _.set(y, [ a, c ], e);
+var e = _.initial(d), f = _.get(z, [ a, c ]);
+if (!f) return void _.set(z, [ a, c ], e);
 var g = _.takeRight(f.concat(e), v);
-_.set(y, [ a, c ], g);
+_.set(z, [ a, c ], g);
 }
 function q(a) {
 b.loaded = !0, b.metricsError = {
@@ -8518,42 +8495,51 @@ details:_.get(a, "data.errorMsg") || _.get(a, "statusText") || "Status code " + 
 };
 }
 function r() {
-if (o()) {
+if (!A && o()) {
+y = Date.now();
 var a = n();
 h.getPodMetrics(a).then(j, q);
 }
 }
 var s, t = {}, u = 6e4, v = 30, w = !1;
 b.uniqueID = _.uniqueId("metrics-");
-var x, y = {};
+var x, y, z = {}, A = b.compact;
 b.metrics = [ {
 label:"Memory",
 units:"MiB",
-chartPrefix:"memory-",
 convert:g.bytesToMiB,
 descriptor:"memory/usage",
-type:"pod_container"
+type:"pod_container",
+chartID:"memory-" + b.uniqueID
 }, {
 label:"CPU",
 units:"millicores",
-chartPrefix:"cpu-",
 descriptor:"cpu/usage_rate",
-type:"pod_container"
+type:"pod_container",
+chartID:"cpu-" + b.uniqueID
 }, {
 label:"Network (Sent)",
 units:"KiB/s",
-chartPrefix:"network-sent-",
 convert:g.bytesToKiB,
 descriptor:"network/tx_rate",
-type:"pod"
+type:"pod",
+compactLabel:"Network",
+compactDatasetLabel:"Sent",
+compactType:"spline",
+chartID:"network-tx-" + b.uniqueID
 }, {
 label:"Network (Received)",
 units:"KiB/s",
-chartPrefix:"network-received-",
 convert:g.bytesToKiB,
 descriptor:"network/rx_rate",
-type:"pod"
-} ], b.loaded = !1, b.noData = !0, h.getMetricsURL().then(function(a) {
+type:"pod",
+compactCombineWith:"network/tx_rate",
+compactDatasetLabel:"Received",
+compactType:"spline",
+chartID:"network-rx-" + b.uniqueID
+} ];
+var B = _.indexBy(b.metrics, "descriptor");
+b.loaded = !1, b.noData = !0, h.getMetricsURL().then(function(a) {
 b.metricsURL = a;
 }), b.options = {
 rangeOptions:[ {
@@ -8573,12 +8559,12 @@ label:"Last week",
 value:10080
 } ]
 }, b.options.timeRange = _.head(b.options.rangeOptions), b.options.selectedContainer = _.head(b.containers);
-var z = function(a) {
+var C = function(a) {
 return {
-bindto:"#" + a.chartPrefix + b.uniqueID + "-sparkline",
+bindto:"#" + a.chartID,
 axis:{
 x:{
-show:!0,
+show:!b.compact,
 type:"timeseries",
 padding:{
 left:0,
@@ -8590,7 +8576,7 @@ format:"%a %H:%M"
 }
 },
 y:{
-show:!0,
+show:!b.compact,
 label:a.units,
 min:0,
 padding:{
@@ -8606,13 +8592,13 @@ return d3.round(a, 3);
 }
 },
 legend:{
-show:!b.showAverage
+show:!b.compact && !b.showAverage
 },
 point:{
 show:!1
 },
 size:{
-height:175
+height:b.compact ? 35 :175
 },
 tooltip:{
 format:{
@@ -8623,9 +8609,11 @@ return d3.round(b, 2) + " " + a.units;
 }
 };
 };
-b.$watch("options", function() {
-y = {}, x = null, delete b.metricsError, r();
-}, !0), s = a(r, u, !1), e.$on("metrics.charts.resize", function() {
+b.formatUsage = d3.format(".2r"), b.$watch("options", function() {
+z = {}, x = null, delete b.metricsError, r();
+}, !0), s = a(r, u, !1), b.updateInView = function(a) {
+A = !a, a && (!y || Date.now() > y + u) && r();
+}, e.$on("metrics.charts.resize", function() {
 c(function() {
 _.each(t, function(a) {
 a.flush();

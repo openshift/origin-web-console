@@ -1,47 +1,34 @@
 'use strict';
 
 angular.module('openshiftConsole')
-  .directive('metrics', function($interval,
-                                 $parse,
-                                 $timeout,
-                                 $q,
-                                 $rootScope,
-                                 ChartsService,
-                                 ConversionService,
-                                 MetricsService,
-                                 usageValueFilter) {
+  .directive('podMetrics', function($interval,
+                                    $parse,
+                                    $timeout,
+                                    $q,
+                                    $rootScope,
+                                    ChartsService,
+                                    ConversionService,
+                                    MetricsService,
+                                    usageValueFilter) {
     return {
       restrict: 'E',
       scope: {
-        // Either pod or deployment must be set
-        pod: '=?',
-        deployment: '=?',
-        // Visual profile, currently either 'compact' or 'full' (default)
-        profile: '@?',
+        pod: '=',
         sparklineWidth: '=?',
         sparklineHeight: '=?',
         includedMetrics: '=?' // defaults to ["cpu", "memory", "network"]
       },
-      templateUrl: function(elem, attrs) {
-        if (attrs.profile === 'compact') {
-          return 'views/directives/metrics-compact.html';
-        }
-        return 'views/directives/metrics.html';
-      },
+      templateUrl: 'views/directives/pod-metrics.html',
       link: function(scope) {
         scope.includedMetrics = scope.includedMetrics || ["cpu", "memory", "network"];
         var donutByMetric = {}, sparklineByMetric = {};
         var intervalPromise;
         var getMemoryLimit = $parse('resources.limits.memory');
         var getCPULimit = $parse('resources.limits.cpu');
-        var compact = scope.profile === 'compact';
 
-        // For compact metrics, wait for the element to scroll into view before updating.
-        var paused = compact;
-        var lastUpdated;
         var updateInterval = 60 * 1000; // 60 seconds
         // Number of data points to display on the chart.
-        var numDataPoints = compact ? 15 : 30;
+        var numDataPoints = 30;
 
         // Set to true when the route changes so we don't update charts that no longer exist.
         var destroyed = false;
@@ -171,7 +158,7 @@ angular.module('openshiftConsole')
             bindto: '#' + metric.chartPrefix + scope.uniqueID + '-sparkline',
             axis: {
               x: {
-                show: !compact,
+                show: true,
                 type: 'timeseries',
                 // With default padding you can have negative axis tick values.
                 padding: {
@@ -184,13 +171,13 @@ angular.module('openshiftConsole')
                 }
               },
               y: {
-                show: !compact,
+                show: true,
                 label: metric.units,
                 min: 0,
                 // With default padding you can have negative axis tick values.
                 padding: {
                   left: 0,
-                  top: compact ? 5 : 20,
+                  top: 20,
                   bottom: 0
                 },
                 tick: {
@@ -201,13 +188,13 @@ angular.module('openshiftConsole')
               }
             },
             legend: {
-              show: metric.datasets.length > 1 && !compact
+              show: metric.datasets.length > 1
             },
             point: {
               show: false
             },
             size: {
-              height: scope.sparklineHeight || (compact ? 35 : 175),
+              height: scope.sparklineHeight || 175,
               width: scope.sparklineWidth,
             },
             tooltip: {
@@ -347,7 +334,7 @@ angular.module('openshiftConsole')
           }
 
           var sparklineConfig, sparklineData = {
-            type: metric.chartType || (compact ? 'area-spline' : 'spline'),
+            type: metric.chartType || 'spline',
             x: 'dates',
             columns: columns
           };
@@ -377,20 +364,10 @@ angular.module('openshiftConsole')
         }
 
         function getStartTime() {
-          if (compact) {
-            // 15 minutes ago
-            return "-15mn";
-          }
-
           return "-" + scope.options.timeRange.value + "mn";
         }
 
         function getTimeRangeMillis() {
-          if (compact) {
-            // 15 minutes
-            return 15 * 60 * 1000;
-          }
-
           return scope.options.timeRange.value * 60 * 1000;
         }
 
@@ -420,15 +397,8 @@ angular.module('openshiftConsole')
             return _.assign(config, {
               namespace: scope.pod.metadata.namespace,
               pod: scope.pod,
-              containerName: metric.containerMetric ? !compact && scope.options.selectedContainer.name : "pod",
+              containerName: metric.containerMetric ? scope.options.selectedContainer.name : "pod",
               stacked: true
-            });
-          }
-
-          if (scope.deployment) {
-            return _.assign(config, {
-              namespace: scope.deployment.metadata.namespace,
-              deployment: scope.deployment
             });
           }
 
@@ -441,11 +411,7 @@ angular.module('openshiftConsole')
             return false;
           }
 
-          if (scope.deployment) {
-            return true;
-          }
-
-          return scope.pod && (compact || _.get(scope, 'options.selectedContainer'));
+          return scope.pod && _.get(scope, 'options.selectedContainer');
         }
 
         function updateData(dataset, response) {
@@ -468,12 +434,9 @@ angular.module('openshiftConsole')
         }
 
         function update() {
-          if (paused || !canUpdate()) {
+          if (!canUpdate()) {
             return;
           }
-
-          var now = Date.now();
-          lastUpdated = now;
 
           // Leave the end time off to use the server's current time as the end
           // time. This prevents an issue where the donut chart shows 0 for
@@ -555,17 +518,6 @@ angular.module('openshiftConsole')
         }, true);
         // Also update every 30 seconds.
         intervalPromise = $interval(update, updateInterval, false);
-
-        // Pause or resume metrics updates when the element scrolls into and
-        // out of view.
-        scope.updateInView = function(inview) {
-          paused = !inview;
-
-          // Update now if in view and it's been longer than updateInterval.
-          if (inview && (!lastUpdated || Date.now() > (lastUpdated + updateInterval))) {
-            update();
-          }
-        };
 
         $rootScope.$on('metrics.charts.resize', function(){
           $timeout(function() {

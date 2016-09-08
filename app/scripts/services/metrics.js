@@ -5,8 +5,6 @@ angular.module("openshiftConsole")
     var POD_GAUGE_TEMPLATE = "/gauges/{containerName}%2F{podUID}%2F{metric}/data";
     // Used in compact view.
     var POD_STACKED_TEMPLATE = "/gauges/data?stacked=true&tags=descriptor_name:{metric},type:{type},pod_name:{podName}";
-    // Find metrics matching the RC selector.
-    var RC_TEMPLATE = "/gauges/data?stacked=true&tags=descriptor_name:{metric},type:{type},labels:{labels}";
 
     var metricsURL;
     function getMetricsURL() {
@@ -35,17 +33,6 @@ angular.module("openshiftConsole")
       });
 
       return data;
-    }
-
-    function labelRegex(selector) {
-      var regex = '^';
-      _.each(selector, function(value, key) {
-        // Use lookarounds to find the labels in any order. They're stored as name:value tags in Hawkular.
-        regex += '(?=.*\\b' + key + ':' + value + '\\b)';
-      });
-      regex += '.*$';
-
-      return regex;
     }
 
     // values must not contain regex special characters.
@@ -77,18 +64,6 @@ angular.module("openshiftConsole")
       return getMetricsURL().then(function(metricsURL) {
         var template;
         var type = getMetricType(config.metric);
-
-        // Are we requesting deployment-level metrics?
-        if (config.deployment) {
-          template = metricsURL + RC_TEMPLATE;
-          var selector = _.get(config, 'deployment.spec.selector', {});
-          var labels = labelRegex(selector);
-          return URI.expand(template, {
-            labels: labels,
-            metric: config.metric,
-            type: type
-          }).toString();
-        }
 
         // Are we requesting stacked pod metrics?
         if (config.stacked) {
@@ -227,9 +202,8 @@ angular.module("openshiftConsole")
 
       // Get metrics data for a container.
       //
-      // config keyword arguments (only one of pod or deployment can be specified)
+      // config keyword arguments
       //   pod:            the pod object
-      //   deployment:     the replication controller object
       //   containerName:  the container name
       //   metric:         the metric to check, e.g. "memory/usage"
       //   start:          start time in millis, or relative time like "-60mn"

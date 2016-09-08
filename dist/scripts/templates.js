@@ -2758,8 +2758,8 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "</uib-tab>\n" +
     "<uib-tab ng-if=\"metricsAvailable\" heading=\"Metrics\" active=\"selectedTab.metrics\">\n" +
     "\n" +
-    "<metrics ng-if=\"selectedTab.metrics\" pod=\"pod\">\n" +
-    "</metrics>\n" +
+    "<pod-metrics ng-if=\"selectedTab.metrics\" pod=\"pod\">\n" +
+    "</pod-metrics>\n" +
     "</uib-tab>\n" +
     "<uib-tab active=\"selectedTab.logs\" ng-if=\"'pods/log' | canI : 'get'\">\n" +
     "<uib-tab-heading>Logs</uib-tab-heading>\n" +
@@ -5153,7 +5153,7 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "{{metricsError.details}}\n" +
     "</p>\n" +
     "</div>\n" +
-    "<div ng-repeat=\"metric in metrics\" ng-if=\"!noData && !metricsError\" class=\"metrics-full\">\n" +
+    "<div ng-repeat=\"metric in metrics\" ng-show=\"!noData && !metricsError\" class=\"metrics-full\">\n" +
     "<h3 class=\"metric-label\">\n" +
     "{{metric.label}}\n" +
     "<small ng-if=\"showAverage\">\n" +
@@ -5161,7 +5161,7 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "</small>\n" +
     "</h3>\n" +
     "\n" +
-    "<div ng-attr-id=\"{{metric.chartPrefix + uniqueID}}-sparkline\" class=\"metrics-sparkline\"></div>\n" +
+    "<div ng-attr-id=\"{{metric.chartID}}\" class=\"metrics-sparkline\"></div>\n" +
     "</div>\n" +
     "</div>"
   );
@@ -5736,99 +5736,19 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
 
   $templateCache.put('views/directives/metrics-compact.html',
     "<div in-view=\"updateInView($inview)\" in-view-options=\"{ debounce: 50 }\">\n" +
-    "<div ng-repeat=\"metric in metrics\" class=\"metrics-compact\">\n" +
-    "<div ng-attr-id=\"{{metric.chartPrefix + uniqueID}}-sparkline\" class=\"metrics-sparkline\"></div>\n" +
+    "<div ng-repeat=\"metric in metrics\" ng-if=\"!metric.compactCombineWith\" class=\"metrics-compact\">\n" +
+    "<div ng-attr-id=\"{{metric.chartID}}\" class=\"metrics-sparkline\"></div>\n" +
     "<div class=\"metrics-usage\">\n" +
     "<div class=\"usage-value\">\n" +
-    "<span class=\"fade-inline\" ng-hide=\"metric.totalUsed | isNil\">{{metric.totalUsed}}</span>\n" +
-    "<span ng-if=\"metric.totalUsed | isNil\" class=\"text-muted\" aria-hidden=\"true\">\n" +
+    "<span class=\"fade-inline\" ng-hide=\"metric.lastValue | isNil\">{{formatUsage(metric.lastValue)}}</span>\n" +
+    "<span ng-if=\"metric.lastValue | isNil\" class=\"text-muted\" aria-hidden=\"true\">\n" +
     "--\n" +
     "</span>\n" +
     "</div>\n" +
     "<div class=\"usage-label\">\n" +
-    "{{metric.units | capitalize}} {{metric.label}}\n" +
+    "{{metric.units | capitalize}} {{metric.compactLabel || metric.label}}\n" +
     "</div>\n" +
     "</div>\n" +
-    "</div>\n" +
-    "</div>"
-  );
-
-
-  $templateCache.put('views/directives/metrics.html',
-    "<div class=\"metrics\" ng-if=\"pod || deployment\">\n" +
-    "<div ng-show=\"!metricsError\" class=\"metrics-options\">\n" +
-    "\n" +
-    "<div ng-if=\"pod.spec.containers.length\" class=\"form-group\">\n" +
-    "<label for=\"selectContainer\">Container:</label>\n" +
-    "<div class=\"select-container\">\n" +
-    "<span ng-show=\"pod.spec.containers.length === 1\">\n" +
-    "{{pod.spec.containers[0].name}}\n" +
-    "</span>\n" +
-    "<select id=\"selectContainer\" ng-show=\"pod.spec.containers.length > 1\" ng-init=\"options.selectedContainer = pod.spec.containers[0]\" ng-model=\"options.selectedContainer\" ng-options=\"container.name for container in pod.spec.containers track by container.name\">\n" +
-    "</select>\n" +
-    "</div>\n" +
-    "</div>\n" +
-    "<div class=\"form-group\">\n" +
-    "<label for=\"timeRange\">Time Range:</label>\n" +
-    "<select id=\"timeRange\" ng-model=\"options.timeRange\" ng-options=\"range.label for range in options.rangeOptions\" ng-disabled=\"metricsError\">\n" +
-    "</select>\n" +
-    "</div>\n" +
-    "</div>\n" +
-    "<ellipsis-pulser color=\"dark\" size=\"sm\" msg=\"Loading metrics\" ng-if=\"!loaded\"></ellipsis-pulser>\n" +
-    "<div ng-if=\"loaded && noData && !metricsError\" class=\"mar-top-md\">No metrics to display.</div>\n" +
-    "<div ng-if=\"metricsError\" class=\"empty-state-message text-center\">\n" +
-    "<h2>\n" +
-    "<span class=\"pficon pficon-error-circle-o\" aria-hidden=\"true\"></span>\n" +
-    "Metrics are not available.\n" +
-    "</h2>\n" +
-    "<p>\n" +
-    "An error occurred getting metrics<span ng-if=\"options.selectedContainer.name\">\n" +
-    "for container {{options.selectedContainer.name}}</span><span ng-if=\"metricsURL\">\n" +
-    "from <a ng-href=\"{{metricsURL}}\">{{metricsURL}}</a></span>.\n" +
-    "</p>\n" +
-    "<p class=\"text-muted\">\n" +
-    "{{metricsError.details}}\n" +
-    "</p>\n" +
-    "</div>\n" +
-    "<div ng-repeat=\"metric in metrics\" ng-if=\"!noData && !metricsError\" class=\"metrics-full\">\n" +
-    "<h3 class=\"metric-label\">\n" +
-    "{{metric.label}}\n" +
-    "<small ng-if=\"pod.spec.containers.length > 1\">\n" +
-    "<span ng-if=\"metric.containerMetric\">Container Metrics</span>\n" +
-    "<span ng-if=\"!metric.containerMetric\">Pod Metrics</span>\n" +
-    "</small>\n" +
-    "<small ng-if=\"deployment\">\n" +
-    "Total for All Pods\n" +
-    "</small>\n" +
-    "</h3>\n" +
-    "\n" +
-    "\n" +
-    "<div ng-if=\"metric.datasets[0].total\" class=\"utilization-trend-chart-pf\">\n" +
-    "<div class=\"current-values\" ng-if=\"metric.datasets[0].available >= 0\">\n" +
-    "<h1 class=\"available-count pull-left\">\n" +
-    "{{metric.datasets[0].available}}\n" +
-    "</h1>\n" +
-    "<div class=\"available-text pull-left\">\n" +
-    "<div>Available of</div>\n" +
-    "<div>{{metric.datasets[0].total}} {{metric.units}}</div>\n" +
-    "</div>\n" +
-    "</div>\n" +
-    "<div class=\"current-values\" ng-if=\"metric.datasets[0].available < 0\">\n" +
-    "<h1 class=\"available-count pull-left\">\n" +
-    "{{metric.datasets[0].available | abs}}\n" +
-    "</h1>\n" +
-    "<div class=\"available-text pull-left\">\n" +
-    "<div><strong>Over limit of</strong></div>\n" +
-    "<div>{{metric.datasets[0].total}} {{metric.units}}</div>\n" +
-    "</div>\n" +
-    "</div>\n" +
-    "</div>\n" +
-    "\n" +
-    "<div style=\"clear: both\"></div>\n" +
-    "\n" +
-    "<div ng-if=\"metric.datasets[0].total\" ng-attr-id=\"{{metric.chartPrefix + uniqueID}}-donut\" class=\"metrics-donut\"></div>\n" +
-    "\n" +
-    "<div ng-attr-id=\"{{metric.chartPrefix + uniqueID}}-sparkline\" class=\"metrics-sparkline\"></div>\n" +
     "</div>\n" +
     "</div>"
   );
@@ -6438,6 +6358,86 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "<div ng-if=\"(pods | hashSize) !== 0\">\n" +
     "Pod status:\n" +
     "<span ng-repeat=\"column in podStatusData\" ng-if=\"column[1]\">{{column[1]}} {{column[0]}}</span>\n" +
+    "</div>\n" +
+    "</div>"
+  );
+
+
+  $templateCache.put('views/directives/pod-metrics.html',
+    "<div class=\"metrics\" ng-if=\"pod || deployment\">\n" +
+    "<div ng-show=\"!metricsError\" class=\"metrics-options\">\n" +
+    "\n" +
+    "<div ng-if=\"pod.spec.containers.length\" class=\"form-group\">\n" +
+    "<label for=\"selectContainer\">Container:</label>\n" +
+    "<div class=\"select-container\">\n" +
+    "<span ng-show=\"pod.spec.containers.length === 1\">\n" +
+    "{{pod.spec.containers[0].name}}\n" +
+    "</span>\n" +
+    "<select id=\"selectContainer\" ng-show=\"pod.spec.containers.length > 1\" ng-init=\"options.selectedContainer = pod.spec.containers[0]\" ng-model=\"options.selectedContainer\" ng-options=\"container.name for container in pod.spec.containers track by container.name\">\n" +
+    "</select>\n" +
+    "</div>\n" +
+    "</div>\n" +
+    "<div class=\"form-group\">\n" +
+    "<label for=\"timeRange\">Time Range:</label>\n" +
+    "<select id=\"timeRange\" ng-model=\"options.timeRange\" ng-options=\"range.label for range in options.rangeOptions\" ng-disabled=\"metricsError\">\n" +
+    "</select>\n" +
+    "</div>\n" +
+    "</div>\n" +
+    "<ellipsis-pulser color=\"dark\" size=\"sm\" msg=\"Loading metrics\" ng-if=\"!loaded\"></ellipsis-pulser>\n" +
+    "<div ng-if=\"loaded && noData && !metricsError\" class=\"mar-top-md\">No metrics to display.</div>\n" +
+    "<div ng-if=\"metricsError\" class=\"empty-state-message text-center\">\n" +
+    "<h2>\n" +
+    "<span class=\"pficon pficon-error-circle-o\" aria-hidden=\"true\"></span>\n" +
+    "Metrics are not available.\n" +
+    "</h2>\n" +
+    "<p>\n" +
+    "An error occurred getting metrics<span ng-if=\"options.selectedContainer.name\">\n" +
+    "for container {{options.selectedContainer.name}}</span><span ng-if=\"metricsURL\">\n" +
+    "from <a ng-href=\"{{metricsURL}}\">{{metricsURL}}</a></span>.\n" +
+    "</p>\n" +
+    "<p class=\"text-muted\">\n" +
+    "{{metricsError.details}}\n" +
+    "</p>\n" +
+    "</div>\n" +
+    "<div ng-repeat=\"metric in metrics\" ng-if=\"!noData && !metricsError\" class=\"metrics-full\">\n" +
+    "<h3 class=\"metric-label\">\n" +
+    "{{metric.label}}\n" +
+    "<small ng-if=\"pod.spec.containers.length > 1\">\n" +
+    "<span ng-if=\"metric.containerMetric\">Container Metrics</span>\n" +
+    "<span ng-if=\"!metric.containerMetric\">Pod Metrics</span>\n" +
+    "</small>\n" +
+    "<small ng-if=\"deployment\">\n" +
+    "Total for All Pods\n" +
+    "</small>\n" +
+    "</h3>\n" +
+    "\n" +
+    "\n" +
+    "<div ng-if=\"metric.datasets[0].total\" class=\"utilization-trend-chart-pf\">\n" +
+    "<div class=\"current-values\" ng-if=\"metric.datasets[0].available >= 0\">\n" +
+    "<h1 class=\"available-count pull-left\">\n" +
+    "{{metric.datasets[0].available}}\n" +
+    "</h1>\n" +
+    "<div class=\"available-text pull-left\">\n" +
+    "<div>Available of</div>\n" +
+    "<div>{{metric.datasets[0].total}} {{metric.units}}</div>\n" +
+    "</div>\n" +
+    "</div>\n" +
+    "<div class=\"current-values\" ng-if=\"metric.datasets[0].available < 0\">\n" +
+    "<h1 class=\"available-count pull-left\">\n" +
+    "{{metric.datasets[0].available | abs}}\n" +
+    "</h1>\n" +
+    "<div class=\"available-text pull-left\">\n" +
+    "<div><strong>Over limit of</strong></div>\n" +
+    "<div>{{metric.datasets[0].total}} {{metric.units}}</div>\n" +
+    "</div>\n" +
+    "</div>\n" +
+    "</div>\n" +
+    "\n" +
+    "<div style=\"clear: both\"></div>\n" +
+    "\n" +
+    "<div ng-if=\"metric.datasets[0].total\" ng-attr-id=\"{{metric.chartPrefix + uniqueID}}-donut\" class=\"metrics-donut\"></div>\n" +
+    "\n" +
+    "<div ng-attr-id=\"{{metric.chartPrefix + uniqueID}}-sparkline\" class=\"metrics-sparkline\"></div>\n" +
     "</div>\n" +
     "</div>"
   );
@@ -7822,7 +7822,7 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "</log-viewer>\n" +
     "\n" +
     "<div class=\"mar-top-lg\" ng-if=\"metricsAvailable\">\n" +
-    "<metrics pod=\"pod\"></metrics>\n" +
+    "<pod-metrics pod=\"pod\"></pod-metrics>\n" +
     "</div>\n" +
     "</div>\n" +
     "</div>\n" +
@@ -8121,7 +8121,8 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "<div column class=\"deployment-details\" ng-if=\"activeDeployment && !anyDeploymentInProgress\">\n" +
     "\n" +
     "\n" +
-    "<metrics ng-if=\"showMetrics && !collapse\" deployment=\"activeDeployment\" profile=\"compact\" class=\"overview-metrics\"></metrics>\n" +
+    "<deployment-metrics ng-if=\"showMetrics && !collapse\" pods=\"podsByDeployment[activeDeployment.metadata.name]\" containers=\"activeDeployment.spec.template.spec.containers\" compact class=\"overview-metrics\">\n" +
+    "</deployment-metrics>\n" +
     "<pod-template ng-if=\"!showMetrics\" pod-template=\"activeDeployment.spec.template\"></pod-template>\n" +
     "\n" +
     "</div>\n" +
@@ -8166,7 +8167,8 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "</a>\n" +
     "</div>\n" +
     "<div column class=\"deployment-details\">\n" +
-    "<metrics ng-if=\"showMetrics && !collapse\" pod=\"pod\" profile=\"compact\" class=\"overview-metrics\"></metrics>\n" +
+    "<deployment-metrics ng-if=\"showMetrics && !collapse\" pods=\"[pod]\" containers=\"pod.spec.containers\" compact class=\"overview-metrics\">\n" +
+    "</deployment-metrics>\n" +
     "<pod-template ng-if=\"!showMetrics\" pod-template=\"pod\"></pod-template>\n" +
     "</div>\n" +
     "</div>\n" +
@@ -8199,7 +8201,8 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "\n" +
     "\n" +
     "<div column class=\"deployment-details\">\n" +
-    "<metrics ng-if=\"showMetrics && !collapse\" deployment=\"deployment\" profile=\"compact\" class=\"overview-metrics\"></metrics>\n" +
+    "<deployment-metrics ng-if=\"showMetrics && !collapse\" pods=\"podsByDeployment[deployment.metadata.name]\" containers=\"deployment.spec.template.spec.containers\" compact class=\"overview-metrics\">\n" +
+    "</deployment-metrics>\n" +
     "<pod-template ng-if=\"!showMetrics\" pod-template=\"deployment.spec.template\"></pod-template>\n" +
     "</div>\n" +
     "\n" +

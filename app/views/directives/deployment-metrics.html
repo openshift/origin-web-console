@@ -45,7 +45,7 @@
     </p>
   </div>
 
-  <div ng-repeat="metric in metrics" ng-if="!noData && !metricsError" class="metrics-full">
+  <div ng-repeat="metric in metrics" ng-show="!noData && !metricsError" class="metrics-full">
     <h3 class="metric-label">
       {{metric.label}}
       <small ng-if="showAverage">
@@ -54,6 +54,6 @@
     </h3>
 
     <!-- Sparkline -->
-    <div ng-attr-id="{{metric.chartPrefix + uniqueID}}-sparkline" class="metrics-sparkline"></div>
+    <div ng-attr-id="{{metric.chartID}}" class="metrics-sparkline"></div>
   </div>
 </div>
