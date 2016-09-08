@@ -51,13 +51,10 @@
                   <div class="list-view-pf">
                     <div class="list-group-item" ng-if="!(filteredBuilds | hashSize)">
                       <div class="list-view-pf-main-info">
+                        <ellipsis-pulser color="dark" size="sm" msg="Loading builds" ng-if="!buildsLoaded"></ellipsis-pulser>
                         <em>
-                          <span ng-if="!(builds | hashSize)">
-                            There are no builds in this project.
-                          </span>
-                          <span ng-if="builds | hashSize">
-                            The current filters are hiding all builds.
-                          </span>
+                          <div ng-if="(builds | hashSize) > 0">The current filters are hiding all builds.</div>
+                          <span ng-if="buildsLoaded && (builds | hashSize) === 0">There are no builds in this project.</span>
                         </em>
                       </div>
                     </div>
@@ -141,13 +138,10 @@
                   <div class="list-view-pf">
                     <div class="list-group-item" ng-if="!(filteredDeployments | hashSize)">
                       <div class="list-view-pf-main-info">
+                        <ellipsis-pulser color="dark" size="sm" msg="Loading deployments" ng-if="!deploymentsLoaded"></ellipsis-pulser>
                         <em>
-                          <span ng-if="!(deployments | hashSize)">
-                            There are no deployments in this project.
-                          </span>
-                          <span ng-if="deployments | hashSize">
-                            The current filters are hiding all deployments.
-                          </span>
+                          <div ng-if="(deployments | hashSize) > 0">The current filters are hiding all deployments.</div>
+                          <span ng-if="deploymentsLoaded && (deployments | hashSize) === 0">There are no deployments in this project.</span>
                         </em>
                       </div>
                     </div>
@@ -217,13 +211,10 @@
                   <div class="list-view-pf">
                     <div class="list-group-item" ng-if="!(filteredPods | hashSize)">
                       <div class="list-view-pf-main-info">
+                        <ellipsis-pulser color="dark" size="sm" msg="Loading pods" ng-if="!podsLoaded"></ellipsis-pulser>
                         <em>
-                          <span ng-if="!(pods | hashSize)">
-                            There are no pods in this project.
-                          </span>
-                          <span ng-if="pods | hashSize">
-                            The current filters are hiding all pods.
-                          </span>
+                          <div ng-if="(pods | hashSize) > 0">The current filters are hiding all pods.</div>
+                          <span ng-if="podsLoaded && (pods | hashSize) === 0">There are no pods in this project.</span>
                         </em>
                       </div>
                     </div>

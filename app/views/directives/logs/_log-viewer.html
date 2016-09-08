@@ -29,9 +29,7 @@
 
 
 <!-- show this message until the log viewer starts. important for pending state, etc -->
-<div ng-if="(!state)" class="mar-top-sm log-loading-msg">
-  Loading log...
-</div>
+<ellipsis-pulser color="dark" size="sm" display="inline" msg="Loading log" ng-if="(!state)"></ellipsis-pulser>
 
 <div class="empty-state-message text-center" ng-if="state=='empty'" ng-class="{'log-fixed-height': fixedHeight}">
   <h2>Logs are not available.</h2>
@@ -77,8 +75,8 @@
         End of log
       </div>
     </div>
-    <!-- show this spinner indicating logs are still streaming -->
-    <ellipsis-loader ng-show="loading"></ellipsis-loader>
+    <!-- show if logs are still streaming -->
+    <ellipsis-pulser color="light" size="md" ng-show="loading"></ellipsis-pulser> 
     <div
       ng-show="showScrollLinks"
       class="log-scroll log-scroll-bottom">
