@@ -1129,7 +1129,7 @@ a.disabled-link {
   }
 
   .trigger-info {
-    margin: 10px 0px 10px 10px;
+    margin: 10px 0px 10px 0px;
     .trigger-url {
       display: inline-block;
       vertical-align: middle;
@@ -1148,6 +1148,9 @@ a.disabled-link {
     padding-bottom: 15px;
   }
   @media (max-width: @screen-sm-min) {
+    .trigger-url {
+      max-width: 90%;
+    }
     .labels {
       .form-group {
         width: 100%;
