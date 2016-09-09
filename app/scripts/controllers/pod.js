@@ -43,6 +43,8 @@ angular.module('openshiftConsole')
       message: "This terminal has been disconnected. If you reconnect, your terminal history will be lost."
     };
 
+    $scope.noContainersYet = true;
+
     // Must always be initialized so we can check the selectedTab elsewhere
     $scope.selectedTab = {};
     // Check for a ?tab=<name> query param to allow linking directly to a tab.
@@ -140,7 +142,7 @@ angular.module('openshiftConsole')
         }
         else {
           $(window).on('resize.terminalsize', _.debounce(calculateTerminalSize, 100));
-        }        
+        }
         $timeout(calculateTerminalSize, 0);
       }
       else {
@@ -191,6 +193,12 @@ angular.module('openshiftConsole')
       return terminals;
     };
 
+    var updateContainersYet = function(pod) {
+      if ($scope.noContainersYet) {
+        $scope.noContainersYet = $scope.containersRunning(pod.status.containerStatuses) === 0; 
+      }
+    };
+
     var updateTerminals = function(terminals) {
       _.each(terminals, function(term) {
         var thisContainerStatus = _.find($scope.pod.status.containerStatuses, { name: term.containerName });
@@ -220,6 +228,7 @@ angular.module('openshiftConsole')
             ImageStreamResolver.fetchReferencedImageStreamImages(pods, $scope.imagesByDockerReference, $scope.imageStreamImageRefByDockerReference, context);
 
             $scope.containerTerminals = makeTerminals();
+            updateContainersYet(pod);
 
             // If we found the item successfully, watch for changes on it
             watches.push(DataService.watchObject("pods", $routeParams.pod, context, function(pod, action) {
@@ -234,6 +243,7 @@ angular.module('openshiftConsole')
               setContainerVars();
 
               updateTerminals($scope.containerTerminals);
+              updateContainersYet(pod);
             }));
           },
           // failure
