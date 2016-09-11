@@ -8,7 +8,7 @@
  * Controller of the openshiftConsole
  */
 angular.module('openshiftConsole')
-  .controller('OAuthController', function ($scope, $location, $q, RedirectLoginService, DataService, AuthService, Logger) {
+  .controller('OAuthController', function ($scope, $location, $q, $http, RedirectLoginService, DataService, AuthService, Logger) {
     var authLogger = Logger.get("auth");
 
     // Initialize to a no-op function.
@@ -19,7 +19,7 @@ angular.module('openshiftConsole')
       $location.url("./");
     };
 
-    RedirectLoginService.finish()
+    RedirectLoginService.finish($http)
     .then(function(data) {
       var token = data.token;
       var then = data.then;
