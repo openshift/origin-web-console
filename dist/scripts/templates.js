@@ -257,11 +257,7 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "</button>\n" +
     "<span class=\"pficon pficon-error-circle-o\"></span>\n" +
     "<strong>Failed to process the resource.</strong>\n" +
-    "<div>\n" +
-    "<truncate-long-text ng-if=\"error.message\" content=\"error.message\" limit=\"512\" use-word-boundary=\"true\"></truncate-long-text>\n" +
-    "<span ng-if=\"error.parsedLine\">Line: {{error.parsedLine}}</span>\n" +
-    "<code ng-if=\"error.snippet\">{{error.snippet}}</code>\n" +
-    "</div>\n" +
+    "<div class=\"pre-wrap\" ng-if=\"error.message\">{{error.message}}</div>\n" +
     "</div>"
   );
 
