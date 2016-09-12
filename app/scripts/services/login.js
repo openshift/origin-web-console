@@ -33,39 +33,37 @@ angular.module('openshiftConsole')
     return _oauth_redirect_uri;
   };
 
-  this.$get = function($location, $q, Logger) {
+  this.$get = function($location, $q, Logger, CryptoService) {
     var authLogger = Logger.get("auth");
 
-    var getRandomInts = function(length) {
-      var randomValues;
-
-      if (window.crypto && window.Uint32Array) {
-        try {
-          var r = new Uint32Array(length);
-          window.crypto.getRandomValues(r);
-          randomValues = [];
-          for (var j=0; j < length; j++) {
-            randomValues.push(r[j]);
-          }
-        } catch(e) {
-          authLogger.debug("RedirectLoginService.getRandomInts: ", e);
-          randomValues = null;
-        }
+    var codeVerifierKey = "RedirectLoginService.code_verifier";
+    var makeCodeVerifier = function() {
+      var code_verifier = CryptoService.randomBase64URLString(50);
+      if (!code_verifier) {
+        return code_verifier;
       }
-      
-      if (!randomValues) {
-        randomValues = [];
-        for (var i=0; i < length; i++) {
-          randomValues.push(Math.floor(Math.random() * 4294967296));
-        }
+      try {
+        window.localStorage[codeVerifierKey] = code_verifier;
+      } catch(e) {
+        authLogger.log("RedirectLoginService.makeCodeVerifier, localStorage error: ", e);
+        return "";
       }
-      
-      return randomValues;
+      return code_verifier;
     };
-    
+    var getCodeVerifier = function() {
+      try {
+        var code_verifier = window.localStorage[codeVerifierKey];
+        window.localStorage.removeItem(codeVerifierKey);
+        return code_verifier;
+      } catch(e) {
+        authLogger.log("RedirectLoginService.getCodeVerifier, localStorage error: ", e);
+        return "";
+      }
+    };
+
     var nonceKey = "RedirectLoginService.nonce";
     var makeState = function(then) {
-      var nonce = String(new Date().getTime()) + "-" + getRandomInts(8).join("");
+      var nonce = String(new Date().getTime()) + "-" + CryptoService.randomBase64URLString(50);
       try {
         window.localStorage[nonceKey] = nonce;
       } catch(e) {
@@ -123,7 +121,12 @@ angular.module('openshiftConsole')
 
         if (_oauth_token_uri) {
           authorizeParams.response_type = "code";
-          // TODO: add PKCE
+
+          var code_verifier = makeCodeVerifier();
+          if (code_verifier) {
+            authorizeParams.code_challenge = code_verifier;
+            // TODO: authorizeParams.code_challenge_method = "S256";
+          }
         }
 
         var deferred = $q.defer();
@@ -212,7 +215,12 @@ angular.module('openshiftConsole')
             "code="         + encodeURIComponent(queryParams.code),
             "redirect_uri=" + encodeURIComponent(_oauth_redirect_uri),
             "client_id="    + encodeURIComponent(_oauth_client_id)
-          ].join("&");
+          ];
+          
+          var code_verifier = getCodeVerifier();
+          if (code_verifier) {
+            tokenPostData.push("code_verifier="+encodeURIComponent(code_verifier));
+          }
 
           return $http({
             method: "POST",
@@ -221,7 +229,7 @@ angular.module('openshiftConsole')
               "Authorization": "Basic " + window.btoa(_oauth_client_id+":"),
               "Content-Type": "application/x-www-form-urlencoded"
             },
-            data: tokenPostData
+            data: tokenPostData.join("&")
           }).then(function(response){
             return handleParams(response.data, stateData);
           }, function(response) {
