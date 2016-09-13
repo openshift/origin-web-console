@@ -2756,10 +2756,10 @@ return e ? (d.metadata = {
 name:a.metadata.name + "-debug",
 annotations:{
 "debug.openshift.io/source-container":b,
-"debug.openshift.io/source-resource":"pod/" + a.metadata.name
+"debug.openshift.io/source-resource":"pods/" + a.metadata.name
 },
 labels:{}
-}, d.metadata.labels[c()] = a.metadata.name, d.spec.restartPolicy = "Never", delete d.spec.nodeName, d.status = {}, delete e.readinessProbe, delete e.livenessProbe, e.command = [ "sleep" ], e.args = [ "3600" ], d.spec.containers = [ e ], d) :null;
+}, d.metadata.labels[c()] = a.metadata.name, d.spec.restartPolicy = "Never", delete d.spec.host, delete d.spec.nodeName, d.status = {}, delete e.readinessProbe, delete e.livenessProbe, e.command = [ "sleep" ], e.args = [ "3600" ], d.spec.containers = [ e ], d) :null;
 },
 groupByReplicationController:function(a, b) {
 var c = {};
