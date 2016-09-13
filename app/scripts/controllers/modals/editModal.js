@@ -34,9 +34,8 @@ angular.module('openshiftConsole')
       kind: resource.kind
     }, resource);
 
-    // 8 - Minimum level of depth before generating inline
-    // 2 - Number of space characters used to indent code
-    $scope.model = YAML.stringify(resource, 8, 2);
+    // flowLevel: 8 - Maximum level of depth before generating inline
+    $scope.model = jsyaml.safeDump(resource, {flowLevel: 8});
 
     var onChange = _.throttle(function() {
       $scope.$eval(function() {
@@ -83,7 +82,7 @@ angular.module('openshiftConsole')
       $scope.modified = false;
       var updatedResource;
       try {
-        updatedResource = YAML.parse($scope.model);
+        updatedResource = jsyaml.safeLoad($scope.model);
       } catch (e) {
         $scope.error = e;
         return;

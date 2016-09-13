@@ -6264,7 +6264,9 @@ a.resourceChanged = g(b) !== g(f);
 }), f = angular.extend({
 apiVersion:f.apiVersion,
 kind:f.kind
-}, f), a.model = YAML.stringify(f, 8, 2);
+}, f), a.model = jsyaml.safeDump(f, {
+flowLevel:8
+});
 var h = _.throttle(function() {
 a.$eval(function() {
 a.modified = !0;
@@ -6290,7 +6292,7 @@ $(window).off("resize", e);
 a.modified = !1;
 var g;
 try {
-g = YAML.parse(a.model);
+g = jsyaml.safeLoad(a.model);
 } catch (h) {
 return void (a.error = h);
 }
@@ -6985,7 +6987,7 @@ try {
 JSON.parse(k.editorContent), u.setMode("ace/mode/json");
 } catch (a) {
 try {
-YAML.parse(k.editorContent), u.setMode("ace/mode/yaml");
+jsyaml.safeLoad(k.editorContent), u.setMode("ace/mode/yaml");
 } catch (a) {}
 }
 k.$apply(w);
@@ -6997,7 +6999,7 @@ try {
 b = JSON.parse(k.editorContent);
 } catch (c) {
 try {
-b = YAML.parse(k.editorContent);
+b = jsyaml.safeLoad(k.editorContent);
 } catch (c) {
 return void (k.error = c);
 }

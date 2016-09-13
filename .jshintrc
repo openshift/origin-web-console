@@ -20,7 +20,7 @@
   "undef": true,
   "unused": true,
   "globals": {
-    "YAML": false,
+    "jsyaml": false,
     "angular": false,
     "ansi_up": false,
     "c3": false,

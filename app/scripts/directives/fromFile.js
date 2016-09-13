@@ -41,7 +41,7 @@ angular.module("openshiftConsole")
             aceEditorSession.setMode("ace/mode/json");
           } catch (e) {
             try {
-              YAML.parse($scope.editorContent);
+              jsyaml.safeLoad($scope.editorContent);
               aceEditorSession.setMode("ace/mode/yaml");
             } catch (e) {}
           }
@@ -67,20 +67,20 @@ angular.module("openshiftConsole")
             resource = JSON.parse($scope.editorContent);
           } catch (e) {
             try {
-              resource = YAML.parse($scope.editorContent);
+              resource = jsyaml.safeLoad($scope.editorContent);
             } catch (e) {
               $scope.error = e;
               return;
             }
           }
 
-          // Top level resource field check. 
+          // Top level resource field check.
           if (!validateFields(resource)) {
             return;
           }
 
           $scope.resourceKind = resource.kind;
-          
+
           if ($scope.resourceKind.endsWith("List")) {
             $scope.isList = true;
             $scope.resourceList = resource.items;
@@ -126,7 +126,7 @@ angular.module("openshiftConsole")
           });
         };
 
-        // Takes item that will be inspect for kind, metadata fields and if the item is meant to be created in current namespace 
+        // Takes item that will be inspect for kind, metadata fields and if the item is meant to be created in current namespace
         function validateFields(item) {
           if (!item.kind) {
             $scope.error = {
@@ -170,7 +170,7 @@ angular.module("openshiftConsole")
               CachedTemplateService.setTemplate($scope.resourceList[0]);
               redirect();
             }
-          });      
+          });
         }
 
         function confirmReplace() {
@@ -188,7 +188,7 @@ angular.module("openshiftConsole")
         function createAndUpdate() {
           var createResourcesSum = $scope.createResources.length,
             updateResourcesSum = $scope.updateResources.length;
-            
+
           if (!$scope.resourceKind.endsWith("List")) {
             creatUpdateSingleResource();
           } else {
@@ -246,7 +246,7 @@ angular.module("openshiftConsole")
               updatedResource.metadata = updatedMetadata;
               $scope.updateResources.push(updatedResource);
             },
-            // resource doesn't exist with RC 404 or catch other RC 
+            // resource doesn't exist with RC 404 or catch other RC
             function(response) {
               if (response.status === 404) {
                 $scope.createResources.push(item);
@@ -261,7 +261,7 @@ angular.module("openshiftConsole")
           });
         }
 
-        // creatUpdateSingleResource function will create/update just a single resource on a none-List resource kind. 
+        // creatUpdateSingleResource function will create/update just a single resource on a none-List resource kind.
         function creatUpdateSingleResource() {
           var resource;
           if (!_.isEmpty($scope.createResources)) {
