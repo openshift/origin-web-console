@@ -3,9 +3,9 @@
     <div class="col-lg-6">
       <h3>
         Status
-        <small ng-if="pod | debugLabel">
+        <small ng-if="pod | isDebugPod">
           debugging
-          <a ng-href="{{pod | debugLabel | navigateResourceURL : 'Pod' : pod.metadata.namespace}}">{{pod | debugLabel}}</a>
+          <a ng-href="{{pod | debugPodSourceName | navigateResourceURL : 'Pod' : pod.metadata.namespace}}">{{pod | debugPodSourceName}}</a>
         </small>
       </h3>
       <dl class="dl-horizontal left">
@@ -62,7 +62,7 @@
           <dd>{{containerStatus.ready}}</dd>
           <dt>Restart Count:</dt>
           <dd>{{containerStatus.restartCount}}</dd>
-          <div ng-if="pod.status.phase !== 'Completed' && !(pod | annotation : 'openshift.io/build.name') && (!containerStatus.state.running || !containerStatus.ready) && !(pod | debugLabel) && ('pods' | canI : 'create')" class="debug-pod-action">
+          <div ng-if="pod.status.phase !== 'Completed' && !(pod | annotation : 'openshift.io/build.name') && (!containerStatus.state.running || !containerStatus.ready) && !(pod | isDebugPod) && ('pods' | canI : 'create')" class="debug-pod-action">
             <a href="" ng-click="debugTerminal(containerStatus.name)" role="button">Debug in terminal</a>
           </div>
         </dl>

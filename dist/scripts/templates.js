@@ -1162,9 +1162,9 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "<div class=\"col-lg-6\">\n" +
     "<h3>\n" +
     "Status\n" +
-    "<small ng-if=\"pod | debugLabel\">\n" +
+    "<small ng-if=\"pod | isDebugPod\">\n" +
     "debugging\n" +
-    "<a ng-href=\"{{pod | debugLabel | navigateResourceURL : 'Pod' : pod.metadata.namespace}}\">{{pod | debugLabel}}</a>\n" +
+    "<a ng-href=\"{{pod | debugPodSourceName | navigateResourceURL : 'Pod' : pod.metadata.namespace}}\">{{pod | debugPodSourceName}}</a>\n" +
     "</small>\n" +
     "</h3>\n" +
     "<dl class=\"dl-horizontal left\">\n" +
@@ -1221,7 +1221,7 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "<dd>{{containerStatus.ready}}</dd>\n" +
     "<dt>Restart Count:</dt>\n" +
     "<dd>{{containerStatus.restartCount}}</dd>\n" +
-    "<div ng-if=\"pod.status.phase !== 'Completed' && !(pod | annotation : 'openshift.io/build.name') && (!containerStatus.state.running || !containerStatus.ready) && !(pod | debugLabel) && ('pods' | canI : 'create')\" class=\"debug-pod-action\">\n" +
+    "<div ng-if=\"pod.status.phase !== 'Completed' && !(pod | annotation : 'openshift.io/build.name') && (!containerStatus.state.running || !containerStatus.ready) && !(pod | isDebugPod) && ('pods' | canI : 'create')\" class=\"debug-pod-action\">\n" +
     "<a href=\"\" ng-click=\"debugTerminal(containerStatus.name)\" role=\"button\">Debug in terminal</a>\n" +
     "</div>\n" +
     "</dl>\n" +
@@ -6468,9 +6468,9 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "<span ng-if=\"pod | isTroubledPod\">\n" +
     "<pod-warnings pod=\"pod\"></pod-warnings>\n" +
     "</span>\n" +
-    "<span ng-if=\"pod | debugLabel\">\n" +
-    "<i class=\"fa fa-bug info-popover\" aria-hidden=\"true\" data-toggle=\"popover\" data-trigger=\"hover\" dynamic-content=\"Debugging pod {{pod | debugLabel}}\"></i>\n" +
-    "<span class=\"sr-only\">Debugging pod {{pod | debugLabel}}</span>\n" +
+    "<span ng-if=\"pod | isDebugPod\">\n" +
+    "<i class=\"fa fa-bug info-popover\" aria-hidden=\"true\" data-toggle=\"popover\" data-trigger=\"hover\" dynamic-content=\"Debugging pod {{pod | debugPodSourceName}}\"></i>\n" +
+    "<span class=\"sr-only\">Debugging pod {{pod | debugPodSourceName}}</span>\n" +
     "</span>\n" +
     "</td>\n" +
     "<td data-title=\"Status\">\n" +
