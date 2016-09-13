@@ -1,15 +1,8 @@
 'use strict';
 
 angular.module("openshiftConsole")
-  .factory("PodsService", function($filter) {
-    var getLabel = $filter('label');
-    var debugLabelKey = _.constant('debug.openshift.io/name');
-
+  .factory("PodsService", function() {
     return {
-      getDebugLabel: function(pod) {
-        return getLabel(pod, debugLabelKey());
-      },
-
       // Generates a copy of pod for debugging crash loops.
       generateDebugPod: function(pod, containerName) {
         // Copy the pod and make some changes for debugging.
@@ -24,14 +17,14 @@ angular.module("openshiftConsole")
           name: pod.metadata.name + "-debug",
           annotations: {
             "debug.openshift.io/source-container": containerName,
-            "debug.openshift.io/source-resource": "pod/" + pod.metadata.name
+            "debug.openshift.io/source-resource": "pods/" + pod.metadata.name
           },
           labels: {}
         };
-        debugPod.metadata.labels[debugLabelKey()] = pod.metadata.name;
 
         // Never restart.
         debugPod.spec.restartPolicy = "Never";
+        delete debugPod.spec.host;
         delete debugPod.spec.nodeName;
         debugPod.status = {};
         delete container.readinessProbe;
@@ -61,7 +54,7 @@ angular.module("openshiftConsole")
 
         return podsByRC;
       },
-      
+
       // includeFn is an optional filter to only include certain pods in the map
       // common use case is to hide infrastructure pods like build and deployer
       groupByService: function(pods, services, includeFn) {

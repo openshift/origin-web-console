@@ -2729,24 +2729,20 @@ hasCPURequest:o,
 filterHPA:p,
 getHPAWarnings:s
 };
-} ]), angular.module("openshiftConsole").factory("PodsService", [ "$filter", function(a) {
-var b = a("label"), c = _.constant("debug.openshift.io/name");
+} ]), angular.module("openshiftConsole").factory("PodsService", function() {
 return {
-getDebugLabel:function(a) {
-return b(a, c());
-},
 generateDebugPod:function(a, b) {
-var d = angular.copy(a), e = _.find(d.spec.containers, {
+var c = angular.copy(a), d = _.find(c.spec.containers, {
 name:b
 });
-return e ? (d.metadata = {
+return d ? (c.metadata = {
 name:a.metadata.name + "-debug",
 annotations:{
 "debug.openshift.io/source-container":b,
-"debug.openshift.io/source-resource":"pod/" + a.metadata.name
+"debug.openshift.io/source-resource":"pods/" + a.metadata.name
 },
 labels:{}
-}, d.metadata.labels[c()] = a.metadata.name, d.spec.restartPolicy = "Never", delete d.spec.nodeName, d.status = {}, delete e.readinessProbe, delete e.livenessProbe, e.command = [ "sleep" ], e.args = [ "3600" ], d.spec.containers = [ e ], d) :null;
+}, c.spec.restartPolicy = "Never", delete c.spec.host, delete c.spec.nodeName, c.status = {}, delete d.readinessProbe, delete d.livenessProbe, d.command = [ "sleep" ], d.args = [ "3600" ], c.spec.containers = [ d ], c) :null;
 },
 groupByReplicationController:function(a, b) {
 var c = {};
@@ -2771,7 +2767,7 @@ _.set(d, [ f, a.metadata.name ], a);
 }), d;
 }
 };
-} ]), angular.module("openshiftConsole").service("CachedTemplateService", function() {
+}), angular.module("openshiftConsole").service("CachedTemplateService", function() {
 var a = null;
 return {
 setTemplate:function(b) {
@@ -10799,9 +10795,16 @@ NotBestEffort:"Matches pods that do not have best effort quality of service."
 return function(b) {
 return a[b];
 };
-}).filter("debugLabel", [ "PodsService", function(a) {
+}).filter("isDebugPod", [ "annotationFilter", function(a) {
 return function(b) {
-return a.getDebugLabel(b);
+return !!a(b, "debug.openshift.io/source-resource");
+};
+} ]).filter("debugPodSourceName", [ "annotationFilter", function(a) {
+return function(b) {
+var c = a(b, "debug.openshift.io/source-resource");
+if (!c) return "";
+var d = c.split("/");
+return 2 !== d.length ? (Logger.warn('Invalid debug.openshift.io/source-resource annotation value "' + c + '"'), "") :d[1];
 };
 } ]).filter("entrypoint", function() {
 var a = function(a) {

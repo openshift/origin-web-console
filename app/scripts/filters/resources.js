@@ -1285,9 +1285,25 @@ angular.module('openshiftConsole')
       return scopeMessages[scope];
     };
   })
-  .filter('debugLabel', function(PodsService) {
+  .filter('isDebugPod', function(annotationFilter) {
     return function(pod) {
-      return PodsService.getDebugLabel(pod);
+      return !!annotationFilter(pod, 'debug.openshift.io/source-resource');
+    };
+  })
+  .filter('debugPodSourceName', function(annotationFilter) {
+    return function(pod) {
+      var source = annotationFilter(pod, 'debug.openshift.io/source-resource');
+      if (!source) {
+        return '';
+      }
+
+      var parts = source.split('/');
+      if (parts.length !== 2) {
+        Logger.warn('Invalid debug.openshift.io/source-resource annotation value "' + source + '"');
+        return '';
+      }
+
+      return parts[1];
     };
   })
   // Determines the container entrypoint command from the container and docker image metadata.
