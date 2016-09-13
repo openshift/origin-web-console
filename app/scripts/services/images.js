@@ -146,7 +146,10 @@ angular.module("openshiftConsole")
               ],
               from: {
                 kind: "ImageStreamTag",
-                name: config.name + ":" + config.tag,
+                // If we created the ImageStream, use our name. Otherwise, use
+                // the image name when referring to an ImageStreamTag from
+                // another namespace.
+                name: (config.namespace ? config.image : config.name) + ":" + config.tag,
                 namespace: config.namespace
               }
             }
