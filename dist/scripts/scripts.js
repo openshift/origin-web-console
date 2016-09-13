@@ -2972,7 +2972,7 @@ automatic:!0,
 containerNames:[ a.name ],
 from:{
 kind:"ImageStreamTag",
-name:a.name + ":" + a.tag,
+name:(a.namespace ? a.image :a.name) + ":" + a.tag,
 namespace:a.namespace
 }
 }
