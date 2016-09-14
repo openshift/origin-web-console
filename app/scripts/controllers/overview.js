@@ -28,6 +28,39 @@ angular.module('openshiftConsole')
     $scope.renderOptions = $scope.renderOptions || {};
     $scope.renderOptions.showLoading = true;
     $scope.renderOptions.showGetStarted = false;
+    $scope.renderOptions.showToolbar = false;
+    $scope.renderOptions.overviewMode = 'tiles';
+
+    /*
+     * HACK: The use of <base href="/"> that is encouraged by angular is
+     * a cop-out. It breaks a number of real world use cases, including
+     * local xlink:href. Use location.href to get around it, even though
+     * these SVG <defs> are local in the template.
+     */
+
+     // must be named kinds to work with topology-icon directive
+    $scope.kinds = {
+      DeploymentConfig: location.href + "#vertex-DeploymentConfig",
+      Pod: location.href + "#vertex-Pod",
+      ReplicationController: location.href + "#vertex-ReplicationController",
+      Route: location.href + "#vertex-Route",
+      Service: location.href + "#vertex-Service"
+    };
+    // a separate map is required since the toplogy-icon directive deletes keys
+    // from the kinds map
+    $scope.legendKinds = {
+      DeploymentConfig: location.href + "#vertex-DeploymentConfig",
+      Pod: location.href + "#vertex-Pod",
+      ReplicationController: location.href + "#vertex-ReplicationController",
+      Route: location.href + "#vertex-Route",
+      Service: location.href + "#vertex-Service"
+    };
+
+    $scope.topologySelection = null;
+
+    /* Filled in by updateTopology */
+    $scope.topologyItems = { };
+    $scope.topologyRelations = [ ];
 
     $scope.alerts = $scope.alerts || {};
     AlertMessageService.getAlerts().forEach(function(alert) {
@@ -194,6 +227,7 @@ angular.module('openshiftConsole')
 
       $scope.podsByDeployment = PodsService.groupByReplicationController(pods, deployments);
       $scope.monopodsByService = PodsService.groupByService($scope.podsByDeployment[''], services, showMonopod);
+      $scope.podsByService = PodsService.groupByService(pods, services);
     };
 
     // Set of child services in this project.
@@ -354,6 +388,7 @@ angular.module('openshiftConsole')
 
       $scope.renderOptions.showGetStarted = loaded && projectEmpty;
       $scope.renderOptions.showLoading = !loaded && projectEmpty;
+      $scope.renderOptions.showToolbar = !projectEmpty;
     };
 
 
@@ -428,6 +463,7 @@ angular.module('openshiftConsole')
           pods = podsData.by("metadata.name");
           groupPods();
           updateShowGetStarted();
+          updateTopologyLater();
           Logger.log("pods", pods);
         }));
 
@@ -439,6 +475,7 @@ angular.module('openshiftConsole')
           groupDeployments();
           updateRouteWarnings();
           updateShowGetStarted();
+          updateTopologyLater();
           Logger.log("services (list)", services);
         }));
 
@@ -460,6 +497,7 @@ angular.module('openshiftConsole')
           groupRoutes();
           groupServices();
           updateRouteWarnings();
+          updateTopologyLater();
           Logger.log("routes (subscribe)", $scope.routesByService);
         }, {poll: limitWatches, pollInterval: 60 * 1000}));
 
@@ -470,6 +508,7 @@ angular.module('openshiftConsole')
           groupPods();
           groupBuilds();
           updateShowGetStarted();
+          updateTopologyLater();
           Logger.log("replicationcontrollers (subscribe)", deployments);
         }));
 
@@ -479,6 +518,7 @@ angular.module('openshiftConsole')
           groupDeploymentConfigs();
           groupDeployments();
           updateShowGetStarted();
+          updateTopologyLater();
           Logger.log("deploymentconfigs (subscribe)", $scope.deploymentConfigs);
         }));
 
@@ -498,6 +538,173 @@ angular.module('openshiftConsole')
 
         $scope.$on('$destroy', function(){
           DataService.unwatchAll(watches);
+          $(window).off('click.topologyItem');
+          $('.kube-topology g').popover('destroy');
         });
+
+        // Topology view specific code
+        var updateTimeout = null;
+
+        function updateTopology() {
+          updateTimeout = null;
+
+          var topologyRelations = [];
+          var topologyItems = { };
+
+          // Because metadata.uid is not unique among resources
+          function makeId(resource) {
+            return resource.kind + resource.metadata.uid;
+          }
+
+          // Add the services
+          angular.forEach($scope.services, function(service) {
+            topologyItems[makeId(service)] = service;
+          });
+
+          var isRecentDeployment = $filter('isRecentDeployment');
+          var isVisibleDeployment = function(deployment) {
+            // If this is a replication controller and not a deployment, then it's visible.
+            var dcName = $filter('annotation')(deployment, 'deploymentConfig');
+            if (!dcName) {
+              return true;
+            }
+
+            // If the deployment is active, it's visible.
+            if ($filter('hashSize')($scope.podsByDeployment[deployment.metadata.name]) > 0) {
+              return true;
+            }
+
+            // Wait for deployment configs to load.
+            if (!$scope.deploymentConfigs) {
+              return false;
+            }
+
+            // If the deployment config has been deleted and the deployment has no replicas, hide it.
+            // Otherwise all old deployments for a deleted deployment config will be visible.
+            var dc = $scope.deploymentConfigs[dcName];
+            if (!dc) {
+              return false;
+            }
+
+            // Show the deployment if it's recent (latest or in progress) or if it's scalable.
+            return isRecentDeployment(deployment, dc) || $scope.isScalableDeployment(deployment);
+          };
+
+          // Add everything related to services, each of these tables are in
+          // standard form with string keys, pointing to a map of further
+          // name -> resource mappings.
+          [
+            $scope.podsByService,
+            $scope.monopodsByService,
+            $scope.deploymentsByService,
+            $scope.deploymentConfigsByService,
+            $scope.routesByService
+          ].forEach(function(map) {
+            angular.forEach(map, function(resources, serviceName) {
+              var service = $scope.services[serviceName];
+              if (!serviceName || service) {
+                angular.forEach(resources, function(resource) {
+                  // Filter some items to be consistent with the tiles view.
+                  if (resource.kind === 'Pod' && !showMonopod(resource)) {
+                    return;
+                  }
+
+                  if (resource.kind === 'ReplicationController' && !isVisibleDeployment(resource)) {
+                    return;
+                  }
+
+                  topologyItems[makeId(resource)] = resource;
+                });
+              }
+            });
+          });
+
+          // Things to link to services. Note that we can push as relations
+          // no non-existing items into the topology without ill effect
+          [
+            $scope.podsByService,
+            $scope.monopodsByService,
+            $scope.routesByService
+          ].forEach(function(map) {
+            angular.forEach(map, function(resources, serviceName) {
+              var service = $scope.services[serviceName];
+              if (service) {
+                angular.forEach(resources, function(resource) {
+                  topologyRelations.push({ source: makeId(service), target: makeId(resource) });
+                });
+              }
+            });
+          });
+
+          // A special case, not related to services
+          angular.forEach($scope.podsByDeployment, function(pods, deploymentName) {
+            var deployment = $scope.deploymentsByName[deploymentName];
+            if (deployment && makeId(deployment) in topologyItems) {
+              angular.forEach(pods, function(pod) {
+          topologyItems[makeId(pod)] = pod;
+                topologyRelations.push({ source: makeId(deployment), target: makeId(pod) });
+              });
+            }
+          });
+
+          // Link deployment configs to their deployment
+          angular.forEach($scope.deploymentsByName, function(deployment, deploymentName) {
+            var deploymentConfig, annotations = deployment.metadata.annotations || {};
+            var deploymentConfigName = annotations["openshift.io/deployment-config.name"] || deploymentName;
+            if (deploymentConfigName && $scope.deploymentConfigs) {
+              deploymentConfig = $scope.deploymentConfigs[deploymentConfigName];
+              if (deploymentConfig) {
+                topologyRelations.push({ source: makeId(deploymentConfig), target: makeId(deployment) });
+              }
+            }
+          });
+
+          $scope.$evalAsync(function() {
+            $scope.topologyItems = topologyItems;
+            $scope.topologyRelations = topologyRelations;
+          });
+        }
+
+        function updateTopologyLater() {
+          if (!updateTimeout) {
+            updateTimeout = window.setTimeout(updateTopology, 100);
+          }
+        }
+
+        $scope.$on("select", function(ev, resource) {
+          $scope.$apply(function() {
+            $scope.topologySelection = resource;
+          });
+        }, true);
+
+        $scope.$watch('renderOptions.overviewMode', function(mode) {
+          if (mode === 'topology') {
+            $(window).on('click.topologyItem', function(evt) {
+              var g = $(evt.target).closest('g', $('.kube-topology'));
+              $('g', '.kube-topology').not(g).popover('hide');
+              if (g.length) {
+                if (!(g.data('bs.popover'))) {
+                  g.popover({
+                    container: 'body',
+                    content: function() {
+                      return $filter('sentenceCase')($scope.topologySelection.kind) + ' <a href="' + $filter('navigateResourceURL')($scope.topologySelection) + '">' + $scope.topologySelection.metadata.name + '</a>';
+                    },
+                    html: true,
+                    placement: 'top',
+                    trigger: 'manual'
+                  }).popover('show');
+                }
+                else {
+                  g.popover('toggle');
+                }
+              }
+            });
+          }
+          else {
+            $(window).off('click.topologyItem');
+            $('.kube-topology g').popover('destroy');
+          }
+        });
+
       }));
   });

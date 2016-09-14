@@ -63,16 +63,17 @@ angular.module("openshiftConsole")
           if (includeFn && !includeFn(pod)) {
             return;
           }
-          var svc = _.find(services, function(svc) {
+          var svcs = _.filter(services, function(svc) {
             var svcSelector = new LabelSelector(svc.spec.selector);
             return svcSelector.matches(pod);
           });
-
-          var svcName = _.get(svc, 'metadata.name', '');
-          _.set(podsBySvc, [svcName, pod.metadata.name], pod);
+          _.each(svcs, function(svc){
+            var svcName = _.get(svc, 'metadata.name', '');
+            _.set(podsBySvc, [svcName, pod.metadata.name], pod);
+          });
         });
 
-        return podsBySvc;        
+        return podsBySvc;
       }
     };
   });

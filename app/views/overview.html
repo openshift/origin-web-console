@@ -35,44 +35,121 @@
               <div ng-if="renderOptions.showLoading" class="loading-message">
                 Loading...
               </div>
-              <div class="service-group-with-route-row" ng-repeat="service in topLevelServices"
-                   ng-if="service.metadata.labels.app || routesByService[service.metadata.name].length || childServicesByParent[service.metadata.name].length">
-                <overview-service-group></overview-service-group>
+
+              <div class="display-mode" ng-if="renderOptions.showToolbar">
+                <div class="btn-group">
+                  <label class="btn btn-default" ng-model="renderOptions.overviewMode" uib-btn-radio="'tiles'" title="Tile View">
+                    <i class="fa fa-list"></i>
+                  </label>
+                  <label class="btn btn-default" ng-model="renderOptions.overviewMode" uib-btn-radio="'topology'" title="Topology View">
+                    <i class="pficon pficon-topology"></i>
+                  </label>
+                </div>
               </div>
 
-              <div row wrap class="standalone-service-row">
-                <div
-                    ng-repeat="service in topLevelServices"
-                    ng-if="!service.metadata.labels.app && !routesByService[service.metadata.name].length && !childServicesByParent[service.metadata.name].length"
-                    class="standalone-service">
+              <div ng-if="renderOptions.overviewMode === 'topology' && !renderOptions.showGetStarted" class="kube-topology-block">
+                <div class="kube-topology-controls">
+                  <p class="kube-topology-controls-instructions">Toggle visibility:</p>
+                  <kubernetes-topology-icon kind="Pod">
+                    <svg class="kube-topology">
+                      <use xlink:href="{{legendKinds.Pod}}" x="16" y="16"></use>
+                    </svg>
+                    <span class="kube-topology-definition">Pods</span>
+                  </kubernetes-topology-icon>
+                  <kubernetes-topology-icon kind="Service">
+                    <svg class="kube-topology">
+                      <use xlink:href="{{legendKinds.Service}}" x="16" y="16"></use>
+                    </svg>
+                    <span class="kube-topology-definition">Services</span>
+                  </kubernetes-topology-icon>
+                  <kubernetes-topology-icon kind="ReplicationController">
+                    <svg class="kube-topology">
+                      <use xlink:href="{{legendKinds.ReplicationController}}" x="16" y="16"></use>
+                    </svg>
+                    <span class="kube-topology-definition">Replication Controllers</span>
+                  </kubernetes-topology-icon>
+                  <kubernetes-topology-icon kind="DeploymentConfig">
+                    <svg class="kube-topology">
+                      <use xlink:href="{{legendKinds.DeploymentConfig}}" x="16" y="16"></use>
+                    </svg>
+                    <span class="kube-topology-definition">Deployment Configs</span>
+                  </kubernetes-topology-icon>
+                  <kubernetes-topology-icon kind="Route">
+                    <svg class="kube-topology">
+                      <use xlink:href="{{legendKinds.Route}}" x="16" y="16"></use>
+                    </svg>
+                    <span class="kube-topology-definition">Routes</span>
+                  </kubernetes-topology-icon>
+                </div>
+                <kubernetes-topology-graph bottom-of-window="1" items="topologyItems"
+                  relations="topologyRelations" kinds="kinds" selection="topologySelection">
+                </kubernetes-topology-graph>
+                <svg class="kube-topology" hidden>
+                  <defs>
+                    <g class="Pod" id="vertex-Pod">
+                      <circle r="15"></circle>
+                      <text y="5" x="0.5">&#xf1b3;</text>
+                    </g>
+                    <g class="Service" id="vertex-Service">
+                      <circle r="15"></circle>
+                      <text y="8" x="-2">&#xe61e;</text>
+                    </g>
+                    <g class="ReplicationController" id="vertex-ReplicationController">
+                      <circle r="15"></circle>
+                      <text y="7.5" x="-1">&#xe624;</text>
+                    </g>
+                    <g class="DeploymentConfig" id="vertex-DeploymentConfig">
+                      <circle r="15"></circle>
+                      <text y="7">&#xf013;</text>
+                    </g>
+                    <g class="Route" id="vertex-Route">
+                      <circle r="15"></circle>
+                      <text y="7.5" x="-0.5">&#xe625;</text>
+                    </g>
+                  </defs>
+                </svg>
+              </div>
+
+              <div ng-if="renderOptions.overviewMode == 'tiles'">
+                <div class="service-group-with-route-row" ng-repeat="service in topLevelServices"
+                     ng-if="service.metadata.labels.app || routesByService[service.metadata.name].length || childServicesByParent[service.metadata.name].length">
                   <overview-service-group></overview-service-group>
                 </div>
-              </div>
 
-              <!-- Unserviced DCs, RCs, and pods -->
-              <div row wrap ng-if="(monopodsByService[''] | hashSize) > 0 || (deploymentConfigsByService[''] | hashSize) > 0 || (deploymentsByService[''] | hashSize) > 0" class="unserviced-row">
-                <!-- unserviced DC -->
-                <div ng-repeat="(dcName, deploymentConfig) in deploymentConfigsByService[''] track by (deploymentConfig | uid)"
-                    class="no-service"
-                    ng-if="deployments = visibleDeploymentsByConfigAndService[''][dcName]"> <!-- Must be an ng-if, an ng-init will not re-evaluate properly -->
-                  <overview-deployment-config class="deployment-tile-wrapper"></overview-deployment-config>
+                <div row wrap class="standalone-service-row">
+                  <div
+                      ng-repeat="service in topLevelServices"
+                      ng-if="!service.metadata.labels.app && !routesByService[service.metadata.name].length && !childServicesByParent[service.metadata.name].length"
+                      class="standalone-service">
+                    <overview-service-group></overview-service-group>
+                  </div>
                 </div>
-                <!-- /unserviced DC -->
 
-                <!-- unserviced RC -->
-                <div ng-repeat="deployment in deploymentsByService[''] | orderObjectsByDate : true track by (deployment | uid)"
-                    ng-if="!(deployment | annotation : 'deploymentConfig') || !deploymentConfigs[(deployment | annotation : 'deploymentConfig')]"
-                    class="no-service">
-                  <overview-replication-controller class="deployment-tile-wrapper"></overview-replication-controller>
-                </div>
-                <!-- /unserviced RC-->
+                <!-- Unserviced DCs, RCs, and pods -->
+                <div row wrap ng-if="(monopodsByService[''] | hashSize) > 0 || (deploymentConfigsByService[''] | hashSize) > 0 || (deploymentsByService[''] | hashSize) > 0" class="unserviced-row">
+                  <!-- unserviced DC -->
+                  <div ng-repeat="(dcName, deploymentConfig) in deploymentConfigsByService[''] track by (deploymentConfig | uid)"
+                      class="no-service"
+                      ng-if="deployments = visibleDeploymentsByConfigAndService[''][dcName]"> <!-- Must be an ng-if, an ng-init will not re-evaluate properly -->
+                    <overview-deployment-config class="deployment-tile-wrapper"></overview-deployment-config>
+                  </div>
+                  <!-- /unserviced DC -->
 
-                <!-- unservice monopods -->
-                <div ng-repeat="pod in monopodsByService[''] | orderObjectsByDate : true track by (pod | uid)"
-                    class="no-service">
-                  <overview-pod class="deployment-tile-wrapper"></overview-pod>
+                  <!-- unserviced RC -->
+                  <div ng-repeat="deployment in deploymentsByService[''] | orderObjectsByDate : true track by (deployment | uid)"
+                      ng-if="!(deployment | annotation : 'deploymentConfig') || !deploymentConfigs[(deployment | annotation : 'deploymentConfig')]"
+                      class="no-service">
+                    <overview-replication-controller class="deployment-tile-wrapper"></overview-replication-controller>
+                  </div>
+                  <!-- /unserviced RC-->
+
+                  <!-- unservice monopods -->
+                  <div ng-repeat="pod in monopodsByService[''] | orderObjectsByDate : true track by (pod | uid)"
+                      class="no-service">
+                    <overview-pod class="deployment-tile-wrapper"></overview-pod>
+                  </div>
+                  <!-- /unserviced monopods -->
                 </div>
-                <!-- /unserviced monopods -->
               </div>
 
             </div>
