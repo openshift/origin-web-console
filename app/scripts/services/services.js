@@ -15,7 +15,7 @@ angular.module("openshiftConsole")
       try {
         return JSON.parse(dependenciesAnnotation);
       } catch(e) {
-        Logger.warn('Could not pase "service.alpha.openshift.io/dependencies" annotation', e);
+        Logger.warn('Could not parse "service.alpha.openshift.io/dependencies" annotation', e);
         return null;
       }
     };
