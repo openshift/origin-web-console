@@ -2815,7 +2815,7 @@ if (!b) return null;
 try {
 return JSON.parse(b);
 } catch (c) {
-return Logger.warn('Could not pase "service.alpha.openshift.io/dependencies" annotation', c), null;
+return Logger.warn('Could not parse "service.alpha.openshift.io/dependencies" annotation', c), null;
 }
 }, h = function(a) {
 var b, c = g(a);
