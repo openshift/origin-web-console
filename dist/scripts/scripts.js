@@ -30,6 +30,10 @@ recreate_strategy:"https://docs.openshift.org/latest/dev_guide/deployments.html#
 custom_strategy:"https://docs.openshift.org/latest/dev_guide/deployments.html#custom-strategy",
 lifecycle_hooks:"https://docs.openshift.org/latest/dev_guide/deployments.html#lifecycle-hooks",
 new_pod_exec:"https://docs.openshift.org/latest/dev_guide/deployments.html#pod-based-lifecycle-hook",
+authorization:"https://docs.openshift.org/latest/architecture/additional_concepts/authorization.html",
+roles:"https://docs.openshift.org/latest/architecture/additional_concepts/authorization.html#roles",
+service_accounts:"https://docs.openshift.org/latest/dev_guide/service_accounts.html",
+users_and_groups:"https://docs.openshift.org/latest/architecture/additional_concepts/authentication.html#users-and-groups",
 "default":"https://docs.openshift.org/latest/welcome/index.html"
 },
 CLI:{
@@ -101,6 +105,13 @@ href:"/quota"
 }, {
 label:"Other Resources",
 href:"/browse/other"
+}, {
+label:"Membership",
+href:"/membership",
+canI:{
+resource:"rolebindings",
+verb:"list"
+}
 } ]
 } ]
 }, {
@@ -134,6 +145,10 @@ controller:"QuotaController"
 }).when("/project/:project/monitoring", {
 templateUrl:"views/monitoring.html",
 controller:"MonitoringController",
+reloadOnSearch:!1
+}).when("/project/:project/membership", {
+templateUrl:"views/membership.html",
+controller:"MembershipController",
 reloadOnSearch:!1
 }).when("/project/:project/browse", {
 redirectTo:function(a) {
@@ -2515,7 +2530,166 @@ b[a.tag] = b[a.tag] || {}, b[a.tag].name = a.tag, b[a.tag].status = angular.copy
 }), b;
 }
 };
-}), angular.module("openshiftConsole").factory("MetricsService", [ "$filter", "$http", "$q", "$rootScope", "APIDiscovery", function(a, b, c, d, e) {
+}), angular.module("openshiftConsole").factory("MembershipService", [ "$filter", function(a) {
+var b = (a("annotation"), function(a, b) {
+return 1 === _.filter(b, function(b) {
+return _.some(b.subjects, {
+name:a
+});
+}).length;
+}), c = function() {
+return _.reduce(_.slice(arguments), function(a, b, c) {
+return b ? _.isEqual(c, 0) ? b :a + "-" + b :a;
+}, "");
+}, d = function() {
+return {
+User:{
+kind:"User",
+sortOrder:1,
+name:"User",
+subjects:{}
+},
+Group:{
+kind:"Group",
+sortOrder:2,
+name:"Group",
+subjects:{}
+},
+ServiceAccount:{
+kind:"ServiceAccount",
+sortOrder:3,
+description:"Service accounts provide a flexible way to control API access without sharing a regular user’s credentials.",
+helpLinkKey:"service_accounts",
+name:"ServiceAccount",
+subjects:{}
+},
+SystemUser:{
+kind:"SystemUser",
+sortOrder:4,
+description:"System users are virtual users automatically provisioned by the system.",
+helpLinkKey:"users_and_groups",
+name:"SystemUser",
+subjects:{}
+},
+SystemGroup:{
+kind:"SystemGroup",
+sortOrder:5,
+description:"System groups are virtual groups automatically provisioned by the system.",
+helpLinkKey:"users_and_groups",
+name:"SystemGroup",
+subjects:{}
+}
+};
+}, e = function(a, b) {
+var e = _.reduce(a, function(a, d) {
+var e = c(d.roleRef.namespace ? "Role" :"ClusterRole", d.roleRef.name);
+return _.each(d.subjects, function(d) {
+var f = c(d.namespace, d.name);
+a[d.kind].subjects[f] || (a[d.kind].subjects[f] = {
+name:d.name,
+namespace:d.namespace,
+roles:{}
+}), _.includes(a[d.kind].subjects[f].roles, e) || (a[d.kind].subjects[f].roles[e] = b[e]);
+}), a;
+}, d());
+return _.sortBy(e, "sortOrder");
+}, f = function(a) {
+return _.sortBy(a, "metadata.name");
+}, g = function(a) {
+return _.filter(a, function(a) {
+return _.isEqual(a.metadata.name, "system:image-puller") || _.isEqual(a.metadata.name, "system:image-pusher") || !_.startsWith(a.metadata.name, "cluster-") && !_.startsWith(a.metadata.name, "system:");
+});
+}, h = function(a) {
+return _.reduce(a, function(a, b) {
+return a[c(b.kind, b.metadata.name)] = b, a;
+}, {});
+}, i = function(a, b) {
+return _.merge(h(a), h(b));
+};
+return {
+sortRoles:f,
+filterRoles:g,
+mapRolesForUI:i,
+isLastRole:b,
+getSubjectKinds:d,
+mapRolebindingsForUI:e
+};
+} ]), angular.module("openshiftConsole").factory("RolesService", [ "$q", "DataService", function(a, b) {
+var c = function(a, c) {
+b.list("clusterroles", {}, a, c);
+}, d = function(a, c, d) {
+b.list("roles", a, c, d);
+}, e = function(b) {
+var e = a.defer(), f = [], g = function(a) {
+f.push(a.by("metadata.name")), _.isEqual(f.length, 2) && e.resolve(f);
+};
+return d(b, function(a) {
+g(a);
+}), c(function(a) {
+g(a);
+}), e.promise;
+};
+return {
+listAllRoles:e
+};
+} ]), angular.module("openshiftConsole").factory("RoleBindingsService", [ "$q", "DataService", function(a, b) {
+var c = {}, d = function(a, b) {
+var e = b ? a + b :a;
+return _.some(c, _.matchesProperty("metadata.name", e)) ? d(a, _.uniqueId()) :e;
+}, e = function(a, b) {
+var c = _.get(a, "metadata.name"), e = c ? d(c) :null;
+return {
+kind:"RoleBinding",
+apiVersion:"v1",
+metadata:{
+name:e,
+namespace:b
+},
+roleRef:{
+name:_.get(a, "metadata.name"),
+namespace:_.get(a, "metadata.namespace")
+},
+subjects:[]
+};
+}, f = function(a, b) {
+return _.isEqual(a.kind, "ServiceAccount") ? a.namespace = a.namespace || b :(_.isEqual(a.kind, "SystemUser") || _.isEqual(a.kind, "SystemGroup")) && (_.startsWith(a.name, "system:") || (a.name = "system:" + a.name)), a;
+}, g = function(a) {
+a.userNames = null, a.groupNames = null;
+}, h = function(a, c, d, g) {
+var h = e(a, d);
+return c = f(c, d), h.subjects.push(angular.copy(c)), b.create("rolebindings", null, h, g);
+}, i = function(a, c, d, h) {
+var i = e(), j = _.extend(i, a);
+if (!c) return j;
+if (c = f(c, d), _.isArray(j.subjects)) {
+if (_.includes(j.subjects, c)) return;
+j.subjects.push(c);
+} else j.subjects = [ c ];
+return g(j), b.update("rolebindings", j.metadata.name, j, h);
+}, j = function(c, d, f, h) {
+var i = _.filter(f, {
+roleRef:{
+name:d
+}
+});
+return a.all(_.map(i, function(a) {
+var d = e();
+return a = _.extend(d, a), g(a), a.subjects = _.reject(a.subjects, {
+name:c
+}), a.subjects.length ? b.update("rolebindings", a.metadata.name, a, h) :b["delete"]("rolebindings", a.metadata.name, h);
+}));
+}, k = function(a, d, e) {
+return b.list("rolebindings", a, function(a) {
+c = a.by("metadata.name"), d(a);
+}, e);
+};
+return {
+list:k,
+create:h,
+addSubject:i,
+removeSubject:j
+};
+} ]), angular.module("openshiftConsole").factory("MetricsService", [ "$filter", "$http", "$q", "$rootScope", "APIDiscovery", function(a, b, c, d, e) {
 function f() {
 return angular.isDefined(l) ? c.when(l) :e.getMetricsURL().then(function(a) {
 return l = (a || "").replace(/\/$/, "");
@@ -4329,6 +4503,209 @@ y = h.generateKeywords(c.filters.text), c.$apply(z);
 maxWait:250
 })), c.$watch("renderOptions.collapseEventsSidebar", function(a, b) {
 a !== b && (localStorage.setItem("monitoring.eventsidebar.collapsed", c.renderOptions.collapseEventsSidebar ? "true" :"false"), o.$emit("metrics.charts.resize"));
+});
+}));
+} ]), angular.module("openshiftConsole").controller("MembershipController", [ "$filter", "$location", "$routeParams", "$scope", "$timeout", "$uibModal", "AuthService", "AuthorizationService", "DataService", "ProjectsService", "MembershipService", "RoleBindingsService", "RolesService", function(a, b, c, d, e, f, g, h, i, j, k, l, m) {
+var n, o = c.project, p = a("humanizeKind"), q = a("annotation"), r = [], s = {
+errorReason:_.template('Reason: "<%- httpErr %>"'),
+notice:{
+yourLastRole:_.template('Removing the role "<%- roleName %>" may completely remove your ability to see this project.')
+},
+warning:{
+serviceAccount:_.template("Removing a system role granted to a service account may cause unexpected behavior.")
+},
+remove:{
+areYouSure:{
+subject:_.template("Are you sure you want to remove <strong><%- roleName %></strong> from the <%- kindName %> <strong><%- subjectName %></strong>?"),
+self:_.template("Are you sure you want to remove <strong><%- roleName %></strong> from <strong><%- subjectName %></strong> (you)?")
+},
+success:_.template('The role "<%- roleName %>" was removed from "<%- subjectName %>".'),
+error:_.template('The role "<%- roleName %>" was not removed from "<%- subjectName %>".')
+},
+update:{
+subject:{
+success:_.template('The role "<%- roleName %>" was given to "<%- subjectName %>".'),
+error:_.template('The role "<%- roleName %>" was not given to "<%- subjectName %>".')
+}
+}
+}, t = function(a, b, c, e, f) {
+f = f || d, f.alerts[a] = {
+type:b,
+message:c,
+details:e
+};
+}, u = function() {
+d.disableAddForm = !1, d.newBinding.name = "", d.newBinding.namespace = o, d.newBinding.newRole = null;
+}, v = function() {
+i.list("rolebindings", n, function(a) {
+angular.extend(d, {
+canShowRoles:!0,
+roleBindings:a.by("metadata.name"),
+subjectKindsForUI:k.mapRolebindingsForUI(a.by("metadata.name"), r)
+});
+}, {
+errorNotification:!1
+});
+}, w = function(b, c) {
+d.disableAddForm = !0, l.create(b, c, o, n).then(function() {
+u(), v(), t("rolebindingCreate", "success", s.update.subject.success({
+roleName:b.metadata.name,
+subjectName:_.escape(c.name)
+}));
+}, function(d) {
+u(), t("rolebindingCreateFail", "error", s.update.subject.error({
+roleName:b.metadata.name,
+subjectName:_.escape(c.name)
+}), s.errorReason({
+httpErr:a("getErrorDetails")(d)
+}));
+});
+}, x = function(b, c, e) {
+d.disableAddForm = !0, l.addSubject(b, c, e, n).then(function() {
+u(), v(), t("rolebindingUpdate", "success", s.update.subject.success({
+roleName:b.roleRef.name,
+subjectName:_.escape(c.name)
+}));
+}, function(d) {
+u(), t("rolebindingUpdateFail", "error", s.update.subject.error({
+roleName:b.roleRef.name,
+subjectName:_.escape(c.name)
+}), s.errorReason({
+httpErr:a("getErrorDetails")(d)
+}));
+});
+}, y = {};
+c.tab && (y[c.tab] = !0);
+var z = k.getSubjectKinds();
+angular.extend(d, {
+selectedTab:y,
+projectName:o,
+alerts:{},
+forms:{},
+emptyMessage:"Loading...",
+subjectKinds:z,
+newBinding:{
+role:"",
+kind:c.tab || "User",
+name:""
+},
+toggleEditMode:function() {
+u(), d.mode.edit = !d.mode.edit;
+},
+mode:{
+edit:!1
+},
+selectTab:function(a) {
+d.newBinding.kind = a;
+}
+}), angular.extend(d, {
+excludeExistingRoles:function(a) {
+return function(b) {
+return !_.some(a, {
+kind:b.kind,
+metadata:{
+name:b.metadata.name
+}
+});
+};
+},
+roleHelp:function(a) {
+if (a) {
+var b = "There is no additional information about this role.", c = _.get(a, "metadata.namespace"), d = _.get(a, "metadata.name"), e = c ? c + " / " + d + ": " :"";
+return a ? e + (q(a, "description") || b) :b;
+}
+}
+});
+var A = function(a, b, c, e) {
+var f = {
+alerts:{},
+detailsMarkup:s.remove.areYouSure.subject({
+roleName:c,
+kindName:p(b),
+subjectName:_.escape(a)
+}),
+okButtonText:"Remove",
+okButtonClass:"btn-danger",
+cancelButtonText:"Cancel"
+};
+return _.isEqual(a, e) && (f.details = s.remove.areYouSure.self({
+roleName:c,
+subjectName:_.escape(a)
+}), k.isLastRole(d.user.metadata.name, d.roleBindings) && t("currentUserLastRole", "error", s.notice.yourLastRole({
+roleName:c
+}), null, f)), _.isEqual(b, "ServiceAccount") && _.startsWith(c, "system:") && t("editingServiceAccountRole", "error", s.warning.serviceAccount(), null, f), f;
+};
+g.withUser().then(function(a) {
+d.user = a;
+}), i.list("projects", {}, function(a) {
+angular.extend(d, {
+projects:_.map(a.by("metadata.name"), function(a) {
+return a.metadata.name;
+})
+});
+}), j.get(c.project).then(_.spread(function(c, e) {
+n = e, v(), angular.extend(d, {
+project:c,
+subjectKinds:z,
+confirmRemove:function(c, e, g) {
+var h = null, i = A(c, e, g, d.user.metadata.name);
+_.isEqual(c, d.user.metadata.name) && k.isLastRole(d.user.metadata.name, d.roleBindings) && (h = !0), f.open({
+animation:!0,
+templateUrl:"views/modals/confirm.html",
+controller:"ConfirmModalController",
+resolve:{
+modalConfig:function() {
+return i;
+}
+}
+}).result.then(function() {
+l.removeSubject(c, g, d.roleBindings, n).then(function() {
+h ? b.url("./") :(v(), t("rolebindingUpdate", "success", s.remove.success({
+roleName:g,
+subjectName:_.escape(c)
+})));
+}, function(b) {
+t("rolebindingUpdateFail", "error", s.remove.error({
+roleName:g,
+subjectName:_.escape(c)
+}), s.errorReason({
+httpErr:a("getErrorDetails")(b)
+}));
+});
+});
+},
+addRoleTo:function(a, b, c, e) {
+var f = {
+name:a,
+kind:b,
+namespace:e
+}, g = _.find(d.roleBindings, {
+roleRef:{
+name:c.metadata.name
+}
+});
+return g ? x(g, f, e) :w(c, f, e);
+}
+}), m.listAllRoles(n, {
+errorNotification:!1
+}).then(function(a) {
+r = k.mapRolesForUI(_.first(a), _.last(a));
+var b = k.sortRoles(r), c = k.filterRoles(r), e = function(a, b) {
+return _.some(b, {
+metadata:{
+name:a
+}
+});
+};
+v(), angular.extend(d, {
+toggle:{
+roles:!1
+},
+filteredRoles:c,
+showAllRoles:function() {
+d.toggle.roles = !d.toggle.roles, d.toggle.roles ? d.filteredRoles = b :(d.filteredRoles = c, e(d.newBinding.role, c) || (d.newBinding.role = null));
+}
+});
 });
 }));
 } ]), angular.module("openshiftConsole").controller("BuildsController", [ "$routeParams", "$scope", "AlertMessageService", "DataService", "$filter", "LabelFilter", "Logger", "$location", "BuildsService", "ProjectsService", function(a, b, c, d, e, f, g, h, i, j) {
@@ -9125,6 +9502,20 @@ a.removedHookParams = a.hookParams, delete a.hookParams, a.view.hookExists = !1,
 _.has(a.istagHook, [ "tagObject", "tag" ]) && (_.set(a.hookParams, "tagImages[0].to.kind", "ImageStreamTag"), _.set(a.hookParams, "tagImages[0].to.namespace", a.istagHook.namespace), _.set(a.hookParams, "tagImages[0].to.name", a.istagHook.imageStream + ":" + a.istagHook.tagObject.tag));
 });
 } ]
+};
+}), angular.module("openshiftConsole").directive("actionChip", function() {
+return {
+restrict:"E",
+scope:{
+key:"=?",
+value:"=?",
+keyHelp:"=?",
+valueHelp:"=?",
+action:"&?",
+actionIcon:"=?",
+showAction:"=?"
+},
+templateUrl:"views/directives/action-chip.html"
 };
 }), angular.module("openshiftConsole").directive("templateOptions", function() {
 return {
