@@ -1,0 +1,44 @@
+<span class="action-chip">
+
+  <span
+    ng-if="key && !(keyHelp)"
+    class="item key truncate">
+    {{key}}
+  </span>
+
+  <a
+    ng-if="key && keyHelp"
+    href=""
+    class="item key truncate"
+    data-toggle="popover"
+    data-trigger="focus"
+    data-content="{{keyHelp}}">
+    {{key}}
+  </a>
+
+  <span
+    ng-if="value && !(valueHelp)"
+    class="item value truncate">
+    {{value}}
+  </span>
+
+  <a
+    ng-if="value && valueHelp"
+    href=""
+    class="item value truncate"
+    data-toggle="popover"
+    data-trigger="focus"
+    data-content="{{valueHelp}}">
+    {{value}}
+  </a>
+
+  <a
+    href=""
+    class="item action"
+    ng-if="showAction"
+    ng-click="action()"
+    ng-attr-title="actionTitle">
+    <i ng-class="icon || 'pficon pficon-close'"></i>
+  </a>
+
+</span>

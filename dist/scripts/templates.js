@@ -4905,6 +4905,27 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
   );
 
 
+  $templateCache.put('views/directives/action-chip.html',
+    "<span class=\"action-chip\">\n" +
+    "<span ng-if=\"key && !(keyHelp)\" class=\"item key truncate\">\n" +
+    "{{key}}\n" +
+    "</span>\n" +
+    "<a ng-if=\"key && keyHelp\" href=\"\" class=\"item key truncate\" data-toggle=\"popover\" data-trigger=\"focus\" data-content=\"{{keyHelp}}\">\n" +
+    "{{key}}\n" +
+    "</a>\n" +
+    "<span ng-if=\"value && !(valueHelp)\" class=\"item value truncate\">\n" +
+    "{{value}}\n" +
+    "</span>\n" +
+    "<a ng-if=\"value && valueHelp\" href=\"\" class=\"item value truncate\" data-toggle=\"popover\" data-trigger=\"focus\" data-content=\"{{valueHelp}}\">\n" +
+    "{{value}}\n" +
+    "</a>\n" +
+    "<a href=\"\" class=\"item action\" ng-if=\"showAction\" ng-click=\"action()\" ng-attr-title=\"actionTitle\">\n" +
+    "<i ng-class=\"icon || 'pficon pficon-close'\"></i>\n" +
+    "</a>\n" +
+    "</span>"
+  );
+
+
   $templateCache.put('views/directives/annotations.html',
     "<div ng-if=\"annotations\" class=\"gutter-top-bottom\">\n" +
     "<a href=\"\" ng-click=\"toggleAnnotations()\" ng-if=\"annotations && !expandAnnotations\">Show annotations</a>\n" +
@@ -8212,6 +8233,194 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
   );
 
 
+  $templateCache.put('views/membership.html',
+    "<project-header class=\"top-header\"></project-header>\n" +
+    "<project-page class=\"membership\" ng-if=\"project\">\n" +
+    "<div class=\"middle-section\">\n" +
+    "<div class=\"middle-container\">\n" +
+    "<div class=\"middle-header\">\n" +
+    "<div class=\"container-fluid\">\n" +
+    "<breadcrumbs breadcrumbs=\"breadcrumbs\"></breadcrumbs>\n" +
+    "</div>\n" +
+    "</div>\n" +
+    "<div class=\"middle-content\" persist-tab-state>\n" +
+    "<div class=\"container-fluid\">\n" +
+    "<div class=\"row\">\n" +
+    "<div class=\"col-md-12\">\n" +
+    "<h1>\n" +
+    "<a class=\"pull-right btn btn-default\" href=\"\" ng-if=\"'rolebindings' | canI : 'update'\" ng-click=\"toggleEditMode()\">\n" +
+    "<span ng-if=\"!(mode.edit)\">Edit Membership</span>\n" +
+    "<span ng-if=\"mode.edit\">Done Editing</span>\n" +
+    "</a>\n" +
+    "Membership\n" +
+    "</h1>\n" +
+    "<span class=\"learn-more-block\">\n" +
+    "<a ng-href=\"{{'roles' | helpLink}}\">\n" +
+    "Learn more <i class=\"fa fa-external-link\"></i>\n" +
+    "</a>\n" +
+    "</span>\n" +
+    "<alerts alerts=\"alerts\"></alerts>\n" +
+    "</div>\n" +
+    "</div>\n" +
+    "<div ng-if=\"!('rolebindings' | canI : 'list')\">\n" +
+    "<p>You do not have permission to view roles in this project.</p>\n" +
+    "</div>\n" +
+    "<uib-tabset ng-if=\"'rolebindings' | canI : 'list'\">\n" +
+    "<uib-tab ng-repeat=\"subjectKind in subjectKindsForUI | orderBy: 'sortOrder'\" active=\"selectedTab[subjectKind.name]\" select=\"selectTab(subjectKind.name)\">\n" +
+    "<uib-tab-heading>\n" +
+    "{{subjectKind.name | startCase}}s&nbsp;({{subjectKind.subjects | hashSize}})\n" +
+    "</uib-tab-heading>\n" +
+    "<div ng-if=\"subjectKind.description\">\n" +
+    "<p>\n" +
+    "{{subjectKind.description}}\n" +
+    "<a ng-if=\"subjectKind.helpLinkKey\" target=\"_blank\" ng-href=\"{{subjectKind.helpLinkKey | helpLink}}\" class=\"learn-more-inline\">\n" +
+    "Learn more <i class=\"fa fa-external-link\"></i>\n" +
+    "</a>\n" +
+    "</p>\n" +
+    "</div>\n" +
+    "<div column class=\"content-pane\" ng-class=\"'content-' + subjectKind.name.toLowerCase()\">\n" +
+    "<div class=\"col-heading item-row\" row mobile=\"column\" tablet=\"column\" flex-collapse-fix>\n" +
+    "<div row flex flex-collapse-fix>\n" +
+    "<div class=\"col-name\" conceal=\"mobile\">\n" +
+    "<h3>Name</h3>\n" +
+    "</div>\n" +
+    "<div class=\"col-roles\" flex conceal=\"mobile\">\n" +
+    "<h3>Roles</h3>\n" +
+    "</div>\n" +
+    "</div>\n" +
+    "<div class=\"col-add-role\" flex-collapse-fix>\n" +
+    "<h3 ng-show=\"mode.edit\">\n" +
+    "Add another role\n" +
+    "</h3>\n" +
+    "</div>\n" +
+    "</div>\n" +
+    "<div ng-if=\"(subjectKind.subjects | hashSize) === 0\">\n" +
+    "<p>\n" +
+    "<em>There are no {{ subjectKind.name | humanizeKind }}s with access to this project.</em>\n" +
+    "</p>\n" +
+    "</div>\n" +
+    "<div ng-repeat=\"subject in subjectKind.subjects\" class=\"item-row highlight-hover\" row mobile=\"column\">\n" +
+    "<div class=\"col-name\" row cross-axis=\"center\">\n" +
+    "<a ng-if=\"subject.namespace\" target=\"_blank\" ng-href=\"project/{{project.metadata.name}}/browse/other?kind=ServiceAccount\">\n" +
+    "<span>\n" +
+    "{{subject.namespace}} /\n" +
+    "</span>\n" +
+    "<strong>\n" +
+    "{{subject.name}}\n" +
+    "</strong>\n" +
+    "</a>\n" +
+    "<span ng-if=\"!subject.namespace\">\n" +
+    "<strong>\n" +
+    "{{subject.name}}\n" +
+    "</strong>\n" +
+    "<span class=\"current-user\" ng-if=\"subject.name === user.metadata.name\">\n" +
+    "(you)\n" +
+    "</span>\n" +
+    "</span>\n" +
+    "</div>\n" +
+    "<div class=\"action-set\" flex row tablet=\"column\" mobile=\"column\">\n" +
+    "<div class=\"col-roles\" row tablet=\"column\" flex wrap axis=\"start\">\n" +
+    "<action-chip ng-repeat=\"role in subject.roles\" key=\"role.metadata.name\" key-help=\"roleHelp(role)\" show-action=\"mode.edit\" action=\"confirmRemove(subject.name, subjectKind.name, role.metadata.name)\" action-title=\"remove role {{role}} from {{subject.name}}\"></action-chip>\n" +
+    "</div>\n" +
+    "<div class=\"col-add-role\">\n" +
+    "<div ng-show=\"mode.edit\" row>\n" +
+    "<ui-select ng-if=\"filteredRoles.length\" ng-model=\"subject.newRole\" theme=\"bootstrap\" search-enabled=\"true\" title=\"Select a new role for {{subjectKind.name}}\" class=\"select-role\" flex>\n" +
+    "<ui-select-match placeholder=\"Select a role\">\n" +
+    "<span ng-bind=\"subject.newRole.metadata.name\"></span>\n" +
+    "</ui-select-match>\n" +
+    "<ui-select-choices repeat=\"role as role in filteredRoles | filter: excludeExistingRoles(subject.roles) | filter: $select.search | orderBy: 'metadata.name'\">\n" +
+    "<div>{{ role.metadata.name }}</div>\n" +
+    "<div ng-if=\"role | annotation : 'description'\">\n" +
+    "<small>{{role | annotation : 'description'}}</small>\n" +
+    "</div>\n" +
+    "</ui-select-choices>\n" +
+    "</ui-select>\n" +
+    "<a href=\"\" ng-disabled=\"disableAddForm || (!subject.newRole)\" ng-click=\"addRoleTo(subject.name, subjectKind.name, subject.newRole)\" class=\"btn btn-default add-role-to\">\n" +
+    "Add\n" +
+    "</a>\n" +
+    "</div>\n" +
+    "</div>\n" +
+    "</div>\n" +
+    "</div>\n" +
+    "<ng-form class=\"new-binding\" novalidate name=\"forms.newBindingForm\" ng-if=\"newBinding\">\n" +
+    "<div ng-if=\"mode.edit\" class=\"item-row form-new-role\" row mobile=\"column\">\n" +
+    "<div class=\"col-name\" column>\n" +
+    "<label ng-attr-for=\"newBindingName\" class=\"sr-only\">\n" +
+    "Name\n" +
+    "</label>\n" +
+    "<input type=\"text\" class=\"form-control input-name\" placeholder=\"Name\" ng-model=\"newBinding.name\">\n" +
+    "<div ng-if=\"newBinding.kind === 'ServiceAccount'\" class=\"service-account-namespace hidden-sm hidden-md hidden-lg\" aria-hidden=\"true\">\n" +
+    "<ui-select ng-model=\"newBinding.namespace\" theme=\"bootstrap\" search-enabled=\"true\" title=\"Select a project\" class=\"select-role\">\n" +
+    "<ui-select-match placeholder=\"Select a project\">\n" +
+    "<span ng-bind=\"newBinding.namespace\"></span>\n" +
+    "</ui-select-match>\n" +
+    "<ui-select-choices repeat=\"projectName in projects | filter: $select.search\">\n" +
+    "<div>{{projectName}}</div>\n" +
+    "</ui-select-choices>\n" +
+    "</ui-select>\n" +
+    "</div>\n" +
+    "</div>\n" +
+    "<div class=\"action-set\" flex row tablet=\"column\" mobile=\"column\">\n" +
+    "<div class=\"col-roles\" row tablet=\"column\" flex wrap axis=\"start\">\n" +
+    "<div ng-if=\"newBinding.kind === 'ServiceAccount'\" class=\"service-account-namespace hidden-xs\">\n" +
+    "<ui-select ng-model=\"newBinding.namespace\" theme=\"bootstrap\" search-enabled=\"true\" title=\"Select a project\" class=\"select-project\">\n" +
+    "<ui-select-match placeholder=\"Select a project\">\n" +
+    "<span ng-bind=\"newBinding.namespace\"></span>\n" +
+    "</ui-select-match>\n" +
+    "<ui-select-choices repeat=\"projectName in projects | filter: $select.search\">\n" +
+    "<div>{{projectName}}</div>\n" +
+    "</ui-select-choices>\n" +
+    "</ui-select>\n" +
+    "</div>\n" +
+    "</div>\n" +
+    "<div class=\"col-add-role\">\n" +
+    "<div ng-show=\"mode.edit\" row>\n" +
+    "<ui-select ng-if=\"filteredRoles.length\" ng-model=\"newBinding.newRole\" theme=\"bootstrap\" search-enabled=\"true\" title=\"new {{subjectKind.name}} role\" class=\"select-role\" flex>\n" +
+    "<ui-select-match placeholder=\"Select a role\">\n" +
+    "<span ng-bind=\"newBinding.newRole.metadata.name\"></span>\n" +
+    "</ui-select-match>\n" +
+    "<ui-select-choices repeat=\"role as role in filteredRoles | filter: $select.search\">\n" +
+    "<div>{{ role.metadata.name }}</div>\n" +
+    "<div ng-if=\"role | annotation : 'description'\">\n" +
+    "<small>{{role | annotation : 'description'}}</small>\n" +
+    "</div>\n" +
+    "</ui-select-choices>\n" +
+    "</ui-select>\n" +
+    "<a href=\"\" ng-disabled=\"disableAddForm || (!newBinding.name) || (!newBinding.newRole)\" ng-click=\"addRoleTo(newBinding.name, newBinding.kind, newBinding.newRole, newBinding.namespace)\" class=\"btn btn-default add-role-to\">\n" +
+    "Add\n" +
+    "</a>\n" +
+    "</div>\n" +
+    "</div>\n" +
+    "</div>\n" +
+    "</div>\n" +
+    "</ng-form>\n" +
+    "<div ng-if=\"mode.edit\" class=\"item-row\" row mobile=\"column\">\n" +
+    "<div class=\"col-name hidden-xs\">&nbsp;</div>\n" +
+    "<div class=\"action-set\" flex row tablet=\"column\" mobile=\"column\">\n" +
+    "<div class=\"col-roles hidden-xs\" flex>&nbsp;</div>\n" +
+    "<div class=\"col-add-role\" row>\n" +
+    "<input id=\"show-hidden-roles\" type=\"checkbox\" class=\"toggle-hidden\" ng-click=\"showAllRoles($event)\">\n" +
+    "&nbsp;\n" +
+    "<label for=\"show-hidden-roles\">\n" +
+    "Show hidden roles\n" +
+    "</label>\n" +
+    "<a href=\"\" class=\"action-inline\" data-toggle=\"popover\" data-trigger=\"focus\" data-content=\"System roles are hidden by default and do not typically need to be managed.\">\n" +
+    "<i class=\"pficon pficon-help\"></i>\n" +
+    "</a>\n" +
+    "</div>\n" +
+    "</div>\n" +
+    "</div>\n" +
+    "</div>\n" +
+    "</uib-tab>\n" +
+    "</uib-tabset>\n" +
+    "</div>\n" +
+    "</div>\n" +
+    "</div>\n" +
+    "</div>\n" +
+    "</project-page>"
+  );
+
+
   $templateCache.put('views/modals/confirm-replace.html',
     "<div class=\"modal-resource-action\">\n" +
     "<div class=\"modal-body\">\n" +
@@ -8240,8 +8449,9 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "<div class=\"modal-resource-action\">\n" +
     "<div class=\"modal-body\">\n" +
     "<h1>{{message}}</h1>\n" +
-    "<alerts ng-if=\"alerts\" alerts=\"alerts\" hide-close-button=\"true\"></alerts>\n" +
     "<p ng-if=\"details\">{{details}}</p>\n" +
+    "<p ng-if=\"detailsMarkup\" ng-bind-html=\"detailsMarkup\"></p>\n" +
+    "<alerts ng-if=\"alerts\" alerts=\"alerts\" hide-close-button=\"true\"></alerts>\n" +
     "</div>\n" +
     "<div class=\"modal-footer\">\n" +
     "<button class=\"btn btn-lg\" ng-class=\"okButtonClass\" type=\"button\" ng-click=\"confirm()\">{{okButtonText}}</button>\n" +
