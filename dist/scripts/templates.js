@@ -1143,7 +1143,7 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "          advanced: {\n" +
     "            highlightActiveLine: false\n" +
     "          }\n" +
-    "        }\" readonly ng-model=\"buildConfig.spec.strategy.jenkinsPipelineStrategy.jenkinsfile\" class=\"ace-bordered ace-inline ace-read-only mar-top-md\"></div>\n" +
+    "        }\" readonly ng-model=\"build.spec.strategy.jenkinsPipelineStrategy.jenkinsfile\" class=\"ace-bordered ace-inline ace-read-only mar-top-md\"></div>\n" +
     "</dl>\n" +
     "</div>\n" +
     "</div>\n" +
