@@ -4,4 +4,4 @@
   <div ng-show="resource | annotation:'provider'">Provider: {{ resource | annotation:'provider' }}</div>
   <div ng-show="resource.metadata.namespace">Namespace: {{ resource.metadata.namespace }}</div>
 </div>
-<div class="resource-description gutter-bottom" ng-bind-html="resource | description | linky"></div>
+<div class="resource-description" ng-bind-html="resource | description | linky"></div>

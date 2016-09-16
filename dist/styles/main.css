@@ -3586,10 +3586,11 @@ label.checkbox{font-weight:400}
 .env-variable-list li .value,.label-list li .value{max-width:500px}
 .env-variable-list li .btn,.label-list li .btn{vertical-align:top}
 .label+.label{margin-left:3px}
-.template-message{background-color:#d9edf7;border-color:#31708f;border-width:1px;color:#000;border-style:solid;padding:21px}
+.template-message{background-color:#d9edf7;border-color:#31708f;border-style:solid;border-width:1px;color:#000;padding:21px}
 .attention-message,.tasks,div.code,pre.code{background-color:#fff}
 .template-message .pficon-info{float:left;font-size:18px;margin-right:6px;color:#31708f}
-.resource-description{overflow-wrap:break-word;min-width:0;white-space:pre-wrap}
+.template-message .resource-description{margin-bottom:0}
+.resource-description{margin-bottom:20px;white-space:pre-wrap;overflow-wrap:break-word;min-width:0}
 .action-inline{margin-left:5px;font-size:11px}
 .action-inline i.fa,.action-inline i.pficon{color:#4d5258;margin-right:5px}
 a.subtle-link{color:#9c9c9c;border-bottom:1px dotted #BBB}

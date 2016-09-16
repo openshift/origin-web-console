@@ -744,23 +744,27 @@ label.checkbox {
 }
 
 .template-message {
+  background-color: #d9edf7;
+  border-color: #31708f;
+  border-style: solid;
+  border-width: 1px;
+  color: black;
+  padding: 21px;
   .pficon-info {
     float: left;
     font-size: 18px;
     margin-right: 6px;
     color: #31708f;
   }
-  background-color: #d9edf7;
-  border-color: #31708f;
-  border-width: 1px;
-  color: black;
-  border-style: solid;
-  padding: 21px;
+  .resource-description {
+    margin-bottom: 0;
+  }
 }
 
 .resource-description {
-  .word-break();
+  margin-bottom: (@grid-gutter-width / 2);
   .pre-wrap();
+  .word-break();
 }
 
 // Misc
