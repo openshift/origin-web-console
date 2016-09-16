@@ -5995,7 +5995,7 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "<div ng-show=\"resource | annotation:'provider'\">Provider: {{ resource | annotation:'provider' }}</div>\n" +
     "<div ng-show=\"resource.metadata.namespace\">Namespace: {{ resource.metadata.namespace }}</div>\n" +
     "</div>\n" +
-    "<div class=\"resource-description gutter-bottom\" ng-bind-html=\"resource | description | linky\"></div>"
+    "<div class=\"resource-description\" ng-bind-html=\"resource | description | linky\"></div>"
   );
 
 
