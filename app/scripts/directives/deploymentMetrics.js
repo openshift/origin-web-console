@@ -15,9 +15,15 @@ angular.module('openshiftConsole')
         pods: '=',
         // Take in the list of containers rather than reading from the pod spec
         // in case pods is empty.
-        containers: '='
+        containers: '=',
+        compact: '='
       },
-      templateUrl: 'views/directives/deployment-metrics.html',
+      templateUrl: function(elem, attrs) {
+        if (attrs.compact) {
+          return 'views/directives/metrics-compact.html';
+        }
+        return 'views/directives/deployment-metrics.html';
+      },
       link: function(scope) {
         var chartByMetric = {};
         var intervalPromise;
@@ -35,35 +41,51 @@ angular.module('openshiftConsole')
         // The last data point timestamp we've gotten.
         var lastTimestamp;
 
+        // Wait until the charts are in view before fetching metrics.
+        var paused = scope.compact;
+
+        // Track when we last requested metrics. When we scroll into view, this
+        // helps decide whether to update immediately or wait until the next
+        // interval tick.
+        var lastUpdated;
+
         // Metrics to display.
         scope.metrics = [{
           label: "Memory",
           units: "MiB",
-          chartPrefix: "memory-",
           convert: ConversionService.bytesToMiB,
           descriptor: 'memory/usage',
-          type: 'pod_container'
+          type: 'pod_container',
+          chartID: "memory-" + scope.uniqueID
         }, {
           label: "CPU",
           units: "millicores",
-          chartPrefix: "cpu-",
           descriptor: 'cpu/usage_rate',
-          type: 'pod_container'
+          type: 'pod_container',
+          chartID: "cpu-" + scope.uniqueID
         }, {
           label: "Network (Sent)",
           units: "KiB/s",
-          chartPrefix: "network-sent-",
           convert: ConversionService.bytesToKiB,
           descriptor: 'network/tx_rate',
-          type: 'pod'
+          type: 'pod',
+          compactLabel: "Network",
+          compactDatasetLabel: "Sent",
+          compactType: 'spline',
+          chartID: "network-tx-" + scope.uniqueID
         }, {
           label: "Network (Received)",
           units: "KiB/s",
-          chartPrefix: "network-received-",
           convert: ConversionService.bytesToKiB,
           descriptor: 'network/rx_rate',
-          type: 'pod'
+          type: 'pod',
+          compactCombineWith: 'network/tx_rate',
+          compactDatasetLabel: "Received",
+          compactType: 'spline',
+          chartID: "network-rx-" + scope.uniqueID
         }];
+
+        var metricByID = _.indexBy(scope.metrics, 'descriptor');
 
         // Set to true when any data has been loaded (or failed to load).
         scope.loaded = false;
@@ -99,10 +121,10 @@ angular.module('openshiftConsole')
 
         var createSparklineConfig = function(metric) {
           return {
-            bindto: '#' + metric.chartPrefix + scope.uniqueID + '-sparkline',
+            bindto: '#' + metric.chartID,
             axis: {
               x: {
-                show: true,
+                show: !scope.compact,
                 type: 'timeseries',
                 // With default padding you can have negative axis tick values.
                 padding: {
@@ -115,7 +137,7 @@ angular.module('openshiftConsole')
                 }
               },
               y: {
-                show: true,
+                show: !scope.compact,
                 label: metric.units,
                 min: 0,
                 // With default padding you can have negative axis tick values.
@@ -132,13 +154,13 @@ angular.module('openshiftConsole')
               }
             },
             legend: {
-              show: !scope.showAverage
+              show: !scope.compact && !scope.showAverage
             },
             point: {
               show: false
             },
             size: {
-              height: 175
+              height: scope.compact ? 35 : 175
             },
             tooltip: {
               format: {
@@ -154,10 +176,18 @@ angular.module('openshiftConsole')
           return point.value === null || point.value === undefined;
         }
 
+        scope.formatUsage = d3.format('.2r');
+
         function averages(metric) {
+          var label;
+          if (scope.compact) {
+            label = metric.compactDatasetLabel || metric.label;
+          } else {
+            label = "Average Usage";
+          }
           var averageData = {},
               dates = ['Date'],
-              values = ['Average Usage'],
+              values = [label],
               columns = [dates, values];
 
           var getStats = function(point) {
@@ -201,6 +231,8 @@ angular.module('openshiftConsole')
             values.push(metric.convert ? metric.convert(avg) : avg);
           });
 
+          metric.lastValue = _.last(values) || 0;
+
           return columns;
         }
 
@@ -210,12 +242,16 @@ angular.module('openshiftConsole')
             type: 'spline'
           };
 
-          // If there are too many pods, just only an average line.
+          // If there are too many pods, show only an average line.
           if (scope.showAverage) {
             _.each(newData[metric.descriptor], function(podData, podName) {
               updateData(metric.descriptor, podName, podData);
             });
             chartData.type = 'area-spline';
+            if (scope.compact && metric.compactType) {
+              chartData.type = metric.compactType;
+            }
+
             chartData.x = 'Date';
             chartData.columns = averages(metric);
             return chartData;
@@ -264,35 +300,40 @@ angular.module('openshiftConsole')
           scope.loaded = true;
 
           // Show an average instead of a multiline chart when there are many pods.
-          scope.showAverage = _.size(scope.pods) > 5;
+          scope.showAverage = _.size(scope.pods) > 5 || scope.compact;
 
           // Iterate over each metric.
           _.each(scope.metrics, function(metric) {
             var config;
             // Get chart data for that metric.
             var chartData = getChartData(newData, metric);
-            if (!chartByMetric[metric.descriptor]) {
+            var descriptor = metric.descriptor;
+            if (scope.compact && metric.compactCombineWith) {
+              descriptor = metric.compactCombineWith;
+              metricByID[descriptor].lastValue += metric.lastValue;
+            }
+
+            if (!chartByMetric[descriptor]) {
               config = createSparklineConfig(metric);
               config.data = chartData;
-              $timeout(function() {
-                if (destroyed) {
-                  return;
-                }
-
-                chartByMetric[metric.descriptor] = c3.generate(config);
-              });
+              chartByMetric[descriptor] = c3.generate(config);
             } else {
-              chartByMetric[metric.descriptor].load(chartData);
+              chartByMetric[descriptor].load(chartData);
               if (scope.showAverage) {
-                chartByMetric[metric.descriptor].legend.hide();
+                chartByMetric[descriptor].legend.hide();
               } else {
-                chartByMetric[metric.descriptor].legend.show();
+                chartByMetric[descriptor].legend.show();
               }
             }
           });
         }
 
         function getStartTime() {
+          if (scope.compact) {
+            // 15 minutes ago
+            return "-15mn";
+          }
+
           return "-" + scope.options.timeRange.value + "mn";
         }
 
@@ -301,6 +342,10 @@ angular.module('openshiftConsole')
         }
 
         function getBucketDuration() {
+          if (scope.compact) {
+            return "1mn";
+          }
+
           return Math.floor(getTimeRangeMillis() / numDataPoints) + "ms";
         }
 
@@ -369,10 +414,10 @@ angular.module('openshiftConsole')
         }
 
         function update() {
-          if (!canUpdate()) {
+          if (paused || !canUpdate()) {
             return;
           }
-
+          lastUpdated = Date.now();
           var config = getConfig();
           MetricsService.getPodMetrics(config).then(processData, handleError);
         }
@@ -388,6 +433,17 @@ angular.module('openshiftConsole')
         }, true);
         // Also update every 30 seconds.
         intervalPromise = $interval(update, updateInterval, false);
+
+        // Pause or resume metrics updates when the element scrolls into and
+        // out of view.
+        scope.updateInView = function(inview) {
+          paused = !inview;
+
+          // Update now if in view and it's been longer than updateInterval.
+          if (inview && (!lastUpdated || Date.now() > (lastUpdated + updateInterval))) {
+            update();
+          }
+        };
 
         $rootScope.$on('metrics.charts.resize', function(){
           $timeout(function() {

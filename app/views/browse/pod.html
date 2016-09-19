@@ -78,10 +78,10 @@
                   <uib-tab ng-if="metricsAvailable" heading="Metrics" active="selectedTab.metrics">
                     <!-- Use ng-if to remove the metrics directive when the tab is not active so
                          we don't update in the background. -->
-                    <metrics
+                    <pod-metrics
                       ng-if="selectedTab.metrics"
                       pod="pod">
-                    </metrics>
+                    </pod-metrics>
                   </uib-tab>
 
                   <uib-tab active="selectedTab.logs" ng-if="'pods/log' | canI : 'get'">

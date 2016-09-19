@@ -27,7 +27,13 @@
       </a>
     </div>
     <div column class="deployment-details">
-      <metrics ng-if="showMetrics && !collapse" pod="pod" profile="compact" class="overview-metrics"></metrics>
+      <deployment-metrics
+        ng-if="showMetrics && !collapse"
+        pods="[pod]"
+        containers="pod.spec.containers"
+        compact="true"
+        class="overview-metrics">
+      </deployment-metrics>
       <pod-template ng-if="!showMetrics" pod-template="pod"></pod-template>
     </div>
   </div>

@@ -87,7 +87,13 @@
     <div column class="deployment-details" ng-if="activeDeployment && !anyDeploymentInProgress">
       <!-- metrics or pod template -->
       <!-- pause metrics updates when the service group is collapsed -->
-      <metrics ng-if="showMetrics && !collapse" deployment="activeDeployment" profile="compact" class="overview-metrics"></metrics>
+      <deployment-metrics
+        ng-if="showMetrics && !collapse"
+        pods="podsByDeployment[activeDeployment.metadata.name]"
+        containers="activeDeployment.spec.template.spec.containers"
+        compact="true"
+        class="overview-metrics">
+      </deployment-metrics>
       <pod-template ng-if="!showMetrics" pod-template="activeDeployment.spec.template"></pod-template>
       <!-- /metrics or pod template -->
     </div>
