@@ -3,27 +3,38 @@
 ---------------------------------------------------------------------------- */
 
 .data-toolbar {
+  .flex(@columns: 1 1 0%);
   .flex-direction(@direction: column);
- .flex-display(@display: flex);
- .flex(@columns: 1 1 0%);
- .flex-wrap(@wrap: wrap);
- @media (min-width: @screen-sm-min) {
+  .flex-display(@display: flex);
+  .flex-wrap(@wrap: wrap);
+  padding: 5px 0;
+  @media (min-width: @screen-sm-min) {
     .flex-direction(@direction: row);
- }
- padding: 5px 0;
- .checkbox {
-   margin-top: 3px;
-   margin-bottom: 0;
- }
- .data-toolbar-dropdown {
-    width: 150px;
- }
- .data-toolbar-filter {
-   margin-top: 10px;
-   @media (min-width: @screen-sm-min) {
-     margin-top: 0;
-   }
+  }
+  // Set min-widths to prevent clipping when option lengths are known
+  &.other-resources-toolbar .data-toolbar-dropdown {
+    min-width: 250px;
+  }
+  .checkbox {
+    margin-bottom: 0;
+    margin-top: 10px;
+    width: 100%;
+    @media (min-width: 900px) {
+      .flex(@columns: 1 1 0%);
+      margin-top: 3px;
+      text-align: right;
+      width: auto;
+    }
+  }
+  .data-toolbar-dropdown {
+    min-width: 160px;
+  }
+  .data-toolbar-filter {
+    margin-top: 10px;
     min-width: 75px;
+    @media (min-width: @screen-sm-min) {
+      margin-top: 0;
+    }
     .form-group {
       margin-bottom: 0;
       min-width: 75px;
@@ -31,18 +42,15 @@
         width: 100%;
       }
     }
- }
- .data-toolbar-views {
-   .flex(@columns: 0 1 auto);
-   @media (min-width: @screen-lg-min) {
-     .flex(@columns: 0 1 auto);
-   }
-   text-align: right;
- }
- // Set min-widths to prevent clipping when option lengths are known
- .other-resources-toolbar {
-   min-width: 250px;
- }
+  }
+  // TODO:  remove this rule with https://github.com/openshift/origin-web-console/issues/220
+  .data-toolbar-views {
+    .flex(@columns: 0 1 auto);
+    text-align: right;
+    @media (min-width: @screen-lg-min) {
+      .flex(@columns: 0 1 auto);
+    }
+  }
 }
 
 project-filter {
@@ -62,8 +70,4 @@ project-filter {
       width: auto;
     }
   }
-}
-
-.monitoring-toolbar {
-   justify-content: space-between;
 }

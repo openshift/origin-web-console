@@ -7598,20 +7598,18 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "</h1>\n" +
     "</div>\n" +
     "<alerts alerts=\"alerts\"></alerts>\n" +
-    "<div fit class=\"data-toolbar monitoring-toolbar\">\n" +
-    "<div row>\n" +
-    "<ui-select ng-model=\"kindSelector.selected\" theme=\"bootstrap\" search-enabled=\"true\" ng-disabled=\"kindSelector.disabled\" title=\"Choose a resource\" class=\"data-toolbar-dropdown\">\n" +
+    "<div class=\"data-toolbar\">\n" +
+    "<ui-select class=\"data-toolbar-dropdown\" ng-model=\"kindSelector.selected\" theme=\"bootstrap\" search-enabled=\"true\" ng-disabled=\"kindSelector.disabled\" title=\"Choose a resource\">\n" +
     "<ui-select-match placeholder=\"Choose a resource\">{{$select.selected.label ? $select.selected.label : ($select.selected.kind | humanizeKind : true)}}</ui-select-match>\n" +
     "<ui-select-choices repeat=\"kind in kinds | filter : {kind: $select.search} : matchKind | orderBy : 'kind'\">\n" +
     "<div ng-bind-html=\"(kind.label ? kind.label : (kind.kind | humanizeKind : true)) | highlight: $select.search\"></div>\n" +
     "</ui-select-choices>\n" +
     "</ui-select>\n" +
     "<div class=\"vertical-divider\"></div>\n" +
-    "<div class=\"data-toolbar-filter form-inline\">\n" +
+    "<div class=\"data-toolbar-filter\">\n" +
     "<div class=\"form-group filter-controls\">\n" +
     "<label for=\"events-filter\" class=\"sr-only\">Filter by name</label>\n" +
     "<input type=\"search\" placeholder=\"Filter by name\" class=\"form-control\" id=\"events-filter\" ng-model=\"filters.text\">\n" +
-    "</div>\n" +
     "</div>\n" +
     "</div>\n" +
     "<div class=\"checkbox nowrap\">\n" +
@@ -7909,8 +7907,8 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "<h1>Other Resources</h1>\n" +
     "</div>\n" +
     "<alerts alerts=\"alerts\"></alerts>\n" +
-    "<div class=\"data-toolbar\">\n" +
-    "<ui-select class=\"other-resources-toolbar\" ng-model=\"kindSelector.selected\" theme=\"bootstrap\" search-enabled=\"true\" ng-disabled=\"kindSelector.disabled\" title=\"Choose a resource\">\n" +
+    "<div class=\"data-toolbar other-resources-toolbar\">\n" +
+    "<ui-select class=\"data-toolbar-dropdown\" ng-model=\"kindSelector.selected\" theme=\"bootstrap\" search-enabled=\"true\" ng-disabled=\"kindSelector.disabled\" title=\"Choose a resource\">\n" +
     "<ui-select-match placeholder=\"Choose a resource to list...\">{{$select.selected.kind | humanizeKind : true}}</ui-select-match>\n" +
     "<ui-select-choices repeat=\"kind in kinds | filter : {kind: $select.search} : matchKind | orderBy : 'kind'\">\n" +
     "<div ng-bind-html=\"(kind.kind | humanizeKind : true) | highlight: $select.search\"></div>\n" +
