@@ -14,24 +14,22 @@
               </h1>
             </div>
             <alerts alerts="alerts"></alerts>
-            <div fit class="data-toolbar monitoring-toolbar">
-              <div row>
-                <ui-select ng-model="kindSelector.selected" theme="bootstrap" search-enabled="true" ng-disabled="kindSelector.disabled" title="Choose a resource" class="data-toolbar-dropdown">
-                  <ui-select-match placeholder="Choose a resource">{{$select.selected.label ? $select.selected.label : ($select.selected.kind | humanizeKind : true)}}</ui-select-match>
-                  <ui-select-choices repeat="kind in kinds | filter : {kind: $select.search} : matchKind | orderBy : 'kind'">
-                    <div ng-bind-html="(kind.label ? kind.label : (kind.kind | humanizeKind : true)) | highlight: $select.search"></div>
-                  </ui-select-choices>
-                </ui-select>
-                <div class="vertical-divider"></div>
-                <div class="data-toolbar-filter form-inline">
-                  <div class="form-group filter-controls">
-                    <label for="events-filter" class="sr-only">Filter by name</label>
-                    <input type="search"
-                          placeholder="Filter by name"
-                          class="form-control"
-                          id="events-filter"
-                          ng-model="filters.text">
-                  </div>
+            <div class="data-toolbar">
+              <ui-select class="data-toolbar-dropdown" ng-model="kindSelector.selected" theme="bootstrap" search-enabled="true" ng-disabled="kindSelector.disabled" title="Choose a resource">
+                <ui-select-match placeholder="Choose a resource">{{$select.selected.label ? $select.selected.label : ($select.selected.kind | humanizeKind : true)}}</ui-select-match>
+                <ui-select-choices repeat="kind in kinds | filter : {kind: $select.search} : matchKind | orderBy : 'kind'">
+                  <div ng-bind-html="(kind.label ? kind.label : (kind.kind | humanizeKind : true)) | highlight: $select.search"></div>
+                </ui-select-choices>
+              </ui-select>
+              <div class="vertical-divider"></div>
+              <div class="data-toolbar-filter">
+                <div class="form-group filter-controls">
+                  <label for="events-filter" class="sr-only">Filter by name</label>
+                  <input type="search"
+                        placeholder="Filter by name"
+                        class="form-control"
+                        id="events-filter"
+                        ng-model="filters.text">
                 </div>
               </div>
               <div class="checkbox nowrap">
