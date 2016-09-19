@@ -51,7 +51,6 @@ angular.module('openshiftConsole')
     $scope.deploymentConfig = null;
     $scope.deploymentConfigMissing = false;
     $scope.deployments = {};
-    $scope.podTemplates = {};
     $scope.imageStreams = {};
     $scope.imagesByDockerReference = {};
     $scope.imageStreamImageRefByDockerReference = {}; // lets us determine if a particular container's docker image reference belongs to an imageStream
@@ -224,6 +223,20 @@ angular.module('openshiftConsole')
           );
         };
 
+        // Get the image stream image for the replica set or replication
+        // controller we're showing to fill out the pod template details.
+        var getImageStreamImage = function() {
+          var podTemplate = _.get($scope, 'deployment.spec.template');
+          if (!podTemplate) {
+            return;
+          }
+
+          ImageStreamResolver.fetchReferencedImageStreamImages([ podTemplate ],
+                                                               $scope.imagesByDockerReference,
+                                                               $scope.imageStreamImageRefByDockerReference,
+                                                               context);
+        };
+
         DataService.get($scope.resource, $routeParams.replicaSet, context).then(
           // success
           function(deployment) {
@@ -232,6 +245,7 @@ angular.module('openshiftConsole')
             setLogVars(deployment);
             updateDC(deployment);
             updateHPAWarnings();
+            getImageStreamImage();
 
             $scope.breadcrumbs = BreadcrumbsService.getBreadcrumbs({ object: deployment });
 
@@ -245,7 +259,7 @@ angular.module('openshiftConsole')
               }
               $scope.deployment = deployment;
 
-              if (!$scope.forms.envForm || $scope.forms.envForm.$pristine) { 
+              if (!$scope.forms.envForm || $scope.forms.envForm.$pristine) {
                 copyDeploymentAndEnsureEnv(deployment);
               } else {
                 $scope.alerts["background_update"] = {
@@ -265,6 +279,7 @@ angular.module('openshiftConsole')
 
               setLogVars(deployment);
               updateHPAWarnings();
+              getImageStreamImage();
             }));
 
             if ($scope.deploymentConfigName) {
@@ -298,16 +313,8 @@ angular.module('openshiftConsole')
           }
         );
 
-        function extractPodTemplates() {
-          angular.forEach($scope.deployments, function(deployment, deploymentId){
-            $scope.podTemplates[deploymentId] = deployment.spec.template;
-          });
-        }
-
         watches.push(DataService.watch($scope.resource, context, function(deployments, action, deployment) {
           $scope.deployments = deployments.by("metadata.name");
-          extractPodTemplates();
-          ImageStreamResolver.fetchReferencedImageStreamImages($scope.podTemplates, $scope.imagesByDockerReference, $scope.imageStreamImageRefByDockerReference, context);
           $scope.emptyMessage = "No deployments to show";
           $scope.deploymentsByDeploymentConfig = DeploymentsService.associateDeploymentsToDeploymentConfig($scope.deployments);
 
@@ -350,7 +357,7 @@ angular.module('openshiftConsole')
         watches.push(DataService.watch("imagestreams", context, function(imageStreams) {
           $scope.imageStreams = imageStreams.by("metadata.name");
           ImageStreamResolver.buildDockerRefMapForImageStreams($scope.imageStreams, $scope.imageStreamImageRefByDockerReference);
-          ImageStreamResolver.fetchReferencedImageStreamImages($scope.podTemplates, $scope.imagesByDockerReference, $scope.imageStreamImageRefByDockerReference, context);
+          getImageStreamImage();
           Logger.log("imagestreams (subscribe)", $scope.imageStreams);
         }));
 

@@ -14,7 +14,6 @@ angular.module('openshiftConsole')
                                                  AlertMessageService,
                                                  DataService,
                                                  DeploymentsService,
-                                                 ImageStreamResolver,
                                                  LabelFilter,
                                                  Logger,
                                                  ProjectsService) {

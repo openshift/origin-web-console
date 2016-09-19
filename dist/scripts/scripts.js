@@ -4269,14 +4269,14 @@ details:"Reason: " + e("getErrorDetails")(b)
 c.unwatchAll(g);
 });
 }));
-} ]), angular.module("openshiftConsole").controller("DeploymentsController", [ "$scope", "$filter", "$routeParams", "AlertMessageService", "DataService", "DeploymentsService", "ImageStreamResolver", "LabelFilter", "Logger", "ProjectsService", function(a, b, c, d, e, f, g, h, i, j) {
+} ]), angular.module("openshiftConsole").controller("DeploymentsController", [ "$scope", "$filter", "$routeParams", "AlertMessageService", "DataService", "DeploymentsService", "LabelFilter", "Logger", "ProjectsService", function(a, b, c, d, e, f, g, h, i) {
 a.projectName = c.project, a.deployments = {}, a.unfilteredDeploymentConfigs = {}, a.unfilteredK8SDeployments = {}, a.deploymentsByDeploymentConfig = {}, a.labelSuggestions = {}, a.alerts = a.alerts || {}, a.emptyMessage = "Loading...", a.expandedDeploymentConfigRow = {}, a.unfilteredReplicaSets = {}, a.unfilteredReplicationControllers = {}, d.getAlerts().forEach(function(b) {
 a.alerts[b.name] = b.data;
 }), d.clearAlerts();
-var k = [];
-j.get(c.project).then(_.spread(function(c, d) {
-function g() {
-var b = !h.getLabelSelector().isEmpty();
+var j = [];
+i.get(c.project).then(_.spread(function(c, d) {
+function i() {
+var b = !g.getLabelSelector().isEmpty();
 if (!b) return void delete a.alerts.deployments;
 var c = _.isEmpty(a.unfilteredDeploymentConfigs) && _.isEmpty(a.unfilteredReplicationControllers) && _.isEmpty(a.unfilteredK8SDeployments) && _.isEmpty(a.unfilteredReplicaSets);
 if (c) return void delete a.alerts.deployments;
@@ -4286,10 +4286,10 @@ type:"warning",
 details:"The active filters are hiding all deployments."
 }) :void delete a.alerts.deployments;
 }
-a.project = c, k.push(e.watch("replicationcontrollers", d, function(c, d, e) {
+a.project = c, j.push(e.watch("replicationcontrollers", d, function(c, d, e) {
 a.deployments = c.by("metadata.name");
 var j, k;
-if (e && (j = b("annotation")(e, "deploymentConfig"), k = e.metadata.name), a.deploymentsByDeploymentConfig = f.associateDeploymentsToDeploymentConfig(a.deployments, a.deploymentConfigs, !0), a.deploymentsByDeploymentConfig[""] && (a.unfilteredReplicationControllers = a.deploymentsByDeploymentConfig[""], h.addLabelSuggestionsFromResources(a.unfilteredReplicationControllers, a.labelSuggestions), h.setLabelSuggestions(a.labelSuggestions), a.deploymentsByDeploymentConfig[""] = h.getLabelSelector().select(a.deploymentsByDeploymentConfig[""])), g(), d) {
+if (e && (j = b("annotation")(e, "deploymentConfig"), k = e.metadata.name), a.deploymentsByDeploymentConfig = f.associateDeploymentsToDeploymentConfig(a.deployments, a.deploymentConfigs, !0), a.deploymentsByDeploymentConfig[""] && (a.unfilteredReplicationControllers = a.deploymentsByDeploymentConfig[""], g.addLabelSuggestionsFromResources(a.unfilteredReplicationControllers, a.labelSuggestions), g.setLabelSuggestions(a.labelSuggestions), a.deploymentsByDeploymentConfig[""] = g.getLabelSelector().select(a.deploymentsByDeploymentConfig[""])), i(), d) {
 if ("ADDED" === d || "MODIFIED" === d && [ "New", "Pending", "Running" ].indexOf(b("deploymentStatus")(e)) > -1) a.deploymentConfigDeploymentsInProgress[j] = a.deploymentConfigDeploymentsInProgress[j] || {}, a.deploymentConfigDeploymentsInProgress[j][k] = e; else if ("MODIFIED" === d) {
 var l = b("deploymentStatus")(e);
 "Complete" !== l && "Failed" !== l || delete a.deploymentConfigDeploymentsInProgress[j][k];
@@ -4297,27 +4297,27 @@ var l = b("deploymentStatus")(e);
 } else a.deploymentConfigDeploymentsInProgress = f.associateRunningDeploymentToDeploymentConfig(a.deploymentsByDeploymentConfig);
 e ? "DELETED" !== d && (e.causes = b("deploymentCauses")(e)) :angular.forEach(a.deployments, function(a) {
 a.causes = b("deploymentCauses")(a);
-}), i.log("deployments (subscribe)", a.deployments);
-})), k.push(e.watch({
+}), h.log("deployments (subscribe)", a.deployments);
+})), j.push(e.watch({
 group:"extensions",
 resource:"replicasets"
 }, d, function(b) {
-a.unfilteredReplicaSets = b.by("metadata.name"), h.addLabelSuggestionsFromResources(a.unfilteredReplicaSets, a.labelSuggestions), h.setLabelSuggestions(a.labelSuggestions), a.replicaSets = h.getLabelSelector().select(a.unfilteredReplicaSets), i.log("replicasets (subscribe)", a.replicaSets);
-})), k.push(e.watch("deploymentconfigs", d, function(b) {
-a.unfilteredDeploymentConfigs = b.by("metadata.name"), h.addLabelSuggestionsFromResources(a.unfilteredDeploymentConfigs, a.labelSuggestions), h.setLabelSuggestions(a.labelSuggestions), a.deploymentConfigs = h.getLabelSelector().select(a.unfilteredDeploymentConfigs), a.emptyMessage = "No deployment configurations to show", a.deploymentsByDeploymentConfig = f.associateDeploymentsToDeploymentConfig(a.deployments, a.deploymentConfigs, !0), a.deploymentsByDeploymentConfig[""] && (a.unfilteredReplicationControllers = a.deploymentsByDeploymentConfig[""], a.deploymentsByDeploymentConfig[""] = h.getLabelSelector().select(a.deploymentsByDeploymentConfig[""])), g(), i.log("deploymentconfigs (subscribe)", a.deploymentConfigs);
-})), k.push(e.watch({
+a.unfilteredReplicaSets = b.by("metadata.name"), g.addLabelSuggestionsFromResources(a.unfilteredReplicaSets, a.labelSuggestions), g.setLabelSuggestions(a.labelSuggestions), a.replicaSets = g.getLabelSelector().select(a.unfilteredReplicaSets), h.log("replicasets (subscribe)", a.replicaSets);
+})), j.push(e.watch("deploymentconfigs", d, function(b) {
+a.unfilteredDeploymentConfigs = b.by("metadata.name"), g.addLabelSuggestionsFromResources(a.unfilteredDeploymentConfigs, a.labelSuggestions), g.setLabelSuggestions(a.labelSuggestions), a.deploymentConfigs = g.getLabelSelector().select(a.unfilteredDeploymentConfigs), a.emptyMessage = "No deployment configurations to show", a.deploymentsByDeploymentConfig = f.associateDeploymentsToDeploymentConfig(a.deployments, a.deploymentConfigs, !0), a.deploymentsByDeploymentConfig[""] && (a.unfilteredReplicationControllers = a.deploymentsByDeploymentConfig[""], a.deploymentsByDeploymentConfig[""] = g.getLabelSelector().select(a.deploymentsByDeploymentConfig[""])), i(), h.log("deploymentconfigs (subscribe)", a.deploymentConfigs);
+})), j.push(e.watch({
 group:"extensions",
 resource:"deployments"
 }, d, function(b) {
-a.unfilteredK8SDeployments = b.by("metadata.name"), h.addLabelSuggestionsFromResources(a.unfilteredK8SDeployments, a.labelSuggestions), h.setLabelSuggestions(a.labelSuggestions), a.k8sDeployments = h.getLabelSelector().select(a.unfilteredK8SDeployments), i.log("k8sDeployments (subscribe)", a.unfilteredK8SDeployments);
+a.unfilteredK8SDeployments = b.by("metadata.name"), g.addLabelSuggestionsFromResources(a.unfilteredK8SDeployments, a.labelSuggestions), g.setLabelSuggestions(a.labelSuggestions), a.k8sDeployments = g.getLabelSelector().select(a.unfilteredK8SDeployments), h.log("k8sDeployments (subscribe)", a.unfilteredK8SDeployments);
 })), a.showEmptyMessage = function() {
 return 0 === b("hashSize")(a.deploymentsByDeploymentConfig) || !(1 !== b("hashSize")(a.deploymentsByDeploymentConfig) || !a.deploymentsByDeploymentConfig[""]);
-}, h.onActiveFiltersChanged(function(b) {
+}, g.onActiveFiltersChanged(function(b) {
 a.$apply(function() {
-a.deploymentConfigs = b.select(a.unfilteredDeploymentConfigs), a.deploymentsByDeploymentConfig = f.associateDeploymentsToDeploymentConfig(a.deployments, a.deploymentConfigs, !0), a.deploymentsByDeploymentConfig[""] && (a.unfilteredReplicationControllers = a.deploymentsByDeploymentConfig[""], a.deploymentsByDeploymentConfig[""] = h.getLabelSelector().select(a.deploymentsByDeploymentConfig[""])), a.k8sDeployments = b.select(a.unfilteredK8SDeployments), a.replicaSets = b.select(a.unfilteredReplicaSets), g();
+a.deploymentConfigs = b.select(a.unfilteredDeploymentConfigs), a.deploymentsByDeploymentConfig = f.associateDeploymentsToDeploymentConfig(a.deployments, a.deploymentConfigs, !0), a.deploymentsByDeploymentConfig[""] && (a.unfilteredReplicationControllers = a.deploymentsByDeploymentConfig[""], a.deploymentsByDeploymentConfig[""] = g.getLabelSelector().select(a.deploymentsByDeploymentConfig[""])), a.k8sDeployments = b.select(a.unfilteredK8SDeployments), a.replicaSets = b.select(a.unfilteredReplicaSets), i();
 });
 }), a.$on("$destroy", function() {
-e.unwatchAll(k);
+e.unwatchAll(j);
 });
 }));
 } ]), angular.module("openshiftConsole").controller("DeploymentController", [ "$scope", "$filter", "$routeParams", "AlertMessageService", "DataService", "DeploymentsService", "HPAService", "ImageStreamResolver", "Navigate", "ProjectsService", "keyValueEditorUtils", function(a, b, c, d, e, f, g, h, i, j, k) {
@@ -4567,7 +4567,7 @@ break;
 case "ReplicationController":
 a.resource = "replicationcontrollers", a.healthCheckURL = l.healthCheckURL(c.project, "ReplicationController", c.replicaSet);
 }
-a.projectName = c.project, a.kind = n, a.deployment = null, a.deploymentConfig = null, a.deploymentConfigMissing = !1, a.deployments = {}, a.podTemplates = {}, a.imageStreams = {}, a.imagesByDockerReference = {}, a.imageStreamImageRefByDockerReference = {}, a.builds = {}, a.alerts = {}, a.renderOptions = a.renderOptions || {}, a.renderOptions.hideFilterWidget = !0, a.forms = {}, c.tab && (a.selectedTab = {}, a.selectedTab[c.tab] = !0), a.logOptions = {}, d.getAlerts().forEach(function(b) {
+a.projectName = c.project, a.kind = n, a.deployment = null, a.deploymentConfig = null, a.deploymentConfigMissing = !1, a.deployments = {}, a.imageStreams = {}, a.imagesByDockerReference = {}, a.imageStreamImageRefByDockerReference = {}, a.builds = {}, a.alerts = {}, a.renderOptions = a.renderOptions || {}, a.renderOptions.hideFilterWidget = !0, a.forms = {}, c.tab && (a.selectedTab = {}, a.selectedTab[c.tab] = !0), a.logOptions = {}, d.getAlerts().forEach(function(b) {
 a.alerts[b.name] = b.data;
 }), d.clearAlerts();
 var q = [];
@@ -4601,34 +4601,29 @@ s(a.deployment), a.forms.envForm.$setPristine();
 };
 var t = b("isIE")() || b("isEdge")();
 i.get(c.project).then(_.spread(function(d, h) {
-function i() {
-angular.forEach(a.deployments, function(b, c) {
-a.podTemplates[c] = b.spec.template;
-});
-}
 a.project = d, a.projectContext = h;
-var m, u, v = {}, w = {}, x = function() {
-if (a.hpaForRS = g.filterHPA(v, n, c.replicaSet), a.isActive) {
-var b = g.filterHPA(v, "DeploymentConfig", a.deploymentConfigName);
+var i, m, u = {}, v = {}, w = function() {
+if (a.hpaForRS = g.filterHPA(u, n, c.replicaSet), a.isActive) {
+var b = g.filterHPA(u, "DeploymentConfig", a.deploymentConfigName);
 a.autoscalers = a.hpaForRS.concat(b);
 } else a.autoscalers = a.hpaForRS;
-}, y = function() {
+}, x = function() {
 q.push(f.watch(a.resource, h, function(c) {
 var d, e = [], f = b("annotation");
 angular.forEach(c.by("metadata.name"), function(b) {
 var c = f(b, "deploymentConfig") || "";
 c === a.deploymentConfigName && e.push(b);
-}), d = j.getActiveDeployment(e), a.isActive = d && d.metadata.uid === a.deployment.metadata.uid, x();
+}), d = j.getActiveDeployment(e), a.isActive = d && d.metadata.uid === a.deployment.metadata.uid, w();
+}));
+}, y = function() {
+i && m && (a.podsForDeployment = _.filter(i, function(a) {
+return m.matches(a);
 }));
 }, z = function() {
-m && u && (a.podsForDeployment = _.filter(m, function(a) {
-return u.matches(a);
-}));
-}, A = function() {
-g.getHPAWarnings(a.deployment, a.autoscalers, w, d).then(function(b) {
+g.getHPAWarnings(a.deployment, a.autoscalers, v, d).then(function(b) {
 a.hpaWarnings = b;
 });
-}, B = function(d) {
+}, A = function(d) {
 var e = b("annotation")(d, "deploymentConfig");
 if (e) {
 o = !0, a.deploymentConfigName = e;
@@ -4645,9 +4640,12 @@ details:"Reason: " + b("getErrorDetails")(c)
 });
 });
 }
+}, B = function() {
+var b = _.get(a, "deployment.spec.template");
+b && k.fetchReferencedImageStreamImages([ b ], a.imagesByDockerReference, a.imageStreamImageRefByDockerReference, h);
 };
 f.get(a.resource, c.replicaSet, h).then(function(b) {
-a.loaded = !0, a.deployment = b, r(b), B(b), A(), a.breadcrumbs = e.getBreadcrumbs({
+a.loaded = !0, a.deployment = b, r(b), A(b), z(), B(), a.breadcrumbs = e.getBreadcrumbs({
 object:b
 }), q.push(f.watchObject(a.resource, c.replicaSet, h, function(b, c) {
 "DELETED" === c && (a.alerts.deleted = {
@@ -4662,11 +4660,11 @@ onClick:function() {
 return a.clearEnvVarUpdates(), !0;
 }
 } ]
-}, r(b), A();
-})), a.deploymentConfigName && y(), a.$watch("deployment.spec.selector", function() {
-u = new LabelSelector(a.deployment.spec.selector), z();
+}, r(b), z(), B();
+})), a.deploymentConfigName && x(), a.$watch("deployment.spec.selector", function() {
+m = new LabelSelector(a.deployment.spec.selector), y();
 }, !0), q.push(f.watch("pods", h, function(a) {
-m = a.by("metadata.name"), z();
+i = a.by("metadata.name"), y();
 }));
 }, function(d) {
 a.loaded = !0, a.alerts.load = {
@@ -4679,31 +4677,31 @@ kind:n,
 namespace:c.project
 });
 }), q.push(f.watch(a.resource, h, function(c, d, e) {
-a.deployments = c.by("metadata.name"), i(), k.fetchReferencedImageStreamImages(a.podTemplates, a.imagesByDockerReference, a.imageStreamImageRefByDockerReference, h), a.emptyMessage = "No deployments to show", a.deploymentsByDeploymentConfig = j.associateDeploymentsToDeploymentConfig(a.deployments);
+a.deployments = c.by("metadata.name"), a.emptyMessage = "No deployments to show", a.deploymentsByDeploymentConfig = j.associateDeploymentsToDeploymentConfig(a.deployments);
 var f, g;
 if (e && (f = b("annotation")(e, "deploymentConfig"), g = e.metadata.name), d) {
 if ("ADDED" === d || "MODIFIED" === d && [ "New", "Pending", "Running" ].indexOf(b("deploymentStatus")(e)) > -1) a.deploymentConfigDeploymentsInProgress[f] = a.deploymentConfigDeploymentsInProgress[f] || {}, a.deploymentConfigDeploymentsInProgress[f][g] = e; else if ("MODIFIED" === d) {
-var l = b("deploymentStatus")(e);
-"Complete" !== l && "Failed" !== l || delete a.deploymentConfigDeploymentsInProgress[f][g];
+var h = b("deploymentStatus")(e);
+"Complete" !== h && "Failed" !== h || delete a.deploymentConfigDeploymentsInProgress[f][g];
 }
 } else a.deploymentConfigDeploymentsInProgress = j.associateRunningDeploymentToDeploymentConfig(a.deploymentsByDeploymentConfig);
 e ? "DELETED" !== d && (e.causes = b("deploymentCauses")(e)) :angular.forEach(a.deployments, function(a) {
 a.causes = b("deploymentCauses")(a);
 });
 })), q.push(f.watch("imagestreams", h, function(b) {
-a.imageStreams = b.by("metadata.name"), k.buildDockerRefMapForImageStreams(a.imageStreams, a.imageStreamImageRefByDockerReference), k.fetchReferencedImageStreamImages(a.podTemplates, a.imagesByDockerReference, a.imageStreamImageRefByDockerReference, h), Logger.log("imagestreams (subscribe)", a.imageStreams);
+a.imageStreams = b.by("metadata.name"), k.buildDockerRefMapForImageStreams(a.imageStreams, a.imageStreamImageRefByDockerReference), B(), Logger.log("imagestreams (subscribe)", a.imageStreams);
 })), q.push(f.watch("builds", h, function(b) {
 a.builds = b.by("metadata.name"), Logger.log("builds (subscribe)", a.builds);
 })), q.push(f.watch({
 group:"extensions",
 resource:"horizontalpodautoscalers"
 }, h, function(a) {
-v = a.by("metadata.name"), x(), A();
+u = a.by("metadata.name"), w(), z();
 }, {
 poll:t,
 pollInterval:6e4
 })), f.list("limitranges", h, function(a) {
-w = a.by("metadata.name"), A();
+v = a.by("metadata.name"), z();
 }), a.retryFailedDeployment = function(b) {
 j.retryFailedDeployment(b, h, a);
 }, a.rollbackToDeployment = function(b, c, d, e) {
