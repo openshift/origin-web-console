@@ -189,7 +189,7 @@ angular.module("openshiftConsole")
             updateResourcesSum = $scope.updateResources.length;
 
           if (!$scope.resourceKind.endsWith("List")) {
-            creatUpdateSingleResource();
+            createUpdateSingleResource();
           } else {
             var createUpdatePromises = [];
             if (updateResourcesSum > 0) {
@@ -260,8 +260,8 @@ angular.module("openshiftConsole")
           });
         }
 
-        // creatUpdateSingleResource function will create/update just a single resource on a none-List resource kind.
-        function creatUpdateSingleResource() {
+        // createUpdateSingleResource function will create/update just a single resource on a none-List resource kind.
+        function createUpdateSingleResource() {
           var resource;
           if (!_.isEmpty($scope.createResources)) {
             resource = _.head($scope.createResources);

@@ -82,24 +82,18 @@ angular.module('openshiftConsole')
             templateUrl: 'views/modals/confirm.html',
             controller: 'ConfirmModalController',
             resolve: {
-              message: function() {
-                return "Remove service '" + service.metadata.name + "' from group?";
-              },
-              details: function() {
-                return "Services '" +
-                       $scope.primaryService.metadata.name +
-                       "' and '" +
-                       service.metadata.name +
-                       "' will no longer be displayed together on the overview.";
-              },
-              okButtonText: function() {
-                return "Remove";
-              },
-              okButtonClass: function() {
-                return "btn-danger";
-              },
-              cancelButtonText: function() {
-                return "Cancel";
+              modalConfig: function() {
+                return {
+                  message: "Remove service '" + service.metadata.name + "' from group?",
+                  details: "Services '" +
+                           $scope.primaryService.metadata.name +
+                           "' and '" +
+                           service.metadata.name +
+                           "' will no longer be displayed together on the overview.",
+                  okButtonText: "Remove",
+                  okButtonClass: "btn-danger",
+                  cancelButtonText: "Cancel"
+                };
               }
             }
           });

@@ -2,7 +2,11 @@
 
 angular.module("openshiftConsole")
 
-  .service("ApplicationGenerator", function(DataService, Logger, $parse){
+  .service("ApplicationGenerator", function(DataService,
+                                            APIService,
+                                            Logger,
+                                            $parse,
+                                            $q){
 
     var scope = {};
 
@@ -398,6 +402,56 @@ angular.module("openshiftConsole")
       };
 
       return service;
+    };
+
+    // returns a promise that will be resolved if none of the resources exist, if any resource exists it will be rejected
+    scope.ifResourcesDontExist = function(apiObjects, namespace){
+      var result = $q.defer();
+      var successResults = [];
+      var failureResults = [];
+      var remaining = apiObjects.length;
+
+      function _checkDone() {
+        if (remaining === 0) {
+          if(successResults.length > 0){
+            //means some resources exist with the given name
+            result.reject({nameTaken: true});
+          }
+          else {
+            //means no resources exist with the given name
+            result.resolve({nameTaken: false});
+          }
+        }
+      }
+
+      apiObjects.forEach(function(apiObject) {
+        var resource = APIService.objectToResourceGroupVersion(apiObject);
+        if (!resource) {
+          failureResults.push({data: {message: APIService.invalidObjectKindOrVersion(apiObject)}});
+          remaining--;
+          _checkDone();
+          return;
+        }
+        if (!APIService.apiInfo(resource)) {
+          failureResults.push({data: {message: APIService.unsupportedObjectKindOrVersion(apiObject)}});
+          remaining--;
+          _checkDone();
+          return;
+        }
+        DataService.get(resource, apiObject.metadata.name, {namespace: namespace}, {errorNotification: false}).then(
+          function (data) {
+            successResults.push(data);
+            remaining--;
+            _checkDone();
+          },
+          function (data) {
+            failureResults.push(data);
+            remaining--;
+            _checkDone();
+          }
+        );
+      });
+      return result.promise;
     };
 
     return scope;

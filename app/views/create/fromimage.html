@@ -371,7 +371,8 @@
                                 help-text="Each label is applied to each created resource.">
                             </label-editor>
                           </div>
-                          <div class="buttons gutter-top-bottom gutter-top-bottom-2x">
+                          <alerts alerts="alerts"></alerts>
+                          <div class="buttons gutter-bottom" ng-class="{'gutter-top': !alerts.length}">
                             <!-- unable to use form.valid.  need to fix validators in labels and key values directive -->
                             <button type="submit"
                                 class="btn btn-primary btn-lg"

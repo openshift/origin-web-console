@@ -25,8 +25,8 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "<span class=\"sr-only\">{{alert.type}}</span>\n" +
     "<span ng-if=\"alert.message\" style=\"margin-right: 5px\" ng-class=\"{'strong': !toast}\">{{alert.message}}</span><span ng-if=\"alert.details\">{{alert.details}}</span>\n" +
     "<span ng-repeat=\"link in alert.links\">\n" +
-    "<a ng-if=\"!link.href\" href=\"\" ng-click=\"onClick(alert, link)\" role=\"button\">{{link.label}}</a>\n" +
-    "<a ng-if=\"link.href\" href=\"{{link.href}}\" ng-click=\"onClick(alert, link)\">{{link.label}}</a>\n" +
+    "<a ng-if=\"!link.href\" href=\"\" ng-click=\"onClick(alert, link)\" role=\"button\" ng-attr-target=\"{{link.target}}\">{{link.label}}</a>\n" +
+    "<a ng-if=\"link.href\" href=\"{{link.href}}\" ng-click=\"onClick(alert, link)\" ng-attr-target=\"{{link.target}}\">{{link.label}}</a>\n" +
     "<span ng-if=\"!$last\" class=\"action-divider\">|</span>\n" +
     "</span>\n" +
     "</div>\n" +
@@ -4136,7 +4136,8 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "<label-editor labels=\"userDefinedLabels\" system-labels=\"systemLabels\" expand=\"true\" can-toggle=\"false\" help-text=\"Each label is applied to each created resource.\">\n" +
     "</label-editor>\n" +
     "</div>\n" +
-    "<div class=\"buttons gutter-top-bottom gutter-top-bottom-2x\">\n" +
+    "<alerts alerts=\"alerts\"></alerts>\n" +
+    "<div class=\"buttons gutter-bottom\" ng-class=\"{'gutter-top': !alerts.length}\">\n" +
     "\n" +
     "<button type=\"submit\" class=\"btn btn-primary btn-lg\" ng-disabled=\"form.$invalid || nameTaken || cpuProblems.length || memoryProblems.length || disableInputs\">Create</button>\n" +
     "<a class=\"btn btn-default btn-lg\" href=\"{{projectName | projectOverviewURL}}\">Cancel</a>\n" +
@@ -5001,7 +5002,7 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "<form name=\"form\" class=\"osc-form\">\n" +
     "<div class=\"form-group\">\n" +
     "<label for=\"name\" class=\"required\">Name</label>\n" +
-    "<div ng-class=\"{'has-error': form.name.$invalid}\">\n" +
+    "<div ng-class=\"{'has-error': form.name.$invalid || nameTaken}\">\n" +
     "<input type=\"text\" required select-on-focus minlength=\"2\" maxlength=\"24\" pattern=\"[a-z]([-a-z0-9]*[a-z0-9])?\" ng-model=\"app.name\" id=\"name\" name=\"name\" class=\"form-control\" autocorrect=\"off\" autocapitalize=\"off\" spellcheck>\n" +
     "</div>\n" +
     "<div class=\"help-block\">Identifies the resources created for this image.</div>\n" +
@@ -5019,14 +5020,18 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "Name can't have more than 24 characters.\n" +
     "</div>\n" +
     "</div>\n" +
+    "<div class=\"has-error\" ng-show=\"nameTaken\">\n" +
+    "<span class=\"help-block\">This name is already in use within the project. Please choose a different name.</span>\n" +
+    "</div>\n" +
     "</div>\n" +
     "<osc-form-section header=\"Environment Variables\" about-title=\"Environment Variables\" about=\"Environment variables are used to configure and pass information to running containers.\" expand=\"true\" can-toggle=\"false\" class=\"first-section\">\n" +
     "<key-value-editor entries=\"env\" key-placeholder=\"Name\" key-validator=\"[A-Za-z_][A-Za-z0-9_]*\" key-validator-error=\"A valid environment variable name is an alphanumeric (a-z and 0-9) string beginning with a letter that may contain underscores.\" value-placeholder=\"Value\" add-row-link=\"Add environment variable\"></key-value-editor>\n" +
     "</osc-form-section>\n" +
     "<label-editor labels=\"labels\" system-labels=\"systemLabels\" expand=\"true\" can-toggle=\"false\" help-text=\"Each label is applied to each created resource.\">\n" +
     "</label-editor>\n" +
-    "<div class=\"button-group gutter-top gutter-bottom\">\n" +
-    "<button type=\"submit\" class=\"btn btn-primary btn-lg\" ng-click=\"create()\" value=\"\" ng-disabled=\"form.$invalid\">Create</button>\n" +
+    "<alerts alerts=\"alerts\"></alerts>\n" +
+    "<div class=\"button-group gutter-bottom\" ng-class=\"{'gutter-top': !alerts.length}\">\n" +
+    "<button type=\"submit\" class=\"btn btn-primary btn-lg\" ng-click=\"create()\" value=\"\" ng-disabled=\"form.$invalid || nameTaken || disableInputs\">Create</button>\n" +
     "<a class=\"btn btn-default btn-lg\" href=\"#\" back>Cancel</a>\n" +
     "</div>\n" +
     "</form>\n" +
@@ -7362,6 +7367,7 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "<div class=\"modal-resource-action\">\n" +
     "<div class=\"modal-body\">\n" +
     "<h1>{{message}}</h1>\n" +
+    "<alerts ng-if=\"alerts\" alerts=\"alerts\" hide-close-button=\"true\"></alerts>\n" +
     "<p ng-if=\"details\">{{details}}</p>\n" +
     "</div>\n" +
     "<div class=\"modal-footer\">\n" +

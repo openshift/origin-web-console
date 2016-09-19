@@ -29,30 +29,21 @@ angular.module('openshiftConsole')
           }
 
           var deploymentName = deployment.metadata.name;
+          var latestVersion = _.get($scope, 'deploymentConfig.status.latestVersion');
           var modalInstance = $uibModal.open({
             animation: true,
             templateUrl: 'views/modals/confirm.html',
             controller: 'ConfirmModalController',
             resolve: {
-              message: function() {
-                return "Cancel deployment " + deploymentName + "?";
-              },
-              details: function() {
-                var latestVersion = _.get($scope, 'deploymentConfig.status.latestVersion');
-                if (latestVersion) {
-                  return "This will attempt to stop the in-progress deployment and rollback to the previous deployment, #" + latestVersion + ". It may take some time to complete.";
-                }
-
-                return "This will attempt to stop the in-progress deployment and may take some time to complete.";
-              },
-              okButtonText: function() {
-                return "Yes, cancel";
-              },
-              okButtonClass: function() {
-                return "btn-danger";
-              },
-              cancelButtonText: function() {
-                return "No, don't cancel";
+              modalConfig: function() {
+                return {
+                  message: "Cancel deployment " + deploymentName + "?",
+                  details: latestVersion ? ("This will attempt to stop the in-progress deployment and rollback to the previous deployment, #" + latestVersion + ". It may take some time to complete.") :
+                                            "This will attempt to stop the in-progress deployment and may take some time to complete.",
+                  okButtonText: "Yes, cancel",
+                  okButtonClass: "btn-danger",
+                  cancelButtonText: "No, don't cancel"
+                };
               }
             }
           });

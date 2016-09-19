@@ -4,11 +4,13 @@ angular.module("openshiftConsole")
   .directive("deployImage", function($filter,
                                      $q,
                                      $window,
+                                     $uibModal,
                                      ApplicationGenerator,
                                      DataService,
                                      ImagesService,
                                      Navigate,
                                      ProjectsService,
+                                     QuotaService,
                                      TaskList,
                                      keyValueEditorUtils) {
     return {
@@ -106,6 +108,7 @@ angular.module("openshiftConsole")
           };
 
           $scope.$watch('app.name', function() {
+            $scope.nameTaken = false;
             _.set(
               _.find($scope.systemLabels, { name: 'app' }),
               'value',
@@ -159,8 +162,8 @@ angular.module("openshiftConsole")
             });
           }, true);
 
-          $scope.create = function() {
-            var resources = getResources();
+          var generatedResources;
+          var createResources = function() {
             var titles = {
               started: "Deploying image " + $scope.app.name + " to project " + $scope.project + ".",
               success: "Deployed image " + $scope.app.name + " to project " + $scope.project + ".",
@@ -169,7 +172,7 @@ angular.module("openshiftConsole")
             TaskList.clear();
             TaskList.add(titles, {}, $scope.project, function() {
               var d = $q.defer();
-              DataService.batch(resources, $scope.context).then(function(result) {
+              DataService.batch(generatedResources, $scope.context).then(function(result) {
                 var alerts, hasErrors = !_.isEmpty(result.failure);
                 if (hasErrors) {
                   // Show failure alerts.
@@ -200,6 +203,60 @@ angular.module("openshiftConsole")
               return d.promise;
             });
             Navigate.toNextSteps($scope.app.name, $scope.project);
+          };
+
+          var launchConfirmationDialog = function(alerts) {
+            var modalInstance = $uibModal.open({
+              animation: true,
+              templateUrl: 'views/modals/confirm.html',
+              controller: 'ConfirmModalController',
+              resolve: {
+                modalConfig: function() {
+                  return {
+                    alerts: alerts,
+                    message: "Problems were detected while checking your application configuration.",
+                    okButtonText: "Create Anyway",
+                    okButtonClass: "btn-danger",
+                    cancelButtonText: "Cancel"
+                  };
+                }
+              }
+            });
+
+            modalInstance.result.then(createResources);
+          };
+
+          var showWarningsOrCreate = function(result){
+            // Now that all checks are completed, show any warnings if we need to
+            var quotaAlerts = result.quotaAlerts || [];
+            var errorAlerts = _.filter(quotaAlerts, {type: 'error'});
+            if ($scope.nameTaken || errorAlerts.length) {
+              $scope.disableInputs = false;
+              $scope.alerts = quotaAlerts;
+            }
+            else if (quotaAlerts.length) {
+              launchConfirmationDialog(quotaAlerts);
+              $scope.disableInputs = false;
+            }
+            else {
+              createResources();
+            }
+          };
+
+          $scope.create = function() {
+            $scope.disableInputs = true;
+            $scope.alerts = {};
+            generatedResources = getResources();
+
+            var nameTakenPromise = ApplicationGenerator.ifResourcesDontExist(generatedResources, $scope.project);
+            var checkQuotaPromise = QuotaService.getLatestQuotaAlerts(generatedResources, $scope.context);
+            // Don't want to wait for the name checks to finish before making the calls to quota
+            // so kick off the requests above and then chain the promises here
+            var setNameTaken = function(result) {
+              $scope.nameTaken = result.nameTaken;
+              return checkQuotaPromise;
+            };
+            nameTakenPromise.then(setNameTaken, setNameTaken).then(showWarningsOrCreate, showWarningsOrCreate);
           };
       }
     };

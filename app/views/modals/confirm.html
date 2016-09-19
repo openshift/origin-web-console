@@ -1,6 +1,7 @@
 <div class="modal-resource-action">
   <div class="modal-body">
     <h1>{{message}}</h1>
+    <alerts ng-if="alerts" alerts="alerts" hide-close-button="true"></alerts>
     <p ng-if="details">{{details}}</p>
   </div>
   <div class="modal-footer">
