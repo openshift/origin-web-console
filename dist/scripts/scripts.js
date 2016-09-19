@@ -8425,7 +8425,7 @@ var b = i(a);
 }), _.each(e, function(b, c) {
 var d;
 d = b.count ? b.total / b.count :null, f.push(Number(c)), g.push(a.convert ? a.convert(d) :d);
-}), a.lastValue = _.last(g) || 0, h;
+}), g.length > 1 && (a.lastValue = _.last(g) || 0), h;
 }
 function i(a, c) {
 var e = [], g = {
@@ -8451,7 +8451,7 @@ return a[0];
 function j(a) {
 w || (b.loaded = !0, b.showAverage = _.size(b.pods) > 5 || b.compact, _.each(b.metrics, function(c) {
 var d, e = i(a, c), f = c.descriptor;
-b.compact && c.compactCombineWith && (f = c.compactCombineWith, B[f].lastValue += c.lastValue), t[f] ? (t[f].load(e), b.showAverage ? t[f].legend.hide() :t[f].legend.show()) :(d = C(c), d.data = e, t[f] = c3.generate(d));
+b.compact && c.compactCombineWith && (f = c.compactCombineWith, c.lastValue && (B[f].lastValue = (B[f].lastValue || 0) + c.lastValue)), t[f] ? (t[f].load(e), b.showAverage ? t[f].legend.hide() :t[f].legend.show()) :(d = C(c), d.data = e, t[f] = c3.generate(d));
 }));
 }
 function k() {

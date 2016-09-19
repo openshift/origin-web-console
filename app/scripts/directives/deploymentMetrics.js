@@ -231,7 +231,9 @@ angular.module('openshiftConsole')
             values.push(metric.convert ? metric.convert(avg) : avg);
           });
 
-          metric.lastValue = _.last(values) || 0;
+          if (values.length > 1) {
+            metric.lastValue = _.last(values) || 0;
+          }
 
           return columns;
         }
@@ -310,7 +312,9 @@ angular.module('openshiftConsole')
             var descriptor = metric.descriptor;
             if (scope.compact && metric.compactCombineWith) {
               descriptor = metric.compactCombineWith;
-              metricByID[descriptor].lastValue += metric.lastValue;
+              if (metric.lastValue) {
+                metricByID[descriptor].lastValue = (metricByID[descriptor].lastValue || 0) + metric.lastValue;
+              }
             }
 
             if (!chartByMetric[descriptor]) {
