@@ -43,6 +43,9 @@ angular.module('openshiftConsole')
       break;
     }
 
+    // lets us determine if a particular container's docker image reference belongs to an imageStream
+    var imageStreamImageRefByDockerReference = {};
+
     $scope.projectName = $routeParams.project;
     $scope.kind = kind;
     // Either a ReplicaSet or a ReplicaSetController
@@ -51,9 +54,7 @@ angular.module('openshiftConsole')
     $scope.deploymentConfig = null;
     $scope.deploymentConfigMissing = false;
     $scope.deployments = {};
-    $scope.imageStreams = {};
     $scope.imagesByDockerReference = {};
-    $scope.imageStreamImageRefByDockerReference = {}; // lets us determine if a particular container's docker image reference belongs to an imageStream
     $scope.builds = {};
     $scope.alerts = {};
     $scope.renderOptions = $scope.renderOptions || {};
@@ -226,6 +227,10 @@ angular.module('openshiftConsole')
         // Get the image stream image for the replica set or replication
         // controller we're showing to fill out the pod template details.
         var getImageStreamImage = function() {
+          if (_.isEmpty(imageStreamImageRefByDockerReference)) {
+            return;
+          }
+
           var podTemplate = _.get($scope, 'deployment.spec.template');
           if (!podTemplate) {
             return;
@@ -233,7 +238,7 @@ angular.module('openshiftConsole')
 
           ImageStreamResolver.fetchReferencedImageStreamImages([ podTemplate ],
                                                                $scope.imagesByDockerReference,
-                                                               $scope.imageStreamImageRefByDockerReference,
+                                                               imageStreamImageRefByDockerReference,
                                                                context);
         };
 
@@ -245,7 +250,6 @@ angular.module('openshiftConsole')
             setLogVars(deployment);
             updateDC(deployment);
             updateHPAWarnings();
-            getImageStreamImage();
 
             $scope.breadcrumbs = BreadcrumbsService.getBreadcrumbs({ object: deployment });
 
@@ -354,11 +358,11 @@ angular.module('openshiftConsole')
         }));
 
         // Sets up subscription for imageStreams
-        watches.push(DataService.watch("imagestreams", context, function(imageStreams) {
-          $scope.imageStreams = imageStreams.by("metadata.name");
-          ImageStreamResolver.buildDockerRefMapForImageStreams($scope.imageStreams, $scope.imageStreamImageRefByDockerReference);
+        watches.push(DataService.watch("imagestreams", context, function(imageStreamData) {
+          var imageStreams = imageStreamData.by('metadata.name');
+          ImageStreamResolver.buildDockerRefMapForImageStreams(imageStreams, imageStreamImageRefByDockerReference);
           getImageStreamImage();
-          Logger.log("imagestreams (subscribe)", $scope.imageStreams);
+          Logger.log("imagestreams (subscribe)", imageStreams);
         }));
 
         watches.push(DataService.watch("builds", context, function(builds) {
