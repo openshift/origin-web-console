@@ -28,7 +28,7 @@ DEFAULT_HPA_CPU_TARGET_PERCENT:80,
 DISABLE_OVERVIEW_METRICS:!1,
 AVAILABLE_KINDS_BLACKLIST:[ "Binding", "Ingress", "DeploymentConfigRollback" ],
 ENABLE_TECH_PREVIEW_FEATURE:{
-pipelines:!1
+pipelines:!0
 },
 PROJECT_NAVIGATION:[ {
 label:"Overview",

@@ -46,7 +46,7 @@ window.OPENSHIFT_CONSTANTS = {
   ],
 
   ENABLE_TECH_PREVIEW_FEATURE: {
-    pipelines: false
+    pipelines: true
   },
 
   // href's will be prefixed with /project/{{projectName}} unless they are absolute URLs
