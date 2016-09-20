@@ -87,6 +87,10 @@ angular.module('openshiftConsole')
       // 25 is a reasonable number to keep at least one or two projects worth of data in cache
       number: 25
     });
+    this._immutableDataCache = $cacheFactory('immutableDataCache', {
+      // 50 is a reasonable number for the immutable resources that are stored per resource instead of grouped by type
+      number: 50
+    });
     this._watchOptionsMap = {};
     this._watchWebsocketsMap = {};
     this._watchPollTimeoutsMap = {};
@@ -329,13 +333,13 @@ angular.module('openshiftConsole')
 
     var deferred = $q.defer();
 
-    var existingData = this._data(key);
+    var existingImmutableData = this._immutableData(key);
 
     // special case, if we have an immutable item, we can return it immediately
-    if (this._hasImmutable(resource, existingData, name)) {
+    if (this._hasImmutable(resource, existingImmutableData, name)) {
       $timeout(function() {
         // we can be guaranteed this wont change on us, just send what we have in existingData
-        deferred.resolve(existingData.by('metadata.name')[name]);
+        deferred.resolve(existingImmutableData.by('metadata.name')[name]);
       }, 0);
     }
     else {
@@ -348,11 +352,11 @@ angular.module('openshiftConsole')
         }, opts.http || {}))
         .success(function(data, status, headerFunc, config, statusText) {
           if (self._isImmutable(resource)) {
-            if (!existingData) {
-              self._data(key, [data]);
+            if (!existingImmutableData) {
+              self._immutableData(key, [data]);
             }
             else {
-              existingData.update(data, "ADDED");
+              existingImmutableData.update(data, "ADDED");
             }
           }
           deferred.resolve(data);
@@ -650,7 +654,7 @@ DataService.prototype.createStream = function(resource, name, context, opts, isR
     var key = this._uniqueKey(resource, null, context, _.get(opts, 'http.params'));
 
     if (objectCallback && objectName) {
-      var objectKey = this._uniqueKey(resource, objectName, context, _.get(opts, 'http.params'));      
+      var objectKey = this._uniqueKey(resource, objectName, context, _.get(opts, 'http.params'));
       var objCallbacks = this._watchObjectCallbacks(objectKey);
       objCallbacks.remove(objectCallback);
     }
@@ -738,6 +742,13 @@ DataService.prototype.createStream = function(resource, name, context, opts, isR
     return data ?
            this._dataCache.put(key, new Data(data)) :
            this._dataCache.get(key);
+  };
+
+    // uses $cacheFactory to impl LRU cache
+  DataService.prototype._immutableData = function(key, data) {
+    return data ?
+           this._immutableDataCache.put(key, new Data(data)) :
+           this._immutableDataCache.get(key);
   };
 
   DataService.prototype._isCached = function(key) {

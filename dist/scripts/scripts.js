@@ -888,6 +888,8 @@ c[h] || (c[h] = {}), "DELETED" === d ? delete c[h][i] :c[h][i] = a;
 function m() {
 this._listCallbacksMap = {}, this._watchCallbacksMap = {}, this._watchObjectCallbacksMap = {}, this._watchOperationMap = {}, this._listOperationMap = {}, this._resourceVersionMap = {}, this._dataCache = a("dataCache", {
 number:25
+}), this._immutableDataCache = a("immutableDataCache", {
+number:50
 }), this._watchOptionsMap = {}, this._watchWebsocketsMap = {}, this._watchPollTimeoutsMap = {}, this._websocketEventsMap = {};
 var b = this;
 d.$on("$routeChangeStart", function(a, c, d) {
@@ -1040,7 +1042,7 @@ a = g.toResourceGroupVersion(a), f = f || {};
 var i = this._uniqueKey(a, c, d, _.get(f, "http.params"));
 !!f.force;
 delete f.force;
-var k = e.defer(), l = this._data(i);
+var k = e.defer(), l = this._immutableData(i);
 if (this._hasImmutable(a, l, c)) j(function() {
 k.resolve(l.by("metadata.name")[c]);
 }, 0); else {
@@ -1051,7 +1053,7 @@ method:"GET",
 auth:{},
 url:m._urlForResource(a, c, d, !1, e)
 }, f.http || {})).success(function(b, c, d, e, f) {
-m._isImmutable(a) && (l ? l.update(b, "ADDED") :m._data(i, [ b ])), k.resolve(b);
+m._isImmutable(a) && (l ? l.update(b, "ADDED") :m._immutableData(i, [ b ])), k.resolve(b);
 }).error(function(b, d, e, g) {
 if (f.errorNotification !== !1) {
 var i = "Failed to get " + a + "/" + c;
@@ -1212,6 +1214,8 @@ return b || b === !1 ? void (this._listOperationMap[a] = b) :this._listOperation
 return b ? void (this._resourceVersionMap[a] = b) :this._resourceVersionMap[a];
 }, m.prototype._data = function(a, b) {
 return b ? this._dataCache.put(a, new k(b)) :this._dataCache.get(a);
+}, m.prototype._immutableData = function(a, b) {
+return b ? this._immutableDataCache.put(a, new k(b)) :this._immutableDataCache.get(a);
 }, m.prototype._isCached = function(a) {
 return this._watchInFlight(a) && this._resourceVersion(a) && !!this._data(a);
 }, m.prototype._watchOptions = function(a, b) {
