@@ -19,13 +19,13 @@ angular.module('openshiftConsole')
                         Navigate,
                         ProjectsService,
                         keyValueEditorUtils) {
+    var imageStreamImageRefByDockerReference = {}; // lets us determine if a particular container's docker image reference belongs to an imageStream
+
     $scope.projectName = $routeParams.project;
     $scope.name = $routeParams.deployment;
     $scope.forms = {};
     $scope.alerts = {};
-    $scope.imageStreams = {};
     $scope.imagesByDockerReference = {};
-    $scope.imageStreamImageRefByDockerReference = {}; // lets us determine if a particular container's docker image reference belongs to an imageStream
     $scope.breadcrumbs = [
       {
         title: "Deployments",
@@ -91,7 +91,6 @@ angular.module('openshiftConsole')
             $scope.loaded = true;
             $scope.deployment = deployment;
             updateHPAWarnings();
-            ImageStreamResolver.fetchReferencedImageStreamImages([deployment.spec.template], $scope.imagesByDockerReference, $scope.imageStreamImageRefByDockerReference, context);
 
             $scope.saveEnvVars = function() {
               _.each($scope.updatedDeployment.spec.template.spec.containers, function(container) {
@@ -156,6 +155,7 @@ angular.module('openshiftConsole')
               }
 
               updateHPAWarnings();
+              ImageStreamResolver.fetchReferencedImageStreamImages([deployment.spec.template], $scope.imagesByDockerReference, imageStreamImageRefByDockerReference, context);
             }));
 
             // Watch replica sets for this deployment
@@ -194,12 +194,12 @@ angular.module('openshiftConsole')
           updateHPAWarnings();
         });
 
-        watches.push(DataService.watch("imagestreams", context, function(imageStreams) {
-          $scope.imageStreams = imageStreams.by("metadata.name");
-          ImageStreamResolver.buildDockerRefMapForImageStreams($scope.imageStreams, $scope.imageStreamImageRefByDockerReference);
+        watches.push(DataService.watch("imagestreams", context, function(imageStreamData) {
+          var imageStreams = imageStreamData.by("metadata.name");
+          ImageStreamResolver.buildDockerRefMapForImageStreams(imageStreams, imageStreamImageRefByDockerReference);
           // If the deployment has been loaded already
           if ($scope.deployment) {
-            ImageStreamResolver.fetchReferencedImageStreamImages([$scope.deployment.spec.template], $scope.imagesByDockerReference, $scope.imageStreamImageRefByDockerReference, context);
+            ImageStreamResolver.fetchReferencedImageStreamImages([$scope.deployment.spec.template], $scope.imagesByDockerReference, imageStreamImageRefByDockerReference, context);
           }
           Logger.log("imagestreams (subscribe)", $scope.imageStreams);
         }));
