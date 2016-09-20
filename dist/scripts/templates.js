@@ -3370,7 +3370,8 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "<div ng-if=\"cliDownloadURLPresent\">\n" +
     "<label class=\"cli-download-label\">Download <code>oc</code>:</label>\n" +
     "<div ng-repeat=\"(key, value) in cliDownloadURL\">\n" +
-    "<a href=\"{{value}}\" class=\"cli-download-link\">\n" +
+    "\n" +
+    "<a ng-href=\"{{value}}\" class=\"cli-download-link\" target=\"_self\">\n" +
     "{{key}}\n" +
     "<i class=\"fa fa-external-link\"></i>\n" +
     "</a>\n" +

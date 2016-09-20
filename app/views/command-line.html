@@ -24,7 +24,11 @@
                     <div ng-if="cliDownloadURLPresent">
                       <label class="cli-download-label">Download <code>oc</code>:</label>
                       <div ng-repeat="(key, value) in cliDownloadURL">
-                        <a href="{{value}}" class="cli-download-link">
+                        <!--
+                           Use target="_self" so that the Angular router doesn't rewrite the link when the download is served using an extension.
+                           See https://docs.angularjs.org/guide/$location#html-link-rewriting
+                        -->
+                        <a ng-href="{{value}}" class="cli-download-link" target="_self">
                           {{key}}
                           <i class="fa fa-external-link"></i>
                         </a>
