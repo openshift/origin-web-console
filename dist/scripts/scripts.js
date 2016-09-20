@@ -9742,13 +9742,13 @@ restrict:"E",
 scope:!0,
 templateUrl:"views/overview/_dc.html",
 link:function(d) {
-var e = a("orderObjectsByDate"), f = a("deploymentIsInProgress"), g = a("anyDeploymentIsInProgress");
+var e = a("orderObjectsByDate"), f = a("deploymentIsInProgress");
 d.$watch("deploymentConfigs", function(a) {
 d.deploymentConfig = _.get(a, d.dcName);
 }), d.$watch("deployments", function(a) {
-d.orderedDeployments = e(a, !0), d.activeDeployment = _.get(d, [ "scalableDeploymentByConfig", d.dcName ]), d.anyDeploymentInProgress = g(a);
+d.orderedDeployments = e(a, !0), d.activeDeployment = _.get(d, [ "scalableDeploymentByConfig", d.dcName ]), d.inProgressDeployment = _.find(d.orderedDeployments, f);
 }), d.cancelDeployment = function() {
-var a = _.find(d.orderedDeployments, f);
+var a = d.inProgressDeployment;
 if (a) {
 var e = a.metadata.name, g = b.open({
 animation:!0,

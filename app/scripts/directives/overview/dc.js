@@ -11,7 +11,6 @@ angular.module('openshiftConsole')
       link: function($scope) {
         var orderByDate = $filter('orderObjectsByDate');
         var deploymentIsInProgress = $filter('deploymentIsInProgress');
-        var anyDeploymentInProgress = $filter('anyDeploymentIsInProgress');
 
         $scope.$watch('deploymentConfigs', function(deploymentConfigs) {
           $scope.deploymentConfig = _.get(deploymentConfigs, $scope.dcName);
@@ -20,11 +19,11 @@ angular.module('openshiftConsole')
         $scope.$watch('deployments', function(deployments) {
           $scope.orderedDeployments = orderByDate(deployments, true);
           $scope.activeDeployment = _.get($scope, ['scalableDeploymentByConfig', $scope.dcName]);
-          $scope.anyDeploymentInProgress = anyDeploymentInProgress(deployments);
+          $scope.inProgressDeployment = _.find($scope.orderedDeployments, deploymentIsInProgress);
         });
 
         $scope.cancelDeployment = function() {
-          var deployment = _.find($scope.orderedDeployments, deploymentIsInProgress);
+          var deployment = $scope.inProgressDeployment;
           if (!deployment) {
             return;
           }
