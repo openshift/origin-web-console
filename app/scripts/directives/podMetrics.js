@@ -20,7 +20,7 @@ angular.module('openshiftConsole')
       },
       templateUrl: 'views/directives/pod-metrics.html',
       link: function(scope) {
-        scope.includedMetrics = scope.includedMetrics || ["cpu", "memory", "network"];
+        scope.includedMetrics = scope.includedMetrics || ["cpu", "memory", "network", "volumes"];
         var donutByMetric = {}, sparklineByMetric = {};
         var intervalPromise;
         var getMemoryLimit = $parse('resources.limits.memory');
@@ -32,6 +32,8 @@ angular.module('openshiftConsole')
 
         // Set to true when the route changes so we don't update charts that no longer exist.
         var destroyed = false;
+        
+        var volumeDataSets = [];
 
         scope.uniqueID = _.uniqueId('metrics-chart-');
 
@@ -98,6 +100,20 @@ angular.module('openshiftConsole')
             ]
           });
         }
+        generateVolumeDataSets();
+        if (_.includes(scope.includedMetrics, "volumes")) {
+          scope.metrics.push({
+            label: "Volumes",
+            units: "MiB",
+            chartPrefix: "volumes-",
+            chartType: "spline",
+            convert: ConversionService.bytesToMiB,
+            // The sparkline y-axis will always extend to at least this value.
+            // Avoid spikey charts when rounding very small network usage values.
+            smallestYAxisMax: 10000,
+            datasets: volumeDataSets
+          });
+        }
 
         // Set to true when any data has been loaded (or failed to load).
         scope.loaded = false;
@@ -130,6 +146,18 @@ angular.module('openshiftConsole')
         // Show last hour by default.
         scope.options.timeRange = _.head(scope.options.rangeOptions);
 
+        function generateVolumeDataSets() {
+          angular.forEach(scope.pod.spec.volumes, function(volumeData) {
+            if (volumeData.persistentVolumeClaim !== undefined) {
+              volumeDataSets.push({
+                id: "filesystem/usage",
+                label: volumeData.name,
+                data: []
+              });
+            }
+          });
+        }
+        
         var createDonutConfig = function(metric) {
           var chartID = '#' + metric.chartPrefix + scope.uniqueID + '-donut';
           return {
