@@ -1,23 +1,29 @@
-<div class="deployment-tile" ng-class="{ 'deployment-in-progress': anyDeploymentInProgress }">
+<div class="deployment-tile" ng-class="{ 'deployment-in-progress': inProgressDeployment }">
   <ng-include src="'views/overview/_service-header.html'"></ng-include>
   <div class="deployment-header">
     <div class="rc-header">
       <div>
         Deployment
         <a ng-href="{{deploymentConfig | navigateResourceURL}}">{{dcName}}</a>
-        <small class="overview-timestamp" ng-if="activeDeployment && !anyDeploymentInProgress">
+        <small class="overview-timestamp" ng-if="activeDeployment && !inProgressDeployment">
           <span class="hidden-xs">&ndash;</span>
           <relative-timestamp timestamp="activeDeployment.metadata.creationTimestamp"></relative-timestamp>
         </small>
       </div>
       <div>
         <image-names
-            ng-if="activeDeployment && !anyDeploymentInProgress && showMetrics"
+            ng-if="activeDeployment && !inProgressDeployment && showMetrics"
             pod-template="activeDeployment.spec.template">
         </image-names>
-        <span ng-if="anyDeploymentInProgress" class="small">
+        <span ng-if="inProgressDeployment" class="small">
           {{deploymentConfig.spec.strategy.type}} <ellipsis-pulser color="dark" size="sm" display="inline" msg="deployment in progress"></ellipsis-pulser>
-          <a href="" ng-click="cancelDeployment()" role="button">Cancel</a>
+          <span ng-if="'deploymentconfigs/log' | canI : 'get'" class="deployment-log-link">
+            <a ng-href="{{inProgressDeployment | navigateResourceURL}}?tab=logs">View Log</a>
+            <span ng-if="'replicationcontrollers' | canI: 'update'" class="action-divider">|</span>
+          </span>
+          <span ng-if="'replicationcontrollers' | canI : 'update'" class="deployment-log-link">
+            <a href="" ng-click="cancelDeployment()" role="button">Cancel</a>
+          </span>
         </span>
       </div>
     </div>
@@ -47,7 +53,7 @@
     <!-- /all visible deployments -->
 
     <!-- deployment in progress (connecting arrow) -->
-    <div column class="overview-donut-connector" ng-class="{'contains-deployment-status-msg':deployments.length === 1}" ng-if="anyDeploymentInProgress">
+    <div column class="overview-donut-connector" ng-class="{'contains-deployment-status-msg':deployments.length === 1}" ng-if="inProgressDeployment">
       <div ng-if="deployments.length > 1" class="deployment-connector-arrow">
 
       </div>
@@ -55,15 +61,12 @@
         <status-icon status="deployments[0] | deploymentStatus" class="mar-right-xs"></status-icon>
         Deployment&nbsp;#{{deployments[0] | annotation : 'deploymentVersion'}}
         {{deployments[0] | deploymentStatus | lowercase}}
-        <div ng-if="'deploymentconfigs/log' | canI : 'get'" class="deployment-log-link">
-          <a ng-href="{{deployments[0] | navigateResourceURL}}?tab=logs">View Log</a>
-        </div>
       </div>
     </div>
     <!-- /deployment in progress (connecting arrow) -->
 
     <!-- cancelled/failed state -->
-    <div column class="overview-unsuccessful-state" ng-if="!activeDeployment && !anyDeploymentInProgress" ng-switch="deployments[0] | deploymentStatus">
+    <div column class="overview-unsuccessful-state" ng-if="!activeDeployment && !inProgressDeployment" ng-switch="deployments[0] | deploymentStatus">
       <div ng-switch-when="Cancelled">
         <span class="deployment-status-msg">
           <i class="fa fa-ban" aria-hidden="true"></i>
@@ -84,7 +87,7 @@
     <!-- /cancelled/failed state -->
 
     <!-- succeeded state -->
-    <div column class="deployment-details" ng-if="activeDeployment && !anyDeploymentInProgress">
+    <div column class="deployment-details" ng-if="activeDeployment && !inProgressDeployment">
       <!-- metrics or pod template -->
       <!-- pause metrics updates when the service group is collapsed -->
       <deployment-metrics

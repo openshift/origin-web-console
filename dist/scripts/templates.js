@@ -8049,24 +8049,30 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
 
 
   $templateCache.put('views/overview/_dc.html',
-    "<div class=\"deployment-tile\" ng-class=\"{ 'deployment-in-progress': anyDeploymentInProgress }\">\n" +
+    "<div class=\"deployment-tile\" ng-class=\"{ 'deployment-in-progress': inProgressDeployment }\">\n" +
     "<ng-include src=\"'views/overview/_service-header.html'\"></ng-include>\n" +
     "<div class=\"deployment-header\">\n" +
     "<div class=\"rc-header\">\n" +
     "<div>\n" +
     "Deployment\n" +
     "<a ng-href=\"{{deploymentConfig | navigateResourceURL}}\">{{dcName}}</a>\n" +
-    "<small class=\"overview-timestamp\" ng-if=\"activeDeployment && !anyDeploymentInProgress\">\n" +
+    "<small class=\"overview-timestamp\" ng-if=\"activeDeployment && !inProgressDeployment\">\n" +
     "<span class=\"hidden-xs\">&ndash;</span>\n" +
     "<relative-timestamp timestamp=\"activeDeployment.metadata.creationTimestamp\"></relative-timestamp>\n" +
     "</small>\n" +
     "</div>\n" +
     "<div>\n" +
-    "<image-names ng-if=\"activeDeployment && !anyDeploymentInProgress && showMetrics\" pod-template=\"activeDeployment.spec.template\">\n" +
+    "<image-names ng-if=\"activeDeployment && !inProgressDeployment && showMetrics\" pod-template=\"activeDeployment.spec.template\">\n" +
     "</image-names>\n" +
-    "<span ng-if=\"anyDeploymentInProgress\" class=\"small\">\n" +
+    "<span ng-if=\"inProgressDeployment\" class=\"small\">\n" +
     "{{deploymentConfig.spec.strategy.type}} <ellipsis-pulser color=\"dark\" size=\"sm\" display=\"inline\" msg=\"deployment in progress\"></ellipsis-pulser>\n" +
+    "<span ng-if=\"'deploymentconfigs/log' | canI : 'get'\" class=\"deployment-log-link\">\n" +
+    "<a ng-href=\"{{inProgressDeployment | navigateResourceURL}}?tab=logs\">View Log</a>\n" +
+    "<span ng-if=\"'replicationcontrollers' | canI: 'update'\" class=\"action-divider\">|</span>\n" +
+    "</span>\n" +
+    "<span ng-if=\"'replicationcontrollers' | canI : 'update'\" class=\"deployment-log-link\">\n" +
     "<a href=\"\" ng-click=\"cancelDeployment()\" role=\"button\">Cancel</a>\n" +
+    "</span>\n" +
     "</span>\n" +
     "</div>\n" +
     "</div>\n" +
@@ -8084,20 +8090,17 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "</div>\n" +
     "\n" +
     "\n" +
-    "<div column class=\"overview-donut-connector\" ng-class=\"{'contains-deployment-status-msg':deployments.length === 1}\" ng-if=\"anyDeploymentInProgress\">\n" +
+    "<div column class=\"overview-donut-connector\" ng-class=\"{'contains-deployment-status-msg':deployments.length === 1}\" ng-if=\"inProgressDeployment\">\n" +
     "<div ng-if=\"deployments.length > 1\" class=\"deployment-connector-arrow\">\n" +
     "</div>\n" +
     "<div ng-if=\"deployments.length === 1\" class=\"deployment-status-msg\">\n" +
     "<status-icon status=\"deployments[0] | deploymentStatus\" class=\"mar-right-xs\"></status-icon>\n" +
     "Deployment&nbsp;#{{deployments[0] | annotation : 'deploymentVersion'}} {{deployments[0] | deploymentStatus | lowercase}}\n" +
-    "<div ng-if=\"'deploymentconfigs/log' | canI : 'get'\" class=\"deployment-log-link\">\n" +
-    "<a ng-href=\"{{deployments[0] | navigateResourceURL}}?tab=logs\">View Log</a>\n" +
-    "</div>\n" +
     "</div>\n" +
     "</div>\n" +
     "\n" +
     "\n" +
-    "<div column class=\"overview-unsuccessful-state\" ng-if=\"!activeDeployment && !anyDeploymentInProgress\" ng-switch=\"deployments[0] | deploymentStatus\">\n" +
+    "<div column class=\"overview-unsuccessful-state\" ng-if=\"!activeDeployment && !inProgressDeployment\" ng-switch=\"deployments[0] | deploymentStatus\">\n" +
     "<div ng-switch-when=\"Cancelled\">\n" +
     "<span class=\"deployment-status-msg\">\n" +
     "<i class=\"fa fa-ban\" aria-hidden=\"true\"></i>\n" +
@@ -8117,7 +8120,7 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "</div>\n" +
     "\n" +
     "\n" +
-    "<div column class=\"deployment-details\" ng-if=\"activeDeployment && !anyDeploymentInProgress\">\n" +
+    "<div column class=\"deployment-details\" ng-if=\"activeDeployment && !inProgressDeployment\">\n" +
     "\n" +
     "\n" +
     "<deployment-metrics ng-if=\"showMetrics && !collapse\" pods=\"podsByDeployment[activeDeployment.metadata.name]\" containers=\"activeDeployment.spec.template.spec.containers\" compact class=\"overview-metrics\">\n" +
