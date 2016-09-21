@@ -4178,14 +4178,16 @@ message:"The image details could not be loaded.",
 details:"Reason: " + e("getErrorDetails")(b)
 };
 });
-}, 200);
-d.get(b.project).then(_.spread(function(d, f) {
-a.project = d, c.get("imagestreams", b.imagestream, f).then(function(d) {
-a.emptyMessage = "", h(d, f), i.push(c.watchObject("imagestreams", b.imagestream, f, function(b, c) {
-"DELETED" === c && (a.alerts.deleted = {
+}, 200), k = function(b, c, d) {
+h(b, c), a.emptyMessage = "", "DELETED" === d && (a.alerts.deleted = {
 type:"warning",
 message:"This image stream has been deleted."
-}), h(b, f);
+});
+};
+d.get(b.project).then(_.spread(function(d, f) {
+a.project = d, c.get("imagestreams", b.imagestream, f).then(function(a) {
+k(a, f), i.push(c.watchObject("imagestreams", b.imagestream, f, function(a, b) {
+k(a, f, b);
 }));
 }, function(b) {
 a.loaded = !0, a.alerts.load = {

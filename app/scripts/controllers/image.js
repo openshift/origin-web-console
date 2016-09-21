@@ -82,29 +82,29 @@ angular.module('openshiftConsole')
       fetchImageStreamTag(tagData, context);
     }
 
+    var imageStreamResolved = function(imageStream, context, action) {
+      populateWithImageStream(imageStream, context);
+      $scope.emptyMessage = "";
+      if (action === "DELETED") {
+        $scope.alerts["deleted"] = {
+          type: "warning",
+          message: "This image stream has been deleted."
+        };
+      }
+    };
+
     ProjectsService
       .get($routeParams.project)
       .then(_.spread(function(project, context) {
         $scope.project = project;
-        DataService.get("imagestreams", $routeParams.imagestream, context).then(
-          // success
-          function(imageStream) {
-            $scope.emptyMessage = "";
-            populateWithImageStream(imageStream, context);
-
-            // If we found the item successfully, watch for changes on it
+        DataService
+          .get("imagestreams", $routeParams.imagestream, context)
+          .then(function(imageStream) {
+            imageStreamResolved(imageStream, context);
             watches.push(DataService.watchObject("imagestreams", $routeParams.imagestream, context, function(imageStream, action) {
-              if (action === "DELETED") {
-                $scope.alerts["deleted"] = {
-                  type: "warning",
-                  message: "This image stream has been deleted."
-                };
-              }
-              populateWithImageStream(imageStream, context);
+              imageStreamResolved(imageStream, context, action);
             }));
-          },
-          // failure
-          function(e) {
+          }, function(e) {
             $scope.loaded = true;
             $scope.alerts["load"] = {
               type: "error",
