@@ -38656,7 +38656,7 @@ var e = d._existingLabels;
 if (!e[c]) return void a({});
 for (var f = 0; f < e[c].length; f++) b.push(e[c][f]);
 a(b);
-}), d._labelFilterOperatorSelectizeInput.css("display", "inline-flex");
+}), d._labelFilterOperatorSelectizeInput.css("display", "inline-block");
 var e = d._labelFilterOperatorSelectize.getValue();
 e ? c.focus() :d._labelFilterOperatorSelectize.focus();
 },
@@ -38691,7 +38691,7 @@ type:"not in",
 label:"not in ..."
 } ],
 onItemAdd:function(a, b) {
-return "exists" == a || "does not exist" == a ? void d._labelFilterAddBtn.removeClass("disabled").prop("disabled", !1).focus() :(d._labelFilterValuesSelectizeInput.css("display", "inline-flex"), void d._labelFilterValuesSelectize.focus());
+return "exists" == a || "does not exist" == a ? void d._labelFilterAddBtn.removeClass("disabled").prop("disabled", !1).focus() :(d._labelFilterValuesSelectizeInput.css("display", "inline-block"), void d._labelFilterValuesSelectize.focus());
 },
 onItemRemove:function(a) {
 d._labelFilterValuesSelectizeInput.hide(), d._labelFilterValuesSelectize.clear(), d._labelFilterAddBtn.addClass("disabled").prop("disabled", !0);

@@ -3,45 +3,38 @@
 ---------------------------------------------------------------------------- */
 
 .data-toolbar {
-  .flex(@columns: 1 1 0%);
-  .flex-direction(@direction: column);
-  .flex-display(@display: flex);
-  .flex-wrap(@wrap: wrap);
   padding: 5px 0;
   @media (min-width: @screen-sm-min) {
-    .flex-direction(@direction: row);
+    .flex-display(@display: flex);
   }
   // Set min-widths to prevent clipping when option lengths are known
   &.other-resources-toolbar .data-toolbar-dropdown {
-    min-width: 250px;
+    min-width: 210px;
   }
   .checkbox {
     margin-bottom: 0;
     margin-top: 10px;
-    width: 100%;
-    @media (min-width: 900px) {
+    @media (min-width: @screen-sm-min) {
       .flex(@columns: 1 1 0%);
+      margin-left: 20px;
       margin-top: 3px;
       text-align: right;
-      width: auto;
     }
   }
-  .data-toolbar-dropdown {
-    min-width: 160px;
-  }
   .data-toolbar-filter {
-    min-width: 75px;
     @media (min-width: @screen-sm-min) {
-      // Set flex rules so that filter expands in IE11
-      .flex-display(@display: flex);
-      .flex(@columns: 1 1 auto);
+      .flex(@columns: 1 1 0%);
+    }
+    @media (min-width: @screen-md-min) {
+      max-width: 600px;
+    }
+    .filter .navbar-filter-widget .label-filter .selectize-control .selectize-input {
+      &, & input {
+        font-size: @font-size-base;
+      }
     }
     .form-group {
       margin-bottom: 0;
-      min-width: 75px;
-      input {
-        width: 100%;
-      }
     }
   }
   // TODO:  remove this rule with https://github.com/openshift/origin-web-console/issues/220
@@ -52,27 +45,13 @@
       .flex(@columns: 0 1 auto);
     }
   }
-}
-
-project-filter {
-    // Set flex rules so that filter expands in IE11
-  .flex-display(@display: flex);
-  .flex(@columns: 1 0 0%);
-  .flex-direction(@direction: column);
-  @media (max-width: @screen-xs-max) {
-    min-width: initial;
-  }
-  .filter .navbar-filter-widget .label-filter  {
-    width: 100%;
+  .vertical-divider + .data-toolbar-filter {
+    margin-top: 10px;
     @media (min-width: @screen-sm-min) {
-      min-width: 50%;
-      width: auto;
-    }
-    @media (min-width: @screen-md-min) {
-      min-width: 30%;
+      margin-top: 0;
     }
   }
-  .label-filtering-remove-all {
-    background-color: @brand-primary !important;
-  }
+}
+.selectize-dropdown {
+  font-size: @font-size-base;
 }

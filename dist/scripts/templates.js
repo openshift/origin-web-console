@@ -4781,7 +4781,7 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
 
 
   $templateCache.put('views/directives/_project-filter.html',
-    "<div class=\"filter navbar-collapse-3 navbar-filter-widget-collapse\">\n" +
+    "<div class=\"filter\">\n" +
     "<div class=\"form-group\">\n" +
     "<label ng-if=\"!renderOptions || !renderOptions.hideFilterWidget\" class=\"control-label sr-only\">Filter by labels</label>\n" +
     "<div class=\"navbar-filter-widget\"></div>\n" +
