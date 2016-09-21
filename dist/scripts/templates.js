@@ -927,10 +927,7 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "<p ng-if=\"attach.resource\"><a ng-href=\"{{attach.resource | navigateResourceURL}}\">Back to {{kind | humanizeKind}} {{name}}</a></p>\n" +
     "</div>\n" +
     "<div class=\"row\" ng-show=\"pvcs && pvcs.length && attach.resource\">\n" +
-    "<div class=\"create-storage-icon col-md-2 gutter-top hidden-sm hidden-xs\">\n" +
-    "<span class=\"fa fa-hdd-o icon-xl\"></span>\n" +
-    "</div>\n" +
-    "<div class=\"col-md-8\">\n" +
+    "<div class=\"col-md-10 col-md-offset-1 gutter-top\">\n" +
     "<h1>Attach Storage</h1>\n" +
     "<div>\n" +
     "<span class=\"help-block\">\n" +
@@ -3643,10 +3640,7 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "<breadcrumbs breadcrumbs=\"breadcrumbs\"></breadcrumbs>\n" +
     "<alerts alerts=\"alerts\"></alerts>\n" +
     "<div class=\"row\">\n" +
-    "<div class=\"create-route-icon col-md-2 gutter-top hidden-sm hidden-xs\">\n" +
-    "<span class=\"fa fa-hdd-o icon-xl\"></span>\n" +
-    "</div>\n" +
-    "<div class=\"col-md-8\">\n" +
+    "<div class=\"col-md-10 col-md-offset-1 gutter-top\">\n" +
     "<h1>Request Storage</h1>\n" +
     "<div>\n" +
     "<span class=\"help-block\">\n" +
@@ -3750,10 +3744,7 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "<breadcrumbs breadcrumbs=\"breadcrumbs\"></breadcrumbs>\n" +
     "<alerts alerts=\"alerts\"></alerts>\n" +
     "<div class=\"row\">\n" +
-    "<div class=\"create-route-icon col-md-2 gutter-top hidden-sm hidden-xs\">\n" +
-    "<span class=\"pficon pficon-route icon-xl\"></span>\n" +
-    "</div>\n" +
-    "<div class=\"col-md-8\">\n" +
+    "<div class=\"col-md-10 col-md-offset-1 gutter-top\">\n" +
     "<h1>Create Route</h1>\n" +
     "<div>\n" +
     "<span class=\"help-block\">\n" +
@@ -7106,10 +7097,7 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "<breadcrumbs breadcrumbs=\"breadcrumbs\"></breadcrumbs>\n" +
     "<alerts alerts=\"alerts\"></alerts>\n" +
     "<div class=\"row\">\n" +
-    "<div class=\"create-route-icon col-md-2 gutter-top hidden-sm hidden-xs\">\n" +
-    "<span class=\"pficon pficon-route icon-xl\"></span>\n" +
-    "</div>\n" +
-    "<div class=\"col-md-8\">\n" +
+    "<div class=\"col-md-10 col-md-offset-1 gutter-top\">\n" +
     "<h1>Edit Route {{routeName}}</h1>\n" +
     "<div ng-if=\"loading\">\n" +
     "Loading...\n" +
