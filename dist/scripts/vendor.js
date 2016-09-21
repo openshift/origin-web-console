@@ -12670,6 +12670,153 @@ d[f.resolveAs || "$resolve"] = g, h(d);
 }
 var h, i, j = b.module("ngRoute", [ "ng" ]).provider("$route", d), k = b.$$minErr("ngRoute");
 j.provider("$routeParams", e), j.directive("ngView", f), j.directive("ngView", g), f.$inject = [ "$route", "$anchorScroll", "$animate" ], g.$inject = [ "$compile", "$controller", "$route" ];
+}(window, window.angular), function(a, b) {
+"use strict";
+function c() {
+function a(a, b, d, e) {
+return function(g, h, i) {
+var j = i.$normalize(b);
+!c[j] || f(h, d) || i[j] || g.$watch(i[a], function(a) {
+a = e ? !a :!!a, h.attr(b, a);
+});
+};
+}
+var c = {
+ariaHidden:!0,
+ariaChecked:!0,
+ariaReadonly:!0,
+ariaDisabled:!0,
+ariaRequired:!0,
+ariaInvalid:!0,
+ariaValue:!0,
+tabindex:!0,
+bindKeypress:!0,
+bindRoleForClick:!0
+};
+this.config = function(a) {
+c = b.extend(c, a);
+}, this.$get = function() {
+return {
+config:function(a) {
+return c[a];
+},
+$$watchExpr:a
+};
+};
+}
+var d = b.module("ngAria", [ "ng" ]).provider("$aria", c), e = [ "BUTTON", "A", "INPUT", "TEXTAREA", "SELECT", "DETAILS", "SUMMARY" ], f = function(a, b) {
+if (b.indexOf(a[0].nodeName) !== -1) return !0;
+};
+d.directive("ngShow", [ "$aria", function(a) {
+return a.$$watchExpr("ngShow", "aria-hidden", [], !0);
+} ]).directive("ngHide", [ "$aria", function(a) {
+return a.$$watchExpr("ngHide", "aria-hidden", [], !1);
+} ]).directive("ngValue", [ "$aria", function(a) {
+return a.$$watchExpr("ngValue", "aria-checked", e, !1);
+} ]).directive("ngChecked", [ "$aria", function(a) {
+return a.$$watchExpr("ngChecked", "aria-checked", e, !1);
+} ]).directive("ngReadonly", [ "$aria", function(a) {
+return a.$$watchExpr("ngReadonly", "aria-readonly", e, !1);
+} ]).directive("ngRequired", [ "$aria", function(a) {
+return a.$$watchExpr("ngRequired", "aria-required", e, !1);
+} ]).directive("ngModel", [ "$aria", function(a) {
+function b(b, c, d, g) {
+return a.config(c) && !d.attr(b) && (g || !f(d, e));
+}
+function c(a, b) {
+return !b.attr("role") && b.attr("type") === a && "INPUT" !== b[0].nodeName;
+}
+function d(a, b) {
+var c = a.type, d = a.role;
+return "checkbox" === (c || d) || "menuitemcheckbox" === d ? "checkbox" :"radio" === (c || d) || "menuitemradio" === d ? "radio" :"range" === c || "progressbar" === d || "slider" === d ? "range" :"";
+}
+return {
+restrict:"A",
+require:"ngModel",
+priority:200,
+compile:function(e, f) {
+var g = d(f, e);
+return {
+pre:function(a, b, c, d) {
+"checkbox" === g && (d.$isEmpty = function(a) {
+return a === !1;
+});
+},
+post:function(d, e, f, h) {
+function i() {
+return h.$modelValue;
+}
+function j(a) {
+var b = f.value == h.$viewValue;
+e.attr("aria-checked", b);
+}
+function k() {
+e.attr("aria-checked", !h.$isEmpty(h.$viewValue));
+}
+var l = b("tabindex", "tabindex", e, !1);
+switch (g) {
+case "radio":
+case "checkbox":
+c(g, e) && e.attr("role", g), b("aria-checked", "ariaChecked", e, !1) && d.$watch(i, "radio" === g ? j :k), l && e.attr("tabindex", 0);
+break;
+
+case "range":
+if (c(g, e) && e.attr("role", "slider"), a.config("ariaValue")) {
+var m = !e.attr("aria-valuemin") && (f.hasOwnProperty("min") || f.hasOwnProperty("ngMin")), n = !e.attr("aria-valuemax") && (f.hasOwnProperty("max") || f.hasOwnProperty("ngMax")), o = !e.attr("aria-valuenow");
+m && f.$observe("min", function(a) {
+e.attr("aria-valuemin", a);
+}), n && f.$observe("max", function(a) {
+e.attr("aria-valuemax", a);
+}), o && d.$watch(i, function(a) {
+e.attr("aria-valuenow", a);
+});
+}
+l && e.attr("tabindex", 0);
+}
+!f.hasOwnProperty("ngRequired") && h.$validators.required && b("aria-required", "ariaRequired", e, !1) && f.$observe("required", function() {
+e.attr("aria-required", !!f.required);
+}), b("aria-invalid", "ariaInvalid", e, !0) && d.$watch(function() {
+return h.$invalid;
+}, function(a) {
+e.attr("aria-invalid", !!a);
+});
+}
+};
+}
+};
+} ]).directive("ngDisabled", [ "$aria", function(a) {
+return a.$$watchExpr("ngDisabled", "aria-disabled", e, !1);
+} ]).directive("ngMessages", function() {
+return {
+restrict:"A",
+require:"?ngMessages",
+link:function(a, b, c, d) {
+b.attr("aria-live") || b.attr("aria-live", "assertive");
+}
+};
+}).directive("ngClick", [ "$aria", "$parse", function(a, b) {
+return {
+restrict:"A",
+compile:function(c, d) {
+var g = b(d.ngClick, null, !0);
+return function(b, c, d) {
+f(c, e) || (a.config("bindRoleForClick") && !c.attr("role") && c.attr("role", "button"), a.config("tabindex") && !c.attr("tabindex") && c.attr("tabindex", 0), a.config("bindKeypress") && !d.ngKeypress && c.on("keypress", function(a) {
+function c() {
+g(b, {
+$event:a
+});
+}
+var d = a.which || a.keyCode;
+32 !== d && 13 !== d || b.$apply(c);
+}));
+};
+}
+};
+} ]).directive("ngDblclick", [ "$aria", function(a) {
+return function(b, c, d) {
+!a.config("tabindex") || c.attr("tabindex") || f(c, e) || c.attr("tabindex", 0);
+};
+} ]);
 }(window, window.angular), angular.module("ui.bootstrap", [ "ui.bootstrap.tpls", "ui.bootstrap.collapse", "ui.bootstrap.accordion", "ui.bootstrap.alert", "ui.bootstrap.buttons", "ui.bootstrap.carousel", "ui.bootstrap.dateparser", "ui.bootstrap.position", "ui.bootstrap.datepicker", "ui.bootstrap.dropdown", "ui.bootstrap.stackedMap", "ui.bootstrap.modal", "ui.bootstrap.pagination", "ui.bootstrap.tooltip", "ui.bootstrap.popover", "ui.bootstrap.progressbar", "ui.bootstrap.rating", "ui.bootstrap.tabs", "ui.bootstrap.timepicker", "ui.bootstrap.typeahead" ]), angular.module("ui.bootstrap.tpls", [ "template/accordion/accordion-group.html", "template/accordion/accordion.html", "template/alert/alert.html", "template/carousel/carousel.html", "template/carousel/slide.html", "template/datepicker/datepicker.html", "template/datepicker/day.html", "template/datepicker/month.html", "template/datepicker/popup.html", "template/datepicker/year.html", "template/modal/backdrop.html", "template/modal/window.html", "template/pagination/pager.html", "template/pagination/pagination.html", "template/tooltip/tooltip-html-popup.html", "template/tooltip/tooltip-popup.html", "template/tooltip/tooltip-template-popup.html", "template/popover/popover-html.html", "template/popover/popover-template.html", "template/popover/popover.html", "template/progressbar/bar.html", "template/progressbar/progress.html", "template/progressbar/progressbar.html", "template/rating/rating.html", "template/tabs/tab.html", "template/tabs/tabset.html", "template/timepicker/timepicker.html", "template/typeahead/typeahead-match.html", "template/typeahead/typeahead-popup.html" ]), 
 angular.module("ui.bootstrap.collapse", []).directive("uibCollapse", [ "$animate", "$injector", function(a, b) {
 var c = b.has("$animateCss") ? b.get("$animateCss") :null;

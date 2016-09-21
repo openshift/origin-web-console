@@ -11,6 +11,7 @@
  */
 angular
   .module('openshiftConsole', [
+    'ngAria',
     'ngAnimate',
     'ngCookies',
     'ngResource',
@@ -416,6 +417,13 @@ angular
       .otherwise({
         redirectTo: '/'
       });
+  })
+  .config(function($ariaProvider) {
+    $ariaProvider.config({
+      tabindex: false,
+      bindRoleForClick: false,
+      bindKeydown: false
+    });
   })
   .constant("API_CFG", _.get(window.OPENSHIFT_CONFIG, "api", {}))
   .constant("APIS_CFG", _.get(window.OPENSHIFT_CONFIG, "apis", {}))

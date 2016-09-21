@@ -267,7 +267,7 @@ label:"Uncategorized",
 description:""
 } ]
 } ]
-}, angular.module("openshiftConsole", [ "ngAnimate", "ngCookies", "ngResource", "ngRoute", "ngSanitize", "openshiftUI", "kubernetesUI", "registryUI.images", "ui.bootstrap", "patternfly.charts", "patternfly.sort", "openshiftConsoleTemplates", "ui.ace", "extension-registry", "as.sortable", "ui.select", "angular-inview", "angularMoment", "ab-base64" ]).config([ "$routeProvider", function(a) {
+}, angular.module("openshiftConsole", [ "ngAria", "ngAnimate", "ngCookies", "ngResource", "ngRoute", "ngSanitize", "openshiftUI", "kubernetesUI", "registryUI.images", "ui.bootstrap", "patternfly.charts", "patternfly.sort", "openshiftConsoleTemplates", "ui.ace", "extension-registry", "as.sortable", "ui.select", "angular-inview", "angularMoment", "ab-base64" ]).config([ "$routeProvider", function(a) {
 a.when("/", {
 templateUrl:"views/projects.html",
 controller:"ProjectsController"
@@ -553,6 +553,12 @@ redirectTo:"/project/:project/browse/rc/:rc"
 redirectTo:"/project/:project/browse/rc/:rc"
 }).otherwise({
 redirectTo:"/"
+});
+} ]).config([ "$ariaProvider", function(a) {
+a.config({
+tabindex:!1,
+bindRoleForClick:!1,
+bindKeydown:!1
 });
 } ]).constant("API_CFG", _.get(window.OPENSHIFT_CONFIG, "api", {})).constant("APIS_CFG", _.get(window.OPENSHIFT_CONFIG, "apis", {})).constant("AUTH_CFG", _.get(window.OPENSHIFT_CONFIG, "auth", {})).constant("LOGGING_URL", _.get(window.OPENSHIFT_CONFIG, "loggingURL")).constant("METRICS_URL", _.get(window.OPENSHIFT_CONFIG, "metricsURL")).constant("LIMIT_REQUEST_OVERRIDES", _.get(window.OPENSHIFT_CONFIG, "limitRequestOverrides")).constant("BREAKPOINTS", {
 screenXsMin:480,

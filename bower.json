@@ -12,6 +12,7 @@
     "angular-animate": "1.5.11",
     "angular-touch": "1.5.11",
     "angular-route": "1.5.11",
+    "angular-aria": "1.5.11",
     "angular-bootstrap": "0.14.3",
     "angular-patternfly": "3.21.0",
     "uri.js": "1.18.0",
