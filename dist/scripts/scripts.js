@@ -135,7 +135,8 @@ templateUrl:"views/pipelines.html",
 controller:"PipelinesController"
 }).when("/project/:project/browse/builds/:buildconfig", {
 templateUrl:"views/browse/build-config.html",
-controller:"BuildConfigController"
+controller:"BuildConfigController",
+reloadOnSearch:!1
 }).when("/project/:project/browse/pipelines/:buildconfig", {
 templateUrl:"views/browse/build-config.html",
 controller:"BuildConfigController",
@@ -157,12 +158,14 @@ resolve:{
 isPipeline:[ "$route", function(a) {
 a.current.params.isPipeline = !0;
 } ]
-}
+},
+reloadOnSearch:!1
 }).when("/project/:project/browse/builds/:buildconfig/:build", {
 templateUrl:function(a) {
 return "chromeless" === a.view ? "views/logs/chromeless-build-log.html" :"views/browse/build.html";
 },
-controller:"BuildController"
+controller:"BuildController",
+reloadOnSearch:!1
 }).when("/project/:project/browse/pipelines/:buildconfig/:build", {
 templateUrl:"views/browse/build.html",
 controller:"BuildController",
@@ -170,10 +173,12 @@ resolve:{
 isPipeline:[ "$route", function(a) {
 a.current.params.isPipeline = !0;
 } ]
-}
+},
+reloadOnSearch:!1
 }).when("/project/:project/browse/builds-noconfig/:build", {
 templateUrl:"views/browse/build.html",
-controller:"BuildController"
+controller:"BuildController",
+reloadOnSearch:!1
 }).when("/project/:project/browse/pipelines-noconfig/:build", {
 templateUrl:"views/browse/build.html",
 controller:"BuildController",
@@ -181,16 +186,19 @@ resolve:{
 isPipeline:[ "$route", function(a) {
 a.current.params.isPipeline = !0;
 } ]
-}
+},
+reloadOnSearch:!1
 }).when("/project/:project/browse/deployments", {
 templateUrl:"views/deployments.html",
 controller:"DeploymentsController"
 }).when("/project/:project/browse/deployment/:deployment", {
 templateUrl:"views/browse/deployment.html",
-controller:"DeploymentController"
+controller:"DeploymentController",
+reloadOnSearch:!1
 }).when("/project/:project/browse/dc/:deploymentconfig", {
 templateUrl:"views/browse/deployment-config.html",
-controller:"DeploymentConfigController"
+controller:"DeploymentConfigController",
+reloadOnSearch:!1
 }).when("/project/:project/browse/rs/:replicaSet", {
 templateUrl:"views/browse/replica-set.html",
 resolve:{
@@ -198,7 +206,8 @@ kind:function() {
 return "ReplicaSet";
 }
 },
-controller:"ReplicaSetController"
+controller:"ReplicaSetController",
+reloadOnSearch:!1
 }).when("/project/:project/browse/rc/:replicaSet", {
 templateUrl:function(a) {
 return "chromeless" === a.view ? "views/logs/chromeless-deployment-log.html" :"views/browse/replica-set.html";
@@ -208,7 +217,8 @@ kind:function() {
 return "ReplicationController";
 }
 },
-controller:"ReplicaSetController"
+controller:"ReplicaSetController",
+reloadOnSearch:!1
 }).when("/project/:project/browse/events", {
 templateUrl:"views/events.html",
 controller:"EventsController"
@@ -220,7 +230,8 @@ templateUrl:"views/browse/imagestream.html",
 controller:"ImageStreamController"
 }).when("/project/:project/browse/images/:imagestream/:tag", {
 templateUrl:"views/browse/image.html",
-controller:"ImageController"
+controller:"ImageController",
+reloadOnSearch:!1
 }).when("/project/:project/browse/pods", {
 templateUrl:"views/pods.html",
 controller:"PodsController"
@@ -228,13 +239,15 @@ controller:"PodsController"
 templateUrl:function(a) {
 return "chromeless" === a.view ? "views/logs/chromeless-pod-log.html" :"views/browse/pod.html";
 },
-controller:"PodController"
+controller:"PodController",
+reloadOnSearch:!1
 }).when("/project/:project/browse/services", {
 templateUrl:"views/services.html",
 controller:"ServicesController"
 }).when("/project/:project/browse/services/:service", {
 templateUrl:"views/browse/service.html",
-controller:"ServiceController"
+controller:"ServiceController",
+reloadOnSearch:!1
 }).when("/project/:project/browse/storage", {
 templateUrl:"views/storage.html",
 controller:"StorageController"
@@ -267,7 +280,8 @@ templateUrl:"views/attach-pvc.html",
 controller:"AttachPVCController"
 }).when("/project/:project/create", {
 templateUrl:"views/create.html",
-controller:"CreateController"
+controller:"CreateController",
+reloadOnSearch:!1
 }).when("/project/:project/create/fromtemplate", {
 templateUrl:"views/newfromtemplate.html",
 controller:"NewFromTemplateController"
@@ -3164,7 +3178,7 @@ title:c.pod
 } ], a.terminalDisconnectAlert.disconnect = {
 type:"warning",
 message:"This terminal has been disconnected. If you reconnect, your terminal history will be lost."
-}, a.noContainersYet = !0, a.selectedTab = {}, c.tab && (a.selectedTab[c.tab] = !0);
+}, a.noContainersYet = !0, a.selectedTab = {};
 var k = [];
 h.isAvailable().then(function(b) {
 a.metricsAvailable = b;
@@ -3977,7 +3991,7 @@ a.alerts[b.name] = b.data;
 }), d.clearAlerts(), a.aceLoaded = function(a) {
 var b = a.getSession();
 b.setOption("tabSize", 2), b.setOption("useSoftTabs", !0), a.$blockScrolling = 1 / 0;
-}, c.tab && (a.selectedTab = {}, a.selectedTab[c.tab] = !0);
+};
 var j = b("orderObjectsByDate"), k = b("buildConfigForBuild"), l = b("buildStrategy"), m = [], n = function(c) {
 a.updatedBuildConfig = angular.copy(c), a.envVars = l(a.updatedBuildConfig).env || [], _.each(a.envVars, function(a) {
 b("altTextForValueFrom")(a);
@@ -4093,7 +4107,7 @@ title:c.buildconfig,
 link:"project/" + c.project + "/browse/builds/" + c.buildconfig
 })), a.breadcrumbs.push({
 title:c.build
-}), c.tab && (a.selectedTab = {}, a.selectedTab[c.tab] = !0);
+});
 var h = [], i = function(b) {
 a.logCanRun = !_.includes([ "New", "Pending", "Error" ], b.status.phase);
 }, j = function() {
@@ -4185,7 +4199,7 @@ title:b.imagestream,
 link:"project/" + b.project + "/browse/images/" + b.imagestream
 }, {
 title:":" + b.tag
-} ], a.emptyMessage = "Loading...", b.tab && (a.selectedTab = {}, a.selectedTab[b.tab] = !0);
+} ], a.emptyMessage = "Loading...";
 var i = [], j = _.debounce(function(d, f) {
 var h = b.imagestream + ":" + b.tag;
 c.get("imagestreamtags", h, f).then(function(b) {
@@ -4337,7 +4351,7 @@ title:"Deployments",
 link:"project/" + c.project + "/browse/deployments"
 }, {
 title:c.deployment
-} ], a.emptyMessage = "Loading...", a.healthCheckURL = i.healthCheckURL(c.project, "Deployment", c.deployment, "extensions"), c.tab && (a.selectedTab = {}, a.selectedTab[c.tab] = !0), d.getAlerts().forEach(function(b) {
+} ], a.emptyMessage = "Loading...", a.healthCheckURL = i.healthCheckURL(c.project, "Deployment", c.deployment, "extensions"), d.getAlerts().forEach(function(b) {
 a.alerts[b.name] = b.data;
 }), d.clearAlerts();
 var m = function(c) {
@@ -4445,7 +4459,7 @@ a.projectName = c.project, a.deploymentConfigName = c.deploymentconfig, a.deploy
 name:c.deploymentconfig,
 kind:"DeploymentConfig",
 namespace:c.project
-}), a.emptyMessage = "Loading...", a.healthCheckURL = j.healthCheckURL(c.project, "DeploymentConfig", c.deploymentconfig), c.tab && (a.selectedTab = {}, a.selectedTab[c.tab] = !0), d.getAlerts().forEach(function(b) {
+}), a.emptyMessage = "Loading...", a.healthCheckURL = j.healthCheckURL(c.project, "DeploymentConfig", c.deploymentconfig), d.getAlerts().forEach(function(b) {
 a.alerts[b.name] = b.data;
 }), d.clearAlerts();
 var p = function(c) {
@@ -4582,7 +4596,7 @@ case "ReplicationController":
 a.resource = "replicationcontrollers", a.healthCheckURL = l.healthCheckURL(c.project, "ReplicationController", c.replicaSet);
 }
 var q = {};
-a.projectName = c.project, a.kind = n, a.deployment = null, a.deploymentConfig = null, a.deploymentConfigMissing = !1, a.deployments = {}, a.imagesByDockerReference = {}, a.builds = {}, a.alerts = {}, a.renderOptions = a.renderOptions || {}, a.renderOptions.hideFilterWidget = !0, a.forms = {}, c.tab && (a.selectedTab = {}, a.selectedTab[c.tab] = !0), a.logOptions = {}, d.getAlerts().forEach(function(b) {
+a.projectName = c.project, a.kind = n, a.deployment = null, a.deploymentConfig = null, a.deploymentConfigMissing = !1, a.deployments = {}, a.imagesByDockerReference = {}, a.builds = {}, a.alerts = {}, a.renderOptions = a.renderOptions || {}, a.renderOptions.hideFilterWidget = !0, a.forms = {}, a.logOptions = {}, d.getAlerts().forEach(function(b) {
 a.alerts[b.name] = b.data;
 }), d.clearAlerts();
 var r = [];
@@ -6135,7 +6149,7 @@ title:d.projectName,
 link:"project/" + d.projectName
 }, {
 title:"Add to Project"
-} ], d.selectedTab = {}, c.tab && (d.selectedTab[c.tab] = !0), d.filterTag = function(a) {
+} ], d.filterTag = function(a) {
 d.filter.tag = a;
 }, d.$watch("filter", v, !0), f.get(c.project).then(_.spread(function(a, b) {
 d.project = a, d.context = b, d.breadcrumbs[0].title = m("displayName")(a), e.list("templates", b, function(a) {
@@ -7893,7 +7907,22 @@ a.$eval(c.onEnter);
 }), b.preventDefault());
 });
 };
-}), angular.module("openshiftConsole").directive("labels", [ "$location", "$timeout", "LabelFilter", function(a, b, c) {
+}).directive("persistTabState", [ "$routeParams", "$location", function(a, b) {
+return {
+restrict:"A",
+scope:!1,
+link:function(c) {
+c.selectedTab = c.selectedTab || {}, a.tab && (c.selectedTab[a.tab] = !0), c.$watch("selectedTab", function() {
+var a = _.keys(_.pick(c.selectedTab, function(a) {
+return a;
+}));
+1 === a.length && b.replace().search({
+tab:a[0]
+});
+}, !0);
+}
+};
+} ]), angular.module("openshiftConsole").directive("labels", [ "$location", "$timeout", "LabelFilter", function(a, b, c) {
 return {
 restrict:"E",
 scope:{

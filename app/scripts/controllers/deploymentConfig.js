@@ -44,12 +44,6 @@ angular.module('openshiftConsole')
                                                     "DeploymentConfig",
                                                     $routeParams.deploymentconfig);
 
-    // Check for a ?tab=<name> query param to allow linking directly to a tab.
-    if ($routeParams.tab) {
-      $scope.selectedTab = {};
-      $scope.selectedTab[$routeParams.tab] = true;
-    }
-
     // get and clear any alerts
     AlertMessageService.getAlerts().forEach(function(alert) {
       $scope.alerts[alert.name] = alert.data;
@@ -130,7 +124,7 @@ angular.module('openshiftConsole')
               }
               $scope.deploymentConfig = deploymentConfig;
 
-              if (!$scope.forms.dcEnvVars || $scope.forms.dcEnvVars.$pristine) { 
+              if (!$scope.forms.dcEnvVars || $scope.forms.dcEnvVars.$pristine) {
                 copyDeploymentConfigAndEnsureEnv(deploymentConfig);
               } else {
                 $scope.alerts["background_update"] = {

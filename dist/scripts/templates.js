@@ -1502,7 +1502,7 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "<labels labels=\"buildConfig.metadata.labels\" clickable=\"true\" kind=\"builds\" title-kind=\"build configs\" project-name=\"{{buildConfig.metadata.namespace}}\" limit=\"3\"></labels>\n" +
     "</div>\n" +
     "</div>\n" +
-    "<div class=\"middle-content\">\n" +
+    "<div class=\"middle-content\" persist-tab-state>\n" +
     "<div class=\"container-fluid\">\n" +
     "<div class=\"row\" ng-if=\"loaded\">\n" +
     "<div class=\"col-md-12\" ng-class=\"{ 'hide-tabs' : !buildConfig }\">\n" +
@@ -1881,7 +1881,7 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "</div>\n" +
     "</div>\n" +
     "</div>\n" +
-    "<div class=\"middle-content\">\n" +
+    "<div class=\"middle-content\" persist-tab-state>\n" +
     "<div class=\"container-fluid\">\n" +
     "<div class=\"row\" ng-if=\"build\">\n" +
     "<div class=\"col-md-12\">\n" +
@@ -1992,7 +1992,7 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "</div>\n" +
     "</div>\n" +
     "</div>\n" +
-    "<div class=\"middle-content\">\n" +
+    "<div class=\"middle-content\" persist-tab-state>\n" +
     "<div class=\"container-fluid\">\n" +
     "<div class=\"row\" ng-if=\"loaded\">\n" +
     "<div class=\"col-md-12\" ng-class=\"{ 'hide-tabs' : !deploymentConfig }\">\n" +
@@ -2232,7 +2232,7 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "</div>\n" +
     "</div>\n" +
     "</div>\n" +
-    "<div class=\"middle-content\">\n" +
+    "<div class=\"middle-content\" persist-tab-state>\n" +
     "<div class=\"container-fluid\">\n" +
     "<div class=\"row\" ng-if=\"loaded\">\n" +
     "<div class=\"col-md-12\" ng-class=\"{ 'hide-tabs' : !deployment }\">\n" +
@@ -2413,7 +2413,7 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "</div>\n" +
     "</div>\n" +
     "</div>\n" +
-    "<div class=\"middle-content gutter-top\">\n" +
+    "<div class=\"middle-content gutter-top\" persist-tab-state>\n" +
     "<div class=\"container-fluid\">\n" +
     "<div class=\"row\" ng-if=\"image\">\n" +
     "<div class=\"col-md-12\">\n" +
@@ -2727,7 +2727,7 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "</div>\n" +
     "</div>\n" +
     "</div>\n" +
-    "<div class=\"middle-content\">\n" +
+    "<div class=\"middle-content\" persist-tab-state>\n" +
     "<div class=\"container-fluid\">\n" +
     "<div class=\"row\" ng-if=\"pod\">\n" +
     "<div class=\"col-md-12\">\n" +
@@ -2865,7 +2865,7 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "</div>\n" +
     "</div>\n" +
     "</div>\n" +
-    "<div class=\"middle-content\">\n" +
+    "<div class=\"middle-content\" persist-tab-state>\n" +
     "<div class=\"container-fluid\">\n" +
     "<div class=\"row\" ng-if=\"deployment\">\n" +
     "<div class=\"col-md-12\">\n" +
@@ -3259,7 +3259,7 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "</div>\n" +
     "</div>\n" +
     "</div>\n" +
-    "<div class=\"middle-content\">\n" +
+    "<div class=\"middle-content\" persist-tab-state>\n" +
     "<div class=\"container-fluid\">\n" +
     "<div class=\"row\" ng-if=\"service\">\n" +
     "<div class=\"col-md-12\">\n" +
@@ -3775,7 +3775,7 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "\n" +
     "<div class=\"middle-section\">\n" +
     "<div class=\"middle-container\">\n" +
-    "<div class=\"middle-content\">\n" +
+    "<div class=\"middle-content\" persist-tab-state>\n" +
     "<div class=\"container surface-shaded\">\n" +
     "<breadcrumbs breadcrumbs=\"breadcrumbs\"></breadcrumbs>\n" +
     "<alerts alerts=\"alerts\"></alerts>\n" +

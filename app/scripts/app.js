@@ -77,7 +77,8 @@ angular
       })
       .when('/project/:project/browse/builds/:buildconfig', {
         templateUrl: 'views/browse/build-config.html',
-        controller: 'BuildConfigController'
+        controller: 'BuildConfigController',
+        reloadOnSearch: false
       })
       .when('/project/:project/browse/pipelines/:buildconfig', {
         templateUrl: 'views/browse/build-config.html',
@@ -103,7 +104,8 @@ angular
           isPipeline: function ($route) {
             $route.current.params.isPipeline = true;
           }
-        }
+        },
+        reloadOnSearch: false
       })
       .when('/project/:project/browse/builds/:buildconfig/:build', {
         templateUrl: function(params) {
@@ -113,7 +115,8 @@ angular
 
           return 'views/browse/build.html';
         },
-        controller: 'BuildController'
+        controller: 'BuildController',
+        reloadOnSearch: false
       })
       .when('/project/:project/browse/pipelines/:buildconfig/:build', {
         templateUrl: 'views/browse/build.html',
@@ -122,13 +125,15 @@ angular
           isPipeline: function ($route) {
             $route.current.params.isPipeline = true;
           }
-        }
+        },
+        reloadOnSearch: false
       })
       // For when a build is missing a buildconfig label
       // Needs to still be prefixed with browse/builds so the secondary nav active state is correct
       .when('/project/:project/browse/builds-noconfig/:build', {
         templateUrl: 'views/browse/build.html',
-        controller: 'BuildController'
+        controller: 'BuildController',
+        reloadOnSearch: false
       })
       .when('/project/:project/browse/pipelines-noconfig/:build', {
         templateUrl: 'views/browse/build.html',
@@ -137,7 +142,8 @@ angular
           isPipeline: function ($route) {
             $route.current.params.isPipeline = true;
           }
-        }
+        },
+        reloadOnSearch: false
       })
       .when('/project/:project/browse/deployments', {
         templateUrl: 'views/deployments.html',
@@ -146,11 +152,13 @@ angular
       // Can't be /deployments/ (plural) because we used that previously for deployment config URLs. See redirect below.
       .when('/project/:project/browse/deployment/:deployment', {
         templateUrl: 'views/browse/deployment.html',
-        controller: 'DeploymentController'
+        controller: 'DeploymentController',
+        reloadOnSearch: false
       })
       .when('/project/:project/browse/dc/:deploymentconfig', {
         templateUrl: 'views/browse/deployment-config.html',
-        controller: 'DeploymentConfigController'
+        controller: 'DeploymentConfigController',
+        reloadOnSearch: false
       })
       .when('/project/:project/browse/rs/:replicaSet', {
         templateUrl: 'views/browse/replica-set.html',
@@ -160,7 +168,8 @@ angular
             return 'ReplicaSet';
           }
         },
-        controller: 'ReplicaSetController'
+        controller: 'ReplicaSetController',
+        reloadOnSearch: false
       })
       .when('/project/:project/browse/rc/:replicaSet', {
         templateUrl: function(params) {
@@ -176,7 +185,8 @@ angular
             return 'ReplicationController';
           }
         },
-        controller: 'ReplicaSetController'
+        controller: 'ReplicaSetController',
+        reloadOnSearch: false
       })
       .when('/project/:project/browse/events', {
         templateUrl: 'views/events.html',
@@ -192,7 +202,8 @@ angular
       })
       .when('/project/:project/browse/images/:imagestream/:tag', {
         templateUrl: 'views/browse/image.html',
-        controller: 'ImageController'
+        controller: 'ImageController',
+        reloadOnSearch: false
       })
       .when('/project/:project/browse/pods', {
         templateUrl: 'views/pods.html',
@@ -206,7 +217,8 @@ angular
 
           return 'views/browse/pod.html';
         },
-        controller: 'PodController'
+        controller: 'PodController',
+        reloadOnSearch: false
       })
       .when('/project/:project/browse/services', {
         templateUrl: 'views/services.html',
@@ -214,7 +226,8 @@ angular
       })
       .when('/project/:project/browse/services/:service', {
         templateUrl: 'views/browse/service.html',
-        controller: 'ServiceController'
+        controller: 'ServiceController',
+        reloadOnSearch: false
       })
       .when('/project/:project/browse/storage', {
         templateUrl: 'views/storage.html',
@@ -258,7 +271,8 @@ angular
       })
       .when('/project/:project/create', {
         templateUrl: 'views/create.html',
-        controller: 'CreateController'
+        controller: 'CreateController',
+        reloadOnSearch: false
       })
       .when('/project/:project/create/fromtemplate', {
         templateUrl: 'views/newfromtemplate.html',

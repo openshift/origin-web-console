@@ -178,4 +178,25 @@ angular.module('openshiftConsole')
         }
       });
     };
+  })
+  // To use this directive on a page you must have reloadOnSearch:false set on the route in app.js
+  .directive('persistTabState', function($routeParams, $location) {
+    return {
+      restrict: 'A',
+      scope: false,
+      link: function(scope) {
+        scope.selectedTab = scope.selectedTab || {};
+        if ($routeParams.tab) {
+          scope.selectedTab[$routeParams.tab] = true;
+        }
+
+        scope.$watch('selectedTab', function() {
+          var selected = _.keys(_.pick(scope.selectedTab, function(active) {return active;}));
+          // When the tabs are transitioning we briefly see two tabs set to true
+          if (selected.length === 1) {
+            $location.replace().search({tab: selected[0]});
+          }
+        }, true);
+      }
+    };
   });

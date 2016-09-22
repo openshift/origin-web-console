@@ -63,7 +63,7 @@
             <labels labels="buildConfig.metadata.labels" clickable="true" kind="builds" title-kind="build configs" project-name="{{buildConfig.metadata.namespace}}" limit="3"></labels>
           </div>
         </div><!-- /middle-header-->
-        <div class="middle-content">
+        <div class="middle-content" persist-tab-state>
           <div class="container-fluid">
             <div class="row" ng-if="loaded">
               <div class="col-md-12" ng-class="{ 'hide-tabs' : !buildConfig }">
