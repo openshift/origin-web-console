@@ -58,11 +58,7 @@
                          ng-class="{ 'disabled-link': !canBuild }">Rebuild</a>
                     </li>
                     <li ng-if="('builds' | canI : 'update')">
-                      <edit-link
-                        resource="build"
-                        kind="Build"
-                        alerts="alerts">
-                      </edit-link>
+                      <a ng-href="{{build | editYamlURL}}" role="button">Edit YAML</a>
                     </li>
                     <li ng-if="('builds' | canI : 'delete')">
                       <delete-link

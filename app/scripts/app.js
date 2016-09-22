@@ -61,7 +61,7 @@ angular
       .when('/project/:project/monitoring', {
         templateUrl: 'views/monitoring.html',
         controller: 'MonitoringController'
-      })         
+      })
       .when('/project/:project/browse', {
         redirectTo: function(params) {
           return '/project/' + encodeURIComponent(params.project) + "/browse/pods";  // TODO decide what subtab to default to here
@@ -87,6 +87,10 @@ angular
             $route.current.params.isPipeline = true;
           }
         }
+      })
+      .when('/project/:project/edit/yaml', {
+        templateUrl: 'views/edit/yaml.html',
+        controller: 'EditYAMLController'
       })
       .when('/project/:project/edit/builds/:buildconfig', {
         templateUrl: 'views/edit/build-config.html',

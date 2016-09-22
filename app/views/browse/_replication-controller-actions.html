@@ -33,11 +33,7 @@
       <a ng-href="{{healthCheckURL}}" role="button">Edit Health Checks</a>
     </li>
     <li ng-if="'replicationcontrollers' | canI : 'update'">
-      <edit-link
-        resource="deployment"
-        kind="ReplicationController"
-        alerts="alerts">
-      </edit-link>
+      <a ng-href="{{deployment | editYamlURL}}" role="button">Edit YAML</a>
     </li>
     <li ng-if="'replicationcontrollers' | canI : 'delete'">
       <delete-link

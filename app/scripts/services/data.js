@@ -525,6 +525,7 @@ DataService.prototype.createStream = function(resource, name, context, opts, isR
 //            pollInterval: in milliseconds, how long to wait between polling the server
 //                    only applies if poll=true.  Default is 5000.
 //            http:   similar to .get, etc. at this point, only used to pass http.params for filtering
+//            errorNotification: will popup an error notification if the API request fails (default true)
 // returns handle to the watch, needed to unwatch e.g.
 //        var handle = DataService.watch(resource,context,callback[,opts])
 //        DataService.unwatch(handle)
@@ -900,11 +901,14 @@ DataService.prototype.createStream = function(resource, name, context, opts, isR
         .success(function(data, status, headerFunc, config, statusText) {
           self._listOpComplete(key, resource, context, opts, data);
         }).error(function(data, status, headers, config) {
+          if (!_.get(opts, 'errorNotification', true)) {
+            return;
+          }
+
           var msg = "Failed to list " + resource;
           if (status !== 0) {
             msg += " (" + status + ")";
           }
-          // TODO would like to make this optional with an errorNotification option, see get for an example
           Notification.error(msg);
         });
       });
@@ -917,11 +921,14 @@ DataService.prototype.createStream = function(resource, name, context, opts, isR
       }).success(function(data, status, headerFunc, config, statusText) {
         self._listOpComplete(key, resource, context, opts, data);
       }).error(function(data, status, headers, config) {
+        if (!_.get(opts, 'errorNotification', true)) {
+          return;
+        }
+
         var msg = "Failed to list " + resource;
         if (status !== 0) {
           msg += " (" + status + ")";
         }
-        // TODO would like to make this optional with an errorNotification option, see get for an example
         Notification.error(msg);
       });
     }
@@ -1104,13 +1111,16 @@ DataService.prototype.createStream = function(resource, name, context, opts, isR
 
     // Don't reopen if we've failed this resource/context too many times
     if (this._isTooManyWebsocketRetries(key)) {
-      Notification.error("Server connection interrupted.", {
-        id: "websocket_retry_halted",
-        mustDismiss: true,
-        actions: {
-          refresh: {label: "Refresh", action: function() { window.location.reload(); }}
-        }
-      });
+      // Show an error notication unless disabled in opts.
+      if (_.get(opts, 'errorNotification', true)) {
+        Notification.error("Server connection interrupted.", {
+          id: "websocket_retry_halted",
+          mustDismiss: true,
+          actions: {
+            refresh: {label: "Refresh", action: function() { window.location.reload(); }}
+          }
+        });
+      }
       return;
     }
 

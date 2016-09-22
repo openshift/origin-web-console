@@ -23,11 +23,7 @@
       <a ng-href="{{healthCheckURL}}" role="button">Edit Health Checks</a>
     </li>
     <li ng-if="{ group: 'extensions', resource: 'replicasets' } | canI : 'update'">
-      <edit-link
-        resource="deployment"
-        kind="ReplicaSet"
-        alerts="alerts">
-      </edit-link>
+      <a ng-href="{{replicaSet | editYamlURL}}" role="button">Edit YAML</a>
     </li>
     <li ng-if="{ group: 'extensions', resource: 'replicasets' } | canI : 'delete'">
       <!-- TODO: Warn about replicas -->

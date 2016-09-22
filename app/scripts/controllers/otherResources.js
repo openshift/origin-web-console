@@ -12,7 +12,7 @@ angular.module('openshiftConsole')
     $scope.projectName = $routeParams.project;
     $scope.labelSuggestions = {};
     $scope.alerts = $scope.alerts || {};
-    $scope.emptyMessage = "Select a resource from the list above ...";  
+    $scope.emptyMessage = "Select a resource from the list above ...";
     $scope.kindSelector = {disabled: true};
     $scope.kinds = _.filter(APIService.availableKinds(), function(kind) {
       switch (kind.kind) {
@@ -41,11 +41,38 @@ angular.module('openshiftConsole')
       }
     });
 
+    $scope.getReturnURL = function() {
+      var kind = _.get($scope, 'kindSelector.selected.kind');
+      if (!kind) {
+        return '';
+      }
+
+      return URI.expand("project/{projectName}/browse/other?kind={kind}&group={group}", {
+        projectName: $routeParams.project,
+        kind: kind,
+        group: _.get($scope, 'kindSelector.selected.group', '')
+      }).toString();
+    };
+
     // get and clear any alerts
     AlertMessageService.getAlerts().forEach(function(alert) {
       $scope.alerts[alert.name] = alert.data;
     });
     AlertMessageService.clearAlerts();
+
+    var kindExists = function(kind, group) {
+      return _.some($scope.kinds, function(next) {
+        if (next.kind !== kind) {
+          return false;
+        }
+
+        if (!next.group && !group) {
+          return true;
+        }
+
+        return next.group === group;
+      });
+    };
 
     ProjectsService
       .get($routeParams.project)
@@ -65,6 +92,12 @@ angular.module('openshiftConsole')
         $scope.project = project;
         $scope.context = context;
         $scope.kindSelector.disabled = false;
+
+        // Optional query param to preselect a kind.
+        if ($routeParams.kind && kindExists($routeParams.kind, $routeParams.group)) {
+          _.set($scope, 'kindSelector.selected.kind', $routeParams.kind);
+          _.set($scope, 'kindSelector.selected.group', $routeParams.group || '');
+        }
       }));
 
     function updateFilterWarning() {
@@ -78,7 +111,7 @@ angular.module('openshiftConsole')
         delete $scope.alerts["resources"];
       }
     }
-    
+
     function loadKind() {
       var selected = $scope.kindSelector.selected;
       if (!selected) {
@@ -98,19 +131,19 @@ angular.module('openshiftConsole')
         $scope.resources = LabelFilter.getLabelSelector().select($scope.unfilteredResources);
         $scope.emptyMessage = "No " + APIService.kindToResource(selected.kind, true) + " to show";
         updateFilterWarning();
-      });   
+      });
     }
     $scope.loadKind = loadKind;
     $scope.$watch("kindSelector.selected", function() {
       $scope.alerts = {};
       loadKind();
     });
-    
+
     var humanizeKind = $filter("humanizeKind");
-    $scope.matchKind = function(kind, search) {     
+    $scope.matchKind = function(kind, search) {
       return humanizeKind(kind).toLowerCase().indexOf(search.toLowerCase()) !== -1;
     };
-      
+
     LabelFilter.onActiveFiltersChanged(function(labelSelector) {
       // trigger a digest loop
       $scope.$apply(function() {

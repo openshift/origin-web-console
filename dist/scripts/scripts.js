@@ -144,6 +144,9 @@ isPipeline:[ "$route", function(a) {
 a.current.params.isPipeline = !0;
 } ]
 }
+}).when("/project/:project/edit/yaml", {
+templateUrl:"views/edit/yaml.html",
+controller:"EditYAMLController"
 }).when("/project/:project/edit/builds/:buildconfig", {
 templateUrl:"views/edit/build-config.html",
 controller:"EditBuildConfigController"
@@ -1261,9 +1264,11 @@ namespace:g.metadata.name
 })
 }, d.http || {})).success(function(b, g, h, i, j) {
 f._listOpComplete(e, a, c, d, b);
-}).error(function(b, c, d, e) {
-var f = "Failed to list " + a;
-0 !== c && (f += " (" + c + ")"), h.error(f);
+}).error(function(b, c, e, f) {
+if (_.get(d, "errorNotification", !0)) {
+var g = "Failed to list " + a;
+0 !== c && (g += " (" + c + ")"), h.error(g);
+}
 });
 }) :b({
 method:"GET",
@@ -1271,9 +1276,11 @@ auth:{},
 url:this._urlForResource(a, null, c)
 }).success(function(b, g, h, i, j) {
 f._listOpComplete(e, a, c, d, b);
-}).error(function(b, c, d, e) {
-var f = "Failed to list " + a;
-0 !== c && (f += " (" + c + ")"), h.error(f);
+}).error(function(b, c, e, f) {
+if (_.get(d, "errorNotification", !0)) {
+var g = "Failed to list " + a;
+0 !== c && (g += " (" + c + ")"), h.error(g);
+}
 });
 }, m.prototype._listOpComplete = function(a, b, c, d, e) {
 e.items || console.warn("List request for " + b + " returned a null items array.  This is an invalid API response.");
@@ -1335,7 +1342,7 @@ if (e !== g) return void i.log("Skipping reopen, eventWS does not match register
 if (this._watchInFlight(f, !1), e.shouldClose) return void i.log("Skipping reopen, eventWS was explicitly closed", e);
 if (d.wasClean) return void i.log("Skipping reopen, clean close", d);
 if (!this._watchCallbacks(f).has()) return void i.log("Skipping reopen, no listeners registered for resource/context", a, b);
-if (this._isTooManyWebsocketRetries(f)) return void h.error("Server connection interrupted.", {
+if (this._isTooManyWebsocketRetries(f)) return void (_.get(c, "errorNotification", !0) && h.error("Server connection interrupted.", {
 id:"websocket_retry_halted",
 mustDismiss:!0,
 actions:{
@@ -1346,7 +1353,7 @@ window.location.reload();
 }
 }
 }
-});
+}));
 if (this._addWebsocketEvent(f, "close"), e.shouldRelist) {
 i.log("Relisting for resource/context", a, b);
 var j = this;
@@ -1954,6 +1961,17 @@ browsePath:c[a]
 },
 toResourceList:function(b, c) {
 a.url(this.resourceListURL(b, c));
+},
+yamlURL:function(a, b) {
+if (!a) return "";
+var c = g.parseGroupVersion(a.apiVersion);
+return URI.expand("project/{projectName}/edit/yaml?kind={kind}&name={name}&group={group}&returnURL={returnURL}", {
+projectName:a.metadata.namespace,
+kind:a.kind,
+name:a.metadata.name,
+group:c.group || "",
+returnURL:b || ""
+}).toString();
 },
 healthCheckURL:function(a, b, c, d) {
 return URI.expand("project/{projectName}/edit/health-checks?kind={kind}&name={name}&group={group}", {
@@ -4908,22 +4926,35 @@ return !1;
 default:
 return !0;
 }
-}), c.getAlerts().forEach(function(a) {
+}), b.getReturnURL = function() {
+var c = _.get(b, "kindSelector.selected.kind");
+return c ? URI.expand("project/{projectName}/browse/other?kind={kind}&group={group}", {
+projectName:a.project,
+kind:c,
+group:_.get(b, "kindSelector.selected.group", "")
+}).toString() :"";
+}, c.getAlerts().forEach(function(a) {
 b.alerts[a.name] = a.data;
-}), c.clearAlerts(), f.get(a.project).then(_.spread(function(a, c) {
+}), c.clearAlerts();
+var m = function(a, c) {
+return _.some(b.kinds, function(b) {
+return b.kind === a && (!b.group && !c || b.group === c);
+});
+};
+f.get(a.project).then(_.spread(function(c, e) {
 b.kinds = _.filter(b.kinds, function(a) {
 var c = {
 resource:j.kindToResource(a.kind),
 group:a.group || ""
 };
 return !!d.checkResource(c.resource) && d.canI(c, "list", b.projectName);
-}), b.project = a, b.context = c, b.kindSelector.disabled = !1;
+}), b.project = c, b.context = e, b.kindSelector.disabled = !1, a.kind && m(a.kind, a.group) && (_.set(b, "kindSelector.selected.kind", a.kind), _.set(b, "kindSelector.selected.group", a.group || ""));
 })), b.loadKind = l, b.$watch("kindSelector.selected", function() {
 b.alerts = {}, l();
 });
-var m = g("humanizeKind");
+var n = g("humanizeKind");
 b.matchKind = function(a, b) {
-return m(a).toLowerCase().indexOf(b.toLowerCase()) !== -1;
+return n(a).toLowerCase().indexOf(b.toLowerCase()) !== -1;
 }, h.onActiveFiltersChanged(function(a) {
 b.$apply(function() {
 b.resources = a.select(b.unfilteredResources), k();
@@ -5462,6 +5493,92 @@ details:a("getErrorDetails")(b)
 };
 }));
 };
+}));
+} ]), angular.module("openshiftConsole").controller("EditYAMLController", [ "$scope", "$filter", "$location", "$routeParams", "$window", "AlertMessageService", "APIService", "BreadcrumbsService", "DataService", "Navigate", "ProjectsService", function(a, b, c, d, e, f, g, h, i, j, k) {
+if (!d.kind || !d.name) return void j.toErrorPage("Kind or name parameter missing.");
+var l = b("humanizeKind");
+a.name = d.name, a.resourceURL = j.resourceURL(a.name, d.kind, d.project), a.breadcrumbs = [ {
+title:d.project,
+link:"project/" + d.project
+}, {
+title:d.name,
+link:d.returnURL
+}, {
+title:"Edit YAML"
+} ];
+var m = function() {
+return d.returnURL ? void c.url(d.returnURL) :void e.history.back();
+}, n = _.throttle(function() {
+a.$eval(function() {
+a.modified = !0;
+});
+}, 1e3);
+a.aceLoaded = function(a) {
+var b = a.getSession();
+b.setOption("tabSize", 2), b.setOption("useSoftTabs", !0), b.on("change", n);
+};
+var o = [];
+k.get(d.project).then(_.spread(function(c, e) {
+var h = {
+resource:g.kindToResource(d.kind),
+group:d.group
+};
+i.get(h, a.name, e).then(function(c) {
+var j = angular.copy(c);
+a.resource = j;
+var k = function(a) {
+return _.get(a, "metadata.resourceVersion");
+};
+j = angular.extend({
+apiVersion:j.apiVersion,
+kind:j.kind
+}, j), _.set(a, "editor.model", jsyaml.safeDump(j, {
+flowLevel:10
+})), a.save = function() {
+a.modified = !1;
+var c;
+try {
+c = jsyaml.safeLoad(a.editor.model);
+} catch (e) {
+return void (a.error = e);
+}
+if (c.kind !== j.kind) return void (a.error = {
+message:"Cannot change resource kind (original: " + j.kind + ", modified: " + (c.kind || "<unspecified>") + ")."
+});
+var h = g.objectToResourceGroupVersion(j), k = g.objectToResourceGroupVersion(c);
+return k ? k.group !== h.group ? void (a.error = {
+message:"Cannot change resource group (original: " + (h.group || "<none>") + ", modified: " + (k.group || "<none>") + ")."
+}) :g.apiInfo(k) ? (a.updatingNow = !0, void i.update(k, a.resource.metadata.name, c, {
+namespace:a.resource.metadata.namespace
+}).then(function() {
+f.addAlert({
+name:"edit-yaml",
+data:{
+type:"success",
+message:l(d.kind, !0) + " " + d.name + " was successfully updated."
+}
+}), m();
+}, function(c) {
+a.updatingNow = !1, a.error = {
+message:b("getErrorDetails")(c)
+};
+})) :void (a.error = {
+message:g.unsupportedObjectKindOrVersion(c)
+}) :void (a.error = {
+message:g.invalidObjectKindOrVersion(c)
+});
+}, a.cancel = function() {
+m();
+}, o.push(i.watchObject(h, a.name, e, function(b, c) {
+a.resourceChanged = k(b) !== k(j), a.resourceDeleted = "DELETED" === c;
+}, {
+errorNotification:!1
+}));
+}, function(a) {
+j.toErrorPage("Could not load " + l(d.kind) + " '" + d.name + "'. " + b("getErrorDetails")(a, !0));
+}), a.$on("$destroy", function() {
+i.unwatchAll(o);
+});
 }));
 } ]), angular.module("openshiftConsole").controller("CreateFromImageController", [ "$scope", "Logger", "$q", "$routeParams", "APIService", "DataService", "ProjectsService", "Navigate", "ApplicationGenerator", "LimitRangesService", "MetricsService", "HPAService", "TaskList", "failureObjectNameFilter", "$filter", "$parse", "SOURCE_URL_PATTERN", "keyValueEditorUtils", function(a, b, c, d, e, f, g, h, i, j, k, l, m, n, o, p, q, r) {
 var s = o("displayName"), t = o("humanize");
@@ -6254,70 +6371,6 @@ b.close("delete");
 }, a.cancel = function() {
 b.dismiss("cancel");
 };
-} ]), angular.module("openshiftConsole").controller("EditModalController", [ "$scope", "$filter", "$uibModalInstance", "APIService", "DataService", function(a, b, c, d, e) {
-var f = angular.copy(a.resource), g = function(a) {
-return _.get(a, "metadata.resourceVersion");
-};
-a.$watch("resource", function(b) {
-a.resourceChanged = g(b) !== g(f);
-}), f = angular.extend({
-apiVersion:f.apiVersion,
-kind:f.kind
-}, f), a.model = jsyaml.safeDump(f, {
-flowLevel:8
-});
-var h = _.throttle(function() {
-a.$eval(function() {
-a.modified = !0;
-});
-}, 1e3);
-a.aceLoaded = function(b) {
-var c = b.getSession();
-c.setOption("tabSize", 2), c.setOption("useSoftTabs", !0), b.getSession().on("change", h);
-var d = function() {
-var a = $(".modal-resource-edit .modal-header").outerHeight(), c = $(".modal-resource-edit .modal-footer").outerHeight(), d = window.innerHeight - a - c, e = Math.floor(.8 * d);
-$(".modal-resource-edit .editor").animate({
-height:e + "px"
-}, 30, function() {
-b.resize();
-});
-};
-setTimeout(d, 10);
-var e = _.debounce(d, 200);
-$(window).resize(e), a.$on("$destroy", function() {
-$(window).off("resize", e);
-});
-}, a.save = function() {
-a.modified = !1;
-var g;
-try {
-g = jsyaml.safeLoad(a.model);
-} catch (h) {
-return void (a.error = h);
-}
-if (_.isEqual(f, g)) return void c.close("no-changes");
-if (g.kind !== f.kind) return void (a.error = {
-message:"Cannot change resource kind (original: " + f.kind + ", modified: " + (g.kind || "<unspecified>") + ")."
-});
-var i = d.objectToResourceGroupVersion(f), j = d.objectToResourceGroupVersion(g);
-return j ? j.group !== i.group ? void (a.error = {
-message:"Cannot change resource group (original: " + (i.group || "<none>") + ", modified: " + (j.group || "<none>") + ")."
-}) :d.apiInfo(j) ? void e.update(d.kindToResource(a.kind), a.resource.metadata.name, g, {
-namespace:a.resource.metadata.namespace
-}).then(function() {
-c.close("save");
-}, function(c) {
-a.error = {
-message:b("getErrorDetails")(c)
-};
-}) :void (a.error = {
-message:d.unsupportedObjectKindOrVersion(g)
-}) :void (a.error = {
-message:d.invalidObjectKindOrVersion(g)
-});
-}, a.cancel = function() {
-c.dismiss("cancel");
-};
 } ]), angular.module("openshiftConsole").controller("DebugTerminalModalController", [ "$scope", "$filter", "$uibModalInstance", "container", "image", function(a, b, c, d, e) {
 a.container = d, a.image = e, a.$watch("debugPod.status.containerStatuses", function() {
 a.containerState = _.get(a, "debugPod.status.containerStatuses[0].state");
@@ -6556,51 +6609,6 @@ details:c("getErrorDetails")(a)
 });
 });
 }
-};
-}
-};
-} ]), angular.module("openshiftConsole").directive("editLink", [ "$uibModal", "Logger", function(a, b) {
-return {
-restrict:"E",
-scope:{
-resource:"=",
-kind:"@",
-alerts:"=?",
-success:"=?"
-},
-templateUrl:"views/directives/edit-link.html",
-replace:!0,
-link:function(c) {
-c.openEditModal = function() {
-c.alerts && delete c.alerts["edit-yaml"];
-var d = a.open({
-animation:!0,
-templateUrl:"views/modals/edit-resource.html",
-controller:"EditModalController",
-scope:c,
-size:"lg",
-backdrop:"static"
-});
-d.result.then(function(a) {
-if (c.alerts) switch (a) {
-case "no-changes":
-c.alerts["edit-yaml"] = {
-type:"warning",
-message:"There were no changes to " + c.resource.metadata.name + " to save. Edit cancelled."
-};
-break;
-
-case "save":
-c.success && c.success(), c.alerts["edit-yaml"] = {
-type:"success",
-message:c.resource.metadata.name + " was updated."
-};
-break;
-
-default:
-b.warn("Unknown edit modal result: " + a);
-}
-});
 };
 }
 };
@@ -11027,14 +11035,14 @@ return a ? a.replace(/^sha256:/, "") :a;
 return function(b, c) {
 return isNaN(c) ? b :a(b, c);
 };
-} ]).filter("getErrorDetails", function() {
-return function(a) {
-var b = a.data || {};
-if (b.message) return b.message;
-var c = a.status || b.status;
-return c ? "Status: " + c :"";
+} ]).filter("getErrorDetails", [ "upperFirstFilter", function(a) {
+return function(b, c) {
+var d = b.data || {};
+if (d.message) return c ? a(d.message) :d.message;
+var e = b.status || d.status;
+return e ? "Status: " + e :"";
 };
-}).filter("humanize", function() {
+} ]).filter("humanize", function() {
 return function(a) {
 return a.replace(/([a-z])([A-Z])/g, "$1 $2").replace(/\b([A-Z]+)([A-Z])([a-z])/, "$1 $2$3").replace(/^./, function(a) {
 return a.toUpperCase();
@@ -11067,6 +11075,10 @@ return a.configURLForResource(b, c);
 return function(b, c, d) {
 var e = a.resourceURL(b, c, d, "edit");
 return e;
+};
+} ]).filter("editYamlURL", [ "Navigate", function(a) {
+return function(b, c) {
+return a.yamlURL(b, c);
 };
 } ]).filter("join", function() {
 return function(a, b) {

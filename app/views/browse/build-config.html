@@ -46,11 +46,7 @@
                     <a ng-href="{{buildConfig | editResourceURL}}" role="button">Edit</a>
                   </li>
                   <li ng-if="'buildconfigs' | canI : 'update'">
-                    <edit-link
-                      resource="buildConfig"
-                      kind="BuildConfig"
-                      alerts="alerts">
-                    </edit-link>
+                    <a ng-href="{{buildConfig | editYamlURL}}" role="button">Edit YAML</a>
                   </li>
                   <li ng-if="'buildconfigs' | canI : 'delete'">
                     <delete-link
