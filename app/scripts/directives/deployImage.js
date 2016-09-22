@@ -167,7 +167,7 @@ angular.module("openshiftConsole")
               failure: "Failed to deploy image " + $scope.app.name + " to project " + $scope.project + "."
             };
             TaskList.clear();
-            TaskList.add(titles, {}, function() {
+            TaskList.add(titles, {}, $scope.project, function() {
               var d = $q.defer();
               DataService.batch(resources, $scope.context).then(function(result) {
                 var alerts, hasErrors = !_.isEmpty(result.failure);

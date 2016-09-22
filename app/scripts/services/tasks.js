@@ -27,12 +27,13 @@ angular.module('openshiftConsole')
 
   var taskList = new TaskList();
 
-  TaskList.prototype.add = function(titles, helpLinks, action) {
+  TaskList.prototype.add = function(titles, helpLinks, namespace, action) {
     // Set up the task
     var task = {
       status: "started",
       titles: titles,
-      helpLinks: helpLinks
+      helpLinks: helpLinks,
+      namespace: namespace
     };
 
     // Add the new task

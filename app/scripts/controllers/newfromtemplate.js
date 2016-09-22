@@ -194,7 +194,7 @@ angular.module('openshiftConsole')
 
               var helpLinks = getHelpLinks($scope.template);
               TaskList.clear();
-              TaskList.add(titles, helpLinks, function() {
+              TaskList.add(titles, helpLinks, $routeParams.project, function() {
                 var d = $q.defer();
                 DataService.batch(config.objects, context).then(
                   function(result) {

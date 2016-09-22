@@ -626,7 +626,7 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
 
   $templateCache.put('views/_tasks.html',
     "<div ng-controller=\"TasksController\">\n" +
-    "<div ng-repeat=\"task in tasks()\">\n" +
+    "<div ng-repeat=\"task in tasks()\" ng-if=\"!task.namespace || !projectName || task.namespace === projectName\">\n" +
     "<div class=\"tasks\" ng-class=\"hasTaskWithError() ? 'failure' : 'success'\">\n" +
     "<div class=\"row\">\n" +
     "<div class=\"col-md-12\">\n" +
@@ -645,14 +645,14 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "</ul>\n" +
     "</div>\n" +
     "<span>\n" +
-    "<a href=\"\" ng-click=\"expanded = !expanded\">\n" +
+    "<a href=\"\" ng-click=\"expanded = !expanded\" role=\"button\">\n" +
     "<span ng-hide=\"expanded\">Show details</span>\n" +
     "<span ng-show=\"expanded\">Hide details</span>\n" +
     "</a>\n" +
-    "<span class=\"action-divider\" aria-hidden=\"true\">|</span>\n" +
     "</span>\n" +
     "<span ng-show=\"task.status=='completed'\">\n" +
-    "<a href=\"\" ng-click=\"delete(task)\">\n" +
+    "<span class=\"action-divider\" aria-hidden=\"true\">|</span>\n" +
+    "<a href=\"\" ng-click=\"delete(task)\" role=\"button\">\n" +
     "Dismiss\n" +
     "</a>\n" +
     "</span>\n" +
