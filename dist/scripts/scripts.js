@@ -2739,6 +2739,15 @@ getHPAWarnings:s
 };
 } ]), angular.module("openshiftConsole").factory("PodsService", function() {
 return {
+getImageIDs:function(a, b) {
+var c = {};
+return _.each(a, function(a) {
+var d, e = _.get(a, "status.containerStatuses", []), f = _.find(e, {
+name:b
+});
+f && f.imageID && (d = f.imageID.replace(/^docker:\/\/sha256:/, ""), c[d] = !0);
+}), _.keys(c);
+},
 generateDebugPod:function(a, b) {
 var c = angular.copy(a), d = _.find(c.spec.containers, {
 name:b
@@ -9824,15 +9833,26 @@ message:"Deployment " + e + " no longer exists."
 };
 }
 };
-} ]), angular.module("openshiftConsole").directive("imageNames", function() {
+} ]), angular.module("openshiftConsole").directive("imageNames", [ "$filter", "PodsService", function(a, b) {
 return {
 restrict:"E",
 scope:{
-podTemplate:"="
+podTemplate:"=",
+pods:"="
 },
-templateUrl:"views/overview/_image-names.html"
+templateUrl:"views/overview/_image-names.html",
+link:function(c) {
+var d = a("imageSHA"), e = function() {
+var a = _.get(c, "podTemplate.spec.containers[0]");
+if (a) {
+var e = d(a.image);
+return e ? void (c.imageIDs = [ e ]) :void (c.imageIDs = b.getImageIDs(c.pods, a.name));
+}
 };
-}), angular.module("openshiftConsole").directive("istagSelect", [ "DataService", function(a) {
+c.$watchGroup([ "podTemplate", "pods" ], e);
+}
+};
+} ]), angular.module("openshiftConsole").directive("istagSelect", [ "DataService", function(a) {
 return {
 require:"^form",
 restrict:"E",
