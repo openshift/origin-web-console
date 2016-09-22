@@ -172,11 +172,10 @@
                           <div class="list-view-pf-additional-info">
                             <div class="list-view-pf-additional-info-item">
                               <span class="pficon fa-fw pficon-image"></span>
-                              <span>{{deployment.spec.template.spec.containers[0].image | imageStreamName}}</span>
-                              <span ng-if="sha = (deployment.spec.template.spec.containers[0].image | imageSHA)" title="{{sha}}">
-                                <span>@</span><span class="hash">{{sha | stripSHAPrefix | limitTo: 7}}</span>
-                              </span>
-                              <span ng-if="deployment.spec.template.spec.containers.length > 1"> and {{deployment.spec.template.spec.containers.length - 1}} other image<span ng-if="deployment.spec.template.spec.containers.length > 2">s</span></span>
+                              <image-names
+                                  pod-template="deployment.spec.template"
+                                  pods="podsByDeployment[deployment.metadata.name]">
+                              </image-names>
                             </div>
                           </div>
                         </div>
@@ -248,11 +247,7 @@
                           <div class="list-view-pf-additional-info">
                             <div class="list-view-pf-additional-info-item">
                               <span class="pficon fa-fw pficon-image"></span>
-                              <span>{{pod.spec.containers[0].image | imageStreamName}}</span>
-                              <span ng-if="sha = (pod.spec.containers[0].image | imageSHA)" title="{{sha}}">
-                                <span>@</span><span class="hash">{{sha | stripSHAPrefix | limitTo: 7}}</span>
-                              </span>
-                              <span ng-if="pod.spec.containers.length > 1" class="mar-left-xs">and {{pod.spec.containers.length - 1}} other image<span ng-if="pod.spec.containers.length > 2">s</span></span>
+                              <image-names pod-template="pod" pods="[pod]"></image-names>
                             </div>
                           </div>
                         </div>

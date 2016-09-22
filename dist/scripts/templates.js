@@ -7731,11 +7731,8 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "<div class=\"list-view-pf-additional-info\">\n" +
     "<div class=\"list-view-pf-additional-info-item\">\n" +
     "<span class=\"pficon fa-fw pficon-image\"></span>\n" +
-    "<span>{{deployment.spec.template.spec.containers[0].image | imageStreamName}}</span>\n" +
-    "<span ng-if=\"sha = (deployment.spec.template.spec.containers[0].image | imageSHA)\" title=\"{{sha}}\">\n" +
-    "<span>@</span><span class=\"hash\">{{sha | stripSHAPrefix | limitTo: 7}}</span>\n" +
-    "</span>\n" +
-    "<span ng-if=\"deployment.spec.template.spec.containers.length > 1\"> and {{deployment.spec.template.spec.containers.length - 1}} other image<span ng-if=\"deployment.spec.template.spec.containers.length > 2\">s</span></span>\n" +
+    "<image-names pod-template=\"deployment.spec.template\" pods=\"podsByDeployment[deployment.metadata.name]\">\n" +
+    "</image-names>\n" +
     "</div>\n" +
     "</div>\n" +
     "</div>\n" +
@@ -7792,11 +7789,7 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "<div class=\"list-view-pf-additional-info\">\n" +
     "<div class=\"list-view-pf-additional-info-item\">\n" +
     "<span class=\"pficon fa-fw pficon-image\"></span>\n" +
-    "<span>{{pod.spec.containers[0].image | imageStreamName}}</span>\n" +
-    "<span ng-if=\"sha = (pod.spec.containers[0].image | imageSHA)\" title=\"{{sha}}\">\n" +
-    "<span>@</span><span class=\"hash\">{{sha | stripSHAPrefix | limitTo: 7}}</span>\n" +
-    "</span>\n" +
-    "<span ng-if=\"pod.spec.containers.length > 1\" class=\"mar-left-xs\">and {{pod.spec.containers.length - 1}} other image<span ng-if=\"pod.spec.containers.length > 2\">s</span></span>\n" +
+    "<image-names pod-template=\"pod\" pods=\"[pod]\"></image-names>\n" +
     "</div>\n" +
     "</div>\n" +
     "</div>\n" +
@@ -8062,9 +8055,11 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "</small>\n" +
     "</div>\n" +
     "<div>\n" +
-    "<image-names ng-if=\"activeDeployment && !inProgressDeployment && showMetrics\" pod-template=\"activeDeployment.spec.template\">\n" +
+    "<div class=\"small truncate\">\n" +
+    "<image-names ng-if=\"activeDeployment && !inProgressDeployment && showMetrics\" pod-template=\"activeDeployment.spec.template\" pods=\"podsByDeployment[activeDeployment.metadata.name]\">\n" +
     "</image-names>\n" +
-    "<span ng-if=\"inProgressDeployment\" class=\"small\">\n" +
+    "</div>\n" +
+    "<div ng-if=\"inProgressDeployment\" class=\"small\">\n" +
     "{{deploymentConfig.spec.strategy.type}} <ellipsis-pulser color=\"dark\" size=\"sm\" display=\"inline\" msg=\"deployment in progress\"></ellipsis-pulser>\n" +
     "<span ng-if=\"'deploymentconfigs/log' | canI : 'get'\" class=\"deployment-log-link\">\n" +
     "<a ng-href=\"{{inProgressDeployment | navigateResourceURL}}?tab=logs\">View Log</a>\n" +
@@ -8073,7 +8068,7 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "<span ng-if=\"'replicationcontrollers' | canI : 'update'\" class=\"deployment-log-link\">\n" +
     "<a href=\"\" ng-click=\"cancelDeployment()\" role=\"button\">Cancel</a>\n" +
     "</span>\n" +
-    "</span>\n" +
+    "</div>\n" +
     "</div>\n" +
     "</div>\n" +
     "<div column flex class=\"shield\" ng-if=\"activeDeployment\" ng-class=\"{ 'shield-lg': (activeDeployment | annotation: 'deploymentVersion').length > 3 }\">\n" +
@@ -8135,13 +8130,11 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
 
 
   $templateCache.put('views/overview/_image-names.html',
-    "<div class=\"small\">\n" +
     "<span>{{podTemplate.spec.containers[0].image | imageStreamName}}</span>\n" +
-    "<span ng-if=\"sha = (podTemplate.spec.containers[0].image | imageSHA)\" title=\"{{sha}}\">\n" +
-    "<span class=\"hash\">{{sha | stripSHAPrefix | limitTo: 7}}</span>\n" +
+    "<span ng-repeat=\"id in imageIDs\" title=\"{{id}}\">\n" +
+    "<span class=\"hash\">{{id | stripSHAPrefix | limitTo: 7}}</span><span ng-if=\"!$last\">,</span>\n" +
     "</span>\n" +
-    "<span ng-if=\"podTemplate.spec.containers.length > 1\"> and {{podTemplate.spec.containers.length - 1}} other image<span ng-if=\"podTemplate.spec.containers.length > 2\">s</span></span>\n" +
-    "</div>"
+    "<span ng-if=\"podTemplate.spec.containers.length > 1\"> and {{podTemplate.spec.containers.length - 1}} other image<span ng-if=\"podTemplate.spec.containers.length > 2\">s</span></span>"
   );
 
 
@@ -8157,7 +8150,9 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "<relative-timestamp timestamp=\"pod.metadata.creationTimestamp\"></relative-timestamp>\n" +
     "</small>\n" +
     "</div>\n" +
-    "<image-names ng-if=\"showMetrics\" pod-template=\"pod\"></image-names>\n" +
+    "<div class=\"small truncate\">\n" +
+    "<image-names ng-if=\"showMetrics\" pod-template=\"pod\" pods=\"[pod]\"></image-names>\n" +
+    "</div>\n" +
     "</div>\n" +
     "<div row class=\"deployment-body\">\n" +
     "<div column class=\"overview-donut\">\n" +
@@ -8191,7 +8186,10 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "<relative-timestamp timestamp=\"deployment.metadata.creationTimestamp\"></relative-timestamp>\n" +
     "</small>\n" +
     "</div>\n" +
-    "<image-names ng-if=\"showMetrics\" pod-template=\"deployment.spec.template\"></image-names>\n" +
+    "<div class=\"small truncate\">\n" +
+    "<image-names ng-if=\"showMetrics\" pod-template=\"deployment.spec.template\" pods=\"podsByDeployment[deployment.metadata.name]\">\n" +
+    "</image-names>\n" +
+    "</div>\n" +
     "</div>\n" +
     "</div>\n" +
     "<div row class=\"deployment-body\">\n" +

@@ -10,7 +10,13 @@
           <relative-timestamp timestamp="deployment.metadata.creationTimestamp"></relative-timestamp>
         </small>
       </div>
-      <image-names ng-if="showMetrics" pod-template="deployment.spec.template"></image-names>
+      <div class="small truncate">
+        <image-names
+            ng-if="showMetrics"
+            pod-template="deployment.spec.template"
+            pods="podsByDeployment[deployment.metadata.name]">
+        </image-names>
+      </div>
     </div>
   </div>
   <div row class="deployment-body">

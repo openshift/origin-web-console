@@ -9,7 +9,9 @@
         <relative-timestamp timestamp="pod.metadata.creationTimestamp"></relative-timestamp>
       </small>
     </div>
-    <image-names ng-if="showMetrics" pod-template="pod"></image-names>
+    <div class="small truncate">
+      <image-names ng-if="showMetrics" pod-template="pod" pods="[pod]"></image-names>
+    </div>
   </div>
   <div row class="deployment-body">
     <div column class="overview-donut">
