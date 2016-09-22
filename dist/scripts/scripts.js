@@ -5234,7 +5234,9 @@ message:"An error occurred updating the build " + a.updatedBuildConfig.metadata.
 details:e("getErrorDetails")(b)
 };
 });
-};
+}, a.$on("$destroy", function() {
+c.unwatchAll(l);
+});
 } ]), angular.module("openshiftConsole").controller("EditAutoscalerController", [ "$scope", "$filter", "$routeParams", "$window", "APIService", "BreadcrumbsService", "DataService", "HPAService", "MetricsService", "Navigate", "ProjectsService", "keyValueEditorUtils", function(a, b, c, d, e, f, g, h, i, j, k, l) {
 if (!c.kind || !c.name) return void j.toErrorPage("Kind or name parameter missing.");
 var m = [ "Deployment", "DeploymentConfig", "HorizontalPodAutoscaler", "ReplicaSet", "ReplicationController" ];
