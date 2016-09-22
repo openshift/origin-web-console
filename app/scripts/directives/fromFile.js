@@ -109,11 +109,10 @@ angular.module("openshiftConsole")
             resourceCheckPromises.push(checkIfExists(item));
           });
 
-          if ($scope.errorOccured) {
-            return;
-          }
-
           $q.all(resourceCheckPromises).then(function() {
+            if ($scope.errorOccured) {
+              return;
+            }
             // If resource if Template and it doesn't exist in the project
             if ($scope.createResources.length === 1 && $scope.resourceList[0].kind === "Template") {
               openTemplateProcessModal();
