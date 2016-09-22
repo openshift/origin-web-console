@@ -5881,7 +5881,7 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "<div ng-if=\"model && showValues && supportsFileUpload\">\n" +
     "<pre ng-if=\"model && showValues && supportsFileUpload\" class=\"clipped scroll\">{{model}}</pre>\n" +
     "</div>\n" +
-    "<a href=\"\" ng-show=\"model || fileName\" ng-click=\"model = ''; fileName = ''\">Clear value</a>"
+    "<a href=\"\" ng-show=\"model || fileName\" class=\"clear-btn\" ng-click=\"cleanInputValues()\">Clear value</a>"
   );
 
 

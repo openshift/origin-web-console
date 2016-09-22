@@ -7067,7 +7067,7 @@ function h() {
 $(k).remove();
 }
 b.helpID = _.uniqueId("help-"), b.supportsFileUpload = window.File && window.FileReader && window.FileList && window.Blob, b.uploadError = !1;
-var i = b.dropZoneId ? $("#" + b.dropZoneId) :c, j = b.dropZoneId + "-drag-and-drop-zone", k = "#" + j, l = !1, m = !1;
+var i = b.dropZoneId ? $("#" + b.dropZoneId) :c, j = b.dropZoneId + "-drag-and-drop-zone", k = "#" + j, l = !1, m = !1, n = c.find("input[type=file]")[0];
 b.$watch("disabled", function() {
 b.disabled ? h() :(e(), d());
 }, !0), (_.isUndefined($._data($(document)[0], "events")) || _.isUndefined($._data($(document)[0], "events").drop)) && ($(document).on("drop.oscFileInput", function() {
@@ -7080,8 +7080,10 @@ return m = !0, $(".drag-and-drop-zone").addClass("show-drag-and-drop-zone"), !1;
 return m = !1, _.delay(function() {
 m || $(".drag-and-drop-zone").removeClass("show-drag-and-drop-zone");
 }, 200), !1;
-})), c.change(function() {
-f($("input[type=file]", this)[0].files[0]);
+})), b.cleanInputValues = function() {
+b.model = "", b.fileName = "", n.value = "";
+}, c.change(function() {
+f(n.files[0]);
 }), b.$on("$destroy", function() {
 $(k).off(), $(document).off("drop.oscFileInput").off("dragenter.oscFileInput").off("dragover.oscFileInput").off("dragleave.oscFileInput");
 });
