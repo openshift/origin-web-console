@@ -3807,7 +3807,7 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "Choose from web frameworks, databases, and other components to add content to your project.\n" +
     "<div class=\"filter-group\">\n" +
     "\n" +
-    "<label for=\"search\" class=\"sr-only\">Filter by keyword</label>\n" +
+    "<label for=\"search\" class=\"sr-only\">Filter by name, tag, or description</label>\n" +
     "\n" +
     "<div uib-dropdown uib-keyboard-nav class=\"btn-group pull-right\">\n" +
     "<button class=\"btn btn-default dropdown-toggle\" data-toggle=\"dropdown\" role=\"menu\">\n" +
@@ -3826,7 +3826,7 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "</div>\n" +
     "\n" +
     "<div style=\"overflow: hidden; padding-right: 10px\">\n" +
-    "<input ng-model=\"filter.keyword\" type=\"search\" id=\"search\" placeholder=\"Filter by keyword\" class=\"search-input form-control\" autocorrect=\"off\" autocapitalize=\"off\" spellcheck style=\"width: 100%\">\n" +
+    "<input ng-model=\"filter.keyword\" type=\"search\" id=\"search\" placeholder=\"Filter by name, tag, or description\" class=\"search-input form-control\" autocorrect=\"off\" autocapitalize=\"off\" spellcheck style=\"width: 100%\">\n" +
     "</div>\n" +
     "<div ng-if=\"filter.tag\">\n" +
     "Tagged with {{filter.tag}}.\n" +
