@@ -9,7 +9,7 @@ angular.module('openshiftConsole')
         childServices: '=',
         deploymentConfigsByService: '=',
         deploymentsByService: '=',
-        podsByDeployment: '=',
+        podsByOwnerUid: '=',
         collapsed: '='
       },
       templateUrl: 'views/directives/service-group-notifications.html',
@@ -76,9 +76,9 @@ angular.module('openshiftConsole')
           _.each(svcs, function(svc) {
             // Get notifications for deployments in this service group
             var svcName = _.get(svc, "metadata.name", '');
-            if ($scope.deploymentsByService && $scope.podsByDeployment) {
+            if ($scope.deploymentsByService && $scope.podsByOwnerUid) {
               _.each($scope.deploymentsByService[svcName], function(deployment) {
-                $filter('groupedPodWarnings')($scope.podsByDeployment[deployment.metadata.name], groupedPodWarnings);
+                $filter('groupedPodWarnings')($scope.podsByOwnerUid[deployment.metadata.uid], groupedPodWarnings);
               });
             }
           });
@@ -149,7 +149,7 @@ angular.module('openshiftConsole')
         $scope.$watch('deploymentConfigsByService', function() {
           setDCNotifications();
         });
-        $scope.$watchGroup(['podsByDeployment', 'deploymentsByService'], function() {
+        $scope.$watchGroup(['podsByOwnerUid', 'deploymentsByService'], function() {
           setDeploymentNotifications();
         });
       }

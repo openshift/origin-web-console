@@ -50,7 +50,7 @@
               </div>
 
               <!-- Unserviced DCs, RCs, and pods -->
-              <div row wrap ng-if="(monopodsByService[''] | hashSize) > 0 || (deploymentConfigsByService[''] | hashSize) > 0 || (deploymentsByService[''] | hashSize) > 0" class="unserviced-row">
+              <div row wrap ng-if="(monopodsByService[''] | hashSize) || (deploymentConfigsByService[''] | hashSize) || (deploymentsByService[''] | hashSize) || (replicaSetsByService[''] | hashSize)" class="unserviced-row">
                 <!-- unserviced DC -->
                 <div ng-repeat="(dcName, deploymentConfig) in deploymentConfigsByService[''] track by (deploymentConfig | uid)"
                     class="no-service"
@@ -66,6 +66,13 @@
                   <overview-replication-controller class="deployment-tile-wrapper"></overview-replication-controller>
                 </div>
                 <!-- /unserviced RC-->
+
+                <!-- unserviced RS -->
+                <div ng-repeat="deployment in replicaSetsByService[''] | orderObjectsByDate : true track by (deployment | uid)"
+                    class="no-service">
+                  <overview-replication-controller class="deployment-tile-wrapper"></overview-replication-controller>
+                </div>
+                <!-- /unserviced RS-->
 
                 <!-- unservice monopods -->
                 <div ng-repeat="pod in monopodsByService[''] | orderObjectsByDate : true track by (pod | uid)"
