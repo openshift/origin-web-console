@@ -22,11 +22,7 @@
                    data-toggle="dropdown"><i class="fa fa-ellipsis-v"></i><span class="sr-only">Actions</span></a>
                 <ul class="dropdown-menu actions action-button">
                   <li ng-if="'imagestreams' | canI : 'update'">
-                    <edit-link
-                      resource="imageStream"
-                      kind="ImageStream"
-                      alerts="alerts">
-                    </edit-link>
+                    <a ng-href="{{imageStream | editYamlURL}}" role="button">Edit YAML</a>
                   </li>
                   <li ng-if="'imagestreams' | canI : 'delete'">
                     <delete-link

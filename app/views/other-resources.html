@@ -55,24 +55,19 @@
                         </button>
                         <ul class="uib-dropdown-menu dropdown-menu-right" aria-labelledby="{{resource.metadata.name}}_actions">
                           <li ng-if="selectedResource | canI : 'update'">
-                              <edit-link
-                                resource="resource"
-                                kind="{{kindSelector.selected.kind}}"
-                                alerts="alerts"
-                                success="loadKind">
-                              </edit-link>
-                            </li>
-                            <li ng-if="selectedResource | canI : 'delete'">
-                              <delete-link
-                                kind="{{kindSelector.selected.kind}}"
-                                group="{{kindSelector.selected.group}}"
-                                resource-name="{{resource.metadata.name}}"
-                                project-name="{{resource.metadata.namespace}}"
-                                alerts="alerts"
-                                stay-on-current-page="true"
-                                success="loadKind">
-                              </delete-link>
-                            </li>
+                            <a ng-href="{{resource | editYamlURL : getReturnURL()}}" role="button">Edit YAML</a>
+                          </li>
+                          <li ng-if="selectedResource | canI : 'delete'">
+                            <delete-link
+                              kind="{{kindSelector.selected.kind}}"
+                              group="{{kindSelector.selected.group}}"
+                              resource-name="{{resource.metadata.name}}"
+                              project-name="{{resource.metadata.namespace}}"
+                              alerts="alerts"
+                              stay-on-current-page="true"
+                              success="loadKind">
+                            </delete-link>
+                          </li>
                         </ul>
                       </span>
                     </td>

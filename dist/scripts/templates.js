@@ -1265,8 +1265,7 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "<a ng-href=\"{{healthCheckURL}}\" role=\"button\">Edit Health Checks</a>\n" +
     "</li>\n" +
     "<li ng-if=\"{ group: 'extensions', resource: 'replicasets' } | canI : 'update'\">\n" +
-    "<edit-link resource=\"deployment\" kind=\"ReplicaSet\" alerts=\"alerts\">\n" +
-    "</edit-link>\n" +
+    "<a ng-href=\"{{replicaSet | editYamlURL}}\" role=\"button\">Edit YAML</a>\n" +
     "</li>\n" +
     "<li ng-if=\"{ group: 'extensions', resource: 'replicasets' } | canI : 'delete'\">\n" +
     "\n" +
@@ -1445,8 +1444,7 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "<a ng-href=\"{{healthCheckURL}}\" role=\"button\">Edit Health Checks</a>\n" +
     "</li>\n" +
     "<li ng-if=\"'replicationcontrollers' | canI : 'update'\">\n" +
-    "<edit-link resource=\"deployment\" kind=\"ReplicationController\" alerts=\"alerts\">\n" +
-    "</edit-link>\n" +
+    "<a ng-href=\"{{deployment | editYamlURL}}\" role=\"button\">Edit YAML</a>\n" +
     "</li>\n" +
     "<li ng-if=\"'replicationcontrollers' | canI : 'delete'\">\n" +
     "<delete-link kind=\"ReplicationController\" type-display-name=\"deployment\" resource-name=\"{{deployment.metadata.name}}\" project-name=\"{{deployment.metadata.namespace}}\" alerts=\"alerts\" replicas=\"deployment.status.replicas\" hpa-list=\"hpaForRS\" redirect-url=\"{{deployment | configURLForResource}}\">\n" +
@@ -1494,8 +1492,7 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "<a ng-href=\"{{buildConfig | editResourceURL}}\" role=\"button\">Edit</a>\n" +
     "</li>\n" +
     "<li ng-if=\"'buildconfigs' | canI : 'update'\">\n" +
-    "<edit-link resource=\"buildConfig\" kind=\"BuildConfig\" alerts=\"alerts\">\n" +
-    "</edit-link>\n" +
+    "<a ng-href=\"{{buildConfig | editYamlURL}}\" role=\"button\">Edit YAML</a>\n" +
     "</li>\n" +
     "<li ng-if=\"'buildconfigs' | canI : 'delete'\">\n" +
     "<delete-link kind=\"BuildConfig\" resource-name=\"{{buildConfig.metadata.name}}\" project-name=\"{{buildConfig.metadata.namespace}}\" alerts=\"alerts\">\n" +
@@ -1873,8 +1870,7 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "<a href=\"\" role=\"button\" ng-click=\"cloneBuild()\" ng-attr-aria-disabled=\"{{canBuild ? undefined : 'true'}}\" ng-class=\"{ 'disabled-link': !canBuild }\">Rebuild</a>\n" +
     "</li>\n" +
     "<li ng-if=\"('builds' | canI : 'update')\">\n" +
-    "<edit-link resource=\"build\" kind=\"Build\" alerts=\"alerts\">\n" +
-    "</edit-link>\n" +
+    "<a ng-href=\"{{build | editYamlURL}}\" role=\"button\">Edit YAML</a>\n" +
     "</li>\n" +
     "<li ng-if=\"('builds' | canI : 'delete')\">\n" +
     "<delete-link kind=\"Build\" resource-name=\"{{build.metadata.name}}\" project-name=\"{{build.metadata.namespace}}\" alerts=\"alerts\" redirect-url=\"{{build | configURLForResource}}\">\n" +
@@ -1984,8 +1980,7 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "<a ng-href=\"{{healthCheckURL}}\" role=\"button\">Edit Health Checks</a>\n" +
     "</li>\n" +
     "<li ng-if=\"'deploymentconfigs' | canI : 'update'\">\n" +
-    "<edit-link resource=\"deploymentConfig\" kind=\"DeploymentConfig\" alerts=\"alerts\">\n" +
-    "</edit-link>\n" +
+    "<a ng-href=\"{{deploymentConfig | editYamlURL}}\" role=\"button\">Edit YAML</a>\n" +
     "</li>\n" +
     "<li ng-if=\"'deploymentconfigs' | canI : 'delete'\">\n" +
     "<delete-link kind=\"DeploymentConfig\" resource-name=\"{{deploymentConfig.metadata.name}}\" project-name=\"{{deploymentConfig.metadata.namespace}}\" alerts=\"alerts\" hpa-list=\"autoscalers\">\n" +
@@ -2226,8 +2221,7 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "<a ng-href=\"{{healthCheckURL}}\" role=\"button\">Edit Health Checks</a>\n" +
     "</li>\n" +
     "<li ng-if=\"{ group: 'extensions', resource: 'deployments' } | canI : 'update'\">\n" +
-    "<edit-link resource=\"deployment\" kind=\"Deployment\" alerts=\"alerts\">\n" +
-    "</edit-link>\n" +
+    "<a ng-href=\"{{deployment | editYamlURL}}\" role=\"button\">Edit YAML</a>\n" +
     "</li>\n" +
     "<li ng-if=\"{ group: 'extensions', resource: 'deployments' } | canI : 'delete'\">\n" +
     "<delete-link kind=\"Deployment\" resource-name=\"{{deployment.metadata.name}}\" project-name=\"{{deployment.metadata.namespace}}\" alerts=\"alerts\" hpa-list=\"autoscalers\">\n" +
@@ -2480,8 +2474,7 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "<a href=\"\" class=\"dropdown-toggle actions-dropdown-kebab visible-xs-inline\" data-toggle=\"dropdown\"><i class=\"fa fa-ellipsis-v\"></i><span class=\"sr-only\">Actions</span></a>\n" +
     "<ul class=\"dropdown-menu actions action-button\">\n" +
     "<li ng-if=\"'imagestreams' | canI : 'update'\">\n" +
-    "<edit-link resource=\"imageStream\" kind=\"ImageStream\" alerts=\"alerts\">\n" +
-    "</edit-link>\n" +
+    "<a ng-href=\"{{imageStream | editYamlURL}}\" role=\"button\">Edit YAML</a>\n" +
     "</li>\n" +
     "<li ng-if=\"'imagestreams' | canI : 'delete'\">\n" +
     "<delete-link kind=\"ImageStream\" resource-name=\"{{imageStream.metadata.name}}\" project-name=\"{{imageStream.metadata.namespace}}\" alerts=\"alerts\">\n" +
@@ -2642,8 +2635,7 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "<a href=\"\" class=\"dropdown-toggle actions-dropdown-kebab visible-xs-inline\" data-toggle=\"dropdown\"><i class=\"fa fa-ellipsis-v\"></i><span class=\"sr-only\">Actions</span></a>\n" +
     "<ul class=\"dropdown-menu actions action-button\">\n" +
     "<li ng-if=\"!pvc.spec.volumeName\">\n" +
-    "<edit-link ng-if=\"'persistentvolumeclaims' | canI : 'update'\" resource=\"pvc\" kind=\"PersistentVolumeClaim\" alerts=\"alerts\">\n" +
-    "</edit-link>\n" +
+    "<a ng-href=\"{{pvc | editYamlURL}}\" role=\"button\">Edit YAML</a>\n" +
     "</li>\n" +
     "<li>\n" +
     "<delete-link ng-if=\"'persistentvolumeclaims' | canI : 'delete'\" kind=\"PersistentVolumeClaim\" resource-name=\"{{pvc.metadata.name}}\" project-name=\"{{pvc.metadata.namespace}}\" alerts=\"alerts\">\n" +
@@ -2721,8 +2713,7 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "<a ng-href=\"project/{{project.metadata.name}}/attach-pvc?deploymentconfig={{pod | annotation:'deploymentConfig'}}\" role=\"button\">Attach Storage</a>\n" +
     "</li>\n" +
     "<li ng-if=\"'pods' | canI : 'update'\">\n" +
-    "<edit-link resource=\"pod\" kind=\"Pod\" alerts=\"alerts\">\n" +
-    "</edit-link>\n" +
+    "<a ng-href=\"{{pod | editYamlURL}}\" role=\"button\">Edit YAML</a>\n" +
     "</li>\n" +
     "<li ng-if=\"'pods' | canI : 'delete'\">\n" +
     "<delete-link kind=\"Pod\" resource-name=\"{{pod.metadata.name}}\" project-name=\"{{pod.metadata.namespace}}\" alerts=\"alerts\">\n" +
@@ -2973,8 +2964,7 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "<a ng-href=\"{{route | editResourceURL}}\" role=\"button\">Edit</a>\n" +
     "</li>\n" +
     "<li ng-if=\"'routes' | canI : 'update'\">\n" +
-    "<edit-link resource=\"route\" kind=\"Route\" alerts=\"alerts\">\n" +
-    "</edit-link>\n" +
+    "<a ng-href=\"{{route | editYamlURL}}\" role=\"button\">Edit YAML</a>\n" +
     "</li>\n" +
     "<li ng-if=\"'routes' | canI : 'delete'\">\n" +
     "<delete-link kind=\"Route\" resource-name=\"{{route.metadata.name}}\" project-name=\"{{route.metadata.namespace}}\" alerts=\"alerts\">\n" +
@@ -3258,8 +3248,7 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "<a ng-href=\"project/{{project.metadata.name}}/create-route?service={{service.metadata.name}}\" role=\"button\">Create Route</a>\n" +
     "</li>\n" +
     "<li ng-if=\"'services' | canI : 'update'\">\n" +
-    "<edit-link resource=\"service\" kind=\"Service\" alerts=\"alerts\">\n" +
-    "</edit-link>\n" +
+    "<a ng-href=\"{{service | editYamlURL}}\" role=\"button\">Edit YAML</a>\n" +
     "</li>\n" +
     "<li ng-if=\"'services' | canI : 'delete'\">\n" +
     "<delete-link kind=\"Service\" resource-name=\"{{service.metadata.name}}\" project-name=\"{{service.metadata.namespace}}\" alerts=\"alerts\">\n" +
@@ -5165,11 +5154,6 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "<div ng-attr-id=\"{{metric.chartID}}\" class=\"metrics-sparkline\"></div>\n" +
     "</div>\n" +
     "</div>"
-  );
-
-
-  $templateCache.put('views/directives/edit-link.html',
-    "<a href=\"\" ng-click=\"openEditModal()\" role=\"button\">Edit YAML</a>"
   );
 
 
@@ -7136,6 +7120,57 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
   );
 
 
+  $templateCache.put('views/edit/yaml.html',
+    "<default-header class=\"top-header\"></default-header>\n" +
+    "<div class=\"wrap no-sidebar\">\n" +
+    "<div class=\"sidebar-left collapse navbar-collapse navbar-collapse-2\">\n" +
+    "<navbar-utility-mobile></navbar-utility-mobile>\n" +
+    "</div>\n" +
+    "<div class=\"middle surface-shaded edit-yaml\">\n" +
+    "\n" +
+    "<div class=\"middle-section\">\n" +
+    "<div class=\"middle-container\">\n" +
+    "<div class=\"middle-content\">\n" +
+    "<div class=\"container surface-shaded\">\n" +
+    "<breadcrumbs breadcrumbs=\"breadcrumbs\"></breadcrumbs>\n" +
+    "<alerts alerts=\"alerts\"></alerts>\n" +
+    "<div ng-if=\"!resource\" class=\"pad-top-md\">Loading...</div>\n" +
+    "<div ng-if=\"resource\" class=\"pad-top-md\">\n" +
+    "<h1 class=\"truncate\">Edit <span class=\"hidden-xs\">{{resource.kind | humanizeKind : true}}</span> {{resource.metadata.name}}</h1>\n" +
+    "<parse-error error=\"error\" ng-if=\"error\"></parse-error>\n" +
+    "<div ng-if=\"resourceChanged && !resourceDeleted && !updatingNow\" class=\"alert alert-warning\">\n" +
+    "<span class=\"pficon pficon-warning-triangle-o\" aria-hidden=\"true\"></span>\n" +
+    "<span class=\"sr-only\">Warning:</span>\n" +
+    "{{resource.kind | humanizeKind | upperFirst}} <strong>{{resource.metadata.name}}</strong> has changed since you started editing it. You'll need to copy any changes you've made and edit the {{resource.kind | humanizeKind}} again.\n" +
+    "</div>\n" +
+    "<div ng-if=\"resourceDeleted\" class=\"alert alert-warning\">\n" +
+    "<span class=\"pficon pficon-warning-triangle-o\" aria-hidden=\"true\"></span>\n" +
+    "<span class=\"sr-only\">Warning:</span>\n" +
+    "{{resource.kind | humanizeKind | upperFirst}} <strong>{{resource.metadata.name}}</strong> has been deleted since you started editing it.\n" +
+    "</div>\n" +
+    "\n" +
+    "<div ui-ace=\"{\n" +
+    "                mode: 'yaml',\n" +
+    "                theme: 'eclipse',\n" +
+    "                onLoad: aceLoaded,\n" +
+    "                rendererOptions: {\n" +
+    "                  showPrintMargin: false\n" +
+    "                }\n" +
+    "              }\" ng-model=\"editor.model\" class=\"editor ace-bordered yaml-mode\"></div>\n" +
+    "<div class=\"button-group mar-top-xl\">\n" +
+    "<button class=\"btn btn-lg btn-primary\" type=\"button\" ng-click=\"save()\" ng-disabled=\"!modified || resourceChanged || resourceDeleted || updatingNow\">Save</button>\n" +
+    "<button class=\"btn btn-lg btn-default\" type=\"button\" ng-disabled=\"updatingNow\" ng-click=\"cancel()\">Cancel</button>\n" +
+    "</div>\n" +
+    "</div>\n" +
+    "</div>\n" +
+    "</div>\n" +
+    "</div>\n" +
+    "</div>\n" +
+    "</div>\n" +
+    "</div>"
+  );
+
+
   $templateCache.put('views/events.html',
     "<project-header class=\"top-header\"></project-header>\n" +
     "<project-page>\n" +
@@ -7495,38 +7530,6 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "<button class=\"btn btn-lg btn-default\" type=\"button\" ng-click=\"cancel();\">Cancel</button>\n" +
     "</div>\n" +
     "</form>\n" +
-    "</div>"
-  );
-
-
-  $templateCache.put('views/modals/edit-resource.html',
-    "<div class=\"modal-resource-edit\">\n" +
-    "<div class=\"modal-header\">\n" +
-    "<h2>Edit <span class=\"hidden-xs\">{{resource.kind | humanizeKind : true}}</span> {{resource.metadata.name}}</h2>\n" +
-    "</div>\n" +
-    "<div class=\"modal-body\">\n" +
-    "\n" +
-    "<parse-error error=\"error\" ng-if=\"error\"></parse-error>\n" +
-    "<div ng-if=\"resourceChanged\" class=\"alert alert-warning\">\n" +
-    "<span class=\"pficon pficon-warning-triangle-o\" aria-hidden=\"true\"></span>\n" +
-    "<span class=\"sr-only\">Warning:</span>\n" +
-    "{{resource.kind | humanizeKind | upperFirst}} <strong>{{resource.metadata.name}}</strong> has changed since you started editing it. You'll need to copy any changes you've made and edit the {{resource.kind | humanizeKind}} again.\n" +
-    "</div>\n" +
-    "\n" +
-    "<div ui-ace=\"{\n" +
-    "      mode: 'yaml',\n" +
-    "      theme: 'eclipse',\n" +
-    "      onLoad: aceLoaded,\n" +
-    "      rendererOptions: {\n" +
-    "        fadeFoldWidgets: true,\n" +
-    "        showPrintMargin: false\n" +
-    "      }\n" +
-    "    }\" ng-model=\"model\" class=\"editor yaml-mode\"></div>\n" +
-    "</div>\n" +
-    "<div class=\"modal-footer\">\n" +
-    "<button class=\"btn btn-lg btn-primary\" type=\"button\" ng-click=\"save()\" ng-disabled=\"!modified || resourceChanged\">Save</button>\n" +
-    "<button class=\"btn btn-lg btn-default\" type=\"button\" ng-click=\"cancel()\">Cancel</button>\n" +
-    "</div>\n" +
     "</div>"
   );
 
@@ -7953,8 +7956,7 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "</button>\n" +
     "<ul class=\"uib-dropdown-menu dropdown-menu-right\" aria-labelledby=\"{{resource.metadata.name}}_actions\">\n" +
     "<li ng-if=\"selectedResource | canI : 'update'\">\n" +
-    "<edit-link resource=\"resource\" kind=\"{{kindSelector.selected.kind}}\" alerts=\"alerts\" success=\"loadKind\">\n" +
-    "</edit-link>\n" +
+    "<a ng-href=\"{{resource | editYamlURL : getReturnURL()}}\" role=\"button\">Edit YAML</a>\n" +
     "</li>\n" +
     "<li ng-if=\"selectedResource | canI : 'delete'\">\n" +
     "<delete-link kind=\"{{kindSelector.selected.kind}}\" group=\"{{kindSelector.selected.group}}\" resource-name=\"{{resource.metadata.name}}\" project-name=\"{{resource.metadata.namespace}}\" alerts=\"alerts\" stay-on-current-page=\"true\" success=\"loadKind\">\n" +

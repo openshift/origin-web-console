@@ -29,12 +29,7 @@
                    data-toggle="dropdown"><i class="fa fa-ellipsis-v"></i><span class="sr-only">Actions</span></a>
                 <ul class="dropdown-menu actions action-button">
                   <li ng-if="!pvc.spec.volumeName">
-                    <edit-link
-                      ng-if="'persistentvolumeclaims' | canI : 'update'"
-                      resource="pvc"
-                      kind="PersistentVolumeClaim"
-                      alerts="alerts">
-                    </edit-link>
+                    <a ng-href="{{pvc | editYamlURL}}" role="button">Edit YAML</a>
                   </li>
                   <li>
                     <delete-link

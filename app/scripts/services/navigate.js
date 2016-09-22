@@ -243,6 +243,21 @@ angular.module("openshiftConsole")
         $location.url(this.resourceListURL(resource, projectName));
       },
 
+      yamlURL: function(object, returnURL) {
+        if (!object) {
+          return '';
+        }
+
+        var groupVersion = APIService.parseGroupVersion(object.apiVersion);
+        return URI.expand("project/{projectName}/edit/yaml?kind={kind}&name={name}&group={group}&returnURL={returnURL}", {
+          projectName: object.metadata.namespace,
+          kind: object.kind,
+          name: object.metadata.name,
+          group: groupVersion.group || '',
+          returnURL: returnURL || ''
+        }).toString();
+      },
+
       healthCheckURL: function(projectName, kind, name, group) {
         return URI.expand("project/{projectName}/edit/health-checks?kind={kind}&name={name}&group={group}", {
           projectName: projectName,

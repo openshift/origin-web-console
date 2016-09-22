@@ -27,11 +27,7 @@
                          role="button">Attach Storage</a>
                     </li>
                     <li ng-if="'pods' | canI : 'update'">
-                      <edit-link
-                        resource="pod"
-                        kind="Pod"
-                        alerts="alerts">
-                      </edit-link>
+                      <a ng-href="{{pod | editYamlURL}}" role="button">Edit YAML</a>
                     </li>
                     <li ng-if="'pods' | canI : 'delete'">
                       <delete-link

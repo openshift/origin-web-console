@@ -338,11 +338,11 @@ angular.module('openshiftConsole')
       return limitToFilter(input, limit);
     };
   })
-  .filter("getErrorDetails", function() {
-    return function(result) {
+  .filter("getErrorDetails", function(upperFirstFilter) {
+    return function(result, capitalize) {
       var error = result.data || {};
       if (error.message) {
-        return error.message;
+        return capitalize ? upperFirstFilter(error.message) : error.message;
       }
 
       var status = result.status || error.status;
@@ -416,6 +416,11 @@ angular.module('openshiftConsole')
     return function(resource, kind, namespace) {
       var url = Navigate.resourceURL(resource, kind, namespace, "edit");
       return url;
+    };
+  })
+  .filter('editYamlURL', function(Navigate) {
+    return function(object, /* optional */ returnURL) {
+      return Navigate.yamlURL(object, returnURL);
     };
   })
   .filter('join', function() {

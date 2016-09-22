@@ -26,11 +26,7 @@
                        role="button">Create Route</a>
                   </li>
                   <li ng-if="'services' | canI : 'update'">
-                    <edit-link
-                      resource="service"
-                      kind="Service"
-                      alerts="alerts">
-                    </edit-link>
+                    <a ng-href="{{service | editYamlURL}}" role="button">Edit YAML</a>
                   </li>
                   <li ng-if="'services' | canI : 'delete'">
                     <delete-link
