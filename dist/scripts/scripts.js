@@ -7011,8 +7011,8 @@ add:!1
 var d = [];
 k.errorOccured = !1, _.forEach(k.resourceList, function(a) {
 return l(a) ? void d.push(q(a)) :(k.errorOccured = !0, !1);
-}), k.errorOccured || a.all(d).then(function() {
-1 === k.createResources.length && "Template" === k.resourceList[0].kind ? m() :_.isEmpty(k.updateResources) ? o() :n();
+}), a.all(d).then(function() {
+k.errorOccured || (1 === k.createResources.length && "Template" === k.resourceList[0].kind ? m() :_.isEmpty(k.updateResources) ? o() :n());
 });
 }
 };
