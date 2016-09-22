@@ -250,7 +250,7 @@ angular.module("openshiftConsole")
           var helpLinks = {};
 
           TaskList.clear();
-          TaskList.add(titles, helpLinks, function(){
+          TaskList.add(titles, helpLinks, $routeParams.project, function(){
             var d = $q.defer();
             DataService.batch(resources, context)
               //refactor these helpers to be common for 'newfromtemplate'

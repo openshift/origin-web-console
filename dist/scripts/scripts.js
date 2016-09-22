@@ -1994,15 +1994,16 @@ function b() {
 this.tasks = [];
 }
 var c = 6e4, d = new b();
-return b.prototype.add = function(b, e, f) {
-var g = {
+return b.prototype.add = function(b, e, f, g) {
+var h = {
 status:"started",
 titles:b,
-helpLinks:e
+helpLinks:e,
+namespace:f
 };
-this.tasks.push(g), f().then(function(b) {
-g.status = "completed", g.hasErrors = b.hasErrors || !1, g.alerts = b.alerts || [], g.hasErrors || a(function() {
-d.deleteTask(g);
+this.tasks.push(h), g().then(function(b) {
+h.status = "completed", h.hasErrors = b.hasErrors || !1, h.alerts = b.alerts || [], h.hasErrors || a(function() {
+d.deleteTask(h);
 }, c);
 });
 }, b.prototype.taskList = function() {
@@ -5697,12 +5698,12 @@ message:e.invalidObjectKindOrVersion(a)
 }), k--, void g());
 }), h.promise;
 }, y = function(b) {
-var d = {
+var e = {
 started:"Creating application " + a.name + " in project " + a.projectDisplayName(),
 success:"Created application " + a.name + " in project " + a.projectDisplayName(),
 failure:"Failed to create " + a.name + " in project " + a.projectDisplayName()
-}, e = {};
-m.clear(), m.add(d, e, function() {
+}, g = {};
+m.clear(), m.add(e, g, d.project, function() {
 var d = c.defer();
 return f.batch(b, n).then(function(b) {
 var c = [], e = !1;
@@ -5890,7 +5891,7 @@ failure:"Failed to create " + a.templateDisplayName() + " in project " + a.proje
 };
 e.setTemplateData(b.parameters, a.template.parameters, b.message);
 var i = y(a.template);
-j.clear(), j.add(g, i, function() {
+j.clear(), j.add(g, i, c.project, function() {
 var c = h.defer();
 return d.batch(b.objects, f).then(function(b) {
 var d = [], e = !1;
@@ -6907,7 +6908,7 @@ started:"Creating resources in project " + k.projectName,
 success:"Creating resources in project " + k.projectName,
 failure:"Failed to create some resources in project " + k.projectName
 }, c = {};
-h.add(b, c, function() {
+h.add(b, c, k.projectName, function() {
 var b = a.defer();
 return i.batch(k.createResources, k.context, "create").then(function(a) {
 var c = [], d = !1;
@@ -9943,7 +9944,7 @@ started:"Deploying image " + c.app.name + " to project " + c.project + ".",
 success:"Deployed image " + c.app.name + " to project " + c.project + ".",
 failure:"Failed to deploy image " + c.app.name + " to project " + c.project + "."
 };
-i.clear(), i.add(d, {}, function() {
+i.clear(), i.add(d, {}, c.project, function() {
 var d = b.defer();
 return e.batch(a, c.context).then(function(a) {
 var b, e = !_.isEmpty(a.failure);

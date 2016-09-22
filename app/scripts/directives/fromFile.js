@@ -314,7 +314,7 @@ angular.module("openshiftConsole")
             failure: "Failed to create some resources in project " + $scope.projectName
           };
           var helpLinks = {};
-          TaskList.add(titles, helpLinks, function() {
+          TaskList.add(titles, helpLinks, $scope.projectName, function() {
             var d = $q.defer();
 
             DataService.batch($scope.createResources, $scope.context, "create").then(
