@@ -41,12 +41,6 @@ angular.module('openshiftConsole')
                                                     $routeParams.deployment,
                                                     "extensions");
 
-    // Check for a ?tab=<name> query param to allow linking directly to a tab.
-    if ($routeParams.tab) {
-      $scope.selectedTab = {};
-      $scope.selectedTab[$routeParams.tab] = true;
-    }
-
     // get and clear any alerts
     AlertMessageService.getAlerts().forEach(function(alert) {
       $scope.alerts[alert.name] = alert.data;

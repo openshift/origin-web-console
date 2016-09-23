@@ -61,12 +61,6 @@ angular.module('openshiftConsole')
     $scope.renderOptions.hideFilterWidget = true;
     $scope.forms = {};
 
-    // Check for a ?tab=<name> query param to allow linking directly to a tab.
-    if ($routeParams.tab) {
-      $scope.selectedTab = {};
-      $scope.selectedTab[$routeParams.tab] = true;
-    }
-
     $scope.logOptions = {};
 
     // get and clear any alerts

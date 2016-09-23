@@ -45,12 +45,8 @@ angular.module('openshiftConsole')
 
     $scope.noContainersYet = true;
 
-    // Must always be initialized so we can check the selectedTab elsewhere
+    // Must always be initialized so we can watch selectedTab
     $scope.selectedTab = {};
-    // Check for a ?tab=<name> query param to allow linking directly to a tab.
-    if ($routeParams.tab) {
-      $scope.selectedTab[$routeParams.tab] = true;
-    }
 
     var watches = [];
 
@@ -195,7 +191,7 @@ angular.module('openshiftConsole')
 
     var updateContainersYet = function(pod) {
       if ($scope.noContainersYet) {
-        $scope.noContainersYet = $scope.containersRunning(pod.status.containerStatuses) === 0; 
+        $scope.noContainersYet = $scope.containersRunning(pod.status.containerStatuses) === 0;
       }
     };
 

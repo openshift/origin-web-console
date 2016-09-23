@@ -53,12 +53,6 @@ angular.module('openshiftConsole')
       editor.$blockScrolling = Infinity;
     };
 
-    // Check for a ?tab=<name> query param to allow linking directly to a tab.
-    if ($routeParams.tab) {
-      $scope.selectedTab = {};
-      $scope.selectedTab[$routeParams.tab] = true;
-    }
-
     var orderByDate = $filter('orderObjectsByDate');
     var buildConfigForBuild = $filter('buildConfigForBuild');
     var buildStrategy = $filter('buildStrategy');
@@ -122,7 +116,7 @@ angular.module('openshiftConsole')
             $scope.clearEnvVarUpdates = function() {
               copyBuildConfigAndEnsureEnv($scope.buildConfig);
               $scope.forms.bcEnvVars.$setPristine();
-            };            
+            };
 
             // If we found the item successfully, watch for changes on it
             watches.push(DataService.watchObject("buildconfigs", $routeParams.buildconfig, context, function(buildConfig, action) {
@@ -134,7 +128,7 @@ angular.module('openshiftConsole')
               }
               $scope.buildConfig = buildConfig;
 
-              if (!$scope.forms.bcEnvVars || $scope.forms.bcEnvVars.$pristine) { 
+              if (!$scope.forms.bcEnvVars || $scope.forms.bcEnvVars.$pristine) {
                 copyBuildConfigAndEnsureEnv(buildConfig);
               } else {
                 $scope.alerts["background_update"] = {

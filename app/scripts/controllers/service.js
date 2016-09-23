@@ -7,7 +7,11 @@
  * Controller of the openshiftConsole
  */
 angular.module('openshiftConsole')
-  .controller('ServiceController', function ($scope, $routeParams, DataService, ProjectsService, $filter) {
+  .controller('ServiceController', function ($scope,
+                                             $routeParams,
+                                             DataService,
+                                             ProjectsService,
+                                             $filter) {
     $scope.projectName = $routeParams.project;
     $scope.service = null;
     $scope.alerts = {};

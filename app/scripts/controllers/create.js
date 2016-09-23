@@ -99,12 +99,6 @@ angular.module('openshiftConsole')
       }
     ];
 
-    $scope.selectedTab = {};
-    // Check for a ?tab=<name> query param to allow linking directly to a tab.
-    if ($routeParams.tab) {
-      $scope.selectedTab[$routeParams.tab] = true;
-    }
-
     $scope.filterTag = function(tag) {
       $scope.filter.tag = tag;
     };

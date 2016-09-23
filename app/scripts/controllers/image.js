@@ -7,7 +7,13 @@
  * Controller of the openshiftConsole
  */
 angular.module('openshiftConsole')
-  .controller('ImageController', function ($scope, $routeParams, DataService, ProjectsService, $filter, ImageStreamsService, imageLayers) {
+  .controller('ImageController', function ($scope,
+                                           $routeParams,
+                                           DataService,
+                                           ProjectsService,
+                                           $filter,
+                                           ImageStreamsService,
+                                           imageLayers) {
     $scope.projectName = $routeParams.project;
     $scope.imageStream = null;
     $scope.image = null;
@@ -32,12 +38,6 @@ angular.module('openshiftConsole')
     ];
 
     $scope.emptyMessage = "Loading...";
-
-    // Check for a ?tab=<name> query param to allow linking directly to a tab.
-    if ($routeParams.tab) {
-      $scope.selectedTab = {};
-      $scope.selectedTab[$routeParams.tab] = true;
-    }
 
     var watches = [];
 
