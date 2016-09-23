@@ -8,7 +8,6 @@
         <div class="container-fluid">
           <breadcrumbs breadcrumbs="breadcrumbs"></breadcrumbs>
           <alerts alerts="alerts"></alerts>
-          <div ng-if="!loaded">Loading...</div>
           <div>
             <h1>
               {{name}}
@@ -65,6 +64,7 @@
       </div><!-- /middle-header-->
       <div class="middle-content">
         <div class="container-fluid">
+          <div ng-if="!loaded">Loading...</div>
           <div class="row" ng-if="loaded">
             <div class="col-md-12" ng-class="{ 'hide-tabs' : !deployment }">
               <uib-tabset>

@@ -10,7 +10,6 @@
               <span ng-if="buildConfig | isJenkinsPipelineStrategy" class="pad-top-md"><span class="label label-warning">Technology Preview</span></span>
             </div>
             <alerts alerts="alerts"></alerts>
-            <div ng-if="!loaded">Loading...</div>
             <h1>
               {{buildConfigName}}
               <span class="pficon pficon-warning-triangle-o"
@@ -65,6 +64,7 @@
         </div><!-- /middle-header-->
         <div class="middle-content">
           <div class="container-fluid">
+            <div ng-if="!loaded">Loading...</div>
             <div class="row" ng-if="loaded">
               <div class="col-md-12" ng-class="{ 'hide-tabs' : !buildConfig }">
                 <uib-tabset>

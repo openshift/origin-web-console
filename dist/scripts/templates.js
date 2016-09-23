@@ -1465,7 +1465,6 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "<span ng-if=\"buildConfig | isJenkinsPipelineStrategy\" class=\"pad-top-md\"><span class=\"label label-warning\">Technology Preview</span></span>\n" +
     "</div>\n" +
     "<alerts alerts=\"alerts\"></alerts>\n" +
-    "<div ng-if=\"!loaded\">Loading...</div>\n" +
     "<h1>\n" +
     "{{buildConfigName}}\n" +
     "<span class=\"pficon pficon-warning-triangle-o\" ng-if=\"paused\" aria-hidden=\"true\" data-toggle=\"tooltip\" data-original-title=\"Building from build configuration {{buildConfig.metadata.name}} has been paused.\">\n" +
@@ -1504,6 +1503,7 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "</div>\n" +
     "<div class=\"middle-content\">\n" +
     "<div class=\"container-fluid\">\n" +
+    "<div ng-if=\"!loaded\">Loading...</div>\n" +
     "<div class=\"row\" ng-if=\"loaded\">\n" +
     "<div class=\"col-md-12\" ng-class=\"{ 'hide-tabs' : !buildConfig }\">\n" +
     "<uib-tabset>\n" +
@@ -1841,7 +1841,7 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "<span ng-if=\"build | isJenkinsPipelineStrategy\" class=\"pad-top-md\"><span class=\"label label-warning\">Technology Preview</span></span>\n" +
     "</div>\n" +
     "<alerts alerts=\"alerts\"></alerts>\n" +
-    "<div ng-if=\"!loaded\">Loading...</div>\n" +
+    "<div ng-if=\"!loaded\" class=\"mar-top-xl\">Loading...</div>\n" +
     "<div ng-if=\"build\">\n" +
     "<h1>\n" +
     "{{build.metadata.name}}\n" +
@@ -1940,7 +1940,6 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "<div class=\"container-fluid\">\n" +
     "<breadcrumbs breadcrumbs=\"breadcrumbs\"></breadcrumbs>\n" +
     "<alerts alerts=\"alerts\"></alerts>\n" +
-    "<div ng-if=\"!loaded\">Loading...</div>\n" +
     "<div>\n" +
     "<h1>\n" +
     "{{deploymentConfigName}}\n" +
@@ -1994,6 +1993,7 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "</div>\n" +
     "<div class=\"middle-content\">\n" +
     "<div class=\"container-fluid\">\n" +
+    "<div ng-if=\"!loaded\">Loading...</div>\n" +
     "<div class=\"row\" ng-if=\"loaded\">\n" +
     "<div class=\"col-md-12\" ng-class=\"{ 'hide-tabs' : !deploymentConfig }\">\n" +
     "<uib-tabset>\n" +
@@ -2189,7 +2189,6 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "<div class=\"container-fluid\">\n" +
     "<breadcrumbs breadcrumbs=\"breadcrumbs\"></breadcrumbs>\n" +
     "<alerts alerts=\"alerts\"></alerts>\n" +
-    "<div ng-if=\"!loaded\">Loading...</div>\n" +
     "<div>\n" +
     "<h1>\n" +
     "{{name}}\n" +
@@ -2234,6 +2233,7 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "</div>\n" +
     "<div class=\"middle-content\">\n" +
     "<div class=\"container-fluid\">\n" +
+    "<div ng-if=\"!loaded\">Loading...</div>\n" +
     "<div class=\"row\" ng-if=\"loaded\">\n" +
     "<div class=\"col-md-12\" ng-class=\"{ 'hide-tabs' : !deployment }\">\n" +
     "<uib-tabset>\n" +
@@ -2405,7 +2405,7 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "<div class=\"container-fluid\">\n" +
     "<breadcrumbs breadcrumbs=\"breadcrumbs\"></breadcrumbs>\n" +
     "<alerts alerts=\"alerts\"></alerts>\n" +
-    "<div ng-if=\"!loaded\">Loading...</div>\n" +
+    "<div ng-if=\"!imageStream\" class=\"mar-top-xl\">Loading...</div>\n" +
     "<div ng-if=\"imageStream\">\n" +
     "<h1>\n" +
     "{{imageStream.metadata.name}}:{{tagName}}\n" +
@@ -2415,6 +2415,7 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "</div>\n" +
     "<div class=\"middle-content gutter-top\">\n" +
     "<div class=\"container-fluid\">\n" +
+    "<div ng-if=\"imageStream && !image\">Loading...</div>\n" +
     "<div class=\"row\" ng-if=\"image\">\n" +
     "<div class=\"col-md-12\">\n" +
     "<registry-image-pull settings=\"settings\" names=\"[ imageStream.metadata.name + ':' + tagName ]\">\n" +
@@ -2459,7 +2460,7 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "<div class=\"container-fluid\">\n" +
     "<breadcrumbs breadcrumbs=\"breadcrumbs\"></breadcrumbs>\n" +
     "<alerts alerts=\"alerts\"></alerts>\n" +
-    "<div ng-if=\"!loaded\">Loading...</div>\n" +
+    "<div ng-if=\"!imageStream\" class=\"mar-top-xl\">Loading...</div>\n" +
     "<div ng-if=\"imageStream\">\n" +
     "<h1>\n" +
     "{{imageStream.metadata.name}}\n" +
@@ -2695,7 +2696,7 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "<div class=\"container-fluid\">\n" +
     "<breadcrumbs breadcrumbs=\"breadcrumbs\"></breadcrumbs>\n" +
     "<alerts alerts=\"alerts\"></alerts>\n" +
-    "<div ng-if=\"!loaded\">Loading...</div>\n" +
+    "<div ng-if=\"!loaded\" class=\"mar-top-xl\">Loading...</div>\n" +
     "<div ng-if=\"pod\">\n" +
     "<h1>\n" +
     "{{pod.metadata.name}}\n" +
@@ -2943,7 +2944,7 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "<div class=\"container-fluid\">\n" +
     "<breadcrumbs breadcrumbs=\"breadcrumbs\"></breadcrumbs>\n" +
     "<alerts alerts=\"alerts\"></alerts>\n" +
-    "<div ng-if=\"!loaded\">Loading...</div>\n" +
+    "<div ng-if=\"!loaded\" class=\"mar-top-xl\">Loading...</div>\n" +
     "<div ng-if=\"route\">\n" +
     "<h1>\n" +
     "{{route.metadata.name}}\n" +
@@ -3230,7 +3231,7 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "<div class=\"container-fluid\">\n" +
     "<breadcrumbs breadcrumbs=\"breadcrumbs\"></breadcrumbs>\n" +
     "<alerts alerts=\"alerts\"></alerts>\n" +
-    "<div ng-if=\"!loaded\">Loading...</div>\n" +
+    "<div ng-if=\"!loaded\" class=\"mar-top-xl\">Loading...</div>\n" +
     "<div ng-if=\"service\">\n" +
     "<h1>\n" +
     "{{service.metadata.name}}\n" +
