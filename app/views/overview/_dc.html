@@ -15,7 +15,7 @@
           <image-names
               ng-if="activeDeployment && !inProgressDeployment && showMetrics"
               pod-template="activeDeployment.spec.template"
-              pods="podsByDeployment[activeDeployment.metadata.name]">
+              pods="podsByOwnerUID[activeDeployment.metadata.uid]">
           </image-names>
         </div>
         <div ng-if="inProgressDeployment" class="small">

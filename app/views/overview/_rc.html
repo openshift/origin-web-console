@@ -14,7 +14,7 @@
         <image-names
             ng-if="showMetrics"
             pod-template="deployment.spec.template"
-            pods="podsByDeployment[deployment.metadata.name]">
+            pods="podsByOwnerUID[deployment.metadata.uid]">
         </image-names>
       </div>
     </div>
