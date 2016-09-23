@@ -8051,7 +8051,7 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "</div>\n" +
     "<div>\n" +
     "<div class=\"small truncate\">\n" +
-    "<image-names ng-if=\"activeDeployment && !inProgressDeployment && showMetrics\" pod-template=\"activeDeployment.spec.template\" pods=\"podsByDeployment[activeDeployment.metadata.name]\">\n" +
+    "<image-names ng-if=\"activeDeployment && !inProgressDeployment && showMetrics\" pod-template=\"activeDeployment.spec.template\" pods=\"podsByOwnerUID[activeDeployment.metadata.uid]\">\n" +
     "</image-names>\n" +
     "</div>\n" +
     "<div ng-if=\"inProgressDeployment\" class=\"small\">\n" +
@@ -8182,7 +8182,7 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "</small>\n" +
     "</div>\n" +
     "<div class=\"small truncate\">\n" +
-    "<image-names ng-if=\"showMetrics\" pod-template=\"deployment.spec.template\" pods=\"podsByDeployment[deployment.metadata.name]\">\n" +
+    "<image-names ng-if=\"showMetrics\" pod-template=\"deployment.spec.template\" pods=\"podsByOwnerUID[deployment.metadata.uid]\">\n" +
     "</image-names>\n" +
     "</div>\n" +
     "</div>\n" +
