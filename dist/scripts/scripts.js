@@ -5151,10 +5151,10 @@ value:a.destinationDir
 })) :(a.imageSourceFromObjects = [], a.sourceImages.forEach(function(b) {
 a.imageSourceFromObjects.push(b.from);
 }))), a.options.forcePull = !!a.buildStrategy.forcePull, a.sources.binary && (a.options.binaryAsFile = a.buildConfig.spec.source.binary.asFile ? a.buildConfig.spec.source.binary.asFile :""), "Docker" === a.strategyType && (a.options.noCache = !!a.buildConfig.spec.strategy.dockerStrategy.noCache, a.buildFromTypes.push("None")), l.push(c.watchObject("buildconfigs", b.buildconfig, f, function(b, c) {
-"MODIFIED" === c && (a.alerts.background_update = {
+"MODIFIED" === c && (a.alerts["updated/deleted"] = {
 type:"warning",
 message:"This build configuration has changed since you started editing it. You'll need to copy any changes you've made and edit again."
-}), "DELETED" === c && (a.alerts.deleted = {
+}), "DELETED" === c && (a.alerts["updated/deleted"] = {
 type:"warning",
 message:"This build configuration has been deleted."
 }, a.disableInputs = !0), a.buildConfig = b;
