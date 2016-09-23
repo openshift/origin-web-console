@@ -129,7 +129,8 @@ return "/project/" + encodeURIComponent(a.project) + "/browse/pods";
 }
 }).when("/project/:project/browse/builds", {
 templateUrl:"views/builds.html",
-controller:"BuildsController"
+controller:"BuildsController",
+reloadOnSearch:!1
 }).when("/project/:project/browse/pipelines", {
 templateUrl:"views/pipelines.html",
 controller:"PipelinesController"
@@ -190,7 +191,8 @@ a.current.params.isPipeline = !0;
 reloadOnSearch:!1
 }).when("/project/:project/browse/deployments", {
 templateUrl:"views/deployments.html",
-controller:"DeploymentsController"
+controller:"DeploymentsController",
+reloadOnSearch:!1
 }).when("/project/:project/browse/deployment/:deployment", {
 templateUrl:"views/browse/deployment.html",
 controller:"DeploymentController",
@@ -234,7 +236,8 @@ controller:"ImageController",
 reloadOnSearch:!1
 }).when("/project/:project/browse/pods", {
 templateUrl:"views/pods.html",
-controller:"PodsController"
+controller:"PodsController",
+reloadOnSearch:!1
 }).when("/project/:project/browse/pods/:pod", {
 templateUrl:function(a) {
 return "chromeless" === a.view ? "views/logs/chromeless-pod-log.html" :"views/browse/pod.html";
@@ -243,23 +246,27 @@ controller:"PodController",
 reloadOnSearch:!1
 }).when("/project/:project/browse/services", {
 templateUrl:"views/services.html",
-controller:"ServicesController"
+controller:"ServicesController",
+reloadOnSearch:!1
 }).when("/project/:project/browse/services/:service", {
 templateUrl:"views/browse/service.html",
 controller:"ServiceController",
 reloadOnSearch:!1
 }).when("/project/:project/browse/storage", {
 templateUrl:"views/storage.html",
-controller:"StorageController"
+controller:"StorageController",
+reloadOnSearch:!1
 }).when("/project/:project/browse/other", {
 templateUrl:"views/other-resources.html",
-controller:"OtherResourcesController"
+controller:"OtherResourcesController",
+reloadOnSearch:!1
 }).when("/project/:project/browse/persistentvolumeclaims/:pvc", {
 templateUrl:"views/browse/persistent-volume-claim.html",
 controller:"PersistentVolumeClaimController"
 }).when("/project/:project/browse/routes", {
 templateUrl:"views/browse/routes.html",
-controller:"RoutesController"
+controller:"RoutesController",
+reloadOnSearch:!1
 }).when("/project/:project/edit/routes/:route", {
 templateUrl:"views/edit/route.html",
 controller:"EditRouteController"
@@ -341,8 +348,8 @@ a.interceptors.push("AuthInterceptor"), b.LoginService("RedirectLoginService"), 
 } ]).config([ "$compileProvider", function(a) {
 a.aHrefSanitizationWhitelist(/^\s*(https?|mailto|git):/i);
 } ]).run([ "$rootScope", "LabelFilter", function(a, b) {
-a.$on("$locationChangeSuccess", function(a) {
-b.setLabelSelector(new LabelSelector({}, (!0)), !0);
+b.persistFilterState(!0), a.$on("$routeChangeSuccess", function() {
+b.readPersistedState();
 });
 } ]).run([ "dateRelativeFilter", "durationFilter", "timeOnlyDurationFromTimestampsFilter", function(a, b, c) {
 setInterval(function() {
@@ -4920,28 +4927,31 @@ b.pvcs = a.select(b.unfilteredPVCs), e();
 d.unwatchAll(i);
 });
 }));
-} ]), angular.module("openshiftConsole").controller("OtherResourcesController", [ "$routeParams", "$scope", "AlertMessageService", "AuthorizationService", "DataService", "ProjectsService", "$filter", "LabelFilter", "Logger", "APIService", function(a, b, c, d, e, f, g, h, i, j) {
-function k() {
-h.getLabelSelector().isEmpty() || !$.isEmptyObject(b.resources) || $.isEmptyObject(b.unfilteredResources) ? delete b.alerts.resources :b.alerts.resources = {
+} ]), angular.module("openshiftConsole").controller("OtherResourcesController", [ "$routeParams", "$location", "$scope", "AlertMessageService", "AuthorizationService", "DataService", "ProjectsService", "$filter", "LabelFilter", "Logger", "APIService", function(a, b, c, d, e, f, g, h, i, j, k) {
+function l() {
+i.getLabelSelector().isEmpty() || !$.isEmptyObject(c.resources) || $.isEmptyObject(c.unfilteredResources) ? delete c.alerts.resources :c.alerts.resources = {
 type:"warning",
-details:"The active filters are hiding all " + j.kindToResource(b.kindSelector.selected.kind, !0) + "."
+details:"The active filters are hiding all " + k.kindToResource(c.kindSelector.selected.kind, !0) + "."
 };
 }
-function l() {
-var a = b.kindSelector.selected;
-a && (b.selectedResource = {
-resource:j.kindToResource(a.kind),
+function m() {
+var a = c.kindSelector.selected;
+if (a) {
+var d = b.search();
+d.kind = a.kind, d.group = a.group || "", b.replace().search(d), c.selectedResource = {
+resource:k.kindToResource(a.kind),
 group:a.group || ""
-}, e.list({
+}, f.list({
 group:a.group,
-resource:j.kindToResource(a.kind)
-}, b.context, function(c) {
-b.unfilteredResources = c.by("metadata.name"), b.labelSuggestions = {}, h.addLabelSuggestionsFromResources(b.unfilteredResources, b.labelSuggestions), h.setLabelSuggestions(b.labelSuggestions), b.resources = h.getLabelSelector().select(b.unfilteredResources), b.emptyMessage = "No " + j.kindToResource(a.kind, !0) + " to show", k();
-}));
+resource:k.kindToResource(a.kind)
+}, c.context, function(b) {
+c.unfilteredResources = b.by("metadata.name"), c.labelSuggestions = {}, i.addLabelSuggestionsFromResources(c.unfilteredResources, c.labelSuggestions), i.setLabelSuggestions(c.labelSuggestions), c.resources = i.getLabelSelector().select(c.unfilteredResources), c.emptyMessage = "No " + k.kindToResource(a.kind, !0) + " to show", l();
+});
 }
-b.projectName = a.project, b.labelSuggestions = {}, b.alerts = b.alerts || {}, b.emptyMessage = "Select a resource from the list above ...", b.kindSelector = {
+}
+c.projectName = a.project, c.labelSuggestions = {}, c.alerts = c.alerts || {}, c.emptyMessage = "Select a resource from the list above ...", c.kindSelector = {
 disabled:!0
-}, b.kinds = _.filter(j.availableKinds(), function(a) {
+}, c.kinds = _.filter(k.availableKinds(), function(a) {
 switch (a.kind) {
 case "ReplicationController":
 case "Deployment":
@@ -4967,38 +4977,38 @@ return !1;
 default:
 return !0;
 }
-}), b.getReturnURL = function() {
-var c = _.get(b, "kindSelector.selected.kind");
-return c ? URI.expand("project/{projectName}/browse/other?kind={kind}&group={group}", {
+}), c.getReturnURL = function() {
+var b = _.get(c, "kindSelector.selected.kind");
+return b ? URI.expand("project/{projectName}/browse/other?kind={kind}&group={group}", {
 projectName:a.project,
-kind:c,
-group:_.get(b, "kindSelector.selected.group", "")
+kind:b,
+group:_.get(c, "kindSelector.selected.group", "")
 }).toString() :"";
-}, c.getAlerts().forEach(function(a) {
-b.alerts[a.name] = a.data;
-}), c.clearAlerts();
-var m = function(a, c) {
-return _.some(b.kinds, function(b) {
-return b.kind === a && (!b.group && !c || b.group === c);
+}, d.getAlerts().forEach(function(a) {
+c.alerts[a.name] = a.data;
+}), d.clearAlerts();
+var n = function(a, b) {
+return _.some(c.kinds, function(c) {
+return c.kind === a && (!c.group && !b || c.group === b);
 });
 };
-f.get(a.project).then(_.spread(function(c, e) {
-b.kinds = _.filter(b.kinds, function(a) {
-var c = {
-resource:j.kindToResource(a.kind),
+g.get(a.project).then(_.spread(function(b, d) {
+c.kinds = _.filter(c.kinds, function(a) {
+var b = {
+resource:k.kindToResource(a.kind),
 group:a.group || ""
 };
-return !!d.checkResource(c.resource) && d.canI(c, "list", b.projectName);
-}), b.project = c, b.context = e, b.kindSelector.disabled = !1, a.kind && m(a.kind, a.group) && (_.set(b, "kindSelector.selected.kind", a.kind), _.set(b, "kindSelector.selected.group", a.group || ""));
-})), b.loadKind = l, b.$watch("kindSelector.selected", function() {
-b.alerts = {}, l();
+return !!e.checkResource(b.resource) && e.canI(b, "list", c.projectName);
+}), c.project = b, c.context = d, c.kindSelector.disabled = !1, a.kind && n(a.kind, a.group) && (_.set(c, "kindSelector.selected.kind", a.kind), _.set(c, "kindSelector.selected.group", a.group || ""));
+})), c.loadKind = m, c.$watch("kindSelector.selected", function() {
+c.alerts = {}, m();
 });
-var n = g("humanizeKind");
-b.matchKind = function(a, b) {
-return n(a).toLowerCase().indexOf(b.toLowerCase()) !== -1;
-}, h.onActiveFiltersChanged(function(a) {
-b.$apply(function() {
-b.resources = a.select(b.unfilteredResources), k();
+var o = h("humanizeKind");
+c.matchKind = function(a, b) {
+return o(a).toLowerCase().indexOf(b.toLowerCase()) !== -1;
+}, i.onActiveFiltersChanged(function(a) {
+c.$apply(function() {
+c.resources = a.select(c.unfilteredResources), l();
 });
 });
 } ]), angular.module("openshiftConsole").controller("PersistentVolumeClaimController", [ "$scope", "$routeParams", "DataService", "ProjectsService", "$filter", function(a, b, c, d, e) {
@@ -7944,9 +7954,10 @@ c.selectedTab = c.selectedTab || {}, a.tab && (c.selectedTab[a.tab] = !0), c.$wa
 var a = _.keys(_.pick(c.selectedTab, function(a) {
 return a;
 }));
-1 === a.length && b.replace().search({
-tab:a[0]
-});
+if (1 === a.length) {
+var d = b.search();
+d.tab = a[0], b.replace().search(d);
+}
 }, !0);
 }
 };

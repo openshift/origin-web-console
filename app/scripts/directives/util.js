@@ -194,7 +194,9 @@ angular.module('openshiftConsole')
           var selected = _.keys(_.pick(scope.selectedTab, function(active) {return active;}));
           // When the tabs are transitioning we briefly see two tabs set to true
           if (selected.length === 1) {
-            $location.replace().search({tab: selected[0]});
+            var search = $location.search();
+            search.tab = selected[0];
+            $location.replace().search(search);
           }
         }, true);
       }
