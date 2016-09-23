@@ -11,7 +11,7 @@
               <span ng-if="build | isJenkinsPipelineStrategy" class="pad-top-md"><span class="label label-warning">Technology Preview</span></span>
             </div>
             <alerts alerts="alerts"></alerts>
-            <div ng-if="!loaded">Loading...</div>
+            <div ng-if="!loaded" class="mar-top-xl">Loading...</div>
             <div ng-if="build">
               <h1>
                 {{build.metadata.name}}
