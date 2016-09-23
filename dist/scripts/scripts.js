@@ -10086,7 +10086,7 @@ allowCustomTag:"="
 templateUrl:"views/directives/istag-select.html",
 controller:[ "$scope", function(b) {
 b.isByNamespace = {}, b.isNamesByNamespace = {};
-var c = _.has(b, "istag.namespace") && _.has(b, "istag.imageStream") && _.has(b, "istag.tagObject.tag"), d = function(c) {
+var c = _.get(b, "istag.namespace") && _.get(b, "istag.imageStream") && _.get(b, "istag.tagObject.tag"), d = function(c) {
 return b.isByNamespace[c] = {}, b.isNamesByNamespace[c] = [], _.contains(b.namespaces, c) ? void a.list("imagestreams", {
 namespace:c
 }, function(a) {

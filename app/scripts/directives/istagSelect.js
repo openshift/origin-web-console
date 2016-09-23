@@ -35,9 +35,7 @@ angular.module("openshiftConsole")
         $scope.isNamesByNamespace = {};
 
         // Check if the istag object contains data about namespace/imageStream/tag so the ui-select will be pre-populated with them
-        var shouldPrepopulate = _.has($scope, 'istag.namespace') &&
-                                _.has($scope, 'istag.imageStream') &&
-                                _.has($scope, 'istag.tagObject.tag');
+        var shouldPrepopulate = _.get($scope, 'istag.namespace') && _.get($scope, 'istag.imageStream') && _.get($scope, 'istag.tagObject.tag');
 
         var prepopulate = function(ns) {
           $scope.isByNamespace[ns] = {};
@@ -49,7 +47,7 @@ angular.module("openshiftConsole")
             $scope.isByNamespace[ns][$scope.istag.imageStream] = {status: {tags: [{tag: $scope.istag.tagObject.tag}]}};
             return;
           }
-        DataService.list('imagestreams', { namespace: ns }, function(isData) {
+          DataService.list('imagestreams', { namespace: ns }, function(isData) {
             $scope.isByNamespace[ns] = isData.by('metadata.name');
             $scope.isNamesByNamespace[ns] = _.keys( $scope.isByNamespace[ns]).sort();
 
