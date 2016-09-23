@@ -24,7 +24,8 @@ angular.module('openshiftConsole')
         dropZoneName = scope.dropZoneId + "-drag-and-drop-zone",
         dropZoneSelectorName = "#" + dropZoneName,
         highlightDropZone = false,
-        showDropZone = false;
+        showDropZone = false,
+        inputFileField = element.find('input[type=file]')[0];
 
         // Add/Remove dropZone based on if the directive element is disabled
         scope.$watch('disabled', function() {
@@ -68,8 +69,14 @@ angular.module('openshiftConsole')
           });
         }
 
+        scope.cleanInputValues = function() {
+          scope.model = '';
+          scope.fileName = '';
+          inputFileField.value = "";
+        };
+
         element.change(function() {
-          addFile($('input[type=file]', this)[0].files[0]);
+          addFile(inputFileField.files[0]);
         });
 
         // Add listeners for the dropZone element
