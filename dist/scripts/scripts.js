@@ -5650,7 +5650,7 @@ deployOnConfigChange:!0
 }, b.DCEnvVarsFromImage, b.DCEnvVarsFromUser = [], b.routing = {
 include:!0,
 portOptions:[]
-}, b.labels = [], b.systemLabels = [ v ], b.annotations = {}, b.scaling = {
+}, b.userDefinedLabels = [], b.systemLabels = [ v ], b.annotations = {}, b.scaling = {
 replicas:1,
 autoscale:!1,
 autoscaleOptions:[ {
@@ -5782,7 +5782,7 @@ a.projectDisplayName = function() {
 return s(this.project) || this.projectName;
 }, a.createApp = function() {
 a.disableInputs = !0, a.buildConfig.envVars = r.mapEntries(r.compactEntries(a.buildConfigEnvVars)), a.deploymentConfig.envVars = r.mapEntries(r.compactEntries(a.DCEnvVarsFromUser));
-var c = r.mapEntries(r.compactEntries(a.labels)), d = r.mapEntries(r.compactEntries(a.systemLabels));
+var c = r.mapEntries(r.compactEntries(a.userDefinedLabels)), d = r.mapEntries(r.compactEntries(a.systemLabels));
 a.labels = _.extend(d, c);
 var e = i.generate(a), f = [];
 angular.forEach(e, function(a) {

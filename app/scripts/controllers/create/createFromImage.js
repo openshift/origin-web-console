@@ -78,7 +78,7 @@ angular.module("openshiftConsole")
             include: true,
             portOptions: []
           };
-          scope.labels = [];
+          scope.userDefinedLabels = [];
           scope.systemLabels = [appLabel];
           scope.annotations = {};
           scope.scaling = {
@@ -310,7 +310,7 @@ angular.module("openshiftConsole")
           $scope.disableInputs = true;
           $scope.buildConfig.envVars = keyValueEditorUtils.mapEntries(keyValueEditorUtils.compactEntries($scope.buildConfigEnvVars));
           $scope.deploymentConfig.envVars = keyValueEditorUtils.mapEntries(keyValueEditorUtils.compactEntries($scope.DCEnvVarsFromUser));
-          var userLabels = keyValueEditorUtils.mapEntries(keyValueEditorUtils.compactEntries($scope.labels));
+          var userLabels = keyValueEditorUtils.mapEntries(keyValueEditorUtils.compactEntries($scope.userDefinedLabels));
           var systemLabels = keyValueEditorUtils.mapEntries(keyValueEditorUtils.compactEntries($scope.systemLabels));
           $scope.labels = _.extend(systemLabels, userLabels);
 
@@ -323,7 +323,6 @@ angular.module("openshiftConsole")
               resources.push(value);
             }
           });
-
           ifResourcesDontExist(resources, $scope.projectName, $scope)
             .then(createResources, elseShowWarning);
         };
