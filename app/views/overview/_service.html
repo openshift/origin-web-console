@@ -1,34 +1,32 @@
-<div ng-if="!(visibleReplicationControllersByDC | hashSize) && !(visibleReplicaSets | hashSize) && !(petSetsByService[service.metadata.name] | hashSize) && !(monopodsByService[service.metadata.name] | hashSize)" class="no-deployments-block">
+<div ng-if="!tileCount" class="no-deployments-block">
   <div column class="no-deployments-message">
     <ng-include src="'views/overview/_service-header.html'"></ng-include>
-    <div class="pad-xxl">
-      <h2>No deployments.</h2>
+    <div class="empty-tile">
+      <h2>No deployments or pods.</h2>
       <p>
-        There are no deployments or pods for service
-        <a ng-href="{{service | navigateResourceURL}}">{{service.metadata.name}}</a>.
+        Service
+        <a ng-href="{{service | navigateResourceURL}}">{{service.metadata.name}}</a>
+        does not route to any deployments or pods.
       </p>
     </div>
   </div>
 </div>
 <div ng-attr-row="{{!service ? '' : undefined}}"
      ng-attr-wrap="{{!service ? '' : undefined}}"
-     ng-if="(visibleReplicationControllersByDC | hashSize) || (visibleReplicaSetsByDeployment | hashSize) || (petSetsByService[service.metadata.name] | hashSize) || (monopodsByService[service.metadata.name || ''] | hashSize)"
+     ng-if="tileCount"
      class="deployment-block"
      ng-class="{
        'no-service': !service,
-       'service-multiple-targets': rcTileCount + rsTileCount + (petSetsByService[service.metadata.name] | hashSize) + (monopodsByService[service.metadata.name] | hashSize) > 1
+       'service-multiple-targets': tileCount > 1
      }">
-  <div ng-repeat="(dcName, replicationControllers) in visibleReplicationControllersByDC track by dcName" class="overview-tile-wrapper">
+   <div ng-repeat="deploymentConfig in deploymentConfigs track by (deploymentConfig | uid)" class="overview-tile-wrapper">
     <!-- visible deployments with a dc -->
-    <overview-deployment-config ng-if="dcName"></overview-deployment-config>
+    <overview-deployment-config></overview-deployment-config>
     <!-- /visible deployments with a dc -->
-
+  </div>
+  <div ng-repeat="set in replicationControllers track by (set | uid)" class="overview-tile-wrapper">
     <!-- visible replication controllers without a dc -->
-    <div ng-if="!dcName"
-         ng-repeat="set in replicationControllers | orderObjectsByDate : true track by (set | uid)"
-         class="overview-tile-wrapper">
-      <overview-set></overview-set>
-    </div>
+    <overview-set></overview-set>
     <!-- /visible deployments without a dc -->
   </div>
 
@@ -37,13 +35,13 @@
     <overview-deployment ng-if="deploymentName"></overview-deployment>
     <!-- /visible replica sets with a deployment -->
 
-    <!-- visible replica sets without a dc -->
+    <!-- visible replica sets without a deployment -->
     <div ng-if="!deploymentName"
          ng-repeat="set in replicaSets | orderObjectsByDate : true track by (set | uid)"
          class="overview-tile-wrapper">
       <overview-set></overview-set>
     </div>
-    <!-- /visible replica sets without a dc -->
+    <!-- /visible replica sets without a deployment -->
   </div>
 
   <div class="overview-tile-wrapper" ng-repeat="set in petSetsByService[service.metadata.name] track by (set | uid)">

@@ -151,13 +151,12 @@ angular.module('openshiftConsole')
       $scope.scalableReplicationControllerByDC = scalableReplicationControllerByDC;
       $scope.mostRecentReplicationControllerByDC = mostRecentReplicationControllerByDC;
 
-      // Take all visible deployments grouped by deployment config and service
-      $scope.visibleRCByDCAndService = {};
-      _.each($scope.replicationControllersByService, function(replicationControllers, svcName) {
-        $scope.visibleRCByDCAndService[svcName] = {};
-        _.each(DeploymentsService.groupByDeploymentConfig(replicationControllers), function(replicationControllers, dcName) {
-          $scope.visibleRCByDCAndService[svcName][dcName] = _.filter(replicationControllers, isReplicationControllerVisible);
-        });
+      // Replication controllers that don't have a deployment config.
+      $scope.vanillaReplicationControllersByService = LabelsService.groupBySelector(replicationControllersByDC[''], services, { matchTemplate: true });
+
+      $scope.visibleRCByDC = {};
+      _.each(replicationControllersByDC, function(replicationControllers, dcName) {
+        $scope.visibleRCByDC[dcName] = _.filter(replicationControllers, isReplicationControllerVisible);
       });
     };
 
@@ -427,6 +426,7 @@ angular.module('openshiftConsole')
       // Check if there is any data visible in the overview.
       var projectEmpty =
         _.isEmpty(services) &&
+        _.isEmpty(deploymentConfigs) &&
         _.isEmpty($scope.monopodsByService) &&
         _.isEmpty(replicationControllers) &&
         _.isEmpty(replicaSets) &&

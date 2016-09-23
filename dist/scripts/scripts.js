@@ -4098,10 +4098,10 @@ v = g.groupByDeploymentConfig(u);
 var a = {}, b = {};
 _.each(v, function(c, d) {
 a[d] = g.getActiveDeployment(c), b[d] = S(c);
-}), c.scalableReplicationControllerByDC = a, c.mostRecentReplicationControllerByDC = b, c.visibleRCByDCAndService = {}, _.each(c.replicationControllersByService, function(a, b) {
-c.visibleRCByDCAndService[b] = {}, _.each(g.groupByDeploymentConfig(a), function(a, d) {
-c.visibleRCByDCAndService[b][d] = _.filter(a, R);
-});
+}), c.scalableReplicationControllerByDC = a, c.mostRecentReplicationControllerByDC = b, c.vanillaReplicationControllersByService = h.groupBySelector(v[""], r, {
+matchTemplate:!0
+}), c.visibleRCByDC = {}, _.each(v, function(a, b) {
+c.visibleRCByDC[b] = _.filter(a, R);
 });
 }
 }, U = function() {
@@ -4204,7 +4204,7 @@ A && (c.recentPipelinesByDC = {}, c.recentBuildsByOutputImage = {}, _.each(e.int
 return E(a) ? void ja(a) :void ha(a);
 }));
 }, la = function() {
-var a = _.isEmpty(r) && _.isEmpty(c.monopodsByService) && _.isEmpty(u) && _.isEmpty(w) && _.isEmpty(x), b = r && y && u && w && x;
+var a = _.isEmpty(r) && _.isEmpty(t) && _.isEmpty(c.monopodsByService) && _.isEmpty(u) && _.isEmpty(w) && _.isEmpty(x), b = r && y && u && w && x;
 c.renderOptions.showGetStarted = b && a, c.renderOptions.showLoading = !b && a;
 }, ma = function() {
 var a = d.isAlertPermanentlyHidden("overview-quota-limit-reached", c.projectName);
@@ -11755,22 +11755,24 @@ var d = a("annotation"), e = a("orderObjectsByDate"), f = function(a) {
 return _.get(a, "status.replicas") || !d(a, "deployment.kubernetes.io/revision");
 };
 b.$watch("replicaSetsByService", function(a) {
-var c = _.get(b, "service.metadata.name"), d = _.get(a, [ c ], []);
+var c = _.get(b, "service.metadata.name"), d = _.get(a, [ c ], {});
 b.visibleReplicaSets = e(_.filter(d, f), !0);
-}), b.$watch("visibleRCByDCAndService", function(a) {
-if (a) {
-var c = _.get(b, "service.metadata.name");
-b.activeDeploymentByConfig = {}, b.visibleReplicationControllersByDC = a[c], b.rcTileCount = 0, _.each(b.visibleReplicationControllersByDC, function(a, c) {
-c ? b.rcTileCount++ :b.rcTileCount += _.size(a);
 });
-}
+var g = function() {
+var a = _.get(b, "service.metadata.name"), c = _.get(b, [ "petSetsByService", a ], {}), d = _.get(b, [ "monopodsByService", a ], {}), e = 0;
+_.each(b.visibleReplicaSetsByDeployment, function(a, b) {
+b ? e++ :e += _.size(a);
+}), b.tileCount = _.size(b.deploymentConfigs) + _.size(b.replicationControllers) + _.size(c) + _.size(d) + e;
+};
+b.$watch("vanillaReplicationControllersByService", function(a) {
+var c = _.get(b, "service.metadata.name");
+b.replicationControllers = _.get(a, [ c ], {}), g();
+}), b.$watch("deploymentConfigsByService", function(a) {
+var c = _.get(b, "service.metadata.name");
+b.deploymentConfigs = _.get(a, c, {}), g();
 }), b.$watch("visibleRSByDeploymentAndService", function(a) {
-if (a) {
 var c = _.get(b, "service.metadata.name");
-b.visibleReplicaSetsByDeployment = a[c], b.rsTileCount = 0, _.each(b.visibleReplicaSetsByDeployment, function(a, c) {
-c ? b.rsTileCount++ :b.rsTileCount += _.size(a);
-});
-}
+b.visibleReplicaSetsByDeployment = _.get(a, [ c ], {}), g();
 });
 }
 };
@@ -11887,47 +11889,57 @@ restrict:"E",
 scope:!0,
 templateUrl:"views/overview/_set.html"
 };
-}), angular.module("openshiftConsole").directive("overviewDeploymentConfig", [ "$filter", "$uibModal", "DeploymentsService", function(a, b, c) {
+}), angular.module("openshiftConsole").directive("overviewDeploymentConfig", [ "$filter", "$uibModal", "DeploymentsService", "Navigate", function(a, b, c, d) {
 return {
 restrict:"E",
 scope:!0,
 templateUrl:"views/overview/_dc.html",
-link:function(d) {
-var e = a("orderObjectsByDate"), f = a("deploymentIsInProgress");
-d.$watch(function() {
-return _.get(d, [ "deploymentConfigs", d.dcName ]);
-}, function(a) {
-d.deploymentConfig = a;
-}), d.$watch("scalableReplicationControllerByDC", function(a) {
-d.activeReplicationController = _.get(d, [ "scalableReplicationControllerByDC", d.dcName ]);
-}), d.$watch("replicationControllers", function(a) {
-d.orderedReplicationControllers = e(a, !0), d.inProgressDeployment = _.find(d.orderedReplicationControllers, f);
+link:function(e) {
+var f = a("orderObjectsByDate"), g = a("deploymentIsInProgress");
+e.$watch("scalableReplicationControllerByDC", function() {
+var a = _.get(e, "deploymentConfig.metadata.name");
+e.activeReplicationController = _.get(e, [ "scalableReplicationControllerByDC", a ]);
+}), e.$watch("visibleRCByDC", function(a) {
+var b = _.get(e, "deploymentConfig.metadata.name"), c = _.get(a, [ b ], []);
+e.orderedReplicationControllers = f(c, !0), e.inProgressDeployment = _.find(e.orderedReplicationControllers, g);
+}), e.$watch("deploymentConfig", function(a) {
+var b = _.get(a, "spec.triggers", []);
+e.imageChangeTriggers = _.filter(b, function(a) {
+return "ImageChange" === a.type && _.get(a, "imageChangeParams.automatic");
 });
-var g;
-d.$watch("deploymentConfig.spec.paused", function() {
-g = !1;
-}), d.resumeDeployment = function() {
-g || (g = !0, c.setPaused(d.deploymentConfig, !1, {
-namespace:d.deploymentConfig.metadata.namespace
+}), e.urlForImageChangeTrigger = function(b) {
+var c = a("stripTag")(_.get(b, "imageChangeParams.from.name")), f = _.get(b, "imageChangeParams.from.namespace", e.deploymentConfig.metadata.namespace);
+return d.resourceURL(c, "ImageStream", f);
+}, e.startDeployment = function() {
+c.startLatestDeployment(e.deploymentConfig, {
+namespace:e.deploymentConfig.metadata.namespace
+}, e);
+};
+var h;
+e.$watch("deploymentConfig.spec.paused", function() {
+h = !1;
+}), e.resumeDeployment = function() {
+h || (h = !0, c.setPaused(e.deploymentConfig, !1, {
+namespace:e.deploymentConfig.metadata.namespace
 }).then(_.noop, function(b) {
-g = !1, d.alerts["resume-deployment"] = {
+h = !1, e.alerts["resume-deployment"] = {
 type:"error",
 message:"An error occurred resuming the deployment.",
 details:a("getErrorDetails")(b)
 };
 }));
-}, d.cancelDeployment = function() {
-var a = d.inProgressDeployment;
+}, e.cancelDeployment = function() {
+var a = e.inProgressDeployment;
 if (a) {
-var e = a.metadata.name, g = _.get(d, "deploymentConfig.status.latestVersion"), h = b.open({
+var d = a.metadata.name, f = _.get(e, "deploymentConfig.status.latestVersion"), h = b.open({
 animation:!0,
 templateUrl:"views/modals/confirm.html",
 controller:"ConfirmModalController",
 resolve:{
 modalConfig:function() {
 return {
-message:"Cancel deployment " + e + "?",
-details:g ? "This will attempt to stop the in-progress deployment and rollback to the previous deployment, #" + g + ". It may take some time to complete." :"This will attempt to stop the in-progress deployment and may take some time to complete.",
+message:"Cancel deployment " + d + "?",
+details:f ? "This will attempt to stop the in-progress deployment and rollback to the previous deployment, #" + f + ". It may take some time to complete." :"This will attempt to stop the in-progress deployment and may take some time to complete.",
 okButtonText:"Yes, cancel",
 okButtonClass:"btn-danger",
 cancelButtonText:"No, don't cancel"
@@ -11936,13 +11948,13 @@ cancelButtonText:"No, don't cancel"
 }
 });
 h.result.then(function() {
-var a = _.get(d, [ "replicationControllersByName", e ]);
-return a ? f(a) ? void c.cancelRunningDeployment(a, d.projectContext, d) :void (d.alerts["cancel-deployment"] = {
+var a = _.get(e, [ "replicationControllersByName", d ]);
+return a ? g(a) ? void c.cancelRunningDeployment(a, e.projectContext, e) :void (e.alerts["cancel-deployment"] = {
 type:"error",
-message:"Deployment " + e + " is no longer in progress."
-}) :void (d.alerts["cancel-deployment"] = {
+message:"Deployment " + d + " is no longer in progress."
+}) :void (e.alerts["cancel-deployment"] = {
 type:"error",
-message:"Deployment " + e + " no longer exists."
+message:"Deployment " + d + " no longer exists."
 });
 });
 }
