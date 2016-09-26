@@ -60,7 +60,8 @@ angular
       })
       .when('/project/:project/monitoring', {
         templateUrl: 'views/monitoring.html',
-        controller: 'MonitoringController'
+        controller: 'MonitoringController',
+        reloadOnSearch: false
       })
       .when('/project/:project/browse', {
         redirectTo: function(params) {
