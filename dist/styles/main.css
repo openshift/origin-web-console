@@ -4415,6 +4415,9 @@ td.visible-print,th.visible-print{display:table-cell!important}
 .log-view.log-fixed-height ::-webkit-scrollbar-track,.navbar-project-menu ::-webkit-scrollbar-track{background-color:#050505}
 .log-view.log-fixed-height ::-webkit-scrollbar{width:17px}
 .log-view.log-fixed-height ::-webkit-scrollbar-track{background-color:rgba(255,255,255,.1)}
+.ui-select-bootstrap .ui-select-choices-row>a{border-color:transparent;border-style:solid;border-width:1px 0;line-height:1.66666667;padding:1px 10px}
+.ui-select-bootstrap .ui-select-choices-row>a:focus,.ui-select-bootstrap .ui-select-choices-row>a:hover{background-color:#def3ff;border-color:#bee1f4;color:#4d5258}
+.ui-select-bootstrap .ui-select-choices-row.active>a{background-color:#0088ce!important;border-color:#0088ce!important;color:#fff}
 .nav-sidenav-secondary .dropdown-header{color:#b3b3b3;font-size:12px;padding-bottom:10px;padding-left:37px;padding-top:20px}
 .sidebar-left .navbar-sidebar{border-bottom:0;border-left:0;border-top:0;margin:0;min-height:46px}
 .sidebar-left .navbar-sidebar.visible-xs-block{border:0}
