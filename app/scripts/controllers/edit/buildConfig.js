@@ -281,6 +281,10 @@ angular.module('openshiftConsole')
       editor.$blockScrolling = Infinity;
     };
 
+    $scope.isSourceURLInvalid = function() {
+      return !$scope.sourceURLPattern.test($scope.updatedBuildConfig.spec.source.git.uri);
+    };
+
     var updatedImageSourcePath = function(imageSourcePaths) {
       return _.map(
               keyValueEditorUtils.compactEntries(imageSourcePaths),
