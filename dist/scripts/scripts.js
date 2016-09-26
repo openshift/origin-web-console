@@ -9582,6 +9582,7 @@ service:"=",
 childServices:"=",
 deploymentConfigsByService:"=",
 deploymentsByService:"=",
+replicaSetsByService:"=",
 podsByOwnerUid:"=",
 collapsed:"="
 },
@@ -9622,9 +9623,11 @@ _.each(h, function(a, b) {
 b.indexOf("pod_warning") >= 0 && delete a[b];
 }), _.each(i, function(b) {
 var e = _.get(b, "metadata.name", "");
-c.deploymentsByService && c.podsByOwnerUid && _.each(c.deploymentsByService[e], function(b) {
+c.deploymentsByService && c.podsByOwnerUid && (_.each(c.deploymentsByService[e], function(b) {
 a("groupedPodWarnings")(c.podsByOwnerUid[b.metadata.uid], d);
-});
+}), _.each(c.replicaSetsByService[e], function(b) {
+a("groupedPodWarnings")(c.podsByOwnerUid[b.metadata.uid], d);
+}));
 }), _.each(d, function(a, d) {
 var g = _.head(a);
 if (g) {

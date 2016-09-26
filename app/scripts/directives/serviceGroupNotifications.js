@@ -9,6 +9,7 @@ angular.module('openshiftConsole')
         childServices: '=',
         deploymentConfigsByService: '=',
         deploymentsByService: '=',
+        replicaSetsByService: '=',
         podsByOwnerUid: '=',
         collapsed: '='
       },
@@ -79,6 +80,9 @@ angular.module('openshiftConsole')
             if ($scope.deploymentsByService && $scope.podsByOwnerUid) {
               _.each($scope.deploymentsByService[svcName], function(deployment) {
                 $filter('groupedPodWarnings')($scope.podsByOwnerUid[deployment.metadata.uid], groupedPodWarnings);
+              });
+              _.each($scope.replicaSetsByService[svcName], function(replicaSet) {
+                $filter('groupedPodWarnings')($scope.podsByOwnerUid[replicaSet.metadata.uid], groupedPodWarnings);
               });
             }
           });
