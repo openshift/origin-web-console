@@ -10,6 +10,7 @@
  */
 angular.module('openshiftConsole')
   .controller('MonitoringController', function ($routeParams,
+                                           $location,
                                            $scope,
                                            $filter,
                                            DataService,
@@ -30,11 +31,6 @@ angular.module('openshiftConsole')
 
     var watches = [];
 
-    $scope.kindSelector = {
-      selected: {
-        kind: "All"
-      }
-    };
     $scope.kinds = [
       {
         kind: "Pods"
@@ -50,6 +46,15 @@ angular.module('openshiftConsole')
         kind: "All"
       }
     ];
+    var initialKind = "All";
+    if ($routeParams.kind && _.some($scope.kinds, {kind: $routeParams.kind})) {
+      initialKind = $routeParams.kind;
+    }
+    $scope.kindSelector = {
+      selected: {
+        kind: initialKind
+      }
+    };
 
     $scope.logOptions = {
       pods: {},
@@ -73,10 +78,12 @@ angular.module('openshiftConsole')
       pods: {},
       deployments: {},
       builds: {}
-    };    
+    };
+
+    var isNil = $filter('isNil');
 
     $scope.filters = {
-      hideOlderResources: true,
+      hideOlderResources: isNil($routeParams.hideOlderResources) || $routeParams.hideOlderResources === 'true',
       text: ''
     };
 
@@ -109,12 +116,12 @@ angular.module('openshiftConsole')
       $scope.logCanRun.pods[pod.metadata.name] = !(_.includes(['New', 'Pending', 'Unknown'], pod.status.phase));
     };
 
-    var setDeploymentLogVars = function(deployment) {   
+    var setDeploymentLogVars = function(deployment) {
       $scope.logOptions.deployments[deployment.metadata.name] = {};
       var deploymentVersion = $filter("annotation")(deployment, "deploymentVersion");
       if (deploymentVersion) {
         $scope.logOptions.deployments[deployment.metadata.name].version = deploymentVersion;
-      }        
+      }
       $scope.logCanRun.deployments[deployment.metadata.name] = !(_.includes(['New', 'Pending'], $filter('deploymentStatus')(deployment)));
     };
 
@@ -141,7 +148,7 @@ angular.module('openshiftConsole')
       ageFilteredBuilds = _.filter($scope.builds, function(build) {
         if (!$scope.filters.hideOlderResources) {
           return true;
-        }        
+        }
         if (isIncompleteBuild(build)) {
           return true;
         }
@@ -149,9 +156,9 @@ angular.module('openshiftConsole')
         if (buildConfigName) {
           return $scope.latestBuildByConfig[buildConfigName].metadata.name === build.metadata.name;
         }
-        
+
         // Otherwise this is a one-off build, fallback to the isRecentBuild logic
-        return isRecentBuild(build);     
+        return isRecentBuild(build);
       });
       $scope.filteredBuilds = KeywordService.filterForKeywords(ageFilteredBuilds, filterFields, filterKeywords);
     };
@@ -162,11 +169,11 @@ angular.module('openshiftConsole')
       ageFilteredDeployments = _.filter($scope.deployments, function(deployment) {
         if (!$scope.filters.hideOlderResources) {
           return true;
-        }        
+        }
         return deploymentIsInProgress(deployment) || deploymentStatus(deployment) === 'Active';
       });
       $scope.filteredDeployments = KeywordService.filterForKeywords(ageFilteredDeployments, filterFields, filterKeywords);
-    };        
+    };
 
     $scope.toggleItem = function(evt, element, resource) {
       var t = $(evt.target);
@@ -252,7 +259,7 @@ angular.module('openshiftConsole')
         DataService.watch("builds", context, function(builds) {
           $scope.builds = orderByDate(builds.by("metadata.name"), true);
           $scope.latestBuildByConfig = BuildsService.latestBuildByConfig($scope.builds);
-          $scope.buildsLoaded = true;        
+          $scope.buildsLoaded = true;
           _.each($scope.builds, setBuildLogVars);
           filterBuilds();
           Logger.log("builds", $scope.builds);
@@ -265,13 +272,22 @@ angular.module('openshiftConsole')
         $scope.$watch('filters.hideOlderResources', function() {
           filterPods();
           filterBuilds();
-          filterDeployments();        
+          filterDeployments();
+          var search = $location.search();
+          search.hideOlderResources = $scope.filters.hideOlderResources ? 'true' : 'false';
+          $location.replace().search(search);
+        });
+
+        $scope.$watch('kindSelector.selected.kind', function() {
+          var search = $location.search();
+          search.kind = $scope.kindSelector.selected.kind;
+          $location.replace().search(search);
         });
 
         $scope.$watch('filters.text', _.debounce(function() {
               filterKeywords = KeywordService.generateKeywords($scope.filters.text);
               $scope.$apply(filterAllResourcesForKeyword);
-            }, 50, { maxWait: 250 }));        
+            }, 50, { maxWait: 250 }));
 
         $scope.$watch('renderOptions.collapseEventsSidebar', function(newValue, oldValue) {
           if (newValue === oldValue) {
