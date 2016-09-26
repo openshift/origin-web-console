@@ -15,6 +15,7 @@ angular.module('openshiftConsole')
                                            $filter,
                                            DataService,
                                            ProjectsService,
+                                           LabelsService,
                                            MetricsService,
                                            BuildsService,
                                            PodsService,
@@ -228,7 +229,7 @@ angular.module('openshiftConsole')
         return;
       }
 
-      $scope.podsByDeployment = PodsService.groupByReplicationController($scope.pods, $scope.deployments);
+      $scope.podsByDeployment = LabelsService.groupBySelector($scope.pods, $scope.deployments);
     };
 
     ProjectsService

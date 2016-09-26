@@ -392,12 +392,12 @@ angular.module("openshiftConsole")
       return byService;
     };
 
-    DeploymentsService.prototype.groupByDeploymentConfig = function(deployments) {
+    DeploymentsService.prototype.groupByDeploymentConfig = function(replicationControllers) {
       var byDC = {};
 
-      _.each(deployments, function(deployment) {
-        var deploymentConfigId = $filter('annotation')(deployment, 'deploymentConfig') || '';
-        _.set(byDC, [deploymentConfigId, deployment.metadata.name], deployment);
+      _.each(replicationControllers, function(rc) {
+        var deploymentConfigId = $filter('annotation')(rc, 'deploymentConfig') || '';
+        _.set(byDC, [deploymentConfigId, rc.metadata.name], rc);
       });
 
       return byDC;

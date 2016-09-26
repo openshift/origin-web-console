@@ -16,6 +16,7 @@ angular.module('openshiftConsole')
                         BuildsService,
                         DataService,
                         DeploymentsService,
+                        LabelsService,
                         Logger,
                         PodsService,
                         ProjectsService,
@@ -82,7 +83,7 @@ angular.module('openshiftConsole')
       }
 
       $scope.deploymentConfigs = deploymentConfigs;
-      $scope.deploymentConfigsByService = DeploymentsService.groupByService(deploymentConfigs, services);
+      $scope.deploymentConfigsByService = LabelsService.groupBySelector(deploymentConfigs, services, { matchTemplate: true });
     };
 
     var groupDeploymentsByDC = function() {
@@ -119,7 +120,7 @@ angular.module('openshiftConsole')
         return;
       }
 
-      $scope.deploymentsByService = DeploymentsService.groupByService(deployments, services);
+      $scope.deploymentsByService = LabelsService.groupBySelector(deployments, services, { matchTemplate: true });
       groupDeploymentsByDC();
       // Only the most recent in progress or complete deployment for a given
       // deployment config is scalable in the overview.
@@ -144,7 +145,7 @@ angular.module('openshiftConsole')
         return;
       }
 
-      $scope.replicaSetsByService = DeploymentsService.groupByService(replicaSets, services);
+      $scope.replicaSetsByService = LabelsService.groupBySelector(replicaSets, services, { matchTemplate: true });
     };
 
     var groupHPAs = function() {
@@ -207,8 +208,10 @@ angular.module('openshiftConsole')
       }
 
       var allOwners = _.toArray(deployments).concat(_.toArray(replicaSets));
-      $scope.podsByOwnerUID = PodsService.groupByOwnerUID(pods, allOwners);
-      $scope.monopodsByService = PodsService.groupByService($scope.podsByOwnerUID[''], services, showMonopod);
+      $scope.podsByOwnerUID = LabelsService.groupBySelector(pods, allOwners, { key: 'metadata.uid' });
+
+      var monopods = $scope.podsByOwnerUID[''];
+      $scope.monopodsByService = LabelsService.groupBySelector(monopods, services, { include: showMonopod });
     };
 
     // Set of child services in this project.
