@@ -5,6 +5,8 @@ angular.module("openshiftConsole")
     var POD_GAUGE_TEMPLATE = "/gauges/{containerName}%2F{podUID}%2F{metric}/data";
     // Used in compact view.
     var POD_STACKED_TEMPLATE = "/gauges/data?stacked=true&tags=descriptor_name:{metric},type:{type},pod_name:{podName}";
+     
+    var POD_RESOURCE_STACKED_TEMPLATE = "/gauges/data?stacked=true&tags=descriptor_name:{metric},type:{type},pod_name:{podName},resource_id:{resourceId}";
 
     var metricsURL;
     function getMetricsURL() {
@@ -54,6 +56,7 @@ angular.module("openshiftConsole")
       switch (metric) {
         case 'network/rx_rate':
         case 'network/tx_rate':
+        case 'filesystem/usage':
           return 'pod';
         default:
           return 'pod_container';
@@ -67,12 +70,23 @@ angular.module("openshiftConsole")
 
         // Are we requesting stacked pod metrics?
         if (config.stacked) {
-          template = metricsURL + POD_STACKED_TEMPLATE;
-          return URI.expand(template, {
-            podName: config.pod.metadata.name,
-            metric: config.metric,
-            type: type
-          }).toString();
+          switch (config.metric) {
+            case 'filesystem/usage':
+              template = metricsURL + POD_RESOURCE_STACKED_TEMPLATE;
+              return URI.expand(template, {
+                podName: config.pod.metadata.name,
+                metric: config.metric,
+                type: type,
+                resourceId: "Volume:" + config.label
+              }).toString();
+            default:
+              template = metricsURL + POD_STACKED_TEMPLATE;
+              return URI.expand(template, {
+                podName: config.pod.metadata.name,
+                metric: config.metric,
+                type: type
+              }).toString();
+           }
         }
 
         // Otherwise, get metrics for a pod.
