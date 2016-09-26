@@ -69,7 +69,8 @@ angular
       })
       .when('/project/:project/browse/builds', {
         templateUrl: 'views/builds.html',
-        controller: 'BuildsController'
+        controller: 'BuildsController',
+        reloadOnSearch: false
       })
       .when('/project/:project/browse/pipelines', {
         templateUrl: 'views/pipelines.html',
@@ -147,7 +148,8 @@ angular
       })
       .when('/project/:project/browse/deployments', {
         templateUrl: 'views/deployments.html',
-        controller: 'DeploymentsController'
+        controller: 'DeploymentsController',
+        reloadOnSearch: false
       })
       // Can't be /deployments/ (plural) because we used that previously for deployment config URLs. See redirect below.
       .when('/project/:project/browse/deployment/:deployment', {
@@ -207,7 +209,8 @@ angular
       })
       .when('/project/:project/browse/pods', {
         templateUrl: 'views/pods.html',
-        controller: 'PodsController'
+        controller: 'PodsController',
+        reloadOnSearch: false
       })
       .when('/project/:project/browse/pods/:pod', {
         templateUrl: function(params) {
@@ -222,7 +225,8 @@ angular
       })
       .when('/project/:project/browse/services', {
         templateUrl: 'views/services.html',
-        controller: 'ServicesController'
+        controller: 'ServicesController',
+        reloadOnSearch: false
       })
       .when('/project/:project/browse/services/:service', {
         templateUrl: 'views/browse/service.html',
@@ -231,11 +235,13 @@ angular
       })
       .when('/project/:project/browse/storage', {
         templateUrl: 'views/storage.html',
-        controller: 'StorageController'
+        controller: 'StorageController',
+        reloadOnSearch: false
       })
       .when('/project/:project/browse/other', {
         templateUrl: 'views/other-resources.html',
-        controller: 'OtherResourcesController'
+        controller: 'OtherResourcesController',
+        reloadOnSearch: false
       })
       .when('/project/:project/browse/persistentvolumeclaims/:pvc', {
         templateUrl: 'views/browse/persistent-volume-claim.html',
@@ -243,7 +249,8 @@ angular
       })
       .when('/project/:project/browse/routes', {
         templateUrl: 'views/browse/routes.html',
-        controller: 'RoutesController'
+        controller: 'RoutesController',
+        reloadOnSearch: false
       })
       .when('/project/:project/edit/routes/:route', {
         templateUrl: 'views/edit/route.html',
@@ -378,8 +385,10 @@ angular
     $compileProvider.aHrefSanitizationWhitelist(/^\s*(https?|mailto|git):/i);
   })
   .run(function($rootScope, LabelFilter){
-    $rootScope.$on('$locationChangeSuccess', function(event) {
-      LabelFilter.setLabelSelector(new LabelSelector({}, true), true);
+    // assume we always want filterState persisted, pages that dont can turn it off
+    LabelFilter.persistFilterState(true);
+    $rootScope.$on('$routeChangeSuccess', function() {
+      LabelFilter.readPersistedState();
     });
   })
   .run(function(dateRelativeFilter, durationFilter, timeOnlyDurationFromTimestampsFilter) {

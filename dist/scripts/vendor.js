@@ -63,17 +63,20 @@ a[c] && a[c].constructor && a[c].constructor === Object ? mergeDeep(a[c], b) :a[
 }
 
 function LabelSelector(a, b) {
-this._conjuncts = {}, this._emptySelectsAll = !!b;
-var c = {
+this._conjuncts = {}, this._emptySelectsAll = !!b, this._OPERATOR_MAP = {
 In:"in",
 NotIn:"not in",
 Exists:"exists",
 DoesNotExist:"does not exist"
-};
-a && (a.matchLabels || a.matchExpressions ? (angular.forEach(a.matchLabels, function(a, b) {
+}, this._REVERSE_OPERATOR_MAP = {
+"in":"In",
+"not in":"NotIn",
+exists:"Exists",
+"does not exist":"DoesNotExist"
+}, a && (a.matchLabels || a.matchExpressions ? (angular.forEach(a.matchLabels, function(a, b) {
 this.addConjunct(b, "in", [ a ]);
 }, this), angular.forEach(a.matchExpressions, function(a) {
-this.addConjunct(a.key, c[a.operator], a.values);
+this.addConjunct(a.key, this._OPERATOR_MAP[a.operator], a.values);
 }, this)) :angular.forEach(a, function(a, b) {
 a || "" === a ? this.addConjunct(b, "in", [ a ]) :this.addConjunct(b, "exists", []);
 }, this));
@@ -38543,6 +38546,19 @@ return !!this._conjuncts[this._getIdForConjunct(a)];
 if (this.isEmpty()) return !1;
 for (var b in this._conjuncts) if (!a.hasConjunct(this._conjuncts[b])) return !1;
 return !0;
+}, LabelSelector.prototype.exportJSON = function() {
+var a = {
+matchExpressions:[]
+};
+for (var b in this._conjuncts) {
+var c = this._conjuncts[b], d = {
+key:c.key,
+operator:this._REVERSE_OPERATOR_MAP[c.operator],
+values:c.values
+};
+a.matchExpressions.push(d);
+}
+return JSON.stringify(a);
 }, LabelSelector.prototype._getStringForConjunct = function(a) {
 var b = a.key;
 if ("exists" == a.operator) return b + " exists";
@@ -38561,18 +38577,18 @@ angular.module("kubernetesUI");
 angular.module("kubernetesUI", []);
 }
 
-angular.module("kubernetesUI").factory("LabelFilter", [ function() {
-function a() {
+angular.module("kubernetesUI").factory("LabelFilter", [ "$location", function(a) {
+function b() {
 this._existingLabels = {}, this._labelSelector = new LabelSelector(null, (!0)), this._onActiveFiltersChangedCallbacks = $.Callbacks();
 }
-return a.prototype.addLabelSuggestionsFromResources = function(a, b) {
+return b.prototype.addLabelSuggestionsFromResources = function(a, b) {
 if (a.metadata && a.metadata.name) this._extractLabelsFromItem(a, b); else {
 var c = this;
 angular.forEach(a, function(a) {
 c._extractLabelsFromItem(a, b);
 });
 }
-}, a.prototype.setLabelSuggestions = function(a) {
+}, b.prototype.setLabelSuggestions = function(a) {
 if (this._existingLabels = a, this._labelFilterKeySelectize) {
 this._labelFilterKeySelectize.clearOptions();
 var b = this;
@@ -38580,16 +38596,33 @@ this._labelFilterKeySelectize.load(function(a) {
 a(b._getLabelFilterKeys());
 });
 }
-}, a.prototype._extractLabelsFromItem = function(a, b) {
+}, b.prototype.persistFilterState = function(a) {
+this._shouldPersistState = !!a;
+}, b.prototype._persistState = function() {
+if (this._shouldPersistState) if (this._labelSelector.isEmpty()) {
+var b = a.search();
+b.labelFilter = null, a.replace().search(b);
+} else {
+var b = a.search();
+b.labelFilter = this._labelSelector.exportJSON(), a.replace().search(b);
+}
+}, b.prototype.readPersistedState = function() {
+var b = a.search().labelFilter;
+if (b) try {
+this._labelSelector = new LabelSelector(JSON.parse(b), (!0));
+} catch (c) {
+this._labelSelector = new LabelSelector({}, (!0));
+} else this._labelSelector = new LabelSelector({}, (!0));
+}, b.prototype._extractLabelsFromItem = function(a, b) {
 var c = a.metadata ? a.metadata.labels :{};
 angular.forEach(c, function(a, c) {
 b[c] || (b[c] = []), b[c].push({
 value:a
 });
 });
-}, a.prototype.getLabelSelector = function() {
+}, b.prototype.getLabelSelector = function() {
 return this._labelSelector;
-}, a.prototype.setLabelSelector = function(a, b) {
+}, b.prototype.setLabelSelector = function(a, b) {
 if (this._labelFilterActiveFiltersElement && this._labelFilterActiveFiltersElement.empty(), this._labelSelector = a, this._labelFilterActiveElement) if (this._labelSelector.isEmpty()) this._labelFilterActiveElement.hide(); else {
 this._labelFilterActiveElement.show();
 var c = this;
@@ -38597,10 +38630,10 @@ this._labelSelector.each(function(a) {
 c._renderActiveFilter(a);
 });
 }
-b || this._onActiveFiltersChangedCallbacks.fire(this._labelSelector);
-}, a.prototype.onActiveFiltersChanged = function(a) {
+this._persistState(), b || this._onActiveFiltersChangedCallbacks.fire(this._labelSelector);
+}, b.prototype.onActiveFiltersChanged = function(a) {
 this._onActiveFiltersChangedCallbacks.add(a);
-}, a.prototype.setupFilterWidget = function(a, b, c) {
+}, b.prototype.setupFilterWidget = function(a, b, c) {
 var d = this, c = c || {};
 this._labelFilterRootElement = a, this._labelFilterActiveFiltersRootElement = b;
 var e = $("<div>").addClass("label-filter").appendTo(a);
@@ -38702,26 +38735,26 @@ d._labelFilterKeySelectize.clear(), d._labelFilterOperatorSelectizeInput.hide(),
 }), this._labelSelector.isEmpty() || (this._labelFilterActiveElement.show(), this._labelSelector.each(function(a) {
 d._renderActiveFilter(a);
 }));
-}, a.prototype._getLabelFilterKeys = function() {
+}, b.prototype._getLabelFilterKeys = function() {
 for (var a = [], b = Object.keys(this._existingLabels), c = 0; c < b.length; c++) a.push({
 key:b[c]
 });
 return a;
-}, a.prototype.addActiveFilter = function(a, b, c) {
+}, b.prototype.addActiveFilter = function(a, b, c) {
 this._labelFilterActiveElement.show(), this._addActiveFilter(a, b, c);
-}, a.prototype._addActiveFilter = function(a, b, c) {
+}, b.prototype._addActiveFilter = function(a, b, c) {
 var d = this._labelSelector.addConjunct(a, b, c);
-this._onActiveFiltersChangedCallbacks.fire(this._labelSelector), this._renderActiveFilter(d);
-}, a.prototype._renderActiveFilter = function(a) {
+this._persistState(), this._onActiveFiltersChangedCallbacks.fire(this._labelSelector), this._renderActiveFilter(d);
+}, b.prototype._renderActiveFilter = function(a) {
 $("<a>").addClass("label label-default label-filter-active-filter").prop("href", "javascript:;").prop("filter-label-id", a.id).click($.proxy(this, "_removeActiveFilter")).append($("<span>").text(a.string)).append($("<i>").addClass("fa fa-times")).appendTo(this._labelFilterActiveFiltersElement);
-}, a.prototype._removeActiveFilter = function(a) {
+}, b.prototype._removeActiveFilter = function(a) {
 var b = $(a.target).closest(".label-filter-active-filter"), c = b.prop("filter-label-id");
-b.remove(), 0 == $(".label-filter-active-filter", this._labelFilterActiveFiltersElement).length && this._labelFilterActiveElement.hide(), this._labelSelector.removeConjunct(c), this._onActiveFiltersChangedCallbacks.fire(this._labelSelector);
-}, a.prototype._clearActiveFilters = function() {
-this._labelSelector.clearConjuncts(), this._onActiveFiltersChangedCallbacks.fire(this._labelSelector);
-}, a.prototype.toggleFilterWidget = function(a) {
+b.remove(), 0 == $(".label-filter-active-filter", this._labelFilterActiveFiltersElement).length && this._labelFilterActiveElement.hide(), this._labelSelector.removeConjunct(c), this._persistState(), this._onActiveFiltersChangedCallbacks.fire(this._labelSelector);
+}, b.prototype._clearActiveFilters = function() {
+this._labelSelector.clearConjuncts(), this._persistState(), this._onActiveFiltersChangedCallbacks.fire(this._labelSelector);
+}, b.prototype.toggleFilterWidget = function(a) {
 this._labelFilterRootElement && (a ? this._labelFilterRootElement.show() :this._labelFilterRootElement.hide()), this._labelFilterActiveFiltersRootElement && (a ? this._labelFilterActiveFiltersRootElement.show() :this._labelFilterActiveFiltersRootElement.hide());
-}, new a();
+}, new b();
 } ]), function(a, b) {
 "function" == typeof define && define.amd ? define([ "angular", "d3" ], b) :b(a.angular, a.d3);
 }(this, function(a, b) {
