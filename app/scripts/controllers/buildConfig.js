@@ -58,6 +58,8 @@ angular.module('openshiftConsole')
     var buildStrategy = $filter('buildStrategy');
     var watches = [];
 
+    var requestContext;
+
     // copy buildConfig and ensure it has env so that we can edit env vars using key-value-editor
     var copyBuildConfigAndEnsureEnv = function(buildConfig) {
       $scope.updatedBuildConfig = angular.copy(buildConfig);
@@ -68,86 +70,85 @@ angular.module('openshiftConsole')
       });
     };
 
+    $scope.saveEnvVars = function() {
+      $scope.envVars = _.filter($scope.envVars, 'name');
+      buildStrategy($scope.updatedBuildConfig).env = keyValueEditorUtils.compactEntries(angular.copy($scope.envVars));
+      DataService
+        .update("buildconfigs", $routeParams.buildconfig, $scope.updatedBuildConfig, requestContext)
+        .then(function success(){
+          // TODO:  de-duplicate success and error messages.
+          // as it stands, multiple messages appear based on how edit
+          // is made.
+          $scope.alerts['saveBCEnvVarsSuccess'] = {
+            type: "success",
+            // TODO:  improve success alert
+            message: $scope.buildConfigName + " was updated."
+          };
+          $scope.forms.bcEnvVars.$setPristine();
+        }, function error(e){
+          $scope.alerts['saveBCEnvVarsError'] = {
+            type: "error",
+            message: $scope.buildConfigName + " was not updated.",
+            details: "Reason: " + $filter('getErrorDetails')(e)
+          };
+        });
+    };
+
+    $scope.clearEnvVarUpdates = function() {
+      copyBuildConfigAndEnsureEnv($scope.buildConfig);
+      $scope.forms.bcEnvVars.$setPristine();
+    };
+
+    var buildConfigResolved = function(buildConfig, action) {
+      $scope.loaded = true;
+      $scope.buildConfig = buildConfig;
+      $scope.paused = BuildsService.isPaused($scope.buildConfig);
+      if ($scope.buildConfig.spec.source.images) {
+        $scope.imageSources = $scope.buildConfig.spec.source.images;
+        $scope.imageSourcesPaths = [];
+        $scope.imageSources.forEach(function(imageSource) {
+          $scope.imageSourcesPaths.push($filter('destinationSourcePair')(imageSource.paths));
+        });
+      }
+      copyBuildConfigAndEnsureEnv(buildConfig);
+      if (action === "DELETED") {
+        $scope.alerts["deleted"] = {
+          type: "warning",
+          message: "This build configuration has been deleted."
+        };
+      }
+      if (!$scope.forms.bcEnvVars || $scope.forms.bcEnvVars.$pristine) {
+        copyBuildConfigAndEnsureEnv(buildConfig);
+      } else {
+        $scope.alerts["background_update"] = {
+          type: "warning",
+          message: "This build configuration has been updated in the background. Saving your changes may create a conflict or cause loss of data.",
+          links: [
+            {
+              label: 'Reload environment variables',
+              onClick: function() {
+                $scope.clearEnvVarUpdates();
+                return true;
+              }
+            }
+          ]
+        };
+      }
+
+      $scope.paused = BuildsService.isPaused($scope.buildConfig);
+    };
+
     ProjectsService
       .get($routeParams.project)
       .then(_.spread(function(project, context) {
         $scope.project = project;
-
-        DataService.get("buildconfigs", $routeParams.buildconfig, context).then(
-          // success
-          function(buildConfig) {
-            $scope.loaded = true;
-            $scope.buildConfig = buildConfig;
-            $scope.paused = BuildsService.isPaused($scope.buildConfig);
-            if ($scope.buildConfig.spec.source.images) {
-              $scope.imageSources = $scope.buildConfig.spec.source.images;
-              $scope.imageSourcesPaths = [];
-              $scope.imageSources.forEach(function(imageSource) {
-                $scope.imageSourcesPaths.push($filter('destinationSourcePair')(imageSource.paths));
-              });
-            }
-
-            copyBuildConfigAndEnsureEnv(buildConfig);
-
-            $scope.saveEnvVars = function() {
-              $scope.envVars = _.filter($scope.envVars, 'name');
-              buildStrategy($scope.updatedBuildConfig).env = keyValueEditorUtils.compactEntries(angular.copy($scope.envVars));
-              DataService
-                .update("buildconfigs", $routeParams.buildconfig, $scope.updatedBuildConfig, context)
-                .then(function success(){
-                  // TODO:  de-duplicate success and error messages.
-                  // as it stands, multiple messages appear based on how edit
-                  // is made.
-                  $scope.alerts['saveBCEnvVarsSuccess'] = {
-                    type: "success",
-                    // TODO:  improve success alert
-                    message: $scope.buildConfigName + " was updated."
-                  };
-                  $scope.forms.bcEnvVars.$setPristine();
-                }, function error(e){
-                  $scope.alerts['saveBCEnvVarsError'] = {
-                    type: "error",
-                    message: $scope.buildConfigName + " was not updated.",
-                    details: "Reason: " + $filter('getErrorDetails')(e)
-                  };
-                });
-            };
-
-            $scope.clearEnvVarUpdates = function() {
-              copyBuildConfigAndEnsureEnv($scope.buildConfig);
-              $scope.forms.bcEnvVars.$setPristine();
-            };
-
+        requestContext = context;
+        DataService
+          .get("buildconfigs", $routeParams.buildconfig, context)
+          .then(function(buildConfig) {
+            buildConfigResolved(buildConfig);
             // If we found the item successfully, watch for changes on it
-            watches.push(DataService.watchObject("buildconfigs", $routeParams.buildconfig, context, function(buildConfig, action) {
-              if (action === "DELETED") {
-                $scope.alerts["deleted"] = {
-                  type: "warning",
-                  message: "This build configuration has been deleted."
-                };
-              }
-              $scope.buildConfig = buildConfig;
-
-              if (!$scope.forms.bcEnvVars || $scope.forms.bcEnvVars.$pristine) {
-                copyBuildConfigAndEnsureEnv(buildConfig);
-              } else {
-                $scope.alerts["background_update"] = {
-                  type: "warning",
-                  message: "This build configuration has been updated in the background. Saving your changes may create a conflict or cause loss of data.",
-                  links: [
-                    {
-                      label: 'Reload environment variables',
-                      onClick: function() {
-                        $scope.clearEnvVarUpdates();
-                        return true;
-                      }
-                    }
-                  ]
-                };
-              }
-
-              $scope.paused = BuildsService.isPaused($scope.buildConfig);
-            }));
+            watches.push(DataService.watchObject("buildconfigs", $routeParams.buildconfig, context, buildConfigResolved));
           },
           // failure
           function(e) {
