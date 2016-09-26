@@ -198,13 +198,13 @@ angular.module('openshiftConsole')
             // If we found the item successfully, watch for changes on it
             watches.push(DataService.watchObject("buildconfigs", $routeParams.buildconfig, context, function(buildConfig, action) {
               if (action === 'MODIFIED') {
-                $scope.alerts["background_update"] = {
+                $scope.alerts["updated/deleted"] = {
                   type: "warning",
                   message: "This build configuration has changed since you started editing it. You'll need to copy any changes you've made and edit again."
                 };
               }
               if (action === "DELETED") {
-                $scope.alerts["deleted"] = {
+                $scope.alerts["updated/deleted"] = {
                   type: "warning",
                   message: "This build configuration has been deleted."
                 };
