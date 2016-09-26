@@ -40,7 +40,7 @@
                                   required>
                               </div>
                               <div>
-                                <span class="text-warning" ng-if="form.sourceUrl.$dirty && !sourceURLPattern.test(updatedBuildConfig.spec.source.git.uri)">Git repository should be a URL.</span>
+                                <span class="text-warning" ng-if="form.sourceUrl.$dirty && isSourceURLInvalid()">Git repository should be a URL.</span>
                               </div>
                             </div>
 
@@ -472,7 +472,7 @@
                     <button
                       type="submit"
                       class="btn btn-primary btn-lg"
-                        ng-disabled="form.$invalid || form.$pristine || disableInputs">
+                        ng-disabled="form.$invalid || form.$pristine || disableInputs || isSourceURLInvalid()">
                         Save
                     </button>
                     <a class="btn btn-default btn-lg"
