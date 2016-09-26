@@ -1262,7 +1262,7 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "<a ng-href=\"{{healthCheckURL}}\" role=\"button\">Edit Health Checks</a>\n" +
     "</li>\n" +
     "<li ng-if=\"{ group: 'extensions', resource: 'replicasets' } | canI : 'update'\">\n" +
-    "<a ng-href=\"{{replicaSet | editYamlURL}}\" role=\"button\">Edit YAML</a>\n" +
+    "<a ng-href=\"{{deployment | editYamlURL}}\" role=\"button\">Edit YAML</a>\n" +
     "</li>\n" +
     "<li ng-if=\"{ group: 'extensions', resource: 'replicasets' } | canI : 'delete'\">\n" +
     "\n" +
