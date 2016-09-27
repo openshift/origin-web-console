@@ -4341,7 +4341,7 @@ c.unwatchAll(g);
 });
 }));
 } ]), angular.module("openshiftConsole").controller("DeploymentsController", [ "$scope", "$filter", "$routeParams", "AlertMessageService", "DataService", "DeploymentsService", "LabelFilter", "Logger", "ProjectsService", function(a, b, c, d, e, f, g, h, i) {
-a.projectName = c.project, a.deployments = {}, a.unfilteredDeploymentConfigs = {}, a.unfilteredK8SDeployments = {}, a.deploymentsByDeploymentConfig = {}, a.labelSuggestions = {}, a.alerts = a.alerts || {}, a.emptyMessage = "Loading...", a.expandedDeploymentConfigRow = {}, a.unfilteredReplicaSets = {}, a.unfilteredReplicationControllers = {}, d.getAlerts().forEach(function(b) {
+a.projectName = c.project, a.replicationControllers = {}, a.unfilteredDeploymentConfigs = {}, a.unfilteredDeployments = {}, a.replicationControllersByDC = {}, a.labelSuggestions = {}, a.alerts = a.alerts || {}, a.emptyMessage = "Loading...", a.expandedDeploymentConfigRow = {}, a.unfilteredReplicaSets = {}, a.unfilteredReplicationControllers = {}, d.getAlerts().forEach(function(b) {
 a.alerts[b.name] = b.data;
 }), d.clearAlerts();
 var j = [];
@@ -4349,43 +4349,43 @@ i.get(c.project).then(_.spread(function(c, d) {
 function i() {
 var b = !g.getLabelSelector().isEmpty();
 if (!b) return void delete a.alerts.deployments;
-var c = _.isEmpty(a.unfilteredDeploymentConfigs) && _.isEmpty(a.unfilteredReplicationControllers) && _.isEmpty(a.unfilteredK8SDeployments) && _.isEmpty(a.unfilteredReplicaSets);
+var c = _.isEmpty(a.unfilteredDeploymentConfigs) && _.isEmpty(a.unfilteredReplicationControllers) && _.isEmpty(a.unfilteredDeployments) && _.isEmpty(a.unfilteredReplicaSets);
 if (c) return void delete a.alerts.deployments;
-var d = _.isEmpty(a.deploymentConfigs) && _.isEmpty(a.deploymentsByDeploymentConfig[""]) && _.isEmpty(a.k8sDeployments) && _.isEmpty(a.replicaSets);
+var d = _.isEmpty(a.deploymentConfigs) && _.isEmpty(a.replicationControllersByDC[""]) && _.isEmpty(a.deployments) && _.isEmpty(a.replicaSets);
 return d ? void (a.alerts.deployments = {
 type:"warning",
 details:"The active filters are hiding all deployments."
 }) :void delete a.alerts.deployments;
 }
 a.project = c, j.push(e.watch("replicationcontrollers", d, function(c, d, e) {
-a.deployments = c.by("metadata.name");
+a.replicationControllers = c.by("metadata.name");
 var j, k;
-if (e && (j = b("annotation")(e, "deploymentConfig"), k = e.metadata.name), a.deploymentsByDeploymentConfig = f.associateDeploymentsToDeploymentConfig(a.deployments, a.deploymentConfigs, !0), a.deploymentsByDeploymentConfig[""] && (a.unfilteredReplicationControllers = a.deploymentsByDeploymentConfig[""], g.addLabelSuggestionsFromResources(a.unfilteredReplicationControllers, a.labelSuggestions), g.setLabelSuggestions(a.labelSuggestions), a.deploymentsByDeploymentConfig[""] = g.getLabelSelector().select(a.deploymentsByDeploymentConfig[""])), i(), d) {
+if (e && (j = b("annotation")(e, "deploymentConfig"), k = e.metadata.name), a.replicationControllersByDC = f.associateDeploymentsToDeploymentConfig(a.replicationControllers, a.deploymentConfigs, !0), a.replicationControllersByDC[""] && (a.unfilteredReplicationControllers = a.replicationControllersByDC[""], g.addLabelSuggestionsFromResources(a.unfilteredReplicationControllers, a.labelSuggestions), g.setLabelSuggestions(a.labelSuggestions), a.replicationControllersByDC[""] = g.getLabelSelector().select(a.replicationControllersByDC[""])), i(), d) {
 if ("ADDED" === d || "MODIFIED" === d && [ "New", "Pending", "Running" ].indexOf(b("deploymentStatus")(e)) > -1) a.deploymentConfigDeploymentsInProgress[j] = a.deploymentConfigDeploymentsInProgress[j] || {}, a.deploymentConfigDeploymentsInProgress[j][k] = e; else if ("MODIFIED" === d) {
 var l = b("deploymentStatus")(e);
 "Complete" !== l && "Failed" !== l || delete a.deploymentConfigDeploymentsInProgress[j][k];
 }
-} else a.deploymentConfigDeploymentsInProgress = f.associateRunningDeploymentToDeploymentConfig(a.deploymentsByDeploymentConfig);
-e ? "DELETED" !== d && (e.causes = b("deploymentCauses")(e)) :angular.forEach(a.deployments, function(a) {
+} else a.deploymentConfigDeploymentsInProgress = f.associateRunningDeploymentToDeploymentConfig(a.replicationControllersByDC);
+e ? "DELETED" !== d && (e.causes = b("deploymentCauses")(e)) :angular.forEach(a.replicationControllers, function(a) {
 a.causes = b("deploymentCauses")(a);
-}), h.log("deployments (subscribe)", a.deployments);
+}), h.log("replicationControllers (subscribe)", a.replicationControllers);
 })), j.push(e.watch({
 group:"extensions",
 resource:"replicasets"
 }, d, function(b) {
 a.unfilteredReplicaSets = b.by("metadata.name"), g.addLabelSuggestionsFromResources(a.unfilteredReplicaSets, a.labelSuggestions), g.setLabelSuggestions(a.labelSuggestions), a.replicaSets = g.getLabelSelector().select(a.unfilteredReplicaSets), h.log("replicasets (subscribe)", a.replicaSets);
 })), j.push(e.watch("deploymentconfigs", d, function(b) {
-a.unfilteredDeploymentConfigs = b.by("metadata.name"), g.addLabelSuggestionsFromResources(a.unfilteredDeploymentConfigs, a.labelSuggestions), g.setLabelSuggestions(a.labelSuggestions), a.deploymentConfigs = g.getLabelSelector().select(a.unfilteredDeploymentConfigs), a.emptyMessage = "No deployment configurations to show", a.deploymentsByDeploymentConfig = f.associateDeploymentsToDeploymentConfig(a.deployments, a.deploymentConfigs, !0), a.deploymentsByDeploymentConfig[""] && (a.unfilteredReplicationControllers = a.deploymentsByDeploymentConfig[""], a.deploymentsByDeploymentConfig[""] = g.getLabelSelector().select(a.deploymentsByDeploymentConfig[""])), i(), h.log("deploymentconfigs (subscribe)", a.deploymentConfigs);
+a.unfilteredDeploymentConfigs = b.by("metadata.name"), g.addLabelSuggestionsFromResources(a.unfilteredDeploymentConfigs, a.labelSuggestions), g.setLabelSuggestions(a.labelSuggestions), a.deploymentConfigs = g.getLabelSelector().select(a.unfilteredDeploymentConfigs), a.emptyMessage = "No deployment configurations to show", a.replicationControllersByDC = f.associateDeploymentsToDeploymentConfig(a.replicationControllers, a.deploymentConfigs, !0), a.replicationControllersByDC[""] && (a.unfilteredReplicationControllers = a.replicationControllersByDC[""], a.replicationControllersByDC[""] = g.getLabelSelector().select(a.replicationControllersByDC[""])), i(), h.log("deploymentconfigs (subscribe)", a.deploymentConfigs);
 })), j.push(e.watch({
 group:"extensions",
 resource:"deployments"
 }, d, function(b) {
-a.unfilteredK8SDeployments = b.by("metadata.name"), g.addLabelSuggestionsFromResources(a.unfilteredK8SDeployments, a.labelSuggestions), g.setLabelSuggestions(a.labelSuggestions), a.k8sDeployments = g.getLabelSelector().select(a.unfilteredK8SDeployments), h.log("k8sDeployments (subscribe)", a.unfilteredK8SDeployments);
+a.unfilteredDeployments = b.by("metadata.name"), g.addLabelSuggestionsFromResources(a.unfilteredDeployments, a.labelSuggestions), g.setLabelSuggestions(a.labelSuggestions), a.deployments = g.getLabelSelector().select(a.unfilteredDeployments), h.log("deployments (subscribe)", a.unfilteredDeployments);
 })), a.showEmptyMessage = function() {
-return 0 === b("hashSize")(a.deploymentsByDeploymentConfig) || !(1 !== b("hashSize")(a.deploymentsByDeploymentConfig) || !a.deploymentsByDeploymentConfig[""]);
+return 0 === b("hashSize")(a.replicationControllersByDC) || !(1 !== b("hashSize")(a.replicationControllersByDC) || !a.replicationControllersByDC[""]);
 }, g.onActiveFiltersChanged(function(b) {
 a.$apply(function() {
-a.deploymentConfigs = b.select(a.unfilteredDeploymentConfigs), a.deploymentsByDeploymentConfig = f.associateDeploymentsToDeploymentConfig(a.deployments, a.deploymentConfigs, !0), a.deploymentsByDeploymentConfig[""] && (a.unfilteredReplicationControllers = a.deploymentsByDeploymentConfig[""], a.deploymentsByDeploymentConfig[""] = g.getLabelSelector().select(a.deploymentsByDeploymentConfig[""])), a.k8sDeployments = b.select(a.unfilteredK8SDeployments), a.replicaSets = b.select(a.unfilteredReplicaSets), i();
+a.deploymentConfigs = b.select(a.unfilteredDeploymentConfigs), a.replicationControllersByDC = f.associateDeploymentsToDeploymentConfig(a.replicationControllers, a.deploymentConfigs, !0), a.replicationControllersByDC[""] && (a.unfilteredReplicationControllers = a.replicationControllersByDC[""], a.replicationControllersByDC[""] = g.getLabelSelector().select(a.replicationControllersByDC[""])), a.deployments = b.select(a.unfilteredDeployments), a.replicaSets = b.select(a.unfilteredReplicaSets), i();
 });
 }), a.$on("$destroy", function() {
 e.unwatchAll(j);
