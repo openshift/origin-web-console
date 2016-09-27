@@ -108,19 +108,12 @@ angular.module('openshiftConsole')
             }
           );
 
-          DataService.list("persistentvolumeclaims", context, 
-            function(pvcs) {
-              $scope.pvcs = orderByDisplayName(pvcs.by("metadata.name"));
-              if ($scope.pvcs.length) {
-                if (!$scope.attach.persistentVolumeClaim) {
-                  $scope.attach.persistentVolumeClaim = $scope.pvcs[0];
-                }
-              }
-            },
-            function(e) {
-              displayError("The persistent volume claims could not be loaded.", getErrorDetails(e));
+          DataService.list("persistentvolumeclaims", context, function(pvcs) {
+            $scope.pvcs = orderByDisplayName(pvcs.by("metadata.name"));
+            if (!_.isEmpty($scope.pvcs) && !$scope.attach.persistentVolumeClaim) {
+              $scope.attach.persistentVolumeClaim = _.head($scope.pvcs);
             }
-          );
+          });
         };
 
         var isVolumeNameUsed = function(name, podTemplate) {
