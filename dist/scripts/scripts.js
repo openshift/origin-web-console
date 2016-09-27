@@ -6371,9 +6371,7 @@ includeProject:!0
 }, function(a) {
 n(b.name + " could not be loaded.", k(a));
 }), g.list("persistentvolumeclaims", h, function(a) {
-c.pvcs = i(a.by("metadata.name")), c.pvcs.length && (c.attach.persistentVolumeClaim || (c.attach.persistentVolumeClaim = c.pvcs[0]));
-}, function(a) {
-n("The persistent volume claims could not be loaded.", k(a));
+c.pvcs = i(a.by("metadata.name")), _.isEmpty(c.pvcs) || c.attach.persistentVolumeClaim || (c.attach.persistentVolumeClaim = _.head(c.pvcs));
 });
 }, p = function(a, b) {
 if (b.spec.volumes) for (var d = 0; d < b.spec.volumes.length; d++) {
