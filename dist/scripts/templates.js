@@ -4301,8 +4301,8 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "<div class=\"middle-content\">\n" +
     "<div class=\"container-fluid\">\n" +
     "<div class=\"row\">\n" +
-    "<div class=\"col-md-12\" ng-class=\"{ 'gutter-top': !(k8sDeployments | hashSize) && !(replicaSets | hashSize) }\">\n" +
-    "<h3 ng-if=\"(k8sDeployments | hashSize) || (replicaSets | hashSize)\">Deployment Configurations</h3>\n" +
+    "<div class=\"col-md-12\" ng-class=\"{ 'gutter-top': !(deployments | hashSize) && !(replicaSets | hashSize) }\">\n" +
+    "<h3 ng-if=\"(deployments | hashSize) || (replicaSets | hashSize)\">Deployment Configurations</h3>\n" +
     "<table class=\"table table-bordered table-hover table-mobile\">\n" +
     "<thead>\n" +
     "<tr>\n" +
@@ -4318,12 +4318,12 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "\n" +
     "<tr><td colspan=\"5\"><em>{{emptyMessage}}</em></td></tr>\n" +
     "</tbody>\n" +
-    "<tbody ng-repeat=\"(deploymentConfigName, deploymentConfigDeployments) in deploymentsByDeploymentConfig\" ng-if=\"deploymentConfigName && (deploymentConfigs[deploymentConfigName] || !unfilteredDeploymentConfigs[deploymentConfigName])\">\n" +
+    "<tbody ng-repeat=\"(dcName, replicationControllersForDC) in replicationControllersByDC\" ng-if=\"dcName && (deploymentConfigs[dcName] || !unfilteredDeploymentConfigs[dcName])\">\n" +
     "\n" +
-    "<tr ng-if=\"(deploymentConfigDeployments | hashSize) == 0 && deploymentConfigName\">\n" +
+    "<tr ng-if=\"(replicationControllersForDC | hashSize) == 0 && dcName\">\n" +
     "<td data-title=\"Name\">\n" +
-    "<a ng-if=\"deploymentConfigs[deploymentConfigName]\" href=\"{{deploymentConfigName | navigateResourceURL : 'DeploymentConfig' : projectName}}\">{{deploymentConfigName}}</a>\n" +
-    "<span ng-if=\"deploymentConfigs[deploymentConfigName].status.details.message\" class=\"pficon pficon-warning-triangle-o\" style=\"cursor: help\" data-toggle=\"popover\" data-trigger=\"hover\" dynamic-content=\"{{deploymentConfigs[deploymentConfigName].status.details.message}}\"></span>\n" +
+    "<a ng-if=\"deploymentConfigs[dcName]\" href=\"{{dcName | navigateResourceURL : 'DeploymentConfig' : projectName}}\">{{dcName}}</a>\n" +
+    "<span ng-if=\"deploymentConfigs[dcName].status.details.message\" class=\"pficon pficon-warning-triangle-o\" style=\"cursor: help\" data-toggle=\"popover\" data-trigger=\"hover\" dynamic-content=\"{{deploymentConfigs[dcName].status.details.message}}\"></span>\n" +
     "</td>\n" +
     "<td data-title=\"Last Version\"><em>No deployments</em></td>\n" +
     "<td class=\"hidden-xs\">&nbsp;</td>\n" +
@@ -4331,38 +4331,38 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "<td class=\"hidden-xs\">&nbsp;</td>\n" +
     "</tr>\n" +
     "\n" +
-    "<tr ng-repeat=\"deployment in deploymentConfigDeployments | orderObjectsByDate : true | limitTo : 1\" ng-if=\"deploymentConfigName\">\n" +
+    "<tr ng-repeat=\"replicationController in replicationControllersForDC | orderObjectsByDate : true | limitTo : 1\" ng-if=\"dcName\">\n" +
     "<td data-title=\"Name\">\n" +
-    "<a href=\"{{deploymentConfigName | navigateResourceURL : 'DeploymentConfig' : deployment.metadata.namespace}}\">{{deploymentConfigName}}</a>\n" +
+    "<a ng-href=\"{{replicationController | configURLForResource}}\">{{dcName}}</a>\n" +
     "\n" +
-    "<span ng-if=\"deploymentConfigs && !deploymentConfigs[deploymentConfigName]\" class=\"pficon pficon-warning-triangle-o\" data-toggle=\"tooltip\" title=\"This deployment config no longer exists\" style=\"cursor: help\"></span>\n" +
+    "<span ng-if=\"deploymentConfigs && !deploymentConfigs[dcName]\" class=\"pficon pficon-warning-triangle-o\" data-toggle=\"tooltip\" title=\"This deployment config no longer exists\" style=\"cursor: help\"></span>\n" +
     "</td>\n" +
     "<td data-title=\"Last Version\">\n" +
     "\n" +
-    "<span ng-if=\"deployment | annotation : 'deploymentVersion'\">\n" +
-    "<a ng-href=\"{{deployment | navigateResourceURL}}\">#{{deployment | annotation : 'deploymentVersion'}}</a>\n" +
+    "<span ng-if=\"replicationController | annotation : 'deploymentVersion'\">\n" +
+    "<a ng-href=\"{{replicationController | navigateResourceURL}}\">#{{replicationController | annotation : 'deploymentVersion'}}</a>\n" +
     "</span>\n" +
-    "<span ng-if=\"!(deployment | annotation : 'deploymentVersion')\">\n" +
-    "<a ng-href=\"{{deployment | navigateResourceURL}}\">{{deployment.metadata.name}}</a>\n" +
+    "<span ng-if=\"!(replicationController | annotation : 'deploymentVersion')\">\n" +
+    "<a ng-href=\"{{replicationController | navigateResourceURL}}\">{{replicationController.metadata.name}}</a>\n" +
     "</span>\n" +
     "</td>\n" +
     "<td data-title=\"Status\">\n" +
     "<div row class=\"status\">\n" +
-    "<status-icon status=\"deployment | deploymentStatus\" disable-animation fixed-width=\"true\"></status-icon>\n" +
+    "<status-icon status=\"replicationController | deploymentStatus\" disable-animation fixed-width=\"true\"></status-icon>\n" +
     "<span flex>\n" +
-    "{{deployment | deploymentStatus}}<span ng-if=\"(deployment | deploymentStatus) == 'Active' || (deployment | deploymentStatus) == 'Running'\">,\n" +
-    "<span ng-if=\"deployment.spec.replicas !== deployment.status.replicas\">{{deployment.status.replicas}}/</span>{{deployment.spec.replicas}} replica<span ng-if=\"deployment.spec.replicas != 1\">s</span></span>\n" +
+    "{{replicationController | deploymentStatus}}<span ng-if=\"(replicationController | deploymentStatus) == 'Active' || (replicationController | deploymentStatus) == 'Running'\">,\n" +
+    "<span ng-if=\"replicationController.spec.replicas !== replicationController.status.replicas\">{{replicationController.status.replicas}}/</span>{{replicationController.spec.replicas}} replica<span ng-if=\"replicationController.spec.replicas != 1\">s</span></span>\n" +
     "</span>\n" +
     "</div>\n" +
     "\n" +
     "</td>\n" +
     "<td data-title=\"Created\">\n" +
-    "<relative-timestamp timestamp=\"deployment.metadata.creationTimestamp\"></relative-timestamp>\n" +
+    "<relative-timestamp timestamp=\"replicationController.metadata.creationTimestamp\"></relative-timestamp>\n" +
     "</td>\n" +
     "<td data-title=\"Trigger\">\n" +
-    "<span ng-if=\"!deployment.causes.length\">Unknown</span>\n" +
-    "<span ng-if=\"deployment.causes.length\">\n" +
-    "<span ng-repeat=\"cause in deployment.causes\">\n" +
+    "<span ng-if=\"!replicationController.causes.length\">Unknown</span>\n" +
+    "<span ng-if=\"replicationController.causes.length\">\n" +
+    "<span ng-repeat=\"cause in replicationController.causes\">\n" +
     "<span ng-switch=\"cause.type\">\n" +
     "<span ng-switch-when=\"ImageChange\">\n" +
     "<span ng-if=\"cause.imageTrigger.from\">\n" +
@@ -4378,7 +4378,7 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "</tr>\n" +
     "</tbody>\n" +
     "</table>\n" +
-    "<div ng-if=\"k8sDeployments | hashSize\">\n" +
+    "<div ng-if=\"deployments | hashSize\">\n" +
     "<h3>Deployments</h3>\n" +
     "<table class=\"table table-bordered table-hover table-mobile\">\n" +
     "<thead>\n" +
@@ -4390,22 +4390,22 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "<th>Strategy</th>\n" +
     "</tr>\n" +
     "</thead>\n" +
-    "<tbody ng-repeat=\"k8sDeployment in k8sDeployments | orderObjectsByDate : true\">\n" +
+    "<tbody ng-repeat=\"deployment in deployments | orderObjectsByDate : true\">\n" +
     "<tr>\n" +
     "<td data-title=\"Name\">\n" +
-    "<a ng-href=\"{{k8sDeployment | navigateResourceURL}}\">{{k8sDeployment.metadata.name}}</a>\n" +
+    "<a ng-href=\"{{deployment | navigateResourceURL}}\">{{deployment.metadata.name}}</a>\n" +
     "</td>\n" +
     "<td data-title=\"Last Version\">\n" +
-    "{{k8sDeployment | lastDeploymentRevision}}\n" +
+    "{{deployment | lastDeploymentRevision}}\n" +
     "</td>\n" +
     "<td data-title=\"Replicas\">\n" +
-    "<span ng-if=\"k8sDeployment.status.replicas !== k8sDeployment.spec.replicas\">{{k8sDeployment.status.replicas}}/</span>{{k8sDeployment.spec.replicas}} replica<span ng-if=\"k8sDeployment.spec.replicas != 1\">s</span>\n" +
+    "<span ng-if=\"deployment.status.replicas !== deployment.spec.replicas\">{{deployment.status.replicas}}/</span>{{deployment.spec.replicas}} replica<span ng-if=\"deployment.spec.replicas != 1\">s</span>\n" +
     "</td>\n" +
     "<td data-title=\"Created\">\n" +
-    "<relative-timestamp timestamp=\"k8sDeployment.metadata.creationTimestamp\"></relative-timestamp>\n" +
+    "<relative-timestamp timestamp=\"deployment.metadata.creationTimestamp\"></relative-timestamp>\n" +
     "</td>\n" +
     "<td data-title=\"Strategy\">\n" +
-    "{{k8sDeployment.spec.strategy.type | sentenceCase}}\n" +
+    "{{deployment.spec.strategy.type | sentenceCase}}\n" +
     "</td>\n" +
     "</tr>\n" +
     "</tbody>\n" +
@@ -4446,8 +4446,8 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "<th>Created</th>\n" +
     "</tr>\n" +
     "</thead>\n" +
-    "<tbody ng-if=\"(deploymentsByDeploymentConfig[''] | hashSize) === 0\"><tr><td colspan=\"3\"><em>No replication controllers to show</em></td></tr></tbody>\n" +
-    "<tbody ng-repeat=\"deployment in deploymentsByDeploymentConfig[''] | orderObjectsByDate : true\">\n" +
+    "<tbody ng-if=\"(replicationControllersByDC[''] | hashSize) === 0\"><tr><td colspan=\"3\"><em>No replication controllers to show</em></td></tr></tbody>\n" +
+    "<tbody ng-repeat=\"deployment in replicationControllersByDC[''] | orderObjectsByDate : true\">\n" +
     "\n" +
     "<tr>\n" +
     "<td data-title=\"Name\">\n" +
