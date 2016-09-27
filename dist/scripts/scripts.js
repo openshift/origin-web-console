@@ -2551,6 +2551,7 @@ params:d
 }).then(function(b) {
 return _.assign(b, {
 metricID:a.metric,
+label:a.label,
 data:f(b.data)
 });
 });
@@ -8235,35 +8236,35 @@ if (!e) {
 a.totalUsed = 0;
 var f = 0;
 angular.forEach(a.datasets, function(e) {
-var g = e.id, h = e.data;
-b = [ "dates" ], d[g] = [ e.label || g ], e.total = l(g);
-var i = _.last(h).value;
-isNaN(i) && (i = 0), a.convert && (i = a.convert(i)), e.used = i, e.total && (e.available = e.total - e.used), a.totalUsed += e.used, angular.forEach(h, function(c) {
-if (b.push(c.start), void 0 === c.value || null === c.value) d[g].push(c.value); else {
+var g = e.id, h = e.data, i = g + e.label;
+b = [ "dates" ], d[i] = [ e.label || g ], e.total = l(g);
+var j = _.last(h).value;
+isNaN(j) && (j = 0), a.convert && (j = a.convert(j)), e.used = j, e.total && (e.available = e.total - e.used), a.totalUsed += e.used, angular.forEach(h, function(c) {
+if (b.push(c.start), void 0 === c.value || null === c.value) d[i].push(c.value); else {
 var e = a.convert ? a.convert(c.value) :c.value;
 switch (g) {
 case "memory/usage":
 case "network/rx":
 case "network/tx":
-d[g].push(d3.round(e, 2));
+d[i].push(d3.round(e, 2));
 break;
 
 default:
-d[g].push(d3.round(e));
+d[i].push(d3.round(e));
 }
 f = Math.max(e, f);
 }
 }), e.used = _.round(e.used), e.total = _.round(e.total), e.available = _.round(e.available);
-var j, k;
-e.total && (k = {
+var k, m;
+e.total && (m = {
 type:"donut",
 columns:[ [ "Used", e.used ], [ "Available", Math.max(e.available, 0) ] ],
 colors:{
 Used:e.available > 0 ? "#0088ce" :"#ec7a08",
 Available:"#d1d1d1"
 }
-}, v[g] ? v[g].load(k) :(j = D(a), j.data = k, c(function() {
-v[g] = c3.generate(j);
+}, v[i] ? v[i].load(m) :(k = D(a), k.data = m, c(function() {
+v[i] = c3.generate(k);
 })));
 }), a.totalUsed = _.round(a.totalUsed, 1);
 var g, h = [ b ].concat(_.values(d));
@@ -8324,7 +8325,8 @@ e && c.push(h.get(e));
 B || (angular.forEach(a, function(a) {
 if (a) {
 var c = _.find(b.datasets, {
-id:a.metricID
+id:a.metricID,
+label:a.label
 });
 s(c, a);
 }
@@ -8390,7 +8392,7 @@ units:"MiB",
 chartPrefix:"volumes-",
 chartType:"spline",
 convert:g.bytesToMiB,
-smallestYAxisMax:1e4,
+smallestYAxisMax:5e3,
 datasets:C
 }), j.loaded = !1, j.noData = !0, h.getMetricsURL().then(function(a) {
 j.metricsURL = a;

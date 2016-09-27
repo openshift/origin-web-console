@@ -110,7 +110,7 @@ angular.module('openshiftConsole')
             convert: ConversionService.bytesToMiB,
             // The sparkline y-axis will always extend to at least this value.
             // Avoid spikey charts when rounding very small network usage values.
-            smallestYAxisMax: 10000,
+            smallestYAxisMax: 5000,
             datasets: volumeDataSets
           });
         }
@@ -276,7 +276,8 @@ angular.module('openshiftConsole')
           var largestValue = 0;
           angular.forEach(metric.datasets, function(dataset) {
             var metricID = dataset.id, metricData = dataset.data;
-            dates = ['dates'], values[metricID] = [dataset.label || metricID];
+			var metricIDLabel = metricID + dataset.label;
+            dates = ['dates'], values[metricIDLabel] = [dataset.label || metricID];
 
             dataset.total = getLimit(metricID);
 
@@ -298,17 +299,17 @@ angular.module('openshiftConsole')
               dates.push(point.start);
               if (point.value === undefined || point.value === null) {
                 // Don't attempt to round null values. These appear as gaps in the chart.
-                values[metricID].push(point.value);
+                values[metricIDLabel].push(point.value);
               } else {
                 var value = metric.convert ? metric.convert(point.value) : point.value;
                 switch (metricID) {
                   case 'memory/usage':
                   case 'network/rx':
                   case 'network/tx':
-                    values[metricID].push(d3.round(value, 2));
+                    values[metricIDLabel].push(d3.round(value, 2));
                     break;
                   default:
-                    values[metricID].push(d3.round(value));
+                    values[metricIDLabel].push(d3.round(value));
                 }
                 largestValue = Math.max(value, largestValue);
               }
@@ -334,14 +335,14 @@ angular.module('openshiftConsole')
                 }
               };
 
-              if (!donutByMetric[metricID]) {
+              if (!donutByMetric[metricIDLabel]) {
                 donutConfig = createDonutConfig(metric);
                 donutConfig.data = donutData;
                 $timeout(function() {
-                  donutByMetric[metricID] = c3.generate(donutConfig);
+                  donutByMetric[metricIDLabel] = c3.generate(donutConfig);
                 });
               } else {
-                donutByMetric[metricID].load(donutData);
+                donutByMetric[metricIDLabel].load(donutData);
               }
             }
           });
@@ -506,7 +507,8 @@ angular.module('openshiftConsole')
                   }
 
                   var dataset = _.find(metric.datasets, {
-                    id: response.metricID
+                    id: response.metricID,
+					label: response.label
                   });
                   updateData(dataset, response);
                 });

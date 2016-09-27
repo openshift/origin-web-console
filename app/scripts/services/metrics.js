@@ -249,6 +249,7 @@ angular.module("openshiftConsole")
           }).then(function(response) {
             return _.assign(response, {
               metricID: config.metric,
+			  label: config.label,
               data: normalize(response.data)
             });
           });
