@@ -39,8 +39,10 @@ angular.module('openshiftConsole')
     var watches = [];
     var routes,
         services,
-        deploymentConfigs,
         deployments,
+        deploymentConfigs,
+        replicationControllers,
+        replicationControllersByDC,
         replicaSets,
         petSets,
         pods,
@@ -87,19 +89,20 @@ angular.module('openshiftConsole')
       $scope.deploymentConfigsByService = LabelsService.groupBySelector(deploymentConfigs, services, { matchTemplate: true });
     };
 
-    var groupDeploymentsByDC = function() {
-      if (!deployments) {
+    var groupDeployments = function() {
+      if (!services || !deployments) {
         return;
       }
 
-      $scope.deploymentsByDeploymentConfig = DeploymentsService.groupByDeploymentConfig(deployments);
+      $scope.deployments = deployments;
+      $scope.deploymentsByService = LabelsService.groupBySelector(deployments, services, { matchTemplate: true });
     };
 
-    var isDeploymentVisible = function(deployment) {
-      if (_.get(deployment, 'status.replicas')) {
+    var isReplicationControllerVisible = function(replicationController) {
+      if (_.get(replicationController, 'status.replicas')) {
         return true;
       }
-      var dcName = annotation(deployment, 'deploymentConfig');
+      var dcName = annotation(replicationController, 'deploymentConfig');
       if (!dcName) {
         return true;
       }
@@ -109,44 +112,103 @@ angular.module('openshiftConsole')
       }
       // If the deployment config has been deleted and the deployment has no replicas, hide it.
       // Otherwise all old deployments for a deleted deployment config will be visible.
-      var dc = deploymentConfigs[dcName];
-      if (!dc) {
+      var deploymentConfig = deploymentConfigs[dcName];
+      if (!deploymentConfig) {
         return false;
       }
-      return isRecentDeployment(deployment, dc);
+      return isRecentDeployment(replicationController, deploymentConfig);
     };
 
-    var groupDeployments = function() {
-      if (!services || !deployments) {
+    var groupReplicationControllersByDC = function() {
+      if (!replicationControllers) {
         return;
       }
 
-      $scope.deploymentsByService = LabelsService.groupBySelector(deployments, services, { matchTemplate: true });
-      groupDeploymentsByDC();
+      replicationControllersByDC = DeploymentsService.groupByDeploymentConfig(replicationControllers);
+
       // Only the most recent in progress or complete deployment for a given
       // deployment config is scalable in the overview.
-      var scalableDeploymentByConfig = {};
-      _.each($scope.deploymentsByDeploymentConfig, function(deployments, dcName) {
-        scalableDeploymentByConfig[dcName] = DeploymentsService.getActiveDeployment(deployments);
+      var scalableReplicationControllerByDC = {};
+      _.each(replicationControllersByDC, function(replicationControllers, dcName) {
+        scalableReplicationControllerByDC[dcName] = DeploymentsService.getActiveDeployment(replicationControllers);
       });
-      $scope.scalableDeploymentByConfig = scalableDeploymentByConfig;
+      $scope.scalableReplicationControllerByDC = scalableReplicationControllerByDC;
 
       // Take all visible deployments grouped by deployment config and service
-      $scope.visibleDeploymentsByConfigAndService = {};
-      _.each($scope.deploymentsByService, function(deployments, svcName) {
-        $scope.visibleDeploymentsByConfigAndService[svcName] = {};
-        _.each(DeploymentsService.groupByDeploymentConfig(deployments), function(deployments, dcName) {
-          $scope.visibleDeploymentsByConfigAndService[svcName][dcName] = _.filter(_.values(deployments), isDeploymentVisible);
+      $scope.visibleRCByDCAndService = {};
+      _.each($scope.replicationControllersByService, function(replicationControllers, svcName) {
+        $scope.visibleRCByDCAndService[svcName] = {};
+        _.each(DeploymentsService.groupByDeploymentConfig(replicationControllers), function(replicationControllers, dcName) {
+          $scope.visibleRCByDCAndService[svcName][dcName] = _.filter(replicationControllers, isReplicationControllerVisible);
         });
       });
     };
 
-    var groupReplicaSets = function() {
+    var groupReplicationControllersByService = function() {
+      if (!services || !replicationControllers) {
+        return;
+      }
+
+      $scope.replicationControllersByService = LabelsService.groupBySelector(replicationControllers, services, { matchTemplate: true });
+    };
+
+    var groupReplicaSetsByService = function() {
       if (!services || !replicaSets) {
         return;
       }
 
       $scope.replicaSetsByService = LabelsService.groupBySelector(replicaSets, services, { matchTemplate: true });
+    };
+
+    var isReplicaSetVisible = function(replicaSet, deployment) {
+      // If the replica set has pods, show it.
+      if (_.get(replicaSet, 'status.replicas')) {
+        return true;
+      }
+
+      var revision = DeploymentsService.getRevision(replicaSet);
+
+      // If not part of a deployment, always show the replica set.
+      if (!revision) {
+        return true;
+      }
+
+      // If the deployment config has been deleted and the deployment has no replicas, hide it.
+      // Otherwise all old deployments for a deleted deployment config will be visible.
+      if (!deployment) {
+        return false;
+      }
+
+      // Show the replica set if it's the latest revision.
+      return DeploymentsService.getRevision(deployment) === revision;
+    };
+
+
+    var groupReplicaSetsByDeployment = function() {
+      if (!replicaSets || !deployments) {
+        return;
+      }
+
+      $scope.replicaSetsByDeployment = LabelsService.groupBySelector(replicaSets, deployments, { matchTemplate: true });
+      var scalableReplicaSetsByDeployment = {};
+      _.each($scope.replicaSetsByDeployment, function(replicaSets, deploymentName) {
+        var deployment = _.get(deployments, [deploymentName]);
+        scalableReplicaSetsByDeployment[deploymentName] = DeploymentsService.getActiveReplicaSet(replicaSets, deployment);
+      });
+      $scope.scalableReplicaSetsByDeployment = scalableReplicaSetsByDeployment;
+
+      // Take all visible deployments grouped by deployment config and service
+      $scope.visibleRSByDeploymentAndService = {};
+      _.each($scope.replicaSetsByService, function(replicaSets, svcName) {
+        $scope.visibleRSByDeploymentAndService[svcName] = {};
+        var byDeployment = LabelsService.groupBySelector(replicaSets, deployments, { matchTemplate: true });
+        _.each(byDeployment, function(replicaSets, deploymentName) {
+          $scope.visibleRSByDeploymentAndService[svcName][deploymentName] = _.filter(replicaSets, function(replicaSet) {
+            var deployment = deployments[deploymentName];
+            return isReplicaSetVisible(replicaSet, deployment);
+          });
+        });
+      });
     };
 
     var groupPetSets = function() {
@@ -212,11 +274,11 @@ angular.module('openshiftConsole')
     };
 
     var groupPods = function() {
-      if (!pods || !deployments || !replicaSets || !petSets) {
+      if (!pods || !replicationControllers || !replicaSets || !petSets) {
         return;
       }
 
-      var allOwners = _.toArray(deployments).concat(_.toArray(replicaSets)).concat(_.toArray(petSets));
+      var allOwners = _.toArray(replicationControllers).concat(_.toArray(replicaSets)).concat(_.toArray(petSets));
       $scope.podsByOwnerUID = LabelsService.groupBySelector(pods, allOwners, { key: 'metadata.uid' });
 
       var monopods = $scope.podsByOwnerUID[''];
@@ -374,12 +436,12 @@ angular.module('openshiftConsole')
       var projectEmpty =
         _.isEmpty(services) &&
         _.isEmpty($scope.monopodsByService) &&
-        _.isEmpty(deployments) &&
+        _.isEmpty(replicationControllers) &&
         _.isEmpty(replicaSets) &&
         _.isEmpty(petSets);
 
       // Check if we've loaded everything we show on the overview.
-      var loaded = services && pods && deployments && deploymentConfigs && replicaSets && petSets;
+      var loaded = services && pods && replicationControllers && replicaSets && petSets;
 
       $scope.renderOptions.showGetStarted = loaded && projectEmpty;
       $scope.renderOptions.showLoading = !loaded && projectEmpty;
@@ -394,17 +456,17 @@ angular.module('openshiftConsole')
       Navigate.toPodsForDeployment(deployment);
     };
 
-    $scope.isScalableDeployment = function(deployment) {
-      return DeploymentsService.isScalable(deployment,
+    $scope.isScalableReplicationController = function(replicationController) {
+      return DeploymentsService.isScalable(replicationController,
                                            deploymentConfigs,
                                            // TODO: Handle groups
                                            _.get(hpaByResource, 'DeploymentConfig'),
                                            _.get(hpaByResource, 'ReplicationController'),
-                                           $scope.scalableDeploymentByConfig);
+                                           $scope.scalableReplicationControllerByDC);
     };
 
-    $scope.isDeploymentLatest = function(deployment) {
-      var dcName = annotation(deployment, 'deploymentConfig');
+    $scope.isDeploymentLatest = function(replicationController) {
+      var dcName = annotation(replicationController, 'deploymentConfig');
       if (!dcName) {
         return true;
       }
@@ -414,9 +476,24 @@ angular.module('openshiftConsole')
         return false;
       }
 
-      var deploymentVersion = parseInt(annotation(deployment, 'deploymentVersion'));
+      var deploymentVersion = parseInt(annotation(replicationController, 'deploymentVersion'));
       return _.some($scope.deploymentConfigs, function(dc) {
         return dc.metadata.name === dcName && dc.status.latestVersion === deploymentVersion;
+      });
+    };
+
+    $scope.hasUnservicedContent = function() {
+      var content = [
+        'monopodsByService',
+        'deploymentConfigsByService',
+        'deploymentsByService',
+        'replicationControllersByService',
+        'replicaSetsByService',
+        'petSetsByService'
+      ];
+      return _.some(content, function(contentByService) {
+        var unservicedContent = _.get($scope, [contentByService, ''], {});
+        return !_.isEmpty(unservicedContent);
       });
     };
 
@@ -462,25 +539,26 @@ angular.module('openshiftConsole')
           groupServices();
           groupPods();
           groupDeploymentConfigs();
-          groupDeployments();
-          groupReplicaSets();
+          groupReplicationControllersByService();
+          groupReplicationControllersByDC();
+          groupReplicaSetsByService();
           groupPetSets();
           updateRouteWarnings();
           updateShowGetStarted();
-          Logger.log("services (list)", services);
+          Logger.log("services (subscribe)", services);
         }, {poll: limitWatches, pollInterval: 60 * 1000}));
 
         watches.push(DataService.watch("builds", context, function(buildData) {
           builds = buildData.by("metadata.name");
           groupBuilds();
           updateShowGetStarted();
-          Logger.log("builds (list)", builds);
+          Logger.log("builds (subscribe)", builds);
         }));
 
         watches.push(DataService.watch("buildConfigs", context, function(buildConfigData) {
           buildConfigs = buildConfigData.by("metadata.name");
           groupBuilds();
-          Logger.log("builds (list)", builds);
+          Logger.log("builds (subscribe)", builds);
         }, {poll: limitWatches, pollInterval: 60 * 1000}));
 
         watches.push(DataService.watch("routes", context, function(routesData) {
@@ -493,19 +571,20 @@ angular.module('openshiftConsole')
 
         // Sets up subscription for deployments
         watches.push(DataService.watch("replicationcontrollers", context, function(rcData) {
-          $scope.deploymentsByName = deployments = rcData.by("metadata.name");
-          groupDeployments();
+          $scope.replicationControllersByName = replicationControllers = rcData.by("metadata.name");
+          groupReplicationControllersByService();
+          groupReplicationControllersByDC();
           groupPods();
           groupBuilds();
           updateShowGetStarted();
-          Logger.log("replicationcontrollers (subscribe)", deployments);
+          Logger.log("replicationcontrollers (subscribe)", replicationControllers);
         }));
 
         // Sets up subscription for deploymentConfigs, associates builds to triggers on deploymentConfigs
         watches.push(DataService.watch("deploymentconfigs", context, function(dcData) {
           deploymentConfigs = dcData.by("metadata.name");
           groupDeploymentConfigs();
-          groupDeployments();
+          groupReplicationControllersByDC();
           updateShowGetStarted();
           Logger.log("deploymentconfigs (subscribe)", deploymentConfigs);
         }));
@@ -516,7 +595,8 @@ angular.module('openshiftConsole')
         }, context, function(replicaSetData) {
           replicaSets = replicaSetData.by('metadata.name');
           groupPods();
-          groupReplicaSets();
+          groupReplicaSetsByService();
+          groupReplicaSetsByDeployment();
           updateShowGetStarted();
           Logger.log("replicasets (subscribe)", replicaSets);
         }));
@@ -530,6 +610,17 @@ angular.module('openshiftConsole')
           groupPetSets();
           updateShowGetStarted();
           Logger.log("petsets (subscribe)", petSets);
+        }, {poll: limitWatches, pollInterval: 60 * 1000}));
+
+        watches.push(DataService.watch({
+          group: "extensions",
+          resource: "deployments"
+        }, context, function(deploymentData) {
+          deployments = deploymentData.by('metadata.name');
+          groupDeployments();
+          groupReplicaSetsByDeployment();
+          updateShowGetStarted();
+          Logger.log("deployments (subscribe)", deployments);
         }));
 
         watches.push(DataService.watch({

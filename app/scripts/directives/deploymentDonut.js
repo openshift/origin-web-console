@@ -18,6 +18,7 @@ angular.module('openshiftConsole')
         // Replication controller / deployment fields
         rc: '=',
         deploymentConfig: '=',
+        deployment: '=',
         scalable: '=',
         hpa: '=?',
         limitRanges: '=',
@@ -64,13 +65,18 @@ angular.module('openshiftConsole')
             };
         };
 
+        var getScaleTarget = function() {
+          return $scope.deploymentConfig || $scope.deployment || $scope.rc;
+        };
+
         // use debouncedScale() unless the returned promise is needed
         var scale = function () {
           scaleRequestPending = false;
           if (!angular.isNumber($scope.desiredReplicas)) {
             return;
           }
-          return DeploymentsService.scale($scope.deploymentConfig || $scope.rc, $scope.desiredReplicas).then(_.noop, showScalingError);
+          var scaleTarget = getScaleTarget();
+          return DeploymentsService.scale(scaleTarget, $scope.desiredReplicas).then(_.noop, showScalingError);
         };
 
         // Debounce scaling so multiple consecutive clicks only result in one request

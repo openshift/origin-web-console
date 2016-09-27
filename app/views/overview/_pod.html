@@ -1,4 +1,4 @@
-<div class="deployment-tile" ng-if="pod.kind === 'Pod'">
+<div class="overview-tile" ng-if="pod.kind === 'Pod'">
   <ng-include src="'views/overview/_service-header.html'"></ng-include>
   <div class="rc-header"> <!-- TODO may want different treatment for a pod-name? -->
     <div>
@@ -13,7 +13,7 @@
       <image-names ng-if="showMetrics" pod-template="pod" pods="[pod]"></image-names>
     </div>
   </div>
-  <div row class="deployment-body">
+  <div row class="overview-tile-body">
     <div column class="overview-donut">
       <pod-donut
           pods="[pod]"
@@ -28,7 +28,7 @@
          View pod
       </a>
     </div>
-    <div column class="deployment-details">
+    <div column class="overview-tile-details">
       <deployment-metrics
         ng-if="showMetrics && !collapse"
         pods="[pod]"

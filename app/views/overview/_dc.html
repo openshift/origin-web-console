@@ -1,21 +1,21 @@
-<div class="deployment-tile" ng-class="{ 'deployment-in-progress': inProgressDeployment }">
+<div class="overview-tile" ng-class="{ 'deployment-in-progress': inProgressDeployment }">
   <ng-include src="'views/overview/_service-header.html'"></ng-include>
-  <div class="deployment-header">
+  <div class="overview-tile-header">
     <div class="rc-header">
       <div>
         Deployment
         <a ng-href="{{deploymentConfig | navigateResourceURL}}">{{dcName}}</a>
-        <small class="overview-timestamp" ng-if="activeDeployment && !inProgressDeployment">
+        <small class="overview-timestamp" ng-if="activeReplicationController && !inProgressDeployment">
           <span class="hidden-xs">&ndash;</span>
-          <relative-timestamp timestamp="activeDeployment.metadata.creationTimestamp"></relative-timestamp>
+          <relative-timestamp timestamp="activeReplicationController.metadata.creationTimestamp"></relative-timestamp>
         </small>
       </div>
       <div>
         <div class="small truncate">
           <image-names
-              ng-if="activeDeployment && !inProgressDeployment && showMetrics"
-              pod-template="activeDeployment.spec.template"
-              pods="podsByOwnerUID[activeDeployment.metadata.uid]">
+              ng-if="activeReplicationController && !inProgressDeployment && showMetrics"
+              pod-template="activeReplicationController.spec.template"
+              pods="podsByOwnerUID[activeReplicationController.metadata.uid]">
           </image-names>
         </div>
         <div ng-if="inProgressDeployment" class="small">
@@ -30,51 +30,51 @@
         </div>
       </div>
     </div>
-    <div column flex class="shield" ng-if="activeDeployment"
-          ng-class="{ 'shield-lg': (activeDeployment | annotation: 'deploymentVersion').length > 3 }">
-      <a ng-href="{{activeDeployment | navigateResourceURL}}">
-        <span class="shield-number">#{{activeDeployment | annotation: 'deploymentVersion'}}</span>
+    <div column flex class="shield" ng-if="activeReplicationController"
+          ng-class="{ 'shield-lg': (activeReplicationController | annotation: 'deploymentVersion').length > 3 }">
+      <a ng-href="{{activeReplicationController | navigateResourceURL}}">
+        <span class="shield-number">#{{activeReplicationController | annotation: 'deploymentVersion'}}</span>
       </a>
     </div>
   </div>
-  <div row class="deployment-body">
-    <!-- all visible deployments -->
+  <div row class="overview-tile-body">
+    <!-- all visible replication controllers -->
     <div column class="overview-donut"
-        ng-repeat="deployment in orderedDeployments track by (deployment | uid)"
-        ng-class="{ latest: isDeploymentLatest(deployment) }"
-        ng-if="!activeDeployment || !(isDeploymentLatest(deployment) && ((deployment | deploymentStatus) == 'Cancelled' || (deployment | deploymentStatus) == 'Failed'))">
+        ng-repeat="replicationController in orderedReplicationControllers track by (replicationController | uid)"
+        ng-class="{ latest: isDeploymentLatest(replicationController) }"
+        ng-if="!activeReplicationController || !(isDeploymentLatest(replicationController) && ((replicationController | deploymentStatus) == 'Cancelled' || (replicationController | deploymentStatus) == 'Failed'))">
       <deployment-donut
-          rc="deployment"
+          rc="replicationController"
           deployment-config="deploymentConfigs[dcName]"
-          pods="podsByOwnerUID[deployment.metadata.uid]"
-          hpa="getHPA(deploymentConfig) || getHPA(deployment)"
+          pods="podsByOwnerUID[replicationController.metadata.uid]"
+          hpa="getHPA(deploymentConfig) || getHPA(replicationController)"
           limit-ranges="limitRanges"
-          scalable="isScalableDeployment(deployment)"
+          scalable="isScalableReplicationController(replicationController)"
           alerts="alerts">
       </deployment-donut>
     </div>
-    <!-- /all visible deployments -->
+    <!-- /all visible replication controllers -->
 
     <!-- deployment in progress (connecting arrow) -->
-    <div column class="overview-donut-connector" ng-class="{'contains-deployment-status-msg':deployments.length === 1}" ng-if="inProgressDeployment">
-      <div ng-if="deployments.length > 1" class="deployment-connector-arrow">
+    <div column class="overview-donut-connector" ng-class="{'contains-deployment-status-msg':replicationControllers.length === 1}" ng-if="inProgressDeployment">
+      <div ng-if="replicationControllers.length > 1" class="deployment-connector-arrow">
 
       </div>
-      <div ng-if="deployments.length === 1" class="deployment-status-msg">
-        <status-icon status="deployments[0] | deploymentStatus" class="mar-right-xs"></status-icon>
-        Deployment&nbsp;#{{deployments[0] | annotation : 'deploymentVersion'}}
-        {{deployments[0] | deploymentStatus | lowercase}}
+      <div ng-if="replicationControllers.length === 1" class="deployment-status-msg">
+        <status-icon status="replicationControllers[0] | deploymentStatus" class="mar-right-xs"></status-icon>
+        Deployment&nbsp;#{{replicationControllers[0] | annotation : 'deploymentVersion'}}
+        {{replicationControllers[0] | deploymentStatus | lowercase}}
       </div>
     </div>
     <!-- /deployment in progress (connecting arrow) -->
 
     <!-- cancelled/failed state -->
-    <div column class="overview-unsuccessful-state" ng-if="!activeDeployment && !inProgressDeployment" ng-switch="deployments[0] | deploymentStatus">
+    <div column class="overview-unsuccessful-state" ng-if="!activeReplicationController && !inProgressDeployment" ng-switch="replicationControllers[0] | deploymentStatus">
       <div ng-switch-when="Cancelled">
         <span class="deployment-status-msg">
           <i class="fa fa-ban" aria-hidden="true"></i>
           {{dcName}}
-          <a ng-href="{{deployments[0] | navigateResourceURL}}">#{{deployments[0] | annotation: 'deploymentVersion'}}</a>
+          <a ng-href="{{replicationControllers[0] | navigateResourceURL}}">#{{replicationControllers[0] | annotation: 'deploymentVersion'}}</a>
           cancelled
         </span>
       </div>
@@ -82,7 +82,7 @@
         <span class="text-danger deployment-status-msg">
           <i class="fa fa-times" aria-hidden="true"></i>
           {{dcName}}
-          <a ng-href="{{deployments[0] | navigateResourceURL}}">#{{deployments[0] | annotation: 'deploymentVersion'}}</a>
+          <a ng-href="{{replicationControllers[0] | navigateResourceURL}}">#{{replicationControllers[0] | annotation: 'deploymentVersion'}}</a>
           failed
         </span>
       </div>
@@ -90,17 +90,17 @@
     <!-- /cancelled/failed state -->
 
     <!-- succeeded state -->
-    <div column class="deployment-details" ng-if="activeDeployment && !inProgressDeployment">
+    <div column class="overview-tile-details" ng-if="activeReplicationController && !inProgressDeployment">
       <!-- metrics or pod template -->
       <!-- pause metrics updates when the service group is collapsed -->
       <deployment-metrics
         ng-if="showMetrics && !collapse"
-        pods="podsByOwnerUID[activeDeployment.metadata.uid]"
-        containers="activeDeployment.spec.template.spec.containers"
+        pods="podsByOwnerUID[activeReplicationController.metadata.uid]"
+        containers="activeReplicationController.spec.template.spec.containers"
         compact="true"
         class="overview-metrics">
       </deployment-metrics>
-      <pod-template ng-if="!showMetrics" pod-template="activeDeployment.spec.template"></pod-template>
+      <pod-template ng-if="!showMetrics" pod-template="activeReplicationController.spec.template"></pod-template>
       <!-- /metrics or pod template -->
     </div>
     <!-- /succeeded state -->

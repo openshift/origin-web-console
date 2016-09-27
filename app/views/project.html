@@ -192,7 +192,7 @@
                          class="animate-repeat">
 
                       <!-- Make sure deploymentConfigs are loaded before testing if the deployment config is missing. -->
-                      <overview-deployment
+                      <topology-deployment
                         rc="deployment"
                         deployment-config-id="deploymentConfigId"
                         deployment-config-missing="deploymentConfigs && !deploymentConfigs[deploymentConfigId]"
@@ -206,7 +206,7 @@
                         builds="builds"
                         pods="podsByDeployment[deployment.metadata.name]"
                         alerts="alerts">
-                      </overview-deployment>
+                      </topology-deployment>
                     </div>
                   </div>
 
@@ -234,7 +234,7 @@
                       <triggers triggers="deploymentConfigs[deploymentConfigId].spec.triggers" builds-by-output-image="recentBuildsByOutputImage" namespace="projectName"></triggers>
                     </div>
                     <!-- Make sure deploymentConfigs are loaded before testing if the deployment config is missing. -->
-                    <overview-deployment
+                    <topology-deployment
                       rc="deployment"
                       deployment-config-id="deploymentConfigId"
                       deployment-config-missing="deploymentConfigs && !deploymentConfigs[deploymentConfigId]"
@@ -246,7 +246,7 @@
                       images-by-docker-reference="imagesByDockerReference"
                       builds="builds"
                       pods="podsByDeployment[deployment.metadata.name]">
-                    </overview-deployment>
+                    </topology-deployment>
                   </div>
                 </section>
 

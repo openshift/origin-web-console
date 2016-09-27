@@ -1,0 +1,72 @@
+<div class="overview-tile" ng-class="{ 'deployment-in-progress': inProgressDeployment }">
+  <ng-include src="'views/overview/_service-header.html'"></ng-include>
+  <div class="overview-tile-header">
+    <div class="rc-header">
+      <div>
+        Deployment
+        <a ng-href="{{deployment | navigateResourceURL}}">{{deploymentName}}</a>
+        <small class="overview-timestamp" ng-if="latestReplicaSet">
+          <span class="hidden-xs">&ndash;</span>
+          <relative-timestamp timestamp="latestReplicaSet.metadata.creationTimestamp"></relative-timestamp>
+        </small>
+      </div>
+      <div class="small truncate">
+        <image-names
+            ng-if="latestReplicaSet && !inProgressDeployment && showMetrics"
+            pod-template="latestReplicaSet.spec.template"
+            pods="podsByOwnerUID[latestReplicaSet.metadata.uid]">
+        </image-names>
+      </div>
+      <div ng-if="inProgressDeployment" class="small">
+        {{deployment.spec.strategy.type | sentenceCase}}
+        <ellipsis-pulser color="dark" size="sm" display="inline" msg="in progress"></ellipsis-pulser>
+      </div>
+    </div>
+    <div column flex class="shield"
+         ng-if="latestReplicaSet && latestRevision && !inProgressDeployment"
+         ng-class="{ 'shield-lg': latestRevision.length > 3 }">
+      <a ng-href="{{latestReplicaSet | navigateResourceURL}}">
+        <span class="shield-number">#{{latestRevision}}</span>
+      </a>
+    </div>
+  </div>
+  <div row class="overview-tile-body">
+    <!-- all visible replica sets -->
+    <div column class="overview-donut"
+        ng-repeat="replicaSet in replicaSets | limitTo : 2 track by (replicaSet | uid)"
+        ng-class="{ latest: replicaSet === latestReplicaSet }">
+      <deployment-donut
+          deployment="deployment"
+          rc="replicaSet"
+          pods="podsByOwnerUID[replicaSet.metadata.uid]"
+          hpa="getHPA(deployment) || getHPA(replicaSet)"
+          limit-ranges="limitRanges"
+          scalable="replicaSet === latestReplicaSet"
+          alerts="alerts">
+      </deployment-donut>
+    </div>
+    <!-- /all visible deployments -->
+
+    <!-- deployment in progress (connecting arrow) -->
+    <div column class="overview-donut-connector" ng-if="inProgressDeployment">
+      <div class="deployment-connector-arrow"></div>
+    </div>
+    <!-- /deployment in progress (connecting arrow) -->
+
+    <!-- succeeded state -->
+    <div column class="overview-tile-details" ng-if="latestReplicaSet && !inProgressDeployment">
+      <!-- metrics or pod template -->
+      <!-- pause metrics updates when the service group is collapsed -->
+      <deployment-metrics
+        ng-if="showMetrics && !collapse"
+        pods="podsByOwnerUID[latestReplicaSet.metadata.uid]"
+        containers="latestReplicaSet.spec.template.spec.containers"
+        compact="true"
+        class="overview-metrics">
+      </deployment-metrics>
+      <pod-template ng-if="!showMetrics" pod-template="latestReplicaSet.spec.template"></pod-template>
+      <!-- /metrics or pod template -->
+    </div>
+    <!-- /succeeded state -->
+  </div>
+</div>

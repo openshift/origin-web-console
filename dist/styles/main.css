@@ -4068,14 +4068,14 @@ ul.messenger-theme-flat .messenger-message.alert-info .messenger-message-inner:b
 .overview .service-group-with-route-row .service-group .alert-wrapper .alert .pficon,.overview .standalone-service-row .service-group .alert-wrapper .alert .pficon{box-shadow:none}
 .overview .service-group-with-route-row .service-group .alert-wrapper .alert .close,.overview .standalone-service-row .service-group .alert-wrapper .alert .close{color:#8b8d8f}
 .overview .service-group-with-route-row .service-group .alert-wrapper .alert{margin-top:6px}
-.overview overview-deployment-config,.overview overview-pod,.overview overview-replication-controller{display:-webkit-flex;display:-moz-flex;display:-ms-flexbox;display:-ms-flex;display:flex;width:100%}
-.overview .deployment-tile,.overview .service-group-header{border:1px solid #d6d6d6}
-.overview .deployment-tile,.overview .no-deployments-block .service-title,.overview .service-group-header{background-color:#fff;border-left-width:0}
-.overview .deployment-tile,.overview .service-group-header,.overview .service-group-triggers,.overview .standalone-service .builds-block{box-shadow:0 2px 6px rgba(0,0,0,.1)}
+.overview overview-deployment,.overview overview-deployment-config,.overview overview-pod,.overview overview-set{display:-webkit-flex;display:-moz-flex;display:-ms-flexbox;display:-ms-flex;display:flex;width:100%}
+.overview .overview-tile,.overview .service-group-header{border:1px solid #d6d6d6}
+.overview .no-deployments-block .service-title,.overview .overview-tile,.overview .service-group-header{background-color:#fff;border-left-width:0}
+.overview .overview-tile,.overview .service-group-header,.overview .service-group-triggers,.overview .standalone-service .builds-block{box-shadow:0 2px 6px rgba(0,0,0,.1)}
 .overview .standalone-service{width:100%;display:flex;position:relative}
 .overview .standalone-service overview-service{-webkit-flex:0 0 100%;-moz-flex:0 0 100%;-ms-flex:0 0 100%;flex:0 0 100%}
 .overview .standalone-service .service-group-body .overview-services overview-service{max-width:none}
-.overview .standalone-service .service-group-body .overview-services .deployment-tile{margin-top:0}
+.overview .standalone-service .service-group-body .overview-services .overview-tile{margin-top:0}
 .overview .standalone-service overview-service-group{width:100%}
 .overview .standalone-service .service-group>div{display:-webkit-flex;display:-moz-flex;display:-ms-flexbox;display:-ms-flex;display:flex;-webkit-flex-direction:column;-moz-flex-direction:column;-ms-flex-direction:column;flex-direction:column;height:100%}
 .overview .standalone-service .service-group-body .overview-services .primary-service .deployment-block{display:-webkit-flex;display:-moz-flex;display:-ms-flexbox;display:-ms-flex;display:flex}
@@ -4092,7 +4092,7 @@ ul.messenger-theme-flat .messenger-message.alert-info .messenger-message-inner:b
 .overview .unserviced-row .no-service:nth-child(even){padding-left:3px}
 .overview .unserviced-row .no-service:nth-child(even):before{left:3px}
 }
-.overview .unserviced-row .no-service .deployment-tile-wrapper{width:100%}
+.overview .unserviced-row .no-service .overview-tile-wrapper{width:100%}
 .overview .service-group-header{cursor:pointer;-webkit-flex-direction:column;-moz-flex-direction:column;-ms-flex-direction:column;flex-direction:column;display:-webkit-flex;display:-moz-flex;display:-ms-flexbox;display:-ms-flex;display:flex;-webkit-justify-content:space-between;-moz-justify-content:space-between;justify-content:space-between;padding:7px}
 .overview .service-group-header .route-title{font-weight:300;line-height:1.4;margin:0 0 0 6px}
 .overview .service-group-header .route-title:only-child{margin:0}
@@ -4108,18 +4108,18 @@ ul.messenger-theme-flat .messenger-message.alert-info .messenger-message-inner:b
 @media (min-width:768px){.overview .service-group-header{-webkit-flex-direction:row;-moz-flex-direction:row;-ms-flex-direction:row;flex-direction:row;align-items:center}
 .overview .service-group-header .other-routes-msg{display:inline-block;margin:0}
 .overview .service-group-header.has-app-label .other-routes-msg{display:block;text-align:right}
-.overview .deployment-tile .deployment-tile{max-width:50%}
+.overview .overview-tile .overview-tile{max-width:50%}
 }
-.overview .service-group-body .overview-services .deployment-tile-wrapper+.deployment-tile-wrapper,.overview .service-group-body .overview-services overview-service:nth-child(n+3){margin-top:6px}
+.overview .service-group-body .overview-services .overview-tile-wrapper+.overview-tile-wrapper,.overview .service-group-body .overview-services overview-service:nth-child(n+3){margin-top:6px}
 .overview .service-group-body{border-top-width:0;margin-top:6px;padding:0}
 .overview .service-group-body .overview-services{-webkit-justify-content:space-between;-moz-justify-content:space-between;justify-content:space-between;display:-webkit-flex;display:-moz-flex;display:-ms-flexbox;display:-ms-flex;display:flex;-webkit-flex-wrap:wrap;-moz-flex-wrap:wrap;-ms-flex-wrap:wrap;flex-wrap:wrap;-webkit-flex-direction:column;-moz-flex-direction:column;-ms-flex-direction:column;flex-direction:column}
 @media (max-width:749px){.overview .service-group-body .overview-services overview-service:nth-child(n+2){margin-top:6px}
 }
 .overview .service-group-body .overview-services .deployment-block{display:-webkit-flex;display:-moz-flex;display:-ms-flexbox;display:-ms-flex;display:flex;-webkit-flex:1 0 0%;-moz-flex:1 0 0%;-ms-flex:1 0 0%;flex:1 0 0%;height:100%}
-.overview .service-group-body .overview-services .deployment-block.service-multiple-targets,.overview .service-group-body .overview-services .deployment-block.service-multiple-targets .deployment-tile-wrapper{display:block}
-.overview .service-group-body .overview-services .deployment-tile-wrapper{display:-webkit-flex;display:-moz-flex;display:-ms-flexbox;display:-ms-flex;display:flex;-webkit-flex:1 0 0%;-moz-flex:1 0 0%;-ms-flex:1 0 0%;flex:1 0 0%}
+.overview .service-group-body .overview-services .deployment-block.service-multiple-targets,.overview .service-group-body .overview-services .deployment-block.service-multiple-targets .overview-tile-wrapper{display:block}
+.overview .service-group-body .overview-services .overview-tile-wrapper{display:-webkit-flex;display:-moz-flex;display:-ms-flexbox;display:-ms-flex;display:flex;-webkit-flex:1 0 0%;-moz-flex:1 0 0%;-ms-flex:1 0 0%;flex:1 0 0%}
 .overview .no-deployments-block,.overview .shield .shield-number{display:-webkit-flex;display:-moz-flex;display:-ms-flexbox;display:-ms-flex}
-.overview .service-group-body .overview-services .deployment-tile{-webkit-flex:1 0 0%;-moz-flex:1 0 0%;-ms-flex:1 0 0%;flex:1 0 0%;position:relative}
+.overview .service-group-body .overview-services .overview-tile{-webkit-flex:1 0 0%;-moz-flex:1 0 0%;-ms-flex:1 0 0%;flex:1 0 0%;position:relative}
 @media (min-width:750px){.overview .service-group-with-route-row .overview-services{-webkit-flex-direction:row;-moz-flex-direction:row;-ms-flex-direction:row;flex-direction:row}
 .overview .service-group-with-route-row .overview-services overview-service{width:50%}
 .overview .service-group-with-route-row .overview-services overview-service:nth-child(even){padding-left:3px}
@@ -4135,49 +4135,49 @@ ul.messenger-theme-flat .messenger-message.alert-info .messenger-message-inner:b
 .overview .service-title .service-name{font-family:inherit;line-height:1.1;color:inherit;font-size:16px;font-weight:300;margin-top:3px;margin-bottom:3px}
 .overview .service-title .service-name .small,.overview .service-title .service-name small{font-weight:400;line-height:1;color:#9c9c9c;font-size:65%}
 .overview .service-title .service-name .pficon{margin-right:7px;vertical-align:-2px}
-.overview .deployment-tile{border-left:1px solid #d6d6d6;width:100%}
-.overview .deployment-tile .deployment-header{color:#9c9c9c;position:relative}
-.overview .deployment-tile .rc-header{color:#9c9c9c;padding:5px 10px;margin-right:50px}
-.overview .deployment-tile .deployment-body{-webkit-flex-direction:column;-moz-flex-direction:column;-ms-flex-direction:column;flex-direction:column;padding:10px;position:relative}
-.overview .deployment-tile .deployment-body .deployment-donut{-webkit-align-items:center;-moz-align-items:center;align-items:center;min-width:0}
-@media (min-width:992px){.overview .deployment-tile .deployment-body{-webkit-flex-direction:row;-moz-flex-direction:row;-ms-flex-direction:row;flex-direction:row;-webkit-justify-content:space-between;-moz-justify-content:space-between;justify-content:space-between}
+.overview .overview-tile{border-left:1px solid #d6d6d6;width:100%}
+.overview .overview-tile .overview-tile-header{color:#9c9c9c;position:relative}
+.overview .overview-tile .rc-header{color:#9c9c9c;padding:5px 10px;margin-right:50px}
+.overview .overview-tile .overview-tile-body{-webkit-flex-direction:column;-moz-flex-direction:column;-ms-flex-direction:column;flex-direction:column;padding:10px;position:relative}
+.overview .overview-tile .overview-tile-body .deployment-donut{-webkit-align-items:center;-moz-align-items:center;align-items:center;min-width:0}
+@media (min-width:992px){.overview .overview-tile .overview-tile-body{-webkit-flex-direction:row;-moz-flex-direction:row;-ms-flex-direction:row;flex-direction:row;-webkit-justify-content:space-between;-moz-justify-content:space-between;justify-content:space-between}
 }
-.overview .deployment-tile.deployment-in-progress{overflow:hidden}
-.overview .deployment-tile .overview-donut,.overview .deployment-tile .overview-metrics{-webkit-align-items:center;-moz-align-items:center;align-items:center}
-@media (min-width:1200px){.overview .deployment-tile .overview-metrics .metrics-sparkline{width:60%}
+.overview .overview-tile.deployment-in-progress{overflow:hidden}
+.overview .overview-tile .overview-donut,.overview .overview-tile .overview-metrics{-webkit-align-items:center;-moz-align-items:center;align-items:center}
+@media (min-width:1200px){.overview .overview-tile .overview-metrics .metrics-sparkline{width:60%}
 }
-@media (max-width:991px){.overview .deployment-tile .overview-metrics{margin:0 auto;text-align:center}
-.overview .deployment-tile .deployment-details{-webkit-order:5;-moz-order:5;-ms-order:5;order:5}
-.overview .deployment-tile .deployment-details pod-template{margin:20px auto 5px}
+@media (max-width:991px){.overview .overview-tile .overview-metrics{margin:0 auto;text-align:center}
+.overview .overview-tile .overview-tile-details{-webkit-order:5;-moz-order:5;-ms-order:5;order:5}
+.overview .overview-tile .overview-tile-details pod-template{margin:20px auto 5px}
 }
-.overview .deployment-tile .overview-donut{-webkit-order:2;-moz-order:2;-ms-order:2;order:2}
-.overview .deployment-tile .overview-donut.latest{-webkit-order:4;-moz-order:4;-ms-order:4;order:4}
-.overview .deployment-tile .overview-donut-connector{-webkit-align-items:center;-moz-align-items:center;align-items:center;-webkit-order:3;-moz-order:3;-ms-order:3;order:3;-webkit-justify-content:center;-moz-justify-content:center;justify-content:center;line-height:1;padding-bottom:10px;position:relative;text-align:center}
-.overview .deployment-tile .overview-donut-connector.contains-deployment-status-msg{-webkit-order:5;-moz-order:5;-ms-order:5;order:5}
-.overview .deployment-tile .overview-donut-connector .deployment-connector-arrow{color:#ccc;font-size:200%}
-.overview .deployment-tile .overview-donut-connector .deployment-connector-arrow:before{content:'\2193';padding-right:23px}
-.overview .deployment-tile .overview-unsuccessful-state{text-align:center}
-.overview .deployment-tile .overview-unsuccessful-state .text-danger{color:#c00}
-.overview .deployment-tile .deployment-status-msg{color:#9c9c9c;line-height:normal;margin-bottom:10px}
+.overview .overview-tile .overview-donut{-webkit-order:2;-moz-order:2;-ms-order:2;order:2}
+.overview .overview-tile .overview-donut.latest{-webkit-order:4;-moz-order:4;-ms-order:4;order:4}
+.overview .overview-tile .overview-donut-connector{-webkit-align-items:center;-moz-align-items:center;align-items:center;-webkit-order:3;-moz-order:3;-ms-order:3;order:3;-webkit-justify-content:center;-moz-justify-content:center;justify-content:center;line-height:1;padding-bottom:10px;position:relative;text-align:center}
+.overview .overview-tile .overview-donut-connector.contains-deployment-status-msg{-webkit-order:5;-moz-order:5;-ms-order:5;order:5}
+.overview .overview-tile .overview-donut-connector .deployment-connector-arrow{color:#ccc;font-size:200%}
+.overview .overview-tile .overview-donut-connector .deployment-connector-arrow:before{content:'\2193';padding-right:23px}
+.overview .overview-tile .overview-unsuccessful-state{text-align:center}
+.overview .overview-tile .overview-unsuccessful-state .text-danger{color:#c00}
+.overview .overview-tile .deployment-status-msg{color:#9c9c9c;line-height:normal;margin-bottom:10px}
 @keyframes simpleSlideOut{0%{margin-left:0%;opacity:1}
 100%{margin-left:-50%;opacity:0}
 }
 @keyframes simpleSlideIn{0%{margin-right:-50%}
 100%{margin-right:0%}
 }
-@media (min-width:992px){.overview .deployment-tile .deployment-details{padding-left:30px;width:50%}
-.overview .deployment-tile .deployment-details.ng-leave{animation:simpleSlideOut 1s ease forwards}
-.overview .deployment-tile .overview-donut{min-height:150px;width:50%}
-.overview .deployment-tile .overview-donut.ng-enter{animation:simpleSlideIn 1s ease forwards}
-.overview .deployment-tile .overview-donut-connector{padding-bottom:0}
-.overview .deployment-tile .overview-donut-connector.contains-deployment-status-msg{-webkit-order:3;-moz-order:3;-ms-order:3;order:3;width:50%}
-.overview .deployment-tile .overview-donut-connector .deployment-connector-arrow{font-size:300%;left:-20px;line-height:0;position:absolute;top:10%}
-.overview .deployment-tile .overview-donut-connector .deployment-connector-arrow:before{content:'\2192';padding-right:0}
-.overview .deployment-tile .overview-unsuccessful-state{-webkit-flex:1 1 0%;-moz-flex:1 1 0%;-ms-flex:1 1 0%;flex:1 1 0%;-webkit-order:3;-moz-order:3;-ms-order:3;order:3;-webkit-align-items:center;-moz-align-items:center;align-items:center;-webkit-justify-content:center;-moz-justify-content:center;justify-content:center;line-height:1}
-.overview .deployment-tile .deployment-status-msg{font-size:16px}
-.overview .deployment-tile .deployment-status-msg .deployment-log-link{font-size:14px}
+@media (min-width:992px){.overview .overview-tile .overview-tile-details{padding-left:30px;width:50%}
+.overview .overview-tile .overview-tile-details.ng-leave{animation:simpleSlideOut 1s ease forwards}
+.overview .overview-tile .overview-donut{min-height:150px;width:50%}
+.overview .overview-tile .overview-donut.ng-enter{animation:simpleSlideIn 1s ease forwards}
+.overview .overview-tile .overview-donut-connector{padding-bottom:0}
+.overview .overview-tile .overview-donut-connector.contains-deployment-status-msg{-webkit-order:3;-moz-order:3;-ms-order:3;order:3;width:50%}
+.overview .overview-tile .overview-donut-connector .deployment-connector-arrow{font-size:300%;left:-20px;line-height:0;position:absolute;top:10%}
+.overview .overview-tile .overview-donut-connector .deployment-connector-arrow:before{content:'\2192';padding-right:0}
+.overview .overview-tile .overview-unsuccessful-state{-webkit-flex:1 1 0%;-moz-flex:1 1 0%;-ms-flex:1 1 0%;flex:1 1 0%;-webkit-order:3;-moz-order:3;-ms-order:3;order:3;-webkit-align-items:center;-moz-align-items:center;align-items:center;-webkit-justify-content:center;-moz-justify-content:center;justify-content:center;line-height:1}
+.overview .overview-tile .deployment-status-msg{font-size:16px}
+.overview .overview-tile .deployment-status-msg .deployment-log-link{font-size:14px}
 }
-@media (min-width:992px) and (min-width:1200px){.overview .deployment-tile .overview-donut-connector .deployment-connector-arrow{top:47%}
+@media (min-width:992px) and (min-width:1200px){.overview .overview-tile .overview-donut-connector .deployment-connector-arrow{top:47%}
 }
 .overview .no-deployments-block{display:flex;height:100%;width:100%}
 .overview .no-child-services-block{padding-left:3px;width:50%}
@@ -4190,19 +4190,19 @@ ul.messenger-theme-flat .messenger-message.alert-info .messenger-message-inner:b
 @media (min-width:750px){.overview .no-child-services-message h2,.overview .no-deployments-message h2{margin-top:0}
 .overview .no-child-services-message{display:-webkit-flex;display:-moz-flex;display:-ms-flexbox;display:-ms-flex;display:flex;-webkit-flex:1 0 0%;-moz-flex:1 0 0%;-ms-flex:1 0 0%;flex:1 0 0%;-webkit-flex-direction:column;-moz-flex-direction:column;-ms-flex-direction:column;flex-direction:column}
 }
-@media (min-width:992px){.overview .overview-services.single-alternate-service .alternate-service .deployment-tile .service-title,.overview .overview-services.single-alternate-service overview-service:nth-child(even){padding-left:0}
-.overview .overview-services.single-alternate-service .primary-service .deployment-tile{border-right:0}
-.overview .overview-services.single-alternate-service .primary-service .deployment-tile .service-title,.overview .overview-services.single-alternate-service overview-service:nth-child(odd){padding-right:0}
-.overview .overview-services.single-alternate-service .alternate-service .deployment-tile{box-shadow:2px 3px 6px -1px rgba(0,0,0,.1)}
+@media (min-width:992px){.overview .overview-services.single-alternate-service .alternate-service .overview-tile .service-title,.overview .overview-services.single-alternate-service overview-service:nth-child(even){padding-left:0}
+.overview .overview-services.single-alternate-service .primary-service .overview-tile{border-right:0}
+.overview .overview-services.single-alternate-service .primary-service .overview-tile .service-title,.overview .overview-services.single-alternate-service overview-service:nth-child(odd){padding-right:0}
+.overview .overview-services.single-alternate-service .alternate-service .overview-tile{box-shadow:2px 3px 6px -1px rgba(0,0,0,.1)}
 .overview .overview-services.single-alternate-service .alternate-service .service-metadata{order:-1}
 .overview .overview-services.single-alternate-service .alternate-service .service-metadata .traffic-label{display:none}
 .overview .overview-services.single-alternate-service .alternate-service .service-metadata .progress{margin-left:0}
 .overview .overview-services.single-alternate-service .alternate-service .service-metadata .progress .progress-bar{background-color:#00659c}
 }
-.overview .deployment-tile .traffic-label{display:inline-block}
-.overview .deployment-tile .progress{background-color:inherit;border:0;box-shadow:none;display:inline-block;margin:0 0 0 5px;min-width:2em;vertical-align:-3px}
-.overview .deployment-tile .progress .progress-bar{width:100%}
-@media (min-width:1200px){.overview .deployment-tile .progress{width:250px}
+.overview .overview-tile .traffic-label{display:inline-block}
+.overview .overview-tile .progress{background-color:inherit;border:0;box-shadow:none;display:inline-block;margin:0 0 0 5px;min-width:2em;vertical-align:-3px}
+.overview .overview-tile .progress .progress-bar{width:100%}
+@media (min-width:1200px){.overview .overview-tile .progress{width:250px}
 }
 .overview .standalone-service-row{-webkit-justify-content:space-between;-moz-justify-content:space-between;justify-content:space-between}
 .overview .standalone-service .no-deployments-block{margin-left:0}

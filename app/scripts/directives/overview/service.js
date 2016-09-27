@@ -29,24 +29,44 @@ angular.module('openshiftConsole')
           $scope.visibleReplicaSets = orderByDate(_.filter(replicaSets, isVisibleReplicaSet), true);
         });
 
-        $scope.$watch('visibleDeploymentsByConfigAndService', function(visibleDeploymentsByConfigAndService) {
-          if (!visibleDeploymentsByConfigAndService) {
+        $scope.$watch('visibleRCByDCAndService', function(visibleRCByDCAndService) {
+          if (!visibleRCByDCAndService) {
             return;
           }
 
           var serviceName = _.get($scope, 'service.metadata.name');
           $scope.activeDeploymentByConfig = {};
-          $scope.visibleDeploymentsByConfig = visibleDeploymentsByConfigAndService[serviceName];
+          $scope.visibleReplicationControllersByDC = visibleRCByDCAndService[serviceName];
 
           // Determine if this service will show multiple RC tiles on the overview.
           $scope.rcTileCount = 0;
-          _.each($scope.visibleDeploymentsByConfig, function(deployments, dcName) {
+          _.each($scope.visibleReplicationControllersByDC, function(replicationControllers, dcName) {
             if (!dcName) {
               // Vanilla RCs.
-              $scope.rcTileCount += _.size(deployments);
+              $scope.rcTileCount += _.size(replicationControllers);
             } else {
               // Deployment config tile.
               $scope.rcTileCount++;
+            }
+          });
+        });
+
+        $scope.$watch('visibleRSByDeploymentAndService', function(visibleRSByDeploymentAndService) {
+          if (!visibleRSByDeploymentAndService) {
+            return;
+          }
+
+          var serviceName = _.get($scope, 'service.metadata.name');
+          $scope.visibleReplicaSetsByDeployment = visibleRSByDeploymentAndService[serviceName];
+
+          $scope.rsTileCount = 0;
+          _.each($scope.visibleReplicaSetsByDeployment, function(replicaSets, deploymentName) {
+            if (!deploymentName) {
+              // Vanilla RCs.
+              $scope.rsTileCount += _.size(replicaSets);
+            } else {
+              // Deployment config tile.
+              $scope.rsTileCount++;
             }
           });
         });

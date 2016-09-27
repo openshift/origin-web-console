@@ -1,7 +1,8 @@
 'use strict';
 
 angular.module('openshiftConsole')
-  .directive('overviewDeployment', function() {
+  // TODO: Remove when we remove the old overview code.
+  .directive('topologyDeployment', function() {
     return {
       restrict: 'E',
       scope: {
