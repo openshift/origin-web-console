@@ -10,6 +10,7 @@ angular.module('openshiftConsole')
         deploymentConfigsByService: '=',
         deploymentsByService: '=',
         replicaSetsByService: '=',
+        petSetsByService: '=',
         podsByOwnerUid: '=',
         collapsed: '='
       },
@@ -83,6 +84,9 @@ angular.module('openshiftConsole')
               });
               _.each($scope.replicaSetsByService[svcName], function(replicaSet) {
                 $filter('groupedPodWarnings')($scope.podsByOwnerUid[replicaSet.metadata.uid], groupedPodWarnings);
+              });
+              _.each($scope.petSetsByService[svcName], function(petSet) {
+                $filter('groupedPodWarnings')($scope.podsByOwnerUid[petSet.metadata.uid], groupedPodWarnings);
               });
             }
           });

@@ -8012,7 +8012,7 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "</div>\n" +
     "</div>\n" +
     "\n" +
-    "<div row wrap ng-if=\"(monopodsByService[''] | hashSize) || (deploymentConfigsByService[''] | hashSize) || (deploymentsByService[''] | hashSize) || (replicaSetsByService[''] | hashSize)\" class=\"unserviced-row\">\n" +
+    "<div row wrap ng-if=\"(monopodsByService[''] | hashSize) || (deploymentConfigsByService[''] | hashSize) || (deploymentsByService[''] | hashSize) || (replicaSetsByService[''] | hashSize) || (petSetsByService[''] | hashSize)\" class=\"unserviced-row\">\n" +
     "\n" +
     "<div ng-repeat=\"(dcName, deploymentConfig) in deploymentConfigsByService[''] track by (deploymentConfig | uid)\" class=\"no-service\" ng-if=\"deployments = visibleDeploymentsByConfigAndService[''][dcName]\"> \n" +
     "<overview-deployment-config class=\"deployment-tile-wrapper\"></overview-deployment-config>\n" +
@@ -8025,6 +8025,11 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "\n" +
     "\n" +
     "<div ng-repeat=\"deployment in replicaSetsByService[''] | orderObjectsByDate : true track by (deployment | uid)\" class=\"no-service\">\n" +
+    "<overview-replication-controller class=\"deployment-tile-wrapper\"></overview-replication-controller>\n" +
+    "</div>\n" +
+    "\n" +
+    "\n" +
+    "<div ng-repeat=\"deployment in petSetsByService[''] | orderObjectsByDate : true track by (deployment | uid)\" class=\"no-service\">\n" +
     "<overview-replication-controller class=\"deployment-tile-wrapper\"></overview-replication-controller>\n" +
     "</div>\n" +
     "\n" +
@@ -8256,7 +8261,7 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "</div>\n" +
     "</div>\n" +
     "\n" +
-    "<service-group-notifications ng-if=\"service\" collapsed=\"collapse\" deployment-configs-by-service=\"deploymentConfigsByService\" deployments-by-service=\"deploymentsByService\" replica-sets-by-service=\"replicaSetsByService\" child-services=\"childServices\" service=\"service\" pods-by-owner-uid=\"podsByOwnerUID\">\n" +
+    "<service-group-notifications ng-if=\"service\" collapsed=\"collapse\" deployment-configs-by-service=\"deploymentConfigsByService\" deployments-by-service=\"deploymentsByService\" replica-sets-by-service=\"replicaSetsByService\" pet-sets-by-service=\"petSetsByService\" child-services=\"childServices\" service=\"service\" pods-by-owner-uid=\"podsByOwnerUID\">\n" +
     "</service-group-notifications>\n" +
     "<div uib-collapse=\"collapse\" class=\"service-group-body\">\n" +
     "\n" +
@@ -8321,7 +8326,7 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
 
 
   $templateCache.put('views/overview/_service.html',
-    "<div ng-if=\"!(visibleDeploymentsByConfig | hashSize) && !(visibleReplicaSets | hashSize) && !(monopodsByService[service.metadata.name] | hashSize)\" class=\"no-deployments-block\">\n" +
+    "<div ng-if=\"!(visibleDeploymentsByConfig | hashSize) && !(visibleReplicaSets | hashSize) && !(petSetsByService[service.metadata.name] | hashSize) && !(monopodsByService[service.metadata.name] | hashSize)\" class=\"no-deployments-block\">\n" +
     "<div column class=\"no-deployments-message\">\n" +
     "<ng-include src=\"'views/overview/_service-header.html'\"></ng-include>\n" +
     "<div class=\"pad-xxl\">\n" +
@@ -8333,9 +8338,9 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "</div>\n" +
     "</div>\n" +
     "</div>\n" +
-    "<div ng-attr-row=\"{{!service ? '' : undefined}}\" ng-attr-wrap=\"{{!service ? '' : undefined}}\" ng-if=\"(visibleDeploymentsByConfig | hashSize) || (visibleReplicaSets | hashSize) || (monopodsByService[service.metadata.name || ''] | hashSize)\" class=\"deployment-block\" ng-class=\"{\n" +
+    "<div ng-attr-row=\"{{!service ? '' : undefined}}\" ng-attr-wrap=\"{{!service ? '' : undefined}}\" ng-if=\"(visibleDeploymentsByConfig | hashSize) || (visibleReplicaSets | hashSize) || (petSetsByService[service.metadata.name] | hashSize) || (monopodsByService[service.metadata.name || ''] | hashSize)\" class=\"deployment-block\" ng-class=\"{\n" +
     "       'no-service': !service,\n" +
-    "       'service-multiple-targets': rcTileCount + (visibleReplicaSets | hashSize) + (monopodsByService[service.metadata.name] | hashSize) > 1\n" +
+    "       'service-multiple-targets': rcTileCount + (visibleReplicaSets | hashSize) + (petSetsByService[service.metadata.name] | hashSize) + (monopodsByService[service.metadata.name] | hashSize) > 1\n" +
     "     }\">\n" +
     "<div ng-repeat=\"(dcName, deployments) in visibleDeploymentsByConfig\" class=\"deployment-tile-wrapper\">\n" +
     "\n" +
@@ -8347,6 +8352,9 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "</div>\n" +
     "</div>\n" +
     "<div class=\"deployment-tile-wrapper\" ng-repeat=\"deployment in visibleReplicaSets track by (deployment | uid)\">\n" +
+    "<overview-replication-controller></overview-replication-controller>\n" +
+    "</div>\n" +
+    "<div class=\"deployment-tile-wrapper\" ng-repeat=\"deployment in petSetsByService[service.metadata.name] track by (deployment | uid)\">\n" +
     "<overview-replication-controller></overview-replication-controller>\n" +
     "</div>\n" +
     "\n" +

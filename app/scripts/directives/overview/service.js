@@ -3,8 +3,7 @@
 angular.module('openshiftConsole')
   .directive('overviewService', function($filter,
                                          DeploymentsService,
-                                         MetricsService,
-                                         Navigate) {
+                                         MetricsService) {
     return {
       restrict: 'E',
       // Inherit scope from OverviewController. This directive is only used for the overview.

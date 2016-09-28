@@ -42,6 +42,7 @@ angular.module('openshiftConsole')
         deploymentConfigs,
         deployments,
         replicaSets,
+        petSets,
         pods,
         buildConfigs,
         builds,
@@ -148,6 +149,14 @@ angular.module('openshiftConsole')
       $scope.replicaSetsByService = LabelsService.groupBySelector(replicaSets, services, { matchTemplate: true });
     };
 
+    var groupPetSets = function() {
+      if (!services || !petSets) {
+        return;
+      }
+
+      $scope.petSetsByService = LabelsService.groupBySelector(petSets, services, { matchTemplate: true });
+    };
+
     var groupHPAs = function() {
       hpaByResource = {};
       _.each(horizontalPodAutoscalers, function(hpa) {
@@ -203,11 +212,11 @@ angular.module('openshiftConsole')
     };
 
     var groupPods = function() {
-      if (!pods || !deployments || !replicaSets) {
+      if (!pods || !deployments || !replicaSets || !petSets) {
         return;
       }
 
-      var allOwners = _.toArray(deployments).concat(_.toArray(replicaSets));
+      var allOwners = _.toArray(deployments).concat(_.toArray(replicaSets)).concat(_.toArray(petSets));
       $scope.podsByOwnerUID = LabelsService.groupBySelector(pods, allOwners, { key: 'metadata.uid' });
 
       var monopods = $scope.podsByOwnerUID[''];
@@ -366,10 +375,11 @@ angular.module('openshiftConsole')
         _.isEmpty(services) &&
         _.isEmpty($scope.monopodsByService) &&
         _.isEmpty(deployments) &&
-        _.isEmpty(replicaSets);
+        _.isEmpty(replicaSets) &&
+        _.isEmpty(petSets);
 
       // Check if we've loaded everything we show on the overview.
-      var loaded = services && pods && deployments && deploymentConfigs && replicaSets;
+      var loaded = services && pods && deployments && deploymentConfigs && replicaSets && petSets;
 
       $scope.renderOptions.showGetStarted = loaded && projectEmpty;
       $scope.renderOptions.showLoading = !loaded && projectEmpty;
@@ -454,6 +464,7 @@ angular.module('openshiftConsole')
           groupDeploymentConfigs();
           groupDeployments();
           groupReplicaSets();
+          groupPetSets();
           updateRouteWarnings();
           updateShowGetStarted();
           Logger.log("services (list)", services);
@@ -496,7 +507,7 @@ angular.module('openshiftConsole')
           groupDeploymentConfigs();
           groupDeployments();
           updateShowGetStarted();
-          Logger.log("deploymentconfigs (subscribe)", $scope.deploymentConfigs);
+          Logger.log("deploymentconfigs (subscribe)", deploymentConfigs);
         }));
 
         watches.push(DataService.watch({
@@ -507,7 +518,18 @@ angular.module('openshiftConsole')
           groupPods();
           groupReplicaSets();
           updateShowGetStarted();
-          Logger.log("replicasets (subscribe)", $scope.replicaSets);
+          Logger.log("replicasets (subscribe)", replicaSets);
+        }));
+
+        watches.push(DataService.watch({
+          group: "apps",
+          resource: "petsets"
+        }, context, function(petSetData) {
+          petSets = petSetData.by('metadata.name');
+          groupPods();
+          groupPetSets();
+          updateShowGetStarted();
+          Logger.log("petsets (subscribe)", petSets);
         }));
 
         watches.push(DataService.watch({

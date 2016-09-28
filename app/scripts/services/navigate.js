@@ -121,6 +121,11 @@ angular.module("openshiftConsole")
         if (!kind) {
           kind = resource.kind;
         }
+        var group = "";
+        if (resource.apiVersion) {
+          group = APIService.parseGroupVersion(resource.apiVersion).group;
+        }
+
         if (!namespace) {
           namespace = resource.metadata.namespace;
         }
@@ -173,9 +178,18 @@ angular.module("openshiftConsole")
             url.segment("images")
               .segmentCoded(name);
             break;
-          default:
+          case "Service":
+          case "Route":
+          case "Pod":
             url.segment(APIService.kindToResource(kind))
             .segmentCoded(name);
+            break;
+          default:
+            url.segment("other")
+            .search({
+              kind: kind,
+              group: group
+            });
         }
         return url.toString();
       },
