@@ -7001,83 +7001,83 @@ b.unwatchAll(e);
 });
 } ]
 };
-} ]), angular.module("openshiftConsole").directive("fromFile", [ "$q", "$uibModal", "$location", "$filter", "CachedTemplateService", "AlertMessageService", "Navigate", "TaskList", "DataService", "APIService", function(a, b, c, d, e, f, g, h, i, j) {
+} ]), angular.module("openshiftConsole").directive("fromFile", [ "$q", "$uibModal", "$location", "$filter", "CachedTemplateService", "AlertMessageService", "Navigate", "TaskList", "DataService", "APIService", "QuotaService", function(a, b, c, d, e, f, g, h, i, j, k) {
 return {
 restrict:"E",
 scope:!1,
 templateUrl:"views/directives/from-file.html",
-controller:[ "$scope", function(k) {
-function l(a) {
-return a.kind ? a.metadata ? a.metadata.name || a.kind.endsWith("List") ? !a.metadata.namespace || a.metadata.namespace === k.projectName || (k.error = {
+controller:[ "$scope", function(l) {
+function m(a) {
+return a.kind ? a.metadata ? a.metadata.name || a.kind.endsWith("List") ? !a.metadata.namespace || a.metadata.namespace === l.projectName || (l.error = {
 message:a.kind + " " + a.metadata.name + " can't be created in project " + a.metadata.namespace + ". Can't create resource in different projects."
-}, !1) :(k.error = {
+}, !1) :(l.error = {
 message:"Resource name is missing in metadata field."
-}, !1) :(k.error = {
+}, !1) :(l.error = {
 message:"Resource is missing metadata field."
-}, !1) :(k.error = {
+}, !1) :(l.error = {
 message:"Resource is missing kind field."
 }, !1);
-}
-function m() {
-var a = b.open({
-animation:!0,
-templateUrl:"views/modals/process-template.html",
-controller:"ProcessTemplateModalController",
-scope:k
-});
-a.result.then(function() {
-k.templateOptions.add ? o() :(e.setTemplate(k.resourceList[0]), p());
-});
 }
 function n() {
 var a = b.open({
 animation:!0,
-templateUrl:"views/modals/confirm-replace.html",
-controller:"ConfirmReplaceModalController",
-scope:k
+templateUrl:"views/modals/process-template.html",
+controller:"ProcessTemplateModalController",
+scope:l
 });
 a.result.then(function() {
-o();
+l.templateOptions.add ? p() :(e.setTemplate(l.resourceList[0]), q());
 });
 }
 function o() {
-var b = k.createResources.length, c = k.updateResources.length;
-if (k.resourceKind.endsWith("List")) {
-var d = [];
-c > 0 && d.push(t()), b > 0 && d.push(s()), a.all(d).then(p);
-} else r();
+var a = b.open({
+animation:!0,
+templateUrl:"views/modals/confirm-replace.html",
+controller:"ConfirmReplaceModalController",
+scope:l
+});
+a.result.then(function() {
+k.getLatestQuotaAlerts(l.createResources, l.context).then(A);
+});
 }
 function p() {
+var b = l.createResources.length, c = l.updateResources.length;
+if (l.resourceKind.endsWith("List")) {
+var d = [];
+c > 0 && d.push(u()), b > 0 && d.push(t()), a.all(d).then(q);
+} else s();
+}
+function q() {
 var a;
-if ("Template" === k.resourceKind && k.templateOptions.process && !k.errorOccured) {
-var b = k.templateOptions.add || k.updateResources.length > 0 ? k.projectName :"";
-a = g.fromTemplateURL(k.projectName, k.resourceName, b);
-} else a = g.projectOverviewURL(k.projectName);
+if ("Template" === l.resourceKind && l.templateOptions.process && !l.errorOccured) {
+var b = l.templateOptions.add || l.updateResources.length > 0 ? l.projectName :"";
+a = g.fromTemplateURL(l.projectName, l.resourceName, b);
+} else a = g.projectOverviewURL(l.projectName);
 c.url(a);
 }
-function q(a) {
+function r(a) {
 var b = j.objectToResourceGroupVersion(a);
-return b ? j.apiInfo(b) ? i.get(b, a.metadata.name, k.context, {
+return b ? j.apiInfo(b) ? i.get(b, a.metadata.name, l.context, {
 errorNotification:!1
 }).then(function(b) {
 var c = angular.copy(a), d = angular.copy(b.metadata);
-d.annotations = a.metadata.annotations, d.labels = a.metadata.labels, c.metadata = d, k.updateResources.push(c);
+d.annotations = a.metadata.annotations, d.labels = a.metadata.labels, c.metadata = d, l.updateResources.push(c);
 }, function(b) {
-404 === b.status ? k.createResources.push(a) :(k.alerts.check = {
+404 === b.status ? l.createResources.push(a) :(l.alerts.check = {
 type:"error",
-message:"An error occurred checking if the " + v(a.kind) + " " + a.metadata.name + " already exists.",
+message:"An error occurred checking if the " + w(a.kind) + " " + a.metadata.name + " already exists.",
 details:"Reason: " + d("getErrorDetails")(b)
-}, k.errorOccured = !0);
-}) :(k.errorOccured = !0, void (k.error = {
+}, l.errorOccured = !0);
+}) :(l.errorOccured = !0, void (l.error = {
 message:j.unsupportedObjectKindOrVersion(a)
-})) :(k.errorOccured = !0, void (k.error = {
+})) :(l.errorOccured = !0, void (l.error = {
 message:j.invalidObjectKindOrVersion(a)
 }));
 }
-function r() {
+function s() {
 var a;
-_.isEmpty(k.createResources) ? (a = _.head(k.updateResources), i.update(j.kindToResource(a.kind), a.metadata.name, a, {
-namespace:k.projectName
+_.isEmpty(l.createResources) ? (a = _.head(l.updateResources), i.update(j.kindToResource(a.kind), a.metadata.name, a, {
+namespace:l.projectName
 }).then(function() {
 f.addAlert({
 name:a.metadata.name,
@@ -7085,13 +7085,13 @@ data:{
 type:"success",
 message:a.kind + " " + a.metadata.name + " was successfully updated."
 }
-}), p();
+}), q();
 }, function(a) {
-k.error = {
+l.error = {
 message:d("getErrorDetails")(a)
 };
-})) :(a = _.head(k.createResources), i.create(j.kindToResource(a.kind), null, a, {
-namespace:k.projectName
+})) :(a = _.head(l.createResources), i.create(j.kindToResource(a.kind), null, a, {
+namespace:l.projectName
 }).then(function() {
 f.addAlert({
 name:a.metadata.name,
@@ -7099,37 +7099,37 @@ data:{
 type:"success",
 message:a.kind + " " + a.metadata.name + " was successfully created."
 }
-}), p();
+}), q();
 }, function(a) {
-k.error = {
+l.error = {
 message:d("getErrorDetails")(a)
 };
 }));
 }
-function s() {
+function t() {
 var b = {
-started:"Creating resources in project " + k.projectName,
-success:"Creating resources in project " + k.projectName,
-failure:"Failed to create some resources in project " + k.projectName
+started:"Creating resources in project " + l.projectName,
+success:"Creating resources in project " + l.projectName,
+failure:"Failed to create some resources in project " + l.projectName
 }, c = {};
-h.add(b, c, k.projectName, function() {
+h.add(b, c, l.projectName, function() {
 var b = a.defer();
-return i.batch(k.createResources, k.context, "create").then(function(a) {
+return i.batch(l.createResources, l.context, "create").then(function(a) {
 var c = [], d = !1;
-if (a.failure.length > 0) d = !0, k.errorOccured = !0, a.failure.forEach(function(a) {
+if (a.failure.length > 0) d = !0, l.errorOccured = !0, a.failure.forEach(function(a) {
 c.push({
 type:"error",
-message:"Cannot create " + v(a.object.kind) + ' "' + a.object.metadata.name + '". ',
+message:"Cannot create " + w(a.object.kind) + ' "' + a.object.metadata.name + '". ',
 details:a.data.message
 });
 }), a.success.forEach(function(a) {
 c.push({
 type:"success",
-message:"Created " + v(a.kind) + ' "' + a.metadata.name + '" successfully. '
+message:"Created " + w(a.kind) + ' "' + a.metadata.name + '" successfully. '
 });
 }); else {
 var e;
-e = k.isList ? "All items in list were created successfully." :v(k.resourceKind) + " " + k.resourceName + " was successfully created.", c.push({
+e = l.isList ? "All items in list were created successfully." :w(l.resourceKind) + " " + l.resourceName + " was successfully created.", c.push({
 type:"success",
 message:e
 });
@@ -7141,30 +7141,30 @@ hasErrors:d
 }), b.promise;
 });
 }
-function t() {
+function u() {
 var b = {
-started:"Updating resources in project " + k.projectName,
-success:"Updated resources in project " + k.projectName,
-failure:"Failed to update some resources in project " + k.projectName
+started:"Updating resources in project " + l.projectName,
+success:"Updated resources in project " + l.projectName,
+failure:"Failed to update some resources in project " + l.projectName
 }, c = {};
-h.add(b, c, function() {
+h.add(b, c, l.projectName, function() {
 var b = a.defer();
-return i.batch(k.updateResources, k.context, "update").then(function(a) {
+return i.batch(l.updateResources, l.context, "update").then(function(a) {
 var c = [], d = !1;
-if (a.failure.length > 0) d = !0, k.errorOccured = !0, a.failure.forEach(function(a) {
+if (a.failure.length > 0) d = !0, l.errorOccured = !0, a.failure.forEach(function(a) {
 c.push({
 type:"error",
-message:"Cannot update " + v(a.object.kind) + ' "' + a.object.metadata.name + '". ',
+message:"Cannot update " + w(a.object.kind) + ' "' + a.object.metadata.name + '". ',
 details:a.data.message
 });
 }), a.success.forEach(function(a) {
 c.push({
 type:"success",
-message:"Updated " + v(a.kind) + ' "' + a.metadata.name + '" successfully. '
+message:"Updated " + w(a.kind) + ' "' + a.metadata.name + '" successfully. '
 });
 }); else {
 var e;
-e = k.isList ? "All items in list were updated successfully." :v(k.resourceKind) + " " + k.resourceName + " was successfully updated.", c.push({
+e = l.isList ? "All items in list were updated successfully." :w(l.resourceKind) + " " + l.resourceName + " was successfully updated.", c.push({
 type:"success",
 message:e
 });
@@ -7185,47 +7185,72 @@ alerts:c
 }), b.promise;
 });
 }
-var u, v = d("humanizeKind");
-h.clear(), k.aceLoaded = function(a) {
-u = a.getSession(), u.setOption("tabSize", 2), u.setOption("useSoftTabs", !0), a.setDragDelay = 0, a.$blockScrolling = 1 / 0;
+var v, w = d("humanizeKind");
+h.clear(), l.aceLoaded = function(a) {
+v = a.getSession(), v.setOption("tabSize", 2), v.setOption("useSoftTabs", !0), a.setDragDelay = 0, a.$blockScrolling = 1 / 0;
 };
-var w = function() {
-var a = u.getAnnotations();
-k.editorErrorAnnotation = _.some(a, {
+var x = function() {
+var a = v.getAnnotations();
+l.editorErrorAnnotation = _.some(a, {
 type:"error"
 });
-}, x = _.debounce(function() {
+}, y = _.debounce(function() {
 try {
-JSON.parse(k.editorContent), u.setMode("ace/mode/json");
+JSON.parse(l.editorContent), v.setMode("ace/mode/json");
 } catch (a) {
 try {
-jsyaml.safeLoad(k.editorContent), u.setMode("ace/mode/yaml");
+jsyaml.safeLoad(l.editorContent), v.setMode("ace/mode/yaml");
 } catch (a) {}
 }
-k.$apply(w);
+l.$apply(x);
 }, 300);
-k.aceChanged = x, k.create = function() {
-delete k.alerts.create, delete k.error;
+l.aceChanged = y;
+var z = function(a) {
+var c = b.open({
+animation:!0,
+templateUrl:"views/modals/confirm.html",
+controller:"ConfirmModalController",
+resolve:{
+modalConfig:function() {
+return {
+alerts:a,
+message:"Problems were detected while checking your application configuration.",
+okButtonText:"Create Anyway",
+okButtonClass:"btn-danger",
+cancelButtonText:"Cancel"
+};
+}
+}
+});
+c.result.then(p);
+}, A = function(a) {
+var b = a.quotaAlerts || [], c = _.filter(b, {
+type:"error"
+});
+c.length ? (l.disableInputs = !1, l.alerts = b) :b.length ? (z(b), l.disableInputs = !1) :p();
+};
+l.create = function() {
+l.alerts = {}, delete l.error;
 var b;
 try {
-b = JSON.parse(k.editorContent);
+b = JSON.parse(l.editorContent);
 } catch (c) {
 try {
-b = jsyaml.safeLoad(k.editorContent);
+b = jsyaml.safeLoad(l.editorContent);
 } catch (c) {
-return void (k.error = c);
+return void (l.error = c);
 }
 }
-if (l(b)) {
-k.resourceKind = b.kind, k.resourceKind.endsWith("List") ? (k.isList = !0, k.resourceList = b.items, k.resourceName = "") :(k.resourceList = [ b ], k.resourceName = b.metadata.name, "Template" === k.resourceKind && (k.templateOptions = {
+if (m(b)) {
+l.resourceKind = b.kind, l.resourceKind.endsWith("List") ? (l.isList = !0, l.resourceList = b.items, l.resourceName = "") :(l.resourceList = [ b ], l.resourceName = b.metadata.name, "Template" === l.resourceKind && (l.templateOptions = {
 process:!0,
 add:!1
-})), k.updateResources = [], k.createResources = [];
+})), l.updateResources = [], l.createResources = [];
 var d = [];
-k.errorOccured = !1, _.forEach(k.resourceList, function(a) {
-return l(a) ? void d.push(q(a)) :(k.errorOccured = !0, !1);
+l.errorOccured = !1, _.forEach(l.resourceList, function(a) {
+return m(a) ? void d.push(r(a)) :(l.errorOccured = !0, !1);
 }), a.all(d).then(function() {
-k.errorOccured || (1 === k.createResources.length && "Template" === k.resourceList[0].kind ? m() :_.isEmpty(k.updateResources) ? o() :n());
+l.errorOccured || (1 === l.createResources.length && "Template" === l.resourceList[0].kind ? n() :_.isEmpty(l.updateResources) ? k.getLatestQuotaAlerts(l.createResources, l.context).then(A) :o());
 });
 }
 };

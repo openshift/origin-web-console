@@ -5408,7 +5408,8 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "          }\n" +
     "        }\" ng-model=\"editorContent\" class=\"editor ace-bordered yaml-mode\" id=\"add-component-editor\" required></div>\n" +
     "</div>\n" +
-    "<div class=\"buttons gutter-top-bottom\">\n" +
+    "<alerts alerts=\"alerts\"></alerts>\n" +
+    "<div class=\"buttons gutter-bottom\" ng-class=\"{'gutter-top': !alerts.length}\">\n" +
     "<button type=\"submit\" ng-click=\"create()\" ng-disabled=\"editorErrorAnnotation || !editorContent\" class=\"btn btn-primary btn-lg\">\n" +
     "Create\n" +
     "</button>\n" +
