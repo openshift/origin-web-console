@@ -107,7 +107,7 @@
       <form name="form" class="osc-form">
         <div class="form-group">
          <label for="name" class="required">Name</label>
-         <div ng-class="{'has-error': form.name.$invalid}">
+         <div ng-class="{'has-error': form.name.$invalid || nameTaken}">
            <input type="text"
                   required
                   select-on-focus
@@ -139,6 +139,9 @@
               Name can't have more than 24 characters.
             </div>
           </div>
+          <div class="has-error" ng-show="nameTaken">
+            <span class="help-block">This name is already in use within the project. Please choose a different name.</span>
+          </div>
         </div>
         <osc-form-section
             header="Environment Variables"
@@ -164,12 +167,14 @@
             help-text="Each label is applied to each created resource.">
         </label-editor>
 
-        <div class="button-group gutter-top gutter-bottom">
+        <alerts alerts="alerts"></alerts>
+
+        <div class="button-group gutter-bottom" ng-class="{'gutter-top': !alerts.length}">
           <button type="submit"
               class="btn btn-primary btn-lg"
               ng-click="create()"
               value=""
-              ng-disabled="form.$invalid">Create</button>
+              ng-disabled="form.$invalid || nameTaken || disableInputs">Create</button>
           <a class="btn btn-default btn-lg" href="#" back>Cancel</a>
         </div>
       </form>

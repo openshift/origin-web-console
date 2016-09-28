@@ -10,7 +10,8 @@ angular.module("openshiftConsole")
                                   Navigate,
                                   TaskList,
                                   DataService,
-                                  APIService) {
+                                  APIService,
+                                  QuotaService) {
     return {
       restrict: "E",
       scope: false,
@@ -52,8 +53,46 @@ angular.module("openshiftConsole")
         // the editor accordingly.
         $scope.aceChanged = updateEditorMode;
 
+        var launchConfirmationDialog = function(alerts) {
+          var modalInstance = $uibModal.open({
+            animation: true,
+            templateUrl: 'views/modals/confirm.html',
+            controller: 'ConfirmModalController',
+            resolve: {
+              modalConfig: function() {
+                return {
+                  alerts: alerts,
+                  message: "Problems were detected while checking your application configuration.",
+                  okButtonText: "Create Anyway",
+                  okButtonClass: "btn-danger",
+                  cancelButtonText: "Cancel"
+                };
+              }
+            }
+          });
+
+          modalInstance.result.then(createAndUpdate);
+        };
+
+        var showWarningsOrCreate = function(result){
+          // Now that all checks are completed, show any Alerts if we need to
+          var quotaAlerts = result.quotaAlerts || [];
+          var errorAlerts = _.filter(quotaAlerts, {type: 'error'});
+          if (errorAlerts.length) {
+            $scope.disableInputs = false;
+            $scope.alerts = quotaAlerts;
+          }
+          else if (quotaAlerts.length) {
+             launchConfirmationDialog(quotaAlerts);
+             $scope.disableInputs = false;
+          }
+          else {
+            createAndUpdate();
+          }
+        };
+
         $scope.create = function() {
-          delete $scope.alerts['create'];
+          $scope.alerts = {};
           delete $scope.error;
           var resource;
 
@@ -120,7 +159,7 @@ angular.module("openshiftConsole")
             } else if (!_.isEmpty($scope.updateResources)) {
               confirmReplace();
             } else {
-              createAndUpdate();
+              QuotaService.getLatestQuotaAlerts($scope.createResources, $scope.context).then(showWarningsOrCreate);
             }
           });
         };
@@ -180,7 +219,7 @@ angular.module("openshiftConsole")
             scope: $scope
           });
           modalInstance.result.then(function() {
-            createAndUpdate();
+            QuotaService.getLatestQuotaAlerts($scope.createResources, $scope.context).then(showWarningsOrCreate);
           });
         }
 
@@ -189,7 +228,7 @@ angular.module("openshiftConsole")
             updateResourcesSum = $scope.updateResources.length;
 
           if (!$scope.resourceKind.endsWith("List")) {
-            creatUpdateSingleResource();
+            createUpdateSingleResource();
           } else {
             var createUpdatePromises = [];
             if (updateResourcesSum > 0) {
@@ -260,8 +299,8 @@ angular.module("openshiftConsole")
           });
         }
 
-        // creatUpdateSingleResource function will create/update just a single resource on a none-List resource kind.
-        function creatUpdateSingleResource() {
+        // createUpdateSingleResource function will create/update just a single resource on a none-List resource kind.
+        function createUpdateSingleResource() {
           var resource;
           if (!_.isEmpty($scope.createResources)) {
             resource = _.head($scope.createResources);
@@ -365,7 +404,7 @@ angular.module("openshiftConsole")
             failure: "Failed to update some resources in project " + $scope.projectName
           };
           var helpLinks = {};
-          TaskList.add(titles, helpLinks, function() {
+          TaskList.add(titles, helpLinks, $scope.projectName, function() {
             var d = $q.defer();
 
             DataService.batch($scope.updateResources, $scope.context, "update").then(

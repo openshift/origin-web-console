@@ -1274,7 +1274,7 @@ angular.module('openshiftConsole')
       });
     };
   })
-  .filter('scopeDetails', function() {
+  .filter('scopeDetails', function(sentenceCaseFilter) {
     var scopeMessages = {
       "Terminating": "Matches pods that have an active deadline.",
       "NotTerminating": "Matches pods that do not have an active deadline.",
@@ -1282,7 +1282,7 @@ angular.module('openshiftConsole')
       "NotBestEffort": "Matches pods that do not have best effort quality of service."
     };
     return function(scope) {
-      return scopeMessages[scope];
+      return scopeMessages[scope] || sentenceCaseFilter(scope);
     };
   })
   .filter('isDebugPod', function(annotationFilter) {

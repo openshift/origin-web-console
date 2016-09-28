@@ -13,10 +13,12 @@ angular.module("openshiftConsole")
       LimitRangesService,
       MetricsService,
       HPAService,
+      QuotaService,
       TaskList,
       failureObjectNameFilter,
       $filter,
       $parse,
+      $uibModal,
       SOURCE_URL_PATTERN,
       keyValueEditorUtils
     ){
@@ -184,6 +186,19 @@ angular.module("openshiftConsole")
           $scope.showCPURequestWarning = !HPAService.hasCPURequest([$scope.container], $scope.limitRanges, project);
         };
 
+        var quotas, clusterQuotas;
+
+        DataService.list("resourcequotas", context, function(quotaData) {
+          quotas = quotaData.by("metadata.name");
+          Logger.log("quotas", quotas);
+        });
+
+        // TODO clean up anything not needed here
+        DataService.list("appliedclusterresourcequotas", context, function(clusterQuotaData) {
+          clusterQuotas = clusterQuotaData.by("metadata.name");
+          Logger.log("cluster quotas", clusterQuotas);
+        });
+
         $scope.$watch('scaling.autoscale', checkCPURequest);
         $scope.$watch('container', checkCPURequest, true);
         $scope.$watch('name', function(newValue) {
@@ -192,56 +207,8 @@ angular.module("openshiftConsole")
 
         initAndValidate($scope);
 
-        var ifResourcesDontExist = function(apiObjects, namespace){
-          var result = $q.defer();
-          var successResults = [];
-          var failureResults = [];
-          var remaining = apiObjects.length;
-
-          function _checkDone() {
-            if (remaining === 0) {
-              if(successResults.length > 0){
-                //means some resources exist with the given nanme
-                result.reject(successResults);
-              }
-              else {
-                //means no resources exist with the given nanme
-                result.resolve(apiObjects);
-              }
-            }
-          }
-
-          apiObjects.forEach(function(apiObject) {
-            var resource = APIService.objectToResourceGroupVersion(apiObject);
-            if (!resource) {
-              failureResults.push({data: {message: APIService.invalidObjectKindOrVersion(apiObject)}});
-              remaining--;
-              _checkDone();
-              return;
-            }
-            if (!APIService.apiInfo(resource)) {
-              failureResults.push({data: {message: APIService.unsupportedObjectKindOrVersion(apiObject)}});
-              remaining--;
-              _checkDone();
-              return;
-            }
-            DataService.get(resource, apiObject.metadata.name, {namespace: (namespace || $routeParams.project)}, {errorNotification: false}).then(
-              function (data) {
-                successResults.push(data);
-                remaining--;
-                _checkDone();
-              },
-              function (data) {
-                failureResults.push(data);
-                remaining--;
-                _checkDone();
-              }
-            );
-          });
-          return result.promise;
-        };
-
-        var createResources = function(resources){
+        var generatedResources;
+        var createResources = function(){
           var titles = {
             started: "Creating application " + $scope.name + " in project " + $scope.projectDisplayName(),
             success: "Created application " + $scope.name + " in project " + $scope.projectDisplayName(),
@@ -252,7 +219,7 @@ angular.module("openshiftConsole")
           TaskList.clear();
           TaskList.add(titles, helpLinks, $routeParams.project, function(){
             var d = $q.defer();
-            DataService.batch(resources, context)
+            DataService.batch(generatedResources, context)
               //refactor these helpers to be common for 'newfromtemplate'
               .then(function(result) {
                     var alerts = [];
@@ -297,9 +264,42 @@ angular.module("openshiftConsole")
           Navigate.toNextSteps($scope.name, $scope.projectName, $scope.usingSampleRepo() ? {"fromSample": true} : null);
         };
 
-        var elseShowWarning = function(){
-          $scope.nameTaken = true;
-          $scope.disableInputs = false;
+        var launchConfirmationDialog = function(alerts) {
+          var modalInstance = $uibModal.open({
+            animation: true,
+            templateUrl: 'views/modals/confirm.html',
+            controller: 'ConfirmModalController',
+            resolve: {
+              modalConfig: function() {
+                return {
+                  alerts: alerts,
+                  message: "Problems were detected while checking your application configuration.",
+                  okButtonText: "Create Anyway",
+                  okButtonClass: "btn-danger",
+                  cancelButtonText: "Cancel"
+                };
+              }
+            }
+          });
+
+          modalInstance.result.then(createResources);
+        };
+
+        var showWarningsOrCreate = function(result){
+          // Now that all checks are completed, show any Alerts if we need to
+          var quotaAlerts = result.quotaAlerts || [];
+          var errorAlerts = _.filter(quotaAlerts, {type: 'error'});
+          if ($scope.nameTaken || errorAlerts.length) {
+            $scope.disableInputs = false;
+            $scope.alerts = quotaAlerts;
+          }
+          else if (quotaAlerts.length) {
+             launchConfirmationDialog(quotaAlerts);
+             $scope.disableInputs = false;
+          }
+          else {
+            createResources();
+          }
         };
 
         $scope.projectDisplayName = function() {
@@ -308,6 +308,7 @@ angular.module("openshiftConsole")
 
         $scope.createApp = function(){
           $scope.disableInputs = true;
+          $scope.alerts = {};
           $scope.buildConfig.envVars = keyValueEditorUtils.mapEntries(keyValueEditorUtils.compactEntries($scope.buildConfigEnvVars));
           $scope.deploymentConfig.envVars = keyValueEditorUtils.mapEntries(keyValueEditorUtils.compactEntries($scope.DCEnvVarsFromUser));
           var userLabels = keyValueEditorUtils.mapEntries(keyValueEditorUtils.compactEntries($scope.userDefinedLabels));
@@ -316,15 +317,23 @@ angular.module("openshiftConsole")
 
           var resourceMap = ApplicationGenerator.generate($scope);
           //init tasks
-          var resources = [];
+          generatedResources = [];
           angular.forEach(resourceMap, function(value){
             if(value !== null){
               Logger.debug("Generated resource definition:", value);
-              resources.push(value);
+              generatedResources.push(value);
             }
           });
-          ifResourcesDontExist(resources, $scope.projectName, $scope)
-            .then(createResources, elseShowWarning);
+
+          var nameTakenPromise = ApplicationGenerator.ifResourcesDontExist(generatedResources, $scope.projectName);
+          var checkQuotaPromise = QuotaService.getLatestQuotaAlerts(generatedResources, context);
+          // Don't want to wait for the name checks to finish before making the calls to quota
+          // so kick off the requests above and then chain the promises here
+          var setNameTaken = function(result) {
+            $scope.nameTaken = result.nameTaken;
+            return checkQuotaPromise;
+          };
+          nameTakenPromise.then(setNameTaken, setNameTaken).then(showWarningsOrCreate, showWarningsOrCreate);
         };
       }));
   });

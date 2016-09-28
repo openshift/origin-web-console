@@ -7,7 +7,7 @@
   <div class="col-sm-12 pod-bottom-xl">
     <form name="form">
       <div class="form-group" id="from-file">
-        <osc-file-input 
+        <osc-file-input
           model="editorContent"
           drop-zone-id="from-file"
           dragging="false"
@@ -25,7 +25,10 @@
           }
         }" ng-model="editorContent" class="editor ace-bordered yaml-mode" id="add-component-editor" required></div>
       </div>
-      <div class="buttons gutter-top-bottom">
+
+      <alerts alerts="alerts"></alerts>
+
+      <div class="buttons gutter-bottom" ng-class="{'gutter-top': !alerts.length}">
         <button
           type="submit"
           ng-click="create()"

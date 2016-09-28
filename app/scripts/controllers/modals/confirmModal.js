@@ -11,16 +11,9 @@
 angular.module('openshiftConsole')
   .controller('ConfirmModalController', function($scope,
                                                  $uibModalInstance,
-                                                 message,
-                                                 details,
-                                                 okButtonText,
-                                                 okButtonClass,
-                                                 cancelButtonText) {
-    $scope.message = message;
-    $scope.details = details;
-    $scope.okButtonText = okButtonText;
-    $scope.okButtonClass = okButtonClass;
-    $scope.cancelButtonText = cancelButtonText;
+                                                 modalConfig) {
+
+    _.extend($scope, modalConfig);
 
     $scope.confirm = function() {
       $uibModalInstance.close('confirm');

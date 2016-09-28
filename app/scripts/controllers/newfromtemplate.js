@@ -17,12 +17,14 @@ angular.module('openshiftConsole')
     ProcessedTemplateService,
     AlertMessageService,
     ProjectsService,
+    QuotaService,
     $q,
     $location,
     TaskList,
     $parse,
     Navigate,
     $filter,
+    $uibModal,
     imageObjectRefFilter,
     failureObjectNameFilter,
     CachedTemplateService,
@@ -175,60 +177,103 @@ angular.module('openshiftConsole')
           return displayNameFilter(this.template);
         };
 
+        var processedResources;
+        var createResources = function() {
+          var titles = {
+            started: "Creating " + $scope.templateDisplayName() + " in project " + $scope.projectDisplayName(),
+            success: "Created " + $scope.templateDisplayName() + " in project " + $scope.projectDisplayName(),
+            failure: "Failed to create " + $scope.templateDisplayName() + " in project " + $scope.projectDisplayName()
+          };
+          var helpLinks = getHelpLinks($scope.template);
+          TaskList.clear();
+          TaskList.add(titles, helpLinks, $routeParams.project, function() {
+            var d = $q.defer();
+            DataService.batch(processedResources, context).then(
+              function(result) {
+                var alerts = [];
+                var hasErrors = false;
+                if (result.failure.length > 0) {
+                  hasErrors = true;
+                  result.failure.forEach(
+                    function(failure) {
+                      alerts.push({
+                        type: "error",
+                        message: "Cannot create " + humanize(failure.object.kind).toLowerCase() + " \"" + failure.object.metadata.name + "\". ",
+                        details: failure.data.message
+                      });
+                    }
+                  );
+                  result.success.forEach(
+                    function(success) {
+                      alerts.push({
+                        type: "success",
+                        message: "Created " + humanize(success.kind).toLowerCase() + " \"" + success.metadata.name + "\" successfully. "
+                      });
+                    }
+                  );
+                } else {
+                  alerts.push({ type: "success", message: "All items in template " + $scope.templateDisplayName() +
+                    " were created successfully."});
+                }
+                d.resolve({alerts: alerts, hasErrors: hasErrors});
+              }
+            );
+            return d.promise;
+          });
+          Navigate.toNextSteps($routeParams.name, $scope.projectName);
+        };
+
+        var launchConfirmationDialog = function(alerts) {
+          var modalInstance = $uibModal.open({
+            animation: true,
+            templateUrl: 'views/modals/confirm.html',
+            controller: 'ConfirmModalController',
+            resolve: {
+              modalConfig: function() {
+                return {
+                  alerts: alerts,
+                  message: "Problems were detected while checking your application configuration.",
+                  okButtonText: "Create Anyway",
+                  okButtonClass: "btn-danger",
+                  cancelButtonText: "Cancel"
+                };
+              }
+            }
+          });
+
+          modalInstance.result.then(createResources);
+        };
+
+        var showWarningsOrCreate = function(result) {
+          // Now that all checks are completed, show any Alerts if we need to
+          var quotaAlerts = result.quotaAlerts || [];
+          var errorAlerts = _.filter(quotaAlerts, {type: 'error'});
+          if (errorAlerts.length) {
+            $scope.disableInputs = false;
+            $scope.alerts = quotaAlerts;
+          }
+          else if (quotaAlerts.length) {
+             launchConfirmationDialog(quotaAlerts);
+             $scope.disableInputs = false;
+          }
+          else {
+            createResources();
+          }
+        };
+
         $scope.createFromTemplate = function() {
           $scope.disableInputs = true;
           var userLabels = keyValueEditorUtils.mapEntries(keyValueEditorUtils.compactEntries($scope.labels));
           var systemLabels = keyValueEditorUtils.mapEntries(keyValueEditorUtils.compactEntries($scope.systemLabels));
           $scope.template.labels = _.extend(systemLabels, userLabels);
-          
+
           DataService.create("processedtemplates", null, $scope.template, context).then(
             function(config) { // success
-              var titles = {
-                started: "Creating " + $scope.templateDisplayName() + " in project " + $scope.projectDisplayName(),
-                success: "Created " + $scope.templateDisplayName() + " in project " + $scope.projectDisplayName(),
-                failure: "Failed to create " + $scope.templateDisplayName() + " in project " + $scope.projectDisplayName()
-              };
-
               // Cache template parameters and message so they can be displayed in the nexSteps page
               ProcessedTemplateService.setTemplateData(config.parameters, $scope.template.parameters, config.message);
+              processedResources = config.objects;
 
-              var helpLinks = getHelpLinks($scope.template);
-              TaskList.clear();
-              TaskList.add(titles, helpLinks, $routeParams.project, function() {
-                var d = $q.defer();
-                DataService.batch(config.objects, context).then(
-                  function(result) {
-                    var alerts = [];
-                    var hasErrors = false;
-                    if (result.failure.length > 0) {
-                      hasErrors = true;
-                      result.failure.forEach(
-                        function(failure) {
-                          alerts.push({
-                            type: "error",
-                            message: "Cannot create " + humanize(failure.object.kind).toLowerCase() + " \"" + failure.object.metadata.name + "\". ",
-                            details: failure.data.message
-                          });
-                        }
-                      );
-                      result.success.forEach(
-                        function(success) {
-                          alerts.push({
-                            type: "success",
-                            message: "Created " + humanize(success.kind).toLowerCase() + " \"" + success.metadata.name + "\" successfully. "
-                          });
-                        }
-                      );
-                    } else {
-                      alerts.push({ type: "success", message: "All items in template " + $scope.templateDisplayName() +
-                        " were created successfully."});
-                    }
-                    d.resolve({alerts: alerts, hasErrors: hasErrors});
-                  }
-                );
-                return d.promise;
-              });
-              Navigate.toNextSteps($routeParams.name, $scope.projectName);
+              QuotaService.getLatestQuotaAlerts(processedResources, context).then(showWarningsOrCreate);
             },
             function(result) { // failure
               $scope.disableInputs = false;
