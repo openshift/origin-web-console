@@ -608,6 +608,34 @@ module.exports = function (grunt) {
     grunt.task.run(['serve:' + target]);
   });
 
+  grunt.registerTask('add-redirect-uri', "Add a redirectURI for openshift-web-console", function(target){
+    var opts = {
+      cmd: "oc",
+      args: [
+        "--server",
+        (grunt.option('masterUrl') || "https://localhost:8443"),
+        "patch",
+        "oauthclient/openshift-web-console",
+        "-p",
+        '{"redirectURIs":["' + (grunt.option('baseUrl') || "https://localhost:9000/") + '"]}'
+      ]
+    };
+    var done = this.async();
+    grunt.log.writeln(opts.cmd + " " + opts.args.join(" "));
+    grunt.util.spawn(opts, function(error, result, code){
+      if (error) {
+        grunt.log.error(error);
+      } else if (code && result) {
+        grunt.log.error(result);
+      } else if (code) {
+        grunt.log.error("unexpected exit code: " + code);
+      } else {
+        grunt.log.writeln(result);
+      }
+      done();
+    });
+  });
+
   // Loads the coverage task which enforces the minimum coverage thresholds
   grunt.loadNpmTasks('grunt-istanbul-coverage');
 
@@ -633,6 +661,7 @@ module.exports = function (grunt) {
       'concurrent:server',
       'autoprefixer',
       'connect:test',
+      'add-redirect-uri',
       'protractor:default',
       'clean:server'
     ]
