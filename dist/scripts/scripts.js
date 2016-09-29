@@ -3646,6 +3646,9 @@ pollInterval:6e4
 x = a.by("metadata.name"), da(), ea(), i.log("builds (list)", x);
 })), A.push(f.watch("buildConfigs", b, function(a) {
 w = a.by("metadata.name"), da(), i.log("builds (list)", x);
+}, {
+poll:ga,
+pollInterval:6e4
 })), A.push(f.watch("routes", b, function(a) {
 p = a.by("metadata.name"), J(), Z(), $(), i.log("routes (subscribe)", c.routesByService);
 }, {
