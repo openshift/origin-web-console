@@ -1148,9 +1148,9 @@ if (this._isCached(e)) c && j(function() {
 c(h._data(e));
 }, 0); else {
 if (c) {
-var i = this._data(e);
-i && j(function() {
-c(i);
+var i = this._resourceVersion(e);
+this._data(e) && j(function() {
+i === h._resourceVersion(e) && c(h._data(e));
 }, 0);
 }
 this._listInFlight(e) || this._startListOp(a, b, d);

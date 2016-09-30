@@ -577,10 +577,13 @@ DataService.prototype.createStream = function(resource, name, context, opts, isR
     }
     else {
       if (callback) {
-        var existingData = this._data(key);
-        if (existingData) {
+        var resourceVersion = this._resourceVersion(key);
+        if (this._data(key)) {
           $timeout(function() {
-            callback(existingData);
+            // If the cached data is still the latest that we have, send it to the callback
+            if (resourceVersion === self._resourceVersion(key)) {
+              callback(self._data(key)); // but just in case, still pull from the current data map
+            }
           }, 0);
         }
       }
