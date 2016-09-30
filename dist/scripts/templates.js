@@ -3590,7 +3590,7 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "<div ng-show=\"showSessionToken\" class=\"alert alert-warning\">\n" +
     "<span class=\"pficon pficon-warning-triangle-o\" aria-hidden=\"true\"></span>\n" +
     "<strong>A token is a form of a password.</strong>\n" +
-    "Do not share your API token.\n" +
+    "Do not share your API token. If your token may have been leaked or you otherwise want to reset it, please <a target=\"_blank\" href=\"{{'token-request' | apiLink}}\">Request a New API Token</a>.\n" +
     "</div>\n" +
     "<p>After you login to your account you will get a list of projects that you can switch between:\n" +
     "<pre class=\"code prettyprint\">oc project <i>project-name</i></pre>\n" +
