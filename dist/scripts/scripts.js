@@ -24,6 +24,9 @@ application_health:"https://docs.openshift.org/latest/dev_guide/application_heal
 CLI:{
 "Latest Release":"https://github.com/openshift/origin/releases/latest"
 },
+API:{
+"token-request":"https://api.preview.openshift.com/oauth/token/request"
+},
 DEFAULT_HPA_CPU_TARGET_PERCENT:80,
 DISABLE_OVERVIEW_METRICS:!1,
 AVAILABLE_KINDS_BLACKLIST:[ "Binding", "Ingress", "DeploymentConfigRollback" ],
@@ -11294,6 +11297,10 @@ return a;
 }).filter("helpLink", [ "Constants", function(a) {
 return function(b) {
 return a.HELP[b] || a.HELP["default"];
+};
+} ]).filter("apiLink", [ "Constants", function(a) {
+return function(b) {
+return a.API[b];
 };
 } ]).filter("taskTitle", function() {
 return function(a) {
