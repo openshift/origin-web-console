@@ -163,6 +163,10 @@ angular
         controller: 'DeploymentConfigController',
         reloadOnSearch: false
       })
+      .when('/project/:project/edit/dc/:deploymentconfig', {
+        templateUrl: 'views/edit/deployment-config.html',
+        controller: 'EditDeploymentConfigController'
+      })
       .when('/project/:project/browse/rs/:replicaSet', {
         templateUrl: 'views/browse/replica-set.html',
         resolve: {

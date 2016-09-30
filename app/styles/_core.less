@@ -503,17 +503,39 @@ label.checkbox {
 }
 
 .osc-secrets-form {
-  .picked-secret {
+  .basic-secrets {
+    .remove-secret {
+      display: inline-block;
+      margin-left: 7px;
+      vertical-align: 8px;
+    }
+    .secret-name {
+      width: 95%;
+      display: inline-block;
+    }
+  }
+  .advanced-secrets {
     margin-bottom: 5px;
+    .remove-secret {
+      display: inline-block;
+      margin-left: 7px;
+      vertical-align: 2px;
+    }
+    .directory {
+      width: 90%;
+      display: inline-block;
+    }
   }
-  .directory {
-    width:90%;
-    display: inline-block;
-  }
-  .remove-secret-row {
-    width: 10%;
-    margin-left: 7px;
-    display: inline;
+  @media (max-width: @screen-xs-max) {
+    .basic-secrets {
+      .secret-name {
+        width: 90%;
+        display: inline-block;
+      }
+    }
+    .remove-secret {
+      vertical-align: 2px;
+    }
   }
   .remove-btn {
     color: #333;
@@ -528,9 +550,15 @@ label.checkbox {
       text-decoration: none;
     }
   }
-  .ui-select-choices-row-inner {
-    height: 24px;
-    cursor: pointer;
+}
+
+.lifecycle-hook {
+  padding-bottom: 20px;
+  &:first-of-type {
+    padding-top: 20px;
+  }
+  .read-only-tag-image {
+    padding-bottom: 10px;
   }
 }
 
@@ -1132,7 +1160,7 @@ a.disabled-link {
     }
   }
   .checkbox {
-    margin: 10px;
+    margin: 10px 0;
   }
 
   .trigger-info {

@@ -6,16 +6,43 @@ angular.module("openshiftConsole")
     return {
       restrict: 'E',
       scope: {
-        pickedSecret: "=model",
+        pickedSecrets: "=model",
         secretsByType: '=',
         namespace: "=",
         displayType: "@",
         type: "@",
         alerts: '=',
-        serviceAccountToLink: '@?'
+        serviceAccountToLink: '@?',
+        allowMultipleSecrets: "=?" // false by default
       },
       templateUrl: 'views/directives/osc-secrets.html',
       link: function($scope) {
+
+        $scope.canAddSourceSecret = function() {
+          var lastSecret = _.last($scope.pickedSecrets);
+          if (!lastSecret) {
+            return false;
+          }
+          return lastSecret.name;
+        };
+
+        $scope.setLastSecretsName = function(secretName) {
+          var lastSecret = _.last($scope.pickedSecrets);
+          lastSecret.name = secretName;
+        };
+
+        $scope.addSourceSecret = function() {
+          $scope.pickedSecrets.push({name: ""});
+        };
+
+        $scope.removeSecret = function(index) {
+          if ($scope.pickedSecrets.length === 1) {
+              $scope.pickedSecrets = [{name: ""}];
+          } else {
+            $scope.pickedSecrets.splice(index,1);
+          }          
+          $scope.secretsForm.$setDirty();
+        };
 
         $scope.openCreateSecretModal = function() {
           $scope.newSecret = {};
@@ -33,7 +60,7 @@ angular.module("openshiftConsole")
               $scope.secretsByType = _.each(secretsByType, function(secretsArray) {
                 secretsArray.unshift("");
               });
-              $scope.pickedSecret.name = newSecret.metadata.name;
+              $scope.setLastSecretsName(newSecret.metadata.name);
               $scope.secretsForm.$setDirty();
             });
           });

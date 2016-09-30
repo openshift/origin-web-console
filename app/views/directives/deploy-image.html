@@ -10,8 +10,8 @@
           Image Stream Tag
         </label>
       </div>
-      <fieldset ng-disabled="mode !== 'istag'">
-        <istag-select model="istag" include-shared-namespace="true"></istag-select>
+      <fieldset>
+        <istag-select model="istag" select-disabled="mode !== 'istag'" include-shared-namespace="true"></istag-select>
         <div ng-if="mode == 'istag' && istag.namespace && istag.namespace !== 'openshift' && istag.namespace !== project" class="alert alert-warning">
           <span class="pficon pficon-warning-triangle-o" aria-hidden="true"></span>
           Service account <strong>default</strong> will need image pull authority to deploy images

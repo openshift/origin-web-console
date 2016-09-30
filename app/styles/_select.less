@@ -26,6 +26,10 @@
       color: @dropdown-link-active-color;
     }
   }
+  .ui-select-choices-row-inner {
+    min-height: 24px;
+    cursor: pointer;
+  }
   .ui-select-match-text, .ui-select-placeholder {
     font-weight: normal;
   }
@@ -41,6 +45,10 @@
     font-style: normal;
     right: 6px;
     top: 10px;
+    // Workaround for https://github.com/angular-ui/ui-select/issues/224
+    // A runtime error occurs when you click exactly on the down caret for some
+    // selects, such as the strategy type select in the deployment config editor.
+    pointer-events: none;
   }
   /* Fixes ui-select's input box extending to 100% page width if the page has been resized after page-load
   * https://github.com/angular-ui/ui-select/issues/1678
