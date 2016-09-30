@@ -3420,6 +3420,7 @@ body{padding-right:0px!important}
 }
 .ui-select-bootstrap .ui-select-search{width:100%!important}
 .ui-select-bootstrap .ui-select-toggle>.caret{font-style:normal;margin-top:-5px}
+.ui-select-bootstrap .ui-select-match-text>span{width:90%;overflow:hidden;text-overflow:ellipsis;position:absolute}
 .ui-select-bootstrap .btn{padding-right:25px}
 .surface-shaded .ui-select-bootstrap .ui-select-match>.btn{background-color:#fff;background-image:linear-gradient(to bottom,#fff 0%,#fbfbfb 100%)}
 .separator{border-top:1px solid rgba(0,0,0,.15)}
@@ -3538,6 +3539,13 @@ label.checkbox{font-weight:400}
 }
 .create-route-icon,.create-storage-icon{padding-top:0;text-align:right}
 .about .about-icon img,.command-line .about-icon img{width:100%}
+.osc-secrets-form .picked-secret{margin-bottom:5px}
+.osc-secrets-form .directory{width:90%;display:inline-block}
+.osc-secrets-form .remove-secret-row{width:10%;margin-left:7px;display:inline}
+.osc-secrets-form .remove-btn{color:#333;opacity:.65;font-size:15px;vertical-align:middle}
+.osc-secrets-form .remove-btn:hover{opacity:1;text-decoration:none}
+.osc-secrets-form .remove-btn:focus{text-decoration:none}
+.osc-secrets-form .ui-select-choices-row-inner{height:24px;cursor:pointer}
 .osc-form .template-name{text-align:right}
 .osc-form .template-name span.fa{font-size:40px}
 @media (min-width:768px){.osc-form .template-name span.fa{font-size:100px}
@@ -3645,6 +3653,10 @@ a.disabled-link:active,a.disabled-link:focus,a.disabled-link:hover{color:#bbb;te
 .modal-resource-action h1{font-size:21px;font-weight:500;margin-bottom:20px;overflow-wrap:break-word;min-width:0}
 .modal-resource-action p{font-size:16px}
 .ace_editor.dockerfile-mode .ace_constant.ace_numeric,.editor.yaml-mode .ace_constant.ace_numeric{color:inherit}
+.create-secret-modal{background-color:#F5F5F5}
+.create-secret-modal .modal-footer{margin-top:0px}
+.create-secret-modal .modal-body{padding:0px 18px}
+.create-secret-modal .modal-body .create-secret-editor{height:150px}
 .edit-yaml h1{line-height:1.3}
 .edit-yaml .editor{line-height:1.5;width:100%;min-height:140px;height:50vh}
 .edit-yaml .editor .ace_gutter{color:#8b8d8f}
@@ -3662,6 +3674,7 @@ a.disabled-link:active,a.disabled-link:focus,a.disabled-link:hover{color:#bbb;te
 .modal-debug-terminal .modal-footer{padding-top:0}
 .ace-inline{height:300px}
 #from-file .editor{height:350px}
+.edit-form .with-divider{border-top:1px solid rgba(0,0,0,.15);padding-top:21px;padding-bottom:10px}
 .edit-form .labels .form-group{width:44%}
 .edit-form .labels .form-group .form-control{width:100%}
 .edit-form .checkbox{margin:10px}
@@ -3669,7 +3682,7 @@ a.disabled-link:active,a.disabled-link:focus,a.disabled-link:hover{color:#bbb;te
 .edit-form .trigger-info .trigger-url{display:inline-block;vertical-align:middle}
 .edit-form .trigger-info .trigger-actions{display:inline-block;margin-left:5px}
 .edit-form .trigger-info .trigger-actions .action-icon,.edit-form .trigger-info .trigger-actions .action-icon:hover{color:#4d5258}
-.edit-form .section{padding-bottom:15px}
+.edit-form .section{padding-bottom:5px}
 @media (max-width:768px){.edit-form .trigger-url{max-width:90%}
 .edit-form .labels .form-group{width:100%}
 }

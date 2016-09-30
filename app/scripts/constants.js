@@ -22,6 +22,11 @@ window.OPENSHIFT_CONSTANTS = {
     "compute_resources":       "https://docs.openshift.org/latest/dev_guide/compute_resources.html",
     "pod_autoscaling":         "https://docs.openshift.org/latest/dev_guide/pod_autoscaling.html",
     "application_health":      "https://docs.openshift.org/latest/dev_guide/application_health.html",
+    "source_secrets":          "https://docs.openshift.org/latest/dev_guide/builds.html#using-secrets",
+    "git_secret":              "https://docs.openshift.org/latest/dev_guide/builds.html#using-private-repositories-for-builds",
+    "pull_secret":             "https://docs.openshift.org/latest/dev_guide/managing_images.html#using-image-pull-secrets",
+    "managing_secrets":        "https://docs.openshift.org/latest/dev_guide/service_accounts.html#managing-allowed-secrets",
+    "creating_secrets":        "https://docs.openshift.org/latest/dev_guide/secrets.html#creating-and-using-secrets",
     "default":                 "https://docs.openshift.org/latest/welcome/index.html"
   },
   // Maps links names to URL's where the CLI tools can be downloaded, may point directly to files or to external pages in a CDN, for example.
