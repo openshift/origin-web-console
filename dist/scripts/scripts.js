@@ -5016,22 +5016,22 @@ link:"project/" + b.project + "/browse/services"
 }, {
 title:b.service
 } ];
-var f = [];
-d.get(b.project).then(_.spread(function(d, g) {
-a.project = d, a.projectContext = g, c.get("services", b.service, g).then(function(d) {
-a.loaded = !0, a.service = d, f.push(c.watchObject("services", b.service, g, function(b, c) {
-"DELETED" === c && (a.alerts.deleted = {
+var f = [], g = function(b, c) {
+a.loaded = !0, a.service = b, "DELETED" === c && (a.alerts.deleted = {
 type:"warning",
 message:"This service has been deleted."
-}), a.service = b;
-}));
+});
+};
+d.get(b.project).then(_.spread(function(d, h) {
+a.project = d, a.projectContext = h, c.get("services", b.service, h).then(function(a) {
+g(a), f.push(c.watchObject("services", b.service, h, g));
 }, function(b) {
 a.loaded = !0, a.alerts.load = {
 type:"error",
 message:"The service details could not be loaded.",
 details:"Reason: " + e("getErrorDetails")(b)
 };
-}), f.push(c.watch("routes", g, function(c) {
+}), f.push(c.watch("routes", h, function(c) {
 a.routesForService = [], angular.forEach(c.by("metadata.name"), function(c) {
 "Service" === c.spec.to.kind && c.spec.to.name === b.service && a.routesForService.push(c);
 }), Logger.log("routes (subscribe)", a.routesByService);
