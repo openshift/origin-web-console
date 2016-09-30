@@ -51,9 +51,10 @@ curl -s https://codeload.github.com/hawtio/openshift-jvm/tar.gz/${OPENSHIFT_JVM_
 # Fix branding for OCP
 indexHtml='openshift-jvm/index.html'
 # TODO Check and make sure these replacements made it into openshift-jvm/index.html
-sed -i '' 's/class="navbar-brand"/class="navbar-brand" style="padding-top: 6px; padding-bottom: 5px;"/' $indexHtml
-sed -i '' 's/img\/logo-origin-thin\.svg"/..\/images\/logo-OCP-console-hdr-thin\.svg" style="height: 13px;"/' $indexHtml
-sed -i '' 's/<title>openshift-jvm<\/title>/<title>OpenShift Container Platform JVM Console<\/title>/' $indexHtml
+sed -i.bak 's/class="navbar-brand"/class="navbar-brand" style="padding-top: 6px; padding-bottom: 5px;"/' $indexHtml
+sed -i.bak 's/img\/logo-origin-thin\.svg"/..\/images\/logo-OCP-console-hdr-thin\.svg" style="height: 13px;"/' $indexHtml
+sed -i.bak 's/<title>openshift-jvm<\/title>/<title>OpenShift Container Platform JVM Console<\/title>/' $indexHtml
+rm -f ${indexHtml}.bak
 
 
 ret=$?; ENDTIME=$(date +%s); echo "$0 took $(($ENDTIME - $STARTTIME)) seconds"; exit "$ret"

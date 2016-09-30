@@ -24,7 +24,7 @@ angular.module("openshiftConsole")
           name: pod.metadata.name + "-debug",
           annotations: {
             "debug.openshift.io/source-container": containerName,
-            "debug.openshift.io/source-resource": "pod/" + pod.metadata.name
+            "debug.openshift.io/source-resource": "pods/" + pod.metadata.name
           },
           labels: {}
         };
@@ -32,6 +32,7 @@ angular.module("openshiftConsole")
 
         // Never restart.
         debugPod.spec.restartPolicy = "Never";
+        delete debugPod.spec.host;
         delete debugPod.spec.nodeName;
         debugPod.status = {};
         delete container.readinessProbe;
