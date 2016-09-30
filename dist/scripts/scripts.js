@@ -48,6 +48,7 @@ routes:"architecture/core_concepts/routes.html",
 builds:"architecture/core_concepts/builds_and_image_streams.html#builds",
 "image-streams":"architecture/core_concepts/builds_and_image_streams.html#image-streams",
 storage:"architecture/additional_concepts/storage.html",
+"build-hooks":"dev_guide/builds.html#build-hooks",
 "default":"welcome/index.html"
 },
 CLI:{
@@ -6881,7 +6882,8 @@ title:"From Source Repository"
 id:"inline",
 title:"Inline"
 } ], a.view = {
-advancedOptions:!1
+advancedOptions:!1,
+hasHooks:!1
 }, a.breadcrumbs = [ {
 title:d.project,
 link:"project/" + d.project
@@ -6916,21 +6918,68 @@ genericWebhooks:[],
 imageChangeTriggers:[],
 builderImageChangeTrigger:{},
 configChangeTrigger:{}
-}, a.runPolicyTypes = [ "Serial", "Parallel", "SerialLatestOnly" ], e.getAlerts().forEach(function(b) {
+}, a.runPolicyTypes = [ "Serial", "Parallel", "SerialLatestOnly" ], a.buildHookTypes = [ {
+id:"command",
+label:"Command"
+}, {
+id:"script",
+label:"Shell Script"
+}, {
+id:"args",
+label:"Arguments to default image entry point"
+}, {
+id:"commandArgs",
+label:"Command with arguments"
+}, {
+id:"scriptArgs",
+label:"Shell script with arguments"
+} ], a.buildHookSelection = {
+type:{}
+};
+var n = function() {
+var b = !_.isEmpty(_.get(a, "buildConfig.spec.postCommit.args")), c = !_.isEmpty(_.get(a, "buildConfig.spec.postCommit.command")), d = !!_.get(a, "buildConfig.spec.postCommit.script");
+a.view.hasHooks = b || c || d;
+var e;
+e = b && c ? "commandArgs" :b && d ? "scriptArgs" :b ? "args" :d ? "script" :"command", a.buildHookSelection.type = _.find(a.buildHookTypes, {
+id:e
+});
+}, o = function() {
+if (a.view.hasHooks) switch (a.buildHookSelection.type.id) {
+case "script":
+delete a.updatedBuildConfig.spec.postCommit.command, delete a.updatedBuildConfig.spec.postCommit.args;
+break;
+
+case "command":
+delete a.updatedBuildConfig.spec.postCommit.script, delete a.updatedBuildConfig.spec.postCommit.args;
+break;
+
+case "args":
+delete a.updatedBuildConfig.spec.postCommit.script, delete a.updatedBuildConfig.spec.postCommit.command;
+break;
+
+case "scriptArgs":
+delete a.updatedBuildConfig.spec.postCommit.command;
+break;
+
+case "commandArgs":
+delete a.updatedBuildConfig.spec.postCommit.script;
+} else delete a.updatedBuildConfig.spec.postCommit.command, delete a.updatedBuildConfig.spec.postCommit.args, delete a.updatedBuildConfig.spec.postCommit.script;
+};
+e.getAlerts().forEach(function(b) {
 a.alerts[b.name] = b.data;
 }), e.clearAlerts(), a.secrets = {};
-var n = [], o = b("buildStrategy");
+var p = [], q = b("buildStrategy");
 j.get(d.project).then(_.spread(function(c, e) {
 return a.project = c, a.context = e, a.breadcrumbs[0].title = b("displayName")(c), g.canI("buildconfigs", "update", d.project) ? void h.get("buildconfigs", d.buildconfig, e).then(function(c) {
-a.buildConfig = c, a.updatedBuildConfig = angular.copy(a.buildConfig), a.buildStrategy = o(a.updatedBuildConfig), a.strategyType = a.buildConfig.spec.strategy.type, a.envVars = a.buildStrategy.env || [], _.each(a.envVars, function(a) {
+a.buildConfig = c, n(), a.updatedBuildConfig = angular.copy(a.buildConfig), a.buildStrategy = q(a.updatedBuildConfig), a.strategyType = a.buildConfig.spec.strategy.type, a.envVars = a.buildStrategy.env || [], _.each(a.envVars, function(a) {
 b("altTextForValueFrom")(a);
-}), a.triggers = p(a.triggers, a.buildConfig.spec.triggers), a.sources = w(a.sources, a.buildConfig.spec.source), _.has(c, "spec.strategy.jenkinsPipelineStrategy.jenkinsfile") && (a.jenkinsfileOptions.type = "inline"), h.list("secrets", e, function(b) {
+}), a.triggers = r(a.triggers, a.buildConfig.spec.triggers), a.sources = y(a.sources, a.buildConfig.spec.source), _.has(c, "spec.strategy.jenkinsPipelineStrategy.jenkinsfile") && (a.jenkinsfileOptions.type = "inline"), h.list("secrets", e, function(b) {
 var c = l.groupSecretsByType(b), d = _.mapValues(c, function(a) {
 return _.map(a, "metadata.name");
 });
 a.secrets.secretsByType = _.each(d, function(a) {
 a.unshift("");
-}), t();
+}), v();
 });
 var f = function(a, b) {
 a.type = b && b.kind ? b.kind :"None";
@@ -6956,7 +7005,7 @@ value:a.destinationDir
 };
 })) :(a.imageSourceFromObjects = [], a.sourceImages.forEach(function(b) {
 a.imageSourceFromObjects.push(b.from);
-}))), a.options.forcePull = !!a.buildStrategy.forcePull, "Docker" === a.strategyType && (a.options.noCache = !!a.buildConfig.spec.strategy.dockerStrategy.noCache, a.buildFromTypes.push("None")), n.push(h.watchObject("buildconfigs", d.buildconfig, e, function(b, c) {
+}))), a.options.forcePull = !!a.buildStrategy.forcePull, "Docker" === a.strategyType && (a.options.noCache = !!a.buildConfig.spec.strategy.dockerStrategy.noCache, a.buildFromTypes.push("None")), p.push(h.watchObject("buildconfigs", d.buildconfig, e, function(b, c) {
 "MODIFIED" === c && (a.alerts["updated/deleted"] = {
 type:"warning",
 message:"This build configuration has changed since you started editing it. You'll need to copy any changes you've made and edit again."
@@ -6973,12 +7022,12 @@ details:"Reason: " + b("getErrorDetails")(c)
 };
 }) :void i.toErrorPage("You do not have authority to update build config " + d.buildconfig + ".", "access_denied");
 }));
-var p = function(c, d) {
+var r = function(c, d) {
 function e(c, d) {
 var e = b("imageObjectRef")(c, a.projectName), f = b("imageObjectRef")(d, a.projectName);
 return e === f;
 }
-var f = o(a.buildConfig).from;
+var f = q(a.buildConfig).from;
 return d.forEach(function(a) {
 switch (a.type) {
 case "Generic":
@@ -7028,14 +7077,14 @@ a.aceLoaded = function(a) {
 var b = a.getSession();
 b.setOption("tabSize", 2), b.setOption("useSoftTabs", !0), a.$blockScrolling = 1 / 0;
 };
-var q = function(a) {
+var s = function(a) {
 return _.map(m.compactEntries(a), function(a) {
 return {
 sourcePath:a.name,
 destinationDir:a.value
 };
 });
-}, r = function(b) {
+}, t = function(b) {
 var c = {};
 switch (b.type) {
 case "ImageStreamTag":
@@ -7060,17 +7109,17 @@ name:_.last(d)
 }, c.namespace = 1 !== d.length ? d[0] :a.buildConfig.metadata.namespace;
 }
 return c;
-}, s = function() {
+}, u = function() {
 var b = [].concat(a.triggers.githubWebhooks, a.triggers.genericWebhooks, a.triggers.imageChangeTriggers, a.triggers.builderImageChangeTrigger, a.triggers.configChangeTrigger);
 return b = _.filter(b, function(a) {
 return _.has(a, "disabled") && !a.disabled || a.present;
 }), b = _.map(b, "data");
-}, t = function() {
+}, v = function() {
 switch (a.secrets.picked = {
 gitSecret:a.buildConfig.spec.source.sourceSecret ? [ a.buildConfig.spec.source.sourceSecret ] :[ {
 name:""
 } ],
-pullSecret:o(a.buildConfig).pullSecret ? [ o(a.buildConfig).pullSecret ] :[ {
+pullSecret:q(a.buildConfig).pullSecret ? [ q(a.buildConfig).pullSecret ] :[ {
 name:""
 } ],
 pushSecret:a.buildConfig.spec.output.pushSecret ? [ a.buildConfig.spec.output.pushSecret ] :[ {
@@ -7088,44 +7137,44 @@ destinationDir:""
 break;
 
 case "Custom":
-a.secrets.picked.sourceSecrets = o(a.buildConfig).secrets || [ {
+a.secrets.picked.sourceSecrets = q(a.buildConfig).secrets || [ {
 secretSource:{
 name:""
 },
 mountPath:""
 } ];
 }
-}, u = function(a, b, c) {
+}, w = function(a, b, c) {
 b.name ? a[c] = b :delete a[c];
-}, v = function(b, c) {
+}, x = function(b, c) {
 var d = "Custom" === a.strategyType ? "secretSource" :"secret", e = _.filter(c, function(a) {
 return a[d].name;
 });
 _.isEmpty(e) ? delete b.secrets :b.secrets = e;
-}, w = function(a, b) {
+}, y = function(a, b) {
 return "None" === b.type ? a :(a.none = !1, angular.forEach(b, function(b, c) {
 a[c] = !0;
 }), a);
 };
 a.save = function() {
-switch (a.disableInputs = !0, o(a.updatedBuildConfig).forcePull = a.options.forcePull, a.strategyType) {
+switch (a.disableInputs = !0, o(), q(a.updatedBuildConfig).forcePull = a.options.forcePull, a.strategyType) {
 case "Docker":
-o(a.updatedBuildConfig).noCache = a.options.noCache;
+q(a.updatedBuildConfig).noCache = a.options.noCache;
 break;
 
 case "JenkinsPipeline":
 "path" === a.jenkinsfileOptions.type ? delete a.updatedBuildConfig.spec.strategy.jenkinsPipelineStrategy.jenkinsfile :delete a.updatedBuildConfig.spec.strategy.jenkinsPipelineStrategy.jenkinsfilePath;
 }
-switch (a.sources.images && !_.isEmpty(a.sourceImages) && (a.updatedBuildConfig.spec.source.images[0].paths = q(a.imageSourcePaths), a.updatedBuildConfig.spec.source.images[0].from = r(a.imageOptions.fromSource)), "None" === a.imageOptions.from.type ? delete o(a.updatedBuildConfig).from :o(a.updatedBuildConfig).from = r(a.imageOptions.from), "None" === a.imageOptions.to.type ? delete a.updatedBuildConfig.spec.output.to :a.updatedBuildConfig.spec.output.to = r(a.imageOptions.to), o(a.updatedBuildConfig).env = m.compactEntries(a.envVars), u(a.updatedBuildConfig.spec.source, _.head(a.secrets.picked.gitSecret), "sourceSecret"), u(o(a.updatedBuildConfig), _.head(a.secrets.picked.pullSecret), "pullSecret"), u(a.updatedBuildConfig.spec.output, _.head(a.secrets.picked.pushSecret), "pushSecret"), a.strategyType) {
+switch (a.sources.images && !_.isEmpty(a.sourceImages) && (a.updatedBuildConfig.spec.source.images[0].paths = s(a.imageSourcePaths), a.updatedBuildConfig.spec.source.images[0].from = t(a.imageOptions.fromSource)), "None" === a.imageOptions.from.type ? delete q(a.updatedBuildConfig).from :q(a.updatedBuildConfig).from = t(a.imageOptions.from), "None" === a.imageOptions.to.type ? delete a.updatedBuildConfig.spec.output.to :a.updatedBuildConfig.spec.output.to = t(a.imageOptions.to), q(a.updatedBuildConfig).env = m.compactEntries(a.envVars), w(a.updatedBuildConfig.spec.source, _.head(a.secrets.picked.gitSecret), "sourceSecret"), w(q(a.updatedBuildConfig), _.head(a.secrets.picked.pullSecret), "pullSecret"), w(a.updatedBuildConfig.spec.output, _.head(a.secrets.picked.pushSecret), "pushSecret"), a.strategyType) {
 case "Source":
 case "Docker":
-v(a.updatedBuildConfig.spec.source, a.secrets.picked.sourceSecrets);
+x(a.updatedBuildConfig.spec.source, a.secrets.picked.sourceSecrets);
 break;
 
 case "Custom":
-v(o(a.updatedBuildConfig), a.secrets.picked.sourceSecrets);
+x(q(a.updatedBuildConfig), a.secrets.picked.sourceSecrets);
 }
-a.updatedBuildConfig.spec.triggers = s(), h.update("buildconfigs", a.updatedBuildConfig.metadata.name, a.updatedBuildConfig, a.context).then(function() {
+a.updatedBuildConfig.spec.triggers = u(), h.update("buildconfigs", a.updatedBuildConfig.metadata.name, a.updatedBuildConfig, a.context).then(function() {
 e.addAlert({
 name:a.updatedBuildConfig.metadata.name,
 data:{
@@ -7141,7 +7190,7 @@ details:b("getErrorDetails")(c)
 };
 });
 }, a.$on("$destroy", function() {
-h.unwatchAll(n);
+h.unwatchAll(p);
 });
 } ]), angular.module("openshiftConsole").controller("EditConfigMapController", [ "$filter", "$routeParams", "$scope", "$window", "DataService", "BreadcrumbsService", "Navigate", "ProjectsService", function(a, b, c, d, e, f, g, h) {
 var i = [];
@@ -12499,6 +12548,7 @@ return {
 restrict:"E",
 scope:{
 args:"=",
+type:"@",
 isRequired:"="
 },
 templateUrl:"views/directives/_edit-command.html",

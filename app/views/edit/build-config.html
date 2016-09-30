@@ -115,7 +115,6 @@
                             <div ui-ace="{
                               mode: 'dockerfile',
                               theme: 'dreamweaver',
-                              onLoad: aceLoaded,
                               rendererOptions: {
                                 fadeFoldWidgets: true,
                                 showPrintMargin: false
@@ -275,7 +274,6 @@
                         <div ui-ace="{
                           mode: 'groovy',
                           theme: 'eclipse',
-                          onLoad: aceLoaded,
                           rendererOptions: {
                             fadeFoldWidgets: true,
                             showPrintMargin: false
@@ -416,8 +414,6 @@
                       </dl>
                     </div>
 
-
-
                     <div ng-if="!(updatedBuildConfig | isJenkinsPipelineStrategy)" class="section">
                       <h3 class="with-divider">Environment Variables<span class="help action-inline">
                         <a href="">
@@ -523,8 +519,8 @@
                             {{type | sentenceCase}}
                           </ui-select-choices>
                         </ui-select>
-
                       </div>
+
                       <div ng-switch="updatedBuildConfig.spec.runPolicy">
                         <div class="help-block" ng-switch-when="Serial">Builds triggered from this Build Configuration will run one at the time, in the order they have been triggered.</div>
                         <div class="help-block" ng-switch-when="Parallel">Builds triggered from this Build Configuration will run all at the same time. The order in which they will finish is not guaranteed.</div>
@@ -533,8 +529,73 @@
                       </div>
                     </div>
 
-                    <div>
-                      <a href="" ng-click="view.advancedOptions = !view.advancedOptions" role="button">{{view.advancedOptions ? 'Hide' : 'Show'}} Advanced Options</a>
+                    <div ng-if="view.advancedOptions && !(updatedBuildConfig | isJenkinsPipelineStrategy)" class="section">
+                      <h3 class="with-divider">Build Hooks
+                        <span class="help action-inline">
+                          <a href="{{'build-hooks' | helpLink}}" aria-hidden="true" target="_blank"><span class="learn-more-inline">Learn More&nbsp;<i class="fa fa-external-link"></i></span></a>
+                        </span>
+                      </h3>
+
+                      <div class="checkbox">
+                        <label>
+                          <input type="checkbox" ng-model="view.hasHooks" id="enable-build-hooks">
+                          Run build hooks after image is built
+                        </label>
+                        <div class="help-block">
+                          Build hooks allow you to run commands at the end of the build to verify the image.
+                        </div>
+                      </div>
+
+                      <div ng-show="view.hasHooks">
+                        <div class="form-group">
+                          <h4>Hook Types</h4>
+                          <ui-select
+                             ng-model="buildHookSelection.type"
+                             title="Choose a type of build hook">
+                            <ui-select-match>{{$select.selected.label}}</ui-select-match>
+                            <ui-select-choices repeat="type in buildHookTypes">
+                              {{type.label}}
+                            </ui-select-choices>
+                          </ui-select>
+                        </div>
+
+                        <fieldset>
+                          <div ng-show="buildHookSelection.type.id === 'script' || buildHookSelection.type.id === 'scriptArgs'">
+                            <h4>Script</h4>
+                            <div
+                              ui-ace="{
+                                mode: 'sh',
+                                theme: 'eclipse',
+                                rendererOptions: {
+                                  fadeFoldWidgets: true,
+                                  showPrintMargin: false
+                                }
+                              }"
+                              ng-model="updatedBuildConfig.spec.postCommit.script"
+                              class="ace-bordered ace-inline mar-top-md">
+                            </div>
+                          </div>
+
+                          <div ng-show="buildHookSelection.type.id === 'command' || buildHookSelection.type.id === 'commandArgs'">
+                            <h4>Command</h4>
+                            <edit-command
+                              args="updatedBuildConfig.spec.postCommit.command">
+                            </edit-command>
+                          </div>
+
+                          <div ng-show="buildHookSelection.type.id === 'args' || buildHookSelection.type.id === 'commandArgs' || buildHookSelection.type.id === 'scriptArgs' ">
+                            <h4>Arguments</h4>
+                            <edit-command
+                              args="updatedBuildConfig.spec.postCommit.args"
+                              type="argument">
+                            </edit-command>
+                          </div>
+                        </fieldset>
+                      </div>
+                    </div>
+
+                    <div class="gutter-top">
+                      <a href="" ng-click="view.advancedOptions = !view.advancedOptions" role="button">{{view.advancedOptions ? 'Hide' : 'Show'}} advanced options</a>
                     </div>
                     <div class="buttons gutter-top-bottom">
                       <button
