@@ -195,6 +195,11 @@ angular.module('openshiftConsole')
       return Constants.HELP[type] || Constants.HELP["default"];
     };
   })
+  .filter('apiLink', function(Constants) {
+    return function(type) {
+      return Constants.API[type];
+    };
+  })
   .filter('taskTitle', function() {
     return function(task) {
       if (task.status !== "completed") {
