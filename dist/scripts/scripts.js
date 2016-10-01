@@ -19,6 +19,11 @@ persistent_volumes:"https://docs.openshift.org/latest/dev_guide/persistent_volum
 compute_resources:"https://docs.openshift.org/latest/dev_guide/compute_resources.html",
 pod_autoscaling:"https://docs.openshift.org/latest/dev_guide/pod_autoscaling.html",
 application_health:"https://docs.openshift.org/latest/dev_guide/application_health.html",
+source_secrets:"https://docs.openshift.org/latest/dev_guide/builds.html#using-secrets",
+git_secret:"https://docs.openshift.org/latest/dev_guide/builds.html#using-private-repositories-for-builds",
+pull_secret:"https://docs.openshift.org/latest/dev_guide/managing_images.html#using-image-pull-secrets",
+managing_secrets:"https://docs.openshift.org/latest/dev_guide/service_accounts.html#managing-allowed-secrets",
+creating_secrets:"https://docs.openshift.org/latest/dev_guide/secrets.html#creating-and-using-secrets",
 "default":"https://docs.openshift.org/latest/welcome/index.html"
 },
 CLI:{
@@ -2865,6 +2870,29 @@ clearTemplateData:function() {
 b = a();
 }
 };
+}), angular.module("openshiftConsole").factory("SecretsService", function() {
+var a = function(a) {
+var b = {
+source:[],
+image:[]
+};
+return _.each(a.by("metadata.name"), function(a) {
+switch (a.type) {
+case "kubernetes.io/basic-auth":
+case "kubernetes.io/ssh-auth":
+case "Opaque":
+b.source.push(a.metadata.name);
+break;
+
+case "kubernetes.io/dockercfg":
+case "kubernetes.io/dockerconfigjson":
+b.image.push(a.metadata.name);
+}
+}), b;
+};
+return {
+groupSecretsByType:a
+};
 }), angular.module("openshiftConsole").factory("ServicesService", [ "$filter", "$q", "DataService", function(a, b, c) {
 var d = "service.alpha.openshift.io/dependencies", e = "service.openshift.io/infrastructure", f = a("annotation"), g = function(a) {
 var b = f(a, d);
@@ -3646,6 +3674,9 @@ pollInterval:6e4
 x = a.by("metadata.name"), da(), ea(), i.log("builds (list)", x);
 })), A.push(f.watch("buildConfigs", b, function(a) {
 w = a.by("metadata.name"), da(), i.log("builds (list)", x);
+}, {
+poll:ga,
+pollInterval:6e4
 })), A.push(f.watch("routes", b, function(a) {
 p = a.by("metadata.name"), J(), Z(), $(), i.log("routes (subscribe)", c.routesByService);
 }, {
@@ -4988,22 +5019,22 @@ link:"project/" + b.project + "/browse/services"
 }, {
 title:b.service
 } ];
-var f = [];
-d.get(b.project).then(_.spread(function(d, g) {
-a.project = d, a.projectContext = g, c.get("services", b.service, g).then(function(d) {
-a.loaded = !0, a.service = d, f.push(c.watchObject("services", b.service, g, function(b, c) {
-"DELETED" === c && (a.alerts.deleted = {
+var f = [], g = function(b, c) {
+a.loaded = !0, a.service = b, "DELETED" === c && (a.alerts.deleted = {
 type:"warning",
 message:"This service has been deleted."
-}), a.service = b;
-}));
+});
+};
+d.get(b.project).then(_.spread(function(d, h) {
+a.project = d, a.projectContext = h, c.get("services", b.service, h).then(function(a) {
+g(a), f.push(c.watchObject("services", b.service, h, g));
 }, function(b) {
 a.loaded = !0, a.alerts.load = {
 type:"error",
 message:"The service details could not be loaded.",
 details:"Reason: " + e("getErrorDetails")(b)
 };
-}), f.push(c.watch("routes", g, function(c) {
+}), f.push(c.watch("routes", h, function(c) {
 a.routesForService = [], angular.forEach(c.by("metadata.name"), function(c) {
 "Service" === c.spec.to.kind && c.spec.to.name === b.service && a.routesForService.push(c);
 }), Logger.log("routes (subscribe)", a.routesByService);
@@ -5254,8 +5285,8 @@ i.list("limitranges", l, function(b) {
 e.limitRanges = b.by("metadata.name"), 0 !== a("hashSize")(b) && e.$watch("containers", n, !0);
 });
 }));
-} ]), angular.module("openshiftConsole").controller("EditBuildConfigController", [ "$scope", "$routeParams", "DataService", "ProjectsService", "$filter", "ApplicationGenerator", "Navigate", "$location", "AlertMessageService", "SOURCE_URL_PATTERN", "keyValueEditorUtils", function(a, b, c, d, e, f, g, h, i, j, k) {
-a.projectName = b.project, a.buildConfig = null, a.alerts = {}, a.emptyMessage = "Loading...", a.sourceURLPattern = j, a.options = {}, a.jenkinsfileOptions = {
+} ]), angular.module("openshiftConsole").controller("EditBuildConfigController", [ "$scope", "$routeParams", "DataService", "SecretsService", "ProjectsService", "$filter", "ApplicationGenerator", "Navigate", "$location", "AlertMessageService", "SOURCE_URL_PATTERN", "keyValueEditorUtils", function(a, b, c, d, e, f, g, h, i, j, k, l) {
+a.projectName = b.project, a.buildConfig = null, a.alerts = {}, a.emptyMessage = "Loading...", a.sourceURLPattern = k, a.options = {}, a.jenkinsfileOptions = {
 type:"path"
 }, a.selectTypes = {
 ImageStreamTag:"Image Stream Tag",
@@ -5267,7 +5298,9 @@ title:"From Source Repository"
 }, {
 id:"inline",
 title:"Inline"
-} ], a.breadcrumbs = [ {
+} ], a.view = {
+advancedOptions:!1
+}, a.breadcrumbs = [ {
 title:b.project,
 link:"project/" + b.project
 } ], b.isPipeline ? (a.breadcrumbs.push({
@@ -5301,20 +5334,25 @@ genericWebhooks:[],
 imageChangeTriggers:[],
 builderImageChangeTrigger:{},
 configChangeTrigger:{}
-}, a.runPolicyTypes = [ "Serial", "Parallel", "SerialLatestOnly" ], i.getAlerts().forEach(function(b) {
+}, a.runPolicyTypes = [ "Serial", "Parallel", "SerialLatestOnly" ], j.getAlerts().forEach(function(b) {
 a.alerts[b.name] = b.data;
-}), i.clearAlerts();
-var l = [], m = e("buildStrategy");
-d.get(b.project).then(_.spread(function(d, f) {
-a.project = d, a.breadcrumbs[0].title = e("displayName")(d), c.get("buildconfigs", b.buildconfig, f).then(function(d) {
-a.buildConfig = d, a.updatedBuildConfig = angular.copy(a.buildConfig), a.buildStrategy = m(a.updatedBuildConfig), a.strategyType = a.buildConfig.spec.strategy.type, a.envVars = a.buildStrategy.env || [], _.each(a.envVars, function(a) {
-e("altTextForValueFrom")(a);
-}), a.triggers = n(a.triggers, a.buildConfig.spec.triggers), a.sources = s(a.sources, a.buildConfig.spec.source), _.has(d, "spec.strategy.jenkinsPipelineStrategy.jenkinsfile") && (a.jenkinsfileOptions.type = "inline");
-var g = function(a, b) {
+}), j.clearAlerts(), a.secrets = {};
+var m = [], n = f("buildStrategy");
+e.get(b.project).then(_.spread(function(e, g) {
+a.project = e, a.context = g, a.breadcrumbs[0].title = f("displayName")(e), c.get("buildconfigs", b.buildconfig, g).then(function(e) {
+a.buildConfig = e, a.updatedBuildConfig = angular.copy(a.buildConfig), a.buildStrategy = n(a.updatedBuildConfig), a.strategyType = a.buildConfig.spec.strategy.type, a.envVars = a.buildStrategy.env || [], _.each(a.envVars, function(a) {
+f("altTextForValueFrom")(a);
+}), a.triggers = o(a.triggers, a.buildConfig.spec.triggers), a.sources = w(a.sources, a.buildConfig.spec.source), _.has(e, "spec.strategy.jenkinsPipelineStrategy.jenkinsfile") && (a.jenkinsfileOptions.type = "inline"), c.list("secrets", g, function(b) {
+var c = d.groupSecretsByType(b);
+a.secrets.secretsByType = _.each(c, function(a) {
+a.unshift("");
+}), t();
+});
+var h = function(a, b) {
 a.type = b && b.kind ? b.kind :"None";
-var c = {}, e = "", f = "";
+var c = {}, d = "", f = "";
 c = "ImageStreamTag" === a.type ? {
-namespace:b.namespace || d.metadata.namespace,
+namespace:b.namespace || e.metadata.namespace,
 imageStream:b.name.split(":")[0],
 tagObject:{
 tag:b.name.split(":")[1]
@@ -5325,16 +5363,16 @@ imageStream:"",
 tagObject:{
 tag:""
 }
-}, e = "ImageStreamImage" === a.type ? (b.namespace || d.metadata.namespace) + "/" + b.name :"", f = "DockerImage" === a.type ? b.name :"", a.imageStreamTag = c, a.imageStreamImage = e, a.dockerImage = f;
+}, d = "ImageStreamImage" === a.type ? (b.namespace || e.metadata.namespace) + "/" + b.name :"", f = "DockerImage" === a.type ? b.name :"", a.imageStreamTag = c, a.imageStreamImage = d, a.dockerImage = f;
 };
-g(a.imageOptions.from, a.buildStrategy.from), g(a.imageOptions.to, a.updatedBuildConfig.spec.output.to), a.sources.images && (a.sourceImages = a.buildConfig.spec.source.images, 1 === a.sourceImages.length ? (a.imageSourceTypes = angular.copy(a.buildFromTypes), g(a.imageOptions.fromSource, a.sourceImages[0].from), a.imageSourcePaths = _.map(a.sourceImages[0].paths, function(a) {
+h(a.imageOptions.from, a.buildStrategy.from), h(a.imageOptions.to, a.updatedBuildConfig.spec.output.to), a.sources.images && (a.sourceImages = a.buildConfig.spec.source.images, 1 === a.sourceImages.length ? (a.imageSourceTypes = angular.copy(a.buildFromTypes), h(a.imageOptions.fromSource, a.sourceImages[0].from), a.imageSourcePaths = _.map(a.sourceImages[0].paths, function(a) {
 return {
 name:a.sourcePath,
 value:a.destinationDir
 };
 })) :(a.imageSourceFromObjects = [], a.sourceImages.forEach(function(b) {
 a.imageSourceFromObjects.push(b.from);
-}))), a.options.forcePull = !!a.buildStrategy.forcePull, a.sources.binary && (a.options.binaryAsFile = a.buildConfig.spec.source.binary.asFile ? a.buildConfig.spec.source.binary.asFile :""), "Docker" === a.strategyType && (a.options.noCache = !!a.buildConfig.spec.strategy.dockerStrategy.noCache, a.buildFromTypes.push("None")), l.push(c.watchObject("buildconfigs", b.buildconfig, f, function(b, c) {
+}))), a.options.forcePull = !!a.buildStrategy.forcePull, a.sources.binary && (a.options.binaryAsFile = a.buildConfig.spec.source.binary.asFile ? a.buildConfig.spec.source.binary.asFile :""), "Docker" === a.strategyType && (a.options.noCache = !!a.buildConfig.spec.strategy.dockerStrategy.noCache, a.buildFromTypes.push("None")), m.push(c.watchObject("buildconfigs", b.buildconfig, g, function(b, c) {
 "MODIFIED" === c && (a.alerts["updated/deleted"] = {
 type:"warning",
 message:"This build configuration has changed since you started editing it. You'll need to copy any changes you've made and edit again."
@@ -5347,16 +5385,16 @@ message:"This build configuration has been deleted."
 a.loaded = !0, a.alerts.load = {
 type:"error",
 message:"The build configuration details could not be loaded.",
-details:"Reason: " + e("getErrorDetails")(b)
+details:"Reason: " + f("getErrorDetails")(b)
 };
 });
 }));
-var n = function(b, c) {
+var o = function(b, c) {
 function d(b, c) {
-var d = e("imageObjectRef")(b, a.projectName), f = e("imageObjectRef")(c, a.projectName);
-return d === f;
+var d = f("imageObjectRef")(b, a.projectName), e = f("imageObjectRef")(c, a.projectName);
+return d === e;
 }
-var f = m(a.buildConfig).from;
+var e = n(a.buildConfig).from;
 return c.forEach(function(a) {
 switch (a.type) {
 case "Generic":
@@ -5375,12 +5413,12 @@ break;
 
 case "ImageChange":
 var c = a.imageChange.from;
-c || (c = f);
-var e = {
+c || (c = e);
+var f = {
 present:!0,
 data:a
 };
-d(c, f) ? b.builderImageChangeTrigger = e :b.imageChangeTriggers.push(e);
+d(c, e) ? b.builderImageChangeTrigger = f :b.imageChangeTriggers.push(f);
 break;
 
 case "ConfigChange":
@@ -5406,16 +5444,16 @@ a.aceLoaded = function(a) {
 var b = a.getSession();
 b.setOption("tabSize", 2), b.setOption("useSoftTabs", !0), a.$blockScrolling = 1 / 0;
 };
-var o = function(a) {
-return _.map(k.compactEntries(a), function(a) {
+var p = function(a) {
+return _.map(l.compactEntries(a), function(a) {
 return {
 sourcePath:a.name,
 destinationDir:a.value
 };
 });
-}, p = function() {
+}, q = function() {
 a.sources.binary && ("" !== a.options.binaryAsFile ? a.updatedBuildConfig.spec.source.binary.asFile = a.options.binaryAsFile :a.updatedBuildConfig.spec.source.binary = {});
-}, q = function(b) {
+}, r = function(b) {
 var c = {};
 switch (b.type) {
 case "ImageStreamTag":
@@ -5440,44 +5478,86 @@ name:_.last(d)
 }, c.namespace = 1 !== d.length ? d[0] :a.buildConfig.metadata.namespace;
 }
 return c;
-}, r = function() {
+}, s = function() {
 var b = [].concat(a.triggers.githubWebhooks, a.triggers.genericWebhooks, a.triggers.imageChangeTriggers, a.triggers.builderImageChangeTrigger, a.triggers.configChangeTrigger);
 return b = _.filter(b, function(a) {
 return _.has(a, "disabled") && !a.disabled || a.present;
 }), b = _.map(b, "data");
-}, s = function(a, b) {
+}, t = function() {
+switch (a.secrets.picked = {
+gitSecret:a.buildConfig.spec.source.sourceSecret || {
+name:""
+},
+pullSecret:n(a.buildConfig).pullSecret || {
+name:""
+},
+pushSecret:a.buildConfig.spec.output.pushSecret || {
+name:""
+}
+}, a.strategyType) {
+case "Source":
+case "Docker":
+a.secrets.picked.sourceSecrets = a.buildConfig.spec.source.secrets || [ {
+secret:{
+name:""
+},
+destinationDir:""
+} ];
+break;
+
+case "Custom":
+a.secrets.picked.sourceSecrets = n(a.buildConfig).secrets || [ {
+secretSource:{
+name:""
+},
+mountPath:""
+} ];
+}
+}, u = function(a, b, c) {
+b.name ? a[c] = b :delete a[c];
+}, v = function(b, c) {
+var d = _.head(c), e = "Custom" === a.strategyType ? "mountPath" :"destinationDir";
+d[e] ? b.secrets = c :delete b.secrets;
+}, w = function(a, b) {
 return "None" === b.type ? a :(a.none = !1, angular.forEach(b, function(b, c) {
 a[c] = !0;
 }), a);
 };
 a.save = function() {
-switch (a.disableInputs = !0, m(a.updatedBuildConfig).forcePull = a.options.forcePull, a.strategyType) {
+switch (a.disableInputs = !0, n(a.updatedBuildConfig).forcePull = a.options.forcePull, a.strategyType) {
 case "Docker":
-m(a.updatedBuildConfig).noCache = a.options.noCache;
+n(a.updatedBuildConfig).noCache = a.options.noCache;
 break;
 
 case "JenkinsPipeline":
 "path" === a.jenkinsfileOptions.type ? delete a.updatedBuildConfig.spec.strategy.jenkinsPipelineStrategy.jenkinsfile :delete a.updatedBuildConfig.spec.strategy.jenkinsPipelineStrategy.jenkinsfilePath;
 }
-p(), a.sources.images && !_.isEmpty(a.sourceImages) && (a.updatedBuildConfig.spec.source.images[0].paths = o(a.imageSourcePaths), a.updatedBuildConfig.spec.source.images[0].from = q(a.imageOptions.fromSource)), "None" === a.imageOptions.from.type ? delete m(a.updatedBuildConfig).from :m(a.updatedBuildConfig).from = q(a.imageOptions.from), "None" === a.imageOptions.to.type ? delete a.updatedBuildConfig.spec.output.to :a.updatedBuildConfig.spec.output.to = q(a.imageOptions.to), m(a.updatedBuildConfig).env = k.compactEntries(a.envVars), a.updatedBuildConfig.spec.triggers = r(), c.update("buildconfigs", a.updatedBuildConfig.metadata.name, a.updatedBuildConfig, {
-namespace:a.updatedBuildConfig.metadata.namespace
-}).then(function() {
-i.addAlert({
+switch (q(), a.sources.images && !_.isEmpty(a.sourceImages) && (a.updatedBuildConfig.spec.source.images[0].paths = p(a.imageSourcePaths), a.updatedBuildConfig.spec.source.images[0].from = r(a.imageOptions.fromSource)), "None" === a.imageOptions.from.type ? delete n(a.updatedBuildConfig).from :n(a.updatedBuildConfig).from = r(a.imageOptions.from), "None" === a.imageOptions.to.type ? delete a.updatedBuildConfig.spec.output.to :a.updatedBuildConfig.spec.output.to = r(a.imageOptions.to), n(a.updatedBuildConfig).env = l.compactEntries(a.envVars), u(a.updatedBuildConfig.spec.source, a.secrets.picked.gitSecret, "sourceSecret"), u(n(a.updatedBuildConfig), a.secrets.picked.pullSecret, "pullSecret"), u(a.updatedBuildConfig.spec.output, a.secrets.picked.pushSecret, "pushSecret"), a.strategyType) {
+case "Source":
+case "Docker":
+v(a.updatedBuildConfig.spec.source, a.secrets.picked.sourceSecrets);
+break;
+
+case "Custom":
+v(n(a.updatedBuildConfig), a.secrets.picked.sourceSecrets);
+}
+a.updatedBuildConfig.spec.triggers = s(), c.update("buildconfigs", a.updatedBuildConfig.metadata.name, a.updatedBuildConfig, a.context).then(function() {
+j.addAlert({
 name:a.updatedBuildConfig.metadata.name,
 data:{
 type:"success",
 message:"Build Config " + a.updatedBuildConfig.metadata.name + " was successfully updated."
 }
-}), h.path(g.resourceURL(a.updatedBuildConfig, "BuildConfig", a.updatedBuildConfig.metadata.namespace));
+}), i.path(h.resourceURL(a.updatedBuildConfig, "BuildConfig", a.updatedBuildConfig.metadata.namespace));
 }, function(b) {
 a.disableInputs = !1, a.alerts.save = {
 type:"error",
 message:"An error occurred updating the build " + a.updatedBuildConfig.metadata.name + "Build Config",
-details:e("getErrorDetails")(b)
+details:f("getErrorDetails")(b)
 };
 });
 }, a.$on("$destroy", function() {
-c.unwatchAll(l);
+c.unwatchAll(m);
 });
 } ]), angular.module("openshiftConsole").controller("EditAutoscalerController", [ "$scope", "$filter", "$routeParams", "$window", "APIService", "BreadcrumbsService", "DataService", "HPAService", "MetricsService", "Navigate", "ProjectsService", "keyValueEditorUtils", function(a, b, c, d, e, f, g, h, i, j, k, l) {
 if (!c.kind || !c.name) return void j.toErrorPage("Kind or name parameter missing.");
@@ -6591,6 +6671,12 @@ n("An error occurred attaching the persistent volume claim to the " + a("humaniz
 }
 };
 }));
+} ]), angular.module("openshiftConsole").controller("CreateSecretModalController", [ "$scope", "$uibModalInstance", function(a, b) {
+a.postCreateAction = function(c, d) {
+b.close(c), _.extend(a.alerts, d);
+}, a.cancel = function() {
+b.dismiss("cancel");
+};
 } ]), angular.module("openshiftConsole").controller("ConfirmModalController", [ "$scope", "$uibModalInstance", "modalConfig", function(a, b, c) {
 _.extend(a, c), a.confirm = function() {
 b.close("confirm");
@@ -6719,7 +6805,143 @@ a.hideBuild = c(b);
 },
 templateUrl:"views/directives/_build-close.html"
 };
-} ]), angular.module("openshiftConsole").directive("relativeTimestamp", function() {
+} ]), angular.module("openshiftConsole").directive("createSecret", function() {
+return {
+restrict:"E",
+scope:{
+type:"=",
+serviceAccountToLink:"=?",
+namespace:"=",
+postCreateAction:"&",
+cancel:"&"
+},
+templateUrl:"views/directives/create-secret.html",
+controller:[ "$scope", "$filter", "DataService", function(a, b, c) {
+a.alerts = {}, a.secretAuthTypeMap = {
+image:{
+label:"Image Secret",
+authTypes:[ {
+id:"kubernetes.io/dockercfg",
+label:"Image Registry Credentials"
+}, {
+id:"kubernetes.io/dockerconfigjson",
+label:"Configuration File"
+} ]
+},
+source:{
+label:"Source Secret",
+authTypes:[ {
+id:"kubernetes.io/basic-auth",
+label:"Basic Authentication"
+}, {
+id:"kubernetes.io/ssh-auth",
+label:"SSH Key"
+} ]
+}
+}, a.secretTypes = _.keys(a.secretAuthTypeMap), a.newSecret = {
+type:a.type,
+authType:a.secretAuthTypeMap[a.type].authTypes[0].id,
+data:{},
+linkSecret:!1,
+pickedServiceAccountToLink:a.serviceAccountToLink || "",
+linkAs:{
+secrets:"source" === a.type,
+imagePullSecrets:"image" === a.type
+}
+}, a.addGitconfig = !1, c.list("serviceaccounts", a, function(b) {
+a.serviceAccounts = b.by("metadata.name"), a.serviceAccountsNames = _.keys(a.serviceAccounts);
+});
+var d = function(b, c) {
+var d = {
+apiVersion:"v1",
+kind:"Secret",
+metadata:{
+name:a.newSecret.data.secretName
+},
+type:c,
+data:{}
+};
+switch (c) {
+case "kubernetes.io/basic-auth":
+d.data = {
+password:window.btoa(b.password)
+}, b.username && (d.data.username = window.btoa(b.username)), b.gitconfig && (d.data[".gitconfig"] = window.btoa(b.gitconfig));
+break;
+
+case "kubernetes.io/ssh-auth":
+d.data = {
+"ssh-privatekey":window.btoa(b.privateKey)
+}, b.gitconfig && (d.data[".gitconfig"] = window.btoa(b.gitconfig));
+break;
+
+case "kubernetes.io/dockerconfigjson":
+var e = window.btoa(b.dockerConfig);
+JSON.parse(b.dockerConfig).auths ? d.data[".dockerconfigjson"] = e :(d.type = "kubernetes.io/dockercfg", d.data[".dockercfg"] = e);
+break;
+
+case "kubernetes.io/dockercfg":
+var f = window.btoa(b.dockerUsername + ":" + b.dockerPassword), g = {};
+g[b.dockerServer] = {
+username:b.dockerUsername,
+password:b.dockerPassword,
+email:b.dockerMail,
+auth:f
+}, d.data[".dockercfg"] = window.btoa(JSON.stringify(g));
+}
+return d;
+}, e = function(d) {
+var e = angular.copy(a.serviceAccounts[a.newSecret.pickedServiceAccountToLink]);
+a.newSecret.linkAs.secrets && e.secrets.push({
+name:d.metadata.name
+}), a.newSecret.linkAs.imagePullSecrets && e.imagePullSecrets.push({
+name:d.metadata.name
+}), c.update("serviceaccounts", a.newSecret.pickedServiceAccountToLink, e, a).then(function(b) {
+var c = {
+createAndLink:{
+type:"success",
+message:"Secret " + d.metadata.name + " was created and linked with service account " + b.metadata.name + "."
+}
+};
+a.postCreateAction({
+newSecret:d,
+creationAlert:c
+});
+}, function(c) {
+a.alerts.createAndLink = {
+type:"error",
+message:"An error occurred while linking the secret with service account.",
+details:b("getErrorDetails")(c)
+};
+});
+};
+a.create = function() {
+a.alerts = {};
+var f = d(a.newSecret.data, a.newSecret.authType);
+c.create("secrets", null, f, a).then(function(b) {
+if (a.newSecret.linkSecret && a.newSecret.pickedServiceAccountToLink) e(b); else {
+var c = {
+create:{
+type:"success",
+message:"Secret " + f.metadata.name + " was created."
+}
+};
+a.postCreateAction({
+newSecret:b,
+creationAlert:c
+});
+}
+}, function(c) {
+var d = c.data || {};
+return "AlreadyExists" === d.reason ? void (a.nameTaken = !0) :void (a.alerts.create = {
+type:"error",
+message:"An error occurred while creating the secret.",
+details:b("getErrorDetails")(c)
+});
+});
+};
+} ]
+};
+}), angular.module("openshiftConsole").directive("relativeTimestamp", function() {
 return {
 restrict:"E",
 scope:{
@@ -7666,6 +7888,132 @@ a !== b && g(a);
 });
 }
 });
+}
+};
+} ]), angular.module("openshiftConsole").directive("oscSecrets", [ "$uibModal", "$filter", "DataService", "SecretsService", function(a, b, c, d) {
+return {
+restrict:"E",
+scope:{
+pickedSecret:"=model",
+secretsByType:"=",
+namespace:"=",
+displayType:"@",
+type:"@",
+alerts:"=",
+serviceAccountToLink:"@?"
+},
+templateUrl:"views/directives/osc-secrets.html",
+link:function(b) {
+b.openCreateSecretModal = function() {
+b.newSecret = {};
+var e = a.open({
+animation:!0,
+templateUrl:"views/modals/create-secret.html",
+controller:"CreateSecretModalController",
+scope:b
+});
+e.result.then(function(a) {
+c.list("secrets", {
+namespace:b.namespace
+}, function(c) {
+var e = d.groupSecretsByType(c);
+b.secretsByType = _.each(e, function(a) {
+a.unshift("");
+}), b.pickedSecret.name = a.metadata.name, b.secretsForm.$setDirty();
+});
+});
+};
+}
+};
+} ]), angular.module("openshiftConsole").directive("oscSourceSecrets", [ "$uibModal", "$filter", "DataService", "SecretsService", function(a, b, c, d) {
+return {
+restrict:"E",
+scope:{
+pickedSecrets:"=model",
+secretsByType:"=",
+strategyType:"=",
+type:"@",
+displayType:"@",
+namespace:"=",
+alerts:"=",
+serviceAccountToLink:"@?"
+},
+templateUrl:"views/directives/osc-source-secrets.html",
+link:function(b) {
+b.canAddSourceSecret = function() {
+var a = _.last(b.pickedSecrets);
+switch (b.strategyType) {
+case "Custom":
+return a.secretSource.name && a.mountPath;
+
+default:
+return a.secret.name && a.destinationDir;
+}
+}, b.setLastSecretsName = function(a) {
+var c = _.last(b.pickedSecrets);
+switch (b.strategyType) {
+case "Custom":
+return void (c.secretSource.name = a);
+
+default:
+return void (c.secret.name = a);
+}
+}, b.addSourceSecret = function() {
+switch (b.strategyType) {
+case "Custom":
+return void b.pickedSecrets.push({
+secretSource:{
+name:""
+},
+mountPath:""
+});
+
+default:
+return void b.pickedSecrets.push({
+secret:{
+name:""
+},
+destinationDir:""
+});
+}
+}, b.removeSecret = function(a) {
+if (1 === b.pickedSecrets.length) switch (b.strategyType) {
+case "Custom":
+b.pickedSecrets = [ {
+secretSource:{
+name:""
+},
+mountPath:""
+} ];
+break;
+
+default:
+b.pickedSecrets = [ {
+secret:{
+name:""
+},
+destinationDir:""
+} ];
+} else b.pickedSecrets.splice(a, 1);
+b.secretsForm.$setDirty();
+}, b.openCreateSecretModal = function() {
+var e = a.open({
+animation:!0,
+templateUrl:"views/modals/create-secret.html",
+controller:"CreateSecretModalController",
+scope:b
+});
+e.result.then(function(a) {
+c.list("secrets", {
+namespace:b.namespace
+}, function(c) {
+var e = d.groupSecretsByType(c);
+b.secretsByType = _.each(e, function(a) {
+a.unshift("");
+}), b.setLastSecretsName(a.metadata.name);
+});
+});
+};
 }
 };
 } ]), angular.module("openshiftConsole").directive("replicas", function() {

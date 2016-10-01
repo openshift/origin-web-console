@@ -98,6 +98,13 @@
     font-style: normal;
     margin-top: -5px;
   }
+  .ui-select-match-text > span {
+      width: 90%;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      position: absolute;
+  }
+
   .btn {
     padding-right: 25px; // prevent text from showing behind select arrow
   }
@@ -529,6 +536,38 @@ label.checkbox {
     img {
       width: 100%;
     }
+  }
+}
+
+.osc-secrets-form {
+  .picked-secret {
+    margin-bottom: 5px;
+  }
+  .directory {
+    width:90%;
+    display: inline-block;
+  }
+  .remove-secret-row {
+    width: 10%;
+    margin-left: 7px;
+    display: inline;
+  }
+  .remove-btn {
+    color: #333;
+    opacity: 0.65;
+    font-size: 15px;
+    vertical-align: middle;
+    &:hover {
+      opacity: 1;
+      text-decoration: none;
+    }
+    &:focus {
+      text-decoration: none;
+    }
+  }
+  .ui-select-choices-row-inner {
+    height: 24px;
+    cursor: pointer;
   }
 }
 
@@ -1040,6 +1079,19 @@ a.disabled-link {
   color: inherit;
 }
 
+.create-secret-modal {
+  background-color: #F5F5F5;
+  .modal-footer{
+    margin-top: 0px
+  }
+  .modal-body {
+    padding: 0px 18px;
+    .create-secret-editor {
+      height: 150px;
+    }
+  }
+}
+
 .edit-yaml {
   h1 {
     line-height: 1.3;
@@ -1103,6 +1155,11 @@ a.disabled-link {
 }
 
 .edit-form {
+  .with-divider {
+    border-top: 1px solid rgba(0, 0, 0, 0.15);
+    padding-top: 21px;
+    padding-bottom: 10px;
+  }
   .labels {
     .form-group {
       width: 44%;
@@ -1132,7 +1189,7 @@ a.disabled-link {
   }
 
   .section {
-    padding-bottom: 15px;
+    padding-bottom: 5px;
   }
   @media (max-width: @screen-sm-min) {
     .trigger-url {

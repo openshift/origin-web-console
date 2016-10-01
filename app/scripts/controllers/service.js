@@ -29,30 +29,28 @@ angular.module('openshiftConsole')
 
     var watches = [];
 
+    var serviceResolved = function(service, action) {
+      $scope.loaded = true;
+      $scope.service = service;
+      if (action === "DELETED") {
+        $scope.alerts["deleted"] = {
+          type: "warning",
+          message: "This service has been deleted."
+        };
+      }
+    };
+
     ProjectsService
       .get($routeParams.project)
       .then(_.spread(function(project, context) {
         $scope.project = project;
         $scope.projectContext = context;
-        DataService.get("services", $routeParams.service, context).then(
-          // success
-          function(service) {
-            $scope.loaded = true;
-            $scope.service = service;
-
-            // If we found the item successfully, watch for changes on it
-            watches.push(DataService.watchObject("services", $routeParams.service, context, function(service, action) {
-              if (action === "DELETED") {
-                $scope.alerts["deleted"] = {
-                  type: "warning",
-                  message: "This service has been deleted."
-                };
-              }
-              $scope.service = service;
-            }));
-          },
-          // failure
-          function(e) {
+        DataService
+          .get("services", $routeParams.service, context)
+          .then(function(service) {
+            serviceResolved(service);
+            watches.push(DataService.watchObject("services", $routeParams.service, context, serviceResolved));
+          }, function(e) {
             $scope.loaded = true;
             $scope.alerts["load"] = {
               type: "error",

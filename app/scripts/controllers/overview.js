@@ -481,7 +481,7 @@ angular.module('openshiftConsole')
           buildConfigs = buildConfigData.by("metadata.name");
           groupBuilds();
           Logger.log("builds (list)", builds);
-        }));
+        }, {poll: limitWatches, pollInterval: 60 * 1000}));
 
         watches.push(DataService.watch("routes", context, function(routesData) {
           routes = routesData.by("metadata.name");

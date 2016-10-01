@@ -66,53 +66,61 @@
                               </div>
                             </div>
                           </div>
+                          <div class="row">
+                            <div ng-class="{
+                              'col-md-8': advancedOptions,
+                              'col-lg-12': !advancedOptions}">
+                              <div class="form-group">
+                                <label for="sourceUrl" class="required">Git Repository URL</label>
+                                <div ng-class="{'has-warning': form.sourceUrl.$dirty && !sourceURLPattern.test(buildConfig.sourceUrl), 'has-error': (form.sourceUrl.$error.required && form.sourceUrl.$dirty)}">
+                                  <!-- Unfortunately, we can't set type="url" because some valid values don't pass browser validation. -->
+                                  <input class="form-control"
+                                    id="sourceUrl"
+                                    name="sourceUrl"
+                                    type="text"
+                                    required
+                                    aria-describedby="from_source_help"
+                                    ng-model="buildConfig.sourceUrl"
+                                    autocorrect="off"
+                                    autocapitalize="off"
+                                    spellcheck="false">
+                                </div>
+                                <div ng-if="image.metadata.annotations.sampleRepo" class="help-block">
+                                  Sample repository for {{imageName}}: {{image.metadata.annotations.sampleRepo}}<span ng-if="image.metadata.annotations.sampleRef">,
+                                    ref: {{image.metadata.annotations.sampleRef}}</span><span ng-if="image.metadata.annotations.sampleContextDir">,
+                                    context dir: {{image.metadata.annotations.sampleContextDir}}</span>
+                                  <a href="" ng-click="fillSampleRepo()"
+                                    style="margin-left: 3px;" class="nowrap">Try it<i class="fa fa-level-up" style="margin-left: 3px; font-size: 17px;"></i></a>
+                                </div>
+                                <div class="has-error" ng-show="form.sourceUrl.$error.required && form.sourceUrl.$dirty">
+                                  <span class="help-block">A Git repository URL is required.</span>
+                                </div>
+                                <div>
+                                  <span class="text-warning" ng-if="form.sourceUrl.$dirty && !sourceURLPattern.test(buildConfig.sourceUrl)">Git repository should be a URL.</span>
+                                </div>
+                              </div>
+                            </div>
 
-                          <div class="form-group">
-                            <label for="sourceUrl" class="required">Git Repository URL</label>
-                            <div ng-class="{'has-warning': form.sourceUrl.$dirty && !sourceURLPattern.test(buildConfig.sourceUrl), 'has-error': (form.sourceUrl.$error.required && form.sourceUrl.$dirty)}">
-                              <!-- Unfortunately, we can't set type="url" because some valid values don't pass browser validation. -->
-                              <input class="form-control"
-                                id="sourceUrl"
-                                name="sourceUrl"
-                                type="text"
-                                required
-                                aria-describedby="from_source_help"
-                                ng-model="buildConfig.sourceUrl"
-                                autocorrect="off"
-                                autocapitalize="off"
-                                spellcheck="false">
-                            </div>
-                            <div ng-if="image.metadata.annotations.sampleRepo" class="help-block">
-                              Sample repository for {{imageName}}: {{image.metadata.annotations.sampleRepo}}<span ng-if="image.metadata.annotations.sampleRef">,
-                                ref: {{image.metadata.annotations.sampleRef}}</span><span ng-if="image.metadata.annotations.sampleContextDir">,
-                                context dir: {{image.metadata.annotations.sampleContextDir}}</span>
-                              <a href="" ng-click="fillSampleRepo()"
-                                style="margin-left: 3px;" class="nowrap">Try it<i class="fa fa-level-up" style="margin-left: 3px; font-size: 17px;"></i></a>
-                            </div>
-                            <div class="has-error" ng-show="form.sourceUrl.$error.required && form.sourceUrl.$dirty">
-                              <span class="help-block">A Git repository URL is required.</span>
-                            </div>
-                            <div>
-                              <span class="text-warning" ng-if="form.sourceUrl.$dirty && !sourceURLPattern.test(buildConfig.sourceUrl)">Git repository should be a URL.</span>
+                            <div class="col-md-4" ng-if="advancedOptions">
+                              <div class="form-group">
+                                <label for="gitref">Git Reference</label>
+                                <div>
+                                  <input
+                                    id="gitref"
+                                    ng-model="buildConfig.gitRef"
+                                    type="text"
+                                    placeholder="master"
+                                    autocorrect="off"
+                                    autocapitalize="off"
+                                    spellcheck="false"
+                                    class="form-control">
+                                </div>
+                                <div class="help-block">Optional branch, tag, or commit.</div>
+                              </div>
                             </div>
                           </div>
 
-                          <div click-to-reveal link-text="Show advanced routing, build, and deployment options">
-                            <div class="form-group">
-                              <label for="gitref">Git Reference</label>
-                              <div>
-                                <input
-                                  id="gitref"
-                                  ng-model="buildConfig.gitRef"
-                                  type="text"
-                                  placeholder="master"
-                                  autocorrect="off"
-                                  autocapitalize="off"
-                                  spellcheck="false"
-                                  class="form-control">
-                              </div>
-                              <div class="help-block">Optional branch, tag, or commit.</div>
-                            </div>
+                          <div ng-if="advancedOptions">
                             <div class="form-group">
                               <label for="contextdir">Context Dir</label>
                               <div>
@@ -372,6 +380,9 @@
                             </label-editor>
                           </div>
                           <alerts alerts="alerts"></alerts>
+                          <div class="gutter-top">
+                            <a href="" ng-click="advancedOptions = !advancedOptions" role="button">{{advancedOptions ? 'Hide' : 'Show'}} advanced routing, build, and deployment options</a>
+                          </div>
                           <div class="buttons gutter-bottom" ng-class="{'gutter-top': !alerts.length}">
                             <!-- unable to use form.valid.  need to fix validators in labels and key values directive -->
                             <button type="submit"
