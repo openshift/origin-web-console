@@ -26,7 +26,7 @@ window.OPENSHIFT_CONSTANTS = {
   },
   // Maps links names to URL's where the CLI tools can be downloaded, may point directly to files or to external pages in a CDN, for example.
   CLI: {
-    "Latest Release":          "https://github.com/openshift/origin/releases/latest"
+    "Latest Release":          "https://access.redhat.com/downloads/content/290"
   },
   // The default CPU target percentage for horizontal pod autoscalers created or edited in the web console.
   // This value is set in the HPA when the input is left blank.
