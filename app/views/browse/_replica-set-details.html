@@ -1,7 +1,8 @@
 <div class="row" style="max-width: 650px;">
   <div class="col-sm-4 col-sm-push-8 browse-deployment-donut">
     <deployment-donut
-        rc="deployment"
+        rc="replicaSet"
+        deployment="deployment"
         deployment-config="deploymentConfig"
         pods="podsForDeployment"
         hpa="autoscalers"
@@ -11,14 +12,14 @@
   </div>
   <div class="col-sm-8 col-sm-pull-4">
     <dl class="dl-horizontal left">
-      <dt ng-if-start="deployment | hasDeploymentConfig">Status:</dt>
+      <dt ng-if-start="replicaSet | hasDeploymentConfig">Status:</dt>
       <dd ng-if-end>
-        <status-icon status="deployment | deploymentStatus"></status-icon>
-        {{deployment | deploymentStatus}}
+        <status-icon status="replicaSet | deploymentStatus"></status-icon>
+        {{replicaSet | deploymentStatus}}
         <span style="margin-left: 7px;">
-          <button ng-show="!rollBackCollapsed && (deployment | deploymentStatus) == 'Complete' && !(deployment | deploymentIsLatest : deploymentConfig) && !deployment.metadata.deletionTimestamp && ('deploymentconfigrollbacks' | canI : 'create')" ng-disabled="(deploymentConfigDeploymentsInProgress[deploymentConfigName] | hashSize) > 0" type="button" class="btn btn-default btn-xs" ng-click="rollBackCollapsed = !rollBackCollapsed">Roll Back</button>
+          <button ng-show="!rollBackCollapsed && (replicaSet | deploymentStatus) == 'Complete' && !(replicaSet | deploymentIsLatest : deploymentConfig) && !replicaSet.metadata.deletionTimestamp && ('deploymentconfigrollbacks' | canI : 'create')" ng-disabled="(deploymentConfigDeploymentsInProgress[deploymentConfigName] | hashSize) > 0" type="button" class="btn btn-default btn-xs" ng-click="rollBackCollapsed = !rollBackCollapsed">Roll Back</button>
           <div ng-show="rollBackCollapsed" class="well well-sm">
-            Use the following settings from {{deployment.metadata.name}} when rolling back:
+            Use the following settings from {{replicaSet.metadata.name}} when rolling back:
             <div class="checkbox">
               <label>
                 <input type="checkbox" ng-model="changeScaleSettings" ng-disabled="(deploymentConfigDeploymentsInProgress[deploymentConfigName] | hashSize) > 0"> replica count and selector
@@ -34,42 +35,42 @@
                 <input type="checkbox" ng-model="changeTriggers" ng-disabled="(deploymentConfigDeploymentsInProgress[deploymentConfigName] | hashSize) > 0"> deployment trigger
               </label>
             </div>
-            <button type="button" ng-click="rollbackToDeployment(deployment, changeScaleSettings, changeStrategy, changeTriggers)" ng-disabled="(deploymentConfigDeploymentsInProgress[deploymentConfigName] | hashSize) > 0" class="btn btn-default btn-xs">Roll Back</button>
+            <button type="button" ng-click="rollbackToDeployment(replicaSet, changeScaleSettings, changeStrategy, changeTriggers)" ng-disabled="(deploymentConfigDeploymentsInProgress[deploymentConfigName] | hashSize) > 0" class="btn btn-default btn-xs">Roll Back</button>
           </div>
           <!-- disabled until we have an api endpoint for retry
-          <button ng-show="(deployment | deploymentStatus) == 'Failed'" type="button" ng-click="retryFailedDeployment(deployment)" ng-disabled="(deploymentConfigDeploymentsInProgress[deploymentConfigName] | hashSize) > 0" class="btn btn-default btn-xs" ng-if="(deployment | deploymentIsLatest : deploymentConfig) && !deployment.metadata.deletionTimestamp">Retry</button>
+          <button ng-show="(replicaSet | deploymentStatus) == 'Failed'" type="button" ng-click="retryFailedDeployment(replicaSet)" ng-disabled="(deploymentConfigDeploymentsInProgress[deploymentConfigName] | hashSize) > 0" class="btn btn-default btn-xs" ng-if="(replicaSet | deploymentIsLatest : deploymentConfig) && !replicaSet.metadata.deletionTimestamp">Retry</button>
           -->
-          <button ng-show="(deployment | deploymentIsInProgress) && !deployment.metadata.deletionTimestamp && ('replicationcontrollers' | canI : 'update')" type="button" ng-click="cancelRunningDeployment(deployment)" class="btn btn-default btn-xs">Cancel</button>
+          <button ng-show="(replicaSet | deploymentIsInProgress) && !replicaSet.metadata.deletionTimestamp && ('replicationcontrollers' | canI : 'update')" type="button" ng-click="cancelRunningDeployment(replicaSet)" class="btn btn-default btn-xs">Cancel</button>
         </span>
       </dd>
-      <dt ng-if-start="deployment | hasDeploymentConfig">Deployment config:</dt>
+      <dt ng-if-start="replicaSet | hasDeploymentConfig">Deployment config:</dt>
       <dd ng-if-end>
-        <a ng-href="{{deploymentConfigName | navigateResourceURL : 'DeploymentConfig' : deployment.metadata.namespace}}">{{deploymentConfigName}}</a>
+        <a ng-href="{{replicaSet | configURLForResource}}">{{deploymentConfigName}}</a>
       </dd>
-      <dt ng-if-start="deployment | annotation:'deploymentStatusReason'">Status reason:</dt>
+      <dt ng-if-start="replicaSet | annotation:'deploymentStatusReason'">Status reason:</dt>
       <dd ng-if-end>
-        {{deployment | annotation:'deploymentStatusReason'}}
+        {{replicaSet | annotation:'deploymentStatusReason'}}
       </dd>
-      <dt ng-if-start="deployment | deploymentIsInProgress">Duration:</dt>
+      <dt ng-if-start="replicaSet | deploymentIsInProgress">Duration:</dt>
       <dd ng-if-end>
-        <span ng-switch="deployment | deploymentStatus" class="hide-ng-leave">
-          <span ng-switch-when="Running">running for <duration-until-now timestamp="deployment.metadata.creationTimestamp"></duration-until-now></span>
-          <span ng-switch-default>waiting for <duration-until-now timestamp="deployment.metadata.creationTimestamp"></duration-until-now></span>
+        <span ng-switch="replicaSet | deploymentStatus" class="hide-ng-leave">
+          <span ng-switch-when="Running">running for <duration-until-now timestamp="replicaSet.metadata.creationTimestamp"></duration-until-now></span>
+          <span ng-switch-default>waiting for <duration-until-now timestamp="replicaSet.metadata.creationTimestamp"></duration-until-now></span>
         </span>
       </dd>
       <dt>Selectors:</dt>
       <dd>
-        <selector selector="deployment.spec.selector"></selector>
+        <selector selector="replicaSet.spec.selector"></selector>
       </dd>
       <dt>Replicas:</dt>
       <dd>
         <!-- Enable scaling if this is a plain replication controller or it's the active deployment,
              as long as it doesn't have an HPA. -->
-        <replicas status="deployment.status.replicas"
-                  spec="deployment.spec.replicas"
+        <replicas status="replicaSet.status.replicas"
+                  spec="replicaSet.spec.replicas"
                   disable-scaling="!isScalable()"
                   scale-fn="scale(replicas)"
-                  deployment="deployment">
+                  deployment="replicaSet">
         </replicas>
         <span ng-if="autoscalers.length">(autoscaled)</span>
       </dd>
@@ -81,17 +82,17 @@
     <div class="deployment-detail">
       <h3>Template</h3>
       <pod-template
-        pod-template="deployment.spec.template"
+        pod-template="replicaSet.spec.template"
         images-by-docker-reference="imagesByDockerReference"
         builds="builds"
         detailed="true"
         add-health-check-url="{{((!deploymentConfig || isActive) && ('deploymentconfigs' | canI : 'update')) ? healthCheckURL : ''}}">
       </pod-template>
       <h4>Volumes</h4>
-      <div ng-if="!deployment.spec.template.spec.volumes.length">
+      <div ng-if="!replicaSet.spec.template.spec.volumes.length">
         <div ng-if="kind === 'ReplicaSet'">
           <a ng-if="resource | canI : 'update'"
-             ng-href="project/{{project.metadata.name}}/attach-pvc?kind=ReplicaSet&name={{deployment.metadata.name}}&group=extensions">Attach storage</a>
+             ng-href="project/{{project.metadata.name}}/attach-pvc?kind=ReplicaSet&name={{replicaSet.metadata.name}}&group=extensions">Attach storage</a>
           <span ng-if="!(resource | canI : 'update')">none</span>
         </div>
         <div ng-if="kind === 'ReplicationController'">
@@ -102,12 +103,12 @@
           </div>
           <div ng-if="!deploymentConfigName">
             <a ng-if="resource | canI : 'update'"
-               ng-href="project/{{project.metadata.name}}/attach-pvc?kind=ReplicationController&name={{deployment.metadata.name}}">Attach storage</a>
+               ng-href="project/{{project.metadata.name}}/attach-pvc?kind=ReplicationController&name={{replicaSet.metadata.name}}">Attach storage</a>
             <span ng-if="!(resource | canI : 'update')">none</span>
           </div>
         </div>
       </div>
-      <volumes volumes="deployment.spec.template.spec.volumes" namespace="project.metadata.name"></volumes>
+      <volumes volumes="replicaSet.spec.template.spec.volumes" namespace="project.metadata.name"></volumes>
     </div>
   </div>
 </div>
@@ -130,11 +131,11 @@
          role="button">Set resource
         <span ng-if="!('cpu' | isRequestCalculated : project)">requests and</span> limits</a>
       <!-- Prompt to set CPU request on the RC if not a deployment. -->
-      <a ng-href="project/{{projectName}}/set-limits?kind=ReplicationController&name={{deployment.metadata.name}}"
+      <a ng-href="project/{{projectName}}/set-limits?kind=ReplicationController&name={{replicaSet.metadata.name}}"
          ng-if="!deploymentConfigName && kind === 'ReplicationController' && (resource | canI : 'update')"
          role="button">Set resource
         <span ng-if="!('cpu' | isRequestCalculated : project)">requests and</span> limits</a>
-      <a ng-href="project/{{projectName}}/set-limits?kind=ReplicaSet&name={{deployment.metadata.name}}&group=extensions"
+      <a ng-href="project/{{projectName}}/set-limits?kind=ReplicaSet&name={{replicaSet.metadata.name}}&group=extensions"
          ng-if="!deploymentConfigName && kind === 'ReplicaSet' && (resource | canI : 'update')"
          role="button">Set resource
         <span ng-if="!('cpu' | isRequestCalculated : project)">requests and</span> limits</a>
@@ -144,17 +145,17 @@
   <!-- Create autoscaler -->
   <div ng-if="!autoscalers.length">
     <span ng-if="{resource: 'horizontalpodautoscalers', group: 'extensions'} | canI : 'create'">
-      <a ng-if="deployment.kind === 'ReplicaSet'"
-         ng-href="project/{{projectName}}/edit/autoscaler?kind=ReplicaSet&name={{deployment.metadata.name}}&group=extensions"
+      <a ng-if="replicaSet.kind === 'ReplicaSet'"
+         ng-href="project/{{projectName}}/edit/autoscaler?kind=ReplicaSet&name={{replicaSet.metadata.name}}&group=extensions"
          role="button">Add autoscaler</a>
-      <a ng-if="deployment.kind === 'ReplicationController'"
-         ng-href="project/{{projectName}}/edit/autoscaler?kind=ReplicationController&name={{deployment.metadata.name}}"
+      <a ng-if="replicaSet.kind === 'ReplicationController'"
+         ng-href="project/{{projectName}}/edit/autoscaler?kind=ReplicationController&name={{replicaSet.metadata.name}}"
          role="button">Add autoscaler</a>
     </span>
     <span ng-if="!({resource: 'horizontalpodautoscalers', group: 'extensions'} | canI : 'create')">
       Autoscaling is not enabled. There are no autoscalers for this
       <span ng-if="deploymentConfigName">deployment config or deployment.</span>
-      <span ng-if="!deploymentConfigName">replication controller.</span>
+      <span ng-if="!deploymentConfigName">{{replicaSet.kind | humanizeKind}}.</span>
     </span>
   </div>
 
@@ -171,4 +172,4 @@
 <h3>Pods</h3>
 <pods-table pods="podsForDeployment"></pods-table>
 
-<annotations annotations="deployment.metadata.annotations"></annotations>
+<annotations annotations="replicaSet.metadata.annotations"></annotations>

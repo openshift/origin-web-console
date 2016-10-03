@@ -23,6 +23,7 @@ angular.module('openshiftConsole')
                         keyValueEditorUtils,
                         kind) {
     var hasDC = false;
+    var annotation = $filter('annotation');
     var displayKind = $filter('humanizeKind')(kind);
     switch (kind) {
     case 'ReplicaSet':
@@ -48,9 +49,8 @@ angular.module('openshiftConsole')
 
     $scope.projectName = $routeParams.project;
     $scope.kind = kind;
-    // Either a ReplicaSet or a ReplicaSetController
-    // TODO: Rename scope var to avoid confusion with k8s deployments.
-    $scope.deployment = null;
+    // Either a ReplicaSet or a ReplicationController
+    $scope.replicaSet = null;
     $scope.deploymentConfig = null;
     $scope.deploymentConfigMissing = false;
     $scope.deployments = {};
@@ -76,12 +76,12 @@ angular.module('openshiftConsole')
       $scope.metricsAvailable = available;
     });
 
-    var setLogVars = function(deployment) {
-      $scope.logCanRun = !(_.includes(['New', 'Pending'], $filter('deploymentStatus')(deployment)));
+    var setLogVars = function(replicaSet) {
+      $scope.logCanRun = !(_.includes(['New', 'Pending'], $filter('deploymentStatus')(replicaSet)));
     };
 
-    var copyDeploymentAndEnsureEnv = function(deployment) {
-      $scope.updatedDeployment = angular.copy(deployment);
+    var copyDeploymentAndEnsureEnv = function(replicaSet) {
+      $scope.updatedDeployment = angular.copy(replicaSet);
       _.each($scope.updatedDeployment.spec.template.spec.containers, function(container) {
         container.env = container.env || [];
       });
@@ -101,20 +101,20 @@ angular.module('openshiftConsole')
           $scope.alerts['saveEnvSuccess'] = {
             type: "success",
             // TODO:  improve success alert
-            message: $scope.deployment.metadata.name + " was updated."
+            message: $scope.replicaSet.metadata.name + " was updated."
           };
           $scope.forms.envForm.$setPristine();
         }, function(e) {
           $scope.alerts['saveEnvError'] = {
             type: "error",
-            message: $scope.deployment.metadata.name + " was not updated.",
+            message: $scope.replicaSet.metadata.name + " was not updated.",
             details: "Reason: " + $filter('getErrorDetails')(e)
           };
         });
     };
 
     $scope.clearEnvVarUpdates = function() {
-      copyDeploymentAndEnsureEnv($scope.deployment);
+      copyDeploymentAndEnsureEnv($scope.replicaSet);
       $scope.forms.envForm.$setPristine();
     };
 
@@ -132,10 +132,14 @@ angular.module('openshiftConsole')
         var allHPA = {}, limitRanges = {};
         var updateHPA = function() {
           $scope.hpaForRS = HPAService.filterHPA(allHPA, kind, $routeParams.replicaSet);
-          if ($scope.isActive) {
-            // Show both HPAs that target the RC and the DC if this is the active deployment.
+          if ($scope.deploymentConfigName && $scope.isActive) {
+            // Show both HPAs that target the replication controller and the deployment config if this is the active replication controller.
             var hpaForDC = HPAService.filterHPA(allHPA, 'DeploymentConfig', $scope.deploymentConfigName);
             $scope.autoscalers = $scope.hpaForRS.concat(hpaForDC);
+          } else if ($scope.deployment && $scope.isActive) {
+            // Show both HPAs that target the replica set and the deployment if this is the active replica set.
+            var hpaForDeployment = HPAService.filterHPA(allHPA, 'Deployment', $scope.deployment.metadata.name);
+            $scope.autoscalers = $scope.hpaForRS.concat(hpaForDeployment);
           } else {
             $scope.autoscalers = $scope.hpaForRS;
           }
@@ -145,17 +149,16 @@ angular.module('openshiftConsole')
           // Watch all replication controllers so we know if this is the active deployment to enable scaling.
           watches.push(DataService.watch($scope.resource, context, function(deployments) {
             var activeDeployment,
-                deploymentsForConfig = [],
-                getAnnotation = $filter("annotation");
+                deploymentsForConfig = [];
             // Filter the list to just those deployments for this config.
             angular.forEach(deployments.by("metadata.name"), function(deployment) {
-              var depConfigName = getAnnotation(deployment, 'deploymentConfig') || "";
+              var depConfigName = annotation(deployment, 'deploymentConfig') || "";
               if (depConfigName === $scope.deploymentConfigName) {
                 deploymentsForConfig.push(deployment);
               }
             });
             activeDeployment = DeploymentsService.getActiveDeployment(deploymentsForConfig);
-            $scope.isActive = activeDeployment && activeDeployment.metadata.uid === $scope.deployment.metadata.uid;
+            $scope.isActive = activeDeployment && activeDeployment.metadata.uid === $scope.replicaSet.metadata.uid;
             updateHPA();
           }));
         };
@@ -172,15 +175,14 @@ angular.module('openshiftConsole')
         };
 
         var updateHPAWarnings = function() {
-            HPAService.getHPAWarnings($scope.deployment, $scope.autoscalers, limitRanges, project)
+            HPAService.getHPAWarnings($scope.replicaSet, $scope.autoscalers, limitRanges, project)
                       .then(function(warnings) {
               $scope.hpaWarnings = warnings;
             });
         };
 
-        // TODO: Handle replica sets owned by k8s deployments.
         var updateDC = function(rc) {
-          var dcName = $filter("annotation")(rc, "deploymentConfig");
+          var dcName = annotation(rc, "deploymentConfig");
           if (!dcName) {
             return;
           }
@@ -188,7 +190,7 @@ angular.module('openshiftConsole')
           hasDC = true;
           $scope.deploymentConfigName = dcName;
 
-          var deploymentVersion = $filter("annotation")(rc, "deploymentVersion");
+          var deploymentVersion = annotation(rc, "deploymentVersion");
           if (deploymentVersion) {
             $scope.logOptions.version = deploymentVersion;
           }
@@ -218,6 +220,69 @@ angular.module('openshiftConsole')
           );
         };
 
+        var checkActiveRevision = function() {
+          $scope.isActive = DeploymentsService.isActiveReplicaSet($scope.replicaSet, $scope.deployment);
+        };
+
+        var hasDeployment = $filter('hasDeployment');
+        var updateDeployment = function() {
+          if (!hasDeployment($scope.replicaSet)) {
+            return;
+          }
+
+          DataService.list({
+            group: 'extensions',
+            resource: 'deployments'
+          }, context, function(deploymentData) {
+            var deployments = deploymentData.by('metadata.name');
+            var replicaSetSelector = new LabelSelector($scope.replicaSet.spec.template.metadata.labels);
+            $scope.deployment = _.find(deployments, function(deployment) {
+              var deploymentSelector = new LabelSelector(deployment.spec.selector);
+              return deploymentSelector.covers(replicaSetSelector);
+            });
+            if (!$scope.deployment) {
+              $scope.deploymentMissing = true;
+              return;
+            }
+
+            $scope.healthCheckURL = Navigate.healthCheckURL($routeParams.project,
+                                                            "Deployment",
+                                                            $scope.deployment.metadata.name,
+                                                            "extensions");
+            watches.push(DataService.watchObject({
+              group: 'extensions',
+              resource: 'deployments'
+            }, $scope.deployment.metadata.name, context, function(deployment, action) {
+              if (action === "DELETED") {
+                $scope.alerts['deployment-deleted'] = {
+                  type: "warning",
+                  message: "The deployment controlling this replica set has been deleted."
+                };
+                $scope.healthCheckURL = Navigate.healthCheckURL($routeParams.project,
+                                                                "ReplicaSet",
+                                                                $routeParams.replicaSet,
+                                                                "extensions");
+                $scope.deploymentMissing = true;
+                delete $scope.deployment;
+                return;
+              }
+
+              $scope.breadcrumbs = BreadcrumbsService.getBreadcrumbs({
+                object: $scope.replicaSet,
+                displayName: '#' + DeploymentsService.getRevision($scope.replicaSet),
+                parent: {
+                  title: $scope.deployment.metadata.name,
+                  link: Navigate.resourceURL($scope.deployment)
+                },
+                humanizedKind: 'Deployments'
+              });
+
+              checkActiveRevision();
+              updateHPA();
+            }));
+          });
+        };
+
         // Get the image stream image for the replica set or replication
         // controller we're showing to fill out the pod template details.
         var getImageStreamImage = function() {
@@ -225,7 +290,7 @@ angular.module('openshiftConsole')
             return;
           }
 
-          var podTemplate = _.get($scope, 'deployment.spec.template');
+          var podTemplate = _.get($scope, 'replicaSet.spec.template');
           if (!podTemplate) {
             return;
           }
@@ -238,27 +303,34 @@ angular.module('openshiftConsole')
 
         DataService.get($scope.resource, $routeParams.replicaSet, context).then(
           // success
-          function(deployment) {
+          function(replicaSet) {
             $scope.loaded = true;
-            $scope.deployment = deployment;
-            setLogVars(deployment);
-            updateDC(deployment);
+            $scope.replicaSet = replicaSet;
+            setLogVars(replicaSet);
+            switch (kind) {
+            case 'ReplicationController':
+              updateDC(replicaSet);
+              break;
+            case 'ReplicaSet':
+              updateDeployment();
+              break;
+            }
             updateHPAWarnings();
 
-            $scope.breadcrumbs = BreadcrumbsService.getBreadcrumbs({ object: deployment });
+            $scope.breadcrumbs = BreadcrumbsService.getBreadcrumbs({ object: replicaSet });
 
             // If we found the item successfully, watch for changes on it
-            watches.push(DataService.watchObject($scope.resource, $routeParams.replicaSet, context, function(deployment, action) {
+            watches.push(DataService.watchObject($scope.resource, $routeParams.replicaSet, context, function(replicaSet, action) {
               if (action === "DELETED") {
                 $scope.alerts["deleted"] = {
                   type: "warning",
                   message: "This " + displayKind + " has been deleted."
                 };
               }
-              $scope.deployment = deployment;
+              $scope.replicaSet = replicaSet;
 
               if (!$scope.forms.envForm || $scope.forms.envForm.$pristine) {
-                copyDeploymentAndEnsureEnv(deployment);
+                copyDeploymentAndEnsureEnv(replicaSet);
               } else {
                 $scope.alerts["background_update"] = {
                   type: "warning",
@@ -275,7 +347,7 @@ angular.module('openshiftConsole')
                 };
               }
 
-              setLogVars(deployment);
+              setLogVars(replicaSet);
               updateHPAWarnings();
               getImageStreamImage();
             }));
@@ -285,8 +357,8 @@ angular.module('openshiftConsole')
               watchActiveDeployment();
             }
 
-            $scope.$watch('deployment.spec.selector', function() {
-              selector = new LabelSelector($scope.deployment.spec.selector);
+            $scope.$watch('replicaSet.spec.selector', function() {
+              selector = new LabelSelector($scope.replicaSet.spec.selector);
               updatePodsForDeployment();
             }, true);
 
@@ -311,42 +383,43 @@ angular.module('openshiftConsole')
           }
         );
 
-        watches.push(DataService.watch($scope.resource, context, function(deployments, action, deployment) {
-          $scope.deployments = deployments.by("metadata.name");
+        watches.push(DataService.watch($scope.resource, context, function(replicaSets, action, replicaSet) {
+          $scope.replicaSets = replicaSets.by("metadata.name");
           $scope.emptyMessage = "No deployments to show";
-          $scope.deploymentsByDeploymentConfig = DeploymentsService.associateDeploymentsToDeploymentConfig($scope.deployments);
+          if (kind === 'ReplicationController') {
+            $scope.deploymentsByDeploymentConfig = DeploymentsService.associateDeploymentsToDeploymentConfig($scope.replicaSets);
+          }
 
           var deploymentConfigName;
-          var deploymentName;
-          if (deployment) {
-            // TODO: Handle replica sets owned by k8s deployments
-            deploymentConfigName = $filter('annotation')(deployment, 'deploymentConfig');
-            deploymentName = deployment.metadata.name;
+          var rsName;
+          if (replicaSet) {
+            deploymentConfigName = annotation(replicaSet, 'deploymentConfig');
+            rsName = replicaSet.metadata.name;
           }
           if (!action) {
             // Loading of the page that will create deploymentConfigDeploymentsInProgress structure, which will associate running deployment to his deploymentConfig.
             $scope.deploymentConfigDeploymentsInProgress = DeploymentsService.associateRunningDeploymentToDeploymentConfig($scope.deploymentsByDeploymentConfig);
-          } else if (action === 'ADDED' || (action === 'MODIFIED' && ['New', 'Pending', 'Running'].indexOf($filter('deploymentStatus')(deployment)) > -1)) {
+          } else if (action === 'ADDED' || (action === 'MODIFIED' && ['New', 'Pending', 'Running'].indexOf($filter('deploymentStatus')(replicaSet)) > -1)) {
             // When new deployment id instantiated/cloned, or in case of a retry, associate him to his deploymentConfig and add him into deploymentConfigDeploymentsInProgress structure.
             $scope.deploymentConfigDeploymentsInProgress[deploymentConfigName] = $scope.deploymentConfigDeploymentsInProgress[deploymentConfigName] || {};
-            $scope.deploymentConfigDeploymentsInProgress[deploymentConfigName][deploymentName] = deployment;
+            $scope.deploymentConfigDeploymentsInProgress[deploymentConfigName][rsName] = replicaSet;
           } else if (action === 'MODIFIED') {
             // After the deployment ends remove him from the deploymentConfigDeploymentsInProgress structure.
-            var status = $filter('deploymentStatus')(deployment);
+            var status = $filter('deploymentStatus')(replicaSet);
             if (status === "Complete" || status === "Failed"){
-              delete $scope.deploymentConfigDeploymentsInProgress[deploymentConfigName][deploymentName];
+              delete $scope.deploymentConfigDeploymentsInProgress[deploymentConfigName][rsName];
             }
           }
 
           // Extract the causes from the encoded deployment config
-          if (deployment) {
+          if (replicaSet) {
             if (action !== "DELETED") {
-              deployment.causes = $filter('deploymentCauses')(deployment);
+              replicaSet.causes = $filter('deploymentCauses')(replicaSet);
             }
           }
           else {
-            angular.forEach($scope.deployments, function(deployment) {
-              deployment.causes = $filter('deploymentCauses')(deployment);
+            angular.forEach($scope.replicaSets, function(replicaSet) {
+              replicaSet.causes = $filter('deploymentCauses')(replicaSet);
             });
           }
         }));
@@ -380,16 +453,16 @@ angular.module('openshiftConsole')
           updateHPAWarnings();
         });
 
-        $scope.retryFailedDeployment = function(deployment) {
-          DeploymentsService.retryFailedDeployment(deployment, context, $scope);
+        $scope.retryFailedDeployment = function(replicaSet) {
+          DeploymentsService.retryFailedDeployment(replicaSet, context, $scope);
         };
 
-        $scope.rollbackToDeployment = function(deployment, changeScaleSettings, changeStrategy, changeTriggers) {
-          DeploymentsService.rollbackToDeployment(deployment, changeScaleSettings, changeStrategy, changeTriggers, context, $scope);
+        $scope.rollbackToDeployment = function(replicaSet, changeScaleSettings, changeStrategy, changeTriggers) {
+          DeploymentsService.rollbackToDeployment(replicaSet, changeScaleSettings, changeStrategy, changeTriggers, context, $scope);
         };
 
-        $scope.cancelRunningDeployment = function(deployment) {
-          DeploymentsService.cancelRunningDeployment(deployment, context, $scope);
+        $scope.cancelRunningDeployment = function(replicaSet) {
+          DeploymentsService.cancelRunningDeployment(replicaSet, context, $scope);
         };
 
         $scope.scale = function(replicas) {
@@ -397,12 +470,13 @@ angular.module('openshiftConsole')
             $scope.alerts = $scope.alerts || {};
             $scope.alerts["scale"] = {
               type: "error",
-              message: "An error occurred scaling the deployment.",
+              message: "An error occurred scaling.",
               details: $filter('getErrorDetails')(result)
             };
           };
 
-          DeploymentsService.scale($scope.deploymentConfig || $scope.deployment, replicas).then(_.noop, showScalingError);
+          var scaleTarget = $scope.deployment || $scope.deploymentConfig || $scope.replicaSet;
+          DeploymentsService.scale(scaleTarget, replicas).then(_.noop, showScalingError);
         };
 
         var hasDeploymentConfig = $filter('hasDeploymentConfig');
@@ -411,16 +485,16 @@ angular.module('openshiftConsole')
             return false;
           }
 
-          if (!hasDeploymentConfig($scope.deployment)) {
+          if (!hasDeploymentConfig($scope.replicaSet) && !hasDeployment($scope.replicaSet)) {
             return true;
           }
 
-          if ($scope.deploymentConfigMissing) {
+          if ($scope.deploymentConfigMissing || $scope.deploymentMissing) {
             return true;
           }
 
-          if (!$scope.deploymentConfig) {
-            // Wait for deployment config to load.
+          if (!$scope.deploymentConfig && !$scope.deployment) {
+            // Wait for deployment config or deployment to load.
             return false;
           }
 

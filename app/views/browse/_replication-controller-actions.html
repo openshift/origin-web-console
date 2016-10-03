@@ -7,12 +7,12 @@
      class="dropdown-toggle actions-dropdown-kebab visible-xs-inline"
      data-toggle="dropdown"><i class="fa fa-ellipsis-v"></i><span class="sr-only">Actions</span></a>
   <ul class="dropdown-menu actions action-button">
-    <li ng-if="!deploymentConfigName && 'replicationcontrollers' | canI : 'update'">
-      <a ng-href="project/{{project.metadata.name}}/attach-pvc?kind=ReplicationController&name={{deployment.metadata.name}}"
-         role="button">Attach Storage</a>
-    </li>
     <li ng-if="deploymentConfigName && ('deploymentconfigs' | canI : 'update')">
       <a ng-href="project/{{project.metadata.name}}/attach-pvc?kind=DeploymentConfig&name={{deploymentConfigName}}"
+         role="button">Attach Storage</a>
+    </li>
+    <li ng-if="!deploymentConfigName && 'replicationcontrollers' | canI : 'update'">
+      <a ng-href="project/{{project.metadata.name}}/attach-pvc?kind=ReplicationController&name={{replicaSet.metadata.name}}"
          role="button">Attach Storage</a>
     </li>
     <li ng-if="deploymentConfigName && ('deploymentconfigs' | canI : 'update')">
@@ -20,31 +20,31 @@
          role="button">Set Resource Limits</a>
     </li>
     <li ng-if="!deploymentConfigName && ('replicationcontrollers' | canI : 'update')">
-      <a ng-href="project/{{projectName}}/set-limits?kind=ReplicationController&name={{deployment.metadata.name}}"
+      <a ng-href="project/{{projectName}}/set-limits?kind=ReplicationController&name={{replicaSet.metadata.name}}"
          role="button">Set Resource Limits</a>
     </li>
     <li ng-if="!deploymentConfigName && !autoscalers.length && ({resource: 'horizontalpodautoscalers', group: 'extensions'} | canI : 'create')">
       <!-- Create a new HPA. -->
-      <a ng-href="project/{{projectName}}/edit/autoscaler?kind=ReplicationController&name={{deployment.metadata.name}}"
+      <a ng-href="project/{{projectName}}/edit/autoscaler?kind=ReplicationController&name={{replicaSet.metadata.name}}"
          role="button">Add Autoscaler</a>
     </li>
     <!-- Only allow editing health checks if there is no deployment config or this is the active deployment. -->
-    <li ng-if="(!deploymentConfigName && ('replicationcontrollers' | canI : 'update')) || (deploymentConfigName && isActive && ('deploymentconfigs' | canI : 'update'))">
+    <li ng-if="(!deploymentConfigName && ('replicationcontrollers' | canI : 'update')) || (deploymentConfigName && ('deploymentconfigs' | canI : 'update'))">
       <a ng-href="{{healthCheckURL}}" role="button">Edit Health Checks</a>
     </li>
     <li ng-if="'replicationcontrollers' | canI : 'update'">
-      <a ng-href="{{deployment | editYamlURL}}" role="button">Edit YAML</a>
+      <a ng-href="{{replicaSet | editYamlURL}}" role="button">Edit YAML</a>
     </li>
     <li ng-if="'replicationcontrollers' | canI : 'delete'">
       <delete-link
         kind="ReplicationController"
         type-display-name="deployment"
-        resource-name="{{deployment.metadata.name}}"
-        project-name="{{deployment.metadata.namespace}}"
+        resource-name="{{replicaSet.metadata.name}}"
+        project-name="{{replicaSet.metadata.namespace}}"
         alerts="alerts"
-        replicas="deployment.status.replicas"
+        replicas="replicaSet.status.replicas"
         hpa-list="hpaForRS"
-        redirect-url="{{deployment | configURLForResource}}">
+        redirect-url="{{replicaSet | configURLForResource}}">
       </delete-link>
     </li>
   </ul>

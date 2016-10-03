@@ -1249,24 +1249,30 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "</button>\n" +
     "<a href=\"\" class=\"dropdown-toggle actions-dropdown-kebab visible-xs-inline\" data-toggle=\"dropdown\"><i class=\"fa fa-ellipsis-v\"></i><span class=\"sr-only\">Actions</span></a>\n" +
     "<ul class=\"dropdown-menu actions action-button\">\n" +
-    "<li ng-if=\"{ group: 'extensions', resource: 'replicasets' } | canI : 'update'\">\n" +
-    "<a ng-href=\"project/{{project.metadata.name}}/attach-pvc?kind=ReplicaSet&name={{deployment.metadata.name}}&group=extensions\" role=\"button\">Attach Storage</a>\n" +
+    "<li ng-if=\"deployment && ({ group: 'extensions', resource: 'deployments' } | canI : 'update')\">\n" +
+    "<a ng-href=\"project/{{project.metadata.name}}/attach-pvc?kind=Deployment&name={{deployment.metadata.name}}&group=extensions\" role=\"button\">Attach Storage</a>\n" +
     "</li>\n" +
-    "<li ng-if=\"{ group: 'extensions', resource: 'replicasets' } | canI : 'update'\">\n" +
-    "<a ng-href=\"project/{{projectName}}/set-limits?kind=ReplicaSet&name={{deployment.metadata.name}}&group=extensions\" role=\"button\">Set Resource Limits</a>\n" +
+    "<li ng-if=\"!deployment && ({ group: 'extensions', resource: 'replicasets' } | canI : 'update')\">\n" +
+    "<a ng-href=\"project/{{project.metadata.name}}/attach-pvc?kind=ReplicaSet&name={{replicaSet.metadata.name}}&group=extensions\" role=\"button\">Attach Storage</a>\n" +
+    "</li>\n" +
+    "<li ng-if=\"deployment && ({ group: 'extensions', resource: 'deployments' } | canI : 'update')\">\n" +
+    "<a ng-href=\"project/{{projectName}}/set-limits?kind=Deployment&name={{deployment.metadata.name}}&group=extensions\" role=\"button\">Set Resource Limits</a>\n" +
+    "</li>\n" +
+    "<li ng-if=\"!deployment && ({ group: 'extensions', resource: 'replicasets' } | canI : 'update')\">\n" +
+    "<a ng-href=\"project/{{projectName}}/set-limits?kind=ReplicaSet&name={{replicaSet.metadata.name}}&group=extensions\" role=\"button\">Set Resource Limits</a>\n" +
     "</li>\n" +
     "<li ng-if=\"!autoscalers.length && { group: 'extensions', resource: 'horizontalpodautoscalers' } | canI : 'create'\">\n" +
-    "<a ng-href=\"project/{{projectName}}/edit/autoscaler?kind=ReplicaSet&name={{deployment.metadata.name}}&group=extensions\" role=\"button\">Add Autoscaler</a>\n" +
+    "<a ng-href=\"project/{{projectName}}/edit/autoscaler?kind=ReplicaSet&name={{replicaSet.metadata.name}}&group=extensions\" role=\"button\">Add Autoscaler</a>\n" +
     "</li>\n" +
-    "<li ng-if=\"{ group: 'extensions', resource: 'replicasets' } | canI : 'update'\">\n" +
+    "<li ng-if=\"(!deployment && ({ group: 'extensions', resource: 'replicasets' } | canI : 'update')) || (deployment && ({group: 'extensions', resource: 'deployments' } | canI : 'update'))\">\n" +
     "<a ng-href=\"{{healthCheckURL}}\" role=\"button\">Edit Health Checks</a>\n" +
     "</li>\n" +
     "<li ng-if=\"{ group: 'extensions', resource: 'replicasets' } | canI : 'update'\">\n" +
-    "<a ng-href=\"{{deployment | editYamlURL}}\" role=\"button\">Edit YAML</a>\n" +
+    "<a ng-href=\"{{replicaSet | editYamlURL}}\" role=\"button\">Edit YAML</a>\n" +
     "</li>\n" +
     "<li ng-if=\"{ group: 'extensions', resource: 'replicasets' } | canI : 'delete'\">\n" +
     "\n" +
-    "<delete-link kind=\"ReplicaSet\" group=\"extensions\" resource-name=\"{{deployment.metadata.name}}\" project-name=\"{{deployment.metadata.namespace}}\" replicas=\"deployment.status.replicas\" hpa-list=\"hpaForRS\" alerts=\"alerts\">\n" +
+    "<delete-link kind=\"ReplicaSet\" group=\"extensions\" resource-name=\"{{replicaSet.metadata.name}}\" project-name=\"{{replicaSet.metadata.namespace}}\" replicas=\"replicaSet.status.replicas\" hpa-list=\"hpaForRS\" alerts=\"alerts\">\n" +
     "</delete-link>\n" +
     "</li>\n" +
     "</ul>\n" +
@@ -1277,19 +1283,19 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
   $templateCache.put('views/browse/_replica-set-details.html',
     "<div class=\"row\" style=\"max-width: 650px\">\n" +
     "<div class=\"col-sm-4 col-sm-push-8 browse-deployment-donut\">\n" +
-    "<deployment-donut rc=\"deployment\" deployment-config=\"deploymentConfig\" pods=\"podsForDeployment\" hpa=\"autoscalers\" scalable=\"isScalable()\" alerts=\"alerts\">\n" +
+    "<deployment-donut rc=\"replicaSet\" deployment=\"deployment\" deployment-config=\"deploymentConfig\" pods=\"podsForDeployment\" hpa=\"autoscalers\" scalable=\"isScalable()\" alerts=\"alerts\">\n" +
     "</deployment-donut>\n" +
     "</div>\n" +
     "<div class=\"col-sm-8 col-sm-pull-4\">\n" +
     "<dl class=\"dl-horizontal left\">\n" +
-    "<dt ng-if-start=\"deployment | hasDeploymentConfig\">Status:</dt>\n" +
+    "<dt ng-if-start=\"replicaSet | hasDeploymentConfig\">Status:</dt>\n" +
     "<dd ng-if-end>\n" +
-    "<status-icon status=\"deployment | deploymentStatus\"></status-icon>\n" +
-    "{{deployment | deploymentStatus}}\n" +
+    "<status-icon status=\"replicaSet | deploymentStatus\"></status-icon>\n" +
+    "{{replicaSet | deploymentStatus}}\n" +
     "<span style=\"margin-left: 7px\">\n" +
-    "<button ng-show=\"!rollBackCollapsed && (deployment | deploymentStatus) == 'Complete' && !(deployment | deploymentIsLatest : deploymentConfig) && !deployment.metadata.deletionTimestamp && ('deploymentconfigrollbacks' | canI : 'create')\" ng-disabled=\"(deploymentConfigDeploymentsInProgress[deploymentConfigName] | hashSize) > 0\" type=\"button\" class=\"btn btn-default btn-xs\" ng-click=\"rollBackCollapsed = !rollBackCollapsed\">Roll Back</button>\n" +
+    "<button ng-show=\"!rollBackCollapsed && (replicaSet | deploymentStatus) == 'Complete' && !(replicaSet | deploymentIsLatest : deploymentConfig) && !replicaSet.metadata.deletionTimestamp && ('deploymentconfigrollbacks' | canI : 'create')\" ng-disabled=\"(deploymentConfigDeploymentsInProgress[deploymentConfigName] | hashSize) > 0\" type=\"button\" class=\"btn btn-default btn-xs\" ng-click=\"rollBackCollapsed = !rollBackCollapsed\">Roll Back</button>\n" +
     "<div ng-show=\"rollBackCollapsed\" class=\"well well-sm\">\n" +
-    "Use the following settings from {{deployment.metadata.name}} when rolling back:\n" +
+    "Use the following settings from {{replicaSet.metadata.name}} when rolling back:\n" +
     "<div class=\"checkbox\">\n" +
     "<label>\n" +
     "<input type=\"checkbox\" ng-model=\"changeScaleSettings\" ng-disabled=\"(deploymentConfigDeploymentsInProgress[deploymentConfigName] | hashSize) > 0\"> replica count and selector\n" +
@@ -1305,35 +1311,35 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "<input type=\"checkbox\" ng-model=\"changeTriggers\" ng-disabled=\"(deploymentConfigDeploymentsInProgress[deploymentConfigName] | hashSize) > 0\"> deployment trigger\n" +
     "</label>\n" +
     "</div>\n" +
-    "<button type=\"button\" ng-click=\"rollbackToDeployment(deployment, changeScaleSettings, changeStrategy, changeTriggers)\" ng-disabled=\"(deploymentConfigDeploymentsInProgress[deploymentConfigName] | hashSize) > 0\" class=\"btn btn-default btn-xs\">Roll Back</button>\n" +
+    "<button type=\"button\" ng-click=\"rollbackToDeployment(replicaSet, changeScaleSettings, changeStrategy, changeTriggers)\" ng-disabled=\"(deploymentConfigDeploymentsInProgress[deploymentConfigName] | hashSize) > 0\" class=\"btn btn-default btn-xs\">Roll Back</button>\n" +
     "</div>\n" +
     "\n" +
-    "<button ng-show=\"(deployment | deploymentIsInProgress) && !deployment.metadata.deletionTimestamp && ('replicationcontrollers' | canI : 'update')\" type=\"button\" ng-click=\"cancelRunningDeployment(deployment)\" class=\"btn btn-default btn-xs\">Cancel</button>\n" +
+    "<button ng-show=\"(replicaSet | deploymentIsInProgress) && !replicaSet.metadata.deletionTimestamp && ('replicationcontrollers' | canI : 'update')\" type=\"button\" ng-click=\"cancelRunningDeployment(replicaSet)\" class=\"btn btn-default btn-xs\">Cancel</button>\n" +
     "</span>\n" +
     "</dd>\n" +
-    "<dt ng-if-start=\"deployment | hasDeploymentConfig\">Deployment config:</dt>\n" +
+    "<dt ng-if-start=\"replicaSet | hasDeploymentConfig\">Deployment config:</dt>\n" +
     "<dd ng-if-end>\n" +
-    "<a ng-href=\"{{deploymentConfigName | navigateResourceURL : 'DeploymentConfig' : deployment.metadata.namespace}}\">{{deploymentConfigName}}</a>\n" +
+    "<a ng-href=\"{{replicaSet | configURLForResource}}\">{{deploymentConfigName}}</a>\n" +
     "</dd>\n" +
-    "<dt ng-if-start=\"deployment | annotation:'deploymentStatusReason'\">Status reason:</dt>\n" +
+    "<dt ng-if-start=\"replicaSet | annotation:'deploymentStatusReason'\">Status reason:</dt>\n" +
     "<dd ng-if-end>\n" +
-    "{{deployment | annotation:'deploymentStatusReason'}}\n" +
+    "{{replicaSet | annotation:'deploymentStatusReason'}}\n" +
     "</dd>\n" +
-    "<dt ng-if-start=\"deployment | deploymentIsInProgress\">Duration:</dt>\n" +
+    "<dt ng-if-start=\"replicaSet | deploymentIsInProgress\">Duration:</dt>\n" +
     "<dd ng-if-end>\n" +
-    "<span ng-switch=\"deployment | deploymentStatus\" class=\"hide-ng-leave\">\n" +
-    "<span ng-switch-when=\"Running\">running for <duration-until-now timestamp=\"deployment.metadata.creationTimestamp\"></duration-until-now></span>\n" +
-    "<span ng-switch-default>waiting for <duration-until-now timestamp=\"deployment.metadata.creationTimestamp\"></duration-until-now></span>\n" +
+    "<span ng-switch=\"replicaSet | deploymentStatus\" class=\"hide-ng-leave\">\n" +
+    "<span ng-switch-when=\"Running\">running for <duration-until-now timestamp=\"replicaSet.metadata.creationTimestamp\"></duration-until-now></span>\n" +
+    "<span ng-switch-default>waiting for <duration-until-now timestamp=\"replicaSet.metadata.creationTimestamp\"></duration-until-now></span>\n" +
     "</span>\n" +
     "</dd>\n" +
     "<dt>Selectors:</dt>\n" +
     "<dd>\n" +
-    "<selector selector=\"deployment.spec.selector\"></selector>\n" +
+    "<selector selector=\"replicaSet.spec.selector\"></selector>\n" +
     "</dd>\n" +
     "<dt>Replicas:</dt>\n" +
     "<dd>\n" +
     "\n" +
-    "<replicas status=\"deployment.status.replicas\" spec=\"deployment.spec.replicas\" disable-scaling=\"!isScalable()\" scale-fn=\"scale(replicas)\" deployment=\"deployment\">\n" +
+    "<replicas status=\"replicaSet.status.replicas\" spec=\"replicaSet.spec.replicas\" disable-scaling=\"!isScalable()\" scale-fn=\"scale(replicas)\" deployment=\"replicaSet\">\n" +
     "</replicas>\n" +
     "<span ng-if=\"autoscalers.length\">(autoscaled)</span>\n" +
     "</dd>\n" +
@@ -1344,12 +1350,12 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "<div class=\"col-lg-6\">\n" +
     "<div class=\"deployment-detail\">\n" +
     "<h3>Template</h3>\n" +
-    "<pod-template pod-template=\"deployment.spec.template\" images-by-docker-reference=\"imagesByDockerReference\" builds=\"builds\" detailed=\"true\" add-health-check-url=\"{{((!deploymentConfig || isActive) && ('deploymentconfigs' | canI : 'update')) ? healthCheckURL : ''}}\">\n" +
+    "<pod-template pod-template=\"replicaSet.spec.template\" images-by-docker-reference=\"imagesByDockerReference\" builds=\"builds\" detailed=\"true\" add-health-check-url=\"{{((!deploymentConfig || isActive) && ('deploymentconfigs' | canI : 'update')) ? healthCheckURL : ''}}\">\n" +
     "</pod-template>\n" +
     "<h4>Volumes</h4>\n" +
-    "<div ng-if=\"!deployment.spec.template.spec.volumes.length\">\n" +
+    "<div ng-if=\"!replicaSet.spec.template.spec.volumes.length\">\n" +
     "<div ng-if=\"kind === 'ReplicaSet'\">\n" +
-    "<a ng-if=\"resource | canI : 'update'\" ng-href=\"project/{{project.metadata.name}}/attach-pvc?kind=ReplicaSet&name={{deployment.metadata.name}}&group=extensions\">Attach storage</a>\n" +
+    "<a ng-if=\"resource | canI : 'update'\" ng-href=\"project/{{project.metadata.name}}/attach-pvc?kind=ReplicaSet&name={{replicaSet.metadata.name}}&group=extensions\">Attach storage</a>\n" +
     "<span ng-if=\"!(resource | canI : 'update')\">none</span>\n" +
     "</div>\n" +
     "<div ng-if=\"kind === 'ReplicationController'\">\n" +
@@ -1358,12 +1364,12 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "<span ng-if=\"!('deploymentconfigs' | canI : 'update')\">none</span>\n" +
     "</div>\n" +
     "<div ng-if=\"!deploymentConfigName\">\n" +
-    "<a ng-if=\"resource | canI : 'update'\" ng-href=\"project/{{project.metadata.name}}/attach-pvc?kind=ReplicationController&name={{deployment.metadata.name}}\">Attach storage</a>\n" +
+    "<a ng-if=\"resource | canI : 'update'\" ng-href=\"project/{{project.metadata.name}}/attach-pvc?kind=ReplicationController&name={{replicaSet.metadata.name}}\">Attach storage</a>\n" +
     "<span ng-if=\"!(resource | canI : 'update')\">none</span>\n" +
     "</div>\n" +
     "</div>\n" +
     "</div>\n" +
-    "<volumes volumes=\"deployment.spec.template.spec.volumes\" namespace=\"project.metadata.name\"></volumes>\n" +
+    "<volumes volumes=\"replicaSet.spec.template.spec.volumes\" namespace=\"project.metadata.name\"></volumes>\n" +
     "</div>\n" +
     "</div>\n" +
     "</div>\n" +
@@ -1381,22 +1387,22 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "<a ng-href=\"project/{{projectName}}/set-limits?kind=DeploymentConfig&name={{deploymentConfigName}}\" ng-if=\"deploymentConfigName && !deploymentConfigMissing && ('deploymentconfigs' | canI : 'update')\" role=\"button\">Set resource\n" +
     "<span ng-if=\"!('cpu' | isRequestCalculated : project)\">requests and</span> limits</a>\n" +
     "\n" +
-    "<a ng-href=\"project/{{projectName}}/set-limits?kind=ReplicationController&name={{deployment.metadata.name}}\" ng-if=\"!deploymentConfigName && kind === 'ReplicationController' && (resource | canI : 'update')\" role=\"button\">Set resource\n" +
+    "<a ng-href=\"project/{{projectName}}/set-limits?kind=ReplicationController&name={{replicaSet.metadata.name}}\" ng-if=\"!deploymentConfigName && kind === 'ReplicationController' && (resource | canI : 'update')\" role=\"button\">Set resource\n" +
     "<span ng-if=\"!('cpu' | isRequestCalculated : project)\">requests and</span> limits</a>\n" +
-    "<a ng-href=\"project/{{projectName}}/set-limits?kind=ReplicaSet&name={{deployment.metadata.name}}&group=extensions\" ng-if=\"!deploymentConfigName && kind === 'ReplicaSet' && (resource | canI : 'update')\" role=\"button\">Set resource\n" +
+    "<a ng-href=\"project/{{projectName}}/set-limits?kind=ReplicaSet&name={{replicaSet.metadata.name}}&group=extensions\" ng-if=\"!deploymentConfigName && kind === 'ReplicaSet' && (resource | canI : 'update')\" role=\"button\">Set resource\n" +
     "<span ng-if=\"!('cpu' | isRequestCalculated : project)\">requests and</span> limits</a>\n" +
     "</span>\n" +
     "</div>\n" +
     "\n" +
     "<div ng-if=\"!autoscalers.length\">\n" +
     "<span ng-if=\"{resource: 'horizontalpodautoscalers', group: 'extensions'} | canI : 'create'\">\n" +
-    "<a ng-if=\"deployment.kind === 'ReplicaSet'\" ng-href=\"project/{{projectName}}/edit/autoscaler?kind=ReplicaSet&name={{deployment.metadata.name}}&group=extensions\" role=\"button\">Add autoscaler</a>\n" +
-    "<a ng-if=\"deployment.kind === 'ReplicationController'\" ng-href=\"project/{{projectName}}/edit/autoscaler?kind=ReplicationController&name={{deployment.metadata.name}}\" role=\"button\">Add autoscaler</a>\n" +
+    "<a ng-if=\"replicaSet.kind === 'ReplicaSet'\" ng-href=\"project/{{projectName}}/edit/autoscaler?kind=ReplicaSet&name={{replicaSet.metadata.name}}&group=extensions\" role=\"button\">Add autoscaler</a>\n" +
+    "<a ng-if=\"replicaSet.kind === 'ReplicationController'\" ng-href=\"project/{{projectName}}/edit/autoscaler?kind=ReplicationController&name={{replicaSet.metadata.name}}\" role=\"button\">Add autoscaler</a>\n" +
     "</span>\n" +
     "<span ng-if=\"!({resource: 'horizontalpodautoscalers', group: 'extensions'} | canI : 'create')\">\n" +
     "Autoscaling is not enabled. There are no autoscalers for this\n" +
     "<span ng-if=\"deploymentConfigName\">deployment config or deployment.</span>\n" +
-    "<span ng-if=\"!deploymentConfigName\">replication controller.</span>\n" +
+    "<span ng-if=\"!deploymentConfigName\">{{replicaSet.kind | humanizeKind}}.</span>\n" +
     "</span>\n" +
     "</div>\n" +
     "\n" +
@@ -1408,7 +1414,7 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "</div>\n" +
     "<h3>Pods</h3>\n" +
     "<pods-table pods=\"podsForDeployment\"></pods-table>\n" +
-    "<annotations annotations=\"deployment.metadata.annotations\"></annotations>"
+    "<annotations annotations=\"replicaSet.metadata.annotations\"></annotations>"
   );
 
 
@@ -1420,31 +1426,31 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "</button>\n" +
     "<a href=\"\" class=\"dropdown-toggle actions-dropdown-kebab visible-xs-inline\" data-toggle=\"dropdown\"><i class=\"fa fa-ellipsis-v\"></i><span class=\"sr-only\">Actions</span></a>\n" +
     "<ul class=\"dropdown-menu actions action-button\">\n" +
-    "<li ng-if=\"!deploymentConfigName && 'replicationcontrollers' | canI : 'update'\">\n" +
-    "<a ng-href=\"project/{{project.metadata.name}}/attach-pvc?kind=ReplicationController&name={{deployment.metadata.name}}\" role=\"button\">Attach Storage</a>\n" +
-    "</li>\n" +
     "<li ng-if=\"deploymentConfigName && ('deploymentconfigs' | canI : 'update')\">\n" +
     "<a ng-href=\"project/{{project.metadata.name}}/attach-pvc?kind=DeploymentConfig&name={{deploymentConfigName}}\" role=\"button\">Attach Storage</a>\n" +
+    "</li>\n" +
+    "<li ng-if=\"!deploymentConfigName && 'replicationcontrollers' | canI : 'update'\">\n" +
+    "<a ng-href=\"project/{{project.metadata.name}}/attach-pvc?kind=ReplicationController&name={{replicaSet.metadata.name}}\" role=\"button\">Attach Storage</a>\n" +
     "</li>\n" +
     "<li ng-if=\"deploymentConfigName && ('deploymentconfigs' | canI : 'update')\">\n" +
     "<a ng-href=\"project/{{projectName}}/set-limits?kind=DeploymentConfig&name={{deploymentConfigName}}\" role=\"button\">Set Resource Limits</a>\n" +
     "</li>\n" +
     "<li ng-if=\"!deploymentConfigName && ('replicationcontrollers' | canI : 'update')\">\n" +
-    "<a ng-href=\"project/{{projectName}}/set-limits?kind=ReplicationController&name={{deployment.metadata.name}}\" role=\"button\">Set Resource Limits</a>\n" +
+    "<a ng-href=\"project/{{projectName}}/set-limits?kind=ReplicationController&name={{replicaSet.metadata.name}}\" role=\"button\">Set Resource Limits</a>\n" +
     "</li>\n" +
     "<li ng-if=\"!deploymentConfigName && !autoscalers.length && ({resource: 'horizontalpodautoscalers', group: 'extensions'} | canI : 'create')\">\n" +
     "\n" +
-    "<a ng-href=\"project/{{projectName}}/edit/autoscaler?kind=ReplicationController&name={{deployment.metadata.name}}\" role=\"button\">Add Autoscaler</a>\n" +
+    "<a ng-href=\"project/{{projectName}}/edit/autoscaler?kind=ReplicationController&name={{replicaSet.metadata.name}}\" role=\"button\">Add Autoscaler</a>\n" +
     "</li>\n" +
     "\n" +
-    "<li ng-if=\"(!deploymentConfigName && ('replicationcontrollers' | canI : 'update')) || (deploymentConfigName && isActive && ('deploymentconfigs' | canI : 'update'))\">\n" +
+    "<li ng-if=\"(!deploymentConfigName && ('replicationcontrollers' | canI : 'update')) || (deploymentConfigName && ('deploymentconfigs' | canI : 'update'))\">\n" +
     "<a ng-href=\"{{healthCheckURL}}\" role=\"button\">Edit Health Checks</a>\n" +
     "</li>\n" +
     "<li ng-if=\"'replicationcontrollers' | canI : 'update'\">\n" +
-    "<a ng-href=\"{{deployment | editYamlURL}}\" role=\"button\">Edit YAML</a>\n" +
+    "<a ng-href=\"{{replicaSet | editYamlURL}}\" role=\"button\">Edit YAML</a>\n" +
     "</li>\n" +
     "<li ng-if=\"'replicationcontrollers' | canI : 'delete'\">\n" +
-    "<delete-link kind=\"ReplicationController\" type-display-name=\"deployment\" resource-name=\"{{deployment.metadata.name}}\" project-name=\"{{deployment.metadata.namespace}}\" alerts=\"alerts\" replicas=\"deployment.status.replicas\" hpa-list=\"hpaForRS\" redirect-url=\"{{deployment | configURLForResource}}\">\n" +
+    "<delete-link kind=\"ReplicationController\" type-display-name=\"deployment\" resource-name=\"{{replicaSet.metadata.name}}\" project-name=\"{{replicaSet.metadata.namespace}}\" alerts=\"alerts\" replicas=\"replicaSet.status.replicas\" hpa-list=\"hpaForRS\" redirect-url=\"{{replicaSet | configURLForResource}}\">\n" +
     "</delete-link>\n" +
     "</li>\n" +
     "</ul>\n" +
@@ -2848,27 +2854,27 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "<breadcrumbs breadcrumbs=\"breadcrumbs\"></breadcrumbs>\n" +
     "<alerts alerts=\"alerts\"></alerts>\n" +
     "<div ng-if=\"!loaded\" class=\"mar-top-md\">Loading...</div>\n" +
-    "<div ng-if=\"deployment\">\n" +
+    "<div ng-if=\"replicaSet\">\n" +
     "<h1>\n" +
-    "{{deployment.metadata.name}}\n" +
+    "{{replicaSet.metadata.name}}\n" +
     "<span ng-if=\"deploymentConfigMissing\" class=\"pficon pficon-warning-triangle-o\" style=\"cursor: help; vertical-align: middle\" data-toggle=\"tooltip\" data-trigger=\"hover\" title=\"The deployment's deployment config is missing.\" aria-hidden=\"true\">\n" +
     "</span>\n" +
     "<span ng-if=\"deploymentConfigMissing\" class=\"sr-only\">Warning: The deployment's deployment config is missing.</span>\n" +
-    "<small class=\"meta\">created <relative-timestamp timestamp=\"deployment.metadata.creationTimestamp\"></relative-timestamp></small>\n" +
+    "<small class=\"meta\">created <relative-timestamp timestamp=\"replicaSet.metadata.creationTimestamp\"></relative-timestamp></small>\n" +
     "\n" +
     "<ng-include ng-if=\"kind === 'ReplicaSet'\" src=\" 'views/browse/_replica-set-actions.html' \">\n" +
     "</ng-include>\n" +
     "<ng-include ng-if=\"kind === 'ReplicationController'\" src=\" 'views/browse/_replication-controller-actions.html' \">\n" +
     "</ng-include>\n" +
     "</h1>\n" +
-    "<labels ng-if=\"deploymentConfigName\" labels=\"deployment.metadata.labels\" clickable=\"true\" kind=\"deployments\" title-kind=\"deployments for deployment config {{deploymentConfigName}}\" project-name=\"{{deployment.metadata.namespace}}\" limit=\"3\" navigate-url=\"{{deployment | configURLForResource}}\"></labels>\n" +
-    "<labels ng-if=\"!deploymentConfigName\" labels=\"deployment.metadata.labels\" clickable=\"true\" kind=\"deployments\" project-name=\"{{deployment.metadata.namespace}}\" limit=\"3\"></labels>\n" +
+    "<labels ng-if=\"deploymentConfigName\" labels=\"replicaSet.metadata.labels\" clickable=\"true\" kind=\"deployments\" title-kind=\"deployments for deployment config {{deploymentConfigName}}\" project-name=\"{{replicaSet.metadata.namespace}}\" limit=\"3\" navigate-url=\"{{replicaSet | configURLForResource}}\"></labels>\n" +
+    "<labels ng-if=\"!deploymentConfigName\" labels=\"replicaSet.metadata.labels\" clickable=\"true\" kind=\"deployments\" project-name=\"{{replicaSet.metadata.namespace}}\" limit=\"3\"></labels>\n" +
     "</div>\n" +
     "</div>\n" +
     "</div>\n" +
     "<div class=\"middle-content\" persist-tab-state>\n" +
     "<div class=\"container-fluid\">\n" +
-    "<div class=\"row\" ng-if=\"deployment\">\n" +
+    "<div class=\"row\" ng-if=\"replicaSet\">\n" +
     "<div class=\"col-md-12\">\n" +
     "<uib-tabset>\n" +
     "<uib-tab active=\"selectedTab.details\">\n" +
@@ -2879,18 +2885,18 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "</uib-tab>\n" +
     "<uib-tab heading=\"Environment\" active=\"selectedTab.environment\">\n" +
     "<uib-tab-heading>Environment</uib-tab-heading>\n" +
-    "<div ng-if=\"deployment | hasDeploymentConfig\">\n" +
+    "<div ng-if=\"replicaSet | hasDeploymentConfig\">\n" +
     "<p ng-if=\"'deploymentconfigs' | canI : 'update'\">\n" +
     "<span class=\"pficon pficon-info\" aria-hidden=\"true\"></span>\n" +
-    "Environment variables can be edited on the <a ng-href=\"{{deployment | configURLForResource}}?tab=environment\">deployment configuration</a>.\n" +
+    "Environment variables can be edited on the <a ng-href=\"{{replicaSet | configURLForResource}}?tab=environment\">deployment configuration</a>.\n" +
     "</p>\n" +
-    "<div ng-repeat=\"container in deployment.spec.template.spec.containers\">\n" +
+    "<div ng-repeat=\"container in replicaSet.spec.template.spec.containers\">\n" +
     "<h3>Container {{container.name}} Environment Variables</h3>\n" +
     "<key-value-editor ng-if=\"container.env.length\" entries=\"container.env\" key-placeholder=\"Name\" value-placeholder=\"Value\" cannot-add cannot-delete cannot-sort is-readonly show-header></key-value-editor>\n" +
     "<em ng-if=\"!container.env.length\">The container specification has no environment variables set.</em>\n" +
     "</div>\n" +
     "</div>\n" +
-    "<ng-form ng-show=\"!(deployment | hasDeploymentConfig)\" name=\"forms.envForm\">\n" +
+    "<ng-form ng-show=\"!(replicaSet | hasDeploymentConfig)\" name=\"forms.envForm\">\n" +
     "<div ng-repeat=\"container in updatedDeployment.spec.template.spec.containers\">\n" +
     "<div ng-if=\"resource | canI : 'update'\">\n" +
     "<key-value-editor entries=\"container.env\" key-placeholder=\"Name\" value-placeholder=\"Value\" key-validator=\"[A-Za-z_][A-Za-z0-9_]*\" key-validator-error=\"Please enter a valid key\" key-validator-error-tooltip=\"A valid environment variable name is an alphanumeric (a-z and 0-9) string beginning with a letter that may contain underscores.\" add-row-link=\"Add environment variable\" show-header></key-value-editor>\n" +
@@ -2906,22 +2912,22 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "</uib-tab>\n" +
     "<uib-tab ng-if=\"metricsAvailable\" heading=\"Metrics\" active=\"selectedTab.metrics\">\n" +
     "\n" +
-    "<deployment-metrics ng-if=\"selectedTab.metrics && podsForDeployment\" pods=\"podsForDeployment\" containers=\"deployment.spec.template.spec.containers\">\n" +
+    "<deployment-metrics ng-if=\"selectedTab.metrics && podsForDeployment\" pods=\"podsForDeployment\" containers=\"replicaSet.spec.template.spec.containers\">\n" +
     "</deployment-metrics>\n" +
     "</uib-tab>\n" +
     "<uib-tab ng-if=\"deploymentConfigName && logOptions.version && ('deploymentconfigs/log' | canI : 'get')\" active=\"selectedTab.logs\">\n" +
     "<uib-tab-heading>Logs</uib-tab-heading>\n" +
     "<log-viewer ng-if=\"selectedTab.logs\" follow-affix-top=\"390\" follow-affix-bottom=\"90\" resource=\"deploymentconfigs/log\" name=\"deploymentConfigName\" context=\"projectContext\" options=\"logOptions\" empty=\"logEmpty\" run=\"logCanRun\">\n" +
-    "<span ng-if=\"deployment | deploymentStatus\">\n" +
+    "<span ng-if=\"replicaSet | deploymentStatus\">\n" +
     "<label>Status:</label>\n" +
-    "<status-icon status=\"deployment | deploymentStatus\"></status-icon>\n" +
-    "{{deployment | deploymentStatus}}\n" +
+    "<status-icon status=\"replicaSet | deploymentStatus\"></status-icon>\n" +
+    "{{replicaSet | deploymentStatus}}\n" +
     "</span>\n" +
     "</log-viewer>\n" +
     "</uib-tab>\n" +
     "<uib-tab active=\"selectedTab.events\" ng-if=\"'events' | canI : 'watch'\">\n" +
     "<uib-tab-heading>Events</uib-tab-heading>\n" +
-    "<events resource-kind=\"ReplicaSet\" resource-name=\"{{deployment.metadata.name}}\" project-context=\"projectContext\" ng-if=\"selectedTab.events\"></events>\n" +
+    "<events resource-kind=\"{{kind}}\" resource-name=\"{{replicaSet.metadata.name}}\" project-context=\"projectContext\" ng-if=\"selectedTab.events\"></events>\n" +
     "</uib-tab>\n" +
     "</uib-tabset>\n" +
     "</div>\n" +
