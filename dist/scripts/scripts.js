@@ -27,7 +27,7 @@ creating_secrets:"https://docs.openshift.org/latest/dev_guide/secrets.html#creat
 "default":"https://docs.openshift.org/latest/welcome/index.html"
 },
 CLI:{
-"Latest Release":"https://github.com/openshift/origin/releases/latest"
+"Latest Release":"https://access.redhat.com/downloads/content/290"
 },
 DEFAULT_HPA_CPU_TARGET_PERCENT:80,
 DISABLE_OVERVIEW_METRICS:!1,
