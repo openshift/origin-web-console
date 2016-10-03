@@ -4503,6 +4503,7 @@ td.visible-print,th.visible-print{display:table-cell!important}
 .sidebar-left .navbar-sidebar ul.nav-sidenav-primary>li>a span{display:block;margin:0}
 .nav-sidenav-secondary .dropdown-header,.sidebar-left .navbar-sidebar ul.nav-sidenav-primary>li .hover-nav ul.nav-sidenav-secondary li a{padding-left:15px}
 }
+.projects-list,.tile{box-shadow:0 3px 1px -2px rgba(0,0,0,.15),0 2px 2px 0 rgba(0,0,0,.1),0 1px 5px 0 rgba(0,0,0,.09)}
 @media (min-width:1200px){.sidebar-left .navbar-sidebar,.sidebar-left .navbar-sidebar .nav-sidenav-secondary.hover-nav.dropdown-menu{font-size:14px}
 .sidebar-left .navbar-sidebar ul.nav-sidenav-primary>li>a{padding-bottom:25px;padding-top:25px}
 .sidebar-left .navbar-sidebar ul.nav-sidenav-primary>li>a .fa-angle-right{font-size:18px}
@@ -4644,7 +4645,7 @@ body,html{margin:0;padding:0}
 .events-table td{overflow-wrap:break-word}
 .events-table .pficon{vertical-align:middle}
 .events-table .severity-icon-td{padding-left:0;padding-right:0}
-.tile{background:#fff;box-shadow:0 3px 1px -2px rgba(0,0,0,.15),0 2px 2px 0 rgba(0,0,0,.1),0 1px 5px 0 rgba(0,0,0,.09);padding:10px 20px;margin-bottom:20px;word-wrap:break-word;-webkit-box-sizing:border-box;-moz-box-sizing:border-box;box-sizing:border-box;overflow-x:hidden}
+.tile{background:#fff;padding:10px 20px;margin-bottom:20px;word-wrap:break-word;-webkit-box-sizing:border-box;-moz-box-sizing:border-box;box-sizing:border-box;overflow-x:hidden}
 .tile h1,.tile h2,.tile h3{margin:10.5px 0px}
 .tile h3 .tile-timestamp{color:#9c9c9c;font-size:84%}
 @media (max-width:768px){.tile h3 .tile-timestamp:before{content:'\2014\00a0'}
@@ -4817,8 +4818,7 @@ kubernetes-topology-graph{height:700px}
 .log-line-number{-moz-user-select:none;-webkit-user-select:none;-ms-user-select:none;border-right:1px #272b30 solid;padding-right:10px;vertical-align:top;white-space:nowrap;width:60px;color:#72767b}
 .log-line-text{padding:0 10px;white-space:pre-wrap;width:100%;overflow-wrap:break-word}
 .log-line-text::-moz-selection{color:#101214;background:#e5e5e5}
-.project-background,.table-log-pods{background-color:#fff}
-.table-log-pods{border:1px solid #D1D1D1}
+.table-log-pods{background-color:#fff;border:1px solid #D1D1D1}
 .table-log-pods>tbody+tbody{border-top-width:1px}
 .log-fixed-height.empty-state-message{margin-top:0}
 .chromeless .log-loading-msg{font-family:inherit;line-height:1.1;color:inherit;font-size:19px;font-weight:300;margin:60px auto;max-width:600px;padding:0 20px;text-align:center}
@@ -4837,37 +4837,37 @@ kubernetes-topology-graph{height:700px}
 .settings-item{margin:4px 8px 4px 0}
 .hide-if-empty:empty{display:none!important}
 .donut-title-med-pf{font-size:22.5px;font-weight:300}
-.project-actions{margin:16px 0 0}
+.col-md-12>.alerts:first-child{margin-top:20px}
+.project-actions{margin:20px 0 0}
+.project-actions .project-action-item{margin-left:12px}
+.project-info.list-group-item{border-bottom:0;border-color:#e0e0e0;padding:10px 20px}
 @media (min-width:992px){.project-actions{margin-top:0}
-.project-name-item.list-group-item-heading{white-space:normal}
+.project-additional-info.list-view-pf-additional-info{width:60%}
+.project-name-item.list-group-item-heading{white-space:normal;width:40%}
 }
-.project-actions .project-action-item{margin-left:10px}
-.project-additional-info.list-view-pf-additional-info{-webkit-align-items:flex-start;-moz-align-items:flex-start;align-items:flex-start}
-@media (min-width:480px){.project-additional-info.list-view-pf-additional-info{-webkit-align-items:center;-moz-align-items:center;align-items:center}
+.project-name-item.list-group-item-heading .h1{margin-bottom:0;margin-top:0}
+.project-name-item.list-group-item-heading .h1 [data-toggle=tooltip]{cursor:help;margin-left:5px}
+.project-name-item.list-group-item-heading .h1 a{line-height:initial}
+.project-name-item.list-group-item-heading p{margin-bottom:0;margin-top:5px}
+.projects-bar{display:flex;flex-direction:column}
+@media (min-width:650px){.projects-bar{flex-direction:row;justify-content:space-between}
 }
-.project-age{-webkit-align-items:flex-start;-moz-align-items:flex-start;align-items:flex-start;-webkit-flex:1 1 auto;-moz-flex:1 1 auto;-ms-flex:1 1 auto;flex:1 1 auto;display:-webkit-flex;display:-moz-flex;display:-ms-flexbox;display:-ms-flex;display:flex}
-@media (min-width:480px){.project-age{-webkit-align-items:center;-moz-align-items:center;align-items:center;width:45%}
+.projects-bar h1{margin-bottom:0!important;margin-top:0!important}
+.projects-bar .projects-add{display:flex;justify-content:flex-end;margin:-27px 0 20px}
+.projects-bar .projects-options{display:flex;flex-direction:column}
+@media (min-width:650px){.projects-bar .projects-add{margin-left:40px;margin-top:0;order:2}
+.projects-bar .projects-options{flex-direction:row}
 }
-.project-age .h1{margin:0;text-align:center}
-.project-age .h2{margin-bottom:0;margin-top:10px}
-.project-age .h3{text-align:left;font-size:14px;margin-top:8px;margin-bottom:0}
-.project-background h1{display:inline-block;margin-bottom:0;margin-top:0}
-.project-bar .form-control{-webkit-flex:1;-moz-flex:1;-ms-flex:1;flex:1;padding-left:8px}
-@media (min-width:768px){.project-bar .form-control{-webkit-flex:0;-moz-flex:0;-ms-flex:0;flex:0;min-width:200px}
-}
-.project-bar .project-sort .form-group{margin:0}
-.project-bar .vertical-divider{border-left:1px solid #bbb;display:inline-block;height:25px;margin:0 7px;vertical-align:middle;width:1px}
-.projects-content{padding-left:0;padding-right:0}
-.project-description.list-group-item-text{-webkit-flex:1 1 auto;-moz-flex:1 1 auto;-ms-flex:1 1 auto;flex:1 1 auto;margin-bottom:0px;width:100%}
-@media (min-width:480px){.project-description.list-group-item-text{margin-bottom:0;width:55%}
-}
-.project-info.list-group-item{border-bottom:0;padding:10px 20px}
-.project-names.list-view-pf-description{-webkit-flex:1 1 auto;-moz-flex:1 1 auto;-ms-flex:1 1 auto;flex:1 1 auto;width:100%}
-@media (min-width:992px){.project-names.list-view-pf-description{width:50%}
-}
-.project-summary .h1{margin-top:0}
+.projects-bar .projects-search{display:flex;margin-bottom:20px}
+.projects-bar .projects-search .search-pf{display:block;flex:0 1 auto}
+.projects-bar .projects-search .search-pf.has-button .form-group{display:block}
+.projects-bar .projects-sort{flex:1 0 auto}
+.projects-bar .projects-sort .form-group{margin:0}
+.projects-bar .vertical-divider{border-left:1px solid #bbb;display:inline-block;height:27px;margin:0 7px;vertical-align:middle;width:1px}
+.projects-header{margin-top:21px}
+.projects-instructions-link{white-space:pre}
 .projects-list{border-top:0;margin-bottom:20px}
-.projects-list .project-info:hover{background-color:#bee1f4}
+.projects-list .project-info:hover{background-color:#def3ff}
 .terminal-font,kubernetes-container-terminal .terminal{font-family:"Monospace Regular","DejaVu Sans Mono",Menlo,Monaco,Consolas,monospace;line-height:1em;font-size:12px}
 @media (min-width:768px){.container-terminal-wrapper{background-color:#000}
 }

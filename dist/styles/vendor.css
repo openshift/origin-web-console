@@ -213,6 +213,10 @@ ul.messenger-theme-flat .messenger-spinner{display:block;position:absolute;left:
 .active-filters{line-height:0;display:-ms-flexbox;display:flex;-ms-flex-direction:column;flex-direction:column}
 .active-filters .label-filter-active-filters{display:-ms-inline-flexbox;display:inline-flex;-ms-flex-wrap:wrap;flex-wrap:wrap}
 .active-filters .label-filter-active-filters .label{-ms-flex-align:center;align-items:center;background:#006e9c;border-radius:2px;display:-ms-inline-flexbox;display:inline-flex;-ms-flex:0 1 auto;flex:0 1 auto;font-size:12px;font-weight:400;line-height:13px;padding:.3em 6px;margin:3px 3px 0 0;text-shadow:0 1px 0 rgba(0,0,0,.2);word-break:break-all;word-break:break-word;overflow-wrap:break-word;white-space:normal}
+<<<<<<< HEAD
+=======
+[overflow-hidden],[truncate]{overflow:hidden}
+>>>>>>> eaf7ada... Simplifying markup, css and design
 .active-filters .label-filter-active-filters .label:hover{background:#006e9c}
 .active-filters .label-filter-active-filters .label i.fa-times{font-size:10px;padding-left:10px}
 .active-filters .label-filter-active-filters .label-filter-clear{display:-ms-inline-flexbox;display:inline-flex;margin:3px 3px 0 0;-ms-flex-align:center;align-items:center}

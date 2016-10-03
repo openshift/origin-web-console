@@ -9287,51 +9287,51 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "<div class=\"middle-section\">\n" +
     "<div class=\"middle-container\">\n" +
     "<div class=\"middle-content\">\n" +
-    "<div ng-if=\"!showGetStarted\" class=\"container-fluid surface-shaded projects-content mar-left-none mar-right-none\"> \n" +
-    "<div ng-if=\"(projects | hashSize) === 0\" class=\"text-muted\">Loading...</div>\n" +
-    "<div ng-if=\"(projects | hashSize) !== 0\" class=\"gutter-top pad-top-none\">\n" +
-    "<div class=\"project-background mar-bottom-xl\">\n" +
-    "<div class=\"pad-top-xl pad-left-xl pad-right-xl\">\n" +
-    "<div>\n" +
-    "<div>\n" +
+    "<div class=\"container surface-shaded\"> \n" +
+    "<div class=\"row\">\n" +
+    "<div class=\"col-md-12\">\n" +
+    "<div ng-if=\"alerts\" class=\"alerts\">\n" +
+    "<alerts alerts=\"alerts\"></alerts>\n" +
+    "</div>\n" +
+    "<div ng-if=\"!showGetStarted\">\n" +
+    "<div ng-if=\"(projects | hashSize) === 0\" class=\"empty-state-message\">\n" +
+    "<h2 class=\"text-center\" id=\"temporary-loading-message\">Loading...</h2>\n" +
+    "</div>\n" +
+    "<div ng-if=\"(projects | hashSize) !== 0\">\n" +
+    "<div class=\"projects-header\">\n" +
+    "<div class=\"projects-bar\">\n" +
     "<h1>Projects</h1>\n" +
-    "<a ng-if=\"canCreate\" href=\"create-project\" class=\"btn btn-md btn-primary pull-right\">\n" +
+    "<div class=\"projects-options\">\n" +
+    "<div class=\"projects-add\" ng-if=\"canCreate\">\n" +
+    "<a href=\"create-project\" class=\"btn btn-md btn-primary\">\n" +
     "<span>New project</span>\n" +
     "</a>\n" +
     "</div>\n" +
-    "</div>\n" +
-    "</div>\n" +
-    "<div row cross-axis=\"center\" class=\"project-bar pad-top-lg pad-right-xl pad-bottom-lg pad-left-xl table-toolbar form-inline\">\n" +
+    "<div class=\"projects-search\">\n" +
     "<form role=\"form\" class=\"search-pf has-button\">\n" +
     "<div class=\"form-group has-clear\">\n" +
     "<div class=\"search-pf-input-group\">\n" +
-    "<label for=\"search1\" class=\"sr-only\">Search</label>\n" +
-    "<input type=\"search\" class=\"form-control\" placeholder=\"Search\" ng-init=\"search.text = ''\" ng-model=\"search.text\">\n" +
+    "<label for=\"search-projects\" class=\"sr-only\">Search</label>\n" +
+    "<input type=\"search\" class=\"form-control\" placeholder=\"Search\" id=\"search-projects\" ng-init=\"search.text = ''\" ng-model=\"search.text\">\n" +
     "<button type=\"button\" class=\"clear\" aria-hidden=\"true\" ng-if=\"search.text\" ng-click=\"search.text = ''\">\n" +
     "<span class=\"pficon pficon-close\"></span>\n" +
     "</button>\n" +
     "</div>\n" +
     "</div>\n" +
     "</form>\n" +
-    "<span class=\"mar-left-sm mar-right-sm\">\n" +
-    "<span class=\"hidden-xs vertical-divider\"></span>\n" +
-    "</span>\n" +
-    "<div class=\"project-sort\">\n" +
+    "<span class=\"vertical-divider\"></span>\n" +
+    "<div class=\"projects-sort\">\n" +
     "<div pf-sort config=\"sortConfig\" class=\"sort-controls\"></div>\n" +
     "</div>\n" +
-    "<span class=\"hidden-xs mar-left-sm mar-right-sm\">\n" +
-    "<span class=\"vertical-divider\"></span>\n" +
-    "</span>\n" +
     "</div>\n" +
     "</div>\n" +
-    "<div ng-if=\"alerts\" class=\"mar-left-xl mar-right-xl\">\n" +
-    "<alerts alerts=\"alerts\"></alerts>\n" +
     "</div>\n" +
-    "<div class=\"empty-state-message text-center\" ng-if=\"(projects | findProject:search.text).length === 0\">\n" +
+    "</div>\n" +
+    "<div ng-if=\"(projects | findProject:search.text).length === 0\" class=\"text-center\">\n" +
     "<h2>{{emptyMessage}}</h2>\n" +
     "</div>\n" +
-    "<div class=\"list-group list-view-pf projects-list tile-click\">\n" +
-    "<div ng-repeat=\"project in projects | findProject:search.text\" class=\"list-group-item project-info mar-left-xl mar-right-xl\">\n" +
+    "<div class=\"list-group list-view-pf projects-list\">\n" +
+    "<div ng-repeat=\"project in projects | findProject:search.text\" class=\"list-group-item project-info tile-click\">\n" +
     "<div row class=\"list-view-pf-actions project-actions\" ng-if=\"project.status.phase == 'Active'\">\n" +
     "<span class=\"fa-lg project-action-item\">\n" +
     "<a ng-href=\"project/{{project.metadata.name}}/edit\" class=\"action-button\">\n" +
@@ -9347,18 +9347,14 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "<div class=\"list-view-pf-main-info\">\n" +
     "<div class=\"list-view-pf-description project-names\">\n" +
     "<div class=\"list-group-item-heading project-name-item\">\n" +
-    "<div class=\"project-summary\">\n" +
-    "<div class=\"h1\">\n" +
+    "<h2 class=\"h1\">\n" +
     "<a class=\"tile-target\" href=\"project/{{project.metadata.name}}\">{{project.metadata.annotations[\"openshift.io/display-name\"] || project.metadata.name}}</a> \n" +
-    "<span ng-if=\"project.status.phase != 'Active'\" data-toggle=\"tooltip\" title=\"This project has been marked for deletion.\" class=\"pficon pficon-warning-triangle-o\" style=\"cursor: help; vertical-align: top; margin-left: 5px\"></span>\n" +
+    "<span ng-if=\"project.status.phase != 'Active'\" data-toggle=\"tooltip\" title=\"This project has been marked for deletion.\" class=\"pficon pficon-warning-triangle-o\"></span>\n" +
+    "</h2>\n" +
+    "<p class=\"hidden-xs project-name-item\" ng-if=\"project.metadata.annotations['openshift.io/display-name']\">{{project.metadata.name}}</p>\n" +
     "</div>\n" +
-    "</div>\n" +
-    "<div class=\"hidden-xs project-name-item\">\n" +
-    "<p>{{project.metadata.name}}</p>\n" +
-    "</div>\n" +
-    "</div>\n" +
-    "<div flex row mobile=\"column\" class=\"list-view-pf-additional-info project-additional-info\">\n" +
-    "<span flex class=\"list-group-item-text project-description\">\n" +
+    "<div class=\"list-view-pf-additional-info project-additional-info\">\n" +
+    "<span class=\"list-group-item-text project-description\">\n" +
     "<truncate-long-text content=\"project | description\" limit=\"265\" use-word-boundary=\"true\"></truncate-long-text>\n" +
     "</span>\n" +
     "</div>\n" +
@@ -9366,21 +9362,18 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "</div>\n" +
     "</div>\n" +
     "</div>\n" +
-    "<div ng-if=\"canCreate === false\" class=\"mar-top-md mar-left-xl mar-right-xl\">\n" +
+    "<p class=\"projects-instructions\" ng-if=\"canCreate === false\">\n" +
     "<span ng-if=\"!newProjectMessage\">A cluster admin can create a project for you by running the command\n" +
     "<code>oadm new-project &lt;projectname&gt; --admin={{user.metadata.name || '&lt;YourUsername&gt;'}}</code></span>\n" +
-    "<span ng-if=\"newProjectMessage\" ng-bind-html=\"newProjectMessage | linky\" style=\"white-space:pre\"></span>\n" +
-    "</div>\n" +
-    "<div class=\"mar-top-md mar-left-xl mar-right-xl\" ng-if=\"(projects | findProject:$search.text).length !== 0\">\n" +
+    "<span ng-if=\"newProjectMessage\" ng-bind-html=\"newProjectMessage | linky\" class=\"projects-instructions-link\"></span>\n" +
+    "</p>\n" +
+    "<p class=\"projects-instructions\" ng-if=\"(projects | findProject:$search.text).length !== 0\">\n" +
     "A project admin can add you to a role on a project by running the command\n" +
     "<code>oc policy add-role-to-user &lt;role&gt; {{user.metadata.name || '&lt;YourUsername&gt;'}} -n &lt;projectname&gt;</code>\n" +
-    "</div>\n" +
+    "</p>\n" +
     "</div>\n" +
     "</div>\n" +
     "<div ng-if=\"showGetStarted\">\n" +
-    "<div class=\"container gutter-top\" ng-if=\"(alerts | hashSize) > 0\">\n" +
-    "<alerts alerts=\"alerts\"></alerts>\n" +
-    "</div>\n" +
     "<div class=\"empty-state-message empty-state-full-page text-center\">\n" +
     "<h1>Welcome to OpenShift.</h1>\n" +
     "<p>\n" +
@@ -9389,11 +9382,14 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "</p>\n" +
     "<a ng-if=\"canCreate\" href=\"create-project\" class=\"btn btn-lg btn-primary\">New Project</a>\n" +
     "<p>To learn more, visit the OpenShift <a target=\"_blank\" ng-href=\"{{'' | helpLink}}\">documentation</a>.</p>\n" +
-    "<p ng-if=\"canCreate === false\">\n" +
+    "<p class=\"projects-instructions\" ng-if=\"canCreate === false\">\n" +
     "<span ng-if=\"!newProjectMessage\">A cluster admin can create a project for you by running the command<br>\n" +
     "<code>oadm new-project &lt;projectname&gt; --admin={{user.metadata.name || '&lt;YourUsername&gt;'}}</code></span>\n" +
-    "<span ng-if=\"newProjectMessage\" ng-bind-html=\"newProjectMessage | linky\" style=\"white-space:pre\"></span>\n" +
+    "<span ng-if=\"newProjectMessage\" ng-bind-html=\"newProjectMessage | linky\" class=\"projects-instructions-link\"></span>\n" +
     "</p>\n" +
+    "</div>\n" +
+    "</div>\n" +
+    "</div>\n" +
     "</div>\n" +
     "</div>\n" +
     "</div>\n" +
