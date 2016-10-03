@@ -22,7 +22,7 @@ application_health:"https://docs.openshift.com/container-platform/3.3/dev_guide/
 "default":"https://docs.openshift.com/container-platform/3.3/welcome/index.html"
 },
 CLI:{
-"Latest Release":"https://github.com/openshift/origin/releases/latest"
+"Latest Release":"https://access.redhat.com/downloads/content/290"
 },
 DEFAULT_HPA_CPU_TARGET_PERCENT:80,
 DISABLE_OVERVIEW_METRICS:!1,
