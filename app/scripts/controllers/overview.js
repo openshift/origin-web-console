@@ -23,7 +23,8 @@ angular.module('openshiftConsole')
                         RoutesService,
                         ServicesService,
                         Navigate,
-                        MetricsService) {
+                        MetricsService,
+                        QuotaService) {
     // scope variables are inherited by overview-service-group and overview-service directives.
     $scope.projectName = $routeParams.project;
     $scope.renderOptions = $scope.renderOptions || {};
@@ -447,6 +448,36 @@ angular.module('openshiftConsole')
       $scope.renderOptions.showLoading = !loaded && projectEmpty;
     };
 
+    var setGenericQuotaWarning = function() {
+      var isHidden = AlertMessageService.isAlertPermanentlyHidden("overview-quota-limit-reached", $scope.projectName);
+      if (!isHidden && QuotaService.isAnyQuotaExceeded($scope.quotas, $scope.clusterQuotas)) {
+        if ($scope.alerts['quotaExceeded']) {
+          // Don't recreate the alert or it will reset the temporary hidden state
+          return;
+        }
+        $scope.alerts['quotaExceeded'] = {
+          type: 'warning',
+          message: 'Quota limit has been reached.',
+          links: [{
+            href: "project/" + $scope.projectName + "/quota",
+            label: "View Quota"
+          },{
+            href: "",
+            label: "Don't show me again",
+            onClick: function() {
+              // Hide the alert on future page loads.
+              AlertMessageService.permanentlyHideAlert("overview-quota-limit-reached", $scope.projectName);
+
+              // Return true close the existing alert.
+              return true;
+            }
+          }]
+        };
+      }
+      else {
+        delete $scope.alerts['quotaExceeded'];
+      }
+    };
 
     $scope.viewPodsForDeployment = function(deployment) {
       if (_.isEmpty($scope.podsByOwnerUID[deployment.metadata.uid])) {
@@ -630,6 +661,17 @@ angular.module('openshiftConsole')
           horizontalPodAutoscalers = hpaData.by("metadata.name");
           groupHPAs();
         }, {poll: limitWatches, pollInterval: 60 * 1000}));
+
+        // Always poll quotas instead of watching, its not worth the overhead of maintaining websocket connections
+        watches.push(DataService.watch('resourcequotas', context, function(quotaData) {
+          $scope.quotas = quotaData.by("metadata.name");
+          setGenericQuotaWarning();
+        }, {poll: true, pollInterval: 60 * 1000}));
+
+        watches.push(DataService.watch('appliedclusterresourcequotas', context, function(clusterQuotaData) {
+          $scope.clusterQuotas = clusterQuotaData.by("metadata.name");
+          setGenericQuotaWarning();
+        }, {poll: true, pollInterval: 60 * 1000}));
 
         // List limit ranges in this project to determine if there is a default
         // CPU request for autoscaling.

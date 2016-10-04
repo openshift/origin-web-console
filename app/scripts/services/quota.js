@@ -52,6 +52,9 @@ angular.module("openshiftConsole")
     };
 
     var filterQuotasForResource = function(resource, quotas) {
+      if (!resource) {
+        return quotas;
+      }
       if (resource.kind === 'Pod') {
         return filterQuotasForPodTemplate(resource, quotas);
       }
@@ -81,9 +84,14 @@ angular.module("openshiftConsole")
         'requests.cpu',
         'requests.memory',
         'limits.cpu',
-        'limits.memory'
+        'limits.memory',
+        'pods'
       ], function(type) {
         var q = quota.status.total || quota.status;
+        // Don't check 'pods' quota if the resource is a pod, that will create duplicate warnings in combination with getQuotaAlerts
+        if (resource.kind === 'Pod' && type === 'pods') {
+          return;
+        }
         if (!isNil(q.hard[type]) && usageValue(q.hard[type]) <= usageValue(q.used[type])) {
           var details;
           if (resource.kind === 'Pod') {
@@ -185,6 +193,20 @@ angular.module("openshiftConsole")
       return result.promise;
     };
 
+    var isAnyQuotaExceeded = function(quotas, clusterQuotas) {
+        var isExceeded = function(quota) {
+          var q = quota.status.total || quota.status;
+          return _.some(q.hard, function(hard, quotaKey) {
+            // We always ignore quota warnings about being out of resourcequotas since end users cant do anything about it
+            if (quotaKey === 'resourcequotas') {
+              return false;
+            }
+            return !isNil(hard) && usageValue(hard) <= usageValue(q.used[quotaKey]);
+          });
+        };
+        return _.some(quotas, isExceeded) || _.some(clusterQuotas, isExceeded);
+    };
+
     return {
       filterQuotasForResource: filterQuotasForResource,
       isBestEffortPod: isBestEffortPod,
@@ -193,6 +215,7 @@ angular.module("openshiftConsole")
       // Gets quota alerts relevant to a set of resources
       // Returns: Array of alerts
       getQuotaAlerts: getQuotaAlerts,
-      getLatestQuotaAlerts: getLatestQuotaAlerts
+      getLatestQuotaAlerts: getLatestQuotaAlerts,
+      isAnyQuotaExceeded: isAnyQuotaExceeded
     };
   });

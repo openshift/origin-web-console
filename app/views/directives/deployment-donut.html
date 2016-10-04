@@ -66,6 +66,16 @@
       </span>
     </div>
   </div>
+  <div class="scaling-details" ng-if="showQuotaWarning">
+      <span class="pficon pficon-warning-triangle-o"></span>
+      <a ng-href="project/{{rc.metadata.namespace}}/quota">Quota</a>
+      limit reached.
+  </div>
+  <div class="scaling-details" ng-if="showQuotaWarning">
+    Scaling may be affected.
+    <a ng-if="rc.kind !== 'PetSet'" ng-href="{{rc | navigateResourceURL}}?tab=events">Check events</a>
+    <a ng-if="rc.kind === 'PetSet'" ng-href="project/{{rc.metadata.namespace}}/browse/events">Check events</a>
+  </div>
   <div
     class="scaling-details"
     ng-if="isIdled && (!getDesiredReplicas())">

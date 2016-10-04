@@ -27,6 +27,8 @@
           pods="podsByOwnerUID[set.metadata.uid]"
           hpa="getHPA(set)"
           limit-ranges="limitRanges"
+          quotas="quotas"
+          cluster-quotas="clusterQuotas"
           scalable="isScalableReplicationController(set)"
           alerts="alerts">
       </deployment-donut>
