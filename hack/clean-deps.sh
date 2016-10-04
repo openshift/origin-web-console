@@ -2,6 +2,7 @@
 
 set -e
 
+echo "[clean-assets]"
 echo "Cleaning up bower_components and node_modules..."
 rm -rf bower_components/*
 rm -rf node_modules/*
