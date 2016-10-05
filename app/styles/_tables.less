@@ -66,7 +66,7 @@
       //   https://www.patternfly.org/styles/color-palette/
       border-left: 1px solid #bbbbbb;
       display: inline-block;
-      height: 25px;
+      height: 27px;
       margin: 0 7px;
       vertical-align: middle;
       width: 1px;
@@ -75,8 +75,11 @@
 }
 
 .table-toolbar {
-  .filter-controls input {
-    width: 100%;
+  .filter-controls {
+    margin-bottom: 10px;
+    input {
+      width: 100%;
+    }
   }
   .sort-label {
     margin-right: 4px;
@@ -92,8 +95,11 @@
       // Inline controls at wider widths.
       display: inline-block;
     }
-    .filter-controls input {
-      width: 300px;
+    .filter-controls {
+      margin-bottom: 0;
+      input {
+        width: 300px;
+      }
     }
   }
 }
