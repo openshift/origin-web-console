@@ -3,7 +3,7 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
 
   $templateCache.put('views/_alerts.html',
     "<div ng-attr-row=\"{{toast}}\" ng-attr-wrap=\"{{toast}}\">\n" +
-    "<div ng-repeat=\"alert in (alerts | filterCollection : filter)\" ng-if=\"!alert.hidden\" class=\"alert-wrapper\">\n" +
+    "<div ng-repeat=\"(alertID, alert) in (alerts | filterCollection : filter) track by (alertID + (alert.message || alert.details))\" ng-if=\"!alert.hidden\" class=\"alert-wrapper animate-repeat\" ng-class=\"{'animate-slide': animateSlide}\">\n" +
     "<div class=\"alert\" ng-class=\"{\n" +
     "      'alert-danger': alert.type === 'error',\n" +
     "      'alert-warning': alert.type === 'warning',\n" +
@@ -251,7 +251,7 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
 
 
   $templateCache.put('views/_parse-error.html',
-    "<div ng-show=\"error && !hidden\" class=\"alert alert-danger\">\n" +
+    "<div ng-show=\"error && !hidden\" class=\"alert alert-danger animate-show\">\n" +
     "<button ng-click=\"hidden = true\" type=\"button\" class=\"close\" aria-hidden=\"true\">\n" +
     "<span class=\"pficon pficon-close\"></span>\n" +
     "</button>\n" +
@@ -715,7 +715,7 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "<div class=\"triggers\">\n" +
     "<div class=\"builds\" ng-repeat=\"trigger in triggers\">\n" +
     "<div ng-if=\"trigger.type === 'ImageChange'\">\n" +
-    "<div ng-repeat=\"build in buildsByOutputImage[(trigger.imageChangeParams.from | imageObjectRef : namespace)] | orderObjectsByDate : true track by (build | uid)\" ng-show=\"!(hideBuild)\" class=\"build animate-repeat hide-ng-leave\" kind=\"Build\" resource=\"build\">\n" +
+    "<div ng-repeat=\"build in buildsByOutputImage[(trigger.imageChangeParams.from | imageObjectRef : namespace)] | orderObjectsByDate : true track by (build | uid)\" ng-show=\"!(hideBuild)\" class=\"build animate-show animate-hide animate-slide\" kind=\"Build\" resource=\"build\">\n" +
     "<div class=\"build-summary\" ng-class=\"{'dismissible' : !(build | isIncompleteBuild)}\">\n" +
     "<div class=\"build-name\">\n" +
     "Build\n" +
@@ -4494,7 +4494,7 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
 
 
   $templateCache.put('views/directives/_build-pipeline-collapsed.html',
-    "<div class=\"build-pipeline-collapsed\" ng-show=\"!hideBuild\">\n" +
+    "<div class=\"build-pipeline-collapsed animate-show animate-hide animate-slide\" ng-show=\"!hideBuild\">\n" +
     "<div class=\"build-summary\" ng-class=\"{'dismissible' : !(build | isIncompleteBuild)}\">\n" +
     "<div class=\"build-name\">\n" +
     "Pipeline\n" +
@@ -4880,8 +4880,8 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
   $templateCache.put('views/directives/build-pipeline.html',
     "<div>\n" +
     "<div ng-if=\"collapseStagesOnCompletion\">\n" +
-    "<div ng-if=\"build | isIncompleteBuild\" ng-include=\"'views/directives/_build-pipeline-expanded.html'\"></div>\n" +
-    "<div ng-if=\"!(build | isIncompleteBuild)\" ng-include=\"'views/directives/_build-pipeline-collapsed.html'\"></div>\n" +
+    "<div class=\"animate-if\" ng-if=\"build | isIncompleteBuild\" ng-include=\"'views/directives/_build-pipeline-expanded.html'\"></div>\n" +
+    "<div class=\"animate-if\" ng-if=\"!(build | isIncompleteBuild)\" ng-include=\"'views/directives/_build-pipeline-collapsed.html'\"></div>\n" +
     "</div>\n" +
     "<div ng-if=\"!collapseStagesOnCompletion\" ng-include=\"'views/directives/_build-pipeline-expanded.html'\"></div>\n" +
     "</div>"
@@ -6877,7 +6877,7 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
 
 
   $templateCache.put('views/directives/service-group-notifications.html',
-    "<alerts alerts=\"alerts\" filter=\"showAlert\" toast=\"true\"></alerts>"
+    "<alerts alerts=\"alerts\" filter=\"showAlert\" toast=\"true\" animate-slide=\"true\"></alerts>"
   );
 
 
@@ -8658,7 +8658,7 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "<div>\n" +
     "<div class=\"service-group-triggers\">\n" +
     "<div ng-repeat=\"dc in deploymentConfigsByService[service.metadata.name || '']\">\n" +
-    "<div row ng-repeat=\"pipeline in recentPipelinesByDC[dc.metadata.name] | orderObjectsByDate : true track by (pipeline | uid)\" class=\"animate-repeat hide-ng-leave\">\n" +
+    "<div row ng-repeat=\"pipeline in recentPipelinesByDC[dc.metadata.name] | orderObjectsByDate : true track by (pipeline | uid)\" class=\"build-pipeline-wrapper animate-repeat animate-slide\">\n" +
     "<build-pipeline flex build=\"pipeline\" collapse-stages-on-completion=\"true\" build-config-name-on-expanded=\"true\"></build-pipeline>\n" +
     "</div>\n" +
     "<div>\n" +

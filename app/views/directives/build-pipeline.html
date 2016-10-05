@@ -1,7 +1,7 @@
 <div>
   <div ng-if="collapseStagesOnCompletion">
-    <div ng-if="build | isIncompleteBuild" ng-include="'views/directives/_build-pipeline-expanded.html'"></div>
-    <div ng-if="!(build | isIncompleteBuild)" ng-include="'views/directives/_build-pipeline-collapsed.html'"></div>
+    <div class="animate-if" ng-if="build | isIncompleteBuild" ng-include="'views/directives/_build-pipeline-expanded.html'"></div>
+    <div class="animate-if" ng-if="!(build | isIncompleteBuild)" ng-include="'views/directives/_build-pipeline-collapsed.html'"></div>
   </div>
   <div ng-if="!collapseStagesOnCompletion" ng-include="'views/directives/_build-pipeline-expanded.html'"></div>
 </div>

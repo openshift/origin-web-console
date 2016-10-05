@@ -473,36 +473,3 @@ code.probe-command {
     margin-left: 7px;
   }
 }
-
-.animate-repeat.ng-move,
-.animate-repeat.ng-enter,
-.animate-repeat.ng-leave {
-  -webkit-transition:all 1s;
-  transition:all 1s;
-}
-
-.animate-repeat.ng-leave.ng-leave-active,
-.animate-repeat.ng-move,
-.animate-repeat.ng-enter {
-  opacity:0;
-}
-
-.animate-repeat.ng-leave,
-.animate-repeat.ng-move.ng-move-active,
-.animate-repeat.ng-enter.ng-enter-active {
-  opacity:1;
-}
-
-/* Angular automatically animates things by creating
-   transition periods between elements showing and hiding.
-   In some cases we do not want to see both elements at the same time
-   so we hide things in the ng-leave state that we have tagged with the
-   additional hide-ng-leave class.
- */
-.hide-ng-leave.ng-leave {
-  display: none;
-}
-
-.hide-ng-leave .ng-leave {
-  display: none;
-}
