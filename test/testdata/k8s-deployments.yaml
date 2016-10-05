@@ -1,0 +1,145 @@
+#
+# Test Data for Kubernetes Deployments and Replica Sets
+#
+kind: List
+apiVersion: v1
+metadata: {}
+items:
+  # Deployment with Service
+  -
+    kind: Deployment
+    apiVersion: extensions/v1beta1
+    metadata:
+      name: hello-openshift
+    labels:
+      app: hello-openshift
+      name: hello-openshift
+    spec:
+      replicas: 3
+      selector:
+        matchLabels:
+          name: hello-openshift
+      template:
+        metadata:
+          labels:
+            app: hello-openshift
+            name: hello-openshift
+        spec:
+          containers:
+          - name: hello-openshift
+            image: openshift/hello-openshift:latest
+            ports:
+            - containerPort: 8080
+  -
+    kind: Service
+    apiVersion: v1
+    metadata:
+      name: hello-openshift
+      creationTimestamp: null
+      labels:
+        app: hello-openshift
+    spec:
+      ports:
+        -
+          protocol: TCP
+          port: 8080
+          targetPort: 8080
+      selector:
+        name: hello-openshift
+      portalIP: ""
+      type: ClusterIP
+      sessionAffinity: None
+    status:
+      loadBalancer: {}
+  # Unserviced Deployment
+  -
+    kind: Deployment
+    apiVersion: extensions/v1beta1
+    metadata:
+      name: hello-openshift-unserviced
+    labels:
+      name: hello-openshift-unserviced
+    spec:
+      replicas: 2
+      selector:
+        matchLabels:
+          name: hello-openshift-unserviced
+      template:
+        metadata:
+          labels:
+            name: hello-openshift-unserviced
+        spec:
+          containers:
+          - name: hello-openshift
+            image: openshift/hello-openshift:latest
+            ports:
+            - containerPort: 8080
+  # ReplicaSet with Service
+  -
+    kind: ReplicaSet
+    apiVersion: extensions/v1beta1
+    metadata:
+      name: hello-replica-set
+    labels:
+      app: hello-replica-set
+      name: hello-replica-set
+    spec:
+      replicas: 2
+      selector:
+        matchLabels:
+          name: hello-replica-set
+      template:
+        metadata:
+          labels:
+            app: hello-replica-set
+            name: hello-replica-set
+        spec:
+          containers:
+          - name: hello-openshift
+            image: openshift/hello-openshift:latest
+            ports:
+            - containerPort: 8080
+  -
+    kind: Service
+    apiVersion: v1
+    metadata:
+      name: hello-openshift-replica-set
+      creationTimestamp: null
+      labels:
+        app: hello-replica-set
+    spec:
+      ports:
+        -
+          protocol: TCP
+          port: 8080
+          targetPort: 8080
+      selector:
+        name: hello-replica-set
+      portalIP: ""
+      type: ClusterIP
+      sessionAffinity: None
+    status:
+      loadBalancer: {}
+  # Unserviced ReplicaSet
+  -
+    kind: ReplicaSet
+    apiVersion: extensions/v1beta1
+    metadata:
+      name: hello-replica-set-unserviced
+    labels:
+      name: hello-replica-set-unserviced
+    spec:
+      replicas: 2
+      selector:
+        matchLabels:
+          name: hello-replica-set-unserviced
+      template:
+        metadata:
+          labels:
+            name: hello-replica-set-unserviced
+        spec:
+          containers:
+          - name: hello-openshift
+            image: openshift/hello-openshift:latest
+            ports:
+            - containerPort: 8080

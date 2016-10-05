@@ -3,6 +3,7 @@
 angular.module("openshiftConsole")
   .factory("DeploymentsService", function(APIService, DataService, $filter, $q, LabelFilter){
     function DeploymentsService() {}
+    var annotation = $filter('annotation');
 
     DeploymentsService.prototype.startLatestDeployment = function(deploymentConfig, context, $scope) {
       // increase latest version by one so starts new deployment based on latest
@@ -43,7 +44,7 @@ angular.module("openshiftConsole")
     DeploymentsService.prototype.retryFailedDeployment = function(deployment, context, $scope) {
       var req = angular.copy(deployment);
       var deploymentName = deployment.metadata.name;
-      var deploymentConfigName = $filter('annotation')(deployment, 'deploymentConfig');
+      var deploymentConfigName = annotation(deployment, 'deploymentConfig');
       // TODO: we need a "retry" api endpoint so we don't have to do this manually
 
       // delete the deployer pod as well as the deployment hooks pods, if any
@@ -103,7 +104,7 @@ angular.module("openshiftConsole")
 
     DeploymentsService.prototype.rollbackToDeployment = function(deployment, changeScaleSettings, changeStrategy, changeTriggers, context, $scope) {
       var deploymentName = deployment.metadata.name;
-      var deploymentConfigName = $filter('annotation')(deployment, 'deploymentConfig');
+      var deploymentConfigName = annotation(deployment, 'deploymentConfig');
       // put together a new rollback request
       var req = {
         kind: "DeploymentConfigRollback",
@@ -268,6 +269,22 @@ angular.module("openshiftConsole")
       });
 
       return activeDeployment;
+    };
+
+    DeploymentsService.prototype.getRevision = function(/* Deployment or ReplicaSet */ object) {
+      return annotation(object, 'deployment.kubernetes.io/revision');
+    };
+
+    DeploymentsService.prototype.getActiveReplicaSet = function(replicaSets, deployment) {
+      var latestRevision = this.getRevision(deployment);
+      if (!latestRevision) {
+        return null;
+      }
+
+      var self = this;
+      return _.find(replicaSets, function(replicaSet) {
+        return self.getRevision(replicaSet) === latestRevision;
+      });
     };
 
     DeploymentsService.prototype.getScaleResource = function(object) {

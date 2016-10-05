@@ -1,4 +1,4 @@
-<div ng-if="!(visibleDeploymentsByConfig | hashSize) && !(visibleReplicaSets | hashSize) && !(petSetsByService[service.metadata.name] | hashSize) && !(monopodsByService[service.metadata.name] | hashSize)" class="no-deployments-block">
+<div ng-if="!(visibleReplicationControllersByDC | hashSize) && !(visibleReplicaSets | hashSize) && !(petSetsByService[service.metadata.name] | hashSize) && !(monopodsByService[service.metadata.name] | hashSize)" class="no-deployments-block">
   <div column class="no-deployments-message">
     <ng-include src="'views/overview/_service-header.html'"></ng-include>
     <div class="pad-xxl">
@@ -10,38 +10,49 @@
     </div>
   </div>
 </div>
-
 <div ng-attr-row="{{!service ? '' : undefined}}"
      ng-attr-wrap="{{!service ? '' : undefined}}"
-     ng-if="(visibleDeploymentsByConfig | hashSize) || (visibleReplicaSets | hashSize) || (petSetsByService[service.metadata.name] | hashSize) || (monopodsByService[service.metadata.name || ''] | hashSize)"
+     ng-if="(visibleReplicationControllersByDC | hashSize) || (visibleReplicaSetsByDeployment | hashSize) || (petSetsByService[service.metadata.name] | hashSize) || (monopodsByService[service.metadata.name || ''] | hashSize)"
      class="deployment-block"
      ng-class="{
        'no-service': !service,
-       'service-multiple-targets': rcTileCount + (visibleReplicaSets | hashSize) + (petSetsByService[service.metadata.name] | hashSize) + (monopodsByService[service.metadata.name] | hashSize) > 1
+       'service-multiple-targets': rcTileCount + rsTileCount + (petSetsByService[service.metadata.name] | hashSize) + (monopodsByService[service.metadata.name] | hashSize) > 1
      }">
-  <div ng-repeat="(dcName, deployments) in visibleDeploymentsByConfig" class="deployment-tile-wrapper">
+  <div ng-repeat="(dcName, replicationControllers) in visibleReplicationControllersByDC track by dcName" class="overview-tile-wrapper">
     <!-- visible deployments with a dc -->
     <overview-deployment-config ng-if="dcName"></overview-deployment-config>
     <!-- /visible deployments with a dc -->
 
-    <!-- visible deployments without a dc -->
-    <div class="deployment-tile-wrapper" ng-if="!dcName.length" ng-repeat="deployment in deployments | orderObjectsByDate : true track by (deployment | uid)">
-      <overview-replication-controller></overview-replication-controller>
+    <!-- visible replication controllers without a dc -->
+    <div ng-if="!dcName"
+         ng-repeat="set in replicationControllers | orderObjectsByDate : true track by (set | uid)"
+         class="overview-tile-wrapper">
+      <overview-set></overview-set>
     </div>
-
+    <!-- /visible deployments without a dc -->
   </div>
 
-  <div class="deployment-tile-wrapper" ng-repeat="deployment in visibleReplicaSets track by (deployment | uid)">
-    <overview-replication-controller></overview-replication-controller>
+  <div ng-repeat="(deploymentName, replicaSets) in visibleReplicaSetsByDeployment track by deploymentName" class="overview-tile-wrapper">
+    <!-- visible replica sets with a deployment -->
+    <overview-deployment ng-if="deploymentName"></overview-deployment>
+    <!-- /visible replica sets with a deployment -->
+
+    <!-- visible replica sets without a dc -->
+    <div ng-if="!deploymentName"
+         ng-repeat="set in replicaSets | orderObjectsByDate : true track by (set | uid)"
+         class="overview-tile-wrapper">
+      <overview-set></overview-set>
+    </div>
+    <!-- /visible replica sets without a dc -->
   </div>
 
-  <div class="deployment-tile-wrapper" ng-repeat="deployment in petSetsByService[service.metadata.name] track by (deployment | uid)">
-    <overview-replication-controller></overview-replication-controller>
+  <div class="overview-tile-wrapper" ng-repeat="set in petSetsByService[service.metadata.name] track by (set | uid)">
+    <overview-set></overview-set>
   </div>
 
   <!-- monopods -->
   <div ng-repeat="pod in monopodsByService[service.metadata.name || ''] | orderObjectsByDate : true track by (pod | uid)"
-      class="deployment-tile-wrapper">
+      class="overview-tile-wrapper">
     <overview-pod></overview-pod>
   </div>
   <!-- /monopods -->

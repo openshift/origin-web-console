@@ -50,41 +50,50 @@
               </div>
 
               <!-- Unserviced DCs, RCs, and pods -->
-              <div row wrap ng-if="(monopodsByService[''] | hashSize) || (deploymentConfigsByService[''] | hashSize) || (deploymentsByService[''] | hashSize) || (replicaSetsByService[''] | hashSize) || (petSetsByService[''] | hashSize)" class="unserviced-row">
+              <div row wrap ng-if="hasUnservicedContent()" class="unserviced-row">
                 <!-- unserviced DC -->
                 <div ng-repeat="(dcName, deploymentConfig) in deploymentConfigsByService[''] track by (deploymentConfig | uid)"
                     class="no-service"
-                    ng-if="deployments = visibleDeploymentsByConfigAndService[''][dcName]"> <!-- Must be an ng-if, an ng-init will not re-evaluate properly -->
-                  <overview-deployment-config class="deployment-tile-wrapper"></overview-deployment-config>
+                    ng-if="deployments = visibleRCByDCAndService[''][dcName]"> <!-- Must be an ng-if, an ng-init will not re-evaluate properly -->
+                  <overview-deployment-config class="overview-tile-wrapper"></overview-deployment-config>
                 </div>
                 <!-- /unserviced DC -->
 
+                <!-- unserviced deployment -->
+                <div ng-repeat="(deploymentName, deployment) in deploymentsByService[''] track by (deployment | uid)"
+                    class="no-service"
+                    ng-if="replicaSets = visibleRSByDeploymentAndService[''][deploymentName]"> <!-- Must be an ng-if, an ng-init will not re-evaluate properly -->
+                  <overview-deployment class="overview-tile-wrapper"></overview-deployment>
+                </div>
+                <!-- /unserviced deployment -->
+
                 <!-- unserviced RC -->
-                <div ng-repeat="deployment in deploymentsByService[''] | orderObjectsByDate : true track by (deployment | uid)"
-                    ng-if="!(deployment | annotation : 'deploymentConfig') || !deploymentConfigs[(deployment | annotation : 'deploymentConfig')]"
+                <div ng-repeat="set in replicationControllersByService[''] | orderObjectsByDate : true track by (set | uid)"
+                    ng-if="!(set | annotation : 'deploymentConfig') || !deploymentConfigs[(set | annotation : 'deploymentConfig')]"
                     class="no-service">
-                  <overview-replication-controller class="deployment-tile-wrapper"></overview-replication-controller>
+                  <overview-set class="overview-tile-wrapper"></overview-set>
                 </div>
                 <!-- /unserviced RC-->
 
                 <!-- unserviced RS -->
-                <div ng-repeat="deployment in replicaSetsByService[''] | orderObjectsByDate : true track by (deployment | uid)"
-                    class="no-service">
-                  <overview-replication-controller class="deployment-tile-wrapper"></overview-replication-controller>
+                <div ng-repeat="set in replicaSetsByService[''] | orderObjectsByDate : true track by (set | uid)"
+                     ng-if="!(set | annotation : 'deployment.kubernetes.io/revision')"
+                     class="no-service">
+                  <overview-set class="overview-tile-wrapper"></overview-set>
                 </div>
                 <!-- /unserviced RS-->
 
                 <!-- unserviced RS -->
-                <div ng-repeat="deployment in petSetsByService[''] | orderObjectsByDate : true track by (deployment | uid)"
+                <div ng-repeat="set in petSetsByService[''] | orderObjectsByDate : true track by (set | uid)"
                     class="no-service">
-                  <overview-replication-controller class="deployment-tile-wrapper"></overview-replication-controller>
+                  <overview-set class="overview-tile-wrapper"></overview-set>
                 </div>
                 <!-- /unserviced RS-->
 
                 <!-- unservice monopods -->
                 <div ng-repeat="pod in monopodsByService[''] | orderObjectsByDate : true track by (pod | uid)"
                     class="no-service">
-                  <overview-pod class="deployment-tile-wrapper"></overview-pod>
+                  <overview-pod class="overview-tile-wrapper"></overview-pod>
                 </div>
                 <!-- /unserviced monopods -->
               </div>

@@ -106,18 +106,19 @@
   .standalone-service-row .service-group .alert-wrapper .alert {
     margin-bottom: @service-group-vertical-margin;
   }
-  overview-replication-controller,
+  overview-set,
   overview-pod,
-  overview-deployment-config {
+  overview-deployment-config,
+  overview-deployment {
     .flex-display(@display: flex);
     width: 100%;
   }
   .service-group-header,
-  .deployment-tile {
+  .overview-tile {
     border: 1px solid @overview-border-gray;
   }
   .service-group-header,
-  .deployment-tile,
+  .overview-tile,
   .no-deployments-block .service-title {
     background-color: #ffffff;
     border-left-width: 0;
@@ -126,7 +127,7 @@
     border-bottom: 1px solid @overview-border-gray;
   }
   .service-group-header,
-  .deployment-tile,
+  .overview-tile,
   .standalone-service .builds-block,
   .service-group-triggers {
     box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1);
@@ -145,7 +146,7 @@
       overview-service {
         max-width: none;
       }
-      .deployment-tile {
+      .overview-tile {
         margin-top: 0;
       }
     }
@@ -221,7 +222,7 @@
           }
         }
       }
-      .deployment-tile-wrapper {
+      .overview-tile-wrapper {
         width: 100%;
       }
     }
@@ -309,18 +310,18 @@
         .flex-display(@display: flex);
         .flex(@columns: 1 0 0%);
         height: 100%;
-        &.service-multiple-targets, &.service-multiple-targets .deployment-tile-wrapper {
+        &.service-multiple-targets, &.service-multiple-targets .overview-tile-wrapper {
           display: block;
         }
       }
-      .deployment-tile-wrapper {
+      .overview-tile-wrapper {
         .flex-display(@display: flex);
         .flex(@columns: 1 0 0%);
-        + .deployment-tile-wrapper {
+        + .overview-tile-wrapper {
           margin-top: @service-group-vertical-margin;
         }
       }
-      .deployment-tile {
+      .overview-tile {
         .flex(@columns: 1 0 0%);
         position: relative;
       }
@@ -380,10 +381,10 @@
       }
     }
   }
-  .deployment-tile {
+  .overview-tile {
     border-left: 1px solid @overview-border-gray;
     width: 100%;
-    .deployment-header {
+    .overview-tile-header {
       .text-muted();
       position: relative;
     }
@@ -393,7 +394,7 @@
       // Prevent the content from overlapping the deployment shield
       margin-right: @shield-width-lg;
     }
-    .deployment-body {
+    .overview-tile-body {
       .flex-direction(@direction: column);
       padding: 10px;
       position: relative;
@@ -427,7 +428,7 @@
       }
     }
     @media (max-width: @screen-sm-max) {
-      .deployment-details {
+      .overview-tile-details {
         .flex-order(@order: 5);
         pod-template {
           margin: 20px auto 5px;
@@ -492,7 +493,7 @@
     }
 
     @media (min-width: @screen-md-min) {
-      .deployment-details {
+      .overview-tile-details {
         padding-left: 30px;
         width: 50%;
         &.ng-leave {
@@ -541,7 +542,7 @@
         }
       }
     }
-    .deployment-tile {
+    .overview-tile {
       @media (min-width: @screen-sm-min) {
         max-width: 50%;
       }
@@ -590,7 +591,7 @@
   }
   @media (min-width: @screen-md-min) {
     .overview-services.single-alternate-service {
-      .primary-service .deployment-tile {
+      .primary-service .overview-tile {
         border-right: 0;
         .service-title {
           padding-right: 0;
@@ -604,7 +605,7 @@
         padding-left: 0;
       }
       .alternate-service {
-        .deployment-tile {
+        .overview-tile {
           // Prevent the left box-shadow from appearing over the primary service tile.
           box-shadow: 2px 3px 6px -1px rgba(0, 0, 0, 0.1);
           .service-title {
@@ -626,7 +627,7 @@
       }
     }
   }
-  .deployment-tile {
+  .overview-tile {
     .traffic-label {
       display: inline-block;
     }

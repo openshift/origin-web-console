@@ -15,6 +15,7 @@ angular.module('openshiftConsole')
                                                  DataService,
                                                  DeploymentsService,
                                                  LabelFilter,
+                                                 LabelsService,
                                                  Logger,
                                                  ProjectsService) {
     $scope.projectName = $routeParams.project;
@@ -35,17 +36,39 @@ angular.module('openshiftConsole')
     });
     AlertMessageService.clearAlerts();
 
+    var replicaSets, deployments;
+    var annotation = $filter('annotation');
+
+    var groupReplicaSets = function() {
+      $scope.replicaSetsByDeployment = LabelsService.groupBySelector(replicaSets, deployments, { matchTemplate: true });
+      $scope.unfilteredReplicaSets = _.get($scope, ['replicaSetsByDeployment', ''], {});
+      LabelFilter.addLabelSuggestionsFromResources($scope.unfilteredReplicaSets, $scope.labelSuggestions);
+      LabelFilter.setLabelSuggestions($scope.labelSuggestions);
+      $scope.replicaSets = LabelFilter.getLabelSelector().select($scope.unfilteredReplicaSets);
+
+      $scope.latestReplicaSetByDeployment = {};
+      _.each($scope.replicaSetsByDeployment, function(replicaSets, deploymentName) {
+        if (!deploymentName) {
+          return;
+        }
+
+        $scope.latestReplicaSetByDeployment[deploymentName] =
+          DeploymentsService.getActiveReplicaSet(replicaSets, deployments[deploymentName]);
+      });
+    };
+
     var watches = [];
     ProjectsService
       .get($routeParams.project)
       .then(_.spread(function(project, context) {
         $scope.project = project;
+
         watches.push(DataService.watch("replicationcontrollers", context, function(replicationControllers, action, replicationController) {
           $scope.replicationControllers = replicationControllers.by("metadata.name");
 
           var dcName, rcName;
           if (replicationController) {
-            dcName = $filter('annotation')(replicationController, 'deploymentConfig');
+            dcName = annotation(replicationController, 'deploymentConfig');
             rcName = replicationController.metadata.name;
           }
 
@@ -91,12 +114,9 @@ angular.module('openshiftConsole')
         watches.push(DataService.watch({
           group: "extensions",
           resource: "replicasets"
-        }, context, function(replicaSets) {
-          // TODO: This should be updated to only include replica sets that do not have a deployment.
-          $scope.unfilteredReplicaSets = replicaSets.by("metadata.name");
-          LabelFilter.addLabelSuggestionsFromResources($scope.unfilteredReplicaSets, $scope.labelSuggestions);
-          LabelFilter.setLabelSuggestions($scope.labelSuggestions);
-          $scope.replicaSets = LabelFilter.getLabelSelector().select($scope.unfilteredReplicaSets);
+        }, context, function(replicaSetsData) {
+          replicaSets = replicaSetsData.by("metadata.name");
+          groupReplicaSets();
           Logger.log("replicasets (subscribe)", $scope.replicaSets);
         }));
 
@@ -118,11 +138,12 @@ angular.module('openshiftConsole')
         watches.push(DataService.watch({
           group: "extensions",
           resource: "deployments"
-        }, context, function(deployments) {
-          $scope.unfilteredDeployments = deployments.by("metadata.name");
+        }, context, function(deploymentData) {
+          deployments = $scope.unfilteredDeployments = deploymentData.by("metadata.name");
           LabelFilter.addLabelSuggestionsFromResources($scope.unfilteredDeployments, $scope.labelSuggestions);
           LabelFilter.setLabelSuggestions($scope.labelSuggestions);
           $scope.deployments = LabelFilter.getLabelSelector().select($scope.unfilteredDeployments);
+          groupReplicaSets();
           Logger.log("deployments (subscribe)", $scope.unfilteredDeployments);
         }));
 
