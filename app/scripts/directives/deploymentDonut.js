@@ -8,6 +8,7 @@ angular.module('openshiftConsole')
                                          $uibModal,
                                          DeploymentsService,
                                          HPAService,
+                                         QuotaService,
                                          LabelFilter,
                                          Navigate,
                                          hashSizeFilter,
@@ -22,6 +23,8 @@ angular.module('openshiftConsole')
         scalable: '=',
         hpa: '=?',
         limitRanges: '=',
+        quotas: '=',
+        clusterQuotas: '=',
         project: '=',
 
         // Pods
@@ -53,6 +56,23 @@ angular.module('openshiftConsole')
 
         $scope.$watchGroup(['limitRanges', 'hpa', 'project'], updateHPAWarnings);
         $scope.$watch('rc.spec.template.spec.containers', updateHPAWarnings, true);
+
+        var updateQuotaWarning = function() {
+          if (_.get($scope.rc, 'spec.replicas', 1) > _.get($scope.rc, 'status.replicas', 0)) {
+            // if we haven't achieved our scale target double check for quota issues
+            var filteredQuotas = QuotaService.filterQuotasForResource($scope.rc, $scope.quotas);
+            var filteredClusterQuotas = QuotaService.filterQuotasForResource($scope.rc, $scope.clusterQuotas);
+            var checkQuota = function(quota) {
+              return !!(QuotaService.getResourceLimitAlerts($scope.rc, quota).length);
+            };
+            $scope.showQuotaWarning = _.some(filteredQuotas, checkQuota) || _.some(filteredClusterQuotas, checkQuota);
+          }
+          else {
+            $scope.showQuotaWarning = false;
+          }
+        };
+
+        $scope.$watchGroup(['rc.spec.replicas', 'rc.status.replicas', 'quotas', 'clusterQuotas'], updateQuotaWarning);
 
         var showScalingError = function(result) {
           $scope.alerts = $scope.alerts || {};

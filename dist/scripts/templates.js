@@ -196,7 +196,7 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "</div>\n" +
     "<div row mobile=\"column\" axis=\"center center\" class=\"pod-block\">\n" +
     "<div column class=\"deployment-pods\" axis=\"center center\">\n" +
-    "<deployment-donut rc=\"rc\" deployment-config=\"deploymentConfig\" pods=\"pods\" hpa=\"hpa\" limit-ragnes=\"limitRanges\" scalable=\"scalable\" alerts=\"alerts\">\n" +
+    "<deployment-donut rc=\"rc\" deployment-config=\"deploymentConfig\" pods=\"pods\" hpa=\"hpa\" quotas=\"quotas\" cluster-quotas=\"clusterQuotas\" limit-ragnes=\"limitRanges\" scalable=\"scalable\" alerts=\"alerts\">\n" +
     "</deployment-donut>\n" +
     "</div>\n" +
     "\n" +
@@ -5317,6 +5317,16 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "</span>\n" +
     "</div>\n" +
     "</div>\n" +
+    "<div class=\"scaling-details\" ng-if=\"showQuotaWarning\">\n" +
+    "<span class=\"pficon pficon-warning-triangle-o\"></span>\n" +
+    "<a ng-href=\"project/{{rc.metadata.namespace}}/quota\">Quota</a>\n" +
+    "limit reached.\n" +
+    "</div>\n" +
+    "<div class=\"scaling-details\" ng-if=\"showQuotaWarning\">\n" +
+    "Scaling may be affected.\n" +
+    "<a ng-if=\"rc.kind !== 'PetSet'\" ng-href=\"{{rc | navigateResourceURL}}?tab=events\">Check events</a>\n" +
+    "<a ng-if=\"rc.kind === 'PetSet'\" ng-href=\"project/{{rc.metadata.namespace}}/browse/events\">Check events</a>\n" +
+    "</div>\n" +
     "<div class=\"scaling-details\" ng-if=\"isIdled && (!getDesiredReplicas())\">\n" +
     "<div ng-if=\"(!resuming)\">\n" +
     "<span>Idled due to inactivity.</span>\n" +
@@ -8504,7 +8514,7 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "<div row class=\"overview-tile-body\">\n" +
     "\n" +
     "<div column class=\"overview-donut\" ng-repeat=\"replicationController in orderedReplicationControllers track by (replicationController | uid)\" ng-class=\"{ latest: isDeploymentLatest(replicationController) }\" ng-if=\"!activeReplicationController || !(isDeploymentLatest(replicationController) && ((replicationController | deploymentStatus) == 'Cancelled' || (replicationController | deploymentStatus) == 'Failed'))\">\n" +
-    "<deployment-donut rc=\"replicationController\" deployment-config=\"deploymentConfigs[dcName]\" pods=\"podsByOwnerUID[replicationController.metadata.uid]\" hpa=\"getHPA(deploymentConfig) || getHPA(replicationController)\" limit-ranges=\"limitRanges\" scalable=\"isScalableReplicationController(replicationController)\" alerts=\"alerts\">\n" +
+    "<deployment-donut rc=\"replicationController\" deployment-config=\"deploymentConfigs[dcName]\" pods=\"podsByOwnerUID[replicationController.metadata.uid]\" hpa=\"getHPA(deploymentConfig) || getHPA(replicationController)\" limit-ranges=\"limitRanges\" quotas=\"quotas\" cluster-quotas=\"clusterQuotas\" scalable=\"isScalableReplicationController(replicationController)\" alerts=\"alerts\">\n" +
     "</deployment-donut>\n" +
     "</div>\n" +
     "\n" +
@@ -8828,7 +8838,7 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "</div>\n" +
     "<div row class=\"overview-tile-body\">\n" +
     "<div column class=\"overview-donut\" ng-class=\"{ latest: isDeploymentLatest(set) }\">\n" +
-    "<deployment-donut rc=\"set\" deployment-config=\"deploymentConfigs[dcName]\" pods=\"podsByOwnerUID[set.metadata.uid]\" hpa=\"getHPA(set)\" limit-ranges=\"limitRanges\" scalable=\"isScalableReplicationController(set)\" alerts=\"alerts\">\n" +
+    "<deployment-donut rc=\"set\" deployment-config=\"deploymentConfigs[dcName]\" pods=\"podsByOwnerUID[set.metadata.uid]\" hpa=\"getHPA(set)\" limit-ranges=\"limitRanges\" quotas=\"quotas\" cluster-quotas=\"clusterQuotas\" scalable=\"isScalableReplicationController(set)\" alerts=\"alerts\">\n" +
     "</deployment-donut>\n" +
     "</div>\n" +
     "\n" +

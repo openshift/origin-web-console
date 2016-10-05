@@ -49,6 +49,8 @@
           pods="podsByOwnerUID[replicationController.metadata.uid]"
           hpa="getHPA(deploymentConfig) || getHPA(replicationController)"
           limit-ranges="limitRanges"
+          quotas="quotas"
+          cluster-quotas="clusterQuotas"
           scalable="isScalableReplicationController(replicationController)"
           alerts="alerts">
       </deployment-donut>
