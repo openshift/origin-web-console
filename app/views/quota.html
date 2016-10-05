@@ -45,7 +45,7 @@
                         <quota-usage-chart height="240" used="namespaceUsageByClusterQuota[quota.metadata.name].used.memory" cross-project-used="quota.status.total.used.memory" total="quota.status.total.hard.memory" type="memory" class="quota-chart"></quota-usage-chart>
                       </div>
                       <div ng-if="quota.status.total.hard['requests.cpu']" class="mar-lg">
-                        <h3 class="text-center">CPU <small>Request</small></h3>                       
+                        <h3 class="text-center">CPU <small>Request</small></h3>
                         <quota-usage-chart height="240" used="namespaceUsageByClusterQuota[quota.metadata.name].used['requests.cpu']" cross-project-used="quota.status.total.used['requests.cpu']" total="quota.status.total.hard['requests.cpu']" type="cpu" class="quota-chart"></quota-usage-chart>
                       </div>
                       <div ng-if="quota.status.total.hard['requests.memory']" class="mar-lg">
@@ -53,11 +53,11 @@
                         <quota-usage-chart height="240" used="namespaceUsageByClusterQuota[quota.metadata.name].used['requests.memory']" cross-project-used="quota.status.total.used['requests.memory']" total="quota.status.total.hard['requests.memory']" type="memory" class="quota-chart"></quota-usage-chart>
                       </div>
                       <div ng-if="quota.status.total.hard['limits.cpu']" class="mar-lg">
-                        <h3 class="text-center">CPU <small>Limit</small></h3>                        
+                        <h3 class="text-center">CPU <small>Limit</small></h3>
                         <quota-usage-chart height="240" used="namespaceUsageByClusterQuota[quota.metadata.name].used['limits.cpu']" cross-project-used="quota.status.total.used['limits.cpu']" total="quota.status.total.hard['limits.cpu']" type="cpu" class="quota-chart"></quota-usage-chart>
                       </div>
                       <div ng-if="quota.status.total.hard['limits.memory']" class="mar-lg">
-                        <h3 class="text-center">Memory <small>Limit</small></h3>                       
+                        <h3 class="text-center">Memory <small>Limit</small></h3>
                         <quota-usage-chart height="240" used="namespaceUsageByClusterQuota[quota.metadata.name].used['limits.memory']" cross-project-used="quota.status.total.used['limits.memory']" total="quota.status.total.hard['limits.memory']" type="memory" class="quota-chart"></quota-usage-chart>
                       </div>
                     </div>
@@ -87,7 +87,7 @@
                               warning: (quota.status.total.used[resourceType] | usageValue) >= (quota.status.total.hard[resourceType] | usageValue)
                             }">
                           <td>
-                            {{resourceType | humanizeQuotaResource}}
+                            {{resourceType | humanizeQuotaResource : true}}
                             <span ng-if="(quota.status.total.used[resourceType] | usageValue) >= (quota.status.total.hard[resourceType] | usageValue)" data-toggle="tooltip" title="Quota limit reached" class="pficon pficon-warning-triangle-o" style="cursor: help; vertical-align: middle;"></span>
                           </td>
                           <td>
@@ -173,7 +173,7 @@
                               warning: (quota.status.used[resourceType] | usageValue) >= (quota.status.hard[resourceType] | usageValue)
                             }">
                           <td>
-                            {{resourceType | humanizeQuotaResource}}
+                            {{resourceType | humanizeQuotaResource : true}}
                             <span ng-if="(quota.status.used[resourceType] | usageValue) >= (quota.status.hard[resourceType] | usageValue)" data-toggle="tooltip" title="Quota limit reached" class="pficon pficon-warning-triangle-o" style="cursor: help; vertical-align: middle;"></span>
                           </td>
                           <td>

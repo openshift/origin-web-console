@@ -3237,47 +3237,82 @@ return _.every(e, b);
 });
 }, j = function(a, b) {
 return a ? "Pod" === a.kind ? i(a, b) :_.has(a, "spec.template") ? i(a.spec.template, b) :b :b;
-}, k = b("humanizeQuotaResource"), l = b("humanizeKind"), m = function(a, b) {
-var c = [], d = "Pod" === a.kind ? a :_.get(a, "spec.template");
-return d ? (_.each([ "cpu", "memory", "requests.cpu", "requests.memory", "limits.cpu", "limits.memory", "pods" ], function(d) {
-var g = b.status.total || b.status;
-if (("Pod" !== a.kind || "pods" !== d) && !e(g.hard[d]) && f(g.hard[d]) <= f(g.used[d])) {
-var h;
-h = "Pod" === a.kind ? "You will not be able to create the " + l(a.kind) + " '" + a.metadata.name + "'." :"You can can still create " + l(a.kind) + " '" + a.metadata.name + "' but no pods will be created until resources are freed.", c.push({
-type:"Pod" === a.kind ? "error" :"warning",
-message:"You are at your quota for " + k(d).toLowerCase() + " on pods.",
-details:h,
-links:[ {
-href:"project/" + b.metadata.namespace + "/quota",
-label:"View Quota",
-target:"_blank"
-} ]
-});
-}
-}), c) :c;
-}, n = function(b, c, d) {
-var g = [];
-return b && c ? (_.each(b, function(b) {
-var h = j(b, c), i = j(b, d), k = a.objectToResourceGroupVersion(b), n = a.kindToResource(b.kind, !0), o = l(b.kind), p = "";
-k.group && (p = k.group + "/"), p += k.resource;
-var q = function(a) {
-var c = a.status.total || a.status;
-!e(c.hard[p]) && f(c.hard[p]) <= f(c.used[p]) && g.push({
-type:"error",
-message:"You are at your quota of " + c.hard[p] + " " + ("1" === c.hard[p] ? o :n) + " in this project.",
-details:"You will not be able to create the " + o + " '" + b.metadata.name + "'.",
+}, k = b("humanizeQuotaResource"), l = b("humanizeKind"), m = function(a, b, c) {
+var d = a.status.total || a.status;
+if (f(d.hard[c]) <= f(d.used[c])) {
+var e;
+return e = "Pod" === b.kind ? "You will not be able to create the " + l(b.kind) + " '" + b.metadata.name + "'." :"You can can still create " + l(b.kind) + " '" + b.metadata.name + "' but no pods will be created until resources are freed.", {
+type:"Pod" === b.kind ? "error" :"warning",
+message:"You are at your quota for " + k(c) + " on pods.",
+details:e,
 links:[ {
 href:"project/" + a.metadata.namespace + "/quota",
 label:"View Quota",
 target:"_blank"
 } ]
-}), g = g.concat(m(b, a));
+};
+}
+return null;
+}, n = {
+cpu:"resources.requests.cpu",
+"requests.cpu":"resources.requests.cpu",
+"limits.cpu":"resources.limits.cpu",
+memory:"resources.requests.memory",
+"requests.memory":"resources.requests.memory",
+"limits.memory":"resources.limits.memory"
+}, o = function(a, b, c, d) {
+var e = a.status.total || a.status, g = n[d], h = 0;
+if (_.each(c.spec.containers, function(a) {
+var b = _.get(a, g);
+b && (h += f(b));
+}), f(e.hard[d]) < f(e.used[d]) + h) {
+var i;
+return i = "Pod" === b.kind ? "You may not be able to create the " + l(b.kind) + " '" + b.metadata.name + "'." :"You can can still create " + l(b.kind) + " '" + b.metadata.name + "' but you may not have pods created until resources are freed.", {
+type:"warning",
+message:"You are close to your quota for " + k(d) + " on pods.",
+details:i,
+links:[ {
+href:"project/" + a.metadata.namespace + "/quota",
+label:"View Quota",
+target:"_blank"
+} ]
+};
+}
+}, p = function(a, b) {
+var c = [], d = "Pod" === a.kind ? a :_.get(a, "spec.template");
+return d ? (_.each([ "cpu", "memory", "requests.cpu", "requests.memory", "limits.cpu", "limits.memory", "pods" ], function(f) {
+var g = b.status.total || b.status;
+if (("Pod" !== a.kind || "pods" !== f) && !e(g.hard[f])) {
+var h = m(b, a, f);
+if (h) c.push(h); else if ("pods" !== f) {
+var i = o(b, a, d, f);
+i && c.push(i);
+}
+}
+}), c) :c;
+}, q = function(b, c, d) {
+var g = [];
+return b && c ? (_.each(b, function(b) {
+var h = j(b, c), i = j(b, d), k = a.objectToResourceGroupVersion(b), m = a.kindToResource(b.kind, !0), n = l(b.kind), o = "";
+k.group && (o = k.group + "/"), o += k.resource;
+var q = function(a) {
+var c = a.status.total || a.status;
+!e(c.hard[o]) && f(c.hard[o]) <= f(c.used[o]) && g.push({
+type:"error",
+message:"You are at your quota of " + c.hard[o] + " " + ("1" === c.hard[o] ? n :m) + " in this project.",
+details:"You will not be able to create the " + n + " '" + b.metadata.name + "'.",
+links:[ {
+href:"project/" + a.metadata.namespace + "/quota",
+label:"View Quota",
+target:"_blank"
+} ]
+}), g = g.concat(p(b, a));
 };
 _.each(h, q), _.each(i, q);
 }), g) :g;
-}, o = function(a, b) {
+}, r = function(a, b) {
 function e() {
-0 === j && (i = n(a, f, g), h.resolve({
+0 === j && (i = q(a, f, g), h.resolve({
 quotaAlerts:i
 }));
 }
@@ -3287,7 +3322,7 @@ f = a.by("metadata.name"), Logger.log("quotas", f), j--, e();
 }), d.list("appliedclusterresourcequotas", b, function(a) {
 g = a.by("metadata.name"), Logger.log("cluster quotas", g), j--, e();
 }), h.promise;
-}, p = function(a, b) {
+}, s = function(a, b) {
 var c = function(a) {
 var b = a.status.total || a.status;
 return _.some(b.hard, function(a, c) {
@@ -3300,10 +3335,10 @@ return {
 filterQuotasForResource:j,
 isBestEffortPod:g,
 isTerminatingPod:h,
-getResourceLimitAlerts:m,
-getQuotaAlerts:n,
-getLatestQuotaAlerts:o,
-isAnyQuotaExceeded:p
+getResourceLimitAlerts:p,
+getQuotaAlerts:q,
+getLatestQuotaAlerts:r,
+isAnyQuotaExceeded:s
 };
 } ]), angular.module("openshiftConsole").factory("LabelsService", function() {
 var a = function(a) {
@@ -11531,9 +11566,9 @@ return function(a) {
 return b[a] || a;
 };
 } ]).filter("humanizeQuotaResource", function() {
-return function(a) {
+return function(a, b) {
 if (!a) return a;
-var b = {
+var c = {
 configmaps:"Config Maps",
 cpu:"CPU (Request)",
 "limits.cpu":"CPU (Limit)",
@@ -11550,8 +11585,22 @@ replicationcontrollers:"Replication Controllers",
 resourcequotas:"Resource Quotas",
 secrets:"Secrets",
 services:"Services"
+}, d = {
+configmaps:"config maps",
+cpu:"CPU (request)",
+"limits.cpu":"CPU (limit)",
+"limits.memory":"memory (limit)",
+memory:"memory (request)",
+"openshift.io/imagesize":"image size",
+"openshift.io/imagestreamsize":"image stream size",
+"openshift.io/projectimagessize":"project image size",
+persistentvolumeclaims:"persistent volume claims",
+replicationcontrollers:"replication controllers",
+"requests.cpu":"CPU (request)",
+"requests.memory":"memory (request)",
+resourcequotas:"resource quotas"
 };
-return b[a] || a;
+return b ? c[a] || a :d[a] || a;
 };
 }).filter("routeTargetPortMapping", [ "RoutesService", function(a) {
 var b = function(a, b, c) {
