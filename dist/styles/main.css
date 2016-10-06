@@ -3380,8 +3380,7 @@ to{opacity:0}
 .pod-template-block .pod-template .fa,.pod-template-block .pod-template .pficon,.pod-template-block .pod-template span[data-icon]{color:#888}
 .pod-template-block .pod-template .pod-template-build{word-wrap:break-word;word-break:break-word;overflow-wrap:break-word;min-width:0}
 .pod-template-block .pod-template .pod-template-key{font-weight:700}
-.components .pod-template-block .pod-template .pod-template-key,.overview .pod-template-block .pod-template .pod-template-key{font-weight:600}
-.surface-shaded .ui-select-bootstrap .ui-select-match-text,.ui-select-bootstrap .ui-select-placeholder{font-weight:400}
+.breadcrumb strong,.components .pod-template-block .pod-template .pod-template-key,.overview .pod-template-block .pod-template .pod-template-key{font-weight:600}
 code.probe-command{display:inline-block;line-height:1.3;margin-right:2px}
 .hash{font-size:12px}
 .pod-template-column{min-width:0}
@@ -3438,15 +3437,9 @@ body{padding-right:0px!important}
 }
 @-moz-document url-prefix(){.console-os fieldset{display:table-cell}
 }
-.ui-select-bootstrap .ui-select-search{width:100%!important}
-.ui-select-bootstrap .ui-select-toggle>.caret{font-style:normal;margin-top:-5px}
-.ui-select-bootstrap .ui-select-match-text>span{width:90%;overflow:hidden;text-overflow:ellipsis;position:absolute}
-.ui-select-bootstrap .btn{padding-right:25px}
-.surface-shaded .ui-select-bootstrap .ui-select-match>.btn{background-color:#fff;background-image:linear-gradient(to bottom,#fff 0%,#fbfbfb 100%)}
 .separator{border-top:1px solid rgba(0,0,0,.15)}
 .surface-shaded .nav-tabs{border-color:rgba(0,0,0,.15)}
 .breadcrumb{font-size:12px;padding-bottom:0;margin-bottom:0}
-.breadcrumb strong{font-weight:600}
 .tile.tile-project h2{padding:10px 0}
 @media (min-width:768px){.browse-deployment-donut .deployment-donut{-webkit-align-items:flex-end;-moz-align-items:flex-end;align-items:flex-end}
 .nav-tabs.nav-justified{border-bottom:1px solid #ededed}
@@ -4441,9 +4434,15 @@ td.visible-print,th.visible-print{display:table-cell!important}
 .log-view.log-fixed-height ::-webkit-scrollbar-track,.navbar-project-menu ::-webkit-scrollbar-track{background-color:#050505}
 .log-view.log-fixed-height ::-webkit-scrollbar{width:17px}
 .log-view.log-fixed-height ::-webkit-scrollbar-track{background-color:rgba(255,255,255,.1)}
-.ui-select-bootstrap .ui-select-choices-row>a{border-color:transparent;border-style:solid;border-width:1px 0;line-height:1.66666667;padding:1px 10px}
-.ui-select-bootstrap .ui-select-choices-row>a:focus,.ui-select-bootstrap .ui-select-choices-row>a:hover{background-color:#def3ff;border-color:#bee1f4;color:#4d5258}
-.ui-select-bootstrap .ui-select-choices-row.active>a{background-color:#0088ce!important;border-color:#0088ce!important;color:#fff}
+.surface-shaded .ui-select-bootstrap .ui-select-match>.btn{background-color:#fff;background-image:linear-gradient(to bottom,#fff 0%,#fbfbfb 100%)}
+.ui-select-bootstrap .ui-select-choices-row>span{border-color:transparent;border-style:solid;border-width:1px 0;line-height:1.66666667;padding:1px 10px}
+.ui-select-bootstrap .ui-select-choices-row>span:focus,.ui-select-bootstrap .ui-select-choices-row>span:hover{background-color:#def3ff;border-color:#bee1f4;color:#4d5258}
+.ui-select-bootstrap .ui-select-choices-row.active>span{background-color:#0088ce!important;border-color:#0088ce!important;color:#fff}
+.ui-select-bootstrap .ui-select-match-text,.ui-select-bootstrap .ui-select-placeholder{font-weight:400}
+.ui-select-bootstrap .ui-select-match-text{padding-right:20px}
+.ui-select-bootstrap .ui-select-match-text span{display:block;text-overflow:ellipsis}
+.ui-select-bootstrap .ui-select-toggle>.caret{font-size:12px;font-style:normal;right:6px;top:10px}
+.ui-select-bootstrap .ui-select-search{width:100%!important}
 .nav-sidenav-secondary .dropdown-header{color:#b3b3b3;font-size:12px;padding-bottom:10px;padding-left:37px;padding-top:20px}
 .sidebar-left .navbar-sidebar{border-bottom:0;border-left:0;border-top:0;margin:0;min-height:46px}
 .sidebar-left .navbar-sidebar.visible-xs-block{border:0}
