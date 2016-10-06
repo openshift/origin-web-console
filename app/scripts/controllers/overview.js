@@ -45,16 +45,26 @@ angular.module('openshiftConsole')
     var isRecentDeployment = $filter('isRecentDeployment');
 
     var alternateServiceSet = {};
+    var servicesWithAlternates = {};
     var findAlternateServices = function() {
       // Map of service names and a truthy value if this is a alternate service for a route.
       alternateServiceSet = {};
       _.each(routes, function(route) {
         var alternateBackends = _.get(route, 'spec.alternateBackends', []);
         var alternateServices = _.filter(alternateBackends, { kind: 'Service' });
-        _.each(alternateServices, function(routeTarget) {
-          alternateServiceSet[routeTarget.name] = true;
-        });
+        if (!_.isEmpty(alternateServices)) {
+          var primary = _.get(route, 'spec.to.name');
+          servicesWithAlternates[primary] = true;
+          _.each(alternateServices, function(routeTarget) {
+            alternateServiceSet[routeTarget.name] = true;
+          });
+        }
       });
+    };
+
+    var hasAlternateServices = function(service) {
+      var name = _.get(service, 'metadata.name');
+      return _.has(servicesWithAlternates, name);
     };
 
     var isAlternateService = function(service) {
@@ -275,6 +285,13 @@ angular.module('openshiftConsole')
         // services. Otherwise, children of children will not show up anywhere
         // on the overview.
         if (hasChildren(service)) {
+          return true;
+        }
+
+        // Similarly, if this service is part of a route with alternate
+        // services, show it as a top-level service so the alternates are not
+        // hidden.
+        if (hasAlternateServices(service)) {
           return true;
         }
 
