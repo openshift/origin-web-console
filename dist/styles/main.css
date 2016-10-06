@@ -4190,19 +4190,19 @@ ul.messenger-theme-flat .messenger-message.alert-info .messenger-message-inner:b
 @media (min-width:750px){.overview .no-child-services-message h2,.overview .no-deployments-message h2{margin-top:0}
 .overview .no-child-services-message{display:-webkit-flex;display:-moz-flex;display:-ms-flexbox;display:-ms-flex;display:flex;-webkit-flex:1 0 0%;-moz-flex:1 0 0%;-ms-flex:1 0 0%;flex:1 0 0%;-webkit-flex-direction:column;-moz-flex-direction:column;-ms-flex-direction:column;flex-direction:column}
 }
-@media (min-width:992px){.overview .overview-services.single-alternate-service .alternate-service .overview-tile .service-title,.overview .overview-services.single-alternate-service overview-service:nth-child(even){padding-left:0}
-.overview .overview-services.single-alternate-service .primary-service .overview-tile{border-right:0}
-.overview .overview-services.single-alternate-service .primary-service .overview-tile .service-title,.overview .overview-services.single-alternate-service overview-service:nth-child(odd){padding-right:0}
+@media (min-width:992px){.overview .overview-services.single-alternate-service .alternate-service .no-deployments-block .service-title,.overview .overview-services.single-alternate-service .alternate-service .overview-tile .service-title,.overview .overview-services.single-alternate-service overview-service:nth-child(even){padding-left:0}
+.overview .overview-services.single-alternate-service .primary-service .no-deployments-block,.overview .overview-services.single-alternate-service .primary-service .overview-tile{border-right:0}
+.overview .overview-services.single-alternate-service .primary-service .no-deployments-block .service-title,.overview .overview-services.single-alternate-service .primary-service .overview-tile .service-title,.overview .overview-services.single-alternate-service overview-service:nth-child(odd){padding-right:0}
 .overview .overview-services.single-alternate-service .alternate-service .overview-tile{box-shadow:2px 3px 6px -1px rgba(0,0,0,.1)}
 .overview .overview-services.single-alternate-service .alternate-service .service-metadata{order:-1}
 .overview .overview-services.single-alternate-service .alternate-service .service-metadata .traffic-label{display:none}
 .overview .overview-services.single-alternate-service .alternate-service .service-metadata .progress{margin-left:0}
 .overview .overview-services.single-alternate-service .alternate-service .service-metadata .progress .progress-bar{background-color:#00659c}
 }
-.overview .overview-tile .traffic-label{display:inline-block}
-.overview .overview-tile .progress{background-color:inherit;border:0;box-shadow:none;display:inline-block;margin:0 0 0 5px;min-width:2em;vertical-align:-3px}
-.overview .overview-tile .progress .progress-bar{width:100%}
-@media (min-width:1200px){.overview .overview-tile .progress{width:250px}
+.overview .no-deployments-block .traffic-label,.overview .overview-tile .traffic-label{display:inline-block}
+.overview .no-deployments-block .progress,.overview .overview-tile .progress{background-color:inherit;border:0;box-shadow:none;display:inline-block;margin:0 0 0 5px;min-width:2em;vertical-align:-3px}
+.overview .no-deployments-block .progress .progress-bar,.overview .overview-tile .progress .progress-bar{width:100%}
+@media (min-width:1200px){.overview .no-deployments-block .progress,.overview .overview-tile .progress{width:250px}
 }
 .overview .standalone-service-row{-webkit-justify-content:space-between;-moz-justify-content:space-between;justify-content:space-between}
 .overview .standalone-service .no-deployments-block{margin-left:0}

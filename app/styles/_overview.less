@@ -591,10 +591,12 @@
   }
   @media (min-width: @screen-md-min) {
     .overview-services.single-alternate-service {
-      .primary-service .overview-tile {
-        border-right: 0;
-        .service-title {
-          padding-right: 0;
+      .primary-service {
+        .overview-tile, .no-deployments-block {
+          border-right: 0;
+          .service-title {
+            padding-right: 0;
+          }
         }
       }
       // Remove the gap between the tiles.
@@ -608,6 +610,8 @@
         .overview-tile {
           // Prevent the left box-shadow from appearing over the primary service tile.
           box-shadow: 2px 3px 6px -1px rgba(0, 0, 0, 0.1);
+        }
+        .overview-tile, .no-deployments-block {
           .service-title {
             padding-left: 0;
           }
@@ -627,7 +631,7 @@
       }
     }
   }
-  .overview-tile {
+  .overview-tile, .no-deployments-block {
     .traffic-label {
       display: inline-block;
     }
