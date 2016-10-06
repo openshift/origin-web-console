@@ -9,9 +9,9 @@
             <breadcrumbs breadcrumbs="breadcrumbs"></breadcrumbs>
             <alerts alerts="alerts"></alerts>
             <div ng-if="!loaded" class="mar-top-md">Loading...</div>
-            <div ng-if="deployment">
+            <div ng-if="replicaSet">
               <h1>
-                {{deployment.metadata.name}}
+                {{replicaSet.metadata.name}}
                 <span
                   ng-if="deploymentConfigMissing"
                   class="pficon pficon-warning-triangle-o"
@@ -22,7 +22,7 @@
                   aria-hidden="true">
                 </span>
                 <span ng-if="deploymentConfigMissing" class="sr-only">Warning: The deployment's deployment config is missing.</span>
-                <small class="meta">created <relative-timestamp timestamp="deployment.metadata.creationTimestamp"></relative-timestamp></small>
+                <small class="meta">created <relative-timestamp timestamp="replicaSet.metadata.creationTimestamp"></relative-timestamp></small>
 
                 <!-- Actions -->
                 <ng-include ng-if="kind === 'ReplicaSet'"
@@ -32,14 +32,14 @@
                             src=" 'views/browse/_replication-controller-actions.html' ">
                 </ng-include>
               </h1>
-              <labels ng-if="deploymentConfigName" labels="deployment.metadata.labels" clickable="true" kind="deployments" title-kind="deployments for deployment config {{deploymentConfigName}}" project-name="{{deployment.metadata.namespace}}" limit="3" navigate-url="{{deployment | configURLForResource}}"></labels>
-              <labels ng-if="!deploymentConfigName" labels="deployment.metadata.labels" clickable="true" kind="deployments" project-name="{{deployment.metadata.namespace}}" limit="3"></labels>
+              <labels ng-if="deploymentConfigName" labels="replicaSet.metadata.labels" clickable="true" kind="deployments" title-kind="deployments for deployment config {{deploymentConfigName}}" project-name="{{replicaSet.metadata.namespace}}" limit="3" navigate-url="{{replicaSet | configURLForResource}}"></labels>
+              <labels ng-if="!deploymentConfigName" labels="replicaSet.metadata.labels" clickable="true" kind="deployments" project-name="{{replicaSet.metadata.namespace}}" limit="3"></labels>
             </div>
           </div>
         </div><!-- /middle-header-->
         <div class="middle-content" persist-tab-state>
           <div class="container-fluid">
-            <div class="row" ng-if="deployment">
+            <div class="row" ng-if="replicaSet">
               <div class="col-md-12">
                 <uib-tabset>
                   <uib-tab active="selectedTab.details">
@@ -50,12 +50,12 @@
                   </uib-tab>
                   <uib-tab heading="Environment" active="selectedTab.environment">
                     <uib-tab-heading>Environment</uib-tab-heading>
-                    <div ng-if="deployment | hasDeploymentConfig">
+                    <div ng-if="replicaSet | hasDeploymentConfig">
                       <p ng-if="'deploymentconfigs' | canI : 'update'">
                         <span class="pficon pficon-info" aria-hidden="true"></span>
-                        Environment variables can be edited on the <a ng-href="{{deployment | configURLForResource}}?tab=environment">deployment configuration</a>.
+                        Environment variables can be edited on the <a ng-href="{{replicaSet | configURLForResource}}?tab=environment">deployment configuration</a>.
                       </p>
-                      <div ng-repeat="container in deployment.spec.template.spec.containers">
+                      <div ng-repeat="container in replicaSet.spec.template.spec.containers">
                         <h3>Container {{container.name}} Environment Variables</h3>
                         <key-value-editor
                           ng-if="container.env.length"
@@ -70,7 +70,7 @@
                         <em ng-if="!container.env.length">The container specification has no environment variables set.</em>
                       </div>
                     </div>
-                    <ng-form ng-show="!(deployment | hasDeploymentConfig)" name="forms.envForm">
+                    <ng-form ng-show="!(replicaSet | hasDeploymentConfig)" name="forms.envForm">
                       <div ng-repeat="container in updatedDeployment.spec.template.spec.containers">
                         <div ng-if="resource | canI : 'update'">
                           <key-value-editor
@@ -114,7 +114,7 @@
                          we don't update in the background. -->
                     <deployment-metrics
                         ng-if="selectedTab.metrics && podsForDeployment"
-                        pods="podsForDeployment" containers="deployment.spec.template.spec.containers">
+                        pods="podsForDeployment" containers="replicaSet.spec.template.spec.containers">
                     </deployment-metrics>
                   </uib-tab>
                   <uib-tab ng-if="deploymentConfigName && logOptions.version && ('deploymentconfigs/log' | canI : 'get')" active="selectedTab.logs">
@@ -130,16 +130,16 @@
                       empty="logEmpty"
                       run="logCanRun">
 
-                      <span ng-if="deployment | deploymentStatus">
+                      <span ng-if="replicaSet | deploymentStatus">
                         <label>Status:</label>
-                        <status-icon status="deployment | deploymentStatus"></status-icon>
-                        {{deployment | deploymentStatus}}
+                        <status-icon status="replicaSet | deploymentStatus"></status-icon>
+                        {{replicaSet | deploymentStatus}}
                       </span>
                     </log-viewer>
                   </uib-tab>
                   <uib-tab active="selectedTab.events" ng-if="'events' | canI : 'watch'">
                     <uib-tab-heading>Events</uib-tab-heading>
-                    <events resource-kind="ReplicaSet" resource-name="{{deployment.metadata.name}}" project-context="projectContext" ng-if="selectedTab.events"></events>
+                    <events resource-kind="{{kind}}" resource-name="{{replicaSet.metadata.name}}" project-context="projectContext" ng-if="selectedTab.events"></events>
                   </uib-tab>
                 </uib-tabset>
               </div><!-- /col-* -->

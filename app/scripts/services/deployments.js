@@ -275,6 +275,16 @@ angular.module("openshiftConsole")
       return annotation(object, 'deployment.kubernetes.io/revision');
     };
 
+    DeploymentsService.prototype.isActiveReplicaSet = function(replicaSet, deployment) {
+      var replicaSetRevision = this.getRevision(replicaSet);
+      var deploymentRevision = this.getRevision(deployment);
+      if (!replicaSetRevision || !deploymentRevision) {
+        return false;
+      }
+
+      return replicaSetRevision === deploymentRevision;
+    };
+
     DeploymentsService.prototype.getActiveReplicaSet = function(replicaSets, deployment) {
       var latestRevision = this.getRevision(deployment);
       if (!latestRevision) {
