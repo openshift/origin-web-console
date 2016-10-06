@@ -68,6 +68,70 @@ angular.module("openshiftConsole")
     var humanizeQuotaResource = $filter('humanizeQuotaResource');
     var humanizeKind = $filter('humanizeKind');
 
+    var getQuotaResourceReachedAlert = function(quota, resource, type) {
+      var q = quota.status.total || quota.status;
+      if (usageValue(q.hard[type]) <= usageValue(q.used[type])) {
+        var details;
+        if (resource.kind === 'Pod') {
+          details = "You will not be able to create the " + humanizeKind(resource.kind) + " '" + resource.metadata.name + "'.";
+        }
+        else {
+          details = "You can can still create " + humanizeKind(resource.kind) + " '" + resource.metadata.name + "' but no pods will be created until resources are freed.";
+        }
+        return {
+          type: resource.kind === 'Pod' ? 'error' : 'warning',
+          message: 'You are at your quota for ' + humanizeQuotaResource(type) + ' on pods.',
+          details: details,
+          links: [{
+            href: "project/" + quota.metadata.namespace + "/quota",
+            label: "View Quota",
+            target: "_blank"
+          }]
+        };
+      }
+      return null;
+    };
+
+    var QUOTA_TYPE_TO_RESOURCE = {
+      'cpu': "resources.requests.cpu",
+      'requests.cpu': "resources.requests.cpu",
+      'limits.cpu': "resources.limits.cpu",
+      'memory': "resources.requests.memory",
+      'requests.memory': "resources.requests.memory",
+      'limits.memory': "resources.limits.memory"
+    };
+
+    var getRequestedResourceQuotaAlert = function(quota, resource, podTemplate, type) {
+      var q = quota.status.total || quota.status;
+      var containerField = QUOTA_TYPE_TO_RESOURCE[type];
+      var templateTotal = 0;
+      _.each(podTemplate.spec.containers, function(container) {
+        var templateVal = _.get(container, containerField);
+        if (templateVal) {
+          templateTotal += usageValue(templateVal);
+        }
+      });
+      if (usageValue(q.hard[type]) < usageValue(q.used[type]) + templateTotal) {
+        var detail;
+        if (resource.kind === 'Pod') {
+          detail = "You may not be able to create the " + humanizeKind(resource.kind) + " '" + resource.metadata.name + "'.";
+        }
+        else {
+          detail = "You can can still create " + humanizeKind(resource.kind) + " '" + resource.metadata.name + "' but you may not have pods created until resources are freed.";
+        }
+        return {
+          type: 'warning',
+          message: 'You are close to your quota for ' + humanizeQuotaResource(type) + " on pods.",
+          details: detail,
+          links: [{
+            href: "project/" + quota.metadata.namespace + "/quota",
+            label: "View Quota",
+            target: "_blank"
+          }]
+        };
+      }
+    };
+
     var getResourceLimitAlerts = function(resource, quota){
       var alerts = [];
       var podTemplate = resource.kind === "Pod" ? resource : _.get(resource, 'spec.template');
@@ -77,7 +141,8 @@ angular.module("openshiftConsole")
       }
 
       // Otherwise this is a pod or something that creates pods so return alerts if we are at quota already
-      // for any of these:
+      // for any of these.  If you add new types to this list, add them to the type map above, or exclude
+      // them from the total checks.
       _.each([
         'cpu',
         'memory',
@@ -92,24 +157,18 @@ angular.module("openshiftConsole")
         if (resource.kind === 'Pod' && type === 'pods') {
           return;
         }
-        if (!isNil(q.hard[type]) && usageValue(q.hard[type]) <= usageValue(q.used[type])) {
-          var details;
-          if (resource.kind === 'Pod') {
-            details = "You will not be able to create the " + humanizeKind(resource.kind) + " '" + resource.metadata.name + "'.";
+        if (!isNil(q.hard[type])) {
+          var quotaReachedAlert = getQuotaResourceReachedAlert(quota, resource, type);
+          if (quotaReachedAlert) {
+            alerts.push(quotaReachedAlert);
           }
-          else {
-            details = "You can can still create " + humanizeKind(resource.kind) + " '" + resource.metadata.name + "' but no pods will be created until resources are freed.";
+          else if (type !== 'pods') {
+            // Only calculate this if we havent already reached quota
+            var requestedAlert = getRequestedResourceQuotaAlert(quota, resource, podTemplate, type);
+            if (requestedAlert) {
+              alerts.push(requestedAlert);
+            }
           }
-          alerts.push({
-            type: resource.kind === 'Pod' ? 'error' : 'warning',
-            message: 'You are at your quota for ' + humanizeQuotaResource(type).toLowerCase() + ' on pods.',
-            details: details,
-            links: [{
-              href: "project/" + quota.metadata.namespace + "/quota",
-              label: "View Quota",
-              target: "_blank"
-            }]
-          });
         }
       });
 

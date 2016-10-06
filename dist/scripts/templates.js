@@ -9373,7 +9373,7 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "                              warning: (quota.status.total.used[resourceType] | usageValue) >= (quota.status.total.hard[resourceType] | usageValue)\n" +
     "                            }\">\n" +
     "<td>\n" +
-    "{{resourceType | humanizeQuotaResource}}\n" +
+    "{{resourceType | humanizeQuotaResource : true}}\n" +
     "<span ng-if=\"(quota.status.total.used[resourceType] | usageValue) >= (quota.status.total.hard[resourceType] | usageValue)\" data-toggle=\"tooltip\" title=\"Quota limit reached\" class=\"pficon pficon-warning-triangle-o\" style=\"cursor: help; vertical-align: middle\"></span>\n" +
     "</td>\n" +
     "<td>\n" +
@@ -9453,7 +9453,7 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "                              warning: (quota.status.used[resourceType] | usageValue) >= (quota.status.hard[resourceType] | usageValue)\n" +
     "                            }\">\n" +
     "<td>\n" +
-    "{{resourceType | humanizeQuotaResource}}\n" +
+    "{{resourceType | humanizeQuotaResource : true}}\n" +
     "<span ng-if=\"(quota.status.used[resourceType] | usageValue) >= (quota.status.hard[resourceType] | usageValue)\" data-toggle=\"tooltip\" title=\"Quota limit reached\" class=\"pficon pficon-warning-triangle-o\" style=\"cursor: help; vertical-align: middle\"></span>\n" +
     "</td>\n" +
     "<td>\n" +
@@ -9780,7 +9780,7 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "                              warning: (quota.status.total.used[resourceType] | usageValue) >= (quota.status.total.hard[resourceType] | usageValue)\n" +
     "                            }\">\n" +
     "<td>\n" +
-    "{{resourceType | humanizeQuotaResource}}\n" +
+    "{{resourceType | humanizeQuotaResource : true}}\n" +
     "<span ng-if=\"(quota.status.total.used[resourceType] | usageValue) >= (quota.status.total.hard[resourceType] | usageValue)\" data-toggle=\"tooltip\" title=\"Quota limit reached\" class=\"pficon pficon-warning-triangle-o\" style=\"cursor: help; vertical-align: middle\"></span>\n" +
     "</td>\n" +
     "<td>\n" +
@@ -9861,7 +9861,7 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "                              warning: (quota.status.used[resourceType] | usageValue) >= (quota.status.hard[resourceType] | usageValue)\n" +
     "                            }\">\n" +
     "<td>\n" +
-    "{{resourceType | humanizeQuotaResource}}\n" +
+    "{{resourceType | humanizeQuotaResource : true}}\n" +
     "<span ng-if=\"(quota.status.used[resourceType] | usageValue) >= (quota.status.hard[resourceType] | usageValue)\" data-toggle=\"tooltip\" title=\"Quota limit reached\" class=\"pficon pficon-warning-triangle-o\" style=\"cursor: help; vertical-align: middle\"></span>\n" +
     "</td>\n" +
     "<td>\n" +

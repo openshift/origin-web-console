@@ -1106,12 +1106,12 @@ angular.module('openshiftConsole')
     };
   })
   .filter('humanizeQuotaResource', function() {
-    return function(resourceType) {
+    return function(resourceType, useTitleCase) {
       if (!resourceType) {
         return resourceType;
       }
 
-      var nameFormatMap = {
+      var nameTitleCaseFormatMap = {
         'configmaps': 'Config Maps',
         'cpu': 'CPU (Request)',
         'limits.cpu': 'CPU (Limit)',
@@ -1129,6 +1129,25 @@ angular.module('openshiftConsole')
         'secrets': 'Secrets',
         'services': 'Services'
       };
+
+      var nameFormatMap = {
+        'configmaps': 'config maps',
+        'cpu': 'CPU (request)',
+        'limits.cpu': 'CPU (limit)',
+        'limits.memory': 'memory (limit)',
+        'memory': 'memory (request)',
+        'openshift.io/imagesize': 'image size',
+        'openshift.io/imagestreamsize': 'image stream size',
+        'openshift.io/projectimagessize': 'project image size',
+        'persistentvolumeclaims': 'persistent volume claims',
+        'replicationcontrollers': 'replication controllers',
+        'requests.cpu': 'CPU (request)',
+        'requests.memory': 'memory (request)',
+        'resourcequotas': 'resource quotas'
+      };
+      if (useTitleCase) {
+        return nameTitleCaseFormatMap[resourceType] || resourceType;
+      }
       return nameFormatMap[resourceType] || resourceType;
     };
   })
