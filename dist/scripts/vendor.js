@@ -52159,7 +52159,7 @@ case a.CTRL:
 case a.ALT:
 return !0;
 }
-return !!b.metaKey;
+return !!(b.metaKey || b.ctrlKey || b.altKey);
 },
 isFunctionKey:function(a) {
 return a = a.which ? a.which :a, a >= 112 && a <= 123;
@@ -52197,6 +52197,8 @@ refreshDelay:1e3,
 closeOnSelect:!0,
 skipFocusser:!1,
 dropdownPosition:"auto",
+removeSelected:!0,
+resetSearchInput:!0,
 generateId:function() {
 return b++;
 },
@@ -52244,66 +52246,93 @@ b.addClass("ui-select-choices");
 var c = b.parent().attr("theme") || a.theme;
 return c + "/choices.tpl.html";
 },
-compile:function(f, g) {
-if (!g.repeat) throw c("repeat", "Expected 'repeat' expression.");
-return function(f, g, h, i, j) {
-var k = h.groupBy, l = h.groupFilter;
-if (i.parseRepeatAttr(h.repeat, k, l), i.disableChoiceExpression = h.uiDisableChoice, i.onHighlightCallback = h.onHighlight, i.dropdownPosition = h.position ? h.position.toLowerCase() :a.dropdownPosition, k) {
-var m = g.querySelectorAll(".ui-select-choices-group");
-if (1 !== m.length) throw c("rows", "Expected 1 .ui-select-choices-group but got '{0}'.", m.length);
-m.attr("ng-repeat", b.getGroupNgRepeatExpression());
+compile:function(d, f) {
+if (!f.repeat) throw c("repeat", "Expected 'repeat' expression.");
+var g = f.groupBy, h = f.groupFilter;
+if (g) {
+var i = d.querySelectorAll(".ui-select-choices-group");
+if (1 !== i.length) throw c("rows", "Expected 1 .ui-select-choices-group but got '{0}'.", i.length);
+i.attr("ng-repeat", b.getGroupNgRepeatExpression());
 }
-var n = g.querySelectorAll(".ui-select-choices-row");
-if (1 !== n.length) throw c("rows", "Expected 1 .ui-select-choices-row but got '{0}'.", n.length);
-n.attr("ng-repeat", i.parserResult.repeatExpression(k)).attr("ng-if", "$select.open"), e.document.addEventListener && n.attr("ng-mouseenter", "$select.setActiveItem(" + i.parserResult.itemName + ")").attr("ng-click", "$select.select(" + i.parserResult.itemName + ",$select.skipFocusser,$event)");
-var o = g.querySelectorAll(".ui-select-choices-row-inner");
-if (1 !== o.length) throw c("rows", "Expected 1 .ui-select-choices-row-inner but got '{0}'.", o.length);
-o.attr("uis-transclude-append", ""), e.document.addEventListener || o.attr("ng-mouseenter", "$select.setActiveItem(" + i.parserResult.itemName + ")").attr("ng-click", "$select.select(" + i.parserResult.itemName + ",$select.skipFocusser,$event)"), d(g, j)(f), f.$watch("$select.search", function(a) {
-a && !i.open && i.multiple && i.activate(!1, !0), i.activeIndex = i.tagging.isActivated ? -1 :0, !h.minimumInputLength || i.search.length >= h.minimumInputLength ? i.refresh(h.refresh) :i.items = [];
-}), h.$observe("refreshDelay", function() {
-var b = f.$eval(h.refreshDelay);
-i.refreshDelay = void 0 !== b ? b :a.refreshDelay;
+var j = b.parse(f.repeat), k = d.querySelectorAll(".ui-select-choices-row");
+if (1 !== k.length) throw c("rows", "Expected 1 .ui-select-choices-row but got '{0}'.", k.length);
+k.attr("ng-repeat", j.repeatExpression(g)).attr("ng-if", "$select.open");
+var l = d.querySelectorAll(".ui-select-choices-row-inner");
+if (1 !== l.length) throw c("rows", "Expected 1 .ui-select-choices-row-inner but got '{0}'.", l.length);
+l.attr("uis-transclude-append", "");
+var m = e.document.addEventListener ? k :l;
+return m.attr("ng-click", "$select.select(" + j.itemName + ",$select.skipFocusser,$event)"), function(b, c, d, e) {
+e.parseRepeatAttr(d.repeat, g, h), e.disableChoiceExpression = d.uiDisableChoice, e.onHighlightCallback = d.onHighlight, e.dropdownPosition = d.position ? d.position.toLowerCase() :a.dropdownPosition, b.$on("$destroy", function() {
+k.remove();
+}), b.$watch("$select.search", function(a) {
+a && !e.open && e.multiple && e.activate(!1, !0), e.activeIndex = e.tagging.isActivated ? -1 :0, !d.minimumInputLength || e.search.length >= d.minimumInputLength ? e.refresh(d.refresh) :e.items = [];
+}), d.$observe("refreshDelay", function() {
+var c = b.$eval(d.refreshDelay);
+e.refreshDelay = void 0 !== c ? c :a.refreshDelay;
 });
 };
 }
 };
-} ]), c.controller("uiSelectCtrl", [ "$scope", "$element", "$timeout", "$filter", "uisRepeatParser", "uiSelectMinErr", "uiSelectConfig", "$parse", "$injector", "$window", function(b, c, d, e, f, g, h, i, j, k) {
-function l(a, b, c) {
+} ]), c.controller("uiSelectCtrl", [ "$scope", "$element", "$timeout", "$filter", "$$uisDebounce", "uisRepeatParser", "uiSelectMinErr", "uiSelectConfig", "$parse", "$injector", "$window", function(b, c, d, e, f, g, h, i, j, k, l) {
+function m(a, b, c) {
 if (a.findIndex) return a.findIndex(b, c);
 for (var d, e = Object(a), f = e.length >>> 0, g = 0; g < f; g++) if (d = e[g], b.call(c, d, g, e)) return g;
 return -1;
 }
-function m() {
-(q.resetSearchInput || void 0 === q.resetSearchInput && h.resetSearchInput) && (q.search = r, q.selected && q.items.length && !q.multiple && (q.activeIndex = l(q.items, function(a) {
+function n() {
+u.resetSearchInput && (u.search = v, u.selected && u.items.length && !u.multiple && (u.activeIndex = m(u.items, function(a) {
 return angular.equals(this, a);
-}, q.selected)));
+}, u.selected)));
 }
-function n(a, b) {
+function o(a, b) {
 var c, d, e = [];
 for (c = 0; c < b.length; c++) for (d = 0; d < a.length; d++) a[d].name == [ b[c] ] && e.push(a[d]);
 return e;
 }
-function o(b) {
+function p(a, b) {
+var c = y.indexOf(a);
+b && c === -1 && y.push(a), !b && c > -1 && y.splice(c, 1);
+}
+function q(a) {
+return y.indexOf(a) > -1;
+}
+function r(a) {
+function b(a, b) {
+var c = d.indexOf(a);
+b && c === -1 && d.push(a), !b && c > -1 && d.splice(c, 0);
+}
+function c(a) {
+return d.indexOf(a) > -1;
+}
+if (a) {
+var d = [];
+u.isLocked = function(a, d) {
+var e = !1, f = u.selected[d];
+return f && (a ? (e = !!a.$eval(u.lockChoiceExpression), b(f, e)) :e = c(f)), e;
+};
+}
+}
+function s(b) {
 var c = !0;
 switch (b) {
 case a.DOWN:
-!q.open && q.multiple ? q.activate(!1, !0) :q.activeIndex < q.items.length - 1 && q.activeIndex++;
+!u.open && u.multiple ? u.activate(!1, !0) :u.activeIndex < u.items.length - 1 && u.activeIndex++;
 break;
 
 case a.UP:
-!q.open && q.multiple ? q.activate(!1, !0) :(q.activeIndex > 0 || 0 === q.search.length && q.tagging.isActivated && q.activeIndex > -1) && q.activeIndex--;
+!u.open && u.multiple ? u.activate(!1, !0) :(u.activeIndex > 0 || 0 === u.search.length && u.tagging.isActivated && u.activeIndex > -1) && u.activeIndex--;
 break;
 
 case a.TAB:
-q.multiple && !q.open || q.select(q.items[q.activeIndex], !0);
+u.multiple && !u.open || u.select(u.items[u.activeIndex], !0);
 break;
 
 case a.ENTER:
-q.open && (q.tagging.isActivated || q.activeIndex >= 0) ? q.select(q.items[q.activeIndex], q.skipFocusser) :q.activate(!1, !0);
+u.open && (u.tagging.isActivated || u.activeIndex >= 0) ? u.select(u.items[u.activeIndex], u.skipFocusser) :u.activate(!1, !0);
 break;
 
 case a.ESC:
-q.close();
+u.close();
 break;
 
 default:
@@ -52311,199 +52340,222 @@ c = !1;
 }
 return c;
 }
-function p() {
+function t() {
 var a = c.querySelectorAll(".ui-select-choices-content"), b = a.querySelectorAll(".ui-select-choices-row");
-if (b.length < 1) throw g("choices", "Expected multiple .ui-select-choices-row but got '{0}'.", b.length);
-if (!(q.activeIndex < 0)) {
-var d = b[q.activeIndex], e = d.offsetTop + d.clientHeight - a[0].scrollTop, f = a[0].offsetHeight;
-e > f ? a[0].scrollTop += e - f :e < d.clientHeight && (q.isGrouped && 0 === q.activeIndex ? a[0].scrollTop = 0 :a[0].scrollTop -= d.clientHeight - e);
+if (b.length < 1) throw h("choices", "Expected multiple .ui-select-choices-row but got '{0}'.", b.length);
+if (!(u.activeIndex < 0)) {
+var d = b[u.activeIndex], e = d.offsetTop + d.clientHeight - a[0].scrollTop, f = a[0].offsetHeight;
+e > f ? a[0].scrollTop += e - f :e < d.clientHeight && (u.isGrouped && 0 === u.activeIndex ? a[0].scrollTop = 0 :a[0].scrollTop -= d.clientHeight - e);
 }
 }
-var q = this, r = "";
-if (q.placeholder = h.placeholder, q.searchEnabled = h.searchEnabled, q.sortable = h.sortable, q.refreshDelay = h.refreshDelay, q.paste = h.paste, q.removeSelected = !1, q.closeOnSelect = !0, q.skipFocusser = !1, q.search = r, q.activeIndex = 0, q.items = [], q.open = !1, q.focus = !1, q.disabled = !1, q.selected = void 0, q.dropdownPosition = "auto", q.focusser = void 0, q.resetSearchInput = !0, q.multiple = void 0, q.disableChoiceExpression = void 0, q.tagging = {
+var u = this, v = "";
+if (u.placeholder = i.placeholder, u.searchEnabled = i.searchEnabled, u.sortable = i.sortable, u.refreshDelay = i.refreshDelay, u.paste = i.paste, u.resetSearchInput = i.resetSearchInput, u.removeSelected = i.removeSelected, u.closeOnSelect = !0, u.skipFocusser = !1, u.search = v, u.activeIndex = 0, u.items = [], u.open = !1, u.focus = !1, u.disabled = !1, u.selected = void 0, u.dropdownPosition = "auto", u.focusser = void 0, u.multiple = void 0, u.disableChoiceExpression = void 0, u.tagging = {
 isActivated:!1,
 fct:void 0
-}, q.taggingTokens = {
+}, u.taggingTokens = {
 isActivated:!1,
 tokens:void 0
-}, q.lockChoiceExpression = void 0, q.clickTriggeredSelect = !1, q.$filter = e, q.$animate = function() {
+}, u.lockChoiceExpression = void 0, u.clickTriggeredSelect = !1, u.$filter = e, u.$element = c, u.$animate = function() {
 try {
-return j.get("$animate");
+return k.get("$animate");
 } catch (a) {
 return null;
 }
-}(), q.searchInput = c.querySelectorAll("input.ui-select-search"), 1 !== q.searchInput.length) throw g("searchInput", "Expected 1 input.ui-select-search but got '{0}'.", q.searchInput.length);
-q.isEmpty = function() {
-return angular.isUndefined(q.selected) || null === q.selected || "" === q.selected || q.multiple && 0 === q.selected.length;
-}, q.activate = function(a, e) {
-if (!q.disabled && !q.open) {
-e || m(), b.$broadcast("uis:activate"), q.open = !0, q.activeIndex = q.activeIndex >= q.items.length ? 0 :q.activeIndex, q.activeIndex === -1 && q.taggingLabel !== !1 && (q.activeIndex = 0);
-var f = c.querySelectorAll(".ui-select-choices-content");
-q.$animate && q.$animate.on && q.$animate.enabled(f[0]) ? q.$animate.on("enter", f[0], function(b, c) {
-"close" === c && d(function() {
-q.focusSearchInput(a);
-});
-}) :d(function() {
-q.focusSearchInput(a), !q.tagging.isActivated && q.items.length > 1 && p();
+}(), u.searchInput = c.querySelectorAll("input.ui-select-search"), 1 !== u.searchInput.length) throw h("searchInput", "Expected 1 input.ui-select-search but got '{0}'.", u.searchInput.length);
+u.isEmpty = function() {
+return angular.isUndefined(u.selected) || null === u.selected || "" === u.selected || u.multiple && 0 === u.selected.length;
+}, u.activate = function(a, e) {
+if (u.disabled || u.open) u.open && !u.searchEnabled && u.close(); else {
+e || n(), b.$broadcast("uis:activate"), u.open = !0, u.activeIndex = u.activeIndex >= u.items.length ? 0 :u.activeIndex, u.activeIndex === -1 && u.taggingLabel !== !1 && (u.activeIndex = 0);
+var f = c.querySelectorAll(".ui-select-choices-content"), g = c.querySelectorAll(".ui-select-search");
+if (u.$animate && u.$animate.on && u.$animate.enabled(f[0])) {
+var h = function(b, c) {
+"start" === c && 0 === u.items.length ? (u.$animate.off("removeClass", g[0], h), d(function() {
+u.focusSearchInput(a);
+})) :"close" === c && (u.$animate.off("enter", f[0], h), d(function() {
+u.focusSearchInput(a);
+}));
+};
+u.items.length > 0 ? u.$animate.on("enter", f[0], h) :u.$animate.on("removeClass", g[0], h);
+} else d(function() {
+u.focusSearchInput(a), !u.tagging.isActivated && u.items.length > 1 && t();
 });
 }
-}, q.focusSearchInput = function(a) {
-q.search = a || q.search, q.searchInput[0].focus();
-}, q.findGroupByName = function(a) {
-return q.groups && q.groups.filter(function(b) {
+}, u.focusSearchInput = function(a) {
+u.search = a || u.search, u.searchInput[0].focus();
+}, u.findGroupByName = function(a) {
+return u.groups && u.groups.filter(function(b) {
 return b.name === a;
 })[0];
-}, q.parseRepeatAttr = function(a, c, d) {
+}, u.parseRepeatAttr = function(a, c, d) {
 function e(a) {
 var e = b.$eval(c);
-if (q.groups = [], angular.forEach(a, function(a) {
-var b = angular.isFunction(e) ? e(a) :a[e], c = q.findGroupByName(b);
-c ? c.items.push(a) :q.groups.push({
+if (u.groups = [], angular.forEach(a, function(a) {
+var b = angular.isFunction(e) ? e(a) :a[e], c = u.findGroupByName(b);
+c ? c.items.push(a) :u.groups.push({
 name:b,
 items:[ a ]
 });
 }), d) {
 var f = b.$eval(d);
-angular.isFunction(f) ? q.groups = f(q.groups) :angular.isArray(f) && (q.groups = n(q.groups, f));
+angular.isFunction(f) ? u.groups = f(u.groups) :angular.isArray(f) && (u.groups = o(u.groups, f));
 }
-q.items = [], q.groups.forEach(function(a) {
-q.items = q.items.concat(a.items);
+u.items = [], u.groups.forEach(function(a) {
+u.items = u.items.concat(a.items);
 });
 }
-function h(a) {
-q.items = a;
+function f(a) {
+u.items = a;
 }
-q.setItemsFn = c ? e :h, q.parserResult = f.parse(a), q.isGrouped = !!c, q.itemProperty = q.parserResult.itemName;
-var j = q.parserResult.source, k = function() {
-var a = j(b);
+u.setItemsFn = c ? e :f, u.parserResult = g.parse(a), u.isGrouped = !!c, u.itemProperty = u.parserResult.itemName;
+var i = u.parserResult.source, k = function() {
+var a = i(b);
 b.$uisSource = Object.keys(a).map(function(b) {
 var c = {};
-return c[q.parserResult.keyName] = b, c.value = a[b], c;
+return c[u.parserResult.keyName] = b, c.value = a[b], c;
 });
 };
-q.parserResult.keyName && (k(), q.parserResult.source = i("$uisSource" + q.parserResult.filters), b.$watch(j, function(a, b) {
+u.parserResult.keyName && (k(), u.parserResult.source = j("$uisSource" + u.parserResult.filters), b.$watch(i, function(a, b) {
 a !== b && k();
-}, !0)), q.refreshItems = function(a) {
-a = a || q.parserResult.source(b);
-var c = q.selected;
-if (q.isEmpty() || angular.isArray(c) && !c.length || !q.removeSelected) q.setItemsFn(a); else if (void 0 !== a) {
+}, !0)), u.refreshItems = function(a) {
+a = a || u.parserResult.source(b);
+var c = u.selected;
+if (u.isEmpty() || angular.isArray(c) && !c.length || !u.multiple || !u.removeSelected) u.setItemsFn(a); else if (void 0 !== a && null !== a) {
 var d = a.filter(function(a) {
-return c.every(function(b) {
+return angular.isArray(c) ? c.every(function(b) {
 return !angular.equals(a, b);
+}) :!angular.equals(a, c);
 });
-});
-q.setItemsFn(d);
+u.setItemsFn(d);
 }
-"auto" !== q.dropdownPosition && "up" !== q.dropdownPosition || b.calculateDropdownPos();
-}, b.$watchCollection(q.parserResult.source, function(a) {
-if (void 0 === a || null === a) q.items = []; else {
-if (!angular.isArray(a)) throw g("items", "Expected an array but got '{0}'.", a);
-q.refreshItems(a), q.ngModel.$modelValue = null;
+"auto" !== u.dropdownPosition && "up" !== u.dropdownPosition || b.calculateDropdownPos(), b.$broadcast("uis:refresh");
+}, b.$watchCollection(u.parserResult.source, function(a) {
+if (void 0 === a || null === a) u.items = []; else {
+if (!angular.isArray(a)) throw h("items", "Expected an array but got '{0}'.", a);
+u.refreshItems(a), angular.isDefined(u.ngModel.$modelValue) && (u.ngModel.$modelValue = null);
 }
 });
 };
-var s;
-q.refresh = function(a) {
-void 0 !== a && (s && d.cancel(s), s = d(function() {
+var w;
+u.refresh = function(a) {
+void 0 !== a && (w && d.cancel(w), w = d(function() {
 b.$eval(a);
-}, q.refreshDelay));
-}, q.isActive = function(a) {
-if (!q.open) return !1;
-var b = q.items.indexOf(a[q.itemProperty]), c = b == q.activeIndex;
-return !(!c || b < 0 && q.taggingLabel !== !1 || b < 0 && q.taggingLabel === !1) && (c && !angular.isUndefined(q.onHighlightCallback) && a.$eval(q.onHighlightCallback), c);
-}, q.isDisabled = function(a) {
-if (q.open) {
-var b, c = q.items.indexOf(a[q.itemProperty]), d = !1;
-return c >= 0 && !angular.isUndefined(q.disableChoiceExpression) && (b = q.items[c], d = !!a.$eval(q.disableChoiceExpression), b._uiSelectChoiceDisabled = d), d;
-}
-}, q.select = function(a, c, e) {
-if (void 0 === a || !a._uiSelectChoiceDisabled) {
-if (!q.items && !q.search && !q.tagging.isActivated) return;
-if (!a || !a._uiSelectChoiceDisabled) {
-if (q.tagging.isActivated) {
-if (q.taggingLabel === !1) if (q.activeIndex < 0) {
-if (a = void 0 !== q.tagging.fct ? q.tagging.fct(q.search) :q.search, !a || angular.equals(q.items[0], a)) return;
-} else a = q.items[q.activeIndex]; else if (0 === q.activeIndex) {
-if (void 0 === a) return;
-if (void 0 !== q.tagging.fct && "string" == typeof a) {
-if (a = q.tagging.fct(a), !a) return;
-} else "string" == typeof a && (a = a.replace(q.taggingLabel, "").trim());
-}
-if (q.selected && angular.isArray(q.selected) && q.selected.filter(function(b) {
-return angular.equals(b, a);
-}).length > 0) return void q.close(c);
-}
-b.$broadcast("uis:select", a);
-var f = {};
-f[q.parserResult.itemName] = a, d(function() {
-q.onSelectCallback(b, {
-$item:a,
-$model:q.parserResult.modelMapper(b, f)
-});
-}), q.closeOnSelect && q.close(c), e && "click" === e.type && (q.clickTriggeredSelect = !0);
-}
-}
-}, q.close = function(a) {
-q.open && (q.ngModel && q.ngModel.$setTouched && q.ngModel.$setTouched(), m(), q.open = !1, b.$broadcast("uis:close", a));
-}, q.setFocus = function() {
-q.focus || q.focusInput[0].focus();
-}, q.clear = function(a) {
-q.select(void 0), a.stopPropagation(), d(function() {
-q.focusser[0].focus();
-}, 0, !1);
-}, q.toggle = function(a) {
-q.open ? (q.close(), a.preventDefault(), a.stopPropagation()) :q.activate();
-}, q.isLocked = function(a, b) {
-var c, d = q.selected[b];
-return d && !angular.isUndefined(q.lockChoiceExpression) && (c = !!a.$eval(q.lockChoiceExpression), d._uiSelectChoiceLocked = c), c;
+}, u.refreshDelay));
+}, u.isActive = function(a) {
+if (!u.open) return !1;
+var b = u.items.indexOf(a[u.itemProperty]), c = b == u.activeIndex;
+return !(!c || b < 0) && (c && !angular.isUndefined(u.onHighlightCallback) && a.$eval(u.onHighlightCallback), c);
 };
-var t = null;
-q.sizeSearchInput = function() {
-var a = q.searchInput[0], c = q.searchInput.parent().parent()[0], e = function() {
+var x = function(a) {
+return u.selected && angular.isArray(u.selected) && u.selected.filter(function(b) {
+return angular.equals(b, a);
+}).length > 0;
+}, y = [];
+u.isDisabled = function(a) {
+if (u.open) {
+var b = a[u.itemProperty], c = u.items.indexOf(b), d = !1;
+if (c >= 0 && (angular.isDefined(u.disableChoiceExpression) || u.multiple)) {
+if (b.isTag) return !1;
+u.multiple && (d = x(b)), !d && angular.isDefined(u.disableChoiceExpression) && (d = !!a.$eval(u.disableChoiceExpression)), p(b, d);
+}
+return d;
+}
+}, u.select = function(a, c, e) {
+if (void 0 === a || !q(a)) {
+if (!u.items && !u.search && !u.tagging.isActivated) return;
+if (!a || !q(a)) {
+if (u.clickTriggeredSelect = !1, e && "click" === e.type && a && (u.clickTriggeredSelect = !0), u.tagging.isActivated && u.clickTriggeredSelect === !1) {
+if (u.taggingLabel === !1) if (u.activeIndex < 0) {
+if (void 0 === a && (a = void 0 !== u.tagging.fct ? u.tagging.fct(u.search) :u.search), !a || angular.equals(u.items[0], a)) return;
+} else a = u.items[u.activeIndex]; else if (0 === u.activeIndex) {
+if (void 0 === a) return;
+if (void 0 !== u.tagging.fct && "string" == typeof a) {
+if (a = u.tagging.fct(a), !a) return;
+} else "string" == typeof a && (a = a.replace(u.taggingLabel, "").trim());
+}
+if (x(a)) return void u.close(c);
+}
+n(), b.$broadcast("uis:select", a);
+var f = {};
+f[u.parserResult.itemName] = a, d(function() {
+u.onSelectCallback(b, {
+$item:a,
+$model:u.parserResult.modelMapper(b, f)
+});
+}), u.closeOnSelect && u.close(c);
+}
+}
+}, u.close = function(a) {
+u.open && (u.ngModel && u.ngModel.$setTouched && u.ngModel.$setTouched(), u.open = !1, n(), b.$broadcast("uis:close", a));
+}, u.setFocus = function() {
+u.focus || u.focusInput[0].focus();
+}, u.clear = function(a) {
+u.select(void 0), a.stopPropagation(), d(function() {
+u.focusser[0].focus();
+}, 0, !1);
+}, u.toggle = function(a) {
+u.open ? (u.close(), a.preventDefault(), a.stopPropagation()) :u.activate();
+}, u.isLocked = function() {
+return !1;
+}, b.$watch(function() {
+return angular.isDefined(u.lockChoiceExpression) && "" !== u.lockChoiceExpression;
+}, r);
+var z = null, A = !1;
+u.sizeSearchInput = function() {
+var a = u.searchInput[0], c = u.searchInput.parent().parent()[0], e = function() {
 return c.clientWidth * !!a.offsetParent;
 }, f = function(b) {
 if (0 === b) return !1;
 var c = b - a.offsetLeft - 10;
-return c < 50 && (c = b), q.searchInput.css("width", c + "px"), !0;
+return c < 50 && (c = b), u.searchInput.css("width", c + "px"), !0;
 };
-q.searchInput.css("width", "10px"), d(function() {
-null !== t || f(e()) || (t = b.$watch(e, function(a) {
-f(a) && (t(), t = null);
+u.searchInput.css("width", "10px"), d(function() {
+null !== z || f(e()) || (z = b.$watch(function() {
+A || (A = !0, b.$$postDigest(function() {
+A = !1, f(e()) && (z(), z = null);
 }));
+}, angular.noop));
 });
-}, q.searchInput.on("keydown", function(c) {
+}, u.searchInput.on("keydown", function(c) {
 var e = c.which;
 ~[ a.ENTER, a.ESC ].indexOf(e) && (c.preventDefault(), c.stopPropagation()), b.$apply(function() {
 var b = !1;
-if ((q.items.length > 0 || q.tagging.isActivated) && (o(e), q.taggingTokens.isActivated)) {
-for (var f = 0; f < q.taggingTokens.tokens.length; f++) q.taggingTokens.tokens[f] === a.MAP[c.keyCode] && q.search.length > 0 && (b = !0);
+if ((u.items.length > 0 || u.tagging.isActivated) && (s(e) || u.searchEnabled || (c.preventDefault(), c.stopPropagation()), u.taggingTokens.isActivated)) {
+for (var f = 0; f < u.taggingTokens.tokens.length; f++) u.taggingTokens.tokens[f] === a.MAP[c.keyCode] && u.search.length > 0 && (b = !0);
 b && d(function() {
-q.searchInput.triggerHandler("tagged");
-var b = q.search.replace(a.MAP[c.keyCode], "").trim();
-q.tagging.fct && (b = q.tagging.fct(b)), b && q.select(b, !0);
+u.searchInput.triggerHandler("tagged");
+var b = u.search.replace(a.MAP[c.keyCode], "").trim();
+u.tagging.fct && (b = u.tagging.fct(b)), b && u.select(b, !0);
 });
 }
-}), a.isVerticalMovement(e) && q.items.length > 0 && p(), e !== a.ENTER && e !== a.ESC || (c.preventDefault(), c.stopPropagation());
-}), q.searchInput.on("paste", function(b) {
+}), a.isVerticalMovement(e) && u.items.length > 0 && t(), e !== a.ENTER && e !== a.ESC || (c.preventDefault(), c.stopPropagation());
+}), u.searchInput.on("paste", function(b) {
 var c;
-if (c = window.clipboardData && window.clipboardData.getData ? window.clipboardData.getData("Text") :(b.originalEvent || b).clipboardData.getData("text/plain"), c = q.search + c, c && c.length > 0) if (q.taggingTokens.isActivated) {
-var d = a.toSeparator(q.taggingTokens.tokens[0]), e = c.split(d || q.taggingTokens.tokens[0]);
-if (e && e.length > 0) {
-var f = q.search;
-angular.forEach(e, function(a) {
-var b = q.tagging.fct ? q.tagging.fct(a) :a;
-b && q.select(b, !0);
-}), q.search = f || r, b.preventDefault(), b.stopPropagation();
+if (c = window.clipboardData && window.clipboardData.getData ? window.clipboardData.getData("Text") :(b.originalEvent || b).clipboardData.getData("text/plain"), c = u.search + c, c && c.length > 0) if (u.taggingTokens.isActivated) {
+for (var d = [], e = 0; e < u.taggingTokens.tokens.length; e++) {
+var f = a.toSeparator(u.taggingTokens.tokens[e]) || u.taggingTokens.tokens[e];
+if (c.indexOf(f) > -1) {
+d = c.split(f);
+break;
 }
-} else q.paste && (q.paste(c), q.search = r, b.preventDefault(), b.stopPropagation());
-}), q.searchInput.on("tagged", function() {
+}
+0 === d.length && (d = [ c ]);
+var g = u.search;
+angular.forEach(d, function(a) {
+var b = u.tagging.fct ? u.tagging.fct(a) :a;
+b && u.select(b, !0);
+}), u.search = g || v, b.preventDefault(), b.stopPropagation();
+} else u.paste && (u.paste(c), u.search = v, b.preventDefault(), b.stopPropagation());
+}), u.searchInput.on("tagged", function() {
 d(function() {
-m();
+n();
 });
-}), b.$on("$destroy", function() {
-q.searchInput.off("keyup keydown tagged blur paste");
-}), angular.element(k).bind("resize", function() {
-q.sizeSearchInput();
+});
+var B = f(function() {
+u.sizeSearchInput();
+}, 50);
+angular.element(l).bind("resize", B), b.$on("$destroy", function() {
+u.searchInput.off("keyup keydown tagged blur paste"), angular.element(l).off("resize", B);
 });
 } ]), c.directive("uiSelect", [ "$document", "uiSelectConfig", "uiSelectMinErr", "uisOffset", "$compile", "$parse", "$timeout", function(a, b, c, d, e, f, g) {
 return {
@@ -52552,16 +52604,22 @@ return angular.isDefined(i.closeOnSelect) ? f(i.closeOnSelect)() :b.closeOnSelec
 }(), e.$watch("skipFocusser", function() {
 var a = e.$eval(i.skipFocusser);
 o.skipFocusser = void 0 !== a ? a :b.skipFocusser;
-}), o.onSelectCallback = f(i.onSelect), o.onRemoveCallback = f(i.onRemove), o.limit = angular.isDefined(i.limit) ? parseInt(i.limit, 10) :void 0, o.ngModel = p, o.choiceGrouped = function(a) {
+}), o.onSelectCallback = f(i.onSelect), o.onRemoveCallback = f(i.onRemove), o.ngModel = p, o.choiceGrouped = function(a) {
 return o.isGrouped && a && a.name;
 }, i.tabindex && i.$observe("tabindex", function(a) {
 o.focusInput.attr("tabindex", a), h.removeAttr("tabindex");
-}), e.$watch("searchEnabled", function() {
-var a = e.$eval(i.searchEnabled);
+}), e.$watch(function() {
+return e.$eval(i.searchEnabled);
+}, function(a) {
 o.searchEnabled = void 0 !== a ? a :b.searchEnabled;
 }), e.$watch("sortable", function() {
 var a = e.$eval(i.sortable);
 o.sortable = void 0 !== a ? a :b.sortable;
+}), i.$observe("limit", function() {
+o.limit = angular.isDefined(i.limit) ? parseInt(i.limit, 10) :void 0;
+}), e.$watch("removeSelected", function() {
+var a = e.$eval(i.removeSelected);
+o.removeSelected = void 0 !== a ? a :b.removeSelected;
 }), i.$observe("disabled", function() {
 o.disabled = void 0 !== i.disabled && i.disabled;
 }), i.$observe("resetSearchInput", function() {
@@ -52605,6 +52663,8 @@ h.querySelectorAll(".ui-select-match").replaceWith(d);
 var e = b.querySelectorAll(".ui-select-choices");
 if (e.removeAttr("ui-select-choices"), e.removeAttr("data-ui-select-choices"), 1 !== e.length) throw c("transcluded", "Expected 1 .ui-select-choices but got '{0}'.", e.length);
 h.querySelectorAll(".ui-select-choices").replaceWith(e);
+var f = b.querySelectorAll(".ui-select-no-choice");
+f.removeAttr("ui-select-no-choice"), f.removeAttr("data-ui-select-no-choice"), 1 == f.length && h.querySelectorAll(".ui-select-no-choice").replaceWith(f);
 });
 var q = e.$eval(i.appendToBody);
 (void 0 !== q ? q :b.appendToBody) && (e.$watch("$select.open", function(a) {
@@ -52620,11 +52680,8 @@ var v = function(a, b) {
 a = a || d(h), b = b || d(t), t[0].style.position = "absolute", t[0].style.top = b.height * -1 + "px", h.addClass(u);
 }, w = function(a, b) {
 h.removeClass(u), a = a || d(h), b = b || d(t), t[0].style.position = "", t[0].style.top = "";
-};
-e.calculateDropdownPos = function() {
-if (o.open) {
-if (t = angular.element(h).querySelectorAll(".ui-select-dropdown"), 0 === t.length) return;
-t[0].style.opacity = 0, g(function() {
+}, x = function() {
+g(function() {
 if ("up" === o.dropdownPosition) v(); else {
 h.removeClass(u);
 var b = d(h), c = d(t), e = a[0].documentElement.scrollTop || a[0].body.scrollTop;
@@ -52632,24 +52689,37 @@ b.top + b.height + c.height > e + a[0].documentElement.clientHeight ? v(b, c) :w
 }
 t[0].style.opacity = 1;
 });
+}, y = !1;
+e.calculateDropdownPos = function() {
+if (o.open) {
+if (t = angular.element(h).querySelectorAll(".ui-select-dropdown"), 0 === t.length) return;
+if ("" !== o.search || y || (t[0].style.opacity = 0, y = !0), !d(t).height && o.$animate && o.$animate.on && o.$animate.enabled(t)) {
+var a = !0;
+o.$animate.on("enter", t, function(b, c) {
+"close" === c && a && (x(), a = !1);
+});
+} else x();
 } else {
 if (null === t || 0 === t.length) return;
-t[0].style.position = "", t[0].style.top = "", h.removeClass(u);
+t[0].style.opacity = 0, t[0].style.position = "", t[0].style.top = "", h.removeClass(u);
 }
 };
 };
 }
 };
 } ]), c.directive("uiSelectMatch", [ "uiSelectConfig", function(a) {
+function b(a, b) {
+return a[0].hasAttribute(b) ? a.attr(b) :a[0].hasAttribute("data-" + b) ? a.attr("data-" + b) :a[0].hasAttribute("x-" + b) ? a.attr("x-" + b) :void 0;
+}
 return {
 restrict:"EA",
 require:"^uiSelect",
 replace:!0,
 transclude:!0,
-templateUrl:function(b) {
-b.addClass("ui-select-match");
-var c = b.parent().attr("theme") || a.theme, d = b.parent().attr("multiple");
-return c + (d ? "/match-multiple.tpl.html" :"/match.tpl.html");
+templateUrl:function(c) {
+c.addClass("ui-select-match");
+var d = c.parent(), e = b(d, "theme") || a.theme, f = angular.isDefined(b(d, "multiple"));
+return e + (f ? "/match-multiple.tpl.html" :"/match.tpl.html");
 },
 link:function(b, c, d, e) {
 function f(a) {
@@ -52671,18 +52741,16 @@ c = a.ngModel;
 }), d.activeMatchIndex = -1, d.updateModel = function() {
 c.$setViewValue(Date.now()), d.refreshComponent();
 }, d.refreshComponent = function() {
-e.refreshItems(), e.sizeSearchInput();
+e.refreshItems && e.refreshItems(), e.sizeSearchInput && e.sizeSearchInput();
 }, d.removeChoice = function(c) {
-var f = e.selected[c];
-if (!f._uiSelectChoiceLocked) {
-var g = {};
-g[e.parserResult.itemName] = f, e.selected.splice(c, 1), d.activeMatchIndex = -1, e.sizeSearchInput(), b(function() {
+if (e.isLocked(null, c)) return !1;
+var f = e.selected[c], g = {};
+return g[e.parserResult.itemName] = f, e.selected.splice(c, 1), d.activeMatchIndex = -1, e.sizeSearchInput(), b(function() {
 e.onRemoveCallback(a, {
 $item:f,
 $model:e.parserResult.modelMapper(a, g)
 });
-}), d.updateModel();
-}
+}), d.updateModel(), !0;
 }, d.getPlaceholder = function() {
 if (!e.selected || !e.selected.length) return e.placeholder;
 };
@@ -52702,7 +52770,7 @@ case a.RIGHT:
 return ~n.activeMatchIndex && i !== g ? j :(l.activate(), !1);
 
 case a.BACKSPACE:
-return ~n.activeMatchIndex ? (n.removeChoice(i), k) :g;
+return ~n.activeMatchIndex ? n.removeChoice(i) ? k :i :g;
 
 case a.DELETE:
 return !!~n.activeMatchIndex && (n.removeChoice(n.activeMatchIndex), i);
@@ -52727,13 +52795,13 @@ angular.isObject(f) && (f.isTag = !0), angular.equals(f, b) && (c = e);
 return c;
 }
 var l = g[0], m = d.ngModel = g[1], n = d.$selectMultiple;
-l.multiple = !0, l.removeSelected = !0, l.focusInput = l.searchInput, m.$isEmpty = function(a) {
+l.multiple = !0, l.focusInput = l.searchInput, m.$isEmpty = function(a) {
 return !a || 0 === a.length;
 }, m.$parsers.unshift(function() {
 for (var a, b = {}, c = [], e = l.selected.length - 1; e >= 0; e--) b = {}, b[l.parserResult.itemName] = l.selected[e], a = l.parserResult.modelMapper(d, b), c.unshift(a);
 return c;
 }), m.$formatters.unshift(function(a) {
-var b, c = l.parserResult.source(d, {
+var b, c = l.parserResult && l.parserResult.source(d, {
 $select:{
 search:""
 }
@@ -52757,11 +52825,11 @@ return f;
 }), d.$watchCollection(function() {
 return m.$modelValue;
 }, function(a, b) {
-b != a && (m.$modelValue = null, n.refreshComponent());
+b != a && (angular.isDefined(m.$modelValue) && (m.$modelValue = null), n.refreshComponent());
 }), m.$render = function() {
 if (!angular.isArray(m.$viewValue)) {
 if (!angular.isUndefined(m.$viewValue) && null !== m.$viewValue) throw b("multiarr", "Expected model value to be array but got '{0}'", m.$viewValue);
-l.selected = [];
+m.$viewValue = [];
 }
 l.selected = m.$viewValue, n.refreshComponent(), d.$evalAsync();
 }, d.$on("uis:select", function(a, b) {
@@ -52787,13 +52855,13 @@ if (void 0 !== l.tagging.fct) {
 if (f = l.$filter("filter")(h, {
 isTag:!0
 }), f.length > 0 && (g = f[0]), h.length > 0 && g && (m = !0, h = h.slice(1, h.length), i = i.slice(1, i.length)), c = l.tagging.fct(l.search), i.some(function(a) {
-return angular.equals(a, l.tagging.fct(l.search));
+return angular.equals(a, c);
 }) || l.selected.some(function(a) {
 return angular.equals(a, c);
 })) return void d.$evalAsync(function() {
 l.activeIndex = 0, l.items = h;
 });
-c.isTag = !0;
+c && (c.isTag = !0);
 } else {
 if (f = l.$filter("filter")(h, function(a) {
 return a.match(l.taggingLabel);
@@ -52803,8 +52871,15 @@ l.activeIndex = 0, l.items = h;
 })));
 if (j(i)) return void (m && (l.items = i.slice(1, i.length)));
 }
-m && (n = k(l.selected, c)), n > -1 ? h = h.slice(n + 1, h.length - 1) :(h = [], h.push(c), h = h.concat(i)), d.$evalAsync(function() {
-l.activeIndex = 0, l.items = h;
+m && (n = k(l.selected, c)), n > -1 ? h = h.slice(n + 1, h.length - 1) :(h = [], c && h.push(c), h = h.concat(i)), d.$evalAsync(function() {
+if (l.activeIndex = 0, l.items = h, l.isGrouped) {
+var a = c ? h.slice(1) :h;
+l.setItemsFn(a), c && (l.items.unshift(c), l.groups.unshift({
+name:"",
+items:[ c ],
+tagging:!0
+}));
+}
 });
 }
 }), l.searchInput.on("blur", function() {
@@ -52812,6 +52887,18 @@ c(function() {
 n.activeMatchIndex = -1;
 });
 });
+}
+};
+} ]), c.directive("uiSelectNoChoice", [ "uiSelectConfig", function(a) {
+return {
+restrict:"EA",
+require:"^uiSelect",
+replace:!0,
+transclude:!0,
+templateUrl:function(b) {
+b.addClass("ui-select-no-choice");
+var c = b.parent().attr("theme") || a.theme;
+return c + "/no-choice.tpl.html";
 }
 };
 } ]), c.directive("uiSelectSingle", [ "$timeout", "$compile", function(b, c) {
@@ -52824,14 +52911,14 @@ i.$parsers.unshift(function(a) {
 var b, c = {};
 return c[h.parserResult.itemName] = a, b = h.parserResult.modelMapper(d, c);
 }), i.$formatters.unshift(function(a) {
-var b, c = h.parserResult.source(d, {
+var b, c = h.parserResult && h.parserResult.source(d, {
 $select:{
 search:""
 }
 }), e = {};
 if (c) {
 var f = function(c) {
-return e[h.parserResult.itemName] = c, b = h.parserResult.modelMapper(d, e), b == a;
+return e[h.parserResult.itemName] = c, b = h.parserResult.modelMapper(d, e), b === a;
 };
 if (h.selected && f(h.selected)) return h.selected;
 for (var g = c.length - 1; g >= 0; g--) if (f(c[g])) return c[g];
@@ -52868,48 +52955,76 @@ b.which === a.TAB || a.isControl(b) || a.isFunctionKey(b) || b.which === a.ESC |
 };
 } ]), c.directive("uiSelectSort", [ "$timeout", "uiSelectConfig", "uiSelectMinErr", function(a, b, c) {
 return {
-require:"^^uiSelect",
+require:[ "^^uiSelect", "^ngModel" ],
 link:function(b, d, e, f) {
 if (null === b[e.uiSelectSort]) throw c("sort", "Expected a list to sort");
-var g = angular.extend({
+var g = f[0], h = f[1], i = angular.extend({
 axis:"horizontal"
-}, b.$eval(e.uiSelectSortOptions)), h = g.axis, i = "dragging", j = "dropping", k = "dropping-before", l = "dropping-after";
+}, b.$eval(e.uiSelectSortOptions)), j = i.axis, k = "dragging", l = "dropping", m = "dropping-before", n = "dropping-after";
 b.$watch(function() {
-return f.sortable;
+return g.sortable;
 }, function(a) {
 a ? d.attr("draggable", !0) :d.removeAttr("draggable");
 }), d.on("dragstart", function(a) {
-d.addClass(i), (a.dataTransfer || a.originalEvent.dataTransfer).setData("text", b.$index.toString());
+d.addClass(k), (a.dataTransfer || a.originalEvent.dataTransfer).setData("text", b.$index.toString());
 }), d.on("dragend", function() {
-d.removeClass(i);
+q(k);
 });
-var m, n = function(a, b) {
+var o, p = function(a, b) {
 this.splice(b, 0, this.splice(a, 1)[0]);
-}, o = function(a) {
+}, q = function(a) {
+angular.forEach(g.$element.querySelectorAll("." + a), function(b) {
+angular.element(b).removeClass(a);
+});
+}, r = function(a) {
 a.preventDefault();
-var b = "vertical" === h ? a.offsetY || a.layerY || (a.originalEvent ? a.originalEvent.offsetY :0) :a.offsetX || a.layerX || (a.originalEvent ? a.originalEvent.offsetX :0);
-b < this["vertical" === h ? "offsetHeight" :"offsetWidth"] / 2 ? (d.removeClass(l), d.addClass(k)) :(d.removeClass(k), d.addClass(l));
-}, p = function(b) {
+var b = "vertical" === j ? a.offsetY || a.layerY || (a.originalEvent ? a.originalEvent.offsetY :0) :a.offsetX || a.layerX || (a.originalEvent ? a.originalEvent.offsetX :0);
+b < this["vertical" === j ? "offsetHeight" :"offsetWidth"] / 2 ? (q(n), d.addClass(m)) :(q(m), d.addClass(n));
+}, s = function(b) {
 b.preventDefault();
 var c = parseInt((b.dataTransfer || b.originalEvent.dataTransfer).getData("text"), 10);
-a.cancel(m), m = a(function() {
-q(c);
+a.cancel(o), o = a(function() {
+t(c);
 }, 20);
-}, q = function(a) {
+}, t = function(a) {
 var c = b.$eval(e.uiSelectSort), f = c[a], g = null;
-g = d.hasClass(k) ? a < b.$index ? b.$index - 1 :b.$index :a < b.$index ? b.$index :b.$index + 1, n.apply(c, [ a, g ]), b.$apply(function() {
+g = d.hasClass(m) ? a < b.$index ? b.$index - 1 :b.$index :a < b.$index ? b.$index :b.$index + 1, p.apply(c, [ a, g ]), h.$setViewValue(Date.now()), b.$apply(function() {
 b.$emit("uiSelectSort:change", {
 array:c,
 item:f,
 from:a,
 to:g
 });
-}), d.removeClass(j), d.removeClass(k), d.removeClass(l), d.off("drop", p);
+}), q(l), q(m), q(n), d.off("drop", s);
 };
 d.on("dragenter", function() {
-d.hasClass(i) || (d.addClass(j), d.on("dragover", o), d.on("drop", p));
+d.hasClass(k) || (d.addClass(l), d.on("dragover", r), d.on("drop", s));
 }), d.on("dragleave", function(a) {
-a.target == d && (d.removeClass(j), d.removeClass(k), d.removeClass(l), d.off("dragover", o), d.off("drop", p));
+a.target == d && (q(l), q(m), q(n), d.off("dragover", r), d.off("drop", s));
+});
+}
+};
+} ]), c.factory("$$uisDebounce", [ "$timeout", function(a) {
+return function(b, c) {
+var d;
+return function() {
+var e = this, f = Array.prototype.slice.call(arguments);
+d && a.cancel(d), d = a(function() {
+b.apply(e, f);
+}, c);
+};
+};
+} ]), c.directive("uisOpenClose", [ "$parse", "$timeout", function(a, b) {
+return {
+restrict:"A",
+require:"uiSelect",
+link:function(c, d, e, f) {
+f.onOpenCloseCallback = a(e.uisOpenClose), c.$watch("$select.open", function(a, d) {
+a !== d && b(function() {
+f.onOpenCloseCallback(c, {
+isOpen:a
+});
+});
 });
 }
 };
@@ -52937,17 +53052,18 @@ return this.trackByExp && (b += " track by " + this.trackByExp), b;
 }
 };
 }, c.getGroupNgRepeatExpression = function() {
-return "$group in $select.groups";
+return "$group in $select.groups track by $group.name";
 };
 } ]);
 }(), angular.module("ui.select").run([ "$templateCache", function(a) {
-a.put("bootstrap/choices.tpl.html", '<ul class="ui-select-choices ui-select-choices-content ui-select-dropdown dropdown-menu" role="listbox" ng-show="$select.open"><li class="ui-select-choices-group" id="ui-select-choices-{{ $select.generatedId }}"><div class="divider" ng-show="$select.isGrouped && $index > 0"></div><div ng-show="$select.isGrouped" class="ui-select-choices-group-label dropdown-header" ng-bind="$group.name"></div><div id="ui-select-choices-row-{{ $select.generatedId }}-{{$index}}" class="ui-select-choices-row" ng-class="{active: $select.isActive(this), disabled: $select.isDisabled(this)}" role="option"><a href="" class="ui-select-choices-row-inner"></a></div></li></ul>'), a.put("bootstrap/match-multiple.tpl.html", '<span class="ui-select-match"><span ng-repeat="$item in $select.selected"><span class="ui-select-match-item btn btn-default btn-xs" tabindex="-1" type="button" ng-disabled="$select.disabled" ng-click="$selectMultiple.activeMatchIndex = $index;" ng-class="{\'btn-primary\':$selectMultiple.activeMatchIndex === $index, \'select-locked\':$select.isLocked(this, $index)}" ui-select-sort="$select.selected"><span class="close ui-select-match-close" ng-hide="$select.disabled" ng-click="$selectMultiple.removeChoice($index)">&nbsp;&times;</span> <span uis-transclude-append=""></span></span></span></span>'), 
-a.put("bootstrap/match.tpl.html", '<div class="ui-select-match" ng-hide="$select.open" ng-disabled="$select.disabled" ng-class="{\'btn-default-focus\':$select.focus}"><span tabindex="-1" class="btn btn-default form-control ui-select-toggle" aria-label="{{ $select.baseTitle }} activate" ng-disabled="$select.disabled" ng-click="$select.activate()" style="outline: 0;"><span ng-show="$select.isEmpty()" class="ui-select-placeholder text-muted">{{$select.placeholder}}</span> <span ng-hide="$select.isEmpty()" class="ui-select-match-text pull-left" ng-class="{\'ui-select-allow-clear\': $select.allowClear && !$select.isEmpty()}" ng-transclude=""></span> <i class="caret pull-right" ng-click="$select.toggle($event)"></i> <a ng-show="$select.allowClear && !$select.isEmpty()" aria-label="{{ $select.baseTitle }} clear" style="margin-right: 10px" ng-click="$select.clear($event)" class="btn btn-xs btn-link pull-right"><i class="glyphicon glyphicon-remove" aria-hidden="true"></i></a></span></div>'), a.put("bootstrap/select-multiple.tpl.html", '<div class="ui-select-container ui-select-multiple ui-select-bootstrap dropdown form-control" ng-class="{open: $select.open}"><div><div class="ui-select-match"></div><input type="text" autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false" class="ui-select-search input-xs" placeholder="{{$selectMultiple.getPlaceholder()}}" ng-disabled="$select.disabled" ng-hide="$select.disabled" ng-click="$select.activate()" ng-model="$select.search" role="combobox" aria-label="{{ $select.baseTitle }}" ondrop="return false;"></div><div class="ui-select-choices"></div></div>'), 
-a.put("bootstrap/select.tpl.html", '<div class="ui-select-container ui-select-bootstrap dropdown" ng-class="{open: $select.open}"><div class="ui-select-match"></div><input type="text" autocomplete="off" tabindex="-1" aria-expanded="true" aria-label="{{ $select.baseTitle }}" aria-owns="ui-select-choices-{{ $select.generatedId }}" aria-activedescendant="ui-select-choices-row-{{ $select.generatedId }}-{{ $select.activeIndex }}" class="form-control ui-select-search" placeholder="{{$select.placeholder}}" ng-model="$select.search" ng-show="$select.searchEnabled && $select.open"><div class="ui-select-choices"></div></div>'), a.put("select2/choices.tpl.html", '<ul class="ui-select-choices ui-select-choices-content select2-results"><li class="ui-select-choices-group" ng-class="{\'select2-result-with-children\': $select.choiceGrouped($group) }"><div ng-show="$select.choiceGrouped($group)" class="ui-select-choices-group-label select2-result-label" ng-bind="$group.name"></div><ul role="listbox" id="ui-select-choices-{{ $select.generatedId }}" ng-class="{\'select2-result-sub\': $select.choiceGrouped($group), \'select2-result-single\': !$select.choiceGrouped($group) }"><li role="option" id="ui-select-choices-row-{{ $select.generatedId }}-{{$index}}" class="ui-select-choices-row" ng-class="{\'select2-highlighted\': $select.isActive(this), \'select2-disabled\': $select.isDisabled(this)}"><div class="select2-result-label ui-select-choices-row-inner"></div></li></ul></li></ul>'), 
-a.put("select2/match-multiple.tpl.html", '<span class="ui-select-match"><li class="ui-select-match-item select2-search-choice" ng-repeat="$item in $select.selected" ng-class="{\'select2-search-choice-focus\':$selectMultiple.activeMatchIndex === $index, \'select2-locked\':$select.isLocked(this, $index)}" ui-select-sort="$select.selected"><span uis-transclude-append=""></span> <a href="javascript:;" class="ui-select-match-close select2-search-choice-close" ng-click="$selectMultiple.removeChoice($index)" tabindex="-1"></a></li></span>'), a.put("select2/match.tpl.html", '<a class="select2-choice ui-select-match" ng-class="{\'select2-default\': $select.isEmpty()}" ng-click="$select.toggle($event)" aria-label="{{ $select.baseTitle }} select"><span ng-show="$select.isEmpty()" class="select2-chosen">{{$select.placeholder}}</span> <span ng-hide="$select.isEmpty()" class="select2-chosen" ng-transclude=""></span> <abbr ng-if="$select.allowClear && !$select.isEmpty()" class="select2-search-choice-close" ng-click="$select.clear($event)"></abbr> <span class="select2-arrow ui-select-toggle"><b></b></span></a>'), 
-a.put("select2/select-multiple.tpl.html", '<div class="ui-select-container ui-select-multiple select2 select2-container select2-container-multi" ng-class="{\'select2-container-active select2-dropdown-open open\': $select.open, \'select2-container-disabled\': $select.disabled}"><ul class="select2-choices"><span class="ui-select-match"></span><li class="select2-search-field"><input type="text" autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false" role="combobox" aria-expanded="true" aria-owns="ui-select-choices-{{ $select.generatedId }}" aria-label="{{ $select.baseTitle }}" aria-activedescendant="ui-select-choices-row-{{ $select.generatedId }}-{{ $select.activeIndex }}" class="select2-input ui-select-search" placeholder="{{$selectMultiple.getPlaceholder()}}" ng-disabled="$select.disabled" ng-hide="$select.disabled" ng-model="$select.search" ng-click="$select.activate()" style="width: 34px;" ondrop="return false;"></li></ul><div class="ui-select-dropdown select2-drop select2-with-searchbox select2-drop-active" ng-class="{\'select2-display-none\': !$select.open}"><div class="ui-select-choices"></div></div></div>'), 
-a.put("select2/select.tpl.html", '<div class="ui-select-container select2 select2-container" ng-class="{\'select2-container-active select2-dropdown-open open\': $select.open, \'select2-container-disabled\': $select.disabled, \'select2-container-active\': $select.focus, \'select2-allowclear\': $select.allowClear && !$select.isEmpty()}"><div class="ui-select-match"></div><div class="ui-select-dropdown select2-drop select2-with-searchbox select2-drop-active" ng-class="{\'select2-display-none\': !$select.open}"><div class="select2-search" ng-show="$select.searchEnabled"><input type="text" autocomplete="off" autocorrect="false" autocapitalize="off" spellcheck="false" role="combobox" aria-expanded="true" aria-owns="ui-select-choices-{{ $select.generatedId }}" aria-label="{{ $select.baseTitle }}" aria-activedescendant="ui-select-choices-row-{{ $select.generatedId }}-{{ $select.activeIndex }}" class="ui-select-search select2-input" ng-model="$select.search"></div><div class="ui-select-choices"></div></div></div>'), 
-a.put("selectize/choices.tpl.html", '<div ng-show="$select.open" class="ui-select-choices ui-select-dropdown selectize-dropdown single"><div class="ui-select-choices-content selectize-dropdown-content"><div class="ui-select-choices-group optgroup" role="listbox"><div ng-show="$select.isGrouped" class="ui-select-choices-group-label optgroup-header" ng-bind="$group.name"></div><div role="option" class="ui-select-choices-row" ng-class="{active: $select.isActive(this), disabled: $select.isDisabled(this)}"><div class="option ui-select-choices-row-inner" data-selectable=""></div></div></div></div></div>'), a.put("selectize/match.tpl.html", '<div ng-hide="($select.open || $select.isEmpty())" class="ui-select-match" ng-transclude=""></div>'), a.put("selectize/select.tpl.html", '<div class="ui-select-container selectize-control single" ng-class="{\'open\': $select.open}"><div class="selectize-input" ng-class="{\'focus\': $select.open, \'disabled\': $select.disabled, \'selectize-focus\' : $select.focus}" ng-click="$select.open && !$select.searchEnabled ? $select.toggle($event) : $select.activate()"><div class="ui-select-match"></div><input type="text" autocomplete="off" tabindex="-1" class="ui-select-search ui-select-toggle" ng-click="$select.toggle($event)" placeholder="{{$select.placeholder}}" ng-model="$select.search" ng-hide="!$select.searchEnabled || ($select.selected && !$select.open)" ng-disabled="$select.disabled" aria-label="{{ $select.baseTitle }}"></div><div class="ui-select-choices"></div></div>');
+a.put("bootstrap/choices.tpl.html", '<ul class="ui-select-choices ui-select-choices-content ui-select-dropdown dropdown-menu" role="listbox" ng-show="$select.open && $select.items.length > 0"><li class="ui-select-choices-group" id="ui-select-choices-{{ $select.generatedId }}"><div class="divider" ng-show="$select.isGrouped && $index > 0"></div><div ng-show="$select.isGrouped" class="ui-select-choices-group-label dropdown-header" ng-bind="$group.name"></div><div ng-attr-id="ui-select-choices-row-{{ $select.generatedId }}-{{$index}}" class="ui-select-choices-row" ng-class="{active: $select.isActive(this), disabled: $select.isDisabled(this)}" role="option"><span class="ui-select-choices-row-inner"></span></div></li></ul>'), a.put("bootstrap/match-multiple.tpl.html", '<span class="ui-select-match"><span ng-repeat="$item in $select.selected track by $index"><span class="ui-select-match-item btn btn-default btn-xs" tabindex="-1" type="button" ng-disabled="$select.disabled" ng-click="$selectMultiple.activeMatchIndex = $index;" ng-class="{\'btn-primary\':$selectMultiple.activeMatchIndex === $index, \'select-locked\':$select.isLocked(this, $index)}" ui-select-sort="$select.selected"><span class="close ui-select-match-close" ng-hide="$select.disabled" ng-click="$selectMultiple.removeChoice($index)">&nbsp;&times;</span> <span uis-transclude-append=""></span></span></span></span>'), 
+a.put("bootstrap/match.tpl.html", '<div class="ui-select-match" ng-hide="$select.open && $select.searchEnabled" ng-disabled="$select.disabled" ng-class="{\'btn-default-focus\':$select.focus}"><span tabindex="-1" class="btn btn-default form-control ui-select-toggle" aria-label="{{ $select.baseTitle }} activate" ng-disabled="$select.disabled" ng-click="$select.activate()" style="outline: 0;"><span ng-show="$select.isEmpty()" class="ui-select-placeholder text-muted">{{$select.placeholder}}</span> <span ng-hide="$select.isEmpty()" class="ui-select-match-text pull-left" ng-class="{\'ui-select-allow-clear\': $select.allowClear && !$select.isEmpty()}" ng-transclude=""></span> <i class="caret pull-right" ng-click="$select.toggle($event)"></i> <a ng-show="$select.allowClear && !$select.isEmpty() && ($select.disabled !== true)" aria-label="{{ $select.baseTitle }} clear" style="margin-right: 10px" ng-click="$select.clear($event)" class="btn btn-xs btn-link pull-right"><i class="glyphicon glyphicon-remove" aria-hidden="true"></i></a></span></div>'), 
+a.put("bootstrap/no-choice.tpl.html", '<ul class="ui-select-no-choice dropdown-menu" ng-show="$select.items.length == 0"><li ng-transclude=""></li></ul>'), a.put("bootstrap/select-multiple.tpl.html", '<div class="ui-select-container ui-select-multiple ui-select-bootstrap dropdown form-control" ng-class="{open: $select.open}"><div><div class="ui-select-match"></div><input type="search" autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false" class="ui-select-search input-xs" placeholder="{{$selectMultiple.getPlaceholder()}}" ng-disabled="$select.disabled" ng-click="$select.activate()" ng-model="$select.search" role="combobox" aria-label="{{ $select.baseTitle }}" ondrop="return false;"></div><div class="ui-select-choices"></div><div class="ui-select-no-choice"></div></div>'), a.put("bootstrap/select.tpl.html", '<div class="ui-select-container ui-select-bootstrap dropdown" ng-class="{open: $select.open}"><div class="ui-select-match"></div><input type="search" autocomplete="off" tabindex="-1" aria-expanded="true" aria-label="{{ $select.baseTitle }}" aria-owns="ui-select-choices-{{ $select.generatedId }}" aria-activedescendant="ui-select-choices-row-{{ $select.generatedId }}-{{ $select.activeIndex }}" class="form-control ui-select-search" ng-class="{ \'ui-select-search-hidden\' : !$select.searchEnabled }" placeholder="{{$select.placeholder}}" ng-model="$select.search" ng-show="$select.open"><div class="ui-select-choices"></div><div class="ui-select-no-choice"></div></div>'), 
+a.put("select2/choices.tpl.html", '<ul tabindex="-1" class="ui-select-choices ui-select-choices-content select2-results"><li class="ui-select-choices-group" ng-class="{\'select2-result-with-children\': $select.choiceGrouped($group) }"><div ng-show="$select.choiceGrouped($group)" class="ui-select-choices-group-label select2-result-label" ng-bind="$group.name"></div><ul role="listbox" id="ui-select-choices-{{ $select.generatedId }}" ng-class="{\'select2-result-sub\': $select.choiceGrouped($group), \'select2-result-single\': !$select.choiceGrouped($group) }"><li role="option" ng-attr-id="ui-select-choices-row-{{ $select.generatedId }}-{{$index}}" class="ui-select-choices-row" ng-class="{\'select2-highlighted\': $select.isActive(this), \'select2-disabled\': $select.isDisabled(this)}"><div class="select2-result-label ui-select-choices-row-inner"></div></li></ul></li></ul>'), a.put("select2/match-multiple.tpl.html", '<span class="ui-select-match"><li class="ui-select-match-item select2-search-choice" ng-repeat="$item in $select.selected track by $index" ng-class="{\'select2-search-choice-focus\':$selectMultiple.activeMatchIndex === $index, \'select2-locked\':$select.isLocked(this, $index)}" ui-select-sort="$select.selected"><span uis-transclude-append=""></span> <a href="javascript:;" class="ui-select-match-close select2-search-choice-close" ng-click="$selectMultiple.removeChoice($index)" tabindex="-1"></a></li></span>'), 
+a.put("select2/match.tpl.html", '<a class="select2-choice ui-select-match" ng-class="{\'select2-default\': $select.isEmpty()}" ng-click="$select.toggle($event)" aria-label="{{ $select.baseTitle }} select"><span ng-show="$select.isEmpty()" class="select2-chosen">{{$select.placeholder}}</span> <span ng-hide="$select.isEmpty()" class="select2-chosen" ng-transclude=""></span> <abbr ng-if="$select.allowClear && !$select.isEmpty()" class="select2-search-choice-close" ng-click="$select.clear($event)"></abbr> <span class="select2-arrow ui-select-toggle"><b></b></span></a>'), a.put("select2/no-choice.tpl.html", '<div class="ui-select-no-choice dropdown" ng-show="$select.items.length == 0"><div class="dropdown-content"><div data-selectable="" ng-transclude=""></div></div></div>'), a.put("select2/select-multiple.tpl.html", '<div class="ui-select-container ui-select-multiple select2 select2-container select2-container-multi" ng-class="{\'select2-container-active select2-dropdown-open open\': $select.open, \'select2-container-disabled\': $select.disabled}"><ul class="select2-choices"><span class="ui-select-match"></span><li class="select2-search-field"><input type="search" autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false" role="combobox" aria-expanded="true" aria-owns="ui-select-choices-{{ $select.generatedId }}" aria-label="{{ $select.baseTitle }}" aria-activedescendant="ui-select-choices-row-{{ $select.generatedId }}-{{ $select.activeIndex }}" class="select2-input ui-select-search" placeholder="{{$selectMultiple.getPlaceholder()}}" ng-disabled="$select.disabled" ng-hide="$select.disabled" ng-model="$select.search" ng-click="$select.activate()" style="width: 34px;" ondrop="return false;"></li></ul><div class="ui-select-dropdown select2-drop select2-with-searchbox select2-drop-active" ng-class="{\'select2-display-none\': !$select.open || $select.items.length === 0}"><div class="ui-select-choices"></div></div></div>'), 
+a.put("select2/select.tpl.html", '<div class="ui-select-container select2 select2-container" ng-class="{\'select2-container-active select2-dropdown-open open\': $select.open, \'select2-container-disabled\': $select.disabled, \'select2-container-active\': $select.focus, \'select2-allowclear\': $select.allowClear && !$select.isEmpty()}"><div class="ui-select-match"></div><div class="ui-select-dropdown select2-drop select2-with-searchbox select2-drop-active" ng-class="{\'select2-display-none\': !$select.open}"><div class="search-container" ng-class="{\'ui-select-search-hidden\':!$select.searchEnabled, \'select2-search\':$select.searchEnabled}"><input type="search" autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false" role="combobox" aria-expanded="true" aria-owns="ui-select-choices-{{ $select.generatedId }}" aria-label="{{ $select.baseTitle }}" aria-activedescendant="ui-select-choices-row-{{ $select.generatedId }}-{{ $select.activeIndex }}" class="ui-select-search select2-input" ng-model="$select.search"></div><div class="ui-select-choices"></div><div class="ui-select-no-choice"></div></div></div>'), 
+a.put("selectize/choices.tpl.html", '<div ng-show="$select.open" class="ui-select-choices ui-select-dropdown selectize-dropdown single"><div class="ui-select-choices-content selectize-dropdown-content"><div class="ui-select-choices-group optgroup" role="listbox"><div ng-show="$select.isGrouped" class="ui-select-choices-group-label optgroup-header" ng-bind="$group.name"></div><div role="option" class="ui-select-choices-row" ng-class="{active: $select.isActive(this), disabled: $select.isDisabled(this)}"><div class="option ui-select-choices-row-inner" data-selectable=""></div></div></div></div></div>'), a.put("selectize/match.tpl.html", '<div ng-hide="$select.searchEnabled && ($select.open || $select.isEmpty())" class="ui-select-match"><span ng-show="!$select.searchEnabled && ($select.isEmpty() || $select.open)" class="ui-select-placeholder text-muted">{{$select.placeholder}}</span> <span ng-hide="$select.isEmpty() || $select.open" ng-transclude=""></span></div>'), a.put("selectize/no-choice.tpl.html", '<div class="ui-select-no-choice selectize-dropdown" ng-show="$select.items.length == 0"><div class="selectize-dropdown-content"><div data-selectable="" ng-transclude=""></div></div></div>'), 
+a.put("selectize/select.tpl.html", '<div class="ui-select-container selectize-control single" ng-class="{\'open\': $select.open}"><div class="selectize-input" ng-class="{\'focus\': $select.open, \'disabled\': $select.disabled, \'selectize-focus\' : $select.focus}" ng-click="$select.open && !$select.searchEnabled ? $select.toggle($event) : $select.activate()"><div class="ui-select-match"></div><input type="search" autocomplete="off" tabindex="-1" class="ui-select-search ui-select-toggle" ng-class="{\'ui-select-search-hidden\':!$select.searchEnabled}" ng-click="$select.toggle($event)" placeholder="{{$select.placeholder}}" ng-model="$select.search" ng-hide="!$select.isEmpty() && !$select.open" ng-disabled="$select.disabled" aria-label="{{ $select.baseTitle }}"></div><div class="ui-select-choices"></div><div class="ui-select-no-choice"></div></div>');
 } ]), function() {
 "use strict";
 angular.module("key-value-editor", [ "as.sortable" ]);

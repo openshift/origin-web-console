@@ -1,20 +1,51 @@
-.ui-select-bootstrap .ui-select-choices-row {
-  > a {
-    border-color: transparent;
-    border-style: solid;
-    border-width: 1px 0;
-    line-height: @line-height-base;
-    padding: 1px 10px;
-    &:hover,
-    &:focus {
-      background-color: @dropdown-link-hover-bg;
-      border-color: @dropdown-link-hover-border-color;
-      color: @dropdown-link-hover-color;
+/* Fix some styles with the angular-ui-select bootstrap theme that isn't right when combined with all of our styles */
+.ui-select-bootstrap {
+  .surface-shaded & {
+    .ui-select-match > .btn {
+      background-color: #ffffff;
+      background-image: linear-gradient(to bottom, #ffffff 0%, #fbfbfb 100%);
     }
   }
-  &.active > a {
-    background-color: @dropdown-link-active-bg !important;
-    border-color: @dropdown-link-active-border-color !important;
-    color: @dropdown-link-active-color;
+  .ui-select-choices-row {
+    > span {
+      border-color: transparent;
+      border-style: solid;
+      border-width: 1px 0;
+      line-height: @line-height-base;
+      padding: 1px 10px;
+      &:hover,
+      &:focus {
+        background-color: @dropdown-link-hover-bg;
+        border-color: @dropdown-link-hover-border-color;
+        color: @dropdown-link-hover-color;
+      }
+    }
+    &.active > span {
+      background-color: @dropdown-link-active-bg !important;
+      border-color: @dropdown-link-active-border-color !important;
+      color: @dropdown-link-active-color;
+    }
+  }
+  .ui-select-match-text, .ui-select-placeholder {
+    font-weight: normal;
+  }
+  .ui-select-match-text {
+    padding-right: 20px;
+    span {
+      display: block;
+      text-overflow: ellipsis;
+    }
+  }
+  .ui-select-toggle > .caret {
+    font-size: (@font-size-base - 1);
+    font-style: normal;
+    right: 6px;
+    top: 10px;
+  }
+  /* Fixes ui-select's input box extending to 100% page width if the page has been resized after page-load
+  * https://github.com/angular-ui/ui-select/issues/1678
+  */
+  .ui-select-search {
+    width: 100% !important;
   }
 }
