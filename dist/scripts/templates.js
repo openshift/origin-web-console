@@ -2885,8 +2885,12 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "</uib-tab>\n" +
     "<uib-tab heading=\"Environment\" active=\"selectedTab.environment\">\n" +
     "<uib-tab-heading>Environment</uib-tab-heading>\n" +
-    "<div ng-if=\"replicaSet | hasDeploymentConfig\">\n" +
-    "<p ng-if=\"'deploymentconfigs' | canI : 'update'\">\n" +
+    "<div ng-if=\"deployment || (replicaSet | hasDeploymentConfig)\">\n" +
+    "<p ng-if=\"deployment && ({ group: 'extensions', resource: 'deployments' } | canI : 'update')\">\n" +
+    "<span class=\"pficon pficon-info\" aria-hidden=\"true\"></span>\n" +
+    "Environment variables can be edited on the <a ng-href=\"{{deployment | navigateResourceURL}}?tab=environment\">deployment</a>.\n" +
+    "</p>\n" +
+    "<p ng-if=\"'(replicaSet | hasDeploymentConfig) && deploymentconfigs' | canI : 'update'\">\n" +
     "<span class=\"pficon pficon-info\" aria-hidden=\"true\"></span>\n" +
     "Environment variables can be edited on the <a ng-href=\"{{replicaSet | configURLForResource}}?tab=environment\">deployment configuration</a>.\n" +
     "</p>\n" +
@@ -2896,7 +2900,7 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "<em ng-if=\"!container.env.length\">The container specification has no environment variables set.</em>\n" +
     "</div>\n" +
     "</div>\n" +
-    "<ng-form ng-show=\"!(replicaSet | hasDeploymentConfig)\" name=\"forms.envForm\">\n" +
+    "<ng-form ng-show=\"!deployment && !(replicaSet | hasDeploymentConfig)\" name=\"forms.envForm\">\n" +
     "<div ng-repeat=\"container in updatedDeployment.spec.template.spec.containers\">\n" +
     "<div ng-if=\"resource | canI : 'update'\">\n" +
     "<key-value-editor entries=\"container.env\" key-placeholder=\"Name\" value-placeholder=\"Value\" key-validator=\"[A-Za-z_][A-Za-z0-9_]*\" key-validator-error=\"Please enter a valid key\" key-validator-error-tooltip=\"A valid environment variable name is an alphanumeric (a-z and 0-9) string beginning with a letter that may contain underscores.\" add-row-link=\"Add environment variable\" show-header></key-value-editor>\n" +
