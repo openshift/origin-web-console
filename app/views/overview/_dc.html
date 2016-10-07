@@ -28,6 +28,13 @@
             <a href="" ng-click="cancelDeployment()" role="button">Cancel</a>
           </span>
         </div>
+        <div ng-if="deploymentConfig.spec.paused" class="small">
+          <span class="pficon pficon-info" aria-hidden="true"></span>
+          Deployment is paused.
+          <span ng-if="'deploymentconfigs' | canI : 'update'">
+            <a href="" ng-click="resumeDeployment()" role="button">Resume</a>
+          </span>
+        </div>
       </div>
     </div>
     <div column flex class="shield" ng-if="activeReplicationController"

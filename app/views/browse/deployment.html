@@ -11,7 +11,6 @@
           <div>
             <h1>
               {{name}}
-
               <div class="pull-right dropdown" ng-if="deployment" ng-hide="!('deployments' | canIDoAny)">
                 <button type="button" class="dropdown-toggle btn btn-default actions-dropdown-btn hidden-xs" data-toggle="dropdown">
                   Actions
@@ -21,6 +20,13 @@
                    class="dropdown-toggle actions-dropdown-kebab visible-xs-inline"
                    data-toggle="dropdown"><i class="fa fa-ellipsis-v"></i><span class="sr-only">Actions</span></a>
                 <ul class="dropdown-menu actions action-button">
+                  <li ng-if="!deployment.spec.paused && !updatingPausedState && { group: 'extensions', resource: 'deployments' } | canI : 'update'">
+                    <a href="" ng-click="setPaused(true)" role="button">Pause Deployment</a>
+                  </li>
+                  <li ng-if="deployment.spec.paused && !updatingPausedState && { group: 'extensions', resource: 'deployments' } | canI : 'update'">
+                    <a href="" ng-click="setPaused(false)" role="button">Resume Deployment</a>
+                  </li>
+                  <li class="divider" ng-if="!updatingPausedState && { group: 'extensions', resource: 'deployments' } | canI : 'update'"></li>
                   <li ng-if="{ group: 'extensions', resource: 'deployments' } | canI : 'update'">
                     <a ng-href="project/{{project.metadata.name}}/attach-pvc?kind=Deployment&name={{deployment.metadata.name}}&group=extensions"
                        role="button">Attach Storage</a>
@@ -45,6 +51,7 @@
                   <li ng-if="{ group: 'extensions', resource: 'deployments' } | canI : 'update'">
                     <a ng-href="{{deployment | editYamlURL}}" role="button">Edit YAML</a>
                   </li>
+                  <li class="divider" ng-if="{ group: 'extensions', resource: 'deployments' } | canI : 'update'"></li>
                   <li ng-if="{ group: 'extensions', resource: 'deployments' } | canI : 'delete'">
                     <delete-link
                       kind="Deployment"
@@ -71,6 +78,15 @@
                 <uib-tab active="selectedTab.details">
                   <uib-tab-heading>Details</uib-tab-heading>
                   <div class="resource-details" ng-if="deployment">
+                    <div ng-if="deployment.spec.paused" class="alert alert-info animate-if">
+                      <span class="pficon pficon-info" aria-hidden="true"></span>
+                      <strong>{{deployment.metadata.name}} is paused.</strong>
+                      This will pause any in-progress rollouts and stop new
+                      rollouts from running until the deployment is resumed.
+                      <span ng-if="!updatingPausedState && { group: 'extensions', resource: 'deployments' } | canI : 'update'">
+                        <a href="" ng-click="setPaused(false)" role="button">Resume deployment</a>
+                      </span>
+                    </div>
                     <div class="row">
                       <div class="col-lg-6">
                         <h3>Status</h3>
@@ -92,8 +108,6 @@
                               <span ng-if="deployment.status.unavailableReplicas">{{deployment.status.unavailableReplicas}} unavailable</span>
                             </div>
                           </dd>
-                          <dt>Paused:</dt>
-                          <dd>{{deployment.spec.paused | yesNo}}</dd>
                         </dl>
                       </div>
                       <div class="col-lg-6">

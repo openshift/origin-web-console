@@ -1964,6 +1964,13 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "<li class=\"visible-xs-inline\" ng-class=\"{ disabled: !canDeploy() }\" ng-if=\"'deploymentconfigs' | canI : 'update'\">\n" +
     "<a href=\"\" role=\"button\" ng-attr-aria-disabled=\"{{canDeploy() ? undefined : 'true'}}\" ng-class=\"{ 'disabled-link': !canDeploy() }\" ng-click=\"startLatestDeployment()\">Deploy</a>\n" +
     "</li>\n" +
+    "<li ng-if=\"!deploymentConfig.spec.paused && !updatingPausedState && 'deploymentconfigs' | canI : 'update'\">\n" +
+    "<a href=\"\" ng-click=\"setPaused(true)\" role=\"button\">Pause Deployment</a>\n" +
+    "</li>\n" +
+    "<li ng-if=\"deploymentConfig.spec.paused && !updatingPausedState && 'deploymentconfigs' | canI : 'update'\">\n" +
+    "<a href=\"\" ng-click=\"setPaused(false)\" role=\"button\">Resume Deployment</a>\n" +
+    "</li>\n" +
+    "<li class=\"divider\" ng-if=\"!updatingPausedState && 'deploymentconfigs' | canI : 'update'\"></li>\n" +
     "<li ng-if=\"'deploymentconfigs' | canI : 'update'\">\n" +
     "<a ng-href=\"project/{{project.metadata.name}}/attach-pvc?kind=DeploymentConfig&name={{deploymentConfig.metadata.name}}\" role=\"button\">Attach Storage</a>\n" +
     "</li>\n" +
@@ -1984,6 +1991,7 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "<li ng-if=\"'deploymentconfigs' | canI : 'update'\">\n" +
     "<a ng-href=\"{{deploymentConfig | editYamlURL}}\" role=\"button\">Edit YAML</a>\n" +
     "</li>\n" +
+    "<li class=\"divider\" ng-if=\"'deploymentconfigs' | canI : 'update'\"></li>\n" +
     "<li ng-if=\"'deploymentconfigs' | canI : 'delete'\">\n" +
     "<delete-link kind=\"DeploymentConfig\" resource-name=\"{{deploymentConfig.metadata.name}}\" project-name=\"{{deploymentConfig.metadata.namespace}}\" alerts=\"alerts\" hpa-list=\"autoscalers\">\n" +
     "</delete-link>\n" +
@@ -2006,6 +2014,14 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "<uib-tab active=\"selectedTab.details\">\n" +
     "<uib-tab-heading>Details</uib-tab-heading>\n" +
     "<div class=\"resource-details\" ng-if=\"deploymentConfig\">\n" +
+    "<div ng-if=\"deploymentConfig.spec.paused\" class=\"alert alert-info animate-if\">\n" +
+    "<span class=\"pficon pficon-info\" aria-hidden=\"true\"></span>\n" +
+    "<strong>{{deploymentConfig.metadata.name}} is paused.</strong>\n" +
+    "This will stop any new deployments and deployment triggers from running until resumed.\n" +
+    "<span ng-if=\"!updatingPausedState && 'deploymentconfigs' | canI : 'update'\">\n" +
+    "<a href=\"\" ng-click=\"setPaused(false)\" role=\"button\">Resume deployment</a>\n" +
+    "</span>\n" +
+    "</div>\n" +
     "<div class=\"row\">\n" +
     "<div class=\"col-lg-6\">\n" +
     "<h3>Configuration</h3>\n" +
@@ -2205,6 +2221,13 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "</button>\n" +
     "<a href=\"\" class=\"dropdown-toggle actions-dropdown-kebab visible-xs-inline\" data-toggle=\"dropdown\"><i class=\"fa fa-ellipsis-v\"></i><span class=\"sr-only\">Actions</span></a>\n" +
     "<ul class=\"dropdown-menu actions action-button\">\n" +
+    "<li ng-if=\"!deployment.spec.paused && !updatingPausedState && { group: 'extensions', resource: 'deployments' } | canI : 'update'\">\n" +
+    "<a href=\"\" ng-click=\"setPaused(true)\" role=\"button\">Pause Deployment</a>\n" +
+    "</li>\n" +
+    "<li ng-if=\"deployment.spec.paused && !updatingPausedState && { group: 'extensions', resource: 'deployments' } | canI : 'update'\">\n" +
+    "<a href=\"\" ng-click=\"setPaused(false)\" role=\"button\">Resume Deployment</a>\n" +
+    "</li>\n" +
+    "<li class=\"divider\" ng-if=\"!updatingPausedState && { group: 'extensions', resource: 'deployments' } | canI : 'update'\"></li>\n" +
     "<li ng-if=\"{ group: 'extensions', resource: 'deployments' } | canI : 'update'\">\n" +
     "<a ng-href=\"project/{{project.metadata.name}}/attach-pvc?kind=Deployment&name={{deployment.metadata.name}}&group=extensions\" role=\"button\">Attach Storage</a>\n" +
     "</li>\n" +
@@ -2225,6 +2248,7 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "<li ng-if=\"{ group: 'extensions', resource: 'deployments' } | canI : 'update'\">\n" +
     "<a ng-href=\"{{deployment | editYamlURL}}\" role=\"button\">Edit YAML</a>\n" +
     "</li>\n" +
+    "<li class=\"divider\" ng-if=\"{ group: 'extensions', resource: 'deployments' } | canI : 'update'\"></li>\n" +
     "<li ng-if=\"{ group: 'extensions', resource: 'deployments' } | canI : 'delete'\">\n" +
     "<delete-link kind=\"Deployment\" resource-name=\"{{deployment.metadata.name}}\" project-name=\"{{deployment.metadata.namespace}}\" alerts=\"alerts\" hpa-list=\"autoscalers\">\n" +
     "</delete-link>\n" +
@@ -2246,6 +2270,14 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "<uib-tab active=\"selectedTab.details\">\n" +
     "<uib-tab-heading>Details</uib-tab-heading>\n" +
     "<div class=\"resource-details\" ng-if=\"deployment\">\n" +
+    "<div ng-if=\"deployment.spec.paused\" class=\"alert alert-info animate-if\">\n" +
+    "<span class=\"pficon pficon-info\" aria-hidden=\"true\"></span>\n" +
+    "<strong>{{deployment.metadata.name}} is paused.</strong>\n" +
+    "This will pause any in-progress rollouts and stop new rollouts from running until the deployment is resumed.\n" +
+    "<span ng-if=\"!updatingPausedState && { group: 'extensions', resource: 'deployments' } | canI : 'update'\">\n" +
+    "<a href=\"\" ng-click=\"setPaused(false)\" role=\"button\">Resume deployment</a>\n" +
+    "</span>\n" +
+    "</div>\n" +
     "<div class=\"row\">\n" +
     "<div class=\"col-lg-6\">\n" +
     "<h3>Status</h3>\n" +
@@ -2264,8 +2296,6 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "<span ng-if=\"deployment.status.unavailableReplicas\">{{deployment.status.unavailableReplicas}} unavailable</span>\n" +
     "</div>\n" +
     "</dd>\n" +
-    "<dt>Paused:</dt>\n" +
-    "<dd>{{deployment.spec.paused | yesNo}}</dd>\n" +
     "</dl>\n" +
     "</div>\n" +
     "<div class=\"col-lg-6\">\n" +
@@ -8574,6 +8604,13 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "<a href=\"\" ng-click=\"cancelDeployment()\" role=\"button\">Cancel</a>\n" +
     "</span>\n" +
     "</div>\n" +
+    "<div ng-if=\"deploymentConfig.spec.paused\" class=\"small\">\n" +
+    "<span class=\"pficon pficon-info\" aria-hidden=\"true\"></span>\n" +
+    "Deployment is paused.\n" +
+    "<span ng-if=\"'deploymentconfigs' | canI : 'update'\">\n" +
+    "<a href=\"\" ng-click=\"resumeDeployment()\" role=\"button\">Resume</a>\n" +
+    "</span>\n" +
+    "</div>\n" +
     "</div>\n" +
     "</div>\n" +
     "<div column flex class=\"shield\" ng-if=\"activeReplicationController\" ng-class=\"{ 'shield-lg': (activeReplicationController | annotation: 'deploymentVersion').length > 3 }\">\n" +
@@ -8654,6 +8691,13 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "<div ng-if=\"inProgressDeployment\" class=\"small\">\n" +
     "{{deployment.spec.strategy.type | sentenceCase}}\n" +
     "<ellipsis-pulser color=\"dark\" size=\"sm\" display=\"inline\" msg=\"in progress\"></ellipsis-pulser>\n" +
+    "</div>\n" +
+    "<div ng-if=\"deployment.spec.paused\" class=\"small\">\n" +
+    "<span class=\"pficon pficon-info\" aria-hidden=\"true\"></span>\n" +
+    "Deployment is paused.\n" +
+    "<span ng-if=\"{ group: 'extensions', resource: 'deployments' } | canI : 'update'\">\n" +
+    "<a href=\"\" ng-click=\"resumeDeployment()\" role=\"button\">Resume</a>\n" +
+    "</span>\n" +
     "</div>\n" +
     "</div>\n" +
     "<div column flex class=\"shield\" ng-if=\"latestReplicaSet && latestRevision && !inProgressDeployment\" ng-class=\"{ 'shield-lg': latestRevision.length > 3 }\">\n" +

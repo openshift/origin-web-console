@@ -123,6 +123,7 @@ angular.module('openshiftConsole')
                 };
               }
               $scope.deploymentConfig = deploymentConfig;
+              $scope.updatingPausedState = false;
 
               if (!$scope.forms.dcEnvVars || $scope.forms.dcEnvVars.$pristine) {
                 copyDeploymentConfigAndEnsureEnv(deploymentConfig);
@@ -274,6 +275,10 @@ angular.module('openshiftConsole')
             return false;
           }
 
+          if ($scope.deploymentConfig.spec.paused) {
+            return false;
+          }
+
           return true;
         };
 
@@ -294,6 +299,22 @@ angular.module('openshiftConsole')
           };
 
           DeploymentsService.scale($scope.deploymentConfig, replicas).then(_.noop, showScalingError);
+        };
+
+        $scope.setPaused = function(paused) {
+          $scope.updatingPausedState = true;
+          DeploymentsService.setPaused($scope.deploymentConfig, paused, context).then(
+            _.noop,
+            // Failure
+            function(e) {
+              $scope.updatingPausedState = false;
+              $scope.alerts = $scope.alerts || {};
+              $scope.alerts["scale"] = {
+                type: "error",
+                message: "An error occurred " + (paused ? "pausing" : "resuming") + " the deployment config.",
+                details: $filter('getErrorDetails')(e)
+              };
+            });
         };
 
         $scope.$on('$destroy', function(){

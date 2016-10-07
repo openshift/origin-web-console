@@ -38,6 +38,13 @@
                         ng-class="{ 'disabled-link': !canDeploy() }"
                         ng-click="startLatestDeployment()">Deploy</a>
                     </li>
+                    <li ng-if="!deploymentConfig.spec.paused && !updatingPausedState && 'deploymentconfigs' | canI : 'update'">
+                      <a href="" ng-click="setPaused(true)" role="button">Pause Deployment</a>
+                    </li>
+                    <li ng-if="deploymentConfig.spec.paused && !updatingPausedState && 'deploymentconfigs' | canI : 'update'">
+                      <a href="" ng-click="setPaused(false)" role="button">Resume Deployment</a>
+                    </li>
+                    <li class="divider" ng-if="!updatingPausedState && 'deploymentconfigs' | canI : 'update'"></li>
                     <li ng-if="'deploymentconfigs' | canI : 'update'">
                       <a ng-href="project/{{project.metadata.name}}/attach-pvc?kind=DeploymentConfig&name={{deploymentConfig.metadata.name}}"
                          role="button">Attach Storage</a>
@@ -62,6 +69,7 @@
                     <li ng-if="'deploymentconfigs' | canI : 'update'">
                       <a ng-href="{{deploymentConfig | editYamlURL}}" role="button">Edit YAML</a>
                     </li>
+                    <li class="divider" ng-if="'deploymentconfigs' | canI : 'update'"></li>
                     <li ng-if="'deploymentconfigs' | canI : 'delete'">
                       <delete-link
                         kind="DeploymentConfig"
@@ -89,6 +97,15 @@
                   <uib-tab active="selectedTab.details">
                     <uib-tab-heading>Details</uib-tab-heading>
                     <div class="resource-details" ng-if="deploymentConfig">
+                      <div ng-if="deploymentConfig.spec.paused" class="alert alert-info animate-if">
+                        <span class="pficon pficon-info" aria-hidden="true"></span>
+                        <strong>{{deploymentConfig.metadata.name}} is paused.</strong>
+                        This will stop any new deployments and deployment triggers from running
+                        until resumed.
+                        <span ng-if="!updatingPausedState && 'deploymentconfigs' | canI : 'update'">
+                          <a href="" ng-click="setPaused(false)" role="button">Resume deployment</a>
+                        </span>
+                      </div>
                       <div class="row">
                         <div class="col-lg-6">
                           <h3>Configuration</h3>

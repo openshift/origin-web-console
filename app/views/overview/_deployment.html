@@ -21,6 +21,13 @@
         {{deployment.spec.strategy.type | sentenceCase}}
         <ellipsis-pulser color="dark" size="sm" display="inline" msg="in progress"></ellipsis-pulser>
       </div>
+      <div ng-if="deployment.spec.paused" class="small">
+        <span class="pficon pficon-info" aria-hidden="true"></span>
+        Deployment is paused.
+        <span ng-if="{ group: 'extensions', resource: 'deployments' } | canI : 'update'">
+          <a href="" ng-click="resumeDeployment()" role="button">Resume</a>
+        </span>
+      </div>
     </div>
     <div column flex class="shield"
          ng-if="latestReplicaSet && latestRevision && !inProgressDeployment"

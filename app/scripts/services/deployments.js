@@ -468,5 +468,12 @@ angular.module("openshiftConsole")
       return _.toArray(replicaSets).sort(compareRevisions);
     };
 
+    DeploymentsService.prototype.setPaused = function(/* deployment or deployment config */ object, paused, context) {
+      var request = angular.copy(object);
+      var resourceGroupVersion = APIService.objectToResourceGroupVersion(object);
+      _.set(request, 'spec.paused', paused);
+      return DataService.update(resourceGroupVersion, object.metadata.name, request, context);
+    };
+
     return new DeploymentsService();
   });

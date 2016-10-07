@@ -209,6 +209,41 @@ angular.module('openshiftConsole')
     return deferred.promise;
   };
 
+// TODO: Enable PATCH when it's added to CORS Access-Control-Allow-Methods
+
+// resource:  API resource group version object (e.g. { group: "", resource: "pods", version: "v1" }).
+//            Must be the full resource group version because it can't be derived from the patch object.
+// name:      API name, the unique name for the object
+// object:    API object data(eg. { kind: "Build", parameters: { ... } } )
+// context:   API context (e.g. {project: "..."})
+// opts:      http - options to pass to the inner $http call
+// Returns a promise resolved with response data or rejected with {data:..., status:..., headers:..., config:...} when the delete call completes.
+// DataService.prototype.patch = function(resourceGroupVersion, name, object, context, opts) {
+//   opts = opts || {};
+//   var deferred = $q.defer();
+//   var self = this;
+//   this._getNamespace(resourceGroupVersion, context, opts).then(function(ns){
+//     $http(angular.extend({
+//       method: 'PATCH',
+//       auth: {},
+//       data: object,
+//       url: self._urlForResource(resourceGroupVersion, name, context, false, ns)
+//     }, opts.http || {}))
+//     .success(function(data, status, headerFunc, config, statusText) {
+//       deferred.resolve(data);
+//     })
+//     .error(function(data, status, headers, config) {
+//       deferred.reject({
+//         data: data,
+//         status: status,
+//         headers: headers,
+//         config: config
+//       });
+//     });
+//   });
+//   return deferred.promise;
+// };
+
 // resource:  API resource (e.g. "pods")
 // name:      API name, the unique name for the object.
 //            In case the name of the Object is provided, expected format of 'resource' parameter is 'resource/subresource', eg: 'buildconfigs/instantiate'.
