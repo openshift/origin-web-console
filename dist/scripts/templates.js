@@ -4622,7 +4622,7 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "</span>\n" +
     "<a href=\"\" ng-click=\"removeArg($index)\" class=\"input-group-addon action-button remove-arg\" title=\"Remove argument\">\n" +
     "<span class=\"sr-only\">Remove argument</span>\n" +
-    "<i class=\"fa fa-times\" aria-hidden=\"true\"></i>\n" +
+    "<i class=\"pficon pficon-close\" aria-hidden=\"true\"></i>\n" +
     "</a>\n" +
     "</span>\n" +
     "</span>\n" +
