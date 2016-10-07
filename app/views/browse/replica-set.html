@@ -50,8 +50,12 @@
                   </uib-tab>
                   <uib-tab heading="Environment" active="selectedTab.environment">
                     <uib-tab-heading>Environment</uib-tab-heading>
-                    <div ng-if="replicaSet | hasDeploymentConfig">
-                      <p ng-if="'deploymentconfigs' | canI : 'update'">
+                    <div ng-if="deployment || (replicaSet | hasDeploymentConfig)">
+                      <p ng-if="deployment && ({ group: 'extensions', resource: 'deployments' } | canI : 'update')">
+                        <span class="pficon pficon-info" aria-hidden="true"></span>
+                        Environment variables can be edited on the <a ng-href="{{deployment | navigateResourceURL}}?tab=environment">deployment</a>.
+                      </p>
+                      <p ng-if="'(replicaSet | hasDeploymentConfig) && deploymentconfigs' | canI : 'update'">
                         <span class="pficon pficon-info" aria-hidden="true"></span>
                         Environment variables can be edited on the <a ng-href="{{replicaSet | configURLForResource}}?tab=environment">deployment configuration</a>.
                       </p>
@@ -70,7 +74,7 @@
                         <em ng-if="!container.env.length">The container specification has no environment variables set.</em>
                       </div>
                     </div>
-                    <ng-form ng-show="!(replicaSet | hasDeploymentConfig)" name="forms.envForm">
+                    <ng-form ng-show="!deployment && !(replicaSet | hasDeploymentConfig)" name="forms.envForm">
                       <div ng-repeat="container in updatedDeployment.spec.template.spec.containers">
                         <div ng-if="resource | canI : 'update'">
                           <key-value-editor
