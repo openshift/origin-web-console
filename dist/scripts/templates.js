@@ -8127,22 +8127,22 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "<div ng-if=\"kindSelector.selected.kind === 'All' || kindSelector.selected.kind === 'ReplicationControllers'\">\n" +
     "<h2>Deployments</h2>\n" +
     "<div class=\"list-view-pf\">\n" +
-    "<div class=\"list-group-item\" ng-if=\"!(filteredDeployments | hashSize)\">\n" +
+    "<div class=\"list-group-item\" ng-if=\"!(filteredReplicationControllers | hashSize) && !(filteredReplicaSets | hashSize)\">\n" +
     "<div class=\"list-view-pf-main-info\">\n" +
-    "<ellipsis-pulser color=\"dark\" size=\"sm\" msg=\"Loading deployments\" ng-if=\"!deploymentsLoaded\"></ellipsis-pulser>\n" +
+    "<ellipsis-pulser color=\"dark\" size=\"sm\" msg=\"Loading deployments\" ng-if=\"!replicationControllersLoaded\"></ellipsis-pulser>\n" +
     "<em>\n" +
-    "<div ng-if=\"(deployments | hashSize) > 0\">The current filters are hiding all deployments.</div>\n" +
-    "<span ng-if=\"deploymentsLoaded && (deployments | hashSize) === 0\">There are no deployments in this project.</span>\n" +
+    "<div ng-if=\"(replicationControllers | hashSize) > 0 || (replicaSets | hashSize) > 0\">The current filters are hiding all deployments.</div>\n" +
+    "<span ng-if=\"replicationControllersLoaded && !(replicationControllers | hashSize) && replicaSetsLoaded && !(replicaSets | hashSize)\">There are no deployments in this project.</span>\n" +
     "</em>\n" +
     "</div>\n" +
     "</div>\n" +
-    "<div class=\"list-group-item list-group-item-expandable\" ng-repeat-start=\"deployment in filteredDeployments track by (deployment | uid)\" ng-click=\"toggleItem($event, this, deployment)\" ng-class=\"{'expanded': expanded.deployments[deployment.metadata.name]}\">\n" +
+    "<div class=\"list-group-item list-group-item-expandable\" ng-repeat-start=\"replicationController in filteredReplicationControllers track by (replicationController | uid)\" ng-click=\"toggleItem($event, this, replicationController)\" ng-class=\"{'expanded': expanded.replicationControllers[replicationController.metadata.name]}\">\n" +
     "<div class=\"list-view-pf-checkbox\">\n" +
-    "<button class=\"sr-only\">{{expanded.deployments[deployment.metadata.name] ? 'Collapse' : 'Expand'}}</button>\n" +
-    "<span ng-if=\"expanded.deployments[deployment.metadata.name]\">\n" +
+    "<button class=\"sr-only\">{{expanded.replicationControllers[replicationController.metadata.name] ? 'Collapse' : 'Expand'}}</button>\n" +
+    "<span ng-if=\"expanded.replicationControllers[replicationController.metadata.name]\">\n" +
     "<span class=\"fa fa-angle-down\"></span>\n" +
     "</span>\n" +
-    "<span ng-if=\"!expanded.deployments[deployment.metadata.name]\">\n" +
+    "<span ng-if=\"!expanded.replicationControllers[replicationController.metadata.name]\">\n" +
     "<span class=\"fa fa-angle-right\"></span>\n" +
     "</span>\n" +
     "</div>\n" +
@@ -8150,30 +8150,72 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "<div class=\"list-view-pf-body\">\n" +
     "<div class=\"list-view-pf-description\">\n" +
     "<div class=\"list-group-item-heading\">\n" +
-    "<a ng-href=\"{{deployment | navigateResourceURL}}\">{{deployment.metadata.name}}</a>\n" +
-    "<small>created <relative-timestamp timestamp=\"deployment.metadata.creationTimestamp\"></relative-timestamp></small>\n" +
+    "<a ng-href=\"{{replicationController | navigateResourceURL}}\">{{replicationController.metadata.name}}</a>\n" +
+    "<small>created <relative-timestamp timestamp=\"replicationController.metadata.creationTimestamp\"></relative-timestamp></small>\n" +
     "</div>\n" +
     "<div class=\"list-group-item-text\">\n" +
-    "<status-icon status=\"deployment | deploymentStatus\" disable-animation fixed-width=\"true\"></status-icon>\n" +
-    "{{deployment | deploymentStatus | sentenceCase}}<span ng-if=\"(deployment | deploymentStatus) === 'Active'\">, {{deployment.status.replicas}} replica<span ng-if=\"deployment.status.replicas !== 1\">s</span></span>\n" +
+    "<status-icon status=\"replicationController | deploymentStatus\" disable-animation fixed-width=\"true\"></status-icon>\n" +
+    "{{replicationController | deploymentStatus | sentenceCase}}<span ng-if=\"(replicationController | deploymentStatus) === 'Active'\">, {{replicationController.status.replicas}} replica<span ng-if=\"replicationController.status.replicas !== 1\">s</span></span>\n" +
     "</div>\n" +
     "</div>\n" +
     "<div class=\"list-view-pf-additional-info\">\n" +
     "<div class=\"list-view-pf-additional-info-item\">\n" +
     "<span class=\"pficon fa-fw pficon-image\"></span>\n" +
-    "<image-names pod-template=\"deployment.spec.template\" pods=\"podsByDeployment[deployment.metadata.name]\">\n" +
+    "<image-names pod-template=\"replicationController.spec.template\" pods=\"podsByOwnerUID[replicationController.metadata.uid]\">\n" +
     "</image-names>\n" +
     "</div>\n" +
     "</div>\n" +
     "</div>\n" +
     "</div>\n" +
     "</div>\n" +
-    "<div ng-repeat-end ng-if=\"expanded.deployments[deployment.metadata.name]\" class=\"list-group-expanded-section\" ng-class=\"{'expanded': expanded.deployments[deployment.metadata.name]}\">\n" +
+    "<div ng-repeat-end ng-if=\"expanded.replicationControllers[replicationController.metadata.name]\" class=\"list-group-expanded-section\" ng-class=\"{'expanded': expanded.replicationControllers[replicationController.metadata.name]}\">\n" +
     "\n" +
-    "<log-viewer ng-if=\"'deploymentconfigs/log' | canI : 'get'\" resource=\"deploymentconfigs/log\" name=\"deployment | annotation : 'deploymentConfig'\" context=\"projectContext\" options=\"logOptions.deployments[deployment.metadata.name]\" empty=\"logEmpty.deployments[deployment.metadata.name]\" run=\"logCanRun.deployments[deployment.metadata.name]\" fixed-height=\"250\" full-log-url=\"(deployment | navigateResourceURL) + '?view=chromeless'\">\n" +
+    "<log-viewer ng-if=\"'deploymentconfigs/log' | canI : 'get'\" resource=\"deploymentconfigs/log\" name=\"replicationController | annotation : 'deploymentConfig'\" context=\"projectContext\" options=\"logOptions.replicationControllers[replicationController.metadata.name]\" empty=\"logEmpty.replicationControllers[replicationController.metadata.name]\" run=\"logCanRun.replicationControllers[replicationController.metadata.name]\" fixed-height=\"250\" full-log-url=\"(replicationController | navigateResourceURL) + '?view=chromeless'\">\n" +
     "</log-viewer>\n" +
     "<div class=\"mar-top-lg\" ng-if=\"metricsAvailable\">\n" +
-    "<deployment-metrics pods=\"podsByDeployment[deployment.metadata.name]\" containers=\"deployment.spec.template.spec.containers\">\n" +
+    "<deployment-metrics pods=\"podsByOwnerUID[replicationController.metadata.uid]\" containers=\"replicationController.spec.template.spec.containers\">\n" +
+    "</deployment-metrics>\n" +
+    "</div>\n" +
+    "</div>\n" +
+    "<div class=\"list-group-item list-group-item-expandable\" ng-repeat-start=\"replicaSet in filteredReplicaSets track by (replicaSet | uid)\" ng-click=\"toggleItem($event, this, replicaSet)\" ng-class=\"{'expanded': expanded.replicaSets[replicaSet.metadata.name]}\">\n" +
+    "<div class=\"list-view-pf-checkbox\">\n" +
+    "<button class=\"sr-only\">{{expanded.replicaSets[replicaSet.metadata.name] ? 'Collapse' : 'Expand'}}</button>\n" +
+    "<span ng-if=\"expanded.replicaSets[replicaSet.metadata.name]\">\n" +
+    "<span class=\"fa fa-angle-down\"></span>\n" +
+    "</span>\n" +
+    "<span ng-if=\"!expanded.replicaSets[replicaSet.metadata.name]\">\n" +
+    "<span class=\"fa fa-angle-right\"></span>\n" +
+    "</span>\n" +
+    "</div>\n" +
+    "<div class=\"list-view-pf-main-info\">\n" +
+    "<div class=\"list-view-pf-body\">\n" +
+    "<div class=\"list-view-pf-description\">\n" +
+    "<div class=\"list-group-item-heading\">\n" +
+    "<a ng-href=\"{{replicaSet | navigateResourceURL}}\">{{replicaSet.metadata.name}}</a>\n" +
+    "<small>created <relative-timestamp timestamp=\"replicaSet.metadata.creationTimestamp\"></relative-timestamp></small>\n" +
+    "</div>\n" +
+    "<div class=\"list-group-item-text\">\n" +
+    "{{replicaSet.status.replicas}} replica<span ng-if=\"replicaSet.status.replicas !== 1\">s</span>\n" +
+    "</div>\n" +
+    "</div>\n" +
+    "<div class=\"list-view-pf-additional-info\">\n" +
+    "<div class=\"list-view-pf-additional-info-item\">\n" +
+    "<span class=\"pficon fa-fw pficon-image\"></span>\n" +
+    "<image-names pod-template=\"replicaSet.spec.template\" pods=\"podsByOwnerUID[replicaSet.metadata.uid]\">\n" +
+    "</image-names>\n" +
+    "</div>\n" +
+    "</div>\n" +
+    "</div>\n" +
+    "</div>\n" +
+    "</div>\n" +
+    "<div ng-repeat-end ng-if=\"expanded.replicaSets[replicaSet.metadata.name]\" class=\"list-group-expanded-section\" ng-class=\"{'expanded': expanded.replicaSets[replicaSet.metadata.name]}\">\n" +
+    "Logs are not available for replica sets.\n" +
+    "<span ng-if=\"podsByOwnerUID[replicaSet.metadata.uid] | hashSize\">\n" +
+    "To see applicaiton logs, view the logs for one of the replica set's\n" +
+    "<a href=\"\" ng-click=\"viewPodsForReplicaSet(replicaSet)\">pods</a>.\n" +
+    "</span>\n" +
+    "<div class=\"mar-top-lg\" ng-if=\"metricsAvailable\">\n" +
+    "<deployment-metrics pods=\"podsByOwnerUID[replicaSet.metadata.uid]\" containers=\"replicaSet.spec.template.spec.containers\">\n" +
     "</deployment-metrics>\n" +
     "</div>\n" +
     "</div>\n" +

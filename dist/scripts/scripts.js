@@ -4133,9 +4133,9 @@ d[b] = d[b] || {}, d[b].maxLimitRequestRatio = a;
 c.unwatchAll(f);
 });
 }));
-} ]), angular.module("openshiftConsole").controller("MonitoringController", [ "$routeParams", "$location", "$scope", "$filter", "DataService", "ProjectsService", "LabelsService", "MetricsService", "BuildsService", "PodsService", "KeywordService", "Logger", "ImageStreamResolver", "$rootScope", function(a, b, c, d, e, f, g, h, i, j, k, l, m, n) {
+} ]), angular.module("openshiftConsole").controller("MonitoringController", [ "$routeParams", "$location", "$scope", "$filter", "BuildsService", "DataService", "ImageStreamResolver", "KeywordService", "LabelsService", "Logger", "MetricsService", "Navigate", "PodsService", "ProjectsService", "$rootScope", function(a, b, c, d, e, f, g, h, i, j, k, l, m, n, o) {
 c.projectName = a.project, c.alerts = c.alerts || {}, c.renderOptions = c.renderOptions || {}, c.renderOptions.showEventsSidebar = !0, c.renderOptions.collapseEventsSidebar = "true" === localStorage.getItem("monitoring.eventsidebar.collapsed");
-var o = [];
+var p = [];
 c.kinds = [ {
 kind:"Pods"
 }, {
@@ -4146,67 +4146,72 @@ kind:"ReplicationControllers"
 }, {
 kind:"All"
 } ];
-var p = "All";
+var q = "All";
 a.kind && _.some(c.kinds, {
 kind:a.kind
-}) && (p = a.kind), c.kindSelector = {
+}) && (q = a.kind), c.kindSelector = {
 selected:{
-kind:p
+kind:q
 }
 }, c.logOptions = {
 pods:{},
-deployments:{},
+replicationControllers:{},
 builds:{}
 }, c.logCanRun = {
 pods:{},
-deployments:{},
+replicationControllers:{},
 builds:{}
 }, c.logEmpty = {
 pods:{},
-deployments:{},
+replicationControllers:{},
 builds:{}
 }, c.expanded = {
 pods:{},
-deployments:{},
+replicationControllers:{},
+replicaSets:{},
 builds:{}
 };
-var q = d("isNil");
+var r = d("isNil");
 c.filters = {
-hideOlderResources:q(a.hideOlderResources) || "true" === a.hideOlderResources,
+hideOlderResources:r(a.hideOlderResources) || "true" === a.hideOlderResources,
 text:""
 };
-var r, s, t;
-h.isAvailable().then(function(a) {
+var s, t, u, v;
+k.isAvailable().then(function(a) {
 c.metricsAvailable = a;
 });
-var u = d("orderObjectsByDate"), v = [ "metadata.name" ], w = [], x = function() {
-c.filteredPods = k.filterForKeywords(t, v, w), c.filteredDeployments = k.filterForKeywords(s, v, w), c.filteredBuilds = k.filterForKeywords(r, v, w);
-}, y = function(a) {
+var w = d("orderObjectsByDate"), x = [ "metadata.name" ], y = [], z = function() {
+c.filteredPods = h.filterForKeywords(v, x, y), c.filteredReplicationControllers = h.filterForKeywords(t, x, y), c.filteredReplicaSets = h.filterForKeywords(u, x, y), c.filteredBuilds = h.filterForKeywords(s, x, y);
+}, A = function(a) {
 c.logOptions.pods[a.metadata.name] = {
 container:a.spec.containers[0].name
 }, c.logCanRun.pods[a.metadata.name] = !_.includes([ "New", "Pending", "Unknown" ], a.status.phase);
-}, z = function(a) {
-c.logOptions.deployments[a.metadata.name] = {};
+}, B = function(a) {
+c.logOptions.replicationControllers[a.metadata.name] = {};
 var b = d("annotation")(a, "deploymentVersion");
-b && (c.logOptions.deployments[a.metadata.name].version = b), c.logCanRun.deployments[a.metadata.name] = !_.includes([ "New", "Pending" ], d("deploymentStatus")(a));
-}, A = function(a) {
+b && (c.logOptions.replicationControllers[a.metadata.name].version = b), c.logCanRun.replicationControllers[a.metadata.name] = !_.includes([ "New", "Pending" ], d("deploymentStatus")(a));
+}, C = function(a) {
 c.logOptions.builds[a.metadata.name] = {}, c.logCanRun.builds[a.metadata.name] = !_.includes([ "New", "Pending", "Error" ], a.status.phase);
-}, B = function() {
-t = _.filter(c.pods, function(a) {
+}, D = function() {
+v = _.filter(c.pods, function(a) {
 return !c.filters.hideOlderResources || "Succeeded" !== a.status.phase && "Failed" !== a.status.phase;
-}), c.filteredPods = k.filterForKeywords(t, v, w);
-}, C = d("isIncompleteBuild"), D = d("buildConfigForBuild"), E = d("isRecentBuild"), F = function() {
+}), c.filteredPods = h.filterForKeywords(v, x, y);
+}, E = d("isIncompleteBuild"), F = d("buildConfigForBuild"), G = d("isRecentBuild"), H = function() {
 moment().subtract(5, "m");
-r = _.filter(c.builds, function(a) {
+s = _.filter(c.builds, function(a) {
 if (!c.filters.hideOlderResources) return !0;
-if (C(a)) return !0;
-var b = D(a);
-return b ? c.latestBuildByConfig[b].metadata.name === a.metadata.name :E(a);
-}), c.filteredBuilds = k.filterForKeywords(r, v, w);
-}, G = d("deploymentStatus"), H = d("deploymentIsInProgress"), I = function() {
-s = _.filter(c.deployments, function(a) {
-return !c.filters.hideOlderResources || (H(a) || "Active" === G(a));
-}), c.filteredDeployments = k.filterForKeywords(s, v, w);
+if (E(a)) return !0;
+var b = F(a);
+return b ? c.latestBuildByConfig[b].metadata.name === a.metadata.name :G(a);
+}), c.filteredBuilds = h.filterForKeywords(s, x, y);
+}, I = d("deploymentStatus"), J = d("deploymentIsInProgress"), K = function() {
+t = _.filter(c.replicationControllers, function(a) {
+return !c.filters.hideOlderResources || (J(a) || "Active" === I(a));
+}), c.filteredReplicationControllers = h.filterForKeywords(t, x, y);
+}, L = function() {
+u = _.filter(c.replicaSets, function(a) {
+return !c.filters.hideOlderResources || _.get(a, "status.replicas");
+}), c.filteredReplicaSets = h.filterForKeywords(u, x, y);
 };
 c.toggleItem = function(a, b, e) {
 var f = $(a.target);
@@ -4214,54 +4219,72 @@ if (!f || !f.closest("a", b).length) {
 var g, h;
 switch (e.kind) {
 case "Build":
-g = !c.expanded.builds[e.metadata.name], c.expanded.builds[e.metadata.name] = g, h = g ? "event.resource.highlight" :"event.resource.clear-highlight", n.$emit(h, e);
+g = !c.expanded.builds[e.metadata.name], c.expanded.builds[e.metadata.name] = g, h = g ? "event.resource.highlight" :"event.resource.clear-highlight", o.$emit(h, e);
 var i = _.get(c.podsByName, d("annotation")(e, "buildPod"));
-i && n.$emit(h, i);
+i && o.$emit(h, i);
 break;
 
 case "ReplicationController":
-g = !c.expanded.deployments[e.metadata.name], c.expanded.deployments[e.metadata.name] = g, h = g ? "event.resource.highlight" :"event.resource.clear-highlight", n.$emit(h, e);
+g = !c.expanded.replicationControllers[e.metadata.name], c.expanded.replicationControllers[e.metadata.name] = g, h = g ? "event.resource.highlight" :"event.resource.clear-highlight", o.$emit(h, e);
 var j = d("annotation")(e, "deployerPod");
-j && n.$emit(h, {
+j && o.$emit(h, {
 kind:"Pod",
 metadata:{
 name:j
 }
-}), _.each(c.podsByDeployment[e.metadata.name], function(a) {
-n.$emit(h, a);
+}), _.each(c.podsByOwnerUID[e.metadata.uid], function(a) {
+o.$emit(h, a);
+});
+break;
+
+case "ReplicaSet":
+g = !c.expanded.replicaSets[e.metadata.name], c.expanded.replicaSets[e.metadata.name] = g, h = g ? "event.resource.highlight" :"event.resource.clear-highlight", o.$emit(h, e), _.each(c.podsByOwnerUID[e.metadata.uid], function(a) {
+o.$emit(h, a);
 });
 break;
 
 case "Pod":
-g = !c.expanded.pods[e.metadata.name], c.expanded.pods[e.metadata.name] = g, h = g ? "event.resource.highlight" :"event.resource.clear-highlight", n.$emit(h, e);
+g = !c.expanded.pods[e.metadata.name], c.expanded.pods[e.metadata.name] = g, h = g ? "event.resource.highlight" :"event.resource.clear-highlight", o.$emit(h, e);
 }
 }
+}, c.viewPodsForReplicaSet = function(a) {
+_.isEmpty(c.podsByOwnerUID[a.metadata.uid]) || l.toPodsForDeployment(a);
 };
-var J = function() {
-c.pods && c.deployments && (c.podsByDeployment = g.groupBySelector(c.pods, c.deployments));
+var M = function() {
+if (c.pods && c.replicationControllers && c.replicaSets) {
+var a = _.toArray(c.replicationControllers).concat(_.toArray(c.replicaSets));
+c.podsByOwnerUID = i.groupBySelector(c.pods, a, {
+key:"metadata.uid"
+});
+}
 };
-f.get(a.project).then(_.spread(function(a, d) {
-c.project = a, c.projectContext = d, e.watch("pods", d, function(a) {
-c.podsByName = a.by("metadata.name"), c.pods = u(c.podsByName, !0), J(), c.podsLoaded = !0, _.each(c.pods, y), B(), l.log("pods", c.pods);
-}), e.watch("replicationcontrollers", d, function(a) {
-c.deployments = u(a.by("metadata.name"), !0), J(), c.deploymentsLoaded = !0, _.each(c.deployments, z), I(), l.log("deployments", c.deployments);
-}), e.watch("builds", d, function(a) {
-c.builds = u(a.by("metadata.name"), !0), c.latestBuildByConfig = i.latestBuildByConfig(c.builds), c.buildsLoaded = !0, _.each(c.builds, A), F(), l.log("builds", c.builds);
+n.get(a.project).then(_.spread(function(a, d) {
+c.project = a, c.projectContext = d, f.watch("pods", d, function(a) {
+c.podsByName = a.by("metadata.name"), c.pods = w(c.podsByName, !0), M(), c.podsLoaded = !0, _.each(c.pods, A), D(), j.log("pods", c.pods);
+}), f.watch("replicationcontrollers", d, function(a) {
+c.replicationControllers = w(a.by("metadata.name"), !0), M(), c.replicationControllersLoaded = !0, _.each(c.replicationControllers, B), K(), j.log("replicationcontrollers", c.replicationControllers);
+}), f.watch("builds", d, function(a) {
+c.builds = w(a.by("metadata.name"), !0), c.latestBuildByConfig = e.latestBuildByConfig(c.builds), c.buildsLoaded = !0, _.each(c.builds, C), H(), j.log("builds", c.builds);
+}), f.watch({
+group:"extensions",
+resource:"replicasets"
+}, d, function(a) {
+c.replicaSets = w(a.by("metadata.name"), !0), M(), c.replicaSetsLoaded = !0, L(), j.log("replicasets", c.replicaSets);
 }), c.$on("$destroy", function() {
-e.unwatchAll(o);
+f.unwatchAll(p);
 }), c.$watch("filters.hideOlderResources", function() {
-B(), F(), I();
+D(), H(), K(), L();
 var a = b.search();
 a.hideOlderResources = c.filters.hideOlderResources ? "true" :"false", b.replace().search(a);
 }), c.$watch("kindSelector.selected.kind", function() {
 var a = b.search();
 a.kind = c.kindSelector.selected.kind, b.replace().search(a);
 }), c.$watch("filters.text", _.debounce(function() {
-w = k.generateKeywords(c.filters.text), c.$apply(x);
+y = h.generateKeywords(c.filters.text), c.$apply(z);
 }, 50, {
 maxWait:250
 })), c.$watch("renderOptions.collapseEventsSidebar", function(a, b) {
-a !== b && (localStorage.setItem("monitoring.eventsidebar.collapsed", c.renderOptions.collapseEventsSidebar ? "true" :"false"), n.$emit("metrics.charts.resize"));
+a !== b && (localStorage.setItem("monitoring.eventsidebar.collapsed", c.renderOptions.collapseEventsSidebar ? "true" :"false"), o.$emit("metrics.charts.resize"));
 });
 }));
 } ]), angular.module("openshiftConsole").controller("BuildsController", [ "$routeParams", "$scope", "AlertMessageService", "DataService", "$filter", "LabelFilter", "Logger", "$location", "BuildsService", "ProjectsService", function(a, b, c, d, e, f, g, h, i, j) {
