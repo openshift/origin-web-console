@@ -10355,75 +10355,80 @@ build:"="
 },
 templateUrl:"views/directives/build-status.html"
 };
-}), angular.module("openshiftConsole").directive("serviceGroupNotifications", [ "$filter", "Navigate", function(a, b) {
+}), angular.module("openshiftConsole").directive("serviceGroupNotifications", [ "$filter", "APIService", "Navigate", function(a, b, c) {
 return {
 restrict:"E",
-scope:{
-service:"=",
-childServices:"=",
-deploymentConfigsByService:"=",
-deploymentsByService:"=",
-replicaSetsByService:"=",
-petSetsByService:"=",
-podsByOwnerUid:"=",
-collapsed:"="
-},
+scope:!0,
 templateUrl:"views/directives/service-group-notifications.html",
-link:function(c) {
-var d = function(a) {
-var b = _.get(c, "service.metadata.namespace");
+link:function(d) {
+var e = function(a) {
+var b = _.get(d, "service.metadata.namespace");
 return "hide/alert/" + b + "/" + a;
-}, e = function(a) {
-var b = d(a);
-return "true" === localStorage.getItem(b);
 }, f = function(a) {
-var b = d(a);
+var b = e(a);
+return "true" === localStorage.getItem(b);
+}, g = function(a) {
+var b = e(a);
 localStorage.setItem(b, "true");
-}, g = a("hasHealthChecks"), h = c.alerts = {}, i = [], j = function() {
-_.each(i, function(d) {
-var i = _.get(d, "metadata.name", "");
-c.deploymentConfigsByService && _.each(c.deploymentConfigsByService[i], function(c) {
-var d = "health_checks_" + c.metadata.uid;
-if (g(c.spec.template)) delete h[d]; else {
-if (e(d)) return;
-h[d] = {
+}, h = a("hasHealthChecks"), i = d.alerts = {}, j = [], k = a("canI"), l = function(a) {
+var d = "health_checks_" + a.metadata.uid;
+if (h(a.spec.template)) delete i[d]; else {
+if (f(d)) return;
+i[d] = {
 type:"info",
-message:c.metadata.name + " has containers without health checks, which ensure your application is running correctly.",
+message:a.metadata.name + " has containers without health checks, which ensure your application is running correctly.",
 onClose:function() {
-f(d);
+g(d);
 }
-}, a("canI")("deploymentconfigs", "update") && (h[d].links = [ {
-href:b.healthCheckURL(c.metadata.namespace, "DeploymentConfig", c.metadata.name),
+};
+var e = b.objectToResourceGroupVersion(a);
+k(e, "update") && (i[d].links = [ {
+href:c.healthCheckURL(a.metadata.namespace, a.kind, a.metadata.name, e.group),
 label:"Add health checks"
 } ]);
 }
+}, m = function() {
+_.each(j, function(a) {
+var b = _.get(a, "metadata.name", ""), c = _.get(d, [ "deploymentConfigsByService", b ]);
+_.each(c, l);
+var e = _.get(d, [ "deploymentsByService", b ]);
+_.each(e, l);
 });
-});
-}, k = function() {
-var d = {};
-_.each(h, function(a, b) {
+}, n = function(a) {
+var b = _.get(a, "metadata.uid");
+return _.get(d, [ "podsByOwnerUID", b ], {});
+}, o = a("groupedPodWarnings"), p = function() {
+var a = {};
+_.each(i, function(a, b) {
 b.indexOf("pod_warning") >= 0 && delete a[b];
-}), _.each(i, function(b) {
-var e = _.get(b, "metadata.name", "");
-c.deploymentsByService && c.podsByOwnerUid && (_.each(c.deploymentsByService[e], function(b) {
-a("groupedPodWarnings")(c.podsByOwnerUid[b.metadata.uid], d);
-}), _.each(c.replicaSetsByService[e], function(b) {
-a("groupedPodWarnings")(c.podsByOwnerUid[b.metadata.uid], d);
-}), _.each(c.petSetsByService[e], function(b) {
-a("groupedPodWarnings")(c.podsByOwnerUid[b.metadata.uid], d);
-}));
-}), _.each(d, function(a, d) {
-var g = _.head(a);
-if (g) {
-var i = "pod_warning" + d, j = {
+}), _.each(j, function(b) {
+var c = _.get(b, "metadata.name", ""), e = _.get(d, [ "replicationControllersByService", c ]);
+_.each(e, function(b) {
+var c = n(b);
+o(c, a);
+});
+var f = _.get(d, [ "replicaSetsByService", c ]);
+_.each(f, function(b) {
+var c = n(b);
+o(c, a);
+});
+var g = _.get(d, [ "petSetsByService", c ]);
+_.each(g, function(b) {
+var c = n(b);
+o(c, a);
+});
+}), _.each(a, function(a, b) {
+var e = _.head(a);
+if (e) {
+var h = "pod_warning" + b, j = {
 type:"warning",
-message:g.message
+message:e.message
 };
-switch (g.reason) {
+switch (e.reason) {
 case "NonZeroExit":
-var k = b.resourceURL(g.pod, "Pod", c.service.metadata.namespace), l = URI(k).addSearch({
+var k = c.resourceURL(e.pod, "Pod", d.service.metadata.namespace), l = URI(k).addSearch({
 tab:"logs",
-container:g.container
+container:e.container
 }).toString();
 j.links = [ {
 href:l,
@@ -10432,28 +10437,24 @@ label:"View Log"
 break;
 
 case "NonZeroExitTerminatingPod":
-if (e(i)) return;
+if (f(h)) return;
 j.links = [ {
 href:"",
 label:"Don't show me again",
 onClick:function() {
-return f(i), !0;
+return g(h), !0;
 }
 } ];
 }
-h[i] = j;
+i[h] = j;
 }
 });
 };
-c.showAlert = function(a) {
-return !c.collapsed || "info" !== a.type;
-}, c.$watchGroup([ "service", "childServices" ], function() {
-i = (c.childServices || []).concat([ c.service ]), j(), k();
-}), c.$watch("deploymentConfigsByService", function() {
-j();
-}), c.$watchGroup([ "podsByOwnerUid", "deploymentsByService" ], function() {
-k();
-});
+d.showAlert = function(a) {
+return !d.collapse || "info" !== a.type;
+}, d.$watchGroup([ "service", "childServices" ], function() {
+j = (d.childServices || []).concat([ d.service ]), m(), p();
+}), d.$watchGroup([ "deploymentConfigsByService", "deploymentsByService" ], m), d.$watchGroup([ "podsByOwnerUid", "replicationControllersByService", "replicaSetsByService", "petSetsByService" ], p);
 }
 };
 } ]), angular.module("openshiftConsole").directive("overviewService", [ "$filter", "DeploymentsService", "MetricsService", function(a, b, c) {

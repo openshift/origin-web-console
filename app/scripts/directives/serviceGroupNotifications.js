@@ -1,19 +1,12 @@
 'use strict';
 
 angular.module('openshiftConsole')
-  .directive('serviceGroupNotifications', function($filter, Navigate) {
+  .directive('serviceGroupNotifications', function($filter, APIService, Navigate) {
     return {
       restrict: 'E',
-      scope: {
-        service: '=',
-        childServices: '=',
-        deploymentConfigsByService: '=',
-        deploymentsByService: '=',
-        replicaSetsByService: '=',
-        petSetsByService: '=',
-        podsByOwnerUid: '=',
-        collapsed: '='
-      },
+      // Inherit scope from OverviewController. This directive is only used for the overview.
+      // We want to do all of the grouping of resources once in the overview controller watch callbacks.
+      scope: true,
       templateUrl: 'views/directives/service-group-notifications.html',
       link: function($scope) {
         var alertHiddenKey = function(alertID) {
@@ -34,39 +27,53 @@ angular.module('openshiftConsole')
         var hasHealthChecks = $filter('hasHealthChecks');
         var alerts = $scope.alerts = {};
         var svcs = [];
-        var setDCNotifications = function() {
-           _.each(svcs, function(svc) {
-             var svcName = _.get(svc, "metadata.name", '');
-            // Get notifications for DCs in this service group
-            if ($scope.deploymentConfigsByService) {
-              _.each($scope.deploymentConfigsByService[svcName], function(dc) {
-                var id = "health_checks_" + dc.metadata.uid;
-                if (!hasHealthChecks(dc.spec.template)) {
-                  if (isAlertHidden(id)) {
-                    return;
-                  }
-                  alerts[id] = {
-                    type: "info",
-                    message: dc.metadata.name + " has containers without health checks, which ensure your application is running correctly.",
-                    onClose: function() {
-                      hideAlert(id);
-                    }
-                  };
-                  if ($filter('canI')("deploymentconfigs", "update")) {
-                    alerts[id].links = [{
-                                          href: Navigate.healthCheckURL(dc.metadata.namespace, "DeploymentConfig", dc.metadata.name),
-                                          label: "Add health checks"
-                                        }];
-                  }
-                }
-                else {
-                  delete alerts[id];
-                }
-              });
+        var canI = $filter('canI');
+        var addHealthCheckWarnings = function(/* deployment or deployment config */ object) {
+          var id = "health_checks_" + object.metadata.uid;
+          if (!hasHealthChecks(object.spec.template)) {
+            if (isAlertHidden(id)) {
+              return;
             }
+            alerts[id] = {
+              type: "info",
+              message: object.metadata.name + " has containers without health checks, which ensure your application is running correctly.",
+              onClose: function() {
+                hideAlert(id);
+              }
+            };
+            var resourceGroupVersion = APIService.objectToResourceGroupVersion(object);
+            if (canI(resourceGroupVersion, "update")) {
+              alerts[id].links = [{
+                                    href: Navigate.healthCheckURL(object.metadata.namespace, object.kind, object.metadata.name, resourceGroupVersion.group),
+                                    label: "Add health checks"
+                                  }];
+            }
+          }
+          else {
+            delete alerts[id];
+          }
+        };
+
+        var setDCNotifications = function() {
+          _.each(svcs, function(svc) {
+            var svcName = _.get(svc, "metadata.name", '');
+
+            // Add health check warnings for deployment configs.
+            var deploymentConfigs = _.get($scope, ['deploymentConfigsByService', svcName]);
+            _.each(deploymentConfigs, addHealthCheckWarnings);
+
+            // Add health check warnings for deployments.
+            var deployments = _.get($scope, ['deploymentsByService', svcName]);
+            _.each(deployments, addHealthCheckWarnings);
           });
         };
 
+        var getPods = function(object) {
+          var uid = _.get(object, 'metadata.uid');
+          return _.get($scope, ['podsByOwnerUID', uid], {});
+        };
+
+        var addPodWarnings = $filter('groupedPodWarnings');
         var setDeploymentNotifications = function() {
           var groupedPodWarnings = {};
           // clear out pod warning alerts
@@ -75,20 +82,27 @@ angular.module('openshiftConsole')
               delete alert[alertId];
             }
           });
+
           _.each(svcs, function(svc) {
             // Get notifications for deployments in this service group
             var svcName = _.get(svc, "metadata.name", '');
-            if ($scope.deploymentsByService && $scope.podsByOwnerUid) {
-              _.each($scope.deploymentsByService[svcName], function(deployment) {
-                $filter('groupedPodWarnings')($scope.podsByOwnerUid[deployment.metadata.uid], groupedPodWarnings);
-              });
-              _.each($scope.replicaSetsByService[svcName], function(replicaSet) {
-                $filter('groupedPodWarnings')($scope.podsByOwnerUid[replicaSet.metadata.uid], groupedPodWarnings);
-              });
-              _.each($scope.petSetsByService[svcName], function(petSet) {
-                $filter('groupedPodWarnings')($scope.podsByOwnerUid[petSet.metadata.uid], groupedPodWarnings);
-              });
-            }
+            var replicationControllers = _.get($scope, ['replicationControllersByService', svcName]);
+            _.each(replicationControllers, function(replicationController) {
+              var pods = getPods(replicationController);
+              addPodWarnings(pods, groupedPodWarnings);
+            });
+
+            var replicaSets = _.get($scope, ['replicaSetsByService', svcName]);
+            _.each(replicaSets, function(replicaSet) {
+              var pods = getPods(replicaSet);
+              addPodWarnings(pods, groupedPodWarnings);
+            });
+
+            var petSets = _.get($scope, ['petSetsByService', svcName]);
+            _.each(petSets, function(petSet) {
+              var pods = getPods(petSet);
+              addPodWarnings(pods, groupedPodWarnings);
+            });
           });
 
           _.each(groupedPodWarnings, function(podWarnings, groupID) {
@@ -140,7 +154,7 @@ angular.module('openshiftConsole')
         };
 
         $scope.showAlert = function(alert) {
-          if (!$scope.collapsed) {
+          if (!$scope.collapse) {
             return true;
           }
 
@@ -154,12 +168,8 @@ angular.module('openshiftConsole')
           setDCNotifications();
           setDeploymentNotifications();
         });
-        $scope.$watch('deploymentConfigsByService', function() {
-          setDCNotifications();
-        });
-        $scope.$watchGroup(['podsByOwnerUid', 'deploymentsByService'], function() {
-          setDeploymentNotifications();
-        });
+        $scope.$watchGroup(['deploymentConfigsByService', 'deploymentsByService'], setDCNotifications);
+        $scope.$watchGroup(['podsByOwnerUid', 'replicationControllersByService', 'replicaSetsByService', 'petSetsByService'], setDeploymentNotifications);
       }
     };
   });

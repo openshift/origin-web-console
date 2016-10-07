@@ -8714,8 +8714,7 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "</div>\n" +
     "</div>\n" +
     "\n" +
-    "<service-group-notifications ng-if=\"service\" collapsed=\"collapse\" deployment-configs-by-service=\"deploymentConfigsByService\" deployments-by-service=\"deploymentsByService\" replica-sets-by-service=\"replicaSetsByService\" pet-sets-by-service=\"petSetsByService\" child-services=\"childServices\" service=\"service\" pods-by-owner-uid=\"podsByOwnerUID\">\n" +
-    "</service-group-notifications>\n" +
+    "<service-group-notifications ng-if=\"service\"></service-group-notifications>\n" +
     "<div uib-collapse=\"collapse\" class=\"service-group-body\">\n" +
     "\n" +
     "<div class=\"overview-services\" ng-class=\"{ 'single-alternate-service': (alternateServices | hashSize) === 1 && totalWeight }\">\n" +
