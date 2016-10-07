@@ -5189,15 +5189,15 @@ title:b.route
 } ], c.getAlerts().forEach(function(b) {
 a.alerts[b.name] = b.data;
 }), c.clearAlerts();
-var g = [];
-e.get(b.project).then(_.spread(function(c, e) {
-a.project = c, d.get("routes", b.route, e).then(function(c) {
-a.loaded = !0, a.route = c, g.push(d.watchObject("routes", b.route, e, function(b, c) {
-"DELETED" === c && (a.alerts.deleted = {
+var g = [], h = function(b, c) {
+a.loaded = !0, a.route = b, "DELETED" === c && (a.alerts.deleted = {
 type:"warning",
 message:"This route has been deleted."
-}), a.route = b;
-}));
+});
+};
+e.get(b.project).then(_.spread(function(c, e) {
+a.project = c, d.get("routes", b.route, e).then(function(a) {
+h(a), g.push(d.watchObject("routes", b.route, e, h));
 }, function(b) {
 a.loaded = !0, a.alerts.load = {
 type:"error",

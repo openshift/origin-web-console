@@ -31,30 +31,28 @@ angular.module('openshiftConsole')
 
     var watches = [];
 
+    var routeResolved = function(route, action) {
+      $scope.loaded = true;
+      $scope.route = route;
+      if (action === "DELETED") {
+        $scope.alerts["deleted"] = {
+          type: "warning",
+          message: "This route has been deleted."
+        };
+      }
+    };
+
     ProjectsService
       .get($routeParams.project)
       .then(_.spread(function(project, context) {
         $scope.project = project;
 
-        DataService.get("routes", $routeParams.route, context).then(
-          // success
-          function(route) {
-            $scope.loaded = true;
-            $scope.route = route;
-
-            // If we found the item successfully, watch for changes on it
-            watches.push(DataService.watchObject("routes", $routeParams.route, context, function(route, action) {
-              if (action === "DELETED") {
-                $scope.alerts["deleted"] = {
-                  type: "warning",
-                  message: "This route has been deleted."
-                };
-              }
-              $scope.route = route;
-            }));
-          },
-          // failure
-          function(e) {
+        DataService
+          .get("routes", $routeParams.route, context)
+          .then(function(route) {
+            routeResolved(route);
+            watches.push(DataService.watchObject("routes", $routeParams.route, context, routeResolved));
+          }, function(e) {
             $scope.loaded = true;
             $scope.alerts["load"] = {
               type: "error",
