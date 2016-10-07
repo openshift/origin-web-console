@@ -2,7 +2,7 @@
 
 set -e
 
-OPENSHIFT_JVM_VERSION=v1.0.47
+OPENSHIFT_JVM_VERSION=v1.0.50
 
 STARTTIME=$(date +%s)
 #OS_ROOT=$(dirname "${BASH_SOURCE}")/..
