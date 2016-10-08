@@ -2046,6 +2046,9 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "<span ng-if=\"!('deploymentconfigs' | canI : 'update')\">none</span>\n" +
     "</p>\n" +
     "<volumes volumes=\"deploymentConfig.spec.template.spec.volumes\" namespace=\"project.metadata.name\"></volumes>\n" +
+    "<p ng-if=\"deploymentConfig.spec.template.spec.volumes.length && 'deploymentconfigs' | canI : 'update' \">\n" +
+    "<a ng-href=\"project/{{project.metadata.name}}/attach-pvc?kind=DeploymentConfig&name={{deploymentConfig.metadata.name}}\">Attach storage</a>\n" +
+    "</p>\n" +
     "</div>\n" +
     "\n" +
     "<div class=\"col-lg-6\">\n" +
@@ -2318,6 +2321,9 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "<span ng-if=\"!('deploymentconfigs' | canI : 'update')\">none</span>\n" +
     "</p>\n" +
     "<volumes volumes=\"deployment.spec.template.spec.volumes\" namespace=\"project.metadata.name\"></volumes>\n" +
+    "<p ng-if=\"deployment.spec.template.spec.volumes.length && 'deploymentconfigs' | canI : 'update'\">\n" +
+    "<a ng-href=\"project/{{project.metadata.name}}/attach-pvc?kind=Deployment&name={{deployment.metadata.name}}&group=extensions\">Attach storage</a>\n" +
+    "</p>\n" +
     "</div>\n" +
     "<div class=\"col-lg-6\">\n" +
     "<h3>Autoscaling</h3>\n" +
