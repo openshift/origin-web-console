@@ -366,7 +366,7 @@ angular.module("openshiftConsole")
         return false;
       }
 
-      var deploymentConfigId = $filter('annotation')(deployment, 'deploymentConfig');
+      var deploymentConfigId = annotation(deployment, 'deploymentConfig');
 
       // Otherwise allow scaling of RCs with no deployment config.
       if (!deploymentConfigId) {
@@ -428,6 +428,44 @@ angular.module("openshiftConsole")
       });
 
       return byDC;
+    };
+
+    DeploymentsService.prototype.sortByRevision = function(replicaSets) {
+      var self = this;
+      var revisionAsNumber = function(replicaSet) {
+        var revision = self.getRevision(replicaSet);
+        if (!revision) {
+          return null;
+        }
+
+        var revisionNumber = parseInt(revision, 10);
+        if (isNaN(revisionNumber)) {
+          return null;
+        }
+
+        return revisionNumber;
+      };
+
+      var compareRevisions = function(lhs, rhs) {
+        var leftRevision = revisionAsNumber(lhs);
+        var rightRevision = revisionAsNumber(rhs);
+        if (!leftRevision && !rightRevision) {
+          return lhs.metadata.name.localeCompare(rhs.metadata.name);
+        }
+
+        if (!leftRevision) {
+          return 1;
+        }
+
+        if (!rightRevision) {
+          return -1;
+        }
+
+        // Sort higher numbers first so more recent revisions appear at the top of the list.
+        return rightRevision - leftRevision;
+      };
+
+      return _.toArray(replicaSets).sort(compareRevisions);
     };
 
     return new DeploymentsService();

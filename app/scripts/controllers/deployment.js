@@ -154,10 +154,6 @@ angular.module('openshiftConsole')
 
             // Watch replica sets for this deployment
             // TODO: Use controller ref
-            var annotation = $filter('annotation');
-            var revision = function(replicaSet) {
-              return annotation(replicaSet, 'deployment.kubernetes.io/revision');
-            };
             watches.push(DataService.watch({
               group: 'extensions',
               resource: 'replicasets'
@@ -167,7 +163,7 @@ angular.module('openshiftConsole')
               replicaSets = _.filter(replicaSets, function(replicaSet) {
                 return deploymentSelector.matches(replicaSet);
               });
-              $scope.replicaSetsForDeployment = _.sortByOrder(replicaSets, [ revision ], [ 'desc' ]);
+              $scope.replicaSetsForDeployment = DeploymentsService.sortByRevision(replicaSets);
             }));
           },
           // failure

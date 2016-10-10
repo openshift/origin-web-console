@@ -2447,14 +2447,14 @@ return !_.isEmpty(c);
 var c = _.get(b, [ a ]);
 return !_.isEmpty(c);
 };
-return f.prototype.isScalable = function(a, b, d, e, f) {
-if (j(a.metadata.name, e)) return !1;
-var g = c("annotation")(a, "deploymentConfig");
-if (!g) return !0;
+return f.prototype.isScalable = function(a, b, c, d, e) {
+if (j(a.metadata.name, d)) return !1;
+var f = g(a, "deploymentConfig");
+if (!f) return !0;
 if (!b) return !1;
-if (!b[g]) return !0;
-if (i(g, d)) return !1;
-var h = _.get(f, [ g, "metadata", "name" ]);
+if (!b[f]) return !0;
+if (i(f, c)) return !1;
+var h = _.get(e, [ f, "metadata", "name" ]);
 return h === a.metadata.name;
 }, f.prototype.groupByService = function(a, b) {
 var c = {};
@@ -2471,6 +2471,17 @@ return _.each(a, function(a) {
 var d = c("annotation")(a, "deploymentConfig") || "";
 _.set(b, [ d, a.metadata.name ], a);
 }), b;
+}, f.prototype.sortByRevision = function(a) {
+var b = this, c = function(a) {
+var c = b.getRevision(a);
+if (!c) return null;
+var d = parseInt(c, 10);
+return isNaN(d) ? null :d;
+}, d = function(a, b) {
+var d = c(a), e = c(b);
+return d || e ? d ? e ? e - d :-1 :1 :a.metadata.name.localeCompare(b.metadata.name);
+};
+return _.toArray(a).sort(d);
 }, new f();
 } ]), angular.module("openshiftConsole").factory("ImageStreamsService", function() {
 return {
@@ -4809,18 +4820,14 @@ return a.clearEnvVarUpdates(), !0;
 }
 } ]
 }, o(), h.fetchReferencedImageStreamImages([ b.spec.template ], a.imagesByDockerReference, l, i);
-}));
-var f = b("annotation"), g = function(a) {
-return f(a, "deployment.kubernetes.io/revision");
-};
-n.push(e.watch({
+})), n.push(e.watch({
 group:"extensions",
 resource:"replicasets"
 }, i, function(b) {
 var c = b.by("metadata.name"), e = new LabelSelector(d.spec.selector);
 c = _.filter(c, function(a) {
 return e.matches(a);
-}), a.replicaSetsForDeployment = _.sortByOrder(c, [ g ], [ "desc" ]);
+}), a.replicaSetsForDeployment = f.sortByRevision(c);
 }));
 }, function(c) {
 a.loaded = !0, a.alerts.load = {
