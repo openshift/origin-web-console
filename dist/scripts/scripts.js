@@ -1992,6 +1992,7 @@ break;
 case "Service":
 case "Route":
 case "Pod":
+case "PersistentVolumeClaim":
 j.segment(g.kindToResource(b)).segmentCoded(i);
 break;
 
