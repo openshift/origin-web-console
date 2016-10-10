@@ -76,7 +76,7 @@ angular.module("openshiftConsole")
           details = "You will not be able to create the " + humanizeKind(resource.kind) + " '" + resource.metadata.name + "'.";
         }
         else {
-          details = "You can can still create " + humanizeKind(resource.kind) + " '" + resource.metadata.name + "' but no pods will be created until resources are freed.";
+          details = "You can still create " + humanizeKind(resource.kind) + " '" + resource.metadata.name + "' but no pods will be created until resources are freed.";
         }
         return {
           type: resource.kind === 'Pod' ? 'error' : 'warning',
@@ -117,7 +117,7 @@ angular.module("openshiftConsole")
           detail = "You may not be able to create the " + humanizeKind(resource.kind) + " '" + resource.metadata.name + "'.";
         }
         else {
-          detail = "You can can still create " + humanizeKind(resource.kind) + " '" + resource.metadata.name + "' but you may not have pods created until resources are freed.";
+          detail = "You can still create " + humanizeKind(resource.kind) + " '" + resource.metadata.name + "' but you may not have pods created until resources are freed.";
         }
         return {
           type: 'warning',

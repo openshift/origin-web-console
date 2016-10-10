@@ -3244,7 +3244,7 @@ return a ? "Pod" === a.kind ? i(a, b) :_.has(a, "spec.template") ? i(a.spec.temp
 var d = a.status.total || a.status;
 if (f(d.hard[c]) <= f(d.used[c])) {
 var e;
-return e = "Pod" === b.kind ? "You will not be able to create the " + l(b.kind) + " '" + b.metadata.name + "'." :"You can can still create " + l(b.kind) + " '" + b.metadata.name + "' but no pods will be created until resources are freed.", {
+return e = "Pod" === b.kind ? "You will not be able to create the " + l(b.kind) + " '" + b.metadata.name + "'." :"You can still create " + l(b.kind) + " '" + b.metadata.name + "' but no pods will be created until resources are freed.", {
 type:"Pod" === b.kind ? "error" :"warning",
 message:"You are at your quota for " + k(c) + " on pods.",
 details:e,
@@ -3270,7 +3270,7 @@ var b = _.get(a, g);
 b && (h += f(b));
 }), f(e.hard[d]) < f(e.used[d]) + h) {
 var i;
-return i = "Pod" === b.kind ? "You may not be able to create the " + l(b.kind) + " '" + b.metadata.name + "'." :"You can can still create " + l(b.kind) + " '" + b.metadata.name + "' but you may not have pods created until resources are freed.", {
+return i = "Pod" === b.kind ? "You may not be able to create the " + l(b.kind) + " '" + b.metadata.name + "'." :"You can still create " + l(b.kind) + " '" + b.metadata.name + "' but you may not have pods created until resources are freed.", {
 type:"warning",
 message:"You are close to your quota for " + k(d) + " on pods.",
 details:i,
