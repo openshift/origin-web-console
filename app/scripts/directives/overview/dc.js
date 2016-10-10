@@ -16,9 +16,12 @@ angular.module('openshiftConsole')
           $scope.deploymentConfig = _.get(deploymentConfigs, $scope.dcName);
         });
 
+        $scope.$watch('scalableReplicationControllerByDC', function(replicationControllers) {
+          $scope.activeReplicationController = _.get($scope, ['scalableReplicationControllerByDC', $scope.dcName]);
+        });
+
         $scope.$watch('replicationControllers', function(replicationControllers) {
           $scope.orderedReplicationControllers = orderByDate(replicationControllers, true);
-          $scope.activeReplicationController = _.get($scope, ['scalableReplicationControllerByDC', $scope.dcName]);
           $scope.inProgressDeployment = _.find($scope.orderedReplicationControllers, deploymentIsInProgress);
         });
 

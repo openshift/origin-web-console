@@ -10635,8 +10635,10 @@ link:function(d) {
 var e = a("orderObjectsByDate"), f = a("deploymentIsInProgress");
 d.$watch("deploymentConfigs", function(a) {
 d.deploymentConfig = _.get(a, d.dcName);
+}), d.$watch("scalableReplicationControllerByDC", function(a) {
+d.activeReplicationController = _.get(d, [ "scalableReplicationControllerByDC", d.dcName ]);
 }), d.$watch("replicationControllers", function(a) {
-d.orderedReplicationControllers = e(a, !0), d.activeReplicationController = _.get(d, [ "scalableReplicationControllerByDC", d.dcName ]), d.inProgressDeployment = _.find(d.orderedReplicationControllers, f);
+d.orderedReplicationControllers = e(a, !0), d.inProgressDeployment = _.find(d.orderedReplicationControllers, f);
 }), d.cancelDeployment = function() {
 var a = d.inProgressDeployment;
 if (a) {
