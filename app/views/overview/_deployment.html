@@ -48,7 +48,7 @@
           pods="podsByOwnerUID[replicaSet.metadata.uid]"
           hpa="getHPA(deployment) || getHPA(replicaSet)"
           limit-ranges="limitRanges"
-          scalable="replicaSet === latestReplicaSet"
+          scalable="replicaSet === latestReplicaSet && !inProgressDeployment"
           alerts="alerts">
       </deployment-donut>
     </div>

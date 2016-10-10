@@ -5505,7 +5505,7 @@ resource:"replicasets"
 var c = b.by("metadata.name"), e = new LabelSelector(d.spec.selector);
 c = _.filter(c, function(a) {
 return e.matches(a);
-}), a.replicaSetsForDeployment = f.sortByRevision(c);
+}), a.inProgressDeployment = _.chain(c).filter("status.replicas").size() > 1, a.replicaSetsForDeployment = f.sortByRevision(c);
 }));
 }, function(c) {
 a.loaded = !0, a.alerts.load = {
@@ -5697,7 +5697,7 @@ case "ReplicationController":
 a.resource = "replicationcontrollers", a.healthCheckURL = l.healthCheckURL(c.project, "ReplicationController", c.replicaSet);
 }
 var r = {};
-a.projectName = c.project, a.kind = n, a.replicaSet = null, a.deploymentConfig = null, a.deploymentConfigMissing = !1, a.deployments = {}, a.imagesByDockerReference = {}, a.builds = {}, a.alerts = {}, a.renderOptions = a.renderOptions || {}, a.renderOptions.hideFilterWidget = !0, a.forms = {}, a.logOptions = {}, d.getAlerts().forEach(function(b) {
+a.projectName = c.project, a.kind = n, a.replicaSet = null, a.deploymentConfig = null, a.deploymentConfigMissing = !1, a.imagesByDockerReference = {}, a.builds = {}, a.alerts = {}, a.renderOptions = a.renderOptions || {}, a.renderOptions.hideFilterWidget = !0, a.forms = {}, a.logOptions = {}, d.getAlerts().forEach(function(b) {
 a.alerts[b.name] = b.data;
 }), d.clearAlerts();
 var s = [];
@@ -5775,7 +5775,7 @@ details:"Reason: " + b("getErrorDetails")(c)
 }
 }, D = function() {
 a.isActive = j.isActiveReplicaSet(a.replicaSet, a.deployment);
-}, E = b("hasDeployment"), F = function() {
+}, E = b("hasDeployment"), F = !1, G = function() {
 E(a.replicaSet) && f.list({
 group:"extensions",
 resource:"deployments"
@@ -5784,7 +5784,7 @@ var d = b.by("metadata.name"), g = new LabelSelector(a.replicaSet.spec.template.
 return a.deployment = _.find(d, function(a) {
 var b = new LabelSelector(a.spec.selector);
 return b.covers(g);
-}), a.deployment ? (a.healthCheckURL = l.healthCheckURL(c.project, "Deployment", a.deployment.metadata.name, "extensions"), void s.push(f.watchObject({
+}), a.deployment ? (a.healthCheckURL = l.healthCheckURL(c.project, "Deployment", a.deployment.metadata.name, "extensions"), s.push(f.watchObject({
 group:"extensions",
 resource:"deployments"
 }, a.deployment.metadata.name, h, function(b, d) {
@@ -5800,9 +5800,19 @@ link:l.resourceURL(a.deployment)
 },
 humanizedKind:"Deployments"
 }), D(), void y());
+})), void s.push(f.watch({
+group:"extensions",
+resource:"replicasets"
+}, h, function(b) {
+var c = new LabelSelector(a.deployment.spec.selector);
+F = !1;
+var d = 0;
+_.each(b.by("metadata.name"), function(a) {
+if (c.matches(a) && a.status.replicas) return d++, d > 1 ? (F = !0, !1) :void 0;
+});
 }))) :void (a.deploymentMissing = !0);
 });
-}, G = function() {
+}, H = function() {
 if (!_.isEmpty(r)) {
 var b = _.get(a, "replicaSet.spec.template");
 b && k.fetchReferencedImageStreamImages([ b ], a.imagesByDockerReference, r, h);
@@ -5815,7 +5825,7 @@ C(b);
 break;
 
 case "ReplicaSet":
-F();
+G();
 }
 B(), a.breadcrumbs = e.getBreadcrumbs({
 object:b
@@ -5832,7 +5842,7 @@ onClick:function() {
 return a.clearEnvVarUpdates(), !0;
 }
 } ]
-}, t(b), B(), G();
+}, t(b), B(), H();
 })), a.deploymentConfigName && z(), a.$watch("replicaSet.spec.selector", function() {
 m = new LabelSelector(a.replicaSet.spec.selector), A();
 }, !0), s.push(f.watch("pods", h, function(a) {
@@ -5862,7 +5872,7 @@ a.causes = b("deploymentCauses")(a);
 });
 })), s.push(f.watch("imagestreams", h, function(a) {
 var b = a.by("metadata.name");
-k.buildDockerRefMapForImageStreams(b, r), G(), Logger.log("imagestreams (subscribe)", b);
+k.buildDockerRefMapForImageStreams(b, r), H(), Logger.log("imagestreams (subscribe)", b);
 })), s.push(f.watch("builds", h, function(b) {
 a.builds = b.by("metadata.name"), Logger.log("builds (subscribe)", a.builds);
 })), s.push(f.watch({
@@ -5891,9 +5901,9 @@ details:b("getErrorDetails")(c)
 }, e = a.deployment || a.deploymentConfig || a.replicaSet;
 j.scale(e, c).then(_.noop, d);
 };
-var H = b("hasDeploymentConfig");
+var I = b("hasDeploymentConfig");
 a.isScalable = function() {
-return !!_.isEmpty(a.autoscalers) && (!H(a.replicaSet) && !E(a.replicaSet) || (!(!a.deploymentConfigMissing && !a.deploymentMissing) || !(!a.deploymentConfig && !a.deployment) && a.isActive));
+return !!_.isEmpty(a.autoscalers) && (!I(a.replicaSet) && !E(a.replicaSet) || (!(!a.deploymentConfigMissing && !a.deploymentMissing) || !(!a.deploymentConfig && !a.deployment) && (a.isActive && !F)));
 }, a.$on("$destroy", function() {
 f.unwatchAll(s);
 });
@@ -11904,7 +11914,6 @@ scope:!0,
 templateUrl:"views/overview/_deployment.html",
 link:function(c) {
 var d;
-a("orderObjectsByDate");
 c.$watch("deployment.spec.paused", function() {
 d = !1;
 }), c.resumeDeployment = function() {
@@ -11921,7 +11930,7 @@ details:a("getErrorDetails")(b)
 return _.get(c, [ "deployments", c.deploymentName ]);
 }, function() {
 c.deployment = _.get(c, [ "deployments", c.deploymentName ]), c.latestRevision = b.getRevision(c.deployment);
-}), c.$watch("scalableReplicaSetsByDeployment", function(a) {
+}), c.$watch("scalableReplicaSetsByDeployment", function() {
 c.latestReplicaSet = _.get(c, [ "scalableReplicaSetsByDeployment", c.deploymentName ]);
 }), c.$watch("replicaSets", function(a) {
 c.inProgressDeployment = _.chain(a).filter("status.replicas").size() > 1;

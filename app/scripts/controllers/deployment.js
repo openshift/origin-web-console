@@ -164,6 +164,7 @@ angular.module('openshiftConsole')
               replicaSets = _.filter(replicaSets, function(replicaSet) {
                 return deploymentSelector.matches(replicaSet);
               });
+              $scope.inProgressDeployment = _.chain(replicaSets).filter('status.replicas').size() > 1;
               $scope.replicaSetsForDeployment = DeploymentsService.sortByRevision(replicaSets);
             }));
           },
