@@ -24,6 +24,7 @@ git_secret:"https://docs.openshift.org/latest/dev_guide/builds.html#using-privat
 pull_secret:"https://docs.openshift.org/latest/dev_guide/managing_images.html#using-image-pull-secrets",
 managing_secrets:"https://docs.openshift.org/latest/dev_guide/service_accounts.html#managing-allowed-secrets",
 creating_secrets:"https://docs.openshift.org/latest/dev_guide/secrets.html#creating-and-using-secrets",
+selector_label:"https://docs.openshift.org/latest/install_config/persistent_storage/selector_label_binding.html",
 "default":"https://docs.openshift.org/latest/welcome/index.html"
 },
 CLI:{
@@ -6950,7 +6951,7 @@ kubernetes:c.VERSION.kubernetes
 c.withUser(), a.cliDownloadURL = d.CLI, a.cliDownloadURLPresent = a.cliDownloadURL && !_.isEmpty(a.cliDownloadURL), a.loginBaseURL = b.openshiftAPIBaseUrl(), a.sessionToken = c.UserStore().getToken(), a.showSessionToken = !1, a.toggleShowSessionToken = function() {
 a.showSessionToken = !a.showSessionToken;
 };
-} ]), angular.module("openshiftConsole").controller("CreatePersistentVolumeClaimController", [ "$filter", "$routeParams", "$scope", "$window", "ApplicationGenerator", "DataService", "Navigate", "ProjectsService", function(a, b, c, d, e, f, g, h) {
+} ]), angular.module("openshiftConsole").controller("CreatePersistentVolumeClaimController", [ "$filter", "$routeParams", "$scope", "$window", "ApplicationGenerator", "DataService", "Navigate", "ProjectsService", "keyValueEditorUtils", function(a, b, c, d, e, f, g, h, i) {
 c.alerts = {}, c.projectName = b.project, c.accessModes = "ReadWriteOnce", c.claim = {}, c.breadcrumbs = [ {
 title:c.projectName,
 link:"project/" + c.projectName
@@ -6971,12 +6972,15 @@ labels:{}
 spec:{
 resources:{
 requests:{}
+},
+selector:{
+matchLabels:{}
 }
 }
 };
 a.spec.accessModes = [ c.claim.accessModes || "ReadWriteOnce" ];
 var b = c.claim.unit || "Mi";
-return a.spec.resources.requests.storage = c.claim.amount + b, a;
+return a.spec.resources.requests.storage = c.claim.amount + b, a.spec.selector.matchLabels = i.mapEntries(i.compactEntries(c.claim.selectedLabels)), a;
 }
 c.project = b, c.breadcrumbs[0].title = a("displayName")(b), c.createPersistentVolumeClaim = function() {
 if (c.createPersistentVolumeClaimForm.$valid) {
@@ -8056,7 +8060,7 @@ label:"TiB"
 }, {
 value:"Pi",
 label:"PiB"
-} ];
+} ], a.claim.selectedLabels = [];
 }
 };
 }), angular.module("openshiftConsole").directive("oscUnique", function() {
