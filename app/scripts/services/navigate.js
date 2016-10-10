@@ -181,6 +181,7 @@ angular.module("openshiftConsole")
           case "Service":
           case "Route":
           case "Pod":
+          case "PersistentVolumeClaim":
             url.segment(APIService.kindToResource(kind))
             .segmentCoded(name);
             break;
