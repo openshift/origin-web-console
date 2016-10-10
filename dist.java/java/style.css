@@ -4450,8 +4450,9 @@ div.CodeMirror span.CodeMirror-nonmatchingbracket{color:#f22}
 div.CodeMirror-cursors{visibility:hidden;position:relative;z-index:3}
 .CodeMirror-focused div.CodeMirror-cursors,div.CodeMirror-dragcursors{visibility:visible}
 .CodeMirror-selected{background:#d9d9d9}
-.CodeMirror-focused .CodeMirror-selected,.CodeMirror-line::selection,.CodeMirror-line>span::selection,.CodeMirror-line>span>span::selection{background:#d7d4f0}
+.CodeMirror-focused .CodeMirror-selected{background:#d7d4f0}
 .CodeMirror-crosshair{cursor:crosshair}
+.CodeMirror-line::selection,.CodeMirror-line>span::selection,.CodeMirror-line>span>span::selection{background:#d7d4f0}
 .CodeMirror-line::-moz-selection,.CodeMirror-line>span::-moz-selection,.CodeMirror-line>span>span::-moz-selection{background:#d7d4f0}
 .cm-searching{background:#ffa;background:rgba(255,255,0,.4)}
 .cm-force-border{padding-right:.1px}
