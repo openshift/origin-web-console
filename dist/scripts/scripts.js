@@ -9807,9 +9807,9 @@ function b() {
 var b = {
 columns:[]
 };
-a.route && (b.columns.push(e(a.route.spec.to)), a.totalWeight = a.route.spec.to.weight, _.each(a.route.spec.alternateBackends, function(c) {
-b.columns.push(e(c)), a.totalWeight += c.weight;
-})), a.totalWeight && (c ? c.load(b) :(d.data.columns = b.columns, c = c3.generate(d)));
+a.route && (b.columns.push(f(a.route.spec.to)), a.totalWeight = a.route.spec.to.weight, _.each(a.route.spec.alternateBackends, function(c) {
+b.columns.push(f(c)), a.totalWeight += c.weight;
+})), a.totalWeight && (c ? (h(b), c.load(b)) :(d.data.columns = b.columns, c = c3.generate(d)), e = b);
 }
 var c, d;
 a.chartId = _.uniqueId("route-service-chart-"), d = {
@@ -9838,8 +9838,21 @@ enabled:!1
 }
 }
 };
-var e = function(a) {
+var e, f = function(a) {
 return [ a.name, a.weight ];
+}, g = function(a) {
+return _.head(a);
+}, h = function(a) {
+var b = {};
+_.each(a.columns, function(a) {
+var c = g(a);
+b[c] = !0;
+});
+var c = _.get(e, "columns", []);
+a.unload = _.chain(c).reject(function(a) {
+var c = g(a);
+return _.has(b, [ c ]);
+}).map(g).value();
 };
 a.$watch("route", b), a.$on("destroy", function() {
 c && (c = c.destroy());
