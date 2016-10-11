@@ -6326,6 +6326,25 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "</div>\n" +
     "</fieldset>\n" +
     "</div>\n" +
+    "\n" +
+    "<div>\n" +
+    "<a href=\"\" ng-click=\"showAdvancedOptions = true\" ng-show=\"!showAdvancedOptions\">Use label selectors in the storage request </a>\n" +
+    "<a href=\"\" ng-click=\"showAdvancedOptions = false\" ng-show=\"showAdvancedOptions\">Hide label selectors in the storage request</a>\n" +
+    "<div ng-show=\"showAdvancedOptions\" class=\"form-group\">\n" +
+    "<fieldset class=\"compute-resource\">\n" +
+    "<label for=\"claim-name\">Label Selector</label>\n" +
+    "<div>\n" +
+    "<span id=\"claim-label-help\" class=\"help-block\">\n" +
+    "Enter a label and value to use with your requested storage.\n" +
+    "<div class=\"learn-more-block\" ng-class=\"{ 'gutter-bottom': showPodWarning }\">\n" +
+    "<a href=\"{{'selector_label' | helpLink}}\" target=\"_blank\">Learn more <i class=\"fa fa-external-link\" aria-hidden=\"true\"> </i></a>\n" +
+    "</div>\n" +
+    "</span>\n" +
+    "</div>\n" +
+    "<key-value-editor entries=\"claim.selectedLabels\" key-placeholder=\"label\" value-placeholder=\"value\" key-validator=\"[a-zA-Z][a-zA-Z0-9_-]*\" key-validator-error-tooltip=\"A valid label name is an alphanumeric (a-z and 0-9) string beginning with a letter that may contain underscores and dashes.\" add-row-link=\"Add Label\"></key-value-editor>\n" +
+    "</fieldset>\n" +
+    "</div>\n" +
+    "</div>\n" +
     "</fieldset>\n" +
     "</ng-form>"
   );

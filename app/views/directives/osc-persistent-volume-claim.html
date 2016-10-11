@@ -91,5 +91,36 @@
       </div>
       </fieldset>
     </div>
+    <!--advanced options-->
+    <div>
+      <a href=""
+         ng-click="showAdvancedOptions = true"
+         ng-show="!showAdvancedOptions">Use label selectors in the storage request </a>
+      <a href=""
+         ng-click="showAdvancedOptions = false"
+         ng-show="showAdvancedOptions">Hide label selectors in the storage request</a>
+
+
+      <div ng-show="showAdvancedOptions" class="form-group" >
+        <fieldset class="compute-resource" >
+          <label for="claim-name" >Label Selector</label>
+          <div>
+            <span id="claim-label-help" class="help-block">
+              Enter a label and value to use with your requested storage.
+               <div class="learn-more-block" ng-class="{ 'gutter-bottom': showPodWarning }">
+                 <a href="{{'selector_label' | helpLink}}" target="_blank">Learn more <i class="fa fa-external-link" aria-hidden="true"> </i></a>
+               </div>
+            </span>
+          </div>
+          <key-value-editor
+            entries="claim.selectedLabels"
+            key-placeholder="label"
+            value-placeholder="value"
+            key-validator="[a-zA-Z][a-zA-Z0-9_-]*"
+            key-validator-error-tooltip="A valid label name is an alphanumeric (a-z and 0-9) string beginning with a letter that may contain underscores and dashes."
+            add-row-link="Add Label"></key-value-editor>
+        </fieldset>
+      </div>
+    </div>
   </fieldset>
 </ng-form>

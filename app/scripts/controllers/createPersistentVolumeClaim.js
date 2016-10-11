@@ -8,7 +8,7 @@
  * Controller of the openshiftConsole
  */
 angular.module('openshiftConsole')
-  .controller('CreatePersistentVolumeClaimController', function ($filter, $routeParams, $scope, $window, ApplicationGenerator, DataService, Navigate, ProjectsService) {
+  .controller('CreatePersistentVolumeClaimController', function ($filter, $routeParams, $scope, $window, ApplicationGenerator, DataService, Navigate, ProjectsService,keyValueEditorUtils) {
     $scope.alerts = {};
     $scope.projectName = $routeParams.project;
     $scope.accessModes="ReadWriteOnce";
@@ -55,29 +55,31 @@ angular.module('openshiftConsole')
           }
         };
 
-      function generatePersistentVolumeClaim() {
-        var pvc = {
-          kind: "PersistentVolumeClaim",
-          apiVersion: "v1",
-          metadata: {
-            name: $scope.claim.name,
-            labels: {}
-          },
-          spec: {
-            resources: {
-              requests:{}
-
+         function generatePersistentVolumeClaim() {
+          var pvc = {
+            kind: "PersistentVolumeClaim",
+            apiVersion: "v1",
+            metadata: {
+              name: $scope.claim.name,
+              labels: {}
+            },
+            spec: {
+              resources: {
+                requests:{}
+              },
+              selector:{
+                matchLabels:{}
+              }
             }
-          }
-        };
+          };
 
-        pvc.spec.accessModes = [$scope.claim.accessModes || "ReadWriteOnce"] ;
-        var unit =  $scope.claim.unit || "Mi";
-        pvc.spec.resources.requests.storage = $scope.claim.amount + unit;
+          pvc.spec.accessModes = [$scope.claim.accessModes || "ReadWriteOnce"] ;
+          var unit =  $scope.claim.unit || "Mi";
+          pvc.spec.resources.requests.storage = $scope.claim.amount + unit;
+          pvc.spec.selector.matchLabels = keyValueEditorUtils.mapEntries( keyValueEditorUtils.compactEntries($scope.claim.selectedLabels) );
 
-        return pvc;
-      }
-
+          return pvc;
+        }
 
     }));
   });

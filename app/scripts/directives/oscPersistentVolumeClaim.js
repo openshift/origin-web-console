@@ -13,16 +13,17 @@ angular.module("openshiftConsole")
         scope.units = [{
           value: "Mi",
           label: "MiB"
-          }, {
+        }, {
           value: "Gi",
           label: "GiB"
-          }, {
+        }, {
           value: "Ti",
           label: "TiB"
-          }, {
+        }, {
           value: "Pi",
           label: "PiB"
-          }];
+        }];
+        scope.claim.selectedLabels = [];
         }
     };
   });
