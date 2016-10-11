@@ -6688,6 +6688,27 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "<ng-form name=\"persistentVolumeClaimForm\">\n" +
     "<fieldset ng-disabled=\"claimDisabled\">\n" +
     "\n" +
+    "<label class=\"required\">Storage Classes</label>\n" +
+    "<div>\n" +
+    "<span id=\"claim-storage-class-help\" class=\"help-block\">Storage classes are set by the administrator to define types of storage the users can select.\n" +
+    "<div class=\"learn-more-block\">\n" +
+    "<a href=\"{{'storage_classes' | helpLink}}\" target=\"_blank\">Learn more <i class=\"fa fa-external-link\" aria-hidden=\"true\"> </i></a>\n" +
+    "</div>\n" +
+    "</span>\n" +
+    "</div>\n" +
+    "<div class=\"form-group\" ng-repeat=\"sclass in storageClasses track by (sclass | uid)\" id=\"storageclass-{{sclass.metadata.name}}\">\n" +
+    "<input type=\"radio\" name=\"storageClass\" ng-value=\"sclass\" ng-model=\"claim.storageClass\">\n" +
+    "{{sclass.metadata.name}}\n" +
+    "<span class=\"help-block\">\n" +
+    "Type: {{sclass.parameters.type}} | Zone: {{sclass.parameters.zone}}\n" +
+    "<span ng-if=\"sclass.metadata.annotations.description\"> | {{sclass.metadata.annotations.description}}</span>\n" +
+    "</span>\n" +
+    "</div>\n" +
+    "<div class=\"form-group\">\n" +
+    "<input type=\"radio\" name=\"storageClass\" ng-model=\"claim.storageClass\">\n" +
+    "No Storage Class\n" +
+    "</div>\n" +
+    "\n" +
     "<div class=\"form-group\">\n" +
     "<label for=\"claim-name\" class=\"required\">Name</label>\n" +
     "<input id=\"claim-name\" class=\"form-control\" type=\"text\" name=\"name\" ng-model=\"claim.name\" ng-required=\"true\" ng-pattern=\"/^[a-z0-9]([-a-z0-9]*[a-z0-9])?$/\" ng-maxlength=\"253\" ng-minlength=\"2\" placeholder=\"my-storage-request\" select-on-focus autocorrect=\"off\" autocapitalize=\"off\" spellcheck aria-describedby=\"claim-name-help\">\n" +

@@ -24,6 +24,7 @@ git_secret:"https://docs.openshift.org/latest/dev_guide/builds.html#using-privat
 pull_secret:"https://docs.openshift.org/latest/dev_guide/managing_images.html#using-image-pull-secrets",
 managing_secrets:"https://docs.openshift.org/latest/dev_guide/service_accounts.html#managing-allowed-secrets",
 creating_secrets:"https://docs.openshift.org/latest/dev_guide/secrets.html#creating-and-using-secrets",
+storage_classes:"https://docs.openshift.org/latest/install_config/persistent_storage/dynamically_provisioning_pvs.html",
 selector_label:"https://docs.openshift.org/latest/install_config/persistent_storage/selector_label_binding.html",
 rolling_strategy:"https://docs.openshift.org/latest/dev_guide/deployments.html#rolling-strategy",
 recreate_strategy:"https://docs.openshift.org/latest/dev_guide/deployments.html#recreate-strategy",
@@ -7891,7 +7892,8 @@ kind:"PersistentVolumeClaim",
 apiVersion:"v1",
 metadata:{
 name:c.claim.name,
-labels:{}
+labels:{},
+annotations:{}
 },
 spec:{
 resources:{
@@ -7904,7 +7906,7 @@ matchLabels:{}
 };
 a.spec.accessModes = [ c.claim.accessModes || "ReadWriteOnce" ];
 var b = c.claim.unit || "Mi";
-return a.spec.resources.requests.storage = c.claim.amount + b, a.spec.selector.matchLabels = i.mapEntries(i.compactEntries(c.claim.selectedLabels)), a;
+return a.spec.resources.requests.storage = c.claim.amount + b, a.spec.selector.matchLabels = i.mapEntries(i.compactEntries(c.claim.selectedLabels)), null !== c.claim.storageClass && (a.metadata.annotations["volume.alpha.kubernetes.io/storage-class"] = c.claim.storageClass.metadata.name), a;
 }
 c.project = b, c.breadcrumbs[0].title = a("displayName")(b), c.createPersistentVolumeClaim = function() {
 if (c.createPersistentVolumeClaimForm.$valid) {
@@ -8989,15 +8991,15 @@ _.set(a, "model.service", c);
 });
 }
 };
-}), angular.module("openshiftConsole").directive("oscPersistentVolumeClaim", function() {
+}), angular.module("openshiftConsole").directive("oscPersistentVolumeClaim", [ "DataService", function(a) {
 return {
 restrict:"E",
 scope:{
 claim:"=model"
 },
 templateUrl:"views/directives/osc-persistent-volume-claim.html",
-link:function(a) {
-a.claim.unit = "Mi", a.units = [ {
+link:function(b) {
+b.storageClasses = [], b.claim.unit = "Mi", b.units = [ {
 value:"Mi",
 label:"MiB"
 }, {
@@ -9009,10 +9011,17 @@ label:"TiB"
 }, {
 value:"Pi",
 label:"PiB"
-} ], a.claim.selectedLabels = [];
+} ], b.claim.selectedLabels = [], a.list({
+group:"storage.k8s.io",
+resource:"storageclasses"
+}, {}, function(a) {
+b.storageClasses = a.by("metadata.name");
+}, {
+errorNotification:!1
+});
 }
 };
-}), angular.module("openshiftConsole").directive("oscUnique", function() {
+} ]), angular.module("openshiftConsole").directive("oscUnique", function() {
 return {
 restrict:"A",
 scope:{

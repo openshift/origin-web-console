@@ -1,6 +1,31 @@
 <ng-form name="persistentVolumeClaimForm">
   <fieldset ng-disabled="claimDisabled">
-
+    <!--storage class-->
+    <label class="required">Storage Classes</label>
+    <div>
+      <span id="claim-storage-class-help" class="help-block">Storage classes are set by the administrator to define types of storage the users can select.
+       <div class="learn-more-block">
+        <a href="{{'storage_classes' | helpLink}}" target="_blank">Learn more <i class="fa fa-external-link" aria-hidden="true"> </i></a>
+       </div>
+      </span>
+    </div>
+    <div class="form-group" ng-repeat="sclass in storageClasses track by (sclass | uid)" id="storageclass-{{sclass.metadata.name}}">
+      <input  type="radio"
+              name="storageClass"
+              ng-value="sclass"
+              ng-model="claim.storageClass">
+      {{sclass.metadata.name}}
+      <span class="help-block">
+        Type: {{sclass.parameters.type}} | Zone: {{sclass.parameters.zone}}
+        <span ng-if="sclass.metadata.annotations.description"> | {{sclass.metadata.annotations.description}}</span>
+      </span>
+    </div>
+    <div class="form-group">
+      <input type="radio"
+             name="storageClass"
+             ng-model="claim.storageClass">
+        No Storage Class
+    </div>
     <!-- Name -->
     <div class="form-group">
       <label for="claim-name" class="required">Name</label>
