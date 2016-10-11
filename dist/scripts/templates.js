@@ -6215,7 +6215,7 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "</div>\n" +
     "<div row main-axis=\"end\" cross-axis=\"baseline\" ng-hide=\"editing\" style=\"flex-basis: 50px\">\n" +
     "<a href=\"\" ng-click=\"edit()\" class=\"btn btn-default btn-xs\" title=\"Edit\">\n" +
-    "<i class=\"icon icon-pencil\"></i>\n" +
+    "<i class=\"pficon pficon-edit\"></i>\n" +
     "</a>\n" +
     "<a href=\"\" ng-click=\"deleteEntry(key)\" class=\"btn btn-default btn-xs\" title=\"Delete\" ng-if=\"allowDelete(key)\">\n" +
     "<i class=\"fa fa-times\"></i>\n" +
@@ -6845,7 +6845,7 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "<span ng-if=\"status === undefined\">{{spec}} replica<span ng-if=\"spec !== 1\">s</span></span>\n" +
     "<span ng-if=\"status !== undefined\">{{status}} current / {{spec}} desired</span>\n" +
     "<a href=\"\" title=\"Edit\" class=\"action-button\" ng-if=\"!disableScaling && scaleFn && (deployment | canIScale)\" ng-click=\"model.desired = spec; model.editing = true\">\n" +
-    "<i class=\"icon icon-pencil\" style=\"margin-left: 5px\"></i>\n" +
+    "<i class=\"pficon pficon-edit mar-left-sm\"></i>\n" +
     "<span class=\"sr-only\">Edit</span>\n" +
     "</a>\n" +
     "</span>\n" +
