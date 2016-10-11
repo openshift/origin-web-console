@@ -45,7 +45,7 @@
         ng-if="!activeReplicationController || !(isDeploymentLatest(replicationController) && ((replicationController | deploymentStatus) == 'Cancelled' || (replicationController | deploymentStatus) == 'Failed'))">
       <deployment-donut
           rc="replicationController"
-          deployment-config="deploymentConfigs[dcName]"
+          deployment-config="deploymentConfig"
           pods="podsByOwnerUID[replicationController.metadata.uid]"
           hpa="getHPA(deploymentConfig) || getHPA(replicationController)"
           limit-ranges="limitRanges"

@@ -8487,7 +8487,7 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "\n" +
     "<div row wrap ng-if=\"hasUnservicedContent()\" class=\"unserviced-row\">\n" +
     "\n" +
-    "<div ng-repeat=\"(dcName, deploymentConfig) in deploymentConfigsByService[''] track by (deploymentConfig | uid)\" class=\"no-service\" ng-if=\"deployments = visibleRCByDCAndService[''][dcName]\"> \n" +
+    "<div ng-repeat=\"(dcName, deploymentConfig) in deploymentConfigsByService[''] track by (deploymentConfig | uid)\" class=\"no-service\" ng-if=\"replicationControllers = visibleRCByDCAndService[''][dcName]\"> \n" +
     "<overview-deployment-config class=\"overview-tile-wrapper\"></overview-deployment-config>\n" +
     "</div>\n" +
     "\n" +
@@ -8566,7 +8566,7 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "<div row class=\"overview-tile-body\">\n" +
     "\n" +
     "<div column class=\"overview-donut\" ng-repeat=\"replicationController in orderedReplicationControllers track by (replicationController | uid)\" ng-class=\"{ latest: isDeploymentLatest(replicationController) }\" ng-if=\"!activeReplicationController || !(isDeploymentLatest(replicationController) && ((replicationController | deploymentStatus) == 'Cancelled' || (replicationController | deploymentStatus) == 'Failed'))\">\n" +
-    "<deployment-donut rc=\"replicationController\" deployment-config=\"deploymentConfigs[dcName]\" pods=\"podsByOwnerUID[replicationController.metadata.uid]\" hpa=\"getHPA(deploymentConfig) || getHPA(replicationController)\" limit-ranges=\"limitRanges\" quotas=\"quotas\" cluster-quotas=\"clusterQuotas\" scalable=\"isScalableReplicationController(replicationController)\" alerts=\"alerts\">\n" +
+    "<deployment-donut rc=\"replicationController\" deployment-config=\"deploymentConfig\" pods=\"podsByOwnerUID[replicationController.metadata.uid]\" hpa=\"getHPA(deploymentConfig) || getHPA(replicationController)\" limit-ranges=\"limitRanges\" quotas=\"quotas\" cluster-quotas=\"clusterQuotas\" scalable=\"isScalableReplicationController(replicationController)\" alerts=\"alerts\">\n" +
     "</deployment-donut>\n" +
     "</div>\n" +
     "\n" +

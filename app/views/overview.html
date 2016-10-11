@@ -54,7 +54,7 @@
                 <!-- unserviced DC -->
                 <div ng-repeat="(dcName, deploymentConfig) in deploymentConfigsByService[''] track by (deploymentConfig | uid)"
                     class="no-service"
-                    ng-if="deployments = visibleRCByDCAndService[''][dcName]"> <!-- Must be an ng-if, an ng-init will not re-evaluate properly -->
+                    ng-if="replicationControllers = visibleRCByDCAndService[''][dcName]"> <!-- Must be an ng-if, an ng-init will not re-evaluate properly -->
                   <overview-deployment-config class="overview-tile-wrapper"></overview-deployment-config>
                 </div>
                 <!-- /unserviced DC -->
