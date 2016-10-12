@@ -4772,25 +4772,14 @@ a.env = a.env || [], _.each(a.env, function(a) {
 b("altTextForValueFrom")(a);
 });
 });
-}, n = [];
-j.get(c.project).then(_.spread(function(d, i) {
-a.project = d, a.projectContext = i;
-var j = {}, o = function() {
-g.getHPAWarnings(a.deployment, a.autoscalers, j, d).then(function(b) {
-a.hpaWarnings = b;
-});
-};
-e.get({
-group:"extensions",
-resource:"deployments"
-}, c.deployment, i).then(function(d) {
-a.loaded = !0, a.deployment = d, o(), a.saveEnvVars = function() {
+}, n = null;
+a.saveEnvVars = function() {
 _.each(a.updatedDeployment.spec.template.spec.containers, function(a) {
 a.env = k.compactEntries(angular.copy(a.env));
 }), e.update({
 group:"extensions",
 resource:"deployments"
-}, c.deployment, a.updatedDeployment, i).then(function() {
+}, c.deployment, a.updatedDeployment, n).then(function() {
 a.alerts.saveDCEnvVarsSuccess = {
 type:"success",
 message:c.deployment + " was updated."
@@ -4804,51 +4793,7 @@ details:"Reason: " + b("getErrorDetails")(d)
 });
 }, a.clearEnvVarUpdates = function() {
 m(a.deployment), a.forms.deploymentEnvVars.$setPristine();
-}, n.push(e.watchObject({
-group:"extensions",
-resource:"deployments"
-}, c.deployment, i, function(b, c) {
-"DELETED" === c && (a.alerts.deleted = {
-type:"warning",
-message:"This deployment has been deleted."
-}), a.deployment = b, a.forms.deploymentEnvVars.$pristine ? m(b) :a.alerts.background_update = {
-type:"warning",
-message:"This deployment has been updated in the background. Saving your changes may create a conflict or cause loss of data.",
-links:[ {
-label:"Reload environment variables",
-onClick:function() {
-return a.clearEnvVarUpdates(), !0;
-}
-} ]
-}, o(), h.fetchReferencedImageStreamImages([ b.spec.template ], a.imagesByDockerReference, l, i);
-})), n.push(e.watch({
-group:"extensions",
-resource:"replicasets"
-}, i, function(b) {
-var c = b.by("metadata.name"), e = new LabelSelector(d.spec.selector);
-c = _.filter(c, function(a) {
-return e.matches(a);
-}), a.replicaSetsForDeployment = f.sortByRevision(c);
-}));
-}, function(c) {
-a.loaded = !0, a.alerts.load = {
-type:"error",
-message:404 === c.status ? "This deployment can not be found, it may have been deleted." :"The deployment details could not be loaded.",
-details:404 === c.status ? "Any remaining deployment history for this deployment will be shown." :"Reason: " + b("getErrorDetails")(c)
-};
-}), e.list("limitranges", i, function(a) {
-j = a.by("metadata.name"), o();
-}), n.push(e.watch("imagestreams", i, function(b) {
-var c = b.by("metadata.name");
-h.buildDockerRefMapForImageStreams(c, l), a.deployment && h.fetchReferencedImageStreamImages([ a.deployment.spec.template ], a.imagesByDockerReference, l, i), Logger.log("imagestreams (subscribe)", a.imageStreams);
-})), n.push(e.watch({
-group:"extensions",
-resource:"horizontalpodautoscalers"
-}, i, function(b) {
-a.autoscalers = g.filterHPA(b.by("metadata.name"), "Deployment", c.deployment), o();
-})), n.push(e.watch("builds", i, function(b) {
-a.builds = b.by("metadata.name"), Logger.log("builds (subscribe)", a.builds);
-})), a.scale = function(c) {
+}, a.scale = function(c) {
 var d = function(c) {
 a.alerts = a.alerts || {}, a.alerts.scale = {
 type:"error",
@@ -4857,8 +4802,67 @@ details:b("getErrorDetails")(c)
 };
 };
 f.scale(a.deployment, c).then(_.noop, d);
-}, a.$on("$destroy", function() {
-e.unwatchAll(n);
+};
+var o = [];
+j.get(c.project).then(_.spread(function(d, i) {
+a.project = d, n = i;
+var j = {}, k = function() {
+g.getHPAWarnings(a.deployment, a.autoscalers, j, d).then(function(b) {
+a.hpaWarnings = b;
+});
+}, p = function(b, c) {
+a.loaded = !0, a.deployment = b, k(), "DELETED" === c && (a.alerts.deleted = {
+type:"warning",
+message:"This deployment has been deleted."
+}), a.forms.deploymentEnvVars.$pristine ? m(b) :a.alerts.background_update = {
+type:"warning",
+message:"This deployment has been updated in the background. Saving your changes may create a conflict or cause loss of data.",
+links:[ {
+label:"Reload environment variables",
+onClick:function() {
+return a.clearEnvVarUpdates(), !0;
+}
+} ]
+};
+};
+e.get({
+group:"extensions",
+resource:"deployments"
+}, c.deployment, i).then(function(b) {
+p(b), o.push(e.watchObject({
+group:"extensions",
+resource:"deployments"
+}, c.deployment, i, function(b, c) {
+p(b, c), h.fetchReferencedImageStreamImages([ b.spec.template ], a.imagesByDockerReference, l, i);
+})), o.push(e.watch({
+group:"extensions",
+resource:"replicasets"
+}, i, function(c) {
+var d = c.by("metadata.name"), e = new LabelSelector(b.spec.selector);
+d = _.filter(d, function(a) {
+return e.matches(a);
+}), a.replicaSetsForDeployment = f.sortByRevision(d);
+}));
+}, function(c) {
+a.loaded = !0, a.alerts.load = {
+type:"error",
+message:404 === c.status ? "This deployment can not be found, it may have been deleted." :"The deployment details could not be loaded.",
+details:404 === c.status ? "Any remaining deployment history for this deployment will be shown." :"Reason: " + b("getErrorDetails")(c)
+};
+}), e.list("limitranges", i, function(a) {
+j = a.by("metadata.name"), k();
+}), o.push(e.watch("imagestreams", i, function(b) {
+var c = b.by("metadata.name");
+h.buildDockerRefMapForImageStreams(c, l), a.deployment && h.fetchReferencedImageStreamImages([ a.deployment.spec.template ], a.imagesByDockerReference, l, i), Logger.log("imagestreams (subscribe)", a.imageStreams);
+})), o.push(e.watch({
+group:"extensions",
+resource:"horizontalpodautoscalers"
+}, i, function(b) {
+a.autoscalers = g.filterHPA(b.by("metadata.name"), "Deployment", c.deployment), k();
+})), o.push(e.watch("builds", i, function(b) {
+a.builds = b.by("metadata.name"), Logger.log("builds (subscribe)", a.builds);
+})), a.$on("$destroy", function() {
+e.unwatchAll(o);
 });
 }));
 } ]), angular.module("openshiftConsole").controller("DeploymentConfigController", [ "$scope", "$filter", "$routeParams", "AlertMessageService", "BreadcrumbsService", "DataService", "DeploymentsService", "HPAService", "ImageStreamResolver", "Navigate", "ProjectsService", "LabelFilter", "labelNameFilter", "keyValueEditorUtils", function(a, b, c, d, e, f, g, h, i, j, k, l, m, n) {

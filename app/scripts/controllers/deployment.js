@@ -59,13 +59,59 @@ angular.module('openshiftConsole')
       });
     };
 
+    var requestContext = null;
+
+    $scope.saveEnvVars = function() {
+      _.each($scope.updatedDeployment.spec.template.spec.containers, function(container) {
+        container.env = keyValueEditorUtils.compactEntries(angular.copy(container.env));
+      });
+      DataService.update({
+        group: 'extensions',
+        resource: 'deployments'
+      }, $routeParams.deployment, $scope.updatedDeployment, requestContext)
+        .then(function success(){
+          // TODO:  de-duplicate success and error messages.
+          // as it stands, multiple messages appear based on how edit
+          // is made.
+          $scope.alerts['saveDCEnvVarsSuccess'] = {
+            type: "success",
+            message: $routeParams.deployment + " was updated."
+          };
+          $scope.forms.deploymentEnvVars.$setPristine();
+        }, function error(e){
+          $scope.alerts['saveDCEnvVarsError'] = {
+            type: "error",
+            message: $routeParams.deployment + " was not updated.",
+            details: "Reason: " + $filter('getErrorDetails')(e)
+          };
+        });
+    };
+
+    $scope.clearEnvVarUpdates = function() {
+      copyDeploymentAndEnsureEnv($scope.deployment);
+      $scope.forms.deploymentEnvVars.$setPristine();
+    };
+
+    $scope.scale = function(replicas) {
+      var showScalingError = function(result) {
+        $scope.alerts = $scope.alerts || {};
+        $scope.alerts["scale"] = {
+          type: "error",
+          message: "An error occurred scaling the deployment.",
+          details: $filter('getErrorDetails')(result)
+        };
+      };
+
+      DeploymentsService.scale($scope.deployment, replicas).then(_.noop, showScalingError);
+    };
+
     var watches = [];
 
     ProjectsService
       .get($routeParams.project)
       .then(_.spread(function(project, context) {
         $scope.project = project;
-        $scope.projectContext = context;
+        requestContext = context;
 
         var limitRanges = {};
 
@@ -76,79 +122,47 @@ angular.module('openshiftConsole')
             });
         };
 
-        DataService.get({
-          group: 'extensions',
-          resource: 'deployments'
-        }, $routeParams.deployment, context).then(
-          // success
-          function(deployment) {
-            $scope.loaded = true;
-            $scope.deployment = deployment;
-            updateHPAWarnings();
-
-            $scope.saveEnvVars = function() {
-              _.each($scope.updatedDeployment.spec.template.spec.containers, function(container) {
-                container.env = keyValueEditorUtils.compactEntries(angular.copy(container.env));
-              });
-              DataService.update({
-                group: 'extensions',
-                resource: 'deployments'
-              }, $routeParams.deployment, $scope.updatedDeployment, context)
-                .then(function success(){
-                  // TODO:  de-duplicate success and error messages.
-                  // as it stands, multiple messages appear based on how edit
-                  // is made.
-                  $scope.alerts['saveDCEnvVarsSuccess'] = {
-                    type: "success",
-                    message: $routeParams.deployment + " was updated."
-                  };
-                  $scope.forms.deploymentEnvVars.$setPristine();
-                }, function error(e){
-                  $scope.alerts['saveDCEnvVarsError'] = {
-                    type: "error",
-                    message: $routeParams.deployment + " was not updated.",
-                    details: "Reason: " + $filter('getErrorDetails')(e)
-                  };
-                });
+        var deploymentResolved = function(deployment, action) {
+          $scope.loaded = true;
+          $scope.deployment = deployment;
+          updateHPAWarnings();
+          if (action === "DELETED") {
+            $scope.alerts["deleted"] = {
+              type: "warning",
+              message: "This deployment has been deleted."
             };
-
-            $scope.clearEnvVarUpdates = function() {
-              copyDeploymentAndEnsureEnv($scope.deployment);
-              $scope.forms.deploymentEnvVars.$setPristine();
+          }
+          if ($scope.forms.deploymentEnvVars.$pristine) {
+            copyDeploymentAndEnsureEnv(deployment);
+          } else {
+            $scope.alerts["background_update"] = {
+              type: "warning",
+              message: "This deployment has been updated in the background. Saving your changes may create a conflict or cause loss of data.",
+              links: [
+                {
+                  label: 'Reload environment variables',
+                  onClick: function() {
+                    $scope.clearEnvVarUpdates();
+                    return true;
+                  }
+                }
+              ]
             };
+          }
+        };
 
-            // If we found the item successfully, watch for changes on it
+        DataService
+          .get({
+            group: 'extensions',
+            resource: 'deployments'
+          }, $routeParams.deployment, context)
+          .then(function(deployment) {
+            deploymentResolved(deployment);
             watches.push(DataService.watchObject({
               group: 'extensions',
               resource: 'deployments'
             }, $routeParams.deployment, context, function(deployment, action) {
-              if (action === "DELETED") {
-                $scope.alerts["deleted"] = {
-                  type: "warning",
-                  message: "This deployment has been deleted."
-                };
-              }
-              $scope.deployment = deployment;
-
-              if ($scope.forms.deploymentEnvVars.$pristine) {
-                copyDeploymentAndEnsureEnv(deployment);
-              } else {
-                $scope.alerts["background_update"] = {
-                  type: "warning",
-                  message: "This deployment has been updated in the background. Saving your changes may create a conflict or cause loss of data.",
-                  links: [
-                    {
-                      label: 'Reload environment variables',
-                      onClick: function() {
-                        $scope.clearEnvVarUpdates();
-                        return true;
-                      }
-                    }
-                  ]
-                };
-              }
-
-              updateHPAWarnings();
+              deploymentResolved(deployment, action);
               ImageStreamResolver.fetchReferencedImageStreamImages([deployment.spec.template], $scope.imagesByDockerReference, imageStreamImageRefByDockerReference, context);
             }));
 
@@ -165,17 +179,14 @@ angular.module('openshiftConsole')
               });
               $scope.replicaSetsForDeployment = DeploymentsService.sortByRevision(replicaSets);
             }));
-          },
-          // failure
-          function(e) {
+          },function(e) {
             $scope.loaded = true;
             $scope.alerts["load"] = {
               type: "error",
               message: e.status === 404 ? "This deployment can not be found, it may have been deleted." : "The deployment details could not be loaded.",
               details: e.status === 404 ? "Any remaining deployment history for this deployment will be shown." : "Reason: " + $filter('getErrorDetails')(e)
             };
-          }
-        );
+          });
 
         // List limit ranges in this project to determine if there is a default
         // CPU request for autoscaling.
@@ -207,19 +218,6 @@ angular.module('openshiftConsole')
           $scope.builds = builds.by("metadata.name");
           Logger.log("builds (subscribe)", $scope.builds);
         }));
-
-        $scope.scale = function(replicas) {
-          var showScalingError = function(result) {
-            $scope.alerts = $scope.alerts || {};
-            $scope.alerts["scale"] = {
-              type: "error",
-              message: "An error occurred scaling the deployment.",
-              details: $filter('getErrorDetails')(result)
-            };
-          };
-
-          DeploymentsService.scale($scope.deployment, replicas).then(_.noop, showScalingError);
-        };
 
         $scope.$on('$destroy', function(){
           DataService.unwatchAll(watches);
