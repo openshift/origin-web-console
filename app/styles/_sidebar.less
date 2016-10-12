@@ -179,7 +179,7 @@
     .navbar-sidebar {
       border-right: 1px solid @sidebar-os-border-color;
       border-bottom: 0;
-      width: @sidebar-left-width-sm;
+      width: @sidebar-left-width-md;
       position: absolute;
       top:1px;
       right:0;
@@ -234,7 +234,7 @@
               font-size: 16px;
               position: absolute;
               right: 13px;
-              top: 37%;
+              top: 39%;
             }
             span {
               display: block;
@@ -253,25 +253,30 @@
   }
 }
 
-@media (min-width: @screen-lg-min) {
-  .sidebar-left {
-    .navbar-sidebar {
-      font-size: @font-size-base + 1;
-      .nav-sidenav-secondary.hover-nav.dropdown-menu {
-        font-size:  @font-size-base + 1;
-      }
-      ul.nav-sidenav-primary > li {
-        > a {
-          padding-bottom: @sidebar-os-padding-y + 10;
-          padding-top: @sidebar-os-padding-y + 10;
-          .fa-angle-right {
-            font-size: 18px;
-          }
-        }
+// Prevent left nav from extending off viewport when > 600px by hiding the icon
+// which reduces the nav height
+.sidebar-left .navbar-sidebar ul.nav-sidenav-primary > li > a {
+  @media (max-height: @screen-height-sm) and (min-width: @screen-sm-min) {
+    text-align: left;
+    // Hide icon but show right arrow
+    .pficon,
+    .fa {
+      display: none;
+      &.fa-angle-right {
+        display: block;
+        top: 36%;
       }
     }
   }
+  @media (max-height: @screen-height-sm) and (min-width: @screen-xlg-min) {
+    .fa,
+    .pficon {
+      display: inline-block;
+    }
+  }
 }
+
+
 
 @media (min-width: @screen-xlg-min) {
   .sidebar-left {
