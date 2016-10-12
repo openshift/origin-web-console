@@ -25,38 +25,35 @@ angular.module('openshiftConsole')
     ];
 
     var watches = [];
-  
+
+    var pvcResolved = function(pvc, action) {
+      $scope.pvc = pvc;
+      $scope.loaded = true;
+      if (action === "DELETED") {
+        $scope.alerts["deleted"] = {
+          type: "warning",
+          message: "This persistent volume claim has been deleted."
+        };
+      }
+    };
+
     ProjectsService
     .get($routeParams.project)
     .then(_.spread(function(project, context) {
       $scope.project = project;
-      DataService.get("persistentvolumeclaims", $routeParams.pvc, context).then(
-        // success
-        function(pvc) {
-          $scope.loaded = true;
-          $scope.pvc = pvc;
-
-          // If we found the item successfully, watch for changes on it
-          watches.push(DataService.watchObject("persistentvolumeclaims", $routeParams.pvc, context, function(pvc, action) {
-            if (action === "DELETED") {
-              $scope.alerts["deleted"] = {
-                type: "warning",
-                message: "This persistent volume claim has been deleted."
-              };
-            }
-            $scope.pvc = pvc;
-          }));
-        },
-        // failure
-        function(e) {
+      DataService
+        .get("persistentvolumeclaims", $routeParams.pvc, context)
+        .then(function(pvc) {
+          pvcResolved(pvc);
+          watches.push(DataService.watchObject("persistentvolumeclaims", $routeParams.pvc, context, pvcResolved));
+        }, function(e) {
           $scope.loaded = true;
           $scope.alerts["load"] = {
             type: "error",
             message: "The persistent volume claim details could not be loaded.",
             details: "Reason: " + $filter('getErrorDetails')(e)
           };
-        }
-      );
+        });
 
       $scope.$on('$destroy', function(){
         DataService.unwatchAll(watches);
