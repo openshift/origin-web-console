@@ -5433,15 +5433,15 @@ link:"project/" + b.project + "/browse/storage"
 }, {
 title:b.pvc
 } ];
-var f = [];
-d.get(b.project).then(_.spread(function(d, g) {
-a.project = d, c.get("persistentvolumeclaims", b.pvc, g).then(function(d) {
-a.loaded = !0, a.pvc = d, f.push(c.watchObject("persistentvolumeclaims", b.pvc, g, function(b, c) {
-"DELETED" === c && (a.alerts.deleted = {
+var f = [], g = function(b, c) {
+a.pvc = b, a.loaded = !0, "DELETED" === c && (a.alerts.deleted = {
 type:"warning",
 message:"This persistent volume claim has been deleted."
-}), a.pvc = b;
-}));
+});
+};
+d.get(b.project).then(_.spread(function(d, h) {
+a.project = d, c.get("persistentvolumeclaims", b.pvc, h).then(function(a) {
+g(a), f.push(c.watchObject("persistentvolumeclaims", b.pvc, h, g));
 }, function(b) {
 a.loaded = !0, a.alerts.load = {
 type:"error",
