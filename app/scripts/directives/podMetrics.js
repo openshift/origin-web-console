@@ -20,7 +20,7 @@ angular.module('openshiftConsole')
       },
       templateUrl: 'views/directives/pod-metrics.html',
       link: function(scope) {
-        scope.includedMetrics = scope.includedMetrics || ["cpu", "memory", "network"];
+        scope.includedMetrics = scope.includedMetrics || ["cpu", "memory", "network", "volumes"];
         var donutByMetric = {}, sparklineByMetric = {};
         var intervalPromise;
         var getMemoryLimit = $parse('resources.limits.memory');
@@ -32,6 +32,8 @@ angular.module('openshiftConsole')
 
         // Set to true when the route changes so we don't update charts that no longer exist.
         var destroyed = false;
+        
+        var volumeDataSets = [];
 
         scope.uniqueID = _.uniqueId('metrics-chart-');
 
@@ -98,6 +100,20 @@ angular.module('openshiftConsole')
             ]
           });
         }
+        generateVolumeDataSets();
+        if (_.includes(scope.includedMetrics, "volumes") && volumeDataSets.length > 0) {
+          scope.metrics.push({
+            label: "Volumes",
+            units: "MiB",
+            chartPrefix: "volumes-",
+            chartType: "spline",
+            convert: ConversionService.bytesToMiB,
+            // The sparkline y-axis will always extend to at least this value.
+            // Avoid spikey charts when rounding very small network usage values.
+            smallestYAxisMax: 5000,
+            datasets: volumeDataSets
+          });
+        }
 
         // Set to true when any data has been loaded (or failed to load).
         scope.loaded = false;
@@ -130,6 +146,19 @@ angular.module('openshiftConsole')
         // Show last hour by default.
         scope.options.timeRange = _.head(scope.options.rangeOptions);
 
+        function generateVolumeDataSets() {
+          _.each(scope.pod.spec.volumes, function(volumeData) {
+            if (!volumeData.persistentVolumeClaim) {
+              return;
+            }
+            volumeDataSets.push({
+              id: "filesystem/usage",
+              label: volumeData.name,
+              data: []
+            });
+          });
+        }
+        
         var createDonutConfig = function(metric) {
           var chartID = '#' + metric.chartPrefix + scope.uniqueID + '-donut';
           return {
@@ -247,7 +276,8 @@ angular.module('openshiftConsole')
           var largestValue = 0;
           angular.forEach(metric.datasets, function(dataset) {
             var metricID = dataset.id, metricData = dataset.data;
-            dates = ['dates'], values[metricID] = [dataset.label || metricID];
+			var metricIDLabel = metricID + dataset.label;
+            dates = ['dates'], values[metricIDLabel] = [dataset.label || metricID];
 
             dataset.total = getLimit(metricID);
 
@@ -269,17 +299,17 @@ angular.module('openshiftConsole')
               dates.push(point.start);
               if (point.value === undefined || point.value === null) {
                 // Don't attempt to round null values. These appear as gaps in the chart.
-                values[metricID].push(point.value);
+                values[metricIDLabel].push(point.value);
               } else {
                 var value = metric.convert ? metric.convert(point.value) : point.value;
                 switch (metricID) {
                   case 'memory/usage':
                   case 'network/rx':
                   case 'network/tx':
-                    values[metricID].push(d3.round(value, 2));
+                    values[metricIDLabel].push(d3.round(value, 2));
                     break;
                   default:
-                    values[metricID].push(d3.round(value));
+                    values[metricIDLabel].push(d3.round(value));
                 }
                 largestValue = Math.max(value, largestValue);
               }
@@ -305,14 +335,14 @@ angular.module('openshiftConsole')
                 }
               };
 
-              if (!donutByMetric[metricID]) {
+              if (!donutByMetric[metricIDLabel]) {
                 donutConfig = createDonutConfig(metric);
                 donutConfig.data = donutData;
                 $timeout(function() {
-                  donutByMetric[metricID] = c3.generate(donutConfig);
+                  donutByMetric[metricIDLabel] = c3.generate(donutConfig);
                 });
               } else {
-                donutByMetric[metricID].load(donutData);
+                donutByMetric[metricIDLabel].load(donutData);
               }
             }
           });
@@ -398,7 +428,8 @@ angular.module('openshiftConsole')
               namespace: scope.pod.metadata.namespace,
               pod: scope.pod,
               containerName: metric.containerMetric ? scope.options.selectedContainer.name : "pod",
-              stacked: true
+              stacked: true,
+              label: dataset.label
             });
           }
 
@@ -476,7 +507,8 @@ angular.module('openshiftConsole')
                   }
 
                   var dataset = _.find(metric.datasets, {
-                    id: response.metricID
+                    id: response.metricID,
+					label: response.label
                   });
                   updateData(dataset, response);
                 });

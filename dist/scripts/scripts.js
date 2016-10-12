@@ -2530,6 +2530,7 @@ function i(a) {
 switch (a) {
 case "network/rx_rate":
 case "network/tx_rate":
+case "filesystem/usage":
 return "pod";
 
 default:
@@ -2539,18 +2540,30 @@ return "pod_container";
 function j(a) {
 return e().then(function(b) {
 var c, d = i(a.metric);
-return a.stacked ? (c = b + o, URI.expand(c, {
+if (a.stacked) switch (a.metric) {
+case "filesystem/usage":
+return c = b + p, URI.expand(c, {
+podName:a.pod.metadata.name,
+metric:a.metric,
+type:d,
+resourceId:"Volume:" + a.label
+}).toString();
+
+default:
+return c = b + o, URI.expand(c, {
 podName:a.pod.metadata.name,
 metric:a.metric,
 type:d
-}).toString()) :(c = b + n, URI.expand(c, {
+}).toString();
+}
+return c = b + n, URI.expand(c, {
 podUID:a.pod.metadata.uid,
 containerName:a.containerName,
 metric:a.metric
-}).toString());
+}).toString();
 });
 }
-var k, l, m, n = "/gauges/{containerName}%2F{podUID}%2F{metric}/data", o = "/gauges/data?stacked=true&tags=descriptor_name:{metric},type:{type},pod_name:{podName}", p = function(a) {
+var k, l, m, n = "/gauges/{containerName}%2F{podUID}%2F{metric}/data", o = "/gauges/data?stacked=true&tags=descriptor_name:{metric},type:{type},pod_name:{podName}", p = "/gauges/data?stacked=true&tags=descriptor_name:{metric},type:{type},pod_name:{podName},resource_id:{resourceId}", q = function(a) {
 return e().then(function(c) {
 return !!c && (!a || (!!l || !m && b.get(c).then(function() {
 return l = !0, !0;
@@ -2558,13 +2571,13 @@ return l = !0, !0;
 return m = !0, !1;
 })));
 });
-}, q = function(a) {
+}, r = function(a) {
 var b = a.split("/");
 return {
 podUID:b[1],
 descriptor:b[2] + "/" + b[3]
 };
-}, r = function(a, c, d) {
+}, s = function(a, c, d) {
 var e = _.indexBy(d.pods, "metadata.uid");
 return b.post(a, c, {
 auth:{},
@@ -2575,12 +2588,12 @@ Accept:"application/json",
 }
 }).then(function(a) {
 var b = {}, c = function(a, c) {
-var d = q(c), g = _.get(e, [ d.podUID, "metadata", "name" ]), h = f(a);
+var d = r(c), g = _.get(e, [ d.podUID, "metadata", "name" ]), h = f(a);
 _.set(b, [ d.descriptor, g ], h);
 };
 return _.each(a.data.counter, c), _.each(a.data.gauge, c), b;
 });
-}, s = _.template("descriptor_name:network/tx_rate|network/rx_rate,type:pod,pod_id:<%= uid %>"), t = _.template("descriptor_name:memory/usage|cpu/usage_rate,type:pod_container,pod_id:<%= uid %>,container_name:<%= containerName %>"), u = function(a) {
+}, t = _.template("descriptor_name:network/tx_rate|network/rx_rate,type:pod,pod_id:<%= uid %>"), u = _.template("descriptor_name:memory/usage|cpu/usage_rate,type:pod_container,pod_id:<%= uid %>,container_name:<%= containerName %>"), v = function(a) {
 return h().then(function(b) {
 var d = {
 bucketDuration:a.bucketDuration,
@@ -2588,18 +2601,18 @@ start:a.start
 };
 a.end && (d.end = a.end);
 var e = [], f = g(_.map(a.pods, "metadata.uid")), h = _.assign({
-tags:t({
+tags:u({
 uid:f,
 containerName:a.containerName
 })
 }, d);
-e.push(r(b, h, a));
+e.push(s(b, h, a));
 var i = _.assign({
-tags:s({
+tags:t({
 uid:f
 })
 }, d);
-return e.push(r(b, i, a)), c.all(e).then(function(a) {
+return e.push(s(b, i, a)), c.all(e).then(function(a) {
 var b = {};
 return _.each(a, function(a) {
 _.assign(b, a);
@@ -2608,7 +2621,7 @@ _.assign(b, a);
 });
 };
 return {
-isAvailable:p,
+isAvailable:q,
 getMetricsURL:e,
 get:function(a) {
 return j(a).then(function(c) {
@@ -2627,12 +2640,13 @@ params:d
 }).then(function(b) {
 return _.assign(b, {
 metricID:a.metric,
+label:a.label,
 data:f(b.data)
 });
 });
 });
 },
-getPodMetrics:u
+getPodMetrics:v
 };
 } ]), angular.module("openshiftConsole").factory("StorageService", function() {
 return {
@@ -8989,22 +9003,31 @@ includedMetrics:"=?"
 },
 templateUrl:"views/directives/pod-metrics.html",
 link:function(j) {
-function k(a) {
+function k() {
+_.each(j.pod.spec.volumes, function(a) {
+a.persistentVolumeClaim && C.push({
+id:"filesystem/usage",
+label:a.name,
+data:[]
+});
+});
+}
+function l(a) {
 if (!j.pod) return null;
 var b = j.options.selectedContainer;
 switch (a) {
 case "memory/usage":
-var c = w(b);
+var c = x(b);
 if (c) return g.bytesToMiB(i(c));
 break;
 
 case "cpu/usage":
-var d = x(b);
+var d = y(b);
 if (d) return _.round(1e3 * i(d));
 }
 return null;
 }
-function l(a) {
+function m(a) {
 var b, d = {}, e = _.some(a.datasets, function(a) {
 return !a.data;
 });
@@ -9012,35 +9035,35 @@ if (!e) {
 a.totalUsed = 0;
 var f = 0;
 angular.forEach(a.datasets, function(e) {
-var g = e.id, h = e.data;
-b = [ "dates" ], d[g] = [ e.label || g ], e.total = k(g);
-var i = _.last(h).value;
-isNaN(i) && (i = 0), a.convert && (i = a.convert(i)), e.used = i, e.total && (e.available = e.total - e.used), a.totalUsed += e.used, angular.forEach(h, function(c) {
-if (b.push(c.start), void 0 === c.value || null === c.value) d[g].push(c.value); else {
+var g = e.id, h = e.data, i = g + e.label;
+b = [ "dates" ], d[i] = [ e.label || g ], e.total = l(g);
+var j = _.last(h).value;
+isNaN(j) && (j = 0), a.convert && (j = a.convert(j)), e.used = j, e.total && (e.available = e.total - e.used), a.totalUsed += e.used, angular.forEach(h, function(c) {
+if (b.push(c.start), void 0 === c.value || null === c.value) d[i].push(c.value); else {
 var e = a.convert ? a.convert(c.value) :c.value;
 switch (g) {
 case "memory/usage":
 case "network/rx":
 case "network/tx":
-d[g].push(d3.round(e, 2));
+d[i].push(d3.round(e, 2));
 break;
 
 default:
-d[g].push(d3.round(e));
+d[i].push(d3.round(e));
 }
 f = Math.max(e, f);
 }
 }), e.used = _.round(e.used), e.total = _.round(e.total), e.available = _.round(e.available);
-var j, l;
-e.total && (l = {
+var k, m;
+e.total && (m = {
 type:"donut",
 columns:[ [ "Used", e.used ], [ "Available", Math.max(e.available, 0) ] ],
 colors:{
 Used:e.available > 0 ? "#0088ce" :"#ec7a08",
 Available:"#d1d1d1"
 }
-}, u[g] ? u[g].load(l) :(j = B(a), j.data = l, c(function() {
-u[g] = c3.generate(j);
+}, v[i] ? v[i].load(m) :(k = D(a), k.data = m, c(function() {
+v[i] = c3.generate(k);
 })));
 }), a.totalUsed = _.round(a.totalUsed, 1);
 var g, h = [ b ].concat(_.values(d));
@@ -9049,64 +9072,66 @@ var i, j = {
 type:a.chartType || "spline",
 x:"dates",
 columns:h
-}, l = a.chartPrefix + "sparkline";
-v[l] ? (v[l].load(j), v[l].axis.max({
+}, k = a.chartPrefix + "sparkline";
+w[k] ? (w[k].load(j), w[k].axis.max({
 y:g
-})) :(i = C(a), i.axis.y.max = g, i.data = j, a.chartDataColors && (i.color = {
+})) :(i = E(a), i.axis.y.max = g, i.data = j, a.chartDataColors && (i.color = {
 pattern:a.chartDataColors
 }), c(function() {
-A || (v[l] = c3.generate(i));
+B || (w[k] = c3.generate(i));
 }));
 }
 }
-function m() {
+function n() {
 return "-" + j.options.timeRange.value + "mn";
 }
-function n() {
+function o() {
 return 60 * j.options.timeRange.value * 1e3;
 }
-function o() {
-return Math.floor(n() / z) + "ms";
+function p() {
+return Math.floor(o() / A) + "ms";
 }
-function p(a, b, c) {
+function q(a, b, c) {
 var d, e = {
 metric:b.id,
-bucketDuration:o()
+bucketDuration:p()
 };
 return b.data && b.data.length ? (d = _.last(b.data), e.start = d.end) :e.start = c, j.pod ? _.assign(e, {
 namespace:j.pod.metadata.namespace,
 pod:j.pod,
 containerName:a.containerMetric ? j.options.selectedContainer.name :"pod",
-stacked:!0
+stacked:!0,
+label:b.label
 }) :null;
 }
-function q() {
+function r() {
 return !j.metricsError && (j.pod && _.get(j, "options.selectedContainer"));
 }
-function r(a, b) {
+function s(a, b) {
 j.noData = !1;
 var c = _.initial(b.data);
-return a.data ? void (a.data = _.chain(a.data).takeRight(z).concat(c).value()) :void (a.data = c);
+return a.data ? void (a.data = _.chain(a.data).takeRight(A).concat(c).value()) :void (a.data = c);
 }
-function s() {
-if (q()) {
-var a = m();
+function t() {
+if (r()) {
+var a = n();
 angular.forEach(j.metrics, function(b) {
 var c = [];
 angular.forEach(b.datasets, function(d) {
-var e = p(b, d, a);
+var e = q(b, d, a);
 e && c.push(h.get(e));
 }), d.all(c).then(function(a) {
-A || (angular.forEach(a, function(a) {
+B || (angular.forEach(a, function(a) {
 if (a) {
 var c = _.find(b.datasets, {
-id:a.metricID
+id:a.metricID,
+label:a.label
 });
-r(c, a);
+s(c, a);
 }
-}), l(b));
+}), m(b));
 }, function(a) {
-A || angular.forEach(a, function(a) {
+B || angular.forEach(a, function(a) {
 j.metricsError = {
 status:_.get(a, "status", 0),
 details:_.get(a, "data.errorMsg") || _.get(a, "statusText") || "Status code " + _.get(a, "status", 0)
@@ -9118,8 +9143,8 @@ j.loaded = !0;
 });
 }
 }
-j.includedMetrics = j.includedMetrics || [ "cpu", "memory", "network" ];
-var t, u = {}, v = {}, w = b("resources.limits.memory"), x = b("resources.limits.cpu"), y = 6e4, z = 30, A = !1;
+j.includedMetrics = j.includedMetrics || [ "cpu", "memory", "network", "volumes" ];
+var u, v = {}, w = {}, x = b("resources.limits.memory"), y = b("resources.limits.cpu"), z = 6e4, A = 30, B = !1, C = [];
 j.uniqueID = _.uniqueId("metrics-chart-"), j.metrics = [], _.includes(j.includedMetrics, "memory") && j.metrics.push({
 label:"Memory",
 units:"MiB",
@@ -9160,6 +9185,14 @@ id:"network/rx_rate",
 label:"Received",
 data:[]
 } ]
+}), k(), _.includes(j.includedMetrics, "volumes") && C.length > 0 && j.metrics.push({
+label:"Volumes",
+units:"MiB",
+chartPrefix:"volumes-",
+chartType:"spline",
+convert:g.bytesToMiB,
+smallestYAxisMax:5e3,
+datasets:C
 }), j.loaded = !1, j.noData = !0, h.getMetricsURL().then(function(a) {
 j.metricsURL = a;
 }), j.options = {
@@ -9180,7 +9213,7 @@ label:"Last week",
 value:10080
 } ]
 }, j.options.timeRange = _.head(j.options.rangeOptions);
-var B = function(a) {
+var D = function(a) {
 var b = "#" + a.chartPrefix + j.uniqueID + "-donut";
 return {
 bindto:b,
@@ -9201,7 +9234,7 @@ height:175,
 widht:175
 }
 };
-}, C = function(a) {
+}, E = function(a) {
 return {
 bindto:"#" + a.chartPrefix + j.uniqueID + "-sparkline",
 axis:{
@@ -9257,19 +9290,19 @@ _.each(j.metrics, function(a) {
 _.each(a.datasets, function(a) {
 delete a.data;
 });
-}), delete j.metricsError, s();
-}, !0), t = a(s, y, !1), e.$on("metrics.charts.resize", function() {
+}), delete j.metricsError, t();
+}, !0), u = a(t, z, !1), e.$on("metrics.charts.resize", function() {
 c(function() {
-_.each(v, function(a) {
+_.each(w, function(a) {
 a.flush();
 });
 }, 0);
 }), j.$on("$destroy", function() {
-t && (a.cancel(t), t = null), angular.forEach(u, function(a) {
+u && (a.cancel(u), u = null), angular.forEach(v, function(a) {
 a.destroy();
-}), u = null, angular.forEach(v, function(a) {
+}), v = null, angular.forEach(w, function(a) {
 a.destroy();
-}), v = null, A = !0;
+}), w = null, B = !0;
 });
 }
 };
