@@ -176,7 +176,17 @@ angular.module('openshiftConsole')
           return point.value === null || point.value === undefined;
         }
 
-        scope.formatUsage = d3.format('.2r');
+        scope.formatUsage = function(usage) {
+          if (usage < 0.01) {
+            return '0';
+          }
+
+          if (usage < 1) {
+            return d3.format('.1r')(usage);
+          }
+
+          return d3.format('.2r')(usage);
+        };
 
         function averages(metric) {
           var label;

@@ -9488,7 +9488,9 @@ return d3.round(b, 2) + " " + a.units;
 }
 };
 };
-b.formatUsage = d3.format(".2r"), b.$watch("options", function() {
+b.formatUsage = function(a) {
+return a < .01 ? "0" :a < 1 ? d3.format(".1r")(a) :d3.format(".2r")(a);
+}, b.$watch("options", function() {
 z = {}, x = null, delete b.metricsError, r();
 }, !0), s = a(r, u, !1), b.updateInView = function(a) {
 A = !a, a && (!y || Date.now() > y + u) && r();
