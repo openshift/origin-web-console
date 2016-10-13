@@ -1780,7 +1780,7 @@ message:b.invalidObjectKindOrVersion(c)
 }, f;
 } ]), angular.module("openshiftConsole").service("AlertMessageService", function() {
 var a = [], b = function(a, b) {
-return "hide/alert/" + b + "/" + a;
+return b ? "hide/alert/" + b + "/" + a :"hide/alert/" + a;
 };
 return {
 addAlert:function(b) {
@@ -2504,13 +2504,13 @@ b[a.tag] = b[a.tag] || {}, b[a.tag].name = a.tag, b[a.tag].status = angular.copy
 }), b;
 }
 };
-}), angular.module("openshiftConsole").factory("MetricsService", [ "$filter", "$http", "$q", "APIDiscovery", function(a, b, c, d) {
-function e() {
-return angular.isDefined(k) ? c.when(k) :d.getMetricsURL().then(function(a) {
-return k = (a || "").replace(/\/$/, "");
+}), angular.module("openshiftConsole").factory("MetricsService", [ "$filter", "$http", "$q", "$rootScope", "APIDiscovery", function(a, b, c, d, e) {
+function f() {
+return angular.isDefined(l) ? c.when(l) :e.getMetricsURL().then(function(a) {
+return l = (a || "").replace(/\/$/, "");
 });
 }
-function f(a) {
+function g(a) {
 if (a.length) return _.each(a, function(a) {
 if (!a.value || "NaN" === a.value) {
 var b = a.avg;
@@ -2518,15 +2518,15 @@ a.value = b && "NaN" !== b ? b :null;
 }
 }), a;
 }
-function g(a) {
+function h(a) {
 return a.join("|");
 }
-function h() {
-return e().then(function(a) {
+function i() {
+return f().then(function(a) {
 return a ? a + "/metrics/stats/query" :a;
 });
 }
-function i(a) {
+function j(a) {
 switch (a) {
 case "network/rx_rate":
 case "network/tx_rate":
@@ -2536,35 +2536,38 @@ default:
 return "pod_container";
 }
 }
-function j(a) {
-return e().then(function(b) {
-var c, d = i(a.metric);
-return a.stacked ? (c = b + o, URI.expand(c, {
+function k(a) {
+return f().then(function(b) {
+var c, d = j(a.metric);
+return a.stacked ? (c = b + p, URI.expand(c, {
 podName:a.pod.metadata.name,
 metric:a.metric,
 type:d
-}).toString()) :(c = b + n, URI.expand(c, {
+}).toString()) :(c = b + o, URI.expand(c, {
 podUID:a.pod.metadata.uid,
 containerName:a.containerName,
 metric:a.metric
 }).toString());
 });
 }
-var k, l, m, n = "/gauges/{containerName}%2F{podUID}%2F{metric}/data", o = "/gauges/data?stacked=true&tags=descriptor_name:{metric},type:{type},pod_name:{podName}", p = function(a) {
-return e().then(function(c) {
-return !!c && (!a || (!!l || !m && b.get(c).then(function() {
-return l = !0, !0;
-}, function() {
-return m = !0, !1;
+var l, m, n, o = "/gauges/{containerName}%2F{podUID}%2F{metric}/data", p = "/gauges/data?stacked=true&tags=descriptor_name:{metric},type:{type},pod_name:{podName}", q = function(a) {
+return f().then(function(c) {
+return !!c && (!a || (!!m || !n && b.get(c).then(function() {
+return m = !0, !0;
+}, function(a) {
+return n = !0, d.$broadcast("metrics-connection-failed", {
+url:c,
+response:a
+}), !1;
 })));
 });
-}, q = function(a) {
+}, r = function(a) {
 var b = a.split("/");
 return {
 podUID:b[1],
 descriptor:b[2] + "/" + b[3]
 };
-}, r = function(a, c, d) {
+}, s = function(a, c, d) {
 var e = _.indexBy(d.pods, "metadata.uid");
 return b.post(a, c, {
 auth:{},
@@ -2575,31 +2578,31 @@ Accept:"application/json",
 }
 }).then(function(a) {
 var b = {}, c = function(a, c) {
-var d = q(c), g = _.get(e, [ d.podUID, "metadata", "name" ]), h = f(a);
-_.set(b, [ d.descriptor, g ], h);
+var d = r(c), f = _.get(e, [ d.podUID, "metadata", "name" ]), h = g(a);
+_.set(b, [ d.descriptor, f ], h);
 };
 return _.each(a.data.counter, c), _.each(a.data.gauge, c), b;
 });
-}, s = _.template("descriptor_name:network/tx_rate|network/rx_rate,type:pod,pod_id:<%= uid %>"), t = _.template("descriptor_name:memory/usage|cpu/usage_rate,type:pod_container,pod_id:<%= uid %>,container_name:<%= containerName %>"), u = function(a) {
-return h().then(function(b) {
+}, t = _.template("descriptor_name:network/tx_rate|network/rx_rate,type:pod,pod_id:<%= uid %>"), u = _.template("descriptor_name:memory/usage|cpu/usage_rate,type:pod_container,pod_id:<%= uid %>,container_name:<%= containerName %>"), v = function(a) {
+return i().then(function(b) {
 var d = {
 bucketDuration:a.bucketDuration,
 start:a.start
 };
 a.end && (d.end = a.end);
-var e = [], f = g(_.map(a.pods, "metadata.uid")), h = _.assign({
-tags:t({
+var e = [], f = h(_.map(a.pods, "metadata.uid")), g = _.assign({
+tags:u({
 uid:f,
 containerName:a.containerName
 })
 }, d);
-e.push(r(b, h, a));
+e.push(s(b, g, a));
 var i = _.assign({
-tags:s({
+tags:t({
 uid:f
 })
 }, d);
-return e.push(r(b, i, a)), c.all(e).then(function(a) {
+return e.push(s(b, i, a)), c.all(e).then(function(a) {
 var b = {};
 return _.each(a, function(a) {
 _.assign(b, a);
@@ -2608,10 +2611,10 @@ _.assign(b, a);
 });
 };
 return {
-isAvailable:p,
-getMetricsURL:e,
+isAvailable:q,
+getMetricsURL:f,
 get:function(a) {
-return j(a).then(function(c) {
+return k(a).then(function(c) {
 if (!c) return null;
 var d = {
 bucketDuration:a.bucketDuration,
@@ -2627,12 +2630,12 @@ params:d
 }).then(function(b) {
 return _.assign(b, {
 metricID:a.metric,
-data:f(b.data)
+data:g(b.data)
 });
 });
 });
 },
-getPodMetrics:u
+getPodMetrics:v
 };
 } ]), angular.module("openshiftConsole").factory("StorageService", function() {
 return {
@@ -3799,9 +3802,26 @@ c.getHPA = function(a) {
 if (!B) return null;
 var b = _.get(a, "kind"), c = _.get(a, "metadata.name");
 return _.get(C, [ b, c ], oa);
-}, window.OPENSHIFT_CONSTANTS.DISABLE_OVERVIEW_METRICS || o.isAvailable(!0).then(function(a) {
+}, window.OPENSHIFT_CONSTANTS.DISABLE_OVERVIEW_METRICS || (o.isAvailable(!0).then(function(a) {
 c.showMetrics = a;
+}), c.$on("metrics-connection-failed", function(a, b) {
+var e = d.isAlertPermanentlyHidden("metrics-connection-failed");
+e || c.alerts["metrics-connection-failed"] || (c.alerts["metrics-connection-failed"] = {
+type:"warning",
+message:"An error occurred getting metrics.",
+links:[ {
+href:b.url,
+label:"Open metrics URL",
+target:"_blank"
+}, {
+href:"",
+label:"Don't show me again",
+onClick:function() {
+return d.permanentlyHideAlert("metrics-connection-failed"), !0;
+}
+} ]
 });
+}));
 var pa = a("isIE")() || a("isEdge")();
 k.get(b.project).then(_.spread(function(a, b) {
 c.project = a, c.projectContext = b, D.push(f.watch("pods", b, function(a) {
