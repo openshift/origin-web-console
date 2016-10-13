@@ -107,6 +107,20 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
   );
 
 
+  $templateCache.put('views/_config-file-params.html',
+    "<div ng-repeat=\"(serverName, data) in secretData\" class=\"image-source-item\">\n" +
+    "<h4>{{serverName}}</h4>\n" +
+    "<dt>Username:</dt>\n" +
+    "<dd class=\"word-break\">{{data.username}}</dd>\n" +
+    "<dt>Password:</dt>\n" +
+    "<dd ng-if=\"view.showSecret\" class=\"word-break\">{{data.password}}</dd>\n" +
+    "<dd ng-if=\"!view.showSecret\">*****</dd>\n" +
+    "<dt>Email:</dt>\n" +
+    "<dd class=\"word-break\">{{data.email}}</dd>\n" +
+    "</div>"
+  );
+
+
   $templateCache.put('views/_deployment-config-metadata.html',
     "<div ng-if=\"deploymentConfigId != ''\" class=\"metadata\">\n" +
     "<span>Created from deployment config {{deploymentConfigId}}</span>\n" +
@@ -3234,6 +3248,147 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
   );
 
 
+  $templateCache.put('views/browse/secret.html',
+    "<project-header class=\"top-header\"></project-header>\n" +
+    "<project-page>\n" +
+    "\n" +
+    "<div class=\"middle-section\">\n" +
+    "<div class=\"middle-container\">\n" +
+    "<div class=\"middle-header\">\n" +
+    "<div class=\"container-fluid\">\n" +
+    "<breadcrumbs breadcrumbs=\"breadcrumbs\"></breadcrumbs>\n" +
+    "<alerts alerts=\"alerts\"></alerts>\n" +
+    "<div ng-if=\"!loaded\" class=\"mar-top-xl\">Loading...</div>\n" +
+    "<div ng-if=\"loaded\">\n" +
+    "<h1>\n" +
+    "<div class=\"pull-right dropdown\" ng-hide=\"!('secrets' | canIDoAny)\">\n" +
+    "<button type=\"button\" class=\"dropdown-toggle btn btn-default actions-dropdown-btn hidden-xs\" data-toggle=\"dropdown\">\n" +
+    "Actions\n" +
+    "<span class=\"caret\"></span>\n" +
+    "</button>\n" +
+    "<a href=\"\" class=\"dropdown-toggle actions-dropdown-kebab visible-xs-inline\" data-toggle=\"dropdown\"><i class=\"fa fa-ellipsis-v\"></i><span class=\"sr-only\">Actions</span></a>\n" +
+    "<ul class=\"dropdown-menu actions action-link\">\n" +
+    "<li ng-if=\"'secrets' | canI : 'update'\">\n" +
+    "<a ng-href=\"{{secret | editYamlURL}}\" role=\"button\">Edit YAML</a>\n" +
+    "</li>\n" +
+    "<li ng-if=\"'secrets' | canI : 'delete'\">\n" +
+    "<delete-link kind=\"Secret\" resource-name=\"{{secret.metadata.name}}\" project-name=\"{{secret.metadata.namespace}}\" alerts=\"alerts\">\n" +
+    "</delete-link>\n" +
+    "</li>\n" +
+    "</ul>\n" +
+    "</div>\n" +
+    "{{secret.metadata.name}}\n" +
+    "<small class=\"meta\">created <relative-timestamp timestamp=\"secret.metadata.creationTimestamp\"></relative-timestamp></small>\n" +
+    "</h1>\n" +
+    "</div>\n" +
+    "</div>\n" +
+    "</div>\n" +
+    "<div class=\"middle-content gutter-top\">\n" +
+    "<div class=\"container-fluid\">\n" +
+    "<div ng-if=\"secret\" class=\"row\">\n" +
+    "<div class=\"col-sm-12\">\n" +
+    "<div class=\"resource-details secret-details\">\n" +
+    "<dl class=\"dl-horizontal left\">\n" +
+    "<dt>Type:</dt>\n" +
+    "<dd>{{secret.type}}</dd>\n" +
+    "<div ng-repeat=\"(secretDataName, secretData) in decodedSecretData\" class=\"image-source-item\">\n" +
+    "<div ng-switch=\"secretDataName\">\n" +
+    "<div ng-switch-when=\".dockercfg\">\n" +
+    "<ng-include src=\" 'views/_config-file-params.html' \"></ng-include>\n" +
+    "</div>\n" +
+    "<div ng-switch-when=\".dockerconfigjson\">\n" +
+    "<ng-include src=\" 'views/_config-file-params.html' \"></ng-include>\n" +
+    "</div>\n" +
+    "<div ng-switch-when=\"username\">\n" +
+    "<dt>Username:</dt>\n" +
+    "<dd class=\"word-break\">{{decodedSecretData.username}}</dd>\n" +
+    "</div>\n" +
+    "<div ng-switch-when=\"password\">\n" +
+    "<dt>Password:</dt>\n" +
+    "<dd ng-if=\"view.showSecret\" class=\"word-break\">{{secretData}}</dd>\n" +
+    "<dd ng-if=\"!view.showSecret\">*****</dd>\n" +
+    "</div>\n" +
+    "<div ng-switch-when=\"ssh-privatekey\">\n" +
+    "<dt>SSH Private Key:</dt>\n" +
+    "<dd ng-if=\"view.showSecret\" class=\"gutter-bottom\">\n" +
+    "<div ui-ace=\"{\n" +
+    "                            theme: 'dreamweaver',\n" +
+    "                            highlightActiveLine: false,\n" +
+    "                            showGutter: false,\n" +
+    "                            rendererOptions: {\n" +
+    "                              fadeFoldWidgets: true,\n" +
+    "                              highlightActiveLine: false,\n" +
+    "                              showPrintMargin: false\n" +
+    "                            },\n" +
+    "                            advanced: {\n" +
+    "                              highlightActiveLine: false\n" +
+    "                            }\n" +
+    "                          }\" readonly ng-model=\"secretData\" class=\"ace-bordered ace-read-only ace-inline secret-data\"></div>\n" +
+    "</dd>\n" +
+    "<dd ng-if=\"!view.showSecret\">*****</dd>\n" +
+    "</div>\n" +
+    "<div ng-switch-when=\"ca.crt\">\n" +
+    "<dt>CA Certificate:</dt>\n" +
+    "<dd ng-if=\"view.showSecret\" class=\"gutter-bottom\">\n" +
+    "<div ui-ace=\"{\n" +
+    "                            theme: 'dreamweaver',\n" +
+    "                            highlightActiveLine: false,\n" +
+    "                            showGutter: false,\n" +
+    "                            rendererOptions: {\n" +
+    "                              fadeFoldWidgets: true,\n" +
+    "                              highlightActiveLine: false,\n" +
+    "                              showPrintMargin: false\n" +
+    "                            },\n" +
+    "                            advanced: {\n" +
+    "                              highlightActiveLine: false\n" +
+    "                            }\n" +
+    "                          }\" readonly ng-model=\"secretData\" class=\"ace-bordered ace-read-only ace-inline secret-data\"></div>\n" +
+    "</dd>\n" +
+    "<dd ng-if=\"!view.showSecret\">*****</dd>\n" +
+    "</div>\n" +
+    "<div ng-switch-when=\".gitconfig\">\n" +
+    "<dt>Git Configuration File:</dt>\n" +
+    "<dd ng-if=\"view.showSecret\" class=\"gutter-bottom\">\n" +
+    "<div ui-ace=\"{\n" +
+    "                            mode: 'ini',\n" +
+    "                            theme: 'dreamweaver',\n" +
+    "                            highlightActiveLine: false,\n" +
+    "                            showGutter: false,\n" +
+    "                            rendererOptions: {\n" +
+    "                              fadeFoldWidgets: true,\n" +
+    "                              highlightActiveLine: false,\n" +
+    "                              showPrintMargin: false\n" +
+    "                            },\n" +
+    "                            advanced: {\n" +
+    "                              highlightActiveLine: false\n" +
+    "                            }\n" +
+    "                          }\" readonly ng-model=\"secretData\" class=\"ace-bordered ace-read-only ace-inline secret-data\"></div>\n" +
+    "</dd>\n" +
+    "<dd ng-if=\"!view.showSecret\">*****</dd>\n" +
+    "</div>\n" +
+    "<div ng-switch-default>\n" +
+    "<dt>{{secretDataName}}:</dt>\n" +
+    "<dd ng-if=\"view.showSecret\" class=\"word-break gutter-bottom\">{{secretData}}</dd>\n" +
+    "<dd ng-if=\"!view.showSecret\">*****</dd>\n" +
+    "</div>\n" +
+    "</div>\n" +
+    "</div>\n" +
+    "</dl>\n" +
+    "</div>\n" +
+    "<div class=\"gutter-bottom\">\n" +
+    "<a href=\"\" ng-click=\"view.showSecret = !view.showSecret\">{{view.showSecret ? \"Hide\" : \"Reveal\"}} secret contents</a>\n" +
+    "</div>\n" +
+    "<annotations annotations=\"secret.metadata.annotations\"></annotations>\n" +
+    "</div>\n" +
+    "</div>\n" +
+    "</div>\n" +
+    "</div>\n" +
+    "</div>\n" +
+    "</div>\n" +
+    "</project-page>"
+  );
+
+
   $templateCache.put('views/browse/service.html',
     "<project-header class=\"top-header\"></project-header>\n" +
     "<project-page>\n" +
@@ -3779,6 +3934,42 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
   );
 
 
+  $templateCache.put('views/create-secret.html',
+    "<default-header class=\"top-header\"></default-header>\n" +
+    "<div class=\"wrap no-sidebar\">\n" +
+    "<div class=\"sidebar-left collapse navbar-collapse navbar-collapse-2\">\n" +
+    "<navbar-utility-mobile></navbar-utility-mobile>\n" +
+    "</div>\n" +
+    "<div class=\"middle surface-shaded\">\n" +
+    "\n" +
+    "<div class=\"middle-section\">\n" +
+    "<div class=\"middle-container\">\n" +
+    "<div class=\"middle-content\">\n" +
+    "<div class=\"container surface-shaded\">\n" +
+    "<div ng-if=\"!project\">Loading...</div>\n" +
+    "<div class=\"row\" ng-if=\"project\">\n" +
+    "<div class=\"col-md-10 col-md-offset-1\">\n" +
+    "<breadcrumbs breadcrumbs=\"breadcrumbs\"></breadcrumbs>\n" +
+    "<alerts alerts=\"alerts\"></alerts>\n" +
+    "<div class=\"mar-top-xl\">\n" +
+    "<h1>Create Secret</h1>\n" +
+    "<div class=\"help-block\">\n" +
+    "Secrets allow you to authenticate to a private Git repository or a private image registry.\n" +
+    "</div>\n" +
+    "<create-secret namespace=\"projectName\" alerts=\"alerts\" post-create-action=\"postCreateAction(newSecret, creationAlert)\" cancel=\"cancel()\">\n" +
+    "</create-secret>\n" +
+    "</div>\n" +
+    "</div>\n" +
+    "</div>\n" +
+    "</div>\n" +
+    "</div>\n" +
+    "</div>\n" +
+    "</div>\n" +
+    "</div>\n" +
+    "</div>"
+  );
+
+
   $templateCache.put('views/create.html',
     "<default-header class=\"top-header\"></default-header>\n" +
     "<div class=\"wrap no-sidebar\">\n" +
@@ -4011,7 +4202,12 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "<div>\n" +
     "<input id=\"contextdir\" ng-model=\"buildConfig.contextDir\" type=\"text\" placeholder=\"/\" autocorrect=\"off\" autocapitalize=\"off\" spellcheck class=\"form-control\">\n" +
     "</div>\n" +
-    "<div class=\"help-block\">Optional subdirectory for the application source code, used as the context directory for the build.</div> </div>\n" +
+    "<div class=\"help-block\">Optional subdirectory for the application source code, used as the context directory for the build.</div>\n" +
+    "</div>\n" +
+    "<div class=\"form-group\">\n" +
+    "<osc-secrets model=\"buildConfig.secrets.gitSecret\" namespace=\"projectName\" display-type=\"source\" type=\"source\" service-account-to-link=\"builder\" secrets-by-type=\"secretsByType\" alerts=\"alerts\" allow-multiple-secrets=\"false\">\n" +
+    "</osc-secrets>\n" +
+    "</div>\n" +
     "\n" +
     "<osc-form-section header=\"Routing\" about-title=\"Routing\" about=\"Routing is a way to make your application publicly visible. Otherwise you may only be able to access your application by its IP address, if allowed by the system administrator.\" expand=\"true\" can-toggle=\"false\" ng-if=\"routing.portOptions.length\">\n" +
     "<div class=\"form-group checkbox\">\n" +
@@ -4060,6 +4256,14 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "</a>\n" +
     "</span></h3>\n" +
     "<key-value-editor entries=\"buildConfigEnvVars\" key-placeholder=\"name\" value-placeholder=\"value\" key-validator=\"[a-zA-Z][a-zA-Z0-9_]*\" key-validator-error-tooltip=\"A valid environment variable name is an alphanumeric (a-z and 0-9) string beginning with a letter that may contain underscores.\" add-row-link=\"Add environment variable\"></key-value-editor>\n" +
+    "<div class=\"form-group\">\n" +
+    "<osc-secrets model=\"buildConfig.secrets.pullSecret\" namespace=\"projectName\" display-type=\"pull\" type=\"image\" secrets-by-type=\"secretsByType\" service-account-to-link=\"builder\" alerts=\"alerts\" allow-multiple-secrets=\"false\">\n" +
+    "</osc-secrets>\n" +
+    "</div>\n" +
+    "<div class=\"form-group\">\n" +
+    "<osc-secrets model=\"buildConfig.secrets.pushSecret\" namespace=\"projectName\" display-type=\"push\" type=\"image\" service-account-to-link=\"builder\" secrets-by-type=\"secretsByType\" alerts=\"alerts\" allow-multiple-secrets=\"false\">\n" +
+    "</osc-secrets>\n" +
+    "</div>\n" +
     "</osc-form-section>\n" +
     "\n" +
     "<osc-form-section header=\"Deployment Configuration\" about-title=\"Deployment Configuration\" about=\"Deployment configurations describe how your application is configured\n" +
@@ -4078,6 +4282,8 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "Deployment configuration changes\n" +
     "</label>\n" +
     "</div>\n" +
+    "<osc-secrets model=\"deploymentConfig.secrets.pullSecrets\" namespace=\"projectName\" display-type=\"pull\" type=\"image\" secrets-by-type=\"secretsByType\" service-account-to-link=\"default\" alerts=\"alerts\" allow-multiple-secrets=\"true\">\n" +
+    "</osc-secrets>\n" +
     "<div>\n" +
     "<h3>Environment Variables (Runtime only) <span class=\"help action-inline\">\n" +
     "<a href=\"\" data-toggle=\"tooltip\" data-original-title=\"Environment variables are used to configure and pass information to running containers.  These environment variables will only be available at runtime.\">\n" +
@@ -4159,7 +4365,7 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "</div>\n" +
     "<alerts alerts=\"alerts\"></alerts>\n" +
     "<div class=\"gutter-top\">\n" +
-    "<a href=\"\" ng-click=\"advancedOptions = !advancedOptions\" role=\"button\">{{advancedOptions ? 'Hide' : 'Show'}} advanced routing, build, and deployment options</a>\n" +
+    "<a href=\"\" ng-click=\"advancedOptions = !advancedOptions\" role=\"button\">{{advancedOptions ? 'Hide' : 'Show'}} advanced routing, build, deployment and source options</a>\n" +
     "</div>\n" +
     "<div class=\"buttons gutter-bottom\" ng-class=\"{'gutter-top': !alerts.length}\">\n" +
     "\n" +
@@ -4936,6 +5142,7 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "</ui-select-choices>\n" +
     "</ui-select>\n" +
     "</div>\n" +
+    "<div ng-if=\"newSecret.type\">\n" +
     "<div class=\"form-group\">\n" +
     "<label for=\"secretName\" class=\"required\">Secret Name</label>\n" +
     "<span ng-class=\"{'has-error': nameTaken || (secretForm.secretName.$error.pattern && secretForm.secretName.$touched)}\">\n" +
@@ -4971,17 +5178,38 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "<input class=\"form-control\" id=\"username\" name=\"username\" ng-model=\"newSecret.data.username\" type=\"text\" autocorrect=\"off\" autocapitalize=\"off\" spellcheck aria-describedby=\"username-help\">\n" +
     "</div>\n" +
     "<div class=\"help-block\" id=\"username-help\">\n" +
-    "Optional username for SCM servers authentication.\n" +
+    "Optional username for Git authentication.\n" +
     "</div>\n" +
     "</div>\n" +
     "<div class=\"form-group\">\n" +
-    "<label for=\"passwordToken\" class=\"required\">Password or Token</label>\n" +
+    "<label for=\"passwordToken\">Password or Token</label>\n" +
     "<div>\n" +
-    "<input class=\"form-control\" id=\"passwordToken\" name=\"passwordToken\" ng-model=\"newSecret.data.passwordToken\" autocorrect=\"off\" autocapitalize=\"off\" spellcheck aria-describedby=\"password-token-help\" type=\"password\" required>\n" +
+    "<input class=\"form-control\" id=\"passwordToken\" name=\"passwordToken\" ng-model=\"newSecret.data.passwordToken\" autocorrect=\"off\" autocapitalize=\"off\" spellcheck aria-describedby=\"password-token-help\" type=\"password\" ng-required=\"!newSecret.data.cacert && !newSecret.data.gitconfig\">\n" +
     "</div>\n" +
     "<div class=\"help-block\" id=\"password-token-help\">\n" +
-    "Password or token for SCM servers authentication.\n" +
+    "Password or token for Git authentication.\n" +
     "</div>\n" +
+    "</div>\n" +
+    "<div class=\"form-group\">\n" +
+    "<div class=\"checkbox\">\n" +
+    "<label>\n" +
+    "<input type=\"checkbox\" ng-model=\"addCaCert\">\n" +
+    "Use a custom ca.crt file\n" +
+    "</label>\n" +
+    "</div>\n" +
+    "</div>\n" +
+    "<div class=\"form-group\" ng-if=\"addCaCert\" id=\"cacert\">\n" +
+    "<label class=\"required\" for=\"cacert\">CA Certificate File</label>\n" +
+    "<osc-file-input id=\"cacert-file-input\" model=\"newSecret.data.cacert\" drop-zone-id=\"cacert\" dragging=\"false\" help-text=\"Upload your ca.cert file.\" show-values=\"false\" ng-required=\"!newSecret.data.gitconfig || !newSecret.data.passwordToken\"></osc-file-input>\n" +
+    "<div ui-ace=\"{\n" +
+    "          mode: 'txt',\n" +
+    "          theme: 'eclipse',\n" +
+    "          onLoad: aceLoaded,\n" +
+    "          rendererOptions: {\n" +
+    "            fadeFoldWidgets: true,\n" +
+    "            showPrintMargin: false\n" +
+    "          }\n" +
+    "        }\" ng-model=\"newSecret.data.cacert\" class=\"create-secret-editor ace-bordered\" id=\"cacert-editor\"></div>\n" +
     "</div>\n" +
     "</div>\n" +
     "<div ng-if=\"newSecret.authType === 'kubernetes.io/ssh-auth'\">\n" +
@@ -4989,15 +5217,15 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "<label for=\"privateKey\" class=\"required\">SSH Private Key</label>\n" +
     "<osc-file-input id=\"private-key-file-input\" model=\"newSecret.data.privateKey\" drop-zone-id=\"private-key\" dragging=\"false\" help-text=\"Upload your private SSH key file.\" show-values=\"false\"></osc-file-input>\n" +
     "<div ui-ace=\"{\n" +
-    "        theme: 'eclipse',\n" +
-    "        onLoad: aceLoaded,\n" +
-    "        rendererOptions: {\n" +
-    "          fadeFoldWidgets: true,\n" +
-    "          showPrintMargin: false \n" +
-    "        }\n" +
-    "      }\" ng-model=\"newSecret.data.privateKey\" class=\"create-secret-editor ace-bordered\" id=\"private-key-editor\" required></div>\n" +
+    "          theme: 'eclipse',\n" +
+    "          onLoad: aceLoaded,\n" +
+    "          rendererOptions: {\n" +
+    "            fadeFoldWidgets: true,\n" +
+    "            showPrintMargin: false \n" +
+    "          }\n" +
+    "        }\" ng-model=\"newSecret.data.privateKey\" class=\"create-secret-editor ace-bordered\" id=\"private-key-editor\" required></div>\n" +
     "<div class=\"help-block\">\n" +
-    "Private SSH key file for SCM servers authentication.\n" +
+    "Private SSH key file for Git authentication.\n" +
     "</div>\n" +
     "</div>\n" +
     "</div>\n" +
@@ -5012,16 +5240,16 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "</div>\n" +
     "<div class=\"form-group\" ng-if=\"addGitconfig\" id=\"gitconfig\" ng-show=\"addGitconfig\">\n" +
     "<label class=\"required\" for=\"gitconfig\">Git Configuration File</label>\n" +
-    "<osc-file-input id=\"gitconfig-file-input\" model=\"newSecret.data.gitconfig\" drop-zone-id=\"gitconfig\" dragging=\"false\" help-text=\"Upload your .gitconfig or  file.\" show-values=\"false\" required></osc-file-input>\n" +
+    "<osc-file-input id=\"gitconfig-file-input\" model=\"newSecret.data.gitconfig\" drop-zone-id=\"gitconfig\" dragging=\"false\" help-text=\"Upload your .gitconfig or  file.\" show-values=\"false\" ng-required=\"!newSecret.data.cacert || !newSecret.data.passwordToken\"></osc-file-input>\n" +
     "<div ui-ace=\"{\n" +
-    "        mode: 'ini',\n" +
-    "        theme: 'eclipse',\n" +
-    "        onLoad: aceLoaded,\n" +
-    "        rendererOptions: {\n" +
-    "          fadeFoldWidgets: true,\n" +
-    "          showPrintMargin: false \n" +
-    "        }\n" +
-    "      }\" ng-model=\"newSecret.data.gitconfig\" class=\"create-secret-editor ace-bordered\" id=\"gitconfig-editor\"></div>\n" +
+    "          mode: 'ini',\n" +
+    "          theme: 'eclipse',\n" +
+    "          onLoad: aceLoaded,\n" +
+    "          rendererOptions: {\n" +
+    "            fadeFoldWidgets: true,\n" +
+    "            showPrintMargin: false \n" +
+    "          }\n" +
+    "        }\" ng-model=\"newSecret.data.gitconfig\" class=\"create-secret-editor ace-bordered\" id=\"gitconfig-editor\"></div>\n" +
     "</div>\n" +
     "</div>\n" +
     "<div ng-if=\"newSecret.authType === 'kubernetes.io/dockercfg'\">\n" +
@@ -5055,71 +5283,40 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "<label for=\"dockerConfig\" class=\"required\">Configuration File</label>\n" +
     "<osc-file-input if=\"dockercfg-file-input\" model=\"newSecret.data.dockerConfig\" drop-zone-id=\"docker-config\" dragging=\"false\" help-text=\"Upload a .dockercfg or .docker/config.json file\" show-values=\"false\" required></osc-file-input>\n" +
     "<div ui-ace=\"{\n" +
-    "        mode: 'json',\n" +
-    "        theme: 'eclipse',\n" +
-    "        onLoad: aceLoaded,\n" +
-    "        rendererOptions: {\n" +
-    "          fadeFoldWidgets: true,\n" +
-    "          showPrintMargin: false \n" +
-    "        }\n" +
-    "      }\" ng-model=\"newSecret.data.dockerConfig\" class=\"create-secret-editor ace-bordered\" id=\"dockerconfig-editor\" required></div>\n" +
+    "          mode: 'json',\n" +
+    "          theme: 'eclipse',\n" +
+    "          onLoad: aceLoaded,\n" +
+    "          rendererOptions: {\n" +
+    "            fadeFoldWidgets: true,\n" +
+    "            showPrintMargin: false \n" +
+    "          }\n" +
+    "        }\" ng-model=\"newSecret.data.dockerConfig\" class=\"create-secret-editor ace-bordered\" id=\"dockerconfig-editor\" required></div>\n" +
     "<div class=\"help-block\">\n" +
     "File with credentials and other configuration for connecting to a secured image registry.\n" +
     "</div>\n" +
     "</div>\n" +
     "</div>\n" +
-    "<div ng-if=\"'serviceaccounts' | canI : 'update'\">\n" +
+    "<div ng-if=\"('serviceaccounts' | canI : 'update') && !serviceAccountToLink\">\n" +
     "<div class=\"form-group\">\n" +
     "<div class=\"checkbox\">\n" +
     "<label>\n" +
     "<input type=\"checkbox\" ng-model=\"newSecret.linkSecret\">\n" +
-    "Use this secret automatically for other builds.\n" +
+    "Link secret to a service account.\n" +
     "</label>\n" +
     "</div>\n" +
+    "<div class=\"help-block\">\n" +
+    "<a href=\"{{'managing_secrets' | helpLink}}\" target=\"_blank\"><span class=\"learn-more-inline\">Learn more&nbsp;<i class=\"fa fa-external-link\" aria-hidden=\"true\"></i></span></a>\n" +
     "</div>\n" +
-    "<div ng-if=\"!serviceAccountToLink && newSecret.linkSecret\">\n" +
+    "</div>\n" +
+    "<div ng-if=\"newSecret.linkSecret\">\n" +
     "<div class=\"form-group\">\n" +
-    "<label for=\"serviceAccount\" class=\"required\">Service Account</label>\n" +
+    "<label class=\"required\">Service Account</label>\n" +
     "<ui-select required ng-model=\"newSecret.pickedServiceAccountToLink\">\n" +
     "<ui-select-match placeholder=\"Service Account Name\">{{$select.selected}}</ui-select-match>\n" +
     "<ui-select-choices repeat=\"sa in (serviceAccountsNames | filter : $select.search)\">\n" +
     "<div ng-bind-html=\"sa | highlight : $select.search\"></div>\n" +
     "</ui-select-choices>\n" +
     "</ui-select>\n" +
-    "</div>\n" +
-    "<div class=\"form-group\">\n" +
-    "<label class=\"required\">Link as</label>\n" +
-    "<div class=\"form-group\">\n" +
-    "<div class=\"checkbox\">\n" +
-    "<label>\n" +
-    "<input type=\"checkbox\" ng-model=\"newSecret.linkAs.secrets\" ng-checked=\"newSecret.linkAs.secrets\">\n" +
-    "Link with {{newSecret.pickedServiceAccountToLink}} service account as a <b>source</b> secret.\n" +
-    "<span class=\"help action-inline\">\n" +
-    "<a href=\"\">\n" +
-    "<i class=\"pficon pficon-help\" aria-hidden=\"true\" data-toggle=\"tooltip\" data-original-title=\"Pods using this service account will mount the content of secret into their containers for pulling sources during build time.\">\n" +
-    "</i>\n" +
-    "</a>\n" +
-    "</span>\n" +
-    "</label>\n" +
-    "</div>\n" +
-    "</div>\n" +
-    "<div class=\"form-group\">\n" +
-    "<div class=\"checkbox\">\n" +
-    "<label>\n" +
-    "<input type=\"checkbox\" ng-model=\"newSecret.linkAs.imagePullSecrets\" ng-checked=\"newSecret.linkAs.imagePullSecrets\">\n" +
-    "Link with {{newSecret.pickedServiceAccountToLink}} service account as a <b>image pull</b> secret.\n" +
-    "<span class=\"help action-inline\">\n" +
-    "<a href=\"\">\n" +
-    "<i class=\"pficon pficon-help\" aria-hidden=\"true\" data-toggle=\"tooltip\" data-original-title=\"Pods using this service account will use provided creadentials to pull images for the pod’s containers.\">\n" +
-    "</i>\n" +
-    "</a>\n" +
-    "</span>\n" +
-    "</label>\n" +
-    "</div>\n" +
-    "</div>\n" +
-    "<div class=\"help-block\">\n" +
-    "Linking a secret enables a service account to automatically use that secret for some forms of authentication.\n" +
-    "<a href=\"{{'managing_secrets' | helpLink}}\" target=\"_blank\"><span class=\"learn-more-inline\">Learn more&nbsp;<i class=\"fa fa-external-link\" aria-hidden=\"true\"></i></span></a>\n" +
     "</div>\n" +
     "</div>\n" +
     "</div>\n" +
@@ -5261,12 +5458,13 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "<span class=\"help-block\">This name is already in use within the project. Please choose a different name.</span>\n" +
     "</div>\n" +
     "</div>\n" +
+    "<osc-secrets model=\"pullSecrets\" namespace=\"project\" display-type=\"pull\" type=\"image\" secrets-by-type=\"secretsByType\" service-account-to-link=\"default\" alerts=\"alerts\" allow-multiple-secrets=\"true\">\n" +
+    "</osc-secrets>\n" +
     "<osc-form-section header=\"Environment Variables\" about-title=\"Environment Variables\" about=\"Environment variables are used to configure and pass information to running containers.\" expand=\"true\" can-toggle=\"false\" class=\"first-section\">\n" +
     "<key-value-editor entries=\"env\" key-placeholder=\"Name\" key-validator=\"[A-Za-z_][A-Za-z0-9_]*\" key-validator-error=\"A valid environment variable name is an alphanumeric (a-z and 0-9) string beginning with a letter that may contain underscores.\" value-placeholder=\"Value\" add-row-link=\"Add environment variable\"></key-value-editor>\n" +
     "</osc-form-section>\n" +
     "<label-editor labels=\"labels\" system-labels=\"systemLabels\" expand=\"true\" can-toggle=\"false\" help-text=\"Each label is applied to each created resource.\">\n" +
     "</label-editor>\n" +
-    "<alerts alerts=\"alerts\"></alerts>\n" +
     "<div class=\"button-group gutter-bottom\" ng-class=\"{'gutter-top': !alerts.length}\">\n" +
     "<button type=\"submit\" class=\"btn btn-primary btn-lg\" ng-click=\"create()\" value=\"\" ng-disabled=\"form.$invalid || nameTaken || disableInputs\">Create</button>\n" +
     "<a class=\"btn btn-default btn-lg\" href=\"#\" back>Cancel</a>\n" +
@@ -5655,7 +5853,6 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "          }\n" +
     "        }\" ng-model=\"editorContent\" class=\"editor ace-bordered yaml-mode\" id=\"add-component-editor\" required></div>\n" +
     "</div>\n" +
-    "<alerts alerts=\"alerts\"></alerts>\n" +
     "<div class=\"buttons gutter-bottom\" ng-class=\"{'gutter-top': !alerts.length}\">\n" +
     "<button type=\"submit\" ng-click=\"create()\" ng-disabled=\"editorErrorAnnotation || !editorContent\" class=\"btn btn-primary btn-lg\">\n" +
     "Create\n" +
@@ -6717,7 +6914,7 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "<div ng-if=\"allowMultipleSecrets\">\n" +
     "<div class=\"basic-secrets\">\n" +
     "<div class=\"secret-name\">\n" +
-    "<label ng-if=\"$first\" class=\"picker-label\">{{displayType | startCase}} Secret</label>\n" +
+    "<label ng-if=\"$first\" class=\"picker-label\">{{displayType | startCase}} Secrets</label>\n" +
     "<ui-select ng-model=\"pickedSecret.name\">\n" +
     "<ui-select-match placeholder=\"Secret name\">{{$select.selected}}</ui-select-match>\n" +
     "<ui-select-choices repeat=\"secret in (secretsByType[type] | filter : $select.search)\">\n" +
@@ -7743,6 +7940,12 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "<input class=\"form-control\" id=\"imageName\" name=\"imageName\" ng-model=\"containerConfig.image\" type=\"text\" autocorrect=\"off\" autocapitalize=\"off\" spellcheck required>\n" +
     "</div>\n" +
     "</div>\n" +
+    "</div>\n" +
+    "<div class=\"checkbox form-group\">\n" +
+    "<label>\n" +
+    "<input type=\"checkbox\" ng-model=\"triggers.hasConfigTrigger\">\n" +
+    "Automatically start new deployment when the deployment configuration changes\n" +
+    "</label>\n" +
     "</div>\n" +
     "<div ng-if=\"view.advancedImageOptions\">\n" +
     "<div class=\"gutter-top\">\n" +
@@ -9993,6 +10196,91 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "</tbody>\n" +
     "</table>\n" +
     "</div>\n" +
+    "</div>\n" +
+    "</div>\n" +
+    "</div>\n" +
+    "</div>\n" +
+    "</div>\n" +
+    "</div>\n" +
+    "</div>\n" +
+    "</project-page>"
+  );
+
+
+  $templateCache.put('views/secrets.html',
+    "<project-header class=\"top-header\"></project-header>\n" +
+    "<project-page>\n" +
+    "\n" +
+    "<div class=\"middle-section\">\n" +
+    "<div class=\"middle-container\">\n" +
+    "<div class=\"middle-header header-light\">\n" +
+    "<div class=\"container-fluid\">\n" +
+    "<div class=\"page-header page-header-bleed-right page-header-bleed-left\">\n" +
+    "<div class=\"pull-right\" ng-if=\"project && ('secrets' | canI : 'create')\">\n" +
+    "<a ng-href=\"project/{{project.metadata.name}}/create-secret\" class=\"btn btn-default\">Create Secret</a>\n" +
+    "</div>\n" +
+    "<h1>Secrets</h1>\n" +
+    "</div>\n" +
+    "<alerts alerts=\"alerts\"></alerts>\n" +
+    "</div>\n" +
+    "</div>\n" +
+    "<div class=\"middle-content\">\n" +
+    "<div class=\"container-fluid\">\n" +
+    "<div ng-if=\"!loaded\">Loading...</div>\n" +
+    "<div ng-if=\"loaded\" class=\"row\">\n" +
+    "<div class=\"col-md-12\">\n" +
+    "<h3>Source Secrets</h3>\n" +
+    "<table class=\"table table-bordered table-hover table-mobile secrets-table\">\n" +
+    "<thead>\n" +
+    "<tr>\n" +
+    "<th>Name</th>\n" +
+    "<th>Type</th>\n" +
+    "<th>Created</th>\n" +
+    "</tr>\n" +
+    "</thead>\n" +
+    "\n" +
+    "<tbody ng-if=\"secretsByType.source.length === 0\">\n" +
+    "\n" +
+    "<tr><td colspan=\"3\"><em>No secrets</em></td></tr>\n" +
+    "</tbody>\n" +
+    "<tbody ng-repeat=\"secret in secretsByType.source | orderBy : 'name'\">\n" +
+    "<tr ng-if=\"secret\">\n" +
+    "<td data-title=\"Name\">\n" +
+    "<a ng-href=\"{{secret | navigateResourceURL}}\">{{secret.metadata.name}}</a>\n" +
+    "</td>\n" +
+    "<td data-title=\"Type\">\n" +
+    "{{secret.type}}\n" +
+    "</td>\n" +
+    "<td data-title=\"Created\">\n" +
+    "<relative-timestamp timestamp=\"secret.metadata.creationTimestamp\"></relative-timestamp>\n" +
+    "</td>\n" +
+    "</tr>\n" +
+    "</tbody>\n" +
+    "</table>\n" +
+    "<div ng-if=\"secretsByType.images.length !== 0\">\n" +
+    "<h3>Image Secrets</h3>\n" +
+    "<table class=\"table table-bordered table-hover table-mobile secrets-table\">\n" +
+    "<thead>\n" +
+    "<tr>\n" +
+    "<th>Name</th>\n" +
+    "<th>Type</th>\n" +
+    "<th>Created</th>\n" +
+    "</tr>\n" +
+    "</thead>\n" +
+    "<tbody ng-repeat=\"secret in secretsByType.image | orderBy : 'name'\">\n" +
+    "<tr>\n" +
+    "<td data-title=\"Name\">\n" +
+    "<a ng-href=\"{{secret | navigateResourceURL}}\">{{secret.metadata.name}}</a>\n" +
+    "</td>\n" +
+    "<td data-title=\"Type\">\n" +
+    "{{secret.type}}\n" +
+    "</td>\n" +
+    "<td data-title=\"Created\">\n" +
+    "<relative-timestamp timestamp=\"secret.metadata.creationTimestamp\"></relative-timestamp>\n" +
+    "</td>\n" +
+    "</tr>\n" +
+    "</tbody>\n" +
+    "</table>\n" +
     "</div>\n" +
     "</div>\n" +
     "</div>\n" +

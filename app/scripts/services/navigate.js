@@ -179,6 +179,7 @@ angular.module("openshiftConsole")
               .segmentCoded(name);
             break;
           case "Service":
+          case "Secret":
           case "Route":
           case "Pod":
           case "PersistentVolumeClaim":
@@ -237,6 +238,7 @@ angular.module("openshiftConsole")
           'replicasets': 'deployments',
           'replicationcontrollers': 'deployments',
           'routes': 'routes',
+          'secrets': 'secrets',
           'services': 'services',
           'persistentvolumeclaims': 'storage'
         };

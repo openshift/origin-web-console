@@ -2,7 +2,7 @@
 
 angular.module("openshiftConsole")
 
-  .directive("createSecret", function() {
+  .directive("createSecret", function(DataService, AuthorizationService) {
     return {
       restrict: 'E',
       scope: {
@@ -13,7 +13,7 @@ angular.module("openshiftConsole")
         cancel: '&'
       },
       templateUrl: 'views/directives/create-secret.html',
-      controller: function($scope, $filter, DataService) {
+      link: function($scope, $filter) {
         $scope.alerts = {};
 
         $scope.secretAuthTypeMap = {
@@ -55,26 +55,33 @@ angular.module("openshiftConsole")
         //                                  - if in BC the 'builder' SA if picked automatically
         //                                  - if in DC the 'deployer' SA if picked automatically
         //                                  - else the user will have to pick the SA and type of linking
-        //   - linkAs                      user specifies how he wants to link the secret with SA
-        //                                  - as a 'secrets'
-        //                                  - as a 'imagePullSecret'
-        $scope.newSecret = {
-          type: $scope.type,
-          authType: $scope.secretAuthTypeMap[$scope.type].authTypes[0].id,
-          data: {},
-          linkSecret: false,
-          pickedServiceAccountToLink: $scope.serviceAccountToLink || "",
-          linkAs: {
-            secrets: $scope.type === 'source',
-            imagePullSecrets: $scope.type === 'image'
-          }
-        };
+        if ($scope.type) {
+          $scope.newSecret = {
+            type: $scope.type,
+            authType: $scope.secretAuthTypeMap[$scope.type].authTypes[0].id,
+            data: {},
+            linkSecret: !_.isEmpty($scope.serviceAccountToLink),
+            pickedServiceAccountToLink: $scope.serviceAccountToLink || "",
+          };
+        } else {
+          $scope.newSecret = {
+            type: "source",
+            authType: "kubernetes.io/basic-auth",
+            data: {},
+            linkSecret: false,
+            pickedServiceAccountToLink: "",
+          };
+        }
         $scope.addGitconfig = false;
+        $scope.addCaCert = false;
 
-        DataService.list("serviceaccounts", $scope, function(result) {
-          $scope.serviceAccounts = result.by('metadata.name');
-          $scope.serviceAccountsNames = _.keys($scope.serviceAccounts);
-        });
+        // List SA only if $scope.serviceAccountToLink is not defined so user has to pick one.
+        if (!$scope.serviceAccountToLink && AuthorizationService.canI('serviceaccounts', 'list') && AuthorizationService.canI('serviceaccounts', 'update')) {
+          DataService.list("serviceaccounts", $scope, function(result) {
+            $scope.serviceAccounts = result.by('metadata.name');
+            $scope.serviceAccountsNames = _.keys($scope.serviceAccounts);
+          });
+        }
 
         var constructSecretObject = function(data, authType) {
           var secret = {
@@ -89,12 +96,20 @@ angular.module("openshiftConsole")
 
           switch (authType) {
             case "kubernetes.io/basic-auth":
-              secret.data = {password: window.btoa(data.password)};
+              // If the password/token is not entered either .gitconfig or ca.crt has to be provided
+              if (data.passwordToken) {
+                secret.data = {password: window.btoa(data.passwordToken)};
+              } else {
+                secret.type = "Opaque";
+              }
               if (data.username) {
                 secret.data.username = window.btoa(data.username);
               }
               if (data.gitconfig) {
                 secret.data[".gitconfig"] = window.btoa(data.gitconfig);
+              }
+              if (data.cacert) {
+                secret.data["ca.crt"] = window.btoa(data.cacert);
               }
               break;
             case "kubernetes.io/ssh-auth":
@@ -129,25 +144,33 @@ angular.module("openshiftConsole")
 
         var linkSecretToServiceAccount = function(secret) {
           var updatedSA = angular.copy($scope.serviceAccounts[$scope.newSecret.pickedServiceAccountToLink]);
-          if ($scope.newSecret.linkAs.secrets) {
+          switch ($scope.newSecret.type) {
+          case 'source':
             updatedSA.secrets.push({name: secret.metadata.name});
-          }
-          if ($scope.newSecret.linkAs.imagePullSecrets) {
+            break;
+          case 'image':
             updatedSA.imagePullSecrets.push({name: secret.metadata.name});
+            break;
           }
-          DataService.update('serviceaccounts', $scope.newSecret.pickedServiceAccountToLink, updatedSA, $scope).then(function(sa) {
+          // Don't show any error related to linking to SA when linking is done automatically 
+          var options = $scope.serviceAccountToLink ? {errorNotification: false} : {};
+          DataService.update('serviceaccounts', $scope.newSecret.pickedServiceAccountToLink, updatedSA, $scope, options).then(function(sa) {
             var alert = {
-              createAndLink: {
+              name: 'createAndLink',
+              data: {
                 type: "success",
                 message: "Secret " + secret.metadata.name + " was created and linked with service account " + sa.metadata.name + "."
               }
             };
             $scope.postCreateAction({newSecret: secret, creationAlert: alert});
           }, function(result){
-            $scope.alerts["createAndLink"] = {
-              type: "error",
-              message: "An error occurred while linking the secret with service account.",
-              details: $filter('getErrorDetails')(result)
+            $scope.alerts = {
+              name: 'createAndLink',
+              data: {
+                type: "error",
+                message: "An error occurred while linking the secret with service account.",
+                details: $filter('getErrorDetails')(result)
+              }
             };
           });
         };
@@ -156,11 +179,12 @@ angular.module("openshiftConsole")
           $scope.alerts = {};
           var newSecret = constructSecretObject($scope.newSecret.data, $scope.newSecret.authType);
           DataService.create('secrets', null, newSecret, $scope).then(function(secret) { // Success
-            if ($scope.newSecret.linkSecret && $scope.newSecret.pickedServiceAccountToLink) {
+            if ($scope.newSecret.linkSecret && $scope.newSecret.pickedServiceAccountToLink && AuthorizationService.canI('serviceaccounts', 'update')) {
               linkSecretToServiceAccount(secret);
             } else {
               var alert = {
-                create: {
+                name: 'create',
+                data: {
                   type: "success",
                   message: "Secret " + newSecret.metadata.name + " was created."
                 }

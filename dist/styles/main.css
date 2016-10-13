@@ -3677,7 +3677,10 @@ a.disabled-link:active,a.disabled-link:focus,a.disabled-link:hover{color:#bbb;te
 .create-secret-modal{background-color:#F5F5F5}
 .create-secret-modal .modal-footer{margin-top:0px}
 .create-secret-modal .modal-body{padding:0px 18px}
-.create-secret-modal .modal-body .create-secret-editor{height:150px}
+.secret-data{max-width:450px;max-height:150px}
+@media (max-width:991px){.secret-data{max-width:100%}
+}
+.create-secret-editor{height:150px}
 .edit-yaml h1{line-height:1.3}
 .edit-yaml .editor{line-height:1.5;width:100%;min-height:140px;height:50vh}
 .edit-yaml .editor .ace_gutter{color:#8b8d8f}

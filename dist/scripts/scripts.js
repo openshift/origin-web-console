@@ -99,6 +99,9 @@ items:[ {
 label:"Quota",
 href:"/quota"
 }, {
+label:"Secrets",
+href:"/browse/secrets"
+}, {
 label:"Other Resources",
 href:"/browse/other"
 } ]
@@ -271,6 +274,17 @@ reloadOnSearch:!1
 templateUrl:"views/storage.html",
 controller:"StorageController",
 reloadOnSearch:!1
+}).when("/project/:project/browse/secrets/:secret", {
+templateUrl:"views/browse/secret.html",
+controller:"SecretController",
+reloadOnSearch:!1
+}).when("/project/:project/browse/secrets", {
+templateUrl:"views/secrets.html",
+controller:"SecretsController",
+reloadOnSearch:!1
+}).when("/project/:project/create-secret", {
+templateUrl:"views/create-secret.html",
+controller:"CreateSecretController"
 }).when("/project/:project/browse/other", {
 templateUrl:"views/other-resources.html",
 controller:"OtherResourcesController",
@@ -1632,7 +1646,7 @@ name:b.toString()
 }
 }), a.deploymentConfig.deployOnConfigChange && h.spec.triggers.push({
 type:"ConfigChange"
-}), h;
+}), _.get(a, "deploymentConfig.secrets.pullSecrets[0].name") && (h.spec.template.spec.imagePullSecrets = a.deploymentConfig.secrets.pullSecrets), h;
 }, f._generateHPA = function(a, b) {
 var c = {
 apiVersion:"extensions/v1beta1",
@@ -1720,7 +1734,7 @@ env:c
 triggers:d
 }
 };
-return a.buildConfig.contextDir && (i.spec.source.contextDir = a.buildConfig.contextDir), i;
+return _.get(a, "buildConfig.secrets.gitSecret[0].name") && (i.spec.source.sourceSecret = _.first(a.buildConfig.secrets.gitSecret)), _.get(a, "buildConfig.secrets.pullSecret[0].name") && (i.spec.strategy.sourceStrategy.pullSecret = _.first(a.buildConfig.secrets.pullSecret)), _.get(a, "buildConfig.secrets.pushSecret[0].name") && (i.spec.output.pushSecret = _.first(a.buildConfig.secrets.pushSecret)), a.buildConfig.contextDir && (i.spec.source.contextDir = a.buildConfig.contextDir), i;
 }, f._generateImageStream = function(a) {
 return {
 apiVersion:"v1",
@@ -1999,6 +2013,7 @@ j.segment("images").segmentCoded(i);
 break;
 
 case "Service":
+case "Secret":
 case "Route":
 case "Pod":
 case "PersistentVolumeClaim":
@@ -2038,6 +2053,7 @@ pods:"pods",
 replicasets:"deployments",
 replicationcontrollers:"deployments",
 routes:"routes",
+secrets:"secrets",
 services:"services",
 persistentvolumeclaims:"storage"
 };
@@ -2925,17 +2941,57 @@ switch (a.type) {
 case "kubernetes.io/basic-auth":
 case "kubernetes.io/ssh-auth":
 case "Opaque":
-b.source.push(a.metadata.name);
+b.source.push(a);
 break;
 
 case "kubernetes.io/dockercfg":
 case "kubernetes.io/dockerconfigjson":
-b.image.push(a.metadata.name);
+b.image.push(a);
 }
 }), b;
+}, b = function(a) {
+var b = {}, c = JSON.parse(window.atob(a));
+return _.each(c, function(a, c) {
+b[c] = {
+username:a.username,
+password:a.password,
+email:a.email
+};
+}), b;
+}, c = function(a) {
+var b = {}, c = JSON.parse(window.atob(a));
+return _.each(c.auths, function(a, c) {
+var d = window.atob(a.auth).split(":");
+b[c] = {
+username:d[0],
+password:d[1],
+email:a.email
+};
+}), b;
+}, d = function(a) {
+return _.mapValues(a, function(a, d) {
+switch (d) {
+case ".dockercfg":
+return b(a);
+
+case ".dockerconfigjson":
+return c(a);
+
+case "username":
+case "password":
+case ".gitconfig":
+case "ssh-privatekey":
+case "ca.crt":
+return window.atob(a);
+
+default:
+return a;
+}
+});
 };
 return {
-groupSecretsByType:a
+groupSecretsByType:a,
+decodeSecretData:d
 };
 }), angular.module("openshiftConsole").factory("ServicesService", [ "$filter", "$q", "DataService", function(a, b, c) {
 var d = "service.alpha.openshift.io/dependencies", e = "service.openshift.io/infrastructure", f = a("annotation"), g = function(a) {
@@ -3117,7 +3173,7 @@ resources:{}
 },
 status:{}
 };
-c.push(j);
+_.first(a.pullSecrets).name && (j.spec.template.spec.imagePullSecrets = a.pullSecrets), c.push(j);
 var k;
 return a.ports.length && (k = {
 kind:"Service",
@@ -5274,6 +5330,51 @@ a.routesForService = [], angular.forEach(c.by("metadata.name"), function(c) {
 c.unwatchAll(f);
 });
 }));
+} ]), angular.module("openshiftConsole").controller("SecretsController", [ "$routeParams", "$scope", "AlertMessageService", "DataService", "ProjectsService", "SecretsService", function(a, b, c, d, e, f) {
+b.projectName = a.project, b.secretsByType = {}, b.alerts = b.alerts || {}, c.getAlerts().forEach(function(a) {
+b.alerts[a.name] = a.data;
+}), c.clearAlerts(), e.get(a.project).then(_.spread(function(a, c) {
+b.project = a, b.context = c, d.list("secrets", c, function(a) {
+b.secretsByType = f.groupSecretsByType(a), b.loaded = !0;
+});
+}));
+} ]), angular.module("openshiftConsole").controller("SecretController", [ "$routeParams", "$filter", "$scope", "AlertMessageService", "DataService", "ProjectsService", "SecretsService", function(a, b, c, d, e, f, g) {
+c.projectName = a.project, c.secretName = a.secret, c.view = {
+showSecret:!1
+}, c.alerts = c.alerts || {}, c.emptyMessage = "Loading...", c.breadcrumbs = [ {
+title:"Secrets",
+link:"project/" + a.project + "/browse/secrets"
+}, {
+title:c.secretName
+} ], d.getAlerts().forEach(function(a) {
+c.alerts[a.name] = a.data;
+}), d.clearAlerts(), f.get(a.project).then(_.spread(function(a, d) {
+c.project = a, c.context = d, e.get("secrets", c.secretName, d).then(function(a) {
+c.secret = a, c.decodedSecretData = g.decodeSecretData(c.secret.data), c.loaded = !0;
+}, function(a) {
+c.loaded = !0, c.alerts.load = {
+type:"error",
+message:"The secret details could not be loaded.",
+details:"Reason: " + b("getErrorDetails")(a)
+};
+});
+}));
+} ]), angular.module("openshiftConsole").controller("CreateSecretController", [ "$filter", "$routeParams", "$scope", "$window", "AlertMessageService", "ApplicationGenerator", "DataService", "Navigate", "ProjectsService", function(a, b, c, d, e, f, g, h, i) {
+c.alerts = {}, c.projectName = b.project, c.breadcrumbs = [ {
+title:c.projectName,
+link:"project/" + c.projectName
+}, {
+title:"Secrets",
+link:"project/" + c.projectName + "/browse/secrets"
+}, {
+title:"Create Secret"
+} ], i.get(b.project).then(_.spread(function(b, d) {
+c.project = b, c.context = d, c.breadcrumbs[0].title = a("displayName")(b), c.postCreateAction = function(a, b) {
+e.addAlert(b), h.toResourceList("secrets", c.projectName);
+}, c.cancel = function() {
+h.toResourceList("secrets", c.projectName);
+};
+}));
 } ]), angular.module("openshiftConsole").controller("RoutesController", [ "$routeParams", "$scope", "AlertMessageService", "DataService", "$filter", "LabelFilter", "ProjectsService", function(a, b, c, d, e, f, g) {
 b.projectName = a.project, b.unfilteredRoutes = {}, b.routes = {}, b.labelSuggestions = {}, b.alerts = b.alerts || {}, b.emptyMessage = "Loading...", c.getAlerts().forEach(function(a) {
 b.alerts[a.name] = a.data;
@@ -5575,8 +5676,10 @@ a.project = e, a.context = g, a.breadcrumbs[0].title = f("displayName")(e), c.ge
 a.buildConfig = e, a.updatedBuildConfig = angular.copy(a.buildConfig), a.buildStrategy = n(a.updatedBuildConfig), a.strategyType = a.buildConfig.spec.strategy.type, a.envVars = a.buildStrategy.env || [], _.each(a.envVars, function(a) {
 f("altTextForValueFrom")(a);
 }), a.triggers = o(a.triggers, a.buildConfig.spec.triggers), a.sources = w(a.sources, a.buildConfig.spec.source), _.has(e, "spec.strategy.jenkinsPipelineStrategy.jenkinsfile") && (a.jenkinsfileOptions.type = "inline"), c.list("secrets", g, function(b) {
-var c = d.groupSecretsByType(b);
-a.secrets.secretsByType = _.each(c, function(a) {
+var c = d.groupSecretsByType(b), e = _.mapValues(c, function(a) {
+return _.map(a, "metadata.name");
+});
+a.secrets.secretsByType = _.each(e, function(a) {
 a.unshift("");
 }), t();
 });
@@ -5795,7 +5898,7 @@ c.unwatchAll(m);
 a.projectName = b.project, a.deploymentConfig = null, a.alerts = {}, a.view = {
 advancedStrategyOptions:!1,
 advancedImageOptions:!1
-}, a.breadcrumbs = e.getBreadcrumbs({
+}, a.triggers = {}, a.breadcrumbs = e.getBreadcrumbs({
 name:b.name,
 kind:b.kind,
 namespace:b.project,
@@ -5862,9 +5965,13 @@ _.set(d, [ b.name, "triggerData" ], f);
 };
 a.updatedDeploymentConfig = angular.copy(a.deploymentConfig), a.containerNames = _.map(a.deploymentConfig.spec.template.spec.containers, "name"), a.containerConfigByName = i(a.updatedDeploymentConfig.spec.template.spec.containers, a.updatedDeploymentConfig.spec.triggers), a.pullSecrets = a.deploymentConfig.spec.template.spec.imagePullSecrets || [ {
 name:""
-} ], a.volumeNames = _.map(a.deploymentConfig.spec.template.spec.volumes, "name"), a.strategyData = angular.copy(a.deploymentConfig.spec.strategy), a.originalStrategy = a.strategyData.type, a.strategyParamsPropertyName = p(a.strategyData.type), "Custom" !== a.strategyData.type || _.has(a.strategyData, "customParams.environment") || (a.strategyData.customParams.environment = []), d.list("secrets", g, function(b) {
-var c = f.groupSecretsByType(b);
-a.secretsByType = _.each(c, function(a) {
+} ], a.volumeNames = _.map(a.deploymentConfig.spec.template.spec.volumes, "name"), a.strategyData = angular.copy(a.deploymentConfig.spec.strategy), a.originalStrategy = a.strategyData.type, a.strategyParamsPropertyName = p(a.strategyData.type), a.triggers.hasConfigTrigger = _.some(a.updatedDeploymentConfig.spec.triggers, {
+type:"ConfigChange"
+}), "Custom" !== a.strategyData.type || _.has(a.strategyData, "customParams.environment") || (a.strategyData.customParams.environment = []), d.list("secrets", g, function(b) {
+var c = f.groupSecretsByType(b), d = _.mapValues(c, function(a) {
+return _.map(a, "metadata.name");
+});
+a.secretsByType = _.each(d, function(a) {
 a.unshift("");
 });
 }), o.push(d.watchObject("deploymentconfigs", b.deploymentconfig, g, function(b, c) {
@@ -5935,8 +6042,8 @@ from:d
 }
 }, c;
 }, t = function() {
-var b = _.filter(a.updatedDeploymentConfig.spec.triggers, function(a) {
-return "ImageChange" !== a.type;
+var b = _.reject(a.updatedDeploymentConfig.spec.triggers, function(a) {
+return "ImageChange" === a.type || "ConfigChange" === a.type;
 });
 return _.each(a.containerConfigByName, function(c, d) {
 if (c.hasDeploymentTrigger) b.push(s(d, c.triggerData.istag, c.triggerData.data)); else {
@@ -5945,6 +6052,8 @@ name:d
 });
 e.image = c.image;
 }
+}), a.triggers.hasConfigTrigger && b.push({
+type:"ConfigChange"
 }), b;
 };
 a.save = function() {
@@ -6287,10 +6396,10 @@ j.toErrorPage("Could not load " + l(d.kind) + " '" + d.name + "'. " + b("getErro
 i.unwatchAll(o);
 });
 }));
-} ]), angular.module("openshiftConsole").controller("CreateFromImageController", [ "$scope", "Logger", "$q", "$routeParams", "APIService", "DataService", "ProjectsService", "Navigate", "ApplicationGenerator", "LimitRangesService", "MetricsService", "HPAService", "QuotaService", "TaskList", "failureObjectNameFilter", "$filter", "$parse", "$uibModal", "SOURCE_URL_PATTERN", "keyValueEditorUtils", function(a, b, c, d, e, f, g, h, i, j, k, l, m, n, o, p, q, r, s, t) {
-var u = p("displayName"), v = p("humanize");
-a.projectName = d.project, a.sourceURLPattern = s;
-var w = d.imageName;
+} ]), angular.module("openshiftConsole").controller("CreateFromImageController", [ "$scope", "Logger", "$q", "$routeParams", "APIService", "DataService", "ProjectsService", "Navigate", "ApplicationGenerator", "LimitRangesService", "MetricsService", "HPAService", "QuotaService", "SecretsService", "TaskList", "failureObjectNameFilter", "$filter", "$parse", "$uibModal", "SOURCE_URL_PATTERN", "keyValueEditorUtils", function(a, b, c, d, e, f, g, h, i, j, k, l, m, n, o, p, q, r, s, t, u) {
+var v = q("displayName"), w = q("humanize");
+a.projectName = d.project, a.sourceURLPattern = t;
+var x = d.imageName;
 a.breadcrumbs = [ {
 title:a.projectName,
 link:"project/" + a.projectName
@@ -6298,25 +6407,41 @@ link:"project/" + a.projectName
 title:"Add to Project",
 link:"project/" + a.projectName + "/create"
 }, {
-title:w
-} ];
-var x = {
+title:x
+} ], a.alerts = {};
+var y = {
 name:"app",
 value:""
 };
 g.get(d.project).then(_.spread(function(e, g) {
-function o(b) {
-w || h.toErrorPage("Cannot create from source: a base image was not specified"), d.imageTag || h.toErrorPage("Cannot create from source: a base image tag was not specified"), b.emptyMessage = "Loading...", b.imageName = w, b.imageTag = d.imageTag, b.namespace = d.namespace, b.buildConfig = {
+function p(b) {
+x || h.toErrorPage("Cannot create from source: a base image was not specified"), d.imageTag || h.toErrorPage("Cannot create from source: a base image tag was not specified"), b.emptyMessage = "Loading...", b.imageName = x, b.imageTag = d.imageTag, b.namespace = d.namespace, b.buildConfig = {
 buildOnSourceChange:!0,
 buildOnImageChange:!0,
-buildOnConfigChange:!0
+buildOnConfigChange:!0,
+secrets:{
+gitSecret:[ {
+name:""
+} ],
+pullSecret:[ {
+name:""
+} ],
+pushSecret:[ {
+name:""
+} ]
+}
 }, b.buildConfigEnvVars = [], b.deploymentConfig = {
 deployOnNewImage:!0,
-deployOnConfigChange:!0
+deployOnConfigChange:!0,
+secrets:{
+pullSecrets:[ {
+name:""
+} ]
+}
 }, b.DCEnvVarsFromImage, b.DCEnvVarsFromUser = [], b.routing = {
 include:!0,
 portOptions:[]
-}, b.userDefinedLabels = [], b.systemLabels = [ x ], b.annotations = {}, b.scaling = {
+}, b.userDefinedLabels = [], b.systemLabels = [ y ], b.annotations = {}, b.scaling = {
 replicas:1,
 autoscale:!1,
 autoscaleOptions:[ {
@@ -6335,6 +6460,13 @@ var a;
 return b.buildConfig.sourceUrl === _.get(b, "image.metadata.annotations.sampleRepo");
 }, k.isAvailable().then(function(b) {
 a.metricsWarning = !b;
+}), f.list("secrets", g, function(b) {
+var c = n.groupSecretsByType(b), d = _.mapValues(c, function(a) {
+return _.map(a, "metadata.name");
+});
+a.secretsByType = _.each(d, function(a) {
+a.unshift("");
+});
 }), f.get("imagestreams", b.imageName, {
 namespace:b.namespace || d.project
 }).then(function(a) {
@@ -6365,43 +6497,43 @@ h.toErrorPage("Cannot create from source: the specified image could not be retri
 h.toErrorPage("Cannot create from source: the specified image could not be retrieved.");
 });
 }
-a.project = e, a.breadcrumbs[0].title = p("displayName")(e);
-var q = function() {
+a.project = e, a.breadcrumbs[0].title = q("displayName")(e);
+var r = function() {
 a.hideCPU || (a.cpuProblems = j.validatePodLimits(a.limitRanges, "cpu", [ a.container ], e)), a.memoryProblems = j.validatePodLimits(a.limitRanges, "memory", [ a.container ], e);
 };
 f.list("limitranges", g, function(b) {
-a.limitRanges = b.by("metadata.name"), 0 !== p("hashSize")(b) && a.$watch("container", q, !0);
+a.limitRanges = b.by("metadata.name"), 0 !== q("hashSize")(b) && a.$watch("container", r, !0);
 });
-var s, y, z = function() {
+var t, z, A = function() {
 return a.scaling.autoscale ? void (a.showCPURequestWarning = !l.hasCPURequest([ a.container ], a.limitRanges, e)) :void (a.showCPURequestWarning = !1);
 };
 f.list("resourcequotas", g, function(a) {
-s = a.by("metadata.name"), b.log("quotas", s);
+t = a.by("metadata.name"), b.log("quotas", t);
 }), f.list("appliedclusterresourcequotas", g, function(a) {
-y = a.by("metadata.name"), b.log("cluster quotas", y);
-}), a.$watch("scaling.autoscale", z), a.$watch("container", z, !0), a.$watch("name", function(a) {
-x.value = a;
-}), o(a);
-var A, B = function() {
+z = a.by("metadata.name"), b.log("cluster quotas", z);
+}), a.$watch("scaling.autoscale", A), a.$watch("container", A, !0), a.$watch("name", function(a) {
+y.value = a;
+}), p(a);
+var B, C = function() {
 var b = {
 started:"Creating application " + a.name + " in project " + a.projectDisplayName(),
 success:"Created application " + a.name + " in project " + a.projectDisplayName(),
 failure:"Failed to create " + a.name + " in project " + a.projectDisplayName()
 }, e = {};
-n.clear(), n.add(b, e, d.project, function() {
+o.clear(), o.add(b, e, d.project, function() {
 var b = c.defer();
-return f.batch(A, g).then(function(c) {
+return f.batch(B, g).then(function(c) {
 var d = [], e = !1;
 c.failure.length > 0 ? (e = !0, c.failure.forEach(function(a) {
 d.push({
 type:"error",
-message:"Cannot create " + v(a.object.kind).toLowerCase() + ' "' + a.object.metadata.name + '". ',
+message:"Cannot create " + w(a.object.kind).toLowerCase() + ' "' + a.object.metadata.name + '". ',
 details:a.data.message
 });
 }), c.success.forEach(function(a) {
 d.push({
 type:"success",
-message:"Created " + v(a.kind).toLowerCase() + ' "' + a.metadata.name + '" successfully. '
+message:"Created " + w(a.kind).toLowerCase() + ' "' + a.metadata.name + '" successfully. '
 });
 })) :d.push({
 type:"success",
@@ -6420,8 +6552,8 @@ details:"Status: " + b.status + ". " + b.data
 }), h.toNextSteps(a.name, a.projectName, a.usingSampleRepo() ? {
 fromSample:!0
 } :null);
-}, C = function(a) {
-var b = r.open({
+}, D = function(a) {
+var b = s.open({
 animation:!0,
 templateUrl:"views/modals/confirm.html",
 controller:"ConfirmModalController",
@@ -6437,27 +6569,27 @@ cancelButtonText:"Cancel"
 }
 }
 });
-b.result.then(B);
-}, D = function(b) {
+b.result.then(C);
+}, E = function(b) {
 var c = b.quotaAlerts || [], d = _.filter(c, {
 type:"error"
 });
-a.nameTaken || d.length ? (a.disableInputs = !1, a.alerts = c) :c.length ? (C(c), a.disableInputs = !1) :B();
+a.nameTaken || d.length ? (a.disableInputs = !1, a.alerts = c) :c.length ? (D(c), a.disableInputs = !1) :C();
 };
 a.projectDisplayName = function() {
-return u(this.project) || this.projectName;
+return v(this.project) || this.projectName;
 }, a.createApp = function() {
-a.disableInputs = !0, a.alerts = {}, a.buildConfig.envVars = t.mapEntries(t.compactEntries(a.buildConfigEnvVars)), a.deploymentConfig.envVars = t.mapEntries(t.compactEntries(a.DCEnvVarsFromUser));
-var c = t.mapEntries(t.compactEntries(a.userDefinedLabels)), d = t.mapEntries(t.compactEntries(a.systemLabels));
+a.disableInputs = !0, a.alerts = {}, a.buildConfig.envVars = u.mapEntries(u.compactEntries(a.buildConfigEnvVars)), a.deploymentConfig.envVars = u.mapEntries(u.compactEntries(a.DCEnvVarsFromUser));
+var c = u.mapEntries(u.compactEntries(a.userDefinedLabels)), d = u.mapEntries(u.compactEntries(a.systemLabels));
 a.labels = _.extend(d, c);
 var e = i.generate(a);
-A = [], angular.forEach(e, function(a) {
-null !== a && (b.debug("Generated resource definition:", a), A.push(a));
+B = [], angular.forEach(e, function(a) {
+null !== a && (b.debug("Generated resource definition:", a), B.push(a));
 });
-var f = i.ifResourcesDontExist(A, a.projectName), h = m.getLatestQuotaAlerts(A, g), j = function(b) {
+var f = i.ifResourcesDontExist(B, a.projectName), h = m.getLatestQuotaAlerts(B, g), j = function(b) {
 return a.nameTaken = b.nameTaken, h;
 };
-f.then(j, j).then(D, D);
+f.then(j, j).then(E, E);
 };
 }));
 } ]), angular.module("openshiftConsole").controller("NextStepsController", [ "$scope", "$http", "$routeParams", "DataService", "$q", "$location", "ProcessedTemplateService", "TaskList", "$parse", "Navigate", "$filter", "imageObjectRefFilter", "failureObjectNameFilter", "ProjectsService", function(a, b, c, d, e, f, g, h, i, j, k, l, m, n) {
@@ -7089,7 +7221,7 @@ n("An error occurred attaching the persistent volume claim to the " + a("humaniz
 }));
 } ]), angular.module("openshiftConsole").controller("CreateSecretModalController", [ "$scope", "$uibModalInstance", function(a, b) {
 a.postCreateAction = function(c, d) {
-b.close(c), _.extend(a.alerts, d);
+b.close(c), a.alerts[d.name] = d.data;
 }, a.cancel = function() {
 b.dismiss("cancel");
 };
@@ -7224,7 +7356,7 @@ a.hideBuild = c(b);
 },
 templateUrl:"views/directives/_build-close.html"
 };
-} ]), angular.module("openshiftConsole").directive("createSecret", function() {
+} ]), angular.module("openshiftConsole").directive("createSecret", [ "DataService", "AuthorizationService", function(a, b) {
 return {
 restrict:"E",
 scope:{
@@ -7235,8 +7367,8 @@ postCreateAction:"&",
 cancel:"&"
 },
 templateUrl:"views/directives/create-secret.html",
-controller:[ "$scope", "$filter", "DataService", function(a, b, c) {
-a.alerts = {}, a.secretAuthTypeMap = {
+link:function(c, d) {
+c.alerts = {}, c.secretAuthTypeMap = {
 image:{
 label:"Image Secret",
 authTypes:[ {
@@ -7257,110 +7389,128 @@ id:"kubernetes.io/ssh-auth",
 label:"SSH Key"
 } ]
 }
-}, a.secretTypes = _.keys(a.secretAuthTypeMap), a.newSecret = {
-type:a.type,
-authType:a.secretAuthTypeMap[a.type].authTypes[0].id,
+}, c.secretTypes = _.keys(c.secretAuthTypeMap), c.type ? c.newSecret = {
+type:c.type,
+authType:c.secretAuthTypeMap[c.type].authTypes[0].id,
+data:{},
+linkSecret:!_.isEmpty(c.serviceAccountToLink),
+pickedServiceAccountToLink:c.serviceAccountToLink || ""
+} :c.newSecret = {
+type:"source",
+authType:"kubernetes.io/basic-auth",
 data:{},
 linkSecret:!1,
-pickedServiceAccountToLink:a.serviceAccountToLink || "",
-linkAs:{
-secrets:"source" === a.type,
-imagePullSecrets:"image" === a.type
-}
-}, a.addGitconfig = !1, c.list("serviceaccounts", a, function(b) {
-a.serviceAccounts = b.by("metadata.name"), a.serviceAccountsNames = _.keys(a.serviceAccounts);
+pickedServiceAccountToLink:""
+}, c.addGitconfig = !1, c.addCaCert = !1, !c.serviceAccountToLink && b.canI("serviceaccounts", "list") && b.canI("serviceaccounts", "update") && a.list("serviceaccounts", c, function(a) {
+c.serviceAccounts = a.by("metadata.name"), c.serviceAccountsNames = _.keys(c.serviceAccounts);
 });
-var d = function(b, c) {
+var e = function(a, b) {
 var d = {
 apiVersion:"v1",
 kind:"Secret",
 metadata:{
-name:a.newSecret.data.secretName
+name:c.newSecret.data.secretName
 },
-type:c,
+type:b,
 data:{}
 };
-switch (c) {
+switch (b) {
 case "kubernetes.io/basic-auth":
-d.data = {
-password:window.btoa(b.password)
-}, b.username && (d.data.username = window.btoa(b.username)), b.gitconfig && (d.data[".gitconfig"] = window.btoa(b.gitconfig));
+a.passwordToken ? d.data = {
+password:window.btoa(a.passwordToken)
+} :d.type = "Opaque", a.username && (d.data.username = window.btoa(a.username)), a.gitconfig && (d.data[".gitconfig"] = window.btoa(a.gitconfig)), a.cacert && (d.data["ca.crt"] = window.btoa(a.cacert));
 break;
 
 case "kubernetes.io/ssh-auth":
 d.data = {
-"ssh-privatekey":window.btoa(b.privateKey)
-}, b.gitconfig && (d.data[".gitconfig"] = window.btoa(b.gitconfig));
+"ssh-privatekey":window.btoa(a.privateKey)
+}, a.gitconfig && (d.data[".gitconfig"] = window.btoa(a.gitconfig));
 break;
 
 case "kubernetes.io/dockerconfigjson":
-var e = window.btoa(b.dockerConfig);
-JSON.parse(b.dockerConfig).auths ? d.data[".dockerconfigjson"] = e :(d.type = "kubernetes.io/dockercfg", d.data[".dockercfg"] = e);
+var e = window.btoa(a.dockerConfig);
+JSON.parse(a.dockerConfig).auths ? d.data[".dockerconfigjson"] = e :(d.type = "kubernetes.io/dockercfg", d.data[".dockercfg"] = e);
 break;
 
 case "kubernetes.io/dockercfg":
-var f = window.btoa(b.dockerUsername + ":" + b.dockerPassword), g = {};
-g[b.dockerServer] = {
-username:b.dockerUsername,
-password:b.dockerPassword,
-email:b.dockerMail,
+var f = window.btoa(a.dockerUsername + ":" + a.dockerPassword), g = {};
+g[a.dockerServer] = {
+username:a.dockerUsername,
+password:a.dockerPassword,
+email:a.dockerMail,
 auth:f
 }, d.data[".dockercfg"] = window.btoa(JSON.stringify(g));
 }
 return d;
-}, e = function(d) {
-var e = angular.copy(a.serviceAccounts[a.newSecret.pickedServiceAccountToLink]);
-a.newSecret.linkAs.secrets && e.secrets.push({
-name:d.metadata.name
-}), a.newSecret.linkAs.imagePullSecrets && e.imagePullSecrets.push({
-name:d.metadata.name
-}), c.update("serviceaccounts", a.newSecret.pickedServiceAccountToLink, e, a).then(function(b) {
-var c = {
-createAndLink:{
+}, f = function(b) {
+var e = angular.copy(c.serviceAccounts[c.newSecret.pickedServiceAccountToLink]);
+switch (c.newSecret.type) {
+case "source":
+e.secrets.push({
+name:b.metadata.name
+});
+break;
+
+case "image":
+e.imagePullSecrets.push({
+name:b.metadata.name
+});
+}
+var f = c.serviceAccountToLink ? {
+errorNotification:!1
+} :{};
+a.update("serviceaccounts", c.newSecret.pickedServiceAccountToLink, e, c, f).then(function(a) {
+var d = {
+name:"createAndLink",
+data:{
 type:"success",
-message:"Secret " + d.metadata.name + " was created and linked with service account " + b.metadata.name + "."
+message:"Secret " + b.metadata.name + " was created and linked with service account " + a.metadata.name + "."
 }
 };
-a.postCreateAction({
-newSecret:d,
-creationAlert:c
+c.postCreateAction({
+newSecret:b,
+creationAlert:d
 });
-}, function(c) {
-a.alerts.createAndLink = {
+}, function(a) {
+c.alerts = {
+name:"createAndLink",
+data:{
 type:"error",
 message:"An error occurred while linking the secret with service account.",
-details:b("getErrorDetails")(c)
+details:d("getErrorDetails")(a)
+}
 };
 });
 };
-a.create = function() {
-a.alerts = {};
-var f = d(a.newSecret.data, a.newSecret.authType);
-c.create("secrets", null, f, a).then(function(b) {
-if (a.newSecret.linkSecret && a.newSecret.pickedServiceAccountToLink) e(b); else {
-var c = {
-create:{
+c.create = function() {
+c.alerts = {};
+var g = e(c.newSecret.data, c.newSecret.authType);
+a.create("secrets", null, g, c).then(function(a) {
+if (c.newSecret.linkSecret && c.newSecret.pickedServiceAccountToLink && b.canI("serviceaccounts", "update")) f(a); else {
+var d = {
+name:"create",
+data:{
 type:"success",
-message:"Secret " + f.metadata.name + " was created."
+message:"Secret " + g.metadata.name + " was created."
 }
 };
-a.postCreateAction({
-newSecret:b,
-creationAlert:c
+c.postCreateAction({
+newSecret:a,
+creationAlert:d
 });
 }
-}, function(c) {
-var d = c.data || {};
-return "AlreadyExists" === d.reason ? void (a.nameTaken = !0) :void (a.alerts.create = {
+}, function(a) {
+var b = a.data || {};
+return "AlreadyExists" === b.reason ? void (c.nameTaken = !0) :void (c.alerts.create = {
 type:"error",
 message:"An error occurred while creating the secret.",
-details:b("getErrorDetails")(c)
+details:d("getErrorDetails")(a)
 });
 });
 };
-} ]
+}
 };
-}), angular.module("openshiftConsole").directive("relativeTimestamp", function() {
+} ]), angular.module("openshiftConsole").directive("relativeTimestamp", function() {
 return {
 restrict:"E",
 scope:{
@@ -8325,6 +8475,7 @@ allowMultipleSecrets:"=?"
 templateUrl:"views/directives/osc-secrets.html",
 link:function(b) {
 b.canAddSourceSecret = function() {
+if (!b.allowMultipleSecrets) return !1;
 var a = _.last(b.pickedSecrets);
 return !!a && a.name;
 }, b.setLastSecretsName = function(a) {
@@ -8350,8 +8501,10 @@ e.result.then(function(a) {
 c.list("secrets", {
 namespace:b.namespace
 }, function(c) {
-var e = d.groupSecretsByType(c);
-b.secretsByType = _.each(e, function(a) {
+var e = d.groupSecretsByType(c), f = _.mapValues(e, function(a) {
+return _.map(a, "metadata.name");
+});
+b.secretsByType = _.each(f, function(a) {
 a.unshift("");
 }), b.setLastSecretsName(a.metadata.name), b.secretsForm.$setDirty();
 });
@@ -8441,8 +8594,10 @@ e.result.then(function(a) {
 c.list("secrets", {
 namespace:b.namespace
 }, function(c) {
-var e = d.groupSecretsByType(c);
-b.secretsByType = _.each(e, function(a) {
+var e = d.groupSecretsByType(c), f = _.mapValues(e, function(a) {
+return _.map(a, "metadata.name");
+});
+b.secretsByType = _.each(f, function(a) {
 a.unshift("");
 }), b.setLastSecretsName(a.metadata.name);
 });
@@ -11050,7 +11205,7 @@ return b.allowCustomTag ? a.items ? "Current Tags" :"New Tag" :"";
 };
 } ]
 };
-} ]), angular.module("openshiftConsole").directive("deployImage", [ "$filter", "$q", "$window", "$uibModal", "ApplicationGenerator", "DataService", "ImagesService", "Navigate", "ProjectsService", "QuotaService", "TaskList", "keyValueEditorUtils", function(a, b, c, d, e, f, g, h, i, j, k, l) {
+} ]), angular.module("openshiftConsole").directive("deployImage", [ "$filter", "$q", "$window", "$uibModal", "ApplicationGenerator", "DataService", "ImagesService", "Navigate", "ProjectsService", "QuotaService", "TaskList", "SecretsService", "keyValueEditorUtils", function(a, b, c, d, e, f, g, h, i, j, k, l, m) {
 return {
 restrict:"E",
 scope:{
@@ -11061,7 +11216,7 @@ alerts:"="
 templateUrl:"views/directives/deploy-image.html",
 link:function(c) {
 function i() {
-var a = l.mapEntries(l.compactEntries(c.labels)), b = l.mapEntries(l.compactEntries(c.systemLabels));
+var a = m.mapEntries(m.compactEntries(c.labels)), b = m.mapEntries(m.compactEntries(c.systemLabels));
 return g.getResources({
 name:c.app.name,
 image:c["import"].name,
@@ -11069,25 +11224,37 @@ namespace:c["import"].namespace,
 tag:c["import"].tag || "latest",
 ports:c.ports,
 volumes:c.volumes,
-env:l.mapEntries(l.compactEntries(c.env)),
-labels:_.extend(b, a)
+env:m.mapEntries(m.compactEntries(c.env)),
+labels:_.extend(b, a),
+pullSecrets:c.pullSecrets
 });
 }
 c.mode = "istag", c.istag = {}, c.app = {}, c.env = [], c.labels = [], c.systemLabels = [ {
 name:"app",
 value:""
-} ];
-var m = a("stripTag"), n = a("stripSHA"), o = a("humanizeKind"), p = function(a) {
+} ], c.pullSecrets = [ {
+name:""
+} ], f.list("secrets", {
+namespace:c.project
+}, function(a) {
+var b = l.groupSecretsByType(a), d = _.mapValues(b, function(a) {
+return _.map(a, "metadata.name");
+});
+c.secretsByType = _.each(d, function(a) {
+a.unshift("");
+});
+});
+var n = a("stripTag"), o = a("stripSHA"), p = a("humanizeKind"), q = function(a) {
 return a.length > 24 ? a.substring(0, 24) :a;
-}, q = function() {
+}, r = function() {
 var a = _.last(c["import"].name.split("/"));
-return a = n(a), a = m(a), a = p(a);
+return a = o(a), a = n(a), a = q(a);
 };
 c.findImage = function() {
 c.loading = !0, g.findImage(c.imageName, c.context).then(function(a) {
 if (c["import"] = a, c.loading = !1, "Success" !== _.get(a, "result.status")) return void (c["import"].error = _.get(a, "result.message", "An error occurred finding the image."));
 var b = c["import"].image;
-b && (c.app.name = q(), c.runsAsRoot = g.runsAsRoot(b), c.ports = e.parsePorts(b), c.volumes = g.getVolumes(b), c.createImageStream = !0);
+b && (c.app.name = r(), c.runsAsRoot = g.runsAsRoot(b), c.ports = e.parsePorts(b), c.volumes = g.getVolumes(b), c.createImageStream = !0);
 }, function(b) {
 c["import"].error = a("getErrorDetails")(b) || "An error occurred finding the image.", c.loading = !1;
 });
@@ -11101,7 +11268,7 @@ a !== b && (delete c["import"], c.istag = {});
 if (b !== d) {
 if (!b.namespace || !b.imageStream || !b.tagObject) return void delete c["import"];
 var h, i = _.get(b, "tagObject.items[0].image");
-c.app.name = p(b.imageStream), c["import"] = {
+c.app.name = q(b.imageStream), c["import"] = {
 name:b.imageStream,
 tag:b.tagObject.tag,
 namespace:b.namespace
@@ -11114,7 +11281,7 @@ c["import"].error = a("getErrorDetails")(b) || "An error occurred.", c.loading =
 }));
 }
 }, !0);
-var r, s = function() {
+var s, t = function() {
 var a = {
 started:"Deploying image " + c.app.name + " to project " + c.project + ".",
 success:"Deployed image " + c.app.name + " to project " + c.project + ".",
@@ -11122,18 +11289,18 @@ failure:"Failed to deploy image " + c.app.name + " to project " + c.project + ".
 };
 k.clear(), k.add(a, {}, c.project, function() {
 var a = b.defer();
-return f.batch(r, c.context).then(function(b) {
+return f.batch(s, c.context).then(function(b) {
 var d, e = !_.isEmpty(b.failure);
 e ? (d = _.map(b.failure, function(a) {
 return {
 type:"error",
-message:"Cannot create " + o(a.object.kind).toLowerCase() + ' "' + a.object.metadata.name + '". ',
+message:"Cannot create " + p(a.object.kind).toLowerCase() + ' "' + a.object.metadata.name + '". ',
 details:a.data.message
 };
 }), d = d.concat(_.map(b.success, function(a) {
 return {
 type:"success",
-message:"Created " + o(a.kind).toLowerCase() + ' "' + a.metadata.name + '" successfully. '
+message:"Created " + p(a.kind).toLowerCase() + ' "' + a.metadata.name + '" successfully. '
 };
 }))) :d = [ {
 type:"success",
@@ -11144,7 +11311,7 @@ hasErrors:e
 });
 }), a.promise;
 }), h.toNextSteps(c.app.name, c.project);
-}, t = function(a) {
+}, u = function(a) {
 var b = d.open({
 animation:!0,
 templateUrl:"views/modals/confirm.html",
@@ -11161,19 +11328,19 @@ cancelButtonText:"Cancel"
 }
 }
 });
-b.result.then(s);
-}, u = function(a) {
+b.result.then(t);
+}, v = function(a) {
 var b = a.quotaAlerts || [], d = _.filter(b, {
 type:"error"
 });
-c.nameTaken || d.length ? (c.disableInputs = !1, c.alerts = b) :b.length ? (t(b), c.disableInputs = !1) :s();
+c.nameTaken || d.length ? (c.disableInputs = !1, c.alerts = b) :b.length ? (u(b), c.disableInputs = !1) :t();
 };
 c.create = function() {
-c.disableInputs = !0, c.alerts = {}, r = i();
-var a = e.ifResourcesDontExist(r, c.project), b = j.getLatestQuotaAlerts(r, c.context), d = function(a) {
+c.disableInputs = !0, c.alerts = {}, s = i();
+var a = e.ifResourcesDontExist(s, c.project), b = j.getLatestQuotaAlerts(s, c.context), d = function(a) {
 return c.nameTaken = a.nameTaken, b;
 };
-a.then(d, d).then(u, u);
+a.then(d, d).then(v, v);
 };
 }
 };
@@ -11402,6 +11569,11 @@ services:[ {
 group:"",
 resource:"services",
 verbs:[ "update", "create", "delete" ]
+} ],
+secrets:[ {
+group:"",
+resource:"secrets",
+verbs:[ "update", "delete" ]
 } ],
 projects:[ {
 group:"",

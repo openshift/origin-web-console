@@ -243,6 +243,20 @@ angular
         controller: 'StorageController',
         reloadOnSearch: false
       })
+      .when('/project/:project/browse/secrets/:secret', {
+        templateUrl: 'views/browse/secret.html',
+        controller: 'SecretController',
+        reloadOnSearch: false
+      })
+      .when('/project/:project/browse/secrets', {
+        templateUrl: 'views/secrets.html',
+        controller: 'SecretsController',
+        reloadOnSearch: false
+      })
+      .when('/project/:project/create-secret', {
+        templateUrl: 'views/create-secret.html',
+        controller: 'CreateSecretController'
+      })
       .when('/project/:project/browse/other', {
         templateUrl: 'views/other-resources.html',
         controller: 'OtherResourcesController',

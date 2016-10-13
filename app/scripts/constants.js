@@ -159,6 +159,10 @@ window.OPENSHIFT_CONSTANTS = {
               href: "/quota"
             },
             {
+              label: "Secrets",
+              href: "/browse/secrets"
+            },
+            {
               label: "Other Resources",
               href: "/browse/other"
             }

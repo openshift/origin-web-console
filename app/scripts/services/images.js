@@ -182,6 +182,9 @@ angular.module("openshiftConsole")
         },
         status: {}
       };
+      if(_.first(config.pullSecrets).name){
+        deploymentConfig.spec.template.spec.imagePullSecrets = config.pullSecrets;
+      }
 
       resources.push(deploymentConfig);
 
