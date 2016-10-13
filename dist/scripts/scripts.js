@@ -7306,8 +7306,8 @@ scope:{
 type:"@",
 typeInfo:"@",
 triggers:"=",
-bcName:"@",
-projectName:"@",
+bcName:"=",
+projectName:"=",
 form:"="
 },
 templateUrl:"views/directives/edit-webhook-triggers.html",
