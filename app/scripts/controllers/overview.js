@@ -565,6 +565,33 @@ angular.module('openshiftConsole')
       MetricsService.isAvailable(true).then(function(available) {
         $scope.showMetrics = available;
       });
+
+      $scope.$on('metrics-connection-failed', function(e, data) {
+        var hidden = AlertMessageService.isAlertPermanentlyHidden('metrics-connection-failed');
+        if (hidden || $scope.alerts['metrics-connection-failed']) {
+          return;
+        }
+
+        $scope.alerts['metrics-connection-failed'] = {
+          type: 'warning',
+          message: 'An error occurred getting metrics.',
+          links: [{
+            href: data.url,
+            label: 'Open metrics URL',
+            target: '_blank'
+          }, {
+            href: '',
+            label: "Don't show me again",
+            onClick: function() {
+              // Hide the alert on future page loads.
+              AlertMessageService.permanentlyHideAlert('metrics-connection-failed');
+
+              // Return true close the existing alert.
+              return true;
+            }
+          }]
+        };
+      });
     }
 
     var limitWatches = $filter('isIE')() || $filter('isEdge')();

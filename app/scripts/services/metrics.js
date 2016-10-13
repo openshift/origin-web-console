@@ -1,7 +1,7 @@
 'use strict';
 
 angular.module("openshiftConsole")
-  .factory("MetricsService", function($filter, $http, $q, APIDiscovery) {
+  .factory("MetricsService", function($filter, $http, $q, $rootScope, APIDiscovery) {
     var POD_GAUGE_TEMPLATE = "/gauges/{containerName}%2F{podUID}%2F{metric}/data";
     // Used in compact view.
     var POD_STACKED_TEMPLATE = "/gauges/data?stacked=true&tags=descriptor_name:{metric},type:{type},pod_name:{podName}";
@@ -109,8 +109,12 @@ angular.module("openshiftConsole")
         return $http.get(url).then(function() {
           connectionSucceeded = true;
           return true;
-        }, function() {
+        }, function(response) {
           connectionFailed = true;
+          $rootScope.$broadcast('metrics-connection-failed', {
+            url: url,
+            response: response
+          });
           return false;
         });
       });

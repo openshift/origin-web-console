@@ -4,6 +4,10 @@ angular.module("openshiftConsole")
   .service("AlertMessageService", function(){
     var alerts = [];
     var alertHiddenKey = function(alertID, namespace) {
+      if (!namespace) {
+        return 'hide/alert/' + alertID;
+      }
+
       return 'hide/alert/' + namespace + '/' + alertID;
     };
     return {
