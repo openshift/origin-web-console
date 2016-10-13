@@ -48,6 +48,7 @@
                   <li ng-if="{ group: 'extensions', resource: 'deployments' } | canI : 'delete'">
                     <delete-link
                       kind="Deployment"
+                      group="extensions"
                       resource-name="{{deployment.metadata.name}}"
                       project-name="{{deployment.metadata.namespace}}"
                       alerts="alerts"
