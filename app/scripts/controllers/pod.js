@@ -47,7 +47,14 @@ angular.module('openshiftConsole')
 
     // Must always be initialized so we can watch selectedTab
     $scope.selectedTab = {};
-
+    // we might want to start structuring this data more?
+    $scope.tabs = {
+      env: {
+        selected: {
+          container: null
+        }
+      }
+    };
     var watches = [];
 
     // Check if the metrics service is available so we know when to show the tab.
@@ -217,6 +224,7 @@ angular.module('openshiftConsole')
           function(pod) {
             $scope.loaded = true;
             $scope.pod = pod;
+            $scope.tabs.env.selected.container = pod.spec.containers[0].name;
             setLogVars(pod);
             setContainerVars();
             var pods = {};
