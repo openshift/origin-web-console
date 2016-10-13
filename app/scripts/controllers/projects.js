@@ -18,15 +18,10 @@ angular.module('openshiftConsole')
 
     var sortProjects = function() {
       var sortID = _.get($scope, 'sortConfig.currentField.id', 'metadata.name');
-      var adjustedSortOrder = $scope.sortConfig.isAscending;
-
-      if (sortID === 'metadata.creationTimestamp') {
-        adjustedSortOrder = !adjustedSortOrder;
-      }
 
       $scope.projects = _.sortByOrder($scope.projects, function(project) {
-        return _.get(project, sortID).toLowerCase();
-      }, [adjustedSortOrder ? 'asc' : 'desc']);
+        return _.get(project, sortID).toLowerCase() || _.get(project, 'metadata.name').toLowerCase();
+      }, [$scope.sortConfig.isAscending ? 'asc' : 'desc']);
     };
 
     // Set up the sort configuration for `pf-sort`.
@@ -39,10 +34,6 @@ angular.module('openshiftConsole')
         id: 'metadata.annotations["openshift.io/display-name"]',
         title: 'Display Name',
         sortType: 'alpha'
-      }, {
-        id: 'metadata.creationTimestamp',
-        title: 'Age',
-        sortType: 'numeric'
       }],
       isAscending: true,
       onSortChange: sortProjects

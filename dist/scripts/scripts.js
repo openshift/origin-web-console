@@ -3385,10 +3385,10 @@ _.set(e, [ c, b.metadata.name ], b);
 var k = [];
 a.projects = {}, a.alerts = a.alerts || {}, a.showGetStarted = !1, a.canCreate = void 0;
 var l = function() {
-var b = _.get(a, "sortConfig.currentField.id", "metadata.name"), c = a.sortConfig.isAscending;
-"metadata.creationTimestamp" === b && (c = !c), a.projects = _.sortByOrder(a.projects, function(a) {
-return _.get(a, b).toLowerCase();
-}, [ c ? "asc" :"desc" ]);
+var b = _.get(a, "sortConfig.currentField.id", "metadata.name");
+a.projects = _.sortByOrder(a.projects, function(a) {
+return _.get(a, b).toLowerCase() || _.get(a, "metadata.name").toLowerCase();
+}, [ a.sortConfig.isAscending ? "asc" :"desc" ]);
 };
 a.sortConfig = {
 fields:[ {
@@ -3399,10 +3399,6 @@ sortType:"alpha"
 id:'metadata.annotations["openshift.io/display-name"]',
 title:"Display Name",
 sortType:"alpha"
-}, {
-id:"metadata.creationTimestamp",
-title:"Age",
-sortType:"numeric"
 } ],
 isAscending:!0,
 onSortChange:l
