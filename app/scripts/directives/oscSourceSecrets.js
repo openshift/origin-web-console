@@ -76,8 +76,9 @@ angular.module("openshiftConsole")
           modalInstance.result.then(function(newSecret) {
             DataService.list("secrets", {namespace: $scope.namespace}, function(secrets) {
               var secretsByType = SecretsService.groupSecretsByType(secrets);
+              var secretNamesByType =_.mapValues(secretsByType, function(secrets) {return _.map(secrets, 'metadata.name');});
               // Add empty option to the image/source secrets
-              $scope.secretsByType = _.each(secretsByType, function(secretsArray) {
+              $scope.secretsByType = _.each(secretNamesByType, function(secretsArray) {
                 secretsArray.unshift("");
               });
               $scope.setLastSecretsName(newSecret.metadata.name);

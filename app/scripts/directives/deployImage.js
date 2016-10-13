@@ -12,6 +12,7 @@ angular.module("openshiftConsole")
                                      ProjectsService,
                                      QuotaService,
                                      TaskList,
+                                     SecretsService,
                                      keyValueEditorUtils) {
     return {
       restrict: 'E',
@@ -35,6 +36,16 @@ angular.module("openshiftConsole")
           name: 'app',
           value: ''
         }];
+        $scope.pullSecrets = [{name: ''}];
+
+        DataService.list("secrets", {namespace: $scope.project}, function(secrets) {
+          var secretsByType = SecretsService.groupSecretsByType(secrets);
+          var secretNamesByType =_.mapValues(secretsByType, function(secrets) {return _.map(secrets, 'metadata.name');});
+          // Add empty option to the image/source secrets
+          $scope.secretsByType = _.each(secretNamesByType, function(secretsArray) {
+            secretsArray.unshift("");
+          });
+        });
 
         var stripTag = $filter('stripTag');
         var stripSHA = $filter('stripSHA');
@@ -73,7 +84,8 @@ angular.module("openshiftConsole")
             ports: $scope.ports,
             volumes: $scope.volumes,
             env: keyValueEditorUtils.mapEntries(keyValueEditorUtils.compactEntries($scope.env)),
-            labels: _.extend(systemLabels, userLabels)
+            labels: _.extend(systemLabels, userLabels),
+            pullSecrets: $scope.pullSecrets
           });
         }
 

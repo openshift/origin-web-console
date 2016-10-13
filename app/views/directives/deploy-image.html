@@ -143,6 +143,15 @@
             <span class="help-block">This name is already in use within the project. Please choose a different name.</span>
           </div>
         </div>
+        <osc-secrets model="pullSecrets"
+                    namespace="project"
+                    display-type="pull"
+                    type="image"
+                    secrets-by-type="secretsByType"
+                    service-account-to-link="default"
+                    alerts="alerts"
+                    allow-multiple-secrets="true">
+        </osc-secrets>
         <osc-form-section
             header="Environment Variables"
             about-title="Environment Variables"
@@ -166,8 +175,6 @@
             can-toggle="false"
             help-text="Each label is applied to each created resource.">
         </label-editor>
-
-        <alerts alerts="alerts"></alerts>
 
         <div class="button-group gutter-bottom" ng-class="{'gutter-top': !alerts.length}">
           <button type="submit"
