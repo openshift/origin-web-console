@@ -47,9 +47,9 @@
                     <form name="attachPVCForm">
                       <fieldset ng-disabled="disableInputs">
                         <div class="form-group">
-                          <label for="persistentVolumeClaim" class="required">Persistent volume claim</label>
+                          <label for="persistentVolumeClaim" class="required">Storage</label>
                           <div>
-                            <span id="persistent-volume-claim-help" class="help-block">Select the persistent volume claim to attach to.</span>
+                            <span id="persistent-volume-claim-help" class="help-block">Select storage to attach to</span>
                           </div>
                           <table style="margin-bottom:0;background-color:transparent;" class="table table-condensed table-borderless">
                             <tbody>
@@ -76,7 +76,9 @@
                             </tbody>
                           </table>
                         </div>
-
+                        <div  ng-if="project && ('persistentvolumeclaims' | canI : 'create')">
+                          Or&nbsp;<a ng-href="project/{{project.metadata.name}}/create-pvc" >create storage.</a>
+                        </div>
                         <h3>Volume</h3>
                         <div>
                           <span class="help-block">

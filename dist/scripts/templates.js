@@ -937,9 +937,9 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "<form name=\"attachPVCForm\">\n" +
     "<fieldset ng-disabled=\"disableInputs\">\n" +
     "<div class=\"form-group\">\n" +
-    "<label for=\"persistentVolumeClaim\" class=\"required\">Persistent volume claim</label>\n" +
+    "<label for=\"persistentVolumeClaim\" class=\"required\">Storage</label>\n" +
     "<div>\n" +
-    "<span id=\"persistent-volume-claim-help\" class=\"help-block\">Select the persistent volume claim to attach to.</span>\n" +
+    "<span id=\"persistent-volume-claim-help\" class=\"help-block\">Select storage to attach to</span>\n" +
     "</div>\n" +
     "<table style=\"margin-bottom:0;background-color:transparent\" class=\"table table-condensed table-borderless\">\n" +
     "<tbody>\n" +
@@ -960,6 +960,9 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "</tr>\n" +
     "</tbody>\n" +
     "</table>\n" +
+    "</div>\n" +
+    "<div ng-if=\"project && ('persistentvolumeclaims' | canI : 'create')\">\n" +
+    "Or&nbsp;<a ng-href=\"project/{{project.metadata.name}}/create-pvc\">create storage.</a>\n" +
     "</div>\n" +
     "<h3>Volume</h3>\n" +
     "<div>\n" +
