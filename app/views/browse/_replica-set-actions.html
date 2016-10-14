@@ -25,6 +25,10 @@
     </li>
     <li ng-if="!autoscalers.length && { group: 'extensions', resource: 'horizontalpodautoscalers' } | canI : 'create'">
       <a ng-href="project/{{projectName}}/edit/autoscaler?kind=ReplicaSet&name={{replicaSet.metadata.name}}&group=extensions"
+         ng-if="!deployment"
+         role="button">Add Autoscaler</a>
+      <a ng-href="project/{{projectName}}/edit/autoscaler?kind=Deployment&name={{deployment.metadata.name}}&group=extensions"
+         ng-if="deployment"
          role="button">Add Autoscaler</a>
     </li>
     <li ng-if="(!deployment && ({ group: 'extensions', resource: 'replicasets' } | canI : 'update')) || (deployment && ({group: 'extensions', resource: 'deployments' } | canI : 'update'))">
