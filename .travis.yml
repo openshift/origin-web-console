@@ -1,10 +1,6 @@
 language: node_js
 node_js:
   - "4"
-before_install:
-  - "export DISPLAY=:99.0"
-  - "sh -e /etc/init.d/xvfb start"
-  - sleep 3 # give xvfb some time to start
 cache:
   directories:
   - node_modules
@@ -14,5 +10,5 @@ before_script:
   - npm install -g bower
   - bower install
 script:
-  - grunt test
+  - hack/test-headless.sh grunt test
   - hack/verify-dist.sh
