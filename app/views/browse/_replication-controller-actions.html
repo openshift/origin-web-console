@@ -23,9 +23,13 @@
       <a ng-href="project/{{projectName}}/set-limits?kind=ReplicationController&name={{replicaSet.metadata.name}}"
          role="button">Set Resource Limits</a>
     </li>
-    <li ng-if="!deploymentConfigName && !autoscalers.length && ({resource: 'horizontalpodautoscalers', group: 'extensions'} | canI : 'create')">
+    <li ng-if="!autoscalers.length && ({resource: 'horizontalpodautoscalers', group: 'extensions'} | canI : 'create')">
       <!-- Create a new HPA. -->
       <a ng-href="project/{{projectName}}/edit/autoscaler?kind=ReplicationController&name={{replicaSet.metadata.name}}"
+         ng-if="!deploymentConfigName"
+         role="button">Add Autoscaler</a>
+      <a ng-href="project/{{projectName}}/edit/autoscaler?kind=DeploymentConfig&name={{deploymentConfigName}}"
+         ng-if="deploymentConfigName"
          role="button">Add Autoscaler</a>
     </li>
     <!-- Only allow editing health checks if there is no deployment config or this is the active deployment. -->

@@ -145,11 +145,17 @@
   <!-- Create autoscaler -->
   <div ng-if="!autoscalers.length">
     <span ng-if="{resource: 'horizontalpodautoscalers', group: 'extensions'} | canI : 'create'">
-      <a ng-if="replicaSet.kind === 'ReplicaSet'"
+      <a ng-if="replicaSet.kind === 'ReplicaSet' && !deployment"
          ng-href="project/{{projectName}}/edit/autoscaler?kind=ReplicaSet&name={{replicaSet.metadata.name}}&group=extensions"
          role="button">Add autoscaler</a>
-      <a ng-if="replicaSet.kind === 'ReplicationController'"
+      <a ng-if="replicaSet.kind === 'ReplicaSet' && deployment"
+         ng-href="project/{{projectName}}/edit/autoscaler?kind=Deployment&name={{deployment.metadata.name}}&group=extensions"
+         role="button">Add autoscaler</a>
+      <a ng-if="replicaSet.kind === 'ReplicationController' && !deploymentConfigName"
          ng-href="project/{{projectName}}/edit/autoscaler?kind=ReplicationController&name={{replicaSet.metadata.name}}"
+         role="button">Add autoscaler</a>
+      <a ng-if="replicaSet.kind === 'ReplicationController' && deploymentConfigName"
+         ng-href="project/{{projectName}}/edit/autoscaler?kind=DeploymentConfig&name={{deploymentConfigName}}"
          role="button">Add autoscaler</a>
     </span>
     <span ng-if="!({resource: 'horizontalpodautoscalers', group: 'extensions'} | canI : 'create')">
