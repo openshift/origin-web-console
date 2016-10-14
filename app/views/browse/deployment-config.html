@@ -138,6 +138,9 @@
                             <span ng-if="!('deploymentconfigs' | canI : 'update')">none</span>
                           </p>
                           <volumes volumes="deploymentConfig.spec.template.spec.volumes" namespace="project.metadata.name"></volumes>
+                          <p ng-if="deploymentConfig.spec.template.spec.volumes.length && 'deploymentconfigs' | canI : 'update' ">
+                            <a ng-href="project/{{project.metadata.name}}/attach-pvc?kind=DeploymentConfig&name={{deploymentConfig.metadata.name}}">Attach storage</a>
+                          </p>
                         </div>
 
                         <!-- Autoscaling -->
