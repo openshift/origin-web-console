@@ -3749,18 +3749,16 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "<div class=\"middle-container\">\n" +
     "<div class=\"middle-content\">\n" +
     "<div class=\"container surface-shaded\">\n" +
-    "<div class=\"col-md-12\">\n" +
+    "<div class=\"row\">\n" +
+    "<div class=\"col-md-10 col-md-offset-1\">\n" +
     "<breadcrumbs breadcrumbs=\"breadcrumbs\"></breadcrumbs>\n" +
     "<alerts alerts=\"alerts\"></alerts>\n" +
-    "<div class=\"row\">\n" +
-    "<div class=\"col-md-10 col-md-offset-1 gutter-top\">\n" +
+    "<div class=\"mar-top-xl\">\n" +
     "<h1>Create Route</h1>\n" +
-    "<div>\n" +
-    "<span class=\"help-block\">\n" +
+    "<div class=\"help-block\">\n" +
     "Routing is a way to make your application publicly visible.\n" +
-    "</span>\n" +
     "</div>\n" +
-    "<form name=\"createRouteForm\">\n" +
+    "<form name=\"createRouteForm\" class=\"mar-top-xl\">\n" +
     "<div ng-if=\"!services\">Loading...</div>\n" +
     "<div ng-if=\"services\">\n" +
     "<fieldset ng-disabled=\"disableInputs\">\n" +
