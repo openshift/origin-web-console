@@ -48,6 +48,25 @@ angular.module('openshiftConsole')
           ];
         };
 
+        var getDataset = function(column) {
+          return _.head(column);
+        };
+
+        var previousData;
+        var unloadRemovedServices = function(data) {
+          var datasets = {};
+          _.each(data.columns, function(column) {
+            var dataset = getDataset(column);
+            datasets[dataset] = true;
+          });
+
+          var previousColumns = _.get(previousData, 'columns', []);
+          data.unload = _.chain(previousColumns).reject(function(column) {
+            var dataset = getDataset(column);
+            return _.has(datasets, [dataset]);
+          }).map(getDataset).value();
+        };
+
         function updateChart() {
           var data = {
             columns: []
@@ -70,8 +89,12 @@ angular.module('openshiftConsole')
             config.data.columns = data.columns;
             chart = c3.generate(config);
           } else {
+            unloadRemovedServices(data);
             chart.load(data);
           }
+
+          // Remember previous data so we know what alternate backends to unload when they change.
+          previousData = data;
         }
 
         $scope.$watch('route', updateChart);
