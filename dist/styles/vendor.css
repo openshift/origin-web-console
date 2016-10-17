@@ -28,7 +28,7 @@
 .card-view-pf .card.active .pficon,.card-view-pf .card.active:focus .pficon,.card-view-pf .card.active:hover .pficon{color:#fff}
 .card-view-pf .card.active .card-check-box,.card-view-pf .card:hover .card-check-box{visibility:visible}
 .card-view-pf .card.disabled,.card.disabled:focus,.card.disabled:hover{border:1px solid #eee;color:#999;cursor:not-allowed;-webkit-box-shadow:none;-moz-box-shadow:none;box-shadow:none}
-.filter-pf a,.toolbar-pf-actions .dropdown-menu a,.toolbar-pf-actions .toolbar-pf-view-selector a{cursor:pointer}
+.filter-pf a,.toast-pf .dropdown-menu>li>a,.toast-pf-action>a,.toolbar-pf-actions .dropdown-menu a,.toolbar-pf-actions .toolbar-pf-view-selector a{cursor:pointer}
 .trend-card-large-pf .trend-header-pf{font-size:16px;font-weight:400;display:block;margin-left:10px}
 .trend-card-small-pf .trend-header-pf{font-size:12px;font-weight:400;display:block;margin-left:10px}
 .trend-card-large-pf .trend-title-big-pf{font-size:26px;font-weight:300;margin-left:10px}
@@ -68,6 +68,7 @@
 .toolbar-pf-actions.no-filter-results{margin-bottom:10px}
 accordion>.panel-group .panel-default .panel-title>a:before{content:"\f105"}
 accordion>.panel-group .panel-open .panel-title>a:before{content:"\f107"}
+.navbar-brand-txt{line-height:34px}
 @-webkit-keyframes ui-spinner-rotate-right{0%{-webkit-transform:rotate(0deg)}
 25%,50%{-webkit-transform:rotate(180deg)}
 100%,75%{-webkit-transform:rotate(360deg)}
