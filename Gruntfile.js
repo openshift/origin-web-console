@@ -179,6 +179,14 @@ module.exports = function (grunt) {
       }
     },
 
+    // ESLint is a replacement for JSHint + includes style linting + is extensible
+    eslint: {
+        target: [
+          'Gruntfile.js',
+          '<%= yeoman.app %>/scripts/{,*/}*.js'
+        ]
+    },
+
     // Empties folders to start fresh
     clean: {
       dist: {
