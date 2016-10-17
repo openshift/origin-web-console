@@ -1,6 +1,7 @@
 env:
   browser: true
 extends: 'eslint:recommended'
+# yay, comments!
 globals:
   angular: true
   _: true
