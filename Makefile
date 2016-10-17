@@ -43,6 +43,6 @@ build: install
 #   make test GRUNT_FLAGS='--gruntfile=~/special/Gruntfile.js'
 test: build
 	hack/verify-dist.sh
-	hack/test-headless.sh test $(GRUNT_FLAGS)
-	hack/test-headless.sh test-integration $(GRUNT_FLAGS)
+	hack/test-integration-headless.sh      # hack/test-headless grunt test-integration
+	grunt test $(GRUNT_FLAGS)              # run hack/test-headless grunt test
 .PHONY: test
