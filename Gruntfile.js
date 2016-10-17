@@ -565,7 +565,7 @@ module.exports = function (grunt) {
           configFile: "test/protractor.conf.js", // Target-specific config file
           args: {
             baseUrl: grunt.option('baseUrl') || "https://localhost:9000/",
-            browser: grunt.option('browser') || "chrome"
+            browser: grunt.option('browser') || "firefox"
           } // Target-specific arguments
         }
       }
