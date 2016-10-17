@@ -129,6 +129,7 @@ angular.module('openshiftConsole')
                 };
               }
               $scope.deployment = deployment;
+              $scope.updatingPausedState = false;
 
               if ($scope.forms.deploymentEnvVars.$pristine) {
                 copyDeploymentAndEnsureEnv(deployment);
@@ -219,6 +220,23 @@ angular.module('openshiftConsole')
           };
 
           DeploymentsService.scale($scope.deployment, replicas).then(_.noop, showScalingError);
+        };
+
+        $scope.setPaused = function(paused) {
+          $scope.updatingPausedState = true;
+          DeploymentsService.setPaused($scope.deployment, paused, context).then(
+            // Success
+            _.noop,
+            // Failure
+            function(e) {
+              $scope.updatingPausedState = false;
+              $scope.alerts = $scope.alerts || {};
+              $scope.alerts["scale"] = {
+                type: "error",
+                message: "An error occurred " + (paused ? "pausing" : "resuming") + " the deployment.",
+                details: $filter('getErrorDetails')(e)
+              };
+            });
         };
 
         $scope.$on('$destroy', function(){

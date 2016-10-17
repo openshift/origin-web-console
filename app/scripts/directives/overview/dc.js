@@ -12,8 +12,10 @@ angular.module('openshiftConsole')
         var orderByDate = $filter('orderObjectsByDate');
         var deploymentIsInProgress = $filter('deploymentIsInProgress');
 
-        $scope.$watch('deploymentConfigs', function(deploymentConfigs) {
-          $scope.deploymentConfig = _.get(deploymentConfigs, $scope.dcName);
+        $scope.$watch(function() {
+          return _.get($scope, ['deploymentConfigs', $scope.dcName]);
+        }, function(deploymentConfig) {
+          $scope.deploymentConfig = deploymentConfig;
         });
 
         $scope.$watch('scalableReplicationControllerByDC', function(replicationControllers) {
@@ -24,6 +26,29 @@ angular.module('openshiftConsole')
           $scope.orderedReplicationControllers = orderByDate(replicationControllers, true);
           $scope.inProgressDeployment = _.find($scope.orderedReplicationControllers, deploymentIsInProgress);
         });
+
+        var resumePending;
+        $scope.$watch('deploymentConfig.spec.paused', function() {
+          resumePending = false;
+        });
+        $scope.resumeDeployment = function() {
+          // Guard against double clicks.
+          if (resumePending) {
+            return;
+          }
+
+          resumePending = true;
+          DeploymentsService.setPaused($scope.deploymentConfig, false, {
+            namespace: $scope.deploymentConfig.metadata.namespace
+          }).then(_.noop, function(e) {
+            resumePending = false;
+            $scope.alerts["resume-deployment"] = {
+              type: "error",
+              message: "An error occurred resuming the deployment.",
+              details: $filter('getErrorDetails')(e)
+            };
+          });
+        };
 
         $scope.cancelDeployment = function() {
           var replicationController = $scope.inProgressDeployment;

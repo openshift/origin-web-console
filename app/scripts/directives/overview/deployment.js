@@ -11,6 +11,29 @@ angular.module('openshiftConsole')
       link: function($scope) {
         var orderByDate = $filter('orderObjectsByDate');
 
+        var resumePending;
+        $scope.$watch('deployment.spec.paused', function() {
+          resumePending = false;
+        });
+        $scope.resumeDeployment = function() {
+          // Guard against double clicks.
+          if (resumePending) {
+            return;
+          }
+
+          resumePending = true;
+          DeploymentsService.setPaused($scope.deployment, false, {
+            namespace: $scope.deployment.metadata.namespace
+          }).then(_.noop, function(e) {
+            resumePending = false;
+            $scope.alerts["resume-deployment"] = {
+              type: "error",
+              message: "An error occurred resuming the deployment.",
+              details: $filter('getErrorDetails')(e)
+            };
+          });
+        };
+
         $scope.$watch(function() {
           return _.get($scope, ['deployments', $scope.deploymentName]);
         }, function() {

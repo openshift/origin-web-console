@@ -520,12 +520,12 @@ angular.module('openshiftConsole')
       }
 
       // Wait for deployment configs to load.
-      if (!$scope.deploymentConfigs) {
+      if (!deploymentConfigs) {
         return false;
       }
 
       var deploymentVersion = parseInt(annotation(replicationController, 'deploymentVersion'));
-      return _.some($scope.deploymentConfigs, function(dc) {
+      return _.some(deploymentConfigs, function(dc) {
         return dc.metadata.name === dcName && dc.status.latestVersion === deploymentVersion;
       });
     };

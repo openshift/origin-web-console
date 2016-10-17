@@ -2483,6 +2483,9 @@ var d = c(a), e = c(b);
 return d || e ? d ? e ? e - d :-1 :1 :a.metadata.name.localeCompare(b.metadata.name);
 };
 return _.toArray(a).sort(d);
+}, f.prototype.setPaused = function(c, d, e) {
+var f = angular.copy(c), g = a.objectToResourceGroupVersion(c);
+return _.set(f, "spec.paused", d), b.update(g, c.metadata.name, f, e);
 }, new f();
 } ]), angular.module("openshiftConsole").factory("ImageStreamsService", function() {
 return {
@@ -3785,10 +3788,10 @@ return g.isScalable(a, t, _.get(C, "DeploymentConfig"), _.get(C, "ReplicationCon
 }, c.isDeploymentLatest = function(a) {
 var b = F(a, "deploymentConfig");
 if (!b) return !0;
-if (!c.deploymentConfigs) return !1;
-var d = parseInt(F(a, "deploymentVersion"));
-return _.some(c.deploymentConfigs, function(a) {
-return a.metadata.name === b && a.status.latestVersion === d;
+if (!t) return !1;
+var c = parseInt(F(a, "deploymentVersion"));
+return _.some(t, function(a) {
+return a.metadata.name === b && a.status.latestVersion === c;
 });
 }, c.hasUnservicedContent = function() {
 var a = [ "monopodsByService", "deploymentConfigsByService", "deploymentsByService", "replicationControllersByService", "replicaSetsByService", "petSetsByService" ];
@@ -4831,7 +4834,7 @@ resource:"deployments"
 "DELETED" === c && (a.alerts.deleted = {
 type:"warning",
 message:"This deployment has been deleted."
-}), a.deployment = b, a.forms.deploymentEnvVars.$pristine ? m(b) :a.alerts.background_update = {
+}), a.deployment = b, a.updatingPausedState = !1, a.forms.deploymentEnvVars.$pristine ? m(b) :a.alerts.background_update = {
 type:"warning",
 message:"This deployment has been updated in the background. Saving your changes may create a conflict or cause loss of data.",
 links:[ {
@@ -4877,6 +4880,14 @@ details:b("getErrorDetails")(c)
 };
 };
 f.scale(a.deployment, c).then(_.noop, d);
+}, a.setPaused = function(c) {
+a.updatingPausedState = !0, f.setPaused(a.deployment, c, i).then(_.noop, function(d) {
+a.updatingPausedState = !1, a.alerts = a.alerts || {}, a.alerts.scale = {
+type:"error",
+message:"An error occurred " + (c ? "pausing" :"resuming") + " the deployment.",
+details:b("getErrorDetails")(d)
+};
+});
 }, a.$on("$destroy", function() {
 e.unwatchAll(n);
 });
@@ -4932,7 +4943,7 @@ p(a.deploymentConfig), a.forms.dcEnvVars.$setPristine();
 "DELETED" === c && (a.alerts.deleted = {
 type:"warning",
 message:"This deployment configuration has been deleted."
-}), a.deploymentConfig = b, !a.forms.dcEnvVars || a.forms.dcEnvVars.$pristine ? p(b) :a.alerts.background_update = {
+}), a.deploymentConfig = b, a.updatingPausedState = !1, !a.forms.dcEnvVars || a.forms.dcEnvVars.$pristine ? p(b) :a.alerts.background_update = {
 type:"warning",
 message:"This deployment configuration has been updated in the background. Saving your changes may create a conflict or cause loss of data.",
 links:[ {
@@ -4994,7 +5005,7 @@ a.$apply(function() {
 a.deployments = b.select(a.unfilteredDeployments), j();
 });
 }), a.canDeploy = function() {
-return !!a.deploymentConfig && (!a.deploymentConfig.metadata.deletionTimestamp && !a.deploymentInProgress);
+return !!a.deploymentConfig && (!a.deploymentConfig.metadata.deletionTimestamp && (!a.deploymentInProgress && !a.deploymentConfig.spec.paused));
 }, a.startLatestDeployment = function() {
 a.canDeploy() && g.startLatestDeployment(a.deploymentConfig, e, a);
 }, a.scale = function(c) {
@@ -5006,6 +5017,14 @@ details:b("getErrorDetails")(c)
 };
 };
 g.scale(a.deploymentConfig, c).then(_.noop, d);
+}, a.setPaused = function(c) {
+a.updatingPausedState = !0, g.setPaused(a.deploymentConfig, c, e).then(_.noop, function(d) {
+a.updatingPausedState = !1, a.alerts = a.alerts || {}, a.alerts.scale = {
+type:"error",
+message:"An error occurred " + (c ? "pausing" :"resuming") + " the deployment config.",
+details:b("getErrorDetails")(d)
+};
+});
 }, a.$on("$destroy", function() {
 f.unwatchAll(q);
 });
@@ -10679,13 +10698,29 @@ scope:!0,
 templateUrl:"views/overview/_dc.html",
 link:function(d) {
 var e = a("orderObjectsByDate"), f = a("deploymentIsInProgress");
-d.$watch("deploymentConfigs", function(a) {
-d.deploymentConfig = _.get(a, d.dcName);
+d.$watch(function() {
+return _.get(d, [ "deploymentConfigs", d.dcName ]);
+}, function(a) {
+d.deploymentConfig = a;
 }), d.$watch("scalableReplicationControllerByDC", function(a) {
 d.activeReplicationController = _.get(d, [ "scalableReplicationControllerByDC", d.dcName ]);
 }), d.$watch("replicationControllers", function(a) {
 d.orderedReplicationControllers = e(a, !0), d.inProgressDeployment = _.find(d.orderedReplicationControllers, f);
-}), d.cancelDeployment = function() {
+});
+var g;
+d.$watch("deploymentConfig.spec.paused", function() {
+g = !1;
+}), d.resumeDeployment = function() {
+g || (g = !0, c.setPaused(d.deploymentConfig, !1, {
+namespace:d.deploymentConfig.metadata.namespace
+}).then(_.noop, function(b) {
+g = !1, d.alerts["resume-deployment"] = {
+type:"error",
+message:"An error occurred resuming the deployment.",
+details:a("getErrorDetails")(b)
+};
+}));
+}, d.cancelDeployment = function() {
 var a = d.inProgressDeployment;
 if (a) {
 var e = a.metadata.name, g = _.get(d, "deploymentConfig.status.latestVersion"), h = b.open({
@@ -10724,8 +10759,21 @@ restrict:"E",
 scope:!0,
 templateUrl:"views/overview/_deployment.html",
 link:function(c) {
+var d;
 a("orderObjectsByDate");
-c.$watch(function() {
+c.$watch("deployment.spec.paused", function() {
+d = !1;
+}), c.resumeDeployment = function() {
+d || (d = !0, b.setPaused(c.deployment, !1, {
+namespace:c.deployment.metadata.namespace
+}).then(_.noop, function(b) {
+d = !1, c.alerts["resume-deployment"] = {
+type:"error",
+message:"An error occurred resuming the deployment.",
+details:a("getErrorDetails")(b)
+};
+}));
+}, c.$watch(function() {
 return _.get(c, [ "deployments", c.deploymentName ]);
 }, function() {
 c.deployment = _.get(c, [ "deployments", c.deploymentName ]), c.latestRevision = b.getRevision(c.deployment);
