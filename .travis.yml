@@ -10,5 +10,5 @@ before_script:
   - npm install -g bower
   - bower install
 script:
-  - hack/test-headless.sh grunt test
+  - grunt test
   - hack/verify-dist.sh
