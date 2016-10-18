@@ -8,35 +8,71 @@
  * Controller of the openshiftConsole
  */
 angular.module('openshiftConsole')
-  .controller('ProjectsController', function ($scope, $route, $timeout, $filter, $location, DataService, AuthService, AlertMessageService, Logger, hashSizeFilter) {
+  .controller('ProjectsController', function ($scope,
+                                              $filter,
+                                              $location,
+                                              $route,
+                                              $timeout,
+                                              AlertMessageService,
+                                              AuthService,
+                                              DataService,
+                                              KeywordService,
+                                              Logger) {
+    var projects, sortedProjects;
     var watches = [];
+    var filterKeywords = [];
 
-    $scope.projects = {};
     $scope.alerts = $scope.alerts || {};
+    $scope.loading = true;
     $scope.showGetStarted = false;
     $scope.canCreate = undefined;
+    $scope.search = {
+      text: ''
+    };
+
+    var filterFields = [
+      'metadata.name',
+      'metadata.annotations["openshift.io/display-name"]',
+      'metadata.annotations["openshift.io/description"]'
+    ];
+
+    var filterProjects = function() {
+      $scope.projects =
+        KeywordService.filterForKeywords(sortedProjects, filterFields, filterKeywords);
+    };
 
     var sortProjects = function() {
-      var sortID = _.get($scope, 'sortConfig.currentField.id', 'metadata.name');
+      var sortID = _.get($scope, 'sortConfig.currentField.id');
+      var sortValue = function(project) {
+        var value = _.get(project, sortID) || _.get(project, 'metadata.name', '');
 
-      $scope.projects = _.sortByOrder($scope.projects, function(project) {
-        return _.get(project, sortID).toLowerCase() || _.get(project, 'metadata.name').toLowerCase();
-      }, [$scope.sortConfig.isAscending ? 'asc' : 'desc']);
+        // Perform a case insensitive sort.
+        return value.toLowerCase();
+      };
+
+      sortedProjects = _.sortByOrder(projects,
+                                     [ sortValue ],
+                                     [ $scope.sortConfig.isAscending ? 'asc' : 'desc' ]);
+    };
+
+    var update = function() {
+      sortProjects();
+      filterProjects();
     };
 
     // Set up the sort configuration for `pf-sort`.
     $scope.sortConfig = {
       fields: [{
-        id: 'metadata.name',
-        title: 'Name',
-        sortType: 'alpha'
-      }, {
         id: 'metadata.annotations["openshift.io/display-name"]',
         title: 'Display Name',
         sortType: 'alpha'
+      }, {
+        id: 'metadata.name',
+        title: 'Name',
+        sortType: 'alpha'
       }],
       isAscending: true,
-      onSortChange: sortProjects
+      onSortChange: update
     };
 
     AlertMessageService.getAlerts().forEach(function(alert) {
@@ -44,11 +80,17 @@ angular.module('openshiftConsole')
     });
     AlertMessageService.clearAlerts();
 
+    $scope.$watch('search.text', _.debounce(function(searchText) {
+      filterKeywords = KeywordService.generateKeywords(searchText);
+      $scope.$apply(filterProjects);
+    }, 50, { maxWait: 250 }));
+
     AuthService.withUser().then(function() {
-      watches.push(DataService.watch("projects", $scope, function(projects) {
-        $scope.emptyMessage = "No projects to show";
-        $scope.projects = projects.by("metadata.name");
-        $scope.showGetStarted = hashSizeFilter($scope.projects) === 0;
+      watches.push(DataService.watch("projects", $scope, function(projectData) {
+        projects = _.toArray(projectData.by("metadata.name"));
+        $scope.loading = false;
+        $scope.showGetStarted = _.isEmpty(projects);
+        update();
       }));
     });
 

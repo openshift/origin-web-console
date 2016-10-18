@@ -9294,17 +9294,17 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "<alerts alerts=\"alerts\"></alerts>\n" +
     "</div>\n" +
     "<div ng-if=\"!showGetStarted\">\n" +
-    "<div ng-if=\"(projects | hashSize) === 0\" class=\"empty-state-message\">\n" +
-    "<h2 class=\"text-center\" id=\"temporary-loading-message\">Loading...</h2>\n" +
+    "<div ng-if=\"loading\" class=\"empty-state-message\">\n" +
+    "<h2 class=\"text-center\">Loading...</h2>\n" +
     "</div>\n" +
-    "<div ng-if=\"(projects | hashSize) !== 0\">\n" +
+    "<div ng-if=\"!loading\">\n" +
     "<div class=\"projects-header\">\n" +
     "<div class=\"projects-bar\">\n" +
     "<h1>Projects</h1>\n" +
     "<div class=\"projects-options\">\n" +
     "<div class=\"projects-add\" ng-if=\"canCreate\">\n" +
     "<a href=\"create-project\" class=\"btn btn-md btn-primary\">\n" +
-    "<span>New project</span>\n" +
+    "New Project\n" +
     "</a>\n" +
     "</div>\n" +
     "<div class=\"projects-search\">\n" +
@@ -9312,7 +9312,7 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "<div class=\"form-group has-clear\">\n" +
     "<div class=\"search-pf-input-group\">\n" +
     "<label for=\"search-projects\" class=\"sr-only\">Search</label>\n" +
-    "<input type=\"search\" class=\"form-control\" placeholder=\"Search\" id=\"search-projects\" ng-init=\"search.text = ''\" ng-model=\"search.text\">\n" +
+    "<input type=\"search\" class=\"form-control\" placeholder=\"Search\" id=\"search-projects\" ng-model=\"search.text\">\n" +
     "<button type=\"button\" class=\"clear\" aria-hidden=\"true\" ng-if=\"search.text\" ng-click=\"search.text = ''\">\n" +
     "<span class=\"pficon pficon-close\"></span>\n" +
     "</button>\n" +
@@ -9327,11 +9327,12 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "</div>\n" +
     "</div>\n" +
     "</div>\n" +
-    "<div ng-if=\"(projects | findProject:search.text).length === 0\" class=\"text-center\">\n" +
-    "<h2>{{emptyMessage}}</h2>\n" +
+    "<div ng-if=\"!projects.length\" class=\"h3\">\n" +
+    "The current filter is hiding all projects.\n" +
+    "<a href=\"\" ng-click=\"search.text = ''\" role=\"button\">Clear filter</a>\n" +
     "</div>\n" +
     "<div class=\"list-group list-view-pf projects-list\">\n" +
-    "<div ng-repeat=\"project in projects | findProject:search.text\" class=\"list-group-item project-info tile-click\">\n" +
+    "<div ng-repeat=\"project in projects\" class=\"list-group-item project-info tile-click\">\n" +
     "<div row class=\"list-view-pf-actions project-actions\" ng-if=\"project.status.phase == 'Active'\">\n" +
     "<span class=\"fa-lg project-action-item\">\n" +
     "<a ng-href=\"project/{{project.metadata.name}}/edit\" class=\"action-button\">\n" +
@@ -9348,10 +9349,10 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "<div class=\"list-view-pf-description project-names\">\n" +
     "<div class=\"list-group-item-heading project-name-item\">\n" +
     "<h2 class=\"h1\">\n" +
-    "<a class=\"tile-target\" href=\"project/{{project.metadata.name}}\">{{project.metadata.annotations[\"openshift.io/display-name\"] || project.metadata.name}}</a> \n" +
+    "<a class=\"tile-target\" ng-href=\"project/{{project.metadata.name}}\">{{project | displayName}}</a>\n" +
     "<span ng-if=\"project.status.phase != 'Active'\" data-toggle=\"tooltip\" title=\"This project has been marked for deletion.\" class=\"pficon pficon-warning-triangle-o\"></span>\n" +
     "</h2>\n" +
-    "<p class=\"hidden-xs project-name-item\" ng-if=\"project.metadata.annotations['openshift.io/display-name']\">{{project.metadata.name}}</p>\n" +
+    "<p class=\"hidden-xs project-name-item\" ng-if=\"project | displayName : true\">{{project.metadata.name}}</p>\n" +
     "</div>\n" +
     "<div class=\"list-view-pf-additional-info project-additional-info\">\n" +
     "<span class=\"list-group-item-text project-description\">\n" +
@@ -9367,7 +9368,7 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "<code>oadm new-project &lt;projectname&gt; --admin={{user.metadata.name || '&lt;YourUsername&gt;'}}</code></span>\n" +
     "<span ng-if=\"newProjectMessage\" ng-bind-html=\"newProjectMessage | linky\" class=\"projects-instructions-link\"></span>\n" +
     "</p>\n" +
-    "<p class=\"projects-instructions\" ng-if=\"(projects | findProject:$search.text).length !== 0\">\n" +
+    "<p class=\"projects-instructions\">\n" +
     "A project admin can add you to a role on a project by running the command\n" +
     "<code>oc policy add-role-to-user &lt;role&gt; {{user.metadata.name || '&lt;YourUsername&gt;'}} -n &lt;projectname&gt;</code>\n" +
     "</p>\n" +
