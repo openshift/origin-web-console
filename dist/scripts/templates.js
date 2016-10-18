@@ -4,7 +4,7 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
   $templateCache.put('views/_alerts.html',
     "<div ng-attr-row=\"{{toast}}\" ng-attr-wrap=\"{{toast}}\">\n" +
     "<div ng-repeat=\"(alertID, alert) in (alerts | filterCollection : filter) track by (alertID + (alert.message || alert.details))\" ng-if=\"!alert.hidden\" class=\"alert-wrapper animate-repeat\" ng-class=\"{'animate-slide': animateSlide}\">\n" +
-    "<div class=\"alert\" ng-class=\"{\n" +
+    "<div class=\"alert word-break\" ng-class=\"{\n" +
     "      'alert-danger': alert.type === 'error',\n" +
     "      'alert-warning': alert.type === 'warning',\n" +
     "      'alert-success': alert.type === 'success',\n" +
