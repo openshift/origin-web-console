@@ -33,7 +33,7 @@
                     <th>Trigger</th>
                   </tr>
                 </thead>
-                <!-- message doesnt show right when there are both dcs and rcs and they are all filtered -->
+                <!-- message doesn't show right when there are both dcs and rcs and they are all filtered -->
                 <tbody ng-if="showEmptyMessage()">
                   <!-- If there are no deployment configs and no replication controllers owned by a deployment config -->
                   <tr><td colspan="5"><em>{{emptyMessage}}</em></td></tr>
@@ -173,7 +173,7 @@
                   </thead>
                   <tbody ng-if="(replicationControllersByDC[''] | hashSize) === 0"><tr><td colspan="3"><em>No replication controllers to show</em></td></tr></tbody>
                   <tbody ng-repeat="deployment in replicationControllersByDC[''] | orderObjectsByDate : true">
-                    <!-- We only show this if there are replication controllers but the active filter is hiding them, otherwise the RC table doesnt show
+                    <!-- We only show this if there are replication controllers but the active filter is hiding them, otherwise the RC table doesn't show
                          at all -->
                     <tr>
                       <td data-title="Name">

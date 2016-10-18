@@ -59,7 +59,7 @@ angular.module('openshiftConsole')
           '$scope',
           function($scope) {
             // cached node's are set by the directive's postLink fn after render (see link: func below)
-            // A jQuery wrapped verison is cached in var of same name w/$
+            // A jQuery wrapped version is cached in var of same name w/$
             var cachedLogNode;
             var cachedScrollableNode;
             var $cachedScrollableNode;

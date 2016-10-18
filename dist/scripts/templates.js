@@ -1755,7 +1755,7 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "<span class=\"help action-inline\">\n" +
     "<a href ng-switch=\"buildConfig.spec.runPolicy\">\n" +
     "<i ng-switch-when=\"Serial\" class=\"pficon pficon-help\" data-toggle=\"tooltip\" aria-hidden=\"true\" data-original-title=\"Builds triggered from this Build Configuration will run one at the time, in the order they have been triggered.\"></i>\n" +
-    "<i ng-switch-when=\"Parallel\" class=\"pficon pficon-help\" data-toggle=\"tooltip\" aria-hidden=\"true\" data-original-title=\"Builds triggered from this Build Configuration will run all at the same time. The order in which they will finish is not guranteed.\"></i>\n" +
+    "<i ng-switch-when=\"Parallel\" class=\"pficon pficon-help\" data-toggle=\"tooltip\" aria-hidden=\"true\" data-original-title=\"Builds triggered from this Build Configuration will run all at the same time. The order in which they will finish is not guaranteed.\"></i>\n" +
     "<i ng-switch-when=\"SerialLatestOnly\" class=\"pficon pficon-help\" data-toggle=\"tooltip\" aria-hidden=\"true\" data-original-title=\"Builds triggered from this Build Configuration will run one at the time. When a currently running build completes, the next build that will run is the latest build created. Other queued builds will be cancelled.\"></i>\n" +
     "<i ng-switch-default class=\"pficon pficon-help\" data-toggle=\"tooltip\" aria-hidden=\"true\" data-original-title=\"Builds triggered from this Build Configuration will run using the {{buildConfig.spec.runPolicy | sentenceCase}} policy.\"></i>\n" +
     "</a>\n" +
@@ -6362,7 +6362,7 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "</div>\n" +
     "<div class=\"has-error\" ng-show=\"persistentVolumeClaimForm.capacity.$error.pattern && persistentVolumeClaimForm.capacity.$touched && !claimDisabled\">\n" +
     "<span class=\"help-block\">\n" +
-    "Must be a postive integer.\n" +
+    "Must be a positive integer.\n" +
     "</span>\n" +
     "</div>\n" +
     "</fieldset>\n" +
@@ -7399,7 +7399,7 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "</div>\n" +
     "<div ng-switch=\"updatedBuildConfig.spec.runPolicy\">\n" +
     "<div class=\"help-block\" ng-switch-when=\"Serial\">Builds triggered from this Build Configuration will run one at the time, in the order they have been triggered.</div>\n" +
-    "<div class=\"help-block\" ng-switch-when=\"Parallel\">Builds triggered from this Build Configuration will run all at the same time. The order in which they will finish is not guranteed.</div>\n" +
+    "<div class=\"help-block\" ng-switch-when=\"Parallel\">Builds triggered from this Build Configuration will run all at the same time. The order in which they will finish is not guaranteed.</div>\n" +
     "<div class=\"help-block\" ng-switch-when=\"SerialLatestOnly\">Builds triggered from this Build Configuration will run one at the time. When a currently running build completes, the next build that will run is the latest build created. Other queued builds will be cancelled.</div>\n" +
     "<div class=\"help-block\" ng-switch-default>Builds triggered from this Build Configuration will run using the {{updatedBuildConfig.spec.runPolicy | sentenceCase}} policy.</div>\n" +
     "</div>\n" +
@@ -8271,7 +8271,7 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "<div ng-repeat-end ng-if=\"expanded.replicaSets[replicaSet.metadata.name]\" class=\"list-group-expanded-section\" ng-class=\"{'expanded': expanded.replicaSets[replicaSet.metadata.name]}\">\n" +
     "Logs are not available for replica sets.\n" +
     "<span ng-if=\"podsByOwnerUID[replicaSet.metadata.uid] | hashSize\">\n" +
-    "To see applicaiton logs, view the logs for one of the replica set's\n" +
+    "To see application logs, view the logs for one of the replica set's\n" +
     "<a href=\"\" ng-click=\"viewPodsForReplicaSet(replicaSet)\">pods</a>.\n" +
     "</span>\n" +
     "<div class=\"mar-top-lg\" ng-if=\"metricsAvailable\">\n" +
