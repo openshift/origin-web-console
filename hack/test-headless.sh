@@ -12,16 +12,23 @@ function cleanup_xvfb() {
 
 trap cleanup_xvfb EXIT
 
+if ! which xdpyinfo >/dev/null 2>&1; then
+	echo "[ERROR] The \`xdpyinfo\` utility is required to run this script!."
+	exit 1
+fi
+
+if ! which Xvfb >/dev/null 2>&1; then
+	echo "[ERROR] The \`xdpyinfo\` utility is required to run this script!."
+	exit 1
+fi
+
 echo "[INFO] Starting virtual framebuffer for headless tests..."
 export DISPLAY=':10'
 export SCREEN='0'
 Xvfb "${DISPLAY}" -screen "${SCREEN}" 1024x768x24 -ac &
 xvfb_process="$!"
 
-# Debian versions of `xrandr` want `-display` whereas RPM
-# versions want `--display`, so we'll just use `-d` to
-# support both.
-while ! xrandr -d "${DISPLAY}" --screen "${SCREEN}" >/dev/null 2>&1; do
+while ! xdpyinfo -d "${DISPLAY}" >/dev/null 2>&1; do
 	sleep 0.2
 done
 
