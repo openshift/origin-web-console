@@ -25,6 +25,11 @@ pull_secret:"https://docs.openshift.org/latest/dev_guide/managing_images.html#us
 managing_secrets:"https://docs.openshift.org/latest/dev_guide/service_accounts.html#managing-allowed-secrets",
 creating_secrets:"https://docs.openshift.org/latest/dev_guide/secrets.html#creating-and-using-secrets",
 selector_label:"https://docs.openshift.org/latest/install_config/persistent_storage/selector_label_binding.html",
+rolling_strategy:"https://docs.openshift.org/latest/dev_guide/deployments.html#rolling-strategy",
+recreate_strategy:"https://docs.openshift.org/latest/dev_guide/deployments.html#recreate-strategy",
+custom_strategy:"https://docs.openshift.org/latest/dev_guide/deployments.html#custom-strategy",
+lifecycle_hooks:"https://docs.openshift.org/latest/dev_guide/deployments.html#lifecycle-hooks",
+new_pod_exec:"https://docs.openshift.org/latest/dev_guide/deployments.html#pod-based-lifecycle-hook",
 "default":"https://docs.openshift.org/latest/welcome/index.html"
 },
 CLI:{
@@ -208,6 +213,9 @@ reloadOnSearch:!1
 templateUrl:"views/browse/deployment-config.html",
 controller:"DeploymentConfigController",
 reloadOnSearch:!1
+}).when("/project/:project/edit/dc/:deploymentconfig", {
+templateUrl:"views/edit/deployment-config.html",
+controller:"EditDeploymentConfigController"
 }).when("/project/:project/browse/rs/:replicaSet", {
 templateUrl:"views/browse/replica-set.html",
 resolve:{
@@ -5549,7 +5557,7 @@ e.limitRanges = b.by("metadata.name"), 0 !== a("hashSize")(b) && e.$watch("conta
 });
 }));
 } ]), angular.module("openshiftConsole").controller("EditBuildConfigController", [ "$scope", "$routeParams", "DataService", "SecretsService", "ProjectsService", "$filter", "ApplicationGenerator", "Navigate", "$location", "AlertMessageService", "SOURCE_URL_PATTERN", "keyValueEditorUtils", function(a, b, c, d, e, f, g, h, i, j, k, l) {
-a.projectName = b.project, a.buildConfig = null, a.alerts = {}, a.emptyMessage = "Loading...", a.sourceURLPattern = k, a.options = {}, a.jenkinsfileOptions = {
+a.projectName = b.project, a.buildConfig = null, a.alerts = {}, a.sourceURLPattern = k, a.options = {}, a.jenkinsfileOptions = {
 type:"path"
 }, a.selectTypes = {
 ImageStreamTag:"Image Stream Tag",
@@ -5579,7 +5587,7 @@ link:"project/" + b.project + "/browse/builds"
 title:b.buildconfig,
 link:"project/" + b.project + "/browse/builds/" + b.buildconfig
 })), a.breadcrumbs.push({
-title:"Edit"
+title:b.isPipeline ? "Edit Pipelines" :"Edit Builds"
 }), a.imageOptions = {
 from:{},
 to:{},
@@ -5748,15 +5756,15 @@ return _.has(a, "disabled") && !a.disabled || a.present;
 }), b = _.map(b, "data");
 }, t = function() {
 switch (a.secrets.picked = {
-gitSecret:a.buildConfig.spec.source.sourceSecret || {
+gitSecret:a.buildConfig.spec.source.sourceSecret ? [ a.buildConfig.spec.source.sourceSecret ] :[ {
 name:""
-},
-pullSecret:n(a.buildConfig).pullSecret || {
+} ],
+pullSecret:n(a.buildConfig).pullSecret ? [ n(a.buildConfig).pullSecret ] :[ {
 name:""
-},
-pushSecret:a.buildConfig.spec.output.pushSecret || {
+} ],
+pushSecret:a.buildConfig.spec.output.pushSecret ? [ a.buildConfig.spec.output.pushSecret ] :[ {
 name:""
-}
+} ]
 }, a.strategyType) {
 case "Source":
 case "Docker":
@@ -5795,7 +5803,7 @@ break;
 case "JenkinsPipeline":
 "path" === a.jenkinsfileOptions.type ? delete a.updatedBuildConfig.spec.strategy.jenkinsPipelineStrategy.jenkinsfile :delete a.updatedBuildConfig.spec.strategy.jenkinsPipelineStrategy.jenkinsfilePath;
 }
-switch (q(), a.sources.images && !_.isEmpty(a.sourceImages) && (a.updatedBuildConfig.spec.source.images[0].paths = p(a.imageSourcePaths), a.updatedBuildConfig.spec.source.images[0].from = r(a.imageOptions.fromSource)), "None" === a.imageOptions.from.type ? delete n(a.updatedBuildConfig).from :n(a.updatedBuildConfig).from = r(a.imageOptions.from), "None" === a.imageOptions.to.type ? delete a.updatedBuildConfig.spec.output.to :a.updatedBuildConfig.spec.output.to = r(a.imageOptions.to), n(a.updatedBuildConfig).env = l.compactEntries(a.envVars), u(a.updatedBuildConfig.spec.source, a.secrets.picked.gitSecret, "sourceSecret"), u(n(a.updatedBuildConfig), a.secrets.picked.pullSecret, "pullSecret"), u(a.updatedBuildConfig.spec.output, a.secrets.picked.pushSecret, "pushSecret"), a.strategyType) {
+switch (q(), a.sources.images && !_.isEmpty(a.sourceImages) && (a.updatedBuildConfig.spec.source.images[0].paths = p(a.imageSourcePaths), a.updatedBuildConfig.spec.source.images[0].from = r(a.imageOptions.fromSource)), "None" === a.imageOptions.from.type ? delete n(a.updatedBuildConfig).from :n(a.updatedBuildConfig).from = r(a.imageOptions.from), "None" === a.imageOptions.to.type ? delete a.updatedBuildConfig.spec.output.to :a.updatedBuildConfig.spec.output.to = r(a.imageOptions.to), n(a.updatedBuildConfig).env = l.compactEntries(a.envVars), u(a.updatedBuildConfig.spec.source, _.head(a.secrets.picked.gitSecret), "sourceSecret"), u(n(a.updatedBuildConfig), _.head(a.secrets.picked.pullSecret), "pullSecret"), u(a.updatedBuildConfig.spec.output, _.head(a.secrets.picked.pushSecret), "pushSecret"), a.strategyType) {
 case "Source":
 case "Docker":
 v(a.updatedBuildConfig.spec.source, a.secrets.picked.sourceSecrets);
@@ -5821,6 +5829,190 @@ details:f("getErrorDetails")(b)
 });
 }, a.$on("$destroy", function() {
 c.unwatchAll(m);
+});
+} ]), angular.module("openshiftConsole").controller("EditDeploymentConfigController", [ "$scope", "$routeParams", "$uibModal", "DataService", "BreadcrumbsService", "SecretsService", "ProjectsService", "$filter", "ApplicationGenerator", "Navigate", "$location", "AlertMessageService", "SOURCE_URL_PATTERN", "keyValueEditorUtils", function(a, b, c, d, e, f, g, h, i, j, k, l, m, n) {
+a.projectName = b.project, a.deploymentConfig = null, a.alerts = {}, a.view = {
+advancedStrategyOptions:!1,
+advancedImageOptions:!1
+}, a.breadcrumbs = e.getBreadcrumbs({
+name:b.name,
+kind:b.kind,
+namespace:b.project,
+subpage:"Edit Deployment Config",
+includeProject:!0
+}), a.deploymentConfigStrategyTypes = [ "Recreate", "Rolling", "Custom" ], l.getAlerts().forEach(function(b) {
+a.alerts[b.name] = b.data;
+}), l.clearAlerts();
+var o = [], p = function(a) {
+switch (a) {
+case "Recreate":
+return "recreateParams";
+
+case "Rolling":
+return "rollingParams";
+
+case "Custom":
+return "customParams";
+
+default:
+return void Logger.error("Unknown deployment strategy type: " + a);
+}
+};
+g.get(b.project).then(_.spread(function(c, g) {
+a.project = c, a.context = g, d.get("deploymentconfigs", b.deploymentconfig, g).then(function(h) {
+a.deploymentConfig = h, a.breadcrumbs = e.getBreadcrumbs({
+object:h,
+project:c,
+subpage:"Edit",
+includeProject:!0
+});
+var i = function(b, c) {
+var d = {}, e = _.filter(c, {
+type:"ImageChange"
+});
+return _.each(b, function(b) {
+var c = _.find(e, function(a) {
+return _.includes(a.imageChangeParams.containerNames, b.name);
+}), f = {};
+if (d[b.name] = {
+env:b.env || [],
+image:b.image,
+hasDeploymentTrigger:!_.isEmpty(c)
+}, c) {
+var g = c.imageChangeParams.from, h = g.name.split(":");
+f = {
+data:c,
+istag:{
+namespace:g.namespace || a.projectName,
+imageStream:h[0],
+tagObject:{
+tag:h[1]
+}
+}
+};
+} else f = {
+istag:{
+namespace:"",
+imageStream:""
+}
+};
+_.set(d, [ b.name, "triggerData" ], f);
+}), d;
+};
+a.updatedDeploymentConfig = angular.copy(a.deploymentConfig), a.containerNames = _.map(a.deploymentConfig.spec.template.spec.containers, "name"), a.containerConfigByName = i(a.updatedDeploymentConfig.spec.template.spec.containers, a.updatedDeploymentConfig.spec.triggers), a.pullSecrets = a.deploymentConfig.spec.template.spec.imagePullSecrets || [ {
+name:""
+} ], a.volumeNames = _.map(a.deploymentConfig.spec.template.spec.volumes, "name"), a.strategyData = angular.copy(a.deploymentConfig.spec.strategy), a.originalStrategy = a.strategyData.type, a.strategyParamsPropertyName = p(a.strategyData.type), "Custom" !== a.strategyData.type || _.has(a.strategyData, "customParams.environment") || (a.strategyData.customParams.environment = []), d.list("secrets", g, function(b) {
+var c = f.groupSecretsByType(b);
+a.secretsByType = _.each(c, function(a) {
+a.unshift("");
+});
+}), o.push(d.watchObject("deploymentconfigs", b.deploymentconfig, g, function(b, c) {
+"MODIFIED" === c && (a.alerts["updated/deleted"] = {
+type:"warning",
+message:"This deployment configuration has changed since you started editing it. You'll need to copy any changes you've made and edit again."
+}), "DELETED" === c && (a.alerts["updated/deleted"] = {
+type:"warning",
+message:"This deployment configuration has been deleted."
+}, a.disableInputs = !0), a.deploymentConfig = b;
+})), a.loaded = !0;
+}, function(b) {
+a.loaded = !0, a.alerts.load = {
+type:"error",
+message:"The deployment configuration details could not be loaded.",
+details:h("getErrorDetails")(b)
+};
+});
+}));
+var q = function() {
+return "Custom" !== a.strategyData.type && "Custom" !== a.originalStrategy && a.strategyData.type !== a.originalStrategy;
+}, r = function(b) {
+if (!_.has(a.strategyData, b)) {
+var d = c.open({
+animation:!0,
+templateUrl:"views/modals/confirm.html",
+controller:"ConfirmModalController",
+resolve:{
+modalConfig:function() {
+return {
+alerts:a.alerts,
+message:"Some of your existing " + a.originalStrategy.toLowerCase() + " strategy parameters can be used for the " + a.strategyData.type.toLowerCase() + " strategy. Keep parameters?",
+details:"The timeout parameter and any pre or post lifecycle hooks will be copied from " + a.originalStrategy.toLowerCase() + " strategy to " + a.strategyData.type.toLowerCase() + " strategy. After saving the changes, " + a.originalStrategy.toLowerCase() + " strategy parameters will be removed.",
+okButtonText:"Yes",
+okButtonClass:"btn-primary",
+cancelButtonText:"No"
+};
+}
+}
+});
+d.result.then(function() {
+a.strategyData[b] = a.strategyData[p(a.originalStrategy)], a.paramsMoved = p(a.originalStrategy);
+}, function() {
+a.strategyData[b] = {};
+});
+}
+};
+a.strategyChanged = function() {
+var b = p(a.strategyData.type);
+q() ? r(b) :_.has(a.strategyData, b) || ("Custom" !== a.strategyData.type ? a.strategyData[b] = {} :a.strategyData[b] = {
+image:"",
+command:[],
+environment:[]
+}), a.strategyParamsPropertyName = b;
+};
+var s = function(a, b, c) {
+var d = {
+kind:"ImageStreamTag",
+namespace:b.namespace,
+name:b.imageStream + ":" + b.tagObject.tag
+};
+return c ? c.imageChangeParams.from = d :c = {
+type:"ImageChange",
+imageChangeParams:{
+automatic:!0,
+containerNames:[ a ],
+from:d
+}
+}, c;
+}, t = function() {
+var b = _.filter(a.updatedDeploymentConfig.spec.triggers, function(a) {
+return "ImageChange" !== a.type;
+});
+return _.each(a.containerConfigByName, function(c, d) {
+if (c.hasDeploymentTrigger) b.push(s(d, c.triggerData.istag, c.triggerData.data)); else {
+var e = _.find(a.updatedDeploymentConfig.spec.template.spec.containers, {
+name:d
+});
+e.image = c.image;
+}
+}), b;
+};
+a.save = function() {
+a.disableInputs = !0, _.each(a.containerConfigByName, function(b, c) {
+var d = _.find(a.updatedDeploymentConfig.spec.template.spec.containers, {
+name:c
+});
+d.env = n.compactEntries(b.env);
+}), a.paramsMoved && q() && delete a.strategyData[p(a.originalStrategy)], "Custom" !== a.strategyData.type ? _.each([ "pre", "mid", "post" ], function(b) {
+_.has(a.strategyData, [ a.strategyParamsPropertyName, b, "execNewPod", "env" ]) && (a.strategyData[a.strategyParamsPropertyName][b].execNewPod.env = n.compactEntries(a.strategyData[a.strategyParamsPropertyName][b].execNewPod.env));
+}) :_.has(a, "strategyData.customParams.environment") && (a.strategyData.customParams.environment = n.compactEntries(a.strategyData.customParams.environment)), a.updatedDeploymentConfig.spec.template.spec.imagePullSecrets = a.pullSecrets, a.updatedDeploymentConfig.spec.strategy = a.strategyData, a.updatedDeploymentConfig.spec.triggers = t(), d.update("deploymentconfigs", a.updatedDeploymentConfig.metadata.name, a.updatedDeploymentConfig, a.context).then(function() {
+l.addAlert({
+name:a.updatedDeploymentConfig.metadata.name,
+data:{
+type:"success",
+message:"Deployment config " + a.updatedDeploymentConfig.metadata.name + " was successfully updated."
+}
+});
+var b = j.resourceURL(a.updatedDeploymentConfig);
+k.url(b);
+}, function(b) {
+a.disableInputs = !1, a.alerts.save = {
+type:"error",
+message:"An error occurred updating deployment config " + a.updatedDeploymentConfig.metadata.name + ".",
+details:h("getErrorDetails")(b)
+};
+});
+}, a.$on("$destroy", function() {
+d.unwatchAll(o);
 });
 } ]), angular.module("openshiftConsole").controller("EditAutoscalerController", [ "$scope", "$filter", "$routeParams", "$window", "APIService", "BreadcrumbsService", "DataService", "HPAService", "MetricsService", "Navigate", "ProjectsService", "keyValueEditorUtils", function(a, b, c, d, e, f, g, h, i, j, k, l) {
 if (!c.kind || !c.name) return void j.toErrorPage("Kind or name parameter missing.");
@@ -8160,17 +8352,32 @@ a !== b && g(a);
 return {
 restrict:"E",
 scope:{
-pickedSecret:"=model",
+pickedSecrets:"=model",
 secretsByType:"=",
 namespace:"=",
 displayType:"@",
 type:"@",
 alerts:"=",
-serviceAccountToLink:"@?"
+serviceAccountToLink:"@?",
+allowMultipleSecrets:"=?"
 },
 templateUrl:"views/directives/osc-secrets.html",
 link:function(b) {
-b.openCreateSecretModal = function() {
+b.canAddSourceSecret = function() {
+var a = _.last(b.pickedSecrets);
+return !!a && a.name;
+}, b.setLastSecretsName = function(a) {
+var c = _.last(b.pickedSecrets);
+c.name = a;
+}, b.addSourceSecret = function() {
+b.pickedSecrets.push({
+name:""
+});
+}, b.removeSecret = function(a) {
+1 === b.pickedSecrets.length ? b.pickedSecrets = [ {
+name:""
+} ] :b.pickedSecrets.splice(a, 1), b.secretsForm.$setDirty();
+}, b.openCreateSecretModal = function() {
 b.newSecret = {};
 var e = a.open({
 animation:!0,
@@ -8185,7 +8392,7 @@ namespace:b.namespace
 var e = d.groupSecretsByType(c);
 b.secretsByType = _.each(e, function(a) {
 a.unshift("");
-}), b.pickedSecret.name = a.metadata.name, b.secretsForm.$setDirty();
+}), b.setLastSecretsName(a.metadata.name), b.secretsForm.$setDirty();
 });
 });
 };
@@ -8852,6 +9059,70 @@ validator:{
 key:d,
 value:d
 }
+});
+} ]
+};
+}), angular.module("openshiftConsole").directive("lifecycleHook", function() {
+return {
+restrict:"E",
+scope:{
+type:"@",
+hookParams:"=model",
+availableVolumes:"=",
+availableContainers:"=",
+namespace:"="
+},
+templateUrl:"views/directives/lifecycle-hook.html",
+controller:[ "$scope", function(a) {
+a.view = {
+isDisabled:!1
+}, a.view.hookExists = !_.isEmpty(a.hookParams), a.lifecycleHookFailurePolicyTypes = [ "Abort", "Retry", "Ignore" ], a.istagHook = {}, a.removedHookParams = {}, a.action = {
+type:_.has(a.hookParams, "tagImages") ? "tagImages" :"execNewPod"
+};
+var b = {
+command:[],
+env:[],
+volumes:[],
+containerName:a.availableContainers[0] || ""
+}, c = {
+to:{},
+containerName:a.availableContainers[0] || ""
+}, d = function(b) {
+var c = {};
+if (_.isEmpty(b)) c = {
+namespace:a.namespace,
+imageStream:"",
+tagObject:{
+tag:""
+}
+}; else {
+var d = b.name.split(":");
+c = {
+namespace:b.namespace || a.namespace,
+imageStream:d[0],
+tagObject:{
+tag:d[1]
+}
+};
+}
+return c;
+}, e = function() {
+if (a.hookParams.failurePolicy = _.get(a.hookParams, "failurePolicy", "Abort"), "execNewPod" === a.action.type) {
+if (_.has(a.removedHookParams, "execNewPod")) return void (a.hookParams.execNewPod = a.removedHookParams.execNewPod);
+a.hookParams.execNewPod = _.merge(b, a.hookParams.execNewPod);
+} else {
+if (_.has(a.removedHookParams, "tagImages")) return void (a.hookParams.tagImages = a.removedHookParams.tagImages);
+a.hookParams.tagImages = [ _.merge(c, a.hookParams.tagImages) ], a.istagHook = d(_.head(a.hookParams.tagImages).to);
+}
+};
+a.addHook = function() {
+return _.isEmpty(a.removedHookParams) ? (a.hookParams = {}, e(), void (a.view.hookExists = !0)) :(a.hookParams = a.removedHookParams, void (a.view.hookExists = !0));
+}, a.removeHook = function() {
+a.removedHookParams = a.hookParams, delete a.hookParams, a.view.hookExists = !1, a.editForm.$setDirty();
+}, a.$watch("action.type", function() {
+"execNewPod" === a.action.type && _.has(a.hookParams, "tagImages") ? (a.removedHookParams.tagImages = a.hookParams.tagImages, delete a.hookParams.tagImages, e()) :"tagImages" === a.action.type && (_.has(a.hookParams, "execNewPod") ? (a.removedHookParams.execNewPod = a.hookParams.execNewPod, delete a.hookParams.execNewPod, e()) :a.istagHook = d(_.head(a.hookParams.tagImages).to));
+}), a.$watch("istagHook.tagObject.tag", function() {
+_.has(a.istagHook, [ "tagObject", "tag" ]) && (_.set(a.hookParams, "tagImages[0].to.kind", "ImageStreamTag"), _.set(a.hookParams, "tagImages[0].to.namespace", a.istagHook.namespace), _.set(a.hookParams, "tagImages[0].to.name", a.istagHook.imageStream + ":" + a.istagHook.tagObject.tag));
 });
 } ]
 };

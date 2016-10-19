@@ -28,6 +28,11 @@ window.OPENSHIFT_CONSTANTS = {
     "managing_secrets":        "https://docs.openshift.org/latest/dev_guide/service_accounts.html#managing-allowed-secrets",
     "creating_secrets":        "https://docs.openshift.org/latest/dev_guide/secrets.html#creating-and-using-secrets",
     "selector_label":          "https://docs.openshift.org/latest/install_config/persistent_storage/selector_label_binding.html",
+    "rolling_strategy":        "https://docs.openshift.org/latest/dev_guide/deployments.html#rolling-strategy",
+    "recreate_strategy":       "https://docs.openshift.org/latest/dev_guide/deployments.html#recreate-strategy",
+    "custom_strategy":         "https://docs.openshift.org/latest/dev_guide/deployments.html#custom-strategy",
+    "lifecycle_hooks":         "https://docs.openshift.org/latest/dev_guide/deployments.html#lifecycle-hooks",
+    "new_pod_exec":            "https://docs.openshift.org/latest/dev_guide/deployments.html#pod-based-lifecycle-hook",
     "default":                 "https://docs.openshift.org/latest/welcome/index.html"
   },
   // Maps links names to URL's where the CLI tools can be downloaded, may point directly to files or to external pages in a CDN, for example.

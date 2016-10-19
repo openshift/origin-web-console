@@ -1979,6 +1979,9 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "</li>\n" +
     "<li class=\"divider\" ng-if=\"!updatingPausedState && 'deploymentconfigs' | canI : 'update'\"></li>\n" +
     "<li ng-if=\"'deploymentconfigs' | canI : 'update'\">\n" +
+    "<a ng-href=\"{{deploymentConfig | editResourceURL}}\" role=\"button\">Edit</a>\n" +
+    "</li>\n" +
+    "<li ng-if=\"'deploymentconfigs' | canI : 'update'\">\n" +
     "<a ng-href=\"project/{{project.metadata.name}}/attach-pvc?kind=DeploymentConfig&name={{deploymentConfig.metadata.name}}\" role=\"button\">Attach Storage</a>\n" +
     "</li>\n" +
     "<li ng-if=\"'deploymentconfigs' | canI : 'update'\">\n" +
@@ -5196,8 +5199,8 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "Image Stream Tag\n" +
     "</label>\n" +
     "</div>\n" +
-    "<fieldset ng-disabled=\"mode !== 'istag'\">\n" +
-    "<istag-select model=\"istag\" include-shared-namespace=\"true\"></istag-select>\n" +
+    "<fieldset>\n" +
+    "<istag-select model=\"istag\" select-disabled=\"mode !== 'istag'\" include-shared-namespace=\"true\"></istag-select>\n" +
     "<div ng-if=\"mode == 'istag' && istag.namespace && istag.namespace !== 'openshift' && istag.namespace !== project\" class=\"alert alert-warning\">\n" +
     "<span class=\"pficon pficon-warning-triangle-o\" aria-hidden=\"true\"></span>\n" +
     "Service account <strong>default</strong> will need image pull authority to deploy images from <strong>{{istag.namespace}}</strong>. You can grant authority with the command:\n" +
@@ -5843,7 +5846,7 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "<div class=\"row\">\n" +
     "<div class=\"form-group col-sm-4\">\n" +
     "<label class=\"sr-only\">Namespace</label>\n" +
-    "<ui-select required ng-model=\"istag.namespace\" ng-change=\"istag.imageStream = null; istag.tagObject = null;\">\n" +
+    "<ui-select required ng-model=\"istag.namespace\" ng-disabled=\"selectDisabled\" ng-change=\"istag.imageStream = null; istag.tagObject = null;\">\n" +
     "<ui-select-match placeholder=\"Namespace\">{{$select.selected}}</ui-select-match>\n" +
     "<ui-select-choices repeat=\"namespace in (namespaces | filter : $select.search)\">\n" +
     "<div ng-bind-html=\"namespace | highlight : $select.search\"></div>\n" +
@@ -5853,7 +5856,7 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "</div>\n" +
     "<div class=\"form-group col-sm-4\">\n" +
     "<label class=\"sr-only\">Image Stream</label>\n" +
-    "<ui-select required ng-model=\"istag.imageStream\" ng-disabled=\"!istag.namespace\" ng-change=\"istag.tagObject = null\">\n" +
+    "<ui-select required ng-model=\"istag.imageStream\" ng-disabled=\"!istag.namespace || selectDisabled\" ng-change=\"istag.tagObject = null\">\n" +
     "<ui-select-match placeholder=\"Image Stream\">{{$select.selected}}</ui-select-match>\n" +
     "<ui-select-choices repeat=\"imageStream in (isNamesByNamespace[istag.namespace] | filter : $select.search)\">\n" +
     "<div ng-bind-html=\"imageStream | highlight : $select.search\"></div>\n" +
@@ -5863,7 +5866,7 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "</div>\n" +
     "<div class=\"form-group col-sm-4\">\n" +
     "<label class=\"sr-only\">Tag</label>\n" +
-    "<ui-select required ng-model=\"istag.tagObject\" ng-disabled=\"!istag.imageStream\">\n" +
+    "<ui-select required ng-model=\"istag.tagObject\" ng-disabled=\"!istag.imageStream || selectDisabled\">\n" +
     "<ui-select-match placeholder=\"Tag\">{{$select.selected.tag}}</ui-select-match>\n" +
     "<ui-select-choices group-by=\"groupTags\" repeat=\"statusTag in (isByNamespace[istag.namespace][istag.imageStream].status.tags | filter : { tag: $select.search })\" refresh=\"getTags($select.search)\" refresh-delay=\"0\">\n" +
     "<div ng-bind-html=\"statusTag.tag | highlight : $select.search\"></div>\n" +
@@ -5912,6 +5915,120 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "</span>\n" +
     "<a href=\"\" class=\"small\" ng-click=\"limit = null\" ng-show=\"limit && limit < (labels | hashSize)\" style=\"padding-left: 5px; vertical-align: middle\">More labels...</a>\n" +
     "</div>"
+  );
+
+
+  $templateCache.put('views/directives/lifecycle-hook.html',
+    "<ng-form name=\"editForm\">\n" +
+    "<div ng-switch=\"type\">\n" +
+    "<div class=\"help-block\" ng-switch-when=\"pre\">Pre hooks execute before the deployment begins.</div>\n" +
+    "<div class=\"help-block\" ng-switch-when=\"mid\">Mid hooks execute after the previous deployment is scaled down to zero and before the first pod of the new deployment is created.</div>\n" +
+    "<div class=\"help-block\" ng-switch-when=\"post\">Post hooks execute after the deployment strategy completes.</div>\n" +
+    "</div>\n" +
+    "<div class=\"gutter-top\" ng-if=\"view.hookExists\">\n" +
+    "<fieldset ng-disabled=\"view.isDisabled\">\n" +
+    "<div class=\"form-group\">\n" +
+    "<label for=\"actionType\" class=\"required\">Lifecycle Action</label><br/>\n" +
+    "<div class=\"radio\">\n" +
+    "<label class=\"radio-inline\">\n" +
+    "<input type=\"radio\" name=\"{{type}}-action-newpod\" ng-model=\"action.type\" value=\"execNewPod\" aria-describedby=\"action-help\">\n" +
+    "Run a specific command in a new pod\n" +
+    "</label>\n" +
+    "<label class=\"radio-inline\">\n" +
+    "<input type=\"radio\" name=\"{{type}}-action-images\" ng-model=\"action.type\" value=\"tagImages\" aria-describedby=\"action-help\">\n" +
+    "Tag image if the deployment succeeds\n" +
+    "</label>\n" +
+    "</div>\n" +
+    "<div id=\"action-help\" class=\"help-block\">\n" +
+    "<span ng-if=\"action.type === 'execNewPod'\">Runs a command in a new pod using the container from the deployment template. You can add additional environment variables and volumes.</span>\n" +
+    "<span ng-if=\"action.type === 'tagImages'\">Tags the current image as an image stream tag if the deployment succeeds.</span>\n" +
+    "<a href=\"{{'new_pod_exec' | helpLink}}\" aria-hidden=\"true\" target=\"_blank\"><span class=\"learn-more-inline\">Learn more&nbsp;<i class=\"fa fa-external-link\"></i></span></a>\n" +
+    "</div>\n" +
+    "</div>\n" +
+    "<div ng-if=\"action.type === 'execNewPod'\">\n" +
+    "<div class=\"form-group\">\n" +
+    "<label class=\"required\">Container Name</label>\n" +
+    "<ui-select ng-model=\"hookParams.execNewPod.containerName\" required>\n" +
+    "<ui-select-match>{{$select.selected}}</ui-select-match>\n" +
+    "<ui-select-choices repeat=\"container in (availableContainers | filter : $select.search)\" ng-disabled=\"view.isDisabled\">\n" +
+    "<div ng-bind-html=\"container | highlight : $select.search\"></div>\n" +
+    "</ui-select-choices>\n" +
+    "</ui-select>\n" +
+    "</div>\n" +
+    "<div class=\"form-group\">\n" +
+    "<label class=\"required\">Command</label>\n" +
+    "<edit-command args=\"hookParams.execNewPod.command\" is-required=\"true\"></edit-command>\n" +
+    "</div>\n" +
+    "<div class=\"form-group\">\n" +
+    "<label>Environment Variables</label>\n" +
+    "<key-value-editor entries=\"hookParams.execNewPod.env\" key-validator=\"[a-zA-Z][a-zA-Z0-9_]*\" key-validator-error-tooltip=\"A valid environment variable name is an alphanumeric (a-z and 0-9) string beginning with a letter that may contain underscores.\" add-row-link=\"Add environment variable\"></key-value-editor>\n" +
+    "<div class=\"help-block\">\n" +
+    "Environment variables to supply to the hook pod's container.\n" +
+    "</div>\n" +
+    "</div>\n" +
+    "<div class=\"form-group\">\n" +
+    "<label>Volumes</label>\n" +
+    "<ui-select multiple placeholder=\"Select volume\" ng-model=\"hookParams.execNewPod.volumes\" ng-disabled=\"view.isDisabled\">\n" +
+    "<ui-select-match>{{$item}}</ui-select-match>\n" +
+    "<ui-select-choices repeat=\"volume in availableVolumes | filter : $select.search\">\n" +
+    "<div ng-bind-html=\"volume | highlight : $select.search\"></div>\n" +
+    "</ui-select-choices>\n" +
+    "</ui-select>\n" +
+    "<div class=\"help-block\">\n" +
+    "List of named volumes to copy to the hook pod.\n" +
+    "</div>\n" +
+    "</div>\n" +
+    "</div>\n" +
+    "<div ng-if=\"action.type === 'tagImages'\">\n" +
+    "<div ng-repeat=\"tagImage in hookParams.tagImages\">\n" +
+    "<div ng-if=\"hookParams.tagImages.length === 1\">\n" +
+    "<div class=\"form-group\">\n" +
+    "<label class=\"required\">Container Name</label>\n" +
+    "<ui-select ng-model=\"tagImage.containerName\" ng-disabled=\"view.isDisabled\" required>\n" +
+    "<ui-select-match>{{$select.selected}}</ui-select-match>\n" +
+    "<ui-select-choices repeat=\"container in (availableContainers | filter : $select.search)\">\n" +
+    "<div ng-bind-html=\"container | highlight : $select.search\"></div>\n" +
+    "</ui-select-choices>\n" +
+    "</ui-select>\n" +
+    "<div class=\"help-block\">\n" +
+    "Use the image for this container as the source of the tag.\n" +
+    "</div>\n" +
+    "</div>\n" +
+    "<div class=\"form-group\">\n" +
+    "<label class=\"required\">Tag As</label>\n" +
+    "<istag-select model=\"istagHook\" allow-custom-tag=\"true\" select-disabled=\"view.isDisabled\"></istag-select>\n" +
+    "</div>\n" +
+    "</div>\n" +
+    "<div class=\"read-only-tag-image\" ng-if=\"hookParams.tagImages.length > 1\">\n" +
+    "<p class=\"read-only-info\" ng-if=\"$first\">\n" +
+    "<span class=\"pficon pficon-info\" aria-hidden=\"true\"></span>\n" +
+    "More than one image tag is defined. To change image tags, use the YAML editor.\n" +
+    "</p>\n" +
+    "{{tagImage.containerName}}&nbsp;&rarr;&nbsp;{{tagImage.to.namespace || namespace}}/{{tagImage.to.name}}\n" +
+    "</div>\n" +
+    "</div>\n" +
+    "</div>\n" +
+    "<div class=\"form-group failure-policy\">\n" +
+    "<label class=\"required picker-label\">Failure Policy</label>\n" +
+    "<ui-select ng-model=\"hookParams.failurePolicy\" search-enabled=\"false\" ng-disabled=\"view.isDisabled\">\n" +
+    "<ui-select-match>{{$select.selected}}</ui-select-match>\n" +
+    "<ui-select-choices repeat=\"failurePolicyTypes in lifecycleHookFailurePolicyTypes\">\n" +
+    "{{failurePolicyTypes}}\n" +
+    "</ui-select-choices>\n" +
+    "</ui-select>\n" +
+    "<div ng-switch=\"hookParams.failurePolicy\">\n" +
+    "<div class=\"help-block\" ng-switch-when=\"Retry\">Retry the hook until it succeeds.</div>\n" +
+    "<div class=\"help-block\" ng-switch-when=\"Abort\">Fail the deployment if the hook fails.</div>\n" +
+    "<div class=\"help-block\" ng-switch-when=\"Ignore\">Ignore hook failures and continue the deployment.</div>\n" +
+    "</div>\n" +
+    "</div>\n" +
+    "</fieldset>\n" +
+    "</div>\n" +
+    "<span>\n" +
+    "<a href=\"\" role=\"button\" ng-if=\"!view.hookExists\" ng-click=\"addHook()\">Add {{type}} lifecycle hook</a>\n" +
+    "<a href=\"\" role=\"button\" ng-if=\"view.hookExists\" ng-click=\"removeHook()\">Remove {{type}} lifecycle hook</a>\n" +
+    "</span>\n" +
+    "</ng-form>"
   );
 
 
@@ -6625,7 +6742,11 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
 
   $templateCache.put('views/directives/osc-secrets.html',
     "<ng-form name=\"secretsForm\" class=\"osc-secrets-form\">\n" +
+    "<div ng-repeat=\"pickedSecret in pickedSecrets\">\n" +
     "<div class=\"form-group\">\n" +
+    "<div class=\"row picked-secret\">\n" +
+    "<div class=\"col-lg-12\">\n" +
+    "<div ng-if=\"!allowMultipleSecrets\">\n" +
     "<label class=\"picker-label\">{{displayType | startCase}} Secret</label>\n" +
     "<ui-select ng-model=\"pickedSecret.name\">\n" +
     "<ui-select-match placeholder=\"Secret name\">{{$select.selected}}</ui-select-match>\n" +
@@ -6633,7 +6754,25 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "<div ng-bind-html=\"secret | highlight : $select.search\"></div>\n" +
     "</ui-select-choices>\n" +
     "</ui-select>\n" +
-    "<div ng-switch=\"displayType\">\n" +
+    "</div>\n" +
+    "<div ng-if=\"allowMultipleSecrets\">\n" +
+    "<div class=\"basic-secrets\">\n" +
+    "<div class=\"secret-name\">\n" +
+    "<label ng-if=\"$first\" class=\"picker-label\">{{displayType | startCase}} Secret</label>\n" +
+    "<ui-select ng-model=\"pickedSecret.name\">\n" +
+    "<ui-select-match placeholder=\"Secret name\">{{$select.selected}}</ui-select-match>\n" +
+    "<ui-select-choices repeat=\"secret in (secretsByType[type] | filter : $select.search)\">\n" +
+    "<div ng-bind-html=\"secret | highlight : $select.search\"></div>\n" +
+    "</ui-select-choices>\n" +
+    "</ui-select>\n" +
+    "</div>\n" +
+    "<div class=\"remove-secret\">\n" +
+    "<label class=\"sr-only\">Remove Build Secret</label>\n" +
+    "<a class=\"pficon pficon-close remove-btn\" aria-label=\"Delete row\" role=\"button\" ng-click=\"removeSecret($index)\" href=\"\"></a>\n" +
+    "</div>\n" +
+    "</div>\n" +
+    "</div>\n" +
+    "<div ng-if=\"$last\" ng-switch=\"displayType\">\n" +
     "<div class=\"help-block\" ng-switch-when=\"source\">\n" +
     "Secret with credentials for pulling your source code.\n" +
     "<a href=\"{{'git_secret' | helpLink}}\" target=\"_blank\"><span class=\"learn-more-inline\">Learn more&nbsp;<i class=\"fa fa-external-link\" aria-hidden=\"true\"></i></span></a>\n" +
@@ -6648,9 +6787,16 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "</div>\n" +
     "</div>\n" +
     "</div>\n" +
-    "<span>\n" +
-    "<a href=\"\" ng-if=\"'secrets' | canI : 'create'\" role=\"button\" ng-click=\"openCreateSecretModal()\">Create {{displayType}} secret</a>\n" +
+    "</div>\n" +
+    "</div>\n" +
+    "</div>\n" +
+    "<div class=\"osc-secret-actions\">\n" +
+    "<span ng-if=\"canAddSourceSecret()\">\n" +
+    "<a href=\"\" role=\"button\" ng-click=\"addSourceSecret()\">Add another secret</a>\n" +
+    "<span ng-if=\"'secrets' | canI : 'create'\" class=\"action-divider\">|</span>\n" +
     "</span>\n" +
+    "<a href=\"\" ng-if=\"'secrets' | canI : 'create'\" role=\"button\" ng-click=\"openCreateSecretModal()\">Create new secret</a>\n" +
+    "</div>\n" +
     "</ng-form>"
   );
 
@@ -6660,7 +6806,7 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "<div ng-if=\"strategyType !== 'Custom'\">\n" +
     "<div ng-repeat=\"pickedSecret in pickedSecrets\">\n" +
     "<div class=\"form-group\">\n" +
-    "<div class=\"row picked-secret\">\n" +
+    "<div class=\"row advanced-secrets\">\n" +
     "<div class=\"col-lg-6\">\n" +
     "<label class=\"picker-label\" ng-if=\"$first\">Build Secret</label>\n" +
     "<ui-select ng-required=\"pickedSecret.destinationDir\" ng-model=\"pickedSecret.secret.name\">\n" +
@@ -6679,7 +6825,7 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "<input class=\"form-control\" id=\"destinationDir\" name=\"destinationDir\" ng-model=\"pickedSecret.destinationDir\" type=\"text\" placeholder=\"/\" autocorrect=\"off\" autocapitalize=\"off\" spellcheck ng-required=\"pickedSecret.secret.name\">\n" +
     "</div>\n" +
     "</div>\n" +
-    "<div class=\"remove-secret-row\">\n" +
+    "<div class=\"remove-secret\">\n" +
     "<a ng-click=\"removeSecret($index)\" href=\"\" role=\"button\">\n" +
     "<span class=\"pficon pficon-close remove-btn\" aria-hidden=\"true\"></span>\n" +
     "<span class=\"sr-only\">Remove build secret</span>\n" +
@@ -6703,7 +6849,7 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "<div ng-if=\"strategyType === 'Custom'\">\n" +
     "<div ng-repeat=\"pickedSecret in pickedSecrets\">\n" +
     "<div class=\"form-group\">\n" +
-    "<div class=\"row picked-secret\">\n" +
+    "<div class=\"row advanced-secrets\">\n" +
     "<div class=\"col-lg-6\">\n" +
     "<label class=\"picker-label\" ng-if=\"$first\">Build Secret</label>\n" +
     "<ui-select ng-required=\"pickedSecret.mountPath !== ''\" ng-model=\"pickedSecret.secretSource.name\">\n" +
@@ -6722,7 +6868,7 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "<input class=\"form-control\" id=\"mountPath\" name=\"mountPath\" ng-model=\"pickedSecret.mountPath\" type=\"text\" placeholder=\"/\" autocorrect=\"off\" autocapitalize=\"off\" spellcheck ng-required=\"pickedSecret.sourceSecret.name\">\n" +
     "</div>\n" +
     "</div>\n" +
-    "<div class=\"remove-secret-row\">\n" +
+    "<div class=\"remove-secret\">\n" +
     "<label class=\"sr-only\">Remove Build Secret</label>\n" +
     "<a class=\"pficon pficon-close remove-btn\" aria-label=\"Delete row\" role=\"button\" ng-click=\"removeSecret($index)\" href=\"\"></a>\n" +
     "</div>\n" +
@@ -6743,10 +6889,10 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "</div>\n" +
     "<div class=\"osc-secret-actions\">\n" +
     "<span ng-if=\"canAddSourceSecret()\">\n" +
-    "<a href=\"\" role=\"button\" ng-click=\"addSourceSecret()\">Add build secret</a>\n" +
+    "<a href=\"\" role=\"button\" ng-click=\"addSourceSecret()\">Add another secret</a>\n" +
     "<span ng-if=\"'secrets' | canI : 'create'\" class=\"action-divider\">|</span>\n" +
     "</span>\n" +
-    "<a href=\"\" ng-if=\"'secrets' | canI : 'create'\" role=\"button\" ng-click=\"openCreateSecretModal()\">Create source secret</a>\n" +
+    "<a href=\"\" ng-if=\"'secrets' | canI : 'create'\" role=\"button\" ng-click=\"openCreateSecretModal()\">Create new secret</a>\n" +
     "</div>\n" +
     "</ng-form>"
   );
@@ -7419,6 +7565,260 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "</div>\n" +
     "</form>\n" +
     "</fieldset>\n" +
+    "</div>\n" +
+    "</div>\n" +
+    "</div>\n" +
+    "</div>\n" +
+    "</div>\n" +
+    "</div>"
+  );
+
+
+  $templateCache.put('views/edit/deployment-config.html',
+    "<default-header class=\"top-header\"></default-header>\n" +
+    "<div class=\"wrap no-sidebar\">\n" +
+    "<div class=\"sidebar-left collapse navbar-collapse navbar-collapse-2\">\n" +
+    "<navbar-utility-mobile></navbar-utility-mobile>\n" +
+    "</div>\n" +
+    "<div class=\"middle surface-shaded\">\n" +
+    "\n" +
+    "<div class=\"middle-section\" ng-show=\"deploymentConfig\">\n" +
+    "<div class=\"middle-container\">\n" +
+    "<div class=\"middle-content\">\n" +
+    "<div class=\"container surface-shaded\">\n" +
+    "<breadcrumbs breadcrumbs=\"breadcrumbs\"></breadcrumbs>\n" +
+    "<alerts alerts=\"alerts\"></alerts>\n" +
+    "<div ng-if=\"!loaded\">Loading...</div>\n" +
+    "<div ng-if=\"loaded\">\n" +
+    "<h1>\n" +
+    "Edit Deployment Config {{deploymentConfig.metadata.name}}\n" +
+    "<small>&mdash; {{strategyData.type | startCase}} Deployment Strategy</small>\n" +
+    "</h1>\n" +
+    "<fieldset ng-disabled=\"disableInputs\">\n" +
+    "<form class=\"edit-form\" name=\"form\" novalidate ng-submit=\"save()\">\n" +
+    "<div class=\"row\">\n" +
+    "<div class=\"col-lg-12\">\n" +
+    "<div class=\"section\">\n" +
+    "<h3>Deployment Strategy</h3>\n" +
+    "<dl class=\"dl-horizontal left\">\n" +
+    "{{strategyParamsName}}\n" +
+    "<div class=\"form-group strategy-name\">\n" +
+    "<label class=\"picker-label\">Strategy Type</label>\n" +
+    "<ui-select ng-model=\"strategyData.type\" search-enabled=\"false\" ng-change=\"strategyChanged()\">\n" +
+    "<ui-select-match>{{$select.selected}}</ui-select-match>\n" +
+    "<ui-select-choices repeat=\"strategyType in deploymentConfigStrategyTypes\">\n" +
+    "{{strategyType}}\n" +
+    "</ui-select-choices>\n" +
+    "</ui-select>\n" +
+    "<div>\n" +
+    "<span ng-switch=\"strategyData.type\">\n" +
+    "<span class=\"help-block\" ng-switch-when=\"Recreate\">\n" +
+    "The recreate strategy has basic rollout behavior and supports lifecycle hooks for injecting code into the deployment process.\n" +
+    "<a href=\"{{'recreate_strategy' | helpLink}}\" target=\"_blank\"><span class=\"learn-more-inline\">Learn more&nbsp;<i class=\"fa fa-external-link\" aria-hidden=\"true\"></i></span></a>\n" +
+    "</span>\n" +
+    "<span class=\"help-block\" ng-switch-when=\"Rolling\">\n" +
+    "The rolling strategy will wait for pods to pass their readiness check, scale down old components and then scale up.\n" +
+    "<a href=\"{{'rolling_strategy' | helpLink}}\" target=\"_blank\"><span class=\"learn-more-inline\">Learn more&nbsp;<i class=\"fa fa-external-link\" aria-hidden=\"true\"></i></span></a>\n" +
+    "</span>\n" +
+    "<span class=\"help-block\" ng-switch-when=\"Custom\">\n" +
+    "The custom strategy allows you to specify container image that will provide your own deployment behavior.\n" +
+    "<a href=\"{{'custom_strategy' | helpLink}}\" target=\"_blank\"><span class=\"learn-more-inline\">Learn more&nbsp;<i class=\"fa fa-external-link\" aria-hidden=\"true\"></i></span></a>\n" +
+    "</span>\n" +
+    "</span>\n" +
+    "</div>\n" +
+    "</div>\n" +
+    "<div ng-if=\"strategyData.type === 'Custom'\">\n" +
+    "<div class=\"form-group\">\n" +
+    "<label for=\"imageName\" class=\"required\">Image Name</label>\n" +
+    "<div>\n" +
+    "<input class=\"form-control\" id=\"imageName\" name=\"imageName\" ng-model=\"strategyData.customParams.image\" type=\"text\" autocorrect=\"off\" autocapitalize=\"off\" spellcheck aria-describedby=\"image-name-help\" required>\n" +
+    "</div>\n" +
+    "<div class=\"help-block\" id=\"image-name-help\">\"An image that can carry out the deployment.</div>\n" +
+    "</div>\n" +
+    "<div class=\"form-group\">\n" +
+    "<label class=\"required\">Command</label>\n" +
+    "<edit-command args=\"strategyData.customParams.command\"></edit-command>\n" +
+    "</div>\n" +
+    "<div class=\"form-group\">\n" +
+    "<label>Environment Variables</label>\n" +
+    "<key-value-editor entries=\"strategyData.customParams.environment\" key-validator=\"[a-zA-Z][a-zA-Z0-9_]*\" key-validator-error-tooltip=\"A valid environment variable name is an alphanumeric (a-z and 0-9) string beginning with a letter that may contain underscores.\" add-row-link=\"Add environment variable\"></key-value-editor>\n" +
+    "</div>\n" +
+    "</div>\n" +
+    "<div ng-if=\"strategyData.type !== 'Custom'\">\n" +
+    "<div class=\"form-group\">\n" +
+    "<label for=\"strategyTimeout\">Timeout</label>\n" +
+    "<span class=\"input-group\" ng-class=\"{ 'has-error': form.strategyTimeout.$invalid && form.strategyTimeout.$touched }\">\n" +
+    "<input id=\"strategyTimeout\" type=\"number\" name=\"strategyTimeout\" ng-model=\"strategyData[strategyParamsPropertyName].timeoutSeconds\" placeholder=\"600\" ng-pattern=\"/^\\d+$/\" min=\"0\" select-on-focus class=\"form-control\" aria-describedby=\"strategyTimeout\">\n" +
+    "<span class=\"input-group-addon\">seconds</span>\n" +
+    "</span>\n" +
+    "<div class=\"help-block\" ng-attr-id=\"strategyTimeout\">\n" +
+    "How long to wait for a pod to scale up before giving up.\n" +
+    "</div>\n" +
+    "<div ng-if=\"form.strategyTimeout.$invalid && form.strategyTimeout.$touched\" class=\"has-error\">\n" +
+    "<div ng-if=\"form.strategyTimeout.$error.number\" class=\"help-block\">\n" +
+    "Must be a number.\n" +
+    "</div>\n" +
+    "<div ng-if=\"form.strategyTimeout.$error.min\" class=\"help-block\">\n" +
+    "Timeout can't be negative.\n" +
+    "</div>\n" +
+    "<span ng-if=\"form.strategyTimeout.$error.pattern && !form.strategyTimeout.$error.min\" class=\"help-block\">\n" +
+    "Must be a whole number.\n" +
+    "</span>\n" +
+    "</div>\n" +
+    "</div>\n" +
+    "<div ng-if=\"strategyData.type === 'Rolling'\">\n" +
+    "<div ng-if=\"view.advancedStrategyOptions\">\n" +
+    "<div class=\"form-group\">\n" +
+    "<label for=\"updatePeriod\">Update Period</label>\n" +
+    "<span class=\"input-group\" ng-class=\"{ 'has-error': form.updatePeriod.$invalid && form.updatePeriod.$touched }\">\n" +
+    "<input id=\"updatePeriod\" type=\"number\" placeholder=\"1\" name=\"updatePeriod\" ng-model=\"strategyData[strategyParamsPropertyName].updatePeriodSeconds\" ng-pattern=\"/^\\d+$/\" min=\"0\" select-on-focus class=\"form-control\" aria-describedby=\"updatePeriod\">\n" +
+    "<span class=\"input-group-addon\">seconds</span>\n" +
+    "</span>\n" +
+    "<div class=\"help-block\" id=\"updatePeriod\">\n" +
+    "Time to wait between retrying to run individual pod.\n" +
+    "</div>\n" +
+    "<div ng-if=\"form.updatePeriod.$invalid && form.updatePeriod.$touched\" class=\"has-error\">\n" +
+    "<div ng-if=\"form.updatePeriod.$error.number\" class=\"help-block\">\n" +
+    "Must be a number.\n" +
+    "</div>\n" +
+    "<div ng-if=\"form.updatePeriod.$error.min\" class=\"help-block\">\n" +
+    "Update period can't be negative.\n" +
+    "</div>\n" +
+    "<span ng-if=\"form.updatePeriod.$error.pattern && !form.updatePeriod.$error.min\" class=\"help-block\">\n" +
+    "Must be a whole number.\n" +
+    "</span>\n" +
+    "</div>\n" +
+    "</div>\n" +
+    "<div class=\"form-group\">\n" +
+    "<label for=\"interval\">Interval</label>\n" +
+    "<span class=\"input-group\" ng-class=\"{ 'has-error': form.interval.$invalid && form.interval.$touched }\">\n" +
+    "<input id=\"interval\" type=\"number\" placeholder=\"1\" name=\"interval\" ng-model=\"strategyData[strategyParamsPropertyName].intervalSeconds\" ng-pattern=\"/^\\d+$/\" min=\"0\" select-on-focus class=\"form-control\" aria-describedby=\"interval\">\n" +
+    "<span class=\"input-group-addon\">seconds</span>\n" +
+    "</span>\n" +
+    "<div class=\"help-block\" ng-attr-id=\"interval\">\n" +
+    "Time to wait between polling deployment status after running a pod.\n" +
+    "</div>\n" +
+    "<div ng-if=\"form.interval.$invalid && form.interval.$touched\" class=\"has-error\">\n" +
+    "<div ng-if=\"form.interval.$error.number\" class=\"help-block\">\n" +
+    "Must be a number.\n" +
+    "</div>\n" +
+    "<div ng-if=\"form.interval.$error.min\" class=\"help-block\">\n" +
+    "Interval can't be negative.\n" +
+    "</div>\n" +
+    "<span ng-if=\"form.interval.$error.pattern && !form.interval.$error.min\" class=\"help-block\">\n" +
+    "Must be a whole number.\n" +
+    "</span>\n" +
+    "</div>\n" +
+    "</div>\n" +
+    "</div>\n" +
+    "<div class=\"form-group\">\n" +
+    "<label for=\"maxUnavailable\">Maximal Unavailable Pods</label>\n" +
+    "<div ng-class=\"{ 'has-error': form.maxUnavailable.$invalid && form.maxUnavailable.$touched }\">\n" +
+    "<input id=\"maxUnavailable\" type=\"text\" placeholder=\"25%\" name=\"maxUnavailable\" ng-model=\"strategyData[strategyParamsPropertyName].maxUnavailable\" ng-pattern=\"/^\\d+%?$/\" select-on-focus class=\"form-control\" aria-describedby=\"max-unavailable-help\">\n" +
+    "</div>\n" +
+    "<div ng-if=\"form.maxUnavailable.$invalid && form.maxUnavailable.$touched && form.maxUnavailable.$error.pattern\" class=\"has-error\">\n" +
+    "<span class=\"help-block\">\n" +
+    "Must be a non-negative whole number or percentage.\n" +
+    "</span>\n" +
+    "</div>\n" +
+    "</div>\n" +
+    "<div class=\"form-group\">\n" +
+    "<label for=\"maxSurge\">Maximal Surge Pods</label>\n" +
+    "<div ng-class=\"{ 'has-error': form.maxSurge.$invalid && form.maxSurge.$touched }\">\n" +
+    "<input id=\"maxSurge\" type=\"text\" placeholder=\"25%\" name=\"maxSurge\" ng-model=\"strategyData[strategyParamsPropertyName].maxSurge\" ng-pattern=\"/^\\d+%?$/\" select-on-focus class=\"form-control\" aria-describedby=\"maxSurge\">\n" +
+    "</div>\n" +
+    "<div ng-if=\"form.maxSurge.$invalid && form.maxSurge.$touched && form.maxSurge.$error.pattern\" class=\"has-error\">\n" +
+    "<span class=\"help-block\">\n" +
+    "Must be a non-negative whole number or percentage.\n" +
+    "</span>\n" +
+    "</div>\n" +
+    "</div>\n" +
+    "</div>\n" +
+    "<div ng-if=\"view.advancedStrategyOptions\">\n" +
+    "<div class=\"lifecycle-hooks\">\n" +
+    "<div class=\"lifecycle-hook\" id=\"pre-lifecycle-hook\">\n" +
+    "<h3>Pre Lifecycle Hook</h3>\n" +
+    "<lifecycle-hook model=\"strategyData[strategyParamsPropertyName].pre\" type=\"pre\" available-volumes=\"volumeNames\" available-containers=\"containerNames\" namespace=\"projectName\">\n" +
+    "</lifecycle-hook>\n" +
+    "</div>\n" +
+    "<div ng-if=\"strategyData.type !== 'Rolling'\" class=\"lifecycle-hook\" id=\"mid-lifecycle-hook\">\n" +
+    "<h3>Mid Lifecycle Hook</h3>\n" +
+    "<lifecycle-hook model=\"strategyData[strategyParamsPropertyName].mid\" type=\"mid\" available-volumes=\"volumeNames\" available-containers=\"containerNames\" namespace=\"projectName\">\n" +
+    "</lifecycle-hook>\n" +
+    "</div>\n" +
+    "<div class=\"lifecycle-hook\" id=\"post-lifecycle-hook\">\n" +
+    "<h3>Post Lifecycle Hook</h3>\n" +
+    "<lifecycle-hook model=\"strategyData[strategyParamsPropertyName].post\" type=\"post\" available-volumes=\"volumeNames\" available-containers=\"containerNames\" namespace=\"projectName\">\n" +
+    "</lifecycle-hook>\n" +
+    "</div>\n" +
+    "</div>\n" +
+    "</div>\n" +
+    "</div>\n" +
+    "<div class=\"gutter-top\">\n" +
+    "<div ng-if=\"!view.advancedStrategyOptions\">To set additional parameters or edit lifecycle hooks, view <a href=\"\" ng-click=\"view.advancedStrategyOptions = true\">advanced strategy options.</a></div>\n" +
+    "<a ng-if=\"view.advancedStrategyOptions\" href=\"\" ng-click=\"view.advancedStrategyOptions = false\">Hide strategy advanced options</a>\n" +
+    "</div>\n" +
+    "</dl>\n" +
+    "</div>\n" +
+    "<div class=\"section\">\n" +
+    "<h3 class=\"with-divider\">Images</h3>\n" +
+    "<dl class=\"dl-horizontal left\">\n" +
+    "<div ng-repeat=\"(containerName, containerConfig) in containerConfigByName\" class=\"gutter-bottom\">\n" +
+    "<div class=\"container-name\">\n" +
+    "<h4>Container {{containerName}}</h4>\n" +
+    "</div>\n" +
+    "<div class=\"checkbox form-group\">\n" +
+    "<label>\n" +
+    "<input type=\"checkbox\" ng-model=\"containerConfig.hasDeploymentTrigger\">\n" +
+    "Automatically start new deployments when the image stream tag is updated.\n" +
+    "</label>\n" +
+    "</div>\n" +
+    "<div class=\"form-group\" ng-if=\"containerConfig.hasDeploymentTrigger\">\n" +
+    "<label class=\"required\">Image Change Trigger</label>\n" +
+    "<istag-select model=\"containerConfig.triggerData.istag\" select-disabled=\"disableInputs\" include-shared-namespace=\"true\"></istag-select>\n" +
+    "<span class=\"help-block\">New deployments will automatically start when the image stream tag is updated.</span>\n" +
+    "</div>\n" +
+    "<div ng-if=\"!containerConfig.hasDeploymentTrigger\">\n" +
+    "<label for=\"imageName\" class=\"required\">Image Name</label>\n" +
+    "<div>\n" +
+    "<input class=\"form-control\" id=\"imageName\" name=\"imageName\" ng-model=\"containerConfig.image\" type=\"text\" autocorrect=\"off\" autocapitalize=\"off\" spellcheck required>\n" +
+    "</div>\n" +
+    "</div>\n" +
+    "</div>\n" +
+    "<div ng-if=\"view.advancedImageOptions\">\n" +
+    "<div class=\"gutter-top\">\n" +
+    "<osc-secrets model=\"pullSecrets\" namespace=\"projectName\" display-type=\"pull\" type=\"image\" secrets-by-type=\"secretsByType\" service-account-to-link=\"default\" alerts=\"alerts\" allow-multiple-secrets=\"true\">\n" +
+    "</osc-secrets>\n" +
+    "</div>\n" +
+    "</div>\n" +
+    "<div class=\"gutter-top\">\n" +
+    "<div ng-if=\"!view.advancedImageOptions\">To set secrets for pulling your images from private image registries, view <a href=\"\" ng-click=\"view.advancedImageOptions = true\">advanced image options.</a></div>\n" +
+    "<a ng-if=\"view.advancedImageOptions\" href=\"\" ng-click=\"view.advancedImageOptions = false\">Hide advanced image options</a>\n" +
+    "</div>\n" +
+    "</dl>\n" +
+    "</div>\n" +
+    "<div class=\"section\">\n" +
+    "<h3 class=\"with-divider\">Environment Variables</h3>\n" +
+    "<div ng-repeat=\"(containerName, containerConfig) in containerConfigByName\">\n" +
+    "<div class=\"container-name\">\n" +
+    "<h4>Container {{containerName}}</h4>\n" +
+    "</div>\n" +
+    "<key-value-editor ng-if=\"containerConfig\" entries=\"containerConfig.env\" key-validator=\"[a-zA-Z][a-zA-Z0-9_]*\" key-validator-error-tooltip=\"A valid environment variable name is an alphanumeric (a-z and 0-9) string beginning with a letter that may contain underscores.\" add-row-link=\"Add environment variable\"></key-value-editor>\n" +
+    "</div>\n" +
+    "</div>\n" +
+    "<div class=\"buttons gutter-top-bottom\">\n" +
+    "<button type=\"submit\" class=\"btn btn-primary btn-lg\" ng-disabled=\"form.$invalid || form.$pristine || disableInputs\">\n" +
+    "Save\n" +
+    "</button>\n" +
+    "<a class=\"btn btn-default btn-lg\" href=\"{{updatedDeploymentConfig | navigateResourceURL}}\">\n" +
+    "Cancel\n" +
+    "</a>\n" +
+    "</div>\n" +
+    "</div>\n" +
+    "</div>\n" +
+    "</form>\n" +
+    "</fieldset>\n" +
+    "</div>\n" +
     "</div>\n" +
     "</div>\n" +
     "</div>\n" +

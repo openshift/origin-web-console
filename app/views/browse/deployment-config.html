@@ -46,6 +46,9 @@
                     </li>
                     <li class="divider" ng-if="!updatingPausedState && 'deploymentconfigs' | canI : 'update'"></li>
                     <li ng-if="'deploymentconfigs' | canI : 'update'">
+                      <a ng-href="{{deploymentConfig | editResourceURL}}" role="button">Edit</a>
+                    </li>
+                    <li ng-if="'deploymentconfigs' | canI : 'update'">
                       <a ng-href="project/{{project.metadata.name}}/attach-pvc?kind=DeploymentConfig&name={{deploymentConfig.metadata.name}}"
                          role="button">Attach Storage</a>
                     </li>
