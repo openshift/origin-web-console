@@ -150,7 +150,7 @@ angular.module('openshiftConsole')
      *  Will set the newTerm's isVisible/isUsed to true, while hiding the previous
      */
     $scope.onTerminalSelectChange = function(newTerm) {
-      // Make all terminals invisible (Becuase we don't have a pointer to the terminal that is currently visible)
+      // Make all terminals invisible (Because we don't have a pointer to the terminal that is currently visible)
       _.each($scope.containerTerminals, function(term) {
         term.isVisible = false;
       });
