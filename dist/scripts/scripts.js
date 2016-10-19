@@ -3395,15 +3395,45 @@ _.set(e, [ c, b.metadata.name ], b);
 }), e;
 }
 };
-}), angular.module("openshiftConsole").controller("ProjectsController", [ "$scope", "$route", "$timeout", "$filter", "$location", "DataService", "AuthService", "AlertMessageService", "Logger", "hashSizeFilter", function(a, b, c, d, e, f, g, h, i, j) {
-var k = [];
-a.projects = {}, a.alerts = a.alerts || {}, a.showGetStarted = !1, a.canCreate = void 0, h.getAlerts().forEach(function(b) {
+}), angular.module("openshiftConsole").controller("ProjectsController", [ "$scope", "$filter", "$location", "$route", "$timeout", "AlertMessageService", "AuthService", "DataService", "KeywordService", "Logger", function(a, b, c, d, e, f, g, h, i, j) {
+var k, l, m = [], n = [];
+a.alerts = a.alerts || {}, a.loading = !0, a.showGetStarted = !1, a.canCreate = void 0, a.search = {
+text:""
+};
+var o = [ "metadata.name", 'metadata.annotations["openshift.io/display-name"]', 'metadata.annotations["openshift.io/description"]' ], p = function() {
+a.projects = i.filterForKeywords(l, o, n);
+}, q = function() {
+var b = _.get(a, "sortConfig.currentField.id"), c = function(a) {
+var c = _.get(a, b) || _.get(a, "metadata.name", "");
+return c.toLowerCase();
+};
+l = _.sortByOrder(k, [ c ], [ a.sortConfig.isAscending ? "asc" :"desc" ]);
+}, r = function() {
+q(), p();
+};
+a.sortConfig = {
+fields:[ {
+id:'metadata.annotations["openshift.io/display-name"]',
+title:"Display Name",
+sortType:"alpha"
+}, {
+id:"metadata.name",
+title:"Name",
+sortType:"alpha"
+} ],
+isAscending:!0,
+onSortChange:r
+}, f.getAlerts().forEach(function(b) {
 a.alerts[b.name] = b.data;
-}), h.clearAlerts(), g.withUser().then(function() {
-k.push(f.watch("projects", a, function(b) {
-a.projects = b.by("metadata.name"), a.showGetStarted = 0 === j(a.projects);
+}), f.clearAlerts(), a.$watch("search.text", _.debounce(function(b) {
+n = i.generateKeywords(b), a.$apply(p);
+}, 50, {
+maxWait:250
+})), g.withUser().then(function() {
+m.push(h.watch("projects", a, function(b) {
+k = _.toArray(b.by("metadata.name")), a.loading = !1, a.showGetStarted = _.isEmpty(k), r();
 }));
-}), f.get("projectrequests", null, a, {
+}), h.get("projectrequests", null, a, {
 errorNotification:!1
 }).then(function() {
 a.canCreate = !0;
@@ -3412,7 +3442,7 @@ a.canCreate = !1;
 var c = b.data || {};
 if (403 !== b.status) {
 var d = "Failed to determine create project permission";
-return 0 !== b.status && (d += " (" + b.status + ")"), void i.warn(d);
+return 0 !== b.status && (d += " (" + b.status + ")"), void j.warn(d);
 }
 if (c.details) {
 var e = [];
@@ -3421,7 +3451,7 @@ a.message && e.push(a.message);
 }), e.length > 0 && (a.newProjectMessage = e.join("\n"));
 }
 }), a.$on("$destroy", function() {
-f.unwatchAll(k);
+h.unwatchAll(m);
 });
 } ]), angular.module("openshiftConsole").controller("PodsController", [ "$routeParams", "$scope", "DataService", "ProjectsService", "AlertMessageService", "$filter", "LabelFilter", "Logger", function(a, b, c, d, e, f, g, h) {
 b.projectName = a.project, b.pods = {}, b.unfilteredPods = {}, b.labelSuggestions = {}, b.alerts = b.alerts || {}, b.emptyMessage = "Loading...", e.getAlerts().forEach(function(a) {

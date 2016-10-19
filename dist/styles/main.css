@@ -3623,10 +3623,6 @@ label.checkbox{font-weight:400}
 .action-inline i.fa,.action-inline i.pficon{color:#4d5258;margin-right:5px}
 a.subtle-link{color:#9c9c9c;border-bottom:1px dotted #BBB}
 a.subtle-link:active,a.subtle-link:focus,a.subtle-link:hover{color:#00659c;border-bottom:1px dotted #00659c;text-decoration:none}
-.project-summary{-webkit-flex:1 0 80%;-moz-flex:1 0 80%;-ms-flex:1 0 80%;flex:1 0 80%;max-width:80%}
-@media (min-width:768px){.project-summary{-webkit-flex:1 0 90%;-moz-flex:1 0 90%;-ms-flex:1 0 90%;flex:1 0 90%;max-width:90%}
-}
-.project-actions{width:50px}
 .tasks{margin-bottom:20px;padding-left:15px;padding-right:15px;padding-bottom:10px}
 .tasks.success{border:1px solid #3f9c35;border-left:3px solid #3f9c35}
 .tasks.failure{border:1px solid #c00;border-left:3px solid #c00}
@@ -4358,7 +4354,6 @@ to{background-color:transparent}
 .navbar-project-menu .form-group .form-control{background-color:transparent;margin-bottom:0;height:auto}
 .navbar-project-menu .bootstrap-select.open.btn-group .btn{background-color:#1e2126}
 .navbar-project-menu .bootstrap-select.btn-group .btn{border-color:#050505;border-radius:0;color:#dbdada;font-size:19px;font-weight:300;background:#292e34;border-bottom:0;box-shadow:none;border-top:0;line-height:1.66666667;padding:7px 50px 7px 20px;transition:none}
-.tile,.tile-flex{transition:.3s cubic-bezier(.25,.8,.25,1)}
 .navbar-project-menu .bootstrap-select.btn-group .btn:focus,.navbar-project-menu .bootstrap-select.btn-group .btn:hover{background-color:#1e2126;color:#fcfcfc}
 .navbar-project-menu .bootstrap-select.btn-group .btn:focus{outline:dotted thin!important;outline:-webkit-focus-ring-color auto 5px!important;outline-offset:-2px!important}
 .navbar-project-menu .bootstrap-select.btn-group .btn:focus:active{outline:0!important}
@@ -4516,6 +4511,7 @@ td.visible-print,th.visible-print{display:table-cell!important}
 .sidebar-left .navbar-sidebar ul.nav-sidenav-primary>li>a span{display:block;margin:0}
 .nav-sidenav-secondary .dropdown-header,.sidebar-left .navbar-sidebar ul.nav-sidenav-primary>li .hover-nav ul.nav-sidenav-secondary li a{padding-left:15px}
 }
+.projects-list,.tile{box-shadow:0 3px 1px -2px rgba(0,0,0,.15),0 2px 2px 0 rgba(0,0,0,.1),0 1px 5px 0 rgba(0,0,0,.09)}
 @media (min-width:1200px){.sidebar-left .navbar-sidebar,.sidebar-left .navbar-sidebar .nav-sidenav-secondary.hover-nav.dropdown-menu{font-size:14px}
 .sidebar-left .navbar-sidebar ul.nav-sidenav-primary>li>a{padding-bottom:25px;padding-top:25px}
 .sidebar-left .navbar-sidebar ul.nav-sidenav-primary>li>a .fa-angle-right{font-size:18px}
@@ -4657,7 +4653,7 @@ body,html{margin:0;padding:0}
 .events-table td{overflow-wrap:break-word}
 .events-table .pficon{vertical-align:middle}
 .events-table .severity-icon-td{padding-left:0;padding-right:0}
-.tile{background:#fff;box-shadow:0 3px 1px -2px rgba(0,0,0,.15),0 2px 2px 0 rgba(0,0,0,.1),0 1px 5px 0 rgba(0,0,0,.09);padding:10px 20px;margin-bottom:20px;word-wrap:break-word;-webkit-box-sizing:border-box;-moz-box-sizing:border-box;box-sizing:border-box;overflow-x:hidden}
+.tile{background:#fff;padding:10px 20px;margin-bottom:20px;word-wrap:break-word;-webkit-box-sizing:border-box;-moz-box-sizing:border-box;box-sizing:border-box;overflow-x:hidden}
 .tile h1,.tile h2,.tile h3{margin:10.5px 0px}
 .tile h3 .tile-timestamp{color:#9c9c9c;font-size:84%}
 @media (max-width:768px){.tile h3 .tile-timestamp:before{content:'\2014\00a0'}
@@ -4669,7 +4665,6 @@ body,html{margin:0;padding:0}
 .tile.tile-project h2{margin:10px 0}
 .tile.tile-status{background-color:#E6ECF1;border-top:5px solid #BFCEDB;margin-top:40px}
 .tile-click{cursor:pointer;position:relative}
-.tile-click:hover{box-shadow:0 2px 12px -1px rgba(0,0,0,.3),0 4px 5px 0 rgba(0,0,0,.11),0 1px 10px 0 rgba(0,0,0,.1)}
 .tile-click:hover .btn{color:#000!important}
 .tile-click:hover .tile-target,.tile-flex:hover a.tile-target{color:#00659c}
 .tile-click:hover .tile-target:hover{text-decoration:none}
@@ -4850,6 +4845,37 @@ kubernetes-topology-graph{height:700px}
 .settings-item{margin:4px 8px 4px 0}
 .hide-if-empty:empty{display:none!important}
 .donut-title-med-pf{font-size:22.5px;font-weight:300}
+.col-md-12>.alerts:first-child{margin-top:20px}
+.project-actions{margin:20px 0 0}
+.project-actions .project-action-item{margin-left:12px}
+.project-info.list-group-item{border-bottom:0;border-color:#e0e0e0;padding:10px 20px}
+@media (min-width:992px){.project-actions{margin-top:0}
+.project-additional-info.list-view-pf-additional-info{width:60%}
+.project-name-item.list-group-item-heading{white-space:normal;width:40%}
+}
+.project-name-item.list-group-item-heading .h1{margin-bottom:0;margin-top:0}
+.project-name-item.list-group-item-heading .h1 [data-toggle=tooltip]{cursor:help;margin-left:5px}
+.project-name-item.list-group-item-heading .h1 a{line-height:initial}
+.project-name-item.list-group-item-heading p{margin-bottom:0;margin-top:5px}
+.projects-bar{display:flex;flex-direction:column}
+@media (min-width:650px){.projects-bar{flex-direction:row;justify-content:space-between}
+}
+.projects-bar h1{margin-bottom:0!important;margin-top:0!important}
+.projects-bar .projects-add{display:flex;justify-content:flex-end;margin:-27px 0 20px}
+.projects-bar .projects-options{display:flex;flex-direction:column}
+@media (min-width:650px){.projects-bar .projects-add{margin-left:40px;margin-top:0;order:2}
+.projects-bar .projects-options{flex-direction:row}
+}
+.projects-bar .projects-search{display:flex;margin-bottom:20px}
+.projects-bar .projects-search .search-pf{display:block;flex:0 1 auto}
+.projects-bar .projects-search .search-pf.has-button .form-group{display:block}
+.projects-bar .projects-sort{flex:1 0 auto}
+.projects-bar .projects-sort .form-group{margin:0}
+.projects-bar .vertical-divider{border-left:1px solid #bbb;display:inline-block;height:27px;margin:0 7px;vertical-align:middle;width:1px}
+.projects-header{margin-top:21px}
+.projects-instructions-link{white-space:pre}
+.projects-list{border-top:0;margin-bottom:20px}
+.projects-list .project-info:hover{background-color:#def3ff}
 .terminal-font,kubernetes-container-terminal .terminal{font-family:"Monospace Regular","DejaVu Sans Mono",Menlo,Monaco,Consolas,monospace;line-height:1em;font-size:12px}
 @media (min-width:768px){.container-terminal-wrapper{background-color:#000}
 }
