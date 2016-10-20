@@ -185,7 +185,7 @@ describe('', function() {
 
         it('should delete a project', function() {
           h.goToPage('/');
-          var projectTile = element(by.cssContainingText(".tile-project", project.displayName));
+          var projectTile = element(by.cssContainingText(".project-info", project.displayName));
           projectTile.element(by.css('.fa-trash-o')).click();
           h.setInputValue('confirmName', project.name);
           var deleteButton = element(by.cssContainingText(".modal-dialog .btn", "Delete"));

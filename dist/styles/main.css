@@ -3440,7 +3440,6 @@ body{padding-right:0px!important}
 .separator{border-top:1px solid rgba(0,0,0,.15)}
 .surface-shaded .nav-tabs{border-color:rgba(0,0,0,.15)}
 .breadcrumb{font-size:12px;padding-bottom:0;margin-bottom:0}
-.tile.tile-project h2{padding:10px 0}
 @media (min-width:768px){.browse-deployment-donut .deployment-donut{-webkit-align-items:flex-end;-moz-align-items:flex-end;align-items:flex-end}
 .nav-tabs.nav-justified{border-bottom:1px solid #ededed}
 }
