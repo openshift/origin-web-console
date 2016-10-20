@@ -63,6 +63,11 @@ angular
         controller: 'MonitoringController',
         reloadOnSearch: false
       })
+      .when('/project/:project/membership', {
+        templateUrl: 'views/membership.html',
+        controller: 'MembershipController',
+        reloadOnSearch: false
+      })
       .when('/project/:project/browse', {
         redirectTo: function(params) {
           return '/project/' + encodeURIComponent(params.project) + "/browse/pods";  // TODO decide what subtab to default to here

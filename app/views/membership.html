@@ -1,0 +1,301 @@
+<project-header class="top-header"></project-header>
+<project-page class="membership" ng-if="project">
+
+  <div class="middle-section">
+    <div class="middle-container">
+      <div class="middle-header">
+        <div class="container-fluid">
+          <breadcrumbs breadcrumbs="breadcrumbs"></breadcrumbs>
+        </div>
+      </div>
+      <div class="middle-content" persist-tab-state>
+        <div class="container-fluid">
+          <div class="row">
+            <div class="col-md-12">
+              <h1>
+                <a
+                  class="pull-right btn btn-default"
+                  href=""
+                  ng-if="'rolebindings' | canI : 'update'"
+                  ng-click="toggleEditMode()">
+                  <span ng-if="!(mode.edit)">Edit Membership</span>
+                  <span ng-if="mode.edit">Done Editing</span>
+                </a>
+                 Membership
+              </h1>
+              <span class="learn-more-block">
+                <a ng-href="{{'roles' | helpLink}}">
+                  Learn more <i class="fa fa-external-link"></i>
+                </a>
+              </span>
+              <alerts alerts="alerts"></alerts>
+            </div>
+          </div>
+          <div  ng-if="!('rolebindings' | canI : 'list')">
+            <p>You do not have permission to view roles in this project.</p>
+          </div>
+          <uib-tabset
+            ng-if="'rolebindings' | canI : 'list'">
+            <uib-tab
+              ng-repeat="subjectKind in subjectKindsForUI | orderBy: 'sortOrder'"
+              active="selectedTab[subjectKind.name]"
+              select="selectTab(subjectKind.name)">
+              <uib-tab-heading>
+                {{subjectKind.name | startCase}}s&nbsp;({{subjectKind.subjects | hashSize}})
+              </uib-tab-heading>
+              <div ng-if="subjectKind.description">
+                <p>
+                  {{subjectKind.description}}
+                  <a
+                    ng-if="subjectKind.helpLinkKey"
+                    target="_blank"
+                    ng-href="{{subjectKind.helpLinkKey | helpLink}}"
+                    class="learn-more-inline">
+                    Learn more <i class="fa fa-external-link"></i>
+                  </a>
+                </p>
+              </div>
+              <div
+                column
+                class="content-pane"
+                ng-class="'content-' + subjectKind.name.toLowerCase()">
+
+                <div
+                  class="col-heading item-row"
+                  row mobile="column" tablet="column" flex-collapse-fix>
+                  <div row flex flex-collapse-fix>
+                    <div class="col-name" conceal="mobile">
+                      <h3>Name</h3>
+                    </div>
+                    <div class="col-roles" flex conceal="mobile">
+                      <h3>Roles</h3>
+                    </div>
+                  </div>
+                  <div class="col-add-role" flex-collapse-fix>
+                    <h3
+                      ng-show="mode.edit">
+                      Add another role
+                    </h3>
+                  </div>
+                </div>
+
+                <div ng-if="(subjectKind.subjects | hashSize) === 0">
+                  <p>
+                    <em>There are no {{ subjectKind.name | humanizeKind }}s with access to this project.</em>
+                  </p>
+                </div>
+                <div
+                  ng-repeat="subject in subjectKind.subjects"
+                  class="item-row highlight-hover"
+                  row mobile="column">
+                  <div class="col-name" row cross-axis="center">
+                    <a
+                      ng-if="subject.namespace"
+                      target="_blank"
+                      ng-href="project/{{project.metadata.name}}/browse/other?kind=ServiceAccount">
+                      <span>
+                        {{subject.namespace}} /
+                      </span>
+                      <strong>
+                        {{subject.name}}
+                      </strong>
+                    </a>
+                    <span ng-if="!subject.namespace">
+                      <strong>
+                        {{subject.name}}
+                      </strong>
+                      <span
+                        class="current-user"
+                        ng-if="subject.name === user.metadata.name">
+                        (you)
+                      </span>
+                    </span>
+                  </div>
+                  <div
+                    class="action-set"
+                    flex row tablet="column" mobile="column">
+                    <div
+                      class="col-roles"
+                      row tablet="column" flex wrap axis="start">
+                      <action-chip
+                        ng-repeat="role in subject.roles"
+                        key="role.metadata.name"
+                        key-help="roleHelp(role)"
+                        show-action="mode.edit"
+                        action="confirmRemove(subject.name, subjectKind.name, role.metadata.name)"
+                        action-title="remove role {{role}} from {{subject.name}}"></action-chip>
+                    </div>
+                    <div
+                      class="col-add-role">
+                      <div ng-show="mode.edit" row>
+                        <ui-select
+                          ng-if="filteredRoles.length"
+                          ng-model="subject.newRole"
+                          theme="bootstrap"
+                          search-enabled="true"
+                          title="Select a new role for {{subjectKind.name}}"
+                          class="select-role"
+                          flex>
+                          <ui-select-match
+                            placeholder="Select a role">
+                            <span ng-bind="subject.newRole.metadata.name"></span>
+                          </ui-select-match>
+                          <ui-select-choices
+                            repeat="role as role in filteredRoles | filter: excludeExistingRoles(subject.roles) | filter: $select.search | orderBy: 'metadata.name'">
+                            <div>{{ role.metadata.name }}</div>
+                            <div ng-if="role | annotation : 'description'">
+                              <small>{{role | annotation : 'description'}}</small>
+                            </div>
+                          </ui-select-choices>
+                        </ui-select>
+                        <a
+                          href=""
+                          ng-disabled="disableAddForm || (!subject.newRole)"
+                          ng-click="addRoleTo(subject.name, subjectKind.name, subject.newRole)"
+                          class="btn btn-default add-role-to">
+                          Add
+                        </a>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+
+                <ng-form
+                  class="new-binding"
+                  novalidate
+                  name="forms.newBindingForm"
+                  ng-if="newBinding">
+                  <div
+                    ng-if="mode.edit"
+                    class="item-row form-new-role" row mobile="column">
+                    <div class="col-name" column>
+                      <label
+                        ng-attr-for="newBindingName"
+                        class="sr-only">
+                        Name
+                      </label>
+                      <input
+                        type="text"
+                        class="form-control input-name"
+                        placeholder="Name"
+                        ng-model="newBinding.name">
+                      <div
+                        ng-if="newBinding.kind === 'ServiceAccount'"
+                        class="service-account-namespace hidden-sm hidden-md hidden-lg"
+                        aria-hidden="true">
+                        <ui-select
+                          ng-model="newBinding.namespace"
+                          theme="bootstrap"
+                          search-enabled="true"
+                          title="Select a project"
+                          class="select-role">
+                          <ui-select-match
+                            placeholder="Select a project">
+                            <span ng-bind="newBinding.namespace"></span>
+                          </ui-select-match>
+                          <ui-select-choices
+                            repeat="projectName in projects | filter: $select.search">
+                            <div>{{projectName}}</div>
+                          </ui-select-choices>
+                        </ui-select>
+                      </div>
+                    </div>
+                    <div
+                      class="action-set"
+                      flex row tablet="column" mobile="column">
+                      <div
+                        class="col-roles"
+                        row tablet="column" flex wrap axis="start">
+                        <div
+                          ng-if="newBinding.kind === 'ServiceAccount'"
+                          class="service-account-namespace hidden-xs">
+                          <ui-select
+                            ng-model="newBinding.namespace"
+                            theme="bootstrap"
+                            search-enabled="true"
+                            title="Select a project"
+                            class="select-project">
+                            <ui-select-match
+                              placeholder="Select a project">
+                              <span ng-bind="newBinding.namespace"></span>
+                            </ui-select-match>
+                            <ui-select-choices
+                              repeat="projectName in projects | filter: $select.search">
+                              <div>{{projectName}}</div>
+                            </ui-select-choices>
+                          </ui-select>
+                        </div>
+                      </div>
+                      <div class="col-add-role">
+                        <div ng-show="mode.edit" row>
+                          <ui-select
+                            ng-if="filteredRoles.length"
+                            ng-model="newBinding.newRole"
+                            theme="bootstrap"
+                            search-enabled="true"
+                            title="new {{subjectKind.name}} role"
+                            class="select-role"
+                            flex>
+                            <ui-select-match
+                              placeholder="Select a role">
+                              <span ng-bind="newBinding.newRole.metadata.name"></span>
+                            </ui-select-match>
+                            <ui-select-choices
+                              repeat="role as role in filteredRoles | filter: $select.search">
+                              <div>{{ role.metadata.name }}</div>
+                              <div ng-if="role | annotation : 'description'">
+                                <small>{{role | annotation : 'description'}}</small>
+                              </div>
+                            </ui-select-choices>
+                          </ui-select>
+                          <a
+                            href=""
+                            ng-disabled="disableAddForm || (!newBinding.name) || (!newBinding.newRole)"
+                            ng-click="addRoleTo(newBinding.name, newBinding.kind, newBinding.newRole, newBinding.namespace)"
+                            class="btn btn-default add-role-to">
+                            Add
+                          </a>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </ng-form>
+
+                <div
+                  ng-if="mode.edit"
+                  class="item-row"
+                  row mobile="column">
+                  <div class="col-name hidden-xs">&nbsp;</div>
+                  <div
+                    class="action-set"
+                    flex row tablet="column" mobile="column">
+                    <div class="col-roles hidden-xs" flex>&nbsp;</div>
+                    <div class="col-add-role" row>
+                      <input
+                        id="show-hidden-roles"
+                        type="checkbox"
+                        class="toggle-hidden"
+                        ng-click="showAllRoles($event)">
+                        &nbsp;
+                      <label for="show-hidden-roles">
+                        Show hidden roles
+                      </label>
+                      <a
+                        href=""
+                        class="action-inline"
+                        data-toggle="popover"
+                        data-trigger="focus"
+                        data-content="System roles are hidden by default and do not typically need to be managed.">
+                        <i class="pficon pficon-help"></i>
+                      </a>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </uib-tab>
+          </uib-tabset>
+        </div>
+      </div>
+    </div>
+  </div>
+</project-page>

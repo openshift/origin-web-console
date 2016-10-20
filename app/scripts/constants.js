@@ -33,6 +33,11 @@ window.OPENSHIFT_CONSTANTS = {
     "custom_strategy":         "https://docs.openshift.org/latest/dev_guide/deployments.html#custom-strategy",
     "lifecycle_hooks":         "https://docs.openshift.org/latest/dev_guide/deployments.html#lifecycle-hooks",
     "new_pod_exec":            "https://docs.openshift.org/latest/dev_guide/deployments.html#pod-based-lifecycle-hook",
+    "authorization":           "https://docs.openshift.org/latest/architecture/additional_concepts/authorization.html",
+    "roles":                   "https://docs.openshift.org/latest/architecture/additional_concepts/authorization.html#roles",
+    "service_accounts":        "https://docs.openshift.org/latest/dev_guide/service_accounts.html",
+    "users_and_groups":        "https://docs.openshift.org/latest/architecture/additional_concepts/authentication.html#users-and-groups",
+    // default should remain last, add new links above
     "default":                 "https://docs.openshift.org/latest/welcome/index.html"
   },
   // Maps links names to URL's where the CLI tools can be downloaded, may point directly to files or to external pages in a CDN, for example.
@@ -161,6 +166,16 @@ window.OPENSHIFT_CONSTANTS = {
             {
               label: "Other Resources",
               href: "/browse/other"
+            },
+            {
+              label: "Membership",
+              href: "/membership",
+              // TODO: coming soon, canI filtering for nav.
+              // supports: {resource: '', verb: '', group: '' }
+              canI: {
+                resource: 'rolebindings',
+                verb: 'list'
+              }
             }
           ]
         }

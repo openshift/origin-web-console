@@ -1,0 +1,64 @@
+.action-chip {
+  margin: 0 5px 2px 0;
+  font-size: 12px;
+  display: flex;
+  flex-direction: row;
+  .item {
+    padding: .2em .6em .3em;
+    // explicit radius as is possible 1 node will receive all rules
+    &:first-child {
+      border-top-left-radius: 2px;
+      border-bottom-left-radius: 2px;
+    }
+    &:last-child {
+      border-top-right-radius: 2px;
+      border-bottom-right-radius: 2px;
+    }
+    &:nth-child(3) {
+      border-left: 1px solid #f1f1f1;
+    }
+  }
+  .key {
+    background-color: #ededed;
+    color: #252525;
+  }
+  .value {
+    background-color: #bbb;
+    color: #FFFFFF;
+  }
+  .action {
+    background-color: #d1d1d1;
+    color: #FFFFFF;
+    &:hover {
+      background-color: #adadad;
+    }
+    i {
+      margin-top: 2px;
+    }
+  }
+}
+// <action-chip class="blue" for orig color scheme.
+// TODO: should be a better name
+.blue {
+  .action-chip {
+    .item {
+      &:nth-child(3) {
+        border-left: 1px solid #b2dcf3;
+      }
+    }
+    .key {
+      background-color: #bee1f4;
+      color: #00659c;
+    }
+    .value {
+      background-color: #7dc3e8;
+      color: #FFFFFF;
+    }
+    .action {
+      background-color: #7dc3e8;
+      &:hover {
+        background-color: #00659c;
+      }
+    }
+  }
+}
