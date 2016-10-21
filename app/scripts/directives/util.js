@@ -132,20 +132,22 @@ angular.module('openshiftConsole')
         tag: '=?'
       },
       controller: function($scope, $filter) {
-        if ($scope.tag) {
-          $scope.icon = $filter('imageStreamTagAnnotation')($scope.resource, "icon", $scope.tag);
-        } else {
-          $scope.icon = $filter('annotation')($scope.resource, "icon");
-        }
-        $scope.isDataIcon = $scope.icon && ($scope.icon.indexOf("data:") === 0);
-        if (!$scope.isDataIcon) {
-          // The icon class filter will at worst return the default icon for the given kind
+        $scope.$watchGroup(['resource', 'tag'], function() {
           if ($scope.tag) {
-            $scope.icon = $filter('imageStreamTagIconClass')($scope.resource, $scope.tag);
+            $scope.icon = $filter('imageStreamTagAnnotation')($scope.resource, "icon", $scope.tag);
           } else {
-            $scope.icon = $filter('iconClass')($scope.resource, $scope.kind);
+            $scope.icon = $filter('annotation')($scope.resource, "icon");
           }
-        }
+          $scope.isDataIcon = $scope.icon && ($scope.icon.indexOf("data:") === 0);
+          if (!$scope.isDataIcon) {
+            // The icon class filter will at worst return the default icon for the given kind
+            if ($scope.tag) {
+              $scope.icon = $filter('imageStreamTagIconClass')($scope.resource, $scope.tag);
+            } else {
+              $scope.icon = $filter('iconClass')($scope.resource, $scope.kind);
+            }
+          }
+        });
       },
       templateUrl: 'views/directives/_custom-icon.html'
     };

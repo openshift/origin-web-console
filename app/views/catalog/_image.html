@@ -1,47 +1,53 @@
-<div class="tile tile-compact tile-image tile-click label-tags" id="" ng-attr-title="{{imageStream | imageStreamTagAnnotation : 'description' : imageTag}}">
-  <div row cross-axis="center" class="tile-flex">
-    <div row main-axis="center" class="image-icon">
-      <custom-icon resource="imageStream" kind="image" tag="imageTag" title="{{imageStream.metadata.name}}:{{imageTag}}"></custom-icon>
+<div class="col-xxs-12 col-xs-6 col-sm-6 col-md-4 col-lg-3">
+  <div class="card-pf">
+    <div class="card-pf-body card-pf-body-with-version">
+      <div class="card-pf-details">
+        <div class="card-pf-title-with-icon">
+          <custom-icon resource="imageStream" kind="image" tag="is.tag.tag" title="{{imageStream.metadata.name}}:{{is.tag.tag}}" class="image-icon"></custom-icon>
+          <h2 class="card-pf-title">
+            {{imageStream | displayName}}
+          </h2>
+        </div>
+        <p class="card-pf-badge">Builds source code</p>
+        <p>
+          <truncate-long-text
+            class="project-description"
+            content="imageStream | imageStreamTagAnnotation : 'description' : is.tag.tag"
+            limit="200"
+            use-word-boundary="true"></truncate-long-text>
+        </p>
+        <p ng-if="imageStream | imageStreamTagAnnotation : 'provider' : is.tag.tag">
+          Provider: {{imageStream | imageStreamTagAnnotation : 'provider' : is.tag.tag}}
+        </p>
+        <!-- Only show the namespace if it's not in the shared openshift namespace -->
+        <p ng-if="imageStream.metadata.namespace !== 'openshift'">
+          Namespace: {{imageStream.metadata.namespace}}
+        </p>
+      </div>
+      <p class="card-pf-version">
+        Version
+        <ui-select ng-model="is.tag" search-enabled="false">
+          <ui-select-match>
+            <span>
+              {{$select.selected.tag}}
+              <small ng-repeat="otherTag in referencedBy[$select.selected.tag]">
+                <span ng-if="$first"> &mdash; </span>{{otherTag}}<span ng-if="!$last">,</span>
+              </small>
+            </span>
+          </ui-select-match>
+          <ui-select-choices repeat="tag in tags track by tag.tag">
+            {{tag.tag}}
+            <small ng-repeat="otherTag in referencedBy[tag.tag]">
+              <span ng-if="$first"> &mdash; </span>{{otherTag}}<span ng-if="!$last">,</span>
+            </small>
+          </ui-select-choices>
+        </ui-select>
+      </p>
     </div>
-    <div flex>
-      <h3>
-        <a class="tile-target" ng-href="{{imageStream | createFromImageURL : imageTag : project}}">{{imageStream.metadata.name}}:{{imageTag}}</a>
-        <small ng-if="referencedBy.length">
-          &ndash;
-          <span ng-repeat="otherTag in referencedBy">
-            {{otherTag}}<span ng-if="!$last">,</span>
-          </span>
-        </small>
-      </h3>
-      <div ng-if="imageStream | imageStreamTagAnnotation : 'provider' : imageTag">
-        <label style="margin-right: 5px;">Provider:</label>
-        {{imageStream | imageStreamTagAnnotation : 'provider' : imageTag}}
-      </div>
-      <!-- Only show the namespace if it's not in the shared openshift namespace -->
-      <div ng-if="imageStream.metadata.namespace !== 'openshift'">
-        <label style="margin-right: 5px;">Namespace:</label>
-        {{imageStream.metadata.namespace}}
-      </div>
-      <div ng-if="version && version !== imageTag">
-        <label style="margin-right: 5px;">Version:</label>
-        {{version}}
-      </div>
-      <a href=""
-         ng-click="filterTag(tag)"
-         ng-repeat="tag in (imageStream | imageStreamTagTags : imageTag)"
-         ng-attr-title="Filter by tag {{tag}}"
-         class="tag small">
-        {{tag}}
+    <div class="card-pf-footer clearfix">
+      <a class="btn btn-default pull-right" ng-href="{{imageStream | createFromImageURL : is.tag.tag : project}}">
+        Select
       </a>
-    </div>
-    <!-- Unset title attribute to prevent two tooltips. -->
-    <div title="" ng-if="isBuilder">
-      <i
-        class="pficon pficon-image tile-badge-icon"
-        aria-hidden="true"
-        data-toggle="tooltip"
-        data-original-title="Builder Image"></i>
-      <span class="sr-only">Builder Image</span>
     </div>
   </div>
 </div>

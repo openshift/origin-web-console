@@ -291,6 +291,14 @@ angular
         controller: 'CreateController',
         reloadOnSearch: false
       })
+      .when('/project/:project/create/category/:category', {
+        templateUrl: 'views/create/category.html',
+        controller: 'BrowseCategoryController'
+      })
+      .when('/project/:project/create/category/:category/:subcategory', {
+        templateUrl: 'views/create/category.html',
+        controller: 'BrowseCategoryController'
+      })
       .when('/project/:project/create/fromtemplate', {
         templateUrl: 'views/newfromtemplate.html',
         controller: 'NewFromTemplateController'

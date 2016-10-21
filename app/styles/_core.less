@@ -390,39 +390,6 @@ label.checkbox {
   margin-bottom: inherit;
 }
 
-// Make sure icons are the same size so headings align.
-.add-to-project {
-  .catalog-legend {
-    dt, dd {
-      display: inline;
-    }
-    dt:before {
-      content: "";
-      display: block;
-    }
-    dd:before {
-      // dash and space
-      content: '\2014\00a0';
-    }
-  }
-
-  .filter-group {
-    line-height: 1.75;
-    margin: 15px 0 10px;
-    .search-input, .btn-group {
-      display: inline-block;
-      margin-bottom: 10px;
-      vertical-align: top;
-    }
-    .search-input {
-      width: 100%;
-      @media (min-width: @screen-sm-min) {
-        width: 400px;
-      }
-    }
-  }
-}
-
 .drag-and-drop-zone {
   position: absolute;
   border-width: 3px;
@@ -638,30 +605,6 @@ label.checkbox {
   }
 }
 
-.catalog-col section {
-  margin-bottom: 20px;
-  > h3 {
-    margin-top: 0;
-    small {
-      font-size: @font-size-base;
-    }
-  }
-}
-@media (min-width: @screen-md-min) {
-  .catalog-col-1 {
-    padding-right: 10px;
-  }
-  .catalog-col-2 {
-    padding-left: 10px;
-  }
-}
-
-.tag {
-  color: #999999;
-  text-transform: uppercase;
-  margin-right: 10px;
-}
-
 // `edit-command` directive
 .command-args {
   textarea {
@@ -680,48 +623,6 @@ label.checkbox {
     font-size: 15px;
     padding-top: 5px;
     vertical-align: top;
-  }
-}
-
-.catalog {
-  .tile-template, .tile-image {
-    h3 small {
-      vertical-align: 1px;
-    }
-    a.tag {
-      text-decoration: none;
-      &:hover {
-        color: black;
-        background: #dfdfdf;
-        text-decoration: none;
-      }
-    }
-  }
-}
-
-.catalog-fluid {
-  .flex-display(@display: flex);
-  // Stack at mobile screen sizes
-  .flex-direction(@direction: column);
-  @media (min-width: @screen-md-min) {
-    .tile-template, .tile-image {
-      &:nth-child(odd) {
-        margin-right: (@grid-gutter-width/2);
-      }
-    }
-  }
-  // Arrange in columns >767px
-  @media (min-width: @screen-sm-min) {
-    .flex-direction(@direction: row);
-    .flex-wrap(@wrap: wrap);
-    .justify-content(@justify: flex-start);
-    // remove ie prefixes when PostCSS Autoprefixer is included for github issue #7559
-    -ms-flex-pack: start;
-
-    .tile-template, .tile-image {
-      .flex(@columns: 1 0 auto);
-      width: 375px;
-    }
   }
 }
 
@@ -791,6 +692,9 @@ label.checkbox {
   margin-bottom: (@grid-gutter-width / 2);
   .pre-wrap();
   .word-break();
+}
+.resource-metadata {
+  margin-bottom: (@grid-gutter-width / 2);
 }
 
 // Misc
@@ -1340,4 +1244,12 @@ copy-to-clipboard .input-group {
 
 .tech-preview-header {
   justify-content: space-between;
+}
+
+
+// add an option for a single-column display at screen resolutions 0-479px
+@media (max-width: @screen-xxs-max) {
+  .col-xxs-12 {
+    width: 100%;
+  }
 }

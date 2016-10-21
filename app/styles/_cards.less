@@ -1,0 +1,64 @@
+//
+// PatternFly Cards
+// --------------------------------------------------
+
+.card-pf {
+  .panel_default_boxshadow();
+
+  .image-icon, .template-icon {
+    font-size: 28px;
+    line-height: 1;
+    margin-right: 15px;
+    opacity: .38;
+  }
+}
+
+.card-pf-badge {
+  color: #999;
+  font-size: @font-size-small;
+  text-transform: uppercase;
+}
+
+.card-pf-body {
+  margin-bottom: 0;
+}
+
+.card-pf-title-with-icon {
+  align-items: center;
+  display: flex;
+  margin-bottom: 15px;
+}
+
+.row-cards-pf-flex {
+  display: flex;
+  flex-wrap: wrap;
+  // Safari bug fix; see http://stackoverflow.com/a/36476586
+  &:before {
+    display: none;
+  }
+  [class^="col"] {
+    display: flex;
+  }
+  .card-pf {
+    display: flex;
+    flex-basis: 100%; // IE 11 overflow bug fix
+    flex-direction: column;
+    flex-grow: 1;
+  }
+  .card-pf-body {
+    flex-grow: 1;
+  }
+  .card-pf-body-with-version {
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+  }
+  .card-pf-footer {
+    .btn {
+      margin-bottom: 10px;
+    }
+  }
+  .card-pf-title {
+    margin: 0;
+  }
+}

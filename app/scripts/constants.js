@@ -216,5 +216,136 @@ window.OPENSHIFT_CONSTANTS = {
       //   }
       // ]
     }
+  ],
+  CATALOG_CATEGORIES: [
+    {
+      id: 'languages',
+      label: "Languages",
+      iconClassDefault: "fa fa-code",
+      items: [
+        {
+          id: "java",
+          label: "Java",
+          iconClass: "font-icon icon-openjdk",
+          subcategories: [{
+            id: 'java-subcategories',
+            items: [
+              {
+                id: "amq",
+                label: "Red Hat JBoss A-MQ"
+              },
+              {
+                id: "processserver",
+                label: "Red Hat JBoss BPM Suite"
+              },
+              {
+                id: "decisionserver",
+                label: "Red Hat JBoss BRMS"
+              },
+              {
+                id: "datagrid",
+                label: "Red Hat JBoss Data Grid"
+              },
+              {
+                id: "eap",
+                label: "Red Hat JBoss EAP"
+              },
+              {
+                id: "jboss-fuse",
+                label: "Red Hat JBoss Fuse"
+              },
+              {
+                id: "tomcat",
+                label: "Red Hat JBoss Web Server (Tomcat)"
+              },
+              {
+                id: "sso",
+                label: "Red Hat Single Sign-On"
+              },
+              {
+                id: "wildfly",
+                label: "WildFly"
+              }
+            ]
+          }]
+        },
+        {
+          id: "javascript",
+          categoryAliases: ["nodejs","js"],
+          label: "JavaScript",
+          iconClass: "font-icon icon-js"
+        },
+        {
+          id: "dotnet",
+          label: ".NET",
+          iconClass: "font-icon icon-dotnet"
+        },
+        {
+          id: "perl",
+          label: "Perl",
+          iconClass: "font-icon icon-perl"
+        },
+        {
+          id: "php",
+          label: "PHP",
+          iconClass: "font-icon icon-php"
+        },
+        {
+          id: "python",
+          label: "Python",
+          iconClass: "font-icon icon-python"
+        },
+        {
+          id: "ruby",
+          label: "Ruby",
+          iconClass: "font-icon icon-ruby"
+        }
+      ]
+    },
+    {
+      id: 'technologies',
+      label: "Technologies",
+      items: [
+        {
+          id: "business-process-services",
+          categoryAliases: ["decisionserver","processserver"],
+          label: "Business Process Services",
+          description: "Model, automate, and orchestrate business processes across applications, services, and data."
+        },
+        {
+          id: "ci-cd",
+          categoryAliases:["jenkins"],
+          label: "Continuous Integration & Deployment",
+          description: "Automate the build, test, and deploymeant of your application with each new code revision."
+        },
+        {
+          id: "datastore",
+          categoryAliases: ["database","datagrid"],
+          label: "Data Stores",
+          description: "Store and manage collections of data."
+        },
+        {
+          id: "messaging",
+          label: "Messaging",
+          description: "Facilitate communication between applications and distributed processes with a messaging server."
+        },
+        {
+          id: "integration",
+          label: "Integration",
+          description: "Connect with other applications and data to enhance functionality without duplication."
+        },
+        {
+          id: "single-sign-on",
+          categoryAliases: ["sso"],
+          label: "Single Sign-On",
+          description: "A centralized authentication server for users to log in, log out, register, and manage user accounts for applications and RESTful web services."
+        },
+        {
+          id: "",
+          label: "Uncategorized",
+          description: ""
+        }
+      ]
+    }
   ]
 };
