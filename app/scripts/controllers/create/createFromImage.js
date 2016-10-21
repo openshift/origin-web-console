@@ -14,6 +14,7 @@ angular.module("openshiftConsole")
       MetricsService,
       HPAService,
       QuotaService,
+      SecretsService,
       TaskList,
       failureObjectNameFilter,
       $filter,
@@ -42,6 +43,7 @@ angular.module("openshiftConsole")
         title: imageName
       }
     ];
+    $scope.alerts = {};
 
     var appLabel = {name: 'app', value: ''};
 
@@ -67,12 +69,20 @@ angular.module("openshiftConsole")
           scope.buildConfig = {
             buildOnSourceChange: true,
             buildOnImageChange: true,
-            buildOnConfigChange: true
+            buildOnConfigChange: true,
+            secrets: {
+              gitSecret: [{name: ""}],
+              pullSecret: [{name: ""}],
+              pushSecret: [{name: ""}]
+            }
           };
           scope.buildConfigEnvVars = [];
           scope.deploymentConfig = {
             deployOnNewImage: true,
-            deployOnConfigChange: true
+            deployOnConfigChange: true,
+            secrets: {
+              pullSecrets: [{name: ""}]
+            }
           };
           scope.DCEnvVarsFromImage;
           scope.DCEnvVarsFromUser = [];
@@ -122,6 +132,15 @@ angular.module("openshiftConsole")
           // Warn if metrics aren't configured when setting autoscaling options.
           MetricsService.isAvailable().then(function(available) {
             $scope.metricsWarning = !available;
+          });
+
+          DataService.list("secrets", context, function(secrets) {
+            var secretsByType = SecretsService.groupSecretsByType(secrets);
+            var secretNamesByType =_.mapValues(secretsByType, function(secrets) {return _.map(secrets, 'metadata.name')});
+            // Add empty option to the image/source secrets
+            $scope.secretsByType = _.each(secretNamesByType, function(secretsArray) {
+              secretsArray.unshift("");
+            });
           });
 
           DataService.get("imagestreams", scope.imageName, {namespace: (scope.namespace || $routeParams.project)}).then(function(imageStream){

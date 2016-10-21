@@ -302,6 +302,13 @@
                             </div>
                           </div>
 
+                          <div class="checkbox form-group">
+                            <label>
+                              <input type="checkbox" ng-model="triggers.hasConfigTrigger">
+                              Automatically start new deployment when the deployment configuration changes
+                            </label>
+                          </div>
+
                           <div ng-if="view.advancedImageOptions">
                             <div class="gutter-top">
                               <osc-secrets model="pullSecrets"

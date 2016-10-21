@@ -14,7 +14,7 @@ angular.module('openshiftConsole')
     $scope.postCreateAction = function(newSecret, creationAlert) {
       $uibModalInstance.close(newSecret);
       // Add creation alert into scope
-      _.extend($scope.alerts, creationAlert);
+      $scope.alerts[creationAlert.name] = creationAlert.data;
     };
 
     $scope.cancel = function() {

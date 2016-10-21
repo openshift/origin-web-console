@@ -237,8 +237,11 @@ angular.module("openshiftConsole")
           }
         );
       }
-      if(input.deploymentConfig.deployOnConfigChange){
+      if (input.deploymentConfig.deployOnConfigChange) {
         deploymentConfig.spec.triggers.push({type: "ConfigChange"});
+      }
+      if (_.get(input, 'deploymentConfig.secrets.pullSecrets[0].name')) {
+        deploymentConfig.spec.template.spec.imagePullSecrets = input.deploymentConfig.secrets.pullSecrets;
       }
       return deploymentConfig;
     };
@@ -349,6 +352,15 @@ angular.module("openshiftConsole")
           triggers: triggers
         }
       };
+      if (_.get(input, 'buildConfig.secrets.gitSecret[0].name')) {
+        bc.spec.source.sourceSecret = _.first(input.buildConfig.secrets.gitSecret);
+      }
+      if (_.get(input, 'buildConfig.secrets.pullSecret[0].name')) {
+        bc.spec.strategy.sourceStrategy.pullSecret = _.first(input.buildConfig.secrets.pullSecret);
+      }
+      if (_.get(input, 'buildConfig.secrets.pushSecret[0].name')) {
+        bc.spec.output.pushSecret = _.first(input.buildConfig.secrets.pushSecret);
+      }
 
       // Add contextDir only if specified.
       if (input.buildConfig.contextDir) {
