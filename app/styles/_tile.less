@@ -5,7 +5,7 @@
 .tile {
   background: @console-panel-color;
   .panel_default_boxshadow();
-  padding: 10px 20px;
+  padding: 20px;
   margin-bottom: 20px;
   word-wrap: break-word;
   .box-sizing(border-box);
@@ -14,52 +14,20 @@
   h1, h2, h3 {
     margin: (@line-height-computed / 2) 0px;
   }
-  h3 .tile-timestamp {
-    .text-muted;
-    .small;
-    @media (min-width: @screen-sm-min) {
-      .pull-right();
-    }
-    @media (max-width: @screen-sm-min) {
-      &:before {
-        // em dash and non-breaking space
-        content: '\2014\00a0'
-      }
-    }
-  }
   &:hover {
     // give primary tile link hover state
     a.tile-target {
       color: @link-hover-color;
     }
   }
-  &.tile-compact {
-    margin-bottom: 12px;
-  }
-}
-.tile.tile-template {
-  a.label {
-    font-size: @font-size-small;
-  }
-}
-.tile.tile-project {
-  min-height: 75px;
-  h2 {
-    margin: 10px 0;
-  }
-}
-.tile.tile-status {
-  background-color: @status-bg-color;
-  border-top: 5px solid @status-border-color;
-  margin-top: @grid-gutter-width;
 }
 
 .tile-click {
   cursor: pointer;
   position: relative;
   &:hover {
-    .btn {
-      color: #000 !important;
+    .image-icon, .template-icon {
+      opacity: .75;
     }
     .tile-target {
       color: @link-hover-color;
@@ -67,46 +35,60 @@
         text-decoration: none;
       }
     }
-    .font-icon.logo {
-      opacity: .75;
-    }
-  }
-}
-
-.tile-flex {
-  .tile-badge-icon {
-    cursor: help;
-    font-size: @font-size-base;
-    opacity: .38;
-    padding-left: 1px;
   }
   .image-icon, .template-icon {
-    width: 30px;
-    margin-right: 20px;
-    font-size: 33px;
+    font-size: 48px;
+    line-height: 1;
+    margin-bottom: 15px;
     opacity: .38;
-  }
-  &:hover {
-    .image-icon, .template-icon, .tile-badge-icon {
-      opacity: .75;
-    }
-    a.tile-target {
-      color: @link-hover-color;
-    }
-  }
-  h3 {
-    margin: 3px 0px 2px;
   }
 }
 
-.label-tags {
-  a.label {
-    display: inline-block;
-    margin-right: 3px;
-    margin-top: -5px;
-    &:hover {
-      color: #111;
-      background-color: #eee !important;
+.tile-row {
+  display: flex;
+  flex-wrap: wrap;
+  margin-left: -10px;
+  margin-right: -10px;
+  // Safari bug fix; see http://stackoverflow.com/a/36476586
+  &:before {
+    display: none;
+  }
+  [class^="col"] {
+    display: flex;
+    padding-left: 10px;
+    padding-right: 10px;
+  }
+  .h3 + & {
+    margin-top: 20px;
+  }
+  .tile {
+    .box-shadow-hover-transition();
+    flex-grow: 1;
+    &.tile-sans-description.tile-sans-icon {
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+    }
+    p {
+      margin-bottom: 0;
+      margin-top: 15px;
+    }
+  }
+  .tile-click:hover {
+    .panel_default_boxshadow_hover();
+  }
+  .tile-item-count {
+    background-color: #ccc;
+    font-weight: 600;
+    padding: 4px 6px;
+    position: absolute;
+    right: 10px;
+    top: 10px;
+  }
+  .tile-title {
+    text-align: center;
+    h3 {
+      margin: 0 20px;
     }
   }
 }

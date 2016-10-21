@@ -29,6 +29,16 @@ angular.module("openshiftConsole")
     $scope.sourceURLPattern = SOURCE_URL_PATTERN;
     var imageName = $routeParams.imageName;
 
+    if(!imageName){
+      Navigate.toErrorPage("Cannot create from source: a base image was not specified");
+      return;
+    }
+    if(!$routeParams.imageTag){
+      Navigate.toErrorPage("Cannot create from source: a base image tag was not specified");
+      return;
+    }
+
+    $scope.displayName = $routeParams.displayName;
     $scope.breadcrumbs = [
       {
         title: $scope.projectName,
@@ -39,7 +49,11 @@ angular.module("openshiftConsole")
         link: "project/" + $scope.projectName + "/create"
       },
       {
-        title: imageName
+        title: "Browse Catalog",
+        link: "project/" + $scope.projectName + "/create?tab=fromCatalog"
+      },
+      {
+        title: $routeParams.displayName || imageName
       }
     ];
 
@@ -52,13 +66,6 @@ angular.module("openshiftConsole")
         // Update project breadcrumb with display name.
         $scope.breadcrumbs[0].title = $filter('displayName')(project);
         function initAndValidate(scope){
-
-          if(!imageName){
-            Navigate.toErrorPage("Cannot create from source: a base image was not specified");
-          }
-          if(!$routeParams.imageTag){
-            Navigate.toErrorPage("Cannot create from source: a base image tag was not specified");
-          }
 
           scope.emptyMessage = "Loading...";
           scope.imageName = imageName;

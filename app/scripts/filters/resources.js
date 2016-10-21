@@ -681,14 +681,15 @@ angular.module('openshiftConsole')
       return createURI.toString();
     };
   })
-  .filter('createFromImageURL', function() {
+  .filter('createFromImageURL', function(displayNameFilter) {
     return function(imageStream, imageTag, projectName) {
       var createURI = URI.expand("project/{project}/create/fromimage{?q*}", {
         project: projectName,
         q: {
           imageName: imageStream.metadata.name,
           imageTag: imageTag,
-          namespace: imageStream.metadata.namespace
+          namespace: imageStream.metadata.namespace,
+          displayName: displayNameFilter(imageStream)
         }
       });
       return createURI.toString();

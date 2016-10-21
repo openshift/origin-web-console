@@ -19,7 +19,7 @@
                     </div>
                     <div class="col-md-8">
                       <fieldset ng-disabled="disableInputs">
-                        <osc-image-summary resource="image" name="imageName" tag="imageTag"></osc-image-summary>
+                        <osc-image-summary resource="image" name="displayName || imageName" tag="imageTag"></osc-image-summary>
                         <div class="clearfix visible-xs-block"></div>
                         <form class="" ng-show="imageStream" novalidate name="form" ng-submit="createApp()">
                           <div style="margin-bottom: 15px;">

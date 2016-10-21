@@ -124,6 +124,108 @@ label:"Monitoring",
 iconClass:"pficon pficon-screen",
 href:"/monitoring",
 prefixes:[ "/browse/events" ]
+} ],
+CATALOG_CATEGORIES:[ {
+id:"languages",
+label:"Languages",
+iconClassDefault:"fa fa-code",
+items:[ {
+id:"java",
+label:"Java",
+iconClass:"font-icon icon-openjdk",
+subcategories:[ {
+id:"java-subcategories",
+items:[ {
+id:"amq",
+label:"Red Hat JBoss A-MQ"
+}, {
+id:"processserver",
+label:"Red Hat JBoss BPM Suite"
+}, {
+id:"decisionserver",
+label:"Red Hat JBoss BRMS"
+}, {
+id:"datagrid",
+label:"Red Hat JBoss Data Grid"
+}, {
+id:"eap",
+label:"Red Hat JBoss EAP"
+}, {
+id:"jboss-fuse",
+label:"Red Hat JBoss Fuse"
+}, {
+id:"tomcat",
+label:"Red Hat JBoss Web Server (Tomcat)"
+}, {
+id:"sso",
+label:"Red Hat Single Sign-On"
+}, {
+id:"wildfly",
+label:"WildFly"
+} ]
+} ]
+}, {
+id:"javascript",
+categoryAliases:[ "nodejs", "js" ],
+label:"JavaScript",
+iconClass:"font-icon icon-js"
+}, {
+id:"dotnet",
+label:".NET",
+iconClass:"font-icon icon-dotnet"
+}, {
+id:"perl",
+label:"Perl",
+iconClass:"font-icon icon-perl"
+}, {
+id:"php",
+label:"PHP",
+iconClass:"font-icon icon-php"
+}, {
+id:"python",
+label:"Python",
+iconClass:"font-icon icon-python"
+}, {
+id:"ruby",
+label:"Ruby",
+iconClass:"font-icon icon-ruby"
+} ]
+}, {
+id:"technologies",
+label:"Technologies",
+items:[ {
+id:"business-process-services",
+categoryAliases:[ "decisionserver", "processserver" ],
+label:"Business Process Services",
+description:"Model, automate, and orchestrate business processes across applications, services, and data."
+}, {
+id:"ci-cd",
+categoryAliases:[ "jenkins" ],
+label:"Continuous Integration & Deployment",
+description:"Automate the build, test, and deploymeant of your application with each new code revision."
+}, {
+id:"datastore",
+categoryAliases:[ "database", "datagrid" ],
+label:"Data Stores",
+description:"Store and manage collections of data."
+}, {
+id:"messaging",
+label:"Messaging",
+description:"Facilitate communication between applications and distributed processes with a messaging server."
+}, {
+id:"integration",
+label:"Integration",
+description:"Connect with other applications and data to enhance functionality without duplication."
+}, {
+id:"single-sign-on",
+categoryAliases:[ "sso" ],
+label:"Single Sign-On",
+description:"A centralized authentication server for users to log in, log out, register, and manage user accounts for applications and RESTful web services."
+}, {
+id:"",
+label:"Uncategorized",
+description:""
+} ]
 } ]
 }, angular.module("openshiftConsole", [ "ngAnimate", "ngCookies", "ngResource", "ngRoute", "ngSanitize", "openshiftUI", "kubernetesUI", "registryUI.images", "ui.bootstrap", "patternfly.charts", "patternfly.sort", "openshiftConsoleTemplates", "ui.ace", "extension-registry", "as.sortable", "ui.select", "key-value-editor", "angular-inview" ]).config([ "$routeProvider", function(a) {
 a.when("/", {
@@ -319,6 +421,12 @@ controller:"AttachPVCController"
 templateUrl:"views/create.html",
 controller:"CreateController",
 reloadOnSearch:!1
+}).when("/project/:project/create/category/:category", {
+templateUrl:"views/create/category.html",
+controller:"BrowseCategoryController"
+}).when("/project/:project/create/category/:category/:subcategory", {
+templateUrl:"views/create/category.html",
+controller:"BrowseCategoryController"
 }).when("/project/:project/create/fromtemplate", {
 templateUrl:"views/newfromtemplate.html",
 controller:"NewFromTemplateController"
@@ -3569,7 +3677,81 @@ _.set(e, [ c, b.metadata.name ], b);
 }), e;
 }
 };
-}), angular.module("openshiftConsole").controller("ProjectsController", [ "$scope", "$filter", "$location", "$route", "$timeout", "AlertMessageService", "AuthService", "DataService", "KeywordService", "Logger", function(a, b, c, d, e, f, g, h, i, j) {
+}), angular.module("openshiftConsole").factory("CatalogService", [ "$filter", "Constants", "KeywordService", function(a, b, c) {
+var d = a("tags"), e = {};
+_.each(b.CATALOG_CATEGORIES, function(a) {
+_.each(a.items, function(a) {
+e[a.id] = a;
+var b = _.get(a, "subcategories", []);
+_.each(b, function(a) {
+_.each(a.items, function(a) {
+e[a.id] = a;
+});
+});
+});
+});
+var f = function(a) {
+return e[a];
+}, g = function(a, b) {
+a = a.toLowerCase();
+var c;
+for (c = 0; c < b.length; c++) {
+var d = b[c].toLowerCase();
+if (a === d) return !0;
+}
+return !1;
+}, h = function(a, b) {
+var c = _.get(a, "categoryAliases", []), d = [ a.id ].concat(c);
+return _.some(d, function(a) {
+return g(a, b);
+});
+}, i = function(a) {
+var b = {};
+return _.each(a, function(a) {
+if (a.status) {
+var c = {};
+a.spec && a.spec.tags && _.each(a.spec.tags, function(a) {
+var b = _.get(a, "annotations.tags");
+b && (c[a.name] = b.split(/\s*,\s*/));
+});
+var d = !1;
+_.each(e, function(e) {
+var f = function(a) {
+return _.some(a.status.tags, function(a) {
+var b = c[a.tag] || [];
+return h(e, b) && g("builder", b);
+});
+};
+f(a) && (b[e.id] = b[e.id] || [], b[e.id].push(a), d = !0);
+});
+var f;
+d || (f = _.some(a.status.tags, function(a) {
+var b = c[a.tag] || [];
+return g("builder", b);
+}), f && (b[""] = b[""] || [], b[""].push(a)));
+}
+}), b;
+}, j = function(a) {
+var b = {};
+return _.each(a, function(a) {
+var c = d(a), f = !1;
+_.each(e, function(d) {
+h(d, c) && (b[d.id] = b[d.id] || [], b[d.id].push(a), f = !0);
+}), f || (b[""] = b[""] || [], b[""].push(a));
+}), b;
+}, k = [ "metadata.name", 'metadata.annotations["openshift.io/display-name"]' ], l = function(a, b) {
+return c.filterForKeywords(a, k, b);
+}, m = [ "metadata.name", 'metadata.annotations["openshift.io/display-name"]', "metadata.annotations.description" ], n = function(a, b) {
+return c.filterForKeywords(a, m, b);
+};
+return {
+getCategoryItem:f,
+categorizeImageStreams:i,
+categorizeTemplates:j,
+filterImageStreams:l,
+filterTemplates:n
+};
+} ]), angular.module("openshiftConsole").controller("ProjectsController", [ "$scope", "$filter", "$location", "$route", "$timeout", "AlertMessageService", "AuthService", "DataService", "KeywordService", "Logger", function(a, b, c, d, e, f, g, h, i, j) {
 var k, l, m = [], n = [];
 a.alerts = a.alerts || {}, a.loading = !0, a.showGetStarted = !1, a.canCreate = void 0, a.search = {
 text:""
@@ -6733,18 +6915,74 @@ j.toErrorPage("Could not load " + l(d.kind) + " '" + d.name + "'. " + b("getErro
 i.unwatchAll(o);
 });
 }));
-} ]), angular.module("openshiftConsole").controller("CreateFromImageController", [ "$scope", "Logger", "$q", "$routeParams", "APIService", "DataService", "ProjectsService", "Navigate", "ApplicationGenerator", "LimitRangesService", "MetricsService", "HPAService", "QuotaService", "TaskList", "failureObjectNameFilter", "$filter", "$parse", "$uibModal", "SOURCE_URL_PATTERN", "keyValueEditorUtils", function(a, b, c, d, e, f, g, h, i, j, k, l, m, n, o, p, q, r, s, t) {
-var u = p("displayName"), v = p("humanize");
-a.projectName = d.project, a.sourceURLPattern = s;
-var w = d.imageName;
-a.breadcrumbs = [ {
+} ]), angular.module("openshiftConsole").controller("BrowseCategoryController", [ "$scope", "$filter", "$location", "$q", "$routeParams", "$uibModal", "AlertMessageService", "CatalogService", "Constants", "DataService", "KeywordService", "LabelFilter", "Logger", "Navigate", "ProjectsService", function(a, b, c, d, e, f, g, h, i, j, k, l, m, n, o) {
+a.projectName = e.project;
+var p = function(b, c) {
+var d;
+return _.some(b, function(b) {
+if (d = _.find(b.items, {
+id:c
+})) {
+a.category = d;
+var e = _.get(d, "subcategories", []);
+return a.subcategories = [ {
+id:"",
+label:""
+} ].concat(e), !0;
+}
+return !1;
+}), d;
+}, q = i.CATALOG_CATEGORIES, r = "none" === e.category ? "" :e.category;
+if (a.category = p(q, r), !a.category) return void n.toErrorPage("Catalog category " + e.category + " not found.");
+var s, t;
+return e.subcategory && (s = a.category, r = "none" === e.subcategory ? "" :e.subcategory, t = _.get(a.category, "subcategories", []), a.category = p(t, r), !a.category) ? void n.toErrorPage("Catalog category " + e.category + "/" + e.subcategory + " not found.") :(a.alerts = a.alerts || {}, g.getAlerts().forEach(function(b) {
+a.alerts[b.name] = b.data;
+}), g.clearAlerts(), a.breadcrumbs = [ {
 title:a.projectName,
 link:"project/" + a.projectName
 }, {
 title:"Add to Project",
 link:"project/" + a.projectName + "/create"
 }, {
-title:w
+title:"Browse Catalog",
+link:"project/" + a.projectName + "/create?tab=fromCatalog"
+} ], s && a.breadcrumbs.push({
+title:s.label,
+link:"project/" + a.projectName + "/create/category/" + s.id
+}), a.breadcrumbs.push({
+title:a.category.label
+}), void o.get(e.project).then(_.spread(function(c, d) {
+a.project = c, a.context = d, a.breadcrumbs[0].title = b("displayName")(c), j.list("templates", d, function(b) {
+a.projectTemplates = b.by("metadata.name");
+}), j.list("templates", {
+namespace:"openshift"
+}, function(b) {
+a.openshiftTemplates = b.by("metadata.name");
+}), j.list("imagestreams", d, function(b) {
+a.projectImageStreams = b.by("metadata.name");
+}), j.list("imagestreams", {
+namespace:"openshift"
+}, function(b) {
+a.openshiftImageStreams = b.by("metadata.name");
+});
+})));
+} ]), angular.module("openshiftConsole").controller("CreateFromImageController", [ "$scope", "Logger", "$q", "$routeParams", "APIService", "DataService", "ProjectsService", "Navigate", "ApplicationGenerator", "LimitRangesService", "MetricsService", "HPAService", "QuotaService", "TaskList", "failureObjectNameFilter", "$filter", "$parse", "$uibModal", "SOURCE_URL_PATTERN", "keyValueEditorUtils", function(a, b, c, d, e, f, g, h, i, j, k, l, m, n, o, p, q, r, s, t) {
+var u = p("displayName"), v = p("humanize");
+a.projectName = d.project, a.sourceURLPattern = s;
+var w = d.imageName;
+if (!w) return void h.toErrorPage("Cannot create from source: a base image was not specified");
+if (!d.imageTag) return void h.toErrorPage("Cannot create from source: a base image tag was not specified");
+a.displayName = d.displayName, a.breadcrumbs = [ {
+title:a.projectName,
+link:"project/" + a.projectName
+}, {
+title:"Add to Project",
+link:"project/" + a.projectName + "/create"
+}, {
+title:"Browse Catalog",
+link:"project/" + a.projectName + "/create?tab=fromCatalog"
+}, {
+title:d.displayName || w
 } ];
 var x = {
 name:"app",
@@ -6752,7 +6990,7 @@ value:""
 };
 g.get(d.project).then(_.spread(function(e, g) {
 function o(b) {
-w || h.toErrorPage("Cannot create from source: a base image was not specified"), d.imageTag || h.toErrorPage("Cannot create from source: a base image tag was not specified"), b.emptyMessage = "Loading...", b.imageName = w, b.imageTag = d.imageTag, b.namespace = d.namespace, b.buildConfig = {
+b.emptyMessage = "Loading...", b.imageName = w, b.imageTag = d.imageTag, b.namespace = d.namespace, b.buildConfig = {
 buildOnSourceChange:!0,
 buildOnImageChange:!0,
 buildOnConfigChange:!0
@@ -6964,9 +7202,9 @@ a.showParamsTable = !0;
 d.unwatchAll(q);
 })) :void j.toProjectOverview(a.projectName);
 }));
-} ]), angular.module("openshiftConsole").controller("NewFromTemplateController", [ "$scope", "$http", "$routeParams", "DataService", "ProcessedTemplateService", "AlertMessageService", "ProjectsService", "QuotaService", "$q", "$location", "TaskList", "$parse", "Navigate", "$filter", "$uibModal", "imageObjectRefFilter", "failureObjectNameFilter", "CachedTemplateService", "keyValueEditorUtils", function(a, b, c, d, e, f, g, h, i, j, k, l, m, n, o, p, q, r, s) {
-var t = c.name, u = c.namespace || "";
-if (!t) return void m.toErrorPage("Cannot create from template: a template name was not specified.");
+} ]), angular.module("openshiftConsole").controller("NewFromTemplateController", [ "$scope", "$http", "$routeParams", "DataService", "ProcessedTemplateService", "AlertMessageService", "ProjectsService", "QuotaService", "$q", "$location", "TaskList", "$parse", "Navigate", "$filter", "$uibModal", "imageObjectRefFilter", "failureObjectNameFilter", "CachedTemplateService", "keyValueEditorUtils", "Constants", function(a, b, c, d, e, f, g, h, i, j, k, l, m, n, o, p, q, r, s, t) {
+var u = c.name, v = c.namespace || "";
+if (!u) return void m.toErrorPage("Cannot create from template: a template name was not specified.");
 a.emptyMessage = "Loading...", a.alerts = {}, a.projectName = c.project, a.projectPromise = $.Deferred(), a.labels = [], a.systemLabels = [], a.breadcrumbs = [ {
 title:a.projectName,
 link:"project/" + a.projectName
@@ -6974,11 +7212,14 @@ link:"project/" + a.projectName
 title:"Add to Project",
 link:"project/" + a.projectName + "/create"
 }, {
-title:t
+title:"Browse Catalog",
+link:"project/" + a.projectName + "/create?tab=fromCatalog"
+}, {
+title:u
 } ], a.alerts = a.alerts || {}, f.getAlerts().forEach(function(b) {
 a.alerts[b.name] = b.data;
 }), f.clearAlerts();
-var v = n("displayName"), w = n("humanize"), x = l("spec.template.spec.containers"), y = l("spec.strategy.sourceStrategy.from || spec.strategy.dockerStrategy.from || spec.strategy.customStrategy.from"), z = l("spec.output.to");
+var w = n("displayName"), x = n("humanize"), y = l("spec.template.spec.containers"), z = l("spec.strategy.sourceStrategy.from || spec.strategy.dockerStrategy.from || spec.strategy.customStrategy.from"), A = l("spec.output.to");
 g.get(c.project).then(_.spread(function(b, f) {
 function g(a, b) {
 var c = _.get(a, "spec.triggers", []), d = _.find(c, function(a) {
@@ -6989,7 +7230,7 @@ return _.includes(c, b.name);
 return _.get(d, "imageChangeParams.from.name");
 }
 function l(a) {
-var b = [], c = x(a);
+var b = [], c = y(a);
 return c && angular.forEach(c, function(c) {
 var d = c.image;
 _.trim(d) || (d = g(a, c)), d && b.push(d);
@@ -6999,11 +7240,11 @@ function q(b) {
 var c = [], d = [], e = {};
 return angular.forEach(b.objects, function(b) {
 if ("BuildConfig" === b.kind) {
-var f = p(y(b), a.projectName);
+var f = p(z(b), a.projectName);
 f && c.push({
 name:f
 });
-var g = p(z(b), a.projectName);
+var g = p(A(b), a.projectName);
 g && (e[g] = !0);
 }
 "DeploymentConfig" === b.kind && (d = d.concat(l(b)));
@@ -7013,7 +7254,7 @@ name:a
 });
 }), c;
 }
-function A(a) {
+function t(a) {
 var b = /^helplink\.(.*)\.title$/, c = /^helplink\.(.*)\.url$/, d = {};
 for (var e in a.annotations) {
 var f, g = e.match(b);
@@ -7033,16 +7274,16 @@ value:a.template.metadata.name
 });
 }
 a.project = b, a.breadcrumbs[0].title = n("displayName")(b), a.projectDisplayName = function() {
-return v(this.project) || this.projectName;
+return w(this.project) || this.projectName;
 }, a.templateDisplayName = function() {
-return v(this.template);
+return w(this.template);
 };
 var C, D = function() {
 var b = {
 started:"Creating " + a.templateDisplayName() + " in project " + a.projectDisplayName(),
 success:"Created " + a.templateDisplayName() + " in project " + a.projectDisplayName(),
 failure:"Failed to create " + a.templateDisplayName() + " in project " + a.projectDisplayName()
-}, e = A(a.template);
+}, e = t(a.template);
 k.clear(), k.add(b, e, c.project, function() {
 var b = i.defer();
 return d.batch(C, f).then(function(c) {
@@ -7050,13 +7291,13 @@ var d = [], e = !1;
 c.failure.length > 0 ? (e = !0, c.failure.forEach(function(a) {
 d.push({
 type:"error",
-message:"Cannot create " + w(a.object.kind).toLowerCase() + ' "' + a.object.metadata.name + '". ',
+message:"Cannot create " + x(a.object.kind).toLowerCase() + ' "' + a.object.metadata.name + '". ',
 details:a.data.message
 });
 }), c.success.forEach(function(a) {
 d.push({
 type:"success",
-message:"Created " + w(a.kind).toLowerCase() + ' "' + a.metadata.name + '" successfully. '
+message:"Created " + x(a.kind).toLowerCase() + ' "' + a.metadata.name + '" successfully. '
 });
 })) :d.push({
 type:"success",
@@ -7105,10 +7346,10 @@ message:"An error occurred processing the template.",
 details:c
 };
 });
-}, u) d.get("templates", t, {
-namespace:u || a.projectName
+}, v) d.get("templates", u, {
+namespace:v || a.projectName
 }).then(function(b) {
-a.template = b, B();
+a.template = b, B(), a.breadcrumbs[3].title = n("displayName")(b);
 }, function() {
 m.toErrorPage("Cannot create from template: the specified template could not be retrieved.");
 }); else {
@@ -7215,122 +7456,27 @@ b.location.href = "/";
 b.debug("LogoutController"), c.isLoggedIn() ? (b.debug("LogoutController, logged in, initiating logout"), a.logoutMessage = "Logging out...", c.startLogout()["finally"](function() {
 c.isLoggedIn() ? (b.debug("LogoutController, logout failed, still logged in"), a.logoutMessage = 'You could not be logged out. Return to the <a href="./">console</a>.') :d.logout_uri ? (b.debug("LogoutController, logout completed, redirecting to AUTH_CFG.logout_uri", d.logout_uri), window.location.href = d.logout_uri) :(b.debug("LogoutController, logout completed, reloading the page"), window.location.reload(!1));
 })) :d.logout_uri ? (b.debug("LogoutController, logout completed, redirecting to AUTH_CFG.logout_uri", d.logout_uri), a.logoutMessage = "Logging out...", window.location.href = d.logout_uri) :(b.debug("LogoutController, not logged in, logout complete"), a.logoutMessage = 'You are logged out. Return to the <a href="./">console</a>.');
-} ]), angular.module("openshiftConsole").controller("CreateController", [ "$q", "$uibModal", "$routeParams", "$scope", "DataService", "ProjectsService", "tagsFilter", "uidFilter", "hashSizeFilter", "imageStreamTagAnnotationFilter", "descriptionFilter", "LabelFilter", "$filter", "$location", "AlertMessageService", "Logger", function(a, b, c, d, e, f, g, h, i, j, k, l, m, n, o, p) {
-function q(a, b, c) {
-var d;
-for (a = a.toLowerCase(), d = 0; d < b.length; d++) {
-var e = b[d].toLowerCase();
-if (a === e || c && 0 === e.indexOf(a)) return !0;
-}
-return !1;
-}
-function r(a, b, c, d) {
-return !!q(d, c, !0) || (a.toLowerCase().indexOf(d) !== -1 || b && b.toLowerCase().indexOf(d) !== -1);
-}
-function s(a, b, c) {
-var e, f;
-if (d.filter.tag && !q(d.filter.tag, c)) return !1;
-if (d.filter.keyword) for (e = d.filter.keyword.split(/\s+/), f = 0; f < e.length; f++) if (!r(a, b, c, e[f])) return !1;
-return !0;
-}
-function t(a) {
-var b = d.filteredBuildersByCategory[a] || [], c = d.filteredTemplatesByCategory[a] || [];
-return Math.min(b.length, d.itemLimit) + Math.min(c.length, d.itemLimit);
-}
-function u() {
-var a = 0, b = 0, c = d.filteredCategoryTags;
-d.leftCategories = [], d.rightCategories = [], angular.forEach(c, function(c) {
-a > b ? (d.rightCategories.push(c), b += t(c)) :(d.leftCategories.push(c), a += t(c));
-});
-}
-function v() {
-d.filteredCategoryTags = [], d.filteredBuildersByCategory = {}, d.filteredTemplatesByCategory = {}, d.filteredNonBuilders = [], angular.forEach(d.categoryTags, function(a) {
-var b, c, e = E[a] || [], f = F[a] || [];
-b = e.filter(function(a) {
-return s(a.name, a.description, a.categoryTags);
-}), d.filteredBuildersByCategory[a] = b, c = f.filter(function(a) {
-var b = g(a);
-return s(a.metadata.name, k(a), b);
-}), d.filteredTemplatesByCategory[a] = c, (b.length || c.length) && d.filteredCategoryTags.push(a);
-}), u(), d.filteredNonBuilders = G.filter(function(a) {
-return s(a.name, a.description, a.categoryTags);
-});
-}
-function w(a) {
-angular.forEach(a, function(a) {
-if (a.status) {
-var b = {}, c = {}, d = {};
-a.spec && a.spec.tags && angular.forEach(a.spec.tags, function(a) {
-a.annotations && a.annotations.tags && (b[a.name] = a.annotations.tags.split(/\s*,\s*/)), a.from && "ImageStreamTag" === a.from.kind && a.from.name.indexOf(":") === -1 && !a.from.namespace && (c[a.name] = !0, d[a.from.name] = d[a.from.name] || [], d[a.from.name].push(a.name));
-}), angular.forEach(a.status.tags, function(e) {
-if (!c[e.tag]) {
-var f, g = e.tag, h = b[g] || [], i = {
-imageStream:a,
-imageStreamTag:g,
-name:a.metadata.name + ":" + g,
-description:j(a, "description", g),
-version:j(a, "version", g),
-categoryTags:h,
-referencedBy:d[g]
-};
-h.indexOf("builder") >= 0 ? (f = y(h), E[f] = E[f] || [], E[f].push(i)) :G.push(i);
-}
-});
-}
-});
-}
-function x(a) {
-angular.forEach(a, function(a) {
-var b = g(a), c = y(b);
-F[c] = F[c] || [], F[c].push(a);
-});
-}
-function y(a) {
-var b, c;
-for (b = 0; b < d.categoryTags.length; b++) for (c = 0; c < a.length; c++) if (a[c].toLowerCase() === d.categoryTags[b]) return d.categoryTags[b];
-return "";
-}
-function z() {
-d.loaded = C && D && A && B, d.emptyCatalog = 0 === i(C) && 0 === i(D) && 0 === i(E), v(), d.loaded && (p.info("templates by category", F), p.info("builder images", E), p.info("non-builder images", G));
-}
-var A, B, C, D, E = {}, F = {}, G = [];
-d.projectName = c.project, d.categoryTags = [ "instant-app", "xpaas", "java", "php", "ruby", "perl", "python", "nodejs", "database", "messaging", "" ], d.browseGeneral = [ "instant-app", "quickstart" ], d.browseTechnologies = _.difference(d.categoryTags, d.browseGeneral), d.categoryLabels = {
-"instant-app":"Instant Apps",
-java:"Java",
-xpaas:"xPaaS",
-php:"PHP",
-ruby:"Ruby",
-perl:"Perl",
-python:"Python",
-nodejs:"NodeJS",
-database:"Databases",
-messaging:"Messaging",
-"":"Other"
-}, d.filteredCategoryTags = [], d.filteredTemplatesByCategory = {}, d.filteredBuildersByCategory = {}, d.loaded = !1, d.emptyCatalog = !0, d.itemLimit = 4, d.filter = {
-keyword:"",
-tag:""
-}, d.alerts = d.alerts || {}, o.getAlerts().forEach(function(a) {
-d.alerts[a.name] = a.data;
-}), o.clearAlerts(), d.editorContent = "", d.breadcrumbs = [ {
-title:d.projectName,
-link:"project/" + d.projectName
+} ]), angular.module("openshiftConsole").controller("CreateController", [ "$scope", "$filter", "$location", "$q", "$routeParams", "$uibModal", "AlertMessageService", "CatalogService", "Constants", "DataService", "LabelFilter", "Logger", "ProjectsService", function(a, b, c, d, e, f, g, h, i, j, k, l, m) {
+a.projectName = e.project, a.categories = i.CATALOG_CATEGORIES, a.alerts = a.alerts || {}, g.getAlerts().forEach(function(b) {
+a.alerts[b.name] = b.data;
+}), g.clearAlerts(), a.breadcrumbs = [ {
+title:a.projectName,
+link:"project/" + a.projectName
 }, {
 title:"Add to Project"
-} ], d.filterTag = function(a) {
-d.filter.tag = a;
-}, d.$watch("filter", v, !0), f.get(c.project).then(_.spread(function(a, b) {
-d.project = a, d.context = b, d.breadcrumbs[0].title = m("displayName")(a), e.list("templates", b, function(a) {
-C = a.by("metadata.name"), x(C), z();
-}), e.list("templates", {
+} ], m.get(e.project).then(_.spread(function(c, d) {
+a.project = c, a.context = d, a.breadcrumbs[0].title = b("displayName")(c), j.list("templates", d, function(b) {
+a.projectTemplates = b.by("metadata.name");
+}), j.list("templates", {
 namespace:"openshift"
-}, function(a) {
-D = a.by("metadata.name"), x(D), z();
-}), e.list("imagestreams", b, function(a) {
-A = a.by("metadata.name"), w(A), z();
-}), e.list("imagestreams", {
+}, function(b) {
+a.openshiftTemplates = b.by("metadata.name");
+}), j.list("imagestreams", d, function(b) {
+a.projectImageStreams = b.by("metadata.name");
+}), j.list("imagestreams", {
 namespace:"openshift"
-}, function(a) {
-B = a.by("metadata.name"), w(B), z();
+}, function(b) {
+a.openshiftImageStreams = b.by("metadata.name");
 });
 }));
 } ]), angular.module("openshiftConsole").controller("CreateProjectController", [ "$scope", "$location", "AuthService", "DataService", "AlertMessageService", function(a, b, c, d, e) {
@@ -9361,7 +9507,9 @@ kind:"@",
 tag:"=?"
 },
 controller:[ "$scope", "$filter", function(a, b) {
+a.$watchGroup([ "resource", "tag" ], function() {
 a.tag ? a.icon = b("imageStreamTagAnnotation")(a.resource, "icon", a.tag) :a.icon = b("annotation")(a.resource, "icon"), a.isDataIcon = a.icon && 0 === a.icon.indexOf("data:"), a.isDataIcon || (a.tag ? a.icon = b("imageStreamTagIconClass")(a.resource, a.tag) :a.icon = b("iconClass")(a.resource, a.kind));
+});
 } ],
 templateUrl:"views/directives/_custom-icon.html"
 };
@@ -9589,50 +9737,152 @@ c ? (b.truncatedContent = a(c, b.limit, b.useWordBoundary, b.newlineLimit), b.tr
 });
 }
 };
-} ]), angular.module("openshiftConsole").directive("catalogCategory", function() {
+} ]), angular.module("openshiftConsole").directive("catalog", [ "CatalogService", "Constants", "KeywordService", function(a, b, c) {
 return {
 restrict:"E",
 scope:{
-categoryLabel:"@",
-builders:"=",
-templates:"=",
-project:"@",
-itemLimit:"@",
-filterTag:"="
+projectImageStreams:"=",
+openshiftImageStreams:"=",
+projectTemplates:"=",
+openshiftTemplates:"=",
+projectName:"=",
+parentCategory:"=category"
 },
-templateUrl:"views/catalog/_catalog-category.html",
-controller:[ "$scope", function(a) {
-a.builderID = function(a) {
-return a.imageStream.metadata.uid + ":" + a.imageStreamTag;
+templateUrl:"views/catalog/catalog.html",
+link:function(d) {
+function e() {
+var b = c.generateKeywords(d.filter.keyword);
+return _.isEmpty(b) ? (d.filterActive = !1, d.filteredBuildersByCategory = d.buildersByCategory, void (d.filteredTemplatesByCategory = d.templatesByCategory)) :(d.filterActive = !0, d.filteredBuildersByCategory = {}, _.each(d.buildersByCategory, function(c, e) {
+var f = a.getCategoryItem(e), g = function(a) {
+return a.test(f.label);
+}, h = _.reject(b, g);
+d.filteredBuildersByCategory[e] = a.filterImageStreams(c, h);
+}), d.filteredTemplatesByCategory = {}, void _.each(d.templatesByCategory, function(c, e) {
+var f = a.getCategoryItem(e), g = function(a) {
+return a.test(f.label);
+}, h = _.reject(b, g);
+d.filteredTemplatesByCategory[e] = a.filterTemplates(c, h);
+}));
+}
+function f() {
+if (d.projectImageStreams && d.openshiftImageStreams) {
+var b = _.toArray(d.projectImageStreams).concat(_.toArray(d.openshiftImageStreams));
+d.buildersByCategory = a.categorizeImageStreams(b), d.emptyCatalog = d.emptyCatalog && _.every(d.buildersByCategory, _.isEmpty), i();
+}
+}
+function g() {
+if (d.projectTemplates && d.openshiftTemplates) {
+var b = _.toArray(d.projectTemplates).concat(_.toArray(d.openshiftTemplates));
+d.templatesByCategory = a.categorizeTemplates(b), d.emptyCatalog = d.emptyCatalog && _.every(d.templatesByCategory, _.isEmpty), i();
+}
+}
+function h() {
+d.noFilterMatches = !0;
+var a = {};
+_.each(d.filteredBuildersByCategory, function(b, c) {
+a[c] = _.size(b);
+}), _.each(d.filteredTemplatesByCategory, function(b, c) {
+a[c] = (a[c] || 0) + _.size(b);
+}), d.allContentHidden = !0, _.each(d.categories, function(b) {
+var c = _.some(b.items, function(b) {
+return a[b.id];
+});
+_.set(d, [ "hasContent", b.id ], c), c && (d.allContentHidden = !1);
+}), d.countByCategory = a;
+}
+function i() {
+d.loaded = d.projectTemplates && d.openshiftTemplates && d.projectImageStreams && d.openshiftImageStreams, e(), h(), d.loaded && (Logger.info("templates by category", d.templatesByCategory), Logger.info("builder images", d.buildersByCategory));
+}
+d.categories = _.get(d, "parentCategory.subcategories", b.CATALOG_CATEGORIES), d.loaded = !1, d.emptyCatalog = !0, d.filter = {
+keyword:""
+}, d.$watch("filter.keyword", _.debounce(function() {
+d.$apply(function() {
+e(), h();
+});
+}, 200, {
+maxWait:1e3,
+trailing:!0
+})), d.$watchGroup([ "openshiftImageStreams", "projectImageStreams" ], f), d.$watchGroup([ "openshiftTemplates", "projectTemplates" ], g);
+}
 };
-} ]
-};
-}).directive("catalogTemplate", function() {
+} ]), angular.module("openshiftConsole").directive("categoryContent", [ "CatalogService", "Constants", "KeywordService", function(a, b, c) {
 return {
 restrict:"E",
-replace:!0,
 scope:{
-template:"=",
-project:"@",
-filterTag:"="
+projectImageStreams:"=",
+openshiftImageStreams:"=",
+projectTemplates:"=",
+openshiftTemplates:"=",
+projectName:"=",
+category:"="
 },
-templateUrl:"views/catalog/_template.html"
+templateUrl:"views/catalog/category-content.html",
+link:function(b) {
+function d() {
+var d = c.generateKeywords(b.filter.keyword);
+b.filteredBuilderImages = a.filterImageStreams(j, d), b.filteredTemplates = a.filterTemplates(k, d);
+}
+function e() {
+return b.projectImageStreams && b.openshiftImageStreams ? _.toArray(b.projectImageStreams).concat(_.toArray(b.openshiftImageStreams)) :[];
+}
+function f() {
+var c = a.categorizeImageStreams(e());
+j = _.get(c, [ b.category.id ], []), i();
+}
+function g() {
+return b.projectTemplates && b.openshiftTemplates ? _.toArray(b.projectTemplates).concat(_.toArray(b.openshiftTemplates)) :[];
+}
+function h() {
+var c = a.categorizeTemplates(g());
+k = _.get(c, [ b.category.id ], []), i();
+}
+function i() {
+b.loaded = b.projectTemplates && b.openshiftTemplates && b.projectImageStreams && b.openshiftImageStreams, d(), b.emptyCategory = _.isEmpty(j) && _.isEmpty(k), b.loaded && (Logger.info("templates", k), Logger.info("builder images", j));
+}
+var j = [], k = [];
+b.filteredTemplates = [], b.filteredBuilderImages = [], b.loaded = !1, b.filter = {
+keyword:""
+}, b.$watch("filter.keyword", d), b.$watchGroup([ "openshiftImageStreams", "projectImageStreams" ], f), b.$watchGroup([ "openshiftTemplates", "projectTemplates" ], h);
+}
 };
-}).directive("catalogImage", function() {
+} ]), angular.module("openshiftConsole").directive("catalogImage", [ "$filter", function(a) {
 return {
 restrict:"E",
 replace:!0,
 scope:{
 image:"=",
 imageStream:"=",
-imageTag:"=",
-version:"=",
 project:"@",
-filterTag:"=",
-referencedBy:"=",
 isBuilder:"=?"
 },
-templateUrl:"views/catalog/_image.html"
+templateUrl:"views/catalog/_image.html",
+link:function(b) {
+var c = a("imageStreamTagTags"), d = {};
+b.referencedBy = {};
+var e = _.get(b, "imageStream.spec.tags", []), f = {};
+_.each(e, function(a) {
+f[a.name] = c(b.imageStream, a.name), a.from && "ImageStreamTag" === a.from.kind && a.from.name.indexOf(":") === -1 && !a.from.namespace && (d[a.name] = !0, b.referencedBy[a.from.name] = b.referencedBy[a.from.name] || [], b.referencedBy[a.from.name].push(a.name));
+});
+var g = function(a) {
+var b = _.get(f, [ a ], []);
+return _.includes(b, "builder");
+}, h = _.get(b, "imageStream.status.tags", []);
+b.tags = _.filter(h, function(a) {
+return g(a.tag) && !d[a.tag];
+});
+var i = _.head(b.tags);
+_.set(b, "is.tag", i);
+}
+};
+} ]), angular.module("openshiftConsole").directive("catalogTemplate", function() {
+return {
+restrict:"E",
+replace:!0,
+scope:{
+template:"=",
+project:"@"
+},
+templateUrl:"views/catalog/_template.html"
 };
 }), angular.module("openshiftConsole").directive("oscObjectDescriber", [ "ObjectDescriber", function(a) {
 return {
@@ -12184,19 +12434,20 @@ builderfor:b
 });
 return c.toString();
 };
-}).filter("createFromImageURL", function() {
-return function(a, b, c) {
-var d = URI.expand("project/{project}/create/fromimage{?q*}", {
-project:c,
+}).filter("createFromImageURL", [ "displayNameFilter", function(a) {
+return function(b, c, d) {
+var e = URI.expand("project/{project}/create/fromimage{?q*}", {
+project:d,
 q:{
-imageName:a.metadata.name,
-imageTag:b,
-namespace:a.metadata.namespace
+imageName:b.metadata.name,
+imageTag:c,
+namespace:b.metadata.namespace,
+displayName:a(b)
 }
 });
-return d.toString();
+return e.toString();
 };
-}).filter("createFromTemplateURL", function() {
+} ]).filter("createFromTemplateURL", function() {
 return function(a, b) {
 var c = URI.expand("project/{project}/create/fromtemplate{?q*}", {
 project:b,

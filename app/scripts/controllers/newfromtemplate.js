@@ -28,7 +28,8 @@ angular.module('openshiftConsole')
     imageObjectRefFilter,
     failureObjectNameFilter,
     CachedTemplateService,
-    keyValueEditorUtils) {
+    keyValueEditorUtils,
+    Constants) {
 
 
     var name = $routeParams.name;
@@ -56,6 +57,10 @@ angular.module('openshiftConsole')
       {
         title: "Add to Project",
         link: "project/" + $scope.projectName + "/create"
+      },
+      {
+        title: "Browse Catalog",
+        link: "project/" + $scope.projectName + "/create?tab=fromCatalog"
       },
       {
         title: name
@@ -325,6 +330,7 @@ angular.module('openshiftConsole')
             function(template) {
               $scope.template = template;
               setTemplateParams();
+              $scope.breadcrumbs[3].title = $filter('displayName')(template);
             },
             function() {
               Navigate.toErrorPage("Cannot create from template: the specified template could not be retrieved.");

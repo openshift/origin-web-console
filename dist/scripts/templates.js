@@ -3497,63 +3497,53 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
   );
 
 
-  $templateCache.put('views/catalog/_catalog-category.html',
-    "<section>\n" +
-    "<h3>\n" +
-    "{{categoryLabel}}\n" +
-    "<small ng-show=\"itemLimit && (builders.length > itemLimit || templates.length > itemLimit)\" class=\"pull-right\">\n" +
-    "<a href=\"\" ng-click=\"itemLimit = undefined\">See all</a>\n" +
-    "</small>\n" +
-    "</h3>\n" +
-    "<div class=\"catalog\">\n" +
-    "\n" +
-    "<catalog-image image-stream=\"builder.imageStream\" image-tag=\"builder.imageStreamTag\" project=\"{{project}}\" version=\"builder.version\" filter-tag=\"filterTag\" referenced-by=\"builder.referencedBy\" is-builder=\"true\" ng-repeat=\"builder in builders | limitToOrAll: itemLimit track by builderID(builder)\">\n" +
-    "</catalog-image>\n" +
-    "\n" +
-    "<catalog-template template=\"template\" project=\"{{project}}\" filter-tag=\"filterTag\" ng-repeat=\"template in templates | orderBy : ['metadata.name', 'metadata.namespace'] | limitToOrAll: itemLimit track by (template | uid)\">\n" +
-    "</catalog-template>\n" +
-    "</div>\n" +
-    "</section>"
-  );
-
-
   $templateCache.put('views/catalog/_image.html',
-    "<div class=\"tile tile-compact tile-image tile-click label-tags\" id=\"\" ng-attr-title=\"{{imageStream | imageStreamTagAnnotation : 'description' : imageTag}}\">\n" +
-    "<div row cross-axis=\"center\" class=\"tile-flex\">\n" +
-    "<div row main-axis=\"center\" class=\"image-icon\">\n" +
-    "<custom-icon resource=\"imageStream\" kind=\"image\" tag=\"imageTag\" title=\"{{imageStream.metadata.name}}:{{imageTag}}\"></custom-icon>\n" +
+    "<div class=\"col-xxs-12 col-xs-6 col-sm-6 col-md-4 col-lg-3\">\n" +
+    "<div class=\"card-pf\">\n" +
+    "<div class=\"card-pf-body card-pf-body-with-version\">\n" +
+    "<div class=\"card-pf-details\">\n" +
+    "<div class=\"card-pf-title-with-icon\">\n" +
+    "<custom-icon resource=\"imageStream\" kind=\"image\" tag=\"is.tag.tag\" title=\"{{imageStream.metadata.name}}:{{is.tag.tag}}\" class=\"image-icon\"></custom-icon>\n" +
+    "<h2 class=\"card-pf-title\">\n" +
+    "{{imageStream | displayName}}\n" +
+    "</h2>\n" +
     "</div>\n" +
-    "<div flex>\n" +
-    "<h3>\n" +
-    "<a class=\"tile-target\" ng-href=\"{{imageStream | createFromImageURL : imageTag : project}}\">{{imageStream.metadata.name}}:{{imageTag}}</a>\n" +
-    "<small ng-if=\"referencedBy.length\">\n" +
-    "&ndash;\n" +
-    "<span ng-repeat=\"otherTag in referencedBy\">\n" +
-    "{{otherTag}}<span ng-if=\"!$last\">,</span>\n" +
-    "</span>\n" +
+    "<p class=\"card-pf-badge\">Builds source code</p>\n" +
+    "<p>\n" +
+    "<truncate-long-text class=\"project-description\" content=\"imageStream | imageStreamTagAnnotation : 'description' : is.tag.tag\" limit=\"200\" use-word-boundary=\"true\"></truncate-long-text>\n" +
+    "</p>\n" +
+    "<p ng-if=\"imageStream | imageStreamTagAnnotation : 'provider' : is.tag.tag\">\n" +
+    "Provider: {{imageStream | imageStreamTagAnnotation : 'provider' : is.tag.tag}}\n" +
+    "</p>\n" +
+    "\n" +
+    "<p ng-if=\"imageStream.metadata.namespace !== 'openshift'\">\n" +
+    "Namespace: {{imageStream.metadata.namespace}}\n" +
+    "</p>\n" +
+    "</div>\n" +
+    "<p class=\"card-pf-version\">\n" +
+    "Version\n" +
+    "<ui-select ng-model=\"is.tag\" search-enabled=\"false\">\n" +
+    "<ui-select-match>\n" +
+    "<span>\n" +
+    "{{$select.selected.tag}}\n" +
+    "<small ng-repeat=\"otherTag in referencedBy[$select.selected.tag]\">\n" +
+    "<span ng-if=\"$first\"> &mdash; </span>{{otherTag}}<span ng-if=\"!$last\">,</span>\n" +
     "</small>\n" +
-    "</h3>\n" +
-    "<div ng-if=\"imageStream | imageStreamTagAnnotation : 'provider' : imageTag\">\n" +
-    "<label style=\"margin-right: 5px\">Provider:</label>\n" +
-    "{{imageStream | imageStreamTagAnnotation : 'provider' : imageTag}}\n" +
+    "</span>\n" +
+    "</ui-select-match>\n" +
+    "<ui-select-choices repeat=\"tag in tags track by tag.tag\">\n" +
+    "{{tag.tag}}\n" +
+    "<small ng-repeat=\"otherTag in referencedBy[tag.tag]\">\n" +
+    "<span ng-if=\"$first\"> &mdash; </span>{{otherTag}}<span ng-if=\"!$last\">,</span>\n" +
+    "</small>\n" +
+    "</ui-select-choices>\n" +
+    "</ui-select>\n" +
+    "</p>\n" +
     "</div>\n" +
-    "\n" +
-    "<div ng-if=\"imageStream.metadata.namespace !== 'openshift'\">\n" +
-    "<label style=\"margin-right: 5px\">Namespace:</label>\n" +
-    "{{imageStream.metadata.namespace}}\n" +
-    "</div>\n" +
-    "<div ng-if=\"version && version !== imageTag\">\n" +
-    "<label style=\"margin-right: 5px\">Version:</label>\n" +
-    "{{version}}\n" +
-    "</div>\n" +
-    "<a href=\"\" ng-click=\"filterTag(tag)\" ng-repeat=\"tag in (imageStream | imageStreamTagTags : imageTag)\" ng-attr-title=\"Filter by tag {{tag}}\" class=\"tag small\">\n" +
-    "{{tag}}\n" +
+    "<div class=\"card-pf-footer clearfix\">\n" +
+    "<a class=\"btn btn-default pull-right\" ng-href=\"{{imageStream | createFromImageURL : is.tag.tag : project}}\">\n" +
+    "Select\n" +
     "</a>\n" +
-    "</div>\n" +
-    "\n" +
-    "<div title=\"\" ng-if=\"isBuilder\">\n" +
-    "<i class=\"pficon pficon-image tile-badge-icon\" aria-hidden=\"true\" data-toggle=\"tooltip\" data-original-title=\"Builder Image\"></i>\n" +
-    "<span class=\"sr-only\">Builder Image</span>\n" +
     "</div>\n" +
     "</div>\n" +
     "</div>"
@@ -3561,39 +3551,155 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
 
 
   $templateCache.put('views/catalog/_template.html',
-    "<div class=\"tile tile-compact tile-template tile-click label-tags\" ng-attr-title=\"{{(template | description) || template.metadata.name}}\">\n" +
-    "<div row cross-axis=\"center\" class=\"tile-flex\">\n" +
-    "<div row main-axis=\"center\" class=\"image-icon\">\n" +
-    "<custom-icon resource=\"template\" kind=\"template\"></custom-icon>\n" +
+    "<div class=\"col-xxs-12 col-xs-6 col-sm-6 col-md-4 col-lg-3\">\n" +
+    "<div class=\"card-pf\">\n" +
+    "<div class=\"card-pf-body\">\n" +
+    "<div class=\"card-pf-title-with-icon\">\n" +
+    "<custom-icon resource=\"template\" kind=\"template\" class=\"image-icon\"></custom-icon>\n" +
+    "<h2 class=\"card-pf-title\">\n" +
+    "{{template | displayName}}\n" +
+    "</h2>\n" +
     "</div>\n" +
-    "<div flex>\n" +
-    "<h3><a class=\"tile-target\" ng-href=\"{{template | createFromTemplateURL : project}}\">{{template.metadata.name}}</a></h3>\n" +
-    "<div ng-if=\"template | annotation : 'provider'\">\n" +
-    "<label style=\"margin-right: 5px\">Provider:</label>\n" +
-    "{{template | annotation : 'provider'}}\n" +
-    "</div>\n" +
+    "<p>\n" +
+    "<truncate-long-text class=\"project-description\" content=\"(template | description) || template.metadata.name\" limit=\"200\" use-word-boundary=\"true\"></truncate-long-text>\n" +
+    "</p>\n" +
+    "<p ng-if=\"template | annotation : 'provider'\">\n" +
+    "Provider: {{template | annotation : 'provider'}}\n" +
+    "</p>\n" +
     "\n" +
-    "<div ng-if=\"template.metadata.namespace !== 'openshift'\">\n" +
-    "<label style=\"margin-right: 5px\">Namespace:</label>\n" +
-    "{{template.metadata.namespace}}\n" +
+    "<p ng-if=\"template.metadata.namespace !== 'openshift'\">\n" +
+    "Namespace: {{template.metadata.namespace}}\n" +
+    "</p>\n" +
     "</div>\n" +
-    "<div ng-if=\"template | annotation : 'version'\">\n" +
-    "<label style=\"margin-right: 5px\">Version:</label>\n" +
-    "{{template | annotation : 'version'}}\n" +
-    "</div>\n" +
-    "<a href=\"\" ng-click=\"filterTag(tag)\" ng-repeat=\"tag in (template | tags)\" ng-attr-title=\"Filter by tag {{tag}}\" class=\"tag small\">\n" +
-    "{{tag}}\n" +
+    "<div class=\"card-pf-footer clearfix\">\n" +
+    "<a class=\"btn btn-default pull-right\" ng-href=\"{{template | createFromTemplateURL : project}}\">\n" +
+    "Select\n" +
     "</a>\n" +
     "</div>\n" +
-    "\n" +
-    "<div title=\"\">\n" +
-    "<span ng-if=\"(template | tags).indexOf('quickstart') !== -1\">\n" +
-    "<i class=\"fa fa-bolt tile-badge-icon\" style=\"margin-right: 5px\" aria-hidden=\"true\" data-toggle=\"tooltip\" data-original-title=\"Quickstart\"></i>\n" +
-    "<span class=\"sr-only\">Quickstart</span>\n" +
-    "</span>\n" +
-    "<i class=\"fa fa-clone tile-badge-icon\" aria-hidden=\"true\" data-toggle=\"tooltip\" data-original-title=\"Template\"></i>\n" +
-    "<span class=\"sr-only\">Template</span>\n" +
     "</div>\n" +
+    "</div>"
+  );
+
+
+  $templateCache.put('views/catalog/catalog.html',
+    "<p ng-if=\"emptyCatalog && !loaded\">Loading...</p>\n" +
+    "<div ng-if=\"emptyCatalog && loaded && !nonBuilderImages.length\" class=\"empty-state-message empty-state-full-page\">\n" +
+    "<h2 class=\"text-center\">No images or templates.</h2>\n" +
+    "<p class=\"gutter-top\">\n" +
+    "No images or templates are loaded for this project or the shared\n" +
+    "<code>openshift</code> namespace. An image or template is required to add content.\n" +
+    "</p>\n" +
+    "<p>\n" +
+    "To add an image stream or template from a file, use the editor in the\n" +
+    "<strong>Import YAML / JSON</strong> tab, or run the following command:\n" +
+    "<div><code>oc create -f &lt;filename&gt; -n {{projectName}}</code></div>\n" +
+    "</p>\n" +
+    "<p><a href=\"{{projectName | projectOverviewURL}}\">Back to overview</a></p>\n" +
+    "</div>\n" +
+    "\n" +
+    "<p ng-if=\"emptyCatalog && loaded && nonBuilderImages.length\">No builder images or templates.</p>\n" +
+    "<div ng-show=\"!emptyCatalog\">\n" +
+    "<p ng-if=\"!parentCategory\">Choose from web frameworks, databases, and other components to add content to your project.</p>\n" +
+    "<form role=\"form\" fit class=\"search-pf has-button\">\n" +
+    "<div class=\"form-group has-clear\">\n" +
+    "\n" +
+    "<div class=\"search-pf-input-group\">\n" +
+    "<label for=\"search\" class=\"sr-only\">Filter by name or description</label>\n" +
+    "<input ng-model=\"filter.keyword\" type=\"search\" id=\"search\" placeholder=\"Filter by name or description\" class=\"search-input form-control\" autocorrect=\"off\" autocapitalize=\"off\" spellcheck>\n" +
+    "<button type=\"button\" class=\"clear\" aria-hidden=\"true\" ng-if=\"filter.keyword\" ng-click=\"filter.keyword = ''\">\n" +
+    "<span class=\"pficon pficon-close\"></span>\n" +
+    "</button>\n" +
+    "</div>\n" +
+    "</div>\n" +
+    "</form>\n" +
+    "<div ng-if=\"allContentHidden\" class=\"empty-state-message text-center h2\">\n" +
+    "All content is hidden by the current filter.\n" +
+    "<a href=\"\" ng-click=\"filter.keyword = ''\">Clear filter</a>\n" +
+    "</div>\n" +
+    "<div ng-if=\"!filterActive\">\n" +
+    "<div ng-repeat=\"category in categories\" ng-if=\"hasContent[category.id]\">\n" +
+    "<h2 class=\"h3\" ng-if=\"category.label && category.items.length > 1\">{{category.label}}</h2>\n" +
+    "<div class=\"row tile-row\" ng-class=\"{ 'mar-top-xl': !category.label || category.items.length < 2 }\">\n" +
+    "<div ng-repeat=\"item in category.items\" ng-if=\"countByCategory[item.id]\" class=\"col-xxs-12 col-xs-6 col-sm-4 col-md-4 col-lg-3\">\n" +
+    "<div class=\"tile tile-click\" ng-class=\"{ 'tile-sans-icon' : !item.iconClass, 'tile-sans-description' : !item.description }\">\n" +
+    "<div class=\"tile-title\">\n" +
+    "<div ng-if=\"item.iconClass || category.iconClassDefault\" class=\"image-icon\">\n" +
+    "<span aria-hidden=\"true\" class=\"{{item.iconClass || category.iconClassDefault}}\"></span>\n" +
+    "</div>\n" +
+    "<h3>\n" +
+    "\n" +
+    "<a ng-if=\"!parentCategory\" ng-href=\"project/{{projectName}}/create/category/{{item.id || 'none'}}\" class=\"tile-target\">\n" +
+    "{{item.label}}\n" +
+    "</a>\n" +
+    "\n" +
+    "<a ng-if=\"parentCategory\" ng-href=\"project/{{projectName}}/create/category/{{parentCategory.id}}/{{item.id || 'none'}}\" class=\"tile-target\">\n" +
+    "{{item.label}}\n" +
+    "</a>\n" +
+    "</h3>\n" +
+    "\n" +
+    "</div>\n" +
+    "<p ng-if=\"item.description\">{{item.description}}</p>\n" +
+    "</div>\n" +
+    "</div>\n" +
+    "</div>\n" +
+    "</div>\n" +
+    "</div>\n" +
+    "<div ng-if=\"filterActive\">\n" +
+    "<div ng-repeat=\"category in categories\" ng-if=\"hasContent[category.id]\">\n" +
+    "<div ng-repeat=\"item in category.items\" ng-if=\"countByCategory[item.id]\">\n" +
+    "<h2 class=\"h3\">\n" +
+    "{{item.label}}\n" +
+    "<span class=\"tile-item-count badge\">{{countByCategory[item.id] || 0}}</span>\n" +
+    "</h2>\n" +
+    "<div class=\"row row-cards-pf row-cards-pf-flex mar-top-xl\">\n" +
+    "<catalog-image image-stream=\"builder\" project=\"{{projectName}}\" is-builder=\"true\" ng-repeat=\"builder in filteredBuildersByCategory[item.id] track by (builder | uid)\">\n" +
+    "</catalog-image>\n" +
+    "<catalog-template template=\"template\" project=\"{{projectName}}\" ng-repeat=\"template in filteredTemplatesByCategory[item.id] | orderBy : ['metadata.name', 'metadata.namespace'] track by (template | uid)\">\n" +
+    "</catalog-template>\n" +
+    "</div>\n" +
+    "</div>\n" +
+    "</div>\n" +
+    "</div>\n" +
+    "</div>"
+  );
+
+
+  $templateCache.put('views/catalog/category-content.html',
+    "<p ng-if=\"emptyCategory && !loaded\">Loading...</p>\n" +
+    "<div ng-if=\"emptyCategory && loaded\" class=\"empty-state-message empty-state-full-page\">\n" +
+    "<h2 class=\"text-center\">No images or templates.</h2>\n" +
+    "<p class=\"gutter-top\">\n" +
+    "No images or templates are loaded for the category {{category.label}}.\n" +
+    "</p>\n" +
+    "<p>\n" +
+    "To add an image stream or template from a file, use the editor in the\n" +
+    "<strong>Import YAML / JSON</strong> tab, or run the following command:\n" +
+    "<div><code>oc create -f &lt;filename&gt; -n {{projectName}}</code></div>\n" +
+    "</p>\n" +
+    "<p><a ng-href=\"project/{{projectName}}/create\">Back to catalog</a></p>\n" +
+    "</div>\n" +
+    "<div ng-if=\"!emptyCategory && !catalog.subcategories\">\n" +
+    "<form role=\"form\" fit class=\"search-pf has-button mar-bottom-xl\">\n" +
+    "<div class=\"form-group has-clear\">\n" +
+    "\n" +
+    "<div class=\"search-pf-input-group\">\n" +
+    "<label for=\"search\" class=\"sr-only\">Filter by name or description</label>\n" +
+    "<input ng-model=\"filter.keyword\" type=\"search\" id=\"search\" placeholder=\"Filter by name or description\" class=\"search-input form-control\" autocorrect=\"off\" autocapitalize=\"off\" spellcheck>\n" +
+    "<button type=\"button\" class=\"clear\" aria-hidden=\"true\" ng-if=\"filter.keyword\" ng-click=\"filter.keyword = ''\">\n" +
+    "<span class=\"pficon pficon-close\"></span>\n" +
+    "</button>\n" +
+    "</div>\n" +
+    "</div>\n" +
+    "</form>\n" +
+    "<div ng-if=\"!filteredBuilderImages.length && !filteredTemplates.length && loaded\" class=\"empty-state-message text-center h2\">\n" +
+    "All content is hidden by the current filter.\n" +
+    "<a href=\"\" ng-click=\"filter.keyword = ''\">Clear filter</a>\n" +
+    "</div>\n" +
+    "<div class=\"row row-cards-pf row-cards-pf-flex mar-top-xl\">\n" +
+    "<catalog-image image-stream=\"builder\" project=\"{{projectName}}\" is-builder=\"true\" ng-repeat=\"builder in filteredBuilderImages track by (builder | uid)\">\n" +
+    "</catalog-image>\n" +
+    "<catalog-template template=\"template\" project=\"{{projectName}}\" ng-repeat=\"template in filteredTemplates | orderBy : ['metadata.name', 'metadata.namespace'] track by (template | uid)\">\n" +
+    "</catalog-template>\n" +
     "</div>\n" +
     "</div>"
   );
@@ -3839,111 +3945,8 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "<uib-tabset class=\"mar-top-none\">\n" +
     "<uib-tab active=\"selectedTab.fromCatalog\">\n" +
     "<uib-tab-heading>Browse Catalog</uib-tab-heading>\n" +
-    "<p ng-if=\"emptyCatalog && !loaded\">Loading...</p>\n" +
-    "<div ng-if=\"emptyCatalog && loaded && !nonBuilderImages.length\" class=\"empty-state-message empty-state-full-page\">\n" +
-    "<h2 class=\"text-center\">No images or templates.</h2>\n" +
-    "<p class=\"gutter-top\">\n" +
-    "No images or templates are loaded for this project or the shared\n" +
-    "<code>openshift</code> namespace. An image or template is required to add content.\n" +
-    "</p>\n" +
-    "<p>\n" +
-    "To add an image stream or template from a file, use the editor in the\n" +
-    "<strong>Import YAML / JSON</strong> tab, or run the following command:\n" +
-    "<div><code>oc create -f &lt;filename&gt; -n {{projectName}}</code></div>\n" +
-    "</p>\n" +
-    "<p><a href=\"{{projectName | projectOverviewURL}}\">Back to overview</a></p>\n" +
-    "</div>\n" +
-    "\n" +
-    "<p ng-if=\"emptyCatalog && loaded && nonBuilderImages.length\">No builder images or templates.</p>\n" +
-    "<div ng-show=\"!emptyCatalog\">\n" +
-    "<div class=\"row\">\n" +
-    "\n" +
-    "<div class=\"col-sm-6 catalog-header-left\">\n" +
-    "Choose from web frameworks, databases, and other components to add content to your project.\n" +
-    "<div class=\"filter-group\">\n" +
-    "\n" +
-    "<label for=\"search\" class=\"sr-only\">Filter by name, tag, or description</label>\n" +
-    "\n" +
-    "<div uib-dropdown uib-keyboard-nav class=\"btn-group pull-right\">\n" +
-    "<button class=\"btn btn-default dropdown-toggle\" data-toggle=\"dropdown\" role=\"menu\">\n" +
-    "Browse\n" +
-    "<span class=\"caret\" aria-hidden=\"true\"></span>\n" +
-    "</button>\n" +
-    "<ul class=\"uib-dropdown-menu\">\n" +
-    "<li ng-repeat=\"tag in browseGeneral\" role=\"menuitem\">\n" +
-    "<a href=\"\" ng-click=\"filter.tag = tag\">{{tag}}</a>\n" +
-    "</li>\n" +
-    "<li class=\"divider\"></li>\n" +
-    "<li ng-repeat=\"tag in browseTechnologies\" ng-if=\"tag\" role=\"menuitem\">\n" +
-    "<a href=\"\" ng-click=\"filter.tag = tag\">{{tag}}</a>\n" +
-    "</li>\n" +
-    "</ul>\n" +
-    "</div>\n" +
-    "\n" +
-    "<div style=\"overflow: hidden; padding-right: 10px\">\n" +
-    "<input ng-model=\"filter.keyword\" type=\"search\" id=\"search\" placeholder=\"Filter by name, tag, or description\" class=\"search-input form-control\" autocorrect=\"off\" autocapitalize=\"off\" spellcheck style=\"width: 100%\">\n" +
-    "</div>\n" +
-    "<div ng-if=\"filter.tag\">\n" +
-    "Tagged with {{filter.tag}}.\n" +
-    "<a href=\"\" ng-click=\"filter.tag = ''\">See all tags</a>\n" +
-    "</div>\n" +
-    "</div>\n" +
-    "</div>\n" +
-    "\n" +
-    "<div class=\"col-sm-6 catalog-legend\">\n" +
-    "<dl aria-hidden=\"true\" class=\"text-muted\">\n" +
-    "<dt>\n" +
-    "<i class=\"pficon pficon-image fa-fw\"></i> Builder Image\n" +
-    "</dt>\n" +
-    "<dd>Builds images from source code in a Git repository.</dd>\n" +
-    "<dt>\n" +
-    "<i class=\"fa fa-clone fa-fw\"></i> Template\n" +
-    "</dt>\n" +
-    "<dd>Creates a predefined set of resources.</dd>\n" +
-    "<dt>\n" +
-    "<i class=\"fa fa-bolt fa-fw\"></i> Quickstart\n" +
-    "</dt>\n" +
-    "<dd>Provides a skeleton for developing an application.</dd>\n" +
-    "</dl>\n" +
-    "</div>\n" +
-    "</div>\n" +
-    "<div ng-if=\"filteredCategoryTags.length === 0 && !emptyCatalog && loaded\" style=\"margin-top: 5px\">\n" +
-    "All builder images and templates are hidden by the current filter.\n" +
-    "<a href=\"\" ng-click=\"filter.keyword = ''; filter.tag = ''\">Clear filter</a>\n" +
-    "</div>\n" +
-    "<div class=\"row gutter-top\">\n" +
-    "\n" +
-    "<div class=\"col-md-6 catalog-col catalog-col-1\">\n" +
-    "<div ng-repeat=\"category in leftCategories\">\n" +
-    "<catalog-category category-label=\"{{categoryLabels[category] || tag}}\" builders=\"filteredBuildersByCategory[category]\" templates=\"filteredTemplatesByCategory[category]\" project=\"{{projectName}}\" item-limit=\"{{itemLimit}}\" filter-tag=\"filterTag\">\n" +
-    "</catalog-category>\n" +
-    "</div>\n" +
-    "</div>\n" +
-    "\n" +
-    "<div class=\"col-md-6 catalog-col catalog-col-2\">\n" +
-    "<div ng-repeat=\"category in rightCategories\">\n" +
-    "<catalog-category category-label=\"{{categoryLabels[category] || tag}}\" builders=\"filteredBuildersByCategory[category]\" templates=\"filteredTemplatesByCategory[category]\" project=\"{{projectName}}\" item-limit=\"{{itemLimit}}\" filter-tag=\"filterTag\">\n" +
-    "</catalog-category>\n" +
-    "</div>\n" +
-    "</div>\n" +
-    "</div>\n" +
-    "\n" +
-    "<div ng-if=\"filteredNonBuilders.length\" click-to-reveal link-text=\"Don't see the image you are looking for?\" class=\"gutter-bottom\">\n" +
-    "<h2>Additional Images</h2>\n" +
-    "<div class=\"alert alert-warning\">\n" +
-    "<span class=\"pficon pficon-warning-triangle-o\" aria-hidden=\"true\"></span>\n" +
-    "<span class=\"sr-only\">Warning:</span>\n" +
-    "These images are not tagged as builder images. Selecting one will attempt to use it to build source code from a Git repository. If you want to deploy an image without building source code, select an image from the\n" +
-    "<a href=\"\" ng-click=\"selectedTab.deployImage = true\">Deploy Image</a> tab.\n" +
-    "</div>\n" +
-    "<div class=\"catalog catalog-fluid\">\n" +
-    "<catalog-image image-stream=\"image.imageStream\" image-tag=\"image.imageStreamTag\" project=\"{{projectName}}\" version=\"image.version\" referenced-by=\"image.referencedBy\" ng-repeat=\"image in filteredNonBuilders | orderBy : ['name', 'imageStream.metadata.namespace']\">\n" +
-    "</catalog-image>\n" +
-    "\n" +
-    "<div style=\"height: 0\" class=\"tile-image\"></div>\n" +
-    "</div>\n" +
-    "</div>\n" +
-    "</div>\n" +
+    "<catalog project-name=\"projectName\" project-image-streams=\"projectImageStreams\" openshift-image-streams=\"openshiftImageStreams\" project-templates=\"projectTemplates\" openshift-templates=\"openshiftTemplates\">\n" +
+    "</catalog>\n" +
     "</uib-tab>\n" +
     "<uib-tab active=\"selectedTab.deployImage\">\n" +
     "<uib-tab-heading>Deploy Image</uib-tab-heading>\n" +
@@ -3954,6 +3957,44 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "<from-file></from-file>\n" +
     "</uib-tab>\n" +
     "</uib-tabset>\n" +
+    "</div>\n" +
+    "</div>\n" +
+    "</div>\n" +
+    "</div>\n" +
+    "</div>\n" +
+    "</div>\n" +
+    "</div>\n" +
+    "</div>"
+  );
+
+
+  $templateCache.put('views/create/category.html',
+    "<default-header class=\"top-header\"></default-header>\n" +
+    "<div class=\"wrap no-sidebar\">\n" +
+    "<div class=\"sidebar-left collapse navbar-collapse navbar-collapse-2\">\n" +
+    "<navbar-utility-mobile></navbar-utility-mobile>\n" +
+    "</div>\n" +
+    "<div class=\"middle surface-shaded\">\n" +
+    "\n" +
+    "<div class=\"middle-section\">\n" +
+    "<div class=\"middle-container\">\n" +
+    "<div class=\"middle-content\">\n" +
+    "<div class=\"container surface-shaded\">\n" +
+    "<breadcrumbs breadcrumbs=\"breadcrumbs\"></breadcrumbs>\n" +
+    "<div class=\"row\">\n" +
+    "<div class=\"col-md-12\">\n" +
+    "<h1>{{category.label}}</h1>\n" +
+    "<div ng-if=\"category.description\" class=\"help-block mar-bottom-lg\">{{category.description}}</div>\n" +
+    "\n" +
+    "<div ng-if=\"category.subcategories\">\n" +
+    "<catalog project-name=\"projectName\" project-image-streams=\"projectImageStreams\" openshift-image-streams=\"openshiftImageStreams\" project-templates=\"projectTemplates\" openshift-templates=\"openshiftTemplates\" category=\"category\">\n" +
+    "</catalog>\n" +
+    "</div>\n" +
+    "\n" +
+    "<div ng-if=\"!category.subcategories\">\n" +
+    "<category-content project-name=\"projectName\" project-image-streams=\"projectImageStreams\" openshift-image-streams=\"openshiftImageStreams\" project-templates=\"projectTemplates\" openshift-templates=\"openshiftTemplates\" category=\"category\">\n" +
+    "</category-content>\n" +
+    "</div>\n" +
     "</div>\n" +
     "</div>\n" +
     "</div>\n" +
@@ -3987,7 +4028,7 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "</div>\n" +
     "<div class=\"col-md-8\">\n" +
     "<fieldset ng-disabled=\"disableInputs\">\n" +
-    "<osc-image-summary resource=\"image\" name=\"imageName\" tag=\"imageTag\"></osc-image-summary>\n" +
+    "<osc-image-summary resource=\"image\" name=\"displayName || imageName\" tag=\"imageTag\"></osc-image-summary>\n" +
     "<div class=\"clearfix visible-xs-block\"></div>\n" +
     "<form class=\"\" ng-show=\"imageStream\" novalidate name=\"form\" ng-submit=\"createApp()\">\n" +
     "<div style=\"margin-bottom: 15px\">\n" +
@@ -4645,7 +4686,7 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
 
 
   $templateCache.put('views/directives/_custom-icon.html',
-    "<span ng-if=\"!isDataIcon\" aria-hidden=\"true\" class=\"font-icon {{icon}}\"></span>\n" +
+    "<span ng-if=\"!isDataIcon\" aria-hidden=\"true\" ng-class=\"icon.contains('fa ') ? icon : 'font-icon ' + icon\"></span>\n" +
     "<img ng-if=\"isDataIcon\" alt=\"\" ng-src=\"{{icon}}\">"
   );
 
@@ -6315,13 +6356,13 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
 
 
   $templateCache.put('views/directives/osc-image-summary.html',
-    "<h1>{{ name || resource.metadata.name }}</h1>\n" +
-    "<div class=\"metadata\">\n" +
-    "<div ng-show=\"resource | annotation:'version'\">Version {{ resource | annotation:'version' }}</div>\n" +
+    "<h1>{{ name || (resource | displayName) }}</h1>\n" +
+    "<div class=\"resource-description\" ng-bind-html=\"resource | description | linky\"></div>\n" +
+    "<div class=\"resource-metadata\">\n" +
     "<div ng-show=\"resource | annotation:'provider'\">Provider: {{ resource | annotation:'provider' }}</div>\n" +
-    "<div ng-show=\"resource.metadata.namespace\">Namespace: {{ resource.metadata.namespace }}</div>\n" +
-    "</div>\n" +
-    "<div class=\"resource-description\" ng-bind-html=\"resource | description | linky\"></div>"
+    "<div ng-show=\"resource.metadata.namespace && resource.metadata.namespace !=='openshift'\">Namespace: {{ resource.metadata.namespace }}</div>\n" +
+    "<div ng-show=\"resource | annotation:'version'\">Version: {{ resource | annotation:'version' }}</div>\n" +
+    "</div>"
   );
 
 
