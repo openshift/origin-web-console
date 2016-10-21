@@ -965,10 +965,21 @@ a.disabled-link {
   }
   .modal-body {
     padding: 0px 18px;
-    .create-secret-editor {
-      height: 150px;
-    }
   }
+}
+
+.secret-data {
+  max-width: 450px;
+  max-height: 150px;
+  @media (max-width: @screen-sm-max) {
+    // The `table-responsive` div adds a 100% border. Make sure the table is at
+    // least 100% to avoid a white block at some screen sizes.
+    max-width: 100%;
+  }
+}
+
+.create-secret-editor {
+  height: 150px;
 }
 
 .edit-yaml {

@@ -184,6 +184,9 @@ angular.module('openshiftConsole')
       'services': [
         {group: '', resource: 'services', verbs: ['update', 'create', 'delete']}
       ],
+      'secrets': [
+        {group: '', resource: 'secrets', verbs: ['update', 'delete']}
+      ],
       'projects': [
         {group: '', resource: 'projects', verbs: ['delete', 'update']}
       ]
