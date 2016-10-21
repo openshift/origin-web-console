@@ -6,9 +6,7 @@ cache:
   - node_modules
   - bower_components
 before_script:
-  - npm install -g grunt-cli
-  - npm install -g bower
-  - bower install
+  - make build
 script:
-  - hack/test-headless.sh grunt test
+  - hack/test-headless.sh test
   - hack/verify-dist.sh
