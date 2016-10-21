@@ -1,0 +1,129 @@
+.membership {
+  .content-pane {
+    max-width: 1024px;
+    margin-top: 50px;
+    .col-add-role {
+      padding: 10px 0;
+      min-width: 150px;
+    }
+    .add-role-to {
+      margin-left: -1px;
+    }
+    .item-row,
+    .col-heading {
+      border-bottom: 1px solid #ededed;
+      h3 {
+        margin: 0;
+      }
+    }
+    .item-row {
+      padding: 5px 10px 5px 5px;
+      margin-bottom: 20px;
+    }
+    .col-heading {
+      margin-bottom: 20px;
+      .col-add-role {
+        h3 {
+          display: none;
+        }
+      }
+    }
+    .col-name {
+      min-width: 165px;
+      padding: 0 5px 10px 0;
+      word-wrap: break-word;
+      input {
+        max-width: 150px;
+      }
+      .new-project {
+        margin-top: 2px;
+      }
+    }
+    .form-new-role {
+      .col-roles {
+        display: none;
+      }
+    }
+    .content-serviceaccount {
+      .form-new-role {
+        .col-roles {
+          display: block;
+        }
+      }
+    }
+    .input-name {
+      width: 150px;
+      margin-bottom: 5px;
+    }
+    .select-project {
+      width: 150px;
+    }
+    .select-role {
+      width: 150px;
+      small {
+        color: #999;
+      }
+      .active {
+        small {
+          color: #c0e0f0;
+        }
+      }
+    }
+  }
+}
+
+
+@media(min-width: @screen-sm-min) {
+  .membership {
+    .content-pane {
+      .col-add-role {
+        padding: 0;
+        min-width: 245px;
+      }
+      .item-row,
+      .col-heading {
+        border-bottom: none;
+        margin-bottom: none;
+      }
+      .item-row.highlight-hover:hover {
+        background-color: #fafafa;
+      }
+      .col-heading {
+        .col-add-role {
+          h3 {
+            display: block;
+          }
+          a {
+            display: block;
+            padding-left: 10px;
+          }
+        }
+      }
+      .col-name {
+        min-width: 180px;
+        input {
+          max-width: 175px;
+        }
+      }
+      .form-new-role {
+        .col-roles {
+          display: block;
+        }
+      }
+    }
+  }
+}
+
+
+// FIXME (bpeterse): to update in layout.attrs & eliminate the workaround here
+// fix for collapse of flex items in IE
+// https://github.com/philipwalton/flexbugs#1-minimum-content-sizing-of-flex-items-not-honored
+[flex-collapse-fix],
+.item-row,
+.col-heading,
+.col-name,
+.col-roles,
+.col-add-role {
+  //flex-shrink: 0;
+  flex-basis: auto;
+}

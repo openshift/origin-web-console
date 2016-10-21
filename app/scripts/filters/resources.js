@@ -129,6 +129,7 @@ angular.module('openshiftConsole')
       return displayName;
     };
   })
+  // TODO: must wrap this filter in ng-if="project" or it will not update
   .filter('canI', function(AuthorizationService) {
     return function(resource, verb, projectName) {
       return AuthorizationService.canI(resource, verb, projectName);

@@ -20,10 +20,15 @@
         color: @dropdown-link-hover-color;
       }
     }
-    &.active > span {
-      background-color: @dropdown-link-active-bg !important;
-      border-color: @dropdown-link-active-border-color !important;
-      color: @dropdown-link-active-color;
+    &.active {
+      > span {
+        background-color: @dropdown-link-active-bg !important;
+        border-color: @dropdown-link-active-border-color !important;
+        color: @dropdown-link-active-color;
+      }
+      .text-muted {
+        color: #f5f5f5;
+      }
     }
   }
   .ui-select-choices-row-inner {
