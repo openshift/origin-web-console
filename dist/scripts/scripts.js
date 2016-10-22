@@ -1099,7 +1099,7 @@ l(a, b, c, d ? d[e] :null);
 }, m.prototype.list = function(a, b, c, d) {
 a = g.toResourceGroupVersion(a);
 var e = this._uniqueKey(a, null, b, _.get(d, "http.params")), f = this._listCallbacks(e);
-f.add(c), this._isCached(e) ? (f.fire(this._data(e)), f.empty()) :this._listInFlight(e) || this._startListOp(a, b);
+f.add(c), this._isCached(e) ? (f.fire(this._data(e)), f.empty()) :this._listInFlight(e) || this._startListOp(a, b, d);
 }, m.prototype["delete"] = function(a, c, d, f) {
 a = g.toResourceGroupVersion(a), f = f || {};
 var h, i = e.defer(), j = this, k = {};

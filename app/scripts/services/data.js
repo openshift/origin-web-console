@@ -126,7 +126,7 @@ angular.module('openshiftConsole')
       // no-op, our callback will get called when listOperation completes
     }
     else {
-      this._startListOp(resource, context);
+      this._startListOp(resource, context, opts);
     }
   };
 
