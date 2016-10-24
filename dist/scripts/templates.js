@@ -7851,7 +7851,6 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "<div ng-if=\"loaded\">\n" +
     "<h1>\n" +
     "Edit Deployment Config {{deploymentConfig.metadata.name}}\n" +
-    "<small>&mdash; {{strategyData.type | startCase}} Deployment Strategy</small>\n" +
     "</h1>\n" +
     "<fieldset ng-disabled=\"disableInputs\">\n" +
     "<form class=\"edit-form\" name=\"form\" novalidate ng-submit=\"save()\">\n" +

@@ -15,7 +15,6 @@
             <div ng-if="loaded">
               <h1>
                 Edit Deployment Config {{deploymentConfig.metadata.name}}
-                <small>&mdash; {{strategyData.type | startCase}} Deployment Strategy</small>
               </h1>
               <fieldset ng-disabled="disableInputs">
                 <form class="edit-form" name="form" novalidate ng-submit="save()">
