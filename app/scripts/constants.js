@@ -175,7 +175,6 @@ window.OPENSHIFT_CONSTANTS = {
             {
               label: "Membership",
               href: "/membership",
-              // TODO: coming soon, canI filtering for nav.
               // supports: {resource: '', verb: '', group: '' }
               canI: {
                 resource: 'rolebindings',
