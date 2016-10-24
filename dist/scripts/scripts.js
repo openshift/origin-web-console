@@ -4775,7 +4775,8 @@ a !== b && (localStorage.setItem("monitoring.eventsidebar.collapsed", c.renderOp
 }));
 } ]), angular.module("openshiftConsole").controller("MembershipController", [ "$filter", "$location", "$routeParams", "$scope", "$timeout", "$uibModal", "AuthService", "AuthorizationService", "DataService", "ProjectsService", "MembershipService", "RoleBindingsService", "RolesService", function(a, b, c, d, e, f, g, h, i, j, k, l, m) {
 var n, o = c.project, p = a("humanizeKind"), q = a("annotation"), r = [], s = {
-errorReason:_.template('Reason: "<%- httpErr %>"'),
+errorReason:_.template('Reason: "<%= httpErr %>"')
+}, t = {
 notice:{
 yourLastRole:_.template('Removing the role "<%- roleName %>" may completely remove your ability to see this project.')
 },
@@ -4796,15 +4797,15 @@ success:_.template('The role "<%- roleName %>" was given to "<%- subjectName %>"
 error:_.template('The role "<%- roleName %>" was not given to "<%- subjectName %>".')
 }
 }
-}, t = function(a, b, c, e, f) {
+}, u = function(a, b, c, e, f) {
 f = f || d, f.alerts[a] = {
 type:b,
 message:c,
 details:e
 };
-}, u = function() {
-d.disableAddForm = !1, d.newBinding.name = "", d.newBinding.namespace = o, d.newBinding.newRole = null;
 }, v = function() {
+d.disableAddForm = !1, d.newBinding.name = "", d.newBinding.namespace = o, d.newBinding.newRole = null;
+}, w = function() {
 i.list("rolebindings", n, function(a) {
 angular.extend(d, {
 canShowRoles:!0,
@@ -4814,51 +4815,51 @@ subjectKindsForUI:k.mapRolebindingsForUI(a.by("metadata.name"), r)
 }, {
 errorNotification:!1
 });
-}, w = function(b, c) {
+}, x = function(b, c) {
 d.disableAddForm = !0, l.create(b, c, o, n).then(function() {
-u(), v(), t("rolebindingCreate", "success", s.update.subject.success({
+v(), w(), u("rolebindingCreate", "success", t.update.subject.success({
 roleName:b.metadata.name,
-subjectName:_.escape(c.name)
+subjectName:c.name
 }));
 }, function(d) {
-u(), t("rolebindingCreateFail", "error", s.update.subject.error({
+v(), u("rolebindingCreateFail", "error", t.update.subject.error({
 roleName:b.metadata.name,
-subjectName:_.escape(c.name)
+subjectName:c.name
 }), s.errorReason({
 httpErr:a("getErrorDetails")(d)
 }));
 });
-}, x = function(b, c, e) {
+}, y = function(b, c, e) {
 d.disableAddForm = !0, l.addSubject(b, c, e, n).then(function() {
-u(), v(), t("rolebindingUpdate", "success", s.update.subject.success({
+v(), w(), u("rolebindingUpdate", "success", t.update.subject.success({
 roleName:b.roleRef.name,
-subjectName:_.escape(c.name)
+subjectName:c.name
 }));
 }, function(d) {
-u(), t("rolebindingUpdateFail", "error", s.update.subject.error({
+v(), u("rolebindingUpdateFail", "error", t.update.subject.error({
 roleName:b.roleRef.name,
-subjectName:_.escape(c.name)
+subjectName:c.name
 }), s.errorReason({
 httpErr:a("getErrorDetails")(d)
 }));
 });
-}, y = {};
-c.tab && (y[c.tab] = !0);
-var z = k.getSubjectKinds();
+}, z = {};
+c.tab && (z[c.tab] = !0);
+var A = k.getSubjectKinds();
 angular.extend(d, {
-selectedTab:y,
+selectedTab:z,
 projectName:o,
 alerts:{},
 forms:{},
 emptyMessage:"Loading...",
-subjectKinds:z,
+subjectKinds:A,
 newBinding:{
 role:"",
 kind:c.tab || "User",
 name:""
 },
 toggleEditMode:function() {
-u(), d.mode.edit = !d.mode.edit;
+v(), d.mode.edit = !d.mode.edit;
 },
 mode:{
 edit:!1
@@ -4884,24 +4885,24 @@ return a ? e + (q(a, "description") || b) :b;
 }
 }
 });
-var A = function(a, b, c, e) {
+var B = function(a, b, c, e) {
 var f = {
 alerts:{},
-detailsMarkup:s.remove.areYouSure.subject({
+detailsMarkup:t.remove.areYouSure.subject({
 roleName:c,
 kindName:p(b),
-subjectName:_.escape(a)
+subjectName:a
 }),
 okButtonText:"Remove",
 okButtonClass:"btn-danger",
 cancelButtonText:"Cancel"
 };
-return _.isEqual(a, e) && (f.details = s.remove.areYouSure.self({
+return _.isEqual(a, e) && (f.detailsMarkup = t.remove.areYouSure.self({
 roleName:c,
-subjectName:_.escape(a)
-}), k.isLastRole(d.user.metadata.name, d.roleBindings) && t("currentUserLastRole", "error", s.notice.yourLastRole({
+subjectName:a
+}), k.isLastRole(d.user.metadata.name, d.roleBindings) && u("currentUserLastRole", "error", t.notice.yourLastRole({
 roleName:c
-}), null, f)), _.isEqual(b, "ServiceAccount") && _.startsWith(c, "system:") && t("editingServiceAccountRole", "error", s.warning.serviceAccount(), null, f), f;
+}), null, f)), _.isEqual(b, "ServiceAccount") && _.startsWith(c, "system:") && u("editingServiceAccountRole", "error", t.warning.serviceAccount(), null, f), f;
 };
 g.withUser().then(function(a) {
 d.user = a;
@@ -4912,11 +4913,11 @@ return a.metadata.name;
 })
 });
 }), j.get(c.project).then(_.spread(function(c, e) {
-n = e, v(), angular.extend(d, {
+n = e, w(), angular.extend(d, {
 project:c,
-subjectKinds:z,
+subjectKinds:A,
 confirmRemove:function(c, e, g) {
-var h = null, i = A(c, e, g, d.user.metadata.name);
+var h = null, i = B(c, e, g, d.user.metadata.name);
 _.isEqual(c, d.user.metadata.name) && k.isLastRole(d.user.metadata.name, d.roleBindings) && (h = !0), f.open({
 animation:!0,
 templateUrl:"views/modals/confirm.html",
@@ -4928,14 +4929,14 @@ return i;
 }
 }).result.then(function() {
 l.removeSubject(c, g, d.roleBindings, n).then(function() {
-h ? b.url("./") :(v(), t("rolebindingUpdate", "success", s.remove.success({
+h ? b.url("./") :(w(), u("rolebindingUpdate", "success", t.remove.success({
 roleName:g,
-subjectName:_.escape(c)
+subjectName:c
 })));
 }, function(b) {
-t("rolebindingUpdateFail", "error", s.remove.error({
+u("rolebindingUpdateFail", "error", t.remove.error({
 roleName:g,
-subjectName:_.escape(c)
+subjectName:c
 }), s.errorReason({
 httpErr:a("getErrorDetails")(b)
 }));
@@ -4952,7 +4953,7 @@ roleRef:{
 name:c.metadata.name
 }
 });
-return g ? x(g, f, e) :w(c, f, e);
+return g ? y(g, f, e) :x(c, f, e);
 }
 }), m.listAllRoles(n, {
 errorNotification:!1
@@ -4965,7 +4966,7 @@ name:a
 }
 });
 };
-v(), angular.extend(d, {
+w(), angular.extend(d, {
 toggle:{
 roles:!1
 },

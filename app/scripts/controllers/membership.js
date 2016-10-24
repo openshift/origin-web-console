@@ -26,8 +26,11 @@ angular
       var allRoles = [];
 
       // NOTE: these could all be moved out into a strings service.
-      var messages = {
-        errorReason: _.template('Reason: "<%- httpErr %>"'),
+      var unescaped = {
+        errorReason: _.template('Reason: "<%= httpErr %>"')
+      };
+
+      var escaped = {
         notice: {
           yourLastRole: _.template('Removing the role "<%- roleName %>" may completely remove your ability to see this project.')
         },
@@ -88,16 +91,16 @@ angular
           .then(function() {
             resetForm();
             refreshRoleBindingList();
-            showAlert('rolebindingCreate', 'success', messages.update.subject.success({
+            showAlert('rolebindingCreate', 'success', escaped.update.subject.success({
               roleName: role.metadata.name,
-              subjectName: _.escape(newSubject.name)
+              subjectName: newSubject.name
             }));
           }, function(err) {
             resetForm();
-            showAlert('rolebindingCreateFail', 'error', messages.update.subject.error({
+            showAlert('rolebindingCreateFail', 'error', escaped.update.subject.error({
               roleName: role.metadata.name,
-              subjectName: _.escape(newSubject.name)
-            }), messages.errorReason({httpErr: $filter('getErrorDetails')(err)}));
+              subjectName: newSubject.name
+            }), unescaped.errorReason({httpErr: $filter('getErrorDetails')(err)}));
           });
       };
 
@@ -108,16 +111,16 @@ angular
           .then(function() {
             resetForm();
             refreshRoleBindingList();
-            showAlert('rolebindingUpdate', 'success', messages.update.subject.success({
+            showAlert('rolebindingUpdate', 'success', escaped.update.subject.success({
               roleName: rb.roleRef.name,
-              subjectName: _.escape(newSubject.name)
+              subjectName: newSubject.name
             }));
           }, function(err) {
             resetForm();
-            showAlert('rolebindingUpdateFail', 'error', messages.update.subject.error({
+            showAlert('rolebindingUpdateFail', 'error', escaped.update.subject.error({
               roleName: rb.roleRef.name,
-              subjectName: _.escape(newSubject.name)
-            }), messages.errorReason({httpErr: $filter('getErrorDetails')(err)}));
+              subjectName: newSubject.name
+            }), unescaped.errorReason({httpErr: $filter('getErrorDetails')(err)}));
           });
       };
 
@@ -177,26 +180,26 @@ angular
       var createModalScope = function(subjectName, kind, roleName, currentUserName) {
         var modalScope = {
           alerts: {},
-          detailsMarkup: messages.remove.areYouSure.subject({
+          detailsMarkup: escaped.remove.areYouSure.subject({
             roleName: roleName,
             kindName: humanizeKind(kind),
-            subjectName:  _.escape(subjectName)
+            subjectName:  subjectName
           }),
           okButtonText: 'Remove',
           okButtonClass: 'btn-danger',
           cancelButtonText: 'Cancel'
         };
         if(_.isEqual(subjectName, currentUserName)) {
-          modalScope.details = messages.remove.areYouSure.self({
+          modalScope.detailsMarkup = escaped.remove.areYouSure.self({
             roleName: roleName,
-            subjectName: _.escape(subjectName)
+            subjectName: subjectName
           });
           if(MembershipService.isLastRole($scope.user.metadata.name, $scope.roleBindings)) {
-            showAlert('currentUserLastRole', 'error', messages.notice.yourLastRole({roleName: roleName}), null, modalScope);
+            showAlert('currentUserLastRole', 'error', escaped.notice.yourLastRole({roleName: roleName}), null, modalScope);
           }
         }
         if(_.isEqual(kind, 'ServiceAccount') && _.startsWith(roleName, 'system:')) {
-          showAlert('editingServiceAccountRole', 'error', messages.warning.serviceAccount(), null, modalScope);
+          showAlert('editingServiceAccountRole', 'error', escaped.warning.serviceAccount(), null, modalScope);
         }
         return modalScope;
       };
@@ -250,16 +253,16 @@ angular
                       $location.url("./");
                     } else {
                       refreshRoleBindingList();
-                      showAlert('rolebindingUpdate', 'success', messages.remove.success({
+                      showAlert('rolebindingUpdate', 'success', escaped.remove.success({
                         roleName: roleName,
-                        subjectName: _.escape(subjectName)
+                        subjectName: subjectName
                       }));
                     }
                   }, function(err) {
-                    showAlert('rolebindingUpdateFail', 'error', messages.remove.error({
+                    showAlert('rolebindingUpdateFail', 'error', escaped.remove.error({
                       roleName: roleName,
-                      subjectName: _.escape(subjectName)
-                    }),  messages.errorReason({
+                      subjectName: subjectName
+                    }),  unescaped.errorReason({
                       httpErr: $filter('getErrorDetails')(err)
                     }));
                   });
