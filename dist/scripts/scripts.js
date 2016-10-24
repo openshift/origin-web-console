@@ -10179,19 +10179,15 @@ Available:"#d1d1d1"
 u[g] = c3.generate(j);
 })));
 }), a.totalUsed = _.round(a.totalUsed, 1);
-var g, h = [ b ].concat(_.values(d));
-f < a.smallestYAxisMax && (g = a.smallestYAxisMax);
-var i, j = {
+var g, h = [ b ].concat(_.values(d)), i = {
 type:a.chartType || "spline",
 x:"dates",
 columns:h
-}, l = a.chartPrefix + "sparkline";
-v[l] ? (v[l].load(j), v[l].axis.max({
-y:g
-})) :(i = C(a), i.axis.y.max = g, i.data = j, a.chartDataColors && (i.color = {
+}, j = a.chartPrefix + "sparkline";
+v[j] ? v[j].load(i) :(g = C(a), g.data = i, a.chartDataColors && (g.color = {
 pattern:a.chartDataColors
 }), c(function() {
-A || (v[l] = c3.generate(i));
+A || (v[j] = c3.generate(g));
 }));
 }
 }
@@ -10262,7 +10258,6 @@ units:"MiB",
 chartPrefix:"memory-",
 convert:g.bytesToMiB,
 containerMetric:!0,
-smallestYAxisMax:100,
 datasets:[ {
 id:"memory/usage",
 label:"Memory",
@@ -10274,7 +10269,6 @@ units:"millicores",
 chartPrefix:"cpu-",
 convert:_.round,
 containerMetric:!0,
-smallestYAxisMax:10,
 datasets:[ {
 id:"cpu/usage_rate",
 label:"CPU",
@@ -10286,7 +10280,6 @@ units:"KiB/s",
 chartPrefix:"network-",
 chartType:"spline",
 convert:g.bytesToKiB,
-smallestYAxisMax:1,
 datasets:[ {
 id:"network/tx_rate",
 label:"Sent",

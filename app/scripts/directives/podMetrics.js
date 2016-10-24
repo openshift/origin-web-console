@@ -44,8 +44,6 @@ angular.module('openshiftConsole')
             chartPrefix: "memory-",
             convert: ConversionService.bytesToMiB,
             containerMetric: true,
-            // The sparkline y-axis will always extend to at least this value.
-            smallestYAxisMax: 100,
             datasets: [
               {
                 id: "memory/usage",
@@ -62,9 +60,6 @@ angular.module('openshiftConsole')
             chartPrefix: "cpu-",
             convert: _.round,
             containerMetric: true,
-            // The sparkline y-axis will always extend to at least this value.
-            // Avoid spikey charts when rounding very small CPU usage values.
-            smallestYAxisMax: 10,
             datasets: [
               {
                 id: "cpu/usage_rate",
@@ -81,9 +76,6 @@ angular.module('openshiftConsole')
             chartPrefix: "network-",
             chartType: "spline",
             convert: ConversionService.bytesToKiB,
-            // The sparkline y-axis will always extend to at least this value.
-            // Avoid spikey charts when rounding very small network usage values.
-            smallestYAxisMax: 1,
             datasets: [
               {
                 id: "network/tx_rate",
@@ -323,16 +315,6 @@ angular.module('openshiftConsole')
 
           // Sparkline
 
-          // Use a reasonable y-axis max value for small data values like 1
-          // millicore or 0.1 KiB/s. If left undefined, c3 will generate one
-          // that fits the data. Setting a value avoids weird spikes when when
-          // CPU or network usage is very low since we round to the nearest
-          // millicore or one decimal place for KiB/s.
-          var yAxisMax;
-          if (largestValue < metric.smallestYAxisMax) {
-            yAxisMax = metric.smallestYAxisMax;
-          }
-
           var sparklineConfig, sparklineData = {
             type: metric.chartType || 'spline',
             x: 'dates',
@@ -343,7 +325,6 @@ angular.module('openshiftConsole')
 
           if (!sparklineByMetric[chartId]) {
             sparklineConfig = createSparklineConfig(metric);
-            sparklineConfig.axis.y.max = yAxisMax;
             sparklineConfig.data = sparklineData;
             if (metric.chartDataColors) {
               sparklineConfig.color = { pattern: metric.chartDataColors };
@@ -357,9 +338,6 @@ angular.module('openshiftConsole')
             });
           } else {
             sparklineByMetric[chartId].load(sparklineData);
-            sparklineByMetric[chartId].axis.max({
-              y: yAxisMax
-            });
           }
         }
 
