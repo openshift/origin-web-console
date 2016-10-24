@@ -2850,7 +2850,7 @@ function k(a) {
 return f().then(function(b) {
 var c, d = j(a.metric);
 return a.stacked ? (c = b + p, URI.expand(c, {
-podName:a.pod.metadata.name,
+podUID:a.pod.metadata.uid,
 metric:a.metric,
 type:d
 }).toString()) :(c = b + o, URI.expand(c, {
@@ -2860,7 +2860,7 @@ metric:a.metric
 }).toString());
 });
 }
-var l, m, n, o = "/gauges/{containerName}%2F{podUID}%2F{metric}/data", p = "/gauges/data?stacked=true&tags=descriptor_name:{metric},type:{type},pod_name:{podName}", q = function(a) {
+var l, m, n, o = "/gauges/{containerName}%2F{podUID}%2F{metric}/data", p = "/gauges/data?stacked=true&tags=descriptor_name:{metric},type:{type},pod_id:{podUID}", q = function(a) {
 return f().then(function(c) {
 return !!c && (!a || (!!m || !n && b.get(c).then(function() {
 return m = !0, !0;

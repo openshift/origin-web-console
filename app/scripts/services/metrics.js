@@ -3,8 +3,7 @@
 angular.module("openshiftConsole")
   .factory("MetricsService", function($filter, $http, $q, $rootScope, APIDiscovery) {
     var POD_GAUGE_TEMPLATE = "/gauges/{containerName}%2F{podUID}%2F{metric}/data";
-    // Used in compact view.
-    var POD_STACKED_TEMPLATE = "/gauges/data?stacked=true&tags=descriptor_name:{metric},type:{type},pod_name:{podName}";
+    var POD_STACKED_TEMPLATE = "/gauges/data?stacked=true&tags=descriptor_name:{metric},type:{type},pod_id:{podUID}";
 
     var metricsURL;
     function getMetricsURL() {
@@ -69,7 +68,7 @@ angular.module("openshiftConsole")
         if (config.stacked) {
           template = metricsURL + POD_STACKED_TEMPLATE;
           return URI.expand(template, {
-            podName: config.pod.metadata.name,
+            podUID: config.pod.metadata.uid,
             metric: config.metric,
             type: type
           }).toString();
