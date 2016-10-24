@@ -8620,7 +8620,7 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "<ui-select-match placeholder=\"Select a role\">\n" +
     "<span ng-bind=\"newBinding.newRole.metadata.name\"></span>\n" +
     "</ui-select-match>\n" +
-    "<ui-select-choices repeat=\"role as role in filteredRoles | filter: $select.search\">\n" +
+    "<ui-select-choices repeat=\"role as role in filteredRoles | filter: $select.search | orderBy: 'metadata.name'\">\n" +
     "<div>{{ role.metadata.name }}</div>\n" +
     "<div ng-if=\"role | annotation : 'description'\">\n" +
     "<small>{{role | annotation : 'description'}}</small>\n" +

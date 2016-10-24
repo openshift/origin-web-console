@@ -241,7 +241,7 @@
                               <span ng-bind="newBinding.newRole.metadata.name"></span>
                             </ui-select-match>
                             <ui-select-choices
-                              repeat="role as role in filteredRoles | filter: $select.search">
+                              repeat="role as role in filteredRoles | filter: $select.search | orderBy: 'metadata.name'">
                               <div>{{ role.metadata.name }}</div>
                               <div ng-if="role | annotation : 'description'">
                                 <small>{{role | annotation : 'description'}}</small>
