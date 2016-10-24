@@ -123,11 +123,27 @@ angular.module("openshiftConsole")
         // Show a warning if previously-set certificates won't be used because
         // the TLS termination is now incompatible.
         scope.$watch('route.tls.termination', function() {
-          if (_.get(scope, 'route.tls.termination')) {
-            // If editing a route with TLS termination already set, expand the secure route options.
-            scope.showSecureRouteOptions = true;
-          }
+          scope.secureRoute = !!_.get(scope, 'route.tls.termination');
           scope.showCertificatesNotUsedWarning = showCertificateWarning();
+        });
+
+        var previousTermination;
+        scope.$watch('secureRoute', function(newValue, oldValue) {
+          if (newValue === oldValue) {
+            return;
+          }
+
+          var termination = _.get(scope, 'route.tls.termination');
+          if (!scope.securetRoute && termination) {
+            // Remember previous value if user switches back to secure.
+            previousTermination = termination;
+            delete scope.route.tls.termination;
+          }
+
+          if (scope.secureRoute && !termination) {
+            // Restore previous termination value or default to edge if no previous value.
+            _.set(scope, 'route.tls.termination', previousTermination || 'edge');
+          }
         });
 
         scope.addAlternateService = function() {

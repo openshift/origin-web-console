@@ -150,25 +150,20 @@
       </div>
     </div>
 
-    <div>
-      <a href=""
-        ng-click="showSecureRouteOptions = true"
-        ng-show="!showSecureRouteOptions">Show options for secured routes</a>
+    <div class="checkbox">
+      <label>
+        <input type="checkbox" ng-model="secureRoute" id="secure-route">Secure route
+      </label>
+      <div class="help-block">
+        Routes can be secured using several TLS termination types for serving certificates.
+      </div>
     </div>
 
-    <div ng-show="showSecureRouteOptions">
-      <h3>Route Type</h3>
-      <div>
-        <span class="help-block">
-          Routes can be secured using several TLS termination types for serving certificates.
-        </span>
-      </div>
-
+    <div ng-show="secureRoute">
       <!-- TLS Termination -->
       <div class="form-group">
         <label>TLS Termination</label>
         <select ng-model="route.tls.termination" class="form-control">
-          <option value="">None</option>
           <option value="edge">Edge</option>
           <option value="passthrough">Passthrough</option>
           <option value="reencrypt">Re-encrypt</option>
