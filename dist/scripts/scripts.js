@@ -2722,7 +2722,7 @@ return _.sortBy(e, "sortOrder");
 return _.sortBy(a, "metadata.name");
 }, g = function(a) {
 return _.filter(a, function(a) {
-return _.isEqual(a.metadata.name, "system:image-puller") || _.isEqual(a.metadata.name, "system:image-pusher") || !_.startsWith(a.metadata.name, "cluster-") && !_.startsWith(a.metadata.name, "system:");
+return _.isEqual(a.metadata.name, "system:image-puller") || _.isEqual(a.metadata.name, "system:image-pusher") || _.isEqual(a.metadata.name, "system:image-builder") || _.isEqual(a.metadata.name, "system:deployer") || !_.startsWith(a.metadata.name, "cluster-") && !_.startsWith(a.metadata.name, "system:") && !_.startsWith(a.metadata.name, "registry-") && !_.startsWith(a.metadata.name, "self-");
 });
 }, h = function(a) {
 return _.reduce(a, function(a, b) {
