@@ -7363,31 +7363,57 @@ return _.includes(c, b.name);
 return _.get(d, "imageChangeParams.from.name");
 }
 function l(a) {
-var b = [], c = y(a);
-return c && angular.forEach(c, function(c) {
-var d = c.image;
-_.trim(d) || (d = g(a, c)), d && b.push(d);
+for (var b = [], c = F.exec(a); c; ) b.push(c[1]), c = F.exec(a);
+return b;
+}
+function q() {
+var b = {};
+return _.each(a.template.parameters, function(a) {
+b[a.name] = a.value;
 }), b;
 }
-function q(b) {
-var c = [], d = [], e = {};
-return angular.forEach(b.objects, function(b) {
+function t() {
+var b = q();
+a.templateImages = _.map(G, function(a) {
+if (_.isEmpty(a.usesParameters)) return a;
+var c = _.template(a.name, {
+interpolate:F
+});
+return {
+name:c(b),
+usesParameters:a.usesParameters
+};
+});
+}
+function B(a) {
+var b = [], c = y(a);
+return c && angular.forEach(c, function(c) {
+var d = c.image, e = g(a, c);
+e && (d = e), d && b.push(d);
+}), b;
+}
+function C(b) {
+G = [];
+var c = [], d = {};
+angular.forEach(b.objects, function(b) {
 if ("BuildConfig" === b.kind) {
-var f = p(z(b), a.projectName);
-f && c.push({
-name:f
+var e = p(z(b), a.projectName);
+e && G.push({
+name:e,
+usesParameters:l(e)
 });
-var g = p(A(b), a.projectName);
-g && (e[g] = !0);
+var f = p(A(b), a.projectName);
+f && (d[f] = !0);
 }
-"DeploymentConfig" === b.kind && (d = d.concat(l(b)));
-}), d.forEach(function(a) {
-e[a] || c.push({
-name:a
+"DeploymentConfig" === b.kind && (c = c.concat(B(b)));
+}), c.forEach(function(a) {
+d[a] || G.push({
+name:a,
+usesParameters:l(a)
 });
-}), c;
+});
 }
-function t(a) {
+function D(a) {
 var b = /^helplink\.(.*)\.title$/, c = /^helplink\.(.*)\.url$/, d = {};
 for (var e in a.annotations) {
 var f, g = e.match(b);
@@ -7395,8 +7421,18 @@ g ? (f = d[g[1]] || {}, f.title = a.annotations[e], d[g[1]] = f) :(g = e.match(c
 }
 return d;
 }
-function B(b) {
-a.templateImages = q(a.template), a.systemLabels = _.map(a.template.labels, function(a, b) {
+function E(b) {
+a.parameterDisplayNames = {}, _.each(a.template.parameters, function(b) {
+a.parameterDisplayNames[b.name] = b.displayName || b.name;
+}), C(a.template);
+var c = function(a) {
+return !_.isEmpty(a.usesParameters);
+};
+_.some(G, c) ? a.$watch("template.parameters", _.debounce(function(b) {
+a.$apply(t);
+}, 50, {
+maxWait:250
+}), !0) :a.templateImages = G, a.systemLabels = _.map(a.template.labels, function(a, b) {
 return {
 name:b,
 value:a
@@ -7406,20 +7442,22 @@ name:"app",
 value:a.template.metadata.name
 });
 }
-a.project = b, a.breadcrumbs[0].title = n("displayName")(b), a.projectDisplayName = function() {
+a.project = b, a.breadcrumbs[0].title = n("displayName")(b);
+var F = /\${([a-zA-Z0-9\_]+)}/g, G = [];
+a.projectDisplayName = function() {
 return w(this.project) || this.projectName;
 }, a.templateDisplayName = function() {
 return w(this.template);
 };
-var C, D = function() {
+var H, I = function() {
 var b = {
 started:"Creating " + a.templateDisplayName() + " in project " + a.projectDisplayName(),
 success:"Created " + a.templateDisplayName() + " in project " + a.projectDisplayName(),
 failure:"Failed to create " + a.templateDisplayName() + " in project " + a.projectDisplayName()
-}, e = t(a.template);
+}, e = D(a.template);
 k.clear(), k.add(b, e, c.project, function() {
 var b = i.defer();
-return d.batch(C, f).then(function(c) {
+return d.batch(H, f).then(function(c) {
 var d = [], e = !1;
 c.failure.length > 0 ? (e = !0, c.failure.forEach(function(a) {
 d.push({
@@ -7441,7 +7479,7 @@ hasErrors:e
 });
 }), b.promise;
 }), m.toNextSteps(c.name, a.projectName);
-}, E = function(a) {
+}, J = function(a) {
 var b = o.open({
 animation:!0,
 templateUrl:"views/modals/confirm.html",
@@ -7458,18 +7496,18 @@ cancelButtonText:"Cancel"
 }
 }
 });
-b.result.then(D);
-}, F = function(b) {
+b.result.then(I);
+}, K = function(b) {
 var c = b.quotaAlerts || [], d = _.filter(c, {
 type:"error"
 });
-d.length ? (a.disableInputs = !1, a.alerts = c) :c.length ? (E(c), a.disableInputs = !1) :D();
+d.length ? (a.disableInputs = !1, a.alerts = c) :c.length ? (J(c), a.disableInputs = !1) :I();
 };
 if (a.createFromTemplate = function() {
 a.disableInputs = !0;
 var b = s.mapEntries(s.compactEntries(a.labels)), c = s.mapEntries(s.compactEntries(a.systemLabels));
 a.template.labels = _.extend(c, b), d.create("processedtemplates", null, a.template, f).then(function(b) {
-e.setTemplateData(b.parameters, a.template.parameters, b.message), C = b.objects, h.getLatestQuotaAlerts(C, f).then(F);
+e.setTemplateData(b.parameters, a.template.parameters, b.message), H = b.objects, h.getLatestQuotaAlerts(H, f).then(K);
 }, function(b) {
 a.disableInputs = !1;
 var c;
@@ -7482,18 +7520,18 @@ details:c
 }, v) d.get("templates", u, {
 namespace:v || a.projectName
 }).then(function(b) {
-a.template = b, B(), a.breadcrumbs[3].title = n("displayName")(b);
+a.template = b, E(), a.breadcrumbs[3].title = n("displayName")(b);
 }, function() {
 m.toErrorPage("Cannot create from template: the specified template could not be retrieved.");
 }); else {
 if (a.template = r.getTemplate(), _.isEmpty(a.template)) {
-var G = URI("error").query({
+var L = URI("error").query({
 error:"not_found",
 error_description:"Template wasn't found in cache."
 }).toString();
-j.url(G);
+j.url(L);
 }
-r.clearTemplate(), B();
+r.clearTemplate(), E();
 }
 }));
 } ]), angular.module("openshiftConsole").controller("LabelsController", [ "$scope", function(a) {
