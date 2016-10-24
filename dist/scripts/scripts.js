@@ -7024,9 +7024,9 @@ j.toErrorPage("Could not load " + l(d.kind) + " '" + d.name + "'. " + b("getErro
 i.unwatchAll(o);
 });
 }));
-} ]), angular.module("openshiftConsole").controller("BrowseCategoryController", [ "$scope", "$filter", "$location", "$q", "$routeParams", "$uibModal", "AlertMessageService", "CatalogService", "Constants", "DataService", "KeywordService", "LabelFilter", "Logger", "Navigate", "ProjectsService", function(a, b, c, d, e, f, g, h, i, j, k, l, m, n, o) {
+} ]), angular.module("openshiftConsole").controller("BrowseCategoryController", [ "$scope", "$filter", "$location", "$q", "$routeParams", "$uibModal", "AlertMessageService", "CatalogService", "Constants", "DataService", "KeywordService", "LabelFilter", "Navigate", "ProjectsService", function(a, b, c, d, e, f, g, h, i, j, k, l, m, n) {
 a.projectName = e.project;
-var p = function(b, c) {
+var o = function(b, c) {
 var d;
 return _.some(b, function(b) {
 if (d = _.find(b.items, {
@@ -7041,10 +7041,10 @@ label:""
 }
 return !1;
 }), d;
-}, q = i.CATALOG_CATEGORIES, r = "none" === e.category ? "" :e.category;
-if (a.category = p(q, r), !a.category) return void n.toErrorPage("Catalog category " + e.category + " not found.");
-var s, t;
-return e.subcategory && (s = a.category, r = "none" === e.subcategory ? "" :e.subcategory, t = _.get(a.category, "subcategories", []), a.category = p(t, r), !a.category) ? void n.toErrorPage("Catalog category " + e.category + "/" + e.subcategory + " not found.") :(a.alerts = a.alerts || {}, g.getAlerts().forEach(function(b) {
+}, p = i.CATALOG_CATEGORIES, q = "none" === e.category ? "" :e.category;
+if (a.category = o(p, q), !a.category) return void m.toErrorPage("Catalog category " + e.category + " not found.");
+var r, s;
+return e.subcategory && (r = a.category, q = "none" === e.subcategory ? "" :e.subcategory, s = _.get(a.category, "subcategories", []), a.category = o(s, q), !a.category) ? void m.toErrorPage("Catalog category " + e.category + "/" + e.subcategory + " not found.") :(a.alerts = a.alerts || {}, g.getAlerts().forEach(function(b) {
 a.alerts[b.name] = b.data;
 }), g.clearAlerts(), a.breadcrumbs = [ {
 title:a.projectName,
@@ -7055,12 +7055,12 @@ link:"project/" + a.projectName + "/create"
 }, {
 title:"Browse Catalog",
 link:"project/" + a.projectName + "/create?tab=fromCatalog"
-} ], s && a.breadcrumbs.push({
-title:s.label,
-link:"project/" + a.projectName + "/create/category/" + s.id
+} ], r && a.breadcrumbs.push({
+title:r.label,
+link:"project/" + a.projectName + "/create/category/" + r.id
 }), a.breadcrumbs.push({
 title:a.category.label
-}), void o.get(e.project).then(_.spread(function(c, d) {
+}), void n.get(e.project).then(_.spread(function(c, d) {
 a.project = c, a.context = d, a.breadcrumbs[0].title = b("displayName")(c), j.list("templates", d, function(b) {
 a.projectTemplates = b.by("metadata.name");
 }), j.list("templates", {
@@ -9899,7 +9899,7 @@ c ? (b.truncatedContent = a(c, b.limit, b.useWordBoundary, b.newlineLimit), b.tr
 });
 }
 };
-} ]), angular.module("openshiftConsole").directive("catalog", [ "CatalogService", "Constants", "KeywordService", function(a, b, c) {
+} ]), angular.module("openshiftConsole").directive("catalog", [ "CatalogService", "Constants", "KeywordService", "Logger", function(a, b, c, d) {
 return {
 restrict:"E",
 scope:{
@@ -9911,63 +9911,63 @@ projectName:"=",
 parentCategory:"=category"
 },
 templateUrl:"views/catalog/catalog.html",
-link:function(d) {
-function e() {
-var b = c.generateKeywords(d.filter.keyword);
-return _.isEmpty(b) ? (d.filterActive = !1, d.filteredBuildersByCategory = d.buildersByCategory, void (d.filteredTemplatesByCategory = d.templatesByCategory)) :(d.filterActive = !0, d.filteredBuildersByCategory = {}, _.each(d.buildersByCategory, function(c, e) {
-var f = a.getCategoryItem(e), g = function(a) {
+link:function(e) {
+function f() {
+var b = c.generateKeywords(e.filter.keyword);
+return _.isEmpty(b) ? (e.filterActive = !1, e.filteredBuildersByCategory = e.buildersByCategory, void (e.filteredTemplatesByCategory = e.templatesByCategory)) :(e.filterActive = !0, e.filteredBuildersByCategory = {}, _.each(e.buildersByCategory, function(c, d) {
+var f = a.getCategoryItem(d), g = function(a) {
 return a.test(f.label);
 }, h = _.reject(b, g);
-d.filteredBuildersByCategory[e] = a.filterImageStreams(c, h);
-}), d.filteredTemplatesByCategory = {}, void _.each(d.templatesByCategory, function(c, e) {
-var f = a.getCategoryItem(e), g = function(a) {
+e.filteredBuildersByCategory[d] = a.filterImageStreams(c, h);
+}), e.filteredTemplatesByCategory = {}, void _.each(e.templatesByCategory, function(c, d) {
+var f = a.getCategoryItem(d), g = function(a) {
 return a.test(f.label);
 }, h = _.reject(b, g);
-d.filteredTemplatesByCategory[e] = a.filterTemplates(c, h);
+e.filteredTemplatesByCategory[d] = a.filterTemplates(c, h);
 }));
 }
-function f() {
-if (d.projectImageStreams && d.openshiftImageStreams) {
-var b = _.toArray(d.projectImageStreams).concat(_.toArray(d.openshiftImageStreams));
-d.buildersByCategory = a.categorizeImageStreams(b), d.emptyCatalog = d.emptyCatalog && _.every(d.buildersByCategory, _.isEmpty), i();
-}
-}
 function g() {
-if (d.projectTemplates && d.openshiftTemplates) {
-var b = _.toArray(d.projectTemplates).concat(_.toArray(d.openshiftTemplates));
-d.templatesByCategory = a.categorizeTemplates(b), d.emptyCatalog = d.emptyCatalog && _.every(d.templatesByCategory, _.isEmpty), i();
+if (e.projectImageStreams && e.openshiftImageStreams) {
+var b = _.toArray(e.projectImageStreams).concat(_.toArray(e.openshiftImageStreams));
+e.buildersByCategory = a.categorizeImageStreams(b), e.emptyCatalog = e.emptyCatalog && _.every(e.buildersByCategory, _.isEmpty), j();
 }
 }
 function h() {
-d.noFilterMatches = !0;
+if (e.projectTemplates && e.openshiftTemplates) {
+var b = _.toArray(e.projectTemplates).concat(_.toArray(e.openshiftTemplates));
+e.templatesByCategory = a.categorizeTemplates(b), e.emptyCatalog = e.emptyCatalog && _.every(e.templatesByCategory, _.isEmpty), j();
+}
+}
+function i() {
+e.noFilterMatches = !0;
 var a = {};
-_.each(d.filteredBuildersByCategory, function(b, c) {
+_.each(e.filteredBuildersByCategory, function(b, c) {
 a[c] = _.size(b);
-}), _.each(d.filteredTemplatesByCategory, function(b, c) {
+}), _.each(e.filteredTemplatesByCategory, function(b, c) {
 a[c] = (a[c] || 0) + _.size(b);
-}), d.allContentHidden = !0, _.each(d.categories, function(b) {
+}), e.allContentHidden = !0, _.each(e.categories, function(b) {
 var c = _.some(b.items, function(b) {
 return a[b.id];
 });
-_.set(d, [ "hasContent", b.id ], c), c && (d.allContentHidden = !1);
-}), d.countByCategory = a;
+_.set(e, [ "hasContent", b.id ], c), c && (e.allContentHidden = !1);
+}), e.countByCategory = a;
 }
-function i() {
-d.loaded = d.projectTemplates && d.openshiftTemplates && d.projectImageStreams && d.openshiftImageStreams, e(), h(), d.loaded && (Logger.info("templates by category", d.templatesByCategory), Logger.info("builder images", d.buildersByCategory));
+function j() {
+e.loaded = e.projectTemplates && e.openshiftTemplates && e.projectImageStreams && e.openshiftImageStreams, f(), i(), e.loaded && (d.log("templates by category", e.templatesByCategory), d.log("builder images", e.buildersByCategory));
 }
-d.categories = _.get(d, "parentCategory.subcategories", b.CATALOG_CATEGORIES), d.loaded = !1, d.emptyCatalog = !0, d.filter = {
+e.categories = _.get(e, "parentCategory.subcategories", b.CATALOG_CATEGORIES), e.loaded = !1, e.emptyCatalog = !0, e.filter = {
 keyword:""
-}, d.$watch("filter.keyword", _.debounce(function() {
-d.$apply(function() {
-e(), h();
+}, e.$watch("filter.keyword", _.debounce(function() {
+e.$apply(function() {
+f(), i();
 });
 }, 200, {
 maxWait:1e3,
 trailing:!0
-})), d.$watchGroup([ "openshiftImageStreams", "projectImageStreams" ], f), d.$watchGroup([ "openshiftTemplates", "projectTemplates" ], g);
+})), e.$watchGroup([ "openshiftImageStreams", "projectImageStreams" ], g), e.$watchGroup([ "openshiftTemplates", "projectTemplates" ], h);
 }
 };
-} ]), angular.module("openshiftConsole").directive("categoryContent", [ "CatalogService", "Constants", "KeywordService", function(a, b, c) {
+} ]), angular.module("openshiftConsole").directive("categoryContent", [ "CatalogService", "Constants", "KeywordService", "Logger", function(a, b, c, d) {
 return {
 restrict:"E",
 scope:{
@@ -9980,31 +9980,31 @@ category:"="
 },
 templateUrl:"views/catalog/category-content.html",
 link:function(b) {
-function d() {
-var d = c.generateKeywords(b.filter.keyword);
-b.filteredBuilderImages = a.filterImageStreams(j, d), b.filteredTemplates = a.filterTemplates(k, d);
-}
 function e() {
-return b.projectImageStreams && b.openshiftImageStreams ? _.toArray(b.projectImageStreams).concat(_.toArray(b.openshiftImageStreams)) :[];
+var d = c.generateKeywords(b.filter.keyword);
+b.filteredBuilderImages = a.filterImageStreams(k, d), b.filteredTemplates = a.filterTemplates(l, d);
 }
 function f() {
-var c = a.categorizeImageStreams(e());
-j = _.get(c, [ b.category.id ], []), i();
+return b.projectImageStreams && b.openshiftImageStreams ? _.toArray(b.projectImageStreams).concat(_.toArray(b.openshiftImageStreams)) :[];
 }
 function g() {
-return b.projectTemplates && b.openshiftTemplates ? _.toArray(b.projectTemplates).concat(_.toArray(b.openshiftTemplates)) :[];
+var c = a.categorizeImageStreams(f());
+k = _.get(c, [ b.category.id ], []), j();
 }
 function h() {
-var c = a.categorizeTemplates(g());
-k = _.get(c, [ b.category.id ], []), i();
+return b.projectTemplates && b.openshiftTemplates ? _.toArray(b.projectTemplates).concat(_.toArray(b.openshiftTemplates)) :[];
 }
 function i() {
-b.loaded = b.projectTemplates && b.openshiftTemplates && b.projectImageStreams && b.openshiftImageStreams, d(), b.emptyCategory = _.isEmpty(j) && _.isEmpty(k), b.loaded && (Logger.info("templates", k), Logger.info("builder images", j));
+var c = a.categorizeTemplates(h());
+l = _.get(c, [ b.category.id ], []), j();
 }
-var j = [], k = [];
+function j() {
+b.loaded = b.projectTemplates && b.openshiftTemplates && b.projectImageStreams && b.openshiftImageStreams, e(), b.emptyCategory = _.isEmpty(k) && _.isEmpty(l), b.loaded && (d.log("templates", l), d.log("builder images", k));
+}
+var k = [], l = [];
 b.filteredTemplates = [], b.filteredBuilderImages = [], b.loaded = !1, b.filter = {
 keyword:""
-}, b.$watch("filter.keyword", d), b.$watchGroup([ "openshiftImageStreams", "projectImageStreams" ], f), b.$watchGroup([ "openshiftTemplates", "projectTemplates" ], h);
+}, b.$watch("filter.keyword", e), b.$watchGroup([ "openshiftImageStreams", "projectImageStreams" ], g), b.$watchGroup([ "openshiftTemplates", "projectTemplates" ], i);
 }
 };
 } ]), angular.module("openshiftConsole").directive("catalogImage", [ "$filter", function(a) {

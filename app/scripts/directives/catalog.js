@@ -1,7 +1,7 @@
 'use strict';
 
 angular.module('openshiftConsole')
-  .directive('catalog', function(CatalogService, Constants, KeywordService) {
+  .directive('catalog', function(CatalogService, Constants, KeywordService, Logger) {
     return {
       restrict: 'E',
       scope: {
@@ -130,8 +130,8 @@ angular.module('openshiftConsole')
           updateCategoryCounts();
 
           if ($scope.loaded) {
-            Logger.info("templates by category", $scope.templatesByCategory);
-            Logger.info("builder images", $scope.buildersByCategory);
+            Logger.log("templates by category", $scope.templatesByCategory);
+            Logger.log("builder images", $scope.buildersByCategory);
           }
         }
 

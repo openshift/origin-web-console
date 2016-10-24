@@ -20,7 +20,6 @@ angular.module('openshiftConsole')
                                                     DataService,
                                                     KeywordService,
                                                     LabelFilter,
-                                                    Logger,
                                                     Navigate,
                                                     ProjectsService) {
     $scope.projectName = $routeParams.project;
