@@ -9243,7 +9243,16 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "<ul class=\"list-unstyled\" ng-repeat=\"image in templateImages\">\n" +
     "<li>\n" +
     "<i class=\"pficon pficon-image\" aria-hidden=\"true\"></i>\n" +
-    "<span class=\"name\">{{ image.name }}</span>\n" +
+    "<span class=\"name\">\n" +
+    "{{ image.name }}\n" +
+    "</span>\n" +
+    "<span ng-if=\"image.usesParameters.length\" class=\"text-muted small\">\n" +
+    "<span ng-if=\"!image.name\">Image value set</span>\n" +
+    "from parameter<span ng-if=\"image.usesParameters.length > 1\">s</span>\n" +
+    "<span ng-repeat=\"parameterName in image.usesParameters\">\n" +
+    "{{parameterDisplayNames[parameterName]}}<span ng-if=\"!$last\">,</span>\n" +
+    "</span>\n" +
+    "</span>\n" +
     "</li>\n" +
     "</ul>\n" +
     "</div>\n" +

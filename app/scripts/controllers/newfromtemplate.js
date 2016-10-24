@@ -102,36 +102,77 @@ angular.module('openshiftConsole')
           return _.get(matchingTrigger, 'imageChangeParams.from.name');
         }
 
+        // Test for variable expressions like ${MY_PARAMETER} in the image.
+        var TEMPLATE_VARIABLE_EXPRESSION = /\${([a-zA-Z0-9\_]+)}/g;
+        function getParametersInImage(image) {
+          var parameters = [];
+          var match = TEMPLATE_VARIABLE_EXPRESSION.exec(image);
+          while (match) {
+            parameters.push(match[1]);
+            match = TEMPLATE_VARIABLE_EXPRESSION.exec(image);
+          }
+
+          return parameters;
+        }
+
+        function getParameterValues() {
+          var values = {};
+          _.each($scope.template.parameters, function(parameter) {
+            values[parameter.name] = parameter.value;
+          });
+
+          return values;
+        }
+
+        var images = [];
+        function resolveParametersInImages() {
+          var values = getParameterValues();
+          $scope.templateImages = _.map(images, function(image) {
+            if (_.isEmpty(image.usesParameters)) {
+              return image;
+            }
+
+            var template = _.template(image.name, { interpolate: TEMPLATE_VARIABLE_EXPRESSION });
+            return {
+              name: template(values),
+              usesParameters: image.usesParameters
+            };
+          });
+        }
+
         function deploymentConfigImages(dc) {
-          var images = [];
+          var dcImages = [];
           var containers = dcContainers(dc);
           if (containers) {
             angular.forEach(containers, function(container) {
               var image = container.image;
-              // If `container.image` is empty, look to see if it's set from an
-              // image change trigger. Trim the string as some templates set
-              // container image to " ".
-              if (!_.trim(image)) {
-                image = findImageFromTrigger(dc, container);
+              // Look to see if `container.image` is set from an image change trigger.
+              var imageFromTrigger = findImageFromTrigger(dc, container);
+              if (imageFromTrigger) {
+                image = imageFromTrigger;
               }
 
               if (image) {
-                images.push(image);
+                dcImages.push(image);
               }
             });
           }
-          return images;
+
+          return dcImages;
         }
 
-        function imageItems(data) {
-          var images = [];
+        function findTemplateImages(data) {
+          images = [];
           var dcImages = [];
           var outputImages = {};
           angular.forEach(data.objects, function(item) {
             if (item.kind === "BuildConfig") {
               var builder = imageObjectRefFilter(builderImage(item), $scope.projectName);
               if(builder) {
-                images.push({ name: builder });
+                images.push({
+                  name: builder,
+                  usesParameters: getParametersInImage(builder)
+                });
               }
               var output = imageObjectRefFilter(outputImage(item), $scope.projectName);
               if (output) {
@@ -144,10 +185,12 @@ angular.module('openshiftConsole')
           });
           dcImages.forEach(function(image) {
             if (!outputImages[image]) {
-              images.push({ name: image });
+              images.push({
+                name: image,
+                usesParameters: getParametersInImage(image)
+              });
             }
           });
-          return images;
         }
 
         function getHelpLinks(template) {
@@ -297,13 +340,30 @@ angular.module('openshiftConsole')
         };
 
         function setTemplateParams(labels) {
-          $scope.templateImages = imageItems($scope.template);
+          $scope.parameterDisplayNames = {};
+          _.each($scope.template.parameters, function(parameter) {
+            $scope.parameterDisplayNames[parameter.name] = parameter.displayName || parameter.name;
+          });
+
+          findTemplateImages($scope.template);
+          var imageUsesParameters = function(image) {
+            return !_.isEmpty(image.usesParameters);
+          };
+          if (_.some(images, imageUsesParameters)) {
+            $scope.$watch('template.parameters', _.debounce(function(parameters) {
+              $scope.$apply(resolveParametersInImages);
+            }, 50, { maxWait: 250 }), true);
+          } else {
+            $scope.templateImages = images;
+          }
+
           $scope.systemLabels = _.map($scope.template.labels, function(value, key) {
             return {
               name: key,
               value: value
             };
           });
+
           $scope.systemLabels.push({
             name: 'app',
             value: $scope.template.metadata.name
