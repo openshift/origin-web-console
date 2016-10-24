@@ -8946,7 +8946,14 @@ var f = function() {
 return !!a.route.tls && ((!a.route.tls.termination || "passthrough" === a.route.tls.termination) && (a.route.tls.certificate || a.route.tls.key || a.route.tls.caCertificate || a.route.tls.destinationCACertificate));
 };
 a.$watch("route.tls.termination", function() {
-_.get(a, "route.tls.termination") && (a.showSecureRouteOptions = !0), a.showCertificatesNotUsedWarning = f();
+a.secureRoute = !!_.get(a, "route.tls.termination"), a.showCertificatesNotUsedWarning = f();
+});
+var g;
+a.$watch("secureRoute", function(b, c) {
+if (b !== c) {
+var d = _.get(a, "route.tls.termination");
+!a.securetRoute && d && (g = d, delete a.route.tls.termination), a.secureRoute && !d && _.set(a, "route.tls.termination", g || "edge");
+}
 }), a.addAlternateService = function() {
 a.route.alternateServices = a.route.alternateServices || [];
 var b = _.find(a.services, function(b) {

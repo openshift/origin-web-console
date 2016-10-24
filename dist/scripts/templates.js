@@ -6908,21 +6908,19 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "</span>\n" +
     "</div>\n" +
     "</div>\n" +
-    "<div>\n" +
-    "<a href=\"\" ng-click=\"showSecureRouteOptions = true\" ng-show=\"!showSecureRouteOptions\">Show options for secured routes</a>\n" +
-    "</div>\n" +
-    "<div ng-show=\"showSecureRouteOptions\">\n" +
-    "<h3>Route Type</h3>\n" +
-    "<div>\n" +
-    "<span class=\"help-block\">\n" +
+    "<div class=\"checkbox\">\n" +
+    "<label>\n" +
+    "<input type=\"checkbox\" ng-model=\"secureRoute\" id=\"secure-route\">Secure route\n" +
+    "</label>\n" +
+    "<div class=\"help-block\">\n" +
     "Routes can be secured using several TLS termination types for serving certificates.\n" +
-    "</span>\n" +
     "</div>\n" +
+    "</div>\n" +
+    "<div ng-show=\"secureRoute\">\n" +
     "\n" +
     "<div class=\"form-group\">\n" +
     "<label>TLS Termination</label>\n" +
     "<select ng-model=\"route.tls.termination\" class=\"form-control\">\n" +
-    "<option value=\"\">None</option>\n" +
     "<option value=\"edge\">Edge</option>\n" +
     "<option value=\"passthrough\">Passthrough</option>\n" +
     "<option value=\"reencrypt\">Re-encrypt</option>\n" +
