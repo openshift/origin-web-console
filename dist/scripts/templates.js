@@ -4522,7 +4522,7 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "</div>\n" +
     "</div>\n" +
     "</div>\n" +
-    "<div class=\"template-message\" ng-if=\"templateMessage.length\">\n" +
+    "<div class=\"alert alert-info template-message\" ng-if=\"templateMessage.length\">\n" +
     "<span class=\"pficon pficon-info\" aria-hidden=\"true\"></span>\n" +
     "<div class=\"resource-description\" ng-bind-html=\"templateMessage | linky\"></div>\n" +
     "</div>\n" +
