@@ -119,9 +119,13 @@ angular
       return _.filter(roles, function(item) {
         // image-puller & image-pusher ok, other system: prob no
         return (_.isEqual(item.metadata.name, 'system:image-puller')   ||
-                _.isEqual(item.metadata.name, 'system:image-pusher') ) ||
+                _.isEqual(item.metadata.name, 'system:image-pusher')   ||
+                _.isEqual(item.metadata.name, 'system:image-builder')  ||
+                _.isEqual(item.metadata.name, 'system:deployer')     ) ||
                 ! _.startsWith(item.metadata.name, 'cluster-') &&
-                ! _.startsWith(item.metadata.name, 'system:');
+                ! _.startsWith(item.metadata.name, 'system:') &&
+                ! _.startsWith(item.metadata.name, 'registry-') &&
+                ! _.startsWith(item.metadata.name, 'self-');
       });
     };
 
