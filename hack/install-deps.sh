@@ -27,14 +27,19 @@ function cmd() {
   exit $rc
 }
 
+# We don't need grunt and bower to be installed globally for the system,
+# so we can amend our path to look into the local node_modules for the
+# correct binaries.
+export PATH="${PATH}:$(pwd)/node_modules/bower/bin:$(pwd)/node_modules/grunt-cli/bin"
+
 # Install bower if needed
 if ! which bower > /dev/null 2>&1 ; then
-  cmd "sudo npm install -g bower"
+  cmd "npm install bower"
 fi
 
 # Install grunt if needed
 if ! which grunt > /dev/null 2>&1 ; then
-  cmd "sudo npm install -g grunt-cli"
+  cmd "npm install grunt-cli"
 fi
 
 cmd "npm install --unsafe-perm"
