@@ -6665,7 +6665,7 @@ cancelButtonText:"No"
 }
 });
 d.result.then(function() {
-a.strategyData[b] = a.strategyData[o(a.originalStrategy)];
+a.strategyData[b] = angular.copy(a.strategyData[o(a.originalStrategy)]);
 }, function() {
 a.strategyData[b] = {};
 });
@@ -9875,7 +9875,7 @@ templateUrl:"views/directives/lifecycle-hook.html",
 controller:[ "$scope", function(a) {
 a.view = {
 isDisabled:!1
-}, a.view.hookExists = !_.isEmpty(a.hookParams), a.lifecycleHookFailurePolicyTypes = [ "Abort", "Retry", "Ignore" ], a.istagHook = {}, a.removedHookParams = {}, a.action = {
+}, a.lifecycleHookFailurePolicyTypes = [ "Abort", "Retry", "Ignore" ], a.istagHook = {}, a.removedHookParams = {}, a.action = {
 type:_.has(a.hookParams, "tagImages") ? "tagImages" :"execNewPod"
 };
 var b = {
@@ -9891,9 +9891,7 @@ var c = {};
 if (_.isEmpty(b)) c = {
 namespace:a.namespace,
 imageStream:"",
-tagObject:{
-tag:""
-}
+tagObject:null
 }; else {
 var d = b.name.split(":");
 c = {
@@ -9906,21 +9904,17 @@ tag:d[1]
 }
 return c;
 }, e = function() {
-if (a.hookParams.failurePolicy = _.get(a.hookParams, "failurePolicy", "Abort"), "execNewPod" === a.action.type) {
-if (_.has(a.removedHookParams, "execNewPod")) return void (a.hookParams.execNewPod = a.removedHookParams.execNewPod);
-a.hookParams.execNewPod = _.merge(b, a.hookParams.execNewPod);
-} else {
-if (_.has(a.removedHookParams, "tagImages")) return void (a.hookParams.tagImages = a.removedHookParams.tagImages);
-a.hookParams.tagImages = [ _.merge(c, a.hookParams.tagImages) ], a.istagHook = d(_.head(a.hookParams.tagImages).to);
-}
+"execNewPod" === a.action.type ? (_.has(a.removedHookParams, "execNewPod") ? a.hookParams.execNewPod = a.removedHookParams.execNewPod :a.hookParams.execNewPod = _.get(a, "hookParams.execNewPod", {}), a.hookParams.execNewPod = _.merge(angular.copy(b), a.hookParams.execNewPod)) :(_.has(a.removedHookParams, "tagImages") ? a.hookParams.tagImages = a.removedHookParams.tagImages :a.hookParams.tagImages = _.get(a, "hookParams.tagImages", [ {} ]), a.hookParams.tagImages = [ _.merge(angular.copy(c), a.hookParams.tagImages[0]) ], a.istagHook = d(_.head(a.hookParams.tagImages).to)), a.hookParams.failurePolicy = _.get(a.hookParams, "failurePolicy", "Abort");
 };
 a.addHook = function() {
-return _.isEmpty(a.removedHookParams) ? (a.hookParams = {}, e(), void (a.view.hookExists = !0)) :(a.hookParams = a.removedHookParams, void (a.view.hookExists = !0));
+return _.isEmpty(a.removedHookParams) ? (a.hookParams = {}, void e()) :void (a.hookParams = a.removedHookParams);
 }, a.removeHook = function() {
-a.removedHookParams = a.hookParams, delete a.hookParams, a.view.hookExists = !1, a.editForm.$setDirty();
-}, a.$watch("action.type", function() {
-"execNewPod" === a.action.type && _.has(a.hookParams, "tagImages") ? (a.removedHookParams.tagImages = a.hookParams.tagImages, delete a.hookParams.tagImages, e()) :"tagImages" === a.action.type && (_.has(a.hookParams, "execNewPod") ? (a.removedHookParams.execNewPod = a.hookParams.execNewPod, delete a.hookParams.execNewPod, e()) :a.istagHook = d(_.head(a.hookParams.tagImages).to));
-}), a.$watch("istagHook.tagObject.tag", function() {
+a.removedHookParams = a.hookParams, delete a.hookParams, a.editForm.$setDirty();
+};
+var f = function() {
+a.hookParams && ("execNewPod" === a.action.type ? (a.hookParams.tagImages && (a.removedHookParams.tagImages = a.hookParams.tagImages, delete a.hookParams.tagImages), e()) :"tagImages" === a.action.type && (a.hookParams.execNewPod && (a.removedHookParams.execNewPod = a.hookParams.execNewPod, delete a.hookParams.execNewPod), e()));
+};
+a.$watchGroup([ "hookParams", "action.type" ], f), a.$watch("istagHook.tagObject.tag", function() {
 _.has(a.istagHook, [ "tagObject", "tag" ]) && (_.set(a.hookParams, "tagImages[0].to.kind", "ImageStreamTag"), _.set(a.hookParams, "tagImages[0].to.namespace", a.istagHook.namespace), _.set(a.hookParams, "tagImages[0].to.name", a.istagHook.imageStream + ":" + a.istagHook.tagObject.tag));
 });
 } ]
@@ -11556,22 +11550,25 @@ isRequired:"="
 templateUrl:"views/directives/_edit-command.html",
 link:function(b) {
 b.id = _.uniqueId("edit-command-"), b.input = {};
-var c, d = a("isMultiline");
+var c, d, e = a("isMultiline");
 b.$watch("args", function() {
-return c ? void (c = !1) :void (_.isEmpty(b.args) || (b.input.args = _.map(b.args, function(a) {
+return d ? void (d = !1) :void (_.isEmpty(b.args) || (b.input.args = _.map(b.args, function(a) {
 return {
 value:a,
-multiline:d(a)
+multiline:e(a)
 };
-})));
-}, !0), b.$watch("input.args", function(a, d) {
-a !== d && (c = !0, b.args = _.map(b.input.args, function(a) {
+}), c = !0));
+}, !0), b.$watch("input.args", function(a, e) {
+if (a !== e) {
+if (c) return void (c = !1);
+d = !0, b.args = _.map(b.input.args, function(a) {
 return a.value;
-}), b.form.command.$setDirty());
+}), b.form.command.$setDirty();
+}
 }, !0), b.addArg = function() {
 b.nextArg && (b.input.args = b.input.args || [], b.input.args.push({
 value:b.nextArg,
-multiline:d(b.nextArg)
+multiline:e(b.nextArg)
 }), b.nextArg = "");
 }, b.removeArg = function(a) {
 b.input.args.splice(a, 1), _.isEmpty(b.input.args) && (b.input.args = null);
