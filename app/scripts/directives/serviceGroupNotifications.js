@@ -1,7 +1,7 @@
 'use strict';
 
 angular.module('openshiftConsole')
-  .directive('serviceGroupNotifications', function($filter, APIService, Navigate) {
+  .directive('serviceGroupNotifications', function($filter, APIService, DeploymentsService, Navigate) {
     return {
       restrict: 'E',
       // Inherit scope from OverviewController. This directive is only used for the overview.
@@ -24,6 +24,8 @@ angular.module('openshiftConsole')
           localStorage.setItem(key, 'true');
         };
 
+        var annotation = $filter('annotation');
+        var deploymentStatus = $filter('deploymentStatus');
         var hasHealthChecks = $filter('hasHealthChecks');
         var alerts = $scope.alerts = {};
         var svcs = [];
@@ -54,17 +56,76 @@ angular.module('openshiftConsole')
           }
         };
 
+        var startDeployment = function(deploymentConfig) {
+          DeploymentsService.startLatestDeployment(deploymentConfig, {
+            namespace: deploymentConfig.metadata.namespace
+          }, $scope);
+        };
+
+        var addDeploymentStatusAlerts = function(deploymentConfig) {
+          var dcName = _.get(deploymentConfig, 'metadata.name');
+
+          // Show messages about cancelled or failed deployments.
+          var mostRecentRC = _.get($scope, ['mostRecentReplicationControllerByDC', dcName]);
+          if (!mostRecentRC) {
+            return;
+          }
+
+          var logLink;
+          var status = deploymentStatus(mostRecentRC);
+          var version = annotation(mostRecentRC, 'deploymentVersion');
+          var displayName = version ? (dcName + ' #' + version) : mostRecentRC.metadata.name;
+          var rcLink = Navigate.resourceURL(mostRecentRC);
+          switch (status) {
+          case 'Cancelled':
+            alerts[mostRecentRC.metadata.uid + '-cancelled'] = {
+              type: 'info',
+              message: 'Deployment ' + displayName + ' was cancelled.',
+              links: [{
+                href: rcLink,
+                label: 'View Deployment'
+              }, {
+                label: 'Start New Deployment',
+                onClick: function() {
+                  startDeployment(deploymentConfig);
+                  // Hide alert.
+                  return true;
+                }
+              }]
+            };
+            break;
+          case 'Failed':
+            logLink = URI(rcLink).addSearch({ tab: "logs" }).toString();
+            alerts[mostRecentRC.metadata.uid + '-failed'] = {
+              type: 'error',
+              message: 'Deployment ' + displayName + ' failed.',
+              reason: annotation(mostRecentRC, 'openshift.io/deployment.status-reason'),
+              links: [{
+                href: rcLink,
+                label: 'View Deployment'
+              }, {
+                href: logLink,
+                label: 'View Log'
+              }]
+            };
+            break;
+          }
+        };
+
         var setDCNotifications = function() {
           _.each(svcs, function(svc) {
             var svcName = _.get(svc, "metadata.name", '');
 
-            // Add health check warnings for deployment configs.
-            var deploymentConfigs = _.get($scope, ['deploymentConfigsByService', svcName]);
-            _.each(deploymentConfigs, addHealthCheckWarnings);
-
-            // Add health check warnings for deployments.
+            // Add health check warnings for k8s deployments.
             var deployments = _.get($scope, ['deploymentsByService', svcName]);
             _.each(deployments, addHealthCheckWarnings);
+
+            // Add notifications for deployment configs.
+            var deploymentConfigs = _.get($scope, ['deploymentConfigsByService', svcName]);
+            _.each(deploymentConfigs, function(deploymentConfig) {
+              addHealthCheckWarnings(deploymentConfig);
+              addDeploymentStatusAlerts(deploymentConfig);
+            });
           });
         };
 

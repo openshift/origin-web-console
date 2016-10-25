@@ -130,6 +130,7 @@ angular.module('openshiftConsole')
       return isRecentDeployment(replicationController, deploymentConfig);
     };
 
+    var findMostRecent = $filter('mostRecent');
     var groupReplicationControllersByDC = function() {
       if (!replicationControllers) {
         return;
@@ -140,10 +141,15 @@ angular.module('openshiftConsole')
       // Only the most recent in progress or complete deployment for a given
       // deployment config is scalable in the overview.
       var scalableReplicationControllerByDC = {};
+      var mostRecentReplicationControllerByDC = {};
       _.each(replicationControllersByDC, function(replicationControllers, dcName) {
         scalableReplicationControllerByDC[dcName] = DeploymentsService.getActiveDeployment(replicationControllers);
+        // Also find the most recent replication controller for a deployment
+        // config so we can warn if it's cancelled or failed.
+        mostRecentReplicationControllerByDC[dcName] = findMostRecent(replicationControllers);
       });
       $scope.scalableReplicationControllerByDC = scalableReplicationControllerByDC;
+      $scope.mostRecentReplicationControllerByDC = mostRecentReplicationControllerByDC;
 
       // Take all visible deployments grouped by deployment config and service
       $scope.visibleRCByDCAndService = {};

@@ -101,6 +101,18 @@ angular.module('openshiftConsole')
       return candidateCreation > otherCreation;
     };
   })
+  .filter('mostRecent', function(isNewerResourceFilter) {
+    return function(objects) {
+      var mostRecent = null;
+      _.each(objects, function(object) {
+        if (!mostRecent || isNewerResourceFilter(object, mostRecent)) {
+          mostRecent = object;
+        }
+      });
+
+      return mostRecent;
+    };
+  })
   .filter('orderObjectsByDate', function(toArrayFilter) {
     return function(items, reverse) {
       items = toArrayFilter(items);
