@@ -2,7 +2,7 @@
 
 angular.module("openshiftConsole")
 
-  .directive("createSecret", function(DataService, AuthorizationService) {
+  .directive("createSecret", function(DataService, AuthorizationService, $filter) {
     return {
       restrict: 'E',
       scope: {
@@ -13,7 +13,7 @@ angular.module("openshiftConsole")
         cancel: '&'
       },
       templateUrl: 'views/directives/create-secret.html',
-      link: function($scope, $filter) {
+      link: function($scope) {
         $scope.alerts = {};
 
         $scope.secretAuthTypeMap = {
@@ -79,7 +79,7 @@ angular.module("openshiftConsole")
         };
 
         // List SA only if $scope.serviceAccountToLink is not defined so user has to pick one.
-        if (!$scope.serviceAccountToLink && AuthorizationService.canI('serviceaccounts', 'list') && AuthorizationService.canI('serviceaccounts', 'update')) {
+        if (AuthorizationService.canI('serviceaccounts', 'list') && AuthorizationService.canI('serviceaccounts', 'update')) {
           DataService.list("serviceaccounts", $scope, function(result) {
             $scope.serviceAccounts = result.by('metadata.name');
             $scope.serviceAccountsNames = _.keys($scope.serviceAccounts);
@@ -145,7 +145,7 @@ angular.module("openshiftConsole")
           return secret;
         };
 
-        var linkSecretToServiceAccount = function(secret) {
+        var linkSecretToServiceAccount = function(secret, alerts) {
           var updatedSA = angular.copy($scope.serviceAccounts[$scope.newSecret.pickedServiceAccountToLink]);
           switch ($scope.newSecret.type) {
           case 'source':
@@ -158,23 +158,24 @@ angular.module("openshiftConsole")
           // Don't show any error related to linking to SA when linking is done automatically 
           var options = $scope.serviceAccountToLink ? {errorNotification: false} : {};
           DataService.update('serviceaccounts', $scope.newSecret.pickedServiceAccountToLink, updatedSA, $scope, options).then(function(sa) {
-            var alert = {
-              name: 'createAndLink',
+            alerts.push({
+              name: 'create',
               data: {
                 type: "success",
                 message: "Secret " + secret.metadata.name + " was created and linked with service account " + sa.metadata.name + "."
               }
-            };
-            $scope.postCreateAction({newSecret: secret, creationAlert: alert});
+            });
+            $scope.postCreateAction({newSecret: secret, creationAlert: alerts});
           }, function(result){
-            $scope.alerts = {
+            alerts.push({
               name: 'createAndLink',
               data: {
                 type: "error",
-                message: "An error occurred while linking the secret with service account.",
+                message: "An error occurred while linking the secret with service account " + $scope.newSecret.pickedServiceAccountToLink + ".",
                 details: $filter('getErrorDetails')(result)
               }
-            };
+            });
+            $scope.postCreateAction({newSecret: secret, creationAlert: alerts});
           });
         };
 
@@ -195,16 +196,21 @@ angular.module("openshiftConsole")
           $scope.alerts = {};
           var newSecret = constructSecretObject($scope.newSecret.data, $scope.newSecret.authType);
           DataService.create('secrets', null, newSecret, $scope).then(function(secret) { // Success
-            if ($scope.newSecret.linkSecret && $scope.newSecret.pickedServiceAccountToLink && AuthorizationService.canI('serviceaccounts', 'update')) {
-              linkSecretToServiceAccount(secret);
+            var alert = [{
+              name: 'create',
+              data: {
+                type: "success",
+                message: "Secret " + newSecret.metadata.name + " was created."
+              }
+            }];
+            // In order to link:
+            // - the SA has to be defined
+            // - defined SA has to be present in the obtained SA list
+            // - user can update SA
+            // Else the linking will be skipped
+            if ($scope.newSecret.linkSecret && $scope.serviceAccountsNames.contains($scope.newSecret.pickedServiceAccountToLink) && AuthorizationService.canI('serviceaccounts', 'update')) {
+              linkSecretToServiceAccount(secret, alert);
             } else {
-              var alert = {
-                name: 'create',
-                data: {
-                  type: "success",
-                  message: "Secret " + newSecret.metadata.name + " was created."
-                }
-              };
               $scope.postCreateAction({newSecret: secret, creationAlert: alert});
             }
           }, function(result) { // Failure
