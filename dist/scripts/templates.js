@@ -4524,7 +4524,7 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "</div>\n" +
     "<div class=\"template-message\" ng-if=\"templateMessage.length\">\n" +
     "<span class=\"pficon pficon-info\" aria-hidden=\"true\"></span>\n" +
-    "<div class=\"resource-description\" ng-bind-html=\"templateMessage | linky\"></div>\n" +
+    "<div class=\"resource-description\" ng-bind-html=\"templateMessage | linky : '_blank'\"></div>\n" +
     "</div>\n" +
     "<div class=\"row\" ng-controller=\"TasksController\">\n" +
     "<div ng-if=\"!pendingTasks(tasks()).length && erroredTasks(tasks()).length\" class=\"col-md-12\">\n" +
@@ -6554,7 +6554,7 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
 
   $templateCache.put('views/directives/osc-image-summary.html',
     "<h1>{{ name || (resource | displayName) }}</h1>\n" +
-    "<div class=\"resource-description\" ng-bind-html=\"resource | description | linky\"></div>\n" +
+    "<div class=\"resource-description\" ng-bind-html=\"resource | description | linky : '_blank'\"></div>\n" +
     "<div class=\"resource-metadata\">\n" +
     "<div ng-show=\"resource | annotation:'provider'\">Provider: {{ resource | annotation:'provider' }}</div>\n" +
     "<div ng-show=\"resource.metadata.namespace && resource.metadata.namespace !=='openshift'\">Namespace: {{ resource.metadata.namespace }}</div>\n" +
@@ -10302,7 +10302,7 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "<p class=\"projects-instructions\" ng-if=\"canCreate === false\">\n" +
     "<span ng-if=\"!newProjectMessage\">A cluster admin can create a project for you by running the command\n" +
     "<code>oadm new-project &lt;projectname&gt; --admin={{user.metadata.name || '&lt;YourUsername&gt;'}}</code></span>\n" +
-    "<span ng-if=\"newProjectMessage\" ng-bind-html=\"newProjectMessage | linky\" class=\"projects-instructions-link\"></span>\n" +
+    "<span ng-if=\"newProjectMessage\" ng-bind-html=\"newProjectMessage | linky : '_blank'\" class=\"projects-instructions-link\"></span>\n" +
     "</p>\n" +
     "<p class=\"projects-instructions\">\n" +
     "A project admin can add you to a role on a project by running the command\n" +
@@ -10322,7 +10322,7 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "<p class=\"projects-instructions\" ng-if=\"canCreate === false\">\n" +
     "<span ng-if=\"!newProjectMessage\">A cluster admin can create a project for you by running the command<br>\n" +
     "<code>oadm new-project &lt;projectname&gt; --admin={{user.metadata.name || '&lt;YourUsername&gt;'}}</code></span>\n" +
-    "<span ng-if=\"newProjectMessage\" ng-bind-html=\"newProjectMessage | linky\" class=\"projects-instructions-link\"></span>\n" +
+    "<span ng-if=\"newProjectMessage\" ng-bind-html=\"newProjectMessage | linky : '_blank'\" class=\"projects-instructions-link\"></span>\n" +
     "</p>\n" +
     "</div>\n" +
     "</div>\n" +
