@@ -7910,10 +7910,10 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "<div>\n" +
     "<input class=\"form-control\" id=\"imageName\" name=\"imageName\" ng-model=\"strategyData.customParams.image\" type=\"text\" autocorrect=\"off\" autocapitalize=\"off\" spellcheck aria-describedby=\"image-name-help\" required>\n" +
     "</div>\n" +
-    "<div class=\"help-block\" id=\"image-name-help\">\"An image that can carry out the deployment.</div>\n" +
+    "<div class=\"help-block\" id=\"image-name-help\">An image that can carry out the deployment.</div>\n" +
     "</div>\n" +
     "<div class=\"form-group\">\n" +
-    "<label class=\"required\">Command</label>\n" +
+    "<label>Command</label>\n" +
     "<edit-command args=\"strategyData.customParams.command\"></edit-command>\n" +
     "</div>\n" +
     "<div class=\"form-group\">\n" +
