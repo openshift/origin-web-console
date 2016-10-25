@@ -72,20 +72,20 @@
                     <td data-title="From">
                       <!-- this value can get long when its an ImageStreamImage. Use max width and class truncate to elide some
                            of the SHA1 for long values. They can still be copied even when elided. -->
-                      <div style="max-width: 400px;" class="truncate">
+
                         <span ng-if="!tag.spec.from"><em>pushed</em></span>
-                        <span ng-if="tag.spec.from">
-                          <span ng-if="!tag.spec.from._imageStreamName">
-                            {{tag.spec.from.name}}
-                          </span>
-                          <span ng-if="tag.spec.from._imageStreamName">
-                            <span ng-if="tag.spec.from._imageStreamName === imageStream.metadata.name">{{tag.spec.from._completeName}}</span>
-                            <span ng-if="tag.spec.from._imageStreamName !== imageStream.metadata.name" >
-                              <a ng-href="{{tag.spec.from._imageStreamName | navigateResourceURL : 'ImageStream' : (tag.spec.from.namespace || imageStream.metadata.namespace)}}"><span ng-if="tag.spec.from.namespace && tag.spec.from.namespace !== imageStream.metadata.namespace" >{{tag.spec.from.namespace}}/</span>{{tag.spec.from._imageStreamName}}</a>{{tag.spec.from._nameConnector}}{{tag.spec.from._idOrTag}}
+                        <div ng-if="tag.spec.from" ng-attr-title="{{tag.spec.from.name}}" class="td-long-string">
+                            <span ng-if="!tag.spec.from._imageStreamName">
+                              {{tag.spec.from.name}}
                             </span>
-                          </span>
-                        </span>
-                      </div>
+                            <span ng-if="tag.spec.from._imageStreamName">
+                              <span ng-if="tag.spec.from._imageStreamName === imageStream.metadata.name">{{tag.spec.from._completeName}}</span>
+                              <span ng-if="tag.spec.from._imageStreamName !== imageStream.metadata.name" >
+                                <a ng-href="{{tag.spec.from._imageStreamName | navigateResourceURL : 'ImageStream' : (tag.spec.from.namespace || imageStream.metadata.namespace)}}"><span ng-if="tag.spec.from.namespace && tag.spec.from.namespace !== imageStream.metadata.namespace" >{{tag.spec.from.namespace}}/</span>{{tag.spec.from._imageStreamName}}</a>{{tag.spec.from._nameConnector}}{{tag.spec.from._idOrTag}}
+                              </span>
+                            </span>
+                        </div>
+
                     </td>
                     <td data-title="Latest Image">
                       <div ng-if="!tag.status">
@@ -117,13 +117,9 @@
                       <!-- dockerImageReference values can get long. Use max width and class truncate to elide some of the SHA1 for long values.
                            They can still be copied even when elided. -->
                       <div ng-if="tag.status.items.length && tag.status.items[0].dockerImageReference">
-                        <div ng-attr-title="{{tag.status.items[0].dockerImageReference}}" class="word-break visible-xs-block">
+                        <div ng-attr-title="{{tag.status.items[0].dockerImageReference}}" class="td-long-string">
                           {{tag.status.items[0].dockerImageReference}}
                         </div>
-                        <div class="pull-spec truncate hidden-xs"
-                         ng-attr-title="{{tag.status.items[0].dockerImageReference}}">
-                          {{tag.status.items[0].dockerImageReference}}
-                        </div>                      
                       </div>
                     </td>
                   </tr>
@@ -139,15 +135,9 @@
                       <relative-timestamp timestamp="item.created"></relative-timestamp>
                     </td>
                     <td data-title="Pull Spec">
-                      <div ng-if="item.dockerImageReference">
-                        <div ng-attr-title="{{item.dockerImageReference}}" class="word-break visible-xs-block">
-                          {{item.dockerImageReference}}
-                        </div>
-                        <div class="pull-spec truncate hidden-xs"
-                         ng-attr-title="{{item.dockerImageReference}}">
-                          {{item.dockerImageReference}}
-                        </div>                      
-                      </div>                      
+                      <div ng-if="item.dockerImageReference" ng-attr-title="{{item.dockerImageReference}}" class="td-long-string">
+                        {{item.dockerImageReference}}
+                      </div>
                     </td>
                   </tr>
                 </tbody>

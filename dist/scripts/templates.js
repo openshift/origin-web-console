@@ -2583,9 +2583,8 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "<td data-title=\"Tag\"><a href=\"{{imageStream | navigateResourceURL}}/{{tag.name}}\">{{tag.name}}</a></td>\n" +
     "<td data-title=\"From\">\n" +
     "\n" +
-    "<div style=\"max-width: 400px\" class=\"truncate\">\n" +
     "<span ng-if=\"!tag.spec.from\"><em>pushed</em></span>\n" +
-    "<span ng-if=\"tag.spec.from\">\n" +
+    "<div ng-if=\"tag.spec.from\" ng-attr-title=\"{{tag.spec.from.name}}\" class=\"td-long-string\">\n" +
     "<span ng-if=\"!tag.spec.from._imageStreamName\">\n" +
     "{{tag.spec.from.name}}\n" +
     "</span>\n" +
@@ -2593,7 +2592,6 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "<span ng-if=\"tag.spec.from._imageStreamName === imageStream.metadata.name\">{{tag.spec.from._completeName}}</span>\n" +
     "<span ng-if=\"tag.spec.from._imageStreamName !== imageStream.metadata.name\">\n" +
     "<a ng-href=\"{{tag.spec.from._imageStreamName | navigateResourceURL : 'ImageStream' : (tag.spec.from.namespace || imageStream.metadata.namespace)}}\"><span ng-if=\"tag.spec.from.namespace && tag.spec.from.namespace !== imageStream.metadata.namespace\">{{tag.spec.from.namespace}}/</span>{{tag.spec.from._imageStreamName}}</a>{{tag.spec.from._nameConnector}}{{tag.spec.from._idOrTag}}\n" +
-    "</span>\n" +
     "</span>\n" +
     "</span>\n" +
     "</div>\n" +
@@ -2626,10 +2624,7 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "<td data-title=\"Pull Spec\">\n" +
     "\n" +
     "<div ng-if=\"tag.status.items.length && tag.status.items[0].dockerImageReference\">\n" +
-    "<div ng-attr-title=\"{{tag.status.items[0].dockerImageReference}}\" class=\"word-break visible-xs-block\">\n" +
-    "{{tag.status.items[0].dockerImageReference}}\n" +
-    "</div>\n" +
-    "<div class=\"pull-spec truncate hidden-xs\" ng-attr-title=\"{{tag.status.items[0].dockerImageReference}}\">\n" +
+    "<div ng-attr-title=\"{{tag.status.items[0].dockerImageReference}}\" class=\"td-long-string\">\n" +
     "{{tag.status.items[0].dockerImageReference}}\n" +
     "</div>\n" +
     "</div>\n" +
@@ -2647,13 +2642,8 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "<relative-timestamp timestamp=\"item.created\"></relative-timestamp>\n" +
     "</td>\n" +
     "<td data-title=\"Pull Spec\">\n" +
-    "<div ng-if=\"item.dockerImageReference\">\n" +
-    "<div ng-attr-title=\"{{item.dockerImageReference}}\" class=\"word-break visible-xs-block\">\n" +
+    "<div ng-if=\"item.dockerImageReference\" ng-attr-title=\"{{item.dockerImageReference}}\" class=\"td-long-string\">\n" +
     "{{item.dockerImageReference}}\n" +
-    "</div>\n" +
-    "<div class=\"pull-spec truncate hidden-xs\" ng-attr-title=\"{{item.dockerImageReference}}\">\n" +
-    "{{item.dockerImageReference}}\n" +
-    "</div>\n" +
     "</div>\n" +
     "</td>\n" +
     "</tr>\n" +
