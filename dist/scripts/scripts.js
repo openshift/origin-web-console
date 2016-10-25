@@ -6642,7 +6642,7 @@ cancelButtonText:"No"
 }
 });
 d.result.then(function() {
-a.strategyData[b] = a.strategyData[p(a.originalStrategy)], a.paramsMoved = p(a.originalStrategy);
+a.strategyData[b] = a.strategyData[p(a.originalStrategy)];
 }, function() {
 a.strategyData[b] = {};
 });
@@ -6691,7 +6691,7 @@ var d = _.find(a.updatedDeploymentConfig.spec.template.spec.containers, {
 name:c
 });
 d.env = n.compactEntries(b.env);
-}), a.paramsMoved && q() && delete a.strategyData[p(a.originalStrategy)], "Custom" !== a.strategyData.type ? _.each([ "pre", "mid", "post" ], function(b) {
+}), q() && delete a.strategyData[p(a.originalStrategy)], "Custom" !== a.strategyData.type ? _.each([ "pre", "mid", "post" ], function(b) {
 _.has(a.strategyData, [ a.strategyParamsPropertyName, b, "execNewPod", "env" ]) && (a.strategyData[a.strategyParamsPropertyName][b].execNewPod.env = n.compactEntries(a.strategyData[a.strategyParamsPropertyName][b].execNewPod.env));
 }) :_.has(a, "strategyData.customParams.environment") && (a.strategyData.customParams.environment = n.compactEntries(a.strategyData.customParams.environment)), a.updatedDeploymentConfig.spec.template.spec.imagePullSecrets = a.pullSecrets, a.updatedDeploymentConfig.spec.strategy = a.strategyData, a.updatedDeploymentConfig.spec.triggers = t(), d.update("deploymentconfigs", a.updatedDeploymentConfig.metadata.name, a.updatedDeploymentConfig, a.context).then(function() {
 l.addAlert({

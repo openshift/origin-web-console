@@ -183,7 +183,6 @@ angular.module('openshiftConsole')
       modalInstance.result.then(function () {
         // Move parameters that belong to the origial strategy to the picked one.
         $scope.strategyData[pickedStrategyParams] = $scope.strategyData[getParamsPropertyName($scope.originalStrategy)];
-        $scope.paramsMoved = getParamsPropertyName($scope.originalStrategy);
       }, function() {
         // Create empty parameters for the newly picked strategy
         $scope.strategyData[pickedStrategyParams] = {};
@@ -263,7 +262,7 @@ angular.module('openshiftConsole')
       });
 
       // Remove parameters of previously set strategy, if user moved 
-      if ($scope.paramsMoved && isRollingRecreateSwitch()) {
+      if (isRollingRecreateSwitch()) {
         delete $scope.strategyData[getParamsPropertyName($scope.originalStrategy)];
       }
 
