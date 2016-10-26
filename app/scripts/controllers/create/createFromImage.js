@@ -50,7 +50,7 @@ angular.module("openshiftConsole")
         link: "project/" + $scope.projectName + "/create"
       },
       {
-        title: "Browse Catalog",
+        title: "Catalog",
         link: "project/" + $scope.projectName + "/create?tab=fromCatalog"
       },
       {
