@@ -190,66 +190,68 @@
                   </div>
                 </div>
 
-                <h1>Limit Range</h1>
-                <div ng-if="!(limitRanges | hashSize)">
-                  <div class="help-block">{{limitRangeHelp}}</div>
-                  <p><em>{{emptyMessageLimitRanges}}</em></p>
-                </div>
+                <div class="limit-ranges-section">
+                  <h1>Limit Range</h1>
+                  <div ng-if="!(limitRanges | hashSize)">
+                    <div class="help-block">{{limitRangeHelp}}</div>
+                    <p><em>{{emptyMessageLimitRanges}}</em></p>
+                  </div>
 
-                <div ng-repeat="(limitRangeName, limitRange) in limitRanges">
-                  <h2 ng-if="(limitRanges | hashSize) > 1">{{limitRangeName}}</h2>
-                  <div ng-if="$first" class="help-block mar-bottom-md">{{limitRangeHelp}}</div>
-                  <div class="table-responsive">
-                    <table class="table">
-                      <thead>
-                        <th>Resource type</th>
-                        <th>
-                          <span class="nowrap">
-                            Min
-                            <i class="small pficon pficon-help" data-toggle="tooltip" title="The minimum amount of this compute resource that can be requested."></i>
-                          </span>
-                        </th>
-                        <th>
-                          <span class="nowrap">
-                            Max
-                            <i class="small pficon pficon-help" data-toggle="tooltip" title="The maximum amount of this compute resource that can be requested.  The limit must also be below the maximum value."></i>
-                           </span>
-                        </th>
-                        <th>
-                          Default
-                          <span class="nowrap">
-                            Request
-                            <i class="small pficon pficon-help" data-toggle="tooltip" title="A container will default to request this amount of a compute resource if no request is specified. The system will guarantee the requested amount of compute resource when scheduling a container for execution. If a quota is enabled for this compute resource, the quota usage is incremented by the requested value."></i>
-                          </span>
-                        </th>
-                        <th>
-                          Default
-                          <span class="nowrap">
-                            Limit
-                            <i class="small pficon pficon-help" data-toggle="tooltip" title="The default limit defines the maximum amount of compute resource the container may have access to during execution if no limit is specified. If no request is made for the compute resource on the container or via a Default Request value, the container will default to request the limit."></i>
-                          </span>
-                        </th>
-                        <th>
-                          Max Limit/Request
-                          <span class="nowrap">
-                            Ratio
-                            <i class="small pficon pficon-help" data-toggle="tooltip" title="If specified, the compute resource must have a request and limit that are both non-zero, where limit divided by request is less than or equal to the specified amount; this represents the max burst for the compute resource during execution."></i>
-                          </span>
-                        </th>
-                      </thead>
-                      <tbody>
-                        <tr ng-repeat-start="limit in limitRange.spec.limits"></tr>
-                        <tr ng-repeat="(type, typeLimits) in limitsByType[limitRangeName][limit.type]">
-                          <td>{{limit.type}} {{type | computeResourceLabel : true}}</td>
-                          <td>{{(typeLimits.min | usageWithUnits : type) || "&mdash;"}}</td>
-                          <td>{{(typeLimits.max | usageWithUnits : type) || "&mdash;"}}</td>
-                          <td>{{(typeLimits.defaultRequest | usageWithUnits : type) || "&mdash;"}}</td>
-                          <td>{{(typeLimits["default"] | usageWithUnits : type) || "&mdash;"}}</td>
-                          <td>{{typeLimits.maxLimitRequestRatio || "&mdash;"}}</td>
-                        </tr>
-                        <tr ng-repeat-end></tr>
-                      </tbody>
-                    </table>
+                  <div ng-repeat="(limitRangeName, limitRange) in limitRanges">
+                    <h2 ng-if="(limitRanges | hashSize) > 1">{{limitRangeName}}</h2>
+                    <div ng-if="$first" class="help-block mar-bottom-md">{{limitRangeHelp}}</div>
+                    <div class="table-responsive">
+                      <table class="table">
+                        <thead>
+                          <th>Resource type</th>
+                          <th>
+                            <span class="nowrap">
+                              Min
+                              <i class="small pficon pficon-help" data-toggle="tooltip" title="The minimum amount of this compute resource that can be requested."></i>
+                            </span>
+                          </th>
+                          <th>
+                            <span class="nowrap">
+                              Max
+                              <i class="small pficon pficon-help" data-toggle="tooltip" title="The maximum amount of this compute resource that can be requested.  The limit must also be below the maximum value."></i>
+                            </span>
+                          </th>
+                          <th>
+                            Default
+                            <span class="nowrap">
+                              Request
+                              <i class="small pficon pficon-help" data-toggle="tooltip" title="A container will default to request this amount of a compute resource if no request is specified. The system will guarantee the requested amount of compute resource when scheduling a container for execution. If a quota is enabled for this compute resource, the quota usage is incremented by the requested value."></i>
+                            </span>
+                          </th>
+                          <th>
+                            Default
+                            <span class="nowrap">
+                              Limit
+                              <i class="small pficon pficon-help" data-toggle="tooltip" title="The default limit defines the maximum amount of compute resource the container may have access to during execution if no limit is specified. If no request is made for the compute resource on the container or via a Default Request value, the container will default to request the limit."></i>
+                            </span>
+                          </th>
+                          <th>
+                            Max Limit/Request
+                            <span class="nowrap">
+                              Ratio
+                              <i class="small pficon pficon-help" data-toggle="tooltip" title="If specified, the compute resource must have a request and limit that are both non-zero, where limit divided by request is less than or equal to the specified amount; this represents the max burst for the compute resource during execution."></i>
+                            </span>
+                          </th>
+                        </thead>
+                        <tbody>
+                          <tr ng-repeat-start="limit in limitRange.spec.limits"></tr>
+                          <tr ng-repeat="(type, typeLimits) in limitsByType[limitRangeName][limit.type]">
+                            <td>{{limit.type}} {{type | computeResourceLabel : true}}</td>
+                            <td>{{(typeLimits.min | usageWithUnits : type) || "&mdash;"}}</td>
+                            <td>{{(typeLimits.max | usageWithUnits : type) || "&mdash;"}}</td>
+                            <td>{{(typeLimits.defaultRequest | usageWithUnits : type) || "&mdash;"}}</td>
+                            <td>{{(typeLimits["default"] | usageWithUnits : type) || "&mdash;"}}</td>
+                            <td>{{typeLimits.maxLimitRequestRatio || "&mdash;"}}</td>
+                          </tr>
+                          <tr ng-repeat-end></tr>
+                        </tbody>
+                      </table>
+                    </div>
                   </div>
                 </div>
               </div><!-- /col-* -->
