@@ -2,48 +2,48 @@
 
 // Assigns global constants to things like external documentation, links to external resources, annotations and naming, etc.
 // Can be customized using custom scripts in the master config file that override one or multiple of these objects.
-// Reference: https://docs.openshift.org/latest/install_config/web_console_customization.html#loading-custom-scripts-and-stylesheets
+// Reference: https://docs.openshift.com/container-platform/3.4/install_config/web_console_customization.html#loading-custom-scripts-and-stylesheets
 
 // NOTE: Update extensions/examples/online-extensions.js if you add a new help link to this map.
 
 window.OPENSHIFT_CONSTANTS = {
   // Maps links to specific topics in external documentation.
   HELP: {
-    "cli":                     "https://docs.openshift.org/latest/cli_reference/overview.html",
-    "get_started_cli":         "https://docs.openshift.org/latest/cli_reference/get_started_cli.html",
-    "basic_cli_operations":    "https://docs.openshift.org/latest/cli_reference/basic_cli_operations.html",
-    "build-triggers":          "https://docs.openshift.org/latest/dev_guide/builds.html#build-triggers",
-    "webhooks":                "https://docs.openshift.org/latest/dev_guide/builds.html#webhook-triggers",
-    "new_app":                 "https://docs.openshift.org/latest/dev_guide/new_app.html",
-    "start-build":             "https://docs.openshift.org/latest/dev_guide/builds.html#starting-a-build",
-    "deployment-operations":   "https://docs.openshift.org/latest/cli_reference/basic_cli_operations.html#build-and-deployment-cli-operations",
-    "route-types":             "https://docs.openshift.org/latest/architecture/core_concepts/routes.html#route-types",
-    "persistent_volumes":      "https://docs.openshift.org/latest/dev_guide/persistent_volumes.html",
-    "compute_resources":       "https://docs.openshift.org/latest/dev_guide/compute_resources.html",
-    "pod_autoscaling":         "https://docs.openshift.org/latest/dev_guide/pod_autoscaling.html",
-    "application_health":      "https://docs.openshift.org/latest/dev_guide/application_health.html",
-    "source_secrets":          "https://docs.openshift.org/latest/dev_guide/builds.html#using-secrets",
-    "git_secret":              "https://docs.openshift.org/latest/dev_guide/builds.html#using-private-repositories-for-builds",
-    "pull_secret":             "https://docs.openshift.org/latest/dev_guide/managing_images.html#using-image-pull-secrets",
-    "managing_secrets":        "https://docs.openshift.org/latest/dev_guide/service_accounts.html#managing-allowed-secrets",
-    "creating_secrets":        "https://docs.openshift.org/latest/dev_guide/secrets.html#creating-and-using-secrets",
-    "storage_classes":         "https://docs.openshift.org/latest/install_config/persistent_storage/dynamically_provisioning_pvs.html",
-    "selector_label":          "https://docs.openshift.org/latest/install_config/persistent_storage/selector_label_binding.html",
-    "rolling_strategy":        "https://docs.openshift.org/latest/dev_guide/deployments.html#rolling-strategy",
-    "recreate_strategy":       "https://docs.openshift.org/latest/dev_guide/deployments.html#recreate-strategy",
-    "custom_strategy":         "https://docs.openshift.org/latest/dev_guide/deployments.html#custom-strategy",
-    "lifecycle_hooks":         "https://docs.openshift.org/latest/dev_guide/deployments.html#lifecycle-hooks",
-    "new_pod_exec":            "https://docs.openshift.org/latest/dev_guide/deployments.html#pod-based-lifecycle-hook",
-    "authorization":           "https://docs.openshift.org/latest/architecture/additional_concepts/authorization.html",
-    "roles":                   "https://docs.openshift.org/latest/architecture/additional_concepts/authorization.html#roles",
-    "service_accounts":        "https://docs.openshift.org/latest/dev_guide/service_accounts.html",
-    "users_and_groups":        "https://docs.openshift.org/latest/architecture/additional_concepts/authentication.html#users-and-groups",
+    "cli":                     "https://docs.openshift.com/container_platform/3.4/cli_reference/overview.html",
+    "get_started_cli":         "https://docs.openshift.com/container_platform/3.4/cli_reference/get_started_cli.html",
+    "basic_cli_operations":    "https://docs.openshift.com/container_platform/3.4/cli_reference/basic_cli_operations.html",
+    "build-triggers":          "https://docs.openshift.com/container_platform/3.4/dev_guide/builds.html#build-triggers",
+    "webhooks":                "https://docs.openshift.com/container_platform/3.4/dev_guide/builds.html#webhook-triggers",
+    "new_app":                 "https://docs.openshift.com/container_platform/3.4/dev_guide/new_app.html",
+    "start-build":             "https://docs.openshift.com/container_platform/3.4/dev_guide/builds.html#starting-a-build",
+    "deployment-operations":   "https://docs.openshift.com/container_platform/3.4/cli_reference/basic_cli_operations.html#build-and-deployment-cli-operations",
+    "route-types":             "https://docs.openshift.com/container_platform/3.4/architecture/core_concepts/routes.html#route-types",
+    "persistent_volumes":      "https://docs.openshift.com/container_platform/3.4/dev_guide/persistent_volumes.html",
+    "compute_resources":       "https://docs.openshift.com/container_platform/3.4/dev_guide/compute_resources.html",
+    "pod_autoscaling":         "https://docs.openshift.com/container_platform/3.4/dev_guide/pod_autoscaling.html",
+    "application_health":      "https://docs.openshift.com/container_platform/3.4/dev_guide/application_health.html",
+    "source_secrets":          "https://docs.openshift.com/container_platform/3.4/dev_guide/builds.html#using-secrets",
+    "git_secret":              "https://docs.openshift.com/container_platform/3.4/dev_guide/builds.html#using-private-repositories-for-builds",
+    "pull_secret":             "https://docs.openshift.com/container_platform/3.4/dev_guide/managing_images.html#using-image-pull-secrets",
+    "managing_secrets":        "https://docs.openshift.com/container_platform/3.4/dev_guide/service_accounts.html#managing-allowed-secrets",
+    "creating_secrets":        "https://docs.openshift.com/container_platform/3.4/dev_guide/secrets.html#creating-and-using-secrets",
+    "storage_classes":         "https://docs.openshift.com/container_platform/3.4/install_config/persistent_storage/dynamically_provisioning_pvs.html",
+    "selector_label":          "https://docs.openshift.com/container_platform/3.4/install_config/persistent_storage/selector_label_binding.html",
+    "rolling_strategy":        "https://docs.openshift.com/container_platform/3.4/dev_guide/deployments.html#rolling-strategy",
+    "recreate_strategy":       "https://docs.openshift.com/container_platform/3.4/dev_guide/deployments.html#recreate-strategy",
+    "custom_strategy":         "https://docs.openshift.com/container_platform/3.4/dev_guide/deployments.html#custom-strategy",
+    "lifecycle_hooks":         "https://docs.openshift.com/container_platform/3.4/dev_guide/deployments.html#lifecycle-hooks",
+    "new_pod_exec":            "https://docs.openshift.com/container_platform/3.4/dev_guide/deployments.html#pod-based-lifecycle-hook",
+    "authorization":           "https://docs.openshift.com/container_platform/3.4/architecture/additional_concepts/authorization.html",
+    "roles":                   "https://docs.openshift.com/container_platform/3.4/architecture/additional_concepts/authorization.html#roles",
+    "service_accounts":        "https://docs.openshift.com/container_platform/3.4/dev_guide/service_accounts.html",
+    "users_and_groups":        "https://docs.openshift.com/container_platform/3.4/architecture/additional_concepts/authentication.html#users-and-groups",
     // default should remain last, add new links above
-    "default":                 "https://docs.openshift.org/latest/welcome/index.html"
+    "default":                 "https://docs.openshift.com/container-platform/3.4/welcome/index.html"
   },
   // Maps links names to URL's where the CLI tools can be downloaded, may point directly to files or to external pages in a CDN, for example.
   CLI: {
-    "Latest Release":          "https://github.com/openshift/origin/releases/latest"
+    "Latest Release":          "https://access.redhat.com/downloads/content/290"
   },
   // The default CPU target percentage for horizontal pod autoscalers created or edited in the web console.
   // This value is set in the HPA when the input is left blank.
