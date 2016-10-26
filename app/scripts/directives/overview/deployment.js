@@ -9,8 +9,6 @@ angular.module('openshiftConsole')
       scope: true,
       templateUrl: 'views/overview/_deployment.html',
       link: function($scope) {
-        var orderByDate = $filter('orderObjectsByDate');
-
         var resumePending;
         $scope.$watch('deployment.spec.paused', function() {
           resumePending = false;
@@ -41,7 +39,7 @@ angular.module('openshiftConsole')
           $scope.latestRevision = DeploymentsService.getRevision($scope.deployment);
         });
 
-        $scope.$watch('scalableReplicaSetsByDeployment', function(replicaSets) {
+        $scope.$watch('scalableReplicaSetsByDeployment', function() {
           $scope.latestReplicaSet = _.get($scope, ['scalableReplicaSetsByDeployment', $scope.deploymentName]);
         });
 

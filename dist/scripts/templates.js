@@ -2313,7 +2313,7 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "<dd>{{deployment | lastDeploymentRevision}}</dd>\n" +
     "<dt>Replicas:</dt>\n" +
     "<dd>\n" +
-    "<replicas spec=\"deployment.spec.replicas\" disable-scaling=\"autoscalers.length\" scale-fn=\"scale(replicas)\" deployment=\"deployment\"></replicas>\n" +
+    "<replicas spec=\"deployment.spec.replicas\" disable-scaling=\"inProgressDeployment || autoscalers.length\" scale-fn=\"scale(replicas)\" deployment=\"deployment\"></replicas>\n" +
     "<span ng-if=\"autoscalers.length\">(autoscaled)</span>\n" +
     "<div ng-if=\"deployment.status.updatedReplicas\">\n" +
     "{{deployment.status.updatedReplicas}} up to date\n" +
@@ -9601,7 +9601,7 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "<div row class=\"overview-tile-body\">\n" +
     "\n" +
     "<div column class=\"overview-donut\" ng-repeat=\"replicaSet in replicaSets | limitTo : 2 track by (replicaSet | uid)\" ng-class=\"{ latest: replicaSet === latestReplicaSet }\">\n" +
-    "<deployment-donut deployment=\"deployment\" rc=\"replicaSet\" pods=\"podsByOwnerUID[replicaSet.metadata.uid]\" hpa=\"getHPA(deployment) || getHPA(replicaSet)\" limit-ranges=\"limitRanges\" scalable=\"replicaSet === latestReplicaSet\" alerts=\"alerts\">\n" +
+    "<deployment-donut deployment=\"deployment\" rc=\"replicaSet\" pods=\"podsByOwnerUID[replicaSet.metadata.uid]\" hpa=\"getHPA(deployment) || getHPA(replicaSet)\" limit-ranges=\"limitRanges\" scalable=\"replicaSet === latestReplicaSet && !inProgressDeployment\" alerts=\"alerts\">\n" +
     "</deployment-donut>\n" +
     "</div>\n" +
     "\n" +

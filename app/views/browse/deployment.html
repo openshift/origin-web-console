@@ -97,7 +97,7 @@
                           <dt>Replicas:</dt>
                           <dd>
                             <replicas spec="deployment.spec.replicas"
-                                      disable-scaling="autoscalers.length"
+                                      disable-scaling="inProgressDeployment || autoscalers.length"
                                       scale-fn="scale(replicas)"
                                       deployment="deployment"></replicas>
                             <span ng-if="autoscalers.length">(autoscaled)</span>

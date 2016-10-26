@@ -53,7 +53,6 @@ angular.module('openshiftConsole')
     $scope.replicaSet = null;
     $scope.deploymentConfig = null;
     $scope.deploymentConfigMissing = false;
-    $scope.deployments = {};
     $scope.imagesByDockerReference = {};
     $scope.builds = {};
     $scope.alerts = {};
@@ -225,6 +224,7 @@ angular.module('openshiftConsole')
         };
 
         var hasDeployment = $filter('hasDeployment');
+        var inProgressDeployment = false;
         var updateDeployment = function() {
           if (!hasDeployment($scope.replicaSet)) {
             return;
@@ -249,6 +249,7 @@ angular.module('openshiftConsole')
                                                             "Deployment",
                                                             $scope.deployment.metadata.name,
                                                             "extensions");
+
             watches.push(DataService.watchObject({
               group: 'extensions',
               resource: 'deployments'
@@ -279,6 +280,38 @@ angular.module('openshiftConsole')
 
               checkActiveRevision();
               updateHPA();
+            }));
+
+            // Watch the replica sets to know if there is a deployment in progress.
+            watches.push(DataService.watch({
+              group: 'extensions',
+              resource: 'replicasets'
+            }, context, function(replicaSets) {
+              var deploymentSelector = new LabelSelector($scope.deployment.spec.selector);
+              inProgressDeployment = false;
+
+              // See if there is more than one replica set that matches the
+              // deployment selector with active replicas.
+              var numActive = 0;
+              _.each(replicaSets.by('metadata.name'), function(replicaSet) {
+                if (!replicaSet.status.replicas) {
+                  return;
+                }
+
+                var templateLabels = _.get(replicaSet, 'spec.template.metadata.labels', {});
+                if (!deploymentSelector.covers(new LabelSelector(templateLabels))) {
+                  return;
+                }
+
+                numActive++;
+
+                if (numActive > 1) {
+                  inProgressDeployment = true;
+
+                  // Stop looping.
+                  return false;
+                }
+              });
             }));
           });
         };
@@ -498,7 +531,7 @@ angular.module('openshiftConsole')
             return false;
           }
 
-          return $scope.isActive;
+          return $scope.isActive && !inProgressDeployment;
         };
 
         $scope.$on('$destroy', function(){
