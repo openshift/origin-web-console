@@ -1,41 +1,39 @@
 <div ng-controller="TasksController">
   <div ng-repeat="task in tasks()" ng-if="!task.namespace || !projectName || task.namespace === projectName">
     <div class="tasks" ng-class="hasTaskWithError() ? 'failure' : 'success'">
-      <div class="row">
-        <div class="col-md-12">
-          <div class="task-content">
-            <i class="pficon task-icon" ng-class="task.hasErrors ? 'pficon-error-circle-o' : 'pficon-ok'"></i>
-            <div class="task-info">
-              <h3>
-                {{ task | taskTitle }}.
-              </h3>
-              <div ng-if="task.helpLinks.length">
-                <h4>Helpful Links</h4>
-                <ul class="list-unstyled">
-                  <li ng-repeat="link in task.helpLinks">
-                    <a href="{{ link.link }}" target="_blank">{{ link.title }}</a>
-                  </li>
-                </ul>
-              </div>
-              <span>
-                <a href="" ng-click="expanded = !expanded" role="button">
-                  <span ng-hide="expanded">Show details</span>
-                  <span ng-show="expanded">Hide details</span>
-                </a>
-              </span>
-              <span ng-show="task.status=='completed'">
-                <span class="action-divider" aria-hidden="true">|</span>
-                <a href="" ng-click="delete(task)" role="button">
-                  Dismiss
-                </a>
-              </span>
-            </div>
-          </div>
-          <div ng-show="expanded">
-            <!-- Don't show a close button for each alert since we have one above for all tasks. -->
-            <alerts alerts="task.alerts" hide-close-button="true"></alerts>
+      <div class="task-content">
+        <i class="pficon task-icon" ng-class="task.hasErrors ? 'pficon-error-circle-o' : 'pficon-ok'"></i>
+        <div class="task-info">
+          <span class="task-title">
+            {{ task | taskTitle }}.
+          </span>
+          <span class="task-links">
+            <span>
+              <a href="" ng-click="expanded = !expanded" role="button">
+                <span ng-hide="expanded">Show details</span>
+                <span ng-show="expanded">Hide details</span>
+              </a>
+            </span>
+            <span ng-show="task.status=='completed'">
+              <span class="action-divider" aria-hidden="true">|</span>
+              <a href="" ng-click="delete(task)" role="button">
+                Dismiss
+              </a>
+            </span>
+          </span>
+          <div ng-if="task.helpLinks.length">
+            <h4>Helpful Links</h4>
+            <ul class="list-unstyled">
+              <li ng-repeat="link in task.helpLinks">
+                <a href="{{ link.link }}" target="_blank">{{ link.title }}</a>
+              </li>
+            </ul>
           </div>
         </div>
+      </div>
+      <div ng-show="expanded" class="task-expanded-details">
+        <!-- Don't show a close button for each alert since we have one above for all tasks. -->
+        <alerts alerts="task.alerts" hide-close-button="true"></alerts>
       </div>
     </div>
   </div>

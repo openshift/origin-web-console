@@ -3617,12 +3617,16 @@ label.checkbox{font-weight:400}
 .action-inline i.fa,.action-inline i.pficon{color:#4d5258;margin-right:5px}
 a.subtle-link{color:#9c9c9c;border-bottom:1px dotted #BBB}
 a.subtle-link:active,a.subtle-link:focus,a.subtle-link:hover{color:#00659c;border-bottom:1px dotted #00659c;text-decoration:none}
-.tasks{padding-left:15px;padding-right:15px;padding-bottom:10px}
+.tasks{font-weight:400;padding:20px;position:relative}
 .tasks.success{border:1px solid #3f9c35;border-left:3px solid #3f9c35}
 .tasks.failure{border:1px solid #c00;border-left:3px solid #c00}
-.tasks .task-icon{font-size:45px;position:absolute}
-.tasks .task-content{min-height:45px}
-.tasks .task-info{margin-left:55px}
+.tasks .task-icon{font-size:38px;left:15px;position:absolute;top:14px}
+.tasks .task-content{font-size:16px}
+.tasks .task-content .task-info{margin-left:45px}
+.tasks .task-content .task-title{margin-right:10px}
+.tasks .task-content .task-links{font-size:13px;font-weight:300;white-space:nowrap}
+.tasks .task-expanded-details{margin-top:20px}
+.tasks .task-expanded-details .alert{margin-bottom:0}
 label.required:before{content:'*';position:absolute;left:10px}
 .btn-group-xs>.btn,.btn-xs{padding:0 4px}
 .btn-group-lg>.btn,.btn-lg{line-height:1.334}
