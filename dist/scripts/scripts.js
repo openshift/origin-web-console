@@ -7054,7 +7054,7 @@ link:"project/" + a.projectName
 title:"Add to Project",
 link:"project/" + a.projectName + "/create"
 }, {
-title:"Browse Catalog",
+title:"Catalog",
 link:"project/" + a.projectName + "/create?tab=fromCatalog"
 } ], r && a.breadcrumbs.push({
 title:r.label,
@@ -7089,7 +7089,7 @@ link:"project/" + a.projectName
 title:"Add to Project",
 link:"project/" + a.projectName + "/create"
 }, {
-title:"Browse Catalog",
+title:"Catalog",
 link:"project/" + a.projectName + "/create?tab=fromCatalog"
 }, {
 title:d.displayName || x
@@ -7345,7 +7345,7 @@ link:"project/" + a.projectName
 title:"Add to Project",
 link:"project/" + a.projectName + "/create"
 }, {
-title:"Browse Catalog",
+title:"Catalog",
 link:"project/" + a.projectName + "/create?tab=fromCatalog"
 }, {
 title:u
