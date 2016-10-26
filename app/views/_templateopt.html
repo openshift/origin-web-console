@@ -14,11 +14,12 @@
       ng-show="expand"
       ng-init="paramID = 'param-' + $index">
     <label ng-attr-for="{{paramID}}" ng-attr-title="{{parameter.name}}" ng-class="{required: parameter.required}">{{parameter.displayName || parameter.name}}</label>
-    <span ng-class="{'has-error': (paramForm[paramID].$error.required && paramForm[paramID].$touched && !cleared), 'has-warning': isOnlyWhitespace(parameter.value)}">
+    <div class="parameter-input-wrapper" ng-class="{'has-error': (paramForm[paramID].$error.required && paramForm[paramID].$touched && !cleared), 'has-warning': isOnlyWhitespace(parameter.value)}">
       <input
+          ng-if="!expandedParameter"
           ng-attr-id="{{paramID}}"
           ng-attr-name="{{paramID}}"
-          class="form-control"
+          class="form-control hide-ng-leave"
           type="text"
           placeholder="{{ parameter | parameterPlaceholder }}"
           ng-model="parameter.value"
@@ -29,7 +30,34 @@
           autocapitalize="off"
           spellcheck="false"
           ng-attr-aria-describedby="{{parameter.description ? (paramID + '-description') : undefined}}">
-    </span>
+      <a href=""
+         ng-click="expandedParameter = !expandedParameter"
+         class="resize-input action-button"
+         data-toggle="tooltip"
+         data-trigger="hover"
+         dynamic-content="{{expandedParameter ? 'Collapse to a single line input. This may strip any new lines you have entered.' : 'Expand to enter multiple lines of content. This is required if you need to include newline characters.'}}"
+        ><i class="fa"
+            ng-class="{'fa-expand': !expandedParemeter, 'fa-compress': expandedParameter}"
+            aria-hidden="true"
+            role="presentation"
+         /><span class="sr-only" ng-if="expandedParameter">Collapse to a single line input</span
+          ><span class="sr-only" ng-if="!expandedParameter">Expand to enter multiline input</span></a>
+      <textarea
+          ng-if="expandedParameter"
+          ng-attr-id="{{paramID}}"
+          ng-attr-name="{{paramID}}"
+          class="form-control hide-ng-leave"
+          placeholder="{{ parameter | parameterPlaceholder }}"
+          ng-model="parameter.value"
+          ng-required="parameter.required && !parameter.generate"
+          ng-blur="cleared = false"
+          ng-trim="false"
+          autocorrect="off"
+          autocapitalize="off"
+          spellcheck="false"
+          rows="6"
+          ng-attr-aria-describedby="{{parameter.description ? (paramID + '-description') : undefined}}"></textarea>
+    </div>
     <div class="help-block" ng-if="parameter.description" ng-attr-id="{{paramID}}-description">{{parameter.description}}</div>
     <div ng-show="paramForm[paramID].$error.required && paramForm[paramID].$touched && !cleared" class="has-error">
       <div class="help-block">{{parameter.displayName || parameter.name}} is required.</div>

@@ -581,7 +581,24 @@ label.checkbox {
     }
     .form-group {
       width: 100%;
-      max-width: 600px;
+
+      .parameter-input-wrapper {
+        position: relative;
+
+        .resize-input {
+          position: absolute;
+          right: 6px;
+          top: 5px;
+
+          .fa-expand, .fa-compress {
+            transform: rotate(90deg);
+          }
+        }
+
+        input, textarea {
+          padding-right: 20px;
+        }
+      }
     }
     .help-block {
       margin-bottom: 5px;
@@ -907,7 +924,7 @@ select:invalid {
 .action-button {
   color: @gray-light;
   cursor: pointer;
-  &:hover {
+  &:hover, &:active, &:focus {
     color: #000;
   }
 }
