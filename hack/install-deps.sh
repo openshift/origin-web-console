@@ -5,8 +5,6 @@ set -e
 OPENSHIFT_JVM_VERSION=v1.0.50
 
 STARTTIME=$(date +%s)
-#OS_ROOT=$(dirname "${BASH_SOURCE}")/..
-#source "${OS_ROOT}/hack/common.sh"
 
 TMPDIR="${TMPDIR:-"/tmp"}"
 LOG_DIR="${LOG_DIR:-$(mktemp -d ${TMPDIR}/openshift.assets.logs.XXXX)}"
@@ -30,7 +28,8 @@ function cmd() {
 # We don't need grunt and bower to be installed globally for the system,
 # so we can amend our path to look into the local node_modules for the
 # correct binaries.
-export PATH="${PATH}:$(pwd)/node_modules/bower/bin:$(pwd)/node_modules/grunt-cli/bin"
+repo_root="$( dirname "${BASH_SOURCE}" )/.."
+export PATH="${PATH}:${repo_root}/node_modules/bower/bin:${repo_root}/node_modules/grunt-cli/bin"
 
 # Install bower if needed
 if ! which bower > /dev/null 2>&1 ; then
