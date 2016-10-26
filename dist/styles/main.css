@@ -4126,7 +4126,9 @@ ul.messenger-theme-flat .messenger-message.alert-warning:before{content:'\e61c';
 ul.messenger-theme-flat .messenger-message.alert-success .messenger-message-inner:before{color:#3f9c35;content:'\e602';display:inline-block;background-color:transparent}
 .tile-click:hover .tile-target,.tile:hover a.tile-target{color:#00659c}
 ul.messenger-theme-flat .messenger-message.alert-info .messenger-message-inner:before{color:#00659c;content:'\e604';display:inline-block;background-color:transparent}
-#header-logo{background-image:url(../images/logo-origin-thin.svg);background-repeat:no-repeat;background-position:center left;background-size:initial;height:46px;width:230px}
+#header-logo{background-image:url(../images/logo-OCP-console-hdr-stacked.svg);background-repeat:no-repeat;background-position:center left;background-size:initial;height:46px;width:320px}
+@media (min-width:425px){#header-logo{background-image:url(../images/logo-OCP-console-hdr-thin.svg)}
+}
 .navbar-pf-alt{background:#292e34;border-bottom:1px solid #050505;border-left:1px solid transparent;border-right:1px solid transparent;border-top:0;min-height:inherit}
 .layout-pf-alt-fixed .navbar-pf-alt{left:0;position:fixed;right:0;top:0;z-index:1030}
 .navbar-pf-alt .navbar-toggle{margin:0;padding:9px 14px}
