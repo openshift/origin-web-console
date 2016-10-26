@@ -8033,7 +8033,10 @@ authType:"kubernetes.io/basic-auth",
 data:{},
 linkSecret:!1,
 pickedServiceAccountToLink:""
-}, c.addGitconfig = !1, c.addCaCert = !1, !c.serviceAccountToLink && b.canI("serviceaccounts", "list") && b.canI("serviceaccounts", "update") && a.list("serviceaccounts", c, function(a) {
+}, c.add = {
+gitconfig:!1,
+cacert:!1
+}, !c.serviceAccountToLink && b.canI("serviceaccounts", "list") && b.canI("serviceaccounts", "update") && a.list("serviceaccounts", c, function(a) {
 c.serviceAccounts = a.by("metadata.name"), c.serviceAccountsNames = _.keys(c.serviceAccounts);
 });
 var e = function(a, b) {
