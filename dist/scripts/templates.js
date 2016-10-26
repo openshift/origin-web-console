@@ -10516,6 +10516,7 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "</table>\n" +
     "</div>\n" +
     "</div>\n" +
+    "<div class=\"limit-ranges-section\">\n" +
     "<h1>Limit Range</h1>\n" +
     "<div ng-if=\"!(limitRanges | hashSize)\">\n" +
     "<div class=\"help-block\">{{limitRangeHelp}}</div>\n" +
@@ -10575,6 +10576,7 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "<tr ng-repeat-end></tr>\n" +
     "</tbody>\n" +
     "</table>\n" +
+    "</div>\n" +
     "</div>\n" +
     "</div>\n" +
     "</div>\n" +
