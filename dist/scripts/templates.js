@@ -642,22 +642,13 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "<div ng-controller=\"TasksController\">\n" +
     "<div ng-repeat=\"task in tasks()\" ng-if=\"!task.namespace || !projectName || task.namespace === projectName\">\n" +
     "<div class=\"tasks\" ng-class=\"hasTaskWithError() ? 'failure' : 'success'\">\n" +
-    "<div class=\"row\">\n" +
-    "<div class=\"col-md-12\">\n" +
     "<div class=\"task-content\">\n" +
     "<i class=\"pficon task-icon\" ng-class=\"task.hasErrors ? 'pficon-error-circle-o' : 'pficon-ok'\"></i>\n" +
     "<div class=\"task-info\">\n" +
-    "<h3>\n" +
+    "<span class=\"task-title\">\n" +
     "{{ task | taskTitle }}.\n" +
-    "</h3>\n" +
-    "<div ng-if=\"task.helpLinks.length\">\n" +
-    "<h4>Helpful Links</h4>\n" +
-    "<ul class=\"list-unstyled\">\n" +
-    "<li ng-repeat=\"link in task.helpLinks\">\n" +
-    "<a href=\"{{ link.link }}\" target=\"_blank\">{{ link.title }}</a>\n" +
-    "</li>\n" +
-    "</ul>\n" +
-    "</div>\n" +
+    "</span>\n" +
+    "<span class=\"task-links\">\n" +
     "<span>\n" +
     "<a href=\"\" ng-click=\"expanded = !expanded\" role=\"button\">\n" +
     "<span ng-hide=\"expanded\">Show details</span>\n" +
@@ -670,13 +661,20 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "Dismiss\n" +
     "</a>\n" +
     "</span>\n" +
+    "</span>\n" +
+    "<div ng-if=\"task.helpLinks.length\">\n" +
+    "<h4>Helpful Links</h4>\n" +
+    "<ul class=\"list-unstyled\">\n" +
+    "<li ng-repeat=\"link in task.helpLinks\">\n" +
+    "<a href=\"{{ link.link }}\" target=\"_blank\">{{ link.title }}</a>\n" +
+    "</li>\n" +
+    "</ul>\n" +
     "</div>\n" +
     "</div>\n" +
-    "<div ng-show=\"expanded\">\n" +
+    "</div>\n" +
+    "<div ng-show=\"expanded\" class=\"task-expanded-details\">\n" +
     "\n" +
     "<alerts alerts=\"task.alerts\" hide-close-button=\"true\"></alerts>\n" +
-    "</div>\n" +
-    "</div>\n" +
     "</div>\n" +
     "</div>\n" +
     "</div>\n" +
@@ -4498,12 +4496,10 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "<div class=\"task-content\">\n" +
     "<i class=\"pficon task-icon\" ng-class=\"task.hasErrors ? 'pficon-error-circle-o' : 'pficon-ok'\"></i>\n" +
     "<div class=\"task-info\">\n" +
-    "<h3>\n" +
     "{{ task | taskTitle }}.\n" +
-    "</h3>\n" +
     "</div>\n" +
     "</div>\n" +
-    "<div class=\"alerts\">\n" +
+    "<div class=\"alerts task-expanded-details\">\n" +
     "<div ng-repeat=\"alert in task.alerts\">\n" +
     "<div ng-switch=\"alert.type\">\n" +
     "<div ng-switch-when=\"error\" class=\"alert alert-danger\">\n" +
