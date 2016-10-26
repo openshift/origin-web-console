@@ -5504,7 +5504,8 @@ resource:"replicasets"
 }, i, function(b) {
 var c = b.by("metadata.name"), e = new LabelSelector(d.spec.selector);
 c = _.filter(c, function(a) {
-return e.matches(a);
+var b = _.get(a, "spec.template.metadata.labels", {});
+return e.covers(new LabelSelector(b));
 }), a.inProgressDeployment = _.chain(c).filter("status.replicas").size() > 1, a.replicaSetsForDeployment = f.sortByRevision(c);
 }));
 }, function(c) {
@@ -5808,7 +5809,10 @@ var c = new LabelSelector(a.deployment.spec.selector);
 F = !1;
 var d = 0;
 _.each(b.by("metadata.name"), function(a) {
-if (c.matches(a) && a.status.replicas) return d++, d > 1 ? (F = !0, !1) :void 0;
+if (a.status.replicas) {
+var b = _.get(a, "spec.template.metadata.labels", {});
+if (c.covers(new LabelSelector(b))) return d++, d > 1 ? (F = !0, !1) :void 0;
+}
 });
 }))) :void (a.deploymentMissing = !0);
 });

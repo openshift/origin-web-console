@@ -294,7 +294,12 @@ angular.module('openshiftConsole')
               // deployment selector with active replicas.
               var numActive = 0;
               _.each(replicaSets.by('metadata.name'), function(replicaSet) {
-                if (!deploymentSelector.matches(replicaSet) || !replicaSet.status.replicas) {
+                if (!replicaSet.status.replicas) {
+                  return;
+                }
+
+                var templateLabels = _.get(replicaSet, 'spec.template.metadata.labels', {});
+                if (!deploymentSelector.covers(new LabelSelector(templateLabels))) {
                   return;
                 }
 
