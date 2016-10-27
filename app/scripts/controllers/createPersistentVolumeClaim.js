@@ -78,7 +78,7 @@ angular.module('openshiftConsole')
           var unit =  $scope.claim.unit || "Mi";
           pvc.spec.resources.requests.storage = $scope.claim.amount + unit;
           pvc.spec.selector.matchLabels = keyValueEditorUtils.mapEntries( keyValueEditorUtils.compactEntries($scope.claim.selectedLabels) );
-          if ($scope.claim.storageClass !== null) {
+          if ($scope.claim.storageClass ) {
             //we can only have one storage class per claim
             pvc.metadata.annotations["volume.alpha.kubernetes.io/storage-class"] = $scope.claim.storageClass.metadata.name;
           }
