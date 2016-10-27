@@ -7,7 +7,7 @@
  * Controller of the openshiftConsole
  */
 angular.module('openshiftConsole')
-  .controller('EditDeploymentConfigController', function ($scope, $routeParams, $uibModal, DataService, BreadcrumbsService, SecretsService, ProjectsService, $filter, ApplicationGenerator, Navigate, $location, AlertMessageService, SOURCE_URL_PATTERN, keyValueEditorUtils) {
+  .controller('EditDeploymentConfigController', function ($scope, $routeParams, $uibModal, DataService, BreadcrumbsService, SecretsService, ProjectsService, $filter, Navigate, $location, AlertMessageService, SOURCE_URL_PATTERN, keyValueEditorUtils) {
     $scope.projectName = $routeParams.project;
     $scope.deploymentConfig = null;
     $scope.alerts = {};
@@ -101,7 +101,9 @@ angular.module('openshiftConsole')
             $scope.updatedDeploymentConfig = angular.copy($scope.deploymentConfig);
             $scope.containerNames = _.map($scope.deploymentConfig.spec.template.spec.containers, 'name');
             $scope.containerConfigByName = mapContainerConfigByName($scope.updatedDeploymentConfig.spec.template.spec.containers, $scope.updatedDeploymentConfig.spec.triggers);
-            $scope.pullSecrets = $scope.deploymentConfig.spec.template.spec.imagePullSecrets || [{name: ''}];
+            $scope.secrets = {
+              pullSecrets: angular.copy($scope.deploymentConfig.spec.template.spec.imagePullSecrets) || [{name: ''}]
+            };
             $scope.volumeNames = _.map($scope.deploymentConfig.spec.template.spec.volumes, 'name');
             $scope.strategyData = angular.copy($scope.deploymentConfig.spec.strategy);
             $scope.originalStrategy = $scope.strategyData.type;
@@ -276,7 +278,7 @@ angular.module('openshiftConsole')
         $scope.strategyData.customParams.environment = keyValueEditorUtils.compactEntries($scope.strategyData.customParams.environment);
       }
       // Update image pull secrets 
-      $scope.updatedDeploymentConfig.spec.template.spec.imagePullSecrets = $scope.pullSecrets
+      $scope.updatedDeploymentConfig.spec.template.spec.imagePullSecrets = _.filter($scope.secrets.pullSecrets, 'name');
       $scope.updatedDeploymentConfig.spec.strategy = $scope.strategyData;
       $scope.updatedDeploymentConfig.spec.triggers = updateTriggers();
 
