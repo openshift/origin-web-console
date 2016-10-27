@@ -175,6 +175,19 @@ angular.module("openshiftConsole")
           });
         };
 
+        var updateEditorMode = _.debounce(function(){
+          try {
+            JSON.parse($scope.newSecret.data.dockerConfig);
+            $scope.invalidConfigFormat = false;
+          } catch (e) {
+            $scope.invalidConfigFormat = true;
+          }
+        }, 300, {
+          'leading': true
+        });
+
+        $scope.aceChanged = updateEditorMode;
+
         $scope.create = function() {
           $scope.alerts = {};
           var newSecret = constructSecretObject($scope.newSecret.data, $scope.newSecret.authType);

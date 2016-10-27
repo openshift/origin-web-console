@@ -8121,8 +8121,16 @@ details:d("getErrorDetails")(a)
 }
 };
 });
-};
-c.create = function() {
+}, g = _.debounce(function() {
+try {
+JSON.parse(c.newSecret.data.dockerConfig), c.invalidConfigFormat = !1;
+} catch (a) {
+c.invalidConfigFormat = !0;
+}
+}, 300, {
+leading:!0
+});
+c.aceChanged = g, c.create = function() {
 c.alerts = {};
 var g = e(c.newSecret.data, c.newSecret.authType);
 a.create("secrets", null, g, c).then(function(a) {
