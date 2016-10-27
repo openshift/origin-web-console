@@ -8068,7 +8068,7 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "</div>\n" +
     "<div ng-if=\"view.advancedImageOptions\">\n" +
     "<div class=\"gutter-top\">\n" +
-    "<osc-secrets model=\"pullSecrets\" namespace=\"projectName\" display-type=\"pull\" type=\"image\" secrets-by-type=\"secretsByType\" service-account-to-link=\"default\" alerts=\"alerts\" allow-multiple-secrets=\"true\">\n" +
+    "<osc-secrets model=\"secrets.pullSecrets\" namespace=\"projectName\" display-type=\"pull\" type=\"image\" secrets-by-type=\"secretsByType\" service-account-to-link=\"default\" alerts=\"alerts\" allow-multiple-secrets=\"true\">\n" +
     "</osc-secrets>\n" +
     "</div>\n" +
     "</div>\n" +

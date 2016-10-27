@@ -6531,7 +6531,7 @@ details:f("getErrorDetails")(b)
 }, a.$on("$destroy", function() {
 c.unwatchAll(m);
 });
-} ]), angular.module("openshiftConsole").controller("EditDeploymentConfigController", [ "$scope", "$routeParams", "$uibModal", "DataService", "BreadcrumbsService", "SecretsService", "ProjectsService", "$filter", "ApplicationGenerator", "Navigate", "$location", "AlertMessageService", "SOURCE_URL_PATTERN", "keyValueEditorUtils", function(a, b, c, d, e, f, g, h, i, j, k, l, m, n) {
+} ]), angular.module("openshiftConsole").controller("EditDeploymentConfigController", [ "$scope", "$routeParams", "$uibModal", "DataService", "BreadcrumbsService", "SecretsService", "ProjectsService", "$filter", "Navigate", "$location", "AlertMessageService", "SOURCE_URL_PATTERN", "keyValueEditorUtils", function(a, b, c, d, e, f, g, h, i, j, k, l, m) {
 a.projectName = b.project, a.deploymentConfig = null, a.alerts = {}, a.view = {
 advancedStrategyOptions:!1,
 advancedImageOptions:!1
@@ -6541,10 +6541,10 @@ kind:b.kind,
 namespace:b.project,
 subpage:"Edit Deployment Config",
 includeProject:!0
-}), a.deploymentConfigStrategyTypes = [ "Recreate", "Rolling", "Custom" ], l.getAlerts().forEach(function(b) {
+}), a.deploymentConfigStrategyTypes = [ "Recreate", "Rolling", "Custom" ], k.getAlerts().forEach(function(b) {
 a.alerts[b.name] = b.data;
-}), l.clearAlerts();
-var o = [], p = function(a) {
+}), k.clearAlerts();
+var n = [], o = function(a) {
 switch (a) {
 case "Recreate":
 return "recreateParams";
@@ -6600,9 +6600,11 @@ imageStream:""
 _.set(d, [ b.name, "triggerData" ], f);
 }), d;
 };
-a.updatedDeploymentConfig = angular.copy(a.deploymentConfig), a.containerNames = _.map(a.deploymentConfig.spec.template.spec.containers, "name"), a.containerConfigByName = i(a.updatedDeploymentConfig.spec.template.spec.containers, a.updatedDeploymentConfig.spec.triggers), a.pullSecrets = a.deploymentConfig.spec.template.spec.imagePullSecrets || [ {
+a.updatedDeploymentConfig = angular.copy(a.deploymentConfig), a.containerNames = _.map(a.deploymentConfig.spec.template.spec.containers, "name"), a.containerConfigByName = i(a.updatedDeploymentConfig.spec.template.spec.containers, a.updatedDeploymentConfig.spec.triggers), a.secrets = {
+pullSecrets:angular.copy(a.deploymentConfig.spec.template.spec.imagePullSecrets) || [ {
 name:""
-} ], a.volumeNames = _.map(a.deploymentConfig.spec.template.spec.volumes, "name"), a.strategyData = angular.copy(a.deploymentConfig.spec.strategy), a.originalStrategy = a.strategyData.type, a.strategyParamsPropertyName = p(a.strategyData.type), a.triggers.hasConfigTrigger = _.some(a.updatedDeploymentConfig.spec.triggers, {
+} ]
+}, a.volumeNames = _.map(a.deploymentConfig.spec.template.spec.volumes, "name"), a.strategyData = angular.copy(a.deploymentConfig.spec.strategy), a.originalStrategy = a.strategyData.type, a.strategyParamsPropertyName = o(a.strategyData.type), a.triggers.hasConfigTrigger = _.some(a.updatedDeploymentConfig.spec.triggers, {
 type:"ConfigChange"
 }), "Custom" !== a.strategyData.type || _.has(a.strategyData, "customParams.environment") || (a.strategyData.customParams.environment = []), d.list("secrets", g, function(b) {
 var c = f.groupSecretsByType(b), d = _.mapValues(c, function(a) {
@@ -6611,7 +6613,7 @@ return _.map(a, "metadata.name");
 a.secretsByType = _.each(d, function(a) {
 a.unshift("");
 });
-}), o.push(d.watchObject("deploymentconfigs", b.deploymentconfig, g, function(b, c) {
+}), n.push(d.watchObject("deploymentconfigs", b.deploymentconfig, g, function(b, c) {
 "MODIFIED" === c && (a.alerts["updated/deleted"] = {
 type:"warning",
 message:"This deployment configuration has changed since you started editing it. You'll need to copy any changes you've made and edit again."
@@ -6628,9 +6630,9 @@ details:h("getErrorDetails")(b)
 };
 });
 }));
-var q = function() {
+var p = function() {
 return "Custom" !== a.strategyData.type && "Custom" !== a.originalStrategy && a.strategyData.type !== a.originalStrategy;
-}, r = function(b) {
+}, q = function(b) {
 if (!_.has(a.strategyData, b)) {
 var d = c.open({
 animation:!0,
@@ -6650,21 +6652,21 @@ cancelButtonText:"No"
 }
 });
 d.result.then(function() {
-a.strategyData[b] = a.strategyData[p(a.originalStrategy)];
+a.strategyData[b] = a.strategyData[o(a.originalStrategy)];
 }, function() {
 a.strategyData[b] = {};
 });
 }
 };
 a.strategyChanged = function() {
-var b = p(a.strategyData.type);
-q() ? r(b) :_.has(a.strategyData, b) || ("Custom" !== a.strategyData.type ? a.strategyData[b] = {} :a.strategyData[b] = {
+var b = o(a.strategyData.type);
+p() ? q(b) :_.has(a.strategyData, b) || ("Custom" !== a.strategyData.type ? a.strategyData[b] = {} :a.strategyData[b] = {
 image:"",
 command:[],
 environment:[]
 }), a.strategyParamsPropertyName = b;
 };
-var s = function(a, b, c) {
+var r = function(a, b, c) {
 var d = {
 kind:"ImageStreamTag",
 namespace:b.namespace,
@@ -6678,12 +6680,12 @@ containerNames:[ a ],
 from:d
 }
 }, c;
-}, t = function() {
+}, s = function() {
 var b = _.reject(a.updatedDeploymentConfig.spec.triggers, function(a) {
 return "ImageChange" === a.type || "ConfigChange" === a.type;
 });
 return _.each(a.containerConfigByName, function(c, d) {
-if (c.hasDeploymentTrigger) b.push(s(d, c.triggerData.istag, c.triggerData.data)); else {
+if (c.hasDeploymentTrigger) b.push(r(d, c.triggerData.istag, c.triggerData.data)); else {
 var e = _.find(a.updatedDeploymentConfig.spec.template.spec.containers, {
 name:d
 });
@@ -6698,19 +6700,19 @@ a.disableInputs = !0, _.each(a.containerConfigByName, function(b, c) {
 var d = _.find(a.updatedDeploymentConfig.spec.template.spec.containers, {
 name:c
 });
-d.env = n.compactEntries(b.env);
-}), q() && delete a.strategyData[p(a.originalStrategy)], "Custom" !== a.strategyData.type ? _.each([ "pre", "mid", "post" ], function(b) {
-_.has(a.strategyData, [ a.strategyParamsPropertyName, b, "execNewPod", "env" ]) && (a.strategyData[a.strategyParamsPropertyName][b].execNewPod.env = n.compactEntries(a.strategyData[a.strategyParamsPropertyName][b].execNewPod.env));
-}) :_.has(a, "strategyData.customParams.environment") && (a.strategyData.customParams.environment = n.compactEntries(a.strategyData.customParams.environment)), a.updatedDeploymentConfig.spec.template.spec.imagePullSecrets = a.pullSecrets, a.updatedDeploymentConfig.spec.strategy = a.strategyData, a.updatedDeploymentConfig.spec.triggers = t(), d.update("deploymentconfigs", a.updatedDeploymentConfig.metadata.name, a.updatedDeploymentConfig, a.context).then(function() {
-l.addAlert({
+d.env = m.compactEntries(b.env);
+}), p() && delete a.strategyData[o(a.originalStrategy)], "Custom" !== a.strategyData.type ? _.each([ "pre", "mid", "post" ], function(b) {
+_.has(a.strategyData, [ a.strategyParamsPropertyName, b, "execNewPod", "env" ]) && (a.strategyData[a.strategyParamsPropertyName][b].execNewPod.env = m.compactEntries(a.strategyData[a.strategyParamsPropertyName][b].execNewPod.env));
+}) :_.has(a, "strategyData.customParams.environment") && (a.strategyData.customParams.environment = m.compactEntries(a.strategyData.customParams.environment)), a.updatedDeploymentConfig.spec.template.spec.imagePullSecrets = _.filter(a.secrets.pullSecrets, "name"), a.updatedDeploymentConfig.spec.strategy = a.strategyData, a.updatedDeploymentConfig.spec.triggers = s(), d.update("deploymentconfigs", a.updatedDeploymentConfig.metadata.name, a.updatedDeploymentConfig, a.context).then(function() {
+k.addAlert({
 name:a.updatedDeploymentConfig.metadata.name,
 data:{
 type:"success",
 message:"Deployment config " + a.updatedDeploymentConfig.metadata.name + " was successfully updated."
 }
 });
-var b = j.resourceURL(a.updatedDeploymentConfig);
-k.url(b);
+var b = i.resourceURL(a.updatedDeploymentConfig);
+j.url(b);
 }, function(b) {
 a.disableInputs = !1, a.alerts.save = {
 type:"error",
@@ -6719,7 +6721,7 @@ details:h("getErrorDetails")(b)
 };
 });
 }, a.$on("$destroy", function() {
-d.unwatchAll(o);
+d.unwatchAll(n);
 });
 } ]), angular.module("openshiftConsole").controller("EditAutoscalerController", [ "$scope", "$filter", "$routeParams", "$window", "APIService", "BreadcrumbsService", "DataService", "HPAService", "MetricsService", "Navigate", "ProjectsService", "keyValueEditorUtils", function(a, b, c, d, e, f, g, h, i, j, k, l) {
 if (!c.kind || !c.name) return void j.toErrorPage("Kind or name parameter missing.");
