@@ -5305,7 +5305,6 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "<div ui-ace=\"{\n" +
     "          mode: 'txt',\n" +
     "          theme: 'eclipse',\n" +
-    "          onLoad: aceLoaded,\n" +
     "          rendererOptions: {\n" +
     "            fadeFoldWidgets: true,\n" +
     "            showPrintMargin: false\n" +
@@ -5319,7 +5318,6 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "<osc-file-input id=\"private-key-file-input\" model=\"newSecret.data.privateKey\" drop-zone-id=\"private-key\" dragging=\"false\" help-text=\"Upload your private SSH key file.\" show-values=\"false\"></osc-file-input>\n" +
     "<div ui-ace=\"{\n" +
     "          theme: 'eclipse',\n" +
-    "          onLoad: aceLoaded,\n" +
     "          rendererOptions: {\n" +
     "            fadeFoldWidgets: true,\n" +
     "            showPrintMargin: false\n" +
@@ -5345,7 +5343,6 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "<div ui-ace=\"{\n" +
     "          mode: 'ini',\n" +
     "          theme: 'eclipse',\n" +
-    "          onLoad: aceLoaded,\n" +
     "          rendererOptions: {\n" +
     "            fadeFoldWidgets: true,\n" +
     "            showPrintMargin: false\n" +
@@ -5386,7 +5383,7 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "<div ui-ace=\"{\n" +
     "          mode: 'json',\n" +
     "          theme: 'eclipse',\n" +
-    "          onLoad: aceLoaded,\n" +
+    "          onChange: aceChanged,\n" +
     "          rendererOptions: {\n" +
     "            fadeFoldWidgets: true,\n" +
     "            showPrintMargin: false\n" +
@@ -5394,6 +5391,11 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "        }\" ng-model=\"newSecret.data.dockerConfig\" class=\"create-secret-editor ace-bordered\" id=\"dockerconfig-editor\" required></div>\n" +
     "<div class=\"help-block\">\n" +
     "File with credentials and other configuration for connecting to a secured image registry.\n" +
+    "</div>\n" +
+    "<div class=\"has-warning\" ng-show=\"invalidConfigFormat\">\n" +
+    "<span class=\"help-block\">\n" +
+    "Configuration file should be in JSON format.\n" +
+    "</span>\n" +
     "</div>\n" +
     "</div>\n" +
     "</div>\n" +
