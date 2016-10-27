@@ -1023,7 +1023,7 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "Attach the volume to the following containers:\n" +
     "</span>\n" +
     "</div>\n" +
-    "<div class=\"checkbox\" ng-repeat=\"container in (attach.deployment.spec.template.spec.containers || attach.deploymentConfig.spec.template.spec.containers)\">\n" +
+    "<div class=\"checkbox\" ng-repeat=\"container in attach.resource.spec.template.spec.containers\">\n" +
     "<label>\n" +
     "<input type=\"checkbox\" ng-model=\"attach.containers.individual[container.name]\">\n" +
     "<b>{{container.name}}</b> from image <i>{{container.image}}</i>\n" +
