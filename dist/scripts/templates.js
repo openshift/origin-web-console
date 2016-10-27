@@ -5283,25 +5283,25 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "</div>\n" +
     "</div>\n" +
     "<div class=\"form-group\">\n" +
-    "<label for=\"passwordToken\">Password or Token</label>\n" +
+    "<label ng-class=\"{ required: !add.cacert && !add.gitconfig }\" for=\"passwordToken\">Password or Token</label>\n" +
     "<div>\n" +
-    "<input class=\"form-control\" id=\"passwordToken\" name=\"passwordToken\" ng-model=\"newSecret.data.passwordToken\" autocorrect=\"off\" autocapitalize=\"off\" spellcheck aria-describedby=\"password-token-help\" type=\"password\" ng-required=\"!newSecret.data.cacert && !newSecret.data.gitconfig\">\n" +
+    "<input class=\"form-control\" id=\"passwordToken\" name=\"passwordToken\" ng-model=\"newSecret.data.passwordToken\" autocorrect=\"off\" autocapitalize=\"off\" spellcheck aria-describedby=\"password-token-help\" type=\"password\" ng-required=\"!add.cacert && !add.gitconfig\">\n" +
     "</div>\n" +
     "<div class=\"help-block\" id=\"password-token-help\">\n" +
-    "Password or token for Git authentication.\n" +
+    "Password or token for Git authentication. Required if a ca.crt or .gitconfig file is not specified.\n" +
     "</div>\n" +
     "</div>\n" +
     "<div class=\"form-group\">\n" +
     "<div class=\"checkbox\">\n" +
     "<label>\n" +
-    "<input type=\"checkbox\" ng-model=\"addCaCert\">\n" +
+    "<input type=\"checkbox\" ng-model=\"add.cacert\">\n" +
     "Use a custom ca.crt file\n" +
     "</label>\n" +
     "</div>\n" +
     "</div>\n" +
-    "<div class=\"form-group\" ng-if=\"addCaCert\" id=\"cacert\">\n" +
+    "<div class=\"form-group\" ng-if=\"add.cacert\" id=\"cacert\">\n" +
     "<label class=\"required\" for=\"cacert\">CA Certificate File</label>\n" +
-    "<osc-file-input id=\"cacert-file-input\" model=\"newSecret.data.cacert\" drop-zone-id=\"cacert\" dragging=\"false\" help-text=\"Upload your ca.cert file.\" show-values=\"false\" ng-required=\"!newSecret.data.gitconfig || !newSecret.data.passwordToken\"></osc-file-input>\n" +
+    "<osc-file-input id=\"cacert-file-input\" model=\"newSecret.data.cacert\" drop-zone-id=\"cacert\" dragging=\"false\" help-text=\"Upload your ca.crt file.\" show-values=\"false\" required></osc-file-input>\n" +
     "<div ui-ace=\"{\n" +
     "          mode: 'txt',\n" +
     "          theme: 'eclipse',\n" +
@@ -5322,7 +5322,7 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "          onLoad: aceLoaded,\n" +
     "          rendererOptions: {\n" +
     "            fadeFoldWidgets: true,\n" +
-    "            showPrintMargin: false \n" +
+    "            showPrintMargin: false\n" +
     "          }\n" +
     "        }\" ng-model=\"newSecret.data.privateKey\" class=\"create-secret-editor ace-bordered\" id=\"private-key-editor\" required></div>\n" +
     "<div class=\"help-block\">\n" +
@@ -5334,21 +5334,21 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "<div class=\"form-group\">\n" +
     "<div class=\"checkbox\">\n" +
     "<label>\n" +
-    "<input type=\"checkbox\" ng-model=\"addGitconfig\">\n" +
+    "<input type=\"checkbox\" ng-model=\"add.gitconfig\">\n" +
     "Use a custom .gitconfig file\n" +
     "</label>\n" +
     "</div>\n" +
     "</div>\n" +
-    "<div class=\"form-group\" ng-if=\"addGitconfig\" id=\"gitconfig\" ng-show=\"addGitconfig\">\n" +
+    "<div class=\"form-group\" ng-if=\"add.gitconfig\" id=\"gitconfig\">\n" +
     "<label class=\"required\" for=\"gitconfig\">Git Configuration File</label>\n" +
-    "<osc-file-input id=\"gitconfig-file-input\" model=\"newSecret.data.gitconfig\" drop-zone-id=\"gitconfig\" dragging=\"false\" help-text=\"Upload your .gitconfig or  file.\" show-values=\"false\" ng-required=\"!newSecret.data.cacert || !newSecret.data.passwordToken\"></osc-file-input>\n" +
+    "<osc-file-input id=\"gitconfig-file-input\" model=\"newSecret.data.gitconfig\" drop-zone-id=\"gitconfig\" dragging=\"false\" help-text=\"Upload your .gitconfig or  file.\" show-values=\"false\" required></osc-file-input>\n" +
     "<div ui-ace=\"{\n" +
     "          mode: 'ini',\n" +
     "          theme: 'eclipse',\n" +
     "          onLoad: aceLoaded,\n" +
     "          rendererOptions: {\n" +
     "            fadeFoldWidgets: true,\n" +
-    "            showPrintMargin: false \n" +
+    "            showPrintMargin: false\n" +
     "          }\n" +
     "        }\" ng-model=\"newSecret.data.gitconfig\" class=\"create-secret-editor ace-bordered\" id=\"gitconfig-editor\"></div>\n" +
     "</div>\n" +
@@ -5389,7 +5389,7 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "          onLoad: aceLoaded,\n" +
     "          rendererOptions: {\n" +
     "            fadeFoldWidgets: true,\n" +
-    "            showPrintMargin: false \n" +
+    "            showPrintMargin: false\n" +
     "          }\n" +
     "        }\" ng-model=\"newSecret.data.dockerConfig\" class=\"create-secret-editor ace-bordered\" id=\"dockerconfig-editor\" required></div>\n" +
     "<div class=\"help-block\">\n" +

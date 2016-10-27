@@ -72,8 +72,11 @@ angular.module("openshiftConsole")
             pickedServiceAccountToLink: "",
           };
         }
-        $scope.addGitconfig = false;
-        $scope.addCaCert = false;
+
+        $scope.add = {
+          gitconfig: false,
+          cacert: false
+        };
 
         // List SA only if $scope.serviceAccountToLink is not defined so user has to pick one.
         if (!$scope.serviceAccountToLink && AuthorizationService.canI('serviceaccounts', 'list') && AuthorizationService.canI('serviceaccounts', 'update')) {
