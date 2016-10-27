@@ -7954,7 +7954,7 @@ matchLabels:{}
 };
 a.spec.accessModes = [ c.claim.accessModes || "ReadWriteOnce" ];
 var b = c.claim.unit || "Mi";
-return a.spec.resources.requests.storage = c.claim.amount + b, a.spec.selector.matchLabels = i.mapEntries(i.compactEntries(c.claim.selectedLabels)), null !== c.claim.storageClass && (a.metadata.annotations["volume.alpha.kubernetes.io/storage-class"] = c.claim.storageClass.metadata.name), a;
+return a.spec.resources.requests.storage = c.claim.amount + b, a.spec.selector.matchLabels = i.mapEntries(i.compactEntries(c.claim.selectedLabels)), c.claim.storageClass && (a.metadata.annotations["volume.alpha.kubernetes.io/storage-class"] = c.claim.storageClass.metadata.name), a;
 }
 c.project = b, c.breadcrumbs[0].title = a("displayName")(b), c.createPersistentVolumeClaim = function() {
 if (c.createPersistentVolumeClaimForm.$valid) {
