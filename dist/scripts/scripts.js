@@ -2587,33 +2587,22 @@ return b.update(e, a.metadata.name, f, {
 namespace:a.metadata.namespace
 });
 };
-var h = function(a) {
-return _.get(a, "spec.template.metadata.labels", {});
-}, i = function(a, b) {
+var h = function(a, b) {
 var c = _.get(b, [ a ]);
 return !_.isEmpty(c);
-}, j = function(a, b) {
+}, i = function(a, b) {
 var c = _.get(b, [ a ]);
 return !_.isEmpty(c);
 };
 return f.prototype.isScalable = function(a, b, c, d, e) {
-if (j(a.metadata.name, d)) return !1;
+if (i(a.metadata.name, d)) return !1;
 var f = g(a, "deploymentConfig");
 if (!f) return !0;
 if (!b) return !1;
 if (!b[f]) return !0;
-if (i(f, c)) return !1;
-var h = _.get(e, [ f, "metadata", "name" ]);
-return h === a.metadata.name;
-}, f.prototype.groupByService = function(a, b) {
-var c = {};
-return _.each(a, function(a) {
-var d = new LabelSelector(h(a)), e = !1;
-_.each(b, function(b) {
-var f = new LabelSelector(b.spec.selector);
-f.covers(d) && (e = !0, _.set(c, [ b.metadata.name, a.metadata.name ], a));
-}), e || _.set(c, [ "", a.metadata.name ], a);
-}), c;
+if (h(f, c)) return !1;
+var j = _.get(e, [ f, "metadata", "name" ]);
+return j === a.metadata.name;
 }, f.prototype.groupByDeploymentConfig = function(a) {
 var b = {};
 return _.each(a, function(a) {
@@ -3711,7 +3700,11 @@ isAnyQuotaExceeded:s
 };
 } ]), angular.module("openshiftConsole").factory("LabelsService", function() {
 var a = function(a) {
-return _.get(a, "spec.template.metadata.labels", {});
+return _.get(a, "spec.template", {
+metadata:{
+labels:{}
+}
+});
 };
 return {
 groupBySelector:function(b, c, d) {
@@ -3722,9 +3715,7 @@ f[a.metadata.uid] = new LabelSelector(a.spec.selector);
 if (!d.include || d.include(b)) {
 var g = _.filter(c, function(c) {
 var e = f[c.metadata.uid];
-if (!d.matchTemplate) return e.matches(b);
-var g = new LabelSelector(a(b));
-return e.covers(g);
+return d.matchTemplate ? e.matches(a(b)) :d.matchSelector ? e.covers(new LabelSelector(b.spec.selector)) :e.matches(b);
 });
 g.length || _.set(e, [ "", b.metadata.name ], b), _.each(g, function(a) {
 var c = _.get(a, d.key || "metadata.name", "");
@@ -4119,7 +4110,7 @@ return !c || !!b && g.getRevision(b) === c;
 }, X = function() {
 if (w && s) {
 c.replicaSetsByDeployment = h.groupBySelector(w, s, {
-matchTemplate:!0
+matchSelector:!0
 });
 var a = {};
 _.each(c.replicaSetsByDeployment, function(b, c) {
@@ -4128,7 +4119,7 @@ a[c] = g.getActiveReplicaSet(b, d);
 }), c.scalableReplicaSetsByDeployment = a, c.visibleRSByDeploymentAndService = {}, _.each(c.replicaSetsByService, function(a, b) {
 c.visibleRSByDeploymentAndService[b] = {};
 var d = h.groupBySelector(a, s, {
-matchTemplate:!0
+matchSelector:!0
 });
 _.each(d, function(a, d) {
 c.visibleRSByDeploymentAndService[b][d] = _.filter(a, function(a) {
@@ -5376,7 +5367,7 @@ a.alerts[b.name] = b.data;
 }), d.clearAlerts();
 var k, l, m = b("annotation"), n = function() {
 a.replicaSetsByDeployment = h.groupBySelector(k, l, {
-matchTemplate:!0
+matchSelector:!0
 }), a.unfilteredReplicaSets = _.get(a, [ "replicaSetsByDeployment", "" ], {}), g.addLabelSuggestionsFromResources(a.unfilteredReplicaSets, a.labelSuggestions), g.setLabelSuggestions(a.labelSuggestions), a.replicaSets = g.getLabelSelector().select(a.unfilteredReplicaSets), a.latestReplicaSetByDeployment = {}, _.each(a.replicaSetsByDeployment, function(b, c) {
 c && (a.latestReplicaSetByDeployment[c] = f.getActiveReplicaSet(b, l[c]));
 });
@@ -5498,8 +5489,7 @@ resource:"replicasets"
 }, i, function(b) {
 var c = b.by("metadata.name"), e = new LabelSelector(d.spec.selector);
 c = _.filter(c, function(a) {
-var b = _.get(a, "spec.template.metadata.labels", {});
-return e.covers(new LabelSelector(b));
+return e.covers(new LabelSelector(a.spec.selector));
 }), a.inProgressDeployment = _.chain(c).filter("status.replicas").size() > 1, a.replicaSetsForDeployment = f.sortByRevision(c);
 }));
 }, function(c) {
@@ -5775,7 +5765,7 @@ E(a.replicaSet) && f.list({
 group:"extensions",
 resource:"deployments"
 }, h, function(b) {
-var d = b.by("metadata.name"), g = new LabelSelector(a.replicaSet.spec.template.metadata.labels);
+var d = b.by("metadata.name"), g = new LabelSelector(a.replicaSet.spec.selector);
 return a.deployment = _.find(d, function(a) {
 var b = new LabelSelector(a.spec.selector);
 return b.covers(g);
@@ -5803,10 +5793,7 @@ var c = new LabelSelector(a.deployment.spec.selector);
 F = !1;
 var d = 0;
 _.each(b.by("metadata.name"), function(a) {
-if (a.status.replicas) {
-var b = _.get(a, "spec.template.metadata.labels", {});
-if (c.covers(new LabelSelector(b))) return d++, d > 1 ? (F = !0, !1) :void 0;
-}
+if (a.status.replicas && c.covers(new LabelSelector(a.spec.selector))) return d++, d > 1 ? (F = !0, !1) :void 0;
 });
 }))) :void (a.deploymentMissing = !0);
 });

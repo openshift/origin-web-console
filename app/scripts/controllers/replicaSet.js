@@ -235,7 +235,7 @@ angular.module('openshiftConsole')
             resource: 'deployments'
           }, context, function(deploymentData) {
             var deployments = deploymentData.by('metadata.name');
-            var replicaSetSelector = new LabelSelector($scope.replicaSet.spec.template.metadata.labels);
+            var replicaSetSelector = new LabelSelector($scope.replicaSet.spec.selector);
             $scope.deployment = _.find(deployments, function(deployment) {
               var deploymentSelector = new LabelSelector(deployment.spec.selector);
               return deploymentSelector.covers(replicaSetSelector);
@@ -298,8 +298,7 @@ angular.module('openshiftConsole')
                   return;
                 }
 
-                var templateLabels = _.get(replicaSet, 'spec.template.metadata.labels', {});
-                if (!deploymentSelector.covers(new LabelSelector(templateLabels))) {
+                if (!deploymentSelector.covers(new LabelSelector(replicaSet.spec.selector))) {
                   return;
                 }
 

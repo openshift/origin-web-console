@@ -206,7 +206,7 @@ angular.module('openshiftConsole')
         return;
       }
 
-      $scope.replicaSetsByDeployment = LabelsService.groupBySelector(replicaSets, deployments, { matchTemplate: true });
+      $scope.replicaSetsByDeployment = LabelsService.groupBySelector(replicaSets, deployments, { matchSelector: true });
       var scalableReplicaSetsByDeployment = {};
       _.each($scope.replicaSetsByDeployment, function(replicaSets, deploymentName) {
         var deployment = _.get(deployments, [deploymentName]);
@@ -218,7 +218,7 @@ angular.module('openshiftConsole')
       $scope.visibleRSByDeploymentAndService = {};
       _.each($scope.replicaSetsByService, function(replicaSets, svcName) {
         $scope.visibleRSByDeploymentAndService[svcName] = {};
-        var byDeployment = LabelsService.groupBySelector(replicaSets, deployments, { matchTemplate: true });
+        var byDeployment = LabelsService.groupBySelector(replicaSets, deployments, { matchSelector: true });
         _.each(byDeployment, function(replicaSets, deploymentName) {
           $scope.visibleRSByDeploymentAndService[svcName][deploymentName] = _.filter(replicaSets, function(replicaSet) {
             var deployment = deployments[deploymentName];
