@@ -103,3 +103,24 @@
     display: inline-block !important;
   }
 }
+
+// Truncate or word-break long strings within tables
+// Wrap when < 768 & truncate when > 769
+.td-long-string {
+  @media (max-width: @screen-xs-max) {
+    .word-break();
+  }
+  @media (min-width: @screen-sm-min) {
+    max-width: 170px;
+    .text-overflow();
+  }
+  @media (min-width: @screen-md-min) {
+    max-width: 260px
+  }
+  @media (min-width: @screen-lg-min) {
+    max-width: 370px
+  }
+  @media (min-width: @screen-xlg-min) {
+    max-width: 540px
+  }
+}
