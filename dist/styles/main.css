@@ -3904,7 +3904,7 @@ ul.messenger-theme-flat .messenger-message.alert-info .messenger-message-inner:b
 .navbar-flex-btn.toggle-menu{display:none}
 .navbar-flex-btn.project-action{-webkit-flex:0 0 120px;-moz-flex:0 0 120px;-ms-flex:0 0 120px;flex:0 0 120px}
 .navbar-flex-btn.project-action .project-action-btn{border-right:1px solid #050505}
-.overview .standalone-service .service-group-body .overview-services{min-height:346px}
+.overview .standalone-service .service-group-body .overview-services{min-height:352px}
 }
 .font-icon,[data-icon]:before{speak:none;font-weight:400;font-variant:normal;text-transform:none;line-height:1;-webkit-font-smoothing:antialiased;-moz-osx-font-smoothing:grayscale}
 @media (min-width:992px){.navbar-pf-alt .navbar-iconic .username{max-width:150px}
@@ -4135,7 +4135,7 @@ ul.messenger-theme-flat .messenger-message.alert-info .messenger-message-inner:b
 @media (min-width:768px){.overview .service-group-header{-webkit-flex-direction:row;-moz-flex-direction:row;-ms-flex-direction:row;flex-direction:row;align-items:center}
 .overview .service-group-header .other-routes-msg{display:inline-block;margin:0}
 .overview .service-group-header.has-app-label .other-routes-msg{display:block;text-align:right}
-.overview .overview-tile .overview-tile{max-width:50%}
+.overview .service-group-body .overview-services .deployment-block{min-height:352px}
 }
 .overview .service-group-body .overview-services .overview-tile-wrapper+.overview-tile-wrapper,.overview .service-group-body .overview-services overview-service:nth-child(n+3){margin-top:6px}
 .overview .service-group-body{border-top-width:0;margin-top:6px;padding:0}
@@ -4167,7 +4167,8 @@ ul.messenger-theme-flat .messenger-message.alert-info .messenger-message-inner:b
 .overview .overview-tile .rc-header{color:#9c9c9c;padding:5px 10px;margin-right:50px}
 .overview .overview-tile .overview-tile-body{-webkit-flex-direction:column;-moz-flex-direction:column;-ms-flex-direction:column;flex-direction:column;padding:10px;position:relative}
 .overview .overview-tile .overview-tile-body .deployment-donut{-webkit-align-items:center;-moz-align-items:center;align-items:center;min-width:0}
-@media (min-width:992px){.overview .overview-tile .overview-tile-body{-webkit-flex-direction:row;-moz-flex-direction:row;-ms-flex-direction:row;flex-direction:row;-webkit-justify-content:space-between;-moz-justify-content:space-between;justify-content:space-between}
+@media (min-width:992px){.overview .service-group-body .overview-services .deployment-block{min-height:256px}
+.overview .overview-tile .overview-tile-body{-webkit-flex-direction:row;-moz-flex-direction:row;-ms-flex-direction:row;flex-direction:row;-webkit-justify-content:space-between;-moz-justify-content:space-between;justify-content:space-between}
 }
 .overview .overview-tile.deployment-in-progress{overflow:hidden}
 .overview .overview-tile .overview-donut,.overview .overview-tile .overview-metrics{-webkit-align-items:center;-moz-align-items:center;align-items:center}
@@ -4235,8 +4236,9 @@ ul.messenger-theme-flat .messenger-message.alert-info .messenger-message-inner:b
 }
 .overview .standalone-service-row{-webkit-justify-content:space-between;-moz-justify-content:space-between;justify-content:space-between}
 .overview .standalone-service .no-deployments-block{margin-left:0}
-@media (min-width:768px){.overview .no-child-services-message,.overview .no-deployments-message{min-height:256px}
-.overview .standalone-service .no-deployments-block{min-height:346px}
+@media (min-width:768px){.overview .overview-tile .overview-tile{max-width:50%}
+.overview .no-child-services-message,.overview .no-deployments-message{min-height:256px}
+.overview .standalone-service .no-deployments-block{min-height:352px}
 }
 @media (min-width:992px){.overview .standalone-service .no-deployments-block{min-height:256px}
 }
