@@ -1,4 +1,5 @@
 div.code,pre,textarea{overflow:auto}
+.text-left,caption,th{text-align:left}
 .navbar-fixed-bottom .navbar-collapse,.navbar-fixed-top .navbar-collapse,.pre-scrollable{max-height:340px}
 .c3 svg,html{-webkit-tap-highlight-color:transparent}
 .list-view-pf-top-align .list-view-pf-actions,.list-view-pf-top-align .list-view-pf-checkbox{align-self:flex-start}
@@ -359,7 +360,6 @@ dt,kbd kbd{font-weight:700}
 .small,small{font-size:84%}
 .mark,mark{background-color:#fcf8e3;padding:.2em}
 .list-inline,.list-unstyled{padding-left:0;list-style:none}
-.text-left{text-align:left}
 .text-right{text-align:right}
 .text-center{text-align:center}
 .text-justify{text-align:justify}
@@ -391,10 +391,10 @@ a.bg-danger:focus,a.bg-danger:hover{background-color:#e4b9b9}
 .page-header{padding-bottom:9.5px;margin:42px 0 21px;border-bottom:1px solid #e4e4e4}
 dl,ol,ul{margin-top:0}
 blockquote ol:last-child,blockquote p:last-child,blockquote ul:last-child,ol ol,ol ul,ul ol,ul ul{margin-bottom:0}
-address,dl{margin-bottom:21px}
 ol,ul{margin-bottom:10.5px}
 .list-inline{margin-left:-5px}
 .list-inline>li{display:inline-block;padding-left:5px;padding-right:5px}
+dl{margin-bottom:21px}
 dd,dt{line-height:1.66666667}
 dd{margin-left:0}
 @media (min-width:415px){.dl-horizontal dt{float:left;width:160px;clear:left;text-align:right;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
@@ -409,10 +409,9 @@ div.code,legend,pre{display:block;color:#363636}
 blockquote .small:before,blockquote footer:before,blockquote small:before{content:'\2014 \00A0'}
 .blockquote-reverse,blockquote.pull-right{padding-right:15px;padding-left:0;border-right:5px solid #f1f1f1;border-left:0;text-align:right}
 code,kbd{padding:2px 4px;font-size:90%;border-radius:1px}
-caption,th{text-align:left}
 .blockquote-reverse .small:before,.blockquote-reverse footer:before,.blockquote-reverse small:before,blockquote.pull-right .small:before,blockquote.pull-right footer:before,blockquote.pull-right small:before{content:''}
 .blockquote-reverse .small:after,.blockquote-reverse footer:after,.blockquote-reverse small:after,blockquote.pull-right .small:after,blockquote.pull-right footer:after,blockquote.pull-right small:after{content:'\00A0 \2014'}
-address{font-style:normal;line-height:1.66666667}
+address{margin-bottom:21px;font-style:normal;line-height:1.66666667}
 code,div.code,kbd,pre,samp{font-family:Menlo,Monaco,Consolas,monospace}
 code{color:#004368;background-color:#def3ff}
 kbd{color:#fff;background-color:#333;box-shadow:inset 0 -1px 0 rgba(0,0,0,.25)}
@@ -1268,7 +1267,7 @@ a.list-group-item-danger.active,a.list-group-item-danger.active:focus,a.list-gro
 .well-lg{padding:24px}
 .well-sm{padding:9px}
 .close{float:right;font-size:19.5px;color:#000}
-.popover,.tooltip{font-family:"Open Sans",Helvetica,Arial,sans-serif;font-style:normal;font-weight:400;letter-spacing:normal;line-break:auto;text-shadow:none;text-transform:none;white-space:normal;word-break:normal;word-spacing:normal;word-wrap:normal;text-decoration:none}
+.popover,.tooltip{font-family:"Open Sans",Helvetica,Arial,sans-serif;font-style:normal;font-weight:400;letter-spacing:normal;line-break:auto;text-shadow:none;text-transform:none;white-space:normal;word-break:normal;word-spacing:normal;text-decoration:none}
 .close:focus,.close:hover{color:#000;text-decoration:none;cursor:pointer}
 button.close{padding:0;cursor:pointer;background:0 0;border:0;-webkit-appearance:none}
 .modal-content,.popover{background-clip:padding-box}
@@ -1296,7 +1295,7 @@ button.close{padding:0;cursor:pointer;background:0 0;border:0;-webkit-appearance
 .tooltip.top-left .tooltip-arrow,.tooltip.top-right .tooltip-arrow{bottom:0;margin-bottom:-8px;border-width:8px 8px 0;border-top-color:#111}
 @media (min-width:992px){.modal-lg{width:900px}
 }
-.tooltip{position:absolute;z-index:1070;display:block;text-align:left;text-align:start;opacity:0;filter:alpha(opacity=0)}
+.tooltip{position:absolute;z-index:1070;display:block;text-align:left;text-align:start;word-wrap:normal;opacity:0;filter:alpha(opacity=0)}
 .tooltip.in{opacity:.9;filter:alpha(opacity=90)}
 .tooltip.top{margin-top:-3px;padding:8px 0}
 .tooltip.right{margin-left:3px;padding:0 8px}
@@ -3437,7 +3436,7 @@ code.probe-command{display:inline-block;line-height:1.3;margin-right:2px}
 .deployment-well:not(.detailed) .deployment-summary .deployment-summary-status{font-size:90%;margin-left:7px}
 .deployment-well:not(.detailed) .deployment-summary .deployment-summary-toggler{float:right!important;font-size:80%}
 .deployment-well.detailed .deployment-summary-status,.deployment-well.detailed .deployment-summary-toggler,.deployment-well:not(.detailed) .deployment-details{display:none}
-.popover{min-width:300px;font-size:13px;line-height:1.66667}
+.popover{font-size:13px;line-height:1.66667;min-width:300px;word-wrap:break-word}
 .build-well,.deployment-well,.pod-well{overflow:hidden;margin-bottom:10px}
 .build-well .build-detail,.build-well .deployment-detail,.build-well .pod-detail,.deployment-well .build-detail,.deployment-well .deployment-detail,.deployment-well .pod-detail,.pod-well .build-detail,.pod-well .deployment-detail,.pod-well .pod-detail{margin-bottom:3px}
 .build-well .build-detail .build-detail-label,.build-well .build-detail .deployment-detail-label,.build-well .build-detail .pod-detail-label,.build-well .deployment-detail .build-detail-label,.build-well .deployment-detail .deployment-detail-label,.build-well .deployment-detail .pod-detail-label,.build-well .pod-detail .build-detail-label,.build-well .pod-detail .deployment-detail-label,.build-well .pod-detail .pod-detail-label,.deployment-well .build-detail .build-detail-label,.deployment-well .build-detail .deployment-detail-label,.deployment-well .build-detail .pod-detail-label,.deployment-well .deployment-detail .build-detail-label,.deployment-well .deployment-detail .deployment-detail-label,.deployment-well .deployment-detail .pod-detail-label,.deployment-well .pod-detail .build-detail-label,.deployment-well .pod-detail .deployment-detail-label,.deployment-well .pod-detail .pod-detail-label,.pod-well .build-detail .build-detail-label,.pod-well .build-detail .deployment-detail-label,.pod-well .build-detail .pod-detail-label,.pod-well .deployment-detail .build-detail-label,.pod-well .deployment-detail .deployment-detail-label,.pod-well .deployment-detail .pod-detail-label,.pod-well .pod-detail .build-detail-label,.pod-well .pod-detail .deployment-detail-label,.pod-well .pod-detail .pod-detail-label{margin-right:10px}
