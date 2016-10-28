@@ -38542,10 +38542,35 @@ if (!g) return !1;
 return !0;
 }, LabelSelector.prototype.hasConjunct = function(a) {
 return !!this._conjuncts[this._getIdForConjunct(a)];
+}, LabelSelector.prototype.findConjunctsMatching = function(a, b) {
+return _.pick(this._conjuncts, _.matches({
+operator:a,
+key:b
+}));
 }, LabelSelector.prototype.covers = function(a) {
-if (this.isEmpty()) return !1;
-for (var b in this._conjuncts) if (!a.hasConjunct(this._conjuncts[b])) return !1;
+return !this.isEmpty() && _.every(this._conjuncts, function(b) {
+if (a.hasConjunct(b)) return !0;
+switch (b.operator) {
+case "exists":
+return !_.isEmpty(a.findConjunctsMatching("in", b.key));
+
+case "does not exist":
+return !1;
+
+case "in":
+var c = a.findConjunctsMatching("in", b.key);
+return !_.isEmpty(c) && _.every(c, function(a) {
+return a.values.length === _.intersection(a.values, b.values).length;
+});
+
+case "not in":
+var d = a.findConjunctsMatching("not in", b.key);
+return !_.isEmpty(d) && _.every(d, function(a) {
+return b.values.length === _.intersection(a.values, b.values).length;
+});
+}
 return !0;
+});
 }, LabelSelector.prototype.exportJSON = function() {
 var a = {
 matchExpressions:[]

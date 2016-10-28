@@ -346,10 +346,6 @@ angular.module("openshiftConsole")
                                 { namespace: object.metadata.namespace });
     };
 
-    var getLabels = function(deployment) {
-      return _.get(deployment, 'spec.template.metadata.labels', {});
-    };
-
     var isDCAutoscaled = function(name, hpaByDC) {
       var hpaArray = _.get(hpaByDC, [name]);
       return !_.isEmpty(hpaArray);
@@ -392,31 +388,6 @@ angular.module("openshiftConsole")
       // Otherwise, check the map to find the most recent deployment that's scalable.
       var scalableName = _.get(scalableDeploymentByConfig, [deploymentConfigId, 'metadata', 'name']);
       return scalableName === deployment.metadata.name;
-    };
-
-    // Group objects by service using the service selector and pod template labels.
-    // Objects should have spec.template.metadata.labels.
-    DeploymentsService.prototype.groupByService = function(objects, services) {
-      var byService = {};
-      _.each(objects, function(object) {
-        var selector = new LabelSelector(getLabels(object));
-        var foundSvc = false;
-        _.each(services, function(service) {
-          var serviceSelector = new LabelSelector(service.spec.selector);
-          if (serviceSelector.covers(selector)) {
-            foundSvc = true;
-            _.set(byService,
-                  [service.metadata.name, object.metadata.name],
-                  object);
-          }
-        });
-        if (!foundSvc) {
-          _.set(byService,
-                  ['', object.metadata.name],
-                  object);
-        }
-      });
-      return byService;
     };
 
     DeploymentsService.prototype.groupByDeploymentConfig = function(replicationControllers) {

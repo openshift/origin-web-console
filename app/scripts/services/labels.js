@@ -2,18 +2,20 @@
 
 angular.module("openshiftConsole")
   .factory("LabelsService", function() {
-    var getTemplateLabels = function(object) {
-      return _.get(object, 'spec.template.metadata.labels', {});
+    var getTemplate = function(object) {
+      return _.get(object, 'spec.template', { metadata: { labels: {} } });
     };
 
     return {
-      // Group objects using label selectors (e.g., pods by service or replica
-      // sets by deployment). Returns a map of owners to objects. The key is
-      // the owner name (unless `opts.key` is set). The value is a collection
+      // Group objects using label selectors (e.g., pods by service
+      // Returns a map of owners to objects. The key is the owner
+      // name (unless `opts.key` is set). The value is a collection
       // of objects. Owners must have a `spec.selector` property.
       //
       // `opts.matchTemplate` will match object's `spec.template.metadata.labels`
       // instead of `metadata.labels`.
+      //
+      // `opts.matchSelector` will perform a covers check against the object's `spec.selector`
       //
       // `opts.key` is an optional property from the owner to use as the map
       // key. Defaults to `metadata.name`.
@@ -37,12 +39,15 @@ angular.module("openshiftConsole")
 
           var matchingOwners = _.filter(owners, function(owner) {
             var ownerSelector = selectors[owner.metadata.uid];
-            if (!opts.matchTemplate) {
-              return ownerSelector.matches(object);
+            if (opts.matchTemplate) {
+              return ownerSelector.matches(getTemplate(object));
             }
 
-            var objectSelector = new LabelSelector(getTemplateLabels(object));
-            return ownerSelector.covers(objectSelector);
+            if (opts.matchSelector) {
+              return ownerSelector.covers(new LabelSelector(object.spec.selector));
+            }
+
+            return ownerSelector.matches(object);
           });
 
           // Use an empty key if no owners match.

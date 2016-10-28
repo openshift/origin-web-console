@@ -162,8 +162,7 @@ angular.module('openshiftConsole')
               var replicaSets = replicaSetData.by('metadata.name');
               var deploymentSelector = new LabelSelector(deployment.spec.selector);
               replicaSets = _.filter(replicaSets, function(replicaSet) {
-                var templateLabels = _.get(replicaSet, 'spec.template.metadata.labels', {});
-                return deploymentSelector.covers(new LabelSelector(templateLabels));
+                return deploymentSelector.covers(new LabelSelector(replicaSet.spec.selector));
               });
               $scope.inProgressDeployment = _.chain(replicaSets).filter('status.replicas').size() > 1;
               $scope.replicaSetsForDeployment = DeploymentsService.sortByRevision(replicaSets);
