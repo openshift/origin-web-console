@@ -8353,7 +8353,7 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "<h1>Image Streams</h1>\n" +
     "</div>\n" +
     "<alerts alerts=\"alerts\"></alerts>\n" +
-    "<div ng-if=\"!renderOptions.showGetStarted\" class=\"data-toolbar\">\n" +
+    "<div class=\"data-toolbar\">\n" +
     "<div class=\"data-toolbar-filter\">\n" +
     "<project-filter></project-filter>\n" +
     "</div>\n" +
