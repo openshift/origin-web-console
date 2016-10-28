@@ -21,12 +21,10 @@
                   <div class="task-content">
                     <i class="pficon task-icon" ng-class="task.hasErrors ? 'pficon-error-circle-o' : 'pficon-ok'"></i>
                     <div class="task-info">
-                      <h3>
-                        {{ task | taskTitle }}.
-                      </h3>
+                      {{ task | taskTitle }}.
                     </div>
                   </div>
-                  <div class="alerts">
+                  <div class="alerts task-expanded-details">
                     <div ng-repeat="alert in task.alerts">
                       <div ng-switch="alert.type">
                         <div ng-switch-when="error" class="alert alert-danger">
@@ -48,7 +46,7 @@
               </div>
             </div>
 
-            <div class="template-message" ng-if="templateMessage.length">
+            <div class="alert alert-info template-message" ng-if="templateMessage.length">
               <span class="pficon pficon-info" aria-hidden="true"></span>
               <div class="resource-description" ng-bind-html="templateMessage | linky : '_blank'"></div>
             </div>

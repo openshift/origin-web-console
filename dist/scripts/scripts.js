@@ -4170,34 +4170,28 @@ return !_.isEmpty(d);
 }, ea = function(a, b) {
 var d = r[b];
 ba[b] = d, c.childServicesByParent[a] = c.childServicesByParent[a] || [], c.childServicesByParent[a].push(d);
-}, fa = function(a) {
-var b = 0, d = _.get(a, "metadata.name", ""), e = _.get(c, [ "routesByService", d ], []);
-return _.isEmpty(e) || (b += 5), _.has(a, "metadata.labels.app") && (b += 3), m.isInfrastructure(a) && (b -= 5), b;
-}, ga = function(a, b) {
-var c = fa(a), d = fa(b);
-return c === d ? a.metadata.name.localeCompare(b.metadata.name) :d - c;
-}, ha = function() {
+}, fa = function() {
 r && q && (c.services = r, ba = {}, c.childServicesByParent = {}, _.each(r, function(a, b) {
 var c = m.getDependentServices(a);
 _.each(c, function(a) {
 ea(b, a);
 });
-}), c.topLevelServices = _.filter(r, function(a) {
+}), c.topLevelServices = _.chain(r).filter(function(a) {
 return !!da(a) || (!!M(a) || !ca(a) && !N(a));
-}).sort(ga));
-}, ia = function() {
+}).sortByAll([ "metadata.labels.app", "metadata.name" ]).value());
+}, ga = function() {
 r && q && (c.routeWarningsByService = {}, _.each(r, function(a) {
 _.each(c.routesByService[a.metadata.name], function(b) {
 var d = l.getRouteWarnings(b, a);
 _.set(c, [ "routeWarningsByService", a.metadata.name, b.metadata.name ], d);
 });
 }));
-}, ja = function(a) {
+}, ha = function(a) {
 var b = H(_.get(a, "spec.output.to"), a.metadata.namespace);
 c.recentBuildsByOutputImage[b] = c.recentBuildsByOutputImage[b] || [], c.recentBuildsByOutputImage[b].push(a);
-}, ka = a("buildConfigForBuild"), la = function(a) {
+}, ia = a("buildConfigForBuild"), ja = function(a) {
 if (z) {
-var b = ka(a), d = z[b];
+var b = ia(a), d = z[b];
 if (d) {
 var f = e.usesDeploymentConfigs(d);
 _.each(f, function(b) {
@@ -4205,14 +4199,14 @@ c.recentPipelinesByDC[b] = c.recentPipelinesByDC[b] || [], c.recentPipelinesByDC
 });
 }
 }
-}, ma = function() {
+}, ka = function() {
 A && (c.recentPipelinesByDC = {}, c.recentBuildsByOutputImage = {}, _.each(e.interestingBuilds(A), function(a) {
-return E(a) ? void la(a) :void ja(a);
+return E(a) ? void ja(a) :void ha(a);
 }));
-}, na = function() {
+}, la = function() {
 var a = _.isEmpty(r) && _.isEmpty(c.monopodsByService) && _.isEmpty(u) && _.isEmpty(w) && _.isEmpty(x), b = r && y && u && w && x;
 c.renderOptions.showGetStarted = b && a, c.renderOptions.showLoading = !b && a;
-}, oa = function() {
+}, ma = function() {
 var a = d.isAlertPermanentlyHidden("overview-quota-limit-reached", c.projectName);
 if (!a && p.isAnyQuotaExceeded(c.quotas, c.clusterQuotas)) {
 if (c.alerts.quotaExceeded) return;
@@ -4251,11 +4245,11 @@ var b = _.get(c, [ a, "" ], {});
 return !_.isEmpty(b);
 });
 };
-var pa = [];
+var na = [];
 c.getHPA = function(a) {
 if (!B) return null;
 var b = _.get(a, "kind"), c = _.get(a, "metadata.name");
-return _.get(C, [ b, c ], pa);
+return _.get(C, [ b, c ], na);
 }, window.OPENSHIFT_CONSTANTS.DISABLE_OVERVIEW_METRICS || (o.isAvailable(!0).then(function(a) {
 c.showMetrics = a;
 }), c.$on("metrics-connection-failed", function(a, b) {
@@ -4276,64 +4270,64 @@ return d.permanentlyHideAlert("metrics-connection-failed"), !0;
 } ]
 });
 }));
-var qa = a("isIE")() || a("isEdge")();
+var oa = a("isIE")() || a("isEdge")();
 k.get(b.project).then(_.spread(function(a, b) {
 c.project = a, c.projectContext = b, D.push(f.watch("pods", b, function(a) {
-y = a.by("metadata.name"), aa(), na(), i.log("pods", y);
+y = a.by("metadata.name"), aa(), la(), i.log("pods", y);
 })), D.push(f.watch("services", b, function(a) {
-c.services = r = a.by("metadata.name"), ha(), aa(), P(), U(), T(), V(), Y(), ia(), na(), i.log("services (subscribe)", r);
+c.services = r = a.by("metadata.name"), fa(), aa(), P(), U(), T(), V(), Y(), ga(), la(), i.log("services (subscribe)", r);
 }, {
-poll:qa,
+poll:oa,
 pollInterval:6e4
 })), D.push(f.watch("builds", b, function(a) {
-A = a.by("metadata.name"), ma(), na(), i.log("builds (subscribe)", A);
+A = a.by("metadata.name"), ka(), la(), i.log("builds (subscribe)", A);
 })), D.push(f.watch("buildConfigs", b, function(a) {
-z = a.by("metadata.name"), ma(), i.log("builds (subscribe)", A);
+z = a.by("metadata.name"), ka(), i.log("builds (subscribe)", A);
 }, {
-poll:qa,
+poll:oa,
 pollInterval:6e4
 })), D.push(f.watch("routes", b, function(a) {
-q = a.by("metadata.name"), O(), ha(), ia(), i.log("routes (subscribe)", c.routesByService);
+q = a.by("metadata.name"), O(), fa(), ga(), i.log("routes (subscribe)", c.routesByService);
 }, {
-poll:qa,
+poll:oa,
 pollInterval:6e4
 })), D.push(f.watch("replicationcontrollers", b, function(a) {
-c.replicationControllersByName = u = a.by("metadata.name"), U(), T(), aa(), ma(), na(), i.log("replicationcontrollers (subscribe)", u);
+c.replicationControllersByName = u = a.by("metadata.name"), U(), T(), aa(), ka(), la(), i.log("replicationcontrollers (subscribe)", u);
 })), D.push(f.watch("deploymentconfigs", b, function(a) {
-t = a.by("metadata.name"), P(), T(), na(), i.log("deploymentconfigs (subscribe)", t);
+t = a.by("metadata.name"), P(), T(), la(), i.log("deploymentconfigs (subscribe)", t);
 })), D.push(f.watch({
 group:"extensions",
 resource:"replicasets"
 }, b, function(a) {
-w = a.by("metadata.name"), aa(), V(), X(), na(), i.log("replicasets (subscribe)", w);
+w = a.by("metadata.name"), aa(), V(), X(), la(), i.log("replicasets (subscribe)", w);
 })), D.push(f.watch({
 group:"apps",
 resource:"petsets"
 }, b, function(a) {
-x = a.by("metadata.name"), aa(), Y(), na(), i.log("petsets (subscribe)", x);
+x = a.by("metadata.name"), aa(), Y(), la(), i.log("petsets (subscribe)", x);
 }, {
-poll:qa,
+poll:oa,
 pollInterval:6e4
 })), D.push(f.watch({
 group:"extensions",
 resource:"deployments"
 }, b, function(a) {
-s = a.by("metadata.name"), Q(), X(), na(), i.log("deployments (subscribe)", s);
+s = a.by("metadata.name"), Q(), X(), la(), i.log("deployments (subscribe)", s);
 })), D.push(f.watch({
 group:"extensions",
 resource:"horizontalpodautoscalers"
 }, b, function(a) {
 B = a.by("metadata.name"), Z();
 }, {
-poll:qa,
+poll:oa,
 pollInterval:6e4
 })), D.push(f.watch("resourcequotas", b, function(a) {
-c.quotas = a.by("metadata.name"), oa();
+c.quotas = a.by("metadata.name"), ma();
 }, {
 poll:!0,
 pollInterval:6e4
 })), D.push(f.watch("appliedclusterresourcequotas", b, function(a) {
-c.clusterQuotas = a.by("metadata.name"), oa();
+c.clusterQuotas = a.by("metadata.name"), ma();
 }, {
 poll:!0,
 pollInterval:6e4
@@ -5504,8 +5498,9 @@ resource:"replicasets"
 }, i, function(b) {
 var c = b.by("metadata.name"), e = new LabelSelector(d.spec.selector);
 c = _.filter(c, function(a) {
-return e.matches(a);
-}), a.replicaSetsForDeployment = f.sortByRevision(c);
+var b = _.get(a, "spec.template.metadata.labels", {});
+return e.covers(new LabelSelector(b));
+}), a.inProgressDeployment = _.chain(c).filter("status.replicas").size() > 1, a.replicaSetsForDeployment = f.sortByRevision(c);
 }));
 }, function(c) {
 a.loaded = !0, a.alerts.load = {
@@ -5697,7 +5692,7 @@ case "ReplicationController":
 a.resource = "replicationcontrollers", a.healthCheckURL = l.healthCheckURL(c.project, "ReplicationController", c.replicaSet);
 }
 var r = {};
-a.projectName = c.project, a.kind = n, a.replicaSet = null, a.deploymentConfig = null, a.deploymentConfigMissing = !1, a.deployments = {}, a.imagesByDockerReference = {}, a.builds = {}, a.alerts = {}, a.renderOptions = a.renderOptions || {}, a.renderOptions.hideFilterWidget = !0, a.forms = {}, a.logOptions = {}, d.getAlerts().forEach(function(b) {
+a.projectName = c.project, a.kind = n, a.replicaSet = null, a.deploymentConfig = null, a.deploymentConfigMissing = !1, a.imagesByDockerReference = {}, a.builds = {}, a.alerts = {}, a.renderOptions = a.renderOptions || {}, a.renderOptions.hideFilterWidget = !0, a.forms = {}, a.logOptions = {}, d.getAlerts().forEach(function(b) {
 a.alerts[b.name] = b.data;
 }), d.clearAlerts();
 var s = [];
@@ -5775,7 +5770,7 @@ details:"Reason: " + b("getErrorDetails")(c)
 }
 }, D = function() {
 a.isActive = j.isActiveReplicaSet(a.replicaSet, a.deployment);
-}, E = b("hasDeployment"), F = function() {
+}, E = b("hasDeployment"), F = !1, G = function() {
 E(a.replicaSet) && f.list({
 group:"extensions",
 resource:"deployments"
@@ -5784,7 +5779,7 @@ var d = b.by("metadata.name"), g = new LabelSelector(a.replicaSet.spec.template.
 return a.deployment = _.find(d, function(a) {
 var b = new LabelSelector(a.spec.selector);
 return b.covers(g);
-}), a.deployment ? (a.healthCheckURL = l.healthCheckURL(c.project, "Deployment", a.deployment.metadata.name, "extensions"), void s.push(f.watchObject({
+}), a.deployment ? (a.healthCheckURL = l.healthCheckURL(c.project, "Deployment", a.deployment.metadata.name, "extensions"), s.push(f.watchObject({
 group:"extensions",
 resource:"deployments"
 }, a.deployment.metadata.name, h, function(b, d) {
@@ -5800,9 +5795,22 @@ link:l.resourceURL(a.deployment)
 },
 humanizedKind:"Deployments"
 }), D(), void y());
+})), void s.push(f.watch({
+group:"extensions",
+resource:"replicasets"
+}, h, function(b) {
+var c = new LabelSelector(a.deployment.spec.selector);
+F = !1;
+var d = 0;
+_.each(b.by("metadata.name"), function(a) {
+if (a.status.replicas) {
+var b = _.get(a, "spec.template.metadata.labels", {});
+if (c.covers(new LabelSelector(b))) return d++, d > 1 ? (F = !0, !1) :void 0;
+}
+});
 }))) :void (a.deploymentMissing = !0);
 });
-}, G = function() {
+}, H = function() {
 if (!_.isEmpty(r)) {
 var b = _.get(a, "replicaSet.spec.template");
 b && k.fetchReferencedImageStreamImages([ b ], a.imagesByDockerReference, r, h);
@@ -5815,7 +5823,7 @@ C(b);
 break;
 
 case "ReplicaSet":
-F();
+G();
 }
 B(), a.breadcrumbs = e.getBreadcrumbs({
 object:b
@@ -5832,7 +5840,7 @@ onClick:function() {
 return a.clearEnvVarUpdates(), !0;
 }
 } ]
-}, t(b), B(), G();
+}, t(b), B(), H();
 })), a.deploymentConfigName && z(), a.$watch("replicaSet.spec.selector", function() {
 m = new LabelSelector(a.replicaSet.spec.selector), A();
 }, !0), s.push(f.watch("pods", h, function(a) {
@@ -5862,7 +5870,7 @@ a.causes = b("deploymentCauses")(a);
 });
 })), s.push(f.watch("imagestreams", h, function(a) {
 var b = a.by("metadata.name");
-k.buildDockerRefMapForImageStreams(b, r), G(), Logger.log("imagestreams (subscribe)", b);
+k.buildDockerRefMapForImageStreams(b, r), H(), Logger.log("imagestreams (subscribe)", b);
 })), s.push(f.watch("builds", h, function(b) {
 a.builds = b.by("metadata.name"), Logger.log("builds (subscribe)", a.builds);
 })), s.push(f.watch({
@@ -5891,9 +5899,9 @@ details:b("getErrorDetails")(c)
 }, e = a.deployment || a.deploymentConfig || a.replicaSet;
 j.scale(e, c).then(_.noop, d);
 };
-var H = b("hasDeploymentConfig");
+var I = b("hasDeploymentConfig");
 a.isScalable = function() {
-return !!_.isEmpty(a.autoscalers) && (!H(a.replicaSet) && !E(a.replicaSet) || (!(!a.deploymentConfigMissing && !a.deploymentMissing) || !(!a.deploymentConfig && !a.deployment) && a.isActive));
+return !!_.isEmpty(a.autoscalers) && (!I(a.replicaSet) && !E(a.replicaSet) || (!(!a.deploymentConfigMissing && !a.deploymentMissing) || !(!a.deploymentConfig && !a.deployment) && (a.isActive && !F)));
 }, a.$on("$destroy", function() {
 f.unwatchAll(s);
 });
@@ -6523,7 +6531,7 @@ details:f("getErrorDetails")(b)
 }, a.$on("$destroy", function() {
 c.unwatchAll(m);
 });
-} ]), angular.module("openshiftConsole").controller("EditDeploymentConfigController", [ "$scope", "$routeParams", "$uibModal", "DataService", "BreadcrumbsService", "SecretsService", "ProjectsService", "$filter", "ApplicationGenerator", "Navigate", "$location", "AlertMessageService", "SOURCE_URL_PATTERN", "keyValueEditorUtils", function(a, b, c, d, e, f, g, h, i, j, k, l, m, n) {
+} ]), angular.module("openshiftConsole").controller("EditDeploymentConfigController", [ "$scope", "$routeParams", "$uibModal", "DataService", "BreadcrumbsService", "SecretsService", "ProjectsService", "$filter", "Navigate", "$location", "AlertMessageService", "SOURCE_URL_PATTERN", "keyValueEditorUtils", function(a, b, c, d, e, f, g, h, i, j, k, l, m) {
 a.projectName = b.project, a.deploymentConfig = null, a.alerts = {}, a.view = {
 advancedStrategyOptions:!1,
 advancedImageOptions:!1
@@ -6533,10 +6541,10 @@ kind:b.kind,
 namespace:b.project,
 subpage:"Edit Deployment Config",
 includeProject:!0
-}), a.deploymentConfigStrategyTypes = [ "Recreate", "Rolling", "Custom" ], l.getAlerts().forEach(function(b) {
+}), a.deploymentConfigStrategyTypes = [ "Recreate", "Rolling", "Custom" ], k.getAlerts().forEach(function(b) {
 a.alerts[b.name] = b.data;
-}), l.clearAlerts();
-var o = [], p = function(a) {
+}), k.clearAlerts();
+var n = [], o = function(a) {
 switch (a) {
 case "Recreate":
 return "recreateParams";
@@ -6592,9 +6600,11 @@ imageStream:""
 _.set(d, [ b.name, "triggerData" ], f);
 }), d;
 };
-a.updatedDeploymentConfig = angular.copy(a.deploymentConfig), a.containerNames = _.map(a.deploymentConfig.spec.template.spec.containers, "name"), a.containerConfigByName = i(a.updatedDeploymentConfig.spec.template.spec.containers, a.updatedDeploymentConfig.spec.triggers), a.pullSecrets = a.deploymentConfig.spec.template.spec.imagePullSecrets || [ {
+a.updatedDeploymentConfig = angular.copy(a.deploymentConfig), a.containerNames = _.map(a.deploymentConfig.spec.template.spec.containers, "name"), a.containerConfigByName = i(a.updatedDeploymentConfig.spec.template.spec.containers, a.updatedDeploymentConfig.spec.triggers), a.secrets = {
+pullSecrets:angular.copy(a.deploymentConfig.spec.template.spec.imagePullSecrets) || [ {
 name:""
-} ], a.volumeNames = _.map(a.deploymentConfig.spec.template.spec.volumes, "name"), a.strategyData = angular.copy(a.deploymentConfig.spec.strategy), a.originalStrategy = a.strategyData.type, a.strategyParamsPropertyName = p(a.strategyData.type), a.triggers.hasConfigTrigger = _.some(a.updatedDeploymentConfig.spec.triggers, {
+} ]
+}, a.volumeNames = _.map(a.deploymentConfig.spec.template.spec.volumes, "name"), a.strategyData = angular.copy(a.deploymentConfig.spec.strategy), a.originalStrategy = a.strategyData.type, a.strategyParamsPropertyName = o(a.strategyData.type), a.triggers.hasConfigTrigger = _.some(a.updatedDeploymentConfig.spec.triggers, {
 type:"ConfigChange"
 }), "Custom" !== a.strategyData.type || _.has(a.strategyData, "customParams.environment") || (a.strategyData.customParams.environment = []), d.list("secrets", g, function(b) {
 var c = f.groupSecretsByType(b), d = _.mapValues(c, function(a) {
@@ -6603,7 +6613,7 @@ return _.map(a, "metadata.name");
 a.secretsByType = _.each(d, function(a) {
 a.unshift("");
 });
-}), o.push(d.watchObject("deploymentconfigs", b.deploymentconfig, g, function(b, c) {
+}), n.push(d.watchObject("deploymentconfigs", b.deploymentconfig, g, function(b, c) {
 "MODIFIED" === c && (a.alerts["updated/deleted"] = {
 type:"warning",
 message:"This deployment configuration has changed since you started editing it. You'll need to copy any changes you've made and edit again."
@@ -6620,9 +6630,9 @@ details:h("getErrorDetails")(b)
 };
 });
 }));
-var q = function() {
+var p = function() {
 return "Custom" !== a.strategyData.type && "Custom" !== a.originalStrategy && a.strategyData.type !== a.originalStrategy;
-}, r = function(b) {
+}, q = function(b) {
 if (!_.has(a.strategyData, b)) {
 var d = c.open({
 animation:!0,
@@ -6642,21 +6652,21 @@ cancelButtonText:"No"
 }
 });
 d.result.then(function() {
-a.strategyData[b] = a.strategyData[p(a.originalStrategy)];
+a.strategyData[b] = a.strategyData[o(a.originalStrategy)];
 }, function() {
 a.strategyData[b] = {};
 });
 }
 };
 a.strategyChanged = function() {
-var b = p(a.strategyData.type);
-q() ? r(b) :_.has(a.strategyData, b) || ("Custom" !== a.strategyData.type ? a.strategyData[b] = {} :a.strategyData[b] = {
+var b = o(a.strategyData.type);
+p() ? q(b) :_.has(a.strategyData, b) || ("Custom" !== a.strategyData.type ? a.strategyData[b] = {} :a.strategyData[b] = {
 image:"",
 command:[],
 environment:[]
 }), a.strategyParamsPropertyName = b;
 };
-var s = function(a, b, c) {
+var r = function(a, b, c) {
 var d = {
 kind:"ImageStreamTag",
 namespace:b.namespace,
@@ -6670,12 +6680,12 @@ containerNames:[ a ],
 from:d
 }
 }, c;
-}, t = function() {
+}, s = function() {
 var b = _.reject(a.updatedDeploymentConfig.spec.triggers, function(a) {
 return "ImageChange" === a.type || "ConfigChange" === a.type;
 });
 return _.each(a.containerConfigByName, function(c, d) {
-if (c.hasDeploymentTrigger) b.push(s(d, c.triggerData.istag, c.triggerData.data)); else {
+if (c.hasDeploymentTrigger) b.push(r(d, c.triggerData.istag, c.triggerData.data)); else {
 var e = _.find(a.updatedDeploymentConfig.spec.template.spec.containers, {
 name:d
 });
@@ -6690,19 +6700,19 @@ a.disableInputs = !0, _.each(a.containerConfigByName, function(b, c) {
 var d = _.find(a.updatedDeploymentConfig.spec.template.spec.containers, {
 name:c
 });
-d.env = n.compactEntries(b.env);
-}), q() && delete a.strategyData[p(a.originalStrategy)], "Custom" !== a.strategyData.type ? _.each([ "pre", "mid", "post" ], function(b) {
-_.has(a.strategyData, [ a.strategyParamsPropertyName, b, "execNewPod", "env" ]) && (a.strategyData[a.strategyParamsPropertyName][b].execNewPod.env = n.compactEntries(a.strategyData[a.strategyParamsPropertyName][b].execNewPod.env));
-}) :_.has(a, "strategyData.customParams.environment") && (a.strategyData.customParams.environment = n.compactEntries(a.strategyData.customParams.environment)), a.updatedDeploymentConfig.spec.template.spec.imagePullSecrets = a.pullSecrets, a.updatedDeploymentConfig.spec.strategy = a.strategyData, a.updatedDeploymentConfig.spec.triggers = t(), d.update("deploymentconfigs", a.updatedDeploymentConfig.metadata.name, a.updatedDeploymentConfig, a.context).then(function() {
-l.addAlert({
+d.env = m.compactEntries(b.env);
+}), p() && delete a.strategyData[o(a.originalStrategy)], "Custom" !== a.strategyData.type ? _.each([ "pre", "mid", "post" ], function(b) {
+_.has(a.strategyData, [ a.strategyParamsPropertyName, b, "execNewPod", "env" ]) && (a.strategyData[a.strategyParamsPropertyName][b].execNewPod.env = m.compactEntries(a.strategyData[a.strategyParamsPropertyName][b].execNewPod.env));
+}) :_.has(a, "strategyData.customParams.environment") && (a.strategyData.customParams.environment = m.compactEntries(a.strategyData.customParams.environment)), a.updatedDeploymentConfig.spec.template.spec.imagePullSecrets = _.filter(a.secrets.pullSecrets, "name"), a.updatedDeploymentConfig.spec.strategy = a.strategyData, a.updatedDeploymentConfig.spec.triggers = s(), d.update("deploymentconfigs", a.updatedDeploymentConfig.metadata.name, a.updatedDeploymentConfig, a.context).then(function() {
+k.addAlert({
 name:a.updatedDeploymentConfig.metadata.name,
 data:{
 type:"success",
 message:"Deployment config " + a.updatedDeploymentConfig.metadata.name + " was successfully updated."
 }
 });
-var b = j.resourceURL(a.updatedDeploymentConfig);
-k.url(b);
+var b = i.resourceURL(a.updatedDeploymentConfig);
+j.url(b);
 }, function(b) {
 a.disableInputs = !1, a.alerts.save = {
 type:"error",
@@ -6711,7 +6721,7 @@ details:h("getErrorDetails")(b)
 };
 });
 }, a.$on("$destroy", function() {
-d.unwatchAll(o);
+d.unwatchAll(n);
 });
 } ]), angular.module("openshiftConsole").controller("EditAutoscalerController", [ "$scope", "$filter", "$routeParams", "$window", "APIService", "BreadcrumbsService", "DataService", "HPAService", "MetricsService", "Navigate", "ProjectsService", "keyValueEditorUtils", function(a, b, c, d, e, f, g, h, i, j, k, l) {
 if (!c.kind || !c.name) return void j.toErrorPage("Kind or name parameter missing.");
@@ -7054,7 +7064,7 @@ link:"project/" + a.projectName
 title:"Add to Project",
 link:"project/" + a.projectName + "/create"
 }, {
-title:"Browse Catalog",
+title:"Catalog",
 link:"project/" + a.projectName + "/create?tab=fromCatalog"
 } ], r && a.breadcrumbs.push({
 title:r.label,
@@ -7089,7 +7099,7 @@ link:"project/" + a.projectName
 title:"Add to Project",
 link:"project/" + a.projectName + "/create"
 }, {
-title:"Browse Catalog",
+title:"Catalog",
 link:"project/" + a.projectName + "/create?tab=fromCatalog"
 }, {
 title:d.displayName || x
@@ -7345,7 +7355,7 @@ link:"project/" + a.projectName
 title:"Add to Project",
 link:"project/" + a.projectName + "/create"
 }, {
-title:"Browse Catalog",
+title:"Catalog",
 link:"project/" + a.projectName + "/create?tab=fromCatalog"
 }, {
 title:u
@@ -7944,7 +7954,7 @@ matchLabels:{}
 };
 a.spec.accessModes = [ c.claim.accessModes || "ReadWriteOnce" ];
 var b = c.claim.unit || "Mi";
-return a.spec.resources.requests.storage = c.claim.amount + b, a.spec.selector.matchLabels = i.mapEntries(i.compactEntries(c.claim.selectedLabels)), null !== c.claim.storageClass && (a.metadata.annotations["volume.alpha.kubernetes.io/storage-class"] = c.claim.storageClass.metadata.name), a;
+return a.spec.resources.requests.storage = c.claim.amount + b, a.spec.selector.matchLabels = i.mapEntries(i.compactEntries(c.claim.selectedLabels)), c.claim.storageClass && (a.metadata.annotations["volume.alpha.kubernetes.io/storage-class"] = c.claim.storageClass.metadata.name), a;
 }
 c.project = b, c.breadcrumbs[0].title = a("displayName")(b), c.createPersistentVolumeClaim = function() {
 if (c.createPersistentVolumeClaimForm.$valid) {
@@ -8033,7 +8043,10 @@ authType:"kubernetes.io/basic-auth",
 data:{},
 linkSecret:!1,
 pickedServiceAccountToLink:""
-}, c.addGitconfig = !1, c.addCaCert = !1, !c.serviceAccountToLink && b.canI("serviceaccounts", "list") && b.canI("serviceaccounts", "update") && a.list("serviceaccounts", c, function(a) {
+}, c.add = {
+gitconfig:!1,
+cacert:!1
+}, !c.serviceAccountToLink && b.canI("serviceaccounts", "list") && b.canI("serviceaccounts", "update") && a.list("serviceaccounts", c, function(a) {
 c.serviceAccounts = a.by("metadata.name"), c.serviceAccountsNames = _.keys(c.serviceAccounts);
 });
 var e = function(a, b) {
@@ -8113,8 +8126,16 @@ details:d("getErrorDetails")(a)
 }
 };
 });
-};
-c.create = function() {
+}, g = _.debounce(function() {
+try {
+JSON.parse(c.newSecret.data.dockerConfig), c.invalidConfigFormat = !1;
+} catch (a) {
+c.invalidConfigFormat = !0;
+}
+}, 300, {
+leading:!0
+});
+c.aceChanged = g, c.create = function() {
 c.alerts = {};
 var g = e(c.newSecret.data, c.newSecret.authType);
 a.create("secrets", null, g, c).then(function(a) {
@@ -11948,7 +11969,6 @@ scope:!0,
 templateUrl:"views/overview/_deployment.html",
 link:function(c) {
 var d;
-a("orderObjectsByDate");
 c.$watch("deployment.spec.paused", function() {
 d = !1;
 }), c.resumeDeployment = function() {
@@ -11965,7 +11985,7 @@ details:a("getErrorDetails")(b)
 return _.get(c, [ "deployments", c.deploymentName ]);
 }, function() {
 c.deployment = _.get(c, [ "deployments", c.deploymentName ]), c.latestRevision = b.getRevision(c.deployment);
-}), c.$watch("scalableReplicaSetsByDeployment", function(a) {
+}), c.$watch("scalableReplicaSetsByDeployment", function() {
 c.latestReplicaSet = _.get(c, [ "scalableReplicaSetsByDeployment", c.deploymentName ]);
 }), c.$watch("replicaSets", function(a) {
 c.inProgressDeployment = _.chain(a).filter("status.replicas").size() > 1;

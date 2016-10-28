@@ -325,38 +325,6 @@ angular.module('openshiftConsole')
       $scope.childServicesByParent[parentName].push(child);
     };
 
-    // Assign each service a score for sorting. Services with routes or app
-    // labels are considered more important.
-    var scoreService = function(service) {
-      var score = 0;
-      var name = _.get(service, 'metadata.name', '');
-      var routes = _.get($scope, ['routesByService', name], []);
-
-      if (!_.isEmpty(routes)) {
-        score += 5;
-      }
-
-      if (_.has(service, 'metadata.labels.app')) {
-        score += 3;
-      }
-
-      if (ServicesService.isInfrastructure(service)) {
-        score -= 5;
-      }
-
-      return score;
-    };
-
-    var compareServices = function(lhs, rhs) {
-      var leftScore = scoreService(lhs), rightScore = scoreService(rhs);
-      if (leftScore === rightScore) {
-        // Fall back to comparing names if two services have the same score.
-        return lhs.metadata.name.localeCompare(rhs.metadata.name);
-      }
-
-      return rightScore - leftScore;
-    };
-
     var groupServices = function() {
       if (!services || !routes) {
         return;
@@ -375,8 +343,8 @@ angular.module('openshiftConsole')
       });
 
       // Filter out child services and alternate services. Order top-level
-      // services by importance.
-      $scope.topLevelServices = _.filter(services, function(service) {
+      // services by app name, then service name.
+      $scope.topLevelServices = _.chain(services).filter(function(service) {
         // If this service has any child services, always show it in top level
         // services. Otherwise, children of children will not show up anywhere
         // on the overview.
@@ -392,7 +360,7 @@ angular.module('openshiftConsole')
         }
 
         return !isChildService(service) && !isAlternateService(service);
-      }).sort(compareServices);
+      }).sortByAll(['metadata.labels.app', 'metadata.name']).value();
     };
 
     var updateRouteWarnings = function() {

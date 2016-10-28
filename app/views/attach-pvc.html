@@ -150,7 +150,7 @@
                               Attach the volume to the following containers:
                             </span>
                           </div>
-                          <div class="checkbox" ng-repeat="container in (attach.deployment.spec.template.spec.containers || attach.deploymentConfig.spec.template.spec.containers)">
+                          <div class="checkbox" ng-repeat="container in attach.resource.spec.template.spec.containers">
                             <label>
                               <input type="checkbox" ng-model="attach.containers.individual[container.name]">
                               <b>{{container.name}}</b> from image <i>{{container.image}}</i>

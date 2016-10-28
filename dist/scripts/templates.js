@@ -642,22 +642,13 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "<div ng-controller=\"TasksController\">\n" +
     "<div ng-repeat=\"task in tasks()\" ng-if=\"!task.namespace || !projectName || task.namespace === projectName\">\n" +
     "<div class=\"tasks\" ng-class=\"hasTaskWithError() ? 'failure' : 'success'\">\n" +
-    "<div class=\"row\">\n" +
-    "<div class=\"col-md-12\">\n" +
     "<div class=\"task-content\">\n" +
     "<i class=\"pficon task-icon\" ng-class=\"task.hasErrors ? 'pficon-error-circle-o' : 'pficon-ok'\"></i>\n" +
     "<div class=\"task-info\">\n" +
-    "<h3>\n" +
+    "<span class=\"task-title\">\n" +
     "{{ task | taskTitle }}.\n" +
-    "</h3>\n" +
-    "<div ng-if=\"task.helpLinks.length\">\n" +
-    "<h4>Helpful Links</h4>\n" +
-    "<ul class=\"list-unstyled\">\n" +
-    "<li ng-repeat=\"link in task.helpLinks\">\n" +
-    "<a href=\"{{ link.link }}\" target=\"_blank\">{{ link.title }}</a>\n" +
-    "</li>\n" +
-    "</ul>\n" +
-    "</div>\n" +
+    "</span>\n" +
+    "<span class=\"task-links\">\n" +
     "<span>\n" +
     "<a href=\"\" ng-click=\"expanded = !expanded\" role=\"button\">\n" +
     "<span ng-hide=\"expanded\">Show details</span>\n" +
@@ -670,13 +661,20 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "Dismiss\n" +
     "</a>\n" +
     "</span>\n" +
+    "</span>\n" +
+    "<div ng-if=\"task.helpLinks.length\">\n" +
+    "<h4>Helpful Links</h4>\n" +
+    "<ul class=\"list-unstyled\">\n" +
+    "<li ng-repeat=\"link in task.helpLinks\">\n" +
+    "<a href=\"{{ link.link }}\" target=\"_blank\">{{ link.title }}</a>\n" +
+    "</li>\n" +
+    "</ul>\n" +
     "</div>\n" +
     "</div>\n" +
-    "<div ng-show=\"expanded\">\n" +
+    "</div>\n" +
+    "<div ng-show=\"expanded\" class=\"task-expanded-details\">\n" +
     "\n" +
     "<alerts alerts=\"task.alerts\" hide-close-button=\"true\"></alerts>\n" +
-    "</div>\n" +
-    "</div>\n" +
     "</div>\n" +
     "</div>\n" +
     "</div>\n" +
@@ -697,9 +695,11 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "</div>\n" +
     "<div class=\"form-group options\" ng-repeat=\"parameter in parameters\" ng-show=\"expand\" ng-init=\"paramID = 'param-' + $index\">\n" +
     "<label ng-attr-for=\"{{paramID}}\" ng-attr-title=\"{{parameter.name}}\" ng-class=\"{required: parameter.required}\">{{parameter.displayName || parameter.name}}</label>\n" +
-    "<span ng-class=\"{'has-error': (paramForm[paramID].$error.required && paramForm[paramID].$touched && !cleared), 'has-warning': isOnlyWhitespace(parameter.value)}\">\n" +
-    "<input ng-attr-id=\"{{paramID}}\" ng-attr-name=\"{{paramID}}\" class=\"form-control\" type=\"text\" placeholder=\"{{ parameter | parameterPlaceholder }}\" ng-model=\"parameter.value\" ng-required=\"parameter.required && !parameter.generate\" ng-blur=\"cleared = false\" ng-trim=\"false\" autocorrect=\"off\" autocapitalize=\"off\" spellcheck ng-attr-aria-describedby=\"{{parameter.description ? (paramID + '-description') : undefined}}\">\n" +
-    "</span>\n" +
+    "<div class=\"parameter-input-wrapper\" ng-class=\"{'has-error': (paramForm[paramID].$error.required && paramForm[paramID].$touched && !cleared), 'has-warning': isOnlyWhitespace(parameter.value)}\">\n" +
+    "<input ng-if=\"!expandedParameter\" ng-attr-id=\"{{paramID}}\" ng-attr-name=\"{{paramID}}\" class=\"form-control hide-ng-leave\" type=\"text\" placeholder=\"{{ parameter | parameterPlaceholder }}\" ng-model=\"parameter.value\" ng-required=\"parameter.required && !parameter.generate\" ng-blur=\"cleared = false\" ng-trim=\"false\" autocorrect=\"off\" autocapitalize=\"off\" spellcheck ng-attr-aria-describedby=\"{{parameter.description ? (paramID + '-description') : undefined}}\">\n" +
+    "<a href=\"\" ng-click=\"expandedParameter = !expandedParameter\" class=\"resize-input action-button\" data-toggle=\"tooltip\" data-trigger=\"hover\" dynamic-content=\"{{expandedParameter ? 'Collapse to a single line input. This may strip any new lines you have entered.' : 'Expand to enter multiple lines of content. This is required if you need to include newline characters.'}}\"><i class=\"fa\" ng-class=\"{'fa-expand': !expandedParemeter, 'fa-compress': expandedParameter}\" aria-hidden=\"true\" role=\"presentation\"/><span class=\"sr-only\" ng-if=\"expandedParameter\">Collapse to a single line input</span><span class=\"sr-only\" ng-if=\"!expandedParameter\">Expand to enter multiline input</span></a>\n" +
+    "<textarea ng-if=\"expandedParameter\" ng-attr-id=\"{{paramID}}\" ng-attr-name=\"{{paramID}}\" class=\"form-control hide-ng-leave\" placeholder=\"{{ parameter | parameterPlaceholder }}\" ng-model=\"parameter.value\" ng-required=\"parameter.required && !parameter.generate\" ng-blur=\"cleared = false\" ng-trim=\"false\" autocorrect=\"off\" autocapitalize=\"off\" spellcheck rows=\"6\" ng-attr-aria-describedby=\"{{parameter.description ? (paramID + '-description') : undefined}}\"></textarea>\n" +
+    "</div>\n" +
     "<div class=\"help-block\" ng-if=\"parameter.description\" ng-attr-id=\"{{paramID}}-description\">{{parameter.description}}</div>\n" +
     "<div ng-show=\"paramForm[paramID].$error.required && paramForm[paramID].$touched && !cleared\" class=\"has-error\">\n" +
     "<div class=\"help-block\">{{parameter.displayName || parameter.name}} is required.</div>\n" +
@@ -1023,7 +1023,7 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "Attach the volume to the following containers:\n" +
     "</span>\n" +
     "</div>\n" +
-    "<div class=\"checkbox\" ng-repeat=\"container in (attach.deployment.spec.template.spec.containers || attach.deploymentConfig.spec.template.spec.containers)\">\n" +
+    "<div class=\"checkbox\" ng-repeat=\"container in attach.resource.spec.template.spec.containers\">\n" +
     "<label>\n" +
     "<input type=\"checkbox\" ng-model=\"attach.containers.individual[container.name]\">\n" +
     "<b>{{container.name}}</b> from image <i>{{container.image}}</i>\n" +
@@ -2313,7 +2313,7 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "<dd>{{deployment | lastDeploymentRevision}}</dd>\n" +
     "<dt>Replicas:</dt>\n" +
     "<dd>\n" +
-    "<replicas spec=\"deployment.spec.replicas\" disable-scaling=\"autoscalers.length\" scale-fn=\"scale(replicas)\" deployment=\"deployment\"></replicas>\n" +
+    "<replicas spec=\"deployment.spec.replicas\" disable-scaling=\"inProgressDeployment || autoscalers.length\" scale-fn=\"scale(replicas)\" deployment=\"deployment\"></replicas>\n" +
     "<span ng-if=\"autoscalers.length\">(autoscaled)</span>\n" +
     "<div ng-if=\"deployment.status.updatedReplicas\">\n" +
     "{{deployment.status.updatedReplicas}} up to date\n" +
@@ -3943,11 +3943,11 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "<div class=\"middle-container\">\n" +
     "<div class=\"middle-content\">\n" +
     "<div class=\"container surface-shaded\">\n" +
-    "<div class=\"col-md-12\">\n" +
+    "<div class=\"row\">\n" +
+    "<div class=\"col-md-10 col-md-offset-1\">\n" +
     "<breadcrumbs breadcrumbs=\"breadcrumbs\"></breadcrumbs>\n" +
     "<alerts alerts=\"alerts\"></alerts>\n" +
-    "<div class=\"row\">\n" +
-    "<div class=\"col-md-10 col-md-offset-1 gutter-top\">\n" +
+    "<div class=\"mar-top-xl\">\n" +
     "<h1>Request Storage</h1>\n" +
     "<div>\n" +
     "<span class=\"help-block\">\n" +
@@ -4496,12 +4496,10 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "<div class=\"task-content\">\n" +
     "<i class=\"pficon task-icon\" ng-class=\"task.hasErrors ? 'pficon-error-circle-o' : 'pficon-ok'\"></i>\n" +
     "<div class=\"task-info\">\n" +
-    "<h3>\n" +
     "{{ task | taskTitle }}.\n" +
-    "</h3>\n" +
     "</div>\n" +
     "</div>\n" +
-    "<div class=\"alerts\">\n" +
+    "<div class=\"alerts task-expanded-details\">\n" +
     "<div ng-repeat=\"alert in task.alerts\">\n" +
     "<div ng-switch=\"alert.type\">\n" +
     "<div ng-switch-when=\"error\" class=\"alert alert-danger\">\n" +
@@ -4522,7 +4520,7 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "</div>\n" +
     "</div>\n" +
     "</div>\n" +
-    "<div class=\"template-message\" ng-if=\"templateMessage.length\">\n" +
+    "<div class=\"alert alert-info template-message\" ng-if=\"templateMessage.length\">\n" +
     "<span class=\"pficon pficon-info\" aria-hidden=\"true\"></span>\n" +
     "<div class=\"resource-description\" ng-bind-html=\"templateMessage | linky : '_blank'\"></div>\n" +
     "</div>\n" +
@@ -5285,29 +5283,28 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "</div>\n" +
     "</div>\n" +
     "<div class=\"form-group\">\n" +
-    "<label for=\"passwordToken\">Password or Token</label>\n" +
+    "<label ng-class=\"{ required: !add.cacert && !add.gitconfig }\" for=\"passwordToken\">Password or Token</label>\n" +
     "<div>\n" +
-    "<input class=\"form-control\" id=\"passwordToken\" name=\"passwordToken\" ng-model=\"newSecret.data.passwordToken\" autocorrect=\"off\" autocapitalize=\"off\" spellcheck aria-describedby=\"password-token-help\" type=\"password\" ng-required=\"!newSecret.data.cacert && !newSecret.data.gitconfig\">\n" +
+    "<input class=\"form-control\" id=\"passwordToken\" name=\"passwordToken\" ng-model=\"newSecret.data.passwordToken\" autocorrect=\"off\" autocapitalize=\"off\" spellcheck aria-describedby=\"password-token-help\" type=\"password\" ng-required=\"!add.cacert && !add.gitconfig\">\n" +
     "</div>\n" +
     "<div class=\"help-block\" id=\"password-token-help\">\n" +
-    "Password or token for Git authentication.\n" +
+    "Password or token for Git authentication. Required if a ca.crt or .gitconfig file is not specified.\n" +
     "</div>\n" +
     "</div>\n" +
     "<div class=\"form-group\">\n" +
     "<div class=\"checkbox\">\n" +
     "<label>\n" +
-    "<input type=\"checkbox\" ng-model=\"addCaCert\">\n" +
+    "<input type=\"checkbox\" ng-model=\"add.cacert\">\n" +
     "Use a custom ca.crt file\n" +
     "</label>\n" +
     "</div>\n" +
     "</div>\n" +
-    "<div class=\"form-group\" ng-if=\"addCaCert\" id=\"cacert\">\n" +
+    "<div class=\"form-group\" ng-if=\"add.cacert\" id=\"cacert\">\n" +
     "<label class=\"required\" for=\"cacert\">CA Certificate File</label>\n" +
-    "<osc-file-input id=\"cacert-file-input\" model=\"newSecret.data.cacert\" drop-zone-id=\"cacert\" dragging=\"false\" help-text=\"Upload your ca.cert file.\" show-values=\"false\" ng-required=\"!newSecret.data.gitconfig || !newSecret.data.passwordToken\"></osc-file-input>\n" +
+    "<osc-file-input id=\"cacert-file-input\" model=\"newSecret.data.cacert\" drop-zone-id=\"cacert\" dragging=\"false\" help-text=\"Upload your ca.crt file.\" show-values=\"false\" required></osc-file-input>\n" +
     "<div ui-ace=\"{\n" +
     "          mode: 'txt',\n" +
     "          theme: 'eclipse',\n" +
-    "          onLoad: aceLoaded,\n" +
     "          rendererOptions: {\n" +
     "            fadeFoldWidgets: true,\n" +
     "            showPrintMargin: false\n" +
@@ -5321,10 +5318,9 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "<osc-file-input id=\"private-key-file-input\" model=\"newSecret.data.privateKey\" drop-zone-id=\"private-key\" dragging=\"false\" help-text=\"Upload your private SSH key file.\" show-values=\"false\"></osc-file-input>\n" +
     "<div ui-ace=\"{\n" +
     "          theme: 'eclipse',\n" +
-    "          onLoad: aceLoaded,\n" +
     "          rendererOptions: {\n" +
     "            fadeFoldWidgets: true,\n" +
-    "            showPrintMargin: false \n" +
+    "            showPrintMargin: false\n" +
     "          }\n" +
     "        }\" ng-model=\"newSecret.data.privateKey\" class=\"create-secret-editor ace-bordered\" id=\"private-key-editor\" required></div>\n" +
     "<div class=\"help-block\">\n" +
@@ -5336,21 +5332,20 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "<div class=\"form-group\">\n" +
     "<div class=\"checkbox\">\n" +
     "<label>\n" +
-    "<input type=\"checkbox\" ng-model=\"addGitconfig\">\n" +
+    "<input type=\"checkbox\" ng-model=\"add.gitconfig\">\n" +
     "Use a custom .gitconfig file\n" +
     "</label>\n" +
     "</div>\n" +
     "</div>\n" +
-    "<div class=\"form-group\" ng-if=\"addGitconfig\" id=\"gitconfig\" ng-show=\"addGitconfig\">\n" +
+    "<div class=\"form-group\" ng-if=\"add.gitconfig\" id=\"gitconfig\">\n" +
     "<label class=\"required\" for=\"gitconfig\">Git Configuration File</label>\n" +
-    "<osc-file-input id=\"gitconfig-file-input\" model=\"newSecret.data.gitconfig\" drop-zone-id=\"gitconfig\" dragging=\"false\" help-text=\"Upload your .gitconfig or  file.\" show-values=\"false\" ng-required=\"!newSecret.data.cacert || !newSecret.data.passwordToken\"></osc-file-input>\n" +
+    "<osc-file-input id=\"gitconfig-file-input\" model=\"newSecret.data.gitconfig\" drop-zone-id=\"gitconfig\" dragging=\"false\" help-text=\"Upload your .gitconfig or  file.\" show-values=\"false\" required></osc-file-input>\n" +
     "<div ui-ace=\"{\n" +
     "          mode: 'ini',\n" +
     "          theme: 'eclipse',\n" +
-    "          onLoad: aceLoaded,\n" +
     "          rendererOptions: {\n" +
     "            fadeFoldWidgets: true,\n" +
-    "            showPrintMargin: false \n" +
+    "            showPrintMargin: false\n" +
     "          }\n" +
     "        }\" ng-model=\"newSecret.data.gitconfig\" class=\"create-secret-editor ace-bordered\" id=\"gitconfig-editor\"></div>\n" +
     "</div>\n" +
@@ -5388,14 +5383,19 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "<div ui-ace=\"{\n" +
     "          mode: 'json',\n" +
     "          theme: 'eclipse',\n" +
-    "          onLoad: aceLoaded,\n" +
+    "          onChange: aceChanged,\n" +
     "          rendererOptions: {\n" +
     "            fadeFoldWidgets: true,\n" +
-    "            showPrintMargin: false \n" +
+    "            showPrintMargin: false\n" +
     "          }\n" +
     "        }\" ng-model=\"newSecret.data.dockerConfig\" class=\"create-secret-editor ace-bordered\" id=\"dockerconfig-editor\" required></div>\n" +
     "<div class=\"help-block\">\n" +
     "File with credentials and other configuration for connecting to a secured image registry.\n" +
+    "</div>\n" +
+    "<div class=\"has-warning\" ng-show=\"invalidConfigFormat\">\n" +
+    "<span class=\"help-block\">\n" +
+    "Configuration file should be in JSON format.\n" +
+    "</span>\n" +
     "</div>\n" +
     "</div>\n" +
     "</div>\n" +
@@ -8070,7 +8070,7 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "</div>\n" +
     "<div ng-if=\"view.advancedImageOptions\">\n" +
     "<div class=\"gutter-top\">\n" +
-    "<osc-secrets model=\"pullSecrets\" namespace=\"projectName\" display-type=\"pull\" type=\"image\" secrets-by-type=\"secretsByType\" service-account-to-link=\"default\" alerts=\"alerts\" allow-multiple-secrets=\"true\">\n" +
+    "<osc-secrets model=\"secrets.pullSecrets\" namespace=\"projectName\" display-type=\"pull\" type=\"image\" secrets-by-type=\"secretsByType\" service-account-to-link=\"default\" alerts=\"alerts\" allow-multiple-secrets=\"true\">\n" +
     "</osc-secrets>\n" +
     "</div>\n" +
     "</div>\n" +
@@ -9601,7 +9601,7 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "<div row class=\"overview-tile-body\">\n" +
     "\n" +
     "<div column class=\"overview-donut\" ng-repeat=\"replicaSet in replicaSets | limitTo : 2 track by (replicaSet | uid)\" ng-class=\"{ latest: replicaSet === latestReplicaSet }\">\n" +
-    "<deployment-donut deployment=\"deployment\" rc=\"replicaSet\" pods=\"podsByOwnerUID[replicaSet.metadata.uid]\" hpa=\"getHPA(deployment) || getHPA(replicaSet)\" limit-ranges=\"limitRanges\" scalable=\"replicaSet === latestReplicaSet\" alerts=\"alerts\">\n" +
+    "<deployment-donut deployment=\"deployment\" rc=\"replicaSet\" pods=\"podsByOwnerUID[replicaSet.metadata.uid]\" hpa=\"getHPA(deployment) || getHPA(replicaSet)\" limit-ranges=\"limitRanges\" scalable=\"replicaSet === latestReplicaSet && !inProgressDeployment\" alerts=\"alerts\">\n" +
     "</deployment-donut>\n" +
     "</div>\n" +
     "\n" +
@@ -10516,6 +10516,7 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "</table>\n" +
     "</div>\n" +
     "</div>\n" +
+    "<div class=\"limit-ranges-section\">\n" +
     "<h1>Limit Range</h1>\n" +
     "<div ng-if=\"!(limitRanges | hashSize)\">\n" +
     "<div class=\"help-block\">{{limitRangeHelp}}</div>\n" +
@@ -10575,6 +10576,7 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "<tr ng-repeat-end></tr>\n" +
     "</tbody>\n" +
     "</table>\n" +
+    "</div>\n" +
     "</div>\n" +
     "</div>\n" +
     "</div>\n" +

@@ -22,6 +22,12 @@ if ! which Xvfb >/dev/null 2>&1; then
 	exit 1
 fi
 
+# We don't need grunt to be installed globally for the system, so 
+# we can amend our path to look into the local node_modules for the
+# correct binaries.
+repo_root="$( dirname "${BASH_SOURCE}" )/.."
+export PATH="${PATH}:${repo_root}/node_modules/grunt-cli/bin"
+
 echo "[INFO] Starting virtual framebuffer for headless tests..."
 export DISPLAY=':10'
 export SCREEN='0'

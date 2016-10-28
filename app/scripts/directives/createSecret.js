@@ -72,8 +72,11 @@ angular.module("openshiftConsole")
             pickedServiceAccountToLink: "",
           };
         }
-        $scope.addGitconfig = false;
-        $scope.addCaCert = false;
+
+        $scope.add = {
+          gitconfig: false,
+          cacert: false
+        };
 
         // List SA only if $scope.serviceAccountToLink is not defined so user has to pick one.
         if (!$scope.serviceAccountToLink && AuthorizationService.canI('serviceaccounts', 'list') && AuthorizationService.canI('serviceaccounts', 'update')) {
@@ -174,6 +177,19 @@ angular.module("openshiftConsole")
             };
           });
         };
+
+        var updateEditorMode = _.debounce(function(){
+          try {
+            JSON.parse($scope.newSecret.data.dockerConfig);
+            $scope.invalidConfigFormat = false;
+          } catch (e) {
+            $scope.invalidConfigFormat = true;
+          }
+        }, 300, {
+          'leading': true
+        });
+
+        $scope.aceChanged = updateEditorMode;
 
         $scope.create = function() {
           $scope.alerts = {};

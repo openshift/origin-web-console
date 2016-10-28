@@ -581,7 +581,24 @@ label.checkbox {
     }
     .form-group {
       width: 100%;
-      max-width: 600px;
+
+      .parameter-input-wrapper {
+        position: relative;
+
+        .resize-input {
+          position: absolute;
+          right: 6px;
+          top: 5px;
+
+          .fa-expand, .fa-compress {
+            transform: rotate(90deg);
+          }
+        }
+
+        input, textarea {
+          padding-right: 20px;
+        }
+      }
     }
     .help-block {
       margin-bottom: 5px;
@@ -676,15 +693,11 @@ label.checkbox {
   border-style: solid;
   border-width: 1px;
   color: black;
-  padding: 21px;
-  .pficon-info {
-    float: left;
-    font-size: 18px;
-    margin-right: 6px;
-    color: #31708f;
-  }
   .resource-description {
     margin-bottom: 0;
+    font-family: @font-family-monospace;
+    // Consistent font-size with the CLI examples in code blocks below the template message.
+    font-size: (@font-size-base - 1);
   }
 }
 
@@ -721,11 +734,11 @@ a.subtle-link {
 }
 
 .tasks {
-  margin-bottom: 20px;
-  padding-left: 15px;
-  padding-right: 15px;
-  padding-bottom: 10px;
   background-color: #ffffff;
+  font-weight: normal;
+  margin-bottom: 20px;
+  padding: 20px;
+  position: relative;
   &.success {
     border: 1px solid #3f9c35;
     border-left: 3px solid #3f9c35;
@@ -735,14 +748,30 @@ a.subtle-link {
     border-left: 3px solid #cc0000;
   }
   .task-icon {
-    font-size: 45px;
+    font-size: 38px;
+    left: 15px;
     position: absolute;
+    top: 14px;
   }
   .task-content {
-    min-height: 45px;
+    font-size: 16px;
+    .task-info {
+      margin-left: 45px;
+    }
+    .task-title {
+      margin-right: 10px;
+    }
+    .task-links {
+      font-size: 13px;
+      font-weight: 300;
+      white-space: nowrap;
+    }
   }
-  .task-info {
-    margin-left: 55px;
+  .task-expanded-details {
+    margin-top: 20px;
+    .alert {
+      margin-bottom: 0;
+    }
   }
 }
 
@@ -907,7 +936,7 @@ select:invalid {
 .action-button {
   color: @gray-light;
   cursor: pointer;
-  &:hover {
+  &:hover, &:active, &:focus {
     color: #000;
   }
 }
