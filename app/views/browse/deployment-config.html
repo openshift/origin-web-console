@@ -174,7 +174,7 @@
                             {{warning.message}}
 
                             <!-- If the CPU request is missing, add an action to set one. -->
-                            <a ng-href="project/{{projectName}}/set-limits?dcName={{deploymentConfig.metadata.name}}"
+                            <a ng-href="project/{{projectName}}/set-limits?kind=DeploymentConfig&name={{deploymentConfig.metadata.name}}"
                                ng-if="warning.reason === 'NoCPURequest' && 'deploymentconfigs' | canI : 'update'"
                                role="button">Set resource
                               <span ng-if="!('cpu' | isRequestCalculated : project)">requests and</span> limits</a>

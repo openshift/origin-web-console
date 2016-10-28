@@ -2099,7 +2099,7 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "<span class=\"sr-only\">Warning:</span>\n" +
     "{{warning.message}}\n" +
     "\n" +
-    "<a ng-href=\"project/{{projectName}}/set-limits?dcName={{deploymentConfig.metadata.name}}\" ng-if=\"warning.reason === 'NoCPURequest' && 'deploymentconfigs' | canI : 'update'\" role=\"button\">Set resource\n" +
+    "<a ng-href=\"project/{{projectName}}/set-limits?kind=DeploymentConfig&name={{deploymentConfig.metadata.name}}\" ng-if=\"warning.reason === 'NoCPURequest' && 'deploymentconfigs' | canI : 'update'\" role=\"button\">Set resource\n" +
     "<span ng-if=\"!('cpu' | isRequestCalculated : project)\">requests and</span> limits</a>\n" +
     "</div>\n" +
     "\n" +
