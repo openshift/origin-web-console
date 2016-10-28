@@ -66,10 +66,7 @@
 
           <div flex column ng-if="alternateServices.length === 0 && childServices.length === 0 && service" class="no-child-services-block">
             <div class="no-child-services-message">
-              <div class="pad-xxl">
-                <!-- <div class="blank-state-icon"> -->
-                <!--   <span class="pficon pficon pficon-add-circle-o" aria-hidden="true"></span> -->
-                <!-- </div> -->
+              <div class="empty-tile">
                 <h2>No grouped services.</h2>
                 <p>
                   No services are grouped with <a ng-href="{{service | navigateResourceURL}}">{{service.metadata.name}}</a>.

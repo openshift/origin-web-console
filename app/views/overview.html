@@ -52,9 +52,7 @@
               <!-- Unserviced DCs, RCs, and pods -->
               <div row wrap ng-if="hasUnservicedContent()" class="unserviced-row">
                 <!-- unserviced DC -->
-                <div ng-repeat="(dcName, deploymentConfig) in deploymentConfigsByService[''] track by (deploymentConfig | uid)"
-                    class="no-service"
-                    ng-if="replicationControllers = visibleRCByDCAndService[''][dcName]"> <!-- Must be an ng-if, an ng-init will not re-evaluate properly -->
+                <div ng-repeat="(dcName, deploymentConfig) in deploymentConfigsByService[''] track by (deploymentConfig | uid)" class="no-service">
                   <overview-deployment-config class="overview-tile-wrapper"></overview-deployment-config>
                 </div>
                 <!-- /unserviced DC -->
@@ -68,7 +66,7 @@
                 <!-- /unserviced deployment -->
 
                 <!-- unserviced RC -->
-                <div ng-repeat="set in replicationControllersByService[''] | orderObjectsByDate : true track by (set | uid)"
+                <div ng-repeat="set in replicationControllersByService[''] | orderBy : 'metadata.name' track by (set | uid)"
                     ng-if="!(set | annotation : 'deploymentConfig') || !deploymentConfigs[(set | annotation : 'deploymentConfig')]"
                     class="no-service">
                   <overview-set class="overview-tile-wrapper"></overview-set>
@@ -76,7 +74,7 @@
                 <!-- /unserviced RC-->
 
                 <!-- unserviced RS -->
-                <div ng-repeat="set in replicaSetsByService[''] | orderObjectsByDate : true track by (set | uid)"
+                <div ng-repeat="set in replicaSetsByService[''] | orderBy : 'metadata.name' track by (set | uid)"
                      ng-if="!(set | annotation : 'deployment.kubernetes.io/revision')"
                      class="no-service">
                   <overview-set class="overview-tile-wrapper"></overview-set>
@@ -84,14 +82,13 @@
                 <!-- /unserviced RS-->
 
                 <!-- unserviced RS -->
-                <div ng-repeat="set in petSetsByService[''] | orderObjectsByDate : true track by (set | uid)"
-                    class="no-service">
+                <div ng-repeat="set in petSetsByService[''] | orderBy : 'metadata.name' track by (set | uid)" class="no-service">
                   <overview-set class="overview-tile-wrapper"></overview-set>
                 </div>
                 <!-- /unserviced RS-->
 
                 <!-- unservice monopods -->
-                <div ng-repeat="pod in monopodsByService[''] | orderObjectsByDate : true track by (pod | uid)"
+                <div ng-repeat="pod in monopodsByService[''] | orderBy : 'metadata.name' track by (pod | uid)"
                     class="no-service">
                   <overview-pod class="overview-tile-wrapper"></overview-pod>
                 </div>

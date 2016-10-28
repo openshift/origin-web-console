@@ -3,8 +3,8 @@
   <div class="overview-tile-header">
     <div class="rc-header">
       <div>
-        Deployment
-        <a ng-href="{{deploymentConfig | navigateResourceURL}}">{{dcName}}</a>
+        Deployment Config
+        <a ng-href="{{deploymentConfig | navigateResourceURL}}">{{deploymentConfig.metadata.name}}</a>
         <small class="overview-timestamp" ng-if="activeReplicationController && !inProgressDeployment">
           <span class="hidden-xs">&ndash;</span>
           <relative-timestamp timestamp="activeReplicationController.metadata.creationTimestamp"></relative-timestamp>
@@ -37,6 +37,31 @@
         </div>
       </div>
     </div>
+    <div ng-if="!(orderedReplicationControllers | hashSize)" class="empty-dc">
+      <h2>No deployments.</h2>
+      <div ng-if="imageChangeTriggers.length">
+        A new deployment will start automatically when
+        <span ng-if="imageChangeTriggers.length === 1">
+          an image is available for
+          <a ng-href="{{urlForImageChangeTrigger(imageChangeTriggers[0], deploymentConfig)}}">
+            {{imageChangeTriggers[0].imageChangeParams.from | imageObjectRef : deploymentConfig.metadata.namespace}}</a>.
+        </span>
+        <span ng-if="imageChangeParams.length > 1">
+          one of the images for this deployment config changes.
+        </span>
+      </div>
+      <div ng-if="!imageChangeTriggers.length">
+        <p>
+          No deployments have started for
+          <a ng-href="{{deploymentConfig | navigateResourceURL}}">{{deploymentConfig.metadata.name}}</a>.
+        </p>
+        <div ng-if="'deploymentconfigs' | canI : 'update'" class="mar-top-md">
+          <button class="btn btn-primary" ng-click="startDeployment(deploymentConfig)">
+            Start Deployment
+          </button>
+        </div>
+      </div>
+    </div>
     <div column flex class="shield" ng-if="activeReplicationController"
           ng-class="{ 'shield-lg': (activeReplicationController | annotation: 'deploymentVersion').length > 3 }">
       <a ng-href="{{activeReplicationController | navigateResourceURL}}">
@@ -65,33 +90,33 @@
     <!-- /all visible replication controllers -->
 
     <!-- deployment in progress (connecting arrow) -->
-    <div column class="overview-donut-connector" ng-class="{'contains-deployment-status-msg':replicationControllers.length === 1}" ng-if="inProgressDeployment">
-      <div ng-if="replicationControllers.length > 1" class="deployment-connector-arrow">
+    <div column class="overview-donut-connector" ng-class="{'contains-deployment-status-msg':orderedReplicationControllers.length === 1}" ng-if="inProgressDeployment">
+      <div ng-if="orderedReplicationControllers.length > 1" class="deployment-connector-arrow">
 
       </div>
-      <div ng-if="replicationControllers.length === 1" class="deployment-status-msg">
-        <status-icon status="replicationControllers[0] | deploymentStatus" class="mar-right-xs"></status-icon>
-        Deployment&nbsp;#{{replicationControllers[0] | annotation : 'deploymentVersion'}}
-        {{replicationControllers[0] | deploymentStatus | lowercase}}
+      <div ng-if="orderedReplicationControllers.length === 1" class="deployment-status-msg">
+        <status-icon status="orderedReplicationControllers[0] | deploymentStatus" class="mar-right-xs"></status-icon>
+        Deployment&nbsp;#{{orderedReplicationControllers[0] | annotation : 'deploymentVersion'}}
+        {{orderedReplicationControllers[0] | deploymentStatus | lowercase}}
       </div>
     </div>
     <!-- /deployment in progress (connecting arrow) -->
 
     <!-- cancelled/failed state -->
-    <div column class="overview-unsuccessful-state" ng-if="!activeReplicationController && !inProgressDeployment" ng-switch="replicationControllers[0] | deploymentStatus">
+    <div column class="overview-unsuccessful-state" ng-if="!activeReplicationController && !inProgressDeployment" ng-switch="orderedReplicationControllers[0] | deploymentStatus">
       <div ng-switch-when="Cancelled">
         <span class="deployment-status-msg">
           <i class="fa fa-ban" aria-hidden="true"></i>
-          {{dcName}}
-          <a ng-href="{{replicationControllers[0] | navigateResourceURL}}">#{{replicationControllers[0] | annotation: 'deploymentVersion'}}</a>
+          {{deploymentConfig.metadata.name}}
+          <a ng-href="{{orderedReplicationControllers[0] | navigateResourceURL}}">#{{orderedReplicationControllers[0] | annotation: 'deploymentVersion'}}</a>
           cancelled
         </span>
       </div>
       <div ng-switch-when="Failed">
         <span class="text-danger deployment-status-msg">
           <i class="fa fa-times" aria-hidden="true"></i>
-          {{dcName}}
-          <a ng-href="{{replicationControllers[0] | navigateResourceURL}}">#{{replicationControllers[0] | annotation: 'deploymentVersion'}}</a>
+          {{deploymentConfig.metadata.name}}
+          <a ng-href="{{orderedReplicationControllers[0] | navigateResourceURL}}">#{{orderedReplicationControllers[0] | annotation: 'deploymentVersion'}}</a>
           failed
         </span>
       </div>

@@ -1,7 +1,7 @@
 'use strict';
 
 angular.module('openshiftConsole')
-  .directive('overviewDeploymentConfig', function($filter, $uibModal, DeploymentsService) {
+  .directive('overviewDeploymentConfig', function($filter, $uibModal, DeploymentsService, Navigate) {
     return {
       restrict: 'E',
       // Inherit scope from OverviewController. This directive is only used for the overview.
@@ -12,20 +12,36 @@ angular.module('openshiftConsole')
         var orderByDate = $filter('orderObjectsByDate');
         var deploymentIsInProgress = $filter('deploymentIsInProgress');
 
-        $scope.$watch(function() {
-          return _.get($scope, ['deploymentConfigs', $scope.dcName]);
-        }, function(deploymentConfig) {
-          $scope.deploymentConfig = deploymentConfig;
+        $scope.$watch('scalableReplicationControllerByDC', function() {
+          var dcName = _.get($scope, 'deploymentConfig.metadata.name');
+          $scope.activeReplicationController = _.get($scope, ['scalableReplicationControllerByDC', dcName]);
         });
 
-        $scope.$watch('scalableReplicationControllerByDC', function(replicationControllers) {
-          $scope.activeReplicationController = _.get($scope, ['scalableReplicationControllerByDC', $scope.dcName]);
-        });
-
-        $scope.$watch('replicationControllers', function(replicationControllers) {
+        $scope.$watch('visibleRCByDC', function(visibleRCByDC) {
+          var dcName = _.get($scope, 'deploymentConfig.metadata.name');
+          var replicationControllers = _.get(visibleRCByDC, [dcName], []);
           $scope.orderedReplicationControllers = orderByDate(replicationControllers, true);
           $scope.inProgressDeployment = _.find($scope.orderedReplicationControllers, deploymentIsInProgress);
         });
+
+        $scope.$watch('deploymentConfig', function(deploymentConfig) {
+          var triggers = _.get(deploymentConfig, 'spec.triggers', []);
+          $scope.imageChangeTriggers = _.filter(triggers, function(trigger) {
+            return trigger.type === 'ImageChange' && _.get(trigger, 'imageChangeParams.automatic');
+          });
+        });
+
+        $scope.urlForImageChangeTrigger = function(imageChangeTrigger) {
+          var name = $filter('stripTag')(_.get(imageChangeTrigger, 'imageChangeParams.from.name'));
+          var namespace = _.get(imageChangeTrigger, 'imageChangeParams.from.namespace', $scope.deploymentConfig.metadata.namespace);
+          return Navigate.resourceURL(name, 'ImageStream', namespace);
+        };
+
+        $scope.startDeployment = function() {
+          DeploymentsService.startLatestDeployment($scope.deploymentConfig, {
+            namespace: $scope.deploymentConfig.metadata.namespace
+          }, $scope);
+        };
 
         var resumePending;
         $scope.$watch('deploymentConfig.spec.paused', function() {

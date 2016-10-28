@@ -4217,6 +4217,8 @@ ul.messenger-theme-flat .messenger-message.alert-info .messenger-message-inner:b
 @media (min-width:750px){.overview .no-child-services-message h2,.overview .no-deployments-message h2{margin-top:0}
 .overview .no-child-services-message{display:-webkit-flex;display:-moz-flex;display:-ms-flexbox;display:-ms-flex;display:flex;-webkit-flex:1 0 0%;-moz-flex:1 0 0%;-ms-flex:1 0 0%;flex:1 0 0%;-webkit-flex-direction:column;-moz-flex-direction:column;-ms-flex-direction:column;flex-direction:column}
 }
+.overview .empty-tile{padding:50px}
+.overview .empty-dc{text-align:center;color:#9c9c9c;padding:0 50px 70px}
 @media (min-width:992px){.overview .overview-services.single-alternate-service .alternate-service .no-deployments-block .service-title,.overview .overview-services.single-alternate-service .alternate-service .overview-tile .service-title,.overview .overview-services.single-alternate-service overview-service:nth-child(even){padding-left:0}
 .overview .overview-services.single-alternate-service .primary-service .no-deployments-block,.overview .overview-services.single-alternate-service .primary-service .overview-tile{border-right:0}
 .overview .overview-services.single-alternate-service .primary-service .no-deployments-block .service-title,.overview .overview-services.single-alternate-service .primary-service .overview-tile .service-title,.overview .overview-services.single-alternate-service overview-service:nth-child(odd){padding-right:0}
