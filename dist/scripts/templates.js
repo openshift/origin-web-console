@@ -8507,7 +8507,7 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "Membership\n" +
     "</h1>\n" +
     "<span class=\"learn-more-block\">\n" +
-    "<a ng-href=\"{{'roles' | helpLink}}\">\n" +
+    "<a ng-href=\"{{'roles' | helpLink}}\" target=\"_blank\">\n" +
     "Learn more <i class=\"fa fa-external-link\"></i>\n" +
     "</a>\n" +
     "</span>\n" +
