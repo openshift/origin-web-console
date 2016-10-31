@@ -2099,7 +2099,7 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "<span class=\"sr-only\">Warning:</span>\n" +
     "{{warning.message}}\n" +
     "\n" +
-    "<a ng-href=\"project/{{projectName}}/set-limits?dcName={{deploymentConfig.metadata.name}}\" ng-if=\"warning.reason === 'NoCPURequest' && 'deploymentconfigs' | canI : 'update'\" role=\"button\">Set resource\n" +
+    "<a ng-href=\"project/{{projectName}}/set-limits?kind=DeploymentConfig&name={{deploymentConfig.metadata.name}}\" ng-if=\"warning.reason === 'NoCPURequest' && 'deploymentconfigs' | canI : 'update'\" role=\"button\">Set resource\n" +
     "<span ng-if=\"!('cpu' | isRequestCalculated : project)\">requests and</span> limits</a>\n" +
     "</div>\n" +
     "\n" +
@@ -2583,9 +2583,8 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "<td data-title=\"Tag\"><a href=\"{{imageStream | navigateResourceURL}}/{{tag.name}}\">{{tag.name}}</a></td>\n" +
     "<td data-title=\"From\">\n" +
     "\n" +
-    "<div style=\"max-width: 400px\" class=\"truncate\">\n" +
     "<span ng-if=\"!tag.spec.from\"><em>pushed</em></span>\n" +
-    "<span ng-if=\"tag.spec.from\">\n" +
+    "<div ng-if=\"tag.spec.from\" ng-attr-title=\"{{tag.spec.from.name}}\" class=\"td-long-string\">\n" +
     "<span ng-if=\"!tag.spec.from._imageStreamName\">\n" +
     "{{tag.spec.from.name}}\n" +
     "</span>\n" +
@@ -2593,7 +2592,6 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "<span ng-if=\"tag.spec.from._imageStreamName === imageStream.metadata.name\">{{tag.spec.from._completeName}}</span>\n" +
     "<span ng-if=\"tag.spec.from._imageStreamName !== imageStream.metadata.name\">\n" +
     "<a ng-href=\"{{tag.spec.from._imageStreamName | navigateResourceURL : 'ImageStream' : (tag.spec.from.namespace || imageStream.metadata.namespace)}}\"><span ng-if=\"tag.spec.from.namespace && tag.spec.from.namespace !== imageStream.metadata.namespace\">{{tag.spec.from.namespace}}/</span>{{tag.spec.from._imageStreamName}}</a>{{tag.spec.from._nameConnector}}{{tag.spec.from._idOrTag}}\n" +
-    "</span>\n" +
     "</span>\n" +
     "</span>\n" +
     "</div>\n" +
@@ -2626,10 +2624,7 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "<td data-title=\"Pull Spec\">\n" +
     "\n" +
     "<div ng-if=\"tag.status.items.length && tag.status.items[0].dockerImageReference\">\n" +
-    "<div ng-attr-title=\"{{tag.status.items[0].dockerImageReference}}\" class=\"word-break visible-xs-block\">\n" +
-    "{{tag.status.items[0].dockerImageReference}}\n" +
-    "</div>\n" +
-    "<div class=\"pull-spec truncate hidden-xs\" ng-attr-title=\"{{tag.status.items[0].dockerImageReference}}\">\n" +
+    "<div ng-attr-title=\"{{tag.status.items[0].dockerImageReference}}\" class=\"td-long-string\">\n" +
     "{{tag.status.items[0].dockerImageReference}}\n" +
     "</div>\n" +
     "</div>\n" +
@@ -2647,13 +2642,8 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "<relative-timestamp timestamp=\"item.created\"></relative-timestamp>\n" +
     "</td>\n" +
     "<td data-title=\"Pull Spec\">\n" +
-    "<div ng-if=\"item.dockerImageReference\">\n" +
-    "<div ng-attr-title=\"{{item.dockerImageReference}}\" class=\"word-break visible-xs-block\">\n" +
+    "<div ng-if=\"item.dockerImageReference\" ng-attr-title=\"{{item.dockerImageReference}}\" class=\"td-long-string\">\n" +
     "{{item.dockerImageReference}}\n" +
-    "</div>\n" +
-    "<div class=\"pull-spec truncate hidden-xs\" ng-attr-title=\"{{item.dockerImageReference}}\">\n" +
-    "{{item.dockerImageReference}}\n" +
-    "</div>\n" +
     "</div>\n" +
     "</td>\n" +
     "</tr>\n" +
@@ -8363,7 +8353,7 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "<h1>Image Streams</h1>\n" +
     "</div>\n" +
     "<alerts alerts=\"alerts\"></alerts>\n" +
-    "<div ng-if=\"!renderOptions.showGetStarted\" class=\"data-toolbar\">\n" +
+    "<div class=\"data-toolbar\">\n" +
     "<div class=\"data-toolbar-filter\">\n" +
     "<project-filter></project-filter>\n" +
     "</div>\n" +
@@ -8517,7 +8507,7 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "Membership\n" +
     "</h1>\n" +
     "<span class=\"learn-more-block\">\n" +
-    "<a ng-href=\"{{'roles' | helpLink}}\">\n" +
+    "<a ng-href=\"{{'roles' | helpLink}}\" target=\"_blank\">\n" +
     "Learn more <i class=\"fa fa-external-link\"></i>\n" +
     "</a>\n" +
     "</span>\n" +
@@ -9428,7 +9418,7 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "\n" +
     "<div row wrap ng-if=\"hasUnservicedContent()\" class=\"unserviced-row\">\n" +
     "\n" +
-    "<div ng-repeat=\"(dcName, deploymentConfig) in deploymentConfigsByService[''] track by (deploymentConfig | uid)\" class=\"no-service\" ng-if=\"replicationControllers = visibleRCByDCAndService[''][dcName]\"> \n" +
+    "<div ng-repeat=\"(dcName, deploymentConfig) in deploymentConfigsByService[''] track by (deploymentConfig | uid)\" class=\"no-service\">\n" +
     "<overview-deployment-config class=\"overview-tile-wrapper\"></overview-deployment-config>\n" +
     "</div>\n" +
     "\n" +
@@ -9438,22 +9428,22 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "</div>\n" +
     "\n" +
     "\n" +
-    "<div ng-repeat=\"set in replicationControllersByService[''] | orderObjectsByDate : true track by (set | uid)\" ng-if=\"!(set | annotation : 'deploymentConfig') || !deploymentConfigs[(set | annotation : 'deploymentConfig')]\" class=\"no-service\">\n" +
+    "<div ng-repeat=\"set in replicationControllersByService[''] | orderBy : 'metadata.name' track by (set | uid)\" ng-if=\"!(set | annotation : 'deploymentConfig') || !deploymentConfigs[(set | annotation : 'deploymentConfig')]\" class=\"no-service\">\n" +
     "<overview-set class=\"overview-tile-wrapper\"></overview-set>\n" +
     "</div>\n" +
     "\n" +
     "\n" +
-    "<div ng-repeat=\"set in replicaSetsByService[''] | orderObjectsByDate : true track by (set | uid)\" ng-if=\"!(set | annotation : 'deployment.kubernetes.io/revision')\" class=\"no-service\">\n" +
+    "<div ng-repeat=\"set in replicaSetsByService[''] | orderBy : 'metadata.name' track by (set | uid)\" ng-if=\"!(set | annotation : 'deployment.kubernetes.io/revision')\" class=\"no-service\">\n" +
     "<overview-set class=\"overview-tile-wrapper\"></overview-set>\n" +
     "</div>\n" +
     "\n" +
     "\n" +
-    "<div ng-repeat=\"set in petSetsByService[''] | orderObjectsByDate : true track by (set | uid)\" class=\"no-service\">\n" +
+    "<div ng-repeat=\"set in petSetsByService[''] | orderBy : 'metadata.name' track by (set | uid)\" class=\"no-service\">\n" +
     "<overview-set class=\"overview-tile-wrapper\"></overview-set>\n" +
     "</div>\n" +
     "\n" +
     "\n" +
-    "<div ng-repeat=\"pod in monopodsByService[''] | orderObjectsByDate : true track by (pod | uid)\" class=\"no-service\">\n" +
+    "<div ng-repeat=\"pod in monopodsByService[''] | orderBy : 'metadata.name' track by (pod | uid)\" class=\"no-service\">\n" +
     "<overview-pod class=\"overview-tile-wrapper\"></overview-pod>\n" +
     "</div>\n" +
     "\n" +
@@ -9474,8 +9464,8 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "<div class=\"overview-tile-header\">\n" +
     "<div class=\"rc-header\">\n" +
     "<div>\n" +
-    "Deployment\n" +
-    "<a ng-href=\"{{deploymentConfig | navigateResourceURL}}\">{{dcName}}</a>\n" +
+    "Deployment Config\n" +
+    "<a ng-href=\"{{deploymentConfig | navigateResourceURL}}\">{{deploymentConfig.metadata.name}}</a>\n" +
     "<small class=\"overview-timestamp\" ng-if=\"activeReplicationController && !inProgressDeployment\">\n" +
     "<span class=\"hidden-xs\">&ndash;</span>\n" +
     "<relative-timestamp timestamp=\"activeReplicationController.metadata.creationTimestamp\"></relative-timestamp>\n" +
@@ -9505,6 +9495,31 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "</div>\n" +
     "</div>\n" +
     "</div>\n" +
+    "<div ng-if=\"!(orderedReplicationControllers | hashSize)\" class=\"empty-dc\">\n" +
+    "<h2>No deployments.</h2>\n" +
+    "<div ng-if=\"imageChangeTriggers.length\">\n" +
+    "A new deployment will start automatically when\n" +
+    "<span ng-if=\"imageChangeTriggers.length === 1\">\n" +
+    "an image is available for\n" +
+    "<a ng-href=\"{{urlForImageChangeTrigger(imageChangeTriggers[0], deploymentConfig)}}\">\n" +
+    "{{imageChangeTriggers[0].imageChangeParams.from | imageObjectRef : deploymentConfig.metadata.namespace}}</a>.\n" +
+    "</span>\n" +
+    "<span ng-if=\"imageChangeParams.length > 1\">\n" +
+    "one of the images for this deployment config changes.\n" +
+    "</span>\n" +
+    "</div>\n" +
+    "<div ng-if=\"!imageChangeTriggers.length\">\n" +
+    "<p>\n" +
+    "No deployments have started for\n" +
+    "<a ng-href=\"{{deploymentConfig | navigateResourceURL}}\">{{deploymentConfig.metadata.name}}</a>.\n" +
+    "</p>\n" +
+    "<div ng-if=\"'deploymentconfigs' | canI : 'update'\" class=\"mar-top-md\">\n" +
+    "<button class=\"btn btn-primary\" ng-click=\"startDeployment(deploymentConfig)\">\n" +
+    "Start Deployment\n" +
+    "</button>\n" +
+    "</div>\n" +
+    "</div>\n" +
+    "</div>\n" +
     "<div column flex class=\"shield\" ng-if=\"activeReplicationController\" ng-class=\"{ 'shield-lg': (activeReplicationController | annotation: 'deploymentVersion').length > 3 }\">\n" +
     "<a ng-href=\"{{activeReplicationController | navigateResourceURL}}\">\n" +
     "<span class=\"shield-number\">#{{activeReplicationController | annotation: 'deploymentVersion'}}</span>\n" +
@@ -9519,30 +9534,30 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "</div>\n" +
     "\n" +
     "\n" +
-    "<div column class=\"overview-donut-connector\" ng-class=\"{'contains-deployment-status-msg':replicationControllers.length === 1}\" ng-if=\"inProgressDeployment\">\n" +
-    "<div ng-if=\"replicationControllers.length > 1\" class=\"deployment-connector-arrow\">\n" +
+    "<div column class=\"overview-donut-connector\" ng-class=\"{'contains-deployment-status-msg':orderedReplicationControllers.length === 1}\" ng-if=\"inProgressDeployment\">\n" +
+    "<div ng-if=\"orderedReplicationControllers.length > 1\" class=\"deployment-connector-arrow\">\n" +
     "</div>\n" +
-    "<div ng-if=\"replicationControllers.length === 1\" class=\"deployment-status-msg\">\n" +
-    "<status-icon status=\"replicationControllers[0] | deploymentStatus\" class=\"mar-right-xs\"></status-icon>\n" +
-    "Deployment&nbsp;#{{replicationControllers[0] | annotation : 'deploymentVersion'}} {{replicationControllers[0] | deploymentStatus | lowercase}}\n" +
+    "<div ng-if=\"orderedReplicationControllers.length === 1\" class=\"deployment-status-msg\">\n" +
+    "<status-icon status=\"orderedReplicationControllers[0] | deploymentStatus\" class=\"mar-right-xs\"></status-icon>\n" +
+    "Deployment&nbsp;#{{orderedReplicationControllers[0] | annotation : 'deploymentVersion'}} {{orderedReplicationControllers[0] | deploymentStatus | lowercase}}\n" +
     "</div>\n" +
     "</div>\n" +
     "\n" +
     "\n" +
-    "<div column class=\"overview-unsuccessful-state\" ng-if=\"!activeReplicationController && !inProgressDeployment\" ng-switch=\"replicationControllers[0] | deploymentStatus\">\n" +
+    "<div column class=\"overview-unsuccessful-state\" ng-if=\"!activeReplicationController && !inProgressDeployment\" ng-switch=\"orderedReplicationControllers[0] | deploymentStatus\">\n" +
     "<div ng-switch-when=\"Cancelled\">\n" +
     "<span class=\"deployment-status-msg\">\n" +
     "<i class=\"fa fa-ban\" aria-hidden=\"true\"></i>\n" +
-    "{{dcName}}\n" +
-    "<a ng-href=\"{{replicationControllers[0] | navigateResourceURL}}\">#{{replicationControllers[0] | annotation: 'deploymentVersion'}}</a>\n" +
+    "{{deploymentConfig.metadata.name}}\n" +
+    "<a ng-href=\"{{orderedReplicationControllers[0] | navigateResourceURL}}\">#{{orderedReplicationControllers[0] | annotation: 'deploymentVersion'}}</a>\n" +
     "cancelled\n" +
     "</span>\n" +
     "</div>\n" +
     "<div ng-switch-when=\"Failed\">\n" +
     "<span class=\"text-danger deployment-status-msg\">\n" +
     "<i class=\"fa fa-times\" aria-hidden=\"true\"></i>\n" +
-    "{{dcName}}\n" +
-    "<a ng-href=\"{{replicationControllers[0] | navigateResourceURL}}\">#{{replicationControllers[0] | annotation: 'deploymentVersion'}}</a>\n" +
+    "{{deploymentConfig.metadata.name}}\n" +
+    "<a ng-href=\"{{orderedReplicationControllers[0] | navigateResourceURL}}\">#{{orderedReplicationControllers[0] | annotation: 'deploymentVersion'}}</a>\n" +
     "failed\n" +
     "</span>\n" +
     "</div>\n" +
@@ -9722,10 +9737,7 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "</overview-service>\n" +
     "<div flex column ng-if=\"alternateServices.length === 0 && childServices.length === 0 && service\" class=\"no-child-services-block\">\n" +
     "<div class=\"no-child-services-message\">\n" +
-    "<div class=\"pad-xxl\">\n" +
-    "\n" +
-    "\n" +
-    "\n" +
+    "<div class=\"empty-tile\">\n" +
     "<h2>No grouped services.</h2>\n" +
     "<p>\n" +
     "No services are grouped with <a ng-href=\"{{service | navigateResourceURL}}\">{{service.metadata.name}}</a>.\n" +
@@ -9775,30 +9787,31 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
 
 
   $templateCache.put('views/overview/_service.html',
-    "<div ng-if=\"!(visibleReplicationControllersByDC | hashSize) && !(visibleReplicaSets | hashSize) && !(petSetsByService[service.metadata.name] | hashSize) && !(monopodsByService[service.metadata.name] | hashSize)\" class=\"no-deployments-block\">\n" +
+    "<div ng-if=\"!tileCount\" class=\"no-deployments-block\">\n" +
     "<div column class=\"no-deployments-message\">\n" +
     "<ng-include src=\"'views/overview/_service-header.html'\"></ng-include>\n" +
-    "<div class=\"pad-xxl\">\n" +
-    "<h2>No deployments.</h2>\n" +
+    "<div class=\"empty-tile\">\n" +
+    "<h2>No deployments or pods.</h2>\n" +
     "<p>\n" +
-    "There are no deployments or pods for service\n" +
-    "<a ng-href=\"{{service | navigateResourceURL}}\">{{service.metadata.name}}</a>.\n" +
+    "Service\n" +
+    "<a ng-href=\"{{service | navigateResourceURL}}\">{{service.metadata.name}}</a>\n" +
+    "does not route to any deployments or pods.\n" +
     "</p>\n" +
     "</div>\n" +
     "</div>\n" +
     "</div>\n" +
-    "<div ng-attr-row=\"{{!service ? '' : undefined}}\" ng-attr-wrap=\"{{!service ? '' : undefined}}\" ng-if=\"(visibleReplicationControllersByDC | hashSize) || (visibleReplicaSetsByDeployment | hashSize) || (petSetsByService[service.metadata.name] | hashSize) || (monopodsByService[service.metadata.name || ''] | hashSize)\" class=\"deployment-block\" ng-class=\"{\n" +
+    "<div ng-attr-row=\"{{!service ? '' : undefined}}\" ng-attr-wrap=\"{{!service ? '' : undefined}}\" ng-if=\"tileCount\" class=\"deployment-block\" ng-class=\"{\n" +
     "       'no-service': !service,\n" +
-    "       'service-multiple-targets': rcTileCount + rsTileCount + (petSetsByService[service.metadata.name] | hashSize) + (monopodsByService[service.metadata.name] | hashSize) > 1\n" +
+    "       'service-multiple-targets': tileCount > 1\n" +
     "     }\">\n" +
-    "<div ng-repeat=\"(dcName, replicationControllers) in visibleReplicationControllersByDC track by dcName\" class=\"overview-tile-wrapper\">\n" +
+    "<div ng-repeat=\"deploymentConfig in deploymentConfigs track by (deploymentConfig | uid)\" class=\"overview-tile-wrapper\">\n" +
     "\n" +
-    "<overview-deployment-config ng-if=\"dcName\"></overview-deployment-config>\n" +
+    "<overview-deployment-config></overview-deployment-config>\n" +
     "\n" +
-    "\n" +
-    "<div ng-if=\"!dcName\" ng-repeat=\"set in replicationControllers | orderObjectsByDate : true track by (set | uid)\" class=\"overview-tile-wrapper\">\n" +
-    "<overview-set></overview-set>\n" +
     "</div>\n" +
+    "<div ng-repeat=\"set in replicationControllers track by (set | uid)\" class=\"overview-tile-wrapper\">\n" +
+    "\n" +
+    "<overview-set></overview-set>\n" +
     "\n" +
     "</div>\n" +
     "<div ng-repeat=\"(deploymentName, replicaSets) in visibleReplicaSetsByDeployment track by deploymentName\" class=\"overview-tile-wrapper\">\n" +
@@ -10271,7 +10284,8 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "<div ng-repeat=\"project in projects\" class=\"list-group-item project-info tile-click\">\n" +
     "<div row class=\"list-view-pf-actions project-actions\" ng-if=\"project.status.phase == 'Active'\">\n" +
     "<span class=\"fa-lg project-action-item\">\n" +
-    "<a ng-href=\"project/{{project.metadata.name}}/edit\" class=\"action-button\">\n" +
+    "\n" +
+    "<a ng-href=\"project/{{project.metadata.name}}/edit?then=./\" class=\"action-button\">\n" +
     "<i class=\"fa fa-pencil\" aria-hidden=\"true\"></i>\n" +
     "<span class=\"sr-only\">Edit Project</span>\n" +
     "</a>\n" +

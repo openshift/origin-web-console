@@ -33,8 +33,10 @@ angular.module('openshiftConsole')
         $scope.context = context;
         $scope.breadcrumbs[0].title = $filter('displayName')(project);
 
-        $scope.postCreateAction = function(newSecret, creationAlert) {
-          AlertMessageService.addAlert(creationAlert);
+        $scope.postCreateAction = function(newSecret, creationAlerts) {
+          _.each(creationAlerts, function(alert) {
+            AlertMessageService.addAlert(alert);
+          });
           Navigate.toResourceList('secrets', $scope.projectName);
         };
         $scope.cancel = function() {

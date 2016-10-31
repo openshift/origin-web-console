@@ -10,7 +10,7 @@
 @two-column-min-width: 750px;
 @two-column-max-width: 749px;
 @tile-min-height:      256px;
-@tile-min-height-lg:   346px;
+@tile-min-height-lg:   352px;
 
 
 .overview {
@@ -310,6 +310,12 @@
         .flex-display(@display: flex);
         .flex(@columns: 1 0 0%);
         height: 100%;
+        @media (min-width: @screen-sm-min) {
+          min-height: @tile-min-height-lg;
+        }
+        @media (min-width: @screen-md-min) {
+          min-height: @tile-min-height;
+        }
         &.service-multiple-targets, &.service-multiple-targets .overview-tile-wrapper {
           display: block;
         }
@@ -588,6 +594,14 @@
       .flex(@columns: 1 0 0%);
       .flex-direction(@direction: column);
     }
+  }
+  .empty-tile {
+    padding: 50px;
+  }
+  .empty-dc {
+    .text-center();
+    .text-muted();
+    padding: 0 50px 70px;
   }
   @media (min-width: @screen-md-min) {
     .overview-services.single-alternate-service {

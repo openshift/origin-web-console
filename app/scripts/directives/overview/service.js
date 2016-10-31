@@ -25,50 +25,50 @@ angular.module('openshiftConsole')
         };
         $scope.$watch('replicaSetsByService', function(replicaSetsByService) {
           var serviceName = _.get($scope, 'service.metadata.name');
-          var replicaSets = _.get(replicaSetsByService, [ serviceName ], []);
+          var replicaSets = _.get(replicaSetsByService, [ serviceName ], {});
           $scope.visibleReplicaSets = orderByDate(_.filter(replicaSets, isVisibleReplicaSet), true);
         });
 
-        $scope.$watch('visibleRCByDCAndService', function(visibleRCByDCAndService) {
-          if (!visibleRCByDCAndService) {
-            return;
-          }
-
+        var countTiles = function() {
           var serviceName = _.get($scope, 'service.metadata.name');
-          $scope.activeDeploymentByConfig = {};
-          $scope.visibleReplicationControllersByDC = visibleRCByDCAndService[serviceName];
+          var petSets = _.get($scope, ['petSetsByService', serviceName], {});
+          var monopods = _.get($scope, ['monopodsByService', serviceName], {});
 
-          // Determine if this service will show multiple RC tiles on the overview.
-          $scope.rcTileCount = 0;
-          _.each($scope.visibleReplicationControllersByDC, function(replicationControllers, dcName) {
-            if (!dcName) {
-              // Vanilla RCs.
-              $scope.rcTileCount += _.size(replicationControllers);
-            } else {
-              // Deployment config tile.
-              $scope.rcTileCount++;
-            }
-          });
-        });
-
-        $scope.$watch('visibleRSByDeploymentAndService', function(visibleRSByDeploymentAndService) {
-          if (!visibleRSByDeploymentAndService) {
-            return;
-          }
-
-          var serviceName = _.get($scope, 'service.metadata.name');
-          $scope.visibleReplicaSetsByDeployment = visibleRSByDeploymentAndService[serviceName];
-
-          $scope.rsTileCount = 0;
+          var rsTileCount = 0;
           _.each($scope.visibleReplicaSetsByDeployment, function(replicaSets, deploymentName) {
             if (!deploymentName) {
               // Vanilla RCs.
-              $scope.rsTileCount += _.size(replicaSets);
+              rsTileCount += _.size(replicaSets);
             } else {
               // Deployment config tile.
-              $scope.rsTileCount++;
+              rsTileCount++;
             }
           });
+
+          $scope.tileCount =
+            _.size($scope.deploymentConfigs) +
+            _.size($scope.replicationControllers) +
+            _.size(petSets) +
+            _.size(monopods) +
+            rsTileCount;
+        };
+
+        $scope.$watch('vanillaReplicationControllersByService', function(rcByService) {
+          var serviceName = _.get($scope, 'service.metadata.name');
+          $scope.replicationControllers = _.get(rcByService, [serviceName], {});
+          countTiles();
+        });
+
+        $scope.$watch('deploymentConfigsByService', function(deploymentConfigsByService) {
+          var serviceName = _.get($scope, 'service.metadata.name');
+          $scope.deploymentConfigs = _.get(deploymentConfigsByService, serviceName, {});
+          countTiles();
+        });
+
+        $scope.$watch('visibleRSByDeploymentAndService', function(visibleRSByDeploymentAndService) {
+          var serviceName = _.get($scope, 'service.metadata.name');
+          $scope.visibleReplicaSetsByDeployment = _.get(visibleRSByDeploymentAndService, [serviceName], {});
+          countTiles();
         });
       }
     };

@@ -362,7 +362,8 @@ templateUrl:"views/events.html",
 controller:"EventsController"
 }).when("/project/:project/browse/images", {
 templateUrl:"views/images.html",
-controller:"ImagesController"
+controller:"ImagesController",
+reloadOnSearch:!1
 }).when("/project/:project/browse/images/:imagestream", {
 templateUrl:"views/browse/imagestream.html",
 controller:"ImageStreamController"
@@ -2587,33 +2588,22 @@ return b.update(e, a.metadata.name, f, {
 namespace:a.metadata.namespace
 });
 };
-var h = function(a) {
-return _.get(a, "spec.template.metadata.labels", {});
-}, i = function(a, b) {
+var h = function(a, b) {
 var c = _.get(b, [ a ]);
 return !_.isEmpty(c);
-}, j = function(a, b) {
+}, i = function(a, b) {
 var c = _.get(b, [ a ]);
 return !_.isEmpty(c);
 };
 return f.prototype.isScalable = function(a, b, c, d, e) {
-if (j(a.metadata.name, d)) return !1;
+if (i(a.metadata.name, d)) return !1;
 var f = g(a, "deploymentConfig");
 if (!f) return !0;
 if (!b) return !1;
 if (!b[f]) return !0;
-if (i(f, c)) return !1;
-var h = _.get(e, [ f, "metadata", "name" ]);
-return h === a.metadata.name;
-}, f.prototype.groupByService = function(a, b) {
-var c = {};
-return _.each(a, function(a) {
-var d = new LabelSelector(h(a)), e = !1;
-_.each(b, function(b) {
-var f = new LabelSelector(b.spec.selector);
-f.covers(d) && (e = !0, _.set(c, [ b.metadata.name, a.metadata.name ], a));
-}), e || _.set(c, [ "", a.metadata.name ], a);
-}), c;
+if (h(f, c)) return !1;
+var j = _.get(e, [ f, "metadata", "name" ]);
+return j === a.metadata.name;
 }, f.prototype.groupByDeploymentConfig = function(a) {
 var b = {};
 return _.each(a, function(a) {
@@ -3711,7 +3701,11 @@ isAnyQuotaExceeded:s
 };
 } ]), angular.module("openshiftConsole").factory("LabelsService", function() {
 var a = function(a) {
-return _.get(a, "spec.template.metadata.labels", {});
+return _.get(a, "spec.template", {
+metadata:{
+labels:{}
+}
+});
 };
 return {
 groupBySelector:function(b, c, d) {
@@ -3722,9 +3716,7 @@ f[a.metadata.uid] = new LabelSelector(a.spec.selector);
 if (!d.include || d.include(b)) {
 var g = _.filter(c, function(c) {
 var e = f[c.metadata.uid];
-if (!d.matchTemplate) return e.matches(b);
-var g = new LabelSelector(a(b));
-return e.covers(g);
+return d.matchTemplate ? e.matches(a(b)) :d.matchSelector ? e.covers(new LabelSelector(b.spec.selector)) :e.matches(b);
 });
 g.length || _.set(e, [ "", b.metadata.name ], b), _.each(g, function(a) {
 var c = _.get(a, d.key || "metadata.name", "");
@@ -4098,10 +4090,10 @@ v = g.groupByDeploymentConfig(u);
 var a = {}, b = {};
 _.each(v, function(c, d) {
 a[d] = g.getActiveDeployment(c), b[d] = S(c);
-}), c.scalableReplicationControllerByDC = a, c.mostRecentReplicationControllerByDC = b, c.visibleRCByDCAndService = {}, _.each(c.replicationControllersByService, function(a, b) {
-c.visibleRCByDCAndService[b] = {}, _.each(g.groupByDeploymentConfig(a), function(a, d) {
-c.visibleRCByDCAndService[b][d] = _.filter(a, R);
-});
+}), c.scalableReplicationControllerByDC = a, c.mostRecentReplicationControllerByDC = b, c.vanillaReplicationControllersByService = h.groupBySelector(v[""], r, {
+matchTemplate:!0
+}), c.visibleRCByDC = {}, _.each(v, function(a, b) {
+c.visibleRCByDC[b] = _.filter(a, R);
 });
 }
 }, U = function() {
@@ -4119,7 +4111,7 @@ return !c || !!b && g.getRevision(b) === c;
 }, X = function() {
 if (w && s) {
 c.replicaSetsByDeployment = h.groupBySelector(w, s, {
-matchTemplate:!0
+matchSelector:!0
 });
 var a = {};
 _.each(c.replicaSetsByDeployment, function(b, c) {
@@ -4128,7 +4120,7 @@ a[c] = g.getActiveReplicaSet(b, d);
 }), c.scalableReplicaSetsByDeployment = a, c.visibleRSByDeploymentAndService = {}, _.each(c.replicaSetsByService, function(a, b) {
 c.visibleRSByDeploymentAndService[b] = {};
 var d = h.groupBySelector(a, s, {
-matchTemplate:!0
+matchSelector:!0
 });
 _.each(d, function(a, d) {
 c.visibleRSByDeploymentAndService[b][d] = _.filter(a, function(a) {
@@ -4204,7 +4196,7 @@ A && (c.recentPipelinesByDC = {}, c.recentBuildsByOutputImage = {}, _.each(e.int
 return E(a) ? void ja(a) :void ha(a);
 }));
 }, la = function() {
-var a = _.isEmpty(r) && _.isEmpty(c.monopodsByService) && _.isEmpty(u) && _.isEmpty(w) && _.isEmpty(x), b = r && y && u && w && x;
+var a = _.isEmpty(r) && _.isEmpty(t) && _.isEmpty(c.monopodsByService) && _.isEmpty(u) && _.isEmpty(w) && _.isEmpty(x), b = r && y && u && w && x;
 c.renderOptions.showGetStarted = b && a, c.renderOptions.showLoading = !b && a;
 }, ma = function() {
 var a = d.isAlertPermanentlyHidden("overview-quota-limit-reached", c.projectName);
@@ -5376,7 +5368,7 @@ a.alerts[b.name] = b.data;
 }), d.clearAlerts();
 var k, l, m = b("annotation"), n = function() {
 a.replicaSetsByDeployment = h.groupBySelector(k, l, {
-matchTemplate:!0
+matchSelector:!0
 }), a.unfilteredReplicaSets = _.get(a, [ "replicaSetsByDeployment", "" ], {}), g.addLabelSuggestionsFromResources(a.unfilteredReplicaSets, a.labelSuggestions), g.setLabelSuggestions(a.labelSuggestions), a.replicaSets = g.getLabelSelector().select(a.unfilteredReplicaSets), a.latestReplicaSetByDeployment = {}, _.each(a.replicaSetsByDeployment, function(b, c) {
 c && (a.latestReplicaSetByDeployment[c] = f.getActiveReplicaSet(b, l[c]));
 });
@@ -5498,8 +5490,7 @@ resource:"replicasets"
 }, i, function(b) {
 var c = b.by("metadata.name"), e = new LabelSelector(d.spec.selector);
 c = _.filter(c, function(a) {
-var b = _.get(a, "spec.template.metadata.labels", {});
-return e.covers(new LabelSelector(b));
+return e.covers(new LabelSelector(a.spec.selector));
 }), a.inProgressDeployment = _.chain(c).filter("status.replicas").size() > 1, a.replicaSetsForDeployment = f.sortByRevision(c);
 }));
 }, function(c) {
@@ -5775,7 +5766,7 @@ E(a.replicaSet) && f.list({
 group:"extensions",
 resource:"deployments"
 }, h, function(b) {
-var d = b.by("metadata.name"), g = new LabelSelector(a.replicaSet.spec.template.metadata.labels);
+var d = b.by("metadata.name"), g = new LabelSelector(a.replicaSet.spec.selector);
 return a.deployment = _.find(d, function(a) {
 var b = new LabelSelector(a.spec.selector);
 return b.covers(g);
@@ -5803,10 +5794,7 @@ var c = new LabelSelector(a.deployment.spec.selector);
 F = !1;
 var d = 0;
 _.each(b.by("metadata.name"), function(a) {
-if (a.status.replicas) {
-var b = _.get(a, "spec.template.metadata.labels", {});
-if (c.covers(new LabelSelector(b))) return d++, d > 1 ? (F = !0, !1) :void 0;
-}
+if (a.status.replicas && c.covers(new LabelSelector(a.spec.selector))) return d++, d > 1 ? (F = !0, !1) :void 0;
 });
 }))) :void (a.deploymentMissing = !0);
 });
@@ -6007,7 +5995,9 @@ link:"project/" + c.projectName + "/browse/secrets"
 title:"Create Secret"
 } ], i.get(b.project).then(_.spread(function(b, d) {
 c.project = b, c.context = d, c.breadcrumbs[0].title = a("displayName")(b), c.postCreateAction = function(a, b) {
-e.addAlert(b), h.toResourceList("secrets", c.projectName);
+_.each(b, function(a) {
+e.addAlert(a);
+}), h.toResourceList("secrets", c.projectName);
 }, c.cancel = function() {
 h.toResourceList("secrets", c.projectName);
 };
@@ -7862,7 +7852,9 @@ n("An error occurred attaching the persistent volume claim to the " + a("humaniz
 }));
 } ]), angular.module("openshiftConsole").controller("CreateSecretModalController", [ "$scope", "$uibModalInstance", function(a, b) {
 a.postCreateAction = function(c, d) {
-b.close(c), a.alerts[d.name] = d.data;
+b.close(c), _.each(d, function(b) {
+a.alerts[b.name] = b.data;
+});
 }, a.cancel = function() {
 b.dismiss("cancel");
 };
@@ -7998,7 +7990,7 @@ a.hideBuild = c(b);
 },
 templateUrl:"views/directives/_build-close.html"
 };
-} ]), angular.module("openshiftConsole").directive("createSecret", [ "DataService", "AuthorizationService", function(a, b) {
+} ]), angular.module("openshiftConsole").directive("createSecret", [ "DataService", "AuthorizationService", "$filter", function(a, b, c) {
 return {
 restrict:"E",
 scope:{
@@ -8009,8 +8001,8 @@ postCreateAction:"&",
 cancel:"&"
 },
 templateUrl:"views/directives/create-secret.html",
-link:function(c, d) {
-c.alerts = {}, c.secretAuthTypeMap = {
+link:function(d) {
+d.alerts = {}, d.secretAuthTypeMap = {
 image:{
 label:"Image Secret",
 authTypes:[ {
@@ -8031,50 +8023,50 @@ id:"kubernetes.io/ssh-auth",
 label:"SSH Key"
 } ]
 }
-}, c.secretTypes = _.keys(c.secretAuthTypeMap), c.type ? c.newSecret = {
-type:c.type,
-authType:c.secretAuthTypeMap[c.type].authTypes[0].id,
+}, d.secretTypes = _.keys(d.secretAuthTypeMap), d.type ? d.newSecret = {
+type:d.type,
+authType:d.secretAuthTypeMap[d.type].authTypes[0].id,
 data:{},
-linkSecret:!_.isEmpty(c.serviceAccountToLink),
-pickedServiceAccountToLink:c.serviceAccountToLink || ""
-} :c.newSecret = {
+linkSecret:!_.isEmpty(d.serviceAccountToLink),
+pickedServiceAccountToLink:d.serviceAccountToLink || ""
+} :d.newSecret = {
 type:"source",
 authType:"kubernetes.io/basic-auth",
 data:{},
 linkSecret:!1,
 pickedServiceAccountToLink:""
-}, c.add = {
+}, d.add = {
 gitconfig:!1,
 cacert:!1
-}, !c.serviceAccountToLink && b.canI("serviceaccounts", "list") && b.canI("serviceaccounts", "update") && a.list("serviceaccounts", c, function(a) {
-c.serviceAccounts = a.by("metadata.name"), c.serviceAccountsNames = _.keys(c.serviceAccounts);
+}, b.canI("serviceaccounts", "list") && b.canI("serviceaccounts", "update") && a.list("serviceaccounts", d, function(a) {
+d.serviceAccounts = a.by("metadata.name"), d.serviceAccountsNames = _.keys(d.serviceAccounts);
 });
 var e = function(a, b) {
-var d = {
+var c = {
 apiVersion:"v1",
 kind:"Secret",
 metadata:{
-name:c.newSecret.data.secretName
+name:d.newSecret.data.secretName
 },
 type:b,
 data:{}
 };
 switch (b) {
 case "kubernetes.io/basic-auth":
-a.passwordToken ? d.data = {
+a.passwordToken ? c.data = {
 password:window.btoa(a.passwordToken)
-} :d.type = "Opaque", a.username && (d.data.username = window.btoa(a.username)), a.gitconfig && (d.data[".gitconfig"] = window.btoa(a.gitconfig)), a.cacert && (d.data["ca.crt"] = window.btoa(a.cacert));
+} :c.type = "Opaque", a.username && (c.data.username = window.btoa(a.username)), a.gitconfig && (c.data[".gitconfig"] = window.btoa(a.gitconfig)), a.cacert && (c.data["ca.crt"] = window.btoa(a.cacert));
 break;
 
 case "kubernetes.io/ssh-auth":
-d.data = {
+c.data = {
 "ssh-privatekey":window.btoa(a.privateKey)
-}, a.gitconfig && (d.data[".gitconfig"] = window.btoa(a.gitconfig));
+}, a.gitconfig && (c.data[".gitconfig"] = window.btoa(a.gitconfig));
 break;
 
 case "kubernetes.io/dockerconfigjson":
 var e = window.btoa(a.dockerConfig);
-JSON.parse(a.dockerConfig).auths ? d.data[".dockerconfigjson"] = e :(d.type = "kubernetes.io/dockercfg", d.data[".dockercfg"] = e);
+JSON.parse(a.dockerConfig).auths ? c.data[".dockerconfigjson"] = e :(c.type = "kubernetes.io/dockercfg", c.data[".dockercfg"] = e);
 break;
 
 case "kubernetes.io/dockercfg":
@@ -8084,80 +8076,80 @@ username:a.dockerUsername,
 password:a.dockerPassword,
 email:a.dockerMail,
 auth:f
-}, d.data[".dockercfg"] = window.btoa(JSON.stringify(g));
+}, c.data[".dockercfg"] = window.btoa(JSON.stringify(g));
 }
-return d;
-}, f = function(b) {
-var e = angular.copy(c.serviceAccounts[c.newSecret.pickedServiceAccountToLink]);
-switch (c.newSecret.type) {
+return c;
+}, f = function(b, e) {
+var f = angular.copy(d.serviceAccounts[d.newSecret.pickedServiceAccountToLink]);
+switch (d.newSecret.type) {
 case "source":
-e.secrets.push({
+f.secrets.push({
 name:b.metadata.name
 });
 break;
 
 case "image":
-e.imagePullSecrets.push({
+f.imagePullSecrets.push({
 name:b.metadata.name
 });
 }
-var f = c.serviceAccountToLink ? {
+var g = d.serviceAccountToLink ? {
 errorNotification:!1
 } :{};
-a.update("serviceaccounts", c.newSecret.pickedServiceAccountToLink, e, c, f).then(function(a) {
-var d = {
-name:"createAndLink",
+a.update("serviceaccounts", d.newSecret.pickedServiceAccountToLink, f, d, g).then(function(a) {
+e.push({
+name:"create",
 data:{
 type:"success",
 message:"Secret " + b.metadata.name + " was created and linked with service account " + a.metadata.name + "."
 }
-};
-c.postCreateAction({
+}), d.postCreateAction({
 newSecret:b,
-creationAlert:d
+creationAlert:e
 });
 }, function(a) {
-c.alerts = {
+e.push({
 name:"createAndLink",
 data:{
 type:"error",
-message:"An error occurred while linking the secret with service account.",
-details:d("getErrorDetails")(a)
+message:"An error occurred while linking the secret with service account " + d.newSecret.pickedServiceAccountToLink + ".",
+details:c("getErrorDetails")(a)
 }
-};
+}), d.postCreateAction({
+newSecret:b,
+creationAlert:e
+});
 });
 }, g = _.debounce(function() {
 try {
-JSON.parse(c.newSecret.data.dockerConfig), c.invalidConfigFormat = !1;
+JSON.parse(d.newSecret.data.dockerConfig), d.invalidConfigFormat = !1;
 } catch (a) {
-c.invalidConfigFormat = !0;
+d.invalidConfigFormat = !0;
 }
 }, 300, {
 leading:!0
 });
-c.aceChanged = g, c.create = function() {
-c.alerts = {};
-var g = e(c.newSecret.data, c.newSecret.authType);
-a.create("secrets", null, g, c).then(function(a) {
-if (c.newSecret.linkSecret && c.newSecret.pickedServiceAccountToLink && b.canI("serviceaccounts", "update")) f(a); else {
-var d = {
+d.aceChanged = g, d.create = function() {
+d.alerts = {};
+var g = e(d.newSecret.data, d.newSecret.authType);
+a.create("secrets", null, g, d).then(function(a) {
+var c = [ {
 name:"create",
 data:{
 type:"success",
 message:"Secret " + g.metadata.name + " was created."
 }
-};
-c.postCreateAction({
+} ];
+d.newSecret.linkSecret && d.serviceAccountsNames.contains(d.newSecret.pickedServiceAccountToLink) && b.canI("serviceaccounts", "update") ? f(a, c) :d.postCreateAction({
 newSecret:a,
-creationAlert:d
+creationAlert:c
 });
-}
 }, function(a) {
 var b = a.data || {};
-return "AlreadyExists" === b.reason ? void (c.nameTaken = !0) :void (c.alerts.create = {
+return "AlreadyExists" === b.reason ? void (d.nameTaken = !0) :void (d.alerts.create = {
 type:"error",
 message:"An error occurred while creating the secret.",
-details:d("getErrorDetails")(a)
+details:c("getErrorDetails")(a)
 });
 });
 };
@@ -11768,22 +11760,24 @@ var d = a("annotation"), e = a("orderObjectsByDate"), f = function(a) {
 return _.get(a, "status.replicas") || !d(a, "deployment.kubernetes.io/revision");
 };
 b.$watch("replicaSetsByService", function(a) {
-var c = _.get(b, "service.metadata.name"), d = _.get(a, [ c ], []);
+var c = _.get(b, "service.metadata.name"), d = _.get(a, [ c ], {});
 b.visibleReplicaSets = e(_.filter(d, f), !0);
-}), b.$watch("visibleRCByDCAndService", function(a) {
-if (a) {
-var c = _.get(b, "service.metadata.name");
-b.activeDeploymentByConfig = {}, b.visibleReplicationControllersByDC = a[c], b.rcTileCount = 0, _.each(b.visibleReplicationControllersByDC, function(a, c) {
-c ? b.rcTileCount++ :b.rcTileCount += _.size(a);
 });
-}
+var g = function() {
+var a = _.get(b, "service.metadata.name"), c = _.get(b, [ "petSetsByService", a ], {}), d = _.get(b, [ "monopodsByService", a ], {}), e = 0;
+_.each(b.visibleReplicaSetsByDeployment, function(a, b) {
+b ? e++ :e += _.size(a);
+}), b.tileCount = _.size(b.deploymentConfigs) + _.size(b.replicationControllers) + _.size(c) + _.size(d) + e;
+};
+b.$watch("vanillaReplicationControllersByService", function(a) {
+var c = _.get(b, "service.metadata.name");
+b.replicationControllers = _.get(a, [ c ], {}), g();
+}), b.$watch("deploymentConfigsByService", function(a) {
+var c = _.get(b, "service.metadata.name");
+b.deploymentConfigs = _.get(a, c, {}), g();
 }), b.$watch("visibleRSByDeploymentAndService", function(a) {
-if (a) {
 var c = _.get(b, "service.metadata.name");
-b.visibleReplicaSetsByDeployment = a[c], b.rsTileCount = 0, _.each(b.visibleReplicaSetsByDeployment, function(a, c) {
-c ? b.rsTileCount++ :b.rsTileCount += _.size(a);
-});
-}
+b.visibleReplicaSetsByDeployment = _.get(a, [ c ], {}), g();
 });
 }
 };
@@ -11900,47 +11894,57 @@ restrict:"E",
 scope:!0,
 templateUrl:"views/overview/_set.html"
 };
-}), angular.module("openshiftConsole").directive("overviewDeploymentConfig", [ "$filter", "$uibModal", "DeploymentsService", function(a, b, c) {
+}), angular.module("openshiftConsole").directive("overviewDeploymentConfig", [ "$filter", "$uibModal", "DeploymentsService", "Navigate", function(a, b, c, d) {
 return {
 restrict:"E",
 scope:!0,
 templateUrl:"views/overview/_dc.html",
-link:function(d) {
-var e = a("orderObjectsByDate"), f = a("deploymentIsInProgress");
-d.$watch(function() {
-return _.get(d, [ "deploymentConfigs", d.dcName ]);
-}, function(a) {
-d.deploymentConfig = a;
-}), d.$watch("scalableReplicationControllerByDC", function(a) {
-d.activeReplicationController = _.get(d, [ "scalableReplicationControllerByDC", d.dcName ]);
-}), d.$watch("replicationControllers", function(a) {
-d.orderedReplicationControllers = e(a, !0), d.inProgressDeployment = _.find(d.orderedReplicationControllers, f);
+link:function(e) {
+var f = a("orderObjectsByDate"), g = a("deploymentIsInProgress");
+e.$watch("scalableReplicationControllerByDC", function() {
+var a = _.get(e, "deploymentConfig.metadata.name");
+e.activeReplicationController = _.get(e, [ "scalableReplicationControllerByDC", a ]);
+}), e.$watch("visibleRCByDC", function(a) {
+var b = _.get(e, "deploymentConfig.metadata.name"), c = _.get(a, [ b ], []);
+e.orderedReplicationControllers = f(c, !0), e.inProgressDeployment = _.find(e.orderedReplicationControllers, g);
+}), e.$watch("deploymentConfig", function(a) {
+var b = _.get(a, "spec.triggers", []);
+e.imageChangeTriggers = _.filter(b, function(a) {
+return "ImageChange" === a.type && _.get(a, "imageChangeParams.automatic");
 });
-var g;
-d.$watch("deploymentConfig.spec.paused", function() {
-g = !1;
-}), d.resumeDeployment = function() {
-g || (g = !0, c.setPaused(d.deploymentConfig, !1, {
-namespace:d.deploymentConfig.metadata.namespace
+}), e.urlForImageChangeTrigger = function(b) {
+var c = a("stripTag")(_.get(b, "imageChangeParams.from.name")), f = _.get(b, "imageChangeParams.from.namespace", e.deploymentConfig.metadata.namespace);
+return d.resourceURL(c, "ImageStream", f);
+}, e.startDeployment = function() {
+c.startLatestDeployment(e.deploymentConfig, {
+namespace:e.deploymentConfig.metadata.namespace
+}, e);
+};
+var h;
+e.$watch("deploymentConfig.spec.paused", function() {
+h = !1;
+}), e.resumeDeployment = function() {
+h || (h = !0, c.setPaused(e.deploymentConfig, !1, {
+namespace:e.deploymentConfig.metadata.namespace
 }).then(_.noop, function(b) {
-g = !1, d.alerts["resume-deployment"] = {
+h = !1, e.alerts["resume-deployment"] = {
 type:"error",
 message:"An error occurred resuming the deployment.",
 details:a("getErrorDetails")(b)
 };
 }));
-}, d.cancelDeployment = function() {
-var a = d.inProgressDeployment;
+}, e.cancelDeployment = function() {
+var a = e.inProgressDeployment;
 if (a) {
-var e = a.metadata.name, g = _.get(d, "deploymentConfig.status.latestVersion"), h = b.open({
+var d = a.metadata.name, f = _.get(e, "deploymentConfig.status.latestVersion"), h = b.open({
 animation:!0,
 templateUrl:"views/modals/confirm.html",
 controller:"ConfirmModalController",
 resolve:{
 modalConfig:function() {
 return {
-message:"Cancel deployment " + e + "?",
-details:g ? "This will attempt to stop the in-progress deployment and rollback to the previous deployment, #" + g + ". It may take some time to complete." :"This will attempt to stop the in-progress deployment and may take some time to complete.",
+message:"Cancel deployment " + d + "?",
+details:f ? "This will attempt to stop the in-progress deployment and rollback to the previous deployment, #" + f + ". It may take some time to complete." :"This will attempt to stop the in-progress deployment and may take some time to complete.",
 okButtonText:"Yes, cancel",
 okButtonClass:"btn-danger",
 cancelButtonText:"No, don't cancel"
@@ -11949,13 +11953,13 @@ cancelButtonText:"No, don't cancel"
 }
 });
 h.result.then(function() {
-var a = _.get(d, [ "replicationControllersByName", e ]);
-return a ? f(a) ? void c.cancelRunningDeployment(a, d.projectContext, d) :void (d.alerts["cancel-deployment"] = {
+var a = _.get(e, [ "replicationControllersByName", d ]);
+return a ? g(a) ? void c.cancelRunningDeployment(a, e.projectContext, e) :void (e.alerts["cancel-deployment"] = {
 type:"error",
-message:"Deployment " + e + " is no longer in progress."
-}) :void (d.alerts["cancel-deployment"] = {
+message:"Deployment " + d + " is no longer in progress."
+}) :void (e.alerts["cancel-deployment"] = {
 type:"error",
-message:"Deployment " + e + " no longer exists."
+message:"Deployment " + d + " no longer exists."
 });
 });
 }
