@@ -33,7 +33,8 @@ angular.module('openshiftConsole')
     var filterFields = [
       'metadata.name',
       'metadata.annotations["openshift.io/display-name"]',
-      'metadata.annotations["openshift.io/description"]'
+      'metadata.annotations["openshift.io/description"]',
+      'metadata.annotations["openshift.io/requester"]'
     ];
 
     var filterProjects = function() {
@@ -41,8 +42,15 @@ angular.module('openshiftConsole')
         KeywordService.filterForKeywords(sortedProjects, filterFields, filterKeywords);
     };
 
+    var previousSortID;
     var sortProjects = function() {
       var sortID = _.get($scope, 'sortConfig.currentField.id');
+
+      if (previousSortID !== sortID) {
+        // Default to desc for creation timestamp. Otherwise default to asc.
+        $scope.sortConfig.isAscending = sortID !== 'metadata.creationTimestamp';
+      }
+
       var sortValue = function(project) {
         var value = _.get(project, sortID) || _.get(project, 'metadata.name', '');
 
@@ -53,6 +61,9 @@ angular.module('openshiftConsole')
       sortedProjects = _.sortByOrder(projects,
                                      [ sortValue ],
                                      [ $scope.sortConfig.isAscending ? 'asc' : 'desc' ]);
+
+      // Remember the previous sort ID.
+      previousSortID = sortID;
     };
 
     var update = function() {
@@ -69,6 +80,14 @@ angular.module('openshiftConsole')
       }, {
         id: 'metadata.name',
         title: 'Name',
+        sortType: 'alpha'
+      }, {
+        id: 'metadata.annotations["openshift.io/requester"]',
+        title: 'Creator',
+        sortType: 'alpha'
+      }, {
+        id: 'metadata.creationTimestamp',
+        title: 'Creation Date',
         sortType: 'alpha'
       }],
       isAscending: true,

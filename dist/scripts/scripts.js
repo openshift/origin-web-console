@@ -3805,16 +3805,18 @@ var k, l, m = [], n = [];
 a.alerts = a.alerts || {}, a.loading = !0, a.showGetStarted = !1, a.canCreate = void 0, a.search = {
 text:""
 };
-var o = [ "metadata.name", 'metadata.annotations["openshift.io/display-name"]', 'metadata.annotations["openshift.io/description"]' ], p = function() {
-a.projects = i.filterForKeywords(l, o, n);
-}, q = function() {
-var b = _.get(a, "sortConfig.currentField.id"), c = function(a) {
+var o, p = [ "metadata.name", 'metadata.annotations["openshift.io/display-name"]', 'metadata.annotations["openshift.io/description"]', 'metadata.annotations["openshift.io/requester"]' ], q = function() {
+a.projects = i.filterForKeywords(l, p, n);
+}, r = function() {
+var b = _.get(a, "sortConfig.currentField.id");
+o !== b && (a.sortConfig.isAscending = "metadata.creationTimestamp" !== b);
+var c = function(a) {
 var c = _.get(a, b) || _.get(a, "metadata.name", "");
 return c.toLowerCase();
 };
-l = _.sortByOrder(k, [ c ], [ a.sortConfig.isAscending ? "asc" :"desc" ]);
-}, r = function() {
-q(), p();
+l = _.sortByOrder(k, [ c ], [ a.sortConfig.isAscending ? "asc" :"desc" ]), o = b;
+}, s = function() {
+r(), q();
 };
 a.sortConfig = {
 fields:[ {
@@ -3825,18 +3827,26 @@ sortType:"alpha"
 id:"metadata.name",
 title:"Name",
 sortType:"alpha"
+}, {
+id:'metadata.annotations["openshift.io/requester"]',
+title:"Creator",
+sortType:"alpha"
+}, {
+id:"metadata.creationTimestamp",
+title:"Creation Date",
+sortType:"alpha"
 } ],
 isAscending:!0,
-onSortChange:r
+onSortChange:s
 }, f.getAlerts().forEach(function(b) {
 a.alerts[b.name] = b.data;
 }), f.clearAlerts(), a.$watch("search.text", _.debounce(function(b) {
-n = i.generateKeywords(b), a.$apply(p);
+n = i.generateKeywords(b), a.$apply(q);
 }, 50, {
 maxWait:250
 })), g.withUser().then(function() {
 m.push(h.watch("projects", a, function(b) {
-k = _.toArray(b.by("metadata.name")), a.loading = !1, a.showGetStarted = _.isEmpty(k), r();
+k = _.toArray(b.by("metadata.name")), a.loading = !1, a.showGetStarted = _.isEmpty(k), s();
 }));
 }), h.get("projectrequests", null, a, {
 errorNotification:!1
