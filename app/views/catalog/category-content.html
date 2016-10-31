@@ -1,4 +1,4 @@
-<p ng-if="emptyCategory && !loaded">Loading...</p>
+<p ng-if="!loaded">Loading...</p>
 
 <div ng-if="emptyCategory && loaded" class="empty-state-message empty-state-full-page">
   <h2 class="text-center">No images or templates.</h2>
@@ -16,7 +16,7 @@
   <p><a ng-href="project/{{projectName}}/create">Back to catalog</a></p>
 </div>
 
-<div ng-if="!emptyCategory && !catalog.subcategories">
+<div ng-if="loaded && !emptyCategory && !catalog.subcategories">
   <form role="form" fit class="search-pf has-button mar-bottom-xl">
     <div class="form-group has-clear">
       <!-- Add a hidden label for screen readers. -->

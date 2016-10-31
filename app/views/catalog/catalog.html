@@ -1,6 +1,6 @@
-<p ng-if="emptyCatalog && !loaded">Loading...</p>
+<p ng-if="!loaded">Loading...</p>
 
-<div ng-if="emptyCatalog && loaded && !nonBuilderImages.length" class="empty-state-message empty-state-full-page">
+<div ng-if="emptyCatalog && loaded" class="empty-state-message empty-state-full-page">
   <h2 class="text-center">No images or templates.</h2>
 
   <p class="gutter-top">
@@ -18,11 +18,7 @@
   <p><a href="{{projectName | projectOverviewURL}}">Back to overview</a></p>
 </div>
 
-<!-- Show an abbreviated message if only non-builders exist in the project.
-     We show a link to view the non-builder images below. -->
-<p ng-if="emptyCatalog && loaded && nonBuilderImages.length">No builder images or templates.</p>
-
-<div ng-show="!emptyCatalog">
+<div ng-show="!emptyCatalog && loaded && !singleCategory">
   <p ng-if="!parentCategory">Choose from web frameworks, databases, and other components to
   add content to your project.</p>
 
@@ -111,3 +107,14 @@
   </div>
 </div>
 
+<!-- If there is only one subcategory with items, just show the items. -->
+<div ng-if="singleCategory">
+  <category-content
+      project-name="projectName"
+      project-image-streams="projectImageStreams"
+      openshift-image-streams="openshiftImageStreams"
+      project-templates="projectTemplates"
+      openshift-templates="openshiftTemplates"
+      category="singleCategory">
+  </category-content>
+</div>

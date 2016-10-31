@@ -3721,8 +3721,8 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
 
 
   $templateCache.put('views/catalog/catalog.html',
-    "<p ng-if=\"emptyCatalog && !loaded\">Loading...</p>\n" +
-    "<div ng-if=\"emptyCatalog && loaded && !nonBuilderImages.length\" class=\"empty-state-message empty-state-full-page\">\n" +
+    "<p ng-if=\"!loaded\">Loading...</p>\n" +
+    "<div ng-if=\"emptyCatalog && loaded\" class=\"empty-state-message empty-state-full-page\">\n" +
     "<h2 class=\"text-center\">No images or templates.</h2>\n" +
     "<p class=\"gutter-top\">\n" +
     "No images or templates are loaded for this project or the shared\n" +
@@ -3735,9 +3735,7 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "</p>\n" +
     "<p><a href=\"{{projectName | projectOverviewURL}}\">Back to overview</a></p>\n" +
     "</div>\n" +
-    "\n" +
-    "<p ng-if=\"emptyCatalog && loaded && nonBuilderImages.length\">No builder images or templates.</p>\n" +
-    "<div ng-show=\"!emptyCatalog\">\n" +
+    "<div ng-show=\"!emptyCatalog && loaded && !singleCategory\">\n" +
     "<p ng-if=\"!parentCategory\">Choose from web frameworks, databases, and other components to add content to your project.</p>\n" +
     "<form role=\"form\" fit class=\"search-pf has-button\">\n" +
     "<div class=\"form-group has-clear\">\n" +
@@ -3799,12 +3797,17 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "</div>\n" +
     "</div>\n" +
     "</div>\n" +
+    "</div>\n" +
+    "\n" +
+    "<div ng-if=\"singleCategory\">\n" +
+    "<category-content project-name=\"projectName\" project-image-streams=\"projectImageStreams\" openshift-image-streams=\"openshiftImageStreams\" project-templates=\"projectTemplates\" openshift-templates=\"openshiftTemplates\" category=\"singleCategory\">\n" +
+    "</category-content>\n" +
     "</div>"
   );
 
 
   $templateCache.put('views/catalog/category-content.html',
-    "<p ng-if=\"emptyCategory && !loaded\">Loading...</p>\n" +
+    "<p ng-if=\"!loaded\">Loading...</p>\n" +
     "<div ng-if=\"emptyCategory && loaded\" class=\"empty-state-message empty-state-full-page\">\n" +
     "<h2 class=\"text-center\">No images or templates.</h2>\n" +
     "<p class=\"gutter-top\">\n" +
@@ -3817,7 +3820,7 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "</p>\n" +
     "<p><a ng-href=\"project/{{projectName}}/create\">Back to catalog</a></p>\n" +
     "</div>\n" +
-    "<div ng-if=\"!emptyCategory && !catalog.subcategories\">\n" +
+    "<div ng-if=\"loaded && !emptyCategory && !catalog.subcategories\">\n" +
     "<form role=\"form\" fit class=\"search-pf has-button mar-bottom-xl\">\n" +
     "<div class=\"form-group has-clear\">\n" +
     "\n" +
