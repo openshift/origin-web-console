@@ -7090,7 +7090,7 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "Destination Directory\n" +
     "</label>\n" +
     "<div>\n" +
-    "<input class=\"form-control\" id=\"destinationDir\" name=\"destinationDir\" ng-model=\"pickedSecret.destinationDir\" type=\"text\" placeholder=\"/\" autocorrect=\"off\" autocapitalize=\"off\" spellcheck ng-required=\"pickedSecret.secret.name\">\n" +
+    "<input class=\"form-control\" id=\"destinationDir\" name=\"destinationDir\" ng-model=\"pickedSecret.destinationDir\" type=\"text\" placeholder=\"/\" autocorrect=\"off\" autocapitalize=\"off\" spellcheck>\n" +
     "</div>\n" +
     "</div>\n" +
     "<div class=\"remove-secret\">\n" +
@@ -7120,9 +7120,9 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "<div class=\"row advanced-secrets\">\n" +
     "<div class=\"col-lg-6\">\n" +
     "<label class=\"picker-label\" ng-if=\"$first\">Build Secret</label>\n" +
-    "<ui-select ng-required=\"pickedSecret.mountPath !== ''\" ng-model=\"pickedSecret.secretSource.name\">\n" +
+    "<ui-select ng-required=\"pickedSecret.mountPath\" ng-model=\"pickedSecret.secretSource.name\">\n" +
     "<ui-select-match placeholder=\"Secret name\">{{$select.selected}}</ui-select-match>\n" +
-    "<ui-select-choices repeat=\"secret in (secretsByType | filter : $select.search)\">\n" +
+    "<ui-select-choices repeat=\"secret in (secretsByType[type] | filter : $select.search)\">\n" +
     "<div ng-bind-html=\"secret | highlight : $select.search\"></div>\n" +
     "</ui-select-choices>\n" +
     "</ui-select>\n" +
@@ -7133,7 +7133,7 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "Mount path\n" +
     "</label>\n" +
     "<div>\n" +
-    "<input class=\"form-control\" id=\"mountPath\" name=\"mountPath\" ng-model=\"pickedSecret.mountPath\" type=\"text\" placeholder=\"/\" autocorrect=\"off\" autocapitalize=\"off\" spellcheck ng-required=\"pickedSecret.sourceSecret.name\">\n" +
+    "<input class=\"form-control\" id=\"mountPath\" name=\"mountPath\" ng-model=\"pickedSecret.mountPath\" type=\"text\" placeholder=\"/\" autocorrect=\"off\" autocapitalize=\"off\" spellcheck>\n" +
     "</div>\n" +
     "</div>\n" +
     "<div class=\"remove-secret\">\n" +

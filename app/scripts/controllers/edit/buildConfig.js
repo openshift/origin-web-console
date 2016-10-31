@@ -385,10 +385,12 @@ angular.module('openshiftConsole')
     };
 
     var updateSourceSecrets = function(object, pickedSecrets) {
-      var lastPickedSecret = _.head(pickedSecrets);
-      var property = $scope.strategyType === "Custom" ? "mountPath" : "destinationDir";
-      if (lastPickedSecret[property]) {
-        object.secrets = pickedSecrets;
+      var property = $scope.strategyType === "Custom" ? "secretSource" : "secret";
+      var nonEmptySecrets = _.filter(pickedSecrets, function(secret) {
+        return secret[property].name;
+      });
+      if (!_.isEmpty(nonEmptySecrets)) {
+        object.secrets = nonEmptySecrets;
       } else {
         delete object.secrets;
       }
