@@ -18,11 +18,11 @@ if ! which xdpyinfo >/dev/null 2>&1; then
 fi
 
 if ! which Xvfb >/dev/null 2>&1; then
-	echo "[ERROR] The \`xdpyinfo\` utility is required to run this script!."
+	echo "[ERROR] The \`Xvfb\` utility is required to run this script!."
 	exit 1
 fi
 
-# We don't need grunt to be installed globally for the system, so 
+# We don't need grunt to be installed globally for the system, so
 # we can amend our path to look into the local node_modules for the
 # correct binaries.
 repo_root="$( dirname "${BASH_SOURCE}" )/.."
