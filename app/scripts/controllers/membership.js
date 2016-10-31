@@ -25,32 +25,30 @@ angular
 
       var allRoles = [];
 
-      // NOTE: these could all be moved out into a strings service.
-      var unescaped = {
-        errorReason: _.template('Reason: "<%= httpErr %>"')
-      };
-
-      var escaped = {
+      var messages = {
         notice: {
-          yourLastRole: _.template('Removing the role "<%- roleName %>" may completely remove your ability to see this project.')
+          yourLastRole: _.template('Removing the role "<%= roleName %>" may completely remove your ability to see this project.')
         },
         warning: {
           serviceAccount: _.template('Removing a system role granted to a service account may cause unexpected behavior.')
         },
         remove: {
           areYouSure: {
-            subject: _.template('Are you sure you want to remove <strong><%- roleName %></strong> from the <%- kindName %> <strong><%- subjectName %></strong>?'),
-            self: _.template('Are you sure you want to remove <strong><%- roleName %></strong> from <strong><%- subjectName %></strong> (you)?')
+            html: {
+              subject: _.template('Are you sure you want to remove <strong><%- roleName %></strong> from the <%- kindName %> <strong><%- subjectName %></strong>?'),
+              self: _.template('Are you sure you want to remove <strong><%- roleName %></strong> from <strong><%- subjectName %></strong> (you)?')
+            }
           },
-          success: _.template('The role "<%- roleName %>" was removed from "<%- subjectName %>".'),
-          error: _.template('The role "<%- roleName %>" was not removed from "<%- subjectName %>".')
+          success: _.template('The role "<%= roleName %>" was removed from "<%= subjectName %>".'),
+          error: _.template('The role "<%= roleName %>" was not removed from "<%= subjectName %>".')
         },
         update: {
           subject: {
-            success: _.template('The role "<%- roleName %>" was given to "<%- subjectName %>".'),
-            error: _.template('The role "<%- roleName %>" was not given to "<%- subjectName %>".')
+            success: _.template('The role "<%= roleName %>" was given to "<%= subjectName %>".'),
+            error: _.template('The role "<%= roleName %>" was not given to "<%= subjectName %>".')
           }
-        }
+        },
+        errorReason: _.template('Reason: "<%= httpErr %>"')
       };
 
       // NOTE: alert service?
@@ -91,16 +89,16 @@ angular
           .then(function() {
             resetForm();
             refreshRoleBindingList();
-            showAlert('rolebindingCreate', 'success', escaped.update.subject.success({
+            showAlert('rolebindingCreate', 'success', messages.update.subject.success({
               roleName: role.metadata.name,
               subjectName: newSubject.name
             }));
           }, function(err) {
             resetForm();
-            showAlert('rolebindingCreateFail', 'error', escaped.update.subject.error({
+            showAlert('rolebindingCreateFail', 'error', messages.update.subject.error({
               roleName: role.metadata.name,
               subjectName: newSubject.name
-            }), unescaped.errorReason({httpErr: $filter('getErrorDetails')(err)}));
+            }), messages.errorReason({httpErr: $filter('getErrorDetails')(err)}));
           });
       };
 
@@ -111,16 +109,16 @@ angular
           .then(function() {
             resetForm();
             refreshRoleBindingList();
-            showAlert('rolebindingUpdate', 'success', escaped.update.subject.success({
+            showAlert('rolebindingUpdate', 'success', messages.update.subject.success({
               roleName: rb.roleRef.name,
               subjectName: newSubject.name
             }));
           }, function(err) {
             resetForm();
-            showAlert('rolebindingUpdateFail', 'error', escaped.update.subject.error({
+            showAlert('rolebindingUpdateFail', 'error', messages.update.subject.error({
               roleName: rb.roleRef.name,
               subjectName: newSubject.name
-            }), unescaped.errorReason({httpErr: $filter('getErrorDetails')(err)}));
+            }), messages.errorReason({httpErr: $filter('getErrorDetails')(err)}));
           });
       };
 
@@ -180,7 +178,7 @@ angular
       var createModalScope = function(subjectName, kind, roleName, currentUserName) {
         var modalScope = {
           alerts: {},
-          detailsMarkup: escaped.remove.areYouSure.subject({
+          detailsMarkup: messages.remove.areYouSure.html.subject({
             roleName: roleName,
             kindName: humanizeKind(kind),
             subjectName:  subjectName
@@ -190,16 +188,16 @@ angular
           cancelButtonText: 'Cancel'
         };
         if(_.isEqual(subjectName, currentUserName)) {
-          modalScope.detailsMarkup = escaped.remove.areYouSure.self({
+          modalScope.detailsMarkup = messages.remove.areYouSure.html.self({
             roleName: roleName,
             subjectName: subjectName
           });
           if(MembershipService.isLastRole($scope.user.metadata.name, $scope.roleBindings)) {
-            showAlert('currentUserLastRole', 'error', escaped.notice.yourLastRole({roleName: roleName}), null, modalScope);
+            showAlert('currentUserLastRole', 'error', messages.notice.yourLastRole({roleName: roleName}), null, modalScope);
           }
         }
         if(_.isEqual(kind, 'ServiceAccount') && _.startsWith(roleName, 'system:')) {
-          showAlert('editingServiceAccountRole', 'error', escaped.warning.serviceAccount(), null, modalScope);
+          showAlert('editingServiceAccountRole', 'error', messages.warning.serviceAccount(), null, modalScope);
         }
         return modalScope;
       };
@@ -253,16 +251,16 @@ angular
                       $location.url("./");
                     } else {
                       refreshRoleBindingList();
-                      showAlert('rolebindingUpdate', 'success', escaped.remove.success({
+                      showAlert('rolebindingUpdate', 'success', messages.remove.success({
                         roleName: roleName,
                         subjectName: subjectName
                       }));
                     }
                   }, function(err) {
-                    showAlert('rolebindingUpdateFail', 'error', escaped.remove.error({
+                    showAlert('rolebindingUpdateFail', 'error', messages.remove.error({
                       roleName: roleName,
                       subjectName: subjectName
-                    }),  unescaped.errorReason({
+                    }),  messages.errorReason({
                       httpErr: $filter('getErrorDetails')(err)
                     }));
                   });
