@@ -285,17 +285,10 @@ angular.module("openshiftConsole")
               $scope.updateResources.push(updatedResource);
             },
             // resource doesn't exist with RC 404 or catch other RC
-            function(response) {
-              if (response.status === 404) {
-                $scope.createResources.push(item);
-              } else {
-                $scope.alerts["check"] = {
-                  type: "error",
-                  message: "An error occurred checking if the " + humanizeKind(item.kind) + " " + item.metadata.name + " already exists.",
-                  details: "Reason: " + $filter('getErrorDetails')(response)
-                };
-                $scope.errorOccured = true;
-              }
+            function() {
+              // Either it didn't exist already or we couldn't validate existence for some reason, just continue on
+              // and try to create it.
+              $scope.createResources.push(item);
           });
         }
 
@@ -318,8 +311,10 @@ angular.module("openshiftConsole")
               },
               // create resource failure
               function(result) {
-                $scope.error = {
-                  message: $filter('getErrorDetails')(result)
+                $scope.alerts["create"+resource.metadata.name] = {
+                  type: "error",
+                  message: "Unable to create the " + humanizeKind(resource.kind) + " '" + resource.metadata.name + "'.",
+                  details: $filter('getErrorDetails')(result)
                 };
               });
           } else {
@@ -338,8 +333,10 @@ angular.module("openshiftConsole")
               },
               // update resource failure
               function(result) {
-                $scope.error = {
-                  message: $filter('getErrorDetails')(result)
+                $scope.alerts["update"+resource.metadata.name] = {
+                  type: "error",
+                  message: "Unable to update the " + humanizeKind(resource.kind) + " '" + resource.metadata.name + "'.",
+                  details: $filter('getErrorDetails')(result)
                 };
               });
           }

@@ -8531,12 +8531,8 @@ errorNotification:!1
 }).then(function(b) {
 var c = angular.copy(a), d = angular.copy(b.metadata);
 d.annotations = a.metadata.annotations, d.labels = a.metadata.labels, c.metadata = d, l.updateResources.push(c);
-}, function(b) {
-404 === b.status ? l.createResources.push(a) :(l.alerts.check = {
-type:"error",
-message:"An error occurred checking if the " + w(a.kind) + " " + a.metadata.name + " already exists.",
-details:"Reason: " + d("getErrorDetails")(b)
-}, l.errorOccured = !0);
+}, function() {
+l.createResources.push(a);
 }) :(l.errorOccured = !0, void (l.error = {
 message:j.unsupportedObjectKindOrVersion(a)
 })) :(l.errorOccured = !0, void (l.error = {
@@ -8555,9 +8551,11 @@ type:"success",
 message:a.kind + " " + a.metadata.name + " was successfully updated."
 }
 }), q();
-}, function(a) {
-l.error = {
-message:d("getErrorDetails")(a)
+}, function(b) {
+l.alerts["update" + a.metadata.name] = {
+type:"error",
+message:"Unable to update the " + w(a.kind) + " '" + a.metadata.name + "'.",
+details:d("getErrorDetails")(b)
 };
 })) :(a = _.head(l.createResources), i.create(j.kindToResource(a.kind), null, a, {
 namespace:l.projectName
@@ -8569,9 +8567,11 @@ type:"success",
 message:a.kind + " " + a.metadata.name + " was successfully created."
 }
 }), q();
-}, function(a) {
-l.error = {
-message:d("getErrorDetails")(a)
+}, function(b) {
+l.alerts["create" + a.metadata.name] = {
+type:"error",
+message:"Unable to create the " + w(a.kind) + " '" + a.metadata.name + "'.",
+details:d("getErrorDetails")(b)
 };
 }));
 }
