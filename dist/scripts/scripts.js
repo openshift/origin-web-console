@@ -5995,7 +5995,9 @@ link:"project/" + c.projectName + "/browse/secrets"
 title:"Create Secret"
 } ], i.get(b.project).then(_.spread(function(b, d) {
 c.project = b, c.context = d, c.breadcrumbs[0].title = a("displayName")(b), c.postCreateAction = function(a, b) {
-e.addAlert(b), h.toResourceList("secrets", c.projectName);
+_.each(b, function(a) {
+e.addAlert(a);
+}), h.toResourceList("secrets", c.projectName);
 }, c.cancel = function() {
 h.toResourceList("secrets", c.projectName);
 };
@@ -7850,7 +7852,9 @@ n("An error occurred attaching the persistent volume claim to the " + a("humaniz
 }));
 } ]), angular.module("openshiftConsole").controller("CreateSecretModalController", [ "$scope", "$uibModalInstance", function(a, b) {
 a.postCreateAction = function(c, d) {
-b.close(c), a.alerts[d.name] = d.data;
+b.close(c), _.each(d, function(b) {
+a.alerts[b.name] = b.data;
+});
 }, a.cancel = function() {
 b.dismiss("cancel");
 };
@@ -7986,7 +7990,7 @@ a.hideBuild = c(b);
 },
 templateUrl:"views/directives/_build-close.html"
 };
-} ]), angular.module("openshiftConsole").directive("createSecret", [ "DataService", "AuthorizationService", function(a, b) {
+} ]), angular.module("openshiftConsole").directive("createSecret", [ "DataService", "AuthorizationService", "$filter", function(a, b, c) {
 return {
 restrict:"E",
 scope:{
@@ -7997,8 +8001,8 @@ postCreateAction:"&",
 cancel:"&"
 },
 templateUrl:"views/directives/create-secret.html",
-link:function(c, d) {
-c.alerts = {}, c.secretAuthTypeMap = {
+link:function(d) {
+d.alerts = {}, d.secretAuthTypeMap = {
 image:{
 label:"Image Secret",
 authTypes:[ {
@@ -8019,50 +8023,50 @@ id:"kubernetes.io/ssh-auth",
 label:"SSH Key"
 } ]
 }
-}, c.secretTypes = _.keys(c.secretAuthTypeMap), c.type ? c.newSecret = {
-type:c.type,
-authType:c.secretAuthTypeMap[c.type].authTypes[0].id,
+}, d.secretTypes = _.keys(d.secretAuthTypeMap), d.type ? d.newSecret = {
+type:d.type,
+authType:d.secretAuthTypeMap[d.type].authTypes[0].id,
 data:{},
-linkSecret:!_.isEmpty(c.serviceAccountToLink),
-pickedServiceAccountToLink:c.serviceAccountToLink || ""
-} :c.newSecret = {
+linkSecret:!_.isEmpty(d.serviceAccountToLink),
+pickedServiceAccountToLink:d.serviceAccountToLink || ""
+} :d.newSecret = {
 type:"source",
 authType:"kubernetes.io/basic-auth",
 data:{},
 linkSecret:!1,
 pickedServiceAccountToLink:""
-}, c.add = {
+}, d.add = {
 gitconfig:!1,
 cacert:!1
-}, !c.serviceAccountToLink && b.canI("serviceaccounts", "list") && b.canI("serviceaccounts", "update") && a.list("serviceaccounts", c, function(a) {
-c.serviceAccounts = a.by("metadata.name"), c.serviceAccountsNames = _.keys(c.serviceAccounts);
+}, b.canI("serviceaccounts", "list") && b.canI("serviceaccounts", "update") && a.list("serviceaccounts", d, function(a) {
+d.serviceAccounts = a.by("metadata.name"), d.serviceAccountsNames = _.keys(d.serviceAccounts);
 });
 var e = function(a, b) {
-var d = {
+var c = {
 apiVersion:"v1",
 kind:"Secret",
 metadata:{
-name:c.newSecret.data.secretName
+name:d.newSecret.data.secretName
 },
 type:b,
 data:{}
 };
 switch (b) {
 case "kubernetes.io/basic-auth":
-a.passwordToken ? d.data = {
+a.passwordToken ? c.data = {
 password:window.btoa(a.passwordToken)
-} :d.type = "Opaque", a.username && (d.data.username = window.btoa(a.username)), a.gitconfig && (d.data[".gitconfig"] = window.btoa(a.gitconfig)), a.cacert && (d.data["ca.crt"] = window.btoa(a.cacert));
+} :c.type = "Opaque", a.username && (c.data.username = window.btoa(a.username)), a.gitconfig && (c.data[".gitconfig"] = window.btoa(a.gitconfig)), a.cacert && (c.data["ca.crt"] = window.btoa(a.cacert));
 break;
 
 case "kubernetes.io/ssh-auth":
-d.data = {
+c.data = {
 "ssh-privatekey":window.btoa(a.privateKey)
-}, a.gitconfig && (d.data[".gitconfig"] = window.btoa(a.gitconfig));
+}, a.gitconfig && (c.data[".gitconfig"] = window.btoa(a.gitconfig));
 break;
 
 case "kubernetes.io/dockerconfigjson":
 var e = window.btoa(a.dockerConfig);
-JSON.parse(a.dockerConfig).auths ? d.data[".dockerconfigjson"] = e :(d.type = "kubernetes.io/dockercfg", d.data[".dockercfg"] = e);
+JSON.parse(a.dockerConfig).auths ? c.data[".dockerconfigjson"] = e :(c.type = "kubernetes.io/dockercfg", c.data[".dockercfg"] = e);
 break;
 
 case "kubernetes.io/dockercfg":
@@ -8072,80 +8076,80 @@ username:a.dockerUsername,
 password:a.dockerPassword,
 email:a.dockerMail,
 auth:f
-}, d.data[".dockercfg"] = window.btoa(JSON.stringify(g));
+}, c.data[".dockercfg"] = window.btoa(JSON.stringify(g));
 }
-return d;
-}, f = function(b) {
-var e = angular.copy(c.serviceAccounts[c.newSecret.pickedServiceAccountToLink]);
-switch (c.newSecret.type) {
+return c;
+}, f = function(b, e) {
+var f = angular.copy(d.serviceAccounts[d.newSecret.pickedServiceAccountToLink]);
+switch (d.newSecret.type) {
 case "source":
-e.secrets.push({
+f.secrets.push({
 name:b.metadata.name
 });
 break;
 
 case "image":
-e.imagePullSecrets.push({
+f.imagePullSecrets.push({
 name:b.metadata.name
 });
 }
-var f = c.serviceAccountToLink ? {
+var g = d.serviceAccountToLink ? {
 errorNotification:!1
 } :{};
-a.update("serviceaccounts", c.newSecret.pickedServiceAccountToLink, e, c, f).then(function(a) {
-var d = {
-name:"createAndLink",
+a.update("serviceaccounts", d.newSecret.pickedServiceAccountToLink, f, d, g).then(function(a) {
+e.push({
+name:"create",
 data:{
 type:"success",
 message:"Secret " + b.metadata.name + " was created and linked with service account " + a.metadata.name + "."
 }
-};
-c.postCreateAction({
+}), d.postCreateAction({
 newSecret:b,
-creationAlert:d
+creationAlert:e
 });
 }, function(a) {
-c.alerts = {
+e.push({
 name:"createAndLink",
 data:{
 type:"error",
-message:"An error occurred while linking the secret with service account.",
-details:d("getErrorDetails")(a)
+message:"An error occurred while linking the secret with service account " + d.newSecret.pickedServiceAccountToLink + ".",
+details:c("getErrorDetails")(a)
 }
-};
+}), d.postCreateAction({
+newSecret:b,
+creationAlert:e
+});
 });
 }, g = _.debounce(function() {
 try {
-JSON.parse(c.newSecret.data.dockerConfig), c.invalidConfigFormat = !1;
+JSON.parse(d.newSecret.data.dockerConfig), d.invalidConfigFormat = !1;
 } catch (a) {
-c.invalidConfigFormat = !0;
+d.invalidConfigFormat = !0;
 }
 }, 300, {
 leading:!0
 });
-c.aceChanged = g, c.create = function() {
-c.alerts = {};
-var g = e(c.newSecret.data, c.newSecret.authType);
-a.create("secrets", null, g, c).then(function(a) {
-if (c.newSecret.linkSecret && c.newSecret.pickedServiceAccountToLink && b.canI("serviceaccounts", "update")) f(a); else {
-var d = {
+d.aceChanged = g, d.create = function() {
+d.alerts = {};
+var g = e(d.newSecret.data, d.newSecret.authType);
+a.create("secrets", null, g, d).then(function(a) {
+var c = [ {
 name:"create",
 data:{
 type:"success",
 message:"Secret " + g.metadata.name + " was created."
 }
-};
-c.postCreateAction({
+} ];
+d.newSecret.linkSecret && d.serviceAccountsNames.contains(d.newSecret.pickedServiceAccountToLink) && b.canI("serviceaccounts", "update") ? f(a, c) :d.postCreateAction({
 newSecret:a,
-creationAlert:d
+creationAlert:c
 });
-}
 }, function(a) {
 var b = a.data || {};
-return "AlreadyExists" === b.reason ? void (c.nameTaken = !0) :void (c.alerts.create = {
+return "AlreadyExists" === b.reason ? void (d.nameTaken = !0) :void (d.alerts.create = {
 type:"error",
 message:"An error occurred while creating the secret.",
-details:d("getErrorDetails")(a)
+details:c("getErrorDetails")(a)
 });
 });
 };

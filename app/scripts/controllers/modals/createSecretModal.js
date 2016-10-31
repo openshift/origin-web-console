@@ -11,10 +11,12 @@
 angular.module('openshiftConsole')
   .controller('CreateSecretModalController', function ($scope, $uibModalInstance) {
 
-    $scope.postCreateAction = function(newSecret, creationAlert) {
+    $scope.postCreateAction = function(newSecret, creationAlerts) {
       $uibModalInstance.close(newSecret);
       // Add creation alert into scope
-      $scope.alerts[creationAlert.name] = creationAlert.data;
+      _.each(creationAlerts, function(alert) {
+        $scope.alerts[alert.name] = alert.data;
+      });
     };
 
     $scope.cancel = function() {
