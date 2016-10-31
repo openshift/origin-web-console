@@ -6,10 +6,7 @@
       <div class="middle-container">
         <div class="middle-header">
           <div class="container-fluid">
-            <div row mobile="column" class="tech-preview-header">
-              <breadcrumbs breadcrumbs="breadcrumbs"></breadcrumbs>
-              <span ng-if="build | isJenkinsPipelineStrategy" class="pad-top-md"><span class="label label-warning">Technology Preview</span></span>
-            </div>
+            <breadcrumbs breadcrumbs="breadcrumbs"></breadcrumbs>
             <alerts alerts="alerts"></alerts>
             <div ng-if="!loaded" class="mar-top-xl">Loading...</div>
             <div ng-if="build">

@@ -9,10 +9,7 @@
         <div class="row">
           <div class="col-md-12">
             <div class="page-header page-header-bleed-right page-header-bleed-left">
-              <div row mobile="column" class="tech-preview-header">
-                <h1 class="mar-top-none">Pipelines</h1>
-                <span><!-- leave wrapper span so label doesn't stretch to flex content --><span class="label label-warning">Technology Preview</span></span>              
-              </div>              
+              <h1 class="mar-top-none">Pipelines</h1>
             </div>
             <alerts alerts="alerts"></alerts>
             <div ng-if="!(buildConfigs | hashSize)" class="mar-top-lg">
@@ -57,7 +54,7 @@
                   <span class="word-break" ng-if="buildConfigs[buildConfigName].spec.source.type == 'Git'" ><osc-git-link
                         uri="buildConfigs[buildConfigName].spec.source.git.uri"
                         ref="buildConfigs[buildConfigName].spec.source.git.ref"
-                        context-dir="buildConfigs[buildConfigName].spec.source.contextDir">{{buildConfigs[buildConfigName].spec.source.git.uri}}</osc-git-link></span>                  
+                        context-dir="buildConfigs[buildConfigName].spec.source.contextDir">{{buildConfigs[buildConfigName].spec.source.git.uri}}</osc-git-link></span>
                 </div>
               </div>
               <!-- Handle missing build configs -->

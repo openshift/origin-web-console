@@ -1487,10 +1487,7 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "<div class=\"middle-container\">\n" +
     "<div class=\"middle-header\">\n" +
     "<div class=\"container-fluid\">\n" +
-    "<div row mobile=\"column\" class=\"tech-preview-header\">\n" +
     "<breadcrumbs breadcrumbs=\"breadcrumbs\"></breadcrumbs>\n" +
-    "<span ng-if=\"buildConfig | isJenkinsPipelineStrategy\" class=\"pad-top-md\"><span class=\"label label-warning\">Technology Preview</span></span>\n" +
-    "</div>\n" +
     "<alerts alerts=\"alerts\"></alerts>\n" +
     "<h1>\n" +
     "{{buildConfigName}}\n" +
@@ -1863,10 +1860,7 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "<div class=\"middle-container\">\n" +
     "<div class=\"middle-header\">\n" +
     "<div class=\"container-fluid\">\n" +
-    "<div row mobile=\"column\" class=\"tech-preview-header\">\n" +
     "<breadcrumbs breadcrumbs=\"breadcrumbs\"></breadcrumbs>\n" +
-    "<span ng-if=\"build | isJenkinsPipelineStrategy\" class=\"pad-top-md\"><span class=\"label label-warning\">Technology Preview</span></span>\n" +
-    "</div>\n" +
     "<alerts alerts=\"alerts\"></alerts>\n" +
     "<div ng-if=\"!loaded\" class=\"mar-top-xl\">Loading...</div>\n" +
     "<div ng-if=\"build\">\n" +
@@ -9909,10 +9903,7 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "<div class=\"row\">\n" +
     "<div class=\"col-md-12\">\n" +
     "<div class=\"page-header page-header-bleed-right page-header-bleed-left\">\n" +
-    "<div row mobile=\"column\" class=\"tech-preview-header\">\n" +
     "<h1 class=\"mar-top-none\">Pipelines</h1>\n" +
-    "<span><span class=\"label label-warning\">Technology Preview</span></span>\n" +
-    "</div>\n" +
     "</div>\n" +
     "<alerts alerts=\"alerts\"></alerts>\n" +
     "<div ng-if=\"!(buildConfigs | hashSize)\" class=\"mar-top-lg\">\n" +
