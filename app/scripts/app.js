@@ -206,7 +206,8 @@ angular
       })
       .when('/project/:project/browse/images', {
         templateUrl: 'views/images.html',
-        controller: 'ImagesController'
+        controller: 'ImagesController',
+        reloadOnSearch: false
       })
       .when('/project/:project/browse/images/:imagestream', {
         templateUrl: 'views/browse/imagestream.html',
