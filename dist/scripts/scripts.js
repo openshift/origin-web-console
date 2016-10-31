@@ -6478,8 +6478,10 @@ mountPath:""
 }, u = function(a, b, c) {
 b.name ? a[c] = b :delete a[c];
 }, v = function(b, c) {
-var d = _.head(c), e = "Custom" === a.strategyType ? "mountPath" :"destinationDir";
-d[e] ? b.secrets = c :delete b.secrets;
+var d = "Custom" === a.strategyType ? "secretSource" :"secret", e = _.filter(c, function(a) {
+return a[d].name;
+});
+_.isEmpty(e) ? delete b.secrets :b.secrets = e;
 }, w = function(a, b) {
 return "None" === b.type ? a :(a.none = !1, angular.forEach(b, function(b, c) {
 a[c] = !0;
@@ -9190,10 +9192,10 @@ b.canAddSourceSecret = function() {
 var a = _.last(b.pickedSecrets);
 switch (b.strategyType) {
 case "Custom":
-return a.secretSource.name && a.mountPath;
+return a.secretSource.name;
 
 default:
-return a.secret.name && a.destinationDir;
+return a.secret.name;
 }
 }, b.setLastSecretsName = function(a) {
 var c = _.last(b.pickedSecrets);
