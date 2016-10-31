@@ -4435,10 +4435,10 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "<label-editor labels=\"userDefinedLabels\" system-labels=\"systemLabels\" expand=\"true\" can-toggle=\"false\" help-text=\"Each label is applied to each created resource.\">\n" +
     "</label-editor>\n" +
     "</div>\n" +
-    "<alerts alerts=\"alerts\"></alerts>\n" +
     "<div class=\"gutter-top\">\n" +
     "<a href=\"\" ng-click=\"advancedOptions = !advancedOptions\" role=\"button\">{{advancedOptions ? 'Hide' : 'Show'}} advanced routing, build, deployment and source options</a>\n" +
     "</div>\n" +
+    "<alerts alerts=\"alerts\"></alerts>\n" +
     "<div class=\"buttons gutter-bottom\" ng-class=\"{'gutter-top': !alerts.length}\">\n" +
     "\n" +
     "<button type=\"submit\" class=\"btn btn-primary btn-lg\" ng-disabled=\"form.$invalid || nameTaken || cpuProblems.length || memoryProblems.length || disableInputs\">Create</button>\n" +
@@ -5558,6 +5558,7 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "</osc-form-section>\n" +
     "<label-editor labels=\"labels\" system-labels=\"systemLabels\" expand=\"true\" can-toggle=\"false\" help-text=\"Each label is applied to each created resource.\">\n" +
     "</label-editor>\n" +
+    "<alerts alerts=\"alerts\"></alerts>\n" +
     "<div class=\"button-group gutter-bottom\" ng-class=\"{'gutter-top': !alerts.length}\">\n" +
     "<button type=\"submit\" class=\"btn btn-primary btn-lg\" ng-click=\"create()\" value=\"\" ng-disabled=\"form.$invalid || nameTaken || disableInputs\">Create</button>\n" +
     "<a class=\"btn btn-default btn-lg\" href=\"#\" back>Cancel</a>\n" +
@@ -5946,6 +5947,7 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "          }\n" +
     "        }\" ng-model=\"editorContent\" class=\"editor ace-bordered yaml-mode\" id=\"add-component-editor\" required></div>\n" +
     "</div>\n" +
+    "<alerts alerts=\"alerts\"></alerts>\n" +
     "<div class=\"buttons gutter-bottom\" ng-class=\"{'gutter-top': !alerts.length}\">\n" +
     "<button type=\"submit\" ng-click=\"create()\" ng-disabled=\"editorErrorAnnotation || !editorContent\" class=\"btn btn-primary btn-lg\">\n" +
     "Create\n" +
@@ -9245,7 +9247,6 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "</div>\n" +
     "<div class=\"col-md-9\">\n" +
     "<fieldset ng-disabled=\"disableInputs\">\n" +
-    "<alerts alerts=\"alerts\"></alerts>\n" +
     "<osc-image-summary resource=\"template\"></osc-image-summary>\n" +
     "<div ng-if=\"templateImages.length\" class=\"images\">\n" +
     "<h2>Images</h2>\n" +
@@ -9269,6 +9270,7 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "<template-options parameters=\"template.parameters\" expand=\"true\" can-toggle=\"false\"></template-options>\n" +
     "<label-editor labels=\"labels\" system-labels=\"systemLabels\" expand=\"true\" can-toggle=\"false\" help-text=\"Each label is applied to each created resource.\">\n" +
     "</label-editor>\n" +
+    "<alerts alerts=\"alerts\"></alerts>\n" +
     "<div class=\"buttons gutter-top-bottom\">\n" +
     "<button class=\"btn btn-primary btn-lg\" ng-click=\"createFromTemplate()\" ng-disabled=\"templateForm.$invalid || disableInputs\">Create</button>\n" +
     "<a class=\"btn btn-default btn-lg\" href=\"{{projectName | projectOverviewURL}}\">Cancel</a>\n" +

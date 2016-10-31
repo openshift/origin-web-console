@@ -423,10 +423,10 @@
                                 help-text="Each label is applied to each created resource.">
                             </label-editor>
                           </div>
-                          <alerts alerts="alerts"></alerts>
                           <div class="gutter-top">
                             <a href="" ng-click="advancedOptions = !advancedOptions" role="button">{{advancedOptions ? 'Hide' : 'Show'}} advanced routing, build, deployment and source options</a>
                           </div>
+                          <alerts alerts="alerts"></alerts>
                           <div class="buttons gutter-bottom" ng-class="{'gutter-top': !alerts.length}">
                             <!-- unable to use form.valid.  need to fix validators in labels and key values directive -->
                             <button type="submit"
