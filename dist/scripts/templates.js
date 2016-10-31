@@ -10284,7 +10284,8 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "<div ng-repeat=\"project in projects\" class=\"list-group-item project-info tile-click\">\n" +
     "<div row class=\"list-view-pf-actions project-actions\" ng-if=\"project.status.phase == 'Active'\">\n" +
     "<span class=\"fa-lg project-action-item\">\n" +
-    "<a ng-href=\"project/{{project.metadata.name}}/edit\" class=\"action-button\">\n" +
+    "\n" +
+    "<a ng-href=\"project/{{project.metadata.name}}/edit?then=./\" class=\"action-button\">\n" +
     "<i class=\"fa fa-pencil\" aria-hidden=\"true\"></i>\n" +
     "<span class=\"sr-only\">Edit Project</span>\n" +
     "</a>\n" +
