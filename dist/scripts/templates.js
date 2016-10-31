@@ -5499,7 +5499,7 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "<h2>\n" +
     "{{app.name}}<span ng-if=\"import.tag\">:{{import.tag}}</span>\n" +
     "<small>\n" +
-    "<span ng-if=\"mode === 'dockerImage'\">from {{import.result.ref.registry || \"Docker Hub\"}},</span>\n" +
+    "<span ng-if=\"import.result.ref.registry\">from {{import.result.ref.registry}},</span>\n" +
     "<relative-timestamp timestamp=\"import.image.dockerImageMetadata.Created\"></relative-timestamp>,\n" +
     "<span ng-if=\"import.image.dockerImageMetadata.Size\">{{import.image.dockerImageMetadata.Size | humanizeSize}},</span>\n" +
     "{{import.image.dockerImageLayers.length}} layers\n" +
