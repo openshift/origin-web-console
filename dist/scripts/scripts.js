@@ -4779,27 +4779,29 @@ a !== b && (localStorage.setItem("monitoring.eventsidebar.collapsed", c.renderOp
 }));
 } ]), angular.module("openshiftConsole").controller("MembershipController", [ "$filter", "$location", "$routeParams", "$scope", "$timeout", "$uibModal", "AuthService", "AuthorizationService", "DataService", "ProjectsService", "MembershipService", "RoleBindingsService", "RolesService", function(a, b, c, d, e, f, g, h, i, j, k, l, m) {
 var n, o = c.project, p = a("humanizeKind"), q = a("annotation"), r = [], s = {
-errorReason:_.template('Reason: "<%- httpErr %>"'),
 notice:{
-yourLastRole:_.template('Removing the role "<%- roleName %>" may completely remove your ability to see this project.')
+yourLastRole:_.template('Removing the role "<%= roleName %>" may completely remove your ability to see this project.')
 },
 warning:{
 serviceAccount:_.template("Removing a system role granted to a service account may cause unexpected behavior.")
 },
 remove:{
 areYouSure:{
+html:{
 subject:_.template("Are you sure you want to remove <strong><%- roleName %></strong> from the <%- kindName %> <strong><%- subjectName %></strong>?"),
 self:_.template("Are you sure you want to remove <strong><%- roleName %></strong> from <strong><%- subjectName %></strong> (you)?")
+}
 },
-success:_.template('The role "<%- roleName %>" was removed from "<%- subjectName %>".'),
-error:_.template('The role "<%- roleName %>" was not removed from "<%- subjectName %>".')
+success:_.template('The role "<%= roleName %>" was removed from "<%= subjectName %>".'),
+error:_.template('The role "<%= roleName %>" was not removed from "<%= subjectName %>".')
 },
 update:{
 subject:{
-success:_.template('The role "<%- roleName %>" was given to "<%- subjectName %>".'),
-error:_.template('The role "<%- roleName %>" was not given to "<%- subjectName %>".')
+success:_.template('The role "<%= roleName %>" was given to "<%= subjectName %>".'),
+error:_.template('The role "<%= roleName %>" was not given to "<%= subjectName %>".')
 }
-}
+},
+errorReason:_.template('Reason: "<%= httpErr %>"')
 }, t = function(a, b, c, e, f) {
 f = f || d, f.alerts[a] = {
 type:b,
@@ -4822,12 +4824,12 @@ errorNotification:!1
 d.disableAddForm = !0, l.create(b, c, o, n).then(function() {
 u(), v(), t("rolebindingCreate", "success", s.update.subject.success({
 roleName:b.metadata.name,
-subjectName:_.escape(c.name)
+subjectName:c.name
 }));
 }, function(d) {
 u(), t("rolebindingCreateFail", "error", s.update.subject.error({
 roleName:b.metadata.name,
-subjectName:_.escape(c.name)
+subjectName:c.name
 }), s.errorReason({
 httpErr:a("getErrorDetails")(d)
 }));
@@ -4836,12 +4838,12 @@ httpErr:a("getErrorDetails")(d)
 d.disableAddForm = !0, l.addSubject(b, c, e, n).then(function() {
 u(), v(), t("rolebindingUpdate", "success", s.update.subject.success({
 roleName:b.roleRef.name,
-subjectName:_.escape(c.name)
+subjectName:c.name
 }));
 }, function(d) {
 u(), t("rolebindingUpdateFail", "error", s.update.subject.error({
 roleName:b.roleRef.name,
-subjectName:_.escape(c.name)
+subjectName:c.name
 }), s.errorReason({
 httpErr:a("getErrorDetails")(d)
 }));
@@ -4891,18 +4893,18 @@ return a ? e + (q(a, "description") || b) :b;
 var A = function(a, b, c, e) {
 var f = {
 alerts:{},
-detailsMarkup:s.remove.areYouSure.subject({
+detailsMarkup:s.remove.areYouSure.html.subject({
 roleName:c,
 kindName:p(b),
-subjectName:_.escape(a)
+subjectName:a
 }),
 okButtonText:"Remove",
 okButtonClass:"btn-danger",
 cancelButtonText:"Cancel"
 };
-return _.isEqual(a, e) && (f.details = s.remove.areYouSure.self({
+return _.isEqual(a, e) && (f.detailsMarkup = s.remove.areYouSure.html.self({
 roleName:c,
-subjectName:_.escape(a)
+subjectName:a
 }), k.isLastRole(d.user.metadata.name, d.roleBindings) && t("currentUserLastRole", "error", s.notice.yourLastRole({
 roleName:c
 }), null, f)), _.isEqual(b, "ServiceAccount") && _.startsWith(c, "system:") && t("editingServiceAccountRole", "error", s.warning.serviceAccount(), null, f), f;
@@ -4934,12 +4936,12 @@ return i;
 l.removeSubject(c, g, d.roleBindings, n).then(function() {
 h ? b.url("./") :(v(), t("rolebindingUpdate", "success", s.remove.success({
 roleName:g,
-subjectName:_.escape(c)
+subjectName:c
 })));
 }, function(b) {
 t("rolebindingUpdateFail", "error", s.remove.error({
 roleName:g,
-subjectName:_.escape(c)
+subjectName:c
 }), s.errorReason({
 httpErr:a("getErrorDetails")(b)
 }));
