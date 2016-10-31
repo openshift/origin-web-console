@@ -9687,6 +9687,9 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "<i class=\"fa fa-angle-down fa-fw\" aria-hidden=\"true\" ng-if=\"!collapse\"></i>\n" +
     "<i class=\"fa fa-angle-right fa-fw\" aria-hidden=\"true\" ng-if=\"collapse\"></i>\n" +
     "{{appName | startCase}}\n" +
+    "<span ng-if=\"isDuplicateApp(appName)\" class=\"small\">\n" +
+    "{{service.metadata.name}}\n" +
+    "</span>\n" +
     "</h2>\n" +
     "<h3 class=\"route-title truncate\">\n" +
     "<span ng-if=\"appName && (displayRoute | isWebRoute)\">\n" +
