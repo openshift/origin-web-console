@@ -4878,6 +4878,9 @@ kubernetes-topology-graph{height:700px}
 .projects-bar .projects-search{display:flex;margin-bottom:20px}
 .projects-bar .projects-search .search-pf{display:block;flex:0 1 auto}
 .projects-bar .projects-search .search-pf.has-button .form-group{display:block}
+.projects-bar .projects-sort-label{margin-right:6px;padding-top:3px}
+@media (max-width:767px){.projects-bar .projects-sort-label{display:none!important}
+}
 .projects-bar .projects-sort{flex:1 0 auto}
 .projects-bar .projects-sort .form-group{margin:0}
 .projects-bar .vertical-divider{border-left:1px solid #bbb;display:inline-block;height:27px;margin:0 7px;vertical-align:middle;width:1px}

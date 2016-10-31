@@ -52,6 +52,7 @@
                               </div>
                             </form>
                             <span class="vertical-divider"></span>
+                            <span class="projects-sort-label">Sort by</span>
                             <div class="projects-sort">
                               <div pf-sort config="sortConfig" class="sort-controls"></div>
                             </div>
@@ -96,7 +97,12 @@
                                   title="This project has been marked for deletion."
                                   class="pficon pficon-warning-triangle-o"></span>
                               </h2>
-                              <p class="hidden-xs project-name-item" ng-if="project | displayName : true">{{project.metadata.name}}</p>
+                              <small>
+                                <span ng-if="project | displayName : true">{{project.metadata.name}} &ndash;</span>
+                                created
+                                <span ng-if="project | annotation : 'openshift.io/requester'">by {{project | annotation : 'openshift.io/requester'}}</span>
+                                <relative-timestamp timestamp="project.metadata.creationTimestamp"></relative-timestamp>
+                              </small>
                             </div>
                             <div class="list-view-pf-additional-info project-additional-info">
                               <span class="list-group-item-text project-description">

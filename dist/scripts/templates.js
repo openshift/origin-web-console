@@ -10269,6 +10269,7 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "</div>\n" +
     "</form>\n" +
     "<span class=\"vertical-divider\"></span>\n" +
+    "<span class=\"projects-sort-label\">Sort by</span>\n" +
     "<div class=\"projects-sort\">\n" +
     "<div pf-sort config=\"sortConfig\" class=\"sort-controls\"></div>\n" +
     "</div>\n" +
@@ -10301,7 +10302,12 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "<a class=\"tile-target\" ng-href=\"project/{{project.metadata.name}}\">{{project | displayName}}</a>\n" +
     "<span ng-if=\"project.status.phase != 'Active'\" data-toggle=\"tooltip\" title=\"This project has been marked for deletion.\" class=\"pficon pficon-warning-triangle-o\"></span>\n" +
     "</h2>\n" +
-    "<p class=\"hidden-xs project-name-item\" ng-if=\"project | displayName : true\">{{project.metadata.name}}</p>\n" +
+    "<small>\n" +
+    "<span ng-if=\"project | displayName : true\">{{project.metadata.name}} &ndash;</span>\n" +
+    "created\n" +
+    "<span ng-if=\"project | annotation : 'openshift.io/requester'\">by {{project | annotation : 'openshift.io/requester'}}</span>\n" +
+    "<relative-timestamp timestamp=\"project.metadata.creationTimestamp\"></relative-timestamp>\n" +
+    "</small>\n" +
     "</div>\n" +
     "<div class=\"list-view-pf-additional-info project-additional-info\">\n" +
     "<span class=\"list-group-item-text project-description\">\n" +
