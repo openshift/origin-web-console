@@ -6999,23 +6999,16 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
 
   $templateCache.put('views/directives/osc-secrets.html',
     "<ng-form name=\"secretsForm\" class=\"osc-secrets-form\">\n" +
-    "<div ng-repeat=\"pickedSecret in pickedSecrets\">\n" +
     "<div class=\"form-group\">\n" +
-    "<div class=\"row picked-secret\">\n" +
-    "<div class=\"col-lg-12\">\n" +
-    "<div ng-if=\"!allowMultipleSecrets\">\n" +
-    "<label class=\"picker-label\">{{displayType | startCase}} Secret</label>\n" +
-    "<ui-select ng-disabled=\"disableInput\" ng-model=\"pickedSecret.name\">\n" +
-    "<ui-select-match placeholder=\"Secret name\">{{$select.selected}}</ui-select-match>\n" +
-    "<ui-select-choices repeat=\"secret in (secretsByType[type] | filter : $select.search)\">\n" +
-    "<div ng-bind-html=\"secret | highlight : $select.search\"></div>\n" +
-    "</ui-select-choices>\n" +
-    "</ui-select>\n" +
-    "</div>\n" +
-    "<div ng-if=\"allowMultipleSecrets\">\n" +
     "<div class=\"basic-secrets\">\n" +
+    "<div class=\"input-labels\">\n" +
+    "<label class=\"input-label\">\n" +
+    "{{displayType | startCase}} Secret\n" +
+    "</label>\n" +
+    "</div>\n" +
+    "<div ng-repeat=\"pickedSecret in pickedSecrets\">\n" +
+    "<div class=\"secret-row\">\n" +
     "<div class=\"secret-name\">\n" +
-    "<label ng-if=\"$first\" class=\"picker-label\">{{displayType | startCase}} Secrets</label>\n" +
     "<ui-select ng-disabled=\"disableInput\" ng-model=\"pickedSecret.name\">\n" +
     "<ui-select-match placeholder=\"Secret name\">{{$select.selected}}</ui-select-match>\n" +
     "<ui-select-choices repeat=\"secret in (secretsByType[type] | filter : $select.search)\">\n" +
@@ -7024,12 +7017,14 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "</ui-select>\n" +
     "</div>\n" +
     "<div class=\"remove-secret\">\n" +
-    "<label class=\"sr-only\">Remove Build Secret</label>\n" +
-    "<a class=\"pficon pficon-close remove-btn\" aria-label=\"Delete row\" role=\"button\" ng-click=\"removeSecret($index)\" href=\"\"></a>\n" +
+    "<a ng-click=\"removeSecret($index)\" href=\"\" role=\"button\" class=\"remove-btn\">\n" +
+    "<span class=\"pficon pficon-close\" aria-hidden=\"true\"></span>\n" +
+    "<span class=\"sr-only\">Remove build secret</span>\n" +
+    "</a>\n" +
     "</div>\n" +
     "</div>\n" +
     "</div>\n" +
-    "<div ng-if=\"$last\" ng-switch=\"displayType\">\n" +
+    "<div class=\"help-blocks\" ng-switch=\"displayType\">\n" +
     "<div class=\"help-block\" ng-switch-when=\"source\">\n" +
     "Secret with credentials for pulling your source code.\n" +
     "<a href=\"{{'git_secret' | helpLink}}\" target=\"_blank\"><span class=\"learn-more-inline\">Learn more&nbsp;<i class=\"fa fa-external-link\" aria-hidden=\"true\"></i></span></a>\n" +
@@ -7041,8 +7036,6 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "<div class=\"help-block\" ng-switch-when=\"push\">\n" +
     "Secret for authentication when pushing images to a secured registry.\n" +
     "<a href=\"{{'pull_secret' | helpLink}}\" target=\"_blank\"><span class=\"learn-more-inline\">Learn more&nbsp;<i class=\"fa fa-external-link\" aria-hidden=\"true\"></i></span></a>\n" +
-    "</div>\n" +
-    "</div>\n" +
     "</div>\n" +
     "</div>\n" +
     "</div>\n" +
@@ -7061,11 +7054,19 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
   $templateCache.put('views/directives/osc-source-secrets.html',
     "<ng-form name=\"secretsForm\" class=\"osc-secrets-form\">\n" +
     "<div ng-if=\"strategyType !== 'Custom'\">\n" +
-    "<div ng-repeat=\"pickedSecret in pickedSecrets\">\n" +
     "<div class=\"form-group\">\n" +
-    "<div class=\"row advanced-secrets\">\n" +
-    "<div class=\"col-lg-6\">\n" +
-    "<label class=\"picker-label\" ng-if=\"$first\">Build Secret</label>\n" +
+    "<div class=\"advanced-secrets\">\n" +
+    "<div class=\"input-labels\">\n" +
+    "<label class=\"input-label\">\n" +
+    "Build Secret\n" +
+    "</label>\n" +
+    "<label class=\"input-label\">\n" +
+    "Destination Directory\n" +
+    "</label>\n" +
+    "</div>\n" +
+    "<div ng-repeat=\"pickedSecret in pickedSecrets\">\n" +
+    "<div class=\"secret-row\">\n" +
+    "<div class=\"secret-name\">\n" +
     "<ui-select ng-required=\"pickedSecret.destinationDir\" ng-model=\"pickedSecret.secret.name\">\n" +
     "<ui-select-match placeholder=\"Secret name\">{{$select.selected}}</ui-select-match>\n" +
     "<ui-select-choices repeat=\"secret in (secretsByType[type] | filter : $select.search)\">\n" +
@@ -7073,42 +7074,38 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "</ui-select-choices>\n" +
     "</ui-select>\n" +
     "</div>\n" +
-    "<div class=\"col-lg-6\">\n" +
-    "<div class=\"directory\">\n" +
-    "<label for=\"destinationDir\" ng-if=\"$first\">\n" +
-    "Destination Directory\n" +
-    "</label>\n" +
-    "<div>\n" +
+    "<div class=\"destination-dir\">\n" +
     "<input class=\"form-control\" id=\"destinationDir\" name=\"destinationDir\" ng-model=\"pickedSecret.destinationDir\" type=\"text\" placeholder=\"/\" autocorrect=\"off\" autocapitalize=\"off\" spellcheck=\"false\">\n" +
     "</div>\n" +
-    "</div>\n" +
     "<div class=\"remove-secret\">\n" +
-    "<a ng-click=\"removeSecret($index)\" href=\"\" role=\"button\">\n" +
-    "<span class=\"pficon pficon-close remove-btn\" aria-hidden=\"true\"></span>\n" +
+    "<a ng-click=\"removeSecret($index)\" href=\"\" role=\"button\" class=\"remove-btn\">\n" +
+    "<span class=\"pficon pficon-close\" aria-hidden=\"true\"></span>\n" +
     "<span class=\"sr-only\">Remove build secret</span>\n" +
     "</a>\n" +
     "</div>\n" +
     "</div>\n" +
     "</div>\n" +
-    "<div class=\"row\" ng-if=\"$last\">\n" +
-    "<div class=\"col-lg-6\">\n" +
+    "<div class=\"help-blocks\">\n" +
     "<div class=\"help-block\">Source secret to copy into the builder pod at build time.</div>\n" +
-    "</div>\n" +
-    "<div class=\"col-lg-6\">\n" +
-    "<div class=\"directory\">\n" +
     "<div class=\"help-block\">Directory where the files will be available at build time.</div>\n" +
     "</div>\n" +
     "</div>\n" +
     "</div>\n" +
     "</div>\n" +
-    "</div>\n" +
-    "</div>\n" +
     "<div ng-if=\"strategyType === 'Custom'\">\n" +
-    "<div ng-repeat=\"pickedSecret in pickedSecrets\">\n" +
     "<div class=\"form-group\">\n" +
-    "<div class=\"row advanced-secrets\">\n" +
-    "<div class=\"col-lg-6\">\n" +
-    "<label class=\"picker-label\" ng-if=\"$first\">Build Secret</label>\n" +
+    "<div class=\"advanced-secrets\">\n" +
+    "<div class=\"input-labels\">\n" +
+    "<label class=\"input-label\">\n" +
+    "Build Secret\n" +
+    "</label>\n" +
+    "<label class=\"input-label\">\n" +
+    "Mount path\n" +
+    "</label>\n" +
+    "</div>\n" +
+    "<div ng-repeat=\"pickedSecret in pickedSecrets\">\n" +
+    "<div class=\"secret-row\">\n" +
+    "<div class=\"secret-name\">\n" +
     "<ui-select ng-required=\"pickedSecret.mountPath\" ng-model=\"pickedSecret.secretSource.name\">\n" +
     "<ui-select-match placeholder=\"Secret name\">{{$select.selected}}</ui-select-match>\n" +
     "<ui-select-choices repeat=\"secret in (secretsByType[type] | filter : $select.search)\">\n" +
@@ -7116,30 +7113,20 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "</ui-select-choices>\n" +
     "</ui-select>\n" +
     "</div>\n" +
-    "<div class=\"col-lg-6\">\n" +
-    "<div class=\"directory\">\n" +
-    "<label for=\"mountPath\" ng-if=\"$first\">\n" +
-    "Mount path\n" +
-    "</label>\n" +
-    "<div>\n" +
+    "<div class=\"destination-dir\">\n" +
     "<input class=\"form-control\" id=\"mountPath\" name=\"mountPath\" ng-model=\"pickedSecret.mountPath\" type=\"text\" placeholder=\"/\" autocorrect=\"off\" autocapitalize=\"off\" spellcheck=\"false\">\n" +
     "</div>\n" +
-    "</div>\n" +
     "<div class=\"remove-secret\">\n" +
-    "<label class=\"sr-only\">Remove Build Secret</label>\n" +
-    "<a class=\"pficon pficon-close remove-btn\" aria-label=\"Delete row\" role=\"button\" ng-click=\"removeSecret($index)\" href=\"\"></a>\n" +
+    "<a ng-click=\"removeSecret($index)\" href=\"\" role=\"button\" class=\"remove-btn\">\n" +
+    "<span class=\"pficon pficon-close\" aria-hidden=\"true\"></span>\n" +
+    "<span class=\"sr-only\">Remove build secret</span>\n" +
+    "</a>\n" +
     "</div>\n" +
     "</div>\n" +
     "</div>\n" +
-    "<div class=\"row\" ng-if=\"$last\">\n" +
-    "<div class=\"col-lg-6\">\n" +
+    "<div class=\"help-blocks\">\n" +
     "<div class=\"help-block\">Source secret to mount into the builder pod at build time.</div>\n" +
-    "</div>\n" +
-    "<div class=\"col-lg-6\">\n" +
-    "<div class=\"directory\">\n" +
     "<div class=\"help-block\">Path at which to mount the secret.</div>\n" +
-    "</div>\n" +
-    "</div>\n" +
     "</div>\n" +
     "</div>\n" +
     "</div>\n" +
