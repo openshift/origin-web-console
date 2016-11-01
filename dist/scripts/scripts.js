@@ -7447,7 +7447,7 @@ return {
 name:b,
 value:a
 };
-}), a.systemLabels.push({
+}), L() && a.systemLabels.push({
 name:"app",
 value:a.template.metadata.name
 });
@@ -7513,7 +7513,7 @@ type:"error"
 });
 d.length ? (a.disableInputs = !1, a.alerts = c) :c.length ? (J(c), a.disableInputs = !1) :I();
 };
-if (a.createFromTemplate = function() {
+a.createFromTemplate = function() {
 a.disableInputs = !0;
 var b = s.mapEntries(s.compactEntries(a.labels)), c = s.mapEntries(s.compactEntries(a.systemLabels));
 a.template.labels = _.extend(c, b), d.create("processedtemplates", null, a.template, f).then(function(b) {
@@ -7527,7 +7527,11 @@ message:"An error occurred processing the template.",
 details:c
 };
 });
-}, v) d.get("templates", u, {
+};
+var L = function() {
+return !_.get(a.template, "labels.app") && !_.some(a.template.objects, "metadata.labels.app");
+};
+if (v) d.get("templates", u, {
 namespace:v || a.projectName
 }).then(function(b) {
 a.template = b, E(), a.breadcrumbs[3].title = n("displayName")(b);
@@ -7535,11 +7539,11 @@ a.template = b, E(), a.breadcrumbs[3].title = n("displayName")(b);
 m.toErrorPage("Cannot create from template: the specified template could not be retrieved.");
 }); else {
 if (a.template = r.getTemplate(), _.isEmpty(a.template)) {
-var L = URI("error").query({
+var M = URI("error").query({
 error:"not_found",
 error_description:"Template wasn't found in cache."
 }).toString();
-j.url(L);
+j.url(M);
 }
 r.clearTemplate(), E();
 }
