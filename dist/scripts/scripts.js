@@ -10493,34 +10493,34 @@ restrict:"E",
 scope:{
 pods:"=",
 containers:"=",
-compact:"="
+profile:"@"
 },
 templateUrl:function(a, b) {
-return b.compact ? "views/directives/metrics-compact.html" :"views/directives/deployment-metrics.html";
+return "compact" === b.profile ? "views/directives/metrics-compact.html" :"views/directives/deployment-metrics.html";
 },
 link:function(b) {
 function d(a) {
 return null === a.value || void 0 === a.value;
 }
 function f(a) {
-var c;
-c = b.compact ? a.compactDatasetLabel || a.label :"Average Usage";
-var e = {}, f = [ "Date" ], g = [ c ], h = [ f, g ], i = function(a) {
+var b;
+b = w ? a.compactDatasetLabel || a.label :"Average Usage";
+var c = {}, e = [ "Date" ], f = [ b ], g = [ e, f ], h = function(a) {
 var b = "" + a.start;
-return e[b] || (e[b] = {
+return c[b] || (c[b] = {
 total:0,
 count:0
-}), e[b];
+}), c[b];
 };
-return _.each(z[a.descriptor], function(a) {
+return _.each(A[a.descriptor], function(a) {
 _.each(a, function(a) {
-var b = i(a);
-(!x || x < a.end) && (x = a.end), d(a) || (b.total += a.value, b.count = b.count + 1);
+var b = h(a);
+(!y || y < a.end) && (y = a.end), d(a) || (b.total += a.value, b.count = b.count + 1);
 });
-}), _.each(e, function(b, c) {
+}), _.each(c, function(b, c) {
 var d;
-d = b.count ? b.total / b.count :null, f.push(Number(c)), g.push(a.convert ? a.convert(d) :d);
-}), g.length > 1 && (a.lastValue = _.last(g) || 0), h;
+d = b.count ? b.total / b.count :null, e.push(Number(c)), f.push(a.convert ? a.convert(d) :d);
+}), f.length > 1 && (a.lastValue = _.last(f) || 0), g;
 }
 function i(a, c) {
 var e = [], g = {
@@ -10528,13 +10528,13 @@ type:"spline"
 };
 return b.showAverage ? (_.each(a[c.descriptor], function(a, b) {
 p(c.descriptor, b, a);
-}), g.type = "area-spline", b.compact && c.compactType && (g.type = c.compactType), g.x = "Date", g.columns = f(c), g) :(_.each(a[c.descriptor], function(a, b) {
+}), g.type = "area-spline", w && c.compactType && (g.type = c.compactType), g.x = "Date", g.columns = f(c), g) :(_.each(a[c.descriptor], function(a, b) {
 p(c.descriptor, b, a);
 var f = b + "-dates";
 _.set(g, [ "xs", b ], f);
 var h = [ f ], i = [ b ];
-e.push(h), e.push(i), _.each(z[c.descriptor][b], function(a) {
-if (h.push(a.start), (!x || x < a.end) && (x = a.end), d(a)) i.push(a.value); else {
+e.push(h), e.push(i), _.each(A[c.descriptor][b], function(a) {
+if (h.push(a.start), (!y || y < a.end) && (y = a.end), d(a)) i.push(a.value); else {
 var b = c.convert ? c.convert(a.value) :a.value;
 i.push(b);
 }
@@ -10544,19 +10544,19 @@ return a[0];
 }), g);
 }
 function j(a) {
-w || (b.loaded = !0, b.showAverage = _.size(b.pods) > 5 || b.compact, _.each(b.metrics, function(c) {
+x || (b.loaded = !0, b.showAverage = _.size(b.pods) > 5 || w, _.each(b.metrics, function(c) {
 var d, e = i(a, c), f = c.descriptor;
-b.compact && c.compactCombineWith && (f = c.compactCombineWith, c.lastValue && (B[f].lastValue = (B[f].lastValue || 0) + c.lastValue)), t[f] ? (t[f].load(e), b.showAverage ? t[f].legend.hide() :t[f].legend.show()) :(d = C(c), d.data = e, t[f] = c3.generate(d));
+w && c.compactCombineWith && (f = c.compactCombineWith, c.lastValue && (C[f].lastValue = (C[f].lastValue || 0) + c.lastValue)), t[f] ? (t[f].load(e), b.showAverage ? t[f].legend.hide() :t[f].legend.show()) :(d = D(c), d.data = e, t[f] = c3.generate(d));
 }));
 }
 function k() {
-return b.compact ? "-15mn" :"-" + b.options.timeRange.value + "mn";
+return w ? "-15mn" :"-" + b.options.timeRange.value + "mn";
 }
 function l() {
 return 60 * b.options.timeRange.value * 1e3;
 }
 function m() {
-return b.compact ? "1mn" :Math.floor(l() / v) + "ms";
+return w ? "1mn" :Math.floor(l() / v) + "ms";
 }
 function n() {
 var a = _.find(b.pods, "metadata.namespace");
@@ -10567,7 +10567,7 @@ containerName:b.options.selectedContainer.name,
 namespace:a.metadata.namespace,
 bucketDuration:m()
 };
-return x ? c.start = x :c.start = k(), c;
+return y ? c.start = y :c.start = k(), c;
 }
 }
 function o() {
@@ -10576,10 +10576,10 @@ return a ? (b.loaded = !0, !1) :!b.metricsError;
 }
 function p(a, c, d) {
 b.noData = !1;
-var e = _.initial(d), f = _.get(z, [ a, c ]);
-if (!f) return void _.set(z, [ a, c ], e);
+var e = _.initial(d), f = _.get(A, [ a, c ]);
+if (!f) return void _.set(A, [ a, c ], e);
 var g = _.takeRight(f.concat(e), v);
-_.set(z, [ a, c ], g);
+_.set(A, [ a, c ], g);
 }
 function q(a) {
 b.loaded = !0, b.metricsError = {
@@ -10588,15 +10588,15 @@ details:_.get(a, "data.errorMsg") || _.get(a, "statusText") || "Status code " + 
 };
 }
 function r() {
-if (!A && o()) {
-y = Date.now();
+if (!B && o()) {
+z = Date.now();
 var a = n();
 h.getPodMetrics(a).then(j, q);
 }
 }
-var s, t = {}, u = 6e4, v = 30, w = !1;
+var s, t = {}, u = 6e4, v = 30, w = "compact" === b.profile, x = !1;
 b.uniqueID = _.uniqueId("metrics-");
-var x, y, z = {}, A = b.compact;
+var y, z, A = {}, B = w;
 b.metrics = [ {
 label:"Memory",
 units:"MiB",
@@ -10631,7 +10631,7 @@ compactDatasetLabel:"Received",
 compactType:"spline",
 chartID:"network-rx-" + b.uniqueID
 } ];
-var B = _.indexBy(b.metrics, "descriptor");
+var C = _.indexBy(b.metrics, "descriptor");
 b.loaded = !1, b.noData = !0, h.getMetricsURL().then(function(a) {
 b.metricsURL = a;
 }), b.options = {
@@ -10652,12 +10652,12 @@ label:"Last week",
 value:10080
 } ]
 }, b.options.timeRange = _.head(b.options.rangeOptions), b.options.selectedContainer = _.head(b.containers);
-var C = function(a) {
+var D = function(a) {
 return {
 bindto:"#" + a.chartID,
 axis:{
 x:{
-show:!b.compact,
+show:!w,
 type:"timeseries",
 padding:{
 left:0,
@@ -10669,7 +10669,7 @@ format:"%a %H:%M"
 }
 },
 y:{
-show:!b.compact,
+show:!w,
 label:a.units,
 min:0,
 padding:{
@@ -10685,13 +10685,13 @@ return d3.round(a, 3);
 }
 },
 legend:{
-show:!b.compact && !b.showAverage
+show:!w && !b.showAverage
 },
 point:{
 show:!1
 },
 size:{
-height:b.compact ? 35 :175
+height:w ? 35 :175
 },
 tooltip:{
 format:{
@@ -10705,9 +10705,9 @@ return d3.round(b, 2) + " " + a.units;
 b.formatUsage = function(a) {
 return a < .01 ? "0" :a < 1 ? d3.format(".1r")(a) :d3.format(".2r")(a);
 }, b.$watch("options", function() {
-z = {}, x = null, delete b.metricsError, r();
+A = {}, y = null, delete b.metricsError, r();
 }, !0), s = a(r, u, !1), b.updateInView = function(a) {
-A = !a, a && (!y || Date.now() > y + u) && r();
+B = !a, a && (!z || Date.now() > z + u) && r();
 }, e.$on("metrics.charts.resize", function() {
 c(function() {
 _.each(t, function(a) {
@@ -10717,7 +10717,7 @@ a.flush();
 }), b.$on("$destroy", function() {
 s && (a.cancel(s), s = null), angular.forEach(t, function(a) {
 a.destroy();
-}), t = null, w = !0;
+}), t = null, x = !0;
 });
 }
 };

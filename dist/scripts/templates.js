@@ -9556,7 +9556,7 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "<div column class=\"overview-tile-details\" ng-if=\"activeReplicationController && !inProgressDeployment\">\n" +
     "\n" +
     "\n" +
-    "<deployment-metrics ng-if=\"showMetrics && !collapse\" pods=\"podsByOwnerUID[activeReplicationController.metadata.uid]\" containers=\"activeReplicationController.spec.template.spec.containers\" compact class=\"overview-metrics\">\n" +
+    "<deployment-metrics ng-if=\"showMetrics && !collapse\" pods=\"podsByOwnerUID[activeReplicationController.metadata.uid]\" containers=\"activeReplicationController.spec.template.spec.containers\" profile=\"compact\" class=\"overview-metrics\">\n" +
     "</deployment-metrics>\n" +
     "<pod-template ng-if=\"!showMetrics\" pod-template=\"activeReplicationController.spec.template\"></pod-template>\n" +
     "\n" +
@@ -9618,7 +9618,7 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "<div column class=\"overview-tile-details\" ng-if=\"latestReplicaSet && !inProgressDeployment\">\n" +
     "\n" +
     "\n" +
-    "<deployment-metrics ng-if=\"showMetrics && !collapse\" pods=\"podsByOwnerUID[latestReplicaSet.metadata.uid]\" containers=\"latestReplicaSet.spec.template.spec.containers\" compact class=\"overview-metrics\">\n" +
+    "<deployment-metrics ng-if=\"showMetrics && !collapse\" pods=\"podsByOwnerUID[latestReplicaSet.metadata.uid]\" containers=\"latestReplicaSet.spec.template.spec.containers\" profile=\"compact\" class=\"overview-metrics\">\n" +
     "</deployment-metrics>\n" +
     "<pod-template ng-if=\"!showMetrics\" pod-template=\"latestReplicaSet.spec.template\"></pod-template>\n" +
     "\n" +
@@ -9664,7 +9664,7 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "</a>\n" +
     "</div>\n" +
     "<div column class=\"overview-tile-details\">\n" +
-    "<deployment-metrics ng-if=\"showMetrics && !collapse\" pods=\"[pod]\" containers=\"pod.spec.containers\" compact class=\"overview-metrics\">\n" +
+    "<deployment-metrics ng-if=\"showMetrics && !collapse\" pods=\"[pod]\" containers=\"pod.spec.containers\" profile=\"compact\" class=\"overview-metrics\">\n" +
     "</deployment-metrics>\n" +
     "<pod-template ng-if=\"!showMetrics\" pod-template=\"pod\"></pod-template>\n" +
     "</div>\n" +
@@ -9855,7 +9855,7 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "\n" +
     "\n" +
     "<div column class=\"overview-tile-details\">\n" +
-    "<deployment-metrics ng-if=\"showMetrics && !collapse\" pods=\"podsByOwnerUID[set.metadata.uid]\" containers=\"set.spec.template.spec.containers\" compact class=\"overview-metrics\">\n" +
+    "<deployment-metrics ng-if=\"showMetrics && !collapse\" pods=\"podsByOwnerUID[set.metadata.uid]\" containers=\"set.spec.template.spec.containers\" profile=\"compact\" class=\"overview-metrics\">\n" +
     "</deployment-metrics>\n" +
     "<pod-template ng-if=\"!showMetrics\" pod-template=\"set.spec.template\"></pod-template>\n" +
     "</div>\n" +

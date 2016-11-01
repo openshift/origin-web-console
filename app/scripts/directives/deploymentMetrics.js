@@ -16,10 +16,11 @@ angular.module('openshiftConsole')
         // Take in the list of containers rather than reading from the pod spec
         // in case pods is empty.
         containers: '=',
-        compact: '='
+        // Optional: set to 'compact' to show smaller charts (for the overview)
+        profile: '@'
       },
       templateUrl: function(elem, attrs) {
-        if (attrs.compact) {
+        if (attrs.profile === 'compact') {
           return 'views/directives/metrics-compact.html';
         }
         return 'views/directives/deployment-metrics.html';
@@ -29,6 +30,7 @@ angular.module('openshiftConsole')
         var intervalPromise;
         var updateInterval = 60 * 1000; // 60 seconds
         var numDataPoints = 30;
+        var compact = scope.profile === 'compact';
 
         // Set to true when the route changes so we don't update charts that no longer exist.
         var destroyed = false;
@@ -42,7 +44,7 @@ angular.module('openshiftConsole')
         var lastTimestamp;
 
         // Wait until the charts are in view before fetching metrics.
-        var paused = scope.compact;
+        var paused = compact;
 
         // Track when we last requested metrics. When we scroll into view, this
         // helps decide whether to update immediately or wait until the next
@@ -124,7 +126,7 @@ angular.module('openshiftConsole')
             bindto: '#' + metric.chartID,
             axis: {
               x: {
-                show: !scope.compact,
+                show: !compact,
                 type: 'timeseries',
                 // With default padding you can have negative axis tick values.
                 padding: {
@@ -137,7 +139,7 @@ angular.module('openshiftConsole')
                 }
               },
               y: {
-                show: !scope.compact,
+                show: !compact,
                 label: metric.units,
                 min: 0,
                 // With default padding you can have negative axis tick values.
@@ -154,13 +156,13 @@ angular.module('openshiftConsole')
               }
             },
             legend: {
-              show: !scope.compact && !scope.showAverage
+              show: !compact && !scope.showAverage
             },
             point: {
               show: false
             },
             size: {
-              height: scope.compact ? 35 : 175
+              height: compact ? 35 : 175
             },
             tooltip: {
               format: {
@@ -190,7 +192,7 @@ angular.module('openshiftConsole')
 
         function averages(metric) {
           var label;
-          if (scope.compact) {
+          if (compact) {
             label = metric.compactDatasetLabel || metric.label;
           } else {
             label = "Average Usage";
@@ -260,7 +262,7 @@ angular.module('openshiftConsole')
               updateData(metric.descriptor, podName, podData);
             });
             chartData.type = 'area-spline';
-            if (scope.compact && metric.compactType) {
+            if (compact && metric.compactType) {
               chartData.type = metric.compactType;
             }
 
@@ -312,7 +314,7 @@ angular.module('openshiftConsole')
           scope.loaded = true;
 
           // Show an average instead of a multiline chart when there are many pods.
-          scope.showAverage = _.size(scope.pods) > 5 || scope.compact;
+          scope.showAverage = _.size(scope.pods) > 5 || compact;
 
           // Iterate over each metric.
           _.each(scope.metrics, function(metric) {
@@ -320,7 +322,7 @@ angular.module('openshiftConsole')
             // Get chart data for that metric.
             var chartData = getChartData(newData, metric);
             var descriptor = metric.descriptor;
-            if (scope.compact && metric.compactCombineWith) {
+            if (compact && metric.compactCombineWith) {
               descriptor = metric.compactCombineWith;
               if (metric.lastValue) {
                 metricByID[descriptor].lastValue = (metricByID[descriptor].lastValue || 0) + metric.lastValue;
@@ -343,7 +345,7 @@ angular.module('openshiftConsole')
         }
 
         function getStartTime() {
-          if (scope.compact) {
+          if (compact) {
             // 15 minutes ago
             return "-15mn";
           }
@@ -356,7 +358,7 @@ angular.module('openshiftConsole')
         }
 
         function getBucketDuration() {
-          if (scope.compact) {
+          if (compact) {
             return "1mn";
           }
 
