@@ -6,7 +6,11 @@
       <div class="middle-container">
         <div class="middle-header">
           <div class="container-fluid">
-            <breadcrumbs breadcrumbs="breadcrumbs"></breadcrumbs>
+            <div class="page-header page-header-bleed-right page-header-bleed-left">
+              <h1>
+                <span ng-if="clusterQuotas | hashSize">Cluster </span>Quota
+              </h1>
+            </div>
             <alerts alerts="alerts"></alerts>
           </div>
         </div><!-- /middle-header-->
@@ -14,10 +18,7 @@
           <div class="container-fluid">
             <div class="row">
               <div class="col-md-12">
-                <h1>
-                  <span ng-if="clusterQuotas | hashSize">Cluster </span>Quota
-                </h1>
-                <div ng-if="!(quotas | hashSize) && !(clusterQuotas | hashSize)">
+                <div ng-if="!(quotas | hashSize) && !(clusterQuotas | hashSize)" class="mar-top-xl">
                   <div class="help-block">{{quotaHelp}}</div>
                   <p><em ng-if="!quotas && !clusterQuotas">Loading...</em><em ng-if="quotas || clusterQuotas">There are no resource quotas set on this project.</em></p>
                 </div>
@@ -108,7 +109,7 @@
                   </div>
                 </div>
 
-                <h1 ng-if="(clusterQuotas | hashSize) && (quotas | hashSize)">Project Quota</h1>
+                <h2 ng-if="(clusterQuotas | hashSize) && (quotas | hashSize)">Project Quota</h2>
                 <div ng-repeat="quota in quotas | orderBy: 'metadata.name'" class="gutter-bottom">
                   <h2 ng-if="(quotas | hashSize) > 1">{{quota.metadata.name}}</h2>
                   <div ng-if="$first" class="help-block mar-bottom-md">{{quotaHelp}}</div>
@@ -191,7 +192,7 @@
                 </div>
 
                 <div class="limit-ranges-section">
-                  <h1>Limit Range</h1>
+                  <h2>Limit Range</h2>
                   <div ng-if="!(limitRanges | hashSize)">
                     <div class="help-block">{{limitRangeHelp}}</div>
                     <p><em>{{emptyMessageLimitRanges}}</em></p>

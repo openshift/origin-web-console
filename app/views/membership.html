@@ -5,30 +5,32 @@
     <div class="middle-container">
       <div class="middle-header">
         <div class="container-fluid">
-          <breadcrumbs breadcrumbs="breadcrumbs"></breadcrumbs>
+          <div class="page-header page-header-bleed-right page-header-bleed-left">
+            <h1>
+              <a
+                class="pull-right btn btn-default"
+                href=""
+                ng-if="'rolebindings' | canI : 'update'"
+                ng-click="toggleEditMode()">
+                <span ng-if="!(mode.edit)">Edit Membership</span>
+                <span ng-if="mode.edit">Done Editing</span>
+              </a>
+               Membership
+               <span class="learn-more-inline">
+                 <a ng-href="{{'roles' | helpLink}}" target="_blank">
+                   Learn more <i class="fa fa-external-link"></i>
+                 </a>
+               </span>
+            </h1>
+            <alerts alerts="alerts"></alerts>
+          </div>
         </div>
       </div>
       <div class="middle-content" persist-tab-state>
         <div class="container-fluid">
           <div class="row">
             <div class="col-md-12">
-              <h1>
-                <a
-                  class="pull-right btn btn-default"
-                  href=""
-                  ng-if="'rolebindings' | canI : 'update'"
-                  ng-click="toggleEditMode()">
-                  <span ng-if="!(mode.edit)">Edit Membership</span>
-                  <span ng-if="mode.edit">Done Editing</span>
-                </a>
-                 Membership
-              </h1>
-              <span class="learn-more-block">
-                <a ng-href="{{'roles' | helpLink}}" target="_blank">
-                  Learn more <i class="fa fa-external-link"></i>
-                </a>
-              </span>
-              <alerts alerts="alerts"></alerts>
+
             </div>
           </div>
           <div  ng-if="!('rolebindings' | canI : 'list')">
