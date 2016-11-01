@@ -1,31 +1,39 @@
 <ng-form name="persistentVolumeClaimForm">
   <fieldset ng-disabled="claimDisabled">
-    <!--storage class-->
-    <label class="required">Storage Classes</label>
-    <div>
-      <span id="claim-storage-class-help" class="help-block">Storage classes are set by the administrator to define types of storage the users can select.
-       <div class="learn-more-block">
-        <a href="{{'storage_classes' | helpLink}}" target="_blank">Learn more <i class="fa fa-external-link" aria-hidden="true"> </i></a>
-       </div>
-      </span>
+    <div ng-show="storageClasses | hashSize" class="form-group">
+      <!--storage class-->
+      <label class="required">Storage Classes</label>
+      <div id="claim-storage-class-help" class="help-block mar-bottom-lg">
+        Storage classes are set by the administrator to define types of storage the users can select.
+        <div class="learn-more-block">
+          <a ng-href="{{'storage_classes' | helpLink}}" target="_blank">Learn more <i class="fa fa-external-link" aria-hidden="true"> </i></a>
+        </div>
+      </div>
+      <div ng-repeat="sclass in storageClasses track by (sclass | uid)" id="storageclass-{{sclass.metadata.name}}">
+        <div class="radio">
+          <label>
+            <input  type="radio"
+                    name="storageClass"
+                    ng-value="sclass"
+                    ng-model="claim.storageClass">
+            {{sclass.metadata.name}}
+          </label>
+        </div>
+        <div class="help-block">
+          Type: {{sclass.parameters.type}} | Zone: {{sclass.parameters.zone}}
+          <span ng-if="sclass.metadata.annotations.description"> | {{sclass.metadata.annotations.description}}</span>
+        </div>
+      </div>
+      <div class="radio">
+        <label>
+          <input type="radio"
+                 name="storageClass"
+                 ng-model="claim.storageClass">
+            No Storage Class
+        </label>
+      </div>
     </div>
-    <div class="form-group" ng-repeat="sclass in storageClasses track by (sclass | uid)" id="storageclass-{{sclass.metadata.name}}">
-      <input  type="radio"
-              name="storageClass"
-              ng-value="sclass"
-              ng-model="claim.storageClass">
-      {{sclass.metadata.name}}
-      <span class="help-block">
-        Type: {{sclass.parameters.type}} | Zone: {{sclass.parameters.zone}}
-        <span ng-if="sclass.metadata.annotations.description"> | {{sclass.metadata.annotations.description}}</span>
-      </span>
-    </div>
-    <div class="form-group">
-      <input type="radio"
-             name="storageClass"
-             ng-model="claim.storageClass">
-        No Storage Class
-    </div>
+
     <!-- Name -->
     <div class="form-group">
       <label for="claim-name" class="required">Name</label>
@@ -117,35 +125,28 @@
       </fieldset>
     </div>
     <!--advanced options-->
-    <div>
+    <div ng-show="!showAdvancedOptions" class="mar-bottom-xl">
       <a href=""
-         ng-click="showAdvancedOptions = true"
-         ng-show="!showAdvancedOptions">Use label selectors in the storage request </a>
-      <a href=""
-         ng-click="showAdvancedOptions = false"
-         ng-show="showAdvancedOptions">Hide label selectors in the storage request</a>
+         ng-click="showAdvancedOptions = true">Use label selectors in the storage request</a>
+    </div>
 
-
-      <div ng-show="showAdvancedOptions" class="form-group" >
-        <fieldset class="compute-resource" >
-          <label for="claim-name" >Label Selector</label>
-          <div>
-            <span id="claim-label-help" class="help-block">
-              Enter a label and value to use with your requested storage.
-               <div class="learn-more-block" ng-class="{ 'gutter-bottom': showPodWarning }">
-                 <a href="{{'selector_label' | helpLink}}" target="_blank">Learn more <i class="fa fa-external-link" aria-hidden="true"> </i></a>
-               </div>
-            </span>
-          </div>
-          <key-value-editor
-            entries="claim.selectedLabels"
-            key-placeholder="label"
-            value-placeholder="value"
-            key-validator="[a-zA-Z][a-zA-Z0-9_-]*"
-            key-validator-error-tooltip="A valid label name is an alphanumeric (a-z and 0-9) string beginning with a letter that may contain underscores and dashes."
-            add-row-link="Add Label"></key-value-editor>
-        </fieldset>
-      </div>
+    <div ng-show="showAdvancedOptions" class="form-group">
+      <fieldset class="compute-resource">
+        <label>Label Selector</label>
+        <div class="help-block mar-bottom-lg">
+          Enter a label and value to use with your requested storage.
+           <div class="learn-more-block">
+             <a ng-href="{{'selector_label' | helpLink}}" target="_blank">Learn more <i class="fa fa-external-link" aria-hidden="true"> </i></a>
+           </div>
+        </div>
+        <key-value-editor
+          entries="claim.selectedLabels"
+          key-placeholder="label"
+          value-placeholder="value"
+          key-validator="[a-zA-Z][a-zA-Z0-9_-]*"
+          key-validator-error-tooltip="A valid label name is an alphanumeric (a-z and 0-9) string beginning with a letter that may contain underscores and dashes."
+          add-row-link="Add Label"></key-value-editor>
+      </fieldset>
     </div>
   </fieldset>
 </ng-form>
