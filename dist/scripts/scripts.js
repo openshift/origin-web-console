@@ -10020,21 +10020,21 @@ e.templatesByCategory = a.categorizeTemplates(b), e.emptyCatalog = e.emptyCatalo
 }
 }
 function i() {
-e.noFilterMatches = !0;
+e.noFilterMatches = !0, k = [];
 var a = {};
 _.each(e.filteredBuildersByCategory, function(b, c) {
 a[c] = _.size(b);
 }), _.each(e.filteredTemplatesByCategory, function(b, c) {
 a[c] = (a[c] || 0) + _.size(b);
 }), e.allContentHidden = !0, _.each(e.categories, function(b) {
-var c = _.some(b.items, function(b) {
-return a[b.id];
-});
-_.set(e, [ "hasContent", b.id ], c), c && (e.allContentHidden = !1);
+var c = !1;
+_.each(b.items, function(b) {
+a[b.id] && (k.push(b), c = !0);
+}), _.set(e, [ "hasContent", b.id ], c), c && (e.allContentHidden = !1);
 }), e.countByCategory = a;
 }
 function j() {
-e.loaded = e.projectTemplates && e.openshiftTemplates && e.projectImageStreams && e.openshiftImageStreams, f(), i(), e.loaded && (d.log("templates by category", e.templatesByCategory), d.log("builder images", e.buildersByCategory));
+e.loaded = e.projectTemplates && e.openshiftTemplates && e.projectImageStreams && e.openshiftImageStreams, f(), i(), e.loaded && (e.parentCategory && 1 === k.length && (e.singleCategory = _.head(k)), d.log("templates by category", e.templatesByCategory), d.log("builder images", e.buildersByCategory));
 }
 e.categories = _.get(e, "parentCategory.subcategories", b.CATALOG_CATEGORIES), e.loaded = !1, e.emptyCatalog = !0, e.filter = {
 keyword:""
@@ -10045,7 +10045,9 @@ f(), i();
 }, 200, {
 maxWait:1e3,
 trailing:!0
-})), e.$watchGroup([ "openshiftImageStreams", "projectImageStreams" ], g), e.$watchGroup([ "openshiftTemplates", "projectTemplates" ], h);
+}));
+var k;
+e.$watchGroup([ "openshiftImageStreams", "projectImageStreams" ], g), e.$watchGroup([ "openshiftTemplates", "projectTemplates" ], h);
 }
 };
 } ]), angular.module("openshiftConsole").directive("categoryContent", [ "CatalogService", "Constants", "KeywordService", "Logger", function(a, b, c, d) {

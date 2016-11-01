@@ -91,8 +91,10 @@ angular.module('openshiftConsole')
           updateState();
         }
 
+        var nonEmptyCategories;
         function updateCategoryCounts() {
           $scope.noFilterMatches = true;
+          nonEmptyCategories = [];
 
           var countByCategory = {};
           _.each($scope.filteredBuildersByCategory, function(builders, id) {
@@ -105,8 +107,12 @@ angular.module('openshiftConsole')
           // Check to see if entire categories have content.
           $scope.allContentHidden = true;
           _.each($scope.categories, function(category) {
-            var hasContent = _.some(category.items, function(item) {
-              return countByCategory[item.id];
+            var hasContent = false;
+            _.each(category.items, function(item) {
+              if (countByCategory[item.id]) {
+                nonEmptyCategories.push(item);
+                hasContent = true;
+              }
             });
             _.set($scope, ['hasContent', category.id], hasContent);
             if (hasContent) {
@@ -130,6 +136,11 @@ angular.module('openshiftConsole')
           updateCategoryCounts();
 
           if ($scope.loaded) {
+            if ($scope.parentCategory && nonEmptyCategories.length === 1) {
+              // If there is only one subcategory with items, just show the items.
+              $scope.singleCategory = _.head(nonEmptyCategories);
+            }
+
             Logger.log("templates by category", $scope.templatesByCategory);
             Logger.log("builder images", $scope.buildersByCategory);
           }
