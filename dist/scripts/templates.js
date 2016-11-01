@@ -6289,7 +6289,7 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "<input type=\"hidden\" name=\"access_token\" value=\"{{access_token}}\">\n" +
     "<button class=\"btn btn-link\">View archive</button>\n" +
     "</form>\n" +
-    "<span ng-if=\"state !== 'empty'\" class=\"action-divider\">|</span>\n" +
+    "<span ng-if=\"state && state !== 'empty'\" class=\"action-divider\">|</span>\n" +
     "</span>\n" +
     "<a ng-if=\"state && state !== 'empty'\" href=\"\" ng-click=\"goChromeless(options, fullLogUrl)\" role=\"button\">\n" +
     "Expand log\n" +
