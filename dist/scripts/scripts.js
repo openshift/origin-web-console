@@ -1771,7 +1771,7 @@ name:b.toString()
 }
 }), a.deploymentConfig.deployOnConfigChange && h.spec.triggers.push({
 type:"ConfigChange"
-}), _.get(a, "deploymentConfig.secrets.pullSecrets[0].name") && (h.spec.template.spec.imagePullSecrets = a.deploymentConfig.secrets.pullSecrets), h;
+}), h;
 }, f._generateHPA = function(a, b) {
 var c = {
 apiVersion:"extensions/v1beta1",
@@ -1859,7 +1859,7 @@ env:c
 triggers:d
 }
 };
-return _.get(a, "buildConfig.secrets.gitSecret[0].name") && (i.spec.source.sourceSecret = _.first(a.buildConfig.secrets.gitSecret)), _.get(a, "buildConfig.secrets.pullSecret[0].name") && (i.spec.strategy.sourceStrategy.pullSecret = _.first(a.buildConfig.secrets.pullSecret)), _.get(a, "buildConfig.secrets.pushSecret[0].name") && (i.spec.output.pushSecret = _.first(a.buildConfig.secrets.pushSecret)), a.buildConfig.contextDir && (i.spec.source.contextDir = a.buildConfig.contextDir), i;
+return _.get(a, "buildConfig.secrets.gitSecret[0].name") && (i.spec.source.sourceSecret = _.first(a.buildConfig.secrets.gitSecret)), a.buildConfig.contextDir && (i.spec.source.contextDir = a.buildConfig.contextDir), i;
 }, f._generateImageStream = function(a) {
 return {
 apiVersion:"v1",
@@ -7128,22 +7128,11 @@ buildOnConfigChange:!0,
 secrets:{
 gitSecret:[ {
 name:""
-} ],
-pullSecret:[ {
-name:""
-} ],
-pushSecret:[ {
-name:""
 } ]
 }
 }, b.buildConfigEnvVars = [], b.deploymentConfig = {
 deployOnNewImage:!0,
-deployOnConfigChange:!0,
-secrets:{
-pullSecrets:[ {
-name:""
-} ]
-}
+deployOnConfigChange:!0
 }, b.DCEnvVarsFromImage, b.DCEnvVarsFromUser = [], b.routing = {
 include:!0,
 portOptions:[]

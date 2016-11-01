@@ -78,18 +78,13 @@ angular.module("openshiftConsole")
             buildOnImageChange: true,
             buildOnConfigChange: true,
             secrets: {
-              gitSecret: [{name: ""}],
-              pullSecret: [{name: ""}],
-              pushSecret: [{name: ""}]
+              gitSecret: [{name: ""}]
             }
           };
           scope.buildConfigEnvVars = [];
           scope.deploymentConfig = {
             deployOnNewImage: true,
-            deployOnConfigChange: true,
-            secrets: {
-              pullSecrets: [{name: ""}]
-            }
+            deployOnConfigChange: true
           };
           scope.DCEnvVarsFromImage;
           scope.DCEnvVarsFromUser = [];
