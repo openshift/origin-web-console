@@ -2789,10 +2789,28 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "</uib-tab>\n" +
     "<uib-tab heading=\"Environment\" active=\"selectedTab.environment\">\n" +
     "<uib-tab-heading>Environment</uib-tab-heading>\n" +
-    "<div ng-repeat=\"container in pod.spec.containers\">\n" +
+    "<div class=\"row\">\n" +
+    "<div class=\"col-sm-6 col-lg-4\">\n" +
+    "<span ng-if=\"pod.spec.containers.length === 1\">\n" +
+    "<label for=\"selectLogContainer\">Container:</label>\n" +
+    "{{pod.spec.containers[0].name}}\n" +
+    "</span>\n" +
+    "<ui-select ng-if=\"pod.spec.containers.length > 1\" ng-model=\"tabs.env.selected.container\">\n" +
+    "<ui-select-match class=\"truncate\" placeholder=\"Container Name\">\n" +
+    "<span ng-bind=\"tabs.env.selected.container\"></span>\n" +
+    "</ui-select-match>\n" +
+    "<ui-select-choices repeat=\"container.name as container in pod.spec.containers\">\n" +
+    "{{container.name}}\n" +
+    "</ui-select-choices>\n" +
+    "</ui-select>\n" +
+    "</div>\n" +
+    "</div>\n" +
+    "<div class=\"row\" ng-repeat=\"container in pod.spec.containers\" ng-show=\"tabs.env.selected.container === container.name\">\n" +
+    "<div class=\"col-sm-12\">\n" +
     "<h3>Container {{container.name}} Environment Variables</h3>\n" +
     "<key-value-editor entries=\"container.env\" is-readonly cannot-add cannot-sort cannot-delete ng-if=\"container.env.length\"></key-value-editor>\n" +
     "<em ng-if=\"!container.env.length\">The container specification has no environment variables set.</em>\n" +
+    "</div>\n" +
     "</div>\n" +
     "</uib-tab>\n" +
     "<uib-tab ng-if=\"metricsAvailable\" heading=\"Metrics\" active=\"selectedTab.metrics\">\n" +
@@ -2836,10 +2854,10 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "<div class=\"row\">\n" +
     "<div class=\"pad-left-none pad-bottom-md col-sm-6 col-lg-4\">\n" +
     "<span ng-if=\"pod.spec.containers.length === 1\">\n" +
-    "<label for=\"selectLogContainer\">Container:</label>\n" +
+    "<label for=\"selectEnvContainer\">Container:</label>\n" +
     "{{pod.spec.containers[0].name}}\n" +
     "</span>\n" +
-    "<ui-select ng-model=\"selectedTerminalContainer\" on-select=\"onTerminalSelectChange(selectedTerminalContainer)\" ng-if=\"pod.spec.containers.length > 1\" class=\"mar-left-none pad-left-none pad-right-none\">\n" +
+    "<ui-select id=\"selectEnvContainer\" ng-model=\"selectedTerminalContainer\" on-select=\"onTerminalSelectChange(selectedTerminalContainer)\" ng-if=\"pod.spec.containers.length > 1\" class=\"mar-left-none pad-left-none pad-right-none\">\n" +
     "<ui-select-match class=\"truncate\" placeholder=\"Container Name\">\n" +
     "<span class=\"pad-left-md\">\n" +
     "{{selectedTerminalContainer.containerName}}\n" +

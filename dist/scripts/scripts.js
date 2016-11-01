@@ -3899,7 +3899,13 @@ title:c.pod
 } ], a.terminalDisconnectAlert.disconnect = {
 type:"warning",
 message:"This terminal has been disconnected. If you reconnect, your terminal history will be lost."
-}, a.noContainersYet = !0, a.selectedTab = {};
+}, a.noContainersYet = !0, a.selectedTab = {}, a.tabs = {
+env:{
+selected:{
+container:null
+}
+}
+};
 var k = [];
 h.isAvailable().then(function(b) {
 a.metricsAvailable = b;
@@ -3978,7 +3984,7 @@ b.containerState = d;
 };
 j.get(c.project).then(_.spread(function(d, h) {
 a.project = d, a.projectContext = h, f.get("pods", c.pod, h).then(function(b) {
-a.loaded = !0, a.pod = b, l(b), m();
+a.loaded = !0, a.pod = b, a.tabs.env.selected.container = b.spec.containers[0].name, l(b), m();
 var d = {};
 d[b.metadata.name] = b, g.fetchReferencedImageStreamImages(d, a.imagesByDockerReference, a.imageStreamImageRefByDockerReference, h), a.containerTerminals = s(), t(b), k.push(f.watchObject("pods", c.pod, h, function(b, c) {
 "DELETED" === c && (a.alerts.deleted = {
