@@ -38,10 +38,10 @@
 
                 <div class="row" ng-show="pvcs && pvcs.length && attach.resource">
                   <div class="col-md-10 col-md-offset-1 gutter-top">
-                    <h1>Attach Storage</h1>
+                    <h1>Add Storage</h1>
                     <div>
                       <span class="help-block">
-                        Attach an existing persistent volume claim to the template of {{kind | humanizeKind}} <b>{{name}}</b>.
+                        Add an existing persistent volume claim to the template of {{kind | humanizeKind}} <b>{{name}}</b>.
                       </span>
                     </div>
                     <form name="attachPVCForm">
@@ -147,7 +147,7 @@
                           <h3>Containers</h3>
                           <div>
                             <span class="help-block">
-                              Attach the volume to the following containers:
+                              Add the volume to the following containers:
                             </span>
                           </div>
                           <div class="checkbox" ng-repeat="container in attach.resource.spec.template.spec.containers">
@@ -167,7 +167,7 @@
                           <button type="submit"
                               class="btn btn-primary btn-lg"
                               ng-click="attachPVC()"
-                              ng-disabled="attachPVCForm.$invalid || disableInputs || !attachPVC || !containerToAttachProvided()">Attach</button>
+                              ng-disabled="attachPVCForm.$invalid || disableInputs || !attachPVC || !containerToAttachProvided()">Add</button>
                           <a class="btn btn-default btn-lg" role="button" href="#" back>Cancel</a>
                         </div>
                       </fieldset>

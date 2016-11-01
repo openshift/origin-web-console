@@ -80,7 +80,7 @@
       <h4>Volumes</h4>
       <div ng-if="!pod.spec.volumes.length">
         <p ng-if="(pod | annotation:'deploymentConfig') && ('deploymentconfigs' | canI : 'update')">
-          <a ng-href="project/{{project.metadata.name}}/attach-pvc?kind=DeploymentConfig&name={{pod | annotation:'deploymentConfig'}}">Attach storage and redeploy</a>
+          <a ng-href="project/{{project.metadata.name}}/attach-pvc?kind=DeploymentConfig&name={{pod | annotation:'deploymentConfig'}}">Add storage and redeploy</a>
         </p>
         <p ng-if="!(pod | annotation:'deploymentConfig') || !('deploymentconfigs' | canI : 'update')">
           None

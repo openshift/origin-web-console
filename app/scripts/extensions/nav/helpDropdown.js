@@ -13,11 +13,11 @@ angular.module('openshiftConsole')
           },
           {
             type: 'dom',
-            node: '<li><a href="about">About</a></li>'
+            node: '<li><a href="command-line">Command Line Tools</a></li>'
           },
           {
             type: 'dom',
-            node: '<li><a href="command-line">Command Line Tools</a></li>'
+            node: '<li><a href="about">About</a></li>'
           }
         ];
       });

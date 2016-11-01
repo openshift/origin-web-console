@@ -92,18 +92,18 @@
       <div ng-if="!replicaSet.spec.template.spec.volumes.length">
         <div ng-if="kind === 'ReplicaSet'">
           <a ng-if="resource | canI : 'update'"
-             ng-href="project/{{project.metadata.name}}/attach-pvc?kind=ReplicaSet&name={{replicaSet.metadata.name}}&group=extensions">Attach storage</a>
+             ng-href="project/{{project.metadata.name}}/attach-pvc?kind=ReplicaSet&name={{replicaSet.metadata.name}}&group=extensions">Add storage</a>
           <span ng-if="!(resource | canI : 'update')">none</span>
         </div>
         <div ng-if="kind === 'ReplicationController'">
           <div ng-if="deploymentConfigName">
             <a ng-if="'deploymentconfigs' | canI : 'update'"
-               ng-href="project/{{project.metadata.name}}/attach-pvc?kind=DeploymentConfig&name={{deploymentConfigName}}">Attach storage and redeploy</a>
+               ng-href="project/{{project.metadata.name}}/attach-pvc?kind=DeploymentConfig&name={{deploymentConfigName}}">Add storage and redeploy</a>
             <span ng-if="!('deploymentconfigs' | canI : 'update')">none</span>
           </div>
           <div ng-if="!deploymentConfigName">
             <a ng-if="resource | canI : 'update'"
-               ng-href="project/{{project.metadata.name}}/attach-pvc?kind=ReplicationController&name={{replicaSet.metadata.name}}">Attach storage</a>
+               ng-href="project/{{project.metadata.name}}/attach-pvc?kind=ReplicationController&name={{replicaSet.metadata.name}}">Add storage</a>
             <span ng-if="!(resource | canI : 'update')">none</span>
           </div>
         </div>
@@ -128,16 +128,16 @@
       <!-- Prompt to set CPU request on the DC if this is a deployment. -->
       <a ng-href="project/{{projectName}}/set-limits?kind=DeploymentConfig&name={{deploymentConfigName}}"
          ng-if="deploymentConfigName && !deploymentConfigMissing && ('deploymentconfigs' | canI : 'update')"
-         role="button">Set resource
+         role="button">Edit resource
         <span ng-if="!('cpu' | isRequestCalculated : project)">requests and</span> limits</a>
       <!-- Prompt to set CPU request on the RC if not a deployment. -->
       <a ng-href="project/{{projectName}}/set-limits?kind=ReplicationController&name={{replicaSet.metadata.name}}"
          ng-if="!deploymentConfigName && kind === 'ReplicationController' && (resource | canI : 'update')"
-         role="button">Set resource
+         role="button">Edit resource
         <span ng-if="!('cpu' | isRequestCalculated : project)">requests and</span> limits</a>
       <a ng-href="project/{{projectName}}/set-limits?kind=ReplicaSet&name={{replicaSet.metadata.name}}&group=extensions"
          ng-if="!deploymentConfigName && kind === 'ReplicaSet' && (resource | canI : 'update')"
-         role="button">Set resource
+         role="button">Edit resource
         <span ng-if="!('cpu' | isRequestCalculated : project)">requests and</span> limits</a>
     </span>
   </div>

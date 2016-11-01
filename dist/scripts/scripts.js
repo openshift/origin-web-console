@@ -104,18 +104,18 @@ items:[ {
 label:"Quota",
 href:"/quota"
 }, {
-label:"Secrets",
-href:"/browse/secrets"
-}, {
-label:"Other Resources",
-href:"/browse/other"
-}, {
 label:"Membership",
 href:"/membership",
 canI:{
 resource:"rolebindings",
 verb:"list"
 }
+}, {
+label:"Secrets",
+href:"/browse/secrets"
+}, {
+label:"Other Resources",
+href:"/browse/other"
 } ]
 } ]
 }, {
@@ -6218,7 +6218,7 @@ hideFilterWidget:!0
 name:d.name,
 kind:d.kind,
 namespace:d.project,
-subpage:"Set Resource Limits",
+subpage:"Edit Resource Limits",
 includeProject:!0
 });
 var p = a("getErrorDetails"), q = function(a, b) {
@@ -6239,7 +6239,7 @@ var d = angular.copy(a);
 e.breadcrumbs = h.getBreadcrumbs({
 object:d,
 project:c,
-subpage:"Set Resource Limits",
+subpage:"Edit Resource Limits",
 includeProject:!0
 }), e.resourceURL = k.resourceURL(d), e.containers = _.get(d, "spec.template.spec.containers"), e.save = function() {
 e.disableInputs = !0, i.update(m, e.name, d, l).then(function() {
@@ -13588,10 +13588,10 @@ type:"dom",
 node:'<li><a target="_blank" href="{{\'default\' | helpLink}}">Documentation</a></li>'
 }, {
 type:"dom",
-node:'<li><a href="about">About</a></li>'
+node:'<li><a href="command-line">Command Line Tools</a></li>'
 }, {
 type:"dom",
-node:'<li><a href="command-line">Command Line Tools</a></li>'
+node:'<li><a href="about">About</a></li>'
 } ];
 });
 } ]), angular.module("openshiftConsole").run([ "extensionRegistry", function(a) {

@@ -29,11 +29,7 @@
                   <li class="divider" ng-if="!updatingPausedState && { group: 'extensions', resource: 'deployments' } | canI : 'update'"></li>
                   <li ng-if="{ group: 'extensions', resource: 'deployments' } | canI : 'update'">
                     <a ng-href="project/{{project.metadata.name}}/attach-pvc?kind=Deployment&name={{deployment.metadata.name}}&group=extensions"
-                       role="button">Attach Storage</a>
-                  </li>
-                  <li ng-if="{ group: 'extensions', resource: 'deployments' } | canI : 'update'">
-                    <a ng-href="project/{{projectName}}/set-limits?kind=Deployment&name={{deployment.metadata.name}}&group=extensions"
-                      role="button">Set Resource Limits</a>
+                       role="button">Add Storage</a>
                   </li>
                   <li ng-if="!autoscalers.length && ({resource: 'horizontalpodautoscalers', group: 'extensions'} | canI : 'create')">
                     <!-- Create a new HPA. -->
@@ -44,6 +40,10 @@
                     <!-- Edit an existing HPA. -->
                     <a ng-href="project/{{projectName}}/edit/autoscaler?kind=HorizontalPodAutoscaler&group=extensions&name={{autoscalers[0].metadata.name}}"
                       role="button">Edit Autoscaler</a>
+                  </li>
+                  <li ng-if="{ group: 'extensions', resource: 'deployments' } | canI : 'update'">
+                    <a ng-href="project/{{projectName}}/set-limits?kind=Deployment&name={{deployment.metadata.name}}&group=extensions"
+                      role="button">Edit Resource Limits</a>
                   </li>
                   <li ng-if="{ group: 'extensions', resource: 'deployments' } | canI : 'update'">
                     <a ng-href="{{healthCheckURL}}" role="button">Edit Health Checks</a>
@@ -169,12 +169,12 @@
                         <h4>Volumes</h4>
                         <p ng-if="!deployment.spec.template.spec.volumes.length">
                           <a ng-if="'deploymentconfigs' | canI : 'update'"
-                            ng-href="project/{{project.metadata.name}}/attach-pvc?kind=Deployment&name={{deployment.metadata.name}}&group=extensions">Attach storage</a>
+                            ng-href="project/{{project.metadata.name}}/attach-pvc?kind=Deployment&name={{deployment.metadata.name}}&group=extensions">Add storage</a>
                           <span ng-if="!('deploymentconfigs' | canI : 'update')">none</span>
                         </p>
                         <volumes volumes="deployment.spec.template.spec.volumes" namespace="project.metadata.name"></volumes>
                         <p ng-if="deployment.spec.template.spec.volumes.length && ('deploymentconfigs' | canI : 'update')">
-                          <a ng-href="project/{{project.metadata.name}}/attach-pvc?kind=Deployment&name={{deployment.metadata.name}}&group=extensions">Attach storage</a>
+                          <a ng-href="project/{{project.metadata.name}}/attach-pvc?kind=Deployment&name={{deployment.metadata.name}}&group=extensions">Add storage</a>
                         </p>
                       </div>
                       <div class="col-lg-6">
@@ -189,7 +189,7 @@
                           <!-- If the CPU request is missing, add an action to set one. -->
                           <a ng-href="project/{{projectName}}/set-limits?kind=Deployment&name={{deployment.metadata.name}}&group=extensions"
                              ng-if="warning.reason === 'NoCPURequest' && ({ group: 'extensions', resource: 'deployments' } | canI : 'update')"
-                             role="button">Set resource
+                             role="button">Edit resource
                             <span ng-if="!('cpu' | isRequestCalculated : project)">requests and</span> limits</a>
                         </div>
 

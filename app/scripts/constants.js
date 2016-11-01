@@ -165,14 +165,6 @@ window.OPENSHIFT_CONSTANTS = {
               href: "/quota"
             },
             {
-              label: "Secrets",
-              href: "/browse/secrets"
-            },
-            {
-              label: "Other Resources",
-              href: "/browse/other"
-            },
-            {
               label: "Membership",
               href: "/membership",
               // supports: {resource: '', verb: '', group: '' }
@@ -180,6 +172,14 @@ window.OPENSHIFT_CONSTANTS = {
                 resource: 'rolebindings',
                 verb: 'list'
               }
+            },
+            {
+              label: "Secrets",
+              href: "/browse/secrets"
+            },
+            {
+              label: "Other Resources",
+              href: "/browse/other"
             }
           ]
         }
