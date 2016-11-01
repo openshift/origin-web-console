@@ -64,18 +64,15 @@
 
                 <div
                   class="col-heading item-row"
-                  row mobile="column" tablet="column" flex-collapse-fix>
-                  <div row flex flex-collapse-fix>
-                    <div class="col-name" conceal="mobile">
-                      <h3>Name</h3>
-                    </div>
-                    <div class="col-roles" flex conceal="mobile">
-                      <h3>Roles</h3>
-                    </div>
+                  row mobile="column" flex-collapse-fix>
+                  <div class="col-name" flex conceal="mobile" ng-class="{ 'half-width': !mode.edit }">
+                    <h3>Name</h3>
                   </div>
-                  <div class="col-add-role" flex-collapse-fix>
-                    <h3
-                      ng-show="mode.edit">
+                  <div class="col-roles" flex conceal="mobile">
+                    <h3>Roles</h3>
+                  </div>
+                  <div ng-if="mode.edit" class="col-add-role" conceal="tablet" flex-collapse-fix>
+                    <h3>
                       Add another role
                     </h3>
                   </div>
@@ -90,7 +87,7 @@
                   ng-repeat="subject in subjectKind.subjects"
                   class="item-row highlight-hover"
                   row mobile="column">
-                  <div class="col-name" row cross-axis="center">
+                  <div class="col-name" row flex cross-axis="center" ng-class="{ 'half-width': !mode.edit }">
                     <a
                       ng-if="subject.namespace"
                       target="_blank"
@@ -128,8 +125,9 @@
                         action-title="remove role {{role}} from {{subject.name}}"></action-chip>
                     </div>
                     <div
+                      ng-if="mode.edit"
                       class="col-add-role">
-                      <div ng-show="mode.edit" row>
+                      <div row>
                         <ui-select
                           ng-if="filteredRoles.length"
                           ng-model="subject.newRole"

@@ -8503,17 +8503,15 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "</p>\n" +
     "</div>\n" +
     "<div column class=\"content-pane\" ng-class=\"'content-' + subjectKind.name.toLowerCase()\">\n" +
-    "<div class=\"col-heading item-row\" row mobile=\"column\" tablet=\"column\" flex-collapse-fix>\n" +
-    "<div row flex flex-collapse-fix>\n" +
-    "<div class=\"col-name\" conceal=\"mobile\">\n" +
+    "<div class=\"col-heading item-row\" row mobile=\"column\" flex-collapse-fix>\n" +
+    "<div class=\"col-name\" flex conceal=\"mobile\" ng-class=\"{ 'half-width': !mode.edit }\">\n" +
     "<h3>Name</h3>\n" +
     "</div>\n" +
     "<div class=\"col-roles\" flex conceal=\"mobile\">\n" +
     "<h3>Roles</h3>\n" +
     "</div>\n" +
-    "</div>\n" +
-    "<div class=\"col-add-role\" flex-collapse-fix>\n" +
-    "<h3 ng-show=\"mode.edit\">\n" +
+    "<div ng-if=\"mode.edit\" class=\"col-add-role\" conceal=\"tablet\" flex-collapse-fix>\n" +
+    "<h3>\n" +
     "Add another role\n" +
     "</h3>\n" +
     "</div>\n" +
@@ -8524,7 +8522,7 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "</p>\n" +
     "</div>\n" +
     "<div ng-repeat=\"subject in subjectKind.subjects\" class=\"item-row highlight-hover\" row mobile=\"column\">\n" +
-    "<div class=\"col-name\" row cross-axis=\"center\">\n" +
+    "<div class=\"col-name\" row flex cross-axis=\"center\" ng-class=\"{ 'half-width': !mode.edit }\">\n" +
     "<a ng-if=\"subject.namespace\" target=\"_blank\" ng-href=\"project/{{project.metadata.name}}/browse/other?kind=ServiceAccount\">\n" +
     "<span>\n" +
     "{{subject.namespace}} /\n" +
@@ -8546,8 +8544,8 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "<div class=\"col-roles\" row tablet=\"column\" flex wrap axis=\"start\">\n" +
     "<action-chip ng-repeat=\"role in subject.roles\" key=\"role.metadata.name\" key-help=\"roleHelp(role)\" show-action=\"mode.edit\" action=\"confirmRemove(subject.name, subjectKind.name, role.metadata.name)\" action-title=\"remove role {{role}} from {{subject.name}}\"></action-chip>\n" +
     "</div>\n" +
-    "<div class=\"col-add-role\">\n" +
-    "<div ng-show=\"mode.edit\" row>\n" +
+    "<div ng-if=\"mode.edit\" class=\"col-add-role\">\n" +
+    "<div row>\n" +
     "<ui-select ng-if=\"filteredRoles.length\" ng-model=\"subject.newRole\" theme=\"bootstrap\" search-enabled=\"true\" title=\"Select a new role for {{subjectKind.name}}\" class=\"select-role\" flex>\n" +
     "<ui-select-match placeholder=\"Select a role\">\n" +
     "<span ng-bind=\"subject.newRole.metadata.name\"></span>\n" +
