@@ -1064,7 +1064,7 @@ c[h] || (c[h] = {}), "DELETED" === d ? delete c[h][i] :c[h][i] = a;
 } else "DELETED" === d ? delete c[f] :c[f] = a;
 }
 function m() {
-this._listCallbacksMap = {}, this._watchCallbacksMap = {}, this._watchObjectCallbacksMap = {}, this._watchOperationMap = {}, this._listOperationMap = {}, this._resourceVersionMap = {}, this._dataCache = a("dataCache", {
+this._listDeferredMap = {}, this._watchCallbacksMap = {}, this._watchObjectCallbacksMap = {}, this._watchOperationMap = {}, this._listOperationMap = {}, this._resourceVersionMap = {}, this._dataCache = a("dataCache", {
 number:25
 }), this._immutableDataCache = a("immutableDataCache", {
 number:50
@@ -1100,8 +1100,8 @@ l(a, b, c, d ? d[e] :null);
 });
 }, m.prototype.list = function(a, b, c, d) {
 a = g.toResourceGroupVersion(a);
-var e = this._uniqueKey(a, null, b, _.get(d, "http.params")), f = this._listCallbacks(e);
-f.add(c), this._isCached(e) ? (f.fire(this._data(e)), f.empty()) :this._listInFlight(e) || this._startListOp(a, b, d);
+var e = this._uniqueKey(a, null, b, _.get(d, "http.params")), f = this._listDeferred(e);
+return c && f.promise.then(c), this._isCached(e) ? f.resolve(this._data(e)) :this._listInFlight(e) || this._startListOp(a, b, d), f.promise;
 }, m.prototype["delete"] = function(a, c, d, f) {
 a = g.toResourceGroupVersion(a), f = f || {};
 var h, i = e.defer(), j = this, k = {};
@@ -1382,8 +1382,8 @@ for (var b = 0; b < a.length; b++) this.unwatch(a[b]);
 return this._watchCallbacksMap[a] || (this._watchCallbacksMap[a] = $.Callbacks()), this._watchCallbacksMap[a];
 }, m.prototype._watchObjectCallbacks = function(a) {
 return this._watchObjectCallbacksMap[a] || (this._watchObjectCallbacksMap[a] = $.Callbacks()), this._watchObjectCallbacksMap[a];
-}, m.prototype._listCallbacks = function(a) {
-return this._listCallbacksMap[a] || (this._listCallbacksMap[a] = $.Callbacks()), this._listCallbacksMap[a];
+}, m.prototype._listDeferred = function(a) {
+return this._listDeferredMap[a] || (this._listDeferredMap[a] = e.defer()), this._listDeferredMap[a];
 }, m.prototype._watchInFlight = function(a, b) {
 return b || b === !1 ? void (this._watchOperationMap[a] = b) :this._watchOperationMap[a];
 }, m.prototype._listInFlight = function(a, b) {
@@ -1439,10 +1439,12 @@ namespace:g.metadata.name
 })
 }, d.http || {})).success(function(b, g, h, i, j) {
 f._listOpComplete(e, a, c, d, b);
-}).error(function(b, c, e, f) {
-if (_.get(d, "errorNotification", !0)) {
-var g = "Failed to list " + a;
-0 !== c && (g += " (" + c + ")"), h.error(g);
+}).error(function(b, c, g, i) {
+f._listInFlight(e, !1);
+var j = f._listDeferred(e);
+if (delete f._listDeferredMap[e], j.reject(b, c, g, i), _.get(d, "errorNotification", !0)) {
+var k = "Failed to list " + a;
+0 !== c && (k += " (" + c + ")"), h.error(k);
 }
 });
 }) :b({
@@ -1451,20 +1453,24 @@ auth:{},
 url:this._urlForResource(a, null, c)
 }).success(function(b, g, h, i, j) {
 f._listOpComplete(e, a, c, d, b);
-}).error(function(b, c, e, f) {
-if (_.get(d, "errorNotification", !0)) {
-var g = "Failed to list " + a;
-0 !== c && (g += " (" + c + ")"), h.error(g);
+}).error(function(b, c, g, i) {
+f._listInFlight(e, !1);
+var j = f._listDeferred(e);
+if (delete f._listDeferredMap[e], j.reject(b, c, g, i), _.get(d, "errorNotification", !0)) {
+var k = "Failed to list " + a;
+0 !== c && (k += " (" + c + ")"), h.error(k);
 }
 });
 }, m.prototype._listOpComplete = function(a, b, c, d, e) {
 e.items || console.warn("List request for " + b + " returned a null items array.  This is an invalid API response.");
 var f = e.items || [];
-if (e.kind && e.kind.indexOf("List") === e.kind.length - 4 && angular.forEach(f, function(a) {
+e.kind && e.kind.indexOf("List") === e.kind.length - 4 && angular.forEach(f, function(a) {
 a.kind || (a.kind = e.kind.slice(0, -4)), a.apiVersion || (a.apiVersion = e.apiVersion);
-}), this._resourceVersion(a, e.resourceVersion || e.metadata.resourceVersion), this._data(a, f), this._listCallbacks(a).fire(this._data(a)), this._listCallbacks(a).empty(), this._watchCallbacks(a).fire(this._data(a)), this._listInFlight(a, !1), this._watchCallbacks(a).has()) {
-var g = this._watchOptions(a) || {};
-g.poll ? (this._watchInFlight(a, !0), this._watchPollTimeouts(a, setTimeout($.proxy(this, "_startListOp", b, c), g.pollInterval || 5e3))) :this._watchInFlight(a) || this._startWatchOp(a, b, c, d, this._resourceVersion(a));
+}), this._listInFlight(a, !1);
+var g = this._listDeferred(a);
+if (delete this._listDeferredMap[a], this._resourceVersion(a, e.resourceVersion || e.metadata.resourceVersion), this._data(a, f), g.resolve(this._data(a)), this._watchCallbacks(a).fire(this._data(a)), this._watchCallbacks(a).has()) {
+var h = this._watchOptions(a) || {};
+h.poll ? (this._watchInFlight(a, !0), this._watchPollTimeouts(a, setTimeout($.proxy(this, "_startListOp", b, c), h.pollInterval || 5e3))) :this._watchInFlight(a) || this._startWatchOp(a, b, c, d, this._resourceVersion(a));
 }
 }, m.prototype._startWatchOp = function(a, b, d, e, f) {
 if (this._watchInFlight(a, !0), c.available()) {
