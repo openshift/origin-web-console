@@ -7005,7 +7005,7 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "<div class=\"col-lg-12\">\n" +
     "<div ng-if=\"!allowMultipleSecrets\">\n" +
     "<label class=\"picker-label\">{{displayType | startCase}} Secret</label>\n" +
-    "<ui-select ng-model=\"pickedSecret.name\">\n" +
+    "<ui-select ng-disabled=\"disableInput\" ng-model=\"pickedSecret.name\">\n" +
     "<ui-select-match placeholder=\"Secret name\">{{$select.selected}}</ui-select-match>\n" +
     "<ui-select-choices repeat=\"secret in (secretsByType[type] | filter : $select.search)\">\n" +
     "<div ng-bind-html=\"secret | highlight : $select.search\"></div>\n" +
@@ -7016,7 +7016,7 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "<div class=\"basic-secrets\">\n" +
     "<div class=\"secret-name\">\n" +
     "<label ng-if=\"$first\" class=\"picker-label\">{{displayType | startCase}} Secrets</label>\n" +
-    "<ui-select ng-model=\"pickedSecret.name\">\n" +
+    "<ui-select ng-disabled=\"disableInput\" ng-model=\"pickedSecret.name\">\n" +
     "<ui-select-match placeholder=\"Secret name\">{{$select.selected}}</ui-select-match>\n" +
     "<ui-select-choices repeat=\"secret in (secretsByType[type] | filter : $select.search)\">\n" +
     "<div ng-bind-html=\"secret | highlight : $select.search\"></div>\n" +
@@ -7047,7 +7047,7 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "</div>\n" +
     "</div>\n" +
     "</div>\n" +
-    "<div class=\"osc-secret-actions\">\n" +
+    "<div class=\"osc-secret-actions\" ng-if=\"!disableInput\">\n" +
     "<span ng-if=\"canAddSourceSecret()\">\n" +
     "<a href=\"\" role=\"button\" ng-click=\"addSourceSecret()\">Add another secret</a>\n" +
     "<span ng-if=\"'secrets' | canI : 'create'\" class=\"action-divider\">|</span>\n" +
@@ -7723,7 +7723,7 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "</div>\n" +
     "</div>\n" +
     "<div class=\"form-group\" ng-if=\"view.advancedOptions\">\n" +
-    "<osc-secrets model=\"secrets.picked.pushSecret\" namespace=\"projectName\" display-type=\"push\" type=\"image\" service-account-to-link=\"builder\" secrets-by-type=\"secrets.secretsByType\" alerts=\"alerts\">\n" +
+    "<osc-secrets model=\"secrets.picked.pushSecret\" namespace=\"projectName\" display-type=\"push\" type=\"image\" disable-input=\"imageOptions.to.type==='None'\" service-account-to-link=\"builder\" secrets-by-type=\"secrets.secretsByType\" alerts=\"alerts\">\n" +
     "</osc-secrets>\n" +
     "</div>\n" +
     "</div>\n" +

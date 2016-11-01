@@ -9138,6 +9138,7 @@ namespace:"=",
 displayType:"@",
 type:"@",
 alerts:"=",
+disableInput:"=",
 serviceAccountToLink:"@?",
 allowMultipleSecrets:"=?"
 },
