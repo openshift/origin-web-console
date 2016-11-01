@@ -391,7 +391,7 @@ module.exports = function (grunt) {
           preserveLineBreaks: true,
           collapseWhitespace: true,
           conservativeCollapse: false,
-          collapseBooleanAttributes: true,
+          collapseBooleanAttributes: false,
           removeComments: true,
           removeCommentsFromCDATA: true,
           removeOptionalTags: false,
