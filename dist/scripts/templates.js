@@ -3936,22 +3936,17 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "<alerts alerts=\"alerts\"></alerts>\n" +
     "<div class=\"mar-top-xl\">\n" +
     "<h1>Request Storage</h1>\n" +
-    "<div>\n" +
-    "<span class=\"help-block\">\n" +
+    "<div class=\"help-block\">\n" +
     "Create a request for an administrator defined storage asset by requesting size and access mode attributes for a best fit.\n" +
-    "</span>\n" +
     "</div>\n" +
-    "<form name=\"createPersistentVolumeClaimForm\">\n" +
-    "<div>\n" +
+    "<form name=\"createPersistentVolumeClaimForm\" class=\"mar-top-lg\">\n" +
     "<fieldset ng-disabled=\"disableInputs\">\n" +
-    "<osc-persistent-volume-claim model=\"claim\">\n" +
-    "</osc-persistent-volume-claim>\n" +
-    "<div class=\"button-group gutter-top gutter-bottom\">\n" +
+    "<osc-persistent-volume-claim model=\"claim\"></osc-persistent-volume-claim>\n" +
+    "<div class=\"button-group gutter-bottom\">\n" +
     "<button type=\"submit\" class=\"btn btn-primary btn-lg\" ng-click=\"createPersistentVolumeClaim()\" ng-disabled=\"createPersistentVolumeClaimForm.$invalid || disableInputs\" value=\"\">Create</button>\n" +
     "<a class=\"btn btn-default btn-lg\" href=\"\" back>Cancel</a>\n" +
     "</div>\n" +
     "</fieldset>\n" +
-    "</div>\n" +
     "</form>\n" +
     "</div>\n" +
     "</div>\n" +
@@ -6666,26 +6661,33 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
   $templateCache.put('views/directives/osc-persistent-volume-claim.html',
     "<ng-form name=\"persistentVolumeClaimForm\">\n" +
     "<fieldset ng-disabled=\"claimDisabled\">\n" +
+    "<div ng-show=\"storageClasses | hashSize\" class=\"form-group\">\n" +
     "\n" +
     "<label class=\"required\">Storage Classes</label>\n" +
-    "<div>\n" +
-    "<span id=\"claim-storage-class-help\" class=\"help-block\">Storage classes are set by the administrator to define types of storage the users can select.\n" +
+    "<div id=\"claim-storage-class-help\" class=\"help-block mar-bottom-lg\">\n" +
+    "Storage classes are set by the administrator to define types of storage the users can select.\n" +
     "<div class=\"learn-more-block\">\n" +
-    "<a href=\"{{'storage_classes' | helpLink}}\" target=\"_blank\">Learn more <i class=\"fa fa-external-link\" aria-hidden=\"true\"> </i></a>\n" +
+    "<a ng-href=\"{{'storage_classes' | helpLink}}\" target=\"_blank\">Learn more <i class=\"fa fa-external-link\" aria-hidden=\"true\"> </i></a>\n" +
     "</div>\n" +
-    "</span>\n" +
     "</div>\n" +
-    "<div class=\"form-group\" ng-repeat=\"sclass in storageClasses track by (sclass | uid)\" id=\"storageclass-{{sclass.metadata.name}}\">\n" +
+    "<div ng-repeat=\"sclass in storageClasses track by (sclass | uid)\" id=\"storageclass-{{sclass.metadata.name}}\">\n" +
+    "<div class=\"radio\">\n" +
+    "<label>\n" +
     "<input type=\"radio\" name=\"storageClass\" ng-value=\"sclass\" ng-model=\"claim.storageClass\">\n" +
     "{{sclass.metadata.name}}\n" +
-    "<span class=\"help-block\">\n" +
+    "</label>\n" +
+    "</div>\n" +
+    "<div class=\"help-block\">\n" +
     "Type: {{sclass.parameters.type}} | Zone: {{sclass.parameters.zone}}\n" +
     "<span ng-if=\"sclass.metadata.annotations.description\"> | {{sclass.metadata.annotations.description}}</span>\n" +
-    "</span>\n" +
     "</div>\n" +
-    "<div class=\"form-group\">\n" +
+    "</div>\n" +
+    "<div class=\"radio\">\n" +
+    "<label>\n" +
     "<input type=\"radio\" name=\"storageClass\" ng-model=\"claim.storageClass\">\n" +
     "No Storage Class\n" +
+    "</label>\n" +
+    "</div>\n" +
     "</div>\n" +
     "\n" +
     "<div class=\"form-group\">\n" +
@@ -6744,23 +6746,20 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "</fieldset>\n" +
     "</div>\n" +
     "\n" +
-    "<div>\n" +
-    "<a href=\"\" ng-click=\"showAdvancedOptions = true\" ng-show=\"!showAdvancedOptions\">Use label selectors in the storage request </a>\n" +
-    "<a href=\"\" ng-click=\"showAdvancedOptions = false\" ng-show=\"showAdvancedOptions\">Hide label selectors in the storage request</a>\n" +
+    "<div ng-show=\"!showAdvancedOptions\" class=\"mar-bottom-xl\">\n" +
+    "<a href=\"\" ng-click=\"showAdvancedOptions = true\">Use label selectors in the storage request</a>\n" +
+    "</div>\n" +
     "<div ng-show=\"showAdvancedOptions\" class=\"form-group\">\n" +
     "<fieldset class=\"compute-resource\">\n" +
-    "<label for=\"claim-name\">Label Selector</label>\n" +
-    "<div>\n" +
-    "<span id=\"claim-label-help\" class=\"help-block\">\n" +
+    "<label>Label Selector</label>\n" +
+    "<div class=\"help-block mar-bottom-lg\">\n" +
     "Enter a label and value to use with your requested storage.\n" +
-    "<div class=\"learn-more-block\" ng-class=\"{ 'gutter-bottom': showPodWarning }\">\n" +
-    "<a href=\"{{'selector_label' | helpLink}}\" target=\"_blank\">Learn more <i class=\"fa fa-external-link\" aria-hidden=\"true\"> </i></a>\n" +
+    "<div class=\"learn-more-block\">\n" +
+    "<a ng-href=\"{{'selector_label' | helpLink}}\" target=\"_blank\">Learn more <i class=\"fa fa-external-link\" aria-hidden=\"true\"> </i></a>\n" +
     "</div>\n" +
-    "</span>\n" +
     "</div>\n" +
     "<key-value-editor entries=\"claim.selectedLabels\" key-placeholder=\"label\" value-placeholder=\"value\" key-validator=\"[a-zA-Z][a-zA-Z0-9_-]*\" key-validator-error-tooltip=\"A valid label name is an alphanumeric (a-z and 0-9) string beginning with a letter that may contain underscores and dashes.\" add-row-link=\"Add Label\"></key-value-editor>\n" +
     "</fieldset>\n" +
-    "</div>\n" +
     "</div>\n" +
     "</fieldset>\n" +
     "</ng-form>"
