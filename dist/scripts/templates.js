@@ -4325,14 +4325,6 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "</a>\n" +
     "</span></h3>\n" +
     "<key-value-editor entries=\"buildConfigEnvVars\" key-placeholder=\"name\" value-placeholder=\"value\" key-validator=\"[a-zA-Z][a-zA-Z0-9_]*\" key-validator-error-tooltip=\"A valid environment variable name is an alphanumeric (a-z and 0-9) string beginning with a letter that may contain underscores.\" add-row-link=\"Add environment variable\"></key-value-editor>\n" +
-    "<div class=\"form-group\">\n" +
-    "<osc-secrets model=\"buildConfig.secrets.pullSecret\" namespace=\"projectName\" display-type=\"pull\" type=\"image\" secrets-by-type=\"secretsByType\" service-account-to-link=\"builder\" alerts=\"alerts\" allow-multiple-secrets=\"false\">\n" +
-    "</osc-secrets>\n" +
-    "</div>\n" +
-    "<div class=\"form-group\">\n" +
-    "<osc-secrets model=\"buildConfig.secrets.pushSecret\" namespace=\"projectName\" display-type=\"push\" type=\"image\" service-account-to-link=\"builder\" secrets-by-type=\"secretsByType\" alerts=\"alerts\" allow-multiple-secrets=\"false\">\n" +
-    "</osc-secrets>\n" +
-    "</div>\n" +
     "</osc-form-section>\n" +
     "\n" +
     "<osc-form-section header=\"Deployment Configuration\" about-title=\"Deployment Configuration\" about=\"Deployment configurations describe how your application is configured\n" +
@@ -4351,8 +4343,6 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "Deployment configuration changes\n" +
     "</label>\n" +
     "</div>\n" +
-    "<osc-secrets model=\"deploymentConfig.secrets.pullSecrets\" namespace=\"projectName\" display-type=\"pull\" type=\"image\" secrets-by-type=\"secretsByType\" service-account-to-link=\"default\" alerts=\"alerts\" allow-multiple-secrets=\"true\">\n" +
-    "</osc-secrets>\n" +
     "<div>\n" +
     "<h3>Environment Variables (Runtime only) <span class=\"help action-inline\">\n" +
     "<a href=\"\" data-toggle=\"tooltip\" data-original-title=\"Environment variables are used to configure and pass information to running containers.  These environment variables will only be available at runtime.\">\n" +
