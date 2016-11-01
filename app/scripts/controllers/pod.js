@@ -49,6 +49,7 @@ angular.module('openshiftConsole')
     $scope.selectedTab = {};
 
     var watches = [];
+    var requestContext = null;
 
     // Check if the metrics service is available so we know when to show the tab.
     MetricsService.isAvailable().then(function(available) {
@@ -204,54 +205,50 @@ angular.module('openshiftConsole')
       });
     };
 
+    var podResolved = function(pod, action) {
+      $scope.loaded = true;
+      $scope.pod = pod;
+      setLogVars(pod);
+      setContainerVars();
+      if (action === "DELETED") {
+        $scope.alerts["deleted"] = {
+          type: "warning",
+          message: "This pod has been deleted."
+        };
+      }
+    };
+
     ProjectsService
       .get($routeParams.project)
       .then(_.spread(function(project, context) {
+        requestContext = context;
         $scope.project = project;
         // FIXME: DataService.createStream() requires a scope with a
         // projectPromise rather than just a namespace, so we have to pass the
         // context into the log-viewer directive.
         $scope.projectContext = context;
-        DataService.get("pods", $routeParams.pod, context).then(
-          // success
-          function(pod) {
-            $scope.loaded = true;
-            $scope.pod = pod;
-            setLogVars(pod);
-            setContainerVars();
+        DataService
+          .get("pods", $routeParams.pod, context)
+          .then(function(pod) {
+            podResolved(pod);
             var pods = {};
             pods[pod.metadata.name] = pod;
-            ImageStreamResolver.fetchReferencedImageStreamImages(pods, $scope.imagesByDockerReference, $scope.imageStreamImageRefByDockerReference, context);
-
             $scope.containerTerminals = makeTerminals();
             updateContainersYet(pod);
-
-            // If we found the item successfully, watch for changes on it
+            ImageStreamResolver.fetchReferencedImageStreamImages(pods, $scope.imagesByDockerReference, $scope.imageStreamImageRefByDockerReference, requestContext);
             watches.push(DataService.watchObject("pods", $routeParams.pod, context, function(pod, action) {
-              if (action === "DELETED") {
-                $scope.alerts["deleted"] = {
-                  type: "warning",
-                  message: "This pod has been deleted."
-                };
-              }
-              $scope.pod = pod;
-              setLogVars(pod);
-              setContainerVars();
-
+              podResolved(pod, action);
               updateTerminals($scope.containerTerminals);
               updateContainersYet(pod);
             }));
-          },
-          // failure
-          function(e) {
+          }, function(e) {
             $scope.loaded = true;
             $scope.alerts["load"] = {
               type: "error",
               message: "The pod details could not be loaded.",
               details: "Reason: " + $filter('getErrorDetails')(e)
             };
-          }
-        );
+          });
 
         // covers container picker if multiple containers
         // outside of the above watch to avoid repeatedly generating new watches.

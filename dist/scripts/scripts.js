@@ -3900,13 +3900,13 @@ title:c.pod
 type:"warning",
 message:"This terminal has been disconnected. If you reconnect, your terminal history will be lost."
 }, a.noContainersYet = !0, a.selectedTab = {};
-var k = [];
+var k = [], l = null;
 h.isAvailable().then(function(b) {
 a.metricsAvailable = b;
 });
-var l = function(b) {
+var m = function(b) {
 a.logOptions.container = c.container || b.spec.containers[0].name, a.logCanRun = !_.includes([ "New", "Pending", "Unknown" ], b.status.phase);
-}, m = function() {
+}, n = function() {
 if (a.pod) {
 var b = _.find(a.pod.status.containerStatuses, {
 name:a.logOptions.container
@@ -3923,7 +3923,7 @@ containerStartTime:_.get(c, [ d, "startedAt" ]),
 containerEndTime:_.get(c, [ d, "finishedAt" ])
 });
 }
-}, n = function() {
+}, o = function() {
 var a = $("<span>").css({
 position:"absolute",
 top:"-100px"
@@ -3932,31 +3932,31 @@ width:a.width() / 10,
 height:a.height()
 };
 return a.remove(), b;
-}, o = n(), p = $(window), q = function() {
-o.height && o.width && a.$apply(function() {
+}, p = o(), q = $(window), r = function() {
+p.height && p.width && a.$apply(function() {
 var b = $(".container-terminal-wrapper").get(0);
 if (b) {
-var c = b.getBoundingClientRect(), d = p.width(), e = p.height(), f = d - c.left - 40, g = e - c.top - 50;
-a.terminalCols = Math.max(_.floor(f / o.width), 80), a.terminalRows = Math.max(_.floor(g / o.height), 24);
+var c = b.getBoundingClientRect(), d = q.width(), e = q.height(), f = d - c.left - 40, g = e - c.top - 50;
+a.terminalCols = Math.max(_.floor(f / p.width), 80), a.terminalRows = Math.max(_.floor(g / p.height), 24);
 }
 });
 };
 a.$watch("selectedTab.terminal", function(a) {
-a ? (o.height && o.width ? $(window).on("resize.terminalsize", _.debounce(q, 100)) :Logger.warn("Unable to calculate the bounding box for a character.  Terminal will not be able to resize."), d(q, 0)) :$(window).off("resize.terminalsize");
+a ? (p.height && p.width ? $(window).on("resize.terminalsize", _.debounce(r, 100)) :Logger.warn("Unable to calculate the bounding box for a character.  Terminal will not be able to resize."), d(r, 0)) :$(window).off("resize.terminalsize");
 }), a.onTerminalSelectChange = function(b) {
 _.each(a.containerTerminals, function(a) {
 a.isVisible = !1;
 }), b.isVisible = !0, b.isUsed = !0, a.selectedTerminalContainer = b;
 };
-var r = function(a) {
+var s = function(a) {
 var b = _.get(a, "state", {});
 return _.head(_.keys(b));
-}, s = function() {
+}, t = function() {
 var b = [];
 _.each(a.pod.spec.containers, function(c) {
 var d = _.find(a.pod.status.containerStatuses, {
 name:c.name
-}), e = r(d);
+}), e = s(d);
 b.push({
 containerName:c.name,
 isVisible:!1,
@@ -3966,25 +3966,27 @@ containerState:e
 });
 var c = _.head(b);
 return c.isVisible = !0, c.isUsed = !0, a.selectedTerminalContainer = c, b;
-}, t = function(b) {
-a.noContainersYet && (a.noContainersYet = 0 === a.containersRunning(b.status.containerStatuses));
 }, u = function(b) {
+a.noContainersYet && (a.noContainersYet = 0 === a.containersRunning(b.status.containerStatuses));
+}, v = function(b) {
 _.each(b, function(b) {
 var c = _.find(a.pod.status.containerStatuses, {
 name:b.containerName
-}), d = r(c);
+}), d = s(c);
 b.containerState = d;
+});
+}, w = function(b, c) {
+a.loaded = !0, a.pod = b, m(b), n(), "DELETED" === c && (a.alerts.deleted = {
+type:"warning",
+message:"This pod has been deleted."
 });
 };
 j.get(c.project).then(_.spread(function(d, h) {
-a.project = d, a.projectContext = h, f.get("pods", c.pod, h).then(function(b) {
-a.loaded = !0, a.pod = b, l(b), m();
+l = h, a.project = d, a.projectContext = h, f.get("pods", c.pod, h).then(function(b) {
+w(b);
 var d = {};
-d[b.metadata.name] = b, g.fetchReferencedImageStreamImages(d, a.imagesByDockerReference, a.imageStreamImageRefByDockerReference, h), a.containerTerminals = s(), t(b), k.push(f.watchObject("pods", c.pod, h, function(b, c) {
-"DELETED" === c && (a.alerts.deleted = {
-type:"warning",
-message:"This pod has been deleted."
-}), a.pod = b, l(b), m(), u(a.containerTerminals), t(b);
+d[b.metadata.name] = b, a.containerTerminals = t(), u(b), g.fetchReferencedImageStreamImages(d, a.imagesByDockerReference, a.imageStreamImageRefByDockerReference, l), k.push(f.watchObject("pods", c.pod, h, function(b, c) {
+w(b, c), v(a.containerTerminals), u(b);
 }));
 }, function(c) {
 a.loaded = !0, a.alerts.load = {
@@ -3992,12 +3994,12 @@ type:"error",
 message:"The pod details could not be loaded.",
 details:"Reason: " + b("getErrorDetails")(c)
 };
-}), a.$watch("logOptions.container", m), k.push(f.watch("imagestreams", h, function(b) {
+}), a.$watch("logOptions.container", n), k.push(f.watch("imagestreams", h, function(b) {
 a.imageStreams = b.by("metadata.name"), g.buildDockerRefMapForImageStreams(a.imageStreams, a.imageStreamImageRefByDockerReference), g.fetchReferencedImageStreamImages(a.pods, a.imagesByDockerReference, a.imageStreamImageRefByDockerReference, h), Logger.log("imagestreams (subscribe)", a.imageStreams);
 })), k.push(f.watch("builds", h, function(b) {
 a.builds = b.by("metadata.name"), Logger.log("builds (subscribe)", a.builds);
 }));
-var j, n = function() {
+var j, m = function() {
 var c = a.debugPod;
 j && (f.unwatch(j), j = null), $(window).off("beforeunload.debugPod"), c && (f["delete"]("pods", c.metadata.name, h, {
 gracePeriodSeconds:0
@@ -4035,7 +4037,7 @@ return _.get(a, [ "imagesByDockerReference", g.image ]);
 },
 backdrop:"static"
 });
-i.result.then(n);
+i.result.then(m);
 }, function(d) {
 a.alerts["debug-container-error"] = {
 type:"error",
@@ -4052,7 +4054,7 @@ return a && a.forEach(function(a) {
 a.state && a.state.running && b++;
 }), b;
 }, a.$on("$destroy", function() {
-f.unwatchAll(k), n(), $(window).off("resize.terminalsize");
+f.unwatchAll(k), m(), $(window).off("resize.terminalsize");
 });
 }));
 } ]), angular.module("openshiftConsole").controller("OverviewController", [ "$filter", "$routeParams", "$scope", "AlertMessageService", "BuildsService", "DataService", "DeploymentsService", "LabelsService", "Logger", "PodsService", "ProjectsService", "RoutesService", "ServicesService", "Navigate", "MetricsService", "QuotaService", function(a, b, c, d, e, f, g, h, i, j, k, l, m, n, o, p) {
