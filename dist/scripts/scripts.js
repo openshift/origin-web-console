@@ -9426,7 +9426,7 @@ alerts:"="
 templateUrl:"views/_overview-deployment.html"
 };
 }), angular.module("openshiftConsole").directive("sidebar", [ "$location", "$filter", "Constants", function(a, b, c) {
-var d = function(a, b) {
+var d = b("canI"), e = function(a, b) {
 return a.href === b || _.some(a.prefixes, function(a) {
 return _.startsWith(b, a);
 });
@@ -9434,17 +9434,22 @@ return _.startsWith(b, a);
 return {
 restrict:"E",
 templateUrl:"views/_sidebar.html",
-controller:[ "$scope", function(e) {
-var f = a.path().replace("/project/" + e.projectName, "");
-e.activeSecondary, e.navItems = c.PROJECT_NAVIGATION, e.activePrimary = _.find(e.navItems, function(a) {
-return d(a, f) ? (e.activeSecondary = null, !0) :_.some(a.secondaryNavSections, function(a) {
+controller:[ "$scope", function(f) {
+var g = a.path().replace("/project/" + f.projectName, "");
+f.activeSecondary, f.navItems = c.PROJECT_NAVIGATION, f.activePrimary = _.find(f.navItems, function(a) {
+return e(a, g) ? (f.activeSecondary = null, !0) :_.some(a.secondaryNavSections, function(a) {
 var b = _.find(a.items, function(a) {
-return d(a, f);
+return e(a, g);
 });
-return !!b && (e.activeSecondary = b, !0);
+return !!b && (f.activeSecondary = b, !0);
 });
-}), e.navURL = function(a) {
-return a ? b("isAbsoluteURL")(a) ? a :"project/" + e.projectName + a :"";
+}), f.navURL = function(a) {
+return a ? b("isAbsoluteURL")(a) ? a :"project/" + f.projectName + a :"";
+}, f.show = function(a) {
+var b = !a.isValid || a.isValid();
+if (!b) return !1;
+var c = !a.canI || d(a.canI.resource, a.canI.verb, a.canI.group);
+return c;
 };
 } ]
 };
@@ -12365,126 +12370,6 @@ return function(c, d) {
 var e = a(c), f = c.metadata.name;
 return e !== f && b(d)[e] > 1 ? e + " (" + f + ")" :e;
 };
-} ]).filter("canI", [ "AuthorizationService", function(a) {
-return function(b, c, d) {
-return a.canI(b, c, d);
-};
-} ]).filter("canIAddToProject", [ "AuthorizationService", function(a) {
-return function(b) {
-return a.canIAddToProject(b);
-};
-} ]).filter("canIDoAny", [ "canIFilter", function(a) {
-var b = {
-buildConfigs:[ {
-group:"",
-resource:"buildconfigs",
-verbs:[ "delete", "update" ]
-}, {
-group:"",
-resource:"buildconfigs/instantiate",
-verbs:[ "create" ]
-} ],
-builds:[ {
-group:"",
-resource:"builds/clone",
-verbs:[ "create" ]
-}, {
-group:"",
-resource:"builds",
-verbs:[ "delete", "update" ]
-} ],
-deployments:[ {
-group:"extensions",
-resource:"horizontalpodautoscalers",
-verbs:[ "create", "update" ]
-}, {
-group:"extensions",
-resource:"deployments",
-verbs:[ "create", "update" ]
-} ],
-deploymentConfigs:[ {
-group:"extensions",
-resource:"horizontalpodautoscalers",
-verbs:[ "create", "update" ]
-}, {
-group:"",
-resource:"deploymentconfigs",
-verbs:[ "create", "update" ]
-} ],
-horizontalPodAutoscalers:[ {
-group:"extensions",
-resource:"horizontalpodautoscalers",
-verbs:[ "update", "delete" ]
-} ],
-imageStreams:[ {
-group:"",
-resource:"imagestreams",
-verbs:[ "update", "delete" ]
-} ],
-persistentVolumeClaims:[ {
-group:"",
-resource:"persistentvolumeclaims",
-verbs:[ "update", "delete" ]
-} ],
-pods:[ {
-group:"",
-resource:"pods",
-verbs:[ "update", "delete" ]
-}, {
-group:"",
-resource:"deploymentconfigs",
-verbs:[ "update" ]
-} ],
-replicaSets:[ {
-group:"extensions",
-resource:"horizontalpodautoscalers",
-verbs:[ "create", "update" ]
-}, {
-group:"extensions",
-resource:"replicasets",
-verbs:[ "update", "delete" ]
-} ],
-replicationControllers:[ {
-group:"",
-resource:"replicationcontrollers",
-verbs:[ "update", "delete" ]
-} ],
-routes:[ {
-group:"",
-resource:"routes",
-verbs:[ "update", "delete" ]
-} ],
-services:[ {
-group:"",
-resource:"services",
-verbs:[ "update", "create", "delete" ]
-} ],
-secrets:[ {
-group:"",
-resource:"secrets",
-verbs:[ "update", "delete" ]
-} ],
-projects:[ {
-group:"",
-resource:"projects",
-verbs:[ "delete", "update" ]
-} ]
-};
-return function(c) {
-return _.some(b[c], function(b) {
-return _.some(b.verbs, function(c) {
-return a({
-resource:b.resource,
-group:b.group
-}, c);
-});
-});
-};
-} ]).filter("canIScale", [ "canIFilter", "hasDeploymentConfigFilter", "DeploymentsService", function(a, b, c) {
-return function(b) {
-var d = c.getScaleResource(b);
-return a(d, "update");
-};
 } ]).filter("tags", [ "annotationFilter", function(a) {
 return function(b, c) {
 c = c || "tags";
@@ -13129,6 +13014,126 @@ return function(b) {
 if (!b) return "";
 var c = a(b, "deployment.kubernetes.io/revision");
 return c ? "#" + c :"Unknown";
+};
+} ]), angular.module("openshiftConsole").filter("canI", [ "AuthorizationService", function(a) {
+return function(b, c, d) {
+return a.canI(b, c, d);
+};
+} ]).filter("canIAddToProject", [ "AuthorizationService", function(a) {
+return function(b) {
+return a.canIAddToProject(b);
+};
+} ]).filter("canIDoAny", [ "canIFilter", function(a) {
+var b = {
+buildConfigs:[ {
+group:"",
+resource:"buildconfigs",
+verbs:[ "delete", "update" ]
+}, {
+group:"",
+resource:"buildconfigs/instantiate",
+verbs:[ "create" ]
+} ],
+builds:[ {
+group:"",
+resource:"builds/clone",
+verbs:[ "create" ]
+}, {
+group:"",
+resource:"builds",
+verbs:[ "delete", "update" ]
+} ],
+deployments:[ {
+group:"extensions",
+resource:"horizontalpodautoscalers",
+verbs:[ "create", "update" ]
+}, {
+group:"extensions",
+resource:"deployments",
+verbs:[ "create", "update" ]
+} ],
+deploymentConfigs:[ {
+group:"extensions",
+resource:"horizontalpodautoscalers",
+verbs:[ "create", "update" ]
+}, {
+group:"",
+resource:"deploymentconfigs",
+verbs:[ "create", "update" ]
+} ],
+horizontalPodAutoscalers:[ {
+group:"extensions",
+resource:"horizontalpodautoscalers",
+verbs:[ "update", "delete" ]
+} ],
+imageStreams:[ {
+group:"",
+resource:"imagestreams",
+verbs:[ "update", "delete" ]
+} ],
+persistentVolumeClaims:[ {
+group:"",
+resource:"persistentvolumeclaims",
+verbs:[ "update", "delete" ]
+} ],
+pods:[ {
+group:"",
+resource:"pods",
+verbs:[ "update", "delete" ]
+}, {
+group:"",
+resource:"deploymentconfigs",
+verbs:[ "update" ]
+} ],
+replicaSets:[ {
+group:"extensions",
+resource:"horizontalpodautoscalers",
+verbs:[ "create", "update" ]
+}, {
+group:"extensions",
+resource:"replicasets",
+verbs:[ "update", "delete" ]
+} ],
+replicationControllers:[ {
+group:"",
+resource:"replicationcontrollers",
+verbs:[ "update", "delete" ]
+} ],
+routes:[ {
+group:"",
+resource:"routes",
+verbs:[ "update", "delete" ]
+} ],
+services:[ {
+group:"",
+resource:"services",
+verbs:[ "update", "create", "delete" ]
+} ],
+secrets:[ {
+group:"",
+resource:"secrets",
+verbs:[ "update", "delete" ]
+} ],
+projects:[ {
+group:"",
+resource:"projects",
+verbs:[ "delete", "update" ]
+} ]
+};
+return function(c) {
+return _.some(b[c], function(b) {
+return _.some(b.verbs, function(c) {
+return a({
+resource:b.resource,
+group:b.group
+}, c);
+});
+});
+};
+} ]).filter("canIScale", [ "canIFilter", "hasDeploymentConfigFilter", "DeploymentsService", function(a, b, c) {
+return function(b) {
+var d = c.getScaleResource(b);
+return a(d, "update");
 };
 } ]), angular.module("openshiftConsole").filter("underscore", function() {
 return function(a) {

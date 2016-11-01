@@ -601,7 +601,7 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
   $templateCache.put('views/_sidebar.html',
     "<nav class=\"navbar navbar-sidebar\">\n" +
     "<ul class=\"nav nav-sidenav-primary\">\n" +
-    "<li ng-repeat=\"primaryItem in navItems\" ng-class=\"{ active: primaryItem === activePrimary }\" ng-if=\"!primaryItem.isValid || primaryItem.isValid()\">\n" +
+    "<li ng-repeat=\"primaryItem in navItems\" ng-class=\"{ active: primaryItem === activePrimary }\" ng-if=\"show(primaryItem)\">\n" +
     "<a ng-if=\"primaryItem.href\" ng-href=\"{{navURL(primaryItem.href)}}\">\n" +
     "<span class=\"{{primaryItem.iconClass}}\"></span> {{primaryItem.label}}\n" +
     "</a>\n" +
@@ -613,7 +613,7 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "<li ng-repeat-start=\"secondarySection in primaryItem.secondaryNavSections\" ng-if=\"secondarySection.header\" class=\"dropdown-header\">\n" +
     "{{secondarySection.header}}\n" +
     "</li>\n" +
-    "<li ng-repeat=\"secondaryItem in secondarySection.items\" ng-class=\"{ active: secondaryItem === activeSecondary }\" ng-if=\"!secondaryItem.isValid || secondaryItem.isValid()\">\n" +
+    "<li ng-repeat=\"secondaryItem in secondarySection.items\" ng-class=\"{ active: secondaryItem === activeSecondary }\" ng-if=\"show(secondaryItem)\">\n" +
     "<a ng-href=\"{{navURL(secondaryItem.href)}}\">{{secondaryItem.label}}</a>\n" +
     "</li>\n" +
     "<li ng-repeat-end style=\"display:none\"></li>\n" +
@@ -624,7 +624,7 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "<li ng-repeat-start=\"secondarySection in primaryItem.secondaryNavSections\" ng-if=\"secondarySection.header\" class=\"dropdown-header\">\n" +
     "{{secondarySection.header}}\n" +
     "</li>\n" +
-    "<li ng-repeat=\"secondaryItem in secondarySection.items\" ng-class=\"{ active: secondaryItem === activeSecondary }\" ng-if=\"!secondaryItem.isValid || secondaryItem.isValid()\">\n" +
+    "<li ng-repeat=\"secondaryItem in secondarySection.items\" ng-class=\"{ active: secondaryItem === activeSecondary }\" ng-if=\"show(secondaryItem)\">\n" +
     "<a ng-href=\"{{navURL(secondaryItem.href)}}\">{{secondaryItem.label}}</a>\n" +
     "</li>\n" +
     "<li ng-repeat-end style=\"display:none\"></li>\n" +
