@@ -12,6 +12,7 @@ angular.module("openshiftConsole")
         displayType: "@",
         type: "@",
         alerts: '=',
+        disableInput: "=",
         serviceAccountToLink: '@?',
         allowMultipleSecrets: "=?" // false by default
       },
