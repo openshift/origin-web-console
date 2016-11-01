@@ -68,7 +68,7 @@
         ng-if="showMetrics && !collapse"
         pods="podsByOwnerUID[latestReplicaSet.metadata.uid]"
         containers="latestReplicaSet.spec.template.spec.containers"
-        compact="true"
+        profile="compact"
         class="overview-metrics">
       </deployment-metrics>
       <pod-template ng-if="!showMetrics" pod-template="latestReplicaSet.spec.template"></pod-template>

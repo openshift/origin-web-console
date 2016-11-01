@@ -33,7 +33,7 @@
         ng-if="showMetrics && !collapse"
         pods="[pod]"
         containers="pod.spec.containers"
-        compact="true"
+        profile="compact"
         class="overview-metrics">
       </deployment-metrics>
       <pod-template ng-if="!showMetrics" pod-template="pod"></pod-template>
