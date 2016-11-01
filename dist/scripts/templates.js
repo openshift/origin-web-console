@@ -7759,7 +7759,7 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "</osc-source-secrets>\n" +
     "</div>\n" +
     "</div>\n" +
-    "<div class=\"section\" ng-if=\"view.advancedOptions\">\n" +
+    "<div class=\"section mar-bottom-lg\" ng-if=\"view.advancedOptions\">\n" +
     "<h3 class=\"with-divider\">Run Policy\n" +
     "<span class=\"help action-inline\">\n" +
     "<a href=\"\">\n" +
@@ -7783,7 +7783,7 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "<div class=\"help-block\" ng-switch-default>Builds triggered from this Build Configuration will run using the {{updatedBuildConfig.spec.runPolicy | sentenceCase}} policy.</div>\n" +
     "</div>\n" +
     "</div>\n" +
-    "<div class=\"gutter-top\">\n" +
+    "<div>\n" +
     "<a href=\"\" ng-click=\"view.advancedOptions = !view.advancedOptions\" role=\"button\">{{view.advancedOptions ? 'Hide' : 'Show'}} advanced options</a>\n" +
     "</div>\n" +
     "<div class=\"buttons gutter-top-bottom\">\n" +
@@ -7986,7 +7986,7 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "</div>\n" +
     "</div>\n" +
     "</div>\n" +
-    "<div class=\"gutter-top\">\n" +
+    "<div class=\"mar-top-lg\">\n" +
     "<div ng-if=\"!view.advancedStrategyOptions\">To set additional parameters or edit lifecycle hooks, view <a href=\"\" ng-click=\"view.advancedStrategyOptions = true\">advanced strategy options.</a></div>\n" +
     "<a ng-if=\"view.advancedStrategyOptions\" href=\"\" ng-click=\"view.advancedStrategyOptions = false\">Hide strategy advanced options</a>\n" +
     "</div>\n" +
@@ -7995,26 +7995,23 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "<div class=\"section\">\n" +
     "<h3 class=\"with-divider\">Images</h3>\n" +
     "<dl class=\"dl-horizontal left\">\n" +
-    "<div ng-repeat=\"(containerName, containerConfig) in containerConfigByName\" class=\"gutter-bottom\">\n" +
+    "<div ng-repeat=\"(containerName, containerConfig) in containerConfigByName\">\n" +
     "<div class=\"container-name\">\n" +
     "<h4>Container {{containerName}}</h4>\n" +
     "</div>\n" +
     "<div class=\"checkbox form-group\">\n" +
     "<label>\n" +
     "<input type=\"checkbox\" ng-model=\"containerConfig.hasDeploymentTrigger\">\n" +
-    "Automatically start new deployments when the image stream tag is updated.\n" +
+    "Automatically start new deployments when an image stream tag is updated.\n" +
     "</label>\n" +
     "</div>\n" +
-    "<div class=\"form-group\" ng-if=\"containerConfig.hasDeploymentTrigger\">\n" +
+    "<div ng-if=\"containerConfig.hasDeploymentTrigger\">\n" +
     "<label class=\"required\">Image Change Trigger</label>\n" +
     "<istag-select model=\"containerConfig.triggerData.istag\" select-disabled=\"disableInputs\" include-shared-namespace=\"true\"></istag-select>\n" +
-    "<span class=\"help-block\">New deployments will automatically start when the image stream tag is updated.</span>\n" +
     "</div>\n" +
-    "<div ng-if=\"!containerConfig.hasDeploymentTrigger\">\n" +
+    "<div ng-if=\"!containerConfig.hasDeploymentTrigger\" class=\"form-group\">\n" +
     "<label for=\"imageName\" class=\"required\">Image Name</label>\n" +
-    "<div>\n" +
     "<input class=\"form-control\" id=\"imageName\" name=\"imageName\" ng-model=\"containerConfig.image\" type=\"text\" autocorrect=\"off\" autocapitalize=\"off\" spellcheck=\"false\" required>\n" +
-    "</div>\n" +
     "</div>\n" +
     "</div>\n" +
     "<div class=\"checkbox form-group\">\n" +
@@ -8024,12 +8021,12 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "</label>\n" +
     "</div>\n" +
     "<div ng-if=\"view.advancedImageOptions\">\n" +
-    "<div class=\"gutter-top\">\n" +
+    "<div class=\"mar-top-lg\">\n" +
     "<osc-secrets model=\"secrets.pullSecrets\" namespace=\"projectName\" display-type=\"pull\" type=\"image\" secrets-by-type=\"secretsByType\" service-account-to-link=\"default\" alerts=\"alerts\" allow-multiple-secrets=\"true\">\n" +
     "</osc-secrets>\n" +
     "</div>\n" +
     "</div>\n" +
-    "<div class=\"gutter-top\">\n" +
+    "<div class=\"mar-top-lg\">\n" +
     "<div ng-if=\"!view.advancedImageOptions\">To set secrets for pulling your images from private image registries, view <a href=\"\" ng-click=\"view.advancedImageOptions = true\">advanced image options.</a></div>\n" +
     "<a ng-if=\"view.advancedImageOptions\" href=\"\" ng-click=\"view.advancedImageOptions = false\">Hide advanced image options</a>\n" +
     "</div>\n" +
