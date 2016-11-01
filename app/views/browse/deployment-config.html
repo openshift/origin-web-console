@@ -38,23 +38,19 @@
                         ng-class="{ 'disabled-link': !canDeploy() }"
                         ng-click="startLatestDeployment()">Deploy</a>
                     </li>
+                    <li ng-if="'deploymentconfigs' | canI : 'update'">
+                      <a ng-href="{{deploymentConfig | editResourceURL}}" role="button">Edit</a>
+                    </li>
+                    <li class="divider" ng-if="'deploymentconfigs' | canI : 'update'"></li>
                     <li ng-if="!deploymentConfig.spec.paused && !updatingPausedState && 'deploymentconfigs' | canI : 'update'">
                       <a href="" ng-click="setPaused(true)" role="button">Pause Deployment</a>
                     </li>
                     <li ng-if="deploymentConfig.spec.paused && !updatingPausedState && 'deploymentconfigs' | canI : 'update'">
                       <a href="" ng-click="setPaused(false)" role="button">Resume Deployment</a>
                     </li>
-                    <li class="divider" ng-if="!updatingPausedState && 'deploymentconfigs' | canI : 'update'"></li>
-                    <li ng-if="'deploymentconfigs' | canI : 'update'">
-                      <a ng-href="{{deploymentConfig | editResourceURL}}" role="button">Edit</a>
-                    </li>
                     <li ng-if="'deploymentconfigs' | canI : 'update'">
                       <a ng-href="project/{{project.metadata.name}}/attach-pvc?kind=DeploymentConfig&name={{deploymentConfig.metadata.name}}"
-                         role="button">Attach Storage</a>
-                    </li>
-                    <li ng-if="'deploymentconfigs' | canI : 'update'">
-                      <a ng-href="project/{{projectName}}/set-limits?kind=DeploymentConfig&name={{deploymentConfig.metadata.name}}"
-                        role="button">Set Resource Limits</a>
+                         role="button">Add Storage</a>
                     </li>
                     <li ng-if="!autoscalers.length && ({resource: 'horizontalpodautoscalers', group: 'extensions'} | canI : 'create')">
                       <!-- Create a new HPA. -->
@@ -65,6 +61,10 @@
                       <!-- Edit an existing HPA. -->
                       <a ng-href="project/{{projectName}}/edit/autoscaler?kind=HorizontalPodAutoscaler&group=extensions&name={{autoscalers[0].metadata.name}}"
                         role="button">Edit Autoscaler</a>
+                    </li>
+                    <li ng-if="'deploymentconfigs' | canI : 'update'">
+                      <a ng-href="project/{{projectName}}/set-limits?kind=DeploymentConfig&name={{deploymentConfig.metadata.name}}"
+                        role="button">Edit Resource Limits</a>
                     </li>
                     <li ng-if="'deploymentconfigs' | canI : 'update'">
                       <a ng-href="{{healthCheckURL}}" role="button">Edit Health Checks</a>
@@ -154,12 +154,12 @@
                           <h4>Volumes</h4>
                           <p ng-if="!deploymentConfig.spec.template.spec.volumes.length">
                             <a ng-if="'deploymentconfigs' | canI : 'update'"
-                              ng-href="project/{{project.metadata.name}}/attach-pvc?kind=DeploymentConfig&name={{deploymentConfig.metadata.name}}">Attach storage</a>
+                              ng-href="project/{{project.metadata.name}}/attach-pvc?kind=DeploymentConfig&name={{deploymentConfig.metadata.name}}">Add storage</a>
                             <span ng-if="!('deploymentconfigs' | canI : 'update')">none</span>
                           </p>
                           <volumes volumes="deploymentConfig.spec.template.spec.volumes" namespace="project.metadata.name"></volumes>
                           <p ng-if="deploymentConfig.spec.template.spec.volumes.length && ('deploymentconfigs' | canI : 'update') ">
-                            <a ng-href="project/{{project.metadata.name}}/attach-pvc?kind=DeploymentConfig&name={{deploymentConfig.metadata.name}}">Attach storage</a>
+                            <a ng-href="project/{{project.metadata.name}}/attach-pvc?kind=DeploymentConfig&name={{deploymentConfig.metadata.name}}">Add storage</a>
                           </p>
                         </div>
 
@@ -176,7 +176,7 @@
                             <!-- If the CPU request is missing, add an action to set one. -->
                             <a ng-href="project/{{projectName}}/set-limits?kind=DeploymentConfig&name={{deploymentConfig.metadata.name}}"
                                ng-if="warning.reason === 'NoCPURequest' && 'deploymentconfigs' | canI : 'update'"
-                               role="button">Set resource
+                               role="button">Edit resource
                               <span ng-if="!('cpu' | isRequestCalculated : project)">requests and</span> limits</a>
                           </div>
 
