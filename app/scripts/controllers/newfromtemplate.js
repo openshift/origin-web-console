@@ -339,6 +339,16 @@ angular.module('openshiftConsole')
           );
         };
 
+        var shouldAddAppLabel = function() {
+          // If the template defines its own app label, we don't need to add one at all
+          if (_.get($scope.template, 'labels.app')) {
+            return false;
+          }
+
+          // Otherwise check if an object in the template has an app label defined
+          return !_.some($scope.template.objects, "metadata.labels.app");
+        };
+
         function setTemplateParams(labels) {
           $scope.parameterDisplayNames = {};
           _.each($scope.template.parameters, function(parameter) {
@@ -364,10 +374,12 @@ angular.module('openshiftConsole')
             };
           });
 
-          $scope.systemLabels.push({
-            name: 'app',
-            value: $scope.template.metadata.name
-          });
+          if (shouldAddAppLabel()) {
+            $scope.systemLabels.push({
+              name: 'app',
+              value: $scope.template.metadata.name
+            });
+          }
         }
 
         // Missing namespace indicates that the template should be received from from the 'CachedTemplateService'.
