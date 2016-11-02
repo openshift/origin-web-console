@@ -195,7 +195,9 @@
                             <span ng-bind="newBinding.namespace"></span>
                           </ui-select-match>
                           <ui-select-choices
-                            repeat="projectName in projects | filter: $select.search">
+                            repeat="projectName in projects | filter: $select.search"
+                            refresh="refreshProjects($select.search)"
+                            refresh-delay="200">
                             <div>{{projectName}}</div>
                           </ui-select-choices>
                         </ui-select>
@@ -221,7 +223,9 @@
                               <span ng-bind="newBinding.namespace"></span>
                             </ui-select-match>
                             <ui-select-choices
-                              repeat="projectName in projects | filter: $select.search">
+                              repeat="projectName in projects | filter: $select.search"
+                              refresh="refreshProjects($select.search)"
+                              refresh-delay="200">
                               <div>{{projectName}}</div>
                             </ui-select-choices>
                           </ui-select>

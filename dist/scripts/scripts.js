@@ -4939,10 +4939,14 @@ roleName:c
 g.withUser().then(function(a) {
 d.user = a;
 }), i.list("projects", {}, function(a) {
-angular.extend(d, {
-projects:_.map(a.by("metadata.name"), function(a) {
+var b = _.map(a.by("metadata.name"), function(a) {
 return a.metadata.name;
-})
+});
+angular.extend(d, {
+projects:b,
+refreshProjects:function(a) {
+a && !_.includes(d.projects, a) ? d.projects = [ a ].concat(b) :d.projects = b;
+}
 });
 }), j.get(c.project).then(_.spread(function(c, e) {
 n = e, v(), angular.extend(d, {

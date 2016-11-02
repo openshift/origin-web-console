@@ -214,10 +214,18 @@ angular
 
 
       DataService.list('projects', {}, function(resp) {
+        var projects = _.map(resp.by('metadata.name'), function(project) {
+          return project.metadata.name;
+        });
         angular.extend($scope, {
-          projects: _.map(resp.by('metadata.name'), function(project) {
-            return project.metadata.name;
-          })
+          projects: projects,
+          refreshProjects: function(search) {
+            if(search && !_.includes($scope.projects, search)) {
+              $scope.projects = [search].concat(projects);
+            } else {
+              $scope.projects = projects;
+            }
+          }
         });
       });
 
