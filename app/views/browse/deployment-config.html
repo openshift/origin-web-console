@@ -209,11 +209,11 @@
                               <span ng-switch="trigger.type">
                                 <span ng-switch-default>{{trigger.type}}</span>
                                 <span ng-switch-when="ImageChange" ng-if="trigger.imageChangeParams.from">
-                                  <dt>New image for:</dt>
+                                  <dt>New Image For:</dt>
                                   <dd>{{trigger.imageChangeParams.from | imageObjectRef : deploymentConfig.metadata.namespace}}</dd>
                                 </span>
                                 <span ng-switch-when="ConfigChange">
-                                  <dt>Change of:</dt>
+                                  <dt>Change Of:</dt>
                                   <dd>Config</dd>
                                 </span>
                               </span>

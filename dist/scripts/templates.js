@@ -768,7 +768,7 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "secret\n" +
     "<span class=\"small text-muted\">(populated by a Secret when the pod is created)</span>\n" +
     "</dd>\n" +
-    "<dt>Secret name:</dt>\n" +
+    "<dt>Secret Name:</dt>\n" +
     "<dd>{{volume.secret.secretName}}</dd>\n" +
     "</div>\n" +
     "<div ng-if=\"volume.persistentVolumeClaim\">\n" +
@@ -824,7 +824,7 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "<span class=\"small text-muted\">(populated with information about the pod)</span>\n" +
     "</dd>\n" +
     "<div ng-repeat=\"item in volume.downwardAPI.items\">\n" +
-    "<dt>Volume file:</dt>\n" +
+    "<dt>Volume File:</dt>\n" +
     "<dd>{{item.fieldRef.fieldPath}}&#8201;&#8594;&#8201;{{item.path}}</dd>\n" +
     "</div>\n" +
     "</div>\n" +
@@ -837,7 +837,7 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "<dt>Name:</dt>\n" +
     "<dd>{{volume.configMap.name}}</dd>\n" +
     "<div ng-repeat=\"item in volume.configMap.items\">\n" +
-    "<dt>Key to file:</dt>\n" +
+    "<dt>Key to File:</dt>\n" +
     "<dd>{{item.key}}&#8201;&#8594;&#8201;{{item.path}}</dd>\n" +
     "</div>\n" +
     "</div>\n" +
@@ -1086,7 +1086,7 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "</span>\n" +
     "</dd>\n" +
     "<div ng-if=\"build.spec.triggeredBy.length\">\n" +
-    "<dt>Triggered by:</dt>\n" +
+    "<dt>Triggered By:</dt>\n" +
     "<dd>\n" +
     "<div ng-repeat=\"trigger in build.spec.triggeredBy\">\n" +
     "<div ng-switch=\"trigger.message\">\n" +
@@ -1108,21 +1108,21 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "</dl>\n" +
     "<h3>Configuration <span class=\"small\" ng-if=\"buildConfigName\">created from <a href=\"{{build | configURLForResource}}\">{{buildConfigName}}</a></span></h3>\n" +
     "<dl class=\"dl-horizontal left\">\n" +
-    "<dt>Build strategy:</dt>\n" +
+    "<dt>Build Strategy:</dt>\n" +
     "<dd>{{build.spec.strategy.type | startCase}}</dd>\n" +
-    "<dt ng-if-start=\"(build | buildStrategy).from\">Builder image:</dt>\n" +
+    "<dt ng-if-start=\"(build | buildStrategy).from\">Builder Image:</dt>\n" +
     "<dd ng-if-end class=\"truncate\">{{(build | buildStrategy).from | imageObjectRef : build.metadata.namespace}}<span ng-if=\"!(build | buildStrategy).from\"><em>none</em></span></dd>\n" +
-    "<dt>Source type:</dt>\n" +
+    "<dt>Source Type:</dt>\n" +
     "<dd>{{build.spec.source.type}}</dd>\n" +
-    "<dt ng-if-start=\"build.spec.source.git.uri\">Source repo:</dt>\n" +
+    "<dt ng-if-start=\"build.spec.source.git.uri\">Source Repo:</dt>\n" +
     "<dd ng-if-end><span class=\"word-break\"><osc-git-link uri=\"build.spec.source.git.uri\" ref=\"build.spec.source.git.ref\" context-dir=\"build.spec.source.contextDir\">{{build.spec.source.git.uri}}</osc-git-link></span></dd>\n" +
-    "<dt ng-if-start=\"build.spec.source.git.ref\">Source ref:</dt>\n" +
+    "<dt ng-if-start=\"build.spec.source.git.ref\">Source Ref:</dt>\n" +
     "<dd ng-if-end>{{build.spec.source.git.ref}}</dd>\n" +
-    "<dt ng-if-start=\"build.spec.source.contextDir\">Source context dir:</dt>\n" +
+    "<dt ng-if-start=\"build.spec.source.contextDir\">Source Context Dir:</dt>\n" +
     "<dd ng-if-end>{{build.spec.source.contextDir}}</dd>\n" +
-    "<dt ng-if-start=\"build.spec.output.to\">Output image:</dt>\n" +
+    "<dt ng-if-start=\"build.spec.output.to\">Output Image:</dt>\n" +
     "<dd ng-if-end>{{build.spec.output.to | imageObjectRef : build.metadata.namespace}}</dd>\n" +
-    "<dt ng-if-start=\"build.spec.output.pushSecret.name\">Push secret:</dt>\n" +
+    "<dt ng-if-start=\"build.spec.output.pushSecret.name\">Push Secret:</dt>\n" +
     "<dd ng-if-end>{{build.spec.output.pushSecret.name}}</dd>\n" +
     "<dt ng-if-start=\"build.spec.strategy.jenkinsPipelineStrategy.jenkinsfilePath\">\n" +
     "Jenkinsfile Path:\n" +
@@ -1643,19 +1643,19 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "<h3>Configuration</h3>\n" +
     "<dl class=\"dl-horizontal left\">\n" +
     "<div>\n" +
-    "<dt>Build strategy:</dt>\n" +
+    "<dt>Build Strategy:</dt>\n" +
     "<dd>{{buildConfig.spec.strategy.type | startCase}}</dd>\n" +
     "</div>\n" +
     "<div ng-switch=\"buildConfig.spec.strategy.type\">\n" +
     "<div ng-switch-when=\"Source\">\n" +
     "<div ng-if=\"buildConfig.spec.strategy.sourceStrategy.from\">\n" +
-    "<dt>Builder image:</dt>\n" +
+    "<dt>Builder Image:</dt>\n" +
     "<dd>{{buildConfig.spec.strategy.sourceStrategy.from | imageObjectRef : buildConfig.metadata.namespace}}</dd>\n" +
     "</div>\n" +
     "</div>\n" +
     "<div ng-switch-when=\"Docker\">\n" +
     "<div ng-if=\"buildConfig.spec.strategy.dockerStrategy.from\">\n" +
-    "<dt>Builder image stream:</dt>\n" +
+    "<dt>Builder Image Stream:</dt>\n" +
     "<dd>{{buildConfig.spec.strategy.dockerStrategy.from | imageObjectRef : buildConfig.metadata.namespace}}</dd>\n" +
     "</div>\n" +
     "<div ng-if=\"buildConfig.spec.source.dockerfile\">\n" +
@@ -1679,7 +1679,7 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "</div>\n" +
     "<div ng-switch-when=\"Custom\">\n" +
     "<div ng-if=\"buildConfig.spec.strategy.customStrategy.from\">\n" +
-    "<dt>Builder image stream:</dt>\n" +
+    "<dt>Builder Image Stream:</dt>\n" +
     "<dd>{{buildConfig.spec.strategy.customStrategy.from | imageObjectRef : buildConfig.metadata.namespace}}\n" +
     "</dd>\n" +
     "</div>\n" +
@@ -1687,11 +1687,11 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "</div>\n" +
     "<div ng-if=\"buildConfig.spec.source\">\n" +
     "<div ng-if=\"buildConfig.spec.source.type == 'Git'\">\n" +
-    "<dt>Source repo:</dt>\n" +
+    "<dt>Source Repo:</dt>\n" +
     "<dd><span class=\"word-break\"><osc-git-link uri=\"buildConfig.spec.source.git.uri\" ref=\"buildConfig.spec.source.git.ref\" context-dir=\"buildConfig.spec.source.contextDir\">{{buildConfig.spec.source.git.uri}}</osc-git-link></span></dd>\n" +
-    "<dt ng-if=\"buildConfig.spec.source.git.ref\">Source ref:</dt>\n" +
+    "<dt ng-if=\"buildConfig.spec.source.git.ref\">Source Ref:</dt>\n" +
     "<dd ng-if=\"buildConfig.spec.source.git.ref\">{{buildConfig.spec.source.git.ref}}</dd>\n" +
-    "<dt ng-if=\"buildConfig.spec.source.contextDir\">Source context dir:</dt>\n" +
+    "<dt ng-if=\"buildConfig.spec.source.contextDir\">Source Context Dir:</dt>\n" +
     "<dd ng-if=\"buildConfig.spec.source.contextDir\">{{buildConfig.spec.source.contextDir}}</dd>\n" +
     "</div>\n" +
     "<div ng-if=\"buildConfig | isJenkinsPipelineStrategy\">\n" +
@@ -1734,7 +1734,7 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "</dd>\n" +
     "</div>\n" +
     "<div ng-if=\"buildConfig.spec.source.images\" class=\"image-sources\">\n" +
-    "<dt>Image sources:</dt>\n" +
+    "<dt>Image Sources:</dt>\n" +
     "<dd></dd>\n" +
     "<div ng-repeat=\"imageSource in imageSources\" class=\"image-source-item\">\n" +
     "<h4>{{imageSource.from | imageObjectRef : buildConfig.metadata.namespace}}</h4>\n" +
@@ -1750,7 +1750,7 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "</div>\n" +
     "</div>\n" +
     "<div ng-if=\"buildConfig.spec.output.to\">\n" +
-    "<dt>Output to:</dt>\n" +
+    "<dt>Output To:</dt>\n" +
     "<dd>{{buildConfig.spec.output.to | imageObjectRef : buildConfig.metadata.namespace}}</dd>\n" +
     "</div>\n" +
     "<div class=\"run-policy\">\n" +
@@ -1775,7 +1775,7 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "<div ng-repeat=\"trigger in buildConfig.spec.triggers\">\n" +
     "<div ng-switch=\"trigger.type\">\n" +
     "<div ng-switch-when=\"GitHub\">\n" +
-    "<dt>GitHub webhook URL:\n" +
+    "<dt>GitHub Webhook URL:\n" +
     "<a href=\"{{'webhooks' | helpLink}}\" target=\"_blank\"><span class=\"learn-more-block\">Learn more\n" +
     "<i class=\"fa fa-external-link\"></i></span></a>\n" +
     "</dt>\n" +
@@ -1784,7 +1784,7 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "</dd>\n" +
     "</div>\n" +
     "<div ng-switch-when=\"Generic\">\n" +
-    "<dt>Generic webhook URL:\n" +
+    "<dt>Generic Webhook URL:\n" +
     "<a href=\"{{'webhooks' | helpLink}}\" target=\"_blank\"><span class=\"learn-more-block\">Learn more <i class=\"fa fa-external-link\"></i></span></a>\n" +
     "</dt>\n" +
     "<dd>\n" +
@@ -1793,18 +1793,18 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "</div>\n" +
     "<div ng-switch-when=\"ImageChange\">\n" +
     "<dt>\n" +
-    "New image for:\n" +
+    "New Image For:\n" +
     "</dt>\n" +
     "<dd>\n" +
     "{{(trigger.imageChange.from || (buildConfig | buildStrategy).from) | imageObjectRef : buildConfig.metadata.namespace}}\n" +
     "</dd>\n" +
     "</div>\n" +
     "<div ng-switch-when=\"ConfigChange\">\n" +
-    "<dt>Config change for:</dt>\n" +
+    "<dt>Config Change For:</dt>\n" +
     "<dd>Build config {{buildConfig.metadata.name}}</dd>\n" +
     "</div>\n" +
     "<div ng-switch-default>\n" +
-    "<dt>Other trigger:</dt>\n" +
+    "<dt>Other Trigger:</dt>\n" +
     "<dd>{{trigger.type}}</dd>\n" +
     "</div>\n" +
     "</div>\n" +
@@ -2116,11 +2116,11 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "<span ng-switch=\"trigger.type\">\n" +
     "<span ng-switch-default>{{trigger.type}}</span>\n" +
     "<span ng-switch-when=\"ImageChange\" ng-if=\"trigger.imageChangeParams.from\">\n" +
-    "<dt>New image for:</dt>\n" +
+    "<dt>New Image For:</dt>\n" +
     "<dd>{{trigger.imageChangeParams.from | imageObjectRef : deploymentConfig.metadata.namespace}}</dd>\n" +
     "</span>\n" +
     "<span ng-switch-when=\"ConfigChange\">\n" +
-    "<dt>Change of:</dt>\n" +
+    "<dt>Change Of:</dt>\n" +
     "<dd>Config</dd>\n" +
     "</span>\n" +
     "</span>\n" +
