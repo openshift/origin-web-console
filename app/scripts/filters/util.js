@@ -500,6 +500,35 @@ angular.module('openshiftConsole')
       return truncated;
     };
   })
+  .filter('middleEllipses', function() {
+    /* Adapted from https://github.com/jviotti/angular-middle-ellipses
+     * Usage:  {{ 'MyVeryLongString' | middleEllipses:5:' ... ' }}
+     */
+    return function(input, limit, ellipses) {
+
+      // If the limit is less than 3, return the string
+      if (limit < 3) {
+        return input;
+      }
+
+      // Do nothing, the string doesn't need truncation.
+      if (input.length <= limit) {
+        return input;
+      }
+
+      // If no ellipses is specified, use a default
+      if (!ellipses) {
+        ellipses = '...';
+      }
+
+      var lengthOfTheSidesAfterTruncation = Math.floor((limit - 1) / 2);
+      var finalLeftPart = input.slice(0, lengthOfTheSidesAfterTruncation);
+      var finalRightPart = input.slice(input.length - lengthOfTheSidesAfterTruncation);
+
+      return finalLeftPart + ellipses + finalRightPart;
+    };
+
+  })
   // Checks if a value is null or undefined.
   .filter('isNil', function() {
     return function(value) {

@@ -13438,6 +13438,14 @@ h !== -1 && (e = e.substring(0, h));
 }
 return e;
 };
+}).filter("middleEllipses", function() {
+return function(a, b, c) {
+if (b < 3) return a;
+if (a.length <= b) return a;
+c || (c = "...");
+var d = Math.floor((b - 1) / 2), e = a.slice(0, d), f = a.slice(a.length - d);
+return e + c + f;
+};
 }).filter("isNil", function() {
 return function(a) {
 return null === a || void 0 === a;
