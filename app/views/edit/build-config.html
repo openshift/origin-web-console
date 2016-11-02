@@ -91,7 +91,7 @@
                               <div class="help-block" id="context-dir-help">Optional subdirectory for the application source code, used as the context directory for the build.</div>
                             </div>
                             <div class="form-group">
-                              <osc-secrets model="secrets.picked.gitSecret" 
+                              <osc-secrets model="secrets.picked.gitSecret"
                                           namespace="projectName"
                                           display-type="source"
                                           type="source"
@@ -500,7 +500,7 @@
                         <a href="{{'source_secrets' | helpLink}}" aria-hidden="true" target="_blank"><span class="learn-more-inline">Learn more&nbsp;<i class="fa fa-external-link"></i></span></a>
                       </h3>
                       <div class="form-group">
-                        <osc-source-secrets model="secrets.picked.sourceSecrets" 
+                        <osc-source-secrets model="secrets.picked.sourceSecrets"
                                     namespace="projectName"
                                     secrets-by-type="secrets.secretsByType"
                                     strategy-type="strategyType"
@@ -512,7 +512,7 @@
                       </div>
 
                     </div>
-                    <div class="section" ng-if="view.advancedOptions">
+                    <div class="section mar-bottom-lg" ng-if="view.advancedOptions">
                       <h3 class="with-divider">Run Policy
                         <span class="help action-inline">
                           <a href="">
@@ -537,8 +537,8 @@
                         <div class="help-block" ng-switch-default>Builds triggered from this Build Configuration will run using the {{updatedBuildConfig.spec.runPolicy | sentenceCase}} policy.</div>
                       </div>
                     </div>
-                  
-                    <div class="gutter-top">
+
+                    <div>
                       <a href="" ng-click="view.advancedOptions = !view.advancedOptions" role="button">{{view.advancedOptions ? 'Hide' : 'Show'}} advanced options</a>
                     </div>
                     <div class="buttons gutter-top-bottom">
