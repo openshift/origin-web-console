@@ -922,9 +922,9 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "<div class=\"middle-container\">\n" +
     "<div class=\"middle-content\">\n" +
     "<div class=\"container surface-shaded\">\n" +
-    "<breadcrumbs breadcrumbs=\"breadcrumbs\"></breadcrumbs>\n" +
     "<div class=\"row\">\n" +
-    "<div class=\"col-md-12\">\n" +
+    "<div class=\"col-md-10 col-md-offset-1\">\n" +
+    "<breadcrumbs breadcrumbs=\"breadcrumbs\"></breadcrumbs>\n" +
     "<alerts alerts=\"alerts\"></alerts>\n" +
     "<div ng-show=\"!pvcs || !attach.resource\">Loading...</div>\n" +
     "<div ng-show=\"pvcs && !pvcs.length && attach.resource\" class=\"empty-state-message empty-state-full-page\">\n" +
@@ -940,21 +940,15 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "</p>\n" +
     "<p ng-if=\"attach.resource\"><a ng-href=\"{{attach.resource | navigateResourceURL}}\">Back to {{kind | humanizeKind}} {{name}}</a></p>\n" +
     "</div>\n" +
-    "<div class=\"row\" ng-show=\"pvcs && pvcs.length && attach.resource\">\n" +
-    "<div class=\"col-md-10 col-md-offset-1 gutter-top\">\n" +
+    "<div ng-show=\"pvcs && pvcs.length && attach.resource\" class=\"mar-top-xl\">\n" +
     "<h1>Add Storage</h1>\n" +
-    "<div>\n" +
-    "<span class=\"help-block\">\n" +
-    "Add an existing persistent volume claim to the template of {{kind | humanizeKind}} <b>{{name}}</b>.\n" +
-    "</span>\n" +
+    "<div class=\"help-block\">\n" +
+    "Add an existing persistent volume claim to the template of {{kind | humanizeKind}} {{name}}.\n" +
     "</div>\n" +
-    "<form name=\"attachPVCForm\">\n" +
+    "<form name=\"attachPVCForm\" class=\"mar-top-lg\">\n" +
     "<fieldset ng-disabled=\"disableInputs\">\n" +
     "<div class=\"form-group\">\n" +
     "<label for=\"persistentVolumeClaim\" class=\"required\">Storage</label>\n" +
-    "<div>\n" +
-    "<span id=\"persistent-volume-claim-help\" class=\"help-block\">Select storage to attach to</span>\n" +
-    "</div>\n" +
     "<table style=\"margin-bottom:0;background-color:transparent\" class=\"table table-condensed table-borderless\">\n" +
     "<tbody>\n" +
     "<tr ng-repeat=\"pvc in pvcs track by (pvc | uid)\">\n" +
@@ -975,16 +969,17 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "</tbody>\n" +
     "</table>\n" +
     "</div>\n" +
-    "<div ng-if=\"project && ('persistentvolumeclaims' | canI : 'create')\">\n" +
-    "Or&nbsp;<a ng-href=\"project/{{project.metadata.name}}/create-pvc\">create storage.</a>\n" +
+    "<div ng-if=\"!(project && ('persistentvolumeclaims' | canI : 'create'))\" class=\"help-block\">\n" +
+    "Select a storage request to use.\n" +
+    "</div>\n" +
+    "<div ng-if=\"project && ('persistentvolumeclaims' | canI : 'create')\" class=\"help-block\">\n" +
+    "Select a storage request or <a ng-href=\"project/{{project.metadata.name}}/create-pvc\">request more storage</a>.\n" +
     "</div>\n" +
     "<h3>Volume</h3>\n" +
-    "<div>\n" +
-    "<span class=\"help-block\">\n" +
+    "<div class=\"help-block\">\n" +
     "Specify details about how volumes are going to be mounted inside containers.\n" +
-    "</span>\n" +
     "</div>\n" +
-    "<div class=\"form-group\">\n" +
+    "<div class=\"form-group mar-top-xl\">\n" +
     "<label for=\"route-name\">Mount path</label>\n" +
     "<input id=\"mount-path\" class=\"form-control\" type=\"text\" name=\"mountPath\" ng-model=\"attach.mountPath\" ng-pattern=\"/^\\/.*$/\" placeholder=\"example: /data\" autocorrect=\"off\" autocapitalize=\"off\" spellcheck=\"false\" aria-describedby=\"mount-path-help\">\n" +
     "<div>\n" +
@@ -1041,7 +1036,6 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "</div>\n" +
     "</fieldset>\n" +
     "</form>\n" +
-    "</div>\n" +
     "</div>\n" +
     "</div>\n" +
     "</div>\n" +
