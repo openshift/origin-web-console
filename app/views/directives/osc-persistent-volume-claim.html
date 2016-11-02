@@ -47,7 +47,7 @@
         ng-pattern="/^[a-z0-9]([-a-z0-9]*[a-z0-9])?$/"
         ng-maxlength="253"
         ng-minlength="2"
-        placeholder="my-storage-request"
+        placeholder="my-storage-claim"
         select-on-focus
         autocorrect="off"
         autocapitalize="off"
@@ -92,7 +92,7 @@
     <!-- capacity -->
     <div class="form-group">
       <fieldset class="form-inline compute-resource">
-      <label class="required">Capacity</label>
+      <label class="required">Size</label>
       <div ng-class="{ 'has-error': form.$invalid }">
         <label class="sr-only">Amount</label>
         <input type="number"
@@ -111,11 +111,9 @@
                 ng-attr-id="claim-capacity-unit"
                 class="form-control inline-select">
         </select>
-        </div>
-      <div>
-         <span id="claim-capacity-help" class="help-block">
-           Size of the storage request.
-        </span>
+       </div>
+       <div id="claim-capacity-help" class="help-block">
+         Desired storage capacity.
       </div>
       <div class="has-error" ng-show="persistentVolumeClaimForm.capacity.$error.pattern && persistentVolumeClaimForm.capacity.$touched && !claimDisabled">
         <span class="help-block">
@@ -127,17 +125,17 @@
     <!--advanced options-->
     <div ng-show="!showAdvancedOptions" class="mar-bottom-xl">
       <a href=""
-         ng-click="showAdvancedOptions = true">Use label selectors in the storage request</a>
+         ng-click="showAdvancedOptions = true">Use label selectors to request storage</a>
     </div>
 
     <div ng-show="showAdvancedOptions" class="form-group">
       <fieldset class="compute-resource">
         <label>Label Selector</label>
         <div class="help-block mar-bottom-lg">
-          Enter a label and value to use with your requested storage.
-           <div class="learn-more-block">
-             <a ng-href="{{'selector_label' | helpLink}}" target="_blank">Learn more <i class="fa fa-external-link" aria-hidden="true"> </i></a>
-           </div>
+          Enter a label and value to use for your storage.
+          <div class="learn-more-block">
+            <a ng-href="{{'selector_label' | helpLink}}" target="_blank">Learn more <i class="fa fa-external-link" aria-hidden="true"> </i></a>
+          </div>
         </div>
         <key-value-editor
           entries="claim.selectedLabels"

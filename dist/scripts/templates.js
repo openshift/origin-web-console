@@ -933,7 +933,7 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "A <b>persistent volume claim</b> is required to attach to this {{kind | humanizeKind}}, but none are loaded on this project.\n" +
     "</p>\n" +
     "<div ng-if=\"project && ('persistentvolumeclaims' | canI : 'create')\" class=\"text-center\">\n" +
-    "<a ng-href=\"project/{{project.metadata.name}}/create-pvc\" class=\"btn btn-primary\">Request Storage</a>\n" +
+    "<a ng-href=\"project/{{project.metadata.name}}/create-pvc\" class=\"btn btn-primary\">Create Storage</a>\n" +
     "</div>\n" +
     "<p ng-if=\"project && !('persistentvolumeclaims' | canI : 'create')\">\n" +
     "To claim storage from a persistent volume, refer to the documentation on <a target=\"_blank\" ng-href=\"{{'persistent_volumes' | helpLink}}\">using persistent volumes</a>.\n" +
@@ -970,17 +970,17 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "</table>\n" +
     "</div>\n" +
     "<div ng-if=\"!(project && ('persistentvolumeclaims' | canI : 'create'))\" class=\"help-block\">\n" +
-    "Select a storage request to use.\n" +
+    "Select storage to use.\n" +
     "</div>\n" +
     "<div ng-if=\"project && ('persistentvolumeclaims' | canI : 'create')\" class=\"help-block\">\n" +
-    "Select a storage request or <a ng-href=\"project/{{project.metadata.name}}/create-pvc\">request more storage</a>.\n" +
+    "Select storage to use or <a ng-href=\"project/{{project.metadata.name}}/create-pvc\">create storage</a>.\n" +
     "</div>\n" +
     "<h3>Volume</h3>\n" +
     "<div class=\"help-block\">\n" +
     "Specify details about how volumes are going to be mounted inside containers.\n" +
     "</div>\n" +
     "<div class=\"form-group mar-top-xl\">\n" +
-    "<label for=\"route-name\">Mount path</label>\n" +
+    "<label for=\"route-name\">Mount Path</label>\n" +
     "<input id=\"mount-path\" class=\"form-control\" type=\"text\" name=\"mountPath\" ng-model=\"attach.mountPath\" ng-pattern=\"/^\\/.*$/\" placeholder=\"example: /data\" autocorrect=\"off\" autocapitalize=\"off\" spellcheck=\"false\" aria-describedby=\"mount-path-help\">\n" +
     "<div>\n" +
     "<span id=\"mount-path-help\" class=\"help-block\">Mount path for the volume inside the container. If not specified, the volume will not be mounted automatically.</span>\n" +
@@ -997,7 +997,7 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "</div>\n" +
     "</div>\n" +
     "<div class=\"form-group\">\n" +
-    "<label for=\"volume-name\">Volume name</label>\n" +
+    "<label for=\"volume-name\">Volume Name</label>\n" +
     "<input id=\"volume-path\" class=\"form-control\" type=\"text\" name=\"volumeName\" ng-model=\"attach.volumeName\" placeholder=\"(generated if empty)\" autocorrect=\"off\" autocapitalize=\"off\" spellcheck=\"false\" aria-describedby=\"volume-name-help\">\n" +
     "<div>\n" +
     "<span id=\"volume-name-help\" class=\"help-block\">Unique name used to identify this volume. If not specified, a volume name is generated.</span>\n" +
@@ -3929,9 +3929,9 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "<breadcrumbs breadcrumbs=\"breadcrumbs\"></breadcrumbs>\n" +
     "<alerts alerts=\"alerts\"></alerts>\n" +
     "<div class=\"mar-top-xl\">\n" +
-    "<h1>Request Storage</h1>\n" +
+    "<h1>Create Storage</h1>\n" +
     "<div class=\"help-block\">\n" +
-    "Create a request for an administrator defined storage asset by requesting size and access mode attributes for a best fit.\n" +
+    "Create a request for an administrator-defined storage asset by specifying size and permissions for a best fit.\n" +
     "</div>\n" +
     "<form name=\"createPersistentVolumeClaimForm\" class=\"mar-top-lg\">\n" +
     "<fieldset ng-disabled=\"disableInputs\">\n" +
@@ -6686,7 +6686,7 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "\n" +
     "<div class=\"form-group\">\n" +
     "<label for=\"claim-name\" class=\"required\">Name</label>\n" +
-    "<input id=\"claim-name\" class=\"form-control\" type=\"text\" name=\"name\" ng-model=\"claim.name\" ng-required=\"true\" ng-pattern=\"/^[a-z0-9]([-a-z0-9]*[a-z0-9])?$/\" ng-maxlength=\"253\" ng-minlength=\"2\" placeholder=\"my-storage-request\" select-on-focus autocorrect=\"off\" autocapitalize=\"off\" spellcheck=\"false\" aria-describedby=\"claim-name-help\">\n" +
+    "<input id=\"claim-name\" class=\"form-control\" type=\"text\" name=\"name\" ng-model=\"claim.name\" ng-required=\"true\" ng-pattern=\"/^[a-z0-9]([-a-z0-9]*[a-z0-9])?$/\" ng-maxlength=\"253\" ng-minlength=\"2\" placeholder=\"my-storage-claim\" select-on-focus autocorrect=\"off\" autocapitalize=\"off\" spellcheck=\"false\" aria-describedby=\"claim-name-help\">\n" +
     "<div>\n" +
     "<span id=\"claim-name-help\" class=\"help-block\">A unique name for the storage claim within the project.</span>\n" +
     "</div>\n" +
@@ -6719,7 +6719,7 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "\n" +
     "<div class=\"form-group\">\n" +
     "<fieldset class=\"form-inline compute-resource\">\n" +
-    "<label class=\"required\">Capacity</label>\n" +
+    "<label class=\"required\">Size</label>\n" +
     "<div ng-class=\"{ 'has-error': form.$invalid }\">\n" +
     "<label class=\"sr-only\">Amount</label>\n" +
     "<input type=\"number\" name=\"amount\" ng-attr-id=\"claim-amount\" ng-model=\"claim.amount\" ng-required=\"true\" min=\"0\" ng-attr-placeholder=\"10\" class=\"form-control\" ng-attr-aria-describedby=\"claim-capacity-help\">\n" +
@@ -6727,10 +6727,8 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "<select ng-model=\"claim.unit\" name=\"unit\" ng-options=\"option.value as option.label for option in units\" ng-attr-id=\"claim-capacity-unit\" class=\"form-control inline-select\">\n" +
     "</select>\n" +
     "</div>\n" +
-    "<div>\n" +
-    "<span id=\"claim-capacity-help\" class=\"help-block\">\n" +
-    "Size of the storage request.\n" +
-    "</span>\n" +
+    "<div id=\"claim-capacity-help\" class=\"help-block\">\n" +
+    "Desired storage capacity.\n" +
     "</div>\n" +
     "<div class=\"has-error\" ng-show=\"persistentVolumeClaimForm.capacity.$error.pattern && persistentVolumeClaimForm.capacity.$touched && !claimDisabled\">\n" +
     "<span class=\"help-block\">\n" +
@@ -6741,13 +6739,13 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "</div>\n" +
     "\n" +
     "<div ng-show=\"!showAdvancedOptions\" class=\"mar-bottom-xl\">\n" +
-    "<a href=\"\" ng-click=\"showAdvancedOptions = true\">Use label selectors in the storage request</a>\n" +
+    "<a href=\"\" ng-click=\"showAdvancedOptions = true\">Use label selectors to request storage</a>\n" +
     "</div>\n" +
     "<div ng-show=\"showAdvancedOptions\" class=\"form-group\">\n" +
     "<fieldset class=\"compute-resource\">\n" +
     "<label>Label Selector</label>\n" +
     "<div class=\"help-block mar-bottom-lg\">\n" +
-    "Enter a label and value to use with your requested storage.\n" +
+    "Enter a label and value to use for your storage.\n" +
     "<div class=\"learn-more-block\">\n" +
     "<a ng-href=\"{{'selector_label' | helpLink}}\" target=\"_blank\">Learn more <i class=\"fa fa-external-link\" aria-hidden=\"true\"> </i></a>\n" +
     "</div>\n" +
@@ -11098,11 +11096,11 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "<div class=\"col-md-12\">\n" +
     "<div class=\"section-header page-header-bleed-right page-header-bleed-left\">\n" +
     "<div class=\"hidden-xs pull-right\" ng-if=\"project && ('persistentvolumeclaims' | canI : 'create')\">\n" +
-    "<a ng-href=\"project/{{project.metadata.name}}/create-pvc\" class=\"btn btn-default\">Request Storage</a>\n" +
+    "<a ng-href=\"project/{{project.metadata.name}}/create-pvc\" class=\"btn btn-default\">Create Storage</a>\n" +
     "</div>\n" +
     "<h2>Persistent Volume Claims</h2>\n" +
     "<div class=\"visible-xs-block mar-bottom-sm\" ng-if=\"project && ('persistentvolumeclaims' | canI : 'create')\">\n" +
-    "<a ng-href=\"project/{{project.metadata.name}}/create-pvc\" class=\"btn btn-default\">Request Storage</a>\n" +
+    "<a ng-href=\"project/{{project.metadata.name}}/create-pvc\" class=\"btn btn-default\">Create Storage</a>\n" +
     "</div>\n" +
     "</div>\n" +
     "<table class=\"table table-bordered table-hover table-mobile\" ng-class=\"{ 'table-empty': (pvcs | hashSize) === 0 }\">\n" +

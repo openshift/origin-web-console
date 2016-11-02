@@ -24,7 +24,7 @@ angular.module('openshiftConsole')
         link: "project/" + $scope.projectName + "/browse/storage"
       },
       {
-        title: "Request Storage"
+        title: "Create Storage"
       }
     ];
 

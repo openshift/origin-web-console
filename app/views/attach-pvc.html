@@ -26,7 +26,7 @@
 
                   <div ng-if="project && ('persistentvolumeclaims' | canI : 'create')" class="text-center">
                     <a ng-href="project/{{project.metadata.name}}/create-pvc"
-                       class="btn btn-primary">Request Storage</a>
+                       class="btn btn-primary">Create Storage</a>
                   </div>
 
                   <p ng-if="project && !('persistentvolumeclaims' | canI : 'create')">
@@ -71,18 +71,19 @@
                         </table>
                       </div>
                       <div ng-if="!(project && ('persistentvolumeclaims' | canI : 'create'))" class="help-block">
-                        Select a storage request to use.
+                        Select storage to use.
                       </div>
                       <div ng-if="project && ('persistentvolumeclaims' | canI : 'create')" class="help-block">
-                        Select a storage request or <a ng-href="project/{{project.metadata.name}}/create-pvc" >request more storage</a>.
+                        Select storage to use or <a ng-href="project/{{project.metadata.name}}/create-pvc" >create storage</a>.
                       </div>
+
                       <h3>Volume</h3>
                       <div class="help-block">
                         Specify details about how volumes are going to be mounted inside containers.
                       </div>
 
                       <div class="form-group mar-top-xl">
-                        <label for="route-name">Mount path</label>
+                        <label for="route-name">Mount Path</label>
                         <input
                             id="mount-path"
                             class="form-control"
@@ -111,7 +112,7 @@
                       </div>
 
                       <div class="form-group">
-                        <label for="volume-name">Volume name</label>
+                        <label for="volume-name">Volume Name</label>
                         <input
                             id="volume-path"
                             class="form-control"
