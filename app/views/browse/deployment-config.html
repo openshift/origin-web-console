@@ -210,7 +210,10 @@
                                 <span ng-switch-default>{{trigger.type}}</span>
                                 <span ng-switch-when="ImageChange" ng-if="trigger.imageChangeParams.from">
                                   <dt>New Image For:</dt>
-                                  <dd>{{trigger.imageChangeParams.from | imageObjectRef : deploymentConfig.metadata.namespace}}</dd>
+                                  <dd>
+                                    {{trigger.imageChangeParams.from | imageObjectRef : deploymentConfig.metadata.namespace}}
+                                    <small ng-if="!trigger.imageChangeParams.automatic" class="text-muted">(disabled)</small>
+                                  </dd>
                                 </span>
                                 <span ng-switch-when="ConfigChange">
                                   <dt>Change Of:</dt>

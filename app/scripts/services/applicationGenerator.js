@@ -220,23 +220,21 @@ angular.module("openshiftConsole")
           }
         }
       };
-      if(input.deploymentConfig.deployOnNewImage){
-        deploymentConfig.spec.triggers.push(
-          {
-            type: "ImageChange",
-            imageChangeParams: {
-              automatic: true,
-              containerNames: [
-                input.name
-              ],
-              from: {
-                kind: imageSpec.kind,
-                name: imageSpec.toString()
-              }
+      deploymentConfig.spec.triggers.push(
+        {
+          type: "ImageChange",
+          imageChangeParams: {
+            automatic: !!input.deploymentConfig.deployOnNewImage,
+            containerNames: [
+              input.name
+            ],
+            from: {
+              kind: imageSpec.kind,
+              name: imageSpec.toString()
             }
           }
-        );
-      }
+        }
+      );
       if (input.deploymentConfig.deployOnConfigChange) {
         deploymentConfig.spec.triggers.push({type: "ConfigChange"});
       }
