@@ -6150,7 +6150,7 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "<div class=\"help-block\" ng-switch-when=\"mid\">Mid hooks execute after the previous deployment is scaled down to zero and before the first pod of the new deployment is created.</div>\n" +
     "<div class=\"help-block\" ng-switch-when=\"post\">Post hooks execute after the deployment strategy completes.</div>\n" +
     "</div>\n" +
-    "<div class=\"gutter-top\" ng-if=\"view.hookExists\">\n" +
+    "<div class=\"gutter-top\" ng-if=\"hookParams\">\n" +
     "<fieldset ng-disabled=\"view.isDisabled\">\n" +
     "<div class=\"form-group\">\n" +
     "<label for=\"actionType\" class=\"required\">Lifecycle Action</label><br/>\n" +
@@ -6250,8 +6250,8 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "</fieldset>\n" +
     "</div>\n" +
     "<span>\n" +
-    "<a href=\"\" role=\"button\" ng-if=\"!view.hookExists\" ng-click=\"addHook()\">Add {{type}} lifecycle hook</a>\n" +
-    "<a href=\"\" role=\"button\" ng-if=\"view.hookExists\" ng-click=\"removeHook()\">Remove {{type}} lifecycle hook</a>\n" +
+    "<a href=\"\" role=\"button\" ng-if=\"!hookParams\" ng-click=\"addHook()\">Add {{type}} lifecycle hook</a>\n" +
+    "<a href=\"\" role=\"button\" ng-if=\"hookParams\" ng-click=\"removeHook()\">Remove {{type}} lifecycle hook</a>\n" +
     "</span>\n" +
     "</ng-form>"
   );

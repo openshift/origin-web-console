@@ -184,7 +184,7 @@ angular.module('openshiftConsole')
       });
       modalInstance.result.then(function () {
         // Move parameters that belong to the origial strategy to the picked one.
-        $scope.strategyData[pickedStrategyParams] = $scope.strategyData[getParamsPropertyName($scope.originalStrategy)];
+        $scope.strategyData[pickedStrategyParams] = angular.copy($scope.strategyData[getParamsPropertyName($scope.originalStrategy)]);
       }, function() {
         // Create empty parameters for the newly picked strategy
         $scope.strategyData[pickedStrategyParams] = {};

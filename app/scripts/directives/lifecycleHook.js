@@ -17,7 +17,6 @@ angular.module("openshiftConsole")
         $scope.view = {
           isDisabled: false
         };
-        $scope.view.hookExists = !_.isEmpty($scope.hookParams);
 
         $scope.lifecycleHookFailurePolicyTypes = [
           "Abort",
@@ -58,65 +57,67 @@ angular.module("openshiftConsole")
             istag = {
               namespace: $scope.namespace,
               imageStream: "",
-              tagObject: {
-                tag: ""
-              }
+              tagObject: null
             };
           }
           return istag;
         };
         
         var setOrDefaultHookParams = function() {
-          $scope.hookParams.failurePolicy = _.get($scope.hookParams, 'failurePolicy', "Abort");
           if ($scope.action.type === "execNewPod") {
             if (_.has($scope.removedHookParams, 'execNewPod')) {
               $scope.hookParams.execNewPod = $scope.removedHookParams.execNewPod;
-              return;
+            } else {
+              $scope.hookParams.execNewPod = _.get($scope, 'hookParams.execNewPod', {});
             }
-            $scope.hookParams.execNewPod = _.merge(defaultExecNewPodObject, $scope.hookParams.execNewPod);
+            $scope.hookParams.execNewPod = _.merge(angular.copy(defaultExecNewPodObject), $scope.hookParams.execNewPod);
           } else {
             if (_.has($scope.removedHookParams, 'tagImages')) {
               $scope.hookParams.tagImages = $scope.removedHookParams.tagImages;
-              return;
+            } else {
+              $scope.hookParams.tagImages = _.get($scope, 'hookParams.tagImages', [{}]);
             }
-            $scope.hookParams.tagImages = [_.merge(defaultTagImageObject, $scope.hookParams.tagImages)];
+            $scope.hookParams.tagImages = [_.merge(angular.copy(defaultTagImageObject), $scope.hookParams.tagImages[0])];
             $scope.istagHook = setImageOptions(_.head($scope.hookParams.tagImages).to);
           }
+          $scope.hookParams.failurePolicy = _.get($scope.hookParams, 'failurePolicy', "Abort");
         };
 
         $scope.addHook = function() {
           if (!_.isEmpty($scope.removedHookParams)) {
             $scope.hookParams = $scope.removedHookParams;
-            $scope.view.hookExists = true;
             return;
           }
           $scope.hookParams = {};
           setOrDefaultHookParams();
-          $scope.view.hookExists = true;
         };
 
         $scope.removeHook = function() {
           $scope.removedHookParams = $scope.hookParams;
           delete $scope.hookParams;
-          $scope.view.hookExists = false;
           $scope.editForm.$setDirty();
         };
 
-        $scope.$watch("action.type", function() {
-          if ($scope.action.type === 'execNewPod' && _.has($scope.hookParams, 'tagImages')) {
-            $scope.removedHookParams['tagImages'] = $scope.hookParams.tagImages;
-            delete $scope.hookParams.tagImages;
+        var paramsChange = function() {
+          if (!$scope.hookParams) {
+            return;
+          }
+          if ($scope.action.type === 'execNewPod') {
+            if ($scope.hookParams.tagImages) {
+              $scope.removedHookParams.tagImages = $scope.hookParams.tagImages;
+              delete $scope.hookParams.tagImages;
+            }
             setOrDefaultHookParams();
           } else if ($scope.action.type === 'tagImages') {
-            if (_.has($scope.hookParams, 'execNewPod')) {
-              $scope.removedHookParams['execNewPod'] = $scope.hookParams.execNewPod;
-              delete $scope.hookParams.execNewPod;
-              setOrDefaultHookParams();
-            } else {
-              $scope.istagHook = setImageOptions(_.head($scope.hookParams.tagImages).to);
+            if ($scope.hookParams.execNewPod) {
+              $scope.removedHookParams.execNewPod = $scope.hookParams.execNewPod;
+              delete $scope.hookParams.execNewPod; 
             }
+            setOrDefaultHookParams();
           }
-        });
+        };
+
+        $scope.$watchGroup(['hookParams', 'action.type'], paramsChange);
 
         $scope.$watch("istagHook.tagObject.tag", function() {
           if (!_.has($scope.istagHook, ['tagObject', 'tag'])) {

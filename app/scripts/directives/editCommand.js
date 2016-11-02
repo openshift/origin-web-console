@@ -12,8 +12,8 @@ angular.module('openshiftConsole')
       link: function(scope) {
         scope.id = _.uniqueId('edit-command-');
         scope.input = {};
+        var argsChanged, inputChanged, isMultiline = $filter('isMultiline');
 
-        var inputChanged, isMultiline = $filter('isMultiline');
         scope.$watch('args', function() {
           if (inputChanged) {
             inputChanged = false;
@@ -30,6 +30,7 @@ angular.module('openshiftConsole')
                 multiline: isMultiline(arg)
               };
             });
+            argsChanged = true;
           }
         }, true);
 
@@ -37,8 +38,12 @@ angular.module('openshiftConsole')
           if (newValue === oldValue) {
             return;
           }
-
+          if (argsChanged) {
+            argsChanged = false;
+            return;
+          }
           inputChanged = true;
+
           scope.args = _.map(scope.input.args, function(arg) {
             return arg.value;
           });
