@@ -5371,10 +5371,8 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "<label>\n" +
     "<input type=\"checkbox\" ng-model=\"newSecret.linkSecret\">\n" +
     "Link secret to a service account.\n" +
-    "</label>\n" +
-    "</div>\n" +
-    "<div class=\"help-block\">\n" +
     "<a href=\"{{'managing_secrets' | helpLink}}\" target=\"_blank\"><span class=\"learn-more-inline\">Learn more&nbsp;<i class=\"fa fa-external-link\" aria-hidden=\"true\"></i></span></a>\n" +
+    "</label>\n" +
     "</div>\n" +
     "</div>\n" +
     "<div ng-if=\"newSecret.linkSecret\">\n" +
