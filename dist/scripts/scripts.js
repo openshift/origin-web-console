@@ -7952,7 +7952,7 @@ link:"project/" + c.projectName
 title:"Storage",
 link:"project/" + c.projectName + "/browse/storage"
 }, {
-title:"Request Storage"
+title:"Create Storage"
 } ], h.get(b.project).then(_.spread(function(b, e) {
 function g() {
 var a = {
