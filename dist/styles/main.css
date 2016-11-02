@@ -4856,7 +4856,7 @@ body,html{margin:0;padding:0}
 .console-os .middle .middle-section .middle-container{display:-webkit-flex;display:-moz-flex;display:-ms-flexbox;display:-ms-flex;display:flex;-webkit-flex-direction:column;-moz-flex-direction:column;-ms-flex-direction:column;flex-direction:column;height:100%}
 .console-os .middle .middle-section .middle-container .middle-header{-webkit-flex:0 0 auto;-moz-flex:0 0 auto;-ms-flex:0 0 auto;flex:0 0 auto}
 .console-os .middle .middle-section .middle-container .middle-content{-webkit-flex:1 1 auto;-moz-flex:1 1 auto;-ms-flex:1 1 auto;flex:1 1 auto;position:relative;width:100%}
-.header-light{background-color:#fff;border-bottom:1px solid #e4e4e4}
+.header-toolbar{background-color:#fff;border-bottom:1px solid #e4e4e4}
 .surface-shaded{background-color:#f2f2f2}
 @media (min-width:768px){.layout-pf-alt-fixed .nav-pf-vertical-alt{position:fixed;bottom:0;overflow:visible}
 .console-os .wrap{margin-top:-60px;padding-top:60px;-webkit-flex-direction:row;-moz-flex-direction:row;-ms-flex-direction:row;flex-direction:row;overflow:hidden}
