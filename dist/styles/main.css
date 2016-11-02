@@ -5165,7 +5165,7 @@ kubernetes-topology-graph{height:700px}
 .membership .content-pane .col-heading h3,.membership .content-pane .item-row h3{margin:0}
 .membership .content-pane .item-row{padding:5px 10px 5px 5px;margin-bottom:20px}
 .membership .content-pane .col-heading{margin-bottom:20px}
-.membership .content-pane .col-name{min-width:165px;padding:0 5px 10px 0;word-wrap:break-word}
+.membership .content-pane .col-name{min-width:165px;padding:0 5px 0 0;word-wrap:break-word}
 .membership .content-pane .col-name input{max-width:150px}
 .membership .content-pane .col-name .new-project{margin-top:2px}
 .membership .content-pane .content-serviceaccount .form-new-role .col-roles{display:block}
