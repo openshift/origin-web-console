@@ -375,8 +375,7 @@ angular.module('openshiftConsole')
             return _.assign(config, {
               namespace: scope.pod.metadata.namespace,
               pod: scope.pod,
-              containerName: metric.containerMetric ? scope.options.selectedContainer.name : "pod",
-              stacked: true
+              containerName: metric.containerMetric ? scope.options.selectedContainer.name : "pod"
             });
           }
 
