@@ -44,8 +44,9 @@ angular
         },
         update: {
           subject: {
-            success: _.template('The role "<%= roleName %>" was given to "<%= subjectName %>".'),
-            error: _.template('The role "<%= roleName %>" was not given to "<%= subjectName %>".')
+            success: _.template('The role "<%= roleName %>" was granted to "<%= subjectName %>".'),
+            error: _.template('The role "<%= roleName %>" could not be granted to "<%= subjectName %>".'),
+            exists: _.template('The role "<%= roleName %>" has already been granted to "<%= subjectName %>".')
           }
         },
         errorReason: _.template('Reason: "<%= httpErr %>"')
@@ -279,11 +280,16 @@ angular
               // infer this, but isn't clear at the moment.  Will fast-follow PR if
               // a good solution is found.
               var rolebindingToUpdate = _.find($scope.roleBindings, {roleRef: {name: role.metadata.name}});
-
-              if(rolebindingToUpdate) {
-                return updateBinding(rolebindingToUpdate, subject, subjectNamespace);
+              if(rolebindingToUpdate && _.some(rolebindingToUpdate.subjects, {name: subjectName})) {
+                showAlert('rolebindingUpdate', 'info', messages.update.subject.exists({
+                  roleName: role.metadata.name,
+                  subjectName: subjectName
+                }));
+              } else if(rolebindingToUpdate) {
+                updateBinding(rolebindingToUpdate, subject, subjectNamespace);
+              } else {
+                createBinding(role, subject, subjectNamespace);
               }
-              return createBinding(role, subject, subjectNamespace);
             }
           });
 

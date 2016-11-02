@@ -4805,8 +4805,9 @@ error:_.template('The role "<%= roleName %>" was not removed from "<%= subjectNa
 },
 update:{
 subject:{
-success:_.template('The role "<%= roleName %>" was given to "<%= subjectName %>".'),
-error:_.template('The role "<%= roleName %>" was not given to "<%= subjectName %>".')
+success:_.template('The role "<%= roleName %>" was granted to "<%= subjectName %>".'),
+error:_.template('The role "<%= roleName %>" could not be granted to "<%= subjectName %>".'),
+exists:_.template('The role "<%= roleName %>" has already been granted to "<%= subjectName %>".')
 }
 },
 errorReason:_.template('Reason: "<%= httpErr %>"')
@@ -4966,7 +4967,12 @@ roleRef:{
 name:c.metadata.name
 }
 });
-return g ? x(g, f, e) :w(c, f, e);
+g && _.some(g.subjects, {
+name:a
+}) ? t("rolebindingUpdate", "info", s.update.subject.exists({
+roleName:c.metadata.name,
+subjectName:a
+})) :g ? x(g, f, e) :w(c, f, e);
 }
 }), m.listAllRoles(n, {
 errorNotification:!1
