@@ -148,13 +148,12 @@
                             </div>
                           </ui-select-choices>
                         </ui-select>
-                        <a
-                          href=""
+                        <button
                           ng-disabled="disableAddForm || (!subject.newRole)"
                           ng-click="addRoleTo(subject.name, subjectKind.name, subject.newRole)"
                           class="btn btn-default add-role-to">
                           Add
-                        </a>
+                        </button>
                       </div>
                     </div>
                   </div>
@@ -248,13 +247,12 @@
                               </div>
                             </ui-select-choices>
                           </ui-select>
-                          <a
-                            href=""
+                          <button
                             ng-disabled="disableAddForm || (!newBinding.name) || (!newBinding.newRole)"
                             ng-click="addRoleTo(newBinding.name, newBinding.kind, newBinding.newRole, newBinding.namespace)"
                             class="btn btn-default add-role-to">
                             Add
-                          </a>
+                          </button>
                         </div>
                       </div>
                     </div>

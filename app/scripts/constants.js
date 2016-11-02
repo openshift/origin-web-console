@@ -165,22 +165,21 @@ window.OPENSHIFT_CONSTANTS = {
               href: "/quota"
             },
             {
+              label: "Membership",
+              href: "/membership",
+              // supports: {resource: '', verb: '', group: '' }
+              canI: {
+                resource: 'rolebindings',
+                verb: 'list'
+              }
+            },
+            {
               label: "Secrets",
               href: "/browse/secrets"
             },
             {
               label: "Other Resources",
               href: "/browse/other"
-            },
-            {
-              label: "Membership",
-              href: "/membership",
-              // TODO: coming soon, canI filtering for nav.
-              // supports: {resource: '', verb: '', group: '' }
-              canI: {
-                resource: 'rolebindings',
-                verb: 'list'
-              }
             }
           ]
         }

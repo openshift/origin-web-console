@@ -75,7 +75,7 @@
       <h2>
         {{app.name}}<span ng-if="import.tag">:{{import.tag}}</span>
         <small>
-          <span ng-if="mode === 'dockerImage'">from {{import.result.ref.registry || "Docker Hub"}},</span>
+          <span ng-if="import.result.ref.registry">from {{import.result.ref.registry}},</span>
           <relative-timestamp timestamp="import.image.dockerImageMetadata.Created"></relative-timestamp>,
           <span ng-if="import.image.dockerImageMetadata.Size">{{import.image.dockerImageMetadata.Size | humanizeSize}},</span>
           {{import.image.dockerImageLayers.length}} layers
@@ -176,6 +176,7 @@
             help-text="Each label is applied to each created resource.">
         </label-editor>
 
+        <alerts alerts="alerts"></alerts>
         <div class="button-group gutter-bottom" ng-class="{'gutter-top': !alerts.length}">
           <button type="submit"
               class="btn btn-primary btn-lg"

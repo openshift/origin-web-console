@@ -54,7 +54,7 @@ angular.module('openshiftConsole')
       name: $routeParams.name,
       kind: $routeParams.kind,
       namespace: $routeParams.project,
-      subpage: 'Set Resource Limits',
+      subpage: 'Edit Resource Limits',
       includeProject: true
     });
 
@@ -84,7 +84,7 @@ angular.module('openshiftConsole')
             $scope.breadcrumbs = BreadcrumbsService.getBreadcrumbs({
               object: resource,
               project: project,
-              subpage: 'Set Resource Limits',
+              subpage: 'Edit Resource Limits',
               includeProject: true
             });
             $scope.resourceURL = Navigate.resourceURL(resource);

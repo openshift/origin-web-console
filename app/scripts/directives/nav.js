@@ -2,6 +2,7 @@
 
 angular.module('openshiftConsole')
   .directive('sidebar', function($location, $filter, Constants) {
+    var canI = $filter('canI');
     var itemMatchesPath = function(item, path) {
       return (item.href === path) || _.some(item.prefixes, function(prefix) {
             return _.startsWith(path, prefix);
@@ -41,6 +42,18 @@ angular.module('openshiftConsole')
             return href;
           }
           return "project/" + $scope.projectName + href;
+        };
+
+        $scope.show = function(item) {
+          var isValid = !item.isValid || item.isValid();
+          if(!isValid) {
+            return false;
+          }
+          var userCan = item.canI ?
+                        canI(item.canI.resource, item.canI.verb, item.canI.group) :
+                        true;
+
+          return userCan;
         };
       }
     };

@@ -9,19 +9,11 @@
   <ul class="dropdown-menu actions action-button">
     <li ng-if="deployment && ({ group: 'extensions', resource: 'deployments' } | canI : 'update')">
       <a ng-href="project/{{project.metadata.name}}/attach-pvc?kind=Deployment&name={{deployment.metadata.name}}&group=extensions"
-         role="button">Attach Storage</a>
+         role="button">Add Storage</a>
     </li>
     <li ng-if="!deployment && ({ group: 'extensions', resource: 'replicasets' } | canI : 'update')">
       <a ng-href="project/{{project.metadata.name}}/attach-pvc?kind=ReplicaSet&name={{replicaSet.metadata.name}}&group=extensions"
-         role="button">Attach Storage</a>
-    </li>
-    <li ng-if="deployment && ({ group: 'extensions', resource: 'deployments' } | canI : 'update')">
-      <a ng-href="project/{{projectName}}/set-limits?kind=Deployment&name={{deployment.metadata.name}}&group=extensions"
-         role="button">Set Resource Limits</a>
-    </li>
-    <li ng-if="!deployment && ({ group: 'extensions', resource: 'replicasets' } | canI : 'update')">
-      <a ng-href="project/{{projectName}}/set-limits?kind=ReplicaSet&name={{replicaSet.metadata.name}}&group=extensions"
-         role="button">Set Resource Limits</a>
+         role="button">Add Storage</a>
     </li>
     <li ng-if="!autoscalers.length && { group: 'extensions', resource: 'horizontalpodautoscalers' } | canI : 'create'">
       <a ng-href="project/{{projectName}}/edit/autoscaler?kind=ReplicaSet&name={{replicaSet.metadata.name}}&group=extensions"
@@ -30,6 +22,14 @@
       <a ng-href="project/{{projectName}}/edit/autoscaler?kind=Deployment&name={{deployment.metadata.name}}&group=extensions"
          ng-if="deployment"
          role="button">Add Autoscaler</a>
+    </li>
+    <li ng-if="deployment && ({ group: 'extensions', resource: 'deployments' } | canI : 'update')">
+      <a ng-href="project/{{projectName}}/set-limits?kind=Deployment&name={{deployment.metadata.name}}&group=extensions"
+         role="button">Edit Resource Limits</a>
+    </li>
+    <li ng-if="!deployment && ({ group: 'extensions', resource: 'replicasets' } | canI : 'update')">
+      <a ng-href="project/{{projectName}}/set-limits?kind=ReplicaSet&name={{replicaSet.metadata.name}}&group=extensions"
+         role="button">Edit Resource Limits</a>
     </li>
     <li ng-if="(!deployment && ({ group: 'extensions', resource: 'replicasets' } | canI : 'update')) || (deployment && ({group: 'extensions', resource: 'deployments' } | canI : 'update'))">
       <a ng-href="{{healthCheckURL}}" role="button">Edit Health Checks</a>

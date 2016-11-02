@@ -324,6 +324,13 @@ angular.module('openshiftConsole')
       $scope.childServicesByParent[parentName].push(child);
     };
 
+    var topLevelServicesByApp = {};
+
+    // Check if an app label is used more than once on a top-level service so we can disambiguate.
+    $scope.isDuplicateApp = function(app) {
+      return _.size(topLevelServicesByApp[app]) > 1;
+    };
+
     var groupServices = function() {
       if (!services || !routes) {
         return;
@@ -340,6 +347,8 @@ angular.module('openshiftConsole')
           addChildService(serviceName, dependency);
         });
       });
+
+      topLevelServicesByApp = {};
 
       // Filter out child services and alternate services. Order top-level
       // services by app name, then service name.
@@ -360,6 +369,15 @@ angular.module('openshiftConsole')
 
         return !isChildService(service) && !isAlternateService(service);
       }).sortByAll(['metadata.labels.app', 'metadata.name']).value();
+
+      _.each($scope.topLevelServices, function(service) {
+        var app = _.get(service, 'metadata.labels.app');
+        if (!app) {
+          return;
+        }
+
+        _.set(topLevelServicesByApp, [app, service.metadata.name], service);
+      });
     };
 
     var updateRouteWarnings = function() {
