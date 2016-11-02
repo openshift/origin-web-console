@@ -9,7 +9,7 @@
         <input type="hidden" name="access_token" value="{{access_token}}">
         <button class="btn btn-link">View archive</button>
       </form>
-      <span ng-if="state !== 'empty'" class="action-divider">|</span>
+      <span ng-if="state && state !== 'empty'" class="action-divider">|</span>
     </span>
     <a ng-if="state && state !== 'empty'"
        href=""
@@ -76,7 +76,7 @@
       </div>
     </div>
     <!-- show if logs are still streaming -->
-    <ellipsis-pulser color="light" size="md" ng-show="loading"></ellipsis-pulser> 
+    <ellipsis-pulser color="light" size="md" ng-show="loading"></ellipsis-pulser>
     <div
       ng-show="showScrollLinks"
       class="log-scroll log-scroll-bottom">
