@@ -1,6 +1,6 @@
 <span ng-if="content">
   <span
-    dynamic-content="{{content}}"
+    dynamic-content="{{content | middleEllipses:350:'...<br>...'}}"
     data-toggle="popover"
     data-trigger="hover"
     data-html="true"

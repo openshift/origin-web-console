@@ -5109,7 +5109,7 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
 
   $templateCache.put('views/directives/_warnings-popover.html',
     "<span ng-if=\"content\">\n" +
-    "<span dynamic-content=\"{{content}}\" data-toggle=\"popover\" data-trigger=\"hover\" data-html=\"true\" class=\"pficon pficon-warning-triangle-o warnings-popover\" aria-hidden=\"true\">\n" +
+    "<span dynamic-content=\"{{content | middleEllipses:350:'...<br>...'}}\" data-toggle=\"popover\" data-trigger=\"hover\" data-html=\"true\" class=\"pficon pficon-warning-triangle-o warnings-popover\" aria-hidden=\"true\">\n" +
     "</span>\n" +
     "<span class=\"sr-only\">{{content}}</span>\n" +
     "</span>"
