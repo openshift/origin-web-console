@@ -77,7 +77,7 @@ angular.module('openshiftConsole')
   }
 
   function DataService() {
-    this._listCallbacksMap = {};
+    this._listDeferredMap = {};
     this._watchCallbacksMap = {};
     this._watchObjectCallbacksMap = {};
     this._watchOperationMap = {};
@@ -104,23 +104,26 @@ angular.module('openshiftConsole')
 
 // resource:  API resource (e.g. "pods")
 // context:   API context (e.g. {project: "..."})
-// callback:  function to be called with the list of the requested resource and context,
+// callback:  (optional) function to be called with the list of the requested resource and context,
 //            parameters passed to the callback:
 //            Data:   a Data object containing the (context-qualified) results
 //                    which includes a helper method for returning a map indexed
 //                    by attribute (e.g. data.by('metadata.name'))
 // opts:      http - options to pass to the inner $http call
+//
+// returns a promise
   DataService.prototype.list = function(resource, context, callback, opts) {
     resource = APIService.toResourceGroupVersion(resource);
     var key = this._uniqueKey(resource, null, context, _.get(opts, 'http.params'));
-    var callbacks = this._listCallbacks(key);
-    callbacks.add(callback);
+    var deferred = this._listDeferred(key);
+    if (callback) {
+      deferred.promise.then(callback);
+    }
 
     if (this._isCached(key)) {
       // A watch operation is running, and we've already received the
       // initial set of data for this resource
-      callbacks.fire(this._data(key));
-      callbacks.empty();
+      deferred.resolve(this._data(key));
     }
     else if (this._listInFlight(key)) {
       // no-op, our callback will get called when listOperation completes
@@ -128,6 +131,7 @@ angular.module('openshiftConsole')
     else {
       this._startListOp(resource, context, opts);
     }
+    return deferred.promise;
   };
 
 // resource:  API resource (e.g. "pods")
@@ -739,11 +743,11 @@ DataService.prototype.createStream = function(resource, name, context, opts, isR
     return this._watchObjectCallbacksMap[key];
   };
 
-  DataService.prototype._listCallbacks = function(key) {
-    if (!this._listCallbacksMap[key]) {
-      this._listCallbacksMap[key] = $.Callbacks();
+  DataService.prototype._listDeferred = function(key) {
+    if (!this._listDeferredMap[key]) {
+      this._listDeferredMap[key] = $q.defer();
     }
-    return this._listCallbacksMap[key];
+    return this._listDeferredMap[key];
   };
 
   DataService.prototype._watchInFlight = function(key, op) {
@@ -936,6 +940,12 @@ DataService.prototype.createStream = function(resource, name, context, opts, isR
         .success(function(data, status, headerFunc, config, statusText) {
           self._listOpComplete(key, resource, context, opts, data);
         }).error(function(data, status, headers, config) {
+          // mark list op as complete
+          self._listInFlight(key, false);
+          var deferred = self._listDeferred(key);
+          delete self._listDeferredMap[key];
+          deferred.reject(data, status, headers, config);
+
           if (!_.get(opts, 'errorNotification', true)) {
             return;
           }
@@ -956,6 +966,12 @@ DataService.prototype.createStream = function(resource, name, context, opts, isR
       }).success(function(data, status, headerFunc, config, statusText) {
         self._listOpComplete(key, resource, context, opts, data);
       }).error(function(data, status, headers, config) {
+        // mark list op as complete
+        self._listInFlight(key, false);
+        var deferred = self._listDeferred(key);
+        delete self._listDeferredMap[key];
+        deferred.reject(data, status, headers, config);
+
         if (!_.get(opts, 'errorNotification', true)) {
           return;
         }
@@ -989,14 +1005,15 @@ DataService.prototype.createStream = function(resource, name, context, opts, isR
       });
     }
 
-    this._resourceVersion(key, data.resourceVersion || data.metadata.resourceVersion);
-    this._data(key, items);
-    this._listCallbacks(key).fire(this._data(key));
-    this._listCallbacks(key).empty();
-    this._watchCallbacks(key).fire(this._data(key));
-
     // mark list op as complete
     this._listInFlight(key, false);
+    var deferred = this._listDeferred(key);
+    delete this._listDeferredMap[key];
+
+    this._resourceVersion(key, data.resourceVersion || data.metadata.resourceVersion);
+    this._data(key, items);
+    deferred.resolve(this._data(key));
+    this._watchCallbacks(key).fire(this._data(key));
 
     if (this._watchCallbacks(key).has()) {
       var watchOpts = this._watchOptions(key) || {};
