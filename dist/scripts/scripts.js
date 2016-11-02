@@ -10311,8 +10311,7 @@ bucketDuration:o()
 return b.data && b.data.length ? (d = _.last(b.data), e.start = d.end) :e.start = c, j.pod ? _.assign(e, {
 namespace:j.pod.metadata.namespace,
 pod:j.pod,
-containerName:a.containerMetric ? j.options.selectedContainer.name :"pod",
-stacked:!0
+containerName:a.containerMetric ? j.options.selectedContainer.name :"pod"
 }) :null;
 }
 function q() {
