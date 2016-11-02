@@ -5150,6 +5150,8 @@ kubernetes-topology-graph{height:700px}
 }
 .projects-bar .projects-sort{flex:1 0 auto}
 .projects-bar .projects-sort .form-group{margin:0}
+@media (max-width:479px){.projects-bar .projects-sort .dropdown-menu{left:auto;right:0}
+}
 .projects-bar .vertical-divider{border-left:1px solid #bbb;display:inline-block;height:27px;margin:0 7px;vertical-align:middle;width:1px}
 .membership .content-pane .col-heading .col-add-role h3,.membership .content-pane .form-new-role .col-roles{display:none}
 .projects-header{margin-top:21px}
