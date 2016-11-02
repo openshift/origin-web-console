@@ -12,7 +12,7 @@
         secret
         <span class="small text-muted">(populated by a Secret when the pod is created)</span>
       </dd>
-      <dt>Secret name:</dt>
+      <dt>Secret Name:</dt>
       <dd>{{volume.secret.secretName}}</dd>
     </div>
     <div ng-if="volume.persistentVolumeClaim">
@@ -68,7 +68,7 @@
         <span class="small text-muted">(populated with information about the pod)</span>
        </dd>
       <div ng-repeat="item in volume.downwardAPI.items">
-        <dt>Volume file:</dt>
+        <dt>Volume File:</dt>
         <dd>{{item.fieldRef.fieldPath}}&#8201;&#8594;&#8201;{{item.path}}</dd>
       </div>
     </div>
@@ -81,7 +81,7 @@
       <dt>Name:</dt>
       <dd>{{volume.configMap.name}}</dd>
       <div ng-repeat="item in volume.configMap.items">
-        <dt>Key to file:</dt>
+        <dt>Key to File:</dt>
         <dd>{{item.key}}&#8201;&#8594;&#8201;{{item.path}}</dd>
       </div>
     </div>
