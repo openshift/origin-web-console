@@ -166,7 +166,10 @@ angular
           if(!role) {
             return;
           }
-          var noInfoMessage = 'There is no additional information about this role.';
+          // NOTE: hiding tooltip entirely for now, until descriptions merge:
+          // https://github.com/openshift/origin/pull/11328
+          // the tooltip will still work if roles are manually annotated
+          var noInfoMessage = ''; // prev: 'There is no additional information about this role.';
           var namespace = _.get(role, 'metadata.namespace');
           var name = _.get(role, 'metadata.name');
           var prefix = namespace ? (namespace + ' / ' + name + ': ') : '';

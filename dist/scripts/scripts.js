@@ -4912,7 +4912,7 @@ name:b.metadata.name
 },
 roleHelp:function(a) {
 if (a) {
-var b = "There is no additional information about this role.", c = _.get(a, "metadata.namespace"), d = _.get(a, "metadata.name"), e = c ? c + " / " + d + ": " :"";
+var b = "", c = _.get(a, "metadata.namespace"), d = _.get(a, "metadata.name"), e = c ? c + " / " + d + ": " :"";
 return a ? e + (q(a, "description") || b) :b;
 }
 }
@@ -9956,7 +9956,7 @@ scope:{
 key:"=?",
 value:"=?",
 keyHelp:"=?",
-valueHelp:"=?",
+valueHelp:"=",
 action:"&?",
 actionIcon:"=?",
 showAction:"=?"
