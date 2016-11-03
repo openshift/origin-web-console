@@ -1765,10 +1765,10 @@ containers:[ g ]
 }
 }
 };
-return a.deploymentConfig.deployOnNewImage && h.spec.triggers.push({
+return h.spec.triggers.push({
 type:"ImageChange",
 imageChangeParams:{
-automatic:!0,
+automatic:!!a.deploymentConfig.deployOnNewImage,
 containerNames:[ a.name ],
 from:{
 kind:b.kind,

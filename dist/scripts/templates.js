@@ -743,7 +743,7 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "</div>\n" +
     "<div class=\"build-phase\">\n" +
     "<status-icon status=\"build.status.phase\"></status-icon>\n" +
-    "{{build.status.phase}}<span ng-if=\"build | isIncompleteBuild\">. A new deployment will be created automatically once the build completes.</span>\n" +
+    "{{build.status.phase}}<span ng-if=\"(build | isIncompleteBuild) && trigger.imageChangeParams.automatic\">. A new deployment will be created automatically once the build completes.</span>\n" +
     "</div>\n" +
     "<relative-timestamp timestamp=\"build.metadata.creationTimestamp\" class=\"build-timestamp\"></relative-timestamp>\n" +
     "<div ng-if=\"'builds/log' | canI : 'get'\" class=\"build-links\">\n" +
@@ -2117,7 +2117,10 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "<span ng-switch-default>{{trigger.type}}</span>\n" +
     "<span ng-switch-when=\"ImageChange\" ng-if=\"trigger.imageChangeParams.from\">\n" +
     "<dt>New Image For:</dt>\n" +
-    "<dd>{{trigger.imageChangeParams.from | imageObjectRef : deploymentConfig.metadata.namespace}}</dd>\n" +
+    "<dd>\n" +
+    "{{trigger.imageChangeParams.from | imageObjectRef : deploymentConfig.metadata.namespace}}\n" +
+    "<small ng-if=\"!trigger.imageChangeParams.automatic\" class=\"text-muted\">(disabled)</small>\n" +
+    "</dd>\n" +
     "</span>\n" +
     "<span ng-switch-when=\"ConfigChange\">\n" +
     "<dt>Change Of:</dt>\n" +
