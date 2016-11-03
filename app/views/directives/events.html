@@ -1,16 +1,28 @@
 <div ng-if="!events">
   Loading...
 </div>
-<div ng-if="events">
-  <div class="table-toolbar form-inline">
-    <div class="form-group filter-controls">
-      <label for="events-filter" class="sr-only">Filter</label>
-      <input type="search"
-             placeholder="Filter by keyword"
-             class="form-control"
-             id="events-filter"
-             ng-model="filter.text">
-    </div>
+<div ng-if="events" class="events">
+  <div class="data-toolbar">
+    <form role="form" class="search-pf has-button">
+      <div class="form-group filter-controls has-clear">
+        <div class="search-pf-input-group">
+          <label for="events-filter" class="sr-only">Filter</label>
+          <input type="search"
+                 placeholder="Filter by keyword"
+                 class="form-control"
+                 id="events-filter"
+                 ng-model="filter.text">
+          <button
+              type="button"
+              class="clear"
+              aria-hidden="true"
+              ng-if="filter.text"
+              ng-click="filter.text = ''">
+              <span class="pficon pficon-close"></span>
+          </button>
+        </div>
+      </div>
+    </form>
     <div class="vertical-divider"></div>
     <div class="sort-group">
       <span class="sort-label">Sort by</span>
@@ -56,28 +68,31 @@
       <tr>
         <td data-title="Time" class="nowrap">{{event.lastTimestamp | date:'mediumTime'}}</td>
         <td ng-if="!resourceKind || !resourceName" data-title="Name">
-          <div class="hidden-xs-block visible-sm-block visible-md-block hidden-lg-block">{{event.involvedObject.kind | humanizeKind : true}}</div>
+          <div class="hidden-xs-block visible-sm-block visible-md-block hidden-lg-block">
+            <span ng-bind-html="event.involvedObject.kind | humanizeKind : true | highlightKeywords : filterExpressions"></span>
+          </div>
           <span ng-init="resourceURL = (event.involvedObject.name | navigateResourceURL : event.involvedObject.kind : event.metadata.namespace : event.involvedObject.apiVersion)">
             <a
               ng-href="{{resourceURL}}"
-              ng-if="resourceURL">{{event.involvedObject.name}}</a>
-            <span ng-if="!resourceURL">{{event.involvedObject.name}}</span>
+              ng-if="resourceURL"><span ng-bind-html="event.involvedObject.name | highlightKeywords : filterExpressions"></span></a>
+            <span ng-if="!resourceURL" ng-bind-html="event.involvedObject.name | highlightKeywords : filterExpressions"></span>
           </span>
         </td>
         <td ng-if="!resourceKind || !resourceName" class="hidden-sm hidden-md" data-title="Kind">
-          {{event.involvedObject.kind | humanizeKind : true}}</td>
+          <span ng-bind-html="event.involvedObject.kind | humanizeKind : true | highlightKeywords : filterExpressions"></span>
+        </td>
         <td data-title="Severity" class="hidden-xs hidden-sm hidden-md text-center severity-icon-td">
           <span class="sr-only">{{event.type}}</span>
           <span class="pficon pficon-warning-triangle-o" ng-show="event.type === 'Warning'" aria-hidden="true" data-toggle="tooltip" data-original-title="Warning"></span></td>
         <td class="hidden-sm hidden-md" data-title="Reason">
-          {{event.reason | sentenceCase}}&nbsp;<span class="visible-xs-inline pficon pficon-warning-triangle-o" ng-show="event.type === 'Warning'" aria-hidden="true" data-toggle="tooltip" data-original-title="Warning"></span>
+          <span ng-bind-html="event.reason | sentenceCase | highlightKeywords : filterExpressions"></span>&nbsp;<span class="visible-xs-inline pficon pficon-warning-triangle-o" ng-show="event.type === 'Warning'" aria-hidden="true" data-toggle="tooltip" data-original-title="Warning"></span>
         </td>
         <td data-title="Message">
           <div class="hidden-xs-block visible-sm-block visible-md-block hidden-lg-block">
-            {{event.reason | sentenceCase}}&nbsp;
+            <span ng-bind-html="event.reason | sentenceCase | highlightKeywords : filterExpressions"></span>&nbsp;
             <span class="pficon pficon-warning-triangle-o" ng-show="event.type === 'Warning'" aria-hidden="true" data-toggle="tooltip" data-original-title="Warning"></span>
           </div>
-          {{event.message}}
+          <span ng-bind-html="event.message | highlightKeywords : filterExpressions"></span>
           <div ng-if="event.count > 1" class="text-muted small">
             {{event.count}} times in the last
             <duration-until-now timestamp="event.firstTimestamp" omit-single="true" precision="1"></duration-until-now>

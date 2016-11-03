@@ -9,7 +9,8 @@ angular.module('openshiftConsole')
       replace: true,
       scope: {
         template: '=',
-        project: '@'
+        project: '@',
+        keywords: '='
       },
       templateUrl: 'views/catalog/_template.html'
     };

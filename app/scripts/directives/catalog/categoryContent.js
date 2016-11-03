@@ -34,7 +34,7 @@ angular.module('openshiftConsole')
         };
 
         function filterCatalog() {
-          var keywords = KeywordService.generateKeywords($scope.filter.keyword);
+          var keywords = $scope.keywords = KeywordService.generateKeywords($scope.filter.keyword);
           $scope.filteredBuilderImages = CatalogService.filterImageStreams(builderImages, keywords);
           $scope.filteredTemplates = CatalogService.filterTemplates(templates, keywords);
         }

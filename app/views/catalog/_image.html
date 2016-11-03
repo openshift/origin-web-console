@@ -5,16 +5,18 @@
         <div class="card-pf-title-with-icon">
           <custom-icon resource="imageStream" kind="image" tag="is.tag.tag" class="image-icon"></custom-icon>
           <h2 class="card-pf-title">
-            {{imageStream | displayName}}
+            <span ng-bind-html="imageStream | displayName | highlightKeywords : keywords"></span>
           </h2>
         </div>
         <p class="card-pf-badge">Builds source code</p>
         <p>
           <truncate-long-text
+            ng-if="!keywords.length"
             class="project-description"
             content="imageStream | imageStreamTagAnnotation : 'description' : is.tag.tag"
             limit="200"
             use-word-boundary="true"></truncate-long-text>
+          <span ng-if="keywords.length" ng-bind-html="imageStream | imageStreamTagAnnotation : 'description' : is.tag.tag | truncate : 200 | highlightKeywords : keywords"></span>
         </p>
         <p ng-if="imageStream | imageStreamTagAnnotation : 'provider' : is.tag.tag">
           Provider: {{imageStream | imageStreamTagAnnotation : 'provider' : is.tag.tag}}

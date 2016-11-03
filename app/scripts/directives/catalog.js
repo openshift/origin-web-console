@@ -29,7 +29,7 @@ angular.module('openshiftConsole')
         };
 
         function filterCatalog() {
-          var keywords = KeywordService.generateKeywords($scope.filter.keyword);
+          var keywords = $scope.keywords = KeywordService.generateKeywords($scope.filter.keyword);
           if (_.isEmpty(keywords)) {
             $scope.filterActive = false;
             $scope.filteredBuildersByCategory = $scope.buildersByCategory;
