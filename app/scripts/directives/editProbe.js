@@ -13,12 +13,31 @@ angular.module('openshiftConsole')
         scope.id = _.uniqueId('edit-probe-');
         scope.probe = scope.probe || {};
 
+        scope.types = [{
+          id: 'httpGet',
+          label: 'HTTP'
+        }, {
+          id: 'exec',
+          label: 'Container Command'
+        }, {
+          id: 'tcpSocket',
+          label: 'TCP Socket'
+        }];
+
         // Map of previous probes by type so switching to a different type and
         // back remembers the previous values.
         scope.previousProbes = {};
 
-        // Only allow selecting TCP ports for HTTP and TCP socket checks.
+        // Show only TCP ports for HTTP and TCP socket checks.
         scope.tcpPorts = _.filter(scope.exposedPorts, { protocol: "TCP" });
+        var initialValue = _.get(scope, 'probe.httpGet.port') || _.get(scope, 'probe.exec.port');
+        if (initialValue && !_.some(scope.tcpPorts, { containerPort: initialValue })) {
+          scope.tcpPorts = [{
+            containerPort: initialValue,
+            protocol: 'TCP'
+          }].concat(scope.tcpPorts);
+        }
+        scope.portOptions = scope.tcpPorts;
 
         var updateSelectedType = function(newType, oldType) {
           scope.probe = scope.probe || {};
@@ -52,25 +71,46 @@ angular.module('openshiftConsole')
         };
 
         // Initialize type from existing data.
+        var type;
         if (scope.probe.httpGet) {
-          scope.type = 'httpGet';
+          type = 'httpGet';
         } else if (scope.probe.exec) {
-          scope.type = 'exec';
+          type = 'exec';
         } else if (scope.probe.tcpSocket) {
-          scope.type = 'tcpSocket';
+          type = 'tcpSocket';
         } else {
           // Set defaults for new probe.
-          scope.type = 'httpGet';
+          type = 'httpGet';
           updateSelectedType('httpGet');
         }
 
-        scope.$watch('type', function(newType, oldType) {
+        _.set(scope, 'selected.type', type);
+
+        scope.$watch('selected.type', function(newType, oldType) {
           if (newType === oldType) {
             return;
           }
 
           updateSelectedType(newType, oldType);
         });
+
+        // Allow the user to type in a new value.
+        scope.refreshPorts = function(search) {
+          if (!/^\d+$/.test(search)) {
+            return;
+          }
+
+          var options = scope.tcpPorts;
+          search = parseInt(search, 10);
+          if (search && !_.some(options, { containerPort: search })) {
+            options = [{
+              containerPort: search,
+              protocol: 'TCP'
+            }].concat(options);
+          }
+
+          scope.portOptions = _.uniq(options);
+        };
       }
     };
   });

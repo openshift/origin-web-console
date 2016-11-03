@@ -4926,14 +4926,13 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
   $templateCache.put('views/directives/_edit-probe.html',
     "<ng-form name=\"form\">\n" +
     "<div class=\"form-group\">\n" +
-    "<label ng-attr-for=\"{{id}}-type\" class=\"required\">Type</label>\n" +
-    "<select ng-model=\"type\" ng-attr-id=\"{{id}}-type\" required class=\"form-control\">\n" +
-    "<option value=\"httpGet\">HTTP</option>\n" +
-    "<option value=\"exec\">Container Command</option>\n" +
-    "<option value=\"tcpSocket\">TCP Socket</option>\n" +
-    "</select>\n" +
+    "<label class=\"required\">Type</label>\n" +
+    "<ui-select ng-model=\"selected.type\" required search-enabled=\"false\">\n" +
+    "<ui-select-match>{{$select.selected.label}}</ui-select-match>\n" +
+    "<ui-select-choices repeat=\"item.id as item in types\">{{item.label}}</ui-select-choices>\n" +
+    "</ui-select>\n" +
     "</div>\n" +
-    "<fieldset ng-if=\"type === 'httpGet'\">\n" +
+    "<fieldset ng-if=\"selected.type === 'httpGet'\">\n" +
     "<div class=\"form-group\">\n" +
     "<label ng-attr-for=\"{{id}}-path\">Path</label>\n" +
     "<div>\n" +
@@ -4941,23 +4940,24 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "</div>\n" +
     "</div>\n" +
     "<div class=\"form-group\">\n" +
-    "<label ng-attr-for=\"{{id}}-http-port\" class=\"required\">Port</label>\n" +
-    "<select id=\"{{id}}-http-port\" ng-model=\"probe.httpGet.port\" ng-options=\"port.containerPort as port.containerPort for port in tcpPorts\" required class=\"form-control\">\n" +
-    "</select>\n" +
-    "<div ng-if=\"!tcpPorts.length\" class=\"has-error\">\n" +
-    "<span class=\"help-block\">Container has no TCP ports.</span>\n" +
-    "</div>\n" +
+    "<label class=\"required\">Port</label>\n" +
+    "<ui-select ng-model=\"probe.httpGet.port\" required>\n" +
+    "<ui-select-match>{{$select.selected.containerPort}}</ui-select-match>\n" +
+    "<ui-select-choices repeat=\"port.containerPort as port in portOptions\" refresh=\"refreshPorts($select.search, $select.selected)\" refresh-delay=\"200\">{{port.containerPort}}</ui-select-choices>\n" +
+    "</ui-select>\n" +
     "</div>\n" +
     "</fieldset>\n" +
-    "<fieldset ng-if=\"type === 'exec'\">\n" +
+    "<fieldset ng-if=\"selected.type === 'exec'\">\n" +
     "<label class=\"required\">Command</label>\n" +
     "<edit-command args=\"probe.exec.command\" is-required=\"true\"></edit-command>\n" +
     "</fieldset>\n" +
-    "<fieldset ng-if=\"type === 'tcpSocket'\">\n" +
+    "<fieldset ng-if=\"selected.type === 'tcpSocket'\">\n" +
     "<div class=\"form-group\">\n" +
-    "<label ng-attr-for=\"{{id}}-tcp-port\" class=\"required\">Port</label>\n" +
-    "<select id=\"{{id}}-tcp-port\" ng-model=\"probe.tcpSocket.port\" ng-options=\"port.containerPort as port.containerPort for port in tcpPorts\" required class=\"form-control\">\n" +
-    "</select>\n" +
+    "<label class=\"required\">Port</label>\n" +
+    "<ui-select ng-model=\"probe.tcpSocket.port\" required>\n" +
+    "<ui-select-match>{{$select.selected.containerPort}}</ui-select-match>\n" +
+    "<ui-select-choices repeat=\"port.containerPort as port in portOptions\" refresh=\"refreshPorts($select.search, $select.selected)\" refresh-delay=\"200\">{{port.containerPort}}</ui-select-choices>\n" +
+    "</ui-select>\n" +
     "</div>\n" +
     "</fieldset>\n" +
     "<div class=\"form-group\">\n" +

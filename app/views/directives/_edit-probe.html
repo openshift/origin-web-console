@@ -1,17 +1,12 @@
 <ng-form name="form">
   <div class="form-group">
-    <label ng-attr-for="{{id}}-type" class="required">Type</label>
-    <select
-        ng-model="type"
-        ng-attr-id="{{id}}-type"
-        required
-        class="form-control">
-      <option value="httpGet">HTTP</option>
-      <option value="exec">Container Command</option>
-      <option value="tcpSocket">TCP Socket</option>
-    </select>
+    <label class="required">Type</label>
+    <ui-select ng-model="selected.type" required search-enabled="false">
+      <ui-select-match>{{$select.selected.label}}</ui-select-match>
+      <ui-select-choices repeat="item.id as item in types">{{item.label}}</ui-select-choices>
+    </ui-select>
   </div>
-  <fieldset ng-if="type === 'httpGet'">
+  <fieldset ng-if="selected.type === 'httpGet'">
     <div class="form-group">
       <label ng-attr-for="{{id}}-path">Path</label>
       <div>
@@ -27,33 +22,30 @@
       </div>
     </div>
     <div class="form-group">
-      <label ng-attr-for="{{id}}-http-port" class="required">Port</label>
-      <select
-          id="{{id}}-http-port"
-          ng-model="probe.httpGet.port"
-          ng-options="port.containerPort as port.containerPort for port in tcpPorts"
-          required
-          class="form-control">
-      </select>
-      <div ng-if="!tcpPorts.length" class="has-error">
-        <span class="help-block">Container has no TCP ports.</span>
-      </div>
+      <label class="required">Port</label>
+      <ui-select ng-model="probe.httpGet.port" required>
+        <ui-select-match>{{$select.selected.containerPort}}</ui-select-match>
+        <ui-select-choices
+            repeat="port.containerPort as port in portOptions"
+            refresh="refreshPorts($select.search, $select.selected)"
+            refresh-delay="200">{{port.containerPort}}</ui-select-choices>
+      </ui-select>
     </div>
   </fieldset>
-  <fieldset ng-if="type === 'exec'">
+  <fieldset ng-if="selected.type === 'exec'">
     <label class="required">Command</label>
     <edit-command args="probe.exec.command" is-required="true"></edit-command>
   </fieldset>
-  <fieldset ng-if="type === 'tcpSocket'">
+  <fieldset ng-if="selected.type === 'tcpSocket'">
     <div class="form-group">
-      <label ng-attr-for="{{id}}-tcp-port" class="required">Port</label>
-      <select
-          id="{{id}}-tcp-port"
-          ng-model="probe.tcpSocket.port"
-          ng-options="port.containerPort as port.containerPort for port in tcpPorts"
-          required
-          class="form-control">
-      </select>
+      <label class="required">Port</label>
+      <ui-select ng-model="probe.tcpSocket.port" required>
+        <ui-select-match>{{$select.selected.containerPort}}</ui-select-match>
+        <ui-select-choices
+            repeat="port.containerPort as port in portOptions"
+            refresh="refreshPorts($select.search, $select.selected)"
+            refresh-delay="200">{{port.containerPort}}</ui-select-choices>
+      </ui-select>
     </div>
   </fieldset>
   <div class="form-group">
