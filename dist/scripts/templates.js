@@ -4311,11 +4311,11 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "Launch the first build when the build configuration is created\n" +
     "</label>\n" +
     "</div>\n" +
-    "<h3>Environment Variables (Build and Runtime) <span class=\"help action-inline\">\n" +
+    "<h3>Environment Variables <span class=\"appended-icon\">(Build and Runtime) <span class=\"help action-inline\">\n" +
     "<a href data-toggle=\"tooltip\" data-original-title=\"Environment variables are used to configure and pass information to running containers.  These environment variables will be available during your build and at runtime.\">\n" +
     "<i class=\"pficon pficon-help\"></i>\n" +
     "</a>\n" +
-    "</span></h3>\n" +
+    "</span></span></h3>\n" +
     "<key-value-editor entries=\"buildConfigEnvVars\" key-placeholder=\"name\" value-placeholder=\"value\" key-validator=\"[a-zA-Z][a-zA-Z0-9_]*\" key-validator-error-tooltip=\"A valid environment variable name is an alphanumeric (a-z and 0-9) string beginning with a letter that may contain underscores.\" add-row-link=\"Add environment variable\"></key-value-editor>\n" +
     "</osc-form-section>\n" +
     "\n" +
@@ -4336,11 +4336,11 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "</label>\n" +
     "</div>\n" +
     "<div>\n" +
-    "<h3>Environment Variables (Runtime only) <span class=\"help action-inline\">\n" +
+    "<h3>Environment Variables <span class=\"appended-icon\">(Runtime only) <span class=\"help action-inline\">\n" +
     "<a href=\"\" data-toggle=\"tooltip\" data-original-title=\"Environment variables are used to configure and pass information to running containers.  These environment variables will only be available at runtime.\">\n" +
     "<i class=\"pficon pficon-help\"></i>\n" +
     "</a>\n" +
-    "</span></h3>\n" +
+    "</span></span></h3>\n" +
     "<p ng-show=\"DCEnvVarsFromImage.length\">\n" +
     "<a href=\"\" ng-click=\"showDCEnvs = (!showDCEnvs)\">\n" +
     "{{showDCEnvs ? 'Hide' : 'Show'}} image environment variables\n" +
@@ -5203,7 +5203,7 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
   $templateCache.put('views/directives/create-secret.html',
     "<alerts alerts=\"alerts\"></alerts>\n" +
     "<ng-form name=\"secretForm\">\n" +
-    "<div for=\"secretType\" ng-if=\"!type\" class=\"form-group\">\n" +
+    "<div for=\"secretType\" ng-if=\"!type\" class=\"form-group mar-top-lg\">\n" +
     "<label>Secret Type</label>\n" +
     "<ui-select required ng-model=\"newSecret.type\" search-enabled=\"false\" ng-change=\"newSecret.authType = secretAuthTypeMap[newSecret.type].authTypes[0].id\">\n" +
     "<ui-select-match>{{$select.selected | upperFirst}} Secret</ui-select-match>\n" +
@@ -6498,7 +6498,7 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
 
 
   $templateCache.put('views/directives/osc-form-section.html',
-    "<div class=\"flow\">\n" +
+    "<div class=\"flow h2-help-block\">\n" +
     "<div class=\"flow-block\">\n" +
     "<h2>{{header}}</h2>\n" +
     "</div>\n" +
@@ -9215,7 +9215,7 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "<div class=\"col-md-2 template-name gutter-top hidden-sm hidden-xs\">\n" +
     "<span class=\"fa fa-cubes\"></span>\n" +
     "</div>\n" +
-    "<div class=\"col-md-9\">\n" +
+    "<div class=\"col-md-8\">\n" +
     "<fieldset ng-disabled=\"disableInputs\">\n" +
     "<osc-image-summary resource=\"template\"></osc-image-summary>\n" +
     "<div ng-if=\"templateImages.length\" class=\"images\">\n" +

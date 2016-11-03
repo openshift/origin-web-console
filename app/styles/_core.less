@@ -499,6 +499,11 @@ label.checkbox {
       &.right {
         font-size: @font-size-small;
         font-weight: normal;
+        .action-inline {
+          @media (max-width: @screen-xs-max) {
+            margin-left: 0;
+          }
+        }
       }
       .action {
           font-size: @font-size-small;
@@ -509,6 +514,7 @@ label.checkbox {
         margin-bottom: 0;
         > li {
           font-size: @font-size-small;
+          padding-right: 0;
           text-align: left;
         }
       }
@@ -1217,5 +1223,14 @@ copy-to-clipboard .input-group {
 @media (max-width: @screen-xxs-max) {
   .col-xxs-12 {
     width: 100%;
+  }
+}
+
+// Use to control spacing on the parent div to prevent spacing discrepancy at mobile
+.h2-help-block {
+  margin-bottom: (@line-height-computed / 2);
+  h2 {
+    margin-bottom: 0;
+    margin-right: 5px;
   }
 }
