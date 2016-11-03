@@ -25,8 +25,8 @@ angular
       scope: {
         key: '=?',
         value: '=?',
-        keyHelp: '=?',
-        valueHelp: '=?',
+        keyHelp: '=?',    // optional, or empty string for false
+        valueHelp: '=',   // optional, or empty string for false
         action: '&?',     // callback fn,
         actionIcon: '=?', // default is pficon pficon-close
         showAction: '=?'  // bool to show-hide the action button
