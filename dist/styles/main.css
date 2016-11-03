@@ -5153,13 +5153,14 @@ kubernetes-topology-graph{height:700px}
 @media (max-width:479px){.projects-bar .projects-sort .dropdown-menu{left:auto;right:0}
 }
 .projects-bar .vertical-divider{border-left:1px solid #bbb;display:inline-block;height:27px;margin:0 7px;vertical-align:middle;width:1px}
-.membership .content-pane .col-heading .col-add-role h3,.membership .content-pane .form-new-role .col-roles{display:none}
 .projects-header{margin-top:21px}
 .projects-instructions-link{white-space:pre}
 .projects-list{border-top:0;box-shadow:0 3px 1px -2px rgba(0,0,0,.15),0 2px 2px 0 rgba(0,0,0,.1),0 1px 5px 0 rgba(0,0,0,.09);margin-bottom:20px}
 .projects-list .project-info:hover{background-color:#def3ff}
 .terminal-font,kubernetes-container-terminal .terminal{font-family:"Monospace Regular","DejaVu Sans Mono",Menlo,Monaco,Consolas,monospace;line-height:1em;font-size:12px}
 .key-value-editor .key-value-editor-header{margin-bottom:5px}
+.membership h1 .learn-more-inline{white-space:nowrap;margin-right:10px;margin-left:0px;display:inline-block}
+.membership .content-pane .col-heading .col-add-role h3,.membership .content-pane .form-new-role .col-roles{display:none}
 .membership .content-pane{max-width:1024px;margin-top:50px}
 .membership .content-pane .col-add-role{padding:10px 0;min-width:150px}
 .membership .content-pane .add-role-to{margin-left:-1px}
