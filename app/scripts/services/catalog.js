@@ -121,14 +121,68 @@ angular.module("openshiftConsole")
       return templatesByCategory;
     };
 
-    // TODO: Filter by description
-    var imageStreamFilterFields = [
-      'metadata.name',
-      'metadata.annotations["openshift.io/display-name"]'
-    ];
-
+    // Don't use KeywordService for image stream filtering so we can add
+    // special handling for image stream tags. Match keywords (array of regex)
+    // against image streams and image stream tags, returning a copy of the
+    // image streams with only matching status tags.
+    var getDisplayName = $filter('displayName');
     var filterImageStreams = function(imageStreams, keywords) {
-      return KeywordService.filterForKeywords(imageStreams, imageStreamFilterFields, keywords);
+      if (!keywords.length) {
+        return imageStreams;
+      }
+
+      var filteredImageStreams = [];
+      _.each(imageStreams, function(imageStream) {
+        var name = _.get(imageStream, 'metadata.name', '');
+        var displayName = getDisplayName(imageStream, true);
+        var matchingTags = _.indexBy(imageStream.spec.tags, 'name');
+
+        // Find tags that match every keyword. Search image stream name, image
+        // stream display name, and tag names, and tag descriptions. If a
+        // keyword matches the image stream name or display name, it's
+        // considered to match all tags.
+        _.each(keywords, function(regex) {
+          if (regex.test(name)) {
+            return;
+          }
+
+          if (displayName && regex.test(displayName)) {
+            return;
+          }
+
+          // Check tag descriptions.
+          _.each(imageStream.spec.tags, function(tag) {
+            // If this is not a builder, don't match the tag.
+            var tagTags = _.get(tag, 'annotations.tags', '');
+            if (!/\bbuilder\b/.test(tagTags)) {
+              delete matchingTags[tag.name];
+              return;
+            }
+
+            // If the keyword matches the tag name, accept it.
+            if (regex.test(tag.name)) {
+              return;
+            }
+
+            var description = _.get(tag, 'annotations.description');
+            if (!description || !regex.test(description)) {
+              delete matchingTags[tag.name];
+            }
+          });
+        });
+
+        // Make a copy of the image stream with only the matching tags.
+        var imageStreamCopy;
+        if (!_.isEmpty(matchingTags)) {
+          imageStreamCopy = angular.copy(imageStream);
+          imageStreamCopy.status.tags = _.filter(imageStreamCopy.status.tags, function(tag) {
+            return matchingTags[tag.tag];
+          });
+          filteredImageStreams.push(imageStreamCopy);
+        }
+      });
+
+      return filteredImageStreams;
     };
 
     var templateFilterFields = [

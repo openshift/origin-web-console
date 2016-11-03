@@ -3794,8 +3794,26 @@ _.each(e, function(d) {
 h(d, c) && (b[d.id] = b[d.id] || [], b[d.id].push(a), f = !0);
 }), f || (b[""] = b[""] || [], b[""].push(a));
 }), b;
-}, k = [ "metadata.name", 'metadata.annotations["openshift.io/display-name"]' ], l = function(a, b) {
-return c.filterForKeywords(a, k, b);
+}, k = a("displayName"), l = function(a, b) {
+if (!b.length) return a;
+var c = [];
+return _.each(a, function(a) {
+var d = _.get(a, "metadata.name", ""), e = k(a, !0), f = _.indexBy(a.spec.tags, "name");
+_.each(b, function(b) {
+b.test(d) || e && b.test(e) || _.each(a.spec.tags, function(a) {
+var c = _.get(a, "annotations.tags", "");
+if (!/\bbuilder\b/.test(c)) return void delete f[a.name];
+if (!b.test(a.name)) {
+var d = _.get(a, "annotations.description");
+d && b.test(d) || delete f[a.name];
+}
+});
+});
+var g;
+_.isEmpty(f) || (g = angular.copy(a), g.status.tags = _.filter(g.status.tags, function(a) {
+return f[a.tag];
+}), c.push(g));
+}), c;
 }, m = [ "metadata.name", 'metadata.annotations["openshift.io/display-name"]', "metadata.annotations.description" ], n = function(a, b) {
 return c.filterForKeywords(a, m, b);
 };
@@ -10118,12 +10136,16 @@ f[a.name] = c(b.imageStream, a.name), a.from && "ImageStreamTag" === a.from.kind
 var g = function(a) {
 var b = _.get(f, [ a ], []);
 return _.includes(b, "builder");
-}, h = _.get(b, "imageStream.status.tags", []);
-b.tags = _.filter(h, function(a) {
+};
+b.$watch("imageStream.status.tags", function(a) {
+b.tags = _.filter(a, function(a) {
 return g(a.tag) && !d[a.tag];
 });
-var i = _.head(b.tags);
-_.set(b, "is.tag", i);
+var c = _.get(b, "is.tag.tag");
+c && _.some(b.tags, {
+tag:c
+}) || _.set(b, "is.tag", _.head(b.tags));
+});
 }
 };
 } ]), angular.module("openshiftConsole").directive("catalogTemplate", function() {
