@@ -4835,7 +4835,7 @@ td.visible-print,th.visible-print{display:table-cell!important}
 .events-sidebar .right-content .event .event-details .event-reason{order:2}
 .events-sidebar .right-content .event .event-details .event-timestamp{text-align:right;margin-left:5px;min-width:100px}
 }
-.events-table td,.log-line-text{word-break:break-word;min-width:0;word-wrap:break-word}
+.events-table td,.log-line-text{word-wrap:break-word;word-break:break-word;min-width:0}
 .events-sidebar .right-content .event.highlight+.event{border-top:1px solid #d1d1d1}
 .events-badge{font-size:14px}
 .events-badge:hover{text-decoration:none}
@@ -5163,17 +5163,20 @@ kubernetes-topology-graph{height:700px}
 .projects-list{border-top:0;box-shadow:0 3px 1px -2px rgba(0,0,0,.15),0 2px 2px 0 rgba(0,0,0,.1),0 1px 5px 0 rgba(0,0,0,.09);margin-bottom:20px}
 .projects-list .project-info:hover{background-color:#def3ff}
 .terminal-font,kubernetes-container-terminal .terminal{font-family:"Monospace Regular","DejaVu Sans Mono",Menlo,Monaco,Consolas,monospace;line-height:1em;font-size:12px}
+@media (min-width:768px){.container-terminal-wrapper{background-color:#000}
+}
 .key-value-editor .key-value-editor-header{margin-bottom:5px}
 .membership h1 .learn-more-inline{white-space:nowrap;margin-right:10px;margin-left:0px;display:inline-block}
 .membership .content-pane .col-heading .col-add-role h3,.membership .content-pane .form-new-role .col-roles{display:none}
-.membership .content-pane{max-width:1024px;margin-top:50px}
+.membership .content-pane{width:100%;margin-top:50px}
 .membership .content-pane .col-add-role{padding:10px 0;min-width:150px}
 .membership .content-pane .add-role-to{margin-left:-1px}
 .membership .content-pane .col-heading,.membership .content-pane .item-row{border-bottom:1px solid #ededed}
 .membership .content-pane .col-heading h3,.membership .content-pane .item-row h3{margin:0}
 .membership .content-pane .item-row{padding:5px 10px 5px 5px;margin-bottom:20px}
 .membership .content-pane .col-heading{margin-bottom:20px}
-.membership .content-pane .col-name{min-width:165px;padding:0 5px 0 0;word-wrap:break-word}
+.membership .content-pane .col-name{word-break:break-all;word-break:break-word;overflow-wrap:break-word;min-width:225px;max-width:30%;padding:0 5px 10px 0}
+.membership .content-pane .col-name.half-width{min-width:50%}
 .membership .content-pane .col-name input{max-width:150px}
 .membership .content-pane .col-name .new-project{margin-top:2px}
 .membership .content-pane .content-serviceaccount .form-new-role .col-roles{display:block}
@@ -5181,16 +5184,15 @@ kubernetes-topology-graph{height:700px}
 .membership .content-pane .select-project,.membership .content-pane .select-role{width:150px}
 .membership .content-pane .select-role small{color:#999}
 .membership .content-pane .select-role .active small{color:#c0e0f0}
-@media (min-width:768px){.container-terminal-wrapper{background-color:#000}
-.membership .content-pane .col-heading .col-add-role h3,.membership .content-pane .form-new-role .col-roles{display:block}
+@media (min-width:480px){.membership .content-pane .col-heading .col-add-role h3,.membership .content-pane .form-new-role .col-roles{display:block}
 .membership .content-pane .col-add-role{padding:0;min-width:245px}
 .membership .content-pane .col-heading,.membership .content-pane .item-row{border-bottom:none;margin-bottom:none}
 .membership .content-pane .item-row.highlight-hover:hover{background-color:#fafafa}
 .membership .content-pane .col-heading .col-add-role a{display:block;padding-left:10px}
-.membership .content-pane .col-name{min-width:180px}
+.membership .content-pane .col-name{width:30%}
 .membership .content-pane .col-name input{max-width:175px}
 }
-.col-add-role,.col-heading,.col-name,.col-roles,.item-row,[flex-collapse-fix]{flex-basis:auto}
+.col-add-role,.col-heading,.col-name,.col-roles,.item-row,[flex-collapse-fix],[flex]{flex-shrink:0;flex-basis:auto}
 .action-chip{margin:0 5px 2px 0;font-size:12px;display:flex;flex-direction:row}
 .action-chip .item{padding:.2em .6em .3em}
 .action-chip .item:first-child{border-top-left-radius:2px;border-bottom-left-radius:2px}
