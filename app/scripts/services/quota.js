@@ -71,16 +71,22 @@ angular.module("openshiftConsole")
     var getQuotaResourceReachedAlert = function(quota, resource, type) {
       var q = quota.status.total || quota.status;
       if (usageValue(q.hard[type]) <= usageValue(q.used[type])) {
-        var details;
+        var details, message;
         if (resource.kind === 'Pod') {
           details = "You will not be able to create the " + humanizeKind(resource.kind) + " '" + resource.metadata.name + "'.";
         }
         else {
           details = "You can still create " + humanizeKind(resource.kind) + " '" + resource.metadata.name + "' but no pods will be created until resources are freed.";
         }
+        if (type === "pods") {
+          message = 'You are at your quota for pods.';
+        }
+        else {
+          message = 'You are at your quota for ' + humanizeQuotaResource(type) + ' on pods.';
+        }
         return {
           type: resource.kind === 'Pod' ? 'error' : 'warning',
-          message: 'You are at your quota for ' + humanizeQuotaResource(type) + ' on pods.',
+          message: message,
           details: details,
           links: [{
             href: "project/" + quota.metadata.namespace + "/quota",
