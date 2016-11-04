@@ -3829,6 +3829,7 @@ label.checkbox{font-weight:400}
 .icon-xl{font-size:128px}
 .istag-separator{color:#9c9c9c;position:absolute;top:2px;right:-3px}
 @media (max-width:767px){.istag-separator{display:none!important}
+.osc-form .flow>.flow-block.right .action-inline{margin-left:0}
 }
 .create-route-icon,.create-storage-icon{padding-top:0;text-align:right}
 .lifecycle-hook{padding-bottom:20px}
@@ -3841,9 +3842,10 @@ label.checkbox{font-weight:400}
 .osc-form span.fa.visible-xs-inline{margin-right:10px}
 .osc-form .flow{border-top:1px solid rgba(0,0,0,.15);display:table;margin-top:40px;width:100%}
 .osc-form .flow>.flow-block{display:inline-block}
-.osc-form .flow>.flow-block .action,.osc-form .flow>.flow-block.right{font-size:11px;font-weight:400}
+.osc-form .flow>.flow-block.right{font-size:11px;font-weight:400}
+.osc-form .flow>.flow-block .action{font-size:11px;font-weight:400}
 .osc-form .flow>.flow-block>ul.list-inline{margin-bottom:0}
-.osc-form .flow>.flow-block>ul.list-inline>li{font-size:11px;text-align:left}
+.osc-form .flow>.flow-block>ul.list-inline>li{font-size:11px;padding-right:0;text-align:left}
 .osc-form .first-section .flow{margin-top:20px;border-top:0}
 .osc-form .template-options{line-height:1.5}
 .osc-form .template-options .list-unstyled .options{margin-bottom:12px}
@@ -3998,6 +4000,8 @@ copy-to-clipboard .input-group{max-width:300px}
 .tech-preview-header{justify-content:space-between}
 @media (max-width:479px){.col-xxs-12{width:100%}
 }
+.h2-help-block{margin-bottom:10.5px}
+.h2-help-block h2{margin-bottom:0;margin-right:5px}
 .data-toolbar{padding:5px 0}
 .data-toolbar.other-resources-toolbar .data-toolbar-dropdown{min-width:210px}
 .data-toolbar .checkbox{margin-bottom:0;margin-top:10px}
@@ -5120,6 +5124,7 @@ kubernetes-topology-graph{height:700px}
 }
 .settings-item{margin:4px 8px 4px 0}
 .hide-if-empty:empty{display:none!important}
+.appended-icon{display:inline-block;white-space:nowrap}
 .donut-title-med-pf{font-size:22.5px;font-weight:300}
 .col-md-12>.alerts:first-child{margin-top:20px}
 .project-actions{margin:20px 0 0}
