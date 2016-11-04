@@ -43,19 +43,14 @@ angular.module('openshiftConsole')
       {
         label: "Deployments",
         kind: "ReplicationControllers"
-      },
-      {
-        kind: "All"
       }
     ];
-    var initialKind = "All";
-    if ($routeParams.kind && _.some($scope.kinds, {kind: $routeParams.kind})) {
-      initialKind = $routeParams.kind;
-    }
+    var defaultKind = {
+      kind: "All"
+    };
+    $scope.kinds.push(defaultKind);
     $scope.kindSelector = {
-      selected: {
-        kind: initialKind
-      }
+      selected: _.find($scope.kinds, {kind: $routeParams.kind}) || defaultKind
     };
 
     $scope.logOptions = {
