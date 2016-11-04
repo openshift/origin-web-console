@@ -11547,10 +11547,26 @@ exposedPorts:"="
 },
 templateUrl:"views/directives/_edit-probe.html",
 link:function(a) {
-a.id = _.uniqueId("edit-probe-"), a.probe = a.probe || {}, a.previousProbes = {}, a.tcpPorts = _.filter(a.exposedPorts, {
+a.id = _.uniqueId("edit-probe-"), a.probe = a.probe || {}, a.types = [ {
+id:"httpGet",
+label:"HTTP"
+}, {
+id:"exec",
+label:"Container Command"
+}, {
+id:"tcpSocket",
+label:"TCP Socket"
+} ], a.previousProbes = {}, a.tcpPorts = _.filter(a.exposedPorts, {
 protocol:"TCP"
 });
-var b = function(b, c) {
+var b = _.get(a, "probe.httpGet.port") || _.get(a, "probe.exec.port");
+b && !_.some(a.tcpPorts, {
+containerPort:b
+}) && (a.tcpPorts = [ {
+containerPort:b,
+protocol:"TCP"
+} ].concat(a.tcpPorts)), a.portOptions = a.tcpPorts;
+var c, d = function(b, c) {
 if (a.probe = a.probe || {}, a.previousProbes[c] = a.probe[c], delete a.probe[c], a.probe[b] = a.previousProbes[b], !a.probe[b]) switch (b) {
 case "httpGet":
 case "tcpSocket":
@@ -11568,9 +11584,19 @@ command:[]
 };
 }
 };
-a.probe.httpGet ? a.type = "httpGet" :a.probe.exec ? a.type = "exec" :a.probe.tcpSocket ? a.type = "tcpSocket" :(a.type = "httpGet", b("httpGet")), a.$watch("type", function(a, c) {
-a !== c && b(a, c);
-});
+a.probe.httpGet ? c = "httpGet" :a.probe.exec ? c = "exec" :a.probe.tcpSocket ? c = "tcpSocket" :(c = "httpGet", d("httpGet")), _.set(a, "selected.type", c), a.$watch("selected.type", function(a, b) {
+a !== b && d(a, b);
+}), a.refreshPorts = function(b) {
+if (/^\d+$/.test(b)) {
+var c = a.tcpPorts;
+b = parseInt(b, 10), b && !_.some(c, {
+containerPort:b
+}) && (c = [ {
+containerPort:b,
+protocol:"TCP"
+} ].concat(c)), a.portOptions = _.uniq(c);
+}
+};
 }
 };
 }), angular.module("openshiftConsole").directive("editCommand", [ "$filter", function(a) {
