@@ -55,8 +55,11 @@
       background-color: @list-view-expanded-bg;
     }
     .list-view-pf-checkbox {
-    border-right-color: @table-border-color;
+      border-right-color: @table-border-color;
     }
+  }
+  .list-group-item-heading {
+    white-space: normal;
   }
 }
 
@@ -74,6 +77,11 @@
   }
   .list-group-item-heading {
     font-size: @font-size-base;
+    small {
+      overflow: hidden;
+      text-overflow: ellipsis;
+      .text-muted();
+    }
   }
   .list-group-item-text {
     margin-bottom: 5px;
@@ -94,12 +102,6 @@
 .list-view-pf-main-info {
   padding-bottom: (@grid-gutter-width / 4);
   padding-top: (@grid-gutter-width / 4);
-}
-
-.list-view-pf .list-group-item-heading small {
-  overflow: hidden;
-  text-overflow: ellipsis;
-  .text-muted();
 }
 
 
