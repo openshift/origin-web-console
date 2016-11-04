@@ -4050,15 +4050,16 @@ copy-to-clipboard .input-group{max-width:300px}
 .list-group-item-expandable.expanded{border-color:#d1d1d1}
 .list-group-item-expandable.expanded,.list-group-item-expandable.expanded:hover{background-color:#f5f5f5}
 .list-group-item-expandable.expanded .list-view-pf-checkbox{border-right-color:#d1d1d1}
+.list-group-item-expandable .list-group-item-heading{white-space:normal}
 .list-group-item-text .fa,.list-group-item-text .pficon,.list-view-pf-additional-info .fa,.list-view-pf-additional-info .pficon{font-size:13px;margin-right:3px}
 .list-view-pf{margin-bottom:50px}
 h2+.list-view-pf{margin-top:20px}
 .list-view-pf .list-group-item-heading{font-size:13px}
+.list-view-pf .list-group-item-heading small{overflow:hidden;text-overflow:ellipsis;color:#9c9c9c}
 .list-view-pf .list-group-item-text{margin-bottom:5px}
 .list-view-pf-additional-info-item{display:inline-block;text-align:left}
 .list-view-pf-description{-ms-flex:1 0 55%;flex:1 0 55%}
 .list-view-pf-main-info{padding-bottom:10px;padding-top:10px}
-.list-view-pf .list-group-item-heading small{overflow:hidden;text-overflow:ellipsis;color:#9c9c9c}
 @media (min-width:992px){.data-toolbar .data-toolbar-filter{max-width:600px}
 .list-view-pf .list-group-item-heading,.list-view-pf .list-group-item-text{-ms-flex:1 0 auto;flex:1 0 auto;margin:0;padding:0 20px 0 0;width:50%}
 .list-view-pf-additional-info{width:40%}
