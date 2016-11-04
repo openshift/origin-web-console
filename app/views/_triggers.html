@@ -19,7 +19,7 @@
           </div>
           <div class="build-phase">
             <status-icon status="build.status.phase"></status-icon>
-            {{build.status.phase}}<span ng-if="build | isIncompleteBuild">. A new deployment will be created automatically once the build completes.</span>
+            {{build.status.phase}}<span ng-if="(build | isIncompleteBuild) && trigger.imageChangeParams.automatic">. A new deployment will be created automatically once the build completes.</span>
           </div>
           <relative-timestamp timestamp="build.metadata.creationTimestamp" class="build-timestamp"></relative-timestamp>
           <div ng-if="'builds/log' | canI : 'get'" class="build-links">

@@ -1765,10 +1765,10 @@ containers:[ g ]
 }
 }
 };
-return a.deploymentConfig.deployOnNewImage && h.spec.triggers.push({
+return h.spec.triggers.push({
 type:"ImageChange",
 imageChangeParams:{
-automatic:!0,
+automatic:!!a.deploymentConfig.deployOnNewImage,
 containerNames:[ a.name ],
 from:{
 kind:b.kind,
@@ -3794,8 +3794,26 @@ _.each(e, function(d) {
 h(d, c) && (b[d.id] = b[d.id] || [], b[d.id].push(a), f = !0);
 }), f || (b[""] = b[""] || [], b[""].push(a));
 }), b;
-}, k = [ "metadata.name", 'metadata.annotations["openshift.io/display-name"]' ], l = function(a, b) {
-return c.filterForKeywords(a, k, b);
+}, k = a("displayName"), l = function(a, b) {
+if (!b.length) return a;
+var c = [];
+return _.each(a, function(a) {
+var d = _.get(a, "metadata.name", ""), e = k(a, !0), f = _.indexBy(a.spec.tags, "name");
+_.each(b, function(b) {
+b.test(d) || e && b.test(e) || _.each(a.spec.tags, function(a) {
+var c = _.get(a, "annotations.tags", "");
+if (!/\bbuilder\b/.test(c)) return void delete f[a.name];
+if (!b.test(a.name)) {
+var d = _.get(a, "annotations.description");
+d && b.test(d) || delete f[a.name];
+}
+});
+});
+var g;
+_.isEmpty(f) || (g = angular.copy(a), g.status.tags = _.filter(g.status.tags, function(a) {
+return f[a.tag];
+}), c.push(g));
+}), c;
 }, m = [ "metadata.name", 'metadata.annotations["openshift.io/display-name"]', "metadata.annotations.description" ], n = function(a, b) {
 return c.filterForKeywords(a, m, b);
 };
@@ -4805,8 +4823,9 @@ error:_.template('The role "<%= roleName %>" was not removed from "<%= subjectNa
 },
 update:{
 subject:{
-success:_.template('The role "<%= roleName %>" was given to "<%= subjectName %>".'),
-error:_.template('The role "<%= roleName %>" was not given to "<%= subjectName %>".')
+success:_.template('The role "<%= roleName %>" was granted to "<%= subjectName %>".'),
+error:_.template('The role "<%= roleName %>" could not be granted to "<%= subjectName %>".'),
+exists:_.template('The role "<%= roleName %>" has already been granted to "<%= subjectName %>".')
 }
 },
 errorReason:_.template('Reason: "<%= httpErr %>"')
@@ -4893,7 +4912,7 @@ name:b.metadata.name
 },
 roleHelp:function(a) {
 if (a) {
-var b = "There is no additional information about this role.", c = _.get(a, "metadata.namespace"), d = _.get(a, "metadata.name"), e = c ? c + " / " + d + ": " :"";
+var b = "", c = _.get(a, "metadata.namespace"), d = _.get(a, "metadata.name"), e = c ? c + " / " + d + ": " :"";
 return a ? e + (q(a, "description") || b) :b;
 }
 }
@@ -4966,7 +4985,12 @@ roleRef:{
 name:c.metadata.name
 }
 });
-return g ? x(g, f, e) :w(c, f, e);
+g && _.some(g.subjects, {
+name:a
+}) ? t("rolebindingUpdate", "info", s.update.subject.exists({
+roleName:c.metadata.name,
+subjectName:a
+})) :g ? x(g, f, e) :w(c, f, e);
 }
 }), m.listAllRoles(n, {
 errorNotification:!1
@@ -6671,7 +6695,7 @@ cancelButtonText:"No"
 }
 });
 d.result.then(function() {
-a.strategyData[b] = a.strategyData[o(a.originalStrategy)];
+a.strategyData[b] = angular.copy(a.strategyData[o(a.originalStrategy)]);
 }, function() {
 a.strategyData[b] = {};
 });
@@ -7946,7 +7970,7 @@ link:"project/" + c.projectName
 title:"Storage",
 link:"project/" + c.projectName + "/browse/storage"
 }, {
-title:"Request Storage"
+title:"Create Storage"
 } ], h.get(b.project).then(_.spread(function(b, e) {
 function g() {
 var a = {
@@ -9881,7 +9905,7 @@ templateUrl:"views/directives/lifecycle-hook.html",
 controller:[ "$scope", function(a) {
 a.view = {
 isDisabled:!1
-}, a.view.hookExists = !_.isEmpty(a.hookParams), a.lifecycleHookFailurePolicyTypes = [ "Abort", "Retry", "Ignore" ], a.istagHook = {}, a.removedHookParams = {}, a.action = {
+}, a.lifecycleHookFailurePolicyTypes = [ "Abort", "Retry", "Ignore" ], a.istagHook = {}, a.removedHookParams = {}, a.action = {
 type:_.has(a.hookParams, "tagImages") ? "tagImages" :"execNewPod"
 };
 var b = {
@@ -9897,9 +9921,7 @@ var c = {};
 if (_.isEmpty(b)) c = {
 namespace:a.namespace,
 imageStream:"",
-tagObject:{
-tag:""
-}
+tagObject:null
 }; else {
 var d = b.name.split(":");
 c = {
@@ -9912,21 +9934,17 @@ tag:d[1]
 }
 return c;
 }, e = function() {
-if (a.hookParams.failurePolicy = _.get(a.hookParams, "failurePolicy", "Abort"), "execNewPod" === a.action.type) {
-if (_.has(a.removedHookParams, "execNewPod")) return void (a.hookParams.execNewPod = a.removedHookParams.execNewPod);
-a.hookParams.execNewPod = _.merge(b, a.hookParams.execNewPod);
-} else {
-if (_.has(a.removedHookParams, "tagImages")) return void (a.hookParams.tagImages = a.removedHookParams.tagImages);
-a.hookParams.tagImages = [ _.merge(c, a.hookParams.tagImages) ], a.istagHook = d(_.head(a.hookParams.tagImages).to);
-}
+"execNewPod" === a.action.type ? (_.has(a.removedHookParams, "execNewPod") ? a.hookParams.execNewPod = a.removedHookParams.execNewPod :a.hookParams.execNewPod = _.get(a, "hookParams.execNewPod", {}), a.hookParams.execNewPod = _.merge(angular.copy(b), a.hookParams.execNewPod)) :(_.has(a.removedHookParams, "tagImages") ? a.hookParams.tagImages = a.removedHookParams.tagImages :a.hookParams.tagImages = _.get(a, "hookParams.tagImages", [ {} ]), a.hookParams.tagImages = [ _.merge(angular.copy(c), a.hookParams.tagImages[0]) ], a.istagHook = d(_.head(a.hookParams.tagImages).to)), a.hookParams.failurePolicy = _.get(a.hookParams, "failurePolicy", "Abort");
 };
 a.addHook = function() {
-return _.isEmpty(a.removedHookParams) ? (a.hookParams = {}, e(), void (a.view.hookExists = !0)) :(a.hookParams = a.removedHookParams, void (a.view.hookExists = !0));
+return _.isEmpty(a.removedHookParams) ? (a.hookParams = {}, void e()) :void (a.hookParams = a.removedHookParams);
 }, a.removeHook = function() {
-a.removedHookParams = a.hookParams, delete a.hookParams, a.view.hookExists = !1, a.editForm.$setDirty();
-}, a.$watch("action.type", function() {
-"execNewPod" === a.action.type && _.has(a.hookParams, "tagImages") ? (a.removedHookParams.tagImages = a.hookParams.tagImages, delete a.hookParams.tagImages, e()) :"tagImages" === a.action.type && (_.has(a.hookParams, "execNewPod") ? (a.removedHookParams.execNewPod = a.hookParams.execNewPod, delete a.hookParams.execNewPod, e()) :a.istagHook = d(_.head(a.hookParams.tagImages).to));
-}), a.$watch("istagHook.tagObject.tag", function() {
+a.removedHookParams = a.hookParams, delete a.hookParams, a.editForm.$setDirty();
+};
+var f = function() {
+a.hookParams && ("execNewPod" === a.action.type ? (a.hookParams.tagImages && (a.removedHookParams.tagImages = a.hookParams.tagImages, delete a.hookParams.tagImages), e()) :"tagImages" === a.action.type && (a.hookParams.execNewPod && (a.removedHookParams.execNewPod = a.hookParams.execNewPod, delete a.hookParams.execNewPod), e()));
+};
+a.$watchGroup([ "hookParams", "action.type" ], f), a.$watch("istagHook.tagObject.tag", function() {
 _.has(a.istagHook, [ "tagObject", "tag" ]) && (_.set(a.hookParams, "tagImages[0].to.kind", "ImageStreamTag"), _.set(a.hookParams, "tagImages[0].to.namespace", a.istagHook.namespace), _.set(a.hookParams, "tagImages[0].to.name", a.istagHook.imageStream + ":" + a.istagHook.tagObject.tag));
 });
 } ]
@@ -9938,7 +9956,7 @@ scope:{
 key:"=?",
 value:"=?",
 keyHelp:"=?",
-valueHelp:"=?",
+valueHelp:"=",
 action:"&?",
 actionIcon:"=?",
 showAction:"=?"
@@ -10118,12 +10136,16 @@ f[a.name] = c(b.imageStream, a.name), a.from && "ImageStreamTag" === a.from.kind
 var g = function(a) {
 var b = _.get(f, [ a ], []);
 return _.includes(b, "builder");
-}, h = _.get(b, "imageStream.status.tags", []);
-b.tags = _.filter(h, function(a) {
+};
+b.$watch("imageStream.status.tags", function(a) {
+b.tags = _.filter(a, function(a) {
 return g(a.tag) && !d[a.tag];
 });
-var i = _.head(b.tags);
-_.set(b, "is.tag", i);
+var c = _.get(b, "is.tag.tag");
+c && _.some(b.tags, {
+tag:c
+}) || _.set(b, "is.tag", _.head(b.tags));
+});
 }
 };
 } ]), angular.module("openshiftConsole").directive("catalogTemplate", function() {
@@ -10305,8 +10327,7 @@ bucketDuration:o()
 return b.data && b.data.length ? (d = _.last(b.data), e.start = d.end) :e.start = c, j.pod ? _.assign(e, {
 namespace:j.pod.metadata.namespace,
 pod:j.pod,
-containerName:a.containerMetric ? j.options.selectedContainer.name :"pod",
-stacked:!0
+containerName:a.containerMetric ? j.options.selectedContainer.name :"pod"
 }) :null;
 }
 function q() {
@@ -11562,22 +11583,25 @@ isRequired:"="
 templateUrl:"views/directives/_edit-command.html",
 link:function(b) {
 b.id = _.uniqueId("edit-command-"), b.input = {};
-var c, d = a("isMultiline");
+var c, d, e = a("isMultiline");
 b.$watch("args", function() {
-return c ? void (c = !1) :void (_.isEmpty(b.args) || (b.input.args = _.map(b.args, function(a) {
+return d ? void (d = !1) :void (_.isEmpty(b.args) || (b.input.args = _.map(b.args, function(a) {
 return {
 value:a,
-multiline:d(a)
+multiline:e(a)
 };
-})));
-}, !0), b.$watch("input.args", function(a, d) {
-a !== d && (c = !0, b.args = _.map(b.input.args, function(a) {
+}), c = !0));
+}, !0), b.$watch("input.args", function(a, e) {
+if (a !== e) {
+if (c) return void (c = !1);
+d = !0, b.args = _.map(b.input.args, function(a) {
 return a.value;
-}), b.form.command.$setDirty());
+}), b.form.command.$setDirty();
+}
 }, !0), b.addArg = function() {
 b.nextArg && (b.input.args = b.input.args || [], b.input.args.push({
 value:b.nextArg,
-multiline:d(b.nextArg)
+multiline:e(b.nextArg)
 }), b.nextArg = "");
 }, b.removeArg = function(a) {
 b.input.args.splice(a, 1), _.isEmpty(b.input.args) && (b.input.args = null);
@@ -11901,6 +11925,9 @@ return _.get(e, [ "routesByService", a ]);
 e.displayRoute = i(a), e.primaryServiceRoutes = a, j();
 }), e.$watchGroup([ "service", "childServicesByParent" ], function() {
 e.service && (e.primaryService = e.service, e.childServices = _.get(e, [ "childServicesByParent", e.service.metadata.name ], []));
+}), e.$watchGroup([ "service", "childServices", "alternateServices" ], function() {
+var a = [ e.service ].concat(e.alternateServices).concat(e.childServices);
+e.allServicesInGroup = _.uniq(a, "metadata.uid");
 });
 }
 };
@@ -13432,6 +13459,14 @@ var g = Math.max(4, b - 10), h = e.lastIndexOf(/\s/, g);
 h !== -1 && (e = e.substring(0, h));
 }
 return e;
+};
+}).filter("middleEllipses", function() {
+return function(a, b, c) {
+if (b < 3) return a;
+if (a.length <= b) return a;
+c || (c = "...");
+var d = Math.floor((b - 1) / 2), e = a.slice(0, d), f = a.slice(a.length - d);
+return e + c + f;
 };
 }).filter("isNil", function() {
 return function(a) {

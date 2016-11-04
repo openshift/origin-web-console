@@ -5,7 +5,7 @@
     <div class="help-block" ng-switch-when="post">Post hooks execute after the deployment strategy completes.</div>
   </div>
 
-  <div class="gutter-top" ng-if="view.hookExists">
+  <div class="gutter-top" ng-if="hookParams">
     <fieldset ng-disabled="view.isDisabled">
 
       <div class="form-group">
@@ -127,7 +127,7 @@
   </div>
 
   <span>
-    <a href="" role="button" ng-if="!view.hookExists" ng-click="addHook()">Add {{type}} lifecycle hook</a>
-    <a href="" role="button" ng-if="view.hookExists" ng-click="removeHook()">Remove {{type}} lifecycle hook</a>
+    <a href="" role="button" ng-if="!hookParams" ng-click="addHook()">Add {{type}} lifecycle hook</a>
+    <a href="" role="button" ng-if="hookParams" ng-click="removeHook()">Remove {{type}} lifecycle hook</a>
   </span>
 </ng-form>

@@ -37,14 +37,19 @@ angular.module('openshiftConsole')
           return _.includes(tags, 'builder');
         };
 
-        var tags = _.get($scope, 'imageStream.status.tags', []);
-        $scope.tags = _.filter(tags, function(tag) {
-          return isBuilder(tag.tag) && !referenceTags[tag.tag];
-        });
+        // Watch status tags. Some tags might be removed from the list if they
+        // don't match the current filter.
+        $scope.$watch('imageStream.status.tags', function(tags) {
+          $scope.tags = _.filter(tags, function(tag) {
+            return isBuilder(tag.tag) && !referenceTags[tag.tag];
+          });
 
-        // Preselect the first tag value.
-        var firstTag = _.head($scope.tags);
-        _.set($scope, 'is.tag', firstTag);
+          var selected = _.get($scope, 'is.tag.tag');
+          if (!selected || !_.some($scope.tags, { tag: selected })) {
+            // Preselect the first tag value.
+            _.set($scope, 'is.tag', _.head($scope.tags));
+          }
+        });
       }
     };
   });

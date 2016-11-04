@@ -4,7 +4,7 @@
   <!-- Middle section -->
   <div class="middle-section">
     <div class="middle-container">
-      <div class="middle-header header-light">
+      <div class="middle-header header-toolbar">
         <div class="container-fluid">
           <div class="page-header page-header-bleed-right page-header-bleed-left">
             <h1>Storage</h1>
@@ -23,11 +23,11 @@
             <div class="col-md-12">
               <div class="section-header page-header-bleed-right page-header-bleed-left">
                 <div class="hidden-xs pull-right" ng-if="project && ('persistentvolumeclaims' | canI : 'create')">
-                  <a ng-href="project/{{project.metadata.name}}/create-pvc" class="btn btn-default">Request Storage</a>
+                  <a ng-href="project/{{project.metadata.name}}/create-pvc" class="btn btn-default">Create Storage</a>
                 </div>
                 <h2>Persistent Volume Claims</h2>
                 <div class="visible-xs-block mar-bottom-sm" ng-if="project && ('persistentvolumeclaims' | canI : 'create')">
-                  <a ng-href="project/{{project.metadata.name}}/create-pvc" class="btn btn-default">Request Storage</a>
+                  <a ng-href="project/{{project.metadata.name}}/create-pvc" class="btn btn-default">Create Storage</a>
                 </div>
               </div>
               <table class="table table-bordered table-hover table-mobile" ng-class="{ 'table-empty': (pvcs | hashSize) === 0 }">

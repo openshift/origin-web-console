@@ -182,7 +182,7 @@
                               </div>
 
                               <div class="form-group">
-                                <label for="maxUnavailable">Maximal Unavailable Pods</label>
+                                <label for="maxUnavailable">Maximum Number of Unavailable Pods</label>
                                 <div ng-class="{ 'has-error': form.maxUnavailable.$invalid && form.maxUnavailable.$touched }">
                                   <input id="maxUnavailable"
                                       type="text"
@@ -194,6 +194,9 @@
                                       class="form-control"
                                       aria-describedby="max-unavailable-help">
                                 </div>
+                                <div class="help-block">
+                                  The maximum number of pods that can be unavailable during the rolling deployment. This can be either a percentage (10%) or a whole number (1).
+                                </div>
                                 <div ng-if="form.maxUnavailable.$invalid && form.maxUnavailable.$touched && form.maxUnavailable.$error.pattern" class="has-error">
                                   <span class="help-block">
                                     Must be a non-negative whole number or percentage.
@@ -202,7 +205,7 @@
                               </div>
 
                               <div class="form-group">
-                                <label for="maxSurge">Maximal Surge Pods</label>
+                                <label for="maxSurge">Maximum Number of Surge Pods</label>
                                 <div ng-class="{ 'has-error': form.maxSurge.$invalid && form.maxSurge.$touched }">
                                   <input id="maxSurge"
                                       type="text"
@@ -213,6 +216,9 @@
                                       select-on-focus
                                       class="form-control"
                                       aria-describedby="maxSurge">
+                                </div>
+                                <div class="help-block">
+                                  The maximum number of pods that can be scheduled above the original number of pods while the rolling deployment is in progress. This can be either a percentage (10%) or a whole number (1).
                                 </div>
                                 <div ng-if="form.maxSurge.$invalid && form.maxSurge.$touched && form.maxSurge.$error.pattern" class="has-error">
                                   <span class="help-block">
@@ -257,7 +263,7 @@
                               </div>
                             </div>
                           </div>
-                          <div class="gutter-top">
+                          <div class="mar-top-lg">
                             <div ng-if="!view.advancedStrategyOptions">To set additional parameters or edit lifecycle hooks, view <a href="" ng-click="view.advancedStrategyOptions = true">advanced strategy options.</a></div>
                             <a ng-if="view.advancedStrategyOptions" href="" ng-click="view.advancedStrategyOptions = false">Hide strategy advanced options</a>
                           </div>
@@ -269,35 +275,32 @@
                         <h3 class="with-divider">Images</h3>
                         <dl class="dl-horizontal left">
 
-                          <div ng-repeat="(containerName, containerConfig) in containerConfigByName" class="gutter-bottom">
+                          <div ng-repeat="(containerName, containerConfig) in containerConfigByName">
                             <div class="container-name">
                               <h4>Container {{containerName}}</h4>
                             </div>
                             <div class="checkbox form-group">
                               <label>
                                 <input type="checkbox" ng-model="containerConfig.hasDeploymentTrigger">
-                                Automatically start new deployments when the image stream tag is updated.
+                                Automatically start new deployments when an image stream tag is updated.
                               </label>
                             </div>
-                            <div class="form-group" ng-if="containerConfig.hasDeploymentTrigger">
+                            <div ng-if="containerConfig.hasDeploymentTrigger">
                               <label class="required">Image Change Trigger</label>
                               <istag-select model="containerConfig.triggerData.istag" select-disabled="disableInputs" include-shared-namespace="true"></istag-select>
-                              <span class="help-block">New deployments will automatically start when the image stream tag is updated.</span>
                             </div>
 
-                            <div ng-if="!containerConfig.hasDeploymentTrigger">
+                            <div ng-if="!containerConfig.hasDeploymentTrigger" class="form-group">
                               <label for="imageName" class="required">Image Name</label>
-                              <div>
-                                <input class="form-control"
-                                  id="imageName"
-                                  name="imageName"
-                                  ng-model="containerConfig.image"
-                                  type="text"
-                                  autocorrect="off"
-                                  autocapitalize="off"
-                                  spellcheck="false"
-                                  required>
-                              </div>
+                              <input class="form-control"
+                                id="imageName"
+                                name="imageName"
+                                ng-model="containerConfig.image"
+                                type="text"
+                                autocorrect="off"
+                                autocapitalize="off"
+                                spellcheck="false"
+                                required>
                             </div>
                           </div>
 
@@ -309,7 +312,7 @@
                           </div>
 
                           <div ng-if="view.advancedImageOptions">
-                            <div class="gutter-top">
+                            <div class="mar-top-lg">
                               <osc-secrets model="secrets.pullSecrets"
                                           namespace="projectName"
                                           display-type="pull"
@@ -322,7 +325,7 @@
                             </div>
                           </div>
 
-                          <div class="gutter-top">
+                          <div class="mar-top-lg">
                             <div ng-if="!view.advancedImageOptions">To set secrets for pulling your images from private image registries, view <a href="" ng-click="view.advancedImageOptions = true">advanced image options.</a></div>
                             <a ng-if="view.advancedImageOptions" href="" ng-click="view.advancedImageOptions = false">Hide advanced image options</a>
                           </div>

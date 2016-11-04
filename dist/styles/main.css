@@ -3949,7 +3949,7 @@ a.disabled-link:active,a.disabled-link:focus,a.disabled-link:hover{color:#bbb;te
 .modal-debug-terminal .modal-footer{padding-top:0}
 .ace-inline{height:300px}
 #from-file .editor{height:350px}
-.edit-form .with-divider{border-top:1px solid rgba(0,0,0,.15);padding-top:21px;padding-bottom:10px}
+.edit-form .with-divider{border-top:1px solid rgba(0,0,0,.15);padding-top:21px;padding-bottom:10px;margin-top:10px}
 .edit-form .labels .form-group{width:44%}
 .edit-form .labels .form-group .form-control{width:100%}
 .edit-form .checkbox{margin:10px 0}
@@ -4858,7 +4858,7 @@ body,html{margin:0;padding:0}
 .console-os .middle .middle-section .middle-container{display:-webkit-flex;display:-moz-flex;display:-ms-flexbox;display:-ms-flex;display:flex;-webkit-flex-direction:column;-moz-flex-direction:column;-ms-flex-direction:column;flex-direction:column;height:100%}
 .console-os .middle .middle-section .middle-container .middle-header{-webkit-flex:0 0 auto;-moz-flex:0 0 auto;-ms-flex:0 0 auto;flex:0 0 auto}
 .console-os .middle .middle-section .middle-container .middle-content{-webkit-flex:1 1 auto;-moz-flex:1 1 auto;-ms-flex:1 1 auto;flex:1 1 auto;position:relative;width:100%}
-.header-light{background-color:#fff;border-bottom:1px solid #e4e4e4}
+.header-toolbar{background-color:#fff;border-bottom:1px solid #e4e4e4}
 .surface-shaded{background-color:#f2f2f2}
 @media (min-width:768px){.layout-pf-alt-fixed .nav-pf-vertical-alt{position:fixed;bottom:0;overflow:visible}
 .console-os .wrap{margin-top:-60px;padding-top:60px;-webkit-flex-direction:row;-moz-flex-direction:row;-ms-flex-direction:row;flex-direction:row;overflow:hidden}
@@ -5152,14 +5152,17 @@ kubernetes-topology-graph{height:700px}
 }
 .projects-bar .projects-sort{flex:1 0 auto}
 .projects-bar .projects-sort .form-group{margin:0}
+@media (max-width:479px){.projects-bar .projects-sort .dropdown-menu{left:auto;right:0}
+}
 .projects-bar .vertical-divider{border-left:1px solid #bbb;display:inline-block;height:27px;margin:0 7px;vertical-align:middle;width:1px}
-.membership .content-pane .col-heading .col-add-role h3,.membership .content-pane .form-new-role .col-roles{display:none}
 .projects-header{margin-top:21px}
 .projects-instructions-link{white-space:pre}
 .projects-list{border-top:0;box-shadow:0 3px 1px -2px rgba(0,0,0,.15),0 2px 2px 0 rgba(0,0,0,.1),0 1px 5px 0 rgba(0,0,0,.09);margin-bottom:20px}
 .projects-list .project-info:hover{background-color:#def3ff}
 .terminal-font,kubernetes-container-terminal .terminal{font-family:"Monospace Regular","DejaVu Sans Mono",Menlo,Monaco,Consolas,monospace;line-height:1em;font-size:12px}
 .key-value-editor .key-value-editor-header{margin-bottom:5px}
+.membership h1 .learn-more-inline{white-space:nowrap;margin-right:10px;margin-left:0px;display:inline-block}
+.membership .content-pane .col-heading .col-add-role h3,.membership .content-pane .form-new-role .col-roles{display:none}
 .membership .content-pane{max-width:1024px;margin-top:50px}
 .membership .content-pane .col-add-role{padding:10px 0;min-width:150px}
 .membership .content-pane .add-role-to{margin-left:-1px}
@@ -5167,7 +5170,7 @@ kubernetes-topology-graph{height:700px}
 .membership .content-pane .col-heading h3,.membership .content-pane .item-row h3{margin:0}
 .membership .content-pane .item-row{padding:5px 10px 5px 5px;margin-bottom:20px}
 .membership .content-pane .col-heading{margin-bottom:20px}
-.membership .content-pane .col-name{min-width:165px;padding:0 5px 10px 0;word-wrap:break-word}
+.membership .content-pane .col-name{min-width:165px;padding:0 5px 0 0;word-wrap:break-word}
 .membership .content-pane .col-name input{max-width:150px}
 .membership .content-pane .col-name .new-project{margin-top:2px}
 .membership .content-pane .content-serviceaccount .form-new-role .col-roles{display:block}

@@ -35,7 +35,7 @@
           </span>
         </dd>
         <div ng-if='build.spec.triggeredBy.length'>
-          <dt>Triggered by:</dt>
+          <dt>Triggered By:</dt>
           <dd>
             <div ng-repeat="trigger in build.spec.triggeredBy">
               <div ng-switch="trigger.message">
@@ -57,24 +57,24 @@
       </dl>
       <h3>Configuration <span class="small" ng-if="buildConfigName">created from <a href="{{build | configURLForResource}}">{{buildConfigName}}</a></span></h3>
       <dl class="dl-horizontal left">
-        <dt>Build strategy:</dt>
+        <dt>Build Strategy:</dt>
         <dd>{{build.spec.strategy.type | startCase}}</dd>
-        <dt ng-if-start="(build | buildStrategy).from">Builder image:</dt>
+        <dt ng-if-start="(build | buildStrategy).from">Builder Image:</dt>
         <dd ng-if-end class="truncate">{{(build | buildStrategy).from | imageObjectRef : build.metadata.namespace}}<span ng-if="!(build | buildStrategy).from"><em>none</em></span></dd>
-        <dt>Source type:</dt>
+        <dt>Source Type:</dt>
         <dd>{{build.spec.source.type}}</dd>
-        <dt ng-if-start="build.spec.source.git.uri">Source repo:</dt>
+        <dt ng-if-start="build.spec.source.git.uri">Source Repo:</dt>
         <dd ng-if-end><span class="word-break"><osc-git-link
                     uri="build.spec.source.git.uri"
                     ref="build.spec.source.git.ref"
                     context-dir="build.spec.source.contextDir">{{build.spec.source.git.uri}}</osc-git-link></span></dd>
-        <dt ng-if-start="build.spec.source.git.ref">Source ref:</dt>
+        <dt ng-if-start="build.spec.source.git.ref">Source Ref:</dt>
         <dd ng-if-end>{{build.spec.source.git.ref}}</dd>
-        <dt ng-if-start="build.spec.source.contextDir">Source context dir:</dt>
+        <dt ng-if-start="build.spec.source.contextDir">Source Context Dir:</dt>
         <dd ng-if-end>{{build.spec.source.contextDir}}</dd>
-        <dt ng-if-start="build.spec.output.to">Output image:</dt>
+        <dt ng-if-start="build.spec.output.to">Output Image:</dt>
         <dd ng-if-end>{{build.spec.output.to | imageObjectRef : build.metadata.namespace}}</dd>
-        <dt ng-if-start="build.spec.output.pushSecret.name">Push secret:</dt>
+        <dt ng-if-start="build.spec.output.pushSecret.name">Push Secret:</dt>
         <dd ng-if-end>{{build.spec.output.pushSecret.name}}</dd>
         <dt ng-if-start="build.spec.strategy.jenkinsPipelineStrategy.jenkinsfilePath">
           Jenkinsfile Path:

@@ -196,19 +196,19 @@
                             <h3>Configuration</h3>
                             <dl class="dl-horizontal left">
                               <div>
-                                <dt>Build strategy:</dt>
+                                <dt>Build Strategy:</dt>
                                 <dd>{{buildConfig.spec.strategy.type | startCase}}</dd>
                               </div>
                               <div ng-switch="buildConfig.spec.strategy.type">
                                 <div ng-switch-when="Source">
                                   <div ng-if="buildConfig.spec.strategy.sourceStrategy.from">
-                                    <dt>Builder image:</dt>
+                                    <dt>Builder Image:</dt>
                                     <dd>{{buildConfig.spec.strategy.sourceStrategy.from | imageObjectRef : buildConfig.metadata.namespace}}</dd>
                                   </div>
                                 </div>
                                 <div ng-switch-when="Docker">
                                   <div ng-if="buildConfig.spec.strategy.dockerStrategy.from">
-                                    <dt>Builder image stream:</dt>
+                                    <dt>Builder Image Stream:</dt>
                                     <dd>{{buildConfig.spec.strategy.dockerStrategy.from | imageObjectRef : buildConfig.metadata.namespace}}</dd>
                                   </div>
                                   <div ng-if="buildConfig.spec.source.dockerfile">
@@ -232,7 +232,7 @@
                                 </div>
                                 <div ng-switch-when="Custom">
                                   <div ng-if="buildConfig.spec.strategy.customStrategy.from">
-                                    <dt>Builder image stream:</dt>
+                                    <dt>Builder Image Stream:</dt>
                                     <dd>{{buildConfig.spec.strategy.customStrategy.from | imageObjectRef : buildConfig.metadata.namespace}}
                                     </dd>
                                   </div>
@@ -240,14 +240,14 @@
                               </div>
                               <div ng-if="buildConfig.spec.source">
                                 <div ng-if="buildConfig.spec.source.type == 'Git'">
-                                  <dt>Source repo:</dt>
+                                  <dt>Source Repo:</dt>
                                   <dd><span class="word-break"><osc-git-link
                                             uri="buildConfig.spec.source.git.uri"
                                             ref="buildConfig.spec.source.git.ref"
                                             context-dir="buildConfig.spec.source.contextDir">{{buildConfig.spec.source.git.uri}}</osc-git-link></span></dd>
-                                  <dt ng-if="buildConfig.spec.source.git.ref">Source ref:</dt>
+                                  <dt ng-if="buildConfig.spec.source.git.ref">Source Ref:</dt>
                                   <dd ng-if="buildConfig.spec.source.git.ref">{{buildConfig.spec.source.git.ref}}</dd>
-                                  <dt ng-if="buildConfig.spec.source.contextDir">Source context dir:</dt>
+                                  <dt ng-if="buildConfig.spec.source.contextDir">Source Context Dir:</dt>
                                   <dd ng-if="buildConfig.spec.source.contextDir">{{buildConfig.spec.source.contextDir}}</dd>
                                 </div>
                                 <div ng-if="buildConfig | isJenkinsPipelineStrategy">
@@ -290,7 +290,7 @@
                                   </dd>
                                 </div>
                                 <div ng-if="buildConfig.spec.source.images" class="image-sources">
-                                  <dt>Image sources:</dt>
+                                  <dt>Image Sources:</dt>
                                   <dd></dd>
                                   <div ng-repeat="imageSource in imageSources" class="image-source-item">
                                     <h4>{{imageSource.from | imageObjectRef : buildConfig.metadata.namespace}}</h4>
@@ -306,7 +306,7 @@
                                 </div>
                               </div>
                               <div ng-if="buildConfig.spec.output.to">
-                                <dt>Output to:</dt>
+                                <dt>Output To:</dt>
                                 <dd>{{buildConfig.spec.output.to | imageObjectRef : buildConfig.metadata.namespace}}</dd>
                               </div>
                               <div class="run-policy">
@@ -331,7 +331,7 @@
                             <div ng-repeat="trigger in buildConfig.spec.triggers">
                               <div ng-switch="trigger.type">
                                 <div ng-switch-when="GitHub">
-                                    <dt>GitHub webhook URL:
+                                    <dt>GitHub Webhook URL:
                                       <a href="{{'webhooks' | helpLink}}" target="_blank"><span class="learn-more-block">Learn more
                                       <i class="fa fa-external-link"></i></span></a>
                                     </dt>
@@ -340,7 +340,7 @@
                                     </dd>
                                 </div>
                                 <div ng-switch-when="Generic">
-                                    <dt>Generic webhook URL:
+                                    <dt>Generic Webhook URL:
                                       <a href="{{'webhooks' | helpLink}}" target="_blank"><span class="learn-more-block">Learn more <i class="fa fa-external-link"></i></span></a>
                                     </dt>
                                     <dd>
@@ -349,18 +349,18 @@
                                 </div>
                                 <div ng-switch-when="ImageChange">
                                   <dt>
-                                    New image for:
+                                    New Image For:
                                   </dt>
                                   <dd>
                                     {{(trigger.imageChange.from || (buildConfig | buildStrategy).from) | imageObjectRef : buildConfig.metadata.namespace}}
                                   </dd>
                                 </div>
                                 <div ng-switch-when="ConfigChange">
-                                  <dt>Config change for:</dt>
+                                  <dt>Config Change For:</dt>
                                   <dd>Build config {{buildConfig.metadata.name}}</dd>
                                 </div>
                                 <div ng-switch-default>
-                                  <dt>Other trigger:</dt>
+                                  <dt>Other Trigger:</dt>
                                   <dd>{{trigger.type}}</dd>
                                 </div>
                               </div>

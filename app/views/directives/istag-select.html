@@ -27,7 +27,7 @@
         <label class="sr-only">Tag</label>
         <ui-select required ng-model="istag.tagObject" ng-disabled="!istag.imageStream || selectDisabled">
           <ui-select-match placeholder="Tag">{{$select.selected.tag}}</ui-select-match>
-          <ui-select-choices group-by="groupTags" repeat="statusTag in (isByNamespace[istag.namespace][istag.imageStream].status.tags | filter : { tag: $select.search })" refresh="getTags($select.search)" refresh-delay="0">
+          <ui-select-choices group-by="groupTags" repeat="statusTag in (isByNamespace[istag.namespace][istag.imageStream].status.tags | filter : { tag: $select.search })" refresh="getTags($select.search)" refresh-delay="200">
             <div ng-bind-html="statusTag.tag | highlight : $select.search"></div>
           </ui-select-choices>
         </ui-select>
