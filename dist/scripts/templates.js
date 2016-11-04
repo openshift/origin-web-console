@@ -8578,7 +8578,7 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "<ui-select-match placeholder=\"Select a project\">\n" +
     "<span ng-bind=\"newBinding.namespace\"></span>\n" +
     "</ui-select-match>\n" +
-    "<ui-select-choices repeat=\"projectName in projects | filter: $select.search\">\n" +
+    "<ui-select-choices repeat=\"projectName in projects | filter: $select.search\" refresh=\"refreshProjects($select.search)\" refresh-delay=\"200\">\n" +
     "<div>{{projectName}}</div>\n" +
     "</ui-select-choices>\n" +
     "</ui-select>\n" +
@@ -8591,7 +8591,7 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "<ui-select-match placeholder=\"Select a project\">\n" +
     "<span ng-bind=\"newBinding.namespace\"></span>\n" +
     "</ui-select-match>\n" +
-    "<ui-select-choices repeat=\"projectName in projects | filter: $select.search\">\n" +
+    "<ui-select-choices repeat=\"projectName in projects | filter: $select.search\" refresh=\"refreshProjects($select.search)\" refresh-delay=\"200\">\n" +
     "<div>{{projectName}}</div>\n" +
     "</ui-select-choices>\n" +
     "</ui-select>\n" +
