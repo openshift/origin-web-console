@@ -4659,16 +4659,14 @@ kind:"Builds"
 }, {
 label:"Deployments",
 kind:"ReplicationControllers"
-}, {
-kind:"All"
 } ];
-var q = "All";
-a.kind && _.some(c.kinds, {
+var q = {
+kind:"All"
+};
+c.kinds.push(q), c.kindSelector = {
+selected:_.find(c.kinds, {
 kind:a.kind
-}) && (q = a.kind), c.kindSelector = {
-selected:{
-kind:q
-}
+}) || q
 }, c.logOptions = {
 pods:{},
 replicationControllers:{},
