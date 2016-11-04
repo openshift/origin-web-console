@@ -3752,7 +3752,7 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "</div>\n" +
     "<div ng-if=\"!filterActive\">\n" +
     "<div ng-repeat=\"category in categories\" ng-if=\"hasContent[category.id]\">\n" +
-    "<h2 class=\"h3\" ng-if=\"category.label && category.items.length > 1\">{{category.label}}</h2>\n" +
+    "<h2 class=\"h3\" ng-if=\"category.label\">{{category.label}}</h2>\n" +
     "<div class=\"row tile-row\" ng-class=\"{ 'mar-top-xl': !category.label || category.items.length < 2 }\">\n" +
     "<div ng-repeat=\"item in category.items\" ng-if=\"countByCategory[item.id]\" class=\"col-xxs-12 col-xs-6 col-sm-4 col-md-4 col-lg-3\">\n" +
     "<div class=\"tile tile-click\" ng-class=\"{ 'tile-sans-icon' : !item.iconClass, 'tile-sans-description' : !item.description }\">\n" +
