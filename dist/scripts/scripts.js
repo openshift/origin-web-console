@@ -3605,10 +3605,10 @@ return a ? "Pod" === a.kind ? i(a, b) :_.has(a, "spec.template") ? i(a.spec.temp
 }, k = b("humanizeQuotaResource"), l = b("humanizeKind"), m = function(a, b, c) {
 var d = a.status.total || a.status;
 if (f(d.hard[c]) <= f(d.used[c])) {
-var e;
-return e = "Pod" === b.kind ? "You will not be able to create the " + l(b.kind) + " '" + b.metadata.name + "'." :"You can still create " + l(b.kind) + " '" + b.metadata.name + "' but no pods will be created until resources are freed.", {
+var e, g;
+return e = "Pod" === b.kind ? "You will not be able to create the " + l(b.kind) + " '" + b.metadata.name + "'." :"You can still create " + l(b.kind) + " '" + b.metadata.name + "' but no pods will be created until resources are freed.", g = "pods" === c ? "You are at your quota for pods." :"You are at your quota for " + k(c) + " on pods.", {
 type:"Pod" === b.kind ? "error" :"warning",
-message:"You are at your quota for " + k(c) + " on pods.",
+message:g,
 details:e,
 links:[ {
 href:"project/" + a.metadata.namespace + "/quota",
