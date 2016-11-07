@@ -10278,7 +10278,7 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "<div class=\"list-view-pf-description project-names\">\n" +
     "<div class=\"list-group-item-heading project-name-item\">\n" +
     "<h2 class=\"h1\">\n" +
-    "<a class=\"tile-target\" ng-href=\"project/{{project.metadata.name}}\">{{project | displayName}}</a>\n" +
+    "<a class=\"tile-target\" ng-href=\"project/{{project.metadata.name}}\" title=\"{{project | displayName}}\">{{project | displayName}}</a>\n" +
     "<span ng-if=\"project.status.phase != 'Active'\" data-toggle=\"tooltip\" title=\"This project has been marked for deletion.\" class=\"pficon pficon-warning-triangle-o\"></span>\n" +
     "</h2>\n" +
     "<small>\n" +
