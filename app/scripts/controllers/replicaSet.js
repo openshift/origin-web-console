@@ -20,6 +20,7 @@ angular.module('openshiftConsole')
                         DeploymentsService,
                         ImageStreamResolver,
                         Navigate,
+                        Logger,
                         keyValueEditorUtils,
                         kind) {
     var hasDC = false;

@@ -12,6 +12,7 @@ angular.module('openshiftConsole')
                                          $routeParams,
                                          $timeout,
                                          $uibModal,
+                                         Logger,
                                          DataService,
                                          ImageStreamResolver,
                                          MetricsService,
