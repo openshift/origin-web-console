@@ -4715,7 +4715,7 @@ td.visible-print,th.visible-print{display:table-cell!important}
 }
 ::-webkit-scrollbar-corner{background:0 0}
 ::-webkit-scrollbar{height:10px;overflow:visible;width:14px}
-.events-sidebar .right-content .event .event-details,.events-sidebar .right-content .event .event-details .event-message,.events-sidebar .right-content .event .event-details .event-object,.events-sidebar .right-content .event .event-details .event-reason{overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.events-sidebar .right-content .event .event-details,.events-sidebar .right-content .event .event-details .event-message,.events-sidebar .right-content .event .event-details .event-object,.events-sidebar .right-content .event .event-details .event-reason{overflow:hidden;white-space:nowrap;text-overflow:ellipsis}
 ::-webkit-scrollbar-thumb{background-color:rgba(0,0,0,.08);background-clip:padding-box;border:solid transparent;border-width:1px;min-height:28px;max-height:60px;padding:100px 0 0;-webkit-box-shadow:inset 1px 1px 0 rgba(0,0,0,.1),inset 0 -1px 0 rgba(0,0,0,.07);box-shadow:inset 1px 1px 0 rgba(0,0,0,.1),inset 0 -1px 0 rgba(0,0,0,.07)}
 ::-webkit-scrollbar-thumb:active,::-webkit-scrollbar-thumb:hover{background-color:rgba(0,0,0,.18)}
 ::-webkit-scrollbar-track{background-clip:padding-box;background-color:rgba(0,0,0,.03)}
@@ -5131,14 +5131,17 @@ kubernetes-topology-graph{height:700px}
 .project-actions .project-action-item{margin-left:12px}
 @media (min-width:768px){.project-actions .project-action-item{margin-left:17px}
 }
-.project-info.list-group-item{border-bottom:0;border-color:#e0e0e0;padding:10px 20px}
 @media (min-width:992px){.project-actions{margin-top:0}
-.project-additional-info.list-view-pf-additional-info{width:60%}
-.project-name-item.list-group-item-heading{white-space:normal;width:40%}
+.project-additional-info.list-view-pf-additional-info{width:55%}
+}
+.project-info.list-group-item{border-bottom:0;border-color:#e0e0e0;padding:10px 20px}
+.project-info .list-view-pf-description{width:100%}
+.project-info .list-view-pf-main-info{display:block}
+@media (min-width:992px){.project-name-item.list-group-item-heading{white-space:normal;width:45%}
 }
 .project-name-item.list-group-item-heading .h1{margin-bottom:0;margin-top:0}
 .project-name-item.list-group-item-heading .h1 [data-toggle=tooltip]{cursor:help;margin-left:5px}
-.project-name-item.list-group-item-heading .h1 a{line-height:initial}
+.project-name-item.list-group-item-heading .h1 a{display:block;overflow:hidden;line-height:initial;text-overflow:ellipsis}
 .project-name-item.list-group-item-heading p{margin-bottom:0;margin-top:5px}
 .projects-bar{display:flex;flex-direction:column}
 @media (min-width:650px){.projects-bar{flex-direction:row;justify-content:space-between}
