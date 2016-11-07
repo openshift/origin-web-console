@@ -36,17 +36,15 @@
   &:before {
     display: none;
   }
-  [class^="col"] {
+  [class^="col"], .card-pf {
     display: flex;
-  }
-  .card-pf {
-    display: flex;
-    flex-basis: 100%; // IE 11 overflow bug fix
     flex-direction: column;
+  }
+  .card-pf, .card-pf-body {
     flex-grow: 1;
   }
-  .card-pf-body {
-    flex-grow: 1;
+  .card-pf-body p {
+    .word-break();
   }
   .card-pf-body-with-version {
     display: flex;
@@ -59,7 +57,9 @@
     }
   }
   .card-pf-title {
+    line-height: 1.3;
     margin: 0;
-    .word-break-all();
+    overflow: hidden;
+    text-overflow: ellipsis;
   }
 }
