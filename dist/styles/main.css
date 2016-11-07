@@ -5129,6 +5129,8 @@ kubernetes-topology-graph{height:700px}
 .col-md-12>.alerts:first-child{margin-top:20px}
 .project-actions{margin:20px 0 0}
 .project-actions .project-action-item{margin-left:12px}
+@media (min-width:768px){.project-actions .project-action-item{margin-left:17px}
+}
 .project-info.list-group-item{border-bottom:0;border-color:#e0e0e0;padding:10px 20px}
 @media (min-width:992px){.project-actions{margin-top:0}
 .project-additional-info.list-view-pf-additional-info{width:60%}
