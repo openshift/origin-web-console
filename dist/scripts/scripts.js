@@ -3831,16 +3831,27 @@ text:""
 };
 var o, p = [ "metadata.name", 'metadata.annotations["openshift.io/display-name"]', 'metadata.annotations["openshift.io/description"]', 'metadata.annotations["openshift.io/requester"]' ], q = function() {
 a.projects = i.filterForKeywords(l, p, n);
-}, r = function() {
+}, r = b("displayName"), s = function() {
 var b = _.get(a, "sortConfig.currentField.id");
 o !== b && (a.sortConfig.isAscending = "metadata.creationTimestamp" !== b);
 var c = function(a) {
-var c = _.get(a, b) || _.get(a, "metadata.name", "");
-return c.toLowerCase();
-};
-l = _.sortByOrder(k, [ c ], [ a.sortConfig.isAscending ? "asc" :"desc" ]), o = b;
-}, s = function() {
-r(), q();
+return r(a).toLowerCase();
+}, d = a.sortConfig.isAscending ? "asc" :"desc";
+switch (b) {
+case 'metadata.annotations["openshift.io/display-name"]':
+l = _.sortByOrder(k, [ c ], [ d ]);
+break;
+
+case 'metadata.annotations["openshift.io/requester"]':
+l = _.sortByOrder(k, [ b, c ], [ d, "asc" ]);
+break;
+
+default:
+l = _.sortByOrder(k, [ b ], [ d ]);
+}
+o = b;
+}, t = function() {
+s(), q();
 };
 a.sortConfig = {
 fields:[ {
@@ -3861,7 +3872,7 @@ title:"Creation Date",
 sortType:"alpha"
 } ],
 isAscending:!0,
-onSortChange:s
+onSortChange:t
 }, f.getAlerts().forEach(function(b) {
 a.alerts[b.name] = b.data;
 }), f.clearAlerts(), a.$watch("search.text", _.debounce(function(b) {
@@ -3870,7 +3881,7 @@ n = i.generateKeywords(b), a.$apply(q);
 maxWait:250
 })), g.withUser().then(function() {
 m.push(h.watch("projects", a, function(b) {
-k = _.toArray(b.by("metadata.name")), a.loading = !1, a.showGetStarted = _.isEmpty(k), s();
+k = _.toArray(b.by("metadata.name")), a.loading = !1, a.showGetStarted = _.isEmpty(k), t();
 }));
 }), h.get("projectrequests", null, a, {
 errorNotification:!1
