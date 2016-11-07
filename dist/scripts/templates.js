@@ -3752,7 +3752,7 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "</div>\n" +
     "<div ng-if=\"!filterActive\">\n" +
     "<div ng-repeat=\"category in categories\" ng-if=\"hasContent[category.id]\">\n" +
-    "<h2 class=\"h3\" ng-if=\"category.label && category.items.length > 1\">{{category.label}}</h2>\n" +
+    "<h2 class=\"h3\" ng-if=\"category.label\">{{category.label}}</h2>\n" +
     "<div class=\"row tile-row\" ng-class=\"{ 'mar-top-xl': !category.label || category.items.length < 2 }\">\n" +
     "<div ng-repeat=\"item in category.items\" ng-if=\"countByCategory[item.id]\" class=\"col-xxs-12 col-xs-6 col-sm-4 col-md-4 col-lg-3\">\n" +
     "<div class=\"tile tile-click\" ng-class=\"{ 'tile-sans-icon' : !item.iconClass, 'tile-sans-description' : !item.description }\">\n" +
@@ -4311,11 +4311,11 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "Launch the first build when the build configuration is created\n" +
     "</label>\n" +
     "</div>\n" +
-    "<h3>Environment Variables (Build and Runtime) <span class=\"help action-inline\">\n" +
+    "<h3>Environment Variables <span class=\"appended-icon\">(Build and Runtime) <span class=\"help action-inline\">\n" +
     "<a href data-toggle=\"tooltip\" data-original-title=\"Environment variables are used to configure and pass information to running containers.  These environment variables will be available during your build and at runtime.\">\n" +
     "<i class=\"pficon pficon-help\"></i>\n" +
     "</a>\n" +
-    "</span></h3>\n" +
+    "</span></span></h3>\n" +
     "<key-value-editor entries=\"buildConfigEnvVars\" key-placeholder=\"name\" value-placeholder=\"value\" key-validator=\"[a-zA-Z][a-zA-Z0-9_]*\" key-validator-error-tooltip=\"A valid environment variable name is an alphanumeric (a-z and 0-9) string beginning with a letter that may contain underscores.\" add-row-link=\"Add environment variable\"></key-value-editor>\n" +
     "</osc-form-section>\n" +
     "\n" +
@@ -4336,11 +4336,11 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "</label>\n" +
     "</div>\n" +
     "<div>\n" +
-    "<h3>Environment Variables (Runtime only) <span class=\"help action-inline\">\n" +
+    "<h3>Environment Variables <span class=\"appended-icon\">(Runtime only) <span class=\"help action-inline\">\n" +
     "<a href=\"\" data-toggle=\"tooltip\" data-original-title=\"Environment variables are used to configure and pass information to running containers.  These environment variables will only be available at runtime.\">\n" +
     "<i class=\"pficon pficon-help\"></i>\n" +
     "</a>\n" +
-    "</span></h3>\n" +
+    "</span></span></h3>\n" +
     "<p ng-show=\"DCEnvVarsFromImage.length\">\n" +
     "<a href=\"\" ng-click=\"showDCEnvs = (!showDCEnvs)\">\n" +
     "{{showDCEnvs ? 'Hide' : 'Show'}} image environment variables\n" +
@@ -4926,14 +4926,13 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
   $templateCache.put('views/directives/_edit-probe.html',
     "<ng-form name=\"form\">\n" +
     "<div class=\"form-group\">\n" +
-    "<label ng-attr-for=\"{{id}}-type\" class=\"required\">Type</label>\n" +
-    "<select ng-model=\"type\" ng-attr-id=\"{{id}}-type\" required class=\"form-control\">\n" +
-    "<option value=\"httpGet\">HTTP</option>\n" +
-    "<option value=\"exec\">Container Command</option>\n" +
-    "<option value=\"tcpSocket\">TCP Socket</option>\n" +
-    "</select>\n" +
+    "<label class=\"required\">Type</label>\n" +
+    "<ui-select ng-model=\"selected.type\" required search-enabled=\"false\">\n" +
+    "<ui-select-match>{{$select.selected.label}}</ui-select-match>\n" +
+    "<ui-select-choices repeat=\"item.id as item in types\">{{item.label}}</ui-select-choices>\n" +
+    "</ui-select>\n" +
     "</div>\n" +
-    "<fieldset ng-if=\"type === 'httpGet'\">\n" +
+    "<fieldset ng-if=\"selected.type === 'httpGet'\">\n" +
     "<div class=\"form-group\">\n" +
     "<label ng-attr-for=\"{{id}}-path\">Path</label>\n" +
     "<div>\n" +
@@ -4941,23 +4940,24 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "</div>\n" +
     "</div>\n" +
     "<div class=\"form-group\">\n" +
-    "<label ng-attr-for=\"{{id}}-http-port\" class=\"required\">Port</label>\n" +
-    "<select id=\"{{id}}-http-port\" ng-model=\"probe.httpGet.port\" ng-options=\"port.containerPort as port.containerPort for port in tcpPorts\" required class=\"form-control\">\n" +
-    "</select>\n" +
-    "<div ng-if=\"!tcpPorts.length\" class=\"has-error\">\n" +
-    "<span class=\"help-block\">Container has no TCP ports.</span>\n" +
-    "</div>\n" +
+    "<label class=\"required\">Port</label>\n" +
+    "<ui-select ng-model=\"probe.httpGet.port\" required>\n" +
+    "<ui-select-match>{{$select.selected.containerPort}}</ui-select-match>\n" +
+    "<ui-select-choices repeat=\"port.containerPort as port in portOptions\" refresh=\"refreshPorts($select.search, $select.selected)\" refresh-delay=\"200\">{{port.containerPort}}</ui-select-choices>\n" +
+    "</ui-select>\n" +
     "</div>\n" +
     "</fieldset>\n" +
-    "<fieldset ng-if=\"type === 'exec'\">\n" +
+    "<fieldset ng-if=\"selected.type === 'exec'\">\n" +
     "<label class=\"required\">Command</label>\n" +
     "<edit-command args=\"probe.exec.command\" is-required=\"true\"></edit-command>\n" +
     "</fieldset>\n" +
-    "<fieldset ng-if=\"type === 'tcpSocket'\">\n" +
+    "<fieldset ng-if=\"selected.type === 'tcpSocket'\">\n" +
     "<div class=\"form-group\">\n" +
-    "<label ng-attr-for=\"{{id}}-tcp-port\" class=\"required\">Port</label>\n" +
-    "<select id=\"{{id}}-tcp-port\" ng-model=\"probe.tcpSocket.port\" ng-options=\"port.containerPort as port.containerPort for port in tcpPorts\" required class=\"form-control\">\n" +
-    "</select>\n" +
+    "<label class=\"required\">Port</label>\n" +
+    "<ui-select ng-model=\"probe.tcpSocket.port\" required>\n" +
+    "<ui-select-match>{{$select.selected.containerPort}}</ui-select-match>\n" +
+    "<ui-select-choices repeat=\"port.containerPort as port in portOptions\" refresh=\"refreshPorts($select.search, $select.selected)\" refresh-delay=\"200\">{{port.containerPort}}</ui-select-choices>\n" +
+    "</ui-select>\n" +
     "</div>\n" +
     "</fieldset>\n" +
     "<div class=\"form-group\">\n" +
@@ -5203,7 +5203,7 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
   $templateCache.put('views/directives/create-secret.html',
     "<alerts alerts=\"alerts\"></alerts>\n" +
     "<ng-form name=\"secretForm\">\n" +
-    "<div for=\"secretType\" ng-if=\"!type\" class=\"form-group\">\n" +
+    "<div for=\"secretType\" ng-if=\"!type\" class=\"form-group mar-top-lg\">\n" +
     "<label>Secret Type</label>\n" +
     "<ui-select required ng-model=\"newSecret.type\" search-enabled=\"false\" ng-change=\"newSecret.authType = secretAuthTypeMap[newSecret.type].authTypes[0].id\">\n" +
     "<ui-select-match>{{$select.selected | upperFirst}} Secret</ui-select-match>\n" +
@@ -6498,7 +6498,7 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
 
 
   $templateCache.put('views/directives/osc-form-section.html',
-    "<div class=\"flow\">\n" +
+    "<div class=\"flow h2-help-block\">\n" +
     "<div class=\"flow-block\">\n" +
     "<h2>{{header}}</h2>\n" +
     "</div>\n" +
@@ -8503,17 +8503,15 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "</p>\n" +
     "</div>\n" +
     "<div column class=\"content-pane\" ng-class=\"'content-' + subjectKind.name.toLowerCase()\">\n" +
-    "<div class=\"col-heading item-row\" row mobile=\"column\" tablet=\"column\" flex-collapse-fix>\n" +
-    "<div row flex flex-collapse-fix>\n" +
-    "<div class=\"col-name\" conceal=\"mobile\">\n" +
+    "<div class=\"col-heading item-row\" row mobile=\"column\" flex-collapse-fix>\n" +
+    "<div class=\"col-name\" flex conceal=\"mobile\" ng-class=\"{ 'half-width': !mode.edit }\">\n" +
     "<h3>Name</h3>\n" +
     "</div>\n" +
     "<div class=\"col-roles\" flex conceal=\"mobile\">\n" +
     "<h3>Roles</h3>\n" +
     "</div>\n" +
-    "</div>\n" +
-    "<div class=\"col-add-role\" flex-collapse-fix>\n" +
-    "<h3 ng-show=\"mode.edit\">\n" +
+    "<div ng-if=\"mode.edit\" class=\"col-add-role\" conceal=\"tablet\" flex-collapse-fix>\n" +
+    "<h3>\n" +
     "Add another role\n" +
     "</h3>\n" +
     "</div>\n" +
@@ -8524,7 +8522,7 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "</p>\n" +
     "</div>\n" +
     "<div ng-repeat=\"subject in subjectKind.subjects\" class=\"item-row highlight-hover\" row mobile=\"column\">\n" +
-    "<div class=\"col-name\" row cross-axis=\"center\">\n" +
+    "<div class=\"col-name\" row flex cross-axis=\"center\" ng-class=\"{ 'half-width': !mode.edit }\">\n" +
     "<a ng-if=\"subject.namespace\" target=\"_blank\" ng-href=\"project/{{project.metadata.name}}/browse/other?kind=ServiceAccount\">\n" +
     "<span>\n" +
     "{{subject.namespace}} /\n" +
@@ -8546,8 +8544,8 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "<div class=\"col-roles\" row tablet=\"column\" flex wrap axis=\"start\">\n" +
     "<action-chip ng-repeat=\"role in subject.roles\" key=\"role.metadata.name\" key-help=\"roleHelp(role)\" show-action=\"mode.edit\" action=\"confirmRemove(subject.name, subjectKind.name, role.metadata.name)\" action-title=\"remove role {{role}} from {{subject.name}}\"></action-chip>\n" +
     "</div>\n" +
-    "<div class=\"col-add-role\">\n" +
-    "<div ng-show=\"mode.edit\" row>\n" +
+    "<div ng-if=\"mode.edit\" class=\"col-add-role\">\n" +
+    "<div row>\n" +
     "<ui-select ng-if=\"filteredRoles.length\" ng-model=\"subject.newRole\" theme=\"bootstrap\" search-enabled=\"true\" title=\"Select a new role for {{subjectKind.name}}\" class=\"select-role\" flex>\n" +
     "<ui-select-match placeholder=\"Select a role\">\n" +
     "<span ng-bind=\"subject.newRole.metadata.name\"></span>\n" +
@@ -8578,7 +8576,7 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "<ui-select-match placeholder=\"Select a project\">\n" +
     "<span ng-bind=\"newBinding.namespace\"></span>\n" +
     "</ui-select-match>\n" +
-    "<ui-select-choices repeat=\"projectName in projects | filter: $select.search\">\n" +
+    "<ui-select-choices repeat=\"projectName in projects | filter: $select.search\" refresh=\"refreshProjects($select.search)\" refresh-delay=\"200\">\n" +
     "<div>{{projectName}}</div>\n" +
     "</ui-select-choices>\n" +
     "</ui-select>\n" +
@@ -8591,7 +8589,7 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "<ui-select-match placeholder=\"Select a project\">\n" +
     "<span ng-bind=\"newBinding.namespace\"></span>\n" +
     "</ui-select-match>\n" +
-    "<ui-select-choices repeat=\"projectName in projects | filter: $select.search\">\n" +
+    "<ui-select-choices repeat=\"projectName in projects | filter: $select.search\" refresh=\"refreshProjects($select.search)\" refresh-delay=\"200\">\n" +
     "<div>{{projectName}}</div>\n" +
     "</ui-select-choices>\n" +
     "</ui-select>\n" +
@@ -9215,7 +9213,7 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "<div class=\"col-md-2 template-name gutter-top hidden-sm hidden-xs\">\n" +
     "<span class=\"fa fa-cubes\"></span>\n" +
     "</div>\n" +
-    "<div class=\"col-md-9\">\n" +
+    "<div class=\"col-md-8\">\n" +
     "<fieldset ng-disabled=\"disableInputs\">\n" +
     "<osc-image-summary resource=\"template\"></osc-image-summary>\n" +
     "<div ng-if=\"templateImages.length\" class=\"images\">\n" +
@@ -10258,14 +10256,20 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "<div class=\"list-group list-view-pf projects-list\">\n" +
     "<div ng-repeat=\"project in projects\" class=\"list-group-item project-info tile-click\">\n" +
     "<div row class=\"list-view-pf-actions project-actions\" ng-if=\"project.status.phase == 'Active'\">\n" +
-    "<span class=\"fa-lg project-action-item\">\n" +
+    "<span class=\"fa-lg project-action-item\" title=\"View and Edit Membership\">\n" +
+    "<a ng-href=\"project/{{project.metadata.name}}/membership\" class=\"action-button\">\n" +
+    "<i class=\"pficon pficon-users\" aria-hidden=\"true\"></i>\n" +
+    "<span class=\"sr-only\">View and Edit Membership</span>\n" +
+    "</a>\n" +
+    "</span>\n" +
+    "<span class=\"fa-lg project-action-item\" title=\"Edit Display Name and Description\">\n" +
     "\n" +
     "<a ng-href=\"project/{{project.metadata.name}}/edit?then=./\" class=\"action-button\">\n" +
     "<i class=\"fa fa-pencil\" aria-hidden=\"true\"></i>\n" +
-    "<span class=\"sr-only\">Edit Project</span>\n" +
+    "<span class=\"sr-only\">Edit Display Name and Description</span>\n" +
     "</a>\n" +
     "</span>\n" +
-    "<span>\n" +
+    "<span title=\"Delete Project\">\n" +
     "<delete-link class=\"fa-lg project-action-item\" kind=\"Project\" resource-name=\"{{project.metadata.name}}\" project-name=\"{{project.metadata.name}}\" display-name=\"{{(project | displayName)}}\" type-name-to-confirm=\"true\" stay-on-current-page=\"true\" alerts=\"alerts\" button-only>\n" +
     "</delete-link>\n" +
     "</span>\n" +
@@ -10297,10 +10301,6 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "<span ng-if=\"!newProjectMessage\">A cluster admin can create a project for you by running the command\n" +
     "<code>oadm new-project &lt;projectname&gt; --admin={{user.metadata.name || '&lt;YourUsername&gt;'}}</code></span>\n" +
     "<span ng-if=\"newProjectMessage\" ng-bind-html=\"newProjectMessage | linky : '_blank'\" class=\"projects-instructions-link\"></span>\n" +
-    "</p>\n" +
-    "<p class=\"projects-instructions\">\n" +
-    "A project admin can add you to a role on a project by running the command\n" +
-    "<code>oc policy add-role-to-user &lt;role&gt; {{user.metadata.name || '&lt;YourUsername&gt;'}} -n &lt;projectname&gt;</code>\n" +
     "</p>\n" +
     "</div>\n" +
     "</div>\n" +
