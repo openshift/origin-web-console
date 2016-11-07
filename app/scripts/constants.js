@@ -175,7 +175,11 @@ window.OPENSHIFT_CONSTANTS = {
             },
             {
               label: "Secrets",
-              href: "/browse/secrets"
+              href: "/browse/secrets",
+              canI: {
+                resource: 'secrets',
+                verb: 'list'
+              }
             },
             {
               label: "Other Resources",
