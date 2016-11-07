@@ -5973,7 +5973,7 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "<div row>\n" +
     "<div class=\"navbar-header\">\n" +
     "\n" +
-    "<div row flex class=\"navbar-flex-btn toggle-menu\">\n" +
+    "<div row class=\"navbar-flex-btn toggle-menu\">\n" +
     "<button type=\"button\" class=\"navbar-toggle project-action-btn ng-isolate-scope\" data-toggle=\"collapse\" data-target=\".navbar-collapse-2\">\n" +
     "<span class=\"sr-only\">Toggle navigation</span>\n" +
     "<span class=\"icon-bar\"></span>\n" +
@@ -6002,7 +6002,7 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "<div class=\"nav navbar-project-menu\">\n" +
     "<div row>\n" +
     "\n" +
-    "<div row flex class=\"navbar-flex-btn toggle-menu\">\n" +
+    "<div row class=\"navbar-flex-btn toggle-menu\">\n" +
     "<button type=\"button\" class=\"navbar-toggle project-action-btn ng-isolate-scope\" data-toggle=\"collapse\" data-target=\".navbar-collapse-1\">\n" +
     "<span class=\"sr-only\">Toggle navigation</span>\n" +
     "<span class=\"icon-bar\"></span>\n" +
