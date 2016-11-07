@@ -62,50 +62,47 @@
                       <dd>{{service.spec.type}}</dd>
                       <dt>IP:</dt>
                       <dd>{{service.spec.clusterIP}}</dd>
+                      <dt>Hostname:</dt>
+                      <dd>
+                        {{service.metadata.name}}.{{service.metadata.namespace}}.svc
+                        <span data-toggle="popover" data-trigger="hover" data-content="{{'This address is only resolvable from within the cluster.'}}" style="cursor: help; padding-left: 5px;">
+                          <span class="pficon pficon-info" aria-hidden="true" data-toggle="tooltip" style="cursor: help;"></span>
+                        </span>
+                      </dd>
+                      <dt ng-if-start="service.spec.externalName">External Hostname:</dt>
+                      <dd ng-if-end>{{service.spec.externalName}}</dd>
                       <dt>Session affinity:</dt>
                       <dd>{{service.spec.sessionAffinity}}</dd>
-                      <dt ng-if="resource.status.loadBalancer.ingress.length">Ingress points</dt>
-                      <dd ng-if="resource.status.loadBalancer.ingress.length">
-                        <span ng-repeat="ingress in resource.status.loadBalancer.ingress"
+                      <dt ng-if-start="service.status.loadBalancer.ingress.length">Ingress Points:</dt>
+                      <dd ng-if-end>
+                        <span ng-repeat="ingress in service.status.loadBalancer.ingress"
                           >{{ingress.ip}}<span ng-if="!$last">, </span></span>
                       </dd>
-                      <dt>Routes:</dt>
-                      <dd>
-                        <span ng-if="!routesForService.length">
+                      <dt ng-if-start="service.spec.externalIPs.length">External IPs:</dt>
+                      <dd ng-if-end>
+                        <span ng-repeat="externalIP in service.spec.externalIPs"
+                          >{{externalIP}}<span ng-if="!$last">, </span></span>
+                      </dd>
+                      <dt ng-if-start="(routesForService | hashSize) == 0">Routes:</dt>
+                      <dd ng-if-end>
+                        <span>
                           <a ng-href="project/{{project.metadata.name}}/create-route?service={{service.metadata.name}}"  ng-if="'routes' | canI : 'create'">Create route</a>
-                        </span>
-                        <span ng-repeat="route in routesForService">
-                            <span ng-if="route | isWebRoute"><a ng-href="{{route | routeWebURL}}">{{route | routeLabel}}</a></span>
-                            <span ng-if="!(route | isWebRoute)">{{route | routeLabel}}</span>
-                            <span ng-show="!$last">, </span>
+                          <span ng-if="!('routes' | canI : 'create')"><em>None</em></span>
                         </span>
                       </dd>
                     </dl>
-                    <div ng-if="service.spec.ports.length" class="table-responsive">
-                      <table class="table table-bordered small service-table">
-                        <thead>
-                          <tr>
-                            <th>Node Port</th>
-                            <th role="presentation"></th>
-                            <th>Service Port</th>
-                            <th role="presentation"></th>
-                            <th>Target Port</th>
-                          </tr>
-                        </thead>
-                        <tbody>
-                          <tr ng-repeat="portMapping in service.spec.ports | orderBy:'port'">
-                            <td>
-                              <span ng-if="portMapping.nodePort">{{portMapping.nodePort}}</span>
-                              <span ng-if="!portMapping.nodePort" class="text-muted">none</span>
-                            </td>
-                            <td role="presentation" class="text-muted">&#8594;</td>
-                            <td>{{portMapping.port}}/{{portMapping.protocol}}
-                                <span ng-if="portMapping.name">({{portMapping.name}})</span></td>
-                            <td role="presentation" class="text-muted">&#8594;</td>
-                            <td>{{portMapping.targetPort}}</td>
-                          </tr>
-                        </tbody>
-                      </table>
+                    <h3>
+                      Traffic
+                    </h3>
+                    <div class="table-responsive">
+                      <traffic-table ports-by-route="portsByRoute" routes="routesForService" services="services" show-node-ports="showNodePorts" custom-name-header="'Route'"></traffic-table>
+                    </div>
+                    <div style="margin:-10px 0 10px 0;">
+                      Learn more about <a ng-href="{{'route-types' | helpLink}}" target="_blank">routes</a> and <a ng-href="{{'services' | helpLink}}" target="_blank">services</a>
+                    </div>
+                    <h3>Pods</h3>
+                    <div class="table-responsive">
+                      <pods-table pods="podsForService" active-pods="podsWithEndpoints" custom-name-header="'Pod'" pod-failure-reasons="podFailureReasons"></pods-table>
                     </div>
                     <annotations annotations="service.metadata.annotations"></annotations>
                   </div>

@@ -1,19 +1,20 @@
 <table class="table table-bordered table-hover table-mobile">
   <thead>
     <tr>
-      <th>Name</th>
+      <th>{{customNameHeader || 'Name'}}</th>
       <th>Status</th>
       <th>Containers Ready</th>
       <th>Container Restarts</th>
       <th>Age</th>
+      <th ng-if="activePods">Receiving Traffic</th>
     </tr>
   </thead>
   <tbody ng-if="(pods | hashSize) == 0">
-    <tr><td colspan="5"><em>{{emptyMessage || 'No pods to show'}}</em></td></tr>
+    <tr><td colspan="6"><em>{{emptyMessage || 'No pods to show'}}</em></td></tr>
   </tbody>
   <tbody ng-repeat="pod in pods | orderObjectsByDate : true">
     <tr>
-      <td data-title="Name">
+      <td data-title="{{customNameHeader || 'Name'}}">
         <a href="{{pod | navigateResourceURL}}">{{pod.metadata.name}}</a>
         <span ng-if="pod | isDebugPod">
           <i class="fa fa-bug info-popover"
@@ -33,6 +34,18 @@
       <td data-title="Ready">{{pod | numContainersReady}}/{{pod.spec.containers.length}}</td>
       <td data-title="Restarts">{{pod | numContainerRestarts}}</td>
       <td data-title="Age"><span am-time-ago="pod.metadata.creationTimestamp" am-without-suffix="true"></span></td>
+      <td ng-if="activePods" data-title="Receiving Traffic">
+        <span ng-if="activePods[pod.metadata.name]">
+          <span class="fa fa-fw fa-check text-success" aria-hidden="true"></span>
+          <span class="sr-only">Yes</span>
+        </span>
+        <span ng-if="!activePods[pod.metadata.name]">
+           <span data-toggle="popover" data-trigger="hover" data-content="{{podFailureReasons[pod.status.phase] || 'This pod has no endpoints and is not accepting traffic.'}}" style="cursor: help;">
+            <span class="fa fa-fw fa-times text-danger" aria-hidden="true" data-toggle="tooltip" style="cursor: help;"></span>
+            <span class="sr-only">No</span>
+          </span>
+        </span>
+      </td>
     </tr>
   </tbody>
 </table>
