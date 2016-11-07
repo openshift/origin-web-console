@@ -123,20 +123,20 @@
         }
       }
     }
+
+    // FIXME (bpeterse): to update in layout.attrs & eliminate the workaround here
+    // fix for collapse of flex items in IE
+    // https://github.com/philipwalton/flexbugs#1-minimum-content-sizing-of-flex-items-not-honored
+    [flex-collapse-fix],
+    [flex], // fixes ie flex-direction: column collapse issue
+    .item-row,
+    .col-heading,
+    .col-name,
+    .col-roles,
+    .col-add-role {
+      flex-shrink: 0;
+      flex-basis: auto;
+    }
+
   }
-}
-
-
-// FIXME (bpeterse): to update in layout.attrs & eliminate the workaround here
-// fix for collapse of flex items in IE
-// https://github.com/philipwalton/flexbugs#1-minimum-content-sizing-of-flex-items-not-honored
-[flex-collapse-fix],
-[flex], // fixes ie flex-direction: column collapse issue
-.item-row,
-.col-heading,
-.col-name,
-.col-roles,
-.col-add-role {
-  flex-shrink: 0;
-  flex-basis: auto;
 }
