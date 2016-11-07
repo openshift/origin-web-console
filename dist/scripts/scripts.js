@@ -112,7 +112,11 @@ verb:"list"
 }
 }, {
 label:"Secrets",
-href:"/browse/secrets"
+href:"/browse/secrets",
+canI:{
+resource:"secrets",
+verb:"list"
+}
 }, {
 label:"Other Resources",
 href:"/browse/other"
