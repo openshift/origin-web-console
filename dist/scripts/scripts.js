@@ -6634,13 +6634,15 @@ imageStream:h[0],
 tagObject:{
 tag:h[1]
 }
-}
+},
+automatic:_.get(c, "imageChangeParams.automatic", !1)
 };
 } else f = {
 istag:{
 namespace:"",
 imageStream:""
-}
+},
+automatic:!0
 };
 _.set(d, [ b.name, "triggerData" ], f);
 }), d;
@@ -6711,18 +6713,18 @@ command:[],
 environment:[]
 }), a.strategyParamsPropertyName = b;
 };
-var r = function(a, b, c) {
-var d = {
+var r = function(a, b, c, d) {
+var e = {
 kind:"ImageStreamTag",
 namespace:b.namespace,
 name:b.imageStream + ":" + b.tagObject.tag
 };
-return c ? c.imageChangeParams.from = d :c = {
+return c ? (c.imageChangeParams.from = e, c.imageChangeParams.automatic = d) :c = {
 type:"ImageChange",
 imageChangeParams:{
-automatic:!0,
+automatic:d,
 containerNames:[ a ],
-from:d
+from:e
 }
 }, c;
 }, s = function() {
@@ -6730,7 +6732,7 @@ var b = _.reject(a.updatedDeploymentConfig.spec.triggers, function(a) {
 return "ImageChange" === a.type || "ConfigChange" === a.type;
 });
 return _.each(a.containerConfigByName, function(c, d) {
-if (c.hasDeploymentTrigger) b.push(r(d, c.triggerData.istag, c.triggerData.data)); else {
+if (c.hasDeploymentTrigger) b.push(r(d, c.triggerData.istag, c.triggerData.data, c.triggerData.automatic)); else {
 var e = _.find(a.updatedDeploymentConfig.spec.template.spec.containers, {
 name:d
 });

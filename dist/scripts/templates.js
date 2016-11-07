@@ -8011,12 +8011,18 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "<div class=\"checkbox form-group\">\n" +
     "<label>\n" +
     "<input type=\"checkbox\" ng-model=\"containerConfig.hasDeploymentTrigger\">\n" +
-    "Automatically start new deployments when an image stream tag is updated.\n" +
+    "Deploy images from an image stream tag\n" +
     "</label>\n" +
     "</div>\n" +
     "<div ng-if=\"containerConfig.hasDeploymentTrigger\">\n" +
-    "<label class=\"required\">Image Change Trigger</label>\n" +
+    "<label class=\"required\">Image Stream Tag</label>\n" +
     "<istag-select model=\"containerConfig.triggerData.istag\" select-disabled=\"disableInputs\" include-shared-namespace=\"true\"></istag-select>\n" +
+    "<div class=\"checkbox form-group\">\n" +
+    "<label>\n" +
+    "<input type=\"checkbox\" ng-model=\"containerConfig.triggerData.automatic\">\n" +
+    "Automatically start a new deployment when the image changes\n" +
+    "</label>\n" +
+    "</div>\n" +
     "</div>\n" +
     "<div ng-if=\"!containerConfig.hasDeploymentTrigger\" class=\"form-group\">\n" +
     "<label for=\"imageName\" class=\"required\">Image Name</label>\n" +
@@ -8026,7 +8032,7 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "<div class=\"checkbox form-group\">\n" +
     "<label>\n" +
     "<input type=\"checkbox\" ng-model=\"triggers.hasConfigTrigger\">\n" +
-    "Automatically start new deployment when the deployment configuration changes\n" +
+    "Automatically start a new deployment when the deployment configuration changes\n" +
     "</label>\n" +
     "</div>\n" +
     "<div ng-if=\"view.advancedImageOptions\">\n" +
