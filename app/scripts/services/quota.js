@@ -4,7 +4,8 @@ angular.module("openshiftConsole")
   .factory("QuotaService", function(APIService,
                                     $filter,
                                     $q,
-                                    DataService) {
+                                    DataService,
+                                    Logger) {
 
     var isNil = $filter('isNil');
     var usageValue = $filter('usageValue');

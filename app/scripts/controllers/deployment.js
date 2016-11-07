@@ -17,6 +17,7 @@ angular.module('openshiftConsole')
                         HPAService,
                         ImageStreamResolver,
                         Navigate,
+                        Logger,
                         ProjectsService,
                         keyValueEditorUtils) {
     var imageStreamImageRefByDockerReference = {}; // lets us determine if a particular container's docker image reference belongs to an imageStream
