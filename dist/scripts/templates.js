@@ -10256,14 +10256,20 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "<div class=\"list-group list-view-pf projects-list\">\n" +
     "<div ng-repeat=\"project in projects\" class=\"list-group-item project-info tile-click\">\n" +
     "<div row class=\"list-view-pf-actions project-actions\" ng-if=\"project.status.phase == 'Active'\">\n" +
-    "<span class=\"fa-lg project-action-item\">\n" +
+    "<span class=\"fa-lg project-action-item\" title=\"View and Edit Membership\">\n" +
+    "<a ng-href=\"project/{{project.metadata.name}}/membership\" class=\"action-button\">\n" +
+    "<i class=\"pficon pficon-users\" aria-hidden=\"true\"></i>\n" +
+    "<span class=\"sr-only\">View and Edit Membership</span>\n" +
+    "</a>\n" +
+    "</span>\n" +
+    "<span class=\"fa-lg project-action-item\" title=\"Edit Display Name and Description\">\n" +
     "\n" +
     "<a ng-href=\"project/{{project.metadata.name}}/edit?then=./\" class=\"action-button\">\n" +
     "<i class=\"fa fa-pencil\" aria-hidden=\"true\"></i>\n" +
-    "<span class=\"sr-only\">Edit Project</span>\n" +
+    "<span class=\"sr-only\">Edit Display Name and Description</span>\n" +
     "</a>\n" +
     "</span>\n" +
-    "<span>\n" +
+    "<span title=\"Delete Project\">\n" +
     "<delete-link class=\"fa-lg project-action-item\" kind=\"Project\" resource-name=\"{{project.metadata.name}}\" project-name=\"{{project.metadata.name}}\" display-name=\"{{(project | displayName)}}\" type-name-to-confirm=\"true\" stay-on-current-page=\"true\" alerts=\"alerts\" button-only>\n" +
     "</delete-link>\n" +
     "</span>\n" +
@@ -10295,10 +10301,6 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "<span ng-if=\"!newProjectMessage\">A cluster admin can create a project for you by running the command\n" +
     "<code>oadm new-project &lt;projectname&gt; --admin={{user.metadata.name || '&lt;YourUsername&gt;'}}</code></span>\n" +
     "<span ng-if=\"newProjectMessage\" ng-bind-html=\"newProjectMessage | linky : '_blank'\" class=\"projects-instructions-link\"></span>\n" +
-    "</p>\n" +
-    "<p class=\"projects-instructions\">\n" +
-    "A project admin can add you to a role on a project by running the command\n" +
-    "<code>oc policy add-role-to-user &lt;role&gt; {{user.metadata.name || '&lt;YourUsername&gt;'}} -n &lt;projectname&gt;</code>\n" +
     "</p>\n" +
     "</div>\n" +
     "</div>\n" +
