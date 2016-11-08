@@ -5197,8 +5197,8 @@ kubernetes-topology-graph{height:700px}
 .membership .content-pane .col-heading .col-add-role a{display:block;padding-left:10px}
 .membership .content-pane .col-name{width:30%}
 .membership .content-pane .col-name input{max-width:175px}
+.membership .col-add-role,.membership .col-heading,.membership .col-name,.membership .col-roles,.membership .item-row,.membership [flex-collapse-fix],.membership [flex]{flex-shrink:0;flex-basis:auto}
 }
-.col-add-role,.col-heading,.col-name,.col-roles,.item-row,[flex-collapse-fix],[flex]{flex-shrink:0;flex-basis:auto}
 .action-chip{margin:0 5px 2px 0;font-size:12px;display:flex;flex-direction:row}
 .action-chip .item{padding:.2em .6em .3em}
 .action-chip .item:first-child{border-top-left-radius:2px;border-bottom-left-radius:2px}
