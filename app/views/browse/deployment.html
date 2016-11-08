@@ -20,13 +20,13 @@
                    class="dropdown-toggle actions-dropdown-kebab visible-xs-inline"
                    data-toggle="dropdown"><i class="fa fa-ellipsis-v"></i><span class="sr-only">Actions</span></a>
                 <ul class="dropdown-menu actions action-button">
-                  <li ng-if="!deployment.spec.paused && !updatingPausedState && { group: 'extensions', resource: 'deployments' } | canI : 'update'">
+                  <li ng-if="!deployment.spec.paused && !updatingPausedState && ({ group: 'extensions', resource: 'deployments' } | canI : 'update')">
                     <a href="" ng-click="setPaused(true)" role="button">Pause Deployment</a>
                   </li>
-                  <li ng-if="deployment.spec.paused && !updatingPausedState && { group: 'extensions', resource: 'deployments' } | canI : 'update'">
+                  <li ng-if="deployment.spec.paused && !updatingPausedState && ({ group: 'extensions', resource: 'deployments' } | canI : 'update')">
                     <a href="" ng-click="setPaused(false)" role="button">Resume Deployment</a>
                   </li>
-                  <li class="divider" ng-if="!updatingPausedState && { group: 'extensions', resource: 'deployments' } | canI : 'update'"></li>
+                  <li class="divider" ng-if="!updatingPausedState && ({ group: 'extensions', resource: 'deployments' } | canI : 'update')"></li>
                   <li ng-if="{ group: 'extensions', resource: 'deployments' } | canI : 'update'">
                     <a ng-href="project/{{project.metadata.name}}/attach-pvc?kind=Deployment&name={{deployment.metadata.name}}&group=extensions"
                        role="button">Add Storage</a>
@@ -84,7 +84,7 @@
                       <strong>{{deployment.metadata.name}} is paused.</strong>
                       This will pause any in-progress rollouts and stop new
                       rollouts from running until the deployment is resumed.
-                      <span ng-if="!updatingPausedState && { group: 'extensions', resource: 'deployments' } | canI : 'update'">
+                      <span ng-if="!updatingPausedState && ({ group: 'extensions', resource: 'deployments' } | canI : 'update')">
                         <a href="" ng-click="setPaused(false)" role="button">Resume deployment</a>
                       </span>
                     </div>

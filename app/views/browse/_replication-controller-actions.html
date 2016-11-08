@@ -1,4 +1,4 @@
-<div ng-if="(('replicationControllers' | canIDoAny) || (!deploymentConfigName && !autoscalers.length && { group: 'extensions', resource: 'horizontalpodautoscalers' } | canI : 'create'))" class="pull-right dropdown">
+<div ng-if="(('replicationControllers' | canIDoAny) || (!deploymentConfigName && !autoscalers.length && ({ group: 'extensions', resource: 'horizontalpodautoscalers' } | canI : 'create')))" class="pull-right dropdown">
   <button type="button" class="dropdown-toggle btn btn-default actions-dropdown-btn hidden-xs" data-toggle="dropdown">
     Actions
     <span class="caret"></span>
@@ -11,7 +11,7 @@
       <a ng-href="project/{{project.metadata.name}}/attach-pvc?kind=DeploymentConfig&name={{deploymentConfigName}}"
          role="button">Add Storage</a>
     </li>
-    <li ng-if="!deploymentConfigName && 'replicationcontrollers' | canI : 'update'">
+    <li ng-if="!deploymentConfigName && ('replicationcontrollers' | canI : 'update')">
       <a ng-href="project/{{project.metadata.name}}/attach-pvc?kind=ReplicationController&name={{replicaSet.metadata.name}}"
          role="button">Add Storage</a>
     </li>
