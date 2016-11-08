@@ -63,7 +63,7 @@ angular.module('openshiftConsole')
       name: $routeParams.name,
       kind: $routeParams.kind,
       namespace: $routeParams.project,
-      subpage: 'Attach Storage',
+      subpage: 'Add Storage',
       includeProject: true
     });
 
@@ -99,7 +99,7 @@ angular.module('openshiftConsole')
               $scope.breadcrumbs = BreadcrumbsService.getBreadcrumbs({
                 object: resource,
                 project: project,
-                subpage: 'Attach Storage',
+                subpage: 'Add Storage',
                 includeProject: true
               });
             },
