@@ -7834,7 +7834,7 @@ individual:{}
 name:b.name,
 kind:b.kind,
 namespace:b.project,
-subpage:"Attach Storage",
+subpage:"Add Storage",
 includeProject:!0
 }), i.get(b.project).then(_.spread(function(e, h) {
 c.project = e, c.breadcrumbs[0].title = a("displayName")(e);
@@ -7851,7 +7851,7 @@ c.attach.containers.individual[a.name] = !0;
 }), c.attach.resource = a, c.breadcrumbs = f.getBreadcrumbs({
 object:a,
 project:e,
-subpage:"Attach Storage",
+subpage:"Add Storage",
 includeProject:!0
 });
 }, function(a) {

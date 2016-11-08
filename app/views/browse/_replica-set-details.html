@@ -91,9 +91,16 @@
       <h4>Volumes</h4>
       <div ng-if="!replicaSet.spec.template.spec.volumes.length">
         <div ng-if="kind === 'ReplicaSet'">
-          <a ng-if="resource | canI : 'update'"
-             ng-href="project/{{project.metadata.name}}/attach-pvc?kind=ReplicaSet&name={{replicaSet.metadata.name}}&group=extensions">Add storage</a>
-          <span ng-if="!(resource | canI : 'update')">none</span>
+          <div ng-if="deployment">
+            <a ng-if="{ group: 'extensions', resource: 'deployments' } | canI : 'update'"
+              ng-href="project/{{project.metadata.name}}/attach-pvc?kind=Deployment&name={{deployment.metadata.name}}&group=extensions">Add storage</a>
+            <span ng-if="!({ group: 'extensions', resource: 'deployments' } | canI : 'update')">none</span>
+          </div>
+          <div ng-if="!deployment">
+            <a ng-if="resource | canI : 'update'"
+               ng-href="project/{{project.metadata.name}}/attach-pvc?kind=ReplicaSet&name={{replicaSet.metadata.name}}&group=extensions">Add storage</a>
+            <span ng-if="!(resource | canI : 'update')">none</span>
+          </div>
         </div>
         <div ng-if="kind === 'ReplicationController'">
           <div ng-if="deploymentConfigName">
