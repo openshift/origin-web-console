@@ -42,10 +42,10 @@
                       <a ng-href="{{deploymentConfig | editResourceURL}}" role="button">Edit</a>
                     </li>
                     <li class="divider" ng-if="'deploymentconfigs' | canI : 'update'"></li>
-                    <li ng-if="!deploymentConfig.spec.paused && !updatingPausedState && 'deploymentconfigs' | canI : 'update'">
+                    <li ng-if="!deploymentConfig.spec.paused && !updatingPausedState && ('deploymentconfigs' | canI : 'update')">
                       <a href="" ng-click="setPaused(true)" role="button">Pause Deployment</a>
                     </li>
-                    <li ng-if="deploymentConfig.spec.paused && !updatingPausedState && 'deploymentconfigs' | canI : 'update'">
+                    <li ng-if="deploymentConfig.spec.paused && !updatingPausedState && ('deploymentconfigs' | canI : 'update')">
                       <a href="" ng-click="setPaused(false)" role="button">Resume Deployment</a>
                     </li>
                     <li ng-if="'deploymentconfigs' | canI : 'update'">
@@ -105,7 +105,7 @@
                         <strong>{{deploymentConfig.metadata.name}} is paused.</strong>
                         This will stop any new deployments and deployment triggers from running
                         until resumed.
-                        <span ng-if="!updatingPausedState && 'deploymentconfigs' | canI : 'update'">
+                        <span ng-if="!updatingPausedState && ('deploymentconfigs' | canI : 'update')">
                           <a href="" ng-click="setPaused(false)" role="button">Resume deployment</a>
                         </span>
                       </div>
@@ -175,7 +175,7 @@
 
                             <!-- If the CPU request is missing, add an action to set one. -->
                             <a ng-href="project/{{projectName}}/set-limits?kind=DeploymentConfig&name={{deploymentConfig.metadata.name}}"
-                               ng-if="warning.reason === 'NoCPURequest' && 'deploymentconfigs' | canI : 'update'"
+                               ng-if="warning.reason === 'NoCPURequest' && ('deploymentconfigs' | canI : 'update')"
                                role="button">Edit resource
                               <span ng-if="!('cpu' | isRequestCalculated : project)">requests and</span> limits</a>
                           </div>
