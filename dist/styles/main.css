@@ -4468,7 +4468,7 @@ ul.messenger-theme-flat .messenger-message.alert-info .messenger-message-inner:b
 .overview .no-child-services-message h1:first-child,.overview .no-child-services-message h2:first-child,.overview .no-child-services-message h3:first-child,.overview .no-child-services-message h4:first-child,.overview .no-child-services-message h5:first-child,.overview .no-deployments-message h1:first-child,.overview .no-deployments-message h2:first-child,.overview .no-deployments-message h3:first-child,.overview .no-deployments-message h4:first-child,.overview .no-deployments-message h5:first-child{margin:5px 0 15px}
 .overview .no-child-services-message h2:first-child,.overview .no-deployments-message h2:first-child{margin-top:15px}
 .overview .no-deployments-message{-webkit-flex:1 0 0%;-moz-flex:1 0 0%;-ms-flex:1 0 0%;flex:1 0 0%}
-.overview .no-child-services-message{display:none;padding-top:35px}
+.overview .no-child-services-message{display:none}
 @media (min-width:750px){.overview .no-child-services-message h2,.overview .no-deployments-message h2{margin-top:0}
 .overview .no-child-services-message{display:-webkit-flex;display:-moz-flex;display:-ms-flexbox;display:-ms-flex;display:flex;-webkit-flex:1 0 0%;-moz-flex:1 0 0%;-ms-flex:1 0 0%;flex:1 0 0%;-webkit-flex-direction:column;-moz-flex-direction:column;-ms-flex-direction:column;flex-direction:column}
 }
