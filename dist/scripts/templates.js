@@ -5979,7 +5979,7 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "<div row>\n" +
     "<div class=\"navbar-header\">\n" +
     "\n" +
-    "<div row flex class=\"navbar-flex-btn toggle-menu\">\n" +
+    "<div row class=\"navbar-flex-btn toggle-menu\">\n" +
     "<button type=\"button\" class=\"navbar-toggle project-action-btn ng-isolate-scope\" data-toggle=\"collapse\" data-target=\".navbar-collapse-2\">\n" +
     "<span class=\"sr-only\">Toggle navigation</span>\n" +
     "<span class=\"icon-bar\"></span>\n" +
@@ -6008,7 +6008,7 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "<div class=\"nav navbar-project-menu\">\n" +
     "<div row>\n" +
     "\n" +
-    "<div row flex class=\"navbar-flex-btn toggle-menu\">\n" +
+    "<div row class=\"navbar-flex-btn toggle-menu\">\n" +
     "<button type=\"button\" class=\"navbar-toggle project-action-btn ng-isolate-scope\" data-toggle=\"collapse\" data-target=\".navbar-collapse-1\">\n" +
     "<span class=\"sr-only\">Toggle navigation</span>\n" +
     "<span class=\"icon-bar\"></span>\n" +
@@ -6022,7 +6022,7 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "<select class=\"selectpicker form-control\" data-selected-text-format=\"count>3\" id=\"boostrapSelect\" title=\"\"></select>\n" +
     "</div>\n" +
     "\n" +
-    "<div row flex class=\"navbar-flex-btn project-action\" ng-if=\"project.metadata.name | canIAddToProject\">\n" +
+    "<div row class=\"navbar-flex-btn project-action\" ng-if=\"project.metadata.name | canIAddToProject\">\n" +
     "<a row class=\"project-action-btn\" href=\"project/{{project.metadata.name}}/create\" ng-disabled=\"project.status.phase != 'Active'\" title=\"Add to project\">\n" +
     "<i class=\"fa fa-plus visible-xs-inline-block\"></i><span class=\"hidden-xs\">Add to project</span>\n" +
     "</a>\n" +

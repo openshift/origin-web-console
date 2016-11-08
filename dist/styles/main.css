@@ -5190,6 +5190,7 @@ kubernetes-topology-graph{height:700px}
 .membership .content-pane .select-project,.membership .content-pane .select-role{width:150px}
 .membership .content-pane .select-role small{color:#999}
 .membership .content-pane .select-role .active small{color:#c0e0f0}
+.membership .content-pane .col-add-role,.membership .content-pane .col-heading,.membership .content-pane .col-name,.membership .content-pane .col-roles,.membership .content-pane .item-row,.membership .content-pane [flex-collapse-fix],.membership .content-pane [flex]{flex-shrink:0;flex-basis:auto}
 @media (min-width:480px){.membership .content-pane .col-heading .col-add-role h3,.membership .content-pane .form-new-role .col-roles{display:block}
 .membership .content-pane .col-add-role{padding:0;min-width:245px}
 .membership .content-pane .col-heading,.membership .content-pane .item-row{border-bottom:none;margin-bottom:none}
@@ -5198,7 +5199,6 @@ kubernetes-topology-graph{height:700px}
 .membership .content-pane .col-name{width:30%}
 .membership .content-pane .col-name input{max-width:175px}
 }
-.col-add-role,.col-heading,.col-name,.col-roles,.item-row,[flex-collapse-fix],[flex]{flex-shrink:0;flex-basis:auto}
 .action-chip{margin:0 5px 2px 0;font-size:12px;display:flex;flex-direction:row}
 .action-chip .item{padding:.2em .6em .3em}
 .action-chip .item:first-child{border-top-left-radius:2px;border-bottom-left-radius:2px}
