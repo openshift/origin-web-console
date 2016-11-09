@@ -6687,6 +6687,7 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "<label>\n" +
     "<input type=\"radio\" name=\"storageClass\" ng-model=\"claim.storageClass\">\n" +
     "No Storage Class\n" +
+    "<div class=\"help-block\">No storage class will be assigned unless a default class has been assigned by the system administrator.</div>\n" +
     "</label>\n" +
     "</div>\n" +
     "</div>\n" +
