@@ -15,8 +15,7 @@
         <div class="middle-content">
           <log-viewer
             ng-if="deploymentConfigName && logOptions.version"
-            resource="deploymentconfigs/log"
-            name="deploymentConfigName"
+            object="replicaSet"
             context="projectContext"
             options="logOptions"
             chromeless="true"

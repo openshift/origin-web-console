@@ -6,12 +6,14 @@ angular.module('openshiftConsole')
     '$sce',
     '$timeout',
     '$window',
+    '$filter',
     'AuthService',
+    'APIService',
     'APIDiscovery',
     'DataService',
     'logLinks',
     'BREAKPOINTS',
-    function($sce, $timeout, $window, AuthService, APIDiscovery, DataService, logLinks, BREAKPOINTS) {
+    function($sce, $timeout, $window, $filter, AuthService, APIService, APIDiscovery, DataService, logLinks, BREAKPOINTS) {
       // cache the jQuery win, but not clobber angular's $window
       var $win = $(window);
 
@@ -57,7 +59,7 @@ angular.module('openshiftConsole')
         scope: {
           followAffixTop: '=?',
           followAffixBottom: '=?',
-          resource: '@',
+          object: '=',
           fullLogUrl: '=?',
           name: '=',
           context: '=',
@@ -80,6 +82,16 @@ angular.module('openshiftConsole')
             var html = document.documentElement;
             $scope.logViewerID = _.uniqueId('log-viewer');
             $scope.empty = true;
+
+            var logSubresource, name;
+            if ($scope.object.kind === "ReplicationController") {
+              logSubresource = "deploymentconfigs/log";
+              name = $filter('annotation')($scope.object, 'deploymentConfig');
+            }
+            else {
+              logSubresource = APIService.kindToResource($scope.object.kind) + "/log";
+              name = $scope.object.metadata.name;
+            }
 
             // are we going to scroll the window, or the DOM node?
             var detectScrollableNode = function() {
@@ -269,10 +281,6 @@ angular.module('openshiftConsole')
               // Stop any active streamer.
               stopStreaming();
 
-              if (!$scope.name) {
-                return;
-              }
-
               if(!$scope.run) {
                 return;
               }
@@ -290,7 +298,7 @@ angular.module('openshiftConsole')
                 limitBytes: 10 * 1024 * 1024 // Limit log size to 10 MiB
               }, $scope.options);
 
-              streamer = DataService.createStream($scope.resource, $scope.name, $scope.context, options);
+              streamer = DataService.createStream(logSubresource, name, $scope.context, options);
 
               var lastLineNumber = 0;
               var addLine = function(text) {
@@ -386,7 +394,7 @@ angular.module('openshiftConsole')
                 var projectName = _.get($scope.context, 'project.metadata.name');
                 var containerName = _.get($scope.options, 'container');
 
-                if(!(projectName && containerName && $scope.name && url)) {
+                if(!(projectName && containerName && name && url)) {
                   return;
                 }
 
@@ -408,7 +416,7 @@ angular.module('openshiftConsole')
                     kibanaArchiveUrl: $sce.trustAsResourceUrl(logLinks.archiveUri({
                                         namespace: $scope.context.project.metadata.name,
                                         namespaceUid: $scope.context.project.metadata.uid,
-                                        podname: $scope.name,
+                                        podname: name,
                                         containername: $scope.options.container,
                                         backlink: URI.encode($window.location.href)
                                       }))
@@ -475,7 +483,7 @@ angular.module('openshiftConsole')
 
 
             // decide whether we should request the logs ------------------------
-            if ($scope.resource === 'deploymentconfigs/log' && !$scope.name) {
+            if (logSubresource === 'deploymentconfigs/logs' && !name) {
               $scope.state = 'empty';
               $scope.emptyStateMessage = 'Logs are not available for this replication controller because it was not generated from a deployment configuration.';
               // don't even attempt to continue since we can't fetch the logs for these RCs

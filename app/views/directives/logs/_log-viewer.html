@@ -1,6 +1,11 @@
 <div class="log-header" ng-if="!chromeless">
   <div ng-transclude class="log-status"><!-- expect start time, end time, status details --></div>
   <div class="log-actions">
+    <span
+        extension-point
+        extension-name="log-links"
+        extension-types="link dom"
+        extension-args="[object, options]"></span>
     <span ng-if="kibanaAuthUrl">
       <form
         action="{{kibanaAuthUrl}}"
