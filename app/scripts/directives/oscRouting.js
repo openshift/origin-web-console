@@ -29,7 +29,7 @@ angular.module("openshiftConsole")
    * routingDisabled:
    *   An expression that will disable the form (default: false)
    */
-  .directive("oscRouting", function() {
+  .directive("oscRouting", function(Constants) {
     return {
       require: '^form',
       restrict: 'E',
@@ -49,6 +49,17 @@ angular.module("openshiftConsole")
       },
       link: function(scope, element, attrs, formCtl) {
         scope.form = formCtl;
+
+        scope.disableWildcards = Constants.DISABLE_WILDCARD_ROUTES;
+
+        // Use different patterns for validating hostnames if wildcard subdomains are supported.
+        if (scope.disableWildcards) {
+          // See k8s.io/kubernetes/pkg/util/validation/validation.go
+          scope.hostnamePattern = /^[a-z0-9]([-a-z0-9]*[a-z0-9])?(\.[a-z0-9]([-a-z0-9]*[a-z0-9])?)*$/;
+        } else {
+          // Allow values like "*.example.com" in addition to the normal hostname regex.
+          scope.hostnamePattern = /^(\*(\.[a-z0-9]([-a-z0-9]*[a-z0-9]))+|[a-z0-9]([-a-z0-9]*[a-z0-9])?(\.[a-z0-9]([-a-z0-9]*[a-z0-9])?)*)$/;
+        }
 
         var updatePortOptions = function(service) {
           if (!service) {

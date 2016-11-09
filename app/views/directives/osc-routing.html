@@ -42,7 +42,7 @@
           type="text"
           name="host"
           ng-model="route.host"
-          ng-pattern="/^[a-z0-9]([-a-z0-9]*[a-z0-9])?(\.[a-z0-9]([-a-z0-9]*[a-z0-9])?)*$/"
+          ng-pattern="hostnamePattern"
           ng-maxlength="253"
           ng-readonly="hostReadOnly"
           placeholder="www.example.com"
@@ -52,15 +52,23 @@
           aria-describedby="route-host-help">
       <div>
         <span id="route-host-help" class="help-block">
-          Public hostname for the route.
-          <span ng-if="!hostReadOnly">If not specified, a hostname is generated.</span>
-          The hostname can't be changed after the route is created.
+          <p>
+            Public hostname for the route.
+            <span ng-if="!hostReadOnly">
+              If not specified, a hostname is generated.
+            </span>
+            <span ng-if="!disableWildcards">
+              You can use <var>*.example.com</var> with routers that support wildcard subdomains.
+            </span>
+          </p>
+          <p>The hostname can't be changed after the route is created.</p>
         </span>
       </div>
       <div class="has-error" ng-show="routeForm.host.$error.pattern && routeForm.host.$touched && !routingDisabled">
         <span class="help-block">
           Hostname must consist of lower-case letters, numbers, periods, and
           hyphens. It must start and end with a letter or number.
+          <span ng-if="!disableWildcards">Wildcard subdomains may start with <var>*.</var></span>
         </span>
       </div>
     </div>
@@ -152,9 +160,10 @@
 
     <div class="checkbox">
       <label>
-        <input type="checkbox" ng-model="secureRoute" id="secure-route">Secure route
+        <input type="checkbox" ng-model="secureRoute" aria-describedby="secure-route-help">
+        Secure route
       </label>
-      <div class="help-block">
+      <div class="help-block" id="secure-route-help">
         Routes can be secured using several TLS termination types for serving certificates.
       </div>
     </div>

@@ -15,7 +15,8 @@ angular.module('openshiftConsole')
                                                AlertMessageService,
                                                DataService,
                                                Navigate,
-                                               ProjectsService) {
+                                               ProjectsService,
+                                               RoutesService) {
     $scope.alerts = {};
     $scope.renderOptions = {
       hideFilterWidget: true
@@ -51,9 +52,16 @@ angular.module('openshiftConsole')
         DataService.get("routes", $scope.routeName, context).then(
           function(original) {
             route = angular.copy(original);
+            var host = _.get(route, 'spec.host');
+            var isWildcard = _.get(route, 'spec.wildcardPolicy') === 'Subdomain';
+            if (isWildcard) {
+              // Display the route as a wildcard.
+              host = '*.' + RoutesService.getSubdomain(route);
+            }
             $scope.routing = {
               service: _.get(route, 'spec.to.name'),
-              host: _.get(route, 'spec.host'),
+              host: host,
+              wildcardPolicy: _.get(route, 'spec.wildcardPolicy'),
               path: _.get(route, 'spec.path'),
               targetPort: _.get(route, 'spec.port.targetPort'),
               tls: angular.copy(_.get(route, 'spec.tls'))

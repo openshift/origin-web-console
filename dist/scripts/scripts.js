@@ -42,6 +42,7 @@ CLI:{
 },
 DEFAULT_HPA_CPU_TARGET_PERCENT:80,
 DISABLE_OVERVIEW_METRICS:!1,
+DISABLE_WILDCARD_ROUTES:!0,
 AVAILABLE_KINDS_BLACKLIST:[ "Binding", "Ingress", "DeploymentConfigRollback" ],
 ENABLE_TECH_PREVIEW_FEATURE:{
 pipelines:!0
@@ -1718,16 +1719,17 @@ spec:{
 to:{
 kind:"Service",
 name:c
+},
+wildcardPolicy:"None"
 }
-}
-};
-a.routing.host && (d.spec.host = a.routing.host), a.routing.path && (d.spec.path = a.routing.path), a.routing.targetPort && (d.spec.port = {
+}, e = a.routing.host;
+e && (e.startsWith("*.") ? (d.spec.wildcardPolicy = "Subdomain", d.spec.host = "wildcard" + e.substring(1)) :d.spec.host = e), a.routing.path && (d.spec.path = a.routing.path), a.routing.targetPort && (d.spec.port = {
 targetPort:a.routing.targetPort
 });
-var e = a.routing.tls;
-return e && e.termination && (d.spec.tls = {
-termination:e.termination
-}, "passthrough" !== e.termination && ("edge" === e.termination && e.insecureEdgeTerminationPolicy && (d.spec.tls.insecureEdgeTerminationPolicy = e.insecureEdgeTerminationPolicy), e.certificate && (d.spec.tls.certificate = e.certificate), e.key && (d.spec.tls.key = e.key), e.caCertificate && (d.spec.tls.caCertificate = e.caCertificate), e.destinationCACertificate && "reencrypt" === e.termination && (d.spec.tls.destinationCACertificate = e.destinationCACertificate))), d;
+var f = a.routing.tls;
+return f && f.termination && (d.spec.tls = {
+termination:f.termination
+}, "passthrough" !== f.termination && ("edge" === f.termination && f.insecureEdgeTerminationPolicy && (d.spec.tls.insecureEdgeTerminationPolicy = f.insecureEdgeTerminationPolicy), f.certificate && (d.spec.tls.certificate = f.certificate), f.key && (d.spec.tls.key = f.key), f.caCertificate && (d.spec.tls.caCertificate = f.caCertificate), f.destinationCACertificate && "reencrypt" === f.termination && (d.spec.tls.destinationCACertificate = f.destinationCACertificate))), d;
 }, f._generateDeploymentConfig = function(a, b, c) {
 var d = [];
 angular.forEach(a.deploymentConfig.envVars, function(a, b) {
@@ -3039,15 +3041,17 @@ g || (b(f) ? e.push('Route target port is set to "' + f + '", but service "' + d
 }, e = function(a, b) {
 a.spec.tls && (a.spec.tls.termination || b.push("Route has a TLS configuration, but no TLS termination type is specified. TLS will not be enabled until a termination type is set."), "passthrough" === a.spec.tls.termination && a.spec.path && b.push('Route path "' + a.spec.path + '" will be ignored since the route uses passthrough termination.'));
 }, f = function(a, b) {
+var c = _.get(a, "spec.wildcardPolicy");
 angular.forEach(a.status.ingress, function(a) {
-var c = _.find(a.conditions, {
+var d = _.find(a.conditions, {
 type:"Admitted",
 status:"False"
 });
-if (c) {
-var d = "Requested host " + (a.host || "<unknown host>") + " was rejected by the router.";
-(c.message || c.reason) && (d += " Reason: " + (c.message || c.reason) + "."), b.push(d);
+if (d) {
+var e = "Requested host " + (a.host || "<unknown host>") + " was rejected by the router.";
+(d.message || d.reason) && (e += " Reason: " + (d.message || d.reason) + "."), b.push(e);
 }
+d || "Subdomain" !== c || a.wildcardPolicy === c || b.push('Router "' + a.routerName + '" does not support wildcard subdomains. Your route will only be available at host ' + a.host + ".");
 });
 }, g = function(a) {
 return _.some(a.status.ingress, function(a) {
@@ -3068,6 +3072,9 @@ var c = i(a), d = i(b);
 return d > c ? b :a;
 }, k = function(a) {
 return _.groupBy(a, "spec.to.name");
+}, l = function(a) {
+var b = _.get(a, "spec.host", "");
+return b.replace(/^[a-z0-9]([-a-z0-9]*[a-z0-9])\./, "");
 };
 return {
 getRouteWarnings:function(a, b) {
@@ -3076,7 +3083,8 @@ return a ? ("Service" === a.spec.to.kind && d(a, b, c), e(a, c), f(a, c), c) :c;
 },
 getServicePortForRoute:c,
 getPreferredDisplayRoute:j,
-groupByService:k
+groupByService:k,
+getSubdomain:l
 };
 } ]), angular.module("openshiftConsole").factory("ChartsService", [ "Logger", function(a) {
 return {
@@ -6929,7 +6937,7 @@ d.disableInputs = !1, m(k + " could not be updated.", l(a));
 m(k + " could not be loaded.", l(a));
 });
 }));
-} ]), angular.module("openshiftConsole").controller("EditRouteController", [ "$filter", "$location", "$routeParams", "$scope", "AlertMessageService", "DataService", "Navigate", "ProjectsService", function(a, b, c, d, e, f, g, h) {
+} ]), angular.module("openshiftConsole").controller("EditRouteController", [ "$filter", "$location", "$routeParams", "$scope", "AlertMessageService", "DataService", "Navigate", "ProjectsService", "RoutesService", function(a, b, c, d, e, f, g, h, i) {
 d.alerts = {}, d.renderOptions = {
 hideFilterWidget:!0
 }, d.projectName = c.project, d.routeName = c.route, d.loading = !0, d.routeURL = g.resourceURL(d.routeName, "Route", d.projectName), d.breadcrumbs = [ {
@@ -6945,20 +6953,23 @@ link:d.routeURL
 title:"Edit"
 } ], h.get(c.project).then(_.spread(function(c, h) {
 d.project = c, d.breadcrumbs[0].title = a("displayName")(c);
-var i, j = a("orderByDisplayName");
+var j, k = a("orderByDisplayName");
 f.get("routes", d.routeName, h).then(function(a) {
-i = angular.copy(a), d.routing = {
-service:_.get(i, "spec.to.name"),
-host:_.get(i, "spec.host"),
-path:_.get(i, "spec.path"),
-targetPort:_.get(i, "spec.port.targetPort"),
-tls:angular.copy(_.get(i, "spec.tls"))
+j = angular.copy(a);
+var b = _.get(j, "spec.host"), c = "Subdomain" === _.get(j, "spec.wildcardPolicy");
+c && (b = "*." + i.getSubdomain(j)), d.routing = {
+service:_.get(j, "spec.to.name"),
+host:b,
+wildcardPolicy:_.get(j, "spec.wildcardPolicy"),
+path:_.get(j, "spec.path"),
+targetPort:_.get(j, "spec.port.targetPort"),
+tls:angular.copy(_.get(j, "spec.tls"))
 }, f.list("services", h, function(a) {
-var b = a.by("metadata.name"), c = _.get(i, "spec.to", {});
-d.loading = !1, d.services = j(b), d.routing.to = {
+var b = a.by("metadata.name"), c = _.get(j, "spec.to", {});
+d.loading = !1, d.services = k(b), d.routing.to = {
 service:b[c.name],
 weight:c.weight
-}, d.routing.alternateServices = [], _.each(_.get(i, "spec.alternateBackends"), function(a) {
+}, d.routing.alternateServices = [], _.each(_.get(j, "spec.alternateBackends"), function(a) {
 return "Service" !== a.kind ? (g.toErrorPage('Editing routes with non-service targets is unsupported. You can edit the route with the "Edit YAML" action instead.'), !1) :void d.routing.alternateServices.push({
 service:b[a.name],
 weight:a.weight
@@ -6968,15 +6979,15 @@ weight:a.weight
 }, function() {
 g.toErrorPage("Could not load route " + d.routeName + ".");
 });
-var k = function() {
+var l = function() {
 var a = _.get(d, "routing.to.service.metadata.name");
-_.set(i, "spec.to.name", a);
+_.set(j, "spec.to.name", a);
 var b = _.get(d, "routing.to.weight");
-isNaN(b) || _.set(i, "spec.to.weight", b), i.spec.path = d.routing.path;
+isNaN(b) || _.set(j, "spec.to.weight", b), j.spec.path = d.routing.path;
 var c = d.routing.targetPort;
-c ? _.set(i, "spec.port.targetPort", c) :delete i.spec.port, _.get(d, "routing.tls.termination") ? (i.spec.tls = d.routing.tls, "edge" !== i.spec.tls.termination && delete i.spec.tls.insecureEdgeTerminationPolicy) :delete i.spec.tls;
+c ? _.set(j, "spec.port.targetPort", c) :delete j.spec.port, _.get(d, "routing.tls.termination") ? (j.spec.tls = d.routing.tls, "edge" !== j.spec.tls.termination && delete j.spec.tls.insecureEdgeTerminationPolicy) :delete j.spec.tls;
 var e = _.get(d, "routing.alternateServices", []);
-_.isEmpty(e) ? delete i.spec.alternateBackends :i.spec.alternateBackends = _.map(e, function(a) {
+_.isEmpty(e) ? delete j.spec.alternateBackends :j.spec.alternateBackends = _.map(e, function(a) {
 return {
 kind:"Service",
 name:_.get(a, "service.metadata.name"),
@@ -6985,7 +6996,7 @@ weight:a.weight
 });
 };
 d.updateRoute = function() {
-d.form.$valid && (d.disableInputs = !0, k(), f.update("routes", d.routeName, i, h).then(function() {
+d.form.$valid && (d.disableInputs = !0, l(), f.update("routes", d.routeName, j, h).then(function() {
 e.addAlert({
 name:d.routeName,
 data:{
@@ -9015,7 +9026,7 @@ d.init(b.find('input[name="key"]'), b.find('input[name="value"]'), b.find("a.add
 };
 }
 };
-}), angular.module("openshiftConsole").directive("oscRouting", function() {
+}), angular.module("openshiftConsole").directive("oscRouting", [ "Constants", function(a) {
 return {
 require:"^form",
 restrict:"E",
@@ -9033,51 +9044,51 @@ var b = _.get(a, "route.tls.termination");
 return !b || "passthrough" === b;
 };
 } ],
-link:function(a, b, c, d) {
-a.form = d;
-var e = function(b) {
-b && (a.unnamedServicePort = 1 === b.spec.ports.length && !b.spec.ports[0].name, b.spec.ports.length && !a.unnamedServicePort ? a.route.portOptions = _.map(b.spec.ports, function(a) {
+link:function(b, c, d, e) {
+b.form = e, b.disableWildcards = a.DISABLE_WILDCARD_ROUTES, b.disableWildcards ? b.hostnamePattern = /^[a-z0-9]([-a-z0-9]*[a-z0-9])?(\.[a-z0-9]([-a-z0-9]*[a-z0-9])?)*$/ :b.hostnamePattern = /^(\*(\.[a-z0-9]([-a-z0-9]*[a-z0-9]))+|[a-z0-9]([-a-z0-9]*[a-z0-9])?(\.[a-z0-9]([-a-z0-9]*[a-z0-9])?)*)$/;
+var f = function(a) {
+a && (b.unnamedServicePort = 1 === a.spec.ports.length && !a.spec.ports[0].name, a.spec.ports.length && !b.unnamedServicePort ? b.route.portOptions = _.map(a.spec.ports, function(a) {
 return {
 port:a.name,
 label:a.port + " → " + a.targetPort + " (" + a.protocol + ")"
 };
-}) :a.route.portOptions = []);
+}) :b.route.portOptions = []);
 };
-a.services && !a.route.service && (a.route.service = _.find(a.services)), a.$watch("route.to.service", function(b, c) {
-e(b), b === c && a.route.targetPort || (a.route.targetPort = _.get(a, "route.portOptions[0].port")), a.services && (a.alternateServiceOptions = _.reject(a.services, function(a) {
-return b === a;
+b.services && !b.route.service && (b.route.service = _.find(b.services)), b.$watch("route.to.service", function(a, c) {
+f(a), a === c && b.route.targetPort || (b.route.targetPort = _.get(b, "route.portOptions[0].port")), b.services && (b.alternateServiceOptions = _.reject(b.services, function(b) {
+return a === b;
 }));
-}), a.$watch("route.alternateServices", function(b) {
-a.duplicateServices = _(b).map("service").filter(function(a, b, c) {
+}), b.$watch("route.alternateServices", function(a) {
+b.duplicateServices = _(a).map("service").filter(function(a, b, c) {
 return _.includes(c, a, b + 1);
-}).value(), d.$setValidity("duplicateServices", !a.duplicateServices.length);
+}).value(), e.$setValidity("duplicateServices", !b.duplicateServices.length);
 }, !0);
-var f = function() {
-return !!a.route.tls && ((!a.route.tls.termination || "passthrough" === a.route.tls.termination) && (a.route.tls.certificate || a.route.tls.key || a.route.tls.caCertificate || a.route.tls.destinationCACertificate));
+var g = function() {
+return !!b.route.tls && ((!b.route.tls.termination || "passthrough" === b.route.tls.termination) && (b.route.tls.certificate || b.route.tls.key || b.route.tls.caCertificate || b.route.tls.destinationCACertificate));
 };
-a.$watch("route.tls.termination", function() {
-a.secureRoute = !!_.get(a, "route.tls.termination"), a.showCertificatesNotUsedWarning = f();
+b.$watch("route.tls.termination", function() {
+b.secureRoute = !!_.get(b, "route.tls.termination"), b.showCertificatesNotUsedWarning = g();
 });
-var g;
-a.$watch("secureRoute", function(b, c) {
-if (b !== c) {
-var d = _.get(a, "route.tls.termination");
-!a.securetRoute && d && (g = d, delete a.route.tls.termination), a.secureRoute && !d && _.set(a, "route.tls.termination", g || "edge");
+var h;
+b.$watch("secureRoute", function(a, c) {
+if (a !== c) {
+var d = _.get(b, "route.tls.termination");
+!b.securetRoute && d && (h = d, delete b.route.tls.termination), b.secureRoute && !d && _.set(b, "route.tls.termination", h || "edge");
 }
-}), a.addAlternateService = function() {
-a.route.alternateServices = a.route.alternateServices || [];
-var b = _.find(a.services, function(b) {
-return b !== a.route.to.service && !_.some(a.route.alternateServices, {
-service:b
+}), b.addAlternateService = function() {
+b.route.alternateServices = b.route.alternateServices || [];
+var a = _.find(b.services, function(a) {
+return a !== b.route.to.service && !_.some(b.route.alternateServices, {
+service:a
 });
 });
-a.route.alternateServices.push({
-service:b
+b.route.alternateServices.push({
+service:a
 });
 };
 }
 };
-}).directive("oscRoutingService", function() {
+} ]).directive("oscRoutingService", function() {
 return {
 restrict:"E",
 scope:{
@@ -12548,18 +12559,18 @@ namespace:e
 };
 } ]).filter("isWebRoute", [ "routeHostFilter", function(a) {
 return function(b) {
-return !!a(b);
+return !!a(b) && "Subdomain" !== _.get(b, "spec.wildcardPolicy");
 };
 } ]).filter("routeWebURL", [ "routeHostFilter", function(a) {
 return function(b, c) {
 var d = b.spec.tls && "" !== b.spec.tls.tlsTerminationType ? "https" :"http", e = d + "://" + (c || a(b));
 return b.spec.path && (e += b.spec.path), e;
 };
-} ]).filter("routeLabel", [ "routeHostFilter", "routeWebURLFilter", "isWebRouteFilter", function(a, b, c) {
-return function(d, e) {
-if (c(d)) return b(d, e);
-var f = e || a(d);
-return f ? (d.spec.path && (f += d.spec.path), f) :"<unknown host>";
+} ]).filter("routeLabel", [ "RoutesService", "routeHostFilter", "routeWebURLFilter", "isWebRouteFilter", function(a, b, c, d) {
+return function(e, f) {
+if (d(e)) return c(e, f);
+var g = f || b(e);
+return g ? ("Subdomain" === _.get(e, "spec.wildcardPolicy") && (g = "*." + a.getSubdomain(e)), e.spec.path && (g += e.spec.path), g) :"<unknown host>";
 };
 } ]).filter("parameterPlaceholder", function() {
 return function(a) {

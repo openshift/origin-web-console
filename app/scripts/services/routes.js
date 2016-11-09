@@ -63,6 +63,7 @@ angular.module("openshiftConsole")
     };
 
     var addIngressWarnings = function(route, warnings) {
+      var wildcardPolicy = _.get(route, 'spec.wildcardPolicy');
       angular.forEach(route.status.ingress, function(ingress) {
         var condition = _.find(ingress.conditions, { type: "Admitted", status: "False" });
         if (condition) {
@@ -71,6 +72,11 @@ angular.module("openshiftConsole")
             message += " Reason: " + (condition.message || condition.reason) + '.';
           }
           warnings.push(message);
+        }
+
+        // This message only displays with old router images that are not aware of `wildcardPolicy`.
+        if (!condition && wildcardPolicy === 'Subdomain' && ingress.wildcardPolicy !== wildcardPolicy) {
+          warnings.push('Router "' + ingress.routerName + '" does not support wildcard subdomains. Your route will only be available at host ' + ingress.host + '.');
         }
       });
     };
@@ -123,6 +129,12 @@ angular.module("openshiftConsole")
       return _.groupBy(routes, 'spec.to.name');
     };
 
+    // For host "foo.example.com" return "example.com"
+    var getSubdomain = function(route) {
+      var hostname = _.get(route, 'spec.host', '');
+      return hostname.replace(/^[a-z0-9]([-a-z0-9]*[a-z0-9])\./, '');
+    };
+
     return {
       // Gets warnings about a route.
       //
@@ -151,6 +163,7 @@ angular.module("openshiftConsole")
 
       getServicePortForRoute: getServicePortForRoute,
       getPreferredDisplayRoute: getPreferredDisplayRoute,
-      groupByService: groupByService
+      groupByService: groupByService,
+      getSubdomain: getSubdomain
     };
   });
