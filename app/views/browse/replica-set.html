@@ -55,7 +55,7 @@
                         <span class="pficon pficon-info" aria-hidden="true"></span>
                         Environment variables can be edited on the <a ng-href="{{deployment | navigateResourceURL}}?tab=environment">deployment</a>.
                       </p>
-                      <p ng-if="'(replicaSet | hasDeploymentConfig) && deploymentconfigs' | canI : 'update'">
+                      <p ng-if="(replicaSet | hasDeploymentConfig) && ('deploymentconfigs' | canI : 'update')">
                         <span class="pficon pficon-info" aria-hidden="true"></span>
                         Environment variables can be edited on the <a ng-href="{{replicaSet | configURLForResource}}?tab=environment">deployment configuration</a>.
                       </p>

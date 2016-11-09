@@ -18,6 +18,7 @@ angular.module('openshiftConsole')
                         HPAService,
                         ImageStreamResolver,
                         Navigate,
+                        Logger,
                         ProjectsService,
                         LabelFilter,
                         labelNameFilter,

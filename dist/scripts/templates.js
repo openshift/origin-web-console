@@ -1266,7 +1266,7 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "<li ng-if=\"!deployment && ({ group: 'extensions', resource: 'replicasets' } | canI : 'update')\">\n" +
     "<a ng-href=\"project/{{project.metadata.name}}/attach-pvc?kind=ReplicaSet&name={{replicaSet.metadata.name}}&group=extensions\" role=\"button\">Add Storage</a>\n" +
     "</li>\n" +
-    "<li ng-if=\"!autoscalers.length && { group: 'extensions', resource: 'horizontalpodautoscalers' } | canI : 'create'\">\n" +
+    "<li ng-if=\"!autoscalers.length && ({ group: 'extensions', resource: 'horizontalpodautoscalers' } | canI : 'create')\">\n" +
     "<a ng-href=\"project/{{projectName}}/edit/autoscaler?kind=ReplicaSet&name={{replicaSet.metadata.name}}&group=extensions\" ng-if=\"!deployment\" role=\"button\">Add Autoscaler</a>\n" +
     "<a ng-href=\"project/{{projectName}}/edit/autoscaler?kind=Deployment&name={{deployment.metadata.name}}&group=extensions\" ng-if=\"deployment\" role=\"button\">Add Autoscaler</a>\n" +
     "</li>\n" +
@@ -1367,8 +1367,14 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "<h4>Volumes</h4>\n" +
     "<div ng-if=\"!replicaSet.spec.template.spec.volumes.length\">\n" +
     "<div ng-if=\"kind === 'ReplicaSet'\">\n" +
+    "<div ng-if=\"deployment\">\n" +
+    "<a ng-if=\"{ group: 'extensions', resource: 'deployments' } | canI : 'update'\" ng-href=\"project/{{project.metadata.name}}/attach-pvc?kind=Deployment&name={{deployment.metadata.name}}&group=extensions\">Add storage</a>\n" +
+    "<span ng-if=\"!({ group: 'extensions', resource: 'deployments' } | canI : 'update')\">none</span>\n" +
+    "</div>\n" +
+    "<div ng-if=\"!deployment\">\n" +
     "<a ng-if=\"resource | canI : 'update'\" ng-href=\"project/{{project.metadata.name}}/attach-pvc?kind=ReplicaSet&name={{replicaSet.metadata.name}}&group=extensions\">Add storage</a>\n" +
     "<span ng-if=\"!(resource | canI : 'update')\">none</span>\n" +
+    "</div>\n" +
     "</div>\n" +
     "<div ng-if=\"kind === 'ReplicationController'\">\n" +
     "<div ng-if=\"deploymentConfigName\">\n" +
@@ -1433,7 +1439,7 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
 
 
   $templateCache.put('views/browse/_replication-controller-actions.html',
-    "<div ng-if=\"(('replicationControllers' | canIDoAny) || (!deploymentConfigName && !autoscalers.length && { group: 'extensions', resource: 'horizontalpodautoscalers' } | canI : 'create'))\" class=\"pull-right dropdown\">\n" +
+    "<div ng-if=\"(('replicationControllers' | canIDoAny) || (!deploymentConfigName && !autoscalers.length && ({ group: 'extensions', resource: 'horizontalpodautoscalers' } | canI : 'create')))\" class=\"pull-right dropdown\">\n" +
     "<button type=\"button\" class=\"dropdown-toggle btn btn-default actions-dropdown-btn hidden-xs\" data-toggle=\"dropdown\">\n" +
     "Actions\n" +
     "<span class=\"caret\"></span>\n" +
@@ -1443,7 +1449,7 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "<li ng-if=\"deploymentConfigName && ('deploymentconfigs' | canI : 'update')\">\n" +
     "<a ng-href=\"project/{{project.metadata.name}}/attach-pvc?kind=DeploymentConfig&name={{deploymentConfigName}}\" role=\"button\">Add Storage</a>\n" +
     "</li>\n" +
-    "<li ng-if=\"!deploymentConfigName && 'replicationcontrollers' | canI : 'update'\">\n" +
+    "<li ng-if=\"!deploymentConfigName && ('replicationcontrollers' | canI : 'update')\">\n" +
     "<a ng-href=\"project/{{project.metadata.name}}/attach-pvc?kind=ReplicationController&name={{replicaSet.metadata.name}}\" role=\"button\">Add Storage</a>\n" +
     "</li>\n" +
     "<li ng-if=\"!autoscalers.length && ({resource: 'horizontalpodautoscalers', group: 'extensions'} | canI : 'create')\">\n" +
@@ -1977,10 +1983,10 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "<a ng-href=\"{{deploymentConfig | editResourceURL}}\" role=\"button\">Edit</a>\n" +
     "</li>\n" +
     "<li class=\"divider\" ng-if=\"'deploymentconfigs' | canI : 'update'\"></li>\n" +
-    "<li ng-if=\"!deploymentConfig.spec.paused && !updatingPausedState && 'deploymentconfigs' | canI : 'update'\">\n" +
+    "<li ng-if=\"!deploymentConfig.spec.paused && !updatingPausedState && ('deploymentconfigs' | canI : 'update')\">\n" +
     "<a href=\"\" ng-click=\"setPaused(true)\" role=\"button\">Pause Deployment</a>\n" +
     "</li>\n" +
-    "<li ng-if=\"deploymentConfig.spec.paused && !updatingPausedState && 'deploymentconfigs' | canI : 'update'\">\n" +
+    "<li ng-if=\"deploymentConfig.spec.paused && !updatingPausedState && ('deploymentconfigs' | canI : 'update')\">\n" +
     "<a href=\"\" ng-click=\"setPaused(false)\" role=\"button\">Resume Deployment</a>\n" +
     "</li>\n" +
     "<li ng-if=\"'deploymentconfigs' | canI : 'update'\">\n" +
@@ -2030,7 +2036,7 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "<span class=\"pficon pficon-info\" aria-hidden=\"true\"></span>\n" +
     "<strong>{{deploymentConfig.metadata.name}} is paused.</strong>\n" +
     "This will stop any new deployments and deployment triggers from running until resumed.\n" +
-    "<span ng-if=\"!updatingPausedState && 'deploymentconfigs' | canI : 'update'\">\n" +
+    "<span ng-if=\"!updatingPausedState && ('deploymentconfigs' | canI : 'update')\">\n" +
     "<a href=\"\" ng-click=\"setPaused(false)\" role=\"button\">Resume deployment</a>\n" +
     "</span>\n" +
     "</div>\n" +
@@ -2087,7 +2093,7 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "<span class=\"sr-only\">Warning:</span>\n" +
     "{{warning.message}}\n" +
     "\n" +
-    "<a ng-href=\"project/{{projectName}}/set-limits?kind=DeploymentConfig&name={{deploymentConfig.metadata.name}}\" ng-if=\"warning.reason === 'NoCPURequest' && 'deploymentconfigs' | canI : 'update'\" role=\"button\">Edit resource\n" +
+    "<a ng-href=\"project/{{projectName}}/set-limits?kind=DeploymentConfig&name={{deploymentConfig.metadata.name}}\" ng-if=\"warning.reason === 'NoCPURequest' && ('deploymentconfigs' | canI : 'update')\" role=\"button\">Edit resource\n" +
     "<span ng-if=\"!('cpu' | isRequestCalculated : project)\">requests and</span> limits</a>\n" +
     "</div>\n" +
     "\n" +
@@ -2239,13 +2245,13 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "</button>\n" +
     "<a href=\"\" class=\"dropdown-toggle actions-dropdown-kebab visible-xs-inline\" data-toggle=\"dropdown\"><i class=\"fa fa-ellipsis-v\"></i><span class=\"sr-only\">Actions</span></a>\n" +
     "<ul class=\"dropdown-menu actions action-button\">\n" +
-    "<li ng-if=\"!deployment.spec.paused && !updatingPausedState && { group: 'extensions', resource: 'deployments' } | canI : 'update'\">\n" +
+    "<li ng-if=\"!deployment.spec.paused && !updatingPausedState && ({ group: 'extensions', resource: 'deployments' } | canI : 'update')\">\n" +
     "<a href=\"\" ng-click=\"setPaused(true)\" role=\"button\">Pause Deployment</a>\n" +
     "</li>\n" +
-    "<li ng-if=\"deployment.spec.paused && !updatingPausedState && { group: 'extensions', resource: 'deployments' } | canI : 'update'\">\n" +
+    "<li ng-if=\"deployment.spec.paused && !updatingPausedState && ({ group: 'extensions', resource: 'deployments' } | canI : 'update')\">\n" +
     "<a href=\"\" ng-click=\"setPaused(false)\" role=\"button\">Resume Deployment</a>\n" +
     "</li>\n" +
-    "<li class=\"divider\" ng-if=\"!updatingPausedState && { group: 'extensions', resource: 'deployments' } | canI : 'update'\"></li>\n" +
+    "<li class=\"divider\" ng-if=\"!updatingPausedState && ({ group: 'extensions', resource: 'deployments' } | canI : 'update')\"></li>\n" +
     "<li ng-if=\"{ group: 'extensions', resource: 'deployments' } | canI : 'update'\">\n" +
     "<a ng-href=\"project/{{project.metadata.name}}/attach-pvc?kind=Deployment&name={{deployment.metadata.name}}&group=extensions\" role=\"button\">Add Storage</a>\n" +
     "</li>\n" +
@@ -2292,7 +2298,7 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "<span class=\"pficon pficon-info\" aria-hidden=\"true\"></span>\n" +
     "<strong>{{deployment.metadata.name}} is paused.</strong>\n" +
     "This will pause any in-progress rollouts and stop new rollouts from running until the deployment is resumed.\n" +
-    "<span ng-if=\"!updatingPausedState && { group: 'extensions', resource: 'deployments' } | canI : 'update'\">\n" +
+    "<span ng-if=\"!updatingPausedState && ({ group: 'extensions', resource: 'deployments' } | canI : 'update')\">\n" +
     "<a href=\"\" ng-click=\"setPaused(false)\" role=\"button\">Resume deployment</a>\n" +
     "</span>\n" +
     "</div>\n" +
@@ -2754,8 +2760,8 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "</button>\n" +
     "<a href=\"\" class=\"dropdown-toggle actions-dropdown-kebab visible-xs-inline\" data-toggle=\"dropdown\"><i class=\"fa fa-ellipsis-v\"></i><span class=\"sr-only\">Actions</span></a>\n" +
     "<ul class=\"dropdown-menu actions action-button\">\n" +
-    "<li ng-if=\"pod | annotation:'deploymentConfig' && 'deploymentconfigs' | canI : 'update'\">\n" +
-    "<a ng-href=\"project/{{project.metadata.name}}/attach-pvc?deploymentconfig={{pod | annotation:'deploymentConfig'}}\" role=\"button\">Add Storage</a>\n" +
+    "<li ng-if=\"(pod | annotation:'deploymentConfig') && ('deploymentconfigs' | canI : 'update')\">\n" +
+    "<a ng-href=\"project/{{project.metadata.name}}/attach-pvc?kind=DeploymentConfig&name={{pod | annotation:'deploymentConfig'}}\" role=\"button\">Add Storage</a>\n" +
     "</li>\n" +
     "<li ng-if=\"'pods' | canI : 'update'\">\n" +
     "<a ng-href=\"{{pod | editYamlURL}}\" role=\"button\">Edit YAML</a>\n" +
@@ -2931,7 +2937,7 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "<span class=\"pficon pficon-info\" aria-hidden=\"true\"></span>\n" +
     "Environment variables can be edited on the <a ng-href=\"{{deployment | navigateResourceURL}}?tab=environment\">deployment</a>.\n" +
     "</p>\n" +
-    "<p ng-if=\"'(replicaSet | hasDeploymentConfig) && deploymentconfigs' | canI : 'update'\">\n" +
+    "<p ng-if=\"(replicaSet | hasDeploymentConfig) && ('deploymentconfigs' | canI : 'update')\">\n" +
     "<span class=\"pficon pficon-info\" aria-hidden=\"true\"></span>\n" +
     "Environment variables can be edited on the <a ng-href=\"{{replicaSet | configURLForResource}}?tab=environment\">deployment configuration</a>.\n" +
     "</p>\n" +
@@ -5973,7 +5979,7 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "<div row>\n" +
     "<div class=\"navbar-header\">\n" +
     "\n" +
-    "<div row flex class=\"navbar-flex-btn toggle-menu\">\n" +
+    "<div row class=\"navbar-flex-btn toggle-menu\">\n" +
     "<button type=\"button\" class=\"navbar-toggle project-action-btn ng-isolate-scope\" data-toggle=\"collapse\" data-target=\".navbar-collapse-2\">\n" +
     "<span class=\"sr-only\">Toggle navigation</span>\n" +
     "<span class=\"icon-bar\"></span>\n" +
@@ -6002,7 +6008,7 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "<div class=\"nav navbar-project-menu\">\n" +
     "<div row>\n" +
     "\n" +
-    "<div row flex class=\"navbar-flex-btn toggle-menu\">\n" +
+    "<div row class=\"navbar-flex-btn toggle-menu\">\n" +
     "<button type=\"button\" class=\"navbar-toggle project-action-btn ng-isolate-scope\" data-toggle=\"collapse\" data-target=\".navbar-collapse-1\">\n" +
     "<span class=\"sr-only\">Toggle navigation</span>\n" +
     "<span class=\"icon-bar\"></span>\n" +
@@ -6016,7 +6022,7 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "<select class=\"selectpicker form-control\" data-selected-text-format=\"count>3\" id=\"boostrapSelect\" title=\"\"></select>\n" +
     "</div>\n" +
     "\n" +
-    "<div row flex class=\"navbar-flex-btn project-action\" ng-if=\"project.metadata.name | canIAddToProject\">\n" +
+    "<div row class=\"navbar-flex-btn project-action\" ng-if=\"project.metadata.name | canIAddToProject\">\n" +
     "<a row class=\"project-action-btn\" href=\"project/{{project.metadata.name}}/create\" ng-disabled=\"project.status.phase != 'Active'\" title=\"Add to project\">\n" +
     "<i class=\"fa fa-plus visible-xs-inline-block\"></i><span class=\"hidden-xs\">Add to project</span>\n" +
     "</a>\n" +
@@ -9716,9 +9722,9 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "<h2>No grouped services.</h2>\n" +
     "<p>\n" +
     "No services are grouped with <a ng-href=\"{{service | navigateResourceURL}}\">{{service.metadata.name}}</a>.\n" +
-    "<span ng-if=\"(services | hashSize) > 1 && 'services' | canI : 'update'\">Add a service to group them together.</span>\n" +
+    "<span ng-if=\"(services | hashSize) > 1 && ('services' | canI : 'update')\">Add a service to group them together.</span>\n" +
     "</p>\n" +
-    "<div ng-if=\"(services | hashSize) > 1 && 'services' | canI : 'update'\">\n" +
+    "<div ng-if=\"(services | hashSize) > 1 && ('services' | canI : 'update')\">\n" +
     "<button class=\"btn btn-primary\" ng-click=\"linkService()\">\n" +
     "Group Service\n" +
     "</button>\n" +
@@ -10278,7 +10284,7 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "<div class=\"list-view-pf-description project-names\">\n" +
     "<div class=\"list-group-item-heading project-name-item\">\n" +
     "<h2 class=\"h1\">\n" +
-    "<a class=\"tile-target\" ng-href=\"project/{{project.metadata.name}}\">{{project | displayName}}</a>\n" +
+    "<a class=\"tile-target\" ng-href=\"project/{{project.metadata.name}}\" title=\"{{project | displayName}}\">{{project | displayName}}</a>\n" +
     "<span ng-if=\"project.status.phase != 'Active'\" data-toggle=\"tooltip\" title=\"This project has been marked for deletion.\" class=\"pficon pficon-warning-triangle-o\"></span>\n" +
     "</h2>\n" +
     "<small>\n" +

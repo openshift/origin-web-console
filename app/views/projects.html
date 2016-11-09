@@ -98,7 +98,7 @@
                           <div class="list-view-pf-description project-names">
                             <div class="list-group-item-heading project-name-item">
                               <h2 class="h1">
-                                <a class="tile-target" ng-href="project/{{project.metadata.name}}">{{project | displayName}}</a>
+                                <a class="tile-target" ng-href="project/{{project.metadata.name}}" title="{{project | displayName}}">{{project | displayName}}</a>
                                 <span ng-if="project.status.phase != 'Active'"
                                   data-toggle="tooltip"
                                   title="This project has been marked for deletion."

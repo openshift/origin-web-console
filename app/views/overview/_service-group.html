@@ -75,9 +75,9 @@
                 <h2>No grouped services.</h2>
                 <p>
                   No services are grouped with <a ng-href="{{service | navigateResourceURL}}">{{service.metadata.name}}</a>.
-                  <span ng-if="(services | hashSize) > 1 && 'services' | canI : 'update'">Add a service to group them together.</span>
+                  <span ng-if="(services | hashSize) > 1 && ('services' | canI : 'update')">Add a service to group them together.</span>
                 </p>
-                <div ng-if="(services | hashSize) > 1 && 'services' | canI : 'update'">
+                <div ng-if="(services | hashSize) > 1 && ('services' | canI : 'update')">
                   <button class="btn btn-primary" ng-click="linkService()">
                     Group Service
                   </button>
