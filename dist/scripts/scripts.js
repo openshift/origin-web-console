@@ -6359,13 +6359,13 @@ e.get(b.project).then(_.spread(function(e, g) {
 a.project = e, a.context = g, a.breadcrumbs[0].title = f("displayName")(e), c.get("buildconfigs", b.buildconfig, g).then(function(e) {
 a.buildConfig = e, a.updatedBuildConfig = angular.copy(a.buildConfig), a.buildStrategy = n(a.updatedBuildConfig), a.strategyType = a.buildConfig.spec.strategy.type, a.envVars = a.buildStrategy.env || [], _.each(a.envVars, function(a) {
 f("altTextForValueFrom")(a);
-}), a.triggers = o(a.triggers, a.buildConfig.spec.triggers), a.sources = w(a.sources, a.buildConfig.spec.source), _.has(e, "spec.strategy.jenkinsPipelineStrategy.jenkinsfile") && (a.jenkinsfileOptions.type = "inline"), c.list("secrets", g, function(b) {
+}), a.triggers = o(a.triggers, a.buildConfig.spec.triggers), a.sources = v(a.sources, a.buildConfig.spec.source), _.has(e, "spec.strategy.jenkinsPipelineStrategy.jenkinsfile") && (a.jenkinsfileOptions.type = "inline"), c.list("secrets", g, function(b) {
 var c = d.groupSecretsByType(b), e = _.mapValues(c, function(a) {
 return _.map(a, "metadata.name");
 });
 a.secrets.secretsByType = _.each(e, function(a) {
 a.unshift("");
-}), t();
+}), s();
 });
 var h = function(a, b) {
 a.type = b && b.kind ? b.kind :"None";
@@ -6391,7 +6391,7 @@ value:a.destinationDir
 };
 })) :(a.imageSourceFromObjects = [], a.sourceImages.forEach(function(b) {
 a.imageSourceFromObjects.push(b.from);
-}))), a.options.forcePull = !!a.buildStrategy.forcePull, a.sources.binary && (a.options.binaryAsFile = a.buildConfig.spec.source.binary.asFile ? a.buildConfig.spec.source.binary.asFile :""), "Docker" === a.strategyType && (a.options.noCache = !!a.buildConfig.spec.strategy.dockerStrategy.noCache, a.buildFromTypes.push("None")), m.push(c.watchObject("buildconfigs", b.buildconfig, g, function(b, c) {
+}))), a.options.forcePull = !!a.buildStrategy.forcePull, "Docker" === a.strategyType && (a.options.noCache = !!a.buildConfig.spec.strategy.dockerStrategy.noCache, a.buildFromTypes.push("None")), m.push(c.watchObject("buildconfigs", b.buildconfig, g, function(b, c) {
 "MODIFIED" === c && (a.alerts["updated/deleted"] = {
 type:"warning",
 message:"This build configuration has changed since you started editing it. You'll need to copy any changes you've made and edit again."
@@ -6470,9 +6470,7 @@ sourcePath:a.name,
 destinationDir:a.value
 };
 });
-}, q = function() {
-a.sources.binary && ("" !== a.options.binaryAsFile ? a.updatedBuildConfig.spec.source.binary.asFile = a.options.binaryAsFile :a.updatedBuildConfig.spec.source.binary = {});
-}, r = function(b) {
+}, q = function(b) {
 var c = {};
 switch (b.type) {
 case "ImageStreamTag":
@@ -6497,12 +6495,12 @@ name:_.last(d)
 }, c.namespace = 1 !== d.length ? d[0] :a.buildConfig.metadata.namespace;
 }
 return c;
-}, s = function() {
+}, r = function() {
 var b = [].concat(a.triggers.githubWebhooks, a.triggers.genericWebhooks, a.triggers.imageChangeTriggers, a.triggers.builderImageChangeTrigger, a.triggers.configChangeTrigger);
 return b = _.filter(b, function(a) {
 return _.has(a, "disabled") && !a.disabled || a.present;
 }), b = _.map(b, "data");
-}, t = function() {
+}, s = function() {
 switch (a.secrets.picked = {
 gitSecret:a.buildConfig.spec.source.sourceSecret ? [ a.buildConfig.spec.source.sourceSecret ] :[ {
 name:""
@@ -6532,14 +6530,14 @@ name:""
 mountPath:""
 } ];
 }
-}, u = function(a, b, c) {
+}, t = function(a, b, c) {
 b.name ? a[c] = b :delete a[c];
-}, v = function(b, c) {
+}, u = function(b, c) {
 var d = "Custom" === a.strategyType ? "secretSource" :"secret", e = _.filter(c, function(a) {
 return a[d].name;
 });
 _.isEmpty(e) ? delete b.secrets :b.secrets = e;
-}, w = function(a, b) {
+}, v = function(a, b) {
 return "None" === b.type ? a :(a.none = !1, angular.forEach(b, function(b, c) {
 a[c] = !0;
 }), a);
@@ -6553,16 +6551,16 @@ break;
 case "JenkinsPipeline":
 "path" === a.jenkinsfileOptions.type ? delete a.updatedBuildConfig.spec.strategy.jenkinsPipelineStrategy.jenkinsfile :delete a.updatedBuildConfig.spec.strategy.jenkinsPipelineStrategy.jenkinsfilePath;
 }
-switch (q(), a.sources.images && !_.isEmpty(a.sourceImages) && (a.updatedBuildConfig.spec.source.images[0].paths = p(a.imageSourcePaths), a.updatedBuildConfig.spec.source.images[0].from = r(a.imageOptions.fromSource)), "None" === a.imageOptions.from.type ? delete n(a.updatedBuildConfig).from :n(a.updatedBuildConfig).from = r(a.imageOptions.from), "None" === a.imageOptions.to.type ? delete a.updatedBuildConfig.spec.output.to :a.updatedBuildConfig.spec.output.to = r(a.imageOptions.to), n(a.updatedBuildConfig).env = l.compactEntries(a.envVars), u(a.updatedBuildConfig.spec.source, _.head(a.secrets.picked.gitSecret), "sourceSecret"), u(n(a.updatedBuildConfig), _.head(a.secrets.picked.pullSecret), "pullSecret"), u(a.updatedBuildConfig.spec.output, _.head(a.secrets.picked.pushSecret), "pushSecret"), a.strategyType) {
+switch (a.sources.images && !_.isEmpty(a.sourceImages) && (a.updatedBuildConfig.spec.source.images[0].paths = p(a.imageSourcePaths), a.updatedBuildConfig.spec.source.images[0].from = q(a.imageOptions.fromSource)), "None" === a.imageOptions.from.type ? delete n(a.updatedBuildConfig).from :n(a.updatedBuildConfig).from = q(a.imageOptions.from), "None" === a.imageOptions.to.type ? delete a.updatedBuildConfig.spec.output.to :a.updatedBuildConfig.spec.output.to = q(a.imageOptions.to), n(a.updatedBuildConfig).env = l.compactEntries(a.envVars), t(a.updatedBuildConfig.spec.source, _.head(a.secrets.picked.gitSecret), "sourceSecret"), t(n(a.updatedBuildConfig), _.head(a.secrets.picked.pullSecret), "pullSecret"), t(a.updatedBuildConfig.spec.output, _.head(a.secrets.picked.pushSecret), "pushSecret"), a.strategyType) {
 case "Source":
 case "Docker":
-v(a.updatedBuildConfig.spec.source, a.secrets.picked.sourceSecrets);
+u(a.updatedBuildConfig.spec.source, a.secrets.picked.sourceSecrets);
 break;
 
 case "Custom":
-v(n(a.updatedBuildConfig), a.secrets.picked.sourceSecrets);
+u(n(a.updatedBuildConfig), a.secrets.picked.sourceSecrets);
 }
-a.updatedBuildConfig.spec.triggers = s(), c.update("buildconfigs", a.updatedBuildConfig.metadata.name, a.updatedBuildConfig, a.context).then(function() {
+a.updatedBuildConfig.spec.triggers = r(), c.update("buildconfigs", a.updatedBuildConfig.metadata.name, a.updatedBuildConfig, a.context).then(function() {
 j.addAlert({
 name:a.updatedBuildConfig.metadata.name,
 data:{
