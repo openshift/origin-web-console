@@ -1,7 +1,7 @@
 {
   "name": "openshift-jvm",
-  "version": "1.0.50",
-  "commitId": "dcbee06e1d9043763259c661132673a7d69e8b95",
+  "version": "1.0.52",
+  "commitId": "413f4afe57c2067e3ca527b4991a2fc2100bba4a",
   "packages": {
     "angular": {
       "version": "1.5.8"
@@ -25,7 +25,7 @@
       "version": "0.7.4"
     },
     "font-awesome": {
-      "version": "4.6.3"
+      "version": "4.7.0"
     },
     "graphlib": {
       "version": "1.0.7"
@@ -43,10 +43,10 @@
       "version": "2.0.3"
     },
     "hawtio-forms": {
-      "version": "2.0.40"
+      "version": "2.0.41"
     },
     "hawtio-integration": {
-      "version": "2.0.22"
+      "version": "2.0.25"
     },
     "hawtio-jmx": {
       "version": "2.0.78"
