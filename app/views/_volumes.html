@@ -79,7 +79,7 @@
         <span class="small text-muted">(populated by a Config Map)</span>
        </dd>
       <dt>Name:</dt>
-      <dd>{{volume.configMap.name}}</dd>
+      <dd><a ng-href="{{volume.configMap.name | navigateResourceURL : 'ConfigMap' : namespace}}">{{volume.configMap.name}}</a></dd>
       <div ng-repeat="item in volume.configMap.items">
         <dt>Key to File:</dt>
         <dd>{{item.key}}&#8201;&#8594;&#8201;{{item.path}}</dd>

@@ -22,6 +22,9 @@ angular
         {group: '', resource: 'builds/clone', verbs: ['create']},
         {group: '', resource: 'builds',       verbs: ['delete', 'update']}
       ],
+      'configmaps': [
+        {group: '', resource: 'configmaps', verbs: ['update', 'delete']}
+      ],
       'deployments': [
         {group: 'extensions', resource: 'horizontalpodautoscalers', verbs: ['create', 'update']},
         {group: 'extensions', resource: 'deployments',              verbs: ['create', 'update']}

@@ -263,6 +263,22 @@ angular
         templateUrl: 'views/create-secret.html',
         controller: 'CreateSecretController'
       })
+      .when('/project/:project/browse/config-maps', {
+        templateUrl: 'views/browse/config-maps.html',
+        controller: 'ConfigMapsController',
+      })
+      .when('/project/:project/browse/config-maps/:configMap', {
+        templateUrl: 'views/browse/config-map.html',
+        controller: 'ConfigMapController',
+      })
+      .when('/project/:project/create-config-map', {
+        templateUrl: 'views/create-config-map.html',
+        controller: 'CreateConfigMapController'
+      })
+      .when('/project/:project/edit/config-maps/:configMap', {
+        templateUrl: 'views/edit/config-map.html',
+        controller: 'EditConfigMapController',
+      })
       .when('/project/:project/browse/other', {
         templateUrl: 'views/other-resources.html',
         controller: 'OtherResourcesController',

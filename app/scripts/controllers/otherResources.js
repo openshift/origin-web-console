@@ -21,9 +21,11 @@ angular.module('openshiftConsole')
         case "DeploymentConfig":
         case "BuildConfig":
         case "Build":
+        case "ConfigMap":
         case "Pod":
         case "PersistentVolumeClaim":
         case "Event":
+        case "Secret":
         case "Service":
         case "Route":
         case "ImageStream":

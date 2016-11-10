@@ -1,0 +1,62 @@
+<project-header class="top-header"></project-header>
+<project-page>
+
+  <!-- Middle section -->
+  <div class="middle-section">
+    <div class="middle-container">
+      <div class="middle-header header-toolbar">
+        <div class="container-fluid">
+          <div class="page-header page-header-bleed-right page-header-bleed-left">
+            <div class="pull-right" ng-if="project && ('configmaps' | canI : 'create')">
+              <a ng-href="project/{{project.metadata.name}}/create-config-map" class="btn btn-default">Create Config Map</a>
+            </div>
+            <h1>Config Maps</h1>
+          </div>
+          <alerts alerts="alerts"></alerts>
+          <div ng-if="!renderOptions.showGetStarted" class="data-toolbar">
+            <div class="data-toolbar-filter">
+              <project-filter></project-filter>
+            </div>
+          </div>
+        </div>
+      </div><!-- /middle-header-->
+      <div class="middle-content">
+        <div class="container-fluid">
+          <div class="row">
+            <div class="col-md-12 gutter-top">
+              <div ng-if="!loaded">Loading...</div>
+              <div ng-if="loaded">
+                <table class="table table-bordered table-hover table-mobile">
+                  <thead>
+                    <tr>
+                      <th>Name</th>
+                      <th>Created</th>
+                      <th>Labels</th>
+                    </tr>
+                  </thead>
+                  <tbody ng-if="(configMaps | hashSize) == 0">
+                    <tr><td colspan="3"><em>No config maps to show</em></td></tr>
+                  </tbody>
+                  <tbody ng-repeat="configMap in configMaps">
+                    <tr>
+                      <td data-title="Name">
+                        <a href="{{configMap | navigateResourceURL}}">{{configMap.metadata.name}}</a>
+                      </td>
+                      <td data-title="Created">
+                        <relative-timestamp timestamp="configMap.metadata.creationTimestamp"></relative-timestamp>
+                      </td>
+                      <td data-title="Labels">
+                        <em ng-if="(configMap.metadata.labels | hashSize) === 0">none</em>
+                        <labels labels="configMap.metadata.labels" clickable="true" kind="Config Map" project-name="{{configMap.metadata.namespace}}" limit="3" filter-current-page="true"></labels>
+                      </td>
+                    </tr>
+                  </tbody>
+                </table>
+              </div>
+            </div><!-- /col-* -->
+          </div>
+        </div>
+      </div><!-- /middle-content -->
+    </div><!-- /middle-container -->
+  </div><!-- /middle-section -->
+</project-page>

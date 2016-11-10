@@ -1,0 +1,115 @@
+<ng-form name="configMapForm">
+  <fieldset>
+    <!-- Name -->
+    <div ng-show="showNameInput" class="form-group">
+      <label for="config-map-name" class="required">Name</label>
+      <!-- regex, maxlength from k8s.io/kubernetes/pkg/util/validation/validation.go -->
+      <div ng-class="{ 'has-error': configMapForm.name.$invalid && configMapForm.name.$touched }">
+        <input
+            id="config-map-name"
+            class="form-control"
+            type="text"
+            name="name"
+            ng-model="configMap.metadata.name"
+            ng-required="showNameInput"
+            ng-pattern="/^[a-z0-9]([-a-z0-9]*[a-z0-9])?$/"
+            ng-maxlength="63"
+            ng-minlength="2"
+            placeholder="my-config-map"
+            select-on-focus
+            autocorrect="off"
+            autocapitalize="off"
+            spellcheck="false"
+            aria-describedby="config-map-name-help">
+      </div>
+      <div>
+        <span id="config-map-name-help" class="help-block">A unique name for the config map within the project.</span>
+      </div>
+      <div class="has-error" ng-show="configMapForm.name.$error.pattern && configMapForm.name.$touched">
+        <span class="help-block">
+          Config map names may only contain lower-case letters, numbers, and dashes.
+          They may not start or end with a dash.
+        </span>
+      </div>
+      <div class="has-error" ng-show="configMapForm.name.$error.maxlength">
+        <span class="help-block">
+          Config map names may not be longer than 63 characters.
+        </span>
+      </div>
+    </div>
+
+    <div ng-if="!data.length">
+      <p><em>The config map has no items.</em></p>
+      <a href="" ng-click="addItem()">Add item</a>
+    </div>
+
+    <div ng-repeat="item in data" ng-init="keys = getKeys()">
+      <div class="form-group">
+        <label ng-attr-for="key-{{$id}}" class="required">Key</label>
+        <!--
+          Config map validation:
+          https://github.com/openshift/origin/blob/32708e768d77db08b118d084955a7ccf2aebbf1c/vendor/k8s.io/client-go/1.4/pkg/util/validation/validation.go#L271-L273
+        -->
+        <div ng-class="{ 'has-error': configMapForm['key-' + $id].$invalid && configMapForm['key-' + $id].$touched }">
+          <input
+              class="form-control"
+              name="key-{{$id}}"
+              ng-attr-id="key-{{$id}}"
+              type="text"
+              ng-model="item.key"
+              required
+              ng-pattern="/^[-._a-zA-Z0-9]+$/"
+              ng-maxlength="253"
+              osc-unique="keys"
+              placeholder="my.key"
+              select-on-focus
+              autocorrect="off"
+              autocapitalize="off"
+              spellcheck="false"
+              aria-describedby="key-{{$id}}-help">
+        </div>
+        <div class="help-block">
+          A unique key for this config map entry.
+        </div>
+        <div class="has-error" ng-show="configMapForm['key-' + $id].$error.oscUnique && configMapForm['key-' + $id].$touched">
+          <span class="help-block">
+            Duplicate key "{{item.key}}". Keys must be unique within the config map.
+          </span>
+        </div>
+        <div class="has-error" ng-show="configMapForm['key-' + $id].$error.pattern && configMapForm['key-' + $id].$touched">
+          <span class="help-block">
+            Config map keys may only consist of letters, numbers, periods, hyphens, and underscores.
+          </span>
+        </div>
+        <div class="has-error" ng-show="configMapForm['key-' + $id].$error.maxlength">
+          <span class="help-block">
+            Config map keys may not be longer than 253 characters.
+          </span>
+        </div>
+      </div>
+      <div class="form-group" ng-attr-id="drop-zone-{{$id}}">
+        <label ng-attr-for="name-{{$id}}">Value</label>
+        <osc-file-input
+          model="item.value"
+          drop-zone-id="drop-zone-{{$id}}"
+          help-text="Enter a value for the config map entry or use the contents of a file."
+          show-values="false"></osc-file-input>
+        <div ui-ace="{
+          theme: 'eclipse',
+          rendererOptions: {
+            showPrintMargin: false
+          }
+        }" ng-model="item.value" class="ace-bordered ace-inline-small mar-top-sm" ng-attr-id="value-{{$id}}"></div>
+      </div>
+      <div class="mar-bottom-md">
+        <a href="" ng-click="removeItem($index)">Remove item</a>
+        <span ng-if="$last">
+          <span class="action-divider">|</span>
+          <a href="" ng-click="addItem()">Add item</a>
+        </span>
+      </div>
+    </div>
+    <div>
+    </div>
+  </fieldset>
+</ng-form>
