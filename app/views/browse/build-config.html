@@ -199,45 +199,6 @@
                                 <dt>Build Strategy:</dt>
                                 <dd>{{buildConfig.spec.strategy.type | startCase}}</dd>
                               </div>
-                              <div ng-switch="buildConfig.spec.strategy.type">
-                                <div ng-switch-when="Source">
-                                  <div ng-if="buildConfig.spec.strategy.sourceStrategy.from">
-                                    <dt>Builder Image:</dt>
-                                    <dd>{{buildConfig.spec.strategy.sourceStrategy.from | imageObjectRef : buildConfig.metadata.namespace}}</dd>
-                                  </div>
-                                </div>
-                                <div ng-switch-when="Docker">
-                                  <div ng-if="buildConfig.spec.strategy.dockerStrategy.from">
-                                    <dt>Builder Image Stream:</dt>
-                                    <dd>{{buildConfig.spec.strategy.dockerStrategy.from | imageObjectRef : buildConfig.metadata.namespace}}</dd>
-                                  </div>
-                                  <div ng-if="buildConfig.spec.source.dockerfile">
-                                    <dt>Dockerfile:</dt><dd></dd>
-                                    <div ui-ace="{
-                                      mode: 'dockerfile',
-                                      theme: 'dreamweaver',
-                                      onLoad: aceLoaded,
-                                      highlightActiveLine: false,
-                                      showGutter: false,
-                                      rendererOptions: {
-                                        fadeFoldWidgets: true,
-                                        highlightActiveLine: false,
-                                        showPrintMargin: false
-                                      },
-                                      advanced: {
-                                        highlightActiveLine: false
-                                      }
-                                    }" readonly ng-model="buildConfig.spec.source.dockerfile" class="ace-bordered ace-read-only ace-inline dockerfile-mode mar-top-md"></div>
-                                  </div>
-                                </div>
-                                <div ng-switch-when="Custom">
-                                  <div ng-if="buildConfig.spec.strategy.customStrategy.from">
-                                    <dt>Builder Image Stream:</dt>
-                                    <dd>{{buildConfig.spec.strategy.customStrategy.from | imageObjectRef : buildConfig.metadata.namespace}}
-                                    </dd>
-                                  </div>
-                                </div>
-                              </div>
                               <div ng-if="buildConfig.spec.source">
                                 <div ng-if="buildConfig.spec.source.type == 'Git'">
                                   <dt>Source Repo:</dt>
@@ -277,6 +238,8 @@
                                     }" readonly ng-model="buildConfig.spec.strategy.jenkinsPipelineStrategy.jenkinsfile" class="ace-bordered ace-inline ace-read-only mar-top-md"></div>
                                   </div>
                                 </div>
+                                <dt ng-if-start="buildConfig.spec.source.binary.asFile">Binary Input as File:</dt>
+                                <dd ng-if-end>{{buildConfig.spec.source.binary.asFile}}</dd>
                                 <div ng-if="buildConfig.spec.source.type == 'None'">
                                   <dt>Source:</dt>
                                   <dd>
@@ -305,6 +268,8 @@
                                   </div>
                                 </div>
                               </div>
+                              <dt ng-if-start="(buildConfig | buildStrategy).from">Builder Image:</dt>
+                              <dd ng-if-end>{{(buildConfig | buildStrategy).from | imageObjectRef : buildConfig.metadata.namespace}}</dd>
                               <div ng-if="buildConfig.spec.output.to">
                                 <dt>Output To:</dt>
                                 <dd>{{buildConfig.spec.output.to | imageObjectRef : buildConfig.metadata.namespace}}</dd>
@@ -322,6 +287,24 @@
                                     </a>
                                   </span>
                                 </dd>
+                              </div>
+                              <div ng-if="buildConfig.spec.source.dockerfile">
+                                <dt>Dockerfile:</dt><dd></dd>
+                                <div ui-ace="{
+                                  mode: 'dockerfile',
+                                  theme: 'dreamweaver',
+                                  onLoad: aceLoaded,
+                                  highlightActiveLine: false,
+                                  showGutter: false,
+                                  rendererOptions: {
+                                    fadeFoldWidgets: true,
+                                    highlightActiveLine: false,
+                                    showPrintMargin: false
+                                  },
+                                  advanced: {
+                                    highlightActiveLine: false
+                                  }
+                                }" readonly ng-model="buildConfig.spec.source.dockerfile" class="ace-bordered ace-read-only ace-inline dockerfile-mode mar-top-md"></div>
                               </div>
                             </dl>
                           </div>
