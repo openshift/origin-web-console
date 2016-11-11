@@ -4004,18 +4004,23 @@ name:b.containerName
 }), d = t(c);
 b.containerState = d;
 });
-}, x = function(b, c) {
-a.loaded = !0, a.pod = b, n(b), o(), "DELETED" === c && (a.alerts.deleted = {
+}, x = b("altTextForValueFrom"), y = function() {
+var b = angular.copy(_.get(a, "pod.spec.containers", []));
+_.each(b, function(a) {
+a.env = a.env || [], _.each(a.env, x);
+}), a.containersEnv = b;
+}, z = function(b, c) {
+a.loaded = !0, a.pod = b, n(b), o(), y(), "DELETED" === c && (a.alerts.deleted = {
 type:"warning",
 message:"This pod has been deleted."
 });
 };
 k.get(c.project).then(_.spread(function(d, i) {
 m = i, a.project = d, a.projectContext = i, g.get("pods", c.pod, i).then(function(b) {
-x(b);
+z(b);
 var d = {};
 d[b.metadata.name] = b, a.containerTerminals = u(), v(b), h.fetchReferencedImageStreamImages(d, a.imagesByDockerReference, a.imageStreamImageRefByDockerReference, m), l.push(g.watchObject("pods", c.pod, i, function(b, c) {
-x(b, c), w(a.containerTerminals), v(b);
+z(b, c), w(a.containerTerminals), v(b);
 }));
 }, function(c) {
 a.loaded = !0, a.alerts.load = {
@@ -5750,9 +5755,9 @@ a.metricsAvailable = b;
 });
 var u = function(c) {
 a.logCanRun = !_.includes([ "New", "Pending" ], b("deploymentStatus")(c));
-}, v = function(b) {
+}, v = b("altTextForValueFrom"), w = function(b) {
 a.updatedDeployment = angular.copy(b), _.each(a.updatedDeployment.spec.template.spec.containers, function(a) {
-a.env = a.env || [];
+a.env = a.env || [], _.each(a.env, v);
 });
 };
 a.saveEnvVars = function() {
@@ -5771,17 +5776,17 @@ details:"Reason: " + b("getErrorDetails")(c)
 };
 });
 }, a.clearEnvVarUpdates = function() {
-v(a.replicaSet), a.forms.envForm.$setPristine();
+w(a.replicaSet), a.forms.envForm.$setPristine();
 };
-var w = b("isIE")() || b("isEdge")();
+var x = b("isIE")() || b("isEdge")();
 i.get(c.project).then(_.spread(function(d, h) {
 a.project = d, a.projectContext = h;
-var i, n, x = {}, y = {}, z = function() {
-if (a.hpaForRS = g.filterHPA(x, o, c.replicaSet), a.deploymentConfigName && a.isActive) {
-var b = g.filterHPA(x, "DeploymentConfig", a.deploymentConfigName);
+var i, n, v = {}, y = {}, z = function() {
+if (a.hpaForRS = g.filterHPA(v, o, c.replicaSet), a.deploymentConfigName && a.isActive) {
+var b = g.filterHPA(v, "DeploymentConfig", a.deploymentConfigName);
 a.autoscalers = a.hpaForRS.concat(b);
 } else if (a.deployment && a.isActive) {
-var d = g.filterHPA(x, "Deployment", a.deployment.metadata.name);
+var d = g.filterHPA(v, "Deployment", a.deployment.metadata.name);
 a.autoscalers = a.hpaForRS.concat(d);
 } else a.autoscalers = a.hpaForRS;
 }, A = function() {
@@ -5877,7 +5882,7 @@ object:b
 "DELETED" === c && (a.alerts.deleted = {
 type:"warning",
 message:"This " + r + " has been deleted."
-}), a.replicaSet = b, !a.forms.envForm || a.forms.envForm.$pristine ? v(b) :a.alerts.background_update = {
+}), a.replicaSet = b, !a.forms.envForm || a.forms.envForm.$pristine ? w(b) :a.alerts.background_update = {
 type:"warning",
 message:"This " + r + " has been updated in the background. Saving your changes may create a conflict or cause loss of data.",
 links:[ {
@@ -5923,9 +5928,9 @@ a.builds = b.by("metadata.name"), m.log("builds (subscribe)", a.builds);
 group:"extensions",
 resource:"horizontalpodautoscalers"
 }, h, function(a) {
-x = a.by("metadata.name"), z(), C();
+v = a.by("metadata.name"), z(), C();
 }, {
-poll:w,
+poll:x,
 pollInterval:6e4
 })), f.list("limitranges", h, function(a) {
 y = a.by("metadata.name"), C();
