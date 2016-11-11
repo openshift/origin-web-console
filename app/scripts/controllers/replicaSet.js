@@ -80,10 +80,12 @@ angular.module('openshiftConsole')
       $scope.logCanRun = !(_.includes(['New', 'Pending'], $filter('deploymentStatus')(replicaSet)));
     };
 
+    var altTextForValueFrom = $filter('altTextForValueFrom');
     var copyDeploymentAndEnsureEnv = function(replicaSet) {
       $scope.updatedDeployment = angular.copy(replicaSet);
       _.each($scope.updatedDeployment.spec.template.spec.containers, function(container) {
         container.env = container.env || [];
+        _.each(container.env, altTextForValueFrom);
       });
     };
 
