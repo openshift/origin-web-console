@@ -10,17 +10,24 @@
       <dt>Type:</dt>
       <dd>
         secret
-        <span class="small text-muted">(populated by a Secret when the pod is created)</span>
+        <span class="small text-muted">(populated by a secret when the pod is created)</span>
       </dd>
-      <dt>Secret Name:</dt>
-      <dd>{{volume.secret.secretName}}</dd>
+      <dt>Secret:</dt>
+      <dd>
+        <span ng-if="'secrets' | canI : 'get'">
+          <a ng-href="{{volume.secret.secretName | navigateResourceURL : 'Secret' : namespace}}">{{volume.secret.secretName}}</a>
+        </span>
+        <span ng-if="!('secrets' | canI : 'get')">
+          {{volume.secret.secretName}}
+        </span>
+      </dd>
     </div>
     <div ng-if="volume.persistentVolumeClaim">
       <dt>Type:</dt>
       <dd>
-				persistent volume claim
-        <span class="small text-muted">(reference to a Persistent Volume Claim)</span>
-			</dd>
+        persistent volume claim
+        <span class="small text-muted">(reference to a persistent volume claim)</span>
+      </dd>
       <dt>Claim name:</dt>
       <dd><a ng-href="{{volume.persistentVolumeClaim.claimName | navigateResourceURL : 'PersistentVolumeClaim' : namespace}}">{{volume.persistentVolumeClaim.claimName}}</a></dd>
       <dt>Mode:</dt>
@@ -76,7 +83,7 @@
       <dt>Type:</dt>
       <dd>
         config map
-        <span class="small text-muted">(populated by a Config Map)</span>
+        <span class="small text-muted">(populated by a config map)</span>
        </dd>
       <dt>Name:</dt>
       <dd>{{volume.configMap.name}}</dd>
