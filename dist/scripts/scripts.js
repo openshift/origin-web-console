@@ -113,6 +113,7 @@ verb:"list"
 }, {
 label:"Secrets",
 href:"/browse/secrets",
+prefixes:[ "/browse/secrets/" ],
 canI:{
 resource:"secrets",
 verb:"list"
