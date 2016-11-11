@@ -1652,45 +1652,6 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "<dt>Build Strategy:</dt>\n" +
     "<dd>{{buildConfig.spec.strategy.type | startCase}}</dd>\n" +
     "</div>\n" +
-    "<div ng-switch=\"buildConfig.spec.strategy.type\">\n" +
-    "<div ng-switch-when=\"Source\">\n" +
-    "<div ng-if=\"buildConfig.spec.strategy.sourceStrategy.from\">\n" +
-    "<dt>Builder Image:</dt>\n" +
-    "<dd>{{buildConfig.spec.strategy.sourceStrategy.from | imageObjectRef : buildConfig.metadata.namespace}}</dd>\n" +
-    "</div>\n" +
-    "</div>\n" +
-    "<div ng-switch-when=\"Docker\">\n" +
-    "<div ng-if=\"buildConfig.spec.strategy.dockerStrategy.from\">\n" +
-    "<dt>Builder Image Stream:</dt>\n" +
-    "<dd>{{buildConfig.spec.strategy.dockerStrategy.from | imageObjectRef : buildConfig.metadata.namespace}}</dd>\n" +
-    "</div>\n" +
-    "<div ng-if=\"buildConfig.spec.source.dockerfile\">\n" +
-    "<dt>Dockerfile:</dt><dd></dd>\n" +
-    "<div ui-ace=\"{\n" +
-    "                                      mode: 'dockerfile',\n" +
-    "                                      theme: 'dreamweaver',\n" +
-    "                                      onLoad: aceLoaded,\n" +
-    "                                      highlightActiveLine: false,\n" +
-    "                                      showGutter: false,\n" +
-    "                                      rendererOptions: {\n" +
-    "                                        fadeFoldWidgets: true,\n" +
-    "                                        highlightActiveLine: false,\n" +
-    "                                        showPrintMargin: false\n" +
-    "                                      },\n" +
-    "                                      advanced: {\n" +
-    "                                        highlightActiveLine: false\n" +
-    "                                      }\n" +
-    "                                    }\" readonly=\"readonly\" ng-model=\"buildConfig.spec.source.dockerfile\" class=\"ace-bordered ace-read-only ace-inline dockerfile-mode mar-top-md\"></div>\n" +
-    "</div>\n" +
-    "</div>\n" +
-    "<div ng-switch-when=\"Custom\">\n" +
-    "<div ng-if=\"buildConfig.spec.strategy.customStrategy.from\">\n" +
-    "<dt>Builder Image Stream:</dt>\n" +
-    "<dd>{{buildConfig.spec.strategy.customStrategy.from | imageObjectRef : buildConfig.metadata.namespace}}\n" +
-    "</dd>\n" +
-    "</div>\n" +
-    "</div>\n" +
-    "</div>\n" +
     "<div ng-if=\"buildConfig.spec.source\">\n" +
     "<div ng-if=\"buildConfig.spec.source.type == 'Git'\">\n" +
     "<dt>Source Repo:</dt>\n" +
@@ -1727,6 +1688,8 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "                                    }\" readonly=\"readonly\" ng-model=\"buildConfig.spec.strategy.jenkinsPipelineStrategy.jenkinsfile\" class=\"ace-bordered ace-inline ace-read-only mar-top-md\"></div>\n" +
     "</div>\n" +
     "</div>\n" +
+    "<dt ng-if-start=\"buildConfig.spec.source.binary.asFile\">Binary Input as File:</dt>\n" +
+    "<dd ng-if-end>{{buildConfig.spec.source.binary.asFile}}</dd>\n" +
     "<div ng-if=\"buildConfig.spec.source.type == 'None'\">\n" +
     "<dt>Source:</dt>\n" +
     "<dd>\n" +
@@ -1755,6 +1718,8 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "</div>\n" +
     "</div>\n" +
     "</div>\n" +
+    "<dt ng-if-start=\"(buildConfig | buildStrategy).from\">Builder Image:</dt>\n" +
+    "<dd ng-if-end>{{(buildConfig | buildStrategy).from | imageObjectRef : buildConfig.metadata.namespace}}</dd>\n" +
     "<div ng-if=\"buildConfig.spec.output.to\">\n" +
     "<dt>Output To:</dt>\n" +
     "<dd>{{buildConfig.spec.output.to | imageObjectRef : buildConfig.metadata.namespace}}</dd>\n" +
@@ -1772,6 +1737,24 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "</a>\n" +
     "</span>\n" +
     "</dd>\n" +
+    "</div>\n" +
+    "<div ng-if=\"buildConfig.spec.source.dockerfile\">\n" +
+    "<dt>Dockerfile:</dt><dd></dd>\n" +
+    "<div ui-ace=\"{\n" +
+    "                                  mode: 'dockerfile',\n" +
+    "                                  theme: 'dreamweaver',\n" +
+    "                                  onLoad: aceLoaded,\n" +
+    "                                  highlightActiveLine: false,\n" +
+    "                                  showGutter: false,\n" +
+    "                                  rendererOptions: {\n" +
+    "                                    fadeFoldWidgets: true,\n" +
+    "                                    highlightActiveLine: false,\n" +
+    "                                    showPrintMargin: false\n" +
+    "                                  },\n" +
+    "                                  advanced: {\n" +
+    "                                    highlightActiveLine: false\n" +
+    "                                  }\n" +
+    "                                }\" readonly=\"readonly\" ng-model=\"buildConfig.spec.source.dockerfile\" class=\"ace-bordered ace-read-only ace-inline dockerfile-mode mar-top-md\"></div>\n" +
     "</div>\n" +
     "</dl>\n" +
     "</div>\n" +
@@ -4322,7 +4305,7 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "<i class=\"pficon pficon-help\"></i>\n" +
     "</a>\n" +
     "</span></span></h3>\n" +
-    "<key-value-editor entries=\"buildConfigEnvVars\" key-placeholder=\"name\" value-placeholder=\"value\" key-validator=\"[a-zA-Z][a-zA-Z0-9_]*\" key-validator-error-tooltip=\"A valid environment variable name is an alphanumeric (a-z and 0-9) string beginning with a letter that may contain underscores.\" add-row-link=\"Add environment variable\"></key-value-editor>\n" +
+    "<key-value-editor entries=\"buildConfigEnvVars\" key-placeholder=\"name\" value-placeholder=\"value\" key-validator=\"[a-zA-Z_][a-zA-Z0-9_]*\" key-validator-error-tooltip=\"A valid environment variable name is an alphanumeric (a-z and 0-9) string beginning with a letter that may contain underscores.\" add-row-link=\"Add environment variable\"></key-value-editor>\n" +
     "</osc-form-section>\n" +
     "\n" +
     "<osc-form-section header=\"Deployment Configuration\" about-title=\"Deployment Configuration\" about=\"Deployment configurations describe how your application is configured\n" +
@@ -4358,7 +4341,7 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "</div>\n" +
     "<key-value-editor entries=\"DCEnvVarsFromImage\" is-readonly cannot-add cannot-sort cannot-delete></key-value-editor>\n" +
     "</div>\n" +
-    "<key-value-editor entries=\"DCEnvVarsFromUser\" key-placeholder=\"name\" value-placeholder=\"value\" key-validator=\"[a-zA-Z][a-zA-Z0-9_]*\" key-validator-error-tooltip=\"A valid environment variable name is an alphanumeric (a-z and 0-9) string beginning with a letter that may contain underscores.\" add-row-link=\"Add environment variable\"></key-value-editor>\n" +
+    "<key-value-editor entries=\"DCEnvVarsFromUser\" key-placeholder=\"name\" value-placeholder=\"value\" key-validator=\"[a-zA-Z_][a-zA-Z0-9_]*\" key-validator-error-tooltip=\"A valid environment variable name is an alphanumeric (a-z and 0-9) string beginning with a letter that may contain underscores.\" add-row-link=\"Add environment variable\"></key-value-editor>\n" +
     "</div>\n" +
     "</div>\n" +
     "</osc-form-section>\n" +
@@ -6195,7 +6178,7 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "</div>\n" +
     "<div class=\"form-group\">\n" +
     "<label>Environment Variables</label>\n" +
-    "<key-value-editor entries=\"hookParams.execNewPod.env\" key-validator=\"[a-zA-Z][a-zA-Z0-9_]*\" key-validator-error-tooltip=\"A valid environment variable name is an alphanumeric (a-z and 0-9) string beginning with a letter that may contain underscores.\" add-row-link=\"Add environment variable\"></key-value-editor>\n" +
+    "<key-value-editor entries=\"hookParams.execNewPod.env\" key-validator=\"[a-zA-Z_][a-zA-Z0-9_]*\" key-validator-error-tooltip=\"A valid environment variable name is an alphanumeric (a-z and 0-9) string beginning with a letter that may contain underscores.\" add-row-link=\"Add environment variable\"></key-value-editor>\n" +
     "<div class=\"help-block\">\n" +
     "Environment variables to supply to the hook pod's container.\n" +
     "</div>\n" +
@@ -7547,21 +7530,6 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "</span>\n" +
     "</label>\n" +
     "</div>\n" +
-    "<div ng-if=\"sources.binary && updatedBuildConfig.spec.source\">\n" +
-    "<div class=\"form-group\">\n" +
-    "<label for=\"binaryAsBuild\">\n" +
-    "Binary Input As File\n" +
-    "<span class=\"help action-inline\">\n" +
-    "<a href=\"\">\n" +
-    "<i class=\"pficon pficon-help\" data-toggle=\"tooltip\" aria-hidden=\"true\" data-original-title=\"Indicates that the provided binary input should be considered a single file within the build input. For example, specifying 'webapp.war' would place the provided binary as '/webapp.war' for the builder. If left empty, the Docker and Source build strategies assume this file is a zip, tar, or tar.gz file and extract it as the source. The custom strategy receives this binary as standard input. This filename may not contain slashes or be '..' or '.'.\"></i>\n" +
-    "</a>\n" +
-    "</span>\n" +
-    "</label>\n" +
-    "<div>\n" +
-    "<input class=\"form-control\" id=\"binaryAsBuild\" name=\"binaryAsBuild\" type=\"text\" ng-model=\"options.binaryAsFile\" autocorrect=\"off\" autocapitalize=\"off\" spellcheck=\"false\">\n" +
-    "</div>\n" +
-    "</div>\n" +
-    "</div>\n" +
     "</div>\n" +
     "<div class=\"form-groups\" ng-show=\"sources.images\">\n" +
     "<div class=\"single-image-source\" ng-if=\"sourceImages.length === 1\">\n" +
@@ -7611,6 +7579,9 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "</div>\n" +
     "</div>\n" +
     "</dl>\n" +
+    "<div ng-if=\"!sources.git && !sources.dockerfile && !sources.images\">\n" +
+    "There are no editable source types for this build config.\n" +
+    "</div>\n" +
     "</div>\n" +
     "<div ng-if=\"updatedBuildConfig | isJenkinsPipelineStrategy\" class=\"section\">\n" +
     "<h3 class=\"with-divider\">Jenkins Pipeline Configuration</h3>\n" +
@@ -7721,7 +7692,7 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "</a>\n" +
     "</span></h3>\n" +
     "<div>\n" +
-    "<key-value-editor ng-if=\"envVars\" entries=\"envVars\" key-validator=\"[a-zA-Z][a-zA-Z0-9_]*\" key-validator-error-tooltip=\"A valid environment variable name is an alphanumeric (a-z and 0-9) string beginning with a letter that may contain underscores.\" add-row-link=\"Add environment variable\"></key-value-editor>\n" +
+    "<key-value-editor ng-if=\"envVars\" entries=\"envVars\" key-validator=\"[a-zA-Z_][a-zA-Z0-9_]*\" key-validator-error-tooltip=\"A valid environment variable name is an alphanumeric (a-z and 0-9) string beginning with a letter that may contain underscores.\" add-row-link=\"Add environment variable\"></key-value-editor>\n" +
     "</div>\n" +
     "</div>\n" +
     "<div ng-if=\"sources.git || !(updatedBuildConfig | isJenkinsPipelineStrategy)\" class=\"section\">\n" +
@@ -7882,7 +7853,7 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "</div>\n" +
     "<div class=\"form-group\">\n" +
     "<label>Environment Variables</label>\n" +
-    "<key-value-editor entries=\"strategyData.customParams.environment\" key-validator=\"[a-zA-Z][a-zA-Z0-9_]*\" key-validator-error-tooltip=\"A valid environment variable name is an alphanumeric (a-z and 0-9) string beginning with a letter that may contain underscores.\" add-row-link=\"Add environment variable\"></key-value-editor>\n" +
+    "<key-value-editor entries=\"strategyData.customParams.environment\" key-validator=\"[a-zA-Z_][a-zA-Z0-9_]*\" key-validator-error-tooltip=\"A valid environment variable name is an alphanumeric (a-z and 0-9) string beginning with a letter that may contain underscores.\" add-row-link=\"Add environment variable\"></key-value-editor>\n" +
     "</div>\n" +
     "</div>\n" +
     "<div ng-if=\"strategyData.type !== 'Custom'\">\n" +
@@ -8053,7 +8024,7 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "<div class=\"container-name\">\n" +
     "<h4>Container {{containerName}}</h4>\n" +
     "</div>\n" +
-    "<key-value-editor ng-if=\"containerConfig\" entries=\"containerConfig.env\" key-validator=\"[a-zA-Z][a-zA-Z0-9_]*\" key-validator-error-tooltip=\"A valid environment variable name is an alphanumeric (a-z and 0-9) string beginning with a letter that may contain underscores.\" add-row-link=\"Add environment variable\"></key-value-editor>\n" +
+    "<key-value-editor ng-if=\"containerConfig\" entries=\"containerConfig.env\" key-validator=\"[a-zA-Z_][a-zA-Z0-9_]*\" key-validator-error-tooltip=\"A valid environment variable name is an alphanumeric (a-z and 0-9) string beginning with a letter that may contain underscores.\" add-row-link=\"Add environment variable\"></key-value-editor>\n" +
     "</div>\n" +
     "</div>\n" +
     "<div class=\"buttons gutter-top-bottom\">\n" +

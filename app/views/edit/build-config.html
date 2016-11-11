@@ -145,29 +145,6 @@
                               </span>
                             </label>
                           </div>
-
-                          <div ng-if="sources.binary && updatedBuildConfig.spec.source">
-                            <div class="form-group">
-                              <label for="binaryAsBuild">
-                                Binary Input As File
-                                <span class="help action-inline">
-                                  <a href="">
-                                    <i class="pficon pficon-help" data-toggle="tooltip" aria-hidden="true" data-original-title="Indicates that the provided binary input should be considered a single file within the build input. For example, specifying 'webapp.war' would place the provided binary as '/webapp.war' for the builder. If left empty, the Docker and Source build strategies assume this file is a zip, tar, or tar.gz file and extract it as the source. The custom strategy receives this binary as standard input. This filename may not contain slashes or be '..' or '.'."></i>
-                                  </a>
-                                </span>
-                              </label>
-                              <div>
-                                <input class="form-control"
-                                  id="binaryAsBuild"
-                                  name="binaryAsBuild"
-                                  type="text"
-                                  ng-model="options.binaryAsFile"
-                                  autocorrect="off"
-                                  autocapitalize="off"
-                                  spellcheck="false">
-                              </div>
-                            </div>
-                          </div>
                         </div>
 
                         <div class="form-groups" ng-show="sources.images">
@@ -249,6 +226,9 @@
                           </div>
                         </div>
                       </dl>
+                      <div ng-if="!sources.git && !sources.dockerfile && !sources.images">
+                        There are no editable source types for this build config.
+                      </div>
                     </div>
 
                     <div ng-if="updatedBuildConfig | isJenkinsPipelineStrategy" class="section">
@@ -433,7 +413,7 @@
                         <key-value-editor
                           ng-if="envVars"
                           entries="envVars"
-                          key-validator="[a-zA-Z][a-zA-Z0-9_]*"
+                          key-validator="[a-zA-Z_][a-zA-Z0-9_]*"
                           key-validator-error-tooltip="A valid environment variable name is an alphanumeric (a-z and 0-9) string beginning with a letter that may contain underscores."
                           add-row-link="Add environment variable"></key-value-editor>
                       </div>

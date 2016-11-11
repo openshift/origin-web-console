@@ -176,6 +176,9 @@ window.OPENSHIFT_CONSTANTS = {
             {
               label: "Secrets",
               href: "/browse/secrets",
+              prefixes: [
+                "/browse/secrets/"
+              ],
               canI: {
                 resource: 'secrets',
                 verb: 'list'
