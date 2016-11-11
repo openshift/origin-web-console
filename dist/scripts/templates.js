@@ -4305,7 +4305,7 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "<i class=\"pficon pficon-help\"></i>\n" +
     "</a>\n" +
     "</span></span></h3>\n" +
-    "<key-value-editor entries=\"buildConfigEnvVars\" key-placeholder=\"name\" value-placeholder=\"value\" key-validator=\"[a-zA-Z][a-zA-Z0-9_]*\" key-validator-error-tooltip=\"A valid environment variable name is an alphanumeric (a-z and 0-9) string beginning with a letter that may contain underscores.\" add-row-link=\"Add environment variable\"></key-value-editor>\n" +
+    "<key-value-editor entries=\"buildConfigEnvVars\" key-placeholder=\"name\" value-placeholder=\"value\" key-validator=\"[a-zA-Z_][a-zA-Z0-9_]*\" key-validator-error-tooltip=\"A valid environment variable name is an alphanumeric (a-z and 0-9) string beginning with a letter that may contain underscores.\" add-row-link=\"Add environment variable\"></key-value-editor>\n" +
     "</osc-form-section>\n" +
     "\n" +
     "<osc-form-section header=\"Deployment Configuration\" about-title=\"Deployment Configuration\" about=\"Deployment configurations describe how your application is configured\n" +
@@ -4341,7 +4341,7 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "</div>\n" +
     "<key-value-editor entries=\"DCEnvVarsFromImage\" is-readonly cannot-add cannot-sort cannot-delete></key-value-editor>\n" +
     "</div>\n" +
-    "<key-value-editor entries=\"DCEnvVarsFromUser\" key-placeholder=\"name\" value-placeholder=\"value\" key-validator=\"[a-zA-Z][a-zA-Z0-9_]*\" key-validator-error-tooltip=\"A valid environment variable name is an alphanumeric (a-z and 0-9) string beginning with a letter that may contain underscores.\" add-row-link=\"Add environment variable\"></key-value-editor>\n" +
+    "<key-value-editor entries=\"DCEnvVarsFromUser\" key-placeholder=\"name\" value-placeholder=\"value\" key-validator=\"[a-zA-Z_][a-zA-Z0-9_]*\" key-validator-error-tooltip=\"A valid environment variable name is an alphanumeric (a-z and 0-9) string beginning with a letter that may contain underscores.\" add-row-link=\"Add environment variable\"></key-value-editor>\n" +
     "</div>\n" +
     "</div>\n" +
     "</osc-form-section>\n" +
@@ -6178,7 +6178,7 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "</div>\n" +
     "<div class=\"form-group\">\n" +
     "<label>Environment Variables</label>\n" +
-    "<key-value-editor entries=\"hookParams.execNewPod.env\" key-validator=\"[a-zA-Z][a-zA-Z0-9_]*\" key-validator-error-tooltip=\"A valid environment variable name is an alphanumeric (a-z and 0-9) string beginning with a letter that may contain underscores.\" add-row-link=\"Add environment variable\"></key-value-editor>\n" +
+    "<key-value-editor entries=\"hookParams.execNewPod.env\" key-validator=\"[a-zA-Z_][a-zA-Z0-9_]*\" key-validator-error-tooltip=\"A valid environment variable name is an alphanumeric (a-z and 0-9) string beginning with a letter that may contain underscores.\" add-row-link=\"Add environment variable\"></key-value-editor>\n" +
     "<div class=\"help-block\">\n" +
     "Environment variables to supply to the hook pod's container.\n" +
     "</div>\n" +
@@ -7692,7 +7692,7 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "</a>\n" +
     "</span></h3>\n" +
     "<div>\n" +
-    "<key-value-editor ng-if=\"envVars\" entries=\"envVars\" key-validator=\"[a-zA-Z][a-zA-Z0-9_]*\" key-validator-error-tooltip=\"A valid environment variable name is an alphanumeric (a-z and 0-9) string beginning with a letter that may contain underscores.\" add-row-link=\"Add environment variable\"></key-value-editor>\n" +
+    "<key-value-editor ng-if=\"envVars\" entries=\"envVars\" key-validator=\"[a-zA-Z_][a-zA-Z0-9_]*\" key-validator-error-tooltip=\"A valid environment variable name is an alphanumeric (a-z and 0-9) string beginning with a letter that may contain underscores.\" add-row-link=\"Add environment variable\"></key-value-editor>\n" +
     "</div>\n" +
     "</div>\n" +
     "<div ng-if=\"sources.git || !(updatedBuildConfig | isJenkinsPipelineStrategy)\" class=\"section\">\n" +
@@ -7853,7 +7853,7 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "</div>\n" +
     "<div class=\"form-group\">\n" +
     "<label>Environment Variables</label>\n" +
-    "<key-value-editor entries=\"strategyData.customParams.environment\" key-validator=\"[a-zA-Z][a-zA-Z0-9_]*\" key-validator-error-tooltip=\"A valid environment variable name is an alphanumeric (a-z and 0-9) string beginning with a letter that may contain underscores.\" add-row-link=\"Add environment variable\"></key-value-editor>\n" +
+    "<key-value-editor entries=\"strategyData.customParams.environment\" key-validator=\"[a-zA-Z_][a-zA-Z0-9_]*\" key-validator-error-tooltip=\"A valid environment variable name is an alphanumeric (a-z and 0-9) string beginning with a letter that may contain underscores.\" add-row-link=\"Add environment variable\"></key-value-editor>\n" +
     "</div>\n" +
     "</div>\n" +
     "<div ng-if=\"strategyData.type !== 'Custom'\">\n" +
@@ -8024,7 +8024,7 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "<div class=\"container-name\">\n" +
     "<h4>Container {{containerName}}</h4>\n" +
     "</div>\n" +
-    "<key-value-editor ng-if=\"containerConfig\" entries=\"containerConfig.env\" key-validator=\"[a-zA-Z][a-zA-Z0-9_]*\" key-validator-error-tooltip=\"A valid environment variable name is an alphanumeric (a-z and 0-9) string beginning with a letter that may contain underscores.\" add-row-link=\"Add environment variable\"></key-value-editor>\n" +
+    "<key-value-editor ng-if=\"containerConfig\" entries=\"containerConfig.env\" key-validator=\"[a-zA-Z_][a-zA-Z0-9_]*\" key-validator-error-tooltip=\"A valid environment variable name is an alphanumeric (a-z and 0-9) string beginning with a letter that may contain underscores.\" add-row-link=\"Add environment variable\"></key-value-editor>\n" +
     "</div>\n" +
     "</div>\n" +
     "<div class=\"buttons gutter-top-bottom\">\n" +
