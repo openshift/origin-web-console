@@ -67,28 +67,25 @@ angular.module('openshiftConsole')
           spec: {
             resources: {
               requests:{}
-            },
-              selector:{
-                matchLabels:{}
             }
           }
         };
 
-          pvc.spec.accessModes = [$scope.claim.accessModes || "ReadWriteOnce"] ;
-          var unit =  $scope.claim.unit || "Mi";
-          pvc.spec.resources.requests.storage = $scope.claim.amount + unit;
-          if ($scope.claim.selectedLabels) {
-            pvc.spec.selector.matchLabels = keyValueEditorUtils.mapEntries( keyValueEditorUtils.compactEntries($scope.claim.selectedLabels) );
+        pvc.spec.accessModes = [$scope.claim.accessModes || "ReadWriteOnce"] ;
+        var unit =  $scope.claim.unit || "Mi";
+        pvc.spec.resources.requests.storage = $scope.claim.amount + unit;
+        if ($scope.claim.selectedLabels) {
+          var selectorLabel = keyValueEditorUtils.mapEntries( keyValueEditorUtils.compactEntries($scope.claim.selectedLabels) );
+          if (!_.isEmpty(selectorLabel)) {
+            _.set(pvc, 'spec.selector.matchLabels', selectorLabel);
           }
-          else {
-            pvc.spec.selector = {};
-          }
-          if ($scope.claim.storageClass ) {
-            //we can only have one storage class per claim
-            pvc.metadata.annotations["volume.beta.kubernetes.io/storage-class"] = $scope.claim.storageClass.metadata.name;
-          }
+        }
+        if ($scope.claim.storageClass ) {
+          //we can only have one storage class per claim
+          pvc.metadata.annotations["volume.beta.kubernetes.io/storage-class"] = $scope.claim.storageClass.metadata.name;
+        }
 
-          return pvc;
+        return pvc;
         }
 
     }));
