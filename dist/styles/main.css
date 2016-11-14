@@ -3995,7 +3995,7 @@ labels+.resource-details{margin-top:10px}
 .environment-variables.table.table-bordered>tbody>tr>td:last-child .env-var-value a{font-family:"Open Sans",Helvetica,Arial,sans-serif}
 .pretty-json{font-family:Menlo,Monaco,Consolas,monospace;white-space:pre-wrap}
 .info-popover,.warnings-popover{cursor:help;vertical-align:middle;margin-left:2px}
-copy-to-clipboard .input-group{max-width:300px}
+copy-to-clipboard .input-group.limit-width{max-width:300px}
 .strong{font-weight:700}
 .tech-preview-header{justify-content:space-between}
 @media (max-width:479px){.col-xxs-12{width:100%}

@@ -9756,7 +9756,9 @@ return {
 restrict:"E",
 scope:{
 clipboardText:"=",
-isDisabled:"=?"
+isDisabled:"=?",
+displayWide:"=?",
+inputText:"=?"
 },
 templateUrl:"views/directives/_copy-to-clipboard.html",
 controller:[ "$scope", function(a) {
@@ -9764,14 +9766,16 @@ a.id = _.uniqueId("clipboardJs");
 } ],
 link:function(b, c) {
 if (a) return void (b.hidden = !0);
-var d = $("a", c), e = new Clipboard(d.get(0));
-e.on("success", function(a) {
+var d = $("a", c), e = d.get(0);
+b.inputText && (e = d.get(1));
+var f = new Clipboard(e);
+f.on("success", function(a) {
 $(a.trigger).attr("title", "Copied!").tooltip("fixTitle").tooltip("show").attr("title", "Copy to clipboard").tooltip("fixTitle"), a.clearSelection();
-}), e.on("error", function(a) {
+}), f.on("error", function(a) {
 var b = /Mac/i.test(navigator.userAgent) ? "Press ⌘C to copy" :"Press Ctrl-C to copy";
 $(a.trigger).attr("title", b).tooltip("fixTitle").tooltip("show").attr("title", "Copy to clipboard").tooltip("fixTitle");
 }), c.on("$destroy", function() {
-e.destroy();
+f.destroy();
 });
 }
 };

@@ -1,7 +1,13 @@
-<div class="input-group copy-to-clipboard">
-  <input id="{{id}}" type="text" class="form-control" value="{{clipboardText}}" ng-disabled="isDisabled" ng-readonly="!isDisabled" select-on-focus>
+<div class="input-group copy-to-clipboard" ng-class="{'limit-width': !displayWide}">
+  <input id="{{id}}" type="text" class="form-control" value="{{inputText ? inputText : clipboardText}}" ng-disabled="isDisabled" ng-readonly="!isDisabled" select-on-focus>
   <span class="input-group-btn" ng-hide="hidden">
-    <a data-clipboard-target="#{{id}}"
+    <a ng-show="!inputText" data-clipboard-target="#{{id}}"
+            ng-disabled="isDisabled"
+            data-toggle="tooltip"
+            title="Copy to clipboard"
+            role="button"
+            class="btn btn-default"><i class="fa fa-clipboard"/></a>
+    <a ng-show="inputText" data-clipboard-text="{{clipboardText}}"
             ng-disabled="isDisabled"
             data-toggle="tooltip"
             title="Copy to clipboard"
