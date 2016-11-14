@@ -139,7 +139,7 @@ angular.module('openshiftConsole')
               // TODO: common alerts service to eliminate duplication
               $scope.alerts["cancel"] = {
                 type: "success",
-                message: "Cancelling build " + build.metadata.name + " of " + $scope.buildConfigName + "."
+                message: "Cancelled build " + build.metadata.name + " of " + $scope.buildConfigName + "."
               };
             }, function reject(result) {
               // TODO: common alerts service to eliminate duplication
