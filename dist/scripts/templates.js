@@ -3171,7 +3171,7 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "<dt>Hostname<span ng-if=\"route.status.ingress.length > 1\">s</span>:</dt>\n" +
     "<dd>\n" +
     "<span ng-if=\"!route.status.ingress\">\n" +
-    "{{route | routeLabel}}\n" +
+    "{{route | routeLabel : null : true}}\n" +
     "<span data-toggle=\"popover\" data-trigger=\"hover\" data-content=\"The route is not accepting traffic yet because it has not been admitted by a router.\" style=\"cursor: help; padding-left: 5px\">\n" +
     "<status-icon status=\"'Pending'\" disable-animation></status-icon>\n" +
     "<span class=\"sr-only\">Pending</span>\n" +
@@ -3179,7 +3179,7 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "</span>\n" +
     "<div ng-repeat=\"ingress in route.status.ingress\">\n" +
     "<span ng-if=\"(route | isWebRoute)\">\n" +
-    "<a href=\"{{route | routeWebURL : ingress.host}}\" target=\"_blank\">{{route | routeLabel : ingress.host}}</a>\n" +
+    "<a ng-href=\"{{route | routeWebURL : ingress.host}}\" target=\"_blank\">{{route | routeLabel : ingress.host : true}}</a>\n" +
     "</span>\n" +
     "<span ng-if=\"!(route | isWebRoute)\">\n" +
     "{{route | routeLabel : ingress.host}}\n" +

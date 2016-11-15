@@ -12767,15 +12767,15 @@ return function(b) {
 return !!a(b) && "Subdomain" !== _.get(b, "spec.wildcardPolicy");
 };
 } ]).filter("routeWebURL", [ "routeHostFilter", function(a) {
-return function(b, c) {
-var d = b.spec.tls && "" !== b.spec.tls.tlsTerminationType ? "https" :"http", e = d + "://" + (c || a(b));
-return b.spec.path && (e += b.spec.path), e;
+return function(b, c, d) {
+var e = b.spec.tls && "" !== b.spec.tls.tlsTerminationType ? "https" :"http", f = e + "://" + (c || a(b));
+return b.spec.path && !d && (f += b.spec.path), f;
 };
 } ]).filter("routeLabel", [ "RoutesService", "routeHostFilter", "routeWebURLFilter", "isWebRouteFilter", function(a, b, c, d) {
-return function(e, f) {
-if (d(e)) return c(e, f);
-var g = f || b(e);
-return g ? ("Subdomain" === _.get(e, "spec.wildcardPolicy") && (g = "*." + a.getSubdomain(e)), e.spec.path && (g += e.spec.path), g) :"<unknown host>";
+return function(e, f, g) {
+if (d(e)) return c(e, f, g);
+var h = f || b(e);
+return h ? ("Subdomain" === _.get(e, "spec.wildcardPolicy") && (h = "*." + a.getSubdomain(e)), g ? h :(e.spec.path && (h += e.spec.path), h)) :"<unknown host>";
 };
 } ]).filter("parameterPlaceholder", function() {
 return function(a) {
