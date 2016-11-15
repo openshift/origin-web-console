@@ -1067,7 +1067,7 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "<dd>\n" +
     "<span ng-if=\"build.status.startTimestamp\">\n" +
     "<relative-timestamp timestamp=\"build.status.startTimestamp\"></relative-timestamp>\n" +
-    "<span><span class=\"text-muted\">&ndash;</span> {{build.status.startTimestamp | date : 'MMM dd, yyyy h:mm a'}}</span>\n" +
+    "<span><span class=\"text-muted\">&ndash;</span> {{build.status.startTimestamp | date : 'medium'}}</span>\n" +
     "</span>\n" +
     "<span ng-if=\"!build.status.startTimestamp\"><em>not started</em></span>\n" +
     "</dd>\n" +
@@ -1912,9 +1912,9 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "<status-icon status=\"build.status.phase\"></status-icon>\n" +
     "<span class=\"space-after\">{{build.status.phase}}</span>\n" +
     "<div ng-if=\"build.status.startTimestamp && !logEmpty\" class=\"log-timestamps\">\n" +
-    "Log from {{build.status.startTimestamp | date : 'short'}}\n" +
+    "Log from {{build.status.startTimestamp | date : 'medium'}}\n" +
     "<span ng-if=\"build.status.completionTimestamp\">\n" +
-    "to {{build.status.completionTimestamp | date : 'short'}}\n" +
+    "to {{build.status.completionTimestamp | date : 'medium'}}\n" +
     "</span>\n" +
     "</div>\n" +
     "</log-viewer>\n" +
@@ -2801,7 +2801,7 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "<span>{{containerStateReason || containerStatusKey | sentenceCase}}</span>\n" +
     "</span>\n" +
     "<span ng-if=\"containerStartTime && !logEmpty\">\n" +
-    "<span class=\"log-timestamps\">Log from {{containerStartTime | date : 'short'}} <span ng-if=\"containerEndTime\">to {{containerEndTime | date : 'short'}}</span></span>\n" +
+    "<span class=\"log-timestamps\">Log from {{containerStartTime | date : 'medium'}} <span ng-if=\"containerEndTime\">to {{containerEndTime | date : 'medium'}}</span></span>\n" +
     "</span>\n" +
     "</log-viewer>\n" +
     "</uib-tab>\n" +
@@ -8368,7 +8368,7 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "</div>\n" +
     "</div>\n" +
     "<div class=\"middle-content\">\n" +
-    "<log-viewer resource=\"builds/log\" name=\"build.metadata.name\" context=\"projectContext\" status=\"build.status.phase\" time-start=\"build.status.startTimestamp | date : 'short'\" time-end=\"build.status.completionTimestamp | date : 'short'\" chromeless=\"true\" run=\"logCanRun\" flex>\n" +
+    "<log-viewer resource=\"builds/log\" name=\"build.metadata.name\" context=\"projectContext\" status=\"build.status.phase\" time-start=\"build.status.startTimestamp | date : 'medium'\" time-end=\"build.status.completionTimestamp | date : 'medium'\" chromeless=\"true\" run=\"logCanRun\" flex>\n" +
     "</log-viewer>\n" +
     "</div>\n" +
     "</div>\n" +
@@ -8420,7 +8420,7 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "</div>\n" +
     "</div>\n" +
     "<div class=\"middle-content\">\n" +
-    "<log-viewer resource=\"pods/log\" name=\"pod.metadata.name\" context=\"projectContext\" options=\"logOptions\" status=\"pod.status.phase\" time-start=\"pod.status.startTime | date : 'short'\" chromeless=\"true\" run=\"logCanRun\" flex>\n" +
+    "<log-viewer resource=\"pods/log\" name=\"pod.metadata.name\" context=\"projectContext\" options=\"logOptions\" status=\"pod.status.phase\" time-start=\"pod.status.startTime | date : 'medium'\" chromeless=\"true\" run=\"logCanRun\" flex>\n" +
     "</log-viewer>\n" +
     "</div>\n" +
     "</div>\n" +
@@ -8986,9 +8986,9 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "\n" +
     "<log-viewer ng-if=\"'builds/log' | canI : 'get'\" resource=\"builds/log\" name=\"build.metadata.name\" context=\"projectContext\" options=\"logOptions.builds[build.metadata.name]\" empty=\"logEmpty.builds[build.metadata.name]\" run=\"logCanRun.builds[build.metadata.name]\" fixed-height=\"250\" full-log-url=\"(build | navigateResourceURL) + '?view=chromeless'\">\n" +
     "<div ng-if=\"build.status.startTimestamp && !logEmpty.builds[build.metadata.name]\" class=\"log-timestamps\" style=\"margin-left: 0\">\n" +
-    "Log from {{build.status.startTimestamp | date : 'short'}}\n" +
+    "Log from {{build.status.startTimestamp | date : 'medium'}}\n" +
     "<span ng-if=\"build.status.completionTimestamp\">\n" +
-    "to {{build.status.completionTimestamp | date : 'short'}}\n" +
+    "to {{build.status.completionTimestamp | date : 'medium'}}\n" +
     "</span>\n" +
     "</div>\n" +
     "</log-viewer>\n" +
@@ -9152,7 +9152,7 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "<span>{{containerStateReason || containerStatusKey | sentenceCase}}</span>\n" +
     "</span>\n" +
     "<span ng-if=\"containerStartTime && !logEmpty.pods[pod.metadata.name]\">\n" +
-    "<span class=\"log-timestamps\">Log from {{containerStartTime | date : 'short'}} <span ng-if=\"containerEndTime\">to {{containerEndTime | date : 'short'}}</span></span>\n" +
+    "<span class=\"log-timestamps\">Log from {{containerStartTime | date : 'medium'}} <span ng-if=\"containerEndTime\">to {{containerEndTime | date : 'medium'}}</span></span>\n" +
     "</span>\n" +
     "</log-viewer>\n" +
     "\n" +
