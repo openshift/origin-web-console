@@ -403,8 +403,8 @@ angular.module('openshiftConsole')
   // Note that builds and deployments can only have their URL built correctly (including their config in the URL)
   // if resource is an object
   .filter('navigateResourceURL', function(Navigate) {
-    return function(resource, kind, namespace) {
-      return Navigate.resourceURL(resource, kind, namespace);
+    return function(resource, kind, namespace, apiVersion) {
+      return Navigate.resourceURL(resource, kind, namespace, null, {apiVersion: apiVersion});
     };
   })
   .filter('configURLForResource', function(Navigate) {

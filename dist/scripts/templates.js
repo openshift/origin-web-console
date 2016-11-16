@@ -5865,7 +5865,8 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "<td data-title=\"Time\" class=\"nowrap\">{{event.lastTimestamp | date:'mediumTime'}}</td>\n" +
     "<td ng-if=\"!resourceKind || !resourceName\" data-title=\"Name\">\n" +
     "<div class=\"hidden-xs-block visible-sm-block visible-md-block hidden-lg-block\">{{event.involvedObject.kind | humanizeKind : true}}</div>\n" +
-    "{{event.involvedObject.name}}\n" +
+    "<a ng-href=\"{{event.involvedObject.name | navigateResourceURL : event.involvedObject.kind : event.metadata.namespace : event.involvedObject.apiVersion}}\" ng-if=\"event.involvedObject.name | navigateResourceURL : event.involvedObject.kind : event.metadata.namespace : event.involvedObject.apiVersion\">{{event.involvedObject.name}}</a>\n" +
+    "<span ng-if=\"!(event.involvedObject.name | navigateResourceURL : event.involvedObject.kind : event.metadata.namespace : event.involvedObject.apiVersion)\">{{event.involvedObject.name}}</span>\n" +
     "</td>\n" +
     "<td ng-if=\"!resourceKind || !resourceName\" class=\"hidden-sm hidden-md\" data-title=\"Kind\">\n" +
     "{{event.involvedObject.kind | humanizeKind : true}}</td>\n" +
