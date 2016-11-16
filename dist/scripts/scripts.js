@@ -78,6 +78,10 @@ label:"Deployments",
 href:"/browse/deployments",
 prefixes:[ "/browse/deployment/", "/browse/dc/", "/browse/rs/", "/browse/rc/" ]
 }, {
+label:"Stateful Sets",
+href:"/browse/stateful-sets",
+prefixes:[ "/browse/stateful-sets/" ]
+}, {
 label:"Pods",
 href:"/browse/pods",
 prefixes:[ "/browse/pods/" ]
@@ -362,6 +366,14 @@ reloadOnSearch:!1
 }).when("/project/:project/edit/dc/:deploymentconfig", {
 templateUrl:"views/edit/deployment-config.html",
 controller:"EditDeploymentConfigController"
+}).when("/project/:project/browse/stateful-sets/", {
+templateUrl:"views/browse/stateful-sets.html",
+controller:"StatefulSetsController",
+reloadOnSearch:!1
+}).when("/project/:project/browse/stateful-sets/:statefulset", {
+templateUrl:"views/browse/stateful-set.html",
+controller:"StatefulSetController",
+reloadOnSearch:!1
 }).when("/project/:project/browse/rs/:replicaSet", {
 templateUrl:"views/browse/replica-set.html",
 resolve:{
@@ -2236,6 +2248,10 @@ break;
 case "ImageStreamTag":
 var m = h.indexOf(":");
 i.segment("images").segmentCoded(h.substring(0, m)).segmentCoded(h.substring(m + 1));
+break;
+
+case "StatefulSet":
+i.segment("stateful-sets").segmentCoded(h);
 break;
 
 case "PersistentVolumeClaim":
@@ -6439,6 +6455,73 @@ e.then(g);
 g.unwatchAll(w);
 });
 }));
+} ]), angular.module("openshiftConsole").controller("StatefulSetsController", [ "$scope", "$routeParams", "AlertMessageService", "DataService", "ProjectsService", function(a, b, c, d, e) {
+a.projectName = b.project, a.alerts = a.alerts || {}, a.emptyMessage = "Loading...", c.getAlerts().forEach(function(b) {
+a.alerts[b.name] = b.data;
+}), c.clearAlerts();
+var f = [];
+e.get(b.project).then(_.spread(function(b, c) {
+a.project = b, f.push(d.watch({
+resource:"statefulsets",
+group:"apps",
+version:"v1beta1"
+}, c, function(b) {
+angular.extend(a, {
+loaded:!0,
+statefulSets:b.by("metadata.name")
+});
+})), a.$on("$destroy", function() {
+d.unwatchAll(f);
+});
+}));
+} ]), angular.module("openshiftConsole").controller("StatefulSetController", [ "$filter", "$scope", "$routeParams", "AlertMessageService", "BreadcrumbsService", "DataService", "ProjectsService", function(a, b, c, d, e, f, g) {
+b.projectName = c.project, b.statefulSetName = c.statefulset, b.forms = {}, b.alerts = {}, b.breadcrumbs = e.getBreadcrumbs({
+name:b.statefulSetName,
+kind:"statefulSet",
+namespace:c.project
+}), b.emptyMessage = "Loading...";
+var h = a("altTextForValueFrom"), i = function(a) {
+return _.each(a.spec.template.spec.containers, function(a) {
+_.each(a.env, h);
+}), a;
+};
+d.getAlerts().forEach(function(a) {
+b.alerts[a.name] = a.data;
+}), d.clearAlerts();
+var j, k = [], l = function(a, b) {
+if (a && b) return b.select(a);
+}, m = {
+resource:"statefulsets",
+group:"apps",
+version:"v1beta1"
+};
+g.get(c.project).then(_.spread(function(a, c) {
+j = c, f.get(m, b.statefulSetName, c).then(function(d) {
+angular.extend(b, {
+statefulSet:i(d),
+project:a,
+projectContext:c,
+loaded:!0,
+isScalable:function() {
+return !1;
+},
+scale:function() {}
+}), k.push(f.watchObject(m, b.statefulSetName, c, function(a) {
+angular.extend(b, {
+resourceGroupVersion:m,
+statefulSet:i(a)
+});
+}));
+var e, g;
+b.$watch("statefulSet.spec.selector", function() {
+g = new LabelSelector(b.statefulSet.spec.selector), b.podsForStatefulSet = l(e, g);
+}, !0), k.push(f.watch("pods", c, function(a) {
+e = a.by("metadata.name"), b.podsForStatefulSet = l(e, g);
+}));
+});
+})), b.$on("$destroy", function() {
+f.unwatchAll(k);
+});
 } ]), angular.module("openshiftConsole").controller("ServicesController", [ "$routeParams", "$scope", "AlertMessageService", "DataService", "ProjectsService", "$filter", "LabelFilter", "Logger", function(a, b, c, d, e, f, g, h) {
 b.projectName = a.project, b.services = {}, b.unfilteredServices = {}, b.routesByService = {}, b.routes = {}, b.labelSuggestions = {}, b.alerts = b.alerts || {}, b.emptyMessage = "Loading...", b.emptyMessageRoutes = "Loading...", c.getAlerts().forEach(function(a) {
 b.alerts[a.name] = a.data;
@@ -10353,6 +10436,14 @@ removeFn:"&?"
 },
 templateUrl:"views/_volumes.html"
 };
+}).directive("volumeClaimTemplates", function() {
+return {
+restrict:"E",
+scope:{
+templates:"="
+},
+templateUrl:"views/_volume-claim-templates.html"
+};
 }).directive("environment", function() {
 return {
 restrict:"E",
@@ -14198,6 +14289,11 @@ projects:[ {
 group:"",
 resource:"projects",
 verbs:[ "delete", "update" ]
+} ],
+statefulsets:[ {
+group:"apps",
+resource:"statefulsets",
+verbs:[ "update", "delete" ]
 } ]
 };
 return function(c) {

@@ -797,6 +797,48 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
   );
 
 
+  $templateCache.put('views/_volume-claim-templates.html',
+    "<div class=\"pod-template-block\">\n" +
+    "<div ng-repeat=\"template in templates\" class=\"pod-template\">\n" +
+    "<div class=\"component-label\">Storage claim: {{template.metadata.name}}</div>\n" +
+    "<div row class=\"pod-template-image icon-row\">\n" +
+    "<div>\n" +
+    "<span class=\"fa fa-lock\" aria-hidden=\"true\"></span>\n" +
+    "</div>\n" +
+    "<div flex class=\"word-break\">\n" +
+    "<span class=\"pod-template-key\">Access Modes:</span>\n" +
+    "<span ng-repeat=\"mode in template.spec.accessModes\">\n" +
+    "{{mode | sentenceCase }}<span ng-if=\"!$last\">, </span>\n" +
+    "</span>\n" +
+    "</div>\n" +
+    "</div>\n" +
+    "<div row class=\"pod-template-image icon-row\">\n" +
+    "<div>\n" +
+    "<span class=\"fa fa-database\" aria-hidden=\"true\"></span>\n" +
+    "</div>\n" +
+    "<div flex class=\"word-break\">\n" +
+    "<span class=\"pod-template-key\">Capacity:</span>\n" +
+    "<span>\n" +
+    "{{template.spec.resources.requests.storage}}\n" +
+    "</span>\n" +
+    "</div>\n" +
+    "</div>\n" +
+    "<div row class=\"pod-template-image icon-row\" ng-if=\"template.spec.selector.matchLabels\">\n" +
+    "<div>\n" +
+    "<span class=\"fa fa-tag\" aria-hidden=\"true\"></span>\n" +
+    "</div>\n" +
+    "<div flex class=\"word-break\">\n" +
+    "<span class=\"pod-template-key\">Selector:</span>\n" +
+    "<span ng-repeat=\"(key, value) in template.spec.selector.matchLabels\">\n" +
+    "{{key}}={{value}}<span ng-if=\"!$last\">, </span>\n" +
+    "</span>\n" +
+    "</div>\n" +
+    "</div>\n" +
+    "</div>\n" +
+    "</div>"
+  );
+
+
   $templateCache.put('views/_volumes.html',
     " <div ng-repeat=\"volume in volumes\">\n" +
     "<h4>\n" +
@@ -3985,6 +4027,194 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "<events resource-kind=\"Service\" resource-name=\"{{service.metadata.name}}\" project-context=\"projectContext\" ng-if=\"selectedTab.events\"></events>\n" +
     "</uib-tab>\n" +
     "</uib-tabset>\n" +
+    "</div>\n" +
+    "</div>\n" +
+    "</div>\n" +
+    "</div>\n" +
+    "</div>\n" +
+    "</div>\n" +
+    "</project-page>"
+  );
+
+
+  $templateCache.put('views/browse/stateful-set.html',
+    "<project-header class=\"top-header\"></project-header>\n" +
+    "<project-page>\n" +
+    "<div class=\"middle-section\">\n" +
+    "<div class=\"middle-container\">\n" +
+    "<div class=\"middle-header\">\n" +
+    "<div class=\"container-fluid\">\n" +
+    "<breadcrumbs breadcrumbs=\"breadcrumbs\"></breadcrumbs>\n" +
+    "<alerts alerts=\"alerts\"></alerts>\n" +
+    "<div>\n" +
+    "<h1>\n" +
+    "{{statefulSet.metadata.name}}\n" +
+    "<div class=\"pull-right dropdown\" ng-if=\"statefulSet\" ng-show=\"resourceGroupVersion.resource | canIDoAny\">\n" +
+    "<button type=\"button\" class=\"dropdown-toggle btn btn-default actions-dropdown-btn hidden-xs\" data-toggle=\"dropdown\">\n" +
+    "Actions\n" +
+    "<span class=\"caret\" aria-hidden=\"true\"></span>\n" +
+    "</button>\n" +
+    "<a href=\"\" class=\"dropdown-toggle actions-dropdown-kebab visible-xs-inline\" data-toggle=\"dropdown\">\n" +
+    "<i class=\"fa fa-ellipsis-v\"></i><span class=\"sr-only\">Actions</span>\n" +
+    "</a>\n" +
+    "<ul class=\"dropdown-menu actions action-button\">\n" +
+    "<li ng-if=\"resourceGroupVersion | canI : 'update'\">\n" +
+    "<a ng-href=\"{{statefulSet | editYamlURL}}\" role=\"button\">Edit YAML</a>\n" +
+    "</li>\n" +
+    "<li ng-if=\"resourceGroupVersion | canI : 'delete'\">\n" +
+    "<delete-link kind=\"statefulSet\" group=\"apps\" resource-name=\"{{statefulSet.metadata.name}}\" project-name=\"{{statefulSet.metadata.namespace}}\" replicas=\"statefulSet.spec.replicas\" alerts=\"alerts\">\n" +
+    "</delete-link>\n" +
+    "</li>\n" +
+    "</ul>\n" +
+    "</div>\n" +
+    "</h1>\n" +
+    "<labels labels=\"statefulSet.metadata.labels\" clickable=\"true\" kind=\"statefulSets\" project-name=\"{{statefulSet.metadata.namespace}}\" limit=\"3\"></labels>\n" +
+    "</div>\n" +
+    "</div>\n" +
+    "</div>\n" +
+    "<div class=\"middle-content\" persist-tab-state>\n" +
+    "<div class=\"container-fluid\">\n" +
+    "<div ng-if=\"!loaded\">Loading...</div>\n" +
+    "<div class=\"row\" ng-if=\"loaded\">\n" +
+    "<div class=\"col-md-12\">\n" +
+    "<uib-tabset>\n" +
+    "<uib-tab active=\"selectedTab.details\">\n" +
+    "<uib-tab-heading>Details</uib-tab-heading>\n" +
+    "<div class=\"row\" style=\"max-width: 650px\">\n" +
+    "<div class=\"col-sm-4 col-sm-push-8 browse-deployment-donut\">\n" +
+    "\n" +
+    "<deployment-donut deployment=\"statefulSet\" pods=\"podsForStatefulSet\" scalable=\"isScalable()\" alerts=\"alerts\">\n" +
+    "</deployment-donut>\n" +
+    "</div>\n" +
+    "<div class=\"col-sm-8 col-sm-pull-4\">\n" +
+    "<dl class=\"dl-horizontal left\">\n" +
+    "<dt>Status:</dt>\n" +
+    "<dd>\n" +
+    "<status-icon status=\"statefulSet | deploymentStatus\"></status-icon>\n" +
+    "{{statefulSet | deploymentStatus}}\n" +
+    "</dd>\n" +
+    "<dt>Replicas:</dt>\n" +
+    "<dd>\n" +
+    "<replicas status=\"statefulSet.status.replicas\" spec=\"statefulSet.spec.replicas\" disable-scaling=\"!isScalable()\" scale-fn=\"scale(replicas)\" deployment=\"statefulSet\">\n" +
+    "</replicas>\n" +
+    "\n" +
+    "</dd>\n" +
+    "</dl>\n" +
+    "<h3>Template</h3>\n" +
+    "<pod-template pod-template=\"statefulSet.spec.template\" detailed=\"true\">\n" +
+    "</pod-template>\n" +
+    "<p ng-if=\"!statefulSet.spec.volumeClaimTemplates.length\">\n" +
+    "none\n" +
+    "</p>\n" +
+    "<volume-claim-templates templates=\"statefulSet.spec.volumeClaimTemplates\" namespace=\"project.metadata.name\">\n" +
+    "</volume-claim-templates>\n" +
+    "</div>\n" +
+    "</div>\n" +
+    "<div class=\"row\">\n" +
+    "<div class=\"col-md-12\">\n" +
+    "<h3>Volumes</h3>\n" +
+    "<p ng-if=\"!statefulSet.spec.template.spec.volumes.length\">\n" +
+    "none\n" +
+    "</p>\n" +
+    "<volumes volumes=\"statefulSet.spec.template.spec.volumes\" namespace=\"project.metadata.name\">\n" +
+    "</volumes>\n" +
+    "<h3>Pods</h3>\n" +
+    "<pods-table pods=\"podsForStatefulSet\"></pods-table>\n" +
+    "<annotations annotations=\"statefulSet.metadata.annotations\"></annotations>\n" +
+    "</div>\n" +
+    "</div>\n" +
+    "</uib-tab>\n" +
+    "<uib-tab active=\"selectedTab.environment\" ng-if=\"statefulSet\">\n" +
+    "<uib-tab-heading>Environment</uib-tab-heading>\n" +
+    "<div class=\"resource-environment\">\n" +
+    "<ng-form name=\"forms.statefulSetEnvVars\">\n" +
+    "<div ng-repeat=\"container in statefulSet.spec.template.spec.containers\">\n" +
+    "<h3>Container {{container.name}} Environment Variables</h3>\n" +
+    "<p>\n" +
+    "Environment variables for stateful sets are readonly.\n" +
+    "<span ng-if=\"!(container.env.length)\">\n" +
+    "There are no environment variables for this container.\n" +
+    "</span>\n" +
+    "</p>\n" +
+    "<key-value-editor entries=\"container.env\" key-placeholder=\"Name\" value-placeholder=\"Value\" is-readonly cannot-add cannot-delete cannot-sort show-header></key-value-editor>\n" +
+    "</div>\n" +
+    "</ng-form>\n" +
+    "</div>\n" +
+    "</uib-tab>\n" +
+    "<uib-tab active=\"selectedTab.metrics\">\n" +
+    "<uib-tab-heading>Metrics</uib-tab-heading>\n" +
+    "<div class=\"resource-metrics\">\n" +
+    "<deployment-metrics ng-if=\"selectedTab.metrics && podsForStatefulSet\" pods=\"podsForStatefulSet\" containers=\"statefulSet.spec.template.spec.containers\" alerts=\"alerts\">\n" +
+    "</deployment-metrics>\n" +
+    "</div>\n" +
+    "</uib-tab>\n" +
+    "<uib-tab active=\"selectedTab.events\">\n" +
+    "<uib-tab-heading>Events</uib-tab-heading>\n" +
+    "<div class=\"resource-events\">\n" +
+    "\n" +
+    "<events resource-kind=\"PetSet\" resource-name=\"{{statefulSet.metadata.name}}\" project-context=\"projectContext\" ng-if=\"selectedTab.events\"></events>\n" +
+    "</div>\n" +
+    "</uib-tab>\n" +
+    "</uib-tabset>\n" +
+    "</div>\n" +
+    "</div>\n" +
+    "</div>\n" +
+    "</div>\n" +
+    "</div>\n" +
+    "</div>\n" +
+    "</project-page>"
+  );
+
+
+  $templateCache.put('views/browse/stateful-sets.html',
+    "<project-header class=\"top-header\"></project-header>\n" +
+    "<project-page>\n" +
+    "<div class=\"middle-section\">\n" +
+    "<div class=\"middle-container\">\n" +
+    "<div class=\"middle-header header-toolbar\">\n" +
+    "<div class=\"container-fluid\">\n" +
+    "<breadcrumbs breadcrumbs=\"breadcrumbs\"></breadcrumbs>\n" +
+    "<alerts alerts=\"alerts\"></alerts>\n" +
+    "<div class=\"page-header page-header-bleed-right page-header-bleed-left\">\n" +
+    "<h1>\n" +
+    "Stateful Sets\n" +
+    "\n" +
+    "</h1>\n" +
+    "</div>\n" +
+    "</div>\n" +
+    "</div>\n" +
+    "<div class=\"middle-content\" persist-tab-state>\n" +
+    "<div class=\"container-fluid\">\n" +
+    "<div ng-if=\"!loaded\">Loading...</div>\n" +
+    "<div class=\"row\" ng-if=\"loaded\">\n" +
+    "<div class=\"col-md-12\">\n" +
+    "<table class=\"table table-bordered table-hover table-mobile\">\n" +
+    "<thead>\n" +
+    "<tr>\n" +
+    "<th>Name</th>\n" +
+    "<th>Replicas</th>\n" +
+    "<th>Created</th>\n" +
+    "</tr>\n" +
+    "</thead>\n" +
+    "<tbody ng-if=\"(statefulSets | hashSize) == 0\">\n" +
+    "<tr>\n" +
+    "<td colspan=\"3\"><em>No stateful sets</em></td>\n" +
+    "</tr>\n" +
+    "</tbody>\n" +
+    "<tbody ng-repeat=\"(statefulSetName, statefulSet) in statefulSets\">\n" +
+    "<tr>\n" +
+    "<td data-title=\"Name\">\n" +
+    "<a ng-href=\"{{statefulSet | navigateResourceURL}}\">{{statefulSet.metadata.name}}</a>\n" +
+    "</td>\n" +
+    "<td data-title=\"Replicas\">\n" +
+    "<span ng-if=\"statefulSet.status.replicas !== statefulSet.spec.replicas\">{{statefulSet.status.replicas}}/</span>{{statefulSet.spec.replicas}} replica<span ng-if=\"statefulSet.spec.replicas != 1\">s</span>\n" +
+    "</td>\n" +
+    "<td data-title=\"Created\">\n" +
+    "<span am-time-ago=\"statefulSet.metadata.creationTimestamp\"></span>\n" +
+    "</td>\n" +
+    "</tr>\n" +
+    "</tbody>\n" +
+    "</table>\n" +
     "</div>\n" +
     "</div>\n" +
     "</div>\n" +

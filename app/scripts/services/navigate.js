@@ -196,6 +196,10 @@ angular.module("openshiftConsole")
               .segmentCoded(name.substring(0, ind))
               .segmentCoded(name.substring(ind + 1));
             break;
+          case "StatefulSet":
+            url.segment("stateful-sets")
+              .segmentCoded(name);
+            break;
           case "PersistentVolumeClaim":
           case "Pod":
           case "Route":
