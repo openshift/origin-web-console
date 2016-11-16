@@ -113,6 +113,7 @@ angular.module("openshiftConsole")
       // pipeline path segment.
       resourceURL: function(resource, kind, namespace, action, opts) {
         action = action || "browse";
+
         if (!resource || (!resource.metadata && (!kind || !namespace))) {
           return null;
         }
@@ -120,10 +121,6 @@ angular.module("openshiftConsole")
         // normalize based on the kind of args we got
         if (!kind) {
           kind = resource.kind;
-        }
-        var group = "";
-        if (resource.apiVersion) {
-          group = APIService.parseGroupVersion(resource.apiVersion).group;
         }
 
         if (!namespace) {
@@ -187,10 +184,29 @@ angular.module("openshiftConsole")
             .segmentCoded(name);
             break;
           default:
+            var rgv;
+            if (resource.metadata) {
+              rgv = APIService.objectToResourceGroupVersion(resource);
+            }
+            else if (_.get(opts, "apiVersion")) {
+              var r = APIService.kindToResource(kind);
+              var gv = APIService.parseGroupVersion(opts.apiVersion);
+              gv.resource = r;
+              rgv = APIService.toResourceGroupVersion(gv);
+            }
+            else {
+              rgv = APIService.toResourceGroupVersion(APIService.kindToResource(kind));
+            }
+            var apiInfo = APIService.apiInfo(rgv);
+            if (!apiInfo) {
+              // This is not an API object we know about from discovery
+              // We won't be able to navigate to it in Other Resources
+              return null;
+            }
             url.segment("other")
             .search({
               kind: kind,
-              group: group
+              group: rgv.group
             });
         }
         return url.toString();

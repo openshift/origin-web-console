@@ -57,7 +57,10 @@
         <td data-title="Time" class="nowrap">{{event.lastTimestamp | date:'mediumTime'}}</td>
         <td ng-if="!resourceKind || !resourceName" data-title="Name">
           <div class="hidden-xs-block visible-sm-block visible-md-block hidden-lg-block">{{event.involvedObject.kind | humanizeKind : true}}</div>
-          {{event.involvedObject.name}}
+          <a
+            ng-href="{{event.involvedObject.name | navigateResourceURL : event.involvedObject.kind : event.metadata.namespace : event.involvedObject.apiVersion}}"
+            ng-if="event.involvedObject.name | navigateResourceURL : event.involvedObject.kind : event.metadata.namespace : event.involvedObject.apiVersion">{{event.involvedObject.name}}</a>
+          <span ng-if="!(event.involvedObject.name | navigateResourceURL : event.involvedObject.kind : event.metadata.namespace : event.involvedObject.apiVersion)">{{event.involvedObject.name}}</span>
         </td>
         <td ng-if="!resourceKind || !resourceName" class="hidden-sm hidden-md" data-title="Kind">
           {{event.involvedObject.kind | humanizeKind : true}}</td>
