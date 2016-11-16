@@ -457,6 +457,9 @@ controller:"CreatePersistentVolumeClaimController"
 }).when("/project/:project/attach-pvc", {
 templateUrl:"views/attach-pvc.html",
 controller:"AttachPVCController"
+}).when("/project/:project/add-config-volume", {
+templateUrl:"views/add-config-volume.html",
+controller:"AddConfigVolumeController"
 }).when("/project/:project/create", {
 templateUrl:"views/create.html",
 controller:"CreateController",
@@ -2994,6 +2997,21 @@ return {
 name:a,
 mountPath:b
 };
+},
+getVolumeNames:function(a) {
+var b = _.get(a, "spec.volumes", []);
+return _.map(b, "name");
+},
+getMountPaths:function(a, b) {
+var c = [], d = _.get(a, "spec.containers", []);
+return _.each(d, function(a) {
+if (!b || b(a)) {
+var d = _.get(a, "volumeMounts", []);
+_.each(d, function(a) {
+c.push(a.mountPath);
+});
+}
+}), c;
 }
 };
 }), angular.module("openshiftConsole").factory("Constants", function() {
@@ -8034,10 +8052,8 @@ hideFilterWidget:!0
 persistentVolumeClaim:null,
 volumeName:null,
 mountPath:null,
-containers:{
-all:!0,
-individual:{}
-}
+allContainers:!0,
+containers:{}
 }, c.breadcrumbs = f.getBreadcrumbs({
 name:b.name,
 kind:b.kind,
@@ -8052,57 +8068,152 @@ type:"error",
 message:a,
 details:b
 };
-}, o = function() {
+}, o = function(a) {
+return c.attach.allContainers || c.attach.containers[a.name];
+}, p = function() {
+var a = _.get(c, "attach.resource.spec.template");
+c.existingMountPaths = j.getMountPaths(a, o);
+};
+c.$watchGroup([ "attach.resource", "attach.allContainers" ], p), c.$watch("attach.containers", p, !0);
+var q = function() {
 g.get(l, b.name, h).then(function(a) {
-angular.forEach(a.spec.template.spec.containers, function(a) {
-c.attach.containers.individual[a.name] = !0;
-}), c.attach.resource = a, c.breadcrumbs = f.getBreadcrumbs({
+c.attach.resource = a, c.breadcrumbs = f.getBreadcrumbs({
 object:a,
 project:e,
 subpage:"Add Storage",
 includeProject:!0
 });
+var b = _.get(a, "spec.template");
+c.existingVolumeNames = j.getVolumeNames(b);
 }, function(a) {
 n(b.name + " could not be loaded.", k(a));
 }), g.list("persistentvolumeclaims", h, function(a) {
 c.pvcs = i(a.by("metadata.name")), _.isEmpty(c.pvcs) || c.attach.persistentVolumeClaim || (c.attach.persistentVolumeClaim = _.head(c.pvcs));
 });
-}, p = function(a, b) {
-if (b.spec.volumes) for (var d = 0; d < b.spec.volumes.length; d++) {
-var e = b.spec.volumes[d];
-if (e.name === a) return c.isVolumeNameUsed = !0, !0;
-}
-return c.isVolumeNameUsed = !1, !1;
-}, q = function(a, b, d) {
-if (d.spec.containers) for (var e = 0; e < d.spec.containers.length; e++) {
-var f = d.spec.containers[e];
-if ((c.attach.containers.all || c.attach.containers.individual[f.name]) && f.volumeMounts) for (var g = 0; g < f.volumeMounts.length; g++) {
-var h = f.volumeMounts[g];
-if (h.mountPath === b && a !== h.Name) return c.isVolumeMountPathUsed = !0, !0;
-}
-}
-return c.isVolumeMountPathUsed = !1, !1;
 };
-o(), c.containerToAttachProvided = function() {
-if (c.attach.containers.all) return !0;
-for (var a in c.attach.containers.individual) if (c.attach.containers.individual[a] === !0) return !0;
-return !1;
-}, c.attachPVC = function() {
+q(), c.attachPVC = function() {
 if (c.disableInputs = !0, c.attachPVCForm.$valid) {
 c.attach.volumeName || (c.attach.volumeName = m("volume-"));
-var e = c.attach.resource, f = _.get(e, "spec.template"), i = c.attach.persistentVolumeClaim, o = c.attach.volumeName, r = c.attach.mountPath;
-if (p(o, f)) return void (c.disableInputs = !1);
-if (r) {
-if (q(o, r, f)) return void (c.disableInputs = !1);
-angular.forEach(f.spec.containers, function(a) {
-if (c.attach.containers.all || c.attach.containers.individual[a.name]) {
-var b = j.createVolumeMount(o, r);
+var e = c.attach.resource, f = _.get(e, "spec.template"), i = c.attach.persistentVolumeClaim, p = c.attach.volumeName, q = c.attach.mountPath;
+q && angular.forEach(f.spec.containers, function(a) {
+if (o(a)) {
+var b = j.createVolumeMount(p, q);
 a.volumeMounts || (a.volumeMounts = []), a.volumeMounts.push(b);
 }
 });
+var r = j.createVolume(p, i);
+f.spec.volumes || (f.spec.volumes = []), f.spec.volumes.push(r), c.alerts = {}, g.update(l, e.metadata.name, c.attach.resource, h).then(function() {
+d.history.back();
+}, function(c) {
+n("An error occurred attaching the persistent volume claim to the " + a("humanizeKind")(b.kind) + ".", k(c));
+});
 }
-var s = j.createVolume(o, i);
-f.spec.volumes || (f.spec.volumes = []), f.spec.volumes.push(s), c.alerts = {}, g.update(l, e.metadata.name, c.attach.resource, h).then(function() {
+};
+}));
+} ]), angular.module("openshiftConsole").controller("AddConfigVolumeController", [ "$filter", "$routeParams", "$scope", "$window", "APIService", "BreadcrumbsService", "DataService", "Navigate", "ProjectsService", "StorageService", function(a, b, c, d, e, f, g, h, i, j) {
+if (!b.kind || !b.name) return void h.toErrorPage("Kind or name parameter missing.");
+var k = [ "Deployment", "DeploymentConfig", "ReplicaSet", "ReplicationController" ];
+if (!_.includes(k, b.kind)) return void h.toErrorPage("Volumes are not supported for kind " + b.kind + ".");
+var l = {
+resource:e.kindToResource(b.kind),
+group:b.group
+};
+c.alerts = {}, c.projectName = b.project, c.kind = b.kind, c.name = b.name, c.attach = {
+allContainers:!0,
+pickKeys:!1
+}, c.forms = {}, c.breadcrumbs = f.getBreadcrumbs({
+name:b.name,
+kind:b.kind,
+namespace:b.project,
+subpage:"Add Config Files",
+includeProject:!0
+});
+var m = a("humanizeKind");
+c.groupByKind = function(a) {
+return m(a.kind);
+};
+var n = function() {
+_.set(c, "attach.items", [ {} ]);
+};
+c.$watch("attach.source", n);
+var o = function() {
+c.forms.addConfigVolumeForm.$setDirty();
+};
+c.addItem = function() {
+c.attach.items.push({}), o();
+}, c.removeItem = function(a) {
+c.attach.items.splice(a, 1), o();
+}, i.get(b.project).then(_.spread(function(e, h) {
+c.project = e;
+var i = a("orderByDisplayName"), k = a("getErrorDetails"), m = a("generateName"), n = function(a, b) {
+c.disableInputs = !0, c.alerts["attach-persistent-volume-claim"] = {
+type:"error",
+message:a,
+details:b
+};
+};
+g.get(l, b.name, h, {
+errorNotification:!1
+}).then(function(a) {
+c.targetObject = a, c.breadcrumbs = f.getBreadcrumbs({
+object:a,
+project:e,
+subpage:"Add Config Files",
+includeProject:!0
+});
+}, function(a) {
+c.error = a;
+}), g.list("configmaps", h, null, {
+errorNotification:!1
+}).then(function(a) {
+c.configMaps = i(a.by("metadata.name"));
+}, function(a) {
+return 403 === a.status ? void (c.configMaps = []) :void n("Could not load config maps", k(a));
+}), g.list("secrets", h, null, {
+errorNotification:!1
+}).then(function(a) {
+c.secrets = i(a.by("metadata.name"));
+}, function(a) {
+return 403 === a.status ? void (c.secrets = []) :void n("Could not load secrets", k(a));
+});
+var o = function(a) {
+return c.attach.allContainers || c.attach.containers[a.name];
+}, p = function() {
+var a = _.get(c, "targetObject.spec.template");
+c.existingMountPaths = j.getMountPaths(a, o);
+};
+c.$watchGroup([ "targetObject", "attach.allContainers" ], p), c.$watch("attach.containers", p, !0);
+var q = function() {
+var a = _.map(c.attach.items, "path");
+c.itemPaths = _.compact(a);
+};
+c.$watch("attach.items", q, !0), c.addVolume = function() {
+if (!c.forms.addConfigVolumeForm.$invalid) {
+var e = c.targetObject, f = _.get(c, "attach.source"), i = _.get(e, "spec.template"), j = m("volume-"), p = _.get(c, "attach.mountPath"), q = {
+name:j,
+mountPath:p
+};
+"Secret" === f.kind && (q.readOnly = !0), _.each(i.spec.containers, function(a) {
+o(a) && (a.volumeMounts = a.volumeMounts || [], a.volumeMounts.push(q));
+});
+var r, s = {
+name:j
+};
+switch (c.attach.pickKeys && (r = c.attach.items), f.kind) {
+case "ConfigMap":
+s.configMap = {
+name:f.metadata.name,
+items:r
+};
+break;
+
+case "Secret":
+s.secret = {
+secretName:f.metadata.name,
+items:r
+};
+}
+i.spec.volumes = i.spec.volumes || [], i.spec.volumes.push(s), c.alerts = {}, c.disableInputs = !0, g.update(l, e.metadata.name, c.targetObject, h).then(function() {
 d.history.back();
 }, function(c) {
 n("An error occurred attaching the persistent volume claim to the " + a("humanizeKind")(b.kind) + ".", k(c));
@@ -12551,6 +12662,24 @@ selector:"="
 },
 templateUrl:"views/directives/selector.html"
 };
+}), angular.module("openshiftConsole").directive("selectContainers", function() {
+return {
+restrict:"E",
+scope:{
+containers:"=ngModel",
+template:"=podTemplate",
+required:"=ngRequired",
+helpText:"@?"
+},
+templateUrl:"views/directives/select-containers.html",
+controller:[ "$scope", function(a) {
+a.containers = a.containers || {}, a.$watch("containers", function(b) {
+a.containerSelected = _.some(b, function(a) {
+return a;
+});
+}, !0);
+} ]
+};
 }), angular.module("openshiftConsole").filter("duration", function() {
 return function(a, b, c, d) {
 function e(a, b, d) {
@@ -13472,6 +13601,8 @@ return a.replace(/\./g, "_");
 return function(a, b) {
 return null === a ? b :("string" != typeof a && (a = String(a)), 0 === a.trim().length ? b :a);
 };
+}).filter("keys", function() {
+return _.keys;
 }).filter("hashSize", function() {
 return function(a) {
 return a ? Object.keys(a).length :0;

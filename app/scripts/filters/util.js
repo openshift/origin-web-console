@@ -24,6 +24,9 @@ angular.module('openshiftConsole')
       return input;
     };
   })
+  .filter('keys', function() {
+    return _.keys;
+  })
   .filter('hashSize', function() {
     return function(hash) {
       if(!hash) { return 0; }

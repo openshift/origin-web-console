@@ -841,7 +841,7 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "config map\n" +
     "<span class=\"small text-muted\">(populated by a config map)</span>\n" +
     "</dd>\n" +
-    "<dt>Name:</dt>\n" +
+    "<dt>Config Map:</dt>\n" +
     "<dd><a ng-href=\"{{volume.configMap.name | navigateResourceURL : 'ConfigMap' : namespace}}\">{{volume.configMap.name}}</a></dd>\n" +
     "<div ng-repeat=\"item in volume.configMap.items\">\n" +
     "<dt>Key to File:</dt>\n" +
@@ -904,6 +904,161 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "<p>With the OpenShift command line interface (CLI), you can create applications and manage OpenShift projects from a terminal. To get started using the CLI, visit <a href=\"command-line\">Command Line Tools</a>.\n" +
     "</p>\n" +
     "</div>\n" +
+    "</div>\n" +
+    "</div>\n" +
+    "</div>\n" +
+    "</div>\n" +
+    "</div>\n" +
+    "</div>\n" +
+    "</div>\n" +
+    "</div>\n" +
+    "</div>\n" +
+    "</div>"
+  );
+
+
+  $templateCache.put('views/add-config-volume.html',
+    "<default-header class=\"top-header\"></default-header>\n" +
+    "<div class=\"wrap no-sidebar\">\n" +
+    "<div class=\"sidebar-left collapse navbar-collapse navbar-collapse-2\">\n" +
+    "<navbar-utility-mobile></navbar-utility-mobile>\n" +
+    "</div>\n" +
+    "<div class=\"add-to-project middle surface-shaded\">\n" +
+    "\n" +
+    "<div class=\"middle-section\">\n" +
+    "<div class=\"middle-container\">\n" +
+    "<div class=\"middle-content\">\n" +
+    "<div class=\"container surface-shaded\">\n" +
+    "<div class=\"row\">\n" +
+    "<div class=\"col-md-10 col-md-offset-1\">\n" +
+    "<breadcrumbs breadcrumbs=\"breadcrumbs\"></breadcrumbs>\n" +
+    "<alerts alerts=\"alerts\"></alerts>\n" +
+    "<div ng-if=\"!error && (!targetObject || !configMaps || !secrets)\">Loading...</div>\n" +
+    "<div ng-if=\"error\" class=\"empty-state-message text-center\">\n" +
+    "<h2>The {{kind | humanizeKind}} could not be loaded.</h2>\n" +
+    "<p>{{error | getErrorDetails}}</p>\n" +
+    "</div>\n" +
+    "<div ng-if=\"targetObject && configMaps && secrets\">\n" +
+    "<div ng-if=\"!configMaps.length && !secrets.length\" class=\"empty-state-message empty-state-full-page\">\n" +
+    "<h2 class=\"text-center\">No config maps or secrets.</h2>\n" +
+    "<p class=\"gutter-top\">\n" +
+    "There are no config maps or secrets in project {{project | displayName}} to use as a volume for this {{kind | humanizeKind}}.\n" +
+    "</p>\n" +
+    "<p ng-if=\"targetObject\"><a ng-href=\"{{targetObject | navigateResourceURL}}\">Back to {{kind | humanizeKind}} {{name}}</a></p>\n" +
+    "</div>\n" +
+    "<div ng-if=\"configMaps.length || secrets.length\" class=\"mar-top-xl\">\n" +
+    "<h1>Add Config Files</h1>\n" +
+    "<div class=\"help-block\">\n" +
+    "Add values from a config map or secret as volume. This will make the data available as files for {{kind | humanizeKind}} {{name}}.\n" +
+    "</div>\n" +
+    "<form name=\"forms.addConfigVolumeForm\" class=\"mar-top-lg\">\n" +
+    "<fieldset ng-disabled=\"disableInputs\">\n" +
+    "<div class=\"form-group\">\n" +
+    "<label class=\"required\">Source</label>\n" +
+    "<ui-select ng-model=\"attach.source\" ng-required=\"true\">\n" +
+    "<ui-select-match placeholder=\"Select config map or secret\">\n" +
+    "<span>\n" +
+    "{{$select.selected.metadata.name}}\n" +
+    "<small class=\"text-muted\">&ndash; {{$select.selected.kind | humanizeKind : true}}</small>\n" +
+    "</span>\n" +
+    "</ui-select-match>\n" +
+    "<ui-select-choices repeat=\"source in (configMaps.concat(secrets)) | filter : { metadata: { name: $select.search } } track by (source | uid)\" group-by=\"groupByKind\">\n" +
+    "<span ng-bind-html=\"source.metadata.name | highlight : $select.search\"></span>\n" +
+    "</ui-select-choices>\n" +
+    "</ui-select>\n" +
+    "<div class=\"help-block\">\n" +
+    "Pick the config source. Its data will be mounted as a volume in the container.\n" +
+    "</div>\n" +
+    "</div>\n" +
+    "<div class=\"form-group\">\n" +
+    "<label for=\"mount-path\" class=\"required\">Mount Path</label>\n" +
+    "<input id=\"mount-path\" class=\"form-control\" type=\"text\" name=\"mountPath\" ng-model=\"attach.mountPath\" required ng-pattern=\"/^\\/.*$/\" osc-unique=\"existingMountPaths\" placeholder=\"example: /data\" autocorrect=\"off\" autocapitalize=\"off\" spellcheck=\"false\" aria-describedby=\"mount-path-help\">\n" +
+    "<div>\n" +
+    "<span id=\"mount-path-help\" class=\"help-block\">\n" +
+    "Mount path for the volume.\n" +
+    "<span ng-if=\"!attach.pickKeys\">\n" +
+    "A file will be created in this directory for each key from the config map or secret. The file contents will be the value of the key.\n" +
+    "</span>\n" +
+    "</span>\n" +
+    "</div>\n" +
+    "<div class=\"has-error\" ng-show=\"forms.addConfigVolumeForm.mountPath.$error.pattern && forms.addConfigVolumeForm.mountPath.$touched\">\n" +
+    "<span class=\"help-block\">\n" +
+    "Mount path must be a valid path to a directory starting with <code>/</code>.\n" +
+    "</span>\n" +
+    "</div>\n" +
+    "<div class=\"has-error\" ng-show=\"forms.addConfigVolumeForm.mountPath.$error.oscUnique\">\n" +
+    "<span class=\"help-block\">\n" +
+    "The mount path is already used. Please choose another mount path.\n" +
+    "</span>\n" +
+    "</div>\n" +
+    "</div>\n" +
+    "<div class=\"form-group\">\n" +
+    "<div class=\"checkbox\">\n" +
+    "<label>\n" +
+    "<input id=\"select-keys\" type=\"checkbox\" ng-model=\"attach.pickKeys\" ng-disabled=\"!attach.source\" aria-describedby=\"select-keys-help\">\n" +
+    "Select specific keys and paths\n" +
+    "</label>\n" +
+    "<div id=\"select-keys-help\" class=\"help-block\">\n" +
+    "Add only certain keys or use paths that are different than the key names.\n" +
+    "</div>\n" +
+    "</div>\n" +
+    "</div>\n" +
+    "<div ng-if=\"attach.pickKeys && attach.source\" class=\"mar-bottom-md\">\n" +
+    "<h3>Keys and Paths</h3>\n" +
+    "<div class=\"help-block mar-bottom-md\">\n" +
+    "Select the keys to use and the file paths where each key will be exposed. The file paths are relative to the mount path. The contents of each file will be the value of the key.\n" +
+    "</div>\n" +
+    "<div ng-repeat=\"item in attach.items\">\n" +
+    "<div class=\"row\">\n" +
+    "<div class=\"form-group col-md-6\">\n" +
+    "<label class=\"required\">Key</label>\n" +
+    "<ui-select ng-model=\"item.key\" ng-required=\"true\">\n" +
+    "<ui-select-match placeholder=\"Pick a key\">\n" +
+    "{{$select.selected}}\n" +
+    "</ui-select-match>\n" +
+    "<ui-select-choices repeat=\"key in attach.source.data | keys | filter : $select.search\">\n" +
+    "<span ng-bind-html=\"key | highlight : $select.search\"></span>\n" +
+    "</ui-select-choices>\n" +
+    "</ui-select>\n" +
+    "</div>\n" +
+    "<div class=\"form-group col-md-6\">\n" +
+    "<label ng-attr-for=\"path-{{$id}}\" class=\"required\">Path</label>\n" +
+    "<input ng-attr-id=\"path-{{$id}}\" class=\"form-control\" ng-class=\"{ 'has-error': forms.addConfigVolumeForm['path-' + $id].$invalid && forms.addConfigVolumeForm['path-' + $id].$touched }\" type=\"text\" name=\"path-{{$id}}\" ng-model=\"item.path\" required osc-unique=\"itemPaths\" placeholder=\"example: config/app.properties\" autocorrect=\"off\" autocapitalize=\"off\" spellcheck=\"false\">\n" +
+    "<div class=\"has-error\" ng-show=\"forms.addConfigVolumeForm['path-' + $id].$error.oscUnique\">\n" +
+    "<span class=\"help-block\">\n" +
+    "Paths must be unique.\n" +
+    "</span>\n" +
+    "</div>\n" +
+    "</div>\n" +
+    "</div>\n" +
+    "<div class=\"mar-bottom-md\">\n" +
+    "<a ng-hide=\"attach.items.length === 1\" href=\"\" ng-click=\"removeItem($index)\">Remove item</a>\n" +
+    "<span ng-if=\"$last\">\n" +
+    "<span ng-hide=\"attach.items.length === 1\" class=\"action-divider\" aria-hidden=\"true\">|</span>\n" +
+    "<a href=\"\" ng-click=\"addItem()\">Add item</a>\n" +
+    "</span>\n" +
+    "</div>\n" +
+    "</div>\n" +
+    "</div>\n" +
+    "<div ng-if=\"targetObject.spec.template.spec.containers.length > 1\">\n" +
+    "<h3 ng-class=\"{ hidden: attach.allContainers && !attach.pickKeys }\">Containers</h3>\n" +
+    "<div ng-if=\"attach.allContainers\">\n" +
+    "The volume will be mounted into all containers. You can\n" +
+    "<a href=\"\" ng-click=\"attach.allContainers = false\">select specific containers</a>\n" +
+    "instead.\n" +
+    "</div>\n" +
+    "<div ng-if=\"!attach.allContainers\" class=\"form-group\">\n" +
+    "<label class=\"sr-only required\">Containers</label>\n" +
+    "<select-containers ng-model=\"attach.containers\" pod-template=\"targetObject.spec.template\" ng-required=\"true\" help-text=\"Add the volume to the selected containers.\">\n" +
+    "</select-containers>\n" +
+    "</div>\n" +
+    "</div>\n" +
+    "<div class=\"button-group gutter-top gutter-bottom\">\n" +
+    "<button type=\"submit\" class=\"btn btn-primary btn-lg\" ng-click=\"addVolume()\" ng-disabled=\"forms.addConfigVolumeForm.$invalid || disableInputs\">Add</button>\n" +
+    "<a class=\"btn btn-default btn-lg\" role=\"button\" href=\"#\" back>Cancel</a>\n" +
+    "</div>\n" +
+    "</fieldset>\n" +
+    "</form>\n" +
     "</div>\n" +
     "</div>\n" +
     "</div>\n" +
@@ -987,8 +1142,8 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "Specify details about how volumes are going to be mounted inside containers.\n" +
     "</div>\n" +
     "<div class=\"form-group mar-top-xl\">\n" +
-    "<label for=\"route-name\">Mount Path</label>\n" +
-    "<input id=\"mount-path\" class=\"form-control\" type=\"text\" name=\"mountPath\" ng-model=\"attach.mountPath\" ng-pattern=\"/^\\/.*$/\" placeholder=\"example: /data\" autocorrect=\"off\" autocapitalize=\"off\" spellcheck=\"false\" aria-describedby=\"mount-path-help\">\n" +
+    "<label for=\"mount-path\">Mount Path</label>\n" +
+    "<input id=\"mount-path\" class=\"form-control\" type=\"text\" name=\"mountPath\" ng-model=\"attach.mountPath\" ng-pattern=\"/^\\/.*$/\" osc-unique=\"existingMountPaths\" placeholder=\"example: /data\" autocorrect=\"off\" autocapitalize=\"off\" spellcheck=\"false\" aria-describedby=\"mount-path-help\">\n" +
     "<div>\n" +
     "<span id=\"mount-path-help\" class=\"help-block\">Mount path for the volume inside the container. If not specified, the volume will not be mounted automatically.</span>\n" +
     "</div>\n" +
@@ -997,7 +1152,7 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "Mount path must be a valid path to a directory starting with <code>/</code>.\n" +
     "</span>\n" +
     "</div>\n" +
-    "<div class=\"has-error\" ng-show=\"isVolumeMountPathUsed\">\n" +
+    "<div class=\"has-error\" ng-show=\"attachPVCForm.mountPath.$error.oscUnique\">\n" +
     "<span class=\"help-block\">\n" +
     "Volume mount in that path already exists. Please choose another mount path.\n" +
     "</span>\n" +
@@ -1005,40 +1160,31 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "</div>\n" +
     "<div class=\"form-group\">\n" +
     "<label for=\"volume-name\">Volume Name</label>\n" +
-    "<input id=\"volume-path\" class=\"form-control\" type=\"text\" name=\"volumeName\" ng-model=\"attach.volumeName\" placeholder=\"(generated if empty)\" autocorrect=\"off\" autocapitalize=\"off\" spellcheck=\"false\" aria-describedby=\"volume-name-help\">\n" +
+    "<input id=\"volume-path\" class=\"form-control\" type=\"text\" name=\"volumeName\" ng-model=\"attach.volumeName\" osc-unique=\"existingVolumeNames\" placeholder=\"(generated if empty)\" autocorrect=\"off\" autocapitalize=\"off\" spellcheck=\"false\" aria-describedby=\"volume-name-help\">\n" +
     "<div>\n" +
     "<span id=\"volume-name-help\" class=\"help-block\">Unique name used to identify this volume. If not specified, a volume name is generated.</span>\n" +
     "</div>\n" +
     "</div>\n" +
-    "<div class=\"has-error\" ng-show=\"isVolumeNameUsed\">\n" +
+    "<div class=\"has-error\" ng-show=\"attachPVCForm.volumeName.$error.oscUnique\">\n" +
     "<span class=\"help-block\">\n" +
     "Volume name already exists. Please choose another name.\n" +
     "</span>\n" +
     "</div>\n" +
-    "<div ng-show=\"attach.containers.all\">\n" +
-    "The volume will be mounted into all containers. You can <a href=\"\" ng-click=\"attach.containers.all = false\">select specific containers</a> instead.\n" +
+    "\n" +
+    "<div ng-if=\"attach.resource.spec.template.spec.containers.length > 1\">\n" +
+    "<div ng-if=\"attach.allContainers\">\n" +
+    "The volume will be mounted into all containers. You can\n" +
+    "<a href=\"\" ng-click=\"attach.allContainers = false\">select specific containers</a>\n" +
+    "instead.\n" +
     "</div>\n" +
-    "<div ng-show=\"!attach.containers.all\" class=\"form-group\">\n" +
-    "<h3>Containers</h3>\n" +
-    "<div>\n" +
-    "<span class=\"help-block\">\n" +
-    "Add the volume to the following containers:\n" +
-    "</span>\n" +
-    "</div>\n" +
-    "<div class=\"checkbox\" ng-repeat=\"container in attach.resource.spec.template.spec.containers\">\n" +
-    "<label>\n" +
-    "<input type=\"checkbox\" ng-model=\"attach.containers.individual[container.name]\">\n" +
-    "<b>{{container.name}}</b> from image <i>{{container.image}}</i>\n" +
-    "</label>\n" +
-    "</div>\n" +
-    "<div class=\"has-error\" ng-show=\"!containerToAttachProvided()\">\n" +
-    "<span class=\"help-block\">\n" +
-    "You must select at least one container.\n" +
-    "</span>\n" +
+    "<div ng-if=\"!attach.allContainers\" class=\"form-group\">\n" +
+    "<label class=\"required\">Containers</label>\n" +
+    "<select-containers ng-model=\"attach.containers\" pod-template=\"attach.resource.spec.template\" ng-required=\"true\" help-text=\"Add the volume to the selected containers.\">\n" +
+    "</select-containers>\n" +
     "</div>\n" +
     "</div>\n" +
     "<div class=\"button-group gutter-top gutter-bottom\">\n" +
-    "<button type=\"submit\" class=\"btn btn-primary btn-lg\" ng-click=\"attachPVC()\" ng-disabled=\"attachPVCForm.$invalid || disableInputs || !attachPVC || !containerToAttachProvided()\">Add</button>\n" +
+    "<button type=\"submit\" class=\"btn btn-primary btn-lg\" ng-click=\"attachPVC()\" ng-disabled=\"attachPVCForm.$invalid || disableInputs || !attachPVC\">Add</button>\n" +
     "<a class=\"btn btn-default btn-lg\" role=\"button\" href=\"#\" back>Cancel</a>\n" +
     "</div>\n" +
     "</fieldset>\n" +
@@ -1243,15 +1389,13 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "<pod-template pod-template=\"pod\" images-by-docker-reference=\"imagesByDockerReference\" builds=\"builds\" detailed=\"true\">\n" +
     "</pod-template>\n" +
     "<h4>Volumes</h4>\n" +
-    "<div ng-if=\"!pod.spec.volumes.length\">\n" +
-    "<p ng-if=\"(pod | annotation:'deploymentConfig') && ('deploymentconfigs' | canI : 'update')\">\n" +
-    "<a ng-href=\"project/{{project.metadata.name}}/attach-pvc?kind=DeploymentConfig&name={{pod | annotation:'deploymentConfig'}}\">Add storage and redeploy</a>\n" +
-    "</p>\n" +
-    "<p ng-if=\"!(pod | annotation:'deploymentConfig') || !('deploymentconfigs' | canI : 'update')\">\n" +
-    "None\n" +
-    "</p>\n" +
-    "</div>\n" +
     "<volumes ng-if=\"pod.spec.volumes.length\" volumes=\"pod.spec.volumes\" namespace=\"project.metadata.name\"></volumes>\n" +
+    "<div ng-if=\"!pod.spec.volumes.length\">none</div>\n" +
+    "<p ng-if=\"(pod | annotation:'deploymentConfig') && ('deploymentconfigs' | canI : 'update')\">\n" +
+    "<a ng-href=\"project/{{project.metadata.name}}/attach-pvc?kind=DeploymentConfig&name={{pod | annotation:'deploymentConfig'}}\">Add storage to {{pod | annotation : 'deploymentConfig'}}</a>\n" +
+    "<span class=\"action-divider\" aria-hidden=\"true\">|</span>\n" +
+    "<a ng-href=\"project/{{project.metadata.name}}/add-config-volume?kind=DeploymentConfig&name={{pod | annotation : 'deploymentConfig'}}\">Add config files to {{pod | annotation : 'deploymentConfig'}}</a>\n" +
+    "</p>\n" +
     "</div>\n" +
     "</div>\n" +
     "<annotations annotations=\"pod.metadata.annotations\"></annotations>\n" +
@@ -1372,29 +1516,43 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "<pod-template pod-template=\"replicaSet.spec.template\" images-by-docker-reference=\"imagesByDockerReference\" builds=\"builds\" detailed=\"true\" add-health-check-url=\"{{((!deploymentConfig || isActive) && ('deploymentconfigs' | canI : 'update')) ? healthCheckURL : ''}}\">\n" +
     "</pod-template>\n" +
     "<h4>Volumes</h4>\n" +
-    "<div ng-if=\"!replicaSet.spec.template.spec.volumes.length\">\n" +
+    "<volumes volumes=\"replicaSet.spec.template.spec.volumes\" namespace=\"project.metadata.name\"></volumes>\n" +
     "<div ng-if=\"kind === 'ReplicaSet'\">\n" +
     "<div ng-if=\"deployment\">\n" +
-    "<a ng-if=\"{ group: 'extensions', resource: 'deployments' } | canI : 'update'\" ng-href=\"project/{{project.metadata.name}}/attach-pvc?kind=Deployment&name={{deployment.metadata.name}}&group=extensions\">Add storage</a>\n" +
+    "<div ng-if=\"{ group: 'extensions', resource: 'deployments' } | canI : 'update'\">\n" +
+    "<a ng-href=\"project/{{project.metadata.name}}/attach-pvc?kind=Deployment&name={{deployment.metadata.name}}&group=extensions\">Add storage</a>\n" +
+    "<span class=\"action-divider\" aria-hidden=\"true\">|</span>\n" +
+    "<a ng-href=\"project/{{project.metadata.name}}/add-config-volume?kind=Deployment&name={{deployment.metadata.name}}\">Add config files</a>\n" +
+    "</div>\n" +
     "<span ng-if=\"!({ group: 'extensions', resource: 'deployments' } | canI : 'update')\">none</span>\n" +
     "</div>\n" +
     "<div ng-if=\"!deployment\">\n" +
-    "<a ng-if=\"resource | canI : 'update'\" ng-href=\"project/{{project.metadata.name}}/attach-pvc?kind=ReplicaSet&name={{replicaSet.metadata.name}}&group=extensions\">Add storage</a>\n" +
+    "<div ng-if=\"resource | canI : 'update'\">\n" +
+    "<a ng-href=\"project/{{project.metadata.name}}/attach-pvc?kind=ReplicaSet&name={{replicaSet.metadata.name}}&group=extensions\">Add storage</a>\n" +
+    "<span class=\"action-divider\" aria-hidden=\"true\">|</span>\n" +
+    "<a ng-href=\"project/{{project.metadata.name}}/add-config-volume?kind=ReplicaSet&name={{replicaSet.metadata.name}}\">Add config files</a>\n" +
+    "</div>\n" +
     "<span ng-if=\"!(resource | canI : 'update')\">none</span>\n" +
     "</div>\n" +
     "</div>\n" +
     "<div ng-if=\"kind === 'ReplicationController'\">\n" +
     "<div ng-if=\"deploymentConfigName\">\n" +
-    "<a ng-if=\"'deploymentconfigs' | canI : 'update'\" ng-href=\"project/{{project.metadata.name}}/attach-pvc?kind=DeploymentConfig&name={{deploymentConfigName}}\">Add storage and redeploy</a>\n" +
+    "<div ng-if=\"'deploymentconfigs' | canI : 'update'\">\n" +
+    "<a ng-href=\"project/{{project.metadata.name}}/attach-pvc?kind=DeploymentConfig&name={{deploymentConfigName}}\">Add storage to {{deploymentConfigName}}</a>\n" +
+    "<span class=\"action-divider\" aria-hidden=\"true\">|</span>\n" +
+    "<a ng-href=\"project/{{project.metadata.name}}/add-config-volume?kind=DeploymentConfig&name={{deploymentConfigName}}\">Add config files to {{deploymentConfigName}}</a>\n" +
+    "</div>\n" +
     "<span ng-if=\"!('deploymentconfigs' | canI : 'update')\">none</span>\n" +
     "</div>\n" +
     "<div ng-if=\"!deploymentConfigName\">\n" +
-    "<a ng-if=\"resource | canI : 'update'\" ng-href=\"project/{{project.metadata.name}}/attach-pvc?kind=ReplicationController&name={{replicaSet.metadata.name}}\">Add storage</a>\n" +
+    "<div ng-if=\"resource | canI : 'update'\">\n" +
+    "<a ng-href=\"project/{{project.metadata.name}}/attach-pvc?kind=ReplicationController&name={{replicaSet.metadata.name}}\">Add storage</a>\n" +
+    "<span class=\"action-divider\" aria-hidden=\"true\">|</span>\n" +
+    "<a ng-href=\"project/{{project.metadata.name}}/add-config-volume?kind=ReplicationController&name={{replicaSet.metadata.name}}\">Add config files</a>\n" +
+    "</div>\n" +
     "<span ng-if=\"!(resource | canI : 'update')\">none</span>\n" +
     "</div>\n" +
     "</div>\n" +
-    "</div>\n" +
-    "<volumes volumes=\"replicaSet.spec.template.spec.volumes\" namespace=\"project.metadata.name\"></volumes>\n" +
     "</div>\n" +
     "</div>\n" +
     "</div>\n" +
@@ -2214,13 +2372,14 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "<pod-template pod-template=\"deploymentConfig.spec.template\" images-by-docker-reference=\"imagesByDockerReference\" builds=\"builds\" detailed=\"true\" add-health-check-url=\"{{('deploymentconfigs' | canI : 'update') ? healthCheckURL : ''}}\">\n" +
     "</pod-template>\n" +
     "<h4>Volumes</h4>\n" +
-    "<p ng-if=\"!deploymentConfig.spec.template.spec.volumes.length\">\n" +
-    "<a ng-if=\"'deploymentconfigs' | canI : 'update'\" ng-href=\"project/{{project.metadata.name}}/attach-pvc?kind=DeploymentConfig&name={{deploymentConfig.metadata.name}}\">Add storage</a>\n" +
-    "<span ng-if=\"!('deploymentconfigs' | canI : 'update')\">none</span>\n" +
+    "<p ng-if=\"!deploymentConfig.spec.template.spec.volumes.length && !('deploymentconfigs' | canI : 'update')\">\n" +
+    "none\n" +
     "</p>\n" +
     "<volumes volumes=\"deploymentConfig.spec.template.spec.volumes\" namespace=\"project.metadata.name\"></volumes>\n" +
-    "<p ng-if=\"deploymentConfig.spec.template.spec.volumes.length && ('deploymentconfigs' | canI : 'update') \">\n" +
+    "<p ng-if=\"'deploymentconfigs' | canI : 'update'\">\n" +
     "<a ng-href=\"project/{{project.metadata.name}}/attach-pvc?kind=DeploymentConfig&name={{deploymentConfig.metadata.name}}\">Add storage</a>\n" +
+    "<span class=\"action-divider\" aria-hidden=\"true\">|</span>\n" +
+    "<a ng-href=\"project/{{project.metadata.name}}/add-config-volume?kind=DeploymentConfig&name={{deploymentConfig.metadata.name}}\">Add config files</a>\n" +
     "</p>\n" +
     "</div>\n" +
     "\n" +
@@ -2506,14 +2665,15 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "<pod-template pod-template=\"deployment.spec.template\" images-by-docker-reference=\"imagesByDockerReference\" builds=\"builds\" detailed=\"true\" add-health-check-url=\"{{ ({ group: 'extensions', resource: 'deployments' } | canI : 'update') ? healthCheckURL : '' }}\">\n" +
     "</pod-template>\n" +
     "<h4>Volumes</h4>\n" +
-    "<p ng-if=\"!deployment.spec.template.spec.volumes.length\">\n" +
-    "<a ng-if=\"'deploymentconfigs' | canI : 'update'\" ng-href=\"project/{{project.metadata.name}}/attach-pvc?kind=Deployment&name={{deployment.metadata.name}}&group=extensions\">Add storage</a>\n" +
-    "<span ng-if=\"!('deploymentconfigs' | canI : 'update')\">none</span>\n" +
+    "<p ng-if=\"!deployment.spec.template.spec.volumes.length && !('deploymentconfigs' | canI : 'update')\">\n" +
+    "none\n" +
     "</p>\n" +
     "<volumes volumes=\"deployment.spec.template.spec.volumes\" namespace=\"project.metadata.name\"></volumes>\n" +
-    "<p ng-if=\"deployment.spec.template.spec.volumes.length && ('deploymentconfigs' | canI : 'update')\">\n" +
+    "<div ng-if=\"'deploymentconfigs' | canI : 'update'\">\n" +
     "<a ng-href=\"project/{{project.metadata.name}}/attach-pvc?kind=Deployment&name={{deployment.metadata.name}}&group=extensions\">Add storage</a>\n" +
-    "</p>\n" +
+    "<span class=\"action-divider\" aria-hidden=\"true\">|</span>\n" +
+    "<a ng-href=\"project/{{project.metadata.name}}/add-config-volume?kind=Deployment&name={{deployment.metadata.name}}&group=extensions\">Add config files</a>\n" +
+    "</div>\n" +
     "</div>\n" +
     "<div class=\"col-lg-6\">\n" +
     "<h3>Autoscaling</h3>\n" +
@@ -7630,6 +7790,30 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "</div>\n" +
     "</form>\n" +
     "</span>"
+  );
+
+
+  $templateCache.put('views/directives/select-containers.html',
+    "<ng-form name=\"forms.containerSelect\">\n" +
+    "<div class=\"checkbox\" ng-repeat=\"container in template.spec.containers\">\n" +
+    "<label class=\"truncate\">\n" +
+    "<input type=\"checkbox\" ng-model=\"containers[container.name]\" ng-required=\"required && !containerSelected\">\n" +
+    "<b>{{container.name}}</b>\n" +
+    "<span class=\"hidden-xs\">\n" +
+    "from image\n" +
+    "<i ng-attr-title=\"{{container.image}}\">{{container.image}}</i>\n" +
+    "</span>\n" +
+    "</label>\n" +
+    "</div>\n" +
+    "<div ng-if=\"helpText\" class=\"help-block\">\n" +
+    "{{helpText}}\n" +
+    "</div>\n" +
+    "<div class=\"has-error\" ng-if=\"required && forms.containerSelect.$dirty && !containerSelected\">\n" +
+    "<span class=\"help-block\">\n" +
+    "You must select at least one container.\n" +
+    "</span>\n" +
+    "</div>\n" +
+    "</ng-form>"
   );
 
 

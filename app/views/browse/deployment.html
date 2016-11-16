@@ -167,15 +167,15 @@
                             add-health-check-url="{{ ({ group: 'extensions', resource: 'deployments' } | canI : 'update') ? healthCheckURL : '' }}">
                         </pod-template>
                         <h4>Volumes</h4>
-                        <p ng-if="!deployment.spec.template.spec.volumes.length">
-                          <a ng-if="'deploymentconfigs' | canI : 'update'"
-                            ng-href="project/{{project.metadata.name}}/attach-pvc?kind=Deployment&name={{deployment.metadata.name}}&group=extensions">Add storage</a>
-                          <span ng-if="!('deploymentconfigs' | canI : 'update')">none</span>
+                        <p ng-if="!deployment.spec.template.spec.volumes.length && !('deploymentconfigs' | canI : 'update')">
+                          none
                         </p>
                         <volumes volumes="deployment.spec.template.spec.volumes" namespace="project.metadata.name"></volumes>
-                        <p ng-if="deployment.spec.template.spec.volumes.length && ('deploymentconfigs' | canI : 'update')">
+                        <div ng-if="'deploymentconfigs' | canI : 'update'">
                           <a ng-href="project/{{project.metadata.name}}/attach-pvc?kind=Deployment&name={{deployment.metadata.name}}&group=extensions">Add storage</a>
-                        </p>
+                          <span class="action-divider" aria-hidden="true">|</span>
+                          <a ng-href="project/{{project.metadata.name}}/add-config-volume?kind=Deployment&name={{deployment.metadata.name}}&group=extensions">Add config files</a>
+                        </div>
                       </div>
                       <div class="col-lg-6">
                         <h3>Autoscaling</h3>
