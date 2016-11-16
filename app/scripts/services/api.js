@@ -101,7 +101,10 @@ angular.module('openshiftConsole')
     }
     var parts = apiVersion.split("/");
     if (parts.length === 1) {
-      return {group:'', version: parts[0]};
+      if (parts[0] === "v1") {
+        return {group: '', version: parts[0]};
+      }
+      return {group: parts[0], version: ''};
     }
     if (parts.length === 2) {
       return {group:parts[0], version: parts[1]};
@@ -185,7 +188,7 @@ angular.module('openshiftConsole')
 
     return resource;
   }
-  
+
   // apiInfo returns the host/port, prefix, group, and version for the given resource,
   // or undefined if the specified resource/group/version is known not to exist.
   var apiInfo = function(resource) {
@@ -206,7 +209,7 @@ angular.module('openshiftConsole')
       }).toString();
       return;
     }
-      
+
     resource = toResourceGroupVersion(resource);
     var primaryResource = resource.primaryResource();
 
@@ -257,9 +260,9 @@ angular.module('openshiftConsole')
 
   // Returns an array of available kinds, including their group
   var calculateAvailableKinds = function(includeClusterScoped) {
-    var kinds = [];   
+    var kinds = [];
     var rejectedKinds = Constants.AVAILABLE_KINDS_BLACKLIST;
-    
+
     // Legacy openshift and k8s kinds
     _.each(API_CFG, function(api) {
       _.each(api.resources.v1, function(resource) {
@@ -273,9 +276,9 @@ angular.module('openshiftConsole')
             kind: resource.kind
           });
         }
-      });      
+      });
     });
-   
+
    // Kinds under api groups
     _.each(APIS_CFG.groups, function(group) {
       // Use the console's default version first, and the server's preferred version second
@@ -293,7 +296,7 @@ angular.module('openshiftConsole')
         ) {
           return;
         }
-               
+
         if (resource.namespaced || includeClusterScoped) {
           kinds.push({
             kind: resource.kind,
@@ -307,10 +310,10 @@ angular.module('openshiftConsole')
       return value.group + "/" + value.kind;
     });
   };
-  
+
   var namespacedKinds = calculateAvailableKinds(false);
   var allKinds = calculateAvailableKinds(true);
-  
+
   var availableKinds = function(includeClusterScoped) {
     return includeClusterScoped ? allKinds : namespacedKinds;
   };
