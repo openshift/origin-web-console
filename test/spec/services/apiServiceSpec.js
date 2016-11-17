@@ -19,7 +19,7 @@ describe("APIService", function(){
       ['Pods',         {r:'pods',g:'',v:'v1'}],
       // normalization preserves subresources
       ['PODS/FOO',     {r:'pods/FOO',g:'',v:'v1'}],
-      
+
       // structured, resource only
       // simple
       [{resource:'pods'},         {r:'pods',g:'',v:'v1'}],
@@ -34,12 +34,12 @@ describe("APIService", function(){
       [{resource:'jobs',group:'extensions'}, {r:'jobs',g:'extensions',v:'v1beta1'}],
       // unknown groups do not default version
       [{resource:'foos',group:'unknown'},    {r:'foos',g:'unknown',   v:undefined}],
-      
+
       // structured, with version
       // groups default
       [{resource:'pods',version:'v1'},      {r:'pods',g:'',v:'v1'     }],
       [{resource:'pods',version:'v1beta3'}, {r:'pods',g:'',v:'v1beta3'}],
-      
+
       // structured, fully specified
       [{resource:'pods',group:'',          version:'v1'},      {r:'pods',g:'',          v:'v1'     }],
       [{resource:'pods',group:'',          version:'v1beta3'}, {r:'pods',g:'',          v:'v1beta3'}],
@@ -56,7 +56,7 @@ describe("APIService", function(){
         expect(actualRGV.resource).toEqual(expectedRGV.r);
         expect(actualRGV.group   ).toEqual(expectedRGV.g);
         expect(actualRGV.version ).toEqual(expectedRGV.v);
-        
+
         // Call again with the result and make sure it is returns the same thing
         var actualRGV2 = APIService.toResourceGroupVersion(actualRGV);
         expect(actualRGV).toEqual(actualRGV2);
@@ -64,7 +64,7 @@ describe("APIService", function(){
     }));
 
   });
-  
+
   describe("#parseGroupVersion", function(){
     var tc = [
       // invalid cases
@@ -73,18 +73,19 @@ describe("APIService", function(){
       ['foo/bar/baz', undefined],
       // legacy
       ['v1',      {group:'',version:'v1'     }],
-      ['v1beta3', {group:'',version:'v1beta3'}],
       // groups
       ['foo/bar',      {group:'foo',version:'bar'}],
-      ['FOO/BAR',      {group:'FOO',version:'BAR'}]
+      ['FOO/BAR',      {group:'FOO',version:'BAR'}],
+      // group missing version, we see this on events
+      ['apps', {group:'apps',version:''}],
     ];
     angular.forEach(tc, _.spread(function(input, expectedGroupVersion) {
       it('should result in ' + JSON.stringify(expectedGroupVersion) + ' when called with ' + JSON.stringify(input), function() {
         expect(APIService.parseGroupVersion(input)).toEqual(expectedGroupVersion);
       });
     }));
-  });  
-  
+  });
+
   describe("#objectToResourceGroupVersion", function(){
     var tc = [
       // invalid cases
@@ -93,7 +94,7 @@ describe("APIService", function(){
       [{},                undefined],
       [{kind:"Pod"},      undefined],
       [{apiVersion:"v1"}, undefined],
-      
+
       // legacy
       [{kind:"Pod",      apiVersion:"v1"}, {g:'',v:'v1',r:'pods'}],
 
@@ -114,14 +115,14 @@ describe("APIService", function(){
         }
       });
     }));
-  });  
-  
+  });
+
   describe("#kindToResource", function(){
     var tc = [
       // invalid cases
       [null,              ""],
       ["",                ""],
-      
+
       // pluralization
       ["foo",             "foos"],
       // pluralization with s
@@ -137,7 +138,7 @@ describe("APIService", function(){
         expect(APIService.kindToResource(kind)).toEqual(resource);
       });
     }));
-  });  
+  });
 
   describe("#deriveTargetResource", function(){
     var tc = [
@@ -145,10 +146,10 @@ describe("APIService", function(){
       [null,null,              undefined],
       ["","",                  undefined],
       [{},{},                  undefined],
-      
+
       // simple resource, matching object overrides group/version
       ['pods', {kind:"Pod",apiVersion:"v1"},                 {r:'pods',g:'',          v:'v1'     }],
-      ['pods', {kind:"Pod",apiVersion:"v2"},                 {r:'pods',g:'',          v:'v2'     }],
+      ['pods', {kind:"Pod",apiVersion:"extensions"},         {r:'pods',g:'extensions',v:''       }],
       ['jobs', {kind:"Job",apiVersion:"extensions/v1beta1"}, {r:'jobs',g:'extensions',v:'v1beta1'}],
       ['jobs', {kind:"Job",apiVersion:"extensions/v1beta2"}, {r:'jobs',g:'extensions',v:'v1beta2'}],
 
@@ -161,8 +162,8 @@ describe("APIService", function(){
       ['deploymentconfigs/scale', {kind:"Scale",apiVersion:"extensions/v1beta1"}, {r:'deploymentconfigs/scale',g:'',v:'v1'}],
 
       // complex resource, matching object kind and group overrides version
-      [{resource:'pods',group:''                        }, {kind:"Pod",apiVersion:"v3"},                 {r:'pods',g:'',          v:'v3'     }],
-      [{resource:'pods',group:'',           version:'v2'}, {kind:"Pod",apiVersion:"v3"},                 {r:'pods',g:'',          v:'v3'     }],
+      [{resource:'pods',group:''                        }, {kind:"Pod",apiVersion:"v1"},                 {r:'pods',g:'',          v:'v1'     }],
+      [{resource:'pods',group:'',           version:'v2'}, {kind:"Pod",apiVersion:"v1"},                 {r:'pods',g:'',          v:'v1'     }],
       [{resource:'jobs',group:'extensions'              }, {kind:"Job",apiVersion:"extensions/v1beta3"}, {r:'jobs',g:'extensions',v:'v1beta3'}],
       [{resource:'jobs',group:'extensions', version:'v2'}, {kind:"Job",apiVersion:"extensions/v1beta3"}, {r:'jobs',g:'extensions',v:'v1beta3'}],
 
@@ -172,7 +173,7 @@ describe("APIService", function(){
       [{resource:'pods',group:'',           version:'v2'}, {kind:"Pod",apiVersion:"othergroup/v3"},      {r:'pods',g:'',          v:'v2'     }],
       [{resource:'jobs',group:'extensions'              }, {kind:"Job",apiVersion:"othergroup/v1beta3"}, {r:'jobs',g:'extensions',v:'v1beta1'}],
       [{resource:'jobs',group:'extensions', version:'v2'}, {kind:"Job",apiVersion:"othergroup/v1beta3"}, {r:'jobs',g:'extensions',v:'v2'     }],
-      // complex resource, non-matching object kind leaves group/version alone 
+      // complex resource, non-matching object kind leaves group/version alone
       [{resource:'pods',group:''                        }, {kind:"Foo",apiVersion:"v3"},                 {r:'pods',g:'',          v:'v1'     }],
       [{resource:'pods',group:'',           version:'v2'}, {kind:"Foo",apiVersion:"v3"},                 {r:'pods',g:'',          v:'v2'     }],
       // actual use:
@@ -191,7 +192,7 @@ describe("APIService", function(){
         }
       });
     }));
-  });  
+  });
 
   describe("#primaryResource", function(){
     var tc = [
@@ -202,7 +203,7 @@ describe("APIService", function(){
       // no subresources
       ["foo",             "foo"],
       ["FOO",             "foo"],
-      
+
       // subresource cases
       ["foo/bar",         "foo"],
       ["FOO/bar/baz",     "foo"]
@@ -212,8 +213,8 @@ describe("APIService", function(){
         expect(APIService.toResourceGroupVersion(resource).primaryResource()).toEqual(primaryResource);
       });
     }));
-  });  
-  
+  });
+
   describe("#subresources", function(){
     var tc = [
       // invalid cases
@@ -223,7 +224,7 @@ describe("APIService", function(){
       // no subresources
       ["foo",             []],
       ["FOO",             []],
-      
+
       // subresource cases
       ["foo/bar",         ["bar"]],
       ["FOO/bar/baz",     ["bar","baz"]],
@@ -234,6 +235,6 @@ describe("APIService", function(){
         expect(APIService.toResourceGroupVersion(resource).subresources()).toEqual(subresources);
       });
     }));
-  });    
-  
+  });
+
 });

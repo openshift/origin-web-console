@@ -807,9 +807,12 @@ return angular.isString(a) ? (c = j(a), d = "", e = l[d]) :a && a.resource && (c
 }, n = function(a) {
 if (a) {
 var b = a.split("/");
-return 1 === b.length ? {
+return 1 === b.length ? "v1" === b[0] ? {
 group:"",
 version:b[0]
+} :{
+group:b[0],
+version:""
 } :2 === b.length ? {
 group:b[0],
 version:b[1]
@@ -2130,44 +2133,42 @@ e.setLabelSelector(new LabelSelector(b.spec.selector, (!0)));
 },
 resourceURL:function(a, b, c, d, e) {
 if (d = d || "browse", !(a && (a.metadata || b && c))) return null;
-b || (b = a.kind);
-var h = "";
-a.apiVersion && (h = g.parseGroupVersion(a.apiVersion).group), c || (c = a.metadata.namespace);
-var i = a;
-a.metadata && (i = a.metadata.name);
-var j = URI("").segment("project").segmentCoded(c).segment(d);
+b || (b = a.kind), c || (c = a.metadata.namespace);
+var h = a;
+a.metadata && (h = a.metadata.name);
+var i = URI("").segment("project").segmentCoded(c).segment(d);
 switch (b) {
 case "Build":
-var l = f("buildConfigForBuild")(a), m = k(a, e);
-l ? j.segment(m).segmentCoded(l).segmentCoded(i) :j.segment(m + "-noconfig").segmentCoded(i);
+var j = f("buildConfigForBuild")(a), l = k(a, e);
+j ? i.segment(l).segmentCoded(j).segmentCoded(h) :i.segment(l + "-noconfig").segmentCoded(h);
 break;
 
 case "BuildConfig":
-j.segment(k(a, e)).segmentCoded(i);
+i.segment(k(a, e)).segmentCoded(h);
 break;
 
 case "ConfigMap":
-j.segment("config-maps").segmentCoded(i);
+i.segment("config-maps").segmentCoded(h);
 break;
 
 case "Deployment":
-j.segment("deployment").segmentCoded(i);
+i.segment("deployment").segmentCoded(h);
 break;
 
 case "DeploymentConfig":
-j.segment("dc").segmentCoded(i);
+i.segment("dc").segmentCoded(h);
 break;
 
 case "ReplicaSet":
-j.segment("rs").segmentCoded(i);
+i.segment("rs").segmentCoded(h);
 break;
 
 case "ReplicationController":
-j.segment("rc").segmentCoded(i);
+i.segment("rc").segmentCoded(h);
 break;
 
 case "ImageStream":
-j.segment("images").segmentCoded(i);
+i.segment("images").segmentCoded(h);
 break;
 
 case "PersistentVolumeClaim":
@@ -2175,16 +2176,23 @@ case "Pod":
 case "Route":
 case "Secret":
 case "Service":
-j.segment(g.kindToResource(b)).segmentCoded(i);
+i.segment(g.kindToResource(b)).segmentCoded(h);
 break;
 
 default:
-j.segment("other").search({
+var m;
+if (a.metadata) m = g.objectToResourceGroupVersion(a); else if (_.get(e, "apiVersion")) {
+var n = g.kindToResource(b), o = g.parseGroupVersion(e.apiVersion);
+o.resource = n, m = g.toResourceGroupVersion(o);
+} else m = g.toResourceGroupVersion(g.kindToResource(b));
+var p = g.apiInfo(m);
+if (!p) return null;
+i.segment("other").search({
 kind:b,
-group:h
+group:m.group
 });
 }
-return j.toString();
+return i.toString();
 },
 configURLForResource:function(a, b) {
 var c, d, e = _.get(a, "kind"), f = _.get(a, "metadata.namespace");
@@ -13656,8 +13664,10 @@ var c = a(b);
 return c ? JSON.stringify(c, null, 4) :b;
 };
 } ]).filter("navigateResourceURL", [ "Navigate", function(a) {
-return function(b, c, d) {
-return a.resourceURL(b, c, d);
+return function(b, c, d, e) {
+return a.resourceURL(b, c, d, null, {
+apiVersion:e
+});
 };
 } ]).filter("configURLForResource", [ "Navigate", function(a) {
 return function(b, c) {
