@@ -179,7 +179,8 @@ angular.module('openshiftConsole')
                 return;
               }
 
-              var fill = $scope.fixedHeight ? $scope.fixedHeight : Math.floor($(window).height() - contentTop);
+              var pulserHeight = $('.ellipsis-pulser').outerHeight(true);
+              var fill = $scope.fixedHeight ? $scope.fixedHeight : Math.floor($(window).height() - contentTop - pulserHeight);
               if (!$scope.chromeless && !$scope.fixedHeight) {
                 // Add some bottom margin if not chromeless.
                 fill = fill - 35;
