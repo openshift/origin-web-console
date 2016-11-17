@@ -42,7 +42,7 @@ angular.module('openshiftConsole')
         KeywordService.filterForKeywords(sortedProjects, filterFields, filterKeywords);
     };
 
-    var previousSortID;
+    var previousSortID, displayName = $filter('displayName');
     var sortProjects = function() {
       var sortID = _.get($scope, 'sortConfig.currentField.id');
 
@@ -51,16 +51,30 @@ angular.module('openshiftConsole')
         $scope.sortConfig.isAscending = sortID !== 'metadata.creationTimestamp';
       }
 
-      var sortValue = function(project) {
-        var value = _.get(project, sortID) || _.get(project, 'metadata.name', '');
-
+      var displayNameLower = function(project) {
         // Perform a case insensitive sort.
-        return value.toLowerCase();
+        return displayName(project).toLowerCase();
       };
 
-      sortedProjects = _.sortByOrder(projects,
-                                     [ sortValue ],
-                                     [ $scope.sortConfig.isAscending ? 'asc' : 'desc' ]);
+      var primarySortOrder = $scope.sortConfig.isAscending ? 'asc' : 'desc';
+      switch (sortID) {
+      case 'metadata.annotations["openshift.io/display-name"]':
+        // Sort by display name, falling back to project name if no display name.
+        sortedProjects = _.sortByOrder(projects,
+                                       [ displayNameLower ],
+                                       [ primarySortOrder ]);
+        break;
+      case 'metadata.annotations["openshift.io/requester"]':
+        // Sort by requester, then display name. Secondary sort is always ascending.
+        sortedProjects = _.sortByOrder(projects,
+                                       [ sortID, displayNameLower ],
+                                       [ primarySortOrder, 'asc' ]);
+        break;
+      default:
+        sortedProjects = _.sortByOrder(projects,
+                                       [ sortID ],
+                                       [ primarySortOrder ]);
+      }
 
       // Remember the previous sort ID.
       previousSortID = sortID;
