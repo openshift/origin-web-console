@@ -338,19 +338,19 @@ angular.module('openshiftConsole')
     };
   })
   .filter('routeWebURL', function(routeHostFilter){
-    return function(route, host){
+    return function(route, host, omitPath){
         var scheme = (route.spec.tls && route.spec.tls.tlsTerminationType !== "") ? "https" : "http";
         var url = scheme + "://" + (host || routeHostFilter(route));
-        if (route.spec.path) {
+        if (route.spec.path && !omitPath) {
             url += route.spec.path;
         }
         return url;
     };
   })
   .filter('routeLabel', function(RoutesService, routeHostFilter, routeWebURLFilter, isWebRouteFilter) {
-    return function(route, host) {
+    return function(route, host, omitPath) {
       if (isWebRouteFilter(route)) {
-        return routeWebURLFilter(route, host);
+        return routeWebURLFilter(route, host, omitPath);
       }
 
       var label = (host || routeHostFilter(route));
@@ -362,6 +362,10 @@ angular.module('openshiftConsole')
         label = '*.' + RoutesService.getSubdomain(route);
       }
 
+      if(omitPath) {
+        return label;
+      }
+      
       if (route.spec.path) {
         label += route.spec.path;
       }
