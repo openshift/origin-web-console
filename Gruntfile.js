@@ -44,9 +44,9 @@ module.exports = function (grunt) {
         files: ['<%= yeoman.app %>/scripts/{,*/}*.js'],
         tasks: ['newer:jshint:all'],
         options: {
-          livereload: {
-            key: grunt.file.read('server.key'),
-            cert: grunt.file.read('server.crt')
+          livereload: grunt.option('disable-live-reload') ? false : {
+             key: grunt.file.read('server.key'),
+             cert: grunt.file.read('server.crt')
           }
         }
       },
@@ -61,7 +61,7 @@ module.exports = function (grunt) {
       html: {
         files: '<%= yeoman.app %>/views/{,*/}*.html',
         options: {
-          livereload: {
+          livereload: grunt.option('disable-live-reload') ? false : {
             key: grunt.file.read('server.key'),
             cert: grunt.file.read('server.crt')
           }
@@ -84,7 +84,7 @@ module.exports = function (grunt) {
       },
       livereload: {
         options: {
-          livereload: '<%= connect.options.livereload %>'
+          livereload: grunt.option('disable-live-reload') ? false : '<%= connect.options.livereload %>'
         },
         files: [
           '<%= yeoman.app %>/{,*/}*.html',
@@ -105,7 +105,7 @@ module.exports = function (grunt) {
         hostname: grunt.option('hostname') || 'localhost',
         key: grunt.file.read('server.key'),
         cert: grunt.file.read('server.crt'),
-        livereload: 35729
+        livereload: grunt.option('disable-live-reload') ? false : 35729
       },
       livereload: {
         options: {
