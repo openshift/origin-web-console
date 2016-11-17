@@ -766,16 +766,23 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "<dt>Type:</dt>\n" +
     "<dd>\n" +
     "secret\n" +
-    "<span class=\"small text-muted\">(populated by a Secret when the pod is created)</span>\n" +
+    "<span class=\"small text-muted\">(populated by a secret when the pod is created)</span>\n" +
     "</dd>\n" +
-    "<dt>Secret Name:</dt>\n" +
-    "<dd>{{volume.secret.secretName}}</dd>\n" +
+    "<dt>Secret:</dt>\n" +
+    "<dd>\n" +
+    "<span ng-if=\"'secrets' | canI : 'get'\">\n" +
+    "<a ng-href=\"{{volume.secret.secretName | navigateResourceURL : 'Secret' : namespace}}\">{{volume.secret.secretName}}</a>\n" +
+    "</span>\n" +
+    "<span ng-if=\"!('secrets' | canI : 'get')\">\n" +
+    "{{volume.secret.secretName}}\n" +
+    "</span>\n" +
+    "</dd>\n" +
     "</div>\n" +
     "<div ng-if=\"volume.persistentVolumeClaim\">\n" +
     "<dt>Type:</dt>\n" +
     "<dd>\n" +
     "persistent volume claim\n" +
-    "<span class=\"small text-muted\">(reference to a Persistent Volume Claim)</span>\n" +
+    "<span class=\"small text-muted\">(reference to a persistent volume claim)</span>\n" +
     "</dd>\n" +
     "<dt>Claim name:</dt>\n" +
     "<dd><a ng-href=\"{{volume.persistentVolumeClaim.claimName | navigateResourceURL : 'PersistentVolumeClaim' : namespace}}\">{{volume.persistentVolumeClaim.claimName}}</a></dd>\n" +
@@ -832,7 +839,7 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "<dt>Type:</dt>\n" +
     "<dd>\n" +
     "config map\n" +
-    "<span class=\"small text-muted\">(populated by a Config Map)</span>\n" +
+    "<span class=\"small text-muted\">(populated by a config map)</span>\n" +
     "</dd>\n" +
     "<dt>Name:</dt>\n" +
     "<dd>{{volume.configMap.name}}</dd>\n" +
