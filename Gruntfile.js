@@ -12,6 +12,7 @@ var modRewrite = require('connect-modrewrite');
 var serveStatic = require('serve-static');
 
 module.exports = function (grunt) {
+  var contextRoot = grunt.option('contextRoot') || "dev-console";
 
   // Load grunt tasks automatically
   require('load-grunt-tasks')(grunt, {
@@ -70,6 +71,10 @@ module.exports = function (grunt) {
         files: ['extensions/extensions.js', 'extensions/extensions.css'],
         tasks: ['copy:extensions']
       },
+      index: {
+        files: ['<%= yeoman.app %>/index.html'],
+        tasks: ['replace:index']
+      },
       localConfig: {
         files: ['<%= yeoman.app %>/config.local.js'],
         tasks: ['copy:localConfig']
@@ -107,7 +112,11 @@ module.exports = function (grunt) {
           open: true,
           middleware: function (connect) {
             return [
-              modRewrite(['!^/(config.js|(java|bower_components|scripts|images|styles|views)(/.*)?)$ /index.html [L]']),
+              modRewrite([
+                '^/$ /' + contextRoot + '/ [R=302]',
+                '^/' + contextRoot + '(.*)$ $1',
+                '!^/(config.js|(java|bower_components|scripts|images|styles|views)(/.*)?)$ /index.html [L]'
+              ]),
               serveStatic('.tmp'),
               connect().use(
                 '/java',
@@ -126,7 +135,11 @@ module.exports = function (grunt) {
         options: {
           middleware: function (connect) {
             return [
-              modRewrite(['!^/(config.js|(bower_components|scripts|images|styles|views)(/.*)?)$ /index.html [L]']),
+              modRewrite([
+                '^/$ /' + contextRoot + '/ [R=302]',
+                '^/' + contextRoot + '(.*)$ $1',
+                '!^/(config.js|(bower_components|scripts|images|styles|views)(/.*)?)$ /index.html [L]'
+              ]),
               serveStatic('.tmp'),
               serveStatic('test'),
               connect().use(
@@ -521,13 +534,30 @@ module.exports = function (grunt) {
       }
     },
 
+    replace: {
+      index: {
+        options: {
+          patterns: [
+            {
+              match: /<base href="\/">/,
+              replacement: '<base href="/' + contextRoot + '/">'
+            }
+          ]
+        },
+        files: [
+          {expand: true, flatten: true, src: ['<%= yeoman.app %>/index.html'], dest: '.tmp/'}
+        ]
+      }
+    },
+
     // Run some tasks in parallel to speed up the build process
     concurrent: {
       server: [
         'less:development',
         'copy:styles',
         'copy:extensions',
-        'copy:localConfig'
+        'copy:localConfig',
+        'replace:index'
       ],
       test: [
         'less:development'
@@ -558,14 +588,14 @@ module.exports = function (grunt) {
         args: {
           // Arguments passed to the command
           suite: grunt.option('suite') || 'full',
-          baseUrl: grunt.option('baseUrl') || "https://localhost:9000/"
+          baseUrl: grunt.option('baseUrl') || ("https://localhost:9000/" + contextRoot + "/")
         }
       },
       default: {
         options: {
           configFile: "test/protractor.conf.js", // Target-specific config file
           args: {
-            baseUrl: grunt.option('baseUrl') || "https://localhost:9000/",
+            baseUrl: grunt.option('baseUrl') || ("https://localhost:9000/" + contextRoot + "/"),
             browser: grunt.option('browser') || "firefox"
           } // Target-specific arguments
         }
