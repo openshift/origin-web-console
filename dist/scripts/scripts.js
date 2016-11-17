@@ -11774,11 +11774,11 @@ type:"error",
 message:"Deployment " + k + " failed.",
 reason:i(c, "openshift.io/deployment.status-reason"),
 links:[ {
-href:m,
-label:"View Deployment"
-}, {
 href:f,
 label:"View Log"
+}, {
+href:"project/" + c.metadata.namespace + "/browse/events",
+label:"View Events"
 } ]
 };
 }

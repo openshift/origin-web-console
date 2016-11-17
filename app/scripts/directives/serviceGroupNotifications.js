@@ -101,11 +101,12 @@ angular.module('openshiftConsole')
               message: 'Deployment ' + displayName + ' failed.',
               reason: annotation(mostRecentRC, 'openshift.io/deployment.status-reason'),
               links: [{
-                href: rcLink,
-                label: 'View Deployment'
-              }, {
                 href: logLink,
                 label: 'View Log'
+              }, {
+                // Show all events since the event might not be on the replication controller itself.
+                href: 'project/' + mostRecentRC.metadata.namespace + '/browse/events',
+                label: 'View Events'
               }]
             };
             break;
