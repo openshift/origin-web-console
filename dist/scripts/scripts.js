@@ -10777,10 +10777,14 @@ a.destroy();
 }
 };
 } ]), angular.module("openshiftConsole").directive("logViewer", [ "$sce", "$timeout", "$window", "AuthService", "APIDiscovery", "DataService", "logLinks", "BREAKPOINTS", function(a, b, c, d, e, f, g, h) {
-var i = $(window), j = $('<tr class="log-line"><td class="log-line-number"></td><td class="log-line-text"></td></tr>').get(0), k = function(a, b) {
-var c = j.cloneNode(!0);
+var i = $(window), j = function(a) {
+return a.replace(/https?:\/\/[A-Za-z0-9._%+-]+\S*[^\s.;,(){}<>"\u201d\u2019]/gm, function(a) {
+return '<a href="' + a + '" target="_blank">' + a + "</a>";
+});
+}, k = $('<tr class="log-line"><td class="log-line-number"></td><td class="log-line-text"></td></tr>').get(0), l = function(a, b) {
+var c = k.cloneNode(!0);
 c.firstChild.setAttribute("data-line-number", a);
-var d = ansi_up.escape_for_html(b), e = ansi_up.ansi_to_html(d), f = ansi_up.linkify(e);
+var d = ansi_up.escape_for_html(b), e = ansi_up.ansi_to_html(d), f = j(e);
 return c.lastChild.innerHTML = f, c;
 };
 return {
@@ -10801,13 +10805,13 @@ empty:"=?",
 run:"=?"
 },
 controller:[ "$scope", function(j) {
-var l, m, n, o, p, q = document.documentElement;
+var k, m, n, o, p, q = document.documentElement;
 j.logViewerID = _.uniqueId("log-viewer"), j.empty = !0;
 var r = function() {
 o = window.innerWidth < h.screenSmMin && !j.fixedHeight ? null :m;
 }, s = function() {
 j.$apply(function() {
-var a = l.getBoundingClientRect();
+var a = k.getBoundingClientRect();
 j.fixedHeight ? j.showScrollLinks = a && a.height > j.fixedHeight :j.showScrollLinks = a && (a.top < 0 || a.bottom > q.clientHeight);
 });
 }, t = !1, u = function() {
@@ -10847,11 +10851,11 @@ t = !0, g.scrollBottom(o);
 }, B = function() {
 j.autoScrollActive = !j.autoScrollActive, j.autoScrollActive && A();
 }, C = document.createDocumentFragment(), D = _.debounce(function() {
-l.appendChild(C), C = document.createDocumentFragment(), j.autoScrollActive && A(), j.showScrollLinks || s();
+k.appendChild(C), C = document.createDocumentFragment(), j.autoScrollActive && A(), j.showScrollLinks || s();
 }, 100, {
 maxWait:300
 }), E = function(a) {
-z && (z.stop(), z = null), a || (D.cancel(), l && (l.innerHTML = ""), C = document.createDocumentFragment());
+z && (z.stop(), z = null), a || (D.cancel(), k && (k.innerHTML = ""), C = document.createDocumentFragment());
 }, F = function() {
 if (E(), j.name && j.run) {
 angular.extend(j, {
@@ -10867,7 +10871,7 @@ limitBytes:10485760
 }, j.options);
 z = f.createStream(j.resource, j.name, j.context, a);
 var c = 0, d = function(a) {
-c++, C.appendChild(k(c, a)), D();
+c++, C.appendChild(l(c, a)), D();
 };
 z.onMessage(function(b, e, f) {
 j.$evalAsync(function() {
@@ -10912,7 +10916,7 @@ backlink:URI.encode(c.location.href)
 }), this.cacheScrollableNode = function(a) {
 m = a, n = $(m);
 }, this.cacheLogNode = function(a) {
-l = a;
+k = a;
 }, this.cacheAffixable = function(a) {
 p = $(a);
 }, this.start = function() {
