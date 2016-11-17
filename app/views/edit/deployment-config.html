@@ -282,12 +282,19 @@
                             <div class="checkbox form-group">
                               <label>
                                 <input type="checkbox" ng-model="containerConfig.hasDeploymentTrigger">
-                                Automatically start new deployments when an image stream tag is updated.
+                                Deploy images from an image stream tag
                               </label>
                             </div>
                             <div ng-if="containerConfig.hasDeploymentTrigger">
-                              <label class="required">Image Change Trigger</label>
+                              <label class="required">Image Stream Tag</label>
                               <istag-select model="containerConfig.triggerData.istag" select-disabled="disableInputs" include-shared-namespace="true"></istag-select>
+
+                              <div class="checkbox form-group">
+                                <label>
+                                  <input type="checkbox" ng-model="containerConfig.triggerData.automatic">
+                                  Automatically start a new deployment when the image changes
+                                </label>
+                              </div>
                             </div>
 
                             <div ng-if="!containerConfig.hasDeploymentTrigger" class="form-group">
@@ -307,7 +314,7 @@
                           <div class="checkbox form-group">
                             <label>
                               <input type="checkbox" ng-model="triggers.hasConfigTrigger">
-                              Automatically start new deployment when the deployment configuration changes
+                              Automatically start a new deployment when the deployment configuration changes
                             </label>
                           </div>
 

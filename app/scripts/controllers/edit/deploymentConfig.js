@@ -86,11 +86,14 @@ angular.module('openshiftConsole')
                   var triggerImageNameParts = triggerFromData.name.split(':');
                   triggerData = {
                     data: imageChangeTriggerForContainer,
-                    istag: {namespace: triggerFromData.namespace || $scope.projectName, imageStream: triggerImageNameParts[0], tagObject: {tag: triggerImageNameParts[1]}}
+                    istag: {namespace: triggerFromData.namespace || $scope.projectName, imageStream: triggerImageNameParts[0], tagObject: {tag: triggerImageNameParts[1]}},
+                    automatic: _.get(imageChangeTriggerForContainer, 'imageChangeParams.automatic', false)
                   };
                 } else {
                   triggerData = {
-                    istag: {namespace: "", imageStream: ""}
+                    istag: {namespace: "", imageStream: ""},
+                    // Default to true when setting up a new image change trigger.
+                    automatic: true
                   };
                 }
                 _.set(containerConfigByName, [container.name, 'triggerData'], triggerData);
@@ -211,7 +214,7 @@ angular.module('openshiftConsole')
       $scope.strategyParamsPropertyName = pickedStrategyParams;
     };
 
-    var assembleImageChangeTrigger = function(containerName, ist, trigger) {
+    var assembleImageChangeTrigger = function(containerName, ist, trigger, automatic) {
       var istagObject = {
         kind: "ImageStreamTag",
         namespace: ist.namespace,
@@ -219,11 +222,12 @@ angular.module('openshiftConsole')
       };
       if (trigger) {
         trigger.imageChangeParams.from = istagObject;
+        trigger.imageChangeParams.automatic = automatic;
       } else {
         trigger = {
           type: "ImageChange",
           imageChangeParams: {
-            automatic: true,
+            automatic: automatic,
             containerNames: [containerName],
             from: istagObject
           }
@@ -240,7 +244,10 @@ angular.module('openshiftConsole')
 
       _.each($scope.containerConfigByName, function(containerData, containerName) {
         if (containerData.hasDeploymentTrigger) {
-          updatedTriggers.push(assembleImageChangeTrigger(containerName, containerData.triggerData.istag, containerData.triggerData.data));
+          updatedTriggers.push(assembleImageChangeTrigger(containerName,
+                                                          containerData.triggerData.istag,
+                                                          containerData.triggerData.data,
+                                                          containerData.triggerData.automatic));
         } else {
           var imageSpec = _.find($scope.updatedDeploymentConfig.spec.template.spec.containers, { name: containerName });
           imageSpec.image = containerData.image;
