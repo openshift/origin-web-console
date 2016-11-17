@@ -27,7 +27,8 @@ describe("RoutesService", function(){
           kind: "Service",
           name: "frontend"
         },
-        host: "www.example.com"
+        host: "www.example.com",
+        wildcardPolicy: "None"
       },
       status: {
         ingress: null
@@ -132,7 +133,25 @@ describe("RoutesService", function(){
       }];
       var warnings = RoutesService.getRouteWarnings(route, serviceTemplate);
       expect(warnings).toEqual(["Requested host www.example.com was rejected by the router. Reason: route bar already exposes www.example.com and is older."]);
-    });    
+    });
+
+    it("should warn if admitted route wildcardPolicy doesn't match", function() {
+      var route = angular.copy(routeTemplate);
+      route.spec.path = '/test';
+      route.spec.wildcardPolicy = 'Subdomain';
+      route.status.ingress = [{
+        host: 'www.example.com',
+        routerName: 'foo',
+        conditions: [{
+          type: "Admitted",
+          status: "True",
+          lastTransitionTime: "2016-02-17T17:18:51Z"
+        }],
+        wildcardPolicy: 'None'
+      }];
+      var warnings = RoutesService.getRouteWarnings(route, serviceTemplate);
+      expect(warnings).toEqual(['Router "foo" does not support wildcard subdomains. Your route will only be available at host www.example.com.']);
+    });
 
     it("should not warn if there are no problems", function() {
       var route = angular.copy(routeTemplate);
@@ -246,6 +265,35 @@ describe("RoutesService", function(){
 
       var preferred = RoutesService.getPreferredDisplayRoute(vanilla, secure);
       expect(preferred).toEqual(secure);
+    });
+  });
+
+  describe("#getSubdomain", function() {
+    var routeTemplate = {
+      kind: "Route",
+      apiVersion: 'v1',
+      metadata: {
+        name: "ruby-hello-world",
+        labels : {
+          "app": "ruby-hello-world"
+        }
+      },
+      spec: {
+        to: {
+          kind: "Service",
+          name: "frontend"
+        },
+        host: "www.example.com",
+        wildcardPolicy: "Subdomain"
+      },
+      status: {
+        ingress: null
+      }
+    };
+
+    it("should return the correct subdomain", function() {
+      var subdomain = RoutesService.getSubdomain(routeTemplate);
+      expect(subdomain).toEqual("example.com");
     });
   });
 });

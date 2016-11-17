@@ -43,7 +43,7 @@
                 </ul>
               </div>
             </h1>
-            <labels labels="route.metadata.labels" clickable="true" kind="routes" project-name="{{route.metadata.namespace}}" limit="3"></labels> 
+            <labels labels="route.metadata.labels" clickable="true" kind="routes" project-name="{{route.metadata.namespace}}" limit="3"></labels>
           </div>
         </div>
       </div><!-- /middle-header-->
@@ -59,16 +59,16 @@
                       {{route | routeLabel}}
                       <span data-toggle="popover" data-trigger="hover" data-content="The route is not accepting traffic yet because it has not been admitted by a router." style="cursor: help; padding-left: 5px;">
                         <status-icon status="'Pending'" disable-animation></status-icon>
-                        <span class="sr-only">Pending</span>                        
+                        <span class="sr-only">Pending</span>
                       </span>
-                    </span>  
+                    </span>
                     <div ng-repeat="ingress in route.status.ingress">
                       <span ng-if="(route | isWebRoute)">
                         <a href="{{route | routeWebURL : ingress.host}}" target="_blank">{{route | routeLabel : ingress.host}}</a>
                       </span>
                       <span ng-if="!(route | isWebRoute)">
                         {{route | routeLabel : ingress.host}}
-                      </span>                    
+                      </span>
                       &ndash;
                       <span ng-init="admittedCondition = (ingress | routeIngressCondition : 'Admitted')">
                         <span ng-if="!admittedCondition">admission status unknown for router '{{ingress.routerName}}'</span>
@@ -77,16 +77,18 @@
                         </span>
                         <span ng-if="admittedCondition.status === 'False'">
                           rejected by router '{{ingress.routerName}}' <relative-timestamp timestamp="admittedCondition.lastTransitionTime"></relative-timestamp>
-                        </span>                        
+                        </span>
                       </span>
                     </div>
                   </dd>
+                  <dt ng-if-start="route.spec.wildcardPolicy && route.spec.wildcardPolicy !== 'None' && route.spec.wildcardPolicy !== 'Subdomain'">Wildcard Policy:</dt>
+                  <dd ng-if-end>{{route.spec.wildcardPolicy}}</dd>
                   <dt>Path:</dt>
                   <dd>
                     <span ng-if="route.spec.path">{{route.spec.path}}</span>
                     <span ng-if="!route.spec.path"><em>none</em></span>
                   </dd>
-                  <dt>{{route.spec.to.kind || "Routes to"}}:</dt>
+                  <dt>{{route.spec.to.kind || "Routes To"}}:</dt>
                   <dd>
                     <a ng-href="{{route.spec.to.name | navigateResourceURL : route.spec.to.kind : route.metadata.namespace}}">{{route.spec.to.name}}</a>
                   </dd>
@@ -143,7 +145,7 @@
                 <div style="margin-bottom: 10px;">
                   <h4>TLS Settings</h4>
                   <dl class="dl-horizontal left" ng-if="route.spec.tls">
-                    <dt>Termination type:</dt>
+                    <dt>Termination Type:</dt>
                     <dd>{{route.spec.tls.termination}}</dd>
                     <dt ng-if-start="route.spec.tls.termination === 'edge'">Insecure Traffic:</dt>
                     <dd ng-if-end>{{route.spec.tls.insecureEdgeTerminationPolicy || 'None'}}</dd>

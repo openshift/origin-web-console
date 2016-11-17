@@ -52,6 +52,10 @@ window.OPENSHIFT_CONSTANTS = {
   // true indicates that deployment metrics should be disabled on the web console overview
   DISABLE_OVERVIEW_METRICS: false,
 
+  // true indicates that none of the routers support wildcard subdomains and
+  // removes the option from the route creation form.
+  DISABLE_WILDCARD_ROUTES: true,
+
   // This blacklist hides certain kinds from the "Other Resources" page because they are unpersisted, disallowed for most end users, or not supported by openshift but exist in kubernetes
   AVAILABLE_KINDS_BLACKLIST: [
       // These are k8s kinds that are not supported in the current release of OpenShift

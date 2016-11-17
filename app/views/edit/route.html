@@ -9,35 +9,31 @@
       <div class="middle-container">
         <div class="middle-content">
           <div class="container surface-shaded">
-            <div class="col-md-12">
+            <div class="col-md-10 col-md-offset-1">
               <breadcrumbs breadcrumbs="breadcrumbs"></breadcrumbs>
               <alerts alerts="alerts"></alerts>
-              <div class="row">
-                <div class="col-md-10 col-md-offset-1 gutter-top">
-                  <h1>Edit Route {{routeName}}</h1>
-                  <div ng-if="loading">
-                    Loading...
-                  </div>
-                  <form name="form">
-                    <fieldset ng-disabled="disableInputs" ng-if="!loading">
-                      <osc-routing
-                          model="routing"
-                          services="services"
-                          show-name-input="false"
-                          host-read-only="true">
-                      </osc-routing>
-                      <div class="button-group gutter-top gutter-bottom">
-                        <button type="submit"
-                            class="btn btn-primary btn-lg"
-                            ng-click="updateRoute()"
-                            ng-disabled="form.$invalid || disableInputs"
-                            value="">Save</button>
-                        <a class="btn btn-default btn-lg" ng-href="{{routeURL}}">Cancel</a>
-                      </div>
-                    </fieldset>
-                  </form>
-                </div>
+              <h1>Edit Route {{routeName}}</h1>
+              <div ng-if="loading">
+                Loading...
               </div>
+              <form name="form">
+                <fieldset ng-disabled="disableInputs" ng-if="!loading">
+                  <osc-routing
+                      model="routing"
+                      services="services"
+                      show-name-input="false"
+                      host-read-only="true">
+                  </osc-routing>
+                  <div class="button-group gutter-top gutter-bottom">
+                    <button type="submit"
+                        class="btn btn-primary btn-lg"
+                        ng-click="updateRoute()"
+                        ng-disabled="form.$invalid || disableInputs"
+                        value="">Save</button>
+                    <a class="btn btn-default btn-lg" ng-href="{{routeURL}}">Cancel</a>
+                  </div>
+                </fieldset>
+              </form>
             </div>
           </div>
         </div><!-- /middle-content -->

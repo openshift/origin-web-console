@@ -246,12 +246,19 @@
         margin-left: 2px;
         margin-right: 6px;
       }
+      .non-web-route {
+        // Add extra margin to account for the missing external link icon.
+        margin-left: 25px;
+      }
       @media (min-width: @screen-sm-min) {
         // At wider screen widths, always 0 margin.
         margin: 0;
         .fa-external-link {
           margin-left: 0;
           margin-right: 5px;
+        }
+        .non-web-route {
+          margin-left: 0;
         }
       }
     }

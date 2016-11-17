@@ -3057,12 +3057,14 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "</span>\n" +
     "</div>\n" +
     "</dd>\n" +
+    "<dt ng-if-start=\"route.spec.wildcardPolicy && route.spec.wildcardPolicy !== 'None' && route.spec.wildcardPolicy !== 'Subdomain'\">Wildcard Policy:</dt>\n" +
+    "<dd ng-if-end>{{route.spec.wildcardPolicy}}</dd>\n" +
     "<dt>Path:</dt>\n" +
     "<dd>\n" +
     "<span ng-if=\"route.spec.path\">{{route.spec.path}}</span>\n" +
     "<span ng-if=\"!route.spec.path\"><em>none</em></span>\n" +
     "</dd>\n" +
-    "<dt>{{route.spec.to.kind || \"Routes to\"}}:</dt>\n" +
+    "<dt>{{route.spec.to.kind || \"Routes To\"}}:</dt>\n" +
     "<dd>\n" +
     "<a ng-href=\"{{route.spec.to.name | navigateResourceURL : route.spec.to.kind : route.metadata.namespace}}\">{{route.spec.to.name}}</a>\n" +
     "</dd>\n" +
@@ -3119,7 +3121,7 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "<div style=\"margin-bottom: 10px\">\n" +
     "<h4>TLS Settings</h4>\n" +
     "<dl class=\"dl-horizontal left\" ng-if=\"route.spec.tls\">\n" +
-    "<dt>Termination type:</dt>\n" +
+    "<dt>Termination Type:</dt>\n" +
     "<dd>{{route.spec.tls.termination}}</dd>\n" +
     "<dt ng-if-start=\"route.spec.tls.termination === 'edge'\">Insecure Traffic:</dt>\n" +
     "<dd ng-if-end>{{route.spec.tls.insecureEdgeTerminationPolicy || 'None'}}</dd>\n" +
@@ -6827,17 +6829,25 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "<div class=\"form-group\">\n" +
     "<label for=\"host\">Hostname</label>\n" +
     "\n" +
-    "<input id=\"host\" class=\"form-control\" type=\"text\" name=\"host\" ng-model=\"route.host\" ng-pattern=\"/^[a-z0-9]([-a-z0-9]*[a-z0-9])?(\\.[a-z0-9]([-a-z0-9]*[a-z0-9])?)*$/\" ng-maxlength=\"253\" ng-readonly=\"hostReadOnly\" placeholder=\"www.example.com\" autocorrect=\"off\" autocapitalize=\"off\" spellcheck=\"false\" aria-describedby=\"route-host-help\">\n" +
+    "<input id=\"host\" class=\"form-control\" type=\"text\" name=\"host\" ng-model=\"route.host\" ng-pattern=\"hostnamePattern\" ng-maxlength=\"253\" ng-readonly=\"hostReadOnly\" placeholder=\"www.example.com\" autocorrect=\"off\" autocapitalize=\"off\" spellcheck=\"false\" aria-describedby=\"route-host-help\">\n" +
     "<div>\n" +
     "<span id=\"route-host-help\" class=\"help-block\">\n" +
+    "<p>\n" +
     "Public hostname for the route.\n" +
-    "<span ng-if=\"!hostReadOnly\">If not specified, a hostname is generated.</span>\n" +
-    "The hostname can't be changed after the route is created.\n" +
+    "<span ng-if=\"!hostReadOnly\">\n" +
+    "If not specified, a hostname is generated.\n" +
+    "</span>\n" +
+    "<span ng-if=\"!disableWildcards\">\n" +
+    "You can use <var>*.example.com</var> with routers that support wildcard subdomains.\n" +
+    "</span>\n" +
+    "</p>\n" +
+    "<p>The hostname can't be changed after the route is created.</p>\n" +
     "</span>\n" +
     "</div>\n" +
     "<div class=\"has-error\" ng-show=\"routeForm.host.$error.pattern && routeForm.host.$touched && !routingDisabled\">\n" +
     "<span class=\"help-block\">\n" +
     "Hostname must consist of lower-case letters, numbers, periods, and hyphens. It must start and end with a letter or number.\n" +
+    "<span ng-if=\"!disableWildcards\">Wildcard subdomains may start with <var>*.</var></span>\n" +
     "</span>\n" +
     "</div>\n" +
     "</div>\n" +
@@ -6900,9 +6910,10 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "</div>\n" +
     "<div class=\"checkbox\">\n" +
     "<label>\n" +
-    "<input type=\"checkbox\" ng-model=\"secureRoute\" id=\"secure-route\">Secure route\n" +
+    "<input type=\"checkbox\" ng-model=\"secureRoute\" aria-describedby=\"secure-route-help\">\n" +
+    "Secure route\n" +
     "</label>\n" +
-    "<div class=\"help-block\">\n" +
+    "<div class=\"help-block\" id=\"secure-route-help\">\n" +
     "Routes can be secured using several TLS termination types for serving certificates.\n" +
     "</div>\n" +
     "</div>\n" +
@@ -8192,11 +8203,9 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "<div class=\"middle-container\">\n" +
     "<div class=\"middle-content\">\n" +
     "<div class=\"container surface-shaded\">\n" +
-    "<div class=\"col-md-12\">\n" +
+    "<div class=\"col-md-10 col-md-offset-1\">\n" +
     "<breadcrumbs breadcrumbs=\"breadcrumbs\"></breadcrumbs>\n" +
     "<alerts alerts=\"alerts\"></alerts>\n" +
-    "<div class=\"row\">\n" +
-    "<div class=\"col-md-10 col-md-offset-1 gutter-top\">\n" +
     "<h1>Edit Route {{routeName}}</h1>\n" +
     "<div ng-if=\"loading\">\n" +
     "Loading...\n" +
@@ -8211,8 +8220,6 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "</div>\n" +
     "</fieldset>\n" +
     "</form>\n" +
-    "</div>\n" +
-    "</div>\n" +
     "</div>\n" +
     "</div>\n" +
     "</div>\n" +
@@ -9666,7 +9673,7 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "<i class=\"fa fa-angle-right fa-fw\" aria-hidden=\"true\" ng-if=\"collapse\"></i>\n" +
     "</span>\n" +
     "<a ng-if=\"displayRoute | isWebRoute\" target=\"_blank\" ng-href=\"{{displayRoute | routeWebURL}}\">{{displayRoute | routeLabel}}</a>\n" +
-    "<span ng-if=\"displayRoute && !(displayRoute | isWebRoute)\">{{displayRoute | routeLabel}}</span>\n" +
+    "<span ng-if=\"displayRoute && !(displayRoute | isWebRoute)\" class=\"non-web-route\">{{displayRoute | routeLabel}}</span>\n" +
     "<span ng-if=\"routeWarningsByService[service.metadata.name] && routesByService[service.metadata.name].length === 1\">\n" +
     "<route-warnings warnings=\"routeWarningsByService[service.metadata.name]\"></route-warnings>\n" +
     "</span>\n" +

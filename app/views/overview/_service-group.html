@@ -21,7 +21,7 @@
       </span>
       <a ng-if="displayRoute | isWebRoute" target="_blank"
          ng-href="{{displayRoute | routeWebURL}}">{{displayRoute | routeLabel}}</a>
-      <span ng-if="displayRoute && !(displayRoute | isWebRoute)">{{displayRoute | routeLabel}}</span>
+      <span ng-if="displayRoute && !(displayRoute | isWebRoute)" class="non-web-route">{{displayRoute | routeLabel}}</span>
       <span ng-if="routeWarningsByService[service.metadata.name] && routesByService[service.metadata.name].length === 1">
         <route-warnings warnings="routeWarningsByService[service.metadata.name]"></route-warnings>
       </span>

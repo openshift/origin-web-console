@@ -126,12 +126,19 @@ angular.module("openshiftConsole")
           to: {
             kind: "Service",
             name: serviceName
-          }
+          },
+          wildcardPolicy: 'None'
         }
       };
 
-      if (input.routing.host) {
-        route.spec.host = input.routing.host;
+      var host = input.routing.host;
+      if (host) {
+        if (host.startsWith('*.')) {
+          route.spec.wildcardPolicy = 'Subdomain';
+          route.spec.host = 'wildcard' + host.substring(1);
+        } else {
+          route.spec.host = host;
+        }
       }
 
       if (input.routing.path) {

@@ -186,6 +186,52 @@ describe("ApplicationGenerator", function(){
             name: "theServiceName"
           },
           host: "www.example.com",
+          wildcardPolicy: "None",
+          path: "/test",
+          port: {
+            targetPort: 'tcp-80'
+          },
+          tls: {
+            termination: "edge",
+            insecureEdgeTerminationPolicy: "Redirect",
+            certificate: "dummy-cert",
+            key: "dummy-key",
+            caCertificate: "dummy-ca-cert"
+          }
+        }
+      });
+    });
+
+    it("should generate a wildcard route when wildcard subdomains are set", function(){
+      // Add the same labels, annotations, and targetPort as application generator `generate()`
+      var routeInput = angular.copy(inputTemplate);
+      routeInput.labels.app = routeInput.name;
+      routeInput.annotations["openshift.io/generated-by"] = "OpenShiftWebConsole";
+      routeInput.routing.targetPort = 'tcp-80';
+      routeInput.routing.host = '*.example.com';
+
+      var route = ApplicationGenerator._generateRoute(routeInput, routeInput.name, "theServiceName");
+      expect(route).toEqual({
+        kind: "Route",
+        apiVersion: 'v1',
+        metadata: {
+          name: "ruby-hello-world",
+          labels : {
+            "foo" : "bar",
+            "abc" : "xyz",
+            "app": "ruby-hello-world"
+          },
+          annotations: {
+            "openshift.io/generated-by": "OpenShiftWebConsole"
+          }
+        },
+        spec: {
+          to: {
+            kind: "Service",
+            name: "theServiceName"
+          },
+          host: "wildcard.example.com",
+          wildcardPolicy: "Subdomain",
           path: "/test",
           port: {
             targetPort: 'tcp-80'

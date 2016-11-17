@@ -333,10 +333,8 @@ angular.module('openshiftConsole')
   })
   .filter('isWebRoute', function(routeHostFilter) {
     return function(route){
-       //TODO: implement when we can tell if routes are http(s) or not web related which will drive
-       // links in view
-       // For now, only return false if the host is not defined.
-       return !!routeHostFilter(route);
+       return !!routeHostFilter(route) &&
+              _.get(route, 'spec.wildcardPolicy') !== 'Subdomain';
     };
   })
   .filter('routeWebURL', function(routeHostFilter){
@@ -349,15 +347,21 @@ angular.module('openshiftConsole')
         return url;
     };
   })
-  .filter('routeLabel', function(routeHostFilter, routeWebURLFilter, isWebRouteFilter) {
+  .filter('routeLabel', function(RoutesService, routeHostFilter, routeWebURLFilter, isWebRouteFilter) {
     return function(route, host) {
       if (isWebRouteFilter(route)) {
         return routeWebURLFilter(route, host);
       }
+
       var label = (host || routeHostFilter(route));
       if (!label) {
         return '<unknown host>';
       }
+
+      if (_.get(route, 'spec.wildcardPolicy') === 'Subdomain') {
+        label = '*.' + RoutesService.getSubdomain(route);
+      }
+
       if (route.spec.path) {
         label += route.spec.path;
       }
