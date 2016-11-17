@@ -39790,7 +39790,7 @@ value:a
 }, b.prototype.getLabelSelector = function() {
 return this._labelSelector;
 }, b.prototype.setLabelSelector = function(a, b) {
-if (this._labelFilterActiveFiltersElement && this._labelFilterActiveFiltersElement.empty(), this._labelSelector = a, this._labelFilterActiveElement) if (this._labelSelector.isEmpty()) this._labelFilterActiveElement.hide(); else {
+if (this._labelFilterActiveFiltersElement && this._labelFilterActiveFiltersElement.find(".label-filter-active-filter").remove(), this._labelSelector = a, this._labelFilterActiveElement) if (this._labelSelector.isEmpty()) this._labelFilterActiveElement.hide(); else {
 this._labelFilterActiveElement.show();
 var c = this;
 this._labelSelector.each(function(a) {
