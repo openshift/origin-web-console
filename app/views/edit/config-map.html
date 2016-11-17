@@ -1,0 +1,57 @@
+<default-header class="top-header"></default-header>
+<div class="wrap no-sidebar">
+  <div class="sidebar-left collapse navbar-collapse navbar-collapse-2">
+    <navbar-utility-mobile></navbar-utility-mobile>
+  </div>
+  <div class="middle surface-shaded">
+    <!-- Middle section -->
+    <div class="middle-section">
+      <div class="middle-container">
+        <div class="middle-content">
+          <div class="container surface-shaded">
+            <div class="row">
+              <div class="col-md-10 col-md-offset-1">
+                <breadcrumbs breadcrumbs="breadcrumbs"></breadcrumbs>
+                <alerts alerts="alerts"></alerts>
+                <div class="mar-top-xl">
+                  <h1>Edit Config Map {{configMap.metadata.name}}</h1>
+                  <div class="help-block">
+                    Config maps hold key-value pairs that can be used in pods to read application
+                    configuration.
+                  </div>
+                  <div class="mar-top-xl">
+                    <div ng-if="!loaded">Loading...</div>
+                    <form ng-if="loaded" name="forms.editConfigMapForm">
+                      <div ng-if="resourceChanged && !resourceDeleted && !updatingNow" class="alert alert-warning">
+                        <span class="pficon pficon-warning-triangle-o" aria-hidden="true"></span>
+                        <span class="sr-only">Warning:</span>
+                        Config map {{configMap.metadata.name}} has changed since you started editing it.
+                        You'll need to copy any changes you've made and edit the config map again.
+                      </div>
+                      <div ng-if="resourceDeleted" class="alert alert-warning">
+                        <span class="pficon pficon-warning-triangle-o" aria-hidden="true"></span>
+                        <span class="sr-only">Warning:</span>
+                        Config map {[configMap.metadata.name}} has been deleted since you started editing it.
+                      </div>
+                      <fieldset ng-disabled="disableInputs">
+                        <edit-config-map model="configMap"></edit-config-map>
+                        <div class="button-group gutter-top gutter-bottom">
+                          <button type="submit"
+                              class="btn btn-primary btn-lg"
+                              ng-click="updateConfigMap()"
+                              ng-disabled="forms.editConfigMapForm.$invalid || forms.editConfigMapForm.$pristine || disableInputs || resourceChanged || resourceDeleted"
+                              value="">Save</button>
+                          <a class="btn btn-default btn-lg" href="#" back>Cancel</a>
+                        </div>
+                      </fieldset>
+                    </form>
+                  </div>
+                </div>
+              </div><!-- /col -->
+            </div><!-- /row -->
+          </div><!-- /container -->
+        </div><!-- /middle-content -->
+      </div><!-- /middle-container -->
+    </div><!-- /middle-section -->
+  </div><!-- /middle -->
+</div><!-- /wrap -->

@@ -390,17 +390,16 @@ label.checkbox {
 }
 
 .drag-and-drop-zone {
-  position: absolute;
-  border-width: 3px;
-  visibility: hidden;
+  display: none;
 }
 
 .show-drag-and-drop-zone {
   border-style: dashed;
-  visibility: visible;
+  display: block;
   border-color:  rgb(136, 136, 136);
-  margin-left: -3px;
+  border-width: 3px;
   background-color: rgba(255, 255, 255, 0.6);
+  margin: -3px;
   text-align: center;
   vertical-align: middle;
   p {
@@ -992,6 +991,10 @@ a.disabled-link {
 
 .ace-inline {
   height: 300px;
+}
+
+.ace-inline-small {
+  height: 200px;
 }
 
 #from-file .editor {

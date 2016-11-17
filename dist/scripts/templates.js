@@ -842,7 +842,7 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "<span class=\"small text-muted\">(populated by a config map)</span>\n" +
     "</dd>\n" +
     "<dt>Name:</dt>\n" +
-    "<dd>{{volume.configMap.name}}</dd>\n" +
+    "<dd><a ng-href=\"{{volume.configMap.name | navigateResourceURL : 'ConfigMap' : namespace}}\">{{volume.configMap.name}}</a></dd>\n" +
     "<div ng-repeat=\"item in volume.configMap.items\">\n" +
     "<dt>Key to File:</dt>\n" +
     "<dd>{{item.key}}&#8201;&#8594;&#8201;{{item.path}}</dd>\n" +
@@ -1931,6 +1931,145 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "<events resource-kind=\"Pod\" resource-name=\"{{build | annotation : 'buildPod'}}\" project-context=\"projectContext\" ng-if=\"selectedTab.events\"></events>\n" +
     "</uib-tab>\n" +
     "</uib-tabset>\n" +
+    "</div>\n" +
+    "</div>\n" +
+    "</div>\n" +
+    "</div>\n" +
+    "</div>\n" +
+    "</div>\n" +
+    "</project-page>"
+  );
+
+
+  $templateCache.put('views/browse/config-map.html',
+    "<project-header class=\"top-header\"></project-header>\n" +
+    "<project-page>\n" +
+    "\n" +
+    "<div class=\"middle-section\">\n" +
+    "<div class=\"middle-container\">\n" +
+    "<div class=\"middle-header\">\n" +
+    "<div class=\"container-fluid\">\n" +
+    "<breadcrumbs breadcrumbs=\"breadcrumbs\"></breadcrumbs>\n" +
+    "<alerts alerts=\"alerts\"></alerts>\n" +
+    "<div ng-if=\"!loaded\" class=\"mar-top-xl\">Loading...</div>\n" +
+    "<div ng-if=\"loaded && error\" class=\"empty-state-message text-center\">\n" +
+    "<h2>The config map could not be loaded.</h2>\n" +
+    "<p>{{error | getErrorDetails}}</p>\n" +
+    "</div>\n" +
+    "<div ng-if=\"loaded && !error\">\n" +
+    "<h1>\n" +
+    "<div class=\"pull-right dropdown\" ng-if=\"'configmaps' | canIDoAny\">\n" +
+    "<button type=\"button\" class=\"dropdown-toggle btn btn-default actions-dropdown-btn hidden-xs\" data-toggle=\"dropdown\">\n" +
+    "Actions\n" +
+    "<span class=\"caret\"></span>\n" +
+    "</button>\n" +
+    "<a href=\"\" class=\"dropdown-toggle actions-dropdown-kebab visible-xs-inline\" data-toggle=\"dropdown\"><i class=\"fa fa-ellipsis-v\"></i><span class=\"sr-only\">Actions</span></a>\n" +
+    "<ul class=\"dropdown-menu actions action-link\">\n" +
+    "<li ng-if=\"'configmaps' | canI : 'update'\">\n" +
+    "<a ng-href=\"{{configMap | editResourceURL}}\" role=\"button\">Edit</a>\n" +
+    "</li>\n" +
+    "<li ng-if=\"'configmaps' | canI : 'update'\">\n" +
+    "<a ng-href=\"{{configMap | editYamlURL}}\" role=\"button\">Edit YAML</a>\n" +
+    "</li>\n" +
+    "<li ng-if=\"'configmaps' | canI : 'delete'\">\n" +
+    "<delete-link kind=\"ConfigMap\" resource-name=\"{{configMap.metadata.name}}\" project-name=\"{{configMap.metadata.namespace}}\" alerts=\"alerts\">\n" +
+    "</delete-link>\n" +
+    "</li>\n" +
+    "</ul>\n" +
+    "</div>\n" +
+    "{{configMap.metadata.name}}\n" +
+    "<small class=\"meta\">created <relative-timestamp timestamp=\"configMap.metadata.creationTimestamp\"></relative-timestamp></small>\n" +
+    "</h1>\n" +
+    "<labels labels=\"configMap.metadata.labels\" clickable=\"true\" kind=\"config-maps\" title-kind=\"config maps\" project-name=\"{{configMap.metadata.namespace}}\" limit=\"3\"></labels>\n" +
+    "</div>\n" +
+    "</div>\n" +
+    "</div>\n" +
+    "<div class=\"middle-content gutter-top\">\n" +
+    "<div class=\"container-fluid\">\n" +
+    "<div ng-if=\"configMap\" class=\"row\">\n" +
+    "<div class=\"col-sm-12\">\n" +
+    "<div ng-if=\"!(configMap.data | hashSize)\" class=\"empty-state-message text-center\">\n" +
+    "<h2>The config map has no items.</h2>\n" +
+    "</div>\n" +
+    "<div ng-if=\"configMap.data | hashSize\" class=\"table-responsive\">\n" +
+    "<table class=\"table table-bordered table-bordered-columns key-value-table\">\n" +
+    "<tbody>\n" +
+    "<tr ng-repeat=\"(prop, value) in configMap.data\">\n" +
+    "<td class=\"key\">{{prop}}</td>\n" +
+    "<td class=\"value\">\n" +
+    "<truncate-long-text content=\"value\" limit=\"1024\" newlinelimit=\"20\" expandable=\"true\">\n" +
+    "</truncate-long-text>\n" +
+    "</td>\n" +
+    "</tr>\n" +
+    "</tbody>\n" +
+    "</table>\n" +
+    "</div>\n" +
+    "<annotations annotations=\"configMap.metadata.annotations\"></annotations>\n" +
+    "</div>\n" +
+    "</div>\n" +
+    "</div>\n" +
+    "</div>\n" +
+    "</div>\n" +
+    "</div>\n" +
+    "</project-page>"
+  );
+
+
+  $templateCache.put('views/browse/config-maps.html',
+    "<project-header class=\"top-header\"></project-header>\n" +
+    "<project-page>\n" +
+    "\n" +
+    "<div class=\"middle-section\">\n" +
+    "<div class=\"middle-container\">\n" +
+    "<div class=\"middle-header header-toolbar\">\n" +
+    "<div class=\"container-fluid\">\n" +
+    "<div class=\"page-header page-header-bleed-right page-header-bleed-left\">\n" +
+    "<div class=\"pull-right\" ng-if=\"project && ('configmaps' | canI : 'create')\">\n" +
+    "<a ng-href=\"project/{{project.metadata.name}}/create-config-map\" class=\"btn btn-default\">Create Config Map</a>\n" +
+    "</div>\n" +
+    "<h1>Config Maps</h1>\n" +
+    "</div>\n" +
+    "<alerts alerts=\"alerts\"></alerts>\n" +
+    "<div ng-if=\"!renderOptions.showGetStarted\" class=\"data-toolbar\">\n" +
+    "<div class=\"data-toolbar-filter\">\n" +
+    "<project-filter></project-filter>\n" +
+    "</div>\n" +
+    "</div>\n" +
+    "</div>\n" +
+    "</div>\n" +
+    "<div class=\"middle-content\">\n" +
+    "<div class=\"container-fluid\">\n" +
+    "<div class=\"row\">\n" +
+    "<div class=\"col-md-12 gutter-top\">\n" +
+    "<div ng-if=\"!loaded\">Loading...</div>\n" +
+    "<div ng-if=\"loaded\">\n" +
+    "<table class=\"table table-bordered table-hover table-mobile\">\n" +
+    "<thead>\n" +
+    "<tr>\n" +
+    "<th>Name</th>\n" +
+    "<th>Created</th>\n" +
+    "<th>Labels</th>\n" +
+    "</tr>\n" +
+    "</thead>\n" +
+    "<tbody ng-if=\"(configMaps | hashSize) == 0\">\n" +
+    "<tr><td colspan=\"3\"><em>No config maps to show</em></td></tr>\n" +
+    "</tbody>\n" +
+    "<tbody ng-repeat=\"configMap in configMaps\">\n" +
+    "<tr>\n" +
+    "<td data-title=\"Name\">\n" +
+    "<a href=\"{{configMap | navigateResourceURL}}\">{{configMap.metadata.name}}</a>\n" +
+    "</td>\n" +
+    "<td data-title=\"Created\">\n" +
+    "<relative-timestamp timestamp=\"configMap.metadata.creationTimestamp\"></relative-timestamp>\n" +
+    "</td>\n" +
+    "<td data-title=\"Labels\">\n" +
+    "<em ng-if=\"(configMap.metadata.labels | hashSize) === 0\">none</em>\n" +
+    "<labels labels=\"configMap.metadata.labels\" clickable=\"true\" kind=\"Config Map\" project-name=\"{{configMap.metadata.namespace}}\" limit=\"3\" filter-current-page=\"true\"></labels>\n" +
+    "</td>\n" +
+    "</tr>\n" +
+    "</tbody>\n" +
+    "</table>\n" +
+    "</div>\n" +
     "</div>\n" +
     "</div>\n" +
     "</div>\n" +
@@ -3914,6 +4053,48 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
   );
 
 
+  $templateCache.put('views/create-config-map.html',
+    "<default-header class=\"top-header\"></default-header>\n" +
+    "<div class=\"wrap no-sidebar\">\n" +
+    "<div class=\"sidebar-left collapse navbar-collapse navbar-collapse-2\">\n" +
+    "<navbar-utility-mobile></navbar-utility-mobile>\n" +
+    "</div>\n" +
+    "<div class=\"middle surface-shaded\">\n" +
+    "\n" +
+    "<div class=\"middle-section\">\n" +
+    "<div class=\"middle-container\">\n" +
+    "<div class=\"middle-content\">\n" +
+    "<div class=\"container surface-shaded\">\n" +
+    "<div class=\"row\">\n" +
+    "<div class=\"col-md-10 col-md-offset-1\">\n" +
+    "<breadcrumbs breadcrumbs=\"breadcrumbs\"></breadcrumbs>\n" +
+    "<alerts alerts=\"alerts\"></alerts>\n" +
+    "<div class=\"mar-top-xl\">\n" +
+    "<h1>Create Config Map</h1>\n" +
+    "<div class=\"help-block\">\n" +
+    "Config maps hold key-value pairs that can be used in pods to read application configuration.\n" +
+    "</div>\n" +
+    "<form name=\"createConfigMapForm\" class=\"mar-top-xl\">\n" +
+    "<fieldset ng-disabled=\"disableInputs\">\n" +
+    "<edit-config-map model=\"configMap\" show-name-input=\"true\"></edit-config-map>\n" +
+    "<div class=\"button-group gutter-top gutter-bottom\">\n" +
+    "<button type=\"submit\" class=\"btn btn-primary btn-lg\" ng-click=\"createConfigMap()\" ng-disabled=\"createConfigMapForm.$invalid || disableInputs\" value=\"\">Create</button>\n" +
+    "<a class=\"btn btn-default btn-lg\" href=\"#\" back>Cancel</a>\n" +
+    "</div>\n" +
+    "</fieldset>\n" +
+    "</form>\n" +
+    "</div>\n" +
+    "</div>\n" +
+    "</div>\n" +
+    "</div>\n" +
+    "</div>\n" +
+    "</div>\n" +
+    "</div>\n" +
+    "</div>\n" +
+    "</div>"
+  );
+
+
   $templateCache.put('views/create-persistent-volume-claim.html',
     "<default-header class=\"top-header\"></default-header>\n" +
     "<div class=\"wrap no-sidebar\">\n" +
@@ -5144,11 +5325,11 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "<a href=\"\" ng-click=\"toggleAnnotations()\" ng-if=\"annotations && !expandAnnotations\">Show annotations</a>\n" +
     "<a href=\"\" ng-click=\"toggleAnnotations()\" ng-if=\"annotations && expandAnnotations\">Hide annotations</a>\n" +
     "<div ng-if=\"expandAnnotations\" class=\"table-responsive\" style=\"margin-top: 5px\">\n" +
-    "<table class=\"table table-bordered table-bordered-columns\">\n" +
+    "<table class=\"table table-bordered table-bordered-columns key-value-table\">\n" +
     "<tbody>\n" +
     "<tr ng-repeat=\"(annotationKey, annotationValue) in annotations\">\n" +
-    "<td style=\"padding-right: 10px; vertical-align: top\">{{annotationKey}}</td>\n" +
-    "<td style=\"width: 100%\">\n" +
+    "<td class=\"key\">{{annotationKey}}</td>\n" +
+    "<td class=\"value\">\n" +
     "<span style=\"white-space: pre\">{{annotationValue | prettifyJSON}}</span>\n" +
     "</td>\n" +
     "</tr>\n" +
@@ -5269,7 +5450,7 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "</div>\n" +
     "<div class=\"form-group\" ng-if=\"add.cacert\" id=\"cacert\">\n" +
     "<label class=\"required\" for=\"cacert\">CA Certificate File</label>\n" +
-    "<osc-file-input id=\"cacert-file-input\" model=\"newSecret.data.cacert\" drop-zone-id=\"cacert\" dragging=\"false\" help-text=\"Upload your ca.crt file.\" show-values=\"false\" required=\"true\"></osc-file-input>\n" +
+    "<osc-file-input id=\"cacert-file-input\" model=\"newSecret.data.cacert\" drop-zone-id=\"cacert\" help-text=\"Upload your ca.crt file.\" show-values=\"false\" required=\"true\"></osc-file-input>\n" +
     "<div ui-ace=\"{\n" +
     "          mode: 'txt',\n" +
     "          theme: 'eclipse',\n" +
@@ -5283,7 +5464,7 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "<div ng-if=\"newSecret.authType === 'kubernetes.io/ssh-auth'\">\n" +
     "<div class=\"form-group\" id=\"private-key\">\n" +
     "<label for=\"privateKey\" class=\"required\">SSH Private Key</label>\n" +
-    "<osc-file-input id=\"private-key-file-input\" model=\"newSecret.data.privateKey\" drop-zone-id=\"private-key\" dragging=\"false\" help-text=\"Upload your private SSH key file.\" show-values=\"false\"></osc-file-input>\n" +
+    "<osc-file-input id=\"private-key-file-input\" model=\"newSecret.data.privateKey\" drop-zone-id=\"private-key\" help-text=\"Upload your private SSH key file.\" show-values=\"false\"></osc-file-input>\n" +
     "<div ui-ace=\"{\n" +
     "          theme: 'eclipse',\n" +
     "          rendererOptions: {\n" +
@@ -5307,7 +5488,7 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "</div>\n" +
     "<div class=\"form-group\" ng-if=\"add.gitconfig\" id=\"gitconfig\">\n" +
     "<label class=\"required\" for=\"gitconfig\">Git Configuration File</label>\n" +
-    "<osc-file-input id=\"gitconfig-file-input\" model=\"newSecret.data.gitconfig\" drop-zone-id=\"gitconfig\" dragging=\"false\" help-text=\"Upload your .gitconfig or  file.\" show-values=\"false\" required=\"true\"></osc-file-input>\n" +
+    "<osc-file-input id=\"gitconfig-file-input\" model=\"newSecret.data.gitconfig\" drop-zone-id=\"gitconfig\" help-text=\"Upload your .gitconfig or  file.\" show-values=\"false\" required=\"true\"></osc-file-input>\n" +
     "<div ui-ace=\"{\n" +
     "          mode: 'ini',\n" +
     "          theme: 'eclipse',\n" +
@@ -5347,7 +5528,7 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "<div ng-if=\"newSecret.authType === 'kubernetes.io/dockerconfigjson'\">\n" +
     "<div class=\"form-group\" id=\"docker-config\">\n" +
     "<label for=\"dockerConfig\" class=\"required\">Configuration File</label>\n" +
-    "<osc-file-input if=\"dockercfg-file-input\" model=\"newSecret.data.dockerConfig\" drop-zone-id=\"docker-config\" dragging=\"false\" help-text=\"Upload a .dockercfg or .docker/config.json file\" show-values=\"false\" required=\"true\"></osc-file-input>\n" +
+    "<osc-file-input if=\"dockercfg-file-input\" model=\"newSecret.data.dockerConfig\" drop-zone-id=\"docker-config\" help-text=\"Upload a .dockercfg or .docker/config.json file\" show-values=\"false\" required=\"true\"></osc-file-input>\n" +
     "<div ui-ace=\"{\n" +
     "          mode: 'json',\n" +
     "          theme: 'eclipse',\n" +
@@ -5669,6 +5850,85 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
   );
 
 
+  $templateCache.put('views/directives/edit-config-map.html',
+    "<ng-form name=\"configMapForm\">\n" +
+    "<fieldset>\n" +
+    "\n" +
+    "<div ng-show=\"showNameInput\" class=\"form-group\">\n" +
+    "<label for=\"config-map-name\" class=\"required\">Name</label>\n" +
+    "\n" +
+    "<div ng-class=\"{ 'has-error': configMapForm.name.$invalid && configMapForm.name.$touched }\">\n" +
+    "<input id=\"config-map-name\" class=\"form-control\" type=\"text\" name=\"name\" ng-model=\"configMap.metadata.name\" ng-required=\"showNameInput\" ng-pattern=\"/^[a-z0-9]([-a-z0-9]*[a-z0-9])?$/\" ng-maxlength=\"63\" ng-minlength=\"2\" placeholder=\"my-config-map\" select-on-focus autocorrect=\"off\" autocapitalize=\"off\" spellcheck=\"false\" aria-describedby=\"config-map-name-help\">\n" +
+    "</div>\n" +
+    "<div>\n" +
+    "<span id=\"config-map-name-help\" class=\"help-block\">A unique name for the config map within the project.</span>\n" +
+    "</div>\n" +
+    "<div class=\"has-error\" ng-show=\"configMapForm.name.$error.pattern && configMapForm.name.$touched\">\n" +
+    "<span class=\"help-block\">\n" +
+    "Config map names may only contain lower-case letters, numbers, and dashes. They may not start or end with a dash.\n" +
+    "</span>\n" +
+    "</div>\n" +
+    "<div class=\"has-error\" ng-show=\"configMapForm.name.$error.maxlength\">\n" +
+    "<span class=\"help-block\">\n" +
+    "Config map names may not be longer than 63 characters.\n" +
+    "</span>\n" +
+    "</div>\n" +
+    "</div>\n" +
+    "<div ng-if=\"!data.length\">\n" +
+    "<p><em>The config map has no items.</em></p>\n" +
+    "<a href=\"\" ng-click=\"addItem()\">Add item</a>\n" +
+    "</div>\n" +
+    "<div ng-repeat=\"item in data\" ng-init=\"keys = getKeys()\">\n" +
+    "<div class=\"form-group\">\n" +
+    "<label ng-attr-for=\"key-{{$id}}\" class=\"required\">Key</label>\n" +
+    "\n" +
+    "<div ng-class=\"{ 'has-error': configMapForm['key-' + $id].$invalid && configMapForm['key-' + $id].$touched }\">\n" +
+    "<input class=\"form-control\" name=\"key-{{$id}}\" ng-attr-id=\"key-{{$id}}\" type=\"text\" ng-model=\"item.key\" required ng-pattern=\"/^[-._a-zA-Z0-9]+$/\" ng-maxlength=\"253\" osc-unique=\"keys\" placeholder=\"my.key\" select-on-focus autocorrect=\"off\" autocapitalize=\"off\" spellcheck=\"false\" aria-describedby=\"key-{{$id}}-help\">\n" +
+    "</div>\n" +
+    "<div class=\"help-block\">\n" +
+    "A unique key for this config map entry.\n" +
+    "</div>\n" +
+    "<div class=\"has-error\" ng-show=\"configMapForm['key-' + $id].$error.oscUnique && configMapForm['key-' + $id].$touched\">\n" +
+    "<span class=\"help-block\">\n" +
+    "Duplicate key \"{{item.key}}\". Keys must be unique within the config map.\n" +
+    "</span>\n" +
+    "</div>\n" +
+    "<div class=\"has-error\" ng-show=\"configMapForm['key-' + $id].$error.pattern && configMapForm['key-' + $id].$touched\">\n" +
+    "<span class=\"help-block\">\n" +
+    "Config map keys may only consist of letters, numbers, periods, hyphens, and underscores.\n" +
+    "</span>\n" +
+    "</div>\n" +
+    "<div class=\"has-error\" ng-show=\"configMapForm['key-' + $id].$error.maxlength\">\n" +
+    "<span class=\"help-block\">\n" +
+    "Config map keys may not be longer than 253 characters.\n" +
+    "</span>\n" +
+    "</div>\n" +
+    "</div>\n" +
+    "<div class=\"form-group\" ng-attr-id=\"drop-zone-{{$id}}\">\n" +
+    "<label ng-attr-for=\"name-{{$id}}\">Value</label>\n" +
+    "<osc-file-input model=\"item.value\" drop-zone-id=\"drop-zone-{{$id}}\" help-text=\"Enter a value for the config map entry or use the contents of a file.\" show-values=\"false\"></osc-file-input>\n" +
+    "<div ui-ace=\"{\n" +
+    "          theme: 'eclipse',\n" +
+    "          rendererOptions: {\n" +
+    "            showPrintMargin: false\n" +
+    "          }\n" +
+    "        }\" ng-model=\"item.value\" class=\"ace-bordered ace-inline-small mar-top-sm\" ng-attr-id=\"value-{{$id}}\"></div>\n" +
+    "</div>\n" +
+    "<div class=\"mar-bottom-md\">\n" +
+    "<a href=\"\" ng-click=\"removeItem($index)\">Remove item</a>\n" +
+    "<span ng-if=\"$last\">\n" +
+    "<span class=\"action-divider\">|</span>\n" +
+    "<a href=\"\" ng-click=\"addItem()\">Add item</a>\n" +
+    "</span>\n" +
+    "</div>\n" +
+    "</div>\n" +
+    "<div>\n" +
+    "</div>\n" +
+    "</fieldset>\n" +
+    "</ng-form>"
+  );
+
+
   $templateCache.put('views/directives/edit-webhook-triggers.html',
     "<h5>{{type}} webhooks\n" +
     "<span class=\"help action-inline\">\n" +
@@ -5911,7 +6171,7 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "<div class=\"col-sm-12 pod-bottom-xl\">\n" +
     "<form name=\"form\">\n" +
     "<div class=\"form-group\" id=\"from-file\">\n" +
-    "<osc-file-input model=\"editorContent\" drop-zone-id=\"from-file\" dragging=\"false\" help-text=\"Upload file by dragging & dropping, selecting it, or pasting from the clipboard.\" ng-disabled=\"false\" show-values=\"false\"></osc-file-input>\n" +
+    "<osc-file-input model=\"editorContent\" drop-zone-id=\"from-file\" help-text=\"Upload file by dragging & dropping, selecting it, or pasting from the clipboard.\" ng-disabled=\"false\" show-values=\"false\"></osc-file-input>\n" +
     "<div ui-ace=\"{\n" +
     "          mode: 'yaml',\n" +
     "          theme: 'eclipse',\n" +
@@ -6472,6 +6732,9 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
 
 
   $templateCache.put('views/directives/osc-file-input.html',
+    "<div ng-attr-id=\"{{dropMessageID}}\" class=\"drag-and-drop-zone\">\n" +
+    "<p>Drop file here</p>\n" +
+    "</div>\n" +
     "<div class=\"input-group\">\n" +
     "<input type=\"text\" class=\"form-control\" ng-model=\"fileName\" readonly=\"readonly\" ng-show=\"supportsFileUpload\" ng-disabled=\"disabled\" ng-attr-aria-describedby=\"{{helpText ? helpID : undefined}}\">\n" +
     "<span class=\"input-group-btn\">\n" +
@@ -7358,20 +7621,20 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
 
 
   $templateCache.put('views/directives/truncate-long-text.html',
-    "<span ng-if=\"!truncated\">{{content}}</span>\n" +
+    "<span ng-if=\"!truncated\" class=\"truncated-content\">{{content}}</span>\n" +
     "<span ng-if=\"truncated\">\n" +
     "<span ng-if=\"!toggles.expanded\">\n" +
-    "<span ng-attr-title=\"{{content}}\">{{truncatedContent}}&hellip;</span>\n" +
+    "<span class=\"truncated-content\" ng-attr-title=\"{{content}}\">{{truncatedContent}}&hellip;</span>\n" +
     "<a ng-if=\"expandable\" href=\"\" ng-click=\"toggles.expanded = true\" style=\"margin-left: 5px; white-space: nowrap\">See all</a>\n" +
     "</span>\n" +
     "<span ng-if=\"toggles.expanded\">\n" +
     "<div ng-if=\"prettifyJson\" class=\"well\">\n" +
     "<span class=\"pull-right\" style=\"margin-top: -10px\"><a href=\"\" ng-click=\"toggles.expanded = false\">Collapse</a></span>\n" +
-    "<span class=\"pretty-json\">{{content | prettifyJSON}}</span>\n" +
+    "<span class=\"pretty-json truncated-content\">{{content | prettifyJSON}}</span>\n" +
     "</div>\n" +
     "<span ng-if=\"!prettifyJson\">\n" +
     "<span class=\"pull-right\"><a href=\"\" ng-click=\"toggles.expanded = false\">Collapse</a></span>\n" +
-    "{{content}}\n" +
+    "<span class=\"truncated-content\">{{content}}</span>\n" +
     "</span>\n" +
     "</span>\n" +
     "</span>"
@@ -7798,6 +8061,61 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "</div>\n" +
     "</form>\n" +
     "</fieldset>\n" +
+    "</div>\n" +
+    "</div>\n" +
+    "</div>\n" +
+    "</div>\n" +
+    "</div>\n" +
+    "</div>"
+  );
+
+
+  $templateCache.put('views/edit/config-map.html',
+    "<default-header class=\"top-header\"></default-header>\n" +
+    "<div class=\"wrap no-sidebar\">\n" +
+    "<div class=\"sidebar-left collapse navbar-collapse navbar-collapse-2\">\n" +
+    "<navbar-utility-mobile></navbar-utility-mobile>\n" +
+    "</div>\n" +
+    "<div class=\"middle surface-shaded\">\n" +
+    "\n" +
+    "<div class=\"middle-section\">\n" +
+    "<div class=\"middle-container\">\n" +
+    "<div class=\"middle-content\">\n" +
+    "<div class=\"container surface-shaded\">\n" +
+    "<div class=\"row\">\n" +
+    "<div class=\"col-md-10 col-md-offset-1\">\n" +
+    "<breadcrumbs breadcrumbs=\"breadcrumbs\"></breadcrumbs>\n" +
+    "<alerts alerts=\"alerts\"></alerts>\n" +
+    "<div class=\"mar-top-xl\">\n" +
+    "<h1>Edit Config Map {{configMap.metadata.name}}</h1>\n" +
+    "<div class=\"help-block\">\n" +
+    "Config maps hold key-value pairs that can be used in pods to read application configuration.\n" +
+    "</div>\n" +
+    "<div class=\"mar-top-xl\">\n" +
+    "<div ng-if=\"!loaded\">Loading...</div>\n" +
+    "<form ng-if=\"loaded\" name=\"forms.editConfigMapForm\">\n" +
+    "<div ng-if=\"resourceChanged && !resourceDeleted && !updatingNow\" class=\"alert alert-warning\">\n" +
+    "<span class=\"pficon pficon-warning-triangle-o\" aria-hidden=\"true\"></span>\n" +
+    "<span class=\"sr-only\">Warning:</span>\n" +
+    "Config map {{configMap.metadata.name}} has changed since you started editing it. You'll need to copy any changes you've made and edit the config map again.\n" +
+    "</div>\n" +
+    "<div ng-if=\"resourceDeleted\" class=\"alert alert-warning\">\n" +
+    "<span class=\"pficon pficon-warning-triangle-o\" aria-hidden=\"true\"></span>\n" +
+    "<span class=\"sr-only\">Warning:</span>\n" +
+    "Config map {[configMap.metadata.name}} has been deleted since you started editing it.\n" +
+    "</div>\n" +
+    "<fieldset ng-disabled=\"disableInputs\">\n" +
+    "<edit-config-map model=\"configMap\"></edit-config-map>\n" +
+    "<div class=\"button-group gutter-top gutter-bottom\">\n" +
+    "<button type=\"submit\" class=\"btn btn-primary btn-lg\" ng-click=\"updateConfigMap()\" ng-disabled=\"forms.editConfigMapForm.$invalid || forms.editConfigMapForm.$pristine || disableInputs || resourceChanged || resourceDeleted\" value=\"\">Save</button>\n" +
+    "<a class=\"btn btn-default btn-lg\" href=\"#\" back>Cancel</a>\n" +
+    "</div>\n" +
+    "</fieldset>\n" +
+    "</form>\n" +
+    "</div>\n" +
+    "</div>\n" +
+    "</div>\n" +
+    "</div>\n" +
     "</div>\n" +
     "</div>\n" +
     "</div>\n" +

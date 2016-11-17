@@ -112,6 +112,10 @@ resource:"rolebindings",
 verb:"list"
 }
 }, {
+label:"Config Maps",
+href:"/browse/config-maps",
+prefixes:[ "/browse/config-maps/" ]
+}, {
 label:"Secrets",
 href:"/browse/secrets",
 prefixes:[ "/browse/secrets/" ],
@@ -410,6 +414,18 @@ reloadOnSearch:!1
 }).when("/project/:project/create-secret", {
 templateUrl:"views/create-secret.html",
 controller:"CreateSecretController"
+}).when("/project/:project/browse/config-maps", {
+templateUrl:"views/browse/config-maps.html",
+controller:"ConfigMapsController"
+}).when("/project/:project/browse/config-maps/:configMap", {
+templateUrl:"views/browse/config-map.html",
+controller:"ConfigMapController"
+}).when("/project/:project/create-config-map", {
+templateUrl:"views/create-config-map.html",
+controller:"CreateConfigMapController"
+}).when("/project/:project/edit/config-maps/:configMap", {
+templateUrl:"views/edit/config-map.html",
+controller:"EditConfigMapController"
 }).when("/project/:project/browse/other", {
 templateUrl:"views/other-resources.html",
 controller:"OtherResourcesController",
@@ -2130,6 +2146,10 @@ case "BuildConfig":
 j.segment(k(a, e)).segmentCoded(i);
 break;
 
+case "ConfigMap":
+j.segment("config-maps").segmentCoded(i);
+break;
+
 case "Deployment":
 j.segment("deployment").segmentCoded(i);
 break;
@@ -2150,11 +2170,11 @@ case "ImageStream":
 j.segment("images").segmentCoded(i);
 break;
 
-case "Service":
-case "Secret":
-case "Route":
-case "Pod":
 case "PersistentVolumeClaim":
+case "Pod":
+case "Route":
+case "Secret":
+case "Service":
 j.segment(g.kindToResource(b)).segmentCoded(i);
 break;
 
@@ -2184,6 +2204,7 @@ resourceListURL:function(a, b) {
 var c = {
 builds:"builds",
 buildconfigs:"builds",
+configmaps:"config-maps",
 deployments:"deployments",
 deploymentconfigs:"deployments",
 imagestreams:"images",
@@ -6084,6 +6105,84 @@ e.addAlert(a);
 h.toResourceList("secrets", c.projectName);
 };
 }));
+} ]), angular.module("openshiftConsole").controller("ConfigMapsController", [ "$scope", "$routeParams", "AlertMessageService", "DataService", "LabelFilter", "ProjectsService", function(a, b, c, d, e, f) {
+a.projectName = b.project, a.alerts = a.alerts || {}, a.loaded = !1, a.labelSuggestions = {}, c.getAlerts().forEach(function(b) {
+a.alerts[b.name] = b.data;
+}), c.clearAlerts();
+var g, h = [], i = function() {
+e.getLabelSelector().isEmpty() || !_.isEmpty(a.configMaps) || _.isEmpty(g) ? delete a.alerts["config-maps"] :a.alerts["config-maps"] = {
+type:"warning",
+details:"The active filters are hiding all config maps."
+};
+}, j = function() {
+e.addLabelSuggestionsFromResources(g, a.labelSuggestions), e.setLabelSuggestions(a.labelSuggestions);
+}, k = function() {
+var b = e.getLabelSelector().select(g);
+a.configMaps = _.sortBy(b, "metadata.name"), i();
+};
+f.get(b.project).then(_.spread(function(b, c) {
+a.project = b, h.push(d.watch("configmaps", c, function(b) {
+g = b.by("metadata.name"), j(), k(), a.loaded = !0;
+})), e.onActiveFiltersChanged(function() {
+a.$apply(k);
+}), a.$on("$destroy", function() {
+d.unwatchAll(h);
+});
+}));
+} ]), angular.module("openshiftConsole").controller("ConfigMapController", [ "$scope", "$routeParams", "AlertMessageService", "BreadcrumbsService", "DataService", "ProjectsService", function(a, b, c, d, e, f) {
+a.projectName = b.project, a.alerts = a.alerts || {}, a.loaded = !1, a.labelSuggestions = {}, a.breadcrumbs = d.getBreadcrumbs({
+name:b.configMap,
+kind:"ConfigMap",
+namespace:b.project
+}), c.getAlerts().forEach(function(b) {
+a.alerts[b.name] = b.data;
+}), c.clearAlerts();
+var g = [], h = function(b, c) {
+a.loaded = !0, a.configMap = b, "DELETED" === c && (a.alerts.deleted = {
+type:"warning",
+message:"This config map has been deleted."
+});
+};
+f.get(b.project).then(_.spread(function(c, d) {
+e.get("configmaps", b.configMap, d, {
+errorNotification:!1
+}).then(function(a) {
+h(a), g.push(e.watchObject("configmaps", b.configMap, d, h));
+}, function(b) {
+a.loaded = !0, a.error = b;
+}), a.$on("$destroy", function() {
+e.unwatchAll(g);
+});
+}));
+} ]), angular.module("openshiftConsole").controller("CreateConfigMapController", [ "$filter", "$routeParams", "$scope", "$window", "DataService", "Navigate", "ProjectsService", function(a, b, c, d, e, f, g) {
+c.alerts = {}, c.projectName = b.project, c.breadcrumbs = [ {
+title:c.projectName,
+link:"project/" + c.projectName
+}, {
+title:"Config Maps",
+link:"project/" + c.projectName + "/browse/config-maps"
+}, {
+title:"Create Config Map"
+} ], g.get(b.project).then(_.spread(function(f, g) {
+c.project = f, c.breadcrumbs[0].title = a("displayName")(f), c.configMap = {
+apiVersion:"v1",
+kind:"ConfigMap",
+metadata:{
+namespace:b.project
+},
+data:{}
+}, c.createConfigMap = function() {
+c.createConfigMapForm.$valid && (c.disableInputs = !0, e.create("configmaps", null, c.configMap, g).then(function() {
+d.history.back();
+}, function(b) {
+c.disableInputs = !1, c.alerts["create-config-map"] = {
+type:"error",
+message:"An error occurred creating the config map.",
+details:a("getErrorDetails")(b)
+};
+}));
+};
+}));
 } ]), angular.module("openshiftConsole").controller("RoutesController", [ "$routeParams", "$scope", "AlertMessageService", "DataService", "$filter", "LabelFilter", "ProjectsService", function(a, b, c, d, e, f, g) {
 b.projectName = a.project, b.unfilteredRoutes = {}, b.routes = {}, b.labelSuggestions = {}, b.alerts = b.alerts || {}, b.emptyMessage = "Loading...", c.getAlerts().forEach(function(a) {
 b.alerts[a.name] = a.data;
@@ -6191,9 +6290,11 @@ case "Deployment":
 case "DeploymentConfig":
 case "BuildConfig":
 case "Build":
+case "ConfigMap":
 case "Pod":
 case "PersistentVolumeClaim":
 case "Event":
+case "Secret":
 case "Service":
 case "Route":
 case "ImageStream":
@@ -6603,6 +6704,49 @@ details:f("getErrorDetails")(b)
 }, a.$on("$destroy", function() {
 c.unwatchAll(m);
 });
+} ]), angular.module("openshiftConsole").controller("EditConfigMapController", [ "$filter", "$routeParams", "$scope", "$window", "DataService", "BreadcrumbsService", "Navigate", "ProjectsService", function(a, b, c, d, e, f, g, h) {
+var i = [];
+c.alerts = {}, c.forms = {}, c.projectName = b.project, c.breadcrumbs = f.getBreadcrumbs({
+name:b.configMap,
+kind:"ConfigMap",
+namespace:b.project,
+includeProject:!0,
+subpage:"Edit Config Map"
+});
+var j = function(a) {
+return _.get(a, "metadata.resourceVersion");
+};
+h.get(b.project).then(_.spread(function(g, h) {
+e.get("configmaps", b.configMap, h).then(function(a) {
+c.loaded = !0, c.breadcrumbs = f.getBreadcrumbs({
+name:b.configMap,
+object:a,
+includeProject:!0,
+project:g,
+subpage:"Edit Config Map"
+}), c.configMap = a, i.push(e.watchObject("configmaps", b.configMap, h, function(a, b) {
+c.resourceChanged = j(a) !== j(c.configMap), c.resourceDeleted = "DELETED" === b;
+}));
+}, function(b) {
+c.loaded = !0, c.alerts.load = {
+type:"error",
+message:"The config map details could not be loaded.",
+details:a("getErrorDetails")(b)
+};
+}), c.updateConfigMap = function() {
+c.forms.editConfigMapForm.$valid && (c.disableInputs = !0, e.update("configmaps", c.configMap.metadata.name, c.configMap, h).then(function() {
+d.history.back();
+}, function(b) {
+c.disableInputs = !1, c.alerts["create-config-map"] = {
+type:"error",
+message:"An error occurred updating the config map.",
+details:a("getErrorDetails")(b)
+};
+}));
+}, c.$on("$destroy", function() {
+e.unwatchAll(i);
+});
+}));
 } ]), angular.module("openshiftConsole").controller("EditDeploymentConfigController", [ "$scope", "$routeParams", "$uibModal", "DataService", "BreadcrumbsService", "SecretsService", "ProjectsService", "$filter", "Navigate", "$location", "AlertMessageService", "SOURCE_URL_PATTERN", "keyValueEditorUtils", function(a, b, c, d, e, f, g, h, i, j, k, l, m) {
 a.projectName = b.project, a.deploymentConfig = null, a.alerts = {}, a.view = {
 advancedStrategyOptions:!1,
@@ -8393,7 +8537,42 @@ secret:a._generateSecret()
 };
 } ]
 };
-} ]), angular.module("openshiftConsole").directive("events", [ "$routeParams", "$filter", "DataService", "ProjectsService", "Logger", function(a, b, c, d, e) {
+} ]), angular.module("openshiftConsole").directive("editConfigMap", function() {
+return {
+require:"^form",
+restrict:"E",
+scope:{
+configMap:"=model",
+showNameInput:"="
+},
+templateUrl:"views/directives/edit-config-map.html",
+link:function(a, b, c, d) {
+a.form = d, a.addItem = function() {
+a.data.push({
+key:"",
+value:""
+}), a.form.$setDirty();
+}, a.removeItem = function(b) {
+a.data.splice(b, 1), a.form.$setDirty();
+}, a.getKeys = function() {
+return _.map(a.data, "key");
+};
+var e = a.$watch("configMap.data", function(b) {
+b && (a.data = _.map(b, function(a, b) {
+return {
+key:b,
+value:a
+};
+}), _.sortBy(a.data, "key"), _.isEmpty(a.data) && a.addItem(), e(), a.$watch("data", function(b) {
+var c = {};
+_.each(b, function(a) {
+c[a.key] = a.value;
+}), _.set(a, "configMap.data", c);
+}, !0));
+});
+}
+};
+}), angular.module("openshiftConsole").directive("events", [ "$routeParams", "$filter", "DataService", "ProjectsService", "Logger", function(a, b, c, d, e) {
 return {
 restrict:"E",
 scope:{
@@ -8815,34 +8994,47 @@ required:"=",
 disabled:"=ngDisabled",
 showValues:"=",
 helpText:"@?",
-dropZoneId:"@?",
-dragging:"="
+dropZoneId:"@?"
 },
 templateUrl:"views/directives/osc-file-input.html",
 link:function(b, c) {
 function d() {
-var a = $(k);
+var a = c.find(".drag-and-drop-zone");
 a.on("dragover", function() {
-a.addClass("highlight-drag-and-drop-zone"), l = !0;
-}), $(k + " p").on("dragover", function() {
-l = !0;
+b.disabled || (a.addClass("highlight-drag-and-drop-zone"), i = !0);
+}), c.find(".drag-and-drop-zone p").on("dragover", function() {
+b.disabled || (i = !0);
 }), a.on("dragleave", function() {
-l = !1, _.delay(function() {
-l || a.removeClass("highlight-drag-and-drop-zone");
-}, 200);
+b.disabled || (i = !1, _.delay(function() {
+i || a.removeClass("highlight-drag-and-drop-zone");
+}, 200));
 }), a.on("drop", function(a) {
+if (!b.disabled) {
 var c = _.get(a, "originalEvent.dataTransfer.files", []);
-return c.length > 0 && (b.file = _.head(c), f(b.file)), g(), $(".drag-and-drop-zone").trigger("putDropZoneFront", !1), $(".drag-and-drop-zone").trigger("reset"), !1;
-}), a.on("putDropZoneFront", function(a, b) {
-return b ? $(k).width(i.outerWidth()).height(i.outerHeight()).css("z-index", 100) :$(k).css("z-index", -1), !1;
+return c.length > 0 && (b.file = _.head(c), e(b.file)), f(), $(".drag-and-drop-zone").trigger("putDropZoneFront", !1), $(".drag-and-drop-zone").trigger("reset"), !1;
+}
+});
+var d = function(a, b) {
+var c = b.offset(), d = b.outerWidth(), e = b.outerHeight();
+a.css({
+height:e + 6,
+width:d + 6,
+top:c.top,
+left:c.left,
+position:"fixed",
+"z-index":100
+});
+};
+a.on("putDropZoneFront", function(a, e) {
+if (!b.disabled) {
+var f, g = c.find(".drag-and-drop-zone");
+return e ? (f = b.dropZoneId ? $("#" + b.dropZoneId) :c, d(g, f)) :g.css("z-index", "-1"), !1;
+}
 }), a.on("reset", function() {
-return m = !1, !1;
+if (!b.disabled) return j = !1, !1;
 });
 }
-function e() {
-i.before("<div id=" + j + ' class="drag-and-drop-zone"><p>Drop file here</p></div>'), c.css("z-index", 50);
-}
-function f(c) {
+function e(c) {
 var d = new FileReader();
 d.onloadend = function() {
 b.$apply(function() {
@@ -8852,32 +9044,28 @@ b.fileName = c.name, b.model = d.result;
 b.supportsFileUpload = !1, b.uploadError = !0, a.error("Could not read file", c);
 }, d.readAsText(c);
 }
-function g() {
-$(".drag-and-drop-zone").removeClass("show-drag-and-drop-zone highlight-drag-and-drop-zone");
+function f() {
+c.find(".drag-and-drop-zone").removeClass("show-drag-and-drop-zone highlight-drag-and-drop-zone");
 }
-function h() {
-$(k).remove();
-}
-b.helpID = _.uniqueId("help-"), b.supportsFileUpload = window.File && window.FileReader && window.FileList && window.Blob, b.uploadError = !1;
-var i = b.dropZoneId ? $("#" + b.dropZoneId) :c, j = b.dropZoneId + "-drag-and-drop-zone", k = "#" + j, l = !1, m = !1, n = c.find("input[type=file]")[0];
-b.$watch("disabled", function() {
-b.disabled ? h() :(e(), d());
-}, !0), (_.isUndefined($._data($(document)[0], "events")) || _.isUndefined($._data($(document)[0], "events").drop)) && ($(document).on("drop.oscFileInput", function() {
-return g(), $(".drag-and-drop-zone").trigger("putDropZoneFront", !1), !1;
-}), $(document).on("dragenter.oscFileInput", function() {
-return m = !0, $(".drag-and-drop-zone").addClass("show-drag-and-drop-zone"), $(".drag-and-drop-zone").trigger("putDropZoneFront", !0), !1;
-}), $(document).on("dragover.oscFileInput", function() {
-return m = !0, $(".drag-and-drop-zone").addClass("show-drag-and-drop-zone"), !1;
-}), $(document).on("dragleave.oscFileInput", function() {
-return m = !1, _.delay(function() {
-m || $(".drag-and-drop-zone").removeClass("show-drag-and-drop-zone");
+var g = _.uniqueId("osc-file-input-");
+b.dropMessageID = g + "-drop-message", b.helpID = g + "-help", b.supportsFileUpload = window.File && window.FileReader && window.FileList && window.Blob, b.uploadError = !1;
+var h = "#" + b.dropMessageID, i = !1, j = !1, k = c.find("input[type=file]")[0];
+setTimeout(d), $(document).on("drop." + g, function() {
+return f(), c.find(".drag-and-drop-zone").trigger("putDropZoneFront", !1), !1;
+}), $(document).on("dragenter." + g, function() {
+if (!b.disabled) return j = !0, c.find(".drag-and-drop-zone").addClass("show-drag-and-drop-zone"), c.find(".drag-and-drop-zone").trigger("putDropZoneFront", !0), !1;
+}), $(document).on("dragover." + g, function() {
+if (!b.disabled) return j = !0, c.find(".drag-and-drop-zone").addClass("show-drag-and-drop-zone"), !1;
+}), $(document).on("dragleave." + g, function() {
+return j = !1, _.delay(function() {
+j || c.find(".drag-and-drop-zone").removeClass("show-drag-and-drop-zone");
 }, 200), !1;
-})), b.cleanInputValues = function() {
-b.model = "", b.fileName = "", n.value = "";
+}), b.cleanInputValues = function() {
+b.model = "", b.fileName = "", k.value = "";
 }, c.change(function() {
-f(n.files[0]);
+e(k.files[0]);
 }), b.$on("$destroy", function() {
-$(k).off(), $(document).off("drop.oscFileInput").off("dragenter.oscFileInput").off("dragover.oscFileInput").off("dragleave.oscFileInput");
+$(h).off(), $(document).off("drop." + g).off("dragenter." + g).off("dragover." + g).off("dragleave." + g);
 });
 }
 };
@@ -13146,6 +13334,11 @@ verbs:[ "create" ]
 group:"",
 resource:"builds",
 verbs:[ "delete", "update" ]
+} ],
+configmaps:[ {
+group:"",
+resource:"configmaps",
+verbs:[ "update", "delete" ]
 } ],
 deployments:[ {
 group:"extensions",

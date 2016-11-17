@@ -178,6 +178,13 @@ window.OPENSHIFT_CONSTANTS = {
               }
             },
             {
+              label: "Config Maps",
+              href: "/browse/config-maps",
+              prefixes: [
+                "/browse/config-maps/"
+              ]
+            },
+            {
               label: "Secrets",
               href: "/browse/secrets",
               prefixes: [

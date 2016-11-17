@@ -178,3 +178,20 @@
     padding-right: 0;
   }
 }
+
+.key-value-table {
+  > tbody {
+    > tr {
+      > td.key {
+        padding-right: 10px;
+        vertical-align: top;
+      }
+      > td.value {
+        width: 100%;
+        .truncated-content {
+          white-space: pre;
+        }
+      }
+    }
+  }
+}

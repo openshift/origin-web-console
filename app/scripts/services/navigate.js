@@ -158,6 +158,10 @@ angular.module("openshiftConsole")
             url.segment(getBuildURLType(resource, opts))
               .segmentCoded(name);
             break;
+          case "ConfigMap":
+            url.segment('config-maps')
+              .segmentCoded(name);
+            break;
           case "Deployment":
             url.segment("deployment")
               .segmentCoded(name);
@@ -178,11 +182,11 @@ angular.module("openshiftConsole")
             url.segment("images")
               .segmentCoded(name);
             break;
-          case "Service":
-          case "Secret":
-          case "Route":
-          case "Pod":
           case "PersistentVolumeClaim":
+          case "Pod":
+          case "Route":
+          case "Secret":
+          case "Service":
             url.segment(APIService.kindToResource(kind))
             .segmentCoded(name);
             break;
@@ -231,6 +235,7 @@ angular.module("openshiftConsole")
         var routeMap = {
           'builds': 'builds',
           'buildconfigs': 'builds',
+          'configmaps': 'config-maps',
           'deployments': 'deployments',
           'deploymentconfigs': 'deployments',
           'imagestreams': 'images',

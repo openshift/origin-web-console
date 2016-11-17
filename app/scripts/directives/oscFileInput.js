@@ -11,63 +11,59 @@ angular.module('openshiftConsole')
         // Show the file contents below the file input.
         showValues: "=",
         helpText: "@?",
-        dropZoneId: "@?",
-        dragging: "=",
+        dropZoneId: "@?"
       },
       templateUrl: 'views/directives/osc-file-input.html',
       link: function(scope, element){
-        scope.helpID = _.uniqueId('help-');
+        var id = _.uniqueId('osc-file-input-');
+        scope.dropMessageID = id + '-drop-message';
+        scope.helpID = id + '-help';
         scope.supportsFileUpload = (window.File && window.FileReader && window.FileList && window.Blob);
         scope.uploadError = false;
 
-        var droppableElement = (scope.dropZoneId) ? $('#' + scope.dropZoneId) : element,
-        dropZoneName = scope.dropZoneId + "-drag-and-drop-zone",
-        dropZoneSelectorName = "#" + dropZoneName,
-        highlightDropZone = false,
-        showDropZone = false,
-        inputFileField = element.find('input[type=file]')[0];
+        var dropMessageSelector = "#" + scope.dropMessageID,
+            highlightDropZone = false,
+            showDropZone = false,
+            inputFileField = element.find('input[type=file]')[0];
 
-        // Add/Remove dropZone based on if the directive element is disabled
-        scope.$watch('disabled', function() {
+        setTimeout(addDropZoneListeners);
+
+        $(document).on('drop.' + id, function() {
+          removeDropZoneClasses();
+          element.find('.drag-and-drop-zone').trigger('putDropZoneFront', false);
+          return false;
+        });
+
+        $(document).on('dragenter.' + id, function() {
           if (scope.disabled) {
-            removeDropZoneElements();
-          } else {
-            addDropZoneToElement();
-            addDropZoneListeners();            
+            return;
           }
-        }, true);
 
-        // Add handler for dropping file out of the dragZone only once
-        if ( _.isUndefined($._data( $(document)[0], "events")) || _.isUndefined($._data( $(document)[0], "events").drop)) {
-          $(document).on('drop.oscFileInput', function() {
-            removeDropZoneClasses();
-            $('.drag-and-drop-zone').trigger('putDropZoneFront', false);
-            return false;
-          });
+          showDropZone = true;
+          element.find('.drag-and-drop-zone').addClass('show-drag-and-drop-zone');
+          element.find('.drag-and-drop-zone').trigger('putDropZoneFront', true);
+          return false;
+        });
 
-          $(document).on('dragenter.oscFileInput', function() {
-            showDropZone = true;
-            $('.drag-and-drop-zone').addClass('show-drag-and-drop-zone');
-            $('.drag-and-drop-zone').trigger('putDropZoneFront', true);
-            return false;
-          });
+        $(document).on('dragover.' + id, function() {
+          if (scope.disabled) {
+            return;
+          }
 
-          $(document).on('dragover.oscFileInput', function() {
-            showDropZone = true;
-            $('.drag-and-drop-zone').addClass('show-drag-and-drop-zone');
-            return false;
-          });
+          showDropZone = true;
+          element.find('.drag-and-drop-zone').addClass('show-drag-and-drop-zone');
+          return false;
+        });
 
-          $(document).on('dragleave.oscFileInput', function() {
-            showDropZone = false;
-            _.delay(function(){
-              if( !showDropZone ){
-                $('.drag-and-drop-zone').removeClass('show-drag-and-drop-zone');
-              }
-            }, 200 );
-            return false;
-          });
-        }
+        $(document).on('dragleave.' + id, function() {
+          showDropZone = false;
+          _.delay(function(){
+            if( !showDropZone ){
+              element.find('.drag-and-drop-zone').removeClass('show-drag-and-drop-zone');
+            }
+          }, 200);
+          return false;
+        });
 
         scope.cleanInputValues = function() {
           scope.model = '';
@@ -81,27 +77,43 @@ angular.module('openshiftConsole')
 
         // Add listeners for the dropZone element
         function addDropZoneListeners(){
-          var dropZoneElement = $(dropZoneSelectorName);
+          var dropMessageElement = element.find('.drag-and-drop-zone');
 
-          dropZoneElement.on('dragover', function() {
-            dropZoneElement.addClass('highlight-drag-and-drop-zone');
+          dropMessageElement.on('dragover', function() {
+            if (scope.disabled) {
+              return;
+            }
+
+            dropMessageElement.addClass('highlight-drag-and-drop-zone');
             highlightDropZone = true;
           });
 
-          $(dropZoneSelectorName + " p").on('dragover', function() {
+          element.find('.drag-and-drop-zone p').on('dragover', function() {
+            if (scope.disabled) {
+              return;
+            }
+
             highlightDropZone = true;
           });
 
-          dropZoneElement.on('dragleave', function() {
+          dropMessageElement.on('dragleave', function() {
+            if (scope.disabled) {
+              return;
+            }
+
             highlightDropZone = false;
             _.delay(function(){
               if (!highlightDropZone) {
-                dropZoneElement.removeClass('highlight-drag-and-drop-zone');
+                dropMessageElement.removeClass('highlight-drag-and-drop-zone');
               }
             }, 200 );
           });
 
-          dropZoneElement.on('drop', function(e) {
+          dropMessageElement.on('drop', function(e) {
+            if (scope.disabled) {
+              return;
+            }
+
             var files = _.get(e, 'originalEvent.dataTransfer.files', []);
             if (files.length > 0 ) {
               scope.file = _.head(files);
@@ -113,25 +125,44 @@ angular.module('openshiftConsole')
             return false;
           });
 
-          dropZoneElement.on('putDropZoneFront', function(event, putFront) {
+          var positionOver = function(element, target) {
+            var offset = target.offset();
+            var outerWidth = target.outerWidth();
+            var outerHeight = target.outerHeight();
+            element.css({
+              // Account for -3px margin by adding 6 to width and height.
+              height: outerHeight + 6,
+              width: outerWidth + 6,
+              top: offset.top,
+              left: offset.left,
+              position: 'fixed',
+              'z-index': 100
+            });
+          };
+
+          dropMessageElement.on('putDropZoneFront', function(event, putFront) {
+            if (scope.disabled) {
+              return;
+            }
+
+            var droppableElement, dropZoneMessage = element.find('.drag-and-drop-zone');
             if (putFront) {
-              $(dropZoneSelectorName).width(droppableElement.outerWidth()).height(droppableElement.outerHeight()).css('z-index', 100);
+              droppableElement = (scope.dropZoneId) ? $('#' + scope.dropZoneId) : element,
+              positionOver(dropZoneMessage, droppableElement);
             } else {
-              $(dropZoneSelectorName).css('z-index', -1);
-            }       
+              dropZoneMessage.css('z-index', '-1');
+            }
             return false;
           });
 
-          dropZoneElement.on('reset', function() {
+          dropMessageElement.on('reset', function() {
+            if (scope.disabled) {
+              return;
+            }
+
             showDropZone = false;
             return false;
           });
-        }
-
-        // Add drop zone before the droppable element
-        function addDropZoneToElement() {
-          droppableElement.before('<div id=' + dropZoneName + ' class="drag-and-drop-zone"><p>Drop file here</p></div>');
-          element.css('z-index', 50);
         }
 
         function addFile(file) {
@@ -151,19 +182,16 @@ angular.module('openshiftConsole')
         }
 
         function removeDropZoneClasses(){
-          $('.drag-and-drop-zone').removeClass("show-drag-and-drop-zone highlight-drag-and-drop-zone");
-        }
-
-        function removeDropZoneElements() {
-          $(dropZoneSelectorName).remove();
+          element.find('.drag-and-drop-zone').removeClass("show-drag-and-drop-zone highlight-drag-and-drop-zone");
         }
 
         scope.$on('$destroy', function(){
-          $(dropZoneSelectorName).off();
-          $(document).off('drop.oscFileInput')
-            .off('dragenter.oscFileInput')
-            .off('dragover.oscFileInput')
-            .off('dragleave.oscFileInput');
+          $(dropMessageSelector).off();
+          $(document)
+            .off('drop.' + id)
+            .off('dragenter.' + id)
+            .off('dragover.' + id)
+            .off('dragleave.' + id);
         });
       }
     };
