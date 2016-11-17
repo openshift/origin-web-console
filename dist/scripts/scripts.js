@@ -2514,7 +2514,7 @@ var f = a.metadata.name, g = c("annotation")(a, "deploymentConfig"), h = angular
 h.metadata.annotations[i] = "true", h.metadata.annotations[j] = "The deployment was cancelled by the user", b.update("replicationcontrollers", f, h, d).then(function() {
 e.alerts = e.alerts || {}, e.alerts.cancel = {
 type:"success",
-message:"Cancelling deployment " + f + " of " + g + "."
+message:"Cancelled deployment " + f + " of " + g + "."
 };
 }, function(a) {
 e.alerts = e.alerts || {}, e.alerts.cancel = {
@@ -5283,7 +5283,7 @@ a.showSecret = !0;
 d.cancelBuild(a.build, a.buildConfigName, i).then(function(b) {
 a.alerts.cancel = {
 type:"success",
-message:"Cancelling build " + b.metadata.name + " of " + a.buildConfigName + "."
+message:"Cancelled build " + b.metadata.name + " of " + a.buildConfigName + "."
 };
 }, function(c) {
 a.alerts.cancel = {

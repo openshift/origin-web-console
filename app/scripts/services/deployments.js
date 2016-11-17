@@ -178,7 +178,7 @@ angular.module("openshiftConsole")
           $scope.alerts["cancel"] =
             {
               type: "success",
-              message: "Cancelling deployment " + deploymentName + " of " + deploymentConfigName + ".",
+              message: "Cancelled deployment " + deploymentName + " of " + deploymentConfigName + ".",
             };
         },
         function(result) {
