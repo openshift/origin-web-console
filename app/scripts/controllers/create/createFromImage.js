@@ -15,6 +15,7 @@ angular.module("openshiftConsole")
       HPAService,
       QuotaService,
       SecretsService,
+      ImagesService,
       TaskList,
       failureObjectNameFilter,
       $filter,
@@ -150,15 +151,7 @@ angular.module("openshiftConsole")
               var imageName = scope.imageTag;
               DataService.get("imagestreamtags", imageStream.metadata.name + ":" + imageName, {namespace: scope.namespace}).then(function(imageStreamTag){
                   scope.image = imageStreamTag.image;
-                  scope.DCEnvVarsFromImage = _.map(
-                                              _.get(imageStreamTag, 'image.dockerImageMetadata.Config.Env'),
-                                              function(entry) {
-                                                var pair = entry.split('=');
-                                                return {
-                                                  name: _.head(pair),
-                                                  value:_.last(pair)
-                                                };
-                                              });
+                  scope.DCEnvVarsFromImage = ImagesService.getEnvironment(imageStreamTag);
                   var ports = ApplicationGenerator.parsePorts(imageStreamTag.image);
                   if (ports.length === 0) {
                     scope.routing.include = false;

@@ -365,6 +365,21 @@
                   <uib-tab heading="Environment" active="selectedTab.environment" ng-if="buildConfig && !(buildConfig | isJenkinsPipelineStrategy)">
                     <uib-tab-heading>Environment</uib-tab-heading>
                     <h3>Environment Variables</h3>
+                    <div style="margin-top: -5px;" ng-if="BCEnvVarsFromImage.length">
+                      The builder image has additional environment variables defined.  Variables defined below will overwrite any from the image with the same name.
+                      <a href="" ng-click="expand.imageEnv = true" ng-if="!expand.imageEnv">Show image environment variables</a>
+                      <a href="" ng-click="expand.imageEnv = false" ng-if="expand.imageEnv">Hide image environment variables</a>
+                    </div>
+                    <key-value-editor
+                      ng-if="expand.imageEnv"
+                      entries="BCEnvVarsFromImage"
+                      key-placeholder="Name"
+                      value-placeholder="Value"
+                      is-readonly
+                      cannot-add
+                      cannot-sort
+                      cannot-delete
+                      show-header></key-value-editor>
                     <ng-form name="forms.bcEnvVars">
                       <div ng-if="'buildconfigs' | canI : 'update'">
                         <key-value-editor
@@ -375,6 +390,16 @@
                           key-validator-error="Please enter a valid key"
                           key-validator-error-tooltip="A valid environment variable name is an alphanumeric (a-z and 0-9) string beginning with a letter that may contain underscores."
                           add-row-link="Add environment variable"
+                          show-header></key-value-editor>
+                        <key-value-editor
+                          ng-if="!('buildconfigs' | canI : 'update')"
+                          entries="envVars"
+                          key-placeholder="Name"
+                          value-placeholder="Value"
+                          is-readonly
+                          cannot-add
+                          cannot-sort
+                          cannot-delete
                           show-header></key-value-editor>
                         <button
                           class="btn btn-default"
@@ -387,16 +412,6 @@
                           class="mar-left-sm"
                           style="vertical-align: -2px;">Clear changes</a>
                       </div>
-                      <key-value-editor
-                        ng-if="!('buildconfigs' | canI : 'update')"
-                        entries="envVars"
-                        key-placeholder="Name"
-                        value-placeholder="Value"
-                        is-readonly
-                        cannot-add
-                        cannot-sort
-                        cannot-delete
-                        show-header></key-value-editor>
                     </ng-form>
                   </uib-tab>
                 </uib-tabset>

@@ -11,7 +11,9 @@ angular.module('openshiftConsole')
                                                  $filter,
                                                  $routeParams,
                                                  AlertMessageService,
+                                                 APIService,
                                                  BuildsService,
+                                                 ImagesService,
                                                  DataService,
                                                  LabelFilter,
                                                  ProjectsService,
@@ -23,6 +25,7 @@ angular.module('openshiftConsole')
     $scope.alerts = {};
     $scope.breadcrumbs = [];
     $scope.forms = {};
+    $scope.expand = {imageEnv: false};
 
     if ($routeParams.isPipeline) {
       $scope.breadcrumbs.push({
@@ -99,6 +102,8 @@ angular.module('openshiftConsole')
       $scope.forms.bcEnvVars.$setPristine();
     };
 
+    var lastLoadedBuildFromImageKey;
+
     var buildConfigResolved = function(buildConfig, action) {
       $scope.loaded = true;
       $scope.buildConfig = buildConfig;
@@ -109,6 +114,23 @@ angular.module('openshiftConsole')
         $scope.imageSources.forEach(function(imageSource) {
           $scope.imageSourcesPaths.push($filter('destinationSourcePair')(imageSource.paths));
         });
+      }
+      var buildFrom = _.get(buildStrategy(buildConfig), 'from', {});
+      // We don't want to reload the image every time the BC updates, only load again if the from changes
+      var buildFromImageKey = buildFrom.kind + "/" + buildFrom.name + "/" + (buildFrom.namespace || $scope.projectName);
+      if (lastLoadedBuildFromImageKey !== buildFromImageKey) {
+        if (_.includes(["ImageStreamTag", "ImageStreamImage"], buildFrom.kind)) {
+          lastLoadedBuildFromImageKey = buildFromImageKey;
+          DataService.get(APIService.kindToResource(buildFrom.kind), buildFrom.name, {namespace: buildFrom.namespace || $scope.projectName}, {errorNotification: false}).then(function(imageStreamImage){
+            $scope.BCEnvVarsFromImage = ImagesService.getEnvironment(imageStreamImage);
+          }, function() {
+            // We may not be able to fetch the image info as the end user, don't reveal any errors
+            $scope.BCEnvVarsFromImage = [];
+          });
+        }
+        else {
+          $scope.BCEnvVarsFromImage = [];
+        }
       }
       copyBuildConfigAndEnsureEnv(buildConfig);
       if (action === "DELETED") {
