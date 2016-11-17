@@ -7,7 +7,12 @@
         <tr ng-repeat="(annotationKey, annotationValue) in annotations">
           <td class="key">{{annotationKey}}</td>
           <td class="value">
-            <span style="white-space: pre;">{{annotationValue | prettifyJSON}}</span>
+            <truncate-long-text
+                content="annotationValue | prettifyJSON"
+                limit="500"
+                newlineLimit="20"
+                expandable="true">
+            </truncate-long-text>
           </td>
         </tr>
       </tbody>

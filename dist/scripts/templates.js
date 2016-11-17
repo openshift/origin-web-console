@@ -5330,7 +5330,8 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "<tr ng-repeat=\"(annotationKey, annotationValue) in annotations\">\n" +
     "<td class=\"key\">{{annotationKey}}</td>\n" +
     "<td class=\"value\">\n" +
-    "<span style=\"white-space: pre\">{{annotationValue | prettifyJSON}}</span>\n" +
+    "<truncate-long-text content=\"annotationValue | prettifyJSON\" limit=\"500\" newlinelimit=\"20\" expandable=\"true\">\n" +
+    "</truncate-long-text>\n" +
     "</td>\n" +
     "</tr>\n" +
     "</tbody>\n" +
