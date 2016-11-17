@@ -14,8 +14,8 @@
         </div>
         <div class="middle-content"><!-- flex item (fill the parent) -->
           <log-viewer
-            resource="builds/log"
-            name="build.metadata.name"
+            ng-if="build"
+            object="build"
             context="projectContext"
             status="build.status.phase"
             time-start="build.status.startTimestamp | date : 'medium'"

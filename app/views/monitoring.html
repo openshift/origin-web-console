@@ -111,8 +111,7 @@
                       <!-- TODO fix vanilla RCs -->
                       <log-viewer
                         ng-if="'builds/log' | canI : 'get'"
-                        resource="builds/log"
-                        name="build.metadata.name"
+                        object="build"
                         context="projectContext"
                         options="logOptions.builds[build.metadata.name]"
                         empty="logEmpty.builds[build.metadata.name]"
@@ -185,8 +184,7 @@
                       <!-- TODO fix vanilla RCs -->
                       <log-viewer
                         ng-if="'deploymentconfigs/log' | canI : 'get'"
-                        resource="deploymentconfigs/log"
-                        name="replicationController | annotation : 'deploymentConfig'"
+                        object="replicationController"
                         context="projectContext"
                         options="logOptions.replicationControllers[replicationController.metadata.name]"
                         empty="logEmpty.replicationControllers[replicationController.metadata.name]"
@@ -306,8 +304,7 @@
                     <div ng-repeat-end ng-if="expanded.pods[pod.metadata.name]" class="list-group-expanded-section" ng-class="{'expanded': expanded.pods[pod.metadata.name]}">
                       <log-viewer
                         ng-if="'pods/log' | canI : 'get'"
-                        resource="pods/log"
-                        name="pod.metadata.name"
+                        object="pod"
                         context="projectContext"
                         options="logOptions.pods[pod.metadata.name]"
                         empty="logEmpty.pods[pod.metadata.name]"

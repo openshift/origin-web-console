@@ -1914,7 +1914,7 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "</uib-tab>\n" +
     "<uib-tab active=\"selectedTab.logs\" ng-if=\"!(build | isJenkinsPipelineStrategy) && ('builds/log' | canI : 'get')\">\n" +
     "<uib-tab-heading>Logs</uib-tab-heading>\n" +
-    "<log-viewer ng-if=\"selectedTab.logs\" follow-affix-top=\"390\" follow-affix-bottom=\"90\" resource=\"builds/log\" name=\"build.metadata.name\" context=\"projectContext\" options=\"logOptions\" empty=\"logEmpty\" run=\"logCanRun\">\n" +
+    "<log-viewer ng-if=\"selectedTab.logs\" follow-affix-top=\"390\" follow-affix-bottom=\"90\" object=\"build\" context=\"projectContext\" options=\"logOptions\" empty=\"logEmpty\" run=\"logCanRun\">\n" +
     "<label>Status:</label>\n" +
     "<status-icon status=\"build.status.phase\"></status-icon>\n" +
     "<span class=\"space-after\">{{build.status.phase}}</span>\n" +
@@ -2934,7 +2934,7 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "</uib-tab>\n" +
     "<uib-tab active=\"selectedTab.logs\" ng-if=\"'pods/log' | canI : 'get'\">\n" +
     "<uib-tab-heading>Logs</uib-tab-heading>\n" +
-    "<log-viewer ng-if=\"selectedTab.logs\" follow-affix-top=\"390\" follow-affix-bottom=\"90\" resource=\"pods/log\" name=\"pod.metadata.name\" context=\"projectContext\" options=\"logOptions\" empty=\"logEmpty\" run=\"logCanRun\">\n" +
+    "<log-viewer ng-if=\"selectedTab.logs\" follow-affix-top=\"390\" follow-affix-bottom=\"90\" object=\"pod\" context=\"projectContext\" options=\"logOptions\" empty=\"logEmpty\" run=\"logCanRun\">\n" +
     "<label for=\"selectLogContainer\">Container:</label>\n" +
     "<span ng-if=\"pod.spec.containers.length === 1\">\n" +
     "{{pod.spec.containers[0].name}}\n" +
@@ -3098,7 +3098,7 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "</uib-tab>\n" +
     "<uib-tab ng-if=\"deploymentConfigName && logOptions.version && ('deploymentconfigs/log' | canI : 'get')\" active=\"selectedTab.logs\">\n" +
     "<uib-tab-heading>Logs</uib-tab-heading>\n" +
-    "<log-viewer ng-if=\"selectedTab.logs\" follow-affix-top=\"390\" follow-affix-bottom=\"90\" resource=\"deploymentconfigs/log\" name=\"deploymentConfigName\" context=\"projectContext\" options=\"logOptions\" empty=\"logEmpty\" run=\"logCanRun\">\n" +
+    "<log-viewer ng-if=\"selectedTab.logs\" follow-affix-top=\"390\" follow-affix-bottom=\"90\" object=\"replicaSet\" context=\"projectContext\" options=\"logOptions\" empty=\"logEmpty\" run=\"logCanRun\">\n" +
     "<span ng-if=\"replicaSet | deploymentStatus\">\n" +
     "<label>Status:</label>\n" +
     "<status-icon status=\"replicaSet | deploymentStatus\"></status-icon>\n" +
@@ -6533,6 +6533,7 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "<div class=\"log-header\" ng-if=\"!chromeless\">\n" +
     "<div ng-transclude class=\"log-status\"></div>\n" +
     "<div class=\"log-actions\">\n" +
+    "<span extension-point extension-name=\"log-links\" extension-types=\"link dom\" extension-args=\"[object, options]\"></span>\n" +
     "<span ng-if=\"kibanaAuthUrl\">\n" +
     "<form action=\"{{kibanaAuthUrl}}\" method=\"POST\">\n" +
     "<input type=\"hidden\" name=\"redirect\" value=\"{{kibanaArchiveUrl}}\">\n" +
@@ -8707,7 +8708,7 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "</div>\n" +
     "</div>\n" +
     "<div class=\"middle-content\">\n" +
-    "<log-viewer resource=\"builds/log\" name=\"build.metadata.name\" context=\"projectContext\" status=\"build.status.phase\" time-start=\"build.status.startTimestamp | date : 'medium'\" time-end=\"build.status.completionTimestamp | date : 'medium'\" chromeless=\"true\" run=\"logCanRun\" flex>\n" +
+    "<log-viewer ng-if=\"build\" object=\"build\" context=\"projectContext\" status=\"build.status.phase\" time-start=\"build.status.startTimestamp | date : 'medium'\" time-end=\"build.status.completionTimestamp | date : 'medium'\" chromeless=\"true\" run=\"logCanRun\" flex>\n" +
     "</log-viewer>\n" +
     "</div>\n" +
     "</div>\n" +
@@ -8733,7 +8734,7 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "</div>\n" +
     "</div>\n" +
     "<div class=\"middle-content\">\n" +
-    "<log-viewer ng-if=\"deploymentConfigName && logOptions.version\" resource=\"deploymentconfigs/log\" name=\"deploymentConfigName\" context=\"projectContext\" options=\"logOptions\" chromeless=\"true\" run=\"logCanRun\" flex>\n" +
+    "<log-viewer ng-if=\"deploymentConfigName && logOptions.version\" object=\"replicaSet\" context=\"projectContext\" options=\"logOptions\" chromeless=\"true\" run=\"logCanRun\" flex>\n" +
     "</log-viewer>\n" +
     "</div>\n" +
     "</div>\n" +
@@ -8759,7 +8760,7 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "</div>\n" +
     "</div>\n" +
     "<div class=\"middle-content\">\n" +
-    "<log-viewer resource=\"pods/log\" name=\"pod.metadata.name\" context=\"projectContext\" options=\"logOptions\" status=\"pod.status.phase\" time-start=\"pod.status.startTime | date : 'medium'\" chromeless=\"true\" run=\"logCanRun\" flex>\n" +
+    "<log-viewer ng-if=\"pod\" object=\"pod\" context=\"projectContext\" options=\"logOptions\" status=\"pod.status.phase\" time-start=\"pod.status.startTime | date : 'medium'\" chromeless=\"true\" run=\"logCanRun\" flex>\n" +
     "</log-viewer>\n" +
     "</div>\n" +
     "</div>\n" +
@@ -9323,7 +9324,7 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "</div>\n" +
     "<div ng-repeat-end ng-if=\"expanded.builds[build.metadata.name]\" class=\"list-group-expanded-section\" ng-class=\"{'expanded': expanded.builds[build.metadata.name]}\">\n" +
     "\n" +
-    "<log-viewer ng-if=\"'builds/log' | canI : 'get'\" resource=\"builds/log\" name=\"build.metadata.name\" context=\"projectContext\" options=\"logOptions.builds[build.metadata.name]\" empty=\"logEmpty.builds[build.metadata.name]\" run=\"logCanRun.builds[build.metadata.name]\" fixed-height=\"250\" full-log-url=\"(build | navigateResourceURL) + '?view=chromeless'\">\n" +
+    "<log-viewer ng-if=\"'builds/log' | canI : 'get'\" object=\"build\" context=\"projectContext\" options=\"logOptions.builds[build.metadata.name]\" empty=\"logEmpty.builds[build.metadata.name]\" run=\"logCanRun.builds[build.metadata.name]\" fixed-height=\"250\" full-log-url=\"(build | navigateResourceURL) + '?view=chromeless'\">\n" +
     "<div ng-if=\"build.status.startTimestamp && !logEmpty.builds[build.metadata.name]\" class=\"log-timestamps\" style=\"margin-left: 0\">\n" +
     "Log from {{build.status.startTimestamp | date : 'medium'}}\n" +
     "<span ng-if=\"build.status.completionTimestamp\">\n" +
@@ -9380,7 +9381,7 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "</div>\n" +
     "<div ng-repeat-end ng-if=\"expanded.replicationControllers[replicationController.metadata.name]\" class=\"list-group-expanded-section\" ng-class=\"{'expanded': expanded.replicationControllers[replicationController.metadata.name]}\">\n" +
     "\n" +
-    "<log-viewer ng-if=\"'deploymentconfigs/log' | canI : 'get'\" resource=\"deploymentconfigs/log\" name=\"replicationController | annotation : 'deploymentConfig'\" context=\"projectContext\" options=\"logOptions.replicationControllers[replicationController.metadata.name]\" empty=\"logEmpty.replicationControllers[replicationController.metadata.name]\" run=\"logCanRun.replicationControllers[replicationController.metadata.name]\" fixed-height=\"250\" full-log-url=\"(replicationController | navigateResourceURL) + '?view=chromeless'\">\n" +
+    "<log-viewer ng-if=\"'deploymentconfigs/log' | canI : 'get'\" object=\"replicationController\" context=\"projectContext\" options=\"logOptions.replicationControllers[replicationController.metadata.name]\" empty=\"logEmpty.replicationControllers[replicationController.metadata.name]\" run=\"logCanRun.replicationControllers[replicationController.metadata.name]\" fixed-height=\"250\" full-log-url=\"(replicationController | navigateResourceURL) + '?view=chromeless'\">\n" +
     "</log-viewer>\n" +
     "<div class=\"mar-top-lg\" ng-if=\"metricsAvailable\">\n" +
     "<deployment-metrics pods=\"podsByOwnerUID[replicationController.metadata.uid]\" containers=\"replicationController.spec.template.spec.containers\">\n" +
@@ -9478,7 +9479,7 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "</div>\n" +
     "</div>\n" +
     "<div ng-repeat-end ng-if=\"expanded.pods[pod.metadata.name]\" class=\"list-group-expanded-section\" ng-class=\"{'expanded': expanded.pods[pod.metadata.name]}\">\n" +
-    "<log-viewer ng-if=\"'pods/log' | canI : 'get'\" resource=\"pods/log\" name=\"pod.metadata.name\" context=\"projectContext\" options=\"logOptions.pods[pod.metadata.name]\" empty=\"logEmpty.pods[pod.metadata.name]\" run=\"logCanRun.pods[pod.metadata.name]\" fixed-height=\"250\" full-log-url=\"(pod | navigateResourceURL) + '?view=chromeless'\">\n" +
+    "<log-viewer ng-if=\"'pods/log' | canI : 'get'\" object=\"pod\" context=\"projectContext\" options=\"logOptions.pods[pod.metadata.name]\" empty=\"logEmpty.pods[pod.metadata.name]\" run=\"logCanRun.pods[pod.metadata.name]\" fixed-height=\"250\" full-log-url=\"(pod | navigateResourceURL) + '?view=chromeless'\">\n" +
     "<label for=\"selectLogContainer\">Container:</label>\n" +
     "<span ng-if=\"pod.spec.containers.length === 1\">\n" +
     "{{pod.spec.containers[0].name}}\n" +
