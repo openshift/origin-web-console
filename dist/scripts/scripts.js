@@ -9223,6 +9223,7 @@ name:""
 b.newSecret = {};
 var e = a.open({
 animation:!0,
+backdrop:"static",
 templateUrl:"views/modals/create-secret.html",
 controller:"CreateSecretModalController",
 scope:b
