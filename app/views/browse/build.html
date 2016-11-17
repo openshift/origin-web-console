@@ -123,9 +123,9 @@
                         <span class="space-after">{{build.status.phase}}</span>
 
                         <div ng-if="build.status.startTimestamp && !logEmpty" class="log-timestamps">
-                          Log from {{build.status.startTimestamp  | date : 'short'}}
+                          Log from {{build.status.startTimestamp  | date : 'medium'}}
                           <span ng-if="build.status.completionTimestamp">
-                            to {{build.status.completionTimestamp  | date : 'short'}}
+                            to {{build.status.completionTimestamp  | date : 'medium'}}
                           </span>
                         </div>
 
