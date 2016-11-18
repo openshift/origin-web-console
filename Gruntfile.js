@@ -576,7 +576,15 @@ module.exports = function (grunt) {
     karma: {
       unit: {
         configFile: 'test/karma.conf.js',
-        singleRun: true
+        singleRun: true,
+        // default in karma.conf.js is Firefox, however, Chrome has much better
+        // error messages when writing tests.  Call like this:
+        // grunt test
+        // grunt test --browsers=Chrome
+        // grunt test --browsers=Chrome,Firefox,Safari (be sure karma-<browser_name>-launcher is installed)
+        browsers: grunt.option('browsers') ?
+                    grunt.option('browsers').split(',') :
+                    ['Firefox']
       }
     },
 
