@@ -1,7 +1,7 @@
 'use strict';
 
 angular.module('openshiftConsole')
-  .directive('events', function($routeParams, $filter, DataService, ProjectsService, Logger) {
+  .directive('events', function($routeParams, $filter, DataService, KeywordService, ProjectsService, Logger) {
     return {
       restrict: 'E',
       scope: {
@@ -50,21 +50,7 @@ angular.module('openshiftConsole')
 
         var filterExpressions = [];
         var updateKeywords = function() {
-          if (!$scope.filter.text) {
-            filterExpressions = [];
-            return;
-          }
-
-          var keywords = _.uniq($scope.filter.text.split(/\s+/));
-          // Sort the longest keyword first.
-          keywords.sort(function(a, b){
-            return b.length - a.length;
-          });
-
-          // Convert the keyword to a case-insensitive regular expression for the filter.
-          filterExpressions = _.map(keywords, function(keyword) {
-            return new RegExp(_.escapeRegExp(keyword), "i");
-          });
+          $scope.filterExpressions = filterExpressions = KeywordService.generateKeywords(_.get($scope, 'filter.text'));
         };
 
         // Only filter by keyword on certain fields.
@@ -78,27 +64,7 @@ angular.module('openshiftConsole')
         }
 
         var filterForKeyword = function() {
-          $scope.filteredEvents = sortedEvents;
-          if (!filterExpressions.length) {
-            return;
-          }
-
-          // Find events that match all keywords.
-          angular.forEach(filterExpressions, function(regex) {
-            var matchesKeyword = function(event) {
-              var i;
-              for (i = 0; i < filterFields.length; i++) {
-                var value = _.get(event, filterFields[i]);
-                if (value && regex.test(value)) {
-                  return true;
-                }
-              }
-
-              return false;
-            };
-
-            $scope.filteredEvents = _.filter($scope.filteredEvents, matchesKeyword);
-          });
+          $scope.filteredEvents = KeywordService.filterForKeywords(sortedEvents, filterFields, filterExpressions);
         };
 
         $scope.$watch('filter.text', _.debounce(function() {

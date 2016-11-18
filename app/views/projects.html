@@ -98,22 +98,23 @@
                           <div class="list-view-pf-description project-names">
                             <div class="list-group-item-heading project-name-item">
                               <h2 class="h1">
-                                <a class="tile-target" ng-href="project/{{project.metadata.name}}" title="{{project | displayName}}">{{project | displayName}}</a>
+                                <a class="tile-target" ng-href="project/{{project.metadata.name}}" title="{{project | displayName}}"><span ng-bind-html="project | displayName | highlightKeywords : keywords"></span></a>
                                 <span ng-if="project.status.phase != 'Active'"
                                   data-toggle="tooltip"
                                   title="This project has been marked for deletion."
                                   class="pficon pficon-warning-triangle-o"></span>
                               </h2>
                               <small>
-                                <span ng-if="project | displayName : true">{{project.metadata.name}} &ndash;</span>
+                                <span ng-if="project | displayName : true"><span ng-bind-html="project.metadata.name | highlightKeywords : keywords"></span> &ndash;</span>
                                 created
-                                <span ng-if="project | annotation : 'openshift.io/requester'">by {{project | annotation : 'openshift.io/requester'}}</span>
+                                <span ng-if="project | annotation : 'openshift.io/requester'">by <span ng-bind-html="project | annotation : 'openshift.io/requester' | highlightKeywords : keywords"></span></span>
                                 <relative-timestamp timestamp="project.metadata.creationTimestamp"></relative-timestamp>
                               </small>
                             </div>
                             <div class="list-view-pf-additional-info project-additional-info">
                               <span class="list-group-item-text project-description">
-                                <truncate-long-text content="project | description" limit="265" use-word-boundary="true"></truncate-long-text>
+                                <truncate-long-text ng-if="!keywords.length" content="project | description" limit="265" use-word-boundary="true"></truncate-long-text>
+                                <span ng-if="keywords.length" ng-bind-html="project | description | truncate : 1000 | highlightKeywords : keywords"></span>
                               </span>
                             </div>
                           </div>

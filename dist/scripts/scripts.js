@@ -3534,7 +3534,7 @@ getResources:g
 } ]), angular.module("openshiftConsole").service("KeywordService", function() {
 var a = function(a) {
 if (!a) return [];
-var b = _.uniq(a.split(/\s+/));
+var b = _.uniq(_.words(a, /[\w.]+/g));
 return b.sort(function(a, b) {
 return b.length - a.length;
 }), _.map(b, function(a) {
@@ -3923,7 +3923,7 @@ onSortChange:t
 }, f.getAlerts().forEach(function(b) {
 a.alerts[b.name] = b.data;
 }), f.clearAlerts(), a.$watch("search.text", _.debounce(function(b) {
-n = i.generateKeywords(b), a.$apply(q);
+a.keywords = n = i.generateKeywords(b), a.$apply(q);
 }, 50, {
 maxWait:250
 })), g.withUser().then(function() {
@@ -4857,7 +4857,7 @@ a.hideOlderResources = c.filters.hideOlderResources ? "true" :"false", b.replace
 var a = b.search();
 a.kind = c.kindSelector.selected.kind, b.replace().search(a);
 }), c.$watch("filters.text", _.debounce(function() {
-y = h.generateKeywords(c.filters.text), c.$apply(z);
+c.filterKeywords = y = h.generateKeywords(c.filters.text), c.$apply(z);
 }, 50, {
 maxWait:250
 })), c.$watch("renderOptions.collapseEventsSidebar", function(a, b) {
@@ -7269,9 +7269,9 @@ j.toErrorPage("Could not load " + l(d.kind) + " '" + d.name + "'. " + b("getErro
 i.unwatchAll(o);
 });
 }));
-} ]), angular.module("openshiftConsole").controller("BrowseCategoryController", [ "$scope", "$filter", "$location", "$q", "$routeParams", "$uibModal", "AlertMessageService", "CatalogService", "Constants", "DataService", "KeywordService", "LabelFilter", "Navigate", "ProjectsService", function(a, b, c, d, e, f, g, h, i, j, k, l, m, n) {
+} ]), angular.module("openshiftConsole").controller("BrowseCategoryController", [ "$scope", "$filter", "$location", "$q", "$routeParams", "$uibModal", "AlertMessageService", "CatalogService", "Constants", "DataService", "LabelFilter", "Navigate", "ProjectsService", function(a, b, c, d, e, f, g, h, i, j, k, l, m) {
 a.projectName = e.project;
-var o = function(b, c) {
+var n = function(b, c) {
 var d;
 return _.some(b, function(b) {
 if (d = _.find(b.items, {
@@ -7286,10 +7286,10 @@ label:""
 }
 return !1;
 }), d;
-}, p = i.CATALOG_CATEGORIES, q = "none" === e.category ? "" :e.category;
-if (a.category = o(p, q), !a.category) return void m.toErrorPage("Catalog category " + e.category + " not found.");
-var r, s;
-return e.subcategory && (r = a.category, q = "none" === e.subcategory ? "" :e.subcategory, s = _.get(a.category, "subcategories", []), a.category = o(s, q), !a.category) ? void m.toErrorPage("Catalog category " + e.category + "/" + e.subcategory + " not found.") :(a.alerts = a.alerts || {}, g.getAlerts().forEach(function(b) {
+}, o = i.CATALOG_CATEGORIES, p = "none" === e.category ? "" :e.category;
+if (a.category = n(o, p), !a.category) return void l.toErrorPage("Catalog category " + e.category + " not found.");
+var q, r;
+return e.subcategory && (q = a.category, p = "none" === e.subcategory ? "" :e.subcategory, r = _.get(a.category, "subcategories", []), a.category = n(r, p), !a.category) ? void l.toErrorPage("Catalog category " + e.category + "/" + e.subcategory + " not found.") :(a.alerts = a.alerts || {}, g.getAlerts().forEach(function(b) {
 a.alerts[b.name] = b.data;
 }), g.clearAlerts(), a.breadcrumbs = [ {
 title:a.projectName,
@@ -7300,12 +7300,12 @@ link:"project/" + a.projectName + "/create"
 }, {
 title:"Catalog",
 link:"project/" + a.projectName + "/create?tab=fromCatalog"
-} ], r && a.breadcrumbs.push({
-title:r.label,
-link:"project/" + a.projectName + "/create/category/" + r.id
+} ], q && a.breadcrumbs.push({
+title:q.label,
+link:"project/" + a.projectName + "/create/category/" + q.id
 }), a.breadcrumbs.push({
 title:a.category.label
-}), void n.get(e.project).then(_.spread(function(c, d) {
+}), void m.get(e.project).then(_.spread(function(c, d) {
 a.project = c, a.context = d, a.breadcrumbs[0].title = b("displayName")(c), j.list("templates", d, function(b) {
 a.projectTemplates = b.by("metadata.name");
 }), j.list("templates", {
@@ -8585,7 +8585,7 @@ c[a.key] = a.value;
 });
 }
 };
-}), angular.module("openshiftConsole").directive("events", [ "$routeParams", "$filter", "DataService", "ProjectsService", "Logger", function(a, b, c, d, e) {
+}), angular.module("openshiftConsole").directive("events", [ "$routeParams", "$filter", "DataService", "KeywordService", "ProjectsService", "Logger", function(a, b, c, d, e, f) {
 return {
 restrict:"E",
 scope:{
@@ -8602,45 +8602,29 @@ var b = function(b) {
 return a.resourceKind ? _.filter(b, function(b) {
 return b.involvedObject.kind === a.resourceKind && b.involvedObject.name === a.resourceName;
 }) :b;
-}, d = [], f = _.get(a, "sortConfig.currentField.id"), g = {
+}, e = [], g = _.get(a, "sortConfig.currentField.id"), h = {
 lastTimestamp:!0
-}, h = function() {
+}, i = function() {
 var b = _.get(a, "sortConfig.currentField.id", "lastTimestamp");
-f !== b && (f = b, a.sortConfig.isAscending = !g[f]);
+g !== b && (g = b, a.sortConfig.isAscending = !h[g]);
 var c = a.sortConfig.isAscending ? "asc" :"desc";
-d = _.sortByOrder(a.events, [ b ], [ c ]);
-}, i = [], j = function() {
-if (!a.filter.text) return void (i = []);
-var b = _.uniq(a.filter.text.split(/\s+/));
-b.sort(function(a, b) {
-return b.length - a.length;
-}), i = _.map(b, function(a) {
-return new RegExp(_.escapeRegExp(a), "i");
-});
-}, k = [ "reason", "message", "type" ];
-a.resourceKind && a.resourceName || k.splice(0, 0, "involvedObject.name", "involvedObject.kind");
-var l = function() {
-a.filteredEvents = d, i.length && angular.forEach(i, function(b) {
-var c = function(a) {
-var c;
-for (c = 0; c < k.length; c++) {
-var d = _.get(a, k[c]);
-if (d && b.test(d)) return !0;
-}
-return !1;
-};
-a.filteredEvents = _.filter(a.filteredEvents, c);
-});
+e = _.sortByOrder(a.events, [ b ], [ c ]);
+}, j = [], k = function() {
+a.filterExpressions = j = d.generateKeywords(_.get(a, "filter.text"));
+}, l = [ "reason", "message", "type" ];
+a.resourceKind && a.resourceName || l.splice(0, 0, "involvedObject.name", "involvedObject.kind");
+var m = function() {
+a.filteredEvents = d.filterForKeywords(e, l, j);
 };
 a.$watch("filter.text", _.debounce(function() {
-j(), a.$apply(l);
+k(), a.$apply(m);
 }, 50, {
 maxWait:250
 }));
-var m = function() {
-h(), l();
-}, n = _.debounce(function() {
-a.$evalAsync(m);
+var n = function() {
+i(), m();
+}, o = _.debounce(function() {
+a.$evalAsync(n);
 }, 250, {
 leading:!0,
 trailing:!1,
@@ -8669,7 +8653,7 @@ title:"Count",
 sortType:"numeric"
 } ],
 isAscending:!0,
-onSortChange:m
+onSortChange:n
 }, a.resourceKind && a.resourceName || a.sortConfig.fields.splice(1, 0, {
 id:"involvedObject.name",
 title:"Name",
@@ -8679,11 +8663,11 @@ id:"involvedObject.kind",
 title:"Kind",
 sortType:"alpha"
 });
-var o = [];
-o.push(c.watch("events", a.projectContext, function(c) {
-a.events = b(c.by("metadata.name")), n(), e.log("events (subscribe)", a.filteredEvents);
+var p = [];
+p.push(c.watch("events", a.projectContext, function(c) {
+a.events = b(c.by("metadata.name")), o(), f.log("events (subscribe)", a.filteredEvents);
 })), a.$on("$destroy", function() {
-c.unwatchAll(o);
+c.unwatchAll(p);
 });
 } ]
 };
@@ -10256,7 +10240,7 @@ parentCategory:"=category"
 templateUrl:"views/catalog/catalog.html",
 link:function(e) {
 function f() {
-var b = c.generateKeywords(e.filter.keyword);
+var b = e.keywords = c.generateKeywords(e.filter.keyword);
 return _.isEmpty(b) ? (e.filterActive = !1, e.filteredBuildersByCategory = e.buildersByCategory, void (e.filteredTemplatesByCategory = e.templatesByCategory)) :(e.filterActive = !0, e.filteredBuildersByCategory = {}, _.each(e.buildersByCategory, function(c, d) {
 var f = a.getCategoryItem(d), g = function(a) {
 return a.test(f.label);
@@ -10326,7 +10310,7 @@ category:"="
 templateUrl:"views/catalog/category-content.html",
 link:function(b) {
 function e() {
-var d = c.generateKeywords(b.filter.keyword);
+var d = b.keywords = c.generateKeywords(b.filter.keyword);
 b.filteredBuilderImages = a.filterImageStreams(k, d), b.filteredTemplates = a.filterTemplates(l, d);
 }
 function f() {
@@ -10360,7 +10344,8 @@ scope:{
 image:"=",
 imageStream:"=",
 project:"@",
-isBuilder:"=?"
+isBuilder:"=?",
+keywords:"="
 },
 templateUrl:"views/catalog/_image.html",
 link:function(b) {
@@ -10391,7 +10376,8 @@ restrict:"E",
 replace:!0,
 scope:{
 template:"=",
-project:"@"
+project:"@",
+keywords:"="
 },
 templateUrl:"views/catalog/_template.html"
 };
@@ -13797,7 +13783,18 @@ return b;
 return function(a) {
 return Math.abs(a);
 };
-}), angular.module("openshiftConsole").filter("camelToLower", function() {
+}).filter("highlightKeywords", [ "KeywordService", function(a) {
+return function(b, c) {
+if (!b) return b;
+var d = _.escape(b);
+if (_.isEmpty(c)) return d;
+_.isString(c) && (c = a.generateKeywords(c));
+var e = _.map(c, function(a) {
+return _.isRegExp(a) ? a.source :_.escapeRegExp(a);
+}).join("|"), f = new RegExp("(" + e + ")", "ig");
+return d.replace(f, "<mark>$&</mark>");
+};
+} ]), angular.module("openshiftConsole").filter("camelToLower", function() {
 return function(a) {
 return a ? _.startCase(a).toLowerCase() :a;
 };

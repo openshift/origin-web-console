@@ -18,7 +18,6 @@ angular.module('openshiftConsole')
                                                     CatalogService,
                                                     Constants,
                                                     DataService,
-                                                    KeywordService,
                                                     LabelFilter,
                                                     Navigate,
                                                     ProjectsService) {

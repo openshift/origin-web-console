@@ -53,11 +53,13 @@
       image-stream="builder"
       project="{{projectName}}"
       is-builder="true"
+      keywords="keywords"
       ng-repeat="builder in filteredBuilderImages track by (builder | uid)">
     </catalog-image>
     <catalog-template
       template="template"
       project="{{projectName}}"
+      keywords="keywords"
       ng-repeat="template in filteredTemplates | orderBy : ['metadata.name', 'metadata.namespace'] track by (template | uid)">
     </catalog-template>
   </div><!-- /row-cards-pf -->

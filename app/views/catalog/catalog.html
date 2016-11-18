@@ -86,7 +86,7 @@
     <div ng-repeat="category in categories" ng-if="hasContent[category.id]">
       <div ng-repeat="item in category.items" ng-if="countByCategory[item.id]">
         <h2 class="h3">
-          {{item.label}}
+          <span ng-bind-html="item.label | highlightKeywords : keywords"></span>
           <span class="tile-item-count badge">{{countByCategory[item.id] || 0}}</span>
         </h2>
         <div class="row row-cards-pf row-cards-pf-flex mar-top-xl">
@@ -94,11 +94,13 @@
             image-stream="builder"
             project="{{projectName}}"
             is-builder="true"
+            keywords="keywords"
             ng-repeat="builder in filteredBuildersByCategory[item.id] track by (builder | uid)">
           </catalog-image>
           <catalog-template
             template="template"
             project="{{projectName}}"
+            keywords="keywords"
             ng-repeat="template in filteredTemplatesByCategory[item.id] | orderBy : ['metadata.name', 'metadata.namespace'] track by (template | uid)">
           </catalog-template>
         </div><!-- /row-cards-pf -->

@@ -321,7 +321,7 @@ angular.module('openshiftConsole')
         });
 
         $scope.$watch('filters.text', _.debounce(function() {
-          filterKeywords = KeywordService.generateKeywords($scope.filters.text);
+          $scope.filterKeywords = filterKeywords = KeywordService.generateKeywords($scope.filters.text);
           $scope.$apply(filterAllResourcesForKeyword);
         }, 50, { maxWait: 250 }));
 

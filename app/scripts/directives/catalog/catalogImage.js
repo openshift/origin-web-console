@@ -11,7 +11,8 @@ angular.module('openshiftConsole')
         image: '=',
         imageStream: '=',
         project: '@',
-        isBuilder: "=?"
+        isBuilder: "=?",
+        keywords: '='
       },
       templateUrl: 'views/catalog/_image.html',
       link: function($scope) {

@@ -8,7 +8,9 @@ angular.module("openshiftConsole")
         return [];
       }
 
-      var keywords = _.uniq(filterText.split(/\s+/));
+      // Remove some special characters from the string.
+      var keywords = _.uniq(_.words(filterText, /[\w.]+/g));
+
       // Sort the longest keyword first.
       keywords.sort(function(a, b){
         return b.length - a.length;

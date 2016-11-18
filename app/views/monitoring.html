@@ -23,14 +23,26 @@
               </ui-select>
               <div class="vertical-divider"></div>
               <div class="data-toolbar-filter">
-                <div class="form-group filter-controls">
-                  <label for="events-filter" class="sr-only">Filter by name</label>
-                  <input type="search"
-                        placeholder="Filter by name"
-                        class="form-control"
-                        id="events-filter"
-                        ng-model="filters.text">
-                </div>
+                <form role="form" class="search-pf has-button">
+                  <div class="form-group filter-controls has-clear">
+                    <div class="search-pf-input-group">
+                      <label for="events-filter" class="sr-only">Filter by name</label>
+                      <input type="search"
+                          placeholder="Filter by name"
+                          class="form-control"
+                          id="events-filter"
+                          ng-model="filters.text">
+                      <button
+                          type="button"
+                          class="clear"
+                          aria-hidden="true"
+                          ng-if="filters.text"
+                          ng-click="filters.text = ''">
+                          <span class="pficon pficon-close"></span>
+                      </button>
+                    </div>
+                  </div>
+                </form>
               </div>
               <div class="checkbox nowrap">
                 <label>
@@ -74,7 +86,7 @@
                         <div class="list-view-pf-body">
                           <div class="list-view-pf-description">
                             <div class="list-group-item-heading">
-                              <a ng-href="{{build | navigateResourceURL}}">{{build.metadata.name}}</a>
+                              <a ng-href="{{build | navigateResourceURL}}"><span ng-bind-html="build.metadata.name | highlightKeywords : filterKeywords"></span></a>
                               <small>created <relative-timestamp timestamp="build.metadata.creationTimestamp"></relative-timestamp></small>
                             </div>
                             <div class="list-group-item-text">
@@ -160,7 +172,7 @@
                         <div class="list-view-pf-body">
                           <div class="list-view-pf-description">
                             <div class="list-group-item-heading">
-                              <a ng-href="{{replicationController | navigateResourceURL}}">{{replicationController.metadata.name}}</a>
+                              <a ng-href="{{replicationController | navigateResourceURL}}"><span ng-bind-html="replicationController.metadata.name | highlightKeywords : filterKeywords"></span></a>
                               <small>created <relative-timestamp timestamp="replicationController.metadata.creationTimestamp"></relative-timestamp></small>
                             </div>
                             <div class="list-group-item-text">
@@ -217,7 +229,7 @@
                         <div class="list-view-pf-body">
                           <div class="list-view-pf-description">
                             <div class="list-group-item-heading">
-                              <a ng-href="{{replicaSet | navigateResourceURL}}">{{replicaSet.metadata.name}}</a>
+                              <a ng-href="{{replicaSet | navigateResourceURL}}"><span ng-bind-html="replicaSet.metadata.name | highlightKeywords : filterKeywords"></span></a>
                               <small>created <relative-timestamp timestamp="replicaSet.metadata.creationTimestamp"></relative-timestamp></small>
                             </div>
                             <div class="list-group-item-text">
@@ -281,7 +293,7 @@
                         <div class="list-view-pf-body">
                           <div class="list-view-pf-description">
                             <div class="list-group-item-heading">
-                              <a ng-href="{{pod | navigateResourceURL}}">{{pod.metadata.name}}</a>
+                              <a ng-href="{{pod | navigateResourceURL}}"><span ng-bind-html="pod.metadata.name | highlightKeywords : filterKeywords"></span></a>
                               <span ng-if="pod | isTroubledPod">
                                 <pod-warnings pod="pod"></pod-warnings>
                               </span>

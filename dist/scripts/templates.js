@@ -3783,12 +3783,13 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "<div class=\"card-pf-title-with-icon\">\n" +
     "<custom-icon resource=\"imageStream\" kind=\"image\" tag=\"is.tag.tag\" class=\"image-icon\"></custom-icon>\n" +
     "<h2 class=\"card-pf-title\">\n" +
-    "{{imageStream | displayName}}\n" +
+    "<span ng-bind-html=\"imageStream | displayName | highlightKeywords : keywords\"></span>\n" +
     "</h2>\n" +
     "</div>\n" +
     "<p class=\"card-pf-badge\">Builds source code</p>\n" +
     "<p>\n" +
-    "<truncate-long-text class=\"project-description\" content=\"imageStream | imageStreamTagAnnotation : 'description' : is.tag.tag\" limit=\"200\" use-word-boundary=\"true\"></truncate-long-text>\n" +
+    "<truncate-long-text ng-if=\"!keywords.length\" class=\"project-description\" content=\"imageStream | imageStreamTagAnnotation : 'description' : is.tag.tag\" limit=\"200\" use-word-boundary=\"true\"></truncate-long-text>\n" +
+    "<span ng-if=\"keywords.length\" ng-bind-html=\"imageStream | imageStreamTagAnnotation : 'description' : is.tag.tag | truncate : 200 | highlightKeywords : keywords\"></span>\n" +
     "</p>\n" +
     "<p ng-if=\"imageStream | imageStreamTagAnnotation : 'provider' : is.tag.tag\">\n" +
     "Provider: {{imageStream | imageStreamTagAnnotation : 'provider' : is.tag.tag}}\n" +
@@ -3835,11 +3836,12 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "<div class=\"card-pf-title-with-icon\">\n" +
     "<custom-icon resource=\"template\" kind=\"template\" class=\"image-icon\"></custom-icon>\n" +
     "<h2 class=\"card-pf-title\">\n" +
-    "{{template | displayName}}\n" +
+    "<span ng-bind-html=\"template | displayName | highlightKeywords : keywords\"></span>\n" +
     "</h2>\n" +
     "</div>\n" +
     "<p>\n" +
-    "<truncate-long-text class=\"project-description\" content=\"(template | description) || template.metadata.name\" limit=\"200\" use-word-boundary=\"true\"></truncate-long-text>\n" +
+    "<truncate-long-text ng-if=\"!keywords.length\" class=\"project-description\" content=\"(template | description) || template.metadata.name\" limit=\"200\" use-word-boundary=\"true\"></truncate-long-text>\n" +
+    "<span ng-if=\"keywords.length\" ng-bind-html=\"template | description | truncate : 200 | highlightKeywords : keywords\"></span>\n" +
     "</p>\n" +
     "<p ng-if=\"template | annotation : 'provider'\">\n" +
     "Provider: {{template | annotation : 'provider'}}\n" +
@@ -3924,13 +3926,13 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "<div ng-repeat=\"category in categories\" ng-if=\"hasContent[category.id]\">\n" +
     "<div ng-repeat=\"item in category.items\" ng-if=\"countByCategory[item.id]\">\n" +
     "<h2 class=\"h3\">\n" +
-    "{{item.label}}\n" +
+    "<span ng-bind-html=\"item.label | highlightKeywords : keywords\"></span>\n" +
     "<span class=\"tile-item-count badge\">{{countByCategory[item.id] || 0}}</span>\n" +
     "</h2>\n" +
     "<div class=\"row row-cards-pf row-cards-pf-flex mar-top-xl\">\n" +
-    "<catalog-image image-stream=\"builder\" project=\"{{projectName}}\" is-builder=\"true\" ng-repeat=\"builder in filteredBuildersByCategory[item.id] track by (builder | uid)\">\n" +
+    "<catalog-image image-stream=\"builder\" project=\"{{projectName}}\" is-builder=\"true\" keywords=\"keywords\" ng-repeat=\"builder in filteredBuildersByCategory[item.id] track by (builder | uid)\">\n" +
     "</catalog-image>\n" +
-    "<catalog-template template=\"template\" project=\"{{projectName}}\" ng-repeat=\"template in filteredTemplatesByCategory[item.id] | orderBy : ['metadata.name', 'metadata.namespace'] track by (template | uid)\">\n" +
+    "<catalog-template template=\"template\" project=\"{{projectName}}\" keywords=\"keywords\" ng-repeat=\"template in filteredTemplatesByCategory[item.id] | orderBy : ['metadata.name', 'metadata.namespace'] track by (template | uid)\">\n" +
     "</catalog-template>\n" +
     "</div>\n" +
     "</div>\n" +
@@ -3977,9 +3979,9 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "<a href=\"\" ng-click=\"filter.keyword = ''\">Clear filter</a>\n" +
     "</div>\n" +
     "<div class=\"row row-cards-pf row-cards-pf-flex mar-top-xl\">\n" +
-    "<catalog-image image-stream=\"builder\" project=\"{{projectName}}\" is-builder=\"true\" ng-repeat=\"builder in filteredBuilderImages track by (builder | uid)\">\n" +
+    "<catalog-image image-stream=\"builder\" project=\"{{projectName}}\" is-builder=\"true\" keywords=\"keywords\" ng-repeat=\"builder in filteredBuilderImages track by (builder | uid)\">\n" +
     "</catalog-image>\n" +
-    "<catalog-template template=\"template\" project=\"{{projectName}}\" ng-repeat=\"template in filteredTemplates | orderBy : ['metadata.name', 'metadata.namespace'] track by (template | uid)\">\n" +
+    "<catalog-template template=\"template\" project=\"{{projectName}}\" keywords=\"keywords\" ng-repeat=\"template in filteredTemplates | orderBy : ['metadata.name', 'metadata.namespace'] track by (template | uid)\">\n" +
     "</catalog-template>\n" +
     "</div>\n" +
     "</div>"
@@ -6087,12 +6089,19 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "<div ng-if=\"!events\">\n" +
     "Loading...\n" +
     "</div>\n" +
-    "<div ng-if=\"events\">\n" +
-    "<div class=\"table-toolbar form-inline\">\n" +
-    "<div class=\"form-group filter-controls\">\n" +
+    "<div ng-if=\"events\" class=\"events\">\n" +
+    "<div class=\"data-toolbar\">\n" +
+    "<form role=\"form\" class=\"search-pf has-button\">\n" +
+    "<div class=\"form-group filter-controls has-clear\">\n" +
+    "<div class=\"search-pf-input-group\">\n" +
     "<label for=\"events-filter\" class=\"sr-only\">Filter</label>\n" +
     "<input type=\"search\" placeholder=\"Filter by keyword\" class=\"form-control\" id=\"events-filter\" ng-model=\"filter.text\">\n" +
+    "<button type=\"button\" class=\"clear\" aria-hidden=\"true\" ng-if=\"filter.text\" ng-click=\"filter.text = ''\">\n" +
+    "<span class=\"pficon pficon-close\"></span>\n" +
+    "</button>\n" +
     "</div>\n" +
+    "</div>\n" +
+    "</form>\n" +
     "<div class=\"vertical-divider\"></div>\n" +
     "<div class=\"sort-group\">\n" +
     "<span class=\"sort-label\">Sort by</span>\n" +
@@ -6138,26 +6147,29 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "<tr>\n" +
     "<td data-title=\"Time\" class=\"nowrap\">{{event.lastTimestamp | date:'mediumTime'}}</td>\n" +
     "<td ng-if=\"!resourceKind || !resourceName\" data-title=\"Name\">\n" +
-    "<div class=\"hidden-xs-block visible-sm-block visible-md-block hidden-lg-block\">{{event.involvedObject.kind | humanizeKind : true}}</div>\n" +
+    "<div class=\"hidden-xs-block visible-sm-block visible-md-block hidden-lg-block\">\n" +
+    "<span ng-bind-html=\"event.involvedObject.kind | humanizeKind : true | highlightKeywords : filterExpressions\"></span>\n" +
+    "</div>\n" +
     "<span ng-init=\"resourceURL = (event.involvedObject.name | navigateResourceURL : event.involvedObject.kind : event.metadata.namespace : event.involvedObject.apiVersion)\">\n" +
-    "<a ng-href=\"{{resourceURL}}\" ng-if=\"resourceURL\">{{event.involvedObject.name}}</a>\n" +
-    "<span ng-if=\"!resourceURL\">{{event.involvedObject.name}}</span>\n" +
+    "<a ng-href=\"{{resourceURL}}\" ng-if=\"resourceURL\"><span ng-bind-html=\"event.involvedObject.name | highlightKeywords : filterExpressions\"></span></a>\n" +
+    "<span ng-if=\"!resourceURL\" ng-bind-html=\"event.involvedObject.name | highlightKeywords : filterExpressions\"></span>\n" +
     "</span>\n" +
     "</td>\n" +
     "<td ng-if=\"!resourceKind || !resourceName\" class=\"hidden-sm hidden-md\" data-title=\"Kind\">\n" +
-    "{{event.involvedObject.kind | humanizeKind : true}}</td>\n" +
+    "<span ng-bind-html=\"event.involvedObject.kind | humanizeKind : true | highlightKeywords : filterExpressions\"></span>\n" +
+    "</td>\n" +
     "<td data-title=\"Severity\" class=\"hidden-xs hidden-sm hidden-md text-center severity-icon-td\">\n" +
     "<span class=\"sr-only\">{{event.type}}</span>\n" +
     "<span class=\"pficon pficon-warning-triangle-o\" ng-show=\"event.type === 'Warning'\" aria-hidden=\"true\" data-toggle=\"tooltip\" data-original-title=\"Warning\"></span></td>\n" +
     "<td class=\"hidden-sm hidden-md\" data-title=\"Reason\">\n" +
-    "{{event.reason | sentenceCase}}&nbsp;<span class=\"visible-xs-inline pficon pficon-warning-triangle-o\" ng-show=\"event.type === 'Warning'\" aria-hidden=\"true\" data-toggle=\"tooltip\" data-original-title=\"Warning\"></span>\n" +
+    "<span ng-bind-html=\"event.reason | sentenceCase | highlightKeywords : filterExpressions\"></span>&nbsp;<span class=\"visible-xs-inline pficon pficon-warning-triangle-o\" ng-show=\"event.type === 'Warning'\" aria-hidden=\"true\" data-toggle=\"tooltip\" data-original-title=\"Warning\"></span>\n" +
     "</td>\n" +
     "<td data-title=\"Message\">\n" +
     "<div class=\"hidden-xs-block visible-sm-block visible-md-block hidden-lg-block\">\n" +
-    "{{event.reason | sentenceCase}}&nbsp;\n" +
+    "<span ng-bind-html=\"event.reason | sentenceCase | highlightKeywords : filterExpressions\"></span>&nbsp;\n" +
     "<span class=\"pficon pficon-warning-triangle-o\" ng-show=\"event.type === 'Warning'\" aria-hidden=\"true\" data-toggle=\"tooltip\" data-original-title=\"Warning\"></span>\n" +
     "</div>\n" +
-    "{{event.message}}\n" +
+    "<span ng-bind-html=\"event.message | highlightKeywords : filterExpressions\"></span>\n" +
     "<div ng-if=\"event.count > 1\" class=\"text-muted small\">\n" +
     "{{event.count}} times in the last\n" +
     "<duration-until-now timestamp=\"event.firstTimestamp\" omit-single=\"true\" precision=\"1\"></duration-until-now>\n" +
@@ -9256,10 +9268,17 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "</ui-select>\n" +
     "<div class=\"vertical-divider\"></div>\n" +
     "<div class=\"data-toolbar-filter\">\n" +
-    "<div class=\"form-group filter-controls\">\n" +
+    "<form role=\"form\" class=\"search-pf has-button\">\n" +
+    "<div class=\"form-group filter-controls has-clear\">\n" +
+    "<div class=\"search-pf-input-group\">\n" +
     "<label for=\"events-filter\" class=\"sr-only\">Filter by name</label>\n" +
     "<input type=\"search\" placeholder=\"Filter by name\" class=\"form-control\" id=\"events-filter\" ng-model=\"filters.text\">\n" +
+    "<button type=\"button\" class=\"clear\" aria-hidden=\"true\" ng-if=\"filters.text\" ng-click=\"filters.text = ''\">\n" +
+    "<span class=\"pficon pficon-close\"></span>\n" +
+    "</button>\n" +
     "</div>\n" +
+    "</div>\n" +
+    "</form>\n" +
     "</div>\n" +
     "<div class=\"checkbox nowrap\">\n" +
     "<label>\n" +
@@ -9299,7 +9318,7 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "<div class=\"list-view-pf-body\">\n" +
     "<div class=\"list-view-pf-description\">\n" +
     "<div class=\"list-group-item-heading\">\n" +
-    "<a ng-href=\"{{build | navigateResourceURL}}\">{{build.metadata.name}}</a>\n" +
+    "<a ng-href=\"{{build | navigateResourceURL}}\"><span ng-bind-html=\"build.metadata.name | highlightKeywords : filterKeywords\"></span></a>\n" +
     "<small>created <relative-timestamp timestamp=\"build.metadata.creationTimestamp\"></relative-timestamp></small>\n" +
     "</div>\n" +
     "<div class=\"list-group-item-text\">\n" +
@@ -9368,7 +9387,7 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "<div class=\"list-view-pf-body\">\n" +
     "<div class=\"list-view-pf-description\">\n" +
     "<div class=\"list-group-item-heading\">\n" +
-    "<a ng-href=\"{{replicationController | navigateResourceURL}}\">{{replicationController.metadata.name}}</a>\n" +
+    "<a ng-href=\"{{replicationController | navigateResourceURL}}\"><span ng-bind-html=\"replicationController.metadata.name | highlightKeywords : filterKeywords\"></span></a>\n" +
     "<small>created <relative-timestamp timestamp=\"replicationController.metadata.creationTimestamp\"></relative-timestamp></small>\n" +
     "</div>\n" +
     "<div class=\"list-group-item-text\">\n" +
@@ -9409,7 +9428,7 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "<div class=\"list-view-pf-body\">\n" +
     "<div class=\"list-view-pf-description\">\n" +
     "<div class=\"list-group-item-heading\">\n" +
-    "<a ng-href=\"{{replicaSet | navigateResourceURL}}\">{{replicaSet.metadata.name}}</a>\n" +
+    "<a ng-href=\"{{replicaSet | navigateResourceURL}}\"><span ng-bind-html=\"replicaSet.metadata.name | highlightKeywords : filterKeywords\"></span></a>\n" +
     "<small>created <relative-timestamp timestamp=\"replicaSet.metadata.creationTimestamp\"></relative-timestamp></small>\n" +
     "</div>\n" +
     "<div class=\"list-group-item-text\">\n" +
@@ -9465,7 +9484,7 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "<div class=\"list-view-pf-body\">\n" +
     "<div class=\"list-view-pf-description\">\n" +
     "<div class=\"list-group-item-heading\">\n" +
-    "<a ng-href=\"{{pod | navigateResourceURL}}\">{{pod.metadata.name}}</a>\n" +
+    "<a ng-href=\"{{pod | navigateResourceURL}}\"><span ng-bind-html=\"pod.metadata.name | highlightKeywords : filterKeywords\"></span></a>\n" +
     "<span ng-if=\"pod | isTroubledPod\">\n" +
     "<pod-warnings pod=\"pod\"></pod-warnings>\n" +
     "</span>\n" +
@@ -10604,19 +10623,20 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "<div class=\"list-view-pf-description project-names\">\n" +
     "<div class=\"list-group-item-heading project-name-item\">\n" +
     "<h2 class=\"h1\">\n" +
-    "<a class=\"tile-target\" ng-href=\"project/{{project.metadata.name}}\" title=\"{{project | displayName}}\">{{project | displayName}}</a>\n" +
+    "<a class=\"tile-target\" ng-href=\"project/{{project.metadata.name}}\" title=\"{{project | displayName}}\"><span ng-bind-html=\"project | displayName | highlightKeywords : keywords\"></span></a>\n" +
     "<span ng-if=\"project.status.phase != 'Active'\" data-toggle=\"tooltip\" title=\"This project has been marked for deletion.\" class=\"pficon pficon-warning-triangle-o\"></span>\n" +
     "</h2>\n" +
     "<small>\n" +
-    "<span ng-if=\"project | displayName : true\">{{project.metadata.name}} &ndash;</span>\n" +
+    "<span ng-if=\"project | displayName : true\"><span ng-bind-html=\"project.metadata.name | highlightKeywords : keywords\"></span> &ndash;</span>\n" +
     "created\n" +
-    "<span ng-if=\"project | annotation : 'openshift.io/requester'\">by {{project | annotation : 'openshift.io/requester'}}</span>\n" +
+    "<span ng-if=\"project | annotation : 'openshift.io/requester'\">by <span ng-bind-html=\"project | annotation : 'openshift.io/requester' | highlightKeywords : keywords\"></span></span>\n" +
     "<relative-timestamp timestamp=\"project.metadata.creationTimestamp\"></relative-timestamp>\n" +
     "</small>\n" +
     "</div>\n" +
     "<div class=\"list-view-pf-additional-info project-additional-info\">\n" +
     "<span class=\"list-group-item-text project-description\">\n" +
-    "<truncate-long-text content=\"project | description\" limit=\"265\" use-word-boundary=\"true\"></truncate-long-text>\n" +
+    "<truncate-long-text ng-if=\"!keywords.length\" content=\"project | description\" limit=\"265\" use-word-boundary=\"true\"></truncate-long-text>\n" +
+    "<span ng-if=\"keywords.length\" ng-bind-html=\"project | description | truncate : 1000 | highlightKeywords : keywords\"></span>\n" +
     "</span>\n" +
     "</div>\n" +
     "</div>\n" +

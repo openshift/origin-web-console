@@ -614,4 +614,40 @@ angular.module('openshiftConsole')
     return function(number) {
       return Math.abs(number);
     };
+  })
+  .filter('highlightKeywords', function(KeywordService) {
+    // Returns HTML wrapping the matching words in a `mark` tag.
+    return function(str, keywords) {
+      if (!str) {
+        return str;
+      }
+
+      // Escape any special characters in the string since we're returning HTML
+      // that will be displayed using `ng-bind-html`. Note that this breaks
+      // matching on characters like `<` and `&`, although KeywordService
+      // removes these from keywords.
+      var escapedStr = _.escape(str);
+
+      if (_.isEmpty(keywords)) {
+        return escapedStr;
+      }
+
+      // If passed a plain string, get the keywords from KeywordService.
+      if (_.isString(keywords)) {
+        keywords = KeywordService.generateKeywords(keywords);
+      }
+
+      // Combine the keywords into a single regex for str.replace().
+      var source = _.map(keywords, function(keyword) {
+        if (_.isRegExp(keyword)) {
+          return keyword.source;
+        }
+        return _.escapeRegExp(keyword);
+      }).join('|');
+
+      var regex = new RegExp('(' + source + ')', 'ig');
+
+      // Wrap matches in a `mark` element to use the Bootstrap / Patternfly highlight styles.
+      return escapedStr.replace(regex, '<mark>$&</mark>');
+    };
   });

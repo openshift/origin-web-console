@@ -114,7 +114,7 @@ angular.module('openshiftConsole')
     AlertMessageService.clearAlerts();
 
     $scope.$watch('search.text', _.debounce(function(searchText) {
-      filterKeywords = KeywordService.generateKeywords(searchText);
+      $scope.keywords = filterKeywords = KeywordService.generateKeywords(searchText);
       $scope.$apply(filterProjects);
     }, 50, { maxWait: 250 }));
 
