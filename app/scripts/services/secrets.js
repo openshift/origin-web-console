@@ -6,7 +6,8 @@ angular.module("openshiftConsole")
     var groupSecretsByType = function(secrets) {
       var secretsByType = {
         source: [],
-        image: []
+        image: [],
+        other: []
       };
 
       _.each(secrets.by('metadata.name'), function(secret) {
@@ -20,8 +21,10 @@ angular.module("openshiftConsole")
           case 'kubernetes.io/dockerconfigjson':
             secretsByType.image.push(secret);
             break;
+          default:
+            secretsByType.other.push(secret);
         }
-      });      
+      });
       return secretsByType;
     };
 

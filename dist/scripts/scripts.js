@@ -3253,7 +3253,8 @@ b = a();
 var a = function(a) {
 var b = {
 source:[],
-image:[]
+image:[],
+other:[]
 };
 return _.each(a.by("metadata.name"), function(a) {
 switch (a.type) {
@@ -3266,6 +3267,10 @@ break;
 case "kubernetes.io/dockercfg":
 case "kubernetes.io/dockerconfigjson":
 b.image.push(a);
+break;
+
+default:
+b.other.push(a);
 }
 }), b;
 }, b = function(a) {

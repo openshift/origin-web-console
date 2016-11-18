@@ -5413,7 +5413,7 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "</div>\n" +
     "</div>\n" +
     "<div class=\"form-group\">\n" +
-    "<label for=\"authentificationType\">Authetication Type</label>\n" +
+    "<label for=\"authentificationType\">Authentication Type</label>\n" +
     "<ui-select required ng-model=\"newSecret.authType\" search-enabled=\"false\">\n" +
     "<ui-select-match>{{$select.selected.label}}</ui-select-match>\n" +
     "<ui-select-choices repeat=\"type.id as type in secretAuthTypeMap[newSecret.type].authTypes\">\n" +
@@ -10937,7 +10937,7 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "\n" +
     "<tr><td colspan=\"3\"><em>No secrets</em></td></tr>\n" +
     "</tbody>\n" +
-    "<tbody ng-repeat=\"secret in secretsByType.source | orderBy : 'name'\">\n" +
+    "<tbody ng-repeat=\"secret in secretsByType.source | orderBy : 'metadata.name'\">\n" +
     "<tr ng-if=\"secret\">\n" +
     "<td data-title=\"Name\">\n" +
     "<a ng-href=\"{{secret | navigateResourceURL}}\">{{secret.metadata.name}}</a>\n" +
@@ -10961,7 +10961,32 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "<th>Created</th>\n" +
     "</tr>\n" +
     "</thead>\n" +
-    "<tbody ng-repeat=\"secret in secretsByType.image | orderBy : 'name'\">\n" +
+    "<tbody ng-repeat=\"secret in secretsByType.image | orderBy : 'metadata.name'\">\n" +
+    "<tr>\n" +
+    "<td data-title=\"Name\">\n" +
+    "<a ng-href=\"{{secret | navigateResourceURL}}\">{{secret.metadata.name}}</a>\n" +
+    "</td>\n" +
+    "<td data-title=\"Type\">\n" +
+    "{{secret.type}}\n" +
+    "</td>\n" +
+    "<td data-title=\"Created\">\n" +
+    "<relative-timestamp timestamp=\"secret.metadata.creationTimestamp\"></relative-timestamp>\n" +
+    "</td>\n" +
+    "</tr>\n" +
+    "</tbody>\n" +
+    "</table>\n" +
+    "</div>\n" +
+    "<div ng-if=\"secretsByType.other.length !== 0\">\n" +
+    "<h3>Other Secrets</h3>\n" +
+    "<table class=\"table table-bordered table-hover table-mobile secrets-table\">\n" +
+    "<thead>\n" +
+    "<tr>\n" +
+    "<th>Name</th>\n" +
+    "<th>Type</th>\n" +
+    "<th>Created</th>\n" +
+    "</tr>\n" +
+    "</thead>\n" +
+    "<tbody ng-repeat=\"secret in secretsByType.other | orderBy : 'metadata.name'\">\n" +
     "<tr>\n" +
     "<td data-title=\"Name\">\n" +
     "<a ng-href=\"{{secret | navigateResourceURL}}\">{{secret.metadata.name}}</a>\n" +
