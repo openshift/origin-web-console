@@ -3772,7 +3772,7 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
 
 
   $templateCache.put('views/catalog/_image.html',
-    "<div class=\"col-xxs-12 col-xs-6 col-sm-6 col-md-4 col-lg-3\">\n" +
+    "<div class=\"col-xxs-12 col-xs-6 col-sm-6 col-md-4\">\n" +
     "<div class=\"card-pf\">\n" +
     "<div class=\"card-pf-body card-pf-body-with-version\">\n" +
     "<div class=\"card-pf-details\">\n" +
@@ -3825,7 +3825,7 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
 
 
   $templateCache.put('views/catalog/_template.html',
-    "<div class=\"col-xxs-12 col-xs-6 col-sm-6 col-md-4 col-lg-3\">\n" +
+    "<div class=\"col-xxs-12 col-xs-6 col-sm-6 col-md-4\">\n" +
     "<div class=\"card-pf\">\n" +
     "<div class=\"card-pf-body\">\n" +
     "<div class=\"card-pf-title-with-icon\">\n" +
