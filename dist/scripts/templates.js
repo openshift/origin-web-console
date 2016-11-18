@@ -3777,7 +3777,7 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "<div class=\"card-pf-body card-pf-body-with-version\">\n" +
     "<div class=\"card-pf-details\">\n" +
     "<div class=\"card-pf-title-with-icon\">\n" +
-    "<custom-icon resource=\"imageStream\" kind=\"image\" tag=\"is.tag.tag\" title=\"{{imageStream.metadata.name}}:{{is.tag.tag}}\" class=\"image-icon\"></custom-icon>\n" +
+    "<custom-icon resource=\"imageStream\" kind=\"image\" tag=\"is.tag.tag\" class=\"image-icon\"></custom-icon>\n" +
     "<h2 class=\"card-pf-title\">\n" +
     "{{imageStream | displayName}}\n" +
     "</h2>\n" +
@@ -4368,13 +4368,16 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "<div class=\"middle-container\">\n" +
     "<div class=\"middle-content\">\n" +
     "<div class=\"container surface-shaded\">\n" +
-    "<breadcrumbs breadcrumbs=\"breadcrumbs\"></breadcrumbs>\n" +
     "<div class=\"row\">\n" +
     "<div class=\"col-md-12\">\n" +
-    "<div class=\"osc-form\">\n" +
+    "<breadcrumbs breadcrumbs=\"breadcrumbs\"></breadcrumbs>\n" +
+    "<div ng-hide=\"imageStream\">\n" +
+    "{{ emptyMessage }}\n" +
+    "</div>\n" +
+    "<div class=\"osc-form\" ng-show=\"imageStream\">\n" +
     "<div class=\"row\">\n" +
-    "<div class=\"col-md-2 template-name gutter-top hidden-sm hidden-xs\">\n" +
-    "<span class=\"fa fa-cubes\"></span>\n" +
+    "<div class=\"col-md-2 icon hidden-sm hidden-xs\">\n" +
+    "<custom-icon resource=\"imageStream\" kind=\"image\" tag=\"imageTag\"></custom-icon>\n" +
     "</div>\n" +
     "<div class=\"col-md-8\">\n" +
     "<fieldset ng-disabled=\"disableInputs\">\n" +
@@ -4604,9 +4607,6 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "<a class=\"btn btn-default btn-lg\" href=\"{{projectName | projectOverviewURL}}\">Cancel</a>\n" +
     "</div>\n" +
     "</form>\n" +
-    "<div ng-hide=\"imageStream\">\n" +
-    "{{ emptyMessage }}\n" +
-    "</div>\n" +
     "</fieldset>\n" +
     "</div>\n" +
     "</div>\n" +
@@ -9530,10 +9530,13 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "<div class=\"row\">\n" +
     "<div class=\"col-md-12\">\n" +
     "<breadcrumbs breadcrumbs=\"breadcrumbs\"></breadcrumbs>\n" +
-    "<div class=\"osc-form\">\n" +
+    "<div ng-hide=\"template\">\n" +
+    "{{ emptyMessage }}\n" +
+    "</div>\n" +
+    "<div class=\"osc-form\" ng-show=\"template\">\n" +
     "<div class=\"row\">\n" +
-    "<div class=\"col-md-2 template-name gutter-top hidden-sm hidden-xs\">\n" +
-    "<span class=\"fa fa-cubes\"></span>\n" +
+    "<div class=\"col-md-2 icon hidden-sm hidden-xs\">\n" +
+    "<custom-icon resource=\"template\" kind=\"template\"></custom-icon>\n" +
     "</div>\n" +
     "<div class=\"col-md-8\">\n" +
     "<fieldset ng-disabled=\"disableInputs\">\n" +
@@ -9568,9 +9571,6 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "</form>\n" +
     "</fieldset>\n" +
     "</div>\n" +
-    "</div>\n" +
-    "<div ng-hide=\"template\">\n" +
-    "{{ emptyMessage }}\n" +
     "</div>\n" +
     "</div>\n" +
     "</div>\n" +

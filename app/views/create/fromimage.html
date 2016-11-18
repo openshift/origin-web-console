@@ -9,13 +9,16 @@
       <div class="middle-container">
         <div class="middle-content">
           <div class="container surface-shaded">
-            <breadcrumbs breadcrumbs="breadcrumbs"></breadcrumbs>
             <div class="row">
               <div class="col-md-12">
-                <div class="osc-form">
+                <breadcrumbs breadcrumbs="breadcrumbs"></breadcrumbs>
+                <div ng-hide="imageStream">
+                  {{ emptyMessage }}
+                </div>
+                <div class="osc-form" ng-show="imageStream">
                   <div class="row">
-                    <div class="col-md-2 template-name gutter-top hidden-sm hidden-xs">
-                      <span class="fa fa-cubes"></span>
+                    <div class="col-md-2 icon hidden-sm hidden-xs">
+                      <custom-icon resource="imageStream" kind="image" tag="imageTag"></custom-icon>
                     </div>
                     <div class="col-md-8">
                       <fieldset ng-disabled="disableInputs">
@@ -405,9 +408,6 @@
                             <a class="btn btn-default btn-lg" href="{{projectName | projectOverviewURL}}">Cancel</a>
                           </div>
                         </form>
-                        <div ng-hide="imageStream">
-                          {{ emptyMessage }}
-                        </div>
                       </fieldset>
                     </div>
                   </div><!-- /row -->

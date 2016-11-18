@@ -3682,6 +3682,7 @@ code.probe-command{display:inline-block;line-height:1.3;margin-right:2px}
 .builds-block{margin-left:5px}
 .builds-block .builds{margin:0;overflow:hidden}
 .builds-block .builds .build{border:1px solid transparent;border-radius:5px;padding:5px;position:relative;margin:10px 0 0;text-align:left}
+.empty-project .fa,.osc-form .icon,.service-table,.service-table thead tr th,.show-drag-and-drop-zone{text-align:center}
 @media (min-width:768px){.builds-block .builds .build.osc-object.osc-object-hover{cursor:pointer;border-color:rgba(0,168,225,.5)}
 .builds-block .builds .build.osc-object.osc-object-active{border-color:#00a8e1}
 }
@@ -3750,7 +3751,7 @@ body{padding-right:0px!important}
 .nav-tabs>li>a:before{left:0!important}
 .nav-tabs,.tab-content{margin-bottom:20px;margin-top:20px}
 .empty-project{margin:10px auto;max-width:500px;padding:30px}
-.empty-project .fa{width:16px;text-align:center}
+.empty-project .fa{width:16px}
 .empty-project dd{margin-left:20px;margin-bottom:10px}
 .empty-state-message{margin:60px auto;max-width:600px;padding:0 20px}
 .empty-state-message .h2,.empty-state-message h2{line-height:1.4}
@@ -3763,8 +3764,7 @@ body{padding-right:0px!important}
 @media (min-height:1024px){.empty-state-message{margin-top:200px}
 .empty-state-message .hero-icon{font-size:120px}
 }
-.service-table{text-align:center;max-width:650px}
-.service-table thead tr th{text-align:center}
+.service-table{max-width:650px}
 @media (max-width:991px){.service-table{min-width:100%}
 }
 .build-config-summary .latest-build-status{margin-right:5px}
@@ -3816,7 +3816,7 @@ body{padding-right:0px!important}
 label.checkbox{font-weight:400}
 .form-group .checkbox{margin-bottom:inherit}
 .drag-and-drop-zone{display:none}
-.show-drag-and-drop-zone{border-style:dashed;display:block;border-color:#888;border-width:3px;background-color:rgba(255,255,255,.6);margin:-3px;text-align:center;vertical-align:middle}
+.show-drag-and-drop-zone{border-style:dashed;display:block;border-color:#888;border-width:3px;background-color:rgba(255,255,255,.6);margin:-3px;vertical-align:middle}
 .show-drag-and-drop-zone p{position:absolute;top:50%;left:50%;transform:translateX(-50%) translateY(-50%);font-size:24px;font-weight:400;margin:0}
 .highlight-drag-and-drop-zone{border-color:#0099d3}
 .highlight-drag-and-drop-zone p{color:#0099d3}
@@ -3833,10 +3833,7 @@ label.checkbox{font-weight:400}
 .lifecycle-hook{padding-bottom:20px}
 .lifecycle-hook:first-of-type{padding-top:20px}
 .lifecycle-hook .read-only-tag-image{padding-bottom:10px}
-.osc-form .template-name{text-align:right}
-.osc-form .template-name span.fa{font-size:40px}
-@media (min-width:768px){.osc-form .template-name span.fa{font-size:100px}
-}
+.osc-form .icon custom-icon{font-size:100px;line-height:1}
 .osc-form span.fa.visible-xs-inline{margin-right:10px}
 .osc-form .flow{border-top:1px solid rgba(0,0,0,.15);display:table;margin-top:40px;width:100%}
 .osc-form .flow>.flow-block{display:inline-block}
