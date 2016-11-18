@@ -1,21 +1,28 @@
-<div ng-if="annotations" class="gutter-top-bottom">
-  <a href="" ng-click="toggleAnnotations()" ng-if="annotations && !expandAnnotations">Show annotations</a>
-  <a href="" ng-click="toggleAnnotations()" ng-if="annotations && expandAnnotations">Hide annotations</a>
-  <div ng-if="expandAnnotations" class="table-responsive" style="margin-top: 5px;">
-    <table class="table table-bordered table-bordered-columns key-value-table">
-      <tbody>
-        <tr ng-repeat="(annotationKey, annotationValue) in annotations">
-          <td class="key">{{annotationKey}}</td>
-          <td class="value">
-            <truncate-long-text
-                content="annotationValue | prettifyJSON"
-                limit="500"
-                newlineLimit="20"
-                expandable="true">
-            </truncate-long-text>
-          </td>
-        </tr>
-      </tbody>
-    </table>
+<div class="gutter-top-bottom">
+  <p>
+    <a href="" ng-click="toggleAnnotations()" ng-if="!expandAnnotations">Show annotations</a>
+    <a href="" ng-click="toggleAnnotations()" ng-if="expandAnnotations">Hide annotations</a>
+  </p>
+  <div ng-if="expandAnnotations">
+    <div ng-if="annotations" class="table-responsive">
+      <table class="table table-bordered table-bordered-columns key-value-table">
+        <tbody>
+          <tr ng-repeat="(annotationKey, annotationValue) in annotations">
+            <td class="key">{{annotationKey}}</td>
+            <td class="value">
+              <truncate-long-text
+                  content="annotationValue | prettifyJSON"
+                  limit="500"
+                  newlineLimit="20"
+                  expandable="true">
+              </truncate-long-text>
+            </td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+    <p ng-if="!annotations">
+      There are no annotations on this resource.
+    </p>
   </div>
 </div>

@@ -5321,10 +5321,13 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
 
 
   $templateCache.put('views/directives/annotations.html',
-    "<div ng-if=\"annotations\" class=\"gutter-top-bottom\">\n" +
-    "<a href=\"\" ng-click=\"toggleAnnotations()\" ng-if=\"annotations && !expandAnnotations\">Show annotations</a>\n" +
-    "<a href=\"\" ng-click=\"toggleAnnotations()\" ng-if=\"annotations && expandAnnotations\">Hide annotations</a>\n" +
-    "<div ng-if=\"expandAnnotations\" class=\"table-responsive\" style=\"margin-top: 5px\">\n" +
+    "<div class=\"gutter-top-bottom\">\n" +
+    "<p>\n" +
+    "<a href=\"\" ng-click=\"toggleAnnotations()\" ng-if=\"!expandAnnotations\">Show annotations</a>\n" +
+    "<a href=\"\" ng-click=\"toggleAnnotations()\" ng-if=\"expandAnnotations\">Hide annotations</a>\n" +
+    "</p>\n" +
+    "<div ng-if=\"expandAnnotations\">\n" +
+    "<div ng-if=\"annotations\" class=\"table-responsive\">\n" +
     "<table class=\"table table-bordered table-bordered-columns key-value-table\">\n" +
     "<tbody>\n" +
     "<tr ng-repeat=\"(annotationKey, annotationValue) in annotations\">\n" +
@@ -5336,6 +5339,10 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "</tr>\n" +
     "</tbody>\n" +
     "</table>\n" +
+    "</div>\n" +
+    "<p ng-if=\"!annotations\">\n" +
+    "There are no annotations on this resource.\n" +
+    "</p>\n" +
     "</div>\n" +
     "</div>"
   );
