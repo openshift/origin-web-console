@@ -1871,6 +1871,10 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "</button>\n" +
     "<a href=\"\" class=\"dropdown-toggle actions-dropdown-kebab visible-xs-inline\" data-toggle=\"dropdown\"><i class=\"fa fa-ellipsis-v\"></i><span class=\"sr-only\">Actions</span></a>\n" +
     "<ul class=\"dropdown-menu actions action-button\">\n" +
+    "<li ng-if=\"'buildconfigs' | canI : 'update'\">\n" +
+    "<a ng-href=\"{{buildConfig | editResourceURL}}\" role=\"button\">Edit Configuration</a>\n" +
+    "</li>\n" +
+    "<li class=\"divider\" ng-if=\"'buildconfigs' | canI : 'update'\"></li>\n" +
     "<li ng-if=\"!build.metadata.deletionTimestamp && (build | isIncompleteBuild) && ('builds' | canI : 'update')\" class=\"visible-xs-inline\">\n" +
     "<a href=\"\" role=\"button\" ng-click=\"cancelBuild()\">Cancel Build</a>\n" +
     "</li>\n" +
