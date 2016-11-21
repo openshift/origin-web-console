@@ -2002,7 +2002,7 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "<h2>The config map has no items.</h2>\n" +
     "</div>\n" +
     "<div ng-if=\"configMap.data | hashSize\" class=\"table-responsive\">\n" +
-    "<table class=\"table table-bordered table-bordered-columns key-value-table\">\n" +
+    "<table class=\"table table-bordered table-bordered-columns config-map-table key-value-table\">\n" +
     "<tbody>\n" +
     "<tr ng-repeat=\"(prop, value) in configMap.data\">\n" +
     "<td class=\"key\">{{prop}}</td>\n" +

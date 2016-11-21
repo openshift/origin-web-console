@@ -3327,7 +3327,6 @@ to{transform:rotate(359deg)}
 .nav-pf-vertical{background:#292e34;border-right:1px solid #292e34;bottom:0;left:0;overflow-x:hidden;overflow-y:auto;position:fixed;top:60px;width:200px;z-index:1030}
 .layout-pf-fixed-with-footer .nav-pf-vertical{bottom:37px}
 .nav-pf-vertical.hidden.show-mobile-nav{box-shadow:0 0 3px rgba(3,3,3,.15);display:block!important}
-.card-pf,.tile{box-shadow:0 3px 1px -2px rgba(0,0,0,.15),0 2px 2px 0 rgba(0,0,0,.1),0 1px 5px 0 rgba(0,0,0,.09)}
 .nav-pf-vertical .hide-nav-pf{visibility:hidden!important}
 .nav-pf-vertical .list-group{border-top:0;margin-bottom:0}
 .nav-pf-vertical .list-group-item{background-color:transparent;border-color:#030303;padding:0}
@@ -3582,6 +3581,7 @@ to{transform:rotate(359deg)}
 .btn-flat-default:focus,.btn-flat-default:hover{background-color:#f7f7f7;border-color:#e7e7e7}
 .copy-to-clipboard input.form-control:read-only{background-color:#fff;color:#363636}
 .input-group-addon.wildcard-prefix{padding-left:10px}
+.card-pf{box-shadow:0 3px 1px -2px rgba(0,0,0,.15),0 2px 2px 0 rgba(0,0,0,.1),0 1px 5px 0 rgba(0,0,0,.09)}
 .card-pf .image-icon,.card-pf .template-icon{font-size:28px;line-height:1;margin-right:15px;opacity:.38}
 .card-pf-badge{color:#999;font-size:11px;text-transform:uppercase}
 .card-pf-title-with-icon{align-items:center;display:flex;margin-bottom:15px}
@@ -3991,7 +3991,8 @@ labels+.resource-details{margin-top:10px}
 .environment-variables.table.table-bordered>tbody>tr>td:first-child{font-weight:700;padding-right:10px;vertical-align:top}
 .environment-variables.table.table-bordered>tbody>tr>td:last-child{word-break:break-all;width:100%}
 .environment-variables.table.table-bordered>tbody>tr>td:last-child .env-var-value a{font-family:"Open Sans",Helvetica,Arial,sans-serif}
-.pretty-json{font-family:Menlo,Monaco,Consolas,monospace;white-space:pre-wrap}
+.config-map-table .key,.config-map-table .truncated-content,.pretty-json{font-family:Menlo,Monaco,Consolas,monospace}
+.pretty-json{white-space:pre-wrap}
 .info-popover,.warnings-popover{cursor:help;vertical-align:middle;margin-left:2px}
 copy-to-clipboard .input-group{max-width:300px}
 .strong{font-weight:700}
@@ -4937,7 +4938,7 @@ body,html{margin:0;padding:0}
 .events-table .severity-icon-td{padding-left:0;padding-right:0}
 .key-value-table>tbody>tr>td.key{padding-right:10px;vertical-align:top}
 .key-value-table>tbody>tr>td.value .truncated-content{white-space:pre}
-.tile{background:#fff;padding:20px;margin-bottom:20px;word-wrap:break-word;-webkit-box-sizing:border-box;-moz-box-sizing:border-box;box-sizing:border-box;overflow-x:hidden}
+.tile{background:#fff;box-shadow:0 3px 1px -2px rgba(0,0,0,.15),0 2px 2px 0 rgba(0,0,0,.1),0 1px 5px 0 rgba(0,0,0,.09);padding:20px;margin-bottom:20px;word-wrap:break-word;-webkit-box-sizing:border-box;-moz-box-sizing:border-box;box-sizing:border-box;overflow-x:hidden}
 .tile h1,.tile h2,.tile h3{margin:10.5px 0px}
 .tile-click{cursor:pointer;position:relative}
 .tile-click:hover .image-icon,.tile-click:hover .template-icon{opacity:.75}
