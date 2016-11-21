@@ -213,10 +213,34 @@ angular.module("openshiftConsole")
       return resources;
     };
 
+    var getEnvironment = function(imageStreamImage) {
+      return _.map(_.get(imageStreamImage, 'image.dockerImageMetadata.Config.Env'),
+              function(entry) {
+                var ind = entry.indexOf('=');
+                var key = "";
+                var value = "";
+                if (ind > 0) {
+                  key = entry.substring(0, ind);
+                  if (ind + 1 < entry.length) {
+                    value = entry.substring(ind + 1);
+                  }
+                }
+                else {
+                  key = entry;
+                }
+                return {
+                  name: key,
+                  value: value
+                };
+              }
+            );
+    };
+
     return {
       findImage: findImage,
       getVolumes: getVolumes,
       runsAsRoot: runsAsRoot,
-      getResources: getResources
+      getResources: getResources,
+      getEnvironment: getEnvironment
     };
   });
