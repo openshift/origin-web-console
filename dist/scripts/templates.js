@@ -11485,6 +11485,10 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "<h1>Error</h1>\n" +
     "<h4>{{errorMessage}}</h4>\n" +
     "<div>{{errorDetails}}</div>\n" +
+    "<div ng-if=\"errorLinks.length\">\n" +
+    "<a ng-repeat-start=\"link in errorLinks\" ng-href=\"{{link.href}}\" target=\"{{link.target || '_blank'}}\">{{link.label}}</a>\n" +
+    "<span ng-repeat-end ng-if=\"!$last\" class=\"action-divider mar-right-xs\">|</span>\n" +
+    "</div>\n" +
     "<br>\n" +
     "<div>Return to the <a href=\"\" ng-click=\"reloadConsole()\">console</a>.</div>\n" +
     "</div>\n" +

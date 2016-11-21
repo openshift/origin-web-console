@@ -22,6 +22,13 @@ angular.module('openshiftConsole')
       case 'invalid_request':
         $scope.errorMessage = "Invalid request";
         break;
+      case 'API_DISCOVERY':
+        $scope.errorLinks = [{
+          href: window.location.protocol + "//" + window.OPENSHIFT_CONFIG.api.openshift.hostPort + window.OPENSHIFT_CONFIG.api.openshift.prefix,
+          label: "Check Server Connection",
+          target: "_blank"
+        }];
+        break;
       default:
         $scope.errorMessage = "An error has occurred";
     }
@@ -29,7 +36,7 @@ angular.module('openshiftConsole')
     if (params.error_description) {
       $scope.errorDetails = params.error_description;
     }
-    
+
     $scope.reloadConsole = function() {
       $window.location.href = "/";
     };
