@@ -890,7 +890,7 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "<img src=\"images/openshift-logo.svg\"/>\n" +
     "</div>\n" +
     "<div class=\"col-md-9\">\n" +
-    "<h1>OpenShift by Red Hat&reg;</h1>\n" +
+    "<h1>Red Hat OpenShift <span class=\"about-reg\">&reg;</span></h1>\n" +
     "<h2>About</h2>\n" +
     "<p><a target=\"_blank\" href=\"https://openshift.com\">OpenShift</a> is Red Hat's Platform-as-a-Service (PaaS) that allows developers to quickly develop, host, and scale applications in a cloud environment.</p>\n" +
     "<h2 id=\"version\">Version</h2>\n" +
