@@ -39,13 +39,20 @@
                       <span class="help-block">A unique name for the project.</span>
                     </div>
                     <div class="has-error">
-                      <span id="nameHelp" class="help-block" ng-if="createProjectForm.name.$error.pattern && createProjectForm.name.$touched">
-                        Project names may only contain lower-case letters, numbers, and dashes.
-                        They may not start or end with a dash.</span>
+                      <span id="nameHelp" class="help-block" ng-if="createProjectForm.name.$error.minlength && createProjectForm.name.$touched">
+                        Name must have at least two characters.
+                      </span>
                     </div>
                     <div class="has-error">
-                      <span class="help-block" ng-if="nameTaken">This name is already
-                          in use. Please choose a different name.</span>
+                      <span id="nameHelp" class="help-block" ng-if="createProjectForm.name.$error.pattern && createProjectForm.name.$touched">
+                        Project names may only contain lower-case letters, numbers, and dashes.
+                        They may not start or end with a dash.
+                      </span>
+                    </div>
+                    <div class="has-error">
+                      <span class="help-block" ng-if="nameTaken">
+                        This name is already in use. Please choose a different name.
+                      </span>
                     </div>
                   </div>
 
