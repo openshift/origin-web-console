@@ -10476,7 +10476,7 @@ var c = w(b);
 if (c) return g.bytesToMiB(i(c));
 break;
 
-case "cpu/usage":
+case "cpu/usage_rate":
 var d = x(b);
 if (d) return _.round(1e3 * i(d));
 }

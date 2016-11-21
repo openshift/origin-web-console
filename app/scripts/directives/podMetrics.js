@@ -213,7 +213,7 @@ angular.module('openshiftConsole')
               return ConversionService.bytesToMiB(usageValueFilter(memLimit));
             }
             break;
-          case 'cpu/usage':
+          case 'cpu/usage_rate':
             var cpuLimit = getCPULimit(container);
             if (cpuLimit) {
               // Convert cores to millicores.
