@@ -4031,26 +4031,24 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "</p>\n" +
     "<p>\n" +
     "After downloading and installing it, you can start by logging in using<span ng-if=\"sessionToken\"> this current session token</span>:\n" +
-    "<div class=\"code prettyprint ng-binding\" ng-if=\"sessionToken\">\n" +
-    "oc login {{loginBaseURL}} --token=<span ng-show=\"showSessionToken\">{{sessionToken}}</span><a href=\"#\" ng-click=\"toggleShowSessionToken()\" ng-show=\"!showSessionToken\">...click to show token...</a>\n" +
-    "</div>\n" +
+    "<copy-to-clipboard display-wide=\"true\" clipboard-text=\"'oc login ' + loginBaseURL + ' --token=' + sessionToken\" input-text=\"'oc login ' + loginBaseURL + ' --token=<hidden>'\"></copy-to-clipboard>\n" +
     "<pre class=\"code prettyprint ng-binding\" ng-if=\"!sessionToken\">\n" +
     "                      oc login {{loginBaseURL}}\n" +
     "                    </pre>\n" +
     "</p>\n" +
-    "<div ng-show=\"showSessionToken\" class=\"alert alert-warning\">\n" +
+    "<div class=\"alert alert-warning\">\n" +
     "<span class=\"pficon pficon-warning-triangle-o\" aria-hidden=\"true\"></span>\n" +
     "<strong>A token is a form of a password.</strong>\n" +
     "Do not share your API token.\n" +
     "</div>\n" +
     "<p>After you login to your account you will get a list of projects that you can switch between:\n" +
-    "<pre class=\"code prettyprint\">oc project <i>project-name</i></pre>\n" +
+    "<copy-to-clipboard display-wide=\"true\" clipboard-text=\"'oc project <project-name>'\"></copy-to-clipboard>\n" +
     "</p>\n" +
     "<p>If you do not have any existing projects, you can create one:\n" +
-    "<pre class=\"code prettyprint\">oc new-project <i>project-name</i></pre>\n" +
+    "<copy-to-clipboard display-wide=\"true\" clipboard-text=\"'oc new-project <project-name>'\"></copy-to-clipboard>\n" +
     "</p>\n" +
     "<p>To show a high level overview of the current project:\n" +
-    "<pre class=\"code prettyprint\">oc status</pre>\n" +
+    "<copy-to-clipboard display-wide=\"true\" clipboard-text=\"'oc status'\"></copy-to-clipboard>\n" +
     "</p>\n" +
     "<p>For other information about the command line tools, check the <a target=\"_blank\" href=\"{{'cli' | helpLink}}\">CLI Reference</a> and <a target=\"_blank\" href=\"{{'basic_cli_operations' | helpLink}}\">Basic CLI Operations</a>.</p>\n" +
     "</div>\n" +
@@ -5049,10 +5047,11 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
 
 
   $templateCache.put('views/directives/_copy-to-clipboard.html',
-    "<div class=\"input-group copy-to-clipboard\">\n" +
-    "<input id=\"{{id}}\" type=\"text\" class=\"form-control\" value=\"{{clipboardText}}\" ng-disabled=\"isDisabled\" ng-readonly=\"!isDisabled\" select-on-focus>\n" +
+    "<div class=\"input-group copy-to-clipboard\" ng-class=\"{'limit-width': !displayWide}\">\n" +
+    "<input id=\"{{id}}\" type=\"text\" class=\"form-control\" value=\"{{inputText ? inputText : clipboardText}}\" ng-disabled=\"isDisabled\" ng-readonly=\"!isDisabled\" select-on-focus>\n" +
     "<span class=\"input-group-btn\" ng-hide=\"hidden\">\n" +
-    "<a data-clipboard-target=\"#{{id}}\" ng-disabled=\"isDisabled\" data-toggle=\"tooltip\" title=\"Copy to clipboard\" role=\"button\" class=\"btn btn-default\"><i class=\"fa fa-clipboard\"/></a>\n" +
+    "<a ng-show=\"!inputText\" data-clipboard-target=\"#{{id}}\" ng-disabled=\"isDisabled\" data-toggle=\"tooltip\" title=\"Copy to clipboard\" role=\"button\" class=\"btn btn-default\"><i class=\"fa fa-clipboard\"/></a>\n" +
+    "<a ng-show=\"inputText\" data-clipboard-text=\"{{clipboardText}}\" ng-disabled=\"isDisabled\" data-toggle=\"tooltip\" title=\"Copy to clipboard\" role=\"button\" class=\"btn btn-default\"><i class=\"fa fa-clipboard\"/></a>\n" +
     "</span>\n" +
     "</div>"
   );
