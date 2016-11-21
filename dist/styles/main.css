@@ -4616,7 +4616,7 @@ to{background-color:transparent}
 .build-pipeline-collapsed .build-summary,.triggers .build .build-summary{border-bottom:0;border-right:0;-webkit-flex-direction:row;-moz-flex-direction:row;-ms-flex-direction:row;flex-direction:row;-webkit-justify-content:flex-start;-moz-justify-content:flex-start;justify-content:flex-start;position:relative;text-align:left}
 .build-pipeline-collapsed .build-summary.dismissible,.triggers .build .build-summary.dismissible{padding-right:30px}
 .build-pipeline-collapsed .build-timestamp,.triggers .build .build-timestamp{float:right!important;float:right}
-.build-pipeline-collapsed .close,.triggers .build .close{color:#8b8d8f;font-size:16px;opacity:.85;position:absolute;right:14px;top:7px}
+.build-pipeline-collapsed .close,.triggers .build .close{color:#8b8d8f;font-size:16px;opacity:.85;position:absolute;right:10px;top:7px}
 .build-pipeline-collapsed .close:hover,.triggers .build .close:hover{opacity:1}
 .navbar-project-menu{width:100%}
 .navbar-project-menu .navbar-project-search{display:inline-block}
@@ -4953,6 +4953,9 @@ body,html{margin:0;padding:0}
 .tile-row .tile-item-count{background-color:#ccc;font-weight:600;padding:4px 6px;position:absolute;right:10px;top:10px}
 .tile-row .tile-title{text-align:center}
 .tile-row .tile-title h3{margin:0 20px}
+.overview .alert.toast-pf{padding:6px 10px 6px 44px}
+.overview .alert.toast-pf .close{font-size:16px;margin-top:2px}
+.overview .alert.toast-pf>.pficon{font-size:16px;padding-top:10px;width:35px}
 kubernetes-topology-graph{height:700px}
 .kube-topology{margin-bottom:-5px}
 .kube-topology g.DeploymentConfig text{font-family:FontAwesome;font-size:20px;fill:#9467bd}
