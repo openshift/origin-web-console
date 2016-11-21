@@ -22,7 +22,7 @@
                   aria-hidden="true">
                 </span>
                 <span ng-if="deploymentConfigMissing" class="sr-only">Warning: The deployment's deployment config is missing.</span>
-                <small class="meta">created <relative-timestamp timestamp="replicaSet.metadata.creationTimestamp"></relative-timestamp></small>
+                <small class="meta">created <span am-time-ago="replicaSet.metadata.creationTimestamp"></span></small>
 
                 <!-- Actions -->
                 <ng-include ng-if="kind === 'ReplicaSet'"

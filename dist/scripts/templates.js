@@ -180,7 +180,7 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "</div>\n" +
     "</div>\n" +
     "<div class=\"component meta-data\">\n" +
-    "<relative-timestamp timestamp=\"rc.metadata.creationTimestamp\"></relative-timestamp><span ng-if=\"rc.causes.length\"><span>\n" +
+    "<span am-time-ago=\"rc.metadata.creationTimestamp\"></span><span ng-if=\"rc.causes.length\"><span>\n" +
     "<span class=\"deployment-trigger\" ng-repeat=\"cause in rc.causes\">\n" +
     "<span ng-switch=\"cause.type\">\n" +
     "<span ng-switch-when=\"ImageChange\">\n" +
@@ -205,7 +205,7 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "</div>\n" +
     "</div>\n" +
     "<div class=\"component meta-data\">\n" +
-    "created <relative-timestamp timestamp=\"rc.metadata.creationTimestamp\"></relative-timestamp>\n" +
+    "created <span am-time-ago=\"rc.metadata.creationTimestamp\"></span>\n" +
     "</div>\n" +
     "</div>\n" +
     "<div row mobile=\"column\" axis=\"center center\" class=\"pod-block\">\n" +
@@ -237,7 +237,7 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "<span class=\"component-label\">Pod: {{pod.metadata.name}}</span>\n" +
     "</div>\n" +
     "<div class=\"component meta-data\">\n" +
-    "created <relative-timestamp timestamp=\"pod.metadata.creationTimestamp\"></relative-timestamp>\n" +
+    "created <span am-time-ago=\"pod.metadata.creationTimestamp\"></span>\n" +
     "</div>\n" +
     "</div>\n" +
     "<div row mobile=\"column\" axis=\"center center\" class=\"pod-block\">\n" +
@@ -745,7 +745,7 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "<status-icon status=\"build.status.phase\"></status-icon>\n" +
     "{{build.status.phase}}<span ng-if=\"(build | isIncompleteBuild) && trigger.imageChangeParams.automatic\">. A new deployment will be created automatically once the build completes.</span>\n" +
     "</div>\n" +
-    "<relative-timestamp timestamp=\"build.metadata.creationTimestamp\" class=\"build-timestamp\"></relative-timestamp>\n" +
+    "<span am-time-ago=\"build.metadata.creationTimestamp\" class=\"build-timestamp\"></span>\n" +
     "<div ng-if=\"'builds/log' | canI : 'get'\" class=\"build-links\">\n" +
     "<a ng-if=\"!!['New', 'Pending'].indexOf(build.status.phase) && (build | buildLogURL)\" ng-href=\"{{build | buildLogURL}}\">View Log</a>\n" +
     "</div>\n" +
@@ -1073,7 +1073,7 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "<dt>Started:</dt>\n" +
     "<dd>\n" +
     "<span ng-if=\"build.status.startTimestamp\">\n" +
-    "<relative-timestamp timestamp=\"build.status.startTimestamp\"></relative-timestamp>\n" +
+    "<span am-time-ago=\"build.status.startTimestamp\"></span>\n" +
     "<span><span class=\"text-muted\">&ndash;</span> {{build.status.startTimestamp | date : 'medium'}}</span>\n" +
     "</span>\n" +
     "<span ng-if=\"!build.status.startTimestamp\"><em>not started</em></span>\n" +
@@ -1527,7 +1527,7 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "</li>\n" +
     "</ul>\n" +
     "</div>\n" +
-    "<small class=\"meta\" ng-if=\"buildConfig\">created <relative-timestamp timestamp=\"buildConfig.metadata.creationTimestamp\"></relative-timestamp></small>\n" +
+    "<small class=\"meta\" ng-if=\"buildConfig\">created <span am-time-ago=\"buildConfig.metadata.creationTimestamp\"></span></small>\n" +
     "</h1>\n" +
     "<labels labels=\"buildConfig.metadata.labels\" clickable=\"true\" kind=\"builds\" title-kind=\"build configs\" project-name=\"{{buildConfig.metadata.namespace}}\" limit=\"3\"></labels>\n" +
     "</div>\n" +
@@ -1594,10 +1594,10 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "</div>\n" +
     "<div class=\"latest-build-timestamp meta text-muted\">\n" +
     "<span ng-if=\"!latestBuild.status.startTimestamp\">\n" +
-    "created <relative-timestamp timestamp=\"latestBuild.metadata.creationTimestamp\"></relative-timestamp>\n" +
+    "created <span am-time-ago=\"latestBuild.metadata.creationTimestamp\"></span>\n" +
     "</span>\n" +
     "<span ng-if=\"latestBuild.status.startTimestamp\">\n" +
-    "started <relative-timestamp timestamp=\"latestBuild.status.startTimestamp\"></relative-timestamp>\n" +
+    "started <span am-time-ago=\"latestBuild.status.startTimestamp\"></span>\n" +
     "</span>\n" +
     "</div>\n" +
     "<build-trends-chart builds=\"builds\"></build-trends-chart>\n" +
@@ -1635,7 +1635,7 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "</div>\n" +
     "</td>\n" +
     "<td data-title=\"Created\">\n" +
-    "<relative-timestamp timestamp=\"build.metadata.creationTimestamp\"></relative-timestamp>\n" +
+    "<span am-time-ago=\"build.metadata.creationTimestamp\"></span>\n" +
     "</td>\n" +
     "</tr>\n" +
     "</tbody>\n" +
@@ -1865,7 +1865,7 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "<span ng-if=\"build.status.message\" class=\"pficon pficon-warning-triangle-o\" style=\"cursor: help\" data-toggle=\"popover\" data-trigger=\"hover\" dynamic-content=\"{{build.status.message}}\"></span>\n" +
     "<span class=\"pficon pficon-warning-triangle-o\" ng-if=\"paused\" aria-hidden=\"true\" data-toggle=\"tooltip\" data-original-title=\"Building from build configuration {{buildConfig.metadata.name}} has been paused.\">\n" +
     "</span>\n" +
-    "<small class=\"meta\">created <relative-timestamp timestamp=\"build.metadata.creationTimestamp\"></relative-timestamp></small>\n" +
+    "<small class=\"meta\">created <span am-time-ago=\"build.metadata.creationTimestamp\"></span></small>\n" +
     "<div class=\"pull-right dropdown\" ng-hide=\"!('builds' | canIDoAny)\">\n" +
     "\n" +
     "<button class=\"btn btn-default hidden-xs\" ng-click=\"cancelBuild()\" ng-if=\"!build.metadata.deletionTimestamp && (build | isIncompleteBuild) && ('builds' | canI : 'update')\">Cancel Build</button>\n" +
@@ -1988,7 +1988,7 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "</ul>\n" +
     "</div>\n" +
     "{{configMap.metadata.name}}\n" +
-    "<small class=\"meta\">created <relative-timestamp timestamp=\"configMap.metadata.creationTimestamp\"></relative-timestamp></small>\n" +
+    "<small class=\"meta\">created <span am-time-ago=\"configMap.metadata.creationTimestamp\"></span></small>\n" +
     "</h1>\n" +
     "<labels labels=\"configMap.metadata.labels\" clickable=\"true\" kind=\"config-maps\" title-kind=\"config maps\" project-name=\"{{configMap.metadata.namespace}}\" limit=\"3\"></labels>\n" +
     "</div>\n" +
@@ -2070,7 +2070,7 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "<a href=\"{{configMap | navigateResourceURL}}\">{{configMap.metadata.name}}</a>\n" +
     "</td>\n" +
     "<td data-title=\"Created\">\n" +
-    "<relative-timestamp timestamp=\"configMap.metadata.creationTimestamp\"></relative-timestamp>\n" +
+    "<span am-time-ago=\"configMap.metadata.creationTimestamp\"></span>\n" +
     "</td>\n" +
     "<td data-title=\"Labels\">\n" +
     "<em ng-if=\"(configMap.metadata.labels | hashSize) === 0\">none</em>\n" +
@@ -2156,7 +2156,7 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "</ul>\n" +
     "</div>\n" +
     "\n" +
-    "<small class=\"meta\" ng-if=\"deploymentConfig\">created <relative-timestamp timestamp=\"deploymentConfig.metadata.creationTimestamp\"></relative-timestamp></small>\n" +
+    "<small class=\"meta\" ng-if=\"deploymentConfig\">created <span am-time-ago=\"deploymentConfig.metadata.creationTimestamp\"></span></small>\n" +
     "</h1>\n" +
     "<labels labels=\"deploymentConfig.metadata.labels\" clickable=\"true\" kind=\"deployments\" title-kind=\"deployment configs\" project-name=\"{{deploymentConfig.metadata.namespace}}\" limit=\"3\"></labels>\n" +
     "</div>\n" +
@@ -2314,7 +2314,7 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "</div>\n" +
     "</td>\n" +
     "<td data-title=\"Created\">\n" +
-    "<relative-timestamp timestamp=\"deployment.metadata.creationTimestamp\"></relative-timestamp>\n" +
+    "<span am-time-ago=\"deployment.metadata.creationTimestamp\"></span>\n" +
     "</td>\n" +
     "<td data-title=\"Trigger\">\n" +
     "<span ng-if=\"!deployment.causes.length\">Unknown</span>\n" +
@@ -2418,7 +2418,7 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "</li>\n" +
     "</ul>\n" +
     "</div>\n" +
-    "<small class=\"meta\" ng-if=\"deployment\">created <relative-timestamp timestamp=\"deployment.metadata.creationTimestamp\"></relative-timestamp></small>\n" +
+    "<small class=\"meta\" ng-if=\"deployment\">created <span am-time-ago=\"deployment.metadata.creationTimestamp\"></span></small>\n" +
     "</h1>\n" +
     "<labels labels=\"deployment.metadata.labels\" clickable=\"true\" kind=\"deployments\" project-name=\"{{deployment.metadata.namespace}}\" limit=\"3\"></labels>\n" +
     "</div>\n" +
@@ -2561,7 +2561,7 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "<span ng-if=\"replicaSet.status.replicas !== replicaSet.spec.replicas\">{{replicaSet.status.replicas}}/</span>{{replicaSet.spec.replicas}} replica<span ng-if=\"replicaSet.spec.replicas != 1\">s</span>\n" +
     "</td>\n" +
     "<td data-title=\"Created\">\n" +
-    "<relative-timestamp timestamp=\"replicaSet.metadata.creationTimestamp\"></relative-timestamp>\n" +
+    "<span am-time-ago=\"replicaSet.metadata.creationTimestamp\"></span>\n" +
     "</td>\n" +
     "</tr>\n" +
     "</tbody>\n" +
@@ -2682,7 +2682,7 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "</li>\n" +
     "</ul>\n" +
     "</div>\n" +
-    "<small class=\"meta\">created <relative-timestamp timestamp=\"imageStream.metadata.creationTimestamp\"></relative-timestamp></small>\n" +
+    "<small class=\"meta\">created <span am-time-ago=\"imageStream.metadata.creationTimestamp\"></span></small>\n" +
     "</h1>\n" +
     "<labels labels=\"imageStream.metadata.labels\" clickable=\"true\" kind=\"images\" project-name=\"{{imageStream.metadata.namespace}}\" limit=\"3\"></labels>\n" +
     "</div>\n" +
@@ -2754,7 +2754,7 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "</td>\n" +
     "<td data-title=\"Created\">\n" +
     "<span ng-if=\"tag.status.items.length && tag.status.items[0].image\">\n" +
-    "<relative-timestamp timestamp=\"tag.status.items[0].created\"></relative-timestamp>\n" +
+    "<span am-time-ago=\"tag.status.items[0].created\"></span>\n" +
     "</span>\n" +
     "</td>\n" +
     "<td data-title=\"Pull Spec\">\n" +
@@ -2775,7 +2775,7 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "<short-id id=\"{{item.image | imageName}}\"></short-id>\n" +
     "</td>\n" +
     "<td data-title=\"Created\">\n" +
-    "<relative-timestamp timestamp=\"item.created\"></relative-timestamp>\n" +
+    "<span am-time-ago=\"item.created\"></span>\n" +
     "</td>\n" +
     "<td data-title=\"Pull Spec\">\n" +
     "<div ng-if=\"item.dockerImageReference\" ng-attr-title=\"{{item.dockerImageReference}}\" class=\"td-long-string\">\n" +
@@ -2816,7 +2816,7 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "</span>\n" +
     "<span ng-if=\"!pvc.spec.resources.requests['storage']\">waiting for allocation,</span>\n" +
     "</small>\n" +
-    "<small class=\"meta\">created <relative-timestamp timestamp=\"pvc.metadata.creationTimestamp\"></relative-timestamp></small>\n" +
+    "<small class=\"meta\">created <span am-time-ago=\"pvc.metadata.creationTimestamp\"></span></small>\n" +
     "<div class=\"pull-right dropdown\" ng-hide=\"!('persistentVolumeClaims' | canIDoAny)\">\n" +
     "<button type=\"button\" class=\"dropdown-toggle btn btn-default actions-dropdown-btn hidden-xs\" data-toggle=\"dropdown\">\n" +
     "Actions\n" +
@@ -2914,7 +2914,7 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "<span ng-if=\"pod | isTroubledPod\">\n" +
     "<pod-warnings pod=\"pod\"></pod-warnings>\n" +
     "</span>\n" +
-    "<small class=\"meta\">created <relative-timestamp timestamp=\"pod.metadata.creationTimestamp\"></relative-timestamp></small>\n" +
+    "<small class=\"meta\">created <span am-time-ago=\"pod.metadata.creationTimestamp\"></span></small>\n" +
     "</h1>\n" +
     "<labels labels=\"pod.metadata.labels\" clickable=\"true\" kind=\"pods\" project-name=\"{{pod.metadata.namespace}}\" limit=\"3\"></labels>\n" +
     "</div>\n" +
@@ -3046,7 +3046,7 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "<span ng-if=\"deploymentConfigMissing\" class=\"pficon pficon-warning-triangle-o\" style=\"cursor: help; vertical-align: middle\" data-toggle=\"tooltip\" data-trigger=\"hover\" title=\"The deployment's deployment config is missing.\" aria-hidden=\"true\">\n" +
     "</span>\n" +
     "<span ng-if=\"deploymentConfigMissing\" class=\"sr-only\">Warning: The deployment's deployment config is missing.</span>\n" +
-    "<small class=\"meta\">created <relative-timestamp timestamp=\"replicaSet.metadata.creationTimestamp\"></relative-timestamp></small>\n" +
+    "<small class=\"meta\">created <span am-time-ago=\"replicaSet.metadata.creationTimestamp\"></span></small>\n" +
     "\n" +
     "<ng-include ng-if=\"kind === 'ReplicaSet'\" src=\" 'views/browse/_replica-set-actions.html' \">\n" +
     "</ng-include>\n" +
@@ -3147,7 +3147,7 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "{{route.metadata.name}}\n" +
     "<route-warnings ng-if=\"route.spec.to.kind !== 'Service' || services\" route=\"route\" service=\"services[route.spec.to.name]\">\n" +
     "</route-warnings>\n" +
-    "<small class=\"meta\">created <relative-timestamp timestamp=\"route.metadata.creationTimestamp\"></relative-timestamp></small>\n" +
+    "<small class=\"meta\">created <span am-time-ago=\"route.metadata.creationTimestamp\"></span></small>\n" +
     "<div class=\"pull-right dropdown\" ng-hide=\"!('routes' | canIDoAny)\">\n" +
     "<button type=\"button\" class=\"dropdown-toggle btn btn-default actions-dropdown-btn hidden-xs\" data-toggle=\"dropdown\">\n" +
     "Actions\n" +
@@ -3198,10 +3198,10 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "<span ng-init=\"admittedCondition = (ingress | routeIngressCondition : 'Admitted')\">\n" +
     "<span ng-if=\"!admittedCondition\">admission status unknown for router '{{ingress.routerName}}'</span>\n" +
     "<span ng-if=\"admittedCondition.status === 'True'\">\n" +
-    "exposed on router '{{ingress.routerName}}' <relative-timestamp timestamp=\"admittedCondition.lastTransitionTime\"></relative-timestamp>\n" +
+    "exposed on router '{{ingress.routerName}}' <span am-time-ago=\"admittedCondition.lastTransitionTime\"></span>\n" +
     "</span>\n" +
     "<span ng-if=\"admittedCondition.status === 'False'\">\n" +
-    "rejected by router '{{ingress.routerName}}' <relative-timestamp timestamp=\"admittedCondition.lastTransitionTime\"></relative-timestamp>\n" +
+    "rejected by router '{{ingress.routerName}}' <span am-time-ago=\"admittedCondition.lastTransitionTime\"></span>\n" +
     "</span>\n" +
     "</span>\n" +
     "</div>\n" +
@@ -3450,7 +3450,7 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "</ul>\n" +
     "</div>\n" +
     "{{secret.metadata.name}}\n" +
-    "<small class=\"meta\">created <relative-timestamp timestamp=\"secret.metadata.creationTimestamp\"></relative-timestamp></small>\n" +
+    "<small class=\"meta\">created <span am-time-ago=\"secret.metadata.creationTimestamp\"></span></small>\n" +
     "</h1>\n" +
     "</div>\n" +
     "</div>\n" +
@@ -3594,7 +3594,7 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "</li>\n" +
     "</ul>\n" +
     "</div>\n" +
-    "<small class=\"meta\">created <relative-timestamp timestamp=\"service.metadata.creationTimestamp\"></relative-timestamp></small>\n" +
+    "<small class=\"meta\">created <span am-time-ago=\"service.metadata.creationTimestamp\"></span></small>\n" +
     "</h1>\n" +
     "<labels labels=\"service.metadata.labels\" clickable=\"true\" kind=\"services\" project-name=\"{{service.metadata.namespace}}\" limit=\"3\"></labels>\n" +
     "</div>\n" +
@@ -3757,7 +3757,7 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "</div>\n" +
     "</td>\n" +
     "<td data-title=\"Created\">\n" +
-    "<relative-timestamp timestamp=\"latestBuild.metadata.creationTimestamp\"></relative-timestamp>\n" +
+    "<span am-time-ago=\"latestBuild.metadata.creationTimestamp\"></span>\n" +
     "</td>\n" +
     "<td data-title=\"Type\">{{latestBuild.spec.strategy.type | startCase}}</td>\n" +
     "<td data-title=\"Source\" class=\"word-break-all\">\n" +
@@ -4837,7 +4837,7 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "\n" +
     "</td>\n" +
     "<td data-title=\"Created\">\n" +
-    "<relative-timestamp timestamp=\"replicationController.metadata.creationTimestamp\"></relative-timestamp>\n" +
+    "<span am-time-ago=\"replicationController.metadata.creationTimestamp\"></span>\n" +
     "</td>\n" +
     "<td data-title=\"Trigger\">\n" +
     "<span ng-if=\"!replicationController.causes.length\">Unknown</span>\n" +
@@ -4887,7 +4887,7 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "<span ng-if=\"deployment.status.replicas !== deployment.spec.replicas\">{{deployment.status.replicas}}/</span>{{deployment.spec.replicas}} replica<span ng-if=\"deployment.spec.replicas != 1\">s</span>\n" +
     "</td>\n" +
     "<td data-title=\"Created\">\n" +
-    "<relative-timestamp timestamp=\"deployment.metadata.creationTimestamp\"></relative-timestamp>\n" +
+    "<span am-time-ago=\"deployment.metadata.creationTimestamp\"></span>\n" +
     "</td>\n" +
     "<td data-title=\"Strategy\">\n" +
     "{{deployment.spec.strategy.type | sentenceCase}}\n" +
@@ -4915,7 +4915,7 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "<span ng-if=\"replicaSet.status.replicas !== replicaSet.spec.replicas\">{{replicaSet.status.replicas}}/</span>{{replicaSet.spec.replicas}} replica<span ng-if=\"replicaSet.spec.replicas != 1\">s</span>\n" +
     "</td>\n" +
     "<td data-title=\"Created\">\n" +
-    "<relative-timestamp timestamp=\"replicaSet.metadata.creationTimestamp\"></relative-timestamp>\n" +
+    "<span am-time-ago=\"replicaSet.metadata.creationTimestamp\"></span>\n" +
     "</td>\n" +
     "</tr>\n" +
     "</tbody>\n" +
@@ -4942,7 +4942,7 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "<span ng-if=\"deployment.status.replicas !== deployment.spec.replicas\">{{deployment.status.replicas}}/</span>{{deployment.spec.replicas}} replica<span ng-if=\"deployment.spec.replicas != 1\">s</span>\n" +
     "</td>\n" +
     "<td data-title=\"Created\">\n" +
-    "<relative-timestamp timestamp=\"deployment.metadata.creationTimestamp\"></relative-timestamp>\n" +
+    "<span am-time-ago=\"deployment.metadata.creationTimestamp\"></span>\n" +
     "</td>\n" +
     "</tr>\n" +
     "</tbody>\n" +
@@ -4978,7 +4978,7 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "<status-icon status=\"build.status.phase\"></status-icon>\n" +
     "{{build.status.phase}}\n" +
     "</div>\n" +
-    "<relative-timestamp timestamp=\"build.metadata.creationTimestamp\" class=\"build-timestamp\"></relative-timestamp>\n" +
+    "<span am-time-ago=\"build.metadata.creationTimestamp\" class=\"build-timestamp\"></span>\n" +
     "<div ng-include=\"'views/directives/_build-pipeline-links.html'\" class=\"build-links\"></div>\n" +
     "<build-close build=\"build\" hide-build=\"hideBuild\"></build-close>\n" +
     "</div>\n" +
@@ -5008,7 +5008,7 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "</span>\n" +
     "<a ng-href=\"{{build | navigateResourceURL}}\">Build #{{build | annotation : 'buildNumber'}}</a>\n" +
     "</div>\n" +
-    "<relative-timestamp timestamp=\"build.metadata.creationTimestamp\" class=\"build-timestamp\"></relative-timestamp>\n" +
+    "<span am-time-ago=\"build.metadata.creationTimestamp\" class=\"build-timestamp\"></span>\n" +
     "<div ng-include=\"'views/directives/_build-pipeline-links.html'\" class=\"build-links\"></div>\n" +
     "</div>\n" +
     "<div class=\"pipeline-container\">\n" +
@@ -5235,7 +5235,7 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "<div ng-switch-default>\n" +
     "&nbsp;\n" +
     "<span ng-if=\"pod.status.podIP\">{{pod.status.podIP}}</span>\n" +
-    "<relative-timestamp ng-if=\"!pod.status.podIP\" timestamp=\"pod.status.startTime\"></relative-timestamp>\n" +
+    "<span am-time-ago-if=\"!pod.status.podIP\" timestamp=\"pod.status.startTime\"></span>\n" +
     "&nbsp;\n" +
     "</div>\n" +
     "</div>"
@@ -5685,7 +5685,7 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "{{app.name}}<span ng-if=\"import.tag\">:{{import.tag}}</span>\n" +
     "<small>\n" +
     "<span ng-if=\"import.result.ref.registry\">from {{import.result.ref.registry}},</span>\n" +
-    "<relative-timestamp timestamp=\"import.image.dockerImageMetadata.Created\"></relative-timestamp>,\n" +
+    "<span am-time-ago=\"import.image.dockerImageMetadata.Created\"></span>,\n" +
     "<span ng-if=\"import.image.dockerImageMetadata.Size\">{{import.image.dockerImageMetadata.Size | humanizeSize}},</span>\n" +
     "{{import.image.dockerImageLayers.length}} layers\n" +
     "</small>\n" +
@@ -6089,7 +6089,7 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "{{event.message}}\n" +
     "</div>\n" +
     "<div class=\"event-timestamp\">\n" +
-    "<relative-timestamp timestamp=\"event.lastTimestamp\"></relative-timestamp>\n" +
+    "<span am-time-ago=\"event.lastTimestamp\"></span>\n" +
     "</div>\n" +
     "</div>\n" +
     "<div ng-if=\"event.count > 1\" class=\"text-muted small\">\n" +
@@ -6356,7 +6356,7 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "{{hpa.status.currentCPUUtilizationPercentage | hpaCPUPercent : project}}%\n" +
     "</dd>\n" +
     "<dt ng-if-start=\"hpa.status.lastScaleTime\">Last Scaled:</dt>\n" +
-    "<dd ng-if-end><relative-timestamp timestamp=\"hpa.status.lastScaleTime\"></relative-timestamp></dd>\n" +
+    "<dd ng-if-end><span am-time-ago=\"hpa.status.lastScaleTime\"></span></dd>\n" +
     "</dl>\n" +
     "\n" +
     "<div ng-hide=\"!('horizontalPodAutoscalers' | canIDoAny)\">\n" +
@@ -7589,7 +7589,7 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "</td>\n" +
     "<td data-title=\"Ready\">{{pod | numContainersReady}}/{{pod.spec.containers.length}}</td>\n" +
     "<td data-title=\"Restarts\">{{pod | numContainerRestarts}}</td>\n" +
-    "<td data-title=\"Age\"><relative-timestamp timestamp=\"pod.metadata.creationTimestamp\" drop-suffix=\"true\"></relative-timestamp></td>\n" +
+    "<td data-title=\"Age\"><span am-time-ago=\"pod.metadata.creationTimestamp\" am-without-suffix=\"true\"></span></td>\n" +
     "</tr>\n" +
     "</tbody>\n" +
     "</table>"
@@ -8718,7 +8718,7 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "<span ng-repeat=\"tag in imageStream.status.tags | limitTo: 4\">{{tag.tag}}<span ng-if=\"!$last\">,\n" +
     "</span></span><span ng-if=\"imageStream.status.tags.length === 5\">, {{imageStream.status.tags[4].tag}}</span><span ng-if=\"imageStream.status.tags.length > 5\">, and {{imageStream.status.tags.length - 4}} others</span>\n" +
     "</td>\n" +
-    "<td data-title=\"Updated\"><relative-timestamp timestamp=\"imageStream | imageStreamLastUpdated\"></relative-timestamp></td>\n" +
+    "<td data-title=\"Updated\"><span am-time-ago=\"imageStream | imageStreamLastUpdated\"></span></td>\n" +
     "</tr>\n" +
     "</tbody>\n" +
     "</table>\n" +
@@ -9340,7 +9340,7 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "<div class=\"list-view-pf-description\">\n" +
     "<div class=\"list-group-item-heading\">\n" +
     "<a ng-href=\"{{build | navigateResourceURL}}\"><span ng-bind-html=\"build.metadata.name | highlightKeywords : filterKeywords\"></span></a>\n" +
-    "<small>created <relative-timestamp timestamp=\"build.metadata.creationTimestamp\"></relative-timestamp></small>\n" +
+    "<small>created <span am-time-ago=\"build.metadata.creationTimestamp\"></span></small>\n" +
     "</div>\n" +
     "<div class=\"list-group-item-text\">\n" +
     "<build-status build=\"build\"></build-status>\n" +
@@ -9409,7 +9409,7 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "<div class=\"list-view-pf-description\">\n" +
     "<div class=\"list-group-item-heading\">\n" +
     "<a ng-href=\"{{replicationController | navigateResourceURL}}\"><span ng-bind-html=\"replicationController.metadata.name | highlightKeywords : filterKeywords\"></span></a>\n" +
-    "<small>created <relative-timestamp timestamp=\"replicationController.metadata.creationTimestamp\"></relative-timestamp></small>\n" +
+    "<small>created <span am-time-ago=\"replicationController.metadata.creationTimestamp\"></span></small>\n" +
     "</div>\n" +
     "<div class=\"list-group-item-text\">\n" +
     "<status-icon status=\"replicationController | deploymentStatus\" disable-animation fixed-width=\"true\"></status-icon>\n" +
@@ -9450,7 +9450,7 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "<div class=\"list-view-pf-description\">\n" +
     "<div class=\"list-group-item-heading\">\n" +
     "<a ng-href=\"{{replicaSet | navigateResourceURL}}\"><span ng-bind-html=\"replicaSet.metadata.name | highlightKeywords : filterKeywords\"></span></a>\n" +
-    "<small>created <relative-timestamp timestamp=\"replicaSet.metadata.creationTimestamp\"></relative-timestamp></small>\n" +
+    "<small>created <span am-time-ago=\"replicaSet.metadata.creationTimestamp\"></span></small>\n" +
     "</div>\n" +
     "<div class=\"list-group-item-text\">\n" +
     "{{replicaSet.status.replicas}} replica<span ng-if=\"replicaSet.status.replicas !== 1\">s</span>\n" +
@@ -9509,7 +9509,7 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "<span ng-if=\"pod | isTroubledPod\">\n" +
     "<pod-warnings pod=\"pod\"></pod-warnings>\n" +
     "</span>\n" +
-    "<small>created <relative-timestamp timestamp=\"pod.metadata.creationTimestamp\"></relative-timestamp></small>\n" +
+    "<small>created <span am-time-ago=\"pod.metadata.creationTimestamp\"></span></small>\n" +
     "</div>\n" +
     "<div class=\"list-group-item-text\">\n" +
     "<status-icon status=\"pod | podStatus\" disable-animation fixed-width=\"true\"></status-icon>\n" +
@@ -9673,7 +9673,7 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "<tbody ng-repeat=\"resource in resources | orderObjectsByDate : true\">\n" +
     "<tr>\n" +
     "<td data-title=\"Name\">{{resource.metadata.name}}</td>\n" +
-    "<td data-title=\"Created\"><relative-timestamp timestamp=\"resource.metadata.creationTimestamp\"></relative-timestamp></td>\n" +
+    "<td data-title=\"Created\"><span am-time-ago=\"resource.metadata.creationTimestamp\"></span></td>\n" +
     "<td data-title=\"Labels\">\n" +
     "<em ng-if=\"(resource.metadata.labels | hashSize) === 0\">none</em>\n" +
     "<labels labels=\"resource.metadata.labels\" clickable=\"true\" kind=\"{{kindSelector.selected.kind | kindToResource : true }}\" project-name=\"{{resource.metadata.namespace}}\" limit=\"3\" filter-current-page=\"true\"></labels></td>\n" +
@@ -9804,7 +9804,7 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "<a ng-href=\"{{deploymentConfig | navigateResourceURL}}\">{{deploymentConfig.metadata.name}}</a>\n" +
     "<small class=\"overview-timestamp\" ng-if=\"activeReplicationController && !inProgressDeployment\">\n" +
     "<span class=\"hidden-xs\">&ndash;</span>\n" +
-    "<relative-timestamp timestamp=\"activeReplicationController.metadata.creationTimestamp\"></relative-timestamp>\n" +
+    "<span am-time-ago=\"activeReplicationController.metadata.creationTimestamp\"></span>\n" +
     "</small>\n" +
     "</div>\n" +
     "<div>\n" +
@@ -9924,7 +9924,7 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "<a ng-href=\"{{deployment | navigateResourceURL}}\">{{deploymentName}}</a>\n" +
     "<small class=\"overview-timestamp\" ng-if=\"latestReplicaSet\">\n" +
     "<span class=\"hidden-xs\">&ndash;</span>\n" +
-    "<relative-timestamp timestamp=\"latestReplicaSet.metadata.creationTimestamp\"></relative-timestamp>\n" +
+    "<span am-time-ago=\"latestReplicaSet.metadata.creationTimestamp\"></span>\n" +
     "</small>\n" +
     "</div>\n" +
     "<div class=\"small truncate\">\n" +
@@ -9994,7 +9994,7 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "<a ng-href=\"{{pod | navigateResourceURL}}\">{{pod.metadata.name}}</a>\n" +
     "<small class=\"overview-timestamp\">\n" +
     "<span class=\"hidden-xs\">&ndash;</span>\n" +
-    "<relative-timestamp timestamp=\"pod.metadata.creationTimestamp\"></relative-timestamp>\n" +
+    "<span am-time-ago=\"pod.metadata.creationTimestamp\"></span>\n" +
     "</small>\n" +
     "</div>\n" +
     "<div class=\"small truncate\">\n" +
@@ -10187,7 +10187,7 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "<a ng-href=\"{{set | navigateResourceURL}}\">{{set.metadata.name}}</a>\n" +
     "<small class=\"overview-timestamp\">\n" +
     "<span class=\"hidden-xs\">&ndash;</span>\n" +
-    "<relative-timestamp timestamp=\"set.metadata.creationTimestamp\"></relative-timestamp>\n" +
+    "<span am-time-ago=\"set.metadata.creationTimestamp\"></span>\n" +
     "</small>\n" +
     "</div>\n" +
     "<div class=\"small truncate\">\n" +
@@ -10281,7 +10281,7 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "</div>\n" +
     "<h2>\n" +
     "<a ng-href=\"{{buildConfig | navigateResourceURL}}\">{{buildConfigName}}</a>\n" +
-    "<small>created <relative-timestamp timestamp=\"buildConfig.metadata.creationTimestamp\"></relative-timestamp></small>\n" +
+    "<small>created <span am-time-ago=\"buildConfig.metadata.creationTimestamp\"></span></small>\n" +
     "</h2>\n" +
     "<div ng-if=\"buildConfig.spec.source.git.uri\">\n" +
     "Source Repository:\n" +
@@ -10651,7 +10651,7 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "<span ng-if=\"project | displayName : true\"><span ng-bind-html=\"project.metadata.name | highlightKeywords : keywords\"></span> &ndash;</span>\n" +
     "created\n" +
     "<span ng-if=\"project | annotation : 'openshift.io/requester'\">by <span ng-bind-html=\"project | annotation : 'openshift.io/requester' | highlightKeywords : keywords\"></span></span>\n" +
-    "<relative-timestamp timestamp=\"project.metadata.creationTimestamp\"></relative-timestamp>\n" +
+    "<span am-time-ago=\"project.metadata.creationTimestamp\"></span>\n" +
     "</small>\n" +
     "</div>\n" +
     "<div class=\"list-view-pf-additional-info project-additional-info\">\n" +
@@ -10996,7 +10996,7 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "{{secret.type}}\n" +
     "</td>\n" +
     "<td data-title=\"Created\">\n" +
-    "<relative-timestamp timestamp=\"secret.metadata.creationTimestamp\"></relative-timestamp>\n" +
+    "<span am-time-ago=\"secret.metadata.creationTimestamp\"></span>\n" +
     "</td>\n" +
     "</tr>\n" +
     "</tbody>\n" +
@@ -11020,7 +11020,7 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "{{secret.type}}\n" +
     "</td>\n" +
     "<td data-title=\"Created\">\n" +
-    "<relative-timestamp timestamp=\"secret.metadata.creationTimestamp\"></relative-timestamp>\n" +
+    "<span am-time-ago=\"secret.metadata.creationTimestamp\"></span>\n" +
     "</td>\n" +
     "</tr>\n" +
     "</tbody>\n" +
@@ -11045,7 +11045,7 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "{{secret.type}}\n" +
     "</td>\n" +
     "<td data-title=\"Created\">\n" +
-    "<relative-timestamp timestamp=\"secret.metadata.creationTimestamp\"></relative-timestamp>\n" +
+    "<span am-time-ago=\"secret.metadata.creationTimestamp\"></span>\n" +
     "</td>\n" +
     "</tr>\n" +
     "</tbody>\n" +
@@ -11116,7 +11116,7 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "<span ng-if=\"!service.spec.selector\"><em>none</em></span>\n" +
     "<span ng-repeat=\"(selectorLabel, selectorValue) in service.spec.selector\">{{selectorLabel}}={{selectorValue}}<span ng-show=\"!$last\">, </span></span>\n" +
     "</td>\n" +
-    "<td data-title=\"Age\"><relative-timestamp timestamp=\"service.metadata.creationTimestamp\" drop-suffix=\"true\"></relative-timestamp></td>\n" +
+    "<td data-title=\"Age\"><span am-time-ago=\"service.metadata.creationTimestamp\" am-without-suffix=\"true\"></span></td>\n" +
     "</tr>\n" +
     "</tbody>\n" +
     "</table>\n" +
@@ -11534,7 +11534,7 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "</span>\n" +
     "</td>\n" +
     "<td data-title=\"Access Modes\">{{pvc.spec.accessModes | accessModes:'long' | join}}</td>\n" +
-    "<td data-title=\"Age\"><relative-timestamp timestamp=\"pvc.metadata.creationTimestamp\" drop-suffix=\"true\"></relative-timestamp></td>\n" +
+    "<td data-title=\"Age\"><span am-time-ago=\"pvc.metadata.creationTimestamp\" am-without-suffix=\"true\"></span></td>\n" +
     "</tr>\n" +
     "</tbody>\n" +
     "</table>\n" +

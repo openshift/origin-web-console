@@ -87,7 +87,7 @@
                           <div class="list-view-pf-description">
                             <div class="list-group-item-heading">
                               <a ng-href="{{build | navigateResourceURL}}"><span ng-bind-html="build.metadata.name | highlightKeywords : filterKeywords"></span></a>
-                              <small>created <relative-timestamp timestamp="build.metadata.creationTimestamp"></relative-timestamp></small>
+                              <small>created <span am-time-ago="build.metadata.creationTimestamp"></span></small>
                             </div>
                             <div class="list-group-item-text">
                               <build-status build="build"></build-status>
@@ -173,7 +173,7 @@
                           <div class="list-view-pf-description">
                             <div class="list-group-item-heading">
                               <a ng-href="{{replicationController | navigateResourceURL}}"><span ng-bind-html="replicationController.metadata.name | highlightKeywords : filterKeywords"></span></a>
-                              <small>created <relative-timestamp timestamp="replicationController.metadata.creationTimestamp"></relative-timestamp></small>
+                              <small>created <span am-time-ago="replicationController.metadata.creationTimestamp"></span></small>
                             </div>
                             <div class="list-group-item-text">
                               <status-icon status="replicationController | deploymentStatus" disable-animation fixed-width="true"></status-icon>
@@ -230,7 +230,7 @@
                           <div class="list-view-pf-description">
                             <div class="list-group-item-heading">
                               <a ng-href="{{replicaSet | navigateResourceURL}}"><span ng-bind-html="replicaSet.metadata.name | highlightKeywords : filterKeywords"></span></a>
-                              <small>created <relative-timestamp timestamp="replicaSet.metadata.creationTimestamp"></relative-timestamp></small>
+                              <small>created <span am-time-ago="replicaSet.metadata.creationTimestamp"></span></small>
                             </div>
                             <div class="list-group-item-text">
                               {{replicaSet.status.replicas}} replica<span ng-if="replicaSet.status.replicas !== 1">s</span>
@@ -297,7 +297,7 @@
                               <span ng-if="pod | isTroubledPod">
                                 <pod-warnings pod="pod"></pod-warnings>
                               </span>
-                              <small>created <relative-timestamp timestamp="pod.metadata.creationTimestamp"></relative-timestamp></small>
+                              <small>created <span am-time-ago="pod.metadata.creationTimestamp"></span></small>
                             </div>
                             <div class="list-group-item-text">
                               <status-icon status="pod | podStatus" disable-animation fixed-width="true"></status-icon>

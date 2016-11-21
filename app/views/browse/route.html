@@ -16,7 +16,7 @@
                               route="route"
                               service="services[route.spec.to.name]">
               </route-warnings>
-              <small class="meta">created <relative-timestamp timestamp="route.metadata.creationTimestamp"></relative-timestamp></small>
+              <small class="meta">created <span am-time-ago="route.metadata.creationTimestamp"></span></small>
               <div class="pull-right dropdown" ng-hide="!('routes' | canIDoAny)">
                 <button type="button" class="dropdown-toggle btn btn-default actions-dropdown-btn hidden-xs" data-toggle="dropdown">
                   Actions
@@ -73,10 +73,10 @@
                       <span ng-init="admittedCondition = (ingress | routeIngressCondition : 'Admitted')">
                         <span ng-if="!admittedCondition">admission status unknown for router '{{ingress.routerName}}'</span>
                         <span ng-if="admittedCondition.status === 'True'">
-                          exposed on router '{{ingress.routerName}}' <relative-timestamp timestamp="admittedCondition.lastTransitionTime"></relative-timestamp>
+                          exposed on router '{{ingress.routerName}}' <span am-time-ago="admittedCondition.lastTransitionTime"></span>
                         </span>
                         <span ng-if="admittedCondition.status === 'False'">
-                          rejected by router '{{ingress.routerName}}' <relative-timestamp timestamp="admittedCondition.lastTransitionTime"></relative-timestamp>
+                          rejected by router '{{ingress.routerName}}' <span am-time-ago="admittedCondition.lastTransitionTime"></span>
                         </span>
                       </span>
                     </div>

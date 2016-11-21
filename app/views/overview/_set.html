@@ -7,7 +7,7 @@
         <a ng-href="{{set | navigateResourceURL}}">{{set.metadata.name}}</a>
         <small class="overview-timestamp">
           <span class="hidden-xs">&ndash;</span>
-          <relative-timestamp timestamp="set.metadata.creationTimestamp"></relative-timestamp>
+          <span am-time-ago="set.metadata.creationTimestamp"></span>
         </small>
       </div>
       <div class="small truncate">

@@ -85,7 +85,7 @@
                   </ul>
                 </div>
                 <!-- <span ng-if="deploymentConfig.status.details.message" class="pficon pficon-warning-triangle-o" style="cursor: help;" data-toggle="popover" data-trigger="hover" dynamic-content="{{deploymentConfig.status.details.message}}"></span> -->
-                <small class="meta" ng-if="deploymentConfig">created <relative-timestamp timestamp="deploymentConfig.metadata.creationTimestamp"></relative-timestamp></small>
+                <small class="meta" ng-if="deploymentConfig">created <span am-time-ago="deploymentConfig.metadata.creationTimestamp"></span></small>
               </h1>
               <labels labels="deploymentConfig.metadata.labels" clickable="true" kind="deployments" title-kind="deployment configs" project-name="{{deploymentConfig.metadata.namespace}}" limit="3"></labels>
             </div>
@@ -262,7 +262,7 @@
                               </div>
                             </td>
                             <td data-title="Created">
-                              <relative-timestamp timestamp="deployment.metadata.creationTimestamp"></relative-timestamp>
+                              <span am-time-ago="deployment.metadata.creationTimestamp"></span>
                             </td>
                             <td data-title="Trigger">
                               <span ng-if="!deployment.causes.length">Unknown</span>

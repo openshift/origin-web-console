@@ -76,7 +76,7 @@
         {{app.name}}<span ng-if="import.tag">:{{import.tag}}</span>
         <small>
           <span ng-if="import.result.ref.registry">from {{import.result.ref.registry}},</span>
-          <relative-timestamp timestamp="import.image.dockerImageMetadata.Created"></relative-timestamp>,
+          <span am-time-ago="import.image.dockerImageMetadata.Created"></span>,
           <span ng-if="import.image.dockerImageMetadata.Size">{{import.image.dockerImageMetadata.Size | humanizeSize}},</span>
           {{import.image.dockerImageLayers.length}} layers
         </small>

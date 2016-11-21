@@ -15,7 +15,7 @@
         <dt>Started:</dt>
         <dd>
           <span ng-if="build.status.startTimestamp">
-            <relative-timestamp timestamp="build.status.startTimestamp"></relative-timestamp>
+            <span am-time-ago="build.status.startTimestamp"></span>
             <span><span class="text-muted">&ndash;</span> {{build.status.startTimestamp | date : 'medium'}}</span>
           </span>
           <span ng-if="!build.status.startTimestamp"><em>not started</em></span>

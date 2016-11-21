@@ -61,7 +61,7 @@
                       </span>
                     </td>
                     <td data-title="Access Modes">{{pvc.spec.accessModes | accessModes:'long' | join}}</td>
-                    <td data-title="Age"><relative-timestamp timestamp="pvc.metadata.creationTimestamp" drop-suffix="true"></relative-timestamp></td>
+                    <td data-title="Age"><span am-time-ago="pvc.metadata.creationTimestamp" am-without-suffix="true"></span></td>
                   </tr>
                 </tbody>
               </table>

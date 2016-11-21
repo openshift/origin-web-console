@@ -57,7 +57,7 @@
                       <span ng-if="!service.spec.selector"><em>none</em></span>
                       <span ng-repeat="(selectorLabel, selectorValue) in service.spec.selector">{{selectorLabel}}={{selectorValue}}<span ng-show="!$last">, </span></span>
                     </td>
-                    <td data-title="Age"><relative-timestamp timestamp="service.metadata.creationTimestamp" drop-suffix="true"></relative-timestamp></td>
+                    <td data-title="Age"><span am-time-ago="service.metadata.creationTimestamp" am-without-suffix="true"></span></td>
                   </tr>
                 </tbody>
               </table>

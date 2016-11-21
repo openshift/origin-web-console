@@ -54,7 +54,7 @@
                   </li>
                 </ul>
               </div>
-              <small class="meta" ng-if="buildConfig">created <relative-timestamp timestamp="buildConfig.metadata.creationTimestamp"></relative-timestamp></small>
+              <small class="meta" ng-if="buildConfig">created <span am-time-ago="buildConfig.metadata.creationTimestamp"></span></small>
             </h1>
             <labels labels="buildConfig.metadata.labels" clickable="true" kind="builds" title-kind="build configs" project-name="{{buildConfig.metadata.namespace}}" limit="3"></labels>
           </div>
@@ -133,10 +133,10 @@
                       </div>
                       <div class="latest-build-timestamp meta text-muted">
                         <span ng-if="!latestBuild.status.startTimestamp">
-                          created <relative-timestamp timestamp="latestBuild.metadata.creationTimestamp"></relative-timestamp>
+                          created <span am-time-ago="latestBuild.metadata.creationTimestamp"></span>
                         </span>
                         <span ng-if="latestBuild.status.startTimestamp">
-                          started <relative-timestamp timestamp="latestBuild.status.startTimestamp"></relative-timestamp>
+                          started <span am-time-ago="latestBuild.status.startTimestamp"></span>
                         </span>
                       </div>
 
@@ -175,7 +175,7 @@
                               </div>
                             </td>
                             <td data-title="Created">
-                              <relative-timestamp timestamp="build.metadata.creationTimestamp"></relative-timestamp>
+                              <span am-time-ago="build.metadata.creationTimestamp"></span>
                             </td>
                           </tr>
                         </tbody>

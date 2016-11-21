@@ -47,7 +47,7 @@
                 </div>
                 <h2>
                   <a ng-href="{{buildConfig | navigateResourceURL}}">{{buildConfigName}}</a>
-                  <small>created <relative-timestamp timestamp="buildConfig.metadata.creationTimestamp"></relative-timestamp></small>
+                  <small>created <span am-time-ago="buildConfig.metadata.creationTimestamp"></span></small>
                 </h2>
                 <div ng-if="buildConfig.spec.source.git.uri">
                   Source Repository:

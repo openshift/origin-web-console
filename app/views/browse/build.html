@@ -19,7 +19,7 @@
                       data-toggle="tooltip"
                       data-original-title="Building from build configuration {{buildConfig.metadata.name}} has been paused.">
                 </span>
-                <small class="meta">created <relative-timestamp timestamp="build.metadata.creationTimestamp"></relative-timestamp></small>
+                <small class="meta">created <span am-time-ago="build.metadata.creationTimestamp"></span></small>
                 <div class="pull-right dropdown" ng-hide="!('builds' | canIDoAny)">
                   <!-- Primary Actions -->
                   <button class="btn btn-default hidden-xs"
