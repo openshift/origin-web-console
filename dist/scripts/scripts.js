@@ -7867,6 +7867,14 @@ case "invalid_request":
 a.errorMessage = "Invalid request";
 break;
 
+case "API_DISCOVERY":
+a.errorLinks = [ {
+href:window.location.protocol + "//" + window.OPENSHIFT_CONFIG.api.openshift.hostPort + window.OPENSHIFT_CONFIG.api.openshift.prefix,
+label:"Check Server Connection",
+target:"_blank"
+} ];
+break;
+
 default:
 a.errorMessage = "An error has occurred";
 }

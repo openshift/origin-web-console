@@ -9,6 +9,10 @@
         <h1>Error</h1>
         <h4>{{errorMessage}}</h4>
         <div>{{errorDetails}}</div>
+        <div ng-if="errorLinks.length">
+          <a ng-repeat-start="link in errorLinks" ng-href="{{link.href}}" target="{{link.target || '_blank'}}">{{link.label}}</a>
+          <span ng-repeat-end ng-if="!$last" class="action-divider mar-right-xs">|</span>
+        </div>
         <br>
         <div>Return to the <a href="" ng-click="reloadConsole()">console</a>.</div>
       </div>
