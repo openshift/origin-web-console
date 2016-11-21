@@ -241,7 +241,7 @@ label:"Uncategorized",
 description:""
 } ]
 } ]
-}, angular.module("openshiftConsole", [ "ngAnimate", "ngCookies", "ngResource", "ngRoute", "ngSanitize", "openshiftUI", "kubernetesUI", "registryUI.images", "ui.bootstrap", "patternfly.charts", "patternfly.sort", "openshiftConsoleTemplates", "ui.ace", "extension-registry", "as.sortable", "ui.select", "key-value-editor", "angular-inview" ]).config([ "$routeProvider", function(a) {
+}, angular.module("openshiftConsole", [ "ngAnimate", "ngCookies", "ngResource", "ngRoute", "ngSanitize", "openshiftUI", "kubernetesUI", "registryUI.images", "ui.bootstrap", "patternfly.charts", "patternfly.sort", "openshiftConsoleTemplates", "ui.ace", "extension-registry", "as.sortable", "ui.select", "key-value-editor", "angular-inview", "angularMoment" ]).config([ "$routeProvider", function(a) {
 a.when("/", {
 templateUrl:"views/projects.html",
 controller:"ProjectsController"
@@ -519,7 +519,9 @@ screenSmMin:768,
 screenMdMin:992,
 screenLgMin:1200,
 screenXlgMin:1600
-}).constant("SOURCE_URL_PATTERN", /^((ftp|http|https|git|ssh):\/\/(\w+:{0,1}[^\s@]*@)|git@)?([^\s@]+)(:[0-9]+)?(\/|\/([\w#!:.?+=&%@!\-\/]))?$/).constant("IS_IOS", /iPad|iPhone|iPod/.test(navigator.userAgent) && !window.MSStream).config([ "$httpProvider", "AuthServiceProvider", "RedirectLoginServiceProvider", "AUTH_CFG", "API_CFG", "kubernetesContainerSocketProvider", function(a, b, c, d, e, f) {
+}).constant("SOURCE_URL_PATTERN", /^((ftp|http|https|git|ssh):\/\/(\w+:{0,1}[^\s@]*@)|git@)?([^\s@]+)(:[0-9]+)?(\/|\/([\w#!:.?+=&%@!\-\/]))?$/).constant("IS_IOS", /iPad|iPhone|iPod/.test(navigator.userAgent) && !window.MSStream).constant("amTimeAgoConfig", {
+titleFormat:"LLL"
+}).config([ "$httpProvider", "AuthServiceProvider", "RedirectLoginServiceProvider", "AUTH_CFG", "API_CFG", "kubernetesContainerSocketProvider", function(a, b, c, d, e, f) {
 a.interceptors.push("AuthInterceptor"), b.LoginService("RedirectLoginService"), b.LogoutService("DeleteTokenLogoutService"), b.UserStore("LocalStorageUserStore"), c.OAuthClientID(d.oauth_client_id), c.OAuthAuthorizeURI(d.oauth_authorize_uri), c.OAuthRedirectURI(URI(d.oauth_redirect_base).segment("oauth").toString()), f.WebSocketFactory = "ContainerWebSocket";
 } ]).config([ "$compileProvider", function(a) {
 a.aHrefSanitizationWhitelist(/^\s*(https?|mailto|git):/i);
@@ -527,15 +529,11 @@ a.aHrefSanitizationWhitelist(/^\s*(https?|mailto|git):/i);
 b.persistFilterState(!0), a.$on("$routeChangeSuccess", function() {
 b.readPersistedState();
 });
-} ]).run([ "dateRelativeFilter", "durationFilter", "timeOnlyDurationFromTimestampsFilter", function(a, b, c) {
+} ]).run([ "durationFilter", "timeOnlyDurationFromTimestampsFilter", function(a, b) {
 setInterval(function() {
-$(".timestamp[data-timestamp]").text(function(b, c) {
-return a($(this).attr("data-timestamp"), $(this).attr("data-drop-suffix")) || c;
-});
-}, 3e4), setInterval(function() {
-$(".duration[data-timestamp]").text(function(a, d) {
+$(".duration[data-timestamp]").text(function(c, d) {
 var e = $(this).data("timestamp"), f = $(this).data("omit-single"), g = $(this).data("precision"), h = $(this).data("time-only");
-return h ? c(e, null) || d :b(e, null, f, g) || d;
+return h ? b(e, null) || d :a(e, null, f, g) || d;
 });
 }, 1e3);
 } ]), hawtioPluginLoader.addModule("openshiftConsole"), hawtioPluginLoader.registerPreBootstrapTask(function(a) {
@@ -8393,16 +8391,7 @@ details:c("getErrorDetails")(a)
 };
 }
 };
-} ]), angular.module("openshiftConsole").directive("relativeTimestamp", function() {
-return {
-restrict:"E",
-scope:{
-timestamp:"=",
-dropSuffix:"=?"
-},
-template:'<span data-timestamp="{{timestamp}}" data-drop-suffix="{{dropSuffix}}" class="timestamp" title="{{timestamp | date : \'short\'}}">{{timestamp | dateRelative : dropSuffix}}</span>'
-};
-}).directive("timeOnlyDurationUntilNow", function() {
+} ]), angular.module("openshiftConsole").directive("timeOnlyDurationUntilNow", function() {
 return {
 restrict:"E",
 scope:{
@@ -12533,11 +12522,7 @@ selector:"="
 },
 templateUrl:"views/directives/selector.html"
 };
-}), angular.module("openshiftConsole").filter("dateRelative", function() {
-return function(a, b) {
-return a ? moment(a).fromNow(b) :a;
-};
-}).filter("duration", function() {
+}), angular.module("openshiftConsole").filter("duration", function() {
 return function(a, b, c, d) {
 function e(a, b, d) {
 if (0 !== a) return 1 === a ? void (c ? h.push(b) :h.push("one " + b)) :void h.push(a + " " + d);

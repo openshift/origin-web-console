@@ -108,7 +108,7 @@
                                 <span ng-if="project | displayName : true"><span ng-bind-html="project.metadata.name | highlightKeywords : keywords"></span> &ndash;</span>
                                 created
                                 <span ng-if="project | annotation : 'openshift.io/requester'">by <span ng-bind-html="project | annotation : 'openshift.io/requester' | highlightKeywords : keywords"></span></span>
-                                <relative-timestamp timestamp="project.metadata.creationTimestamp"></relative-timestamp>
+                                <span am-time-ago="project.metadata.creationTimestamp"></span>
                               </small>
                             </div>
                             <div class="list-view-pf-additional-info project-additional-info">

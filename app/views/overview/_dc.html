@@ -7,7 +7,7 @@
         <a ng-href="{{deploymentConfig | navigateResourceURL}}">{{deploymentConfig.metadata.name}}</a>
         <small class="overview-timestamp" ng-if="activeReplicationController && !inProgressDeployment">
           <span class="hidden-xs">&ndash;</span>
-          <relative-timestamp timestamp="activeReplicationController.metadata.creationTimestamp"></relative-timestamp>
+          <span am-time-ago="activeReplicationController.metadata.creationTimestamp"></span>
         </small>
       </div>
       <div>

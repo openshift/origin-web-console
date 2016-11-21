@@ -50,7 +50,7 @@
     </div>
 
     <div class="component meta-data">
-      <relative-timestamp timestamp="rc.metadata.creationTimestamp"></relative-timestamp
+      <span am-time-ago="rc.metadata.creationTimestamp"></span
       ><span ng-if="rc.causes.length"
         ><span>
           <span class="deployment-trigger" ng-repeat="cause in rc.causes">
@@ -78,7 +78,7 @@
       </div>
     </div>
     <div class="component meta-data">
-      created <relative-timestamp timestamp="rc.metadata.creationTimestamp"></relative-timestamp>
+      created <span am-time-ago="rc.metadata.creationTimestamp"></span>
     </div>
   </div>
 

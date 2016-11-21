@@ -145,7 +145,6 @@ For more details on the expected scope arguments, see the source under [app/scri
 
 * toggle (attribute) - intended for Bootstrap's data-toggle=tooltip and data-toggle=popover, will automatically initialize any tooltips and popovers
 * alerts (element) - renders a set of alerts according to the [patternfly style](https://www.patternfly.org/widgets/#alerts)
-* relative-timestamp (element) - renders a relative timestamp (ex: '5 minutes ago') based on the current time, auto-updating every 30 seconds
 * copy-to-clipboard (element) - creates a copy to clipboard button using clipboard.js
 * back (attribute) - when the element is clicked a simulated browser back button event occurs (calls history.back)
 * select-on-focus (attribute) - when the element is focused, all text within it will be selected
@@ -158,7 +157,6 @@ For more details on the expected scope arguments, see the source under [app/scri
 
 For more details on the expected arguments, see the source under [app/scripts/filters](app/scripts/filters)
 
-* dateRelative - returns the relative date for a timestamp given the current time (ex: '5 minutes ago')
 * ageLessThan - returns whether a timestamp is within a given time amount (ex: 5) and unit (ex: 'minutes').  Refer to the [Moment.js docs](http://momentjs.com/docs/#/manipulating/add/) for the supported units.
 * orderObjectsByDate - given an array or hash of k8s or openshift API objects, return an array of the objects sorted by the creationTimestamp.  By default orders with oldest first, optional reverse param will return ordered by newest first.
 * annotation - for a k8s or OpenShift api object, lets you get any annotation by key

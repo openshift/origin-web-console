@@ -18,7 +18,7 @@
                   </span>
                   <span ng-if="!pvc.spec.resources.requests['storage']">waiting for allocation,</span>
               </small>
-              <small class="meta">created <relative-timestamp timestamp="pvc.metadata.creationTimestamp"></relative-timestamp></small>
+              <small class="meta">created <span am-time-ago="pvc.metadata.creationTimestamp"></span></small>
               <div class="pull-right dropdown" ng-hide="!('persistentVolumeClaims' | canIDoAny)">
                 <button type="button" class="dropdown-toggle btn btn-default actions-dropdown-btn hidden-xs" data-toggle="dropdown">
                   Actions

@@ -47,7 +47,7 @@
                         {{imageStream.status.tags[4].tag}}</span><span ng-if="imageStream.status.tags.length > 5">,
                         and {{imageStream.status.tags.length - 4}} others</span>
                     </td>
-                    <td data-title="Updated"><relative-timestamp timestamp="imageStream | imageStreamLastUpdated"></relative-timestamp></td>
+                    <td data-title="Updated"><span am-time-ago="imageStream | imageStreamLastUpdated"></span></td>
                   </tr>
                 </tbody>
               </table>

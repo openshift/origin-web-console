@@ -40,7 +40,7 @@
                 </ul>
               </div>
               {{configMap.metadata.name}}
-              <small class="meta">created <relative-timestamp timestamp="configMap.metadata.creationTimestamp"></relative-timestamp></small>
+              <small class="meta">created <span am-time-ago="configMap.metadata.creationTimestamp"></span></small>
             </h1>
             <labels labels="configMap.metadata.labels" clickable="true" kind="config-maps" title-kind="config maps" project-name="{{configMap.metadata.namespace}}" limit="3"></labels>
           </div>

@@ -24,7 +24,7 @@
     {{hpa.status.currentCPUUtilizationPercentage | hpaCPUPercent : project}}%
   </dd>
   <dt ng-if-start="hpa.status.lastScaleTime">Last Scaled:</dt>
-  <dd ng-if-end><relative-timestamp timestamp="hpa.status.lastScaleTime"></relative-timestamp></dd>
+  <dd ng-if-end><span am-time-ago="hpa.status.lastScaleTime"></span></dd>
 </dl>
 
 <!-- HPA actions -->

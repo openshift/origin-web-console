@@ -46,7 +46,7 @@
               {{event.message}}
             </div>
             <div class="event-timestamp">
-              <relative-timestamp timestamp="event.lastTimestamp"></relative-timestamp>
+              <span am-time-ago="event.lastTimestamp"></span>
             </div>
           </div>
           <div ng-if="event.count > 1" class="text-muted small">

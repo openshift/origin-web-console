@@ -11,7 +11,7 @@
   <div ng-switch-default>
     &nbsp;
     <span ng-if="pod.status.podIP">{{pod.status.podIP}}</span>
-    <relative-timestamp ng-if="!pod.status.podIP" timestamp="pod.status.startTime"></relative-timestamp>
+    <span am-time-ago-if="!pod.status.podIP" timestamp="pod.status.startTime"></span>
     &nbsp;
   </div>
 </div>

@@ -35,7 +35,7 @@
       </td>
       <td data-title="Ready">{{pod | numContainersReady}}/{{pod.spec.containers.length}}</td>
       <td data-title="Restarts">{{pod | numContainerRestarts}}</td>
-      <td data-title="Age"><relative-timestamp timestamp="pod.metadata.creationTimestamp" drop-suffix="true"></relative-timestamp></td>
+      <td data-title="Age"><span am-time-ago="pod.metadata.creationTimestamp" am-without-suffix="true"></span></td>
     </tr>
   </tbody>
 </table>

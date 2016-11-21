@@ -21,7 +21,7 @@
             <status-icon status="build.status.phase"></status-icon>
             {{build.status.phase}}<span ng-if="(build | isIncompleteBuild) && trigger.imageChangeParams.automatic">. A new deployment will be created automatically once the build completes.</span>
           </div>
-          <relative-timestamp timestamp="build.metadata.creationTimestamp" class="build-timestamp"></relative-timestamp>
+          <span am-time-ago="build.metadata.creationTimestamp" class="build-timestamp"></span>
           <div ng-if="'builds/log' | canI : 'get'" class="build-links">
             <a ng-if="!!['New', 'Pending'].indexOf(build.status.phase) && (build | buildLogURL)" ng-href="{{build | buildLogURL}}">View Log</a>
           </div>

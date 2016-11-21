@@ -43,7 +43,7 @@
                 <tbody ng-repeat="resource in resources | orderObjectsByDate : true">
                   <tr>
                     <td data-title="Name">{{resource.metadata.name}}</td>
-                    <td data-title="Created"><relative-timestamp timestamp="resource.metadata.creationTimestamp"></relative-timestamp></td>
+                    <td data-title="Created"><span am-time-ago="resource.metadata.creationTimestamp"></span></td>
                     <td data-title="Labels">
                       <em ng-if="(resource.metadata.labels | hashSize) === 0">none</em>
                       <labels labels="resource.metadata.labels" clickable="true" kind="{{kindSelector.selected.kind | kindToResource : true }}" project-name="{{resource.metadata.namespace}}" limit="3" filter-current-page="true"></labels></td>

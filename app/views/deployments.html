@@ -77,7 +77,7 @@
                       <!-- TODO would be nice to have the deploymentStatusReason in a popup, when there is one -->
                     </td>
                     <td data-title="Created">
-                      <relative-timestamp timestamp="replicationController.metadata.creationTimestamp"></relative-timestamp>
+                      <span am-time-ago="replicationController.metadata.creationTimestamp"></span>
                     </td>
                     <td data-title="Trigger">
                       <span ng-if="!replicationController.causes.length">Unknown</span>
@@ -127,7 +127,7 @@
                         <span ng-if="deployment.status.replicas !== deployment.spec.replicas">{{deployment.status.replicas}}/</span>{{deployment.spec.replicas}} replica<span ng-if="deployment.spec.replicas != 1">s</span>
                       </td>
                       <td data-title="Created">
-                        <relative-timestamp timestamp="deployment.metadata.creationTimestamp"></relative-timestamp>
+                        <span am-time-ago="deployment.metadata.creationTimestamp"></span>
                       </td>
                       <td data-title="Strategy">
                         {{deployment.spec.strategy.type | sentenceCase}}
@@ -155,7 +155,7 @@
                         <span ng-if="replicaSet.status.replicas !== replicaSet.spec.replicas">{{replicaSet.status.replicas}}/</span>{{replicaSet.spec.replicas}} replica<span ng-if="replicaSet.spec.replicas != 1">s</span>
                       </td>
                       <td data-title="Created">
-                        <relative-timestamp timestamp="replicaSet.metadata.creationTimestamp"></relative-timestamp>
+                        <span am-time-ago="replicaSet.metadata.creationTimestamp"></span>
                       </td>
                     </tr>
                   </tbody>
@@ -183,7 +183,7 @@
                         <span ng-if="deployment.status.replicas !== deployment.spec.replicas">{{deployment.status.replicas}}/</span>{{deployment.spec.replicas}} replica<span ng-if="deployment.spec.replicas != 1">s</span>
                       </td>
                       <td data-title="Created">
-                        <relative-timestamp timestamp="deployment.metadata.creationTimestamp"></relative-timestamp>
+                        <span am-time-ago="deployment.metadata.creationTimestamp"></span>
                       </td>
                     </tr>
                   </tbody>

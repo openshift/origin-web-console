@@ -64,7 +64,7 @@
                   </li>
                 </ul>
               </div>
-              <small class="meta" ng-if="deployment">created <relative-timestamp timestamp="deployment.metadata.creationTimestamp"></relative-timestamp></small>
+              <small class="meta" ng-if="deployment">created <span am-time-ago="deployment.metadata.creationTimestamp"></span></small>
             </h1>
             <labels labels="deployment.metadata.labels" clickable="true" kind="deployments" project-name="{{deployment.metadata.namespace}}" limit="3"></labels>
           </div>
@@ -230,7 +230,7 @@
                               <span ng-if="replicaSet.status.replicas !== replicaSet.spec.replicas">{{replicaSet.status.replicas}}/</span>{{replicaSet.spec.replicas}} replica<span ng-if="replicaSet.spec.replicas != 1">s</span>
                             </td>
                             <td data-title="Created">
-                              <relative-timestamp timestamp="replicaSet.metadata.creationTimestamp"></relative-timestamp>
+                              <span am-time-ago="replicaSet.metadata.creationTimestamp"></span>
                             </td>
                           </tr>
                         </tbody>

@@ -34,7 +34,7 @@
                   </li>
                 </ul>
               </div>
-              <small class="meta">created <relative-timestamp timestamp="imageStream.metadata.creationTimestamp"></relative-timestamp></small>
+              <small class="meta">created <span am-time-ago="imageStream.metadata.creationTimestamp"></span></small>
             </h1>
             <labels labels="imageStream.metadata.labels" clickable="true" kind="images" project-name="{{imageStream.metadata.namespace}}" limit="3"></labels>
           </div>
@@ -110,7 +110,7 @@
                     </td>
                     <td data-title="Created">
                       <span ng-if="tag.status.items.length && tag.status.items[0].image">
-                        <relative-timestamp timestamp="tag.status.items[0].created"></relative-timestamp>
+                        <span am-time-ago="tag.status.items[0].created"></span>
                       </span>
                     </td>
                     <td data-title="Pull Spec">
@@ -132,7 +132,7 @@
                       <short-id id="{{item.image | imageName}}"></short-id>
                     </td>
                     <td data-title="Created">
-                      <relative-timestamp timestamp="item.created"></relative-timestamp>
+                      <span am-time-ago="item.created"></span>
                     </td>
                     <td data-title="Pull Spec">
                       <div ng-if="item.dockerImageReference" ng-attr-title="{{item.dockerImageReference}}" class="td-long-string">
