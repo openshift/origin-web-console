@@ -13226,6 +13226,22 @@ var c, d, e = _.get(a, "state.waiting.reason") || _.get(a, "state.terminated.rea
 return e ? void (b = e) :(c = _.get(a, "state.terminated.signal")) ? void (b = "Signal: " + c) :(d = _.get(a, "state.terminated.exitCode"), void (d && (b = "Exit Code: " + d)));
 }), b;
 };
+}).filter("podStartTime", function() {
+return function(a) {
+var b = null;
+return _.each(_.get(a, "status.containerStatuses"), function(a) {
+var c = _.get(a, "state.running") || _.get(a, "state.terminated");
+c && (b && !moment(c.startedAt).isBefore(b) || (b = c.startedAt));
+}), b;
+};
+}).filter("podCompletionTime", function() {
+return function(a) {
+var b = null;
+return _.each(_.get(a, "status.containerStatuses"), function(a) {
+var c = _.get(a, "state.terminated");
+c && (b && !moment(c.finishedAt).isAfter(b) || (b = c.finishedAt));
+}), b;
+};
 }).filter("routeIngressCondition", function() {
 return function(a, b) {
 return a ? _.find(a.conditions, {

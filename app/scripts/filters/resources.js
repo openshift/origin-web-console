@@ -1172,6 +1172,36 @@ angular.module('openshiftConsole')
       return reason;
     };
   })
+  .filter('podStartTime', function() {
+    return function(pod) {
+      var earliestStartTime = null;
+      _.each(_.get(pod, 'status.containerStatuses'), function(containerStatus){
+        var status = _.get(containerStatus, 'state.running') || _.get(containerStatus, 'state.terminated');
+        if (!status) {
+          return;
+        }
+        if (!earliestStartTime || moment(status.startedAt).isBefore(earliestStartTime)) {
+          earliestStartTime = status.startedAt;
+        }
+      });
+      return earliestStartTime;
+    };
+  })
+  .filter('podCompletionTime', function() {
+    return function(pod) {
+      var lastFinishTime = null;
+      _.each(_.get(pod, 'status.containerStatuses'), function(containerStatus){
+        var status = _.get(containerStatus, 'state.terminated');
+        if (!status) {
+          return;
+        }
+        if (!lastFinishTime || moment(status.finishedAt).isAfter(lastFinishTime)) {
+          lastFinishTime = status.finishedAt;
+        }
+      });
+      return lastFinishTime;
+    };
+  })
   .filter('routeIngressCondition', function() {
     return function(ingress, type) {
       if (!ingress) {
