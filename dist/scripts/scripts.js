@@ -10694,7 +10694,8 @@ scope:{
 pod:"=",
 sparklineWidth:"=?",
 sparklineHeight:"=?",
-includedMetrics:"=?"
+includedMetrics:"=?",
+alerts:"=?"
 },
 templateUrl:"views/directives/pod-metrics.html",
 link:function(j) {
@@ -10703,12 +10704,12 @@ if (!j.pod) return null;
 var b = j.options.selectedContainer;
 switch (a) {
 case "memory/usage":
-var c = w(b);
+var c = y(b);
 if (c) return g.bytesToMiB(i(c));
 break;
 
 case "cpu/usage_rate":
-var d = x(b);
+var d = z(b);
 if (d) return _.round(1e3 * i(d));
 }
 return null;
@@ -10748,8 +10749,8 @@ colors:{
 Used:e.available > 0 ? "#0088ce" :"#ec7a08",
 Available:"#d1d1d1"
 }
-}, u[g] ? u[g].load(l) :(j = B(a), j.data = l, c(function() {
-u[g] = c3.generate(j);
+}, w[g] ? w[g].load(l) :(j = D(a), j.data = l, c(function() {
+w[g] = c3.generate(j);
 })));
 }), a.totalUsed = _.round(a.totalUsed, 1);
 var g, h = [ b ].concat(_.values(d)), i = {
@@ -10757,10 +10758,10 @@ type:a.chartType || "spline",
 x:"dates",
 columns:h
 }, j = a.chartPrefix + "sparkline";
-v[j] ? v[j].load(i) :(g = C(a), g.data = i, a.chartDataColors && (g.color = {
+x[j] ? x[j].load(i) :(g = E(a), g.data = i, a.chartDataColors && (g.color = {
 pattern:a.chartDataColors
 }), c(function() {
-A || (v[j] = c3.generate(g));
+C || (x[j] = c3.generate(g));
 }));
 }
 }
@@ -10771,7 +10772,7 @@ function n() {
 return 60 * j.options.timeRange.value * 1e3;
 }
 function o() {
-return Math.floor(n() / z) + "ms";
+return Math.floor(n() / B) + "ms";
 }
 function p(a, b, c) {
 var d, e = {
@@ -10785,45 +10786,66 @@ containerName:a.containerMetric ? j.options.selectedContainer.name :"pod"
 }) :null;
 }
 function q() {
-return !j.metricsError && (j.pod && _.get(j, "options.selectedContainer"));
+F = 0;
 }
-function r(a, b) {
-j.noData = !1;
-var c = _.initial(b.data);
-return a.data ? void (a.data = _.chain(a.data).takeRight(z).concat(c).value()) :void (a.data = c);
-}
-function s() {
-if (q()) {
-var a = m();
-angular.forEach(j.metrics, function(b) {
-var c = [];
-angular.forEach(b.datasets, function(d) {
-var e = p(b, d, a);
-e && c.push(h.get(e));
-}), d.all(c).then(function(a) {
-A || (angular.forEach(a, function(a) {
-if (a) {
-var c = _.find(b.datasets, {
-id:a.metricID
-});
-r(c, a);
-}
-}), l(b));
-}, function(a) {
-A || angular.forEach(a, function(a) {
-j.metricsError = {
+function r(a) {
+if (!C) {
+if (F++, j.noData) return void (j.metricsError = {
 status:_.get(a, "status", 0),
 details:_.get(a, "data.errorMsg") || _.get(a, "statusText") || "Status code " + _.get(a, "status", 0)
+});
+if (!(F < 2)) {
+var b = "metrics-failed-" + j.uniqueID;
+j.alerts[b] = {
+type:"error",
+message:"An error occurred updating metrics for pod " + _.get(j, "pod.metadata.name", "<unknown>") + ".",
+links:[ {
+href:"",
+label:"Retry",
+onClick:function() {
+delete j.alerts[b], F = 1, u();
+}
+} ]
 };
+}
+}
+}
+function s() {
+return !(j.metricsError || F > 1) && (j.pod && _.get(j, "options.selectedContainer"));
+}
+function t(a, b) {
+j.noData = !1;
+var c = _.initial(b.data);
+return a.data ? void (a.data = _.chain(a.data).takeRight(B).concat(c).value()) :void (a.data = c);
+}
+function u() {
+if (s()) {
+var a = m(), b = [];
+angular.forEach(j.metrics, function(c) {
+var e = [];
+angular.forEach(c.datasets, function(b) {
+var d = p(c, b, a);
+if (d) {
+var f = h.get(d);
+e.push(f);
+}
+}), b = b.concat(e), d.all(e).then(function(a) {
+C || (angular.forEach(a, function(a) {
+if (a) {
+var b = _.find(c.datasets, {
+id:a.metricID
 });
-})["finally"](function() {
+t(b, a);
+}
+}), l(c));
+});
+}), d.all(b).then(q, r)["finally"](function() {
 j.loaded = !0;
-});
 });
 }
 }
 j.includedMetrics = j.includedMetrics || [ "cpu", "memory", "network" ];
-var t, u = {}, v = {}, w = b("resources.limits.memory"), x = b("resources.limits.cpu"), y = 6e4, z = 30, A = !1;
+var v, w = {}, x = {}, y = b("resources.limits.memory"), z = b("resources.limits.cpu"), A = 6e4, B = 30, C = !1;
 j.uniqueID = _.uniqueId("metrics-chart-"), j.metrics = [], _.includes(j.includedMetrics, "memory") && j.metrics.push({
 label:"Memory",
 units:"MiB",
@@ -10881,7 +10903,7 @@ label:"Last week",
 value:10080
 } ]
 }, j.options.timeRange = _.head(j.options.rangeOptions);
-var B = function(a) {
+var D = function(a) {
 var b = "#" + a.chartPrefix + j.uniqueID + "-donut";
 return {
 bindto:b,
@@ -10902,7 +10924,7 @@ height:175,
 widht:175
 }
 };
-}, C = function(a) {
+}, E = function(a) {
 return {
 bindto:"#" + a.chartPrefix + j.uniqueID + "-sparkline",
 axis:{
@@ -10952,25 +10974,25 @@ return d3.round(b, 2) + " " + a.units;
 }
 }
 };
-};
+}, F = 0;
 j.$watch("options", function() {
 _.each(j.metrics, function(a) {
 _.each(a.datasets, function(a) {
 delete a.data;
 });
-}), delete j.metricsError, s();
-}, !0), t = a(s, y, !1), e.$on("metrics.charts.resize", function() {
+}), delete j.metricsError, u();
+}, !0), v = a(u, A, !1), e.$on("metrics.charts.resize", function() {
 c(function() {
-_.each(v, function(a) {
+_.each(x, function(a) {
 a.flush();
 });
 }, 0);
 }), j.$on("$destroy", function() {
-t && (a.cancel(t), t = null), angular.forEach(u, function(a) {
+v && (a.cancel(v), v = null), angular.forEach(w, function(a) {
 a.destroy();
-}), u = null, angular.forEach(v, function(a) {
+}), w = null, angular.forEach(x, function(a) {
 a.destroy();
-}), v = null, A = !0;
+}), x = null, C = !0;
 });
 }
 };
@@ -10980,7 +11002,8 @@ restrict:"E",
 scope:{
 pods:"=",
 containers:"=",
-profile:"@"
+profile:"@",
+alerts:"=?"
 },
 templateUrl:function(a, b) {
 return "compact" === b.profile ? "views/directives/metrics-compact.html" :"views/directives/deployment-metrics.html";
@@ -11014,9 +11037,9 @@ var e = [], g = {
 type:"spline"
 };
 return b.showAverage ? (_.each(a[c.descriptor], function(a, b) {
-p(c.descriptor, b, a);
+q(c.descriptor, b, a);
 }), g.type = "area-spline", w && c.compactType && (g.type = c.compactType), g.x = "Date", g.columns = f(c), g) :(_.each(a[c.descriptor], function(a, b) {
-p(c.descriptor, b, a);
+q(c.descriptor, b, a);
 var f = b + "-dates";
 _.set(g, [ "xs", b ], f);
 var h = [ f ], i = [ b ];
@@ -11031,9 +11054,9 @@ return a[0];
 }), g);
 }
 function j(a) {
-x || (b.loaded = !0, b.showAverage = _.size(b.pods) > 5 || w, _.each(b.metrics, function(c) {
+x || (D = 0, b.showAverage = _.size(b.pods) > 5 || w, _.each(b.metrics, function(c) {
 var d, e = i(a, c), f = c.descriptor;
-w && c.compactCombineWith && (f = c.compactCombineWith, c.lastValue && (C[f].lastValue = (C[f].lastValue || 0) + c.lastValue)), t[f] ? (t[f].load(e), b.showAverage ? t[f].legend.hide() :t[f].legend.show()) :(d = D(c), d.data = e, t[f] = c3.generate(d));
+w && c.compactCombineWith && (f = c.compactCombineWith, c.lastValue && (C[f].lastValue = (C[f].lastValue || 0) + c.lastValue)), t[f] ? (t[f].load(e), b.showAverage ? t[f].legend.hide() :t[f].legend.show()) :(d = E(c), d.data = e, t[f] = c3.generate(d));
 }));
 }
 function k() {
@@ -11057,28 +11080,46 @@ bucketDuration:m()
 return y ? c.start = y :c.start = k(), c;
 }
 }
-function o() {
-var a = _.isEmpty(b.pods);
-return a ? (b.loaded = !0, !1) :!b.metricsError;
+function o(a) {
+if (!x) {
+if (D++, b.noData) return void (b.metricsError = {
+status:_.get(a, "status", 0),
+details:_.get(a, "data.errorMsg") || _.get(a, "statusText") || "Status code " + _.get(a, "status", 0)
+});
+if (!(D < 2)) {
+var c = "metrics-failed-" + b.uniqueID;
+b.alerts[c] = {
+type:"error",
+message:"An error occurred updating metrics.",
+links:[ {
+href:"",
+label:"Retry",
+onClick:function() {
+delete b.alerts[c], D = 1, r();
 }
-function p(a, c, d) {
+} ]
+};
+}
+}
+}
+function p() {
+var a = _.isEmpty(b.pods);
+return a ? (b.loaded = !0, !1) :!b.metricsError && D < 2;
+}
+function q(a, c, d) {
 b.noData = !1;
 var e = _.initial(d), f = _.get(A, [ a, c ]);
 if (!f) return void _.set(A, [ a, c ], e);
 var g = _.takeRight(f.concat(e), v);
 _.set(A, [ a, c ], g);
 }
-function q(a) {
-b.loaded = !0, b.metricsError = {
-status:_.get(a, "status", 0),
-details:_.get(a, "data.errorMsg") || _.get(a, "statusText") || "Status code " + _.get(a, "status", 0)
-};
-}
 function r() {
-if (!B && o()) {
+if (!B && p()) {
 z = Date.now();
 var a = n();
-h.getPodMetrics(a).then(j, q);
+h.getPodMetrics(a).then(j, o)["finally"](function() {
+b.loaded = !0;
+});
 }
 }
 var s, t = {}, u = 6e4, v = 30, w = "compact" === b.profile, x = !1;
@@ -11119,7 +11160,9 @@ compactType:"spline",
 chartID:"network-rx-" + b.uniqueID
 } ];
 var C = _.indexBy(b.metrics, "descriptor");
-b.loaded = !1, b.noData = !0, h.getMetricsURL().then(function(a) {
+b.loaded = !1, b.noData = !0;
+var D = 0;
+h.getMetricsURL().then(function(a) {
 b.metricsURL = a;
 }), b.options = {
 rangeOptions:[ {
@@ -11139,7 +11182,7 @@ label:"Last week",
 value:10080
 } ]
 }, b.options.timeRange = _.head(b.options.rangeOptions), b.options.selectedContainer = _.head(b.containers);
-var D = function(a) {
+var E = function(a) {
 return {
 bindto:"#" + a.chartID,
 axis:{

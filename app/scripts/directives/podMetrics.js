@@ -16,7 +16,8 @@ angular.module('openshiftConsole')
         pod: '=',
         sparklineWidth: '=?',
         sparklineHeight: '=?',
-        includedMetrics: '=?' // defaults to ["cpu", "memory", "network"]
+        includedMetrics: '=?', // defaults to ["cpu", "memory", "network"]
+        alerts: '=?'
       },
       templateUrl: 'views/directives/pod-metrics.html',
       link: function(scope) {
@@ -27,6 +28,7 @@ angular.module('openshiftConsole')
         var getCPULimit = $parse('resources.limits.cpu');
 
         var updateInterval = 60 * 1000; // 60 seconds
+
         // Number of data points to display on the chart.
         var numDataPoints = 30;
 
@@ -382,9 +384,61 @@ angular.module('openshiftConsole')
           return null;
         }
 
+        // Track the number of consecutive failures.
+        var failureCount = 0;
+
+        function metricsSucceeded() {
+          // Reset the number of failures on a successful request.
+          failureCount = 0;
+        }
+
+        // If the first request for metrics fails, show an empty state error message.
+        // Otherwise show an alert if more than one consecutive request fails.
+        function metricsFailed(response) {
+          if (destroyed) {
+            return;
+          }
+
+          failureCount++;
+          if (scope.noData) {
+            // Show an empty state message if the first request for data fails.
+            scope.metricsError = {
+              status:  _.get(response, 'status', 0),
+              details: _.get(response, 'data.errorMsg') ||
+                       _.get(response, 'statusText') ||
+                       "Status code " + _.get(response, 'status', 0)
+            };
+            return;
+          }
+
+          // If this is the first failure and a previous request succeeded, wait and try again.
+          if (failureCount < 2) {
+            return;
+          }
+
+          // Show an alert if we've failed more than once.
+          // Use scope.$id in the alert ID so that it is unique on pages that
+          // use the directive multiple times like monitoring.
+          var alertID = 'metrics-failed-' + scope.uniqueID;
+          scope.alerts[alertID] = {
+            type: 'error',
+            message: 'An error occurred updating metrics for pod ' + _.get(scope, 'pod.metadata.name', '<unknown>') + '.',
+            links: [{
+              href: '',
+              label: 'Retry',
+              onClick: function() {
+                delete scope.alerts[alertID];
+                // Reset failure count to 1 to trigger a retry.
+                failureCount = 1;
+                update();
+              }
+            }]
+          };
+        }
+
         // Make sure there are no errors or missing data before updating.
         function canUpdate() {
-          if (scope.metricsError) {
+          if (scope.metricsError || failureCount > 1) {
             return false;
           }
 
@@ -419,8 +473,9 @@ angular.module('openshiftConsole')
           // time. This prevents an issue where the donut chart shows 0 for
           // current usage if the client clock is ahead of the server clock.
           var start = getStartTime();
+          var allPromises = [];
           angular.forEach(scope.metrics, function(metric) {
-            var promises = [];
+            var datasetPromises = [];
 
             // On metrics that require more than one set of data (e.g. network
             // incoming and outgoing traffic) we perform one request for each,
@@ -434,51 +489,39 @@ angular.module('openshiftConsole')
               if (!config) {
                 return;
               }
-              promises.push(MetricsService.get(config));
+              var promise = MetricsService.get(config);
+              datasetPromises.push(promise);
             });
+
+            allPromises = allPromises.concat(datasetPromises);
 
             // Collect all promises from every metric requested into one, so we
             // have all data the chart wants at the time of the chart creation
             // (or timeout updates, etc).
-            $q.all(promises).then(
-              // success
-              function(responses) {
-                if (destroyed) {
-                  return;
-                }
-
-                angular.forEach(responses, function(response) {
-                  if (!response) {
-                    return;
-                  }
-
-                  var dataset = _.find(metric.datasets, {
-                    id: response.metricID
-                  });
-                  updateData(dataset, response);
-                });
-                updateChart(metric);
-              },
-              // failure
-              function(responses) {
-                if (destroyed) {
-                  return;
-                }
-
-                angular.forEach(responses, function(response) {
-                  scope.metricsError = {
-                    status:  _.get(response, 'status', 0),
-                    details: _.get(response, 'data.errorMsg') ||
-                             _.get(response, 'statusText') ||
-                             "Status code " + _.get(response, 'status', 0)
-                  };
-                });
+            $q.all(datasetPromises).then(function(responses) {
+              if (destroyed) {
+                return;
               }
-            ).finally(function() {
-              // Even on errors mark metrics as loaded to replace the
-              // "Loading..." message with "No metrics to display."
-              scope.loaded = true;
+
+              angular.forEach(responses, function(response) {
+                if (!response) {
+                  return;
+                }
+
+                var dataset = _.find(metric.datasets, {
+                  id: response.metricID
+                });
+                updateData(dataset, response);
+              });
+              updateChart(metric);
             });
+          });
+
+          // Handle failures when any request fails.
+          $q.all(allPromises).then(metricsSucceeded, metricsFailed).finally(function() {
+            // Even on errors mark metrics as loaded to replace the
+            // "Loading..." message with "No metrics to display."
+            scope.loaded = true;
           });
         }
 

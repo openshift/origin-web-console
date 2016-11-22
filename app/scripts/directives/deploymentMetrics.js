@@ -17,7 +17,8 @@ angular.module('openshiftConsole')
         // in case pods is empty.
         containers: '=',
         // Optional: set to 'compact' to show smaller charts (for the overview)
-        profile: '@'
+        profile: '@',
+        alerts: '=?'
       },
       templateUrl: function(elem, attrs) {
         if (attrs.profile === 'compact') {
@@ -92,6 +93,9 @@ angular.module('openshiftConsole')
         // Set to true when any data has been loaded (or failed to load).
         scope.loaded = false;
         scope.noData = true;
+
+        // Track the number of consecutive failures.
+        var failureCount = 0;
 
         // Get the URL to show in error messages.
         MetricsService.getMetricsURL().then(function(url) {
@@ -311,7 +315,8 @@ angular.module('openshiftConsole')
             return;
           }
 
-          scope.loaded = true;
+          // Reset the number of failures on a successful request.
+          failureCount = 0;
 
           // Show an average instead of a multiline chart when there are many pods.
           scope.showAverage = _.size(scope.pods) > 5 || compact;
@@ -392,6 +397,50 @@ angular.module('openshiftConsole')
           return config;
         }
 
+        // If the first request for metrics fails, show an empty state error message.
+        // Otherwise show an alert if more than one consecutive request fails.
+        function metricsFailed(response) {
+          if (destroyed) {
+            return;
+          }
+
+          failureCount++;
+          if (scope.noData) {
+            // Show an empty state message if the first request for data fails.
+            scope.metricsError = {
+              status:  _.get(response, 'status', 0),
+              details: _.get(response, 'data.errorMsg') ||
+                       _.get(response, 'statusText') ||
+                       "Status code " + _.get(response, 'status', 0)
+            };
+            return;
+          }
+
+          // If this is the first failure and a previous request succeeded, wait and try again.
+          if (failureCount < 2) {
+            return;
+          }
+
+          // Show an alert if we've failed more than once.
+          // Use scope.$id in the alert ID so that it is unique on pages that
+          // use the directive multiple times like monitoring.
+          var alertID = 'metrics-failed-' + scope.uniqueID;
+          scope.alerts[alertID] = {
+            type: 'error',
+            message: 'An error occurred updating metrics.',
+            links: [{
+              href: '',
+              label: 'Retry',
+              onClick: function() {
+                delete scope.alerts[alertID];
+                // Reset failure count to 1 to trigger a retry.
+                failureCount = 1;
+                update();
+              }
+            }]
+          };
+        }
+
         // Make sure there are no errors or missing data before updating.
         function canUpdate() {
           var noPods = _.isEmpty(scope.pods);
@@ -400,7 +449,7 @@ angular.module('openshiftConsole')
             scope.loaded = true;
             return false;
           }
-          return !scope.metricsError;
+          return !scope.metricsError && failureCount < 2;
         }
 
         function updateData(metricType, podName, podData) {
@@ -419,23 +468,17 @@ angular.module('openshiftConsole')
           _.set(data, [metricType, podName], updated);
         }
 
-        function handleError(response) {
-          scope.loaded = true;
-          scope.metricsError = {
-            status:  _.get(response, 'status', 0),
-            details: _.get(response, 'data.errorMsg') ||
-                     _.get(response, 'statusText') ||
-                     "Status code " + _.get(response, 'status', 0)
-          };
-        }
-
         function update() {
           if (paused || !canUpdate()) {
             return;
           }
           lastUpdated = Date.now();
           var config = getConfig();
-          MetricsService.getPodMetrics(config).then(processData, handleError);
+          MetricsService.getPodMetrics(config).then(processData, metricsFailed).finally(function() {
+            // Even on errors mark metrics as loaded to replace the
+            // "Loading..." message with "No metrics to display."
+            scope.loaded = true;
+          });
         }
 
         // Updates immediately and then on options changes.
