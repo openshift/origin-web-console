@@ -760,7 +760,12 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
 
   $templateCache.put('views/_volumes.html',
     " <div ng-repeat=\"volume in volumes\">\n" +
-    "<h5>{{volume.name}}</h5>\n" +
+    "<h4>\n" +
+    "{{volume.name}}\n" +
+    "<span ng-if=\"canRemove\" class=\"header-actions\">\n" +
+    "<a href=\"\" ng-click=\"removeFn({volume: volume})\">Remove</a>\n" +
+    "</span>\n" +
+    "</h4>\n" +
     "<dl class=\"dl-horizontal left\">\n" +
     "<div ng-if=\"volume.secret\">\n" +
     "<dt>Type:</dt>\n" +
@@ -1516,41 +1521,52 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "<pod-template pod-template=\"replicaSet.spec.template\" images-by-docker-reference=\"imagesByDockerReference\" builds=\"builds\" detailed=\"true\" add-health-check-url=\"{{((!deploymentConfig || isActive) && ('deploymentconfigs' | canI : 'update')) ? healthCheckURL : ''}}\">\n" +
     "</pod-template>\n" +
     "<h4>Volumes</h4>\n" +
-    "<volumes volumes=\"replicaSet.spec.template.spec.volumes\" namespace=\"project.metadata.name\"></volumes>\n" +
     "<div ng-if=\"kind === 'ReplicaSet'\">\n" +
     "<div ng-if=\"deployment\">\n" +
+    "<volumes volumes=\"replicaSet.spec.template.spec.volumes\" namespace=\"project.metadata.name\"></volumes>\n" +
     "<div ng-if=\"{ group: 'extensions', resource: 'deployments' } | canI : 'update'\">\n" +
     "<a ng-href=\"project/{{project.metadata.name}}/attach-pvc?kind=Deployment&name={{deployment.metadata.name}}&group=extensions\">Add storage</a>\n" +
     "<span class=\"action-divider\" aria-hidden=\"true\">|</span>\n" +
     "<a ng-href=\"project/{{project.metadata.name}}/add-config-volume?kind=Deployment&name={{deployment.metadata.name}}\">Add config files</a>\n" +
     "</div>\n" +
-    "<span ng-if=\"!({ group: 'extensions', resource: 'deployments' } | canI : 'update')\">none</span>\n" +
+    "<div ng-if=\"!replicaSet.spec.template.spec.volumes.length && !({ group: 'extensions', resource: 'deployments' } | canI : 'update')\">none</div>\n" +
     "</div>\n" +
     "<div ng-if=\"!deployment\">\n" +
     "<div ng-if=\"resource | canI : 'update'\">\n" +
+    "<volumes volumes=\"replicaSet.spec.template.spec.volumes\" namespace=\"project.metadata.name\" can-remove=\"true\" remove-fn=\"removeVolume(volume)\">\n" +
+    "</volumes>\n" +
     "<a ng-href=\"project/{{project.metadata.name}}/attach-pvc?kind=ReplicaSet&name={{replicaSet.metadata.name}}&group=extensions\">Add storage</a>\n" +
     "<span class=\"action-divider\" aria-hidden=\"true\">|</span>\n" +
-    "<a ng-href=\"project/{{project.metadata.name}}/add-config-volume?kind=ReplicaSet&name={{replicaSet.metadata.name}}\">Add config files</a>\n" +
+    "<a ng-href=\"project/{{project.metadata.name}}/add-config-volume?kind=ReplicaSet&name={{replicaSet.metadata.name}}&group=extensions\">Add config files</a>\n" +
     "</div>\n" +
-    "<span ng-if=\"!(resource | canI : 'update')\">none</span>\n" +
+    "<div ng-if=\"!(resource | canI : 'update')\">\n" +
+    "<volumes volumes=\"replicaSet.spec.template.spec.volumes\" namespace=\"project.metadata.name\"></volumes>\n" +
+    "<span ng-if=\"!replicaSet.spec.template.spec.volumes.length\">none</span>\n" +
+    "</div>\n" +
     "</div>\n" +
     "</div>\n" +
     "<div ng-if=\"kind === 'ReplicationController'\">\n" +
     "<div ng-if=\"deploymentConfigName\">\n" +
+    "<volumes volumes=\"replicaSet.spec.template.spec.volumes\" namespace=\"project.metadata.name\"></volumes>\n" +
     "<div ng-if=\"'deploymentconfigs' | canI : 'update'\">\n" +
     "<a ng-href=\"project/{{project.metadata.name}}/attach-pvc?kind=DeploymentConfig&name={{deploymentConfigName}}\">Add storage to {{deploymentConfigName}}</a>\n" +
     "<span class=\"action-divider\" aria-hidden=\"true\">|</span>\n" +
     "<a ng-href=\"project/{{project.metadata.name}}/add-config-volume?kind=DeploymentConfig&name={{deploymentConfigName}}\">Add config files to {{deploymentConfigName}}</a>\n" +
     "</div>\n" +
-    "<span ng-if=\"!('deploymentconfigs' | canI : 'update')\">none</span>\n" +
+    "<div ng-if=\"!replicaSet.spec.template.spec.volumes.length && !('deploymentconfigs' | canI : 'update')\">none</div>\n" +
     "</div>\n" +
     "<div ng-if=\"!deploymentConfigName\">\n" +
     "<div ng-if=\"resource | canI : 'update'\">\n" +
+    "<volumes volumes=\"replicaSet.spec.template.spec.volumes\" namespace=\"project.metadata.name\" can-remove=\"true\" remove-fn=\"removeVolume(volume)\">\n" +
+    "</volumes>\n" +
     "<a ng-href=\"project/{{project.metadata.name}}/attach-pvc?kind=ReplicationController&name={{replicaSet.metadata.name}}\">Add storage</a>\n" +
     "<span class=\"action-divider\" aria-hidden=\"true\">|</span>\n" +
     "<a ng-href=\"project/{{project.metadata.name}}/add-config-volume?kind=ReplicationController&name={{replicaSet.metadata.name}}\">Add config files</a>\n" +
     "</div>\n" +
-    "<span ng-if=\"!(resource | canI : 'update')\">none</span>\n" +
+    "<div ng-if=\"!(resource | canI : 'update')\">\n" +
+    "<volumes volumes=\"replicaSet.spec.template.spec.volumes\" namespace=\"project.metadata.name\"></volumes>\n" +
+    "<span ng-if=\"!replicaSet.spec.template.spec.volumes.length\">none</span>\n" +
+    "</div>\n" +
     "</div>\n" +
     "</div>\n" +
     "</div>\n" +
@@ -1592,7 +1608,6 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "</div>\n" +
     "\n" +
     "<div ng-repeat=\"hpa in autoscalers | orderBy : 'name'\">\n" +
-    "<h4>{{hpa.metadata.name}}</h4>\n" +
     "<hpa hpa=\"hpa\" show-scale-target=\"hpa.spec.scaleRef.kind !== 'ReplicationController'\" alerts=\"alerts\">\n" +
     "</hpa>\n" +
     "</div>\n" +
@@ -2371,11 +2386,12 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "<h3>Template</h3>\n" +
     "<pod-template pod-template=\"deploymentConfig.spec.template\" images-by-docker-reference=\"imagesByDockerReference\" builds=\"builds\" detailed=\"true\" add-health-check-url=\"{{('deploymentconfigs' | canI : 'update') ? healthCheckURL : ''}}\">\n" +
     "</pod-template>\n" +
-    "<h4>Volumes</h4>\n" +
+    "<h3>Volumes</h3>\n" +
     "<p ng-if=\"!deploymentConfig.spec.template.spec.volumes.length && !('deploymentconfigs' | canI : 'update')\">\n" +
     "none\n" +
     "</p>\n" +
-    "<volumes volumes=\"deploymentConfig.spec.template.spec.volumes\" namespace=\"project.metadata.name\"></volumes>\n" +
+    "<volumes volumes=\"deploymentConfig.spec.template.spec.volumes\" namespace=\"project.metadata.name\" can-remove=\"'deploymentconfigs' | canI : 'update'\" remove-fn=\"removeVolume(volume)\">\n" +
+    "</volumes>\n" +
     "<p ng-if=\"'deploymentconfigs' | canI : 'update'\">\n" +
     "<a ng-href=\"project/{{project.metadata.name}}/attach-pvc?kind=DeploymentConfig&name={{deploymentConfig.metadata.name}}\">Add storage</a>\n" +
     "<span class=\"action-divider\" aria-hidden=\"true\">|</span>\n" +
@@ -2401,7 +2417,6 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "</div>\n" +
     "\n" +
     "<div ng-repeat=\"hpa in autoscalers\">\n" +
-    "<h4>{{hpa.metadata.name}}</h4>\n" +
     "<hpa hpa=\"hpa\" project=\"project\" show-scale-target=\"false\" alerts=\"alerts\"></hpa>\n" +
     "</div>\n" +
     "</div>\n" +
@@ -2665,11 +2680,12 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "<pod-template pod-template=\"deployment.spec.template\" images-by-docker-reference=\"imagesByDockerReference\" builds=\"builds\" detailed=\"true\" add-health-check-url=\"{{ ({ group: 'extensions', resource: 'deployments' } | canI : 'update') ? healthCheckURL : '' }}\">\n" +
     "</pod-template>\n" +
     "<h4>Volumes</h4>\n" +
-    "<p ng-if=\"!deployment.spec.template.spec.volumes.length && !('deploymentconfigs' | canI : 'update')\">\n" +
+    "<p ng-if=\"!deployment.spec.template.spec.volumes.length && !({ group: 'extensions', resource: 'deployments' } | canI : 'update')\">\n" +
     "none\n" +
     "</p>\n" +
-    "<volumes volumes=\"deployment.spec.template.spec.volumes\" namespace=\"project.metadata.name\"></volumes>\n" +
-    "<div ng-if=\"'deploymentconfigs' | canI : 'update'\">\n" +
+    "<volumes volumes=\"deployment.spec.template.spec.volumes\" namespace=\"project.metadata.name\" can-remove=\"{ group: 'extensions', resource: 'deployments' } | canI : 'update'\" remove-fn=\"removeVolume(volume)\">\n" +
+    "</volumes>\n" +
+    "<div ng-if=\"{ group: 'extensions', resource: 'deployments' } | canI : 'update'\">\n" +
     "<a ng-href=\"project/{{project.metadata.name}}/attach-pvc?kind=Deployment&name={{deployment.metadata.name}}&group=extensions\">Add storage</a>\n" +
     "<span class=\"action-divider\" aria-hidden=\"true\">|</span>\n" +
     "<a ng-href=\"project/{{project.metadata.name}}/add-config-volume?kind=Deployment&name={{deployment.metadata.name}}&group=extensions\">Add config files</a>\n" +
@@ -2693,7 +2709,6 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "</div>\n" +
     "\n" +
     "<div ng-repeat=\"hpa in autoscalers\">\n" +
-    "<h4>{{hpa.metadata.name}}</h4>\n" +
     "<hpa hpa=\"hpa\" project=\"project\" show-scale-target=\"false\" alerts=\"alerts\"></hpa>\n" +
     "</div>\n" +
     "</div>\n" +
@@ -6489,6 +6504,16 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
 
 
   $templateCache.put('views/directives/hpa.html',
+    "<h4>\n" +
+    "{{hpa.metadata.name}}\n" +
+    "\n" +
+    "<span ng-if=\"'horizontalPodAutoscalers' | canIDoAny\" class=\"header-actions\">\n" +
+    "<a ng-if=\"{resource: 'horizontalpodautoscalers', group: 'extensions'} | canI : 'update'\" ng-href=\"project/{{hpa.metadata.namespace}}/edit/autoscaler?kind=HorizontalPodAutoscaler&group=extensions&name={{hpa.metadata.name}}\" role=\"button\">Edit</a>\n" +
+    "<span class=\"action-divider\">|</span>\n" +
+    "<delete-link ng-if=\"{resource: 'horizontalpodautoscalers', group: 'extensions'} | canI : 'delete'\" kind=\"HorizontalPodAutoscaler\" group=\"extensions\" resource-name=\"{{hpa.metadata.name}}\" project-name=\"{{hpa.metadata.namespace}}\" label=\"Remove\" alerts=\"alerts\" stay-on-current-page=\"true\">\n" +
+    "</delete-link>\n" +
+    "</span>\n" +
+    "</h4>\n" +
     "<dl class=\"dl-horizontal left\" style=\"margin-bottom: 10px\">\n" +
     "<dt ng-if-start=\"showScaleTarget && hpa.spec.scaleRef.kind && hpa.spec.scaleRef.name\">{{hpa.spec.scaleRef.kind | humanizeKind : true}}:</dt>\n" +
     "<dd ng-if-end>\n" +
@@ -6516,14 +6541,7 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "</dd>\n" +
     "<dt ng-if-start=\"hpa.status.lastScaleTime\">Last Scaled:</dt>\n" +
     "<dd ng-if-end><span am-time-ago=\"hpa.status.lastScaleTime\"></span></dd>\n" +
-    "</dl>\n" +
-    "\n" +
-    "<div ng-hide=\"!('horizontalPodAutoscalers' | canIDoAny)\">\n" +
-    "<a ng-if=\"{resource: 'horizontalpodautoscalers', group: 'extensions'} | canI : 'update'\" ng-href=\"project/{{hpa.metadata.namespace}}/edit/autoscaler?kind=HorizontalPodAutoscaler&group=extensions&name={{hpa.metadata.name}}\" role=\"button\">Edit</a>\n" +
-    "<span class=\"action-divider\">|</span>\n" +
-    "<delete-link ng-if=\"{resource: 'horizontalpodautoscalers', group: 'extensions'} | canI : 'delete'\" kind=\"HorizontalPodAutoscaler\" group=\"extensions\" resource-name=\"{{hpa.metadata.name}}\" project-name=\"{{hpa.metadata.namespace}}\" label=\"Remove\" alerts=\"alerts\" stay-on-current-page=\"true\">\n" +
-    "</delete-link>\n" +
-    "</div>"
+    "</dl>"
   );
 
 

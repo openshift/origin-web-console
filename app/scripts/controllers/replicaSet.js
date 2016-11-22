@@ -14,13 +14,15 @@ angular.module('openshiftConsole')
                         AlertMessageService,
                         BreadcrumbsService,
                         DataService,
-                        HPAService,
-                        MetricsService,
-                        ProjectsService,
                         DeploymentsService,
+                        HPAService,
                         ImageStreamResolver,
-                        Navigate,
                         Logger,
+                        MetricsService,
+                        ModalsService,
+                        Navigate,
+                        ProjectsService,
+                        StorageService,
                         keyValueEditorUtils,
                         kind) {
     var hasDC = false;
@@ -534,6 +536,42 @@ angular.module('openshiftConsole')
           }
 
           return $scope.isActive && !inProgressDeployment;
+        };
+
+        $scope.removeVolume = function(volume) {
+          var details = "This will remove the volume from the " + $filter('humanizeKind')($scope.replicaSet.kind) + ".";
+          if (volume.persistentVolumeClaim) {
+            details += " It will not delete the persistent volume claim.";
+          } else if (volume.secret) {
+            details += " It will not delete the secret.";
+          } else if (volume.configMap) {
+            details += " It will not delete the config map.";
+          }
+
+          var confirm = ModalsService.confirm({
+            message: "Remove volume " + volume.name + "?",
+            details: details,
+            okButtonText: "Remove",
+            okButtonClass: "btn-danger",
+            cancelButtonText: "Cancel"
+          });
+
+          var showError = function(e) {
+            $scope.alerts["remove-volume-error"] = {
+              type: "error",
+              message: "An error occurred removing the volume.",
+              details: $filter('getErrorDetails')(e)
+            };
+          };
+
+          var removeVolume = function() {
+            // No-op on success since the page updates.
+            StorageService
+              .removeVolume($scope.replicaSet, volume, context)
+              .then(_.noop, showError);
+          };
+
+          confirm.then(removeVolume);
         };
 
         $scope.$on('$destroy', function(){
