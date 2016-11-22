@@ -16,7 +16,7 @@
           </div>
         </div>
       </div><!-- /middle-header-->
-      <div class="middle-content gutter-top" persist-tab-state>
+      <div class="middle-content" persist-tab-state>
         <div class="container-fluid">
           <div ng-if="imageStream && !image">Loading...</div>
           <div class="row" ng-if="image">
@@ -32,7 +32,7 @@
                   </registry-image-meta>
                 </uib-tab>
                 <uib-tab heading="Config" active="selectedTab.config">
-                  <uib-tab-heading>Config</uib-tab-heading>
+                  <uib-tab-heading>Configuration</uib-tab-heading>
                   <registry-image-config image="image">
                   </registry-image-config>
                 </uib-tab>

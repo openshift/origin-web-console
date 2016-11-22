@@ -1826,7 +1826,6 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "<div class=\"resource-details\">\n" +
     "<div class=\"row\">\n" +
     "<div class=\"col-lg-6\">\n" +
-    "<h3>Configuration</h3>\n" +
     "<dl class=\"dl-horizontal left\">\n" +
     "<div>\n" +
     "<dt>Build Strategy:</dt>\n" +
@@ -2167,7 +2166,7 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "</div>\n" +
     "</div>\n" +
     "</div>\n" +
-    "<div class=\"middle-content gutter-top\">\n" +
+    "<div class=\"middle-content\">\n" +
     "<div class=\"container-fluid\">\n" +
     "<div ng-if=\"configMap\" class=\"row\">\n" +
     "<div class=\"col-sm-12\">\n" +
@@ -2223,7 +2222,7 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "<div class=\"middle-content\">\n" +
     "<div class=\"container-fluid\">\n" +
     "<div class=\"row\">\n" +
-    "<div class=\"col-md-12 gutter-top\">\n" +
+    "<div class=\"col-md-12\">\n" +
     "<div ng-if=\"!loaded\">Loading...</div>\n" +
     "<div ng-if=\"loaded\">\n" +
     "<table class=\"table table-bordered table-hover table-mobile\">\n" +
@@ -2340,10 +2339,6 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "<div ng-if=\"!loaded\">Loading...</div>\n" +
     "<div class=\"row\" ng-if=\"loaded\">\n" +
     "<div class=\"col-md-12\" ng-class=\"{ 'hide-tabs' : !deploymentConfig }\">\n" +
-    "<uib-tabset>\n" +
-    "<uib-tab active=\"selectedTab.details\">\n" +
-    "<uib-tab-heading>Details</uib-tab-heading>\n" +
-    "<div class=\"resource-details\" ng-if=\"deploymentConfig\">\n" +
     "<div ng-if=\"deploymentConfig.spec.paused\" class=\"alert alert-info animate-if\">\n" +
     "<span class=\"pficon pficon-info\" aria-hidden=\"true\"></span>\n" +
     "<strong>{{deploymentConfig.metadata.name}} is paused.</strong>\n" +
@@ -2352,6 +2347,10 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "<a href=\"\" ng-click=\"setPaused(false)\" role=\"button\">Resume deployment</a>\n" +
     "</span>\n" +
     "</div>\n" +
+    "<uib-tabset>\n" +
+    "<uib-tab active=\"selectedTab.details\">\n" +
+    "<uib-tab-heading>Details</uib-tab-heading>\n" +
+    "<div class=\"resource-details\" ng-if=\"deploymentConfig\">\n" +
     "<div class=\"row\">\n" +
     "<div class=\"col-lg-6\">\n" +
     "<h3>Configuration</h3>\n" +
@@ -2790,7 +2789,7 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "</div>\n" +
     "</div>\n" +
     "</div>\n" +
-    "<div class=\"middle-content gutter-top\" persist-tab-state>\n" +
+    "<div class=\"middle-content\" persist-tab-state>\n" +
     "<div class=\"container-fluid\">\n" +
     "<div ng-if=\"imageStream && !image\">Loading...</div>\n" +
     "<div class=\"row\" ng-if=\"image\">\n" +
@@ -2806,7 +2805,7 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "</registry-image-meta>\n" +
     "</uib-tab>\n" +
     "<uib-tab heading=\"Config\" active=\"selectedTab.config\">\n" +
-    "<uib-tab-heading>Config</uib-tab-heading>\n" +
+    "<uib-tab-heading>Configuration</uib-tab-heading>\n" +
     "<registry-image-config image=\"image\">\n" +
     "</registry-image-config>\n" +
     "</uib-tab>\n" +
@@ -2863,7 +2862,7 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "</div>\n" +
     "</div>\n" +
     "</div>\n" +
-    "<div class=\"middle-content gutter-top\">\n" +
+    "<div class=\"middle-content\">\n" +
     "<div class=\"container-fluid\">\n" +
     "<div class=\"row\" ng-if=\"imageStream\">\n" +
     "<div class=\"col-md-12\">\n" +
@@ -3016,7 +3015,7 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "<div class=\"middle-content\">\n" +
     "<div class=\"container-fluid\">\n" +
     "<div class=\"row\" ng-if=\"pvc\">\n" +
-    "<div class=\"col-md-12 gutter-top\">\n" +
+    "<div class=\"col-md-12\">\n" +
     "<div class=\"resource-details\">\n" +
     "<dl class=\"dl-horizontal left\">\n" +
     "<dt>Status:</dt>\n" +
@@ -3144,7 +3143,7 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "</h2>\n" +
     "</div>\n" +
     "<div ng-if=\"!noContainersYet\">\n" +
-    "<div class=\"mar-bottom-md\">\n" +
+    "<div class=\"mar-bottom-md mar-top-xl\">\n" +
     "<span class=\"pficon pficon-info\" aria-hidden=\"true\"></span>\n" +
     "When you navigate away from this pod, any open terminal connections will be closed. This will kill any foreground processes you started from the terminal.\n" +
     "</div>\n" +
@@ -3347,7 +3346,7 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "</div>\n" +
     "</div>\n" +
     "</div>\n" +
-    "<div class=\"middle-content gutter-top\">\n" +
+    "<div class=\"middle-content\">\n" +
     "<div class=\"container-fluid\">\n" +
     "<div class=\"row\" ng-if=\"route\">\n" +
     "<div class=\"col-sm-12\">\n" +
@@ -3529,7 +3528,7 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "<div class=\"middle-content\">\n" +
     "<div class=\"container-fluid\">\n" +
     "<div class=\"row\">\n" +
-    "<div class=\"col-md-12 gutter-top\">\n" +
+    "<div class=\"col-md-12\">\n" +
     "<table class=\"table table-bordered table-hover table-mobile\">\n" +
     "<thead>\n" +
     "<tr>\n" +
@@ -3630,7 +3629,7 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "</div>\n" +
     "</div>\n" +
     "</div>\n" +
-    "<div class=\"middle-content gutter-top\">\n" +
+    "<div class=\"middle-content\">\n" +
     "<div class=\"container-fluid\">\n" +
     "<div ng-if=\"secret\" class=\"row\">\n" +
     "<div class=\"col-sm-12\">\n" +
@@ -3877,7 +3876,7 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "<div class=\"middle-content\">\n" +
     "<div class=\"container-fluid\">\n" +
     "<div class=\"row\">\n" +
-    "<div class=\"col-md-12 gutter-top\">\n" +
+    "<div class=\"col-md-12\">\n" +
     "<table class=\"table table-bordered table-hover table-mobile\">\n" +
     "<thead>\n" +
     "<tr>\n" +
@@ -4954,7 +4953,7 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "<div class=\"middle-content\">\n" +
     "<div class=\"container-fluid\">\n" +
     "<div class=\"row\">\n" +
-    "<div class=\"col-md-12\" ng-class=\"{ 'gutter-top': !(deployments | hashSize) && !(replicaSets | hashSize) }\">\n" +
+    "<div class=\"col-md-12\">\n" +
     "<h3 ng-if=\"(deployments | hashSize) || (replicaSets | hashSize)\">Deployment Configurations</h3>\n" +
     "<table class=\"table table-bordered table-hover table-mobile\">\n" +
     "<thead>\n" +
@@ -5515,7 +5514,7 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
 
 
   $templateCache.put('views/directives/annotations.html',
-    "<div class=\"gutter-top-bottom\">\n" +
+    "<div class=\"gutter-bottom\">\n" +
     "<p>\n" +
     "<a href=\"\" ng-click=\"toggleAnnotations()\" ng-if=\"!expandAnnotations\">Show annotations</a>\n" +
     "<a href=\"\" ng-click=\"toggleAnnotations()\" ng-if=\"expandAnnotations\">Hide annotations</a>\n" +
@@ -7653,7 +7652,7 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
 
 
   $templateCache.put('views/directives/pod-metrics.html',
-    "<div class=\"metrics\" ng-if=\"pod || deployment\">\n" +
+    "<div class=\"metrics mar-top-xl\" ng-if=\"pod || deployment\">\n" +
     "<div ng-show=\"!metricsError\" class=\"metrics-options\">\n" +
     "\n" +
     "<div ng-if=\"pod.spec.containers.length\" class=\"form-group\">\n" +
@@ -8860,7 +8859,7 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "<div class=\"middle-content\">\n" +
     "<div class=\"container-fluid\">\n" +
     "<div class=\"row\">\n" +
-    "<div class=\"col-md-12 gutter-top\" ng-if=\"projectContext\">\n" +
+    "<div class=\"col-md-12\" ng-if=\"projectContext\">\n" +
     "<events project-context=\"projectContext\" ng-if=\"projectContext\"></events>\n" +
     "</div>\n" +
     "</div>\n" +
@@ -8894,7 +8893,7 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "<div class=\"middle-content\">\n" +
     "<div class=\"container-fluid\">\n" +
     "<div class=\"row\">\n" +
-    "<div class=\"col-md-12 gutter-top\">\n" +
+    "<div class=\"col-md-12\">\n" +
     "<table class=\"table table-bordered table-hover table-mobile\">\n" +
     "<thead>\n" +
     "<tr>\n" +
@@ -9858,7 +9857,7 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "<div class=\"middle-content\">\n" +
     "<div class=\"container-fluid\">\n" +
     "<div class=\"row\">\n" +
-    "<div class=\"col-md-12 gutter-top\">\n" +
+    "<div class=\"col-md-12\">\n" +
     "<table class=\"table table-bordered table-mobile\" ng-class=\"{ 'table-empty': (resources | hashSize) === 0 }\">\n" +
     "<thead>\n" +
     "<tr>\n" +
@@ -10444,14 +10443,20 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "\n" +
     "<div class=\"middle-section\">\n" +
     "<div class=\"middle-container\">\n" +
+    "<div class=\"middle-header\">\n" +
+    "<div class=\"container-fluid\">\n" +
+    "<div class=\"page-header page-header-bleed-right page-header-bleed-left\">\n" +
+    "<h1>\n" +
+    "Pipelines\n" +
+    "</h1>\n" +
+    "<alerts alerts=\"alerts\"></alerts>\n" +
+    "</div>\n" +
+    "</div>\n" +
+    "</div>\n" +
     "<div class=\"middle-content pipelines-page\">\n" +
     "<div class=\"container-fluid\">\n" +
     "<div class=\"row\">\n" +
     "<div class=\"col-md-12\">\n" +
-    "<div class=\"page-header page-header-bleed-right page-header-bleed-left\">\n" +
-    "<h1 class=\"mar-top-none\">Pipelines</h1>\n" +
-    "</div>\n" +
-    "<alerts alerts=\"alerts\"></alerts>\n" +
     "<div ng-if=\"!(buildConfigs | hashSize)\" class=\"mar-top-lg\">\n" +
     "<div ng-if=\"!buildConfigsLoaded\">\n" +
     "Loading...\n" +
@@ -10480,7 +10485,7 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "Start Pipeline\n" +
     "</button>\n" +
     "</div>\n" +
-    "<h2>\n" +
+    "<h2 class=\"mar-top-none\">\n" +
     "<a ng-href=\"{{buildConfig | navigateResourceURL}}\">{{buildConfigName}}</a>\n" +
     "<small>created <span am-time-ago=\"buildConfig.metadata.creationTimestamp\"></span></small>\n" +
     "</h2>\n" +
@@ -10556,7 +10561,7 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "<div class=\"middle-content\">\n" +
     "<div class=\"container-fluid\">\n" +
     "<div class=\"row\">\n" +
-    "<div class=\"col-md-12 gutter-top\">\n" +
+    "<div class=\"col-md-12\">\n" +
     "<pods-table pods=\"pods\" empty-message=\"emptyMessage\"></pods-table>\n" +
     "</div>\n" +
     "</div>\n" +
@@ -10604,7 +10609,7 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "<div class=\"middle-content surface-shaded\">\n" +
     "<div class=\"container-fluid surface-shaded\">\n" +
     "<div class=\"row\">\n" +
-    "<div class=\"col-md-12 gutter-top\">\n" +
+    "<div class=\"col-md-12\">\n" +
     "\n" +
     "<div ng-if=\"(services | hashSize) === 0 && (monopodsByService[''] | hashSize) === 0 && (deploymentsByServiceByDeploymentConfig[''] | hashSize) === 0\">\n" +
     "\n" +
@@ -11174,7 +11179,7 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "<div ng-if=\"!loaded\" class=\"mar-top-xl\">Loading...</div>\n" +
     "<div ng-if=\"loaded\" class=\"row\">\n" +
     "<div class=\"col-md-12\">\n" +
-    "<h3>Source Secrets</h3>\n" +
+    "<h2>Source Secrets</h2>\n" +
     "<table class=\"table table-bordered table-hover table-mobile secrets-table\">\n" +
     "<thead>\n" +
     "<tr>\n" +
@@ -11203,7 +11208,7 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "</tbody>\n" +
     "</table>\n" +
     "<div ng-if=\"secretsByType.images.length !== 0\">\n" +
-    "<h3>Image Secrets</h3>\n" +
+    "<h2>Image Secrets</h2>\n" +
     "<table class=\"table table-bordered table-hover table-mobile secrets-table\">\n" +
     "<thead>\n" +
     "<tr>\n" +
@@ -11228,7 +11233,7 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "</table>\n" +
     "</div>\n" +
     "<div ng-if=\"secretsByType.other.length !== 0\">\n" +
-    "<h3>Other Secrets</h3>\n" +
+    "<h2>Other Secrets</h2>\n" +
     "<table class=\"table table-bordered table-hover table-mobile secrets-table\">\n" +
     "<thead>\n" +
     "<tr>\n" +
@@ -11284,7 +11289,7 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "<div class=\"middle-content\">\n" +
     "<div class=\"container-fluid\">\n" +
     "<div class=\"row\">\n" +
-    "<div class=\"col-md-12 gutter-top\">\n" +
+    "<div class=\"col-md-12\">\n" +
     "<table class=\"table table-bordered table-hover table-mobile\">\n" +
     "<thead>\n" +
     "<tr>\n" +
