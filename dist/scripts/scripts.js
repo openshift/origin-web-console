@@ -417,7 +417,8 @@ templateUrl:"views/create-secret.html",
 controller:"CreateSecretController"
 }).when("/project/:project/browse/config-maps", {
 templateUrl:"views/browse/config-maps.html",
-controller:"ConfigMapsController"
+controller:"ConfigMapsController",
+reloadOnSearch:!1
 }).when("/project/:project/browse/config-maps/:configMap", {
 templateUrl:"views/browse/config-map.html",
 controller:"ConfigMapController"
