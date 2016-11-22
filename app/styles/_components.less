@@ -281,12 +281,28 @@ code.probe-command {
 }
 
 .pod-donut {
+  .c3-defocused {
+    // Removing hover opacity change which caused the "c3-Running" state to look very similar to "c3-Not-Ready" state
+    // https://github.com/openshift/origin/issues/9253
+    opacity: 1 !important;
+  }
+  .c3-tooltip-container {
+    top: -27px !important;
+    left: 50% !important;
+    transform: translateX(-50%);
+    // prevent text wrap
+    white-space: nowrap;
+  }
   // Give an empty pod donut chart a light gray outline.
   path.c3-arc-Empty {
     stroke: #d1d1d1;
     // Override the style set in JavaScript since you can't click or hover
     // on the empty chart.
     cursor: inherit !important;
+  }
+  .c3-tooltip-name--Empty .name {
+    // hide tooltip text 'Empty'
+    display:none;
   }
 }
 
