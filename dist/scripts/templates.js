@@ -61,6 +61,13 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
   );
 
 
+  $templateCache.put('views/_cannot-create-project.html',
+    "<span ng-if=\"!newProjectMessage\">A cluster admin can create a project for you by running the command\n" +
+    "<code>oadm new-project &lt;projectname&gt; --admin={{user.metadata.name || '&lt;YourUsername&gt;'}}</code></span>\n" +
+    "<span ng-if=\"newProjectMessage\" ng-bind-html=\"newProjectMessage | linky : '_blank'\" class=\"projects-instructions-link\"></span>"
+  );
+
+
   $templateCache.put('views/_compute-resource.html',
     "<ng-form name=\"form\">\n" +
     "<fieldset class=\"form-inline compute-resource\">\n" +
@@ -4340,6 +4347,81 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
   );
 
 
+  $templateCache.put('views/create-from-url.html',
+    "<default-header class=\"top-header\"></default-header>\n" +
+    "<div class=\"wrap no-sidebar\">\n" +
+    "<div class=\"sidebar-left collapse navbar-collapse navbar-collapse-2\">\n" +
+    "<navbar-utility-mobile></navbar-utility-mobile>\n" +
+    "</div>\n" +
+    "<div class=\"middle surface-shaded\">\n" +
+    "\n" +
+    "<div class=\"middle-section\">\n" +
+    "<div class=\"middle-container\">\n" +
+    "<div class=\"middle-content\">\n" +
+    "<div class=\"container surface-shaded gutter-top\">\n" +
+    "<div class=\"row\">\n" +
+    "<div class=\"col-md-12\">\n" +
+    "<div ng-if=\"!loaded\">Loading...</div>\n" +
+    "<div ng-if=\"loaded\">\n" +
+    "<alerts alerts=\"alerts\" hide-close-button=\"true\"></alerts>\n" +
+    "<osc-image-summary resource=\"resource\"></osc-image-summary>\n" +
+    "<p ng-if=\"validationPassed && createDetails.sourceURI\">Source code from <a href=\"{{createDetails.sourceURI}}\">{{createDetails.sourceURI}}</a> will be built and deployed unless otherwise specified in the next step.</p>\n" +
+    "<div ng-if=\"validationPassed\">\n" +
+    "<div ng-if=\"noProjects && canCreateProject\">\n" +
+    "<h2>Create a New Project</h2>\n" +
+    "<create-project alerts=\"alerts\" submit-button-label=\"Next\" redirect-action=\"createWithProject\"></create-project>\n" +
+    "</div>\n" +
+    "<div ng-if=\"!noProjects && !canCreateProject\">\n" +
+    "<h2>Choose a Project</h2>\n" +
+    "<ui-select ng-model=\"selected.project\">\n" +
+    "<ui-select-match placeholder=\"Project name\">\n" +
+    "{{$select.selected | uniqueDisplayName : projects}}\n" +
+    "</ui-select-match>\n" +
+    "<ui-select-choices repeat=\"project in projects | searchProjects : $select.search\">\n" +
+    "<div ng-bind-html=\"project | uniqueDisplayName : projects | highlight : $select.search\"></div>\n" +
+    "</ui-select-choices>\n" +
+    "</ui-select>\n" +
+    "</div>\n" +
+    "<div ng-if=\"!noProjects && canCreateProject\">\n" +
+    "<uib-tabset>\n" +
+    "<uib-tab>\n" +
+    "<uib-tab-heading>Choose Existing Project</uib-tab-heading>\n" +
+    "<ui-select ng-model=\"selected.project\">\n" +
+    "<ui-select-match placeholder=\"Project name\">\n" +
+    "{{$select.selected | uniqueDisplayName : projects}}\n" +
+    "</ui-select-match>\n" +
+    "<ui-select-choices repeat=\"project in projects | searchProjects : $select.search\">\n" +
+    "<div ng-bind-html=\"project | uniqueDisplayName : projects | highlight : $select.search\"></div>\n" +
+    "</ui-select-choices>\n" +
+    "</ui-select>\n" +
+    "<div class=\"button-group mar-bottom-lg mar-top-lg\">\n" +
+    "<button type=\"submit\" class=\"btn btn-primary btn-lg\" ng-click=\"createWithProject()\" ng-disabled=\"!(selected.project)\" value=\"\">Next</button>\n" +
+    "<a class=\"btn btn-default btn-lg\" href=\"#\" back>Cancel</a>\n" +
+    "</div>\n" +
+    "</uib-tab>\n" +
+    "<uib-tab>\n" +
+    "<uib-tab-heading>Create a New Project</uib-tab-heading>\n" +
+    "<create-project alerts=\"alerts\" submit-button-label=\"Next\" redirect-action=\"createWithProject\"></create-project>\n" +
+    "</uib-tab>\n" +
+    "</uib-tabset>\n" +
+    "</div>\n" +
+    "<p ng-if=\"!canCreateProject\" class=\"mar-top-md\">\n" +
+    "<span ng-if=\"noProjects\">A project is required in order to complete the installation.</span>\n" +
+    "<ng-include src=\"'views/_cannot-create-project.html'\"></ng-include>\n" +
+    "</p>\n" +
+    "</div>\n" +
+    "</div>\n" +
+    "</div>\n" +
+    "</div>\n" +
+    "</div>\n" +
+    "</div>\n" +
+    "</div>\n" +
+    "</div>\n" +
+    "</div>\n" +
+    "</div>"
+  );
+
+
   $templateCache.put('views/create-persistent-volume-claim.html',
     "<default-header class=\"top-header\"></default-header>\n" +
     "<div class=\"wrap no-sidebar\">\n" +
@@ -4397,46 +4479,7 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "<div class=\"col-md-12\">\n" +
     "<h1>New Project</h1>\n" +
     "<alerts alerts=\"alerts\"></alerts>\n" +
-    "<form name=\"createProjectForm\">\n" +
-    "<fieldset ng-disabled=\"disableInputs\">\n" +
-    "<div class=\"form-group\">\n" +
-    "<label for=\"name\" class=\"required\">Name</label>\n" +
-    "<span ng-class=\"{'has-error': (createProjectForm.name.$error.pattern && createProjectForm.name.$touched) || nameTaken}\">\n" +
-    "<input class=\"form-control input-lg\" name=\"name\" id=\"name\" placeholder=\"my-project\" type=\"text\" required take-focus minlength=\"2\" maxlength=\"63\" pattern=\"[a-z0-9]([-a-z0-9]*[a-z0-9])?\" aria-describedby=\"nameHelp\" ng-model=\"name\" ng-model-options=\"{ updateOn: 'default blur' }\" ng-change=\"nameTaken = false\" autocorrect=\"off\" autocapitalize=\"off\" spellcheck=\"false\">\n" +
-    "</span>\n" +
-    "<div>\n" +
-    "<span class=\"help-block\">A unique name for the project.</span>\n" +
-    "</div>\n" +
-    "<div class=\"has-error\">\n" +
-    "<span id=\"nameHelp\" class=\"help-block\" ng-if=\"createProjectForm.name.$error.minlength && createProjectForm.name.$touched\">\n" +
-    "Name must have at least two characters.\n" +
-    "</span>\n" +
-    "</div>\n" +
-    "<div class=\"has-error\">\n" +
-    "<span id=\"nameHelp\" class=\"help-block\" ng-if=\"createProjectForm.name.$error.pattern && createProjectForm.name.$touched\">\n" +
-    "Project names may only contain lower-case letters, numbers, and dashes. They may not start or end with a dash.\n" +
-    "</span>\n" +
-    "</div>\n" +
-    "<div class=\"has-error\">\n" +
-    "<span class=\"help-block\" ng-if=\"nameTaken\">\n" +
-    "This name is already in use. Please choose a different name.\n" +
-    "</span>\n" +
-    "</div>\n" +
-    "</div>\n" +
-    "<div class=\"form-group\">\n" +
-    "<label for=\"displayName\">Display Name</label>\n" +
-    "<input class=\"form-control input-lg\" name=\"displayName\" id=\"displayName\" placeholder=\"My Project\" type=\"text\" ng-model=\"displayName\">\n" +
-    "</div>\n" +
-    "<div class=\"form-group\">\n" +
-    "<label for=\"description\">Description</label>\n" +
-    "<textarea class=\"form-control input-lg\" name=\"description\" id=\"description\" placeholder=\"A short description.\" ng-model=\"description\"></textarea>\n" +
-    "</div>\n" +
-    "<div class=\"button-group\">\n" +
-    "<button type=\"submit\" class=\"btn btn-primary btn-lg\" ng-click=\"createProject()\" ng-disabled=\"createProjectForm.$invalid || nameTaken || disableInputs\" value=\"\">Create</button>\n" +
-    "<a class=\"btn btn-default btn-lg\" href=\"#\" back>Cancel</a>\n" +
-    "</div>\n" +
-    "</fieldset>\n" +
-    "</form>\n" +
+    "<create-project alerts=\"alerts\"></create-project>\n" +
     "</div>\n" +
     "</div>\n" +
     "</div>\n" +
@@ -4676,7 +4719,7 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "\n" +
     "<input class=\"form-control\" id=\"sourceUrl\" name=\"sourceUrl\" type=\"text\" required aria-describedby=\"from_source_help\" ng-model=\"buildConfig.sourceUrl\" autocorrect=\"off\" autocapitalize=\"off\" spellcheck=\"false\">\n" +
     "</div>\n" +
-    "<div ng-if=\"image.metadata.annotations.sampleRepo\" class=\"help-block\">\n" +
+    "<div ng-if=\"!(sourceURIinParams) && image.metadata.annotations.sampleRepo\" class=\"help-block\">\n" +
     "Sample repository for {{imageName}}: {{image.metadata.annotations.sampleRepo}}<span ng-if=\"image.metadata.annotations.sampleRef\">, ref: {{image.metadata.annotations.sampleRef}}</span><span ng-if=\"image.metadata.annotations.sampleContextDir\">, context dir: {{image.metadata.annotations.sampleContextDir}}</span>\n" +
     "<a href=\"\" ng-click=\"fillSampleRepo()\" style=\"margin-left: 3px\" class=\"nowrap\">Try It<i class=\"fa fa-level-up\" style=\"margin-left: 3px; font-size: 17px\"></i></a>\n" +
     "</div>\n" +
@@ -5298,6 +5341,50 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "<a ng-show=\"inputText\" data-clipboard-text=\"{{clipboardText}}\" href=\"\" ng-disabled=\"isDisabled\" data-toggle=\"tooltip\" title=\"Copy to clipboard\" role=\"button\" class=\"btn btn-default\"><i class=\"fa fa-clipboard\"/></a>\n" +
     "</span>\n" +
     "</div>"
+  );
+
+
+  $templateCache.put('views/directives/_create-project-form.html',
+    "<form name=\"createProjectForm\">\n" +
+    "<fieldset ng-disabled=\"disableInputs\">\n" +
+    "<div class=\"form-group\">\n" +
+    "<label for=\"name\" class=\"required\">Name</label>\n" +
+    "<span ng-class=\"{'has-error': (createProjectForm.name.$error.pattern && createProjectForm.name.$touched) || nameTaken}\">\n" +
+    "<input class=\"form-control input-lg\" name=\"name\" id=\"name\" placeholder=\"my-project\" type=\"text\" required take-focus minlength=\"2\" maxlength=\"63\" pattern=\"[a-z0-9]([-a-z0-9]*[a-z0-9])?\" aria-describedby=\"nameHelp\" ng-model=\"name\" ng-model-options=\"{ updateOn: 'default blur' }\" ng-change=\"nameTaken = false\" autocorrect=\"off\" autocapitalize=\"off\" spellcheck=\"false\">\n" +
+    "</span>\n" +
+    "<div>\n" +
+    "<span class=\"help-block\">A unique name for the project.</span>\n" +
+    "</div>\n" +
+    "<div class=\"has-error\">\n" +
+    "<span id=\"nameHelp\" class=\"help-block\" ng-if=\"createProjectForm.name.$error.minlength && createProjectForm.name.$touched\">\n" +
+    "Name must have at least two characters.\n" +
+    "</span>\n" +
+    "</div>\n" +
+    "<div class=\"has-error\">\n" +
+    "<span id=\"nameHelp\" class=\"help-block\" ng-if=\"createProjectForm.name.$error.pattern && createProjectForm.name.$touched\">\n" +
+    "Project names may only contain lower-case letters, numbers, and dashes. They may not start or end with a dash.\n" +
+    "</span>\n" +
+    "</div>\n" +
+    "<div class=\"has-error\">\n" +
+    "<span class=\"help-block\" ng-if=\"nameTaken\">\n" +
+    "This name is already in use. Please choose a different name.\n" +
+    "</span>\n" +
+    "</div>\n" +
+    "</div>\n" +
+    "<div class=\"form-group\">\n" +
+    "<label for=\"displayName\">Display Name</label>\n" +
+    "<input class=\"form-control input-lg\" name=\"displayName\" id=\"displayName\" placeholder=\"My Project\" type=\"text\" ng-model=\"displayName\">\n" +
+    "</div>\n" +
+    "<div class=\"form-group\">\n" +
+    "<label for=\"description\">Description</label>\n" +
+    "<textarea class=\"form-control input-lg\" name=\"description\" id=\"description\" placeholder=\"A short description.\" ng-model=\"description\"></textarea>\n" +
+    "</div>\n" +
+    "<div class=\"button-group\">\n" +
+    "<button type=\"submit\" class=\"btn btn-primary btn-lg\" ng-click=\"createProject()\" ng-disabled=\"createProjectForm.$invalid || nameTaken || disableInputs\" value=\"\">Create</button>\n" +
+    "<a class=\"btn btn-default btn-lg\" href=\"#\" back>Cancel</a>\n" +
+    "</div>\n" +
+    "</fieldset>\n" +
+    "</form>"
   );
 
 
@@ -9913,6 +10000,7 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "{{ emptyMessage }}\n" +
     "</div>\n" +
     "<div class=\"osc-form\" ng-show=\"template\">\n" +
+    "<alerts alerts=\"alertsTop\" hide-close-button=\"true\"></alerts>\n" +
     "<div class=\"row\">\n" +
     "<div class=\"col-md-2 icon hidden-sm hidden-xs\">\n" +
     "<custom-icon resource=\"template\" kind=\"template\"></custom-icon>\n" +
@@ -11033,11 +11121,7 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "</div>\n" +
     "</div>\n" +
     "</div>\n" +
-    "<p class=\"projects-instructions\" ng-if=\"canCreate === false\">\n" +
-    "<span ng-if=\"!newProjectMessage\">A cluster admin can create a project for you by running the command\n" +
-    "<code>oadm new-project &lt;projectname&gt; --admin={{user.metadata.name || '&lt;YourUsername&gt;'}}</code></span>\n" +
-    "<span ng-if=\"newProjectMessage\" ng-bind-html=\"newProjectMessage | linky : '_blank'\" class=\"projects-instructions-link\"></span>\n" +
-    "</p>\n" +
+    "<p class=\"projects-instructions\" ng-if=\"canCreate === false\" ng-include=\"'views/_cannot-create-project.html'\"></p>\n" +
     "</div>\n" +
     "</div>\n" +
     "<div ng-if=\"showGetStarted\">\n" +
@@ -11049,11 +11133,7 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "</p>\n" +
     "<a ng-if=\"canCreate\" href=\"create-project\" class=\"btn btn-lg btn-primary\">New Project</a>\n" +
     "<p>To learn more, visit the OpenShift <a target=\"_blank\" ng-href=\"{{'' | helpLink}}\">documentation</a>.</p>\n" +
-    "<p class=\"projects-instructions\" ng-if=\"canCreate === false\">\n" +
-    "<span ng-if=\"!newProjectMessage\">A cluster admin can create a project for you by running the command<br>\n" +
-    "<code>oadm new-project &lt;projectname&gt; --admin={{user.metadata.name || '&lt;YourUsername&gt;'}}</code></span>\n" +
-    "<span ng-if=\"newProjectMessage\" ng-bind-html=\"newProjectMessage | linky : '_blank'\" class=\"projects-instructions-link\"></span>\n" +
-    "</p>\n" +
+    "<p class=\"projects-instructions\" ng-if=\"canCreate === false\" ng-include=\"'views/_cannot-create-project.html'\"></p>\n" +
     "</div>\n" +
     "</div>\n" +
     "</div>\n" +

@@ -20,17 +20,17 @@ angular.module("openshiftConsole")
     $scope.showParamsTable = false;
 
     $scope.projectName = $routeParams.project;
-    var imageName = $routeParams.imageName;
+    var imageName = $routeParams.imageStream;
     var imageTag = $routeParams.imageTag;
     var namespace = $routeParams.namespace;
     $scope.fromSampleRepo = $routeParams.fromSample;
 
-    var name = $routeParams.name;
+    var template = $routeParams.template;
     var nameLink = "";
     if (creatingFromImage()) {
       nameLink = "project/" + $scope.projectName + "/create/fromimage?imageName=" + imageName + "&imageTag=" + imageTag + "&namespace=" + namespace + "&name=" + name;
     } else if (creatingFromTemplate()) {
-      nameLink = "project/" + $scope.projectName + "/create/fromtemplate?name=" + name + "&namespace=" + namespace;
+      nameLink = "project/" + $scope.projectName + "/create/fromtemplate?template=" + template + "&namespace=" + namespace;
     }
 
     $scope.breadcrumbs = [

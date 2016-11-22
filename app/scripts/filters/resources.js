@@ -121,12 +121,23 @@ angular.module('openshiftConsole')
       return nameCount;
     }
     return function (resource, projects){
+      if (!resource) {
+        return '';
+      }
       var displayName = displayNameFilter(resource);
       var name = resource.metadata.name;
       if (displayName !== name && countNames(projects)[displayName] > 1 ){
         return displayName + ' (' + name + ')';
       }
       return displayName;
+    };
+  })
+  .filter('searchProjects', function(annotationNameFilter) {
+    return function(projects, text) {
+      return _.filter(projects, function(project) {
+        return _.includes(project.metadata.name, text) ||
+                _.includes(project.metadata.annotations[annotationNameFilter('displayName')], text);
+      });
     };
   })
   .filter('tags', function(annotationFilter) {
@@ -365,7 +376,7 @@ angular.module('openshiftConsole')
       if(omitPath) {
         return label;
       }
-      
+
       if (route.spec.path) {
         label += route.spec.path;
       }
@@ -620,30 +631,14 @@ angular.module('openshiftConsole')
       return createURI.toString();
     };
   })
-  .filter('createFromImageURL', function(displayNameFilter) {
-    return function(imageStream, imageTag, projectName) {
-      var createURI = URI.expand("project/{project}/create/fromimage{?q*}", {
-        project: projectName,
-        q: {
-          imageName: imageStream.metadata.name,
-          imageTag: imageTag,
-          namespace: imageStream.metadata.namespace,
-          displayName: displayNameFilter(imageStream)
-        }
-      });
-      return createURI.toString();
+  .filter('createFromImageURL', function(Navigate) {
+    return function(imageStream, imageTag, projectName, queryParams) {
+      return Navigate.createFromImageURL(imageStream, imageTag, projectName, queryParams);
     };
   })
-  .filter('createFromTemplateURL', function() {
-    return function(template, projectName) {
-      var createURI = URI.expand("project/{project}/create/fromtemplate{?q*}", {
-        project: projectName,
-        q: {
-          name: template.metadata.name,
-          namespace: template.metadata.namespace
-        }
-      });
-      return createURI.toString();
+  .filter('createFromTemplateURL', function(Navigate) {
+    return function(template, projectName, queryParams) {
+      return Navigate.createFromTemplateURL(template, projectName, queryParams);
     };
   })
   .filter('failureObjectName', function() {

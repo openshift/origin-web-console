@@ -78,6 +78,10 @@ window.OPENSHIFT_CONSTANTS = {
     namespace: "openshift"
   },
 
+  // only resources from the namespaces listed below can be utilized with create from url (/create)
+  // 'openshift' should always be included
+  CREATE_FROM_URL_WHITELIST: ['openshift'],
+
   // href's will be prefixed with /project/{{projectName}} unless they are absolute URLs
   PROJECT_NAVIGATION: [
     {

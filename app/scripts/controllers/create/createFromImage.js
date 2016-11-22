@@ -29,7 +29,7 @@ angular.module("openshiftConsole")
 
     $scope.projectName = $routeParams.project;
     $scope.sourceURLPattern = SOURCE_URL_PATTERN;
-    var imageName = $routeParams.imageName;
+    var imageName = $routeParams.imageStream;
 
     if(!imageName){
       Navigate.toErrorPage("Cannot create from source: a base image was not specified");
@@ -68,9 +68,13 @@ angular.module("openshiftConsole")
         $scope.project = project;
         // Update project breadcrumb with display name.
         $scope.breadcrumbs[0].title = $filter('displayName')(project);
+        if($routeParams.sourceURI) {
+          $scope.sourceURIinParams = true;
+        }
         function initAndValidate(scope){
 
           scope.emptyMessage = "Loading...";
+          scope.name = $routeParams.name;
           scope.imageName = imageName;
           scope.imageTag = $routeParams.imageTag;
           scope.namespace = $routeParams.namespace;
@@ -80,7 +84,10 @@ angular.module("openshiftConsole")
             buildOnConfigChange: true,
             secrets: {
               gitSecret: [{name: ""}]
-            }
+            },
+            sourceUrl: $routeParams.sourceURI,
+            gitRef: $routeParams.sourceRef,
+            contextDir: $routeParams.contextDir
           };
           scope.buildConfigEnvVars = [];
           scope.deploymentConfig = {

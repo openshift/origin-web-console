@@ -88,7 +88,7 @@
                                     autocapitalize="off"
                                     spellcheck="false">
                                 </div>
-                                <div ng-if="image.metadata.annotations.sampleRepo" class="help-block">
+                                <div ng-if="!(sourceURIinParams) && image.metadata.annotations.sampleRepo" class="help-block">
                                   Sample repository for {{imageName}}: {{image.metadata.annotations.sampleRepo}}<span ng-if="image.metadata.annotations.sampleRef">,
                                     ref: {{image.metadata.annotations.sampleRef}}</span><span ng-if="image.metadata.annotations.sampleContextDir">,
                                     context dir: {{image.metadata.annotations.sampleContextDir}}</span>

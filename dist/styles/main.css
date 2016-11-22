@@ -5154,7 +5154,8 @@ kubernetes-topology-graph{height:700px}
 }
 .settings-item{margin:4px 8px 4px 0}
 .hide-if-empty:empty{display:none!important}
-.appended-icon{display:inline-block;white-space:nowrap}
+.appended-icon,.empty-state-message .projects-instructions code{display:inline-block}
+.appended-icon{white-space:nowrap}
 .donut-title-med-pf{font-size:22.5px;font-weight:300}
 .col-md-12>.alerts:first-child{margin-top:20px}
 .project-actions{margin:20px 0 0}

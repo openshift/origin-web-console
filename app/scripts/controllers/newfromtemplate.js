@@ -31,8 +31,7 @@ angular.module('openshiftConsole')
     keyValueEditorUtils,
     Constants) {
 
-
-    var name = $routeParams.name;
+    var name = $routeParams.template;
 
     // If the namespace is not defined, that indicates that the processed Template should be obtained from the 'CachedTemplateService'
     var namespace = $routeParams.namespace || "";
@@ -44,6 +43,7 @@ angular.module('openshiftConsole')
 
     $scope.emptyMessage = "Loading...";
     $scope.alerts = {};
+    $scope.alertsTop = {};
     $scope.projectName = $routeParams.project;
     $scope.projectPromise = $.Deferred();
     $scope.labels = [];
@@ -79,6 +79,18 @@ angular.module('openshiftConsole')
     var dcContainers = $parse('spec.template.spec.containers');
     var builderImage = $parse('spec.strategy.sourceStrategy.from || spec.strategy.dockerStrategy.from || spec.strategy.customStrategy.from');
     var outputImage = $parse('spec.output.to');
+
+    var getValidTemplateParamsMap = function () {
+      try {
+        return JSON.parse($routeParams.templateParamsMap);
+      }
+      catch (e) {
+        $scope.alertsTop.invalidTemplateParams = {
+          type: "error",
+          message: "The templateParamsMap is not valid JSON. " + e
+        };
+      }
+    };
 
     ProjectsService
       .get($routeParams.project)
@@ -355,6 +367,15 @@ angular.module('openshiftConsole')
           _.each($scope.template.parameters, function(parameter) {
             $scope.parameterDisplayNames[parameter.name] = parameter.displayName || parameter.name;
           });
+
+          if($routeParams.templateParamsMap) {
+            var templateParams = getValidTemplateParamsMap();
+            _.each($scope.template.parameters, function(parameter) {
+              if (templateParams[parameter.name]) {
+                parameter.value = templateParams[parameter.name];
+              }
+            });
+          }
 
           findTemplateImages($scope.template);
           var imageUsesParameters = function(image) {
