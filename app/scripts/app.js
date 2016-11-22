@@ -319,6 +319,10 @@ angular
         templateUrl: 'views/attach-pvc.html',
         controller: 'AttachPVCController'
       })
+      .when('/project/:project/add-config-volume', {
+        templateUrl: 'views/add-config-volume.html',
+        controller: 'AddConfigVolumeController'
+      })
       .when('/project/:project/create', {
         templateUrl: 'views/create.html',
         controller: 'CreateController',

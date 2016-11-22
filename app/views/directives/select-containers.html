@@ -1,0 +1,23 @@
+<ng-form name="forms.containerSelect">
+  <div class="checkbox" ng-repeat="container in template.spec.containers">
+    <label class="truncate">
+      <input
+          type="checkbox"
+          ng-model="containers[container.name]"
+          ng-required="required && !containerSelected">
+      <b>{{container.name}}</b>
+      <span class="hidden-xs">
+        from image
+        <i ng-attr-title="{{container.image}}">{{container.image}}</i>
+      </span>
+    </label>
+  </div>
+  <div ng-if="helpText" class="help-block">
+    {{helpText}}
+  </div>
+  <div class="has-error" ng-if="required && forms.containerSelect.$dirty && !containerSelected">
+    <span class="help-block">
+      You must select at least one container.
+    </span>
+  </div>
+</ng-form>

@@ -1,3 +1,22 @@
+<h4>
+  {{hpa.metadata.name}}
+  <!-- HPA actions -->
+  <span ng-if="'horizontalPodAutoscalers' | canIDoAny" class="header-actions">
+    <a ng-if="{resource: 'horizontalpodautoscalers', group: 'extensions'} | canI : 'update'" ng-href="project/{{hpa.metadata.namespace}}/edit/autoscaler?kind=HorizontalPodAutoscaler&group=extensions&name={{hpa.metadata.name}}"
+       role="button">Edit</a>
+    <span class="action-divider">|</span>
+    <delete-link
+        ng-if="{resource: 'horizontalpodautoscalers', group: 'extensions'} | canI : 'delete'"
+        kind="HorizontalPodAutoscaler"
+        group="extensions"
+        resource-name="{{hpa.metadata.name}}"
+        project-name="{{hpa.metadata.namespace}}"
+        label="Remove"
+        alerts="alerts"
+        stay-on-current-page="true">
+    </delete-link>
+  </span>
+</h4>
 <dl class="dl-horizontal left" style="margin-bottom: 10px;">
   <dt ng-if-start="showScaleTarget && hpa.spec.scaleRef.kind && hpa.spec.scaleRef.name">{{hpa.spec.scaleRef.kind | humanizeKind : true}}:</dt>
   <dd ng-if-end>
@@ -26,20 +45,3 @@
   <dt ng-if-start="hpa.status.lastScaleTime">Last Scaled:</dt>
   <dd ng-if-end><span am-time-ago="hpa.status.lastScaleTime"></span></dd>
 </dl>
-
-<!-- HPA actions -->
-<div ng-hide="!('horizontalPodAutoscalers' | canIDoAny)">
-  <a ng-if="{resource: 'horizontalpodautoscalers', group: 'extensions'} | canI : 'update'" ng-href="project/{{hpa.metadata.namespace}}/edit/autoscaler?kind=HorizontalPodAutoscaler&group=extensions&name={{hpa.metadata.name}}"
-     role="button">Edit</a>
-  <span class="action-divider">|</span>
-  <delete-link
-      ng-if="{resource: 'horizontalpodautoscalers', group: 'extensions'} | canI : 'delete'"
-      kind="HorizontalPodAutoscaler"
-      group="extensions"
-      resource-name="{{hpa.metadata.name}}"
-      project-name="{{hpa.metadata.namespace}}"
-      label="Remove"
-      alerts="alerts"
-      stay-on-current-page="true">
-  </delete-link>
-</div>

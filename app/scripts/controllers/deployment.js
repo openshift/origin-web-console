@@ -16,9 +16,11 @@ angular.module('openshiftConsole')
                         DeploymentsService,
                         HPAService,
                         ImageStreamResolver,
+                        ModalsService,
                         Navigate,
                         Logger,
                         ProjectsService,
+                        StorageService,
                         keyValueEditorUtils) {
     var imageStreamImageRefByDockerReference = {}; // lets us determine if a particular container's docker image reference belongs to an imageStream
 
@@ -239,6 +241,48 @@ angular.module('openshiftConsole')
                 details: $filter('getErrorDetails')(e)
               };
             });
+        };
+
+        $scope.removeVolume = function(volume) {
+          var details;
+          if (_.get($scope, 'deployment.spec.paused')) {
+            details = "This will remove the volume from the deployment.";
+          } else {
+            details = "This will remove the volume from the deployment and start a new rollout.";
+          }
+
+          if (volume.persistentVolumeClaim) {
+            details += " It will not delete the persistent volume claim.";
+          } else if (volume.secret) {
+            details += " It will not delete the secret.";
+          } else if (volume.configMap) {
+            details += " It will not delete the config map.";
+          }
+
+          var confirm = ModalsService.confirm({
+            message: "Remove volume " + volume.name + "?",
+            details: details,
+            okButtonText: "Remove",
+            okButtonClass: "btn-danger",
+            cancelButtonText: "Cancel"
+          });
+
+          var showError = function(e) {
+            $scope.alerts["remove-volume-error"] = {
+              type: "error",
+              message: "An error occurred removing the volume.",
+              details: $filter('getErrorDetails')(e)
+            };
+          };
+
+          var removeVolume = function() {
+            // No-op on success since the page updates.
+            StorageService
+              .removeVolume($scope.deployment, volume, context)
+              .then(_.noop, showError);
+          };
+
+          confirm.then(removeVolume);
         };
 
         $scope.$on('$destroy', function(){

@@ -4,7 +4,12 @@
   namespace
  -->
 <div ng-repeat="volume in volumes">
-  <h5>{{volume.name}}</h5>
+  <h4>
+    {{volume.name}}
+    <span ng-if="canRemove" class="header-actions">
+      <a href="" ng-click="removeFn({volume: volume})">Remove</a>
+    </span>
+  </h4>
   <dl class="dl-horizontal left">
     <div ng-if="volume.secret">
       <dt>Type:</dt>
@@ -85,7 +90,7 @@
         config map
         <span class="small text-muted">(populated by a config map)</span>
        </dd>
-      <dt>Name:</dt>
+      <dt>Config Map:</dt>
       <dd><a ng-href="{{volume.configMap.name | navigateResourceURL : 'ConfigMap' : namespace}}">{{volume.configMap.name}}</a></dd>
       <div ng-repeat="item in volume.configMap.items">
         <dt>Key to File:</dt>

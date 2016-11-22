@@ -120,7 +120,9 @@ angular.module('openshiftConsole')
       restrict: 'E',
       scope: {
         volumes: '=',
-        namespace: '='
+        namespace: '=',
+        canRemove: '=?',
+        removeFn: '&?'
       },
       templateUrl: 'views/_volumes.html'
     };

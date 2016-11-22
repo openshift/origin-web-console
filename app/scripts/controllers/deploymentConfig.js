@@ -17,9 +17,11 @@ angular.module('openshiftConsole')
                         DeploymentsService,
                         HPAService,
                         ImageStreamResolver,
+                        ModalsService,
                         Navigate,
                         Logger,
                         ProjectsService,
+                        StorageService,
                         LabelFilter,
                         labelNameFilter,
                         keyValueEditorUtils) {
@@ -291,8 +293,7 @@ angular.module('openshiftConsole')
 
         $scope.scale = function(replicas) {
           var showScalingError = function(result) {
-            $scope.alerts = $scope.alerts || {};
-            $scope.alerts["scale"] = {
+            $scope.alerts["scale-error"] = {
               type: "error",
               message: "An error occurred scaling the deployment config.",
               details: $filter('getErrorDetails')(result)
@@ -309,13 +310,63 @@ angular.module('openshiftConsole')
             // Failure
             function(e) {
               $scope.updatingPausedState = false;
-              $scope.alerts = $scope.alerts || {};
-              $scope.alerts["scale"] = {
+              $scope.alerts["pause-error"] = {
                 type: "error",
                 message: "An error occurred " + (paused ? "pausing" : "resuming") + " the deployment config.",
                 details: $filter('getErrorDetails')(e)
               };
             });
+        };
+
+        var isConfigChangeActive = function() {
+          if (_.get($scope, 'deploymentConfig.spec.paused')) {
+            return false;
+          }
+
+          var triggers = _.get($scope, 'deploymentConfig.spec.triggers', []);
+          return _.some(triggers, { type: 'ConfigChange' });
+        };
+
+        $scope.removeVolume = function(volume) {
+          var details;
+          if (isConfigChangeActive()) {
+            details = "This will remove the volume from the deployment config and trigger a new deployment.";
+          } else {
+            details = "This will remove the volume from the deployment config.";
+          }
+
+          if (volume.persistentVolumeClaim) {
+            details += " It will not delete the persistent volume claim.";
+          } else if (volume.secret) {
+            details += " It will not delete the secret.";
+          } else if (volume.configMap) {
+            details += " It will not delete the config map.";
+          }
+
+          var confirm = ModalsService.confirm({
+            message: "Remove volume " + volume.name + "?",
+            details: details,
+            okButtonText: "Remove",
+            okButtonClass: "btn-danger",
+            cancelButtonText: "Cancel"
+          });
+
+          var showError = function(e) {
+            $scope.alerts["remove-volume-error"] = {
+              type: "error",
+              message: "An error occurred removing the volume.",
+              details: $filter('getErrorDetails')(e)
+            };
+          };
+
+          var removeVolume = function() {
+            // No-op on success since the page updates.
+            StorageService
+              .removeVolume($scope.deploymentConfig, volume, context)
+              .then(_.noop, showError);
+          };
+
+          confirm.then(removeVolume);
         };
 
         $scope.$on('$destroy', function(){
