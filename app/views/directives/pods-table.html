@@ -15,9 +15,6 @@
     <tr>
       <td data-title="Name">
         <a href="{{pod | navigateResourceURL}}">{{pod.metadata.name}}</a>
-        <span ng-if="pod | isTroubledPod">
-          <pod-warnings pod="pod"></pod-warnings>
-        </span>
         <span ng-if="pod | isDebugPod">
           <i class="fa fa-bug info-popover"
              aria-hidden="true"

@@ -10170,7 +10170,7 @@ pod:"="
 },
 link:function(b) {
 var c, d = "", e = a(b.pod);
-for (c = 0; c < e.length; c++) d && (d += "<br>"), d += e[c].message;
+for (c = 0; c < e.length; c++) d && (d += "<br>"), "error" === e[c].severity && (b.hasError = !0), d += e[c].message;
 b.content = d;
 },
 templateUrl:"views/directives/_warnings-popover.html"
@@ -11483,7 +11483,7 @@ e.cacheScrollableNode(document.getElementById(a.fixedHeight ? a.logViewerID + "-
 }, 0);
 }
 };
-} ]), angular.module("openshiftConsole").directive("statusIcon", [ function() {
+} ]), angular.module("openshiftConsole").directive("statusIcon", function() {
 return {
 restrict:"E",
 templateUrl:"views/directives/_status-icon.html",
@@ -11496,7 +11496,7 @@ link:function(a, b, c) {
 a.spinning = !angular.isDefined(c.disableAnimation);
 }
 };
-} ]), angular.module("openshiftConsole").directive("ellipsisPulser", [ function() {
+}), angular.module("openshiftConsole").directive("ellipsisPulser", [ function() {
 return {
 restrict:"E",
 scope:{
@@ -11507,7 +11507,7 @@ msg:"@"
 },
 templateUrl:"views/directives/_ellipsis-pulser.html"
 };
-} ]), angular.module("openshiftConsole").directive("podDonut", [ "$timeout", "hashSizeFilter", "isPullingImageFilter", "isTerminatingFilter", "isTroubledPodFilter", "numContainersReadyFilter", "Logger", "ChartsService", function(a, b, c, d, e, f, g, h) {
+} ]), angular.module("openshiftConsole").directive("podDonut", [ "$timeout", "hashSizeFilter", "isPullingImageFilter", "isTerminatingFilter", "podWarningsFilter", "numContainersReadyFilter", "Logger", "ChartsService", function(a, b, c, d, e, f, g, h) {
 return {
 restrict:"E",
 scope:{
@@ -11534,7 +11534,11 @@ var b = f(a), c = a.spec.containers.length;
 return b === c;
 }
 function l(a) {
-return d(a) ? "Terminating" :e(a) ? "Warning" :c(a) ? "Pulling" :"Running" !== a.status.phase || k(a) ? _.get(a, "status.phase", "Unknown") :"Not Ready";
+if (d(a)) return "Terminating";
+var b = e(a);
+return _.some(b), {
+severity:"error"
+} ? "Failed" :b.length ? "Warning" :c(a) ? "Pulling" :"Running" !== a.status.phase || k(a) ? _.get(a, "status.phase", "Unknown") :"Not Ready";
 }
 function m() {
 var b = {};
@@ -13217,21 +13221,25 @@ pod:f.metadata.name,
 message:"The pod has been stuck in the pending state for more than five minutes."
 }), "Running" === f.status.phase && f.status.containerStatuses && _.each(f.status.containerStatuses, function(a) {
 return !!a.state && (c(a) && (e(f) ? g.push({
+severity:"error",
 reason:"NonZeroExitTerminatingPod",
 pod:f.metadata.name,
 container:a.name,
 message:"The container " + a.name + " did not stop cleanly when terminated (exit code " + a.state.terminated.exitCode + ")."
 }) :g.push({
+severity:"warning",
 reason:"NonZeroExit",
 pod:f.metadata.name,
 container:a.name,
 message:"The container " + a.name + " failed (exit code " + a.state.terminated.exitCode + ")."
 })), b(a) && g.push({
+severity:"error",
 reason:"Looping",
 pod:f.metadata.name,
 container:a.name,
 message:"The container " + a.name + " is crashing frequently. It must wait before it will be restarted again."
 }), void (d(a) && g.push({
+severity:"warning",
 reason:"Unprepared",
 pod:f.metadata.name,
 container:a.name,

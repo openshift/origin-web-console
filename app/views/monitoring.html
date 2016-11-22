@@ -87,9 +87,6 @@
                           <div class="list-view-pf-description">
                             <div class="list-group-item-heading">
                               <a ng-href="{{pod | navigateResourceURL}}"><span ng-bind-html="pod.metadata.name | highlightKeywords : filterKeywords"></span></a>
-                              <span ng-if="pod | isTroubledPod">
-                                <pod-warnings pod="pod"></pod-warnings>
-                              </span>
                               <small>created <span am-time-ago="pod.metadata.creationTimestamp"></span></small>
                             </div>
                             <div class="list-group-item-text">

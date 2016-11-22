@@ -1,7 +1,7 @@
 'use strict';
 
 angular.module('openshiftConsole')
-  .directive('statusIcon', [
+  .directive('statusIcon',
     function() {
       return {
         restrict: 'E',
@@ -16,4 +16,4 @@ angular.module('openshiftConsole')
         }
       };
     }
-  ]);
+  );
