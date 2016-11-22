@@ -267,10 +267,11 @@ angular
       .when('/project/:project/browse/config-maps', {
         templateUrl: 'views/browse/config-maps.html',
         controller: 'ConfigMapsController',
+        reloadOnSearch: false
       })
       .when('/project/:project/browse/config-maps/:configMap', {
         templateUrl: 'views/browse/config-map.html',
-        controller: 'ConfigMapController',
+        controller: 'ConfigMapController'
       })
       .when('/project/:project/create-config-map', {
         templateUrl: 'views/create-config-map.html',
@@ -278,7 +279,7 @@ angular
       })
       .when('/project/:project/edit/config-maps/:configMap', {
         templateUrl: 'views/edit/config-map.html',
-        controller: 'EditConfigMapController',
+        controller: 'EditConfigMapController'
       })
       .when('/project/:project/browse/other', {
         templateUrl: 'views/other-resources.html',
