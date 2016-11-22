@@ -5208,7 +5208,7 @@ details:"Reason: " + b("getErrorDetails")(c)
 q(a.buildConfig), a.forms.bcEnvVars.$setPristine();
 };
 var r, s = function(c, d) {
-a.loaded = !0, a.buildConfig = c, a.paused = f.isPaused(a.buildConfig), a.buildConfig.spec.source.images && (a.imageSources = a.buildConfig.spec.source.images, a.imageSourcesPaths = [], a.imageSources.forEach(function(c) {
+a.loaded = !0, a.buildConfig = c, a.buildConfigPaused = f.isPaused(a.buildConfig), a.buildConfig.spec.source.images && (a.imageSources = a.buildConfig.spec.source.images, a.imageSourcesPaths = [], a.imageSources.forEach(function(c) {
 a.imageSourcesPaths.push(b("destinationSourcePair")(c.paths));
 }));
 var i = _.get(o(c), "from", {}), j = i.kind + "/" + i.name + "/" + (i.namespace || a.projectName);
@@ -5223,7 +5223,7 @@ a.BCEnvVarsFromImage = [];
 })) :a.BCEnvVarsFromImage = []), q(c), "DELETED" === d && (a.alerts.deleted = {
 type:"warning",
 message:"This build configuration has been deleted."
-}), !a.forms.bcEnvVars || a.forms.bcEnvVars.$pristine ? q(c) :a.alerts.background_update = {
+}, a.buildConfigDeleted = !0), !a.forms.bcEnvVars || a.forms.bcEnvVars.$pristine ? q(c) :a.alerts.background_update = {
 type:"warning",
 message:"This build configuration has been updated in the background. Saving your changes may create a conflict or cause loss of data.",
 links:[ {
@@ -5335,7 +5335,7 @@ details:"Reason: " + b("getErrorDetails")(c)
 "DELETED" === c && (a.alerts.deleted = {
 type:"warning",
 message:"Build configuration " + a.buildConfigName + " has been deleted."
-}), a.buildConfig = b, a.paused = d.isPaused(a.buildConfig), j();
+}, a.buildConfigDeleted = !0), a.buildConfig = b, a.buildConfigPaused = d.isPaused(a.buildConfig), j();
 };
 g.get(c.project).then(_.spread(function(g, i) {
 a.project = g, a.projectContext = i, a.logOptions = {}, e.get("builds", c.build, i).then(function(a) {

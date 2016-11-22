@@ -107,7 +107,7 @@ angular.module('openshiftConsole')
     var buildConfigResolved = function(buildConfig, action) {
       $scope.loaded = true;
       $scope.buildConfig = buildConfig;
-      $scope.paused = BuildsService.isPaused($scope.buildConfig);
+      $scope.buildConfigPaused = BuildsService.isPaused($scope.buildConfig);
       if ($scope.buildConfig.spec.source.images) {
         $scope.imageSources = $scope.buildConfig.spec.source.images;
         $scope.imageSourcesPaths = [];
@@ -138,6 +138,7 @@ angular.module('openshiftConsole')
           type: "warning",
           message: "This build configuration has been deleted."
         };
+        $scope.buildConfigDeleted = true;
       }
       if (!$scope.forms.bcEnvVars || $scope.forms.bcEnvVars.$pristine) {
         copyBuildConfigAndEnsureEnv(buildConfig);

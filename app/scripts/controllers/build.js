@@ -103,9 +103,10 @@ angular.module('openshiftConsole')
           type: "warning",
           message: "Build configuration " + $scope.buildConfigName + " has been deleted."
         };
+        $scope.buildConfigDeleted = true;
       }
       $scope.buildConfig = buildConfig;
-      $scope.paused = BuildsService.isPaused($scope.buildConfig);
+      $scope.buildConfigPaused = BuildsService.isPaused($scope.buildConfig);
       updateCanBuild();
     };
 
