@@ -14,10 +14,10 @@
                 {{build.metadata.name}}
                 <span ng-if="build.status.message" class="pficon pficon-warning-triangle-o" style="cursor: help;" data-toggle="popover" data-trigger="hover" dynamic-content="{{build.status.message}}"></span>
                 <span class="pficon pficon-warning-triangle-o"
-                      ng-if="paused"
+                      ng-if="buildConfigPaused || buildConfigDeleted"
                       aria-hidden="true"
                       data-toggle="tooltip"
-                      data-original-title="Building from build configuration {{buildConfig.metadata.name}} has been paused.">
+                      data-original-title="{{buildConfigDeleted ? 'The build configuration for this build no longer exists.' : 'Building from build configuration ' + buildConfig.metadata.name + ' has been paused.'}}">
                 </span>
                 <small class="meta">created <span am-time-ago="build.metadata.creationTimestamp"></span></small>
                 <div class="pull-right dropdown" ng-hide="!('builds' | canIDoAny)">
