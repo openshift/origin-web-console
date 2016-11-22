@@ -5,37 +5,38 @@ return this.resource = a, this.group = b, this.version = c, this;
 }
 
 window.OPENSHIFT_CONSTANTS = {
+HELP_BASE_URL:"https://docs.openshift.org/latest/",
 HELP:{
-cli:"https://docs.openshift.org/latest/cli_reference/overview.html",
-get_started_cli:"https://docs.openshift.org/latest/cli_reference/get_started_cli.html",
-basic_cli_operations:"https://docs.openshift.org/latest/cli_reference/basic_cli_operations.html",
-"build-triggers":"https://docs.openshift.org/latest/dev_guide/builds.html#build-triggers",
-webhooks:"https://docs.openshift.org/latest/dev_guide/builds.html#webhook-triggers",
-new_app:"https://docs.openshift.org/latest/dev_guide/new_app.html",
-"start-build":"https://docs.openshift.org/latest/dev_guide/builds.html#starting-a-build",
-"deployment-operations":"https://docs.openshift.org/latest/cli_reference/basic_cli_operations.html#build-and-deployment-cli-operations",
-"route-types":"https://docs.openshift.org/latest/architecture/core_concepts/routes.html#route-types",
-persistent_volumes:"https://docs.openshift.org/latest/dev_guide/persistent_volumes.html",
-compute_resources:"https://docs.openshift.org/latest/dev_guide/compute_resources.html",
-pod_autoscaling:"https://docs.openshift.org/latest/dev_guide/pod_autoscaling.html",
-application_health:"https://docs.openshift.org/latest/dev_guide/application_health.html",
-source_secrets:"https://docs.openshift.org/latest/dev_guide/builds.html#using-secrets",
-git_secret:"https://docs.openshift.org/latest/dev_guide/builds.html#using-private-repositories-for-builds",
-pull_secret:"https://docs.openshift.org/latest/dev_guide/managing_images.html#using-image-pull-secrets",
-managing_secrets:"https://docs.openshift.org/latest/dev_guide/service_accounts.html#managing-allowed-secrets",
-creating_secrets:"https://docs.openshift.org/latest/dev_guide/secrets.html#creating-and-using-secrets",
-storage_classes:"https://docs.openshift.org/latest/install_config/persistent_storage/dynamically_provisioning_pvs.html",
-selector_label:"https://docs.openshift.org/latest/install_config/persistent_storage/selector_label_binding.html",
-rolling_strategy:"https://docs.openshift.org/latest/dev_guide/deployments.html#rolling-strategy",
-recreate_strategy:"https://docs.openshift.org/latest/dev_guide/deployments.html#recreate-strategy",
-custom_strategy:"https://docs.openshift.org/latest/dev_guide/deployments.html#custom-strategy",
-lifecycle_hooks:"https://docs.openshift.org/latest/dev_guide/deployments.html#lifecycle-hooks",
-new_pod_exec:"https://docs.openshift.org/latest/dev_guide/deployments.html#pod-based-lifecycle-hook",
-authorization:"https://docs.openshift.org/latest/architecture/additional_concepts/authorization.html",
-roles:"https://docs.openshift.org/latest/architecture/additional_concepts/authorization.html#roles",
-service_accounts:"https://docs.openshift.org/latest/dev_guide/service_accounts.html",
-users_and_groups:"https://docs.openshift.org/latest/architecture/additional_concepts/authentication.html#users-and-groups",
-"default":"https://docs.openshift.org/latest/welcome/index.html"
+cli:"cli_reference/overview.html",
+get_started_cli:"cli_reference/get_started_cli.html",
+basic_cli_operations:"cli_reference/basic_cli_operations.html",
+"build-triggers":"dev_guide/builds.html#build-triggers",
+webhooks:"dev_guide/builds.html#webhook-triggers",
+new_app:"dev_guide/new_app.html",
+"start-build":"dev_guide/builds.html#starting-a-build",
+"deployment-operations":"cli_reference/basic_cli_operations.html#build-and-deployment-cli-operations",
+"route-types":"architecture/core_concepts/routes.html#route-types",
+persistent_volumes:"dev_guide/persistent_volumes.html",
+compute_resources:"dev_guide/compute_resources.html",
+pod_autoscaling:"dev_guide/pod_autoscaling.html",
+application_health:"dev_guide/application_health.html",
+source_secrets:"dev_guide/builds.html#using-secrets",
+git_secret:"dev_guide/builds.html#using-private-repositories-for-builds",
+pull_secret:"dev_guide/managing_images.html#using-image-pull-secrets",
+managing_secrets:"dev_guide/service_accounts.html#managing-allowed-secrets",
+creating_secrets:"dev_guide/secrets.html#creating-and-using-secrets",
+storage_classes:"install_config/persistent_storage/dynamically_provisioning_pvs.html",
+selector_label:"install_config/persistent_storage/selector_label_binding.html",
+rolling_strategy:"dev_guide/deployments.html#rolling-strategy",
+recreate_strategy:"dev_guide/deployments.html#recreate-strategy",
+custom_strategy:"dev_guide/deployments.html#custom-strategy",
+lifecycle_hooks:"dev_guide/deployments.html#lifecycle-hooks",
+new_pod_exec:"dev_guide/deployments.html#pod-based-lifecycle-hook",
+authorization:"architecture/additional_concepts/authorization.html",
+roles:"architecture/additional_concepts/authorization.html#roles",
+service_accounts:"dev_guide/service_accounts.html",
+users_and_groups:"architecture/additional_concepts/authentication.html#users-and-groups",
+"default":"welcome/index.html"
 },
 CLI:{
 "Latest Release":"https://github.com/openshift/origin/releases/latest"
@@ -13597,7 +13598,8 @@ return a;
 };
 }).filter("helpLink", [ "Constants", function(a) {
 return function(b) {
-return a.HELP[b] || a.HELP["default"];
+var c = a.HELP[b] || a.HELP["default"];
+return URI(c).is("absolute") || (c = a.HELP_BASE_URL + c), c;
 };
 } ]).filter("taskTitle", function() {
 return function(a) {

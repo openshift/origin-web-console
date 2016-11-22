@@ -192,7 +192,11 @@ angular.module('openshiftConsole')
   })
   .filter('helpLink', function(Constants) {
     return function(type) {
-      return Constants.HELP[type] || Constants.HELP["default"];
+      var helpLink = Constants.HELP[type] || Constants.HELP["default"];
+      if (!URI(helpLink).is('absolute')) {
+        helpLink = Constants.HELP_BASE_URL + helpLink;
+      }
+      return helpLink;
     };
   })
   .filter('taskTitle', function() {
