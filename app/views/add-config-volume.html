@@ -136,6 +136,14 @@
                               </div>
                               <div class="form-group col-md-6">
                                 <label ng-attr-for="path-{{$id}}" class="required">Path</label>
+                                <!--
+                                  Regex matches any paths not starting with `/` or containing `..` as path elements.
+                                  Use negative lookaheads to assert that the value does not match those patterns.
+
+                                    (?!(\.\.)?\/)         do not match strings starting with `/`
+                                    (?!\.\.(\/|$))        do not match strings starting with `../` or exactly `..`
+                                    (?!.*\/\.\.(\/|$))    do not match strings containing `/../` or ending in `/..`
+                                -->
                                 <input
                                     ng-attr-id="path-{{$id}}"
                                     class="form-control"
@@ -143,12 +151,19 @@
                                     type="text"
                                     name="path-{{$id}}"
                                     ng-model="item.path"
+                                    ng-pattern="/^(?!\/)(?!\.\.(\/|$))(?!.*\/\.\.(\/|$)).*$/"
                                     required
                                     osc-unique="itemPaths"
                                     placeholder="example: config/app.properties"
                                     autocorrect="off"
                                     autocapitalize="off"
                                     spellcheck="false">
+                                <div class="has-error" ng-show="forms.addConfigVolumeForm['path-' + $id].$error.pattern">
+                                  <span class="help-block">
+                                    Path must be a relative path. It cannot start with <code>/</code> or
+                                    contain <code>..</code> path elements.
+                                  </span>
+                                </div>
                                 <div class="has-error" ng-show="forms.addConfigVolumeForm['path-' + $id].$error.oscUnique">
                                   <span class="help-block">
                                     Paths must be unique.

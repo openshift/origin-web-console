@@ -1028,7 +1028,13 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "</div>\n" +
     "<div class=\"form-group col-md-6\">\n" +
     "<label ng-attr-for=\"path-{{$id}}\" class=\"required\">Path</label>\n" +
-    "<input ng-attr-id=\"path-{{$id}}\" class=\"form-control\" ng-class=\"{ 'has-error': forms.addConfigVolumeForm['path-' + $id].$invalid && forms.addConfigVolumeForm['path-' + $id].$touched }\" type=\"text\" name=\"path-{{$id}}\" ng-model=\"item.path\" required osc-unique=\"itemPaths\" placeholder=\"example: config/app.properties\" autocorrect=\"off\" autocapitalize=\"off\" spellcheck=\"false\">\n" +
+    "\n" +
+    "<input ng-attr-id=\"path-{{$id}}\" class=\"form-control\" ng-class=\"{ 'has-error': forms.addConfigVolumeForm['path-' + $id].$invalid && forms.addConfigVolumeForm['path-' + $id].$touched }\" type=\"text\" name=\"path-{{$id}}\" ng-model=\"item.path\" ng-pattern=\"/^(?!\\/)(?!\\.\\.(\\/|$))(?!.*\\/\\.\\.(\\/|$)).*$/\" required osc-unique=\"itemPaths\" placeholder=\"example: config/app.properties\" autocorrect=\"off\" autocapitalize=\"off\" spellcheck=\"false\">\n" +
+    "<div class=\"has-error\" ng-show=\"forms.addConfigVolumeForm['path-' + $id].$error.pattern\">\n" +
+    "<span class=\"help-block\">\n" +
+    "Path must be a relative path. It cannot start with <code>/</code> or contain <code>..</code> path elements.\n" +
+    "</span>\n" +
+    "</div>\n" +
     "<div class=\"has-error\" ng-show=\"forms.addConfigVolumeForm['path-' + $id].$error.oscUnique\">\n" +
     "<span class=\"help-block\">\n" +
     "Paths must be unique.\n" +
@@ -1165,15 +1171,26 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "</div>\n" +
     "<div class=\"form-group\">\n" +
     "<label for=\"volume-name\">Volume Name</label>\n" +
-    "<input id=\"volume-path\" class=\"form-control\" type=\"text\" name=\"volumeName\" ng-model=\"attach.volumeName\" osc-unique=\"existingVolumeNames\" placeholder=\"(generated if empty)\" autocorrect=\"off\" autocapitalize=\"off\" spellcheck=\"false\" aria-describedby=\"volume-name-help\">\n" +
+    "\n" +
+    "<input id=\"volume-path\" class=\"form-control\" type=\"text\" name=\"volumeName\" ng-model=\"attach.volumeName\" osc-unique=\"existingVolumeNames\" ng-pattern=\"/^[a-z0-9]([-a-z0-9]*[a-z0-9])?$/\" maxlength=\"63\" placeholder=\"(generated if empty)\" autocorrect=\"off\" autocapitalize=\"off\" spellcheck=\"false\" aria-describedby=\"volume-name-help\">\n" +
     "<div>\n" +
     "<span id=\"volume-name-help\" class=\"help-block\">Unique name used to identify this volume. If not specified, a volume name is generated.</span>\n" +
     "</div>\n" +
+    "<div class=\"has-error\" ng-show=\"attachPVCForm.volumeName.$error.pattern && attachPVCForm.volumeName.$touched\">\n" +
+    "<span class=\"help-block\">\n" +
+    "Volume names may only contain lower-case letters, numbers, and dashes. They may not start or end with a dash.\n" +
+    "</span>\n" +
+    "</div>\n" +
+    "<div class=\"has-error\" ng-show=\"attachPVCForm.volumeName.$error.maxlength\">\n" +
+    "<span class=\"help-block\">\n" +
+    "Volume names cannot be longer than 63 characters.\n" +
+    "</span>\n" +
     "</div>\n" +
     "<div class=\"has-error\" ng-show=\"attachPVCForm.volumeName.$error.oscUnique\">\n" +
     "<span class=\"help-block\">\n" +
     "Volume name already exists. Please choose another name.\n" +
     "</span>\n" +
+    "</div>\n" +
     "</div>\n" +
     "\n" +
     "<div ng-if=\"attach.resource.spec.template.spec.containers.length > 1\">\n" +
