@@ -179,6 +179,12 @@ angular.module("openshiftConsole")
             url.segment("images")
               .segmentCoded(name);
             break;
+          case "ImageStreamTag":
+            var ind = name.indexOf(':');
+            url.segment("images")
+              .segmentCoded(name.substring(0, ind))
+              .segmentCoded(name.substring(ind + 1));
+            break;
           case "PersistentVolumeClaim":
           case "Pod":
           case "Route":

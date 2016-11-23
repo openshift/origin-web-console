@@ -1295,8 +1295,15 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "<dd ng-if-end>{{build.spec.source.git.ref}}</dd>\n" +
     "<dt ng-if-start=\"build.spec.source.contextDir\">Source Context Dir:</dt>\n" +
     "<dd ng-if-end>{{build.spec.source.contextDir}}</dd>\n" +
-    "<dt ng-if-start=\"build.spec.output.to\">Output Image:</dt>\n" +
-    "<dd ng-if-end>{{build.spec.output.to | imageObjectRef : build.metadata.namespace}}</dd>\n" +
+    "<dt ng-if-start=\"outputTo = build.spec.output.to\">Output Image:</dt>\n" +
+    "<dd ng-if-end>\n" +
+    "<a ng-if=\"outputTo.kind === 'ImageStreamTag' && (!outputTo.namespace || build.metadata.namespace === outputTo.namespace)\" ng-href=\"{{outputTo.name | navigateResourceURL : 'ImageStreamTag' : build.metadata.namespace}}\">\n" +
+    "{{outputTo | imageObjectRef : build.metadata.namespace}}\n" +
+    "</a>\n" +
+    "<span ng-if=\"outputTo.kind !== 'ImageStreamTag' || (outputTo.namespace && build.metadata.namespace !== outputTo.namespace)\">\n" +
+    "{{outputTo | imageObjectRef : build.metadata.namespace}}\n" +
+    "</span>\n" +
+    "</dd>\n" +
     "<dt ng-if-start=\"build.spec.output.pushSecret.name\">Push Secret:</dt>\n" +
     "<dd ng-if-end>{{build.spec.output.pushSecret.name}}</dd>\n" +
     "<dt ng-if-start=\"build.spec.strategy.jenkinsPipelineStrategy.jenkinsfilePath\">\n" +
@@ -1914,11 +1921,25 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "</div>\n" +
     "</div>\n" +
     "</div>\n" +
-    "<dt ng-if-start=\"(buildConfig | buildStrategy).from\">Builder Image:</dt>\n" +
-    "<dd ng-if-end>{{(buildConfig | buildStrategy).from | imageObjectRef : buildConfig.metadata.namespace}}</dd>\n" +
-    "<div ng-if=\"buildConfig.spec.output.to\">\n" +
+    "<dt ng-if-start=\"buildFrom = (buildConfig | buildStrategy).from\">Builder Image:</dt>\n" +
+    "<dd ng-if-end>\n" +
+    "<a ng-if=\"buildFrom.kind === 'ImageStreamTag' && (!buildFrom.namespace || buildConfig.metadata.namespace === buildFrom.namespace)\" ng-href=\"{{buildFrom.name | navigateResourceURL : 'ImageStreamTag' : buildConfig.metadata.namespace}}\">\n" +
+    "{{buildFrom | imageObjectRef : buildConfig.metadata.namespace}}\n" +
+    "</a>\n" +
+    "<span ng-if=\"buildFrom.kind !== 'ImageStreamTag' || (buildFrom.namespace && buildConfig.metadata.namespace !== buildFrom.namespace)\">\n" +
+    "{{buildFrom | imageObjectRef : buildConfig.metadata.namespace}}\n" +
+    "</span>\n" +
+    "</dd>\n" +
+    "<div ng-if=\"outputTo = buildConfig.spec.output.to\">\n" +
     "<dt>Output To:</dt>\n" +
-    "<dd>{{buildConfig.spec.output.to | imageObjectRef : buildConfig.metadata.namespace}}</dd>\n" +
+    "<dd>\n" +
+    "<a ng-if=\"outputTo.kind === 'ImageStreamTag' && (!outputTo.namespace || buildConfig.metadata.namespace === outputTo.namespace)\" ng-href=\"{{outputTo.name | navigateResourceURL : 'ImageStreamTag' : buildConfig.metadata.namespace}}\">\n" +
+    "{{outputTo | imageObjectRef : buildConfig.metadata.namespace}}\n" +
+    "</a>\n" +
+    "<span ng-if=\"outputTo.kind !== 'ImageStreamTag' || (outputTo.namespace && buildConfig.metadata.namespace !== outputTo.namespace)\">\n" +
+    "{{outputTo | imageObjectRef : buildConfig.metadata.namespace}}\n" +
+    "</span>\n" +
+    "</dd>\n" +
     "</div>\n" +
     "<div class=\"run-policy\">\n" +
     "<dt>Run Policy:</dt>\n" +
@@ -1980,8 +2001,13 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "<dt>\n" +
     "New Image For:\n" +
     "</dt>\n" +
-    "<dd>\n" +
-    "{{(trigger.imageChange.from || (buildConfig | buildStrategy).from) | imageObjectRef : buildConfig.metadata.namespace}}\n" +
+    "<dd ng-init=\"triggerFrom = (trigger.imageChange.from || (buildConfig | buildStrategy).from)\">\n" +
+    "<a ng-if=\"triggerFrom.kind === 'ImageStreamTag' && (!triggerFrom.namespace || buildConfig.metadata.namespace === triggerFrom.namespace)\" ng-href=\"{{triggerFrom.name | navigateResourceURL : 'ImageStreamTag' : buildConfig.metadata.namespace}}\">\n" +
+    "{{triggerFrom | imageObjectRef : buildConfig.metadata.namespace}}\n" +
+    "</a>\n" +
+    "<span ng-if=\"triggerFrom.kind !== 'ImageStreamTag' || (triggerFrom.namespace && buildConfig.metadata.namespace !== triggerFrom.namespace)\">\n" +
+    "{{triggerFrom | imageObjectRef : buildConfig.metadata.namespace}}\n" +
+    "</span>\n" +
     "</dd>\n" +
     "</div>\n" +
     "<div ng-switch-when=\"ConfigChange\">\n" +

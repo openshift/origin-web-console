@@ -2174,6 +2174,11 @@ case "ImageStream":
 i.segment("images").segmentCoded(h);
 break;
 
+case "ImageStreamTag":
+var m = h.indexOf(":");
+i.segment("images").segmentCoded(h.substring(0, m)).segmentCoded(h.substring(m + 1));
+break;
+
 case "PersistentVolumeClaim":
 case "Pod":
 case "Route":
@@ -2183,16 +2188,16 @@ i.segment(g.kindToResource(b)).segmentCoded(h);
 break;
 
 default:
-var m;
-if (a.metadata) m = g.objectToResourceGroupVersion(a); else if (_.get(e, "apiVersion")) {
-var n = g.kindToResource(b), o = g.parseGroupVersion(e.apiVersion);
-o.resource = n, m = g.toResourceGroupVersion(o);
-} else m = g.toResourceGroupVersion(g.kindToResource(b));
-var p = g.apiInfo(m);
-if (!p) return null;
+var n;
+if (a.metadata) n = g.objectToResourceGroupVersion(a); else if (_.get(e, "apiVersion")) {
+var o = g.kindToResource(b), p = g.parseGroupVersion(e.apiVersion);
+p.resource = o, n = g.toResourceGroupVersion(p);
+} else n = g.toResourceGroupVersion(g.kindToResource(b));
+var q = g.apiInfo(n);
+if (!q) return null;
 i.segment("other").search({
 kind:b,
-group:m.group
+group:n.group
 });
 }
 return i.toString();

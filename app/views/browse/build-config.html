@@ -267,11 +267,27 @@
                                   </div>
                                 </div>
                               </div>
-                              <dt ng-if-start="(buildConfig | buildStrategy).from">Builder Image:</dt>
-                              <dd ng-if-end>{{(buildConfig | buildStrategy).from | imageObjectRef : buildConfig.metadata.namespace}}</dd>
-                              <div ng-if="buildConfig.spec.output.to">
+                              <dt ng-if-start="buildFrom = (buildConfig | buildStrategy).from">Builder Image:</dt>
+                              <dd ng-if-end>
+                                <a ng-if="buildFrom.kind === 'ImageStreamTag' && (!buildFrom.namespace || buildConfig.metadata.namespace === buildFrom.namespace)"
+                                    ng-href="{{buildFrom.name | navigateResourceURL : 'ImageStreamTag' : buildConfig.metadata.namespace}}">
+                                  {{buildFrom | imageObjectRef : buildConfig.metadata.namespace}}
+                                </a>
+                                <span ng-if="buildFrom.kind !== 'ImageStreamTag' || (buildFrom.namespace && buildConfig.metadata.namespace !== buildFrom.namespace)">
+                                  {{buildFrom | imageObjectRef : buildConfig.metadata.namespace}}
+                                </span>
+                              </dd>
+                              <div ng-if="outputTo = buildConfig.spec.output.to">
                                 <dt>Output To:</dt>
-                                <dd>{{buildConfig.spec.output.to | imageObjectRef : buildConfig.metadata.namespace}}</dd>
+                                <dd>
+                                  <a ng-if="outputTo.kind === 'ImageStreamTag' && (!outputTo.namespace || buildConfig.metadata.namespace === outputTo.namespace)"
+                                     ng-href="{{outputTo.name | navigateResourceURL : 'ImageStreamTag' : buildConfig.metadata.namespace}}">
+                                    {{outputTo | imageObjectRef : buildConfig.metadata.namespace}}
+                                  </a>
+                                  <span ng-if="outputTo.kind !== 'ImageStreamTag' || (outputTo.namespace && buildConfig.metadata.namespace !== outputTo.namespace)">
+                                    {{outputTo | imageObjectRef : buildConfig.metadata.namespace}}
+                                  </span>
+                                </dd>
                               </div>
                               <div class="run-policy">
                                 <dt>Run Policy:</dt>
@@ -333,8 +349,14 @@
                                   <dt>
                                     New Image For:
                                   </dt>
-                                  <dd>
-                                    {{(trigger.imageChange.from || (buildConfig | buildStrategy).from) | imageObjectRef : buildConfig.metadata.namespace}}
+                                  <dd ng-init="triggerFrom = (trigger.imageChange.from || (buildConfig | buildStrategy).from)">
+                                    <a ng-if="triggerFrom.kind === 'ImageStreamTag' && (!triggerFrom.namespace || buildConfig.metadata.namespace === triggerFrom.namespace)"
+                                        ng-href="{{triggerFrom.name | navigateResourceURL : 'ImageStreamTag' : buildConfig.metadata.namespace}}">
+                                      {{triggerFrom | imageObjectRef : buildConfig.metadata.namespace}}
+                                    </a>
+                                    <span ng-if="triggerFrom.kind !== 'ImageStreamTag' || (triggerFrom.namespace && buildConfig.metadata.namespace !== triggerFrom.namespace)">
+                                      {{triggerFrom | imageObjectRef : buildConfig.metadata.namespace}}
+                                    </span>
                                   </dd>
                                 </div>
                                 <div ng-switch-when="ConfigChange">
