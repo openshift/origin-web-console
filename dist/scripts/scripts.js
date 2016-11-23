@@ -8197,8 +8197,8 @@ a.volumeMounts || (a.volumeMounts = []), a.volumeMounts.push(b);
 var r = j.createVolume(p, i);
 f.spec.volumes || (f.spec.volumes = []), f.spec.volumes.push(r), c.alerts = {}, g.update(l, e.metadata.name, c.attach.resource, h).then(function() {
 d.history.back();
-}, function(c) {
-n("An error occurred attaching the persistent volume claim to the " + a("humanizeKind")(b.kind) + ".", k(c));
+}, function(d) {
+n("An error occurred attaching the persistent volume claim to the " + a("humanizeKind")(b.kind) + ".", k(d)), c.disableInputs = !1;
 });
 }
 };
@@ -8239,7 +8239,7 @@ c.attach.items.splice(a, 1), o();
 }, i.get(b.project).then(_.spread(function(e, h) {
 c.project = e;
 var i = a("orderByDisplayName"), k = a("getErrorDetails"), m = a("generateName"), n = function(a, b) {
-c.disableInputs = !0, c.alerts["attach-persistent-volume-claim"] = {
+c.alerts["attach-persistent-volume-claim"] = {
 type:"error",
 message:a,
 details:b
@@ -8308,8 +8308,10 @@ items:r
 }
 i.spec.volumes = i.spec.volumes || [], i.spec.volumes.push(s), c.alerts = {}, c.disableInputs = !0, g.update(l, e.metadata.name, c.targetObject, h).then(function() {
 d.history.back();
-}, function(c) {
-n("An error occurred attaching the persistent volume claim to the " + a("humanizeKind")(b.kind) + ".", k(c));
+}, function(d) {
+c.disableInputs = !1;
+var e = a("humanizeKind"), g = e(f.kind), h = e(b.kind);
+n("An error occurred attaching the " + g + " to the " + h + ".", k(d));
 });
 }
 };

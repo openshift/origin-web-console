@@ -168,6 +168,7 @@ angular.module('openshiftConsole')
               },
               function(result) {
                 displayError("An error occurred attaching the persistent volume claim to the " + $filter('humanizeKind')($routeParams.kind) + ".", getErrorDetails(result));
+                $scope.disableInputs = false;
               }
             );
           }

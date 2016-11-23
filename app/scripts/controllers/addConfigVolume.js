@@ -96,7 +96,6 @@ angular.module('openshiftConsole')
         var generateName = $filter('generateName');
 
         var displayError = function(errorMessage, errorDetails) {
-          $scope.disableInputs = true;
           $scope.alerts['attach-persistent-volume-claim'] = {
             type: "error",
             message: errorMessage,
@@ -225,7 +224,11 @@ angular.module('openshiftConsole')
               $window.history.back();
             },
             function(result) {
-              displayError("An error occurred attaching the persistent volume claim to the " + $filter('humanizeKind')($routeParams.kind) + ".", getErrorDetails(result));
+              $scope.disableInputs = false;
+              var humanizeKind = $filter('humanizeKind');
+              var sourceKind = humanizeKind(source.kind);
+              var targetKind = humanizeKind($routeParams.kind);
+              displayError("An error occurred attaching the " + sourceKind + " to the " + targetKind + ".", getErrorDetails(result));
             }
           );
         };
