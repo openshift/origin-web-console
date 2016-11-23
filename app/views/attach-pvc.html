@@ -114,6 +114,11 @@
 
                       <div class="form-group">
                         <label for="volume-name">Volume Name</label>
+                        <!--
+                          Volume name must conform to a DNS label
+                          https://github.com/kubernetes/kubernetes/blob/master/docs/design/identifiers.md
+                          https://github.com/kubernetes/kubernetes/blob/d7a87c228506ed11240049ae95cbb4efb07fd178/pkg/util/validation/validation.go#L61-L70
+                        -->
                         <input
                             id="volume-path"
                             class="form-control"
@@ -121,6 +126,8 @@
                             name="volumeName"
                             ng-model="attach.volumeName"
                             osc-unique="existingVolumeNames"
+                            ng-pattern="/^[a-z0-9]([-a-z0-9]*[a-z0-9])?$/"
+                            maxlength="63"
                             placeholder="(generated if empty)"
                             autocorrect="off"
                             autocapitalize="off"
@@ -129,11 +136,22 @@
                         <div>
                           <span id="volume-name-help" class="help-block">Unique name used to identify this volume. If not specified, a volume name is generated.</span>
                         </div>
-                      </div>
-                      <div class="has-error" ng-show="attachPVCForm.volumeName.$error.oscUnique">
-                        <span class="help-block">
-                          Volume name already exists. Please choose another name.
-                        </span>
+                        <div class="has-error" ng-show="attachPVCForm.volumeName.$error.pattern && attachPVCForm.volumeName.$touched">
+                          <span class="help-block">
+                            Volume names may only contain lower-case letters, numbers, and dashes.
+                            They may not start or end with a dash.
+                          </span>
+                        </div>
+                        <div class="has-error" ng-show="attachPVCForm.volumeName.$error.maxlength">
+                          <span class="help-block">
+                            Volume names cannot be longer than 63 characters.
+                          </span>
+                        </div>
+                        <div class="has-error" ng-show="attachPVCForm.volumeName.$error.oscUnique">
+                          <span class="help-block">
+                            Volume name already exists. Please choose another name.
+                          </span>
+                        </div>
                       </div>
 
                       <!-- Prompt for containers only if there is more than one. -->
