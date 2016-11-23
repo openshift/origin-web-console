@@ -1740,7 +1740,7 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "\n" +
     "<div ng-if=\"!unfilteredBuilds\" class=\"gutter-bottom\">Loading...</div>\n" +
     "\n" +
-    "<div ng-if=\"unfilteredBuilds && (unfilteredBuilds | hashSize) === 0\" class=\"empty-state-message text-center\">\n" +
+    "<div ng-if=\"buildConfig && unfilteredBuilds && (unfilteredBuilds | hashSize) === 0\" class=\"empty-state-message text-center\">\n" +
     "<h2>No builds.</h2>\n" +
     "<p>\n" +
     "<span ng-if=\"!('buildconfigs/instantiate' | canI : 'create')\">\n" +

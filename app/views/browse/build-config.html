@@ -72,7 +72,7 @@
                     <div ng-if="!unfilteredBuilds" class="gutter-bottom">Loading...</div>
 
                     <!-- Show an empty state message when there are no builds. -->
-                    <div ng-if="unfilteredBuilds && (unfilteredBuilds | hashSize) === 0" class="empty-state-message text-center">
+                    <div ng-if="buildConfig && unfilteredBuilds && (unfilteredBuilds | hashSize) === 0" class="empty-state-message text-center">
                       <h2>No builds.</h2>
 
                         <p>
