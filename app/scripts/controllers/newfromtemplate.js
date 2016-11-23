@@ -191,6 +191,7 @@ angular.module('openshiftConsole')
               });
             }
           });
+          images = _.uniq(images, false, 'name');
         }
 
         function getHelpLinks(template) {

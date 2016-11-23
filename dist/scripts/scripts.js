@@ -7770,7 +7770,7 @@ d[a] || G.push({
 name:a,
 usesParameters:l(a)
 });
-});
+}), G = _.uniq(G, !1, "name");
 }
 function D(a) {
 var b = /^helplink\.(.*)\.title$/, c = /^helplink\.(.*)\.url$/, d = {};
