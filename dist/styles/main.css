@@ -3834,6 +3834,7 @@ label.checkbox{font-weight:400}
 @media (max-width:767px){.istag-separator{display:none!important}
 .osc-form .flow>.flow-block.right .action-inline{margin-left:0}
 }
+.about .about-reg{font-size:65%;vertical-align:5px}
 .lifecycle-hook{padding-bottom:20px}
 .lifecycle-hook:first-of-type{padding-top:20px}
 .lifecycle-hook .read-only-tag-image{padding-bottom:10px}
