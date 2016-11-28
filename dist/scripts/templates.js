@@ -782,6 +782,10 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "{{volume.secret.secretName}}\n" +
     "</span>\n" +
     "</dd>\n" +
+    "<div ng-repeat=\"item in volume.secret.items\">\n" +
+    "<dt>Key to File:</dt>\n" +
+    "<dd>{{item.key}}&#8201;&#8594;&#8201;{{item.path}}</dd>\n" +
+    "</div>\n" +
     "</div>\n" +
     "<div ng-if=\"volume.persistentVolumeClaim\">\n" +
     "<dt>Type:</dt>\n" +
