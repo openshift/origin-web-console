@@ -2114,7 +2114,14 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "<a href=\"\" class=\"dropdown-toggle actions-dropdown-kebab visible-xs-inline\" data-toggle=\"dropdown\"><i class=\"fa fa-ellipsis-v\"></i><span class=\"sr-only\">Actions</span></a>\n" +
     "<ul class=\"dropdown-menu actions action-button\">\n" +
     "<li ng-if=\"'buildconfigs' | canI : 'update'\">\n" +
-    "<a ng-href=\"{{buildConfig | editResourceURL}}\" role=\"button\">Edit Configuration</a>\n" +
+    "<a ng-href=\"{{buildConfig | editResourceURL}}\" role=\"button\">\n" +
+    "<span ng-if=\"!(buildConfig | isJenkinsPipelineStrategy)\">\n" +
+    "Edit Configuration\n" +
+    "</span>\n" +
+    "<span ng-if=\"buildConfig | isJenkinsPipelineStrategy\">\n" +
+    "Edit Pipeline\n" +
+    "</span>\n" +
+    "</a>\n" +
     "</li>\n" +
     "<li class=\"divider\" ng-if=\"'buildconfigs' | canI : 'update'\"></li>\n" +
     "<li ng-if=\"!build.metadata.deletionTimestamp && (build | isIncompleteBuild) && ('builds' | canI : 'update')\" class=\"visible-xs-inline\">\n" +
@@ -10585,7 +10592,7 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "<build-pipeline build=\"build\"></build-pipeline>\n" +
     "</div>\n" +
     "<div ng-if=\"buildConfig\" class=\"mar-top-sm\">\n" +
-    "<a ng-href=\"{{buildConfigs[buildConfigName] | navigateResourceURL}}\">View History</a>\n" +
+    "<a ng-href=\"{{buildConfigs[buildConfigName] | navigateResourceURL}}\">View Pipeline Runs</a>\n" +
     "<span ng-if=\"'buildconfigs' | canI : 'update'\">\n" +
     "<span class=\"action-divider\">|</span>\n" +
     "<a ng-href=\"{{buildConfig | editResourceURL}}\" role=\"button\">Edit Pipeline</a>\n" +

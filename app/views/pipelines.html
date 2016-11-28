@@ -93,7 +93,7 @@
                   <build-pipeline build="build"></build-pipeline>
                 </div>
                 <div ng-if="buildConfig" class="mar-top-sm">
-                  <a ng-href="{{buildConfigs[buildConfigName] | navigateResourceURL}}">View History</a>
+                  <a ng-href="{{buildConfigs[buildConfigName] | navigateResourceURL}}">View Pipeline Runs</a>
                   <span ng-if="'buildconfigs' | canI : 'update'">
                     <span class="action-divider">|</span>
                     <a ng-href="{{buildConfig | editResourceURL}}" role="button">Edit Pipeline</a>

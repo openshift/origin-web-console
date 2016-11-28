@@ -40,7 +40,14 @@
                      data-toggle="dropdown"><i class="fa fa-ellipsis-v"></i><span class="sr-only">Actions</span></a>
                   <ul class="dropdown-menu actions action-button">
                     <li ng-if="'buildconfigs' | canI : 'update'">
-                      <a ng-href="{{buildConfig | editResourceURL}}" role="button">Edit Configuration</a>
+                      <a ng-href="{{buildConfig | editResourceURL}}" role="button">
+                        <span ng-if="!(buildConfig | isJenkinsPipelineStrategy)">
+                          Edit Configuration
+                        </span>
+                        <span ng-if="buildConfig | isJenkinsPipelineStrategy">
+                          Edit Pipeline
+                        </span>
+                      </a>
                     </li>
                     <li class="divider" ng-if="'buildconfigs' | canI : 'update'"></li>
                     <li ng-if="!build.metadata.deletionTimestamp && (build | isIncompleteBuild) && ('builds' | canI : 'update')"
