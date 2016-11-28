@@ -124,7 +124,8 @@
                          we don't update in the background. -->
                     <deployment-metrics
                         ng-if="selectedTab.metrics && podsForDeployment"
-                        pods="podsForDeployment" containers="replicaSet.spec.template.spec.containers">
+                        pods="podsForDeployment" containers="replicaSet.spec.template.spec.containers"
+                        alerts="alerts">
                     </deployment-metrics>
                   </uib-tab>
                   <uib-tab ng-if="deploymentConfigName && logOptions.version && ('deploymentconfigs/log' | canI : 'get')" active="selectedTab.logs">
