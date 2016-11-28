@@ -26,6 +26,10 @@
           {{volume.secret.secretName}}
         </span>
       </dd>
+      <div ng-repeat="item in volume.secret.items">
+        <dt>Key to File:</dt>
+        <dd>{{item.key}}&#8201;&#8594;&#8201;{{item.path}}</dd>
+      </div>
     </div>
     <div ng-if="volume.persistentVolumeClaim">
       <dt>Type:</dt>
