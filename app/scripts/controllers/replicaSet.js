@@ -205,8 +205,17 @@ angular.module('openshiftConsole')
             errorNotification: false
           }).then(
             // success
-            function(deploymentConfig) {
-              $scope.deploymentConfig = deploymentConfig;
+            function() {
+              watches.push(DataService.watchObject("deploymentconfigs", annotation($scope.replicaSet, 'deploymentConfig'), context, function(deploymentConfig, action) {
+                if (action === "DELETED") {
+                  $scope.alerts["deleted"] = {
+                    type: "warning",
+                    message: "This deployment configuration has been deleted."
+                  };
+                  $scope.deploymentConfigMissing = true;
+                }
+                $scope.deploymentConfig = deploymentConfig;
+              }));
             },
             // failure
             function(e) {
@@ -363,6 +372,7 @@ angular.module('openshiftConsole')
                   type: "warning",
                   message: "This " + displayKind + " has been deleted."
                 };
+                $scope.deploymentMissing = true;
               }
               $scope.replicaSet = replicaSet;
 

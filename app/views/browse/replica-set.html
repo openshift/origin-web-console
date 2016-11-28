@@ -13,12 +13,11 @@
               <h1>
                 {{replicaSet.metadata.name}}
                 <span
-                  ng-if="deploymentConfigMissing"
+                  ng-if="deploymentMissing || deploymentConfigMissing"
                   class="pficon pficon-warning-triangle-o"
-                  style="cursor: help; vertical-align: middle;"
                   data-toggle="tooltip"
                   data-trigger="hover"
-                  title="The deployment's deployment config is missing."
+                  data-original-title="{{deploymentConfigMissing ? 'The deployment configuration for this deployment no longer exists.' : 'This ' + (kind | humanizeKind ) + ' is missing.'}}"
                   aria-hidden="true">
                 </span>
                 <span ng-if="deploymentConfigMissing" class="sr-only">Warning: The deployment's deployment config is missing.</span>

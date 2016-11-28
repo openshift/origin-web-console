@@ -37,6 +37,7 @@ angular.module('openshiftConsole')
     $scope.labelSuggestions = {};
     $scope.forms = {};
     $scope.alerts = {};
+    $scope.deploymentConfigMissing = false;
     $scope.breadcrumbs = BreadcrumbsService.getBreadcrumbs({
       name: $routeParams.deploymentconfig,
       kind: 'DeploymentConfig',
@@ -124,6 +125,7 @@ angular.module('openshiftConsole')
                   type: "warning",
                   message: "This deployment configuration has been deleted."
                 };
+                $scope.deploymentConfigMissing = true;
               }
               $scope.deploymentConfig = deploymentConfig;
               $scope.updatingPausedState = false;

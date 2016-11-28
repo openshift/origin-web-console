@@ -84,7 +84,7 @@
                     </li>
                   </ul>
                 </div>
-                <!-- <span ng-if="deploymentConfig.status.details.message" class="pficon pficon-warning-triangle-o" style="cursor: help;" data-toggle="popover" data-trigger="hover" dynamic-content="{{deploymentConfig.status.details.message}}"></span> -->
+                <span ng-if="deploymentConfigMissing" class="pficon pficon-warning-triangle-o" data-toggle="tooltip" aria-hidden="true" data-original-title="This deployment configuration no longer exists"></span>
                 <small class="meta" ng-if="deploymentConfig">created <span am-time-ago="deploymentConfig.metadata.creationTimestamp"></span></small>
               </h1>
               <labels labels="deploymentConfig.metadata.labels" clickable="true" kind="deployments" title-kind="deployment configs" project-name="{{deploymentConfig.metadata.namespace}}" limit="3"></labels>
