@@ -254,7 +254,7 @@
                                 </div>
                                 <dt ng-if-start="buildConfig.spec.source.binary.asFile">Binary Input as File:</dt>
                                 <dd ng-if-end>{{buildConfig.spec.source.binary.asFile}}</dd>
-                                <div ng-if="buildConfig.spec.source.type == 'None'">
+                                <div ng-if="buildConfig.spec.source.type == 'None' && !(buildConfig | isJenkinsPipelineStrategy)">
                                   <dt>Source:</dt>
                                   <dd>
                                     <i>none</i>
