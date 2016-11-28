@@ -9554,7 +9554,7 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "<div class=\"data-toolbar\">\n" +
     "<ui-select class=\"data-toolbar-dropdown\" ng-model=\"kindSelector.selected\" theme=\"bootstrap\" search-enabled=\"true\" ng-disabled=\"kindSelector.disabled\" title=\"Choose a resource\">\n" +
     "<ui-select-match placeholder=\"Choose a resource\">{{$select.selected.label ? $select.selected.label : ($select.selected.kind | humanizeKind : true)}}</ui-select-match>\n" +
-    "<ui-select-choices repeat=\"kind in kinds | filter : {kind: $select.search} : matchKind | orderBy : 'kind'\">\n" +
+    "<ui-select-choices repeat=\"kind in kinds | filter : {kind: $select.search} : matchKind\">\n" +
     "<div ng-bind-html=\"(kind.label ? kind.label : (kind.kind | humanizeKind : true)) | highlight: $select.search\"></div>\n" +
     "</ui-select-choices>\n" +
     "</ui-select>\n" +
@@ -9584,25 +9584,25 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "<div class=\"container-fluid\">\n" +
     "<div class=\"row\">\n" +
     "<div class=\"col-md-12\">\n" +
-    "<div ng-if=\"kindSelector.selected.kind === 'All' || kindSelector.selected.kind === 'Builds'\">\n" +
-    "<h2>Builds</h2>\n" +
+    "<div ng-if=\"kindSelector.selected.kind === 'All' || kindSelector.selected.kind === 'Pods'\">\n" +
+    "<h2>Pods</h2>\n" +
     "<div class=\"list-view-pf\">\n" +
-    "<div class=\"list-group-item\" ng-if=\"!(filteredBuilds | hashSize)\">\n" +
+    "<div class=\"list-group-item\" ng-if=\"!(filteredPods | hashSize)\">\n" +
     "<div class=\"list-view-pf-main-info\">\n" +
-    "<ellipsis-pulser color=\"dark\" size=\"sm\" msg=\"Loading builds\" ng-if=\"!buildsLoaded\"></ellipsis-pulser>\n" +
+    "<ellipsis-pulser color=\"dark\" size=\"sm\" msg=\"Loading pods\" ng-if=\"!podsLoaded\"></ellipsis-pulser>\n" +
     "<em>\n" +
-    "<div ng-if=\"(builds | hashSize) > 0\">The current filters are hiding all builds.</div>\n" +
-    "<span ng-if=\"buildsLoaded && (builds | hashSize) === 0\">There are no builds in this project.</span>\n" +
+    "<div ng-if=\"(pods | hashSize) > 0\">The current filters are hiding all pods.</div>\n" +
+    "<span ng-if=\"podsLoaded && (pods | hashSize) === 0\">There are no pods in this project.</span>\n" +
     "</em>\n" +
     "</div>\n" +
     "</div>\n" +
-    "<div class=\"list-group-item list-group-item-expandable\" ng-repeat-start=\"build in filteredBuilds track by (build | uid)\" ng-click=\"toggleItem($event, this, build)\" ng-class=\"{'expanded': expanded.builds[build.metadata.name]}\">\n" +
+    "<div class=\"list-group-item list-group-item-expandable\" ng-repeat-start=\"pod in filteredPods track by (pod | uid)\" ng-click=\"toggleItem($event, this, pod)\" ng-class=\"{'expanded': expanded.pods[pod.metadata.name]}\">\n" +
     "<div class=\"list-view-pf-checkbox\">\n" +
-    "<button class=\"sr-only\">{{expanded.builds[build.metadata.name] ? 'Collapse' : 'Expand'}}</button>\n" +
-    "<span ng-if=\"expanded.builds[build.metadata.name]\">\n" +
+    "<button class=\"sr-only\">{{expanded.pods[pod.metadata.name] ? 'Collapse' : 'Expand'}}</button>\n" +
+    "<span ng-if=\"expanded.pods[pod.metadata.name]\">\n" +
     "<span class=\"fa fa-angle-down\"></span>\n" +
     "</span>\n" +
-    "<span ng-if=\"!expanded.builds[build.metadata.name]\">\n" +
+    "<span ng-if=\"!expanded.pods[pod.metadata.name]\">\n" +
     "<span class=\"fa fa-angle-right\"></span>\n" +
     "</span>\n" +
     "</div>\n" +
@@ -9610,46 +9610,47 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "<div class=\"list-view-pf-body\">\n" +
     "<div class=\"list-view-pf-description\">\n" +
     "<div class=\"list-group-item-heading\">\n" +
-    "<a ng-href=\"{{build | navigateResourceURL}}\"><span ng-bind-html=\"build.metadata.name | highlightKeywords : filterKeywords\"></span></a>\n" +
-    "<small>created <span am-time-ago=\"build.metadata.creationTimestamp\"></span></small>\n" +
+    "<a ng-href=\"{{pod | navigateResourceURL}}\"><span ng-bind-html=\"pod.metadata.name | highlightKeywords : filterKeywords\"></span></a>\n" +
+    "<span ng-if=\"pod | isTroubledPod\">\n" +
+    "<pod-warnings pod=\"pod\"></pod-warnings>\n" +
+    "</span>\n" +
+    "<small>created <span am-time-ago=\"pod.metadata.creationTimestamp\"></span></small>\n" +
     "</div>\n" +
     "<div class=\"list-group-item-text\">\n" +
-    "<build-status build=\"build\"></build-status>\n" +
+    "<status-icon status=\"pod | podStatus\" disable-animation fixed-width=\"true\"></status-icon>\n" +
+    "{{pod | podStatus | sentenceCase}}\n" +
     "</div>\n" +
     "</div>\n" +
     "<div class=\"list-view-pf-additional-info\">\n" +
     "<div class=\"list-view-pf-additional-info-item\">\n" +
-    "<span ng-if=\"build.spec.source.type || build.spec.revision.git.commit || build.spec.source.git.uri\">\n" +
-    "<span class=\"fa fa-fw fa-code\"></span>\n" +
-    "<span ng-if=\"build.spec.revision.git.commit\">\n" +
-    "{{build.spec.revision.git.message}}\n" +
-    "<osc-git-link class=\"hash\" uri=\"build.spec.source.git.uri\" ref=\"build.spec.revision.git.commit\">{{build.spec.revision.git.commit | limitTo:7}}</osc-git-link>\n" +
-    "<span ng-if=\"detailed && build.spec.revision.git.author\">\n" +
-    "authored by {{build.spec.revision.git.author.name}}\n" +
-    "</span>\n" +
-    "</span>\n" +
-    "<span ng-if=\"!build.spec.revision.git.commit && build.spec.source.git.uri\">\n" +
-    "<osc-git-link uri=\"build.spec.source.git.uri\">{{build.spec.source.git.uri}}</osc-git-link>\n" +
-    "</span>\n" +
-    "<span ng-if=\"build.spec.source.type && !build.spec.source.git\">\n" +
-    "Source: {{build.spec.source.type}}\n" +
-    "</span>\n" +
-    "</span>\n" +
+    "<span class=\"pficon fa-fw pficon-image\"></span>\n" +
+    "<image-names pod-template=\"pod\" pods=\"[pod]\"></image-names>\n" +
     "</div>\n" +
     "</div>\n" +
     "</div>\n" +
     "</div>\n" +
     "</div>\n" +
-    "<div ng-repeat-end ng-if=\"expanded.builds[build.metadata.name]\" class=\"list-group-expanded-section\" ng-class=\"{'expanded': expanded.builds[build.metadata.name]}\">\n" +
-    "\n" +
-    "<log-viewer ng-if=\"'builds/log' | canI : 'get'\" object=\"build\" context=\"projectContext\" options=\"logOptions.builds[build.metadata.name]\" empty=\"logEmpty.builds[build.metadata.name]\" run=\"logCanRun.builds[build.metadata.name]\" fixed-height=\"250\" full-log-url=\"(build | navigateResourceURL) + '?view=chromeless'\">\n" +
-    "<div ng-if=\"build.status.startTimestamp && !logEmpty.builds[build.metadata.name]\" class=\"log-timestamps\" style=\"margin-left: 0\">\n" +
-    "Log from {{build.status.startTimestamp | date : 'medium'}}\n" +
-    "<span ng-if=\"build.status.completionTimestamp\">\n" +
-    "to {{build.status.completionTimestamp | date : 'medium'}}\n" +
+    "<div ng-repeat-end ng-if=\"expanded.pods[pod.metadata.name]\" class=\"list-group-expanded-section\" ng-class=\"{'expanded': expanded.pods[pod.metadata.name]}\">\n" +
+    "<log-viewer ng-if=\"'pods/log' | canI : 'get'\" object=\"pod\" context=\"projectContext\" options=\"logOptions.pods[pod.metadata.name]\" empty=\"logEmpty.pods[pod.metadata.name]\" run=\"logCanRun.pods[pod.metadata.name]\" fixed-height=\"250\" full-log-url=\"(pod | navigateResourceURL) + '?view=chromeless'\">\n" +
+    "<label for=\"selectLogContainer\">Container:</label>\n" +
+    "<span ng-if=\"pod.spec.containers.length === 1\">\n" +
+    "{{pod.spec.containers[0].name}}\n" +
     "</span>\n" +
-    "</div>\n" +
+    "<select id=\"selectLogContainer\" ng-if=\"pod.spec.containers.length > 1\" ng-model=\"logOptions.pods[pod.metadata.name].container\" ng-options=\"container.name as container.name for container in pod.spec.containers\" ng-init=\"logOptions.pods[pod.metadata.name].container = pod.spec.containers[0].name\">\n" +
+    "</select>\n" +
+    "<span ng-if=\"containerStateReason || containerStatusKey\">\n" +
+    "<span class=\"dash\">&mdash;</span>\n" +
+    "<status-icon status=\"containerStateReason || (containerStatusKey | capitalize)\"></status-icon>\n" +
+    "<span>{{containerStateReason || containerStatusKey | sentenceCase}}</span>\n" +
+    "</span>\n" +
+    "<span ng-if=\"containerStartTime && !logEmpty.pods[pod.metadata.name]\">\n" +
+    "<span class=\"log-timestamps\">Log from {{containerStartTime | date : 'medium'}} <span ng-if=\"containerEndTime\">to {{containerEndTime | date : 'medium'}}</span></span>\n" +
+    "</span>\n" +
     "</log-viewer>\n" +
+    "\n" +
+    "<div class=\"mar-top-lg\" ng-if=\"metricsAvailable\">\n" +
+    "<pod-metrics pod=\"pod\" alerts=\"alerts\"></pod-metrics>\n" +
+    "</div>\n" +
     "</div>\n" +
     "</div>\n" +
     "</div>\n" +
@@ -9750,25 +9751,25 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "</div>\n" +
     "</div>\n" +
     "</div>\n" +
-    "<div ng-if=\"kindSelector.selected.kind === 'All' || kindSelector.selected.kind === 'Pods'\">\n" +
-    "<h2>Pods</h2>\n" +
+    "<div ng-if=\"kindSelector.selected.kind === 'All' || kindSelector.selected.kind === 'Builds'\">\n" +
+    "<h2>Builds</h2>\n" +
     "<div class=\"list-view-pf\">\n" +
-    "<div class=\"list-group-item\" ng-if=\"!(filteredPods | hashSize)\">\n" +
+    "<div class=\"list-group-item\" ng-if=\"!(filteredBuilds | hashSize)\">\n" +
     "<div class=\"list-view-pf-main-info\">\n" +
-    "<ellipsis-pulser color=\"dark\" size=\"sm\" msg=\"Loading pods\" ng-if=\"!podsLoaded\"></ellipsis-pulser>\n" +
+    "<ellipsis-pulser color=\"dark\" size=\"sm\" msg=\"Loading builds\" ng-if=\"!buildsLoaded\"></ellipsis-pulser>\n" +
     "<em>\n" +
-    "<div ng-if=\"(pods | hashSize) > 0\">The current filters are hiding all pods.</div>\n" +
-    "<span ng-if=\"podsLoaded && (pods | hashSize) === 0\">There are no pods in this project.</span>\n" +
+    "<div ng-if=\"(builds | hashSize) > 0\">The current filters are hiding all builds.</div>\n" +
+    "<span ng-if=\"buildsLoaded && (builds | hashSize) === 0\">There are no builds in this project.</span>\n" +
     "</em>\n" +
     "</div>\n" +
     "</div>\n" +
-    "<div class=\"list-group-item list-group-item-expandable\" ng-repeat-start=\"pod in filteredPods track by (pod | uid)\" ng-click=\"toggleItem($event, this, pod)\" ng-class=\"{'expanded': expanded.pods[pod.metadata.name]}\">\n" +
+    "<div class=\"list-group-item list-group-item-expandable\" ng-repeat-start=\"build in filteredBuilds track by (build | uid)\" ng-click=\"toggleItem($event, this, build)\" ng-class=\"{'expanded': expanded.builds[build.metadata.name]}\">\n" +
     "<div class=\"list-view-pf-checkbox\">\n" +
-    "<button class=\"sr-only\">{{expanded.pods[pod.metadata.name] ? 'Collapse' : 'Expand'}}</button>\n" +
-    "<span ng-if=\"expanded.pods[pod.metadata.name]\">\n" +
+    "<button class=\"sr-only\">{{expanded.builds[build.metadata.name] ? 'Collapse' : 'Expand'}}</button>\n" +
+    "<span ng-if=\"expanded.builds[build.metadata.name]\">\n" +
     "<span class=\"fa fa-angle-down\"></span>\n" +
     "</span>\n" +
-    "<span ng-if=\"!expanded.pods[pod.metadata.name]\">\n" +
+    "<span ng-if=\"!expanded.builds[build.metadata.name]\">\n" +
     "<span class=\"fa fa-angle-right\"></span>\n" +
     "</span>\n" +
     "</div>\n" +
@@ -9776,47 +9777,46 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "<div class=\"list-view-pf-body\">\n" +
     "<div class=\"list-view-pf-description\">\n" +
     "<div class=\"list-group-item-heading\">\n" +
-    "<a ng-href=\"{{pod | navigateResourceURL}}\"><span ng-bind-html=\"pod.metadata.name | highlightKeywords : filterKeywords\"></span></a>\n" +
-    "<span ng-if=\"pod | isTroubledPod\">\n" +
-    "<pod-warnings pod=\"pod\"></pod-warnings>\n" +
-    "</span>\n" +
-    "<small>created <span am-time-ago=\"pod.metadata.creationTimestamp\"></span></small>\n" +
+    "<a ng-href=\"{{build | navigateResourceURL}}\"><span ng-bind-html=\"build.metadata.name | highlightKeywords : filterKeywords\"></span></a>\n" +
+    "<small>created <span am-time-ago=\"build.metadata.creationTimestamp\"></span></small>\n" +
     "</div>\n" +
     "<div class=\"list-group-item-text\">\n" +
-    "<status-icon status=\"pod | podStatus\" disable-animation fixed-width=\"true\"></status-icon>\n" +
-    "{{pod | podStatus | sentenceCase}}\n" +
+    "<build-status build=\"build\"></build-status>\n" +
     "</div>\n" +
     "</div>\n" +
     "<div class=\"list-view-pf-additional-info\">\n" +
     "<div class=\"list-view-pf-additional-info-item\">\n" +
-    "<span class=\"pficon fa-fw pficon-image\"></span>\n" +
-    "<image-names pod-template=\"pod\" pods=\"[pod]\"></image-names>\n" +
-    "</div>\n" +
-    "</div>\n" +
-    "</div>\n" +
-    "</div>\n" +
-    "</div>\n" +
-    "<div ng-repeat-end ng-if=\"expanded.pods[pod.metadata.name]\" class=\"list-group-expanded-section\" ng-class=\"{'expanded': expanded.pods[pod.metadata.name]}\">\n" +
-    "<log-viewer ng-if=\"'pods/log' | canI : 'get'\" object=\"pod\" context=\"projectContext\" options=\"logOptions.pods[pod.metadata.name]\" empty=\"logEmpty.pods[pod.metadata.name]\" run=\"logCanRun.pods[pod.metadata.name]\" fixed-height=\"250\" full-log-url=\"(pod | navigateResourceURL) + '?view=chromeless'\">\n" +
-    "<label for=\"selectLogContainer\">Container:</label>\n" +
-    "<span ng-if=\"pod.spec.containers.length === 1\">\n" +
-    "{{pod.spec.containers[0].name}}\n" +
+    "<span ng-if=\"build.spec.source.type || build.spec.revision.git.commit || build.spec.source.git.uri\">\n" +
+    "<span class=\"fa fa-fw fa-code\"></span>\n" +
+    "<span ng-if=\"build.spec.revision.git.commit\">\n" +
+    "{{build.spec.revision.git.message}}\n" +
+    "<osc-git-link class=\"hash\" uri=\"build.spec.source.git.uri\" ref=\"build.spec.revision.git.commit\">{{build.spec.revision.git.commit | limitTo:7}}</osc-git-link>\n" +
+    "<span ng-if=\"detailed && build.spec.revision.git.author\">\n" +
+    "authored by {{build.spec.revision.git.author.name}}\n" +
     "</span>\n" +
-    "<select id=\"selectLogContainer\" ng-if=\"pod.spec.containers.length > 1\" ng-model=\"logOptions.pods[pod.metadata.name].container\" ng-options=\"container.name as container.name for container in pod.spec.containers\" ng-init=\"logOptions.pods[pod.metadata.name].container = pod.spec.containers[0].name\">\n" +
-    "</select>\n" +
-    "<span ng-if=\"containerStateReason || containerStatusKey\">\n" +
-    "<span class=\"dash\">&mdash;</span>\n" +
-    "<status-icon status=\"containerStateReason || (containerStatusKey | capitalize)\"></status-icon>\n" +
-    "<span>{{containerStateReason || containerStatusKey | sentenceCase}}</span>\n" +
     "</span>\n" +
-    "<span ng-if=\"containerStartTime && !logEmpty.pods[pod.metadata.name]\">\n" +
-    "<span class=\"log-timestamps\">Log from {{containerStartTime | date : 'medium'}} <span ng-if=\"containerEndTime\">to {{containerEndTime | date : 'medium'}}</span></span>\n" +
+    "<span ng-if=\"!build.spec.revision.git.commit && build.spec.source.git.uri\">\n" +
+    "<osc-git-link uri=\"build.spec.source.git.uri\">{{build.spec.source.git.uri}}</osc-git-link>\n" +
     "</span>\n" +
-    "</log-viewer>\n" +
+    "<span ng-if=\"build.spec.source.type && !build.spec.source.git\">\n" +
+    "Source: {{build.spec.source.type}}\n" +
+    "</span>\n" +
+    "</span>\n" +
+    "</div>\n" +
+    "</div>\n" +
+    "</div>\n" +
+    "</div>\n" +
+    "</div>\n" +
+    "<div ng-repeat-end ng-if=\"expanded.builds[build.metadata.name]\" class=\"list-group-expanded-section\" ng-class=\"{'expanded': expanded.builds[build.metadata.name]}\">\n" +
     "\n" +
-    "<div class=\"mar-top-lg\" ng-if=\"metricsAvailable\">\n" +
-    "<pod-metrics pod=\"pod\" alerts=\"alerts\"></pod-metrics>\n" +
+    "<log-viewer ng-if=\"'builds/log' | canI : 'get'\" object=\"build\" context=\"projectContext\" options=\"logOptions.builds[build.metadata.name]\" empty=\"logEmpty.builds[build.metadata.name]\" run=\"logCanRun.builds[build.metadata.name]\" fixed-height=\"250\" full-log-url=\"(build | navigateResourceURL) + '?view=chromeless'\">\n" +
+    "<div ng-if=\"build.status.startTimestamp && !logEmpty.builds[build.metadata.name]\" class=\"log-timestamps\" style=\"margin-left: 0\">\n" +
+    "Log from {{build.status.startTimestamp | date : 'medium'}}\n" +
+    "<span ng-if=\"build.status.completionTimestamp\">\n" +
+    "to {{build.status.completionTimestamp | date : 'medium'}}\n" +
+    "</span>\n" +
     "</div>\n" +
+    "</log-viewer>\n" +
     "</div>\n" +
     "</div>\n" +
     "</div>\n" +

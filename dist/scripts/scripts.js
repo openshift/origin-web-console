@@ -4776,20 +4776,18 @@ c.unwatchAll(f);
 c.projectName = a.project, c.alerts = c.alerts || {}, c.renderOptions = c.renderOptions || {}, c.renderOptions.showEventsSidebar = !0, c.renderOptions.collapseEventsSidebar = "true" === localStorage.getItem("monitoring.eventsidebar.collapsed");
 var p = [];
 c.kinds = [ {
-kind:"Pods"
+kind:"All"
 }, {
-kind:"Builds"
+kind:"Pods"
 }, {
 label:"Deployments",
 kind:"ReplicationControllers"
-} ];
-var q = {
-kind:"All"
-};
-c.kinds.push(q), c.kindSelector = {
+}, {
+kind:"Builds"
+} ], c.kindSelector = {
 selected:_.find(c.kinds, {
 kind:a.kind
-}) || q
+}) || _.head(c.kinds)
 }, c.logOptions = {
 pods:{},
 replicationControllers:{},
@@ -4808,47 +4806,47 @@ replicationControllers:{},
 replicaSets:{},
 builds:{}
 };
-var r = d("isNil");
+var q = d("isNil");
 c.filters = {
-hideOlderResources:r(a.hideOlderResources) || "true" === a.hideOlderResources,
+hideOlderResources:q(a.hideOlderResources) || "true" === a.hideOlderResources,
 text:""
 };
-var s, t, u, v;
+var r, s, t, u;
 k.isAvailable().then(function(a) {
 c.metricsAvailable = a;
 });
-var w = d("orderObjectsByDate"), x = [ "metadata.name" ], y = [], z = function() {
-c.filteredPods = h.filterForKeywords(v, x, y), c.filteredReplicationControllers = h.filterForKeywords(t, x, y), c.filteredReplicaSets = h.filterForKeywords(u, x, y), c.filteredBuilds = h.filterForKeywords(s, x, y);
-}, A = function(a) {
+var v = d("orderObjectsByDate"), w = [ "metadata.name" ], x = [], y = function() {
+c.filteredPods = h.filterForKeywords(u, w, x), c.filteredReplicationControllers = h.filterForKeywords(s, w, x), c.filteredReplicaSets = h.filterForKeywords(t, w, x), c.filteredBuilds = h.filterForKeywords(r, w, x);
+}, z = function(a) {
 c.logOptions.pods[a.metadata.name] = {
 container:a.spec.containers[0].name
 }, c.logCanRun.pods[a.metadata.name] = !_.includes([ "New", "Pending", "Unknown" ], a.status.phase);
-}, B = function(a) {
+}, A = function(a) {
 c.logOptions.replicationControllers[a.metadata.name] = {};
 var b = d("annotation")(a, "deploymentVersion");
 b && (c.logOptions.replicationControllers[a.metadata.name].version = b), c.logCanRun.replicationControllers[a.metadata.name] = !_.includes([ "New", "Pending" ], d("deploymentStatus")(a));
-}, C = function(a) {
+}, B = function(a) {
 c.logOptions.builds[a.metadata.name] = {}, c.logCanRun.builds[a.metadata.name] = !_.includes([ "New", "Pending", "Error" ], a.status.phase);
-}, D = function() {
-v = _.filter(c.pods, function(a) {
+}, C = function() {
+u = _.filter(c.pods, function(a) {
 return !c.filters.hideOlderResources || "Succeeded" !== a.status.phase && "Failed" !== a.status.phase;
-}), c.filteredPods = h.filterForKeywords(v, x, y);
-}, E = d("isIncompleteBuild"), F = d("buildConfigForBuild"), G = d("isRecentBuild"), H = function() {
+}), c.filteredPods = h.filterForKeywords(u, w, x);
+}, D = d("isIncompleteBuild"), E = d("buildConfigForBuild"), F = d("isRecentBuild"), G = function() {
 moment().subtract(5, "m");
-s = _.filter(c.builds, function(a) {
+r = _.filter(c.builds, function(a) {
 if (!c.filters.hideOlderResources) return !0;
-if (E(a)) return !0;
-var b = F(a);
-return b ? c.latestBuildByConfig[b].metadata.name === a.metadata.name :G(a);
-}), c.filteredBuilds = h.filterForKeywords(s, x, y);
-}, I = d("deploymentStatus"), J = d("deploymentIsInProgress"), K = function() {
-t = _.filter(c.replicationControllers, function(a) {
-return !c.filters.hideOlderResources || (J(a) || "Active" === I(a));
-}), c.filteredReplicationControllers = h.filterForKeywords(t, x, y);
-}, L = function() {
-u = _.filter(c.replicaSets, function(a) {
+if (D(a)) return !0;
+var b = E(a);
+return b ? c.latestBuildByConfig[b].metadata.name === a.metadata.name :F(a);
+}), c.filteredBuilds = h.filterForKeywords(r, w, x);
+}, H = d("deploymentStatus"), I = d("deploymentIsInProgress"), J = function() {
+s = _.filter(c.replicationControllers, function(a) {
+return !c.filters.hideOlderResources || (I(a) || "Active" === H(a));
+}), c.filteredReplicationControllers = h.filterForKeywords(s, w, x);
+}, K = function() {
+t = _.filter(c.replicaSets, function(a) {
 return !c.filters.hideOlderResources || _.get(a, "status.replicas");
-}), c.filteredReplicaSets = h.filterForKeywords(u, x, y);
+}), c.filteredReplicaSets = h.filterForKeywords(t, w, x);
 };
 c.toggleItem = function(a, b, e) {
 var f = $(a.target);
@@ -4887,7 +4885,7 @@ g = !c.expanded.pods[e.metadata.name], c.expanded.pods[e.metadata.name] = g, h =
 }, c.viewPodsForReplicaSet = function(a) {
 _.isEmpty(c.podsByOwnerUID[a.metadata.uid]) || l.toPodsForDeployment(a);
 };
-var M = function() {
+var L = function() {
 if (c.pods && c.replicationControllers && c.replicaSets) {
 var a = _.toArray(c.replicationControllers).concat(_.toArray(c.replicaSets));
 c.podsByOwnerUID = i.groupBySelector(c.pods, a, {
@@ -4897,27 +4895,27 @@ key:"metadata.uid"
 };
 n.get(a.project).then(_.spread(function(a, d) {
 c.project = a, c.projectContext = d, f.watch("pods", d, function(a) {
-c.podsByName = a.by("metadata.name"), c.pods = w(c.podsByName, !0), M(), c.podsLoaded = !0, _.each(c.pods, A), D(), j.log("pods", c.pods);
+c.podsByName = a.by("metadata.name"), c.pods = v(c.podsByName, !0), L(), c.podsLoaded = !0, _.each(c.pods, z), C(), j.log("pods", c.pods);
 }), f.watch("replicationcontrollers", d, function(a) {
-c.replicationControllers = w(a.by("metadata.name"), !0), M(), c.replicationControllersLoaded = !0, _.each(c.replicationControllers, B), K(), j.log("replicationcontrollers", c.replicationControllers);
+c.replicationControllers = v(a.by("metadata.name"), !0), L(), c.replicationControllersLoaded = !0, _.each(c.replicationControllers, A), J(), j.log("replicationcontrollers", c.replicationControllers);
 }), f.watch("builds", d, function(a) {
-c.builds = w(a.by("metadata.name"), !0), c.latestBuildByConfig = e.latestBuildByConfig(c.builds), c.buildsLoaded = !0, _.each(c.builds, C), H(), j.log("builds", c.builds);
+c.builds = v(a.by("metadata.name"), !0), c.latestBuildByConfig = e.latestBuildByConfig(c.builds), c.buildsLoaded = !0, _.each(c.builds, B), G(), j.log("builds", c.builds);
 }), f.watch({
 group:"extensions",
 resource:"replicasets"
 }, d, function(a) {
-c.replicaSets = w(a.by("metadata.name"), !0), M(), c.replicaSetsLoaded = !0, L(), j.log("replicasets", c.replicaSets);
+c.replicaSets = v(a.by("metadata.name"), !0), L(), c.replicaSetsLoaded = !0, K(), j.log("replicasets", c.replicaSets);
 }), c.$on("$destroy", function() {
 f.unwatchAll(p);
 }), c.$watch("filters.hideOlderResources", function() {
-D(), H(), K(), L();
+C(), G(), J(), K();
 var a = b.search();
 a.hideOlderResources = c.filters.hideOlderResources ? "true" :"false", b.replace().search(a);
 }), c.$watch("kindSelector.selected.kind", function() {
 var a = b.search();
 a.kind = c.kindSelector.selected.kind, b.replace().search(a);
 }), c.$watch("filters.text", _.debounce(function() {
-c.filterKeywords = y = h.generateKeywords(c.filters.text), c.$apply(z);
+c.filterKeywords = x = h.generateKeywords(c.filters.text), c.$apply(y);
 }, 50, {
 maxWait:250
 })), c.$watch("renderOptions.collapseEventsSidebar", function(a, b) {

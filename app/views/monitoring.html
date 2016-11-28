@@ -17,7 +17,7 @@
             <div class="data-toolbar">
               <ui-select class="data-toolbar-dropdown" ng-model="kindSelector.selected" theme="bootstrap" search-enabled="true" ng-disabled="kindSelector.disabled" title="Choose a resource">
                 <ui-select-match placeholder="Choose a resource">{{$select.selected.label ? $select.selected.label : ($select.selected.kind | humanizeKind : true)}}</ui-select-match>
-                <ui-select-choices repeat="kind in kinds | filter : {kind: $select.search} : matchKind | orderBy : 'kind'">
+                <ui-select-choices repeat="kind in kinds | filter : {kind: $select.search} : matchKind">
                   <div ng-bind-html="(kind.label ? kind.label : (kind.kind | humanizeKind : true)) | highlight: $select.search"></div>
                 </ui-select-choices>
               </ui-select>
@@ -56,28 +56,28 @@
           <div class="container-fluid">
             <div class="row">
               <div class="col-md-12">
-                <div ng-if="kindSelector.selected.kind === 'All' || kindSelector.selected.kind === 'Builds'">
-                  <h2>Builds</h2>
+                <div ng-if="kindSelector.selected.kind === 'All' || kindSelector.selected.kind === 'Pods'">
+                  <h2>Pods</h2>
                   <div class="list-view-pf">
-                    <div class="list-group-item" ng-if="!(filteredBuilds | hashSize)">
+                    <div class="list-group-item" ng-if="!(filteredPods | hashSize)">
                       <div class="list-view-pf-main-info">
-                        <ellipsis-pulser color="dark" size="sm" msg="Loading builds" ng-if="!buildsLoaded"></ellipsis-pulser>
+                        <ellipsis-pulser color="dark" size="sm" msg="Loading pods" ng-if="!podsLoaded"></ellipsis-pulser>
                         <em>
-                          <div ng-if="(builds | hashSize) > 0">The current filters are hiding all builds.</div>
-                          <span ng-if="buildsLoaded && (builds | hashSize) === 0">There are no builds in this project.</span>
+                          <div ng-if="(pods | hashSize) > 0">The current filters are hiding all pods.</div>
+                          <span ng-if="podsLoaded && (pods | hashSize) === 0">There are no pods in this project.</span>
                         </em>
                       </div>
                     </div>
                     <div class="list-group-item list-group-item-expandable"
-                         ng-repeat-start="build in filteredBuilds track by (build | uid)"
-                         ng-click="toggleItem($event, this, build)"
-                         ng-class="{'expanded': expanded.builds[build.metadata.name]}">
+                         ng-repeat-start="pod in filteredPods track by (pod | uid)"
+                         ng-click="toggleItem($event, this, pod)"
+                         ng-class="{'expanded': expanded.pods[pod.metadata.name]}">
                       <div class="list-view-pf-checkbox">
-                        <button class="sr-only">{{expanded.builds[build.metadata.name] ? 'Collapse' : 'Expand'}}</button>
-                        <span ng-if="expanded.builds[build.metadata.name]">
+                        <button class="sr-only">{{expanded.pods[pod.metadata.name] ? 'Collapse' : 'Expand'}}</button>
+                        <span ng-if="expanded.pods[pod.metadata.name]">
                           <span class="fa fa-angle-down"></span>
                         </span>
-                        <span ng-if="!expanded.builds[build.metadata.name]">
+                        <span ng-if="!expanded.pods[pod.metadata.name]">
                           <span class="fa fa-angle-right"></span>
                         </span>
                       </div>
@@ -86,59 +86,66 @@
                         <div class="list-view-pf-body">
                           <div class="list-view-pf-description">
                             <div class="list-group-item-heading">
-                              <a ng-href="{{build | navigateResourceURL}}"><span ng-bind-html="build.metadata.name | highlightKeywords : filterKeywords"></span></a>
-                              <small>created <span am-time-ago="build.metadata.creationTimestamp"></span></small>
+                              <a ng-href="{{pod | navigateResourceURL}}"><span ng-bind-html="pod.metadata.name | highlightKeywords : filterKeywords"></span></a>
+                              <span ng-if="pod | isTroubledPod">
+                                <pod-warnings pod="pod"></pod-warnings>
+                              </span>
+                              <small>created <span am-time-ago="pod.metadata.creationTimestamp"></span></small>
                             </div>
                             <div class="list-group-item-text">
-                              <build-status build="build"></build-status>
+                              <status-icon status="pod | podStatus" disable-animation fixed-width="true"></status-icon>
+                              {{pod | podStatus | sentenceCase}}
                             </div>
                           </div>
                           <div class="list-view-pf-additional-info">
                             <div class="list-view-pf-additional-info-item">
-                              <span ng-if="build.spec.source.type || build.spec.revision.git.commit || build.spec.source.git.uri">
-                                <span class="fa fa-fw fa-code"></span>
-                                <span ng-if="build.spec.revision.git.commit">
-                                  {{build.spec.revision.git.message}}
-                                  <osc-git-link
-                                    class="hash"
-                                    uri="build.spec.source.git.uri"
-                                    ref="build.spec.revision.git.commit">{{build.spec.revision.git.commit | limitTo:7}}</osc-git-link>
-                                  <span ng-if="detailed && build.spec.revision.git.author">
-                                    authored by {{build.spec.revision.git.author.name}}
-                                  </span>
-                                </span>
-                                <span ng-if="!build.spec.revision.git.commit && build.spec.source.git.uri">
-                                  <osc-git-link uri="build.spec.source.git.uri">{{build.spec.source.git.uri}}</osc-git-link>
-                                </span>
-                                <span ng-if="build.spec.source.type && !build.spec.source.git">
-                                  Source: {{build.spec.source.type}}
-                                </span>
-                              </span>
+                              <span class="pficon fa-fw pficon-image"></span>
+                              <image-names pod-template="pod" pods="[pod]"></image-names>
                             </div>
                           </div>
                         </div>
                       </div>
                     </div>
-                    <div ng-repeat-end ng-if="expanded.builds[build.metadata.name]" class="list-group-expanded-section" ng-class="{'expanded': expanded.builds[build.metadata.name]}">
-                      <!-- TODO fix vanilla RCs -->
+                    <div ng-repeat-end ng-if="expanded.pods[pod.metadata.name]" class="list-group-expanded-section" ng-class="{'expanded': expanded.pods[pod.metadata.name]}">
                       <log-viewer
-                        ng-if="'builds/log' | canI : 'get'"
-                        object="build"
+                        ng-if="'pods/log' | canI : 'get'"
+                        object="pod"
                         context="projectContext"
-                        options="logOptions.builds[build.metadata.name]"
-                        empty="logEmpty.builds[build.metadata.name]"
-                        run="logCanRun.builds[build.metadata.name]"
+                        options="logOptions.pods[pod.metadata.name]"
+                        empty="logEmpty.pods[pod.metadata.name]"
+                        run="logCanRun.pods[pod.metadata.name]"
                         fixed-height="250"
-                        full-log-url="(build | navigateResourceURL) + '?view=chromeless'">
+                        full-log-url="(pod | navigateResourceURL) + '?view=chromeless'">
 
-                        <div ng-if="build.status.startTimestamp && !logEmpty.builds[build.metadata.name]" class="log-timestamps" style="margin-left: 0;">
-                          Log from {{build.status.startTimestamp  | date : 'medium'}}
-                          <span ng-if="build.status.completionTimestamp">
-                            to {{build.status.completionTimestamp  | date : 'medium'}}
-                          </span>
-                        </div>
+                        <label for="selectLogContainer">Container:</label>
+
+                        <span ng-if="pod.spec.containers.length === 1">
+                          {{pod.spec.containers[0].name}}
+                        </span>
+
+                        <select
+                          id="selectLogContainer"
+                          ng-if="pod.spec.containers.length > 1"
+                          ng-model="logOptions.pods[pod.metadata.name].container"
+                          ng-options="container.name as container.name for container in pod.spec.containers"
+                          ng-init="logOptions.pods[pod.metadata.name].container = pod.spec.containers[0].name">
+                        </select>
+
+                        <span ng-if="containerStateReason || containerStatusKey">
+                          <span class="dash">&mdash;</span>
+                          <status-icon status="containerStateReason || (containerStatusKey | capitalize)"></status-icon>
+                          <span>{{containerStateReason || containerStatusKey | sentenceCase}}</span>
+                        </span>
+
+                        <span ng-if="containerStartTime && !logEmpty.pods[pod.metadata.name]">
+                          <span class="log-timestamps">Log from {{containerStartTime  | date : 'medium'}} <span ng-if="containerEndTime">to {{containerEndTime  | date : 'medium'}}</span></span>
+                        </span>
 
                       </log-viewer>
+                      <!-- Until the metrics directive pulls the metrics from the time range of the life of the pod, hide the metrics for old stuff -->
+                      <div class="mar-top-lg" ng-if="metricsAvailable">
+                        <pod-metrics pod="pod" alerts="alerts"></pod-metrics>
+                      </div>
                     </div>
                   </div>
                 </div>
@@ -265,28 +272,28 @@
                     </div>
                   </div>
                 </div>
-                <div ng-if="kindSelector.selected.kind === 'All' || kindSelector.selected.kind === 'Pods'">
-                  <h2>Pods</h2>
+                <div ng-if="kindSelector.selected.kind === 'All' || kindSelector.selected.kind === 'Builds'">
+                  <h2>Builds</h2>
                   <div class="list-view-pf">
-                    <div class="list-group-item" ng-if="!(filteredPods | hashSize)">
+                    <div class="list-group-item" ng-if="!(filteredBuilds | hashSize)">
                       <div class="list-view-pf-main-info">
-                        <ellipsis-pulser color="dark" size="sm" msg="Loading pods" ng-if="!podsLoaded"></ellipsis-pulser>
+                        <ellipsis-pulser color="dark" size="sm" msg="Loading builds" ng-if="!buildsLoaded"></ellipsis-pulser>
                         <em>
-                          <div ng-if="(pods | hashSize) > 0">The current filters are hiding all pods.</div>
-                          <span ng-if="podsLoaded && (pods | hashSize) === 0">There are no pods in this project.</span>
+                          <div ng-if="(builds | hashSize) > 0">The current filters are hiding all builds.</div>
+                          <span ng-if="buildsLoaded && (builds | hashSize) === 0">There are no builds in this project.</span>
                         </em>
                       </div>
                     </div>
                     <div class="list-group-item list-group-item-expandable"
-                         ng-repeat-start="pod in filteredPods track by (pod | uid)"
-                         ng-click="toggleItem($event, this, pod)"
-                         ng-class="{'expanded': expanded.pods[pod.metadata.name]}">
+                         ng-repeat-start="build in filteredBuilds track by (build | uid)"
+                         ng-click="toggleItem($event, this, build)"
+                         ng-class="{'expanded': expanded.builds[build.metadata.name]}">
                       <div class="list-view-pf-checkbox">
-                        <button class="sr-only">{{expanded.pods[pod.metadata.name] ? 'Collapse' : 'Expand'}}</button>
-                        <span ng-if="expanded.pods[pod.metadata.name]">
+                        <button class="sr-only">{{expanded.builds[build.metadata.name] ? 'Collapse' : 'Expand'}}</button>
+                        <span ng-if="expanded.builds[build.metadata.name]">
                           <span class="fa fa-angle-down"></span>
                         </span>
-                        <span ng-if="!expanded.pods[pod.metadata.name]">
+                        <span ng-if="!expanded.builds[build.metadata.name]">
                           <span class="fa fa-angle-right"></span>
                         </span>
                       </div>
@@ -295,66 +302,59 @@
                         <div class="list-view-pf-body">
                           <div class="list-view-pf-description">
                             <div class="list-group-item-heading">
-                              <a ng-href="{{pod | navigateResourceURL}}"><span ng-bind-html="pod.metadata.name | highlightKeywords : filterKeywords"></span></a>
-                              <span ng-if="pod | isTroubledPod">
-                                <pod-warnings pod="pod"></pod-warnings>
-                              </span>
-                              <small>created <span am-time-ago="pod.metadata.creationTimestamp"></span></small>
+                              <a ng-href="{{build | navigateResourceURL}}"><span ng-bind-html="build.metadata.name | highlightKeywords : filterKeywords"></span></a>
+                              <small>created <span am-time-ago="build.metadata.creationTimestamp"></span></small>
                             </div>
                             <div class="list-group-item-text">
-                              <status-icon status="pod | podStatus" disable-animation fixed-width="true"></status-icon>
-                              {{pod | podStatus | sentenceCase}}
+                              <build-status build="build"></build-status>
                             </div>
                           </div>
                           <div class="list-view-pf-additional-info">
                             <div class="list-view-pf-additional-info-item">
-                              <span class="pficon fa-fw pficon-image"></span>
-                              <image-names pod-template="pod" pods="[pod]"></image-names>
+                              <span ng-if="build.spec.source.type || build.spec.revision.git.commit || build.spec.source.git.uri">
+                                <span class="fa fa-fw fa-code"></span>
+                                <span ng-if="build.spec.revision.git.commit">
+                                  {{build.spec.revision.git.message}}
+                                  <osc-git-link
+                                    class="hash"
+                                    uri="build.spec.source.git.uri"
+                                    ref="build.spec.revision.git.commit">{{build.spec.revision.git.commit | limitTo:7}}</osc-git-link>
+                                  <span ng-if="detailed && build.spec.revision.git.author">
+                                    authored by {{build.spec.revision.git.author.name}}
+                                  </span>
+                                </span>
+                                <span ng-if="!build.spec.revision.git.commit && build.spec.source.git.uri">
+                                  <osc-git-link uri="build.spec.source.git.uri">{{build.spec.source.git.uri}}</osc-git-link>
+                                </span>
+                                <span ng-if="build.spec.source.type && !build.spec.source.git">
+                                  Source: {{build.spec.source.type}}
+                                </span>
+                              </span>
                             </div>
                           </div>
                         </div>
                       </div>
                     </div>
-                    <div ng-repeat-end ng-if="expanded.pods[pod.metadata.name]" class="list-group-expanded-section" ng-class="{'expanded': expanded.pods[pod.metadata.name]}">
+                    <div ng-repeat-end ng-if="expanded.builds[build.metadata.name]" class="list-group-expanded-section" ng-class="{'expanded': expanded.builds[build.metadata.name]}">
+                      <!-- TODO fix vanilla RCs -->
                       <log-viewer
-                        ng-if="'pods/log' | canI : 'get'"
-                        object="pod"
+                        ng-if="'builds/log' | canI : 'get'"
+                        object="build"
                         context="projectContext"
-                        options="logOptions.pods[pod.metadata.name]"
-                        empty="logEmpty.pods[pod.metadata.name]"
-                        run="logCanRun.pods[pod.metadata.name]"
+                        options="logOptions.builds[build.metadata.name]"
+                        empty="logEmpty.builds[build.metadata.name]"
+                        run="logCanRun.builds[build.metadata.name]"
                         fixed-height="250"
-                        full-log-url="(pod | navigateResourceURL) + '?view=chromeless'">
+                        full-log-url="(build | navigateResourceURL) + '?view=chromeless'">
 
-                        <label for="selectLogContainer">Container:</label>
-
-                        <span ng-if="pod.spec.containers.length === 1">
-                          {{pod.spec.containers[0].name}}
-                        </span>
-
-                        <select
-                          id="selectLogContainer"
-                          ng-if="pod.spec.containers.length > 1"
-                          ng-model="logOptions.pods[pod.metadata.name].container"
-                          ng-options="container.name as container.name for container in pod.spec.containers"
-                          ng-init="logOptions.pods[pod.metadata.name].container = pod.spec.containers[0].name">
-                        </select>
-
-                        <span ng-if="containerStateReason || containerStatusKey">
-                          <span class="dash">&mdash;</span>
-                          <status-icon status="containerStateReason || (containerStatusKey | capitalize)"></status-icon>
-                          <span>{{containerStateReason || containerStatusKey | sentenceCase}}</span>
-                        </span>
-
-                        <span ng-if="containerStartTime && !logEmpty.pods[pod.metadata.name]">
-                          <span class="log-timestamps">Log from {{containerStartTime  | date : 'medium'}} <span ng-if="containerEndTime">to {{containerEndTime  | date : 'medium'}}</span></span>
-                        </span>
+                        <div ng-if="build.status.startTimestamp && !logEmpty.builds[build.metadata.name]" class="log-timestamps" style="margin-left: 0;">
+                          Log from {{build.status.startTimestamp  | date : 'medium'}}
+                          <span ng-if="build.status.completionTimestamp">
+                            to {{build.status.completionTimestamp  | date : 'medium'}}
+                          </span>
+                        </div>
 
                       </log-viewer>
-                      <!-- Until the metrics directive pulls the metrics from the time range of the life of the pod, hide the metrics for old stuff -->
-                      <div class="mar-top-lg" ng-if="metricsAvailable">
-                        <pod-metrics pod="pod" alerts="alerts"></pod-metrics>
-                      </div>
                     </div>
                   </div>
                 </div>
