@@ -1704,7 +1704,12 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "<div class=\"pull-right dropdown\" ng-if=\"buildConfig\" ng-hide=\"!('buildConfigs' | canIDoAny)\">\n" +
     "\n" +
     "<button class=\"btn btn-default hidden-xs\" ng-if=\"'buildconfigs/instantiate' | canI : 'create'\" ng-click=\"startBuild()\">\n" +
+    "<span ng-if=\"!(buildConfig | isJenkinsPipelineStrategy)\">\n" +
     "Start Build\n" +
+    "</span>\n" +
+    "<span ng-if=\"buildConfig | isJenkinsPipelineStrategy\">\n" +
+    "Start Pipeline\n" +
+    "</span>\n" +
     "</button>\n" +
     "\n" +
     "<button type=\"button\" class=\"dropdown-toggle actions-dropdown-btn btn btn-default hidden-xs\" data-toggle=\"dropdown\">\n" +
@@ -1714,7 +1719,14 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "<a href=\"\" class=\"dropdown-toggle actions-dropdown-kebab visible-xs-inline\" data-toggle=\"dropdown\"><i class=\"fa fa-ellipsis-v\"></i><span class=\"sr-only\">Actions</span></a>\n" +
     "<ul class=\"dropdown-menu actions action-button\">\n" +
     "<li class=\"visible-xs-inline\" ng-if=\"'buildconfigs/instantiate' | canI : 'create'\">\n" +
-    "<a href=\"\" role=\"button\" ng-click=\"startBuild()\">Start Build</a>\n" +
+    "<a href=\"\" role=\"button\" ng-click=\"startBuild()\">\n" +
+    "<span ng-if=\"!(buildConfig | isJenkinsPipelineStrategy)\">\n" +
+    "Start Build\n" +
+    "</span>\n" +
+    "<span ng-if=\"buildConfig | isJenkinsPipelineStrategy\">\n" +
+    "Start Pipeline\n" +
+    "</span>\n" +
+    "</a>\n" +
     "</li>\n" +
     "<li ng-if=\"'buildconfigs' | canI : 'update'\">\n" +
     "<a ng-href=\"{{buildConfig | editResourceURL}}\" role=\"button\">Edit</a>\n" +
@@ -1762,7 +1774,12 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "</span>\n" +
     "</p>\n" +
     "<button class=\"btn btn-primary btn-lg\" ng-click=\"startBuild(buildConfig.metadata.name)\" ng-if=\"'buildconfigs/instantiate' | canI : 'create'\">\n" +
+    "<span ng-if=\"!(buildConfig | isJenkinsPipelineStrategy)\">\n" +
     "Start Build\n" +
+    "</span>\n" +
+    "<span ng-if=\"buildConfig | isJenkinsPipelineStrategy\">\n" +
+    "Start Pipeline\n" +
+    "</span>\n" +
     "</button>\n" +
     "</div>\n" +
     "\n" +
