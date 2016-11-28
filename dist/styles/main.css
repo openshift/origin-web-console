@@ -3541,8 +3541,8 @@ to{transform:rotate(359deg)}
 .wizard-pf-review-content .wizard-pf-review-item.sub-item{margin-left:10px}
 .wizard-pf-review-content .wizard-pf-review-item .wizard-pf-review-item-label{font-weight:700;padding-right:10px}
 .wizard-pf-review-content .wizard-pf-review-item .wizard-pf-review-item-field{font-weight:700;margin:5px 0;padding-right:10px}
-.card-pf-body,.wizard-pf-review-content .wizard-pf-review-item .wizard-pf-review-item-field:last-of-type{margin-bottom:0}
 .wizard-pf-review-content .wizard-pf-review-item .wizard-pf-review-item-field:first-of-type{margin-top:0}
+.wizard-pf-review-content .wizard-pf-review-item .wizard-pf-review-item-field:last-of-type{margin-bottom:0}
 .wizard-pf-review-content .wizard-pf-review-item .wizard-pf-review-item-field.sub-field{margin-left:10px}
 .wizard-pf-success-icon{color:#3f9c35;font-size:72.8px;line-height:72.8px}
 .wizard-pf-footer{border-top:1px solid #d1d1d1;margin-top:0;padding-bottom:17px}
@@ -3581,9 +3581,12 @@ to{transform:rotate(359deg)}
 .btn-flat-default:focus,.btn-flat-default:hover{background-color:#f7f7f7;border-color:#e7e7e7}
 .copy-to-clipboard input.form-control:read-only{background-color:#fff;color:#363636}
 .input-group-addon.wildcard-prefix{padding-left:10px}
+.editor-examples{padding:19px;margin-bottom:20px;border:1px solid #d1d1d1}
+.editor-examples .copy-to-clipboard{margin-top:3px}
 .card-pf{box-shadow:0 3px 1px -2px rgba(0,0,0,.15),0 2px 2px 0 rgba(0,0,0,.1),0 1px 5px 0 rgba(0,0,0,.09)}
 .card-pf .image-icon,.card-pf .template-icon{font-size:28px;line-height:1;margin-right:15px;opacity:.38}
 .card-pf-badge{color:#999;font-size:11px;text-transform:uppercase}
+.card-pf-body{margin-bottom:0}
 .card-pf-title-with-icon{align-items:center;display:flex;margin-bottom:15px}
 .row-cards-pf-flex{display:flex;flex-wrap:wrap}
 .row-cards-pf-flex:before{display:none}
