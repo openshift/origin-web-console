@@ -11379,7 +11379,11 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "<div ng-if=\"loaded\" class=\"row\">\n" +
     "<div class=\"col-md-12\">\n" +
     "<h2>Source Secrets</h2>\n" +
-    "<table class=\"table table-bordered table-hover table-mobile secrets-table\">\n" +
+    "<table class=\"table table-bordered table-hover table-mobile secrets-table table-word-break-all\">\n" +
+    "<colgroup>\n" +
+    "<col class=\"col-sm-5\">\n" +
+    "<col class=\"col-sm-5\">\n" +
+    "</colgroup>\n" +
     "<thead>\n" +
     "<tr>\n" +
     "<th>Name</th>\n" +
@@ -11400,7 +11404,7 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "<td data-title=\"Type\">\n" +
     "{{secret.type}}\n" +
     "</td>\n" +
-    "<td data-title=\"Created\">\n" +
+    "<td data-title=\"Created\" class=\"word-break-normal\">\n" +
     "<span am-time-ago=\"secret.metadata.creationTimestamp\"></span>\n" +
     "</td>\n" +
     "</tr>\n" +
@@ -11408,7 +11412,11 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "</table>\n" +
     "<div ng-if=\"secretsByType.images.length !== 0\">\n" +
     "<h2>Image Secrets</h2>\n" +
-    "<table class=\"table table-bordered table-hover table-mobile secrets-table\">\n" +
+    "<table class=\"table table-bordered table-hover table-mobile secrets-table table-word-break-all\">\n" +
+    "<colgroup>\n" +
+    "<col class=\"col-sm-5\">\n" +
+    "<col class=\"col-sm-5\">\n" +
+    "</colgroup>\n" +
     "<thead>\n" +
     "<tr>\n" +
     "<th>Name</th>\n" +
@@ -11424,7 +11432,7 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "<td data-title=\"Type\">\n" +
     "{{secret.type}}\n" +
     "</td>\n" +
-    "<td data-title=\"Created\">\n" +
+    "<td data-title=\"Created\" class=\"word-break-normal\">\n" +
     "<span am-time-ago=\"secret.metadata.creationTimestamp\"></span>\n" +
     "</td>\n" +
     "</tr>\n" +
@@ -11433,7 +11441,11 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "</div>\n" +
     "<div ng-if=\"secretsByType.other.length !== 0\">\n" +
     "<h2>Other Secrets</h2>\n" +
-    "<table class=\"table table-bordered table-hover table-mobile secrets-table\">\n" +
+    "<table class=\"table table-bordered table-hover table-mobile secrets-table table-word-break-all\">\n" +
+    "<colgroup>\n" +
+    "<col class=\"col-sm-5\">\n" +
+    "<col class=\"col-sm-5\">\n" +
+    "</colgroup>\n" +
     "<thead>\n" +
     "<tr>\n" +
     "<th>Name</th>\n" +
@@ -11449,7 +11461,7 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "<td data-title=\"Type\">\n" +
     "{{secret.type}}\n" +
     "</td>\n" +
-    "<td data-title=\"Created\">\n" +
+    "<td data-title=\"Created\" class=\"word-break-normal\">\n" +
     "<span am-time-ago=\"secret.metadata.creationTimestamp\"></span>\n" +
     "</td>\n" +
     "</tr>\n" +
