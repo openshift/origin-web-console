@@ -98,13 +98,13 @@
         <div ng-if-end class="small">
           <a href="" ng-click="showJenkinsfileExamples()">What's a Jenkinsfile?</a>
         </div>
-        <dt ng-if-start="build.spec.strategy.jenkinsPipelineStrategy.jenkinsfile">
+        <div ng-if-start="build.spec.strategy.jenkinsPipelineStrategy.jenkinsfile" class="small pull-right mar-top-sm">
+          <a href="" ng-click="showJenkinsfileExamples()">What's a Jenkinsfile?</a>
+        </div>
+        <dt>
           Jenkinsfile:
         </dt>
         <dd></dd>
-        <div class="small pull-right mar-top-sm">
-          <a href="" ng-click="showJenkinsfileExamples()">What's a Jenkinsfile?</a>
-        </div>
         <div ng-if-end ui-ace="{
           mode: 'groovy',
           theme: 'eclipse',
@@ -117,7 +117,7 @@
           advanced: {
             highlightActiveLine: false
           }
-        }" readonly ng-model="build.spec.strategy.jenkinsPipelineStrategy.jenkinsfile" class="ace-bordered ace-inline ace-read-only mar-top-md"></div>
+        }" readonly ng-model="build.spec.strategy.jenkinsPipelineStrategy.jenkinsfile" class="ace-bordered ace-inline ace-read-only"></div>
       </dl>
     </div>
   </div>

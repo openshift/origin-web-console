@@ -1324,13 +1324,13 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "<div ng-if-end class=\"small\">\n" +
     "<a href=\"\" ng-click=\"showJenkinsfileExamples()\">What's a Jenkinsfile?</a>\n" +
     "</div>\n" +
-    "<dt ng-if-start=\"build.spec.strategy.jenkinsPipelineStrategy.jenkinsfile\">\n" +
+    "<div ng-if-start=\"build.spec.strategy.jenkinsPipelineStrategy.jenkinsfile\" class=\"small pull-right mar-top-sm\">\n" +
+    "<a href=\"\" ng-click=\"showJenkinsfileExamples()\">What's a Jenkinsfile?</a>\n" +
+    "</div>\n" +
+    "<dt>\n" +
     "Jenkinsfile:\n" +
     "</dt>\n" +
     "<dd></dd>\n" +
-    "<div class=\"small pull-right mar-top-sm\">\n" +
-    "<a href=\"\" ng-click=\"showJenkinsfileExamples()\">What's a Jenkinsfile?</a>\n" +
-    "</div>\n" +
     "<div ng-if-end ui-ace=\"{\n" +
     "          mode: 'groovy',\n" +
     "          theme: 'eclipse',\n" +
@@ -1343,7 +1343,7 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "          advanced: {\n" +
     "            highlightActiveLine: false\n" +
     "          }\n" +
-    "        }\" readonly=\"readonly\" ng-model=\"build.spec.strategy.jenkinsPipelineStrategy.jenkinsfile\" class=\"ace-bordered ace-inline ace-read-only mar-top-md\"></div>\n" +
+    "        }\" readonly=\"readonly\" ng-model=\"build.spec.strategy.jenkinsPipelineStrategy.jenkinsfile\" class=\"ace-bordered ace-inline ace-read-only\"></div>\n" +
     "</dl>\n" +
     "</div>\n" +
     "</div>\n" +
