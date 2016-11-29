@@ -1891,7 +1891,6 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "<dt ng-if=\"buildConfig.spec.source.contextDir\">Source Context Dir:</dt>\n" +
     "<dd ng-if=\"buildConfig.spec.source.contextDir\">{{buildConfig.spec.source.contextDir}}</dd>\n" +
     "</div>\n" +
-    "<div ng-if=\"buildConfig | isJenkinsPipelineStrategy\">\n" +
     "<div ng-if=\"buildConfig.spec.strategy.jenkinsPipelineStrategy.jenkinsfilePath\">\n" +
     "<dt>Jenkinsfile Path:</dt>\n" +
     "<dd ng-if=\"buildConfig | jenkinsfileLink\">\n" +
@@ -1902,28 +1901,6 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "</dd>\n" +
     "<div class=\"small\">\n" +
     "<a href=\"\" ng-click=\"showJenkinsfileExamples()\">What's a Jenkinsfile?</a>\n" +
-    "</div>\n" +
-    "</div>\n" +
-    "<div ng-if=\"buildConfig.spec.strategy.jenkinsPipelineStrategy.jenkinsfile\">\n" +
-    "<div class=\"small pull-right mar-top-sm\">\n" +
-    "<a href=\"\" ng-click=\"showJenkinsfileExamples()\">What's a Jenkinsfile?</a>\n" +
-    "</div>\n" +
-    "<dt>\n" +
-    "Jenkinsfile:\n" +
-    "</dt><dd></dd>\n" +
-    "<div ui-ace=\"{\n" +
-    "                                      mode: 'groovy',\n" +
-    "                                      theme: 'eclipse',\n" +
-    "                                      showGutter: false,\n" +
-    "                                      rendererOptions: {\n" +
-    "                                        fadeFoldWidgets: true,\n" +
-    "                                        highlightActiveLine: false,\n" +
-    "                                        showPrintMargin: false\n" +
-    "                                      },\n" +
-    "                                      advanced: {\n" +
-    "                                        highlightActiveLine: false\n" +
-    "                                      }\n" +
-    "                                    }\" readonly=\"readonly\" ng-model=\"buildConfig.spec.strategy.jenkinsPipelineStrategy.jenkinsfile\" class=\"ace-bordered ace-inline ace-read-only\"></div>\n" +
     "</div>\n" +
     "</div>\n" +
     "<dt ng-if-start=\"buildConfig.spec.source.binary.asFile\">Binary Input as File:</dt>\n" +
@@ -1990,6 +1967,7 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "</span>\n" +
     "</dd>\n" +
     "</div>\n" +
+    "\n" +
     "<div ng-if=\"buildConfig.spec.source.dockerfile\">\n" +
     "<dt>Dockerfile:</dt><dd></dd>\n" +
     "<div ui-ace=\"{\n" +
@@ -2007,6 +1985,27 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "                                    highlightActiveLine: false\n" +
     "                                  }\n" +
     "                                }\" readonly=\"readonly\" ng-model=\"buildConfig.spec.source.dockerfile\" class=\"ace-bordered ace-read-only ace-inline dockerfile-mode mar-top-md\"></div>\n" +
+    "</div>\n" +
+    "<div ng-if=\"buildConfig.spec.strategy.jenkinsPipelineStrategy.jenkinsfile\">\n" +
+    "<div class=\"small pull-right mar-top-sm\">\n" +
+    "<a href=\"\" ng-click=\"showJenkinsfileExamples()\">What's a Jenkinsfile?</a>\n" +
+    "</div>\n" +
+    "<dt>\n" +
+    "Jenkinsfile:\n" +
+    "</dt><dd></dd>\n" +
+    "<div ui-ace=\"{\n" +
+    "                                  mode: 'groovy',\n" +
+    "                                  theme: 'eclipse',\n" +
+    "                                  showGutter: false,\n" +
+    "                                  rendererOptions: {\n" +
+    "                                    fadeFoldWidgets: true,\n" +
+    "                                    highlightActiveLine: false,\n" +
+    "                                    showPrintMargin: false\n" +
+    "                                  },\n" +
+    "                                  advanced: {\n" +
+    "                                    highlightActiveLine: false\n" +
+    "                                  }\n" +
+    "                                }\" readonly=\"readonly\" ng-model=\"buildConfig.spec.strategy.jenkinsPipelineStrategy.jenkinsfile\" class=\"ace-bordered ace-inline ace-read-only\"></div>\n" +
     "</div>\n" +
     "</dl>\n" +
     "</div>\n" +
