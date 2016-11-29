@@ -1914,7 +1914,7 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "</div>\n" +
     "<dt ng-if-start=\"buildConfig.spec.source.binary.asFile\">Binary Input as File:</dt>\n" +
     "<dd ng-if-end>{{buildConfig.spec.source.binary.asFile}}</dd>\n" +
-    "<div ng-if=\"buildConfig.spec.source.type == 'None'\">\n" +
+    "<div ng-if=\"buildConfig.spec.source.type == 'None' && !(buildConfig | isJenkinsPipelineStrategy)\">\n" +
     "<dt>Source:</dt>\n" +
     "<dd>\n" +
     "<i>none</i>\n" +
@@ -8209,7 +8209,7 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "                          }\" ng-model=\"updatedBuildConfig.spec.strategy.jenkinsPipelineStrategy.jenkinsfile\" class=\"ace-bordered ace-inline\"></div>\n" +
     "</div>\n" +
     "</div>\n" +
-    "<div ng-if=\"sources.none\">\n" +
+    "<div ng-if=\"sources.none && !(updatedBuildConfig | isJenkinsPipelineStrategy)\">\n" +
     "<div class=\"form-group\">\n" +
     "<i>No source inputs have been defined for this build configuration.</i>\n" +
     "</div>\n" +
