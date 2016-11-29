@@ -26,7 +26,7 @@ angular.module('openshiftConsole')
     return _oauth_redirect_uri;
   };
 
-  this.$get = function($location, $q, Logger) {
+  this.$get = function($location, $q, Logger, base64) {
     var authLogger = Logger.get("auth");
 
     var getRandomInts = function(length) {
@@ -64,7 +64,7 @@ angular.module('openshiftConsole')
       } catch(e) {
         authLogger.log("RedirectLoginService.makeState, localStorage error: ", e);
       }
-      return JSON.stringify({then: then, nonce:nonce});
+      return base64.urlencode(JSON.stringify({then: then, nonce:nonce}));
     };
     var parseState = function(state) {
       var retval = {
@@ -81,7 +81,7 @@ angular.module('openshiftConsole')
       }
       
       try {
-        var data = state ? JSON.parse(state) : {};
+        var data = state ? JSON.parse(base64.urldecode(state)) : {};
         if (data && data.nonce && nonce && data.nonce === nonce) {
           retval.verified = true;
           retval.then = data.then;
