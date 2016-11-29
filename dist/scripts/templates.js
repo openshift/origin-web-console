@@ -1275,7 +1275,7 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "<span ng-switch-when=\"Image change\">\n" +
     "{{trigger.message}} for {{trigger.imageChangeBuild.fromRef.name}}\n" +
     "</span>\n" +
-    "<span ng-switch-default>{{trigger.message}}</span>\n" +
+    "<span ng-switch-default ng-bind-html=\"trigger.message | linky : '_blank'\"></span>\n" +
     "</div>\n" +
     "</div>\n" +
     "</dd>\n" +
