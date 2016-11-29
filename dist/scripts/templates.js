@@ -10193,12 +10193,24 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "</span>\n" +
     "</div>\n" +
     "<div ng-if=\"!imageChangeTriggers.length\">\n" +
+    "<div ng-if=\"pipeline = pipelinesForDC[deploymentConfig.metadata.name][0]\">\n" +
+    "<p>\n" +
+    "This deployment config is part of pipeline\n" +
+    "<a ng-href=\"{{pipeline | navigateResourceURL}}\">{{pipeline.metadata.name}}</a>.\n" +
+    "</p>\n" +
+    "<div ng-if=\"('buildconfigs/instantiate' | canI : 'create')\">\n" +
+    "\n" +
+    "<button class=\"btn btn-primary\" ng-click=\"startPipeline(pipeline)\" ng-disabled=\"incompletePipelinesByDC[deploymentConfig.metadata.name].length\">\n" +
+    "Start Pipeline\n" +
+    "</button>\n" +
+    "</div>\n" +
+    "</div>\n" +
+    "<div ng-if=\"!pipelinesForDC[deploymentConfig.metadata.name].length\">\n" +
     "<p>\n" +
     "No deployments have started for\n" +
     "<a ng-href=\"{{deploymentConfig | navigateResourceURL}}\">{{deploymentConfig.metadata.name}}</a>.\n" +
     "</p>\n" +
-    "<div ng-if=\"'deploymentconfigs' | canI : 'update'\" class=\"mar-top-md\">\n" +
-    "<button class=\"btn btn-primary\" ng-click=\"startDeployment(deploymentConfig)\">\n" +
+    "<button ng-if=\"'deploymentconfigs' | canI : 'update'\" class=\"btn btn-primary\" ng-click=\"startDeployment(deploymentConfig)\">\n" +
     "Start Deployment\n" +
     "</button>\n" +
     "</div>\n" +

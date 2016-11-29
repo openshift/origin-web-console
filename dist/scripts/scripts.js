@@ -4372,24 +4372,28 @@ _.set(c, [ "routeWarningsByService", a.metadata.name, b.metadata.name ], d);
 }, ia = function(a) {
 var b = H(_.get(a, "spec.output.to"), a.metadata.namespace);
 c.recentBuildsByOutputImage[b] = c.recentBuildsByOutputImage[b] || [], c.recentBuildsByOutputImage[b].push(a);
-}, ja = a("buildConfigForBuild"), ka = function(a) {
+}, ja = a("buildConfigForBuild"), ka = a("isIncompleteBuild"), la = function(a) {
 if (z) {
 var b = ja(a), d = z[b];
 if (d) {
 var f = e.usesDeploymentConfigs(d);
 _.each(f, function(b) {
-c.recentPipelinesByDC[b] = c.recentPipelinesByDC[b] || [], c.recentPipelinesByDC[b].push(a);
+c.recentPipelinesByDC[b] = c.recentPipelinesByDC[b] || [], c.recentPipelinesByDC[b].push(a), ka(a) && (c.incompletePipelinesByDC[b] = c.incompletePipelinesByDC[b] || [], c.incompletePipelinesByDC[b].push(a));
 });
 }
 }
-}, la = function() {
-A && (c.recentPipelinesByDC = {}, c.recentBuildsByOutputImage = {}, _.each(e.interestingBuilds(A), function(a) {
-return E(a) ? void ka(a) :void ia(a);
-}));
 }, ma = function() {
+A && (c.recentPipelinesByDC = {}, c.incompletePipelinesByDC = {}, c.recentBuildsByOutputImage = {}, _.each(e.interestingBuilds(A), function(a) {
+return E(a) ? void la(a) :void ia(a);
+}), c.pipelinesForDC = {}, _.each(z, function(a) {
+_.each(e.usesDeploymentConfigs(a), function(b) {
+c.pipelinesForDC[b] = c.pipelinesForDC[b] || [], c.pipelinesForDC[b].push(a);
+});
+}));
+}, na = function() {
 var a = _.isEmpty(r) && _.isEmpty(t) && _.isEmpty(c.monopodsByService) && _.isEmpty(u) && _.isEmpty(w) && _.isEmpty(x), b = r && y && u && w && x;
 c.renderOptions.showGetStarted = b && a, c.renderOptions.showLoading = !b && a;
-}, na = function() {
+}, oa = function() {
 var a = d.isAlertPermanentlyHidden("overview-quota-limit-reached", c.projectName);
 if (!a && p.isAnyQuotaExceeded(c.quotas, c.clusterQuotas)) {
 if (c.alerts.quotaExceeded) return;
@@ -4428,11 +4432,11 @@ var b = _.get(c, [ a, "" ], {});
 return !_.isEmpty(b);
 });
 };
-var oa = [];
+var pa = [];
 c.getHPA = function(a) {
 if (!B) return null;
 var b = _.get(a, "kind"), c = _.get(a, "metadata.name");
-return _.get(C, [ b, c ], oa);
+return _.get(C, [ b, c ], pa);
 }, window.OPENSHIFT_CONSTANTS.DISABLE_OVERVIEW_METRICS || (o.isAvailable(!0).then(function(a) {
 c.showMetrics = a;
 }), c.$on("metrics-connection-failed", function(a, b) {
@@ -4453,64 +4457,64 @@ return d.permanentlyHideAlert("metrics-connection-failed"), !0;
 } ]
 });
 }));
-var pa = a("isIE")() || a("isEdge")();
+var qa = a("isIE")() || a("isEdge")();
 k.get(b.project).then(_.spread(function(a, b) {
 c.project = a, c.projectContext = b, D.push(f.watch("pods", b, function(a) {
-y = a.by("metadata.name"), aa(), ma(), i.log("pods", y);
+y = a.by("metadata.name"), aa(), na(), i.log("pods", y);
 })), D.push(f.watch("services", b, function(a) {
-c.services = r = a.by("metadata.name"), ga(), aa(), P(), U(), T(), V(), Y(), ha(), ma(), i.log("services (subscribe)", r);
+c.services = r = a.by("metadata.name"), ga(), aa(), P(), U(), T(), V(), Y(), ha(), na(), i.log("services (subscribe)", r);
 }, {
-poll:pa,
+poll:qa,
 pollInterval:6e4
 })), D.push(f.watch("builds", b, function(a) {
-A = a.by("metadata.name"), la(), ma(), i.log("builds (subscribe)", A);
+A = a.by("metadata.name"), ma(), na(), i.log("builds (subscribe)", A);
 })), D.push(f.watch("buildConfigs", b, function(a) {
-z = a.by("metadata.name"), la(), i.log("builds (subscribe)", A);
+z = a.by("metadata.name"), ma(), i.log("builds (subscribe)", A);
 }, {
-poll:pa,
+poll:qa,
 pollInterval:6e4
 })), D.push(f.watch("routes", b, function(a) {
 q = a.by("metadata.name"), O(), ga(), ha(), i.log("routes (subscribe)", c.routesByService);
 }, {
-poll:pa,
+poll:qa,
 pollInterval:6e4
 })), D.push(f.watch("replicationcontrollers", b, function(a) {
-c.replicationControllersByName = u = a.by("metadata.name"), U(), T(), aa(), la(), ma(), i.log("replicationcontrollers (subscribe)", u);
+c.replicationControllersByName = u = a.by("metadata.name"), U(), T(), aa(), ma(), na(), i.log("replicationcontrollers (subscribe)", u);
 })), D.push(f.watch("deploymentconfigs", b, function(a) {
-t = a.by("metadata.name"), P(), T(), ma(), i.log("deploymentconfigs (subscribe)", t);
+t = a.by("metadata.name"), P(), T(), na(), i.log("deploymentconfigs (subscribe)", t);
 })), D.push(f.watch({
 group:"extensions",
 resource:"replicasets"
 }, b, function(a) {
-w = a.by("metadata.name"), aa(), V(), X(), ma(), i.log("replicasets (subscribe)", w);
+w = a.by("metadata.name"), aa(), V(), X(), na(), i.log("replicasets (subscribe)", w);
 })), D.push(f.watch({
 group:"apps",
 resource:"petsets"
 }, b, function(a) {
-x = a.by("metadata.name"), aa(), Y(), ma(), i.log("petsets (subscribe)", x);
+x = a.by("metadata.name"), aa(), Y(), na(), i.log("petsets (subscribe)", x);
 }, {
-poll:pa,
+poll:qa,
 pollInterval:6e4
 })), D.push(f.watch({
 group:"extensions",
 resource:"deployments"
 }, b, function(a) {
-s = a.by("metadata.name"), Q(), X(), ma(), i.log("deployments (subscribe)", s);
+s = a.by("metadata.name"), Q(), X(), na(), i.log("deployments (subscribe)", s);
 })), D.push(f.watch({
 group:"extensions",
 resource:"horizontalpodautoscalers"
 }, b, function(a) {
 B = a.by("metadata.name"), Z();
 }, {
-poll:pa,
+poll:qa,
 pollInterval:6e4
 })), D.push(f.watch("resourcequotas", b, function(a) {
-c.quotas = a.by("metadata.name"), na();
+c.quotas = a.by("metadata.name"), oa();
 }, {
 poll:!0,
 pollInterval:6e4
 })), D.push(f.watch("appliedclusterresourcequotas", b, function(a) {
-c.clusterQuotas = a.by("metadata.name"), na();
+c.clusterQuotas = a.by("metadata.name"), oa();
 }, {
 poll:!0,
 pollInterval:6e4
@@ -12511,57 +12515,67 @@ restrict:"E",
 scope:!0,
 templateUrl:"views/overview/_set.html"
 };
-}), angular.module("openshiftConsole").directive("overviewDeploymentConfig", [ "$filter", "$uibModal", "DeploymentsService", "Navigate", function(a, b, c, d) {
+}), angular.module("openshiftConsole").directive("overviewDeploymentConfig", [ "$filter", "$uibModal", "BuildsService", "DeploymentsService", "Navigate", function(a, b, c, d, e) {
 return {
 restrict:"E",
 scope:!0,
 templateUrl:"views/overview/_dc.html",
-link:function(e) {
-var f = a("orderObjectsByDate"), g = a("deploymentIsInProgress");
-e.$watch("scalableReplicationControllerByDC", function() {
-var a = _.get(e, "deploymentConfig.metadata.name");
-e.activeReplicationController = _.get(e, [ "scalableReplicationControllerByDC", a ]);
-}), e.$watch("visibleRCByDC", function(a) {
-var b = _.get(e, "deploymentConfig.metadata.name"), c = _.get(a, [ b ], []);
-e.orderedReplicationControllers = f(c, !0), e.inProgressDeployment = _.find(e.orderedReplicationControllers, g);
-}), e.$watch("deploymentConfig", function(a) {
+link:function(f) {
+var g = a("orderObjectsByDate"), h = a("deploymentIsInProgress");
+f.$watch("scalableReplicationControllerByDC", function() {
+var a = _.get(f, "deploymentConfig.metadata.name");
+f.activeReplicationController = _.get(f, [ "scalableReplicationControllerByDC", a ]);
+}), f.$watch("visibleRCByDC", function(a) {
+var b = _.get(f, "deploymentConfig.metadata.name"), c = _.get(a, [ b ], []);
+f.orderedReplicationControllers = g(c, !0), f.inProgressDeployment = _.find(f.orderedReplicationControllers, h);
+}), f.$watch("deploymentConfig", function(a) {
 var b = _.get(a, "spec.triggers", []);
-e.imageChangeTriggers = _.filter(b, function(a) {
+f.imageChangeTriggers = _.filter(b, function(a) {
 return "ImageChange" === a.type && _.get(a, "imageChangeParams.automatic");
 });
-}), e.urlForImageChangeTrigger = function(b) {
-var c = a("stripTag")(_.get(b, "imageChangeParams.from.name")), f = _.get(b, "imageChangeParams.from.namespace", e.deploymentConfig.metadata.namespace);
-return d.resourceURL(c, "ImageStream", f);
-}, e.startDeployment = function() {
-c.startLatestDeployment(e.deploymentConfig, {
-namespace:e.deploymentConfig.metadata.namespace
-}, e);
-};
-var h;
-e.$watch("deploymentConfig.spec.paused", function() {
-h = !1;
-}), e.resumeDeployment = function() {
-h || (h = !0, c.setPaused(e.deploymentConfig, !1, {
-namespace:e.deploymentConfig.metadata.namespace
+}), f.urlForImageChangeTrigger = function(b) {
+var c = a("stripTag")(_.get(b, "imageChangeParams.from.name")), d = _.get(b, "imageChangeParams.from.namespace", f.deploymentConfig.metadata.namespace);
+return e.resourceURL(c, "ImageStream", d);
+}, f.startPipeline = function(b) {
+c.startBuild(b.metadata.name, {
+namespace:b.metadata.namespace
 }).then(_.noop, function(b) {
-h = !1, e.alerts["resume-deployment"] = {
+f.alerts["start-pipeline"] = {
+type:"error",
+message:"An error occurred while starting the pipeline.",
+details:a("getErrorDetails")(b)
+};
+});
+}, f.startDeployment = function() {
+d.startLatestDeployment(f.deploymentConfig, {
+namespace:f.deploymentConfig.metadata.namespace
+}, f);
+};
+var i;
+f.$watch("deploymentConfig.spec.paused", function() {
+i = !1;
+}), f.resumeDeployment = function() {
+i || (i = !0, d.setPaused(f.deploymentConfig, !1, {
+namespace:f.deploymentConfig.metadata.namespace
+}).then(_.noop, function(b) {
+i = !1, f.alerts["resume-deployment"] = {
 type:"error",
 message:"An error occurred resuming the deployment.",
 details:a("getErrorDetails")(b)
 };
 }));
-}, e.cancelDeployment = function() {
-var a = e.inProgressDeployment;
+}, f.cancelDeployment = function() {
+var a = f.inProgressDeployment;
 if (a) {
-var d = a.metadata.name, f = _.get(e, "deploymentConfig.status.latestVersion"), h = b.open({
+var c = a.metadata.name, e = _.get(f, "deploymentConfig.status.latestVersion"), g = b.open({
 animation:!0,
 templateUrl:"views/modals/confirm.html",
 controller:"ConfirmModalController",
 resolve:{
 modalConfig:function() {
 return {
-message:"Cancel deployment " + d + "?",
-details:f ? "This will attempt to stop the in-progress deployment and rollback to the previous deployment, #" + f + ". It may take some time to complete." :"This will attempt to stop the in-progress deployment and may take some time to complete.",
+message:"Cancel deployment " + c + "?",
+details:e ? "This will attempt to stop the in-progress deployment and rollback to the previous deployment, #" + e + ". It may take some time to complete." :"This will attempt to stop the in-progress deployment and may take some time to complete.",
 okButtonText:"Yes, cancel",
 okButtonClass:"btn-danger",
 cancelButtonText:"No, don't cancel"
@@ -12569,14 +12583,14 @@ cancelButtonText:"No, don't cancel"
 }
 }
 });
-h.result.then(function() {
-var a = _.get(e, [ "replicationControllersByName", d ]);
-return a ? g(a) ? void c.cancelRunningDeployment(a, e.projectContext, e) :void (e.alerts["cancel-deployment"] = {
+g.result.then(function() {
+var a = _.get(f, [ "replicationControllersByName", c ]);
+return a ? h(a) ? void d.cancelRunningDeployment(a, f.projectContext, f) :void (f.alerts["cancel-deployment"] = {
 type:"error",
-message:"Deployment " + d + " is no longer in progress."
-}) :void (e.alerts["cancel-deployment"] = {
+message:"Deployment " + c + " is no longer in progress."
+}) :void (f.alerts["cancel-deployment"] = {
 type:"error",
-message:"Deployment " + d + " no longer exists."
+message:"Deployment " + c + " no longer exists."
 });
 });
 }

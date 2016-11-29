@@ -1,7 +1,12 @@
 'use strict';
 
 angular.module('openshiftConsole')
-  .directive('overviewDeploymentConfig', function($filter, $uibModal, DeploymentsService, Navigate) {
+  .directive('overviewDeploymentConfig',
+             function($filter,
+                      $uibModal,
+                      BuildsService,
+                      DeploymentsService,
+                      Navigate) {
     return {
       restrict: 'E',
       // Inherit scope from OverviewController. This directive is only used for the overview.
@@ -35,6 +40,18 @@ angular.module('openshiftConsole')
           var name = $filter('stripTag')(_.get(imageChangeTrigger, 'imageChangeParams.from.name'));
           var namespace = _.get(imageChangeTrigger, 'imageChangeParams.from.namespace', $scope.deploymentConfig.metadata.namespace);
           return Navigate.resourceURL(name, 'ImageStream', namespace);
+        };
+
+        $scope.startPipeline = function(pipeline) {
+          BuildsService
+            .startBuild(pipeline.metadata.name, { namespace: pipeline.metadata.namespace })
+            .then(_.noop, function(result) {
+              $scope.alerts["start-pipeline"] = {
+                type: "error",
+                message: "An error occurred while starting the pipeline.",
+                details: $filter('getErrorDetails')(result)
+              };
+            });
         };
 
         $scope.startDeployment = function() {

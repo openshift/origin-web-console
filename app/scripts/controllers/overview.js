@@ -401,6 +401,7 @@ angular.module('openshiftConsole')
     };
 
     var buildConfigForBuild = $filter('buildConfigForBuild');
+    var isIncompleteBuild = $filter('isIncompleteBuild');
     var groupPipelineByDC = function(build) {
       if (!buildConfigs) {
         return;
@@ -417,6 +418,10 @@ angular.module('openshiftConsole')
       _.each(dcNames, function(dcName) {
         $scope.recentPipelinesByDC[dcName] = $scope.recentPipelinesByDC[dcName] || [];
         $scope.recentPipelinesByDC[dcName].push(build);
+        if (isIncompleteBuild(build)) {
+          $scope.incompletePipelinesByDC[dcName] = $scope.incompletePipelinesByDC[dcName] || [];
+          $scope.incompletePipelinesByDC[dcName].push(build);
+        }
       });
     };
 
@@ -426,6 +431,7 @@ angular.module('openshiftConsole')
       }
       // reset these maps
       $scope.recentPipelinesByDC = {};
+      $scope.incompletePipelinesByDC = {};
       $scope.recentBuildsByOutputImage = {};
       _.each(
         BuildsService.interestingBuilds(builds),
@@ -436,6 +442,14 @@ angular.module('openshiftConsole')
           }
           groupPipelineByDC(build);
         });
+
+      $scope.pipelinesForDC = {};
+      _.each(buildConfigs, function(buildConfig) {
+        _.each(BuildsService.usesDeploymentConfigs(buildConfig), function(dcName) {
+          $scope.pipelinesForDC[dcName] = $scope.pipelinesForDC[dcName] || [];
+          $scope.pipelinesForDC[dcName].push(buildConfig);
+        });
+      });
     };
 
 
