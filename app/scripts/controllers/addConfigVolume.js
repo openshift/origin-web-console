@@ -10,6 +10,7 @@
 angular.module('openshiftConsole')
   .controller('AddConfigVolumeController',
               function($filter,
+                       $location,
                        $routeParams,
                        $scope,
                        $window,
@@ -58,6 +59,9 @@ angular.module('openshiftConsole')
       subpage: 'Add Config Files',
       includeProject: true
     });
+
+    // Return URL for creating secrets.
+    $scope.returnURL = $location.url();
 
     var humanizeKind = $filter('humanizeKind');
     $scope.groupByKind = function(object) {

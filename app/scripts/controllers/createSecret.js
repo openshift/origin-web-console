@@ -8,7 +8,7 @@
  * Controller of the openshiftConsole
  */
 angular.module('openshiftConsole')
-  .controller('CreateSecretController', function ($filter, $routeParams, $scope, $window, AlertMessageService, ApplicationGenerator, DataService, Navigate, ProjectsService) {
+  .controller('CreateSecretController', function ($filter, $location, $routeParams, $scope, $window, AlertMessageService, ApplicationGenerator, DataService, Navigate, ProjectsService) {
     $scope.alerts = {};
     $scope.projectName = $routeParams.project;
 
@@ -26,6 +26,15 @@ angular.module('openshiftConsole')
       }
     ];
 
+    var navigateBack = function() {
+      if ($routeParams.then) {
+        $location.url($routeParams.then);
+        return;
+      }
+
+      Navigate.toResourceList('secrets', $scope.projectName);
+    };
+
     ProjectsService
       .get($routeParams.project)
       .then(_.spread(function(project, context) {
@@ -37,10 +46,9 @@ angular.module('openshiftConsole')
           _.each(creationAlerts, function(alert) {
             AlertMessageService.addAlert(alert);
           });
-          Navigate.toResourceList('secrets', $scope.projectName);
+          navigateBack();
         };
-        $scope.cancel = function() {
-          Navigate.toResourceList('secrets', $scope.projectName);
-        };
+
+        $scope.cancel = navigateBack;
     }));
   });
