@@ -657,4 +657,7 @@ angular.module('openshiftConsole')
       // Wrap matches in a `mark` element to use the Bootstrap / Patternfly highlight styles.
       return escapedStr.replace(regex, '<mark>$&</mark>');
     };
+  })
+  .filter('encodeURIComponent', function() {
+    return window.encodeURIComponent;
   });
