@@ -2,7 +2,7 @@
 /* jshint eqeqeq: false, unused: false, expr: true */
 
 angular.module('openshiftConsole')
-.factory('DataService', function($cacheFactory, $http, $ws, $rootScope, $q, API_CFG, APIService, Notification, Logger, $timeout) {
+.factory('DataService', function($cacheFactory, $http, $ws, $rootScope, $q, API_CFG, APIService, Notification, Logger, $timeout, base64, base64util) {
 
   function Data(array) {
     this._data = {};
@@ -420,14 +420,6 @@ angular.module('openshiftConsole')
     return deferred.promise;
   };
 
-// https://developer.mozilla.org/en-US/docs/Web/API/WindowBase64/btoa
-function utf8_to_b64( str ) {
-    return window.btoa(window.unescape(encodeURIComponent( str )));
-}
-function b64_to_utf8( str ) {
-    return decodeURIComponent(window.escape(window.atob( str )));
-}
-
 // TODO (bpeterse): Create a new Streamer service & get this out of DataService.
 DataService.prototype.createStream = function(resource, name, context, opts, isRaw) {
   var self = this;
@@ -461,7 +453,7 @@ DataService.prototype.createStream = function(resource, name, context, opts, isR
 
                               var message;
                               if(!isRaw) {
-                                message = b64_to_utf8(evt.data);
+                                message = base64.decode(base64util.pad(evt.data));
                                 // Count bytes for log streams, which will stop when limitBytes is reached.
                                 // There's no other way to detect we've reach the limit currently.
                                 cumulativeBytes += message.length;
