@@ -29,7 +29,8 @@ angular
     'ui.select',
     'key-value-editor',
     'angular-inview',
-    'angularMoment'
+    'angularMoment',
+    'ab-base64'
   ])
   .config(function ($routeProvider) {
     $routeProvider
