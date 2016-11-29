@@ -13,7 +13,6 @@
                 <events-badge project-context="projectContext" ng-if="projectContext" class="pull-right" sidebar-collapsed="renderOptions.collapseEventsSidebar"></events-badge>
               </h1>
             </div>
-            <alerts alerts="alerts"></alerts>
             <div class="data-toolbar">
               <ui-select class="data-toolbar-dropdown" ng-model="kindSelector.selected" theme="bootstrap" search-enabled="true" ng-disabled="kindSelector.disabled" title="Choose a resource">
                 <ui-select-match placeholder="Choose a resource">{{$select.selected.label ? $select.selected.label : ($select.selected.kind | humanizeKind : true)}}</ui-select-match>
@@ -54,6 +53,7 @@
         </div><!-- /middle-header-->
         <div class="middle-content">
           <div class="container-fluid">
+            <alerts alerts="alerts"></alerts>
             <div class="row">
               <div class="col-md-12">
                 <div ng-if="kindSelector.selected.kind === 'All' || kindSelector.selected.kind === 'Pods'">

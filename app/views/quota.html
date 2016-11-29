@@ -11,11 +11,11 @@
                 <span ng-if="clusterQuotas | hashSize">Cluster </span>Quota
               </h1>
             </div>
-            <alerts alerts="alerts"></alerts>
           </div>
         </div><!-- /middle-header-->
         <div class="middle-content">
           <div class="container-fluid">
+            <alerts alerts="alerts"></alerts>
             <div class="row">
               <div class="col-md-12">
                 <div ng-if="!(quotas | hashSize) && !(clusterQuotas | hashSize)" class="mar-top-xl">
