@@ -36,6 +36,8 @@ authorization:"architecture/additional_concepts/authorization.html",
 roles:"architecture/additional_concepts/authorization.html#roles",
 service_accounts:"dev_guide/service_accounts.html",
 users_and_groups:"architecture/additional_concepts/authentication.html#users-and-groups",
+"pipeline-builds":"architecture/core_concepts/builds_and_image_streams.html#pipeline-build",
+"pipeline-plugin":"using_images/other_images/jenkins.html#openshift-origin-pipeline-plug-in",
 "default":"welcome/index.html"
 },
 CLI:{
@@ -3929,6 +3931,13 @@ modalConfig:b
 }
 });
 return c.result;
+},
+showJenkinsfileExamples:function() {
+a.open({
+animation:!0,
+templateUrl:"views/modals/jenkinsfile-examples-modal.html",
+controller:"JenkinsfileExamplesModalController"
+});
 }
 };
 } ]), angular.module("openshiftConsole").controller("ProjectsController", [ "$scope", "$filter", "$location", "$route", "$timeout", "AlertMessageService", "AuthService", "DataService", "KeywordService", "Logger", function(a, b, c, d, e, f, g, h, i, j) {
@@ -5218,7 +5227,7 @@ details:a("getErrorDetails")(b)
 f.unwatchAll(i);
 });
 }));
-} ]), angular.module("openshiftConsole").controller("BuildConfigController", [ "$scope", "$filter", "$routeParams", "AlertMessageService", "APIService", "BuildsService", "ImagesService", "DataService", "LabelFilter", "ProjectsService", "keyValueEditorUtils", function(a, b, c, d, e, f, g, h, i, j, k) {
+} ]), angular.module("openshiftConsole").controller("BuildConfigController", [ "$scope", "$filter", "$routeParams", "AlertMessageService", "APIService", "BuildsService", "ImagesService", "DataService", "LabelFilter", "ModalsService", "ProjectsService", "keyValueEditorUtils", function(a, b, c, d, e, f, g, h, i, j, k, l) {
 a.projectName = c.project, a.buildConfigName = c.buildconfig, a.buildConfig = null, a.labelSuggestions = {}, a.alerts = {}, a.breadcrumbs = [], a.forms = {}, a.expand = {
 imageEnv:!1
 }, c.isPipeline ? a.breadcrumbs.push({
@@ -5235,13 +5244,13 @@ a.alerts[b.name] = b.data;
 var b = a.getSession();
 b.setOption("tabSize", 2), b.setOption("useSoftTabs", !0), a.$blockScrolling = 1 / 0;
 };
-var l, m = b("orderObjectsByDate"), n = b("buildConfigForBuild"), o = b("buildStrategy"), p = [], q = function(c) {
-a.updatedBuildConfig = angular.copy(c), a.envVars = o(a.updatedBuildConfig).env || [], _.each(a.envVars, function(a) {
+var m, n = b("orderObjectsByDate"), o = b("buildConfigForBuild"), p = b("buildStrategy"), q = [], r = function(c) {
+a.updatedBuildConfig = angular.copy(c), a.envVars = p(a.updatedBuildConfig).env || [], _.each(a.envVars, function(a) {
 b("altTextForValueFrom")(a);
 });
 };
 a.saveEnvVars = function() {
-a.envVars = _.filter(a.envVars, "name"), o(a.updatedBuildConfig).env = k.compactEntries(angular.copy(a.envVars)), h.update("buildconfigs", c.buildconfig, a.updatedBuildConfig, l).then(function() {
+a.envVars = _.filter(a.envVars, "name"), p(a.updatedBuildConfig).env = l.compactEntries(angular.copy(a.envVars)), h.update("buildconfigs", c.buildconfig, a.updatedBuildConfig, m).then(function() {
 a.alerts.saveBCEnvVarsSuccess = {
 type:"success",
 message:a.buildConfigName + " was updated."
@@ -5254,14 +5263,14 @@ details:"Reason: " + b("getErrorDetails")(c)
 };
 });
 }, a.clearEnvVarUpdates = function() {
-q(a.buildConfig), a.forms.bcEnvVars.$setPristine();
+r(a.buildConfig), a.forms.bcEnvVars.$setPristine();
 };
-var r, s = function(c, d) {
+var s, t = function(c, d) {
 a.loaded = !0, a.buildConfig = c, a.buildConfigPaused = f.isPaused(a.buildConfig), a.buildConfig.spec.source.images && (a.imageSources = a.buildConfig.spec.source.images, a.imageSourcesPaths = [], a.imageSources.forEach(function(c) {
 a.imageSourcesPaths.push(b("destinationSourcePair")(c.paths));
 }));
-var i = _.get(o(c), "from", {}), j = i.kind + "/" + i.name + "/" + (i.namespace || a.projectName);
-r !== j && (_.includes([ "ImageStreamTag", "ImageStreamImage" ], i.kind) ? (r = j, h.get(e.kindToResource(i.kind), i.name, {
+var i = _.get(p(c), "from", {}), j = i.kind + "/" + i.name + "/" + (i.namespace || a.projectName);
+s !== j && (_.includes([ "ImageStreamTag", "ImageStreamImage" ], i.kind) ? (s = j, h.get(e.kindToResource(i.kind), i.name, {
 namespace:i.namespace || a.projectName
 }, {
 errorNotification:!1
@@ -5269,10 +5278,10 @@ errorNotification:!1
 a.BCEnvVarsFromImage = g.getEnvironment(b);
 }, function() {
 a.BCEnvVarsFromImage = [];
-})) :a.BCEnvVarsFromImage = []), q(c), "DELETED" === d && (a.alerts.deleted = {
+})) :a.BCEnvVarsFromImage = []), r(c), "DELETED" === d && (a.alerts.deleted = {
 type:"warning",
 message:"This build configuration has been deleted."
-}, a.buildConfigDeleted = !0), !a.forms.bcEnvVars || a.forms.bcEnvVars.$pristine ? q(c) :a.alerts.background_update = {
+}, a.buildConfigDeleted = !0), !a.forms.bcEnvVars || a.forms.bcEnvVars.$pristine ? r(c) :a.alerts.background_update = {
 type:"warning",
 message:"This build configuration has been updated in the background. Saving your changes may create a conflict or cause loss of data.",
 links:[ {
@@ -5283,24 +5292,24 @@ return a.clearEnvVarUpdates(), !0;
 } ]
 }, a.paused = f.isPaused(a.buildConfig);
 };
-j.get(c.project).then(_.spread(function(d, e) {
+k.get(c.project).then(_.spread(function(d, e) {
 function g() {
 i.getLabelSelector().isEmpty() || !$.isEmptyObject(a.builds) || $.isEmptyObject(a.unfilteredBuilds) ? delete a.alerts.builds :a.alerts.builds = {
 type:"warning",
 details:"The active filters are hiding all builds."
 };
 }
-a.project = d, l = e, h.get("buildconfigs", c.buildconfig, e).then(function(a) {
-s(a), p.push(h.watchObject("buildconfigs", c.buildconfig, e, s));
+a.project = d, m = e, h.get("buildconfigs", c.buildconfig, e).then(function(a) {
+t(a), q.push(h.watchObject("buildconfigs", c.buildconfig, e, t));
 }, function(c) {
 a.loaded = !0, a.alerts.load = {
 type:"error",
 message:404 === c.status ? "This build configuration can not be found, it may have been deleted." :"The build configuration details could not be loaded.",
 details:404 === c.status ? "Any remaining build history for this build will be shown." :"Reason: " + b("getErrorDetails")(c)
 };
-}), p.push(h.watch("builds", e, function(b, d, e) {
+}), q.push(h.watch("builds", e, function(b, d, e) {
 if (a.emptyMessage = "No builds to show", d) {
-var h = n(e);
+var h = o(e);
 if (h === c.buildconfig) {
 var j = e.metadata.name;
 switch (d) {
@@ -5314,7 +5323,7 @@ delete a.unfilteredBuilds[j];
 }
 }
 } else a.unfilteredBuilds = f.validatedBuildsForBuildConfig(c.buildconfig, b.by("metadata.name"));
-a.builds = i.getLabelSelector().select(a.unfilteredBuilds), g(), i.addLabelSuggestionsFromResources(a.unfilteredBuilds, a.labelSuggestions), i.setLabelSuggestions(a.labelSuggestions), a.orderedBuilds = m(a.builds, !0), a.latestBuild = a.orderedBuilds.length ? a.orderedBuilds[0] :null;
+a.builds = i.getLabelSelector().select(a.unfilteredBuilds), g(), i.addLabelSuggestionsFromResources(a.unfilteredBuilds, a.labelSuggestions), i.setLabelSuggestions(a.labelSuggestions), a.orderedBuilds = n(a.builds, !0), a.latestBuild = a.orderedBuilds.length ? a.orderedBuilds[0] :null;
 }, {
 http:{
 params:{
@@ -5326,7 +5335,7 @@ omission:""
 }
 })), i.onActiveFiltersChanged(function(b) {
 a.$apply(function() {
-a.builds = b.select(a.unfilteredBuilds), a.orderedBuilds = m(a.builds, !0), a.latestBuild = a.orderedBuilds.length ? a.orderedBuilds[0] :null, g();
+a.builds = b.select(a.unfilteredBuilds), a.orderedBuilds = n(a.builds, !0), a.latestBuild = a.orderedBuilds.length ? a.orderedBuilds[0] :null, g();
 });
 }), a.startBuild = function() {
 f.startBuild(a.buildConfig.metadata.name, e).then(function(b) {
@@ -5341,11 +5350,13 @@ message:"An error occurred while starting the build.",
 details:b("getErrorDetails")(c)
 };
 });
+}, a.showJenkinsfileExamples = function() {
+j.showJenkinsfileExamples();
 }, a.$on("$destroy", function() {
-h.unwatchAll(p);
+h.unwatchAll(q);
 });
 }));
-} ]), angular.module("openshiftConsole").controller("BuildController", [ "$scope", "$filter", "$routeParams", "BuildsService", "DataService", "Navigate", "ProjectsService", function(a, b, c, d, e, f, g) {
+} ]), angular.module("openshiftConsole").controller("BuildController", [ "$scope", "$filter", "$routeParams", "BuildsService", "DataService", "ModalsService", "Navigate", "ProjectsService", function(a, b, c, d, e, f, g, h) {
 a.projectName = c.project, a.build = null, a.buildConfig = null, a.buildConfigName = c.buildconfig, a.builds = {}, a.alerts = {}, a.showSecret = !1, a.renderOptions = {
 hideFilterWidget:!0
 }, a.breadcrumbs = [], c.isPipeline ? (a.breadcrumbs.push({
@@ -5363,36 +5374,36 @@ link:"project/" + c.project + "/browse/builds/" + c.buildconfig
 })), a.breadcrumbs.push({
 title:c.build
 });
-var h = [], i = function(b) {
+var i = [], j = function(b) {
 a.logCanRun = !_.includes([ "New", "Pending", "Error" ], b.status.phase);
-}, j = function() {
+}, k = function() {
 a.buildConfig ? a.canBuild = d.canBuild(a.buildConfig) :a.canBuild = !1;
-}, k = function(c, d) {
-a.loaded = !0, a.build = c, i(c);
+}, l = function(c, d) {
+a.loaded = !0, a.build = c, j(c);
 var e = b("annotation")(c, "buildNumber");
 e && (a.breadcrumbs[2].title = "#" + e), "DELETED" === d && (a.alerts.deleted = {
 type:"warning",
 message:"This build has been deleted."
 });
-}, l = function(c) {
+}, m = function(c) {
 a.loaded = !0, a.alerts.load = {
 type:"error",
 message:"The build details could not be loaded.",
 details:"Reason: " + b("getErrorDetails")(c)
 };
-}, m = function(b, c) {
+}, n = function(b, c) {
 "DELETED" === c && (a.alerts.deleted = {
 type:"warning",
 message:"Build configuration " + a.buildConfigName + " has been deleted."
-}, a.buildConfigDeleted = !0), a.buildConfig = b, a.buildConfigPaused = d.isPaused(a.buildConfig), j();
+}, a.buildConfigDeleted = !0), a.buildConfig = b, a.buildConfigPaused = d.isPaused(a.buildConfig), k();
 };
-g.get(c.project).then(_.spread(function(g, i) {
-a.project = g, a.projectContext = i, a.logOptions = {}, e.get("builds", c.build, i).then(function(a) {
-k(a), h.push(e.watchObject("builds", c.build, i, k)), h.push(e.watchObject("buildconfigs", c.buildconfig, i, m));
-}, l), a.toggleSecret = function() {
+h.get(c.project).then(_.spread(function(h, j) {
+a.project = h, a.projectContext = j, a.logOptions = {}, e.get("builds", c.build, j).then(function(a) {
+l(a), i.push(e.watchObject("builds", c.build, j, l)), i.push(e.watchObject("buildconfigs", c.buildconfig, j, n));
+}, m), a.toggleSecret = function() {
 a.showSecret = !0;
 }, a.cancelBuild = function() {
-d.cancelBuild(a.build, a.buildConfigName, i).then(function(b) {
+d.cancelBuild(a.build, a.buildConfigName, j).then(function(b) {
 a.alerts.cancel = {
 type:"success",
 message:"Cancelled build " + b.metadata.name + " of " + a.buildConfigName + "."
@@ -5405,9 +5416,9 @@ details:b("getErrorDetails")(c)
 };
 });
 };
-var j = function(c) {
+var k = function(c) {
 if (b("isJenkinsPipelineStrategy")(a.build) || !b("canI")("builds/log", "get")) return [ {
-href:f.resourceURL(c),
+href:g.resourceURL(c),
 label:"View Build"
 } ];
 var d = b("buildLogURL")(c);
@@ -5418,8 +5429,8 @@ label:"View Log"
 };
 a.cloneBuild = function() {
 var c = _.get(a, "build.metadata.name");
-c && a.canBuild && d.cloneBuild(c, i).then(function(b) {
-var d = j(b);
+c && a.canBuild && d.cloneBuild(c, j).then(function(b) {
+var d = k(b);
 a.alerts.rebuild = {
 type:"success",
 message:"Build " + c + " is being rebuilt as " + b.metadata.name + ".",
@@ -5432,8 +5443,10 @@ message:"An error occurred while rerunning the build.",
 details:b("getErrorDetails")(c)
 };
 });
+}, a.showJenkinsfileExamples = function() {
+f.showJenkinsfileExamples();
 }, a.$on("$destroy", function() {
-e.unwatchAll(h);
+e.unwatchAll(i);
 });
 }));
 } ]), angular.module("openshiftConsole").controller("ImageController", [ "$scope", "$routeParams", "DataService", "ProjectsService", "$filter", "ImageStreamsService", "imageLayers", function(a, b, c, d, e, f, g) {
@@ -8373,6 +8386,10 @@ return b !== a.service && !_.includes(d, b.metadata.name);
 b.close(_.get(a, "link.selectedService"));
 }, a.cancel = function() {
 b.dismiss();
+};
+} ]), angular.module("openshiftConsole").controller("JenkinsfileExamplesModalController", [ "$scope", "$uibModalInstance", function(a, b) {
+a.ok = function() {
+b.close("ok");
 };
 } ]), angular.module("openshiftConsole").controller("AboutController", [ "$scope", "AuthService", "Constants", function(a, b, c) {
 b.withUser(), a.version = {

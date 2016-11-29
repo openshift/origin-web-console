@@ -1,0 +1,48 @@
+<div>
+  <p>
+    A Jenkinsfile is a Groovy script that defines your pipeline. In the Jenkinsfile, you can declare
+    pipeline stages and run one or more steps within each stage. Here are some examples you can use
+    in your pipelines.
+  </p>
+  <p>
+    Declare a new pipeline stage called <var>Build:</var>
+    <copy-to-clipboard
+        display-wide="true"
+        clipboard-text="'stage \'Build\''">
+    </copy-to-clipboard>
+  </p>
+  <p>
+    Start a build for build config <var>my-build-config:</var>
+    <copy-to-clipboard
+        display-wide="true"
+        clipboard-text="'openshiftBuild(buildConfig: \'my-build-config\', showBuildLogs: \'true\')'">
+    </copy-to-clipboard>
+  </p>
+  <p>
+    Start a deployment for deployment config <var>my-deployment-config:</var>
+    <copy-to-clipboard
+        display-wide="true"
+        clipboard-text="'openshiftDeploy(deploymentConfig: \'my-deployment-config\')'">
+    </copy-to-clipboard>
+  </p>
+  <p>
+    Run the shell command <var>make test:</var>
+    <copy-to-clipboard
+        display-wide="true"
+        clipboard-text="'sh \'make test\''">
+    </copy-to-clipboard>
+  </p>
+  <p>
+    Prompt for manual input:
+    <copy-to-clipboard
+        display-wide="true"
+        clipboard-text="'input \'Promote to production?\''">
+    </copy-to-clipboard>
+  </p>
+  <p>
+    Learn more about
+    <a ng-href="{{ 'pipeline-builds' | helpLink}}" target="_blank">Pipeline Builds</a>
+    and the
+    <a ng-href="{{ 'pipeline-plugin' | helpLink}}" target="_blank">OpenShift Pipeline Plugin</a>.
+  </p>
+</div>

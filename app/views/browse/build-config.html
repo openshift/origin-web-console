@@ -234,9 +234,17 @@
                                     <dd ng-if="!(buildConfig | jenkinsfileLink)">
                                       {{buildConfig.spec.strategy.jenkinsPipelineStrategy.jenkinsfilePath}}
                                     </dd>
+                                    <div class="small">
+                                      <a href="" ng-click="showJenkinsfileExamples()">What's a Jenkinsfile?</a>
+                                    </div>
                                   </div>
                                   <div ng-if="buildConfig.spec.strategy.jenkinsPipelineStrategy.jenkinsfile">
-                                    <dt>Jenkinsfile:</dt><dd></dd>
+                                    <div class="small pull-right mar-top-sm">
+                                      <a href="" ng-click="showJenkinsfileExamples()">What's a Jenkinsfile?</a>
+                                    </div>
+                                    <dt>
+                                      Jenkinsfile:
+                                    </dt><dd></dd>
                                     <div ui-ace="{
                                       mode: 'groovy',
                                       theme: 'eclipse',
@@ -249,7 +257,7 @@
                                       advanced: {
                                         highlightActiveLine: false
                                       }
-                                    }" readonly ng-model="buildConfig.spec.strategy.jenkinsPipelineStrategy.jenkinsfile" class="ace-bordered ace-inline ace-read-only mar-top-md"></div>
+                                    }" readonly ng-model="buildConfig.spec.strategy.jenkinsPipelineStrategy.jenkinsfile" class="ace-bordered ace-inline ace-read-only"></div>
                                   </div>
                                 </div>
                                 <dt ng-if-start="buildConfig.spec.source.binary.asFile">Binary Input as File:</dt>

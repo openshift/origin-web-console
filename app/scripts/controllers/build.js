@@ -12,6 +12,7 @@ angular.module('openshiftConsole')
                                            $routeParams,
                                            BuildsService,
                                            DataService,
+                                           ModalsService,
                                            Navigate,
                                            ProjectsService) {
     $scope.projectName = $routeParams.project;
@@ -197,6 +198,10 @@ angular.module('openshiftConsole')
                 };
               });
           }
+        };
+
+        $scope.showJenkinsfileExamples = function() {
+          ModalsService.showJenkinsfileExamples();
         };
 
         $scope.$on('$destroy', function(){

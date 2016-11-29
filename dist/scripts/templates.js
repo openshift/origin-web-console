@@ -1313,7 +1313,7 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "<dt ng-if-start=\"build.spec.strategy.jenkinsPipelineStrategy.jenkinsfilePath\">\n" +
     "Jenkinsfile Path:\n" +
     "</dt>\n" +
-    "<dd ng-if-end>\n" +
+    "<dd>\n" +
     "<span ng-if=\"build | jenkinsfileLink\">\n" +
     "<a ng-href=\"{{build | jenkinsfileLink}}\">{{build.spec.strategy.jenkinsPipelineStrategy.jenkinsfilePath}}</a>\n" +
     "</span>\n" +
@@ -1321,10 +1321,16 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "{{build.spec.strategy.jenkinsPipelineStrategy.jenkinsfilePath}}\n" +
     "</span>\n" +
     "</dd>\n" +
+    "<div ng-if-end class=\"small\">\n" +
+    "<a href=\"\" ng-click=\"showJenkinsfileExamples()\">What's a Jenkinsfile?</a>\n" +
+    "</div>\n" +
     "<dt ng-if-start=\"build.spec.strategy.jenkinsPipelineStrategy.jenkinsfile\">\n" +
     "Jenkinsfile:\n" +
     "</dt>\n" +
     "<dd></dd>\n" +
+    "<div class=\"small pull-right mar-top-sm\">\n" +
+    "<a href=\"\" ng-click=\"showJenkinsfileExamples()\">What's a Jenkinsfile?</a>\n" +
+    "</div>\n" +
     "<div ng-if-end ui-ace=\"{\n" +
     "          mode: 'groovy',\n" +
     "          theme: 'eclipse',\n" +
@@ -1894,9 +1900,17 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "<dd ng-if=\"!(buildConfig | jenkinsfileLink)\">\n" +
     "{{buildConfig.spec.strategy.jenkinsPipelineStrategy.jenkinsfilePath}}\n" +
     "</dd>\n" +
+    "<div class=\"small\">\n" +
+    "<a href=\"\" ng-click=\"showJenkinsfileExamples()\">What's a Jenkinsfile?</a>\n" +
+    "</div>\n" +
     "</div>\n" +
     "<div ng-if=\"buildConfig.spec.strategy.jenkinsPipelineStrategy.jenkinsfile\">\n" +
-    "<dt>Jenkinsfile:</dt><dd></dd>\n" +
+    "<div class=\"small pull-right mar-top-sm\">\n" +
+    "<a href=\"\" ng-click=\"showJenkinsfileExamples()\">What's a Jenkinsfile?</a>\n" +
+    "</div>\n" +
+    "<dt>\n" +
+    "Jenkinsfile:\n" +
+    "</dt><dd></dd>\n" +
     "<div ui-ace=\"{\n" +
     "                                      mode: 'groovy',\n" +
     "                                      theme: 'eclipse',\n" +
@@ -1909,7 +1923,7 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "                                      advanced: {\n" +
     "                                        highlightActiveLine: false\n" +
     "                                      }\n" +
-    "                                    }\" readonly=\"readonly\" ng-model=\"buildConfig.spec.strategy.jenkinsPipelineStrategy.jenkinsfile\" class=\"ace-bordered ace-inline ace-read-only mar-top-md\"></div>\n" +
+    "                                    }\" readonly=\"readonly\" ng-model=\"buildConfig.spec.strategy.jenkinsPipelineStrategy.jenkinsfile\" class=\"ace-bordered ace-inline ace-read-only\"></div>\n" +
     "</div>\n" +
     "</div>\n" +
     "<dt ng-if-start=\"buildConfig.spec.source.binary.asFile\">Binary Input as File:</dt>\n" +
@@ -8180,7 +8194,7 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "</div>\n" +
     "</div>\n" +
     "<div ng-if=\"updatedBuildConfig | isJenkinsPipelineStrategy\" class=\"section\">\n" +
-    "<h3 class=\"with-divider\">Jenkins Pipeline Configuration</h3>\n" +
+    "<h3 ng-class=\"{ 'with-divider': !sources.none }\">Jenkins Pipeline Configuration</h3>\n" +
     "<div class=\"form-group\" ng-if=\"buildConfig.spec.source.type === 'Git'\">\n" +
     "<label for=\"jenkinsfile-type\">Jenkinsfile Type</label>\n" +
     "<select id=\"jenkinsfile-type\" class=\"form-control\" ng-model=\"jenkinsfileOptions.type\" ng-options=\"type.id as type.title for type in jenkinsfileTypes\" aria-describedby=\"jenkinsfile-type-help\">\n" +
@@ -8199,14 +8213,24 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "<div ng-if=\"jenkinsfileOptions.type === 'inline'\">\n" +
     "<label>Jenkinsfile</label>\n" +
     "<div ui-ace=\"{\n" +
-    "                            mode: 'groovy',\n" +
-    "                            theme: 'eclipse',\n" +
-    "                            onLoad: aceLoaded,\n" +
-    "                            rendererOptions: {\n" +
-    "                              fadeFoldWidgets: true,\n" +
-    "                              showPrintMargin: false\n" +
-    "                            }\n" +
-    "                          }\" ng-model=\"updatedBuildConfig.spec.strategy.jenkinsPipelineStrategy.jenkinsfile\" class=\"ace-bordered ace-inline\"></div>\n" +
+    "                          mode: 'groovy',\n" +
+    "                          theme: 'eclipse',\n" +
+    "                          onLoad: aceLoaded,\n" +
+    "                          rendererOptions: {\n" +
+    "                            fadeFoldWidgets: true,\n" +
+    "                            showPrintMargin: false\n" +
+    "                          }\n" +
+    "                        }\" ng-model=\"updatedBuildConfig.spec.strategy.jenkinsPipelineStrategy.jenkinsfile\" class=\"ace-bordered ace-inline\"></div>\n" +
+    "</div>\n" +
+    "<div class=\"mar-top-md mar-bottom-md\">\n" +
+    "<a ng-if=\"!view.jenkinsfileExamples\" href=\"\" ng-click=\"view.jenkinsfileExamples = true\">What's a Jenkinsfile?</a>\n" +
+    "</div>\n" +
+    "<div ng-if=\"view.jenkinsfileExamples\" class=\"editor-examples\">\n" +
+    "<div class=\"pull-right mar-top-md\">\n" +
+    "<a href=\"\" ng-click=\"view.jenkinsfileExamples = false\">Hide examples</a>\n" +
+    "</div>\n" +
+    "<h4>Jenkinsfile Examples</h4>\n" +
+    "<ng-include src=\"'views/edit/jenkinsfile-examples.html'\"></ng-include>\n" +
     "</div>\n" +
     "</div>\n" +
     "<div ng-if=\"sources.none && !(updatedBuildConfig | isJenkinsPipelineStrategy)\">\n" +
@@ -8776,6 +8800,46 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "</div>\n" +
     "</div>\n" +
     "</div>\n" +
+    "</div>"
+  );
+
+
+  $templateCache.put('views/edit/jenkinsfile-examples.html',
+    "<div>\n" +
+    "<p>\n" +
+    "A Jenkinsfile is a Groovy script that defines your pipeline. In the Jenkinsfile, you can declare pipeline stages and run one or more steps within each stage. Here are some examples you can use in your pipelines.\n" +
+    "</p>\n" +
+    "<p>\n" +
+    "Declare a new pipeline stage called <var>Build:</var>\n" +
+    "<copy-to-clipboard display-wide=\"true\" clipboard-text=\"'stage \\'Build\\''\">\n" +
+    "</copy-to-clipboard>\n" +
+    "</p>\n" +
+    "<p>\n" +
+    "Start a build for build config <var>my-build-config:</var>\n" +
+    "<copy-to-clipboard display-wide=\"true\" clipboard-text=\"'openshiftBuild(buildConfig: \\'my-build-config\\', showBuildLogs: \\'true\\')'\">\n" +
+    "</copy-to-clipboard>\n" +
+    "</p>\n" +
+    "<p>\n" +
+    "Start a deployment for deployment config <var>my-deployment-config:</var>\n" +
+    "<copy-to-clipboard display-wide=\"true\" clipboard-text=\"'openshiftDeploy(deploymentConfig: \\'my-deployment-config\\')'\">\n" +
+    "</copy-to-clipboard>\n" +
+    "</p>\n" +
+    "<p>\n" +
+    "Run the shell command <var>make test:</var>\n" +
+    "<copy-to-clipboard display-wide=\"true\" clipboard-text=\"'sh \\'make test\\''\">\n" +
+    "</copy-to-clipboard>\n" +
+    "</p>\n" +
+    "<p>\n" +
+    "Prompt for manual input:\n" +
+    "<copy-to-clipboard display-wide=\"true\" clipboard-text=\"'input \\'Promote to production?\\''\">\n" +
+    "</copy-to-clipboard>\n" +
+    "</p>\n" +
+    "<p>\n" +
+    "Learn more about\n" +
+    "<a ng-href=\"{{ 'pipeline-builds' | helpLink}}\" target=\"_blank\">Pipeline Builds</a>\n" +
+    "and the\n" +
+    "<a ng-href=\"{{ 'pipeline-plugin' | helpLink}}\" target=\"_blank\">OpenShift Pipeline Plugin</a>.\n" +
+    "</p>\n" +
     "</div>"
   );
 
@@ -9479,6 +9543,19 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "<button class=\"btn btn-lg btn-default\" type=\"button\" ng-click=\"cancel();\">Cancel</button>\n" +
     "</div>\n" +
     "</form>\n" +
+    "</div>"
+  );
+
+
+  $templateCache.put('views/modals/jenkinsfile-examples-modal.html',
+    "<div>\n" +
+    "<div class=\"modal-body\">\n" +
+    "<h2>Jenkinsfile Examples</h2>\n" +
+    "<ng-include src=\"'views/edit/jenkinsfile-examples.html'\"></ng-include>\n" +
+    "</div>\n" +
+    "<div class=\"modal-footer\">\n" +
+    "<button class=\"btn btn-lg btn-default\" type=\"button\" ng-click=\"ok()\">OK</button>\n" +
+    "</div>\n" +
     "</div>"
   );
 

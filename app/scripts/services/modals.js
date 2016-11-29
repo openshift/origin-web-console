@@ -16,6 +16,14 @@ angular.module("openshiftConsole")
         });
 
         return modalInstance.result;
+      },
+
+      showJenkinsfileExamples: function() {
+        $uibModal.open({
+          animation: true,
+          templateUrl: 'views/modals/jenkinsfile-examples-modal.html',
+          controller: 'JenkinsfileExamplesModalController'
+        });
       }
     };
   });

@@ -39,6 +39,8 @@ window.OPENSHIFT_CONSTANTS = {
     "roles":                   "architecture/additional_concepts/authorization.html#roles",
     "service_accounts":        "dev_guide/service_accounts.html",
     "users_and_groups":        "architecture/additional_concepts/authentication.html#users-and-groups",
+    "pipeline-builds":         "architecture/core_concepts/builds_and_image_streams.html#pipeline-build",
+    "pipeline-plugin":         "using_images/other_images/jenkins.html#openshift-origin-pipeline-plug-in",
     // default should remain last, add new links above
     "default":                 "welcome/index.html"
   },

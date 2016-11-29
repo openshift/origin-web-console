@@ -232,7 +232,7 @@
                     </div>
 
                     <div ng-if="updatedBuildConfig | isJenkinsPipelineStrategy" class="section">
-                      <h3 class="with-divider">Jenkins Pipeline Configuration</h3>
+                      <h3 ng-class="{ 'with-divider': !sources.none }">Jenkins Pipeline Configuration</h3>
                       <div class="form-group" ng-if="buildConfig.spec.source.type === 'Git'">
                         <label for="jenkinsfile-type">Jenkinsfile Type</label>
                         <select
@@ -267,15 +267,25 @@
 
                       <div ng-if="jenkinsfileOptions.type === 'inline'">
                         <label>Jenkinsfile</label>
-                          <div ui-ace="{
-                            mode: 'groovy',
-                            theme: 'eclipse',
-                            onLoad: aceLoaded,
-                            rendererOptions: {
-                              fadeFoldWidgets: true,
-                              showPrintMargin: false
-                            }
-                          }" ng-model="updatedBuildConfig.spec.strategy.jenkinsPipelineStrategy.jenkinsfile" class="ace-bordered ace-inline"></div>
+                        <div ui-ace="{
+                          mode: 'groovy',
+                          theme: 'eclipse',
+                          onLoad: aceLoaded,
+                          rendererOptions: {
+                            fadeFoldWidgets: true,
+                            showPrintMargin: false
+                          }
+                        }" ng-model="updatedBuildConfig.spec.strategy.jenkinsPipelineStrategy.jenkinsfile" class="ace-bordered ace-inline"></div>
+                      </div>
+                      <div class="mar-top-md mar-bottom-md">
+                        <a ng-if="!view.jenkinsfileExamples" href="" ng-click="view.jenkinsfileExamples = true">What's a Jenkinsfile?</a>
+                      </div>
+                      <div ng-if="view.jenkinsfileExamples" class="editor-examples">
+                        <div class="pull-right mar-top-md">
+                          <a href="" ng-click="view.jenkinsfileExamples = false">Hide examples</a>
+                        </div>
+                        <h4>Jenkinsfile Examples</h4>
+                        <ng-include src="'views/edit/jenkinsfile-examples.html'"></ng-include>
                       </div>
                     </div>
                     <div ng-if="sources.none && !(updatedBuildConfig | isJenkinsPipelineStrategy)">

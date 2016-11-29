@@ -16,6 +16,7 @@ angular.module('openshiftConsole')
                                                  ImagesService,
                                                  DataService,
                                                  LabelFilter,
+                                                 ModalsService,
                                                  ProjectsService,
                                                  keyValueEditorUtils) {
     $scope.projectName = $routeParams.project;
@@ -264,6 +265,10 @@ angular.module('openshiftConsole')
                 details: $filter('getErrorDetails')(result)
               };
             });
+        };
+
+        $scope.showJenkinsfileExamples = function() {
+          ModalsService.showJenkinsfileExamples();
         };
 
         $scope.$on('$destroy', function(){
