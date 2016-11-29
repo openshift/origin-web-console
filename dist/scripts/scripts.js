@@ -50,6 +50,10 @@ AVAILABLE_KINDS_BLACKLIST:[ "Binding", "Ingress", "DeploymentConfigRollback" ],
 ENABLE_TECH_PREVIEW_FEATURE:{
 pipelines:!0
 },
+SAMPLE_PIPELINE_TEMPLATE:{
+name:"jenkins-pipeline-example",
+namespace:"openshift"
+},
 PROJECT_NAVIGATION:[ {
 label:"Overview",
 iconClass:"fa fa-dashboard",
@@ -5200,39 +5204,52 @@ b.buildConfigs = a.select(b.unfilteredBuildConfigs), j(), m();
 d.unwatchAll(l);
 });
 }));
-} ]), angular.module("openshiftConsole").controller("PipelinesController", [ "$filter", "$routeParams", "$scope", "AlertMessageService", "BuildsService", "DataService", "Logger", "ProjectsService", function(a, b, c, d, e, f, g, h) {
-c.projectName = b.project, c.alerts = c.alerts || {}, c.buildConfigs = {}, d.getAlerts().forEach(function(a) {
+} ]), angular.module("openshiftConsole").controller("PipelinesController", [ "$filter", "$routeParams", "$scope", "Constants", "Navigate", "AlertMessageService", "BuildsService", "DataService", "Logger", "ProjectsService", function(a, b, c, d, e, f, g, h, i, j) {
+c.projectName = b.project, c.alerts = c.alerts || {}, c.buildConfigs = {}, f.getAlerts().forEach(function(a) {
 c.alerts[a.name] = a.data;
-}), d.clearAlerts();
-var i = [];
-h.get(b.project).then(_.spread(function(b, d) {
+}), f.clearAlerts();
+var k = [];
+j.get(b.project).then(_.spread(function(b, f) {
 c.project = b;
-var g = {}, h = a("buildConfigForBuild"), j = a("isIncompleteBuild"), k = a("isJenkinsPipelineStrategy"), l = a("isNewerResource"), m = function(a, b) {
-if (!j(b)) {
+var i = {}, j = a("buildConfigForBuild"), l = a("isIncompleteBuild"), m = a("isJenkinsPipelineStrategy"), n = a("isNewerResource"), o = function(a, b) {
+if (!l(b)) {
 c.statsByConfig[a] || (c.statsByConfig[a] = {
 count:0,
 totalDuration:0
 });
 var d = c.statsByConfig[a];
-d.count++, d.totalDuration += e.getDuration(b), d.avgDuration = _.round(d.totalDuration / d.count);
+d.count++, d.totalDuration += g.getDuration(b), d.avgDuration = _.round(d.totalDuration / d.count);
 }
-}, n = function() {
+}, p = function() {
 var a = {}, b = {};
-c.statsByConfig = {}, _.each(g, function(d) {
-if (k(d)) {
-var e = h(d) || "";
-c.buildConfigs[e] || (c.buildConfigs[e] = null), j(d) ? _.set(a, [ e, d.metadata.name ], d) :l(d, b[e]) && (b[e] = d), m(e, d);
+c.statsByConfig = {}, _.each(i, function(d) {
+if (m(d)) {
+var e = j(d) || "";
+c.buildConfigs[e] || (c.buildConfigs[e] = null), l(d) ? _.set(a, [ e, d.metadata.name ], d) :n(d, b[e]) && (b[e] = d), o(e, d);
 }
 }), _.each(b, function(b, c) {
 _.set(a, [ c, b.metadata.name ], b);
 }), c.interestingBuildsByConfig = a;
 };
-i.push(f.watch("builds", d, function(a) {
-c.buildsLoaded = !0, g = a.by("metadata.name"), n();
-})), i.push(f.watch("buildconfigs", d, function(a) {
-c.buildConfigsLoaded = !0, c.buildConfigs = _.pick(a.by("metadata.name"), k), n();
+k.push(h.watch("builds", f, function(a) {
+c.buildsLoaded = !0, i = a.by("metadata.name"), p();
+}));
+var q = !1;
+k.push(h.watch("buildconfigs", f, function(a) {
+if (c.buildConfigsLoaded = !0, c.buildConfigs = _.pick(a.by("metadata.name"), m), _.isEmpty(c.buildConfigs) && !q) {
+q = !0;
+var b = d.SAMPLE_PIPELINE_TEMPLATE.name, f = d.SAMPLE_PIPELINE_TEMPLATE.namespace;
+h.get("templates", b, {
+namespace:f
+}, {
+errorNotification:!1
+}).then(function() {
+c.createSampleURL = e.fromTemplateURL(c.projectName, b, f);
+});
+}
+p();
 })), c.startBuild = function(b) {
-e.startBuild(b, d).then(_.noop, function(b) {
+g.startBuild(b, f).then(_.noop, function(b) {
 c.alerts["start-build"] = {
 type:"error",
 message:"An error occurred while starting the build.",
@@ -5240,7 +5257,7 @@ details:a("getErrorDetails")(b)
 };
 });
 }, c.$on("$destroy", function() {
-f.unwatchAll(i);
+h.unwatchAll(k);
 });
 }));
 } ]), angular.module("openshiftConsole").controller("BuildConfigController", [ "$scope", "$filter", "$routeParams", "AlertMessageService", "APIService", "BuildsService", "ImagesService", "DataService", "LabelFilter", "ModalsService", "ProjectsService", "keyValueEditorUtils", function(a, b, c, d, e, f, g, h, i, j, k, l) {

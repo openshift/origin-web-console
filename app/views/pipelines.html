@@ -27,10 +27,15 @@
                 <div ng-if="project.metadata.name | canIAddToProject">
                   <p>
                     No pipelines have been added to project {{projectName}}.
+                    <br>
+                    Learn more about
+                    <a ng-href="{{ 'pipeline-builds' | helpLink}}" target="_blank">Pipeline Builds</a>
+                    and the
+                    <a ng-href="{{ 'pipeline-plugin' | helpLink}}" target="_blank">OpenShift Pipeline Plugin</a>.
                   </p>
-                  <p ng-if="project.metadata.name | canIAddToProject">
-                    <a ng-href="project/{{projectName}}/create" class="btn btn-lg btn-primary">
-                      Add to Project
+                  <p ng-if="(project.metadata.name | canIAddToProject) && createSampleURL">
+                    <a ng-href="{{createSampleURL}}" class="btn btn-lg btn-primary">
+                      Create Sample Pipeline
                     </a>
                   </p>
                 </div>

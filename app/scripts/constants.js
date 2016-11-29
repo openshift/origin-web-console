@@ -73,6 +73,11 @@ window.OPENSHIFT_CONSTANTS = {
     pipelines: true
   },
 
+  SAMPLE_PIPELINE_TEMPLATE: {
+    name: "jenkins-pipeline-example",
+    namespace: "openshift"
+  },
+
   // href's will be prefixed with /project/{{projectName}} unless they are absolute URLs
   PROJECT_NAVIGATION: [
     {

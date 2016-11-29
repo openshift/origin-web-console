@@ -11,6 +11,8 @@ angular.module('openshiftConsole')
   .controller('PipelinesController', function ($filter,
                                                $routeParams,
                                                $scope,
+                                               Constants,
+                                               Navigate,
                                                AlertMessageService,
                                                BuildsService,
                                                DataService,
@@ -106,11 +108,21 @@ angular.module('openshiftConsole')
           update();
         }));
 
+        var checkedForSampleTemplate = false;
         watches.push(DataService.watch("buildconfigs", context, function(buildConfigData) {
           $scope.buildConfigsLoaded = true;
           // Filter on the client until the server supports fieldSelector on spec.strategy.type.
           // Use _.pick instead of _.filter to keep $scope.buildConfigs a map
           $scope.buildConfigs = _.pick(buildConfigData.by("metadata.name"), isPipeline);
+          if (_.isEmpty($scope.buildConfigs) && !checkedForSampleTemplate) {
+            checkedForSampleTemplate = true;
+            var sampleName = Constants.SAMPLE_PIPELINE_TEMPLATE.name;
+            var sampleNamespace = Constants.SAMPLE_PIPELINE_TEMPLATE.namespace;
+            DataService.get("templates", sampleName, {namespace: sampleNamespace}, {errorNotification: false}).then(
+              function() {
+                $scope.createSampleURL = Navigate.fromTemplateURL($scope.projectName, sampleName, sampleNamespace);
+              });
+          }
           update();
         }));
 
