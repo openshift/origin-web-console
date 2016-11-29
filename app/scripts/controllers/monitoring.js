@@ -35,22 +35,21 @@ angular.module('openshiftConsole')
 
     $scope.kinds = [
       {
-        kind: "Pods"
+        kind: "All"
       },
       {
-        kind: "Builds"
+        kind: "Pods"
       },
       {
         label: "Deployments",
         kind: "ReplicationControllers"
+      },
+      {
+        kind: "Builds"
       }
     ];
-    var defaultKind = {
-      kind: "All"
-    };
-    $scope.kinds.push(defaultKind);
     $scope.kindSelector = {
-      selected: _.find($scope.kinds, {kind: $routeParams.kind}) || defaultKind
+      selected: _.find($scope.kinds, {kind: $routeParams.kind}) || _.head($scope.kinds)
     };
 
     $scope.logOptions = {
