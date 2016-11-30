@@ -79,7 +79,18 @@
                 </div>
               </div>
               <div ng-if="buildsLoaded && !(interestingBuildsByConfig[buildConfigName] | hashSize)">
-                <em>No pipeline builds have run for {{buildConfigName}}.</em>
+                <p>
+                  No pipeline builds have run for {{buildConfigName}}.
+                  <span ng-if="buildConfig.spec.strategy.jenkinsPipelineStrategy.jenkinsfile">
+                    View the <a ng-href="{{(buildConfig | navigateResourceURL) + '?tab=configuration'}}">Jenkinsfile</a> to see what stages will run.
+                  </span>
+                  <span ng-if="buildConfig.spec.strategy.jenkinsPipelineStrategy.jenkinsfilePath">
+                    View the file <code>{{buildConfig.spec.strategy.jenkinsPipelineStrategy.jenkinsfilePath}}</code> in the
+                    <a ng-if="buildConfig | jenkinsfileLink" ng-href="buildConfig | jenkinsfileLink">source repository</a>
+                    <span ng-if="!(buildConfig | jenkinsfileLink)">source repository</span>
+                    to see what stages will run.
+                  </span>
+                </p>
               </div>
               <div ng-if="interestingBuildsByConfig[buildConfigName] | hashSize">
                 <div ng-if="!(statsByConfig[buildConfigName].avgDuration | isNil)" class="hidden-xs pull-right text-muted">

@@ -1774,6 +1774,7 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "<div ng-if=\"buildConfig && unfilteredBuilds && (unfilteredBuilds | hashSize) === 0\" class=\"empty-state-message text-center\">\n" +
     "<h2>No builds.</h2>\n" +
     "<p>\n" +
+    "<span ng-if=\"!buildConfig.spec.strategy.jenkinsPipelineStrategy\">\n" +
     "<span ng-if=\"!('buildconfigs/instantiate' | canI : 'create')\">\n" +
     "Builds will create an image from\n" +
     "</span>\n" +
@@ -1786,6 +1787,20 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "</span>\n" +
     "<span ng-if=\"buildConfig.spec.source.type !== 'Git'\">\n" +
     "build configuration {{buildConfig.metadata.name}}.\n" +
+    "</span>\n" +
+    "</span>\n" +
+    "<span ng-if=\"buildConfig.spec.strategy.jenkinsPipelineStrategy\">\n" +
+    "No pipeline builds have run for {{buildConfigName}}.\n" +
+    "<br>\n" +
+    "<span ng-if=\"buildConfig.spec.strategy.jenkinsPipelineStrategy.jenkinsfile\">\n" +
+    "View the <a ng-href=\"{{(buildConfig | navigateResourceURL) + '?tab=configuration'}}\">Jenkinsfile</a> to see what stages will run.\n" +
+    "</span>\n" +
+    "<span ng-if=\"buildConfig.spec.strategy.jenkinsPipelineStrategy.jenkinsfilePath\">\n" +
+    "View the file <code>{{buildConfig.spec.strategy.jenkinsPipelineStrategy.jenkinsfilePath}}</code> in the\n" +
+    "<a ng-if=\"buildConfig | jenkinsfileLink\" ng-href=\"buildConfig | jenkinsfileLink\">source repository</a>\n" +
+    "<span ng-if=\"!(buildConfig | jenkinsfileLink)\">source repository</span>\n" +
+    "to see what stages will run.\n" +
+    "</span>\n" +
     "</span>\n" +
     "</p>\n" +
     "<button class=\"btn btn-primary btn-lg\" ng-click=\"startBuild(buildConfig.metadata.name)\" ng-if=\"'buildconfigs/instantiate' | canI : 'create'\">\n" +
@@ -10666,7 +10681,18 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "</div>\n" +
     "</div>\n" +
     "<div ng-if=\"buildsLoaded && !(interestingBuildsByConfig[buildConfigName] | hashSize)\">\n" +
-    "<em>No pipeline builds have run for {{buildConfigName}}.</em>\n" +
+    "<p>\n" +
+    "No pipeline builds have run for {{buildConfigName}}.\n" +
+    "<span ng-if=\"buildConfig.spec.strategy.jenkinsPipelineStrategy.jenkinsfile\">\n" +
+    "View the <a ng-href=\"{{(buildConfig | navigateResourceURL) + '?tab=configuration'}}\">Jenkinsfile</a> to see what stages will run.\n" +
+    "</span>\n" +
+    "<span ng-if=\"buildConfig.spec.strategy.jenkinsPipelineStrategy.jenkinsfilePath\">\n" +
+    "View the file <code>{{buildConfig.spec.strategy.jenkinsPipelineStrategy.jenkinsfilePath}}</code> in the\n" +
+    "<a ng-if=\"buildConfig | jenkinsfileLink\" ng-href=\"buildConfig | jenkinsfileLink\">source repository</a>\n" +
+    "<span ng-if=\"!(buildConfig | jenkinsfileLink)\">source repository</span>\n" +
+    "to see what stages will run.\n" +
+    "</span>\n" +
+    "</p>\n" +
     "</div>\n" +
     "<div ng-if=\"interestingBuildsByConfig[buildConfigName] | hashSize\">\n" +
     "<div ng-if=\"!(statsByConfig[buildConfigName].avgDuration | isNil)\" class=\"hidden-xs pull-right text-muted\">\n" +
