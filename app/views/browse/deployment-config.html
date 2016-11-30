@@ -125,21 +125,21 @@
                                         deployment="deploymentConfig"></replicas>
                               <span ng-if="autoscalers.length">(autoscaled)</span>
                             </dd>
-                            <div ng-if="deploymentConfig.spec.strategy.type">
-                                <dt>Strategy:</dt>
-                                <dd>{{deploymentConfig.spec.strategy.type}}</dd>
-                            </div>
-                            <div ng-if="deploymentConfig.spec.strategy.rollingParams">
-                              <dt>Update Period:</dt>
-                              <dd>{{deploymentConfig.spec.strategy.rollingParams.updatePeriodSeconds}} sec</dd>
-                              <dt>Interval:</dt>
-                              <dd>{{deploymentConfig.spec.strategy.rollingParams.intervalSeconds}} sec</dd>
+
+                            <dt ng-if-start="deploymentConfig.spec.strategy.type">Strategy:</dt>
+                            <dd ng-if-end>{{deploymentConfig.spec.strategy.type}}</dd>
+
+                            <div ng-if="deploymentConfig.spec.strategy.rollingParams || deploymentConfig.spec.strategy.recreateParams">
                               <dt>Timeout:</dt>
-                              <dd>{{deploymentConfig.spec.strategy.rollingParams.timeoutSeconds}} sec</dd>
+                              <dd>{{strategyParams.timeoutSeconds}} sec</dd>
+                              <dt ng-if-start="deploymentConfig.spec.strategy.rollingParams">Update Period:</dt>
+                              <dd>{{strategyParams.updatePeriodSeconds}} sec</dd>
+                              <dt>Interval:</dt>
+                              <dd>{{strategyParams.intervalSeconds}} sec</dd>
                               <dt>Max Unavailable:</dt>
-                              <dd>{{deploymentConfig.spec.strategy.rollingParams.maxUnavailable}}</dd>
+                              <dd>{{strategyParams.maxUnavailable}}</dd>
                               <dt>Max Surge:</dt>
-                              <dd>{{deploymentConfig.spec.strategy.rollingParams.maxSurge}}</dd>
+                              <dd ng-if-end>{{strategyParams.maxSurge}}</dd>
                             </div>
                             <!-- TODO: Surface the parameters for the recreate and custom strategies -->
                           </dl>
@@ -195,6 +195,27 @@
                           <!-- HPA details -->
                           <div ng-repeat="hpa in autoscalers">
                             <hpa hpa="hpa" project="project" show-scale-target="false" alerts="alerts"></hpa>
+                          </div>
+                        </div>
+
+                        <div class="col-lg-6" ng-if="deploymentConfig.spec.strategy.type !== 'Custom'">
+                          <h3>
+                            Hooks
+                            <span class="learn-more-inline">
+                              <a ng-href="{{'lifecycle_hooks' | helpLink}}" target="_blank">Learn More&nbsp;<i class="fa fa-external-link" aria-hidden="true"></i></a>
+                            </span>
+                          </h3>
+                          <div ng-if="strategyParams.pre">
+                            <lifecycle-hook deployment-config="deploymentConfig" type="pre"></lifecycle-hook>
+                          </div>
+                          <div ng-if="strategyParams.mid">
+                            <lifecycle-hook deployment-config="deploymentConfig" type="mid"></lifecycle-hook>
+                          </div>
+                          <div ng-if="strategyParams.post">
+                            <lifecycle-hook deployment-config="deploymentConfig" type="post"></lifecycle-hook>
+                          </div>
+                          <div ng-if="!strategyParams.pre && !strategyParams.mid && !strategyParams.post">
+                            none
                           </div>
                         </div>
 

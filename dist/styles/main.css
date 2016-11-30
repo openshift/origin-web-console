@@ -3676,7 +3676,7 @@ to{opacity:0}
 .pod-template-block .pod-template .pod-template-build{word-wrap:break-word;word-break:break-word;overflow-wrap:break-word;min-width:0}
 .pod-template-block .pod-template .pod-template-key{font-weight:700}
 .breadcrumb strong,.components .pod-template-block .pod-template .pod-template-key,.overview .pod-template-block .pod-template .pod-template-key{font-weight:600}
-code.probe-command{display:inline-block;line-height:1.3;margin-right:2px}
+code.command{display:inline-block;line-height:1.3;margin-right:2px}
 .hash{font-size:12px}
 .pod-template-column{min-width:0}
 .pod-template-container{margin:0 0 20px}

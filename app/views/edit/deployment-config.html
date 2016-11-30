@@ -233,32 +233,32 @@
                                 <div class="lifecycle-hook" id="pre-lifecycle-hook">
 
                                   <h3>Pre Lifecycle Hook</h3>
-                                  <lifecycle-hook model='strategyData[strategyParamsPropertyName].pre'
+                                  <edit-lifecycle-hook model='strategyData[strategyParamsPropertyName].pre'
                                                     type='pre'
                                                     available-volumes='volumeNames'
                                                     available-containers='containerNames'
                                                     namespace="projectName">
-                                  </lifecycle-hook>
+                                  </edit-lifecycle-hook>
                                 </div>
 
                                 <div ng-if="strategyData.type !== 'Rolling'" class="lifecycle-hook" id="mid-lifecycle-hook">
                                   <h3>Mid Lifecycle Hook</h3>
-                                  <lifecycle-hook model='strategyData[strategyParamsPropertyName].mid'
+                                  <edit-lifecycle-hook model='strategyData[strategyParamsPropertyName].mid'
                                                     type='mid'
                                                     available-volumes='volumeNames'
                                                     available-containers='containerNames'
                                                     namespace="projectName">
-                                  </lifecycle-hook>
+                                  </edit-lifecycle-hook>
                                 </div>
 
                                 <div class="lifecycle-hook" id="post-lifecycle-hook">
                                   <h3>Post Lifecycle Hook</h3>
-                                  <lifecycle-hook model='strategyData[strategyParamsPropertyName].post'
+                                  <edit-lifecycle-hook model='strategyData[strategyParamsPropertyName].post'
                                                     type='post'
                                                     available-volumes='volumeNames'
                                                     available-containers='containerNames'
                                                     namespace="projectName">
-                                  </lifecycle-hook>
+                                  </edit-lifecycle-hook>
                                 </div>
                               </div>
                             </div>

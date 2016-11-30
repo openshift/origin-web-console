@@ -87,6 +87,7 @@ angular.module('openshiftConsole')
           function(deploymentConfig) {
             $scope.loaded = true;
             $scope.deploymentConfig = deploymentConfig;
+            $scope.strategyParams = $filter('deploymentStrategyParams')(deploymentConfig);
             updateHPAWarnings();
             copyDeploymentConfigAndEnsureEnv(deploymentConfig);
             $scope.saveEnvVars = function() {
