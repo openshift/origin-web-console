@@ -1,0 +1,9 @@
+#!/bin/bash
+
+if [ -f /origin-web-console-config/config.js ]; then
+   cp -f /origin-web-console-config/config.js app/config.js
+else
+   echo "No config.js is mounted, using default development config."
+fi
+
+grunt serve --hostname=0.0.0.0 --disable-live-reload
