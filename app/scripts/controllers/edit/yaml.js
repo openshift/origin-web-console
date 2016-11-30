@@ -15,6 +15,7 @@ angular.module('openshiftConsole')
                                               $window,
                                               AlertMessageService,
                                               APIService,
+                                              AuthorizationService,
                                               BreadcrumbsService,
                                               DataService,
                                               Navigate,
@@ -69,6 +70,12 @@ angular.module('openshiftConsole')
           resource: APIService.kindToResource($routeParams.kind),
           group: $routeParams.group
         };
+
+        if (!AuthorizationService.canI(resourceGroupVersion, 'update', $routeParams.project)) {
+          Navigate.toErrorPage('You do not have authority to update ' +
+                               humanizeKind($routeParams.kind) + ' ' + $routeParams.name + '.', 'access_denied');
+          return;
+        }
 
         DataService.get(resourceGroupVersion, $scope.name, context).then(
           function(result) {

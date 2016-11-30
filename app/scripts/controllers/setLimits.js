@@ -8,18 +8,20 @@
  * Controller of the openshiftConsole
  */
 angular.module('openshiftConsole')
-  .controller('SetLimitsController', function ($filter,
-                                               $location,
-                                               $parse,
-                                               $routeParams,
-                                               $scope,
-                                               AlertMessageService,
-                                               APIService,
-                                               BreadcrumbsService,
-                                               DataService,
-                                               LimitRangesService,
-                                               Navigate,
-                                               ProjectsService) {
+  .controller('SetLimitsController',
+              function($filter,
+                       $location,
+                       $parse,
+                       $routeParams,
+                       $scope,
+                       AlertMessageService,
+                       APIService,
+                       AuthorizationService,
+                       BreadcrumbsService,
+                       DataService,
+                       LimitRangesService,
+                       Navigate,
+                       ProjectsService) {
     if (!$routeParams.kind || !$routeParams.name) {
       Navigate.toErrorPage("Kind or name parameter missing.");
       return;
@@ -78,6 +80,13 @@ angular.module('openshiftConsole')
           resource: APIService.kindToResource($routeParams.kind),
           group: $routeParams.group
         };
+
+        if (!AuthorizationService.canI(resourceGroupVersion, 'update', $routeParams.project)) {
+          Navigate.toErrorPage('You do not have authority to update ' +
+                               humanizeKind($routeParams.kind) + ' ' + $routeParams.name + '.', 'access_denied');
+          return;
+        }
+
         DataService.get(resourceGroupVersion, $scope.name, context).then(
           function(result) {
             var resource = angular.copy(result);

@@ -13,6 +13,7 @@ angular.module('openshiftConsole')
                         $routeParams,
                         $scope,
                         $window,
+                        AuthorizationService,
                         DataService,
                         Navigate,
                         ProjectsService) {
@@ -40,6 +41,11 @@ angular.module('openshiftConsole')
         $scope.project = project;
         // Update project breadcrumb with display name.
         $scope.breadcrumbs[0].title = $filter('displayName')(project);
+
+        if (!AuthorizationService.canI('configmaps', 'create', $routeParams.project)) {
+          Navigate.toErrorPage('You do not have authority to create config maps in project ' + $routeParams.project + '.', 'access_denied');
+          return;
+        }
 
         $scope.configMap = {
           apiVersion: 'v1',

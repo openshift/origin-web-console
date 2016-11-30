@@ -7,7 +7,21 @@
  * Controller of the openshiftConsole
  */
 angular.module('openshiftConsole')
-  .controller('EditDeploymentConfigController', function ($scope, $routeParams, $uibModal, DataService, BreadcrumbsService, SecretsService, ProjectsService, $filter, Navigate, $location, AlertMessageService, SOURCE_URL_PATTERN, keyValueEditorUtils) {
+  .controller('EditDeploymentConfigController',
+              function($scope,
+                       $filter,
+                       $location,
+                       $routeParams,
+                       $uibModal,
+                       AlertMessageService,
+                       AuthorizationService,
+                       BreadcrumbsService,
+                       DataService,
+                       Navigate,
+                       ProjectsService,
+                       SecretsService,
+                       SOURCE_URL_PATTERN,
+                       keyValueEditorUtils) {
     $scope.projectName = $routeParams.project;
     $scope.deploymentConfig = null;
     $scope.alerts = {};
@@ -55,6 +69,13 @@ angular.module('openshiftConsole')
       .then(_.spread(function(project, context) {
         $scope.project = project;
         $scope.context = context;
+
+        if (!AuthorizationService.canI('deploymentconfigs', 'update', $routeParams.project)) {
+          Navigate.toErrorPage('You do not have authority to update deployment config ' +
+                               $routeParams.deploymentconfig + '.', 'access_denied');
+          return;
+        }
+
         DataService.get("deploymentconfigs", $routeParams.deploymentconfig, context).then(
           // success
           function(deploymentConfig) {

@@ -8,15 +8,17 @@
  * Controller of the openshiftConsole
  */
 angular.module('openshiftConsole')
-  .controller('EditRouteController', function ($filter,
-                                               $location,
-                                               $routeParams,
-                                               $scope,
-                                               AlertMessageService,
-                                               DataService,
-                                               Navigate,
-                                               ProjectsService,
-                                               RoutesService) {
+  .controller('EditRouteController',
+              function($filter,
+                       $location,
+                       $routeParams,
+                       $scope,
+                       AlertMessageService,
+                       AuthorizationService,
+                       DataService,
+                       Navigate,
+                       ProjectsService,
+                       RoutesService) {
     $scope.alerts = {};
     $scope.renderOptions = {
       hideFilterWidget: true
@@ -45,6 +47,11 @@ angular.module('openshiftConsole')
         $scope.project = project;
         // Update project breadcrumb with display name.
         $scope.breadcrumbs[0].title = $filter('displayName')(project);
+
+        if (!AuthorizationService.canI('routes', 'update', $routeParams.project)) {
+          Navigate.toErrorPage('You do not have authority to update route ' + $routeParams.routeName + '.', 'access_denied');
+          return;
+        }
 
         var orderByDisplayName = $filter('orderByDisplayName');
 
