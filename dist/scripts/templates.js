@@ -4552,9 +4552,10 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "<div class=\"middle-container\">\n" +
     "<div class=\"middle-content\">\n" +
     "<div class=\"container surface-shaded\">\n" +
-    "<div ng-if=\"!project\">Loading...</div>\n" +
-    "<div class=\"row\" ng-if=\"project\">\n" +
+    "<div class=\"row\">\n" +
     "<div class=\"col-md-10 col-md-offset-1\">\n" +
+    "<div ng-if=\"!project\" class=\"mar-top-md\">Loading...</div>\n" +
+    "<div ng-if=\"project\">\n" +
     "<breadcrumbs breadcrumbs=\"breadcrumbs\"></breadcrumbs>\n" +
     "<alerts alerts=\"alerts\"></alerts>\n" +
     "<div class=\"mar-top-xl\">\n" +
@@ -4564,6 +4565,7 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "</div>\n" +
     "<create-secret namespace=\"projectName\" alerts=\"alerts\" post-create-action=\"postCreateAction(newSecret, creationAlert)\" cancel=\"cancel()\">\n" +
     "</create-secret>\n" +
+    "</div>\n" +
     "</div>\n" +
     "</div>\n" +
     "</div>\n" +
