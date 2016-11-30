@@ -86,21 +86,36 @@
                       <h2>No builds.</h2>
 
                         <p>
-                          <span ng-if="!('buildconfigs/instantiate' | canI : 'create')">
-                            Builds will create an image from
+                          <span ng-if="!buildConfig.spec.strategy.jenkinsPipelineStrategy">
+                            <span ng-if="!('buildconfigs/instantiate' | canI : 'create')">
+                              Builds will create an image from
+                            </span>
+                            <span ng-if="'buildconfigs/instantiate' | canI : 'create'">
+                              Start a new build to create an image from
+                            </span>
+                            <span ng-if="buildConfig.spec.source.type === 'Git'">
+                              source repository
+                              <span class="word-break"><osc-git-link
+                                              uri="buildConfig.spec.source.git.uri"
+                                              ref="buildConfig.spec.source.git.ref"
+                                              context-dir="buildConfig.spec.source.contextDir">{{buildConfig.spec.source.git.uri}}</osc-git-link></span>
+                            </span>
+                            <span ng-if="buildConfig.spec.source.type !== 'Git'">
+                              build configuration {{buildConfig.metadata.name}}.
+                            </span>
                           </span>
-                          <span ng-if="'buildconfigs/instantiate' | canI : 'create'">
-                            Start a new build to create an image from
-                          </span>
-                          <span ng-if="buildConfig.spec.source.type === 'Git'">
-                            source repository
-                            <span class="word-break"><osc-git-link
-                                            uri="buildConfig.spec.source.git.uri"
-                                            ref="buildConfig.spec.source.git.ref"
-                                            context-dir="buildConfig.spec.source.contextDir">{{buildConfig.spec.source.git.uri}}</osc-git-link></span>
-                          </span>
-                          <span ng-if="buildConfig.spec.source.type !== 'Git'">
-                            build configuration {{buildConfig.metadata.name}}.
+                          <span ng-if="buildConfig.spec.strategy.jenkinsPipelineStrategy">
+                            No pipeline builds have run for {{buildConfigName}}.
+                            <br>
+                            <span ng-if="buildConfig.spec.strategy.jenkinsPipelineStrategy.jenkinsfile">
+                              View the <a ng-href="{{(buildConfig | navigateResourceURL) + '?tab=configuration'}}">Jenkinsfile</a> to see what stages will run.
+                            </span>
+                            <span ng-if="buildConfig.spec.strategy.jenkinsPipelineStrategy.jenkinsfilePath">
+                              View the file <code>{{buildConfig.spec.strategy.jenkinsPipelineStrategy.jenkinsfilePath}}</code> in the
+                              <a ng-if="buildConfig | jenkinsfileLink" ng-href="buildConfig | jenkinsfileLink">source repository</a>
+                              <span ng-if="!(buildConfig | jenkinsfileLink)">source repository</span>
+                              to see what stages will run.
+                            </span>
                           </span>
                         </p>
 
