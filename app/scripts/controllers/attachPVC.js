@@ -8,16 +8,18 @@
  * Controller of the openshiftConsole
  */
 angular.module('openshiftConsole')
-  .controller('AttachPVCController', function($filter,
-                                              $routeParams,
-                                              $scope,
-                                              $window,
-                                              APIService,
-                                              BreadcrumbsService,
-                                              DataService,
-                                              Navigate,
-                                              ProjectsService,
-                                              StorageService) {
+  .controller('AttachPVCController',
+              function($filter,
+                       $routeParams,
+                       $scope,
+                       $window,
+                       APIService,
+                       AuthorizationService,
+                       BreadcrumbsService,
+                       DataService,
+                       Navigate,
+                       ProjectsService,
+                       StorageService) {
     if (!$routeParams.kind || !$routeParams.name) {
       Navigate.toErrorPage("Kind or name parameter missing.");
       return;
@@ -72,6 +74,12 @@ angular.module('openshiftConsole')
 
         // Update project breadcrumb with display name.
         $scope.breadcrumbs[0].title = $filter('displayName')(project);
+
+        if (!AuthorizationService.canI(resourceGroupVersion, 'update', $routeParams.project)) {
+          Navigate.toErrorPage('You do not have authority to update ' +
+                               $filter('humanizeKind')($routeParams.kind) + ' ' + $routeParams.name + '.', 'access_denied');
+          return;
+        }
 
         var orderByDisplayName = $filter('orderByDisplayName');
         var getErrorDetails = $filter('getErrorDetails');

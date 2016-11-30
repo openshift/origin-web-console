@@ -7,7 +7,20 @@
  * Controller of the openshiftConsole
  */
 angular.module('openshiftConsole')
-  .controller('EditBuildConfigController', function ($scope, $routeParams, DataService, SecretsService, ProjectsService, $filter, ApplicationGenerator, Navigate, $location, AlertMessageService, SOURCE_URL_PATTERN, keyValueEditorUtils) {
+  .controller('EditBuildConfigController',
+              function($scope,
+                       $filter,
+                       $location,
+                       $routeParams,
+                       AlertMessageService,
+                       ApplicationGenerator,
+                       AuthorizationService,
+                       DataService,
+                       Navigate,
+                       ProjectsService,
+                       SOURCE_URL_PATTERN,
+                       SecretsService,
+                       keyValueEditorUtils) {
 
     $scope.projectName = $routeParams.project;
     $scope.buildConfig = null;
@@ -119,6 +132,12 @@ angular.module('openshiftConsole')
         $scope.context = context;
         // Update project breadcrumb with display name.
         $scope.breadcrumbs[0].title = $filter('displayName')(project);
+
+        if (!AuthorizationService.canI('buildconfigs', 'update', $routeParams.project)) {
+          Navigate.toErrorPage('You do not have authority to update build config ' +
+                               $routeParams.buildconfig + '.', 'access_denied');
+          return;
+        }
 
         DataService.get("buildconfigs", $routeParams.buildconfig, context).then(
           // success

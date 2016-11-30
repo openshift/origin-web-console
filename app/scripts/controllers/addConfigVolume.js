@@ -15,6 +15,7 @@ angular.module('openshiftConsole')
                        $scope,
                        $window,
                        APIService,
+                       AuthorizationService,
                        BreadcrumbsService,
                        DataService,
                        Navigate,
@@ -95,6 +96,12 @@ angular.module('openshiftConsole')
       .then(_.spread(function(project, context) {
         $scope.project = project;
 
+        if (!AuthorizationService.canI(resourceGroupVersion, 'update', $routeParams.project)) {
+          Navigate.toErrorPage('You do not have authority to update ' +
+                               humanizeKind($routeParams.kind) + ' ' + $routeParams.name + '.', 'access_denied');
+          return;
+        }
+
         var orderByDisplayName = $filter('orderByDisplayName');
         var getErrorDetails = $filter('getErrorDetails');
         var generateName = $filter('generateName');
@@ -125,17 +132,18 @@ angular.module('openshiftConsole')
         DataService.list("configmaps", context, null, { errorNotification: false }).then(function(configMapData) {
           $scope.configMaps = orderByDisplayName(configMapData.by("metadata.name"));
         }, function(e) {
-          if (e.status === 403) {
+          if (e.code === 403) {
             $scope.configMaps = [];
             return;
           }
 
           displayError('Could not load config maps', getErrorDetails(e));
         });
+
         DataService.list("secrets", context, null, { errorNotification: false }).then(function(secretData) {
           $scope.secrets = orderByDisplayName(secretData.by("metadata.name"));
         }, function(e) {
-          if (e.status === 403) {
+          if (e.code === 403) {
             $scope.secrets = [];
             return;
           }

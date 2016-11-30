@@ -8,7 +8,17 @@
  * Controller of the openshiftConsole
  */
 angular.module('openshiftConsole')
-  .controller('CreatePersistentVolumeClaimController', function ($filter, $routeParams, $scope, $window, ApplicationGenerator, DataService, Navigate, ProjectsService,keyValueEditorUtils) {
+  .controller('CreatePersistentVolumeClaimController',
+              function($filter,
+                       $routeParams,
+                       $scope,
+                       $window,
+                       ApplicationGenerator,
+                       AuthorizationService,
+                       DataService,
+                       Navigate,
+                       ProjectsService,
+                       keyValueEditorUtils) {
     $scope.alerts = {};
     $scope.projectName = $routeParams.project;
     $scope.accessModes="ReadWriteOnce";
@@ -34,6 +44,11 @@ angular.module('openshiftConsole')
         $scope.project = project;
         // Update project breadcrumb with display name.
         $scope.breadcrumbs[0].title = $filter('displayName')(project);
+
+        if (!AuthorizationService.canI('persistentvolumeclaims', 'create', $routeParams.project)) {
+          Navigate.toErrorPage('You do not have authority to create persistent volume claims in project ' + $routeParams.project + '.', 'access_denied');
+          return;
+        }
 
         $scope.createPersistentVolumeClaim = function() {
           if ($scope.createPersistentVolumeClaimForm.$valid) {

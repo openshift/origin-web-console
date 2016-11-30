@@ -14,6 +14,7 @@ angular.module('openshiftConsole')
                         $routeParams,
                         $window,
                         APIService,
+                        AuthorizationService,
                         BreadcrumbsService,
                         DataService,
                         HPAService,
@@ -78,6 +79,12 @@ angular.module('openshiftConsole')
       .then(_.spread(function(project, context) {
         // Update project breadcrumb with display name.
         $scope.project = project;
+
+        var verb = $routeParams.kind === 'HorizontalPodAutoscaler' ? 'update' : 'create';
+        if (!AuthorizationService.canI({ resource: 'horizontalpodautoscalers', group: 'extensions' }, verb, $routeParams.project)) {
+          Navigate.toErrorPage('You do not have authority to ' + verb + ' horizontal pod autoscalers in project ' + $routeParams.project + '.', 'access_denied');
+          return;
+        }
 
         var createHPA = function() {
           $scope.disableInputs = true;

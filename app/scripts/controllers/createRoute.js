@@ -8,7 +8,16 @@
  * Controller of the openshiftConsole
  */
 angular.module('openshiftConsole')
-  .controller('CreateRouteController', function ($filter, $routeParams, $scope, $window, ApplicationGenerator, DataService, Navigate, ProjectsService) {
+  .controller('CreateRouteController',
+              function($filter,
+                       $routeParams,
+                       $scope,
+                       $window,
+                       ApplicationGenerator,
+                       AuthorizationService,
+                       DataService,
+                       Navigate,
+                       ProjectsService) {
     $scope.alerts = {};
     $scope.renderOptions = {
       hideFilterWidget: true
@@ -41,6 +50,11 @@ angular.module('openshiftConsole')
         $scope.project = project;
         // Update project breadcrumb with display name.
         $scope.breadcrumbs[0].title = $filter('displayName')(project);
+
+        if (!AuthorizationService.canI('routes', 'create', $routeParams.project)) {
+          Navigate.toErrorPage('You do not have authority to create routes in project ' + $routeParams.project + '.', 'access_denied');
+          return;
+        }
 
         var labels = {},
             orderByDisplayName = $filter('orderByDisplayName');
