@@ -51,12 +51,28 @@
         </span>
       </div>
       <div ng-if="!imageChangeTriggers.length">
-        <p>
-          No deployments have started for
-          <a ng-href="{{deploymentConfig | navigateResourceURL}}">{{deploymentConfig.metadata.name}}</a>.
-        </p>
-        <div ng-if="'deploymentconfigs' | canI : 'update'" class="mar-top-md">
-          <button class="btn btn-primary" ng-click="startDeployment(deploymentConfig)">
+        <div ng-if="pipeline = pipelinesForDC[deploymentConfig.metadata.name][0]">
+          <p>
+            This deployment config is part of pipeline
+            <a ng-href="{{pipeline | navigateResourceURL}}">{{pipeline.metadata.name}}</a>.
+          </p>
+          <div ng-if="('buildconfigs/instantiate' | canI : 'create')">
+            <!-- Disable the button if a pipeline is running. -->
+            <button
+                class="btn btn-primary"
+                ng-click="startPipeline(pipeline)"
+                ng-disabled="incompletePipelinesByDC[deploymentConfig.metadata.name].length">
+              Start Pipeline
+            </button>
+          </div>
+        </div>
+        <div ng-if="!pipelinesForDC[deploymentConfig.metadata.name].length">
+          <p>
+            No deployments have started for
+            <a ng-href="{{deploymentConfig | navigateResourceURL}}">{{deploymentConfig.metadata.name}}</a>.
+          </p>
+
+          <button ng-if="'deploymentconfigs' | canI : 'update'" class="btn btn-primary" ng-click="startDeployment(deploymentConfig)">
             Start Deployment
           </button>
         </div>
