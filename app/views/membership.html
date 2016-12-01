@@ -273,23 +273,15 @@
                     flex row tablet="column" mobile="column">
                     <div class="col-roles hidden-xs" flex>&nbsp;</div>
                     <div class="col-add-role" row>
-                      <input
-                        id="show-hidden-roles"
-                        type="checkbox"
-                        class="toggle-hidden"
-                        ng-click="showAllRoles($event)">
-                        &nbsp;
-                      <label for="show-hidden-roles">
-                        Show hidden roles
-                      </label>
-                      <a
-                        href=""
-                        class="action-inline"
-                        data-toggle="popover"
-                        data-trigger="focus"
-                        data-content="System roles are hidden by default and do not typically need to be managed.">
-                        <i class="pficon pficon-help"></i>
-                      </a>
+                      <div class="checkbox">
+                        <label>
+                          <input type="checkbox" class="toggle-hidden" ng-click="showAllRoles($event)">
+                          Show hidden roles</label>&nbsp;<a href=""
+                                                            class="action-inline"
+                                                            data-toggle="popover"
+                                                            data-trigger="hover focus"
+                                                            data-content="System roles are hidden by default and do not typically need to be managed."><i class="pficon pficon-help"></i></a>
+                      </div>
                     </div>
                   </div>
                 </div>
