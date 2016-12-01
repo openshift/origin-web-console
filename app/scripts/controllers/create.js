@@ -49,22 +49,30 @@ angular.module('openshiftConsole')
         $scope.context = context;
         // Update project breadcrumb with display name.
         $scope.breadcrumbs[0].title = $filter('displayName')(project);
-        // List templates in the project namespace as well as the shared `openshift` namespace.
-        DataService.list("templates", context, function(templates) {
-          $scope.projectTemplates = templates.by('metadata.name');
+
+        // List image streams and templates in the both the shared `openshift`
+        // namespace and the project namespace.
+        DataService.list("imagestreams", {namespace: "openshift"}, function(imageStreams) {
+          $scope.openshiftImageStreams = imageStreams.by("metadata.name");
         });
 
         DataService.list("templates", {namespace: "openshift"}, function(templates) {
           $scope.openshiftTemplates = templates.by("metadata.name");
         });
 
-        // List image streams in the project namespace as well as the shared `openshift` namespace.
-        DataService.list("imagestreams", context, function(imageStreams) {
-          $scope.projectImageStreams = imageStreams.by("metadata.name");
-        });
+        // If the current namespace is `openshift`, don't request the same
+        // templates and image streams again.
+        if ($routeParams.project === 'openshift') {
+          $scope.projectImageStreams = [];
+          $scope.projectTemplates = [];
+        } else {
+          DataService.list("imagestreams", context, function(imageStreams) {
+            $scope.projectImageStreams = imageStreams.by("metadata.name");
+          });
 
-        DataService.list("imagestreams", {namespace: "openshift"}, function(imageStreams) {
-          $scope.openshiftImageStreams = imageStreams.by("metadata.name");
-        });
+          DataService.list("templates", context, function(templates) {
+            $scope.projectTemplates = templates.by("metadata.name");
+          });
+        }
       }));
   });
