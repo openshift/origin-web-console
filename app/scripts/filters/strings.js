@@ -50,10 +50,21 @@ angular.module('openshiftConsole')
     };
   })
   .filter('isMultiline', function() {
-    return function(str) {
+    return function(str, ignoreTrailing) {
       if (!str) {
         return false;
       }
-      return str.indexOf('\n') !== -1;
+
+      var index = str.search(/\r|\n/);
+      if (index === -1) {
+        return false;
+      }
+
+      // Ignore a final, trailing newline?
+      if (ignoreTrailing) {
+        return index !== (str.length - 1);
+      }
+
+      return true;
     };
   });
