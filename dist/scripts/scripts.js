@@ -4995,13 +4995,13 @@ angular.extend(d, {
 canShowRoles:!0,
 roleBindings:a.by("metadata.name"),
 subjectKindsForUI:k.mapRolebindingsForUI(a.by("metadata.name"), r)
-});
+}), u();
 }, {
 errorNotification:!1
 });
 }, w = function(b, c) {
 d.disableAddForm = !0, l.create(b, c, o, n).then(function() {
-u(), v(), t("rolebindingCreate", "success", s.update.subject.success({
+v(), t("rolebindingCreate", "success", s.update.subject.success({
 roleName:b.metadata.name,
 subjectName:c.name
 }));
@@ -5015,7 +5015,7 @@ httpErr:a("getErrorDetails")(d)
 });
 }, x = function(b, c, e) {
 d.disableAddForm = !0, l.addSubject(b, c, e, n).then(function() {
-u(), v(), t("rolebindingUpdate", "success", s.update.subject.success({
+v(), t("rolebindingUpdate", "success", s.update.subject.success({
 roleName:b.roleRef.name,
 subjectName:c.name
 }));

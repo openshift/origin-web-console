@@ -77,6 +77,7 @@ angular
               roleBindings: resp.by('metadata.name'),
               subjectKindsForUI: MembershipService.mapRolebindingsForUI(resp.by('metadata.name'), allRoles)
             });
+            resetForm();
           }, {
             errorNotification: false
           });
@@ -84,11 +85,9 @@ angular
 
       var createBinding = function(role, newSubject) {
         $scope.disableAddForm = true;
-
         RoleBindingsService
           .create(role, newSubject, projectName, requestContext)
           .then(function() {
-            resetForm();
             refreshRoleBindingList();
             showAlert('rolebindingCreate', 'success', messages.update.subject.success({
               roleName: role.metadata.name,
@@ -108,7 +107,6 @@ angular
         RoleBindingsService
           .addSubject(rb, newSubject, projectName, requestContext)
           .then(function() {
-            resetForm();
             refreshRoleBindingList();
             showAlert('rolebindingUpdate', 'success', messages.update.subject.success({
               roleName: rb.roleRef.name,
