@@ -11532,9 +11532,9 @@ return b === c;
 function l(a) {
 if (d(a)) return "Terminating";
 var b = e(a);
-return _.some(b), {
+return _.some(b, {
 severity:"error"
-} ? "Failed" :b.length ? "Warning" :c(a) ? "Pulling" :"Running" !== a.status.phase || k(a) ? _.get(a, "status.phase", "Unknown") :"Not Ready";
+}) ? "Failed" :_.isEmpty(b) ? c(a) ? "Pulling" :"Running" !== a.status.phase || k(a) ? _.get(a, "status.phase", "Unknown") :"Not Ready" :"Warning";
 }
 function m() {
 var b = {};
