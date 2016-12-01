@@ -7125,19 +7125,19 @@ link:"project/" + a.projectName + "/create/category/" + r.id
 }), a.breadcrumbs.push({
 title:a.category.label
 }), void n.get(e.project).then(_.spread(function(c, d) {
-a.project = c, a.context = d, a.breadcrumbs[0].title = b("displayName")(c), j.list("templates", d, function(b) {
-a.projectTemplates = b.by("metadata.name");
+a.project = c, a.context = d, a.breadcrumbs[0].title = b("displayName")(c), j.list("imagestreams", {
+namespace:"openshift"
+}, function(b) {
+a.openshiftImageStreams = b.by("metadata.name");
 }), j.list("templates", {
 namespace:"openshift"
 }, function(b) {
 a.openshiftTemplates = b.by("metadata.name");
-}), j.list("imagestreams", d, function(b) {
+}), "openshift" === e.project ? (a.projectImageStreams = [], a.projectTemplates = []) :(j.list("imagestreams", d, function(b) {
 a.projectImageStreams = b.by("metadata.name");
-}), j.list("imagestreams", {
-namespace:"openshift"
-}, function(b) {
-a.openshiftImageStreams = b.by("metadata.name");
-});
+}), j.list("templates", d, function(b) {
+a.projectTemplates = b.by("metadata.name");
+}));
 })));
 } ]), angular.module("openshiftConsole").controller("CreateFromImageController", [ "$scope", "Logger", "$q", "$routeParams", "APIService", "DataService", "ProjectsService", "Navigate", "ApplicationGenerator", "LimitRangesService", "MetricsService", "HPAService", "QuotaService", "SecretsService", "TaskList", "failureObjectNameFilter", "$filter", "$parse", "$uibModal", "SOURCE_URL_PATTERN", "keyValueEditorUtils", function(a, b, c, d, e, f, g, h, i, j, k, l, m, n, o, p, q, r, s, t, u) {
 var v = q("displayName"), w = q("humanize");
@@ -7692,19 +7692,19 @@ link:"project/" + a.projectName
 }, {
 title:"Add to Project"
 } ], m.get(e.project).then(_.spread(function(c, d) {
-a.project = c, a.context = d, a.breadcrumbs[0].title = b("displayName")(c), j.list("templates", d, function(b) {
-a.projectTemplates = b.by("metadata.name");
+a.project = c, a.context = d, a.breadcrumbs[0].title = b("displayName")(c), j.list("imagestreams", {
+namespace:"openshift"
+}, function(b) {
+a.openshiftImageStreams = b.by("metadata.name");
 }), j.list("templates", {
 namespace:"openshift"
 }, function(b) {
 a.openshiftTemplates = b.by("metadata.name");
-}), j.list("imagestreams", d, function(b) {
+}), "openshift" === e.project ? (a.projectImageStreams = [], a.projectTemplates = []) :(j.list("imagestreams", d, function(b) {
 a.projectImageStreams = b.by("metadata.name");
-}), j.list("imagestreams", {
-namespace:"openshift"
-}, function(b) {
-a.openshiftImageStreams = b.by("metadata.name");
-});
+}), j.list("templates", d, function(b) {
+a.projectTemplates = b.by("metadata.name");
+}));
 }));
 } ]), angular.module("openshiftConsole").controller("CreateProjectController", [ "$scope", "$location", "AuthService", "DataService", "AlertMessageService", function(a, b, c, d, e) {
 a.alerts = {}, c.withUser(), e.getAlerts().forEach(function(b) {
