@@ -17,8 +17,8 @@ angular.module('openshiftConsole')
           type: 'dom',
           node: [
             '<li>',
-              '<a href="about">',
-                '<span class="pficon pficon-info fa-fw" aria-hidden="true"></span> About',
+              '<a href="command-line">',
+                '<span class="fa fa-terminal" aria-hidden="true"></span> Command Line Tools',
               '</a>',
             '</li>'
           ].join('')
@@ -26,8 +26,8 @@ angular.module('openshiftConsole')
           type: 'dom',
           node: [
             '<li>',
-              '<a href="command-line">',
-                '<span class="fa fa-terminal" aria-hidden="true"></span> Command Line Tools',
+              '<a href="about">',
+                '<span class="pficon pficon-info fa-fw" aria-hidden="true"></span> About',
               '</a>',
             '</li>'
           ].join('')
