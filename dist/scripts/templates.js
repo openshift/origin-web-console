@@ -2321,7 +2321,6 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "</div>\n" +
     "<h1>Config Maps</h1>\n" +
     "</div>\n" +
-    "<alerts alerts=\"alerts\"></alerts>\n" +
     "<div ng-if=\"!renderOptions.showGetStarted\" class=\"data-toolbar\">\n" +
     "<div class=\"data-toolbar-filter\">\n" +
     "<project-filter></project-filter>\n" +
@@ -2331,6 +2330,7 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "</div>\n" +
     "<div class=\"middle-content\">\n" +
     "<div class=\"container-fluid\">\n" +
+    "<alerts alerts=\"alerts\"></alerts>\n" +
     "<div class=\"row\">\n" +
     "<div class=\"col-md-12\">\n" +
     "<div ng-if=\"!loaded\">Loading...</div>\n" +
@@ -3627,7 +3627,6 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "</div>\n" +
     "<h1>Routes</h1>\n" +
     "</div>\n" +
-    "<alerts alerts=\"alerts\"></alerts>\n" +
     "<div ng-if=\"!renderOptions.showGetStarted\" class=\"data-toolbar\">\n" +
     "<div class=\"data-toolbar-filter\">\n" +
     "<project-filter></project-filter>\n" +
@@ -3637,6 +3636,7 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "</div>\n" +
     "<div class=\"middle-content\">\n" +
     "<div class=\"container-fluid\">\n" +
+    "<alerts alerts=\"alerts\"></alerts>\n" +
     "<div class=\"row\">\n" +
     "<div class=\"col-md-12\">\n" +
     "<table class=\"table table-bordered table-hover table-mobile\">\n" +
@@ -3913,7 +3913,6 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "<div class=\"page-header page-header-bleed-right page-header-bleed-left\">\n" +
     "<h1>Builds</h1>\n" +
     "</div>\n" +
-    "<alerts alerts=\"alerts\"></alerts>\n" +
     "<div ng-if=\"!renderOptions.showGetStarted\" class=\"data-toolbar\">\n" +
     "<div class=\"data-toolbar-filter\">\n" +
     "<project-filter></project-filter>\n" +
@@ -3923,6 +3922,7 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "</div>\n" +
     "<div class=\"middle-content\">\n" +
     "<div class=\"container-fluid\">\n" +
+    "<alerts alerts=\"alerts\"></alerts>\n" +
     "<div class=\"row\">\n" +
     "<div class=\"col-md-12\">\n" +
     "<table class=\"table table-bordered table-hover table-mobile\">\n" +
@@ -4992,7 +4992,6 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "<div class=\"page-header page-header-bleed-right page-header-bleed-left\">\n" +
     "<h1>Deployments</h1>\n" +
     "</div>\n" +
-    "<alerts alerts=\"alerts\"></alerts>\n" +
     "<div ng-if=\"!renderOptions.showGetStarted\" class=\"data-toolbar\">\n" +
     "<div class=\"data-toolbar-filter\">\n" +
     "<project-filter></project-filter>\n" +
@@ -5002,6 +5001,7 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "</div>\n" +
     "<div class=\"middle-content\">\n" +
     "<div class=\"container-fluid\">\n" +
+    "<alerts alerts=\"alerts\"></alerts>\n" +
     "<div class=\"row\">\n" +
     "<div class=\"col-md-12\">\n" +
     "<h3 ng-if=\"(deployments | hashSize) || (replicaSets | hashSize)\">Deployment Configurations</h3>\n" +
@@ -8954,11 +8954,11 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "<div class=\"page-header page-header-bleed-right page-header-bleed-left\">\n" +
     "<h1>Events</h1>\n" +
     "</div>\n" +
-    "<alerts alerts=\"alerts\"></alerts>\n" +
     "</div>\n" +
     "</div>\n" +
     "<div class=\"middle-content\">\n" +
     "<div class=\"container-fluid\">\n" +
+    "<alerts alerts=\"alerts\"></alerts>\n" +
     "<div class=\"row\">\n" +
     "<div class=\"col-md-12\" ng-if=\"projectContext\">\n" +
     "<events project-context=\"projectContext\" ng-if=\"projectContext\"></events>\n" +
@@ -8983,7 +8983,6 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "<div class=\"page-header page-header-bleed-right page-header-bleed-left\">\n" +
     "<h1>Image Streams</h1>\n" +
     "</div>\n" +
-    "<alerts alerts=\"alerts\"></alerts>\n" +
     "<div class=\"data-toolbar\">\n" +
     "<div class=\"data-toolbar-filter\">\n" +
     "<project-filter></project-filter>\n" +
@@ -8993,6 +8992,7 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "</div>\n" +
     "<div class=\"middle-content\">\n" +
     "<div class=\"container-fluid\">\n" +
+    "<alerts alerts=\"alerts\"></alerts>\n" +
     "<div class=\"row\">\n" +
     "<div class=\"col-md-12\">\n" +
     "<table class=\"table table-bordered table-hover table-mobile\">\n" +
@@ -9136,12 +9136,12 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "</a>\n" +
     "</span>\n" +
     "</h1>\n" +
-    "<alerts alerts=\"alerts\"></alerts>\n" +
     "</div>\n" +
     "</div>\n" +
     "</div>\n" +
     "<div class=\"middle-content\" persist-tab-state>\n" +
     "<div class=\"container-fluid\">\n" +
+    "<alerts alerts=\"alerts\"></alerts>\n" +
     "<div class=\"row\">\n" +
     "<div class=\"col-md-12\">\n" +
     "</div>\n" +
@@ -9593,7 +9593,6 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "<events-badge project-context=\"projectContext\" ng-if=\"projectContext\" class=\"pull-right\" sidebar-collapsed=\"renderOptions.collapseEventsSidebar\"></events-badge>\n" +
     "</h1>\n" +
     "</div>\n" +
-    "<alerts alerts=\"alerts\"></alerts>\n" +
     "<div class=\"data-toolbar\">\n" +
     "<ui-select class=\"data-toolbar-dropdown\" ng-model=\"kindSelector.selected\" theme=\"bootstrap\" search-enabled=\"true\" ng-disabled=\"kindSelector.disabled\" title=\"Choose a resource\">\n" +
     "<ui-select-match placeholder=\"Choose a resource\">{{$select.selected.label ? $select.selected.label : ($select.selected.kind | humanizeKind : true)}}</ui-select-match>\n" +
@@ -9625,6 +9624,7 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "</div>\n" +
     "<div class=\"middle-content\">\n" +
     "<div class=\"container-fluid\">\n" +
+    "<alerts alerts=\"alerts\"></alerts>\n" +
     "<div class=\"row\">\n" +
     "<div class=\"col-md-12\">\n" +
     "<div ng-if=\"kindSelector.selected.kind === 'All' || kindSelector.selected.kind === 'Pods'\">\n" +
@@ -9953,7 +9953,6 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "<div class=\"page-header page-header-bleed-right page-header-bleed-left\">\n" +
     "<h1>Other Resources</h1>\n" +
     "</div>\n" +
-    "<alerts alerts=\"alerts\"></alerts>\n" +
     "<div class=\"data-toolbar other-resources-toolbar\">\n" +
     "<ui-select class=\"data-toolbar-dropdown\" ng-model=\"kindSelector.selected\" theme=\"bootstrap\" search-enabled=\"true\" ng-disabled=\"kindSelector.disabled\" title=\"Choose a resource\">\n" +
     "<ui-select-match placeholder=\"Choose a resource to list...\">{{$select.selected.kind | humanizeKind : true}}</ui-select-match>\n" +
@@ -9970,6 +9969,7 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "</div>\n" +
     "<div class=\"middle-content\">\n" +
     "<div class=\"container-fluid\">\n" +
+    "<alerts alerts=\"alerts\"></alerts>\n" +
     "<div class=\"row\">\n" +
     "<div class=\"col-md-12\">\n" +
     "<table class=\"table table-bordered table-mobile\" ng-class=\"{ 'table-empty': (resources | hashSize) === 0 }\">\n" +
@@ -10575,12 +10575,12 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "<h1>\n" +
     "Pipelines\n" +
     "</h1>\n" +
-    "<alerts alerts=\"alerts\"></alerts>\n" +
     "</div>\n" +
     "</div>\n" +
     "</div>\n" +
     "<div class=\"middle-content pipelines-page\">\n" +
     "<div class=\"container-fluid\">\n" +
+    "<alerts alerts=\"alerts\"></alerts>\n" +
     "<div class=\"row\">\n" +
     "<div class=\"col-md-12\">\n" +
     "<div ng-if=\"!(buildConfigs | hashSize)\" class=\"mar-top-lg\">\n" +
@@ -10692,7 +10692,6 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "<div class=\"page-header page-header-bleed-right page-header-bleed-left\">\n" +
     "<h1>Pods</h1>\n" +
     "</div>\n" +
-    "<alerts alerts=\"alerts\"></alerts>\n" +
     "<div ng-if=\"!renderOptions.showGetStarted\" class=\"data-toolbar\">\n" +
     "<div class=\"data-toolbar-filter\">\n" +
     "<project-filter></project-filter>\n" +
@@ -10702,6 +10701,7 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "</div>\n" +
     "<div class=\"middle-content\">\n" +
     "<div class=\"container-fluid\">\n" +
+    "<alerts alerts=\"alerts\"></alerts>\n" +
     "<div class=\"row\">\n" +
     "<div class=\"col-md-12\">\n" +
     "<pods-table pods=\"pods\" empty-message=\"emptyMessage\"></pods-table>\n" +
@@ -11059,11 +11059,11 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "<span ng-if=\"clusterQuotas | hashSize\">Cluster </span>Quota\n" +
     "</h1>\n" +
     "</div>\n" +
-    "<alerts alerts=\"alerts\"></alerts>\n" +
     "</div>\n" +
     "</div>\n" +
     "<div class=\"middle-content\">\n" +
     "<div class=\"container-fluid\">\n" +
+    "<alerts alerts=\"alerts\"></alerts>\n" +
     "<div class=\"row\">\n" +
     "<div class=\"col-md-12\">\n" +
     "<div ng-if=\"!(quotas | hashSize) && !(clusterQuotas | hashSize)\" class=\"mar-top-xl\">\n" +
@@ -11313,11 +11313,11 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "</div>\n" +
     "<h1>Secrets</h1>\n" +
     "</div>\n" +
-    "<alerts alerts=\"alerts\"></alerts>\n" +
     "</div>\n" +
     "</div>\n" +
     "<div class=\"middle-content\">\n" +
     "<div class=\"container-fluid\">\n" +
+    "<alerts alerts=\"alerts\"></alerts>\n" +
     "<div ng-if=\"!loaded\" class=\"mar-top-xl\">Loading...</div>\n" +
     "<div ng-if=\"loaded\" class=\"row\">\n" +
     "<div class=\"col-md-12\">\n" +
@@ -11432,7 +11432,6 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "<div class=\"page-header page-header-bleed-right page-header-bleed-left\">\n" +
     "<h1>Services</h1>\n" +
     "</div>\n" +
-    "<alerts alerts=\"alerts\"></alerts>\n" +
     "<div class=\"data-toolbar\">\n" +
     "<div class=\"data-toolbar-filter\">\n" +
     "<project-filter></project-filter>\n" +
@@ -11442,6 +11441,7 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "</div>\n" +
     "<div class=\"middle-content\">\n" +
     "<div class=\"container-fluid\">\n" +
+    "<alerts alerts=\"alerts\"></alerts>\n" +
     "<div class=\"row\">\n" +
     "<div class=\"col-md-12\">\n" +
     "<table class=\"table table-bordered table-hover table-mobile\">\n" +
@@ -11842,7 +11842,6 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "<div class=\"page-header page-header-bleed-right page-header-bleed-left\">\n" +
     "<h1>Storage</h1>\n" +
     "</div>\n" +
-    "<alerts alerts=\"alerts\"></alerts>\n" +
     "<div ng-if=\"!renderOptions.showGetStarted\" class=\"data-toolbar\">\n" +
     "<div class=\"data-toolbar-filter\">\n" +
     "<project-filter></project-filter>\n" +
@@ -11852,6 +11851,7 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "</div>\n" +
     "<div class=\"middle-content\">\n" +
     "<div class=\"container-fluid\">\n" +
+    "<alerts alerts=\"alerts\"></alerts>\n" +
     "<div class=\"row\">\n" +
     "<div class=\"col-md-12\">\n" +
     "<div class=\"section-header page-header-bleed-right page-header-bleed-left\">\n" +

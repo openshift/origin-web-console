@@ -3897,7 +3897,7 @@ a.subtle-link:active,a.subtle-link:focus,a.subtle-link:hover{color:#00659c;borde
 .tasks .task-content .task-title{margin-right:10px}
 .tasks .task-content .task-links{font-size:13px;font-weight:300;white-space:nowrap}
 .tasks .task-expanded-details{margin-top:20px}
-.tasks .task-expanded-details .alert{margin-bottom:0}
+.tasks .task-expanded-details .alert{margin-bottom:7px}
 label.required:before{content:'*';position:absolute;left:10px}
 .btn-group-xs>.btn,.btn-xs{padding:0 4px}
 .btn-group-lg>.btn,.btn-lg{line-height:1.334}

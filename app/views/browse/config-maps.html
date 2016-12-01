@@ -12,7 +12,6 @@
             </div>
             <h1>Config Maps</h1>
           </div>
-          <alerts alerts="alerts"></alerts>
           <div ng-if="!renderOptions.showGetStarted" class="data-toolbar">
             <div class="data-toolbar-filter">
               <project-filter></project-filter>
@@ -22,6 +21,7 @@
       </div><!-- /middle-header-->
       <div class="middle-content">
         <div class="container-fluid">
+          <alerts alerts="alerts"></alerts>
           <div class="row">
             <div class="col-md-12">
               <div ng-if="!loaded">Loading...</div>
