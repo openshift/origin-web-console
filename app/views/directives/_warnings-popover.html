@@ -4,7 +4,8 @@
     data-toggle="popover"
     data-trigger="hover"
     data-html="true"
-    class="pficon pficon-warning-triangle-o warnings-popover"
+    class="pficon warnings-popover"
+    ng-class="{'pficon-warning-triangle-o': !hasError, 'pficon-error-circle-o': hasError}"
     aria-hidden="true">
   </span>
   <span class="sr-only">{{content}}</span>

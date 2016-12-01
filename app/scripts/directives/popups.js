@@ -85,6 +85,9 @@ angular.module('openshiftConsole')
           if (content) {
             content += '<br>';
           }
+          if (warnings[i].severity === "error") {
+            $scope.hasError = true;
+          }
           content += warnings[i].message;
         }
         $scope.content = content;

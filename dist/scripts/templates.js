@@ -5536,7 +5536,7 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
 
   $templateCache.put('views/directives/_warnings-popover.html',
     "<span ng-if=\"content\">\n" +
-    "<span dynamic-content=\"{{content | middleEllipses:350:'...<br>...'}}\" data-toggle=\"popover\" data-trigger=\"hover\" data-html=\"true\" class=\"pficon pficon-warning-triangle-o warnings-popover\" aria-hidden=\"true\">\n" +
+    "<span dynamic-content=\"{{content | middleEllipses:350:'...<br>...'}}\" data-toggle=\"popover\" data-trigger=\"hover\" data-html=\"true\" class=\"pficon warnings-popover\" ng-class=\"{'pficon-warning-triangle-o': !hasError, 'pficon-error-circle-o': hasError}\" aria-hidden=\"true\">\n" +
     "</span>\n" +
     "<span class=\"sr-only\">{{content}}</span>\n" +
     "</span>"
@@ -7800,9 +7800,6 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "<tr>\n" +
     "<td data-title=\"Name\">\n" +
     "<a href=\"{{pod | navigateResourceURL}}\">{{pod.metadata.name}}</a>\n" +
-    "<span ng-if=\"pod | isTroubledPod\">\n" +
-    "<pod-warnings pod=\"pod\"></pod-warnings>\n" +
-    "</span>\n" +
     "<span ng-if=\"pod | isDebugPod\">\n" +
     "<i class=\"fa fa-bug info-popover\" aria-hidden=\"true\" data-toggle=\"popover\" data-trigger=\"hover\" dynamic-content=\"Debugging pod {{pod | debugPodSourceName}}\"></i>\n" +
     "<span class=\"sr-only\">Debugging pod {{pod | debugPodSourceName}}</span>\n" +
@@ -9654,9 +9651,6 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "<div class=\"list-view-pf-description\">\n" +
     "<div class=\"list-group-item-heading\">\n" +
     "<a ng-href=\"{{pod | navigateResourceURL}}\"><span ng-bind-html=\"pod.metadata.name | highlightKeywords : filterKeywords\"></span></a>\n" +
-    "<span ng-if=\"pod | isTroubledPod\">\n" +
-    "<pod-warnings pod=\"pod\"></pod-warnings>\n" +
-    "</span>\n" +
     "<small>created <span am-time-ago=\"pod.metadata.creationTimestamp\"></span></small>\n" +
     "</div>\n" +
     "<div class=\"list-group-item-text\">\n" +

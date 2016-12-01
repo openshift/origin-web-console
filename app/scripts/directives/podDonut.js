@@ -5,7 +5,7 @@ angular.module('openshiftConsole')
                                   hashSizeFilter,
                                   isPullingImageFilter,
                                   isTerminatingFilter,
-                                  isTroubledPodFilter,
+                                  podWarningsFilter,
                                   numContainersReadyFilter,
                                   Logger,
                                   ChartsService) {
@@ -153,7 +153,10 @@ angular.module('openshiftConsole')
             return 'Terminating';
           }
 
-          if (isTroubledPodFilter(pod)) {
+          var warnings = podWarningsFilter(pod);
+          if (_.some(warnings), { severity: 'error' }) {
+            return 'Failed';
+          } else if (warnings.length) {
             return 'Warning';
           }
 

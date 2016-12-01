@@ -523,6 +523,7 @@ angular.module('openshiftConsole')
           if (isContainerFailedFilter(containerStatus)) {
             if (isTerminatingFilter(pod)) {
               warnings.push({
+                severity: "error",
                 reason: "NonZeroExitTerminatingPod",
                 pod: pod.metadata.name,
                 container: containerStatus.name,
@@ -530,6 +531,7 @@ angular.module('openshiftConsole')
               });
             } else {
               warnings.push({
+                severity: "warning",
                 reason: "NonZeroExit",
                 pod: pod.metadata.name,
                 container: containerStatus.name,
@@ -539,6 +541,7 @@ angular.module('openshiftConsole')
           }
           if (isContainerLoopingFilter(containerStatus)) {
             warnings.push({
+              severity: "error",
               reason: "Looping",
               pod: pod.metadata.name,
               container: containerStatus.name,
@@ -547,6 +550,7 @@ angular.module('openshiftConsole')
           }
           if (isContainerUnpreparedFilter(containerStatus)) {
             warnings.push({
+              severity: "warning",
               reason: "Unprepared",
               pod: pod.metadata.name,
               container: containerStatus.name,
