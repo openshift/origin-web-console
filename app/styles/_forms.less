@@ -3,6 +3,22 @@
   color: @text-color;
 }
 
+.copy-to-clipboard-multiline {
+  position: relative;
+  width: 100%;
+  a {
+    box-shadow: none;
+    position: absolute;
+    right: 0;
+    top: 0;
+  }
+  pre {
+    background-color: #fff;
+    max-width: 100%;
+    overflow-x: auto;
+  }
+}
+
 .input-group-addon.wildcard-prefix {
   padding-left: 10px;
 }

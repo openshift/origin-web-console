@@ -109,13 +109,15 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
 
   $templateCache.put('views/_config-file-params.html',
     "<div ng-repeat=\"(serverName, data) in secretData\" class=\"image-source-item\">\n" +
-    "<h4>{{serverName}}</h4>\n" +
-    "<dt>Username:</dt>\n" +
+    "<h3>{{serverName}}</h3>\n" +
+    "<dt>username</dt>\n" +
     "<dd class=\"word-break\">{{data.username}}</dd>\n" +
-    "<dt>Password:</dt>\n" +
-    "<dd ng-if=\"view.showSecret\" class=\"word-break\">{{data.password}}</dd>\n" +
+    "<dt>password</dt>\n" +
+    "<dd ng-if=\"view.showSecret\">\n" +
+    "<copy-to-clipboard clipboard-text=\"data.password\" display-wide=\"true\"></copy-to-clipboard>\n" +
+    "</dd>\n" +
     "<dd ng-if=\"!view.showSecret\">*****</dd>\n" +
-    "<dt>Email:</dt>\n" +
+    "<dt>email</dt>\n" +
     "<dd class=\"word-break\">{{data.email}}</dd>\n" +
     "</div>"
   );
@@ -3741,10 +3743,12 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "<div class=\"container-fluid\">\n" +
     "<div ng-if=\"secret\" class=\"row\">\n" +
     "<div class=\"col-sm-12\">\n" +
-    "<div class=\"resource-details secret-details\">\n" +
-    "<dl class=\"dl-horizontal left\">\n" +
-    "<dt>Type:</dt>\n" +
-    "<dd>{{secret.type}}</dd>\n" +
+    "<div class=\"resource-details\">\n" +
+    "<h2 class=\"mar-top-none\">\n" +
+    "{{secret.type}}\n" +
+    "<small class=\"mar-left-sm\"><a href=\"\" ng-click=\"view.showSecret = !view.showSecret\">{{view.showSecret ? \"Hide\" : \"Reveal\"}} secret</a></small>\n" +
+    "</h2>\n" +
+    "<dl class=\"secret-data left\">\n" +
     "<div ng-repeat=\"(secretDataName, secretData) in decodedSecretData\" class=\"image-source-item\">\n" +
     "<div ng-switch=\"secretDataName\">\n" +
     "<div ng-switch-when=\".dockercfg\">\n" +
@@ -3753,84 +3757,20 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "<div ng-switch-when=\".dockerconfigjson\">\n" +
     "<ng-include src=\" 'views/_config-file-params.html' \"></ng-include>\n" +
     "</div>\n" +
-    "<div ng-switch-when=\"username\">\n" +
-    "<dt>Username:</dt>\n" +
-    "<dd class=\"word-break\">{{decodedSecretData.username}}</dd>\n" +
-    "</div>\n" +
-    "<div ng-switch-when=\"password\">\n" +
-    "<dt>Password:</dt>\n" +
-    "<dd ng-if=\"view.showSecret\" class=\"word-break\">{{secretData}}</dd>\n" +
-    "<dd ng-if=\"!view.showSecret\">*****</dd>\n" +
-    "</div>\n" +
-    "<div ng-switch-when=\"ssh-privatekey\">\n" +
-    "<dt>SSH Private Key:</dt>\n" +
-    "<dd ng-if=\"view.showSecret\" class=\"gutter-bottom\">\n" +
-    "<div ui-ace=\"{\n" +
-    "                            theme: 'dreamweaver',\n" +
-    "                            highlightActiveLine: false,\n" +
-    "                            showGutter: false,\n" +
-    "                            rendererOptions: {\n" +
-    "                              fadeFoldWidgets: true,\n" +
-    "                              highlightActiveLine: false,\n" +
-    "                              showPrintMargin: false\n" +
-    "                            },\n" +
-    "                            advanced: {\n" +
-    "                              highlightActiveLine: false\n" +
-    "                            }\n" +
-    "                          }\" readonly=\"readonly\" ng-model=\"secretData\" class=\"ace-bordered ace-read-only ace-inline secret-data\"></div>\n" +
-    "</dd>\n" +
-    "<dd ng-if=\"!view.showSecret\">*****</dd>\n" +
-    "</div>\n" +
-    "<div ng-switch-when=\"ca.crt\">\n" +
-    "<dt>CA Certificate:</dt>\n" +
-    "<dd ng-if=\"view.showSecret\" class=\"gutter-bottom\">\n" +
-    "<div ui-ace=\"{\n" +
-    "                            theme: 'dreamweaver',\n" +
-    "                            highlightActiveLine: false,\n" +
-    "                            showGutter: false,\n" +
-    "                            rendererOptions: {\n" +
-    "                              fadeFoldWidgets: true,\n" +
-    "                              highlightActiveLine: false,\n" +
-    "                              showPrintMargin: false\n" +
-    "                            },\n" +
-    "                            advanced: {\n" +
-    "                              highlightActiveLine: false\n" +
-    "                            }\n" +
-    "                          }\" readonly=\"readonly\" ng-model=\"secretData\" class=\"ace-bordered ace-read-only ace-inline secret-data\"></div>\n" +
-    "</dd>\n" +
-    "<dd ng-if=\"!view.showSecret\">*****</dd>\n" +
-    "</div>\n" +
-    "<div ng-switch-when=\".gitconfig\">\n" +
-    "<dt>Git Configuration File:</dt>\n" +
-    "<dd ng-if=\"view.showSecret\" class=\"gutter-bottom\">\n" +
-    "<div ui-ace=\"{\n" +
-    "                            mode: 'ini',\n" +
-    "                            theme: 'dreamweaver',\n" +
-    "                            highlightActiveLine: false,\n" +
-    "                            showGutter: false,\n" +
-    "                            rendererOptions: {\n" +
-    "                              fadeFoldWidgets: true,\n" +
-    "                              highlightActiveLine: false,\n" +
-    "                              showPrintMargin: false\n" +
-    "                            },\n" +
-    "                            advanced: {\n" +
-    "                              highlightActiveLine: false\n" +
-    "                            }\n" +
-    "                          }\" readonly=\"readonly\" ng-model=\"secretData\" class=\"ace-bordered ace-read-only ace-inline secret-data\"></div>\n" +
-    "</dd>\n" +
-    "<dd ng-if=\"!view.showSecret\">*****</dd>\n" +
-    "</div>\n" +
     "<div ng-switch-default>\n" +
-    "<dt>{{secretDataName}}:</dt>\n" +
-    "<dd ng-if=\"view.showSecret\" class=\"word-break gutter-bottom\">{{secretData}}</dd>\n" +
+    "<dt ng-attr-title=\"{{secretDataName}}\">{{secretDataName}}</dt>\n" +
+    "<dd ng-if=\"view.showSecret\">\n" +
+    "<copy-to-clipboard clipboard-text=\"secretData\" multiline=\"secretData | isMultiline : true\" display-wide=\"true\">\n" +
+    "</copy-to-clipboard>\n" +
+    "<div ng-if=\"decodedSecretData.$$nonprintable[secretDataName]\" class=\"help-block\">\n" +
+    "This secret value contains non-printable characters and is displayed as a Base64-encoded string.\n" +
+    "</div>\n" +
+    "</dd>\n" +
     "<dd ng-if=\"!view.showSecret\">*****</dd>\n" +
     "</div>\n" +
     "</div>\n" +
     "</div>\n" +
     "</dl>\n" +
-    "</div>\n" +
-    "<div class=\"gutter-bottom\">\n" +
-    "<a href=\"\" ng-click=\"view.showSecret = !view.showSecret\">{{view.showSecret ? \"Hide\" : \"Reveal\"}} secret contents</a>\n" +
     "</div>\n" +
     "<annotations annotations=\"secret.metadata.annotations\"></annotations>\n" +
     "</div>\n" +
@@ -5331,11 +5271,12 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
 
 
   $templateCache.put('views/directives/_copy-to-clipboard.html',
-    "<div class=\"input-group copy-to-clipboard\" ng-class=\"{'limit-width': !displayWide}\">\n" +
-    "<input id=\"{{id}}\" type=\"text\" class=\"form-control\" value=\"{{inputText ? inputText : clipboardText}}\" ng-disabled=\"isDisabled\" ng-readonly=\"!isDisabled\" select-on-focus>\n" +
-    "<span class=\"input-group-btn\" ng-hide=\"hidden\">\n" +
-    "<a ng-show=\"!inputText\" data-clipboard-target=\"#{{id}}\" ng-disabled=\"isDisabled\" data-toggle=\"tooltip\" title=\"Copy to clipboard\" role=\"button\" class=\"btn btn-default\"><i class=\"fa fa-clipboard\"/></a>\n" +
-    "<a ng-show=\"inputText\" data-clipboard-text=\"{{clipboardText}}\" ng-disabled=\"isDisabled\" data-toggle=\"tooltip\" title=\"Copy to clipboard\" role=\"button\" class=\"btn btn-default\"><i class=\"fa fa-clipboard\"/></a>\n" +
+    "<div class=\"input-group copy-to-clipboard\" ng-class=\"{'limit-width': !displayWide, 'copy-to-clipboard-multiline': multiline}\">\n" +
+    "<input ng-if=\"!multiline\" id=\"{{id}}\" type=\"text\" class=\"form-control\" value=\"{{inputText || clipboardText}}\" ng-disabled=\"isDisabled\" ng-readonly=\"!isDisabled\" select-on-focus>\n" +
+    "<pre ng-if=\"multiline\" id=\"{{id}}\">{{inputText || clipboardText}}</pre>\n" +
+    "<span ng-class=\"{ 'input-group-btn': !multiline }\" ng-hide=\"hidden\">\n" +
+    "<a ng-show=\"!inputText\" data-clipboard-target=\"#{{id}}\" href=\"\" ng-disabled=\"isDisabled\" data-toggle=\"tooltip\" title=\"Copy to clipboard\" role=\"button\" class=\"btn btn-default\"><i class=\"fa fa-clipboard\"/></a>\n" +
+    "<a ng-show=\"inputText\" data-clipboard-text=\"{{clipboardText}}\" href=\"\" ng-disabled=\"isDisabled\" data-toggle=\"tooltip\" title=\"Copy to clipboard\" role=\"button\" class=\"btn btn-default\"><i class=\"fa fa-clipboard\"/></a>\n" +
     "</span>\n" +
     "</div>"
   );

@@ -3360,25 +3360,20 @@ email:a.email
 };
 }), b;
 }, d = function(a) {
-return _.mapValues(a, function(a, d) {
-switch (d) {
+var d = {}, e = _.mapValues(a, function(a, e) {
+var f, g;
+switch (e) {
 case ".dockercfg":
 return b(a);
 
 case ".dockerconfigjson":
 return c(a);
 
-case "username":
-case "password":
-case ".gitconfig":
-case "ssh-privatekey":
-case "ca.crt":
-return window.atob(a);
-
 default:
-return a;
+return f = window.atob(a), g = /[\x00-\x09\x0E-\x1F]/.test(f), g ? (d[e] = !0, a) :f;
 }
 });
+return e.$$nonprintable = d, e;
 };
 return {
 groupSecretsByType:a,
@@ -10255,7 +10250,8 @@ scope:{
 clipboardText:"=",
 isDisabled:"=?",
 displayWide:"=?",
-inputText:"=?"
+inputText:"=?",
+multiline:"=?"
 },
 templateUrl:"views/directives/_copy-to-clipboard.html",
 controller:[ "$scope", function(a) {
@@ -14196,8 +14192,10 @@ return function(a) {
 return _.capitalize(a);
 };
 }).filter("isMultiline", function() {
-return function(a) {
-return !!a && a.indexOf("\n") !== -1;
+return function(a, b) {
+if (!a) return !1;
+var c = a.search(/\r|\n/);
+return c !== -1 && (!b || c !== a.length - 1);
 };
 }), angular.module("openshiftConsole").directive("affix", [ "$window", function(a) {
 return {

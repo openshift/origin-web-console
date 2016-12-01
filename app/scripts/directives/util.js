@@ -78,7 +78,8 @@ angular.module('openshiftConsole')
         clipboardText: "=",
         isDisabled: "=?",
         displayWide: "=?",
-        inputText: "=?"
+        inputText: "=?",
+        multiline: "=?"
       },
       templateUrl: 'views/directives/_copy-to-clipboard.html',
       controller: function($scope) {

@@ -56,22 +56,35 @@ angular.module("openshiftConsole")
     };
 
     var decodeSecretData = function(secretData) {
-      return _.mapValues(secretData, function(data, paramName) {
+      var nonPrintable = {};
+      var decodedSecret = _.mapValues(secretData, function(data, paramName) {
+        var decoded, isNonPrintable;
         switch (paramName) {
-          case ".dockercfg":
-            return decodeDockercfg(data);
-          case ".dockerconfigjson":
-            return decodeDockerconfigjson(data);
-          case "username":
-          case "password":
-          case ".gitconfig":
-          case "ssh-privatekey":
-          case "ca.crt":
-            return window.atob(data);
-          default:
+        case ".dockercfg":
+          return decodeDockercfg(data);
+        case ".dockerconfigjson":
+          return decodeDockerconfigjson(data);
+        default:
+          decoded = window.atob(data);
+          // Allow whitespace like newlines and tabs, but detect other
+          // non-printable characters in the unencoded data.
+          // http://stackoverflow.com/questions/1677644/detect-non-printable-characters-in-javascript
+          isNonPrintable = /[\x00-\x09\x0E-\x1F]/.test(decoded);
+          if (isNonPrintable) {
+            nonPrintable[paramName] = true;
             return data;
+          }
+
+          return decoded;
         }
       });
+
+      // Add a property to indicate when the decoded data contains
+      // non-printable characters. Use the `$$` prefix so it's not
+      // considered part of the data.
+      decodedSecret.$$nonprintable = nonPrintable;
+
+      return decodedSecret;
     };
 
     return {
