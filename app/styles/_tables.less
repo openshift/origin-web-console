@@ -97,6 +97,9 @@
     border-top: 2px solid @table-border-color;
     // so that .word-break() will work
     table-layout: fixed;
+    colgroup, col {
+      display: none;
+    }
     thead, tbody, th, td, tr {
       display: block;
     }
@@ -195,5 +198,15 @@
 .config-map-table {
   .key, .truncated-content {
     font-family: @font-family-monospace;
+  }
+}
+
+.table-word-break-all td {
+  // Break long non-breaking strings by default
+  .word-break-all;
+  // Override specific cells
+  &.word-break-normal {
+    word-break: normal;
+    overflow-wrap: normal;
   }
 }
