@@ -12354,7 +12354,7 @@ t(c, a);
 var c = _.head(a);
 if (c) {
 var f = "pod_warning" + b, i = {
-type:"warning",
+type:c.severity || "warning",
 message:c.message
 };
 switch (c.reason) {

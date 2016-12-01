@@ -175,7 +175,7 @@ angular.module('openshiftConsole')
 
             var alertID = "pod_warning" + groupID;
             var alert = {
-              type: "warning",
+              type: warning.severity || 'warning',
               message: warning.message
             };
 
