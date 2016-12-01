@@ -154,9 +154,9 @@ angular.module('openshiftConsole')
           }
 
           var warnings = podWarningsFilter(pod);
-          if (_.some(warnings), { severity: 'error' }) {
+          if (_.some(warnings, { severity: 'error' })) {
             return 'Failed';
-          } else if (warnings.length) {
+          } else if (!_.isEmpty(warnings)) {
             return 'Warning';
           }
 
