@@ -69,20 +69,14 @@ describe("CreateFromImageController", function(){
     expect(match).not.toBeNull();
   });
 
-  it("valid http URL, without http part", function(){
+  it("invalid http URL, without http part", function(){
     var match = 'example.com/dir1/dir2'.match($scope.sourceURLPattern);
-    expect(match).not.toBeNull();
+    expect(match).toBeNull();
   });
-
 
   it("valid http URL with user and password", function(){
     var match = 'http://user:pass@example.com/dir1/dir2'.match($scope.sourceURLPattern);
     expect(match).not.toBeNull();
-  });
-
-  it("invalid http URL with user and password containing space", function(){
-    var match = 'http://user:pa ss@example.com/dir1/dir2'.match($scope.sourceURLPattern);
-    expect(match).toBeNull();
   });
 
   it("valid http URL with user and password with special characters", function(){
@@ -115,11 +109,6 @@ describe("CreateFromImageController", function(){
     expect(match).not.toBeNull();
   });
 
-  it("invalid git+ssh URL (double @@)", function(){
-    var match = 'git@@example.com:dir1/dir2'.match($scope.sourceURLPattern);
-    expect(match).toBeNull();
-  });
-
   it("valid ssh URL", function(){
     var match = 'ssh://git@example.com/dir1/dir2'.match($scope.sourceURLPattern);
     expect(match).not.toBeNull();
@@ -129,5 +118,5 @@ describe("CreateFromImageController", function(){
     var match = 'ssh://git@example.com:8080/dir1/dir2'.match($scope.sourceURLPattern);
     expect(match).not.toBeNull();
   });
-  
+
 });

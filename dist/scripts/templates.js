@@ -4656,7 +4656,7 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "                              'col-lg-12': !advancedOptions}\">\n" +
     "<div class=\"form-group\">\n" +
     "<label for=\"sourceUrl\" class=\"required\">Git Repository URL</label>\n" +
-    "<div ng-class=\"{'has-warning': form.sourceUrl.$dirty && !sourceURLPattern.test(buildConfig.sourceUrl), 'has-error': (form.sourceUrl.$error.required && form.sourceUrl.$dirty)}\">\n" +
+    "<div ng-class=\"{'has-warning': form.sourceUrl.$touched && !sourceURLPattern.test(buildConfig.sourceUrl), 'has-error': (form.sourceUrl.$error.required && form.sourceUrl.$dirty)}\">\n" +
     "\n" +
     "<input class=\"form-control\" id=\"sourceUrl\" name=\"sourceUrl\" type=\"text\" required aria-describedby=\"from_source_help\" ng-model=\"buildConfig.sourceUrl\" autocorrect=\"off\" autocapitalize=\"off\" spellcheck=\"false\">\n" +
     "</div>\n" +
@@ -4667,8 +4667,8 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "<div class=\"has-error\" ng-show=\"form.sourceUrl.$error.required && form.sourceUrl.$dirty\">\n" +
     "<span class=\"help-block\">A Git repository URL is required.</span>\n" +
     "</div>\n" +
-    "<div>\n" +
-    "<span class=\"text-warning\" ng-if=\"form.sourceUrl.$dirty && !sourceURLPattern.test(buildConfig.sourceUrl)\">Git repository should be a URL.</span>\n" +
+    "<div class=\"has-warning\" ng-if=\"buildConfig.sourceUrl && form.sourceUrl.$touched && !sourceURLPattern.test(buildConfig.sourceUrl)\">\n" +
+    "<span class=\"help-block\">This might not be a valid Git URL. Check that it is the correct URL to a remote Git repository.</span>\n" +
     "</div>\n" +
     "</div>\n" +
     "</div>\n" +
@@ -8038,12 +8038,12 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "\n" +
     "<input class=\"form-control\" id=\"sourceUrl\" name=\"sourceUrl\" ng-model=\"updatedBuildConfig.spec.source.git.uri\" type=\"text\" autocorrect=\"off\" autocapitalize=\"off\" spellcheck=\"false\" aria-describedby=\"source-url-help\" required>\n" +
     "</div>\n" +
-    "<div>\n" +
-    "<span class=\"text-warning\" ng-if=\"form.sourceUrl.$dirty && !sourceURLPattern.test(updatedBuildConfig.spec.source.git.uri)\">Git repository should be a URL.</span>\n" +
-    "</div>\n" +
     "<div class=\"help-block\" id=\"source-url-help\">\n" +
     "Git URL of the source code to build.\n" +
     "<span ng-if=\"!view.advancedOptions\">If your Git repository is private, view the <a href=\"\" ng-click=\"view.advancedOptions = true\">advanced options</a> to set up authentication.</span>\n" +
+    "</div>\n" +
+    "<div class=\"has-warning\" ng-if=\"updatedBuildConfig.spec.source.git.uri && form.sourceUrl.$touched && !sourceURLPattern.test(buildConfig.sourceUrl)\">\n" +
+    "<span class=\"help-block\">This might not be a valid Git URL. Check that it is the correct URL to a remote Git repository.</span>\n" +
     "</div>\n" +
     "</div>\n" +
     "</div>\n" +

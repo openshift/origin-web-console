@@ -20,7 +20,6 @@ angular.module('openshiftConsole')
                        Navigate,
                        ProjectsService,
                        SecretsService,
-                       SOURCE_URL_PATTERN,
                        keyValueEditorUtils) {
     $scope.projectName = $routeParams.project;
     $scope.deploymentConfig = null;
