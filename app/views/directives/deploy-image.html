@@ -73,7 +73,8 @@
         administrator.
       </div>
       <h2>
-        {{app.name}}<span ng-if="import.tag">:{{import.tag}}</span>
+        <span ng-if="mode === 'dockerImage'">{{import.name}}</span>
+        <span ng-if="mode === 'istag'">{{istag.imageStream}}<span ng-if="import.tag">:{{import.tag}}</span></span>
         <small>
           <span ng-if="import.result.ref.registry">from {{import.result.ref.registry}},</span>
           <span am-time-ago="import.image.dockerImageMetadata.Created"></span>,
