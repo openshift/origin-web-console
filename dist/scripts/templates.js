@@ -5906,7 +5906,8 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "<strong>root</strong> user which might not be permitted by your cluster administrator.\n" +
     "</div>\n" +
     "<h2>\n" +
-    "{{app.name}}<span ng-if=\"import.tag\">:{{import.tag}}</span>\n" +
+    "<span ng-if=\"mode === 'dockerImage'\">{{import.name}}</span>\n" +
+    "<span ng-if=\"mode === 'istag'\">{{istag.imageStream}}<span ng-if=\"import.tag\">:{{import.tag}}</span></span>\n" +
     "<small>\n" +
     "<span ng-if=\"import.result.ref.registry\">from {{import.result.ref.registry}},</span>\n" +
     "<span am-time-ago=\"import.image.dockerImageMetadata.Created\"></span>,\n" +
