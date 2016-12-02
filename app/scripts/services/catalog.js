@@ -73,7 +73,9 @@ angular.module("openshiftConsole")
           var matchesCategory = function(imageStream) {
             return _.some(imageStream.status.tags, function(tag) {
               var categoryTags = specTags[tag.tag] || [];
-              return hasCategory(categoryItem, categoryTags) && hasTag('builder', categoryTags);
+              return hasCategory(categoryItem, categoryTags) &&
+                     hasTag('builder', categoryTags) &&
+                     !hasTag('hidden', categoryTags);
             });
           };
 
@@ -88,7 +90,7 @@ angular.module("openshiftConsole")
         if (!matchFound) {
           isBuilder = _.some(imageStream.status.tags, function(tag) {
             var categoryTags = specTags[tag.tag] || [];
-            return hasTag('builder', categoryTags);
+            return hasTag('builder', categoryTags) && !hasTag('hidden', categoryTags);
           });
           if (isBuilder) {
             imageStreamsByCategory[''] = imageStreamsByCategory[''] || [];
@@ -152,9 +154,9 @@ angular.module("openshiftConsole")
 
           // Check tag descriptions.
           _.each(imageStream.spec.tags, function(tag) {
-            // If this is not a builder, don't match the tag.
+            // If this is not a builder or is hidden, don't match the tag.
             var tagTags = _.get(tag, 'annotations.tags', '');
-            if (!/\bbuilder\b/.test(tagTags)) {
+            if (!/\bbuilder\b/.test(tagTags) || /\bhidden\b/.test(tagTags)) {
               delete matchingTags[tag.name];
               return;
             }
