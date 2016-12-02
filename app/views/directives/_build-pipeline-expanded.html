@@ -31,7 +31,7 @@
     <div class="pipeline">
       <div class="pipeline-stage" ng-repeat="stage in jenkinsStatus.stages track by stage.id">
         <div column class="pipeline-stage-column">
-          <div class="pipeline-stage-name" ng-class="build.status.phase">
+          <div title="{{stage.name}}" class="pipeline-stage-name" ng-class="build.status.phase">
             {{stage.name}}
           </div>
           <pipeline-status ng-if="stage.status" status="stage.status"></pipeline-status>

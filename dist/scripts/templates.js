@@ -5247,7 +5247,7 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "<div class=\"pipeline\">\n" +
     "<div class=\"pipeline-stage\" ng-repeat=\"stage in jenkinsStatus.stages track by stage.id\">\n" +
     "<div column class=\"pipeline-stage-column\">\n" +
-    "<div class=\"pipeline-stage-name\" ng-class=\"build.status.phase\">\n" +
+    "<div title=\"{{stage.name}}\" class=\"pipeline-stage-name\" ng-class=\"build.status.phase\">\n" +
     "{{stage.name}}\n" +
     "</div>\n" +
     "<pipeline-status ng-if=\"stage.status\" status=\"stage.status\"></pipeline-status>\n" +
