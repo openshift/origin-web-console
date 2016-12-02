@@ -45,8 +45,8 @@ module.exports = function (grunt) {
         tasks: ['newer:jshint:all'],
         options: {
           livereload: grunt.option('disable-live-reload') ? false : {
-             key: grunt.file.read('server.key'),
-             cert: grunt.file.read('server.crt')
+             key: grunt.file.read('tls/tls.key'),
+             cert: grunt.file.read('tls/tls.crt')
           }
         }
       },
@@ -62,8 +62,8 @@ module.exports = function (grunt) {
         files: '<%= yeoman.app %>/views/{,*/}*.html',
         options: {
           livereload: grunt.option('disable-live-reload') ? false : {
-            key: grunt.file.read('server.key'),
-            cert: grunt.file.read('server.crt')
+            key: grunt.file.read('tls/tls.key'),
+            cert: grunt.file.read('tls/tls.crt')
           }
         }
       },
@@ -103,8 +103,8 @@ module.exports = function (grunt) {
         port: grunt.option('port') || 9000,
         // Change this to '0.0.0.0' to access the server from outside.
         hostname: grunt.option('hostname') || 'localhost',
-        key: grunt.file.read('server.key'),
-        cert: grunt.file.read('server.crt'),
+        key: grunt.file.read('tls/tls.key'),
+        cert: grunt.file.read('tls/tls.crt'),
         livereload: grunt.option('disable-live-reload') ? false : 35729
       },
       livereload: {

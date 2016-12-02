@@ -1,0 +1,10 @@
+#!/bin/bash
+/usr/libexec/s2i/assemble
+rc=$?
+
+if [ $rc -eq 0 ]; then
+  bower install
+  rc=$?
+fi
+
+exit $rc
