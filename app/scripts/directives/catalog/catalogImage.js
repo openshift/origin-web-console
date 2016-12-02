@@ -35,7 +35,7 @@ angular.module('openshiftConsole')
 
         var isBuilder = function(tagName) {
           var tags = _.get(tagTags, [tagName], []);
-          return _.includes(tags, 'builder');
+          return _.includes(tags, 'builder') && !_.includes(tags, 'hidden');
         };
 
         // Watch status tags. Some tags might be removed from the list if they

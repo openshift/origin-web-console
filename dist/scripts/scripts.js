@@ -3884,7 +3884,7 @@ _.each(e, function(e) {
 var f = function(a) {
 return _.some(a.status.tags, function(a) {
 var b = c[a.tag] || [];
-return h(e, b) && g("builder", b);
+return h(e, b) && g("builder", b) && !g("hidden", b);
 });
 };
 f(a) && (b[e.id] = b[e.id] || [], b[e.id].push(a), d = !0);
@@ -3892,7 +3892,7 @@ f(a) && (b[e.id] = b[e.id] || [], b[e.id].push(a), d = !0);
 var f;
 d || (f = _.some(a.status.tags, function(a) {
 var b = c[a.tag] || [];
-return g("builder", b);
+return g("builder", b) && !g("hidden", b);
 }), f && (b[""] = b[""] || [], b[""].push(a)));
 }
 }), b;
@@ -3912,7 +3912,7 @@ var d = _.get(a, "metadata.name", ""), e = k(a, !0), f = _.indexBy(a.spec.tags, 
 _.each(b, function(b) {
 b.test(d) || e && b.test(e) || _.each(a.spec.tags, function(a) {
 var c = _.get(a, "annotations.tags", "");
-if (!/\bbuilder\b/.test(c)) return void delete f[a.name];
+if (!/\bbuilder\b/.test(c) || /\bhidden\b/.test(c)) return void delete f[a.name];
 if (!b.test(a.name)) {
 var d = _.get(a, "annotations.description");
 d && b.test(d) || delete f[a.name];
@@ -10644,7 +10644,7 @@ f[a.name] = c(b.imageStream, a.name), a.from && "ImageStreamTag" === a.from.kind
 });
 var g = function(a) {
 var b = _.get(f, [ a ], []);
-return _.includes(b, "builder");
+return _.includes(b, "builder") && !_.includes(b, "hidden");
 };
 b.$watch("imageStream.status.tags", function(a) {
 b.tags = _.filter(a, function(a) {
