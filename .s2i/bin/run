@@ -6,4 +6,6 @@ else
    echo "No config.js is mounted, using default development config."
 fi
 
-grunt serve --hostname=0.0.0.0 --disable-live-reload
+CONSOLE_CONTEXT_ROOT="${CONSOLE_CONTEXT_ROOT:-"dev-console"}"
+
+grunt serve --hostname=0.0.0.0 --contextRoot=${CONSOLE_CONTEXT_ROOT} --disable-live-reload
