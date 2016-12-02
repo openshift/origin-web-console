@@ -419,7 +419,11 @@ angular
     screenLgMin:  1200,  // screen-lg
     screenXlgMin: 1600   // screen-xlg
   })
-  .constant('SOURCE_URL_PATTERN', /^((ftp|http|https|git|ssh):\/\/(\w+:{0,1}[^\s@]*@)|git@)?([^\s@]+)(:[0-9]+)?(\/|\/([\w#!:.?+=&%@!\-\/]))?$/ )
+  // A (very) basic regex to determine if a URL is an absolute URL, enough to
+  // warn the user the Git URL probably won't work. This should only be used
+  // as a sanity test and shouldn't block submitting the form. Rely on the API
+  // server for any additional validation.
+  .constant('SOURCE_URL_PATTERN', /^[a-z][a-z0-9+.-@]*:(\/\/)?[0-9a-z_-]+/i)
   // http://stackoverflow.com/questions/9038625/detect-if-device-is-ios
   .constant('IS_IOS', /iPad|iPhone|iPod/.test(navigator.userAgent) && !window.MSStream)
   .constant('amTimeAgoConfig', {

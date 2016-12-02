@@ -530,7 +530,7 @@ screenSmMin:768,
 screenMdMin:992,
 screenLgMin:1200,
 screenXlgMin:1600
-}).constant("SOURCE_URL_PATTERN", /^((ftp|http|https|git|ssh):\/\/(\w+:{0,1}[^\s@]*@)|git@)?([^\s@]+)(:[0-9]+)?(\/|\/([\w#!:.?+=&%@!\-\/]))?$/).constant("IS_IOS", /iPad|iPhone|iPod/.test(navigator.userAgent) && !window.MSStream).constant("amTimeAgoConfig", {
+}).constant("SOURCE_URL_PATTERN", /^[a-z][a-z0-9+.-@]*:(\/\/)?[0-9a-z_-]+/i).constant("IS_IOS", /iPad|iPhone|iPod/.test(navigator.userAgent) && !window.MSStream).constant("amTimeAgoConfig", {
 titleFormat:"LLL"
 }).config([ "$httpProvider", "AuthServiceProvider", "RedirectLoginServiceProvider", "AUTH_CFG", "API_CFG", "kubernetesContainerSocketProvider", function(a, b, c, d, e, f) {
 a.interceptors.push("AuthInterceptor"), b.LoginService("RedirectLoginService"), b.LogoutService("DeleteTokenLogoutService"), b.UserStore("LocalStorageUserStore"), c.OAuthClientID(d.oauth_client_id), c.OAuthAuthorizeURI(d.oauth_authorize_uri), c.OAuthRedirectURI(URI(d.oauth_redirect_base).segment("oauth").toString()), f.WebSocketFactory = "ContainerWebSocket";
@@ -6943,7 +6943,7 @@ details:a("getErrorDetails")(b)
 e.unwatchAll(i);
 });
 }));
-} ]), angular.module("openshiftConsole").controller("EditDeploymentConfigController", [ "$scope", "$filter", "$location", "$routeParams", "$uibModal", "AlertMessageService", "AuthorizationService", "BreadcrumbsService", "DataService", "Navigate", "ProjectsService", "SecretsService", "SOURCE_URL_PATTERN", "keyValueEditorUtils", function(a, b, c, d, e, f, g, h, i, j, k, l, m, n) {
+} ]), angular.module("openshiftConsole").controller("EditDeploymentConfigController", [ "$scope", "$filter", "$location", "$routeParams", "$uibModal", "AlertMessageService", "AuthorizationService", "BreadcrumbsService", "DataService", "Navigate", "ProjectsService", "SecretsService", "keyValueEditorUtils", function(a, b, c, d, e, f, g, h, i, j, k, l, m) {
 a.projectName = d.project, a.deploymentConfig = null, a.alerts = {}, a.view = {
 advancedStrategyOptions:!1,
 advancedImageOptions:!1
@@ -6956,7 +6956,7 @@ includeProject:!0
 }), a.deploymentConfigStrategyTypes = [ "Recreate", "Rolling", "Custom" ], f.getAlerts().forEach(function(b) {
 a.alerts[b.name] = b.data;
 }), f.clearAlerts();
-var o = [], p = function(a) {
+var n = [], o = function(a) {
 switch (a) {
 case "Recreate":
 return "recreateParams";
@@ -7018,7 +7018,7 @@ a.updatedDeploymentConfig = angular.copy(a.deploymentConfig), a.containerNames =
 pullSecrets:angular.copy(a.deploymentConfig.spec.template.spec.imagePullSecrets) || [ {
 name:""
 } ]
-}, a.volumeNames = _.map(a.deploymentConfig.spec.template.spec.volumes, "name"), a.strategyData = angular.copy(a.deploymentConfig.spec.strategy), a.originalStrategy = a.strategyData.type, a.strategyParamsPropertyName = p(a.strategyData.type), a.triggers.hasConfigTrigger = _.some(a.updatedDeploymentConfig.spec.triggers, {
+}, a.volumeNames = _.map(a.deploymentConfig.spec.template.spec.volumes, "name"), a.strategyData = angular.copy(a.deploymentConfig.spec.strategy), a.originalStrategy = a.strategyData.type, a.strategyParamsPropertyName = o(a.strategyData.type), a.triggers.hasConfigTrigger = _.some(a.updatedDeploymentConfig.spec.triggers, {
 type:"ConfigChange"
 }), "Custom" !== a.strategyData.type || _.has(a.strategyData, "customParams.environment") || (a.strategyData.customParams.environment = []), i.list("secrets", e, function(b) {
 var c = l.groupSecretsByType(b), d = _.mapValues(c, function(a) {
@@ -7027,7 +7027,7 @@ return _.map(a, "metadata.name");
 a.secretsByType = _.each(d, function(a) {
 a.unshift("");
 });
-}), o.push(i.watchObject("deploymentconfigs", d.deploymentconfig, e, function(b, c) {
+}), n.push(i.watchObject("deploymentconfigs", d.deploymentconfig, e, function(b, c) {
 "MODIFIED" === c && (a.alerts["updated/deleted"] = {
 type:"warning",
 message:"This deployment configuration has changed since you started editing it. You'll need to copy any changes you've made and edit again."
@@ -7044,9 +7044,9 @@ details:b("getErrorDetails")(c)
 };
 }) :void j.toErrorPage("You do not have authority to update deployment config " + d.deploymentconfig + ".", "access_denied");
 }));
-var q = function() {
+var p = function() {
 return "Custom" !== a.strategyData.type && "Custom" !== a.originalStrategy && a.strategyData.type !== a.originalStrategy;
-}, r = function(b) {
+}, q = function(b) {
 if (!_.has(a.strategyData, b)) {
 var c = e.open({
 animation:!0,
@@ -7066,21 +7066,21 @@ cancelButtonText:"No"
 }
 });
 c.result.then(function() {
-a.strategyData[b] = angular.copy(a.strategyData[p(a.originalStrategy)]);
+a.strategyData[b] = angular.copy(a.strategyData[o(a.originalStrategy)]);
 }, function() {
 a.strategyData[b] = {};
 });
 }
 };
 a.strategyChanged = function() {
-var b = p(a.strategyData.type);
-q() ? r(b) :_.has(a.strategyData, b) || ("Custom" !== a.strategyData.type ? a.strategyData[b] = {} :a.strategyData[b] = {
+var b = o(a.strategyData.type);
+p() ? q(b) :_.has(a.strategyData, b) || ("Custom" !== a.strategyData.type ? a.strategyData[b] = {} :a.strategyData[b] = {
 image:"",
 command:[],
 environment:[]
 }), a.strategyParamsPropertyName = b;
 };
-var s = function(a, b, c, d) {
+var r = function(a, b, c, d) {
 var e = {
 kind:"ImageStreamTag",
 namespace:b.namespace,
@@ -7094,12 +7094,12 @@ containerNames:[ a ],
 from:e
 }
 }, c;
-}, t = function() {
+}, s = function() {
 var b = _.reject(a.updatedDeploymentConfig.spec.triggers, function(a) {
 return "ImageChange" === a.type || "ConfigChange" === a.type;
 });
 return _.each(a.containerConfigByName, function(c, d) {
-if (c.hasDeploymentTrigger) b.push(s(d, c.triggerData.istag, c.triggerData.data, c.triggerData.automatic)); else {
+if (c.hasDeploymentTrigger) b.push(r(d, c.triggerData.istag, c.triggerData.data, c.triggerData.automatic)); else {
 var e = _.find(a.updatedDeploymentConfig.spec.template.spec.containers, {
 name:d
 });
@@ -7114,10 +7114,10 @@ a.disableInputs = !0, _.each(a.containerConfigByName, function(b, c) {
 var d = _.find(a.updatedDeploymentConfig.spec.template.spec.containers, {
 name:c
 });
-d.env = n.compactEntries(b.env);
-}), q() && delete a.strategyData[p(a.originalStrategy)], "Custom" !== a.strategyData.type ? _.each([ "pre", "mid", "post" ], function(b) {
-_.has(a.strategyData, [ a.strategyParamsPropertyName, b, "execNewPod", "env" ]) && (a.strategyData[a.strategyParamsPropertyName][b].execNewPod.env = n.compactEntries(a.strategyData[a.strategyParamsPropertyName][b].execNewPod.env));
-}) :_.has(a, "strategyData.customParams.environment") && (a.strategyData.customParams.environment = n.compactEntries(a.strategyData.customParams.environment)), a.updatedDeploymentConfig.spec.template.spec.imagePullSecrets = _.filter(a.secrets.pullSecrets, "name"), a.updatedDeploymentConfig.spec.strategy = a.strategyData, a.updatedDeploymentConfig.spec.triggers = t(), i.update("deploymentconfigs", a.updatedDeploymentConfig.metadata.name, a.updatedDeploymentConfig, a.context).then(function() {
+d.env = m.compactEntries(b.env);
+}), p() && delete a.strategyData[o(a.originalStrategy)], "Custom" !== a.strategyData.type ? _.each([ "pre", "mid", "post" ], function(b) {
+_.has(a.strategyData, [ a.strategyParamsPropertyName, b, "execNewPod", "env" ]) && (a.strategyData[a.strategyParamsPropertyName][b].execNewPod.env = m.compactEntries(a.strategyData[a.strategyParamsPropertyName][b].execNewPod.env));
+}) :_.has(a, "strategyData.customParams.environment") && (a.strategyData.customParams.environment = m.compactEntries(a.strategyData.customParams.environment)), a.updatedDeploymentConfig.spec.template.spec.imagePullSecrets = _.filter(a.secrets.pullSecrets, "name"), a.updatedDeploymentConfig.spec.strategy = a.strategyData, a.updatedDeploymentConfig.spec.triggers = s(), i.update("deploymentconfigs", a.updatedDeploymentConfig.metadata.name, a.updatedDeploymentConfig, a.context).then(function() {
 f.addAlert({
 name:a.updatedDeploymentConfig.metadata.name,
 data:{
@@ -7135,7 +7135,7 @@ details:b("getErrorDetails")(c)
 };
 });
 }, a.$on("$destroy", function() {
-i.unwatchAll(o);
+i.unwatchAll(n);
 });
 } ]), angular.module("openshiftConsole").controller("EditAutoscalerController", [ "$scope", "$filter", "$routeParams", "$window", "APIService", "AuthorizationService", "BreadcrumbsService", "DataService", "HPAService", "MetricsService", "Navigate", "ProjectsService", "keyValueEditorUtils", function(a, b, c, d, e, f, g, h, i, j, k, l, m) {
 if (!c.kind || !c.name) return void k.toErrorPage("Kind or name parameter missing.");
