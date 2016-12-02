@@ -8042,7 +8042,7 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "Git URL of the source code to build.\n" +
     "<span ng-if=\"!view.advancedOptions\">If your Git repository is private, view the <a href=\"\" ng-click=\"view.advancedOptions = true\">advanced options</a> to set up authentication.</span>\n" +
     "</div>\n" +
-    "<div class=\"has-warning\" ng-if=\"updatedBuildConfig.spec.source.git.uri && form.sourceUrl.$touched && !sourceURLPattern.test(buildConfig.sourceUrl)\">\n" +
+    "<div class=\"has-warning\" ng-if=\"updatedBuildConfig.spec.source.git.uri && form.sourceUrl.$touched && !sourceURLPattern.test(updatedBuildConfig.spec.source.git.uri)\">\n" +
     "<span class=\"help-block\">This might not be a valid Git URL. Check that it is the correct URL to a remote Git repository.</span>\n" +
     "</div>\n" +
     "</div>\n" +
