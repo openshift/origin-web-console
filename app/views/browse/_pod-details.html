@@ -63,7 +63,7 @@
           <dt>Restart Count:</dt>
           <dd>{{containerStatus.restartCount}}</dd>
           <div ng-if="pod.status.phase !== 'Completed' && !(pod | annotation : 'openshift.io/build.name') && (!containerStatus.state.running || !containerStatus.ready) && !(pod | isDebugPod) && ('pods' | canI : 'create')" class="debug-pod-action">
-            <a href="" ng-click="debugTerminal(containerStatus.name)" role="button">Debug in terminal</a>
+            <a href="" ng-click="debugTerminal(containerStatus.name)" role="button">Debug in Terminal</a>
           </div>
         </dl>
       </div>
@@ -81,9 +81,9 @@
       <volumes ng-if="pod.spec.volumes.length" volumes="pod.spec.volumes" namespace="project.metadata.name"></volumes>
       <div ng-if="!pod.spec.volumes.length">none</div>
       <p ng-if="(pod | annotation:'deploymentConfig') && ('deploymentconfigs' | canI : 'update')">
-        <a ng-href="project/{{project.metadata.name}}/attach-pvc?kind=DeploymentConfig&name={{pod | annotation:'deploymentConfig'}}">Add storage to {{pod | annotation : 'deploymentConfig'}}</a>
+        <a ng-href="project/{{project.metadata.name}}/attach-pvc?kind=DeploymentConfig&name={{pod | annotation:'deploymentConfig'}}">Add Storage to {{pod | annotation : 'deploymentConfig'}}</a>
         <span class="action-divider" aria-hidden="true">|</span>
-        <a ng-href="project/{{project.metadata.name}}/add-config-volume?kind=DeploymentConfig&name={{pod | annotation : 'deploymentConfig'}}">Add config files to {{pod | annotation : 'deploymentConfig'}}</a>
+        <a ng-href="project/{{project.metadata.name}}/add-config-volume?kind=DeploymentConfig&name={{pod | annotation : 'deploymentConfig'}}">Add Config Files to {{pod | annotation : 'deploymentConfig'}}</a>
       </p>
     </div>
   </div>

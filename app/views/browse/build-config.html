@@ -367,8 +367,7 @@
                               <div ng-switch="trigger.type">
                                 <div ng-switch-when="GitHub">
                                     <dt>GitHub Webhook URL:
-                                      <a href="{{'webhooks' | helpLink}}" target="_blank"><span class="learn-more-block">Learn more
-                                      <i class="fa fa-external-link"></i></span></a>
+                                      <a href="{{'webhooks' | helpLink}}" target="_blank"><span class="learn-more-block">Learn More&nbsp;<i class="fa fa-external-link" aria-hidden="true"></i></span></a>
                                     </dt>
                                     <dd>
                                       <copy-to-clipboard clipboard-text="buildConfig.metadata.name | webhookURL : trigger.type : trigger.github.secret : project.metadata.name"></copy-to-clipboard>
@@ -376,7 +375,7 @@
                                 </div>
                                 <div ng-switch-when="Generic">
                                     <dt>Generic Webhook URL:
-                                      <a href="{{'webhooks' | helpLink}}" target="_blank"><span class="learn-more-block">Learn more <i class="fa fa-external-link"></i></span></a>
+                                      <a href="{{'webhooks' | helpLink}}" target="_blank"><span class="learn-more-block">Learn More&nbsp;<i class="fa fa-external-link" aria-hidden="true"></i></span></a>
                                     </dt>
                                     <dd>
                                       <copy-to-clipboard clipboard-text="buildConfig.metadata.name | webhookURL : trigger.type : trigger.generic.secret : project.metadata.name"></copy-to-clipboard>
@@ -408,7 +407,7 @@
                             </div>
                             <dt>Manual (CLI):
                               <a href="{{'start-build' | helpLink}}" target="_blank">
-                                <span class="learn-more-block">Learn more <i class="fa fa-external-link"> </i></span>
+                                <span class="learn-more-block">Learn More&nbsp;<i class="fa fa-external-link" aria-hidden="true"> </i></span>
                               </a>
                             </dt>
                             <dd>
@@ -425,8 +424,8 @@
                     <h3>Environment Variables</h3>
                     <div style="margin-top: -5px;" ng-if="BCEnvVarsFromImage.length">
                       The builder image has additional environment variables defined.  Variables defined below will overwrite any from the image with the same name.
-                      <a href="" ng-click="expand.imageEnv = true" ng-if="!expand.imageEnv">Show image environment variables</a>
-                      <a href="" ng-click="expand.imageEnv = false" ng-if="expand.imageEnv">Hide image environment variables</a>
+                      <a href="" ng-click="expand.imageEnv = true" ng-if="!expand.imageEnv">Show Image Environment Variables</a>
+                      <a href="" ng-click="expand.imageEnv = false" ng-if="expand.imageEnv">Hide Image Environment Variables</a>
                     </div>
                     <key-value-editor
                       ng-if="expand.imageEnv"
@@ -447,7 +446,7 @@
                           key-validator="[A-Za-z_][A-Za-z0-9_]*"
                           key-validator-error="Please enter a valid key"
                           key-validator-error-tooltip="A valid environment variable name is an alphanumeric (a-z and 0-9) string beginning with a letter that may contain underscores."
-                          add-row-link="Add environment variable"
+                          add-row-link="Add Environment Variable"
                           show-header></key-value-editor>
                         <key-value-editor
                           ng-if="!('buildconfigs' | canI : 'update')"
@@ -468,7 +467,7 @@
                           href=""
                           ng-click="clearEnvVarUpdates()"
                           class="mar-left-sm"
-                          style="vertical-align: -2px;">Clear changes</a>
+                          style="vertical-align: -2px;">Clear Changes</a>
                       </div>
                     </ng-form>
                   </uib-tab>

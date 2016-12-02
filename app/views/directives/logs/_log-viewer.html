@@ -12,7 +12,7 @@
         method="POST">
         <input type="hidden" name="redirect" value="{{kibanaArchiveUrl}}">
         <input type="hidden" name="access_token" value="{{access_token}}">
-        <button class="btn btn-link">View archive</button>
+        <button class="btn btn-link">View Archive</button>
       </form>
       <span ng-if="state && state !== 'empty'" class="action-divider">|</span>
     </span>
@@ -20,7 +20,7 @@
        href=""
        ng-click="goChromeless(options, fullLogUrl)"
        role="button">
-       Expand log
+       Expand Log
        <i class="fa fa-external-link"></i>
     </a>
   </div>
@@ -69,7 +69,7 @@
         <span ng-if="autoScrollActive">Stop following</span>
       </a>
       <a ng-if="!loading" href="" ng-click="onScrollBottom()">
-        Go to end
+        Go to End
       </a>
     </div>
     <div class="log-view-output" id="{{logViewerID}}-fixed-scrollable" >
@@ -85,7 +85,7 @@
     <div
       ng-show="showScrollLinks"
       class="log-scroll log-scroll-bottom">
-      <a href="" ng-click="onScrollTop()">Go to top</a>
+      <a href="" ng-click="onScrollTop()">Go to Top</a>
     </div>
   </div>
 </div>

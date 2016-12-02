@@ -36,15 +36,15 @@
                               <span ng-switch="strategyData.type">
                                 <span class="help-block" ng-switch-when="Recreate">
                                   The recreate strategy has basic rollout behavior and supports lifecycle hooks for injecting code into the deployment process.
-                                  <a href="{{'recreate_strategy' | helpLink}}" target="_blank"><span class="learn-more-inline">Learn more&nbsp;<i class="fa fa-external-link" aria-hidden="true"></i></span></a>
+                                  <a ng-href="{{'recreate_strategy' | helpLink}}" target="_blank"><span class="learn-more-inline">Learn More&nbsp;<i class="fa fa-external-link" aria-hidden="true"></i></span></a>
                                 </span>
                                 <span class="help-block" ng-switch-when="Rolling">
                                   The rolling strategy will wait for pods to pass their readiness check, scale down old components and then scale up.
-                                  <a href="{{'rolling_strategy' | helpLink}}" target="_blank"><span class="learn-more-inline">Learn more&nbsp;<i class="fa fa-external-link" aria-hidden="true"></i></span></a>
+                                  <a ng-href="{{'rolling_strategy' | helpLink}}" target="_blank"><span class="learn-more-inline">Learn More&nbsp;<i class="fa fa-external-link" aria-hidden="true"></i></span></a>
                                 </span>
                                 <span class="help-block" ng-switch-when="Custom">
                                   The custom strategy allows you to specify container image that will provide your own deployment behavior.
-                                  <a href="{{'custom_strategy' | helpLink}}" target="_blank"><span class="learn-more-inline">Learn more&nbsp;<i class="fa fa-external-link" aria-hidden="true"></i></span></a>
+                                  <a ng-href="{{'custom_strategy' | helpLink}}" target="_blank"><span class="learn-more-inline">Learn More&nbsp;<i class="fa fa-external-link" aria-hidden="true"></i></span></a>
                                 </span>
                               </span>
                             </div>
@@ -78,7 +78,7 @@
                                 entries="strategyData.customParams.environment"
                                 key-validator="[a-zA-Z_][a-zA-Z0-9_]*"
                                 key-validator-error-tooltip="A valid environment variable name is an alphanumeric (a-z and 0-9) string beginning with a letter that may contain underscores."
-                                add-row-link="Add environment variable"></key-value-editor>
+                                add-row-link="Add Environment Variable"></key-value-editor>
                             </div>
                           </div>
                           <div ng-if="strategyData.type !== 'Custom'" >
@@ -352,7 +352,7 @@
                             entries="containerConfig.env"
                             key-validator="[a-zA-Z_][a-zA-Z0-9_]*"
                             key-validator-error-tooltip="A valid environment variable name is an alphanumeric (a-z and 0-9) string beginning with a letter that may contain underscores."
-                            add-row-link="Add environment variable"></key-value-editor>
+                            add-row-link="Add Environment Variable"></key-value-editor>
                         </div>
                       </div>
 

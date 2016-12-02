@@ -4404,7 +4404,7 @@ href:"project/" + c.projectName + "/quota",
 label:"View Quota"
 }, {
 href:"",
-label:"Don't show me again",
+label:"Don't Show Me Again",
 onClick:function() {
 return d.permanentlyHideAlert("overview-quota-limit-reached", c.projectName), !0;
 }
@@ -4445,11 +4445,11 @@ type:"warning",
 message:"An error occurred getting metrics.",
 links:[ {
 href:b.url,
-label:"Open metrics URL",
+label:"Open Metrics URL",
 target:"_blank"
 }, {
 href:"",
-label:"Don't show me again",
+label:"Don't Show Me Again",
 onClick:function() {
 return d.permanentlyHideAlert("metrics-connection-failed"), !0;
 }
@@ -5317,7 +5317,7 @@ message:"This build configuration has been deleted."
 type:"warning",
 message:"This build configuration has been updated in the background. Saving your changes may create a conflict or cause loss of data.",
 links:[ {
-label:"Reload environment variables",
+label:"Reload Environment Variables",
 onClick:function() {
 return a.clearEnvVarUpdates(), !0;
 }
@@ -5709,7 +5709,7 @@ message:"This deployment has been deleted."
 type:"warning",
 message:"This deployment has been updated in the background. Saving your changes may create a conflict or cause loss of data.",
 links:[ {
-label:"Reload environment variables",
+label:"Reload Environment Variables",
 onClick:function() {
 return a.clearEnvVarUpdates(), !0;
 }
@@ -5837,7 +5837,7 @@ message:"This deployment configuration has been deleted."
 type:"warning",
 message:"This deployment configuration has been updated in the background. Saving your changes may create a conflict or cause loss of data.",
 links:[ {
-label:"Reload environment variables",
+label:"Reload Environment Variables",
 onClick:function() {
 return a.clearEnvVarUpdates(), !0;
 }
@@ -6100,7 +6100,7 @@ message:"This " + t + " has been deleted."
 type:"warning",
 message:"This " + t + " has been updated in the background. Saving your changes may create a conflict or cause loss of data.",
 links:[ {
-label:"Reload environment variables",
+label:"Reload Environment Variables",
 onClick:function() {
 return a.clearEnvVarUpdates(), !0;
 }
@@ -12267,7 +12267,7 @@ h(c);
 var e = b.objectToResourceGroupVersion(a);
 n(e, "update") && (l[c].links = [ {
 href:d.healthCheckURL(a.metadata.namespace, a.kind, a.metadata.name, e.group),
-label:"Add health checks"
+label:"Add Health Checks"
 } ]);
 }
 }, p = function(a) {
@@ -12367,7 +12367,7 @@ case "NonZeroExitTerminatingPod":
 if (g(f)) return;
 i.links = [ {
 href:"",
-label:"Don't show me again",
+label:"Don't Show Me Again",
 onClick:function() {
 return h(f), !0;
 }

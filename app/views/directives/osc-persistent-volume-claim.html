@@ -6,7 +6,7 @@
       <div id="claim-storage-class-help" class="help-block mar-bottom-lg">
         Storage classes are set by the administrator to define types of storage the users can select.
         <div class="learn-more-block">
-          <a ng-href="{{'storage_classes' | helpLink}}" target="_blank">Learn more <i class="fa fa-external-link" aria-hidden="true"> </i></a>
+          <a ng-href="{{'storage_classes' | helpLink}}" target="_blank">Learn More&nbsp;<i class="fa fa-external-link" aria-hidden="true"></i></a>
         </div>
       </div>
       <div ng-repeat="sclass in storageClasses track by (sclass | uid)" id="storageclass-{{sclass.metadata.name}}">
@@ -124,8 +124,9 @@
     </div>
     <!--advanced options-->
     <div ng-show="!showAdvancedOptions" class="mar-bottom-xl">
-      <a href=""
-         ng-click="showAdvancedOptions = true">Use label selectors to request storage</a>
+      Use
+      <a href="" ng-click="showAdvancedOptions = true">label selectors</a>
+      to request storage.
     </div>
 
     <div ng-show="showAdvancedOptions" class="form-group">
@@ -134,7 +135,7 @@
         <div class="help-block mar-bottom-lg">
           Enter a label and value to use for your storage.
           <div class="learn-more-block">
-            <a ng-href="{{'selector_label' | helpLink}}" target="_blank">Learn more <i class="fa fa-external-link" aria-hidden="true"> </i></a>
+            <a ng-href="{{'selector_label' | helpLink}}" target="_blank">Learn More&nbsp;<i class="fa fa-external-link" aria-hidden="true"></i></a>
           </div>
         </div>
         <key-value-editor

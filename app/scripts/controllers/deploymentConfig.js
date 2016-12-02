@@ -136,7 +136,7 @@ angular.module('openshiftConsole')
                   message: "This deployment configuration has been updated in the background. Saving your changes may create a conflict or cause loss of data.",
                   links: [
                     {
-                      label: 'Reload environment variables',
+                      label: 'Reload Environment Variables',
                       onClick: function() {
                         $scope.clearEnvVarUpdates();
                         return true;
