@@ -49,7 +49,7 @@ angular.module('openshiftConsole')
           type: "donut",
           bindto: '#' + $scope.chartId,
           donut: {
-            expand: false,
+            expand: true,
             label: {
               show: false
             },
@@ -74,16 +74,12 @@ angular.module('openshiftConsole')
 
                 // Disable the tooltip for empty donuts.
                 if (id === "Empty") {
-                  return undefined;
+                  return "No pods exist";
                 }
 
                 // Show the count rather than a percentage.
                 return value;
               }
-            },
-            position: function() {
-              // Position in the top-left to avoid problems with tooltip text wrapping.
-              return { top: 0, left: 0 };
             }
           },
           transition: {

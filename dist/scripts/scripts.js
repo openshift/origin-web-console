@@ -11548,7 +11548,7 @@ a.chartId = _.uniqueId("pods-donut-chart-"), o = {
 type:"donut",
 bindto:"#" + a.chartId,
 donut:{
-expand:!1,
+expand:!0,
 label:{
 show:!1
 },
@@ -11565,14 +11565,8 @@ onrendered:i,
 tooltip:{
 format:{
 value:function(a, b, c) {
-if (a && "Empty" !== c) return a;
+if (a) return "Empty" === c ? "No pods exist" :a;
 }
-},
-position:function() {
-return {
-top:0,
-left:0
-};
 }
 },
 transition:{
