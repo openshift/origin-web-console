@@ -47,7 +47,7 @@
                                   Git URL of the source code to build.
                                   <span ng-if="!view.advancedOptions">If your Git repository is private, view the <a href="" ng-click="view.advancedOptions = true">advanced options</a> to set up authentication.</span>
                                 </div>
-                                <div class="has-warning" ng-if="updatedBuildConfig.spec.source.git.uri && form.sourceUrl.$touched && !sourceURLPattern.test(buildConfig.sourceUrl)">
+                                <div class="has-warning" ng-if="updatedBuildConfig.spec.source.git.uri && form.sourceUrl.$touched && !sourceURLPattern.test(updatedBuildConfig.spec.source.git.uri)">
                                   <span class="help-block">This might not be a valid Git URL. Check that it is the correct URL to a remote Git repository.</span>
                                 </div>
                               </div>
