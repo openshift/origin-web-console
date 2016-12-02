@@ -5710,7 +5710,7 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "            fadeFoldWidgets: true,\n" +
     "            showPrintMargin: false\n" +
     "          }\n" +
-    "        }\" ng-model=\"newSecret.data.cacert\" class=\"create-secret-editor ace-bordered\" id=\"cacert-editor\"></div>\n" +
+    "        }\" ng-model=\"newSecret.data.cacert\" class=\"create-secret-editor ace-bordered\" id=\"cacert-editor\" required></div>\n" +
     "</div>\n" +
     "</div>\n" +
     "<div ng-if=\"newSecret.authType === 'kubernetes.io/ssh-auth'\">\n" +
@@ -5748,7 +5748,7 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "            fadeFoldWidgets: true,\n" +
     "            showPrintMargin: false\n" +
     "          }\n" +
-    "        }\" ng-model=\"newSecret.data.gitconfig\" class=\"create-secret-editor ace-bordered\" id=\"gitconfig-editor\"></div>\n" +
+    "        }\" ng-model=\"newSecret.data.gitconfig\" class=\"create-secret-editor ace-bordered\" id=\"gitconfig-editor\" required></div>\n" +
     "</div>\n" +
     "</div>\n" +
     "<div ng-if=\"newSecret.authType === 'kubernetes.io/dockercfg'\">\n" +
@@ -5780,7 +5780,7 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "<div ng-if=\"newSecret.authType === 'kubernetes.io/dockerconfigjson'\">\n" +
     "<div class=\"form-group\" id=\"docker-config\">\n" +
     "<label for=\"dockerConfig\" class=\"required\">Configuration File</label>\n" +
-    "<osc-file-input if=\"dockercfg-file-input\" model=\"newSecret.data.dockerConfig\" drop-zone-id=\"docker-config\" help-text=\"Upload a .dockercfg or .docker/config.json file\" show-values=\"false\" required=\"true\"></osc-file-input>\n" +
+    "<osc-file-input id=\"dockercfg-file-input\" model=\"newSecret.data.dockerConfig\" drop-zone-id=\"docker-config\" help-text=\"Upload a .dockercfg or .docker/config.json file\" show-values=\"false\" required=\"true\"></osc-file-input>\n" +
     "<div ui-ace=\"{\n" +
     "          mode: 'json',\n" +
     "          theme: 'eclipse',\n" +
@@ -5824,7 +5824,7 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "</div>\n" +
     "</div>\n" +
     "<div class=\"buttons gutter-top-bottom\">\n" +
-    "<button class=\"btn btn-lg btn-primary\" type=\"button\" ng-disabled=\"secretForm.$invalid || secretForm.$pristine\" ng-click=\"create()\">Create</button>\n" +
+    "<button class=\"btn btn-lg btn-primary\" type=\"button\" ng-disabled=\"secretForm.$invalid || secretForm.$pristine || invalidConfigFormat\" ng-click=\"create()\">Create</button>\n" +
     "<button class=\"btn btn-lg btn-default\" type=\"button\" ng-click=\"cancel()\">Cancel</button>\n" +
     "</div>\n" +
     "</ng-form>"
