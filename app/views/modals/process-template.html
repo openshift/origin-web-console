@@ -1,6 +1,6 @@
 <div class="modal-resource-action">
   <div class="modal-body">
-    <h1>Add Template</h1>
+    <h1>{{updateTemplate ? "Update" : "Add"}} Template</h1>
     <p>What would you like to do?</p>
 
     <div>
@@ -13,9 +13,9 @@
     <div>
       <label>
         <input type="checkbox" ng-model="templateOptions.add"/>
-        <strong>Save template</strong>
+        <strong>{{updateTemplate ? "Update" : "Save"}} template</strong>
       </label>
-      <span id="helpBlock" class="help-block">Save the template to the project. This will make the template available to anyone who can view the project.</span> 
+      <span id="helpBlock" class="help-block">{{updateTemplate ? "This will overwrite the current version of the template." : "Save the template to the project. This will make the template available to anyone who can view the project."}}</span>
     </div>
   </div>
   <div class="modal-footer">
