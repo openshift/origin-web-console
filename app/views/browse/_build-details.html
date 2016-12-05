@@ -6,7 +6,8 @@
         <dt>Status:</dt>
         <dd>
           <status-icon status="build.status.phase"></status-icon>
-          {{build.status.phase}}
+          <span ng-if="!build.status.message || build.status.phase === 'Cancelled'">{{build.status.phase}}</span>
+          <span ng-if="build.status.message && build.status.phase !== 'Cancelled'">{{build.status.message}}</span>
           <span ng-if="build | jenkinsLogURL">
             <span class="text-muted">&ndash;</span>
             <a ng-href="{{build | jenkinsLogURL}}" target="_blank">View Log</a>

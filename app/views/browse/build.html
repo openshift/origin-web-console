@@ -12,7 +12,6 @@
             <div ng-if="build">
               <h1>
                 {{build.metadata.name}}
-                <span ng-if="build.status.message" class="pficon pficon-warning-triangle-o" style="cursor: help;" data-toggle="popover" data-trigger="hover" dynamic-content="{{build.status.message}}"></span>
                 <span class="pficon pficon-warning-triangle-o"
                       ng-if="buildConfigPaused || buildConfigDeleted"
                       aria-hidden="true"
