@@ -43,11 +43,11 @@
           <button ng-show="(replicaSet | deploymentIsInProgress) && !replicaSet.metadata.deletionTimestamp && ('replicationcontrollers' | canI : 'update')" type="button" ng-click="cancelRunningDeployment(replicaSet)" class="btn btn-default btn-xs">Cancel</button>
         </span>
       </dd>
-      <dt ng-if-start="replicaSet | hasDeploymentConfig">Deployment config:</dt>
+      <dt ng-if-start="replicaSet | hasDeploymentConfig">Deployment Config:</dt>
       <dd ng-if-end>
         <a ng-href="{{replicaSet | configURLForResource}}">{{deploymentConfigName}}</a>
       </dd>
-      <dt ng-if-start="replicaSet | annotation:'deploymentStatusReason'">Status reason:</dt>
+      <dt ng-if-start="replicaSet | annotation:'deploymentStatusReason'">Status Reason:</dt>
       <dd ng-if-end>
         {{replicaSet | annotation:'deploymentStatusReason'}}
       </dd>

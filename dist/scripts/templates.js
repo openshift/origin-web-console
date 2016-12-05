@@ -1530,11 +1530,11 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "<button ng-show=\"(replicaSet | deploymentIsInProgress) && !replicaSet.metadata.deletionTimestamp && ('replicationcontrollers' | canI : 'update')\" type=\"button\" ng-click=\"cancelRunningDeployment(replicaSet)\" class=\"btn btn-default btn-xs\">Cancel</button>\n" +
     "</span>\n" +
     "</dd>\n" +
-    "<dt ng-if-start=\"replicaSet | hasDeploymentConfig\">Deployment config:</dt>\n" +
+    "<dt ng-if-start=\"replicaSet | hasDeploymentConfig\">Deployment Config:</dt>\n" +
     "<dd ng-if-end>\n" +
     "<a ng-href=\"{{replicaSet | configURLForResource}}\">{{deploymentConfigName}}</a>\n" +
     "</dd>\n" +
-    "<dt ng-if-start=\"replicaSet | annotation:'deploymentStatusReason'\">Status reason:</dt>\n" +
+    "<dt ng-if-start=\"replicaSet | annotation:'deploymentStatusReason'\">Status Reason:</dt>\n" +
     "<dd ng-if-end>\n" +
     "{{replicaSet | annotation:'deploymentStatusReason'}}\n" +
     "</dd>\n" +
