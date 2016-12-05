@@ -1,7 +1,8 @@
 'use strict';
 
 angular.module('openshiftConsole')
-  .directive('podMetrics', function($interval,
+  .directive('podMetrics', function($filter,
+                                    $interval,
                                     $parse,
                                     $timeout,
                                     $q,
@@ -17,6 +18,7 @@ angular.module('openshiftConsole')
         sparklineWidth: '=?',
         sparklineHeight: '=?',
         includedMetrics: '=?', // defaults to ["cpu", "memory", "network"]
+        stackDonut: '=?', // Keep donut on top of sparkline (e.g. on the monitoring page)
         alerts: '=?'
       },
       templateUrl: 'views/directives/pod-metrics.html',
@@ -124,12 +126,14 @@ angular.module('openshiftConsole')
         // Show last hour by default.
         scope.options.timeRange = _.head(scope.options.rangeOptions);
 
+        var upperFirst = $filter('upperFirst');
         var createDonutConfig = function(metric) {
           var chartID = '#' + metric.chartPrefix + scope.uniqueID + '-donut';
           return {
             bindto: chartID,
             onrendered: function() {
-              ChartsService.updateDonutCenterText(chartID, metric.datasets[0].used, metric.units);
+              ChartsService.updateDonutCenterText(chartID, metric.datasets[0].used,
+                                                  upperFirst(metric.units) + " Used");
             },
             donut: {
               label: {
@@ -244,6 +248,9 @@ angular.module('openshiftConsole')
             dates = ['dates'], values[metricID] = [dataset.label || metricID];
 
             dataset.total = getLimit(metricID);
+            if (dataset.total) {
+              scope.hasLimits = true;
+            }
 
             var lastValue = _.last(metricData).value;
             if (isNaN(lastValue)) {
@@ -539,12 +546,18 @@ angular.module('openshiftConsole')
         // Also update every 30 seconds.
         intervalPromise = $interval(update, updateInterval, false);
 
-        $rootScope.$on('metrics.charts.resize', function(){
-          $timeout(function() {
-            _.each(sparklineByMetric, function(chart) {
+        $rootScope.$on('metrics.charts.resize', function() {
+          _.each(donutByMetric, function(chart) {
+            setTimeout(function() {
               chart.flush();
             });
-          }, 0);
+          });
+
+          _.each(sparklineByMetric, function(chart) {
+            setTimeout(function() {
+              chart.flush();
+            });
+          });
         });
 
         scope.$on('$destroy', function() {

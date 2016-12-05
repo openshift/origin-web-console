@@ -301,9 +301,17 @@ mark {
     }
   }
   .metrics-full {
+    h2:not(.has-limit) {
+      border-bottom: 1px solid #d1d1d1;
+      margin-bottom: 0;
+      padding-bottom: 15px;
+    }
     .metrics-donut,
     .metrics-sparkline {
       margin-top: 20px;
+    }
+    .metrics-sparkline {
+      margin-left: -10px;
     }
   }
 

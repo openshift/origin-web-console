@@ -6095,12 +6095,12 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "</p>\n" +
     "</div>\n" +
     "<div ng-repeat=\"metric in metrics\" ng-show=\"!noData && !metricsError\" class=\"metrics-full\">\n" +
-    "<h3 class=\"metric-label\">\n" +
+    "<h2 class=\"metric-label\">\n" +
     "{{metric.label}}\n" +
     "<small ng-if=\"showAverage\">\n" +
     "Average per pod\n" +
     "</small>\n" +
-    "</h3>\n" +
+    "</h2>\n" +
     "\n" +
     "<div ng-attr-id=\"{{metric.chartID}}\" class=\"metrics-sparkline\"></div>\n" +
     "</div>\n" +
@@ -7747,20 +7747,18 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "</p>\n" +
     "</div>\n" +
     "<div ng-repeat=\"metric in metrics\" ng-if=\"!noData && !metricsError\" class=\"metrics-full\">\n" +
-    "<h3 class=\"metric-label\">\n" +
+    "<h2 ng-class=\"{ 'has-limit': metric.datasets[0].total }\">\n" +
     "{{metric.label}}\n" +
     "<small ng-if=\"pod.spec.containers.length > 1\">\n" +
     "<span ng-if=\"metric.containerMetric\">Container Metrics</span>\n" +
     "<span ng-if=\"!metric.containerMetric\">Pod Metrics</span>\n" +
     "</small>\n" +
-    "<small ng-if=\"deployment\">\n" +
-    "Total for All Pods\n" +
-    "</small>\n" +
-    "</h3>\n" +
+    "</h2>\n" +
     "\n" +
     "\n" +
     "<div ng-if=\"metric.datasets[0].total\" class=\"utilization-trend-chart-pf\">\n" +
-    "<div class=\"current-values\" ng-if=\"metric.datasets[0].available >= 0\">\n" +
+    "<div class=\"current-values\">\n" +
+    "<div ng-if=\"metric.datasets[0].available >= 0\">\n" +
     "<h1 class=\"available-count pull-left\">\n" +
     "{{metric.datasets[0].available}}\n" +
     "</h1>\n" +
@@ -7769,7 +7767,7 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "<div>{{metric.datasets[0].total}} {{metric.units}}</div>\n" +
     "</div>\n" +
     "</div>\n" +
-    "<div class=\"current-values\" ng-if=\"metric.datasets[0].available < 0\">\n" +
+    "<div ng-if=\"metric.datasets[0].available < 0\">\n" +
     "<h1 class=\"available-count pull-left\">\n" +
     "{{metric.datasets[0].available | abs}}\n" +
     "</h1>\n" +
@@ -7779,12 +7777,19 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "</div>\n" +
     "</div>\n" +
     "</div>\n" +
+    "</div>\n" +
     "\n" +
     "<div style=\"clear: both\"></div>\n" +
+    "<div class=\"row\">\n" +
     "\n" +
-    "<div ng-if=\"metric.datasets[0].total\" ng-attr-id=\"{{metric.chartPrefix + uniqueID}}-donut\" class=\"metrics-donut\"></div>\n" +
+    "<div ng-if=\"metric.datasets[0].total\" ng-class=\"{ 'col-sm-12 col-md-3 col-md-push-9': !stackDonut }\">\n" +
+    "<div ng-attr-id=\"{{metric.chartPrefix + uniqueID}}-donut\" class=\"metrics-donut\"></div>\n" +
+    "</div>\n" +
     "\n" +
+    "<div class=\"col-sm-12\" ng-class=\"{ 'col-md-9': hasLimits && !stackDonut, 'col-md-pull-3': metric.datasets[0].total && !stackDonut}\">\n" +
     "<div ng-attr-id=\"{{metric.chartPrefix + uniqueID}}-sparkline\" class=\"metrics-sparkline\"></div>\n" +
+    "</div>\n" +
+    "</div>\n" +
     "</div>\n" +
     "</div>"
   );
@@ -9694,7 +9699,7 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "</log-viewer>\n" +
     "\n" +
     "<div class=\"mar-top-lg\" ng-if=\"metricsAvailable\">\n" +
-    "<pod-metrics pod=\"pod\" alerts=\"alerts\"></pod-metrics>\n" +
+    "<pod-metrics pod=\"pod\" stack-donut=\"!renderOptions.collapseEventsSidebar\" alerts=\"alerts\"></pod-metrics>\n" +
     "</div>\n" +
     "</div>\n" +
     "</div>\n" +

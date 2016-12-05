@@ -141,7 +141,7 @@
                       </log-viewer>
                       <!-- Until the metrics directive pulls the metrics from the time range of the life of the pod, hide the metrics for old stuff -->
                       <div class="mar-top-lg" ng-if="metricsAvailable">
-                        <pod-metrics pod="pod" alerts="alerts"></pod-metrics>
+                        <pod-metrics pod="pod" stack-donut="!renderOptions.collapseEventsSidebar" alerts="alerts"></pod-metrics>
                       </div>
                     </div>
                   </div>

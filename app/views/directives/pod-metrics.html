@@ -47,36 +47,35 @@
   </div>
 
   <div ng-repeat="metric in metrics" ng-if="!noData && !metricsError" class="metrics-full">
-    <h3 class="metric-label">
+    <h2 ng-class="{ 'has-limit': metric.datasets[0].total }">
       {{metric.label}}
       <small ng-if="pod.spec.containers.length > 1">
         <span ng-if="metric.containerMetric">Container Metrics</span>
         <span ng-if="!metric.containerMetric">Pod Metrics</span>
       </small>
-      <small ng-if="deployment">
-        Total for All Pods
-      </small>
-     </h3>
+     </h2>
 
     <!-- Show a summary of usage above the charts like the patternfly utilization card. -->
     <!-- Reuse the utilization card styles, but only here. -->
     <div ng-if="metric.datasets[0].total" class="utilization-trend-chart-pf">
-      <div class="current-values" ng-if="metric.datasets[0].available >= 0">
-        <h1 class="available-count pull-left">
-          {{metric.datasets[0].available}}
-        </h1>
-        <div class="available-text pull-left">
-          <div>Available of</div>
-          <div>{{metric.datasets[0].total}} {{metric.units}}</div>
+      <div class="current-values">
+        <div ng-if="metric.datasets[0].available >= 0">
+          <h1 class="available-count pull-left">
+            {{metric.datasets[0].available}}
+          </h1>
+          <div class="available-text pull-left">
+            <div>Available of</div>
+            <div>{{metric.datasets[0].total}} {{metric.units}}</div>
+          </div>
         </div>
-      </div>
-      <div class="current-values" ng-if="metric.datasets[0].available < 0">
-        <h1 class="available-count pull-left">
-          {{metric.datasets[0].available | abs}}
-        </h1>
-        <div class="available-text pull-left">
-          <div><strong>Over limit of</strong></div>
-          <div>{{metric.datasets[0].total}} {{metric.units}}</div>
+        <div ng-if="metric.datasets[0].available < 0">
+          <h1 class="available-count pull-left">
+            {{metric.datasets[0].available | abs}}
+          </h1>
+          <div class="available-text pull-left">
+            <div><strong>Over limit of</strong></div>
+            <div>{{metric.datasets[0].total}} {{metric.units}}</div>
+          </div>
         </div>
       </div>
     </div>
@@ -84,10 +83,16 @@
     <!-- Clear floats so top margin works on the charts below. -->
     <div style="clear: both;"></div>
 
-    <!-- Donut -->
-    <div ng-if="metric.datasets[0].total" ng-attr-id="{{metric.chartPrefix + uniqueID}}-donut" class="metrics-donut"></div>
+    <div class="row">
+      <!-- Donut -->
+      <div ng-if="metric.datasets[0].total" ng-class="{ 'col-sm-12 col-md-3 col-md-push-9': !stackDonut }">
+        <div ng-attr-id="{{metric.chartPrefix + uniqueID}}-donut" class="metrics-donut"></div>
+      </div>
 
-    <!-- Sparkline -->
-    <div ng-attr-id="{{metric.chartPrefix + uniqueID}}-sparkline" class="metrics-sparkline"></div>
+      <!-- Sparkline -->
+      <div class="col-sm-12" ng-class="{ 'col-md-9': hasLimits && !stackDonut, 'col-md-pull-3': metric.datasets[0].total && !stackDonut}">
+        <div ng-attr-id="{{metric.chartPrefix + uniqueID}}-sparkline" class="metrics-sparkline"></div>
+      </div>
+    </div>
   </div>
 </div>
