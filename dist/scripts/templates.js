@@ -4454,12 +4454,15 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "<div class=\"help-block\">\n" +
     "Routing is a way to make your application publicly visible.\n" +
     "</div>\n" +
-    "<form name=\"createRouteForm\" class=\"mar-top-xl\">\n" +
+    "<form name=\"createRouteForm\" class=\"mar-top-xl osc-form\">\n" +
     "<div ng-if=\"!services\">Loading...</div>\n" +
     "<div ng-if=\"services\">\n" +
     "<fieldset ng-disabled=\"disableInputs\">\n" +
     "<osc-routing model=\"routing\" services=\"services\" show-name-input=\"true\">\n" +
     "</osc-routing>\n" +
+    "<label-editor labels=\"labels\" expand=\"true\" can-toggle=\"false\" help-text=\"Labels for this route.\">\n" +
+    "</label-editor>\n" +
+    "<a href=\"\" ng-click=\"copyServiceLabels()\">Copy Service Labels</a>\n" +
     "<div class=\"button-group gutter-top gutter-bottom\">\n" +
     "<button type=\"submit\" class=\"btn btn-primary btn-lg\" ng-click=\"createRoute()\" ng-disabled=\"createRouteForm.$invalid || disableInputs || !createRoute\" value=\"\">Create</button>\n" +
     "<a class=\"btn btn-default btn-lg\" href=\"#\" back>Cancel</a>\n" +
