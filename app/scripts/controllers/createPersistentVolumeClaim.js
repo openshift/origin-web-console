@@ -95,7 +95,7 @@ angular.module('openshiftConsole')
             _.set(pvc, 'spec.selector.matchLabels', selectorLabel);
           }
         }
-        if ($scope.claim.storageClass ) {
+        if ($scope.claim.storageClass && $scope.claim.storageClass.metadata.name !== "No Storage Class") {
           //we can only have one storage class per claim
           pvc.metadata.annotations["volume.beta.kubernetes.io/storage-class"] = $scope.claim.storageClass.metadata.name;
         }

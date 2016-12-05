@@ -7504,31 +7504,34 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "<fieldset ng-disabled=\"claimDisabled\">\n" +
     "<div ng-show=\"storageClasses | hashSize\" class=\"form-group\">\n" +
     "\n" +
-    "<label class=\"required\">Storage Classes</label>\n" +
-    "<div id=\"claim-storage-class-help\" class=\"help-block mar-bottom-lg\">\n" +
+    "<label>Storage Class</label>\n" +
+    "<div>\n" +
+    "<ui-select ng-if=\"storageClasses\" ng-model=\"claim.storageClass\" theme=\"bootstrap\" search-enabled=\"true\" title=\"Select a storage class\" class=\"select-role\">\n" +
+    "<ui-select-match placeholder=\"Select a storage class\">\n" +
+    "<span>\n" +
+    "{{$select.selected.metadata.name}}\n" +
+    "</span>\n" +
+    "</ui-select-match>\n" +
+    "<ui-select-choices repeat=\"sclass as sclass in storageClasses | toArray | filter : { metadata: { name: $select.search } } \">\n" +
+    "<div>\n" +
+    "<span ng-bind-html=\"sclass.metadata.name  | highlight : $select.search\"></span>\n" +
+    "<span ng-if=\"sclass | annotation : 'description'\" class=\"text-muted\">\n" +
+    "<small>&ndash;\n" +
+    "<span ng-if=\"sclass.parameters.type\">Type: {{sclass.parameters.type}} | </span>\n" +
+    "<span ng-if=\"sclass.parameters.zone\">Zone: {{sclass.parameters.zone}} | </span>\n" +
+    "{{sclass | annotation : 'description'}}\n" +
+    "</small>\n" +
+    "</span>\n" +
+    "</div>\n" +
+    "</ui-select-choices>\n" +
+    "</ui-select>\n" +
+    "</div>\n" +
+    "<div id=\"claim-storage-class-help\" class=\"help-block\">\n" +
     "Storage classes are set by the administrator to define types of storage the users can select.\n" +
+    "<span ng-if=\"defaultStorageClass\"> If another storage class is not chosen, the default storage class <var>{{defaultStorageClass.metadata.name}}</var> will be used.</span>\n" +
     "<div class=\"learn-more-block\">\n" +
-    "<a ng-href=\"{{'storage_classes' | helpLink}}\" target=\"_blank\">Learn More&nbsp;<i class=\"fa fa-external-link\" aria-hidden=\"true\"></i></a>\n" +
+    "<a ng-href=\"{{'storage_classes' | helpLink}}\" target=\"_blank\">Learn More&nbsp;<i class=\"fa fa-external-link\" aria-hidden=\"true\"> </i></a>\n" +
     "</div>\n" +
-    "</div>\n" +
-    "<div ng-repeat=\"sclass in storageClasses track by (sclass | uid)\" id=\"storageclass-{{sclass.metadata.name}}\">\n" +
-    "<div class=\"radio\">\n" +
-    "<label>\n" +
-    "<input type=\"radio\" name=\"storageClass\" ng-value=\"sclass\" ng-model=\"claim.storageClass\">\n" +
-    "{{sclass.metadata.name}}\n" +
-    "</label>\n" +
-    "</div>\n" +
-    "<div class=\"help-block\">\n" +
-    "Type: {{sclass.parameters.type}} | Zone: {{sclass.parameters.zone}}\n" +
-    "<span ng-if=\"sclass.metadata.annotations.description\"> | {{sclass.metadata.annotations.description}}</span>\n" +
-    "</div>\n" +
-    "</div>\n" +
-    "<div class=\"radio\">\n" +
-    "<label>\n" +
-    "<input type=\"radio\" name=\"storageClass\" ng-model=\"claim.storageClass\">\n" +
-    "No Storage Class\n" +
-    "<div class=\"help-block\">No storage class will be assigned unless a default class has been assigned by the system administrator.</div>\n" +
-    "</label>\n" +
     "</div>\n" +
     "</div>\n" +
     "\n" +
