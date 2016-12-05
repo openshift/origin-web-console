@@ -18,7 +18,7 @@
                   <div class="help-block">
                     Routing is a way to make your application publicly visible.
                   </div>
-                  <form name="createRouteForm" class="mar-top-xl">
+                  <form name="createRouteForm" class="mar-top-xl osc-form">
                     <div ng-if="!services">Loading...</div>
                     <div ng-if="services">
                       <fieldset ng-disabled="disableInputs">
@@ -27,6 +27,13 @@
                             services="services"
                             show-name-input="true">
                         </osc-routing>
+                        <label-editor
+                            labels="labels"
+                            expand="true"
+                            can-toggle="false"
+                            help-text="Labels for this route.">
+                        </label-editor>
+                        <a href="" ng-click="copyServiceLabels()">Copy Service Labels</a>
                         <div class="button-group gutter-top gutter-bottom">
                           <button type="submit"
                               class="btn btn-primary btn-lg"

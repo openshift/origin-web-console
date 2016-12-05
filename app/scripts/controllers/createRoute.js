@@ -17,13 +17,15 @@ angular.module('openshiftConsole')
                        AuthorizationService,
                        DataService,
                        Navigate,
-                       ProjectsService) {
+                       ProjectsService,
+                       keyValueEditorUtils) {
     $scope.alerts = {};
     $scope.renderOptions = {
       hideFilterWidget: true
     };
     $scope.projectName = $routeParams.project;
     $scope.serviceName = $routeParams.service;
+    $scope.labels = [];
 
     // Prefill route name with the service name.
     $scope.routing = {
@@ -56,8 +58,7 @@ angular.module('openshiftConsole')
           return;
         }
 
-        var labels = {},
-            orderByDisplayName = $filter('orderByDisplayName');
+        var orderByDisplayName = $filter('orderByDisplayName');
 
         DataService.list("services", context, function(services) {
           $scope.services = orderByDisplayName(services.by("metadata.name"));
@@ -65,15 +66,26 @@ angular.module('openshiftConsole')
           $scope.routing.to.service = _.find($scope.services, function(service) {
             return !$scope.serviceName || service.metadata.name === $scope.serviceName;
           });
-          $scope.$watch('routing.to.service', function() {
-            labels = angular.copy($scope.routing.to.service.metadata.labels);
-          });
         });
+
+        $scope.copyServiceLabels = function() {
+          var serviceLabels = _.get($scope, 'routing.to.service.metadata.labels', {});
+          var existing = keyValueEditorUtils.mapEntries(keyValueEditorUtils.compactEntries($scope.labels));
+          var updated = _.assign(existing, serviceLabels);
+          $scope.labels = _.map(updated, function(value, key) {
+            return {
+              name: key,
+              value: value
+            };
+          });
+        };
 
         $scope.createRoute = function() {
           if ($scope.createRouteForm.$valid) {
             $scope.disableInputs = true;
             var serviceName = $scope.routing.to.service.metadata.name;
+            var labels = keyValueEditorUtils.mapEntries(keyValueEditorUtils.compactEntries($scope.labels));
+
             var route = ApplicationGenerator.createRoute($scope.routing, serviceName, labels);
             var alternateServices = _.get($scope, 'routing.alternateServices', []);
             if (!_.isEmpty(alternateServices)) {

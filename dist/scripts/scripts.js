@@ -8143,10 +8143,10 @@ details:c("getErrorDetails")(b)
 }
 });
 }));
-} ]), angular.module("openshiftConsole").controller("CreateRouteController", [ "$filter", "$routeParams", "$scope", "$window", "ApplicationGenerator", "AuthorizationService", "DataService", "Navigate", "ProjectsService", function(a, b, c, d, e, f, g, h, i) {
+} ]), angular.module("openshiftConsole").controller("CreateRouteController", [ "$filter", "$routeParams", "$scope", "$window", "ApplicationGenerator", "AuthorizationService", "DataService", "Navigate", "ProjectsService", "keyValueEditorUtils", function(a, b, c, d, e, f, g, h, i, j) {
 c.alerts = {}, c.renderOptions = {
 hideFilterWidget:!0
-}, c.projectName = b.project, c.serviceName = b.service, c.routing = {
+}, c.projectName = b.project, c.serviceName = b.service, c.labels = [], c.routing = {
 name:c.serviceName || ""
 }, c.breadcrumbs = [ {
 title:c.projectName,
@@ -8156,26 +8156,32 @@ title:"Routes",
 link:"project/" + c.projectName + "/browse/routes"
 }, {
 title:"Create Route"
-} ], i.get(b.project).then(_.spread(function(i, j) {
+} ], i.get(b.project).then(_.spread(function(i, k) {
 if (c.project = i, c.breadcrumbs[0].title = a("displayName")(i), !f.canI("routes", "create", b.project)) return void h.toErrorPage("You do not have authority to create routes in project " + b.project + ".", "access_denied");
-var k = {}, l = a("orderByDisplayName");
-g.list("services", j, function(a) {
+var l = a("orderByDisplayName");
+g.list("services", k, function(a) {
 c.services = l(a.by("metadata.name")), c.routing.to = {}, c.routing.to.service = _.find(c.services, function(a) {
 return !c.serviceName || a.metadata.name === c.serviceName;
-}), c.$watch("routing.to.service", function() {
-k = angular.copy(c.routing.to.service.metadata.labels);
 });
-}), c.createRoute = function() {
+}), c.copyServiceLabels = function() {
+var a = _.get(c, "routing.to.service.metadata.labels", {}), b = j.mapEntries(j.compactEntries(c.labels)), d = _.assign(b, a);
+c.labels = _.map(d, function(a, b) {
+return {
+name:b,
+value:a
+};
+});
+}, c.createRoute = function() {
 if (c.createRouteForm.$valid) {
 c.disableInputs = !0;
-var b = c.routing.to.service.metadata.name, f = e.createRoute(c.routing, b, k), h = _.get(c, "routing.alternateServices", []);
-_.isEmpty(h) || (f.spec.to.weight = _.get(c, "routing.to.weight"), f.spec.alternateBackends = _.map(h, function(a) {
+var b = c.routing.to.service.metadata.name, f = j.mapEntries(j.compactEntries(c.labels)), h = e.createRoute(c.routing, b, f), i = _.get(c, "routing.alternateServices", []);
+_.isEmpty(i) || (h.spec.to.weight = _.get(c, "routing.to.weight"), h.spec.alternateBackends = _.map(i, function(a) {
 return {
 kind:"Service",
 name:_.get(a, "service.metadata.name"),
 weight:a.weight
 };
-})), g.create("routes", null, f, j).then(function() {
+})), g.create("routes", null, h, k).then(function() {
 d.history.back();
 }, function(b) {
 c.disableInputs = !1, c.alerts["create-route"] = {
