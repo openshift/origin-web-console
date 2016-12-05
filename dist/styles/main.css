@@ -3798,7 +3798,9 @@ mark{padding:0;background-color:rgba(252,248,160,.5)}
 @media (min-width:768px){.metrics .metrics-options .form-group{display:inline-block}
 .metrics .metrics-options .select-container{margin-right:10px}
 }
+.metrics .metrics-full h2:not(.has-limit){border-bottom:1px solid #d1d1d1;margin-bottom:0;padding-bottom:15px}
 .metrics .metrics-full .metrics-donut,.metrics .metrics-full .metrics-sparkline{margin-top:20px}
+.metrics .metrics-full .metrics-sparkline{margin-left:-10px}
 @media (max-width:500px){.metrics .metrics-sparkline .c3-axis-x .tick{display:none}
 }
 @media (max-width:550px){.monitoring-page .metrics-sparkline .c3-axis-x .tick{display:none}
