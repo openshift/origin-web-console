@@ -6,7 +6,7 @@
 //   to give access to 'openshift' for installing templates and things initially.
 // - the browse catalog flow can be run w/o needing this, however
 exports.addNamespaceToCreateWhitelist = function(namespace) {
-  return browser.executeScript(function() {
+  return browser.executeScript(function(namespace) {
     window.OPENSHIFT_CONSTANTS.CREATE_FROM_URL_WHITELIST.push(namespace);
-  });
+  }, namespace);
 };

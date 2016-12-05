@@ -23,6 +23,7 @@ class CreateProjectPage extends Page {
     button.click();
     return new CatalogPage(this.project);
   }
+  // TODO: there is an implicit navigation here, this should return a new Overview page for clarity
   createProject() {
     this.enterProjectInfo();
     return this.submit();
