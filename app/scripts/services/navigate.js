@@ -233,6 +233,11 @@ angular.module("openshiftConsole")
         return url.toString();
       },
 
+      // Navigate to the URL of the resource
+      toResourceURL: function (resource) {
+        $location.url(this.resourceURL(resource));
+      },
+
       // Returns the build config URL for a build or the deployment config URL for a deployment.
       configURLForResource: function(resource, /* optional */ action) {
         var bc, dc,
