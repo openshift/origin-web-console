@@ -47,7 +47,7 @@ angular.module('openshiftConsole')
             if (canI(resourceGroupVersion, "update")) {
               alerts[id].links = [{
                                     href: Navigate.healthCheckURL(object.metadata.namespace, object.kind, object.metadata.name, resourceGroupVersion.group),
-                                    label: "Add health checks"
+                                    label: "Add Health Checks"
                                   }];
             }
           }
@@ -199,7 +199,7 @@ angular.module('openshiftConsole')
 
               alert.links = [{
                 href: "",
-                label: "Don't show me again",
+                label: "Don't Show Me Again",
                 onClick: function() {
                   // Hide the alert on future page loads.
                   hideAlert(alertID);

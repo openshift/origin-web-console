@@ -39,7 +39,7 @@
 
     <div ng-if="!data.length">
       <p><em>The config map has no items.</em></p>
-      <a href="" ng-click="addItem()">Add item</a>
+      <a href="" ng-click="addItem()">Add Item</a>
     </div>
 
     <div ng-repeat="item in data" ng-init="keys = getKeys()">
@@ -101,10 +101,10 @@
         }" ng-model="item.value" class="ace-bordered ace-inline-small mar-top-sm" ng-attr-id="value-{{$id}}"></div>
       </div>
       <div class="mar-bottom-md">
-        <a href="" ng-click="removeItem($index)">Remove item</a>
+        <a href="" ng-click="removeItem($index)">Remove Item</a>
         <span ng-if="$last">
           <span class="action-divider">|</span>
-          <a href="" ng-click="addItem()">Add item</a>
+          <a href="" ng-click="addItem()">Add Item</a>
         </span>
       </div>
     </div>

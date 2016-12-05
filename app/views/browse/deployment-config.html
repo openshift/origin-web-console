@@ -162,9 +162,9 @@
                               remove-fn="removeVolume(volume)">
                           </volumes>
                           <p ng-if="'deploymentconfigs' | canI : 'update'">
-                            <a ng-href="project/{{project.metadata.name}}/attach-pvc?kind=DeploymentConfig&name={{deploymentConfig.metadata.name}}">Add storage</a>
+                            <a ng-href="project/{{project.metadata.name}}/attach-pvc?kind=DeploymentConfig&name={{deploymentConfig.metadata.name}}">Add Storage</a>
                             <span class="action-divider" aria-hidden="true">|</span>
-                            <a ng-href="project/{{project.metadata.name}}/add-config-volume?kind=DeploymentConfig&name={{deploymentConfig.metadata.name}}">Add config files</a>
+                            <a ng-href="project/{{project.metadata.name}}/add-config-volume?kind=DeploymentConfig&name={{deploymentConfig.metadata.name}}">Add Config Files</a>
                           </p>
                         </div>
 
@@ -181,14 +181,14 @@
                             <!-- If the CPU request is missing, add an action to set one. -->
                             <a ng-href="project/{{projectName}}/set-limits?kind=DeploymentConfig&name={{deploymentConfig.metadata.name}}"
                                ng-if="warning.reason === 'NoCPURequest' && ('deploymentconfigs' | canI : 'update')"
-                               role="button">Edit resource
-                              <span ng-if="!('cpu' | isRequestCalculated : project)">requests and</span> limits</a>
+                               role="button">Edit Resource
+                              <span ng-if="!('cpu' | isRequestCalculated : project)">Requests and</span> Limits</a>
                           </div>
 
                           <!-- Create autoscaler -->
                           <div ng-if="!autoscalers.length">
                             <a ng-if="{resource: 'horizontalpodautoscalers', group: 'extensions'} | canI : 'create'" ng-href="project/{{projectName}}/edit/autoscaler?kind=DeploymentConfig&name={{deploymentConfig.metadata.name}}"
-                               role="button">Add autoscaler</a>
+                               role="button">Add Autoscaler</a>
                             <span ng-if="!({resource: 'horizontalpodautoscalers', group: 'extensions'} | canI : 'create')">Autoscaling is not enabled. There are no autoscalers for this deployment config.</span>
                           </div>
 
@@ -203,7 +203,7 @@
                           <dl class="dl-horizontal left">
                             <dt>Manual (CLI):
                               <a href="{{'deployment-operations' | helpLink}}" target="_blank">
-                                <span class="learn-more-block">Learn more <i class="fa fa-external-link"> </i></span>
+                                <span class="learn-more-block">Learn More&nbsp;<i class="fa fa-external-link" aria-hidden="true"></i></span>
                               </a>
                             </dt>
                             <dd>
@@ -312,7 +312,7 @@
                           key-validator="[A-Za-z_][A-Za-z0-9_]*"
                           key-validator-error="Please enter a valid key"
                           key-validator-error-tooltip="A valid environment variable name is an alphanumeric (a-z and 0-9) string beginning with a letter that may contain underscores."
-                          add-row-link="Add environment variable"
+                          add-row-link="Add Environment Variable"
                           show-header></key-value-editor>
                       </div>
                       <button
@@ -325,7 +325,7 @@
                         href=""
                         ng-click="clearEnvVarUpdates()"
                         class="mar-left-sm"
-                        style="vertical-align: -2px;">Clear changes</a>
+                        style="vertical-align: -2px;">Clear Changes</a>
                     </ng-form>
                   </uib-tab>
                   <uib-tab active="selectedTab.events" ng-if="'events' | canI : 'watch'">

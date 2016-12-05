@@ -93,9 +93,9 @@
         <div ng-if="deployment">
           <volumes volumes="replicaSet.spec.template.spec.volumes" namespace="project.metadata.name"></volumes>
           <div ng-if="{ group: 'extensions', resource: 'deployments' } | canI : 'update'">
-            <a ng-href="project/{{project.metadata.name}}/attach-pvc?kind=Deployment&name={{deployment.metadata.name}}&group=extensions">Add storage</a>
+            <a ng-href="project/{{project.metadata.name}}/attach-pvc?kind=Deployment&name={{deployment.metadata.name}}&group=extensions">Add Storage</a>
             <span class="action-divider" aria-hidden="true">|</span>
-            <a ng-href="project/{{project.metadata.name}}/add-config-volume?kind=Deployment&name={{deployment.metadata.name}}">Add config files</a>
+            <a ng-href="project/{{project.metadata.name}}/add-config-volume?kind=Deployment&name={{deployment.metadata.name}}">Add Config Files</a>
           </div>
           <div ng-if="!replicaSet.spec.template.spec.volumes.length && !({ group: 'extensions', resource: 'deployments' } | canI : 'update')">none</div>
         </div>
@@ -107,9 +107,9 @@
                 can-remove="true"
                 remove-fn="removeVolume(volume)">
             </volumes>
-            <a ng-href="project/{{project.metadata.name}}/attach-pvc?kind=ReplicaSet&name={{replicaSet.metadata.name}}&group=extensions">Add storage</a>
+            <a ng-href="project/{{project.metadata.name}}/attach-pvc?kind=ReplicaSet&name={{replicaSet.metadata.name}}&group=extensions">Add Storage</a>
             <span class="action-divider" aria-hidden="true">|</span>
-            <a ng-href="project/{{project.metadata.name}}/add-config-volume?kind=ReplicaSet&name={{replicaSet.metadata.name}}&group=extensions">Add config files</a>
+            <a ng-href="project/{{project.metadata.name}}/add-config-volume?kind=ReplicaSet&name={{replicaSet.metadata.name}}&group=extensions">Add Config Files</a>
           </div>
           <div ng-if="!(resource | canI : 'update')">
             <volumes volumes="replicaSet.spec.template.spec.volumes" namespace="project.metadata.name"></volumes>
@@ -121,9 +121,9 @@
         <div ng-if="deploymentConfigName">
           <volumes volumes="replicaSet.spec.template.spec.volumes" namespace="project.metadata.name"></volumes>
           <div ng-if="'deploymentconfigs' | canI : 'update'">
-            <a ng-href="project/{{project.metadata.name}}/attach-pvc?kind=DeploymentConfig&name={{deploymentConfigName}}">Add storage to {{deploymentConfigName}}</a>
+            <a ng-href="project/{{project.metadata.name}}/attach-pvc?kind=DeploymentConfig&name={{deploymentConfigName}}">Add Storage to {{deploymentConfigName}}</a>
             <span class="action-divider" aria-hidden="true">|</span>
-            <a ng-href="project/{{project.metadata.name}}/add-config-volume?kind=DeploymentConfig&name={{deploymentConfigName}}">Add config files to {{deploymentConfigName}}</a>
+            <a ng-href="project/{{project.metadata.name}}/add-config-volume?kind=DeploymentConfig&name={{deploymentConfigName}}">Add Config Files to {{deploymentConfigName}}</a>
           </div>
           <div ng-if="!replicaSet.spec.template.spec.volumes.length && !('deploymentconfigs' | canI : 'update')">none</div>
         </div>
@@ -135,7 +135,7 @@
                 can-remove="true"
                 remove-fn="removeVolume(volume)">
             </volumes>
-            <a ng-href="project/{{project.metadata.name}}/attach-pvc?kind=ReplicationController&name={{replicaSet.metadata.name}}">Add storage</a>
+            <a ng-href="project/{{project.metadata.name}}/attach-pvc?kind=ReplicationController&name={{replicaSet.metadata.name}}">Add Storage</a>
             <span class="action-divider" aria-hidden="true">|</span>
             <a ng-href="project/{{project.metadata.name}}/add-config-volume?kind=ReplicationController&name={{replicaSet.metadata.name}}">Add config files</a>
           </div>
@@ -164,17 +164,17 @@
       <!-- Prompt to set CPU request on the DC if this is a deployment. -->
       <a ng-href="project/{{projectName}}/set-limits?kind=DeploymentConfig&name={{deploymentConfigName}}"
          ng-if="deploymentConfigName && !deploymentConfigMissing && ('deploymentconfigs' | canI : 'update')"
-         role="button">Edit resource
-        <span ng-if="!('cpu' | isRequestCalculated : project)">requests and</span> limits</a>
+         role="button">Edit Resource
+        <span ng-if="!('cpu' | isRequestCalculated : project)">Requests and</span> Limits</a>
       <!-- Prompt to set CPU request on the RC if not a deployment. -->
       <a ng-href="project/{{projectName}}/set-limits?kind=ReplicationController&name={{replicaSet.metadata.name}}"
          ng-if="!deploymentConfigName && kind === 'ReplicationController' && (resource | canI : 'update')"
-         role="button">Edit resource
-        <span ng-if="!('cpu' | isRequestCalculated : project)">requests and</span> limits</a>
+         role="button">Edit Resource
+        <span ng-if="!('cpu' | isRequestCalculated : project)">Requests and</span> Limits</a>
       <a ng-href="project/{{projectName}}/set-limits?kind=ReplicaSet&name={{replicaSet.metadata.name}}&group=extensions"
          ng-if="!deploymentConfigName && kind === 'ReplicaSet' && (resource | canI : 'update')"
-         role="button">Edit resource
-        <span ng-if="!('cpu' | isRequestCalculated : project)">requests and</span> limits</a>
+         role="button">Edit Resource
+        <span ng-if="!('cpu' | isRequestCalculated : project)">Requests and</span> Limits</a>
     </span>
   </div>
 
@@ -183,16 +183,16 @@
     <span ng-if="{resource: 'horizontalpodautoscalers', group: 'extensions'} | canI : 'create'">
       <a ng-if="replicaSet.kind === 'ReplicaSet' && !deployment"
          ng-href="project/{{projectName}}/edit/autoscaler?kind=ReplicaSet&name={{replicaSet.metadata.name}}&group=extensions"
-         role="button">Add autoscaler</a>
+         role="button">Add Autoscaler</a>
       <a ng-if="replicaSet.kind === 'ReplicaSet' && deployment"
          ng-href="project/{{projectName}}/edit/autoscaler?kind=Deployment&name={{deployment.metadata.name}}&group=extensions"
-         role="button">Add autoscaler</a>
+         role="button">Add Autoscaler</a>
       <a ng-if="replicaSet.kind === 'ReplicationController' && !deploymentConfigName"
          ng-href="project/{{projectName}}/edit/autoscaler?kind=ReplicationController&name={{replicaSet.metadata.name}}"
-         role="button">Add autoscaler</a>
+         role="button">Add Autoscaler</a>
       <a ng-if="replicaSet.kind === 'ReplicationController' && deploymentConfigName"
          ng-href="project/{{projectName}}/edit/autoscaler?kind=DeploymentConfig&name={{deploymentConfigName}}"
-         role="button">Add autoscaler</a>
+         role="button">Add Autoscaler</a>
     </span>
     <span ng-if="!({resource: 'horizontalpodautoscalers', group: 'extensions'} | canI : 'create')">
       Autoscaling is not enabled. There are no autoscalers for this

@@ -486,7 +486,7 @@ angular.module('openshiftConsole')
             label: "View Quota"
           },{
             href: "",
-            label: "Don't show me again",
+            label: "Don't Show Me Again",
             onClick: function() {
               // Hide the alert on future page loads.
               AlertMessageService.permanentlyHideAlert("overview-quota-limit-reached", $scope.projectName);
@@ -583,11 +583,11 @@ angular.module('openshiftConsole')
           message: 'An error occurred getting metrics.',
           links: [{
             href: data.url,
-            label: 'Open metrics URL',
+            label: 'Open Metrics URL',
             target: '_blank'
           }, {
             href: '',
-            label: "Don't show me again",
+            label: "Don't Show Me Again",
             onClick: function() {
               // Hide the alert on future page loads.
               AlertMessageService.permanentlyHideAlert('metrics-connection-failed');

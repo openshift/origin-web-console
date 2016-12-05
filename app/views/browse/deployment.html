@@ -177,9 +177,9 @@
                             remove-fn="removeVolume(volume)">
                         </volumes>
                         <div ng-if="{ group: 'extensions', resource: 'deployments' } | canI : 'update'">
-                          <a ng-href="project/{{project.metadata.name}}/attach-pvc?kind=Deployment&name={{deployment.metadata.name}}&group=extensions">Add storage</a>
+                          <a ng-href="project/{{project.metadata.name}}/attach-pvc?kind=Deployment&name={{deployment.metadata.name}}&group=extensions">Add Storage</a>
                           <span class="action-divider" aria-hidden="true">|</span>
-                          <a ng-href="project/{{project.metadata.name}}/add-config-volume?kind=Deployment&name={{deployment.metadata.name}}&group=extensions">Add config files</a>
+                          <a ng-href="project/{{project.metadata.name}}/add-config-volume?kind=Deployment&name={{deployment.metadata.name}}&group=extensions">Add Config Files</a>
                         </div>
                       </div>
                       <div class="col-lg-6">
@@ -194,14 +194,14 @@
                           <!-- If the CPU request is missing, add an action to set one. -->
                           <a ng-href="project/{{projectName}}/set-limits?kind=Deployment&name={{deployment.metadata.name}}&group=extensions"
                              ng-if="warning.reason === 'NoCPURequest' && ({ group: 'extensions', resource: 'deployments' } | canI : 'update')"
-                             role="button">Edit resource
-                            <span ng-if="!('cpu' | isRequestCalculated : project)">requests and</span> limits</a>
+                             role="button">Edit Resource
+                            <span ng-if="!('cpu' | isRequestCalculated : project)">Requests and</span> Limits</a>
                         </div>
 
                         <!-- Create autoscaler -->
                         <div ng-if="!autoscalers.length">
                           <a ng-if="{resource: 'horizontalpodautoscalers', group: 'extensions'} | canI : 'create'" ng-href="project/{{projectName}}/edit/autoscaler?kind=Deployment&name={{deployment.metadata.name}}&group=extensions"
-                             role="button">Add autoscaler</a>
+                             role="button">Add Autoscaler</a>
                           <span ng-if="!({resource: 'horizontalpodautoscalers', group: 'extensions'} | canI : 'create')">none</span>
                         </div>
 
@@ -266,7 +266,7 @@
                         key-validator="[A-Za-z_][A-Za-z0-9_]*"
                         key-validator-error="Please enter a valid key"
                         key-validator-error-tooltip="A valid environment variable name is an alphanumeric (a-z and 0-9) string beginning with a letter that may contain underscores."
-                        add-row-link="Add environment variable"
+                        add-row-link="Add Environment Variable"
                         show-header></key-value-editor>
                     </div>
                     <button
@@ -279,7 +279,7 @@
                       href=""
                       ng-click="clearEnvVarUpdates()"
                       class="mar-left-sm"
-                      style="vertical-align: -2px;">Clear changes</a>
+                      style="vertical-align: -2px;">Clear Changes</a>
                   </ng-form>
                 </uib-tab>
                 <uib-tab active="selectedTab.events" ng-if="'events' | canI : 'watch'">
