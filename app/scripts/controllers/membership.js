@@ -71,15 +71,16 @@ angular
 
       var refreshRoleBindingList = function() {
         DataService
-          .list('rolebindings', requestContext, function(resp) {
+          .list('rolebindings', requestContext, null , {
+            errorNotification: false
+          })
+          .then(function(resp) {
             angular.extend($scope, {
               canShowRoles: true,
               roleBindings: resp.by('metadata.name'),
               subjectKindsForUI: MembershipService.mapRolebindingsForUI(resp.by('metadata.name'), allRoles)
             });
-            resetForm();
-          }, {
-            errorNotification: false
+			      resetForm();
           });
       };
 
@@ -211,21 +212,23 @@ angular
         });
 
 
-      DataService.list('projects', {}, function(resp) {
-        var projects = _.map(resp.by('metadata.name'), function(project) {
-          return project.metadata.name;
-        });
-        angular.extend($scope, {
-          projects: projects,
-          refreshProjects: function(search) {
-            if(search && !_.includes($scope.projects, search)) {
-              $scope.projects = [search].concat(projects);
-            } else {
-              $scope.projects = projects;
+      DataService
+        .list('projects', {})
+        .then(function(resp) {
+          var projects = _.map(resp.by('metadata.name'), function(project) {
+            return project.metadata.name;
+          });
+          angular.extend($scope, {
+            projects: projects,
+            refreshProjects: function(search) {
+              if(search && !_.includes($scope.projects, search)) {
+                $scope.projects = [search].concat(projects);
+              } else {
+                $scope.projects = projects;
+              }
             }
-          }
+          });
         });
-      });
 
       ProjectsService
         .get($routeParams.project)
@@ -311,7 +314,10 @@ angular
               // TODO: this should be by UID, not by Kind-Name, would be less janky.
               // The only catch is matching them up w/Rolebindings, which do not have
               // the UID
-              allRoles = MembershipService.mapRolesForUI(_.first(resp), _.last(resp));
+              allRoles = MembershipService
+                          .mapRolesForUI(
+                            _.first(resp).by('metadata.name'),
+                            _.last(resp).by('metadata.name'));
               var sortedRoles = MembershipService.sortRoles(allRoles);
               var filteredRoles = MembershipService.filterRoles(allRoles);
               var includesRole = function(roleName, roles) {

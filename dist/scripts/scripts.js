@@ -2802,22 +2802,11 @@ getSubjectKinds:d,
 mapRolebindingsForUI:e
 };
 } ]), angular.module("openshiftConsole").factory("RolesService", [ "$q", "DataService", function(a, b) {
-var c = function(a, c) {
-b.list("clusterroles", {}, a, c);
-}, d = function(a, c, d) {
-b.list("roles", a, c, d);
-}, e = function(b) {
-var e = a.defer(), f = [], g = function(a) {
-f.push(a.by("metadata.name")), _.isEqual(f.length, 2) && e.resolve(f);
-};
-return d(b, function(a) {
-g(a);
-}), c(function(a) {
-g(a);
-}), e.promise;
+var c = function(c) {
+return a.all([ b.list("roles", c, null), b.list("clusterroles", {}, null) ]);
 };
 return {
-listAllRoles:e
+listAllRoles:c
 };
 } ]), angular.module("openshiftConsole").factory("RoleBindingsService", [ "$q", "DataService", function(a, b) {
 var c = {}, d = function(a, b) {
@@ -4985,14 +4974,14 @@ details:e
 }, u = function() {
 d.disableAddForm = !1, d.newBinding.name = "", d.newBinding.namespace = o, d.newBinding.newRole = null;
 }, v = function() {
-i.list("rolebindings", n, function(a) {
+i.list("rolebindings", n, null, {
+errorNotification:!1
+}).then(function(a) {
 angular.extend(d, {
 canShowRoles:!0,
 roleBindings:a.by("metadata.name"),
 subjectKindsForUI:k.mapRolebindingsForUI(a.by("metadata.name"), r)
 }), u();
-}, {
-errorNotification:!1
 });
 }, w = function(b, c) {
 d.disableAddForm = !0, l.create(b, c, o, n).then(function() {
@@ -5085,7 +5074,7 @@ roleName:c
 };
 g.withUser().then(function(a) {
 d.user = a;
-}), i.list("projects", {}, function(a) {
+}), i.list("projects", {}).then(function(a) {
 var b = _.map(a.by("metadata.name"), function(a) {
 return a.metadata.name;
 });
@@ -5146,7 +5135,7 @@ subjectName:a
 }), m.listAllRoles(n, {
 errorNotification:!1
 }).then(function(a) {
-r = k.mapRolesForUI(_.first(a), _.last(a));
+r = k.mapRolesForUI(_.first(a).by("metadata.name"), _.last(a).by("metadata.name"));
 var b = k.sortRoles(r), c = k.filterRoles(r), e = function(a, b) {
 return _.some(b, {
 metadata:{
