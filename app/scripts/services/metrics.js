@@ -219,6 +219,34 @@ angular.module("openshiftConsole")
         });
       },
 
+      getCurrentUsage: function(config) {
+        return getRequestURL(config).then(function(url) {
+          if (!url) {
+            return null;
+          }
+
+          // Request one data point for the last minute.
+          var params = {
+            bucketDuration: '1mn',
+            start: '-1mn'
+          };
+
+          return $http.get(url, {
+            auth: {},
+            headers: {
+              Accept: 'application/json',
+              'Hawkular-Tenant': config.namespace
+            },
+            params: params
+          }).then(function(response) {
+            return _.assign(response, {
+              metricID: config.metric,
+              usage: _.head(normalize(response.data))
+            });
+          });
+        });
+      },
+
       // Get metrics data for a collection of pods (memory, CPU, network send and received).
       //
       // config keyword arguments

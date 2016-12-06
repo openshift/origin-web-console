@@ -231,7 +231,42 @@ angular.module('openshiftConsole')
           return null;
         }
 
-        function updateChart(metric) {
+        function updateDonut(metric) {
+          var dataset = _.head(metric.datasets);
+          if (!dataset.total) {
+            return;
+          }
+
+          var donutData = {
+            type: 'donut',
+            columns: [
+              ['Used', dataset.used],
+              ['Available', Math.max(dataset.available, 0)]
+            ],
+            colors: {
+              // Blue if not at limit, orange if at or over limit
+              Used: (dataset.available > 0) ? "#0088ce" : "#ec7a08",
+              Available: "#d1d1d1"
+            }
+          };
+
+          var donutConfig;
+          if (!donutByMetric[dataset.id]) {
+            donutConfig = createDonutConfig(metric);
+            donutConfig.data = donutData;
+            $timeout(function() {
+              if (destroyed) {
+                return;
+              }
+
+              donutByMetric[dataset.id] = c3.generate(donutConfig);
+            });
+          } else {
+            donutByMetric[dataset.id].load(donutData);
+          }
+        }
+
+        function updateSparkline(metric) {
           var dates, values = {};
 
           var missingData = _.some(metric.datasets, function(dataset) {
@@ -241,31 +276,9 @@ angular.module('openshiftConsole')
             return;
           }
 
-          metric.totalUsed = 0;
-          var largestValue = 0;
           angular.forEach(metric.datasets, function(dataset) {
             var metricID = dataset.id, metricData = dataset.data;
             dates = ['dates'], values[metricID] = [dataset.label || metricID];
-
-            dataset.total = getLimit(metricID);
-            if (dataset.total) {
-              scope.hasLimits = true;
-            }
-
-            var lastValue = _.last(metricData).value;
-            if (isNaN(lastValue)) {
-              lastValue = 0;
-            }
-            if (metric.convert) {
-              lastValue = metric.convert(lastValue);
-            }
-
-            dataset.used = lastValue;
-            if (dataset.total) {
-              dataset.available = dataset.total - dataset.used;
-            }
-            metric.totalUsed += dataset.used;
-
             angular.forEach(metricData, function(point) {
               dates.push(point.start);
               if (point.value === undefined || point.value === null) {
@@ -282,47 +295,12 @@ angular.module('openshiftConsole')
                   default:
                     values[metricID].push(d3.round(value));
                 }
-                largestValue = Math.max(value, largestValue);
               }
             });
 
-            dataset.used = _.round(dataset.used);
-            dataset.total = _.round(dataset.total);
-            dataset.available = _.round(dataset.available);
-
-            // Donut
-            var donutConfig, donutData;
-            if (dataset.total) {
-              donutData = {
-                type: 'donut',
-                columns: [
-                  ['Used', dataset.used],
-                  ['Available', Math.max(dataset.available, 0)]
-                ],
-                colors: {
-                  // Blue if not at limit, orange if at or over limit
-                  Used: (dataset.available > 0) ? "#0088ce" : "#ec7a08",
-                  Available: "#d1d1d1"
-                }
-              };
-
-              if (!donutByMetric[metricID]) {
-                donutConfig = createDonutConfig(metric);
-                donutConfig.data = donutData;
-                $timeout(function() {
-                  donutByMetric[metricID] = c3.generate(donutConfig);
-                });
-              } else {
-                donutByMetric[metricID].load(donutData);
-              }
-            }
           });
 
-          metric.totalUsed = _.round(metric.totalUsed, 1);
-
           var columns = [dates].concat(_.values(values));
-
-          // Sparkline
 
           var sparklineConfig, sparklineData = {
             type: metric.chartType || 'spline',
@@ -397,6 +375,11 @@ angular.module('openshiftConsole')
         function metricsSucceeded() {
           // Reset the number of failures on a successful request.
           failureCount = 0;
+
+          _.each(scope.metrics, function(metric) {
+            updateSparkline(metric);
+            updateDonut(metric);
+          });
         }
 
         // If the first request for metrics fails, show an empty state error message.
@@ -452,6 +435,27 @@ angular.module('openshiftConsole')
           return scope.pod && _.get(scope, 'options.selectedContainer');
         }
 
+        function updateCurrentUsage(metric, dataset, response) {
+          dataset.total = getLimit(dataset.id);
+          if (dataset.total) {
+            scope.hasLimits = true;
+          }
+
+          var currentUsage = _.get(response, 'usage.value');
+          if (isNaN(currentUsage)) {
+            currentUsage = 0;
+          }
+          if (metric.convert) {
+            currentUsage = metric.convert(currentUsage);
+          }
+
+          dataset.used = _.round(currentUsage);
+          if (dataset.total) {
+            dataset.available = _.round(dataset.total - currentUsage);
+          }
+          metric.totalUsed += dataset.used;
+        }
+
         function updateData(dataset, response) {
           scope.noData = false;
 
@@ -484,6 +488,8 @@ angular.module('openshiftConsole')
           angular.forEach(scope.metrics, function(metric) {
             var datasetPromises = [];
 
+            metric.totalUsed = 0;
+
             // On metrics that require more than one set of data (e.g. network
             // incoming and outgoing traffic) we perform one request for each,
             // but collect and handle all requests in one single promise below.
@@ -498,6 +504,16 @@ angular.module('openshiftConsole')
               }
               var promise = MetricsService.get(config);
               datasetPromises.push(promise);
+
+              // Only request current usage if we have a limit. This lets us
+              // show consistent values inside the donut chart no matter what
+              // time range is selected.
+              var limit = getLimit(dataset.id);
+              if (limit) {
+                allPromises.push(MetricsService.getCurrentUsage(config).then(function(response) {
+                  updateCurrentUsage(metric, dataset, response);
+                }));
+              }
             });
 
             allPromises = allPromises.concat(datasetPromises);
@@ -520,7 +536,6 @@ angular.module('openshiftConsole')
                 });
                 updateData(dataset, response);
               });
-              updateChart(metric);
             });
           });
 
