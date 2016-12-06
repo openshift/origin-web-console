@@ -1950,7 +1950,7 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "<h4>{{imageSource.from | imageObjectRef : buildConfig.metadata.namespace}}</h4>\n" +
     "<dl class=\"dl-horizontal left\">\n" +
     "<div class=\"is-item-description\">\n" +
-    "<dt>Paths</dt>\n" +
+    "<dt>Paths:</dt>\n" +
     "<div ng-repeat=\"(source, destination) in imageSourcesPaths[$index]\" class=\"image-source-paths\">\n" +
     "<dd><span class=\"source-path\">{{source}}</span><i class=\"fa fa-long-arrow-right\"></i><span class=\"destination-dir\">{{destination}}</span></dd>\n" +
     "</div>\n" +
