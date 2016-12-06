@@ -1,14 +1,12 @@
 <status-icon status="build.status.phase" disable-animation fixed-width="true"></status-icon>
-{{build.status.phase | sentenceCase}}
-<span ng-switch="build.status.phase" class="hide-ng-leave">
-  <span ng-switch-when="Complete"> in {{(build.status.startTimestamp || build.metadata.creationTimestamp) | timeOnlyDurationFromTimestamps : build.status.completionTimestamp}}</span>
-  <span ng-switch-when="Failed">after <span ng-if="!build.status.startTimestamp">waiting </span>{{(build.status.startTimestamp || build.metadata.creationTimestamp) | timeOnlyDurationFromTimestamps : build.status.completionTimestamp}}</span>
-  <span ng-switch-when="Cancelled"> after {{(build.status.startTimestamp || build.metadata.creationTimestamp) | timeOnlyDurationFromTimestamps : build.status.completionTimestamp}}</span>
-  <span ng-switch-when="Running"> for <time-only-duration-until-now timestamp="build.status.startTimestamp" time-only></time-only-duration-until-now></span>
-  <span ng-switch-when="New">, waiting for <time-only-duration-until-now timestamp="build.metadata.creationTimestamp"></time-only-duration-until-now></span>
-  <span ng-switch-when="Pending"> for <time-only-duration-until-now timestamp="build.metadata.creationTimestamp"></time-only-duration-until-now></span>
-  <span ng-switch-default>
-    <span ng-if="build.status.startTimestamp">, finished in {{build.status.startTimestamp | timeOnlyDurationFromTimestamps : build.status.completionTimestamp}}</span>
-    <span ng-if="!build.status.startTimestamp">, waited for {{build.metadata.creationTimestamp | timeOnlyDurationFromTimestamps : build.status.completionTimestamp}}</span>
-  </span>
+<span ng-if="!build.status.reason || build.status.phase === 'Cancelled'">{{build.status.phase}}</span>
+<span ng-if="build.status.reason && build.status.phase !== 'Cancelled'">{{build.status.reason | sentenceCase}}</span><span
+  ng-switch="build.status.phase" class="hide-ng-leave" ng-if="build.status.startTimestamp"><span
+    ng-switch-when="Complete">, ran for {{build.status.startTimestamp | timeOnlyDurationFromTimestamps : build.status.completionTimestamp}}</span><span
+    ng-switch-when="Failed">, ran for {{build.status.startTimestamp | timeOnlyDurationFromTimestamps : build.status.completionTimestamp}}</span><span
+    ng-switch-when="Cancelled"> after {{build.status.startTimestamp | timeOnlyDurationFromTimestamps : build.status.completionTimestamp}}</span><span
+    ng-switch-when="Running"> for <time-only-duration-until-now timestamp="build.status.startTimestamp" time-only></time-only-duration-until-now></span><span
+    ng-switch-when="New"></span><span
+    ng-switch-when="Pending"></span><span
+    ng-switch-default>, ran for {{build.status.startTimestamp | duration : build.status.completionTimestamp}}</span>
 </span>
