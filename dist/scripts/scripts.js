@@ -2982,6 +2982,28 @@ data:g(b.data)
 });
 });
 },
+getCurrentUsage:function(a) {
+return j(a).then(function(c) {
+if (!c) return null;
+var d = {
+bucketDuration:"1mn",
+start:"-1mn"
+};
+return b.get(c, {
+auth:{},
+headers:{
+Accept:"application/json",
+"Hawkular-Tenant":a.namespace
+},
+params:d
+}).then(function(b) {
+return _.assign(b, {
+metricID:a.metric,
+usage:_.head(g(b.data))
+});
+});
+});
+},
 getPodMetrics:t
 };
 } ]), angular.module("openshiftConsole").factory("StorageService", [ "APIService", "DataService", function(a, b) {
@@ -10742,80 +10764,80 @@ if (!k.pod) return null;
 var b = k.options.selectedContainer;
 switch (a) {
 case "memory/usage":
-var c = z(b);
+var c = B(b);
 if (c) return h.bytesToMiB(j(c));
 break;
 
 case "cpu/usage_rate":
-var d = A(b);
+var d = C(b);
 if (d) return _.round(1e3 * j(d));
 }
 return null;
 }
 function m(a) {
+var b = _.head(a.datasets);
+if (b.total) {
+var c, e = {
+type:"donut",
+columns:[ [ "Used", b.used ], [ "Available", Math.max(b.available, 0) ] ],
+colors:{
+Used:b.available > 0 ? "#0088ce" :"#ec7a08",
+Available:"#d1d1d1"
+}
+};
+z[b.id] ? z[b.id].load(e) :(c = H(a), c.data = e, d(function() {
+F || (z[b.id] = c3.generate(c));
+}));
+}
+}
+function n(a) {
 var b, c = {}, e = _.some(a.datasets, function(a) {
 return !a.data;
 });
 if (!e) {
-a.totalUsed = 0;
-var f = 0;
-angular.forEach(a.datasets, function(e) {
-var g = e.id, h = e.data;
-b = [ "dates" ], c[g] = [ e.label || g ], e.total = l(g), e.total && (k.hasLimits = !0);
-var i = _.last(h).value;
-isNaN(i) && (i = 0), a.convert && (i = a.convert(i)), e.used = i, e.total && (e.available = e.total - e.used), a.totalUsed += e.used, angular.forEach(h, function(d) {
-if (b.push(d.start), void 0 === d.value || null === d.value) c[g].push(d.value); else {
-var e = a.convert ? a.convert(d.value) :d.value;
-switch (g) {
+angular.forEach(a.datasets, function(d) {
+var e = d.id, f = d.data;
+b = [ "dates" ], c[e] = [ d.label || e ], angular.forEach(f, function(d) {
+if (b.push(d.start), void 0 === d.value || null === d.value) c[e].push(d.value); else {
+var f = a.convert ? a.convert(d.value) :d.value;
+switch (e) {
 case "memory/usage":
 case "network/rx":
 case "network/tx":
-c[g].push(d3.round(e, 2));
+c[e].push(d3.round(f, 2));
 break;
 
 default:
-c[g].push(d3.round(e));
+c[e].push(d3.round(f));
 }
-f = Math.max(e, f);
 }
-}), e.used = _.round(e.used), e.total = _.round(e.total), e.available = _.round(e.available);
-var j, m;
-e.total && (m = {
-type:"donut",
-columns:[ [ "Used", e.used ], [ "Available", Math.max(e.available, 0) ] ],
-colors:{
-Used:e.available > 0 ? "#0088ce" :"#ec7a08",
-Available:"#d1d1d1"
-}
-}, x[g] ? x[g].load(m) :(j = F(a), j.data = m, d(function() {
-x[g] = c3.generate(j);
-})));
-}), a.totalUsed = _.round(a.totalUsed, 1);
-var g, h = [ b ].concat(_.values(c)), i = {
+});
+});
+var f, g = [ b ].concat(_.values(c)), h = {
 type:a.chartType || "spline",
 x:"dates",
-columns:h
-}, j = a.chartPrefix + "sparkline";
-y[j] ? y[j].load(i) :(g = G(a), g.data = i, a.chartDataColors && (g.color = {
+columns:g
+}, i = a.chartPrefix + "sparkline";
+A[i] ? A[i].load(h) :(f = I(a), f.data = h, a.chartDataColors && (f.color = {
 pattern:a.chartDataColors
 }), d(function() {
-D || (y[j] = c3.generate(g));
+F || (A[i] = c3.generate(f));
 }));
 }
 }
-function n() {
+function o() {
 return "-" + k.options.timeRange.value + "mn";
 }
-function o() {
+function p() {
 return 60 * k.options.timeRange.value * 1e3;
 }
-function p() {
-return Math.floor(o() / C) + "ms";
+function q() {
+return Math.floor(p() / E) + "ms";
 }
-function q(a, b, c) {
+function r(a, b, c) {
 var d, e = {
 metric:b.id,
-bucketDuration:p()
+bucketDuration:q()
 };
 return b.data && b.data.length ? (d = _.last(b.data), e.start = d.end) :e.start = c, k.pod ? _.assign(e, {
 namespace:k.pod.metadata.namespace,
@@ -10823,16 +10845,18 @@ pod:k.pod,
 containerName:a.containerMetric ? k.options.selectedContainer.name :"pod"
 }) :null;
 }
-function r() {
-H = 0;
+function s() {
+J = 0, _.each(k.metrics, function(a) {
+n(a), m(a);
+});
 }
-function s(a) {
-if (!D) {
-if (H++, k.noData) return void (k.metricsError = {
+function t(a) {
+if (!F) {
+if (J++, k.noData) return void (k.metricsError = {
 status:_.get(a, "status", 0),
 details:_.get(a, "data.errorMsg") || _.get(a, "statusText") || "Status code " + _.get(a, "status", 0)
 });
-if (!(H < 2)) {
+if (!(J < 2)) {
 var b = "metrics-failed-" + k.uniqueID;
 k.alerts[b] = {
 type:"error",
@@ -10841,49 +10865,58 @@ links:[ {
 href:"",
 label:"Retry",
 onClick:function() {
-delete k.alerts[b], H = 1, v();
+delete k.alerts[b], J = 1, x();
 }
 } ]
 };
 }
 }
 }
-function t() {
-return !(k.metricsError || H > 1) && (k.pod && _.get(k, "options.selectedContainer"));
+function u() {
+return !(k.metricsError || J > 1) && (k.pod && _.get(k, "options.selectedContainer"));
 }
-function u(a, b) {
+function v(a, b, c) {
+b.total = l(b.id), b.total && (k.hasLimits = !0);
+var d = _.get(c, "usage.value");
+isNaN(d) && (d = 0), a.convert && (d = a.convert(d)), b.used = _.round(d), b.total && (b.available = _.round(b.total - d)), a.totalUsed += b.used;
+}
+function w(a, b) {
 k.noData = !1;
 var c = _.initial(b.data);
-return a.data ? void (a.data = _.chain(a.data).takeRight(C).concat(c).value()) :void (a.data = c);
+return a.data ? void (a.data = _.chain(a.data).takeRight(E).concat(c).value()) :void (a.data = c);
 }
-function v() {
-if (t()) {
-var a = n(), b = [];
+function x() {
+if (u()) {
+var a = o(), b = [];
 angular.forEach(k.metrics, function(c) {
 var d = [];
-angular.forEach(c.datasets, function(b) {
-var e = q(c, b, a);
-if (e) {
-var f = i.get(e);
-d.push(f);
+c.totalUsed = 0, angular.forEach(c.datasets, function(e) {
+var f = r(c, e, a);
+if (f) {
+var g = i.get(f);
+d.push(g);
+var h = l(e.id);
+h && b.push(i.getCurrentUsage(f).then(function(a) {
+v(c, e, a);
+}));
 }
 }), b = b.concat(d), e.all(d).then(function(a) {
-D || (angular.forEach(a, function(a) {
+F || angular.forEach(a, function(a) {
 if (a) {
 var b = _.find(c.datasets, {
 id:a.metricID
 });
-u(b, a);
+w(b, a);
 }
-}), m(c));
 });
-}), e.all(b).then(r, s)["finally"](function() {
+});
+}), e.all(b).then(s, t)["finally"](function() {
 k.loaded = !0;
 });
 }
 }
 k.includedMetrics = k.includedMetrics || [ "cpu", "memory", "network" ];
-var w, x = {}, y = {}, z = c("resources.limits.memory"), A = c("resources.limits.cpu"), B = 6e4, C = 30, D = !1;
+var y, z = {}, A = {}, B = c("resources.limits.memory"), C = c("resources.limits.cpu"), D = 6e4, E = 30, F = !1;
 k.uniqueID = _.uniqueId("metrics-chart-"), k.metrics = [], _.includes(k.includedMetrics, "memory") && k.metrics.push({
 label:"Memory",
 units:"MiB",
@@ -10941,12 +10974,12 @@ label:"Last week",
 value:10080
 } ]
 }, k.options.timeRange = _.head(k.options.rangeOptions);
-var E = a("upperFirst"), F = function(a) {
+var G = a("upperFirst"), H = function(a) {
 var b = "#" + a.chartPrefix + k.uniqueID + "-donut";
 return {
 bindto:b,
 onrendered:function() {
-g.updateDonutCenterText(b, a.datasets[0].used, E(a.units) + " Used");
+g.updateDonutCenterText(b, a.datasets[0].used, G(a.units) + " Used");
 },
 donut:{
 label:{
@@ -10962,7 +10995,7 @@ height:175,
 widht:175
 }
 };
-}, G = function(a) {
+}, I = function(a) {
 return {
 bindto:"#" + a.chartPrefix + k.uniqueID + "-sparkline",
 axis:{
@@ -11012,29 +11045,29 @@ return d3.round(b, 2) + " " + a.units;
 }
 }
 };
-}, H = 0;
+}, J = 0;
 k.$watch("options", function() {
 _.each(k.metrics, function(a) {
 _.each(a.datasets, function(a) {
 delete a.data;
 });
-}), delete k.metricsError, v();
-}, !0), w = b(v, B, !1), f.$on("metrics.charts.resize", function() {
-_.each(x, function(a) {
+}), delete k.metricsError, x();
+}, !0), y = b(x, D, !1), f.$on("metrics.charts.resize", function() {
+_.each(z, function(a) {
 setTimeout(function() {
 a.flush();
 });
-}), _.each(y, function(a) {
+}), _.each(A, function(a) {
 setTimeout(function() {
 a.flush();
 });
 });
 }), k.$on("$destroy", function() {
-w && (b.cancel(w), w = null), angular.forEach(x, function(a) {
+y && (b.cancel(y), y = null), angular.forEach(z, function(a) {
 a.destroy();
-}), x = null, angular.forEach(y, function(a) {
+}), z = null, angular.forEach(A, function(a) {
 a.destroy();
-}), y = null, D = !0;
+}), A = null, F = !0;
 });
 }
 };
