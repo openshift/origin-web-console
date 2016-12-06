@@ -1247,7 +1247,8 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "<dt>Status:</dt>\n" +
     "<dd>\n" +
     "<status-icon status=\"build.status.phase\"></status-icon>\n" +
-    "{{build.status.phase}}\n" +
+    "<span ng-if=\"!build.status.message || build.status.phase === 'Cancelled'\">{{build.status.phase}}</span>\n" +
+    "<span ng-if=\"build.status.message && build.status.phase !== 'Cancelled'\">{{build.status.message}}</span>\n" +
     "<span ng-if=\"build | jenkinsLogURL\">\n" +
     "<span class=\"text-muted\">&ndash;</span>\n" +
     "<a ng-href=\"{{build | jenkinsLogURL}}\" target=\"_blank\">View Log</a>\n" +
@@ -1861,6 +1862,7 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "<tr>\n" +
     "<th>Build</th>\n" +
     "<th>Status</th>\n" +
+    "<th>Duration</th>\n" +
     "<th>Created</th>\n" +
     "</tr>\n" +
     "</thead>\n" +
@@ -1877,12 +1879,17 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "<span ng-if=\"!(build | annotation : 'buildNumber')\">\n" +
     "<a ng-href=\"{{build | navigateResourceURL}}\">{{build.metadata.name}}</a>\n" +
     "</span>\n" +
-    "<span ng-if=\"build.status.message\" class=\"pficon pficon-warning-triangle-o\" style=\"cursor: help\" data-toggle=\"popover\" data-trigger=\"hover\" dynamic-content=\"{{build.status.message}}\"></span>\n" +
     "</td>\n" +
     "<td data-title=\"Status\">\n" +
     "<div row class=\"status\">\n" +
-    "<build-status build=\"build\"></build-status>\n" +
+    "<status-icon status=\"build.status.phase\" disable-animation fixed-width=\"true\"></status-icon>\n" +
+    "<span ng-if=\"build.status.phase ==='Failed'\">{{(build.status.reason || build.status.phase) | sentenceCase}}</span>\n" +
+    "<span ng-if=\"build.status.phase !== 'Failed'\">{{build.status.phase | sentenceCase}}</span>\n" +
     "</div>\n" +
+    "</td>\n" +
+    "<td data-title=\"Duration\">\n" +
+    "<duration-until-now ng-if=\"build.status.startTimestamp && !build.status.completionTimestamp\" timestamp=\"build.status.startTimestamp\" time-only></duration-until-now>\n" +
+    "<span ng-if=\"build.status.startTimestamp && build.status.completionTimestamp\">{{build.status.startTimestamp | duration : build.status.completionTimestamp}}</span>\n" +
     "</td>\n" +
     "<td data-title=\"Created\">\n" +
     "<span am-time-ago=\"build.metadata.creationTimestamp\"></span>\n" +
@@ -2136,7 +2143,6 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "<div ng-if=\"build\">\n" +
     "<h1>\n" +
     "{{build.metadata.name}}\n" +
-    "<span ng-if=\"build.status.message\" class=\"pficon pficon-warning-triangle-o\" style=\"cursor: help\" data-toggle=\"popover\" data-trigger=\"hover\" dynamic-content=\"{{build.status.message}}\"></span>\n" +
     "<span class=\"pficon pficon-warning-triangle-o\" ng-if=\"buildConfigPaused || buildConfigDeleted\" aria-hidden=\"true\" data-toggle=\"tooltip\" data-original-title=\"{{buildConfigDeleted ? 'The build configuration for this build no longer exists.' : 'Building from build configuration ' + buildConfig.metadata.name + ' has been paused.'}}\">\n" +
     "</span>\n" +
     "<small class=\"meta\">created <span am-time-ago=\"build.metadata.creationTimestamp\"></span></small>\n" +
@@ -3930,6 +3936,7 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "<th>Name</th>\n" +
     "<th>Last Build</th>\n" +
     "<th>Status</th>\n" +
+    "<th>Duration</th>\n" +
     "<th>Created</th>\n" +
     "<th>Type</th>\n" +
     "<th>Source</th>\n" +
@@ -3974,8 +3981,15 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "</td>\n" +
     "<td data-title=\"Status\">\n" +
     "<div row class=\"status\">\n" +
-    "<build-status build=\"latestBuild\"></build-status>\n" +
+    "\n" +
+    "<status-icon status=\"latestBuild.status.phase\" disable-animation fixed-width=\"true\"></status-icon>\n" +
+    "<span ng-if=\"latestBuild.status.phase ==='Failed'\">{{(latestBuild.status.reason || latestBuild.status.phase) | sentenceCase}}</span>\n" +
+    "<span ng-if=\"latestBuild.status.phase !== 'Failed'\">{{latestBuild.status.phase | sentenceCase}}</span>\n" +
     "</div>\n" +
+    "</td>\n" +
+    "<td data-title=\"Duration\">\n" +
+    "<duration-until-now ng-if=\"latestBuild.status.startTimestamp && !latestBuild.status.completionTimestamp\" timestamp=\"latestBuild.status.startTimestamp\" time-only></duration-until-now>\n" +
+    "<span ng-if=\"latestBuild.status.startTimestamp && latestBuild.status.completionTimestamp\">{{latestBuild.status.startTimestamp | duration : latestBuild.status.completionTimestamp}}</span>\n" +
     "</td>\n" +
     "<td data-title=\"Created\">\n" +
     "<span am-time-ago=\"latestBuild.metadata.creationTimestamp\"></span>\n" +

@@ -181,6 +181,7 @@
                           <tr>
                             <th>Build</th>
                             <th>Status</th>
+                            <th>Duration</th>
                             <th>Created</th>
                           </tr>
                         </thead>
@@ -197,12 +198,17 @@
                               <span ng-if="!(build | annotation : 'buildNumber')">
                                 <a ng-href="{{build | navigateResourceURL}}">{{build.metadata.name}}</a>
                               </span>
-                              <span ng-if="build.status.message" class="pficon pficon-warning-triangle-o" style="cursor: help;" data-toggle="popover" data-trigger="hover" dynamic-content="{{build.status.message}}"></span>
                             </td>
                             <td data-title="Status">
                               <div row class="status">
-                                <build-status build="build"></build-status>
+                                <status-icon status="build.status.phase" disable-animation fixed-width="true"></status-icon>
+                                <span ng-if="build.status.phase ==='Failed'">{{(build.status.reason || build.status.phase) | sentenceCase}}</span>
+                                <span ng-if="build.status.phase !== 'Failed'">{{build.status.phase | sentenceCase}}</span>
                               </div>
+                            </td>
+                            <td data-title="Duration">
+                              <duration-until-now ng-if="build.status.startTimestamp && !build.status.completionTimestamp" timestamp="build.status.startTimestamp" time-only></duration-until-now>
+                              <span ng-if="build.status.startTimestamp && build.status.completionTimestamp">{{build.status.startTimestamp | duration : build.status.completionTimestamp}}</span>
                             </td>
                             <td data-title="Created">
                               <span am-time-ago="build.metadata.creationTimestamp"></span>

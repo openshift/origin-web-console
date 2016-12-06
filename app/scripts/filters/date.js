@@ -10,6 +10,10 @@ angular.module('openshiftConsole')
       timestampRhs = timestampRhs || new Date(); // moment expects either an ISO format string or a Date object
 
       var ms = moment(timestampRhs).diff(timestampLhs);
+      if (ms < 0) {
+        // Don't show negative durations
+        ms = 0;
+      }
       var duration = moment.duration(ms);
       // the out of the box humanize in moment.js rounds to the nearest time unit
       // but we need more details
@@ -30,7 +34,7 @@ angular.module('openshiftConsole')
           if (omitSingle) {
             humanizedDuration.push(singularText);
           } else {
-            humanizedDuration.push("one " + singularText);
+            humanizedDuration.push("1 " + singularText);
           }
 
           return;
@@ -54,7 +58,7 @@ angular.module('openshiftConsole')
           return "minute";
         }
 
-        return "one minute";
+        return "1 minute";
       }
 
       if (humanizedDuration.length === 0) {

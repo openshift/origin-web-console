@@ -12878,12 +12878,14 @@ return a;
 }), angular.module("openshiftConsole").filter("duration", function() {
 return function(a, b, c, d) {
 function e(a, b, d) {
-if (0 !== a) return 1 === a ? void (c ? h.push(b) :h.push("one " + b)) :void h.push(a + " " + d);
+if (0 !== a) return 1 === a ? void (c ? h.push(b) :h.push("1 " + b)) :void h.push(a + " " + d);
 }
 if (!a) return a;
 d = d || 2, b = b || new Date();
-var f = moment(b).diff(a), g = moment.duration(f), h = [], i = g.years(), j = g.months(), k = g.days(), l = g.hours(), m = g.minutes(), n = g.seconds();
-return e(i, "year", "years"), e(j, "month", "months"), e(k, "day", "days"), e(l, "hour", "hours"), e(m, "minute", "minutes"), e(n, "second", "seconds"), 1 === h.length && n && 1 === d ? c ? "minute" :"one minute" :(0 === h.length && h.push("0 seconds"), h.length > d && (h.length = d), h.join(", "));
+var f = moment(b).diff(a);
+f < 0 && (f = 0);
+var g = moment.duration(f), h = [], i = g.years(), j = g.months(), k = g.days(), l = g.hours(), m = g.minutes(), n = g.seconds();
+return e(i, "year", "years"), e(j, "month", "months"), e(k, "day", "days"), e(l, "hour", "hours"), e(m, "minute", "minutes"), e(n, "second", "seconds"), 1 === h.length && n && 1 === d ? c ? "minute" :"1 minute" :(0 === h.length && h.push("0 seconds"), h.length > d && (h.length = d), h.join(", "));
 };
 }).filter("ageLessThan", function() {
 return function(a, b, c) {
