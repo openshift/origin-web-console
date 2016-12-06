@@ -4578,12 +4578,16 @@ to{background-color:transparent}
 @media (min-width:600px){.build-links,.build-timestamp{padding-top:0}
 .build-pipeline{-webkit-flex-direction:row;-moz-flex-direction:row;-ms-flex-direction:row;flex-direction:row;display:-webkit-flex;display:-moz-flex;display:-ms-flexbox;display:-ms-flex;display:flex}
 .build-pipeline .build-name{white-space:nowrap}
-.build-summary{border-bottom-width:0;border-right:1px solid #d1d1d1;-webkit-flex:0 0 175px;-moz-flex:0 0 175px;-ms-flex:0 0 175px;flex:0 0 175px;-webkit-flex-direction:column;-moz-flex-direction:column;-ms-flex-direction:column;flex-direction:column;-webkit-justify-content:center;-moz-justify-content:center;justify-content:center}
+.build-summary{border-bottom-width:0;border-right:1px solid #d1d1d1;-webkit-flex:0 0 125px;-moz-flex:0 0 125px;-ms-flex:0 0 125px;flex:0 0 125px;-webkit-flex-direction:column;-moz-flex-direction:column;-ms-flex-direction:column;flex-direction:column;-webkit-justify-content:center;-moz-justify-content:center;justify-content:center}
 }
 .console-os .top-header,.pipeline-status-bar{display:-webkit-flex;display:-moz-flex;display:-ms-flexbox;display:-ms-flex}
-@media (min-width:992px){.pipeline .pipeline-stage{width:33.333333%}
+@media (min-width:992px){.pipeline .pipeline-stage{width:25%}
 }
-@media (min-width:1200px){.pipeline .pipeline-stage{width:25%}
+@media (min-width:1200px){.pipeline .pipeline-stage{width:20%}
+}
+@media (min-width:1400px){.pipeline .pipeline-stage{width:16.66666667%}
+}
+@media (min-width:1600px){.pipeline .pipeline-stage{width:14.28571429%}
 }
 .pipeline-status-bar .clip1:before,.pipeline-status-bar .clip2:before,.pipeline-status-bar .pipeline-line:before{background-color:#d1d1d1}
 .pipeline-status-bar .inner-circle-fill{background-color:#fff;opacity:0}
