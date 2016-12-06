@@ -2867,8 +2867,8 @@ removeSubject:j
 };
 } ]), angular.module("openshiftConsole").factory("MetricsService", [ "$filter", "$http", "$q", "$rootScope", "APIDiscovery", function(a, b, c, d, e) {
 function f() {
-return angular.isDefined(l) ? c.when(l) :e.getMetricsURL().then(function(a) {
-return l = (a || "").replace(/\/$/, "");
+return angular.isDefined(k) ? c.when(k) :e.getMetricsURL().then(function(a) {
+return k = (a || "").replace(/\/$/, "");
 });
 }
 function g(a) {
@@ -2888,47 +2888,33 @@ return a ? a + "/metrics/stats/query" :a;
 });
 }
 function j(a) {
-switch (a) {
-case "network/rx_rate":
-case "network/tx_rate":
-return "pod";
-
-default:
-return "pod_container";
-}
-}
-function k(a) {
 return f().then(function(b) {
-var c, d = j(a.metric);
-return a.stacked ? (c = b + p, URI.expand(c, {
-podUID:a.pod.metadata.uid,
-metric:a.metric,
-type:d
-}).toString()) :(c = b + o, URI.expand(c, {
+var c = b + n;
+return URI.expand(c, {
 podUID:a.pod.metadata.uid,
 containerName:a.containerName,
 metric:a.metric
-}).toString());
+}).toString();
 });
 }
-var l, m, n, o = "/gauges/{containerName}%2F{podUID}%2F{metric}/data", p = "/gauges/data?stacked=true&tags=descriptor_name:{metric},type:{type},pod_id:{podUID}", q = function(a) {
+var k, l, m, n = "/gauges/{containerName}%2F{podUID}%2F{metric}/data", o = function(a) {
 return f().then(function(c) {
-return !!c && (!a || (!!m || !n && b.get(c).then(function() {
-return m = !0, !0;
+return !!c && (!a || (!!l || !m && b.get(c).then(function() {
+return l = !0, !0;
 }, function(a) {
-return n = !0, d.$broadcast("metrics-connection-failed", {
+return m = !0, d.$broadcast("metrics-connection-failed", {
 url:c,
 response:a
 }), !1;
 })));
 });
-}, r = function(a) {
+}, p = function(a) {
 var b = a.split("/");
 return {
 podUID:b[1],
 descriptor:b[2] + "/" + b[3]
 };
-}, s = function(a, c, d) {
+}, q = function(a, c, d) {
 var e = _.indexBy(d.pods, "metadata.uid");
 return b.post(a, c, {
 auth:{},
@@ -2939,12 +2925,12 @@ Accept:"application/json",
 }
 }).then(function(a) {
 var b = {}, c = function(a, c) {
-var d = r(c), f = _.get(e, [ d.podUID, "metadata", "name" ]), h = g(a);
+var d = p(c), f = _.get(e, [ d.podUID, "metadata", "name" ]), h = g(a);
 _.set(b, [ d.descriptor, f ], h);
 };
 return _.each(a.data.counter, c), _.each(a.data.gauge, c), b;
 });
-}, t = _.template("descriptor_name:network/tx_rate|network/rx_rate,type:pod,pod_id:<%= uid %>"), u = _.template("descriptor_name:memory/usage|cpu/usage_rate,type:pod_container,pod_id:<%= uid %>,container_name:<%= containerName %>"), v = function(a) {
+}, r = _.template("descriptor_name:network/tx_rate|network/rx_rate,type:pod,pod_id:<%= uid %>"), s = _.template("descriptor_name:memory/usage|cpu/usage_rate,type:pod_container,pod_id:<%= uid %>,container_name:<%= containerName %>"), t = function(a) {
 return i().then(function(b) {
 var d = {
 bucketDuration:a.bucketDuration,
@@ -2952,18 +2938,18 @@ start:a.start
 };
 a.end && (d.end = a.end);
 var e = [], f = h(_.map(a.pods, "metadata.uid")), g = _.assign({
-tags:u({
+tags:s({
 uid:f,
 containerName:a.containerName
 })
 }, d);
-e.push(s(b, g, a));
+e.push(q(b, g, a));
 var i = _.assign({
-tags:t({
+tags:r({
 uid:f
 })
 }, d);
-return e.push(s(b, i, a)), c.all(e).then(function(a) {
+return e.push(q(b, i, a)), c.all(e).then(function(a) {
 var b = {};
 return _.each(a, function(a) {
 _.assign(b, a);
@@ -2972,10 +2958,10 @@ _.assign(b, a);
 });
 };
 return {
-isAvailable:q,
+isAvailable:o,
 getMetricsURL:f,
 get:function(a) {
-return k(a).then(function(c) {
+return j(a).then(function(c) {
 if (!c) return null;
 var d = {
 bucketDuration:a.bucketDuration,
@@ -2996,7 +2982,7 @@ data:g(b.data)
 });
 });
 },
-getPodMetrics:v
+getPodMetrics:t
 };
 } ]), angular.module("openshiftConsole").factory("StorageService", [ "APIService", "DataService", function(a, b) {
 return {

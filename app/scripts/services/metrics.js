@@ -3,7 +3,6 @@
 angular.module("openshiftConsole")
   .factory("MetricsService", function($filter, $http, $q, $rootScope, APIDiscovery) {
     var POD_GAUGE_TEMPLATE = "/gauges/{containerName}%2F{podUID}%2F{metric}/data";
-    var POD_STACKED_TEMPLATE = "/gauges/data?stacked=true&tags=descriptor_name:{metric},type:{type},pod_id:{podUID}";
 
     var metricsURL;
     function getMetricsURL() {
@@ -49,33 +48,9 @@ angular.module("openshiftConsole")
       });
     }
 
-    function getMetricType(metric) {
-      switch (metric) {
-        case 'network/rx_rate':
-        case 'network/tx_rate':
-          return 'pod';
-        default:
-          return 'pod_container';
-      }
-    }
-
     function getRequestURL(config) {
       return getMetricsURL().then(function(metricsURL) {
-        var template;
-        var type = getMetricType(config.metric);
-
-        // Are we requesting stacked pod metrics?
-        if (config.stacked) {
-          template = metricsURL + POD_STACKED_TEMPLATE;
-          return URI.expand(template, {
-            podUID: config.pod.metadata.uid,
-            metric: config.metric,
-            type: type
-          }).toString();
-        }
-
-        // Otherwise, get metrics for a pod.
-        template = metricsURL + POD_GAUGE_TEMPLATE;
+        var template = metricsURL + POD_GAUGE_TEMPLATE;
         return URI.expand(template, {
           podUID: config.pod.metadata.uid,
           containerName: config.containerName,
