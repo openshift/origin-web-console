@@ -11,6 +11,7 @@ angular.module("openshiftConsole")
     var annotation = $filter('annotation');
     var buildConfigForBuild = $filter('buildConfigForBuild');
     var isPipeline = $filter('isJenkinsPipelineStrategy');
+    var displayNameFilter = $filter('displayName');
 
     // Get the type segment for build URLs. `resource` can be a build or build config.
     var getBuildURLType = function(resource, opts) {
@@ -69,18 +70,28 @@ angular.module("openshiftConsole")
         return "project/" + encodeURIComponent(projectName) + "/overview";
       },
 
-      /**
-       * Return the URL for the fromTemplate page for the picked template
-       *
-       * @param {String}      projectName  Project name
-       * @param {String}      name         Template name
-       * @param {String}      namespace    Namespace from which the Template should be loaded
-       * @returns {String} a URL string for the fromTemplate page. If the namespace is not set
-       * read the template from TemplateService.
-       */
-      fromTemplateURL: function(projectName, name, namespace){
-        namespace = namespace || "";
-        return "project/" + encodeURIComponent(projectName) + "/create/fromtemplate?name=" + name + "&namespace=" + namespace;
+      createFromImageURL: function(imageStream, imageTag, projectName, queryParams) {
+        var createURI = URI.expand("project/{project}/create/fromimage{?q*}", {
+          project: projectName,
+          q: angular.extend ({
+            imageStream: imageStream.metadata.name,
+            imageTag: imageTag,
+            namespace: imageStream.metadata.namespace,
+            displayName: displayNameFilter(imageStream)
+          }, queryParams || {})
+        });
+        return createURI.toString();
+      },
+
+      createFromTemplateURL: function(template, projectName, queryParams) {
+        var createURI = URI.expand("project/{project}/create/fromtemplate{?q*}", {
+          project: projectName,
+          q: angular.extend ({
+            template: template.metadata.name,
+            namespace: template.metadata.namespace
+          }, queryParams || {})
+        });
+        return createURI.toString();
       },
 
       /**

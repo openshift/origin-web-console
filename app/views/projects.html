@@ -121,11 +121,7 @@
                         </div>
                       </div>
                     </div>
-                    <p class="projects-instructions" ng-if="canCreate === false">
-                      <span ng-if="!newProjectMessage">A cluster admin can create a project for you by running the command
-                        <code>oadm new-project &lt;projectname&gt; --admin={{user.metadata.name || '&lt;YourUsername&gt;'}}</code></span>
-                      <span ng-if="newProjectMessage" ng-bind-html="newProjectMessage | linky : '_blank'" class="projects-instructions-link"></span>
-                    </p>
+                    <p class="projects-instructions" ng-if="canCreate === false" ng-include="'views/_cannot-create-project.html'"></p>
                   </div>
                 </div>
 
@@ -138,11 +134,7 @@
                     </p>
                     <a ng-if="canCreate" href="create-project" class="btn btn-lg btn-primary">New Project</a>
                     <p>To learn more, visit the OpenShift <a target="_blank" ng-href="{{'' | helpLink}}">documentation</a>.</p>
-                    <p class="projects-instructions" ng-if="canCreate === false">
-                      <span ng-if="!newProjectMessage">A cluster admin can create a project for you by running the command<br>
-                        <code>oadm new-project &lt;projectname&gt; --admin={{user.metadata.name || '&lt;YourUsername&gt;'}}</code></span>
-                        <span ng-if="newProjectMessage" ng-bind-html="newProjectMessage | linky : '_blank'" class="projects-instructions-link"></span>
-                    </p>
+                    <p class="projects-instructions" ng-if="canCreate === false" ng-include="'views/_cannot-create-project.html'"></p>
                   </div>
                 </div>
 

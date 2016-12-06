@@ -17,7 +17,8 @@ angular.module('openshiftConsole')
                                               AuthService,
                                               DataService,
                                               KeywordService,
-                                              Logger) {
+                                              Logger,
+                                              ProjectsService) {
     var projects, sortedProjects;
     var watches = [];
     var filterKeywords = [];
@@ -129,7 +130,8 @@ angular.module('openshiftConsole')
 
     // Test if the user can submit project requests. Handle error notifications
     // ourselves because 403 responses are expected.
-    DataService.get("projectrequests", null, $scope, { errorNotification: false})
+  ProjectsService
+    .canCreate()
     .then(function() {
       $scope.canCreate = true;
     }, function(result) {

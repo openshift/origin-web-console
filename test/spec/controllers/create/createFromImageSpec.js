@@ -7,7 +7,7 @@ describe("CreateFromImageController", function(){
     projectName: "aProjectName"
   };
   var $routeParams = {
-    imageName: "anImageName",
+    imageStream: "anImageName",
     imageTag: "latest",
     namespace: "aNamespace"
   };

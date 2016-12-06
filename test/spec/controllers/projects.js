@@ -64,6 +64,13 @@ describe('Controller: ProjectsController', function () {
           deferred.resolve({});
           return deferred.promise;
         }
+      },
+      ProjectsService: {
+        canCreate: function() {
+          var deferred = $q.defer();
+          deferred.resolve({});
+          return deferred.promise;
+        }
       }
     });
   }));

@@ -381,6 +381,10 @@ angular
         templateUrl: 'views/util/logout.html',
         controller: 'LogoutController'
       })
+      .when('/create', {
+        templateUrl: 'views/create-from-url.html',
+        controller: 'CreateFromURLController'
+      })
       // legacy redirects
       .when('/createProject', {
         redirectTo: '/create-project'

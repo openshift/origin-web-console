@@ -248,7 +248,7 @@ angular.module("openshiftConsole")
           var path;
           if ($scope.resourceKind === "Template" && $scope.templateOptions.process && !$scope.errorOccured) {
             var namespace = ($scope.templateOptions.add || $scope.updateResources.length > 0) ? $scope.projectName : "";
-            path = Navigate.fromTemplateURL($scope.projectName, $scope.resourceName, namespace);
+            path = Navigate.createFromTemplateURL($scope.resourceName, $scope.projectName, {namespace: namespace});
           } else {
             path = Navigate.projectOverviewURL($scope.projectName);
           }

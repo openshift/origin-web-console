@@ -32,7 +32,8 @@ angular.module('openshiftConsole')
                       return DataService
                               .get('projects', projectName, context, {errorNotification: false})
                               .then(function(project) {
-                                return AuthorizationService.getProjectRules(projectName)
+                                return AuthorizationService
+                                        .getProjectRules(projectName)
                                         .then(function() {
                                           context.project = project;
                                           context.projectPromise.resolve(project);
@@ -64,6 +65,9 @@ angular.module('openshiftConsole')
           update: function(projectName, data) {
             return DataService
                     .update('projects', projectName, cleanEditableAnnotations(data), {projectName: projectName}, {errorNotification: false});
+          },
+          canCreate: function() {
+            return DataService.get("projectrequests", null, {}, { errorNotification: false});
           }
         };
     });
