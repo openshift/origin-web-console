@@ -301,7 +301,8 @@ angular.module('openshiftConsole')
             $scope.strategyData[$scope.strategyParamsPropertyName][hookType].execNewPod.env = keyValueEditorUtils.compactEntries($scope.strategyData[$scope.strategyParamsPropertyName][hookType].execNewPod.env);
           }
         });
-      } else if (_.has($scope, 'strategyData.customParams.environment')) {
+      }
+      if (_.has($scope, 'strategyData.customParams.environment')) {
         $scope.strategyData.customParams.environment = keyValueEditorUtils.compactEntries($scope.strategyData.customParams.environment);
       }
       // Update image pull secrets 

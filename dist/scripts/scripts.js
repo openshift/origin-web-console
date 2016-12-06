@@ -7115,9 +7115,9 @@ var d = _.find(a.updatedDeploymentConfig.spec.template.spec.containers, {
 name:c
 });
 d.env = m.compactEntries(b.env);
-}), p() && delete a.strategyData[o(a.originalStrategy)], "Custom" !== a.strategyData.type ? _.each([ "pre", "mid", "post" ], function(b) {
+}), p() && delete a.strategyData[o(a.originalStrategy)], "Custom" !== a.strategyData.type && _.each([ "pre", "mid", "post" ], function(b) {
 _.has(a.strategyData, [ a.strategyParamsPropertyName, b, "execNewPod", "env" ]) && (a.strategyData[a.strategyParamsPropertyName][b].execNewPod.env = m.compactEntries(a.strategyData[a.strategyParamsPropertyName][b].execNewPod.env));
-}) :_.has(a, "strategyData.customParams.environment") && (a.strategyData.customParams.environment = m.compactEntries(a.strategyData.customParams.environment)), a.updatedDeploymentConfig.spec.template.spec.imagePullSecrets = _.filter(a.secrets.pullSecrets, "name"), a.updatedDeploymentConfig.spec.strategy = a.strategyData, a.updatedDeploymentConfig.spec.triggers = s(), i.update("deploymentconfigs", a.updatedDeploymentConfig.metadata.name, a.updatedDeploymentConfig, a.context).then(function() {
+}), _.has(a, "strategyData.customParams.environment") && (a.strategyData.customParams.environment = m.compactEntries(a.strategyData.customParams.environment)), a.updatedDeploymentConfig.spec.template.spec.imagePullSecrets = _.filter(a.secrets.pullSecrets, "name"), a.updatedDeploymentConfig.spec.strategy = a.strategyData, a.updatedDeploymentConfig.spec.triggers = s(), i.update("deploymentconfigs", a.updatedDeploymentConfig.metadata.name, a.updatedDeploymentConfig, a.context).then(function() {
 f.addAlert({
 name:a.updatedDeploymentConfig.metadata.name,
 data:{
