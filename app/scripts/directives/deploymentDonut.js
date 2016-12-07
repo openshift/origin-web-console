@@ -105,9 +105,12 @@ angular.module('openshiftConsole')
         $scope.viewPodsForDeployment = function(deployment) {
           if (hashSizeFilter($scope.pods) === 0) {
             return;
+          } else if (hashSizeFilter($scope.pods) === 1) {
+            // there should only be 1 pod, so navigate to it
+            Navigate.toResourceURL(_.sample($scope.pods));
+          } else {
+            Navigate.toPodsForDeployment(deployment);
           }
-
-          Navigate.toPodsForDeployment(deployment);
         };
 
         $scope.scaleUp = function() {

@@ -2252,6 +2252,9 @@ group:n.group
 }
 return i.toString();
 },
+toResourceURL:function(b) {
+a.url(this.resourceURL(b));
+},
 configURLForResource:function(a, b) {
 var c, d, e = _.get(a, "kind"), f = _.get(a, "metadata.namespace");
 if (!e || !f) return null;
@@ -11907,7 +11910,7 @@ return e.scale(a, b.desiredReplicas).then(_.noop, m);
 }
 }, p = _.debounce(o, 650);
 b.viewPodsForDeployment = function(a) {
-0 !== j(b.pods) && i.toPodsForDeployment(a);
+0 !== j(b.pods) && (1 === j(b.pods) ? i.toResourceURL(_.sample(b.pods)) :i.toPodsForDeployment(a));
 }, b.scaleUp = function() {
 b.scalable && (b.desiredReplicas = b.getDesiredReplicas(), b.desiredReplicas++, p(), c = !0);
 }, b.scaleDown = function() {
