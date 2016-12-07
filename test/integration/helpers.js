@@ -1,5 +1,7 @@
 'use strict';
 
+var EC = protractor.ExpectedConditions;
+
 var commonTeardown = function() {
   browser.executeScript('window.sessionStorage.clear();');
   browser.executeScript('window.localStorage.clear();');
@@ -35,18 +37,9 @@ exports.login = function(loginPageAlreadyLoaded) {
   }, 5000);
 };
 
-exports.setInputValue = function(name, value) {
-  var input = element(by.model(name));
-  expect(input).toBeTruthy();
-  input.clear();
-  input.sendKeys(value);
-  expect(input.getAttribute("value")).toBe(value);
-  return input;
-};
-
 exports.clickAndGo = function(buttonText, uri) {
   var button = element(by.buttonText(buttonText));
-  browser.wait(protractor.ExpectedConditions.elementToBeClickable(button), 2000);
+  browser.wait(EC.elementToBeClickable(button), 2000);
   button.click().then(function() {
     return browser.getCurrentUrl().then(function(url) {
       return url.indexOf(uri) > -1;
@@ -63,7 +56,24 @@ var waitForUri = function(uri) {
 };
 exports.waitForUri = waitForUri;
 
-exports.waitForPresence = function(selector, elementText, timeout) {
+// elem is a single protractor ElementFinder, such as: `element(by.css('.foo'))`
+// not an ElementArrayFinder, this will not work: `element.all(by.css('.foo'))`
+// example:
+//  waitForElement(element(by.css('.foo')));  // success
+//  waitForElement(element.all(by.css('.foos')));  // fail, incorrect element.all
+var waitForElem = function(elem, timeout) {
+  return browser.wait(EC.presenceOf(elem), timeout || 5000, 'Element not found: ' + elem.locator().toString());
+};
+exports.waitForElem = waitForElem;
+
+var waitForElemRemoval = function(elem, timeout) {
+  return browser.wait(EC.not(EC.presenceOf(elem)), timeout || 5000, 'Element did not disappear');
+};
+exports.waitForElemRemoval = waitForElemRemoval;
+
+// an alt to waitForElem()
+// waitForElem() does not use protractor.ExpectConditions, which can occasionally flake
+exports.waitForPresence = function(selector, elementText, timeout, callback) {
   if (!timeout) { timeout = 5000; }
   var el;
   if (elementText) {
@@ -72,7 +82,13 @@ exports.waitForPresence = function(selector, elementText, timeout) {
   else {
     el = element(by.css(selector));
   }
-  browser.wait(protractor.ExpectedConditions.presenceOf(el), timeout, "Element not found: " + selector);
+  browser
+    .wait(EC.presenceOf(el), timeout, "Element not found: " + selector)
+    .then(function() {
+      if(callback) {
+        callback();
+      }
+    });
 };
 
 exports.goToPage = function(uri) {
@@ -82,7 +98,7 @@ exports.goToPage = function(uri) {
 };
 
 exports.presenceOf = function(obj) {
-  return protractor.ExpectedConditions.presenceOf(obj);
+  return EC.presenceOf(obj);
 };
 
 // example:
@@ -91,4 +107,13 @@ exports.waitFor = function(item, timeout, msg) {
   timeout = timeout || 5000;
   msg = msg || '';
   return browser.wait(item, timeout, msg);
+};
+
+exports.setInputValue = function(name, value) {
+  var input = element(by.model(name));
+  waitForElem(input);
+  input.clear();
+  input.sendKeys(value);
+  expect(input.getAttribute("value")).toBe(value);
+  return input;
 };

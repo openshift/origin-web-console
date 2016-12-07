@@ -89,7 +89,9 @@ exports.config = {
   // run.
   suites: {
     // smoke: 'spec/smoketests/*.js',
-    rest_api: 'integration/rest_api/*.js' // This suite of tests should only require a running master api, it should not require a node
+    'add-to-project': 'integration/features/user_adds_template_to_project.spec.js',
+    'create-project': 'integration/features/user_creates_project.spec.js' // This suite of tests should only require a running master api, it should not require a node
+    //'create-from-url': 'integration/create-from-url/*.js',
     //e2e: 'integration/e2e.js'
   },
 
@@ -172,10 +174,10 @@ exports.config = {
   // The timeout in milliseconds for each script run on the browser. This should
   // be longer than the maximum time your application needs to stabilize between
   // tasks.
-  allScriptsTimeout: 11000,
+  allScriptsTimeout: 30 * 1000,
 
   // How long to wait for a page to load.
-  getPageTimeout: 10000,
+  getPageTimeout: 30 * 1000,
 
   // A callback function called once configs are read but before any environment
   // setup. This will only run once, and before onPrepare.
@@ -222,10 +224,10 @@ exports.config = {
       baseDirectory: './test/tmp/screenshots',
       takeScreenShotsOnlyForFailedSpecs: true,
       pathBuilder: function pathBuilder(spec, descriptions, results, capabilities) {
-        // Return '<specname>' as path for screenshots: 
-        // Example: 'list-should work'. 
+        // Return '<specname>' as path for screenshots:
+        // Example: 'list-should work'.
         return descriptions.reverse().join(' ');
-      }       
+      }
     }));
   },
 

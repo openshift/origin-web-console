@@ -1,7 +1,7 @@
 {
   "node": true,
   "browser": true,
-  "esnext": true,
+  "esversion": 6,
   "bitwise": true,
   "camelcase": false,
   "curly": true,
@@ -18,7 +18,9 @@
   "sub" : true,
   "undef": true,
   "unused": true,
+  "expr" : true,
   "globals": {
+    "ace": false,
     "after": false,
     "afterEach": false,
     "afterAll": false,
@@ -32,6 +34,7 @@
     "expect": false,
     "inject": false,
     "it": false,
+    "xit": false,
     "jasmine": false,
     "spyOn": false,
     "hawtioPluginLoader": false,
