@@ -2486,21 +2486,19 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "<replicas spec=\"deploymentConfig.spec.replicas\" disable-scaling=\"autoscalers.length || deploymentInProgress\" scale-fn=\"scale(replicas)\" deployment=\"deploymentConfig\"></replicas>\n" +
     "<span ng-if=\"autoscalers.length\">(autoscaled)</span>\n" +
     "</dd>\n" +
-    "<div ng-if=\"deploymentConfig.spec.strategy.type\">\n" +
-    "<dt>Strategy:</dt>\n" +
-    "<dd>{{deploymentConfig.spec.strategy.type}}</dd>\n" +
-    "</div>\n" +
-    "<div ng-if=\"deploymentConfig.spec.strategy.rollingParams\">\n" +
-    "<dt>Update Period:</dt>\n" +
-    "<dd>{{deploymentConfig.spec.strategy.rollingParams.updatePeriodSeconds}} sec</dd>\n" +
-    "<dt>Interval:</dt>\n" +
-    "<dd>{{deploymentConfig.spec.strategy.rollingParams.intervalSeconds}} sec</dd>\n" +
+    "<dt ng-if-start=\"deploymentConfig.spec.strategy.type\">Strategy:</dt>\n" +
+    "<dd ng-if-end>{{deploymentConfig.spec.strategy.type}}</dd>\n" +
+    "<div ng-if=\"deploymentConfig.spec.strategy.rollingParams || deploymentConfig.spec.strategy.recreateParams\">\n" +
     "<dt>Timeout:</dt>\n" +
-    "<dd>{{deploymentConfig.spec.strategy.rollingParams.timeoutSeconds}} sec</dd>\n" +
+    "<dd>{{strategyParams.timeoutSeconds}} sec</dd>\n" +
+    "<dt ng-if-start=\"deploymentConfig.spec.strategy.rollingParams\">Update Period:</dt>\n" +
+    "<dd>{{strategyParams.updatePeriodSeconds}} sec</dd>\n" +
+    "<dt>Interval:</dt>\n" +
+    "<dd>{{strategyParams.intervalSeconds}} sec</dd>\n" +
     "<dt>Max Unavailable:</dt>\n" +
-    "<dd>{{deploymentConfig.spec.strategy.rollingParams.maxUnavailable}}</dd>\n" +
+    "<dd>{{strategyParams.maxUnavailable}}</dd>\n" +
     "<dt>Max Surge:</dt>\n" +
-    "<dd>{{deploymentConfig.spec.strategy.rollingParams.maxSurge}}</dd>\n" +
+    "<dd ng-if-end>{{strategyParams.maxSurge}}</dd>\n" +
     "</div>\n" +
     "\n" +
     "</dl>\n" +
@@ -2539,6 +2537,26 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "\n" +
     "<div ng-repeat=\"hpa in autoscalers\">\n" +
     "<hpa hpa=\"hpa\" project=\"project\" show-scale-target=\"false\" alerts=\"alerts\"></hpa>\n" +
+    "</div>\n" +
+    "</div>\n" +
+    "<div class=\"col-lg-6\" ng-if=\"deploymentConfig.spec.strategy.type !== 'Custom'\">\n" +
+    "<h3>\n" +
+    "Hooks\n" +
+    "<span class=\"learn-more-inline\">\n" +
+    "<a ng-href=\"{{'lifecycle_hooks' | helpLink}}\" target=\"_blank\">Learn More&nbsp;<i class=\"fa fa-external-link\" aria-hidden=\"true\"></i></a>\n" +
+    "</span>\n" +
+    "</h3>\n" +
+    "<div ng-if=\"strategyParams.pre\">\n" +
+    "<lifecycle-hook deployment-config=\"deploymentConfig\" type=\"pre\"></lifecycle-hook>\n" +
+    "</div>\n" +
+    "<div ng-if=\"strategyParams.mid\">\n" +
+    "<lifecycle-hook deployment-config=\"deploymentConfig\" type=\"mid\"></lifecycle-hook>\n" +
+    "</div>\n" +
+    "<div ng-if=\"strategyParams.post\">\n" +
+    "<lifecycle-hook deployment-config=\"deploymentConfig\" type=\"post\"></lifecycle-hook>\n" +
+    "</div>\n" +
+    "<div ng-if=\"!strategyParams.pre && !strategyParams.mid && !strategyParams.post\">\n" +
+    "none\n" +
     "</div>\n" +
     "</div>\n" +
     "<div class=\"col-lg-6\">\n" +
@@ -5577,7 +5595,7 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "GET {{probe.httpGet.path || '/'}} on port {{probe.httpGet.port || 'unknown'}}\n" +
     "</span>\n" +
     "<span ng-if=\"probe.exec.command\">\n" +
-    "<code class=\"probe-command\">\n" +
+    "<code class=\"command\">\n" +
     "<span ng-repeat=\"arg in probe.exec.command\">\n" +
     "<truncate-long-text content=\"arg\" limit=\"80\" newline-limit=\"1\" expandable=\"false\" use-word-boundary=\"false\">\n" +
     "</truncate-long-text>\n" +
@@ -6288,6 +6306,120 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
   );
 
 
+  $templateCache.put('views/directives/edit-lifecycle-hook.html',
+    "<ng-form name=\"editForm\">\n" +
+    "<div ng-switch=\"type\">\n" +
+    "<div class=\"help-block\" ng-switch-when=\"pre\">Pre hooks execute before the deployment begins.</div>\n" +
+    "<div class=\"help-block\" ng-switch-when=\"mid\">Mid hooks execute after the previous deployment is scaled down to zero and before the first pod of the new deployment is created.</div>\n" +
+    "<div class=\"help-block\" ng-switch-when=\"post\">Post hooks execute after the deployment strategy completes.</div>\n" +
+    "</div>\n" +
+    "<div class=\"gutter-top\" ng-if=\"hookParams\">\n" +
+    "<fieldset ng-disabled=\"view.isDisabled\">\n" +
+    "<div class=\"form-group\">\n" +
+    "<label for=\"actionType\" class=\"required\">Lifecycle Action</label><br/>\n" +
+    "<div class=\"radio\">\n" +
+    "<label class=\"radio-inline\">\n" +
+    "<input type=\"radio\" name=\"{{type}}-action-newpod\" ng-model=\"action.type\" value=\"execNewPod\" aria-describedby=\"action-help\">\n" +
+    "Run a specific command in a new pod\n" +
+    "</label>\n" +
+    "<label class=\"radio-inline\">\n" +
+    "<input type=\"radio\" name=\"{{type}}-action-images\" ng-model=\"action.type\" value=\"tagImages\" aria-describedby=\"action-help\">\n" +
+    "Tag image if the deployment succeeds\n" +
+    "</label>\n" +
+    "</div>\n" +
+    "<div id=\"action-help\" class=\"help-block\">\n" +
+    "<span ng-if=\"action.type === 'execNewPod'\">Runs a command in a new pod using the container from the deployment template. You can add additional environment variables and volumes.</span>\n" +
+    "<span ng-if=\"action.type === 'tagImages'\">Tags the current image as an image stream tag if the deployment succeeds.</span>\n" +
+    "<a href=\"{{'new_pod_exec' | helpLink}}\" aria-hidden=\"true\" target=\"_blank\"><span class=\"learn-more-inline\">Learn More&nbsp;<i class=\"fa fa-external-link\"></i></span></a>\n" +
+    "</div>\n" +
+    "</div>\n" +
+    "<div ng-if=\"action.type === 'execNewPod'\">\n" +
+    "<div class=\"form-group\">\n" +
+    "<label class=\"required\">Container Name</label>\n" +
+    "<ui-select ng-model=\"hookParams.execNewPod.containerName\" required>\n" +
+    "<ui-select-match>{{$select.selected}}</ui-select-match>\n" +
+    "<ui-select-choices repeat=\"container in (availableContainers | filter : $select.search)\" ng-disabled=\"view.isDisabled\">\n" +
+    "<div ng-bind-html=\"container | highlight : $select.search\"></div>\n" +
+    "</ui-select-choices>\n" +
+    "</ui-select>\n" +
+    "</div>\n" +
+    "<div class=\"form-group\">\n" +
+    "<label class=\"required\">Command</label>\n" +
+    "<edit-command args=\"hookParams.execNewPod.command\" is-required=\"true\"></edit-command>\n" +
+    "</div>\n" +
+    "<div class=\"form-group\">\n" +
+    "<label>Environment Variables</label>\n" +
+    "<key-value-editor entries=\"hookParams.execNewPod.env\" key-validator=\"[a-zA-Z_][a-zA-Z0-9_]*\" key-validator-error-tooltip=\"A valid environment variable name is an alphanumeric (a-z and 0-9) string beginning with a letter that may contain underscores.\" add-row-link=\"Add environment variable\"></key-value-editor>\n" +
+    "<div class=\"help-block\">\n" +
+    "Environment variables to supply to the hook pod's container.\n" +
+    "</div>\n" +
+    "</div>\n" +
+    "<div class=\"form-group\">\n" +
+    "<label>Volumes</label>\n" +
+    "<ui-select multiple=\"multiple\" placeholder=\"Select volume\" ng-model=\"hookParams.execNewPod.volumes\" ng-disabled=\"view.isDisabled\">\n" +
+    "<ui-select-match>{{$item}}</ui-select-match>\n" +
+    "<ui-select-choices repeat=\"volume in availableVolumes | filter : $select.search\">\n" +
+    "<div ng-bind-html=\"volume | highlight : $select.search\"></div>\n" +
+    "</ui-select-choices>\n" +
+    "</ui-select>\n" +
+    "<div class=\"help-block\">\n" +
+    "List of named volumes to copy to the hook pod.\n" +
+    "</div>\n" +
+    "</div>\n" +
+    "</div>\n" +
+    "<div ng-if=\"action.type === 'tagImages'\">\n" +
+    "<div ng-repeat=\"tagImage in hookParams.tagImages\">\n" +
+    "<div ng-if=\"hookParams.tagImages.length === 1\">\n" +
+    "<div class=\"form-group\">\n" +
+    "<label class=\"required\">Container Name</label>\n" +
+    "<ui-select ng-model=\"tagImage.containerName\" ng-disabled=\"view.isDisabled\" required>\n" +
+    "<ui-select-match>{{$select.selected}}</ui-select-match>\n" +
+    "<ui-select-choices repeat=\"container in (availableContainers | filter : $select.search)\">\n" +
+    "<div ng-bind-html=\"container | highlight : $select.search\"></div>\n" +
+    "</ui-select-choices>\n" +
+    "</ui-select>\n" +
+    "<div class=\"help-block\">\n" +
+    "Use the image for this container as the source of the tag.\n" +
+    "</div>\n" +
+    "</div>\n" +
+    "<div class=\"form-group\">\n" +
+    "<label class=\"required\">Tag As</label>\n" +
+    "<istag-select model=\"istagHook\" allow-custom-tag=\"true\" select-disabled=\"view.isDisabled\"></istag-select>\n" +
+    "</div>\n" +
+    "</div>\n" +
+    "<div class=\"read-only-tag-image\" ng-if=\"hookParams.tagImages.length > 1\">\n" +
+    "<p class=\"read-only-info\" ng-if=\"$first\">\n" +
+    "<span class=\"pficon pficon-info\" aria-hidden=\"true\"></span>\n" +
+    "More than one image tag is defined. To change image tags, use the YAML editor.\n" +
+    "</p>\n" +
+    "{{tagImage.containerName}}&nbsp;&rarr;&nbsp;{{tagImage.to.namespace || namespace}}/{{tagImage.to.name}}\n" +
+    "</div>\n" +
+    "</div>\n" +
+    "</div>\n" +
+    "<div class=\"form-group failure-policy\">\n" +
+    "<label class=\"required picker-label\">Failure Policy</label>\n" +
+    "<ui-select ng-model=\"hookParams.failurePolicy\" search-enabled=\"false\" ng-disabled=\"view.isDisabled\">\n" +
+    "<ui-select-match>{{$select.selected}}</ui-select-match>\n" +
+    "<ui-select-choices repeat=\"failurePolicyTypes in lifecycleHookFailurePolicyTypes\">\n" +
+    "{{failurePolicyTypes}}\n" +
+    "</ui-select-choices>\n" +
+    "</ui-select>\n" +
+    "<div ng-switch=\"hookParams.failurePolicy\">\n" +
+    "<div class=\"help-block\" ng-switch-when=\"Retry\">Retry the hook until it succeeds.</div>\n" +
+    "<div class=\"help-block\" ng-switch-when=\"Abort\">Fail the deployment if the hook fails.</div>\n" +
+    "<div class=\"help-block\" ng-switch-when=\"Ignore\">Ignore hook failures and continue the deployment.</div>\n" +
+    "</div>\n" +
+    "</div>\n" +
+    "</fieldset>\n" +
+    "</div>\n" +
+    "<span>\n" +
+    "<a href=\"\" role=\"button\" ng-if=\"!hookParams\" ng-click=\"addHook()\">Add {{type}} lifecycle hook</a>\n" +
+    "<a href=\"\" role=\"button\" ng-if=\"hookParams\" ng-click=\"removeHook()\">Remove {{type}} lifecycle hook</a>\n" +
+    "</span>\n" +
+    "</ng-form>"
+  );
+
+
   $templateCache.put('views/directives/edit-webhook-triggers.html',
     "<h5>{{type}} webhooks\n" +
     "<span class=\"help action-inline\">\n" +
@@ -6781,116 +6913,62 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
 
 
   $templateCache.put('views/directives/lifecycle-hook.html',
-    "<ng-form name=\"editForm\">\n" +
-    "<div ng-switch=\"type\">\n" +
-    "<div class=\"help-block\" ng-switch-when=\"pre\">Pre hooks execute before the deployment begins.</div>\n" +
-    "<div class=\"help-block\" ng-switch-when=\"mid\">Mid hooks execute after the previous deployment is scaled down to zero and before the first pod of the new deployment is created.</div>\n" +
-    "<div class=\"help-block\" ng-switch-when=\"post\">Post hooks execute after the deployment strategy completes.</div>\n" +
-    "</div>\n" +
-    "<div class=\"gutter-top\" ng-if=\"hookParams\">\n" +
-    "<fieldset ng-disabled=\"view.isDisabled\">\n" +
-    "<div class=\"form-group\">\n" +
-    "<label for=\"actionType\" class=\"required\">Lifecycle Action</label><br/>\n" +
-    "<div class=\"radio\">\n" +
-    "<label class=\"radio-inline\">\n" +
-    "<input type=\"radio\" name=\"{{type}}-action-newpod\" ng-model=\"action.type\" value=\"execNewPod\" aria-describedby=\"action-help\">\n" +
-    "Run a specific command in a new pod\n" +
-    "</label>\n" +
-    "<label class=\"radio-inline\">\n" +
-    "<input type=\"radio\" name=\"{{type}}-action-images\" ng-model=\"action.type\" value=\"tagImages\" aria-describedby=\"action-help\">\n" +
-    "Tag image if the deployment succeeds\n" +
-    "</label>\n" +
-    "</div>\n" +
-    "<div id=\"action-help\" class=\"help-block\">\n" +
-    "<span ng-if=\"action.type === 'execNewPod'\">Runs a command in a new pod using the container from the deployment template. You can add additional environment variables and volumes.</span>\n" +
-    "<span ng-if=\"action.type === 'tagImages'\">Tags the current image as an image stream tag if the deployment succeeds.</span>\n" +
-    "<a href=\"{{'new_pod_exec' | helpLink}}\" aria-hidden=\"true\" target=\"_blank\"><span class=\"learn-more-inline\">Learn More&nbsp;<i class=\"fa fa-external-link\" aria-hidden=\"true\"></i></span></a>\n" +
-    "</div>\n" +
-    "</div>\n" +
-    "<div ng-if=\"action.type === 'execNewPod'\">\n" +
-    "<div class=\"form-group\">\n" +
-    "<label class=\"required\">Container Name</label>\n" +
-    "<ui-select ng-model=\"hookParams.execNewPod.containerName\" required>\n" +
-    "<ui-select-match>{{$select.selected}}</ui-select-match>\n" +
-    "<ui-select-choices repeat=\"container in (availableContainers | filter : $select.search)\" ng-disabled=\"view.isDisabled\">\n" +
-    "<div ng-bind-html=\"container | highlight : $select.search\"></div>\n" +
-    "</ui-select-choices>\n" +
-    "</ui-select>\n" +
-    "</div>\n" +
-    "<div class=\"form-group\">\n" +
-    "<label class=\"required\">Command</label>\n" +
-    "<edit-command args=\"hookParams.execNewPod.command\" is-required=\"true\"></edit-command>\n" +
-    "</div>\n" +
-    "<div class=\"form-group\">\n" +
-    "<label>Environment Variables</label>\n" +
-    "<key-value-editor entries=\"hookParams.execNewPod.env\" key-validator=\"[a-zA-Z_][a-zA-Z0-9_]*\" key-validator-error-tooltip=\"A valid environment variable name is an alphanumeric (a-z and 0-9) string beginning with a letter that may contain underscores.\" add-row-link=\"Add Environment Variable\"></key-value-editor>\n" +
-    "<div class=\"help-block\">\n" +
-    "Environment variables to supply to the hook pod's container.\n" +
-    "</div>\n" +
-    "</div>\n" +
-    "<div class=\"form-group\">\n" +
-    "<label>Volumes</label>\n" +
-    "<ui-select multiple=\"multiple\" placeholder=\"Select volume\" ng-model=\"hookParams.execNewPod.volumes\" ng-disabled=\"view.isDisabled\">\n" +
-    "<ui-select-match>{{$item}}</ui-select-match>\n" +
-    "<ui-select-choices repeat=\"volume in availableVolumes | filter : $select.search\">\n" +
-    "<div ng-bind-html=\"volume | highlight : $select.search\"></div>\n" +
-    "</ui-select-choices>\n" +
-    "</ui-select>\n" +
-    "<div class=\"help-block\">\n" +
-    "List of named volumes to copy to the hook pod.\n" +
-    "</div>\n" +
-    "</div>\n" +
-    "</div>\n" +
-    "<div ng-if=\"action.type === 'tagImages'\">\n" +
-    "<div ng-repeat=\"tagImage in hookParams.tagImages\">\n" +
-    "<div ng-if=\"hookParams.tagImages.length === 1\">\n" +
-    "<div class=\"form-group\">\n" +
-    "<label class=\"required\">Container Name</label>\n" +
-    "<ui-select ng-model=\"tagImage.containerName\" ng-disabled=\"view.isDisabled\" required>\n" +
-    "<ui-select-match>{{$select.selected}}</ui-select-match>\n" +
-    "<ui-select-choices repeat=\"container in (availableContainers | filter : $select.search)\">\n" +
-    "<div ng-bind-html=\"container | highlight : $select.search\"></div>\n" +
-    "</ui-select-choices>\n" +
-    "</ui-select>\n" +
-    "<div class=\"help-block\">\n" +
-    "Use the image for this container as the source of the tag.\n" +
-    "</div>\n" +
-    "</div>\n" +
-    "<div class=\"form-group\">\n" +
-    "<label class=\"required\">Tag As</label>\n" +
-    "<istag-select model=\"istagHook\" allow-custom-tag=\"true\" select-disabled=\"view.isDisabled\"></istag-select>\n" +
-    "</div>\n" +
-    "</div>\n" +
-    "<div class=\"read-only-tag-image\" ng-if=\"hookParams.tagImages.length > 1\">\n" +
-    "<p class=\"read-only-info\" ng-if=\"$first\">\n" +
-    "<span class=\"pficon pficon-info\" aria-hidden=\"true\"></span>\n" +
-    "More than one image tag is defined. To change image tags, use the YAML editor.\n" +
-    "</p>\n" +
-    "{{tagImage.containerName}}&nbsp;&rarr;&nbsp;{{tagImage.to.namespace || namespace}}/{{tagImage.to.name}}\n" +
-    "</div>\n" +
-    "</div>\n" +
-    "</div>\n" +
-    "<div class=\"form-group failure-policy\">\n" +
-    "<label class=\"required picker-label\">Failure Policy</label>\n" +
-    "<ui-select ng-model=\"hookParams.failurePolicy\" search-enabled=\"false\" ng-disabled=\"view.isDisabled\">\n" +
-    "<ui-select-match>{{$select.selected}}</ui-select-match>\n" +
-    "<ui-select-choices repeat=\"failurePolicyTypes in lifecycleHookFailurePolicyTypes\">\n" +
-    "{{failurePolicyTypes}}\n" +
-    "</ui-select-choices>\n" +
-    "</ui-select>\n" +
-    "<div ng-switch=\"hookParams.failurePolicy\">\n" +
-    "<div class=\"help-block\" ng-switch-when=\"Retry\">Retry the hook until it succeeds.</div>\n" +
-    "<div class=\"help-block\" ng-switch-when=\"Abort\">Fail the deployment if the hook fails.</div>\n" +
-    "<div class=\"help-block\" ng-switch-when=\"Ignore\">Ignore hook failures and continue the deployment.</div>\n" +
-    "</div>\n" +
-    "</div>\n" +
-    "</fieldset>\n" +
-    "</div>\n" +
-    "<span>\n" +
-    "<a href=\"\" role=\"button\" ng-if=\"!hookParams\" ng-click=\"addHook()\">Add {{type}} lifecycle hook</a>\n" +
-    "<a href=\"\" role=\"button\" ng-if=\"hookParams\" ng-click=\"removeHook()\">Remove {{type}} lifecycle hook</a>\n" +
+    "<h4>\n" +
+    "{{type | upperFirst}} Hook\n" +
+    "<span ng-switch=\"type\">\n" +
+    "<small ng-switch-when=\"pre\">&ndash; runs before the deployment begins</small>\n" +
+    "<small ng-switch-when=\"mid\">&ndash; runs after the previous deployment is scaled down to zero and before the first pod of the new deployment is created</small>\n" +
+    "<small ng-switch-when=\"post\">&ndash; runs after the deployment strategy completes</small>\n" +
     "</span>\n" +
-    "</ng-form>"
+    "</h4>\n" +
+    "<dl class=\"dl-horizontal left\">\n" +
+    "<dt>Action:</dt>\n" +
+    "<dd>{{strategyParams[type].execNewPod ? \"Run a command\" : \"Tag the image\"}}</dd>\n" +
+    "<dt>Failure Policy:</dt>\n" +
+    "<dd>{{strategyParams[type].failurePolicy}}\n" +
+    "<span class=\"help action-inline\">\n" +
+    "<a href ng-switch=\"strategyParams[type].failurePolicy\">\n" +
+    "<i ng-switch-when=\"Ignore\" class=\"pficon pficon-help\" data-toggle=\"tooltip\" aria-hidden=\"true\" data-original-title=\"Continue with deployment on failure\"></i>\n" +
+    "<i ng-switch-when=\"Abort\" class=\"pficon pficon-help\" data-toggle=\"tooltip\" aria-hidden=\"true\" data-original-title=\"Abort deployment on failure\"></i>\n" +
+    "<i ng-switch-when=\"Retry\" class=\"pficon pficon-help\" data-toggle=\"tooltip\" aria-hidden=\"true\" data-original-title=\"Retry the hook until it succeeds\"></i>\n" +
+    "</a>\n" +
+    "</span>\n" +
+    "</dd>\n" +
+    "<div ng-if=\"strategyParams[type].execNewPod\">\n" +
+    "<h5 class=\"container-name\">Container {{strategyParams[type].execNewPod.containerName}}</h5>\n" +
+    "<dl class=\"dl-horizontal left\">\n" +
+    "<dt>Command:</dt>\n" +
+    "<dd>\n" +
+    "<code class=\"command\">\n" +
+    "<span ng-repeat=\"arg in strategyParams[type].execNewPod.command\">\n" +
+    "<truncate-long-text content=\"arg\" limit=\"80\" newline-limit=\"1\" expandable=\"false\" use-word-boundary=\"false\"></truncate-long-text>\n" +
+    "</span>\n" +
+    "</code>\n" +
+    "</dd>\n" +
+    "<dt ng-if-start=\"strategyParams[type].execNewPod.env\">Environment Variables:</dt>\n" +
+    "<dd ng-if-end>\n" +
+    "<div ng-repeat=\"env in strategyParams[type].execNewPod.env\">\n" +
+    "<div class=\"truncate\" ng-attr-title=\"{{env.value}}\">{{env.name}}={{env.value}}</div>\n" +
+    "</div>\n" +
+    "</dd>\n" +
+    "<dt ng-if-start=\"strategyParams[type].execNewPod.volumes\">Volumes:</dt>\n" +
+    "<dd ng-if-end>\n" +
+    "<div ng-repeat=\"volume in strategyParams[type].execNewPod.volumes\">\n" +
+    "{{volume}}\n" +
+    "</div>\n" +
+    "</dd>\n" +
+    "</dl>\n" +
+    "</div>\n" +
+    "<div ng-if=\"strategyParams[type].tagImages\">\n" +
+    "<div ng-repeat=\"tagImage in strategyParams[type].tagImages\">\n" +
+    "<h5 class=\"container-name\">Container {{tagImage.containerName}}</h5>\n" +
+    "<dl class=\"dl-horizontal left\">\n" +
+    "<div>Tag image as <a ng-if=\"!tagImage.to.namespace || tagImage.to.namespace === deploymentConfig.metadata.namespace\" ng-href=\"{{tagImage.to.name | navigateResourceURL : 'ImageStreamTag' : deploymentConfig.metadata.namespace}}\">{{tagImage.to | imageObjectRef : deploymentConfig.metadata.namespace}}</a>\n" +
+    "<span ng-if=\"tagImage.to.namespace && tagImage.to.namespace !== deploymentConfig.metadata.namespace\">{{tagImage.to | imageObjectRef : deploymentConfig.metadata.namespace}}</span></div>\n" +
+    "</dl>\n" +
+    "</div>\n" +
+    "</div>\n" +
+    "</dl>"
   );
 
 
@@ -8708,18 +8786,18 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "<div class=\"lifecycle-hooks\">\n" +
     "<div class=\"lifecycle-hook\" id=\"pre-lifecycle-hook\">\n" +
     "<h3>Pre Lifecycle Hook</h3>\n" +
-    "<lifecycle-hook model=\"strategyData[strategyParamsPropertyName].pre\" type=\"pre\" available-volumes=\"volumeNames\" available-containers=\"containerNames\" namespace=\"projectName\">\n" +
-    "</lifecycle-hook>\n" +
+    "<edit-lifecycle-hook model=\"strategyData[strategyParamsPropertyName].pre\" type=\"pre\" available-volumes=\"volumeNames\" available-containers=\"containerNames\" namespace=\"projectName\">\n" +
+    "</edit-lifecycle-hook>\n" +
     "</div>\n" +
     "<div ng-if=\"strategyData.type !== 'Rolling'\" class=\"lifecycle-hook\" id=\"mid-lifecycle-hook\">\n" +
     "<h3>Mid Lifecycle Hook</h3>\n" +
-    "<lifecycle-hook model=\"strategyData[strategyParamsPropertyName].mid\" type=\"mid\" available-volumes=\"volumeNames\" available-containers=\"containerNames\" namespace=\"projectName\">\n" +
-    "</lifecycle-hook>\n" +
+    "<edit-lifecycle-hook model=\"strategyData[strategyParamsPropertyName].mid\" type=\"mid\" available-volumes=\"volumeNames\" available-containers=\"containerNames\" namespace=\"projectName\">\n" +
+    "</edit-lifecycle-hook>\n" +
     "</div>\n" +
     "<div class=\"lifecycle-hook\" id=\"post-lifecycle-hook\">\n" +
     "<h3>Post Lifecycle Hook</h3>\n" +
-    "<lifecycle-hook model=\"strategyData[strategyParamsPropertyName].post\" type=\"post\" available-volumes=\"volumeNames\" available-containers=\"containerNames\" namespace=\"projectName\">\n" +
-    "</lifecycle-hook>\n" +
+    "<edit-lifecycle-hook model=\"strategyData[strategyParamsPropertyName].post\" type=\"post\" available-volumes=\"volumeNames\" available-containers=\"containerNames\" namespace=\"projectName\">\n" +
+    "</edit-lifecycle-hook>\n" +
     "</div>\n" +
     "</div>\n" +
     "</div>\n" +

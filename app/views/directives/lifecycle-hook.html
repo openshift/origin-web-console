@@ -1,133 +1,56 @@
-<ng-form name="editForm">
-  <div ng-switch="type">
-    <div class="help-block" ng-switch-when="pre">Pre hooks execute before the deployment begins.</div>
-    <div class="help-block" ng-switch-when="mid">Mid hooks execute after the previous deployment is scaled down to zero and before the first pod of the new deployment is created.</div>
-    <div class="help-block" ng-switch-when="post">Post hooks execute after the deployment strategy completes.</div>
-  </div>
-
-  <div class="gutter-top" ng-if="hookParams">
-    <fieldset ng-disabled="view.isDisabled">
-
-      <div class="form-group">
-        <label for="actionType" class="required">Lifecycle Action</label><br/>
-        <div class="radio">
-          <label class="radio-inline">
-            <input type="radio"
-                    name="{{type}}-action-newpod"
-                    ng-model="action.type"
-                    value="execNewPod"
-                    aria-describedby="action-help">
-            Run a specific command in a new pod
-          </label>
-          <label class="radio-inline">
-            <input type="radio"
-                  name="{{type}}-action-images"
-                  ng-model="action.type"
-                  value="tagImages"
-                  aria-describedby="action-help">
-              Tag image if the deployment succeeds
-          </label>
-        </div>
-        <div  id="action-help" class="help-block">
-          <span ng-if="action.type === 'execNewPod'">Runs a command in a new pod using the container from the deployment template. You can add additional environment variables and volumes.</span>
-          <span ng-if="action.type === 'tagImages'">Tags the current image as an image stream tag if the deployment succeeds.</span>
-          <a href="{{'new_pod_exec' | helpLink}}" aria-hidden="true" target="_blank"><span class="learn-more-inline">Learn More&nbsp;<i class="fa fa-external-link" aria-hidden="true"></i></span></a>
-        </div>
-      </div>
-
-      <div ng-if="action.type === 'execNewPod'">
-        <div class="form-group">
-          <label class="required">Container Name</label>
-          <ui-select ng-model="hookParams.execNewPod.containerName" required>
-            <ui-select-match>{{$select.selected}}</ui-select-match>
-            <ui-select-choices repeat="container in (availableContainers | filter : $select.search)" ng-disabled="view.isDisabled">
-              <div ng-bind-html="container | highlight : $select.search"></div>
-            </ui-select-choices>
-          </ui-select>
-        </div>
-
-        <div class="form-group">
-          <label class="required">Command</label>
-          <edit-command args="hookParams.execNewPod.command" is-required="true"></edit-command>
-        </div>
-
-        <div class="form-group">
-          <label>Environment Variables</label>
-          <key-value-editor
-            entries="hookParams.execNewPod.env"
-            key-validator="[a-zA-Z_][a-zA-Z0-9_]*"
-            key-validator-error-tooltip="A valid environment variable name is an alphanumeric (a-z and 0-9) string beginning with a letter that may contain underscores."
-            add-row-link="Add Environment Variable"></key-value-editor>
-          <div class="help-block">
-            Environment variables to supply to the hook pod's container.
-          </div>
-        </div>
-
-        <div class="form-group">
-        <label>Volumes</label>
-        <ui-select multiple placeholder="Select volume" ng-model="hookParams.execNewPod.volumes" ng-disabled="view.isDisabled">
-          <ui-select-match>{{$item}}</ui-select-match>
-          <ui-select-choices repeat="volume in availableVolumes | filter : $select.search">
-            <div ng-bind-html="volume | highlight : $select.search"></div>
-          </ui-select-choices>
-        </ui-select>
-        <div class="help-block">
-          List of named volumes to copy to the hook pod.
-        </div>
-        </div>
-      </div>
-
-      <div ng-if="action.type === 'tagImages'">
-        <div ng-repeat="tagImage in hookParams.tagImages">
-          <div ng-if="hookParams.tagImages.length === 1">
-            <div class="form-group">
-              <label class="required">Container Name</label>
-              <ui-select ng-model="tagImage.containerName" ng-disabled="view.isDisabled" required>
-                <ui-select-match>{{$select.selected}}</ui-select-match>
-                <ui-select-choices repeat="container in (availableContainers | filter : $select.search)">
-                  <div ng-bind-html="container | highlight : $select.search"></div>
-                </ui-select-choices>
-              </ui-select>
-              <div class="help-block">
-                Use the image for this container as the source of the tag.
-              </div>
-            </div>
-            <div class="form-group">
-              <label class="required">Tag As</label>
-              <istag-select model="istagHook" allow-custom-tag="true" select-disabled="view.isDisabled"></istag-select>
-            </div>
-          </div>
-
-          <div class="read-only-tag-image" ng-if="hookParams.tagImages.length > 1">
-            <p class="read-only-info" ng-if="$first">
-              <span class="pficon pficon-info" aria-hidden="true"></span>
-              More than one image tag is defined. To change image tags, use the YAML editor.
-            </p>
-            {{tagImage.containerName}}&nbsp;&rarr;&nbsp;{{tagImage.to.namespace || namespace}}/{{tagImage.to.name}}
-          </div>
-        </div>
-      </div>
-
-      <div class="form-group failure-policy">
-        <label class="required picker-label">Failure Policy</label>
-        <ui-select ng-model="hookParams.failurePolicy" search-enabled="false" ng-disabled="view.isDisabled">
-          <ui-select-match>{{$select.selected}}</ui-select-match>
-          <ui-select-choices repeat="failurePolicyTypes in lifecycleHookFailurePolicyTypes">
-            {{failurePolicyTypes}}
-          </ui-select-choices>
-        </ui-select>
-
-        <div ng-switch="hookParams.failurePolicy">
-          <div class="help-block" ng-switch-when="Retry">Retry the hook until it succeeds.</div>
-          <div class="help-block" ng-switch-when="Abort">Fail the deployment if the hook fails.</div>
-          <div class="help-block" ng-switch-when="Ignore">Ignore hook failures and continue the deployment.</div>
-        </div>
-      </div>
-    </fieldset>
-  </div>
-
-  <span>
-    <a href="" role="button" ng-if="!hookParams" ng-click="addHook()">Add {{type}} lifecycle hook</a>
-    <a href="" role="button" ng-if="hookParams" ng-click="removeHook()">Remove {{type}} lifecycle hook</a>
+<h4>
+  {{type | upperFirst}} Hook
+  <span ng-switch="type">
+    <small ng-switch-when="pre">&ndash; runs before the deployment begins</small>
+    <small ng-switch-when="mid">&ndash; runs after the previous deployment is scaled down to zero and before the first pod of the new deployment is created</small>
+    <small ng-switch-when="post">&ndash; runs after the deployment strategy completes</small>
   </span>
-</ng-form>
+</h4>
+<dl class="dl-horizontal left">
+  <dt>Action:</dt>
+  <dd>{{strategyParams[type].execNewPod ? "Run a command" : "Tag the image"}}</dd>
+  <dt>Failure Policy:</dt>
+  <dd>{{strategyParams[type].failurePolicy}}
+    <span class="help action-inline">
+      <a href ng-switch="strategyParams[type].failurePolicy">
+        <i ng-switch-when="Ignore" class="pficon pficon-help" data-toggle="tooltip" aria-hidden="true" data-original-title="Continue with deployment on failure"></i>
+        <i ng-switch-when="Abort" class="pficon pficon-help" data-toggle="tooltip" aria-hidden="true" data-original-title="Abort deployment on failure"></i>
+        <i ng-switch-when="Retry" class="pficon pficon-help" data-toggle="tooltip" aria-hidden="true" data-original-title="Retry the hook until it succeeds"></i>
+      </a>
+    </span>
+  </dd>
+  <div ng-if="strategyParams[type].execNewPod">
+    <h5 class="container-name">Container {{strategyParams[type].execNewPod.containerName}}</h5>
+    <dl class="dl-horizontal left">
+      <dt>Command:</dt>
+      <dd>
+        <code class="command">
+          <span ng-repeat="arg in strategyParams[type].execNewPod.command">
+            <truncate-long-text content="arg" limit="80" newline-limit="1" expandable="false" use-word-boundary="false"></truncate-long-text>
+          </span>
+        </code>
+      </dd>
+      <dt ng-if-start="strategyParams[type].execNewPod.env">Environment Variables:</dt>
+      <dd ng-if-end>
+        <div ng-repeat="env in strategyParams[type].execNewPod.env">
+          <div class="truncate" ng-attr-title="{{env.value}}">{{env.name}}={{env.value}}</div>
+        </div>
+      </dd>
+      <dt ng-if-start="strategyParams[type].execNewPod.volumes">Volumes:</dt>
+      <dd ng-if-end>
+        <div ng-repeat="volume in strategyParams[type].execNewPod.volumes">
+          {{volume}}
+        </div>
+      </dd>
+    </dl>
+  </div>
+  <div ng-if="strategyParams[type].tagImages">
+    <div ng-repeat="tagImage in strategyParams[type].tagImages">
+    <h5 class="container-name">Container {{tagImage.containerName}}</h5>
+      <dl class="dl-horizontal left">
+        <div>Tag image as <a ng-if="!tagImage.to.namespace || tagImage.to.namespace === deploymentConfig.metadata.namespace" ng-href="{{tagImage.to.name | navigateResourceURL : 'ImageStreamTag' : deploymentConfig.metadata.namespace}}">{{tagImage.to | imageObjectRef : deploymentConfig.metadata.namespace}}</a>
+          <span ng-if="tagImage.to.namespace && tagImage.to.namespace !== deploymentConfig.metadata.namespace">{{tagImage.to | imageObjectRef : deploymentConfig.metadata.namespace}}</span></div>
+      </dl>
+    </div>
+  </div>
+</dl>

@@ -3,7 +3,7 @@
   GET {{probe.httpGet.path || '/'}} on port {{probe.httpGet.port || 'unknown'}}
 </span>
 <span ng-if="probe.exec.command">
-  <code class="probe-command">
+  <code class="command">
     <span ng-repeat="arg in probe.exec.command">
       <truncate-long-text
           content="arg"

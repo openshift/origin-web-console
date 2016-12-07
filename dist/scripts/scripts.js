@@ -27,11 +27,11 @@ managing_secrets:"dev_guide/service_accounts.html#managing-allowed-secrets",
 creating_secrets:"dev_guide/secrets.html#creating-and-using-secrets",
 storage_classes:"install_config/persistent_storage/dynamically_provisioning_pvs.html",
 selector_label:"install_config/persistent_storage/selector_label_binding.html",
-rolling_strategy:"dev_guide/deployments.html#rolling-strategy",
-recreate_strategy:"dev_guide/deployments.html#recreate-strategy",
-custom_strategy:"dev_guide/deployments.html#custom-strategy",
-lifecycle_hooks:"dev_guide/deployments.html#lifecycle-hooks",
-new_pod_exec:"dev_guide/deployments.html#pod-based-lifecycle-hook",
+rolling_strategy:"dev_guide/deployments/deployment_strategies.html#rolling-strategy",
+recreate_strategy:"dev_guide/deployments/deployment_strategies.html#recreate-strategy",
+custom_strategy:"dev_guide/deployments/deployment_strategies.html#custom-strategy",
+lifecycle_hooks:"dev_guide/deployments/deployment_strategies.html#lifecycle-hooks",
+new_pod_exec:"dev_guide/deployments/deployment_strategies.html#pod-based-lifecycle-hook",
 authorization:"architecture/additional_concepts/authorization.html",
 roles:"architecture/additional_concepts/authorization.html#roles",
 service_accounts:"dev_guide/service_accounts.html",
@@ -5835,7 +5835,7 @@ a.hpaWarnings = b;
 });
 };
 f.get("deploymentconfigs", c.deploymentconfig, e).then(function(d) {
-a.loaded = !0, a.deploymentConfig = d, u(), s(d), a.saveEnvVars = function() {
+a.loaded = !0, a.deploymentConfig = d, a.strategyParams = b("deploymentStrategyParams")(d), u(), s(d), a.saveEnvVars = function() {
 _.each(a.updatedDeploymentConfig.spec.template.spec.containers, function(a) {
 a.env = q.compactEntries(angular.copy(a.env));
 }), f.update("deploymentconfigs", c.deploymentconfig, angular.copy(a.updatedDeploymentConfig), e).then(function() {
@@ -10557,7 +10557,7 @@ value:d
 });
 } ]
 };
-}), angular.module("openshiftConsole").directive("lifecycleHook", function() {
+}), angular.module("openshiftConsole").directive("editLifecycleHook", function() {
 return {
 restrict:"E",
 scope:{
@@ -10567,7 +10567,7 @@ availableVolumes:"=",
 availableContainers:"=",
 namespace:"="
 },
-templateUrl:"views/directives/lifecycle-hook.html",
+templateUrl:"views/directives/edit-lifecycle-hook.html",
 controller:[ "$scope", function(a) {
 a.view = {
 isDisabled:!1
@@ -10615,7 +10615,21 @@ _.has(a.istagHook, [ "tagObject", "tag" ]) && (_.set(a.hookParams, "tagImages[0]
 });
 } ]
 };
-}), angular.module("openshiftConsole").directive("actionChip", function() {
+}).directive("lifecycleHook", [ "$filter", function(a) {
+return {
+restrict:"E",
+scope:{
+deploymentConfig:"=",
+type:"@"
+},
+templateUrl:"views/directives/lifecycle-hook.html",
+link:function(b) {
+b.$watch("deploymentConfig", function(c) {
+b.strategyParams = a("deploymentStrategyParams")(c);
+});
+}
+};
+} ]), angular.module("openshiftConsole").directive("actionChip", function() {
 return {
 restrict:"E",
 scope:{
@@ -13668,6 +13682,23 @@ return !!a && _.indexOf([ "ABORTED", "FAILED", "SUCCESS" ], a.status) !== -1;
 }).filter("pipelineStagePendingInput", function() {
 return function(a) {
 return !!a && "PAUSED_PENDING_INPUT" === a.status;
+};
+}).filter("deploymentStrategyParams", function() {
+return function(a) {
+var b = _.get(a, "spec.strategy.type");
+switch (b) {
+case "Recreate":
+return _.get(a, "spec.strategy.recreateParams", {});
+
+case "Rolling":
+return _.get(a, "spec.strategy.rollingParams", {});
+
+case "Custom":
+return _.get(a, "spec.strategy.customParams", {});
+
+default:
+return null;
+}
 };
 }).filter("humanizeKind", [ "startCaseFilter", function(a) {
 return function(a, b) {

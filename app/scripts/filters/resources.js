@@ -1007,6 +1007,21 @@ angular.module('openshiftConsole')
       return 'PAUSED_PENDING_INPUT' === stage.status;
     };
   })
+  .filter('deploymentStrategyParams', function () {
+    return function(deploymentConfig) {
+      var strategy = _.get(deploymentConfig, 'spec.strategy.type');
+      switch (strategy) {
+        case 'Recreate':
+          return _.get(deploymentConfig, 'spec.strategy.recreateParams', {});
+        case 'Rolling':
+          return _.get(deploymentConfig, 'spec.strategy.rollingParams', {});
+        case 'Custom':
+          return _.get(deploymentConfig, 'spec.strategy.customParams', {});
+        default:
+          return null;
+      }
+    };
+  })
   .filter('humanizeKind', function (startCaseFilter) {
     // Changes "ReplicationController" to "replication controller".
     // If useTitleCase, returns "Replication Controller".
