@@ -2331,7 +2331,14 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "<div class=\"pull-right\" ng-if=\"project && ('configmaps' | canI : 'create')\">\n" +
     "<a ng-href=\"project/{{project.metadata.name}}/create-config-map\" class=\"btn btn-default\">Create Config Map</a>\n" +
     "</div>\n" +
-    "<h1>Config Maps</h1>\n" +
+    "<h1>\n" +
+    "Config Maps\n" +
+    "<span class=\"page-header-link\">\n" +
+    "<a ng-href=\"{{'config-maps' | helpLink}}\" target=\"_blank\">\n" +
+    "Learn More <i class=\"fa fa-external-link\" aria-hidden=\"true\"></i>\n" +
+    "</a>\n" +
+    "</span>\n" +
+    "</h1>\n" +
     "</div>\n" +
     "<div ng-if=\"!renderOptions.showGetStarted\" class=\"data-toolbar\">\n" +
     "<div class=\"data-toolbar-filter\">\n" +
@@ -3655,7 +3662,14 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "<div class=\"pull-right\" ng-if=\"project && ('routes' | canI : 'create')\">\n" +
     "<a ng-href=\"project/{{project.metadata.name}}/create-route\" class=\"btn btn-default\">Create Route</a>\n" +
     "</div>\n" +
-    "<h1>Routes</h1>\n" +
+    "<h1>\n" +
+    "Routes\n" +
+    "<span class=\"page-header-link\">\n" +
+    "<a ng-href=\"{{'routes' | helpLink}}\" target=\"_blank\">\n" +
+    "Learn More <i class=\"fa fa-external-link\" aria-hidden=\"true\"></i>\n" +
+    "</a>\n" +
+    "</span>\n" +
+    "</h1>\n" +
     "</div>\n" +
     "<div ng-if=\"!renderOptions.showGetStarted\" class=\"data-toolbar\">\n" +
     "<div class=\"data-toolbar-filter\">\n" +
@@ -3941,7 +3955,14 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "<div class=\"middle-header header-toolbar\">\n" +
     "<div class=\"container-fluid\">\n" +
     "<div class=\"page-header page-header-bleed-right page-header-bleed-left\">\n" +
-    "<h1>Builds</h1>\n" +
+    "<h1>\n" +
+    "Builds\n" +
+    "<span class=\"page-header-link\">\n" +
+    "<a ng-href=\"{{'builds' | helpLink}}\" target=\"_blank\">\n" +
+    "Learn More <i class=\"fa fa-external-link\" aria-hidden=\"true\"></i>\n" +
+    "</a>\n" +
+    "</span>\n" +
+    "</h1>\n" +
     "</div>\n" +
     "<div ng-if=\"!renderOptions.showGetStarted\" class=\"data-toolbar\">\n" +
     "<div class=\"data-toolbar-filter\">\n" +
@@ -5070,7 +5091,14 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "<div class=\"middle-header header-toolbar\">\n" +
     "<div class=\"container-fluid\">\n" +
     "<div class=\"page-header page-header-bleed-right page-header-bleed-left\">\n" +
-    "<h1>Deployments</h1>\n" +
+    "<h1>\n" +
+    "Deployments\n" +
+    "<span class=\"page-header-link\">\n" +
+    "<a ng-href=\"{{'deployments' | helpLink}}\" target=\"_blank\">\n" +
+    "Learn More <i class=\"fa fa-external-link\" aria-hidden=\"true\"></i>\n" +
+    "</a>\n" +
+    "</span>\n" +
+    "</h1>\n" +
     "</div>\n" +
     "<div ng-if=\"!renderOptions.showGetStarted\" class=\"data-toolbar\">\n" +
     "<div class=\"data-toolbar-filter\">\n" +
@@ -9170,7 +9198,14 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "<div class=\"middle-header header-toolbar\">\n" +
     "<div class=\"container-fluid\">\n" +
     "<div class=\"page-header page-header-bleed-right page-header-bleed-left\">\n" +
-    "<h1>Image Streams</h1>\n" +
+    "<h1>\n" +
+    "Image Streams\n" +
+    "<span class=\"page-header-link\">\n" +
+    "<a ng-href=\"{{'image-streams' | helpLink}}\" target=\"_blank\">\n" +
+    "Learn More <i class=\"fa fa-external-link\" aria-hidden=\"true\"></i>\n" +
+    "</a>\n" +
+    "</span>\n" +
+    "</h1>\n" +
     "</div>\n" +
     "<div class=\"data-toolbar\">\n" +
     "<div class=\"data-toolbar-filter\">\n" +
@@ -9319,7 +9354,7 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "<span ng-if=\"mode.edit\">Done Editing</span>\n" +
     "</a>\n" +
     "Membership\n" +
-    "<span class=\"learn-more-inline\">\n" +
+    "<span class=\"page-header-link\">\n" +
     "<a ng-href=\"{{'roles' | helpLink}}\" target=\"_blank\">\n" +
     "Learn More <i class=\"fa fa-external-link\" aria-hidden=\"true\"></i>\n" +
     "</a>\n" +
@@ -10761,6 +10796,11 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "<div class=\"page-header page-header-bleed-right page-header-bleed-left\">\n" +
     "<h1>\n" +
     "Pipelines\n" +
+    "<span class=\"page-header-link\">\n" +
+    "<a ng-href=\"{{'pipeline-builds' | helpLink}}\" target=\"_blank\">\n" +
+    "Learn More <i class=\"fa fa-external-link\" aria-hidden=\"true\"></i>\n" +
+    "</a>\n" +
+    "</span>\n" +
     "</h1>\n" +
     "</div>\n" +
     "</div>\n" +
@@ -10877,7 +10917,14 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "<div class=\"middle-header header-toolbar\">\n" +
     "<div class=\"container-fluid\">\n" +
     "<div class=\"page-header page-header-bleed-right page-header-bleed-left\">\n" +
-    "<h1>Pods</h1>\n" +
+    "<h1>\n" +
+    "Pods\n" +
+    "<span class=\"page-header-link\">\n" +
+    "<a ng-href=\"{{'pods' | helpLink}}\" target=\"_blank\">\n" +
+    "Learn More <i class=\"fa fa-external-link\" aria-hidden=\"true\"></i>\n" +
+    "</a>\n" +
+    "</span>\n" +
+    "</h1>\n" +
     "</div>\n" +
     "<div ng-if=\"!renderOptions.showGetStarted\" class=\"data-toolbar\">\n" +
     "<div class=\"data-toolbar-filter\">\n" +
@@ -11236,6 +11283,11 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "<div class=\"page-header page-header-bleed-right page-header-bleed-left\">\n" +
     "<h1>\n" +
     "<span ng-if=\"clusterQuotas | hashSize\">Cluster </span>Quota\n" +
+    "<span class=\"page-header-link\">\n" +
+    "<a ng-href=\"{{'quota' | helpLink}}\" target=\"_blank\">\n" +
+    "Learn More <i class=\"fa fa-external-link\" aria-hidden=\"true\"></i>\n" +
+    "</a>\n" +
+    "</span>\n" +
     "</h1>\n" +
     "</div>\n" +
     "</div>\n" +
@@ -11490,7 +11542,14 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "<div class=\"pull-right\" ng-if=\"project && ('secrets' | canI : 'create')\">\n" +
     "<a ng-href=\"project/{{project.metadata.name}}/create-secret\" class=\"btn btn-default\">Create Secret</a>\n" +
     "</div>\n" +
-    "<h1>Secrets</h1>\n" +
+    "<h1>\n" +
+    "Secrets\n" +
+    "<span class=\"page-header-link\">\n" +
+    "<a ng-href=\"{{'secrets' | helpLink}}\" target=\"_blank\">\n" +
+    "Learn More <i class=\"fa fa-external-link\" aria-hidden=\"true\"></i>\n" +
+    "</a>\n" +
+    "</span>\n" +
+    "</h1>\n" +
     "</div>\n" +
     "</div>\n" +
     "</div>\n" +
@@ -11609,7 +11668,14 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "<div class=\"middle-header header-toolbar\">\n" +
     "<div class=\"container-fluid\">\n" +
     "<div class=\"page-header page-header-bleed-right page-header-bleed-left\">\n" +
-    "<h1>Services</h1>\n" +
+    "<h1>\n" +
+    "Services\n" +
+    "<span class=\"page-header-link\">\n" +
+    "<a ng-href=\"{{'services' | helpLink}}\" target=\"_blank\">\n" +
+    "Learn More <i class=\"fa fa-external-link\" aria-hidden=\"true\"></i>\n" +
+    "</a>\n" +
+    "</span>\n" +
+    "</h1>\n" +
     "</div>\n" +
     "<div class=\"data-toolbar\">\n" +
     "<div class=\"data-toolbar-filter\">\n" +
@@ -12019,7 +12085,14 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "<div class=\"middle-header header-toolbar\">\n" +
     "<div class=\"container-fluid\">\n" +
     "<div class=\"page-header page-header-bleed-right page-header-bleed-left\">\n" +
-    "<h1>Storage</h1>\n" +
+    "<h1>\n" +
+    "Storage\n" +
+    "<span class=\"page-header-link\">\n" +
+    "<a ng-href=\"{{'storage' | helpLink}}\" target=\"_blank\">\n" +
+    "Learn More <i class=\"fa fa-external-link\" aria-hidden=\"true\"></i>\n" +
+    "</a>\n" +
+    "</span>\n" +
+    "</h1>\n" +
     "</div>\n" +
     "<div ng-if=\"!renderOptions.showGetStarted\" class=\"data-toolbar\">\n" +
     "<div class=\"data-toolbar-filter\">\n" +
