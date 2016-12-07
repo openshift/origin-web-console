@@ -355,6 +355,29 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "</div>\n" +
     "</div>\n" +
     "</div>\n" +
+    "<div row ng-if=\"detailed && (container.command.length || container.args.length)\" class=\"icon-row\">\n" +
+    "<div>\n" +
+    "<span aria-hidden=\"true\" class=\"fa fa-terminal\"></span>\n" +
+    "</div>\n" +
+    "<div flex class=\"word-break\">\n" +
+    "<span class=\"pod-template-key\">\n" +
+    "<span ng-if=\"container.command.length\">Command:</span>\n" +
+    "<span ng-if=\"!container.command.length\">Arguments:</span>\n" +
+    "</span>\n" +
+    "<span>\n" +
+    "<code class=\"command\">\n" +
+    "<span ng-repeat=\"arg in container.command\">\n" +
+    "<truncate-long-text content=\"arg\" limit=\"80\" newline-limit=\"1\" expandable=\"false\" use-word-boundary=\"false\">\n" +
+    "</truncate-long-text>\n" +
+    "</span>\n" +
+    "<span ng-repeat=\"arg in container.args\">\n" +
+    "<truncate-long-text content=\"arg\" limit=\"80\" newline-limit=\"1\" expandable=\"false\" use-word-boundary=\"false\">\n" +
+    "</truncate-long-text>\n" +
+    "</span>\n" +
+    "</code>\n" +
+    "</span>\n" +
+    "</div>\n" +
+    "</div>\n" +
     "<div row ng-if=\"container.ports.length > 0\" class=\"pod-template-ports icon-row\">\n" +
     "<div>\n" +
     "<span data-icon=\"\" aria-hidden=\"true\" style=\"font-size:16px;line-height:normal\"></span>\n" +
