@@ -5305,10 +5305,15 @@ b("altTextForValueFrom")(a);
 });
 };
 a.saveEnvVars = function() {
-a.envVars = _.filter(a.envVars, "name"), p(a.updatedBuildConfig).env = l.compactEntries(angular.copy(a.envVars)), h.update("buildconfigs", c.buildconfig, a.updatedBuildConfig, m).then(function() {
+a.envVarDiffAmount = 0, a.envVars = _.filter(a.envVars, "name"), p(a.updatedBuildConfig).env = l.compactEntries(angular.copy(a.envVars));
+var d = p(a.updatedBuildConfig).env, e = a.originalEnvVars;
+e.length !== d.length && (a.envVarDiffAmount = Math.abs(e.length - d.length));
+for (var f = 0; f < e.length; f++) !d[f] || e[f].name === d[f].name && e[f].value === d[f].value || a.envVarDiffAmount++;
+a.saveOriginalEnvVarValues(), h.update("buildconfigs", c.buildconfig, a.updatedBuildConfig, m).then(function() {
+var b = a.envVarDiffAmount > 1 ? "fields" :"field";
 a.alerts.saveBCEnvVarsSuccess = {
 type:"success",
-message:a.buildConfigName + " was updated."
+message:a.buildConfigName + " was updated (" + a.envVarDiffAmount + " " + b + " updated)."
 }, a.forms.bcEnvVars.$setPristine();
 }, function(c) {
 a.alerts.saveBCEnvVarsError = {
@@ -5354,8 +5359,12 @@ type:"warning",
 details:"The active filters are hiding all builds."
 };
 }
-a.project = d, m = e, h.get("buildconfigs", c.buildconfig, e).then(function(a) {
-t(a), q.push(h.watchObject("buildconfigs", c.buildconfig, e, t));
+a.project = d, m = e, h.get("buildconfigs", c.buildconfig, e).then(function(b) {
+a.saveOriginalEnvVarValues = function() {
+a.originalEnvVars = [], _.each(p(b).env, function(b) {
+a.originalEnvVars.push(b);
+});
+}, a.saveOriginalEnvVarValues(), t(b), q.push(h.watchObject("buildconfigs", c.buildconfig, e, t));
 }, function(c) {
 a.loaded = !0, a.alerts.load = {
 type:"error",
@@ -5835,13 +5844,23 @@ a.hpaWarnings = b;
 });
 };
 f.get("deploymentconfigs", c.deploymentconfig, e).then(function(d) {
-a.loaded = !0, a.deploymentConfig = d, u(), s(d), a.saveEnvVars = function() {
-_.each(a.updatedDeploymentConfig.spec.template.spec.containers, function(a) {
-a.env = q.compactEntries(angular.copy(a.env));
-}), f.update("deploymentconfigs", c.deploymentconfig, angular.copy(a.updatedDeploymentConfig), e).then(function() {
+a.loaded = !0, a.deploymentConfig = d, u(), s(d), a.saveOriginalEnvVarValues = function() {
+a.originalEnvVars = {}, _.each(a.updatedDeploymentConfig.spec.template.spec.containers, function(b) {
+a.originalEnvVars[b.name] || (a.originalEnvVars[b.name] = []), _.each(b.env, function(c) {
+a.originalEnvVars[b.name].push(c);
+});
+});
+}, a.saveOriginalEnvVarValues(), a.saveEnvVars = function() {
+a.envVarDiffAmount = 0, _.each(a.updatedDeploymentConfig.spec.template.spec.containers, function(b) {
+b.env = q.compactEntries(angular.copy(b.env));
+var c = a.originalEnvVars[b.name];
+c.length !== b.env.length && (a.envVarDiffAmount += Math.abs(c.length - b.env.length));
+for (var d = 0; d < c.length; d++) !b.env[d] || c[d].name === b.env[d].name && c[d].value === b.env[d].value || a.envVarDiffAmount++;
+}), a.saveOriginalEnvVarValues(), f.update("deploymentconfigs", c.deploymentconfig, angular.copy(a.updatedDeploymentConfig), e).then(function() {
+var b = a.envVarDiffAmount > 1 ? "fields" :"field";
 a.alerts.saveDCEnvVarsSuccess = {
 type:"success",
-message:a.deploymentConfigName + " was updated."
+message:a.deploymentConfigName + " was updated (" + a.envVarDiffAmount + " " + b + " updated)."
 }, a.forms.dcEnvVars.$setPristine();
 }, function(c) {
 a.alerts.saveDCEnvVarsError = {

@@ -89,19 +89,51 @@ angular.module('openshiftConsole')
             $scope.deploymentConfig = deploymentConfig;
             updateHPAWarnings();
             copyDeploymentConfigAndEnsureEnv(deploymentConfig);
+
+            // save original env values for each dc container in order to obtain update count
+            $scope.saveOriginalEnvVarValues = function() {
+              $scope.originalEnvVars = {};
+              _.each($scope.updatedDeploymentConfig.spec.template.spec.containers, function(container) {
+                if (!$scope.originalEnvVars[container.name]) {
+                  $scope.originalEnvVars[container.name] = [];
+                }
+                _.each(container.env, function(env) {
+                  $scope.originalEnvVars[container.name].push(env);
+                });
+              });
+            };
+            $scope.saveOriginalEnvVarValues();
+
             $scope.saveEnvVars = function() {
+              $scope.envVarDiffAmount = 0;
               _.each($scope.updatedDeploymentConfig.spec.template.spec.containers, function(container) {
                 container.env = keyValueEditorUtils.compactEntries(angular.copy(container.env));
+
+                // count number of updated environment vars
+                var originalEnvs = $scope.originalEnvVars[container.name];
+                if (originalEnvs.length !== container.env.length) {
+                  $scope.envVarDiffAmount += Math.abs(originalEnvs.length - container.env.length);
+                }
+                for(var  i = 0; i < originalEnvs.length; i++) {
+                  if(container.env[i] &&
+                    (originalEnvs[i].name !== container.env[i].name ||
+                    originalEnvs[i].value !== container.env[i].value)) {
+                    $scope.envVarDiffAmount++;
+                  }
+                }
               });
+              $scope.saveOriginalEnvVarValues();
+
               DataService.update("deploymentconfigs", $routeParams.deploymentconfig, angular.copy($scope.updatedDeploymentConfig), context)
                 .then(function success(){
+                  var fieldsText = ($scope.envVarDiffAmount > 1 ? "fields" : "field");
                   // TODO:  de-duplicate success and error messages.
                   // as it stands, multiple messages appear based on how edit
                   // is made.
                   $scope.alerts['saveDCEnvVarsSuccess'] = {
                     type: "success",
                     // TODO:  improve success alert
-                    message: $scope.deploymentConfigName + " was updated."
+                    message: $scope.deploymentConfigName + " was updated (" + $scope.envVarDiffAmount + " " + fieldsText + " updated)."
                   };
                   $scope.forms.dcEnvVars.$setPristine();
                 }, function error(e){

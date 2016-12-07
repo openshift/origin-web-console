@@ -75,18 +75,35 @@ angular.module('openshiftConsole')
     };
 
     $scope.saveEnvVars = function() {
+      $scope.envVarDiffAmount = 0;
       $scope.envVars = _.filter($scope.envVars, 'name');
       buildStrategy($scope.updatedBuildConfig).env = keyValueEditorUtils.compactEntries(angular.copy($scope.envVars));
+
+      // count number of updated environment vars
+      var updatedEnvs = buildStrategy($scope.updatedBuildConfig).env;
+      var originalEnvs = $scope.originalEnvVars;
+      if (originalEnvs.length !== updatedEnvs.length) {
+        $scope.envVarDiffAmount = Math.abs(originalEnvs.length - updatedEnvs.length);
+      }
+      for(var i = 0; i < originalEnvs.length; i++) {
+       if(updatedEnvs[i] &&
+         (originalEnvs[i].name !== updatedEnvs[i].name ||
+         originalEnvs[i].value !== updatedEnvs[i].value)) {
+         $scope.envVarDiffAmount++;
+       }
+      }
+      $scope.saveOriginalEnvVarValues();
+
       DataService
         .update("buildconfigs", $routeParams.buildconfig, $scope.updatedBuildConfig, requestContext)
         .then(function success(){
+          var fieldsText = ($scope.envVarDiffAmount > 1 ? "fields" : "field");
           // TODO:  de-duplicate success and error messages.
           // as it stands, multiple messages appear based on how edit
           // is made.
           $scope.alerts['saveBCEnvVarsSuccess'] = {
             type: "success",
-            // TODO:  improve success alert
-            message: $scope.buildConfigName + " was updated."
+            message: $scope.buildConfigName + " was updated (" + $scope.envVarDiffAmount + " " + fieldsText + " updated)."
           };
           $scope.forms.bcEnvVars.$setPristine();
         }, function error(e){
@@ -170,6 +187,14 @@ angular.module('openshiftConsole')
         DataService
           .get("buildconfigs", $routeParams.buildconfig, context)
           .then(function(buildConfig) {
+            // save original environment values for each bc container in order to obtain update count
+            $scope.saveOriginalEnvVarValues = function() {
+              $scope.originalEnvVars = [];
+              _.each(buildStrategy(buildConfig).env, function(env) {
+                $scope.originalEnvVars.push(env);
+              });
+            };
+            $scope.saveOriginalEnvVarValues();
             buildConfigResolved(buildConfig);
             // If we found the item successfully, watch for changes on it
             watches.push(DataService.watchObject("buildconfigs", $routeParams.buildconfig, context, buildConfigResolved));
