@@ -41,6 +41,16 @@ window.OPENSHIFT_CONSTANTS = {
     "users_and_groups":        "architecture/additional_concepts/authentication.html#users-and-groups",
     "pipeline-builds":         "architecture/core_concepts/builds_and_image_streams.html#pipeline-build",
     "pipeline-plugin":         "using_images/other_images/jenkins.html#openshift-origin-pipeline-plug-in",
+    "quota":                   "dev_guide/compute_resources.html",
+    "config-maps":             "dev_guide/configmaps.html",
+    "secrets":                 "dev_guide/secrets.html",
+    "deployments":             "dev_guide/deployments/how_deployments_work.html",
+    "pods":                    "architecture/core_concepts/pods_and_services.html#pods",
+    "services":                "architecture/core_concepts/pods_and_services.html#services",
+    "routes":                  "architecture/core_concepts/routes.html",
+    "builds":                  "architecture/core_concepts/builds_and_image_streams.html#builds",
+    "image-streams":           "architecture/core_concepts/builds_and_image_streams.html#image-streams",
+    "storage":                 "architecture/additional_concepts/storage.html",
     // default should remain last, add new links above
     "default":                 "welcome/index.html"
   },

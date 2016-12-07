@@ -1,3 +1,98 @@
+// Page header
+// --------------------------------------------------
+.console-os {
+  .page-header {
+    border-color: @page-header-border-color;
+    margin-bottom: 0;
+    margin-left: -20px;
+    margin-right: -20px;
+    margin-top: 20px;
+    padding-left: 20px;
+    padding-right: 20px;
+    .actions {
+      margin-top: 0;
+    }
+    .page-header-link {
+      display: inline-block;
+      font-size: @font-size-small;
+      font-weight: normal;
+      margin: 0 10px;
+      white-space: nowrap;
+    }
+  }
+  @media (min-width: @screen-md-min) {
+    .page-header.page-header-bleed-left {
+      margin-left: -30px;
+      padding-left: 30px;
+      margin-right: -30px;
+      padding-right: 30px;
+    }
+  }
+  .section-header{
+    .page-header();
+    border-bottom: none;
+    padding-bottom: 10px;
+  }
+}
+
+h1 small.meta, .build-config-summary .meta {
+  font-size: 12px;
+  @media (max-width: @screen-xs-min) {
+    display: block;
+    margin-top: 5px;
+  }
+}
+
+.learn-more-block {
+  display: block;
+  font-size: @font-size-small;
+  font-weight: normal;
+}
+
+.learn-more-inline {
+  display: inline;
+  font-size: @font-size-small;
+  font-weight: normal;
+  margin-left: 5px;
+}
+
+// same style as a <strong> tag but used when you want to optionally apply the style based on a condition
+.strong {
+  font-weight: bold;
+}
+
+// Misc
+// --------------------------------------------------
+.action-inline {
+  margin-left: @action-link-inline-margin;
+  font-size: @font-size-small;
+  i.pficon, i.fa {
+    color: @btn-default-color;
+    margin-right: 5px;
+  }
+}
+
+a.subtle-link {
+  color: @gray-light;
+  border-bottom: 1px dotted #BBB;
+
+  &:hover, &:active, &:focus {
+    color: @link-hover-color;
+    border-bottom: 1px dotted @link-hover-color;
+    text-decoration: none;
+  }
+}
+
+// Use to control spacing on the parent div to prevent spacing discrepancy at mobile
+.h2-help-block {
+  margin-bottom: (@line-height-computed / 2);
+  h2 {
+    margin-bottom: 0;
+    margin-right: 5px;
+  }
+}
+
+
 /* force a space where it may collapse */
 .space-after:after {
   content: "\00a0";
