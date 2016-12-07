@@ -79,8 +79,6 @@
     display: inline-block;
   }
   @media (min-width: @screen-sm-min) {
-    // Only needed at larger sizes since form-group has a bottom margin at mobile.
-    .gutter-bottom;
     .filter-controls, .sort-group {
       // Inline controls at wider widths.
       display: inline-block;
@@ -164,6 +162,9 @@ td[role="presentation"].arrow:after {
   border-left: 1px solid @table-border-color;
   border-right: 1px solid @table-border-color;
   background-color: #f9f9f9;
+  .form-group {
+    margin-bottom: 5px;
+  }
 }
 
 // table for events
