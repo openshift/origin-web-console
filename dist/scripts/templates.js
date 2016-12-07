@@ -752,7 +752,9 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "</div>\n" +
     "<div class=\"build-phase\">\n" +
     "<status-icon status=\"build.status.phase\"></status-icon>\n" +
-    "{{build.status.phase}}<span ng-if=\"(build | isIncompleteBuild) && trigger.imageChangeParams.automatic\">. A new deployment will be created automatically once the build completes.</span>\n" +
+    "<span ng-if=\"!build.status.message || build.status.phase === 'Cancelled'\">{{build.status.phase}}.</span>\n" +
+    "<span ng-if=\"build.status.message && build.status.phase !== 'Cancelled'\">{{build.status.message}}.</span>\n" +
+    "<span ng-if=\"(build | isIncompleteBuild) && trigger.imageChangeParams.automatic\">A new deployment will be created automatically once the build completes.</span>\n" +
     "</div>\n" +
     "<span am-time-ago=\"build.metadata.creationTimestamp\" class=\"build-timestamp\"></span>\n" +
     "<div ng-if=\"'builds/log' | canI : 'get'\" class=\"build-links\">\n" +
@@ -5740,18 +5742,8 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
 
   $templateCache.put('views/directives/build-status.html',
     "<status-icon status=\"build.status.phase\" disable-animation fixed-width=\"true\"></status-icon>\n" +
-    "{{build.status.phase | sentenceCase}}\n" +
-    "<span ng-switch=\"build.status.phase\" class=\"hide-ng-leave\">\n" +
-    "<span ng-switch-when=\"Complete\"> in {{(build.status.startTimestamp || build.metadata.creationTimestamp) | timeOnlyDurationFromTimestamps : build.status.completionTimestamp}}</span>\n" +
-    "<span ng-switch-when=\"Failed\">after <span ng-if=\"!build.status.startTimestamp\">waiting </span>{{(build.status.startTimestamp || build.metadata.creationTimestamp) | timeOnlyDurationFromTimestamps : build.status.completionTimestamp}}</span>\n" +
-    "<span ng-switch-when=\"Cancelled\"> after {{(build.status.startTimestamp || build.metadata.creationTimestamp) | timeOnlyDurationFromTimestamps : build.status.completionTimestamp}}</span>\n" +
-    "<span ng-switch-when=\"Running\"> for <time-only-duration-until-now timestamp=\"build.status.startTimestamp\" time-only></time-only-duration-until-now></span>\n" +
-    "<span ng-switch-when=\"New\">, waiting for <time-only-duration-until-now timestamp=\"build.metadata.creationTimestamp\"></time-only-duration-until-now></span>\n" +
-    "<span ng-switch-when=\"Pending\"> for <time-only-duration-until-now timestamp=\"build.metadata.creationTimestamp\"></time-only-duration-until-now></span>\n" +
-    "<span ng-switch-default>\n" +
-    "<span ng-if=\"build.status.startTimestamp\">, finished in {{build.status.startTimestamp | timeOnlyDurationFromTimestamps : build.status.completionTimestamp}}</span>\n" +
-    "<span ng-if=\"!build.status.startTimestamp\">, waited for {{build.metadata.creationTimestamp | timeOnlyDurationFromTimestamps : build.status.completionTimestamp}}</span>\n" +
-    "</span>\n" +
+    "<span ng-if=\"!build.status.reason || build.status.phase === 'Cancelled'\">{{build.status.phase}}</span>\n" +
+    "<span ng-if=\"build.status.reason && build.status.phase !== 'Cancelled'\">{{build.status.reason | sentenceCase}}</span><span ng-switch=\"build.status.phase\" class=\"hide-ng-leave\" ng-if=\"build.status.startTimestamp\"><span ng-switch-when=\"Complete\">, ran for {{build.status.startTimestamp | timeOnlyDurationFromTimestamps : build.status.completionTimestamp}}</span><span ng-switch-when=\"Failed\">, ran for {{build.status.startTimestamp | timeOnlyDurationFromTimestamps : build.status.completionTimestamp}}</span><span ng-switch-when=\"Cancelled\"> after {{build.status.startTimestamp | timeOnlyDurationFromTimestamps : build.status.completionTimestamp}}</span><span ng-switch-when=\"Running\"> for <time-only-duration-until-now timestamp=\"build.status.startTimestamp\" time-only></time-only-duration-until-now></span><span ng-switch-when=\"New\"></span><span ng-switch-when=\"Pending\"></span><span ng-switch-default>, ran for {{build.status.startTimestamp | duration : build.status.completionTimestamp}}</span>\n" +
     "</span>"
   );
 

@@ -19,7 +19,9 @@
           </div>
           <div class="build-phase">
             <status-icon status="build.status.phase"></status-icon>
-            {{build.status.phase}}<span ng-if="(build | isIncompleteBuild) && trigger.imageChangeParams.automatic">. A new deployment will be created automatically once the build completes.</span>
+            <span ng-if="!build.status.message || build.status.phase === 'Cancelled'">{{build.status.phase}}.</span>
+            <span ng-if="build.status.message && build.status.phase !== 'Cancelled'">{{build.status.message}}.</span>
+            <span ng-if="(build | isIncompleteBuild) && trigger.imageChangeParams.automatic">A new deployment will be created automatically once the build completes.</span>
           </div>
           <span am-time-ago="build.metadata.creationTimestamp" class="build-timestamp"></span>
           <div ng-if="'builds/log' | canI : 'get'" class="build-links">
