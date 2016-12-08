@@ -4,15 +4,13 @@
 </span>
 <span ng-if="probe.exec.command">
   <code class="command">
-    <span ng-repeat="arg in probe.exec.command">
-      <truncate-long-text
-          content="arg"
-          limit="80"
-          newline-limit="1"
-          expandable="false"
-          use-word-boundary="false">
-      </truncate-long-text>
-    </span>
+    <truncate-long-text
+        content="probe.exec.command.join(' ')"
+        limit="80"
+        newline-limit="1"
+        expandable="true"
+        use-word-boundary="false">
+    </truncate-long-text>
   </code>
 </span>
 <span ng-if="probe.tcpSocket">

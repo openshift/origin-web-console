@@ -361,19 +361,12 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "</div>\n" +
     "<div flex class=\"word-break\">\n" +
     "<span class=\"pod-template-key\">\n" +
-    "<span ng-if=\"container.command.length\">Command:</span>\n" +
-    "<span ng-if=\"!container.command.length\">Arguments:</span>\n" +
+    "Command:\n" +
     "</span>\n" +
     "<span>\n" +
     "<code class=\"command\">\n" +
-    "<span ng-repeat=\"arg in container.command\">\n" +
-    "<truncate-long-text content=\"arg\" limit=\"80\" newline-limit=\"1\" expandable=\"false\" use-word-boundary=\"false\">\n" +
+    "<truncate-long-text content=\"container | entrypoint : imagesByDockerReference[container.image]\" limit=\"80\" newline-limit=\"1\" expandable=\"true\" use-word-boundary=\"false\">\n" +
     "</truncate-long-text>\n" +
-    "</span>\n" +
-    "<span ng-repeat=\"arg in container.args\">\n" +
-    "<truncate-long-text content=\"arg\" limit=\"80\" newline-limit=\"1\" expandable=\"false\" use-word-boundary=\"false\">\n" +
-    "</truncate-long-text>\n" +
-    "</span>\n" +
     "</code>\n" +
     "</span>\n" +
     "</div>\n" +
@@ -5649,10 +5642,8 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "</span>\n" +
     "<span ng-if=\"probe.exec.command\">\n" +
     "<code class=\"command\">\n" +
-    "<span ng-repeat=\"arg in probe.exec.command\">\n" +
-    "<truncate-long-text content=\"arg\" limit=\"80\" newline-limit=\"1\" expandable=\"false\" use-word-boundary=\"false\">\n" +
+    "<truncate-long-text content=\"probe.exec.command.join(' ')\" limit=\"80\" newline-limit=\"1\" expandable=\"true\" use-word-boundary=\"false\">\n" +
     "</truncate-long-text>\n" +
-    "</span>\n" +
     "</code>\n" +
     "</span>\n" +
     "<span ng-if=\"probe.tcpSocket\">\n" +

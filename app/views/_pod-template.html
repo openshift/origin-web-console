@@ -88,29 +88,17 @@
         </div>
         <div flex class="word-break">
           <span class="pod-template-key">
-            <span ng-if="container.command.length">Command:</span>
-            <span ng-if="!container.command.length">Arguments:</span>
+            Command:
           </span>
           <span>
             <code class="command">
-              <span ng-repeat="arg in container.command">
-                <truncate-long-text
-                    content="arg"
-                    limit="80"
-                    newline-limit="1"
-                    expandable="false"
-                    use-word-boundary="false">
-                </truncate-long-text>
-              </span>
-              <span ng-repeat="arg in container.args">
-                <truncate-long-text
-                    content="arg"
-                    limit="80"
-                    newline-limit="1"
-                    expandable="false"
-                    use-word-boundary="false">
-                </truncate-long-text>
-              </span>
+              <truncate-long-text
+                  content="container | entrypoint : imagesByDockerReference[container.image]"
+                  limit="80"
+                  newline-limit="1"
+                  expandable="true"
+                  use-word-boundary="false">
+              </truncate-long-text>
             </code>
           </span>
         </div>
