@@ -91,10 +91,11 @@ angular.module("openshiftConsole")
           }
         };
 
+        var resource;
+
         $scope.create = function() {
           $scope.alerts = {};
           delete $scope.error;
-          var resource;
 
           // Trying to auto-detect what format the input is in. Since parsing JSON throws only SyntexError
           // exception if the string to parse is not valid JSON, it is tried first and then the YAML parser
@@ -248,7 +249,7 @@ angular.module("openshiftConsole")
           var path;
           if ($scope.resourceKind === "Template" && $scope.templateOptions.process && !$scope.errorOccured) {
             var namespace = ($scope.templateOptions.add || $scope.updateResources.length > 0) ? $scope.projectName : "";
-            path = Navigate.createFromTemplateURL($scope.resourceName, $scope.projectName, {namespace: namespace});
+            path = Navigate.createFromTemplateURL(resource, $scope.projectName, {namespace: namespace});
           } else {
             path = Navigate.projectOverviewURL($scope.projectName);
           }

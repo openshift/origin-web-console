@@ -9212,7 +9212,7 @@ controller:"ConfirmReplaceModalController",
 scope:l
 });
 a.result.then(function() {
-k.getLatestQuotaAlerts(l.createResources, l.context).then(A);
+k.getLatestQuotaAlerts(l.createResources, l.context).then(B);
 });
 }
 function p() {
@@ -9226,7 +9226,7 @@ function q() {
 var a;
 if ("Template" === l.resourceKind && l.templateOptions.process && !l.errorOccured) {
 var b = l.templateOptions.add || l.updateResources.length > 0 ? l.projectName :"";
-a = g.createFromTemplateURL(l.resourceName, l.projectName, {
+a = g.createFromTemplateURL(z, l.projectName, {
 namespace:b
 });
 } else a = g.projectOverviewURL(l.projectName);
@@ -9382,7 +9382,7 @@ jsyaml.safeLoad(l.editorContent), v.setMode("ace/mode/yaml");
 l.$apply(x);
 }, 300);
 l.aceChanged = y;
-var z = function(a) {
+var z, A = function(a) {
 var c = b.open({
 animation:!0,
 templateUrl:"views/modals/confirm.html",
@@ -9400,34 +9400,33 @@ cancelButtonText:"Cancel"
 }
 });
 c.result.then(p);
-}, A = function(a) {
+}, B = function(a) {
 var b = a.quotaAlerts || [], c = _.filter(b, {
 type:"error"
 });
-c.length ? (l.disableInputs = !1, l.alerts = b) :b.length ? (z(b), l.disableInputs = !1) :p();
+c.length ? (l.disableInputs = !1, l.alerts = b) :b.length ? (A(b), l.disableInputs = !1) :p();
 };
 l.create = function() {
 l.alerts = {}, delete l.error;
-var b;
 try {
-b = JSON.parse(l.editorContent);
-} catch (c) {
+z = JSON.parse(l.editorContent);
+} catch (b) {
 try {
-b = jsyaml.safeLoad(l.editorContent);
-} catch (c) {
-return void (l.error = c);
+z = jsyaml.safeLoad(l.editorContent);
+} catch (b) {
+return void (l.error = b);
 }
 }
-if (m(b)) {
-l.resourceKind = b.kind, l.resourceKind.endsWith("List") ? (l.isList = !0, l.resourceList = b.items, l.resourceName = "") :(l.resourceList = [ b ], l.resourceName = b.metadata.name, "Template" === l.resourceKind && (l.templateOptions = {
+if (m(z)) {
+l.resourceKind = z.kind, l.resourceKind.endsWith("List") ? (l.isList = !0, l.resourceList = z.items, l.resourceName = "") :(l.resourceList = [ z ], l.resourceName = z.metadata.name, "Template" === l.resourceKind && (l.templateOptions = {
 process:!0,
 add:!1
 })), l.updateResources = [], l.createResources = [];
-var d = [];
+var c = [];
 l.errorOccured = !1, _.forEach(l.resourceList, function(a) {
-return m(a) ? void d.push(r(a)) :(l.errorOccured = !0, !1);
-}), a.all(d).then(function() {
-l.errorOccured || (1 === l.createResources.length && "Template" === l.resourceList[0].kind ? n() :_.isEmpty(l.updateResources) ? k.getLatestQuotaAlerts(l.createResources, l.context).then(A) :o());
+return m(a) ? void c.push(r(a)) :(l.errorOccured = !0, !1);
+}), a.all(c).then(function() {
+l.errorOccured || (1 === l.createResources.length && "Template" === l.resourceList[0].kind ? n() :_.isEmpty(l.updateResources) ? k.getLatestQuotaAlerts(l.createResources, l.context).then(B) :o());
 });
 }
 };
