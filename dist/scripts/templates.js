@@ -9520,14 +9520,11 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "<div class=\"action-set\" flex row tablet=\"column\" mobile=\"column\">\n" +
     "<div class=\"col-roles hidden-xs\" flex>&nbsp;</div>\n" +
     "<div class=\"col-add-role\" row>\n" +
-    "<input id=\"show-hidden-roles\" type=\"checkbox\" class=\"toggle-hidden\" ng-click=\"showAllRoles($event)\">\n" +
-    "&nbsp;\n" +
-    "<label for=\"show-hidden-roles\">\n" +
-    "Show hidden roles\n" +
-    "</label>\n" +
-    "<a href=\"\" class=\"action-inline\" data-toggle=\"popover\" data-trigger=\"focus\" data-content=\"System roles are hidden by default and do not typically need to be managed.\">\n" +
-    "<i class=\"pficon pficon-help\"></i>\n" +
-    "</a>\n" +
+    "<div class=\"checkbox\">\n" +
+    "<label>\n" +
+    "<input type=\"checkbox\" class=\"toggle-hidden\" ng-click=\"showAllRoles($event)\">\n" +
+    "Show hidden roles</label>&nbsp;<a href=\"\" class=\"action-inline\" data-toggle=\"popover\" data-trigger=\"hover focus\" data-content=\"System roles are hidden by default and do not typically need to be managed.\"><i class=\"pficon pficon-help\"></i></a>\n" +
+    "</div>\n" +
     "</div>\n" +
     "</div>\n" +
     "</div>\n" +
