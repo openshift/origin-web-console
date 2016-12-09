@@ -144,10 +144,10 @@
                              is-alternate="true"
                              show-weight="true">
         </osc-routing-service>
-        <a href="" ng-click="route.alternateServices.splice($index, 1)">Remove service</a>
+        <a href="" ng-click="route.alternateServices.splice($index, 1)">Remove Service</a>
         <span ng-if="$last && route.alternateServices.length < alternateServiceOptions.length">
           <span class="action-divider">|</span>
-          <a href="" ng-click="addAlternateService()">Add another service</a>
+          <a href="" ng-click="addAlternateService()">Add Another Service</a>
         </span>
       </div>
       <div ng-repeat="duplicate in duplicateServices" class="has-error mar-bottom-lg">

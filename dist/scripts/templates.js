@@ -1639,7 +1639,7 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "</volumes>\n" +
     "<a ng-href=\"project/{{project.metadata.name}}/attach-pvc?kind=ReplicationController&name={{replicaSet.metadata.name}}\">Add Storage</a>\n" +
     "<span class=\"action-divider\" aria-hidden=\"true\">|</span>\n" +
-    "<a ng-href=\"project/{{project.metadata.name}}/add-config-volume?kind=ReplicationController&name={{replicaSet.metadata.name}}\">Add config files</a>\n" +
+    "<a ng-href=\"project/{{project.metadata.name}}/add-config-volume?kind=ReplicationController&name={{replicaSet.metadata.name}}\">Add Config Files</a>\n" +
     "</div>\n" +
     "<div ng-if=\"!(resource | canI : 'update')\">\n" +
     "<volumes volumes=\"replicaSet.spec.template.spec.volumes\" namespace=\"project.metadata.name\"></volumes>\n" +
@@ -6388,7 +6388,7 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "</div>\n" +
     "<div class=\"form-group\">\n" +
     "<label>Environment Variables</label>\n" +
-    "<key-value-editor entries=\"hookParams.execNewPod.env\" key-validator=\"[a-zA-Z_][a-zA-Z0-9_]*\" key-validator-error-tooltip=\"A valid environment variable name is an alphanumeric (a-z and 0-9) string beginning with a letter that may contain underscores.\" add-row-link=\"Add environment variable\"></key-value-editor>\n" +
+    "<key-value-editor entries=\"hookParams.execNewPod.env\" key-validator=\"[a-zA-Z_][a-zA-Z0-9_]*\" key-validator-error-tooltip=\"A valid environment variable name is an alphanumeric (a-z and 0-9) string beginning with a letter that may contain underscores.\" add-row-link=\"Add Environment Variable\"></key-value-editor>\n" +
     "<div class=\"help-block\">\n" +
     "Environment variables to supply to the hook pod's container.\n" +
     "</div>\n" +
@@ -6452,8 +6452,8 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "</fieldset>\n" +
     "</div>\n" +
     "<span>\n" +
-    "<a href=\"\" role=\"button\" ng-if=\"!hookParams\" ng-click=\"addHook()\">Add {{type}} lifecycle hook</a>\n" +
-    "<a href=\"\" role=\"button\" ng-if=\"hookParams\" ng-click=\"removeHook()\">Remove {{type}} lifecycle hook</a>\n" +
+    "<a href=\"\" role=\"button\" ng-if=\"!hookParams\" ng-click=\"addHook()\">Add {{type | upperFirst}} Lifecycle Hook</a>\n" +
+    "<a href=\"\" role=\"button\" ng-if=\"hookParams\" ng-click=\"removeHook()\">Remove {{type | upperFirst}} Lifecycle Hook</a>\n" +
     "</span>\n" +
     "</ng-form>"
   );
@@ -6490,7 +6490,7 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "</div>\n" +
     "</div>\n" +
     "<span>\n" +
-    "<a href=\"\" role=\"button\" ng-click=\"addWebhookTrigger(type)\">Add {{type}} webhook</a>\n" +
+    "<a href=\"\" role=\"button\" ng-click=\"addWebhookTrigger(type)\">Add {{type}} Webhook</a>\n" +
     "</span>"
   );
 
@@ -7654,10 +7654,10 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "<div ng-repeat=\"alternate in route.alternateServices\" class=\"form-group\">\n" +
     "<osc-routing-service model=\"alternate\" services=\"alternateServiceOptions\" is-alternate=\"true\" show-weight=\"true\">\n" +
     "</osc-routing-service>\n" +
-    "<a href=\"\" ng-click=\"route.alternateServices.splice($index, 1)\">Remove service</a>\n" +
+    "<a href=\"\" ng-click=\"route.alternateServices.splice($index, 1)\">Remove Service</a>\n" +
     "<span ng-if=\"$last && route.alternateServices.length < alternateServiceOptions.length\">\n" +
     "<span class=\"action-divider\">|</span>\n" +
-    "<a href=\"\" ng-click=\"addAlternateService()\">Add another service</a>\n" +
+    "<a href=\"\" ng-click=\"addAlternateService()\">Add Another Service</a>\n" +
     "</span>\n" +
     "</div>\n" +
     "<div ng-repeat=\"duplicate in duplicateServices\" class=\"has-error mar-bottom-lg\">\n" +
@@ -8935,7 +8935,7 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "</div>\n" +
     "<div class=\"mar-top-lg\">\n" +
     "<div ng-if=\"!view.advancedStrategyOptions\">To set additional parameters or edit lifecycle hooks, view <a href=\"\" ng-click=\"view.advancedStrategyOptions = true\">advanced strategy options.</a></div>\n" +
-    "<a ng-if=\"view.advancedStrategyOptions\" href=\"\" ng-click=\"view.advancedStrategyOptions = false\">Hide strategy advanced options</a>\n" +
+    "<a ng-if=\"view.advancedStrategyOptions\" href=\"\" ng-click=\"view.advancedStrategyOptions = false\">Hide Advanced Strategy Options</a>\n" +
     "</div>\n" +
     "</dl>\n" +
     "</div>\n" +
@@ -8981,7 +8981,7 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "</div>\n" +
     "<div class=\"mar-top-lg\">\n" +
     "<div ng-if=\"!view.advancedImageOptions\">To set secrets for pulling your images from private image registries, view <a href=\"\" ng-click=\"view.advancedImageOptions = true\">advanced image options.</a></div>\n" +
-    "<a ng-if=\"view.advancedImageOptions\" href=\"\" ng-click=\"view.advancedImageOptions = false\">Hide advanced image options</a>\n" +
+    "<a ng-if=\"view.advancedImageOptions\" href=\"\" ng-click=\"view.advancedImageOptions = false\">Hide Advanced Image Options</a>\n" +
     "</div>\n" +
     "</dl>\n" +
     "</div>\n" +
@@ -9499,7 +9499,7 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "</div>\n" +
     "<div ng-if=\"mode.edit\" class=\"col-add-role\" conceal=\"tablet\" flex-collapse-fix>\n" +
     "<h3>\n" +
-    "Add another role\n" +
+    "Add Another Role\n" +
     "</h3>\n" +
     "</div>\n" +
     "</div>\n" +
