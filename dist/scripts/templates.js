@@ -6915,7 +6915,7 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "{{helpText}}\n" +
     "</div>\n" +
     "<div ng-show=\"expand\" ng-class=\"{ 'gutter-top': !helpText }\">\n" +
-    "<key-value-editor entries=\"labels\" key-placeholder=\"Name\" key-maxlength=\"63\" key-validator-regex=\"validator.key\" value-placeholder=\"Value\" value-maxlength=\"63\" value-validator-regex=\"validator.val\" key-validator-error-tooltip=\"A valid object label has the form [domain/]name where a name is an alphanumeric (a-z, and 0-9) string,\n" +
+    "<key-value-editor entries=\"labels\" key-placeholder=\"Name\" key-maxlength=\"63\" key-validator-regex=\"validator.key\" value-placeholder=\"Value\" value-maxlength=\"63\" value-validator-regex=\"validator.value\" key-validator-error-tooltip=\"A valid object label has the form [domain/]name where a name is an alphanumeric (a-z, and 0-9) string,\n" +
     "                                   with a maximum length of 63 characters, with the '-' character allowed anywhere except the first or last\n" +
     "                                   character. A domain is a sequence of names separated by the '.' character with a maximum length of 253 characters.\" value-validator-error-tooltip=\"A valid label value is an alphanumeric (a-z, and 0-9) string, with a maximum length of 63 characters, with the '-'\n" +
     "                                     character allowed anywhere except the first or last character.\" add-row-link=\"Add Label\"></key-value-editor>\n" +
