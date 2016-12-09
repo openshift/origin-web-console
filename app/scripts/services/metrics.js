@@ -169,7 +169,6 @@ angular.module("openshiftConsole")
       });
     };
 
-
     return {
       // Check if the metrics service is available. The service is considered
       // available if a metrics URL is set. Returns a promise resolved with a
@@ -256,6 +255,6 @@ angular.module("openshiftConsole")
       //   end:            end time in millis (optional)
       //
       // Returns a promise resolved with the metrics data.
-      getPodMetrics: getPodMetrics,
+      getPodMetrics: getPodMetrics
     };
   });

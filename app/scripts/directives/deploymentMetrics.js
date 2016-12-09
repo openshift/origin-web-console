@@ -8,6 +8,7 @@ angular.module('openshiftConsole')
                                            $rootScope,
                                            ChartsService,
                                            ConversionService,
+                                           MetricsCharts,
                                            MetricsService) {
     return {
       restrict: 'E',
@@ -29,14 +30,13 @@ angular.module('openshiftConsole')
       link: function(scope) {
         var chartByMetric = {};
         var intervalPromise;
-        var updateInterval = 60 * 1000; // 60 seconds
         var numDataPoints = 30;
         var compact = scope.profile === 'compact';
 
         // Set to true when the route changes so we don't update charts that no longer exist.
         var destroyed = false;
 
-        scope.uniqueID = _.uniqueId('metrics-');
+        scope.uniqueID = MetricsCharts.uniqueID();
 
         // Map of metric.type -> podName -> metrics data
         var data = {};
@@ -104,95 +104,24 @@ angular.module('openshiftConsole')
 
         // Relative time options.
         scope.options = {
-          rangeOptions: [{
-            label: "Last hour",
-            value: 60
-          }, {
-            label: "Last 4 hours",
-            value: 4 * 60
-          }, {
-            label: "Last day",
-            value: 24 * 60
-          }, {
-            label: "Last 3 days",
-            value: 3 * 24 * 60
-          }, {
-            label: "Last week",
-            value: 7 * 24 * 60
-          }]
+          rangeOptions: MetricsCharts.getTimeRangeOptions()
         };
         // Show last hour by default.
         scope.options.timeRange = _.head(scope.options.rangeOptions);
         scope.options.selectedContainer = _.head(scope.containers);
 
         var createSparklineConfig = function(metric) {
-          return {
-            bindto: '#' + metric.chartID,
-            axis: {
-              x: {
-                show: !compact,
-                type: 'timeseries',
-                // With default padding you can have negative axis tick values.
-                padding: {
-                  left: 0,
-                  bottom: 0
-                },
-                tick: {
-                  type: 'timeseries',
-                  format: '%a %H:%M'
-                }
-              },
-              y: {
-                show: !compact,
-                label: metric.units,
-                min: 0,
-                // With default padding you can have negative axis tick values.
-                padding: {
-                  left: 0,
-                  bottom: 0,
-                  top: 20
-                },
-                tick: {
-                  format: function(value) {
-                    return d3.round(value, 3);
-                  }
-                }
-              }
-            },
-            legend: {
-              show: !compact && !scope.showAverage
-            },
-            point: {
-              show: false
-            },
-            size: {
-              height: compact ? 35 : 175
-            },
-            tooltip: {
-              format: {
-                value: function(value) {
-                  return d3.round(value, 2) + " " + metric.units;
-                }
-              }
-            }
-          };
+          var config = MetricsCharts.getDefaultSparklineConfig(metric.chartID, metric.units, compact);
+          _.set(config, 'legend.show', !compact && !scope.showAverage);
+
+          return config;
         };
 
         function isNil(point) {
           return point.value === null || point.value === undefined;
         }
 
-        scope.formatUsage = function(usage) {
-          if (usage < 0.01) {
-            return '0';
-          }
-
-          if (usage < 1) {
-            return d3.format('.1r')(usage);
-          }
-
-          return d3.format('.2r')(usage);
-        };
+        scope.formatUsage = MetricsCharts.formatUsage;
 
         function averages(metric) {
           var label;
@@ -490,8 +419,7 @@ angular.module('openshiftConsole')
 
           update();
         }, true);
-        // Also update every 30 seconds.
-        intervalPromise = $interval(update, updateInterval, false);
+        intervalPromise = $interval(update, MetricsCharts.getDefaultUpdateInterval(), false);
 
         // Pause or resume metrics updates when the element scrolls into and
         // out of view.
@@ -499,17 +427,13 @@ angular.module('openshiftConsole')
           paused = !inview;
 
           // Update now if in view and it's been longer than updateInterval.
-          if (inview && (!lastUpdated || Date.now() > (lastUpdated + updateInterval))) {
+          if (inview && (!lastUpdated || Date.now() > (lastUpdated + MetricsCharts.getDefaultUpdateInterval()))) {
             update();
           }
         };
 
         $rootScope.$on('metrics.charts.resize', function(){
-          $timeout(function() {
-            _.each(chartByMetric, function(chart) {
-              chart.flush();
-            });
-          }, 0);
+          MetricsCharts.redraw(chartByMetric);
         });
 
         scope.$on('$destroy', function() {

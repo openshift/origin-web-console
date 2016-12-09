@@ -9,14 +9,13 @@ angular.module('openshiftConsole')
                                     $rootScope,
                                     ChartsService,
                                     ConversionService,
+                                    MetricsCharts,
                                     MetricsService,
                                     usageValueFilter) {
     return {
       restrict: 'E',
       scope: {
         pod: '=',
-        sparklineWidth: '=?',
-        sparklineHeight: '=?',
         includedMetrics: '=?', // defaults to ["cpu", "memory", "network"]
         stackDonut: '=?', // Keep donut on top of sparkline (e.g. on the monitoring page)
         alerts: '=?'
@@ -29,15 +28,13 @@ angular.module('openshiftConsole')
         var getMemoryLimit = $parse('resources.limits.memory');
         var getCPULimit = $parse('resources.limits.cpu');
 
-        var updateInterval = 60 * 1000; // 60 seconds
-
         // Number of data points to display on the chart.
         var numDataPoints = 30;
 
         // Set to true when the route changes so we don't update charts that no longer exist.
         var destroyed = false;
 
-        scope.uniqueID = _.uniqueId('metrics-chart-');
+        scope.uniqueID = MetricsCharts.uniqueID();
 
         // Metrics to display.
         scope.metrics = [];
@@ -106,24 +103,8 @@ angular.module('openshiftConsole')
 
         // Relative time options.
         scope.options = {
-          rangeOptions: [{
-            label: "Last hour",
-            value: 60
-          }, {
-            label: "Last 4 hours",
-            value: 4 * 60
-          }, {
-            label: "Last day",
-            value: 24 * 60
-          }, {
-            label: "Last 3 days",
-            value: 3 * 24 * 60
-          }, {
-            label: "Last week",
-            value: 7 * 24 * 60
-          }]
+          rangeOptions: MetricsCharts.getTimeRangeOptions()
         };
-        // Show last hour by default.
         scope.options.timeRange = _.head(scope.options.rangeOptions);
 
         var upperFirst = $filter('upperFirst');
@@ -152,57 +133,8 @@ angular.module('openshiftConsole')
         };
 
         var createSparklineConfig = function(metric) {
-          return {
-            bindto: '#' + metric.chartPrefix + scope.uniqueID + '-sparkline',
-            axis: {
-              x: {
-                show: true,
-                type: 'timeseries',
-                // With default padding you can have negative axis tick values.
-                padding: {
-                  left: 0,
-                  bottom: 0
-                },
-                tick: {
-                  type: 'timeseries',
-                  format: '%a %H:%M'
-                }
-              },
-              y: {
-                show: true,
-                label: metric.units,
-                min: 0,
-                // With default padding you can have negative axis tick values.
-                padding: {
-                  left: 0,
-                  top: 20,
-                  bottom: 0
-                },
-                tick: {
-                  format: function(value) {
-                    return d3.round(value, 3);
-                  }
-                }
-              }
-            },
-            legend: {
-              show: metric.datasets.length > 1
-            },
-            point: {
-              show: false
-            },
-            size: {
-              height: scope.sparklineHeight || 175,
-              width: scope.sparklineWidth,
-            },
-            tooltip: {
-              format: {
-                value: function(value) {
-                  return d3.round(value, 2) + " " + metric.units;
-                }
-              }
-            }
-          };
+          var chartID = metric.chartPrefix + scope.uniqueID + '-sparkline';
+          return MetricsCharts.getDefaultSparklineConfig(chartID, metric.units);
         };
 
         function getLimit(metricID) {
@@ -267,8 +199,6 @@ angular.module('openshiftConsole')
         }
 
         function updateSparkline(metric) {
-          var dates, values = {};
-
           var missingData = _.some(metric.datasets, function(dataset) {
             return !dataset.data;
           });
@@ -276,40 +206,15 @@ angular.module('openshiftConsole')
             return;
           }
 
-          angular.forEach(metric.datasets, function(dataset) {
-            var metricID = dataset.id, metricData = dataset.data;
-            dates = ['dates'], values[metricID] = [dataset.label || metricID];
-            angular.forEach(metricData, function(point) {
-              dates.push(point.start);
-              if (point.value === undefined || point.value === null) {
-                // Don't attempt to round null values. These appear as gaps in the chart.
-                values[metricID].push(point.value);
-              } else {
-                var value = metric.convert ? metric.convert(point.value) : point.value;
-                switch (metricID) {
-                  case 'memory/usage':
-                  case 'network/rx':
-                  case 'network/tx':
-                    values[metricID].push(d3.round(value, 2));
-                    break;
-                  default:
-                    values[metricID].push(d3.round(value));
-                }
-              }
-            });
-
+          var dataByID = {};
+          _.each(metric.datasets, function(dataset) {
+            dataByID[dataset.id] = dataset.data;
           });
 
-          var columns = [dates].concat(_.values(values));
-
-          var sparklineConfig, sparklineData = {
-            type: metric.chartType || 'spline',
-            x: 'dates',
-            columns: columns
-          };
-
+          var sparklineData = MetricsCharts.getSparklineData(dataByID);
           var chartId = metric.chartPrefix + "sparkline";
 
+          var sparklineConfig;
           if (!sparklineByMetric[chartId]) {
             sparklineConfig = createSparklineConfig(metric);
             sparklineConfig.data = sparklineData;
@@ -558,21 +463,11 @@ angular.module('openshiftConsole')
           delete scope.metricsError;
           update();
         }, true);
-        // Also update every 30 seconds.
-        intervalPromise = $interval(update, updateInterval, false);
+        intervalPromise = $interval(update, MetricsCharts.getDefaultUpdateInterval(), false);
 
         $rootScope.$on('metrics.charts.resize', function() {
-          _.each(donutByMetric, function(chart) {
-            setTimeout(function() {
-              chart.flush();
-            });
-          });
-
-          _.each(sparklineByMetric, function(chart) {
-            setTimeout(function() {
-              chart.flush();
-            });
-          });
+          MetricsCharts.redraw(donutByMetric);
+          MetricsCharts.redraw(sparklineByMetric);
         });
 
         scope.$on('$destroy', function() {
