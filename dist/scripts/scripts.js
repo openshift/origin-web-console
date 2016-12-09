@@ -81,10 +81,7 @@ prefixes:[ "/browse/deployment/", "/browse/dc/", "/browse/rs/", "/browse/rc/" ]
 label:"Pods",
 href:"/browse/pods",
 prefixes:[ "/browse/pods/" ]
-} ]
 }, {
-header:"Networking",
-items:[ {
 label:"Services",
 href:"/browse/services",
 prefixes:[ "/browse/services/" ]

@@ -121,12 +121,7 @@ window.OPENSHIFT_CONSTANTS = {
               prefixes: [
                 "/browse/pods/"
               ]
-            }
-          ]
-        },
-        {
-          header: "Networking",
-          items: [
+            },
             {
               label: "Services",
               href: "/browse/services",
