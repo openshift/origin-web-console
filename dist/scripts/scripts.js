@@ -9426,7 +9426,7 @@ var c = [];
 l.errorOccured = !1, _.forEach(l.resourceList, function(a) {
 return m(a) ? void c.push(r(a)) :(l.errorOccured = !0, !1);
 }), a.all(c).then(function() {
-l.errorOccured || (1 === l.createResources.length && "Template" === l.resourceList[0].kind ? n() :_.isEmpty(l.updateResources) ? k.getLatestQuotaAlerts(l.createResources, l.context).then(B) :o());
+l.errorOccured || (1 === l.createResources.length && "Template" === l.resourceList[0].kind ? n() :_.isEmpty(l.updateResources) ? k.getLatestQuotaAlerts(l.createResources, l.context).then(B) :(l.updateTemplate = 1 === l.updateResources.length && "Template" === l.updateResources[0].kind, l.updateTemplate ? n() :o()));
 });
 }
 };

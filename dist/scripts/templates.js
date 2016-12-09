@@ -9790,7 +9790,7 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
   $templateCache.put('views/modals/process-template.html',
     "<div class=\"modal-resource-action\">\n" +
     "<div class=\"modal-body\">\n" +
-    "<h1>Add Template</h1>\n" +
+    "<h1>{{updateTemplate ? \"Update\" : \"Add\"}} Template</h1>\n" +
     "<p>What would you like to do?</p>\n" +
     "<div>\n" +
     "<label>\n" +
@@ -9802,9 +9802,9 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "<div>\n" +
     "<label>\n" +
     "<input type=\"checkbox\" ng-model=\"templateOptions.add\"/>\n" +
-    "<strong>Save template</strong>\n" +
+    "<strong>{{updateTemplate ? \"Update\" : \"Save\"}} template</strong>\n" +
     "</label>\n" +
-    "<span id=\"helpBlock\" class=\"help-block\">Save the template to the project. This will make the template available to anyone who can view the project.</span>\n" +
+    "<span id=\"helpBlock\" class=\"help-block\">{{updateTemplate ? \"This will overwrite the current version of the template.\" : \"Save the template to the project. This will make the template available to anyone who can view the project.\"}}</span>\n" +
     "</div>\n" +
     "</div>\n" +
     "<div class=\"modal-footer\">\n" +

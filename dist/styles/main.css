@@ -3931,6 +3931,7 @@ a.disabled-link:active,a.disabled-link:focus,a.disabled-link:hover{color:#bbb;te
 .modal-resource-action{background-color:#f1f1f1}
 .modal-resource-action h1{font-size:21px;font-weight:500;margin-bottom:20px;word-wrap:break-word;word-break:break-word;overflow-wrap:break-word;min-width:0}
 .modal-resource-action p{font-size:16px}
+.modal-resource-action .help-block{margin-top:0px;margin-bottom:10px}
 .ace_editor.dockerfile-mode .ace_constant.ace_numeric,.editor.yaml-mode .ace_constant.ace_numeric{color:inherit}
 .edit-yaml h1{line-height:1.3}
 .edit-yaml .editor{line-height:1.5;width:100%;min-height:140px;height:50vh}

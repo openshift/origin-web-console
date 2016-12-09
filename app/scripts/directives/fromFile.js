@@ -158,7 +158,12 @@ angular.module("openshiftConsole")
               openTemplateProcessModal();
             // Else if any resources already exist
             } else if (!_.isEmpty($scope.updateResources)) {
-              confirmReplace();
+              $scope.updateTemplate = $scope.updateResources.length === 1 && $scope.updateResources[0].kind === "Template";
+              if ($scope.updateTemplate) {
+                openTemplateProcessModal();
+              } else {
+                confirmReplace();
+              }
             } else {
               QuotaService.getLatestQuotaAlerts($scope.createResources, $scope.context).then(showWarningsOrCreate);
             }
