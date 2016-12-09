@@ -1323,7 +1323,7 @@ angular.module('openshiftConsole')
     };
 
     return function(container, image) {
-      if (!container || !image) {
+      if (!container) {
         return null;
       }
 
@@ -1341,16 +1341,23 @@ angular.module('openshiftConsole')
         return cmd;
       }
 
-      entrypoint = toShellForm(_.get(image, 'dockerImageMetadata.Config.Entrypoint') || ["/bin/sh", "-c"]);
-      // If `container.args` is supplied without `container.command`, use container args with the image entrypoint.
-      if (args) {
-        return entrypoint + " " + args;
+      if (image) {
+        entrypoint = toShellForm(_.get(image, 'dockerImageMetadata.Config.Entrypoint') || ["/bin/sh", "-c"]);
+
+        // If `container.args` is supplied without `container.command`, use container args with the image entrypoint.
+        if (args) {
+          return entrypoint + " " + args;
+        }
+
+        // Otherwise, use container entrypoint with container command.
+        cmd = toShellForm(_.get(image, 'dockerImageMetadata.Config.Cmd'));
+        if (cmd) {
+          return entrypoint + " " + cmd;
+        }
       }
 
-      // Otherwise, use container entrypoint with container command.
-      cmd = toShellForm(_.get(image, 'dockerImageMetadata.Config.Cmd'));
-      if (cmd) {
-        return entrypoint + " " + cmd;
+      if (args) {
+        return "<image-entrypoint> " + args;
       }
 
       return null;

@@ -13913,9 +13913,15 @@ var a = function(a) {
 return _.isArray(a) ? a.join(" ") :a;
 };
 return function(b, c) {
-if (!b || !c) return null;
+if (!b) return null;
 var d, e = a(b.command), f = a(b.args);
-return e && f ? e + " " + f :e ? e :(d = a(_.get(c, "dockerImageMetadata.Config.Entrypoint") || [ "/bin/sh", "-c" ]), f ? d + " " + f :(e = a(_.get(c, "dockerImageMetadata.Config.Cmd")), e ? d + " " + e :null));
+if (e && f) return e + " " + f;
+if (e) return e;
+if (c) {
+if (d = a(_.get(c, "dockerImageMetadata.Config.Entrypoint") || [ "/bin/sh", "-c" ]), f) return d + " " + f;
+if (e = a(_.get(c, "dockerImageMetadata.Config.Cmd"))) return d + " " + e;
+}
+return f ? "<image-entrypoint> " + f :null;
 };
 }).filter("unidleTargetReplicas", [ "annotationFilter", function(a) {
 return function(b, c) {
