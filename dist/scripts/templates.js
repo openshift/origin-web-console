@@ -11250,8 +11250,8 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "</div>\n" +
     "<div class=\"list-view-pf-additional-info project-additional-info\">\n" +
     "<span class=\"list-group-item-text project-description\">\n" +
-    "<truncate-long-text ng-if=\"!keywords.length\" content=\"project | description\" limit=\"265\" use-word-boundary=\"true\"></truncate-long-text>\n" +
-    "<span ng-if=\"keywords.length\" ng-bind-html=\"project | description | truncate : 1000 | highlightKeywords : keywords\"></span>\n" +
+    "<truncate-long-text ng-if=\"!keywords.length\" content=\"project | description\" limit=\"265\" newline-limit=\"10\" use-word-boundary=\"true\"></truncate-long-text>\n" +
+    "<span class=\"highlighted-content\" ng-if=\"keywords.length\" ng-bind-html=\"project | description | truncate : 1000 | highlightKeywords : keywords\"></span>\n" +
     "</span>\n" +
     "</div>\n" +
     "</div>\n" +
