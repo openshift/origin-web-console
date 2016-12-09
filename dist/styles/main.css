@@ -4793,7 +4793,7 @@ dl.secret-data dd{margin-left:180px}
 .show-sidebar-right .sidebar-right h3:last-child{border-top:0;padding-top:0}
 @media (min-width:768px){.sidebar-left .navbar-sidebar{border-right:1px solid #050505;border-bottom:0;width:145px;position:absolute;top:1px;right:0;bottom:0;left:0}
 .sidebar-left .navbar-sidebar .sidebar-header{display:none}
-.sidebar-left .navbar-sidebar .hover-nav.dropdown-menu{border:0;border-radius:0;-webkit-box-shadow:2px 2px 2px rgba(0,0,0,.125);box-shadow:2px 2px 2px rgba(0,0,0,.125);left:100%;margin:0 0 0 1px;min-width:230px;position:absolute;padding:10px;top:-2px}
+.sidebar-left .navbar-sidebar .hover-nav.dropdown-menu{border:0;border-radius:0;-webkit-box-shadow:2px 2px 2px rgba(0,0,0,.125);box-shadow:2px 2px 2px rgba(0,0,0,.125);left:100%;margin:0 0 0 1px;min-width:230px;position:absolute;padding:10px;top:-2px;z-index:1001}
 .sidebar-left .navbar-sidebar ul.nav-sidenav-primary{border-bottom:1px solid rgba(255,255,255,.04)}
 .sidebar-left .navbar-sidebar ul.nav-sidenav-primary>li{position:relative}
 .sidebar-left .navbar-sidebar ul.nav-sidenav-primary>li.open>a:before{background-color:#3f4750;bottom:0;content:'';display:block;right:-1px;position:absolute;top:-1px;width:1px}
