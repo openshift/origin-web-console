@@ -3707,11 +3707,11 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "<div class=\"container-fluid\">\n" +
     "<alerts alerts=\"alerts\"></alerts>\n" +
     "<div class=\"row\">\n" +
-    "<div class=\"col-md-12\">\n" +
+    "<div class=\"col-md-12 gutter-top\">\n" +
     "<table class=\"table table-bordered table-hover table-mobile\">\n" +
     "<thead>\n" +
     "<tr>\n" +
-    "<th>Name</th>\n" +
+    "<th>{{customNameHeader || 'Name'}}</th>\n" +
     "<th>Hostname</th>\n" +
     "<th>Routes To</th>\n" +
     "<th>Target Port</th>\n" +
@@ -3719,11 +3719,11 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "</tr>\n" +
     "</thead>\n" +
     "<tbody ng-if=\"(routes | hashSize) == 0\">\n" +
-    "<tr><td colspan=\"5\"><em>{{emptyMessage}}</em></td></tr>\n" +
+    "<tr><td colspan=\"5\"><em>{{emptyMessage || 'No routes to show'}}</em></td></tr>\n" +
     "</tbody>\n" +
     "<tbody ng-repeat=\"route in routes | orderObjectsByDate : true\">\n" +
     "<tr>\n" +
-    "<td data-title=\"Name\">\n" +
+    "<td data-title=\"{{ customNameHeader || 'Name' }}\">\n" +
     "<a href=\"{{route | navigateResourceURL}}\">{{route.metadata.name}}</a>\n" +
     "<route-warnings ng-if=\"route.spec.to.kind !== 'Service' || services\" route=\"route\" service=\"services[route.spec.to.name]\">\n" +
     "</route-warnings>\n" +
@@ -3909,49 +3909,45 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "<dd>{{service.spec.type}}</dd>\n" +
     "<dt>IP:</dt>\n" +
     "<dd>{{service.spec.clusterIP}}</dd>\n" +
+    "<dt>Hostname:</dt>\n" +
+    "<dd>\n" +
+    "{{service.metadata.name}}.{{service.metadata.namespace}}.svc\n" +
+    "<span data-toggle=\"popover\" data-trigger=\"hover\" data-content=\"{{'This address is only resolvable from within the cluster.'}}\" style=\"cursor: help; padding-left: 5px\">\n" +
+    "<span class=\"pficon pficon-info\" aria-hidden=\"true\" data-toggle=\"tooltip\" style=\"cursor: help\"></span>\n" +
+    "</span>\n" +
+    "</dd>\n" +
+    "<dt ng-if-start=\"service.spec.externalName\">External Hostname:</dt>\n" +
+    "<dd ng-if-end>{{service.spec.externalName}}</dd>\n" +
     "<dt>Session affinity:</dt>\n" +
     "<dd>{{service.spec.sessionAffinity}}</dd>\n" +
-    "<dt ng-if=\"resource.status.loadBalancer.ingress.length\">Ingress points</dt>\n" +
-    "<dd ng-if=\"resource.status.loadBalancer.ingress.length\">\n" +
-    "<span ng-repeat=\"ingress in resource.status.loadBalancer.ingress\">{{ingress.ip}}<span ng-if=\"!$last\">, </span></span>\n" +
+    "<dt ng-if-start=\"service.status.loadBalancer.ingress.length\">Ingress Points:</dt>\n" +
+    "<dd ng-if-end>\n" +
+    "<span ng-repeat=\"ingress in service.status.loadBalancer.ingress\">{{ingress.ip}}<span ng-if=\"!$last\">, </span></span>\n" +
     "</dd>\n" +
-    "<dt>Routes:</dt>\n" +
-    "<dd>\n" +
-    "<span ng-if=\"!routesForService.length\">\n" +
+    "<dt ng-if-start=\"service.spec.externalIPs.length\">External IPs:</dt>\n" +
+    "<dd ng-if-end>\n" +
+    "<span ng-repeat=\"externalIP in service.spec.externalIPs\">{{externalIP}}<span ng-if=\"!$last\">, </span></span>\n" +
+    "</dd>\n" +
+    "<dt ng-if-start=\"(routesForService | hashSize) == 0\">Routes:</dt>\n" +
+    "<dd ng-if-end>\n" +
+    "<span>\n" +
     "<a ng-href=\"project/{{project.metadata.name}}/create-route?service={{service.metadata.name}}\" ng-if=\"'routes' | canI : 'create'\">Create route</a>\n" +
-    "</span>\n" +
-    "<span ng-repeat=\"route in routesForService\">\n" +
-    "<span ng-if=\"route | isWebRoute\"><a ng-href=\"{{route | routeWebURL}}\">{{route | routeLabel}}</a></span>\n" +
-    "<span ng-if=\"!(route | isWebRoute)\">{{route | routeLabel}}</span>\n" +
-    "<span ng-show=\"!$last\">, </span>\n" +
+    "<span ng-if=\"!('routes' | canI : 'create')\"><em>None</em></span>\n" +
     "</span>\n" +
     "</dd>\n" +
     "</dl>\n" +
-    "<div ng-if=\"service.spec.ports.length\" class=\"table-responsive\">\n" +
-    "<table class=\"table table-bordered small service-table\">\n" +
-    "<thead>\n" +
-    "<tr>\n" +
-    "<th>Node Port</th>\n" +
-    "<th role=\"presentation\"></th>\n" +
-    "<th>Service Port</th>\n" +
-    "<th role=\"presentation\"></th>\n" +
-    "<th>Target Port</th>\n" +
-    "</tr>\n" +
-    "</thead>\n" +
-    "<tbody>\n" +
-    "<tr ng-repeat=\"portMapping in service.spec.ports | orderBy:'port'\">\n" +
-    "<td>\n" +
-    "<span ng-if=\"portMapping.nodePort\">{{portMapping.nodePort}}</span>\n" +
-    "<span ng-if=\"!portMapping.nodePort\" class=\"text-muted\">none</span>\n" +
-    "</td>\n" +
-    "<td role=\"presentation\" class=\"text-muted\">&#8594;</td>\n" +
-    "<td>{{portMapping.port}}/{{portMapping.protocol}}\n" +
-    "<span ng-if=\"portMapping.name\">({{portMapping.name}})</span></td>\n" +
-    "<td role=\"presentation\" class=\"text-muted\">&#8594;</td>\n" +
-    "<td>{{portMapping.targetPort}}</td>\n" +
-    "</tr>\n" +
-    "</tbody>\n" +
-    "</table>\n" +
+    "<h3>\n" +
+    "Traffic\n" +
+    "</h3>\n" +
+    "<div class=\"table-responsive\">\n" +
+    "<traffic-table ports-by-route=\"portsByRoute\" routes=\"routesForService\" services=\"services\" show-node-ports=\"showNodePorts\" custom-name-header=\"'Route'\"></traffic-table>\n" +
+    "</div>\n" +
+    "<div style=\"margin:-10px 0 10px 0\">\n" +
+    "Learn more about <a ng-href=\"{{'route-types' | helpLink}}\" target=\"_blank\">routes</a> and <a ng-href=\"{{'services' | helpLink}}\" target=\"_blank\">services</a>\n" +
+    "</div>\n" +
+    "<h3>Pods</h3>\n" +
+    "<div class=\"table-responsive\">\n" +
+    "<pods-table pods=\"podsForService\" active-pods=\"podsWithEndpoints\" custom-name-header=\"'Pod'\" pod-failure-reasons=\"podFailureReasons\"></pods-table>\n" +
     "</div>\n" +
     "<annotations annotations=\"service.metadata.annotations\"></annotations>\n" +
     "</div>\n" +
@@ -8021,19 +8017,20 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "<table class=\"table table-bordered table-hover table-mobile\">\n" +
     "<thead>\n" +
     "<tr>\n" +
-    "<th>Name</th>\n" +
+    "<th>{{customNameHeader || 'Name'}}</th>\n" +
     "<th>Status</th>\n" +
     "<th>Containers Ready</th>\n" +
     "<th>Container Restarts</th>\n" +
     "<th>Age</th>\n" +
+    "<th ng-if=\"activePods\">Receiving Traffic</th>\n" +
     "</tr>\n" +
     "</thead>\n" +
     "<tbody ng-if=\"(pods | hashSize) == 0\">\n" +
-    "<tr><td colspan=\"5\"><em>{{emptyMessage || 'No pods to show'}}</em></td></tr>\n" +
+    "<tr><td colspan=\"6\"><em>{{emptyMessage || 'No pods to show'}}</em></td></tr>\n" +
     "</tbody>\n" +
     "<tbody ng-repeat=\"pod in pods | orderObjectsByDate : true\">\n" +
     "<tr>\n" +
-    "<td data-title=\"Name\">\n" +
+    "<td data-title=\"{{customNameHeader || 'Name'}}\">\n" +
     "<a href=\"{{pod | navigateResourceURL}}\">{{pod.metadata.name}}</a>\n" +
     "<span ng-if=\"pod | isDebugPod\">\n" +
     "<i class=\"fa fa-bug info-popover\" aria-hidden=\"true\" data-toggle=\"popover\" data-trigger=\"hover\" dynamic-content=\"Debugging pod {{pod | debugPodSourceName}}\"></i>\n" +
@@ -8049,6 +8046,18 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "<td data-title=\"Ready\">{{pod | numContainersReady}}/{{pod.spec.containers.length}}</td>\n" +
     "<td data-title=\"Restarts\">{{pod | numContainerRestarts}}</td>\n" +
     "<td data-title=\"Age\"><span am-time-ago=\"pod.metadata.creationTimestamp\" am-without-suffix=\"true\"></span></td>\n" +
+    "<td ng-if=\"activePods\" data-title=\"Receiving Traffic\">\n" +
+    "<span ng-if=\"activePods[pod.metadata.name]\">\n" +
+    "<span class=\"fa fa-fw fa-check text-success\" aria-hidden=\"true\"></span>\n" +
+    "<span class=\"sr-only\">Yes</span>\n" +
+    "</span>\n" +
+    "<span ng-if=\"!activePods[pod.metadata.name]\">\n" +
+    "<span data-toggle=\"popover\" data-trigger=\"hover\" data-content=\"{{podFailureReasons[pod.status.phase] || 'This pod has no endpoints and is not accepting traffic.'}}\" style=\"cursor: help\">\n" +
+    "<span class=\"fa fa-fw fa-times text-danger\" aria-hidden=\"true\" data-toggle=\"tooltip\" style=\"cursor: help\"></span>\n" +
+    "<span class=\"sr-only\">No</span>\n" +
+    "</span>\n" +
+    "</span>\n" +
+    "</td>\n" +
     "</tr>\n" +
     "</tbody>\n" +
     "</table>"
@@ -8142,6 +8151,85 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
 
   $templateCache.put('views/directives/service-group-notifications.html',
     "<alerts alerts=\"alerts\" filter=\"showAlert\" toast=\"true\" animate-slide=\"true\"></alerts>"
+  );
+
+
+  $templateCache.put('views/directives/traffic-table.html',
+    " <table class=\"table table-bordered table-hover table-mobile\">\n" +
+    "<thead>\n" +
+    "<tr>\n" +
+    "<th>{{customNameHeader || 'Route'}}<span ng-if=\"showNodePorts\"> / Node Port</span></th>\n" +
+    "<th role=\"presentation\"></th>\n" +
+    "<th>Service Port</th>\n" +
+    "<th role=\"presentation\"></th>\n" +
+    "<th>Target Port</th>\n" +
+    "<th>Hostname</th>\n" +
+    "<th>TLS Termination</th>\n" +
+    "</tr>\n" +
+    "</thead>\n" +
+    "<tbody ng-if=\"(portsByRoute | hashSize) == 0\">\n" +
+    "<tr><td colspan=\"7\"><em>{{emptyMessage || 'No routes or ports to show'}}</em></td></tr>\n" +
+    "</tbody>\n" +
+    "<tbody ng-if=\"(portsByRoute | hashSize) > 0\">\n" +
+    "<tr ng-repeat-start=\"(routeName,ports) in portsByRoute\" style=\"display:none\"></tr>\n" +
+    "<tr ng-repeat=\"port in ports\" ng-if=\"routeName !== ''\">\n" +
+    "<td data-title=\"{{customNameHeader || 'Route'}}{{ showNodePorts ? ' / Node Port' : '' }}\">\n" +
+    "<a href=\"{{routes[routeName] | navigateResourceURL}}\">{{routes[routeName].metadata.name}}</a>\n" +
+    "<route-warnings ng-if=\"routes[routeName].spec.to.kind !== 'Service' || services\" route=\"routes[routeName]\" service=\"services[routes[routeName].spec.to.name]\">\n" +
+    "</route-warnings>\n" +
+    "<span ng-if=\"showNodePorts\">\n" +
+    "<span ng-if=\"port.nodePort\"> / {{port.nodePort}}</span>\n" +
+    "</span>\n" +
+    "</td>\n" +
+    "<td role=\"presentation\" class=\"text-muted\">&#8594;</td>\n" +
+    "<td data-title=\"Service Port\">\n" +
+    "{{port.port}}/{{port.protocol}}\n" +
+    "<span ng-if=\"port.name\">({{port.name}})</span>\n" +
+    "</td>\n" +
+    "<td role=\"presentation\" class=\"text-muted\">&#8594;</td>\n" +
+    "<td data-title=\"Target Port\">\n" +
+    "{{port.targetPort}}\n" +
+    "</td>\n" +
+    "<td data-title=\"Hostname\">\n" +
+    "<span ng-if=\"(routes[routeName] | isWebRoute)\" class=\"word-break\">\n" +
+    "<a href=\"{{routes[routeName] | routeWebURL}}\" target=\"_blank\">{{routes[routeName] | routeLabel}}</a>\n" +
+    "</span>\n" +
+    "<span ng-if=\"!(routes[routeName] | isWebRoute)\" class=\"word-break\">\n" +
+    "{{routes[routeName] | routeLabel}}\n" +
+    "</span>\n" +
+    "<span ng-if=\"!routes[routeName].status.ingress\" data-toggle=\"popover\" data-trigger=\"hover\" data-content=\"The route is not accepting traffic yet because it has not been admitted by a router.\" style=\"cursor: help; padding-left: 5px\">\n" +
+    "<status-icon status=\"'Pending'\" disable-animation></status-icon>\n" +
+    "<span class=\"sr-only\">Pending</span>\n" +
+    "</span>\n" +
+    "</td>\n" +
+    "\n" +
+    "<td data-title=\"Termination\">\n" +
+    "{{routes[routeName].spec.tls.termination}}\n" +
+    "<span ng-if=\"!routes[routeName].spec.tls.termination\">&nbsp;</span>\n" +
+    "</td>\n" +
+    "</tr>\n" +
+    "<tr ng-repeat-end style=\"display:none\"></tr>\n" +
+    "<tr ng-repeat=\"port in portsByRoute['']\">\n" +
+    "<td data-title=\"{{customNameHeader || 'Route'}}{{ showNodePorts ? ' / Node Port' : '' }}\">\n" +
+    "<span ng-if=\"!port.nodePort\" class=\"text-muted\">none</span>\n" +
+    "<span ng-if=\"port.nodePort\">{{port.nodePort}}</span>\n" +
+    "</td>\n" +
+    "<td role=\"presentation\" class=\"text-muted\">&#8594;</td>\n" +
+    "<td data-title=\"Service Port\">\n" +
+    "{{port.port}}/{{port.protocol}}\n" +
+    "<span ng-if=\"port.name\">({{port.name}})</span>\n" +
+    "</td>\n" +
+    "<td role=\"presentation\" class=\"text-muted\">&#8594;</td>\n" +
+    "<td data-title=\"Target Port\">\n" +
+    "{{port.targetPort}}\n" +
+    "</td>\n" +
+    "<td data-title=\"Hostname\"><span class=\"text-muted\">none</span></td>\n" +
+    "<td data-title=\"Termination\">\n" +
+    "<span class=\"text-muted\">none</span>\n" +
+    "</td>\n" +
+    "</tr>\n" +
+    "</tbody>\n" +
+    "</table>"
   );
 
 

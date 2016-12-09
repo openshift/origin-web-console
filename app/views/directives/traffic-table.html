@@ -1,0 +1,78 @@
+<!-- Table combining routes and ports for a service -->
+<table class="table table-bordered table-hover table-mobile">
+  <thead>
+    <tr>
+      <th>{{customNameHeader || 'Route'}}<span ng-if="showNodePorts"> / Node Port</span></th>
+      <th role="presentation"></th>
+      <th>Service Port</th>
+      <th role="presentation"></th>
+      <th>Target Port</th>
+      <th>Hostname</th>
+      <th>TLS Termination</th>
+    </tr>
+  </thead>
+  <tbody ng-if="(portsByRoute | hashSize) == 0">
+    <tr><td colspan="7"><em>{{emptyMessage || 'No routes or ports to show'}}</em></td></tr>
+  </tbody>
+  <tbody ng-if="(portsByRoute | hashSize) > 0">
+    <tr ng-repeat-start="(routeName,ports) in portsByRoute" style="display:none;"></tr>
+    <tr ng-repeat="port in ports" ng-if="routeName !== ''">
+      <td data-title="{{customNameHeader || 'Route'}}{{ showNodePorts ? ' / Node Port' : '' }}">
+        <a href="{{routes[routeName] | navigateResourceURL}}">{{routes[routeName].metadata.name}}</a>
+        <route-warnings ng-if="routes[routeName].spec.to.kind !== 'Service' || services"
+                        route="routes[routeName]"
+                        service="services[routes[routeName].spec.to.name]">
+        </route-warnings>
+        <span ng-if="showNodePorts">
+          <span ng-if="port.nodePort"> / {{port.nodePort}}</span>
+        </span>
+      </td>
+      <td role="presentation" class="text-muted">&#8594;</td>
+      <td data-title="Service Port">
+        {{port.port}}/{{port.protocol}}
+        <span ng-if="port.name">({{port.name}})</span>
+      </td>
+      <td role="presentation" class="text-muted">&#8594;</td>
+      <td data-title="Target Port">
+        {{port.targetPort}}
+      </td>
+      <td data-title="Hostname">
+        <span ng-if="(routes[routeName] | isWebRoute)" class="word-break">
+          <a href="{{routes[routeName] | routeWebURL}}" target="_blank">{{routes[routeName] | routeLabel}}</a>
+        </span>
+        <span ng-if="!(routes[routeName] | isWebRoute)" class="word-break">
+          {{routes[routeName] | routeLabel}}
+        </span>
+        <span ng-if="!routes[routeName].status.ingress" data-toggle="popover" data-trigger="hover" data-content="The route is not accepting traffic yet because it has not been admitted by a router." style="cursor: help; padding-left: 5px;">
+          <status-icon status="'Pending'" disable-animation></status-icon>
+          <span class="sr-only">Pending</span>
+        </span>
+      </td>
+      <!-- Use shorter Termination title for table-mobile to avoid overlapping text. -->
+      <td data-title="Termination">
+        {{routes[routeName].spec.tls.termination}}
+        <span ng-if="!routes[routeName].spec.tls.termination">&nbsp;</span>
+      </td>
+    </tr>
+    <tr ng-repeat-end style="display:none;"></tr>
+    <tr ng-repeat="port in portsByRoute['']">
+      <td data-title="{{customNameHeader || 'Route'}}{{ showNodePorts ? ' / Node Port' : '' }}">
+        <span ng-if="!port.nodePort" class="text-muted">none</span>
+        <span ng-if="port.nodePort">{{port.nodePort}}</span>
+      </td>
+      <td role="presentation" class="text-muted">&#8594;</td>
+      <td data-title="Service Port">
+        {{port.port}}/{{port.protocol}}
+        <span ng-if="port.name">({{port.name}})</span>
+      </td>
+      <td role="presentation" class="text-muted">&#8594;</td>
+      <td data-title="Target Port">
+        {{port.targetPort}}
+      </td>
+      <td data-title="Hostname"><span class="text-muted">none</span></td>
+      <td data-title="Termination">
+        <span class="text-muted">none</span>
+      </td>
+    </tr>
+  </tbody>
+</table>

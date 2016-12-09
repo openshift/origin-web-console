@@ -165,9 +165,31 @@ angular.module('openshiftConsole')
       restrict: 'E',
       scope: {
         pods: '=',
+        // Optional active pods map to display whether or not pods have endpoints
+        activePods: '=?',
         // Optional empty message to display when there are no pods.
-        emptyMessage: '=?'
+        emptyMessage: '=?',
+        // Alternative header text to display in the 'Name' column.
+        customNameHeader: '=?',
+        // Optional map of explanations or warnings for each phase of a pod
+        podFailureReasons: '=?'
       },
       templateUrl: 'views/directives/pods-table.html'
+    };
+  })
+  .directive('trafficTable', function() {
+    return {
+      restrict: 'E',
+      scope: {
+        routes: '=',
+        services: '=',
+        portsByRoute: '=',
+        showNodePorts: '=?',
+        // Optional empty message to display when there are no pods.
+        emptyMessage: '=?',
+        // Alternative header text to display in the 'Name' column.
+        customNameHeader: '=?',
+      },
+      templateUrl: 'views/directives/traffic-table.html'
     };
   });
