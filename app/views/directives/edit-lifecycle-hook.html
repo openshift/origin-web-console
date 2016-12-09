@@ -57,7 +57,7 @@
             entries="hookParams.execNewPod.env"
             key-validator="[a-zA-Z_][a-zA-Z0-9_]*"
             key-validator-error-tooltip="A valid environment variable name is an alphanumeric (a-z and 0-9) string beginning with a letter that may contain underscores."
-            add-row-link="Add environment variable"></key-value-editor>
+            add-row-link="Add Environment Variable"></key-value-editor>
           <div class="help-block">
             Environment variables to supply to the hook pod's container.
           </div>
@@ -127,7 +127,7 @@
   </div>
 
   <span>
-    <a href="" role="button" ng-if="!hookParams" ng-click="addHook()">Add {{type}} lifecycle hook</a>
-    <a href="" role="button" ng-if="hookParams" ng-click="removeHook()">Remove {{type}} lifecycle hook</a>
+    <a href="" role="button" ng-if="!hookParams" ng-click="addHook()">Add {{type | upperFirst}} Lifecycle Hook</a>
+    <a href="" role="button" ng-if="hookParams" ng-click="removeHook()">Remove {{type | upperFirst}} Lifecycle Hook</a>
   </span>
 </ng-form>
