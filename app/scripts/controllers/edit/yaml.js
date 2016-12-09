@@ -107,8 +107,7 @@ angular.module('openshiftConsole')
               kind: resource.kind
             }, resource);
 
-            // flowLevel: 10 - Maximum level of depth before generating inline
-            _.set($scope, 'editor.model', jsyaml.safeDump(resource, {flowLevel: 10}));
+            _.set($scope, 'editor.model', jsyaml.safeDump(resource));
 
             $scope.save = function() {
               $scope.modified = false;

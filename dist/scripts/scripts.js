@@ -7471,9 +7471,7 @@ return _.get(a, "metadata.resourceVersion");
 h = angular.extend({
 apiVersion:h.apiVersion,
 kind:h.kind
-}, h), _.set(a, "editor.model", jsyaml.safeDump(h, {
-flowLevel:10
-})), a.save = function() {
+}, h), _.set(a, "editor.model", jsyaml.safeDump(h)), a.save = function() {
 a.modified = !1;
 var c;
 try {
