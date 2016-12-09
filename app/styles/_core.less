@@ -1165,10 +1165,15 @@ copy-to-clipboard .input-group.limit-width {
   justify-content: space-between;
 }
 
-
 // add an option for a single-column display at screen resolutions 0-479px
 @media (max-width: @screen-xxs-max) {
   .col-xxs-12 {
     width: 100%;
   }
+}
+
+// fixes wobble that occurs when status-icons utilize fa-spin (see https://github.com/FortAwesome/Font-Awesome/issues/671#issuecomment-249591495)
+.status-icon > .fa-spin {
+  font-size: 14px;
+  line-height: normal;
 }
