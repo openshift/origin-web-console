@@ -4106,6 +4106,13 @@ animation:!0,
 templateUrl:"views/modals/jenkinsfile-examples-modal.html",
 controller:"JenkinsfileExamplesModalController"
 });
+},
+showComputeUnitsHelp:function() {
+a.open({
+animation:!0,
+templateUrl:"views/modals/about-compute-units-modal.html",
+controller:"AboutComputeUnitsModalController"
+});
 }
 };
 } ]), angular.module("openshiftConsole").controller("ProjectsController", [ "$scope", "$filter", "$location", "$route", "$timeout", "AlertMessageService", "AuthService", "DataService", "KeywordService", "Logger", "ProjectsService", function(a, b, c, d, e, f, g, h, i, j, k) {
@@ -8701,6 +8708,10 @@ b.dismiss();
 a.ok = function() {
 b.close("ok");
 };
+} ]), angular.module("openshiftConsole").controller("AboutComputeUnitsModalController", [ "$scope", "$uibModalInstance", function(a, b) {
+a.ok = function() {
+b.close("ok");
+};
 } ]), angular.module("openshiftConsole").controller("AboutController", [ "$scope", "AuthService", "Constants", function(a, b, c) {
 b.withUser(), a.version = {
 master:{
@@ -11093,7 +11104,7 @@ b(c.resource, c.kind);
 }, b.prototype.removeResourceChangedCallback = function(a) {
 this.callbacks.remove(a);
 }, new b();
-} ]), angular.module("openshiftConsole").directive("podMetrics", [ "$filter", "$interval", "$parse", "$timeout", "$q", "$rootScope", "ChartsService", "ConversionService", "MetricsCharts", "MetricsService", "usageValueFilter", function(a, b, c, d, e, f, g, h, i, j, k) {
+} ]), angular.module("openshiftConsole").directive("podMetrics", [ "$filter", "$interval", "$parse", "$timeout", "$q", "$rootScope", "ChartsService", "ConversionService", "MetricsCharts", "MetricsService", "ModalsService", "usageValueFilter", function(a, b, c, d, e, f, g, h, i, j, k, l) {
 return {
 restrict:"E",
 scope:{
@@ -11103,23 +11114,23 @@ stackDonut:"=?",
 alerts:"=?"
 },
 templateUrl:"views/directives/pod-metrics.html",
-link:function(l) {
-function m(a) {
-if (!l.pod) return null;
-var b = l.options.selectedContainer;
+link:function(m) {
+function n(a) {
+if (!m.pod) return null;
+var b = m.options.selectedContainer;
 switch (a) {
 case "memory/usage":
-var c = C(b);
-if (c) return h.bytesToMiB(k(c));
+var c = D(b);
+if (c) return h.bytesToMiB(l(c));
 break;
 
 case "cpu/usage_rate":
-var d = D(b);
-if (d) return k(d);
+var d = E(b);
+if (d) return l(d);
 }
 return null;
 }
-function n(a) {
+function o(a) {
 var b = _.head(a.datasets);
 if (b.total) {
 var c, e = {
@@ -11130,12 +11141,12 @@ Used:b.available > 0 ? "#0088ce" :"#ec7a08",
 Available:"#d1d1d1"
 }
 };
-A[b.id] ? A[b.id].load(e) :(c = H(a), c.data = e, d(function() {
-F || (A[b.id] = c3.generate(c));
+B[b.id] ? B[b.id].load(e) :(c = I(a), c.data = e, d(function() {
+G || (B[b.id] = c3.generate(c));
 }));
 }
 }
-function o(a) {
+function p(a) {
 var b = _.some(a.datasets, function(a) {
 return !a.data;
 });
@@ -11145,106 +11156,106 @@ _.each(a.datasets, function(a) {
 c[a.id] = a.data;
 });
 var e, f = i.getSparklineData(c), g = a.chartPrefix + "sparkline";
-B[g] ? B[g].load(f) :(e = I(a), e.data = f, a.chartDataColors && (e.color = {
+C[g] ? C[g].load(f) :(e = J(a), e.data = f, a.chartDataColors && (e.color = {
 pattern:a.chartDataColors
 }), d(function() {
-F || (B[g] = c3.generate(e));
+G || (C[g] = c3.generate(e));
 }));
 }
 }
-function p() {
-return "-" + l.options.timeRange.value + "mn";
-}
 function q() {
-return 60 * l.options.timeRange.value * 1e3;
+return "-" + m.options.timeRange.value + "mn";
 }
 function r() {
-return Math.floor(q() / E) + "ms";
+return 60 * m.options.timeRange.value * 1e3;
 }
-function s(a, b, c) {
+function s() {
+return Math.floor(r() / F) + "ms";
+}
+function t(a, b, c) {
 var d, e = {
 metric:b.id,
-bucketDuration:r()
+bucketDuration:s()
 };
-return b.data && b.data.length ? (d = _.last(b.data), e.start = d.end) :e.start = c, l.pod ? _.assign(e, {
-namespace:l.pod.metadata.namespace,
-pod:l.pod,
-containerName:a.containerMetric ? l.options.selectedContainer.name :"pod"
+return b.data && b.data.length ? (d = _.last(b.data), e.start = d.end) :e.start = c, m.pod ? _.assign(e, {
+namespace:m.pod.metadata.namespace,
+pod:m.pod,
+containerName:a.containerMetric ? m.options.selectedContainer.name :"pod"
 }) :null;
 }
-function t() {
-J = 0, _.each(l.metrics, function(a) {
-o(a), n(a);
+function u() {
+K = 0, _.each(m.metrics, function(a) {
+p(a), o(a);
 });
 }
-function u(a) {
-if (!F) {
-if (J++, l.noData) return void (l.metricsError = {
+function v(a) {
+if (!G) {
+if (K++, m.noData) return void (m.metricsError = {
 status:_.get(a, "status", 0),
 details:_.get(a, "data.errorMsg") || _.get(a, "statusText") || "Status code " + _.get(a, "status", 0)
 });
-if (!(J < 2)) {
-var b = "metrics-failed-" + l.uniqueID;
-l.alerts[b] = {
+if (!(K < 2)) {
+var b = "metrics-failed-" + m.uniqueID;
+m.alerts[b] = {
 type:"error",
-message:"An error occurred updating metrics for pod " + _.get(l, "pod.metadata.name", "<unknown>") + ".",
+message:"An error occurred updating metrics for pod " + _.get(m, "pod.metadata.name", "<unknown>") + ".",
 links:[ {
 href:"",
 label:"Retry",
 onClick:function() {
-delete l.alerts[b], J = 1, y();
+delete m.alerts[b], K = 1, z();
 }
 } ]
 };
 }
 }
 }
-function v() {
-return !(l.metricsError || J > 1) && (l.pod && _.get(l, "options.selectedContainer"));
+function w() {
+return !(m.metricsError || K > 1) && (m.pod && _.get(m, "options.selectedContainer"));
 }
-function w(a, b, c) {
-b.total = m(b.id), b.total && (l.hasLimits = !0);
+function x(a, b, c) {
+b.total = n(b.id), b.total && (m.hasLimits = !0);
 var d = _.get(c, "usage.value");
 isNaN(d) && (d = 0), a.convert && (d = a.convert(d)), b.used = d3.round(d, a.usagePrecision), b.total && (b.available = d3.round(b.total - d, a.usagePrecision)), a.totalUsed += b.used;
 }
-function x(a, b) {
-l.noData = !1;
+function y(a, b) {
+m.noData = !1;
 var c = _.initial(b.data);
-return a.data ? void (a.data = _.chain(a.data).takeRight(E).concat(c).value()) :void (a.data = c);
+return a.data ? void (a.data = _.chain(a.data).takeRight(F).concat(c).value()) :void (a.data = c);
 }
-function y() {
-if (v()) {
-var a = p(), b = [];
-angular.forEach(l.metrics, function(c) {
+function z() {
+if (w()) {
+var a = q(), b = [];
+angular.forEach(m.metrics, function(c) {
 var d = [];
 c.totalUsed = 0, angular.forEach(c.datasets, function(e) {
-var f = s(c, e, a);
+var f = t(c, e, a);
 if (f) {
 var g = j.get(f);
 d.push(g);
-var h = m(e.id);
+var h = n(e.id);
 h && b.push(j.getCurrentUsage(f).then(function(a) {
-w(c, e, a);
+x(c, e, a);
 }));
 }
 }), b = b.concat(d), e.all(d).then(function(a) {
-F || angular.forEach(a, function(a) {
+G || angular.forEach(a, function(a) {
 if (a) {
 var b = _.find(c.datasets, {
 id:a.metricID
 });
-x(b, a);
+y(b, a);
 }
 });
 });
-}), e.all(b).then(t, u)["finally"](function() {
-l.loaded = !0;
+}), e.all(b).then(u, v)["finally"](function() {
+m.loaded = !0;
 });
 }
 }
-l.includedMetrics = l.includedMetrics || [ "cpu", "memory", "network" ];
-var z, A = {}, B = {}, C = c("resources.limits.memory"), D = c("resources.limits.cpu"), E = 30, F = !1;
-l.uniqueID = i.uniqueID(), l.metrics = [], _.includes(l.includedMetrics, "memory") && l.metrics.push({
+m.includedMetrics = m.includedMetrics || [ "cpu", "memory", "network" ];
+var A, B = {}, C = {}, D = c("resources.limits.memory"), E = c("resources.limits.cpu"), F = 30, G = !1;
+m.uniqueID = i.uniqueID(), m.metrics = [], _.includes(m.includedMetrics, "memory") && m.metrics.push({
 label:"Memory",
 units:"MiB",
 chartPrefix:"memory-",
@@ -11255,7 +11266,7 @@ id:"memory/usage",
 label:"Memory",
 data:[]
 } ]
-}), _.includes(l.includedMetrics, "cpu") && l.metrics.push({
+}), _.includes(m.includedMetrics, "cpu") && m.metrics.push({
 label:"CPU",
 units:"cores",
 chartPrefix:"cpu-",
@@ -11267,7 +11278,7 @@ id:"cpu/usage_rate",
 label:"CPU",
 data:[]
 } ]
-}), _.includes(l.includedMetrics, "network") && l.metrics.push({
+}), _.includes(m.includedMetrics, "network") && m.metrics.push({
 label:"Network",
 units:"KiB/s",
 chartPrefix:"network-",
@@ -11282,17 +11293,19 @@ id:"network/rx_rate",
 label:"Received",
 data:[]
 } ]
-}), l.loaded = !1, l.noData = !0, j.getMetricsURL().then(function(a) {
-l.metricsURL = a;
-}), l.options = {
+}), m.loaded = !1, m.noData = !0, m.showComputeUnitsHelp = function() {
+k.showComputeUnitsHelp();
+}, j.getMetricsURL().then(function(a) {
+m.metricsURL = a;
+}), m.options = {
 rangeOptions:i.getTimeRangeOptions()
-}, l.options.timeRange = _.head(l.options.rangeOptions);
-var G = a("upperFirst"), H = function(a) {
-var b = "#" + a.chartPrefix + l.uniqueID + "-donut";
+}, m.options.timeRange = _.head(m.options.rangeOptions);
+var H = a("upperFirst"), I = function(a) {
+var b = "#" + a.chartPrefix + m.uniqueID + "-donut";
 return {
 bindto:b,
 onrendered:function() {
-g.updateDonutCenterText(b, a.datasets[0].used, G(a.units) + " Used");
+g.updateDonutCenterText(b, a.datasets[0].used, H(a.units) + " Used");
 },
 donut:{
 label:{
@@ -11308,28 +11321,28 @@ height:175,
 widht:175
 }
 };
-}, I = function(a) {
-var b = a.chartPrefix + l.uniqueID + "-sparkline", c = i.getDefaultSparklineConfig(b, a.units);
+}, J = function(a) {
+var b = a.chartPrefix + m.uniqueID + "-sparkline", c = i.getDefaultSparklineConfig(b, a.units);
 return 1 === a.datasets.length && _.set(c, "legend.show", !1), c;
-}, J = 0;
-l.$watch("options", function() {
-_.each(l.metrics, function(a) {
+}, K = 0;
+m.$watch("options", function() {
+_.each(m.metrics, function(a) {
 _.each(a.datasets, function(a) {
 delete a.data;
 });
-}), delete l.metricsError, y();
-}, !0), z = b(y, i.getDefaultUpdateInterval(), !1), f.$on("metrics.charts.resize", function() {
-i.redraw(A), i.redraw(B);
-}), l.$on("$destroy", function() {
-z && (b.cancel(z), z = null), angular.forEach(A, function(a) {
+}), delete m.metricsError, z();
+}, !0), A = b(z, i.getDefaultUpdateInterval(), !1), f.$on("metrics.charts.resize", function() {
+i.redraw(B), i.redraw(C);
+}), m.$on("$destroy", function() {
+A && (b.cancel(A), A = null), angular.forEach(B, function(a) {
 a.destroy();
-}), A = null, angular.forEach(B, function(a) {
+}), B = null, angular.forEach(C, function(a) {
 a.destroy();
-}), B = null, F = !0;
+}), C = null, G = !0;
 });
 }
 };
-} ]), angular.module("openshiftConsole").directive("deploymentMetrics", [ "$interval", "$parse", "$timeout", "$q", "$rootScope", "ChartsService", "ConversionService", "MetricsCharts", "MetricsService", function(a, b, c, d, e, f, g, h, i) {
+} ]), angular.module("openshiftConsole").directive("deploymentMetrics", [ "$interval", "$parse", "$timeout", "$q", "$rootScope", "ChartsService", "ConversionService", "MetricsCharts", "MetricsService", "ModalsService", function(a, b, c, d, e, f, g, h, i, j) {
 return {
 restrict:"E",
 scope:{
@@ -11347,7 +11360,7 @@ return null === a.value || void 0 === a.value;
 }
 function d(a) {
 var b;
-b = v ? a.compactDatasetLabel || a.label :"Average Usage";
+b = w ? a.compactDatasetLabel || a.label :"Average Usage";
 var d = {}, e = [ "Date" ], f = [ b ], g = [ e, f ], h = function(a) {
 var b = "" + a.start;
 return d[b] || (d[b] = {
@@ -11355,10 +11368,10 @@ total:0,
 count:0
 }), d[b];
 };
-return _.each(z[a.descriptor], function(a) {
+return _.each(A[a.descriptor], function(a) {
 _.each(a, function(a) {
 var b = h(a);
-(!x || x < a.end) && (x = a.end), c(a) || (b.total += a.value, b.count = b.count + 1);
+(!y || y < a.end) && (y = a.end), c(a) || (b.total += a.value, b.count = b.count + 1);
 });
 }), _.each(d, function(b, c) {
 var d;
@@ -11370,14 +11383,14 @@ var f = [], g = {
 type:"spline"
 };
 return b.showAverage ? (_.each(a[e.descriptor], function(a, b) {
-q(e.descriptor, b, a);
-}), g.type = "area-spline", v && e.compactType && (g.type = e.compactType), g.x = "Date", g.columns = d(e), g) :(_.each(a[e.descriptor], function(a, b) {
-q(e.descriptor, b, a);
+r(e.descriptor, b, a);
+}), g.type = "area-spline", w && e.compactType && (g.type = e.compactType), g.x = "Date", g.columns = d(e), g) :(_.each(a[e.descriptor], function(a, b) {
+r(e.descriptor, b, a);
 var d = b + "-dates";
 _.set(g, [ "xs", b ], d);
 var h = [ d ], i = [ b ];
-f.push(h), f.push(i), _.each(z[e.descriptor][b], function(a) {
-if (h.push(a.start), (!x || x < a.end) && (x = a.end), c(a)) i.push(a.value); else {
+f.push(h), f.push(i), _.each(A[e.descriptor][b], function(a) {
+if (h.push(a.start), (!y || y < a.end) && (y = a.end), c(a)) i.push(a.value); else {
 var b = e.convert ? e.convert(a.value) :a.value;
 i.push(b);
 }
@@ -11386,40 +11399,40 @@ i.push(b);
 return a[0];
 }), g);
 }
-function j(a) {
-w || (D = 0, b.showAverage = _.size(b.pods) > 5 || v, _.each(b.metrics, function(c) {
+function k(a) {
+x || (E = 0, b.showAverage = _.size(b.pods) > 5 || w, _.each(b.metrics, function(c) {
 var d, e = f(a, c), g = c.descriptor;
-v && c.compactCombineWith && (g = c.compactCombineWith, c.lastValue && (C[g].lastValue = (C[g].lastValue || 0) + c.lastValue)), t[g] ? (t[g].load(e), b.showAverage ? t[g].legend.hide() :t[g].legend.show()) :(d = E(c), d.data = e, t[g] = c3.generate(d));
+w && c.compactCombineWith && (g = c.compactCombineWith, c.lastValue && (D[g].lastValue = (D[g].lastValue || 0) + c.lastValue)), u[g] ? (u[g].load(e), b.showAverage ? u[g].legend.hide() :u[g].legend.show()) :(d = F(c), d.data = e, u[g] = c3.generate(d));
 }));
 }
-function k() {
-return v ? "-15mn" :"-" + b.options.timeRange.value + "mn";
-}
 function l() {
-return 60 * b.options.timeRange.value * 1e3;
+return w ? "-15mn" :"-" + b.options.timeRange.value + "mn";
 }
 function m() {
-return v ? "1mn" :Math.floor(l() / u) + "ms";
+return 60 * b.options.timeRange.value * 1e3;
 }
 function n() {
+return w ? "1mn" :Math.floor(m() / v) + "ms";
+}
+function o() {
 var a = _.find(b.pods, "metadata.namespace");
 if (a) {
 var c = {
 pods:b.pods,
 containerName:b.options.selectedContainer.name,
 namespace:a.metadata.namespace,
-bucketDuration:m()
+bucketDuration:n()
 };
-return x ? c.start = x :c.start = k(), c;
+return y ? c.start = y :c.start = l(), c;
 }
 }
-function o(a) {
-if (!w) {
-if (D++, b.noData) return void (b.metricsError = {
+function p(a) {
+if (!x) {
+if (E++, b.noData) return void (b.metricsError = {
 status:_.get(a, "status", 0),
 details:_.get(a, "data.errorMsg") || _.get(a, "statusText") || "Status code " + _.get(a, "status", 0)
 });
-if (!(D < 2)) {
+if (!(E < 2)) {
 var c = "metrics-failed-" + b.uniqueID;
 b.alerts[c] = {
 type:"error",
@@ -11428,36 +11441,36 @@ links:[ {
 href:"",
 label:"Retry",
 onClick:function() {
-delete b.alerts[c], D = 1, r();
+delete b.alerts[c], E = 1, s();
 }
 } ]
 };
 }
 }
 }
-function p() {
+function q() {
 var a = _.isEmpty(b.pods);
-return a ? (b.loaded = !0, !1) :!b.metricsError && D < 2;
+return a ? (b.loaded = !0, !1) :!b.metricsError && E < 2;
 }
-function q(a, c, d) {
+function r(a, c, d) {
 b.noData = !1;
-var e = _.initial(d), f = _.get(z, [ a, c ]);
-if (!f) return void _.set(z, [ a, c ], e);
-var g = _.takeRight(f.concat(e), u);
-_.set(z, [ a, c ], g);
+var e = _.initial(d), f = _.get(A, [ a, c ]);
+if (!f) return void _.set(A, [ a, c ], e);
+var g = _.takeRight(f.concat(e), v);
+_.set(A, [ a, c ], g);
 }
-function r() {
-if (!A && p()) {
-y = Date.now();
-var a = n();
-i.getPodMetrics(a).then(j, o)["finally"](function() {
+function s() {
+if (!B && q()) {
+z = Date.now();
+var a = o();
+i.getPodMetrics(a).then(k, p)["finally"](function() {
 b.loaded = !0;
 });
 }
 }
-var s, t = {}, u = 30, v = "compact" === b.profile, w = !1;
+var t, u = {}, v = 30, w = "compact" === b.profile, x = !1;
 b.uniqueID = h.uniqueID();
-var x, y, z = {}, A = v, B = function(a) {
+var y, z, A = {}, B = w, C = function(a) {
 return a >= 1024;
 };
 b.metrics = [ {
@@ -11465,10 +11478,10 @@ label:"Memory",
 units:"MiB",
 convert:g.bytesToMiB,
 formatUsage:function(a) {
-return B(a) && (a /= 1024), h.formatUsage(a);
+return C(a) && (a /= 1024), h.formatUsage(a);
 },
 usageUnits:function(a) {
-return B(a) ? "GiB" :"MiB";
+return C(a) ? "GiB" :"MiB";
 },
 descriptor:"memory/usage",
 type:"pod_container",
@@ -11513,28 +11526,30 @@ compactDatasetLabel:"Received",
 compactType:"spline",
 chartID:"network-rx-" + b.uniqueID
 } ];
-var C = _.indexBy(b.metrics, "descriptor");
-b.loaded = !1, b.noData = !0;
-var D = 0;
+var D = _.indexBy(b.metrics, "descriptor");
+b.loaded = !1, b.noData = !0, b.showComputeUnitsHelp = function() {
+j.showComputeUnitsHelp();
+};
+var E = 0;
 i.getMetricsURL().then(function(a) {
 b.metricsURL = a;
 }), b.options = {
 rangeOptions:h.getTimeRangeOptions()
 }, b.options.timeRange = _.head(b.options.rangeOptions), b.options.selectedContainer = _.head(b.containers);
-var E = function(a) {
-var c = h.getDefaultSparklineConfig(a.chartID, a.units, v);
-return _.set(c, "legend.show", !v && !b.showAverage), c;
+var F = function(a) {
+var c = h.getDefaultSparklineConfig(a.chartID, a.units, w);
+return _.set(c, "legend.show", !w && !b.showAverage), c;
 };
 b.$watch("options", function() {
-z = {}, x = null, delete b.metricsError, r();
-}, !0), s = a(r, h.getDefaultUpdateInterval(), !1), b.updateInView = function(a) {
-A = !a, a && (!y || Date.now() > y + h.getDefaultUpdateInterval()) && r();
+A = {}, y = null, delete b.metricsError, s();
+}, !0), t = a(s, h.getDefaultUpdateInterval(), !1), b.updateInView = function(a) {
+B = !a, a && (!z || Date.now() > z + h.getDefaultUpdateInterval()) && s();
 }, e.$on("metrics.charts.resize", function() {
-h.redraw(t);
+h.redraw(u);
 }), b.$on("$destroy", function() {
-s && (a.cancel(s), s = null), angular.forEach(t, function(a) {
+t && (a.cancel(t), t = null), angular.forEach(u, function(a) {
 a.destroy();
-}), t = null, w = !0;
+}), u = null, x = !0;
 });
 }
 };
@@ -12310,7 +12325,7 @@ j(), k(), b.amount ? e.$setViewValue(b.amount + b.unit) :e.$setViewValue(void 0)
 }), b.$watchGroup([ "limitRangeMin", "limitRangeMax" ], j), b.$watch("request", k);
 }
 };
-} ]).directive("editRequestLimit", [ "$filter", "LimitRangesService", function(a, b) {
+} ]).directive("editRequestLimit", [ "$filter", "LimitRangesService", "ModalsService", function(a, b, c) {
 return {
 restrict:"E",
 scope:{
@@ -12321,7 +12336,9 @@ project:"="
 },
 templateUrl:"views/_edit-request-limit.html",
 link:function(a) {
-a.$watch("limitRanges", function() {
+a.showComputeUnitsHelp = function() {
+c.showComputeUnitsHelp();
+}, a.$watch("limitRanges", function() {
 a.limits = b.getEffectiveLimitRange(a.limitRanges, a.type, "Container", a.project), a.requestCalculated = b.isRequestCalculated(a.type, a.project), a.limitCalculated = b.isLimitCalculated(a.type, a.project);
 }, !0);
 }

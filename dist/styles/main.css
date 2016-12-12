@@ -3586,6 +3586,9 @@ to{transform:rotate(359deg)}
 .input-group-addon.wildcard-prefix{padding-left:10px}
 .editor-examples{padding:19px;margin-bottom:20px;border:1px solid #d1d1d1}
 .editor-examples .copy-to-clipboard{margin-top:3px}
+.compute-resource{margin-bottom:5px}
+@media (max-width:767px){.compute-resource .inline-select{margin-top:5px}
+}
 .card-pf .image-icon,.card-pf .template-icon{font-size:28px;line-height:1;margin-right:15px;opacity:.38}
 .card-pf-badge{color:#999;font-size:11px;text-transform:uppercase}
 .card-pf-body{margin-bottom:0}
@@ -3864,8 +3867,6 @@ label.checkbox{font-weight:400}
 .osc-form .template-options .form-group .parameter-input-wrapper .resize-input .fa-compress,.osc-form .template-options .form-group .parameter-input-wrapper .resize-input .fa-expand{transform:rotate(90deg)}
 .osc-form .template-options .form-group .parameter-input-wrapper input,.osc-form .template-options .form-group .parameter-input-wrapper textarea{padding-right:20px}
 .osc-form .template-options .help-block{margin-bottom:5px}
-@media (max-width:767px){.compute-resource .inline-select{margin-top:5px}
-}
 .next-steps .tile{margin-bottom:0}
 .next-steps .tile.tile-status{margin-top:0}
 .command-args textarea{resize:none}
@@ -4983,13 +4984,12 @@ kubernetes-topology-graph{height:700px}
 .kube-topology line.DeploymentConfigReplicationController,.kube-topology line.ReplicationControllerPod,.kube-topology line.ServiceDeploymentConfig,.kube-topology line.ServiceReplicationController{stroke-dasharray:5,2;stroke-linecap:round}
 .console-os .page-header{border-color:#e4e4e4;padding-left:20px;padding-right:20px;margin:20px -20px 0}
 .console-os .page-header .actions{margin-top:0}
-.console-os .page-header .page-header-link{display:inline-block;font-size:11px;font-weight:400;margin:0 10px;white-space:nowrap}
+.console-os .page-header-link{display:inline-block;font-size:11px;font-weight:400;margin:0 10px;white-space:nowrap}
 @media (min-width:992px){.console-os .page-header.page-header-bleed-left{margin-left:-30px;padding-left:30px;margin-right:-30px;padding-right:30px}
 }
 .console-os .section-header{border-color:#e4e4e4;padding-left:20px;padding-right:20px;border-bottom:none;padding-bottom:10px;margin:20px -20px 0}
-.console-os .section-header .actions{margin-top:0}
-.console-os .section-header .page-header-link{display:inline-block;font-size:11px;font-weight:400;margin:0 10px;white-space:nowrap}
 .action-inline,.learn-more-inline{margin-left:5px;font-size:11px}
+.console-os .section-header .actions{margin-top:0}
 .build-config-summary .meta,.deployment-config-summary .meta,h1 small.meta{font-size:12px}
 @media (max-width:480px){.build-config-summary .meta,.deployment-config-summary .meta,h1 small.meta{display:block;margin-top:5px}
 }

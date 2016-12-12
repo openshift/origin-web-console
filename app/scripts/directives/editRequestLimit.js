@@ -167,7 +167,10 @@ angular.module('openshiftConsole')
       }
     };
   })
-  .directive('editRequestLimit', function($filter, LimitRangesService) {
+  .directive('editRequestLimit',
+             function($filter,
+                      LimitRangesService,
+                      ModalsService) {
     return {
       restrict: 'E',
       scope: {
@@ -180,6 +183,10 @@ angular.module('openshiftConsole')
       },
       templateUrl: 'views/_edit-request-limit.html',
       link: function(scope) {
+        scope.showComputeUnitsHelp = function() {
+          ModalsService.showComputeUnitsHelp();
+        };
+
         scope.$watch('limitRanges', function() {
           scope.limits = LimitRangesService.getEffectiveLimitRange(scope.limitRanges, scope.type, 'Container', scope.project);
           scope.requestCalculated = LimitRangesService.isRequestCalculated(scope.type, scope.project);
