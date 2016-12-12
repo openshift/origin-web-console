@@ -11376,9 +11376,9 @@ return a[0];
 }), g);
 }
 function j(a) {
-w || (C = 0, b.showAverage = _.size(b.pods) > 5 || v, _.each(b.metrics, function(c) {
+w || (D = 0, b.showAverage = _.size(b.pods) > 5 || v, _.each(b.metrics, function(c) {
 var d, e = f(a, c), g = c.descriptor;
-v && c.compactCombineWith && (g = c.compactCombineWith, c.lastValue && (B[g].lastValue = (B[g].lastValue || 0) + c.lastValue)), t[g] ? (t[g].load(e), b.showAverage ? t[g].legend.hide() :t[g].legend.show()) :(d = D(c), d.data = e, t[g] = c3.generate(d));
+v && c.compactCombineWith && (g = c.compactCombineWith, c.lastValue && (C[g].lastValue = (C[g].lastValue || 0) + c.lastValue)), t[g] ? (t[g].load(e), b.showAverage ? t[g].legend.hide() :t[g].legend.show()) :(d = E(c), d.data = e, t[g] = c3.generate(d));
 }));
 }
 function k() {
@@ -11404,11 +11404,11 @@ return x ? c.start = x :c.start = k(), c;
 }
 function o(a) {
 if (!w) {
-if (C++, b.noData) return void (b.metricsError = {
+if (D++, b.noData) return void (b.metricsError = {
 status:_.get(a, "status", 0),
 details:_.get(a, "data.errorMsg") || _.get(a, "statusText") || "Status code " + _.get(a, "status", 0)
 });
-if (!(C < 2)) {
+if (!(D < 2)) {
 var c = "metrics-failed-" + b.uniqueID;
 b.alerts[c] = {
 type:"error",
@@ -11417,7 +11417,7 @@ links:[ {
 href:"",
 label:"Retry",
 onClick:function() {
-delete b.alerts[c], C = 1, r();
+delete b.alerts[c], D = 1, r();
 }
 } ]
 };
@@ -11426,7 +11426,7 @@ delete b.alerts[c], C = 1, r();
 }
 function p() {
 var a = _.isEmpty(b.pods);
-return a ? (b.loaded = !0, !1) :!b.metricsError && C < 2;
+return a ? (b.loaded = !0, !1) :!b.metricsError && D < 2;
 }
 function q(a, c, d) {
 b.noData = !1;
@@ -11446,11 +11446,19 @@ b.loaded = !0;
 }
 var s, t = {}, u = 30, v = "compact" === b.profile, w = !1;
 b.uniqueID = h.uniqueID();
-var x, y, z = {}, A = v;
+var x, y, z = {}, A = v, B = function(a) {
+return a >= 1024;
+};
 b.metrics = [ {
 label:"Memory",
 units:"MiB",
 convert:g.bytesToMiB,
+formatUsage:function(a) {
+return B(a) && (a /= 1024), h.formatUsage(a);
+},
+usageUnits:function(a) {
+return B(a) ? "GiB" :"MiB";
+},
 descriptor:"memory/usage",
 type:"pod_container",
 chartID:"memory-" + b.uniqueID
@@ -11458,6 +11466,10 @@ chartID:"memory-" + b.uniqueID
 label:"CPU",
 units:"cores",
 convert:g.millicoresToCores,
+formatUsage:h.formatUsage,
+usageUnits:function() {
+return "cores";
+},
 descriptor:"cpu/usage_rate",
 type:"pod_container",
 chartID:"cpu-" + b.uniqueID
@@ -11465,6 +11477,10 @@ chartID:"cpu-" + b.uniqueID
 label:"Network (Sent)",
 units:"KiB/s",
 convert:g.bytesToKiB,
+formatUsage:h.formatUsage,
+usageUnits:function() {
+return "KiB/s";
+},
 descriptor:"network/tx_rate",
 type:"pod",
 compactLabel:"Network",
@@ -11475,6 +11491,10 @@ chartID:"network-tx-" + b.uniqueID
 label:"Network (Received)",
 units:"KiB/s",
 convert:g.bytesToKiB,
+formatUsage:h.formatUsage,
+usageUnits:function() {
+return "KiB/s";
+},
 descriptor:"network/rx_rate",
 type:"pod",
 compactCombineWith:"network/tx_rate",
@@ -11482,19 +11502,19 @@ compactDatasetLabel:"Received",
 compactType:"spline",
 chartID:"network-rx-" + b.uniqueID
 } ];
-var B = _.indexBy(b.metrics, "descriptor");
+var C = _.indexBy(b.metrics, "descriptor");
 b.loaded = !1, b.noData = !0;
-var C = 0;
+var D = 0;
 i.getMetricsURL().then(function(a) {
 b.metricsURL = a;
 }), b.options = {
 rangeOptions:h.getTimeRangeOptions()
 }, b.options.timeRange = _.head(b.options.rangeOptions), b.options.selectedContainer = _.head(b.containers);
-var D = function(a) {
+var E = function(a) {
 var c = h.getDefaultSparklineConfig(a.chartID, a.units, v);
 return _.set(c, "legend.show", !v && !b.showAverage), c;
 };
-b.formatUsage = h.formatUsage, b.$watch("options", function() {
+b.$watch("options", function() {
 z = {}, x = null, delete b.metricsError, r();
 }, !0), s = a(r, h.getDefaultUpdateInterval(), !1), b.updateInView = function(a) {
 A = !a, a && (!y || Date.now() > y + h.getDefaultUpdateInterval()) && r();

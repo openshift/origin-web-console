@@ -52,11 +52,25 @@ angular.module('openshiftConsole')
         // interval tick.
         var lastUpdated;
 
+        // Should we display the current usage as GiB when showing compact metrics?
+        var displayAsGiB = function(usageInMiB) {
+          return usageInMiB >= 1024;
+        };
+
         // Metrics to display.
         scope.metrics = [{
           label: "Memory",
           units: "MiB",
           convert: ConversionService.bytesToMiB,
+          formatUsage: function(value) {
+            if (displayAsGiB(value)) {
+              value = value / 1024;
+            }
+            return MetricsCharts.formatUsage(value);
+          },
+          usageUnits: function(value) {
+            return displayAsGiB(value) ? 'GiB' : 'MiB';
+          },
           descriptor: 'memory/usage',
           type: 'pod_container',
           chartID: "memory-" + scope.uniqueID
@@ -64,6 +78,10 @@ angular.module('openshiftConsole')
           label: "CPU",
           units: "cores",
           convert: ConversionService.millicoresToCores,
+          formatUsage: MetricsCharts.formatUsage,
+          usageUnits: function() {
+            return 'cores';
+          },
           descriptor: 'cpu/usage_rate',
           type: 'pod_container',
           chartID: "cpu-" + scope.uniqueID
@@ -71,6 +89,10 @@ angular.module('openshiftConsole')
           label: "Network (Sent)",
           units: "KiB/s",
           convert: ConversionService.bytesToKiB,
+          formatUsage: MetricsCharts.formatUsage,
+          usageUnits: function() {
+            return 'KiB/s';
+          },
           descriptor: 'network/tx_rate',
           type: 'pod',
           compactLabel: "Network",
@@ -81,6 +103,10 @@ angular.module('openshiftConsole')
           label: "Network (Received)",
           units: "KiB/s",
           convert: ConversionService.bytesToKiB,
+          formatUsage: MetricsCharts.formatUsage,
+          usageUnits: function() {
+            return 'KiB/s';
+          },
           descriptor: 'network/rx_rate',
           type: 'pod',
           compactCombineWith: 'network/tx_rate',
@@ -121,8 +147,6 @@ angular.module('openshiftConsole')
         function isNil(point) {
           return point.value === null || point.value === undefined;
         }
-
-        scope.formatUsage = MetricsCharts.formatUsage;
 
         function averages(metric) {
           var label;
