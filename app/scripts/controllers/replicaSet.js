@@ -12,6 +12,7 @@ angular.module('openshiftConsole')
                         $filter,
                         $routeParams,
                         AlertMessageService,
+                        AuthorizationService,
                         BreadcrumbsService,
                         DataService,
                         DeploymentsService,
@@ -78,8 +79,10 @@ angular.module('openshiftConsole')
       $scope.metricsAvailable = available;
     });
 
+    var deploymentStatus = $filter('deploymentStatus');
+
     var setLogVars = function(replicaSet) {
-      $scope.logCanRun = !(_.includes(['New', 'Pending'], $filter('deploymentStatus')(replicaSet)));
+      $scope.logCanRun = !(_.includes(['New', 'Pending'], deploymentStatus(replicaSet)));
     };
 
     var altTextForValueFrom = $filter('altTextForValueFrom');
@@ -436,16 +439,13 @@ angular.module('openshiftConsole')
           if (!action) {
             // Loading of the page that will create deploymentConfigDeploymentsInProgress structure, which will associate running deployment to his deploymentConfig.
             $scope.deploymentConfigDeploymentsInProgress = DeploymentsService.associateRunningDeploymentToDeploymentConfig($scope.deploymentsByDeploymentConfig);
-          } else if (action === 'ADDED' || (action === 'MODIFIED' && ['New', 'Pending', 'Running'].indexOf($filter('deploymentStatus')(replicaSet)) > -1)) {
+          } else if (action === 'ADDED' || (action === 'MODIFIED' && $filter('deploymentIsInProgress')(replicaSet))) {
             // When new deployment id instantiated/cloned, or in case of a retry, associate him to his deploymentConfig and add him into deploymentConfigDeploymentsInProgress structure.
             $scope.deploymentConfigDeploymentsInProgress[deploymentConfigName] = $scope.deploymentConfigDeploymentsInProgress[deploymentConfigName] || {};
             $scope.deploymentConfigDeploymentsInProgress[deploymentConfigName][rsName] = replicaSet;
           } else if (action === 'MODIFIED') {
             // After the deployment ends remove him from the deploymentConfigDeploymentsInProgress structure.
-            var status = $filter('deploymentStatus')(replicaSet);
-            if (status === "Complete" || status === "Failed"){
-              delete $scope.deploymentConfigDeploymentsInProgress[deploymentConfigName][rsName];
-            }
+            delete $scope.deploymentConfigDeploymentsInProgress[deploymentConfigName][rsName];
           }
 
           // Extract the causes from the encoded deployment config
@@ -489,6 +489,15 @@ angular.module('openshiftConsole')
           limitRanges = response.by("metadata.name");
           updateHPAWarnings();
         });
+
+        var deploymentIsLatest = $filter('deploymentIsLatest');
+
+        $scope.showRollbackAction = function() {
+          return deploymentStatus($scope.replicaSet) === 'Complete' &&
+            !deploymentIsLatest($scope.replicaSet, $scope.deploymentConfig) &&
+            !$scope.replicaSet.metadata.deletionTimestamp &&
+            AuthorizationService.canI('deploymentconfigrollbacks', 'create');
+        };
 
         $scope.retryFailedDeployment = function(replicaSet) {
           DeploymentsService.retryFailedDeployment(replicaSet, context, $scope);
