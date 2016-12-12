@@ -46,6 +46,11 @@ angular.module("openshiftConsole")
           var termination = _.get($scope, 'route.tls.termination');
           return !termination || termination === 'passthrough';
         };
+        $scope.insecureTrafficOptions = [
+          {value: '', label: 'None'},
+          {value: 'Allow', label: 'Allow'},
+          {value: 'Redirect', label: 'Redirect'}
+        ];
       },
       link: function(scope, element, attrs, formCtl) {
         scope.form = formCtl;
@@ -142,6 +147,11 @@ angular.module("openshiftConsole")
         scope.$watch('secureRoute', function(newValue, oldValue) {
           if (newValue === oldValue) {
             return;
+          }
+
+          // Set the default behavior of insecure connections to 'None'
+          if (newValue && !_.get(scope, 'route.tls.insecureEdgeTerminationPolicy')) {
+            _.set(scope, 'route.tls.insecureEdgeTerminationPolicy', scope.insecureTrafficOptions[0]);
           }
 
           var termination = _.get(scope, 'route.tls.termination');

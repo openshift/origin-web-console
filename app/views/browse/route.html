@@ -146,7 +146,7 @@
                   <h4>TLS Settings</h4>
                   <dl class="dl-horizontal left" ng-if="route.spec.tls">
                     <dt>Termination Type:</dt>
-                    <dd>{{route.spec.tls.termination}}</dd>
+                    <dd>{{route.spec.tls.termination | humanizeTLSTermination}}</dd>
                     <dt ng-if-start="route.spec.tls.termination === 'edge'">Insecure Traffic:</dt>
                     <dd ng-if-end>{{route.spec.tls.insecureEdgeTerminationPolicy || 'None'}}</dd>
                     <dt>Certificate:</dt>

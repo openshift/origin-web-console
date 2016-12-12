@@ -3610,7 +3610,7 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "<h4>TLS Settings</h4>\n" +
     "<dl class=\"dl-horizontal left\" ng-if=\"route.spec.tls\">\n" +
     "<dt>Termination Type:</dt>\n" +
-    "<dd>{{route.spec.tls.termination}}</dd>\n" +
+    "<dd>{{route.spec.tls.termination | humanizeTLSTermination}}</dd>\n" +
     "<dt ng-if-start=\"route.spec.tls.termination === 'edge'\">Insecure Traffic:</dt>\n" +
     "<dd ng-if-end>{{route.spec.tls.insecureEdgeTerminationPolicy || 'None'}}</dd>\n" +
     "<dt>Certificate:</dt>\n" +
@@ -3750,7 +3750,7 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "</td>\n" +
     "\n" +
     "<td data-title=\"Termination\">\n" +
-    "{{route.spec.tls.termination}}\n" +
+    "{{route.spec.tls.termination | humanizeTLSTermination}}\n" +
     "<span ng-if=\"!route.spec.tls.termination\">&nbsp;</span>\n" +
     "</td>\n" +
     "</tr>\n" +
@@ -4897,8 +4897,12 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "<osc-form-section header=\"Scaling\" about-title=\"Scaling\" about=\"Scaling defines the number of running instances of your built image.\" expand=\"true\" can-toggle=\"false\">\n" +
     "<div class=\"form-group\">\n" +
     "<label for=\"scale-type\">Strategy</label>\n" +
-    "<select ng-model=\"scaling.autoscale\" ng-options=\"option.value as option.label for option in scaling.autoscaleOptions\" id=\"scale-type\" class=\"form-control\" aria-describedby=\"scale-type-help\">\n" +
-    "</select>\n" +
+    "<ui-select ng-model=\"scaling.autoscale\" input-id=\"scale-type\" search-enabled=\"false\" aria-describedby=\"scale-type-help\">\n" +
+    "<ui-select-match>{{$select.selected.label}}</ui-select-match>\n" +
+    "<ui-select-choices repeat=\"option.value as option in scaling.autoscaleOptions\">\n" +
+    "{{option.label}}\n" +
+    "</ui-select-choices>\n" +
+    "</ui-select>\n" +
     "<div class=\"help-block\" id=\"scale-type-help\">\n" +
     "Scale replicas manually or automatically based on CPU usage.\n" +
     "</div>\n" +
@@ -7515,8 +7519,12 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "<label for=\"{{id}}-service-select\" class=\"required\">\n" +
     "Service\n" +
     "</label>\n" +
-    "<select id=\"{{id}}-service-select\" ng-model=\"model.service\" ng-options=\"service as service.metadata.name for service in services\" required class=\"form-control\" ng-attr-aria-describedby=\"{{id}}-service-help\">\n" +
-    "</select>\n" +
+    "<ui-select ng-model=\"model.service\" input-id=\"{{id}}-service-select\" aria-describedby=\"{{id}}-service-help\" required>\n" +
+    "<ui-select-match>{{$select.selected.metadata.name}}</ui-select-match>\n" +
+    "<ui-select-choices repeat=\"service in (services | filter : {metadata: { name: $select.search }}) track by (service | uid)\">\n" +
+    "<div ng-bind-html=\"service.metadata.name | highlight : $select.search\"></div>\n" +
+    "</ui-select-choices>\n" +
+    "</ui-select>\n" +
     "<div>\n" +
     "<span ng-attr-id=\"{{id}}-service-help\" class=\"help-block\">\n" +
     "<span ng-if=\"!isAlternate\">Service to route to.</span>\n" +
@@ -7631,8 +7639,12 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "\n" +
     "<div ng-if=\"route.portOptions.length\" class=\"form-group\">\n" +
     "<label for=\"routeTargetPort\">Target Port</label>\n" +
-    "<select id=\"routeTargetPort\" ng-if=\"route.portOptions.length\" ng-model=\"route.targetPort\" ng-options=\"portOption.port as portOption.label for portOption in route.portOptions\" class=\"form-control\" aria-describedby=\"target-port-help\">\n" +
-    "</select>\n" +
+    "<ui-select ng-if=\"route.portOptions.length\" ng-model=\"route.targetPort\" input-id=\"routeTargetPort\" search-enabled=\"false\" aria-describedby=\"target-port-help\">\n" +
+    "<ui-select-match>{{$select.selected.label}}</ui-select-match>\n" +
+    "<ui-select-choices repeat=\"portOption.port as portOption in route.portOptions\">\n" +
+    "{{portOption.label}}\n" +
+    "</ui-select-choices>\n" +
+    "</ui-select>\n" +
     "<div>\n" +
     "<span id=\"target-port-help\" class=\"help-block\">\n" +
     "Target port for traffic.\n" +
@@ -7669,24 +7681,26 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "<div ng-show=\"secureRoute\">\n" +
     "\n" +
     "<div class=\"form-group\">\n" +
-    "<label>TLS Termination</label>\n" +
-    "<select ng-model=\"route.tls.termination\" class=\"form-control\">\n" +
-    "<option value=\"edge\">Edge</option>\n" +
-    "<option value=\"passthrough\">Passthrough</option>\n" +
-    "<option value=\"reencrypt\">Re-encrypt</option>\n" +
-    "</select>\n" +
+    "<label for=\"tlsTermination\">TLS Termination</label>\n" +
+    "<ui-select ng-model=\"route.tls.termination\" input-id=\"tlsTermination\" search-enabled=\"false\">\n" +
+    "<ui-select-match>{{$select.selected | humanizeTLSTermination}}</ui-select-match>\n" +
+    "<ui-select-choices repeat=\"option in ['edge', 'passthrough', 'reencrypt']\">\n" +
+    "{{option | humanizeTLSTermination}}\n" +
+    "</ui-select-choices>\n" +
+    "</ui-select>\n" +
     "<div class=\"learn-more-block help-block\">\n" +
     "<a href=\"{{'route-types' | helpLink}}\" target=\"_blank\">Learn More&nbsp;<i class=\"fa fa-external-link\" aria-hidden=\"true\"></i></a>\n" +
     "</div>\n" +
     "</div>\n" +
     "\n" +
     "<div class=\"form-group\">\n" +
-    "<label>Insecure Traffic</label>\n" +
-    "<select ng-model=\"route.tls.insecureEdgeTerminationPolicy\" ng-disabled=\"route.tls.termination !== 'edge'\" class=\"form-control\" aria-describedby=\"route-insecure-policy-help\">\n" +
-    "<option value=\"\">None</option>\n" +
-    "<option value=\"Allow\">Allow</option>\n" +
-    "<option value=\"Redirect\">Redirect</option>\n" +
-    "</select>\n" +
+    "<label for=\"insecureTraffic\">Insecure Traffic</label>\n" +
+    "<ui-select ng-model=\"route.tls.insecureEdgeTerminationPolicy\" ng-disabled=\"route.tls.termination !== 'edge'\" input-id=\"insecureTraffic\" aria-describedby=\"route-insecure-policy-help\" search-enabled=\"false\">\n" +
+    "<ui-select-match>{{$select.selected.label}}</ui-select-match>\n" +
+    "<ui-select-choices repeat=\"option.value as option in insecureTrafficOptions\">\n" +
+    "{{option.label}}\n" +
+    "</ui-select-choices>\n" +
+    "</ui-select>\n" +
     "<div>\n" +
     "<span id=\"route-insecure-policy-help\" class=\"help-block\">\n" +
     "Policy for traffic on insecure schemes like HTTP for edge termination.\n" +
@@ -7929,14 +7943,24 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "<span ng-show=\"pod.spec.containers.length === 1\">\n" +
     "{{pod.spec.containers[0].name}}\n" +
     "</span>\n" +
-    "<select id=\"selectContainer\" ng-show=\"pod.spec.containers.length > 1\" ng-init=\"options.selectedContainer = pod.spec.containers[0]\" ng-model=\"options.selectedContainer\" ng-options=\"container.name for container in pod.spec.containers track by container.name\">\n" +
-    "</select>\n" +
+    "<ui-select ng-init=\"options.selectedContainer = pod.spec.containers[0]\" ng-show=\"pod.spec.containers.length > 1\" ng-model=\"options.selectedContainer\" input-id=\"selectContainer\">\n" +
+    "<ui-select-match>{{$select.selected.name}}</ui-select-match>\n" +
+    "<ui-select-choices repeat=\"container in pod.spec.containers | filter : { name: $select.search }\">\n" +
+    "<div ng-bind-html=\"container.name | highlight : $select.search\"></div>\n" +
+    "</ui-select-choices>\n" +
+    "</ui-select>\n" +
     "</div>\n" +
     "</div>\n" +
     "<div class=\"form-group\">\n" +
     "<label for=\"timeRange\">Time Range:</label>\n" +
-    "<select id=\"timeRange\" ng-model=\"options.timeRange\" ng-options=\"range.label for range in options.rangeOptions\" ng-disabled=\"metricsError\">\n" +
-    "</select>\n" +
+    "<div class=\"select-range\">\n" +
+    "<ui-select ng-model=\"options.timeRange\" search-enabled=\"false\" input-id=\"timeRange\">\n" +
+    "<ui-select-match>{{$select.selected.label}}</ui-select-match>\n" +
+    "<ui-select-choices repeat=\"range in options.rangeOptions\">\n" +
+    "{{range.label}}\n" +
+    "</ui-select-choices>\n" +
+    "</ui-select>\n" +
+    "</div>\n" +
     "</div>\n" +
     "</div>\n" +
     "<ellipsis-pulser color=\"dark\" size=\"sm\" msg=\"Loading metrics\" ng-if=\"!loaded\"></ellipsis-pulser>\n" +
@@ -8195,7 +8219,7 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "</td>\n" +
     "\n" +
     "<td data-title=\"Termination\">\n" +
-    "{{routes[routeName].spec.tls.termination}}\n" +
+    "{{routes[routeName].spec.tls.termination | humanizeTLSTermination}}\n" +
     "<span ng-if=\"!routes[routeName].spec.tls.termination\">&nbsp;</span>\n" +
     "</td>\n" +
     "</tr>\n" +
