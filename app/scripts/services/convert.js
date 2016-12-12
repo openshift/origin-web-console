@@ -15,12 +15,20 @@ angular.module("openshiftConsole")
         return value;
       }
 
-      // Round to one decimal place
       return value / 1024;
+    };
+
+    var millicoresToCores = function(value) {
+      if (!value) {
+        return value;
+      }
+
+      return value / 1000;
     };
 
     return {
       bytesToMiB: bytesToMiB,
-      bytesToKiB: bytesToKiB
+      bytesToKiB: bytesToKiB,
+      millicoresToCores: millicoresToCores
     };
   });
