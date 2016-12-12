@@ -1532,7 +1532,7 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "<status-icon status=\"replicaSet | deploymentStatus\"></status-icon>\n" +
     "{{replicaSet | deploymentStatus}}\n" +
     "<span style=\"margin-left: 7px\">\n" +
-    "<button ng-show=\"!rollBackCollapsed && (replicaSet | deploymentStatus) == 'Complete' && !(replicaSet | deploymentIsLatest : deploymentConfig) && !replicaSet.metadata.deletionTimestamp && ('deploymentconfigrollbacks' | canI : 'create')\" ng-disabled=\"(deploymentConfigDeploymentsInProgress[deploymentConfigName] | hashSize) > 0\" type=\"button\" class=\"btn btn-default btn-xs\" ng-click=\"rollBackCollapsed = !rollBackCollapsed\">Roll Back</button>\n" +
+    "<button ng-show=\"!rollBackCollapsed && showRollbackAction()\" ng-disabled=\"(deploymentConfigDeploymentsInProgress[deploymentConfigName] | hashSize) > 0\" type=\"button\" class=\"btn btn-default btn-xs\" ng-click=\"rollBackCollapsed = !rollBackCollapsed\">Roll Back</button>\n" +
     "<div ng-show=\"rollBackCollapsed\" class=\"well well-sm\">\n" +
     "Use the following settings from {{replicaSet.metadata.name}} when rolling back:\n" +
     "<div class=\"checkbox\">\n" +

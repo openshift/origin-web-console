@@ -17,7 +17,7 @@
         <status-icon status="replicaSet | deploymentStatus"></status-icon>
         {{replicaSet | deploymentStatus}}
         <span style="margin-left: 7px;">
-          <button ng-show="!rollBackCollapsed && (replicaSet | deploymentStatus) == 'Complete' && !(replicaSet | deploymentIsLatest : deploymentConfig) && !replicaSet.metadata.deletionTimestamp && ('deploymentconfigrollbacks' | canI : 'create')" ng-disabled="(deploymentConfigDeploymentsInProgress[deploymentConfigName] | hashSize) > 0" type="button" class="btn btn-default btn-xs" ng-click="rollBackCollapsed = !rollBackCollapsed">Roll Back</button>
+          <button ng-show="!rollBackCollapsed && showRollbackAction()" ng-disabled="(deploymentConfigDeploymentsInProgress[deploymentConfigName] | hashSize) > 0" type="button" class="btn btn-default btn-xs" ng-click="rollBackCollapsed = !rollBackCollapsed">Roll Back</button>
           <div ng-show="rollBackCollapsed" class="well well-sm">
             Use the following settings from {{replicaSet.metadata.name}} when rolling back:
             <div class="checkbox">
