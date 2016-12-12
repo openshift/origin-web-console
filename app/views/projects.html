@@ -113,8 +113,8 @@
                             </div>
                             <div class="list-view-pf-additional-info project-additional-info">
                               <span class="list-group-item-text project-description">
-                                <truncate-long-text ng-if="!keywords.length" content="project | description" limit="265" use-word-boundary="true"></truncate-long-text>
-                                <span ng-if="keywords.length" ng-bind-html="project | description | truncate : 1000 | highlightKeywords : keywords"></span>
+                                <truncate-long-text ng-if="!keywords.length" content="project | description" limit="265" newline-limit="10" use-word-boundary="true"></truncate-long-text>
+                                <span class="highlighted-content" ng-if="keywords.length" ng-bind-html="project | description | truncate : 1000 | highlightKeywords : keywords"></span>
                               </span>
                             </div>
                           </div>
