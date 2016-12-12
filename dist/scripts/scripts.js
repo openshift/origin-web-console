@@ -3051,6 +3051,9 @@ switch (c) {
 case "memory/usage":
 return _.round(b.bytesToMiB(a.value), 2);
 
+case "cpu/usage_rate":
+return b.millicoresToCores(a.value);
+
 case "network/rx_rate":
 case "network/tx_rate":
 return _.round(b.bytesToKiB(a.value), 2);
@@ -3113,11 +3116,6 @@ padding:{
 left:0,
 top:20,
 bottom:0
-},
-tick:{
-format:function(a) {
-return d3.round(a, 3);
-}
 }
 }
 },
@@ -3130,7 +3128,8 @@ height:c ? 35 :175
 tooltip:{
 format:{
 value:function(a) {
-return d3.round(a, 2) + " " + b;
+var c = "cores" === b ? 3 :2;
+return d3.round(a, c) + " " + b;
 }
 }
 }
@@ -3150,7 +3149,7 @@ b.push(a.start), f[d].push(e);
 }), e.columns = [ b ].concat(_.values(f)), e;
 },
 formatUsage:function(a) {
-return a < .01 ? "0" :a < 1 ? d3.format(".1r")(a) :d3.format(".2r")(a);
+return a < .001 ? "0" :a < 1 ? d3.format(".1r")(a) :d3.format(".2r")(a);
 },
 redraw:function(b) {
 a(function() {
@@ -3777,10 +3776,13 @@ var a = function(a) {
 return a ? a / 1048576 :a;
 }, b = function(a) {
 return a ? a / 1024 :a;
+}, c = function(a) {
+return a ? a / 1e3 :a;
 };
 return {
 bytesToMiB:a,
-bytesToKiB:b
+bytesToKiB:b,
+millicoresToCores:c
 };
 }), angular.module("openshiftConsole").service("BreadcrumbsService", [ "$filter", "APIService", "Navigate", function(a, b, c) {
 var d = a("annotation"), e = a("displayName"), f = function(a) {
@@ -11102,7 +11104,7 @@ break;
 
 case "cpu/usage_rate":
 var d = D(b);
-if (d) return _.round(1e3 * k(d));
+if (d) return k(d);
 }
 return null;
 }
@@ -11192,7 +11194,7 @@ return !(l.metricsError || J > 1) && (l.pod && _.get(l, "options.selectedContain
 function w(a, b, c) {
 b.total = m(b.id), b.total && (l.hasLimits = !0);
 var d = _.get(c, "usage.value");
-isNaN(d) && (d = 0), a.convert && (d = a.convert(d)), b.used = _.round(d), b.total && (b.available = _.round(b.total - d)), a.totalUsed += b.used;
+isNaN(d) && (d = 0), a.convert && (d = a.convert(d)), b.used = d3.round(d, a.usagePrecision), b.total && (b.available = d3.round(b.total - d, a.usagePrecision)), a.totalUsed += b.used;
 }
 function x(a, b) {
 l.noData = !1;
@@ -11244,9 +11246,10 @@ data:[]
 } ]
 }), _.includes(l.includedMetrics, "cpu") && l.metrics.push({
 label:"CPU",
-units:"millicores",
+units:"cores",
 chartPrefix:"cpu-",
-convert:_.round,
+convert:h.millicoresToCores,
+usagePrecision:3,
 containerMetric:!0,
 datasets:[ {
 id:"cpu/usage_rate",
@@ -11295,8 +11298,8 @@ widht:175
 }
 };
 }, I = function(a) {
-var b = a.chartPrefix + l.uniqueID + "-sparkline";
-return i.getDefaultSparklineConfig(b, a.units);
+var b = a.chartPrefix + l.uniqueID + "-sparkline", c = i.getDefaultSparklineConfig(b, a.units);
+return 1 === a.datasets.length && _.set(c, "legend.show", !1), c;
 }, J = 0;
 l.$watch("options", function() {
 _.each(l.metrics, function(a) {
@@ -11453,7 +11456,8 @@ type:"pod_container",
 chartID:"memory-" + b.uniqueID
 }, {
 label:"CPU",
-units:"millicores",
+units:"cores",
+convert:g.millicoresToCores,
 descriptor:"cpu/usage_rate",
 type:"pod_container",
 chartID:"cpu-" + b.uniqueID

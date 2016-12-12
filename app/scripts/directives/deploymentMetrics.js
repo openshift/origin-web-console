@@ -62,7 +62,8 @@ angular.module('openshiftConsole')
           chartID: "memory-" + scope.uniqueID
         }, {
           label: "CPU",
-          units: "millicores",
+          units: "cores",
+          convert: ConversionService.millicoresToCores,
           descriptor: 'cpu/usage_rate',
           type: 'pod_container',
           chartID: "cpu-" + scope.uniqueID

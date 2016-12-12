@@ -11,6 +11,8 @@ angular.module("openshiftConsole")
       switch (metricID) {
       case 'memory/usage':
         return _.round(ConversionService.bytesToMiB(point.value), 2);
+      case 'cpu/usage_rate':
+        return ConversionService.millicoresToCores(point.value);
       case 'network/rx_rate':
       case 'network/tx_rate':
         return _.round(ConversionService.bytesToKiB(point.value), 2);
@@ -80,11 +82,6 @@ angular.module("openshiftConsole")
                 left: 0,
                 top: 20,
                 bottom: 0
-              },
-              tick: {
-                format: function(value) {
-                  return d3.round(value, 3);
-                }
               }
             }
           },
@@ -97,7 +94,8 @@ angular.module("openshiftConsole")
           tooltip: {
             format: {
               value: function(value) {
-                return d3.round(value, 2) + " " + units;
+                var precision = units === 'cores' ? 3 : 2;
+                return d3.round(value, precision) + " " + units;
               }
             },
           }
@@ -126,7 +124,7 @@ angular.module("openshiftConsole")
       },
 
       formatUsage: function(usage) {
-        if (usage < 0.01) {
+        if (usage < 0.001) {
           return '0';
         }
 

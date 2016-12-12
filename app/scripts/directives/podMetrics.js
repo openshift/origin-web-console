@@ -57,9 +57,11 @@ angular.module('openshiftConsole')
         if (_.includes(scope.includedMetrics, "cpu")) {
           scope.metrics.push({
             label: "CPU",
-            units: "millicores",
+            units: "cores",
             chartPrefix: "cpu-",
-            convert: _.round,
+            convert: ConversionService.millicoresToCores,
+            // Max number of decimal places to show for usage donut.
+            usagePrecision: 3,
             containerMetric: true,
             datasets: [
               {
@@ -134,7 +136,12 @@ angular.module('openshiftConsole')
 
         var createSparklineConfig = function(metric) {
           var chartID = metric.chartPrefix + scope.uniqueID + '-sparkline';
-          return MetricsCharts.getDefaultSparklineConfig(chartID, metric.units);
+          var config = MetricsCharts.getDefaultSparklineConfig(chartID, metric.units);
+          if (metric.datasets.length === 1) {
+            _.set(config, 'legend.show', false);
+          }
+
+          return config;
         };
 
         function getLimit(metricID) {
@@ -154,8 +161,7 @@ angular.module('openshiftConsole')
           case 'cpu/usage_rate':
             var cpuLimit = getCPULimit(container);
             if (cpuLimit) {
-              // Convert cores to millicores.
-              return _.round(usageValueFilter(cpuLimit) * 1000);
+              return usageValueFilter(cpuLimit);
             }
             break;
           }
@@ -354,9 +360,9 @@ angular.module('openshiftConsole')
             currentUsage = metric.convert(currentUsage);
           }
 
-          dataset.used = _.round(currentUsage);
+          dataset.used = d3.round(currentUsage, metric.usagePrecision);
           if (dataset.total) {
-            dataset.available = _.round(dataset.total - currentUsage);
+            dataset.available = d3.round(dataset.total - currentUsage, metric.usagePrecision);
           }
           metric.totalUsed += dataset.used;
         }
