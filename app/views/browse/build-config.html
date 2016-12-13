@@ -202,8 +202,8 @@
                             <td data-title="Status">
                               <div row class="status">
                                 <status-icon status="build.status.phase" disable-animation fixed-width="true"></status-icon>
-                                <span ng-if="build.status.phase ==='Failed'">{{(build.status.reason || build.status.phase) | sentenceCase}}</span>
-                                <span ng-if="build.status.phase !== 'Failed'">{{build.status.phase | sentenceCase}}</span>
+                                <span ng-if="!build.status.reason || build.status.phase === 'Cancelled'">{{build.status.phase}}</span>
+                                <span ng-if="build.status.reason && build.status.phase !== 'Cancelled'">{{build.status.reason | sentenceCase}}</span>
                               </div>
                             </td>
                             <td data-title="Duration">

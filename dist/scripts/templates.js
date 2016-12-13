@@ -1908,8 +1908,8 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "<td data-title=\"Status\">\n" +
     "<div row class=\"status\">\n" +
     "<status-icon status=\"build.status.phase\" disable-animation fixed-width=\"true\"></status-icon>\n" +
-    "<span ng-if=\"build.status.phase ==='Failed'\">{{(build.status.reason || build.status.phase) | sentenceCase}}</span>\n" +
-    "<span ng-if=\"build.status.phase !== 'Failed'\">{{build.status.phase | sentenceCase}}</span>\n" +
+    "<span ng-if=\"!build.status.reason || build.status.phase === 'Cancelled'\">{{build.status.phase}}</span>\n" +
+    "<span ng-if=\"build.status.reason && build.status.phase !== 'Cancelled'\">{{build.status.reason | sentenceCase}}</span>\n" +
     "</div>\n" +
     "</td>\n" +
     "<td data-title=\"Duration\">\n" +
@@ -4043,8 +4043,8 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "<div row class=\"status\">\n" +
     "\n" +
     "<status-icon status=\"latestBuild.status.phase\" disable-animation fixed-width=\"true\"></status-icon>\n" +
-    "<span ng-if=\"latestBuild.status.phase ==='Failed'\">{{(latestBuild.status.reason || latestBuild.status.phase) | sentenceCase}}</span>\n" +
-    "<span ng-if=\"latestBuild.status.phase !== 'Failed'\">{{latestBuild.status.phase | sentenceCase}}</span>\n" +
+    "<span ng-if=\"!latestBuild.status.reason || latestBuild.status.phase === 'Cancelled'\">{{latestBuild.status.phase}}</span>\n" +
+    "<span ng-if=\"latestBuild.status.reason && latestBuild.status.phase !== 'Cancelled'\">{{latestBuild.status.reason | sentenceCase}}</span>\n" +
     "</div>\n" +
     "</td>\n" +
     "<td data-title=\"Duration\">\n" +
