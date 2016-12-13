@@ -200,7 +200,7 @@
                             </td>
                             <td data-title="Status">
                               <div row class="status">
-                                <status-icon status="build.status.phase" disable-animation fixed-width="true"></status-icon>
+                                <status-icon status="build.status.phase" disable-animation></status-icon>
                                 <span ng-if="!build.status.reason || build.status.phase === 'Cancelled'">{{build.status.phase}}</span>
                                 <span ng-if="build.status.reason && build.status.phase !== 'Cancelled'">{{build.status.reason | sentenceCase}}</span>
                               </div>

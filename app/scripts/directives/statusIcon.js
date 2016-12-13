@@ -8,8 +8,7 @@ angular.module('openshiftConsole')
         templateUrl: 'views/directives/_status-icon.html',
         scope: {
           status: '=',
-          disableAnimation: "@",
-          fixedWidth: "=?"
+          disableAnimation: "@"
         },
         link: function($scope, $elem, $attrs) {
           $scope.spinning = !angular.isDefined($attrs.disableAnimation);

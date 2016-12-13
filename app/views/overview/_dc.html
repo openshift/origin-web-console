@@ -111,7 +111,7 @@
 
       </div>
       <div ng-if="orderedReplicationControllers.length === 1" class="deployment-status-msg">
-        <status-icon status="orderedReplicationControllers[0] | deploymentStatus" class="mar-right-xs"></status-icon>
+        <status-icon status="orderedReplicationControllers[0] | deploymentStatus"></status-icon>
         Deployment&nbsp;#{{orderedReplicationControllers[0] | annotation : 'deploymentVersion'}}
         {{orderedReplicationControllers[0] | deploymentStatus | lowercase}}
       </div>

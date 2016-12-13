@@ -74,7 +74,7 @@
                     </td>
                     <td data-title="Status">
                       <div row class="status">
-                        <status-icon status="replicationController | deploymentStatus" disable-animation fixed-width="true"></status-icon>
+                        <status-icon status="replicationController | deploymentStatus" disable-animation></status-icon>
                         <span flex>
                           {{replicationController | deploymentStatus}}<span ng-if="(replicationController | deploymentStatus) == 'Active' || (replicationController | deploymentStatus) == 'Running'">,
                           <span ng-if="replicationController.spec.replicas !== replicationController.status.replicas">{{replicationController.status.replicas}}/</span>{{replicationController.spec.replicas}} replica<span ng-if="replicationController.spec.replicas != 1">s</span></span>
