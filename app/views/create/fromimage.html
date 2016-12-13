@@ -298,12 +298,12 @@
                               >
                               <div class="form-group">
                                 <label for="scale-type">Strategy</label>
-                                <select ng-model="scaling.autoscale"
-                                        ng-options="option.value as option.label for option in scaling.autoscaleOptions"
-                                        id="scale-type"
-                                        class="form-control"
-                                        aria-describedby="scale-type-help">
-                                </select>
+                                <ui-select ng-model="scaling.autoscale" input-id="scale-type" search-enabled="false" aria-describedby="scale-type-help">
+                                  <ui-select-match>{{$select.selected.label}}</ui-select-match>
+                                  <ui-select-choices repeat="option.value as option in scaling.autoscaleOptions">
+                                    {{option.label}}
+                                  </ui-select-choices>
+                                </ui-select>
                                 <div class="help-block" id="scale-type-help">
                                   Scale replicas manually or automatically based on CPU usage.
                                 </div>

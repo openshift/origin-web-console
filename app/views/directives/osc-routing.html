@@ -120,14 +120,12 @@
     <!-- Target Port -->
     <div ng-if="route.portOptions.length" class="form-group">
       <label for="routeTargetPort">Target Port</label>
-      <select
-          id="routeTargetPort"
-          ng-if="route.portOptions.length"
-          ng-model="route.targetPort"
-          ng-options="portOption.port as portOption.label for portOption in route.portOptions"
-          class="form-control"
-          aria-describedby="target-port-help">
-      </select>
+      <ui-select ng-if="route.portOptions.length" ng-model="route.targetPort" input-id="routeTargetPort" search-enabled="false" aria-describedby="target-port-help">
+        <ui-select-match>{{$select.selected.label}}</ui-select-match>
+        <ui-select-choices repeat="portOption.port as portOption in route.portOptions">
+          {{portOption.label}}
+        </ui-select-choices>
+      </ui-select>
       <div>
         <span id="target-port-help" class="help-block">
           Target port for traffic.
@@ -170,12 +168,13 @@
     <div ng-show="secureRoute">
       <!-- TLS Termination -->
       <div class="form-group">
-        <label>TLS Termination</label>
-        <select ng-model="route.tls.termination" class="form-control">
-          <option value="edge">Edge</option>
-          <option value="passthrough">Passthrough</option>
-          <option value="reencrypt">Re-encrypt</option>
-        </select>
+        <label for="tlsTermination">TLS Termination</label>
+        <ui-select ng-model="route.tls.termination" input-id="tlsTermination" search-enabled="false">
+          <ui-select-match>{{$select.selected | humanizeTLSTermination}}</ui-select-match>
+          <ui-select-choices repeat="option in ['edge', 'passthrough', 'reencrypt']">
+            {{option | humanizeTLSTermination}}
+          </ui-select-choices>
+        </ui-select>
         <div class="learn-more-block help-block">
           <a href="{{'route-types' | helpLink}}" target="_blank">Learn More&nbsp;<i class="fa fa-external-link" aria-hidden="true"></i></a>
         </div>
@@ -183,16 +182,13 @@
 
       <!-- Insecure Edge Termination Policy -->
       <div class="form-group">
-        <label>Insecure Traffic</label>
-        <select
-            ng-model="route.tls.insecureEdgeTerminationPolicy"
-            ng-disabled="route.tls.termination !== 'edge'"
-            class="form-control"
-            aria-describedby="route-insecure-policy-help">
-          <option value="">None</option>
-          <option value="Allow">Allow</option>
-          <option value="Redirect">Redirect</option>
-        </select>
+        <label for="insecureTraffic">Insecure Traffic</label>
+        <ui-select ng-model="route.tls.insecureEdgeTerminationPolicy" ng-disabled="route.tls.termination !== 'edge'" input-id="insecureTraffic" aria-describedby="route-insecure-policy-help" search-enabled="false">
+          <ui-select-match>{{$select.selected.label}}</ui-select-match>
+          <ui-select-choices repeat="option.value as option in insecureTrafficOptions">
+            {{option.label}}
+          </ui-select-choices>
+        </ui-select>
         <div>
           <span id="route-insecure-policy-help" class="help-block">
             Policy for traffic on insecure schemes like HTTP for edge termination.

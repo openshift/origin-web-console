@@ -4,14 +4,12 @@
       <label for="{{id}}-service-select" class="required">
         Service
       </label>
-      <select
-          id="{{id}}-service-select"
-          ng-model="model.service"
-          ng-options="service as service.metadata.name for service in services"
-          required
-          class="form-control"
-          ng-attr-aria-describedby="{{id}}-service-help">
-      </select>
+      <ui-select ng-model="model.service" input-id="{{id}}-service-select" aria-describedby="{{id}}-service-help" required>
+        <ui-select-match>{{$select.selected.metadata.name}}</ui-select-match>
+        <ui-select-choices repeat="service in (services | filter : {metadata: { name: $select.search }}) track by (service | uid)">
+           <div ng-bind-html="service.metadata.name | highlight : $select.search"></div>
+        </ui-select-choices>
+      </ui-select>
       <div>
         <span ng-attr-id="{{id}}-service-help" class="help-block">
           <span ng-if="!isAlternate">Service to route to.</span>

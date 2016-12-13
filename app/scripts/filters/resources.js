@@ -1022,6 +1022,20 @@ angular.module('openshiftConsole')
       }
     };
   })
+  .filter('humanizeTLSTermination', function () {
+    return function(termination) {
+      switch (termination) {
+        case 'edge':
+          return 'Edge';
+        case 'passthrough':
+          return 'Passthrough';
+        case 'reencrypt':
+          return 'Re-encrypt';
+        default:
+          return termination;
+      }
+    };
+  })
   .filter('humanizeKind', function (startCaseFilter) {
     // Changes "ReplicationController" to "replication controller".
     // If useTitleCase, returns "Replication Controller".

@@ -50,7 +50,7 @@
       </td>
       <!-- Use shorter Termination title for table-mobile to avoid overlapping text. -->
       <td data-title="Termination">
-        {{routes[routeName].spec.tls.termination}}
+        {{routes[routeName].spec.tls.termination | humanizeTLSTermination}}
         <span ng-if="!routes[routeName].spec.tls.termination">&nbsp;</span>
       </td>
     </tr>

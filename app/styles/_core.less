@@ -263,15 +263,26 @@ mark {
     .form-group {
       margin-bottom: 0;
     }
-    .select-container {
+    .select-container,
+    .select-range {
       display: inline-block;
+      vertical-align: middle;
     }
     @media (min-width: @screen-sm-min) {
       .form-group {
         display: inline-block;
+        vertical-align: middle;
       }
       .select-container {
         margin-right: 10px;
+      }
+    }
+    @media (max-width: @screen-xs-max) {
+      .form-group {
+        padding-bottom: 10px;
+        label {
+          width: 100px;
+        }
       }
     }
   }

@@ -9827,7 +9827,16 @@ controller:[ "$scope", function(a) {
 a.disableCertificateInputs = function() {
 var b = _.get(a, "route.tls.termination");
 return !b || "passthrough" === b;
-};
+}, a.insecureTrafficOptions = [ {
+value:"",
+label:"None"
+}, {
+value:"Allow",
+label:"Allow"
+}, {
+value:"Redirect",
+label:"Redirect"
+} ];
 } ],
 link:function(b, c, d, e) {
 b.form = e, b.disableWildcards = a.DISABLE_WILDCARD_ROUTES, b.disableWildcards ? b.hostnamePattern = /^[a-z0-9]([-a-z0-9]*[a-z0-9])?(\.[a-z0-9]([-a-z0-9]*[a-z0-9])?)*$/ :b.hostnamePattern = /^(\*(\.[a-z0-9]([-a-z0-9]*[a-z0-9]))+|[a-z0-9]([-a-z0-9]*[a-z0-9])?(\.[a-z0-9]([-a-z0-9]*[a-z0-9])?)*)$/;
@@ -9857,6 +9866,7 @@ b.secureRoute = !!_.get(b, "route.tls.termination"), b.showCertificatesNotUsedWa
 var h;
 b.$watch("secureRoute", function(a, c) {
 if (a !== c) {
+a && !_.get(b, "route.tls.insecureEdgeTerminationPolicy") && _.set(b, "route.tls.insecureEdgeTerminationPolicy", b.insecureTrafficOptions[0]);
 var d = _.get(b, "route.tls.termination");
 !b.securetRoute && d && (h = d, delete b.route.tls.termination), b.secureRoute && !d && _.set(b, "route.tls.termination", h || "edge");
 }
@@ -13711,6 +13721,22 @@ return _.get(a, "spec.strategy.customParams", {});
 
 default:
 return null;
+}
+};
+}).filter("humanizeTLSTermination", function() {
+return function(a) {
+switch (a) {
+case "edge":
+return "Edge";
+
+case "passthrough":
+return "Passthrough";
+
+case "reencrypt":
+return "Re-encrypt";
+
+default:
+return a;
 }
 };
 }).filter("humanizeKind", [ "startCaseFilter", function(a) {
