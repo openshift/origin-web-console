@@ -3976,7 +3976,6 @@ pre.clipped.scroll{max-height:150px;overflow:auto;width:100%}
 .k8s-label .label-pair .label-key{background-color:#bee1f4;color:#00659c;padding-top:4px;padding-bottom:4px;margin-left:0;font-size:12px}
 .k8s-label .label-pair a.label-key:active,.k8s-label .label-pair a.label-key:focus,.k8s-label .label-pair a.label-key:hover{background-color:#00659c;color:#FFF}
 .k8s-label .label-pair .label-value{background-color:#7dc3e8;color:#FFF;margin-left:0;padding-top:4px;padding-bottom:4px;font-size:12px}
-.data-toolbar .data-toolbar-filter .filter .navbar-filter-widget .label-filter .selectize-control .selectize-input,.data-toolbar .data-toolbar-filter .filter .navbar-filter-widget .label-filter .selectize-control .selectize-input input,.selectize-dropdown{font-size:13px}
 .k8s-label .label-pair a.label-value:active,.k8s-label .label-pair a.label-value:focus,.k8s-label .label-pair a.label-value:hover{background-color:#00659c}
 @media (max-width:768px){.k8s-label,.k8s-label .label-pair{width:100%}
 .k8s-label .label{display:block;min-width:50px}
@@ -3995,6 +3994,8 @@ copy-to-clipboard .input-group.limit-width{max-width:300px}
 .tech-preview-header{justify-content:space-between}
 @media (max-width:479px){.col-xxs-12{width:100%}
 }
+.status-icon>.fa-spin{font-size:14px;line-height:normal}
+.data-toolbar .data-toolbar-filter .filter .navbar-filter-widget .label-filter .selectize-control .selectize-input,.data-toolbar .data-toolbar-filter .filter .navbar-filter-widget .label-filter .selectize-control .selectize-input input,.selectize-dropdown{font-size:13px}
 .data-toolbar{padding:5px 0}
 .data-toolbar.other-resources-toolbar .data-toolbar-dropdown{min-width:210px}
 .data-toolbar .checkbox{margin-bottom:0;margin-top:10px}
