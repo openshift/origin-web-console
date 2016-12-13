@@ -84,8 +84,8 @@
                       <div row class="status">
                         <!-- <build-status build="build"></build-status> -->
                         <status-icon status="latestBuild.status.phase" disable-animation fixed-width="true"></status-icon>
-                        <span ng-if="latestBuild.status.phase ==='Failed'">{{(latestBuild.status.reason || latestBuild.status.phase) | sentenceCase}}</span>
-                        <span ng-if="latestBuild.status.phase !== 'Failed'">{{latestBuild.status.phase | sentenceCase}}</span>
+                        <span ng-if="!latestBuild.status.reason || latestBuild.status.phase === 'Cancelled'">{{latestBuild.status.phase}}</span>
+                        <span ng-if="latestBuild.status.reason && latestBuild.status.phase !== 'Cancelled'">{{latestBuild.status.reason | sentenceCase}}</span>
                       </div>
                     </td>
                     <td data-title="Duration">
