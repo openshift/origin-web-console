@@ -2,7 +2,21 @@
 
 angular.module('openshiftConsole')
   // This triggers when an element has either a toggle or data-toggle attribute set on it
-  .directive('toggle', function() {
+  .directive('toggle', function(IS_IOS) {
+    // Sets the CSS cursor value on the document body to allow dismissing the tooltips on iOS.
+    // See https://github.com/twbs/bootstrap/issues/16028#issuecomment-236269114
+    var setCursor = function(cursor) {
+      $('body').css('cursor', cursor);
+    };
+    var setCursorPointer = _.partial(setCursor, 'pointer');
+    var setCursorAuto = _.partial(setCursor, 'auto');
+    if (IS_IOS) {
+      $(document).on('shown.bs.popover', setCursorPointer);
+      $(document).on('shown.bs.tooltip', setCursorPointer);
+      $(document).on('hide.bs.popover', setCursorAuto);
+      $(document).on('hide.bs.tooltip', setCursorAuto);
+    }
+
     return {
       restrict: 'A',
       scope: {
