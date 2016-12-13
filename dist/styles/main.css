@@ -4745,7 +4745,8 @@ td.visible-print,th.visible-print{display:table-cell!important}
 .osc-secrets-form .remove-btn:focus{text-decoration:none}
 dl.secret-data{overflow:hidden}
 dl.secret-data pre{margin-bottom:0}
-dl.secret-data dd{margin-bottom:10px;overflow-x:auto}
+.create-secret-form .help-block,dl.secret-data dd{margin-bottom:10px}
+dl.secret-data dd{overflow-x:auto}
 .events-sidebar .right-content .event .event-details,.events-sidebar .right-content .event .event-details .event-message,.events-sidebar .right-content .event .event-details .event-object,.events-sidebar .right-content .event .event-details .event-reason{overflow:hidden;white-space:nowrap;text-overflow:ellipsis}
 @media (min-width:992px){dl.secret-data.left dt{text-align:left}
 dl.secret-data.indent{margin-left:20px}

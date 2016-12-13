@@ -5788,7 +5788,7 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
 
   $templateCache.put('views/directives/create-secret.html',
     "<alerts alerts=\"alerts\"></alerts>\n" +
-    "<ng-form name=\"secretForm\">\n" +
+    "<ng-form name=\"secretForm\" class=\"create-secret-form\">\n" +
     "<div for=\"secretType\" ng-if=\"!type\" class=\"form-group mar-top-lg\">\n" +
     "<label>Secret Type</label>\n" +
     "<ui-select required ng-model=\"newSecret.type\" search-enabled=\"false\" ng-change=\"newSecret.authType = secretAuthTypeMap[newSecret.type].authTypes[0].id\">\n" +
@@ -5801,7 +5801,7 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "<div ng-if=\"newSecret.type\">\n" +
     "<div class=\"form-group\">\n" +
     "<label for=\"secretName\" class=\"required\">Secret Name</label>\n" +
-    "<span ng-class=\"{'has-error': nameTaken || (secretForm.secretName.$error.pattern && secretForm.secretName.$touched)}\">\n" +
+    "<span ng-class=\"{'has-error': nameTaken || (secretForm.secretName.$invalid && secretForm.secretName.$touched)}\">\n" +
     "<input class=\"form-control\" id=\"secretName\" name=\"secretName\" ng-model=\"newSecret.data.secretName\" type=\"text\" autocorrect=\"off\" autocapitalize=\"off\" spellcheck=\"false\" aria-describedby=\"secret-name-help\" ng-maxlength=\"253\" ng-pattern=\"/^[a-z0-9]([-a-z0-9]*[a-z0-9])?(\\.[a-z0-9]([-a-z0-9]*[a-z0-9])?)*$/\" required>\n" +
     "</span>\n" +
     "<div class=\"has-error\" ng-show=\"nameTaken\">\n" +
@@ -5809,10 +5809,13 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "This name is already in use. Please choose a different name.\n" +
     "</span>\n" +
     "</div>\n" +
-    "<div class=\"has-error\" ng-show=\"secretForm.secretName.$error.pattern && secretForm.secretName.$touched\">\n" +
-    "<span class=\"help-block\">\n" +
+    "<div class=\"has-error\" ng-show=\"secretForm.secretName.$invalid\">\n" +
+    "<div ng-show=\"secretForm.secretName.$error.pattern && secretForm.secretName.$touched\" class=\"help-block\">\n" +
     "Secret name must consist of lower-case letters, numbers, periods, and hyphens. It must start and end with a letter or number.\n" +
-    "</span>\n" +
+    "</div>\n" +
+    "<div ng-show=\"secretForm.secretName.$error.required && secretForm.secretName.$touched\" class=\"help-block\">\n" +
+    "Secret name is required.\n" +
+    "</div>\n" +
     "</div>\n" +
     "<div class=\"help-block\" id=\"secret-name-help\">\n" +
     "Unique name of the new secret.\n" +
@@ -5837,14 +5840,17 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "Optional username for Git authentication.\n" +
     "</div>\n" +
     "</div>\n" +
-    "<div class=\"form-group\">\n" +
+    "<div class=\"form-group\" ng-class=\"{ 'has-error' : secretForm.passwordToken.$invalid && secretForm.passwordToken.$touched }\">\n" +
     "<label ng-class=\"{ required: !add.cacert && !add.gitconfig }\" for=\"passwordToken\">Password or Token</label>\n" +
-    "<div>\n" +
     "<input class=\"form-control\" id=\"passwordToken\" name=\"passwordToken\" ng-model=\"newSecret.data.passwordToken\" autocorrect=\"off\" autocapitalize=\"off\" spellcheck=\"false\" aria-describedby=\"password-token-help\" type=\"password\" ng-required=\"!add.cacert && !add.gitconfig\">\n" +
+    "</div>\n" +
+    "<div class=\"has-error\" ng-show=\"secretForm.passwordToken.$error.required && secretForm.passwordToken.$touched\">\n" +
+    "<div class=\"help-block\">\n" +
+    "Password or token is required.\n" +
+    "</div>\n" +
     "</div>\n" +
     "<div class=\"help-block\" id=\"password-token-help\">\n" +
     "Password or token for Git authentication. Required if a ca.crt or .gitconfig file is not specified.\n" +
-    "</div>\n" +
     "</div>\n" +
     "<div class=\"form-group\">\n" +
     "<div class=\"checkbox\">\n" +
@@ -5906,28 +5912,51 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "</div>\n" +
     "</div>\n" +
     "<div ng-if=\"newSecret.authType === 'kubernetes.io/dockercfg'\">\n" +
-    "<div class=\"form-group\">\n" +
+    "<div class=\"form-group\" ng-class=\"{ 'has-error' : secretForm.dockerServer.$invalid && secretForm.dockerServer.$touched }\">\n" +
     "<label for=\"dockerServer\" class=\"required\">Image Registry Server Address</label>\n" +
     "<div>\n" +
     "<input class=\"form-control\" id=\"dockerServer\" name=\"dockerServer\" ng-model=\"newSecret.data.dockerServer\" type=\"text\" autocorrect=\"off\" autocapitalize=\"off\" spellcheck=\"false\" required>\n" +
     "</div>\n" +
     "</div>\n" +
-    "<div class=\"form-group\">\n" +
+    "<div ng-show=\"secretForm.dockerServer.$error.required && secretForm.dockerServer.$touched\" class=\"has-error\">\n" +
+    "<div class=\"help-block\">\n" +
+    "Image registry server address is required.\n" +
+    "</div>\n" +
+    "</div>\n" +
+    "<div class=\"form-group\" ng-class=\"{ 'has-error' : secretForm.dockerUsername.$invalid && secretForm.dockerUsername.$touched }\">\n" +
     "<label for=\"dockerUsername\" class=\"required\">Username</label>\n" +
     "<div>\n" +
     "<input class=\"form-control\" id=\"dockerUsername\" name=\"dockerUsername\" ng-model=\"newSecret.data.dockerUsername\" type=\"text\" autocorrect=\"off\" autocapitalize=\"off\" spellcheck=\"false\" required>\n" +
     "</div>\n" +
     "</div>\n" +
-    "<div class=\"form-group\">\n" +
+    "<div ng-show=\"secretForm.dockerUsername.$error.required && secretForm.dockerUsername.$touched\" class=\"has-error\">\n" +
+    "<div class=\"help-block\">\n" +
+    "Username is required.\n" +
+    "</div>\n" +
+    "</div>\n" +
+    "<div class=\"form-group\" ng-class=\"{ 'has-error' : secretForm.dockerPassword.$invalid && secretForm.dockerPassword.$touched }\">\n" +
     "<label for=\"dockerPassword\" class=\"required\">Password</label>\n" +
     "<div>\n" +
     "<input class=\"form-control\" id=\"dockerPassword\" name=\"dockerPassword\" ng-model=\"newSecret.data.dockerPassword\" type=\"password\" autocorrect=\"off\" autocapitalize=\"off\" spellcheck=\"false\" required>\n" +
     "</div>\n" +
     "</div>\n" +
-    "<div class=\"form-group\">\n" +
+    "<div ng-show=\"secretForm.dockerPassword.$error.required && secretForm.dockerPassword.$touched\" class=\"has-error\">\n" +
+    "<div class=\"help-block\">\n" +
+    "Password is required.\n" +
+    "</div>\n" +
+    "</div>\n" +
+    "<div class=\"form-group\" ng-class=\"{ 'has-error' : secretForm.dockerEmail.$invalid && secretForm.dockerEmail.$touched }\">\n" +
     "<label for=\"dockerEmail\" class=\"required\">Email</label>\n" +
     "<div>\n" +
     "<input class=\"form-control\" type=\"email\" id=\"dockerEmail\" name=\"dockerEmail\" ng-model=\"newSecret.data.dockerMail\" autocorrect=\"off\" autocapitalize=\"off\" spellcheck=\"false\" required>\n" +
+    "</div>\n" +
+    "</div>\n" +
+    "<div class=\"has-error\" ng-show=\"secretForm.dockerEmail.$invalid\">\n" +
+    "<div ng-show=\"secretForm.dockerEmail.$error.email && secretForm.dockerEmail.$touched\" class=\"help-block\">\n" +
+    "Email must be in the form of <var>user@domain</var>.\n" +
+    "</div>\n" +
+    "<div ng-show=\"secretForm.dockerEmail.$error.required && secretForm.dockerEmail.$touched\" class=\"help-block\">\n" +
+    "Email is required.\n" +
     "</div>\n" +
     "</div>\n" +
     "</div>\n" +
