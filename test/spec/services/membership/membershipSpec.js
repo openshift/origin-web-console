@@ -60,6 +60,11 @@ describe('MembershipService', function() {
           kind: 'RoleBinding', metadata: { name: 'view' },
           roleRef: { name: 'view' },
           subjects: [{kind: 'User', name: 'jill'}]
+        },
+        systemImagePuller: {
+          kind: 'RoleBinding', metadata: { name: 'system:image-puller' },
+          roleRef: { name: 'system:image-puller' },
+          subjects: [{kind: 'ServiceAccount', name: 'foo', namespace: 'fake-project'}]
         }
       };
     });
@@ -68,13 +73,13 @@ describe('MembershipService', function() {
 
   describe('#sortRoles', function() {
     it('should sort provided roles', function() {
-      var sorted = [
+      var sortedAlphabetical = [
         {"metadata":{"name":"admin"},"rules":{}, "kind": "ClusterRole"},
         {"metadata":{"name":"basic-user"},"rules":{},"kind": "ClusterRole"},
         {"metadata":{"name":"edit"},"rules":{},"kind": "ClusterRole"},
         {"metadata":{"name":"view"},"rules":{},"kind": "ClusterRole"}
       ];
-      expect(MembershipService.sortRoles(clusterRoles)).toEqual(sorted);
+      expect(MembershipService.sortRoles(clusterRoles)).toEqual(sortedAlphabetical);
     });
   });
 
@@ -108,8 +113,20 @@ describe('MembershipService', function() {
   });
 
   describe('#mapRolesForUI', function() {
-    it('should merge clusterRoles & roles into a single object with unique keys to ensure no collisions', function() {
-      expect(MembershipService.mapRolesForUI(roles, clusterRoles))
+
+
+    it('should build a map of clusterRoles and roles with unique keys to ensure no collisions', function() {
+      var mappedRoles = MembershipService.mapRolesForUI(roles, clusterRoles);
+      expect(_.keys(mappedRoles)).toEqual([
+        'Role-awesomeview',
+        'Role-people-who-break-things',
+        'ClusterRole-basic-user',
+        'ClusterRole-admin',
+        'ClusterRole-view',
+        'ClusterRole-edit'
+      ]);
+      // the ugly manual JSON blob comparison
+      expect(mappedRoles)
       .toEqual({
           "Role-awesomeview": {
               "metadata": {
@@ -169,19 +186,64 @@ describe('MembershipService', function() {
   });
 
   describe('#getSubjectKinds', function() {
-    // No test needed, this returns static data
+    it('should return the kind list in the preferred order', function() {
+      var kinds = MembershipService.getSubjectKinds();
+      expect(kinds['User'].sortOrder).toEqual(1);
+      expect(kinds['Group'].sortOrder).toEqual(2);
+      expect(kinds['ServiceAccount'].sortOrder).toEqual(3);
+      expect(kinds['SystemUser'].sortOrder).toEqual(4);
+      expect(kinds['SystemGroup'].sortOrder).toEqual(5);
+
+      expect(kinds['User'].kind).toEqual('User');
+      expect(kinds['Group'].kind).toEqual('Group');
+      expect(kinds['ServiceAccount'].kind).toEqual('ServiceAccount');
+      expect(kinds['SystemUser'].kind).toEqual('SystemUser');
+      expect(kinds['SystemGroup'].kind).toEqual('SystemGroup');
+
+      expect(kinds['SystemUser'].helpLinkKey).toEqual('users_and_groups');
+      expect(kinds['SystemGroup'].helpLinkKey).toEqual('users_and_groups');
+    });
   });
 
   describe('#mapRolebindingsForUI', function() {
+    it('Should return rolebindings in the following order: User, Group, ServiceAccount, SystemUser, SystemGroup', function() {
+      var mappedRolebindings = MembershipService.mapRolebindingsForUI(roleBindings, keyedRoles);
+      var orderedKinds = _.map(mappedRolebindings, 'kind');
+      expect(orderedKinds[0]).toEqual('User');
+      expect(orderedKinds[1]).toEqual('Group');
+      expect(orderedKinds[2]).toEqual('ServiceAccount');
+      expect(orderedKinds[3]).toEqual('SystemUser');
+      expect(orderedKinds[4]).toEqual('SystemGroup');
+    });
+
+    it('should put subjects under the appropriate kind', function() {
+      var mappedRolebindings = MembershipService.mapRolebindingsForUI(roleBindings, keyedRoles);
+      expect(_.map(mappedRolebindings[0].subjects, 'name')).toEqual(['jill', 'jack']);
+      expect(_.map(mappedRolebindings[2].subjects, 'name')).toEqual(['foo']);
+    });
+
+    it('should list appropriate roles for a subject under a kind heading', function() {
+      var mappedRolebindings = MembershipService.mapRolebindingsForUI(roleBindings, keyedRoles);
+      var firstBinding = _.first(mappedRolebindings);
+      var firstBindingSubjects = _.toArray(firstBinding.subjects);
+      var firstSubject = _.first(firstBindingSubjects);
+      var firstSubjectRoles = _.toArray(firstSubject.roles);
+      var firstRoleNames = _.map(firstSubjectRoles, function(role) {
+        return role.metadata.name;
+      });
+      expect(firstRoleNames).toEqual(['admin', 'view']);
+    });
+
+
+    // NOTE: ideally the above tests catch any issues as they do a better job of
+    // declaring intent, if not, this test will compare raw output.
     it('should build a map for the tabbed role list interface', function() {
       expect(MembershipService.mapRolebindingsForUI(roleBindings, keyedRoles))
-        .toEqual(
-          [{
+        .toEqual([{
             "kind": "User",
             "sortOrder": 1,
             "name": "User",
             "subjects": {
-                // uniqueKey(namespace, name) -> 'namespace-name'
                 "-jill": {
                     "name": "jill",
                     "roles": {
@@ -191,11 +253,11 @@ describe('MembershipService', function() {
                                 "name": "admin"
                             }
                         },
-                        "ClusterRole-view" : {
-                          "kind": "ClusterRole",
-                          "metadata": {
-                            "name": "view"
-                          }
+                        "ClusterRole-view": {
+                            "kind": "ClusterRole",
+                            "metadata": {
+                                "name": "view"
+                            }
                         }
                     }
                 },
@@ -211,33 +273,39 @@ describe('MembershipService', function() {
                     }
                 }
             }
-            }, {
-                "kind": "Group",
-                "sortOrder": 2,
-                "name": "Group",
-                "subjects": {}
-            }, {
-                "kind": "ServiceAccount",
-                "sortOrder": 3,
-                "description": "Service accounts provide a flexible way to control API access without sharing a regular user’s credentials.",
-                "helpLinkKey": "service_accounts",
-                "name": "ServiceAccount",
-                "subjects": {}
-            }, {
-                "kind": "SystemUser",
-                "sortOrder": 4,
-                "description": "System users are virtual users automatically provisioned by the system.",
-                "helpLinkKey": "users_and_groups",
-                "name": "SystemUser",
-                "subjects": {}
-            }, {
-                "kind": "SystemGroup",
-                "sortOrder": 5,
-                "description": "System groups are virtual groups automatically provisioned by the system.",
-                "helpLinkKey": "users_and_groups",
-                "name": "SystemGroup",
-                "subjects": {}
-            }]);
+        }, {
+            "kind": "Group",
+            "sortOrder": 2,
+            "name": "Group",
+            "subjects": {}
+        }, {
+            "kind": "ServiceAccount",
+            "sortOrder": 3,
+            "description": "Service accounts provide a flexible way to control API access without sharing a regular user’s credentials.",
+            "helpLinkKey": "service_accounts",
+            "name": "ServiceAccount",
+            "subjects": {
+                "fake-project-foo": {
+                    "name": "foo",
+                    "namespace": "fake-project",
+                    "roles": {}
+                }
+            }
+        }, {
+            "kind": "SystemUser",
+            "sortOrder": 4,
+            "description": "System users are virtual users automatically provisioned by the system.",
+            "helpLinkKey": "users_and_groups",
+            "name": "SystemUser",
+            "subjects": {}
+        }, {
+            "kind": "SystemGroup",
+            "sortOrder": 5,
+            "description": "System groups are virtual groups automatically provisioned by the system.",
+            "helpLinkKey": "users_and_groups",
+            "name": "SystemGroup",
+            "subjects": {}
+        }]);
     });
   });
 
