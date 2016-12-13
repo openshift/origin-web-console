@@ -7870,7 +7870,7 @@ f.then(j, j).then(F, F);
 }));
 } ]), angular.module("openshiftConsole").controller("NextStepsController", [ "$scope", "$http", "$routeParams", "DataService", "$q", "$location", "ProcessedTemplateService", "TaskList", "$parse", "Navigate", "Logger", "$filter", "imageObjectRefFilter", "failureObjectNameFilter", "ProjectsService", function(a, b, c, d, e, f, g, h, i, j, k, l, m, n, o) {
 function p() {
-return name && u;
+return v && u;
 }
 function q() {
 return s && t && u;
@@ -7879,23 +7879,23 @@ var r = (l("displayName"), []);
 a.emptyMessage = "Loading...", a.alerts = [], a.loginBaseUrl = d.openshiftAPIBaseUrl(), a.buildConfigs = {}, a.showParamsTable = !1, a.projectName = c.project;
 var s = c.imageStream, t = c.imageTag, u = c.namespace;
 a.fromSampleRepo = c.fromSample;
-var v = c.template, w = "";
-q() ? w = "project/" + a.projectName + "/create/fromimage?imageName=" + s + "&imageTag=" + t + "&namespace=" + u + "&name=" + name :p() && (w = "project/" + a.projectName + "/create/fromtemplate?template=" + v + "&namespace=" + u), a.breadcrumbs = [ {
+var v = c.template, w = "", x = "";
+q() ? (w = "project/" + a.projectName + "/create/fromimage?imageName=" + s + "&imageTag=" + t + "&namespace=" + u + "&name=" + x, x = s + ":" + t) :p() && (w = "project/" + a.projectName + "/create/fromtemplate?template=" + v + "&namespace=" + u, x = v), a.breadcrumbs = [ {
 title:a.projectName,
 link:"project/" + a.projectName
 }, {
 title:"Add to Project",
 link:"project/" + a.projectName + "/create"
 }, {
-title:name,
+title:x,
 link:w
 }, {
 title:"Next Steps"
 } ];
-var x = g.getTemplateData();
-a.parameters = x.params, _.each(a.parameters, function(a) {
+var y = g.getTemplateData();
+a.parameters = y.params, _.each(a.parameters, function(a) {
 l("altTextForValueFrom")(a);
-}), a.templateMessage = x.message, g.clearTemplateData(), o.get(c.project).then(_.spread(function(b, c) {
+}), a.templateMessage = y.message, g.clearTemplateData(), o.get(c.project).then(_.spread(function(b, c) {
 function e(a) {
 var b = [];
 return angular.forEach(a, function(a) {
@@ -7908,8 +7908,8 @@ return angular.forEach(a, function(a) {
 "completed" !== a.status && b.push(a);
 }), b;
 }
-return a.project = b, a.breadcrumbs[0].title = l("displayName")(b), name ? (r.push(d.watch("buildconfigs", c, function(b) {
-a.buildConfigs = b.by("metadata.name"), a.createdBuildConfig = a.buildConfigs[name], k.log("buildconfigs (subscribe)", a.buildConfigs);
+return a.project = b, a.breadcrumbs[0].title = l("displayName")(b), x ? (r.push(d.watch("buildconfigs", c, function(b) {
+a.buildConfigs = b.by("metadata.name"), a.createdBuildConfig = a.buildConfigs[x], k.log("buildconfigs (subscribe)", a.buildConfigs);
 })), a.createdBuildConfigWithGitHubTrigger = function() {
 return _.some(_.get(a, "createdBuildConfig.spec.triggers"), {
 type:"GitHub"

@@ -27,10 +27,13 @@ angular.module("openshiftConsole")
 
     var template = $routeParams.template;
     var nameLink = "";
+    var name = "";
     if (creatingFromImage()) {
       nameLink = "project/" + $scope.projectName + "/create/fromimage?imageName=" + imageName + "&imageTag=" + imageTag + "&namespace=" + namespace + "&name=" + name;
+      name = imageName + ":" + imageTag;
     } else if (creatingFromTemplate()) {
       nameLink = "project/" + $scope.projectName + "/create/fromtemplate?template=" + template + "&namespace=" + namespace;
+      name = template;
     }
 
     $scope.breadcrumbs = [
@@ -120,7 +123,7 @@ angular.module("openshiftConsole")
       }));
 
       function creatingFromTemplate() {
-        return name && namespace;
+        return template && namespace;
       }
 
       function creatingFromImage() {
