@@ -3,13 +3,16 @@
     <div ng-attr-id="{{metric.chartID}}" class="metrics-sparkline"></div>
     <div class="metrics-usage">
       <div class="usage-value">
-        <span class="fade-inline" ng-hide="metric.lastValue | isNil">{{formatUsage(metric.lastValue)}}</span>
+        <span class="fade-inline" ng-hide="metric.lastValue | isNil">
+          {{metric.formatUsage(metric.lastValue)}}
+        </span>
         <span ng-if="metric.lastValue | isNil" class="text-muted" aria-hidden="true">
           --
         </span>
       </div>
       <div class="usage-label">
-        {{metric.units | capitalize}} {{metric.compactLabel || metric.label}}
+        {{metric.usageUnits(metric.lastValue) | capitalize}}
+        {{metric.compactLabel || metric.label}}
       </div>
     </div>
   </div>

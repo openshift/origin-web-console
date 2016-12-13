@@ -7100,13 +7100,15 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "<div ng-attr-id=\"{{metric.chartID}}\" class=\"metrics-sparkline\"></div>\n" +
     "<div class=\"metrics-usage\">\n" +
     "<div class=\"usage-value\">\n" +
-    "<span class=\"fade-inline\" ng-hide=\"metric.lastValue | isNil\">{{formatUsage(metric.lastValue)}}</span>\n" +
+    "<span class=\"fade-inline\" ng-hide=\"metric.lastValue | isNil\">\n" +
+    "{{metric.formatUsage(metric.lastValue)}}\n" +
+    "</span>\n" +
     "<span ng-if=\"metric.lastValue | isNil\" class=\"text-muted\" aria-hidden=\"true\">\n" +
     "--\n" +
     "</span>\n" +
     "</div>\n" +
     "<div class=\"usage-label\">\n" +
-    "{{metric.units | capitalize}} {{metric.compactLabel || metric.label}}\n" +
+    "{{metric.usageUnits(metric.lastValue) | capitalize}} {{metric.compactLabel || metric.label}}\n" +
     "</div>\n" +
     "</div>\n" +
     "</div>\n" +
