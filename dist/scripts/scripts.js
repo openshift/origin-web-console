@@ -13168,7 +13168,7 @@ return b ? (c = c || new Date(), a(moment(c).diff(b))) :b;
 } ]).filter("timeOnlyDuration", function() {
 return function(a) {
 var b = [], c = moment.duration(a), d = Math.floor(c.asHours()), e = c.minutes(), f = c.seconds();
-return d || e || f ? (d && b.push(d + "h"), e && b.push(e + "m"), d || b.push(f + "s"), b.join(" ")) :"";
+return (d < 0 || e < 0 || f < 0) && (d = e = f = 0), d && b.push(d + "h"), e && b.push(e + "m"), d || b.push(f + "s"), b.join(" ");
 };
 }), angular.module("openshiftConsole").filter("uid", function() {
 return function(a) {

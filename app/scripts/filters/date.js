@@ -164,8 +164,9 @@ angular.module('openshiftConsole')
       var minutes = duration.minutes();
       var seconds = duration.seconds();
 
-      if (!hours && !minutes && !seconds) {
-        return '';
+      // If we have negative duration then normalize it to zero, don't show negative durations
+      if (hours < 0 || minutes < 0 || seconds < 0) {
+        hours = minutes = seconds = 0;
       }
 
       if (hours) {
