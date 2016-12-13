@@ -4495,6 +4495,7 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "<h1>Create Storage</h1>\n" +
     "<div class=\"help-block\">\n" +
     "Create a request for an administrator-defined storage asset by specifying size and permissions for a best fit.\n" +
+    "<a href=\"{{'persistent_volumes' | helpLink}}\" target=\"_blank\"><span class=\"learn-more-inline\">Learn More&nbsp;<i class=\"fa fa-external-link\" aria-hidden=\"true\"></i></span></a>\n" +
     "</div>\n" +
     "<form name=\"createPersistentVolumeClaimForm\" class=\"mar-top-lg\">\n" +
     "<fieldset ng-disabled=\"disableInputs\">\n" +
