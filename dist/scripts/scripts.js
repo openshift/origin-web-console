@@ -10441,8 +10441,11 @@ a.hidden = !1;
 });
 }
 };
-}), angular.module("openshiftConsole").directive("toggle", function() {
-return {
+}), angular.module("openshiftConsole").directive("toggle", [ "IS_IOS", function(a) {
+var b = function(a) {
+$("body").css("cursor", a);
+}, c = _.partial(b, "pointer"), d = _.partial(b, "auto");
+return a && ($(document).on("shown.bs.popover", c), $(document).on("shown.bs.tooltip", c), $(document).on("hide.bs.popover", d), $(document).on("hide.bs.tooltip", d)), {
 restrict:"A",
 scope:{
 dynamicContent:"@?"
@@ -10480,7 +10483,7 @@ delay:200
 }
 }
 };
-}).directive("podWarnings", [ "podWarningsFilter", function(a) {
+} ]).directive("podWarnings", [ "podWarningsFilter", function(a) {
 return {
 restrict:"E",
 scope:{
