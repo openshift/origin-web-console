@@ -9,7 +9,8 @@ angular.module('openshiftConsole')
                                            ChartsService,
                                            ConversionService,
                                            MetricsCharts,
-                                           MetricsService) {
+                                           MetricsService,
+                                           ModalsService) {
     return {
       restrict: 'E',
       scope: {
@@ -120,6 +121,10 @@ angular.module('openshiftConsole')
         // Set to true when any data has been loaded (or failed to load).
         scope.loaded = false;
         scope.noData = true;
+
+        scope.showComputeUnitsHelp = function() {
+          ModalsService.showComputeUnitsHelp();
+        };
 
         // Track the number of consecutive failures.
         var failureCount = 0;

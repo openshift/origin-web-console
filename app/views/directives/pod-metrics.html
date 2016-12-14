@@ -1,5 +1,8 @@
 <div class="metrics mar-top-xl" ng-if="pod || deployment">
   <div ng-show="!metricsError" class="metrics-options">
+    <div class="pull-right learn-more-block hidden-xs">
+      <a href="" ng-click="showComputeUnitsHelp()">About Compute Resources</a>
+    </div>
     <!-- Let the user select the container if we're showing pod metrics. -->
     <div ng-if="pod.spec.containers.length" class="form-group">
       <label for="selectContainer">Container:</label>

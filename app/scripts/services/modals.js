@@ -24,6 +24,14 @@ angular.module("openshiftConsole")
           templateUrl: 'views/modals/jenkinsfile-examples-modal.html',
           controller: 'JenkinsfileExamplesModalController'
         });
+      },
+
+      showComputeUnitsHelp: function() {
+        $uibModal.open({
+          animation: true,
+          templateUrl: 'views/modals/about-compute-units-modal.html',
+          controller: 'AboutComputeUnitsModalController'
+        });
       }
     };
   });

@@ -11,6 +11,7 @@ angular.module('openshiftConsole')
                                     ConversionService,
                                     MetricsCharts,
                                     MetricsService,
+                                    ModalsService,
                                     usageValueFilter) {
     return {
       restrict: 'E',
@@ -97,6 +98,10 @@ angular.module('openshiftConsole')
         // Set to true when any data has been loaded (or failed to load).
         scope.loaded = false;
         scope.noData = true;
+
+        scope.showComputeUnitsHelp = function() {
+          ModalsService.showComputeUnitsHelp();
+        };
 
         // Get the URL to show in error messages.
         MetricsService.getMetricsURL().then(function(url) {

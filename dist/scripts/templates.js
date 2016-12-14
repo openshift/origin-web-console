@@ -154,11 +154,15 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "</small>\n" +
     "</h3>\n" +
     "\n" +
-    "<compute-resource ng-model=\"resources.requests[type]\" type=\"{{type}}\" label=\"Request\" description=\"The amount of {{type | computeResourceLabel}} the container requests.\" default-value=\"limits.defaultRequest\" limit-range-min=\"limits.min\" limit-range-max=\"limits.max\" max-limit-request-ratio=\"limits.maxLimitRequestRatio\" ng-if=\"!requestCalculated\">\n" +
+    "<compute-resource ng-model=\"resources.requests[type]\" type=\"{{type}}\" label=\"Request\" description=\"The minimum amount of {{type | computeResourceLabel}} the container is guaranteed.\" default-value=\"limits.defaultRequest\" limit-range-min=\"limits.min\" limit-range-max=\"limits.max\" max-limit-request-ratio=\"limits.maxLimitRequestRatio\" ng-if=\"!requestCalculated\">\n" +
     "</compute-resource>\n" +
     "\n" +
-    "<compute-resource ng-model=\"resources.limits[type]\" type=\"{{type}}\" label=\"{{requestCalculated ? undefined : 'Limit'}}\" description=\"The amount of {{type | computeResourceLabel : true}} the container is limited to use.\" default-value=\"limits.defaultLimit\" limit-range-min=\"limits.min\" limit-range-max=\"limits.max\" request=\"requestCalculated ? undefined : resources.requests[type]\" max-limit-request-ratio=\"limits.maxLimitRequestRatio\" ng-if=\"!hideLimit\">\n" +
+    "<compute-resource ng-model=\"resources.limits[type]\" type=\"{{type}}\" label=\"{{requestCalculated ? undefined : 'Limit'}}\" description=\"The maximum amount of {{type | computeResourceLabel}} the container is allowed to use when running.\" default-value=\"limits.defaultLimit\" limit-range-min=\"limits.min\" limit-range-max=\"limits.max\" request=\"requestCalculated ? undefined : resources.requests[type]\" max-limit-request-ratio=\"limits.maxLimitRequestRatio\" ng-if=\"!hideLimit\">\n" +
     "</compute-resource>\n" +
+    "<div class=\"learn-more-block\">\n" +
+    "<a href=\"\" ng-click=\"showComputeUnitsHelp()\">What are\n" +
+    "<span ng-if=\"type === 'cpu'\">millicores</span><span ng-if=\"type === 'memory'\">MiB</span>?</a>\n" +
+    "</div>\n" +
     "</ng-form>"
   );
 
@@ -6229,6 +6233,9 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
   $templateCache.put('views/directives/deployment-metrics.html',
     "<div class=\"metrics\">\n" +
     "<div ng-if=\"!metricsError\" class=\"metrics-options\">\n" +
+    "<div class=\"pull-right learn-more-block hidden-xs\">\n" +
+    "<a href=\"\" ng-click=\"showComputeUnitsHelp()\">About Compute Resources</a>\n" +
+    "</div>\n" +
     "<div ng-if=\"containers.length\" class=\"form-group\">\n" +
     "<label for=\"selectContainer\">Container:</label>\n" +
     "<div class=\"select-container\">\n" +
@@ -7954,6 +7961,9 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
   $templateCache.put('views/directives/pod-metrics.html',
     "<div class=\"metrics mar-top-xl\" ng-if=\"pod || deployment\">\n" +
     "<div ng-show=\"!metricsError\" class=\"metrics-options\">\n" +
+    "<div class=\"pull-right learn-more-block hidden-xs\">\n" +
+    "<a href=\"\" ng-click=\"showComputeUnitsHelp()\">About Compute Resources</a>\n" +
+    "</div>\n" +
     "\n" +
     "<div ng-if=\"pod.spec.containers.length\" class=\"form-group\">\n" +
     "<label for=\"selectContainer\">Container:</label>\n" +
@@ -9657,6 +9667,55 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "</div>\n" +
     "</div>\n" +
     "</project-page>"
+  );
+
+
+  $templateCache.put('views/modals/about-compute-units-modal.html',
+    "<div>\n" +
+    "<div class=\"modal-body\">\n" +
+    "<h2>\n" +
+    "Compute Resources\n" +
+    "<span class=\"page-header-link\">\n" +
+    "<a href=\"{{'compute_resources' | helpLink}}\" target=\"_blank\">Learn More <i class=\"fa fa-external-link\" aria-hidden=\"true\"></i></a>\n" +
+    "</span>\n" +
+    "</h2>\n" +
+    "<div>\n" +
+    "Each container running on a node uses compute resources like CPU and memory. You can specify how much CPU and memory a container needs to improve scheduling and performance.\n" +
+    "</div>\n" +
+    "<h3>CPU</h3>\n" +
+    "<p>\n" +
+    "CPU is often measured in units called <var>millicores</var>. Each millicore is equivalent to <sup>1</sup>&frasl;<sub>1000</sub> of a CPU&nbsp;core.\n" +
+    "</p>\n" +
+    "<pre>\n" +
+    "1000 millcores  =  1 core\n" +
+    "</pre>\n" +
+    "<h3>Memory</h3>\n" +
+    "<p>\n" +
+    "Memory is measured in binary units like <var>KiB</var>, <var>MiB</var>, and <var>GiB</var> or decimal units like <var>kB</var>, <var>MB</var>, and&nbsp;<var>GB</var>.\n" +
+    "</p>\n" +
+    "<div class=\"row\">\n" +
+    "<div class=\"col-sm-6\">\n" +
+    "<h4>Binary Units</h4>\n" +
+    "<pre>\n" +
+    "1024 bytes  =  1 KiB\n" +
+    "1024 KiB    =  1 MiB\n" +
+    "1024 MiB    =  1 GiB\n" +
+    "</pre>\n" +
+    "</div>\n" +
+    "<div class=\"col-sm-6\">\n" +
+    "<h4>Decimal Units</h4>\n" +
+    "<pre>\n" +
+    "1000 bytes  =  1 kB\n" +
+    "1000 kB     =  1 MB\n" +
+    "1000 MB     =  1 GB\n" +
+    "</pre>\n" +
+    "</div>\n" +
+    "</div>\n" +
+    "</div>\n" +
+    "<div class=\"modal-footer\">\n" +
+    "<button class=\"btn btn-lg btn-default\" type=\"button\" ng-click=\"ok()\">OK</button>\n" +
+    "</div>\n" +
+    "</div>"
   );
 
 

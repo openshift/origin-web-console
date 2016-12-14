@@ -16,7 +16,7 @@
       ng-model="resources.requests[type]"
       type="{{type}}"
       label="Request"
-      description="The amount of {{type | computeResourceLabel}} the container requests."
+      description="The minimum amount of {{type | computeResourceLabel}} the container is guaranteed."
       default-value="limits.defaultRequest"
       limit-range-min="limits.min"
       limit-range-max="limits.max"
@@ -29,7 +29,7 @@
       ng-model="resources.limits[type]"
       type="{{type}}"
       label="{{requestCalculated ? undefined : 'Limit'}}"
-      description="The amount of {{type | computeResourceLabel : true}} the container is limited to use."
+      description="The maximum amount of {{type | computeResourceLabel}} the container is allowed to use when running."
       default-value="limits.defaultLimit"
       limit-range-min="limits.min"
       limit-range-max="limits.max"
@@ -37,4 +37,8 @@
       max-limit-request-ratio="limits.maxLimitRequestRatio"
       ng-if="!hideLimit">
   </compute-resource>
+  <div class="learn-more-block">
+    <a href="" ng-click="showComputeUnitsHelp()">What are
+      <span ng-if="type === 'cpu'">millicores</span><span ng-if="type === 'memory'">MiB</span>?</a>
+  </div>
 </ng-form>
