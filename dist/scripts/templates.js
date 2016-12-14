@@ -1411,6 +1411,15 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "{{pod | podStatus | sentenceCase}}<span ng-if=\"pod | podCompletionTime\">, ran for {{(pod | podStartTime) | duration : (pod | podCompletionTime)}}</span>\n" +
     "<span ng-if=\"pod.metadata.deletionTimestamp\">(expires {{pod.metadata.deletionTimestamp | date : 'medium'}})</span>\n" +
     "</dd>\n" +
+    "<dt ng-if-start=\"pod.status.message\">Message:</dt>\n" +
+    "<dd ng-if-end>{{pod.status.message}}</dd>\n" +
+    "<dt ng-if-start=\"dcName\">\n" +
+    "Deployment:\n" +
+    "</dt>\n" +
+    "<dd ng-if-end>\n" +
+    "<a ng-href=\"{{dcName | navigateResourceURL : 'DeploymentConfig' : pod.metadata.namespace}}\">{{dcName}}</a><span ng-if=\"rcName\">,\n" +
+    "<a ng-href=\"{{rcName | navigateResourceURL : 'ReplicationController' : pod.metadata.namespace}}\"><span ng-if=\"deploymentVersion\">#{{deploymentVersion}}</span><span ng-if=\"!deploymentVersion\">{{rcName}}</span></a></span>\n" +
+    "</dd>\n" +
     "<dt ng-if-start=\"pod.metadata.deletionTimestamp && pod.spec.terminationGracePeriodSeconds\">Grace Period:</dt>\n" +
     "<dd ng-if-end>\n" +
     "\n" +
@@ -1421,8 +1430,6 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "{{pod.spec.terminationGracePeriodSeconds | humanizeDurationValue : 'seconds'}}\n" +
     "</span>\n" +
     "</dd>\n" +
-    "<dt ng-if-start=\"pod.status.message\">Message:</dt>\n" +
-    "<dd ng-if-end>{{pod.status.message}}</dd>\n" +
     "<dt>IP:</dt>\n" +
     "<dd>{{pod.status.podIP || 'unknown'}}</dd>\n" +
     "<dt>Node:</dt>\n" +
@@ -1471,10 +1478,10 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "<h4>Volumes</h4>\n" +
     "<volumes ng-if=\"pod.spec.volumes.length\" volumes=\"pod.spec.volumes\" namespace=\"project.metadata.name\"></volumes>\n" +
     "<div ng-if=\"!pod.spec.volumes.length\">none</div>\n" +
-    "<p ng-if=\"(pod | annotation:'deploymentConfig') && ('deploymentconfigs' | canI : 'update')\">\n" +
-    "<a ng-href=\"project/{{project.metadata.name}}/attach-pvc?kind=DeploymentConfig&name={{pod | annotation:'deploymentConfig'}}\">Add Storage to {{pod | annotation : 'deploymentConfig'}}</a>\n" +
+    "<p ng-if=\"dcName && ('deploymentconfigs' | canI : 'update')\">\n" +
+    "<a ng-href=\"project/{{project.metadata.name}}/attach-pvc?kind=DeploymentConfig&name={{dcName}}\">Add Storage to {{dcName}}</a>\n" +
     "<span class=\"action-divider\" aria-hidden=\"true\">|</span>\n" +
-    "<a ng-href=\"project/{{project.metadata.name}}/add-config-volume?kind=DeploymentConfig&name={{pod | annotation : 'deploymentConfig'}}\">Add Config Files to {{pod | annotation : 'deploymentConfig'}}</a>\n" +
+    "<a ng-href=\"project/{{project.metadata.name}}/add-config-volume?kind=DeploymentConfig&name={{dcName}}\">Add Config Files to {{dcName}}</a>\n" +
     "</p>\n" +
     "</div>\n" +
     "</div>\n" +
