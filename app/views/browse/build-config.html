@@ -75,8 +75,8 @@
             <div class="row" ng-if="loaded">
               <div class="col-md-12" ng-class="{ 'hide-tabs' : !buildConfig }">
                 <uib-tabset>
-                  <uib-tab active="selectedTab.summary">
-                    <uib-tab-heading>Summary</uib-tab-heading>
+                  <uib-tab active="selectedTab.history">
+                    <uib-tab-heading>History</uib-tab-heading>
 
                     <!-- If unfilteredBuilds is undefined, the builds are still loading. -->
                     <div ng-if="!unfilteredBuilds" class="gutter-bottom">Loading...</div>
@@ -133,17 +133,16 @@
                     <!-- Show the latest build and a chart of the recent build duration and status. -->
                     <div ng-if="builds && (builds | hashSize) > 0" class="build-config-summary">
                       <!-- Show the latest build status first. -->
-                      <div class="h3" style="margin-bottom: 0;">
-                        <span class="latest-build-status">
-                          <status-icon status="latestBuild.status.phase" style="margin-right: 5px;"></status-icon>
-                          Latest build
+                      <div class="h3">
+                        <span class="last-status">
+                          <status-icon status="latestBuild.status.phase"></status-icon>
+                          Build
                           <!-- Line break comments to prevent whitespace from being underlined on link hover. -->
                           <a ng-href="{{latestBuild | navigateResourceURL}}"><!--
                             --><span ng-if="latestBuild | annotation : 'buildNumber'">#{{latestBuild | annotation : 'buildNumber'}}</span><!--
                             --><span ng-if="!(latestBuild | annotation : 'buildNumber')">{{latestBuild.metadata.name}}</span><!--
                           --></a>
                           <span ng-switch="latestBuild.status.phase" class="hide-ng-leave">
-                            <span ng-switch-when="Complete">complete.</span>
                             <span ng-switch-when="Failed">failed.</span>
                             <span ng-switch-when="Error">encountered an error.</span>
                             <span ng-switch-when="Cancelled">was cancelled.</span>
@@ -161,7 +160,7 @@
                           </span>
                         </span>
                       </div>
-                      <div class="latest-build-timestamp meta text-muted">
+                      <div class="last-timestamp meta text-muted">
                         <span ng-if="!latestBuild.status.startTimestamp">
                           created <span am-time-ago="latestBuild.metadata.creationTimestamp"></span>
                         </span>
@@ -229,6 +228,11 @@
                       <div class="resource-details">
                         <div class="row">
                           <div class="col-lg-6">
+                            <!--
+                              Show a header at lg and xl screen sizes to balance the columns, but hide
+                              it at smaller widths since "Details" is not very meaningful.
+                            -->
+                            <h3 class="hidden visible-lg visible-xl">Details</h3>
                             <dl class="dl-horizontal left">
                               <div>
                                 <dt>Build Strategy:</dt>

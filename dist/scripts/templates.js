@@ -1794,8 +1794,8 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "<div class=\"row\" ng-if=\"loaded\">\n" +
     "<div class=\"col-md-12\" ng-class=\"{ 'hide-tabs' : !buildConfig }\">\n" +
     "<uib-tabset>\n" +
-    "<uib-tab active=\"selectedTab.summary\">\n" +
-    "<uib-tab-heading>Summary</uib-tab-heading>\n" +
+    "<uib-tab active=\"selectedTab.history\">\n" +
+    "<uib-tab-heading>History</uib-tab-heading>\n" +
     "\n" +
     "<div ng-if=\"!unfilteredBuilds\" class=\"gutter-bottom\">Loading...</div>\n" +
     "\n" +
@@ -1843,14 +1843,13 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "\n" +
     "<div ng-if=\"builds && (builds | hashSize) > 0\" class=\"build-config-summary\">\n" +
     "\n" +
-    "<div class=\"h3\" style=\"margin-bottom: 0\">\n" +
-    "<span class=\"latest-build-status\">\n" +
-    "<status-icon status=\"latestBuild.status.phase\" style=\"margin-right: 5px\"></status-icon>\n" +
-    "Latest build\n" +
+    "<div class=\"h3\">\n" +
+    "<span class=\"last-status\">\n" +
+    "<status-icon status=\"latestBuild.status.phase\"></status-icon>\n" +
+    "Build\n" +
     "\n" +
     "<a ng-href=\"{{latestBuild | navigateResourceURL}}\"><span ng-if=\"latestBuild | annotation : 'buildNumber'\">#{{latestBuild | annotation : 'buildNumber'}}</span><span ng-if=\"!(latestBuild | annotation : 'buildNumber')\">{{latestBuild.metadata.name}}</span></a>\n" +
     "<span ng-switch=\"latestBuild.status.phase\" class=\"hide-ng-leave\">\n" +
-    "<span ng-switch-when=\"Complete\">complete.</span>\n" +
     "<span ng-switch-when=\"Failed\">failed.</span>\n" +
     "<span ng-switch-when=\"Error\">encountered an error.</span>\n" +
     "<span ng-switch-when=\"Cancelled\">was cancelled.</span>\n" +
@@ -1868,7 +1867,7 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "</span>\n" +
     "</span>\n" +
     "</div>\n" +
-    "<div class=\"latest-build-timestamp meta text-muted\">\n" +
+    "<div class=\"last-timestamp meta text-muted\">\n" +
     "<span ng-if=\"!latestBuild.status.startTimestamp\">\n" +
     "created <span am-time-ago=\"latestBuild.metadata.creationTimestamp\"></span>\n" +
     "</span>\n" +
@@ -1935,6 +1934,8 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "<div class=\"resource-details\">\n" +
     "<div class=\"row\">\n" +
     "<div class=\"col-lg-6\">\n" +
+    "\n" +
+    "<h3 class=\"hidden visible-lg visible-xl\">Details</h3>\n" +
     "<dl class=\"dl-horizontal left\">\n" +
     "<div>\n" +
     "<dt>Build Strategy:</dt>\n" +
@@ -2495,12 +2496,90 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "</span>\n" +
     "</div>\n" +
     "<uib-tabset>\n" +
-    "<uib-tab active=\"selectedTab.details\">\n" +
-    "<uib-tab-heading>Details</uib-tab-heading>\n" +
+    "<uib-tab active=\"selectedTab.history\">\n" +
+    "<uib-tab-heading>History</uib-tab-heading>\n" +
+    "<div ng-if=\"mostRecent\" class=\"deployment-config-summary\">\n" +
+    "\n" +
+    "<div class=\"h3\">\n" +
+    "<span class=\"latest-status\">\n" +
+    "<status-icon status=\"mostRecent | deploymentStatus\"></status-icon>\n" +
+    "Deployment\n" +
+    "\n" +
+    "<a ng-href=\"{{mostRecent | navigateResourceURL}}\"><span ng-if=\"mostRecent | annotation : 'deploymentVersion'\">#{{mostRecent | annotation : 'deploymentVersion'}}</span><span ng-if=\"!(mostRecent | annotation : 'deploymentVersion')\">{{mostRecent.metadata.name}}</span></a>\n" +
+    "<span ng-if=\"(mostRecent | deploymentStatus) !== 'Failed'\">is</span>\n" +
+    "{{mostRecent | deploymentStatus | lowercase}}.\n" +
+    "<a ng-href=\"{{mostRecent | navigateResourceURL}}?tab=logs\">View Log</a>\n" +
+    "</span>\n" +
+    "\n" +
+    "</div>\n" +
+    "<div class=\"last-timestamp meta text-muted\">\n" +
+    "created <span am-time-ago=\"mostRecent.metadata.creationTimestamp\"></span>\n" +
+    "</div>\n" +
+    "</div>\n" +
+    "<div class=\"table-filter-wrapper\">\n" +
+    "<project-filter></project-filter>\n" +
+    "</div>\n" +
+    "<table class=\"table table-bordered table-hover table-mobile\">\n" +
+    "<thead>\n" +
+    "<tr>\n" +
+    "<th>Deployment</th>\n" +
+    "<th>Status</th>\n" +
+    "<th>Created</th>\n" +
+    "<th>Trigger</th>\n" +
+    "</tr>\n" +
+    "</thead>\n" +
+    "<tbody ng-if=\"(deployments | hashSize) == 0\">\n" +
+    "<tr><td colspan=\"4\"><em>{{emptyMessage}}</em></td></tr>\n" +
+    "</tbody>\n" +
+    "<tbody ng-repeat=\"deployment in orderedDeployments\">\n" +
+    "<tr>\n" +
+    "<td data-title=\"Deployment\">\n" +
+    "\n" +
+    "<span ng-if=\"deployment | annotation : 'deploymentVersion'\">\n" +
+    "<a ng-href=\"{{deployment | navigateResourceURL}}\">#{{deployment | annotation : 'deploymentVersion'}}</a>\n" +
+    "<span ng-if=\"deploymentConfig.status.latestVersion == (deployment | annotation : 'deploymentVersion')\">(latest)</span>\n" +
+    "</span>\n" +
+    "</td>\n" +
+    "<td data-title=\"Status\">\n" +
+    "<div row class=\"status\">\n" +
+    "<status-icon status=\"deployment | deploymentStatus\" disable-animation fixed-width=\"true\"></status-icon>\n" +
+    "<span flex>\n" +
+    "{{deployment | deploymentStatus}}<span ng-if=\"(deployment | deploymentStatus) == 'Active' || (deployment | deploymentStatus) == 'Running'\">,\n" +
+    "<span ng-if=\"deployment.spec.replicas !== deployment.status.replicas\">{{deployment.status.replicas}}/</span>{{deployment.spec.replicas}} replica<span ng-if=\"deployment.spec.replicas != 1\">s</span></span>\n" +
+    "</span>\n" +
+    "\n" +
+    "</div>\n" +
+    "</td>\n" +
+    "<td data-title=\"Created\">\n" +
+    "<span am-time-ago=\"deployment.metadata.creationTimestamp\"></span>\n" +
+    "</td>\n" +
+    "<td data-title=\"Trigger\">\n" +
+    "<span ng-if=\"!deployment.causes.length\">Unknown</span>\n" +
+    "<span ng-if=\"deployment.causes.length\">\n" +
+    "<span ng-repeat=\"cause in deployment.causes\">\n" +
+    "<span ng-switch=\"cause.type\">\n" +
+    "<span ng-switch-when=\"ImageChange\">\n" +
+    "<span ng-if=\"cause.imageTrigger.from\">\n" +
+    "<abbr title=\"{{cause.imageTrigger.from | imageObjectRef : null : true}}\">Image</abbr> change\n" +
+    "</span>\n" +
+    "</span>\n" +
+    "<span ng-switch-when=\"ConfigChange\">Config change</span>\n" +
+    "<span ng-switch-default>{{cause.type}}</span>\n" +
+    "</span>\n" +
+    "</span>\n" +
+    "</span>\n" +
+    "</td>\n" +
+    "</tr>\n" +
+    "</tbody>\n" +
+    "</table>\n" +
+    "</uib-tab>\n" +
+    "<uib-tab active=\"selectedTab.configuration\">\n" +
+    "<uib-tab-heading>Configuration</uib-tab-heading>\n" +
     "<div class=\"resource-details\" ng-if=\"deploymentConfig\">\n" +
     "<div class=\"row\">\n" +
     "<div class=\"col-lg-6\">\n" +
-    "<h3>Configuration</h3>\n" +
+    "\n" +
+    "<h3 class=\"hidden visible-lg visible-xl\">Details</h3>\n" +
     "<dl class=\"dl-horizontal left\">\n" +
     "<dt>Selectors:</dt>\n" +
     "<dd>\n" +
@@ -2616,64 +2695,6 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "</div>\n" +
     "<annotations annotations=\"deploymentConfig.metadata.annotations\"></annotations>\n" +
     "</div>\n" +
-    "<div ng-if=\"loaded\">\n" +
-    "<div class=\"table-filter-wrapper\">\n" +
-    "<project-filter></project-filter>\n" +
-    "</div>\n" +
-    "<table class=\"table table-bordered table-hover table-mobile\">\n" +
-    "<thead>\n" +
-    "<tr>\n" +
-    "<th>Deployment</th>\n" +
-    "<th>Status</th>\n" +
-    "<th>Created</th>\n" +
-    "<th>Trigger</th>\n" +
-    "</tr>\n" +
-    "</thead>\n" +
-    "<tbody ng-if=\"(deployments | hashSize) == 0\">\n" +
-    "<tr><td colspan=\"4\"><em>{{emptyMessage}}</em></td></tr>\n" +
-    "</tbody>\n" +
-    "<tbody ng-repeat=\"deployment in deployments | orderObjectsByDate : true\">\n" +
-    "<tr>\n" +
-    "<td data-title=\"Deployment\">\n" +
-    "\n" +
-    "<span ng-if=\"deployment | annotation : 'deploymentVersion'\">\n" +
-    "<a ng-href=\"{{deployment | navigateResourceURL}}\">#{{deployment | annotation : 'deploymentVersion'}}</a>\n" +
-    "<span ng-if=\"deploymentConfig.status.latestVersion == (deployment | annotation : 'deploymentVersion')\">(latest)</span>\n" +
-    "</span>\n" +
-    "</td>\n" +
-    "<td data-title=\"Status\">\n" +
-    "<div row class=\"status\">\n" +
-    "<status-icon status=\"deployment | deploymentStatus\" disable-animation fixed-width=\"true\"></status-icon>\n" +
-    "<span flex>\n" +
-    "{{deployment | deploymentStatus}}<span ng-if=\"(deployment | deploymentStatus) == 'Active' || (deployment | deploymentStatus) == 'Running'\">,\n" +
-    "<span ng-if=\"deployment.spec.replicas !== deployment.status.replicas\">{{deployment.status.replicas}}/</span>{{deployment.spec.replicas}} replica<span ng-if=\"deployment.spec.replicas != 1\">s</span></span>\n" +
-    "</span>\n" +
-    "\n" +
-    "</div>\n" +
-    "</td>\n" +
-    "<td data-title=\"Created\">\n" +
-    "<span am-time-ago=\"deployment.metadata.creationTimestamp\"></span>\n" +
-    "</td>\n" +
-    "<td data-title=\"Trigger\">\n" +
-    "<span ng-if=\"!deployment.causes.length\">Unknown</span>\n" +
-    "<span ng-if=\"deployment.causes.length\">\n" +
-    "<span ng-repeat=\"cause in deployment.causes\">\n" +
-    "<span ng-switch=\"cause.type\">\n" +
-    "<span ng-switch-when=\"ImageChange\">\n" +
-    "<span ng-if=\"cause.imageTrigger.from\">\n" +
-    "<abbr title=\"{{cause.imageTrigger.from | imageObjectRef : null : true}}\">Image</abbr> change\n" +
-    "</span>\n" +
-    "</span>\n" +
-    "<span ng-switch-when=\"ConfigChange\">Config change</span>\n" +
-    "<span ng-switch-default>{{cause.type}}</span>\n" +
-    "</span>\n" +
-    "</span>\n" +
-    "</span>\n" +
-    "</td>\n" +
-    "</tr>\n" +
-    "</tbody>\n" +
-    "</table>\n" +
-    "</div>\n" +
     "</uib-tab>\n" +
     "<uib-tab heading=\"Environment\" active=\"selectedTab.environment\" ng-if=\"deploymentConfig\">\n" +
     "<uib-tab-heading>Environment</uib-tab-heading>\n" +
@@ -2767,10 +2788,6 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "<div ng-if=\"!loaded\">Loading...</div>\n" +
     "<div class=\"row\" ng-if=\"loaded\">\n" +
     "<div class=\"col-md-12\" ng-class=\"{ 'hide-tabs' : !deployment }\">\n" +
-    "<uib-tabset>\n" +
-    "<uib-tab active=\"selectedTab.details\">\n" +
-    "<uib-tab-heading>Details</uib-tab-heading>\n" +
-    "<div class=\"resource-details\" ng-if=\"deployment\">\n" +
     "<div ng-if=\"deployment.spec.paused\" class=\"alert alert-info animate-if\">\n" +
     "<span class=\"pficon pficon-info\" aria-hidden=\"true\"></span>\n" +
     "<strong>{{deployment.metadata.name}} is paused.</strong>\n" +
@@ -2779,12 +2796,50 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "<a href=\"\" ng-click=\"setPaused(false)\" role=\"button\">Resume deployment</a>\n" +
     "</span>\n" +
     "</div>\n" +
+    "<uib-tabset>\n" +
+    "<uib-tab active=\"selectedTab.history\">\n" +
+    "<uib-tab-heading>History</uib-tab-heading>\n" +
+    "<div ng-if=\"replicaSetsForDeployment | hashSize\">\n" +
+    "<table class=\"table table-bordered table-hover table-mobile\">\n" +
+    "<thead>\n" +
+    "<tr>\n" +
+    "<th>Version</th>\n" +
+    "<th>Name</th>\n" +
+    "<th>Replicas</th>\n" +
+    "<th>Created</th>\n" +
+    "</tr>\n" +
+    "</thead>\n" +
+    "<tbody ng-repeat=\"replicaSet in replicaSetsForDeployment\">\n" +
+    "<tr>\n" +
+    "<td data-title=\"Version\">\n" +
+    "#{{replicaSet | annotation : 'deployment.kubernetes.io/revision'}}\n" +
+    "</td>\n" +
+    "<td data-title=\"Name\">\n" +
+    "<a ng-href=\"{{replicaSet | navigateResourceURL}}\">{{replicaSet.metadata.name}}</a>\n" +
+    "</td>\n" +
+    "<td data-title=\"Replicas\">\n" +
+    "<span ng-if=\"replicaSet.status.replicas !== replicaSet.spec.replicas\">{{replicaSet.status.replicas}}/</span>{{replicaSet.spec.replicas}} replica<span ng-if=\"replicaSet.spec.replicas != 1\">s</span>\n" +
+    "</td>\n" +
+    "<td data-title=\"Created\">\n" +
+    "<span am-time-ago=\"replicaSet.metadata.creationTimestamp\"></span>\n" +
+    "</td>\n" +
+    "</tr>\n" +
+    "</tbody>\n" +
+    "</table>\n" +
+    "</div>\n" +
+    "</uib-tab>\n" +
+    "<uib-tab active=\"selectedTab.configuration\">\n" +
+    "<uib-tab-heading>Configuration</uib-tab-heading>\n" +
+    "<div class=\"resource-details\" ng-if=\"deployment\">\n" +
     "<div class=\"row\">\n" +
     "<div class=\"col-lg-6\">\n" +
-    "<h3>Status</h3>\n" +
+    "\n" +
+    "<h3 class=\"hidden visible-lg visible-xl\">Details</h3>\n" +
     "<dl class=\"dl-horizontal left\">\n" +
-    "<dt>Last Version:</dt>\n" +
-    "<dd>{{deployment | lastDeploymentRevision}}</dd>\n" +
+    "<dt>Selectors:</dt>\n" +
+    "<dd>\n" +
+    "<selector selector=\"deployment.spec.selector\"></selector>\n" +
+    "</dd>\n" +
     "<dt>Replicas:</dt>\n" +
     "<dd>\n" +
     "<replicas spec=\"deployment.spec.replicas\" disable-scaling=\"inProgressDeployment || autoscalers.length\" scale-fn=\"scale(replicas)\" deployment=\"deployment\"></replicas>\n" +
@@ -2796,15 +2851,6 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "<span ng-if=\"deployment.status.availableReplicas\">{{deployment.status.availableReplicas}} available<span ng-if=\"deployment.status.unavailableReplicas\">,</span></span>\n" +
     "<span ng-if=\"deployment.status.unavailableReplicas\">{{deployment.status.unavailableReplicas}} unavailable</span>\n" +
     "</div>\n" +
-    "</dd>\n" +
-    "</dl>\n" +
-    "</div>\n" +
-    "<div class=\"col-lg-6\">\n" +
-    "<h3>Configuration</h3>\n" +
-    "<dl class=\"dl-horizontal left\">\n" +
-    "<dt>Selectors:</dt>\n" +
-    "<dd>\n" +
-    "<selector selector=\"deployment.spec.selector\"></selector>\n" +
     "</dd>\n" +
     "<dt>Strategy:</dt>\n" +
     "<dd>{{deployment.spec.strategy.type | sentenceCase}}</dd>\n" +
@@ -2836,14 +2882,12 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "{{deployment.spec.minReadySeconds || 0}} sec\n" +
     "</dd>\n" +
     "</dl>\n" +
-    "</div>\n" +
-    "</div>\n" +
-    "<div class=\"row\">\n" +
-    "<div class=\"col-lg-6\">\n" +
     "<h3>Template</h3>\n" +
     "<pod-template pod-template=\"deployment.spec.template\" images-by-docker-reference=\"imagesByDockerReference\" builds=\"builds\" detailed=\"true\" add-health-check-url=\"{{ ({ group: 'extensions', resource: 'deployments' } | canI : 'update') ? healthCheckURL : '' }}\">\n" +
     "</pod-template>\n" +
-    "<h4>Volumes</h4>\n" +
+    "</div>\n" +
+    "<div class=\"col-lg-6\">\n" +
+    "<h3>Volumes</h3>\n" +
     "<p ng-if=\"!deployment.spec.template.spec.volumes.length && !({ group: 'extensions', resource: 'deployments' } | canI : 'update')\">\n" +
     "none\n" +
     "</p>\n" +
@@ -2854,8 +2898,6 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "<span class=\"action-divider\" aria-hidden=\"true\">|</span>\n" +
     "<a ng-href=\"project/{{project.metadata.name}}/add-config-volume?kind=Deployment&name={{deployment.metadata.name}}&group=extensions\">Add Config Files</a>\n" +
     "</div>\n" +
-    "</div>\n" +
-    "<div class=\"col-lg-6\">\n" +
     "<h3>Autoscaling</h3>\n" +
     "\n" +
     "<div ng-repeat=\"warning in hpaWarnings\" class=\"alert alert-warning\">\n" +
@@ -2877,36 +2919,9 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "</div>\n" +
     "</div>\n" +
     "</div>\n" +
-    "<div ng-if=\"replicaSetsForDeployment | hashSize\">\n" +
-    "<h3>Replica Sets</h3>\n" +
-    "<table class=\"table table-bordered table-hover table-mobile\">\n" +
-    "<thead>\n" +
-    "<tr>\n" +
-    "<th>Version</th>\n" +
-    "<th>Name</th>\n" +
-    "<th>Replicas</th>\n" +
-    "<th>Created</th>\n" +
-    "</tr>\n" +
-    "</thead>\n" +
-    "<tbody ng-repeat=\"replicaSet in replicaSetsForDeployment\">\n" +
-    "<tr>\n" +
-    "<td data-title=\"Version\">\n" +
-    "#{{replicaSet | annotation : 'deployment.kubernetes.io/revision'}}\n" +
-    "</td>\n" +
-    "<td data-title=\"Name\">\n" +
-    "<a ng-href=\"{{replicaSet | navigateResourceURL}}\">{{replicaSet.metadata.name}}</a>\n" +
-    "</td>\n" +
-    "<td data-title=\"Replicas\">\n" +
-    "<span ng-if=\"replicaSet.status.replicas !== replicaSet.spec.replicas\">{{replicaSet.status.replicas}}/</span>{{replicaSet.spec.replicas}} replica<span ng-if=\"replicaSet.spec.replicas != 1\">s</span>\n" +
-    "</td>\n" +
-    "<td data-title=\"Created\">\n" +
-    "<span am-time-ago=\"replicaSet.metadata.creationTimestamp\"></span>\n" +
-    "</td>\n" +
-    "</tr>\n" +
-    "</tbody>\n" +
-    "</table>\n" +
-    "</div>\n" +
+    "<div class=\"mar-top-md\">\n" +
     "<annotations annotations=\"deployment.metadata.annotations\"></annotations>\n" +
+    "</div>\n" +
     "</div>\n" +
     "</uib-tab>\n" +
     "<uib-tab heading=\"Environment\" active=\"selectedTab.environment\" ng-if=\"deployment\">\n" +

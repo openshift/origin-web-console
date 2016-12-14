@@ -75,25 +75,62 @@
           <div ng-if="!loaded">Loading...</div>
           <div class="row" ng-if="loaded">
             <div class="col-md-12" ng-class="{ 'hide-tabs' : !deployment }">
+              <div ng-if="deployment.spec.paused" class="alert alert-info animate-if">
+                <span class="pficon pficon-info" aria-hidden="true"></span>
+                <strong>{{deployment.metadata.name}} is paused.</strong>
+                This will pause any in-progress rollouts and stop new
+                rollouts from running until the deployment is resumed.
+                <span ng-if="!updatingPausedState && ({ group: 'extensions', resource: 'deployments' } | canI : 'update')">
+                  <a href="" ng-click="setPaused(false)" role="button">Resume deployment</a>
+                </span>
+              </div>
               <uib-tabset>
-                <uib-tab active="selectedTab.details">
-                  <uib-tab-heading>Details</uib-tab-heading>
+                <uib-tab active="selectedTab.history">
+                  <uib-tab-heading>History</uib-tab-heading>
+                  <div ng-if="replicaSetsForDeployment | hashSize">
+                    <table class="table table-bordered table-hover table-mobile">
+                      <thead>
+                        <tr>
+                          <th>Version</th>
+                          <th>Name</th>
+                          <th>Replicas</th>
+                          <th>Created</th>
+                        </tr>
+                      </thead>
+                      <tbody ng-repeat="replicaSet in replicaSetsForDeployment">
+                        <tr>
+                          <td data-title="Version">
+                            #{{replicaSet | annotation : 'deployment.kubernetes.io/revision'}}
+                          </td>
+                          <td data-title="Name">
+                            <a ng-href="{{replicaSet | navigateResourceURL}}">{{replicaSet.metadata.name}}</a>
+                          </td>
+                          <td data-title="Replicas">
+                            <span ng-if="replicaSet.status.replicas !== replicaSet.spec.replicas">{{replicaSet.status.replicas}}/</span>{{replicaSet.spec.replicas}} replica<span ng-if="replicaSet.spec.replicas != 1">s</span>
+                          </td>
+                          <td data-title="Created">
+                            <span am-time-ago="replicaSet.metadata.creationTimestamp"></span>
+                          </td>
+                        </tr>
+                      </tbody>
+                    </table>
+                  </div>
+                </uib-tab>
+                <uib-tab active="selectedTab.configuration">
+                  <uib-tab-heading>Configuration</uib-tab-heading>
                   <div class="resource-details" ng-if="deployment">
-                    <div ng-if="deployment.spec.paused" class="alert alert-info animate-if">
-                      <span class="pficon pficon-info" aria-hidden="true"></span>
-                      <strong>{{deployment.metadata.name}} is paused.</strong>
-                      This will pause any in-progress rollouts and stop new
-                      rollouts from running until the deployment is resumed.
-                      <span ng-if="!updatingPausedState && ({ group: 'extensions', resource: 'deployments' } | canI : 'update')">
-                        <a href="" ng-click="setPaused(false)" role="button">Resume deployment</a>
-                      </span>
-                    </div>
                     <div class="row">
                       <div class="col-lg-6">
-                        <h3>Status</h3>
+                        <!--
+                          Show a header at lg and xl screen sizes to balance the columns, but hide
+                          it at smaller widths since "Details" is not very meaningful.
+                        -->
+                        <h3 class="hidden visible-lg visible-xl">Details</h3>
                         <dl class="dl-horizontal left">
-                          <dt>Last Version:</dt>
-                          <dd>{{deployment | lastDeploymentRevision}}</dd>
+                          <dt>Selectors:</dt>
+                          <dd>
+                            <selector selector="deployment.spec.selector"></selector>
+                          </dd>
                           <dt>Replicas:</dt>
                           <dd>
                             <replicas spec="deployment.spec.replicas"
@@ -108,15 +145,6 @@
                               <span ng-if="deployment.status.availableReplicas">{{deployment.status.availableReplicas}} available<span ng-if="deployment.status.unavailableReplicas">,</span></span>
                               <span ng-if="deployment.status.unavailableReplicas">{{deployment.status.unavailableReplicas}} unavailable</span>
                             </div>
-                          </dd>
-                        </dl>
-                      </div>
-                      <div class="col-lg-6">
-                        <h3>Configuration</h3>
-                        <dl class="dl-horizontal left">
-                          <dt>Selectors:</dt>
-                          <dd>
-                            <selector selector="deployment.spec.selector"></selector>
                           </dd>
                           <dt>Strategy:</dt>
                           <dd>{{deployment.spec.strategy.type | sentenceCase}}</dd>
@@ -154,10 +182,7 @@
                             {{deployment.spec.minReadySeconds || 0}} sec
                           </dd>
                         </dl>
-                      </div>
-                    </div>
-                    <div class="row">
-                      <div class="col-lg-6">
+
                         <h3>Template</h3>
                         <pod-template
                             pod-template="deployment.spec.template"
@@ -166,7 +191,10 @@
                             detailed="true"
                             add-health-check-url="{{ ({ group: 'extensions', resource: 'deployments' } | canI : 'update') ? healthCheckURL : '' }}">
                         </pod-template>
-                        <h4>Volumes</h4>
+
+                      </div>
+                      <div class="col-lg-6">
+                        <h3>Volumes</h3>
                         <p ng-if="!deployment.spec.template.spec.volumes.length && !({ group: 'extensions', resource: 'deployments' } | canI : 'update')">
                           none
                         </p>
@@ -181,8 +209,7 @@
                           <span class="action-divider" aria-hidden="true">|</span>
                           <a ng-href="project/{{project.metadata.name}}/add-config-volume?kind=Deployment&name={{deployment.metadata.name}}&group=extensions">Add Config Files</a>
                         </div>
-                      </div>
-                      <div class="col-lg-6">
+
                         <h3>Autoscaling</h3>
 
                         <!-- Show any warnings. -->
@@ -209,38 +236,12 @@
                         <div ng-repeat="hpa in autoscalers">
                           <hpa hpa="hpa" project="project" show-scale-target="false" alerts="alerts"></hpa>
                         </div>
+
                       </div>
                     </div>
-                    <div ng-if="replicaSetsForDeployment | hashSize">
-                      <h3>Replica Sets</h3>
-                      <table class="table table-bordered table-hover table-mobile">
-                        <thead>
-                          <tr>
-                            <th>Version</th>
-                            <th>Name</th>
-                            <th>Replicas</th>
-                            <th>Created</th>
-                          </tr>
-                        </thead>
-                        <tbody ng-repeat="replicaSet in replicaSetsForDeployment">
-                          <tr>
-                            <td data-title="Version">
-                              #{{replicaSet | annotation : 'deployment.kubernetes.io/revision'}}
-                            </td>
-                            <td data-title="Name">
-                              <a ng-href="{{replicaSet | navigateResourceURL}}">{{replicaSet.metadata.name}}</a>
-                            </td>
-                            <td data-title="Replicas">
-                              <span ng-if="replicaSet.status.replicas !== replicaSet.spec.replicas">{{replicaSet.status.replicas}}/</span>{{replicaSet.spec.replicas}} replica<span ng-if="replicaSet.spec.replicas != 1">s</span>
-                            </td>
-                            <td data-title="Created">
-                              <span am-time-ago="replicaSet.metadata.creationTimestamp"></span>
-                            </td>
-                          </tr>
-                        </tbody>
-                      </table>
+                    <div class="mar-top-md">
+                      <annotations annotations="deployment.metadata.annotations"></annotations>
                     </div>
-                    <annotations annotations="deployment.metadata.annotations"></annotations>
                   </div>
                 </uib-tab>
                 <uib-tab heading="Environment" active="selectedTab.environment" ng-if="deployment">

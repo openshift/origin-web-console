@@ -53,6 +53,9 @@ angular.module('openshiftConsole')
     });
     AlertMessageService.clearAlerts();
 
+    var orderByDate = $filter('orderObjectsByDate');
+    var mostRecent = $filter('mostRecent');
+
     // copy deploymentConfig and ensure it has env so that we can edit env vars using key-value-editor
     var copyDeploymentConfigAndEnsureEnv = function(deploymentConfig) {
       $scope.updatedDeploymentConfig = angular.copy(deploymentConfig);
@@ -198,7 +201,9 @@ angular.module('openshiftConsole')
           }
 
           $scope.deployments = LabelFilter.getLabelSelector().select($scope.unfilteredDeployments);
+          $scope.orderedDeployments = orderByDate($scope.deployments, true);
           $scope.deploymentInProgress = !!_.size($scope.deploymentConfigDeploymentsInProgress[deploymentConfigName]);
+          $scope.mostRecent = mostRecent($scope.unfilteredDeployments);
 
           updateFilterWarning();
           LabelFilter.addLabelSuggestionsFromResources($scope.unfilteredDeployments, $scope.labelSuggestions);
@@ -262,6 +267,7 @@ angular.module('openshiftConsole')
           // trigger a digest loop
           $scope.$apply(function() {
             $scope.deployments = labelSelector.select($scope.unfilteredDeployments);
+            $scope.orderedDeployments = orderByDate($scope.deployments, true);
             updateFilterWarning();
           });
         });

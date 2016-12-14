@@ -181,17 +181,27 @@ mark {
   }
 }
 
-.build-config-summary {
-  .latest-build-status {
+.deployment-config-summary, .build-config-summary {
+  status-icon {
+    margin-right: 5px;
+  }
+  .h3 {
+    margin-bottom: 0;
+  }
+  .last-status {
     margin-right: 5px;
     .status-icon {
       width: 20px;
     }
   }
   // Indent icon width to align with text above.
-  .latest-build-timestamp {
+  .last-timestamp {
     margin-left: 25px;
   }
+}
+
+.deployment-config-summary {
+  .gutter-bottom();
 }
 
 .registry-image-pull {
