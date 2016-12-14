@@ -15,7 +15,7 @@ angular.module('openshiftConsole')
     // content supplied in the following forms:
     // heading: modalConfig.message
     // content: modalConfig.details (plain text ONLY, no user imput)
-    // content: modalConfig.detailsHtml (pre-sanitized, see _.escape() or _.template('<%- %>') )
+    // content: modalConfig.detailsMarkup (pre-sanitized, see _.escape() or _.template('<%- %>') )
     _.extend($scope, modalConfig);
 
     $scope.confirm = function() {

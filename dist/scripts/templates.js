@@ -7080,10 +7080,15 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "</form>\n" +
     "<span ng-if=\"state && state !== 'empty'\" class=\"action-divider\">|</span>\n" +
     "</span>\n" +
+    "<span ng-if=\"canSave && state && state !== 'empty'\">\n" +
+    "<a href=\"\" ng-click=\"saveLog()\" role=\"button\">\n" +
+    "Save\n" +
+    "<i class=\"fa fa-download\"></i></a>\n" +
+    "<span ng-if=\"state && state !== 'empty'\" class=\"action-divider\">|</span>\n" +
+    "</span>\n" +
     "<a ng-if=\"state && state !== 'empty'\" href=\"\" ng-click=\"goChromeless(options, fullLogUrl)\" role=\"button\">\n" +
-    "Expand Log\n" +
-    "<i class=\"fa fa-external-link\"></i>\n" +
-    "</a>\n" +
+    "Expand\n" +
+    "<i class=\"fa fa-external-link\"></i></a>\n" +
     "</div>\n" +
     "</div>\n" +
     "<div ng-if=\"largeLog\" class=\"alert alert-info log-size-warning\">\n" +
@@ -9767,6 +9772,27 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "<div class=\"modal-footer\">\n" +
     "<button class=\"btn btn-lg btn-primary\" type=\"button\" ng-click=\"replace();\">Replace</button>\n" +
     "<button class=\"btn btn-lg btn-default\" type=\"button\" ng-click=\"cancel();\">Cancel</button>\n" +
+    "</div>\n" +
+    "</div>"
+  );
+
+
+  $templateCache.put('views/modals/confirm-save-log.html',
+    "<div class=\"modal-resource-action\">\n" +
+    "<div class=\"modal-body\">\n" +
+    "<h1>Save partial log for <strong>{{object.metadata.name}}</strong>?</h1>\n" +
+    "<div class=\"mar-bottom-xl\">\n" +
+    "The log might not be complete. Continuing will save only the content currently displayed.\n" +
+    "<span ng-if=\"command\">To get the complete log, run the command</span>\n" +
+    "</div>\n" +
+    "<copy-to-clipboard ng-if=\"command\" display-wide=\"true\" clipboard-text=\"command\"></copy-to-clipboard>\n" +
+    "<div class=\"mar-top-xl\">\n" +
+    "Learn more about the <a href=\"command-line\" target=\"_blank\">command line tools</a>.\n" +
+    "</div>\n" +
+    "</div>\n" +
+    "<div class=\"modal-footer\">\n" +
+    "<button class=\"btn btn-lg btn-primary\" type=\"button\" ng-click=\"save()\">Save</button>\n" +
+    "<button class=\"btn btn-lg btn-default\" type=\"button\" ng-click=\"cancel()\">Cancel</button>\n" +
     "</div>\n" +
     "</div>"
   );

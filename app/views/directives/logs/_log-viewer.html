@@ -16,13 +16,20 @@
       </form>
       <span ng-if="state && state !== 'empty'" class="action-divider">|</span>
     </span>
+    <span ng-if="canSave && state && state !== 'empty'">
+      <a href=""
+         ng-click="saveLog()"
+         role="button">
+         Save
+         <i class="fa fa-download"></i></a>
+      <span ng-if="state && state !== 'empty'" class="action-divider">|</span>
+    </span>
     <a ng-if="state && state !== 'empty'"
        href=""
        ng-click="goChromeless(options, fullLogUrl)"
        role="button">
-       Expand Log
-       <i class="fa fa-external-link"></i>
-    </a>
+       Expand
+       <i class="fa fa-external-link"></i></a>
   </div>
 </div>
 

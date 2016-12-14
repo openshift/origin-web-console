@@ -36,6 +36,7 @@
     "Clipboard": false,
     "$": false,
     "_" : false,
-    "URITemplate": false
+    "URITemplate": false,
+    "saveAs": false
   }
 }
