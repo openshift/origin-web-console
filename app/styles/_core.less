@@ -190,9 +190,6 @@ mark {
   }
   .last-status {
     margin-right: 5px;
-    .status-icon {
-      width: 20px;
-    }
   }
   // Indent icon width to align with text above.
   .last-timestamp {
@@ -1040,12 +1037,39 @@ a.disabled-link {
 
 .status {
   min-width: 130px;
-  .status-icon {
-    margin-right: 6px;
-    width: 13px;
+}
+
+status-icon {
+  // when status-icon is child of [row], add margin-right to the icon
+  // because the space resulting from display: inline-block collapses
+  [row] > & {
+    margin-right: 3px;
+  }
+  // so that status-icons have a fixed width (like .fa-fw, but better sized)
+  // this ensures when the icons change, the text that follows doesn't shift
+  .fa, .pficon {
     text-align: center;
+    width: 1.230769em; // ~16px at 13px font size
+    .latest-build-status & {
+      width: 20px;
+    }
+  }
+  // fixes wobble that occurs when status-icons utilize fa-spin (see https://github.com/FortAwesome/Font-Awesome/issues/671#issuecomment-249591495)
+  .fa-spin {
+    font-size: 14px;
+    line-height: normal;
+  }
+  // so that spinners match width of .fa/.pficon (16px or 20px)
+  .spinner.spinner-inline {
+    margin-left: 0.153846em; // ~2px at 13px font size
+    margin-right: 0.153846em; // ~2px at 13px font size
+    .latest-build-status & {
+      margin-left: 4px;
+      margin-right: 4px;
+    }
   }
 }
+
 pre.clipped {
   display: inline-block;
   margin-top: 10px;
@@ -1184,10 +1208,4 @@ copy-to-clipboard .input-group.limit-width {
   .col-xxs-12 {
     width: 100%;
   }
-}
-
-// fixes wobble that occurs when status-icons utilize fa-spin (see https://github.com/FortAwesome/Font-Awesome/issues/671#issuecomment-249591495)
-.status-icon > .fa-spin {
-  font-size: 14px;
-  line-height: normal;
 }

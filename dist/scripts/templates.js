@@ -1910,7 +1910,7 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "</td>\n" +
     "<td data-title=\"Status\">\n" +
     "<div row class=\"status\">\n" +
-    "<status-icon status=\"build.status.phase\" disable-animation fixed-width=\"true\"></status-icon>\n" +
+    "<status-icon status=\"build.status.phase\" disable-animation></status-icon>\n" +
     "<span ng-if=\"!build.status.reason || build.status.phase === 'Cancelled'\">{{build.status.phase}}</span>\n" +
     "<span ng-if=\"build.status.reason && build.status.phase !== 'Cancelled'\">{{build.status.reason | sentenceCase}}</span>\n" +
     "</div>\n" +
@@ -2546,7 +2546,7 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "</td>\n" +
     "<td data-title=\"Status\">\n" +
     "<div row class=\"status\">\n" +
-    "<status-icon status=\"deployment | deploymentStatus\" disable-animation fixed-width=\"true\"></status-icon>\n" +
+    "<status-icon status=\"deployment | deploymentStatus\" disable-animation></status-icon>\n" +
     "<span flex>\n" +
     "{{deployment | deploymentStatus}}<span ng-if=\"(deployment | deploymentStatus) == 'Active' || (deployment | deploymentStatus) == 'Running'\">,\n" +
     "<span ng-if=\"deployment.spec.replicas !== deployment.status.replicas\">{{deployment.status.replicas}}/</span>{{deployment.spec.replicas}} replica<span ng-if=\"deployment.spec.replicas != 1\">s</span></span>\n" +
@@ -3541,7 +3541,7 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "<span ng-if=\"!route.status.ingress\">\n" +
     "{{route | routeLabel : null : true}}\n" +
     "<span data-toggle=\"popover\" data-trigger=\"hover\" data-content=\"The route is not accepting traffic yet because it has not been admitted by a router.\" style=\"cursor: help; padding-left: 5px\">\n" +
-    "<status-icon status=\"'Pending'\" disable-animation></status-icon>\n" +
+    "<status-icon status=\"'Pending'\"></status-icon>\n" +
     "<span class=\"sr-only\">Pending</span>\n" +
     "</span>\n" +
     "</span>\n" +
@@ -3748,7 +3748,7 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "{{route | routeLabel}}\n" +
     "</span>\n" +
     "<span ng-if=\"!route.status.ingress\" data-toggle=\"popover\" data-trigger=\"hover\" data-content=\"The route is not accepting traffic yet because it has not been admitted by a router.\" style=\"cursor: help; padding-left: 5px\">\n" +
-    "<status-icon status=\"'Pending'\" disable-animation></status-icon>\n" +
+    "<status-icon status=\"'Pending'\"></status-icon>\n" +
     "<span class=\"sr-only\">Pending</span>\n" +
     "</span>\n" +
     "</td>\n" +
@@ -4061,7 +4061,7 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "<td data-title=\"Status\">\n" +
     "<div row class=\"status\">\n" +
     "\n" +
-    "<status-icon status=\"latestBuild.status.phase\" disable-animation fixed-width=\"true\"></status-icon>\n" +
+    "<status-icon status=\"latestBuild.status.phase\" disable-animation></status-icon>\n" +
     "<span ng-if=\"!latestBuild.status.reason || latestBuild.status.phase === 'Cancelled'\">{{latestBuild.status.phase}}</span>\n" +
     "<span ng-if=\"latestBuild.status.reason && latestBuild.status.phase !== 'Cancelled'\">{{latestBuild.status.reason | sentenceCase}}</span>\n" +
     "</div>\n" +
@@ -5196,7 +5196,7 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "</td>\n" +
     "<td data-title=\"Status\">\n" +
     "<div row class=\"status\">\n" +
-    "<status-icon status=\"replicationController | deploymentStatus\" disable-animation fixed-width=\"true\"></status-icon>\n" +
+    "<status-icon status=\"replicationController | deploymentStatus\" disable-animation></status-icon>\n" +
     "<span flex>\n" +
     "{{replicationController | deploymentStatus}}<span ng-if=\"(replicationController | deploymentStatus) == 'Active' || (replicationController | deploymentStatus) == 'Running'\">,\n" +
     "<span ng-if=\"replicationController.spec.replicas !== replicationController.status.replicas\">{{replicationController.status.replicas}}/</span>{{replicationController.spec.replicas}} replica<span ng-if=\"replicationController.spec.replicas != 1\">s</span></span>\n" +
@@ -5364,10 +5364,10 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "<span class=\"status-icon\" ng-class=\"build.status.phase\">\n" +
     "<span ng-switch=\"build.status.phase\" class=\"hide-ng-leave\">\n" +
     "<span ng-switch-when=\"Complete\" aria-hidden=\"true\">\n" +
-    "<i class=\"fa fa-check-circle\"></i>\n" +
+    "<i class=\"fa fa-check-circle fa-fw\"></i>\n" +
     "</span>\n" +
     "<span ng-switch-when=\"Failed\" aria-hidden=\"true\">\n" +
-    "<i class=\"fa fa-times-circle\"></i>\n" +
+    "<i class=\"fa fa-times-circle fa-fw\"></i>\n" +
     "</span>\n" +
     "<span ng-switch-default>\n" +
     "<status-icon status=\"build.status.phase\"></status-icon>\n" +
@@ -5689,35 +5689,35 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
 
   $templateCache.put('views/directives/_status-icon.html',
     "<span ng-switch=\"status\" class=\"hide-ng-leave status-icon\">\n" +
-    "<span ng-switch-when=\"Cancelled\" class=\"fa fa-ban text-muted\" aria-hidden=\"true\" ng-class=\"{'fa-fw': fixedWidth}\"></span>\n" +
-    "<span ng-switch-when=\"Complete\" class=\"fa fa-check text-success\" aria-hidden=\"true\" ng-class=\"{'fa-fw': fixedWidth}\"></span>\n" +
-    "<span ng-switch-when=\"Completed\" class=\"fa fa-check text-success\" aria-hidden=\"true\" ng-class=\"{'fa-fw': fixedWidth}\"></span>\n" +
-    "<span ng-switch-when=\"Active\" class=\"fa fa-refresh\" aria-hidden=\"true\" ng-class=\"{'fa-fw': fixedWidth}\"></span>\n" +
-    "<span ng-switch-when=\"Error\" class=\"fa fa-times text-danger\" aria-hidden=\"true\" ng-class=\"{'fa-fw': fixedWidth}\"></span>\n" +
-    "<span ng-switch-when=\"Failed\" class=\"fa fa-times text-danger\" aria-hidden=\"true\" ng-class=\"{'fa-fw': fixedWidth}\"></span>\n" +
-    "<span ng-switch-when=\"New\" class=\"spinner spinner-xs spinner-inline\" aria-hidden=\"true\" ng-class=\"{'fa-fw': fixedWidth}\"></span>\n" +
-    "<span ng-switch-when=\"Pending\" class=\"spinner spinner-xs spinner-inline\" aria-hidden=\"true\" ng-class=\"{'fa-fw': fixedWidth}\"></span>\n" +
-    "<span ng-switch-when=\"Running\" class=\"fa fa-refresh\" aria-hidden=\"true\" ng-class=\"{'fa-spin' : spinning, 'fa-fw': fixedWidth}\"></span>\n" +
-    "<span ng-switch-when=\"Succeeded\" class=\"fa fa-check text-success\" aria-hidden=\"true\" ng-class=\"{'fa-fw': fixedWidth}\"></span>\n" +
-    "<span ng-switch-when=\"Bound\" class=\"fa fa-check text-success\" aria-hidden=\"true\" ng-class=\"{'fa-fw': fixedWidth}\"></span>\n" +
-    "<span ng-switch-when=\"Terminating\" class=\"fa fa-times text-danger\" aria-hidden=\"true\" ng-class=\"{'fa-fw': fixedWidth}\"></span>\n" +
-    "<span ng-switch-when=\"Terminated\" class=\"fa fa-times text-danger\" aria-hidden=\"true\" ng-class=\"{'fa-fw': fixedWidth}\"></span>\n" +
-    "<span ng-switch-when=\"Unknown\" class=\"fa fa-question text-danger\" aria-hidden=\"true\" ng-class=\"{'fa-fw': fixedWidth}\"></span>\n" +
+    "<span ng-switch-when=\"Cancelled\" class=\"fa fa-ban text-muted\" aria-hidden=\"true\"></span>\n" +
+    "<span ng-switch-when=\"Complete\" class=\"fa fa-check text-success\" aria-hidden=\"true\"></span>\n" +
+    "<span ng-switch-when=\"Completed\" class=\"fa fa-check text-success\" aria-hidden=\"true\"></span>\n" +
+    "<span ng-switch-when=\"Active\" class=\"fa fa-refresh\" aria-hidden=\"true\"></span>\n" +
+    "<span ng-switch-when=\"Error\" class=\"fa fa-times text-danger\" aria-hidden=\"true\"></span>\n" +
+    "<span ng-switch-when=\"Failed\" class=\"fa fa-times text-danger\" aria-hidden=\"true\"></span>\n" +
+    "<span ng-switch-when=\"New\" class=\"spinner spinner-xs spinner-inline\" aria-hidden=\"true\"></span>\n" +
+    "<span ng-switch-when=\"Pending\" class=\"spinner spinner-xs spinner-inline\" aria-hidden=\"true\"></span>\n" +
+    "<span ng-switch-when=\"Running\" class=\"fa fa-refresh\" aria-hidden=\"true\" ng-class=\"{'fa-spin' : spinning}\"></span>\n" +
+    "<span ng-switch-when=\"Succeeded\" class=\"fa fa-check text-success\" aria-hidden=\"true\"></span>\n" +
+    "<span ng-switch-when=\"Bound\" class=\"fa fa-check text-success\" aria-hidden=\"true\"></span>\n" +
+    "<span ng-switch-when=\"Terminating\" class=\"fa fa-times text-danger\" aria-hidden=\"true\"></span>\n" +
+    "<span ng-switch-when=\"Terminated\" class=\"fa fa-times text-danger\" aria-hidden=\"true\"></span>\n" +
+    "<span ng-switch-when=\"Unknown\" class=\"fa fa-question text-danger\" aria-hidden=\"true\"></span>\n" +
     "\n" +
-    "<span ng-switch-when=\"ContainerCreating\" class=\"spinner spinner-xs spinner-inline\" aria-hidden=\"true\" ng-class=\"{'fa-fw': fixedWidth}\"></span>\n" +
-    "<span ng-switch-when=\"CrashLoopBackOff\" class=\"fa fa-times text-danger\" aria-hidden=\"true\" ng-class=\"{'fa-fw': fixedWidth}\"></span>\n" +
-    "<span ng-switch-when=\"ImagePullBackOff\" class=\"fa fa-times text-danger\" aria-hidden=\"true\" ng-class=\"{'fa-fw': fixedWidth}\"></span>\n" +
-    "<span ng-switch-when=\"ImageInspectError\" class=\"fa fa-times text-danger\" aria-hidden=\"true\" ng-class=\"{'fa-fw': fixedWidth}\"></span>\n" +
-    "<span ng-switch-when=\"ErrImagePull\" class=\"fa fa-times text-danger\" aria-hidden=\"true\" ng-class=\"{'fa-fw': fixedWidth}\"></span>\n" +
-    "<span ng-switch-when=\"ErrImageNeverPull\" class=\"fa fa-times text-danger\" aria-hidden=\"true\" ng-class=\"{'fa-fw': fixedWidth}\"></span>\n" +
-    "<span ng-switch-when=\"no matching container\" class=\"fa fa-times text-danger\" aria-hidden=\"true\" ng-class=\"{'fa-fw': fixedWidth}\"></span>\n" +
-    "<span ng-switch-when=\"RegistryUnavailable\" class=\"fa fa-times text-danger\" aria-hidden=\"true\" ng-class=\"{'fa-fw': fixedWidth}\"></span>\n" +
-    "<span ng-switch-when=\"RunContainerError\" class=\"fa fa-times text-danger\" aria-hidden=\"true\" ng-class=\"{'fa-fw': fixedWidth}\"></span>\n" +
-    "<span ng-switch-when=\"KillContainerError\" class=\"fa fa-times text-danger\" aria-hidden=\"true\" ng-class=\"{'fa-fw': fixedWidth}\"></span>\n" +
-    "<span ng-switch-when=\"VerifyNonRootError\" class=\"fa fa-times text-danger\" aria-hidden=\"true\" ng-class=\"{'fa-fw': fixedWidth}\"></span>\n" +
-    "<span ng-switch-when=\"SetupNetworkError\" class=\"fa fa-times text-danger\" aria-hidden=\"true\" ng-class=\"{'fa-fw': fixedWidth}\"></span>\n" +
-    "<span ng-switch-when=\"TeardownNetworkError\" class=\"fa fa-times text-danger\" aria-hidden=\"true\" ng-class=\"{'fa-fw': fixedWidth}\"></span>\n" +
-    "<span ng-switch-when=\"DeadlineExceeded\" class=\"fa fa-times text-danger\" aria-hidden=\"true\" ng-class=\"{'fa-fw': fixedWidth}\"></span>\n" +
+    "<span ng-switch-when=\"ContainerCreating\" class=\"spinner spinner-xs spinner-inline\" aria-hidden=\"true\"></span>\n" +
+    "<span ng-switch-when=\"CrashLoopBackOff\" class=\"fa fa-times text-danger\" aria-hidden=\"true\"></span>\n" +
+    "<span ng-switch-when=\"ImagePullBackOff\" class=\"fa fa-times text-danger\" aria-hidden=\"true\"></span>\n" +
+    "<span ng-switch-when=\"ImageInspectError\" class=\"fa fa-times text-danger\" aria-hidden=\"true\"></span>\n" +
+    "<span ng-switch-when=\"ErrImagePull\" class=\"fa fa-times text-danger\" aria-hidden=\"true\"></span>\n" +
+    "<span ng-switch-when=\"ErrImageNeverPull\" class=\"fa fa-times text-danger\" aria-hidden=\"true\"></span>\n" +
+    "<span ng-switch-when=\"no matching container\" class=\"fa fa-times text-danger\" aria-hidden=\"true\"></span>\n" +
+    "<span ng-switch-when=\"RegistryUnavailable\" class=\"fa fa-times text-danger\" aria-hidden=\"true\"></span>\n" +
+    "<span ng-switch-when=\"RunContainerError\" class=\"fa fa-times text-danger\" aria-hidden=\"true\"></span>\n" +
+    "<span ng-switch-when=\"KillContainerError\" class=\"fa fa-times text-danger\" aria-hidden=\"true\"></span>\n" +
+    "<span ng-switch-when=\"VerifyNonRootError\" class=\"fa fa-times text-danger\" aria-hidden=\"true\"></span>\n" +
+    "<span ng-switch-when=\"SetupNetworkError\" class=\"fa fa-times text-danger\" aria-hidden=\"true\"></span>\n" +
+    "<span ng-switch-when=\"TeardownNetworkError\" class=\"fa fa-times text-danger\" aria-hidden=\"true\"></span>\n" +
+    "<span ng-switch-when=\"DeadlineExceeded\" class=\"fa fa-times text-danger\" aria-hidden=\"true\"></span>\n" +
     "</span>"
   );
 
@@ -5803,7 +5803,7 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
 
 
   $templateCache.put('views/directives/build-status.html',
-    "<status-icon status=\"build.status.phase\" disable-animation fixed-width=\"true\"></status-icon>\n" +
+    "<status-icon status=\"build.status.phase\" disable-animation></status-icon>\n" +
     "<span ng-if=\"!build.status.reason || build.status.phase === 'Cancelled'\">{{build.status.phase}}</span>\n" +
     "<span ng-if=\"build.status.reason && build.status.phase !== 'Cancelled'\">{{build.status.reason | sentenceCase}}</span><span ng-switch=\"build.status.phase\" class=\"hide-ng-leave\" ng-if=\"build.status.startTimestamp\"><span ng-switch-when=\"Complete\">, ran for {{build.status.startTimestamp | timeOnlyDurationFromTimestamps : build.status.completionTimestamp}}</span><span ng-switch-when=\"Failed\">, ran for {{build.status.startTimestamp | timeOnlyDurationFromTimestamps : build.status.completionTimestamp}}</span><span ng-switch-when=\"Cancelled\"> after {{build.status.startTimestamp | timeOnlyDurationFromTimestamps : build.status.completionTimestamp}}</span><span ng-switch-when=\"Running\"> for <time-only-duration-until-now timestamp=\"build.status.startTimestamp\" time-only></time-only-duration-until-now></span><span ng-switch-when=\"New\"></span><span ng-switch-when=\"Pending\"></span><span ng-switch-default>, ran for {{build.status.startTimestamp | duration : build.status.completionTimestamp}}</span>\n" +
     "</span>"
@@ -8270,7 +8270,7 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "{{routes[routeName] | routeLabel}}\n" +
     "</span>\n" +
     "<span ng-if=\"!routes[routeName].status.ingress\" data-toggle=\"popover\" data-trigger=\"hover\" data-content=\"The route is not accepting traffic yet because it has not been admitted by a router.\" style=\"cursor: help; padding-left: 5px\">\n" +
-    "<status-icon status=\"'Pending'\" disable-animation></status-icon>\n" +
+    "<status-icon status=\"'Pending'\"></status-icon>\n" +
     "<span class=\"sr-only\">Pending</span>\n" +
     "</span>\n" +
     "</td>\n" +
@@ -10102,7 +10102,7 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "<small>created <span am-time-ago=\"pod.metadata.creationTimestamp\"></span></small>\n" +
     "</div>\n" +
     "<div class=\"list-group-item-text\">\n" +
-    "<status-icon status=\"pod | podStatus\" disable-animation fixed-width=\"true\"></status-icon>\n" +
+    "<status-icon status=\"pod | podStatus\" disable-animation></status-icon>\n" +
     "{{pod | podStatus | sentenceCase}}\n" +
     "</div>\n" +
     "</div>\n" +
@@ -10169,7 +10169,7 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "<small>created <span am-time-ago=\"replicationController.metadata.creationTimestamp\"></span></small>\n" +
     "</div>\n" +
     "<div class=\"list-group-item-text\">\n" +
-    "<status-icon status=\"replicationController | deploymentStatus\" disable-animation fixed-width=\"true\"></status-icon>\n" +
+    "<status-icon status=\"replicationController | deploymentStatus\" disable-animation></status-icon>\n" +
     "{{replicationController | deploymentStatus | sentenceCase}}<span ng-if=\"(replicationController | deploymentStatus) === 'Active'\">, {{replicationController.status.replicas}} replica<span ng-if=\"replicationController.status.replicas !== 1\">s</span></span>\n" +
     "</div>\n" +
     "</div>\n" +
@@ -10643,7 +10643,7 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "<div ng-if=\"orderedReplicationControllers.length > 1\" class=\"deployment-connector-arrow\">\n" +
     "</div>\n" +
     "<div ng-if=\"orderedReplicationControllers.length === 1\" class=\"deployment-status-msg\">\n" +
-    "<status-icon status=\"orderedReplicationControllers[0] | deploymentStatus\" class=\"mar-right-xs\"></status-icon>\n" +
+    "<status-icon status=\"orderedReplicationControllers[0] | deploymentStatus\"></status-icon>\n" +
     "Deployment&nbsp;#{{orderedReplicationControllers[0] | annotation : 'deploymentVersion'}} {{orderedReplicationControllers[0] | deploymentStatus | lowercase}}\n" +
     "</div>\n" +
     "</div>\n" +

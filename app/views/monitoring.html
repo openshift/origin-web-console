@@ -90,7 +90,7 @@
                               <small>created <span am-time-ago="pod.metadata.creationTimestamp"></span></small>
                             </div>
                             <div class="list-group-item-text">
-                              <status-icon status="pod | podStatus" disable-animation fixed-width="true"></status-icon>
+                              <status-icon status="pod | podStatus" disable-animation></status-icon>
                               {{pod | podStatus | sentenceCase}}
                             </div>
                           </div>
@@ -180,7 +180,7 @@
                               <small>created <span am-time-ago="replicationController.metadata.creationTimestamp"></span></small>
                             </div>
                             <div class="list-group-item-text">
-                              <status-icon status="replicationController | deploymentStatus" disable-animation fixed-width="true"></status-icon>
+                              <status-icon status="replicationController | deploymentStatus" disable-animation></status-icon>
                               {{replicationController | deploymentStatus | sentenceCase}}<span ng-if="(replicationController | deploymentStatus) === 'Active'">, {{replicationController.status.replicas}} replica<span ng-if="replicationController.status.replicas !== 1">s</span></span>
                             </div>
                           </div>

@@ -11731,8 +11731,7 @@ restrict:"E",
 templateUrl:"views/directives/_status-icon.html",
 scope:{
 status:"=",
-disableAnimation:"@",
-fixedWidth:"=?"
+disableAnimation:"@"
 },
 link:function(a, b, c) {
 a.spinning = !angular.isDefined(c.disableAnimation);
