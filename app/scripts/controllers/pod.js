@@ -13,6 +13,7 @@ angular.module('openshiftConsole')
                                          $timeout,
                                          $uibModal,
                                          Logger,
+                                         BreadcrumbsService,
                                          DataService,
                                          ImageStreamResolver,
                                          MetricsService,
@@ -30,15 +31,7 @@ angular.module('openshiftConsole')
     $scope.renderOptions.hideFilterWidget = true;
     $scope.logOptions = {};
     $scope.terminalTabWasSelected = false;
-    $scope.breadcrumbs = [
-      {
-        title: "Pods",
-        link: "project/" + $routeParams.project + "/browse/pods"
-      },
-      {
-        title: $routeParams.pod
-      }
-    ];
+
     $scope.terminalDisconnectAlert["disconnect"] = {
       type: "warning",
       message: "This terminal has been disconnected. If you reconnect, your terminal history will be lost."
@@ -230,6 +223,8 @@ angular.module('openshiftConsole')
           message: "This pod has been deleted."
         };
       }
+
+      $scope.breadcrumbs = BreadcrumbsService.getBreadcrumbs({ object: pod });
     };
 
     ProjectsService
@@ -262,6 +257,11 @@ angular.module('openshiftConsole')
               message: "The pod details could not be loaded.",
               details: "Reason: " + $filter('getErrorDetails')(e)
             };
+            $scope.breadcrumbs = BreadcrumbsService.getBreadcrumbs({
+              name: $routeParams.pod,
+              kind: 'Pod',
+              namespace: $routeParams.project
+            });
           });
 
         // covers container picker if multiple containers

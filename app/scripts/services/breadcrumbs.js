@@ -69,7 +69,7 @@ angular.module("openshiftConsole")
           title: dcName,
           link: Navigate.configURLForResource(replicationController)
         };
-        deploymentVersion = $filter("annotation")(replicationController, "deploymentVersion");
+        deploymentVersion = annotation(replicationController, "deploymentVersion");
         if (deploymentVersion) {
           config.displayName = '#' + deploymentVersion;
         }
@@ -81,9 +81,48 @@ angular.module("openshiftConsole")
                                           config);
     };
 
+    var getPodBreadcrumbs = function(pod, config) {
+      config = config || {};
+      var dcName = annotation(pod, 'deploymentConfig');
+      // TODO: Look for pod owner ref when available. Currently we only handle
+      //       pods that have a deployment config specially.
+      if (!dcName) {
+        return getBreadcrumbsForNameAndKind(pod.metadata.name,
+                                            pod.kind,
+                                            pod.metadata.namespace,
+                                            config);
+      }
+
+      // Handle pods that are owned by a deployment config specially.
+      var breadcrumbs, dcIndex, rcName, deploymentVersion;
+      config.humanizedKind = 'Deployments';
+      config.parent = {
+        title: dcName,
+        link: Navigate.resourceURL(dcName, 'DeploymentConfig', pod.metadata.namespace)
+      };
+      breadcrumbs = getBreadcrumbsForNameAndKind(pod.metadata.name,
+                                                 pod.kind,
+                                                 pod.metadata.namespace,
+                                                 config);
+
+      dcIndex = _.findIndex(breadcrumbs, { title: dcName });
+      rcName = annotation(pod, 'deployment');
+      if (dcIndex !== -1 && rcName) {
+        deploymentVersion = annotation(pod, "deploymentVersion");
+        breadcrumbs.splice(dcIndex + 1, 0, {
+          title: deploymentVersion ? '#' + deploymentVersion : rcName,
+          link: Navigate.resourceURL(rcName, 'ReplicationController', pod.metadata.namespace)
+        });
+      }
+
+      return breadcrumbs;
+    };
+
     var getBreadcrumbsForObject = function(object, config) {
       // TODO: handle builds
       switch (object.kind) {
+      case 'Pod':
+        return getPodBreadcrumbs(object, config);
       case 'ReplicationController':
         return getRCBreadcrumbs(object, config);
       default:
