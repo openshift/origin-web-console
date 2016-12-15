@@ -60,7 +60,6 @@ angular.module('openshiftConsole')
         templateUrl: 'views/directives/logs/_log-viewer.html',
         scope: {
           followAffixTop: '=?',
-          followAffixBottom: '=?',
           object: '=',
           fullLogUrl: '=?',
           name: '=',
@@ -168,8 +167,7 @@ angular.module('openshiftConsole')
                   .affix({
                     target:  window,
                     offset: {
-                        top:  $scope.followAffixTop || 0, // 390,
-                        bottom: $scope.followAffixBottom || 0 // 90
+                      top:  $scope.followAffixTop || 0 // 390
                     }
                   });
               } else {
@@ -178,8 +176,7 @@ angular.module('openshiftConsole')
                   .affix({
                     target:  $cachedScrollableNode,
                     offset: {
-                        top: $scope.followAffixTop || 0, // 390,
-                        bottom: $scope.followAffixBottom || 0 // 90
+                      top: $scope.followAffixTop || 0 // 390
                     }
                   });
               }
@@ -289,7 +286,7 @@ angular.module('openshiftConsole')
 
               angular.extend($scope, {
                 loading: true,
-                autoScroll: false,
+                autoScrollActive: true,
                 limitReached: false,
                 showScrollLinks: false
               });
@@ -374,7 +371,7 @@ angular.module('openshiftConsole')
                 $scope.$evalAsync(function() {
                   angular.extend($scope, {
                     loading: false,
-                    autoScroll: false
+                    autoScrollActive: false
                   });
                   // if logs err before we get anything, will show an empty state message
                   if(lastLineNumber === 0) {
@@ -460,7 +457,7 @@ angular.module('openshiftConsole')
             angular.extend($scope, {
               ready: true,
               loading: true,
-              autoScroll: false,
+              autoScrollActive: true,
               state: false, // show nothing initially to avoid flicker
               onScrollBottom: function() {
                 logLinks.scrollBottom(scrollableDOMNode);
