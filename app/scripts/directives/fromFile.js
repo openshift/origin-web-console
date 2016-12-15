@@ -114,15 +114,17 @@ angular.module("openshiftConsole")
             }
           }
 
-          // Top level resource field check.
-          if (!validateFields(resource)) {
+          if (!isKindValid(resource)) {
             return;
           }
 
           $scope.resourceKind = resource.kind;
+          $scope.resourceKind.endsWith("List") ? $scope.isList = true : $scope.isList = false;
 
-          if ($scope.resourceKind.endsWith("List")) {
-            $scope.isList = true;
+          if (!isMetadataValid(resource)) {
+            return;
+          }
+          if ($scope.isList) {
             $scope.resourceList = resource.items;
             $scope.resourceName = '';
           } else {
@@ -142,7 +144,7 @@ angular.module("openshiftConsole")
           var resourceCheckPromises = [];
           $scope.errorOccured = false;
           _.forEach($scope.resourceList, function(item) {
-            if (!validateFields(item)) {
+            if (!isMetadataValid(item)) {
               $scope.errorOccured = true;
               return false;
             }
@@ -170,13 +172,21 @@ angular.module("openshiftConsole")
           });
         };
 
-        // Takes item that will be inspect for kind, metadata fields and if the item is meant to be created in current namespace
-        function validateFields(item) {
+        // Takes item that will be inspect kind field.
+        function isKindValid(item) {
           if (!item.kind) {
             $scope.error = {
               message: "Resource is missing kind field."
             };
             return false;
+          }
+          return true;
+        }
+
+        // Takes item that will be inspect metadata fields and if the item is meant to be created in current namespace
+        function isMetadataValid(item) {
+          if ($scope.isList) {
+            return true;
           }
           if (!item.metadata) {
             $scope.error = {
@@ -184,8 +194,7 @@ angular.module("openshiftConsole")
             };
             return false;
           }
-          // Validate if resource has 'name' field in its 'metadata', but it's not a List
-          if (!item.metadata.name && !item.kind.endsWith("List")) {
+          if (!item.metadata.name) {
             $scope.error = {
               message: "Resource name is missing in metadata field."
             };

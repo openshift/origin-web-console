@@ -9648,11 +9648,11 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
   $templateCache.put('views/modals/confirm-replace.html',
     "<div class=\"modal-resource-action\">\n" +
     "<div class=\"modal-body\">\n" +
-    "<div ng-if=\"resourceList.length === 1\">\n" +
-    "<h1>{{resourceKind | humanizeKind}} '<strong>{{resourceName}}</strong>' already exists</h1>\n" +
+    "<div ng-if=\"!isList\">\n" +
+    "<h1>{{resourceKind}} '<strong>{{resourceName}}</strong>' already exists</h1>\n" +
     "<p>Do you want to replace with the new content?</p>\n" +
     "</div>\n" +
-    "<div ng-if=\"resourceList.length > 1\">\n" +
+    "<div ng-if=\"isList\">\n" +
     "<h1>Some items already exist:</h1>\n" +
     "<dl class=\"dl-horizontal\">\n" +
     "<dt ng-repeat-start=\"resource in updateResources\">{{resource.kind}}</dt>\n" +

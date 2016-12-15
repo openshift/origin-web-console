@@ -9320,17 +9320,20 @@ scope:!1,
 templateUrl:"views/directives/from-file.html",
 controller:[ "$scope", function(l) {
 function m(a) {
-return a.kind ? a.metadata ? a.metadata.name || a.kind.endsWith("List") ? !a.metadata.namespace || a.metadata.namespace === l.projectName || (l.error = {
+return !!a.kind || (l.error = {
+message:"Resource is missing kind field."
+}, !1);
+}
+function n(a) {
+return !!l.isList || (a.metadata ? a.metadata.name ? !a.metadata.namespace || a.metadata.namespace === l.projectName || (l.error = {
 message:a.kind + " " + a.metadata.name + " can't be created in project " + a.metadata.namespace + ". Can't create resource in different projects."
 }, !1) :(l.error = {
 message:"Resource name is missing in metadata field."
 }, !1) :(l.error = {
 message:"Resource is missing metadata field."
-}, !1) :(l.error = {
-message:"Resource is missing kind field."
-}, !1);
+}, !1));
 }
-function n() {
+function o() {
 var a = b.open({
 animation:!0,
 templateUrl:"views/modals/process-template.html",
@@ -9338,10 +9341,10 @@ controller:"ProcessTemplateModalController",
 scope:l
 });
 a.result.then(function() {
-l.templateOptions.add ? p() :(e.setTemplate(l.resourceList[0]), q());
+l.templateOptions.add ? q() :(e.setTemplate(l.resourceList[0]), r());
 });
 }
-function o() {
+function p() {
 var a = b.open({
 animation:!0,
 templateUrl:"views/modals/confirm-replace.html",
@@ -9349,27 +9352,27 @@ controller:"ConfirmReplaceModalController",
 scope:l
 });
 a.result.then(function() {
-k.getLatestQuotaAlerts(l.createResources, l.context).then(B);
+k.getLatestQuotaAlerts(l.createResources, l.context).then(C);
 });
 }
-function p() {
+function q() {
 var b = l.createResources.length, c = l.updateResources.length;
 if (l.resourceKind.endsWith("List")) {
 var d = [];
-c > 0 && d.push(u()), b > 0 && d.push(t()), a.all(d).then(q);
-} else s();
+c > 0 && d.push(v()), b > 0 && d.push(u()), a.all(d).then(r);
+} else t();
 }
-function q() {
+function r() {
 var a;
 if ("Template" === l.resourceKind && l.templateOptions.process && !l.errorOccured) {
 var b = l.templateOptions.add || l.updateResources.length > 0 ? l.projectName :"";
-a = g.createFromTemplateURL(z, l.projectName, {
+a = g.createFromTemplateURL(A, l.projectName, {
 namespace:b
 });
 } else a = g.projectOverviewURL(l.projectName);
 c.url(a);
 }
-function r(a) {
+function s(a) {
 var b = j.objectToResourceGroupVersion(a);
 return b ? j.apiInfo(b) ? i.get(b, a.metadata.name, l.context, {
 errorNotification:!1
@@ -9384,7 +9387,7 @@ message:j.unsupportedObjectKindOrVersion(a)
 message:j.invalidObjectKindOrVersion(a)
 }));
 }
-function s() {
+function t() {
 var a;
 _.isEmpty(l.createResources) ? (a = _.head(l.updateResources), i.update(j.kindToResource(a.kind), a.metadata.name, a, {
 namespace:l.projectName
@@ -9395,11 +9398,11 @@ data:{
 type:"success",
 message:a.kind + " " + a.metadata.name + " was successfully updated."
 }
-}), q();
+}), r();
 }, function(b) {
 l.alerts["update" + a.metadata.name] = {
 type:"error",
-message:"Unable to update the " + w(a.kind) + " '" + a.metadata.name + "'.",
+message:"Unable to update the " + x(a.kind) + " '" + a.metadata.name + "'.",
 details:d("getErrorDetails")(b)
 };
 })) :(a = _.head(l.createResources), i.create(j.kindToResource(a.kind), null, a, {
@@ -9411,16 +9414,16 @@ data:{
 type:"success",
 message:a.kind + " " + a.metadata.name + " was successfully created."
 }
-}), q();
+}), r();
 }, function(b) {
 l.alerts["create" + a.metadata.name] = {
 type:"error",
-message:"Unable to create the " + w(a.kind) + " '" + a.metadata.name + "'.",
+message:"Unable to create the " + x(a.kind) + " '" + a.metadata.name + "'.",
 details:d("getErrorDetails")(b)
 };
 }));
 }
-function t() {
+function u() {
 var b = {
 started:"Creating resources in project " + l.projectName,
 success:"Creating resources in project " + l.projectName,
@@ -9433,17 +9436,17 @@ var c = [], d = !1;
 if (a.failure.length > 0) d = !0, l.errorOccured = !0, a.failure.forEach(function(a) {
 c.push({
 type:"error",
-message:"Cannot create " + w(a.object.kind) + ' "' + a.object.metadata.name + '". ',
+message:"Cannot create " + x(a.object.kind) + ' "' + a.object.metadata.name + '". ',
 details:a.data.message
 });
 }), a.success.forEach(function(a) {
 c.push({
 type:"success",
-message:"Created " + w(a.kind) + ' "' + a.metadata.name + '" successfully. '
+message:"Created " + x(a.kind) + ' "' + a.metadata.name + '" successfully. '
 });
 }); else {
 var e;
-e = l.isList ? "All items in list were created successfully." :w(l.resourceKind) + " " + l.resourceName + " was successfully created.", c.push({
+e = l.isList ? "All items in list were created successfully." :x(l.resourceKind) + " " + l.resourceName + " was successfully created.", c.push({
 type:"success",
 message:e
 });
@@ -9455,7 +9458,7 @@ hasErrors:d
 }), b.promise;
 });
 }
-function u() {
+function v() {
 var b = {
 started:"Updating resources in project " + l.projectName,
 success:"Updated resources in project " + l.projectName,
@@ -9468,17 +9471,17 @@ var c = [], d = !1;
 if (a.failure.length > 0) d = !0, l.errorOccured = !0, a.failure.forEach(function(a) {
 c.push({
 type:"error",
-message:"Cannot update " + w(a.object.kind) + ' "' + a.object.metadata.name + '". ',
+message:"Cannot update " + x(a.object.kind) + ' "' + a.object.metadata.name + '". ',
 details:a.data.message
 });
 }), a.success.forEach(function(a) {
 c.push({
 type:"success",
-message:"Updated " + w(a.kind) + ' "' + a.metadata.name + '" successfully. '
+message:"Updated " + x(a.kind) + ' "' + a.metadata.name + '" successfully. '
 });
 }); else {
 var e;
-e = l.isList ? "All items in list were updated successfully." :w(l.resourceKind) + " " + l.resourceName + " was successfully updated.", c.push({
+e = l.isList ? "All items in list were updated successfully." :x(l.resourceKind) + " " + l.resourceName + " was successfully updated.", c.push({
 type:"success",
 message:e
 });
@@ -9499,27 +9502,27 @@ alerts:c
 }), b.promise;
 });
 }
-var v, w = d("humanizeKind");
+var w, x = d("humanizeKind");
 h.clear(), l.aceLoaded = function(a) {
-v = a.getSession(), v.setOption("tabSize", 2), v.setOption("useSoftTabs", !0), a.setDragDelay = 0, a.$blockScrolling = 1 / 0;
+w = a.getSession(), w.setOption("tabSize", 2), w.setOption("useSoftTabs", !0), a.setDragDelay = 0, a.$blockScrolling = 1 / 0;
 };
-var x = function() {
-var a = v.getAnnotations();
+var y = function() {
+var a = w.getAnnotations();
 l.editorErrorAnnotation = _.some(a, {
 type:"error"
 });
-}, y = _.debounce(function() {
+}, z = _.debounce(function() {
 try {
-JSON.parse(l.editorContent), v.setMode("ace/mode/json");
+JSON.parse(l.editorContent), w.setMode("ace/mode/json");
 } catch (a) {
 try {
-jsyaml.safeLoad(l.editorContent), v.setMode("ace/mode/yaml");
+jsyaml.safeLoad(l.editorContent), w.setMode("ace/mode/yaml");
 } catch (a) {}
 }
-l.$apply(x);
+l.$apply(y);
 }, 300);
-l.aceChanged = y;
-var z, A = function(a) {
+l.aceChanged = z;
+var A, B = function(a) {
 var c = b.open({
 animation:!0,
 templateUrl:"views/modals/confirm.html",
@@ -9536,34 +9539,34 @@ cancelButtonText:"Cancel"
 }
 }
 });
-c.result.then(p);
-}, B = function(a) {
+c.result.then(q);
+}, C = function(a) {
 var b = a.quotaAlerts || [], c = _.filter(b, {
 type:"error"
 });
-c.length ? (l.disableInputs = !1, l.alerts = b) :b.length ? (A(b), l.disableInputs = !1) :p();
+c.length ? (l.disableInputs = !1, l.alerts = b) :b.length ? (B(b), l.disableInputs = !1) :q();
 };
 l.create = function() {
 l.alerts = {}, delete l.error;
 try {
-z = JSON.parse(l.editorContent);
+A = JSON.parse(l.editorContent);
 } catch (b) {
 try {
-z = jsyaml.safeLoad(l.editorContent);
+A = jsyaml.safeLoad(l.editorContent);
 } catch (b) {
 return void (l.error = b);
 }
 }
-if (m(z)) {
-l.resourceKind = z.kind, l.resourceKind.endsWith("List") ? (l.isList = !0, l.resourceList = z.items, l.resourceName = "") :(l.resourceList = [ z ], l.resourceName = z.metadata.name, "Template" === l.resourceKind && (l.templateOptions = {
+if (m(A) && (l.resourceKind = A.kind, l.resourceKind.endsWith("List") ? l.isList = !0 :l.isList = !1, n(A))) {
+l.isList ? (l.resourceList = A.items, l.resourceName = "") :(l.resourceList = [ A ], l.resourceName = A.metadata.name, "Template" === l.resourceKind && (l.templateOptions = {
 process:!0,
 add:!1
 })), l.updateResources = [], l.createResources = [];
 var c = [];
 l.errorOccured = !1, _.forEach(l.resourceList, function(a) {
-return m(a) ? void c.push(r(a)) :(l.errorOccured = !0, !1);
+return n(a) ? void c.push(s(a)) :(l.errorOccured = !0, !1);
 }), a.all(c).then(function() {
-l.errorOccured || (1 === l.createResources.length && "Template" === l.resourceList[0].kind ? n() :_.isEmpty(l.updateResources) ? k.getLatestQuotaAlerts(l.createResources, l.context).then(B) :(l.updateTemplate = 1 === l.updateResources.length && "Template" === l.updateResources[0].kind, l.updateTemplate ? n() :o()));
+l.errorOccured || (1 === l.createResources.length && "Template" === l.resourceList[0].kind ? o() :_.isEmpty(l.updateResources) ? k.getLatestQuotaAlerts(l.createResources, l.context).then(C) :(l.updateTemplate = 1 === l.updateResources.length && "Template" === l.updateResources[0].kind, l.updateTemplate ? o() :p()));
 });
 }
 };
