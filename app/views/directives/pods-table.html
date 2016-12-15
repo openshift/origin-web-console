@@ -12,8 +12,8 @@
   <tbody ng-if="(pods | hashSize) == 0">
     <tr><td colspan="6"><em>{{emptyMessage || 'No pods to show'}}</em></td></tr>
   </tbody>
-  <tbody ng-repeat="pod in pods | orderObjectsByDate : true">
-    <tr>
+  <tbody ng-if="(pods | hashSize) > 0">
+    <tr ng-repeat="pod in pods | orderObjectsByDate : true">
       <td data-title="{{customNameHeader || 'Name'}}">
         <a href="{{pod | navigateResourceURL}}">{{pod.metadata.name}}</a>
         <span ng-if="pod | isDebugPod">

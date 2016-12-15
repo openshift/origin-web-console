@@ -44,8 +44,8 @@
                   <tbody ng-if="(configMaps | hashSize) == 0">
                     <tr><td colspan="3"><em>No config maps to show</em></td></tr>
                   </tbody>
-                  <tbody ng-repeat="configMap in configMaps">
-                    <tr>
+                  <tbody ng-if="(configMaps | hashSize) > 0">
+                    <tr ng-repeat="configMap in configMaps">
                       <td data-title="Name">
                         <a href="{{configMap | navigateResourceURL}}">{{configMap.metadata.name}}</a>
                       </td>

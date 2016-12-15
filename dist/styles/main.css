@@ -4938,13 +4938,13 @@ body,html{margin:0;padding:0}
 @media (min-width:768px){.events .data-toolbar .filter-controls,.events .data-toolbar .sort-group{display:inline-block}
 .events .data-toolbar .search-pf{margin-bottom:0;width:300px}
 }
-@media (max-width:767px){.table-mobile{border-top:2px solid #d1d1d1;table-layout:fixed}
+@media (max-width:767px){.table-mobile{border-top-width:0;table-layout:fixed}
 .table-mobile col,.table-mobile colgroup{display:none}
 .table-mobile tbody,.table-mobile td,.table-mobile th,.table-mobile thead,.table-mobile tr{display:block}
 .table-mobile thead tr{position:absolute;width:1px;height:1px;margin:-1px;padding:0;overflow:hidden;clip:rect(0,0,0,0);border:0}
 .table-mobile.table-empty{border:0}
 .table-mobile.table-empty>tbody>tr>td{border:0;padding-left:0}
-.table-mobile>tbody+tbody{border-top-width:2px}
+.table-mobile>tbody>tr{border-top:2px solid #d1d1d1}
 .table-mobile>tbody>tr>td{border:none;border-bottom:1px solid #dedede;padding:3px 6px 2px 35%;position:relative}
 .table-mobile>tbody>tr>td:last-child{border-bottom:none}
 .table-mobile>tbody>tr>td:before{content:attr(data-title);position:absolute;top:8px;left:6px;width:35%;padding-right:10px;white-space:nowrap}

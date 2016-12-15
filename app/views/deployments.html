@@ -44,7 +44,8 @@
                   <!-- If there are no deployment configs and no replication controllers owned by a deployment config -->
                   <tr><td colspan="5"><em>{{emptyMessage}}</em></td></tr>
                 </tbody>
-                <tbody ng-repeat="(dcName, replicationControllersForDC) in replicationControllersByDC" ng-if="dcName && (deploymentConfigs[dcName] || !unfilteredDeploymentConfigs[dcName])">
+                <tbody ng-if="!showEmptyMessage()">
+                  <tr ng-repeat-start="(dcName, replicationControllersForDC) in replicationControllersByDC" ng-if="dcName && (deploymentConfigs[dcName] || !unfilteredDeploymentConfigs[dcName])" style="display: none;"></tr>
                   <!-- Deployment config with no replication controllers -->
                   <tr ng-if="(replicationControllersForDC | hashSize) == 0 && dcName">
                     <td data-title="Name">
@@ -102,6 +103,7 @@
                       </span>
                     </td>
                   </tr>
+                  <tr ng-repeat-end style="display: none;"></tr>
                 </tbody>
               </table>
               <div ng-if="deployments | hashSize">
@@ -116,8 +118,8 @@
                       <th>Strategy</th>
                     </tr>
                   </thead>
-                  <tbody ng-repeat="deployment in deployments | orderObjectsByDate : true">
-                    <tr>
+                  <tbody>
+                    <tr ng-repeat="deployment in deployments | orderObjectsByDate : true">
                       <td data-title="Name">
                         <a ng-href="{{deployment | navigateResourceURL}}">{{deployment.metadata.name}}</a>
                       </td>
@@ -152,8 +154,8 @@
                       <th>Created</th>
                     </tr>
                   </thead>
-                  <tbody ng-repeat="replicaSet in replicaSets | orderObjectsByDate : true">
-                    <tr>
+                  <tbody>
+                    <tr ng-repeat="replicaSet in replicaSets | orderObjectsByDate : true">
                       <td data-title="Name">
                         <a ng-href="{{replicaSet | navigateResourceURL}}">{{replicaSet.metadata.name}}</a>
                       </td>
@@ -178,10 +180,10 @@
                     </tr>
                   </thead>
                   <tbody ng-if="(replicationControllersByDC[''] | hashSize) === 0"><tr><td colspan="3"><em>No replication controllers to show</em></td></tr></tbody>
-                  <tbody ng-repeat="deployment in replicationControllersByDC[''] | orderObjectsByDate : true">
+                  <tbody ng-if="(replicationControllersByDC[''] | hashSize) > 0">
                     <!-- We only show this if there are replication controllers but the active filter is hiding them, otherwise the RC table doesn't show
                          at all -->
-                    <tr>
+                    <tr ng-repeat="deployment in replicationControllersByDC[''] | orderObjectsByDate : true">
                       <td data-title="Name">
                         <a ng-href="{{deployment | navigateResourceURL}}">{{deployment.metadata.name}}</a>
                       </td>

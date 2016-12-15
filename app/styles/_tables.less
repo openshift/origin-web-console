@@ -92,7 +92,7 @@
 
 @media (max-width: @screen-xs-max) {
   .table-mobile {
-    border-top: 2px solid @table-border-color;
+    border-top-width: 0;
     // so that .word-break() will work
     table-layout: fixed;
     colgroup, col {
@@ -117,10 +117,8 @@
       }
     }
     > tbody {
-      + tbody {
-        border-top-width: 2px;
-      }
       > tr {
+        border-top: 2px solid @table-border-color;
         > td {
            /* Behave like a row */
           border: none;

@@ -97,8 +97,8 @@
                           <th>Created</th>
                         </tr>
                       </thead>
-                      <tbody ng-repeat="replicaSet in replicaSetsForDeployment">
-                        <tr>
+                      <tbody>
+                        <tr ng-repeat="replicaSet in replicaSetsForDeployment">
                           <td data-title="Version">
                             #{{replicaSet | annotation : 'deployment.kubernetes.io/revision'}}
                           </td>
