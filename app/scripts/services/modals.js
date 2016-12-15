@@ -18,6 +18,19 @@ angular.module("openshiftConsole")
         return modalInstance.result;
       },
 
+      confirmSaveLog: function(object) {
+        var modalInstance = $uibModal.open({
+          animation: true,
+          templateUrl: 'views/modals/confirm-save-log.html',
+          controller: 'ConfirmSaveLogController',
+          resolve: {
+            object: object
+          }
+        });
+
+        return modalInstance.result;
+      },
+
       showJenkinsfileExamples: function() {
         $uibModal.open({
           animation: true,

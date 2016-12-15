@@ -4100,6 +4100,17 @@ modalConfig:b
 });
 return c.result;
 },
+confirmSaveLog:function(b) {
+var c = a.open({
+animation:!0,
+templateUrl:"views/modals/confirm-save-log.html",
+controller:"ConfirmSaveLogController",
+resolve:{
+object:b
+}
+});
+return c.result;
+},
 showJenkinsfileExamples:function() {
 a.open({
 animation:!0,
@@ -4114,6 +4125,39 @@ templateUrl:"views/modals/about-compute-units-modal.html",
 controller:"AboutComputeUnitsModalController"
 });
 }
+};
+} ]), angular.module("openshiftConsole").factory("CLIHelp", [ "$filter", function(a) {
+var b = a("annotation"), c = function(a, c) {
+if (!a) return null;
+var d, e, f;
+switch (a.kind) {
+case "Pod":
+d = "oc logs " + a.metadata.name, c && (d += " -c " + c);
+break;
+
+case "DeploymentConfig":
+d = "oc logs dc/" + a.metadata.name;
+break;
+
+case "ReplicationController":
+e = b(a, "deploymentConfig"), f = b(a, "deploymentVersion"), d = e && f ? "oc logs --version " + f + " dc/" + e :"oc logs rc/" + a.metadata.name;
+break;
+
+case "BuildConfig":
+d = "oc logs bc/" + a.metadata.name;
+break;
+
+case "Build":
+e = b(a, "buildConfig"), f = b(a, "buildNumber"), d = "oc logs --version " + f + " bc/" + e;
+break;
+
+default:
+return null;
+}
+return d += " -n " + a.metadata.namespace;
+};
+return {
+getLogsCommand:c
 };
 } ]), angular.module("openshiftConsole").controller("ProjectsController", [ "$scope", "$filter", "$location", "$route", "$timeout", "AlertMessageService", "AuthService", "DataService", "KeywordService", "Logger", "ProjectsService", function(a, b, c, d, e, f, g, h, i, j, k) {
 var l, m, n = [], o = [];
@@ -8669,6 +8713,12 @@ b.close("confirmScale");
 }, a.cancel = function() {
 b.dismiss("cancel");
 };
+} ]), angular.module("openshiftConsole").controller("ConfirmSaveLogController", [ "$scope", "$uibModalInstance", "object", "CLIHelp", function(a, b, c, d) {
+a.object = c, a.command = d.getLogsCommand(c), a.save = function() {
+b.close("save");
+}, a.cancel = function() {
+b.dismiss("cancel");
+};
 } ]), angular.module("openshiftConsole").controller("DeleteModalController", [ "$scope", "$uibModalInstance", function(a, b) {
 a["delete"] = function() {
 b.close("delete");
@@ -11553,15 +11603,15 @@ a.destroy();
 });
 }
 };
-} ]), angular.module("openshiftConsole").directive("logViewer", [ "$sce", "$timeout", "$window", "$filter", "AuthService", "APIService", "APIDiscovery", "DataService", "logLinks", "BREAKPOINTS", function(a, b, c, d, e, f, g, h, i, j) {
-var k = $(window), l = function(a) {
+} ]), angular.module("openshiftConsole").directive("logViewer", [ "$sce", "$timeout", "$window", "$filter", "AuthService", "APIService", "APIDiscovery", "DataService", "ModalsService", "logLinks", "BREAKPOINTS", function(a, b, c, d, e, f, g, h, i, j, k) {
+var l = $(window), m = function(a) {
 return a.replace(/https?:\/\/[A-Za-z0-9._%+-]+\S*[^\s.;,(){}<>"\u201d\u2019]/gm, function(a) {
 return '<a href="' + a + '" target="_blank">' + a + "</a>";
 });
-}, m = $('<tr class="log-line"><td class="log-line-number"></td><td class="log-line-text"></td></tr>').get(0), n = function(a, b) {
-var c = m.cloneNode(!0);
+}, n = $('<tr class="log-line"><td class="log-line-number"></td><td class="log-line-text"></td></tr>').get(0), o = function(a, b) {
+var c = n.cloneNode(!0);
 c.firstChild.setAttribute("data-line-number", a);
-var d = ansi_up.escape_for_html(b), e = ansi_up.ansi_to_html(d), f = l(e);
+var d = ansi_up.escape_for_html(b), e = ansi_up.ansi_to_html(d), f = m(e);
 return c.lastChild.innerHTML = f, c;
 };
 return {
@@ -11581,63 +11631,63 @@ chromeless:"=?",
 empty:"=?",
 run:"=?"
 },
-controller:[ "$scope", function(l) {
-var m, o, p, q, r, s = document.documentElement;
-l.logViewerID = _.uniqueId("log-viewer"), l.empty = !0;
+controller:[ "$scope", function(i) {
+var m, n, p, q, r, s = document.documentElement;
+i.logViewerID = _.uniqueId("log-viewer"), i.empty = !0;
 var t, u;
-"ReplicationController" === l.object.kind ? (t = "deploymentconfigs/log", u = d("annotation")(l.object, "deploymentConfig")) :(t = f.kindToResource(l.object.kind) + "/log", u = l.object.metadata.name);
+"ReplicationController" === i.object.kind ? (t = "deploymentconfigs/log", u = d("annotation")(i.object, "deploymentConfig")) :(t = f.kindToResource(i.object.kind) + "/log", u = i.object.metadata.name);
 var v = function() {
-q = window.innerWidth < j.screenSmMin && !l.fixedHeight ? null :o;
+q = window.innerWidth < k.screenSmMin && !i.fixedHeight ? null :n;
 }, w = function() {
-l.$apply(function() {
+i.$apply(function() {
 var a = m.getBoundingClientRect();
-l.fixedHeight ? l.showScrollLinks = a && a.height > l.fixedHeight :l.showScrollLinks = a && (a.top < 0 || a.bottom > s.clientHeight);
+i.fixedHeight ? i.showScrollLinks = a && a.height > i.fixedHeight :i.showScrollLinks = a && (a.top < 0 || a.bottom > s.clientHeight);
 });
 }, x = !1, y = function() {
-x ? x = !1 :l.$evalAsync(function() {
-l.autoScrollActive = !1;
+x ? x = !1 :i.$evalAsync(function() {
+i.autoScrollActive = !1;
 });
 }, z = function() {
-p.off("scroll", y), k.off("scroll", y), window.innerWidth <= j.screenSmMin && !l.fixedHeight ? k.on("scroll", y) :p.on("scroll", y);
+p.off("scroll", y), l.off("scroll", y), window.innerWidth <= k.screenSmMin && !i.fixedHeight ? l.on("scroll", y) :p.on("scroll", y);
 }, A = function() {
-l.fixedHeight || (window.innerWidth < j.screenSmMin && !l.fixedHeight ? r.removeClass("target-logger-node").affix({
+i.fixedHeight || (window.innerWidth < k.screenSmMin && !i.fixedHeight ? r.removeClass("target-logger-node").affix({
 target:window,
 offset:{
-top:l.followAffixTop || 0,
-bottom:l.followAffixBottom || 0
+top:i.followAffixTop || 0,
+bottom:i.followAffixBottom || 0
 }
 }) :r.addClass("target-logger-node").affix({
 target:p,
 offset:{
-top:l.followAffixTop || 0,
-bottom:l.followAffixBottom || 0
+top:i.followAffixTop || 0,
+bottom:i.followAffixBottom || 0
 }
 }));
 }, B = function(a) {
-var b = $("#" + l.logViewerID + " .log-view-output"), c = b.offset().top;
+var b = $("#" + i.logViewerID + " .log-view-output"), c = b.offset().top;
 if (!(c < 0)) {
-var d = $(".ellipsis-pulser").outerHeight(!0), e = l.fixedHeight ? l.fixedHeight :Math.floor($(window).height() - c - d);
-l.chromeless || l.fixedHeight || (e -= 35), a ? b.animate({
+var d = $(".ellipsis-pulser").outerHeight(!0), e = i.fixedHeight ? i.fixedHeight :Math.floor($(window).height() - c - d);
+i.chromeless || i.fixedHeight || (e -= 35), a ? b.animate({
 "min-height":e + "px"
-}, "fast") :b.css("min-height", e + "px"), l.fixedHeight && b.css("max-height", e);
+}, "fast") :b.css("min-height", e + "px"), i.fixedHeight && b.css("max-height", e);
 }
 }, C = _.debounce(function() {
 B(!0), v(), z(), w(), A(), y();
 }, 100);
-k.on("resize", C);
+l.on("resize", C);
 var D, E = function() {
-x = !0, i.scrollBottom(q);
+x = !0, j.scrollBottom(q);
 }, F = function() {
-l.autoScrollActive = !l.autoScrollActive, l.autoScrollActive && E();
+i.autoScrollActive = !i.autoScrollActive, i.autoScrollActive && E();
 }, G = document.createDocumentFragment(), H = _.debounce(function() {
-m.appendChild(G), G = document.createDocumentFragment(), l.autoScrollActive && E(), l.showScrollLinks || w();
+m.appendChild(G), G = document.createDocumentFragment(), i.autoScrollActive && E(), i.showScrollLinks || w();
 }, 100, {
 maxWait:300
 }), I = function(a) {
 D && (D.stop(), D = null), a || (H.cancel(), m && (m.innerHTML = ""), G = document.createDocumentFragment());
 }, J = function() {
-if (I(), l.run) {
-angular.extend(l, {
+if (I(), i.run) {
+angular.extend(i, {
 loading:!0,
 autoScroll:!1,
 limitReached:!1,
@@ -11647,82 +11697,91 @@ var a = angular.extend({
 follow:!0,
 tailLines:5e3,
 limitBytes:10485760
-}, l.options);
-D = h.createStream(t, u, l.context, a);
+}, i.options);
+D = h.createStream(t, u, i.context, a);
 var c = 0, d = function(a) {
-c++, G.appendChild(n(c, a)), H();
+c++, G.appendChild(o(c, a)), H();
 };
 D.onMessage(function(b, e, f) {
-l.$evalAsync(function() {
-l.empty = !1, "logs" !== l.state && (l.state = "logs", setTimeout(B));
-}), b && (a.limitBytes && f >= a.limitBytes && (l.$evalAsync(function() {
-l.limitReached = !0, l.loading = !1;
-}), I(!0)), d(b), !l.largeLog && c >= a.tailLines && l.$evalAsync(function() {
-l.largeLog = !0;
+i.$evalAsync(function() {
+i.empty = !1, "logs" !== i.state && (i.state = "logs", setTimeout(B));
+}), b && (a.limitBytes && f >= a.limitBytes && (i.$evalAsync(function() {
+i.limitReached = !0, i.loading = !1;
+}), I(!0)), d(b), !i.largeLog && c >= a.tailLines && i.$evalAsync(function() {
+i.largeLog = !0;
 }));
 }), D.onClose(function() {
-D = null, l.$evalAsync(function() {
-l.autoScrollActive = !1, 0 !== c || l.emptyStateMessage || (l.state = "empty", l.emptyStateMessage = "The logs are no longer available or could not be loaded.");
+D = null, i.$evalAsync(function() {
+i.autoScrollActive = !1, 0 !== c || i.emptyStateMessage || (i.state = "empty", i.emptyStateMessage = "The logs are no longer available or could not be loaded.");
 }), b(function() {
-l.loading = !1;
+i.loading = !1;
 }, 100);
 }), D.onError(function() {
-D = null, l.$evalAsync(function() {
-angular.extend(l, {
+D = null, i.$evalAsync(function() {
+angular.extend(i, {
 loading:!1,
 autoScroll:!1
-}), 0 === c ? (l.state = "empty", l.emptyStateMessage = "The logs are no longer available or could not be loaded.") :l.errorWhileRunning = !0;
+}), 0 === c ? (i.state = "empty", i.emptyStateMessage = "The logs are no longer available or could not be loaded.") :i.errorWhileRunning = !0;
 });
 }), D.start();
 }
 };
 return g.getLoggingURL().then(function(b) {
-var d = _.get(l.context, "project.metadata.name"), f = _.get(l.options, "container");
-d && f && u && b && (angular.extend(l, {
+var d = _.get(i.context, "project.metadata.name"), f = _.get(i.options, "container");
+d && f && u && b && (angular.extend(i, {
 kibanaAuthUrl:a.trustAsResourceUrl(URI(b).segment("auth").segment("token").normalizePathname().toString()),
 access_token:e.UserStore().getToken()
-}), l.$watchGroup([ "context.project.metadata.name", "options.container", "name" ], function() {
-angular.extend(l, {
-kibanaArchiveUrl:a.trustAsResourceUrl(i.archiveUri({
-namespace:l.context.project.metadata.name,
-namespaceUid:l.context.project.metadata.uid,
+}), i.$watchGroup([ "context.project.metadata.name", "options.container", "name" ], function() {
+angular.extend(i, {
+kibanaArchiveUrl:a.trustAsResourceUrl(j.archiveUri({
+namespace:i.context.project.metadata.name,
+namespaceUid:i.context.project.metadata.uid,
 podname:u,
-containername:l.options.container,
+containername:i.options.container,
 backlink:URI.encode(c.location.href)
 }))
 });
 }));
 }), this.cacheScrollableNode = function(a) {
-o = a, p = $(o);
+n = a, p = $(n);
 }, this.cacheLogNode = function(a) {
 m = a;
 }, this.cacheAffixable = function(a) {
 r = $(a);
 }, this.start = function() {
 v(), z(), A();
-}, angular.extend(l, {
+}, angular.extend(i, {
 ready:!0,
 loading:!0,
 autoScroll:!1,
 state:!1,
 onScrollBottom:function() {
-i.scrollBottom(q);
+j.scrollBottom(q);
 },
 onScrollTop:function() {
-l.autoScrollActive = !1, i.scrollTop(q);
+i.autoScrollActive = !1, j.scrollTop(q);
 },
 toggleAutoScroll:F,
-goChromeless:i.chromelessLink,
+goChromeless:j.chromelessLink,
 restartLogs:J
-}), l.$on("$destroy", function() {
-I(), k.off("resize", C), k.off("scroll", y), p.off("scroll", y);
-}), "deploymentconfigs/logs" !== t || u ? void l.$watchGroup([ "name", "options.container", "run" ], J) :(l.state = "empty", void (l.emptyStateMessage = "Logs are not available for this replication controller because it was not generated from a deployment configuration."));
+}), i.$on("$destroy", function() {
+I(), l.off("resize", C), l.off("scroll", y), p.off("scroll", y);
+}), "deploymentconfigs/logs" !== t || u ? void i.$watchGroup([ "name", "options.container", "run" ], J) :(i.state = "empty", void (i.emptyStateMessage = "Logs are not available for this replication controller because it was not generated from a deployment configuration."));
 } ],
 require:"logViewer",
 link:function(a, c, d, e) {
 b(function() {
 e.cacheScrollableNode(document.getElementById(a.fixedHeight ? a.logViewerID + "-fixed-scrollable" :"container-main")), e.cacheLogNode(document.getElementById(a.logViewerID + "-logContent")), e.cacheAffixable(document.getElementById(a.logViewerID + "-affixedFollow")), e.start();
 }, 0);
+var f = function() {
+var b = $(c).find(".log-line-text").text(), d = _.get(a, "object.metadata.name", "openshift") + ".log", e = new Blob([ b ], {
+type:"text/plain;charset=utf-8"
+});
+saveAs(e, d);
+};
+a.canSave = !!new Blob(), a.saveLog = function() {
+return a.largeLog ? void i.confirmSaveLog(a.object).then(f) :void f();
+};
 }
 };
 } ]), angular.module("openshiftConsole").directive("statusIcon", function() {

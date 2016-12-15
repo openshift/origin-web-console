@@ -11,9 +11,10 @@ angular.module('openshiftConsole')
     'APIService',
     'APIDiscovery',
     'DataService',
+    'ModalsService',
     'logLinks',
     'BREAKPOINTS',
-    function($sce, $timeout, $window, $filter, AuthService, APIService, APIDiscovery, DataService, logLinks, BREAKPOINTS) {
+    function($sce, $timeout, $window, $filter, AuthService, APIService, APIDiscovery, DataService, ModalsService, logLinks, BREAKPOINTS) {
       // cache the jQuery win, but not clobber angular's $window
       var $win = $(window);
 
@@ -295,7 +296,11 @@ angular.module('openshiftConsole')
               var options = angular.extend({
                 follow: true,
                 tailLines: 5000,
-                limitBytes: 10 * 1024 * 1024 // Limit log size to 10 MiB
+                // Limit log size to 10 MiB. Note: This can't be more than 500 MiB,
+                // otherwise save log will break because we'll exceed the max Blob
+                // size for some browsers.
+                // https://github.com/eligrey/FileSaver.js#supported-browsers
+                limitBytes: 10 * 1024 * 1024
               }, $scope.options);
 
               streamer = DataService.createStream(logSubresource, name, $scope.context, options);
@@ -384,7 +389,6 @@ angular.module('openshiftConsole')
 
               streamer.start();
             };
-
 
             // Kibana archives -------------------------------------------------
 
@@ -505,6 +509,28 @@ angular.module('openshiftConsole')
             ctrl.cacheAffixable(document.getElementById($scope.logViewerID+'-affixedFollow'));
             ctrl.start();
           }, 0);
+
+          var saveLog = function() {
+            var text = $($elem).find('.log-line-text').text();
+            var filename = _.get($scope, 'object.metadata.name', 'openshift') + '.log';
+            var blob = new Blob([text], { type: "text/plain;charset=utf-8" });
+            saveAs(blob, filename);
+          };
+
+          // Detect if we can save files.
+          // https://github.com/eligrey/FileSaver.js#supported-browsers
+          $scope.canSave = !!new Blob();
+
+          $scope.saveLog = function() {
+            // Save without confirmation if we're showing the complete log.
+            if (!$scope.largeLog) {
+              saveLog();
+              return;
+            }
+
+            // Prompt if this is a partial log.
+            ModalsService.confirmSaveLog($scope.object).then(saveLog);
+          };
         }
       };
     }
