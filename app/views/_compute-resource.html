@@ -1,22 +1,27 @@
 <ng-form name="form">
   <fieldset class="form-inline compute-resource">
     <label ng-if="label">{{label}}</label>
-    <div ng-class="{ 'has-error': form.$invalid }">
-      <label class="sr-only" ng-attr-for="{{id}}">Amount</label>
-      <input type="number"
-             name="amount"
-             ng-attr-id="{{id}}"
-             ng-model="amount"
-             min="0"
-             ng-attr-placeholder="{{placeholder}}"
-             class="form-control"
-             ng-attr-aria-describedby="{{description ? id + '-help' : undefined}}">
-      <label class="sr-only" ng-attr-for="{{id}}-unit">Unit</label>
-      <select ng-model="unit"
-              ng-options="option.value as option.label for option in units"
-              ng-attr-id="{{id}}-unit"
-              class="form-control inline-select">
-      </select>
+    <div class="resource-size" ng-class="{ 'has-error': form.$invalid }">
+      <div class="resource-amount">
+        <label class="sr-only" ng-attr-for="{{id}}">Amount</label>
+        <input type="number"
+               name="amount"
+               ng-attr-id="{{id}}"
+               ng-model="amount"
+               min="0"
+               ng-attr-placeholder="{{placeholder}}"
+               class="form-control"
+               ng-attr-aria-describedby="{{description ? id + '-help' : undefined}}">
+      </div>
+      <div class="resource-unit">
+        <label class="sr-only" ng-attr-for="{{id}}-unit">Unit</label>
+        <ui-select search-enabled="false" ng-model="unit" input-id="{{id}}-unit">
+          <ui-select-match>{{$select.selected.label}}</ui-select-match>
+          <ui-select-choices repeat="option.value as option in units">
+            {{option.label}}
+          </ui-select-choices>
+        </ui-select>
+      </div>
     </div>
     <div ng-if="description" class="help-block" ng-attr-id="{{id}}-help">
       {{description}}

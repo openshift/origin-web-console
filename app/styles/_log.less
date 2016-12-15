@@ -11,6 +11,19 @@
     .text-muted();
     margin: 0 2px;
   }
+  .ui-select-container {
+    min-width: 150px;
+    max-width: 250px;
+    margin: 0 5px;
+  }
+  .container-details {
+    display: inline-flex;
+    align-items: center;
+    flex-wrap: wrap;
+    .container-state {
+      margin-right: 5px;
+    }
+  }
   .log-actions {
     form {
       display: inline-block;
@@ -30,7 +43,6 @@
     .log-timestamps {
       .small();
       display: inline-block;
-      margin-left: 3px;
     }
     .log-actions {
       .pull-right();
@@ -40,6 +52,11 @@
 }
 .log-size-warning {
   margin: 0;
+}
+@media (max-width: @screen-sm-max) {
+  .log-size-warning {
+    margin-top: 20px;
+  }
 }
 .log-view {
   background-color: @log-bg-color;

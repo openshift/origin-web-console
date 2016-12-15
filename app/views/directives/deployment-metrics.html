@@ -9,20 +9,24 @@
         <span ng-show="containers.length === 1">
           {{options.selectedContainer.name}}
         </span>
-        <select id="selectContainer"
-                ng-show="containers.length > 1"
-                ng-model="options.selectedContainer"
-                ng-options="container.name for container in containers track by container.name">
-        </select>
+        <ui-select ng-show="containers.length > 1" ng-model="options.selectedContainer" input-id="selectContainer">
+          <ui-select-match>{{$select.selected.name}}</ui-select-match>
+          <ui-select-choices repeat="container in containers | filter : { name: $select.search }">
+            <div ng-bind-html="container.name | highlight : $select.search"></div>
+          </ui-select-choices>
+        </ui-select>
       </div>
     </div>
     <div class="form-group">
       <label for="timeRange">Time Range:</label>
-      <select id="timeRange"
-              ng-model="options.timeRange"
-              ng-options="range.label for range in options.rangeOptions"
-              ng-disabled="metricsError">
-      </select>
+      <div class="select-range">
+        <ui-select ng-model="options.timeRange" search-enabled="false" ng-disabled="metricsError" input-id="timeRange">
+          <ui-select-match>{{$select.selected.label}}</ui-select-match>
+          <ui-select-choices repeat="range in options.rangeOptions">
+            {{range.label}}
+          </ui-select-choices>
+        </ui-select>
+      </div>
     </div>
   </div>
 
