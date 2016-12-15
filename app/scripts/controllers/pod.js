@@ -218,9 +218,13 @@ angular.module('openshiftConsole')
       $scope.containersEnv = containers;
     };
 
+    var annotation = $filter('annotation');
     var podResolved = function(pod, action) {
       $scope.loaded = true;
       $scope.pod = pod;
+      $scope.dcName = annotation(pod, 'deploymentConfig');
+      $scope.rcName = annotation(pod, 'deployment');
+      $scope.deploymentVersion = annotation(pod, 'deploymentVersion');
       setLogVars(pod);
       setContainerVars();
       updateEnv();

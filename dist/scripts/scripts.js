@@ -4348,18 +4348,18 @@ var b = angular.copy(_.get(a, "pod.spec.containers", []));
 _.each(b, function(a) {
 a.env = a.env || [], _.each(a.env, x);
 }), a.containersEnv = b;
-}, z = function(b, c) {
-a.loaded = !0, a.pod = b, n(b), o(), y(), "DELETED" === c && (a.alerts.deleted = {
+}, z = b("annotation"), A = function(b, c) {
+a.loaded = !0, a.pod = b, a.dcName = z(b, "deploymentConfig"), a.rcName = z(b, "deployment"), a.deploymentVersion = z(b, "deploymentVersion"), n(b), o(), y(), "DELETED" === c && (a.alerts.deleted = {
 type:"warning",
 message:"This pod has been deleted."
 });
 };
 k.get(c.project).then(_.spread(function(d, i) {
 m = i, a.project = d, a.projectContext = i, g.get("pods", c.pod, i).then(function(b) {
-z(b);
+A(b);
 var d = {};
 d[b.metadata.name] = b, a.containerTerminals = u(), v(b), h.fetchReferencedImageStreamImages(d, a.imagesByDockerReference, a.imageStreamImageRefByDockerReference, m), l.push(g.watchObject("pods", c.pod, i, function(b, c) {
-z(b, c), w(a.containerTerminals), v(b);
+A(b, c), w(a.containerTerminals), v(b);
 }));
 }, function(c) {
 a.loaded = !0, a.alerts.load = {

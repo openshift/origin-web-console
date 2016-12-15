@@ -15,6 +15,16 @@
           {{pod | podStatus | sentenceCase}}<span ng-if="pod | podCompletionTime">, ran for {{(pod | podStartTime) | duration : (pod | podCompletionTime)}}</span>
           <span ng-if="pod.metadata.deletionTimestamp">(expires {{pod.metadata.deletionTimestamp | date : 'medium'}})</span>
         </dd>
+        <dt ng-if-start="pod.status.message">Message:</dt>
+        <dd ng-if-end>{{pod.status.message}}</dd>
+        <dt ng-if-start="dcName">
+          Deployment:
+        </dt>
+        <dd ng-if-end>
+          <a ng-href="{{dcName | navigateResourceURL : 'DeploymentConfig' : pod.metadata.namespace}}">{{dcName}}</a><span ng-if="rcName">,
+          <a ng-href="{{rcName | navigateResourceURL : 'ReplicationController' : pod.metadata.namespace}}"
+            ><span ng-if="deploymentVersion">#{{deploymentVersion}}</span><span ng-if="!deploymentVersion">{{rcName}}</span></a></span>
+        </dd>
         <dt ng-if-start="pod.metadata.deletionTimestamp && pod.spec.terminationGracePeriodSeconds">Grace Period:</dt>
         <dd ng-if-end>
           <!-- Don't show "a few seconds" for small values. -->
@@ -25,8 +35,6 @@
             {{pod.spec.terminationGracePeriodSeconds | humanizeDurationValue : 'seconds'}}
           </span>
         </dd>
-        <dt ng-if-start="pod.status.message">Message:</dt>
-        <dd ng-if-end>{{pod.status.message}}</dd>
         <dt>IP:</dt>
         <dd>{{pod.status.podIP || 'unknown'}}</dd>
         <dt>Node:</dt>
@@ -80,10 +88,10 @@
       <h4>Volumes</h4>
       <volumes ng-if="pod.spec.volumes.length" volumes="pod.spec.volumes" namespace="project.metadata.name"></volumes>
       <div ng-if="!pod.spec.volumes.length">none</div>
-      <p ng-if="(pod | annotation:'deploymentConfig') && ('deploymentconfigs' | canI : 'update')">
-        <a ng-href="project/{{project.metadata.name}}/attach-pvc?kind=DeploymentConfig&name={{pod | annotation:'deploymentConfig'}}">Add Storage to {{pod | annotation : 'deploymentConfig'}}</a>
+      <p ng-if="dcName && ('deploymentconfigs' | canI : 'update')">
+        <a ng-href="project/{{project.metadata.name}}/attach-pvc?kind=DeploymentConfig&name={{dcName}}">Add Storage to {{dcName}}</a>
         <span class="action-divider" aria-hidden="true">|</span>
-        <a ng-href="project/{{project.metadata.name}}/add-config-volume?kind=DeploymentConfig&name={{pod | annotation : 'deploymentConfig'}}">Add Config Files to {{pod | annotation : 'deploymentConfig'}}</a>
+        <a ng-href="project/{{project.metadata.name}}/add-config-volume?kind=DeploymentConfig&name={{dcName}}">Add Config Files to {{dcName}}</a>
       </p>
     </div>
   </div>
