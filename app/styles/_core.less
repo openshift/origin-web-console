@@ -182,9 +182,6 @@ mark {
 }
 
 .deployment-config-summary, .build-config-summary {
-  status-icon {
-    margin-right: 5px;
-  }
   .h3 {
     margin-bottom: 0;
   }
@@ -1050,7 +1047,7 @@ status-icon {
   .fa, .pficon {
     text-align: center;
     width: 1.230769em; // ~16px at 13px font size
-    .latest-build-status & {
+    .last-status & {
       width: 20px;
     }
   }
@@ -1063,7 +1060,7 @@ status-icon {
   .spinner.spinner-inline {
     margin-left: 0.153846em; // ~2px at 13px font size
     margin-right: 0.153846em; // ~2px at 13px font size
-    .latest-build-status & {
+    .last-status & {
       margin-left: 4px;
       margin-right: 4px;
     }

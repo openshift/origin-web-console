@@ -3762,7 +3762,6 @@ body{padding-right:0px!important}
 .empty-state-message{margin:60px auto;max-width:600px;padding:0 20px}
 .empty-state-message .h2,.empty-state-message h2{line-height:1.4}
 .empty-state-message .btn{margin:10px 0 20px}
-.build-config-summary .last-status,.build-config-summary status-icon,.deployment-config-summary .last-status,.deployment-config-summary status-icon{margin-right:5px}
 @media (min-height:600px){.empty-state-message .hero-icon{display:inline-block;font-size:90px}
 }
 @media (min-height:800px){.empty-state-message{margin-top:150px}
@@ -3776,6 +3775,7 @@ mark{padding:0;background-color:rgba(252,248,160,.5)}
 @media (max-width:991px){.service-table{min-width:100%}
 }
 .build-config-summary .h3,.deployment-config-summary .h3{margin-bottom:0}
+.build-config-summary .last-status,.deployment-config-summary .last-status{margin-right:5px}
 .build-config-summary .last-timestamp,.deployment-config-summary .last-timestamp{margin-left:25px}
 .deployment-config-summary{padding-bottom:20px}
 .deployment-config-summary.gutter-bottom-2x{padding-bottom:40px}
@@ -3970,10 +3970,10 @@ a.disabled-link:active,a.disabled-link:focus,a.disabled-link:hover{color:#bbb;te
 .status{min-width:130px}
 [row]>status-icon{margin-right:3px}
 status-icon .fa,status-icon .pficon{text-align:center;width:1.230769em}
-.latest-build-status status-icon .fa,.latest-build-status status-icon .pficon{width:20px}
+.last-status status-icon .fa,.last-status status-icon .pficon{width:20px}
 status-icon .fa-spin{font-size:14px;line-height:normal}
 status-icon .spinner.spinner-inline{margin-left:.153846em;margin-right:.153846em}
-.latest-build-status status-icon .spinner.spinner-inline{margin-left:4px;margin-right:4px}
+.last-status status-icon .spinner.spinner-inline{margin-left:4px;margin-right:4px}
 pre.clipped{display:inline-block;margin-top:10px;max-width:100%}
 pre.clipped.scroll{max-height:150px;overflow:auto;width:100%}
 .k8s-label{margin-right:5px;margin-top:3px}
