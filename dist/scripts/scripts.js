@@ -4426,6 +4426,12 @@ var b = 0;
 return a && a.forEach(function(a) {
 a.state && a.state.running && b++;
 }), b;
+}, a.showDebugAction = function(c) {
+if ("Completed" === _.get(a, "pod.status.phase")) return !1;
+if (z(a.pod, "openshift.io/build.name")) return !1;
+if (b("isDebugPod")(a.pod)) return !1;
+var d = _.get(c, "state.waiting.reason");
+return "ImagePullBackOff" !== d && "ErrImagePull" !== d && (!_.get(c, "state.running") || !c.ready);
 }, a.$on("$destroy", function() {
 g.unwatchAll(l), n(), $(window).off("resize.terminalsize");
 });
