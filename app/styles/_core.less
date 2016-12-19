@@ -31,6 +31,16 @@
   }
 }
 
+// Prevent having to tap tabs twice on iOS.
+.ios .nav-tabs > {
+  li > a:hover:before {
+    content: none;
+  }
+  li.active > a:before {
+    content: '';
+  }
+}
+
 .console-os {
   .wrap > .container { // For projects list page
     margin-top: 35px;

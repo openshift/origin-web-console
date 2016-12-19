@@ -477,6 +477,14 @@ angular
         }
       });
     }, 1000);
+  })
+  .run(function(IS_IOS) {
+    if (IS_IOS) {
+      // Add a class for iOS devices. This lets us disable some hover effects
+      // since iOS will treat the first tap as a hover if it changes the DOM
+      // content (e.g. using :before pseudo-elements).
+      $('body').addClass('ios');
+    }
   });
 
 hawtioPluginLoader.addModule('openshiftConsole');
