@@ -109,7 +109,7 @@
     <div ng-if="services">
       <osc-routing-service model="route.to"
                            services="services"
-                           show-weight="route.alternateServices.length">
+                           show-weight="route.alternateServices.length > 1 || (controls.hideSlider && route.alternateServices.length)">
       </osc-routing-service>
     </div>
 
@@ -140,7 +140,7 @@
         <osc-routing-service model="alternate"
                              services="alternateServiceOptions"
                              is-alternate="true"
-                             show-weight="true">
+                             show-weight="route.alternateServices.length > 1 || controls.hideSlider">
         </osc-routing-service>
         <a href="" ng-click="route.alternateServices.splice($index, 1)">Remove Service</a>
         <span ng-if="$last && route.alternateServices.length < alternateServiceOptions.length">
@@ -152,6 +152,46 @@
         <span class="help-block">
           Service {{duplicate.metadata.name}} cannot be added twice.
         </span>
+      </div>
+    </div>
+
+    <!-- If there is exactly one alternate service, let the user change the weights using a slider. -->
+    <div ng-if="route.alternateServices.length === 1 && !controls.hideSlider">
+      <h3>Service Weights</h3>
+      <div class="form-group">
+        <div class="weight-slider-values">
+          <div>
+            <span class="service-name">{{route.to.service.metadata.name}}</span>
+            <span class="weight-percentage">{{weightAsPercentage(route.to.weight)}}</span>
+          </div>
+          <div>
+            <span class="weight-percentage hidden-xs">{{weightAsPercentage(route.alternateServices[0].weight)}}</span>
+            <span class="service-name">{{route.alternateServices[0].service.metadata.name}}</span>
+            <span class="weight-percentage visible-xs-inline">{{weightAsPercentage(route.alternateServices[0].weight)}}</span>
+          </div>
+        </div>
+        <label class="sr-only" for="weight-slider">Service {{route.to.service.metadata.name}} Weight</label>
+        <input
+            id="weight-slider"
+            type="range"
+            min="0"
+            max="100"
+            step="1"
+            list="ticks"
+            ng-model="controls.rangeSlider"
+            aria-describedby="weight-slider-help"
+            class="mar-top-md">
+        <datalist id="ticks">
+          <option>0</option>
+          <option>25</option>
+          <option>50</option>
+          <option>75</option>
+          <option>100</option>
+        </datalist>
+        <div class="help-block" id="weight-slider-help">
+          Percentage of traffic sent to each service. Drag the slider to adjust the values or
+          <a href="" ng-click="controls.hideSlider = true">edit weights as integers</a>.
+        </div>
       </div>
     </div>
 

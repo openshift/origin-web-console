@@ -42,3 +42,22 @@
     margin-top: 5px;
   }
 }
+
+.weight-slider-values {
+  .flex-display(@display: flex);
+  .flex-direction(@direction: column);
+  .service-name {
+    font-weight: 600;
+  }
+  .weight-percentage {
+    font-size: 15px;
+    margin-left: 5px;
+  }
+  @media (min-width: @screen-sm-min) {
+    .flex-direction(@direction: row);
+    justify-content: space-between;
+    .weight-percentage {
+      margin-right: 5px;
+    }
+  }
+}

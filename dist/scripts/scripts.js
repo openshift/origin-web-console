@@ -9917,7 +9917,7 @@ label:"Redirect"
 } ];
 } ],
 link:function(b, c, d, e) {
-b.form = e, b.disableWildcards = a.DISABLE_WILDCARD_ROUTES, b.disableWildcards ? b.hostnamePattern = /^[a-z0-9]([-a-z0-9]*[a-z0-9])?(\.[a-z0-9]([-a-z0-9]*[a-z0-9])?)*$/ :b.hostnamePattern = /^(\*(\.[a-z0-9]([-a-z0-9]*[a-z0-9]))+|[a-z0-9]([-a-z0-9]*[a-z0-9])?(\.[a-z0-9]([-a-z0-9]*[a-z0-9])?)*)$/;
+b.form = e, b.controls = {}, b.disableWildcards = a.DISABLE_WILDCARD_ROUTES, b.disableWildcards ? b.hostnamePattern = /^[a-z0-9]([-a-z0-9]*[a-z0-9])?(\.[a-z0-9]([-a-z0-9]*[a-z0-9])?)*$/ :b.hostnamePattern = /^(\*(\.[a-z0-9]([-a-z0-9]*[a-z0-9]))+|[a-z0-9]([-a-z0-9]*[a-z0-9])?(\.[a-z0-9]([-a-z0-9]*[a-z0-9])?)*)$/;
 var f = function(a) {
 a && (b.unnamedServicePort = 1 === a.spec.ports.length && !a.spec.ports[0].name, a.spec.ports.length && !b.unnamedServicePort ? b.route.portOptions = _.map(a.spec.ports, function(a) {
 return {
@@ -9956,9 +9956,20 @@ service:a
 });
 });
 b.route.alternateServices.push({
-service:a
+service:a,
+weight:1
+}), _.has(b, "route.to.weight") || _.set(b, "route.to.weight", 1);
+}, b.weightAsPercentage = function(a) {
+a = a || 0;
+var c = _.get(b, "route.to.weight", 0);
+if (_.each(b.route.alternateServices, function(a) {
+c += _.get(a, "weight", 0);
+}), !c) return "";
+var d = a / c * 100;
+return d3.round(d, 1) + "%";
+}, b.$watch("controls.rangeSlider", function(a, c) {
+a !== c && (a = parseInt(a, 10), _.set(b, "route.to.weight", a), _.set(b, "route.alternateServices[0].weight", 100 - a));
 });
-};
 }
 };
 } ]).directive("oscRoutingService", function() {

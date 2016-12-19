@@ -7692,7 +7692,7 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "</div>\n" +
     "\n" +
     "<div ng-if=\"services\">\n" +
-    "<osc-routing-service model=\"route.to\" services=\"services\" show-weight=\"route.alternateServices.length\">\n" +
+    "<osc-routing-service model=\"route.to\" services=\"services\" show-weight=\"route.alternateServices.length > 1 || (controls.hideSlider && route.alternateServices.length)\">\n" +
     "</osc-routing-service>\n" +
     "</div>\n" +
     "<div ng-if=\"alternateServiceOptions.length && !route.alternateServices.length\" class=\"form-group\">\n" +
@@ -7717,7 +7717,7 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "<div ng-if=\"route.alternateServices.length\">\n" +
     "<h3>Alternate Services</h3>\n" +
     "<div ng-repeat=\"alternate in route.alternateServices\" class=\"form-group\">\n" +
-    "<osc-routing-service model=\"alternate\" services=\"alternateServiceOptions\" is-alternate=\"true\" show-weight=\"true\">\n" +
+    "<osc-routing-service model=\"alternate\" services=\"alternateServiceOptions\" is-alternate=\"true\" show-weight=\"route.alternateServices.length > 1 || controls.hideSlider\">\n" +
     "</osc-routing-service>\n" +
     "<a href=\"\" ng-click=\"route.alternateServices.splice($index, 1)\">Remove Service</a>\n" +
     "<span ng-if=\"$last && route.alternateServices.length < alternateServiceOptions.length\">\n" +
@@ -7729,6 +7729,36 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "<span class=\"help-block\">\n" +
     "Service {{duplicate.metadata.name}} cannot be added twice.\n" +
     "</span>\n" +
+    "</div>\n" +
+    "</div>\n" +
+    "\n" +
+    "<div ng-if=\"route.alternateServices.length === 1 && !controls.hideSlider\">\n" +
+    "<h3>Service Weights</h3>\n" +
+    "<div class=\"form-group\">\n" +
+    "<div class=\"weight-slider-values\">\n" +
+    "<div>\n" +
+    "<span class=\"service-name\">{{route.to.service.metadata.name}}</span>\n" +
+    "<span class=\"weight-percentage\">{{weightAsPercentage(route.to.weight)}}</span>\n" +
+    "</div>\n" +
+    "<div>\n" +
+    "<span class=\"weight-percentage hidden-xs\">{{weightAsPercentage(route.alternateServices[0].weight)}}</span>\n" +
+    "<span class=\"service-name\">{{route.alternateServices[0].service.metadata.name}}</span>\n" +
+    "<span class=\"weight-percentage visible-xs-inline\">{{weightAsPercentage(route.alternateServices[0].weight)}}</span>\n" +
+    "</div>\n" +
+    "</div>\n" +
+    "<label class=\"sr-only\" for=\"weight-slider\">Service {{route.to.service.metadata.name}} Weight</label>\n" +
+    "<input id=\"weight-slider\" type=\"range\" min=\"0\" max=\"100\" step=\"1\" list=\"ticks\" ng-model=\"controls.rangeSlider\" aria-describedby=\"weight-slider-help\" class=\"mar-top-md\">\n" +
+    "<datalist id=\"ticks\">\n" +
+    "<option>0</option>\n" +
+    "<option>25</option>\n" +
+    "<option>50</option>\n" +
+    "<option>75</option>\n" +
+    "<option>100</option>\n" +
+    "</datalist>\n" +
+    "<div class=\"help-block\" id=\"weight-slider-help\">\n" +
+    "Percentage of traffic sent to each service. Drag the slider to adjust the values or\n" +
+    "<a href=\"\" ng-click=\"controls.hideSlider = true\">edit weights as integers</a>.\n" +
+    "</div>\n" +
     "</div>\n" +
     "</div>\n" +
     "<div class=\"checkbox\">\n" +

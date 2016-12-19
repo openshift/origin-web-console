@@ -54,6 +54,7 @@ angular.module("openshiftConsole")
       },
       link: function(scope, element, attrs, formCtl) {
         scope.form = formCtl;
+        scope.controls = {};
 
         scope.disableWildcards = Constants.DISABLE_WILDCARD_ROUTES;
 
@@ -175,9 +176,42 @@ angular.module("openshiftConsole")
 
           // Add a new value.
           scope.route.alternateServices.push({
-            service: firstUnselected
+            service: firstUnselected,
+            weight: 1
           });
+
+          if (!_.has(scope, 'route.to.weight')) {
+            _.set(scope, 'route.to.weight', 1);
+          }
         };
+
+        scope.weightAsPercentage = function(weight) {
+          weight = weight || 0;
+
+          var total = _.get(scope, 'route.to.weight', 0);
+          _.each(scope.route.alternateServices, function(alternate) {
+            total += _.get(alternate, 'weight', 0);
+          });
+
+          if (!total) {
+            return '';
+          }
+
+          var percentage = (weight / total) * 100;
+          return d3.round(percentage, 1) + '%';
+        };
+
+        scope.$watch('controls.rangeSlider', function(weight, previous) {
+          if (weight === previous) {
+            return;
+          }
+
+          // Once the values are changed using the slider, set the weights as precentages.
+          // Slider range is 0-100.
+          weight = parseInt(weight, 10);
+          _.set(scope, 'route.to.weight', weight);
+          _.set(scope, 'route.alternateServices[0].weight', 100 - weight);
+        });
       }
     };
   })
