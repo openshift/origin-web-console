@@ -5194,12 +5194,14 @@ a.subtle-link:active,a.subtle-link:focus,a.subtle-link:hover{color:#00659c;borde
 @media (min-width:650px){.projects-bar{flex-direction:row;justify-content:space-between}
 }
 .projects-bar h1{margin-bottom:0!important;margin-top:0!important}
-.projects-bar .projects-add{display:flex;justify-content:flex-end;margin:-27px 0 20px}
+.projects-bar .projects-add{display:flex;justify-content:flex-end;margin:-27px 0 0}
 .projects-bar .projects-options{display:flex;flex-direction:column}
-@media (min-width:650px){.projects-bar .projects-add{margin-left:40px;margin-top:0;order:2}
+@media (min-width:650px){.projects-bar .projects-add{margin-bottom:20px;margin-left:40px;margin-top:0;order:2}
 .projects-bar .projects-options{flex-direction:row}
 }
-.projects-bar .projects-search{display:flex;margin-bottom:20px}
+.projects-bar .projects-search{display:flex;margin-bottom:20px;margin-top:20px}
+@media (min-width:650px){.projects-bar .projects-search{margin-top:0}
+}
 .projects-bar .projects-search .search-pf{display:block;flex:0 1 auto}
 .projects-bar .projects-search .search-pf.has-button .form-group{display:block}
 .projects-bar .projects-sort-label{margin-right:6px;padding-top:3px}
