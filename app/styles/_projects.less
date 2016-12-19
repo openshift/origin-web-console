@@ -93,8 +93,9 @@
   .projects-add {
     display: flex;
     justify-content: flex-end;
-    margin: -27px 0 20px 0;
+    margin: -27px 0 0 0;
     @media (min-width: 650px) {
+      margin-bottom: 20px;
       margin-left: 40px;
       margin-top: 0;
       order: 2;
@@ -110,6 +111,10 @@
   .projects-search {
     display: flex;
     margin-bottom: 20px;
+    margin-top: 20px;
+    @media (min-width: 650px) {
+      margin-top: 0;
+    }
     .search-pf {
       display: block;
       flex: 0 1 auto;
