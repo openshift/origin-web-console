@@ -4940,6 +4940,9 @@ body,html{margin:0;padding:0}
 .table-mobile>tbody>tr>td:last-child{border-bottom:none}
 .table-mobile>tbody>tr>td:before{content:attr(data-title);position:absolute;top:8px;left:6px;width:35%;padding-right:10px;white-space:nowrap}
 }
+td[role=presentation].arrow:after{content:"\2193"}
+@media (min-width:768px){td[role=presentation].arrow:after{content:"\2192"}
+}
 .table-filter-wrapper{display:-webkit-flex;display:-moz-flex;display:-ms-flexbox;display:-ms-flex;display:flex;padding:10px 10px 5px;border-top:1px solid #d1d1d1;border-left:1px solid #d1d1d1;border-right:1px solid #d1d1d1;background-color:#f9f9f9}
 .events-table{table-layout:fixed}
 .events-table th#time{width:90px}

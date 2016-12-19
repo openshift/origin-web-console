@@ -148,6 +148,15 @@
   }
 }
 
+// swaps direction of arrow in table cell
+td[role="presentation"].arrow:after {
+  content: "\2193";
+
+  @media (min-width: @screen-sm-min) {
+    content: "\2192";
+  }
+}
+
 .table-filter-wrapper {
   .flex-display(@display: flex);
   padding: 10px 10px 5px 10px;
