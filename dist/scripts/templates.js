@@ -64,7 +64,7 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
   $templateCache.put('views/_cannot-create-project.html',
     "<span ng-if=\"!newProjectMessage\">A cluster admin can create a project for you by running the command\n" +
     "<code>oadm new-project &lt;projectname&gt; --admin={{user.metadata.name || '&lt;YourUsername&gt;'}}</code></span>\n" +
-    "<span ng-if=\"newProjectMessage\" ng-bind-html=\"newProjectMessage | linky : '_blank'\" class=\"projects-instructions-link\"></span>"
+    "<span ng-if=\"newProjectMessage\" ng-bind-html=\"newProjectMessage | linkify : '_blank'\" class=\"projects-instructions-link\"></span>"
   );
 
 
@@ -1320,7 +1320,7 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "<span ng-switch-when=\"Image change\">\n" +
     "{{trigger.message}} for {{trigger.imageChangeBuild.fromRef.name}}\n" +
     "</span>\n" +
-    "<span ng-switch-default ng-bind-html=\"trigger.message | linky : '_blank'\"></span>\n" +
+    "<span ng-switch-default ng-bind-html=\"trigger.message | linkify : '_blank'\"></span>\n" +
     "</div>\n" +
     "</div>\n" +
     "</dd>\n" +
@@ -5057,7 +5057,7 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "</div>\n" +
     "<div class=\"alert alert-info template-message\" ng-if=\"templateMessage.length\">\n" +
     "<span class=\"pficon pficon-info\" aria-hidden=\"true\"></span>\n" +
-    "<div class=\"resource-description\" ng-bind-html=\"templateMessage | linky : '_blank'\"></div>\n" +
+    "<div class=\"resource-description\" ng-bind-html=\"templateMessage | linkify : '_blank'\"></div>\n" +
     "</div>\n" +
     "<div class=\"row\" ng-controller=\"TasksController\">\n" +
     "<div ng-if=\"!pendingTasks(tasks()).length && erroredTasks(tasks()).length\" class=\"col-md-12\">\n" +
@@ -7337,7 +7337,7 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
 
   $templateCache.put('views/directives/osc-image-summary.html',
     "<h1>{{ name || (resource | displayName) }}</h1>\n" +
-    "<div class=\"resource-description\" ng-bind-html=\"resource | description | linky : '_blank'\"></div>\n" +
+    "<div class=\"resource-description\" ng-bind-html=\"resource | description | linkify : '_blank'\"></div>\n" +
     "<div class=\"resource-metadata\">\n" +
     "<div ng-show=\"resource | annotation:'provider'\">Provider: {{ resource | annotation:'provider' }}</div>\n" +
     "<div ng-show=\"resource.metadata.namespace && resource.metadata.namespace !=='openshift'\">Namespace: {{ resource.metadata.namespace }}</div>\n" +

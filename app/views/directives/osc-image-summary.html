@@ -1,5 +1,5 @@
 <h1>{{ name || (resource | displayName) }}</h1>
-<div class="resource-description" ng-bind-html="resource | description | linky : '_blank'"></div>
+<div class="resource-description" ng-bind-html="resource | description | linkify : '_blank'"></div>
 <div class="resource-metadata">
   <div ng-show="resource | annotation:'provider'">Provider: {{ resource | annotation:'provider' }}</div>
   <div ng-show="resource.metadata.namespace && resource.metadata.namespace !=='openshift'">Namespace: {{ resource.metadata.namespace }}</div>

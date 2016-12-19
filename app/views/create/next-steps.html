@@ -48,7 +48,7 @@
 
             <div class="alert alert-info template-message" ng-if="templateMessage.length">
               <span class="pficon pficon-info" aria-hidden="true"></span>
-              <div class="resource-description" ng-bind-html="templateMessage | linky : '_blank'"></div>
+              <div class="resource-description" ng-bind-html="templateMessage | linkify : '_blank'"></div>
             </div>
 
             <div class="row" ng-controller="TasksController">

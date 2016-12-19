@@ -50,7 +50,7 @@
                 <span ng-switch-when="Image change">
                   {{trigger.message}} for {{trigger.imageChangeBuild.fromRef.name}}
                 </span>
-                <span ng-switch-default ng-bind-html="trigger.message | linky : '_blank'"></span>
+                <span ng-switch-default ng-bind-html="trigger.message | linkify : '_blank'"></span>
               </div>
             </div>
           </dd>
