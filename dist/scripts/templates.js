@@ -2140,11 +2140,11 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "<uib-tab heading=\"Environment\" active=\"selectedTab.environment\" ng-if=\"buildConfig && !(buildConfig | isJenkinsPipelineStrategy)\">\n" +
     "<uib-tab-heading>Environment</uib-tab-heading>\n" +
     "<h3>Environment Variables</h3>\n" +
-    "<div style=\"margin-top: -5px\" ng-if=\"BCEnvVarsFromImage.length\">\n" +
+    "<p ng-if=\"BCEnvVarsFromImage.length\">\n" +
     "The builder image has additional environment variables defined. Variables defined below will overwrite any from the image with the same name.\n" +
     "<a href=\"\" ng-click=\"expand.imageEnv = true\" ng-if=\"!expand.imageEnv\">Show Image Environment Variables</a>\n" +
     "<a href=\"\" ng-click=\"expand.imageEnv = false\" ng-if=\"expand.imageEnv\">Hide Image Environment Variables</a>\n" +
-    "</div>\n" +
+    "</p>\n" +
     "<key-value-editor ng-if=\"expand.imageEnv\" entries=\"BCEnvVarsFromImage\" key-placeholder=\"Name\" value-placeholder=\"Value\" is-readonly cannot-add cannot-sort cannot-delete show-header></key-value-editor>\n" +
     "<ng-form name=\"forms.bcEnvVars\">\n" +
     "<div ng-if=\"'buildconfigs' | canI : 'update'\">\n" +
@@ -2964,7 +2964,7 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
 
   $templateCache.put('views/browse/image.html',
     "<project-header class=\"top-header\"></project-header>\n" +
-    "<project-page>\n" +
+    "<project-page class=\"image\">\n" +
     "\n" +
     "<div class=\"middle-section\">\n" +
     "<div class=\"middle-container\">\n" +
@@ -3066,7 +3066,7 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "</dl>\n" +
     "<annotations annotations=\"imageStream.metadata.annotations\"></annotations>\n" +
     "</div>\n" +
-    "<table class=\"table table-bordered table-hover table-mobile\">\n" +
+    "<table class=\"table table-bordered table-hover table-mobile mar-top-xl\">\n" +
     "<thead>\n" +
     "<tr>\n" +
     "<th>Tag</th>\n" +
@@ -3245,7 +3245,7 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
 
   $templateCache.put('views/browse/pod.html',
     "<project-header class=\"top-header\"></project-header>\n" +
-    "<project-page>\n" +
+    "<project-page class=\"pod\">\n" +
     "\n" +
     "<div class=\"middle-section\">\n" +
     "<div class=\"middle-container\">\n" +
@@ -3339,7 +3339,7 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "When you navigate away from this pod, any open terminal connections will be closed. This will kill any foreground processes you started from the terminal.\n" +
     "</div>\n" +
     "<alerts ng-if=\"selectedTerminalContainer.status === 'disconnected'\" alerts=\"terminalDisconnectAlert\"></alerts>\n" +
-    "<div class=\"mar-left-xl mar-bottom-lg\">\n" +
+    "<div class=\"mar-left-xl\">\n" +
     "<div class=\"row\">\n" +
     "<div class=\"pad-left-none pad-bottom-md col-sm-6 col-lg-4\">\n" +
     "<span ng-if=\"pod.spec.containers.length === 1\">\n" +
@@ -3682,8 +3682,8 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "</dl>\n" +
     "<div ng-if=\"!route.spec.tls\"><em>TLS is not enabled for this route</em></div>\n" +
     "</div>\n" +
-    "</div>\n" +
     "<annotations annotations=\"route.metadata.annotations\"></annotations>\n" +
+    "</div>\n" +
     "</div>\n" +
     "</div>\n" +
     "</div>\n" +
@@ -3859,8 +3859,8 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "</div>\n" +
     "</div>\n" +
     "</dl>\n" +
-    "</div>\n" +
     "<annotations annotations=\"secret.metadata.annotations\"></annotations>\n" +
+    "</div>\n" +
     "</div>\n" +
     "</div>\n" +
     "</div>\n" +
@@ -3959,9 +3959,9 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "<div>\n" +
     "<traffic-table ports-by-route=\"portsByRoute\" routes=\"routesForService\" services=\"services\" show-node-ports=\"showNodePorts\" custom-name-header=\"'Route'\"></traffic-table>\n" +
     "</div>\n" +
-    "<div style=\"margin:-10px 0 10px 0\">\n" +
+    "<p>\n" +
     "Learn more about <a ng-href=\"{{'route-types' | helpLink}}\" target=\"_blank\">routes</a> and <a ng-href=\"{{'services' | helpLink}}\" target=\"_blank\">services</a>\n" +
-    "</div>\n" +
+    "</p>\n" +
     "<h3>Pods</h3>\n" +
     "<div>\n" +
     "<pods-table pods=\"podsForService\" active-pods=\"podsWithEndpoints\" custom-name-header=\"'Pod'\" pod-failure-reasons=\"podFailureReasons\"></pods-table>\n" +
@@ -5758,14 +5758,13 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
 
 
   $templateCache.put('views/directives/annotations.html',
-    "<div class=\"gutter-bottom\">\n" +
     "<p>\n" +
     "<a href=\"\" ng-click=\"toggleAnnotations()\" ng-if=\"!expandAnnotations\">Show Annotations</a>\n" +
     "<a href=\"\" ng-click=\"toggleAnnotations()\" ng-if=\"expandAnnotations\">Hide Annotations</a>\n" +
     "</p>\n" +
     "<div ng-if=\"expandAnnotations\">\n" +
     "<div ng-if=\"annotations\" class=\"table-responsive\">\n" +
-    "<table class=\"table table-bordered table-bordered-columns key-value-table\">\n" +
+    "<table class=\"table table-bordered table-bordered-columns key-value-table table-top-margin\">\n" +
     "<tbody>\n" +
     "<tr ng-repeat=\"(annotationKey, annotationValue) in annotations\">\n" +
     "<td class=\"key\">{{annotationKey}}</td>\n" +
@@ -5780,7 +5779,6 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "<p ng-if=\"!annotations\">\n" +
     "There are no annotations on this resource.\n" +
     "</p>\n" +
-    "</div>\n" +
     "</div>"
   );
 
@@ -9687,7 +9685,7 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "</div>\n" +
     "</div>\n" +
     "</ng-form>\n" +
-    "<div ng-if=\"mode.edit\" class=\"item-row\" row mobile=\"column\">\n" +
+    "<div ng-if=\"mode.edit\" row mobile=\"column\">\n" +
     "<div class=\"col-name hidden-xs\">&nbsp;</div>\n" +
     "<div class=\"action-set\" flex row tablet=\"column\" mobile=\"column\">\n" +
     "<div class=\"col-roles hidden-xs\" flex>&nbsp;</div>\n" +
@@ -10059,7 +10057,7 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
 
   $templateCache.put('views/monitoring.html',
     "<project-header class=\"top-header\"></project-header>\n" +
-    "<project-page>\n" +
+    "<project-page class=\"monitoring\">\n" +
     "\n" +
     "<div class=\"middle-section monitoring-page\" ng-class=\"{ 'sidebar-open': !renderOptions.collapseEventsSidebar }\">\n" +
     "<div class=\"middle-container\">\n" +

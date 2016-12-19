@@ -432,11 +432,11 @@
                   <uib-tab heading="Environment" active="selectedTab.environment" ng-if="buildConfig && !(buildConfig | isJenkinsPipelineStrategy)">
                     <uib-tab-heading>Environment</uib-tab-heading>
                     <h3>Environment Variables</h3>
-                    <div style="margin-top: -5px;" ng-if="BCEnvVarsFromImage.length">
+                    <p ng-if="BCEnvVarsFromImage.length">
                       The builder image has additional environment variables defined.  Variables defined below will overwrite any from the image with the same name.
                       <a href="" ng-click="expand.imageEnv = true" ng-if="!expand.imageEnv">Show Image Environment Variables</a>
                       <a href="" ng-click="expand.imageEnv = false" ng-if="expand.imageEnv">Hide Image Environment Variables</a>
-                    </div>
+                    </p>
                     <key-value-editor
                       ng-if="expand.imageEnv"
                       entries="BCEnvVarsFromImage"
