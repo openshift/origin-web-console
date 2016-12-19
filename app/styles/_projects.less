@@ -26,14 +26,17 @@
 }
 
 .project-additional-info.list-view-pf-additional-info {
+  display: block;
   @media (min-width: @screen-md-min) {
     width: 55%;
   }
 }
 
-.project-description {
+.project-description.list-group-item-text {
+  width: 100%;
   .highlighted-content,
   .truncated-content {
+    display: block;
     white-space: pre-line;
     .word-break();
   }

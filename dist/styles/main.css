@@ -5177,12 +5177,13 @@ a.subtle-link:active,a.subtle-link:focus,a.subtle-link:hover{color:#00659c;borde
 .project-actions .project-action-item{margin-left:12px}
 @media (min-width:768px){.project-actions .project-action-item{margin-left:17px}
 }
+.project-additional-info.list-view-pf-additional-info{display:block}
 @media (min-width:992px){.project-actions{margin-top:0}
 .project-additional-info.list-view-pf-additional-info{width:55%}
 }
-.project-description .highlighted-content,.project-description .truncated-content{white-space:pre-line;word-wrap:break-word;word-break:break-word;overflow-wrap:break-word;min-width:0}
+.project-description.list-group-item-text,.project-info .list-view-pf-description{width:100%}
+.project-description.list-group-item-text .highlighted-content,.project-description.list-group-item-text .truncated-content{display:block;white-space:pre-line;word-wrap:break-word;word-break:break-word;overflow-wrap:break-word;min-width:0}
 .project-info.list-group-item{border-bottom:0;border-color:#e0e0e0;padding:10px 20px}
-.project-info .list-view-pf-description{width:100%}
 .project-info .list-view-pf-main-info{display:block}
 @media (min-width:992px){.project-name-item.list-group-item-heading{white-space:normal;width:45%}
 }
