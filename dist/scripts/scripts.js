@@ -4159,7 +4159,15 @@ return d += " -n " + a.metadata.namespace;
 return {
 getLogsCommand:c
 };
-} ]), angular.module("openshiftConsole").controller("ProjectsController", [ "$scope", "$filter", "$location", "$route", "$timeout", "AlertMessageService", "AuthService", "DataService", "KeywordService", "Logger", "ProjectsService", function(a, b, c, d, e, f, g, h, i, j, k) {
+} ]), angular.module("openshiftConsole").factory("HTMLService", function() {
+return {
+linkify:function(a, b, c) {
+return a ? (c || (a = _.escape(a)), a.replace(/https?:\/\/[A-Za-z0-9._%+-]+\S*[^\s.;,(){}<>"\u201d\u2019]/gm, function(a) {
+return b ? '<a href="' + a + '" target="' + b + '">' + a + "</a>" :'<a href="' + a + '">' + a + "</a>";
+})) :a;
+}
+};
+}), angular.module("openshiftConsole").controller("ProjectsController", [ "$scope", "$filter", "$location", "$route", "$timeout", "AlertMessageService", "AuthService", "DataService", "KeywordService", "Logger", "ProjectsService", function(a, b, c, d, e, f, g, h, i, j, k) {
 var l, m, n = [], o = [];
 a.alerts = a.alerts || {}, a.loading = !0, a.showGetStarted = !1, a.canCreate = void 0, a.search = {
 text:""
@@ -11612,15 +11620,11 @@ a.destroy();
 });
 }
 };
-} ]), angular.module("openshiftConsole").directive("logViewer", [ "$sce", "$timeout", "$window", "$filter", "AuthService", "APIService", "APIDiscovery", "DataService", "ModalsService", "logLinks", "BREAKPOINTS", function(a, b, c, d, e, f, g, h, i, j, k) {
-var l = $(window), m = function(a) {
-return a.replace(/https?:\/\/[A-Za-z0-9._%+-]+\S*[^\s.;,(){}<>"\u201d\u2019]/gm, function(a) {
-return '<a href="' + a + '" target="_blank">' + a + "</a>";
-});
-}, n = $('<tr class="log-line"><td class="log-line-number"></td><td class="log-line-text"></td></tr>').get(0), o = function(a, b) {
+} ]), angular.module("openshiftConsole").directive("logViewer", [ "$sce", "$timeout", "$window", "$filter", "AuthService", "APIService", "APIDiscovery", "DataService", "HTMLService", "ModalsService", "logLinks", "BREAKPOINTS", function(a, b, c, d, e, f, g, h, i, j, k, l) {
+var m = $(window), n = $('<tr class="log-line"><td class="log-line-number"></td><td class="log-line-text"></td></tr>').get(0), o = function(a, b) {
 var c = n.cloneNode(!0);
 c.firstChild.setAttribute("data-line-number", a);
-var d = ansi_up.escape_for_html(b), e = ansi_up.ansi_to_html(d), f = m(e);
+var d = ansi_up.escape_for_html(b), e = ansi_up.ansi_to_html(d), f = i.linkify(e, "_blank", !0);
 return c.lastChild.innerHTML = f, c;
 };
 return {
@@ -11641,15 +11645,15 @@ empty:"=?",
 run:"=?"
 },
 controller:[ "$scope", function(i) {
-var m, n, p, q, r, s = document.documentElement;
+var j, n, p, q, r, s = document.documentElement;
 i.logViewerID = _.uniqueId("log-viewer"), i.empty = !0;
 var t, u;
 "ReplicationController" === i.object.kind ? (t = "deploymentconfigs/log", u = d("annotation")(i.object, "deploymentConfig")) :(t = f.kindToResource(i.object.kind) + "/log", u = i.object.metadata.name);
 var v = function() {
-q = window.innerWidth < k.screenSmMin && !i.fixedHeight ? null :n;
+q = window.innerWidth < l.screenSmMin && !i.fixedHeight ? null :n;
 }, w = function() {
 i.$apply(function() {
-var a = m.getBoundingClientRect();
+var a = j.getBoundingClientRect();
 i.fixedHeight ? i.showScrollLinks = a && a.height > i.fixedHeight :i.showScrollLinks = a && (a.top < 0 || a.bottom > s.clientHeight);
 });
 }, x = !1, y = function() {
@@ -11657,9 +11661,9 @@ x ? x = !1 :i.$evalAsync(function() {
 i.autoScrollActive = !1;
 });
 }, z = function() {
-p.off("scroll", y), l.off("scroll", y), window.innerWidth <= k.screenSmMin && !i.fixedHeight ? l.on("scroll", y) :p.on("scroll", y);
+p.off("scroll", y), m.off("scroll", y), window.innerWidth <= l.screenSmMin && !i.fixedHeight ? m.on("scroll", y) :p.on("scroll", y);
 }, A = function() {
-i.fixedHeight || (window.innerWidth < k.screenSmMin && !i.fixedHeight ? r.removeClass("target-logger-node").affix({
+i.fixedHeight || (window.innerWidth < l.screenSmMin && !i.fixedHeight ? r.removeClass("target-logger-node").affix({
 target:window,
 offset:{
 top:i.followAffixTop || 0,
@@ -11683,17 +11687,17 @@ i.chromeless || i.fixedHeight || (e -= 35), a ? b.animate({
 }, C = _.debounce(function() {
 B(!0), v(), z(), w(), A(), y();
 }, 100);
-l.on("resize", C);
+m.on("resize", C);
 var D, E = function() {
-x = !0, j.scrollBottom(q);
+x = !0, k.scrollBottom(q);
 }, F = function() {
 i.autoScrollActive = !i.autoScrollActive, i.autoScrollActive && E();
 }, G = document.createDocumentFragment(), H = _.debounce(function() {
-m.appendChild(G), G = document.createDocumentFragment(), i.autoScrollActive && E(), i.showScrollLinks || w();
+j.appendChild(G), G = document.createDocumentFragment(), i.autoScrollActive && E(), i.showScrollLinks || w();
 }, 100, {
 maxWait:300
 }), I = function(a) {
-D && (D.stop(), D = null), a || (H.cancel(), m && (m.innerHTML = ""), G = document.createDocumentFragment());
+D && (D.stop(), D = null), a || (H.cancel(), j && (j.innerHTML = ""), G = document.createDocumentFragment());
 }, J = function() {
 if (I(), i.run) {
 angular.extend(i, {
@@ -11742,7 +11746,7 @@ kibanaAuthUrl:a.trustAsResourceUrl(URI(b).segment("auth").segment("token").norma
 access_token:e.UserStore().getToken()
 }), i.$watchGroup([ "context.project.metadata.name", "options.container", "name" ], function() {
 angular.extend(i, {
-kibanaArchiveUrl:a.trustAsResourceUrl(j.archiveUri({
+kibanaArchiveUrl:a.trustAsResourceUrl(k.archiveUri({
 namespace:i.context.project.metadata.name,
 namespaceUid:i.context.project.metadata.uid,
 podname:u,
@@ -11754,7 +11758,7 @@ backlink:URI.encode(c.location.href)
 }), this.cacheScrollableNode = function(a) {
 n = a, p = $(n);
 }, this.cacheLogNode = function(a) {
-m = a;
+j = a;
 }, this.cacheAffixable = function(a) {
 r = $(a);
 }, this.start = function() {
@@ -11765,16 +11769,16 @@ loading:!0,
 autoScroll:!1,
 state:!1,
 onScrollBottom:function() {
-j.scrollBottom(q);
+k.scrollBottom(q);
 },
 onScrollTop:function() {
-i.autoScrollActive = !1, j.scrollTop(q);
+i.autoScrollActive = !1, k.scrollTop(q);
 },
 toggleAutoScroll:F,
-goChromeless:j.chromelessLink,
+goChromeless:k.chromelessLink,
 restartLogs:J
 }), i.$on("$destroy", function() {
-I(), l.off("resize", C), l.off("scroll", y), p.off("scroll", y);
+I(), m.off("resize", C), m.off("scroll", y), p.off("scroll", y);
 }), "deploymentconfigs/logs" !== t || u ? void i.$watchGroup([ "name", "options.container", "run" ], J) :(i.state = "empty", void (i.emptyStateMessage = "Logs are not available for this replication controller because it was not generated from a deployment configuration."));
 } ],
 require:"logViewer",
@@ -11789,7 +11793,7 @@ type:"text/plain;charset=utf-8"
 saveAs(e, d);
 };
 a.canSave = !!new Blob(), a.saveLog = function() {
-return a.largeLog ? void i.confirmSaveLog(a.object).then(f) :void f();
+return a.largeLog ? void j.confirmSaveLog(a.object).then(f) :void f();
 };
 }
 };
@@ -14518,7 +14522,11 @@ return d.replace(f, "<mark>$&</mark>");
 };
 } ]).filter("encodeURIComponent", function() {
 return window.encodeURIComponent;
-}), angular.module("openshiftConsole").filter("camelToLower", function() {
+}).filter("linkify", [ "HTMLService", function(a) {
+return function(b, c, d) {
+return a.linkify(b, c, d);
+};
+} ]), angular.module("openshiftConsole").filter("camelToLower", function() {
 return function(a) {
 return a ? _.startCase(a).toLowerCase() :a;
 };

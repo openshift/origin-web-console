@@ -11,23 +11,24 @@ angular.module('openshiftConsole')
     'APIService',
     'APIDiscovery',
     'DataService',
+    'HTMLService',
     'ModalsService',
     'logLinks',
     'BREAKPOINTS',
-    function($sce, $timeout, $window, $filter, AuthService, APIService, APIDiscovery, DataService, ModalsService, logLinks, BREAKPOINTS) {
+    function($sce,
+             $timeout,
+             $window,
+             $filter,
+             AuthService,
+             APIService,
+             APIDiscovery,
+             DataService,
+             HTMLService,
+             ModalsService,
+             logLinks,
+             BREAKPOINTS) {
       // cache the jQuery win, but not clobber angular's $window
       var $win = $(window);
-
-      // Based on https://github.com/drudru/ansi_up/blob/v1.3.0/ansi_up.js#L93-L97
-      // and https://github.com/angular/angular.js/blob/v1.5.8/src/ngSanitize/filter/linky.js#L131-L132
-      // The AngularJS `linky` regex will avoid matching special characters like `"` at the end of the URL.
-      // Like `ansi_up.linkify`, assumes `text` is already HTML escaped.
-      // Opens the link in a new window.
-      var linkify = function(text) {
-        return text.replace(/https?:\/\/[A-Za-z0-9._%+-]+\S*[^\s.;,(){}<>"\u201d\u2019]/gm, function(str) {
-          return "<a href=\"" + str + "\" target=\"_blank\">" + str + "</a>";
-        });
-      };
 
       // Keep a reference the DOM node rather than the jQuery object for cloneNode.
       var logLineTemplate =
@@ -46,7 +47,7 @@ angular.module('openshiftConsole')
         // Escape ANSI color codes
         var escaped = ansi_up.escape_for_html(text);
         var html = ansi_up.ansi_to_html(escaped);
-        var linkifiedHTML = linkify(html);
+        var linkifiedHTML = HTMLService.linkify(html, '_blank', true);
         line.lastChild.innerHTML = linkifiedHTML;
 
         return line;
