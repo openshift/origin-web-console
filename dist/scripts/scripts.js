@@ -558,6 +558,8 @@ var e = $(this).data("timestamp"), f = $(this).data("omit-single"), g = $(this).
 return h ? b(e, null) || d :a(e, null, f, g) || d;
 });
 }, 1e3);
+} ]).run([ "IS_IOS", function(a) {
+a && $("body").addClass("ios");
 } ]), hawtioPluginLoader.addModule("openshiftConsole"), hawtioPluginLoader.registerPreBootstrapTask(function(a) {
 if (_.get(window, "OPENSHIFT_CONFIG.api.k8s.resources")) return void a();
 var b = {
