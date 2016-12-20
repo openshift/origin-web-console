@@ -79,17 +79,20 @@ html,body {
         }
         .middle-content {
           .flex(@columns: 1 1 auto);
-          // default 50px space beneath content
-          padding-bottom: @middle-content-bottom-margin;
           position: relative;
           width: 100%;
         }
       }
     }
   }
-  & .overview .middle .middle-section .middle-container .middle-content {
-      // reduce 20px to account for overview tiles bottom margin
-      padding-bottom: (@middle-content-bottom-margin - 20px);
+  .middle .middle-content > .container-fluid {
+    // default 40px space beneath content
+    padding-bottom: @middle-content-bottom-margin;
+  }
+  & .overview .middle-content > .container-fluid,
+  .no-sidebar .middle-content > .container {
+    // reduce 20px to account for tile bottom margin
+    padding-bottom: (@middle-content-bottom-margin - 20px);
   }
 }
 .header-toolbar {
