@@ -581,6 +581,45 @@ label.checkbox {
   }
 }
 
+.compute-resource {
+  .resource-size {
+    display: flex;
+    height: 27px;
+    .resource-amount {
+      width: 70%;
+      input {
+        width: 100%;
+      }
+    }
+    .resource-unit {
+      width: 30%;
+      .ui-select-container {
+        height: 27px;
+      }
+      .ui-select-choices,
+      .ui-select-toggle {
+        width: 100%;
+      }
+    }
+    @media (min-width: @screen-sm-min) {
+      .resource-amount {
+        width: 80%;
+      }
+      .resource-unit {
+        width: 20%;
+      }
+    }
+    @media (min-width: @screen-md-min) {
+      .resource-amount {
+        width: 85%;
+      }
+      .resource-unit {
+        width: 15%;
+      }
+    }
+  }
+}
+
 .next-steps {
   .tile {
     margin-bottom: 0;

@@ -93,24 +93,28 @@
     <div class="form-group">
       <fieldset class="form-inline compute-resource">
       <label class="required">Size</label>
-      <div ng-class="{ 'has-error': form.$invalid }">
-        <label class="sr-only">Amount</label>
-        <input type="number"
-               name="amount"
-               ng-attr-id="claim-amount"
-               ng-model="claim.amount"
-               ng-required="true"
-               min="0"
-               ng-attr-placeholder="10"
-               class="form-control"
-               ng-attr-aria-describedby="claim-capacity-help">
-        <label class="sr-only" >Unit</label>
-        <select ng-model="claim.unit"
-                name="unit"
-                ng-options="option.value as option.label for option in units"
-                ng-attr-id="claim-capacity-unit"
-                class="form-control inline-select">
-        </select>
+      <div class="resource-size" ng-class="{ 'has-error': form.$invalid }">
+        <div class="resource-amount">
+          <label class="sr-only">Amount</label>
+          <input type="number"
+                 name="amount"
+                 ng-attr-id="claim-amount"
+                 ng-model="claim.amount"
+                 ng-required="true"
+                 min="0"
+                 ng-attr-placeholder="10"
+                 class="form-control"
+                 ng-attr-aria-describedby="claim-capacity-help">
+        </div>
+        <div class="resource-unit">
+          <label class="sr-only" >Unit</label>
+          <ui-select search-enabled="false" ng-model="claim.unit" input-id="claim-capacity-unit">
+            <ui-select-match>{{$select.selected.label}}</ui-select-match>
+            <ui-select-choices repeat="option.value as option in units">
+              {{option.label}}
+            </ui-select-choices>
+          </ui-select>
+        </div>
        </div>
        <div id="claim-capacity-help" class="help-block">
          Desired storage capacity.

@@ -235,13 +235,12 @@
                       <h3 ng-class="{ 'with-divider': !sources.none }">Jenkins Pipeline Configuration</h3>
                       <div class="form-group" ng-if="buildConfig.spec.source.type === 'Git'">
                         <label for="jenkinsfile-type">Jenkinsfile Type</label>
-                        <select
-                          id="jenkinsfile-type"
-                          class="form-control"
-                          ng-model="jenkinsfileOptions.type"
-                          ng-options="type.id as type.title for type in jenkinsfileTypes"
-                          aria-describedby="jenkinsfile-type-help">
-                        </select>
+                        <ui-select search-enabled="false" ng-model="jenkinsfileOptions.type" input-id="jenkinsfile-type" aria-describedby="jenkinsfile-type-help">
+                          <ui-select-match>{{$select.selected.title}}</ui-select-match>
+                          <ui-select-choices repeat="type.id as type in jenkinsfileTypes">
+                            {{type.title}}
+                          </ui-select-choices>
+                        </ui-select>
                         <div class="help-block" id="jenkinsfile-type-help">
                           Use a Jenkinsfile from the source repository or specify the
                           Jenkinsfile content directly in the build configuration.

@@ -72,12 +72,20 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "<ng-form name=\"form\">\n" +
     "<fieldset class=\"form-inline compute-resource\">\n" +
     "<label ng-if=\"label\">{{label}}</label>\n" +
-    "<div ng-class=\"{ 'has-error': form.$invalid }\">\n" +
+    "<div class=\"resource-size\" ng-class=\"{ 'has-error': form.$invalid }\">\n" +
+    "<div class=\"resource-amount\">\n" +
     "<label class=\"sr-only\" ng-attr-for=\"{{id}}\">Amount</label>\n" +
     "<input type=\"number\" name=\"amount\" ng-attr-id=\"{{id}}\" ng-model=\"amount\" min=\"0\" ng-attr-placeholder=\"{{placeholder}}\" class=\"form-control\" ng-attr-aria-describedby=\"{{description ? id + '-help' : undefined}}\">\n" +
+    "</div>\n" +
+    "<div class=\"resource-unit\">\n" +
     "<label class=\"sr-only\" ng-attr-for=\"{{id}}-unit\">Unit</label>\n" +
-    "<select ng-model=\"unit\" ng-options=\"option.value as option.label for option in units\" ng-attr-id=\"{{id}}-unit\" class=\"form-control inline-select\">\n" +
-    "</select>\n" +
+    "<ui-select search-enabled=\"false\" ng-model=\"unit\" input-id=\"{{id}}-unit\">\n" +
+    "<ui-select-match>{{$select.selected.label}}</ui-select-match>\n" +
+    "<ui-select-choices repeat=\"option.value as option in units\">\n" +
+    "{{option.label}}\n" +
+    "</ui-select-choices>\n" +
+    "</ui-select>\n" +
+    "</div>\n" +
     "</div>\n" +
     "<div ng-if=\"description\" class=\"help-block\" ng-attr-id=\"{{id}}-help\">\n" +
     "{{description}}\n" +
@@ -3310,19 +3318,25 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "<uib-tab active=\"selectedTab.logs\" ng-if=\"'pods/log' | canI : 'get'\">\n" +
     "<uib-tab-heading>Logs</uib-tab-heading>\n" +
     "<log-viewer ng-if=\"selectedTab.logs\" follow-affix-top=\"390\" follow-affix-bottom=\"90\" object=\"pod\" context=\"projectContext\" options=\"logOptions\" empty=\"logEmpty\" run=\"logCanRun\">\n" +
+    "<span class=\"container-details\">\n" +
     "<label for=\"selectLogContainer\">Container:</label>\n" +
     "<span ng-if=\"pod.spec.containers.length === 1\">\n" +
     "{{pod.spec.containers[0].name}}\n" +
     "</span>\n" +
-    "<select id=\"selectLogContainer\" ng-if=\"pod.spec.containers.length > 1\" ng-model=\"logOptions.container\" ng-options=\"container.name as container.name for container in pod.spec.containers\" ng-init=\"logOptions.container = pod.spec.containers[0].name\">\n" +
-    "</select>\n" +
-    "<span ng-if=\"containerStateReason || containerStatusKey\">\n" +
+    "<ui-select ng-init=\"logOptions.container = pod.spec.containers[0].name\" ng-show=\"pod.spec.containers.length > 1\" ng-model=\"logOptions.container\" input-id=\"selectLogContainer\">\n" +
+    "<ui-select-match>{{$select.selected.name}}</ui-select-match>\n" +
+    "<ui-select-choices repeat=\"container.name as container in pod.spec.containers\">\n" +
+    "<div ng-bind-html=\"container.name | highlight : $select.search\"></div>\n" +
+    "</ui-select-choices>\n" +
+    "</ui-select>\n" +
+    "<span class=\"container-state\" ng-if=\"containerStateReason || containerStatusKey\">\n" +
     "<span class=\"dash\">&mdash;</span>\n" +
     "<status-icon status=\"containerStateReason || (containerStatusKey | capitalize)\"></status-icon>\n" +
     "<span>{{containerStateReason || containerStatusKey | sentenceCase}}</span>\n" +
     "</span>\n" +
     "<span ng-if=\"containerStartTime && !logEmpty\">\n" +
     "<span class=\"log-timestamps\">Log from {{containerStartTime | date : 'medium'}} <span ng-if=\"containerEndTime\">to {{containerEndTime | date : 'medium'}}</span></span>\n" +
+    "</span>\n" +
     "</span>\n" +
     "</log-viewer>\n" +
     "</uib-tab>\n" +
@@ -6274,14 +6288,24 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "<span ng-show=\"containers.length === 1\">\n" +
     "{{options.selectedContainer.name}}\n" +
     "</span>\n" +
-    "<select id=\"selectContainer\" ng-show=\"containers.length > 1\" ng-model=\"options.selectedContainer\" ng-options=\"container.name for container in containers track by container.name\">\n" +
-    "</select>\n" +
+    "<ui-select ng-show=\"containers.length > 1\" ng-model=\"options.selectedContainer\" input-id=\"selectContainer\">\n" +
+    "<ui-select-match>{{$select.selected.name}}</ui-select-match>\n" +
+    "<ui-select-choices repeat=\"container in containers | filter : { name: $select.search }\">\n" +
+    "<div ng-bind-html=\"container.name | highlight : $select.search\"></div>\n" +
+    "</ui-select-choices>\n" +
+    "</ui-select>\n" +
     "</div>\n" +
     "</div>\n" +
     "<div class=\"form-group\">\n" +
     "<label for=\"timeRange\">Time Range:</label>\n" +
-    "<select id=\"timeRange\" ng-model=\"options.timeRange\" ng-options=\"range.label for range in options.rangeOptions\" ng-disabled=\"metricsError\">\n" +
-    "</select>\n" +
+    "<div class=\"select-range\">\n" +
+    "<ui-select ng-model=\"options.timeRange\" search-enabled=\"false\" ng-disabled=\"metricsError\" input-id=\"timeRange\">\n" +
+    "<ui-select-match>{{$select.selected.label}}</ui-select-match>\n" +
+    "<ui-select-choices repeat=\"range in options.rangeOptions\">\n" +
+    "{{range.label}}\n" +
+    "</ui-select-choices>\n" +
+    "</ui-select>\n" +
+    "</div>\n" +
     "</div>\n" +
     "</div>\n" +
     "<ellipsis-pulser color=\"dark\" size=\"sm\" msg=\"Loading metrics\" ng-if=\"!loaded\"></ellipsis-pulser>\n" +
@@ -7534,12 +7558,20 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "<div class=\"form-group\">\n" +
     "<fieldset class=\"form-inline compute-resource\">\n" +
     "<label class=\"required\">Size</label>\n" +
-    "<div ng-class=\"{ 'has-error': form.$invalid }\">\n" +
+    "<div class=\"resource-size\" ng-class=\"{ 'has-error': form.$invalid }\">\n" +
+    "<div class=\"resource-amount\">\n" +
     "<label class=\"sr-only\">Amount</label>\n" +
     "<input type=\"number\" name=\"amount\" ng-attr-id=\"claim-amount\" ng-model=\"claim.amount\" ng-required=\"true\" min=\"0\" ng-attr-placeholder=\"10\" class=\"form-control\" ng-attr-aria-describedby=\"claim-capacity-help\">\n" +
+    "</div>\n" +
+    "<div class=\"resource-unit\">\n" +
     "<label class=\"sr-only\">Unit</label>\n" +
-    "<select ng-model=\"claim.unit\" name=\"unit\" ng-options=\"option.value as option.label for option in units\" ng-attr-id=\"claim-capacity-unit\" class=\"form-control inline-select\">\n" +
-    "</select>\n" +
+    "<ui-select search-enabled=\"false\" ng-model=\"claim.unit\" input-id=\"claim-capacity-unit\">\n" +
+    "<ui-select-match>{{$select.selected.label}}</ui-select-match>\n" +
+    "<ui-select-choices repeat=\"option.value as option in units\">\n" +
+    "{{option.label}}\n" +
+    "</ui-select-choices>\n" +
+    "</ui-select>\n" +
+    "</div>\n" +
     "</div>\n" +
     "<div id=\"claim-capacity-help\" class=\"help-block\">\n" +
     "Desired storage capacity.\n" +
@@ -8049,7 +8081,7 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "<div class=\"form-group\">\n" +
     "<label for=\"timeRange\">Time Range:</label>\n" +
     "<div class=\"select-range\">\n" +
-    "<ui-select ng-model=\"options.timeRange\" search-enabled=\"false\" input-id=\"timeRange\">\n" +
+    "<ui-select ng-model=\"options.timeRange\" search-enabled=\"false\" ng-disabled=\"metricsError\" input-id=\"timeRange\">\n" +
     "<ui-select-match>{{$select.selected.label}}</ui-select-match>\n" +
     "<ui-select-choices repeat=\"range in options.rangeOptions\">\n" +
     "{{range.label}}\n" +
@@ -8595,8 +8627,12 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "<h3 ng-class=\"{ 'with-divider': !sources.none }\">Jenkins Pipeline Configuration</h3>\n" +
     "<div class=\"form-group\" ng-if=\"buildConfig.spec.source.type === 'Git'\">\n" +
     "<label for=\"jenkinsfile-type\">Jenkinsfile Type</label>\n" +
-    "<select id=\"jenkinsfile-type\" class=\"form-control\" ng-model=\"jenkinsfileOptions.type\" ng-options=\"type.id as type.title for type in jenkinsfileTypes\" aria-describedby=\"jenkinsfile-type-help\">\n" +
-    "</select>\n" +
+    "<ui-select search-enabled=\"false\" ng-model=\"jenkinsfileOptions.type\" input-id=\"jenkinsfile-type\" aria-describedby=\"jenkinsfile-type-help\">\n" +
+    "<ui-select-match>{{$select.selected.title}}</ui-select-match>\n" +
+    "<ui-select-choices repeat=\"type.id as type in jenkinsfileTypes\">\n" +
+    "{{type.title}}\n" +
+    "</ui-select-choices>\n" +
+    "</ui-select>\n" +
     "<div class=\"help-block\" id=\"jenkinsfile-type-help\">\n" +
     "Use a Jenkinsfile from the source repository or specify the Jenkinsfile content directly in the build configuration.\n" +
     "</div>\n" +
@@ -10178,19 +10214,17 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "</div>\n" +
     "<div ng-repeat-end ng-if=\"expanded.pods[pod.metadata.name]\" class=\"list-group-expanded-section\" ng-class=\"{'expanded': expanded.pods[pod.metadata.name]}\">\n" +
     "<log-viewer ng-if=\"'pods/log' | canI : 'get'\" object=\"pod\" context=\"projectContext\" options=\"logOptions.pods[pod.metadata.name]\" empty=\"logEmpty.pods[pod.metadata.name]\" run=\"logCanRun.pods[pod.metadata.name]\" fixed-height=\"250\" full-log-url=\"(pod | navigateResourceURL) + '?view=chromeless'\">\n" +
+    "<span class=\"container-details\">\n" +
     "<label for=\"selectLogContainer\">Container:</label>\n" +
     "<span ng-if=\"pod.spec.containers.length === 1\">\n" +
     "{{pod.spec.containers[0].name}}\n" +
     "</span>\n" +
-    "<select id=\"selectLogContainer\" ng-if=\"pod.spec.containers.length > 1\" ng-model=\"logOptions.pods[pod.metadata.name].container\" ng-options=\"container.name as container.name for container in pod.spec.containers\" ng-init=\"logOptions.pods[pod.metadata.name].container = pod.spec.containers[0].name\">\n" +
-    "</select>\n" +
-    "<span ng-if=\"containerStateReason || containerStatusKey\">\n" +
-    "<span class=\"dash\">&mdash;</span>\n" +
-    "<status-icon status=\"containerStateReason || (containerStatusKey | capitalize)\"></status-icon>\n" +
-    "<span>{{containerStateReason || containerStatusKey | sentenceCase}}</span>\n" +
-    "</span>\n" +
-    "<span ng-if=\"containerStartTime && !logEmpty.pods[pod.metadata.name]\">\n" +
-    "<span class=\"log-timestamps\">Log from {{containerStartTime | date : 'medium'}} <span ng-if=\"containerEndTime\">to {{containerEndTime | date : 'medium'}}</span></span>\n" +
+    "<ui-select ng-init=\"logOptions.pods[pod.metadata.name].container = pod.spec.containers[0].name\" ng-show=\"pod.spec.containers.length > 1\" ng-model=\"logOptions.pods[pod.metadata.name].container\" input-id=\"selectLogContainer\">\n" +
+    "<ui-select-match>{{$select.selected.name}}</ui-select-match>\n" +
+    "<ui-select-choices repeat=\"container.name as container in pod.spec.containers\">\n" +
+    "<div ng-bind-html=\"container.name | highlight : $select.search\"></div>\n" +
+    "</ui-select-choices>\n" +
+    "</ui-select>\n" +
     "</span>\n" +
     "</log-viewer>\n" +
     "\n" +
