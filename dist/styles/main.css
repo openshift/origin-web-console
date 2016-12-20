@@ -4371,7 +4371,7 @@ ul.messenger-theme-flat .messenger-message.alert-info .messenger-message-inner:b
 .overview .service-group-with-route-row .service-group .alert-wrapper .alert .pficon,.overview .standalone-service-row .service-group .alert-wrapper .alert .pficon{box-shadow:none}
 .overview .service-group-with-route-row .service-group .alert-wrapper .alert .close,.overview .standalone-service-row .service-group .alert-wrapper .alert .close{color:#8b8d8f}
 .overview .service-group-with-route-row .service-group .alert-wrapper .alert{margin-top:6px}
-.overview overview-deployment,.overview overview-deployment-config,.overview overview-pod,.overview overview-set{display:-webkit-flex;display:-moz-flex;display:-ms-flexbox;display:-ms-flex;display:flex;width:100%}
+.overview overview-deployment,.overview overview-deployment-config,.overview overview-pod,.overview overview-set{-webkit-flex-direction:column;-moz-flex-direction:column;-ms-flex-direction:column;flex-direction:column;display:-webkit-flex;display:-moz-flex;display:-ms-flexbox;display:-ms-flex;display:flex;width:100%}
 .overview .overview-tile,.overview .service-group-header{border:1px solid #d6d6d6}
 .overview .no-deployments-block .service-title,.overview .overview-tile,.overview .service-group-header{background-color:#fff;border-left-width:0}
 .overview .overview-tile,.overview .service-group-header,.overview .service-group-triggers,.overview .standalone-service .builds-block{box-shadow:0 2px 6px rgba(0,0,0,.1)}
@@ -4394,7 +4394,7 @@ ul.messenger-theme-flat .messenger-message.alert-info .messenger-message-inner:b
 .overview .unserviced-row .no-service:nth-child(even){padding-left:3px}
 .overview .unserviced-row .no-service:nth-child(even):before{left:3px}
 }
-.overview .unserviced-row .no-service .overview-tile-wrapper{width:100%}
+.overview .service-group-body .overview-services overview-service,.overview .unserviced-row .no-service .overview-tile-wrapper{width:100%}
 .overview .service-group-header{cursor:pointer;-webkit-flex-direction:column;-moz-flex-direction:column;-ms-flex-direction:column;flex-direction:column;display:-webkit-flex;display:-moz-flex;display:-ms-flexbox;display:-ms-flex;display:flex;-webkit-justify-content:space-between;-moz-justify-content:space-between;justify-content:space-between;padding:7px}
 .overview .service-group-header .route-title{font-weight:300;line-height:1.4;margin:0 0 0 6px}
 .overview .service-group-header .route-title:only-child{margin:0}
@@ -4419,9 +4419,9 @@ ul.messenger-theme-flat .messenger-message.alert-info .messenger-message-inner:b
 .overview .service-group-body .overview-services{-webkit-justify-content:space-between;-moz-justify-content:space-between;justify-content:space-between;display:-webkit-flex;display:-moz-flex;display:-ms-flexbox;display:-ms-flex;display:flex;-webkit-flex-wrap:wrap;-moz-flex-wrap:wrap;-ms-flex-wrap:wrap;flex-wrap:wrap;-webkit-flex-direction:column;-moz-flex-direction:column;-ms-flex-direction:column;flex-direction:column}
 @media (max-width:749px){.overview .service-group-body .overview-services overview-service:nth-child(n+2){margin-top:6px}
 }
-.overview .service-group-body .overview-services .deployment-block{display:-webkit-flex;display:-moz-flex;display:-ms-flexbox;display:-ms-flex;display:flex;-webkit-flex:1 0 0%;-moz-flex:1 0 0%;-ms-flex:1 0 0%;flex:1 0 0%;height:100%}
+.overview .service-group-body .overview-services .deployment-block{-webkit-flex:1 0 0%;-moz-flex:1 0 0%;-ms-flex:1 0 0%;flex:1 0 0%;height:100%}
 .overview .service-group-body .overview-services .deployment-block.service-multiple-targets,.overview .service-group-body .overview-services .deployment-block.service-multiple-targets .overview-tile-wrapper{display:block}
-.overview .service-group-body .overview-services .overview-tile-wrapper{display:-webkit-flex;display:-moz-flex;display:-ms-flexbox;display:-ms-flex;display:flex;-webkit-flex:1 0 0%;-moz-flex:1 0 0%;-ms-flex:1 0 0%;flex:1 0 0%}
+.overview .service-group-body .overview-services .overview-tile-wrapper{display:-webkit-flex;display:-moz-flex;display:-ms-flexbox;display:-ms-flex;display:flex;-webkit-flex:1 0 0%;-moz-flex:1 0 0%;-ms-flex:1 0 0%;flex:1 0 0%;height:100%}
 .overview .no-deployments-block,.overview .shield .shield-number{display:-webkit-flex;display:-moz-flex;display:-ms-flexbox;display:-ms-flex}
 .overview .service-group-body .overview-services .overview-tile{-webkit-flex:1 0 0%;-moz-flex:1 0 0%;-ms-flex:1 0 0%;flex:1 0 0%;position:relative}
 @media (min-width:750px){.overview .service-group-with-route-row .overview-services{-webkit-flex-direction:row;-moz-flex-direction:row;-ms-flex-direction:row;flex-direction:row}
