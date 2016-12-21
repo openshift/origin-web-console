@@ -110,6 +110,7 @@
   overview-pod,
   overview-deployment-config,
   overview-deployment {
+    .flex-direction(@direction: column);
     .flex-display(@display: flex);
     width: 100%;
   }
@@ -299,6 +300,7 @@
       .flex-wrap(@wrap: wrap);
       .flex-direction(@direction: column);
       overview-service {
+        width: 100%;
         &:nth-child(n+3) {
           margin-top: @service-group-vertical-margin;
         }
@@ -309,7 +311,6 @@
         }
       }
       .deployment-block {
-        .flex-display(@display: flex);
         .flex(@columns: 1 0 0%);
         height: 100%;
         @media (min-width: @screen-sm-min) {
@@ -325,6 +326,7 @@
       .overview-tile-wrapper {
         .flex-display(@display: flex);
         .flex(@columns: 1 0 0%);
+        height: 100%;
         + .overview-tile-wrapper {
           margin-top: @service-group-vertical-margin;
         }
