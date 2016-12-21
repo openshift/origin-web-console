@@ -87,7 +87,7 @@ angular.module('openshiftConsole')
               includeProject: true
             });
 
-            // Create map which will associate concatiner name to container's data(envVar, trigger and image which will be used on manual deployment) 
+            // Create map which will associate concatiner name to container's data(envVar, trigger and image which will be used on manual deployment)
             var mapContainerConfigByName = function(containers, triggers) {
               var containerConfigByName = {};
               var imageChangeTriggers = _.filter(triggers, {type: 'ImageChange'});
@@ -96,8 +96,13 @@ angular.module('openshiftConsole')
                   return _.includes(trigger.imageChangeParams.containerNames, container.name);
                 });
                 var triggerData = {};
+                container.env = container.env || [];
+                // check valueFrom attribs and set an alt text for display if present
+                _.each(container.env, function(env) {
+                  $filter('altTextForValueFrom')(env);
+                });
                 containerConfigByName[container.name] = {
-                  env: container.env || [],
+                  env: container.env,
                   image: container.image,
                   hasDeploymentTrigger: !_.isEmpty(imageChangeTriggerForContainer)
                 };
@@ -137,7 +142,7 @@ angular.module('openshiftConsole')
             if ($scope.strategyData.type === 'Custom' && !_.has($scope.strategyData, 'customParams.environment')) {
               $scope.strategyData.customParams.environment = [];
             }
-            
+
             DataService.list("secrets", context, function(secrets) {
               var secretsByType = SecretsService.groupSecretsByType(secrets);
               var secretNamesByType =_.mapValues(secretsByType, function(secrets) {return _.map(secrets, 'metadata.name')});
@@ -290,7 +295,7 @@ angular.module('openshiftConsole')
         matchingContainer.env = keyValueEditorUtils.compactEntries(containerData.env);
       });
 
-      // Remove parameters of previously set strategy, if user moved 
+      // Remove parameters of previously set strategy, if user moved
       if (isRollingRecreateSwitch()) {
         delete $scope.strategyData[getParamsPropertyName($scope.originalStrategy)];
       }
@@ -305,7 +310,7 @@ angular.module('openshiftConsole')
       if (_.has($scope, 'strategyData.customParams.environment')) {
         $scope.strategyData.customParams.environment = keyValueEditorUtils.compactEntries($scope.strategyData.customParams.environment);
       }
-      // Update image pull secrets 
+      // Update image pull secrets
       $scope.updatedDeploymentConfig.spec.template.spec.imagePullSecrets = _.filter($scope.secrets.pullSecrets, 'name');
       $scope.updatedDeploymentConfig.spec.strategy = $scope.strategyData;
       $scope.updatedDeploymentConfig.spec.triggers = updateTriggers();
