@@ -66,7 +66,7 @@
 
 <!-- must be ng-show rather than ng-if, else DOM is not rendered in time to cache nodes -->
 <div ng-show="state=='logs'">
-  <div class="log-view" id="{{logViewerID}}" ng-class="{'log-fixed-height': fixedHeight}">
+  <div class="log-view" ng-attr-id="{{logViewerID}}" ng-class="{'log-fixed-height': fixedHeight}">
     <div
       id="{{logViewerID}}-affixedFollow"
       class="log-scroll log-scroll-top">

@@ -11690,7 +11690,7 @@ top:i.followAffixTop || 0
 var b = $("#" + i.logViewerID + " .log-view-output"), c = b.offset().top;
 if (!(c < 0)) {
 var d = $(".ellipsis-pulser").outerHeight(!0), e = i.fixedHeight ? i.fixedHeight :Math.floor($(window).height() - c - d);
-i.chromeless || i.fixedHeight || (e -= 35), a ? b.animate({
+i.chromeless || i.fixedHeight || (e -= 40), a ? b.animate({
 "min-height":e + "px"
 }, "fast") :b.css("min-height", e + "px"), i.fixedHeight && b.css("max-height", e);
 }

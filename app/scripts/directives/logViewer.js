@@ -194,7 +194,8 @@ angular.module('openshiftConsole')
               var fill = $scope.fixedHeight ? $scope.fixedHeight : Math.floor($(window).height() - contentTop - pulserHeight);
               if (!$scope.chromeless && !$scope.fixedHeight) {
                 // Add some bottom margin if not chromeless.
-                fill = fill - 35;
+                // 40px, same as `@middle-content-bottom-margin`
+                fill = fill - 40;
               }
               if (animate) {
                 content.animate({ 'min-height': fill +'px' }, 'fast');
