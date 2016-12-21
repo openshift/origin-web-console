@@ -40,8 +40,8 @@
                 <tbody ng-if="(resources | hashSize) == 0">
                   <tr><td colspan="4"><em>{{emptyMessage}}</em></td></tr>
                 </tbody>
-                <tbody ng-repeat="resource in resources | orderObjectsByDate : true">
-                  <tr>
+                <tbody ng-if="(resources | hashSize) > 0">
+                  <tr ng-repeat="resource in resources | orderObjectsByDate : true">
                     <td data-title="Name">{{resource.metadata.name}}</td>
                     <td data-title="Created"><span am-time-ago="resource.metadata.creationTimestamp"></span></td>
                     <td data-title="Labels">

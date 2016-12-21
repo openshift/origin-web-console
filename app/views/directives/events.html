@@ -64,8 +64,8 @@
         </td>
       </tr>
     </tbody>
-    <tbody ng-repeat="event in filteredEvents">
-      <tr>
+    <tbody ng-if="(filteredEvents | hashSize) > 0">
+      <tr ng-repeat="event in filteredEvents">
         <td data-title="Time" class="nowrap">{{event.lastTimestamp | date:'mediumTime'}}</td>
         <td ng-if="!resourceKind || !resourceName" data-title="Name">
           <div class="hidden-xs-block visible-sm-block visible-md-block hidden-lg-block">

@@ -144,8 +144,8 @@
                       <tbody ng-if="(deployments | hashSize) == 0">
                         <tr><td colspan="4"><em>{{emptyMessage}}</em></td></tr>
                       </tbody>
-                      <tbody ng-repeat="deployment in orderedDeployments">
-                        <tr>
+                      <tbody ng-if="(deployments | hashSize) > 0">
+                        <tr ng-repeat="deployment in orderedDeployments">
                           <td data-title="Deployment">
                             <!-- Deployment number and link -->
                             <span ng-if="deployment | annotation : 'deploymentVersion'">

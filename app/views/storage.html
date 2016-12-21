@@ -50,8 +50,8 @@
                 <tbody ng-if="(pvcs | hashSize) === 0">
                   <tr><td colspan="5"><em>{{emptyMessage}}</em></td></tr>
                 </tbody>
-                <tbody ng-repeat="pvc in pvcs | orderObjectsByDate : true">
-                  <tr>
+                <tbody ng-if="(pvcs | hashSize) > 0">
+                  <tr ng-repeat="pvc in pvcs | orderObjectsByDate : true">
                     <td data-title="Name"><a ng-href="{{pvc | navigateResourceURL}}">{{pvc.metadata.name}}</a></td>
                     <td data-title="Status">
                       <status-icon status="pvc.status.phase" disable-animation></status-icon>

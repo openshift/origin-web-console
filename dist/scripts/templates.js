@@ -1912,8 +1912,8 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "<tbody ng-if=\"(builds | hashSize) == 0\">\n" +
     "<tr><td colspan=\"3\"><em>{{emptyMessage}}</em></td></tr>\n" +
     "</tbody>\n" +
-    "<tbody ng-repeat=\"build in orderedBuilds\">\n" +
-    "<tr>\n" +
+    "<tbody ng-if=\"(builds | hashSize) > 0\">\n" +
+    "<tr ng-repeat=\"build in orderedBuilds\">\n" +
     "<td data-title=\"Build\">\n" +
     "\n" +
     "<span ng-if=\"build | annotation : 'buildNumber'\">\n" +
@@ -2403,8 +2403,8 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "<tbody ng-if=\"(configMaps | hashSize) == 0\">\n" +
     "<tr><td colspan=\"3\"><em>No config maps to show</em></td></tr>\n" +
     "</tbody>\n" +
-    "<tbody ng-repeat=\"configMap in configMaps\">\n" +
-    "<tr>\n" +
+    "<tbody ng-if=\"(configMaps | hashSize) > 0\">\n" +
+    "<tr ng-repeat=\"configMap in configMaps\">\n" +
     "<td data-title=\"Name\">\n" +
     "<a href=\"{{configMap | navigateResourceURL}}\">{{configMap.metadata.name}}</a>\n" +
     "</td>\n" +
@@ -2550,8 +2550,8 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "<tbody ng-if=\"(deployments | hashSize) == 0\">\n" +
     "<tr><td colspan=\"4\"><em>{{emptyMessage}}</em></td></tr>\n" +
     "</tbody>\n" +
-    "<tbody ng-repeat=\"deployment in orderedDeployments\">\n" +
-    "<tr>\n" +
+    "<tbody ng-if=\"(deployments | hashSize) > 0\">\n" +
+    "<tr ng-repeat=\"deployment in orderedDeployments\">\n" +
     "<td data-title=\"Deployment\">\n" +
     "\n" +
     "<span ng-if=\"deployment | annotation : 'deploymentVersion'\">\n" +
@@ -2828,8 +2828,8 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "<th>Created</th>\n" +
     "</tr>\n" +
     "</thead>\n" +
-    "<tbody ng-repeat=\"replicaSet in replicaSetsForDeployment\">\n" +
-    "<tr>\n" +
+    "<tbody>\n" +
+    "<tr ng-repeat=\"replicaSet in replicaSetsForDeployment\">\n" +
     "<td data-title=\"Version\">\n" +
     "#{{replicaSet | annotation : 'deployment.kubernetes.io/revision'}}\n" +
     "</td>\n" +
@@ -3087,8 +3087,8 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "<tbody ng-if=\"(tagsByName | hashSize) == 0\">\n" +
     "<tr><td colspan=\"5\"><em>{{emptyMessage}}</em></td></tr>\n" +
     "</tbody>\n" +
-    "<tbody ng-repeat-start=\"tag in tagsByName | orderBy : 'name'\">\n" +
-    "<tr>\n" +
+    "<tbody ng-if=\"(tagsByName | hashSize) > 0\">\n" +
+    "<tr ng-repeat=\"tag in tagsByName | orderBy : 'name'\">\n" +
     "<td data-title=\"Tag\"><a href=\"{{imageStream | navigateResourceURL}}/{{tag.name}}\">{{tag.name}}</a></td>\n" +
     "<td data-title=\"From\">\n" +
     "\n" +
@@ -3139,9 +3139,7 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "</div>\n" +
     "</td>\n" +
     "</tr>\n" +
-    "</tbody>\n" +
-    "<tbody ng-repeat=\"item in tag.status.items\" ng-if=\"tagShowOlder[tag.name] && !$first && item.image\">\n" +
-    "<tr>\n" +
+    "<tr ng-repeat=\"item in tag.status.items\" ng-if=\"tagShowOlder[tag.name] && !$first && item.image\">\n" +
     "<td data-title=\"Tag\"><span class=\"hidden-xs\">&nbsp;</span><span class=\"visible-xs\">{{tag.name}}</span></td>\n" +
     "<td class=\"hidden-xs\">&nbsp;</td>\n" +
     "<td data-title=\"Older Image\">\n" +
@@ -3157,7 +3155,6 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "</td>\n" +
     "</tr>\n" +
     "</tbody>\n" +
-    "<tbody ng-repeat-end style=\"display: none\"></tbody>\n" +
     "</table>\n" +
     "</div>\n" +
     "</div>\n" +
@@ -3754,8 +3751,8 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "<tbody ng-if=\"(routes | hashSize) == 0\">\n" +
     "<tr><td colspan=\"5\"><em>{{emptyMessage || 'No routes to show'}}</em></td></tr>\n" +
     "</tbody>\n" +
-    "<tbody ng-repeat=\"route in routes | orderObjectsByDate : true\">\n" +
-    "<tr>\n" +
+    "<tbody ng-if=\"(routes | hashSize) > 0\">\n" +
+    "<tr ng-repeat=\"route in routes | orderObjectsByDate : true\">\n" +
     "<td data-title=\"{{ customNameHeader || 'Name' }}\">\n" +
     "<a href=\"{{route | navigateResourceURL}}\">{{route.metadata.name}}</a>\n" +
     "<route-warnings ng-if=\"route.spec.to.kind !== 'Service' || services\" route=\"route\" service=\"services[route.spec.to.name]\">\n" +
@@ -4043,9 +4040,9 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "<tbody ng-if=\"!(latestByConfig | hashSize)\">\n" +
     "<tr><td colspan=\"6\"><em>{{emptyMessage}}</em></td></tr>\n" +
     "</tbody>\n" +
-    "<tbody ng-repeat=\"(buildConfigName, latestBuild) in latestByConfig\">\n" +
+    "<tbody ng-if=\"(latestByConfig | hashSize)\">\n" +
     "\n" +
-    "<tr ng-if=\"!latestBuild\">\n" +
+    "<tr ng-repeat=\"(buildConfigName, latestBuild) in latestByConfig\" ng-if=\"!latestBuild\">\n" +
     "<td data-title=\"Name\">\n" +
     "<a href=\"{{buildConfigs[buildConfigName] | navigateResourceURL}}\">{{buildConfigName}}</a>\n" +
     "</td>\n" +
@@ -5188,7 +5185,8 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "\n" +
     "<tr><td colspan=\"5\"><em>{{emptyMessage}}</em></td></tr>\n" +
     "</tbody>\n" +
-    "<tbody ng-repeat=\"(dcName, replicationControllersForDC) in replicationControllersByDC\" ng-if=\"dcName && (deploymentConfigs[dcName] || !unfilteredDeploymentConfigs[dcName])\">\n" +
+    "<tbody ng-if=\"!showEmptyMessage()\">\n" +
+    "<tr ng-repeat-start=\"(dcName, replicationControllersForDC) in replicationControllersByDC\" ng-if=\"dcName && (deploymentConfigs[dcName] || !unfilteredDeploymentConfigs[dcName])\" style=\"display: none\"></tr>\n" +
     "\n" +
     "<tr ng-if=\"(replicationControllersForDC | hashSize) == 0 && dcName\">\n" +
     "<td data-title=\"Name\">\n" +
@@ -5246,6 +5244,7 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "</span>\n" +
     "</td>\n" +
     "</tr>\n" +
+    "<tr ng-repeat-end style=\"display: none\"></tr>\n" +
     "</tbody>\n" +
     "</table>\n" +
     "<div ng-if=\"deployments | hashSize\">\n" +
@@ -5260,8 +5259,8 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "<th>Strategy</th>\n" +
     "</tr>\n" +
     "</thead>\n" +
-    "<tbody ng-repeat=\"deployment in deployments | orderObjectsByDate : true\">\n" +
-    "<tr>\n" +
+    "<tbody>\n" +
+    "<tr ng-repeat=\"deployment in deployments | orderObjectsByDate : true\">\n" +
     "<td data-title=\"Name\">\n" +
     "<a ng-href=\"{{deployment | navigateResourceURL}}\">{{deployment.metadata.name}}</a>\n" +
     "</td>\n" +
@@ -5296,8 +5295,8 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "<th>Created</th>\n" +
     "</tr>\n" +
     "</thead>\n" +
-    "<tbody ng-repeat=\"replicaSet in replicaSets | orderObjectsByDate : true\">\n" +
-    "<tr>\n" +
+    "<tbody>\n" +
+    "<tr ng-repeat=\"replicaSet in replicaSets | orderObjectsByDate : true\">\n" +
     "<td data-title=\"Name\">\n" +
     "<a ng-href=\"{{replicaSet | navigateResourceURL}}\">{{replicaSet.metadata.name}}</a>\n" +
     "</td>\n" +
@@ -5322,9 +5321,9 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "</tr>\n" +
     "</thead>\n" +
     "<tbody ng-if=\"(replicationControllersByDC[''] | hashSize) === 0\"><tr><td colspan=\"3\"><em>No replication controllers to show</em></td></tr></tbody>\n" +
-    "<tbody ng-repeat=\"deployment in replicationControllersByDC[''] | orderObjectsByDate : true\">\n" +
+    "<tbody ng-if=\"(replicationControllersByDC[''] | hashSize) > 0\">\n" +
     "\n" +
-    "<tr>\n" +
+    "<tr ng-repeat=\"deployment in replicationControllersByDC[''] | orderObjectsByDate : true\">\n" +
     "<td data-title=\"Name\">\n" +
     "<a ng-href=\"{{deployment | navigateResourceURL}}\">{{deployment.metadata.name}}</a>\n" +
     "</td>\n" +
@@ -6743,8 +6742,8 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "</td>\n" +
     "</tr>\n" +
     "</tbody>\n" +
-    "<tbody ng-repeat=\"event in filteredEvents\">\n" +
-    "<tr>\n" +
+    "<tbody ng-if=\"(filteredEvents | hashSize) > 0\">\n" +
+    "<tr ng-repeat=\"event in filteredEvents\">\n" +
     "<td data-title=\"Time\" class=\"nowrap\">{{event.lastTimestamp | date:'mediumTime'}}</td>\n" +
     "<td ng-if=\"!resourceKind || !resourceName\" data-title=\"Name\">\n" +
     "<div class=\"hidden-xs-block visible-sm-block visible-md-block hidden-lg-block\">\n" +
@@ -8173,8 +8172,8 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "<tbody ng-if=\"(pods | hashSize) == 0\">\n" +
     "<tr><td colspan=\"6\"><em>{{emptyMessage || 'No pods to show'}}</em></td></tr>\n" +
     "</tbody>\n" +
-    "<tbody ng-repeat=\"pod in pods | orderObjectsByDate : true\">\n" +
-    "<tr>\n" +
+    "<tbody ng-if=\"(pods | hashSize) > 0\">\n" +
+    "<tr ng-repeat=\"pod in pods | orderObjectsByDate : true\">\n" +
     "<td data-title=\"{{customNameHeader || 'Name'}}\">\n" +
     "<a href=\"{{pod | navigateResourceURL}}\">{{pod.metadata.name}}</a>\n" +
     "<span ng-if=\"pod | isDebugPod\">\n" +
@@ -8315,9 +8314,9 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "<tbody ng-if=\"(portsByRoute | hashSize) == 0\">\n" +
     "<tr><td colspan=\"7\"><em>{{emptyMessage || 'No routes or ports to show'}}</em></td></tr>\n" +
     "</tbody>\n" +
-    "<tbody ng-if=\"(portsByRoute | hashSize) > 0\" ng-repeat-start=\"(routeName,ports) in portsByRoute\" style=\"display:none\"></tbody>\n" +
-    "<tbody ng-repeat=\"port in ports\" ng-if=\"routeName !== ''\">\n" +
-    "<tr>\n" +
+    "<tbody ng-if=\"(portsByRoute | hashSize) > 0\">\n" +
+    "<tr ng-repeat-start=\"(routeName,ports) in portsByRoute\" style=\"display: none\"></tr>\n" +
+    "<tr ng-repeat=\"port in ports\" ng-if=\"routeName !== ''\">\n" +
     "<td data-title=\"{{customNameHeader || 'Route'}}{{ showNodePorts ? ' / Node Port' : '' }}\">\n" +
     "<a href=\"{{routes[routeName] | navigateResourceURL}}\">{{routes[routeName].metadata.name}}</a>\n" +
     "<route-warnings ng-if=\"routes[routeName].spec.to.kind !== 'Service' || services\" route=\"routes[routeName]\" service=\"services[routes[routeName].spec.to.name]\">\n" +
@@ -8353,10 +8352,8 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "<span ng-if=\"!routes[routeName].spec.tls.termination\">&nbsp;</span>\n" +
     "</td>\n" +
     "</tr>\n" +
-    "</tbody>\n" +
-    "<tbody ng-repeat-end style=\"display:none\"></tbody>\n" +
-    "<tbody ng-repeat=\"port in portsByRoute['']\">\n" +
-    "<tr>\n" +
+    "<tr ng-repeat-end style=\"display: none\"></tr>\n" +
+    "<tr ng-repeat=\"port in portsByRoute['']\">\n" +
     "<td data-title=\"{{customNameHeader || 'Route'}}{{ showNodePorts ? ' / Node Port' : '' }}\">\n" +
     "<span ng-if=\"!port.nodePort\" class=\"text-muted\">none</span>\n" +
     "<span ng-if=\"port.nodePort\">{{port.nodePort}}</span>\n" +
@@ -9491,8 +9488,8 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "<tbody ng-if=\"(imageStreams | hashSize) == 0\">\n" +
     "<tr><td colspan=\"4\"><em>{{emptyMessage}}</em></td></tr>\n" +
     "</tbody>\n" +
-    "<tbody ng-repeat=\"imageStream in imageStreams | orderObjectsByDate : true\">\n" +
-    "<tr>\n" +
+    "<tbody ng-if=\"(imageStreams | hashSize) > 0\">\n" +
+    "<tr ng-repeat=\"imageStream in imageStreams | orderObjectsByDate : true\">\n" +
     "<td data-title=\"Name\"><a href=\"{{imageStream | navigateResourceURL}}\">{{imageStream.metadata.name}}</a></td>\n" +
     "<td data-title=\"Docker Repo\">\n" +
     "<span ng-if=\"!imageStream.status.dockerImageRepository && !imageStream.spec.dockerImageRepository\"><em>unknown</em></span>\n" +
@@ -10531,8 +10528,8 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "<tbody ng-if=\"(resources | hashSize) == 0\">\n" +
     "<tr><td colspan=\"4\"><em>{{emptyMessage}}</em></td></tr>\n" +
     "</tbody>\n" +
-    "<tbody ng-repeat=\"resource in resources | orderObjectsByDate : true\">\n" +
-    "<tr>\n" +
+    "<tbody ng-if=\"(resources | hashSize) > 0\">\n" +
+    "<tr ng-repeat=\"resource in resources | orderObjectsByDate : true\">\n" +
     "<td data-title=\"Name\">{{resource.metadata.name}}</td>\n" +
     "<td data-title=\"Created\"><span am-time-ago=\"resource.metadata.creationTimestamp\"></span></td>\n" +
     "<td data-title=\"Labels\">\n" +
@@ -11902,8 +11899,8 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "\n" +
     "<tr><td colspan=\"3\"><em>No secrets</em></td></tr>\n" +
     "</tbody>\n" +
-    "<tbody ng-repeat=\"secret in secretsByType.source | orderBy : 'metadata.name'\">\n" +
-    "<tr ng-if=\"secret\">\n" +
+    "<tbody ng-if=\"secretsByType.source.length > 0\">\n" +
+    "<tr ng-if=\"secret\" ng-repeat=\"secret in secretsByType.source | orderBy : 'metadata.name'\">\n" +
     "<td data-title=\"Name\">\n" +
     "<a ng-href=\"{{secret | navigateResourceURL}}\">{{secret.metadata.name}}</a>\n" +
     "</td>\n" +
@@ -11930,8 +11927,8 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "<th>Created</th>\n" +
     "</tr>\n" +
     "</thead>\n" +
-    "<tbody ng-repeat=\"secret in secretsByType.image | orderBy : 'metadata.name'\">\n" +
-    "<tr>\n" +
+    "<tbody>\n" +
+    "<tr ng-repeat=\"secret in secretsByType.image | orderBy : 'metadata.name'\">\n" +
     "<td data-title=\"Name\">\n" +
     "<a ng-href=\"{{secret | navigateResourceURL}}\">{{secret.metadata.name}}</a>\n" +
     "</td>\n" +
@@ -11959,8 +11956,8 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "<th>Created</th>\n" +
     "</tr>\n" +
     "</thead>\n" +
-    "<tbody ng-repeat=\"secret in secretsByType.other | orderBy : 'metadata.name'\">\n" +
-    "<tr>\n" +
+    "<tbody>\n" +
+    "<tr ng-repeat=\"secret in secretsByType.other | orderBy : 'metadata.name'\">\n" +
     "<td data-title=\"Name\">\n" +
     "<a ng-href=\"{{secret | navigateResourceURL}}\">{{secret.metadata.name}}</a>\n" +
     "</td>\n" +
@@ -12028,8 +12025,8 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "<tbody ng-if=\"(services | hashSize) == 0\">\n" +
     "<tr><td colspan=\"6\"><em>{{emptyMessage}}</em></td></tr>\n" +
     "</tbody>\n" +
-    "<tbody ng-repeat=\"service in services | orderObjectsByDate : true\">\n" +
-    "<tr>\n" +
+    "<tbody ng-if=\"(services | hashSize) > 0\">\n" +
+    "<tr ng-repeat=\"service in services | orderObjectsByDate : true\">\n" +
     "<td data-title=\"Name\"><a href=\"{{service | navigateResourceURL}}\">{{service.metadata.name}}</a></td>\n" +
     "<td data-title=\"Cluster IP\">{{service.spec.clusterIP}}</td>\n" +
     "<td data-title=\"External IP\">\n" +
@@ -12453,8 +12450,8 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "<tbody ng-if=\"(pvcs | hashSize) === 0\">\n" +
     "<tr><td colspan=\"5\"><em>{{emptyMessage}}</em></td></tr>\n" +
     "</tbody>\n" +
-    "<tbody ng-repeat=\"pvc in pvcs | orderObjectsByDate : true\">\n" +
-    "<tr>\n" +
+    "<tbody ng-if=\"(pvcs | hashSize) > 0\">\n" +
+    "<tr ng-repeat=\"pvc in pvcs | orderObjectsByDate : true\">\n" +
     "<td data-title=\"Name\"><a ng-href=\"{{pvc | navigateResourceURL}}\">{{pvc.metadata.name}}</a></td>\n" +
     "<td data-title=\"Status\">\n" +
     "<status-icon status=\"pvc.status.phase\" disable-animation></status-icon>\n" +

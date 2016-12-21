@@ -187,8 +187,8 @@
                         <tbody ng-if="(builds | hashSize) == 0">
                           <tr><td colspan="3"><em>{{emptyMessage}}</em></td></tr>
                         </tbody>
-                        <tbody ng-repeat="build in orderedBuilds">
-                          <tr>
+                        <tbody ng-if="(builds | hashSize) > 0">
+                          <tr ng-repeat="build in orderedBuilds">
                             <td data-title="Build">
                               <!-- Build number and link -->
                               <span ng-if="build | annotation : 'buildNumber'">

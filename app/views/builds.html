@@ -43,9 +43,9 @@
                 <tbody ng-if="!(latestByConfig | hashSize)">
                   <tr><td colspan="6"><em>{{emptyMessage}}</em></td></tr>
                 </tbody>
-                <tbody ng-repeat="(buildConfigName, latestBuild) in latestByConfig">
+                <tbody ng-if="(latestByConfig | hashSize)">
                   <!-- Build config with no builds-->
-                  <tr ng-if="!latestBuild">
+                  <tr ng-repeat="(buildConfigName, latestBuild) in latestByConfig" ng-if="!latestBuild">
                     <td data-title="Name">
                       <a href="{{buildConfigs[buildConfigName] | navigateResourceURL}}">{{buildConfigName}}</a>
                     </td>

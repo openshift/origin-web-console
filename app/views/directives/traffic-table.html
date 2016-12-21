@@ -14,9 +14,9 @@
   <tbody ng-if="(portsByRoute | hashSize) == 0">
     <tr><td colspan="7"><em>{{emptyMessage || 'No routes or ports to show'}}</em></td></tr>
   </tbody>
-  <tbody ng-if="(portsByRoute | hashSize) > 0" ng-repeat-start="(routeName,ports) in portsByRoute" style="display:none;"></tbody>
-  <tbody ng-repeat="port in ports" ng-if="routeName !== ''">
-    <tr>
+  <tbody ng-if="(portsByRoute | hashSize) > 0">
+    <tr ng-repeat-start="(routeName,ports) in portsByRoute" style="display: none;"></tr>
+    <tr ng-repeat="port in ports" ng-if="routeName !== ''">
       <td data-title="{{customNameHeader || 'Route'}}{{ showNodePorts ? ' / Node Port' : '' }}">
         <a href="{{routes[routeName] | navigateResourceURL}}">{{routes[routeName].metadata.name}}</a>
         <route-warnings ng-if="routes[routeName].spec.to.kind !== 'Service' || services"
@@ -54,10 +54,8 @@
         <span ng-if="!routes[routeName].spec.tls.termination">&nbsp;</span>
       </td>
     </tr>
-  </tbody>
-  <tbody ng-repeat-end style="display:none;"></tbody>
-  <tbody ng-repeat="port in portsByRoute['']">
-    <tr>
+    <tr ng-repeat-end style="display: none;"></tr>
+    <tr ng-repeat="port in portsByRoute['']">
       <td data-title="{{customNameHeader || 'Route'}}{{ showNodePorts ? ' / Node Port' : '' }}">
         <span ng-if="!port.nodePort" class="text-muted">none</span>
         <span ng-if="port.nodePort">{{port.nodePort}}</span>

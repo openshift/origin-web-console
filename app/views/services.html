@@ -42,8 +42,8 @@
                 <tbody ng-if="(services | hashSize) == 0">
                   <tr><td colspan="6"><em>{{emptyMessage}}</em></td></tr>
                 </tbody>
-                <tbody ng-repeat="service in services | orderObjectsByDate : true">
-                  <tr>
+                <tbody ng-if="(services | hashSize) > 0">
+                  <tr ng-repeat="service in services | orderObjectsByDate : true">
                     <td data-title="Name"><a href="{{service | navigateResourceURL}}">{{service.metadata.name}}</a></td>
                     <td data-title="Cluster IP">{{service.spec.clusterIP}}</td>
                     <td data-title="External IP">

@@ -66,8 +66,8 @@
                 <tbody ng-if="(tagsByName | hashSize) == 0">
                   <tr><td colspan="5"><em>{{emptyMessage}}</em></td></tr>
                 </tbody>
-                <tbody ng-repeat-start="tag in tagsByName | orderBy : 'name'">
-                  <tr>
+                <tbody ng-if="(tagsByName | hashSize) > 0">
+                  <tr ng-repeat="tag in tagsByName | orderBy : 'name'">
                     <td data-title="Tag"><a href="{{imageStream | navigateResourceURL}}/{{tag.name}}">{{tag.name}}</a></td>
                     <td data-title="From">
                       <!-- this value can get long when its an ImageStreamImage. Use max width and class truncate to elide some
@@ -123,9 +123,7 @@
                       </div>
                     </td>
                   </tr>
-                </tbody>
-                <tbody ng-repeat="item in tag.status.items" ng-if="tagShowOlder[tag.name] && !$first && item.image">
-                  <tr>
+                  <tr ng-repeat="item in tag.status.items" ng-if="tagShowOlder[tag.name] && !$first && item.image">
                     <td data-title="Tag"><span class="hidden-xs">&nbsp;</span><span class="visible-xs">{{tag.name}}</span></td>
                     <td class="hidden-xs">&nbsp;</td>
                     <td data-title="Older Image">
@@ -141,7 +139,6 @@
                     </td>
                   </tr>
                 </tbody>
-                <tbody ng-repeat-end style="display: none;"></tbody>
               </table>
             </div><!-- /col-* -->
           </div>
