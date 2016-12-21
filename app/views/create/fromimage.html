@@ -75,7 +75,10 @@
                               'col-lg-12': !advancedOptions}">
                               <div class="form-group">
                                 <label for="sourceUrl" class="required">Git Repository URL</label>
-                                <div ng-class="{'has-warning': form.sourceUrl.$touched && !sourceURLPattern.test(buildConfig.sourceUrl), 'has-error': (form.sourceUrl.$error.required && form.sourceUrl.$dirty)}">
+                                <div ng-class="{
+                                  'has-warning': buildConfig.sourceUrl && form.sourceUrl.$touched && !sourceURLPattern.test(buildConfig.sourceUrl),
+                                  'has-error': (form.sourceUrl.$error.required && form.sourceUrl.$dirty)
+                                }">
                                   <!-- Unfortunately, we can't set type="url" because some valid values don't pass browser validation. -->
                                   <input class="form-control"
                                     id="sourceUrl"
