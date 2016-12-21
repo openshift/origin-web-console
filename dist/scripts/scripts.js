@@ -7214,49 +7214,51 @@ return void Logger.error("Unknown deployment strategy type: " + a);
 }
 };
 k.get(d.project).then(_.spread(function(c, e) {
-return a.project = c, a.context = e, g.canI("deploymentconfigs", "update", d.project) ? void i.get("deploymentconfigs", d.deploymentconfig, e).then(function(b) {
-a.deploymentConfig = b, a.breadcrumbs = h.getBreadcrumbs({
-object:b,
+return a.project = c, a.context = e, g.canI("deploymentconfigs", "update", d.project) ? void i.get("deploymentconfigs", d.deploymentconfig, e).then(function(f) {
+a.deploymentConfig = f, a.breadcrumbs = h.getBreadcrumbs({
+object:f,
 project:c,
 subpage:"Edit",
 includeProject:!0
 });
-var f = function(b, c) {
-var d = {}, e = _.filter(c, {
+var g = function(c, d) {
+var e = {}, f = _.filter(d, {
 type:"ImageChange"
 });
-return _.each(b, function(b) {
-var c = _.find(e, function(a) {
-return _.includes(a.imageChangeParams.containerNames, b.name);
-}), f = {};
-if (d[b.name] = {
-env:b.env || [],
-image:b.image,
-hasDeploymentTrigger:!_.isEmpty(c)
-}, c) {
-var g = c.imageChangeParams.from, h = g.name.split(":");
-f = {
-data:c,
+return _.each(c, function(c) {
+var d = _.find(f, function(a) {
+return _.includes(a.imageChangeParams.containerNames, c.name);
+}), g = {};
+if (c.env = c.env || [], _.each(c.env, function(a) {
+b("altTextForValueFrom")(a);
+}), e[c.name] = {
+env:c.env,
+image:c.image,
+hasDeploymentTrigger:!_.isEmpty(d)
+}, d) {
+var h = d.imageChangeParams.from, i = h.name.split(":");
+g = {
+data:d,
 istag:{
-namespace:g.namespace || a.projectName,
-imageStream:h[0],
+namespace:h.namespace || a.projectName,
+imageStream:i[0],
 tagObject:{
-tag:h[1]
+tag:i[1]
 }
 },
-automatic:_.get(c, "imageChangeParams.automatic", !1)
+automatic:_.get(d, "imageChangeParams.automatic", !1)
 };
-} else f = {
+} else g = {
 istag:{
 namespace:"",
 imageStream:""
 },
 automatic:!0
 };
-_.set(d, [ b.name, "triggerData" ], f);
-}), d;
+_.set(e, [ c.name, "triggerData" ], g);
+}), e;
 };
-a.updatedDeploymentConfig = angular.copy(a.deploymentConfig), a.containerNames = _.map(a.deploymentConfig.spec.template.spec.containers, "name"), a.containerConfigByName = f(a.updatedDeploymentConfig.spec.template.spec.containers, a.updatedDeploymentConfig.spec.triggers), a.secrets = {
+a.updatedDeploymentConfig = angular.copy(a.deploymentConfig), a.containerNames = _.map(a.deploymentConfig.spec.template.spec.containers, "name"), a.containerConfigByName = g(a.updatedDeploymentConfig.spec.template.spec.containers, a.updatedDeploymentConfig.spec.triggers), a.secrets = {
 pullSecrets:angular.copy(a.deploymentConfig.spec.template.spec.imagePullSecrets) || [ {
 name:""
 } ]
