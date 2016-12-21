@@ -4038,26 +4038,25 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "</tr>\n" +
     "</thead>\n" +
     "<tbody ng-if=\"!(latestByConfig | hashSize)\">\n" +
-    "<tr><td colspan=\"6\"><em>{{emptyMessage}}</em></td></tr>\n" +
+    "<tr><td colspan=\"7\"><em>{{emptyMessage}}</em></td></tr>\n" +
     "</tbody>\n" +
     "<tbody ng-if=\"(latestByConfig | hashSize)\">\n" +
+    "<tr ng-repeat=\"(buildConfigName, latestBuild) in latestByConfig\">\n" +
     "\n" +
-    "<tr ng-repeat=\"(buildConfigName, latestBuild) in latestByConfig\" ng-if=\"!latestBuild\">\n" +
-    "<td data-title=\"Name\">\n" +
+    "<td ng-if-start=\"!latestBuild\" data-title=\"Name\">\n" +
     "<a href=\"{{buildConfigs[buildConfigName] | navigateResourceURL}}\">{{buildConfigName}}</a>\n" +
     "</td>\n" +
     "<td data-title=\"Last Build\"><em>No builds</em></td>\n" +
     "<td class=\"hidden-xs\">&nbsp;</td>\n" +
     "<td class=\"hidden-xs\">&nbsp;</td>\n" +
+    "<td class=\"hidden-xs\">&nbsp;</td>\n" +
     "<td data-title=\"Type\">{{buildConfigs[buildConfigName].spec.strategy.type | startCase}}</td>\n" +
-    "<td data-title=\"Source\">\n" +
+    "<td ng-if-end data-title=\"Source\">\n" +
     "<span ng-if=\"buildConfigs[buildConfigName].spec.source.type == 'None'\"><i>none</i></span>\n" +
     "<span class=\"word-break\" ng-if=\"buildConfigs[buildConfigName].spec.source.type == 'Git'\"><osc-git-link uri=\"buildConfigs[buildConfigName].spec.source.git.uri\" ref=\"buildConfigs[buildConfigName].spec.source.git.ref\" context-dir=\"buildConfigs[buildConfigName].spec.source.contextDir\">{{buildConfigs[buildConfigName].spec.source.git.uri}}</osc-git-link></span></td>\n" +
-    "</tr>\n" +
     "\n" +
     "\n" +
-    "<tr ng-if=\"latestBuild && (buildConfigs[buildConfigName] || !unfilteredBuildConfigs[buildConfigName])\">\n" +
-    "<td data-title=\"Name\">\n" +
+    "<td ng-if-start=\"latestBuild && (buildConfigs[buildConfigName] || !unfilteredBuildConfigs[buildConfigName])\" data-title=\"Name\">\n" +
     "<a ng-if=\"buildConfigName\" href=\"{{latestBuild | configURLForResource}}\">{{buildConfigName}}</a>\n" +
     "<span ng-if=\"buildConfigs && buildConfigName && !buildConfigs[buildConfigName]\" class=\"pficon pficon-warning-triangle-o\" data-toggle=\"tooltip\" title=\"This build config no longer exists\" style=\"cursor: help\"></span>\n" +
     "<span ng-if=\"buildConfigName == ''\"><em>none</em></span>\n" +
@@ -4090,7 +4089,7 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "<span am-time-ago=\"latestBuild.metadata.creationTimestamp\"></span>\n" +
     "</td>\n" +
     "<td data-title=\"Type\">{{latestBuild.spec.strategy.type | startCase}}</td>\n" +
-    "<td data-title=\"Source\" class=\"word-break-all\">\n" +
+    "<td ng-if-end data-title=\"Source\" class=\"word-break-all\">\n" +
     "<span ng-if=\"latestBuild.spec.source\">\n" +
     "<span ng-if=\"latestBuild.spec.source.type == 'None'\">\n" +
     "<i>none</i>\n" +
