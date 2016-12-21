@@ -11646,7 +11646,6 @@ transclude:!0,
 templateUrl:"views/directives/logs/_log-viewer.html",
 scope:{
 followAffixTop:"=?",
-followAffixBottom:"=?",
 object:"=",
 fullLogUrl:"=?",
 name:"=",
@@ -11679,21 +11678,19 @@ p.off("scroll", y), m.off("scroll", y), window.innerWidth <= l.screenSmMin && !i
 i.fixedHeight || (window.innerWidth < l.screenSmMin && !i.fixedHeight ? r.removeClass("target-logger-node").affix({
 target:window,
 offset:{
-top:i.followAffixTop || 0,
-bottom:i.followAffixBottom || 0
+top:i.followAffixTop || 0
 }
 }) :r.addClass("target-logger-node").affix({
 target:p,
 offset:{
-top:i.followAffixTop || 0,
-bottom:i.followAffixBottom || 0
+top:i.followAffixTop || 0
 }
 }));
 }, B = function(a) {
 var b = $("#" + i.logViewerID + " .log-view-output"), c = b.offset().top;
 if (!(c < 0)) {
 var d = $(".ellipsis-pulser").outerHeight(!0), e = i.fixedHeight ? i.fixedHeight :Math.floor($(window).height() - c - d);
-i.chromeless || i.fixedHeight || (e -= 35), a ? b.animate({
+i.chromeless || i.fixedHeight || (e -= 40), a ? b.animate({
 "min-height":e + "px"
 }, "fast") :b.css("min-height", e + "px"), i.fixedHeight && b.css("max-height", e);
 }
@@ -11715,7 +11712,7 @@ D && (D.stop(), D = null), a || (H.cancel(), j && (j.innerHTML = ""), G = docume
 if (I(), i.run) {
 angular.extend(i, {
 loading:!0,
-autoScroll:!1,
+autoScrollActive:!0,
 limitReached:!1,
 showScrollLinks:!1
 });
@@ -11746,7 +11743,7 @@ i.loading = !1;
 D = null, i.$evalAsync(function() {
 angular.extend(i, {
 loading:!1,
-autoScroll:!1
+autoScrollActive:!1
 }), 0 === c ? (i.state = "empty", i.emptyStateMessage = "The logs are no longer available or could not be loaded.") :i.errorWhileRunning = !0;
 });
 }), D.start();
@@ -11779,7 +11776,7 @@ v(), z(), A();
 }, angular.extend(i, {
 ready:!0,
 loading:!0,
-autoScroll:!1,
+autoScrollActive:!0,
 state:!1,
 onScrollBottom:function() {
 k.scrollBottom(q);

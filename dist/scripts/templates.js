@@ -2256,7 +2256,7 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "</uib-tab>\n" +
     "<uib-tab active=\"selectedTab.logs\" ng-if=\"!(build | isJenkinsPipelineStrategy) && ('builds/log' | canI : 'get')\">\n" +
     "<uib-tab-heading>Logs</uib-tab-heading>\n" +
-    "<log-viewer ng-if=\"selectedTab.logs\" follow-affix-top=\"390\" follow-affix-bottom=\"90\" object=\"build\" context=\"projectContext\" options=\"logOptions\" empty=\"logEmpty\" run=\"logCanRun\">\n" +
+    "<log-viewer ng-if=\"selectedTab.logs\" follow-affix-top=\"390\" object=\"build\" context=\"projectContext\" options=\"logOptions\" empty=\"logEmpty\" run=\"logCanRun\">\n" +
     "<label>Status:</label>\n" +
     "<status-icon status=\"build.status.phase\"></status-icon>\n" +
     "<span class=\"space-after\">{{build.status.phase}}</span>\n" +
@@ -3317,7 +3317,7 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "</uib-tab>\n" +
     "<uib-tab active=\"selectedTab.logs\" ng-if=\"'pods/log' | canI : 'get'\">\n" +
     "<uib-tab-heading>Logs</uib-tab-heading>\n" +
-    "<log-viewer ng-if=\"selectedTab.logs\" follow-affix-top=\"390\" follow-affix-bottom=\"90\" object=\"pod\" context=\"projectContext\" options=\"logOptions\" empty=\"logEmpty\" run=\"logCanRun\">\n" +
+    "<log-viewer ng-if=\"selectedTab.logs\" follow-affix-top=\"390\" object=\"pod\" context=\"projectContext\" options=\"logOptions\" empty=\"logEmpty\" run=\"logCanRun\">\n" +
     "<span class=\"container-details\">\n" +
     "<label for=\"selectLogContainer\">Container:</label>\n" +
     "<span ng-if=\"pod.spec.containers.length === 1\">\n" +
@@ -3487,7 +3487,7 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "</uib-tab>\n" +
     "<uib-tab ng-if=\"deploymentConfigName && logOptions.version && ('deploymentconfigs/log' | canI : 'get')\" active=\"selectedTab.logs\">\n" +
     "<uib-tab-heading>Logs</uib-tab-heading>\n" +
-    "<log-viewer ng-if=\"selectedTab.logs\" follow-affix-top=\"390\" follow-affix-bottom=\"90\" object=\"replicaSet\" context=\"projectContext\" options=\"logOptions\" empty=\"logEmpty\" run=\"logCanRun\">\n" +
+    "<log-viewer ng-if=\"selectedTab.logs\" follow-affix-top=\"390\" object=\"replicaSet\" context=\"projectContext\" options=\"logOptions\" empty=\"logEmpty\" run=\"logCanRun\">\n" +
     "<span ng-if=\"replicaSet | deploymentStatus\">\n" +
     "<label>Status:</label>\n" +
     "<status-icon status=\"replicaSet | deploymentStatus\"></status-icon>\n" +
@@ -7144,13 +7144,13 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "</div>\n" +
     "\n" +
     "<div ng-show=\"state=='logs'\">\n" +
-    "<div class=\"log-view\" id=\"{{logViewerID}}\" ng-class=\"{'log-fixed-height': fixedHeight}\">\n" +
-    "<div ng-show=\"showScrollLinks\" id=\"{{logViewerID}}-affixedFollow\" class=\"log-scroll log-scroll-top\">\n" +
+    "<div class=\"log-view\" ng-attr-id=\"{{logViewerID}}\" ng-class=\"{'log-fixed-height': fixedHeight}\">\n" +
+    "<div id=\"{{logViewerID}}-affixedFollow\" class=\"log-scroll log-scroll-top\">\n" +
     "<a ng-if=\"loading\" href=\"\" ng-click=\"toggleAutoScroll()\">\n" +
     "<span ng-if=\"!autoScrollActive\">Follow</span>\n" +
-    "<span ng-if=\"autoScrollActive\">Stop following</span>\n" +
+    "<span ng-if=\"autoScrollActive\">Stop Following</span>\n" +
     "</a>\n" +
-    "<a ng-if=\"!loading\" href=\"\" ng-click=\"onScrollBottom()\">\n" +
+    "<a ng-if=\"!loading\" href=\"\" ng-show=\"showScrollLinks\" ng-click=\"onScrollBottom()\">\n" +
     "Go to End\n" +
     "</a>\n" +
     "</div>\n" +
