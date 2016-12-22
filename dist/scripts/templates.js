@@ -9251,33 +9251,41 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
 
 
   $templateCache.put('views/edit/jenkinsfile-examples.html',
-    "<div>\n" +
+    "<div class=\"jenkinsfile-examples\">\n" +
     "<p>\n" +
     "A Jenkinsfile is a Groovy script that defines your pipeline. In the Jenkinsfile, you can declare pipeline stages and run one or more steps within each stage. Here are some examples you can use in your pipelines.\n" +
     "</p>\n" +
     "<p>\n" +
-    "Declare a new pipeline stage called <var>Build:</var>\n" +
-    "<copy-to-clipboard display-wide=\"true\" clipboard-text=\"'stage \\'Build\\''\">\n" +
+    "Run an OpenShift build and deployment:\n" +
+    "<copy-to-clipboard display-wide=\"true\" clipboard-text=\"'node {\n" +
+    "  stage \\'Build\\'\n" +
+    "  openshiftBuild(buildConfig: \\'my-build-config\\', showBuildLogs: \\'true\\')\n" +
+    "  stage \\'Deploy\\'\n" +
+    "  openshiftDeploy(deploymentConfig: \\'my-deployment-config\\')\n" +
+    "}\n" +
+    "'\" multiline=\"true\">\n" +
     "</copy-to-clipboard>\n" +
     "</p>\n" +
     "<p>\n" +
-    "Start a build for build config <var>my-build-config:</var>\n" +
-    "<copy-to-clipboard display-wide=\"true\" clipboard-text=\"'openshiftBuild(buildConfig: \\'my-build-config\\', showBuildLogs: \\'true\\')'\">\n" +
-    "</copy-to-clipboard>\n" +
-    "</p>\n" +
-    "<p>\n" +
-    "Start a deployment for deployment config <var>my-deployment-config:</var>\n" +
-    "<copy-to-clipboard display-wide=\"true\" clipboard-text=\"'openshiftDeploy(deploymentConfig: \\'my-deployment-config\\')'\">\n" +
-    "</copy-to-clipboard>\n" +
-    "</p>\n" +
-    "<p>\n" +
-    "Run the shell command <var>make test:</var>\n" +
-    "<copy-to-clipboard display-wide=\"true\" clipboard-text=\"'sh \\'make test\\''\">\n" +
+    "Checkout source code and run shell commands on a node labelled <var>maven:</var>\n" +
+    "<copy-to-clipboard display-wide=\"true\" clipboard-text=\"'node(\\'maven\\') {\n" +
+    "  stage \\'Checkout\\'\n" +
+    "  checkout scm\n" +
+    "  stage \\'Build\\'\n" +
+    "  sh \\'mvn install\\'\n" +
+    "  stage \\'Unit Test\\'\n" +
+    "  sh \\'mvn test\\'\n" +
+    "}\n" +
+    "'\" multiline=\"true\">\n" +
     "</copy-to-clipboard>\n" +
     "</p>\n" +
     "<p>\n" +
     "Prompt for manual input:\n" +
-    "<copy-to-clipboard display-wide=\"true\" clipboard-text=\"'input \\'Promote to production?\\''\">\n" +
+    "<copy-to-clipboard display-wide=\"true\" clipboard-text=\"'node {\n" +
+    "  stage \\'Approve\\'\n" +
+    "  input \\'Promote to production?\\'\n" +
+    "}\n" +
+    "'\" multiline=\"true\">\n" +
     "</copy-to-clipboard>\n" +
     "</p>\n" +
     "<p>\n" +
