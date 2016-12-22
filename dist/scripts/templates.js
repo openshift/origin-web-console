@@ -5905,7 +5905,7 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "</div>\n" +
     "<div class=\"form-group\" ng-if=\"add.cacert\" id=\"cacert\">\n" +
     "<label class=\"required\" for=\"cacert\">CA Certificate File</label>\n" +
-    "<osc-file-input id=\"cacert-file-input\" model=\"newSecret.data.cacert\" drop-zone-id=\"cacert\" help-text=\"Upload your ca.crt file.\" show-values=\"false\" required=\"true\"></osc-file-input>\n" +
+    "<osc-file-input id=\"cacert-file-input\" model=\"newSecret.data.cacert\" drop-zone-id=\"cacert\" help-text=\"Upload your ca.crt file.\" required=\"true\"></osc-file-input>\n" +
     "<div ui-ace=\"{\n" +
     "          mode: 'txt',\n" +
     "          theme: 'eclipse',\n" +
@@ -5919,7 +5919,7 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "<div ng-if=\"newSecret.authType === 'kubernetes.io/ssh-auth'\">\n" +
     "<div class=\"form-group\" id=\"private-key\">\n" +
     "<label for=\"privateKey\" class=\"required\">SSH Private Key</label>\n" +
-    "<osc-file-input id=\"private-key-file-input\" model=\"newSecret.data.privateKey\" drop-zone-id=\"private-key\" help-text=\"Upload your private SSH key file.\" show-values=\"false\"></osc-file-input>\n" +
+    "<osc-file-input id=\"private-key-file-input\" model=\"newSecret.data.privateKey\" drop-zone-id=\"private-key\" help-text=\"Upload your private SSH key file.\"></osc-file-input>\n" +
     "<div ui-ace=\"{\n" +
     "          theme: 'eclipse',\n" +
     "          rendererOptions: {\n" +
@@ -5943,7 +5943,7 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "</div>\n" +
     "<div class=\"form-group\" ng-if=\"add.gitconfig\" id=\"gitconfig\">\n" +
     "<label class=\"required\" for=\"gitconfig\">Git Configuration File</label>\n" +
-    "<osc-file-input id=\"gitconfig-file-input\" model=\"newSecret.data.gitconfig\" drop-zone-id=\"gitconfig\" help-text=\"Upload your .gitconfig or  file.\" show-values=\"false\" required=\"true\"></osc-file-input>\n" +
+    "<osc-file-input id=\"gitconfig-file-input\" model=\"newSecret.data.gitconfig\" drop-zone-id=\"gitconfig\" help-text=\"Upload your .gitconfig or  file.\" required=\"true\"></osc-file-input>\n" +
     "<div ui-ace=\"{\n" +
     "          mode: 'ini',\n" +
     "          theme: 'eclipse',\n" +
@@ -6006,7 +6006,7 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "<div ng-if=\"newSecret.authType === 'kubernetes.io/dockerconfigjson'\">\n" +
     "<div class=\"form-group\" id=\"docker-config\">\n" +
     "<label for=\"dockerConfig\" class=\"required\">Configuration File</label>\n" +
-    "<osc-file-input id=\"dockercfg-file-input\" model=\"newSecret.data.dockerConfig\" drop-zone-id=\"docker-config\" help-text=\"Upload a .dockercfg or .docker/config.json file\" show-values=\"false\" required=\"true\"></osc-file-input>\n" +
+    "<osc-file-input id=\"dockercfg-file-input\" model=\"newSecret.data.dockerConfig\" drop-zone-id=\"docker-config\" help-text=\"Upload a .dockercfg or .docker/config.json file\" required=\"true\"></osc-file-input>\n" +
     "<div ui-ace=\"{\n" +
     "          mode: 'json',\n" +
     "          theme: 'eclipse',\n" +
@@ -6398,7 +6398,7 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "</div>\n" +
     "<div class=\"form-group\" ng-attr-id=\"drop-zone-{{$id}}\">\n" +
     "<label ng-attr-for=\"name-{{$id}}\">Value</label>\n" +
-    "<osc-file-input model=\"item.value\" drop-zone-id=\"drop-zone-{{$id}}\" help-text=\"Enter a value for the config map entry or use the contents of a file.\" show-values=\"false\"></osc-file-input>\n" +
+    "<osc-file-input model=\"item.value\" drop-zone-id=\"drop-zone-{{$id}}\" help-text=\"Enter a value for the config map entry or use the contents of a file.\"></osc-file-input>\n" +
     "<div ui-ace=\"{\n" +
     "          theme: 'eclipse',\n" +
     "          rendererOptions: {\n" +
@@ -6790,7 +6790,7 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "<div class=\"col-sm-12 pod-bottom-xl\">\n" +
     "<form name=\"form\">\n" +
     "<div class=\"form-group\" id=\"from-file\">\n" +
-    "<osc-file-input model=\"editorContent\" drop-zone-id=\"from-file\" help-text=\"Upload file by dragging & dropping, selecting it, or pasting from the clipboard.\" ng-disabled=\"false\" show-values=\"false\"></osc-file-input>\n" +
+    "<osc-file-input model=\"editorContent\" drop-zone-id=\"from-file\" help-text=\"Upload file by dragging & dropping, selecting it, or pasting from the clipboard.\" ng-disabled=\"false\"></osc-file-input>\n" +
     "<div ui-ace=\"{\n" +
     "          mode: 'yaml',\n" +
     "          theme: 'eclipse',\n" +
@@ -7308,6 +7308,7 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
 
 
   $templateCache.put('views/directives/osc-file-input.html',
+    "<div class=\"osc-file-input\">\n" +
     "<div ng-attr-id=\"{{dropMessageID}}\" class=\"drag-and-drop-zone\">\n" +
     "<p>Drop file here</p>\n" +
     "</div>\n" +
@@ -7320,18 +7321,16 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "</span>\n" +
     "</span>\n" +
     "</div>\n" +
-    "<textarea class=\"form-control\" rows=\"8\" ng-hide=\"supportsFileUpload\" ng-model=\"model\" ng-required=\"required\" ng-disabled=\"disabled\" ng-attr-aria-describedby=\"{{helpText ? helpID : undefined}}\">\n" +
-    "</textarea>\n" +
     "<div ng-if=\"helpText\">\n" +
     "<span ng-attr-id=\"{{helpID}}\" class=\"help-block\">{{::helpText}}</span>\n" +
     "</div>\n" +
     "<div class=\"has-error\" ng-show=\"uploadError\">\n" +
     "<span class=\"help-block\">There was an error reading the file. Please copy the file content into the text area.</span>\n" +
     "</div>\n" +
-    "<div ng-if=\"model && showValues && supportsFileUpload\">\n" +
-    "<pre ng-if=\"model && showValues && supportsFileUpload\" class=\"clipped scroll\">{{model}}</pre>\n" +
-    "</div>\n" +
-    "<a href=\"\" ng-show=\"model || fileName\" class=\"clear-btn\" ng-click=\"cleanInputValues()\">Clear Value</a>"
+    "<textarea class=\"form-control\" rows=\"5\" ng-show=\"showTextArea || !supportsFileUpload\" ng-model=\"model\" ng-required=\"required\" ng-disabled=\"disabled\" autocorrect=\"off\" autocapitalize=\"off\" spellcheck=\"false\" ng-attr-aria-describedby=\"{{helpText ? helpID : undefined}}\">\n" +
+    "  </textarea>\n" +
+    "<a href=\"\" ng-show=\"(model || fileName) && !disabled\" ng-click=\"cleanInputValues()\">Clear Value</a>\n" +
+    "</div>"
   );
 
 
@@ -7855,22 +7854,22 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "<div>\n" +
     "<div class=\"form-group\" id=\"certificate-file\">\n" +
     "<label>Certificate</label>\n" +
-    "<osc-file-input model=\"route.tls.certificate\" drop-zone-id=\"certificate-file\" show-values=\"true\" help-text=\"The PEM format certificate. Upload file by dragging & dropping, or selecting it.\" ng-disabled=\"disableCertificateInputs()\">\n" +
+    "<osc-file-input model=\"route.tls.certificate\" drop-zone-id=\"certificate-file\" show-text-area=\"true\" help-text=\"The PEM format certificate. Upload file by dragging & dropping, selecting it, or pasting from the clipbard.\" ng-disabled=\"disableCertificateInputs()\">\n" +
     "</osc-file-input>\n" +
     "</div>\n" +
     "<div class=\"form-group\" id=\"private-key-file\">\n" +
     "<label>Private Key</label>\n" +
-    "<osc-file-input model=\"route.tls.key\" drop-zone-id=\"private-key-file\" show-values=\"true\" help-text=\"The PEM format key. Upload file by dragging & dropping, or selecting it.\" ng-disabled=\"disableCertificateInputs()\">\n" +
+    "<osc-file-input model=\"route.tls.key\" drop-zone-id=\"private-key-file\" show-text-area=\"true\" help-text=\"The PEM format key. Upload file by dragging & dropping, selecting it, or pasting from the clipboard.\" ng-disabled=\"disableCertificateInputs()\">\n" +
     "</osc-file-input>\n" +
     "</div>\n" +
     "<div class=\"form-group\" id=\"ca-certificate-file\">\n" +
     "<label>CA Certificate</label>\n" +
-    "<osc-file-input model=\"route.tls.caCertificate\" drop-zone-id=\"ca-certificate-file\" show-values=\"true\" help-text=\"The PEM format CA certificate. Upload file by dragging & dropping, or selecting it.\" ng-disabled=\"disableCertificateInputs()\">\n" +
+    "<osc-file-input model=\"route.tls.caCertificate\" drop-zone-id=\"ca-certificate-file\" show-text-area=\"true\" help-text=\"The PEM format CA certificate. Upload file by dragging & dropping, selecting it, or pasting from the clipboard.\" ng-disabled=\"disableCertificateInputs()\">\n" +
     "</osc-file-input>\n" +
     "</div>\n" +
     "<div class=\"form-group\" id=\"dest-ca-certificate-file\">\n" +
     "<label>Destination CA Certificate</label>\n" +
-    "<osc-file-input model=\"route.tls.destinationCACertificate\" show-values=\"true\" drop-zone-id=\"dest-ca-certificate-file\" help-text=\"The PEM format CA certificate to validate the endpoint certificate for re-encrypt termination. Upload file by dragging & dropping, or selecting it.\" ng-disabled=\"route.tls.termination !== 'reencrypt'\">\n" +
+    "<osc-file-input model=\"route.tls.destinationCACertificate\" show-text-area=\"true\" drop-zone-id=\"dest-ca-certificate-file\" help-text=\"The PEM format CA certificate to validate the endpoint certificate for re-encrypt termination. Upload file by dragging & dropping, selecting it, or pasting from the clipboard.\" ng-disabled=\"route.tls.termination !== 'reencrypt'\">\n" +
     "</osc-file-input>\n" +
     "\n" +
     "<div ng-if=\"route.tls.destinationCACertificate && route.tls.termination !== 'reencrypt' && !showCertificatesNotUsedWarning\" class=\"has-warning\">\n" +

@@ -3595,6 +3595,7 @@ to{transform:rotate(359deg)}
 @media (min-width:768px){.weight-slider-values{-webkit-flex-direction:row;-moz-flex-direction:row;-ms-flex-direction:row;flex-direction:row;justify-content:space-between}
 .weight-slider-values .weight-percentage{margin-right:5px}
 }
+.osc-file-input textarea{font-family:Menlo,Monaco,Consolas,monospace;margin:5px 0}
 .card-pf{box-shadow:0 3px 1px -2px rgba(0,0,0,.15),0 2px 2px 0 rgba(0,0,0,.1),0 1px 5px 0 rgba(0,0,0,.09)}
 .card-pf .image-icon,.card-pf .template-icon{font-size:28px;line-height:1;margin-right:15px;opacity:.38}
 .card-pf-badge{color:#999;font-size:11px;text-transform:uppercase}

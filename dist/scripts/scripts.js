@@ -9658,7 +9658,7 @@ scope:{
 model:"=",
 required:"=",
 disabled:"=ngDisabled",
-showValues:"=",
+showTextArea:"=",
 helpText:"@?",
 dropZoneId:"@?"
 },
@@ -9715,7 +9715,7 @@ c.find(".drag-and-drop-zone").removeClass("show-drag-and-drop-zone highlight-dra
 }
 var g = _.uniqueId("osc-file-input-");
 b.dropMessageID = g + "-drop-message", b.helpID = g + "-help", b.supportsFileUpload = window.File && window.FileReader && window.FileList && window.Blob, b.uploadError = !1;
-var h = "#" + b.dropMessageID, i = !1, j = !1, k = c.find("input[type=file]")[0];
+var h = "#" + b.dropMessageID, i = !1, j = !1, k = c.find("input[type=file]");
 setTimeout(d), $(document).on("drop." + g, function() {
 return f(), c.find(".drag-and-drop-zone").trigger("putDropZoneFront", !1), !1;
 }), $(document).on("dragenter." + g, function() {
@@ -9727,9 +9727,9 @@ return j = !1, _.delay(function() {
 j || c.find(".drag-and-drop-zone").removeClass("show-drag-and-drop-zone");
 }, 200), !1;
 }), b.cleanInputValues = function() {
-b.model = "", b.fileName = "", k.value = "";
-}, c.change(function() {
-e(k.files[0]);
+b.model = "", b.fileName = "", k[0].value = "";
+}, k.change(function() {
+e(k[0].files[0]);
 }), b.$on("$destroy", function() {
 $(h).off(), $(document).off("drop." + g).off("dragenter." + g).off("dragover." + g).off("dragleave." + g);
 });
