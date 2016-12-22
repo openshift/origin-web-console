@@ -8,8 +8,7 @@ angular.module('openshiftConsole')
         model: "=",
         required: "=",
         disabled: "=ngDisabled",
-        // Show the file contents below the file input.
-        showValues: "=",
+        showTextArea: '=',
         helpText: "@?",
         dropZoneId: "@?"
       },
@@ -24,7 +23,7 @@ angular.module('openshiftConsole')
         var dropMessageSelector = "#" + scope.dropMessageID,
             highlightDropZone = false,
             showDropZone = false,
-            inputFileField = element.find('input[type=file]')[0];
+            inputFileField = element.find('input[type=file]');
 
         setTimeout(addDropZoneListeners);
 
@@ -68,11 +67,11 @@ angular.module('openshiftConsole')
         scope.cleanInputValues = function() {
           scope.model = '';
           scope.fileName = '';
-          inputFileField.value = "";
+          inputFileField[0].value = "";
         };
 
-        element.change(function() {
-          addFile(inputFileField.files[0]);
+        inputFileField.change(function() {
+          addFile(inputFileField[0].files[0]);
         });
 
         // Add listeners for the dropZone element

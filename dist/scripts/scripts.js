@@ -9658,7 +9658,7 @@ scope:{
 model:"=",
 required:"=",
 disabled:"=ngDisabled",
-showValues:"=",
+showTextArea:"=",
 helpText:"@?",
 dropZoneId:"@?"
 },
@@ -9715,7 +9715,7 @@ c.find(".drag-and-drop-zone").removeClass("show-drag-and-drop-zone highlight-dra
 }
 var g = _.uniqueId("osc-file-input-");
 b.dropMessageID = g + "-drop-message", b.helpID = g + "-help", b.supportsFileUpload = window.File && window.FileReader && window.FileList && window.Blob, b.uploadError = !1;
-var h = "#" + b.dropMessageID, i = !1, j = !1, k = c.find("input[type=file]")[0];
+var h = "#" + b.dropMessageID, i = !1, j = !1, k = c.find("input[type=file]");
 setTimeout(d), $(document).on("drop." + g, function() {
 return f(), c.find(".drag-and-drop-zone").trigger("putDropZoneFront", !1), !1;
 }), $(document).on("dragenter." + g, function() {
@@ -9727,9 +9727,9 @@ return j = !1, _.delay(function() {
 j || c.find(".drag-and-drop-zone").removeClass("show-drag-and-drop-zone");
 }, 200), !1;
 }), b.cleanInputValues = function() {
-b.model = "", b.fileName = "", k.value = "";
-}, c.change(function() {
-e(k.files[0]);
+b.model = "", b.fileName = "", k[0].value = "";
+}, k.change(function() {
+e(k[0].files[0]);
 }), b.$on("$destroy", function() {
 $(h).off(), $(document).off("drop." + g).off("dragenter." + g).off("dragover." + g).off("dragleave." + g);
 });
@@ -9905,11 +9905,14 @@ routingDisabled:"=",
 hostReadOnly:"="
 },
 templateUrl:"views/directives/osc-routing.html",
-controller:[ "$scope", function(a) {
-a.disableCertificateInputs = function() {
-var b = _.get(a, "route.tls.termination");
-return !b || "passthrough" === b;
-}, a.insecureTrafficOptions = [ {
+link:function(b, c, d, e) {
+b.form = e, b.controls = {}, b.options = {
+secureRoute:!1,
+alternateServices:!1
+}, b.disableWildcards = a.DISABLE_WILDCARD_ROUTES, b.disableCertificateInputs = function() {
+var a = _.get(b, "route.tls.termination");
+return !a || "passthrough" === a;
+}, b.insecureTrafficOptions = [ {
 value:"",
 label:"None"
 }, {
@@ -9918,10 +9921,7 @@ label:"Allow"
 }, {
 value:"Redirect",
 label:"Redirect"
-} ];
-} ],
-link:function(b, c, d, e) {
-b.form = e, b.controls = {}, b.disableWildcards = a.DISABLE_WILDCARD_ROUTES, b.disableWildcards ? b.hostnamePattern = /^[a-z0-9]([-a-z0-9]*[a-z0-9])?(\.[a-z0-9]([-a-z0-9]*[a-z0-9])?)*$/ :b.hostnamePattern = /^(\*(\.[a-z0-9]([-a-z0-9]*[a-z0-9]))+|[a-z0-9]([-a-z0-9]*[a-z0-9])?(\.[a-z0-9]([-a-z0-9]*[a-z0-9])?)*)$/;
+} ], _.has(b, "route.tls.insecureEdgeTerminationPolicy") || _.set(b, "route.tls.insecureEdgeTerminationPolicy", ""), b.disableWildcards ? b.hostnamePattern = /^[a-z0-9]([-a-z0-9]*[a-z0-9])?(\.[a-z0-9]([-a-z0-9]*[a-z0-9])?)*$/ :b.hostnamePattern = /^(\*(\.[a-z0-9]([-a-z0-9]*[a-z0-9]))+|[a-z0-9]([-a-z0-9]*[a-z0-9])?(\.[a-z0-9]([-a-z0-9]*[a-z0-9])?)*)$/;
 var f = function(a) {
 a && (b.unnamedServicePort = 1 === a.spec.ports.length && !a.spec.ports[0].name, a.spec.ports.length && !b.unnamedServicePort ? b.route.portOptions = _.map(a.spec.ports, function(a) {
 return {
@@ -9937,21 +9937,22 @@ return a === b;
 }), b.$watch("route.alternateServices", function(a) {
 b.duplicateServices = _(a).map("service").filter(function(a, b, c) {
 return _.includes(c, a, b + 1);
-}).value(), e.$setValidity("duplicateServices", !b.duplicateServices.length);
+}).value(), e.$setValidity("duplicateServices", !b.duplicateServices.length), b.options.alternateServices = !_.isEmpty(a);
 }, !0);
 var g = function() {
 return !!b.route.tls && ((!b.route.tls.termination || "passthrough" === b.route.tls.termination) && (b.route.tls.certificate || b.route.tls.key || b.route.tls.caCertificate || b.route.tls.destinationCACertificate));
 };
 b.$watch("route.tls.termination", function() {
-b.secureRoute = !!_.get(b, "route.tls.termination"), b.showCertificatesNotUsedWarning = g();
+b.options.secureRoute = !!_.get(b, "route.tls.termination"), b.showCertificatesNotUsedWarning = g();
 });
 var h;
-b.$watch("secureRoute", function(a, c) {
+b.$watch("options.secureRoute", function(a, c) {
 if (a !== c) {
-a && !_.get(b, "route.tls.insecureEdgeTerminationPolicy") && _.set(b, "route.tls.insecureEdgeTerminationPolicy", b.insecureTrafficOptions[0]);
 var d = _.get(b, "route.tls.termination");
-!b.securetRoute && d && (h = d, delete b.route.tls.termination), b.secureRoute && !d && _.set(b, "route.tls.termination", h || "edge");
+!b.securetRoute && d && (h = d, delete b.route.tls.termination), b.options.secureRoute && !d && _.set(b, "route.tls.termination", h || "edge");
 }
+}), b.$watch("options.alternateServices", function(a, c) {
+a !== c && (a || (b.route.alternateServices = []), a && _.isEmpty(b.route.alternateServices) && b.addAlternateService());
 }), b.addAlternateService = function() {
 b.route.alternateServices = b.route.alternateServices || [];
 var a = _.find(b.services, function(a) {
@@ -9959,20 +9960,24 @@ return a !== b.route.to.service && !_.some(b.route.alternateServices, {
 service:a
 });
 });
-b.route.alternateServices.push({
+_.has(b, "route.to.weight") || _.set(b, "route.to.weight", 1), b.route.alternateServices.push({
 service:a,
 weight:1
-}), _.has(b, "route.to.weight") || _.set(b, "route.to.weight", 1);
-}, b.weightAsPercentage = function(a) {
+});
+}, b.weightAsPercentage = function(a, c) {
 a = a || 0;
-var c = _.get(b, "route.to.weight", 0);
+var d = _.get(b, "route.to.weight", 0);
 if (_.each(b.route.alternateServices, function(a) {
-c += _.get(a, "weight", 0);
-}), !c) return "";
-var d = a / c * 100;
-return d3.round(d, 1) + "%";
-}, b.$watch("controls.rangeSlider", function(a, c) {
-a !== c && (a = parseInt(a, 10), _.set(b, "route.to.weight", a), _.set(b, "route.alternateServices[0].weight", 100 - a));
+d += _.get(a, "weight", 0);
+}), !d) return "";
+var e = a / d * 100;
+return c ? d3.round(e, 1) + "%" :e;
+};
+var i = !1;
+b.$watch("route.alternateServices.length", function(a) {
+0 === a && _.has(b, "route.to.weight") && delete b.route.to.weight, 1 === a && (i = !0, b.controls.rangeSlider = b.weightAsPercentage(b.route.to.weight));
+}), b.$watch("controls.rangeSlider", function(a, c) {
+return i ? void (i = !1) :void (a !== c && (a = parseInt(a, 10), _.set(b, "route.to.weight", a), _.set(b, "route.alternateServices[0].weight", 100 - a)));
 });
 }
 };
