@@ -7728,9 +7728,6 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "<osc-routing-service model=\"route.to\" services=\"services\" show-weight=\"route.alternateServices.length > 1 || (controls.hideSlider && route.alternateServices.length)\">\n" +
     "</osc-routing-service>\n" +
     "</div>\n" +
-    "<div ng-if=\"alternateServiceOptions.length && !route.alternateServices.length\" class=\"form-group\">\n" +
-    "<a href=\"\" ng-click=\"addAlternateService()\">Split traffic across multiple services</a>\n" +
-    "</div>\n" +
     "\n" +
     "<div ng-if=\"route.portOptions.length\" class=\"form-group\">\n" +
     "<label for=\"routeTargetPort\">Target Port</label>\n" +
@@ -7747,8 +7744,19 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "</div>\n" +
     "</div>\n" +
     "\n" +
-    "<div ng-if=\"route.alternateServices.length\">\n" +
+    "<div ng-if=\"alternateServiceOptions.length\">\n" +
     "<h3>Alternate Services</h3>\n" +
+    "<div class=\"form-group\">\n" +
+    "<div class=\"checkbox\">\n" +
+    "<label>\n" +
+    "<input type=\"checkbox\" ng-model=\"options.alternateServices\" aria-describedby=\"secure-route-help\">\n" +
+    "Split traffic across multiple services\n" +
+    "</label>\n" +
+    "<div class=\"help-block\">\n" +
+    "Routes can direct traffic to multiple services for A/B testing. Each service has a weight controlling how much traffic it gets.\n" +
+    "</div>\n" +
+    "</div>\n" +
+    "</div>\n" +
     "<div ng-repeat=\"alternate in route.alternateServices\" class=\"form-group\">\n" +
     "<osc-routing-service model=\"alternate\" services=\"alternateServiceOptions\" is-alternate=\"true\" show-weight=\"route.alternateServices.length > 1 || controls.hideSlider\">\n" +
     "</osc-routing-service>\n" +
@@ -7771,12 +7779,12 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "<div class=\"weight-slider-values\">\n" +
     "<div>\n" +
     "<span class=\"service-name\">{{route.to.service.metadata.name}}</span>\n" +
-    "<span class=\"weight-percentage\">{{weightAsPercentage(route.to.weight)}}</span>\n" +
+    "<span class=\"weight-percentage\">{{weightAsPercentage(route.to.weight, true)}}</span>\n" +
     "</div>\n" +
     "<div>\n" +
-    "<span class=\"weight-percentage hidden-xs\">{{weightAsPercentage(route.alternateServices[0].weight)}}</span>\n" +
+    "<span class=\"weight-percentage hidden-xs\">{{weightAsPercentage(route.alternateServices[0].weight, true)}}</span>\n" +
     "<span class=\"service-name\">{{route.alternateServices[0].service.metadata.name}}</span>\n" +
-    "<span class=\"weight-percentage visible-xs-inline\">{{weightAsPercentage(route.alternateServices[0].weight)}}</span>\n" +
+    "<span class=\"weight-percentage visible-xs-inline\">{{weightAsPercentage(route.alternateServices[0].weight, true)}}</span>\n" +
     "</div>\n" +
     "</div>\n" +
     "<label class=\"sr-only\" for=\"weight-slider\">Service {{route.to.service.metadata.name}} Weight</label>\n" +
@@ -7794,16 +7802,17 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "</div>\n" +
     "</div>\n" +
     "</div>\n" +
+    "<h3>Security</h3>\n" +
     "<div class=\"checkbox\">\n" +
     "<label>\n" +
-    "<input type=\"checkbox\" ng-model=\"secureRoute\" aria-describedby=\"secure-route-help\">\n" +
+    "<input type=\"checkbox\" ng-model=\"options.secureRoute\" aria-describedby=\"secure-route-help\">\n" +
     "Secure route\n" +
     "</label>\n" +
     "<div class=\"help-block\" id=\"secure-route-help\">\n" +
     "Routes can be secured using several TLS termination types for serving certificates.\n" +
     "</div>\n" +
     "</div>\n" +
-    "<div ng-show=\"secureRoute\">\n" +
+    "<div ng-show=\"options.secureRoute\">\n" +
     "\n" +
     "<div class=\"form-group\">\n" +
     "<label for=\"tlsTermination\">TLS Termination</label>\n" +
@@ -7834,10 +7843,8 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "</div>\n" +
     "\n" +
     "<h3>Certificates</h3>\n" +
-    "<div>\n" +
-    "<span class=\"help-block\">\n" +
+    "<div class=\"help-block\">\n" +
     "TLS certificates for edge and re-encrypt termination. If not specified, the router's default certificate is used.\n" +
-    "</span>\n" +
     "</div>\n" +
     "<div ng-if=\"showCertificatesNotUsedWarning\" class=\"has-warning\">\n" +
     "<span class=\"help-block\">\n" +
@@ -7850,7 +7857,7 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "</span>\n" +
     "</span>\n" +
     "</div>\n" +
-    "<fieldset>\n" +
+    "<fieldset class=\"mar-top-md\">\n" +
     "<div>\n" +
     "<div class=\"form-group\" id=\"certificate-file\">\n" +
     "<label>Certificate</label>\n" +
@@ -7874,7 +7881,7 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "\n" +
     "<div ng-if=\"route.tls.destinationCACertificate && route.tls.termination !== 'reencrypt' && !showCertificatesNotUsedWarning\" class=\"has-warning\">\n" +
     "<span class=\"help-block\">\n" +
-    "The destination CA certificate will not be used. Destination CA certificates are only used for re-encrypt termination.\n" +
+    "The destination CA certificate will be removed from the route. Destination CA certificates are only used for re-encrypt termination.\n" +
     "</span>\n" +
     "</div>\n" +
     "</div>\n" +

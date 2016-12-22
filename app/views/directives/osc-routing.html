@@ -113,10 +113,6 @@
       </osc-routing-service>
     </div>
 
-    <div ng-if="alternateServiceOptions.length && !route.alternateServices.length" class="form-group">
-      <a href="" ng-click="addAlternateService()">Split traffic across multiple services</a>
-    </div>
-
     <!-- Target Port -->
     <div ng-if="route.portOptions.length" class="form-group">
       <label for="routeTargetPort">Target Port</label>
@@ -133,9 +129,23 @@
       </div>
     </div>
 
+
     <!-- Alternate Services for A/B Traffic -->
-    <div ng-if="route.alternateServices.length">
+    <div ng-if="alternateServiceOptions.length">
       <h3>Alternate Services</h3>
+      <div class="form-group">
+        <div class="checkbox">
+          <label>
+            <input type="checkbox" ng-model="options.alternateServices" aria-describedby="secure-route-help">
+            Split traffic across multiple services
+          </label>
+          <div class="help-block">
+            Routes can direct traffic to multiple services for A/B testing. Each service has a weight
+            controlling how much traffic it gets.
+          </div>
+        </div>
+      </div>
+
       <div ng-repeat="alternate in route.alternateServices" class="form-group">
         <osc-routing-service model="alternate"
                              services="alternateServiceOptions"
@@ -162,12 +172,12 @@
         <div class="weight-slider-values">
           <div>
             <span class="service-name">{{route.to.service.metadata.name}}</span>
-            <span class="weight-percentage">{{weightAsPercentage(route.to.weight)}}</span>
+            <span class="weight-percentage">{{weightAsPercentage(route.to.weight, true)}}</span>
           </div>
           <div>
-            <span class="weight-percentage hidden-xs">{{weightAsPercentage(route.alternateServices[0].weight)}}</span>
+            <span class="weight-percentage hidden-xs">{{weightAsPercentage(route.alternateServices[0].weight, true)}}</span>
             <span class="service-name">{{route.alternateServices[0].service.metadata.name}}</span>
-            <span class="weight-percentage visible-xs-inline">{{weightAsPercentage(route.alternateServices[0].weight)}}</span>
+            <span class="weight-percentage visible-xs-inline">{{weightAsPercentage(route.alternateServices[0].weight, true)}}</span>
           </div>
         </div>
         <label class="sr-only" for="weight-slider">Service {{route.to.service.metadata.name}} Weight</label>
@@ -195,9 +205,10 @@
       </div>
     </div>
 
+    <h3>Security</h3>
     <div class="checkbox">
       <label>
-        <input type="checkbox" ng-model="secureRoute" aria-describedby="secure-route-help">
+        <input type="checkbox" ng-model="options.secureRoute" aria-describedby="secure-route-help">
         Secure route
       </label>
       <div class="help-block" id="secure-route-help">
@@ -205,7 +216,7 @@
       </div>
     </div>
 
-    <div ng-show="secureRoute">
+    <div ng-show="options.secureRoute">
       <!-- TLS Termination -->
       <div class="form-group">
         <label for="tlsTermination">TLS Termination</label>
@@ -238,11 +249,9 @@
 
       <!-- Key and Certificates -->
       <h3>Certificates</h3>
-      <div>
-        <span class="help-block">
-          TLS certificates for edge and re-encrypt termination. If not
-          specified, the router's default certificate is used.
-        </span>
+      <div class="help-block">
+        TLS certificates for edge and re-encrypt termination. If not specified, the router's default
+        certificate is used.
       </div>
       <div ng-if="showCertificatesNotUsedWarning" class="has-warning">
         <span class="help-block">
@@ -255,7 +264,7 @@
           </span>
         </span>
       </div>
-      <fieldset>
+      <fieldset class="mar-top-md">
         <div>
           <div class="form-group" id="certificate-file">
             <label>Certificate</label>
@@ -300,8 +309,8 @@
                  not already showing the generic certificate warning above. -->
             <div ng-if="route.tls.destinationCACertificate && route.tls.termination !== 'reencrypt' && !showCertificatesNotUsedWarning" class="has-warning">
               <span class="help-block">
-                The destination CA certificate will not be used. Destination CA
-                certificates are only used for re-encrypt termination.
+                The destination CA certificate will be removed from the route.
+                Destination CA certificates are only used for re-encrypt termination.
               </span>
             </div>
           </div>

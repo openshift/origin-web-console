@@ -41,22 +41,31 @@ angular.module("openshiftConsole")
         hostReadOnly: "="
       },
       templateUrl: 'views/directives/osc-routing.html',
-      controller: function($scope) {
-        $scope.disableCertificateInputs = function() {
-          var termination = _.get($scope, 'route.tls.termination');
+      link: function(scope, element, attrs, formCtl) {
+        scope.form = formCtl;
+        scope.controls = {};
+        scope.options = {
+          secureRoute: false,
+          alternateServices: false
+        };
+
+        scope.disableWildcards = Constants.DISABLE_WILDCARD_ROUTES;
+        scope.disableCertificateInputs = function() {
+          var termination = _.get(scope, 'route.tls.termination');
           return !termination || termination === 'passthrough';
         };
-        $scope.insecureTrafficOptions = [
+
+        scope.insecureTrafficOptions = [
           {value: '', label: 'None'},
           {value: 'Allow', label: 'Allow'},
           {value: 'Redirect', label: 'Redirect'}
         ];
-      },
-      link: function(scope, element, attrs, formCtl) {
-        scope.form = formCtl;
-        scope.controls = {};
 
-        scope.disableWildcards = Constants.DISABLE_WILDCARD_ROUTES;
+        if (!_.has(scope, 'route.tls.insecureEdgeTerminationPolicy')) {
+          // Initialize the value to the empty string so the option 'None' is
+          // shown in the select.
+          _.set(scope, 'route.tls.insecureEdgeTerminationPolicy', '');
+        }
 
         // Use different patterns for validating hostnames if wildcard subdomains are supported.
         if (scope.disableWildcards) {
@@ -119,6 +128,8 @@ angular.module("openshiftConsole")
             return _.includes(iteratee, value, index + 1);
           }).value();
           formCtl.$setValidity("duplicateServices", !scope.duplicateServices.length);
+
+          scope.options.alternateServices = !_.isEmpty(alternateServices);
         }, true);
 
         var showCertificateWarning = function() {
@@ -140,19 +151,14 @@ angular.module("openshiftConsole")
         // Show a warning if previously-set certificates won't be used because
         // the TLS termination is now incompatible.
         scope.$watch('route.tls.termination', function() {
-          scope.secureRoute = !!_.get(scope, 'route.tls.termination');
+          scope.options.secureRoute = !!_.get(scope, 'route.tls.termination');
           scope.showCertificatesNotUsedWarning = showCertificateWarning();
         });
 
         var previousTermination;
-        scope.$watch('secureRoute', function(newValue, oldValue) {
+        scope.$watch('options.secureRoute', function(newValue, oldValue) {
           if (newValue === oldValue) {
             return;
-          }
-
-          // Set the default behavior of insecure connections to 'None'
-          if (newValue && !_.get(scope, 'route.tls.insecureEdgeTerminationPolicy')) {
-            _.set(scope, 'route.tls.insecureEdgeTerminationPolicy', scope.insecureTrafficOptions[0]);
           }
 
           var termination = _.get(scope, 'route.tls.termination');
@@ -162,9 +168,23 @@ angular.module("openshiftConsole")
             delete scope.route.tls.termination;
           }
 
-          if (scope.secureRoute && !termination) {
+          if (scope.options.secureRoute && !termination) {
             // Restore previous termination value or default to edge if no previous value.
             _.set(scope, 'route.tls.termination', previousTermination || 'edge');
+          }
+        });
+
+        scope.$watch('options.alternateServices', function(alternateServices, previousValue) {
+          if (alternateServices === previousValue) {
+            return;
+          }
+
+          if (!alternateServices) {
+            scope.route.alternateServices = [];
+          }
+
+          if (alternateServices && _.isEmpty(scope.route.alternateServices)) {
+            scope.addAlternateService();
           }
         });
 
@@ -174,18 +194,18 @@ angular.module("openshiftConsole")
             return service !== scope.route.to.service && !_.some(scope.route.alternateServices, { service: service });
           });
 
+          if (!_.has(scope, 'route.to.weight')) {
+            _.set(scope, 'route.to.weight', 1);
+          }
+
           // Add a new value.
           scope.route.alternateServices.push({
             service: firstUnselected,
             weight: 1
           });
-
-          if (!_.has(scope, 'route.to.weight')) {
-            _.set(scope, 'route.to.weight', 1);
-          }
         };
 
-        scope.weightAsPercentage = function(weight) {
+        scope.weightAsPercentage = function(weight, format) {
           weight = weight || 0;
 
           var total = _.get(scope, 'route.to.weight', 0);
@@ -198,10 +218,29 @@ angular.module("openshiftConsole")
           }
 
           var percentage = (weight / total) * 100;
-          return d3.round(percentage, 1) + '%';
+          return format ? (d3.round(percentage, 1) + '%') : percentage;
         };
 
+        var initializingSlider = false;
+        scope.$watch('route.alternateServices.length', function(alternateServicesCount) {
+          if (alternateServicesCount === 0 && _.has(scope, 'route.to.weight')) {
+            // Reset the primary service weight. This rebalances the percentages when adding a new alternate service.
+            delete scope.route.to.weight;
+          }
+
+          if (alternateServicesCount === 1) {
+            initializingSlider = true;
+            scope.controls.rangeSlider = scope.weightAsPercentage(scope.route.to.weight);
+          }
+        });
+
         scope.$watch('controls.rangeSlider', function(weight, previous) {
+          // Don't update the routes if we're setting the initial slider value.
+          if (initializingSlider) {
+            initializingSlider = false;
+            return;
+          }
+
           if (weight === previous) {
             return;
           }
