@@ -355,7 +355,7 @@ window.OPENSHIFT_CONSTANTS = {
           id: "ci-cd",
           categoryAliases:["jenkins"],
           label: "Continuous Integration & Deployment",
-          description: "Automate the build, test, and deploymeant of your application with each new code revision."
+          description: "Automate the build, test, and deployment of your application with each new code revision."
         },
         {
           id: "datastore",
