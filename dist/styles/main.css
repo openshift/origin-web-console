@@ -3585,7 +3585,7 @@ to{transform:rotate(359deg)}
 .copy-to-clipboard-multiline pre{background-color:#fff;max-width:100%;overflow-x:auto}
 .input-group-addon.wildcard-prefix{padding-left:10px}
 .editor-examples{padding:19px;margin-bottom:20px;border:1px solid #d1d1d1}
-.editor-examples .copy-to-clipboard{margin-top:3px}
+.jenkinsfile-examples .copy-to-clipboard{margin-top:3px}
 .compute-resource{margin-bottom:5px}
 @media (max-width:767px){.compute-resource .inline-select{margin-top:5px}
 }
