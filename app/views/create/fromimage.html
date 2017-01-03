@@ -71,8 +71,9 @@
                           </div>
                           <div class="row">
                             <div ng-class="{
-                              'col-md-8': advancedOptions,
-                              'col-lg-12': !advancedOptions}">
+                              'col-md-8': advancedOptions || advancedSourceOptions,
+                              'col-lg-12': !advancedOptions && !advancedSourceOptions
+                            }">
                               <div class="form-group">
                                 <label for="sourceUrl" class="required">Git Repository URL</label>
                                 <div ng-class="{
@@ -107,7 +108,7 @@
                               </div>
                             </div>
 
-                            <div class="col-md-4" ng-if="advancedOptions">
+                            <div class="col-md-4" ng-if="advancedOptions || advancedSourceOptions">
                               <div class="form-group">
                                 <label for="gitref">Git Reference</label>
                                 <div>
@@ -126,23 +127,23 @@
                             </div>
                           </div>
 
-                          <div ng-if="advancedOptions">
-                            <div class="form-group">
-                              <label for="contextdir">Context Dir</label>
-                              <div>
-                                <input
-                                  id="contextdir"
-                                  ng-model="buildConfig.contextDir"
-                                  type="text"
-                                  placeholder="/"
-                                  autocorrect="off"
-                                  autocapitalize="off"
-                                  spellcheck="false"
-                                  class="form-control">
-                              </div>
-                              <div class="help-block">Optional subdirectory for the application source code, used as the context directory for the build.</div>
+                          <div ng-if="advancedOptions || advancedSourceOptions" class="form-group">
+                            <label for="contextdir">Context Dir</label>
+                            <div>
+                              <input
+                                id="contextdir"
+                                ng-model="buildConfig.contextDir"
+                                type="text"
+                                placeholder="/"
+                                autocorrect="off"
+                                autocapitalize="off"
+                                spellcheck="false"
+                                class="form-control">
                             </div>
+                            <div class="help-block">Optional subdirectory for the application source code, used as the context directory for the build.</div>
+                          </div>
 
+                          <div ng-if="advancedOptions">
                             <div class="form-group">
                               <osc-secrets model="buildConfig.secrets.gitSecret"
                                           namespace="projectName"
