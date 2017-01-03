@@ -10680,7 +10680,7 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "</small>\n" +
     "</div>\n" +
     "<div>\n" +
-    "<div class=\"small truncate\">\n" +
+    "<div class=\"small\">\n" +
     "<image-names ng-if=\"activeReplicationController && !inProgressDeployment && showMetrics\" pod-template=\"activeReplicationController.spec.template\" pods=\"podsByOwnerUID[activeReplicationController.metadata.uid]\">\n" +
     "</image-names>\n" +
     "</div>\n" +
@@ -10881,7 +10881,7 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "<span am-time-ago=\"pod.metadata.creationTimestamp\"></span>\n" +
     "</small>\n" +
     "</div>\n" +
-    "<div class=\"small truncate\">\n" +
+    "<div class=\"small\">\n" +
     "<image-names ng-if=\"showMetrics\" pod-template=\"pod\" pods=\"[pod]\"></image-names>\n" +
     "</div>\n" +
     "</div>\n" +
@@ -11074,7 +11074,7 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "<span am-time-ago=\"set.metadata.creationTimestamp\"></span>\n" +
     "</small>\n" +
     "</div>\n" +
-    "<div class=\"small truncate\">\n" +
+    "<div class=\"small\">\n" +
     "<image-names ng-if=\"showMetrics\" pod-template=\"set.spec.template\" pods=\"podsByOwnerUID[set.metadata.uid]\">\n" +
     "</image-names>\n" +
     "</div>\n" +
