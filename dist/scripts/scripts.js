@@ -4117,7 +4117,8 @@ showJenkinsfileExamples:function() {
 a.open({
 animation:!0,
 templateUrl:"views/modals/jenkinsfile-examples-modal.html",
-controller:"JenkinsfileExamplesModalController"
+controller:"JenkinsfileExamplesModalController",
+size:"lg"
 });
 },
 showComputeUnitsHelp:function() {
