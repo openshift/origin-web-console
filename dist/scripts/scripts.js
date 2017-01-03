@@ -7806,7 +7806,7 @@ value:!0
 resources:{}
 }, b.cpuRequestCalculated = j.isRequestCalculated("cpu", e), b.cpuLimitCalculated = j.isLimitCalculated("cpu", e), b.memoryRequestCalculated = j.isRequestCalculated("memory", e), b.fillSampleRepo = function() {
 var a;
-(b.image || b.image.metadata || b.image.metadata.annotations) && (a = b.image.metadata.annotations, b.buildConfig.sourceUrl = a.sampleRepo || "", b.buildConfig.gitRef = a.sampleRef || "", b.buildConfig.contextDir = a.sampleContextDir || "");
+(b.image || b.image.metadata || b.image.metadata.annotations) && (a = b.image.metadata.annotations, b.buildConfig.sourceUrl = a.sampleRepo || "", b.buildConfig.gitRef = a.sampleRef || "", b.buildConfig.contextDir = a.sampleContextDir || "", (a.sampleRef || a.sampleContextDir) && (b.advancedSourceOptions = !0));
 }, b.usingSampleRepo = function() {
 return b.buildConfig.sourceUrl === _.get(b, "image.metadata.annotations.sampleRepo");
 }, k.isAvailable().then(function(b) {

@@ -4799,8 +4799,9 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "</div>\n" +
     "<div class=\"row\">\n" +
     "<div ng-class=\"{\n" +
-    "                              'col-md-8': advancedOptions,\n" +
-    "                              'col-lg-12': !advancedOptions}\">\n" +
+    "                              'col-md-8': advancedOptions || advancedSourceOptions,\n" +
+    "                              'col-lg-12': !advancedOptions && !advancedSourceOptions\n" +
+    "                            }\">\n" +
     "<div class=\"form-group\">\n" +
     "<label for=\"sourceUrl\" class=\"required\">Git Repository URL</label>\n" +
     "<div ng-class=\"{\n" +
@@ -4822,7 +4823,7 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "</div>\n" +
     "</div>\n" +
     "</div>\n" +
-    "<div class=\"col-md-4\" ng-if=\"advancedOptions\">\n" +
+    "<div class=\"col-md-4\" ng-if=\"advancedOptions || advancedSourceOptions\">\n" +
     "<div class=\"form-group\">\n" +
     "<label for=\"gitref\">Git Reference</label>\n" +
     "<div>\n" +
@@ -4832,14 +4833,14 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "</div>\n" +
     "</div>\n" +
     "</div>\n" +
-    "<div ng-if=\"advancedOptions\">\n" +
-    "<div class=\"form-group\">\n" +
+    "<div ng-if=\"advancedOptions || advancedSourceOptions\" class=\"form-group\">\n" +
     "<label for=\"contextdir\">Context Dir</label>\n" +
     "<div>\n" +
     "<input id=\"contextdir\" ng-model=\"buildConfig.contextDir\" type=\"text\" placeholder=\"/\" autocorrect=\"off\" autocapitalize=\"off\" spellcheck=\"false\" class=\"form-control\">\n" +
     "</div>\n" +
     "<div class=\"help-block\">Optional subdirectory for the application source code, used as the context directory for the build.</div>\n" +
     "</div>\n" +
+    "<div ng-if=\"advancedOptions\">\n" +
     "<div class=\"form-group\">\n" +
     "<osc-secrets model=\"buildConfig.secrets.gitSecret\" namespace=\"projectName\" display-type=\"source\" type=\"source\" service-account-to-link=\"builder\" secrets-by-type=\"secretsByType\" alerts=\"alerts\" allow-multiple-secrets=\"false\">\n" +
     "</osc-secrets>\n" +

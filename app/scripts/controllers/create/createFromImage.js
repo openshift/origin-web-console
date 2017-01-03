@@ -133,6 +133,11 @@ angular.module("openshiftConsole")
             scope.buildConfig.sourceUrl = annotations.sampleRepo || "";
             scope.buildConfig.gitRef = annotations.sampleRef || "";
             scope.buildConfig.contextDir = annotations.sampleContextDir || "";
+            if (annotations.sampleRef || annotations.sampleContextDir) {
+              // Show the advanced source options (without exapnding all
+              // advanced options) if the sample repo uses it.
+              scope.advancedSourceOptions = true;
+            }
           };
 
           scope.usingSampleRepo = function() {
