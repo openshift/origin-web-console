@@ -3707,7 +3707,7 @@ code.command{display:inline-block;line-height:1.3;margin-right:2px}
 .builds-block .builds .build+.build:after{background-color:#e0e0e0;top:-6px;content:"";display:block;height:1px;left:0;right:0;position:absolute}
 .deployment-well.detailed .deployment-summary-status,.deployment-well.detailed .deployment-summary-toggler,.deployment-well:not(.detailed) .deployment-details,.pod-donut .c3-tooltip-name--Empty .name{display:none}
 .clickable{cursor:pointer}
-.pod-donut .c3-defocused{opacity:1!important}
+.pod-donut .c3-defocused{opacity:.5!important}
 .pod-donut .c3-tooltip-container{top:-27px!important;left:50%!important;transform:translateX(-50%);white-space:nowrap}
 .pod-donut path.c3-arc-Empty{stroke:#d1d1d1;cursor:inherit!important}
 .deployment-donut{justify-content:center;min-width:200px}

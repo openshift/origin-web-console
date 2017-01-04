@@ -11882,7 +11882,7 @@ a.chartId = _.uniqueId("pods-donut-chart-"), o = {
 type:"donut",
 bindto:"#" + a.chartId,
 donut:{
-expand:!0,
+expand:!1,
 label:{
 show:!1
 },
