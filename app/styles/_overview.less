@@ -110,7 +110,6 @@
   overview-pod,
   overview-deployment-config,
   overview-deployment {
-    .flex-direction(@direction: column);
     .flex-display(@display: flex);
     width: 100%;
   }
@@ -138,7 +137,7 @@
     display: flex;
     position: relative;
     overview-service {
-      .flex(@columns: 0 0 100%);
+      width: 100%;
     }
     .builds-block .builds .build:last-child {
       margin-bottom: @service-group-vertical-margin;
@@ -300,7 +299,6 @@
       .flex-wrap(@wrap: wrap);
       .flex-direction(@direction: column);
       overview-service {
-        width: 100%;
         &:nth-child(n+3) {
           margin-top: @service-group-vertical-margin;
         }
@@ -312,6 +310,7 @@
       }
       .deployment-block {
         .flex(@columns: 1 0 0%);
+        .flex-display(@display: flex);
         height: 100%;
         @media (min-width: @screen-sm-min) {
           min-height: @tile-min-height-lg;
@@ -325,14 +324,12 @@
       }
       .overview-tile-wrapper {
         .flex-display(@display: flex);
-        .flex(@columns: 1 0 0%);
-        height: 100%;
+        width: 100%;
         + .overview-tile-wrapper {
           margin-top: @service-group-vertical-margin;
         }
       }
       .overview-tile {
-        .flex(@columns: 1 0 0%);
         position: relative;
       }
     }
@@ -403,6 +400,11 @@
       padding: 5px 10px;
       // Prevent the content from overlapping the deployment shield
       margin-right: @shield-width-lg;
+    }
+    image-names {
+      // truncate long image names
+      display: block;
+      .truncate();
     }
     .overview-tile-body {
       .flex-direction(@direction: column);
