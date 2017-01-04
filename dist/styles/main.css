@@ -5217,7 +5217,7 @@ a.subtle-link:active,a.subtle-link:focus,a.subtle-link:hover{color:#00659c;borde
 }
 .project-name-item.list-group-item-heading .h1{margin-bottom:0;margin-top:0}
 .project-name-item.list-group-item-heading .h1 [data-toggle=tooltip]{cursor:help;margin-left:5px}
-.project-name-item.list-group-item-heading .h1 a{display:block;overflow:hidden;line-height:initial;text-overflow:ellipsis}
+.project-name-item.list-group-item-heading .h1 a{display:block;line-height:normal;overflow:hidden;text-overflow:ellipsis}
 .project-name-item.list-group-item-heading p{margin-bottom:0;margin-top:5px}
 .projects-bar{display:flex;flex-direction:column}
 @media (min-width:650px){.projects-bar{flex-direction:row;justify-content:space-between}
