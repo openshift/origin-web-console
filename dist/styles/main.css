@@ -4935,8 +4935,8 @@ body,html{margin:0;padding:0}
 .console-os .wrap.show-sidebar-right .sidebar-right{-webkit-flex:0 0 480px;-moz-flex:0 0 480px;-ms-flex:0 0 480px;flex:0 0 480px}
 .console-os .wrap.show-sidebar-right .sidebar-right .right-section{width:480px}
 }
-.middle-content pods-table{display:block;padding-bottom:20px}
-.middle-content pods-table.gutter-bottom-2x{padding-bottom:40px}
+.middle-content pods-table,.middle-content traffic-table{display:block;padding-bottom:20px}
+.middle-content pods-table.gutter-bottom-2x,.middle-content traffic-table.gutter-bottom-2x{padding-bottom:40px}
 .table{background-color:#fff}
 .table.table-bordered>tbody>tr>td,.table.table-bordered>thead>tr>th{border-left:0;border-right:0;padding-bottom:8px;padding-top:8px;vertical-align:middle}
 .table.table-bordered.table-bordered-columns>tbody>tr>td,.table.table-bordered.table-bordered-columns>thead>tr>th{border:1px solid #d1d1d1}
