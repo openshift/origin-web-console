@@ -49,7 +49,8 @@ angular.module('openshiftConsole')
           type: "donut",
           bindto: '#' + $scope.chartId,
           donut: {
-            expand: true,
+            // disable hover expansion
+            expand: false,
             label: {
               show: false
             },
