@@ -3971,7 +3971,7 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "<traffic-table ports-by-route=\"portsByRoute\" routes=\"routesForService\" services=\"services\" show-node-ports=\"showNodePorts\" custom-name-header=\"'Route'\"></traffic-table>\n" +
     "</div>\n" +
     "<p>\n" +
-    "Learn more about <a ng-href=\"{{'route-types' | helpLink}}\" target=\"_blank\">routes</a> and <a ng-href=\"{{'services' | helpLink}}\" target=\"_blank\">services</a>\n" +
+    "Learn more about <a ng-href=\"{{'route-types' | helpLink}}\" target=\"_blank\">routes</a> and <a ng-href=\"{{'services' | helpLink}}\" target=\"_blank\">services</a>.\n" +
     "</p>\n" +
     "<h3>Pods</h3>\n" +
     "<div>\n" +
