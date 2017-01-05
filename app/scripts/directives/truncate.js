@@ -12,7 +12,8 @@ angular.module('openshiftConsole')
         newlineLimit: '=',
         useWordBoundary: '=',
         expandable: '=',
-        prettifyJson: '=' // prettifies JSON blobs when expanded, only used if expandable is true
+        keywords: '=highlightKeywords',  // optional keywords to highlight using the `highlightKeywords` filter
+        prettifyJson: '='                // prettifies JSON blobs when expanded, only used if expandable is true
       },
       templateUrl: 'views/directives/truncate-long-text.html',
       link: function(scope) {

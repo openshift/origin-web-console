@@ -10950,6 +10950,7 @@ limit:"=",
 newlineLimit:"=",
 useWordBoundary:"=",
 expandable:"=",
+keywords:"=highlightKeywords",
 prettifyJson:"="
 },
 templateUrl:"views/directives/truncate-long-text.html",
