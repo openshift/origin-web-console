@@ -435,6 +435,14 @@ angular.module('openshiftConsole')
       itemsArray.sort(function(left, right) {
         var leftName = displayNameFilter(left) || '';
         var rightName = displayNameFilter(right) || '';
+
+        // Fall back to sorting by `metadata.name` if the display names are the
+        // same so that the sort is stable.
+        if (leftName === rightName) {
+          leftName = _.get(left, 'metadata.name', '');
+          rightName = _.get(right, 'metadata.name', '');
+        }
+
         return leftName.localeCompare(rightName);
       });
 

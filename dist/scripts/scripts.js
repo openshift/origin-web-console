@@ -4184,7 +4184,7 @@ return s(a).toLowerCase();
 }, d = a.sortConfig.isAscending ? "asc" :"desc";
 switch (b) {
 case 'metadata.annotations["openshift.io/display-name"]':
-m = _.sortByOrder(l, [ c ], [ d ]);
+m = _.sortByOrder(l, [ c, "metadata.name" ], [ d ]);
 break;
 
 case 'metadata.annotations["openshift.io/requester"]':
@@ -13503,7 +13503,7 @@ return function(c) {
 var d = b(c);
 return d.sort(function(b, c) {
 var d = a(b) || "", e = a(c) || "";
-return d.localeCompare(e);
+return d === e && (d = _.get(b, "metadata.name", ""), e = _.get(c, "metadata.name", "")), d.localeCompare(e);
 }), d;
 };
 } ]).filter("isPodStuck", function() {
