@@ -60,9 +60,10 @@ angular.module('openshiftConsole')
       var primarySortOrder = $scope.sortConfig.isAscending ? 'asc' : 'desc';
       switch (sortID) {
       case 'metadata.annotations["openshift.io/display-name"]':
-        // Sort by display name, falling back to project name if no display name.
+        // Sort by display name. Use `metadata.name` as a secondary sort when
+        // projects have the same display name.
         sortedProjects = _.sortByOrder(projects,
-                                       [ displayNameLower ],
+                                       [ displayNameLower, 'metadata.name' ],
                                        [ primarySortOrder ]);
         break;
       case 'metadata.annotations["openshift.io/requester"]':
