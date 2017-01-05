@@ -9,12 +9,11 @@
       </div>
       <p>
         <truncate-long-text
-          ng-if="!keywords.length"
           class="project-description"
           content="(template | description) || template.metadata.name"
           limit="200"
-          use-word-boundary="true"></truncate-long-text>
-        <span ng-if="keywords.length" ng-bind-html="template | description | truncate : 200 | highlightKeywords : keywords"></span>
+          use-word-boundary="true"
+          highlight-keywords="keywords"></truncate-long-text>
       </p>
       <p ng-if="template | annotation : 'provider'">
         Provider: {{template | annotation : 'provider'}}

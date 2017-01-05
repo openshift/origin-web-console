@@ -4123,8 +4123,7 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "</div>\n" +
     "<p class=\"card-pf-badge\">Builds source code</p>\n" +
     "<p>\n" +
-    "<truncate-long-text ng-if=\"!keywords.length\" class=\"project-description\" content=\"imageStream | imageStreamTagAnnotation : 'description' : is.tag.tag\" limit=\"200\" use-word-boundary=\"true\"></truncate-long-text>\n" +
-    "<span ng-if=\"keywords.length\" ng-bind-html=\"imageStream | imageStreamTagAnnotation : 'description' : is.tag.tag | truncate : 200 | highlightKeywords : keywords\"></span>\n" +
+    "<truncate-long-text class=\"project-description\" content=\"imageStream | imageStreamTagAnnotation : 'description' : is.tag.tag\" limit=\"200\" highlight-keywords=\"keywords\" use-word-boundary=\"true\"></truncate-long-text>\n" +
     "</p>\n" +
     "<p ng-if=\"imageStream | imageStreamTagAnnotation : 'provider' : is.tag.tag\">\n" +
     "Provider: {{imageStream | imageStreamTagAnnotation : 'provider' : is.tag.tag}}\n" +
@@ -4175,8 +4174,7 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "</h2>\n" +
     "</div>\n" +
     "<p>\n" +
-    "<truncate-long-text ng-if=\"!keywords.length\" class=\"project-description\" content=\"(template | description) || template.metadata.name\" limit=\"200\" use-word-boundary=\"true\"></truncate-long-text>\n" +
-    "<span ng-if=\"keywords.length\" ng-bind-html=\"template | description | truncate : 200 | highlightKeywords : keywords\"></span>\n" +
+    "<truncate-long-text class=\"project-description\" content=\"(template | description) || template.metadata.name\" limit=\"200\" use-word-boundary=\"true\" highlight-keywords=\"keywords\"></truncate-long-text>\n" +
     "</p>\n" +
     "<p ng-if=\"template | annotation : 'provider'\">\n" +
     "Provider: {{template | annotation : 'provider'}}\n" +
@@ -6768,7 +6766,9 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "<span ng-bind-html=\"event.reason | sentenceCase | highlightKeywords : filterExpressions\"></span>&nbsp;\n" +
     "<span class=\"pficon pficon-warning-triangle-o\" ng-show=\"event.type === 'Warning'\" aria-hidden=\"true\" data-toggle=\"tooltip\" data-original-title=\"Warning\"></span>\n" +
     "</div>\n" +
-    "<span ng-bind-html=\"event.message | highlightKeywords : filterExpressions\"></span>\n" +
+    "\n" +
+    "<truncate-long-text content=\"event.message\" limit=\"1000\" newline-limit=\"4\" use-word-boundary=\"true\" highlight-keywords=\"filterExpressions\" expandable=\"true\">\n" +
+    "</truncate-long-text>\n" +
     "<div ng-if=\"event.count > 1\" class=\"text-muted small\">\n" +
     "{{event.count}} times in the last\n" +
     "<duration-until-now timestamp=\"event.firstTimestamp\" omit-single=\"true\" precision=\"1\"></duration-until-now>\n" +
@@ -8384,20 +8384,22 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
 
 
   $templateCache.put('views/directives/truncate-long-text.html',
-    "<span ng-if=\"!truncated\" class=\"truncated-content\">{{content}}</span>\n" +
+    "<span ng-if=\"!truncated\" ng-bind-html=\"content | highlightKeywords : keywords\" class=\"truncated-content\"></span>\n" +
     "<span ng-if=\"truncated\">\n" +
     "<span ng-if=\"!toggles.expanded\">\n" +
-    "<span class=\"truncated-content\" ng-attr-title=\"{{content}}\">{{truncatedContent}}&hellip;</span>\n" +
+    "<span ng-attr-title=\"{{content}}\">\n" +
+    "<span ng-bind-html=\"truncatedContent | highlightKeywords : keywords\" class=\"truncated-content\"></span>&hellip;\n" +
+    "</span>\n" +
     "<a ng-if=\"expandable\" href=\"\" ng-click=\"toggles.expanded = true\" style=\"margin-left: 5px; white-space: nowrap\">See all</a>\n" +
     "</span>\n" +
     "<span ng-if=\"toggles.expanded\">\n" +
     "<div ng-if=\"prettifyJson\" class=\"well\">\n" +
     "<span class=\"pull-right\" style=\"margin-top: -10px\"><a href=\"\" ng-click=\"toggles.expanded = false\">Collapse</a></span>\n" +
-    "<span class=\"pretty-json truncated-content\">{{content | prettifyJSON}}</span>\n" +
+    "<span ng-bind-html=\"content | prettifyJSON | highlightKeywords : keywords\" class=\"pretty-json truncated-content\"></span>\n" +
     "</div>\n" +
     "<span ng-if=\"!prettifyJson\">\n" +
     "<span class=\"pull-right\"><a href=\"\" ng-click=\"toggles.expanded = false\">Collapse</a></span>\n" +
-    "<span class=\"truncated-content\">{{content}}</span>\n" +
+    "<span ng-bind-html=\"content | highlightKeywords : keywords\" class=\"truncated-content\"></span>\n" +
     "</span>\n" +
     "</span>\n" +
     "</span>"
