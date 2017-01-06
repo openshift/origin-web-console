@@ -5567,6 +5567,14 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "</div>\n" +
     "<fieldset ng-if=\"selected.type === 'httpGet'\">\n" +
     "<div class=\"form-group\">\n" +
+    "<div class=\"checkbox\">\n" +
+    "<label>\n" +
+    "<input type=\"checkbox\" ng-model=\"probe.httpGet.scheme\" ng-true-value=\" 'HTTPS' \" ng-false-value=\" 'HTTP' \">\n" +
+    "Use HTTPS\n" +
+    "</label>\n" +
+    "</div>\n" +
+    "</div>\n" +
+    "<div class=\"form-group\">\n" +
     "<label ng-attr-for=\"{{id}}-path\">Path</label>\n" +
     "<div>\n" +
     "<input ng-attr-id=\"{{id}}-path\" ng-model=\"probe.httpGet.path\" type=\"text\" placeholder=\"/\" autocorrect=\"off\" autocapitalize=\"off\" spellcheck=\"false\" class=\"form-control\">\n" +
@@ -5677,7 +5685,7 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
 
   $templateCache.put('views/directives/_probe.html',
     " <span ng-if=\"probe.httpGet\">\n" +
-    "GET {{probe.httpGet.path || '/'}} on port {{probe.httpGet.port || 'unknown'}}\n" +
+    "GET {{probe.httpGet.path || '/'}} on port {{probe.httpGet.port || 'unknown'}} ({{probe.httpGet.scheme || 'HTTP'}})\n" +
     "</span>\n" +
     "<span ng-if=\"probe.exec.command\">\n" +
     "<code class=\"command\">\n" +
@@ -9207,7 +9215,7 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "<div ng-repeat=\"container in containers\">\n" +
     "<h2 ng-if=\"containers.length > 1\">Container {{container.name}}</h2>\n" +
     "<h3>Readiness Probe</h3>\n" +
-    "<div class=\"help-block\" ng-if=\"$first\">\n" +
+    "<div class=\"help-block mar-bottom-md\" ng-if=\"$first\">\n" +
     "A readiness probe checks if the container is ready to handle requests. A failed readiness probe means that a container should not receive any traffic from a proxy, even if it's running.\n" +
     "</div>\n" +
     "<div ng-if=\"!container.readinessProbe\">\n" +
@@ -9221,7 +9229,7 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "</p>\n" +
     "</div>\n" +
     "<h3>Liveness Probe</h3>\n" +
-    "<div class=\"help-block\" ng-if=\"$first\">\n" +
+    "<div class=\"help-block mar-bottom-md\" ng-if=\"$first\">\n" +
     "A liveness probe checks if the container is still running. If the liveness probe fails, the container is killed.\n" +
     "</div>\n" +
     "<div ng-if=\"!container.livenessProbe\">\n" +

@@ -15,7 +15,7 @@ angular.module('openshiftConsole')
 
         scope.types = [{
           id: 'httpGet',
-          label: 'HTTP'
+          label: 'HTTP GET'
         }, {
           id: 'exec',
           label: 'Container Command'

@@ -12443,7 +12443,7 @@ templateUrl:"views/directives/_edit-probe.html",
 link:function(a) {
 a.id = _.uniqueId("edit-probe-"), a.probe = a.probe || {}, a.types = [ {
 id:"httpGet",
-label:"HTTP"
+label:"HTTP GET"
 }, {
 id:"exec",
 label:"Container Command"

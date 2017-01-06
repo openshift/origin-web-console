@@ -8,6 +8,18 @@
   </div>
   <fieldset ng-if="selected.type === 'httpGet'">
     <div class="form-group">
+      <div class="checkbox">
+        <label>
+          <input
+              type="checkbox"
+              ng-model="probe.httpGet.scheme"
+              ng-true-value=" 'HTTPS' "
+              ng-false-value=" 'HTTP' ">
+          Use HTTPS
+        </label>
+      </div>
+    </div>
+    <div class="form-group">
       <label ng-attr-for="{{id}}-path">Path</label>
       <div>
         <input

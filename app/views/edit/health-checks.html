@@ -26,7 +26,7 @@
                     <div ng-repeat="container in containers">
                       <h2 ng-if="containers.length > 1">Container {{container.name}}</h2>
                       <h3>Readiness Probe</h3>
-                      <div class="help-block" ng-if="$first">
+                      <div class="help-block mar-bottom-md" ng-if="$first">
                         A readiness probe checks if the container is ready to handle requests. A
                         failed readiness probe means that a container should not receive any traffic
                         from a proxy, even if it's running.
@@ -45,7 +45,7 @@
                         </p>
                       </div>
                       <h3>Liveness Probe</h3>
-                      <div class="help-block" ng-if="$first">
+                      <div class="help-block mar-bottom-md" ng-if="$first">
                         A liveness probe checks if the container is still running. If the liveness
                         probe fails, the container is killed.
                       </div>
