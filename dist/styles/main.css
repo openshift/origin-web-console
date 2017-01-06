@@ -3585,6 +3585,7 @@ to{transform:rotate(359deg)}
 .copy-to-clipboard-multiline pre{background-color:#fff;max-width:100%;overflow-x:auto}
 .input-group-addon.wildcard-prefix{padding-left:10px}
 .editor-examples{padding:19px;margin-bottom:20px;border:1px solid #d1d1d1}
+.jenkinsfile-examples p{overflow:auto}
 .jenkinsfile-examples .copy-to-clipboard{margin-top:3px}
 .compute-resource{margin-bottom:5px}
 @media (max-width:767px){.compute-resource .inline-select{margin-top:5px}
@@ -3974,6 +3975,8 @@ a.disabled-link:active,a.disabled-link:focus,a.disabled-link:hover{color:#bbb;te
 .modal-debug-terminal .modal-body .empty-state-message{margin-top:60px}
 .modal-debug-terminal .modal-body kubernetes-container-terminal{text-align:center;overflow:hidden}
 .modal-debug-terminal .modal-footer{padding-top:0}
+.jenkinsfile-examples-modal .jenkinsfile-examples p:last-child{margin-bottom:0;padding-bottom:0}
+.jenkinsfile-examples-modal .modal-footer{margin-top:0;padding-top:0}
 .ace-inline{height:300px}
 .ace-inline-small{height:200px}
 #from-file .editor{height:350px}

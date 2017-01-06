@@ -10078,7 +10078,7 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
 
 
   $templateCache.put('views/modals/jenkinsfile-examples-modal.html',
-    "<div>\n" +
+    "<div class=\"jenkinsfile-examples-modal\">\n" +
     "<div class=\"modal-body\">\n" +
     "<h2>Jenkinsfile Examples</h2>\n" +
     "<ng-include src=\"'views/edit/jenkinsfile-examples.html'\"></ng-include>\n" +

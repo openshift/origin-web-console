@@ -35,7 +35,8 @@ angular.module("openshiftConsole")
         $uibModal.open({
           animation: true,
           templateUrl: 'views/modals/jenkinsfile-examples-modal.html',
-          controller: 'JenkinsfileExamplesModalController'
+          controller: 'JenkinsfileExamplesModalController',
+          size: 'lg'
         });
       },
 
