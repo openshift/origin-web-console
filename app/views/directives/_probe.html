@@ -1,6 +1,6 @@
 <!-- Make sure there is no whitespace before comma -->
 <span ng-if="probe.httpGet">
-  GET {{probe.httpGet.path || '/'}} on port {{probe.httpGet.port || 'unknown'}}
+  GET {{probe.httpGet.path || '/'}} on port {{probe.httpGet.port || 'unknown'}} ({{probe.httpGet.scheme || 'HTTP'}})
 </span>
 <span ng-if="probe.exec.command">
   <code class="command">
