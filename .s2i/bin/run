@@ -1,8 +1,6 @@
 #!/bin/bash
 
-if [ -f /openshift-web-console-config/config.js ]; then
-   cp -f /openshift-web-console-config/config.js config.js
-else
+if [ ! -f /openshift-web-console-config/config.js ]; then
    echo "No config.js is mounted, the console can not run without a configuration defined."
    exit -1
 fi
