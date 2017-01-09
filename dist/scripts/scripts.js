@@ -12513,12 +12513,9 @@ multiline:e(a)
 };
 }), c = !0));
 }, !0), b.$watch("input.args", function(a, e) {
-if (a !== e) {
-if (c) return void (c = !1);
-d = !0, b.args = _.map(b.input.args, function(a) {
+return c ? void (c = !1) :void (a !== e && (d = !0, b.args = _.map(b.input.args, function(a) {
 return a.value;
-}), b.form.command.$setDirty();
-}
+}), b.form.command.$setDirty()));
 }, !0), b.addArg = function() {
 b.nextArg && (b.input.args = b.input.args || [], b.input.args.push({
 value:b.nextArg,
