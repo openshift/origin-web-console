@@ -35,15 +35,16 @@ angular.module('openshiftConsole')
         }, true);
 
         scope.$watch('input.args', function(newValue, oldValue) {
-          if (newValue === oldValue) {
-            return;
-          }
           if (argsChanged) {
             argsChanged = false;
             return;
           }
-          inputChanged = true;
 
+          if (newValue === oldValue) {
+            return;
+          }
+
+          inputChanged = true;
           scope.args = _.map(scope.input.args, function(arg) {
             return arg.value;
           });
