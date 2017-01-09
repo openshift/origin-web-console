@@ -4924,7 +4924,6 @@ body,html{margin:0;padding:0}
 .right-section .right-container .right-header{-webkit-flex:0 0 auto;-moz-flex:0 0 auto;-ms-flex:0 0 auto;flex:0 0 auto;width:100%}
 .right-section .right-container .right-content{-webkit-flex:1 1 auto;-moz-flex:1 1 auto;-ms-flex:1 1 auto;flex:1 1 auto;position:relative;overflow-x:hidden;overflow-y:auto;width:100%}
 }
-.middle-content .tab-content .key-value-editor-entry:last-child .form-group,.middle-content .tab-content key-value-editor+button.btn,.middle-content .table:last-child,.middle-content annotations p,.middle-content annotations:last-child,project-page.image registry-image-config>:last-child>dl,project-page.image registry-image-meta .dl-horizontal,project-page.membership .content-pane>.item-row:nth-last-child(2),project-page.monitoring .col-md-12>:last-child .list-view-pf,project-page.pod .log-view{margin-bottom:0}
 @media (min-width:992px){.console-os .sidebar-right{-webkit-flex:0 0 310px;-moz-flex:0 0 310px;-ms-flex:0 0 310px;flex:0 0 310px}
 .console-os .sidebar-right .right-section{width:310px}
 }
@@ -4938,8 +4937,10 @@ body,html{margin:0;padding:0}
 .console-os .wrap.show-sidebar-right .sidebar-right{-webkit-flex:0 0 480px;-moz-flex:0 0 480px;-ms-flex:0 0 480px;flex:0 0 480px}
 .console-os .wrap.show-sidebar-right .sidebar-right .right-section{width:480px}
 }
+.middle-content annotations{display:block}
 .middle-content pods-table,.middle-content traffic-table{display:block;padding-bottom:20px}
 .middle-content pods-table.gutter-bottom-2x,.middle-content traffic-table.gutter-bottom-2x{padding-bottom:40px}
+.middle-content .tab-content .key-value-editor-entry:last-child .form-group,.middle-content .tab-content key-value-editor+button.btn,.middle-content .table:last-child,project-page.image registry-image-config>:last-child>dl,project-page.image registry-image-meta .dl-horizontal,project-page.membership .content-pane>.item-row:nth-last-child(2),project-page.monitoring .col-md-12>:last-child .list-view-pf,project-page.pod .log-view{margin-bottom:0}
 .table{background-color:#fff}
 .table.table-bordered>tbody>tr>td,.table.table-bordered>thead>tr>th{border-left:0;border-right:0;padding-bottom:8px;padding-top:8px;vertical-align:middle}
 .table.table-bordered.table-bordered-columns>tbody>tr>td,.table.table-bordered.table-bordered-columns>thead>tr>th{border:1px solid #d1d1d1}
