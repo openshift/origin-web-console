@@ -68,10 +68,6 @@ angular.module('openshiftConsole')
     var copyBuildConfigAndEnsureEnv = function(buildConfig) {
       $scope.updatedBuildConfig = angular.copy(buildConfig);
       $scope.envVars = buildStrategy($scope.updatedBuildConfig).env || [];
-      // check valueFrom attribs and set an alt text for display if present
-      _.each($scope.envVars, function(env) {
-        $filter('altTextForValueFrom')(env);
-      });
     };
 
     $scope.saveEnvVars = function() {

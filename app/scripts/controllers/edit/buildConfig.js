@@ -237,9 +237,6 @@ angular.module('openshiftConsole')
             $scope.buildStrategy = buildStrategy($scope.updatedBuildConfig);
             $scope.strategyType = $scope.buildConfig.spec.strategy.type;
             $scope.envVars = $scope.buildStrategy.env || [];
-            _.each($scope.envVars, function(env) {
-              $filter('altTextForValueFrom')(env);
-            });
             $scope.triggers = getTriggerMap($scope.triggers, $scope.buildConfig.spec.triggers);
             $scope.sources = getSourceMap($scope.sources, $scope.buildConfig.spec.source);
 
@@ -249,7 +246,7 @@ angular.module('openshiftConsole')
 
             DataService.list("secrets", context, function(secrets) {
               var secretsByType = SecretsService.groupSecretsByType(secrets);
-              var secretNamesByType =_.mapValues(secretsByType, function(secrets) {return _.map(secrets, 'metadata.name')});
+              var secretNamesByType =_.mapValues(secretsByType, function(secrets) {return _.map(secrets, 'metadata.name');});
               // Add empty option to the image/source secrets
               $scope.secrets.secretsByType = _.each(secretNamesByType, function(secretsArray) {
                 secretsArray.unshift("");

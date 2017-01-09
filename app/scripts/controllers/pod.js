@@ -222,13 +222,11 @@ angular.module('openshiftConsole')
       });
     };
 
-    var altTextForValueFrom = $filter('altTextForValueFrom');
     var updateEnv = function() {
       // Copy the containers so we aren't modifying the original pod spec.
       var containers = angular.copy(_.get($scope, 'pod.spec.containers', []));
       _.each(containers, function(container) {
         container.env = container.env || [];
-        _.each(container.env, altTextForValueFrom);
       });
 
       $scope.containersEnv = containers;

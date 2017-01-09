@@ -1,0 +1,238 @@
+<ng-form name="forms.keyValueEditor" novalidate ng-if="entries">
+  <div class="key-value-editor" ng-model="entries" as-sortable="dragControlListeners">
+
+    <div
+      ng-if="showHeader"
+      class="key-value-editor-entry">
+      <div class="form-group key-value-editor-header key-header">
+        <div class="input-group">
+          <span class="help-block">{{keyPlaceholder}}</span>
+        </div>
+      </div>
+      <div class="form-group key-value-editor-header value-header">
+        <div class="input-group">
+          <span class="help-block">{{valuePlaceholder}}</span>
+        </div>
+      </div>
+    </div>
+
+    <div
+      class="key-value-editor-entry"
+      ng-class-odd="'odd'"
+      ng-class-even="'even'"
+      ng-repeat="entry in entries"
+      as-sortable-item>
+
+      <!-- The name/key block -->
+      <div
+        class="form-group key-value-editor-input"
+        ng-class="{ 'has-error' :  (forms.keyValueEditor[uniqueForKey(unique, $index)].$invalid) }">
+
+        <label for="uniqueForKey(unique, $index)" class="sr-only">{{keyPlaceholder}}</label>
+
+        <input
+          type="text"
+          class="form-control"
+          ng-class="{ '{{setFocusKeyClass}}' : $last  }"
+          id="{{uniqueForKey(unique, $index)}}"
+          name="{{uniqueForKey(unique, $index)}}"
+          ng-attr-placeholder="{{ (!isReadonlyAny) && keyPlaceholder || ''}}"
+          ng-minlength="{{keyMinlength}}"
+          maxlength="{{keyMaxlength}}"
+          ng-model="entry.name"
+          ng-readonly="isReadonlyAny || isReadonlySome(entry.name) || entry.isReadonlyKey || entry.isReadonly"
+          ng-pattern="validation.key"
+          ng-value
+          ng-required="!allowEmptyKeys && entry.value"
+          ng-attr-key-value-editor-focus="{{grabFocus && $last}}">
+
+        <!-- name/key help block -->
+        <span
+          class="help-block key-validation-error"
+          ng-show="(forms.keyValueEditor[uniqueForKey(unique, $index)].$error.pattern)">
+          <span class="validation-text">{{ entry.keyValidatorError || keyValidatorError }}</span>
+          <span ng-if="entry.keyValidatorErrorTooltip || keyValidatorErrorTooltip" class="help action-inline">
+            <a
+              aria-hidden="true"
+              data-toggle="tooltip"
+              data-placement="top"
+              data-original-title="{{entry.keyValidatorErrorTooltip || keyValidatorErrorTooltip}}"
+              title="{{entry.keyValidatorErrorTooltip || keyValidatorErrorTooltip}}">
+              <i class="{{entry.keyValidatorErrorTooltipIcon || keyValidatorErrorTooltipIcon}}"></i>
+            </a>
+          </span>
+        </span>
+        <span
+          class="help-block key-min-length"
+          ng-show="(forms.keyValueEditor[uniqueForKey(unique, $index)].$error.minlength)">
+          <span class="validation-text">Minimum character count is {{keyMinlength}}</span>
+        </span>
+        <span
+          class="help-block key-validation-error"
+          ng-show="(forms.keyValueEditor[uniqueForKey(unique, $index)].$error.required)">
+          <span class="validation-text">{{keyRequiredError}}</span>
+        </span>
+      </div>
+
+      <!-- the value block -->
+      <div
+        class="form-group key-value-editor-input"
+        ng-class="forms.keyValueEditor[uniqueForValue(unique, $index)].$invalid ? 'has-error' : ''">
+
+        <label for="uniqueForValue(unique, $index)" class="sr-only">{{valuePlaceholder}}</label>
+
+        <div ng-if="(!entry.valueFrom)">
+          <input
+            type="text"
+            class="form-control"
+            ng-class="{ '{{setFocusValClass}}' : $last  }"
+            id="{{uniqueForValue(unique, $index)}}"
+            name="{{uniqueForValue(unique, $index)}}"
+            ng-attr-placeholder="{{ (!isReadonlyAny) && valuePlaceholder || ''}}"
+            ng-minlength="{{valueMinlength}}"
+            maxlength="{{valueMaxlength}}"
+            ng-model="entry.value"
+            ng-readonly="isReadonlyAny || isReadonlySome(entry.name) || entry.isReadonly"
+            ng-pattern="validation.val"
+            ng-required="!allowEmptyKeys && entry.value">
+        </div>
+
+        <div ng-if="entry.valueFrom">
+          <div ng-if="isReadonlyAny || entry.isReadonlyValue" class="faux-input-group">
+            <span
+              class="faux-form-control-addon {{entry.valueIcon}}"
+              aria-hidden="true"
+              data-toggle="tooltip"
+              data-placement="top"
+              data-original-title="{{entry.valueIconTooltip || valueIconTooltip}}"
+              title="{{entry.valueIconTooltip || valueIconTooltip}}"></span>
+            <div
+              class="faux-form-control readonly">
+              <span ng-switch="entry.refType">
+                <span ng-switch-when="configMapKeyRef">
+                  Set to the key {{entry.valueFrom.configMapKeyRef.key}} in config map
+                  <span
+                    ng-if="!('configmaps' | canI : 'get')">
+                    {{entry.valueFrom.configMapKeyRef.name}}
+                  </span>
+                  <a
+                    ng-if="'configmaps' | canI : 'get'"
+                    ng-href="{{entry.apiObj | navigateResourceURL}}">
+                    {{entry.valueFrom.configMapKeyRef.name}}
+                  </a>
+                </span>
+                <span ng-switch-when="secretKeyRef">
+                  Set to the key {{entry.valueFrom.secretKeyRef.key}} in secret
+                  <span
+                    ng-if="!('secrets' | canI : 'get')">
+                    {{entry.valueFrom.secretKeyRef.name}}
+                  </span>
+                  <a
+                    ng-if="'secrets' | canI : 'get'"
+                    ng-href="{{entry.apiObj | navigateResourceURL}}">
+                    {{entry.valueFrom.secretKeyRef.name}}
+                  </a>
+                </span>
+                <span ng-switch-when="fieldRef">
+                  {{entry.valueAlt}}
+                </span>
+                <span ng-switch-default>
+                  {{entry.valueAlt}}
+                </span>
+              </span>
+            </div>
+          </div>
+          <div ng-if="(!isReadonlyAny) && (!entry.isReadonlyValue)">
+            <div class="ui-select">
+              <ui-select ng-model="entry.selectedValueFrom" ng-required="true" on-select="valueFromObjectSelected(entry, $select.selected)">
+                <ui-select-match placeholder="Select a resource">
+                  <span>
+                    {{$select.selected.metadata.name}}
+                    <small class="text-muted">&ndash; {{$select.selected.kind | humanizeKind : true}}</small>
+                  </span>
+                </ui-select-match>
+                <ui-select-choices
+                  repeat="source in valueFromSelectorOptions | filter : { metadata: { name: $select.search } } track by (source | uid)"
+                  group-by="groupByKind">
+                  <span ng-bind-html="source.metadata.name | highlight : $select.search"></span>
+                </ui-select-choices>
+              </ui-select>
+            </div>
+            <div class="ui-select">
+              <ui-select ng-model="entry.selectedValueFromKey" ng-required="true" on-select="valueFromKeySelected(entry, $select.selected)">
+                <ui-select-match placeholder="Select key">
+                  {{$select.selected}}
+                </ui-select-match>
+                <ui-select-choices repeat="key in entry.selectedValueFrom.data | keys">
+                  <span ng-bind-html="key | highlight : $select.search"></span>
+                </ui-select-choices>
+              </ui-select>
+            </div>
+          </div>
+        </div>
+
+        <!-- value help block -->
+        <span
+          class="help-block value-validation-error"
+          ng-show="(forms.keyValueEditor[uniqueForValue(unique, $index)].$error.pattern)">
+          <span class="validation-text">{{ entry.valueValidatorError || valueValidatorError}}</span>
+          <span ng-if="entry.valueValidatorErrorTooltip || valueValidatorErrorTooltip" class="help action-inline">
+            <a
+              aria-hidden="true"
+              data-toggle="tooltip"
+              data-placement="top"
+              data-original-title="{{entry.valueValidatorErrorTooltip || valueValidatorErrorTooltip}}"
+              title="{{entry.valueValidatorErrorTooltip || valueValidatorErrorTooltip}}">
+              <i class="{{entry.valueValidatorErrorTooltipIcon || valueValidatorErrorTooltipIcon}}"></i>
+            </a>
+          </span>
+        </span>
+        <span
+          class="help-block value-min-length"
+          ng-show="(forms.keyValueEditor[uniqueForValue(unique, $index)].$error.minlength)">
+          <span class="validation-text">Minimum character count is {{valueMinlength}}</span>
+        </span>
+      </div>
+
+      <div class="key-value-editor-buttons">
+        <span
+          ng-if="(!cannotSort) && (entries.length > 1)"
+          class="fa fa-bars sort-row"
+          role="button"
+          aria-label="Move row"
+          aria-grabbed="false"
+          as-sortable-item-handle></span>
+        <a
+          href=""
+          class="pficon pficon-close delete-row as-sortable-item-delete"
+          role="button"
+          aria-label="Delete row"
+          ng-hide="cannotDeleteAny || cannotDeleteSome(entry.name) || entry.cannotDelete"
+          ng-click="deleteEntry($index, 1)"></a>
+      </div>
+    </div>
+
+    <div
+      class="key-value-editor-entry form-group"
+      ng-if="(!cannotAdd)">
+      <a
+        href=""
+        class="add-row-link"
+        role="button"
+        aria-label="Add row"
+        ng-click="onAddRow()">{{ addRowLink }}</a>
+      <span ng-if="valueFromSelectorOptions.length">
+        <span
+          class="action-divider"
+          aria-hidden="true"> | </span>
+        <a
+          href=""
+          class="add-row-link"
+          role="button"
+          aria-label="Add row"
+          ng-click="onAddRowWithSelectors()">{{ addRowWithSelectorsLink }}</a>
+      </span>
+    </div>
+
+  </div>
+</ng-form>

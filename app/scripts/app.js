@@ -27,7 +27,6 @@ angular
     'extension-registry',
     'as.sortable',
     'ui.select',
-    'key-value-editor',
     'angular-inview',
     'angularMoment',
     'ab-base64'

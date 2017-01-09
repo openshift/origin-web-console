@@ -270,10 +270,12 @@
                         entries="container.env"
                         key-placeholder="Name"
                         value-placeholder="Value"
+                        value-from-selector-options="valueFromObjects"
                         key-validator="[A-Za-z_][A-Za-z0-9_]*"
                         key-validator-error="Please enter a valid key"
                         key-validator-error-tooltip="A valid environment variable name is an alphanumeric (a-z and 0-9) string beginning with a letter that may contain underscores."
                         add-row-link="Add Environment Variable"
+                        add-row-with-selectors-link="Add Environment Variable Using a Config Map or Secret"
                         show-header></key-value-editor>
                     </div>
                     <button

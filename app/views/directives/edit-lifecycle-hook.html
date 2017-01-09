@@ -57,6 +57,8 @@
             entries="hookParams.execNewPod.env"
             key-validator="[a-zA-Z_][a-zA-Z0-9_]*"
             key-validator-error-tooltip="A valid environment variable name is an alphanumeric (a-z and 0-9) string beginning with a letter that may contain underscores."
+            value-from-selector-options="valueFromObjects"
+            add-row-with-selectors-link="Add Environment Variable Using a Config Map or Secret"
             add-row-link="Add Environment Variable"></key-value-editor>
           <div class="help-block">
             Environment variables to supply to the hook pod's container.

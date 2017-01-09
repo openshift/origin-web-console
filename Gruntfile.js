@@ -251,8 +251,7 @@ module.exports = function (grunt) {
           'bower_components/google-code-prettify/bin/prettify.min.js',
           'bower_components/google-code-prettify/bin/prettify.min.css',
           'bower_components/patternfly/dist/css/patternfly.css',
-          'bower_components/patternfly/dist/css/patternfly-additions.css',
-          'bower_components/angular-key-value-editor/dist/angular-key-value-editor.css'
+          'bower_components/patternfly/dist/css/patternfly-additions.css'
         ]
       }
     },
