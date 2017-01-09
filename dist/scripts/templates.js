@@ -10941,14 +10941,12 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "</div>\n" +
     "<div>\n" +
     "<div class=\"service-group-triggers\">\n" +
-    "<div ng-repeat=\"svc in allServicesInGroup track by (svc | uid)\">\n" +
-    "<div ng-repeat=\"dc in deploymentConfigsByService[svc.metadata.name || '']\">\n" +
+    "<div ng-repeat=\"dc in allDeploymentConfigsInGroup\">\n" +
     "<div row ng-repeat=\"pipeline in recentPipelinesByDC[dc.metadata.name] | orderObjectsByDate : true track by (pipeline | uid)\" class=\"build-pipeline-wrapper animate-repeat animate-slide\">\n" +
     "<build-pipeline flex build=\"pipeline\" collapse-stages-on-completion=\"true\" build-config-name-on-expanded=\"true\"></build-pipeline>\n" +
     "</div>\n" +
     "<div>\n" +
     "<triggers triggers=\"dc.spec.triggers\" builds-by-output-image=\"recentBuildsByOutputImage\" namespace=\"dc.metadata.namespace\"></triggers>\n" +
-    "</div>\n" +
     "</div>\n" +
     "</div>\n" +
     "</div>\n" +

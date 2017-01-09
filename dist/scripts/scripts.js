@@ -12845,9 +12845,15 @@ return _.get(e, [ "routesByService", a ]);
 e.displayRoute = i(a), e.primaryServiceRoutes = a, j();
 }), e.$watchGroup([ "service", "childServicesByParent" ], function() {
 e.service && (e.primaryService = e.service, e.childServices = _.get(e, [ "childServicesByParent", e.service.metadata.name ], []));
-}), e.$watchGroup([ "service", "childServices", "alternateServices" ], function() {
+}), e.$watchGroup([ "service", "childServices", "alternateServices", "deploymentConfigsByService" ], function() {
+if (e.deploymentConfigsByService) {
 var a = [ e.service ].concat(e.alternateServices).concat(e.childServices);
-e.allServicesInGroup = _.uniq(a, "metadata.uid");
+a = _.map(a, "metadata.name");
+var b = {};
+_.each(a, function(a) {
+_.extend(b, e.deploymentConfigsByService[a]);
+}), e.allDeploymentConfigsInGroup = b;
+}
 });
 }
 };
