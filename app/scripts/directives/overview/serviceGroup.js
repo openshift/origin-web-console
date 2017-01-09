@@ -179,9 +179,17 @@ angular.module('openshiftConsole')
           $scope.childServices = _.get($scope, ['childServicesByParent', $scope.service.metadata.name], []);
         });
 
-        $scope.$watchGroup(['service', 'childServices', 'alternateServices'], function() {
+        $scope.$watchGroup(['service', 'childServices', 'alternateServices', 'deploymentConfigsByService'], function() {
+          if (!$scope.deploymentConfigsByService) {
+            return;
+          }
           var allSvcs = [$scope.service].concat($scope.alternateServices).concat($scope.childServices);
-          $scope.allServicesInGroup = _.uniq(allSvcs, "metadata.uid");
+          allSvcs = _.map(allSvcs, "metadata.name");
+          var allDCs = {};
+          _.each(allSvcs, function(svc) {
+            _.extend(allDCs, $scope.deploymentConfigsByService[svc]);
+          });
+          $scope.allDeploymentConfigsInGroup = allDCs;
         });
       }
     };
