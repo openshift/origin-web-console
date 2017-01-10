@@ -1,10 +1,10 @@
-<p>
+<p ng-class="{'mar-bottom-xl': !expandAnnotations}">
   <a href="" ng-click="toggleAnnotations()" ng-if="!expandAnnotations">Show Annotations</a>
   <a href="" ng-click="toggleAnnotations()" ng-if="expandAnnotations">Hide Annotations</a>
 </p>
 <div ng-if="expandAnnotations">
   <div ng-if="annotations" class="table-responsive">
-    <table class="table table-bordered table-bordered-columns key-value-table table-top-margin">
+    <table class="table table-bordered table-bordered-columns key-value-table">
       <tbody>
         <tr ng-repeat="(annotationKey, annotationValue) in annotations">
           <td class="key">{{annotationKey}}</td>
@@ -20,7 +20,7 @@
       </tbody>
     </table>
   </div>
-  <p ng-if="!annotations">
+  <p ng-if="!annotations" class="mar-bottom-xl">
     There are no annotations on this resource.
   </p>
 </div>

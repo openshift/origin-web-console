@@ -1896,7 +1896,7 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "</div>\n" +
     "<build-trends-chart builds=\"builds\"></build-trends-chart>\n" +
     "</div>\n" +
-    "<div ng-if=\"loaded && (unfilteredBuilds | hashSize) > 0\">\n" +
+    "<div ng-if=\"loaded && (unfilteredBuilds | hashSize) > 0\" class=\"mar-bottom-xl\">\n" +
     "<div class=\"table-filter-wrapper\">\n" +
     "<project-filter></project-filter>\n" +
     "</div>\n" +
@@ -2154,7 +2154,7 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "<a href=\"\" ng-click=\"expand.imageEnv = false\" ng-if=\"expand.imageEnv\">Hide Image Environment Variables</a>\n" +
     "</p>\n" +
     "<key-value-editor ng-if=\"expand.imageEnv\" entries=\"BCEnvVarsFromImage\" key-placeholder=\"Name\" value-placeholder=\"Value\" is-readonly cannot-add cannot-sort cannot-delete show-header></key-value-editor>\n" +
-    "<ng-form name=\"forms.bcEnvVars\">\n" +
+    "<ng-form name=\"forms.bcEnvVars\" class=\"mar-bottom-xl block\">\n" +
     "<div ng-if=\"'buildconfigs' | canI : 'update'\">\n" +
     "<key-value-editor entries=\"envVars\" key-placeholder=\"Name\" value-placeholder=\"Value\" key-validator=\"[A-Za-z_][A-Za-z0-9_]*\" key-validator-error=\"Please enter a valid key\" key-validator-error-tooltip=\"A valid environment variable name is an alphanumeric (a-z and 0-9) string beginning with a letter that may contain underscores.\" add-row-link=\"Add Environment Variable\" show-header></key-value-editor>\n" +
     "<button class=\"btn btn-default\" ng-click=\"saveEnvVars()\" ng-disabled=\"forms.bcEnvVars.$pristine || forms.bcEnvVars.$invalid\">Save</button>\n" +
@@ -2251,8 +2251,8 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "<span class=\"pficon pficon-info\" aria-hidden=\"true\"></span>\n" +
     "Environment variables can be edited on the <a ng-href=\"{{build | configURLForResource}}?tab=environment\">build configuration</a>.\n" +
     "</p>\n" +
-    "<key-value-editor entries=\"(build | buildStrategy).env\" key-placeholder=\"Name\" value-placeholder=\"Value\" cannot-add cannot-delete cannot-sort is-readonly show-header></key-value-editor>\n" +
-    "<em ng-if=\"!(build | buildStrategy).env\">The build strategy had no environment variables defined.</em>\n" +
+    "<key-value-editor entries=\"(build | buildStrategy).env\" key-placeholder=\"Name\" value-placeholder=\"Value\" cannot-add cannot-delete cannot-sort is-readonly show-header class=\"mar-bottom-xl block\"></key-value-editor>\n" +
+    "<p ng-if=\"!(build | buildStrategy).env\"><em>The build strategy had no environment variables defined.</em></p>\n" +
     "</uib-tab>\n" +
     "<uib-tab active=\"selectedTab.logs\" ng-if=\"!(build | isJenkinsPipelineStrategy) && ('builds/log' | canI : 'get')\">\n" +
     "<uib-tab-heading>Logs</uib-tab-heading>\n" +
@@ -2717,7 +2717,7 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "</uib-tab>\n" +
     "<uib-tab heading=\"Environment\" active=\"selectedTab.environment\" ng-if=\"deploymentConfig\">\n" +
     "<uib-tab-heading>Environment</uib-tab-heading>\n" +
-    "<ng-form name=\"forms.dcEnvVars\">\n" +
+    "<ng-form name=\"forms.dcEnvVars\" class=\"mar-bottom-xl block\">\n" +
     "<div ng-repeat=\"container in updatedDeploymentConfig.spec.template.spec.containers\">\n" +
     "<h3>Container {{container.name}} Environment Variables</h3>\n" +
     "<key-value-editor ng-if=\"!('deploymentconfigs' | canI : 'update')\" entries=\"container.env\" key-placeholder=\"Name\" value-placeholder=\"Value\" cannot-add cannot-sort cannot-delete is-readonly show-header></key-value-editor>\n" +
@@ -3010,8 +3010,8 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "</uib-tab>\n" +
     "<uib-tab heading=\"Layers\" active=\"selectedTab.meta\">\n" +
     "<uib-tab-heading>Layers</uib-tab-heading>\n" +
-    "<div ng-if=\"!layers.length\"><em>No layer information is available for this image.</em></div>\n" +
-    "<registry-image-layers layers=\"layers\" ng-if=\"layers.length\">\n" +
+    "<p ng-if=\"!layers.length\"><em>No layer information is available for this image.</em></p>\n" +
+    "<registry-image-layers layers=\"layers\" ng-if=\"layers.length\" class=\"mar-bottom-xl block\">\n" +
     "</registry-image-layers>\n" +
     "</uib-tab>\n" +
     "</uib-tabset>\n" +
@@ -3350,7 +3350,7 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "When you navigate away from this pod, any open terminal connections will be closed. This will kill any foreground processes you started from the terminal.\n" +
     "</div>\n" +
     "<alerts ng-if=\"selectedTerminalContainer.status === 'disconnected'\" alerts=\"terminalDisconnectAlert\"></alerts>\n" +
-    "<div class=\"mar-left-xl\">\n" +
+    "<div class=\"mar-left-xl mar-bottom-xl\">\n" +
     "<div class=\"row\">\n" +
     "<div class=\"pad-left-none pad-bottom-md col-sm-6 col-lg-4\">\n" +
     "<span ng-if=\"pod.spec.containers.length === 1\">\n" +
@@ -5780,13 +5780,13 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
 
 
   $templateCache.put('views/directives/annotations.html',
-    "<p>\n" +
+    "<p ng-class=\"{'mar-bottom-xl': !expandAnnotations}\">\n" +
     "<a href=\"\" ng-click=\"toggleAnnotations()\" ng-if=\"!expandAnnotations\">Show Annotations</a>\n" +
     "<a href=\"\" ng-click=\"toggleAnnotations()\" ng-if=\"expandAnnotations\">Hide Annotations</a>\n" +
     "</p>\n" +
     "<div ng-if=\"expandAnnotations\">\n" +
     "<div ng-if=\"annotations\" class=\"table-responsive\">\n" +
-    "<table class=\"table table-bordered table-bordered-columns key-value-table table-top-margin\">\n" +
+    "<table class=\"table table-bordered table-bordered-columns key-value-table\">\n" +
     "<tbody>\n" +
     "<tr ng-repeat=\"(annotationKey, annotationValue) in annotations\">\n" +
     "<td class=\"key\">{{annotationKey}}</td>\n" +
@@ -5798,7 +5798,7 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "</tbody>\n" +
     "</table>\n" +
     "</div>\n" +
-    "<p ng-if=\"!annotations\">\n" +
+    "<p ng-if=\"!annotations\" class=\"mar-bottom-xl\">\n" +
     "There are no annotations on this resource.\n" +
     "</p>\n" +
     "</div>"
@@ -11233,7 +11233,7 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "<div ng-repeat=\"build in (interestingBuildsByConfig[buildConfigName] | orderObjectsByDate : true) track by (build | uid)\" class=\"animate-repeat\">\n" +
     "<build-pipeline build=\"build\"></build-pipeline>\n" +
     "</div>\n" +
-    "<div ng-if=\"buildConfig\" class=\"mar-top-sm\">\n" +
+    "<div ng-if=\"buildConfig\" class=\"mar-top-sm mar-bottom-xl\">\n" +
     "<a ng-href=\"{{buildConfigs[buildConfigName] | navigateResourceURL}}\">View Pipeline Runs</a>\n" +
     "<span ng-if=\"'buildconfigs' | canI : 'update'\">\n" +
     "<span class=\"action-divider\">|</span>\n" +

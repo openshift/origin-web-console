@@ -85,11 +85,6 @@ html,body {
       }
     }
   }
-  .middle .middle-content > .container-fluid {
-    // default 40px space beneath content
-    padding-bottom: @middle-content-bottom-margin;
-  }
-  & .overview .middle-content > .container-fluid,
   .no-sidebar .middle-content > .container {
     // reduce 20px to account for tile bottom margin
     padding-bottom: (@middle-content-bottom-margin - 20px);
@@ -277,41 +272,5 @@ html,body {
         }
       }
     }
-  }
-}
-
-
-// Removal of varying bottom-margin from ui elements that are positioned last within the
-// middle-content area in order to achieve consistent bottom spacing across all pages
-.middle-content {
-  annotations {
-    &:last-child,
-    p {
-      margin-bottom: 0;
-    }
-  }
-  pods-table,
-  traffic-table {
-    display: block;
-    .gutter-bottom();
-  }
-  .table:last-child {
-    margin-bottom: 0;
-  }
-  .tab-content {
-    .key-value-editor-entry:last-child .form-group,
-    key-value-editor + button.btn {
-      margin-bottom: 0;
-    }
-  }
-}
-// Isolated to specific pages
-project-page {
-  &.image registry-image-config > :last-child > dl,
-  &.image registry-image-meta .dl-horizontal,
-  &.membership .content-pane > .item-row:nth-last-child(2),
-  &.monitoring .col-md-12 > :last-child .list-view-pf,
-  &.pod .log-view {
-    margin-bottom: 0;
   }
 }

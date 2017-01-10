@@ -111,8 +111,9 @@
                         cannot-delete
                         cannot-sort
                         is-readonly
-                        show-header></key-value-editor>
-                      <em ng-if="!(build | buildStrategy).env">The build strategy had no environment variables defined.</em>
+                        show-header
+                        class="mar-bottom-xl block"></key-value-editor>
+                      <p ng-if="!(build | buildStrategy).env"><em>The build strategy had no environment variables defined.</em></p>
                     </uib-tab>
 
                     <uib-tab active="selectedTab.logs" ng-if="!(build | isJenkinsPipelineStrategy) && ('builds/log' | canI : 'get')">
