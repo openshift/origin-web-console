@@ -4533,7 +4533,7 @@ return W(a, b);
 });
 }
 }, Y = function() {
-r && x && (c.petSetsByService = h.groupBySelector(x, r, {
+r && x && (c.statefulSetsByService = h.groupBySelector(x, r, {
 matchTemplate:!0
 }));
 }, Z = function() {
@@ -4644,7 +4644,7 @@ return _.some(t, function(a) {
 return a.metadata.name === b && a.status.latestVersion === c;
 });
 }, c.hasUnservicedContent = function() {
-var a = [ "monopodsByService", "deploymentConfigsByService", "deploymentsByService", "replicationControllersByService", "replicaSetsByService", "petSetsByService" ];
+var a = [ "monopodsByService", "deploymentConfigsByService", "deploymentsByService", "replicationControllersByService", "replicaSetsByService", "statefulSetsByService" ];
 return _.some(a, function(a) {
 var b = _.get(c, [ a, "" ], {});
 return !_.isEmpty(b);
@@ -4707,9 +4707,9 @@ resource:"replicasets"
 w = a.by("metadata.name"), aa(), V(), X(), na(), i.log("replicasets (subscribe)", w);
 })), D.push(f.watch({
 group:"apps",
-resource:"petsets"
+resource:"statefulsets"
 }, b, function(a) {
-x = a.by("metadata.name"), aa(), Y(), na(), i.log("petsets (subscribe)", x);
+x = a.by("metadata.name"), aa(), Y(), na(), i.log("statefulsets (subscribe)", x);
 }, {
 poll:qa,
 pollInterval:6e4
@@ -12674,7 +12674,7 @@ _.each(f, function(b) {
 var c = s(b);
 t(c, a);
 });
-var g = _.get(e, [ "petSetsByService", c ]);
+var g = _.get(e, [ "statefulSetsByService", c ]);
 _.each(g, function(b) {
 var c = s(b);
 t(c, a);
@@ -12716,7 +12716,7 @@ e.showAlert = function(a) {
 return !e.collapse || "info" !== a.type;
 }, e.$watchGroup([ "service", "childServices" ], function() {
 m = (e.childServices || []).concat([ e.service ]), r(), u();
-}), e.$watchGroup([ "deploymentConfigsByService", "deploymentsByService" ], r), e.$watchGroup([ "podsByOwnerUid", "replicationControllersByService", "replicaSetsByService", "petSetsByService" ], u);
+}), e.$watchGroup([ "deploymentConfigsByService", "deploymentsByService" ], r), e.$watchGroup([ "podsByOwnerUid", "replicationControllersByService", "replicaSetsByService", "statefulSetsByService" ], u);
 }
 };
 } ]), angular.module("openshiftConsole").directive("overviewService", [ "$filter", "DeploymentsService", "MetricsService", function(a, b, c) {
@@ -12736,7 +12736,7 @@ var c = _.get(b, "service.metadata.name"), d = _.get(a, [ c ], {});
 b.visibleReplicaSets = e(_.filter(d, f), !0);
 });
 var g = function() {
-var a = _.get(b, "service.metadata.name"), c = _.get(b, [ "petSetsByService", a ], {}), d = _.get(b, [ "monopodsByService", a ], {}), e = 0;
+var a = _.get(b, "service.metadata.name"), c = _.get(b, [ "statefulSetsByService", a ], {}), d = _.get(b, [ "monopodsByService", a ], {}), e = 0;
 _.each(b.visibleReplicaSetsByDeployment, function(a, b) {
 b ? e++ :e += _.size(a);
 }), b.tileCount = _.size(b.deploymentConfigs) + _.size(b.replicationControllers) + _.size(c) + _.size(d) + e;

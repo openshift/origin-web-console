@@ -82,7 +82,7 @@
                 <!-- /unserviced RS-->
 
                 <!-- unserviced RS -->
-                <div ng-repeat="set in petSetsByService[''] | orderBy : 'metadata.name' track by (set | uid)" class="no-service">
+                <div ng-repeat="set in statefulSetsByService[''] | orderBy : 'metadata.name' track by (set | uid)" class="no-service">
                   <overview-set class="overview-tile-wrapper"></overview-set>
                 </div>
                 <!-- /unserviced RS-->
