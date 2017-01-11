@@ -5308,7 +5308,7 @@ fs-donut svg g text.units{font-size:20px}
 .jmx-attributes-toolbar .row{margin-top:1em;margin-bottom:1em}
 .jmx-attributes-toolbar .search-query{margin-top:0;margin-bottom:0}
 .jmx-attributes-toolbar .pull-right .inline-block .search-query{margin-top:1em;margin-bottom:1em}
-.bundle-list-toolbar,.metricsWatcher .activeRequestsGraph{vertical-align:top}
+.bundle-list-toolbar,.metricsWatcher .activeRequestsGraph,.overviewSection td{vertical-align:top}
 .metricsWatcher .heading1{font-size:24px;line-height:30px;margin:0}
 .metricsWatcher .heading3{font-size:18px;line-height:27px;margin:0}
 .metricsWatcher .heading4{font-size:14px;line-height:18px;margin:0}
