@@ -11622,9 +11622,11 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "\n" +
     "<div class=\"middle-section\">\n" +
     "<div class=\"middle-container\">\n" +
-    "<div class=\"middle-header\">\n" +
-    "<div class=\"container-fluid\">\n" +
-    "<div class=\"page-header page-header-bleed-right page-header-bleed-left\">\n" +
+    "<div class=\"middle-content\">\n" +
+    "<div class=\"container-fluid mar-top-xl\">\n" +
+    "<alerts alerts=\"alerts\"></alerts>\n" +
+    "<div class=\"row\">\n" +
+    "<div class=\"col-md-12\">\n" +
     "<h1>\n" +
     "<span ng-if=\"clusterQuotas | hashSize\">Cluster </span>Quota\n" +
     "<span class=\"page-header-link\">\n" +
@@ -11633,14 +11635,6 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "</a>\n" +
     "</span>\n" +
     "</h1>\n" +
-    "</div>\n" +
-    "</div>\n" +
-    "</div>\n" +
-    "<div class=\"middle-content\">\n" +
-    "<div class=\"container-fluid\">\n" +
-    "<alerts alerts=\"alerts\"></alerts>\n" +
-    "<div class=\"row\">\n" +
-    "<div class=\"col-md-12\">\n" +
     "<div ng-if=\"!(quotas | hashSize) && !(clusterQuotas | hashSize)\" class=\"mar-top-xl\">\n" +
     "<div class=\"help-block\">{{quotaHelp}}</div>\n" +
     "<p><em ng-if=\"!quotas && !clusterQuotas\">Loading...</em><em ng-if=\"quotas || clusterQuotas\">There are no resource quotas set on this project.</em></p>\n" +
@@ -11725,7 +11719,7 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "</table>\n" +
     "</div>\n" +
     "</div>\n" +
-    "<h2 ng-if=\"(clusterQuotas | hashSize) && (quotas | hashSize)\">Project Quota</h2>\n" +
+    "<h1 ng-if=\"(clusterQuotas | hashSize) && (quotas | hashSize)\">Project Quota</h1>\n" +
     "<div ng-repeat=\"quota in quotas | orderBy: 'metadata.name'\" class=\"gutter-bottom\">\n" +
     "<h2 ng-if=\"(quotas | hashSize) > 1\">{{quota.metadata.name}}</h2>\n" +
     "<div ng-if=\"$first\" class=\"help-block mar-bottom-md\">{{quotaHelp}}</div>\n" +
@@ -11802,7 +11796,7 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "</div>\n" +
     "</div>\n" +
     "<div class=\"limit-ranges-section\">\n" +
-    "<h2>Limit Range</h2>\n" +
+    "<h1>Limit Range</h1>\n" +
     "<div ng-if=\"!(limitRanges | hashSize)\">\n" +
     "<div class=\"help-block\">{{limitRangeHelp}}</div>\n" +
     "<p><em>{{emptyMessageLimitRanges}}</em></p>\n" +
