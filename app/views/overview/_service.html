@@ -44,7 +44,7 @@
     <!-- /visible replica sets without a deployment -->
   </div>
 
-  <div class="overview-tile-wrapper" ng-repeat="set in petSetsByService[service.metadata.name] track by (set | uid)">
+  <div class="overview-tile-wrapper" ng-repeat="set in statefulSetsByService[service.metadata.name] track by (set | uid)">
     <overview-set></overview-set>
   </div>
 

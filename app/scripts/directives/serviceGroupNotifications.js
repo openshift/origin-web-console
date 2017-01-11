@@ -160,9 +160,9 @@ angular.module('openshiftConsole')
               addPodWarnings(pods, groupedPodWarnings);
             });
 
-            var petSets = _.get($scope, ['petSetsByService', svcName]);
-            _.each(petSets, function(petSet) {
-              var pods = getPods(petSet);
+            var statefulSets = _.get($scope, ['statefulSetsByService', svcName]);
+            _.each(statefulSets, function(statefulSet) {
+              var pods = getPods(statefulSet);
               addPodWarnings(pods, groupedPodWarnings);
             });
           });
@@ -231,7 +231,7 @@ angular.module('openshiftConsole')
           setDeploymentNotifications();
         });
         $scope.$watchGroup(['deploymentConfigsByService', 'deploymentsByService'], setDCNotifications);
-        $scope.$watchGroup(['podsByOwnerUid', 'replicationControllersByService', 'replicaSetsByService', 'petSetsByService'], setDeploymentNotifications);
+        $scope.$watchGroup(['podsByOwnerUid', 'replicationControllersByService', 'replicaSetsByService', 'statefulSetsByService'], setDeploymentNotifications);
       }
     };
   });

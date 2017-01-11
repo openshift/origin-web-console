@@ -31,7 +31,7 @@ angular.module('openshiftConsole')
 
         var countTiles = function() {
           var serviceName = _.get($scope, 'service.metadata.name');
-          var petSets = _.get($scope, ['petSetsByService', serviceName], {});
+          var statefulSets = _.get($scope, ['statefulSetsByService', serviceName], {});
           var monopods = _.get($scope, ['monopodsByService', serviceName], {});
 
           var rsTileCount = 0;
@@ -48,7 +48,7 @@ angular.module('openshiftConsole')
           $scope.tileCount =
             _.size($scope.deploymentConfigs) +
             _.size($scope.replicationControllers) +
-            _.size(petSets) +
+            _.size(statefulSets) +
             _.size(monopods) +
             rsTileCount;
         };
