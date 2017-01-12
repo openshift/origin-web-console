@@ -2157,10 +2157,10 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "<ng-form name=\"forms.bcEnvVars\">\n" +
     "<div ng-if=\"'buildconfigs' | canI : 'update'\">\n" +
     "<key-value-editor entries=\"envVars\" key-placeholder=\"Name\" value-placeholder=\"Value\" key-validator=\"[A-Za-z_][A-Za-z0-9_]*\" key-validator-error=\"Please enter a valid key\" key-validator-error-tooltip=\"A valid environment variable name is an alphanumeric (a-z and 0-9) string beginning with a letter that may contain underscores.\" add-row-link=\"Add Environment Variable\" show-header></key-value-editor>\n" +
-    "<key-value-editor ng-if=\"!('buildconfigs' | canI : 'update')\" entries=\"envVars\" key-placeholder=\"Name\" value-placeholder=\"Value\" is-readonly cannot-add cannot-sort cannot-delete show-header></key-value-editor>\n" +
     "<button class=\"btn btn-default\" ng-click=\"saveEnvVars()\" ng-disabled=\"forms.bcEnvVars.$pristine || forms.bcEnvVars.$invalid\">Save</button>\n" +
     "<a ng-if=\"!forms.bcEnvVars.$pristine\" href=\"\" ng-click=\"clearEnvVarUpdates()\" class=\"mar-left-sm\" style=\"vertical-align: -2px\">Clear Changes</a>\n" +
     "</div>\n" +
+    "<key-value-editor ng-if=\"!('buildconfigs' | canI : 'update')\" entries=\"envVars\" key-placeholder=\"Name\" value-placeholder=\"Value\" is-readonly cannot-add cannot-sort cannot-delete show-header></key-value-editor>\n" +
     "</ng-form>\n" +
     "</uib-tab>\n" +
     "</uib-tabset>\n" +
