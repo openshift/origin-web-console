@@ -232,6 +232,7 @@ angular.module('openshiftConsole')
           $scope.disableInputs = true;
           DataService.update(resourceGroupVersion, resource.metadata.name, $scope.targetObject, context).then(
             function() {
+              _.set($scope, 'confirm.doneEditing', true);
               $window.history.back();
             },
             function(result) {

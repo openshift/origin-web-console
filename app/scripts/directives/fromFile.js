@@ -264,6 +264,8 @@ angular.module("openshiftConsole")
         // When redirecting to newFromTemplate page, use the cached Template if user doesn't adds it into the
         // namespace by the create process or if the template is being updated.
         function redirect() {
+          _.set($scope, 'confirm.doneEditing', true);
+
           var path;
           if ($scope.resourceKind === "Template" && $scope.templateOptions.process && !$scope.errorOccured) {
             var namespace = ($scope.templateOptions.add || $scope.updateResources.length > 0) ? $scope.projectName : "";

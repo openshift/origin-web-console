@@ -6,6 +6,7 @@
 <div class="row">
   <div class="col-sm-12 pod-bottom-xl">
     <form name="form">
+      <confirm-on-exit dirty="form.$dirty && !confirm.doneEditing"></confirm-on-exit>
       <div class="form-group" id="from-file">
         <osc-file-input
           model="editorContent"
@@ -34,7 +35,8 @@
           Create
         </button>
         <a class="btn btn-default btn-lg"
-          href="{{projectName | projectOverviewURL}}">
+          ng-click="confirm.doneEditing = true"
+          ng-href="{{projectName | projectOverviewURL}}">
           Cancel
         </a>
       </div>

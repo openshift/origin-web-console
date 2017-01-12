@@ -36,6 +36,7 @@
     "$": false,
     "_" : false,
     "URITemplate": false,
-    "saveAs": false
+    "saveAs": false,
+    "confirm": false
   }
 }

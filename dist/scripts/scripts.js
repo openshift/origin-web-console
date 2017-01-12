@@ -549,7 +549,7 @@ alerts:c,
 hasErrors:d
 });
 }), a.promise;
-}), o.isDialog ? c.$emit("templateInstantiated", {
+}), _.set(c, "confirm.doneEditing", !0), o.isDialog ? c.$emit("templateInstantiated", {
 project:o.selectedProject,
 template:o.template
 }) :f.toNextSteps(o.templateDisplayName, o.selectedProject.metadata.name);
@@ -6592,7 +6592,7 @@ data:{
 type:"success",
 message:p + " was updated."
 }
-}), b.url(e.resourceURL);
+}), _.set(e, "confirm.doneEditing", !0), b.url(e.resourceURL);
 }, function(a) {
 e.disableInputs = !1, r(p + " could not be updated.", q(a));
 });
@@ -6931,7 +6931,7 @@ data:{
 type:"success",
 message:"Build Config " + a.updatedBuildConfig.metadata.name + " was successfully updated."
 }
-}), c.path(i.resourceURL(a.updatedBuildConfig, "BuildConfig", a.updatedBuildConfig.metadata.namespace));
+}), _.set(a, "confirm.doneEditing", !0), c.path(i.resourceURL(a.updatedBuildConfig, "BuildConfig", a.updatedBuildConfig.metadata.namespace));
 }, function(c) {
 a.disableInputs = !1, a.alerts.save = {
 type:"error",
@@ -7191,7 +7191,7 @@ data:{
 type:"success",
 message:"Deployment config " + a.updatedDeploymentConfig.metadata.name + " was successfully updated."
 }
-});
+}), _.set(a, "confirm.doneEditing", !0);
 var b = k.resourceURL(a.updatedDeploymentConfig);
 c.url(b);
 }, function(c) {
@@ -7252,7 +7252,7 @@ h.create({
 resource:"horizontalpodautoscalers",
 group:"autoscaling"
 }, null, b, j).then(function() {
-d.history.back();
+_.set(a, "confirm.doneEditing", !0), d.history.back();
 }, function(b) {
 a.disableInputs = !1, p("An error occurred creating the horizontal pod autoscaler.", b);
 });
@@ -7261,7 +7261,7 @@ a.disableInputs = !0, b = angular.copy(b), b.metadata.labels = m.mapEntries(m.co
 resource:"horizontalpodautoscalers",
 group:"autoscaling"
 }, b.metadata.name, b, j).then(function() {
-d.history.back();
+_.set(a, "confirm.doneEditing", !0), d.history.back();
 }, function(c) {
 a.disableInputs = !1, p('An error occurred updating horizontal pod autoscaler "' + b.metadata.name + '".', c);
 });
@@ -7353,7 +7353,7 @@ data:{
 type:"success",
 message:o + " was updated."
 }
-}), b.url(d.resourceURL);
+}), _.set(d, "confirm.doneEditing", !0), b.url(d.resourceURL);
 }, function(a) {
 d.disableInputs = !1, n(o + " could not be updated.", m(a));
 });
@@ -7376,35 +7376,41 @@ title:d.routeName,
 link:d.routeURL
 }, {
 title:"Edit"
-} ], d.hideErrorNotifications = function() {
+} ];
+var l = function() {
 i.hideNotification("edit-route-error");
-}, j.get(c.project).then(_.spread(function(e, j) {
-if (d.project = e, d.breadcrumbs[0].title = a("displayName")(e), !f.canI("routes", "update", c.project)) return void h.toErrorPage("You do not have authority to update route " + c.routeName + ".", "access_denied");
-var l, m = a("orderByDisplayName"), n = function() {
+}, m = function() {
+_.set(d, "confirm.doneEditing", !0), d.doneEditing = !0, b.path(d.routeURL);
+};
+d.cancel = function() {
+l(), m();
+}, j.get(c.project).then(_.spread(function(b, e) {
+if (d.project = b, d.breadcrumbs[0].title = a("displayName")(b), !f.canI("routes", "update", c.project)) return void h.toErrorPage("You do not have authority to update route " + c.routeName + ".", "access_denied");
+var j, n = a("orderByDisplayName"), o = function() {
 h.toErrorPage('Editing routes with non-service targets is unsupported. You can edit the route with the "Edit YAML" action instead.');
 };
-g.get("routes", d.routeName, j).then(function(a) {
-if ("Service" !== a.spec.to.kind) return void n();
-l = angular.copy(a);
-var b = _.get(l, "spec.host"), c = "Subdomain" === _.get(l, "spec.wildcardPolicy");
-c && (b = "*." + k.getSubdomain(l)), d.routing = {
+g.get("routes", d.routeName, e).then(function(a) {
+if ("Service" !== a.spec.to.kind) return void o();
+j = angular.copy(a);
+var b = _.get(j, "spec.host"), c = "Subdomain" === _.get(j, "spec.wildcardPolicy");
+c && (b = "*." + k.getSubdomain(j)), d.routing = {
 host:b,
-wildcardPolicy:_.get(l, "spec.wildcardPolicy"),
-path:_.get(l, "spec.path"),
-targetPort:_.get(l, "spec.port.targetPort"),
-tls:angular.copy(_.get(l, "spec.tls"))
-}, g.list("services", j).then(function(a) {
+wildcardPolicy:_.get(j, "spec.wildcardPolicy"),
+path:_.get(j, "spec.path"),
+targetPort:_.get(j, "spec.port.targetPort"),
+tls:angular.copy(_.get(j, "spec.tls"))
+}, g.list("services", e).then(function(a) {
 d.loading = !1;
 var b = a.by("metadata.name");
-d.routing.to = l.spec.to, d.routing.alternateServices = [], _.each(_.get(l, "spec.alternateBackends"), function(a) {
-return "Service" !== a.kind ? (n(), !1) :void d.routing.alternateServices.push(a);
-}), d.services = m(b);
+d.routing.to = j.spec.to, d.routing.alternateServices = [], _.each(_.get(j, "spec.alternateBackends"), function(a) {
+return "Service" !== a.kind ? (o(), !1) :void d.routing.alternateServices.push(a);
+}), d.services = n(b);
 });
 }, function() {
 h.toErrorPage("Could not load route " + d.routeName + ".");
 });
-var o = function() {
-var a = angular.copy(l), b = _.get(d, "routing.to.name");
+var p = function() {
+var a = angular.copy(j), b = _.get(d, "routing.to.name");
 _.set(a, "spec.to.name", b);
 var c = _.get(d, "routing.to.weight");
 isNaN(c) || _.set(a, "spec.to.weight", c), a.spec.path = d.routing.path;
@@ -7421,13 +7427,13 @@ weight:a.weight
 };
 d.updateRoute = function() {
 if (d.form.$valid) {
-d.hideErrorNotifications(), d.disableInputs = !0;
-var c = o();
-g.update("routes", d.routeName, c, j).then(function() {
+l(), d.disableInputs = !0;
+var b = p();
+g.update("routes", d.routeName, b, e).then(function() {
 i.addNotification({
 type:"success",
 message:"Route " + d.routeName + " was successfully updated."
-}), b.path(d.routeURL);
+}), m();
 }, function(b) {
 d.disableInputs = !1, i.addNotification({
 type:"error",
@@ -7452,7 +7458,7 @@ link:d.returnURL
 title:"Edit YAML"
 } ];
 var n = function() {
-return d.returnURL ? void c.url(d.returnURL) :void e.history.back();
+return a.modified = !1, d.returnURL ? void c.url(d.returnURL) :void e.history.back();
 }, o = _.throttle(function() {
 a.$eval(function() {
 a.modified = !0;
@@ -7743,7 +7749,7 @@ type:"error",
 message:"An error occurred creating the application.",
 details:"Status: " + b.status + ". " + b.data
 };
-}), h.toNextSteps(a.name, a.projectName, {
+}), _.set(a, "confirm.doneEditing", !0), h.toNextSteps(a.name, a.projectName, {
 usingSampleRepo:a.usingSampleRepo(),
 breadcrumbTitle:z
 });
@@ -8174,7 +8180,7 @@ a.actions.canSubmit = b;
 },
 update:function() {
 a.disableInputs = !0, g.update(b.project, k(e, a.editableFields)).then(function() {
-b.then ? d.path(b.then) :h.toProjectOverview(e.metadata.name);
+_.set(a, "confirm.doneEditing", !0), b.then ? d.path(b.then) :h.toProjectOverview(e.metadata.name);
 }, function(b) {
 a.disableInputs = !1, a.editableFields = f(e), a.alerts.update = {
 type:"error",
@@ -8201,17 +8207,19 @@ title:"Create Route"
 } ];
 var l = function() {
 i.hideNotification("create-route-error");
+}, m = function() {
+_.set(c, "confirm.doneEditing", !0), d.history.back();
 };
 c.cancel = function() {
-l(), d.history.back();
-}, j.get(b.project).then(_.spread(function(j, m) {
-if (c.project = j, c.breadcrumbs[0].title = a("displayName")(j), !f.canI("routes", "create", b.project)) return void h.toErrorPage("You do not have authority to create routes in project " + b.project + ".", "access_denied");
+l(), m();
+}, j.get(b.project).then(_.spread(function(d, j) {
+if (c.project = d, c.breadcrumbs[0].title = a("displayName")(d), !f.canI("routes", "create", b.project)) return void h.toErrorPage("You do not have authority to create routes in project " + b.project + ".", "access_denied");
 var n = a("orderByDisplayName");
 c.routing.to = {
 kind:"Service",
 name:c.serviceName,
 weight:1
-}, g.list("services", m).then(function(a) {
+}, g.list("services", j).then(function(a) {
 c.services = n(a.by("metadata.name"));
 }), c.copyServiceLabels = function() {
 var a = _.get(c, "routing.to.service.metadata.labels", {}), b = k.mapEntries(k.compactEntries(c.labels)), d = _.assign(b, a);
@@ -8224,18 +8232,18 @@ value:a
 }, c.createRoute = function() {
 if (c.createRouteForm.$valid) {
 l(), c.disableInputs = !0;
-var b = c.routing.to.name, f = k.mapEntries(k.compactEntries(c.labels)), h = e.createRoute(c.routing, b, f), j = _.get(c, "routing.alternateServices", []);
-_.isEmpty(j) || (h.spec.to.weight = _.get(c, "routing.to.weight"), h.spec.alternateBackends = _.map(j, function(a) {
+var b = c.routing.to.name, d = k.mapEntries(k.compactEntries(c.labels)), f = e.createRoute(c.routing, b, d), h = _.get(c, "routing.alternateServices", []);
+_.isEmpty(h) || (f.spec.to.weight = _.get(c, "routing.to.weight"), f.spec.alternateBackends = _.map(h, function(a) {
 return {
 kind:"Service",
 name:a.name,
 weight:a.weight
 };
-})), g.create("routes", null, h, m).then(function() {
+})), g.create("routes", null, f, j).then(function() {
 i.addNotification({
 type:"success",
-message:"Route " + h.metadata.name + " was successfully created."
-}), d.history.back();
+message:"Route " + f.metadata.name + " was successfully created."
+}), m();
 }, function(b) {
 c.disableInputs = !1, i.addNotification({
 type:"error",
@@ -8431,7 +8439,7 @@ items:p
 };
 }
 h.spec.volumes = h.spec.volumes || [], h.spec.volumes.push(s), d.alerts = {}, d.disableInputs = !0, i.update(o, b.metadata.name, d.targetObject, f).then(function() {
-e.history.back();
+_.set(d, "confirm.doneEditing", !0), e.history.back();
 }, function(b) {
 d.disableInputs = !1;
 var e = a("humanizeKind"), f = e(g.kind), h = e(c.kind);
@@ -8558,7 +8566,7 @@ if (c.createPersistentVolumeClaimForm.$valid) {
 c.disableInputs = !0;
 var b = k();
 g.create("persistentvolumeclaims", null, b, i).then(function() {
-d.history.back();
+_.set(c, "confirm.doneEditing", !0), d.history.back();
 }, function(b) {
 c.disableInputs = !1, c.alerts["create-persistent-volume-claim"] = {
 type:"error",
@@ -8738,6 +8746,7 @@ e.aceChanged = h, e.create = function() {
 e.alerts = {};
 var d = f(e.newSecret.data, e.newSecret.authType);
 c.create("secrets", null, d, e).then(function(a) {
+_.set(e, "confirm.doneEditing", !0);
 var c = [ {
 name:"create",
 data:{
@@ -9134,6 +9143,7 @@ c > 0 && d.push(w()), b > 0 && d.push(v()), a.all(d).then(s);
 } else u();
 }
 function s() {
+_.set(m, "confirm.doneEditing", !0);
 var a;
 if ("Template" === m.resourceKind && m.templateOptions.process && !m.errorOccured) {
 var b = m.templateOptions.add || m.updateResources.length > 0 ? m.projectName :"";
@@ -13082,7 +13092,7 @@ alerts:d,
 hasErrors:e
 });
 }), a.promise;
-}), h.toNextSteps(c.app.name, c.project);
+}), _.set(c, "confirm.doneEditing", !0), h.toNextSteps(c.app.name, c.project);
 }, A = function(a) {
 var b = d.open({
 animation:!0,
@@ -13302,7 +13312,28 @@ e.findReferenceValueForEntries(b.entries, b.valueFromSelectorOptions);
 } ]
 };
 } ]);
-}(), angular.module("openshiftConsole").filter("duration", function() {
+}(), angular.module("openshiftConsole").directive("confirmOnExit", function() {
+return {
+scope:{
+dirty:"=",
+message:"="
+},
+link:function(a) {
+var b = function() {
+return a.message || "You have unsaved changes. Leave this page anyway?";
+}, c = function() {
+if (a.dirty) return b();
+};
+$(window).on("beforeunload", c);
+var d = a.$on("$locationChangeStart", function(c) {
+a.dirty && (confirm(b()) || c.preventDefault());
+});
+a.$on("$destroy", function() {
+$(window).off("beforeunload", c), d && d();
+});
+}
+};
+}), angular.module("openshiftConsole").filter("duration", function() {
 return function(a, b, c, d) {
 function e(a, b, d) {
 if (0 !== a) return 1 === a ? void (c ? h.push(b) :h.push("1 " + b)) :void h.push(a + " " + d);

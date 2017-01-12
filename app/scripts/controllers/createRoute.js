@@ -50,9 +50,14 @@ angular.module('openshiftConsole')
       NotificationsService.hideNotification("create-route-error");
     };
 
+    var navigateBack = function() {
+      _.set($scope, 'confirm.doneEditing', true);
+      $window.history.back();
+    };
+
     $scope.cancel = function() {
       hideErrorNotifications();
-      $window.history.back();
+      navigateBack();
     };
 
     ProjectsService
@@ -116,8 +121,9 @@ angular.module('openshiftConsole')
                     type: "success",
                     message: "Route " + route.metadata.name + " was successfully created."
                 });
+
                 // Return to the previous page
-                $window.history.back();
+                navigateBack();
               }, function(result) { // Failure
                 $scope.disableInputs = false;
                 NotificationsService.addNotification({

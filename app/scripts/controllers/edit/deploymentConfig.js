@@ -378,6 +378,7 @@ angular.module('openshiftConsole')
               message: "Deployment config " + $scope.updatedDeploymentConfig.metadata.name + " was successfully updated."
             }
           });
+          _.set($scope, 'confirm.doneEditing', true);
           var returnURL = Navigate.resourceURL($scope.updatedDeploymentConfig);
           $location.url(returnURL);
         },

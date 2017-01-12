@@ -119,6 +119,7 @@ angular.module('openshiftConsole')
                       message: displayName + " was updated."
                     }
                   });
+                  _.set($scope, 'confirm.doneEditing', true);
                   $location.url($scope.resourceURL);
                 },
                 function(result) {

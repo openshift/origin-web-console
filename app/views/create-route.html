@@ -18,6 +18,7 @@
                     Routing is a way to make your application publicly visible.
                   </div>
                   <form name="createRouteForm" class="mar-top-xl osc-form">
+                    <confirm-on-exit dirty="createRouteForm.$dirty && !confirm.doneEditing"></confirm-on-exit>
                     <div ng-if="!services">Loading...</div>
                     <div ng-if="services">
                       <fieldset ng-disabled="disableInputs">
