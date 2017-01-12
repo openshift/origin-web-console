@@ -19,7 +19,8 @@ angular.module('openshiftConsole')
                        DataService,
                        Navigate,
                        ProjectsService,
-                       StorageService) {
+                       StorageService,
+                       RELATIVE_PATH_PATTERN) {
     if (!$routeParams.kind || !$routeParams.name) {
       Navigate.toErrorPage("Kind or name parameter missing.");
       return;
@@ -50,6 +51,7 @@ angular.module('openshiftConsole')
     $scope.projectName = $routeParams.project;
     $scope.kind = $routeParams.kind;
     $scope.name = $routeParams.name;
+    $scope.RELATIVE_PATH_PATTERN = RELATIVE_PATH_PATTERN;
 
     $scope.attach = {
       persistentVolumeClaim: null,
@@ -149,11 +151,14 @@ angular.module('openshiftConsole')
             var persistentVolumeClaim = $scope.attach.persistentVolumeClaim;
             var name = $scope.attach.volumeName;
             var mountPath = $scope.attach.mountPath;
+            var subPath = $scope.attach.subPath;
+            var readOnly = $scope.attach.readOnly;
             if (mountPath) {
               // for each container in the pod spec, add the new volume mount
               angular.forEach(podTemplate.spec.containers, function(container) {
                 if (isContainerSelected(container)) {
-                  var newVolumeMount = StorageService.createVolumeMount(name, mountPath);
+                  var newVolumeMount =
+                    StorageService.createVolumeMount(name, mountPath, subPath, readOnly);
                   if (!container.volumeMounts) {
                     container.volumeMounts = [];
                   }
