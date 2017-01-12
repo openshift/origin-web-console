@@ -3711,7 +3711,7 @@ code.command{display:inline-block;line-height:1.3;margin-right:2px}
 .pod-donut .c3-defocused{opacity:.5!important}
 .pod-donut .c3-tooltip-container{top:-27px!important;left:50%!important;transform:translateX(-50%);white-space:nowrap}
 .pod-donut path.c3-arc-Empty{stroke:#d1d1d1;cursor:inherit!important}
-.deployment-donut{justify-content:center;min-width:200px}
+.deployment-donut{justify-content:center}
 .deployment-donut .scaling-controls{justify-content:center;font-size:24px}
 .deployment-donut .scaling-controls a{color:#bbb}
 .deployment-donut .scaling-controls a:active,.deployment-donut .scaling-controls a:hover{color:#72767b;text-decoration:none}
