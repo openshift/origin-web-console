@@ -96,8 +96,14 @@ angular
           cleanBinding(binding);
           binding.subjects = _.reject(binding.subjects, {name: subjectName});
           return binding.subjects.length ?
-                  DataService.update('rolebindings', binding.metadata.name, binding, context):
-                  DataService.delete('rolebindings', binding.metadata.name, context);
+                  DataService.update('rolebindings', binding.metadata.name, binding, context) :
+                  DataService.delete('rolebindings', binding.metadata.name, context)
+                  // For a delete, resp is simply a 201 or less useful object.
+                  // Instead, this intercepts the response & returns the binding object
+                  // with the empty .subjects[] list. 
+                  .then(function() {
+                    return binding;
+                  });
         }));
     };
 

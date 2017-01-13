@@ -22,6 +22,7 @@ angular
       var projectName = $routeParams.project;
       var humanizeKind = $filter('humanizeKind');
       var annotation = $filter('annotation');
+      var canI = $filter('canI');
 
       var allRoles = [];
 
@@ -69,7 +70,7 @@ angular
         $scope.newBinding.newRole = null;
       };
 
-      var refreshRoleBindingList = function() {
+      var refreshRoleBindingList = function(toUpdateOnError) {
         DataService
           .list('rolebindings', requestContext, null , {
             errorNotification: false
@@ -81,6 +82,13 @@ angular
               subjectKindsForUI: MembershipService.mapRolebindingsForUI(resp.by('metadata.name'), allRoles)
             });
 			      resetForm();
+          }, function() {
+            // if the request errors but we have an object, we can at least update in place
+            if(toUpdateOnError) {
+              $scope.roleBindings[toUpdateOnError.metadata.name] = toUpdateOnError;
+              $scope.subjectKindsForUI = MembershipService.mapRolebindingsForUI($scope.roleBindings, allRoles);
+            }
+            resetForm();
           });
       };
 
@@ -238,6 +246,7 @@ angular
           angular.extend($scope, {
             project: project,
             subjectKinds: subjectKinds,
+            canUpdateRolebindings: canI('rolebindings', 'update', projectName),
             confirmRemove: function(subjectName, kindName, roleName) {
               var redirectToProjectList = null;
               var modalScope = createModalScope(subjectName, kindName, roleName, $scope.user.metadata.name);
@@ -259,11 +268,24 @@ angular
               .result.then(function() {
                 RoleBindingsService
                   .removeSubject(subjectName, roleName, $scope.roleBindings, requestContext)
-                  .then(function() {
+                  .then(function(updateRolebinding) {
                     if(redirectToProjectList) {
                       $location.url("./");
                     } else {
-                      refreshRoleBindingList();
+                      AuthorizationService
+                        .getProjectRules(projectName, true)
+                        .then(function() {
+                          refreshRoleBindingList(updateRolebinding[0]);
+                          // test if the current user can still edit roles.
+                          // if not, remove permissions & exit edit mode.
+                          var canEdit = canI('rolebindings', 'update', projectName);
+                          angular.extend($scope, {
+                            canUpdateRolebindings: canEdit,
+                            mode: {
+                              edit: $scope.mode.edit ? canEdit : false
+                            }
+                          });
+                        });
                       showAlert('rolebindingUpdate', 'success', messages.remove.success({
                         roleName: roleName,
                         subjectName: subjectName

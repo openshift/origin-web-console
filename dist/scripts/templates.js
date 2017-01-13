@@ -9630,7 +9630,7 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "<div class=\"container-fluid\">\n" +
     "<div class=\"page-header page-header-bleed-right page-header-bleed-left\">\n" +
     "<h1>\n" +
-    "<a class=\"pull-right btn btn-default\" href=\"\" ng-if=\"'rolebindings' | canI : 'update'\" ng-click=\"toggleEditMode()\">\n" +
+    "<a class=\"pull-right btn btn-default\" href=\"\" ng-if=\"canUpdateRolebindings\" ng-click=\"toggleEditMode()\">\n" +
     "<span ng-if=\"!(mode.edit)\">Edit Membership</span>\n" +
     "<span ng-if=\"mode.edit\">Done Editing</span>\n" +
     "</a>\n" +
