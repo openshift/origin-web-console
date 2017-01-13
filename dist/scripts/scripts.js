@@ -3941,22 +3941,25 @@ target:"_blank"
 _.each(h, p), _.each(i, p);
 }), e) :e;
 }, s = function(a, b) {
-function f() {
-0 === k && (j = r(a, g, h), i.resolve({
-quotaAlerts:j
-}));
-}
-var g, h, i = c.defer(), j = [], k = 2;
-return d.list("resourcequotas", b, function(a) {
-g = a.by("metadata.name"), e.log("quotas", g), k--, f();
-}), d.list("appliedclusterresourcequotas", b, function(a) {
-h = a.by("metadata.name"), e.log("cluster quotas", h), k--, f();
-}), i.promise;
+var f, g, h = [];
+return h.push(d.list("resourcequotas", b).then(function(a) {
+f = a.by("metadata.name"), e.log("quotas", f);
+})), h.push(d.list("appliedclusterresourcequotas", b).then(function(a) {
+g = a.by("metadata.name"), e.log("cluster quotas", g);
+})), c.all(h).then(function() {
+var b = r(a, f, g);
+return {
+quotaAlerts:b
+};
+});
 }, t = function(a, b) {
 var c = function(a) {
 var b = a.status.total || a.status;
 return _.some(b.hard, function(a, c) {
-return "resourcequotas" !== c && (!f(a) && g(a) <= g(b.used[c]));
+if ("resourcequotas" === c) return !1;
+if (a = g(a), !a) return !1;
+var d = g(_.get(b, [ "used", c ]));
+return !!d && a <= d;
 });
 };
 return _.some(a, c) || _.some(b, c);
@@ -4983,25 +4986,30 @@ q.cancel(a);
 });
 });
 }));
-} ]), angular.module("openshiftConsole").controller("QuotaController", [ "$routeParams", "$scope", "DataService", "ProjectsService", "Logger", function(a, b, c, d, e) {
-b.projectName = a.project, b.limitRanges = {}, b.limitsByType = {}, b.labelSuggestions = {}, b.alerts = b.alerts || {}, b.quotaHelp = "Limits resource usage within this project.", b.emptyMessageLimitRanges = "Loading...", b.limitRangeHelp = "Defines minimum and maximum constraints for runtime resources such as memory and CPU.", b.renderOptions = b.renderOptions || {}, b.renderOptions.hideFilterWidget = !0;
-var f = [];
-d.get(a.project).then(_.spread(function(d, g) {
-b.project = d, c.list("resourcequotas", g, function(a) {
-b.quotas = a.by("metadata.name"), e.log("quotas", b.quotas);
-}), c.list("appliedclusterresourcequotas", g, function(c) {
-b.clusterQuotas = c.by("metadata.name"), b.namespaceUsageByClusterQuota = {}, _.each(b.clusterQuotas, function(c, d) {
-if (c.status) {
-var e = _.find(c.status.namespaces, {
-namespace:a.project
+} ]), angular.module("openshiftConsole").controller("QuotaController", [ "$filter", "$routeParams", "$scope", "DataService", "ProjectsService", "Logger", function(a, b, c, d, e, f) {
+c.projectName = b.project, c.limitRanges = {}, c.limitsByType = {}, c.labelSuggestions = {}, c.alerts = c.alerts || {}, c.quotaHelp = "Limits resource usage within this project.", c.emptyMessageLimitRanges = "Loading...", c.limitRangeHelp = "Defines minimum and maximum constraints for runtime resources such as memory and CPU.", c.renderOptions = c.renderOptions || {}, c.renderOptions.hideFilterWidget = !0;
+var g = [], h = a("usageValue");
+c.isAtLimit = function(a, b) {
+var c = a.status.total || a.status, d = h(_.get(c, [ "hard", b ]));
+if (!d) return !1;
+var e = h(_.get(c, [ "used", b ]));
+return !!e && e >= d;
+}, e.get(b.project).then(_.spread(function(a, e) {
+c.project = a, d.list("resourcequotas", e, function(a) {
+c.quotas = a.by("metadata.name"), f.log("quotas", c.quotas);
+}), d.list("appliedclusterresourcequotas", e, function(a) {
+c.clusterQuotas = a.by("metadata.name"), c.namespaceUsageByClusterQuota = {}, _.each(c.clusterQuotas, function(a, d) {
+if (a.status) {
+var e = _.find(a.status.namespaces, {
+namespace:b.project
 });
-b.namespaceUsageByClusterQuota[d] = e.status;
+c.namespaceUsageByClusterQuota[d] = e.status;
 }
-}), e.log("cluster quotas", b.clusterQuotas);
-}), c.list("limitranges", g, function(a) {
-b.limitRanges = a.by("metadata.name"), b.emptyMessageLimitRanges = "There are no limit ranges set on this project.", angular.forEach(b.limitRanges, function(a, c) {
-b.limitsByType[c] = {}, angular.forEach(a.spec.limits, function(a) {
-var d = b.limitsByType[c][a.type] = {};
+}), f.log("cluster quotas", c.clusterQuotas);
+}), d.list("limitranges", e, function(a) {
+c.limitRanges = a.by("metadata.name"), c.emptyMessageLimitRanges = "There are no limit ranges set on this project.", angular.forEach(c.limitRanges, function(a, b) {
+c.limitsByType[b] = {}, angular.forEach(a.spec.limits, function(a) {
+var d = c.limitsByType[b][a.type] = {};
 angular.forEach(a.max, function(a, b) {
 d[b] = d[b] || {}, d[b].max = a;
 }), angular.forEach(a.min, function(a, b) {
@@ -5014,9 +5022,9 @@ d[b] = d[b] || {}, d[b].defaultRequest = a;
 d[b] = d[b] || {}, d[b].maxLimitRequestRatio = a;
 });
 });
-}), e.log("limitRanges", b.limitRanges);
-}), b.$on("$destroy", function() {
-c.unwatchAll(f);
+}), f.log("limitRanges", c.limitRanges);
+}), c.$on("$destroy", function() {
+d.unwatchAll(g);
 });
 }));
 } ]), angular.module("openshiftConsole").controller("MonitoringController", [ "$routeParams", "$location", "$scope", "$filter", "BuildsService", "DataService", "ImageStreamResolver", "KeywordService", "LabelsService", "Logger", "MetricsService", "Navigate", "PodsService", "ProjectsService", "$rootScope", function(a, b, c, d, e, f, g, h, i, j, k, l, m, n, o) {
@@ -13910,7 +13918,9 @@ replicationcontrollers:"Replication Controllers",
 "requests.memory":"Memory (Request)",
 resourcequotas:"Resource Quotas",
 secrets:"Secrets",
-services:"Services"
+services:"Services",
+"services.loadbalancers":"Service Load Balancers",
+"services.nodeports":"Service Node Ports"
 }, d = {
 configmaps:"config maps",
 cpu:"CPU (request)",
@@ -13924,7 +13934,9 @@ persistentvolumeclaims:"persistent volume claims",
 replicationcontrollers:"replication controllers",
 "requests.cpu":"CPU (request)",
 "requests.memory":"memory (request)",
-resourcequotas:"resource quotas"
+resourcequotas:"resource quotas",
+"services.loadbalancers":"service load balancers",
+"services.nodeports":"service node ports"
 };
 return b ? c[a] || a :d[a] || a;
 };
