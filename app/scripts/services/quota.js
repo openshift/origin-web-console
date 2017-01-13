@@ -227,47 +227,51 @@ angular.module("openshiftConsole")
     };
 
     var getLatestQuotaAlerts = function(resources, context) {
-      var result = $q.defer();
-      var quotaAlerts = [];
-      var quotas, clusterQuotas;
-      var remaining = 2;
-      function _checkDone() {
-        if (remaining === 0) {
-          quotaAlerts = getQuotaAlerts(resources, quotas, clusterQuotas);
-          result.resolve({quotaAlerts: quotaAlerts});
-        }
-      }
+      var quotas, clusterQuotas, promises = [];
 
       // double check using the latest quotas
-      DataService.list("resourcequotas", context, function(quotaData) {
+      promises.push(DataService.list("resourcequotas", context).then(function(quotaData) {
         quotas = quotaData.by("metadata.name");
         Logger.log("quotas", quotas);
-        remaining--;
-        _checkDone();
-      });
+      }));
 
-      DataService.list("appliedclusterresourcequotas", context, function(clusterQuotaData) {
+      promises.push(DataService.list("appliedclusterresourcequotas", context).then(function(clusterQuotaData) {
         clusterQuotas = clusterQuotaData.by("metadata.name");
         Logger.log("cluster quotas", clusterQuotas);
-        remaining--;
-        _checkDone();
+      }));
+
+      return $q.all(promises).then(function() {
+        var quotaAlerts = getQuotaAlerts(resources, quotas, clusterQuotas);
+        return {
+          quotaAlerts: quotaAlerts
+        };
       });
-
-      // TODO when DataService.List supports error callbacks an error retrieving the lists should reject the promise
-      // So that failing to check your quota doesn't block app creation.
-
-      return result.promise;
     };
 
+    // Warn if you are at quota or over any quota for any resource. Do *not*
+    // warn about quota for 'resourcequotas' or resources whose hard limit is
+    // 0, however.
     var isAnyQuotaExceeded = function(quotas, clusterQuotas) {
         var isExceeded = function(quota) {
           var q = quota.status.total || quota.status;
           return _.some(q.hard, function(hard, quotaKey) {
-            // We always ignore quota warnings about being out of resourcequotas since end users cant do anything about it
+            // We always ignore quota warnings about being out of
+            // resourcequotas since end users cant do anything about it
             if (quotaKey === 'resourcequotas') {
               return false;
             }
-            return !isNil(hard) && usageValue(hard) <= usageValue(q.used[quotaKey]);
+
+            hard = usageValue(hard);
+            if (!hard) {
+              return false;
+            }
+
+            var used = usageValue(_.get(q, ['used', quotaKey]));
+            if (!used) {
+              return false;
+            }
+
+            return hard <= used;
           });
         };
         return _.some(quotas, isExceeded) || _.some(clusterQuotas, isExceeded);

@@ -11682,7 +11682,7 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "<div class=\"table-responsive\">\n" +
     "<table class=\"table\">\n" +
     "<thead>\n" +
-    "<th>Resource type</th>\n" +
+    "<th>Resource Type</th>\n" +
     "<th>Used (this project)</th>\n" +
     "<th>Used (all projects)</th>\n" +
     "<th>Max</th>\n" +
@@ -11696,11 +11696,13 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "</tr>\n" +
     "\n" +
     "<tr ng-repeat=\"(resourceType, specMax) in quota.spec.quota.hard\" ng-if=\"resourceType !== 'resourcequotas'\" ng-class=\"{\n" +
-    "                              warning: (quota.status.total.used[resourceType] | usageValue) >= (quota.status.total.hard[resourceType] | usageValue)\n" +
+    "                              warning: isAtLimit(quota, resourceType),\n" +
+    "                              disabled: (quota.status.total.hard[resourceType] || specMax) === '0'\n" +
     "                            }\">\n" +
     "<td>\n" +
     "{{resourceType | humanizeQuotaResource : true}}\n" +
-    "<span ng-if=\"(quota.status.total.used[resourceType] | usageValue) >= (quota.status.total.hard[resourceType] | usageValue)\" data-toggle=\"tooltip\" title=\"Quota limit reached\" class=\"pficon pficon-warning-triangle-o\" style=\"cursor: help; vertical-align: middle\"></span>\n" +
+    "<span ng-if=\"isAtLimit(quota, resourceType)\" data-toggle=\"tooltip\" title=\"Quota limit reached.\" class=\"pficon pficon-warning-triangle-o warnings-popover\"></span>\n" +
+    "<span ng-if=\"(quota.status.total.hard[resourceType] || specMax) === '0'\" data-toggle=\"tooltip\" title=\"You are not allowed to create resources of this type.\" class=\"pficon pficon-info warnings-popover\"></span>\n" +
     "</td>\n" +
     "<td>\n" +
     "<span ng-if=\"!namespaceUsageByClusterQuota[quota.metadata.name].used\">&mdash;</span>\n" +
@@ -11763,7 +11765,7 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "<div class=\"table-responsive\">\n" +
     "<table class=\"table\">\n" +
     "<thead>\n" +
-    "<th>Resource type</th>\n" +
+    "<th>Resource Type</th>\n" +
     "<th>Used</th>\n" +
     "<th>Max</th>\n" +
     "</thead>\n" +
@@ -11776,11 +11778,13 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "</tr>\n" +
     "\n" +
     "<tr ng-repeat=\"(resourceType, specMax) in quota.spec.hard\" ng-if=\"resourceType !== 'resourcequotas'\" ng-class=\"{\n" +
-    "                              warning: (quota.status.used[resourceType] | usageValue) >= (quota.status.hard[resourceType] | usageValue)\n" +
+    "                              warning: isAtLimit(quota, resourceType),\n" +
+    "                              disabled: (quota.status.hard[resourceType] || specMax) === '0'\n" +
     "                            }\">\n" +
     "<td>\n" +
     "{{resourceType | humanizeQuotaResource : true}}\n" +
-    "<span ng-if=\"(quota.status.used[resourceType] | usageValue) >= (quota.status.hard[resourceType] | usageValue)\" data-toggle=\"tooltip\" title=\"Quota limit reached\" class=\"pficon pficon-warning-triangle-o\" style=\"cursor: help; vertical-align: middle\"></span>\n" +
+    "<span ng-if=\"isAtLimit(quota, resourceType)\" data-toggle=\"tooltip\" title=\"Quota limit reached.\" class=\"pficon pficon-warning-triangle-o warnings-popover\"></span>\n" +
+    "<span ng-if=\"(quota.status.hard[resourceType] || specMax) === '0'\" data-toggle=\"tooltip\" title=\"You are not allowed to create resources of this type.\" class=\"pficon pficon-info warnings-popover\"></span>\n" +
     "</td>\n" +
     "<td>\n" +
     "<span ng-if=\"!quota.status.used\">&mdash;</span>\n" +
@@ -11807,7 +11811,7 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "<div class=\"table-responsive\">\n" +
     "<table class=\"table\">\n" +
     "<thead>\n" +
-    "<th>Resource type</th>\n" +
+    "<th>Resource Type</th>\n" +
     "<th>\n" +
     "<span class=\"nowrap\">\n" +
     "Min\n" +

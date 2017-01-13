@@ -9,7 +9,8 @@
  * Controller of the openshiftConsole
  */
 angular.module('openshiftConsole')
-  .controller('QuotaController', function ($routeParams,
+  .controller('QuotaController', function ($filter,
+                                           $routeParams,
                                            $scope,
                                            DataService,
                                            ProjectsService,
@@ -26,6 +27,22 @@ angular.module('openshiftConsole')
     $scope.renderOptions.hideFilterWidget = true;
 
     var watches = [];
+
+    var usageValue = $filter('usageValue');
+    $scope.isAtLimit = function(quota, resourceType) {
+      var q = quota.status.total || quota.status;
+      var hard = usageValue(_.get(q, ['hard', resourceType]));
+      if (!hard) {
+        return false;
+      }
+
+      var used = usageValue(_.get(q, ['used', resourceType]));
+      if (!used) {
+        return false;
+      }
+
+      return used >= hard;
+    };
 
     ProjectsService
       .get($routeParams.project)

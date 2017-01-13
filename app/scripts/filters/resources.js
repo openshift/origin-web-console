@@ -1100,7 +1100,9 @@ angular.module('openshiftConsole')
         'requests.memory': 'Memory (Request)',
         'resourcequotas': 'Resource Quotas',
         'secrets': 'Secrets',
-        'services': 'Services'
+        'services': 'Services',
+        'services.loadbalancers': 'Service Load Balancers',
+        'services.nodeports': 'Service Node Ports'
       };
 
       var nameFormatMap = {
@@ -1116,7 +1118,9 @@ angular.module('openshiftConsole')
         'replicationcontrollers': 'replication controllers',
         'requests.cpu': 'CPU (request)',
         'requests.memory': 'memory (request)',
-        'resourcequotas': 'resource quotas'
+        'resourcequotas': 'resource quotas',
+        'services.loadbalancers': 'service load balancers',
+        'services.nodeports': 'service node ports'
       };
       if (useTitleCase) {
         return nameTitleCaseFormatMap[resourceType] || resourceType;
