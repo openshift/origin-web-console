@@ -171,7 +171,7 @@
 
                       <build-trends-chart builds="builds"></build-trends-chart>
                     </div>
-                    <div ng-if="loaded && (unfilteredBuilds | hashSize) > 0">
+                    <div ng-if="loaded && (unfilteredBuilds | hashSize) > 0" class="mar-bottom-xl">
                       <div class="table-filter-wrapper">
                         <project-filter></project-filter>
                       </div>
@@ -447,7 +447,7 @@
                       cannot-sort
                       cannot-delete
                       show-header></key-value-editor>
-                    <ng-form name="forms.bcEnvVars">
+                    <ng-form name="forms.bcEnvVars" class="mar-bottom-xl block">
                       <div ng-if="'buildconfigs' | canI : 'update'">
                         <key-value-editor
                           entries="envVars"
