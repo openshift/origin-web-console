@@ -2346,7 +2346,7 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "</tbody>\n" +
     "</table>\n" +
     "</div>\n" +
-    "<annotations annotations=\"configMap.metadata.annotations\"></annotations>\n" +
+    "<annotations annotations=\"configMap.metadata.annotations\" class=\"mar-top-xl\"></annotations>\n" +
     "</div>\n" +
     "</div>\n" +
     "</div>\n" +
@@ -5780,13 +5780,13 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
 
 
   $templateCache.put('views/directives/annotations.html',
-    "<p>\n" +
+    "<p ng-class=\"{'mar-bottom-md': expandAnnotations, 'mar-none':!expandAnnotations}\">\n" +
     "<a href=\"\" ng-click=\"toggleAnnotations()\" ng-if=\"!expandAnnotations\">Show Annotations</a>\n" +
     "<a href=\"\" ng-click=\"toggleAnnotations()\" ng-if=\"expandAnnotations\">Hide Annotations</a>\n" +
     "</p>\n" +
     "<div ng-if=\"expandAnnotations\">\n" +
     "<div ng-if=\"annotations\" class=\"table-responsive\">\n" +
-    "<table class=\"table table-bordered table-bordered-columns key-value-table table-top-margin\">\n" +
+    "<table class=\"table table-bordered table-bordered-columns key-value-table\">\n" +
     "<tbody>\n" +
     "<tr ng-repeat=\"(annotationKey, annotationValue) in annotations\">\n" +
     "<td class=\"key\">{{annotationKey}}</td>\n" +
@@ -5798,7 +5798,7 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "</tbody>\n" +
     "</table>\n" +
     "</div>\n" +
-    "<p ng-if=\"!annotations\">\n" +
+    "<p ng-if=\"!annotations\" class=\"mar-none\">\n" +
     "There are no annotations on this resource.\n" +
     "</p>\n" +
     "</div>"
