@@ -59,6 +59,7 @@ angular.module("openshiftConsole")
       }
     ];
     $scope.alerts = {};
+    $scope.quotaAlerts = {};
 
     var appLabel = {name: 'app', value: ''};
 
@@ -317,7 +318,7 @@ angular.module("openshiftConsole")
           var errorAlerts = _.filter(quotaAlerts, {type: 'error'});
           if ($scope.nameTaken || errorAlerts.length) {
             $scope.disableInputs = false;
-            $scope.alerts = quotaAlerts;
+            $scope.quotaAlerts = quotaAlerts;
           }
           else if (quotaAlerts.length) {
              launchConfirmationDialog(quotaAlerts);
