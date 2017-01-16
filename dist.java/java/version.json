@@ -1,25 +1,31 @@
 {
   "name": "openshift-jvm",
-  "version": "1.0.60",
-  "commitId": "fc6372f60b2527c403177c484bc01fe89d1eb9a8",
+  "version": "1.1.2",
+  "commitId": "d3e46c3ee4b781c925af0f73dbbe04d5325775cf",
   "packages": {
     "angular": {
-      "version": "1.5.8"
+      "version": "1.5.11"
+    },
+    "angular-bootstrap": {
+      "version": "0.13.4"
     },
     "angular-resource": {
-      "version": "1.3.20"
+      "version": "1.5.11"
     },
     "angular-route": {
-      "version": "1.3.20"
+      "version": "1.5.11"
     },
     "angular-sanitize": {
-      "version": "1.5.8"
+      "version": "1.5.11"
     },
     "bootstrap": {
       "version": "3.3.7"
     },
     "codemirror": {
-      "version": "5.18.2"
+      "version": "5.19.0"
+    },
+    "d3": {
+      "version": "3.5.17"
     },
     "dagre": {
       "version": "0.7.4"
@@ -31,13 +37,13 @@
       "version": "1.0.7"
     },
     "hawtio-core": {
-      "version": "2.0.36"
+      "version": "2.0.37"
     },
     "hawtio-core-dts": {
-      "version": "2.0.28"
+      "version": "2.0.29"
     },
     "hawtio-core-navigation": {
-      "version": "2.0.58"
+      "version": "2.0.59"
     },
     "hawtio-extension-service": {
       "version": "2.0.3"
@@ -46,19 +52,19 @@
       "version": "2.0.41"
     },
     "hawtio-integration": {
-      "version": "2.0.27"
+      "version": "2.1.2"
     },
     "hawtio-jmx": {
-      "version": "2.0.78"
+      "version": "2.0.79"
     },
     "hawtio-preferences": {
-      "version": "2.0.9"
+      "version": "2.0.10"
     },
     "hawtio-template-cache": {
-      "version": "2.0.6"
+      "version": "2.0.7"
     },
     "hawtio-ui": {
-      "version": "2.0.108"
+      "version": "2.0.113"
     },
     "hawtio-utilities": {
       "version": "2.0.39"
@@ -67,16 +73,25 @@
       "version": "1.3.2"
     },
     "humanize-duration": {
-      "version": "3.9.1"
+      "version": "3.10.0"
     },
     "jquery": {
       "version": "2.1.4"
+    },
+    "jquery-ui": {
+      "version": "1.12.1"
+    },
+    "jquery.dynatree": {
+      "version": "1.2.8"
     },
     "js-logger": {
       "version": "0.9.14"
     },
     "lodash": {
       "version": "3.10.1"
+    },
+    "marked": {
+      "version": "0.3.6"
     },
     "patternfly": {
       "version": "2.7.0"
