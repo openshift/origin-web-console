@@ -57,11 +57,7 @@
             <a ng-href="{{pipeline | navigateResourceURL}}">{{pipeline.metadata.name}}</a>.
           </p>
           <div ng-if="('buildconfigs/instantiate' | canI : 'create')">
-            <!-- Disable the button if a pipeline is running. -->
-            <button
-                class="btn btn-primary"
-                ng-click="startPipeline(pipeline)"
-                ng-disabled="incompletePipelinesByDC[deploymentConfig.metadata.name].length">
+            <button class="btn btn-primary" ng-click="startPipeline(pipeline)">
               Start Pipeline
             </button>
           </div>
