@@ -4762,6 +4762,7 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "{{ emptyMessage }}\n" +
     "</div>\n" +
     "<div class=\"osc-form\" ng-show=\"imageStream\">\n" +
+    "<alerts alerts=\"alerts\"></alerts>\n" +
     "<div class=\"row\">\n" +
     "<div class=\"col-md-2 icon hidden-sm hidden-xs\">\n" +
     "<custom-icon resource=\"imageStream\" kind=\"image\" tag=\"imageTag\"></custom-icon>\n" +
@@ -4998,7 +4999,7 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "<a href=\"\" ng-click=\"advancedOptions = !advancedOptions\" role=\"button\">advanced options</a>\n" +
     "for source, routes, builds, and deployments.\n" +
     "</div>\n" +
-    "<alerts alerts=\"alerts\"></alerts>\n" +
+    "<alerts alerts=\"quotaAlerts\"></alerts>\n" +
     "<div class=\"buttons gutter-bottom\" ng-class=\"{'gutter-top': !alerts.length}\">\n" +
     "\n" +
     "<button type=\"submit\" class=\"btn btn-primary btn-lg\" ng-disabled=\"form.$invalid || nameTaken || cpuProblems.length || memoryProblems.length || disableInputs\">Create</button>\n" +
@@ -10459,7 +10460,7 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "{{ emptyMessage }}\n" +
     "</div>\n" +
     "<div class=\"osc-form\" ng-show=\"template\">\n" +
-    "<alerts alerts=\"alertsTop\" hide-close-button=\"true\"></alerts>\n" +
+    "<alerts alerts=\"alerts\"></alerts>\n" +
     "<div class=\"row\">\n" +
     "<div class=\"col-md-2 icon hidden-sm hidden-xs\">\n" +
     "<custom-icon resource=\"template\" kind=\"template\"></custom-icon>\n" +
@@ -10489,7 +10490,7 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "<template-options parameters=\"template.parameters\" expand=\"true\" can-toggle=\"false\"></template-options>\n" +
     "<label-editor labels=\"labels\" system-labels=\"systemLabels\" expand=\"true\" can-toggle=\"false\" help-text=\"Each label is applied to each created resource.\">\n" +
     "</label-editor>\n" +
-    "<alerts alerts=\"alerts\"></alerts>\n" +
+    "<alerts alerts=\"quotaAlerts\"></alerts>\n" +
     "<div class=\"buttons gutter-top-bottom\">\n" +
     "<button class=\"btn btn-primary btn-lg\" ng-click=\"createFromTemplate()\" ng-disabled=\"templateForm.$invalid || disableInputs\">Create</button>\n" +
     "<a class=\"btn btn-default btn-lg\" href=\"{{projectName | projectOverviewURL}}\">Cancel</a>\n" +

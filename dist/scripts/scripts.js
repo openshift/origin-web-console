@@ -7776,7 +7776,7 @@ title:"Catalog",
 link:"project/" + a.projectName + "/create?tab=fromCatalog"
 }, {
 title:d.displayName || y
-} ], a.alerts = {};
+} ], a.alerts = {}, a.quotaAlerts = {};
 var z = {
 name:"app",
 value:""
@@ -7928,7 +7928,7 @@ b.result.then(D);
 var c = b.quotaAlerts || [], d = _.filter(c, {
 type:"error"
 });
-a.nameTaken || d.length ? (a.disableInputs = !1, a.alerts = c) :c.length ? (E(c), a.disableInputs = !1) :D();
+a.nameTaken || d.length ? (a.disableInputs = !1, a.quotaAlerts = c) :c.length ? (E(c), a.disableInputs = !1) :D();
 };
 a.projectDisplayName = function() {
 return w(this.project) || this.projectName;
@@ -8007,7 +8007,7 @@ d.unwatchAll(r);
 } ]), angular.module("openshiftConsole").controller("NewFromTemplateController", [ "$scope", "$http", "$routeParams", "DataService", "ProcessedTemplateService", "AlertMessageService", "ProjectsService", "QuotaService", "$q", "$location", "TaskList", "$parse", "Navigate", "$filter", "$uibModal", "imageObjectRefFilter", "failureObjectNameFilter", "CachedTemplateService", "keyValueEditorUtils", "Constants", function(a, b, c, d, e, f, g, h, i, j, k, l, m, n, o, p, q, r, s, t) {
 var u = c.template, v = c.namespace || "";
 if (!u) return void m.toErrorPage("Cannot create from template: a template name was not specified.");
-a.emptyMessage = "Loading...", a.alerts = {}, a.alertsTop = {}, a.projectName = c.project, a.projectPromise = $.Deferred(), a.labels = [], a.systemLabels = [], a.breadcrumbs = [ {
+a.emptyMessage = "Loading...", a.alerts = {}, a.quotaAlerts = {}, a.projectName = c.project, a.projectPromise = $.Deferred(), a.labels = [], a.systemLabels = [], a.breadcrumbs = [ {
 title:a.projectName,
 link:"project/" + a.projectName
 }, {
@@ -8025,7 +8025,7 @@ var w = n("displayName"), x = n("humanize"), y = l("spec.template.spec.container
 try {
 return JSON.parse(c.templateParamsMap);
 } catch (b) {
-a.alertsTop.invalidTemplateParams = {
+a.alerts.invalidTemplateParams = {
 type:"error",
 message:"The templateParamsMap is not valid JSON. " + b
 };
@@ -8185,7 +8185,7 @@ b.result.then(J);
 var c = b.quotaAlerts || [], d = _.filter(c, {
 type:"error"
 });
-d.length ? (a.disableInputs = !1, a.alerts = c) :c.length ? (K(c), a.disableInputs = !1) :J();
+d.length ? (a.disableInputs = !1, a.quotaAlerts = c) :c.length ? (K(c), a.disableInputs = !1) :J();
 };
 a.createFromTemplate = function() {
 a.disableInputs = !0;

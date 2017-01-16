@@ -43,7 +43,7 @@ angular.module('openshiftConsole')
 
     $scope.emptyMessage = "Loading...";
     $scope.alerts = {};
-    $scope.alertsTop = {};
+    $scope.quotaAlerts = {};
     $scope.projectName = $routeParams.project;
     $scope.projectPromise = $.Deferred();
     $scope.labels = [];
@@ -85,7 +85,7 @@ angular.module('openshiftConsole')
         return JSON.parse($routeParams.templateParamsMap);
       }
       catch (e) {
-        $scope.alertsTop.invalidTemplateParams = {
+        $scope.alerts.invalidTemplateParams = {
           type: "error",
           message: "The templateParamsMap is not valid JSON. " + e
         };
@@ -311,7 +311,7 @@ angular.module('openshiftConsole')
           var errorAlerts = _.filter(quotaAlerts, {type: 'error'});
           if (errorAlerts.length) {
             $scope.disableInputs = false;
-            $scope.alerts = quotaAlerts;
+            $scope.quotaAlerts = quotaAlerts;
           }
           else if (quotaAlerts.length) {
              launchConfirmationDialog(quotaAlerts);
