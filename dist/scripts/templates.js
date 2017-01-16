@@ -10734,8 +10734,7 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "<a ng-href=\"{{pipeline | navigateResourceURL}}\">{{pipeline.metadata.name}}</a>.\n" +
     "</p>\n" +
     "<div ng-if=\"('buildconfigs/instantiate' | canI : 'create')\">\n" +
-    "\n" +
-    "<button class=\"btn btn-primary\" ng-click=\"startPipeline(pipeline)\" ng-disabled=\"incompletePipelinesByDC[deploymentConfig.metadata.name].length\">\n" +
+    "<button class=\"btn btn-primary\" ng-click=\"startPipeline(pipeline)\">\n" +
     "Start Pipeline\n" +
     "</button>\n" +
     "</div>\n" +
