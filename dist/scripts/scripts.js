@@ -4994,11 +4994,21 @@ var c = a.status.total || a.status, d = h(_.get(c, [ "hard", b ]));
 if (!d) return !1;
 var e = h(_.get(c, [ "used", b ]));
 return !!e && e >= d;
-}, e.get(b.project).then(_.spread(function(a, e) {
+};
+var i = a("humanizeQuotaResource"), j = function(a, b) {
+return "cpu" === a || "requests.cpu" === a ? "cpu" === b || "requests.cpu" === b ? 0 :-1 :"cpu" === b || "requests.cpu" === b ? 1 :"memory" === a || "requests.memory" === a ? "memory" === b || "requests.memory" === b ? 0 :-1 :"memory" === b || "requests.memory" === b ? 1 :"limits.cpu" === a ? "limits.cpu" === b ? 0 :-1 :"limits.cpu" === b ? 1 :"limits.memory" === a ? "limits.memory" === b ? 0 :-1 :"limits.memory" === b ? 1 :(a = i(a), b = i(b), a.localeCompare(b));
+}, k = function(a) {
+var b = {};
+return _.each(a, function(a) {
+var c = _.get(a, "spec.quota.hard") || _.get(a, "spec.hard"), d = _.keys(c).sort(j);
+b[a.metadata.name] = d;
+}), b;
+};
+e.get(b.project).then(_.spread(function(a, e) {
 c.project = a, d.list("resourcequotas", e, function(a) {
-c.quotas = a.by("metadata.name"), f.log("quotas", c.quotas);
+c.quotas = a.by("metadata.name"), c.orderedTypesByQuota = k(c.quotas), f.log("quotas", c.quotas);
 }), d.list("appliedclusterresourcequotas", e, function(a) {
-c.clusterQuotas = a.by("metadata.name"), c.namespaceUsageByClusterQuota = {}, _.each(c.clusterQuotas, function(a, d) {
+c.clusterQuotas = a.by("metadata.name"), c.orderedTypesByClusterQuota = k(c.clusterQuotas), c.namespaceUsageByClusterQuota = {}, _.each(c.clusterQuotas, function(a, d) {
 if (a.status) {
 var e = _.find(a.status.namespaces, {
 namespace:b.project

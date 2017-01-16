@@ -44,6 +44,58 @@ angular.module('openshiftConsole')
       return used >= hard;
     };
 
+    // Order the table rows first in the order of the donuts above the table,
+    // then alphabetically by humanized label.
+    var humanizeQuotaResource = $filter('humanizeQuotaResource');
+    var compareResourceType = function(left, right) {
+      // CPU Request
+      if (left === 'cpu' || left === 'requests.cpu') {
+        return right === 'cpu' || right === 'requests.cpu' ? 0 : -1;
+      }
+      if (right === 'cpu' || right === 'requests.cpu') {
+        return 1;
+      }
+
+      // Memory Request
+      if (left === 'memory' || left === 'requests.memory') {
+        return right === 'memory' || right === 'requests.memory' ? 0 : -1;
+      }
+      if (right === 'memory' || right === 'requests.memory') {
+        return 1;
+      }
+
+      // CPU Limit
+      if (left === 'limits.cpu') {
+        return right === 'limits.cpu' ? 0 : -1;
+      }
+      if (right === 'limits.cpu') {
+        return 1;
+      }
+
+      // Memory Limit
+      if (left === 'limits.memory') {
+        return right === 'limits.memory' ? 0 : -1;
+      }
+      if (right === 'limits.memory') {
+        return 1;
+      }
+
+      left = humanizeQuotaResource(left);
+      right = humanizeQuotaResource(right);
+      return left.localeCompare(right);
+    };
+
+    var orderTypes = function(quotas) {
+      var orderedTypesByQuota = {};
+      _.each(quotas, function(quota) {
+        var specHard = _.get(quota, 'spec.quota.hard') || _.get(quota, 'spec.hard');
+        var orderedTypes = _.keys(specHard).sort(compareResourceType);
+        orderedTypesByQuota[quota.metadata.name] = orderedTypes;
+      });
+
+      return orderedTypesByQuota;
+    };
+
     ProjectsService
       .get($routeParams.project)
       .then(_.spread(function(project, context) {
@@ -51,11 +103,13 @@ angular.module('openshiftConsole')
 
         DataService.list("resourcequotas", context, function(quotas) {
           $scope.quotas = quotas.by("metadata.name");
+          $scope.orderedTypesByQuota = orderTypes($scope.quotas);
           Logger.log("quotas", $scope.quotas);
         });
 
         DataService.list("appliedclusterresourcequotas", context, function(quotas) {
           $scope.clusterQuotas = quotas.by("metadata.name");
+          $scope.orderedTypesByClusterQuota = orderTypes($scope.clusterQuotas);
           $scope.namespaceUsageByClusterQuota = {};
           _.each($scope.clusterQuotas, function(quota, quotaName) {
             if (quota.status) {

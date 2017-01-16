@@ -67,8 +67,8 @@
                     <table class="table">
                       <thead>
                         <th>Resource Type</th>
-                        <th>Used (this project)</th>
-                        <th>Used (all projects)</th>
+                        <th>Used (This Project)</th>
+                        <th>Used (All Projects)</th>
                         <th>Max</th>
                       </thead>
                       <tbody>
@@ -81,16 +81,16 @@
                         <!-- Don't show quotas for type `resourcequotas`. They are frequently at limit,
                              which is not something to worry about, and only a cluster admin can create
                              those resources anyway. -->
-                        <tr ng-repeat="(resourceType, specMax) in quota.spec.quota.hard"
+                        <tr ng-repeat="resourceType in orderedTypesByClusterQuota[quota.metadata.name]"
                             ng-if="resourceType !== 'resourcequotas'"
                             ng-class="{
                               warning: isAtLimit(quota, resourceType),
-                              disabled: (quota.status.total.hard[resourceType] || specMax) === '0'
+                              disabled: (quota.status.total.hard[resourceType] || quota.spec.quota.hard[resourceType]) === '0'
                             }">
                           <td>
                             {{resourceType | humanizeQuotaResource : true}}
                             <span ng-if="isAtLimit(quota, resourceType)" data-toggle="tooltip" title="Quota limit reached." class="pficon pficon-warning-triangle-o warnings-popover"></span>
-                            <span ng-if="(quota.status.total.hard[resourceType] || specMax) === '0'"
+                            <span ng-if="(quota.status.total.hard[resourceType] || quota.spec.quota.hard[resourceType]) === '0'"
                                   data-toggle="tooltip"
                                   title="You are not allowed to create resources of this type."
                                   class="pficon pficon-info warnings-popover"></span>
@@ -104,7 +104,7 @@
                             <span ng-if="quota.status.total.used">{{quota.status.total.used[resourceType] | usageWithUnits : resourceType}}</span>
                           </td>
                           <td>
-                            <span ng-if="!quota.status.total.hard">{{specMax  | usageWithUnits : resourceType}}</span>
+                            <span ng-if="!quota.status.total.hard">{{quota.spec.quota.hard[resourceType]  | usageWithUnits : resourceType}}</span>
                             <span ng-if="quota.status.total.hard">{{quota.status.total.hard[resourceType]  | usageWithUnits : resourceType}}</span>
                           </td>
                         </tr>
@@ -172,16 +172,16 @@
                         <!-- Don't show quotas for type `resourcequotas`. They are frequently at limit,
                              which is not something to worry about, and only a cluster admin can create
                              those resources anyway. -->
-                        <tr ng-repeat="(resourceType, specMax) in quota.spec.hard"
+                        <tr ng-repeat="resourceType in orderedTypesByQuota[quota.metadata.name]"
                             ng-if="resourceType !== 'resourcequotas'"
                             ng-class="{
                               warning: isAtLimit(quota, resourceType),
-                              disabled: (quota.status.hard[resourceType] || specMax) === '0'
+                              disabled: (quota.status.hard[resourceType] || quota.spec.hard[resourceType]) === '0'
                             }">
                           <td>
                             {{resourceType | humanizeQuotaResource : true}}
                             <span ng-if="isAtLimit(quota, resourceType)" data-toggle="tooltip" title="Quota limit reached." class="pficon pficon-warning-triangle-o warnings-popover"></span>
-                            <span ng-if="(quota.status.hard[resourceType] || specMax) === '0'"
+                            <span ng-if="(quota.status.hard[resourceType] || quota.spec.hard[resourceType]) === '0'"
                                   data-toggle="tooltip"
                                   title="You are not allowed to create resources of this type."
                                   class="pficon pficon-info warnings-popover"></span>
@@ -191,7 +191,7 @@
                             <span ng-if="quota.status.used">{{quota.status.used[resourceType] | usageWithUnits : resourceType}}</span>
                           </td>
                           <td>
-                            <span ng-if="!quota.status.hard">{{specMax  | usageWithUnits : resourceType}}</span>
+                            <span ng-if="!quota.status.hard">{{quota.spec.hard[resourceType]  | usageWithUnits : resourceType}}</span>
                             <span ng-if="quota.status.hard">{{quota.status.hard[resourceType]  | usageWithUnits : resourceType}}</span>
                           </td>
                         </tr>
