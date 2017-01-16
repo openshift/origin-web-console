@@ -10,7 +10,7 @@
               <a
                 class="pull-right btn btn-default"
                 href=""
-                ng-if="'rolebindings' | canI : 'update'"
+                ng-if="canUpdateRolebindings"
                 ng-click="toggleEditMode()">
                 <span ng-if="!(mode.edit)">Edit Membership</span>
                 <span ng-if="mode.edit">Done Editing</span>

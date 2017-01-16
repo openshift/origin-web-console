@@ -2,7 +2,7 @@
 
 angular.module("openshiftConsole")
   .factory("AuthorizationService", function($q, $cacheFactory, Logger, $interval, APIService, DataService){
-    
+
     var currentProject = null;
     var cachedRulesByProject = $cacheFactory('rulesCache', {
           number: 10
@@ -34,7 +34,7 @@ angular.module("openshiftConsole")
     // Check if resource name meets one of following conditions, since those resources can't be create/update via `Add to project` page:
     //  - 'projectrequests'
     //  - subresource that contains '/', eg: 'builds/source', 'builds/logs', ...
-    //  - resource is in REVIEW_RESOURCES list 
+    //  - resource is in REVIEW_RESOURCES list
     var checkResource = function(resource) {
       if (resource === "projectrequests" || _.contains(resource, "/") || _.contains(REVIEW_RESOURCES, resource)) {
         return false;
@@ -52,12 +52,13 @@ angular.module("openshiftConsole")
       });
     };
 
-    var getProjectRules = function(projectName) {
+    // forceRefresh is a boolean to bust the cache & request new perms
+    var getProjectRules = function(projectName, forceRefresh) {
       var deferred = $q.defer();
       currentProject = projectName;
       var projectRules = cachedRulesByProject.get(projectName);
       var rulesResource = "selfsubjectrulesreviews";
-      if (!projectRules || projectRules.forceRefresh) {
+      if (!projectRules || projectRules.forceRefresh || forceRefresh) {
         // Check if APIserver contains 'selfsubjectrulesreviews' resource. If not switch to permissive mode.
         if (APIService.apiInfo(rulesResource)) {
           Logger.log("AuthorizationService, loading user rules for " + projectName + " project");
@@ -127,7 +128,7 @@ angular.module("openshiftConsole")
              _canI(rules, verb, '*',     '*'       ) ||
              _canI(rules, verb, r.group, '*'       ) ||
              _canI(rules, verb, '*',     r.resource);
-    }; 
+    };
 
     var canIAddToProject = function(projectName) {
       if (permissiveMode) {
