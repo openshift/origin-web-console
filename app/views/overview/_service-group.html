@@ -39,7 +39,7 @@
       <div ng-repeat="dc in allDeploymentConfigsInGroup">
         <div row ng-repeat="pipeline in recentPipelinesByDC[dc.metadata.name] | orderObjectsByDate : true track by (pipeline | uid)"
             class="build-pipeline-wrapper animate-repeat animate-slide">
-          <build-pipeline flex build="pipeline" collapse-stages-on-completion="true" build-config-name-on-expanded="true"></build-pipeline>
+          <build-pipeline flex build="pipeline" expand-only-running="true" build-config-name-on-expanded="true"></build-pipeline>
         </div>
         <div>
           <triggers triggers="dc.spec.triggers" builds-by-output-image="recentBuildsByOutputImage" namespace="dc.metadata.namespace"></triggers>

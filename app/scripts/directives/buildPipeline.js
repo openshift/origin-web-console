@@ -6,7 +6,7 @@ angular.module('openshiftConsole')
       restrict: 'E',
       scope: {
         build: '=',
-        collapseStagesOnCompletion: '=?',
+        expandOnlyRunning: '=?',
         buildConfigNameOnExpanded: '=?'
       },
       // To fill height as flexbox item.
