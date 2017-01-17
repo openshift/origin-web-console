@@ -7,7 +7,7 @@
         <input type="number"
                name="amount"
                ng-attr-id="{{id}}"
-               ng-model="amount"
+               ng-model="input.amount"
                min="0"
                ng-attr-placeholder="{{placeholder}}"
                class="form-control"
@@ -15,7 +15,7 @@
       </div>
       <div class="resource-unit">
         <label class="sr-only" ng-attr-for="{{id}}-unit">Unit</label>
-        <ui-select search-enabled="false" ng-model="unit" input-id="{{id}}-unit">
+        <ui-select search-enabled="false" ng-model="input.unit" input-id="{{id}}-unit">
           <ui-select-match>{{$select.selected.label}}</ui-select-match>
           <ui-select-choices repeat="option.value as option in units">
             {{option.label}}
@@ -43,14 +43,14 @@
         Limit can't be less than request ({{request | usageWithUnits : type}}).
       </div>
       <div ng-if="form.amount.$error.limitWithinRatio" class="help-block">
-        <span ng-if="!amount && !defaultValue">
+        <span ng-if="!input.amount && !defaultValue">
           Limit is required if request is set. (Max Limit/Request Ratio: {{maxLimitRequestRatio}})
         </span>
-        <span ng-if="amount || defaultValue">
+        <span ng-if="input.amount || defaultValue">
           Limit cannot be more than {{maxLimitRequestRatio}} times request value.
           (Request: {{request | usageWithUnits : type}},
           <!-- Show default if amount is unset. -->
-          Limit: {{(amount ? (amount + unit) : defaultValue) | usageWithUnits : type}})
+          Limit: {{(input.amount ? (input.amount + input.unit) : defaultValue) | usageWithUnits : type}})
         </span>
       </div>
     </div>

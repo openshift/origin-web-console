@@ -12390,7 +12390,7 @@ request:"="
 templateUrl:"views/_compute-resource.html",
 link:function(b, c, d, e) {
 var f = a("usageValue"), g = a("amountAndUnit"), h = a("humanizeUnit");
-b.id = _.uniqueId("compute-resource-");
+b.id = _.uniqueId("compute-resource-"), b.input = {};
 var i = function(a) {
 _.some(b.units, {
 value:a
@@ -12401,12 +12401,12 @@ label:h(a, b.type)
 };
 switch (b.$watch("defaultValue", function(a) {
 var c = _.spread(function(a, c) {
-b.placeholder = a, i(c), b.amount || (b.unit = c);
+b.placeholder = a, i(c), b.input.amount || (b.input.unit = c);
 });
 a && c(g(a, b.type));
 }), b.type) {
 case "cpu":
-b.unit = "m", b.units = [ {
+b.input.unit = "m", b.units = [ {
 value:"m",
 label:"millicores"
 }, {
@@ -12416,7 +12416,7 @@ label:"cores"
 break;
 
 case "memory":
-b.unit = "Mi", b.units = [ {
+b.input.unit = "Mi", b.units = [ {
 value:"M",
 label:"MB"
 }, {
@@ -12431,19 +12431,19 @@ label:"GiB"
 } ];
 }
 var j = function() {
-var a = b.amount && f(b.amount + b.unit), c = b.limitRangeMin && f(b.limitRangeMin), d = b.limitRangeMax && f(b.limitRangeMax), e = !0, g = !0;
+var a = b.input.amount && f(b.input.amount + b.input.unit), c = b.limitRangeMin && f(b.limitRangeMin), d = b.limitRangeMax && f(b.limitRangeMax), e = !0, g = !0;
 a && c && (e = a >= c), a && d && (g = a <= d), b.form.amount.$setValidity("limitRangeMin", e), b.form.amount.$setValidity("limitRangeMax", g);
 }, k = function() {
 var a, c = b.request && f(b.request), d = !0, e = !0;
-b.amount ? a = f(b.amount + b.unit) :b.defaultValue && (a = f(b.defaultValue)), c && a && (d = a >= c, b.maxLimitRequestRatio && (e = a / c <= b.maxLimitRequestRatio)), c && !a && b.maxLimitRequestRatio && (e = !1), b.form.amount.$setValidity("limitLargerThanRequest", d), b.form.amount.$setValidity("limitWithinRatio", e);
+b.input.amount ? a = f(b.input.amount + b.input.unit) :b.defaultValue && (a = f(b.defaultValue)), c && a && (d = a >= c, b.maxLimitRequestRatio && (e = a / c <= b.maxLimitRequestRatio)), c && !a && b.maxLimitRequestRatio && (e = !1), b.form.amount.$setValidity("limitLargerThanRequest", d), b.form.amount.$setValidity("limitWithinRatio", e);
 };
 e.$render = function() {
 var a = _.spread(function(a, c) {
-a ? (b.amount = Number(a), b.unit = c, i(c)) :b.amount = null;
+a ? (b.input.amount = Number(a), b.input.unit = c, i(c)) :b.input.amount = null;
 });
 a(g(e.$viewValue, b.type));
-}, b.$watchGroup([ "amount", "unit" ], function() {
-j(), k(), b.amount ? e.$setViewValue(b.amount + b.unit) :e.$setViewValue(void 0);
+}, b.$watchGroup([ "input.amount", "input.unit" ], function() {
+j(), k(), b.input.amount ? e.$setViewValue(b.input.amount + b.input.unit) :e.$setViewValue(void 0);
 }), b.$watchGroup([ "limitRangeMin", "limitRangeMax" ], j), b.$watch("request", k);
 }
 };

@@ -75,11 +75,11 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "<div class=\"resource-size\" ng-class=\"{ 'has-error': form.$invalid }\">\n" +
     "<div class=\"resource-amount\">\n" +
     "<label class=\"sr-only\" ng-attr-for=\"{{id}}\">Amount</label>\n" +
-    "<input type=\"number\" name=\"amount\" ng-attr-id=\"{{id}}\" ng-model=\"amount\" min=\"0\" ng-attr-placeholder=\"{{placeholder}}\" class=\"form-control\" ng-attr-aria-describedby=\"{{description ? id + '-help' : undefined}}\">\n" +
+    "<input type=\"number\" name=\"amount\" ng-attr-id=\"{{id}}\" ng-model=\"input.amount\" min=\"0\" ng-attr-placeholder=\"{{placeholder}}\" class=\"form-control\" ng-attr-aria-describedby=\"{{description ? id + '-help' : undefined}}\">\n" +
     "</div>\n" +
     "<div class=\"resource-unit\">\n" +
     "<label class=\"sr-only\" ng-attr-for=\"{{id}}-unit\">Unit</label>\n" +
-    "<ui-select search-enabled=\"false\" ng-model=\"unit\" input-id=\"{{id}}-unit\">\n" +
+    "<ui-select search-enabled=\"false\" ng-model=\"input.unit\" input-id=\"{{id}}-unit\">\n" +
     "<ui-select-match>{{$select.selected.label}}</ui-select-match>\n" +
     "<ui-select-choices repeat=\"option.value as option in units\">\n" +
     "{{option.label}}\n" +
@@ -107,13 +107,13 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "Limit can't be less than request ({{request | usageWithUnits : type}}).\n" +
     "</div>\n" +
     "<div ng-if=\"form.amount.$error.limitWithinRatio\" class=\"help-block\">\n" +
-    "<span ng-if=\"!amount && !defaultValue\">\n" +
+    "<span ng-if=\"!input.amount && !defaultValue\">\n" +
     "Limit is required if request is set. (Max Limit/Request Ratio: {{maxLimitRequestRatio}})\n" +
     "</span>\n" +
-    "<span ng-if=\"amount || defaultValue\">\n" +
+    "<span ng-if=\"input.amount || defaultValue\">\n" +
     "Limit cannot be more than {{maxLimitRequestRatio}} times request value. (Request: {{request | usageWithUnits : type}},\n" +
     "\n" +
-    "Limit: {{(amount ? (amount + unit) : defaultValue) | usageWithUnits : type}})\n" +
+    "Limit: {{(input.amount ? (input.amount + input.unit) : defaultValue) | usageWithUnits : type}})\n" +
     "</span>\n" +
     "</div>\n" +
     "</div>\n" +
