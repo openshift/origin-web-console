@@ -95,6 +95,41 @@ angular.module('openshiftConsole')
           });
         }
 
+        if (!window.OPENSHIFT_CONSTANTS.DISABLE_CUSTOM_METRICS) {
+          // Load any custom metrics onto the page
+          MetricsService.getCustomMetrics(scope.pod).then(
+            function(response) {
+              angular.forEach(response, function(metric) {
+
+                // set the label to the description if specified
+                var label = metric.description || metric.name;
+              
+                // get the unit value if specified
+                var unit =  metric.unit || "";
+
+                scope.metrics.push({
+                  label: label,
+                  units: unit,
+                  chartPrefix: "custom-" + _.uniqueId('custom-metric-'),
+                  chartType: "spline",
+
+                  datasets: [
+                    {
+                      id: "custom/" + metric.name,
+                      label: label,
+                      type: metric.type,
+                      data: []
+                    },
+                  ]
+                });
+
+              });
+              // update the page with the new charts.
+              update();
+            }
+          );
+        }
+
         // Set to true when any data has been loaded (or failed to load).
         scope.loaded = false;
         scope.noData = true;
@@ -260,6 +295,7 @@ angular.module('openshiftConsole')
           var lastPoint;
           var config = {
             metric: dataset.id,
+            type: dataset.type,
             bucketDuration: getBucketDuration()
           };
 

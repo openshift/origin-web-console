@@ -3,6 +3,7 @@
 angular.module("openshiftConsole")
   .factory("MetricsService", function($filter, $http, $q, $rootScope, APIDiscovery) {
     var POD_GAUGE_TEMPLATE = "/gauges/{containerName}%2F{podUID}%2F{metric}/data";
+    var POD_COUNTER_TEMPLATE = "/counters/{containerName}%2F{podUID}%2F{metric}/data";
 
     var metricsURL;
     function getMetricsURL() {
@@ -50,7 +51,13 @@ angular.module("openshiftConsole")
 
     function getRequestURL(config) {
       return getMetricsURL().then(function(metricsURL) {
-        var template = metricsURL + POD_GAUGE_TEMPLATE;
+        var template;
+        // if no type is specified, it is assumed the metric is a gauge
+        if (config.type === "counter") {
+          template = metricsURL + POD_COUNTER_TEMPLATE;
+        } else {
+          template = metricsURL + POD_GAUGE_TEMPLATE;
+        }
         return URI.expand(template, {
           podUID: config.pod.metadata.uid,
           containerName: config.containerName,
@@ -169,6 +176,44 @@ angular.module("openshiftConsole")
       });
     };
 
+    // Returns custom metrics available for a particular pod
+    var getCustomMetrics = function(pod) {
+      var namespace = pod.metadata.namespace;
+      var podId = pod.metadata.uid;
+
+      return getMetricsURL().then(function(metricsURL) {
+
+        if (!metricsURL) {
+          return null;
+        }
+
+        var url = metricsURL + "/metrics";
+
+        var params = {
+          tags: "custom_metric:true,pod_id:" + podId
+        };
+
+        return $http.get(url, {
+          auth: {},
+          headers: {
+            Accept: 'application/json',
+            'Hawkular-Tenant': namespace
+          },
+          params: params
+        }).then(function(response) {
+          return _.map(response.data, function(value) {
+            return {
+              name: value.tags.metric_name,
+              unit: value.tags.units,
+              description: value.tags.description,
+              type: value.type
+            };
+          });
+        });
+      });
+    };
+
+
     return {
       // Check if the metrics service is available. The service is considered
       // available if a metrics URL is set. Returns a promise resolved with a
@@ -255,6 +300,7 @@ angular.module("openshiftConsole")
       //   end:            end time in millis (optional)
       //
       // Returns a promise resolved with the metrics data.
-      getPodMetrics: getPodMetrics
+      getPodMetrics: getPodMetrics,
+      getCustomMetrics: getCustomMetrics,
     };
   });

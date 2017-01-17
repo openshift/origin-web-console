@@ -64,6 +64,9 @@ window.OPENSHIFT_CONSTANTS = {
 
   // true indicates that deployment metrics should be disabled on the web console overview
   DISABLE_OVERVIEW_METRICS: false,
+ 
+  // true indicates that custom metrics should be disabled when viewing pod metrics
+  DISABLE_CUSTOM_METRICS: false,
 
   // true indicates that none of the routers support wildcard subdomains and
   // removes the option from the route creation form.
