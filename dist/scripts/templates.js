@@ -2691,7 +2691,7 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "</a>\n" +
     "</dt>\n" +
     "<dd>\n" +
-    "<copy-to-clipboard clipboard-text=\"'oc deploy ' + deploymentConfig.metadata.name + ' --latest -n ' + project.metadata.name\"></copy-to-clipboard>\n" +
+    "<copy-to-clipboard clipboard-text=\"'oc rollout latest dc/' + deploymentConfig.metadata.name + ' -n ' + project.metadata.name\"></copy-to-clipboard>\n" +
     "</dd>\n" +
     "<div ng-repeat=\"trigger in deploymentConfig.spec.triggers\">\n" +
     "<span ng-switch=\"trigger.type\">\n" +
