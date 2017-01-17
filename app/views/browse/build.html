@@ -10,15 +10,7 @@
             <alerts alerts="alerts"></alerts>
             <div ng-if="!loaded" class="mar-top-xl">Loading...</div>
             <div ng-if="build">
-              <h1>
-                {{build.metadata.name}}
-                <span class="pficon pficon-warning-triangle-o"
-                      ng-if="buildConfigPaused || buildConfigDeleted"
-                      aria-hidden="true"
-                      data-toggle="tooltip"
-                      data-original-title="{{buildConfigDeleted ? 'The build configuration for this build no longer exists.' : 'Building from build configuration ' + buildConfig.metadata.name + ' has been paused.'}}">
-                </span>
-                <small class="meta">created <span am-time-ago="build.metadata.creationTimestamp"></span></small>
+              <h1 class="contains-actions">
                 <div class="pull-right dropdown" ng-hide="!('builds' | canIDoAny)">
                   <!-- Primary Actions -->
                   <button class="btn btn-default hidden-xs"
@@ -78,6 +70,14 @@
                     </li>
                   </ul>
                 </div>
+                {{build.metadata.name}}
+                <span class="pficon pficon-warning-triangle-o"
+                      ng-if="buildConfigPaused || buildConfigDeleted"
+                      aria-hidden="true"
+                      data-toggle="tooltip"
+                      data-original-title="{{buildConfigDeleted ? 'The build configuration for this build no longer exists.' : 'Building from build configuration ' + buildConfig.metadata.name + ' has been paused.'}}">
+                </span>
+                <small class="meta">created <span am-time-ago="build.metadata.creationTimestamp"></span></small>
               </h1>
               <labels ng-if="buildConfigName" labels="build.metadata.labels" clickable="true" kind="builds" title-kind="builds for build config {{buildConfigName}}" project-name="{{build.metadata.namespace}}" limit="3" navigate-url="project/{{build.metadata.namespace}}/browse/builds/{{buildConfigName}}"></labels>
               <labels ng-if="!buildConfigName" labels="build.metadata.labels" limit="3"></labels>

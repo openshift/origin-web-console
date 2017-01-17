@@ -10,9 +10,7 @@
             <alerts alerts="alerts"></alerts>
             <div ng-if="!loaded" class="mar-top-xl">Loading...</div>
             <div ng-if="pod">
-              <h1>
-                {{pod.metadata.name}}
-
+              <h1 class="contains-actions">
                 <div class="pull-right dropdown" ng-hide="!('pods' | canIDoAny)">
                   <button type="button" class="dropdown-toggle actions-dropdown-btn btn btn-default hidden-xs" data-toggle="dropdown">
                     Actions
@@ -39,6 +37,7 @@
                     </li>
                   </ul>
                 </div>
+                {{pod.metadata.name}}
                 <span ng-if="pod | isTroubledPod">
                   <pod-warnings pod="pod"></pod-warnings>
                 </span>

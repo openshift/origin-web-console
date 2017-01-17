@@ -3561,7 +3561,7 @@ to{transform:rotate(359deg)}
 .key-value-editor .key-value-editor-header,.key-value-editor .key-value-editor-input{float:left;padding-right:5px;width:50%}
 .word-break{word-wrap:break-word;word-break:break-word;overflow-wrap:break-word;min-width:0}
 .word-break-all{word-break:break-all;word-break:break-word;overflow-wrap:break-word}
-.events-table td,.modal-resource-action h1,.resource-description,.row-cards-pf-flex .card-pf-body p{word-break:break-word;word-wrap:break-word}
+.events-table td,.modal-resource-action h1,.resource-description,.row-cards-pf-flex .card-pf-body p{word-wrap:break-word;word-break:break-word}
 .pre-wrap{white-space:pre-wrap}
 .visible-xlg-inline-block{display:none!important}
 @media (max-width:767px){.td-long-string{word-wrap:break-word;word-break:break-word;overflow-wrap:break-word;min-width:0}
@@ -4983,6 +4983,7 @@ td[role=presentation].arrow:after{content:"\2193"}
 .key-value-table>tbody>tr>td.value .truncated-content{white-space:pre}
 .table-word-break-all td{word-break:break-all;word-break:break-word;overflow-wrap:break-word}
 .table-word-break-all td.word-break-normal{word-break:normal;overflow-wrap:normal}
+.log-line-text,h1.contains-actions{word-wrap:break-word;word-break:break-word}
 .table>tbody>tr.disabled>td,.table>tbody>tr.disabled>th,.table>tbody>tr>td.disabled,.table>tbody>tr>th.disabled,.table>tfoot>tr.disabled>td,.table>tfoot>tr.disabled>th,.table>tfoot>tr>td.disabled,.table>tfoot>tr>th.disabled,.table>thead>tr.disabled>td,.table>thead>tr.disabled>th,.table>thead>tr>td.disabled,.table>thead>tr>th.disabled{background-color:#f5f5f5}
 .table-hover>tbody>tr.disabled:hover>td,.table-hover>tbody>tr.disabled:hover>th,.table-hover>tbody>tr:hover>.disabled,.table-hover>tbody>tr>td.disabled:hover,.table-hover>tbody>tr>th.disabled:hover{background-color:#e8e8e8}
 .tile{background:#fff;padding:20px;margin-bottom:20px;word-wrap:break-word;-webkit-box-sizing:border-box;-moz-box-sizing:border-box;box-sizing:border-box;overflow-x:hidden}
@@ -5022,8 +5023,9 @@ kubernetes-topology-graph{height:700px}
 .console-os .section-header{border-color:#e4e4e4;padding-left:20px;padding-right:20px;border-bottom:none;padding-bottom:10px;margin:20px -20px 0}
 .action-inline,.learn-more-inline{margin-left:5px;font-size:11px}
 .console-os .section-header .actions{margin-top:0}
-.build-config-summary .meta,.deployment-config-summary .meta,h1 small.meta{font-size:12px}
-@media (max-width:480px){.build-config-summary .meta,.deployment-config-summary .meta,h1 small.meta{display:block;margin-top:5px}
+h1.contains-actions{overflow-wrap:break-word;min-width:0}
+h1 .build-config-summary .meta,h1 .deployment-config-summary .meta,h1 small.meta{font-size:12px}
+@media (max-width:480px){h1 .build-config-summary .meta,h1 .deployment-config-summary .meta,h1 small.meta{display:block;margin-top:5px}
 }
 .learn-more-block{display:block;font-size:11px;font-weight:400}
 .learn-more-inline{display:inline;font-weight:400}
@@ -5180,7 +5182,7 @@ a.subtle-link:active,a.subtle-link:focus,a.subtle-link:hover{color:#00659c;borde
 .log-line:hover{background-color:#22262b;color:#ededed}
 .log-line-number:before{content:attr(data-line-number)}
 .log-line-number{-ms-user-select:none;border-right:1px #272b30 solid;padding-right:10px;vertical-align:top;white-space:nowrap;width:60px;color:#72767b}
-.log-line-text{padding:0 10px;white-space:pre-wrap;width:100%;word-wrap:break-word;word-break:break-word;overflow-wrap:break-word;min-width:0}
+.log-line-text{padding:0 10px;white-space:pre-wrap;width:100%;overflow-wrap:break-word;min-width:0}
 .log-line-text::-moz-selection{color:#101214;background:#e5e5e5}
 .table-log-pods{background-color:#fff;border:1px solid #D1D1D1}
 .table-log-pods>tbody+tbody{border-top-width:1px}

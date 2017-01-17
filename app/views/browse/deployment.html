@@ -9,8 +9,7 @@
           <breadcrumbs breadcrumbs="breadcrumbs"></breadcrumbs>
           <alerts alerts="alerts"></alerts>
           <div>
-            <h1>
-              {{name}}
+            <h1 class="contains-actions">
               <div class="pull-right dropdown" ng-if="deployment" ng-hide="!('deployments' | canIDoAny)">
                 <button type="button" class="dropdown-toggle btn btn-default actions-dropdown-btn hidden-xs" data-toggle="dropdown">
                   Actions
@@ -64,6 +63,7 @@
                   </li>
                 </ul>
               </div>
+              {{name}}
               <small class="meta" ng-if="deployment">created <span am-time-ago="deployment.metadata.creationTimestamp"></span></small>
             </h1>
             <labels labels="deployment.metadata.labels" clickable="true" kind="deployments" project-name="{{deployment.metadata.namespace}}" limit="3"></labels>

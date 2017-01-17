@@ -35,13 +35,18 @@
   }
 }
 
-h1 small.meta,
-.build-config-summary .meta,
-.deployment-config-summary .meta {
-  font-size: 12px;
-  @media (max-width: @screen-xs-min) {
-    display: block;
-    margin-top: 5px;
+h1 {
+  &.contains-actions {
+    .word-break();
+  }
+  small.meta,
+  .build-config-summary .meta,
+  .deployment-config-summary .meta {
+    font-size: 12px;
+    @media (max-width: @screen-xs-min) {
+      display: block;
+      margin-top: 5px;
+    }
   }
 }
 
