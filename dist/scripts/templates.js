@@ -1322,6 +1322,8 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "</select-containers>\n" +
     "</div>\n" +
     "</div>\n" +
+    "<pause-rollouts-checkbox ng-if=\"attach.resource | managesRollouts\" deployment=\"attach.resource\">\n" +
+    "</pause-rollouts-checkbox>\n" +
     "<div class=\"button-group gutter-top gutter-bottom\">\n" +
     "<button type=\"submit\" class=\"btn btn-primary btn-lg\" ng-click=\"attachPVC()\" ng-disabled=\"attachPVCForm.$invalid || disableInputs || !attachPVC\">Add</button>\n" +
     "<a class=\"btn btn-default btn-lg\" role=\"button\" href=\"#\" back>Cancel</a>\n" +
@@ -2534,10 +2536,10 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "</li>\n" +
     "<li class=\"divider\" ng-if=\"'deploymentconfigs' | canI : 'update'\"></li>\n" +
     "<li ng-if=\"!deploymentConfig.spec.paused && !updatingPausedState && ('deploymentconfigs' | canI : 'update')\">\n" +
-    "<a href=\"\" ng-click=\"setPaused(true)\" role=\"button\">Pause Deployment</a>\n" +
+    "<a href=\"\" ng-click=\"setPaused(true)\" role=\"button\">Pause Rollouts</a>\n" +
     "</li>\n" +
     "<li ng-if=\"deploymentConfig.spec.paused && !updatingPausedState && ('deploymentconfigs' | canI : 'update')\">\n" +
-    "<a href=\"\" ng-click=\"setPaused(false)\" role=\"button\">Resume Deployment</a>\n" +
+    "<a href=\"\" ng-click=\"setPaused(false)\" role=\"button\">Resume Rollouts</a>\n" +
     "</li>\n" +
     "<li ng-if=\"'deploymentconfigs' | canI : 'update'\">\n" +
     "<a ng-href=\"project/{{project.metadata.name}}/attach-pvc?kind=DeploymentConfig&name={{deploymentConfig.metadata.name}}\" role=\"button\">Add Storage</a>\n" +
@@ -2582,9 +2584,9 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "<div ng-if=\"deploymentConfig.spec.paused\" class=\"alert alert-info animate-if\">\n" +
     "<span class=\"pficon pficon-info\" aria-hidden=\"true\"></span>\n" +
     "<strong>{{deploymentConfig.metadata.name}} is paused.</strong>\n" +
-    "This will stop any new deployments and deployment triggers from running until resumed.\n" +
-    "<span ng-if=\"!updatingPausedState && ('deploymentconfigs' | canI : 'update')\">\n" +
-    "<a href=\"\" ng-click=\"setPaused(false)\" role=\"button\">Resume deployment</a>\n" +
+    "This will stop any new rollouts or triggers from running until resumed.\n" +
+    "<span ng-if=\"!updatingPausedState && ('deploymentconfigs' | canI : 'update')\" class=\"nowrap\">\n" +
+    "<a href=\"\" ng-click=\"setPaused(false)\" role=\"button\">Resume Rollouts</a>\n" +
     "</span>\n" +
     "</div>\n" +
     "<uib-tabset>\n" +
@@ -2835,10 +2837,10 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "<a href=\"\" class=\"dropdown-toggle actions-dropdown-kebab visible-xs-inline\" data-toggle=\"dropdown\"><i class=\"fa fa-ellipsis-v\"></i><span class=\"sr-only\">Actions</span></a>\n" +
     "<ul class=\"dropdown-menu actions action-button\">\n" +
     "<li ng-if=\"!deployment.spec.paused && !updatingPausedState && ({ group: 'extensions', resource: 'deployments' } | canI : 'update')\">\n" +
-    "<a href=\"\" ng-click=\"setPaused(true)\" role=\"button\">Pause Deployment</a>\n" +
+    "<a href=\"\" ng-click=\"setPaused(true)\" role=\"button\">Pause Rollouts</a>\n" +
     "</li>\n" +
     "<li ng-if=\"deployment.spec.paused && !updatingPausedState && ({ group: 'extensions', resource: 'deployments' } | canI : 'update')\">\n" +
-    "<a href=\"\" ng-click=\"setPaused(false)\" role=\"button\">Resume Deployment</a>\n" +
+    "<a href=\"\" ng-click=\"setPaused(false)\" role=\"button\">Resume Rollouts</a>\n" +
     "</li>\n" +
     "<li class=\"divider\" ng-if=\"!updatingPausedState && ({ group: 'extensions', resource: 'deployments' } | canI : 'update')\"></li>\n" +
     "<li ng-if=\"{ group: 'extensions', resource: 'deployments' } | canI : 'update'\">\n" +
@@ -2883,9 +2885,9 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "<div ng-if=\"deployment.spec.paused\" class=\"alert alert-info animate-if\">\n" +
     "<span class=\"pficon pficon-info\" aria-hidden=\"true\"></span>\n" +
     "<strong>{{deployment.metadata.name}} is paused.</strong>\n" +
-    "This will pause any in-progress rollouts and stop new rollouts from running until the deployment is resumed.\n" +
-    "<span ng-if=\"!updatingPausedState && ({ group: 'extensions', resource: 'deployments' } | canI : 'update')\">\n" +
-    "<a href=\"\" ng-click=\"setPaused(false)\" role=\"button\">Resume deployment</a>\n" +
+    "This pauses any in-progress rollouts and stops new rollouts from running until the deployment is resumed.\n" +
+    "<span ng-if=\"!updatingPausedState && ({ group: 'extensions', resource: 'deployments' } | canI : 'update')\" class=\"nowrap\">\n" +
+    "<a href=\"\" ng-click=\"setPaused(false)\" role=\"button\">Resume Rollouts</a>\n" +
     "</span>\n" +
     "</div>\n" +
     "<uib-tabset>\n" +
@@ -8410,6 +8412,22 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
   );
 
 
+  $templateCache.put('views/directives/pause-rollouts-checkbox.html',
+    "<div ng-if=\"alwaysVisible || !missingConfigChangeTrigger\" class=\"form-group pause-rollouts-checkbox\">\n" +
+    "<div class=\"checkbox\">\n" +
+    "<label>\n" +
+    "<input type=\"checkbox\" ng-disabled=\"disabled\" ng-model=\"deployment.spec.paused\" aria-describedby=\"pause-help\">\n" +
+    "Pause rollouts for this {{deployment.kind | humanizeKind}}\n" +
+    "</label>\n" +
+    "<div id=\"pause-help\" class=\"help-block\">\n" +
+    "Pausing lets you make changes without triggering a rollout. You can resume rollouts at any time.\n" +
+    "<span ng-if=\"!alwaysVisible\">If unchecked, a new rollout will start on save.</span>\n" +
+    "</div>\n" +
+    "</div>\n" +
+    "</div>"
+  );
+
+
   $templateCache.put('views/directives/pipeline-status.html',
     "<div class=\"pipeline-status-bar\" ng-class=\"status\">\n" +
     "<div class=\"pipeline-line\"></div>\n" +
@@ -9578,6 +9596,8 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "<key-value-editor ng-if=\"containerConfig\" entries=\"containerConfig.env\" key-validator=\"[a-zA-Z_][a-zA-Z0-9_]*\" key-validator-error-tooltip=\"A valid environment variable name is an alphanumeric (a-z and 0-9) string beginning with a letter that may contain underscores.\" add-row-link=\"Add Environment Variable\"></key-value-editor>\n" +
     "</div>\n" +
     "</div>\n" +
+    "<pause-rollouts-checkbox deployment=\"updatedDeploymentConfig\" always-visible=\"true\">\n" +
+    "</pause-rollouts-checkbox>\n" +
     "<div class=\"buttons gutter-top-bottom\">\n" +
     "<button type=\"submit\" class=\"btn btn-primary btn-lg\" ng-disabled=\"form.$invalid || form.$pristine || disableInputs\">\n" +
     "Save\n" +
@@ -9617,7 +9637,7 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "<div class=\"col-md-12\">\n" +
     "<alerts alerts=\"alerts\"></alerts>\n" +
     "<div ng-show=\"!containers.length\" class=\"mar-top-md\">Loading...</div>\n" +
-    "<form ng-show=\"containers.length\" name=\"form\">\n" +
+    "<form ng-show=\"containers.length\" name=\"form\" class=\"health-checks-form\">\n" +
     "<h1>Health Checks: {{name}}</h1>\n" +
     "<div class=\"help-block\">\n" +
     "Container health is periodically checked using readiness and liveness probes.\n" +
@@ -9657,6 +9677,8 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "</p>\n" +
     "</div>\n" +
     "</div>\n" +
+    "<pause-rollouts-checkbox ng-if=\"object | managesRollouts\" deployment=\"object\">\n" +
+    "</pause-rollouts-checkbox>\n" +
     "<div class=\"button-group gutter-top gutter-bottom\">\n" +
     "<button type=\"submit\" class=\"btn btn-primary btn-lg\" ng-click=\"save()\" ng-disabled=\"form.$invalid || form.$pristine || disableInputs\" value=\"\">Save</button>\n" +
     "<a class=\"btn btn-default btn-lg\" ng-href=\"{{resourceURL}}\">Cancel</a>\n" +
@@ -12515,7 +12537,7 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "<div class=\"col-md-12\">\n" +
     "<alerts alerts=\"alerts\"></alerts>\n" +
     "<div ng-show=\"!containers.length\">Loading...</div>\n" +
-    "<form ng-if=\"containers.length\" name=\"form\">\n" +
+    "<form ng-if=\"containers.length\" name=\"form\" class=\"set-limits-form\">\n" +
     "<h1>Resource Limits: {{name}}</h1>\n" +
     "<div class=\"help-block\">\n" +
     "Resource limits control how much <span ng-if=\"!hideCPU\">CPU and</span> memory a container will consume on a node.\n" +
@@ -12541,8 +12563,10 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "<div ng-repeat=\"problem in memoryProblems\" class=\"has-error\">\n" +
     "<span class=\"help-block\">{{problem}}</span>\n" +
     "</div>\n" +
+    "<pause-rollouts-checkbox ng-if=\"object | managesRollouts\" deployment=\"object\">\n" +
+    "</pause-rollouts-checkbox>\n" +
     "<div class=\"button-group gutter-top gutter-bottom\">\n" +
-    "<button type=\"submit\" class=\"btn btn-primary btn-lg\" ng-click=\"save()\" ng-disabled=\"form.$invalid || disableInputs || cpuProblems.length || memoryProblems.length\" value=\"\">Save</button>\n" +
+    "<button type=\"submit\" class=\"btn btn-primary btn-lg\" ng-click=\"save()\" ng-disabled=\"form.$pristine || form.$invalid || disableInputs || cpuProblems.length || memoryProblems.length\" value=\"\">Save</button>\n" +
     "<a class=\"btn btn-default btn-lg\" ng-href=\"{{resourceURL}}\">Cancel</a>\n" +
     "</div>\n" +
     "</fieldset>\n" +

@@ -211,6 +211,11 @@
                         </div>
                       </div>
 
+                      <pause-rollouts-checkbox
+                          ng-if="attach.resource | managesRollouts"
+                          deployment="attach.resource">
+                      </pause-rollouts-checkbox>
+
                       <div class="button-group gutter-top gutter-bottom">
                         <button type="submit"
                             class="btn btn-primary btn-lg"

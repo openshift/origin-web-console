@@ -89,18 +89,18 @@ angular.module('openshiftConsole')
 
         DataService.get(resourceGroupVersion, $scope.name, context).then(
           function(result) {
-            var resource = angular.copy(result);
+            var object = $scope.object = angular.copy(result);
             $scope.breadcrumbs = BreadcrumbsService.getBreadcrumbs({
-              object: resource,
+              object: object,
               project: project,
               subpage: 'Edit Resource Limits',
               includeProject: true
             });
-            $scope.resourceURL = Navigate.resourceURL(resource);
-            $scope.containers = _.get(resource, 'spec.template.spec.containers');
+            $scope.resourceURL = Navigate.resourceURL(object);
+            $scope.containers = _.get(object, 'spec.template.spec.containers');
             $scope.save = function() {
               $scope.disableInputs = true;
-              DataService.update(resourceGroupVersion, $scope.name, resource, context).then(
+              DataService.update(resourceGroupVersion, $scope.name, object, context).then(
                 function() {
                   AlertMessageService.addAlert({
                     name: $scope.name,

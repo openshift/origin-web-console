@@ -1460,4 +1460,23 @@ angular.module('openshiftConsole')
 
       return mount.readOnly ? 'read-only' : 'read-write';
     };
+  })
+  .filter('managesRollouts', function(APIService) {
+    // Return true for API objects that manage rollouts (deployment configs and deployments).
+    return function(object) {
+      if (!object) {
+        return false;
+      }
+
+      var rgv = APIService.objectToResourceGroupVersion(object);
+      if (rgv.resource === 'deploymentconfigs' && !rgv.group) {
+        return true;
+      }
+
+      if (rgv.resource === 'deployments' && rgv.group === 'extensions') {
+        return true;
+      }
+
+      return false;
+    };
   });
