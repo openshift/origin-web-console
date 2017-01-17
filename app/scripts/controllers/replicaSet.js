@@ -436,6 +436,7 @@ angular.module('openshiftConsole')
             deploymentConfigName = annotation(replicaSet, 'deploymentConfig');
             rsName = replicaSet.metadata.name;
           }
+          $scope.deploymentConfigDeploymentsInProgress = $scope.deploymentConfigDeploymentsInProgress || {};
           if (!action) {
             // Loading of the page that will create deploymentConfigDeploymentsInProgress structure, which will associate running deployment to his deploymentConfig.
             $scope.deploymentConfigDeploymentsInProgress = DeploymentsService.associateRunningDeploymentToDeploymentConfig($scope.deploymentsByDeploymentConfig);
@@ -445,7 +446,9 @@ angular.module('openshiftConsole')
             $scope.deploymentConfigDeploymentsInProgress[deploymentConfigName][rsName] = replicaSet;
           } else if (action === 'MODIFIED') {
             // After the deployment ends remove him from the deploymentConfigDeploymentsInProgress structure.
-            delete $scope.deploymentConfigDeploymentsInProgress[deploymentConfigName][rsName];
+            if($scope.deploymentConfigDeploymentsInProgress[deploymentConfigName]) {
+              delete $scope.deploymentConfigDeploymentsInProgress[deploymentConfigName][rsName];
+            }
           }
 
           // Extract the causes from the encoded deployment config
