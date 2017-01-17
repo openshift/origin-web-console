@@ -312,7 +312,7 @@
                               </a>
                             </dt>
                             <dd>
-                              <copy-to-clipboard clipboard-text="'oc deploy ' + deploymentConfig.metadata.name + ' --latest -n ' + project.metadata.name"></copy-to-clipboard>
+                              <copy-to-clipboard clipboard-text="'oc rollout latest dc/' + deploymentConfig.metadata.name + ' -n ' + project.metadata.name"></copy-to-clipboard>
                             </dd>
                             <div ng-repeat="trigger in deploymentConfig.spec.triggers">
                               <span ng-switch="trigger.type">
