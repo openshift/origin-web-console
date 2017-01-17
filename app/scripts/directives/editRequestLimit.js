@@ -25,6 +25,7 @@ angular.module('openshiftConsole')
 
         // Create a unique ID for `label for` and `aria-describedby` attributes.
         scope.id = _.uniqueId('compute-resource-');
+        scope.input = {};
 
         // If unit is not already in options, add it.
         var addUnitOption = function(unit) {
@@ -43,8 +44,8 @@ angular.module('openshiftConsole')
             scope.placeholder = defaultAmount;
             addUnitOption(defaultUnit);
             // Only change selected unit if no value is set.
-            if (!scope.amount) {
-              scope.unit = defaultUnit;
+            if (!scope.input.amount) {
+              scope.input.unit = defaultUnit;
             }
           });
           if (defaultValue) {
@@ -55,7 +56,7 @@ angular.module('openshiftConsole')
         // Set unit options and based on type.
         switch (scope.type) {
         case 'cpu':
-          scope.unit = 'm';
+          scope.input.unit = 'm';
           scope.units = [{
             value: "m",
             label: "millicores"
@@ -65,7 +66,7 @@ angular.module('openshiftConsole')
           }];
           break;
         case 'memory':
-          scope.unit = 'Mi';
+          scope.input.unit = 'Mi';
           scope.units = [{
             value: "M",
             label: "MB"
@@ -84,7 +85,7 @@ angular.module('openshiftConsole')
 
         var validateLimitRange = function() {
           // Use usageValue filter to normalize units for comparison.
-          var value = scope.amount && usageValue(scope.amount + scope.unit),
+          var value = scope.input.amount && usageValue(scope.input.amount + scope.input.unit),
               min = scope.limitRangeMin && usageValue(scope.limitRangeMin),
               max = scope.limitRangeMax && usageValue(scope.limitRangeMax),
               minValid = true,
@@ -112,8 +113,8 @@ angular.module('openshiftConsole')
               limitWithinRatio = true;
 
           // Limit is either the value set by the user or the default value if limit is unset.
-          if (scope.amount) {
-            limit = usageValue(scope.amount + scope.unit);
+          if (scope.input.amount) {
+            limit = usageValue(scope.input.amount + scope.input.unit);
           } else if (scope.defaultValue) {
             limit = usageValue(scope.defaultValue);
           }
@@ -140,25 +141,25 @@ angular.module('openshiftConsole')
         ngModel.$render = function() {
           var update = _.spread(function(amount, unit) {
             if (amount) {
-              scope.amount = Number(amount);
-              scope.unit = unit;
+              scope.input.amount = Number(amount);
+              scope.input.unit = unit;
               // If the unit already set in the resource isn't in the list, add it.
               addUnitOption(unit);
             } else {
-              scope.amount = null;
+              scope.input.amount = null;
             }
           });
           update(amountAndUnit(ngModel.$viewValue, scope.type));
         };
 
         // Update model from view.
-        scope.$watchGroup(['amount', 'unit'], function() {
+        scope.$watchGroup(['input.amount', 'input.unit'], function() {
           validateLimitRange();
           validateLimitAgainstRequest();
-          if (!scope.amount) {
+          if (!scope.input.amount) {
             ngModel.$setViewValue(undefined);
           } else {
-            ngModel.$setViewValue(scope.amount + scope.unit);
+            ngModel.$setViewValue(scope.input.amount + scope.input.unit);
           }
         });
 
