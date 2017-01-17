@@ -55,6 +55,7 @@ CLI:{
 },
 DEFAULT_HPA_CPU_TARGET_PERCENT:80,
 DISABLE_OVERVIEW_METRICS:!1,
+DISABLE_CUSTOM_METRICS:!1,
 DISABLE_WILDCARD_ROUTES:!0,
 AVAILABLE_KINDS_BLACKLIST:[ "Binding", "Ingress", "DeploymentConfigRollback" ],
 ENABLE_TECH_PREVIEW_FEATURE:{
@@ -2929,15 +2930,15 @@ return a ? a + "/metrics/stats/query" :a;
 }
 function j(a) {
 return f().then(function(b) {
-var c = b + n;
-return URI.expand(c, {
+var c;
+return c = "counter" === a.type ? b + o :b + n, URI.expand(c, {
 podUID:a.pod.metadata.uid,
 containerName:a.containerName,
 metric:a.metric
 }).toString();
 });
 }
-var k, l, m, n = "/gauges/{containerName}%2F{podUID}%2F{metric}/data", o = function(a) {
+var k, l, m, n = "/gauges/{containerName}%2F{podUID}%2F{metric}/data", o = "/counters/{containerName}%2F{podUID}%2F{metric}/data", p = function(a) {
 return f().then(function(c) {
 return !!c && (!a || (!!l || !m && b.get(c).then(function() {
 return l = !0, !0;
@@ -2948,13 +2949,13 @@ response:a
 }), !1;
 })));
 });
-}, p = function(a) {
+}, q = function(a) {
 var b = a.split("/");
 return {
 podUID:b[1],
 descriptor:b[2] + "/" + b[3]
 };
-}, q = function(a, c, d) {
+}, r = function(a, c, d) {
 var e = _.indexBy(d.pods, "metadata.uid");
 return b.post(a, c, {
 auth:{},
@@ -2965,12 +2966,12 @@ Accept:"application/json",
 }
 }).then(function(a) {
 var b = {}, c = function(a, c) {
-var d = p(c), f = _.get(e, [ d.podUID, "metadata", "name" ]), h = g(a);
+var d = q(c), f = _.get(e, [ d.podUID, "metadata", "name" ]), h = g(a);
 _.set(b, [ d.descriptor, f ], h);
 };
 return _.each(a.data.counter, c), _.each(a.data.gauge, c), b;
 });
-}, r = _.template("descriptor_name:network/tx_rate|network/rx_rate,type:pod,pod_id:<%= uid %>"), s = _.template("descriptor_name:memory/usage|cpu/usage_rate,type:pod_container,pod_id:<%= uid %>,container_name:<%= containerName %>"), t = function(a) {
+}, s = _.template("descriptor_name:network/tx_rate|network/rx_rate,type:pod,pod_id:<%= uid %>"), t = _.template("descriptor_name:memory/usage|cpu/usage_rate,type:pod_container,pod_id:<%= uid %>,container_name:<%= containerName %>"), u = function(a) {
 return i().then(function(b) {
 var d = {
 bucketDuration:a.bucketDuration,
@@ -2978,27 +2979,52 @@ start:a.start
 };
 a.end && (d.end = a.end);
 var e = [], f = h(_.map(a.pods, "metadata.uid")), g = _.assign({
-tags:s({
+tags:t({
 uid:f,
 containerName:a.containerName
 })
 }, d);
-e.push(q(b, g, a));
+e.push(r(b, g, a));
 var i = _.assign({
-tags:r({
+tags:s({
 uid:f
 })
 }, d);
-return e.push(q(b, i, a)), c.all(e).then(function(a) {
+return e.push(r(b, i, a)), c.all(e).then(function(a) {
 var b = {};
 return _.each(a, function(a) {
 _.assign(b, a);
 }), b;
 });
 });
+}, v = function(a) {
+var c = a.metadata.namespace, d = a.metadata.uid;
+return f().then(function(a) {
+if (!a) return null;
+var e = a + "/metrics", f = {
+tags:"custom_metric:true,pod_id:" + d
+};
+return b.get(e, {
+auth:{},
+headers:{
+Accept:"application/json",
+"Hawkular-Tenant":c
+},
+params:f
+}).then(function(a) {
+return _.map(a.data, function(a) {
+return {
+name:a.tags.metric_name,
+unit:a.tags.units,
+description:a.tags.description,
+type:a.type
+};
+});
+});
+});
 };
 return {
-isAvailable:o,
+isAvailable:p,
 getMetricsURL:f,
 get:function(a) {
 return j(a).then(function(c) {
@@ -3044,7 +3070,8 @@ usage:_.head(g(b.data))
 });
 });
 },
-getPodMetrics:t
+getPodMetrics:u,
+getCustomMetrics:v
 };
 } ]), angular.module("openshiftConsole").factory("MetricsCharts", [ "$timeout", "ConversionService", function(a, b) {
 var c = function(a, c) {
@@ -11264,6 +11291,7 @@ return Math.floor(r() / F) + "ms";
 function t(a, b, c) {
 var d, e = {
 metric:b.id,
+type:b.type,
 bucketDuration:s()
 };
 return b.data && b.data.length ? (d = _.last(b.data), e.start = d.end) :e.start = c, m.pod ? _.assign(e, {
@@ -11382,6 +11410,22 @@ id:"network/rx_rate",
 label:"Received",
 data:[]
 } ]
+}), window.OPENSHIFT_CONSTANTS.DISABLE_CUSTOM_METRICS || j.getCustomMetrics(m.pod).then(function(a) {
+angular.forEach(a, function(a) {
+var b = a.description || a.name, c = a.unit || "";
+m.metrics.push({
+label:b,
+units:c,
+chartPrefix:"custom-" + _.uniqueId("custom-metric-"),
+chartType:"spline",
+datasets:[ {
+id:"custom/" + a.name,
+label:b,
+type:a.type,
+data:[]
+} ]
+});
+}), z();
 }), m.loaded = !1, m.noData = !0, m.showComputeUnitsHelp = function() {
 k.showComputeUnitsHelp();
 }, j.getMetricsURL().then(function(a) {
