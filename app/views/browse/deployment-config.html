@@ -9,9 +9,7 @@
             <breadcrumbs breadcrumbs="breadcrumbs"></breadcrumbs>
             <alerts alerts="alerts"></alerts>
             <div>
-              <h1>
-                {{deploymentConfigName}}
-
+              <h1 class="contains-actions">
                 <div class="pull-right dropdown" ng-if="deploymentConfig" ng-hide="!('deploymentConfigs' | canIDoAny)">
                   <!-- Primary Actions -->
                   <button
@@ -84,6 +82,7 @@
                     </li>
                   </ul>
                 </div>
+                {{deploymentConfigName}}
                 <!-- <span ng-if="deploymentConfig.status.details.message" class="pficon pficon-warning-triangle-o" style="cursor: help;" data-toggle="popover" data-trigger="hover" dynamic-content="{{deploymentConfig.status.details.message}}"></span> -->
                 <small class="meta" ng-if="deploymentConfig">created <span am-time-ago="deploymentConfig.metadata.creationTimestamp"></span></small>
               </h1>
