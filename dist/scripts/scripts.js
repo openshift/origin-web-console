@@ -4595,28 +4595,28 @@ _.set(c, [ "routeWarningsByService", a.metadata.name, b.metadata.name ], d);
 }, ia = function(a) {
 var b = H(_.get(a, "spec.output.to"), a.metadata.namespace);
 c.recentBuildsByOutputImage[b] = c.recentBuildsByOutputImage[b] || [], c.recentBuildsByOutputImage[b].push(a);
-}, ja = a("buildConfigForBuild"), ka = a("isIncompleteBuild"), la = function(a) {
+}, ja = a("buildConfigForBuild"), ka = function(a) {
 if (z) {
 var b = ja(a), d = z[b];
 if (d) {
 var f = e.usesDeploymentConfigs(d);
 _.each(f, function(b) {
-c.recentPipelinesByDC[b] = c.recentPipelinesByDC[b] || [], c.recentPipelinesByDC[b].push(a), ka(a) && (c.incompletePipelinesByDC[b] = c.incompletePipelinesByDC[b] || [], c.incompletePipelinesByDC[b].push(a));
+c.recentPipelinesByDC[b] = c.recentPipelinesByDC[b] || [], c.recentPipelinesByDC[b].push(a);
 });
 }
 }
-}, ma = function() {
-A && (c.recentPipelinesByDC = {}, c.incompletePipelinesByDC = {}, c.recentBuildsByOutputImage = {}, _.each(e.interestingBuilds(A), function(a) {
-return E(a) ? void la(a) :void ia(a);
+}, la = function() {
+A && (c.recentPipelinesByDC = {}, c.recentBuildsByOutputImage = {}, _.each(e.interestingBuilds(A), function(a) {
+return E(a) ? void ka(a) :void ia(a);
 }), c.pipelinesForDC = {}, _.each(z, function(a) {
 _.each(e.usesDeploymentConfigs(a), function(b) {
 c.pipelinesForDC[b] = c.pipelinesForDC[b] || [], c.pipelinesForDC[b].push(a);
 });
 }));
-}, na = function() {
+}, ma = function() {
 var a = _.isEmpty(r) && _.isEmpty(t) && _.isEmpty(c.monopodsByService) && _.isEmpty(u) && _.isEmpty(w) && _.isEmpty(x), b = r && y && u && w && x;
 c.renderOptions.showGetStarted = b && a, c.renderOptions.showLoading = !b && a;
-}, oa = function() {
+}, na = function() {
 var a = d.isAlertPermanentlyHidden("overview-quota-limit-reached", c.projectName);
 if (!a && p.isAnyQuotaExceeded(c.quotas, c.clusterQuotas)) {
 if (c.alerts.quotaExceeded) return;
@@ -4655,11 +4655,11 @@ var b = _.get(c, [ a, "" ], {});
 return !_.isEmpty(b);
 });
 };
-var pa = [];
+var oa = [];
 c.getHPA = function(a) {
 if (!B) return null;
 var b = _.get(a, "kind"), c = _.get(a, "metadata.name");
-return _.get(C, [ b, c ], pa);
+return _.get(C, [ b, c ], oa);
 }, window.OPENSHIFT_CONSTANTS.DISABLE_OVERVIEW_METRICS || (o.isAvailable(!0).then(function(a) {
 c.showMetrics = a;
 }), c.$on("metrics-connection-failed", function(a, b) {
@@ -4680,64 +4680,64 @@ return d.permanentlyHideAlert("metrics-connection-failed"), !0;
 } ]
 });
 }));
-var qa = a("isIE")() || a("isEdge")();
+var pa = a("isIE")() || a("isEdge")();
 k.get(b.project).then(_.spread(function(a, b) {
 c.project = a, c.projectContext = b, D.push(f.watch("pods", b, function(a) {
-y = a.by("metadata.name"), aa(), na(), i.log("pods", y);
+y = a.by("metadata.name"), aa(), ma(), i.log("pods", y);
 })), D.push(f.watch("services", b, function(a) {
-c.services = r = a.by("metadata.name"), ga(), aa(), P(), U(), T(), V(), Y(), ha(), na(), i.log("services (subscribe)", r);
+c.services = r = a.by("metadata.name"), ga(), aa(), P(), U(), T(), V(), Y(), ha(), ma(), i.log("services (subscribe)", r);
 }, {
-poll:qa,
+poll:pa,
 pollInterval:6e4
 })), D.push(f.watch("builds", b, function(a) {
-A = a.by("metadata.name"), ma(), na(), i.log("builds (subscribe)", A);
+A = a.by("metadata.name"), la(), ma(), i.log("builds (subscribe)", A);
 })), D.push(f.watch("buildConfigs", b, function(a) {
-z = a.by("metadata.name"), ma(), i.log("builds (subscribe)", A);
+z = a.by("metadata.name"), la(), i.log("builds (subscribe)", A);
 }, {
-poll:qa,
+poll:pa,
 pollInterval:6e4
 })), D.push(f.watch("routes", b, function(a) {
 q = a.by("metadata.name"), O(), ga(), ha(), i.log("routes (subscribe)", c.routesByService);
 }, {
-poll:qa,
+poll:pa,
 pollInterval:6e4
 })), D.push(f.watch("replicationcontrollers", b, function(a) {
-c.replicationControllersByName = u = a.by("metadata.name"), U(), T(), aa(), ma(), na(), i.log("replicationcontrollers (subscribe)", u);
+c.replicationControllersByName = u = a.by("metadata.name"), U(), T(), aa(), la(), ma(), i.log("replicationcontrollers (subscribe)", u);
 })), D.push(f.watch("deploymentconfigs", b, function(a) {
-t = a.by("metadata.name"), P(), T(), na(), i.log("deploymentconfigs (subscribe)", t);
+t = a.by("metadata.name"), P(), T(), ma(), i.log("deploymentconfigs (subscribe)", t);
 })), D.push(f.watch({
 group:"extensions",
 resource:"replicasets"
 }, b, function(a) {
-w = a.by("metadata.name"), aa(), V(), X(), na(), i.log("replicasets (subscribe)", w);
+w = a.by("metadata.name"), aa(), V(), X(), ma(), i.log("replicasets (subscribe)", w);
 })), D.push(f.watch({
 group:"apps",
 resource:"statefulsets"
 }, b, function(a) {
-x = a.by("metadata.name"), aa(), Y(), na(), i.log("statefulsets (subscribe)", x);
+x = a.by("metadata.name"), aa(), Y(), ma(), i.log("statefulsets (subscribe)", x);
 }, {
-poll:qa,
+poll:pa,
 pollInterval:6e4
 })), D.push(f.watch({
 group:"extensions",
 resource:"deployments"
 }, b, function(a) {
-s = a.by("metadata.name"), Q(), X(), na(), i.log("deployments (subscribe)", s);
+s = a.by("metadata.name"), Q(), X(), ma(), i.log("deployments (subscribe)", s);
 })), D.push(f.watch({
 group:"extensions",
 resource:"horizontalpodautoscalers"
 }, b, function(a) {
 B = a.by("metadata.name"), Z();
 }, {
-poll:qa,
+poll:pa,
 pollInterval:6e4
 })), D.push(f.watch("resourcequotas", b, function(a) {
-c.quotas = a.by("metadata.name"), oa();
+c.quotas = a.by("metadata.name"), na();
 }, {
 poll:!0,
 pollInterval:6e4
 })), D.push(f.watch("appliedclusterresourcequotas", b, function(a) {
-c.clusterQuotas = a.by("metadata.name"), oa();
+c.clusterQuotas = a.by("metadata.name"), na();
 }, {
 poll:!0,
 pollInterval:6e4
@@ -12565,7 +12565,7 @@ return {
 restrict:"E",
 scope:{
 build:"=",
-collapseStagesOnCompletion:"=?",
+expandOnlyRunning:"=?",
 buildConfigNameOnExpanded:"=?"
 },
 replace:!0,

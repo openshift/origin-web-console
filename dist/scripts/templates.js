@@ -5819,11 +5819,11 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
 
   $templateCache.put('views/directives/build-pipeline.html',
     "<div>\n" +
-    "<div ng-if=\"collapseStagesOnCompletion\">\n" +
-    "<div class=\"animate-if\" ng-if=\"build | isIncompleteBuild\" ng-include=\"'views/directives/_build-pipeline-expanded.html'\"></div>\n" +
-    "<div class=\"animate-if\" ng-if=\"!(build | isIncompleteBuild)\" ng-include=\"'views/directives/_build-pipeline-collapsed.html'\"></div>\n" +
+    "<div ng-if=\"expandOnlyRunning\">\n" +
+    "<div class=\"animate-if\" ng-if=\"build.status.phase === 'Running'\" ng-include=\"'views/directives/_build-pipeline-expanded.html'\"></div>\n" +
+    "<div class=\"animate-if\" ng-if=\"build.status.phase !== 'Running'\" ng-include=\"'views/directives/_build-pipeline-collapsed.html'\"></div>\n" +
     "</div>\n" +
-    "<div ng-if=\"!collapseStagesOnCompletion\" ng-include=\"'views/directives/_build-pipeline-expanded.html'\"></div>\n" +
+    "<div ng-if=\"!expandOnlyRunning\" ng-include=\"'views/directives/_build-pipeline-expanded.html'\"></div>\n" +
     "</div>"
   );
 
@@ -10951,7 +10951,7 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "<div class=\"service-group-triggers\">\n" +
     "<div ng-repeat=\"dc in allDeploymentConfigsInGroup\">\n" +
     "<div row ng-repeat=\"pipeline in recentPipelinesByDC[dc.metadata.name] | orderObjectsByDate : true track by (pipeline | uid)\" class=\"build-pipeline-wrapper animate-repeat animate-slide\">\n" +
-    "<build-pipeline flex build=\"pipeline\" collapse-stages-on-completion=\"true\" build-config-name-on-expanded=\"true\"></build-pipeline>\n" +
+    "<build-pipeline flex build=\"pipeline\" expand-only-running=\"true\" build-config-name-on-expanded=\"true\"></build-pipeline>\n" +
     "</div>\n" +
     "<div>\n" +
     "<triggers triggers=\"dc.spec.triggers\" builds-by-output-image=\"recentBuildsByOutputImage\" namespace=\"dc.metadata.namespace\"></triggers>\n" +
