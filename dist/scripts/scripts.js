@@ -13431,10 +13431,13 @@ var e = a(b);
 c[e] = (c[e] || 0) + 1;
 }), c;
 }
-return function(c, d) {
-if (!c) return "";
-var e = a(c), f = c.metadata.name;
-return e !== f && b(d)[e] > 1 ? e + " (" + f + ")" :e;
+function c(a) {
+return a.replace(/</g, "&lt;").replace(/>/g, "&gt;");
+}
+return function(d, e, f) {
+if (!d) return "";
+var g = a(d), h = d.metadata.name;
+return g !== h && b(e)[g] > 1 ? f ? c(g) + " (" + h + ")" :g + " (" + h + ")" :f ? c(g) :g;
 };
 } ]).filter("searchProjects", [ "annotationNameFilter", function(a) {
 return function(b, c) {
