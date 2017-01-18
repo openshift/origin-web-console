@@ -10063,15 +10063,17 @@ _.set(a, "model.service", c);
 });
 }
 };
-}), angular.module("openshiftConsole").directive("oscPersistentVolumeClaim", [ "DataService", "ModalsService", function(a, b) {
+}), angular.module("openshiftConsole").directive("oscPersistentVolumeClaim", [ "$filter", "DataService", "LimitRangesService", "ModalsService", function(a, b, c, d) {
 return {
 restrict:"E",
 scope:{
-claim:"=model"
+claim:"=model",
+projectName:"="
 },
 templateUrl:"views/directives/osc-persistent-volume-claim.html",
-link:function(c) {
-c.storageClasses = [], c.claim.unit = "Gi", c.units = [ {
+link:function(e) {
+var f = a("amountAndUnit"), g = a("usageValue");
+e.storageClasses = [], e.claim.unit = "Gi", e.units = [ {
 value:"Mi",
 label:"MiB"
 }, {
@@ -10089,7 +10091,7 @@ label:"GB"
 }, {
 value:"T",
 label:"TB"
-} ], c.claim.selectedLabels = [], c.groupUnits = function(a) {
+} ], e.claim.selectedLabels = [], e.groupUnits = function(a) {
 switch (a.value) {
 case "Mi":
 case "Gi":
@@ -10102,15 +10104,33 @@ case "T":
 return "Decimal Units";
 }
 return "";
-}, c.showComputeUnitsHelp = function() {
-b.showComputeUnitsHelp();
-}, a.list({
+}, e.showComputeUnitsHelp = function() {
+d.showComputeUnitsHelp();
+};
+var h = function() {
+var a = e.claim.amount && g(e.claim.amount + e.claim.unit), b = _.has(e, "limits.min") && g(e.limits.min), c = _.has(e, "limits.max") && g(e.limits.max), d = !0, f = !0;
+a && b && (d = a >= b), a && c && (f = a <= c), e.persistentVolumeClaimForm.capacity.$setValidity("limitRangeMin", d), e.persistentVolumeClaimForm.capacity.$setValidity("limitRangeMax", f);
+};
+b.list({
 group:"storage.k8s.io",
 resource:"storageclasses"
 }, {}, function(a) {
-c.storageClasses = a.by("metadata.name");
+e.storageClasses = a.by("metadata.name");
 }, {
 errorNotification:!1
+}), b.list("limitranges", {
+namespace:e.projectName
+}, function(a) {
+var b = a.by("metadata.name");
+if (!_.isEmpty(b)) {
+e.limits = c.getEffectiveLimitRange(b, "storage", "PersistentVolumeClaim");
+var d;
+if (e.limits.min && e.limits.max) {
+var i = g(e.limits.min), j = g(e.limits.max);
+i === j && (d = f(e.limits.max), e.claim.amount = Number(d[0]), e.claim.unit = d[1], e.capacityReadOnly = !0);
+}
+e.$watchGroup([ "claim.amount", "claim.unit" ], h);
+}
 });
 }
 };

@@ -2,15 +2,21 @@
 
 angular.module("openshiftConsole")
   .directive("oscPersistentVolumeClaim",
-             function(DataService,
+             function($filter,
+                      DataService,
+                      LimitRangesService,
                       ModalsService) {
     return {
       restrict: 'E',
       scope: {
-        claim: "=model"
+        claim: "=model",
+        projectName: "="
       },
       templateUrl: 'views/directives/osc-persistent-volume-claim.html',
       link: function(scope) {
+        var amountAndUnit = $filter('amountAndUnit');
+        var usageValue = $filter('usageValue');
+
         scope.storageClasses = [];
         scope.claim.unit = 'Gi';
         scope.units = [{
@@ -53,9 +59,54 @@ angular.module("openshiftConsole")
           ModalsService.showComputeUnitsHelp();
         };
 
+        var validateLimitRange = function() {
+          // Use usageValue filter to normalize units for comparison.
+          var value = scope.claim.amount && usageValue(scope.claim.amount + scope.claim.unit);
+          var min = _.has(scope, 'limits.min') && usageValue(scope.limits.min);
+          var max = _.has(scope, 'limits.max') && usageValue(scope.limits.max);
+          var minValid = true;
+          var maxValid = true;
+
+          // Test against limit range min if defined.
+          if (value && min) {
+            minValid = value >= min;
+          }
+
+          // Test against limit range max if defined.
+          if (value && max) {
+            maxValid = value <= max;
+          }
+
+          scope.persistentVolumeClaimForm.capacity.$setValidity('limitRangeMin', minValid);
+          scope.persistentVolumeClaimForm.capacity.$setValidity('limitRangeMax', maxValid);
+        };
+
         DataService.list({group: 'storage.k8s.io', resource: 'storageclasses'}, {}, function(storageClasses) {
           scope.storageClasses = storageClasses.by('metadata.name');
         }, {errorNotification: false});
+
+        DataService.list('limitranges', { namespace: scope.projectName }, function(limitRangeData) {
+          var limitRanges = limitRangeData.by('metadata.name');
+          if (_.isEmpty(limitRanges)) {
+            return;
+          }
+
+          scope.limits = LimitRangesService.getEffectiveLimitRange(limitRanges, 'storage', 'PersistentVolumeClaim');
+          // If min === max, set the capacity to the required value and make the field readonly.
+          var requiredAmountAndUnit;
+          if (scope.limits.min && scope.limits.max) {
+            var minUsage = usageValue(scope.limits.min);
+            var maxUsage = usageValue(scope.limits.max);
+            if (minUsage === maxUsage) {
+              requiredAmountAndUnit = amountAndUnit(scope.limits.max);
+              scope.claim.amount = Number(requiredAmountAndUnit[0]);
+              scope.claim.unit = requiredAmountAndUnit[1];
+              scope.capacityReadOnly = true;
+            }
+          }
+
+          scope.$watchGroup(['claim.amount', 'claim.unit'], validateLimitRange);
+        });
       }
     };
   });

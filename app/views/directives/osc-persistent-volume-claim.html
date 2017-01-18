@@ -67,7 +67,7 @@
     </div>
 
     <div class="form-group" >
-      <label class="required">Access Mode</label><br/>
+      <label class="required">Access Mode</label>
       <div class="radio">
 
         <label class="radio-inline">
@@ -92,21 +92,38 @@
     </div>
 
     <!-- capacity -->
-    <div class="form-group">
+    <div ng-if="capacityReadOnly" class="form-group mar-bottom-xl">
+      <label>Size</label>
+      <div class="static-form-value-large">
+        {{claim.amount}} {{claim.unit | humanizeUnit : 'storage'}}
+        <small>(cannot be changed)</small>
+      </div>
+    </div>
+    <div ng-if="!capacityReadOnly" class="form-group">
       <fieldset class="form-inline compute-resource">
-        <label class="required">Size</label>
-        <div class="resource-size">
-          <div class="resource-amount" ng-class="{ 'has-error': persistentVolumeClaimForm.capacity.$invalid && persistentVolumeClaimForm.capacity.$touched && !claimDisabled }">
-            <label class="sr-only">Amount</label>
+        <label class="required">
+          Size
+          <small ng-if="limits.min && limits.max">
+            {{limits.min | usageWithUnits : 'storage'}} min to {{limits.max | usageWithUnits : 'storage'}} max
+          </small>
+          <small ng-if="limits.min && !limits.max">
+            Min: {{limits.min | usageWithUnits : 'storage'}}
+          </small>
+          <small ng-if="limits.max && !limits.min">
+            Max: {{limits.max | usageWithUnits : 'storage'}}
+          </small>
+        </label>
+        <div class="resource-size" ng-class="{ 'has-error': persistentVolumeClaimForm.capacity.$invalid && persistentVolumeClaimForm.capacity.$touched && !claimDisabled }">
+          <div class="resource-amount">
+            <label for="claim-amount" class="sr-only">Amount</label>
             <input type="number"
                    name="capacity"
-                   ng-attr-id="claim-amount"
+                   id="claim-amount"
                    ng-model="claim.amount"
-                   ng-required="true"
+                   required
                    min="0"
-                   ng-attr-placeholder="10"
                    class="form-control"
-                   ng-attr-aria-describedby="claim-capacity-help">
+                   aria-describedby="claim-capacity-help">
           </div>
           <div class="resource-unit">
             <label class="sr-only" >Unit</label>
@@ -120,20 +137,32 @@
          </div>
          <div id="claim-capacity-help" class="help-block">
            Desired storage capacity.
-        </div>
-        <div class="has-error" ng-show="persistentVolumeClaimForm.capacity.$error.number && persistentVolumeClaimForm.capacity.$touched && !claimDisabled">
-          <span class="help-block">
-            Must be a number.
-          </span>
-        </div>
-        <div class="has-error" ng-show="persistentVolumeClaimForm.capacity.$error.min && persistentVolumeClaimForm.capacity.$touched && !claimDisabled">
-          <span class="help-block">
-            Must be a positive number.
-          </span>
-        </div>
-        <div class="learn-more-block mar-top-sm">
-          <a href="" ng-click="showComputeUnitsHelp()">What are GiB?</a>
-        </div>
+         </div>
+         <div ng-if="persistentVolumeClaimForm.capacity.$touched && !claimDisabled">
+           <div class="has-error" ng-show="persistentVolumeClaimForm.capacity.$error.number">
+             <span class="help-block">
+               Must be a number.
+             </span>
+           </div>
+           <div class="has-error" ng-show="persistentVolumeClaimForm.capacity.$error.min">
+             <span class="help-block">
+               Must be a positive number.
+             </span>
+           </div>
+           <div ng-if="persistentVolumeClaimForm.capacity.$error.limitRangeMin" class="has-error">
+             <span class="help-block">
+               Can't be less than {{limits.min | usageWithUnits : 'storage'}}.
+             </span>
+           </div>
+           <div ng-if="persistentVolumeClaimForm.capacity.$error.limitRangeMax" class="has-error">
+             <span class="help-block">
+               Can't be greater than {{limits.max | usageWithUnits : 'storage'}}.
+             </span>
+           </div>
+         </div>
+         <div class="learn-more-block mar-top-sm">
+           <a href="" ng-click="showComputeUnitsHelp()">What are GiB?</a>
+         </div>
       </fieldset>
     </div>
     <!--advanced options-->
