@@ -18,6 +18,7 @@ angular.module("openshiftConsole")
         var usageValue = $filter('usageValue');
 
         scope.storageClasses = [];
+        scope.defaultStorageClass = "";
         scope.claim.unit = 'Gi';
         scope.units = [{
           value: "Mi",
@@ -81,9 +82,28 @@ angular.module("openshiftConsole")
           scope.persistentVolumeClaimForm.capacity.$setValidity('limitRangeMax', maxValid);
         };
 
-        DataService.list({group: 'storage.k8s.io', resource: 'storageclasses'}, {}, function(storageClasses) {
-          scope.storageClasses = storageClasses.by('metadata.name');
-        }, {errorNotification: false});
+        DataService.list({group: 'storage.k8s.io', resource: 'storageclasses'}, {}, function(storageClassData) {
+           var storageClasses = storageClassData.by('metadata.name');
+           scope.storageClasses = _.sortBy(storageClasses, 'metadata.name');
+           var annotation = $filter('annotation');
+           scope.defaultStorageClass = _.find(scope.storageClasses, function(storageClass) {
+             return annotation(storageClass, 'storageclass.beta.kubernetes.io/is-default-class') === 'true';
+           });
+           if (!scope.defaultStorageClass)  { //if there is no default, set a no storage class option
+             var noclass = {
+               metadata: {
+                 name: "No Storage Class",
+                 labels: {},
+                 annotations: {
+                   description:  "No storage class will be assigned"
+                 }
+               }
+             };
+             scope.storageClasses.unshift(noclass);
+           } else {
+             scope.claim.storageClass = scope.defaultStorageClass;
+           }
+         }, {errorNotification: false});
 
         DataService.list('limitranges', { namespace: scope.projectName }, function(limitRangeData) {
           var limitRanges = limitRangeData.by('metadata.name');

@@ -8931,7 +8931,7 @@ if (a.spec.resources.requests.storage = c.claim.amount + b, c.claim.selectedLabe
 var d = j.mapEntries(j.compactEntries(c.claim.selectedLabels));
 _.isEmpty(d) || _.set(a, "spec.selector.matchLabels", d);
 }
-return c.claim.storageClass && (a.metadata.annotations["volume.beta.kubernetes.io/storage-class"] = c.claim.storageClass.metadata.name), a;
+return c.claim.storageClass && "No Storage Class" !== c.claim.storageClass.metadata.name && (a.metadata.annotations["volume.beta.kubernetes.io/storage-class"] = c.claim.storageClass.metadata.name), a;
 }
 return c.project = e, c.breadcrumbs[0].title = a("displayName")(e), f.canI("persistentvolumeclaims", "create", b.project) ? void (c.createPersistentVolumeClaim = function() {
 if (c.createPersistentVolumeClaimForm.$valid) {
@@ -10122,7 +10122,7 @@ projectName:"="
 templateUrl:"views/directives/osc-persistent-volume-claim.html",
 link:function(e) {
 var f = a("amountAndUnit"), g = a("usageValue");
-e.storageClasses = [], e.claim.unit = "Gi", e.units = [ {
+e.storageClasses = [], e.defaultStorageClass = "", e.claim.unit = "Gi", e.units = [ {
 value:"Mi",
 label:"MiB"
 }, {
@@ -10163,8 +10163,24 @@ a && b && (d = a >= b), a && c && (f = a <= c), e.persistentVolumeClaimForm.capa
 b.list({
 group:"storage.k8s.io",
 resource:"storageclasses"
-}, {}, function(a) {
-e.storageClasses = a.by("metadata.name");
+}, {}, function(b) {
+var c = b.by("metadata.name");
+e.storageClasses = _.sortBy(c, "metadata.name");
+var d = a("annotation");
+if (e.defaultStorageClass = _.find(e.storageClasses, function(a) {
+return "true" === d(a, "storageclass.beta.kubernetes.io/is-default-class");
+}), e.defaultStorageClass) e.claim.storageClass = e.defaultStorageClass; else {
+var f = {
+metadata:{
+name:"No Storage Class",
+labels:{},
+annotations:{
+description:"No storage class will be assigned"
+}
+}
+};
+e.storageClasses.unshift(f);
+}
 }, {
 errorNotification:!1
 }), b.list("limitranges", {
