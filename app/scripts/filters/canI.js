@@ -64,6 +64,9 @@ angular
       ],
       'projects': [
         {group: '', resource: 'projects', verbs: ['delete', 'update']}
+      ],
+      'statefulsets': [
+        {group: 'apps', resource: 'statefulsets', verbs: ['update', 'delete']}
       ]
     };
     return function(resource) {

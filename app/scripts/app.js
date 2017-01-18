@@ -174,6 +174,16 @@ angular
         templateUrl: 'views/edit/deployment-config.html',
         controller: 'EditDeploymentConfigController'
       })
+      .when('/project/:project/browse/stateful-sets/', {
+        templateUrl: 'views/browse/stateful-sets.html',
+        controller: 'StatefulSetsController',
+        reloadOnSearch: false
+      })
+      .when('/project/:project/browse/stateful-sets/:statefulset', {
+        templateUrl: 'views/browse/stateful-set.html',
+        controller: 'StatefulSetController',
+        reloadOnSearch: false
+      })
       .when('/project/:project/browse/rs/:replicaSet', {
         templateUrl: 'views/browse/replica-set.html',
         resolve: {

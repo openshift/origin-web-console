@@ -127,6 +127,15 @@ angular.module('openshiftConsole')
       templateUrl: 'views/_volumes.html'
     };
   })
+  .directive('volumeClaimTemplates', function() {
+    return {
+      restrict: 'E',
+      scope: {
+        templates: '=',
+      },
+      templateUrl: 'views/_volume-claim-templates.html'
+    };
+  })
   .directive('environment', function() {
     return {
       restrict: 'E',
