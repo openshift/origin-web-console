@@ -4531,7 +4531,7 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "</div>\n" +
     "<form name=\"createPersistentVolumeClaimForm\" class=\"mar-top-lg\">\n" +
     "<fieldset ng-disabled=\"disableInputs\">\n" +
-    "<osc-persistent-volume-claim model=\"claim\"></osc-persistent-volume-claim>\n" +
+    "<osc-persistent-volume-claim model=\"claim\" project-name=\"projectName\"></osc-persistent-volume-claim>\n" +
     "<div class=\"button-group gutter-bottom\">\n" +
     "<button type=\"submit\" class=\"btn btn-primary btn-lg\" ng-click=\"createPersistentVolumeClaim()\" ng-disabled=\"createPersistentVolumeClaimForm.$invalid || disableInputs\" value=\"\">Create</button>\n" +
     "<a class=\"btn btn-default btn-lg\" href=\"\" back>Cancel</a>\n" +
@@ -7547,7 +7547,7 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "</div>\n" +
     "</div>\n" +
     "<div class=\"form-group\">\n" +
-    "<label class=\"required\">Access Mode</label><br/>\n" +
+    "<label class=\"required\">Access Mode</label>\n" +
     "<div class=\"radio\">\n" +
     "<label class=\"radio-inline\">\n" +
     "<input type=\"radio\" name=\"accessModes\" ng-model=\"claim.accessModes\" value=\"ReadWriteOnce\" aria-describedby=\"access-modes-help\" ng-checked=\"true\">\n" +
@@ -7567,13 +7567,31 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "</div>\n" +
     "</div>\n" +
     "\n" +
-    "<div class=\"form-group\">\n" +
+    "<div ng-if=\"capacityReadOnly\" class=\"form-group mar-bottom-xl\">\n" +
+    "<label>Size</label>\n" +
+    "<div class=\"static-form-value-large\">\n" +
+    "{{claim.amount}} {{claim.unit | humanizeUnit : 'storage'}}\n" +
+    "<small>(cannot be changed)</small>\n" +
+    "</div>\n" +
+    "</div>\n" +
+    "<div ng-if=\"!capacityReadOnly\" class=\"form-group\">\n" +
     "<fieldset class=\"form-inline compute-resource\">\n" +
-    "<label class=\"required\">Size</label>\n" +
-    "<div class=\"resource-size\">\n" +
-    "<div class=\"resource-amount\" ng-class=\"{ 'has-error': persistentVolumeClaimForm.capacity.$invalid && persistentVolumeClaimForm.capacity.$touched && !claimDisabled }\">\n" +
-    "<label class=\"sr-only\">Amount</label>\n" +
-    "<input type=\"number\" name=\"capacity\" ng-attr-id=\"claim-amount\" ng-model=\"claim.amount\" ng-required=\"true\" min=\"0\" ng-attr-placeholder=\"10\" class=\"form-control\" ng-attr-aria-describedby=\"claim-capacity-help\">\n" +
+    "<label class=\"required\">\n" +
+    "Size\n" +
+    "<small ng-if=\"limits.min && limits.max\">\n" +
+    "{{limits.min | usageWithUnits : 'storage'}} min to {{limits.max | usageWithUnits : 'storage'}} max\n" +
+    "</small>\n" +
+    "<small ng-if=\"limits.min && !limits.max\">\n" +
+    "Min: {{limits.min | usageWithUnits : 'storage'}}\n" +
+    "</small>\n" +
+    "<small ng-if=\"limits.max && !limits.min\">\n" +
+    "Max: {{limits.max | usageWithUnits : 'storage'}}\n" +
+    "</small>\n" +
+    "</label>\n" +
+    "<div class=\"resource-size\" ng-class=\"{ 'has-error': persistentVolumeClaimForm.capacity.$invalid && persistentVolumeClaimForm.capacity.$touched && !claimDisabled }\">\n" +
+    "<div class=\"resource-amount\">\n" +
+    "<label for=\"claim-amount\" class=\"sr-only\">Amount</label>\n" +
+    "<input type=\"number\" name=\"capacity\" id=\"claim-amount\" ng-model=\"claim.amount\" required min=\"0\" class=\"form-control\" aria-describedby=\"claim-capacity-help\">\n" +
     "</div>\n" +
     "<div class=\"resource-unit\">\n" +
     "<label class=\"sr-only\">Unit</label>\n" +
@@ -7588,15 +7606,27 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "<div id=\"claim-capacity-help\" class=\"help-block\">\n" +
     "Desired storage capacity.\n" +
     "</div>\n" +
-    "<div class=\"has-error\" ng-show=\"persistentVolumeClaimForm.capacity.$error.number && persistentVolumeClaimForm.capacity.$touched && !claimDisabled\">\n" +
+    "<div ng-if=\"persistentVolumeClaimForm.capacity.$touched && !claimDisabled\">\n" +
+    "<div class=\"has-error\" ng-show=\"persistentVolumeClaimForm.capacity.$error.number\">\n" +
     "<span class=\"help-block\">\n" +
     "Must be a number.\n" +
     "</span>\n" +
     "</div>\n" +
-    "<div class=\"has-error\" ng-show=\"persistentVolumeClaimForm.capacity.$error.min && persistentVolumeClaimForm.capacity.$touched && !claimDisabled\">\n" +
+    "<div class=\"has-error\" ng-show=\"persistentVolumeClaimForm.capacity.$error.min\">\n" +
     "<span class=\"help-block\">\n" +
     "Must be a positive number.\n" +
     "</span>\n" +
+    "</div>\n" +
+    "<div ng-if=\"persistentVolumeClaimForm.capacity.$error.limitRangeMin\" class=\"has-error\">\n" +
+    "<span class=\"help-block\">\n" +
+    "Can't be less than {{limits.min | usageWithUnits : 'storage'}}.\n" +
+    "</span>\n" +
+    "</div>\n" +
+    "<div ng-if=\"persistentVolumeClaimForm.capacity.$error.limitRangeMax\" class=\"has-error\">\n" +
+    "<span class=\"help-block\">\n" +
+    "Can't be greater than {{limits.max | usageWithUnits : 'storage'}}.\n" +
+    "</span>\n" +
+    "</div>\n" +
     "</div>\n" +
     "<div class=\"learn-more-block mar-top-sm\">\n" +
     "<a href=\"\" ng-click=\"showComputeUnitsHelp()\">What are GiB?</a>\n" +

@@ -3581,6 +3581,8 @@ to{transform:rotate(359deg)}
 .btn-flat-default:focus,.btn-flat-default:hover{background-color:#f7f7f7;border-color:#e7e7e7}
 .btn-remove{color:#333;display:inline-block;font-size:15px;line-height:1;opacity:.65;padding:5px 7px;vertical-align:middle}
 .btn-remove:focus,.btn-remove:hover{color:inherit;opacity:1;text-decoration:none}
+.static-form-value-large{font-family:inherit;font-weight:500;line-height:1.1;color:inherit;margin-bottom:10.5px;font-size:16px;margin-top:3px}
+.static-form-value-large .small,.static-form-value-large small{font-weight:400;line-height:1;color:#9c9c9c;font-size:65%}
 .copy-to-clipboard input.form-control:read-only{background-color:#fff;color:#363636}
 .copy-to-clipboard-multiline{position:relative;width:100%}
 .copy-to-clipboard-multiline a{box-shadow:none;position:absolute;right:0;top:0}
