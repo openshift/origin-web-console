@@ -17,7 +17,7 @@
         <label class="sr-only" ng-attr-for="{{id}}-unit">Unit</label>
         <ui-select search-enabled="false" ng-model="input.unit" input-id="{{id}}-unit">
           <ui-select-match>{{$select.selected.label}}</ui-select-match>
-          <ui-select-choices repeat="option.value as option in units">
+          <ui-select-choices repeat="option.value as option in units" group-by="groupUnits">
             {{option.label}}
           </ui-select-choices>
         </ui-select>
