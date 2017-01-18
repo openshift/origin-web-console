@@ -51,6 +51,7 @@ window.OPENSHIFT_CONSTANTS = {
     "builds":                  "architecture/core_concepts/builds_and_image_streams.html#builds",
     "image-streams":           "architecture/core_concepts/builds_and_image_streams.html#image-streams",
     "storage":                 "architecture/additional_concepts/storage.html",
+    "build-hooks":             "dev_guide/builds.html#build-hooks",
     // default should remain last, add new links above
     "default":                 "welcome/index.html"
   },

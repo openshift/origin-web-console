@@ -5500,7 +5500,7 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
 
   $templateCache.put('views/directives/_edit-command.html',
     "<ng-form name=\"form\">\n" +
-    "<p ng-hide=\"input.args.length\"><em>No command set.</em></p>\n" +
+    "<p ng-hide=\"input.args.length\"><em>No {{type || 'command'}} set.</em></p>\n" +
     "<p ng-show=\"input.args.length\" as-sortable ng-model=\"input.args\" class=\"command-args\">\n" +
     "<span ng-repeat=\"arg in input.args\" as-sortable-item class=\"form-group\">\n" +
     "<span class=\"input-group\">\n" +
@@ -5512,18 +5512,18 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "<span as-sortable-item-handle class=\"input-group-addon action-button drag-handle\">\n" +
     "<i class=\"fa fa-bars\" aria-hidden=\"true\"></i>\n" +
     "</span>\n" +
-    "<a href=\"\" ng-click=\"removeArg($index)\" class=\"input-group-addon action-button remove-arg\" title=\"Remove Argument\">\n" +
-    "<span class=\"sr-only\">Remove Argument</span>\n" +
+    "<a href=\"\" ng-click=\"removeArg($index)\" class=\"input-group-addon action-button remove-arg\" title=\"Remove Item\">\n" +
+    "<span class=\"sr-only\">Remove Item</span>\n" +
     "<i class=\"pficon pficon-close\" aria-hidden=\"true\"></i>\n" +
     "</a>\n" +
     "</span>\n" +
     "</span>\n" +
     "</p>\n" +
     "<div class=\"form-group\">\n" +
-    "<label class=\"sr-only\" ng-attr-for=\"{{id}}-add-arg\">Add Argument</label>\n" +
+    "<label class=\"sr-only\" ng-attr-for=\"{{id}}-add-arg\">Add {{type || 'Command'}}</label>\n" +
     "\n" +
     "<span ng-show=\"!multiline\" class=\"input-group\">\n" +
-    "<input type=\"text\" ng-model=\"nextArg\" name=\"nextArg\" ng-attr-id=\"{{id}}-add-arg\" on-enter=\"addArg()\" placeholder=\"Add argument\" class=\"form-control\" autocorrect=\"off\" autocapitalize=\"off\" spellcheck=\"false\">\n" +
+    "<input type=\"text\" ng-model=\"nextArg\" name=\"nextArg\" ng-attr-id=\"{{id}}-add-arg\" on-enter=\"addArg()\" placeholder=\"Add {{type || 'command'}}\" class=\"form-control\" autocorrect=\"off\" autocapitalize=\"off\" spellcheck=\"false\">\n" +
     "<span class=\"input-group-btn\">\n" +
     "\n" +
     "<a class=\"btn btn-default\" href=\"\" ng-click=\"addArg()\" ng-disabled=\"!nextArg\" ng-attr-aria-disabled=\"!nextArg\" role=\"button\">Add</a>\n" +
@@ -5531,7 +5531,7 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "</span>\n" +
     "\n" +
     "<span ng-show=\"multiline\">\n" +
-    "<textarea ng-model=\"nextArg\" name=\"nextArg\" rows=\"10\" ng-attr-id=\"{{id}}-add-arg\" placeholder=\"Add argument\" class=\"form-control\" autocorrect=\"off\" autocapitalize=\"off\" spellcheck=\"false\">\n" +
+    "<textarea ng-model=\"nextArg\" name=\"nextArg\" rows=\"10\" ng-attr-id=\"{{id}}-add-arg\" placeholder=\"Add {{type || 'command'}}\" class=\"form-control\" autocorrect=\"off\" autocapitalize=\"off\" spellcheck=\"false\">\n" +
     "      </textarea>\n" +
     "<div class=\"mar-top-md\">\n" +
     "<a class=\"btn btn-default\" href=\"\" ng-click=\"addArg()\" ng-disabled=\"!nextArg\" ng-attr-aria-disabled=\"!nextArg\" role=\"button\">Add</a>\n" +
@@ -5539,13 +5539,18 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "</span>\n" +
     "</div>\n" +
     "<div class=\"help-block\">\n" +
+    "<div ng-if=\"!type\">\n" +
     "Enter the command to run inside the container. The command is considered successful if its exit code is 0. Drag and drop command arguments to reorder them.\n" +
+    "</div>\n" +
+    "<div ng-if=\"type\">\n" +
+    "Enter the arguments that will be appended to the container's command. Drag and drop arguments to reorder them.\n" +
+    "</div>\n" +
     "</div>\n" +
     "<div class=\"mar-top-sm mar-bottom-md\">\n" +
     "<a href=\"\" ng-click=\"multiline = !multiline\">Switch to {{multiline ? 'Single-line' : 'Multiline'}} Editor</a>\n" +
     "<span ng-show=\"input.args.length\">\n" +
     "<span class=\"action-divider\">|</span>\n" +
-    "<a href=\"\" ng-click=\"clear()\" role=\"button\">Clear Command</a>\n" +
+    "<a href=\"\" ng-click=\"clear()\" role=\"button\">Clear {{ (type || 'Command') | sentenceCase }}</a>\n" +
     "</span>\n" +
     "</div>\n" +
     "\n" +
@@ -8606,7 +8611,6 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "<div ui-ace=\"{\n" +
     "                              mode: 'dockerfile',\n" +
     "                              theme: 'dreamweaver',\n" +
-    "                              onLoad: aceLoaded,\n" +
     "                              rendererOptions: {\n" +
     "                                fadeFoldWidgets: true,\n" +
     "                                showPrintMargin: false\n" +
@@ -8712,7 +8716,6 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "<div ui-ace=\"{\n" +
     "                          mode: 'groovy',\n" +
     "                          theme: 'eclipse',\n" +
-    "                          onLoad: aceLoaded,\n" +
     "                          rendererOptions: {\n" +
     "                            fadeFoldWidgets: true,\n" +
     "                            showPrintMargin: false\n" +
@@ -8880,8 +8883,59 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "<div class=\"help-block\" ng-switch-default>Builds triggered from this Build Configuration will run using the {{updatedBuildConfig.spec.runPolicy | sentenceCase}} policy.</div>\n" +
     "</div>\n" +
     "</div>\n" +
-    "<div>\n" +
-    "<a href=\"\" ng-click=\"view.advancedOptions = !view.advancedOptions\" role=\"button\">{{view.advancedOptions ? 'Hide' : 'Show'}} Advanced Options</a>\n" +
+    "<div ng-if=\"view.advancedOptions && !(updatedBuildConfig | isJenkinsPipelineStrategy)\" class=\"section\">\n" +
+    "<h3 class=\"with-divider\">Build Hooks\n" +
+    "<span class=\"help action-inline\">\n" +
+    "<a href=\"{{'build-hooks' | helpLink}}\" aria-hidden=\"true\" target=\"_blank\"><span class=\"learn-more-inline\">Learn More&nbsp;<i class=\"fa fa-external-link\"></i></span></a>\n" +
+    "</span>\n" +
+    "</h3>\n" +
+    "<div class=\"checkbox\">\n" +
+    "<label>\n" +
+    "<input type=\"checkbox\" ng-model=\"view.hasHooks\" id=\"enable-build-hooks\">\n" +
+    "Run build hooks after image is built\n" +
+    "</label>\n" +
+    "<div class=\"help-block\">\n" +
+    "Build hooks allow you to run commands at the end of the build to verify the image.\n" +
+    "</div>\n" +
+    "</div>\n" +
+    "<div ng-show=\"view.hasHooks\">\n" +
+    "<div class=\"form-group\">\n" +
+    "<h4>Hook Types</h4>\n" +
+    "<ui-select ng-model=\"buildHookSelection.type\" title=\"Choose a type of build hook\">\n" +
+    "<ui-select-match>{{$select.selected.label}}</ui-select-match>\n" +
+    "<ui-select-choices repeat=\"type in buildHookTypes\">\n" +
+    "{{type.label}}\n" +
+    "</ui-select-choices>\n" +
+    "</ui-select>\n" +
+    "</div>\n" +
+    "<fieldset>\n" +
+    "<div ng-show=\"buildHookSelection.type.id === 'script' || buildHookSelection.type.id === 'scriptArgs'\">\n" +
+    "<h4>Script</h4>\n" +
+    "<div ui-ace=\"{\n" +
+    "                                mode: 'sh',\n" +
+    "                                theme: 'eclipse',\n" +
+    "                                rendererOptions: {\n" +
+    "                                  fadeFoldWidgets: true,\n" +
+    "                                  showPrintMargin: false\n" +
+    "                                }\n" +
+    "                              }\" ng-model=\"updatedBuildConfig.spec.postCommit.script\" class=\"ace-bordered ace-inline mar-top-md\">\n" +
+    "</div>\n" +
+    "</div>\n" +
+    "<div ng-show=\"buildHookSelection.type.id === 'command' || buildHookSelection.type.id === 'commandArgs'\">\n" +
+    "<h4>Command</h4>\n" +
+    "<edit-command args=\"updatedBuildConfig.spec.postCommit.command\">\n" +
+    "</edit-command>\n" +
+    "</div>\n" +
+    "<div ng-show=\"buildHookSelection.type.id === 'args' || buildHookSelection.type.id === 'commandArgs' || buildHookSelection.type.id === 'scriptArgs' \">\n" +
+    "<h4>Arguments</h4>\n" +
+    "<edit-command args=\"updatedBuildConfig.spec.postCommit.args\" type=\"argument\">\n" +
+    "</edit-command>\n" +
+    "</div>\n" +
+    "</fieldset>\n" +
+    "</div>\n" +
+    "</div>\n" +
+    "<div class=\"gutter-top\">\n" +
+    "<a href=\"\" ng-click=\"view.advancedOptions = !view.advancedOptions\" role=\"button\">{{view.advancedOptions ? 'Hide' : 'Show'}} advanced options</a>\n" +
     "</div>\n" +
     "<div class=\"buttons gutter-top-bottom\">\n" +
     "<button type=\"submit\" class=\"btn btn-primary btn-lg\" ng-disabled=\"form.$invalid || form.$pristine || disableInputs\">\n" +

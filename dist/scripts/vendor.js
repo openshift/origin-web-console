@@ -52204,6 +52204,461 @@ b.isDark = !1, b.cssText = '.ace-eclipse .ace_gutter {background: #ebebeb;border
 b.cssClass = "ace-eclipse";
 var d = a("../lib/dom");
 d.importCssString(b.cssText, b.cssClass);
+}), ace.define("ace/mode/sh_highlight_rules", [ "require", "exports", "module", "ace/lib/oop", "ace/mode/text_highlight_rules" ], function(a, b, c) {
+"use strict";
+var d = a("../lib/oop"), e = a("./text_highlight_rules").TextHighlightRules, f = b.reservedKeywords = "!|{|}|case|do|done|elif|else|esac|fi|for|if|in|then|until|while|&|;|export|local|read|typeset|unset|elif|select|set|function|declare|readonly", g = b.languageConstructs = "[|]|alias|bg|bind|break|builtin|cd|command|compgen|complete|continue|dirs|disown|echo|enable|eval|exec|exit|fc|fg|getopts|hash|help|history|jobs|kill|let|logout|popd|printf|pushd|pwd|return|set|shift|shopt|source|suspend|test|times|trap|type|ulimit|umask|unalias|wait", h = function() {
+var a = this.createKeywordMapper({
+keyword:f,
+"support.function.builtin":g,
+"invalid.deprecated":"debugger"
+}, "identifier"), b = "(?:(?:[1-9]\\d*)|(?:0))", c = "(?:\\.\\d+)", d = "(?:\\d+)", e = "(?:(?:" + d + "?" + c + ")|(?:" + d + "\\.))", h = "(?:(?:" + e + "|" + d + "))", i = "(?:" + h + "|" + e + ")", j = "(?:&" + d + ")", k = "[a-zA-Z_][a-zA-Z0-9_]*", l = "(?:" + k + "=)", m = "(?:\\$(?:SHLVL|\\$|\\!|\\?))", n = "(?:" + k + "\\s*\\(\\))";
+this.$rules = {
+start:[ {
+token:"constant",
+regex:/\\./
+}, {
+token:[ "text", "comment" ],
+regex:/(^|\s)(#.*)$/
+}, {
+token:"string",
+regex:'"',
+push:[ {
+token:"constant.language.escape",
+regex:/\\(?:[$`"\\]|$)/
+}, {
+include:"variables"
+}, {
+token:"keyword.operator",
+regex:/`/
+}, {
+token:"string",
+regex:'"',
+next:"pop"
+}, {
+defaultToken:"string"
+} ]
+}, {
+token:"string",
+regex:"\\$'",
+push:[ {
+token:"constant.language.escape",
+regex:/\\(?:[abeEfnrtv\\'"]|x[a-fA-F\d]{1,2}|u[a-fA-F\d]{4}([a-fA-F\d]{4})?|c.|\d{1,3})/
+}, {
+token:"string",
+regex:"'",
+next:"pop"
+}, {
+defaultToken:"string"
+} ]
+}, {
+regex:"<<<",
+token:"keyword.operator"
+}, {
+stateName:"heredoc",
+regex:"(<<-?)(\\s*)(['\"`]?)([\\w\\-]+)(['\"`]?)",
+onMatch:function(a, b, c) {
+var d = "-" == a[2] ? "indentedHeredoc" :"heredoc", e = a.split(this.splitRegex);
+return c.push(d, e[4]), [ {
+type:"constant",
+value:e[1]
+}, {
+type:"text",
+value:e[2]
+}, {
+type:"string",
+value:e[3]
+}, {
+type:"support.class",
+value:e[4]
+}, {
+type:"string",
+value:e[5]
+} ];
+},
+rules:{
+heredoc:[ {
+onMatch:function(a, b, c) {
+return a === c[1] ? (c.shift(), c.shift(), this.next = c[0] || "start", "support.class") :(this.next = "", "string");
+},
+regex:".*$",
+next:"start"
+} ],
+indentedHeredoc:[ {
+token:"string",
+regex:"^\t+"
+}, {
+onMatch:function(a, b, c) {
+return a === c[1] ? (c.shift(), c.shift(), this.next = c[0] || "start", "support.class") :(this.next = "", "string");
+},
+regex:".*$",
+next:"start"
+} ]
+}
+}, {
+regex:"$",
+token:"empty",
+next:function(a, b) {
+return "heredoc" === b[0] || "indentedHeredoc" === b[0] ? b[0] :a;
+}
+}, {
+token:[ "keyword", "text", "text", "text", "variable" ],
+regex:/(declare|local|readonly)(\s+)(?:(-[fixar]+)(\s+))?([a-zA-Z_][a-zA-Z0-9_]*\b)/
+}, {
+token:"variable.language",
+regex:m
+}, {
+token:"variable",
+regex:l
+}, {
+include:"variables"
+}, {
+token:"support.function",
+regex:n
+}, {
+token:"support.function",
+regex:j
+}, {
+token:"string",
+start:"'",
+end:"'"
+}, {
+token:"constant.numeric",
+regex:i
+}, {
+token:"constant.numeric",
+regex:b + "\\b"
+}, {
+token:a,
+regex:"[a-zA-Z_][a-zA-Z0-9_]*\\b"
+}, {
+token:"keyword.operator",
+regex:"\\+|\\-|\\*|\\*\\*|\\/|\\/\\/|~|<|>|<=|=>|=|!=|[%&|`]"
+}, {
+token:"punctuation.operator",
+regex:";"
+}, {
+token:"paren.lparen",
+regex:"[\\[\\(\\{]"
+}, {
+token:"paren.rparen",
+regex:"[\\]]"
+}, {
+token:"paren.rparen",
+regex:"[\\)\\}]",
+next:"pop"
+} ],
+variables:[ {
+token:"variable",
+regex:/(\$)(\w+)/
+}, {
+token:[ "variable", "paren.lparen" ],
+regex:/(\$)(\()/,
+push:"start"
+}, {
+token:[ "variable", "paren.lparen", "keyword.operator", "variable", "keyword.operator" ],
+regex:/(\$)(\{)([#!]?)(\w+|[*@#?\-$!0_])(:[?+\-=]?|##?|%%?|,,?\/|\^\^?)?/,
+push:"start"
+}, {
+token:"variable",
+regex:/\$[*@#?\-$!0_]/
+}, {
+token:[ "variable", "paren.lparen" ],
+regex:/(\$)(\{)/,
+push:"start"
+} ]
+}, this.normalizeRules();
+};
+d.inherits(h, e), b.ShHighlightRules = h;
+}), ace.define("ace/mode/folding/cstyle", [ "require", "exports", "module", "ace/lib/oop", "ace/range", "ace/mode/folding/fold_mode" ], function(a, b, c) {
+"use strict";
+var d = a("../../lib/oop"), e = a("../../range").Range, f = a("./fold_mode").FoldMode, g = b.FoldMode = function(a) {
+a && (this.foldingStartMarker = new RegExp(this.foldingStartMarker.source.replace(/\|[^|]*?$/, "|" + a.start)), this.foldingStopMarker = new RegExp(this.foldingStopMarker.source.replace(/\|[^|]*?$/, "|" + a.end)));
+};
+d.inherits(g, f), function() {
+this.foldingStartMarker = /(\{|\[)[^\}\]]*$|^\s*(\/\*)/, this.foldingStopMarker = /^[^\[\{]*(\}|\])|^[\s\*]*(\*\/)/, this.singleLineBlockCommentRe = /^\s*(\/\*).*\*\/\s*$/, this.tripleStarBlockCommentRe = /^\s*(\/\*\*\*).*\*\/\s*$/, this.startRegionRe = /^\s*(\/\*|\/\/)#?region\b/, this._getFoldWidgetBase = this.getFoldWidget, this.getFoldWidget = function(a, b, c) {
+var d = a.getLine(c);
+if (this.singleLineBlockCommentRe.test(d) && !this.startRegionRe.test(d) && !this.tripleStarBlockCommentRe.test(d)) return "";
+var e = this._getFoldWidgetBase(a, b, c);
+return !e && this.startRegionRe.test(d) ? "start" :e;
+}, this.getFoldWidgetRange = function(a, b, c, d) {
+var e = a.getLine(c);
+if (this.startRegionRe.test(e)) return this.getCommentRegionBlock(a, e, c);
+var f = e.match(this.foldingStartMarker);
+if (f) {
+var g = f.index;
+if (f[1]) return this.openingBracketBlock(a, f[1], c, g);
+var h = a.getCommentFoldRange(c, g + f[0].length, 1);
+return h && !h.isMultiLine() && (d ? h = this.getSectionRange(a, c) :"all" != b && (h = null)), h;
+}
+if ("markbegin" !== b) {
+var f = e.match(this.foldingStopMarker);
+if (f) {
+var g = f.index + f[0].length;
+return f[1] ? this.closingBracketBlock(a, f[1], c, g) :a.getCommentFoldRange(c, g, -1);
+}
+}
+}, this.getSectionRange = function(a, b) {
+var c = a.getLine(b), d = c.search(/\S/), f = b, g = c.length;
+b += 1;
+for (var h = b, i = a.getLength(); ++b < i; ) {
+c = a.getLine(b);
+var j = c.search(/\S/);
+if (j !== -1) {
+if (d > j) break;
+var k = this.getFoldWidgetRange(a, "all", b);
+if (k) {
+if (k.start.row <= f) break;
+if (k.isMultiLine()) b = k.end.row; else if (d == j) break;
+}
+h = b;
+}
+}
+return new e(f, g, h, a.getLine(h).length);
+}, this.getCommentRegionBlock = function(a, b, c) {
+for (var d = b.search(/\s*$/), f = a.getLength(), g = c, h = /^\s*(?:\/\*|\/\/|--)#?(end)?region\b/, i = 1; ++c < f; ) {
+b = a.getLine(c);
+var j = h.exec(b);
+if (j && (j[1] ? i-- :i++, !i)) break;
+}
+var k = c;
+if (k > g) return new e(g, d, k, b.length);
+};
+}.call(g.prototype);
+}), ace.define("ace/mode/behaviour/cstyle", [ "require", "exports", "module", "ace/lib/oop", "ace/mode/behaviour", "ace/token_iterator", "ace/lib/lang" ], function(a, b, c) {
+"use strict";
+var d, e = a("../../lib/oop"), f = a("../behaviour").Behaviour, g = a("../../token_iterator").TokenIterator, h = a("../../lib/lang"), i = [ "text", "paren.rparen", "punctuation.operator" ], j = [ "text", "paren.rparen", "punctuation.operator", "comment" ], k = {}, l = function(a) {
+var b = -1;
+return a.multiSelect && (b = a.selection.index, k.rangeCount != a.multiSelect.rangeCount && (k = {
+rangeCount:a.multiSelect.rangeCount
+})), k[b] ? d = k[b] :void (d = k[b] = {
+autoInsertedBrackets:0,
+autoInsertedRow:-1,
+autoInsertedLineEnd:"",
+maybeInsertedBrackets:0,
+maybeInsertedRow:-1,
+maybeInsertedLineStart:"",
+maybeInsertedLineEnd:""
+});
+}, m = function(a, b, c, d) {
+var e = a.end.row - a.start.row;
+return {
+text:c + b + d,
+selection:[ 0, a.start.column + 1, e, a.end.column + (e ? 0 :1) ]
+};
+}, n = function() {
+this.add("braces", "insertion", function(a, b, c, e, f) {
+var g = c.getCursorPosition(), i = e.doc.getLine(g.row);
+if ("{" == f) {
+l(c);
+var j = c.getSelectionRange(), k = e.doc.getTextRange(j);
+if ("" !== k && "{" !== k && c.getWrapBehavioursEnabled()) return m(j, k, "{", "}");
+if (n.isSaneInsertion(c, e)) return /[\]\}\)]/.test(i[g.column]) || c.inMultiSelectMode ? (n.recordAutoInsert(c, e, "}"), {
+text:"{}",
+selection:[ 1, 1 ]
+}) :(n.recordMaybeInsert(c, e, "{"), {
+text:"{",
+selection:[ 1, 1 ]
+});
+} else if ("}" == f) {
+l(c);
+var o = i.substring(g.column, g.column + 1);
+if ("}" == o) {
+var p = e.$findOpeningBracket("}", {
+column:g.column + 1,
+row:g.row
+});
+if (null !== p && n.isAutoInsertedClosing(g, i, f)) return n.popAutoInsertedClosing(), {
+text:"",
+selection:[ 1, 1 ]
+};
+}
+} else {
+if ("\n" == f || "\r\n" == f) {
+l(c);
+var q = "";
+n.isMaybeInsertedClosing(g, i) && (q = h.stringRepeat("}", d.maybeInsertedBrackets), n.clearMaybeInsertedClosing());
+var o = i.substring(g.column, g.column + 1);
+if ("}" === o) {
+var r = e.findMatchingBracket({
+row:g.row,
+column:g.column + 1
+}, "}");
+if (!r) return null;
+var s = this.$getIndent(e.getLine(r.row));
+} else {
+if (!q) return void n.clearMaybeInsertedClosing();
+var s = this.$getIndent(i);
+}
+var t = s + e.getTabString();
+return {
+text:"\n" + t + "\n" + s + q,
+selection:[ 1, t.length, 1, t.length ]
+};
+}
+n.clearMaybeInsertedClosing();
+}
+}), this.add("braces", "deletion", function(a, b, c, e, f) {
+var g = e.doc.getTextRange(f);
+if (!f.isMultiLine() && "{" == g) {
+l(c);
+var h = e.doc.getLine(f.start.row), i = h.substring(f.end.column, f.end.column + 1);
+if ("}" == i) return f.end.column++, f;
+d.maybeInsertedBrackets--;
+}
+}), this.add("parens", "insertion", function(a, b, c, d, e) {
+if ("(" == e) {
+l(c);
+var f = c.getSelectionRange(), g = d.doc.getTextRange(f);
+if ("" !== g && c.getWrapBehavioursEnabled()) return m(f, g, "(", ")");
+if (n.isSaneInsertion(c, d)) return n.recordAutoInsert(c, d, ")"), {
+text:"()",
+selection:[ 1, 1 ]
+};
+} else if (")" == e) {
+l(c);
+var h = c.getCursorPosition(), i = d.doc.getLine(h.row), j = i.substring(h.column, h.column + 1);
+if (")" == j) {
+var k = d.$findOpeningBracket(")", {
+column:h.column + 1,
+row:h.row
+});
+if (null !== k && n.isAutoInsertedClosing(h, i, e)) return n.popAutoInsertedClosing(), {
+text:"",
+selection:[ 1, 1 ]
+};
+}
+}
+}), this.add("parens", "deletion", function(a, b, c, d, e) {
+var f = d.doc.getTextRange(e);
+if (!e.isMultiLine() && "(" == f) {
+l(c);
+var g = d.doc.getLine(e.start.row), h = g.substring(e.start.column + 1, e.start.column + 2);
+if (")" == h) return e.end.column++, e;
+}
+}), this.add("brackets", "insertion", function(a, b, c, d, e) {
+if ("[" == e) {
+l(c);
+var f = c.getSelectionRange(), g = d.doc.getTextRange(f);
+if ("" !== g && c.getWrapBehavioursEnabled()) return m(f, g, "[", "]");
+if (n.isSaneInsertion(c, d)) return n.recordAutoInsert(c, d, "]"), {
+text:"[]",
+selection:[ 1, 1 ]
+};
+} else if ("]" == e) {
+l(c);
+var h = c.getCursorPosition(), i = d.doc.getLine(h.row), j = i.substring(h.column, h.column + 1);
+if ("]" == j) {
+var k = d.$findOpeningBracket("]", {
+column:h.column + 1,
+row:h.row
+});
+if (null !== k && n.isAutoInsertedClosing(h, i, e)) return n.popAutoInsertedClosing(), {
+text:"",
+selection:[ 1, 1 ]
+};
+}
+}
+}), this.add("brackets", "deletion", function(a, b, c, d, e) {
+var f = d.doc.getTextRange(e);
+if (!e.isMultiLine() && "[" == f) {
+l(c);
+var g = d.doc.getLine(e.start.row), h = g.substring(e.start.column + 1, e.start.column + 2);
+if ("]" == h) return e.end.column++, e;
+}
+}), this.add("string_dquotes", "insertion", function(a, b, c, d, e) {
+if ('"' == e || "'" == e) {
+l(c);
+var f = e, g = c.getSelectionRange(), h = d.doc.getTextRange(g);
+if ("" !== h && "'" !== h && '"' != h && c.getWrapBehavioursEnabled()) return m(g, h, f, f);
+if (!h) {
+var i = c.getCursorPosition(), j = d.doc.getLine(i.row), k = j.substring(i.column - 1, i.column), n = j.substring(i.column, i.column + 1), o = d.getTokenAt(i.row, i.column), p = d.getTokenAt(i.row, i.column + 1);
+if ("\\" == k && o && /escape/.test(o.type)) return null;
+var q, r = o && /string|escape/.test(o.type), s = !p || /string|escape/.test(p.type);
+if (n == f) q = r !== s; else {
+if (r && !s) return null;
+if (r && s) return null;
+var t = d.$mode.tokenRe;
+t.lastIndex = 0;
+var u = t.test(k);
+t.lastIndex = 0;
+var v = t.test(k);
+if (u || v) return null;
+if (n && !/[\s;,.})\]\\]/.test(n)) return null;
+q = !0;
+}
+return {
+text:q ? f + f :"",
+selection:[ 1, 1 ]
+};
+}
+}
+}), this.add("string_dquotes", "deletion", function(a, b, c, d, e) {
+var f = d.doc.getTextRange(e);
+if (!e.isMultiLine() && ('"' == f || "'" == f)) {
+l(c);
+var g = d.doc.getLine(e.start.row), h = g.substring(e.start.column + 1, e.start.column + 2);
+if (h == f) return e.end.column++, e;
+}
+});
+};
+n.isSaneInsertion = function(a, b) {
+var c = a.getCursorPosition(), d = new g(b, c.row, c.column);
+if (!this.$matchTokenType(d.getCurrentToken() || "text", i)) {
+var e = new g(b, c.row, c.column + 1);
+if (!this.$matchTokenType(e.getCurrentToken() || "text", i)) return !1;
+}
+return d.stepForward(), d.getCurrentTokenRow() !== c.row || this.$matchTokenType(d.getCurrentToken() || "text", j);
+}, n.$matchTokenType = function(a, b) {
+return b.indexOf(a.type || a) > -1;
+}, n.recordAutoInsert = function(a, b, c) {
+var e = a.getCursorPosition(), f = b.doc.getLine(e.row);
+this.isAutoInsertedClosing(e, f, d.autoInsertedLineEnd[0]) || (d.autoInsertedBrackets = 0), d.autoInsertedRow = e.row, d.autoInsertedLineEnd = c + f.substr(e.column), d.autoInsertedBrackets++;
+}, n.recordMaybeInsert = function(a, b, c) {
+var e = a.getCursorPosition(), f = b.doc.getLine(e.row);
+this.isMaybeInsertedClosing(e, f) || (d.maybeInsertedBrackets = 0), d.maybeInsertedRow = e.row, d.maybeInsertedLineStart = f.substr(0, e.column) + c, d.maybeInsertedLineEnd = f.substr(e.column), d.maybeInsertedBrackets++;
+}, n.isAutoInsertedClosing = function(a, b, c) {
+return d.autoInsertedBrackets > 0 && a.row === d.autoInsertedRow && c === d.autoInsertedLineEnd[0] && b.substr(a.column) === d.autoInsertedLineEnd;
+}, n.isMaybeInsertedClosing = function(a, b) {
+return d.maybeInsertedBrackets > 0 && a.row === d.maybeInsertedRow && b.substr(a.column) === d.maybeInsertedLineEnd && b.substr(0, a.column) == d.maybeInsertedLineStart;
+}, n.popAutoInsertedClosing = function() {
+d.autoInsertedLineEnd = d.autoInsertedLineEnd.substr(1), d.autoInsertedBrackets--;
+}, n.clearMaybeInsertedClosing = function() {
+d && (d.maybeInsertedBrackets = 0, d.maybeInsertedRow = -1);
+}, e.inherits(n, f), b.CstyleBehaviour = n;
+}), ace.define("ace/mode/sh", [ "require", "exports", "module", "ace/lib/oop", "ace/mode/text", "ace/mode/sh_highlight_rules", "ace/range", "ace/mode/folding/cstyle", "ace/mode/behaviour/cstyle" ], function(a, b, c) {
+"use strict";
+var d = a("../lib/oop"), e = a("./text").Mode, f = a("./sh_highlight_rules").ShHighlightRules, g = a("../range").Range, h = a("./folding/cstyle").FoldMode, i = a("./behaviour/cstyle").CstyleBehaviour, j = function() {
+this.HighlightRules = f, this.foldingRules = new h(), this.$behaviour = new i();
+};
+d.inherits(j, e), function() {
+this.lineCommentStart = "#", this.getNextLineIndent = function(a, b, c) {
+var d = this.$getIndent(b), e = this.getTokenizer().getLineTokens(b, a), f = e.tokens;
+if (f.length && "comment" == f[f.length - 1].type) return d;
+if ("start" == a) {
+var g = b.match(/^.*[\{\(\[\:]\s*$/);
+g && (d += c);
+}
+return d;
+};
+var a = {
+pass:1,
+"return":1,
+raise:1,
+"break":1,
+"continue":1
+};
+this.checkOutdent = function(b, c, d) {
+if ("\r\n" !== d && "\r" !== d && "\n" !== d) return !1;
+var e = this.getTokenizer().getLineTokens(c.trim(), b).tokens;
+if (!e) return !1;
+do var f = e.pop(); while (f && ("comment" == f.type || "text" == f.type && f.value.match(/^\s+$/)));
+return !!f && ("keyword" == f.type && a[f.value]);
+}, this.autoOutdent = function(a, b, c) {
+c += 1;
+var d = this.$getIndent(b.getLine(c)), e = b.getTabString();
+d.slice(-e.length) == e && b.remove(new g(c, d.length - e.length, c, d.length));
+}, this.$id = "ace/mode/sh";
+}.call(j.prototype), b.Mode = j;
 }), angular.module("ui.ace", []).constant("uiAceConfig", {}).directive("uiAce", [ "uiAceConfig", function(a) {
 if (angular.isUndefined(window.ace)) throw new Error("ui-ace need ace to work... (o rly?)");
 var b = function(a, b, c) {
