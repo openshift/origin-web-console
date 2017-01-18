@@ -7932,7 +7932,7 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "</ui-select>\n" +
     "</div>\n" +
     "<div class=\"remove-secret\">\n" +
-    "<a ng-click=\"removeSecret($index)\" href=\"\" role=\"button\" class=\"remove-btn\">\n" +
+    "<a ng-click=\"removeSecret($index)\" href=\"\" role=\"button\" class=\"btn-remove\">\n" +
     "<span class=\"pficon pficon-close\" aria-hidden=\"true\"></span>\n" +
     "<span class=\"sr-only\">Remove build secret</span>\n" +
     "</a>\n" +
@@ -7993,7 +7993,7 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "<input class=\"form-control\" id=\"destinationDir\" name=\"destinationDir\" ng-model=\"pickedSecret.destinationDir\" type=\"text\" placeholder=\"/\" autocorrect=\"off\" autocapitalize=\"off\" spellcheck=\"false\">\n" +
     "</div>\n" +
     "<div class=\"remove-secret\">\n" +
-    "<a ng-click=\"removeSecret($index)\" href=\"\" role=\"button\" class=\"remove-btn\">\n" +
+    "<a ng-click=\"removeSecret($index)\" href=\"\" role=\"button\" class=\"btn-remove\">\n" +
     "<span class=\"pficon pficon-close\" aria-hidden=\"true\"></span>\n" +
     "<span class=\"sr-only\">Remove build secret</span>\n" +
     "</a>\n" +
@@ -8032,7 +8032,7 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "<input class=\"form-control\" id=\"mountPath\" name=\"mountPath\" ng-model=\"pickedSecret.mountPath\" type=\"text\" placeholder=\"/\" autocorrect=\"off\" autocapitalize=\"off\" spellcheck=\"false\">\n" +
     "</div>\n" +
     "<div class=\"remove-secret\">\n" +
-    "<a ng-click=\"removeSecret($index)\" href=\"\" role=\"button\" class=\"remove-btn\">\n" +
+    "<a ng-click=\"removeSecret($index)\" href=\"\" role=\"button\" class=\"btn-remove\">\n" +
     "<span class=\"pficon pficon-close\" aria-hidden=\"true\"></span>\n" +
     "<span class=\"sr-only\">Remove build secret</span>\n" +
     "</a>\n" +
