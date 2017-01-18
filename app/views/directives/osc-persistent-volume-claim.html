@@ -38,21 +38,23 @@
     <!-- Name -->
     <div class="form-group">
       <label for="claim-name" class="required">Name</label>
-      <input
-        id="claim-name"
-        class="form-control"
-        type="text"
-        name="name"
-        ng-model="claim.name"
-        ng-required="true"
-        ng-pattern="/^[a-z0-9]([-a-z0-9]*[a-z0-9])?$/"
-        ng-maxlength="253"
-        placeholder="my-storage-claim"
-        select-on-focus
-        autocorrect="off"
-        autocapitalize="off"
-        spellcheck="false"
-        aria-describedby="claim-name-help">
+      <span ng-class="{ 'has-error': persistentVolumeClaimForm.name.$invalid && persistentVolumeClaimForm.name.$touched && !claimDisabled }">
+        <input
+          id="claim-name"
+          class="form-control"
+          type="text"
+          name="name"
+          ng-model="claim.name"
+          ng-required="true"
+          ng-pattern="/^[a-z0-9]([-a-z0-9]*[a-z0-9])?$/"
+          ng-maxlength="253"
+          placeholder="my-storage-claim"
+          select-on-focus
+          autocorrect="off"
+          autocapitalize="off"
+          spellcheck="false"
+          aria-describedby="claim-name-help">
+      </span>
       <div>
         <span id="claim-name-help" class="help-block">A unique name for the storage claim within the project.</span>
       </div>
@@ -92,38 +94,46 @@
     <!-- capacity -->
     <div class="form-group">
       <fieldset class="form-inline compute-resource">
-      <label class="required">Size</label>
-      <div class="resource-size" ng-class="{ 'has-error': form.$invalid }">
-        <div class="resource-amount">
-          <label class="sr-only">Amount</label>
-          <input type="number"
-                 name="amount"
-                 ng-attr-id="claim-amount"
-                 ng-model="claim.amount"
-                 ng-required="true"
-                 min="0"
-                 ng-attr-placeholder="10"
-                 class="form-control"
-                 ng-attr-aria-describedby="claim-capacity-help">
+        <label class="required">Size</label>
+        <div class="resource-size">
+          <div class="resource-amount" ng-class="{ 'has-error': persistentVolumeClaimForm.capacity.$invalid && persistentVolumeClaimForm.capacity.$touched && !claimDisabled }">
+            <label class="sr-only">Amount</label>
+            <input type="number"
+                   name="capacity"
+                   ng-attr-id="claim-amount"
+                   ng-model="claim.amount"
+                   ng-required="true"
+                   min="0"
+                   ng-attr-placeholder="10"
+                   class="form-control"
+                   ng-attr-aria-describedby="claim-capacity-help">
+          </div>
+          <div class="resource-unit">
+            <label class="sr-only" >Unit</label>
+            <ui-select search-enabled="false" ng-model="claim.unit" input-id="claim-capacity-unit">
+              <ui-select-match>{{$select.selected.label}}</ui-select-match>
+              <ui-select-choices repeat="option.value as option in units" group-by="groupUnits">
+                {{option.label}}
+              </ui-select-choices>
+            </ui-select>
+          </div>
+         </div>
+         <div id="claim-capacity-help" class="help-block">
+           Desired storage capacity.
         </div>
-        <div class="resource-unit">
-          <label class="sr-only" >Unit</label>
-          <ui-select search-enabled="false" ng-model="claim.unit" input-id="claim-capacity-unit">
-            <ui-select-match>{{$select.selected.label}}</ui-select-match>
-            <ui-select-choices repeat="option.value as option in units">
-              {{option.label}}
-            </ui-select-choices>
-          </ui-select>
+        <div class="has-error" ng-show="persistentVolumeClaimForm.capacity.$error.number && persistentVolumeClaimForm.capacity.$touched && !claimDisabled">
+          <span class="help-block">
+            Must be a number.
+          </span>
         </div>
-       </div>
-       <div id="claim-capacity-help" class="help-block">
-         Desired storage capacity.
-      </div>
-      <div class="has-error" ng-show="persistentVolumeClaimForm.capacity.$error.pattern && persistentVolumeClaimForm.capacity.$touched && !claimDisabled">
-        <span class="help-block">
-          Must be a positive integer.
-        </span>
-      </div>
+        <div class="has-error" ng-show="persistentVolumeClaimForm.capacity.$error.min && persistentVolumeClaimForm.capacity.$touched && !claimDisabled">
+          <span class="help-block">
+            Must be a positive number.
+          </span>
+        </div>
+        <div class="learn-more-block mar-top-sm">
+          <a href="" ng-click="showComputeUnitsHelp()">What are GiB?</a>
+        </div>
       </fieldset>
     </div>
     <!--advanced options-->

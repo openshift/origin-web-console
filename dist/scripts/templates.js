@@ -81,7 +81,7 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "<label class=\"sr-only\" ng-attr-for=\"{{id}}-unit\">Unit</label>\n" +
     "<ui-select search-enabled=\"false\" ng-model=\"input.unit\" input-id=\"{{id}}-unit\">\n" +
     "<ui-select-match>{{$select.selected.label}}</ui-select-match>\n" +
-    "<ui-select-choices repeat=\"option.value as option in units\">\n" +
+    "<ui-select-choices repeat=\"option.value as option in units\" group-by=\"groupUnits\">\n" +
     "{{option.label}}\n" +
     "</ui-select-choices>\n" +
     "</ui-select>\n" +
@@ -7534,7 +7534,9 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "\n" +
     "<div class=\"form-group\">\n" +
     "<label for=\"claim-name\" class=\"required\">Name</label>\n" +
+    "<span ng-class=\"{ 'has-error': persistentVolumeClaimForm.name.$invalid && persistentVolumeClaimForm.name.$touched && !claimDisabled }\">\n" +
     "<input id=\"claim-name\" class=\"form-control\" type=\"text\" name=\"name\" ng-model=\"claim.name\" ng-required=\"true\" ng-pattern=\"/^[a-z0-9]([-a-z0-9]*[a-z0-9])?$/\" ng-maxlength=\"253\" placeholder=\"my-storage-claim\" select-on-focus autocorrect=\"off\" autocapitalize=\"off\" spellcheck=\"false\" aria-describedby=\"claim-name-help\">\n" +
+    "</span>\n" +
     "<div>\n" +
     "<span id=\"claim-name-help\" class=\"help-block\">A unique name for the storage claim within the project.</span>\n" +
     "</div>\n" +
@@ -7568,16 +7570,16 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "<div class=\"form-group\">\n" +
     "<fieldset class=\"form-inline compute-resource\">\n" +
     "<label class=\"required\">Size</label>\n" +
-    "<div class=\"resource-size\" ng-class=\"{ 'has-error': form.$invalid }\">\n" +
-    "<div class=\"resource-amount\">\n" +
+    "<div class=\"resource-size\">\n" +
+    "<div class=\"resource-amount\" ng-class=\"{ 'has-error': persistentVolumeClaimForm.capacity.$invalid && persistentVolumeClaimForm.capacity.$touched && !claimDisabled }\">\n" +
     "<label class=\"sr-only\">Amount</label>\n" +
-    "<input type=\"number\" name=\"amount\" ng-attr-id=\"claim-amount\" ng-model=\"claim.amount\" ng-required=\"true\" min=\"0\" ng-attr-placeholder=\"10\" class=\"form-control\" ng-attr-aria-describedby=\"claim-capacity-help\">\n" +
+    "<input type=\"number\" name=\"capacity\" ng-attr-id=\"claim-amount\" ng-model=\"claim.amount\" ng-required=\"true\" min=\"0\" ng-attr-placeholder=\"10\" class=\"form-control\" ng-attr-aria-describedby=\"claim-capacity-help\">\n" +
     "</div>\n" +
     "<div class=\"resource-unit\">\n" +
     "<label class=\"sr-only\">Unit</label>\n" +
     "<ui-select search-enabled=\"false\" ng-model=\"claim.unit\" input-id=\"claim-capacity-unit\">\n" +
     "<ui-select-match>{{$select.selected.label}}</ui-select-match>\n" +
-    "<ui-select-choices repeat=\"option.value as option in units\">\n" +
+    "<ui-select-choices repeat=\"option.value as option in units\" group-by=\"groupUnits\">\n" +
     "{{option.label}}\n" +
     "</ui-select-choices>\n" +
     "</ui-select>\n" +
@@ -7586,10 +7588,18 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "<div id=\"claim-capacity-help\" class=\"help-block\">\n" +
     "Desired storage capacity.\n" +
     "</div>\n" +
-    "<div class=\"has-error\" ng-show=\"persistentVolumeClaimForm.capacity.$error.pattern && persistentVolumeClaimForm.capacity.$touched && !claimDisabled\">\n" +
+    "<div class=\"has-error\" ng-show=\"persistentVolumeClaimForm.capacity.$error.number && persistentVolumeClaimForm.capacity.$touched && !claimDisabled\">\n" +
     "<span class=\"help-block\">\n" +
-    "Must be a positive integer.\n" +
+    "Must be a number.\n" +
     "</span>\n" +
+    "</div>\n" +
+    "<div class=\"has-error\" ng-show=\"persistentVolumeClaimForm.capacity.$error.min && persistentVolumeClaimForm.capacity.$touched && !claimDisabled\">\n" +
+    "<span class=\"help-block\">\n" +
+    "Must be a positive number.\n" +
+    "</span>\n" +
+    "</div>\n" +
+    "<div class=\"learn-more-block mar-top-sm\">\n" +
+    "<a href=\"\" ng-click=\"showComputeUnitsHelp()\">What are GiB?</a>\n" +
     "</div>\n" +
     "</fieldset>\n" +
     "</div>\n" +
@@ -9825,9 +9835,9 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "<pre>\n" +
     "1000 millcores  =  1 core\n" +
     "</pre>\n" +
-    "<h3>Memory</h3>\n" +
+    "<h3>Memory and Storage</h3>\n" +
     "<p>\n" +
-    "Memory is measured in binary units like <var>KiB</var>, <var>MiB</var>, and <var>GiB</var> or decimal units like <var>kB</var>, <var>MB</var>, and&nbsp;<var>GB</var>.\n" +
+    "Memory and storage are measured in binary units like <var>KiB</var>, <var>MiB</var>, <var>GiB</var>, and <var>TiB</var> or decimal units like <var>kB</var>, <var>MB</var>, <var>GB</var>, and&nbsp;<var>TB</var>.\n" +
     "</p>\n" +
     "<div class=\"row\">\n" +
     "<div class=\"col-sm-6\">\n" +
@@ -9836,6 +9846,7 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "1024 bytes  =  1 KiB\n" +
     "1024 KiB    =  1 MiB\n" +
     "1024 MiB    =  1 GiB\n" +
+    "1024 GiB    =  1 TiB\n" +
     "</pre>\n" +
     "</div>\n" +
     "<div class=\"col-sm-6\">\n" +
@@ -9844,6 +9855,7 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "1000 bytes  =  1 kB\n" +
     "1000 kB     =  1 MB\n" +
     "1000 MB     =  1 GB\n" +
+    "1000 GB     =  1 TB\n" +
     "</pre>\n" +
     "</div>\n" +
     "</div>\n" +

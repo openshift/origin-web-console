@@ -10063,15 +10063,15 @@ _.set(a, "model.service", c);
 });
 }
 };
-}), angular.module("openshiftConsole").directive("oscPersistentVolumeClaim", [ "DataService", function(a) {
+}), angular.module("openshiftConsole").directive("oscPersistentVolumeClaim", [ "DataService", "ModalsService", function(a, b) {
 return {
 restrict:"E",
 scope:{
 claim:"=model"
 },
 templateUrl:"views/directives/osc-persistent-volume-claim.html",
-link:function(b) {
-b.storageClasses = [], b.claim.unit = "Mi", b.units = [ {
+link:function(c) {
+c.storageClasses = [], c.claim.unit = "Gi", c.units = [ {
 value:"Mi",
 label:"MiB"
 }, {
@@ -10081,13 +10081,34 @@ label:"GiB"
 value:"Ti",
 label:"TiB"
 }, {
-value:"Pi",
-label:"PiB"
-} ], b.claim.selectedLabels = [], a.list({
+value:"M",
+label:"MB"
+}, {
+value:"G",
+label:"GB"
+}, {
+value:"T",
+label:"TB"
+} ], c.claim.selectedLabels = [], c.groupUnits = function(a) {
+switch (a.value) {
+case "Mi":
+case "Gi":
+case "Ti":
+return "Binary Units";
+
+case "M":
+case "G":
+case "T":
+return "Decimal Units";
+}
+return "";
+}, c.showComputeUnitsHelp = function() {
+b.showComputeUnitsHelp();
+}, a.list({
 group:"storage.k8s.io",
 resource:"storageclasses"
 }, {}, function(a) {
-b.storageClasses = a.by("metadata.name");
+c.storageClasses = a.by("metadata.name");
 }, {
 errorNotification:!1
 });
@@ -12461,19 +12482,31 @@ break;
 
 case "memory":
 b.input.unit = "Mi", b.units = [ {
-value:"M",
-label:"MB"
-}, {
-value:"G",
-label:"GB"
-}, {
 value:"Mi",
 label:"MiB"
 }, {
 value:"Gi",
 label:"GiB"
+}, {
+value:"M",
+label:"MB"
+}, {
+value:"G",
+label:"GB"
 } ];
 }
+b.groupUnits = function(a) {
+switch (a.value) {
+case "Mi":
+case "Gi":
+return "Binary Units";
+
+case "M":
+case "G":
+return "Decimal Units";
+}
+return "";
+};
 var j = function() {
 var a = b.input.amount && f(b.input.amount + b.input.unit), c = b.limitRangeMin && f(b.limitRangeMin), d = b.limitRangeMax && f(b.limitRangeMax), e = !0, g = !0;
 a && c && (e = a >= c), a && d && (g = a <= d), b.form.amount.$setValidity("limitRangeMin", e), b.form.amount.$setValidity("limitRangeMax", g);
