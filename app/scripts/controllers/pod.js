@@ -14,6 +14,7 @@ angular.module('openshiftConsole')
                                          $uibModal,
                                          Logger,
                                          DataService,
+                                         EnvironmentService,
                                          ImageStreamResolver,
                                          MetricsService,
                                          PodsService,
