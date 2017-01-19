@@ -7791,11 +7791,11 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
   $templateCache.put('views/directives/osc-persistent-volume-claim.html',
     "<ng-form name=\"persistentVolumeClaimForm\">\n" +
     "<fieldset ng-disabled=\"claimDisabled\">\n" +
-    "<div ng-show=\"storageClasses | hashSize\" class=\"form-group\">\n" +
+    "<div ng-if=\"storageClasses.length\" class=\"form-group\">\n" +
     "\n" +
     "<label>Storage Class</label>\n" +
     "<div>\n" +
-    "<ui-select ng-if=\"storageClasses\" ng-model=\"claim.storageClass\" theme=\"bootstrap\" search-enabled=\"true\" title=\"Select a storage class\" class=\"select-role\">\n" +
+    "<ui-select ng-model=\"claim.storageClass\" theme=\"bootstrap\" search-enabled=\"true\" title=\"Select a storage class\" class=\"select-role\">\n" +
     "<ui-select-match placeholder=\"Select a storage class\">\n" +
     "<span>\n" +
     "{{$select.selected.metadata.name}}\n" +

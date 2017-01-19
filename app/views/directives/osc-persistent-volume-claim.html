@@ -1,11 +1,10 @@
 <ng-form name="persistentVolumeClaimForm">
   <fieldset ng-disabled="claimDisabled">
-    <div ng-show="storageClasses | hashSize" class="form-group">
+    <div ng-if="storageClasses.length" class="form-group">
       <!--storage class-->
       <label>Storage Class</label>
       <div>
         <ui-select
-          ng-if="storageClasses"
           ng-model="claim.storageClass"
           theme="bootstrap"
           search-enabled="true"

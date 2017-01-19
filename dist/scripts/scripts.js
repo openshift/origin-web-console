@@ -10262,6 +10262,7 @@ group:"storage.k8s.io",
 resource:"storageclasses"
 }, {}, function(b) {
 var c = b.by("metadata.name");
+if (!_.isEmpty(c)) {
 e.storageClasses = _.sortBy(c, "metadata.name");
 var d = a("annotation");
 if (e.defaultStorageClass = _.find(e.storageClasses, function(a) {
@@ -10277,6 +10278,7 @@ description:"No storage class will be assigned"
 }
 };
 e.storageClasses.unshift(f);
+}
 }
 }, {
 errorNotification:!1
