@@ -13634,7 +13634,7 @@ return null;
 };
 }).filter("description", [ "annotationFilter", function(a) {
 return function(b) {
-return a(b, "description");
+return a(b, "openshift.io/description") || a(b, "kubernetes.io/description");
 };
 } ]).filter("displayName", [ "annotationFilter", function(a) {
 return function(b, c) {

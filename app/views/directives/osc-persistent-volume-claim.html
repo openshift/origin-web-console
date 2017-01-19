@@ -20,7 +20,7 @@
             repeat="sclass as sclass in storageClasses | toArray | filter : { metadata: { name: $select.search } } ">
             <div>
               <span ng-bind-html="sclass.metadata.name  | highlight : $select.search"></span>
-              <span ng-if="sclass.parameters.type || sclass.parameters.zone || (sclass | annotation : 'description')" class="text-muted">
+              <span ng-if="sclass.parameters.type || sclass.parameters.zone || (sclass | description)" class="text-muted">
                 <small>&ndash;
                   <span ng-if="sclass.parameters.type">
                     Type: {{sclass.parameters.type}}
@@ -29,9 +29,9 @@
                     <span ng-if="sclass.parameters.type">|</span>
                     Zone: {{sclass.parameters.zone}}
                   </span>
-                  <span ng-if="sclass | annotation : 'description'">
+                  <span ng-if="sclass | description">
                     <span ng-if="sclass.parameters.type || sclass.parameters.zone">|</span>
-                    {{sclass | annotation : 'description'}}
+                    {{sclass | description}}
                   </span>
                 </small>
               </span>
