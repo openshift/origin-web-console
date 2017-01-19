@@ -165,7 +165,7 @@
                   </div>
                 </uib-tab>
 
-                <uib-tab active="selectedTab.metrics">
+                <uib-tab ng-if="metricsAvailable" active="selectedTab.metrics">
                   <uib-tab-heading>Metrics</uib-tab-heading>
                   <div class="resource-metrics">
                     <deployment-metrics
