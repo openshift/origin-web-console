@@ -3795,7 +3795,7 @@ getEnvironment:h
 } ]), angular.module("openshiftConsole").service("KeywordService", function() {
 var a = function(a) {
 if (!a) return [];
-var b = _.uniq(_.words(a, /[\w.]+/g));
+var b = _.uniq(a.match(/\S+/g));
 return b.sort(function(a, b) {
 return b.length - a.length;
 }), _.map(b, function(a) {
@@ -14839,15 +14839,14 @@ return function(a) {
 return Math.abs(a);
 };
 }).filter("highlightKeywords", [ "KeywordService", function(a) {
-return function(b, c) {
+return function(b, c, d) {
 if (!b) return b;
-var d = _.escape(b);
-if (_.isEmpty(c)) return d;
+if (_.isEmpty(c)) return _.escape(b);
 _.isString(c) && (c = a.generateKeywords(c));
-var e = _.map(c, function(a) {
+for (var e, f = _.map(c, function(a) {
 return _.isRegExp(a) ? a.source :_.escapeRegExp(a);
-}).join("|"), f = new RegExp("(" + e + ")", "ig");
-return d.replace(f, "<mark>$&</mark>");
+}).join("|"), g = "", h = 0, i = d ? "g" :"ig", j = new RegExp(f, i); null !== (e = j.exec(b)); ) h < e.index && (g += _.escape(b.substring(h, e.index))), g += "<mark>" + _.escape(e[0]) + "</mark>", h = j.lastIndex;
+return h < b.length && (g += _.escape(b.substring(h))), g;
 };
 } ]).filter("encodeURIComponent", function() {
 return window.encodeURIComponent;
