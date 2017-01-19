@@ -4111,9 +4111,6 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "<h3>Template</h3>\n" +
     "<pod-template pod-template=\"statefulSet.spec.template\" detailed=\"true\">\n" +
     "</pod-template>\n" +
-    "<p ng-if=\"!statefulSet.spec.volumeClaimTemplates.length\">\n" +
-    "none\n" +
-    "</p>\n" +
     "<volume-claim-templates templates=\"statefulSet.spec.volumeClaimTemplates\" namespace=\"project.metadata.name\">\n" +
     "</volume-claim-templates>\n" +
     "</div>\n" +
