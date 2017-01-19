@@ -4146,7 +4146,7 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "</ng-form>\n" +
     "</div>\n" +
     "</uib-tab>\n" +
-    "<uib-tab active=\"selectedTab.metrics\">\n" +
+    "<uib-tab ng-if=\"metricsAvailable\" active=\"selectedTab.metrics\">\n" +
     "<uib-tab-heading>Metrics</uib-tab-heading>\n" +
     "<div class=\"resource-metrics\">\n" +
     "<deployment-metrics ng-if=\"selectedTab.metrics && podsForStatefulSet\" pods=\"podsForStatefulSet\" containers=\"statefulSet.spec.template.spec.containers\" alerts=\"alerts\">\n" +

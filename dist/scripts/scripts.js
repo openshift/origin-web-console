@@ -6502,31 +6502,33 @@ statefulSets:b.by("metadata.name")
 d.unwatchAll(f);
 });
 }));
-} ]), angular.module("openshiftConsole").controller("StatefulSetController", [ "$filter", "$scope", "$routeParams", "AlertMessageService", "BreadcrumbsService", "DataService", "ProjectsService", function(a, b, c, d, e, f, g) {
+} ]), angular.module("openshiftConsole").controller("StatefulSetController", [ "$filter", "$scope", "$routeParams", "AlertMessageService", "BreadcrumbsService", "DataService", "MetricsService", "ProjectsService", function(a, b, c, d, e, f, g, h) {
 b.projectName = c.project, b.statefulSetName = c.statefulset, b.forms = {}, b.alerts = {}, b.breadcrumbs = e.getBreadcrumbs({
 name:b.statefulSetName,
 kind:"statefulSet",
 namespace:c.project
 }), b.emptyMessage = "Loading...";
-var h = a("altTextForValueFrom"), i = function(a) {
+var i = a("altTextForValueFrom"), j = function(a) {
 return _.each(a.spec.template.spec.containers, function(a) {
-_.each(a.env, h);
+_.each(a.env, i);
 }), a;
 };
 d.getAlerts().forEach(function(a) {
 b.alerts[a.name] = a.data;
 }), d.clearAlerts();
-var j, k = [], l = function(a, b) {
+var k, l = [], m = function(a, b) {
 if (a && b) return b.select(a);
-}, m = {
+}, n = {
 resource:"statefulsets",
 group:"apps",
 version:"v1beta1"
 };
-g.get(c.project).then(_.spread(function(a, c) {
-j = c, f.get(m, b.statefulSetName, c).then(function(d) {
+g.isAvailable().then(function(a) {
+b.metricsAvailable = a;
+}), h.get(c.project).then(_.spread(function(a, c) {
+k = c, f.get(n, b.statefulSetName, c).then(function(d) {
 angular.extend(b, {
-statefulSet:i(d),
+statefulSet:j(d),
 project:a,
 projectContext:c,
 loaded:!0,
@@ -6534,21 +6536,21 @@ isScalable:function() {
 return !1;
 },
 scale:function() {}
-}), k.push(f.watchObject(m, b.statefulSetName, c, function(a) {
+}), l.push(f.watchObject(n, b.statefulSetName, c, function(a) {
 angular.extend(b, {
-resourceGroupVersion:m,
-statefulSet:i(a)
+resourceGroupVersion:n,
+statefulSet:j(a)
 });
 }));
 var e, g;
 b.$watch("statefulSet.spec.selector", function() {
-g = new LabelSelector(b.statefulSet.spec.selector), b.podsForStatefulSet = l(e, g);
-}, !0), k.push(f.watch("pods", c, function(a) {
-e = a.by("metadata.name"), b.podsForStatefulSet = l(e, g);
+g = new LabelSelector(b.statefulSet.spec.selector), b.podsForStatefulSet = m(e, g);
+}, !0), l.push(f.watch("pods", c, function(a) {
+e = a.by("metadata.name"), b.podsForStatefulSet = m(e, g);
 }));
 });
 })), b.$on("$destroy", function() {
-f.unwatchAll(k);
+f.unwatchAll(l);
 });
 } ]), angular.module("openshiftConsole").controller("ServicesController", [ "$routeParams", "$scope", "AlertMessageService", "DataService", "ProjectsService", "$filter", "LabelFilter", "Logger", function(a, b, c, d, e, f, g, h) {
 b.projectName = a.project, b.services = {}, b.unfilteredServices = {}, b.routesByService = {}, b.routes = {}, b.labelSuggestions = {}, b.alerts = b.alerts || {}, b.emptyMessage = "Loading...", b.emptyMessageRoutes = "Loading...", c.getAlerts().forEach(function(a) {

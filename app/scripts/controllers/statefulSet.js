@@ -9,6 +9,7 @@ angular
     AlertMessageService,
     BreadcrumbsService,
     DataService,
+    MetricsService,
     ProjectsService) {
 
     $scope.projectName = $routeParams.project;
@@ -51,6 +52,10 @@ angular
       version: 'v1beta1'
     };
 
+    MetricsService.isAvailable().then(function(available) {
+      $scope.metricsAvailable = available;
+    });
+
     ProjectsService
       .get($routeParams.project)
       .then(_.spread(function(project, context) {
@@ -59,7 +64,7 @@ angular
         DataService
           .get(resourceGroupVersion, $scope.statefulSetName, context)
           .then(function(statefulSet) {
-          
+
             angular.extend($scope, {
               statefulSet: updateEnvVars(statefulSet),
               project: project,
