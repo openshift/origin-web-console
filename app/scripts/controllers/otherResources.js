@@ -37,6 +37,7 @@ angular.module('openshiftConsole')
         case "ReplicaSet":
         case "ResourceQuota":
         case "AppliedClusterResourceQuota":
+        case "StatefulSet":
           return false;
         default:
           return true;

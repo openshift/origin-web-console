@@ -6887,6 +6887,7 @@ case "LimitRange":
 case "ReplicaSet":
 case "ResourceQuota":
 case "AppliedClusterResourceQuota":
+case "StatefulSet":
 return !1;
 
 default:
