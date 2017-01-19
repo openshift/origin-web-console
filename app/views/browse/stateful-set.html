@@ -106,9 +106,6 @@
                         detailed="true">
                       </pod-template>
 
-                      <p ng-if="!statefulSet.spec.volumeClaimTemplates.length">
-                        none
-                      </p>
                       <volume-claim-templates
                           templates="statefulSet.spec.volumeClaimTemplates"
                           namespace="project.metadata.name">
