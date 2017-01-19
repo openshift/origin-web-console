@@ -120,6 +120,10 @@
           }
         }" readonly ng-model="build.spec.strategy.jenkinsPipelineStrategy.jenkinsfile" class="ace-bordered ace-inline ace-read-only"></div>
       </dl>
+      <div ng-if="build | hasPostCommitHook">
+        <h3>Post-Commit Hooks</h3>
+        <build-hooks build="build"></build-hooks>
+      </div>
     </div>
   </div>
   <annotations annotations="build.metadata.annotations"></annotations>

@@ -13516,6 +13516,14 @@ return a;
 }, !0);
 } ]
 };
+}), angular.module("openshiftConsole").directive("buildHooks", function() {
+return {
+restrict:"E",
+templateUrl:"views/directives/build-hooks.html",
+scope:{
+build:"="
+}
+};
 }), angular.module("openshiftConsole").filter("duration", function() {
 return function(a, b, c, d) {
 function e(a, b, d) {
@@ -14344,7 +14352,11 @@ if (!b) return "";
 var c = a(b, "deployment.kubernetes.io/revision");
 return c ? "#" + c :"Unknown";
 };
-} ]), angular.module("openshiftConsole").filter("canI", [ "AuthorizationService", function(a) {
+} ]).filter("hasPostCommitHook", function() {
+return function(a) {
+return _.has(a, "spec.postCommit.command") || _.has(a, "spec.postCommit.script") || _.has(a, "spec.postCommit.args");
+};
+}), angular.module("openshiftConsole").filter("canI", [ "AuthorizationService", function(a) {
 return function(b, c, d) {
 return a.canI(b, c, d);
 };

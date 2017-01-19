@@ -1412,4 +1412,12 @@ angular.module('openshiftConsole')
       var revision = annotationFilter(deployment, 'deployment.kubernetes.io/revision');
       return revision ? "#" + revision : 'Unknown';
     };
+  })
+  .filter('hasPostCommitHook', function() {
+    // Check if a build or build config has a post commit hook.
+    return function(build) {
+      return _.has(build, 'spec.postCommit.command') ||
+             _.has(build, 'spec.postCommit.script') ||
+             _.has(build, 'spec.postCommit.args');
+    };
   });

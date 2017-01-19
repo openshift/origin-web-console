@@ -1436,6 +1436,10 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "          }\n" +
     "        }\" readonly=\"readonly\" ng-model=\"build.spec.strategy.jenkinsPipelineStrategy.jenkinsfile\" class=\"ace-bordered ace-inline ace-read-only\"></div>\n" +
     "</dl>\n" +
+    "<div ng-if=\"build | hasPostCommitHook\">\n" +
+    "<h3>Post-Commit Hooks</h3>\n" +
+    "<build-hooks build=\"build\"></build-hooks>\n" +
+    "</div>\n" +
     "</div>\n" +
     "</div>\n" +
     "<annotations annotations=\"build.metadata.annotations\"></annotations>\n" +
@@ -2128,6 +2132,10 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "                                }\" readonly=\"readonly\" ng-model=\"buildConfig.spec.strategy.jenkinsPipelineStrategy.jenkinsfile\" class=\"ace-bordered ace-inline ace-read-only\"></div>\n" +
     "</div>\n" +
     "</dl>\n" +
+    "<div ng-if=\"buildConfig | hasPostCommitHook\">\n" +
+    "<h3>Post-Commit Hooks</h3>\n" +
+    "<build-hooks build=\"buildConfig\"></build-hooks>\n" +
+    "</div>\n" +
     "</div>\n" +
     "<div class=\"col-lg-6\">\n" +
     "<h3>Triggers</h3>\n" +
@@ -6052,6 +6060,38 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
   );
 
 
+  $templateCache.put('views/directives/build-hooks.html',
+    " <dl ng-class=\"{ 'dl-horizontal left': !build.spec.postCommit.script }\">\n" +
+    "<dt ng-if-start=\"build.spec.postCommit.command\">Command:</dt>\n" +
+    "<dd ng-if-end>\n" +
+    "<code class=\"command\">\n" +
+    "<truncate-long-text content=\"build.spec.postCommit.command.join(' ')\" limit=\"80\" newline-limit=\"1\" expandable=\"true\" use-word-boundary=\"false\">\n" +
+    "</truncate-long-text>\n" +
+    "</code>\n" +
+    "</dd>\n" +
+    "<dt ng-if-start=\"build.spec.postCommit.script\">Script:</dt>\n" +
+    "<dd ng-if-end>\n" +
+    "<div ui-ace=\"{\n" +
+    "        mode: 'sh',\n" +
+    "        theme: 'eclipse',\n" +
+    "        rendererOptions: {\n" +
+    "          fadeFoldWidgets: true,\n" +
+    "          showPrintMargin: false\n" +
+    "        }\n" +
+    "      }\" ng-model=\"build.spec.postCommit.script\" readonly=\"readonly\" class=\"ace-bordered ace-read-only ace-inline mar-top-md mar-bottom-md\">\n" +
+    "</div>\n" +
+    "</dd>\n" +
+    "<dt ng-if-start=\"build.spec.postCommit.args\">Args:</dt>\n" +
+    "<dd ng-if-end>\n" +
+    "<code class=\"command\">\n" +
+    "<truncate-long-text content=\"build.spec.postCommit.args.join(' ')\" limit=\"80\" newline-limit=\"1\" expandable=\"true\" use-word-boundary=\"false\">\n" +
+    "</truncate-long-text>\n" +
+    "</code>\n" +
+    "</dd>\n" +
+    "</dl>"
+  );
+
+
   $templateCache.put('views/directives/build-pipeline.html',
     "<div>\n" +
     "<div ng-if=\"expandOnlyRunning\">\n" +
@@ -9117,7 +9157,8 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "</div>\n" +
     "</div>\n" +
     "<div ng-if=\"view.advancedOptions && !(updatedBuildConfig | isJenkinsPipelineStrategy)\" class=\"section\">\n" +
-    "<h3 class=\"with-divider\">Build Hooks\n" +
+    "<h3 class=\"with-divider\">\n" +
+    "Post-Commit Hooks\n" +
     "<span class=\"help action-inline\">\n" +
     "<a href=\"{{'build-hooks' | helpLink}}\" aria-hidden=\"true\" target=\"_blank\"><span class=\"learn-more-inline\">Learn More&nbsp;<i class=\"fa fa-external-link\"></i></span></a>\n" +
     "</span>\n" +
