@@ -122,16 +122,29 @@ angular.module('openshiftConsole')
       });
       return nameCount;
     }
-    return function (resource, projects){
+    function escapeLessThanGreaterThan(str) {
+      return str.
+        replace(/</g, '&lt;').
+        replace(/>/g, '&gt;');
+    }
+    return function (resource, projects, escape){
       if (!resource) {
         return '';
       }
       var displayName = displayNameFilter(resource);
       var name = resource.metadata.name;
       if (displayName !== name && countNames(projects)[displayName] > 1 ){
-        return displayName + ' (' + name + ')';
+        if (!!escape) {
+          return escapeLessThanGreaterThan(displayName) + ' (' + name + ')';
+        } else {
+          return displayName + ' (' + name + ')';
+        }
       }
-      return displayName;
+      if (!!escape) {
+        return escapeLessThanGreaterThan(displayName);
+      } else {
+        return displayName;
+      }
     };
   })
   .filter('searchProjects', function(annotationNameFilter) {

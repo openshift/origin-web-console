@@ -4698,7 +4698,7 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "{{$select.selected | uniqueDisplayName : projects}}\n" +
     "</ui-select-match>\n" +
     "<ui-select-choices repeat=\"project in projects | searchProjects : $select.search\">\n" +
-    "<div ng-bind-html=\"project | uniqueDisplayName : projects | highlight : $select.search\"></div>\n" +
+    "<div ng-bind-html=\"project | uniqueDisplayName : projects : true | highlight : $select.search\"></div>\n" +
     "</ui-select-choices>\n" +
     "</ui-select>\n" +
     "</div>\n" +
@@ -4711,7 +4711,7 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "{{$select.selected | uniqueDisplayName : projects}}\n" +
     "</ui-select-match>\n" +
     "<ui-select-choices repeat=\"project in projects | searchProjects : $select.search\">\n" +
-    "<div ng-bind-html=\"project | uniqueDisplayName : projects | highlight : $select.search\"></div>\n" +
+    "<div ng-bind-html=\"project | uniqueDisplayName : projects : true | highlight : $select.search\"></div>\n" +
     "</ui-select-choices>\n" +
     "</ui-select>\n" +
     "<div class=\"button-group mar-bottom-lg mar-top-lg\">\n" +
