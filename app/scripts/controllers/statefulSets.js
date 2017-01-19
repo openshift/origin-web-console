@@ -1,9 +1,10 @@
 'use strict';
 
 angular.module('openshiftConsole')
-  .controller('StatefulSetsController', function($scope, $routeParams, AlertMessageService, DataService, ProjectsService) {
+  .controller('StatefulSetsController', function($scope, $routeParams, AlertMessageService, DataService, ProjectsService, LabelFilter) {
     $scope.projectName = $routeParams.project;
     $scope.alerts = $scope.alerts || {};
+    $scope.labelSuggestions = {};
     $scope.emptyMessage = "Loading...";
 
     // get and clear any alerts
@@ -25,9 +26,33 @@ angular.module('openshiftConsole')
         }, context, function(statefulSets) {
           angular.extend($scope, {
             loaded: true,
-            statefulSets: statefulSets.by('metadata.name')
+            unfilteredStatefulSets: statefulSets.by('metadata.name')
           });
+          $scope.statefulSets = LabelFilter.getLabelSelector().select($scope.unfilteredStatefulSets);
+          LabelFilter.addLabelSuggestionsFromResources($scope.unfilteredStatefulSets, $scope.labelSuggestions);
+          LabelFilter.setLabelSuggestions($scope.labelSuggestions);
+          updateFilterWarning();
         }));
+
+        function updateFilterWarning() {
+          if (!LabelFilter.getLabelSelector().isEmpty() && $.isEmptyObject($scope.statefulSets) && !$.isEmptyObject($scope.unfilteredStatefulSets)) {
+            $scope.alerts["statefulsets"] = {
+              type: "warning",
+              details: "The active filters are hiding all stateful sets."
+            };
+          }
+          else {
+            delete $scope.alerts["statefulsets"];
+          }
+        }
+
+        LabelFilter.onActiveFiltersChanged(function(labelSelector) {
+          // trigger a digest loop
+          $scope.$apply(function() {
+            $scope.statefulSets = labelSelector.select($scope.unfilteredStatefulSets);
+            updateFilterWarning();
+          });
+        });
 
         $scope.$on('$destroy', function(){
           DataService.unwatchAll(watches);
