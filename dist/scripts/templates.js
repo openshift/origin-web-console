@@ -1846,7 +1846,7 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "</ul>\n" +
     "</div>\n" +
     "{{buildConfigName}}\n" +
-    "<span class=\"pficon pficon-warning-triangle-o\" aria-hidden=\"true\" data-toggle=\"tooltip\" data-original-title=\"{{buildConfigDeleted ? 'This build configuration no longer exists' : 'Building from build configuration ' + buildConfig.metadata.name + ' has been paused.'}}\">\n" +
+    "<span class=\"pficon pficon-warning-triangle-o\" ng-if=\"buildConfigPaused || buildConfigDeleted\" aria-hidden=\"true\" data-toggle=\"tooltip\" data-original-title=\"{{buildConfigDeleted ? 'This build configuration no longer exists' : 'Building from build configuration ' + buildConfig.metadata.name + ' has been paused.'}}\">\n" +
     "</span>\n" +
     "<small class=\"meta\" ng-if=\"buildConfig\">created <span am-time-ago=\"buildConfig.metadata.creationTimestamp\"></span></small>\n" +
     "</h1>\n" +

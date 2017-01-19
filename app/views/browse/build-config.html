@@ -59,6 +59,7 @@
               </div>
               {{buildConfigName}}
               <span class="pficon pficon-warning-triangle-o"
+                    ng-if="buildConfigPaused || buildConfigDeleted"
                     aria-hidden="true"
                     data-toggle="tooltip"
                     data-original-title="{{buildConfigDeleted ? 'This build configuration no longer exists' : 'Building from build configuration ' + buildConfig.metadata.name + ' has been paused.'}}">
