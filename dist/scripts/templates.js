@@ -9645,10 +9645,12 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "<p>\n" +
     "Run an OpenShift build and deployment:\n" +
     "<copy-to-clipboard display-wide=\"true\" clipboard-text=\"'node {\n" +
-    "  stage \\'Build\\'\n" +
-    "  openshiftBuild(buildConfig: \\'my-build-config\\', showBuildLogs: \\'true\\')\n" +
-    "  stage \\'Deploy\\'\n" +
-    "  openshiftDeploy(deploymentConfig: \\'my-deployment-config\\')\n" +
+    "  stage(\\'Build\\') {\n" +
+    "    openshiftBuild(buildConfig: \\'my-build-config\\', showBuildLogs: \\'true\\')\n" +
+    "  }\n" +
+    "  stage(\\'Deploy\\') {\n" +
+    "    openshiftDeploy(deploymentConfig: \\'my-deployment-config\\')\n" +
+    "  }\n" +
     "}\n" +
     "'\" multiline=\"true\">\n" +
     "</copy-to-clipboard>\n" +
@@ -9656,12 +9658,15 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "<p>\n" +
     "Checkout source code and run shell commands on a node labelled <var>maven:</var>\n" +
     "<copy-to-clipboard display-wide=\"true\" clipboard-text=\"'node(\\'maven\\') {\n" +
-    "  stage \\'Checkout\\'\n" +
-    "  checkout scm\n" +
-    "  stage \\'Build\\'\n" +
-    "  sh \\'mvn install\\'\n" +
-    "  stage \\'Unit Test\\'\n" +
-    "  sh \\'mvn test\\'\n" +
+    "  stage(\\'Checkout\\') {\n" +
+    "    checkout scm\n" +
+    "  }\n" +
+    "  stage(\\'Build\\') {\n" +
+    "    sh \\'mvn install\\'\n" +
+    "  }\n" +
+    "  stage(\\'Unit Test\\') {\n" +
+    "    sh \\'mvn test\\'\n" +
+    "  }\n" +
     "}\n" +
     "'\" multiline=\"true\">\n" +
     "</copy-to-clipboard>\n" +
@@ -9669,8 +9674,9 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "<p>\n" +
     "Prompt for manual input:\n" +
     "<copy-to-clipboard display-wide=\"true\" clipboard-text=\"'node {\n" +
-    "  stage \\'Approve\\'\n" +
-    "  input \\'Promote to production?\\'\n" +
+    "  stage(\\'Approve\\') {\n" +
+    "    input \\'Promote to production?\\'\n" +
+    "  }\n" +
     "}\n" +
     "'\" multiline=\"true\">\n" +
     "</copy-to-clipboard>\n" +
