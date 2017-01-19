@@ -113,6 +113,32 @@
                       </div>
 
                       <div class="form-group">
+                        <label for="sub-path">Subpath</label>
+                        <input
+                            id="sub-path"
+                            class="form-control"
+                            type="text"
+                            name="subPath"
+                            ng-model="attach.subPath"
+                            placeholder="example: application/resources"
+                            ng-pattern="RELATIVE_PATH_PATTERN"
+                            autocorrect="off"
+                            autocapitalize="off"
+                            spellcheck="false"
+                            aria-describedby="sub-path-help">
+                        <div id="sub-path-help" class="help-block">
+                          Optional path within the volume from which it will be mounted into the
+                          container. Defaults to the volume's root.
+                        </div>
+                        <div class="has-error" ng-show="attachPVCForm.subPath.$error.pattern && attachPVCForm.subPath.$touched">
+                          <span class="help-block">
+                            Path must be a relative path. It cannot start with <code>/</code> or
+                            contain <code>..</code> path elements.
+                          </span>
+                        </div>
+                      </div>
+
+                      <div class="form-group">
                         <label for="volume-name">Volume Name</label>
                         <!--
                           Volume name must conform to a DNS label
@@ -151,6 +177,18 @@
                           <span class="help-block">
                             Volume name already exists. Please choose another name.
                           </span>
+                        </div>
+                      </div>
+
+                      <div class="form-group">
+                        <div class="checkbox">
+                          <label>
+                            <input type="checkbox" ng-model="attach.readOnly" aria-describedby="read-only-help">
+                            Read only
+                          </label>
+                          <div id="read-only-help" class="help-block">
+                            Mount the volume as read-only.
+                          </div>
                         </div>
                       </div>
 

@@ -12,11 +12,18 @@ angular.module("openshiftConsole")
         };
       },
 
-      createVolumeMount: function(name, mountPath) {
-        return {
+      createVolumeMount: function(name, mountPath, subPath, readOnly) {
+        var mount = {
           name: name,
-          mountPath: mountPath
+          mountPath: mountPath,
+          readOnly: !!readOnly
         };
+
+        if (subPath) {
+          mount.subPath = subPath;
+        }
+
+        return mount;
       },
 
       // Gets the volume names currently defined in the pod template.
