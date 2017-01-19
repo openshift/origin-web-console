@@ -92,7 +92,9 @@ angular.module('openshiftConsole')
   })
   .filter('description', function(annotationFilter) {
     return function(resource) {
-      return annotationFilter(resource, "description");
+      // Prefer `openshift.io/description`, but fall back to `kubernetes.io/description`.
+      return annotationFilter(resource, 'openshift.io/description') ||
+             annotationFilter(resource, 'kubernetes.io/description');
     };
   })
   .filter('displayName', function(annotationFilter) {
