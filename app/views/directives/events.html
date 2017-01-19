@@ -48,14 +48,14 @@
     </thead>
     <tbody ng-if="(filteredEvents | hashSize) === 0">
       <tr>
-        <td class="hidden-lg" colspan="3">
+        <td colspan="2" class="hidden-lg">
           <span ng-if="(events | hashSize) === 0"><em>No events to show.</em></span>
           <span ng-if="(events | hashSize) > 0">
             All events hidden by filter.
             <a href="" ng-click="filter.text = ''" role="button">Clear Filter</a>
           </span>
         </td>
-        <td class="hidden-xs hidden-sm hidden-md" colspan="6">
+        <td colspan="4" class="hidden-xs hidden-sm hidden-md">
           <span ng-if="(events | hashSize) === 0"><em>No events to show.</em></span>
           <span ng-if="(events | hashSize) > 0">
             All events hidden by filter.
@@ -83,7 +83,8 @@
         </td>
         <td data-title="Severity" class="hidden-xs hidden-sm hidden-md text-center severity-icon-td">
           <span class="sr-only">{{event.type}}</span>
-          <span class="pficon pficon-warning-triangle-o" ng-show="event.type === 'Warning'" aria-hidden="true" data-toggle="tooltip" data-original-title="Warning"></span></td>
+          <span class="pficon pficon-warning-triangle-o" ng-show="event.type === 'Warning'" aria-hidden="true" data-toggle="tooltip" data-original-title="Warning"></span>
+        </td>
         <td class="hidden-sm hidden-md" data-title="Reason">
           <span ng-bind-html="event.reason | sentenceCase | highlightKeywords : filterExpressions"></span>&nbsp;<span class="visible-xs-inline pficon pficon-warning-triangle-o" ng-show="event.type === 'Warning'" aria-hidden="true" data-toggle="tooltip" data-original-title="Warning"></span>
         </td>
