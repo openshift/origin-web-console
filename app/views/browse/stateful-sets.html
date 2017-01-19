@@ -7,7 +7,6 @@
       <div class="middle-header header-toolbar">
         <div class="container-fluid">
           <breadcrumbs breadcrumbs="breadcrumbs"></breadcrumbs>
-          <alerts alerts="alerts"></alerts>
           <div class="page-header page-header-bleed-right page-header-bleed-left">
             <h1>
               Stateful Sets
@@ -20,11 +19,17 @@
               -->
             </h1>
           </div>
+          <div ng-if="!renderOptions.showGetStarted" class="data-toolbar">
+            <div class="data-toolbar-filter">
+              <project-filter></project-filter>
+            </div>
+          </div>
         </div>
       </div>
 
       <div class="middle-content" persist-tab-state>
         <div class="container-fluid">
+          <alerts alerts="alerts"></alerts>
           <div ng-if="!loaded">Loading...</div>
           <div class="row" ng-if="loaded">
             <div class="col-md-12">
