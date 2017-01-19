@@ -5,7 +5,7 @@ return this.resource = a, this.group = b, this.version = c, this;
 }
 
 window.OPENSHIFT_CONSTANTS = {
-HELP_BASE_URL:"https://docs.openshift.org/latest/",
+HELP_BASE_URL:"https://docs.openshift.com/container-platform/3.5/",
 HELP:{
 cli:"cli_reference/index.html",
 get_started_cli:"cli_reference/get_started_cli.html",

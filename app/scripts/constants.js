@@ -8,7 +8,7 @@
 
 window.OPENSHIFT_CONSTANTS = {
   // Maps links to specific topics in external documentation.
-  HELP_BASE_URL: "https://docs.openshift.org/latest/",
+  HELP_BASE_URL: "https://docs.openshift.com/container-platform/3.5/",
   HELP: {
     "cli":                     "cli_reference/index.html",
     "get_started_cli":         "cli_reference/get_started_cli.html",
@@ -64,7 +64,7 @@ window.OPENSHIFT_CONSTANTS = {
 
   // true indicates that deployment metrics should be disabled on the web console overview
   DISABLE_OVERVIEW_METRICS: false,
- 
+
   // true indicates that custom metrics should be disabled when viewing pod metrics
   DISABLE_CUSTOM_METRICS: false,
 
