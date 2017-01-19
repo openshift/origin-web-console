@@ -33,7 +33,7 @@
                   </li>
                   <li ng-if="resourceGroupVersion | canI : 'delete'">
                     <delete-link
-                      kind="statefulSet"
+                      kind="StatefulSet"
                       group="apps"
                       resource-name="{{statefulSet.metadata.name}}"
                       project-name="{{statefulSet.metadata.namespace}}"
@@ -47,7 +47,8 @@
             <labels
               labels="statefulSet.metadata.labels"
               clickable="true"
-              kind="statefulSets"
+              kind="stateful-sets"
+              title-kind="stateful sets"
               project-name="{{statefulSet.metadata.namespace}}"
               limit="3"></labels>
           </div>

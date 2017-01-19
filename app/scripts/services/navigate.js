@@ -287,7 +287,8 @@ angular.module("openshiftConsole")
           'routes': 'routes',
           'secrets': 'secrets',
           'services': 'services',
-          'persistentvolumeclaims': 'storage'
+          'persistentvolumeclaims': 'storage',
+          'statefulsets' : 'stateful-sets'
         };
 
         return URI.expand("project/{projectName}/browse/{browsePath}", {

@@ -18,9 +18,10 @@ angular
     $scope.alerts = {};
     $scope.breadcrumbs = BreadcrumbsService.getBreadcrumbs({
       name: $scope.statefulSetName,
-      kind: 'statefulSet',
+      kind: 'StatefulSet',
       namespace: $routeParams.project
     });
+
     $scope.emptyMessage = "Loading...";
 
     var altTextForValueFrom = $filter('altTextForValueFrom');

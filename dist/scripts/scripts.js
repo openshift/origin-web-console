@@ -2310,7 +2310,8 @@ replicationcontrollers:"deployments",
 routes:"routes",
 secrets:"secrets",
 services:"services",
-persistentvolumeclaims:"storage"
+persistentvolumeclaims:"storage",
+statefulsets:"stateful-sets"
 };
 return URI.expand("project/{projectName}/browse/{browsePath}", {
 projectName:b,
@@ -6515,7 +6516,7 @@ d.unwatchAll(g);
 } ]), angular.module("openshiftConsole").controller("StatefulSetController", [ "$filter", "$scope", "$routeParams", "AlertMessageService", "BreadcrumbsService", "DataService", "MetricsService", "ProjectsService", function(a, b, c, d, e, f, g, h) {
 b.projectName = c.project, b.statefulSetName = c.statefulset, b.forms = {}, b.alerts = {}, b.breadcrumbs = e.getBreadcrumbs({
 name:b.statefulSetName,
-kind:"statefulSet",
+kind:"StatefulSet",
 namespace:c.project
 }), b.emptyMessage = "Loading...";
 var i = a("altTextForValueFrom"), j = function(a) {
