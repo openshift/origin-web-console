@@ -25,10 +25,14 @@
                       <h2>Choose a Project</h2>
                       <ui-select ng-model="selected.project">
                         <ui-select-match placeholder="Project name">
-                          {{$select.selected | uniqueDisplayName : projects}}
+                          {{$select.selected | displayName}}
                         </ui-select-match>
                         <ui-select-choices repeat="project in projects | searchProjects : $select.search">
-                          <div ng-bind-html="project | uniqueDisplayName : projects | highlightKeywords : $select.search"></div>
+                          <span ng-bind-html="project | displayName | highlightKeywords : $select.search"></span>
+                          <span ng-if="project | displayName : true" class="small text-muted">
+                            &ndash;
+                            <span ng-bind-html="project.metadata.name | highlightKeywords : $select.search"></span>
+                          </span>
                         </ui-select-choices>
                       </ui-select>
                     </div>
@@ -38,10 +42,14 @@
                           <uib-tab-heading>Choose Existing Project</uib-tab-heading>
                           <ui-select ng-model="selected.project">
                             <ui-select-match placeholder="Project name">
-                              {{$select.selected | uniqueDisplayName : projects}}
+                              {{$select.selected | displayName}}
                             </ui-select-match>
                             <ui-select-choices repeat="project in projects | searchProjects : $select.search">
-                              <div ng-bind-html="project | uniqueDisplayName : projects | highlightKeywords : $select.search"></div>
+                              <span ng-bind-html="project | displayName | highlightKeywords : $select.search"></span>
+                              <span ng-if="project | displayName : true" class="small text-muted">
+                                &ndash;
+                                <span ng-bind-html="project.metadata.name | highlightKeywords : $select.search"></span>
+                              </span>
                             </ui-select-choices>
                           </ui-select>
                           <div class="button-group mar-bottom-lg mar-top-lg">

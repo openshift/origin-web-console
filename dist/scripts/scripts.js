@@ -13654,11 +13654,13 @@ if (!c) return "";
 var e = a(c), f = c.metadata.name;
 return e !== f && b(d)[e] > 1 ? e + " (" + f + ")" :e;
 };
-} ]).filter("searchProjects", [ "annotationNameFilter", function(a) {
+} ]).filter("searchProjects", [ "displayNameFilter", function(a) {
 return function(b, c) {
-return _.filter(b, function(b) {
-return _.includes(b.metadata.name, c) || _.includes(b.metadata.annotations[a("displayName")], c);
-});
+return c ? (c = c.toLowerCase(), _.filter(b, function(b) {
+if (_.includes(b.metadata.name, c)) return !0;
+var d = a(b, !0);
+return !(!d || !_.includes(d.toLowerCase(), c));
+})) :b;
 };
 } ]).filter("tags", [ "annotationFilter", function(a) {
 return function(b, c) {
