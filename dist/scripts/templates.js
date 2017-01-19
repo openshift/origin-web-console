@@ -4070,13 +4070,13 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "<a ng-href=\"{{statefulSet | editYamlURL}}\" role=\"button\">Edit YAML</a>\n" +
     "</li>\n" +
     "<li ng-if=\"resourceGroupVersion | canI : 'delete'\">\n" +
-    "<delete-link kind=\"statefulSet\" group=\"apps\" resource-name=\"{{statefulSet.metadata.name}}\" project-name=\"{{statefulSet.metadata.namespace}}\" replicas=\"statefulSet.spec.replicas\" alerts=\"alerts\">\n" +
+    "<delete-link kind=\"StatefulSet\" group=\"apps\" resource-name=\"{{statefulSet.metadata.name}}\" project-name=\"{{statefulSet.metadata.namespace}}\" replicas=\"statefulSet.spec.replicas\" alerts=\"alerts\">\n" +
     "</delete-link>\n" +
     "</li>\n" +
     "</ul>\n" +
     "</div>\n" +
     "</h1>\n" +
-    "<labels labels=\"statefulSet.metadata.labels\" clickable=\"true\" kind=\"statefulSets\" project-name=\"{{statefulSet.metadata.namespace}}\" limit=\"3\"></labels>\n" +
+    "<labels labels=\"statefulSet.metadata.labels\" clickable=\"true\" kind=\"stateful-sets\" title-kind=\"stateful sets\" project-name=\"{{statefulSet.metadata.namespace}}\" limit=\"3\"></labels>\n" +
     "</div>\n" +
     "</div>\n" +
     "</div>\n" +
