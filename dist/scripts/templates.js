@@ -6058,7 +6058,7 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
 
 
   $templateCache.put('views/directives/build-hooks.html',
-    " <dl ng-class=\"{ 'dl-horizontal left': !build.spec.postCommit.script }\">\n" +
+    " <dl ng-class=\"{ 'dl-horizontal left': !build.spec.postCommit.script || !(build.spec.postCommit.script | isMultiline)}\">\n" +
     "<dt ng-if-start=\"build.spec.postCommit.command\">Command:</dt>\n" +
     "<dd ng-if-end>\n" +
     "<code class=\"command\">\n" +
@@ -6068,7 +6068,11 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "</dd>\n" +
     "<dt ng-if-start=\"build.spec.postCommit.script\">Script:</dt>\n" +
     "<dd ng-if-end>\n" +
-    "<div ui-ace=\"{\n" +
+    "<code ng-if=\"!(build.spec.postCommit.script | isMultiline)\" class=\"command\">\n" +
+    "<truncate-long-text content=\"build.spec.postCommit.script\" limit=\"80\" expandable=\"true\" use-word-boundary=\"false\">\n" +
+    "</truncate-long-text>\n" +
+    "</code>\n" +
+    "<div ng-if=\"build.spec.postCommit.script | isMultiline\" ui-ace=\"{\n" +
     "        mode: 'sh',\n" +
     "        theme: 'eclipse',\n" +
     "        rendererOptions: {\n" +

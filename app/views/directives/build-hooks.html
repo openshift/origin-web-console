@@ -2,7 +2,7 @@
   Use `dl-horizontal left` style unless there's a script.
   Otherwise use the default `dl` style because it looks strange with the block editor.
 -->
-<dl ng-class="{ 'dl-horizontal left': !build.spec.postCommit.script }">
+<dl ng-class="{ 'dl-horizontal left': !build.spec.postCommit.script || !(build.spec.postCommit.script | isMultiline)}">
   <dt ng-if-start="build.spec.postCommit.command">Command:</dt>
   <dd ng-if-end>
     <code class="command">
@@ -17,7 +17,16 @@
   </dd>
   <dt ng-if-start="build.spec.postCommit.script">Script:</dt>
   <dd ng-if-end>
+    <code ng-if="!(build.spec.postCommit.script | isMultiline)" class="command">
+      <truncate-long-text
+          content="build.spec.postCommit.script"
+          limit="80"
+          expandable="true"
+          use-word-boundary="false">
+      </truncate-long-text>
+    </code>
     <div
+      ng-if="build.spec.postCommit.script | isMultiline"
       ui-ace="{
         mode: 'sh',
         theme: 'eclipse',
