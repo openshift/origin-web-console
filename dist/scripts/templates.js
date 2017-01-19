@@ -7790,11 +7790,19 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "<ui-select-choices repeat=\"sclass as sclass in storageClasses | toArray | filter : { metadata: { name: $select.search } } \">\n" +
     "<div>\n" +
     "<span ng-bind-html=\"sclass.metadata.name  | highlight : $select.search\"></span>\n" +
-    "<span ng-if=\"sclass | annotation : 'description'\" class=\"text-muted\">\n" +
+    "<span ng-if=\"sclass.parameters.type || sclass.parameters.zone || (sclass | annotation : 'description')\" class=\"text-muted\">\n" +
     "<small>&ndash;\n" +
-    "<span ng-if=\"sclass.parameters.type\">Type: {{sclass.parameters.type}} | </span>\n" +
-    "<span ng-if=\"sclass.parameters.zone\">Zone: {{sclass.parameters.zone}} | </span>\n" +
+    "<span ng-if=\"sclass.parameters.type\">\n" +
+    "Type: {{sclass.parameters.type}}\n" +
+    "</span>\n" +
+    "<span ng-if=\"sclass.parameters.zone\">\n" +
+    "<span ng-if=\"sclass.parameters.type\">|</span>\n" +
+    "Zone: {{sclass.parameters.zone}}\n" +
+    "</span>\n" +
+    "<span ng-if=\"sclass | annotation : 'description'\">\n" +
+    "<span ng-if=\"sclass.parameters.type || sclass.parameters.zone\">|</span>\n" +
     "{{sclass | annotation : 'description'}}\n" +
+    "</span>\n" +
     "</small>\n" +
     "</span>\n" +
     "</div>\n" +
