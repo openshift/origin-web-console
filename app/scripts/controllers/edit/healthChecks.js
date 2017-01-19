@@ -81,16 +81,16 @@ angular.module('openshiftConsole')
 
         DataService.get(resourceGroupVersion, $scope.name, context).then(
           function(result) {
-            // Modify a copy of the resource.
-            var resource = angular.copy(result);
+            // Modify a copy of the object.
+            var object = $scope.object = angular.copy(result);
             $scope.breadcrumbs = BreadcrumbsService.getBreadcrumbs({
-              object: resource,
+              object: object,
               project: project,
               subpage: 'Edit Health Checks',
               includeProject: true
             });
 
-            $scope.containers = _.get(resource, 'spec.template.spec.containers');
+            $scope.containers = _.get(object, 'spec.template.spec.containers');
 
             $scope.addProbe = function(container, probe) {
               // Restore the previous values if set.
@@ -109,7 +109,7 @@ angular.module('openshiftConsole')
               $scope.disableInputs = true;
               DataService.update(APIService.kindToResource($routeParams.kind),
                                  $scope.name,
-                                 resource,
+                                 object,
                                  context).then(
                 function() {
                   AlertMessageService.addAlert({

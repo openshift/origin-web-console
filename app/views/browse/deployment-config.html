@@ -41,10 +41,10 @@
                     </li>
                     <li class="divider" ng-if="'deploymentconfigs' | canI : 'update'"></li>
                     <li ng-if="!deploymentConfig.spec.paused && !updatingPausedState && ('deploymentconfigs' | canI : 'update')">
-                      <a href="" ng-click="setPaused(true)" role="button">Pause Deployment</a>
+                      <a href="" ng-click="setPaused(true)" role="button">Pause Rollouts</a>
                     </li>
                     <li ng-if="deploymentConfig.spec.paused && !updatingPausedState && ('deploymentconfigs' | canI : 'update')">
-                      <a href="" ng-click="setPaused(false)" role="button">Resume Deployment</a>
+                      <a href="" ng-click="setPaused(false)" role="button">Resume Rollouts</a>
                     </li>
                     <li ng-if="'deploymentconfigs' | canI : 'update'">
                       <a ng-href="project/{{project.metadata.name}}/attach-pvc?kind=DeploymentConfig&name={{deploymentConfig.metadata.name}}"
@@ -98,10 +98,9 @@
                 <div ng-if="deploymentConfig.spec.paused" class="alert alert-info animate-if">
                   <span class="pficon pficon-info" aria-hidden="true"></span>
                   <strong>{{deploymentConfig.metadata.name}} is paused.</strong>
-                  This will stop any new deployments and deployment triggers from running
-                  until resumed.
-                  <span ng-if="!updatingPausedState && ('deploymentconfigs' | canI : 'update')">
-                    <a href="" ng-click="setPaused(false)" role="button">Resume deployment</a>
+                  This will stop any new rollouts or triggers from running until resumed.
+                  <span ng-if="!updatingPausedState && ('deploymentconfigs' | canI : 'update')" class="nowrap">
+                    <a href="" ng-click="setPaused(false)" role="button">Resume Rollouts</a>
                   </span>
                 </div>
                 <uib-tabset>

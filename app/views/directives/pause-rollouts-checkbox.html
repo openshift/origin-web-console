@@ -1,0 +1,17 @@
+<div ng-if="alwaysVisible || !missingConfigChangeTrigger" class="form-group pause-rollouts-checkbox">
+  <div class="checkbox">
+    <label>
+      <input
+          type="checkbox"
+          ng-disabled="disabled"
+          ng-model="deployment.spec.paused"
+          aria-describedby="pause-help">
+      Pause rollouts for this {{deployment.kind | humanizeKind}}
+    </label>
+    <div id="pause-help" class="help-block">
+      Pausing lets you make changes without triggering a rollout. You can resume rollouts at any
+      time.
+      <span ng-if="!alwaysVisible">If unchecked, a new rollout will start on save.</span>
+    </div>
+  </div>
+</div>

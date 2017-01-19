@@ -6997,7 +6997,7 @@ group:d.group
 };
 if (!h.canI(n, "update", d.project)) return void l.toErrorPage("You do not have authority to update " + o(d.kind) + " " + d.name + ".", "access_denied");
 j.get(n, e.name, m).then(function(a) {
-var d = angular.copy(a);
+var d = e.object = angular.copy(a);
 e.breadcrumbs = i.getBreadcrumbs({
 object:d,
 project:c,
@@ -7720,7 +7720,7 @@ resource:h.kindToResource(c.kind),
 group:c.group
 };
 return f.canI(p, "update", c.project) ? void i.get(p, d.name, l).then(function(a) {
-var f = angular.copy(a);
+var f = d.object = angular.copy(a);
 d.breadcrumbs = g.getBreadcrumbs({
 object:f,
 project:k,
@@ -13540,7 +13540,29 @@ scope:{
 build:"="
 }
 };
-}), angular.module("openshiftConsole").filter("duration", function() {
+}), angular.module("openshiftConsole").directive("pauseRolloutsCheckbox", [ "APIService", function(a) {
+return {
+restrict:"E",
+scope:{
+deployment:"=",
+disabled:"=ngDisabled",
+alwaysVisible:"="
+},
+templateUrl:"views/directives/pause-rollouts-checkbox.html",
+link:function(b) {
+var c = function() {
+if (!b.deployment) return !1;
+var c = a.objectToResourceGroupVersion(b.deployment);
+return "deploymentconfigs" === c.resource && !c.group;
+};
+b.$watch("deployment.spec.triggers", function(a) {
+b.missingConfigChangeTrigger = c() && !_.some(a, {
+type:"ConfigChange"
+});
+}, !0);
+}
+};
+} ]), angular.module("openshiftConsole").filter("duration", function() {
 return function(a, b, c, d) {
 function e(a, b, d) {
 if (0 !== a) return 1 === a ? void (c ? h.push(b) :h.push("1 " + b)) :void h.push(a + " " + d);
@@ -14385,7 +14407,13 @@ name:b.name
 });
 return a(d) ? "read-only" :_.get(d, "persistentVolumeClaim.readOnly") ? "read-only" :b.readOnly ? "read-only" :"read-write";
 };
-}), angular.module("openshiftConsole").filter("canI", [ "AuthorizationService", function(a) {
+}).filter("managesRollouts", [ "APIService", function(a) {
+return function(b) {
+if (!b) return !1;
+var c = a.objectToResourceGroupVersion(b);
+return "deploymentconfigs" === c.resource && !c.group || "deployments" === c.resource && "extensions" === c.group;
+};
+} ]), angular.module("openshiftConsole").filter("canI", [ "AuthorizationService", function(a) {
 return function(b, c, d) {
 return a.canI(b, c, d);
 };
