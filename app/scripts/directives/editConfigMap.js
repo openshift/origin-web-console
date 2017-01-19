@@ -1,7 +1,8 @@
 "use strict";
 
 angular.module("openshiftConsole")
-  .directive("editConfigMap", function() {
+  .directive("editConfigMap",
+             function(DNS1123_SUBDOMAIN_VALIDATION) {
     return {
       require: '^form',
       restrict: 'E',
@@ -12,6 +13,8 @@ angular.module("openshiftConsole")
       templateUrl: 'views/directives/edit-config-map.html',
       link: function($scope, element, attrs, formCtl) {
         $scope.form = formCtl;
+
+        $scope.nameValidation = DNS1123_SUBDOMAIN_VALIDATION;
 
         $scope.addItem = function() {
           $scope.data.push({ key: '', value: '' });

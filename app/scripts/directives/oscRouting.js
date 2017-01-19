@@ -29,7 +29,9 @@ angular.module("openshiftConsole")
    * routingDisabled:
    *   An expression that will disable the form (default: false)
    */
-  .directive("oscRouting", function(Constants) {
+  .directive("oscRouting",
+             function(Constants,
+                      DNS1123_SUBDOMAIN_VALIDATION) {
     return {
       require: '^form',
       restrict: 'E',
@@ -67,14 +69,16 @@ angular.module("openshiftConsole")
           _.set(scope, 'route.tls.insecureEdgeTerminationPolicy', '');
         }
 
+        scope.nameValidation = DNS1123_SUBDOMAIN_VALIDATION;
+
         // Use different patterns for validating hostnames if wildcard subdomains are supported.
         if (scope.disableWildcards) {
-          // See k8s.io/kubernetes/pkg/util/validation/validation.go
-          scope.hostnamePattern = /^[a-z0-9]([-a-z0-9]*[a-z0-9])?(\.[a-z0-9]([-a-z0-9]*[a-z0-9])?)*$/;
+          scope.hostnamePattern = DNS1123_SUBDOMAIN_VALIDATION.pattern;
         } else {
           // Allow values like "*.example.com" in addition to the normal hostname regex.
           scope.hostnamePattern = /^(\*(\.[a-z0-9]([-a-z0-9]*[a-z0-9]))+|[a-z0-9]([-a-z0-9]*[a-z0-9])?(\.[a-z0-9]([-a-z0-9]*[a-z0-9])?)*)$/;
         }
+        scope.hostnameMaxLength = DNS1123_SUBDOMAIN_VALIDATION.maxlength;
 
         var updatePortOptions = function(service) {
           if (!service) {

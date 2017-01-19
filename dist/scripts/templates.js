@@ -6166,7 +6166,7 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "<div class=\"form-group\">\n" +
     "<label for=\"secretName\" class=\"required\">Secret Name</label>\n" +
     "<span ng-class=\"{'has-error': nameTaken || (secretForm.secretName.$invalid && secretForm.secretName.$touched)}\">\n" +
-    "<input class=\"form-control\" id=\"secretName\" name=\"secretName\" ng-model=\"newSecret.data.secretName\" type=\"text\" autocorrect=\"off\" autocapitalize=\"off\" spellcheck=\"false\" aria-describedby=\"secret-name-help\" ng-maxlength=\"253\" ng-pattern=\"/^[a-z0-9]([-a-z0-9]*[a-z0-9])?(\\.[a-z0-9]([-a-z0-9]*[a-z0-9])?)*$/\" required>\n" +
+    "<input class=\"form-control\" id=\"secretName\" name=\"secretName\" ng-model=\"newSecret.data.secretName\" type=\"text\" autocorrect=\"off\" autocapitalize=\"off\" spellcheck=\"false\" aria-describedby=\"secret-name-help\" ng-pattern=\"nameValidation.pattern\" ng-maxlength=\"nameValidation.maxlength\" required>\n" +
     "</span>\n" +
     "<div class=\"has-error\" ng-show=\"nameTaken\">\n" +
     "<span class=\"help-block\">\n" +
@@ -6175,10 +6175,13 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "</div>\n" +
     "<div class=\"has-error\" ng-show=\"secretForm.secretName.$invalid\">\n" +
     "<div ng-show=\"secretForm.secretName.$error.pattern && secretForm.secretName.$touched\" class=\"help-block\">\n" +
-    "Secret name must consist of lower-case letters, numbers, periods, and hyphens. It must start and end with a letter or number.\n" +
+    "{{nameValidation.description}}\n" +
     "</div>\n" +
     "<div ng-show=\"secretForm.secretName.$error.required && secretForm.secretName.$touched\" class=\"help-block\">\n" +
-    "Secret name is required.\n" +
+    "Name is required.\n" +
+    "</div>\n" +
+    "<div ng-show=\"secretForm.secretName.$error.maxlength && secretForm.secretName.$touched\" class=\"help-block\">\n" +
+    "Can't be longer than {{nameValidation.maxlength}} characters.\n" +
     "</div>\n" +
     "</div>\n" +
     "<div class=\"help-block\" id=\"secret-name-help\">\n" +
@@ -6671,19 +6674,24 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "<label for=\"config-map-name\" class=\"required\">Name</label>\n" +
     "\n" +
     "<div ng-class=\"{ 'has-error': configMapForm.name.$invalid && configMapForm.name.$touched }\">\n" +
-    "<input id=\"config-map-name\" class=\"form-control\" type=\"text\" name=\"name\" ng-model=\"configMap.metadata.name\" ng-required=\"showNameInput\" ng-pattern=\"/^[a-z0-9]([-a-z0-9]*[a-z0-9])?$/\" ng-maxlength=\"63\" placeholder=\"my-config-map\" select-on-focus autocorrect=\"off\" autocapitalize=\"off\" spellcheck=\"false\" aria-describedby=\"config-map-name-help\">\n" +
+    "<input id=\"config-map-name\" class=\"form-control\" type=\"text\" name=\"name\" ng-model=\"configMap.metadata.name\" ng-required=\"showNameInput\" ng-pattern=\"nameValidation.pattern\" ng-maxlength=\"nameValidation.maxlength\" placeholder=\"my-config-map\" select-on-focus autocorrect=\"off\" autocapitalize=\"off\" spellcheck=\"false\" aria-describedby=\"config-map-name-help\">\n" +
     "</div>\n" +
     "<div>\n" +
     "<span id=\"config-map-name-help\" class=\"help-block\">A unique name for the config map within the project.</span>\n" +
     "</div>\n" +
     "<div class=\"has-error\" ng-show=\"configMapForm.name.$error.pattern && configMapForm.name.$touched\">\n" +
     "<span class=\"help-block\">\n" +
-    "Config map names may only contain lower-case letters, numbers, and dashes. They may not start or end with a dash.\n" +
+    "{{nameValidation.description}}\n" +
+    "</span>\n" +
+    "</div>\n" +
+    "<div class=\"has-error\" ng-show=\"configMapForm.name.$error.required && configMapForm.name.$touched\">\n" +
+    "<span class=\"help-block\">\n" +
+    "Name is required.\n" +
     "</span>\n" +
     "</div>\n" +
     "<div class=\"has-error\" ng-show=\"configMapForm.name.$error.maxlength\">\n" +
     "<span class=\"help-block\">\n" +
-    "Config map names may not be longer than 63 characters.\n" +
+    "Can't be longer than {{nameValidation.maxlength}} characters.\n" +
     "</span>\n" +
     "</div>\n" +
     "</div>\n" +
@@ -6700,6 +6708,11 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "</div>\n" +
     "<div class=\"help-block\">\n" +
     "A unique key for this config map entry.\n" +
+    "</div>\n" +
+    "<div class=\"has-error\" ng-show=\"configMapForm['key-' + $id].$error.required && configMapForm['key-' + $id].$touched\">\n" +
+    "<span class=\"help-block\">\n" +
+    "Key is required.\n" +
+    "</span>\n" +
     "</div>\n" +
     "<div class=\"has-error\" ng-show=\"configMapForm['key-' + $id].$error.oscUnique && configMapForm['key-' + $id].$touched\">\n" +
     "<span class=\"help-block\">\n" +
@@ -7531,7 +7544,7 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "<div ng-show=\"showNameInput\" class=\"form-group\">\n" +
     "<label for=\"hpa-name\" class=\"required\">Autoscaler Name</label>\n" +
     "<span ng-class=\"{ 'has-error': form.name.$touched && form.name.$invalid }\">\n" +
-    "<input id=\"hpa-name\" class=\"form-control\" type=\"text\" name=\"name\" ng-model=\"autoscaling.name\" ng-required=\"showNameInput\" ng-readonly=\"nameReadOnly\" ng-pattern=\"/^[a-z0-9]([-a-z0-9]*[a-z0-9])?$/\" ng-maxlength=\"63\" placeholder=\"my-hpa\" select-on-focus autocorrect=\"off\" autocapitalize=\"off\" spellcheck=\"false\" aria-describedby=\"hpa-name-help\">\n" +
+    "<input id=\"hpa-name\" class=\"form-control\" type=\"text\" name=\"name\" ng-model=\"autoscaling.name\" ng-required=\"showNameInput\" ng-readonly=\"nameReadOnly\" ng-pattern=\"nameValidation.pattern\" ng-maxlength=\"nameValidation.maxlength\" placeholder=\"my-hpa\" select-on-focus autocorrect=\"off\" autocapitalize=\"off\" spellcheck=\"false\" aria-describedby=\"hpa-name-help\">\n" +
     "</span>\n" +
     "<div>\n" +
     "<span id=\"hpa-name-help\" class=\"help-block\">\n" +
@@ -7540,17 +7553,22 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "</div>\n" +
     "<div class=\"has-error\" ng-show=\"form.name.$invalid && form.name.$touched\">\n" +
     "<span ng-if=\"form.name.$error.required\" class=\"help-block\">\n" +
-    "A name is required.\n" +
+    "Name is required.\n" +
     "</span>\n" +
     "<span ng-show=\"form.name.$error.pattern\" class=\"help-block\">\n" +
-    "Autoscaler names may only contain lower-case letters, numbers, and dashes. They may not start or end with a dash.\n" +
+    "{{nameValidation.description}}\n" +
+    "</span>\n" +
+    "<span ng-show=\"form.name.$error.maxlength\" class=\"help-block\">\n" +
+    "<span class=\"help-block\">\n" +
+    "Can't be longer than {{nameValidation.maxlength}} characters.\n" +
+    "</span>\n" +
     "</span>\n" +
     "</div>\n" +
     "</div>\n" +
     "<div class=\"form-group\">\n" +
     "<label>Min Pods</label>\n" +
     "<span ng-class=\"{ 'has-error': form.minReplicas.$dirty && form.minReplicas.$invalid }\">\n" +
-    "<input type=\"number\" class=\"form-control\" min=\"1\" name=\"minReplicas\" placeholder=\"1\" ng-model=\"autoscaling.minReplicas\" ng-required=\"required\" ng-pattern=\"/^\\d+$/\" aria-describedby=\"min-replicas-help\">\n" +
+    "<input type=\"number\" class=\"form-control\" min=\"1\" name=\"minReplicas\" placeholder=\"1\" ng-model=\"autoscaling.minReplicas\" ng-pattern=\"/^\\d+$/\" aria-describedby=\"min-replicas-help\">\n" +
     "</span>\n" +
     "<div id=\"min-replicas-help\" class=\"help-block\">\n" +
     "The lower limit for the number of pods that can be set by the autoscaler. If not specified, defaults to 1.\n" +
@@ -7860,14 +7878,24 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "<div class=\"form-group\">\n" +
     "<label for=\"claim-name\" class=\"required\">Name</label>\n" +
     "<span ng-class=\"{ 'has-error': persistentVolumeClaimForm.name.$invalid && persistentVolumeClaimForm.name.$touched && !claimDisabled }\">\n" +
-    "<input id=\"claim-name\" class=\"form-control\" type=\"text\" name=\"name\" ng-model=\"claim.name\" ng-required=\"true\" ng-pattern=\"/^[a-z0-9]([-a-z0-9]*[a-z0-9])?$/\" ng-maxlength=\"253\" placeholder=\"my-storage-claim\" select-on-focus autocorrect=\"off\" autocapitalize=\"off\" spellcheck=\"false\" aria-describedby=\"claim-name-help\">\n" +
+    "<input id=\"claim-name\" class=\"form-control\" type=\"text\" name=\"name\" ng-model=\"claim.name\" ng-required=\"true\" ng-pattern=\"nameValidation.pattern\" ng-maxlength=\"nameValidation.maxlength\" placeholder=\"my-storage-claim\" select-on-focus autocorrect=\"off\" autocapitalize=\"off\" spellcheck=\"false\" aria-describedby=\"claim-name-help\">\n" +
     "</span>\n" +
     "<div>\n" +
     "<span id=\"claim-name-help\" class=\"help-block\">A unique name for the storage claim within the project.</span>\n" +
     "</div>\n" +
+    "<div class=\"has-error\" ng-show=\"persistentVolumeClaimForm.name.$error.required && persistentVolumeClaimForm.name.$touched && !claimDisabled\">\n" +
+    "<span class=\"help-block\">\n" +
+    "Name is required.\n" +
+    "</span>\n" +
+    "</div>\n" +
     "<div class=\"has-error\" ng-show=\"persistentVolumeClaimForm.name.$error.pattern && persistentVolumeClaimForm.name.$touched && !claimDisabled\">\n" +
     "<span class=\"help-block\">\n" +
-    "Claim names may only contain lower-case letters, numbers, and dashes. They may not start or end with a dash. Max length of 253.\n" +
+    "{{nameValidation.description}}\n" +
+    "</span>\n" +
+    "</div>\n" +
+    "<div class=\"has-error\" ng-show=\"persistentVolumeClaimForm.name.$error.maxlength && persistentVolumeClaimForm.name.$touched && !claimDisabled\">\n" +
+    "<span class=\"help-block\">\n" +
+    "Can't be longer than {{nameValidation.maxlength}} characters.\n" +
     "</span>\n" +
     "</div>\n" +
     "</div>\n" +
@@ -7932,6 +7960,11 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "Desired storage capacity.\n" +
     "</div>\n" +
     "<div ng-if=\"persistentVolumeClaimForm.capacity.$touched && !claimDisabled\">\n" +
+    "<div class=\"has-error\" ng-show=\"persistentVolumeClaimForm.capacity.$error.required\">\n" +
+    "<span class=\"help-block\">\n" +
+    "Size is required.\n" +
+    "</span>\n" +
+    "</div>\n" +
     "<div class=\"has-error\" ng-show=\"persistentVolumeClaimForm.capacity.$error.number\">\n" +
     "<span class=\"help-block\">\n" +
     "Must be a number.\n" +
@@ -8040,22 +8073,29 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "\n" +
     "<div ng-show=\"showNameInput\" class=\"form-group\">\n" +
     "<label for=\"route-name\" class=\"required\">Name</label>\n" +
-    "\n" +
-    "<input id=\"route-name\" class=\"form-control\" type=\"text\" name=\"name\" ng-model=\"route.name\" ng-required=\"showNameInput\" ng-pattern=\"/^[a-z0-9]([-a-z0-9]*[a-z0-9])?$/\" ng-maxlength=\"63\" placeholder=\"my-route\" select-on-focus autocorrect=\"off\" autocapitalize=\"off\" spellcheck=\"false\" aria-describedby=\"route-name-help\">\n" +
+    "<span ng-class=\"{ 'has-error': routeForm.name.$invalid && routeForm.name.$touched && !routingDisabled }\">\n" +
+    "<input id=\"route-name\" class=\"form-control\" type=\"text\" name=\"name\" ng-model=\"route.name\" ng-required=\"showNameInput\" ng-pattern=\"nameValidation.pattern\" ng-maxlength=\"nameValidation.maxlength\" placeholder=\"my-route\" select-on-focus autocorrect=\"off\" autocapitalize=\"off\" spellcheck=\"false\" aria-describedby=\"route-name-help\">\n" +
+    "</span>\n" +
     "<div>\n" +
     "<span id=\"route-name-help\" class=\"help-block\">A unique name for the route within the project.</span>\n" +
     "</div>\n" +
     "<div class=\"has-error\" ng-show=\"routeForm.name.$error.pattern && routeForm.name.$touched && !routingDisabled\">\n" +
     "<span class=\"help-block\">\n" +
-    "Route names may only contain lower-case letters, numbers, and dashes. They may not start or end with a dash.\n" +
+    "{{nameValidation.description}}\n" +
+    "</span>\n" +
+    "</div>\n" +
+    "<div class=\"has-error\" ng-show=\"routeForm.name.$error.maxlength && routeForm.name.$touched && !routingDisabled\">\n" +
+    "<span class=\"help-block\">\n" +
+    "Can't be longer than {{nameValidation.maxlength}} characters.\n" +
     "</span>\n" +
     "</div>\n" +
     "</div>\n" +
     "\n" +
     "<div class=\"form-group\">\n" +
     "<label for=\"host\">Hostname</label>\n" +
-    "\n" +
-    "<input id=\"host\" class=\"form-control\" type=\"text\" name=\"host\" ng-model=\"route.host\" ng-pattern=\"hostnamePattern\" ng-maxlength=\"253\" ng-readonly=\"hostReadOnly\" placeholder=\"www.example.com\" autocorrect=\"off\" autocapitalize=\"off\" spellcheck=\"false\" aria-describedby=\"route-host-help\">\n" +
+    "<span ng-class=\"{ 'has-error': routeForm.host.$invalid && routeForm.host.$touched && !routingDisabled }\">\n" +
+    "<input id=\"host\" class=\"form-control\" type=\"text\" name=\"host\" ng-model=\"route.host\" ng-pattern=\"hostnamePattern\" ng-maxlength=\"hostnameMaxLength\" ng-readonly=\"hostReadOnly\" placeholder=\"www.example.com\" autocorrect=\"off\" autocapitalize=\"off\" spellcheck=\"false\" aria-describedby=\"route-host-help\">\n" +
+    "</span>\n" +
     "<div>\n" +
     "<span id=\"route-host-help\" class=\"help-block\">\n" +
     "<p>\n" +
@@ -8076,11 +8116,18 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "<span ng-if=\"!disableWildcards\">Wildcard subdomains may start with <var>*.</var></span>\n" +
     "</span>\n" +
     "</div>\n" +
+    "<div class=\"has-error\" ng-show=\"routeForm.host.$error.maxlength && routeForm.host.$touched && !routingDisabled\">\n" +
+    "<span class=\"help-block\">\n" +
+    "Can't be longer than {{hostnameMaxLength}} characters.\n" +
+    "</span>\n" +
+    "</div>\n" +
     "</div>\n" +
     "\n" +
     "<div class=\"form-group\">\n" +
     "<label for=\"path\">Path</label>\n" +
+    "<span ng-class=\"{ 'has-error': routeForm.path.$invalid && routeForm.path.$touched && !routingDisabled }\">\n" +
     "<input id=\"path\" class=\"form-control\" type=\"text\" name=\"path\" ng-model=\"route.path\" ng-pattern=\"/^\\/.*$/\" ng-disabled=\"route.tls.termination === 'passthrough'\" placeholder=\"/\" autocorrect=\"off\" autocapitalize=\"off\" spellcheck=\"false\" aria-describedby=\"route-path-help\">\n" +
+    "</span>\n" +
     "<div>\n" +
     "<span id=\"route-path-help\" class=\"help-block\">\n" +
     "Path that the router watches to route traffic to the service.\n" +

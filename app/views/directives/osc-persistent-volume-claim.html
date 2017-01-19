@@ -59,8 +59,8 @@
           name="name"
           ng-model="claim.name"
           ng-required="true"
-          ng-pattern="/^[a-z0-9]([-a-z0-9]*[a-z0-9])?$/"
-          ng-maxlength="253"
+          ng-pattern="nameValidation.pattern"
+          ng-maxlength="nameValidation.maxlength"
           placeholder="my-storage-claim"
           select-on-focus
           autocorrect="off"
@@ -71,10 +71,19 @@
       <div>
         <span id="claim-name-help" class="help-block">A unique name for the storage claim within the project.</span>
       </div>
+      <div class="has-error" ng-show="persistentVolumeClaimForm.name.$error.required && persistentVolumeClaimForm.name.$touched && !claimDisabled">
+        <span class="help-block">
+          Name is required.
+        </span>
+      </div>
       <div class="has-error" ng-show="persistentVolumeClaimForm.name.$error.pattern && persistentVolumeClaimForm.name.$touched && !claimDisabled">
         <span class="help-block">
-          Claim names may only contain lower-case letters, numbers, and dashes.
-          They may not start or end with a dash. Max length of 253.
+          {{nameValidation.description}}
+        </span>
+      </div>
+      <div class="has-error" ng-show="persistentVolumeClaimForm.name.$error.maxlength && persistentVolumeClaimForm.name.$touched && !claimDisabled">
+        <span class="help-block">
+          Can't be longer than {{nameValidation.maxlength}} characters.
         </span>
       </div>
     </div>
@@ -152,6 +161,11 @@
            Desired storage capacity.
          </div>
          <div ng-if="persistentVolumeClaimForm.capacity.$touched && !claimDisabled">
+           <div class="has-error" ng-show="persistentVolumeClaimForm.capacity.$error.required">
+             <span class="help-block">
+               Size is required.
+             </span>
+           </div>
            <div class="has-error" ng-show="persistentVolumeClaimForm.capacity.$error.number">
              <span class="help-block">
                Must be a number.

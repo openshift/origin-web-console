@@ -555,6 +555,10 @@ screenSmMin:768,
 screenMdMin:992,
 screenLgMin:1200,
 screenXlgMin:1600
+}).constant("DNS1123_SUBDOMAIN_VALIDATION", {
+pattern:/^[a-z0-9]([-a-z0-9]*[a-z0-9])?(\.[a-z0-9]([-a-z0-9]*[a-z0-9])?)*$/,
+maxlength:253,
+description:"Name must consist of lower-case letters, numbers, periods, and hyphens. It must start and end with a letter or a number."
 }).constant("SOURCE_URL_PATTERN", /^[a-z][a-z0-9+.-@]*:(\/\/)?[0-9a-z_-]+/i).constant("RELATIVE_PATH_PATTERN", /^(?!\/)(?!\.\.(\/|$))(?!.*\/\.\.(\/|$)).*$/).constant("IS_IOS", /iPad|iPhone|iPod/.test(navigator.userAgent) && !window.MSStream).constant("amTimeAgoConfig", {
 titleFormat:"LLL"
 }).config([ "$httpProvider", "AuthServiceProvider", "RedirectLoginServiceProvider", "AUTH_CFG", "API_CFG", "kubernetesContainerSocketProvider", function(a, b, c, d, e, f) {
@@ -9110,7 +9114,7 @@ message:d
 };
 } ]
 };
-}), angular.module("openshiftConsole").directive("createSecret", [ "DataService", "AuthorizationService", "$filter", function(a, b, c) {
+}), angular.module("openshiftConsole").directive("createSecret", [ "$filter", "AuthorizationService", "DataService", "DNS1123_SUBDOMAIN_VALIDATION", function(a, b, c, d) {
 return {
 restrict:"E",
 scope:{
@@ -9121,8 +9125,8 @@ postCreateAction:"&",
 cancel:"&"
 },
 templateUrl:"views/directives/create-secret.html",
-link:function(d) {
-d.alerts = {}, d.secretAuthTypeMap = {
+link:function(e) {
+e.alerts = {}, e.nameValidation = d, e.secretAuthTypeMap = {
 image:{
 label:"Image Secret",
 authTypes:[ {
@@ -9143,30 +9147,30 @@ id:"kubernetes.io/ssh-auth",
 label:"SSH Key"
 } ]
 }
-}, d.secretTypes = _.keys(d.secretAuthTypeMap), d.type ? d.newSecret = {
-type:d.type,
-authType:d.secretAuthTypeMap[d.type].authTypes[0].id,
+}, e.secretTypes = _.keys(e.secretAuthTypeMap), e.type ? e.newSecret = {
+type:e.type,
+authType:e.secretAuthTypeMap[e.type].authTypes[0].id,
 data:{},
-linkSecret:!_.isEmpty(d.serviceAccountToLink),
-pickedServiceAccountToLink:d.serviceAccountToLink || ""
-} :d.newSecret = {
+linkSecret:!_.isEmpty(e.serviceAccountToLink),
+pickedServiceAccountToLink:e.serviceAccountToLink || ""
+} :e.newSecret = {
 type:"source",
 authType:"kubernetes.io/basic-auth",
 data:{},
 linkSecret:!1,
 pickedServiceAccountToLink:""
-}, d.add = {
+}, e.add = {
 gitconfig:!1,
 cacert:!1
-}, b.canI("serviceaccounts", "list") && b.canI("serviceaccounts", "update") && a.list("serviceaccounts", d, function(a) {
-d.serviceAccounts = a.by("metadata.name"), d.serviceAccountsNames = _.keys(d.serviceAccounts);
+}, b.canI("serviceaccounts", "list") && b.canI("serviceaccounts", "update") && c.list("serviceaccounts", e, function(a) {
+e.serviceAccounts = a.by("metadata.name"), e.serviceAccountsNames = _.keys(e.serviceAccounts);
 });
-var e = function(a, b) {
+var f = function(a, b) {
 var c = {
 apiVersion:"v1",
 kind:"Secret",
 metadata:{
-name:d.newSecret.data.secretName
+name:e.newSecret.data.secretName
 },
 type:b,
 data:{}
@@ -9185,8 +9189,8 @@ c.data = {
 break;
 
 case "kubernetes.io/dockerconfigjson":
-var e = window.btoa(a.dockerConfig);
-JSON.parse(a.dockerConfig).auths ? c.data[".dockerconfigjson"] = e :(c.type = "kubernetes.io/dockercfg", c.data[".dockercfg"] = e);
+var d = window.btoa(a.dockerConfig);
+JSON.parse(a.dockerConfig).auths ? c.data[".dockerconfigjson"] = d :(c.type = "kubernetes.io/dockercfg", c.data[".dockercfg"] = d);
 break;
 
 case "kubernetes.io/dockercfg":
@@ -9199,9 +9203,9 @@ auth:f
 }, c.data[".dockercfg"] = window.btoa(JSON.stringify(g));
 }
 return c;
-}, f = function(b, e) {
-var f = angular.copy(d.serviceAccounts[d.newSecret.pickedServiceAccountToLink]);
-switch (d.newSecret.type) {
+}, g = function(b, d) {
+var f = angular.copy(e.serviceAccounts[e.newSecret.pickedServiceAccountToLink]);
+switch (e.newSecret.type) {
 case "source":
 f.secrets.push({
 name:b.metadata.name
@@ -9213,63 +9217,63 @@ f.imagePullSecrets.push({
 name:b.metadata.name
 });
 }
-var g = d.serviceAccountToLink ? {
+var g = e.serviceAccountToLink ? {
 errorNotification:!1
 } :{};
-a.update("serviceaccounts", d.newSecret.pickedServiceAccountToLink, f, d, g).then(function(a) {
-e.push({
+c.update("serviceaccounts", e.newSecret.pickedServiceAccountToLink, f, e, g).then(function(a) {
+d.push({
 name:"create",
 data:{
 type:"success",
 message:"Secret " + b.metadata.name + " was created and linked with service account " + a.metadata.name + "."
 }
-}), d.postCreateAction({
+}), e.postCreateAction({
 newSecret:b,
-creationAlert:e
+creationAlert:d
 });
-}, function(a) {
-e.push({
+}, function(c) {
+d.push({
 name:"createAndLink",
 data:{
 type:"error",
-message:"An error occurred while linking the secret with service account " + d.newSecret.pickedServiceAccountToLink + ".",
-details:c("getErrorDetails")(a)
+message:"An error occurred while linking the secret with service account " + e.newSecret.pickedServiceAccountToLink + ".",
+details:a("getErrorDetails")(c)
 }
-}), d.postCreateAction({
+}), e.postCreateAction({
 newSecret:b,
-creationAlert:e
+creationAlert:d
 });
 });
-}, g = _.debounce(function() {
+}, h = _.debounce(function() {
 try {
-JSON.parse(d.newSecret.data.dockerConfig), d.invalidConfigFormat = !1;
+JSON.parse(e.newSecret.data.dockerConfig), e.invalidConfigFormat = !1;
 } catch (a) {
-d.invalidConfigFormat = !0;
+e.invalidConfigFormat = !0;
 }
 }, 300, {
 leading:!0
 });
-d.aceChanged = g, d.create = function() {
-d.alerts = {};
-var g = e(d.newSecret.data, d.newSecret.authType);
-a.create("secrets", null, g, d).then(function(a) {
+e.aceChanged = h, e.create = function() {
+e.alerts = {};
+var d = f(e.newSecret.data, e.newSecret.authType);
+c.create("secrets", null, d, e).then(function(a) {
 var c = [ {
 name:"create",
 data:{
 type:"success",
-message:"Secret " + g.metadata.name + " was created."
+message:"Secret " + d.metadata.name + " was created."
 }
 } ];
-d.newSecret.linkSecret && d.serviceAccountsNames.contains(d.newSecret.pickedServiceAccountToLink) && b.canI("serviceaccounts", "update") ? f(a, c) :d.postCreateAction({
+e.newSecret.linkSecret && e.serviceAccountsNames.contains(e.newSecret.pickedServiceAccountToLink) && b.canI("serviceaccounts", "update") ? g(a, c) :e.postCreateAction({
 newSecret:a,
 creationAlert:c
 });
-}, function(a) {
-var b = a.data || {};
-return "AlreadyExists" === b.reason ? void (d.nameTaken = !0) :void (d.alerts.create = {
+}, function(b) {
+var c = b.data || {};
+return "AlreadyExists" === c.reason ? void (e.nameTaken = !0) :void (e.alerts.create = {
 type:"error",
 message:"An error occurred while creating the secret.",
-details:c("getErrorDetails")(a)
+details:a("getErrorDetails")(b)
 });
 });
 };
@@ -9423,7 +9427,7 @@ secret:a._generateSecret()
 };
 } ]
 };
-} ]), angular.module("openshiftConsole").directive("editConfigMap", function() {
+} ]), angular.module("openshiftConsole").directive("editConfigMap", [ "DNS1123_SUBDOMAIN_VALIDATION", function(a) {
 return {
 require:"^form",
 restrict:"E",
@@ -9432,33 +9436,33 @@ configMap:"=model",
 showNameInput:"="
 },
 templateUrl:"views/directives/edit-config-map.html",
-link:function(a, b, c, d) {
-a.form = d, a.addItem = function() {
-a.data.push({
+link:function(b, c, d, e) {
+b.form = e, b.nameValidation = a, b.addItem = function() {
+b.data.push({
 key:"",
 value:""
-}), a.form.$setDirty();
-}, a.removeItem = function(b) {
-a.data.splice(b, 1), a.form.$setDirty();
-}, a.getKeys = function() {
-return _.map(a.data, "key");
+}), b.form.$setDirty();
+}, b.removeItem = function(a) {
+b.data.splice(a, 1), b.form.$setDirty();
+}, b.getKeys = function() {
+return _.map(b.data, "key");
 };
-var e = a.$watch("configMap.data", function(b) {
-b && (a.data = _.map(b, function(a, b) {
+var f = b.$watch("configMap.data", function(a) {
+a && (b.data = _.map(a, function(a, b) {
 return {
 key:b,
 value:a
 };
-}), _.sortBy(a.data, "key"), _.isEmpty(a.data) && a.addItem(), e(), a.$watch("data", function(b) {
+}), _.sortBy(b.data, "key"), _.isEmpty(b.data) && b.addItem(), f(), b.$watch("data", function(a) {
 var c = {};
-_.each(b, function(a) {
+_.each(a, function(a) {
 c[a.key] = a.value;
-}), _.set(a, "configMap.data", c);
+}), _.set(b, "configMap.data", c);
 }, !0));
 });
 }
 };
-}), angular.module("openshiftConsole").directive("events", [ "$routeParams", "$filter", "DataService", "KeywordService", "ProjectsService", "Logger", function(a, b, c, d, e, f) {
+} ]), angular.module("openshiftConsole").directive("events", [ "$routeParams", "$filter", "DataService", "KeywordService", "ProjectsService", "Logger", function(a, b, c, d, e, f) {
 return {
 restrict:"E",
 scope:{
@@ -10101,7 +10105,7 @@ d.init(b.find('input[name="key"]'), b.find('input[name="value"]'), b.find("a.add
 };
 }
 };
-}), angular.module("openshiftConsole").directive("oscRouting", [ "Constants", function(a) {
+}), angular.module("openshiftConsole").directive("oscRouting", [ "Constants", "DNS1123_SUBDOMAIN_VALIDATION", function(a, b) {
 return {
 require:"^form",
 restrict:"E",
@@ -10113,14 +10117,14 @@ routingDisabled:"=",
 hostReadOnly:"="
 },
 templateUrl:"views/directives/osc-routing.html",
-link:function(b, c, d, e) {
-b.form = e, b.controls = {}, b.options = {
+link:function(c, d, e, f) {
+c.form = f, c.controls = {}, c.options = {
 secureRoute:!1,
 alternateServices:!1
-}, b.disableWildcards = a.DISABLE_WILDCARD_ROUTES, b.disableCertificateInputs = function() {
-var a = _.get(b, "route.tls.termination");
+}, c.disableWildcards = a.DISABLE_WILDCARD_ROUTES, c.disableCertificateInputs = function() {
+var a = _.get(c, "route.tls.termination");
 return !a || "passthrough" === a;
-}, b.insecureTrafficOptions = [ {
+}, c.insecureTrafficOptions = [ {
 value:"",
 label:"None"
 }, {
@@ -10129,63 +10133,63 @@ label:"Allow"
 }, {
 value:"Redirect",
 label:"Redirect"
-} ], _.has(b, "route.tls.insecureEdgeTerminationPolicy") || _.set(b, "route.tls.insecureEdgeTerminationPolicy", ""), b.disableWildcards ? b.hostnamePattern = /^[a-z0-9]([-a-z0-9]*[a-z0-9])?(\.[a-z0-9]([-a-z0-9]*[a-z0-9])?)*$/ :b.hostnamePattern = /^(\*(\.[a-z0-9]([-a-z0-9]*[a-z0-9]))+|[a-z0-9]([-a-z0-9]*[a-z0-9])?(\.[a-z0-9]([-a-z0-9]*[a-z0-9])?)*)$/;
-var f = function(a) {
-a && (b.unnamedServicePort = 1 === a.spec.ports.length && !a.spec.ports[0].name, a.spec.ports.length && !b.unnamedServicePort ? b.route.portOptions = _.map(a.spec.ports, function(a) {
+} ], _.has(c, "route.tls.insecureEdgeTerminationPolicy") || _.set(c, "route.tls.insecureEdgeTerminationPolicy", ""), c.nameValidation = b, c.disableWildcards ? c.hostnamePattern = b.pattern :c.hostnamePattern = /^(\*(\.[a-z0-9]([-a-z0-9]*[a-z0-9]))+|[a-z0-9]([-a-z0-9]*[a-z0-9])?(\.[a-z0-9]([-a-z0-9]*[a-z0-9])?)*)$/, c.hostnameMaxLength = b.maxlength;
+var g = function(a) {
+a && (c.unnamedServicePort = 1 === a.spec.ports.length && !a.spec.ports[0].name, a.spec.ports.length && !c.unnamedServicePort ? c.route.portOptions = _.map(a.spec.ports, function(a) {
 return {
 port:a.name,
 label:a.port + " → " + a.targetPort + " (" + a.protocol + ")"
 };
-}) :b.route.portOptions = []);
+}) :c.route.portOptions = []);
 };
-b.services && !b.route.service && (b.route.service = _.find(b.services)), b.$watch("route.to.service", function(a, c) {
-f(a), a === c && b.route.targetPort || (b.route.targetPort = _.get(b, "route.portOptions[0].port")), b.services && (b.alternateServiceOptions = _.reject(b.services, function(b) {
+c.services && !c.route.service && (c.route.service = _.find(c.services)), c.$watch("route.to.service", function(a, b) {
+g(a), a === b && c.route.targetPort || (c.route.targetPort = _.get(c, "route.portOptions[0].port")), c.services && (c.alternateServiceOptions = _.reject(c.services, function(b) {
 return a === b;
 }));
-}), b.$watch("route.alternateServices", function(a) {
-b.duplicateServices = _(a).map("service").filter(function(a, b, c) {
+}), c.$watch("route.alternateServices", function(a) {
+c.duplicateServices = _(a).map("service").filter(function(a, b, c) {
 return _.includes(c, a, b + 1);
-}).value(), e.$setValidity("duplicateServices", !b.duplicateServices.length), b.options.alternateServices = !_.isEmpty(a);
+}).value(), f.$setValidity("duplicateServices", !c.duplicateServices.length), c.options.alternateServices = !_.isEmpty(a);
 }, !0);
-var g = function() {
-return !!b.route.tls && ((!b.route.tls.termination || "passthrough" === b.route.tls.termination) && (b.route.tls.certificate || b.route.tls.key || b.route.tls.caCertificate || b.route.tls.destinationCACertificate));
+var h = function() {
+return !!c.route.tls && ((!c.route.tls.termination || "passthrough" === c.route.tls.termination) && (c.route.tls.certificate || c.route.tls.key || c.route.tls.caCertificate || c.route.tls.destinationCACertificate));
 };
-b.$watch("route.tls.termination", function() {
-b.options.secureRoute = !!_.get(b, "route.tls.termination"), b.showCertificatesNotUsedWarning = g();
+c.$watch("route.tls.termination", function() {
+c.options.secureRoute = !!_.get(c, "route.tls.termination"), c.showCertificatesNotUsedWarning = h();
 });
-var h;
-b.$watch("options.secureRoute", function(a, c) {
-if (a !== c) {
-var d = _.get(b, "route.tls.termination");
-!b.securetRoute && d && (h = d, delete b.route.tls.termination), b.options.secureRoute && !d && _.set(b, "route.tls.termination", h || "edge");
+var i;
+c.$watch("options.secureRoute", function(a, b) {
+if (a !== b) {
+var d = _.get(c, "route.tls.termination");
+!c.securetRoute && d && (i = d, delete c.route.tls.termination), c.options.secureRoute && !d && _.set(c, "route.tls.termination", i || "edge");
 }
-}), b.$watch("options.alternateServices", function(a, c) {
-a !== c && (a || (b.route.alternateServices = []), a && _.isEmpty(b.route.alternateServices) && b.addAlternateService());
-}), b.addAlternateService = function() {
-b.route.alternateServices = b.route.alternateServices || [];
-var a = _.find(b.services, function(a) {
-return a !== b.route.to.service && !_.some(b.route.alternateServices, {
+}), c.$watch("options.alternateServices", function(a, b) {
+a !== b && (a || (c.route.alternateServices = []), a && _.isEmpty(c.route.alternateServices) && c.addAlternateService());
+}), c.addAlternateService = function() {
+c.route.alternateServices = c.route.alternateServices || [];
+var a = _.find(c.services, function(a) {
+return a !== c.route.to.service && !_.some(c.route.alternateServices, {
 service:a
 });
 });
-_.has(b, "route.to.weight") || _.set(b, "route.to.weight", 1), b.route.alternateServices.push({
+_.has(c, "route.to.weight") || _.set(c, "route.to.weight", 1), c.route.alternateServices.push({
 service:a,
 weight:1
 });
-}, b.weightAsPercentage = function(a, c) {
+}, c.weightAsPercentage = function(a, b) {
 a = a || 0;
-var d = _.get(b, "route.to.weight", 0);
-if (_.each(b.route.alternateServices, function(a) {
+var d = _.get(c, "route.to.weight", 0);
+if (_.each(c.route.alternateServices, function(a) {
 d += _.get(a, "weight", 0);
 }), !d) return "";
 var e = a / d * 100;
-return c ? d3.round(e, 1) + "%" :e;
+return b ? d3.round(e, 1) + "%" :e;
 };
-var i = !1;
-b.$watch("route.alternateServices.length", function(a) {
-0 === a && _.has(b, "route.to.weight") && delete b.route.to.weight, 1 === a && (i = !0, b.controls.rangeSlider = b.weightAsPercentage(b.route.to.weight));
-}), b.$watch("controls.rangeSlider", function(a, c) {
-return i ? void (i = !1) :void (a !== c && (a = parseInt(a, 10), _.set(b, "route.to.weight", a), _.set(b, "route.alternateServices[0].weight", 100 - a)));
+var j = !1;
+c.$watch("route.alternateServices.length", function(a) {
+0 === a && _.has(c, "route.to.weight") && delete c.route.to.weight, 1 === a && (j = !0, c.controls.rangeSlider = c.weightAsPercentage(c.route.to.weight));
+}), c.$watch("controls.rangeSlider", function(a, b) {
+return j ? void (j = !1) :void (a !== b && (a = parseInt(a, 10), _.set(c, "route.to.weight", a), _.set(c, "route.alternateServices[0].weight", 100 - a)));
 });
 }
 };
@@ -10211,7 +10215,7 @@ _.set(a, "model.service", c);
 });
 }
 };
-}), angular.module("openshiftConsole").directive("oscPersistentVolumeClaim", [ "$filter", "DataService", "LimitRangesService", "ModalsService", function(a, b, c, d) {
+}), angular.module("openshiftConsole").directive("oscPersistentVolumeClaim", [ "$filter", "DataService", "LimitRangesService", "ModalsService", "DNS1123_SUBDOMAIN_VALIDATION", function(a, b, c, d, e) {
 return {
 restrict:"E",
 scope:{
@@ -10219,9 +10223,9 @@ claim:"=model",
 projectName:"="
 },
 templateUrl:"views/directives/osc-persistent-volume-claim.html",
-link:function(e) {
-var f = a("amountAndUnit"), g = a("usageValue");
-e.storageClasses = [], e.defaultStorageClass = "", e.claim.unit = "Gi", e.units = [ {
+link:function(f) {
+var g = a("amountAndUnit"), h = a("usageValue");
+f.nameValidation = e, f.storageClasses = [], f.defaultStorageClass = "", f.claim.unit = "Gi", f.units = [ {
 value:"Mi",
 label:"MiB"
 }, {
@@ -10239,7 +10243,7 @@ label:"GB"
 }, {
 value:"T",
 label:"TB"
-} ], e.claim.selectedLabels = [], e.groupUnits = function(a) {
+} ], f.claim.selectedLabels = [], f.groupUnits = function(a) {
 switch (a.value) {
 case "Mi":
 case "Gi":
@@ -10252,12 +10256,12 @@ case "T":
 return "Decimal Units";
 }
 return "";
-}, e.showComputeUnitsHelp = function() {
+}, f.showComputeUnitsHelp = function() {
 d.showComputeUnitsHelp();
 };
-var h = function() {
-var a = e.claim.amount && g(e.claim.amount + e.claim.unit), b = _.has(e, "limits.min") && g(e.limits.min), c = _.has(e, "limits.max") && g(e.limits.max), d = !0, f = !0;
-a && b && (d = a >= b), a && c && (f = a <= c), e.persistentVolumeClaimForm.capacity.$setValidity("limitRangeMin", d), e.persistentVolumeClaimForm.capacity.$setValidity("limitRangeMax", f);
+var i = function() {
+var a = f.claim.amount && h(f.claim.amount + f.claim.unit), b = _.has(f, "limits.min") && h(f.limits.min), c = _.has(f, "limits.max") && h(f.limits.max), d = !0, e = !0;
+a && b && (d = a >= b), a && c && (e = a <= c), f.persistentVolumeClaimForm.capacity.$setValidity("limitRangeMin", d), f.persistentVolumeClaimForm.capacity.$setValidity("limitRangeMax", e);
 };
 b.list({
 group:"storage.k8s.io",
@@ -10265,12 +10269,12 @@ resource:"storageclasses"
 }, {}, function(b) {
 var c = b.by("metadata.name");
 if (!_.isEmpty(c)) {
-e.storageClasses = _.sortBy(c, "metadata.name");
+f.storageClasses = _.sortBy(c, "metadata.name");
 var d = a("annotation");
-if (e.defaultStorageClass = _.find(e.storageClasses, function(a) {
+if (f.defaultStorageClass = _.find(f.storageClasses, function(a) {
 return "true" === d(a, "storageclass.beta.kubernetes.io/is-default-class");
-}), e.defaultStorageClass) e.claim.storageClass = e.defaultStorageClass; else {
-var f = {
+}), f.defaultStorageClass) f.claim.storageClass = f.defaultStorageClass; else {
+var e = {
 metadata:{
 name:"No Storage Class",
 labels:{},
@@ -10279,23 +10283,23 @@ description:"No storage class will be assigned"
 }
 }
 };
-e.storageClasses.unshift(f);
+f.storageClasses.unshift(e);
 }
 }
 }, {
 errorNotification:!1
 }), b.list("limitranges", {
-namespace:e.projectName
+namespace:f.projectName
 }, function(a) {
 var b = a.by("metadata.name");
 if (!_.isEmpty(b)) {
-e.limits = c.getEffectiveLimitRange(b, "storage", "PersistentVolumeClaim");
+f.limits = c.getEffectiveLimitRange(b, "storage", "PersistentVolumeClaim");
 var d;
-if (e.limits.min && e.limits.max) {
-var i = g(e.limits.min), j = g(e.limits.max);
-i === j && (d = f(e.limits.max), e.claim.amount = Number(d[0]), e.claim.unit = d[1], e.capacityReadOnly = !0);
+if (f.limits.min && f.limits.max) {
+var e = h(f.limits.min), j = h(f.limits.max);
+e === j && (d = g(f.limits.max), f.claim.amount = Number(d[0]), f.claim.unit = d[1], f.capacityReadOnly = !0);
 }
-e.$watchGroup([ "claim.amount", "claim.unit" ], h);
+f.$watchGroup([ "claim.amount", "claim.unit" ], i);
 }
 });
 }
@@ -10316,7 +10320,7 @@ return d.$setValidity("oscUnique", !_.includes(e, a)), a;
 });
 }
 };
-}), angular.module("openshiftConsole").directive("oscAutoscaling", [ "HPAService", "LimitRangesService", function(a, b) {
+}), angular.module("openshiftConsole").directive("oscAutoscaling", [ "HPAService", "LimitRangesService", "DNS1123_SUBDOMAIN_VALIDATION", function(a, b, c) {
 return {
 restrict:"E",
 scope:{
@@ -10326,20 +10330,20 @@ showNameInput:"=?",
 nameReadOnly:"=?"
 },
 templateUrl:"views/directives/osc-autoscaling.html",
-link:function(c) {
-c.$watch("project", function() {
-if (c.project) {
-c.isRequestCalculated = b.isRequestCalculated("cpu", c.project);
-var d = window.OPENSHIFT_CONSTANTS.DEFAULT_HPA_CPU_TARGET_PERCENT;
-c.isRequestCalculated && (d = a.convertLimitPercentToRequest(d, c.project)), _.set(c, "autoscaling.defaultTargetCPU", d), c.defaultTargetCPUDisplayValue = window.OPENSHIFT_CONSTANTS.DEFAULT_HPA_CPU_TARGET_PERCENT;
+link:function(d) {
+d.nameValidation = c, d.$watch("project", function() {
+if (d.project) {
+d.isRequestCalculated = b.isRequestCalculated("cpu", d.project);
+var c = window.OPENSHIFT_CONSTANTS.DEFAULT_HPA_CPU_TARGET_PERCENT;
+d.isRequestCalculated && (c = a.convertLimitPercentToRequest(c, d.project)), _.set(d, "autoscaling.defaultTargetCPU", c), d.defaultTargetCPUDisplayValue = window.OPENSHIFT_CONSTANTS.DEFAULT_HPA_CPU_TARGET_PERCENT;
 var e = !1, f = function(b) {
-return e ? void (e = !1) :(b && c.isRequestCalculated && (b = a.convertRequestPercentToLimit(b, c.project)), void _.set(c, "targetCPUInput.percent", b));
+return e ? void (e = !1) :(b && d.isRequestCalculated && (b = a.convertRequestPercentToLimit(b, d.project)), void _.set(d, "targetCPUInput.percent", b));
 };
-c.$watch("autoscaling.targetCPU", f);
+d.$watch("autoscaling.targetCPU", f);
 var g = function(b) {
-b && c.isRequestCalculated && (b = a.convertLimitPercentToRequest(b, c.project)), e = !0, _.set(c, "autoscaling.targetCPU", b);
+b && d.isRequestCalculated && (b = a.convertLimitPercentToRequest(b, d.project)), e = !0, _.set(d, "autoscaling.targetCPU", b);
 };
-c.$watch("targetCPUInput.percent", function(a, b) {
+d.$watch("targetCPUInput.percent", function(a, b) {
 a !== b && g(a);
 });
 }

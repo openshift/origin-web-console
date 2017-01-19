@@ -2,7 +2,11 @@
 
 angular.module("openshiftConsole")
 
-  .directive("createSecret", function(DataService, AuthorizationService, $filter) {
+  .directive("createSecret",
+             function($filter,
+                      AuthorizationService,
+                      DataService,
+                      DNS1123_SUBDOMAIN_VALIDATION) {
     return {
       restrict: 'E',
       scope: {
@@ -15,6 +19,7 @@ angular.module("openshiftConsole")
       templateUrl: 'views/directives/create-secret.html',
       link: function($scope) {
         $scope.alerts = {};
+        $scope.nameValidation = DNS1123_SUBDOMAIN_VALIDATION;
 
         $scope.secretAuthTypeMap = {
           image: {
