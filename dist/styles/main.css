@@ -3786,6 +3786,7 @@ body{padding-right:0px!important}
 .empty-state-message .hero-icon{font-size:120px}
 }
 mark{padding:0;background-color:rgba(252,248,160,.5)}
+.ui-select-choices-row.active>span mark{background-color:rgba(252,248,160,.75)}
 .service-table{max-width:650px}
 @media (max-width:991px){.service-table{min-width:100%}
 }

@@ -4695,10 +4695,14 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "<h2>Choose a Project</h2>\n" +
     "<ui-select ng-model=\"selected.project\">\n" +
     "<ui-select-match placeholder=\"Project name\">\n" +
-    "{{$select.selected | uniqueDisplayName : projects}}\n" +
+    "{{$select.selected | displayName}}\n" +
     "</ui-select-match>\n" +
     "<ui-select-choices repeat=\"project in projects | searchProjects : $select.search\">\n" +
-    "<div ng-bind-html=\"project | uniqueDisplayName : projects | highlight : $select.search\"></div>\n" +
+    "<span ng-bind-html=\"project | displayName | highlightKeywords : $select.search\"></span>\n" +
+    "<span ng-if=\"project | displayName : true\" class=\"small text-muted\">\n" +
+    "&ndash;\n" +
+    "<span ng-bind-html=\"project.metadata.name | highlightKeywords : $select.search\"></span>\n" +
+    "</span>\n" +
     "</ui-select-choices>\n" +
     "</ui-select>\n" +
     "</div>\n" +
@@ -4708,10 +4712,14 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "<uib-tab-heading>Choose Existing Project</uib-tab-heading>\n" +
     "<ui-select ng-model=\"selected.project\">\n" +
     "<ui-select-match placeholder=\"Project name\">\n" +
-    "{{$select.selected | uniqueDisplayName : projects}}\n" +
+    "{{$select.selected | displayName}}\n" +
     "</ui-select-match>\n" +
     "<ui-select-choices repeat=\"project in projects | searchProjects : $select.search\">\n" +
-    "<div ng-bind-html=\"project | uniqueDisplayName : projects | highlight : $select.search\"></div>\n" +
+    "<span ng-bind-html=\"project | displayName | highlightKeywords : $select.search\"></span>\n" +
+    "<span ng-if=\"project | displayName : true\" class=\"small text-muted\">\n" +
+    "&ndash;\n" +
+    "<span ng-bind-html=\"project.metadata.name | highlightKeywords : $select.search\"></span>\n" +
+    "</span>\n" +
     "</ui-select-choices>\n" +
     "</ui-select>\n" +
     "<div class=\"button-group mar-bottom-lg mar-top-lg\">\n" +

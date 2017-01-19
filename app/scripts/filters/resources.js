@@ -134,11 +134,25 @@ angular.module('openshiftConsole')
       return displayName;
     };
   })
-  .filter('searchProjects', function(annotationNameFilter) {
+  .filter('searchProjects', function(displayNameFilter) {
     return function(projects, text) {
+      if (!text) {
+        return projects;
+      }
+
+      // Lowercase the search string and project display name to perform a case-insensitive search.
+      text = text.toLowerCase();
       return _.filter(projects, function(project) {
-        return _.includes(project.metadata.name, text) ||
-                _.includes(project.metadata.annotations[annotationNameFilter('displayName')], text);
+        if (_.includes(project.metadata.name, text)) {
+          return true;
+        }
+
+        var displayName = displayNameFilter(project, true);
+        if (displayName && _.includes(displayName.toLowerCase(), text)) {
+          return true;
+        }
+
+        return false;
       });
     };
   })
