@@ -7022,14 +7022,14 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "</thead>\n" +
     "<tbody ng-if=\"(filteredEvents | hashSize) === 0\">\n" +
     "<tr>\n" +
-    "<td class=\"hidden-lg\" colspan=\"3\">\n" +
+    "<td class=\"hidden-lg\" colspan=\"{{!resourceKind || !resourceName ? 3 : 2}}\">\n" +
     "<span ng-if=\"(events | hashSize) === 0\"><em>No events to show.</em></span>\n" +
     "<span ng-if=\"(events | hashSize) > 0\">\n" +
     "All events hidden by filter.\n" +
     "<a href=\"\" ng-click=\"filter.text = ''\" role=\"button\">Clear Filter</a>\n" +
     "</span>\n" +
     "</td>\n" +
-    "<td class=\"hidden-xs hidden-sm hidden-md\" colspan=\"6\">\n" +
+    "<td class=\"hidden-xs hidden-sm hidden-md\" colspan=\"{{!resourceKind || !resourceName ? 6 : 4}}\">\n" +
     "<span ng-if=\"(events | hashSize) === 0\"><em>No events to show.</em></span>\n" +
     "<span ng-if=\"(events | hashSize) > 0\">\n" +
     "All events hidden by filter.\n" +
