@@ -15,6 +15,7 @@ angular.module('openshiftConsole')
                                          Logger,
                                          DataService,
                                          EnvironmentService,
+                                         FullscreenService,
                                          ImageStreamResolver,
                                          MetricsService,
                                          PodsService,
@@ -328,6 +329,21 @@ angular.module('openshiftConsole')
               });
             $scope.debugPod = null;
           }
+        };
+
+        var focusTerminal = function() {
+          $('.terminal:visible').focus();
+        };
+
+        $scope.hasFullscreen = FullscreenService.hasFullscreen(true);
+        $scope.fullscreenTerminal = function() {
+          FullscreenService.requestFullscreen('#container-terminal-wrapper');
+          // Give focus back to the terminal after the user clicks the link.
+          setTimeout(focusTerminal);
+        };
+
+        $scope.exitFullscreen = function() {
+          FullscreenService.exitFullscreen();
         };
 
         $scope.debugTerminal = function(containerName) {

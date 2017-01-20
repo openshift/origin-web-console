@@ -9,9 +9,77 @@ kubernetes-container-terminal .terminal {
   .terminal-font();
 }
 
-// Fill the extra right border we get when we cant quite fit the last col so it lines up with the Actions dropdown button
-@media(min-width: @screen-sm-min) {
-  .container-terminal-wrapper {
+.pod-container-terminal {
+  margin-top: 15px;
+  margin-bottom: 15px;
+  kubernetes-container-terminal .terminal-wrapper {
+    max-width: 100%;
+    overflow-x: auto;
+  }
+}
+
+.container-terminal-wrapper {
+  .style-terminal-action() {
+    color: @gray-light;
+    cursor: pointer;
+    font-size: 18px;
+    &:hover, &:active, &:focus {
+      color: #fff;
+      text-decoration: none;
+    }
+  }
+  position: relative;
+  .terminal-actions .btn {
+    .btn-link();
+    .style-terminal-action();
+    background: none;
+  }
+  .fullscreen-toggle {
+    display: none;
+    position: absolute;
+    top: 7px;
+    right: 15px;
+    z-index: 1;
+    a {
+      .style-terminal-action();
+    }
+    .exit-fullscreen {
+      display: none;
+    }
+  }
+  &.disconnected .go-fullscreen {
+    display: none;
+  }
+  .fullscreen() {
+    width: 100%;
+    height: 100%;
+    .go-fullscreen {
+      display: none;
+    }
+    .exit-fullscreen {
+      display: inline;
+    }
+  }
+  &:-webkit-full-screen {
+    .fullscreen();
+  }
+  &:-moz-full-screen {
+    .fullscreen();
+  }
+  &:-ms-full-screen {
+    .fullscreen();
+  }
+  &:-fullscreen {
+    .fullscreen();
+  }
+  @media(min-width: @screen-sm-min) {
+    // Fill the extra right border we get when we cant quite fit the last col so it lines up with the Actions dropdown button
     background-color: #000;
+    // Show the expand to fullscreen action when hovering over the terminal.
+    &:hover {
+      .fullscreen-toggle {
+        display: inline-block;
+      }
+    }
   }
 }
