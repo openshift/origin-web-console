@@ -84,6 +84,10 @@ angular.module("openshiftConsole")
 
         DataService.list({group: 'storage.k8s.io', resource: 'storageclasses'}, {}, function(storageClassData) {
            var storageClasses = storageClassData.by('metadata.name');
+           if (_.isEmpty(storageClasses)) {
+             return;
+           }
+
            scope.storageClasses = _.sortBy(storageClasses, 'metadata.name');
            var annotation = $filter('annotation');
            scope.defaultStorageClass = _.find(scope.storageClasses, function(storageClass) {
