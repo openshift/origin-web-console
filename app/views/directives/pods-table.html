@@ -1,4 +1,7 @@
-<table class="table table-bordered table-hover table-mobile">
+<table class="table table-bordered table-hover table-mobile table-layout-fixed">
+  <colgroup>
+    <col class="col-sm-4">
+  </colgroup>
   <thead>
     <tr>
       <th>{{customNameHeader || 'Name'}}</th>
@@ -10,7 +13,7 @@
     </tr>
   </thead>
   <tbody ng-if="(pods | hashSize) == 0">
-    <tr><td colspan="6"><em>{{emptyMessage || 'No pods to show'}}</em></td></tr>
+    <tr><td colspan="{{activePods ? 6 : 5}}"><em>{{emptyMessage || 'No pods to show'}}</em></td></tr>
   </tbody>
   <tbody ng-if="(pods | hashSize) > 0">
     <tr ng-repeat="pod in pods | orderObjectsByDate : true">
