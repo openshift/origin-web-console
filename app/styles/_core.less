@@ -213,12 +213,21 @@ registry-imagestream-push {
   margin-top: @grid-gutter-width;
 }
 
+/* No expandable listing when shown in the Openshift Web Console */
 registry-imagestream-listing .listing-ct-toggle {
   display: none;
 }
 
 registry-imagestream-listing table {
   width: 100%;
+}
+
+registry-image-body dt:after,
+registry-image-config dt:after,
+registry-image-meta dt:after,
+registry-imagestream-body dt:after,
+registry-imagestream-meta dt:after {
+  content: ':';
 }
 
 .image-sources {
