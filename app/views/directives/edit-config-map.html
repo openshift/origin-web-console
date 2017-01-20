@@ -12,8 +12,8 @@
             name="name"
             ng-model="configMap.metadata.name"
             ng-required="showNameInput"
-            ng-pattern="/^[a-z0-9]([-a-z0-9]*[a-z0-9])?$/"
-            ng-maxlength="63"
+            ng-pattern="nameValidation.pattern"
+            ng-maxlength="nameValidation.maxlength"
             placeholder="my-config-map"
             select-on-focus
             autocorrect="off"
@@ -26,13 +26,17 @@
       </div>
       <div class="has-error" ng-show="configMapForm.name.$error.pattern && configMapForm.name.$touched">
         <span class="help-block">
-          Config map names may only contain lower-case letters, numbers, and dashes.
-          They may not start or end with a dash.
+          {{nameValidation.description}}
+        </span>
+      </div>
+      <div class="has-error" ng-show="configMapForm.name.$error.required && configMapForm.name.$touched">
+        <span class="help-block">
+          Name is required.
         </span>
       </div>
       <div class="has-error" ng-show="configMapForm.name.$error.maxlength">
         <span class="help-block">
-          Config map names may not be longer than 63 characters.
+          Can't be longer than {{nameValidation.maxlength}} characters.
         </span>
       </div>
     </div>
@@ -69,6 +73,11 @@
         </div>
         <div class="help-block">
           A unique key for this config map entry.
+        </div>
+        <div class="has-error" ng-show="configMapForm['key-' + $id].$error.required && configMapForm['key-' + $id].$touched">
+          <span class="help-block">
+            Key is required.
+          </span>
         </div>
         <div class="has-error" ng-show="configMapForm['key-' + $id].$error.oscUnique && configMapForm['key-' + $id].$touched">
           <span class="help-block">

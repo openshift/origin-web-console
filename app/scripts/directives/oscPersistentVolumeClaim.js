@@ -5,7 +5,8 @@ angular.module("openshiftConsole")
              function($filter,
                       DataService,
                       LimitRangesService,
-                      ModalsService) {
+                      ModalsService,
+                      DNS1123_SUBDOMAIN_VALIDATION) {
     return {
       restrict: 'E',
       scope: {
@@ -16,6 +17,8 @@ angular.module("openshiftConsole")
       link: function(scope) {
         var amountAndUnit = $filter('amountAndUnit');
         var usageValue = $filter('usageValue');
+
+        scope.nameValidation = DNS1123_SUBDOMAIN_VALIDATION;
 
         scope.storageClasses = [];
         scope.defaultStorageClass = "";

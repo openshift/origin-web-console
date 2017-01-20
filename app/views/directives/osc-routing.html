@@ -4,29 +4,34 @@
     <!-- Name -->
     <div ng-show="showNameInput" class="form-group">
       <label for="route-name" class="required">Name</label>
-      <!-- regex, maxlength from k8s.io/kubernetes/pkg/util/validation/validation.go -->
-      <input
-          id="route-name"
-          class="form-control"
-          type="text"
-          name="name"
-          ng-model="route.name"
-          ng-required="showNameInput"
-          ng-pattern="/^[a-z0-9]([-a-z0-9]*[a-z0-9])?$/"
-          ng-maxlength="63"
-          placeholder="my-route"
-          select-on-focus
-          autocorrect="off"
-          autocapitalize="off"
-          spellcheck="false"
-          aria-describedby="route-name-help">
+      <span ng-class="{ 'has-error': routeForm.name.$invalid && routeForm.name.$touched && !routingDisabled }">
+        <input
+            id="route-name"
+            class="form-control"
+            type="text"
+            name="name"
+            ng-model="route.name"
+            ng-required="showNameInput"
+            ng-pattern="nameValidation.pattern"
+            ng-maxlength="nameValidation.maxlength"
+            placeholder="my-route"
+            select-on-focus
+            autocorrect="off"
+            autocapitalize="off"
+            spellcheck="false"
+            aria-describedby="route-name-help">
+      </span>
       <div>
         <span id="route-name-help" class="help-block">A unique name for the route within the project.</span>
       </div>
       <div class="has-error" ng-show="routeForm.name.$error.pattern && routeForm.name.$touched && !routingDisabled">
         <span class="help-block">
-          Route names may only contain lower-case letters, numbers, and dashes.
-          They may not start or end with a dash.
+          {{nameValidation.description}}
+        </span>
+      </div>
+      <div class="has-error" ng-show="routeForm.name.$error.maxlength && routeForm.name.$touched && !routingDisabled">
+        <span class="help-block">
+          Can't be longer than {{nameValidation.maxlength}} characters.
         </span>
       </div>
     </div>
@@ -34,21 +39,22 @@
     <!-- Host -->
     <div class="form-group">
       <label for="host">Hostname</label>
-      <!-- regex, maxlength from k8s.io/kubernetes/pkg/util/validation/validation.go -->
-      <input
-          id="host"
-          class="form-control"
-          type="text"
-          name="host"
-          ng-model="route.host"
-          ng-pattern="hostnamePattern"
-          ng-maxlength="253"
-          ng-readonly="hostReadOnly"
-          placeholder="www.example.com"
-          autocorrect="off"
-          autocapitalize="off"
-          spellcheck="false"
-          aria-describedby="route-host-help">
+      <span ng-class="{ 'has-error': routeForm.host.$invalid && routeForm.host.$touched && !routingDisabled }">
+        <input
+            id="host"
+            class="form-control"
+            type="text"
+            name="host"
+            ng-model="route.host"
+            ng-pattern="hostnamePattern"
+            ng-maxlength="hostnameMaxLength"
+            ng-readonly="hostReadOnly"
+            placeholder="www.example.com"
+            autocorrect="off"
+            autocapitalize="off"
+            spellcheck="false"
+            aria-describedby="route-host-help">
+      </span>
       <div>
         <span id="route-host-help" class="help-block">
           <p>
@@ -70,24 +76,31 @@
           <span ng-if="!disableWildcards">Wildcard subdomains may start with <var>*.</var></span>
         </span>
       </div>
+      <div class="has-error" ng-show="routeForm.host.$error.maxlength && routeForm.host.$touched && !routingDisabled">
+        <span class="help-block">
+          Can't be longer than {{hostnameMaxLength}} characters.
+        </span>
+      </div>
     </div>
 
     <!-- Path -->
     <div class="form-group">
       <label for="path">Path</label>
-      <input
-          id="path"
-          class="form-control"
-          type="text"
-          name="path"
-          ng-model="route.path"
-          ng-pattern="/^\/.*$/"
-          ng-disabled="route.tls.termination === 'passthrough'"
-          placeholder="/"
-          autocorrect="off"
-          autocapitalize="off"
-          spellcheck="false"
-          aria-describedby="route-path-help">
+      <span ng-class="{ 'has-error': routeForm.path.$invalid && routeForm.path.$touched && !routingDisabled }">
+        <input
+            id="path"
+            class="form-control"
+            type="text"
+            name="path"
+            ng-model="route.path"
+            ng-pattern="/^\/.*$/"
+            ng-disabled="route.tls.termination === 'passthrough'"
+            placeholder="/"
+            autocorrect="off"
+            autocapitalize="off"
+            spellcheck="false"
+            aria-describedby="route-path-help">
+      </span>
       <div>
         <span id="route-path-help" class="help-block">
           Path that the router watches to route traffic to the service.
