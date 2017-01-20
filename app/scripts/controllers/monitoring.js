@@ -46,6 +46,9 @@ angular.module('openshiftConsole')
       },
       {
         kind: "Builds"
+      },
+      {
+        kind: "StatefulSets"
       }
     ];
     $scope.kindSelector = {
@@ -55,26 +58,30 @@ angular.module('openshiftConsole')
     $scope.logOptions = {
       pods: {},
       replicationControllers: {},
-      builds: {}
+      builds: {},
+      statefulSets: {}
     };
 
     $scope.logCanRun = {
       pods: {},
       replicationControllers: {},
-      builds: {}
+      builds: {},
+      statefulSets: {}
     };
 
     $scope.logEmpty = {
       pods: {},
       replicationControllers: {},
-      builds: {}
+      builds: {},
+      statefulSets: {}
     };
 
     $scope.expanded = {
       pods: {},
       replicationControllers: {},
       replicaSets: {},
-      builds: {}
+      builds: {},
+      statefulSets: {}
     };
 
     var isNil = $filter('isNil');
@@ -86,7 +93,6 @@ angular.module('openshiftConsole')
 
     var ageFilteredBuilds, ageFilteredReplicationControllers, ageFilteredReplicaSets, ageFilteredPods;
 
-    // Check if the metrics service is available so we know when to show the tab.
     MetricsService.isAvailable().then(function(available) {
       $scope.metricsAvailable = available;
     });
@@ -105,7 +111,17 @@ angular.module('openshiftConsole')
       $scope.filteredReplicationControllers = KeywordService.filterForKeywords(ageFilteredReplicationControllers, filterFields, filterKeywords);
       $scope.filteredReplicaSets = KeywordService.filterForKeywords(ageFilteredReplicaSets, filterFields, filterKeywords);
       $scope.filteredBuilds = KeywordService.filterForKeywords(ageFilteredBuilds, filterFields, filterKeywords);
+      $scope.filteredStatefulSets = KeywordService.filterForKeywords(_.values($scope.statefulSets), filterFields, filterKeywords);
     };
+
+    // TODO: logs for stateful sets will come later
+    // logging endpoint for stateful sets coming in the future.
+    // var setStatefulSetLogVars = function(set) {
+    //   $scope.logOptions.statefulSets[set.metadata.name] = {
+    //     container: set.spec.template.spec.containers[0].name
+    //   };
+    //   $scope.logCanRun.statefulSets[set.metadata.name] = !(_.includes(['New', 'Pending', 'Unknown'], set.status.phase));
+    // };
 
     var setPodLogVars = function(pod) {
       $scope.logOptions.pods[pod.metadata.name] = {
@@ -126,6 +142,11 @@ angular.module('openshiftConsole')
     var setBuildLogVars = function(build) {
       $scope.logOptions.builds[build.metadata.name] = {};
       $scope.logCanRun.builds[build.metadata.name] = !(_.includes(['New', 'Pending', 'Error'], build.status.phase));
+    };
+
+
+    var filterStatefulSets = function() {
+      $scope.filteredStatefulSets = KeywordService.filterForKeywords(_.values($scope.statefulSets), filterFields, filterKeywords);
     };
 
     var filterPods = function() {
@@ -237,6 +258,12 @@ angular.module('openshiftConsole')
           event = expanded ? 'event.resource.highlight' : 'event.resource.clear-highlight';
           $rootScope.$emit(event, resource);
           break;
+        case 'StatefulSet':
+          expanded = !$scope.expanded.statefulSets[resource.metadata.name];
+          $scope.expanded.statefulSets[resource.metadata.name] = expanded;
+          event = expanded ? 'event.resource.highlight' : 'event.resource.clear-highlight';
+          $rootScope.$emit(event, resource);
+          break;
       }
     };
 
@@ -249,11 +276,11 @@ angular.module('openshiftConsole')
     };
 
     var groupPods = function() {
-      if (!$scope.pods || !$scope.replicationControllers || !$scope.replicaSets) {
+      if (!$scope.pods || !$scope.replicationControllers || !$scope.replicaSets || !$scope.statefulSets) {
         return;
       }
 
-      var allOwners = _.toArray($scope.replicationControllers).concat(_.toArray($scope.replicaSets));
+      var allOwners = _.toArray($scope.replicationControllers).concat(_.toArray($scope.replicaSets)).concat(_.toArray($scope.statefulSets));
       $scope.podsByOwnerUID = LabelsService.groupBySelector($scope.pods, allOwners, { key: 'metadata.uid' });
     };
 
@@ -271,6 +298,19 @@ angular.module('openshiftConsole')
           _.each($scope.pods, setPodLogVars);
           filterPods();
           Logger.log("pods", $scope.pods);
+        });
+
+        DataService.watch({
+          resource: 'statefulsets',
+          group: 'apps',
+          version: 'v1beta1'
+        }, context, function(statefulSets) {
+          $scope.statefulSets = statefulSets.by("metadata.name");
+          groupPods();
+          $scope.statefulSetsLoaded = true;
+          // _.each($scope.statefulSets, setStatefulSetLogVars); // TODO: enable when we have the endpoint
+          filterStatefulSets();
+          Logger.log("statefulSets", $scope.statefulSets);
         });
 
         DataService.watch("replicationcontrollers", context, function(replicationControllers) {
@@ -308,6 +348,7 @@ angular.module('openshiftConsole')
           filterBuilds();
           filterDeployments();
           filterReplicaSets();
+          filterStatefulSets();
           var search = $location.search();
           search.hideOlderResources = $scope.filters.hideOlderResources ? 'true' : 'false';
           $location.replace().search(search);

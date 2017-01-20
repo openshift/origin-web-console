@@ -5098,6 +5098,8 @@ label:"Deployments",
 kind:"ReplicationControllers"
 }, {
 kind:"Builds"
+}, {
+kind:"StatefulSets"
 } ], c.kindSelector = {
 selected:_.find(c.kinds, {
 kind:a.kind
@@ -5105,20 +5107,24 @@ kind:a.kind
 }, c.logOptions = {
 pods:{},
 replicationControllers:{},
-builds:{}
+builds:{},
+statefulSets:{}
 }, c.logCanRun = {
 pods:{},
 replicationControllers:{},
-builds:{}
+builds:{},
+statefulSets:{}
 }, c.logEmpty = {
 pods:{},
 replicationControllers:{},
-builds:{}
+builds:{},
+statefulSets:{}
 }, c.expanded = {
 pods:{},
 replicationControllers:{},
 replicaSets:{},
-builds:{}
+builds:{},
+statefulSets:{}
 };
 var q = d("isNil");
 c.filters = {
@@ -5130,7 +5136,7 @@ k.isAvailable().then(function(a) {
 c.metricsAvailable = a;
 });
 var v = d("orderObjectsByDate"), w = [ "metadata.name" ], x = [], y = function() {
-c.filteredPods = h.filterForKeywords(u, w, x), c.filteredReplicationControllers = h.filterForKeywords(s, w, x), c.filteredReplicaSets = h.filterForKeywords(t, w, x), c.filteredBuilds = h.filterForKeywords(r, w, x);
+c.filteredPods = h.filterForKeywords(u, w, x), c.filteredReplicationControllers = h.filterForKeywords(s, w, x), c.filteredReplicaSets = h.filterForKeywords(t, w, x), c.filteredBuilds = h.filterForKeywords(r, w, x), c.filteredStatefulSets = h.filterForKeywords(_.values(c.statefulSets), w, x);
 }, z = function(a) {
 c.logOptions.pods[a.metadata.name] = {
 container:a.spec.containers[0].name
@@ -5142,22 +5148,24 @@ b && (c.logOptions.replicationControllers[a.metadata.name].version = b), c.logCa
 }, B = function(a) {
 c.logOptions.builds[a.metadata.name] = {}, c.logCanRun.builds[a.metadata.name] = !_.includes([ "New", "Pending", "Error" ], a.status.phase);
 }, C = function() {
+c.filteredStatefulSets = h.filterForKeywords(_.values(c.statefulSets), w, x);
+}, D = function() {
 u = _.filter(c.pods, function(a) {
 return !c.filters.hideOlderResources || "Succeeded" !== a.status.phase && "Failed" !== a.status.phase;
 }), c.filteredPods = h.filterForKeywords(u, w, x);
-}, D = d("isIncompleteBuild"), E = d("buildConfigForBuild"), F = d("isRecentBuild"), G = function() {
+}, E = d("isIncompleteBuild"), F = d("buildConfigForBuild"), G = d("isRecentBuild"), H = function() {
 moment().subtract(5, "m");
 r = _.filter(c.builds, function(a) {
 if (!c.filters.hideOlderResources) return !0;
-if (D(a)) return !0;
-var b = E(a);
-return b ? c.latestBuildByConfig[b].metadata.name === a.metadata.name :F(a);
+if (E(a)) return !0;
+var b = F(a);
+return b ? c.latestBuildByConfig[b].metadata.name === a.metadata.name :G(a);
 }), c.filteredBuilds = h.filterForKeywords(r, w, x);
-}, H = d("deploymentStatus"), I = d("deploymentIsInProgress"), J = function() {
+}, I = d("deploymentStatus"), J = d("deploymentIsInProgress"), K = function() {
 s = _.filter(c.replicationControllers, function(a) {
-return !c.filters.hideOlderResources || (I(a) || "Active" === H(a));
+return !c.filters.hideOlderResources || (J(a) || "Active" === I(a));
 }), c.filteredReplicationControllers = h.filterForKeywords(s, w, x);
-}, K = function() {
+}, L = function() {
 t = _.filter(c.replicaSets, function(a) {
 return !c.filters.hideOlderResources || _.get(a, "status.replicas");
 }), c.filteredReplicaSets = h.filterForKeywords(t, w, x);
@@ -5194,14 +5202,18 @@ break;
 
 case "Pod":
 g = !c.expanded.pods[e.metadata.name], c.expanded.pods[e.metadata.name] = g, h = g ? "event.resource.highlight" :"event.resource.clear-highlight", o.$emit(h, e);
+break;
+
+case "StatefulSet":
+g = !c.expanded.statefulSets[e.metadata.name], c.expanded.statefulSets[e.metadata.name] = g, h = g ? "event.resource.highlight" :"event.resource.clear-highlight", o.$emit(h, e);
 }
 }
 }, c.viewPodsForReplicaSet = function(a) {
 _.isEmpty(c.podsByOwnerUID[a.metadata.uid]) || l.toPodsForDeployment(a);
 };
-var L = function() {
-if (c.pods && c.replicationControllers && c.replicaSets) {
-var a = _.toArray(c.replicationControllers).concat(_.toArray(c.replicaSets));
+var M = function() {
+if (c.pods && c.replicationControllers && c.replicaSets && c.statefulSets) {
+var a = _.toArray(c.replicationControllers).concat(_.toArray(c.replicaSets)).concat(_.toArray(c.statefulSets));
 c.podsByOwnerUID = i.groupBySelector(c.pods, a, {
 key:"metadata.uid"
 });
@@ -5209,20 +5221,26 @@ key:"metadata.uid"
 };
 n.get(a.project).then(_.spread(function(a, d) {
 c.project = a, c.projectContext = d, f.watch("pods", d, function(a) {
-c.podsByName = a.by("metadata.name"), c.pods = v(c.podsByName, !0), L(), c.podsLoaded = !0, _.each(c.pods, z), C(), j.log("pods", c.pods);
+c.podsByName = a.by("metadata.name"), c.pods = v(c.podsByName, !0), M(), c.podsLoaded = !0, _.each(c.pods, z), D(), j.log("pods", c.pods);
+}), f.watch({
+resource:"statefulsets",
+group:"apps",
+version:"v1beta1"
+}, d, function(a) {
+c.statefulSets = a.by("metadata.name"), M(), c.statefulSetsLoaded = !0, C(), j.log("statefulSets", c.statefulSets);
 }), f.watch("replicationcontrollers", d, function(a) {
-c.replicationControllers = v(a.by("metadata.name"), !0), L(), c.replicationControllersLoaded = !0, _.each(c.replicationControllers, A), J(), j.log("replicationcontrollers", c.replicationControllers);
+c.replicationControllers = v(a.by("metadata.name"), !0), M(), c.replicationControllersLoaded = !0, _.each(c.replicationControllers, A), K(), j.log("replicationcontrollers", c.replicationControllers);
 }), f.watch("builds", d, function(a) {
-c.builds = v(a.by("metadata.name"), !0), c.latestBuildByConfig = e.latestBuildByConfig(c.builds), c.buildsLoaded = !0, _.each(c.builds, B), G(), j.log("builds", c.builds);
+c.builds = v(a.by("metadata.name"), !0), c.latestBuildByConfig = e.latestBuildByConfig(c.builds), c.buildsLoaded = !0, _.each(c.builds, B), H(), j.log("builds", c.builds);
 }), f.watch({
 group:"extensions",
 resource:"replicasets"
 }, d, function(a) {
-c.replicaSets = v(a.by("metadata.name"), !0), L(), c.replicaSetsLoaded = !0, K(), j.log("replicasets", c.replicaSets);
+c.replicaSets = v(a.by("metadata.name"), !0), M(), c.replicaSetsLoaded = !0, L(), j.log("replicasets", c.replicaSets);
 }), c.$on("$destroy", function() {
 f.unwatchAll(p);
 }), c.$watch("filters.hideOlderResources", function() {
-C(), G(), J(), K();
+D(), H(), K(), L(), C();
 var a = b.search();
 a.hideOlderResources = c.filters.hideOlderResources ? "true" :"false", b.replace().search(a);
 }), c.$watch("kindSelector.selected.kind", function() {

@@ -10805,6 +10805,63 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "</div>\n" +
     "</div>\n" +
     "</div>\n" +
+    "<div ng-if=\"kindSelector.selected.kind === 'All' || kindSelector.selected.kind === 'StatefulSets'\">\n" +
+    "<h2>Stateful Sets</h2>\n" +
+    "<div class=\"list-view-pf\">\n" +
+    "<div class=\"list-group-item\" ng-if=\"!(filteredStatefulSets | hashSize)\">\n" +
+    "<div class=\"list-view-pf-main-info\">\n" +
+    "<ellipsis-pulser color=\"dark\" size=\"sm\" msg=\"Loading stateful sets\" ng-if=\"!statefulSetsLoaded\"></ellipsis-pulser>\n" +
+    "<em>\n" +
+    "<div ng-if=\"(statefulSets | hashSize) > 0\">The current filters are hiding all stateful sets.</div>\n" +
+    "<span ng-if=\"statefulSetsLoaded && (statefulSets | hashSize) === 0\">There are no stateful sets in this project.</span>\n" +
+    "</em>\n" +
+    "</div>\n" +
+    "</div>\n" +
+    "<div class=\"list-group-item list-group-item-expandable\" ng-repeat-start=\"set in filteredStatefulSets track by (set | uid)\" ng-click=\"toggleItem($event, this, set)\" ng-class=\"{'expanded': expanded.statefulSets[set.metadata.name]}\">\n" +
+    "<div class=\"list-view-pf-checkbox\">\n" +
+    "<button class=\"sr-only\">{{expanded.statefulSets[set.metadata.name] ? 'Collapse' : 'Expand'}}</button>\n" +
+    "<span ng-if=\"expanded.statefulSets[set.metadata.name]\">\n" +
+    "<span class=\"fa fa-angle-down\"></span>\n" +
+    "</span>\n" +
+    "<span ng-if=\"!expanded.statefulSets[set.metadata.name]\">\n" +
+    "<span class=\"fa fa-angle-right\"></span>\n" +
+    "</span>\n" +
+    "</div>\n" +
+    "<div class=\"list-view-pf-main-info\">\n" +
+    "<div class=\"list-view-pf-body\">\n" +
+    "<div class=\"list-view-pf-description\">\n" +
+    "<div class=\"list-group-item-heading\">\n" +
+    "<a ng-href=\"{{set | navigateResourceURL}}\"><span ng-bind-html=\"set.metadata.name | highlightKeywords : filterKeywords\"></span></a>\n" +
+    "<small>created <span am-time-ago=\"set.metadata.creationTimestamp\"></span></small>\n" +
+    "</div>\n" +
+    "<div class=\"list-group-item-text\">\n" +
+    "<status-icon status=\"set | deploymentStatus\" disable-animation></status-icon>\n" +
+    "{{set | deploymentStatus | sentenceCase}},\n" +
+    "<span ng-if=\"(podsByOwnerUID[set.metadata.uid] | hashSize) !== set.spec.replicas\">{{podsByOwnerUID[set.metadata.uid] | hashSize}}/</span>{{set.spec.replicas}} replica<span ng-if=\"set.spec.replicas != 1\">s</span>\n" +
+    "</div>\n" +
+    "</div>\n" +
+    "<div class=\"list-view-pf-additional-info\">\n" +
+    "<div class=\"list-view-pf-additional-info-item\">\n" +
+    "<span class=\"pficon fa-fw pficon-image\"></span>\n" +
+    "<image-names pod-template=\"set.spec.template\" pods=\"podsByOwnerUID[set.metadata.uid]\"></image-names>\n" +
+    "</div>\n" +
+    "</div>\n" +
+    "</div>\n" +
+    "</div>\n" +
+    "</div>\n" +
+    "<div ng-repeat-end ng-if=\"expanded.statefulSets[set.metadata.name]\" class=\"list-group-expanded-section\" ng-class=\"{'expanded': expanded.statefulSets[set.metadata.name]}\">\n" +
+    "Logs are not available for stateful sets.\n" +
+    "<span ng-if=\"podsByOwnerUID[set.metadata.uid] | hashSize\">\n" +
+    "To see application logs, view the logs for one of the stateful sets's\n" +
+    "<a href=\"\" ng-click=\"viewPodsForReplicaSet(set)\">pods</a>.\n" +
+    "</span>\n" +
+    "<div class=\"mar-top-lg\" ng-if=\"metricsAvailable\">\n" +
+    "<deployment-metrics pods=\"podsByOwnerUID[set.metadata.uid]\" containers=\"set.spec.template.spec.containers\" alerts=\"alerts\">\n" +
+    "</deployment-metrics>\n" +
+    "</div>\n" +
+    "</div>\n" +
+    "</div>\n" +
+    "</div>\n" +
     "<div ng-if=\"kindSelector.selected.kind === 'All' || kindSelector.selected.kind === 'Builds'\">\n" +
     "<h2>Builds</h2>\n" +
     "<div class=\"list-view-pf\">\n" +
