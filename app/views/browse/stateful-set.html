@@ -1,0 +1,197 @@
+<project-header class="top-header"></project-header>
+<project-page>
+  <div class="middle-section">
+    <div class="middle-container">
+
+      <div class="middle-header">
+        <div class="container-fluid">
+          <breadcrumbs breadcrumbs="breadcrumbs"></breadcrumbs>
+          <alerts alerts="alerts"></alerts>
+          <div>
+            <h1>
+              {{statefulSet.metadata.name}}
+              <div
+                class="pull-right dropdown"
+                ng-if="statefulSet"
+                ng-show="resourceGroupVersion.resource | canIDoAny">
+                <button
+                  type="button"
+                  class="dropdown-toggle btn btn-default actions-dropdown-btn hidden-xs"
+                  data-toggle="dropdown">
+                  Actions
+                  <span class="caret" aria-hidden="true"></span>
+                </button>
+                <a
+                  href=""
+                  class="dropdown-toggle actions-dropdown-kebab visible-xs-inline"
+                  data-toggle="dropdown">
+                  <i class="fa fa-ellipsis-v"></i><span class="sr-only">Actions</span>
+                </a>
+                <ul class="dropdown-menu actions action-button">
+                  <li ng-if="resourceGroupVersion | canI : 'update'">
+                    <a ng-href="{{statefulSet | editYamlURL}}" role="button">Edit YAML</a>
+                  </li>
+                  <li ng-if="resourceGroupVersion | canI : 'delete'">
+                    <delete-link
+                      kind="StatefulSet"
+                      group="apps"
+                      resource-name="{{statefulSet.metadata.name}}"
+                      project-name="{{statefulSet.metadata.namespace}}"
+                      replicas="statefulSet.spec.replicas"
+                      alerts="alerts">
+                    </delete-link>
+                  </li>
+                </ul>
+              </div>
+            </h1>
+            <labels
+              labels="statefulSet.metadata.labels"
+              clickable="true"
+              kind="stateful-sets"
+              title-kind="stateful sets"
+              project-name="{{statefulSet.metadata.namespace}}"
+              limit="3"></labels>
+          </div>
+        </div>
+      </div><!-- /middle-header-->
+
+      <div class="middle-content" persist-tab-state>
+        <div class="container-fluid">
+         <div ng-if="!loaded">Loading...</div>
+
+          <div class="row" ng-if="loaded">
+            <div class="col-md-12">
+              <uib-tabset>
+                <uib-tab active="selectedTab.details">
+                  <uib-tab-heading>Details</uib-tab-heading>
+
+                  <div class="row" style="max-width: 650px;">
+
+                    <div class="col-sm-4 col-sm-push-8 browse-deployment-donut">
+                      <!--
+                      TODO: scale/autoscale is a follow-on PR
+                      -->
+                      <deployment-donut
+                        rc="statefulSet"
+                        pods="podsForStatefulSet"
+                        scalable="isScalable()"
+                        alerts="alerts">
+                      </deployment-donut>
+                    </div>
+
+                    <div class="col-sm-8 col-sm-pull-4">
+                      <dl class="dl-horizontal left">
+                        <dt>Status:</dt>
+                        <dd>
+                          <status-icon status="statefulSet | deploymentStatus"></status-icon>
+                          {{statefulSet | deploymentStatus}}
+                        </dd>
+                        <dt>Replicas:</dt>
+                        <dd>
+                          <replicas
+                            status="statefulSet.status.replicas"
+                            spec="statefulSet.spec.replicas"
+                            disable-scaling="!isScalable()"
+                            scale-fn="scale(replicas)"
+                            deployment="statefulSet">
+                          </replicas>
+                          <!-- TODO: HPA as a follow-on PR
+                            <span ng-if="autoscalers.length">(autoscaled)</span>
+                          -->
+                        </dd>
+                      </dl>
+
+                      <h3>Template</h3>
+                      <pod-template
+                        pod-template="statefulSet.spec.template"
+                        detailed="true">
+                      </pod-template>
+
+                      <volume-claim-templates
+                          templates="statefulSet.spec.volumeClaimTemplates"
+                          namespace="project.metadata.name">
+                      </volume-claim-templates>
+
+                    </div>
+
+                  </div>
+
+                  <div class="row">
+                    <div class="col-md-12">
+                      <h3>Volumes</h3>
+                      <p ng-if="!statefulSet.spec.template.spec.volumes.length">
+                        none
+                      </p>
+                      <volumes
+                          volumes="statefulSet.spec.template.spec.volumes"
+                          namespace="project.metadata.name">
+                      </volumes>
+
+                      <h3>Pods</h3>
+                      <pods-table
+                        pods="podsForStatefulSet"></pods-table>
+
+                      <annotations
+                        annotations="statefulSet.metadata.annotations"></annotations>
+                      </div>
+                    </div>
+                </uib-tab>
+
+                <uib-tab active="selectedTab.environment" ng-if="statefulSet">
+                  <uib-tab-heading>Environment</uib-tab-heading>
+                  <div class="resource-environment">
+                    <ng-form name="forms.statefulSetEnvVars">
+                      <div ng-repeat="container in statefulSet.spec.template.spec.containers">
+                        <h3>Container {{container.name}} Environment Variables</h3>
+                        <p>
+                          Environment variables for stateful sets are readonly.
+                          <span ng-if="!(container.env.length)">
+                            There are no environment variables for this container.
+                          </span>
+                        </p>
+                        <key-value-editor
+                          entries="container.env"
+                          key-placeholder="Name"
+                          value-placeholder="Value"
+                          is-readonly
+                          cannot-add
+                          cannot-delete
+                          cannot-sort
+                          show-header></key-value-editor>
+                      </div>
+                    </ng-form>
+                  </div>
+                </uib-tab>
+
+                <uib-tab ng-if="metricsAvailable" active="selectedTab.metrics">
+                  <uib-tab-heading>Metrics</uib-tab-heading>
+                  <div class="resource-metrics">
+                    <deployment-metrics
+                      ng-if="selectedTab.metrics && podsForStatefulSet"
+                      pods="podsForStatefulSet"
+                      containers="statefulSet.spec.template.spec.containers"
+                      alerts="alerts">
+                    </deployment-metrics>
+                  </div>
+                </uib-tab>
+
+                <uib-tab active="selectedTab.events">
+                  <uib-tab-heading>Events</uib-tab-heading>
+                  <div class="resource-events">
+                      <!-- TODO: resource-kind: StatefulSet update -->
+                      <events
+                        resource-kind="PetSet"
+                        resource-name="{{statefulSet.metadata.name}}"
+                        project-context="projectContext"
+                        ng-if="selectedTab.events"></events>
+                  </div>
+                </uib-tab>
+
+              </uib-tabset>
+            </div>
+          </div>
+        </div>
+      </div><!-- /middle-content -->
+    </div><!-- /middle-container -->
+  </div><!-- /middle-section -->
+</project-page>

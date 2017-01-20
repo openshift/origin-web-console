@@ -68,20 +68,33 @@ angular.module('openshiftConsole')
         case 'memory':
           scope.input.unit = 'Mi';
           scope.units = [{
-            value: "M",
-            label: "MB"
-          }, {
-            value: "G",
-            label: "GB"
-          }, {
             value: "Mi",
             label: "MiB"
           }, {
             value: "Gi",
             label: "GiB"
+          }, {
+            value: "M",
+            label: "MB"
+          }, {
+            value: "G",
+            label: "GB"
           }];
           break;
         }
+
+        scope.groupUnits = function(unit) {
+          switch (unit.value) {
+          case 'Mi':
+          case 'Gi':
+            return 'Binary Units';
+          case 'M':
+          case 'G':
+            return 'Decimal Units';
+          }
+
+          return '';
+        };
 
         var validateLimitRange = function() {
           // Use usageValue filter to normalize units for comparison.

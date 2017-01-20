@@ -20,10 +20,10 @@
                    data-toggle="dropdown"><i class="fa fa-ellipsis-v"></i><span class="sr-only">Actions</span></a>
                 <ul class="dropdown-menu actions action-button">
                   <li ng-if="!deployment.spec.paused && !updatingPausedState && ({ group: 'extensions', resource: 'deployments' } | canI : 'update')">
-                    <a href="" ng-click="setPaused(true)" role="button">Pause Deployment</a>
+                    <a href="" ng-click="setPaused(true)" role="button">Pause Rollouts</a>
                   </li>
                   <li ng-if="deployment.spec.paused && !updatingPausedState && ({ group: 'extensions', resource: 'deployments' } | canI : 'update')">
-                    <a href="" ng-click="setPaused(false)" role="button">Resume Deployment</a>
+                    <a href="" ng-click="setPaused(false)" role="button">Resume Rollouts</a>
                   </li>
                   <li class="divider" ng-if="!updatingPausedState && ({ group: 'extensions', resource: 'deployments' } | canI : 'update')"></li>
                   <li ng-if="{ group: 'extensions', resource: 'deployments' } | canI : 'update'">
@@ -78,10 +78,10 @@
               <div ng-if="deployment.spec.paused" class="alert alert-info animate-if">
                 <span class="pficon pficon-info" aria-hidden="true"></span>
                 <strong>{{deployment.metadata.name}} is paused.</strong>
-                This will pause any in-progress rollouts and stop new
+                This pauses any in-progress rollouts and stops new
                 rollouts from running until the deployment is resumed.
-                <span ng-if="!updatingPausedState && ({ group: 'extensions', resource: 'deployments' } | canI : 'update')">
-                  <a href="" ng-click="setPaused(false)" role="button">Resume deployment</a>
+                <span ng-if="!updatingPausedState && ({ group: 'extensions', resource: 'deployments' } | canI : 'update')" class="nowrap">
+                  <a href="" ng-click="setPaused(false)" role="button">Resume Rollouts</a>
                 </span>
               </div>
               <uib-tabset>

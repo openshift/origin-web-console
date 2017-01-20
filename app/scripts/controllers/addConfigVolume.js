@@ -20,7 +20,8 @@ angular.module('openshiftConsole')
                        DataService,
                        Navigate,
                        ProjectsService,
-                       StorageService) {
+                       StorageService,
+                       RELATIVE_PATH_PATTERN) {
     if (!$routeParams.kind || !$routeParams.name) {
       Navigate.toErrorPage("Kind or name parameter missing.");
       return;
@@ -52,6 +53,7 @@ angular.module('openshiftConsole')
       pickKeys: false
     };
     $scope.forms = {};
+    $scope.RELATIVE_PATH_PATTERN = RELATIVE_PATH_PATTERN;
 
     $scope.breadcrumbs = BreadcrumbsService.getBreadcrumbs({
       name: $routeParams.name,

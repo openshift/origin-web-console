@@ -105,7 +105,8 @@
         "src-min-noconflict/mode-groovy.js",
         "src-min-noconflict/mode-yaml.js",
         "src-min-noconflict/theme-dreamweaver.js",
-        "src-min-noconflict/theme-eclipse.js"
+        "src-min-noconflict/theme-eclipse.js",
+        "src-min-noconflict/mode-sh.js"
       ]
     }
   }

@@ -174,6 +174,16 @@ angular
         templateUrl: 'views/edit/deployment-config.html',
         controller: 'EditDeploymentConfigController'
       })
+      .when('/project/:project/browse/stateful-sets/', {
+        templateUrl: 'views/browse/stateful-sets.html',
+        controller: 'StatefulSetsController',
+        reloadOnSearch: false
+      })
+      .when('/project/:project/browse/stateful-sets/:statefulset', {
+        templateUrl: 'views/browse/stateful-set.html',
+        controller: 'StatefulSetController',
+        reloadOnSearch: false
+      })
       .when('/project/:project/browse/rs/:replicaSet', {
         templateUrl: 'views/browse/replica-set.html',
         resolve: {
@@ -428,6 +438,14 @@ angular
   // as a sanity test and shouldn't block submitting the form. Rely on the API
   // server for any additional validation.
   .constant('SOURCE_URL_PATTERN', /^[a-z][a-z0-9+.-@]*:(\/\/)?[0-9a-z_-]+/i)
+  // RELATIVE_PATH_PATTERN matches any paths not starting with `/` or
+  // containing `..` as path elements. Use negative lookaheads to assert that
+  // the value does not match those patterns.
+  //
+  //   (?!\/)                do not match strings starting with `/`
+  //   (?!\.\.(\/|$))        do not match strings starting with `../` or exactly `..`
+  //   (?!.*\/\.\.(\/|$))    do not match strings containing `/../` or ending in `/..`
+  .constant('RELATIVE_PATH_PATTERN', /^(?!\/)(?!\.\.(\/|$))(?!.*\/\.\.(\/|$)).*$/)
   // http://stackoverflow.com/questions/9038625/detect-if-device-is-ios
   .constant('IS_IOS', /iPad|iPhone|iPod/.test(navigator.userAgent) && !window.MSStream)
   .constant('amTimeAgoConfig', {

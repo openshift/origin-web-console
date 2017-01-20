@@ -45,12 +45,14 @@ window.OPENSHIFT_CONSTANTS = {
     "config-maps":             "dev_guide/configmaps.html",
     "secrets":                 "dev_guide/secrets.html",
     "deployments":             "dev_guide/deployments/how_deployments_work.html",
+    //"stateful-sets":           "", // TODO: docs are in progress
     "pods":                    "architecture/core_concepts/pods_and_services.html#pods",
     "services":                "architecture/core_concepts/pods_and_services.html#services",
     "routes":                  "architecture/core_concepts/routes.html",
     "builds":                  "architecture/core_concepts/builds_and_image_streams.html#builds",
     "image-streams":           "architecture/core_concepts/builds_and_image_streams.html#image-streams",
     "storage":                 "architecture/additional_concepts/storage.html",
+    "build-hooks":             "dev_guide/builds.html#build-hooks",
     // default should remain last, add new links above
     "default":                 "welcome/index.html"
   },
@@ -116,6 +118,13 @@ window.OPENSHIFT_CONSTANTS = {
                 "/browse/dc/",
                 "/browse/rs/",
                 "/browse/rc/"
+              ]
+            },
+            {
+              label: "Stateful Sets",
+              href: "/browse/stateful-sets",
+              prefixes: [
+                "/browse/stateful-sets/"
               ]
             },
             {

@@ -48,14 +48,14 @@
     </thead>
     <tbody ng-if="(filteredEvents | hashSize) === 0">
       <tr>
-        <td class="hidden-lg" colspan="3">
+        <td class="hidden-lg" colspan="{{!resourceKind || !resourceName ? 3 : 2}}">
           <span ng-if="(events | hashSize) === 0"><em>No events to show.</em></span>
           <span ng-if="(events | hashSize) > 0">
             All events hidden by filter.
             <a href="" ng-click="filter.text = ''" role="button">Clear Filter</a>
           </span>
         </td>
-        <td class="hidden-xs hidden-sm hidden-md" colspan="6">
+          <td class="hidden-xs hidden-sm hidden-md" colspan="{{!resourceKind || !resourceName ? 6 : 4}}">
           <span ng-if="(events | hashSize) === 0"><em>No events to show.</em></span>
           <span ng-if="(events | hashSize) > 0">
             All events hidden by filter.

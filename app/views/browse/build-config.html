@@ -59,6 +59,7 @@
               </div>
               {{buildConfigName}}
               <span class="pficon pficon-warning-triangle-o"
+                    ng-if="buildConfigPaused || buildConfigDeleted"
                     aria-hidden="true"
                     data-toggle="tooltip"
                     data-original-title="{{buildConfigDeleted ? 'This build configuration no longer exists' : 'Building from build configuration ' + buildConfig.metadata.name + ' has been paused.'}}">
@@ -368,6 +369,10 @@
                                 }" readonly ng-model="buildConfig.spec.strategy.jenkinsPipelineStrategy.jenkinsfile" class="ace-bordered ace-inline ace-read-only"></div>
                               </div>
                             </dl>
+                            <div ng-if="buildConfig | hasPostCommitHook">
+                              <h3>Post-Commit Hooks</h3>
+                              <build-hooks build="buildConfig"></build-hooks>
+                            </div>
                           </div>
                           <div class="col-lg-6">
                             <h3>Triggers</h3>

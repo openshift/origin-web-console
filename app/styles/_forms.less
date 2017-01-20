@@ -1,3 +1,8 @@
+.static-form-value-large {
+  .h3();
+  margin-top: 3px;
+}
+
 .copy-to-clipboard input.form-control:read-only {
   background-color: white;
   color: @text-color;
@@ -73,4 +78,11 @@
   font-family: @font-family-monospace;
   // Use the same spacing as `help-block` so the textarea is evenly spaced under the help text.
   margin: 5px 0;
+}
+
+.health-checks-form .pause-rollouts-checkbox,
+.set-limits-form .pause-rollouts-checkbox {
+  // Add extra margin on some forms so it's clear the checkbox is not part of
+  // the sections just above.
+  margin-top: @line-height-computed;
 }

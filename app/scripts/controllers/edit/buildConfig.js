@@ -55,7 +55,8 @@ angular.module('openshiftConsole')
       "title": "Inline"
     }];
     $scope.view = {
-      advancedOptions: false
+      advancedOptions: false,
+      hasHooks: false
     };
     $scope.breadcrumbs = [
       {
@@ -117,6 +118,79 @@ angular.module('openshiftConsole')
       "SerialLatestOnly"
     ];
 
+    $scope.buildHookTypes = [{
+      id: "command",
+      label: "Command"
+    }, {
+      id: "script",
+      label: "Shell Script"
+    }, {
+      id: "args",
+      label: "Arguments to default image entry point"
+    }, {
+      id: "commandArgs",
+      label: "Command with arguments"
+    }, {
+      id: "scriptArgs",
+      label: "Shell script with arguments"
+    }];
+
+    $scope.buildHookSelection = {
+      type: {}
+    };
+
+    var getInitialBuildHookSelection = function() {
+      var hasArgs = !_.isEmpty(_.get($scope, 'buildConfig.spec.postCommit.args'));
+      var hasCommand = !_.isEmpty(_.get($scope, 'buildConfig.spec.postCommit.command'));
+      var hasScript = !!_.get($scope, 'buildConfig.spec.postCommit.script');
+      $scope.view.hasHooks = hasArgs || hasCommand || hasScript;
+
+      var id;
+
+      if (hasArgs && hasCommand) {
+        id = 'commandArgs';
+      } else if (hasArgs && hasScript) {
+        id = 'scriptArgs';
+      } else if (hasArgs) {
+        id = 'args';
+      } else if (hasScript) {
+        id = 'script';
+      } else {
+        id = 'command';
+      }
+
+      $scope.buildHookSelection.type = _.find($scope.buildHookTypes, { id: id });
+    };
+
+    var clearIncompatibleBuildHookFields = function() {
+      if (!$scope.view.hasHooks) {
+        delete $scope.updatedBuildConfig.spec.postCommit.command;
+        delete $scope.updatedBuildConfig.spec.postCommit.args;
+        delete $scope.updatedBuildConfig.spec.postCommit.script;
+      } else {
+        switch ($scope.buildHookSelection.type.id) {
+          case "script":
+            delete $scope.updatedBuildConfig.spec.postCommit.command;
+            delete $scope.updatedBuildConfig.spec.postCommit.args;
+            break;
+          case "command":
+            delete $scope.updatedBuildConfig.spec.postCommit.script;
+            delete $scope.updatedBuildConfig.spec.postCommit.args;
+            break;
+          case "args":
+            delete $scope.updatedBuildConfig.spec.postCommit.script;
+            delete $scope.updatedBuildConfig.spec.postCommit.command;
+            break;
+          case "scriptArgs":
+            delete $scope.updatedBuildConfig.spec.postCommit.command;
+            break;
+          case "commandArgs":
+            delete $scope.updatedBuildConfig.spec.postCommit.script;
+            break;
+        }
+      }
+    };
+
     AlertMessageService.getAlerts().forEach(function(alert) {
       $scope.alerts[alert.name] = alert.data;
     });
@@ -143,6 +217,8 @@ angular.module('openshiftConsole')
           // success
           function(buildConfig) {
             $scope.buildConfig = buildConfig;
+            getInitialBuildHookSelection();
+
             $scope.updatedBuildConfig = angular.copy($scope.buildConfig);
             $scope.buildStrategy = buildStrategy($scope.updatedBuildConfig);
             $scope.strategyType = $scope.buildConfig.spec.strategy.type;
@@ -180,7 +256,7 @@ angular.module('openshiftConsole')
               }
 
               if (imageOptions.type === "ImageStreamImage") {
-                isimage = (imageData.namespace || buildConfig.metadata.namespace) + "/" + imageData.name;               
+                isimage = (imageData.namespace || buildConfig.metadata.namespace) + "/" + imageData.name;
               } else {
                 isimage = "";
               }
@@ -414,6 +490,7 @@ angular.module('openshiftConsole')
 
     $scope.save = function() {
       $scope.disableInputs = true;
+      clearIncompatibleBuildHookFields();
       // Update Configuration
       buildStrategy($scope.updatedBuildConfig).forcePull = $scope.options.forcePull;
 

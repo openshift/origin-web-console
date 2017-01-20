@@ -92,7 +92,9 @@ angular.module('openshiftConsole')
   })
   .filter('description', function(annotationFilter) {
     return function(resource) {
-      return annotationFilter(resource, "description");
+      // Prefer `openshift.io/description`, but fall back to `kubernetes.io/description`.
+      return annotationFilter(resource, 'openshift.io/description') ||
+             annotationFilter(resource, 'kubernetes.io/description');
     };
   })
   .filter('displayName', function(annotationFilter) {
@@ -132,11 +134,25 @@ angular.module('openshiftConsole')
       return displayName;
     };
   })
-  .filter('searchProjects', function(annotationNameFilter) {
+  .filter('searchProjects', function(displayNameFilter) {
     return function(projects, text) {
+      if (!text) {
+        return projects;
+      }
+
+      // Lowercase the search string and project display name to perform a case-insensitive search.
+      text = text.toLowerCase();
       return _.filter(projects, function(project) {
-        return _.includes(project.metadata.name, text) ||
-                _.includes(project.metadata.annotations[annotationNameFilter('displayName')], text);
+        if (_.includes(project.metadata.name, text)) {
+          return true;
+        }
+
+        var displayName = displayNameFilter(project, true);
+        if (displayName && _.includes(displayName.toLowerCase(), text)) {
+          return true;
+        }
+
+        return false;
       });
     };
   })
@@ -1411,5 +1427,56 @@ angular.module('openshiftConsole')
 
       var revision = annotationFilter(deployment, 'deployment.kubernetes.io/revision');
       return revision ? "#" + revision : 'Unknown';
+    };
+  })
+  .filter('hasPostCommitHook', function() {
+    // Check if a build or build config has a post commit hook.
+    return function(build) {
+      return _.has(build, 'spec.postCommit.command') ||
+             _.has(build, 'spec.postCommit.script') ||
+             _.has(build, 'spec.postCommit.args');
+    };
+  })
+  .filter('volumeMountMode', function() {
+    var isConfigVolume = function(volume) {
+      return _.has(volume, 'configMap') || _.has(volume, 'secret');
+    };
+
+    return function(mount, volumes) {
+      if (!mount) {
+        return '';
+      }
+
+      // Config maps and secrets are always read-only, even if not explicitly
+      // set in the volume mount.
+      var volume = _.find(volumes, { name: mount.name });
+      if (isConfigVolume(volume)) {
+        return 'read-only';
+      }
+
+      if (_.get(volume, 'persistentVolumeClaim.readOnly')) {
+        return 'read-only';
+      }
+
+      return mount.readOnly ? 'read-only' : 'read-write';
+    };
+  })
+  .filter('managesRollouts', function(APIService) {
+    // Return true for API objects that manage rollouts (deployment configs and deployments).
+    return function(object) {
+      if (!object) {
+        return false;
+      }
+
+      var rgv = APIService.objectToResourceGroupVersion(object);
+      if (rgv.resource === 'deploymentconfigs' && !rgv.group) {
+        return true;
+      }
+
+      if (rgv.resource === 'deployments' && rgv.group === 'extensions') {
+        return true;
+      }
+
+      return false;
     };
   });

@@ -6,6 +6,7 @@ angular.module('openshiftConsole')
       restrict: 'E',
       scope: {
         args: '=',
+        type: '@',
         isRequired: '='
       },
       templateUrl: 'views/directives/_edit-command.html',

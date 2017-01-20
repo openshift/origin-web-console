@@ -624,19 +624,13 @@ angular.module('openshiftConsole')
   })
   .filter('highlightKeywords', function(KeywordService) {
     // Returns HTML wrapping the matching words in a `mark` tag.
-    return function(str, keywords) {
+    return function(str, keywords, caseSensitive) {
       if (!str) {
         return str;
       }
 
-      // Escape any special characters in the string since we're returning HTML
-      // that will be displayed using `ng-bind-html`. Note that this breaks
-      // matching on characters like `<` and `&`, although KeywordService
-      // removes these from keywords.
-      var escapedStr = _.escape(str);
-
       if (_.isEmpty(keywords)) {
-        return escapedStr;
+        return _.escape(str);
       }
 
       // If passed a plain string, get the keywords from KeywordService.
@@ -644,7 +638,7 @@ angular.module('openshiftConsole')
         keywords = KeywordService.generateKeywords(keywords);
       }
 
-      // Combine the keywords into a single regex for str.replace().
+      // Combine the keywords into a single regex.
       var source = _.map(keywords, function(keyword) {
         if (_.isRegExp(keyword)) {
           return keyword.source;
@@ -652,10 +646,30 @@ angular.module('openshiftConsole')
         return _.escapeRegExp(keyword);
       }).join('|');
 
-      var regex = new RegExp('(' + source + ')', 'ig');
+      // Search for matches.
+      var match;
+      var result = '';
+      var lastIndex = 0;
+      var flags = caseSensitive ? 'g' : 'ig';
+      var regex = new RegExp(source, flags);
+      while ((match = regex.exec(str)) !== null) {
+        // Escape any text between the end of the last match and the start of
+        // this match, and add it to the result.
+        if (lastIndex < match.index) {
+          result += _.escape(str.substring(lastIndex, match.index));
+        }
 
-      // Wrap matches in a `mark` element to use the Bootstrap / Patternfly highlight styles.
-      return escapedStr.replace(regex, '<mark>$&</mark>');
+        // Wrap the match in a `mark` element to use the Bootstrap / Patternfly highlight styles.
+        result += "<mark>" + _.escape(match[0]) + "</mark>";
+        lastIndex = regex.lastIndex;
+      }
+
+      // Escape any remaining text and add it to the result.
+      if (lastIndex < str.length) {
+        result += _.escape(str.substring(lastIndex));
+      }
+
+      return result;
     };
   })
   .filter('encodeURIComponent', function() {

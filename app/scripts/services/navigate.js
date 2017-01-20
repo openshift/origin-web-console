@@ -196,6 +196,10 @@ angular.module("openshiftConsole")
               .segmentCoded(name.substring(0, ind))
               .segmentCoded(name.substring(ind + 1));
             break;
+          case "StatefulSet":
+            url.segment("stateful-sets")
+              .segmentCoded(name);
+            break;
           case "PersistentVolumeClaim":
           case "Pod":
           case "Route":
@@ -283,7 +287,8 @@ angular.module("openshiftConsole")
           'routes': 'routes',
           'secrets': 'secrets',
           'services': 'services',
-          'persistentvolumeclaims': 'storage'
+          'persistentvolumeclaims': 'storage',
+          'statefulsets' : 'stateful-sets'
         };
 
         return URI.expand("project/{projectName}/browse/{browsePath}", {
