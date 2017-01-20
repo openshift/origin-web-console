@@ -5,7 +5,7 @@
     <div class="component-label">Storage claim: {{template.metadata.name}}</div>
 
     <div row class="pod-template-image icon-row">
-      <div>
+      <div class="icon-wrap">
         <span class="fa fa-lock" aria-hidden="true"></span>
       </div>
       <div flex class="word-break">
@@ -17,7 +17,7 @@
     </div>
 
     <div row class="pod-template-image icon-row">
-      <div>
+      <div class="icon-wrap">
         <span class="fa fa-database" aria-hidden="true"></span>
       </div>
       <div flex class="word-break">
@@ -31,14 +31,12 @@
     <div
       row class="pod-template-image icon-row"
       ng-if="template.spec.selector.matchLabels">
-      <div>
+      <div class="icon-wrap">
         <span class="fa fa-tag" aria-hidden="true"></span>
       </div>
       <div flex class="word-break">
         <span class="pod-template-key">Selector:</span>
-        <span ng-repeat="(key, value) in template.spec.selector.matchLabels">
-          {{key}}={{value}}<span ng-if="!$last">, </span>
-        </span>
+        <selector selector="template.spec.selector"></selector>
       </div>
     </div>
 

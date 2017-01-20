@@ -310,7 +310,7 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "<div class=\"pod-template\">\n" +
     "<div class=\"component-label\">Container: {{container.name}}</div>\n" +
     "<div row ng-if=\"container.image\" class=\"pod-template-image icon-row\">\n" +
-    "<div>\n" +
+    "<div class=\"icon-wrap\">\n" +
     "<span class=\"pficon pficon-image\" aria-hidden=\"true\"></span>\n" +
     "</div>\n" +
     "<div flex class=\"word-break\">\n" +
@@ -327,7 +327,7 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "</div>\n" +
     "<div ng-if=\"imagesByDockerReference && container.image && (image = imagesByDockerReference[container.image])\" class=\"pod-template-build\">\n" +
     "<div row class=\"icon-row\" ng-if=\"build = (image | buildForImage : builds)\">\n" +
-    "<div>\n" +
+    "<div class=\"icon-wrap\">\n" +
     "<span class=\"fa fa-refresh\" aria-hidden=\"true\"></span>\n" +
     "</div>\n" +
     "<div flex class=\"word-break\">\n" +
@@ -342,7 +342,7 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "</div>\n" +
     "</div>\n" +
     "<div row class=\"icon-row\" ng-if=\"build.spec.source\">\n" +
-    "<div>\n" +
+    "<div class=\"icon-wrap\">\n" +
     "<span class=\"fa fa-code\" aria-hidden=\"true\"></span>\n" +
     "</div>\n" +
     "<div flex>\n" +
@@ -368,7 +368,7 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "</div>\n" +
     "</div>\n" +
     "<div row ng-if=\"detailed && (container.command.length || container.args.length)\" class=\"icon-row\">\n" +
-    "<div>\n" +
+    "<div class=\"icon-wrap\">\n" +
     "<span aria-hidden=\"true\" class=\"fa fa-terminal\"></span>\n" +
     "</div>\n" +
     "<div flex class=\"word-break\">\n" +
@@ -384,7 +384,7 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "</div>\n" +
     "</div>\n" +
     "<div row ng-if=\"container.ports.length > 0\" class=\"pod-template-ports icon-row\">\n" +
-    "<div>\n" +
+    "<div class=\"icon-wrap\">\n" +
     "<span data-icon=\"\" aria-hidden=\"true\" style=\"font-size:16px;line-height:normal\"></span>\n" +
     "</div>\n" +
     "<div flex class=\"word-break\">\n" +
@@ -399,7 +399,7 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "</div>\n" +
     "</div>\n" +
     "<div row ng-if=\"detailed\" ng-repeat=\"mount in container.volumeMounts\" class=\"icon-row\">\n" +
-    "<div>\n" +
+    "<div class=\"icon-wrap\">\n" +
     "<span aria-hidden=\"true\" class=\"fa fa-database\"></span>\n" +
     "</div>\n" +
     "<div flex class=\"word-break\">\n" +
@@ -411,7 +411,7 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "</div>\n" +
     "</div>\n" +
     "<div row ng-if=\"detailed && (container.resources.requests.cpu || container.resources.limits.cpu)\" class=\"icon-row\">\n" +
-    "<div>\n" +
+    "<div class=\"icon-wrap\">\n" +
     "<i class=\"fa fa-area-chart\" aria-hidden=\"true\"></i>\n" +
     "</div>\n" +
     "<div flex>\n" +
@@ -428,7 +428,7 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "</div>\n" +
     "</div>\n" +
     "<div row ng-if=\"detailed && (container.resources.requests.memory || container.resources.limits.memory)\" class=\"icon-row\">\n" +
-    "<div>\n" +
+    "<div class=\"icon-wrap\">\n" +
     "<i class=\"fa fa-area-chart\" aria-hidden=\"true\"></i>\n" +
     "</div>\n" +
     "<div flex>\n" +
@@ -445,7 +445,7 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "</div>\n" +
     "</div>\n" +
     "<div row ng-if=\"detailed && container.readinessProbe\" class=\"icon-row\">\n" +
-    "<div>\n" +
+    "<div class=\"icon-wrap\">\n" +
     "<i class=\"fa fa-medkit\" aria-hidden=\"true\"></i>\n" +
     "</div>\n" +
     "<div flex>\n" +
@@ -454,7 +454,7 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "</div>\n" +
     "</div>\n" +
     "<div row ng-if=\"detailed && container.livenessProbe\" class=\"icon-row\">\n" +
-    "<div>\n" +
+    "<div class=\"icon-wrap\">\n" +
     "<i class=\"fa fa-medkit\" aria-hidden=\"true\"></i>\n" +
     "</div>\n" +
     "<div flex>\n" +
@@ -803,7 +803,7 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "<div ng-repeat=\"template in templates\" class=\"pod-template\">\n" +
     "<div class=\"component-label\">Storage claim: {{template.metadata.name}}</div>\n" +
     "<div row class=\"pod-template-image icon-row\">\n" +
-    "<div>\n" +
+    "<div class=\"icon-wrap\">\n" +
     "<span class=\"fa fa-lock\" aria-hidden=\"true\"></span>\n" +
     "</div>\n" +
     "<div flex class=\"word-break\">\n" +
@@ -814,7 +814,7 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "</div>\n" +
     "</div>\n" +
     "<div row class=\"pod-template-image icon-row\">\n" +
-    "<div>\n" +
+    "<div class=\"icon-wrap\">\n" +
     "<span class=\"fa fa-database\" aria-hidden=\"true\"></span>\n" +
     "</div>\n" +
     "<div flex class=\"word-break\">\n" +
@@ -825,14 +825,12 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "</div>\n" +
     "</div>\n" +
     "<div row class=\"pod-template-image icon-row\" ng-if=\"template.spec.selector.matchLabels\">\n" +
-    "<div>\n" +
+    "<div class=\"icon-wrap\">\n" +
     "<span class=\"fa fa-tag\" aria-hidden=\"true\"></span>\n" +
     "</div>\n" +
     "<div flex class=\"word-break\">\n" +
     "<span class=\"pod-template-key\">Selector:</span>\n" +
-    "<span ng-repeat=\"(key, value) in template.spec.selector.matchLabels\">\n" +
-    "{{key}}={{value}}<span ng-if=\"!$last\">, </span>\n" +
-    "</span>\n" +
+    "<selector selector=\"template.spec.selector\"></selector>\n" +
     "</div>\n" +
     "</div>\n" +
     "</div>\n" +
