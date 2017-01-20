@@ -11483,12 +11483,12 @@ if (!m.pod) return null;
 var b = m.options.selectedContainer;
 switch (a) {
 case "memory/usage":
-var c = D(b);
+var c = E(b);
 if (c) return h.bytesToMiB(l(c));
 break;
 
 case "cpu/usage_rate":
-var d = E(b);
+var d = F(b);
 if (d) return l(d);
 }
 return null;
@@ -11504,8 +11504,8 @@ Used:b.available > 0 ? "#0088ce" :"#ec7a08",
 Available:"#d1d1d1"
 }
 };
-B[b.id] ? B[b.id].load(e) :(c = I(a), c.data = e, d(function() {
-G || (B[b.id] = c3.generate(c));
+C[b.id] ? C[b.id].load(e) :(c = J(a), c.data = e, d(function() {
+H || (C[b.id] = c3.generate(c));
 }));
 }
 }
@@ -11519,10 +11519,10 @@ _.each(a.datasets, function(a) {
 c[a.id] = a.data;
 });
 var e, f = i.getSparklineData(c), g = a.chartPrefix + "sparkline";
-C[g] ? C[g].load(f) :(e = J(a), e.data = f, a.chartDataColors && (e.color = {
+D[g] ? D[g].load(f) :(e = K(a), e.data = f, a.chartDataColors && (e.color = {
 pattern:a.chartDataColors
 }), d(function() {
-G || (C[g] = c3.generate(e));
+H || (D[g] = c3.generate(e));
 }));
 }
 }
@@ -11533,7 +11533,7 @@ function r() {
 return 60 * m.options.timeRange.value * 1e3;
 }
 function s() {
-return Math.floor(r() / F) + "ms";
+return Math.floor(r() / G) + "ms";
 }
 function t(a, b, c) {
 var d, e = {
@@ -11548,17 +11548,17 @@ containerName:a.containerMetric ? m.options.selectedContainer.name :"pod"
 }) :null;
 }
 function u() {
-K = 0, _.each(m.metrics, function(a) {
+L = 0, _.each(m.metrics, function(a) {
 p(a), o(a);
 });
 }
 function v(a) {
-if (!G) {
-if (K++, m.noData) return void (m.metricsError = {
+if (!H) {
+if (L++, m.noData) return void (m.metricsError = {
 status:_.get(a, "status", 0),
 details:_.get(a, "data.errorMsg") || _.get(a, "statusText") || "Status code " + _.get(a, "status", 0)
 });
-if (!(K < 2)) {
+if (!(L < 2)) {
 var b = "metrics-failed-" + m.uniqueID;
 m.alerts[b] = {
 type:"error",
@@ -11567,7 +11567,7 @@ links:[ {
 href:"",
 label:"Retry",
 onClick:function() {
-delete m.alerts[b], K = 1, z();
+delete m.alerts[b], L = 1, A();
 }
 } ]
 };
@@ -11575,20 +11575,39 @@ delete m.alerts[b], K = 1, z();
 }
 }
 function w() {
-return !(m.metricsError || K > 1) && (m.pod && _.get(m, "options.selectedContainer"));
+return window.OPENSHIFT_CONSTANTS.DISABLE_CUSTOM_METRICS ? e.when({}) :j.getCustomMetrics(m.pod).then(function(a) {
+angular.forEach(a, function(a) {
+var b = a.description || a.name, c = a.unit || "";
+m.metrics.push({
+label:b,
+units:c,
+chartPrefix:"custom-" + _.uniqueId("custom-metric-"),
+chartType:"spline",
+datasets:[ {
+id:"custom/" + a.name,
+label:b,
+type:a.type,
+data:[]
+} ]
+});
+});
+});
 }
-function x(a, b, c) {
+function x() {
+return !(m.metricsError || L > 1) && (m.pod && _.get(m, "options.selectedContainer"));
+}
+function y(a, b, c) {
 b.total = n(b.id), b.total && (m.hasLimits = !0);
 var d = _.get(c, "usage.value");
 isNaN(d) && (d = 0), a.convert && (d = a.convert(d)), b.used = d3.round(d, a.usagePrecision), b.total && (b.available = d3.round(b.total - d, a.usagePrecision)), a.totalUsed += b.used;
 }
-function y(a, b) {
+function z(a, b) {
 m.noData = !1;
 var c = _.initial(b.data);
-return a.data ? void (a.data = _.chain(a.data).takeRight(F).concat(c).value()) :void (a.data = c);
+return a.data ? void (a.data = _.chain(a.data).takeRight(G).concat(c).value()) :void (a.data = c);
 }
-function z() {
-if (w()) {
+function A() {
+if (x()) {
 var a = q(), b = [];
 angular.forEach(m.metrics, function(c) {
 var d = [];
@@ -11599,16 +11618,16 @@ var g = j.get(f);
 d.push(g);
 var h = n(e.id);
 h && b.push(j.getCurrentUsage(f).then(function(a) {
-x(c, e, a);
+y(c, e, a);
 }));
 }
 }), b = b.concat(d), e.all(d).then(function(a) {
-G || angular.forEach(a, function(a) {
+H || angular.forEach(a, function(a) {
 if (a) {
 var b = _.find(c.datasets, {
 id:a.metricID
 });
-y(b, a);
+z(b, a);
 }
 });
 });
@@ -11618,7 +11637,7 @@ m.loaded = !0;
 }
 }
 m.includedMetrics = m.includedMetrics || [ "cpu", "memory", "network" ];
-var A, B = {}, C = {}, D = c("resources.limits.memory"), E = c("resources.limits.cpu"), F = 30, G = !1;
+var B, C = {}, D = {}, E = c("resources.limits.memory"), F = c("resources.limits.cpu"), G = 30, H = !1;
 m.uniqueID = i.uniqueID(), m.metrics = [], _.includes(m.includedMetrics, "memory") && m.metrics.push({
 label:"Memory",
 units:"MiB",
@@ -11657,22 +11676,6 @@ id:"network/rx_rate",
 label:"Received",
 data:[]
 } ]
-}), window.OPENSHIFT_CONSTANTS.DISABLE_CUSTOM_METRICS || j.getCustomMetrics(m.pod).then(function(a) {
-angular.forEach(a, function(a) {
-var b = a.description || a.name, c = a.unit || "";
-m.metrics.push({
-label:b,
-units:c,
-chartPrefix:"custom-" + _.uniqueId("custom-metric-"),
-chartType:"spline",
-datasets:[ {
-id:"custom/" + a.name,
-label:b,
-type:a.type,
-data:[]
-} ]
-});
-}), z();
 }), m.loaded = !1, m.noData = !0, m.showComputeUnitsHelp = function() {
 k.showComputeUnitsHelp();
 }, j.getMetricsURL().then(function(a) {
@@ -11680,12 +11683,12 @@ m.metricsURL = a;
 }), m.options = {
 rangeOptions:i.getTimeRangeOptions()
 }, m.options.timeRange = _.head(m.options.rangeOptions);
-var H = a("upperFirst"), I = function(a) {
+var I = a("upperFirst"), J = function(a) {
 var b = "#" + a.chartPrefix + m.uniqueID + "-donut";
 return {
 bindto:b,
 onrendered:function() {
-g.updateDonutCenterText(b, a.datasets[0].used, H(a.units) + " Used");
+g.updateDonutCenterText(b, a.datasets[0].used, I(a.units) + " Used");
 },
 donut:{
 label:{
@@ -11701,24 +11704,26 @@ height:175,
 widht:175
 }
 };
-}, J = function(a) {
+}, K = function(a) {
 var b = a.chartPrefix + m.uniqueID + "-sparkline", c = i.getDefaultSparklineConfig(b, a.units);
 return 1 === a.datasets.length && _.set(c, "legend.show", !1), c;
-}, K = 0;
+}, L = 0;
+w()["finally"](function() {
 m.$watch("options", function() {
 _.each(m.metrics, function(a) {
 _.each(a.datasets, function(a) {
 delete a.data;
 });
-}), delete m.metricsError, z();
-}, !0), A = b(z, i.getDefaultUpdateInterval(), !1), f.$on("metrics.charts.resize", function() {
-i.redraw(B), i.redraw(C);
+}), delete m.metricsError, A();
+}, !0), B = b(A, i.getDefaultUpdateInterval(), !1);
+}), f.$on("metrics.charts.resize", function() {
+i.redraw(C), i.redraw(D);
 }), m.$on("$destroy", function() {
-A && (b.cancel(A), A = null), angular.forEach(B, function(a) {
+B && (b.cancel(B), B = null), angular.forEach(C, function(a) {
 a.destroy();
-}), B = null, angular.forEach(C, function(a) {
+}), C = null, angular.forEach(D, function(a) {
 a.destroy();
-}), C = null, G = !0;
+}), D = null, H = !0;
 });
 }
 };

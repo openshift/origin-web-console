@@ -95,41 +95,6 @@ angular.module('openshiftConsole')
           });
         }
 
-        if (!window.OPENSHIFT_CONSTANTS.DISABLE_CUSTOM_METRICS) {
-          // Load any custom metrics onto the page
-          MetricsService.getCustomMetrics(scope.pod).then(
-            function(response) {
-              angular.forEach(response, function(metric) {
-
-                // set the label to the description if specified
-                var label = metric.description || metric.name;
-              
-                // get the unit value if specified
-                var unit =  metric.unit || "";
-
-                scope.metrics.push({
-                  label: label,
-                  units: unit,
-                  chartPrefix: "custom-" + _.uniqueId('custom-metric-'),
-                  chartType: "spline",
-
-                  datasets: [
-                    {
-                      id: "custom/" + metric.name,
-                      label: label,
-                      type: metric.type,
-                      data: []
-                    },
-                  ]
-                });
-
-              });
-              // update the page with the new charts.
-              update();
-            }
-          );
-        }
-
         // Set to true when any data has been loaded (or failed to load).
         scope.loaded = false;
         scope.noData = true;
@@ -378,6 +343,40 @@ angular.module('openshiftConsole')
           };
         }
 
+        function getCustomMetrics() {
+          if (window.OPENSHIFT_CONSTANTS.DISABLE_CUSTOM_METRICS) {
+            return $q.when({});
+          }
+
+          // Load any custom metrics onto the page
+          return MetricsService.getCustomMetrics(scope.pod).then(function(response) {
+            angular.forEach(response, function(metric) {
+
+              // set the label to the description if specified
+              var label = metric.description || metric.name;
+
+              // get the unit value if specified
+              var unit =  metric.unit || "";
+
+              scope.metrics.push({
+                label: label,
+                units: unit,
+                chartPrefix: "custom-" + _.uniqueId('custom-metric-'),
+                chartType: "spline",
+
+                datasets: [
+                  {
+                    id: "custom/" + metric.name,
+                    label: label,
+                    type: metric.type,
+                    data: []
+                  },
+                ]
+              });
+            });
+          });
+        }
+
         // Make sure there are no errors or missing data before updating.
         function canUpdate() {
           if (scope.metricsError || failureCount > 1) {
@@ -499,18 +498,21 @@ angular.module('openshiftConsole')
           });
         }
 
-        // Updates immediately and then on options changes.
-        scope.$watch('options', function() {
-          // Remove any existing data so that we request data for the new container or time range.
-          _.each(scope.metrics, function(metric) {
-            _.each(metric.datasets, function(dataset) {
-              delete dataset.data;
+        // Request custom metrics before calling update the first time.
+        getCustomMetrics().finally(function() {
+          // Updates immediately and then on options changes.
+          scope.$watch('options', function() {
+            // Remove any existing data so that we request data for the new container or time range.
+            _.each(scope.metrics, function(metric) {
+              _.each(metric.datasets, function(dataset) {
+                delete dataset.data;
+              });
             });
-          });
-          delete scope.metricsError;
-          update();
-        }, true);
-        intervalPromise = $interval(update, MetricsCharts.getDefaultUpdateInterval(), false);
+            delete scope.metricsError;
+            update();
+          }, true);
+          intervalPromise = $interval(update, MetricsCharts.getDefaultUpdateInterval(), false);
+        });
 
         $rootScope.$on('metrics.charts.resize', function() {
           MetricsCharts.redraw(donutByMetric);
