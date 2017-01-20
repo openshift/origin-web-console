@@ -1,7 +1,7 @@
 'use strict';
 
 angular.module('openshiftConsole')
-  .controller('StatefulSetsController', function($scope, $routeParams, AlertMessageService, DataService, ProjectsService, LabelFilter) {
+  .controller('StatefulSetsController', function($scope, $routeParams, AlertMessageService, DataService, ProjectsService, LabelFilter, LabelsService) {
     $scope.projectName = $routeParams.project;
     $scope.alerts = $scope.alerts || {};
     $scope.labelSuggestions = {};
@@ -32,6 +32,13 @@ angular.module('openshiftConsole')
           LabelFilter.addLabelSuggestionsFromResources($scope.unfilteredStatefulSets, $scope.labelSuggestions);
           LabelFilter.setLabelSuggestions($scope.labelSuggestions);
           updateFilterWarning();
+        }));
+
+        // TODO: 1.6 eliminate this block, we dont actually need pods on this page,
+        // we are just using to fix the fact that the replicas count in inaccurate
+        watches.push(DataService.watch('pods', context, function(podData) {
+          $scope.pods = podData.by('metadata.name');
+          $scope.podsByOwnerUID = LabelsService.groupBySelector($scope.pods, $scope.statefulSets, { key: 'metadata.uid' });
         }));
 
         function updateFilterWarning() {

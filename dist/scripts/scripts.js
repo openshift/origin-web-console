@@ -6490,11 +6490,11 @@ e.then(g);
 g.unwatchAll(w);
 });
 }));
-} ]), angular.module("openshiftConsole").controller("StatefulSetsController", [ "$scope", "$routeParams", "AlertMessageService", "DataService", "ProjectsService", "LabelFilter", function(a, b, c, d, e, f) {
+} ]), angular.module("openshiftConsole").controller("StatefulSetsController", [ "$scope", "$routeParams", "AlertMessageService", "DataService", "ProjectsService", "LabelFilter", "LabelsService", function(a, b, c, d, e, f, g) {
 a.projectName = b.project, a.alerts = a.alerts || {}, a.labelSuggestions = {}, a.emptyMessage = "Loading...", c.getAlerts().forEach(function(b) {
 a.alerts[b.name] = b.data;
 }), c.clearAlerts();
-var g = [];
+var h = [];
 e.get(b.project).then(_.spread(function(b, c) {
 function e() {
 f.getLabelSelector().isEmpty() || !$.isEmptyObject(a.statefulSets) || $.isEmptyObject(a.unfilteredStatefulSets) ? delete a.alerts.statefulsets :a.alerts.statefulsets = {
@@ -6502,7 +6502,7 @@ type:"warning",
 details:"The active filters are hiding all stateful sets."
 };
 }
-a.project = b, g.push(d.watch({
+a.project = b, h.push(d.watch({
 resource:"statefulsets",
 group:"apps",
 version:"v1beta1"
@@ -6511,12 +6511,16 @@ angular.extend(a, {
 loaded:!0,
 unfilteredStatefulSets:b.by("metadata.name")
 }), a.statefulSets = f.getLabelSelector().select(a.unfilteredStatefulSets), f.addLabelSuggestionsFromResources(a.unfilteredStatefulSets, a.labelSuggestions), f.setLabelSuggestions(a.labelSuggestions), e();
+})), h.push(d.watch("pods", c, function(b) {
+a.pods = b.by("metadata.name"), a.podsByOwnerUID = g.groupBySelector(a.pods, a.statefulSets, {
+key:"metadata.uid"
+});
 })), f.onActiveFiltersChanged(function(b) {
 a.$apply(function() {
 a.statefulSets = b.select(a.unfilteredStatefulSets), e();
 });
 }), a.$on("$destroy", function() {
-d.unwatchAll(g);
+d.unwatchAll(h);
 });
 }));
 } ]), angular.module("openshiftConsole").controller("StatefulSetController", [ "$filter", "$scope", "$routeParams", "AlertMessageService", "BreadcrumbsService", "DataService", "MetricsService", "ProjectsService", function(a, b, c, d, e, f, g, h) {
