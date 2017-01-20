@@ -4128,8 +4128,8 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "</dd>\n" +
     "<dt>Replicas:</dt>\n" +
     "<dd>\n" +
-    "<replicas status=\"statefulSet.status.replicas\" spec=\"statefulSet.spec.replicas\" disable-scaling=\"!isScalable()\" scale-fn=\"scale(replicas)\" deployment=\"statefulSet\">\n" +
-    "</replicas>\n" +
+    "\n" +
+    "<span ng-if=\"(podsForStatefulSet | hashSize) !== statefulSet.spec.replicas\">{{podsForStatefulSet | hashSize}}/</span>{{statefulSet.spec.replicas}} replica<span ng-if=\"statefulSet.spec.replicas != 1\">s</span>\n" +
     "\n" +
     "</dd>\n" +
     "</dl>\n" +
@@ -4242,7 +4242,8 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "<a ng-href=\"{{statefulSet | navigateResourceURL}}\">{{statefulSet.metadata.name}}</a>\n" +
     "</td>\n" +
     "<td data-title=\"Replicas\">\n" +
-    "<span ng-if=\"statefulSet.status.replicas !== statefulSet.spec.replicas\">{{statefulSet.status.replicas}}/</span>{{statefulSet.spec.replicas}} replica<span ng-if=\"statefulSet.spec.replicas != 1\">s</span>\n" +
+    "<span ng-if=\"(podsByOwnerUID[statefulSet.metadata.uid] | hashSize) !== statefulSet.spec.replicas\">{{podsByOwnerUID[statefulSet.metadata.uid] | hashSize}}/</span>{{statefulSet.spec.replicas}} replica<span ng-if=\"statefulSet.spec.replicas != 1\">s</span>\n" +
+    "\n" +
     "</td>\n" +
     "<td data-title=\"Created\">\n" +
     "<span am-time-ago=\"statefulSet.metadata.creationTimestamp\"></span>\n" +
