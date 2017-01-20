@@ -9235,7 +9235,7 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "Build hooks allow you to run commands at the end of the build to verify the image.\n" +
     "</div>\n" +
     "</div>\n" +
-    "<div ng-show=\"view.hasHooks\">\n" +
+    "<div ng-if=\"view.hasHooks\">\n" +
     "<div class=\"form-group\">\n" +
     "<h4>Hook Types</h4>\n" +
     "<ui-select ng-model=\"buildHookSelection.type\" title=\"Choose a type of build hook\">\n" +
@@ -9246,7 +9246,7 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "</ui-select>\n" +
     "</div>\n" +
     "<fieldset>\n" +
-    "<div ng-show=\"buildHookSelection.type.id === 'script' || buildHookSelection.type.id === 'scriptArgs'\">\n" +
+    "<div ng-if=\"buildHookSelection.type.id === 'script' || buildHookSelection.type.id === 'scriptArgs'\">\n" +
     "<h4>Script</h4>\n" +
     "<div ui-ace=\"{\n" +
     "                                mode: 'sh',\n" +
@@ -9255,17 +9255,17 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "                                  fadeFoldWidgets: true,\n" +
     "                                  showPrintMargin: false\n" +
     "                                }\n" +
-    "                              }\" ng-model=\"updatedBuildConfig.spec.postCommit.script\" class=\"ace-bordered ace-inline mar-top-md\">\n" +
+    "                              }\" ng-model=\"updatedBuildConfig.spec.postCommit.script\" required class=\"ace-bordered ace-inline mar-top-md\">\n" +
     "</div>\n" +
     "</div>\n" +
-    "<div ng-show=\"buildHookSelection.type.id === 'command' || buildHookSelection.type.id === 'commandArgs'\">\n" +
+    "<div ng-if=\"buildHookSelection.type.id === 'command' || buildHookSelection.type.id === 'commandArgs'\">\n" +
     "<h4>Command</h4>\n" +
-    "<edit-command args=\"updatedBuildConfig.spec.postCommit.command\">\n" +
+    "<edit-command args=\"updatedBuildConfig.spec.postCommit.command\" is-required=\"true\">\n" +
     "</edit-command>\n" +
     "</div>\n" +
-    "<div ng-show=\"buildHookSelection.type.id === 'args' || buildHookSelection.type.id === 'commandArgs' || buildHookSelection.type.id === 'scriptArgs' \">\n" +
+    "<div ng-if=\"buildHookSelection.type.id === 'args' || buildHookSelection.type.id === 'commandArgs' || buildHookSelection.type.id === 'scriptArgs' \">\n" +
     "<h4>Arguments</h4>\n" +
-    "<edit-command args=\"updatedBuildConfig.spec.postCommit.args\" type=\"argument\">\n" +
+    "<edit-command args=\"updatedBuildConfig.spec.postCommit.args\" type=\"argument\" is-required=\"true\">\n" +
     "</edit-command>\n" +
     "</div>\n" +
     "</fieldset>\n" +

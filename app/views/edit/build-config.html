@@ -547,7 +547,7 @@
                         </div>
                       </div>
 
-                      <div ng-show="view.hasHooks">
+                      <div ng-if="view.hasHooks">
                         <div class="form-group">
                           <h4>Hook Types</h4>
                           <ui-select
@@ -561,7 +561,7 @@
                         </div>
 
                         <fieldset>
-                          <div ng-show="buildHookSelection.type.id === 'script' || buildHookSelection.type.id === 'scriptArgs'">
+                          <div ng-if="buildHookSelection.type.id === 'script' || buildHookSelection.type.id === 'scriptArgs'">
                             <h4>Script</h4>
                             <div
                               ui-ace="{
@@ -573,22 +573,25 @@
                                 }
                               }"
                               ng-model="updatedBuildConfig.spec.postCommit.script"
+                              required
                               class="ace-bordered ace-inline mar-top-md">
                             </div>
                           </div>
 
-                          <div ng-show="buildHookSelection.type.id === 'command' || buildHookSelection.type.id === 'commandArgs'">
+                          <div ng-if="buildHookSelection.type.id === 'command' || buildHookSelection.type.id === 'commandArgs'">
                             <h4>Command</h4>
                             <edit-command
-                              args="updatedBuildConfig.spec.postCommit.command">
+                              args="updatedBuildConfig.spec.postCommit.command"
+                              is-required="true">
                             </edit-command>
                           </div>
 
-                          <div ng-show="buildHookSelection.type.id === 'args' || buildHookSelection.type.id === 'commandArgs' || buildHookSelection.type.id === 'scriptArgs' ">
+                          <div ng-if="buildHookSelection.type.id === 'args' || buildHookSelection.type.id === 'commandArgs' || buildHookSelection.type.id === 'scriptArgs' ">
                             <h4>Arguments</h4>
                             <edit-command
                               args="updatedBuildConfig.spec.postCommit.args"
-                              type="argument">
+                              type="argument"
+                              is-required="true">
                             </edit-command>
                           </div>
                         </fieldset>
