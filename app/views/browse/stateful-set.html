@@ -178,9 +178,8 @@
                 <uib-tab active="selectedTab.events">
                   <uib-tab-heading>Events</uib-tab-heading>
                   <div class="resource-events">
-                      <!-- TODO: resource-kind: StatefulSet update -->
                       <events
-                        resource-kind="PetSet"
+                        resource-kind="StatefulSet"
                         resource-name="{{statefulSet.metadata.name}}"
                         project-context="projectContext"
                         ng-if="selectedTab.events"></events>

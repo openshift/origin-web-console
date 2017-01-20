@@ -4181,8 +4181,7 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "<uib-tab active=\"selectedTab.events\">\n" +
     "<uib-tab-heading>Events</uib-tab-heading>\n" +
     "<div class=\"resource-events\">\n" +
-    "\n" +
-    "<events resource-kind=\"PetSet\" resource-name=\"{{statefulSet.metadata.name}}\" project-context=\"projectContext\" ng-if=\"selectedTab.events\"></events>\n" +
+    "<events resource-kind=\"StatefulSet\" resource-name=\"{{statefulSet.metadata.name}}\" project-context=\"projectContext\" ng-if=\"selectedTab.events\"></events>\n" +
     "</div>\n" +
     "</uib-tab>\n" +
     "</uib-tabset>\n" +
