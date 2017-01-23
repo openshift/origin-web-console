@@ -40,6 +40,7 @@ angular.module("openshiftConsole")
       return;
     }
 
+    var breadcrumbTitle = $routeParams.displayName || imageName;
     $scope.displayName = $routeParams.displayName;
     $scope.breadcrumbs = [
       {
@@ -55,7 +56,7 @@ angular.module("openshiftConsole")
         link: "project/" + $scope.projectName + "/create?tab=fromCatalog"
       },
       {
-        title: $routeParams.displayName || imageName
+        title: breadcrumbTitle
       }
     ];
     $scope.alerts = {};
@@ -288,7 +289,10 @@ angular.module("openshiftConsole")
                   };
               }
             );
-          Navigate.toNextSteps($scope.name, $scope.projectName, $scope.usingSampleRepo() ? {"fromSample": true} : null);
+          Navigate.toNextSteps($scope.name, $scope.projectName, {
+            usingSampleRepo: $scope.usingSampleRepo(),
+            breadcrumbTitle: breadcrumbTitle
+          });
         };
 
         var launchConfirmationDialog = function(alerts) {
