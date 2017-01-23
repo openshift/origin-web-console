@@ -3688,7 +3688,7 @@ to{opacity:0}
 .pod-template-block+.pod-template-block{margin-top:15px}
 .pod-template-block .component-label{font-size:11px;padding:0 10px 4px 0;text-transform:uppercase}
 .pod-template-block .pod-template [flex]{min-width:0}
-.pod-template-block .pod-template [row]{border-left:3px solid #f1f1f1;padding:2px 0 0 2px}
+.pod-template-block .pod-template .icon-row{border-left:3px solid #f1f1f1;padding:2px 0 0 2px}
 .pod-template-block .pod-template .fa,.pod-template-block .pod-template .pficon,.pod-template-block .pod-template span[data-icon]{color:#888}
 .pod-template-block .pod-template .pod-template-build{word-wrap:break-word;word-break:break-word;overflow-wrap:break-word;min-width:0}
 .pod-template-block .pod-template .pod-template-key{font-weight:700}
@@ -4299,7 +4299,7 @@ ul.messenger-theme-flat .messenger-message.alert-info .messenger-message-inner:b
 .font-icon-block .font-icon:nth-child(n+2){position:absolute;left:0;top:0;text-shadow:none}
 .font-icon{display:inline-block;top:0;font-family:openshift-logos-icon!important;font-style:normal}
 .font-icon.font-icon-inline{position:relative}
-.icon-row div:first-child{text-align:center;width:30px}
+.icon-row .icon-wrap{text-align:center;width:30px}
 @font-face{font-family:openshift-logos-icon;src:url(../styles/fonts/openshift-logos-icon.ttf) format('truetype'),url(../styles/fonts/openshift-logos-icon.woff) format('woff'),url(../styles/fonts/openshift-logos-icon.svg#openshift-logos-icon) format('svg');font-weight:400;font-style:normal}
 .icon-js:before{content:"\f157"}
 .icon-symfony:before{content:"\f156"}
