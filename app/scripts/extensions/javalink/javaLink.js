@@ -17,7 +17,7 @@
           'ng-show="item.url" ',
           'class="icon-row" ',
           'title="Connect to container">',
-            '<div>',
+            '<div class="icon-wrap">',
               '<i class="fa fa-share" aria-hidden="true"></i>',
             '</div>',
             '<div flex>',

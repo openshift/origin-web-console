@@ -21,7 +21,7 @@
     <div class="pod-template">
       <div class="component-label">Container: {{container.name}}</div>
       <div row ng-if="container.image" class="pod-template-image icon-row">
-        <div>
+        <div class="icon-wrap">
           <span class="pficon pficon-image" aria-hidden="true"></span>
         </div>
         <div flex class="word-break">
@@ -38,7 +38,7 @@
       </div>
       <div ng-if="imagesByDockerReference && container.image && (image = imagesByDockerReference[container.image])" class="pod-template-build">
         <div row class="icon-row" ng-if="build = (image | buildForImage : builds)">
-          <div>
+          <div class="icon-wrap">
             <span class="fa fa-refresh" aria-hidden="true"></span>
           </div>
           <div flex class="word-break">
@@ -53,7 +53,7 @@
           </div>
         </div>
         <div row class="icon-row" ng-if="build.spec.source">
-          <div>
+          <div class="icon-wrap">
             <span class="fa fa-code" aria-hidden="true"></span>
           </div>
           <div flex>
@@ -83,7 +83,7 @@
       </div>
 
       <div row ng-if="detailed && (container.command.length || container.args.length)" class="icon-row">
-        <div>
+        <div class="icon-wrap">
           <span aria-hidden="true" class="fa fa-terminal"></span>
         </div>
         <div flex class="word-break">
@@ -105,7 +105,7 @@
       </div>
 
       <div row ng-if="container.ports.length > 0" class="pod-template-ports icon-row">
-        <div>
+        <div class="icon-wrap">
           <span data-icon="" aria-hidden="true" style="font-size:16px;line-height:normal"></span>
         </div>
         <div flex class="word-break">
@@ -121,7 +121,7 @@
       </div>
 
       <div row ng-if="detailed" ng-repeat="mount in container.volumeMounts" class="icon-row">
-        <div>
+        <div class="icon-wrap">
           <span aria-hidden="true" class="fa fa-database"></span>
         </div>
         <div flex class="word-break">
@@ -134,7 +134,7 @@
       </div>
 
       <div row ng-if="detailed && (container.resources.requests.cpu || container.resources.limits.cpu)" class="icon-row">
-        <div>
+        <div class="icon-wrap">
           <i class="fa fa-area-chart" aria-hidden="true"></i>
         </div>
         <div flex>
@@ -152,7 +152,7 @@
       </div>
 
       <div row ng-if="detailed && (container.resources.requests.memory || container.resources.limits.memory)" class="icon-row">
-        <div>
+        <div class="icon-wrap">
           <i class="fa fa-area-chart" aria-hidden="true"></i>
         </div>
         <div flex>
@@ -170,7 +170,7 @@
       </div>
 
       <div row ng-if="detailed && container.readinessProbe" class="icon-row">
-        <div>
+        <div class="icon-wrap">
           <i class="fa fa-medkit" aria-hidden="true"></i>
         </div>
         <div flex>
@@ -180,7 +180,7 @@
       </div>
 
       <div row ng-if="detailed && container.livenessProbe" class="icon-row">
-        <div>
+        <div class="icon-wrap">
           <i class="fa fa-medkit" aria-hidden="true"></i>
         </div>
         <div flex>
