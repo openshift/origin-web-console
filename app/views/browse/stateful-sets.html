@@ -52,7 +52,10 @@
                       <a ng-href="{{statefulSet | navigateResourceURL}}">{{statefulSet.metadata.name}}</a>
                     </td>
                     <td data-title="Replicas">
+                      <span ng-if="(podsByOwnerUID[statefulSet.metadata.uid] | hashSize) !== statefulSet.spec.replicas">{{podsByOwnerUID[statefulSet.metadata.uid] | hashSize}}/</span>{{statefulSet.spec.replicas}} replica<span ng-if="statefulSet.spec.replicas != 1">s</span>
+                      <!-- TODO: swap back in 1.6 when the replicas count for StatefulSets is fixed
                       <span ng-if="statefulSet.status.replicas !== statefulSet.spec.replicas">{{statefulSet.status.replicas}}/</span>{{statefulSet.spec.replicas}} replica<span ng-if="statefulSet.spec.replicas != 1">s</span>
+                      -->
                     </td>
                     <td data-title="Created">
                       <span am-time-ago="statefulSet.metadata.creationTimestamp"></span>
