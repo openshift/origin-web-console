@@ -2777,17 +2777,17 @@ b[a.tag] = b[a.tag] || {}, b[a.tag].name = a.tag, b[a.tag].status = angular.copy
 }
 };
 }), angular.module("openshiftConsole").factory("MembershipService", [ "$filter", function(a) {
-var b = (a("annotation"), function(a, b) {
+var b = a("annotation"), c = function(a, b) {
 return 1 === _.filter(b, function(b) {
 return _.some(b.subjects, {
 name:a
 });
 }).length;
-}), c = function() {
+}, d = function() {
 return _.reduce(_.slice(arguments), function(a, b, c) {
 return b ? _.isEqual(c, 0) ? b :a + "-" + b :a;
 }, "");
-}, d = function() {
+}, e = function() {
 return {
 User:{
 kind:"User",
@@ -2826,39 +2826,39 @@ name:"SystemGroup",
 subjects:{}
 }
 };
-}, e = function(a, b) {
-var e = _.reduce(a, function(a, d) {
-var e = c(d.roleRef.namespace ? "Role" :"ClusterRole", d.roleRef.name);
-return _.each(d.subjects, function(d) {
-var f = c(d.namespace, d.name);
-a[d.kind].subjects[f] || (a[d.kind].subjects[f] = {
-name:d.name,
-namespace:d.namespace,
+}, f = function(a, b) {
+var c = _.reduce(a, function(a, c) {
+var e = d(c.roleRef.namespace ? "Role" :"ClusterRole", c.roleRef.name);
+return _.each(c.subjects, function(c) {
+var f = d(c.namespace, c.name);
+a[c.kind].subjects[f] || (a[c.kind].subjects[f] = {
+name:c.name,
+namespace:c.namespace,
 roles:{}
-}), _.includes(a[d.kind].subjects[f].roles, e) || (a[d.kind].subjects[f].roles[e] = b[e]);
+}), _.includes(a[c.kind].subjects[f].roles, e) || (a[c.kind].subjects[f].roles[e] = b[e]);
 }), a;
-}, d());
-return _.sortBy(e, "sortOrder");
-}, f = function(a) {
-return _.sortBy(a, "metadata.name");
+}, e());
+return _.sortBy(c, "sortOrder");
 }, g = function(a) {
-return _.filter(a, function(a) {
-return _.isEqual(a.metadata.name, "system:image-puller") || _.isEqual(a.metadata.name, "system:image-pusher") || _.isEqual(a.metadata.name, "system:image-builder") || _.isEqual(a.metadata.name, "system:deployer") || !_.startsWith(a.metadata.name, "cluster-") && !_.startsWith(a.metadata.name, "system:") && !_.startsWith(a.metadata.name, "registry-") && !_.startsWith(a.metadata.name, "self-");
-});
+return _.sortBy(a, "metadata.name");
 }, h = function(a) {
+return _.filter(a, function(a) {
+return "true" !== b(a, "systemOnly");
+});
+}, i = function(a) {
 return _.reduce(a, function(a, b) {
-return a[c(b.kind, b.metadata.name)] = b, a;
+return a[d(b.kind, b.metadata.name)] = b, a;
 }, {});
-}, i = function(a, b) {
-return _.merge(h(a), h(b));
+}, j = function(a, b) {
+return _.merge(i(a), i(b));
 };
 return {
-sortRoles:f,
-filterRoles:g,
-mapRolesForUI:i,
-isLastRole:b,
-getSubjectKinds:d,
-mapRolebindingsForUI:e
+sortRoles:g,
+filterRoles:h,
+mapRolesForUI:j,
+isLastRole:c,
+getSubjectKinds:e,
+mapRolebindingsForUI:f
 };
 } ]), angular.module("openshiftConsole").factory("RolesService", [ "$q", "DataService", function(a, b) {
 var c = function(c) {
@@ -13639,7 +13639,8 @@ jenkinsBuildURL:[ "openshift.io/jenkins-build-uri" ],
 jenkinsLogURL:[ "openshift.io/jenkins-log-url" ],
 jenkinsStatus:[ "openshift.io/jenkins-status-json" ],
 idledAt:[ "idling.alpha.openshift.io/idled-at" ],
-idledPreviousScale:[ "idling.alpha.openshift.io/previous-scale" ]
+idledPreviousScale:[ "idling.alpha.openshift.io/previous-scale" ],
+systemOnly:[ "authorization.openshift.io/system-only" ]
 };
 return function(b) {
 return a[b] || null;

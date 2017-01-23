@@ -86,28 +86,26 @@ describe('MembershipService', function() {
   describe('#filterRoles', function() {
     it('should filter out system-only roles', function() {
       var fakeList = [
-        // specific roles filter will explicitly pass
-        {metadata: {name: 'system:image-puller'}},
-        {metadata: {name: 'system:image-pusher'}},
-        {metadata: {name: 'system:image-builder'}},
-        {metadata: {name: 'system:deployer'}},
-        // roles the filter will explicitly reject
-        {metadata: {name: 'cluster-magical-scary-role'}},
-        {metadata: {name: 'system:special-scary-role'}},
-        {metadata: {name: 'registry-ninja'}},
-        {metadata: {name: 'self-destruction'}},
-        // ignored
-        {metadata: {name: 'admin'}},
-        {metadata: {name: 'edit'}}
+        // the string 'true' is the only acceptable value for 'authorization.openshift.io/system-only'
+        {metadata: {name: 'system-only-role', annotations: {'authorization.openshift.io/system-only': 'true'}}},
+        // the rest of these will not be filtered
+        {metadata: {name: 'system-only-role2', annotations: {'authorization.openshift.io/system-only': 'false'}}},
+        {metadata: {name: 'system-only-role3', annotations: {'authorization.openshift.io/system-only': 'show'}}},
+        {metadata: {name: 'system-only-role4', annotations: {'authorization.openshift.io/system-only': ''}}},
+        {metadata: {name: 'system-only-role5', annotations: {'authorization.openshift.io/system-only': undefined}}},
+        {metadata: {name: 'system-only-role6', annotations: {'authorization.openshift.io/system-only': null}}},
+        {metadata : {name : 'not-system-only'}},
+        {metadata : {name : 'the-other-not-system-only' }}
       ];
 
       expect(MembershipService.filterRoles(fakeList)).toEqual([
-        {metadata : {name : 'system:image-puller'}},
-        {metadata : {name : 'system:image-pusher' }},
-        {metadata : {name : 'system:image-builder'}},
-        {metadata : {name : 'system:deployer'}},
-        {metadata : {name : 'admin'}},
-        {metadata : {name : 'edit'}}
+        {metadata: {name: 'system-only-role2', annotations: {'authorization.openshift.io/system-only': 'false'}}},
+        {metadata: {name: 'system-only-role3', annotations: {'authorization.openshift.io/system-only': 'show'}}},
+        {metadata: {name: 'system-only-role4', annotations: {'authorization.openshift.io/system-only': ''}}},
+        {metadata: {name: 'system-only-role5', annotations: {'authorization.openshift.io/system-only': undefined}}},
+        {metadata: {name: 'system-only-role6', annotations: {'authorization.openshift.io/system-only': null}}},
+        {metadata : {name : 'not-system-only'}},
+        {metadata : {name : 'the-other-not-system-only' }}
       ]);
     });
   });
