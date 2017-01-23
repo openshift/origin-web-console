@@ -37,7 +37,8 @@ angular.module('openshiftConsole')
       "jenkinsLogURL":            ["openshift.io/jenkins-log-url"],
       "jenkinsStatus":            ["openshift.io/jenkins-status-json"],
       "idledAt":                  ["idling.alpha.openshift.io/idled-at"],
-      "idledPreviousScale":       ["idling.alpha.openshift.io/previous-scale"]
+      "idledPreviousScale":       ["idling.alpha.openshift.io/previous-scale"],
+      "systemOnly":               ["authorization.openshift.io/system-only"]
     };
     return function(annotationKey) {
       return annotationMap[annotationKey] || null;
