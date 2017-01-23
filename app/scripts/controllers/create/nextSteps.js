@@ -20,21 +20,7 @@ angular.module("openshiftConsole")
     $scope.showParamsTable = false;
 
     $scope.projectName = $routeParams.project;
-    var imageName = $routeParams.imageStream;
-    var imageTag = $routeParams.imageTag;
-    var namespace = $routeParams.namespace;
     $scope.fromSampleRepo = $routeParams.fromSample;
-
-    var template = $routeParams.template;
-    var nameLink = "";
-    var name = "";
-    if (creatingFromImage()) {
-      nameLink = "project/" + $scope.projectName + "/create/fromimage?imageName=" + imageName + "&imageTag=" + imageTag + "&namespace=" + namespace + "&name=" + name;
-      name = imageName + ":" + imageTag;
-    } else if (creatingFromTemplate()) {
-      nameLink = "project/" + $scope.projectName + "/create/fromtemplate?template=" + template + "&namespace=" + namespace;
-      name = template;
-    }
 
     $scope.breadcrumbs = [
       {
@@ -46,8 +32,8 @@ angular.module("openshiftConsole")
         link: "project/" + $scope.projectName + "/create"
       },
       {
-        title: name,
-        link: nameLink
+        // Make history back the default by leaving off the link.
+        title: $routeParams.breadcrumbTitle || $routeParams.name
       },
       {
         title: "Next Steps"
@@ -68,22 +54,23 @@ angular.module("openshiftConsole")
         $scope.project = project;
         // Update project breadcrumb with display name.
         $scope.breadcrumbs[0].title = $filter('displayName')(project);
-        if (!name) {
-          Navigate.toProjectOverview($scope.projectName);
-          return;
-        }
         watches.push(DataService.watch("buildconfigs", context, function(buildconfigs) {
           $scope.buildConfigs = buildconfigs.by("metadata.name");
-          $scope.createdBuildConfig = $scope.buildConfigs[name];
+          $scope.createdBuildConfig = $scope.buildConfigs[$routeParams.name];
           Logger.log("buildconfigs (subscribe)", $scope.buildConfigs);
         }));
 
+        var hasBuildConfigTrigger = function(type) {
+          var triggers = _.get($scope,  'createdBuildConfig.spec.triggers', []);
+          return _.some(triggers, { type: type });
+        };
+
         $scope.createdBuildConfigWithGitHubTrigger = function() {
-          return _.some(_.get($scope, 'createdBuildConfig.spec.triggers'), {type: 'GitHub'});
+          return hasBuildConfigTrigger('GitHub');
         };
 
         $scope.createdBuildConfigWithConfigChangeTrigger = function() {
-          return _.some(_.get($scope, 'createdBuildConfig.spec.triggers'), {type: 'ConfigChange'});
+          return hasBuildConfigTrigger('ConfigChange');
         };
 
         $scope.allTasksSuccessful = function(tasks) {
@@ -121,12 +108,4 @@ angular.module("openshiftConsole")
         });
 
       }));
-
-      function creatingFromTemplate() {
-        return template && namespace;
-      }
-
-      function creatingFromImage() {
-        return imageName && imageTag && namespace;
-      }
   });
