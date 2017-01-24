@@ -4406,13 +4406,18 @@ width:a.width() / 10,
 height:a.height()
 };
 return a.remove(), b;
-}, r = q(), s = $(window), t = function() {
-r.height && r.width && a.$apply(function() {
-var b = $(".container-terminal-wrapper").get(0);
-if (b) {
-var c = b.getBoundingClientRect(), d = s.width(), e = s.height(), f = d - c.left - 40, g = e - c.top - 50;
-a.terminalCols = Math.max(_.floor(f / r.width), 80), a.terminalRows = Math.max(_.floor(g / r.height), 24);
-}
+}, r = q(), s = $(window), t = function(b) {
+b || (b = 0), r.height && r.width && a.selectedTab.terminal && !(b > 10) && a.$apply(function() {
+var c = $(".container-terminal-wrapper").get(0);
+if (!c) return void d(function() {
+t(b + 1);
+}, 50);
+var e = c.getBoundingClientRect();
+if (0 === e.left && 0 === e.top && 0 === e.width && 0 === e.height) return void d(function() {
+t(b + 1);
+}, 50);
+var f = s.width(), g = s.height(), h = f - e.left - 40, i = g - e.top - 50;
+a.terminalCols = Math.max(_.floor(h / r.width), 80), a.terminalRows = Math.max(_.floor(i / r.height), 24);
 });
 };
 a.$watch("selectedTab.terminal", function(a) {
