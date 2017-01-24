@@ -9,6 +9,7 @@ angular
     AlertMessageService,
     BreadcrumbsService,
     DataService,
+    EnvironmentService,
     MetricsService,
     ProjectsService) {
 
@@ -24,12 +25,10 @@ angular
 
     $scope.emptyMessage = "Loading...";
 
-    var altTextForValueFrom = $filter('altTextForValueFrom');
     var updateEnvVars = function(statefulSet) {
-      _.each(statefulSet.spec.template.spec.containers, function(container) {
-        _.each(container.env, altTextForValueFrom);
-      });
-      return statefulSet;
+      // Return a copy so that we don't alter the original object, which is
+      // cached by DataService. Normalizing would otherwise modify the original.
+      return EnvironmentService.copyAndNormalize(statefulSet);
     };
 
     AlertMessageService.getAlerts().forEach(function(alert) {
