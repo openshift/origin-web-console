@@ -64,7 +64,7 @@
                         <span class="pficon pficon-info" aria-hidden="true"></span>
                         Environment variables can be edited on the <a ng-href="{{replicaSet | configURLForResource}}?tab=environment">deployment configuration</a>.
                       </p>
-                      <div ng-repeat="container in updatedDeployment.spec.template.spec.containers">
+                      <div ng-repeat="container in updatedReplicaSet.spec.template.spec.containers">
                         <h3>Container {{container.name}} Environment Variables</h3>
                         <key-value-editor
                           ng-if="container.env.length"
@@ -80,7 +80,7 @@
                       </div>
                     </div>
                     <ng-form ng-if="!(replicaSet | hasDeployment) && !(replicaSet | hasDeploymentConfig)" name="forms.envForm">
-                      <div ng-repeat="container in updatedDeployment.spec.template.spec.containers">
+                      <div ng-repeat="container in updatedReplicaSet.spec.template.spec.containers">
                         <div ng-if="resource | canI : 'update'">
                           <key-value-editor
                             entries="container.env"

@@ -16,6 +16,7 @@ angular.module('openshiftConsole')
                         BreadcrumbsService,
                         DataService,
                         DeploymentsService,
+                        EnvironmentService,
                         HPAService,
                         ImageStreamResolver,
                         Logger,
@@ -85,44 +86,70 @@ angular.module('openshiftConsole')
       $scope.logCanRun = !(_.includes(['New', 'Pending'], deploymentStatus(replicaSet)));
     };
 
-    var altTextForValueFrom = $filter('altTextForValueFrom');
-    var copyDeploymentAndEnsureEnv = function(replicaSet) {
-      $scope.updatedDeployment = angular.copy(replicaSet);
-      _.each($scope.updatedDeployment.spec.template.spec.containers, function(container) {
-        container.env = container.env || [];
-        _.each(container.env, altTextForValueFrom);
-      });
+    var previousEnvConflict = false;
+    var updateEnvironment = function(current, previous) {
+      if (previousEnvConflict) {
+        return;
+      }
+
+      if (!$scope.forms.envForm || $scope.forms.envForm.$pristine) {
+        $scope.updatedReplicaSet = EnvironmentService.copyAndNormalize(current);
+        return;
+      }
+
+      // The env var form has changed and the replica set has been updated. See
+      // if there were any background changes to the environment variables. If
+      // not, merge the environment edits into the updated replica set object.
+      if (EnvironmentService.isEnvironmentEqual(current, previous)) {
+        $scope.updatedReplicaSet = EnvironmentService.mergeEdits($scope.updatedReplicaSet, current);
+        return;
+      }
+
+      previousEnvConflict = true;
+      $scope.alerts["env-conflict"] = {
+        type: "warning",
+        message: "The environment variables for the " +
+          $filter('humanizeKind')($scope.replicaSet.kind) +
+            " have been updated in the background. Saving your changes may create a conflict or cause loss of data.",
+        links: [
+          {
+            label: 'Reload Environment Variables',
+            onClick: function() {
+              $scope.clearEnvVarUpdates();
+              return true;
+            }
+          }
+        ]
+      };
     };
 
+    var saveEnvPromise;
     $scope.saveEnvVars = function() {
-      _.each($scope.updatedDeployment.spec.template.spec.containers, function(container) {
-        container.env = keyValueEditorUtils.compactEntries(angular.copy(container.env));
+      EnvironmentService.compact($scope.updatedReplicaSet);
+      saveEnvPromise = DataService.update($scope.resource,
+                                          $routeParams.replicaSet,
+                                          $scope.updatedReplicaSet,
+                                          $scope.projectContext);
+      saveEnvPromise.then(function success() {
+        $scope.alerts['saveEnvSuccess'] = {
+          type: "success",
+          // TODO:  improve success alert
+          message: $scope.replicaSet.metadata.name + " was updated."
+        };
+        $scope.forms.envForm.$setPristine();
+      }, function failure(e) {
+        $scope.alerts['saveEnvError'] = {
+          type: "error",
+          message: $scope.replicaSet.metadata.name + " was not updated.",
+          details: "Reason: " + $filter('getErrorDetails')(e)
+        };
       });
-      DataService
-        .update(
-          $scope.resource,
-          $routeParams.replicaSet,
-          angular.copy($scope.updatedDeployment),
-          $scope.projectContext)
-        .then(function() {
-          $scope.alerts['saveEnvSuccess'] = {
-            type: "success",
-            // TODO:  improve success alert
-            message: $scope.replicaSet.metadata.name + " was updated."
-          };
-          $scope.forms.envForm.$setPristine();
-        }, function(e) {
-          $scope.alerts['saveEnvError'] = {
-            type: "error",
-            message: $scope.replicaSet.metadata.name + " was not updated.",
-            details: "Reason: " + $filter('getErrorDetails')(e)
-          };
-        });
     };
 
     $scope.clearEnvVarUpdates = function() {
-      copyDeploymentAndEnsureEnv($scope.replicaSet);
+      $scope.updatedReplicaSet = EnvironmentService.copyAndNormalize($scope.replicaSet);
       $scope.forms.envForm.$setPristine();
+      previousEnvConflict = false;
     };
 
     var limitWatches = $filter('isIE')() || $filter('isEdge')();
@@ -367,24 +394,17 @@ angular.module('openshiftConsole')
                   message: "This " + displayKind + " has been deleted."
                 };
               }
+
+              var previous = $scope.replicaSet;
               $scope.replicaSet = replicaSet;
 
-              if (!$scope.forms.envForm || $scope.forms.envForm.$pristine) {
-                copyDeploymentAndEnsureEnv(replicaSet);
+              // Wait for a pending save to complete to avoid a race between the PUT and the watch callbacks.
+              if (saveEnvPromise) {
+                saveEnvPromise.finally(function() {
+                  updateEnvironment(replicaSet, previous);
+                });
               } else {
-                $scope.alerts["background_update"] = {
-                  type: "warning",
-                  message: "This " + displayKind + " has been updated in the background. Saving your changes may create a conflict or cause loss of data.",
-                  links: [
-                    {
-                      label: 'Reload Environment Variables',
-                      onClick: function() {
-                        $scope.clearEnvVarUpdates();
-                        return true;
-                      }
-                    }
-                  ]
-                };
+                updateEnvironment(replicaSet, previous);
               }
 
               setLogVars(replicaSet);

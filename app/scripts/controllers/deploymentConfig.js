@@ -15,6 +15,7 @@ angular.module('openshiftConsole')
                         BreadcrumbsService,
                         DataService,
                         DeploymentsService,
+                        EnvironmentService,
                         HPAService,
                         ImageStreamResolver,
                         ModalsService,
@@ -23,8 +24,7 @@ angular.module('openshiftConsole')
                         ProjectsService,
                         StorageService,
                         LabelFilter,
-                        labelNameFilter,
-                        keyValueEditorUtils) {
+                        labelNameFilter) {
     var imageStreamImageRefByDockerReference = {}; // lets us determine if a particular container's docker image reference belongs to an imageStream
 
     $scope.projectName = $routeParams.project;
@@ -56,16 +56,40 @@ angular.module('openshiftConsole')
     var orderByDate = $filter('orderObjectsByDate');
     var mostRecent = $filter('mostRecent');
 
-    // copy deploymentConfig and ensure it has env so that we can edit env vars using key-value-editor
-    var copyDeploymentConfigAndEnsureEnv = function(deploymentConfig) {
-      $scope.updatedDeploymentConfig = angular.copy(deploymentConfig);
-      _.each($scope.updatedDeploymentConfig.spec.template.spec.containers, function(container) {
-        container.env = container.env || [];
-        // check valueFrom attribs and set an alt text for display if present
-        _.each(container.env, function(env) {
-          $filter('altTextForValueFrom')(env);
-        });
-      });
+    var previousEnvConflict = false;
+    var updateEnvironment = function(current, previous) {
+      if (previousEnvConflict) {
+        return;
+      }
+
+      if (!$scope.forms.dcEnvVars || $scope.forms.dcEnvVars.$pristine) {
+        $scope.updatedDeploymentConfig = EnvironmentService.copyAndNormalize(current);
+        return;
+      }
+
+      // The env var form has changed and the deployment config has been
+      // updated. See if there were any background changes to the environment
+      // variables. If not, merge the environment edits into the updated
+      // deployment config object.
+      if (EnvironmentService.isEnvironmentEqual(current, previous)) {
+        $scope.updatedDeploymentConfig = EnvironmentService.mergeEdits($scope.updatedDeploymentConfig, current);
+        return;
+      }
+
+      previousEnvConflict = true;
+      $scope.alerts["env-conflict"] = {
+        type: "warning",
+        message: "The environment variables for the deployment configuration have been updated in the background. Saving your changes may create a conflict or cause loss of data.",
+        links: [
+          {
+            label: 'Reload Environment Variables',
+            onClick: function() {
+              $scope.clearEnvVarUpdates();
+              return true;
+            }
+          }
+        ]
+      };
     };
 
     var watches = [];
@@ -85,6 +109,7 @@ angular.module('openshiftConsole')
             });
         };
 
+        var saveEnvPromise;
         DataService.get("deploymentconfigs", $routeParams.deploymentconfig, context).then(
           // success
           function(deploymentConfig) {
@@ -92,33 +117,37 @@ angular.module('openshiftConsole')
             $scope.deploymentConfig = deploymentConfig;
             $scope.strategyParams = $filter('deploymentStrategyParams')(deploymentConfig);
             updateHPAWarnings();
-            copyDeploymentConfigAndEnsureEnv(deploymentConfig);
+            $scope.updatedDeploymentConfig = EnvironmentService.copyAndNormalize(deploymentConfig);
             $scope.saveEnvVars = function() {
-              _.each($scope.updatedDeploymentConfig.spec.template.spec.containers, function(container) {
-                container.env = keyValueEditorUtils.compactEntries(angular.copy(container.env));
+              EnvironmentService.compact($scope.updatedDeploymentConfig);
+              saveEnvPromise = DataService.update("deploymentconfigs",
+                                                  $routeParams.deploymentconfig,
+                                                  $scope.updatedDeploymentConfig,
+                                                  context);
+              saveEnvPromise.then(function success(){
+                // TODO:  de-duplicate success and error messages.
+                // as it stands, multiple messages appear based on how edit
+                // is made.
+                $scope.alerts['saveDCEnvVarsSuccess'] = {
+                  type: "success",
+                  // TODO:  improve success alert
+                  message: $scope.deploymentConfigName + " was updated."
+                };
+                $scope.forms.dcEnvVars.$setPristine();
+              }, function error(e){
+                $scope.alerts['saveDCEnvVarsError'] = {
+                  type: "error",
+                  message: $scope.deploymentConfigName + " was not updated.",
+                  details: "Reason: " + $filter('getErrorDetails')(e)
+                };
+              }).finally(function() {
+                saveEnvPromise = null;
               });
-              DataService.update("deploymentconfigs", $routeParams.deploymentconfig, angular.copy($scope.updatedDeploymentConfig), context)
-                .then(function success(){
-                  // TODO:  de-duplicate success and error messages.
-                  // as it stands, multiple messages appear based on how edit
-                  // is made.
-                  $scope.alerts['saveDCEnvVarsSuccess'] = {
-                    type: "success",
-                    // TODO:  improve success alert
-                    message: $scope.deploymentConfigName + " was updated."
-                  };
-                  $scope.forms.dcEnvVars.$setPristine();
-                }, function error(e){
-                  $scope.alerts['saveDCEnvVarsError'] = {
-                    type: "error",
-                    message: $scope.deploymentConfigName + " was not updated.",
-                    details: "Reason: " + $filter('getErrorDetails')(e)
-                  };
-                });
             };
             $scope.clearEnvVarUpdates = function() {
-              copyDeploymentConfigAndEnsureEnv($scope.deploymentConfig);
+              $scope.updatedDeploymentConfig = EnvironmentService.copyAndNormalize($scope.deploymentConfig);
               $scope.forms.dcEnvVars.$setPristine();
+              previousEnvConflict = false;
             };
 
             // If we found the item successfully, watch for changes on it
@@ -129,28 +158,20 @@ angular.module('openshiftConsole')
                   message: "This deployment configuration has been deleted."
                 };
               }
+              var previous = $scope.deploymentConfig;
               $scope.deploymentConfig = deploymentConfig;
               $scope.updatingPausedState = false;
+              updateHPAWarnings();
 
-              if (!$scope.forms.dcEnvVars || $scope.forms.dcEnvVars.$pristine) {
-                copyDeploymentConfigAndEnsureEnv(deploymentConfig);
+              // Wait for a pending save to complete to avoid a race between the PUT and the watch callbacks.
+              if (saveEnvPromise) {
+                saveEnvPromise.finally(function() {
+                  updateEnvironment(deploymentConfig, previous);
+                });
               } else {
-                $scope.alerts["background_update"] = {
-                  type: "warning",
-                  message: "This deployment configuration has been updated in the background. Saving your changes may create a conflict or cause loss of data.",
-                  links: [
-                    {
-                      label: 'Reload Environment Variables',
-                      onClick: function() {
-                        $scope.clearEnvVarUpdates();
-                        return true;
-                      }
-                    }
-                  ]
-                };
+                updateEnvironment(deploymentConfig, previous);
               }
 
-              updateHPAWarnings();
               ImageStreamResolver.fetchReferencedImageStreamImages([deploymentConfig.spec.template], $scope.imagesByDockerReference, imageStreamImageRefByDockerReference, context);
             }));
           },

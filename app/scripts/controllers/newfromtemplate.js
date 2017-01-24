@@ -281,7 +281,7 @@ angular.module('openshiftConsole')
             );
             return d.promise;
           });
-          Navigate.toNextSteps($routeParams.name, $scope.projectName);
+          Navigate.toNextSteps(name, $scope.projectName);
         };
 
         var launchConfirmationDialog = function(alerts) {
