@@ -7178,6 +7178,19 @@ id:"scriptArgs",
 label:"Shell script with arguments"
 } ], a.buildHookSelection = {
 type:{}
+}, a.getArgumentsDescription = function() {
+var b = _.get(a, "buildHookSelection.type.id", "");
+switch (b) {
+case "args":
+return "Enter the arguments that will be appended to the default image entry point.";
+
+case "commandArgs":
+return "Enter the arguments that will be appended to the command.";
+
+case "scriptArgs":
+return "Enter the arguments that will be appended to the script.";
+}
+return null;
 };
 var n = function() {
 var b = !_.isEmpty(_.get(a, "buildConfig.spec.postCommit.args")), c = !_.isEmpty(_.get(a, "buildConfig.spec.postCommit.command")), d = !!_.get(a, "buildConfig.spec.postCommit.script");
@@ -12887,6 +12900,8 @@ restrict:"E",
 scope:{
 args:"=",
 type:"@",
+placeholder:"@",
+description:"=",
 isRequired:"="
 },
 templateUrl:"views/directives/_edit-command.html",

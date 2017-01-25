@@ -5839,10 +5839,13 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "</span>\n" +
     "</p>\n" +
     "<div class=\"form-group\">\n" +
-    "<label class=\"sr-only\" ng-attr-for=\"{{id}}-add-arg\">Add {{type || 'Command'}}</label>\n" +
+    "<label class=\"sr-only\" ng-attr-for=\"{{id}}-add-arg\">\n" +
+    "<span ng-if=\"placeholder\">{{placeholder}}</span>\n" +
+    "<span ng-if=\"!placeholder\">Add argument</span>\n" +
+    "</label>\n" +
     "\n" +
     "<span ng-show=\"!multiline\" class=\"input-group\">\n" +
-    "<input type=\"text\" ng-model=\"nextArg\" name=\"nextArg\" ng-attr-id=\"{{id}}-add-arg\" on-enter=\"addArg()\" placeholder=\"Add {{type || 'command'}}\" class=\"form-control\" autocorrect=\"off\" autocapitalize=\"off\" spellcheck=\"false\">\n" +
+    "<input type=\"text\" ng-model=\"nextArg\" name=\"nextArg\" ng-attr-id=\"{{id}}-add-arg\" on-enter=\"addArg()\" ng-attr-placeholder=\"{{placeholder || 'Add argument'}}\" class=\"form-control\" autocorrect=\"off\" autocapitalize=\"off\" spellcheck=\"false\">\n" +
     "<span class=\"input-group-btn\">\n" +
     "\n" +
     "<a class=\"btn btn-default\" href=\"\" ng-click=\"addArg()\" ng-disabled=\"!nextArg\" ng-attr-aria-disabled=\"!nextArg\" role=\"button\">Add</a>\n" +
@@ -5850,26 +5853,24 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "</span>\n" +
     "\n" +
     "<span ng-show=\"multiline\">\n" +
-    "<textarea ng-model=\"nextArg\" name=\"nextArg\" rows=\"10\" ng-attr-id=\"{{id}}-add-arg\" placeholder=\"Add {{type || 'command'}}\" class=\"form-control\" autocorrect=\"off\" autocapitalize=\"off\" spellcheck=\"false\">\n" +
+    "<textarea ng-model=\"nextArg\" name=\"nextArg\" rows=\"10\" ng-attr-id=\"{{id}}-add-arg\" ng-attr-placeholder=\"{{placeholder || 'Add argument'}}\" class=\"form-control\" autocorrect=\"off\" autocapitalize=\"off\" spellcheck=\"false\">\n" +
     "      </textarea>\n" +
     "<div class=\"mar-top-md\">\n" +
     "<a class=\"btn btn-default\" href=\"\" ng-click=\"addArg()\" ng-disabled=\"!nextArg\" ng-attr-aria-disabled=\"!nextArg\" role=\"button\">Add</a>\n" +
     "</div>\n" +
     "</span>\n" +
-    "</div>\n" +
     "<div class=\"help-block\">\n" +
-    "<div ng-if=\"!type\">\n" +
-    "Enter the command to run inside the container. The command is considered successful if its exit code is 0. Drag and drop command arguments to reorder them.\n" +
-    "</div>\n" +
-    "<div ng-if=\"type\">\n" +
-    "Enter the arguments that will be appended to the container's command. Drag and drop arguments to reorder them.\n" +
+    "<span ng-if=\"description\">{{description}}</span>\n" +
+    "<span ng-if=\"!description\">\n" +
+    "Enter the command to run inside the container. The command is considered successful if its exit code is 0. Drag and drop to reorder arguments.\n" +
+    "</span>\n" +
     "</div>\n" +
     "</div>\n" +
     "<div class=\"mar-top-sm mar-bottom-md\">\n" +
     "<a href=\"\" ng-click=\"multiline = !multiline\">Switch to {{multiline ? 'Single-line' : 'Multiline'}} Editor</a>\n" +
     "<span ng-show=\"input.args.length\">\n" +
     "<span class=\"action-divider\">|</span>\n" +
-    "<a href=\"\" ng-click=\"clear()\" role=\"button\">Clear {{ (type || 'Command') | sentenceCase }}</a>\n" +
+    "<a href=\"\" ng-click=\"clear()\" role=\"button\">Clear {{ (type || 'Command') | upperFirst }}</a>\n" +
     "</span>\n" +
     "</div>\n" +
     "\n" +
@@ -9356,12 +9357,12 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "</div>\n" +
     "<div ng-if=\"buildHookSelection.type.id === 'command' || buildHookSelection.type.id === 'commandArgs'\">\n" +
     "<h4>Command</h4>\n" +
-    "<edit-command args=\"updatedBuildConfig.spec.postCommit.command\" is-required=\"true\">\n" +
+    "<edit-command args=\"updatedBuildConfig.spec.postCommit.command\" placeholder=\"Add to command\" is-required=\"true\">\n" +
     "</edit-command>\n" +
     "</div>\n" +
     "<div ng-if=\"buildHookSelection.type.id === 'args' || buildHookSelection.type.id === 'commandArgs' || buildHookSelection.type.id === 'scriptArgs' \">\n" +
     "<h4>Arguments</h4>\n" +
-    "<edit-command args=\"updatedBuildConfig.spec.postCommit.args\" type=\"argument\" is-required=\"true\">\n" +
+    "<edit-command args=\"updatedBuildConfig.spec.postCommit.args\" type=\"arguments\" description=\"getArgumentsDescription()\" is-required=\"true\">\n" +
     "</edit-command>\n" +
     "</div>\n" +
     "</fieldset>\n" +
