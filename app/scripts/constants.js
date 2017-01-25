@@ -66,7 +66,7 @@ window.OPENSHIFT_CONSTANTS = {
 
   // true indicates that deployment metrics should be disabled on the web console overview
   DISABLE_OVERVIEW_METRICS: false,
- 
+
   // true indicates that custom metrics should be disabled when viewing pod metrics
   DISABLE_CUSTOM_METRICS: false,
 
@@ -350,6 +350,12 @@ window.OPENSHIFT_CONSTANTS = {
           id: "ruby",
           label: "Ruby",
           iconClass: "font-icon icon-ruby"
+        },
+        {
+          id: "Golang",
+          categoryAliases: ["go"],
+          label: "Go",
+          iconClass: "font-icon icon-go-gopher"
         }
       ]
     },
