@@ -118,7 +118,10 @@
   // this is toggled in JS
   .log-scroll-top.affix.target-logger-node {
     position: fixed;
-    right: 45px;
+    right: @log-scroll-top-offset;
+    @media (min-width: @screen-md-min) {
+      right: @log-scroll-top-offset-lg;
+    }
     top: 60px !important;
   }
 
