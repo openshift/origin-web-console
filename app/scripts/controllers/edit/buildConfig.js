@@ -139,6 +139,20 @@ angular.module('openshiftConsole')
       type: {}
     };
 
+    $scope.getArgumentsDescription = function() {
+      var commandType = _.get($scope, 'buildHookSelection.type.id', '');
+      switch (commandType) {
+      case 'args':
+        return 'Enter the arguments that will be appended to the default image entry point.';
+      case 'commandArgs':
+        return 'Enter the arguments that will be appended to the command.';
+      case 'scriptArgs':
+        return 'Enter the arguments that will be appended to the script.';
+      }
+
+      return null;
+    };
+
     var getInitialBuildHookSelection = function() {
       var hasArgs = !_.isEmpty(_.get($scope, 'buildConfig.spec.postCommit.args'));
       var hasCommand = !_.isEmpty(_.get($scope, 'buildConfig.spec.postCommit.command'));
