@@ -1322,6 +1322,19 @@ angular.module('openshiftConsole')
       return HPAService.convertRequestPercentToLimit(targetCPU, project);
     };
   })
+  .filter('podTemplate', function() {
+    return function(apiObject) {
+      if (!apiObject) {
+        return null;
+      }
+
+      if (apiObject.kind === 'Pod') {
+        return apiObject;
+      }
+
+      return _.get(apiObject, 'spec.template');
+    };
+  })
   .filter('hasHealthChecks', function() {
     return function(podTemplate) {
       // Returns true if every container has a readiness or liveness probe.
@@ -1488,5 +1501,11 @@ angular.module('openshiftConsole')
       }
 
       return false;
+    };
+  })
+  .filter('hasAlternateBackends', function() {
+    return function(route) {
+      var alternateBackends = _.get(route, 'spec.alternateBackends', []);
+      return !_.isEmpty(alternateBackends);
     };
   });

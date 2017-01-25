@@ -380,24 +380,26 @@ angular.module('openshiftConsole')
             return;
           }
 
-          // Show an alert if we've failed more than once.
-          // Use scope.$id in the alert ID so that it is unique on pages that
-          // use the directive multiple times like monitoring.
-          var alertID = 'metrics-failed-' + scope.uniqueID;
-          scope.alerts[alertID] = {
-            type: 'error',
-            message: 'An error occurred updating metrics.',
-            links: [{
-              href: '',
-              label: 'Retry',
-              onClick: function() {
-                delete scope.alerts[alertID];
-                // Reset failure count to 1 to trigger a retry.
-                failureCount = 1;
-                update();
-              }
-            }]
-          };
+          if (scope.alerts) {
+            // Show an alert if we've failed more than once.
+            // Use scope.$id in the alert ID so that it is unique on pages that
+            // use the directive multiple times like monitoring.
+            var alertID = 'metrics-failed-' + scope.uniqueID;
+            scope.alerts[alertID] = {
+              type: 'error',
+              message: 'An error occurred updating metrics.',
+              links: [{
+                href: '',
+                label: 'Retry',
+                onClick: function() {
+                  delete scope.alerts[alertID];
+                  // Reset failure count to 1 to trigger a retry.
+                  failureCount = 1;
+                  update();
+                }
+              }]
+            };
+          }
         }
 
         // Make sure there are no errors or missing data before updating.

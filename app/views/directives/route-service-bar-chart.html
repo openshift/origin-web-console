@@ -1,0 +1,15 @@
+<div class="route-service-bar-chart">
+  <h5>Traffic Split</h5>
+  <div ng-repeat="backend in routeServices.backends">
+    <div class="service-name" title="{{backend.name}}">
+      {{backend.name}}
+    </div>
+    <div class="progress progress-xs"
+         ng-class="{ 'highlight': backend.name === routeServices.highlightService }">
+      <div class="progress-bar" ng-style="{ width: routeServices.barWidth(backend) }"></div>
+    </div>
+    <div class="service-weight">
+      {{routeServices.getPercentage(backend)}}
+    </div>
+  </div>
+</div>

@@ -339,7 +339,7 @@ mark {
   }
 }
 
-.metrics-compact {
+.overview .metrics-compact {
   margin-bottom: 10px;
   white-space : nowrap;
   @media (min-width: @screen-lg-min) {
@@ -401,6 +401,34 @@ mark {
 
 .quota-chart {
   margin: 0 20px;
+}
+
+.route-service-bar-chart {
+  .service-name,
+  .service-weight {
+    .small();
+    .text-muted();
+    display: inline-block;
+    vertical-align: middle;
+  }
+  .service-name {
+    .truncate();
+    width: 125px;
+  }
+  .service-weight {
+    margin-left: 5px;
+  }
+  .progress {
+    background: none;
+    box-shadow: none;
+    display: inline-block;
+    margin: 0;
+    width: 125px;
+    -webkit-box-shadow: none;
+    &:not(.highlight) .progress-bar {
+      background-color: @color-pf-black-300;
+    }
+  }
 }
 
 

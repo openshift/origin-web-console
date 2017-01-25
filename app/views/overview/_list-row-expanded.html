@@ -1,0 +1,186 @@
+<div class="list-pf-container">
+  <div class="list-pf-content">
+    <alerts alerts="row.notifications"></alerts>
+    <div ng-if="row.current">
+      <div class="row">
+        <div ng-if="row.state.breakpoint !== 'xs'">
+          <div ng-class="{
+                'col-sm-7 col-md-8 col-lg-9': !row.state.showMetrics && !row.previous,
+                'col-sm-12 col-md-4 col-lg-5': row.state.showMetrics && !row.previous,
+                'hidden-sm col-md-5 col-lg-5': row.previous
+              }">
+            <!-- TODO: markup semantics suggest div.component-label in <pod-template> should be an h4,
+                       but only here on the overview -->
+            <pod-template
+              pod-template="row.current | podTemplate"
+              images-by-docker-reference="row.state.imagesByDockerReference"
+              builds="row.state.builds"></pod-template>
+          </div>
+          <div ng-if="row.state.showMetrics && !row.previous" class="col-sm-7 col-md-4 col-lg-4">
+            <div ng-if="row.apiObject.kind === 'Pod'">
+              <deployment-metrics
+                pods="[row.apiObject]"
+                containers="row.apiObject.spec.containers"
+                profile="compact"
+                alerts="row.state.alerts"
+                class="overview-metrics">
+              </deployment-metrics>
+              <h4 class="h5">Usage <small>Last 15 Minutes</small></h4>
+            </div>
+            <div ng-if="row.apiObject.kind !== 'Pod'">
+              <deployment-metrics
+                pods="row.getPods(row.current)"
+                containers="row.current.spec.template.spec.containers"
+                profile="compact"
+                alerts="row.state.alerts"
+                class="overview-metrics">
+              </deployment-metrics>
+              <h4 class="h5">Average Usage <small>Last 15 Minutes</small></h4>
+            </div>
+          </div>
+        </div>
+        <div ng-if="row.previous" class="col-sm-5 col-md-3">
+          <deployment-donut
+            rc="row.previous"
+            deployment-config="row.apiObject"
+            pods="row.getPods(row.previous)"
+            hpa="row.hpa"
+            limit-ranges="row.state.limitRanges"
+            quotas="row.state.quotas"
+            cluster-quotas="row.state.clusterQuotas"
+            scalable="false"
+            alerts="row.state.alerts">
+          </deployment-donut>
+        </div>
+        <div ng-if="row.previous" class="col-sm-2 col-md-1 col-lg-1">
+          <div class="deployment-connector-arrow" aria-hidden="true">
+            &rarr;
+          </div>
+        </div>
+        <div class="col-sm-5 col-md-3">
+          <div ng-if="row.apiObject.kind === 'Pod'">
+            <a ng-href="{{row.apiObject | navigateResourceURL}}">
+              <pod-donut pods="[row.apiObject]"></pod-donut>
+            </a>
+          </div>
+          <div ng-if="row.apiObject.kind !== 'Pod'">
+            <deployment-donut
+              rc="row.current"
+              deployment-config="row.apiObject"
+              pods="row.getPods(row.current)"
+              hpa="row.hpa"
+              limit-ranges="row.state.limitRanges"
+              quotas="row.state.quotas"
+              cluster-quotas="row.state.clusterQuotas"
+              scalable="row.isScalable()"
+              alerts="row.state.alerts">
+            </deployment-donut>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Empty State Message -->
+    <div ng-if="!row.current" class="empty-state-message">
+      <div ng-include src=" 'views/overview/_list-row-empty-state.html' "></div>
+    </div>
+
+    <div ng-if="row.state.breakpoint === 'xs' && !row.state.previous" class="row">
+      <div class="col-sm-12">
+        <!-- Only show the tabset if any of the tabs are visible. -->
+        <uib-tabset ng-if="row.current || (row.services | hashSize) || row.recentPipelines.length || row.buildConfigs.length" class="list-row-tabset">
+          <uib-tab active="row.selectedTab.networking" ng-if="row.services | hashSize">
+            <uib-tab-heading>Networking</uib-tab-heading>
+            <overview-networking
+              services="row.services"
+              routes-by-service="row.state.routesByService">
+            </overview-networking>
+          </uib-tab>
+          <uib-tab ng-if="row.current" active="row.selectedTab.containers">
+            <uib-tab-heading>Containers</uib-tab-heading>
+            <!-- TODO: markup semantics suggest div.component-label in <pod-template> should be an h4,
+                       but only here on the overview -->
+            <pod-template
+              pod-template="row.current | podTemplate"
+              images-by-docker-reference="row.state.imagesByDockerReference"
+              builds="row.state.builds"></pod-template>
+          </uib-tab>
+          <uib-tab ng-if="row.current && row.state.showMetrics" active="row.selectedTab.metrics">
+            <uib-tab-heading>Metrics</uib-tab-heading>
+            <!-- Use ng-if to avoid requesting metrics when the tab is not active. -->
+            <div ng-if="row.selectedTab.metrics">
+              <div ng-if="row.apiObject.kind === 'Pod'">
+                <deployment-metrics
+                  pods="[row.apiObject]"
+                  containers="row.apiObject.spec.containers"
+                  profile="compact"
+                  alerts="row.state.alerts"
+                  class="overview-metrics">
+                </deployment-metrics>
+                <h4 class="h5">Usage <small>Last 15 Minutes</small></h4>
+              </div>
+              <div ng-if="row.apiObject.kind !== 'Pod'">
+                <deployment-metrics
+                  pods="row.getPods(row.current)"
+                  containers="row.current.spec.template.spec.containers"
+                  profile="compact"
+                  alerts="row.state.alerts"
+                  class="overview-metrics">
+                </deployment-metrics>
+                <h4 class="h5">Average Usage <small>Last 15 Minutes</small></h4>
+              </div>
+            </div>
+          </uib-tab>
+          <uib-tab ng-if="!row.hidePipelines && row.recentPipelines.length" active="row.selectedTab.pipelines">
+            <uib-tab-heading>
+              Pipelines
+              <span class="build-count">
+                <build-counts builds="row.recentPipelines"></build-counts>
+              </span>
+            </uib-tab-heading>
+            <overview-pipelines
+              recent-pipelines="row.recentPipelines">
+            </overview-pipelines>
+          </uib-tab>
+          <uib-tab ng-if="row.buildConfigs.length" active="row.selectedTab.builds">
+            <uib-tab-heading>
+              Builds
+              <span class="build-count">
+                <build-counts builds="row.recentBuilds"></build-counts>
+              </span>
+            </uib-tab-heading>
+            <overview-builds
+              build-configs="row.buildConfigs"
+              recent-builds-by-build-config="row.state.recentBuildsByBuildConfig"
+              context="row.state.context"
+              hide-log="row.state.limitWatches">
+            </overview-builds>
+          </uib-tab>
+        </uib-tabset>
+      </div>
+    </div>
+
+    <!-- Networking Section -->
+    <overview-networking
+      ng-if="row.state.breakpoint !== 'xs'"
+      services="row.services"
+      routes-by-service="row.state.routesByService">
+    </overview-networking>
+
+    <!-- Pipelines Section -->
+    <overview-pipelines
+      ng-if="!row.hidePipelines && row.state.breakpoint !== 'xs'"
+      recent-pipelines="row.recentPipelines">
+    </overview-pipelines>
+
+    <!-- Builds Section -->
+    <overview-builds
+      ng-if="row.state.breakpoint !== 'xs'"
+      build-configs="row.buildConfigs"
+      recent-builds-by-build-config="row.state.recentBuildsByBuildConfig"
+      context="row.state.context"
+      hide-log="row.state.limitWatches">
+    </overview-builds>
+
+  </div><!-- /list-pf-content -->
+</div> <!-- /list-pf-container -->

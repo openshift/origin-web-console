@@ -23,7 +23,7 @@ angular.module("openshiftConsole")
 
     var filterForKeywords = function(objects, filterFields, keywords) {
       var filteredObjects = objects;
-      if (!keywords.length) {
+      if (_.isEmpty(keywords)) {
         return filteredObjects;
       }
 

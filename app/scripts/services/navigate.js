@@ -70,6 +70,10 @@ angular.module("openshiftConsole")
         return "project/" + encodeURIComponent(projectName) + "/overview";
       },
 
+      quotaURL: function(projectName) {
+        return "project/" + encodeURIComponent(projectName) + "/quota";
+      },
+
       createFromImageURL: function(imageStream, imageTag, projectName, queryParams) {
         var createURI = URI.expand("project/{project}/create/fromimage{?q*}", {
           project: projectName,

@@ -1,0 +1,51 @@
+//
+// PatternFly List
+// --------------------------------------------------
+
+.list-pf-actions {
+  .actions-dropdown-kebab {
+    font-size: 18px;
+    margin-right: -5px;
+  }
+  .dropdown {
+    // add dropdown-pf-kebab styles
+    .dropdown-kebab-pf;
+    .dropdown-menu.dropdown-menu-right {
+      right: -10px;
+    }
+  }
+}
+
+.list-pf-content {
+  flex-grow: 1;
+  .alert:first-child {
+    margin-top: 0;
+  }
+  .alert-wrapper:last-child {
+    margin-bottom: 20px;
+  }
+  .list-pf-chevron + & {
+    align-items: center;
+    display: flex;
+    .list-pf-details,
+    .list-pf-name {
+      flex-grow: 1;
+    }
+    .list-pf-details {
+      align-items: center;
+      display: flex;
+      width: 55%;
+    }
+    .list-pf-name {
+      width: 45%;
+    }
+  }
+}
+
+.list-pf-item:not(.active) .list-pf-chevron + .list-pf-content {
+  border-left-color: #dcdcdc;
+}
+
+.list-pf-name {
+  margin: 0;
+}

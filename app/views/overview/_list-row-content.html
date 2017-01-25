@@ -1,0 +1,86 @@
+<div class="list-pf-name">
+  <h3>
+    <div class="component-label">
+      <span ng-if="row.apiObject.kind === 'DeploymentConfig'">
+        Deployment
+      </span>
+      <span ng-if="row.apiObject.kind !== 'DeploymentConfig'">
+        {{row.apiObject.kind | humanizeKind}}
+      </span>
+    </div>
+    <a ng-href="{{row.apiObject | navigateResourceURL}}"><span ng-bind-html="row.apiObject.metadata.name | highlightKeywords : row.state.filterKeywords"></span></a><span ng-if="row.apiObject.kind === 'DeploymentConfig' && row.current">,
+      <a ng-href="{{row.current | navigateResourceURL}}">#{{row.apiObject.status.latestVersion}}</a>
+    </span><span ng-if="row.apiObject.kind === 'Deployment' && row.current">,
+      <a ng-href="{{row.current | navigateResourceURL}}">#{{row.current | annotation : 'deployment.kubernetes.io/revision'}}</a>
+    </span>
+  </h3>
+  <div class="status-icons">
+    <notification-icon ng-if="!row.expanded" alerts="row.notifications"></notification-icon>
+    <span class="build-count">
+      <span ng-if="!row.expanded && !row.hidePipelines && (row.recentPipelines | hashSize)" class="pipelines">
+        <build-counts
+          builds="row.recentPipelines"
+          label="Pipelines"
+          show-running-stage="true">
+        </build-counts>
+      </span>
+      <span ng-if="!row.expanded && (row.recentBuilds | hashSize)" class="builds">
+        <build-counts builds="row.recentBuilds" label="Builds"></build-counts>
+      </span>
+    </span>
+  </div>
+</div>
+<div ng-if="row.apiObject.kind === 'DeploymentConfig' && !row.current && !row.expanded" class="list-pf-details hidden-xs hidden-sm">
+  <span>
+    No deployments for <a ng-href="{{row.apiObject | navigateResourceURL}}">{{row.apiObject.metadata.name}}</a>
+  </span>
+</div>
+<div ng-if="row.isDeploymentInProgress()" class="list-pf-details">
+  <div ng-if="row.apiObject.kind === 'DeploymentConfig'">
+    <span class="mar-right-sm">
+      <span class="hidden-xs">
+        {{row.apiObject.spec.strategy.type}} deployment
+        {{row.current | deploymentStatus | lowercase}}&thinsp;<ellipsis-pulser color="dark" size="sm" display="inline" msg=""></ellipsis-pulser>
+      </span>
+      <!-- Don't show the strategy at phone resolutions to save space. -->
+      <span class="hidden visible-xs-inline nowrap">
+        <ellipsis-pulser color="dark" size="sm" display="inline" msg="Deploying"></ellipsis-pulser>
+      </span>
+    </span>
+    <span ng-if="'replicationcontrollers' | canI : 'update'">
+      <a href="" ng-click="row.cancelDeployment()" role="button">Cancel</a>
+    </span>
+  </div>
+  <div ng-if="row.apiObject.kind === 'Deployment'">
+    <span class="hidden-xs">
+      {{row.apiObject.spec.strategy.type | sentenceCase}}&nbsp;<ellipsis-pulser color="dark" size="sm" display="inline" msg="in progress"></ellipsis-pulser>
+    </span>
+    <span class="hidden visible-xs-inline nowrap">
+      <ellipsis-pulser color="dark" size="sm" display="inline" msg="Deploying"></ellipsis-pulser>
+    </span>
+  </div>
+</div>
+<div ng-if="row.current && !row.isDeploymentInProgress() && !row.expanded" class="list-pf-details">
+  <div ng-if="row.state.showMetrics && row.state.breakpoint === 'md' || row.state.breakpoint === 'lg'" class="truncate metrics-collapsed">
+    <div ng-if="row.apiObject.kind === 'Pod'">
+      <metrics-summary
+        pods="[row.apiObject]"
+        containers="row.apiObject.spec.containers">
+      </metrics-summary>
+    </div>
+    <div ng-if="row.apiObject.kind !== 'Pod' && row.current">
+      <metrics-summary
+        pods="row.getPods(row.current)"
+        containers="row.current.spec.template.spec.containers">
+      </metrics-summary>
+    </div>
+  </div>
+  <div class="pods hidden-xs">
+    <div ng-if="row.apiObject.kind === 'Pod'">
+      <pod-donut pods="[row.apiObject]" mini="true"></pod-donut>
+    </div>
+    <div ng-if="row.apiObject.kind !== 'Pod'">
+      <pod-donut pods="row.getPods(row.current)" mini="true"></pod-donut>
+    </div>
+  </div>
+</div>
