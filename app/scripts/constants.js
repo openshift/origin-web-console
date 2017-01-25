@@ -350,6 +350,12 @@ window.OPENSHIFT_CONSTANTS = {
           id: "ruby",
           label: "Ruby",
           iconClass: "font-icon icon-ruby"
+        },
+        {
+          id: "Golang",
+          categoryAliases: ["go"],
+          label: "Go",
+          iconClass: "font-icon icon-go-gopher"
         }
       ]
     },

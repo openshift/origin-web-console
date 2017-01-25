@@ -113,18 +113,33 @@ angular.module('openshiftConsole')
 
     var characterBoundingBox = calculateCharacterBoundingBox();
     var win = $( window );
-    var calculateTerminalSize = function(){
-      if (!characterBoundingBox.height || !characterBoundingBox.width) {
+    var calculateTerminalSize = function(retries){
+      if (!retries) {
+        retries = 0;
+      }
+
+      if (!characterBoundingBox.height || !characterBoundingBox.width || !$scope.selectedTab.terminal || retries > 10) {
         return;
       }
       $scope.$apply(function() {
         var terminalWrapper = $('.container-terminal-wrapper').get(0);
-        // `terminalWrapper` won't exist until the user selects the terminal tab.
+        // `terminalWrapper` may not exist yet, we should retry
         if (!terminalWrapper) {
+          $timeout(function(){
+            calculateTerminalSize(retries + 1);
+          }, 50);
           return;
         }
 
         var r = terminalWrapper.getBoundingClientRect();
+        // Check if the content under the terminal tab isnt fully appended to the DOM yet, in that case
+        // there is no bounding box yet so we can't calculate the right width / height. Retry.
+        if (r.left === 0 && r.top === 0 && r.width === 0 && r.height === 0) {
+          $timeout(function(){
+            calculateTerminalSize(retries + 1);
+          }, 50);
+          return;
+        }
         var windowWidth = win.width();
         var windowHeight = win.height();
         var termWidth = windowWidth - r.left - 40; // we want 40px right padding, includes 20px padding within the container terminal
