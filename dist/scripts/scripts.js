@@ -7888,23 +7888,26 @@ weight:a.weight
 h.toErrorPage("Could not load route " + d.routeName + ".");
 });
 var n = function() {
-var a = _.get(d, "routing.to.service.metadata.name");
-_.set(l, "spec.to.name", a);
-var b = _.get(d, "routing.to.weight");
-isNaN(b) || _.set(l, "spec.to.weight", b), l.spec.path = d.routing.path;
-var c = d.routing.targetPort;
-c ? _.set(l, "spec.port.targetPort", c) :delete l.spec.port, _.get(d, "routing.tls.termination") ? (l.spec.tls = d.routing.tls, "edge" !== l.spec.tls.termination && delete l.spec.tls.insecureEdgeTerminationPolicy) :delete l.spec.tls;
-var e = _.get(d, "routing.alternateServices", []);
-_.isEmpty(e) ? delete l.spec.alternateBackends :l.spec.alternateBackends = _.map(e, function(a) {
+var a = angular.copy(l), b = _.get(d, "routing.to.service.metadata.name");
+_.set(a, "spec.to.name", b);
+var c = _.get(d, "routing.to.weight");
+isNaN(c) || _.set(a, "spec.to.weight", c), a.spec.path = d.routing.path;
+var e = d.routing.targetPort;
+e ? _.set(a, "spec.port.targetPort", e) :delete a.spec.port, _.get(d, "routing.tls.termination") ? (a.spec.tls = d.routing.tls, "edge" !== a.spec.tls.termination && delete a.spec.tls.insecureEdgeTerminationPolicy, "passthrough" === a.spec.tls.termination && (delete a.spec.path, delete a.spec.tls.certificate, delete a.spec.tls.key, delete a.spec.tls.caCertificate), "reencrypt" !== a.spec.tls.termination && delete a.spec.tls.destinationCACertificate) :delete a.spec.tls;
+var f = _.get(d, "routing.alternateServices", []);
+return _.isEmpty(f) ? delete a.spec.alternateBackends :a.spec.alternateBackends = _.map(f, function(a) {
 return {
 kind:"Service",
 name:_.get(a, "service.metadata.name"),
 weight:a.weight
 };
-});
+}), a;
 };
 d.updateRoute = function() {
-d.form.$valid && (d.disableInputs = !0, n(), g.update("routes", d.routeName, l, k).then(function() {
+if (d.form.$valid) {
+d.disableInputs = !0;
+var c = n();
+g.update("routes", d.routeName, c, k).then(function() {
 e.addAlert({
 name:d.routeName,
 data:{
@@ -7918,7 +7921,8 @@ type:"error",
 message:"An error occurred updating route " + d.routeName + ".",
 details:a("getErrorDetails")(b)
 };
-}));
+});
+}
 };
 }));
 } ]), angular.module("openshiftConsole").controller("EditYAMLController", [ "$scope", "$filter", "$location", "$routeParams", "$window", "AlertMessageService", "APIService", "AuthorizationService", "BreadcrumbsService", "DataService", "Navigate", "ProjectsService", function(a, b, c, d, e, f, g, h, i, j, k, l) {

@@ -103,37 +103,52 @@ angular.module('openshiftConsole')
 
         // Update the fields in the route from what was entered in the form.
         var updateRouteFields = function() {
+          // Make a second copy of the route before making the PUT request.
+          // This way if the PUT fails and the user switches termination types,
+          // we haven't lost the previously-entered certificates values.
+          var updated = angular.copy(route);
           var serviceName = _.get($scope, 'routing.to.service.metadata.name');
-          _.set(route, 'spec.to.name', serviceName);
+          _.set(updated, 'spec.to.name', serviceName);
           var weight = _.get($scope, 'routing.to.weight');
           if (!isNaN(weight)) {
-            _.set(route, 'spec.to.weight', weight);
+            _.set(updated, 'spec.to.weight', weight);
           }
 
-          route.spec.path = $scope.routing.path;
+          updated.spec.path = $scope.routing.path;
 
           var targetPort = $scope.routing.targetPort;
           if (targetPort) {
-            _.set(route, 'spec.port.targetPort', targetPort);
+            _.set(updated, 'spec.port.targetPort', targetPort);
           } else {
-            delete route.spec.port;
+            delete updated.spec.port;
           }
 
           if (_.get($scope, 'routing.tls.termination')) {
-            route.spec.tls = $scope.routing.tls;
-            if (route.spec.tls.termination !== 'edge') {
+            updated.spec.tls = $scope.routing.tls;
+            if (updated.spec.tls.termination !== 'edge') {
               // insecureEdgeTerminationPolicy only applies to edge routes.
-              delete route.spec.tls.insecureEdgeTerminationPolicy;
+              delete updated.spec.tls.insecureEdgeTerminationPolicy;
+            }
+
+            if (updated.spec.tls.termination === 'passthrough') {
+              delete updated.spec.path;
+              delete updated.spec.tls.certificate;
+              delete updated.spec.tls.key;
+              delete updated.spec.tls.caCertificate;
+            }
+
+            if (updated.spec.tls.termination !== 'reencrypt') {
+              delete updated.spec.tls.destinationCACertificate;
             }
           } else {
-            delete route.spec.tls;
+            delete updated.spec.tls;
           }
 
           var alternateServices = _.get($scope, 'routing.alternateServices', []);
           if (_.isEmpty(alternateServices)) {
-            delete route.spec.alternateBackends;
+            delete updated.spec.alternateBackends;
           } else {
-            route.spec.alternateBackends = _.map(alternateServices, function(alternate) {
+            updated.spec.alternateBackends = _.map(alternateServices, function(alternate) {
               return {
                 kind: 'Service',
                 name: _.get(alternate, 'service.metadata.name'),
@@ -141,13 +156,15 @@ angular.module('openshiftConsole')
               };
             });
           }
+
+          return updated;
         };
 
         $scope.updateRoute = function() {
           if ($scope.form.$valid) {
             $scope.disableInputs = true;
-            updateRouteFields();
-            DataService.update('routes', $scope.routeName, route, context)
+            var updated = updateRouteFields();
+            DataService.update('routes', $scope.routeName, updated, context)
               .then(function() { // Success
                 AlertMessageService.addAlert({
                   name: $scope.routeName,
