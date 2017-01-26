@@ -4249,7 +4249,7 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "</thead>\n" +
     "<tbody ng-if=\"(statefulSets | hashSize) == 0\">\n" +
     "<tr>\n" +
-    "<td colspan=\"3\"><em>No stateful sets</em></td>\n" +
+    "<td colspan=\"3\"><em>No stateful sets to show</em></td>\n" +
     "</tr>\n" +
     "</tbody>\n" +
     "<tbody ng-repeat=\"(statefulSetName, statefulSet) in statefulSets\">\n" +
