@@ -3730,8 +3730,8 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "<dl class=\"dl-horizontal left\" ng-if=\"route.spec.tls\">\n" +
     "<dt>Termination Type:</dt>\n" +
     "<dd>{{route.spec.tls.termination | humanizeTLSTermination}}</dd>\n" +
-    "<dt ng-if-start=\"route.spec.tls.termination === 'edge'\">Insecure Traffic:</dt>\n" +
-    "<dd ng-if-end>{{route.spec.tls.insecureEdgeTerminationPolicy || 'None'}}</dd>\n" +
+    "<dt>Insecure Traffic:</dt>\n" +
+    "<dd>{{route.spec.tls.insecureEdgeTerminationPolicy || 'None'}}</dd>\n" +
     "<dt>Certificate:</dt>\n" +
     "<dd>\n" +
     "<span ng-show=\"route.spec.tls.certificate && !reveal.certificate\">\n" +
@@ -8297,15 +8297,22 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "\n" +
     "<div class=\"form-group\">\n" +
     "<label for=\"insecureTraffic\">Insecure Traffic</label>\n" +
-    "<ui-select ng-model=\"route.tls.insecureEdgeTerminationPolicy\" ng-disabled=\"route.tls.termination !== 'edge'\" input-id=\"insecureTraffic\" aria-describedby=\"route-insecure-policy-help\" search-enabled=\"false\">\n" +
+    "\n" +
+    "<input type=\"hidden\" name=\"insecureTraffic\">\n" +
+    "<ui-select ng-model=\"route.tls.insecureEdgeTerminationPolicy\" name=\"insecureTraffic\" input-id=\"insecureTraffic\" aria-describedby=\"route-insecure-policy-help\" search-enabled=\"false\">\n" +
     "<ui-select-match>{{$select.selected.label}}</ui-select-match>\n" +
-    "<ui-select-choices repeat=\"option.value as option in insecureTrafficOptions\">\n" +
+    "<ui-select-choices repeat=\"option.value as option in insecureTrafficOptions\" ui-disable-choice=\"route.tls.termination === 'passthrough' && option.value === 'Allow'\">\n" +
     "{{option.label}}\n" +
     "</ui-select-choices>\n" +
     "</ui-select>\n" +
     "<div>\n" +
     "<span id=\"route-insecure-policy-help\" class=\"help-block\">\n" +
-    "Policy for traffic on insecure schemes like HTTP for edge termination.\n" +
+    "Policy for traffic on insecure schemes like HTTP.\n" +
+    "</span>\n" +
+    "</div>\n" +
+    "<div ng-if=\"routeForm.insecureTraffic.$error.passthrough\" class=\"has-warning\">\n" +
+    "<span class=\"help-block\">\n" +
+    "Passthrough routes can't use the insecure traffic policy <var>Allow</var>.\n" +
     "</span>\n" +
     "</div>\n" +
     "</div>\n" +
