@@ -28,7 +28,16 @@
           <alerts alerts="alerts"></alerts>
           <div class="row">
             <div class="col-md-12">
-              <table class="table table-bordered table-hover table-mobile">
+              <table class="table table-bordered table-hover table-mobile table-layout-fixed">
+                <colgroup>
+                  <col class="col-sm-2">
+                  <col class="col-sm-1">
+                  <col class="col-sm-2">
+                  <col class="col-sm-2">
+                  <col class="col-sm-2">
+                  <col class="col-sm-1">
+                  <col class="col-sm-2 hidden-sm">
+                </colgroup>
                 <thead>
                   <tr>
                     <th>Name</th>
@@ -37,7 +46,7 @@
                     <th>Duration</th>
                     <th>Created</th>
                     <th>Type</th>
-                    <th>Source</th>
+                    <th ng-class="{'hidden-sm' : (latestByConfig | hashSize)}">Source</th>
                   </tr>
                 </thead>
                 <tbody ng-if="!(latestByConfig | hashSize)">
@@ -54,9 +63,9 @@
                     <td class="hidden-xs">&nbsp;</td>
                     <td class="hidden-xs">&nbsp;</td>
                     <td data-title="Type">{{buildConfigs[buildConfigName].spec.strategy.type | startCase}}</td>
-                    <td ng-if-end data-title="Source">
+                    <td ng-if-end data-title="Source" class="hidden-sm">
                       <span ng-if="buildConfigs[buildConfigName].spec.source.type == 'None'"><i>none</i></span>
-                      <span class="word-break" ng-if="buildConfigs[buildConfigName].spec.source.type == 'Git'" ><osc-git-link
+                      <span ng-if="buildConfigs[buildConfigName].spec.source.type == 'Git'" ><osc-git-link
                                             uri="buildConfigs[buildConfigName].spec.source.git.uri"
                                             ref="buildConfigs[buildConfigName].spec.source.git.ref"
                                             context-dir="buildConfigs[buildConfigName].spec.source.contextDir">{{buildConfigs[buildConfigName].spec.source.git.uri}}</osc-git-link></span></td>
@@ -95,15 +104,15 @@
                       <span am-time-ago="latestBuild.metadata.creationTimestamp"></span>
                     </td>
                     <td data-title="Type">{{latestBuild.spec.strategy.type | startCase}}</td>
-                    <td ng-if-end data-title="Source" class="word-break-all">
+                    <td ng-if-end data-title="Source" class="hidden-sm">
                       <span ng-if="latestBuild.spec.source">
                         <span ng-if="latestBuild.spec.source.type == 'None'">
                           <i>none</i>
                         </span>
-                        <span class="word-break"><osc-git-link
-                              uri="latestBuild.spec.source.git.uri"
-                              ref="latestBuild.spec.source.git.ref"
-                              context-dir="latestBuild.spec.source.contextDir">{{latestBuild.spec.source.git.uri}}</osc-git-link></span>
+                        <osc-git-link
+                          uri="latestBuild.spec.source.git.uri"
+                          ref="latestBuild.spec.source.git.ref"
+                          context-dir="latestBuild.spec.source.contextDir">{{latestBuild.spec.source.git.uri}}</osc-git-link>
                       </span>
                     </td>
                   </tr>

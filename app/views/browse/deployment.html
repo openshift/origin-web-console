@@ -88,7 +88,13 @@
                 <uib-tab active="selectedTab.history">
                   <uib-tab-heading>History</uib-tab-heading>
                   <div ng-if="replicaSetsForDeployment | hashSize">
-                    <table class="table table-bordered table-hover table-mobile">
+                    <table class="table table-bordered table-hover table-mobile table-layout-fixed">
+                      <colgroup>
+                        <col class="col-sm-2">
+                        <col class="col-sm-4">
+                        <col class="col-sm-3">
+                        <col class="col-sm-3">
+                      </colgroup>
                       <thead>
                         <tr>
                           <th>Version</th>

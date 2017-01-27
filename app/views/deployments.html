@@ -29,7 +29,14 @@
           <div class="row">
             <div class="col-md-12">
               <h3 ng-if="(deployments | hashSize) || (replicaSets | hashSize)">Deployment Configurations</h3>
-              <table class="table table-bordered table-hover table-mobile">
+              <table class="table table-bordered table-hover table-mobile table-layout-fixed">
+                <colgroup>
+                  <col class="col-sm-3">
+                  <col class="col-sm-2">
+                  <col class="col-sm-3">
+                  <col class="col-sm-2">
+                  <col class="col-sm-2">
+                </colgroup>
                 <thead>
                   <tr>
                     <th>Name</th>
@@ -108,7 +115,14 @@
               </table>
               <div ng-if="deployments | hashSize">
                 <h3>Deployments</h3>
-                <table class="table table-bordered table-hover table-mobile">
+                <table class="table table-bordered table-hover table-mobile table-layout-fixed">
+                  <colgroup>
+                    <col class="col-sm-4">
+                    <col class="col-sm-2">
+                    <col class="col-sm-2">
+                    <col class="col-sm-2">
+                    <col class="col-sm-2">
+                  </colgroup>
                   <thead>
                     <tr>
                       <th>Name</th>
@@ -146,7 +160,10 @@
               </div>
               <div ng-if="replicaSets | hashSize" id="replica-sets">
                 <h3>Replica Sets</h3>
-                <table class="table table-bordered table-hover table-mobile">
+                <table class="table table-bordered table-hover table-mobile table-layout-fixed">
+                  <colgroup>
+                    <col class="col-sm-4">
+                  </colgroup>
                   <thead>
                     <tr>
                       <th>Name</th>
@@ -171,7 +188,10 @@
               </div>
               <div ng-if="(unfilteredReplicationControllers | hashSize) > 0" id="replica-controllers">
                 <h3>Other Replication Controllers</h3>
-                <table class="table table-bordered table-hover table-mobile">
+                <table class="table table-bordered table-hover table-mobile table-layout-fixed">
+                  <colgroup>
+                    <col class="col-sm-5">
+                  </colgroup>
                   <thead>
                     <tr>
                       <th>Name</th>

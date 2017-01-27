@@ -31,7 +31,14 @@
           <alerts alerts="alerts"></alerts>
           <div class="row">
             <div class="col-md-12">
-              <table class="table table-bordered table-hover table-mobile">
+              <table class="table table-bordered table-hover table-mobile table-layout-fixed">
+                <colgroup>
+                  <col class="col-sm-3">
+                  <col class="col-sm-3">
+                  <col class="col-sm-2">
+                  <col class="col-sm-2">
+                  <col class="col-sm-2">
+                </colgroup>
                 <thead>
                   <tr>
                     <th>{{customNameHeader || 'Name'}}</th>
@@ -54,10 +61,10 @@
                       </route-warnings>
                     </td>
                     <td data-title="Hostname">
-                      <span ng-if="(route | isWebRoute)" class="word-break">
+                      <span ng-if="(route | isWebRoute)">
                         <a href="{{route | routeWebURL}}" target="_blank">{{route | routeLabel}}</a>
                       </span>
-                      <span ng-if="!(route | isWebRoute)" class="word-break">
+                      <span ng-if="!(route | isWebRoute)">
                         {{route | routeLabel}}
                       </span>
                       <span ng-if="!route.status.ingress" data-toggle="popover" data-trigger="hover" data-content="The route is not accepting traffic yet because it has not been admitted by a router." style="cursor: help; padding-left: 5px;">

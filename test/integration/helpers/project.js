@@ -35,21 +35,23 @@ exports.deleteProject = function(project) {
   h.waitForPresence(".alert-success", "marked for deletion");
 };
 
+// All projects visible to the current user.
+// This function will click the 'delete' on every project that appears on the project list page.
+// Be careful about using this function if your test gives the e2e-user access
+// to internal projects such as openshift, or openshift-infra
 exports.deleteAllProjects = function() {
   h.goToPage('/');
   var projectTiles = element.all(by.css(".project-info"));
   var allDeleted = protractor.promise.defer();
   var numDeleted = 0;
   var count;
-  projectTiles
-    .count()
-    .then(function(num) {
-      count = num;
-      // safely fulfill if there happen to be no projects.
-      if(count === 0) {
-        allDeleted.fulfill();
-      }
-    });
+  projectTiles.count().then(function(num) {
+    count = num;
+    // safely fulfill if there happen to be no projects.
+    if(count === 0) {
+      allDeleted.fulfill();
+    }
+  });
 
   projectTiles.each(function(elem) {
     var projectTitle = elem.element(by.css('.tile-target span')).getText();
@@ -57,10 +59,12 @@ exports.deleteAllProjects = function() {
     elem.element(by.css('.fa-trash-o')).click();
     h.setInputValue('confirmName', projectTitle);
     // then click delete
-    var deleteButton = element(by.cssContainingText(".modal-dialog .btn", "Delete"));
+    var modal = element(by.css('.modal-dialog'));
+    var deleteButton = modal.element(by.cssContainingText(".modal-dialog .btn", "Delete"));
     browser.wait(protractor.ExpectedConditions.elementToBeClickable(deleteButton), 2000);
     deleteButton.click();
-    h.waitForPresence(".alert-success", "marked for deletion");
+    h.waitForElem(element(by.cssContainingText(".alert-success", "marked for deletion")));
+    h.waitForElemRemoval(element(by.css('.modal-dialog')));
     numDeleted++;
     if(numDeleted >= count) {
       allDeleted.fulfill(numDeleted);

@@ -1814,7 +1814,7 @@ targetPort:a.routing.targetPort
 var f = a.routing.tls;
 return f && f.termination && (d.spec.tls = {
 termination:f.termination
-}, "passthrough" !== f.termination && ("edge" === f.termination && f.insecureEdgeTerminationPolicy && (d.spec.tls.insecureEdgeTerminationPolicy = f.insecureEdgeTerminationPolicy), f.certificate && (d.spec.tls.certificate = f.certificate), f.key && (d.spec.tls.key = f.key), f.caCertificate && (d.spec.tls.caCertificate = f.caCertificate), f.destinationCACertificate && "reencrypt" === f.termination && (d.spec.tls.destinationCACertificate = f.destinationCACertificate))), d;
+}, f.insecureEdgeTerminationPolicy && (d.spec.tls.insecureEdgeTerminationPolicy = f.insecureEdgeTerminationPolicy), "passthrough" !== f.termination && (f.certificate && (d.spec.tls.certificate = f.certificate), f.key && (d.spec.tls.key = f.key), f.caCertificate && (d.spec.tls.caCertificate = f.caCertificate), f.destinationCACertificate && "reencrypt" === f.termination && (d.spec.tls.destinationCACertificate = f.destinationCACertificate))), d;
 }, f._generateDeploymentConfig = function(a, b, c) {
 var d = [];
 angular.forEach(a.deploymentConfig.envVars, function(a, b) {
@@ -7178,6 +7178,19 @@ id:"scriptArgs",
 label:"Shell script with arguments"
 } ], a.buildHookSelection = {
 type:{}
+}, a.getArgumentsDescription = function() {
+var b = _.get(a, "buildHookSelection.type.id", "");
+switch (b) {
+case "args":
+return "Enter the arguments that will be appended to the default image entry point.";
+
+case "commandArgs":
+return "Enter the arguments that will be appended to the command.";
+
+case "scriptArgs":
+return "Enter the arguments that will be appended to the script.";
+}
+return null;
 };
 var n = function() {
 var b = !_.isEmpty(_.get(a, "buildConfig.spec.postCommit.args")), c = !_.isEmpty(_.get(a, "buildConfig.spec.postCommit.command")), d = !!_.get(a, "buildConfig.spec.postCommit.script");
@@ -7875,23 +7888,26 @@ weight:a.weight
 h.toErrorPage("Could not load route " + d.routeName + ".");
 });
 var n = function() {
-var a = _.get(d, "routing.to.service.metadata.name");
-_.set(l, "spec.to.name", a);
-var b = _.get(d, "routing.to.weight");
-isNaN(b) || _.set(l, "spec.to.weight", b), l.spec.path = d.routing.path;
-var c = d.routing.targetPort;
-c ? _.set(l, "spec.port.targetPort", c) :delete l.spec.port, _.get(d, "routing.tls.termination") ? (l.spec.tls = d.routing.tls, "edge" !== l.spec.tls.termination && delete l.spec.tls.insecureEdgeTerminationPolicy) :delete l.spec.tls;
-var e = _.get(d, "routing.alternateServices", []);
-_.isEmpty(e) ? delete l.spec.alternateBackends :l.spec.alternateBackends = _.map(e, function(a) {
+var a = angular.copy(l), b = _.get(d, "routing.to.service.metadata.name");
+_.set(a, "spec.to.name", b);
+var c = _.get(d, "routing.to.weight");
+isNaN(c) || _.set(a, "spec.to.weight", c), a.spec.path = d.routing.path;
+var e = d.routing.targetPort;
+e ? _.set(a, "spec.port.targetPort", e) :delete a.spec.port, _.get(d, "routing.tls.termination") ? (a.spec.tls = d.routing.tls, "passthrough" === a.spec.tls.termination && (delete a.spec.path, delete a.spec.tls.certificate, delete a.spec.tls.key, delete a.spec.tls.caCertificate), "reencrypt" !== a.spec.tls.termination && delete a.spec.tls.destinationCACertificate) :delete a.spec.tls;
+var f = _.get(d, "routing.alternateServices", []);
+return _.isEmpty(f) ? delete a.spec.alternateBackends :a.spec.alternateBackends = _.map(f, function(a) {
 return {
 kind:"Service",
 name:_.get(a, "service.metadata.name"),
 weight:a.weight
 };
-});
+}), a;
 };
 d.updateRoute = function() {
-d.form.$valid && (d.disableInputs = !0, n(), g.update("routes", d.routeName, l, k).then(function() {
+if (d.form.$valid) {
+d.disableInputs = !0;
+var c = n();
+g.update("routes", d.routeName, c, k).then(function() {
 e.addAlert({
 name:d.routeName,
 data:{
@@ -7905,7 +7921,8 @@ type:"error",
 message:"An error occurred updating route " + d.routeName + ".",
 details:a("getErrorDetails")(b)
 };
-}));
+});
+}
 };
 }));
 } ]), angular.module("openshiftConsole").controller("EditYAMLController", [ "$scope", "$filter", "$location", "$routeParams", "$window", "AlertMessageService", "APIService", "AuthorizationService", "BreadcrumbsService", "DataService", "Navigate", "ProjectsService", function(a, b, c, d, e, f, g, h, i, j, k, l) {
@@ -10208,8 +10225,13 @@ label:"Allow"
 }, {
 value:"Redirect",
 label:"Redirect"
-} ], _.has(c, "route.tls.insecureEdgeTerminationPolicy") || _.set(c, "route.tls.insecureEdgeTerminationPolicy", ""), c.nameValidation = b, c.disableWildcards ? c.hostnamePattern = b.pattern :c.hostnamePattern = /^(\*(\.[a-z0-9]([-a-z0-9]*[a-z0-9]))+|[a-z0-9]([-a-z0-9]*[a-z0-9])?(\.[a-z0-9]([-a-z0-9]*[a-z0-9])?)*)$/, c.hostnameMaxLength = b.maxlength;
-var g = function(a) {
+} ], _.has(c, "route.tls.insecureEdgeTerminationPolicy") || _.set(c, "route.tls.insecureEdgeTerminationPolicy", "");
+var g = function() {
+var a = "passthrough" !== _.get(c, "route.tls.termination") || "Allow" !== _.get(c, "route.tls.insecureEdgeTerminationPolicy");
+c.routeForm.insecureTraffic.$setValidity("passthrough", a);
+};
+c.$watchGroup([ "route.tls.termination", "route.tls.insecureEdgeTerminationPolicy" ], g), c.nameValidation = b, c.disableWildcards ? c.hostnamePattern = b.pattern :c.hostnamePattern = /^(\*(\.[a-z0-9]([-a-z0-9]*[a-z0-9]))+|[a-z0-9]([-a-z0-9]*[a-z0-9])?(\.[a-z0-9]([-a-z0-9]*[a-z0-9])?)*)$/, c.hostnameMaxLength = b.maxlength;
+var h = function(a) {
 a && (c.unnamedServicePort = 1 === a.spec.ports.length && !a.spec.ports[0].name, a.spec.ports.length && !c.unnamedServicePort ? c.route.portOptions = _.map(a.spec.ports, function(a) {
 return {
 port:a.name,
@@ -10218,7 +10240,7 @@ label:a.port + " → " + a.targetPort + " (" + a.protocol + ")"
 }) :c.route.portOptions = []);
 };
 c.services && !c.route.service && (c.route.service = _.find(c.services)), c.$watch("route.to.service", function(a, b) {
-g(a), a === b && c.route.targetPort || (c.route.targetPort = _.get(c, "route.portOptions[0].port")), c.services && (c.alternateServiceOptions = _.reject(c.services, function(b) {
+h(a), a === b && c.route.targetPort || (c.route.targetPort = _.get(c, "route.portOptions[0].port")), c.services && (c.alternateServiceOptions = _.reject(c.services, function(b) {
 return a === b;
 }));
 }), c.$watch("route.alternateServices", function(a) {
@@ -10226,17 +10248,17 @@ c.duplicateServices = _(a).map("service").filter(function(a, b, c) {
 return _.includes(c, a, b + 1);
 }).value(), f.$setValidity("duplicateServices", !c.duplicateServices.length), c.options.alternateServices = !_.isEmpty(a);
 }, !0);
-var h = function() {
+var i = function() {
 return !!c.route.tls && ((!c.route.tls.termination || "passthrough" === c.route.tls.termination) && (c.route.tls.certificate || c.route.tls.key || c.route.tls.caCertificate || c.route.tls.destinationCACertificate));
 };
 c.$watch("route.tls.termination", function() {
-c.options.secureRoute = !!_.get(c, "route.tls.termination"), c.showCertificatesNotUsedWarning = h();
+c.options.secureRoute = !!_.get(c, "route.tls.termination"), c.showCertificatesNotUsedWarning = i();
 });
-var i;
+var j;
 c.$watch("options.secureRoute", function(a, b) {
 if (a !== b) {
 var d = _.get(c, "route.tls.termination");
-!c.securetRoute && d && (i = d, delete c.route.tls.termination), c.options.secureRoute && !d && _.set(c, "route.tls.termination", i || "edge");
+!c.securetRoute && d && (j = d, delete c.route.tls.termination), c.options.secureRoute && !d && _.set(c, "route.tls.termination", j || "edge");
 }
 }), c.$watch("options.alternateServices", function(a, b) {
 a !== b && (a || (c.route.alternateServices = []), a && _.isEmpty(c.route.alternateServices) && c.addAlternateService());
@@ -10260,11 +10282,11 @@ d += _.get(a, "weight", 0);
 var e = a / d * 100;
 return b ? d3.round(e, 1) + "%" :e;
 };
-var j = !1;
+var k = !1;
 c.$watch("route.alternateServices.length", function(a) {
-0 === a && _.has(c, "route.to.weight") && delete c.route.to.weight, 1 === a && (j = !0, c.controls.rangeSlider = c.weightAsPercentage(c.route.to.weight));
+0 === a && _.has(c, "route.to.weight") && delete c.route.to.weight, 1 === a && (k = !0, c.controls.rangeSlider = c.weightAsPercentage(c.route.to.weight));
 }), c.$watch("controls.rangeSlider", function(a, b) {
-return j ? void (j = !1) :void (a !== b && (a = parseInt(a, 10), _.set(c, "route.to.weight", a), _.set(c, "route.alternateServices[0].weight", 100 - a)));
+return k ? void (k = !1) :void (a !== b && (a = parseInt(a, 10), _.set(c, "route.to.weight", a), _.set(c, "route.alternateServices[0].weight", 100 - a)));
 });
 }
 };
@@ -12887,6 +12909,8 @@ restrict:"E",
 scope:{
 args:"=",
 type:"@",
+placeholder:"@",
+description:"=",
 isRequired:"="
 },
 templateUrl:"views/directives/_edit-command.html",

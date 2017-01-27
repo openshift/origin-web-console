@@ -33,7 +33,10 @@
             <div class="col-md-12">
               <div ng-if="!loaded">Loading...</div>
               <div ng-if="loaded">
-                <table class="table table-bordered table-hover table-mobile">
+                <table class="table table-bordered table-hover table-mobile table-layout-fixed">
+                  <colgroup>
+                    <col class="col-sm-5">
+                  </colgroup>
                   <thead>
                     <tr>
                       <th>Name</th>

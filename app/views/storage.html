@@ -37,7 +37,10 @@
                   <a ng-href="project/{{project.metadata.name}}/create-pvc" class="btn btn-default">Create Storage</a>
                 </div>
               </div>
-              <table class="table table-bordered table-hover table-mobile" ng-class="{ 'table-empty': (pvcs | hashSize) === 0 }">
+              <table class="table table-bordered table-hover table-mobile table-layout-fixed" ng-class="{ 'table-empty': (pvcs | hashSize) === 0 }">
+                <colgroup>
+                  <col class="col-sm-5">
+                </colgroup>
                 <thead>
                   <tr>
                     <th>Name</th>

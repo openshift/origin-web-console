@@ -228,6 +228,11 @@ html,body {
 
 @media (min-width: @screen-md-min) {
   .console-os {
+    .middle .container-fluid {
+      // At wide view increase the space between middle container and sidebar-left/right, by setting its padding to 30px instead of the bootstrap 20px default
+      padding-left: @middle-content-container-padding-lg;
+      padding-right: @middle-content-container-padding-lg;
+    }
     .sidebar-right {
       .flex(@columns: 0 0 @sidebar-right-width-md);
       .right-section {

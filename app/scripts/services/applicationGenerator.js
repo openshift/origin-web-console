@@ -157,10 +157,11 @@ angular.module("openshiftConsole")
           termination: tls.termination
         };
 
+        if (tls.insecureEdgeTerminationPolicy) {
+          route.spec.tls.insecureEdgeTerminationPolicy = tls.insecureEdgeTerminationPolicy;
+        }
+
         if (tls.termination !== 'passthrough') {
-          if (tls.termination === 'edge' && tls.insecureEdgeTerminationPolicy) {
-            route.spec.tls.insecureEdgeTerminationPolicy = tls.insecureEdgeTerminationPolicy;
-          }
           if (tls.certificate) {
             route.spec.tls.certificate = tls.certificate;
           }

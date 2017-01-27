@@ -1,22 +1,22 @@
 'use strict';
+/*jshint esversion: 6 */
 
 // is a pain to get an array of input values because .getAttribute()
 // is a promise
-var getInputValues = function(inputs) {
-  var allValues = protractor.promise.defer();
-  var values = [];
-  var count;
-  inputs
-    .count()
-    .then(function(num) {
-      count = num;
+const getInputValues = (inputs) => {
+  let allValues = protractor.promise.defer();
+  let values = [];
+  let count;
+  inputs.count()
+    .then((num) => {
+      count = num + 1;
     });
-  inputs.each(function(input, i) {
+  inputs.each((input, i) => {
     input
       .getAttribute('value')
       .then(function(val) {
         values.push(val);
-        if((i+1) === count) {
+        if((i) === count) {
           allValues.fulfill(values);
         }
       });
@@ -24,20 +24,40 @@ var getInputValues = function(inputs) {
   return allValues.promise;
 };
 
-
 // inputs: protractor object
 //  - element.all(by.model('parameter.value'))
 // value: string
-var findValueInInputs = function(inputs, value) {
+const findValueInInputs = (inputs, value) => {
   return getInputValues(inputs)
-          .then(function(values) {
-            var found = values.find(function(val) {
-              return val === value;
-            });
+          .then((values) => {
+            let found = values.find((val) => { val === value; });
             return found;
           });
 };
 
 
+// example:
+//   check(element(by.css('input[type="checkbox"]')))
+const check = (checkboxElem) => {
+  return checkboxElem.isSelected().then((selected) => {
+    if(!selected) {
+      return checkboxElem.click();
+    }
+  });
+};
+
+// example:
+//   unCheck(element(by.css('input[type="checkbox"]')))
+const uncheck = (checkboxElem) => {
+  return checkboxElem.isSelected().then((selected) => {
+    if(selected) {
+      return checkboxElem.click();
+    }
+  });
+};
+
 exports.getInputValues = getInputValues;
 exports.findValueInInputs = findValueInInputs;
+
+exports.check = check;
+exports.uncheck = uncheck;

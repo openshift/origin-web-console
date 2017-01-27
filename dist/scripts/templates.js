@@ -2465,7 +2465,10 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "<div class=\"col-md-12\">\n" +
     "<div ng-if=\"!loaded\">Loading...</div>\n" +
     "<div ng-if=\"loaded\">\n" +
-    "<table class=\"table table-bordered table-hover table-mobile\">\n" +
+    "<table class=\"table table-bordered table-hover table-mobile table-layout-fixed\">\n" +
+    "<colgroup>\n" +
+    "<col class=\"col-sm-5\">\n" +
+    "</colgroup>\n" +
     "<thead>\n" +
     "<tr>\n" +
     "<th>Name</th>\n" +
@@ -2892,7 +2895,13 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "<uib-tab active=\"selectedTab.history\">\n" +
     "<uib-tab-heading>History</uib-tab-heading>\n" +
     "<div ng-if=\"replicaSetsForDeployment | hashSize\">\n" +
-    "<table class=\"table table-bordered table-hover table-mobile\">\n" +
+    "<table class=\"table table-bordered table-hover table-mobile table-layout-fixed\">\n" +
+    "<colgroup>\n" +
+    "<col class=\"col-sm-2\">\n" +
+    "<col class=\"col-sm-4\">\n" +
+    "<col class=\"col-sm-3\">\n" +
+    "<col class=\"col-sm-3\">\n" +
+    "</colgroup>\n" +
     "<thead>\n" +
     "<tr>\n" +
     "<th>Version</th>\n" +
@@ -3721,8 +3730,8 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "<dl class=\"dl-horizontal left\" ng-if=\"route.spec.tls\">\n" +
     "<dt>Termination Type:</dt>\n" +
     "<dd>{{route.spec.tls.termination | humanizeTLSTermination}}</dd>\n" +
-    "<dt ng-if-start=\"route.spec.tls.termination === 'edge'\">Insecure Traffic:</dt>\n" +
-    "<dd ng-if-end>{{route.spec.tls.insecureEdgeTerminationPolicy || 'None'}}</dd>\n" +
+    "<dt>Insecure Traffic:</dt>\n" +
+    "<dd>{{route.spec.tls.insecureEdgeTerminationPolicy || 'None'}}</dd>\n" +
     "<dt>Certificate:</dt>\n" +
     "<dd>\n" +
     "<span ng-show=\"route.spec.tls.certificate && !reveal.certificate\">\n" +
@@ -3811,7 +3820,14 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "<alerts alerts=\"alerts\"></alerts>\n" +
     "<div class=\"row\">\n" +
     "<div class=\"col-md-12\">\n" +
-    "<table class=\"table table-bordered table-hover table-mobile\">\n" +
+    "<table class=\"table table-bordered table-hover table-mobile table-layout-fixed\">\n" +
+    "<colgroup>\n" +
+    "<col class=\"col-sm-3\">\n" +
+    "<col class=\"col-sm-3\">\n" +
+    "<col class=\"col-sm-2\">\n" +
+    "<col class=\"col-sm-2\">\n" +
+    "<col class=\"col-sm-2\">\n" +
+    "</colgroup>\n" +
     "<thead>\n" +
     "<tr>\n" +
     "<th>{{customNameHeader || 'Name'}}</th>\n" +
@@ -3832,10 +3848,10 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "</route-warnings>\n" +
     "</td>\n" +
     "<td data-title=\"Hostname\">\n" +
-    "<span ng-if=\"(route | isWebRoute)\" class=\"word-break\">\n" +
+    "<span ng-if=\"(route | isWebRoute)\">\n" +
     "<a href=\"{{route | routeWebURL}}\" target=\"_blank\">{{route | routeLabel}}</a>\n" +
     "</span>\n" +
-    "<span ng-if=\"!(route | isWebRoute)\" class=\"word-break\">\n" +
+    "<span ng-if=\"!(route | isWebRoute)\">\n" +
     "{{route | routeLabel}}\n" +
     "</span>\n" +
     "<span ng-if=\"!route.status.ingress\" data-toggle=\"popover\" data-trigger=\"hover\" data-content=\"The route is not accepting traffic yet because it has not been admitted by a router.\" style=\"cursor: help; padding-left: 5px\">\n" +
@@ -4220,7 +4236,10 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "<div ng-if=\"!loaded\">Loading...</div>\n" +
     "<div class=\"row\" ng-if=\"loaded\">\n" +
     "<div class=\"col-md-12\">\n" +
-    "<table class=\"table table-bordered table-hover table-mobile\">\n" +
+    "<table class=\"table table-bordered table-hover table-mobile table-layout-fixed\">\n" +
+    "<colgroup>\n" +
+    "<col class=\"col-sm-5\">\n" +
+    "</colgroup>\n" +
     "<thead>\n" +
     "<tr>\n" +
     "<th>Name</th>\n" +
@@ -4230,7 +4249,7 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "</thead>\n" +
     "<tbody ng-if=\"(statefulSets | hashSize) == 0\">\n" +
     "<tr>\n" +
-    "<td colspan=\"3\"><em>No stateful sets</em></td>\n" +
+    "<td colspan=\"3\"><em>No stateful sets to show</em></td>\n" +
     "</tr>\n" +
     "</tbody>\n" +
     "<tbody ng-repeat=\"(statefulSetName, statefulSet) in statefulSets\">\n" +
@@ -4288,7 +4307,16 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "<alerts alerts=\"alerts\"></alerts>\n" +
     "<div class=\"row\">\n" +
     "<div class=\"col-md-12\">\n" +
-    "<table class=\"table table-bordered table-hover table-mobile\">\n" +
+    "<table class=\"table table-bordered table-hover table-mobile table-layout-fixed\">\n" +
+    "<colgroup>\n" +
+    "<col class=\"col-sm-2\">\n" +
+    "<col class=\"col-sm-1\">\n" +
+    "<col class=\"col-sm-2\">\n" +
+    "<col class=\"col-sm-2\">\n" +
+    "<col class=\"col-sm-2\">\n" +
+    "<col class=\"col-sm-1\">\n" +
+    "<col class=\"col-sm-2 hidden-sm\">\n" +
+    "</colgroup>\n" +
     "<thead>\n" +
     "<tr>\n" +
     "<th>Name</th>\n" +
@@ -4297,7 +4325,7 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "<th>Duration</th>\n" +
     "<th>Created</th>\n" +
     "<th>Type</th>\n" +
-    "<th>Source</th>\n" +
+    "<th ng-class=\"{'hidden-sm' : (latestByConfig | hashSize)}\">Source</th>\n" +
     "</tr>\n" +
     "</thead>\n" +
     "<tbody ng-if=\"!(latestByConfig | hashSize)\">\n" +
@@ -4314,9 +4342,9 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "<td class=\"hidden-xs\">&nbsp;</td>\n" +
     "<td class=\"hidden-xs\">&nbsp;</td>\n" +
     "<td data-title=\"Type\">{{buildConfigs[buildConfigName].spec.strategy.type | startCase}}</td>\n" +
-    "<td ng-if-end data-title=\"Source\">\n" +
+    "<td ng-if-end data-title=\"Source\" class=\"hidden-sm\">\n" +
     "<span ng-if=\"buildConfigs[buildConfigName].spec.source.type == 'None'\"><i>none</i></span>\n" +
-    "<span class=\"word-break\" ng-if=\"buildConfigs[buildConfigName].spec.source.type == 'Git'\"><osc-git-link uri=\"buildConfigs[buildConfigName].spec.source.git.uri\" ref=\"buildConfigs[buildConfigName].spec.source.git.ref\" context-dir=\"buildConfigs[buildConfigName].spec.source.contextDir\">{{buildConfigs[buildConfigName].spec.source.git.uri}}</osc-git-link></span></td>\n" +
+    "<span ng-if=\"buildConfigs[buildConfigName].spec.source.type == 'Git'\"><osc-git-link uri=\"buildConfigs[buildConfigName].spec.source.git.uri\" ref=\"buildConfigs[buildConfigName].spec.source.git.ref\" context-dir=\"buildConfigs[buildConfigName].spec.source.contextDir\">{{buildConfigs[buildConfigName].spec.source.git.uri}}</osc-git-link></span></td>\n" +
     "\n" +
     "\n" +
     "<td ng-if-start=\"latestBuild && (buildConfigs[buildConfigName] || !unfilteredBuildConfigs[buildConfigName])\" data-title=\"Name\">\n" +
@@ -4352,12 +4380,12 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "<span am-time-ago=\"latestBuild.metadata.creationTimestamp\"></span>\n" +
     "</td>\n" +
     "<td data-title=\"Type\">{{latestBuild.spec.strategy.type | startCase}}</td>\n" +
-    "<td ng-if-end data-title=\"Source\" class=\"word-break-all\">\n" +
+    "<td ng-if-end data-title=\"Source\" class=\"hidden-sm\">\n" +
     "<span ng-if=\"latestBuild.spec.source\">\n" +
     "<span ng-if=\"latestBuild.spec.source.type == 'None'\">\n" +
     "<i>none</i>\n" +
     "</span>\n" +
-    "<span class=\"word-break\"><osc-git-link uri=\"latestBuild.spec.source.git.uri\" ref=\"latestBuild.spec.source.git.ref\" context-dir=\"latestBuild.spec.source.contextDir\">{{latestBuild.spec.source.git.uri}}</osc-git-link></span>\n" +
+    "<osc-git-link uri=\"latestBuild.spec.source.git.uri\" ref=\"latestBuild.spec.source.git.ref\" context-dir=\"latestBuild.spec.source.contextDir\">{{latestBuild.spec.source.git.uri}}</osc-git-link>\n" +
     "</span>\n" +
     "</td>\n" +
     "</tr>\n" +
@@ -5440,7 +5468,14 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "<div class=\"row\">\n" +
     "<div class=\"col-md-12\">\n" +
     "<h3 ng-if=\"(deployments | hashSize) || (replicaSets | hashSize)\">Deployment Configurations</h3>\n" +
-    "<table class=\"table table-bordered table-hover table-mobile\">\n" +
+    "<table class=\"table table-bordered table-hover table-mobile table-layout-fixed\">\n" +
+    "<colgroup>\n" +
+    "<col class=\"col-sm-3\">\n" +
+    "<col class=\"col-sm-2\">\n" +
+    "<col class=\"col-sm-3\">\n" +
+    "<col class=\"col-sm-2\">\n" +
+    "<col class=\"col-sm-2\">\n" +
+    "</colgroup>\n" +
     "<thead>\n" +
     "<tr>\n" +
     "<th>Name</th>\n" +
@@ -5519,7 +5554,14 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "</table>\n" +
     "<div ng-if=\"deployments | hashSize\">\n" +
     "<h3>Deployments</h3>\n" +
-    "<table class=\"table table-bordered table-hover table-mobile\">\n" +
+    "<table class=\"table table-bordered table-hover table-mobile table-layout-fixed\">\n" +
+    "<colgroup>\n" +
+    "<col class=\"col-sm-4\">\n" +
+    "<col class=\"col-sm-2\">\n" +
+    "<col class=\"col-sm-2\">\n" +
+    "<col class=\"col-sm-2\">\n" +
+    "<col class=\"col-sm-2\">\n" +
+    "</colgroup>\n" +
     "<thead>\n" +
     "<tr>\n" +
     "<th>Name</th>\n" +
@@ -5557,7 +5599,10 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "</div>\n" +
     "<div ng-if=\"replicaSets | hashSize\" id=\"replica-sets\">\n" +
     "<h3>Replica Sets</h3>\n" +
-    "<table class=\"table table-bordered table-hover table-mobile\">\n" +
+    "<table class=\"table table-bordered table-hover table-mobile table-layout-fixed\">\n" +
+    "<colgroup>\n" +
+    "<col class=\"col-sm-4\">\n" +
+    "</colgroup>\n" +
     "<thead>\n" +
     "<tr>\n" +
     "<th>Name</th>\n" +
@@ -5582,7 +5627,10 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "</div>\n" +
     "<div ng-if=\"(unfilteredReplicationControllers | hashSize) > 0\" id=\"replica-controllers\">\n" +
     "<h3>Other Replication Controllers</h3>\n" +
-    "<table class=\"table table-bordered table-hover table-mobile\">\n" +
+    "<table class=\"table table-bordered table-hover table-mobile table-layout-fixed\">\n" +
+    "<colgroup>\n" +
+    "<col class=\"col-sm-5\">\n" +
+    "</colgroup>\n" +
     "<thead>\n" +
     "<tr>\n" +
     "<th>Name</th>\n" +
@@ -5791,10 +5839,13 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "</span>\n" +
     "</p>\n" +
     "<div class=\"form-group\">\n" +
-    "<label class=\"sr-only\" ng-attr-for=\"{{id}}-add-arg\">Add {{type || 'Command'}}</label>\n" +
+    "<label class=\"sr-only\" ng-attr-for=\"{{id}}-add-arg\">\n" +
+    "<span ng-if=\"placeholder\">{{placeholder}}</span>\n" +
+    "<span ng-if=\"!placeholder\">Add argument</span>\n" +
+    "</label>\n" +
     "\n" +
     "<span ng-show=\"!multiline\" class=\"input-group\">\n" +
-    "<input type=\"text\" ng-model=\"nextArg\" name=\"nextArg\" ng-attr-id=\"{{id}}-add-arg\" on-enter=\"addArg()\" placeholder=\"Add {{type || 'command'}}\" class=\"form-control\" autocorrect=\"off\" autocapitalize=\"off\" spellcheck=\"false\">\n" +
+    "<input type=\"text\" ng-model=\"nextArg\" name=\"nextArg\" ng-attr-id=\"{{id}}-add-arg\" on-enter=\"addArg()\" ng-attr-placeholder=\"{{placeholder || 'Add argument'}}\" class=\"form-control\" autocorrect=\"off\" autocapitalize=\"off\" spellcheck=\"false\">\n" +
     "<span class=\"input-group-btn\">\n" +
     "\n" +
     "<a class=\"btn btn-default\" href=\"\" ng-click=\"addArg()\" ng-disabled=\"!nextArg\" ng-attr-aria-disabled=\"!nextArg\" role=\"button\">Add</a>\n" +
@@ -5802,26 +5853,24 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "</span>\n" +
     "\n" +
     "<span ng-show=\"multiline\">\n" +
-    "<textarea ng-model=\"nextArg\" name=\"nextArg\" rows=\"10\" ng-attr-id=\"{{id}}-add-arg\" placeholder=\"Add {{type || 'command'}}\" class=\"form-control\" autocorrect=\"off\" autocapitalize=\"off\" spellcheck=\"false\">\n" +
+    "<textarea ng-model=\"nextArg\" name=\"nextArg\" rows=\"10\" ng-attr-id=\"{{id}}-add-arg\" ng-attr-placeholder=\"{{placeholder || 'Add argument'}}\" class=\"form-control\" autocorrect=\"off\" autocapitalize=\"off\" spellcheck=\"false\">\n" +
     "      </textarea>\n" +
     "<div class=\"mar-top-md\">\n" +
     "<a class=\"btn btn-default\" href=\"\" ng-click=\"addArg()\" ng-disabled=\"!nextArg\" ng-attr-aria-disabled=\"!nextArg\" role=\"button\">Add</a>\n" +
     "</div>\n" +
     "</span>\n" +
-    "</div>\n" +
     "<div class=\"help-block\">\n" +
-    "<div ng-if=\"!type\">\n" +
-    "Enter the command to run inside the container. The command is considered successful if its exit code is 0. Drag and drop command arguments to reorder them.\n" +
-    "</div>\n" +
-    "<div ng-if=\"type\">\n" +
-    "Enter the arguments that will be appended to the container's command. Drag and drop arguments to reorder them.\n" +
+    "<span ng-if=\"description\">{{description}}</span>\n" +
+    "<span ng-if=\"!description\">\n" +
+    "Enter the command to run inside the container. The command is considered successful if its exit code is 0. Drag and drop to reorder arguments.\n" +
+    "</span>\n" +
     "</div>\n" +
     "</div>\n" +
     "<div class=\"mar-top-sm mar-bottom-md\">\n" +
     "<a href=\"\" ng-click=\"multiline = !multiline\">Switch to {{multiline ? 'Single-line' : 'Multiline'}} Editor</a>\n" +
     "<span ng-show=\"input.args.length\">\n" +
     "<span class=\"action-divider\">|</span>\n" +
-    "<a href=\"\" ng-click=\"clear()\" role=\"button\">Clear {{ (type || 'Command') | sentenceCase }}</a>\n" +
+    "<a href=\"\" ng-click=\"clear()\" role=\"button\">Clear {{ (type || 'Command') | upperFirst }}</a>\n" +
     "</span>\n" +
     "</div>\n" +
     "\n" +
@@ -7039,7 +7088,7 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "<div pf-sort config=\"sortConfig\" class=\"sort-controls\"></div>\n" +
     "</div>\n" +
     "</div>\n" +
-    "<table class=\"table table-bordered table-condensed table-mobile table-hover events-table\" ng-class=\"{ 'table-empty': (filteredEvents | hashSize) === 0 }\">\n" +
+    "<table class=\"table table-bordered table-condensed table-mobile table-hover table-layout-fixed events-table\" ng-class=\"{ 'table-empty': (filteredEvents | hashSize) === 0 }\">\n" +
     "<thead>\n" +
     "<tr>\n" +
     "<th id=\"time\">Time</th>\n" +
@@ -8248,15 +8297,22 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "\n" +
     "<div class=\"form-group\">\n" +
     "<label for=\"insecureTraffic\">Insecure Traffic</label>\n" +
-    "<ui-select ng-model=\"route.tls.insecureEdgeTerminationPolicy\" ng-disabled=\"route.tls.termination !== 'edge'\" input-id=\"insecureTraffic\" aria-describedby=\"route-insecure-policy-help\" search-enabled=\"false\">\n" +
+    "\n" +
+    "<input type=\"hidden\" name=\"insecureTraffic\">\n" +
+    "<ui-select ng-model=\"route.tls.insecureEdgeTerminationPolicy\" name=\"insecureTraffic\" input-id=\"insecureTraffic\" aria-describedby=\"route-insecure-policy-help\" search-enabled=\"false\">\n" +
     "<ui-select-match>{{$select.selected.label}}</ui-select-match>\n" +
-    "<ui-select-choices repeat=\"option.value as option in insecureTrafficOptions\">\n" +
+    "<ui-select-choices repeat=\"option.value as option in insecureTrafficOptions\" ui-disable-choice=\"route.tls.termination === 'passthrough' && option.value === 'Allow'\">\n" +
     "{{option.label}}\n" +
     "</ui-select-choices>\n" +
     "</ui-select>\n" +
     "<div>\n" +
     "<span id=\"route-insecure-policy-help\" class=\"help-block\">\n" +
-    "Policy for traffic on insecure schemes like HTTP for edge termination.\n" +
+    "Policy for traffic on insecure schemes like HTTP.\n" +
+    "</span>\n" +
+    "</div>\n" +
+    "<div ng-if=\"routeForm.insecureTraffic.$error.passthrough\" class=\"has-warning\">\n" +
+    "<span class=\"help-block\">\n" +
+    "Passthrough routes can't use the insecure traffic policy <var>Allow</var>.\n" +
     "</span>\n" +
     "</div>\n" +
     "</div>\n" +
@@ -8599,7 +8655,10 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
 
 
   $templateCache.put('views/directives/pods-table.html',
-    "<table class=\"table table-bordered table-hover table-mobile\">\n" +
+    "<table class=\"table table-bordered table-hover table-mobile table-layout-fixed\">\n" +
+    "<colgroup>\n" +
+    "<col class=\"col-sm-4\">\n" +
+    "</colgroup>\n" +
     "<thead>\n" +
     "<tr>\n" +
     "<th>{{customNameHeader || 'Name'}}</th>\n" +
@@ -8611,7 +8670,7 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "</tr>\n" +
     "</thead>\n" +
     "<tbody ng-if=\"(pods | hashSize) == 0\">\n" +
-    "<tr><td colspan=\"6\"><em>{{emptyMessage || 'No pods to show'}}</em></td></tr>\n" +
+    "<tr><td colspan=\"{{activePods ? 6 : 5}}\"><em>{{emptyMessage || 'No pods to show'}}</em></td></tr>\n" +
     "</tbody>\n" +
     "<tbody ng-if=\"(pods | hashSize) > 0\">\n" +
     "<tr ng-repeat=\"pod in pods | orderObjectsByDate : true\">\n" +
@@ -9305,12 +9364,12 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "</div>\n" +
     "<div ng-if=\"buildHookSelection.type.id === 'command' || buildHookSelection.type.id === 'commandArgs'\">\n" +
     "<h4>Command</h4>\n" +
-    "<edit-command args=\"updatedBuildConfig.spec.postCommit.command\" is-required=\"true\">\n" +
+    "<edit-command args=\"updatedBuildConfig.spec.postCommit.command\" placeholder=\"Add to command\" is-required=\"true\">\n" +
     "</edit-command>\n" +
     "</div>\n" +
     "<div ng-if=\"buildHookSelection.type.id === 'args' || buildHookSelection.type.id === 'commandArgs' || buildHookSelection.type.id === 'scriptArgs' \">\n" +
     "<h4>Arguments</h4>\n" +
-    "<edit-command args=\"updatedBuildConfig.spec.postCommit.args\" type=\"argument\" is-required=\"true\">\n" +
+    "<edit-command args=\"updatedBuildConfig.spec.postCommit.args\" type=\"arguments\" description=\"getArgumentsDescription()\" is-required=\"true\">\n" +
     "</edit-command>\n" +
     "</div>\n" +
     "</fieldset>\n" +
@@ -9987,7 +10046,13 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "<alerts alerts=\"alerts\"></alerts>\n" +
     "<div class=\"row\">\n" +
     "<div class=\"col-md-12\">\n" +
-    "<table class=\"table table-bordered table-hover table-mobile\">\n" +
+    "<table class=\"table table-bordered table-hover table-mobile table-layout-fixed\">\n" +
+    "<colgroup>\n" +
+    "<col class=\"col-sm-3\">\n" +
+    "<col class=\"col-sm-5\">\n" +
+    "<col class=\"col-sm-2\">\n" +
+    "<col class=\"col-sm-2\">\n" +
+    "</colgroup>\n" +
     "<thead>\n" +
     "<tr>\n" +
     "<th>Name</th>\n" +
@@ -10004,7 +10069,7 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "<td data-title=\"Name\"><a href=\"{{imageStream | navigateResourceURL}}\">{{imageStream.metadata.name}}</a></td>\n" +
     "<td data-title=\"Docker Repo\">\n" +
     "<span ng-if=\"!imageStream.status.dockerImageRepository && !imageStream.spec.dockerImageRepository\"><em>unknown</em></span>\n" +
-    "<span ng-if=\"imageStream.status.dockerImageRepository || imageStream.spec.dockerImageRepository\" class=\"word-break\">{{imageStream.status.dockerImageRepository || imageStream.spec.dockerImageRepository}}</span>\n" +
+    "<span ng-if=\"imageStream.status.dockerImageRepository || imageStream.spec.dockerImageRepository\">{{imageStream.status.dockerImageRepository || imageStream.spec.dockerImageRepository}}</span>\n" +
     "</td>\n" +
     "<td data-title=\"Tags\">\n" +
     "<span ng-if=\"!imageStream.status.tags.length\"><em>none</em></span>\n" +
@@ -11086,7 +11151,13 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "<alerts alerts=\"alerts\"></alerts>\n" +
     "<div class=\"row\">\n" +
     "<div class=\"col-md-12\">\n" +
-    "<table class=\"table table-bordered table-mobile\" ng-class=\"{ 'table-empty': (resources | hashSize) === 0 }\">\n" +
+    "<table class=\"table table-bordered table-mobile table-layout-fixed\" ng-class=\"{ 'table-empty': (resources | hashSize) === 0 }\">\n" +
+    "<colgroup>\n" +
+    "<col class=\"col-sm-3\">\n" +
+    "<col class=\"col-sm-2\">\n" +
+    "<col class=\"col-sm-5\">\n" +
+    "<col class=\"col-sm-2\">\n" +
+    "</colgroup>\n" +
     "<thead>\n" +
     "<tr>\n" +
     "<th>Name</th>\n" +
@@ -12447,7 +12518,7 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "<div ng-if=\"loaded\" class=\"row\">\n" +
     "<div class=\"col-md-12\">\n" +
     "<h2>Source Secrets</h2>\n" +
-    "<table class=\"table table-bordered table-hover table-mobile secrets-table table-word-break-all\">\n" +
+    "<table class=\"table table-bordered table-hover table-mobile secrets-table table-layout-fixed\">\n" +
     "<colgroup>\n" +
     "<col class=\"col-sm-5\">\n" +
     "<col class=\"col-sm-5\">\n" +
@@ -12472,7 +12543,7 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "<td data-title=\"Type\">\n" +
     "{{secret.type}}\n" +
     "</td>\n" +
-    "<td data-title=\"Created\" class=\"word-break-normal\">\n" +
+    "<td data-title=\"Created\">\n" +
     "<span am-time-ago=\"secret.metadata.creationTimestamp\"></span>\n" +
     "</td>\n" +
     "</tr>\n" +
@@ -12480,7 +12551,7 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "</table>\n" +
     "<div ng-if=\"secretsByType.images.length !== 0\">\n" +
     "<h2>Image Secrets</h2>\n" +
-    "<table class=\"table table-bordered table-hover table-mobile secrets-table table-word-break-all\">\n" +
+    "<table class=\"table table-bordered table-hover table-mobile secrets-table table-layout-fixed\">\n" +
     "<colgroup>\n" +
     "<col class=\"col-sm-5\">\n" +
     "<col class=\"col-sm-5\">\n" +
@@ -12500,7 +12571,7 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "<td data-title=\"Type\">\n" +
     "{{secret.type}}\n" +
     "</td>\n" +
-    "<td data-title=\"Created\" class=\"word-break-normal\">\n" +
+    "<td data-title=\"Created\">\n" +
     "<span am-time-ago=\"secret.metadata.creationTimestamp\"></span>\n" +
     "</td>\n" +
     "</tr>\n" +
@@ -12509,7 +12580,7 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "</div>\n" +
     "<div ng-if=\"secretsByType.other.length !== 0\">\n" +
     "<h2>Other Secrets</h2>\n" +
-    "<table class=\"table table-bordered table-hover table-mobile secrets-table table-word-break-all\">\n" +
+    "<table class=\"table table-bordered table-hover table-mobile secrets-table table-layout-fixed\">\n" +
     "<colgroup>\n" +
     "<col class=\"col-sm-5\">\n" +
     "<col class=\"col-sm-5\">\n" +
@@ -12529,7 +12600,7 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "<td data-title=\"Type\">\n" +
     "{{secret.type}}\n" +
     "</td>\n" +
-    "<td data-title=\"Created\" class=\"word-break-normal\">\n" +
+    "<td data-title=\"Created\">\n" +
     "<span am-time-ago=\"secret.metadata.creationTimestamp\"></span>\n" +
     "</td>\n" +
     "</tr>\n" +
@@ -12576,7 +12647,10 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "<alerts alerts=\"alerts\"></alerts>\n" +
     "<div class=\"row\">\n" +
     "<div class=\"col-md-12\">\n" +
-    "<table class=\"table table-bordered table-hover table-mobile\">\n" +
+    "<table class=\"table table-bordered table-hover table-mobile table-layout-fixed\">\n" +
+    "<colgroup>\n" +
+    "<col class=\"col-sm-3\">\n" +
+    "</colgroup>\n" +
     "<thead>\n" +
     "<tr>\n" +
     "<th>Name</th>\n" +
@@ -13004,7 +13078,10 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "<a ng-href=\"project/{{project.metadata.name}}/create-pvc\" class=\"btn btn-default\">Create Storage</a>\n" +
     "</div>\n" +
     "</div>\n" +
-    "<table class=\"table table-bordered table-hover table-mobile\" ng-class=\"{ 'table-empty': (pvcs | hashSize) === 0 }\">\n" +
+    "<table class=\"table table-bordered table-hover table-mobile table-layout-fixed\" ng-class=\"{ 'table-empty': (pvcs | hashSize) === 0 }\">\n" +
+    "<colgroup>\n" +
+    "<col class=\"col-sm-5\">\n" +
+    "</colgroup>\n" +
     "<thead>\n" +
     "<tr>\n" +
     "<th>Name</th>\n" +
