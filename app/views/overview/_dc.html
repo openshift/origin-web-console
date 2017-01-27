@@ -1,8 +1,8 @@
 <div class="overview-tile" ng-class="{ 'deployment-in-progress': inProgressDeployment }">
   <ng-include src="'views/overview/_service-header.html'"></ng-include>
   <div class="overview-tile-header">
-    <div class="rc-header">
-      <div>
+    <div class="rc-header" ng-class="{ 'rc-header-shield' : activeReplicationController}">
+      <div class="truncate">
         Deployment Config
         <a ng-href="{{deploymentConfig | navigateResourceURL}}">{{deploymentConfig.metadata.name}}</a>
         <small class="overview-timestamp" ng-if="activeReplicationController && !inProgressDeployment">
@@ -43,8 +43,7 @@
         A new deployment will start automatically when
         <span ng-if="imageChangeTriggers.length === 1">
           an image is available for
-          <a ng-href="{{urlForImageChangeTrigger(imageChangeTriggers[0], deploymentConfig)}}">
-            {{imageChangeTriggers[0].imageChangeParams.from | imageObjectRef : deploymentConfig.metadata.namespace}}</a>.
+          <a ng-href="{{urlForImageChangeTrigger(imageChangeTriggers[0], deploymentConfig)}}">{{imageChangeTriggers[0].imageChangeParams.from | imageObjectRef : deploymentConfig.metadata.namespace}}</a>.
         </span>
         <span ng-if="imageChangeParams.length > 1">
           one of the images for this deployment config changes.
@@ -63,11 +62,8 @@
           </div>
         </div>
         <div ng-if="!pipelinesForDC[deploymentConfig.metadata.name].length">
-          <p>
-            No deployments have started for
-            <a ng-href="{{deploymentConfig | navigateResourceURL}}">{{deploymentConfig.metadata.name}}</a>.
-          </p>
-
+            <p>No deployments have started for
+            <a ng-href="{{deploymentConfig | navigateResourceURL}}">{{deploymentConfig.metadata.name}}</a>.</p>
           <button ng-if="'deploymentconfigs' | canI : 'update'" class="btn btn-primary" ng-click="startDeployment(deploymentConfig)">
             Start Deployment
           </button>

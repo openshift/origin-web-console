@@ -1,11 +1,10 @@
 <div ng-if="!tileCount" class="no-deployments-block">
-  <div column class="no-deployments-message">
+  <div column class="no-deployments-message overview-tile">
     <ng-include src="'views/overview/_service-header.html'"></ng-include>
     <div class="empty-tile">
       <h2>No deployments or pods.</h2>
       <p>
-        Service
-        <a ng-href="{{service | navigateResourceURL}}">{{service.metadata.name}}</a>
+        Service <a ng-href="{{service | navigateResourceURL}}">{{service.metadata.name}}</a>
         does not route to any deployments or pods.
       </p>
     </div>

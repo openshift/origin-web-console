@@ -1,8 +1,8 @@
 <div class="overview-tile" ng-class="{ 'deployment-in-progress': inProgressDeployment }">
   <ng-include src="'views/overview/_service-header.html'"></ng-include>
   <div class="overview-tile-header">
-    <div class="rc-header">
-      <div>
+    <div class="rc-header" ng-class="{ 'rc-header-shield' : latestReplicaSet && latestRevision && !inProgressDeployment}">
+      <div class="truncate">
         Deployment
         <a ng-href="{{deployment | navigateResourceURL}}">{{deploymentName}}</a>
         <small class="overview-timestamp" ng-if="latestReplicaSet">
