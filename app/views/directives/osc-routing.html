@@ -247,15 +247,28 @@
       <!-- Insecure Edge Termination Policy -->
       <div class="form-group">
         <label for="insecureTraffic">Insecure Traffic</label>
-        <ui-select ng-model="route.tls.insecureEdgeTerminationPolicy" ng-disabled="route.tls.termination !== 'edge'" input-id="insecureTraffic" aria-describedby="route-insecure-policy-help" search-enabled="false">
+        <!-- Since we can't give the ui-select field a name, create a hidden input for Angular form validation. -->
+        <input type="hidden" name="insecureTraffic">
+        <ui-select ng-model="route.tls.insecureEdgeTerminationPolicy"
+            name="insecureTraffic"
+            input-id="insecureTraffic"
+            aria-describedby="route-insecure-policy-help"
+            search-enabled="false">
           <ui-select-match>{{$select.selected.label}}</ui-select-match>
-          <ui-select-choices repeat="option.value as option in insecureTrafficOptions">
+          <ui-select-choices
+              repeat="option.value as option in insecureTrafficOptions"
+              ui-disable-choice="route.tls.termination === 'passthrough' && option.value === 'Allow'">
             {{option.label}}
           </ui-select-choices>
         </ui-select>
         <div>
           <span id="route-insecure-policy-help" class="help-block">
-            Policy for traffic on insecure schemes like HTTP for edge termination.
+            Policy for traffic on insecure schemes like HTTP.
+          </span>
+        </div>
+        <div ng-if="routeForm.insecureTraffic.$error.passthrough" class="has-warning">
+          <span class="help-block">
+            Passthrough routes can't use the insecure traffic policy <var>Allow</var>.
           </span>
         </div>
       </div>

@@ -125,10 +125,6 @@ angular.module('openshiftConsole')
 
           if (_.get($scope, 'routing.tls.termination')) {
             updated.spec.tls = $scope.routing.tls;
-            if (updated.spec.tls.termination !== 'edge') {
-              // insecureEdgeTerminationPolicy only applies to edge routes.
-              delete updated.spec.tls.insecureEdgeTerminationPolicy;
-            }
 
             if (updated.spec.tls.termination === 'passthrough') {
               delete updated.spec.path;

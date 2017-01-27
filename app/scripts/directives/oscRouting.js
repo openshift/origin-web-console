@@ -69,6 +69,14 @@ angular.module("openshiftConsole")
           _.set(scope, 'route.tls.insecureEdgeTerminationPolicy', '');
         }
 
+        var validateInsecureTerminationPolicy = function() {
+          var insecureTrafficValid = _.get(scope, 'route.tls.termination') !== 'passthrough' ||
+                                     _.get(scope, 'route.tls.insecureEdgeTerminationPolicy') !== 'Allow';
+          scope.routeForm.insecureTraffic.$setValidity('passthrough', insecureTrafficValid);
+        };
+        scope.$watchGroup([ 'route.tls.termination', 'route.tls.insecureEdgeTerminationPolicy' ],
+                          validateInsecureTerminationPolicy);
+
         scope.nameValidation = DNS1123_SUBDOMAIN_VALIDATION;
 
         // Use different patterns for validating hostnames if wildcard subdomains are supported.
