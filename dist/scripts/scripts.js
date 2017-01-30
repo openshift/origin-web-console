@@ -8009,9 +8009,9 @@ k.toErrorPage("Could not load " + m(d.kind) + " '" + d.name + "'. " + b("getErro
 j.unwatchAll(p);
 })) :void k.toErrorPage("You do not have authority to update " + m(d.kind) + " " + d.name + ".", "access_denied");
 }));
-} ]), angular.module("openshiftConsole").controller("BrowseCategoryController", [ "$scope", "$filter", "$location", "$q", "$routeParams", "$uibModal", "AlertMessageService", "CatalogService", "Constants", "DataService", "LabelFilter", "Navigate", "ProjectsService", function(a, b, c, d, e, f, g, h, i, j, k, l, m) {
+} ]), angular.module("openshiftConsole").controller("BrowseCategoryController", [ "$scope", "$filter", "$location", "$q", "$routeParams", "$uibModal", "AlertMessageService", "Constants", "DataService", "LabelFilter", "Navigate", "ProjectsService", function(a, b, c, d, e, f, g, h, i, j, k, l) {
 a.projectName = e.project;
-var n = function(b, c) {
+var m = function(b, c) {
 var d;
 return _.some(b, function(b) {
 if (d = _.find(b.items, {
@@ -8026,10 +8026,10 @@ label:""
 }
 return !1;
 }), d;
-}, o = i.CATALOG_CATEGORIES, p = "none" === e.category ? "" :e.category;
-if (a.category = n(o, p), !a.category) return void l.toErrorPage("Catalog category " + e.category + " not found.");
-var q, r;
-return e.subcategory && (q = a.category, p = "none" === e.subcategory ? "" :e.subcategory, r = _.get(a.category, "subcategories", []), a.category = n(r, p), !a.category) ? void l.toErrorPage("Catalog category " + e.category + "/" + e.subcategory + " not found.") :(a.alerts = a.alerts || {}, g.getAlerts().forEach(function(b) {
+}, n = h.CATALOG_CATEGORIES, o = "none" === e.category ? "" :e.category;
+if (a.category = m(n, o), !a.category) return void k.toErrorPage("Catalog category " + e.category + " not found.");
+var p, q;
+return e.subcategory && (p = a.category, o = "none" === e.subcategory ? "" :e.subcategory, q = _.get(a.category, "subcategories", []), a.category = m(q, o), !a.category) ? void k.toErrorPage("Catalog category " + e.category + "/" + e.subcategory + " not found.") :(a.alerts = a.alerts || {}, g.getAlerts().forEach(function(b) {
 a.alerts[b.name] = b.data;
 }), g.clearAlerts(), a.breadcrumbs = [ {
 title:a.projectName,
@@ -8040,23 +8040,23 @@ link:"project/" + a.projectName + "/create"
 }, {
 title:"Catalog",
 link:"project/" + a.projectName + "/create?tab=fromCatalog"
-} ], q && a.breadcrumbs.push({
-title:q.label,
-link:"project/" + a.projectName + "/create/category/" + q.id
+} ], p && a.breadcrumbs.push({
+title:p.label,
+link:"project/" + a.projectName + "/create/category/" + p.id
 }), a.breadcrumbs.push({
 title:a.category.label
-}), void m.get(e.project).then(_.spread(function(c, d) {
-a.project = c, a.context = d, a.breadcrumbs[0].title = b("displayName")(c), j.list("imagestreams", {
+}), void l.get(e.project).then(_.spread(function(c, d) {
+a.project = c, a.context = d, a.breadcrumbs[0].title = b("displayName")(c), i.list("imagestreams", {
 namespace:"openshift"
 }, function(b) {
 a.openshiftImageStreams = b.by("metadata.name");
-}), j.list("templates", {
+}), i.list("templates", {
 namespace:"openshift"
 }, function(b) {
 a.openshiftTemplates = b.by("metadata.name");
-}), "openshift" === e.project ? (a.projectImageStreams = [], a.projectTemplates = []) :(j.list("imagestreams", d, function(b) {
+}), "openshift" === e.project ? (a.projectImageStreams = [], a.projectTemplates = []) :(i.list("imagestreams", d, function(b) {
 a.projectImageStreams = b.by("metadata.name");
-}), j.list("templates", d, function(b) {
+}), i.list("templates", d, function(b) {
 a.projectTemplates = b.by("metadata.name");
 }));
 })));
@@ -11358,27 +11358,45 @@ var f = a.getCategoryItem(d), g = function(a) {
 return a.test(f.label);
 }, h = _.reject(b, g);
 e.filteredBuildersByCategory[d] = a.filterImageStreams(c, h);
-}), e.filteredTemplatesByCategory = {}, void _.each(e.templatesByCategory, function(c, d) {
+}), e.filteredBuildersNoSubcategory = a.filterImageStreams(e.buildersNoSubcategory, b), e.filteredTemplatesByCategory = {}, _.each(e.templatesByCategory, function(c, d) {
 var f = a.getCategoryItem(d), g = function(a) {
 return a.test(f.label);
 }, h = _.reject(b, g);
 e.filteredTemplatesByCategory[d] = a.filterTemplates(c, h);
-}));
+}), void (e.filteredTemplatesNoSubcategory = a.filterTemplates(e.templatesNoSubcategory, b)));
 }
-function g() {
-if (e.projectImageStreams && e.openshiftImageStreams) {
-var b = _.toArray(e.projectImageStreams).concat(_.toArray(e.openshiftImageStreams));
-e.buildersByCategory = a.categorizeImageStreams(b), e.emptyCatalog = e.emptyCatalog && _.every(e.buildersByCategory, _.isEmpty), j();
-}
+function g(a) {
+var b = _.get(e, "parentCategory.subcategories", []);
+if (_.isEmpty(b)) return [];
+var c = {};
+_.each(b, function(b) {
+_.each(b.items, function(b) {
+_.each(a[b.id], function(a) {
+var b = _.get(a, "metadata.uid");
+c[b] = !0;
+});
+});
+});
+var d = function(a) {
+var b = _.get(a, "metadata.uid");
+return !!c[b];
+}, f = e.parentCategory.id;
+return _.reject(a[f], d);
 }
 function h() {
-if (e.projectTemplates && e.openshiftTemplates) {
-var b = _.toArray(e.projectTemplates).concat(_.toArray(e.openshiftTemplates));
-e.templatesByCategory = a.categorizeTemplates(b), e.emptyCatalog = e.emptyCatalog && _.every(e.templatesByCategory, _.isEmpty), j();
+if (e.projectImageStreams && e.openshiftImageStreams) {
+var b = _.toArray(e.projectImageStreams).concat(_.toArray(e.openshiftImageStreams));
+e.buildersByCategory = a.categorizeImageStreams(b), e.buildersNoSubcategory = g(e.buildersByCategory), e.emptyCatalog = e.emptyCatalog && _.every(e.buildersByCategory, _.isEmpty) && _.isEmpty(e.buildersNoSubcategory), l();
 }
 }
 function i() {
-e.noFilterMatches = !0, k = [];
+if (e.projectTemplates && e.openshiftTemplates) {
+var b = _.toArray(e.projectTemplates).concat(_.toArray(e.openshiftTemplates));
+e.templatesByCategory = a.categorizeTemplates(b), e.templatesNoSubcategory = g(e.templatesByCategory), e.emptyCatalog = e.emptyCatalog && _.every(e.templatesByCategory, _.isEmpty) && _.isEmpty(e.templatesNoSubcategory), l();
+}
+}
+function j() {
+e.noFilterMatches = !0, m = [];
 var a = {};
 _.each(e.filteredBuildersByCategory, function(b, c) {
 a[c] = _.size(b);
@@ -11387,25 +11405,28 @@ a[c] = (a[c] || 0) + _.size(b);
 }), e.allContentHidden = !0, _.each(e.categories, function(b) {
 var c = !1;
 _.each(b.items, function(b) {
-a[b.id] && (k.push(b), c = !0);
+a[b.id] && (m.push(b), c = !0);
 }), _.set(e, [ "hasContent", b.id ], c), c && (e.allContentHidden = !1);
-}), e.countByCategory = a;
+}), e.countByCategory = a, e.hasItemsNoSubcategory = !_.isEmpty(e.buildersNoSubcategory) || !_.isEmpty(e.templatesNoSubcategory), e.countFilteredNoSubcategory = _.size(e.filteredBuildersNoSubcategory) + _.size(e.filteredTemplatesNoSubcategory), e.countFilteredNoSubcategory && (e.allContentHidden = !1);
 }
-function j() {
-e.loaded = e.projectTemplates && e.openshiftTemplates && e.projectImageStreams && e.openshiftImageStreams, f(), i(), e.loaded && (e.parentCategory && 1 === k.length && (e.singleCategory = _.head(k)), d.log("templates by category", e.templatesByCategory), d.log("builder images", e.buildersByCategory));
+function k() {
+return !!e.parentCategory && (1 === m.length && !e.hasItemsNoSubcategory);
+}
+function l() {
+e.loaded = e.projectTemplates && e.openshiftTemplates && e.projectImageStreams && e.openshiftImageStreams, f(), j(), e.loaded && (k() && (e.singleCategory = _.head(m)), d.log("templates by category", e.templatesByCategory), d.log("builder images", e.buildersByCategory));
 }
 e.categories = _.get(e, "parentCategory.subcategories", b.CATALOG_CATEGORIES), e.loaded = !1, e.emptyCatalog = !0, e.filter = {
 keyword:""
 }, e.$watch("filter.keyword", _.debounce(function() {
 e.$apply(function() {
-f(), i();
+f(), j();
 });
 }, 200, {
 maxWait:1e3,
 trailing:!0
 }));
-var k;
-e.$watchGroup([ "openshiftImageStreams", "projectImageStreams" ], g), e.$watchGroup([ "openshiftTemplates", "projectTemplates" ], h);
+var m;
+e.$watchGroup([ "openshiftImageStreams", "projectImageStreams" ], h), e.$watchGroup([ "openshiftTemplates", "projectTemplates" ], i);
 }
 };
 } ]), angular.module("openshiftConsole").directive("categoryContent", [ "CatalogService", "Constants", "KeywordService", "Logger", function(a, b, c, d) {
