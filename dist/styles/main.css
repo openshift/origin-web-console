@@ -3790,6 +3790,7 @@ mark{padding:0;background-color:rgba(252,248,160,.5)}
 .build-config-summary .h3,.deployment-config-summary .h3{margin-bottom:0}
 .build-config-summary .last-status,.deployment-config-summary .last-status{margin-right:5px}
 .build-config-summary .last-timestamp,.deployment-config-summary .last-timestamp{margin-left:25px}
+.route-status .h3{margin-top:0;margin-bottom:5px}
 .deployment-config-summary{padding-bottom:20px}
 .deployment-config-summary.gutter-bottom-2x{padding-bottom:40px}
 .registry-image-pull{margin-bottom:20px}

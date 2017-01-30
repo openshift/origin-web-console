@@ -3360,19 +3360,19 @@ type:"Admitted",
 status:"True"
 });
 });
-}, h = function(b) {
-return "true" !== a("annotation")(b, "openshift.io/host.generated");
-}, i = function(a) {
+}, h = a("annotation"), i = function(a) {
+return "true" !== h(a, "openshift.io/host.generated");
+}, j = function(a) {
 var b = 0;
 g(a) && (b += 11);
 var c = _.get(a, "spec.alternateBackends");
-return _.isEmpty(c) || (b += 5), h(a) && (b += 3), a.spec.tls && (b += 1), b;
-}, j = function(a, b) {
-var c = i(a), d = i(b);
+return _.isEmpty(c) || (b += 5), i(a) && (b += 3), a.spec.tls && (b += 1), b;
+}, k = function(a, b) {
+var c = j(a), d = j(b);
 return d > c ? b :a;
-}, k = function(a) {
-return _.groupBy(a, "spec.to.name");
 }, l = function(a) {
+return _.groupBy(a, "spec.to.name");
+}, m = function(a) {
 var b = _.get(a, "spec.host", "");
 return b.replace(/^[a-z0-9]([-a-z0-9]*[a-z0-9])\./, "");
 };
@@ -3382,9 +3382,10 @@ var c = [];
 return a ? ("Service" === a.spec.to.kind && d(a, b, c), e(a, c), f(a, c), c) :c;
 },
 getServicePortForRoute:c,
-getPreferredDisplayRoute:j,
-groupByService:k,
-getSubdomain:l
+getPreferredDisplayRoute:k,
+groupByService:l,
+getSubdomain:m,
+isCustomHost:i
 };
 } ]), angular.module("openshiftConsole").factory("ChartsService", [ "Logger", function(a) {
 return {
@@ -6888,34 +6889,46 @@ b.routes = a.select(b.unfilteredRoutes), e();
 d.unwatchAll(h);
 });
 }));
-} ]), angular.module("openshiftConsole").controller("RouteController", [ "$scope", "$routeParams", "AlertMessageService", "DataService", "ProjectsService", "$filter", function(a, b, c, d, e, f) {
-a.projectName = b.project, a.route = null, a.alerts = {}, a.renderOptions = a.renderOptions || {}, a.renderOptions.hideFilterWidget = !0, a.breadcrumbs = [ {
+} ]), angular.module("openshiftConsole").controller("RouteController", [ "$scope", "$filter", "$routeParams", "AlertMessageService", "DataService", "ProjectsService", "RoutesService", function(a, b, c, d, e, f, g) {
+a.projectName = c.project, a.route = null, a.alerts = {}, a.renderOptions = a.renderOptions || {}, a.renderOptions.hideFilterWidget = !0, a.breadcrumbs = [ {
 title:"Routes",
-link:"project/" + b.project + "/browse/routes"
+link:"project/" + c.project + "/browse/routes"
 }, {
-title:b.route
-} ], c.getAlerts().forEach(function(b) {
+title:c.route
+} ], d.getAlerts().forEach(function(b) {
 a.alerts[b.name] = b.data;
-}), c.clearAlerts();
-var g = [], h = function(b, c) {
-a.loaded = !0, a.route = b, "DELETED" === c && (a.alerts.deleted = {
+}), d.clearAlerts();
+var h, i = [], j = function(b, c) {
+a.loaded = !0, a.route = b, h = g.isCustomHost(b), "DELETED" === c && (a.alerts.deleted = {
 type:"warning",
 message:"This route has been deleted."
 });
+}, k = function(b) {
+var c = _.get(a, "route.metadata.uid");
+return "router-host-" + c + "-" + b.host + "-" + b.routerCanonicalHostname;
 };
-e.get(b.project).then(_.spread(function(c, e) {
-a.project = c, d.get("routes", b.route, e).then(function(a) {
-h(a), g.push(d.watchObject("routes", b.route, e, h));
-}, function(b) {
+a.showRouterHostnameAlert = function(b, c) {
+if (!h) return !1;
+if (!b || !b.host || !b.routerCanonicalHostname) return !1;
+if (!c || "True" !== c.status) return !1;
+var e = k(b);
+return !d.isAlertPermanentlyHidden(e, a.projectName);
+}, a.hideRouterHostnameAlert = function(b) {
+var c = k(b);
+d.permanentlyHideAlert(c, a.projectName);
+}, f.get(c.project).then(_.spread(function(d, f) {
+a.project = d, e.get("routes", c.route, f).then(function(a) {
+j(a), i.push(e.watchObject("routes", c.route, f, j));
+}, function(c) {
 a.loaded = !0, a.alerts.load = {
 type:"error",
 message:"The route details could not be loaded.",
-details:"Reason: " + f("getErrorDetails")(b)
+details:"Reason: " + b("getErrorDetails")(c)
 };
-}), g.push(d.watch("services", e, function(b) {
+}), i.push(e.watch("services", f, function(b) {
 a.services = b.by("metadata.name");
 })), a.$on("$destroy", function() {
-d.unwatchAll(g);
+e.unwatchAll(i);
 });
 }));
 } ]), angular.module("openshiftConsole").controller("StorageController", [ "$routeParams", "$scope", "AlertMessageService", "DataService", "ProjectsService", "$filter", "LabelFilter", "Logger", function(a, b, c, d, e, f, g, h) {
