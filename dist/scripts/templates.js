@@ -4522,7 +4522,7 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "<div ng-repeat=\"category in categories\" ng-if=\"hasContent[category.id]\">\n" +
     "<h2 class=\"h3\" ng-if=\"category.label\">{{category.label}}</h2>\n" +
     "<div class=\"row tile-row\" ng-class=\"{ 'mar-top-xl': !category.label || category.items.length < 2 }\">\n" +
-    "<div ng-repeat=\"item in category.items\" ng-if=\"countByCategory[item.id]\" class=\"col-xxs-12 col-xs-6 col-sm-4 col-md-4 col-lg-3\">\n" +
+    "<div ng-repeat=\"item in category.items\" ng-if=\"countByCategory[item.id]\" class=\"col-xxs-12 col-xs-6 col-sm-6 col-md-4\">\n" +
     "<div class=\"tile tile-click\" ng-class=\"{ 'tile-sans-icon' : !item.iconClass, 'tile-sans-description' : !item.description }\">\n" +
     "<div class=\"tile-title\">\n" +
     "<div ng-if=\"item.iconClass || category.iconClassDefault\" class=\"image-icon\">\n" +
@@ -4545,6 +4545,14 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "</div>\n" +
     "</div>\n" +
     "</div>\n" +
+    "<div ng-if=\"hasItemsNoSubcategory\">\n" +
+    "<div class=\"row row-cards-pf row-cards-pf-flex\">\n" +
+    "<catalog-image image-stream=\"builder\" project=\"{{projectName}}\" is-builder=\"true\" ng-repeat=\"builder in buildersNoSubcategory track by (builder | uid)\">\n" +
+    "</catalog-image>\n" +
+    "<catalog-template template=\"template\" project=\"{{projectName}}\" ng-repeat=\"template in templatesNoSubcategory | orderBy : ['metadata.name', 'metadata.namespace'] track by (template | uid)\">\n" +
+    "</catalog-template>\n" +
+    "</div>\n" +
+    "</div>\n" +
     "</div>\n" +
     "<div ng-if=\"filterActive\">\n" +
     "<div ng-repeat=\"category in categories\" ng-if=\"hasContent[category.id]\">\n" +
@@ -4559,6 +4567,18 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "<catalog-template template=\"template\" project=\"{{projectName}}\" keywords=\"keywords\" ng-repeat=\"template in filteredTemplatesByCategory[item.id] | orderBy : ['metadata.name', 'metadata.namespace'] track by (template | uid)\">\n" +
     "</catalog-template>\n" +
     "</div>\n" +
+    "</div>\n" +
+    "</div>\n" +
+    "<div ng-if=\"countFilteredNoSubcategory\">\n" +
+    "<h2 class=\"h3\">\n" +
+    "Other {{parentCategory.label}}\n" +
+    "<span class=\"tile-item-count badge\">{{countFilteredNoSubcategory}}</span>\n" +
+    "</h2>\n" +
+    "<div class=\"row row-cards-pf row-cards-pf-flex mar-top-xl\">\n" +
+    "<catalog-image image-stream=\"builder\" project=\"{{projectName}}\" is-builder=\"true\" keywords=\"keywords\" ng-repeat=\"builder in filteredBuildersNoSubcategory track by (builder | uid)\">\n" +
+    "</catalog-image>\n" +
+    "<catalog-template template=\"template\" project=\"{{projectName}}\" keywords=\"keywords\" ng-repeat=\"template in filteredTemplatesNoSubcategory | orderBy : ['metadata.name', 'metadata.namespace'] track by (template | uid)\">\n" +
+    "</catalog-template>\n" +
     "</div>\n" +
     "</div>\n" +
     "</div>\n" +

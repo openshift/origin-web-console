@@ -15,7 +15,6 @@ angular.module('openshiftConsole')
                                                     $routeParams,
                                                     $uibModal,
                                                     AlertMessageService,
-                                                    CatalogService,
                                                     Constants,
                                                     DataService,
                                                     LabelFilter,
