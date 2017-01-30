@@ -4,6 +4,7 @@ require('jasmine-beforeall');
 
 const h = require('../helpers');
 const addExtension = require('../helpers/extensions').addExtension;
+const resetExtensions = require('../helpers/extensions').resetExtensions;
 const matchersHelpers = require('../helpers/matchers');
 const projectHelpers = require('../helpers/project');
 const inputsHelpers = require('../helpers/inputs');
@@ -48,6 +49,7 @@ describe('authenticated e2e-user', function() {
 
   afterAll(function() {
     projectHelpers.deleteAllProjects();
+    resetExtensions();
     h.afterAllTeardown();
   });
 
