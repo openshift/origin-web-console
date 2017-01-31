@@ -3635,35 +3635,47 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "<div class=\"row\" ng-if=\"route\">\n" +
     "<div class=\"col-sm-12\">\n" +
     "<div class=\"resource-details\">\n" +
-    "<dl class=\"dl-horizontal left\">\n" +
-    "<dt>Hostname<span ng-if=\"route.status.ingress.length > 1\">s</span>:</dt>\n" +
-    "<dd>\n" +
-    "<span ng-if=\"!route.status.ingress\">\n" +
+    "<div ng-if=\"!route.status.ingress\" class=\"route-status\">\n" +
+    "<span class=\"h3\">\n" +
     "{{route | routeLabel : null : true}}\n" +
-    "<span data-toggle=\"popover\" data-trigger=\"hover\" data-content=\"The route is not accepting traffic yet because it has not been admitted by a router.\" style=\"cursor: help; padding-left: 5px\">\n" +
+    "</span>\n" +
+    "<div class=\"meta\">\n" +
     "<status-icon status=\"'Pending'\"></status-icon>\n" +
-    "<span class=\"sr-only\">Pending</span>\n" +
-    "</span>\n" +
-    "</span>\n" +
-    "<div ng-repeat=\"ingress in route.status.ingress\">\n" +
+    "The route is not accepting traffic yet because it has not been admitted by a router.\n" +
+    "</div>\n" +
+    "</div>\n" +
+    "<div ng-repeat=\"ingress in route.status.ingress\" ng-init=\"admittedCondition = (ingress | routeIngressCondition : 'Admitted')\" class=\"route-status\">\n" +
+    "<div class=\"h3\">\n" +
     "<span ng-if=\"(route | isWebRoute)\">\n" +
     "<a ng-href=\"{{route | routeWebURL : ingress.host}}\" target=\"_blank\">{{route | routeLabel : ingress.host : true}}</a>\n" +
     "</span>\n" +
     "<span ng-if=\"!(route | isWebRoute)\">\n" +
     "{{route | routeLabel : ingress.host}}\n" +
     "</span>\n" +
-    "&ndash;\n" +
-    "<span ng-init=\"admittedCondition = (ingress | routeIngressCondition : 'Admitted')\">\n" +
-    "<span ng-if=\"!admittedCondition\">admission status unknown for router '{{ingress.routerName}}'</span>\n" +
+    "</div>\n" +
+    "<div class=\"meta\">\n" +
+    "<span ng-if=\"!admittedCondition\">Admission status unknown for router '{{ingress.routerName}}'</span>\n" +
     "<span ng-if=\"admittedCondition.status === 'True'\">\n" +
-    "exposed on router '{{ingress.routerName}}' <span am-time-ago=\"admittedCondition.lastTransitionTime\"></span>\n" +
+    "<status-icon status=\"'Succeeded'\"></status-icon>\n" +
+    "Exposed on router '{{ingress.routerName}}' <span am-time-ago=\"admittedCondition.lastTransitionTime\"></span>\n" +
     "</span>\n" +
     "<span ng-if=\"admittedCondition.status === 'False'\">\n" +
-    "rejected by router '{{ingress.routerName}}' <span am-time-ago=\"admittedCondition.lastTransitionTime\"></span>\n" +
-    "</span>\n" +
+    "<status-icon status=\"'Error'\"></status-icon>\n" +
+    "Rejected by router '{{ingress.routerName}}' <span am-time-ago=\"admittedCondition.lastTransitionTime\"></span>\n" +
     "</span>\n" +
     "</div>\n" +
-    "</dd>\n" +
+    "<div ng-if=\"showRouterHostnameAlert(ingress, admittedCondition)\" class=\"mar-top-lg\">\n" +
+    "<div class=\"alert alert-info\">\n" +
+    "<span class=\"pficon pficon-info\" aria-hidden=\"true\"></span>\n" +
+    "<span class=\"mar-right-sm\">\n" +
+    "The DNS admin should set up a CNAME from the route's hostname, {{ingress.host}}, to the router's canonical hostname, {{ingress.routerCanonicalHostname}}.\n" +
+    "</span>\n" +
+    "<a href=\"\" ng-click=\"hideRouterHostnameAlert(ingress)\" role=\"button\" class=\"nowrap\">Don't Show Me Again</a>\n" +
+    "</div>\n" +
+    "</div>\n" +
+    "</div>\n" +
+    "<h4 class=\"mar-top-xl\">Details</h4>\n" +
+    "<dl class=\"dl-horizontal left\">\n" +
     "<dt ng-if-start=\"route.spec.wildcardPolicy && route.spec.wildcardPolicy !== 'None' && route.spec.wildcardPolicy !== 'Subdomain'\">Wildcard Policy:</dt>\n" +
     "<dd ng-if-end>{{route.spec.wildcardPolicy}}</dd>\n" +
     "<dt>Path:</dt>\n" +

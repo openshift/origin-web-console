@@ -92,8 +92,9 @@ angular.module("openshiftConsole")
       });
     };
 
+    var annotation = $filter('annotation');
     var isCustomHost = function(route) {
-      return $filter('annotation')(route, "openshift.io/host.generated") !== "true";
+      return annotation(route, "openshift.io/host.generated") !== "true";
     };
 
     // Gets a score for the route to decide which to show on the overview.
@@ -164,6 +165,7 @@ angular.module("openshiftConsole")
       getServicePortForRoute: getServicePortForRoute,
       getPreferredDisplayRoute: getPreferredDisplayRoute,
       groupByService: groupByService,
-      getSubdomain: getSubdomain
+      getSubdomain: getSubdomain,
+      isCustomHost: isCustomHost
     };
   });
