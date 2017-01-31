@@ -183,15 +183,10 @@
     }
   }
 }
-.ellipsis-loader {
-  // Show the loading dots at the bottom, even when the log content doesn't fill the page.
-  position: absolute;
-  bottom: 10px;
-  // Center the dots.
-  margin-left: auto;
-  margin-right: auto;
-  left: 0;
-  right: 0;
+.log-pending-ellipsis {
+  display: inline-block;
+  padding-top: @grid-gutter-width / 2;
+  width: 100%;
 }
 .log-end-msg {
   font-family: @font-family-base;
@@ -201,13 +196,21 @@
   bottom: 5px;
   left: 10px;
 }
-// TODO: need to encapsulate this better
-.chromeless .log-scroll-top.affix {
-  right: 0px; // override
+.chromeless {
+  background-color:  @log-bg-color;
+  color: #d1d1d1;
+  .log-pending-ellipsis {
+    background-color: @log-bg-color;
+    padding: @grid-gutter-width 0 0 (@grid-gutter-width - 10px);
+  }
+  .log-scroll-top.affix {
+    right: 0px; // override
+  }
+  .log-scroll-top.affix.target-logger-node {
+    right: @scrollbar-width;  // override
+  }
 }
-.chromeless .log-scroll-top.affix.target-logger-node {
-  right: @scrollbar-width;  // override
-}
+
 
 .log-link-external {
   text-align: right;

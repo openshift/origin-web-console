@@ -41,7 +41,10 @@
 
 
 <!-- show this message until the log viewer starts. important for pending state, etc -->
-<ellipsis-pulser color="dark" size="sm" display="inline" msg="Loading log" ng-if="(!state)"></ellipsis-pulser>
+<div ng-if="(!state)">
+  <ellipsis-pulser ng-if="!chromeless" color="dark" size="sm" display="inline" msg="Loading log" class="log-pending-ellipsis"></ellipsis-pulser>
+  <ellipsis-pulser ng-if="chromeless" color="light" size="sm" display="inline" msg="Loading log" class="log-pending-ellipsis"></ellipsis-pulser>
+</div>
 
 <div class="empty-state-message text-center" ng-if="state=='empty'" ng-class="{'log-fixed-height': fixedHeight}">
   <h2>Logs are not available.</h2>

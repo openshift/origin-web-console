@@ -7543,7 +7543,10 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "Only the previous {{options.tailLines || 5000}} log lines and new log messages will be displayed because of the large log size.\n" +
     "</div>\n" +
     "\n" +
-    "<ellipsis-pulser color=\"dark\" size=\"sm\" display=\"inline\" msg=\"Loading log\" ng-if=\"(!state)\"></ellipsis-pulser>\n" +
+    "<div ng-if=\"(!state)\">\n" +
+    "<ellipsis-pulser ng-if=\"!chromeless\" color=\"dark\" size=\"sm\" display=\"inline\" msg=\"Loading log\" class=\"log-pending-ellipsis\"></ellipsis-pulser>\n" +
+    "<ellipsis-pulser ng-if=\"chromeless\" color=\"light\" size=\"sm\" display=\"inline\" msg=\"Loading log\" class=\"log-pending-ellipsis\"></ellipsis-pulser>\n" +
+    "</div>\n" +
     "<div class=\"empty-state-message text-center\" ng-if=\"state=='empty'\" ng-class=\"{'log-fixed-height': fixedHeight}\">\n" +
     "<h2>Logs are not available.</h2>\n" +
     "<p>\n" +
