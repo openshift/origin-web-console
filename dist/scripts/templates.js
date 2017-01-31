@@ -979,6 +979,7 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "<img src=\"images/openshift-logo.svg\"/>\n" +
     "</div>\n" +
     "<div class=\"col-md-9\">\n" +
+    "<alerts alerts=\"alerts\"></alerts>\n" +
     "<h1>Red Hat OpenShift <span class=\"about-reg\">&reg;</span></h1>\n" +
     "<h2>About</h2>\n" +
     "<p><a target=\"_blank\" href=\"https://openshift.com\">OpenShift</a> is Red Hat's Platform-as-a-Service (PaaS) that allows developers to quickly develop, host, and scale applications in a cloud environment.</p>\n" +
@@ -992,6 +993,10 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "<p>The <a target=\"_blank\" href=\"{{'welcome' | helpLink}}\">documentation</a> contains information and guides to help you learn about OpenShift and start exploring its features. From getting started with creating your first application, to trying out more advanced build and deployment techniques, it provides what you need to set up and manage your OpenShift environment as an application developer.</p>\n" +
     "<p>With the OpenShift command line interface (CLI), you can create applications and manage OpenShift projects from a terminal. To get started using the CLI, visit <a href=\"command-line\">Command Line Tools</a>.\n" +
     "</p>\n" +
+    "<div class=\"small text-muted mar-top-xl\">\n" +
+    "To see <var>Don't Show Me Again</var> messages that you've previously hidden, you can\n" +
+    "<a href=\"\" ng-click=\"resetHiddenAlerts()\" role=\"button\">reset alerts</a>.\n" +
+    "</div>\n" +
     "</div>\n" +
     "</div>\n" +
     "</div>\n" +
