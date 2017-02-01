@@ -2,7 +2,7 @@
 
 /**
  * @ngdoc function
- * @name openshiftConsole.controller:CreateRouteController
+ * @name openshiftConsole.controller:SetLimitsController
  * @description
  * # CreateRouteController
  * Controller of the openshiftConsole

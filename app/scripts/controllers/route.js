@@ -2,7 +2,7 @@
 
 /**
  * @ngdoc function
- * @name openshiftConsole.controller:ServiceController
+ * @name openshiftConsole.controller:RouteController
  * @description
  * Controller of the openshiftConsole
  */
