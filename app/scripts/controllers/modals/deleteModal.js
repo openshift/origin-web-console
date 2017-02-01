@@ -3,7 +3,7 @@
 
 /**
  * @ngdoc function
- * @name openshiftConsole.controller:ServicesController
+ * @name openshiftConsole.controller:DeleteModalController
  * @description
  * # ProjectController
  * Controller of the openshiftConsole

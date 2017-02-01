@@ -25,12 +25,15 @@
                 <form role="form" class="search-pf has-button">
                   <div class="form-group filter-controls has-clear">
                     <div class="search-pf-input-group">
-                      <label for="events-filter" class="sr-only">Filter by name</label>
+                      <label for="name-filter" class="sr-only">Filter by name</label>
                       <input type="search"
                           placeholder="Filter by name"
                           class="form-control"
-                          id="events-filter"
-                          ng-model="filters.text">
+                          id="name-filter"
+                          ng-model="filters.text"
+                          autocorrect="off"
+                          autocapitalize="off"
+                          spellcheck="false">
                       <button
                           type="button"
                           class="clear"

@@ -2,12 +2,19 @@
 
 /**
  * @ngdoc function
- * @name openshiftConsole.controller:ServiceController
+ * @name openshiftConsole.controller:RouteController
  * @description
  * Controller of the openshiftConsole
  */
 angular.module('openshiftConsole')
-  .controller('RouteController', function ($scope, $routeParams, AlertMessageService, DataService, ProjectsService, $filter) {
+  .controller('RouteController',
+              function($scope,
+                       $filter,
+                       $routeParams,
+                       AlertMessageService,
+                       DataService,
+                       ProjectsService,
+                       RoutesService) {
     $scope.projectName = $routeParams.project;
     $scope.route = null;
     $scope.alerts = {};
@@ -31,15 +38,49 @@ angular.module('openshiftConsole')
 
     var watches = [];
 
+    var isCustomHost;
     var routeResolved = function(route, action) {
       $scope.loaded = true;
       $scope.route = route;
+      isCustomHost = RoutesService.isCustomHost(route);
       if (action === "DELETED") {
         $scope.alerts["deleted"] = {
           type: "warning",
           message: "This route has been deleted."
         };
       }
+    };
+
+    // Use an alert key that has the route UID, route host, and router
+    // hostname. This will handle cases where the route is admitted by
+    // multiple routers and we have more than one alert.
+    var routerHostnameAlertKey = function(ingress) {
+      var uid = _.get($scope, 'route.metadata.uid');
+      return 'router-host-' + uid + '-' + ingress.host + '-' + ingress.routerCanonicalHostname;
+    };
+
+    // Show the alert for admitted routes that have a custom host if
+    // routerCanonicalHostname is set.
+    $scope.showRouterHostnameAlert = function(ingress, admittedCondition) {
+      if (!isCustomHost) {
+        return false;
+      }
+
+      if (!ingress || !ingress.host || !ingress.routerCanonicalHostname) {
+        return false;
+      }
+
+      if (!admittedCondition || admittedCondition.status !== 'True') {
+        return false;
+      }
+
+      var alertKey = routerHostnameAlertKey(ingress);
+      return !AlertMessageService.isAlertPermanentlyHidden(alertKey, $scope.projectName);
+    };
+
+    $scope.hideRouterHostnameAlert = function(ingress) {
+      var alertKey = routerHostnameAlertKey(ingress);
+      AlertMessageService.permanentlyHideAlert(alertKey, $scope.projectName);
     };
 
     ProjectsService

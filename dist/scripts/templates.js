@@ -3171,7 +3171,10 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "</tbody>\n" +
     "<tbody ng-if=\"(tagsByName | hashSize) > 0\">\n" +
     "<tr ng-repeat=\"tag in tagsByName | orderBy : 'name'\">\n" +
-    "<td data-title=\"Tag\"><a href=\"{{imageStream | navigateResourceURL}}/{{tag.name}}\">{{tag.name}}</a></td>\n" +
+    "<td data-title=\"Tag\">\n" +
+    "<a ng-if=\"tag.status\" ng-href=\"{{imageStream | navigateResourceURL}}/{{tag.name}}\">{{tag.name}}</a>\n" +
+    "<span ng-if=\"!tag.status\">{{tag.name}}</span>\n" +
+    "</td>\n" +
     "<td data-title=\"From\">\n" +
     "\n" +
     "<span ng-if=\"!tag.spec.from\"><em>pushed</em></span>\n" +
@@ -3635,35 +3638,47 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "<div class=\"row\" ng-if=\"route\">\n" +
     "<div class=\"col-sm-12\">\n" +
     "<div class=\"resource-details\">\n" +
-    "<dl class=\"dl-horizontal left\">\n" +
-    "<dt>Hostname<span ng-if=\"route.status.ingress.length > 1\">s</span>:</dt>\n" +
-    "<dd>\n" +
-    "<span ng-if=\"!route.status.ingress\">\n" +
+    "<div ng-if=\"!route.status.ingress\" class=\"route-status\">\n" +
+    "<span class=\"h3\">\n" +
     "{{route | routeLabel : null : true}}\n" +
-    "<span data-toggle=\"popover\" data-trigger=\"hover\" data-content=\"The route is not accepting traffic yet because it has not been admitted by a router.\" style=\"cursor: help; padding-left: 5px\">\n" +
+    "</span>\n" +
+    "<div class=\"meta\">\n" +
     "<status-icon status=\"'Pending'\"></status-icon>\n" +
-    "<span class=\"sr-only\">Pending</span>\n" +
-    "</span>\n" +
-    "</span>\n" +
-    "<div ng-repeat=\"ingress in route.status.ingress\">\n" +
+    "The route is not accepting traffic yet because it has not been admitted by a router.\n" +
+    "</div>\n" +
+    "</div>\n" +
+    "<div ng-repeat=\"ingress in route.status.ingress\" ng-init=\"admittedCondition = (ingress | routeIngressCondition : 'Admitted')\" class=\"route-status\">\n" +
+    "<div class=\"h3\">\n" +
     "<span ng-if=\"(route | isWebRoute)\">\n" +
     "<a ng-href=\"{{route | routeWebURL : ingress.host}}\" target=\"_blank\">{{route | routeLabel : ingress.host : true}}</a>\n" +
     "</span>\n" +
     "<span ng-if=\"!(route | isWebRoute)\">\n" +
     "{{route | routeLabel : ingress.host}}\n" +
     "</span>\n" +
-    "&ndash;\n" +
-    "<span ng-init=\"admittedCondition = (ingress | routeIngressCondition : 'Admitted')\">\n" +
-    "<span ng-if=\"!admittedCondition\">admission status unknown for router '{{ingress.routerName}}'</span>\n" +
+    "</div>\n" +
+    "<div class=\"meta\">\n" +
+    "<span ng-if=\"!admittedCondition\">Admission status unknown for router '{{ingress.routerName}}'</span>\n" +
     "<span ng-if=\"admittedCondition.status === 'True'\">\n" +
-    "exposed on router '{{ingress.routerName}}' <span am-time-ago=\"admittedCondition.lastTransitionTime\"></span>\n" +
+    "<status-icon status=\"'Succeeded'\"></status-icon>\n" +
+    "Exposed on router '{{ingress.routerName}}' <span am-time-ago=\"admittedCondition.lastTransitionTime\"></span>\n" +
     "</span>\n" +
     "<span ng-if=\"admittedCondition.status === 'False'\">\n" +
-    "rejected by router '{{ingress.routerName}}' <span am-time-ago=\"admittedCondition.lastTransitionTime\"></span>\n" +
-    "</span>\n" +
+    "<status-icon status=\"'Error'\"></status-icon>\n" +
+    "Rejected by router '{{ingress.routerName}}' <span am-time-ago=\"admittedCondition.lastTransitionTime\"></span>\n" +
     "</span>\n" +
     "</div>\n" +
-    "</dd>\n" +
+    "<div ng-if=\"showRouterHostnameAlert(ingress, admittedCondition)\" class=\"mar-top-lg\">\n" +
+    "<div class=\"alert alert-info\">\n" +
+    "<span class=\"pficon pficon-info\" aria-hidden=\"true\"></span>\n" +
+    "<span class=\"mar-right-sm\">\n" +
+    "The DNS admin should set up a CNAME from the route's hostname, {{ingress.host}}, to the router's canonical hostname, {{ingress.routerCanonicalHostname}}.\n" +
+    "</span>\n" +
+    "<a href=\"\" ng-click=\"hideRouterHostnameAlert(ingress)\" role=\"button\" class=\"nowrap\">Don't Show Me Again</a>\n" +
+    "</div>\n" +
+    "</div>\n" +
+    "</div>\n" +
+    "<h4 class=\"mar-top-xl\">Details</h4>\n" +
+    "<dl class=\"dl-horizontal left\">\n" +
     "<dt ng-if-start=\"route.spec.wildcardPolicy && route.spec.wildcardPolicy !== 'None' && route.spec.wildcardPolicy !== 'Subdomain'\">Wildcard Policy:</dt>\n" +
     "<dd ng-if-end>{{route.spec.wildcardPolicy}}</dd>\n" +
     "<dt>Path:</dt>\n" +
@@ -4522,7 +4537,7 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "<div ng-repeat=\"category in categories\" ng-if=\"hasContent[category.id]\">\n" +
     "<h2 class=\"h3\" ng-if=\"category.label\">{{category.label}}</h2>\n" +
     "<div class=\"row tile-row\" ng-class=\"{ 'mar-top-xl': !category.label || category.items.length < 2 }\">\n" +
-    "<div ng-repeat=\"item in category.items\" ng-if=\"countByCategory[item.id]\" class=\"col-xxs-12 col-xs-6 col-sm-4 col-md-4 col-lg-3\">\n" +
+    "<div ng-repeat=\"item in category.items\" ng-if=\"countByCategory[item.id]\" class=\"col-xxs-12 col-xs-6 col-sm-6 col-md-4\">\n" +
     "<div class=\"tile tile-click\" ng-class=\"{ 'tile-sans-icon' : !item.iconClass, 'tile-sans-description' : !item.description }\">\n" +
     "<div class=\"tile-title\">\n" +
     "<div ng-if=\"item.iconClass || category.iconClassDefault\" class=\"image-icon\">\n" +
@@ -4545,6 +4560,14 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "</div>\n" +
     "</div>\n" +
     "</div>\n" +
+    "<div ng-if=\"hasItemsNoSubcategory\">\n" +
+    "<div class=\"row row-cards-pf row-cards-pf-flex\">\n" +
+    "<catalog-image image-stream=\"builder\" project=\"{{projectName}}\" is-builder=\"true\" ng-repeat=\"builder in buildersNoSubcategory track by (builder | uid)\">\n" +
+    "</catalog-image>\n" +
+    "<catalog-template template=\"template\" project=\"{{projectName}}\" ng-repeat=\"template in templatesNoSubcategory | orderBy : ['metadata.name', 'metadata.namespace'] track by (template | uid)\">\n" +
+    "</catalog-template>\n" +
+    "</div>\n" +
+    "</div>\n" +
     "</div>\n" +
     "<div ng-if=\"filterActive\">\n" +
     "<div ng-repeat=\"category in categories\" ng-if=\"hasContent[category.id]\">\n" +
@@ -4559,6 +4582,18 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "<catalog-template template=\"template\" project=\"{{projectName}}\" keywords=\"keywords\" ng-repeat=\"template in filteredTemplatesByCategory[item.id] | orderBy : ['metadata.name', 'metadata.namespace'] track by (template | uid)\">\n" +
     "</catalog-template>\n" +
     "</div>\n" +
+    "</div>\n" +
+    "</div>\n" +
+    "<div ng-if=\"countFilteredNoSubcategory\">\n" +
+    "<h2 class=\"h3\">\n" +
+    "Other {{parentCategory.label}}\n" +
+    "<span class=\"tile-item-count badge\">{{countFilteredNoSubcategory}}</span>\n" +
+    "</h2>\n" +
+    "<div class=\"row row-cards-pf row-cards-pf-flex mar-top-xl\">\n" +
+    "<catalog-image image-stream=\"builder\" project=\"{{projectName}}\" is-builder=\"true\" keywords=\"keywords\" ng-repeat=\"builder in filteredBuildersNoSubcategory track by (builder | uid)\">\n" +
+    "</catalog-image>\n" +
+    "<catalog-template template=\"template\" project=\"{{projectName}}\" keywords=\"keywords\" ng-repeat=\"template in filteredTemplatesNoSubcategory | orderBy : ['metadata.name', 'metadata.namespace'] track by (template | uid)\">\n" +
+    "</catalog-template>\n" +
     "</div>\n" +
     "</div>\n" +
     "</div>\n" +
@@ -6473,7 +6508,7 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "<div class=\"form-group\">\n" +
     "<label for=\"imageName\" class=\"sr-only\">Image name or pull spec</label>\n" +
     "<div class=\"input-group\">\n" +
-    "<input type=\"search\" id=\"imageName\" ng-model=\"imageName\" required select-on-focus ng-disabled=\"mode !== 'dockerImage'\" placeholder=\"Image name or pull spec\" class=\"form-control\">\n" +
+    "<input type=\"search\" id=\"imageName\" ng-model=\"imageName\" required select-on-focus ng-disabled=\"mode !== 'dockerImage'\" placeholder=\"Image name or pull spec\" class=\"form-control\" autocorrect=\"off\" autocapitalize=\"off\" spellcheck=\"false\">\n" +
     "<span class=\"input-group-btn\">\n" +
     "<button class=\"btn btn-default\" type=\"submit\" ng-disabled=\"!imageName\" ng-click=\"findImage()\">\n" +
     "<i class=\"fa fa-search\" aria-hidden=\"true\"></i>\n" +
@@ -7075,7 +7110,7 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "<div class=\"form-group filter-controls has-clear\">\n" +
     "<div class=\"search-pf-input-group\">\n" +
     "<label for=\"events-filter\" class=\"sr-only\">Filter</label>\n" +
-    "<input type=\"search\" placeholder=\"Filter by keyword\" class=\"form-control\" id=\"events-filter\" ng-model=\"filter.text\">\n" +
+    "<input type=\"search\" placeholder=\"Filter by keyword\" class=\"form-control\" id=\"events-filter\" ng-model=\"filter.text\" autocorrect=\"off\" autocapitalize=\"off\" spellcheck=\"false\">\n" +
     "<button type=\"button\" class=\"clear\" aria-hidden=\"true\" ng-if=\"filter.text\" ng-click=\"filter.text = ''\">\n" +
     "<span class=\"pficon pficon-close\"></span>\n" +
     "</button>\n" +
@@ -7508,7 +7543,10 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "Only the previous {{options.tailLines || 5000}} log lines and new log messages will be displayed because of the large log size.\n" +
     "</div>\n" +
     "\n" +
-    "<ellipsis-pulser color=\"dark\" size=\"sm\" display=\"inline\" msg=\"Loading log\" ng-if=\"(!state)\"></ellipsis-pulser>\n" +
+    "<div ng-if=\"(!state)\">\n" +
+    "<ellipsis-pulser ng-if=\"!chromeless\" color=\"dark\" size=\"sm\" display=\"inline\" msg=\"Loading log\" class=\"log-pending-ellipsis\"></ellipsis-pulser>\n" +
+    "<ellipsis-pulser ng-if=\"chromeless\" color=\"light\" size=\"sm\" display=\"inline\" msg=\"Loading log\" class=\"log-pending-ellipsis\"></ellipsis-pulser>\n" +
+    "</div>\n" +
     "<div class=\"empty-state-message text-center\" ng-if=\"state=='empty'\" ng-class=\"{'log-fixed-height': fixedHeight}\">\n" +
     "<h2>Logs are not available.</h2>\n" +
     "<p>\n" +
@@ -10287,7 +10325,7 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "<label ng-attr-for=\"newBindingName\" class=\"sr-only\">\n" +
     "Name\n" +
     "</label>\n" +
-    "<input type=\"text\" class=\"form-control input-name\" placeholder=\"Name\" ng-model=\"newBinding.name\">\n" +
+    "<input type=\"text\" class=\"form-control input-name\" placeholder=\"Name\" ng-model=\"newBinding.name\" autocorrect=\"off\" autocapitalize=\"off\" spellcheck=\"false\">\n" +
     "<div ng-if=\"newBinding.kind === 'ServiceAccount'\" class=\"service-account-namespace hidden-sm hidden-md hidden-lg\" aria-hidden=\"true\">\n" +
     "<ui-select ng-model=\"newBinding.namespace\" theme=\"bootstrap\" search-enabled=\"true\" title=\"Select a project\" class=\"select-role\">\n" +
     "<ui-select-match placeholder=\"Select a project\">\n" +
@@ -10731,8 +10769,8 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "<form role=\"form\" class=\"search-pf has-button\">\n" +
     "<div class=\"form-group filter-controls has-clear\">\n" +
     "<div class=\"search-pf-input-group\">\n" +
-    "<label for=\"events-filter\" class=\"sr-only\">Filter by name</label>\n" +
-    "<input type=\"search\" placeholder=\"Filter by name\" class=\"form-control\" id=\"events-filter\" ng-model=\"filters.text\">\n" +
+    "<label for=\"name-filter\" class=\"sr-only\">Filter by name</label>\n" +
+    "<input type=\"search\" placeholder=\"Filter by name\" class=\"form-control\" id=\"name-filter\" ng-model=\"filters.text\" autocorrect=\"off\" autocapitalize=\"off\" spellcheck=\"false\">\n" +
     "<button type=\"button\" class=\"clear\" aria-hidden=\"true\" ng-if=\"filters.text\" ng-click=\"filters.text = ''\">\n" +
     "<span class=\"pficon pficon-close\"></span>\n" +
     "</button>\n" +

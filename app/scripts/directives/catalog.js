@@ -48,6 +48,7 @@ angular.module('openshiftConsole')
             var categoryKeywords = _.reject(keywords, matchesCategoryLabel);
             $scope.filteredBuildersByCategory[id] = CatalogService.filterImageStreams(builders, categoryKeywords);
           });
+          $scope.filteredBuildersNoSubcategory = CatalogService.filterImageStreams($scope.buildersNoSubcategory, keywords);
 
           $scope.filteredTemplatesByCategory = {};
           _.each($scope.templatesByCategory, function(templates, id) {
@@ -59,6 +60,7 @@ angular.module('openshiftConsole')
             var categoryKeywords = _.reject(keywords, matchesCategoryLabel);
             $scope.filteredTemplatesByCategory[id] = CatalogService.filterTemplates(templates, categoryKeywords);
           });
+          $scope.filteredTemplatesNoSubcategory = CatalogService.filterTemplates($scope.templatesNoSubcategory, keywords);
         }
 
         // Filter the catalog when the keyword or tag changes.
@@ -69,6 +71,32 @@ angular.module('openshiftConsole')
           });
         }, 200, { maxWait: 1000, trailing: true }));
 
+        function findItemsWithNoSubcategory(itemsByCategory) {
+          var subcategories = _.get($scope, 'parentCategory.subcategories', []);
+          if (_.isEmpty(subcategories)) {
+            return [];
+          }
+
+          // Set of items in a subcategory indexed by UID.
+          var uidInSubcategory = {};
+          _.each(subcategories, function(subcategory) {
+            _.each(subcategory.items, function(subcategoryItem) {
+              _.each(itemsByCategory[subcategoryItem.id], function(item) {
+                var uid = _.get(item, 'metadata.uid');
+                uidInSubcategory[uid] = true;
+              });
+            });
+          });
+
+          var isInSubcategory = function(item) {
+            var uid = _.get(item, 'metadata.uid');
+            return !!uidInSubcategory[uid];
+          };
+
+          var parentID = $scope.parentCategory.id;
+          return _.reject(itemsByCategory[parentID], isInSubcategory);
+        }
+
         function updateImageStreams() {
           if (!$scope.projectImageStreams || !$scope.openshiftImageStreams) {
             return;
@@ -76,7 +104,8 @@ angular.module('openshiftConsole')
 
           var imageStreams = _.toArray($scope.projectImageStreams).concat(_.toArray($scope.openshiftImageStreams));
           $scope.buildersByCategory = CatalogService.categorizeImageStreams(imageStreams);
-          $scope.emptyCatalog = $scope.emptyCatalog && _.every($scope.buildersByCategory, _.isEmpty);
+          $scope.buildersNoSubcategory = findItemsWithNoSubcategory($scope.buildersByCategory);
+          $scope.emptyCatalog = $scope.emptyCatalog && _.every($scope.buildersByCategory, _.isEmpty) && _.isEmpty($scope.buildersNoSubcategory);
           updateState();
         }
 
@@ -87,7 +116,8 @@ angular.module('openshiftConsole')
 
           var templates = _.toArray($scope.projectTemplates).concat(_.toArray($scope.openshiftTemplates));
           $scope.templatesByCategory = CatalogService.categorizeTemplates(templates);
-          $scope.emptyCatalog = $scope.emptyCatalog && _.every($scope.templatesByCategory, _.isEmpty);
+          $scope.templatesNoSubcategory = findItemsWithNoSubcategory($scope.templatesByCategory);
+          $scope.emptyCatalog = $scope.emptyCatalog && _.every($scope.templatesByCategory, _.isEmpty) && _.isEmpty($scope.templatesNoSubcategory);
           updateState();
         }
 
@@ -120,6 +150,24 @@ angular.module('openshiftConsole')
             }
           });
           $scope.countByCategory = countByCategory;
+
+          $scope.hasItemsNoSubcategory = !_.isEmpty($scope.buildersNoSubcategory) || !_.isEmpty($scope.templatesNoSubcategory);
+          $scope.countFilteredNoSubcategory = _.size($scope.filteredBuildersNoSubcategory) + _.size($scope.filteredTemplatesNoSubcategory);
+          if ($scope.countFilteredNoSubcategory) {
+            $scope.allContentHidden = false;
+          }
+        }
+
+        function hasSingleCategory() {
+          if (!$scope.parentCategory) {
+            return false;
+          }
+
+          if (nonEmptyCategories.length !== 1) {
+            return false;
+          }
+
+          return !$scope.hasItemsNoSubcategory;
         }
 
         function updateState() {
@@ -136,8 +184,8 @@ angular.module('openshiftConsole')
           updateCategoryCounts();
 
           if ($scope.loaded) {
-            if ($scope.parentCategory && nonEmptyCategories.length === 1) {
-              // If there is only one subcategory with items, just show the items.
+            // If there is only one subcategory with items, just show the items.
+            if (hasSingleCategory()) {
               $scope.singleCategory = _.head(nonEmptyCategories);
             }
 
