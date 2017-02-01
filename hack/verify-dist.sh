@@ -8,7 +8,13 @@ set -e
 repo_root="$( dirname "${BASH_SOURCE}" )/.."
 export PATH="${PATH}:${repo_root}/node_modules/grunt-cli/bin"
 
+echo "Checking style.css perms before build:"
+ls -la dist.java/java/style.css
+
 grunt build
+
+echo "Checking style.css perms after build:"
+ls -la dist.java/java/style.css
 
 echo "Verifying that checked in built files under dist match the source..."
 if [[ $(git status -s -u dist*) ]]; then
