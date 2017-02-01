@@ -5798,7 +5798,7 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
 
 
   $templateCache.put('views/directives/_copy-to-clipboard.html',
-    "<div class=\"input-group copy-to-clipboard\" ng-class=\"{'limit-width': !displayWide, 'copy-to-clipboard-multiline': multiline}\">\n" +
+    "<div class=\"copy-to-clipboard\" ng-class=\"{'limit-width': !displayWide, 'copy-to-clipboard-multiline': multiline, 'input-group': !hidden}\">\n" +
     "<input ng-if=\"!multiline\" id=\"{{id}}\" type=\"text\" class=\"form-control\" value=\"{{inputText || clipboardText}}\" ng-disabled=\"isDisabled\" ng-readonly=\"!isDisabled\" select-on-focus>\n" +
     "<pre ng-if=\"multiline\" id=\"{{id}}\">{{inputText || clipboardText}}</pre>\n" +
     "<span ng-class=\"{ 'input-group-btn': !multiline }\" ng-hide=\"hidden\">\n" +
