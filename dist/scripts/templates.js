@@ -10328,35 +10328,38 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "</div>\n" +
     "<ng-form class=\"new-binding\" novalidate name=\"forms.newBindingForm\" ng-if=\"newBinding\">\n" +
     "<div ng-if=\"mode.edit\" class=\"item-row form-new-role\" row mobile=\"column\">\n" +
-    "<div class=\"col-name\" column>\n" +
+    "<div class=\"col-name pad-bottom-none\" row mobile=\"column\" tablet=\"column\">\n" +
     "<label ng-attr-for=\"newBindingName\" class=\"sr-only\">\n" +
     "Name\n" +
     "</label>\n" +
-    "<input type=\"text\" class=\"form-control input-name\" placeholder=\"Name\" ng-model=\"newBinding.name\" autocorrect=\"off\" autocapitalize=\"off\" spellcheck=\"false\">\n" +
-    "<div ng-if=\"newBinding.kind === 'ServiceAccount'\" class=\"service-account-namespace hidden-sm hidden-md hidden-lg\" aria-hidden=\"true\">\n" +
-    "<ui-select ng-model=\"newBinding.namespace\" theme=\"bootstrap\" search-enabled=\"true\" title=\"Select a project\" class=\"select-role\">\n" +
+    "\n" +
+    "<input ng-if=\"newBinding.kind !== 'ServiceAccount'\" type=\"text\" class=\"form-control input-name\" placeholder=\"Name\" ng-model=\"newBinding.name\" autocorrect=\"off\" autocapitalize=\"off\" spellcheck=\"false\">\n" +
+    "\n" +
+    "<div ng-if=\"newBinding.kind === 'ServiceAccount'\" class=\"service-account-namespace\" aria-hidden=\"true\">\n" +
+    "<ui-select ng-model=\"newBinding.namespace\" on-select=\"selectProject($item, $model)\" theme=\"bootstrap\" search-enabled=\"true\" title=\"Select a project\" class=\"select-role pad-bottom-sm\">\n" +
     "<ui-select-match placeholder=\"Select a project\">\n" +
-    "<span ng-bind=\"newBinding.namespace\"></span>\n" +
+    "<span>{{newBinding.namespace}}</span>\n" +
     "</ui-select-match>\n" +
     "<ui-select-choices repeat=\"projectName in projects | filter: $select.search\" refresh=\"refreshProjects($select.search)\" refresh-delay=\"200\">\n" +
-    "<div>{{projectName}}</div>\n" +
+    "<div ng-bind-html=\"projectName | highlight : $select.search\"></div>\n" +
+    "</ui-select-choices>\n" +
+    "</ui-select>\n" +
+    "</div>\n" +
+    "<span ng-if=\"newBinding.kind === 'ServiceAccount'\" class=\"mar-left-md mar-right-md hidden-xs\">/</span>\n" +
+    "\n" +
+    "<div ng-if=\"newBinding.kind === 'ServiceAccount'\" class=\"service-account-name\">\n" +
+    "<ui-select ng-model=\"newBinding.name\" theme=\"bootstrap\" search-enabled=\"true\" title=\"Select a service account\" class=\"select-role\">\n" +
+    "<ui-select-match placeholder=\"Service account\">\n" +
+    "<span>{{newBinding.name}}</span>\n" +
+    "</ui-select-match>\n" +
+    "<ui-select-choices repeat=\"saName in serviceAccounts | filter: $select.search\" refresh=\"refreshServiceAccounts($select.search)\" refresh-delay=\"200\">\n" +
+    "<div ng-bind-html=\"saName | highlight : $select.search\"></div>\n" +
     "</ui-select-choices>\n" +
     "</ui-select>\n" +
     "</div>\n" +
     "</div>\n" +
     "<div class=\"action-set\" flex row tablet=\"column\" mobile=\"column\">\n" +
-    "<div class=\"col-roles\" row tablet=\"column\" flex wrap axis=\"start\">\n" +
-    "<div ng-if=\"newBinding.kind === 'ServiceAccount'\" class=\"service-account-namespace hidden-xs\">\n" +
-    "<ui-select ng-model=\"newBinding.namespace\" theme=\"bootstrap\" search-enabled=\"true\" title=\"Select a project\" class=\"select-project\">\n" +
-    "<ui-select-match placeholder=\"Select a project\">\n" +
-    "<span ng-bind=\"newBinding.namespace\"></span>\n" +
-    "</ui-select-match>\n" +
-    "<ui-select-choices repeat=\"projectName in projects | filter: $select.search\" refresh=\"refreshProjects($select.search)\" refresh-delay=\"200\">\n" +
-    "<div>{{projectName}}</div>\n" +
-    "</ui-select-choices>\n" +
-    "</ui-select>\n" +
-    "</div>\n" +
-    "</div>\n" +
+    "<div class=\"col-roles\" flex row tablet=\"column\">&nbsp;</div>\n" +
     "<div class=\"col-add-role\">\n" +
     "<div ng-show=\"mode.edit\" row>\n" +
     "<ui-select ng-if=\"filteredRoles.length\" ng-model=\"newBinding.newRole\" theme=\"bootstrap\" search-enabled=\"true\" title=\"new {{subjectKind.name}} role\" class=\"select-role\" flex>\n" +
