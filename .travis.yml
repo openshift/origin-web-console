@@ -6,6 +6,8 @@ cache:
   - node_modules
   - bower_components
 before_script:
+  - echo "Checking style.css perms before build:"
+  - ls -la dist.java/java/style.css
   - make build
 script:
   - hack/test-headless.sh test
