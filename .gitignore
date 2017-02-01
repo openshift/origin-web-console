@@ -2,6 +2,7 @@ node_modules
 .tmp
 .sass-cache
 .bundle
+.idea
 bower_components
 phantomjsdriver.log
 openshift-jvm
