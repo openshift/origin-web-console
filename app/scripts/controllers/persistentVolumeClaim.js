@@ -2,7 +2,7 @@
 
 /**
  * @ngdoc function
- * @name openshiftConsole.controller:StorageController
+ * @name openshiftConsole.controller:PersistentVolumeClaimController
  * @description
  * # StorageController
  * Controller of the openshiftConsole
