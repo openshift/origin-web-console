@@ -177,7 +177,10 @@
                         type="text"
                         class="form-control input-name"
                         placeholder="Name"
-                        ng-model="newBinding.name">
+                        ng-model="newBinding.name"
+                        autocorrect="off"
+                        autocapitalize="off"
+                        spellcheck="false">
                       <div
                         ng-if="newBinding.kind === 'ServiceAccount'"
                         class="service-account-namespace hidden-sm hidden-md hidden-lg"
