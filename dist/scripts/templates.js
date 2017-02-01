@@ -13141,7 +13141,9 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "</tbody>\n" +
     "<tbody ng-if=\"(pvcs | hashSize) > 0\">\n" +
     "<tr ng-repeat=\"pvc in pvcs | orderObjectsByDate : true\">\n" +
-    "<td data-title=\"Name\"><a ng-href=\"{{pvc | navigateResourceURL}}\">{{pvc.metadata.name}}</a></td>\n" +
+    "<td data-title=\"Name\"><a ng-href=\"{{pvc | navigateResourceURL}}\">{{pvc.metadata.name}}</a>\n" +
+    "<span ng-if=\"pvc | storageClass\" class=\"text-muted\"> using storage class {{pvc | storageClass}}</span>\n" +
+    "</td>\n" +
     "<td data-title=\"Status\">\n" +
     "<status-icon status=\"pvc.status.phase\" disable-animation></status-icon>\n" +
     "{{pvc.status.phase}}\n" +

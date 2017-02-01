@@ -98,6 +98,11 @@ angular.module('openshiftConsole')
              annotationFilter(resource, 'kubernetes.io/description');
     };
   })
+  .filter('storageClass', function(annotationFilter) {
+     return function(pvc) {
+       return annotationFilter(pvc, 'volume.beta.kubernetes.io/storage-class');
+     };
+  })
   .filter('displayName', function(annotationFilter) {
     // annotationOnly - if true, don't fall back to using metadata.name when
     //                  there's no displayName annotation
