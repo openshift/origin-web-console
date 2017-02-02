@@ -263,7 +263,7 @@
                               </div>
                             </div>
                           </div>
-                          <div class="mar-top-lg">
+                          <div class="mar-top-lg" ng-if="strategyData.type !== 'Custom'">
                             <div ng-if="!view.advancedStrategyOptions">To set additional parameters or edit lifecycle hooks, view <a href="" ng-click="view.advancedStrategyOptions = true">advanced strategy options.</a></div>
                             <a ng-if="view.advancedStrategyOptions" href="" ng-click="view.advancedStrategyOptions = false">Hide Advanced Strategy Options</a>
                           </div>

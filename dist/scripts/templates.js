@@ -9684,7 +9684,7 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "</div>\n" +
     "</div>\n" +
     "</div>\n" +
-    "<div class=\"mar-top-lg\">\n" +
+    "<div class=\"mar-top-lg\" ng-if=\"strategyData.type !== 'Custom'\">\n" +
     "<div ng-if=\"!view.advancedStrategyOptions\">To set additional parameters or edit lifecycle hooks, view <a href=\"\" ng-click=\"view.advancedStrategyOptions = true\">advanced strategy options.</a></div>\n" +
     "<a ng-if=\"view.advancedStrategyOptions\" href=\"\" ng-click=\"view.advancedStrategyOptions = false\">Hide Advanced Strategy Options</a>\n" +
     "</div>\n" +
