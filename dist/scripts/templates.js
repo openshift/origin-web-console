@@ -3166,10 +3166,10 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "<th>Pull Spec</th>\n" +
     "</tr>\n" +
     "</thead>\n" +
-    "<tbody ng-if=\"(tagsByName | hashSize) == 0\">\n" +
+    "<tbody ng-if=\"!tags.length\">\n" +
     "<tr><td colspan=\"5\"><em>{{emptyMessage}}</em></td></tr>\n" +
     "</tbody>\n" +
-    "<tbody ng-repeat=\"tag in tagsByName | orderBy : 'name'\">\n" +
+    "<tbody ng-repeat=\"tag in tags\">\n" +
     "<tr>\n" +
     "<td data-title=\"Tag\">\n" +
     "<a ng-if=\"tag.status\" ng-href=\"{{imageStream | navigateResourceURL}}/{{tag.name}}\">{{tag.name}}</a>\n" +
@@ -11328,22 +11328,22 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "</div>\n" +
     "\n" +
     "\n" +
-    "<div ng-repeat=\"set in replicationControllersByService[''] | orderBy : 'metadata.name' track by (set | uid)\" ng-if=\"!(set | annotation : 'deploymentConfig') || !deploymentConfigs[(set | annotation : 'deploymentConfig')]\" class=\"no-service\">\n" +
+    "<div ng-repeat=\"set in replicationControllersByService[''] | toArray | orderBy : 'metadata.name' track by (set | uid)\" ng-if=\"!(set | annotation : 'deploymentConfig') || !deploymentConfigs[(set | annotation : 'deploymentConfig')]\" class=\"no-service\">\n" +
     "<overview-set class=\"overview-tile-wrapper\"></overview-set>\n" +
     "</div>\n" +
     "\n" +
     "\n" +
-    "<div ng-repeat=\"set in replicaSetsByService[''] | orderBy : 'metadata.name' track by (set | uid)\" ng-if=\"!(set | annotation : 'deployment.kubernetes.io/revision')\" class=\"no-service\">\n" +
+    "<div ng-repeat=\"set in replicaSetsByService[''] | toArray | orderBy : 'metadata.name' track by (set | uid)\" ng-if=\"!(set | annotation : 'deployment.kubernetes.io/revision')\" class=\"no-service\">\n" +
     "<overview-set class=\"overview-tile-wrapper\"></overview-set>\n" +
     "</div>\n" +
     "\n" +
     "\n" +
-    "<div ng-repeat=\"set in statefulSetsByService[''] | orderBy : 'metadata.name' track by (set | uid)\" class=\"no-service\">\n" +
+    "<div ng-repeat=\"set in statefulSetsByService[''] | toArray | orderBy : 'metadata.name' track by (set | uid)\" class=\"no-service\">\n" +
     "<overview-set class=\"overview-tile-wrapper\"></overview-set>\n" +
     "</div>\n" +
     "\n" +
     "\n" +
-    "<div ng-repeat=\"pod in monopodsByService[''] | orderBy : 'metadata.name' track by (pod | uid)\" class=\"no-service\">\n" +
+    "<div ng-repeat=\"pod in monopodsByService[''] | toArray | orderBy : 'metadata.name' track by (pod | uid)\" class=\"no-service\">\n" +
     "<overview-pod class=\"overview-tile-wrapper\"></overview-pod>\n" +
     "</div>\n" +
     "\n" +
@@ -12309,19 +12309,19 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "<div class=\"row\">\n" +
     "<div class=\"col-md-12\">\n" +
     "<h1>\n" +
-    "<span ng-if=\"clusterQuotas | hashSize\">Cluster </span>Quota\n" +
+    "<span ng-if=\"clusterQuotas.length\">Cluster </span>Quota\n" +
     "<span class=\"page-header-link\">\n" +
     "<a ng-href=\"{{'quota' | helpLink}}\" target=\"_blank\">\n" +
     "Learn More <i class=\"fa fa-external-link\" aria-hidden=\"true\"></i>\n" +
     "</a>\n" +
     "</span>\n" +
     "</h1>\n" +
-    "<div ng-if=\"!(quotas | hashSize) && !(clusterQuotas | hashSize)\" class=\"mar-top-xl\">\n" +
+    "<div ng-if=\"!quotas.length && !clusterQuotas.length\" class=\"mar-top-xl\">\n" +
     "<div class=\"help-block\">{{quotaHelp}}</div>\n" +
     "<p><em ng-if=\"!quotas && !clusterQuotas\">Loading...</em><em ng-if=\"quotas || clusterQuotas\">There are no resource quotas set on this project.</em></p>\n" +
     "</div>\n" +
     "<div ng-repeat=\"quota in clusterQuotas | orderBy: 'metadata.name'\" class=\"gutter-bottom\">\n" +
-    "<h2 ng-if=\"(clusterQuotas | hashSize) > 1\">{{quota.metadata.name}}</h2>\n" +
+    "<h2 ng-if=\"clusterQuotas.length\">{{quota.metadata.name}}</h2>\n" +
     "<div ng-if=\"$first\" class=\"help-block\">Limits resource usage across a set of projects.</div>\n" +
     "<dl ng-if=\"quota.spec.quota.scopes.length\">\n" +
     "<dt>Scopes:</dt>\n" +
@@ -12402,9 +12402,9 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "</table>\n" +
     "</div>\n" +
     "</div>\n" +
-    "<h1 ng-if=\"(clusterQuotas | hashSize) && (quotas | hashSize)\">Project Quota</h1>\n" +
+    "<h1 ng-if=\"clusterQuotas.length && quotas.length\">Project Quota</h1>\n" +
     "<div ng-repeat=\"quota in quotas | orderBy: 'metadata.name'\" class=\"gutter-bottom\">\n" +
-    "<h2 ng-if=\"(quotas | hashSize) > 1\">{{quota.metadata.name}}</h2>\n" +
+    "<h2 ng-if=\"quotas.length\">{{quota.metadata.name}}</h2>\n" +
     "<div ng-if=\"$first\" class=\"help-block mar-bottom-md\">{{quotaHelp}}</div>\n" +
     "<dl ng-if=\"quota.spec.scopes.length\">\n" +
     "<dt>Scopes:</dt>\n" +
@@ -12482,12 +12482,12 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "</div>\n" +
     "<div class=\"limit-ranges-section\">\n" +
     "<h1>Limit Range</h1>\n" +
-    "<div ng-if=\"!(limitRanges | hashSize)\">\n" +
+    "<div ng-if=\"!limitRanges.length\">\n" +
     "<div class=\"help-block\">{{limitRangeHelp}}</div>\n" +
     "<p><em>{{emptyMessageLimitRanges}}</em></p>\n" +
     "</div>\n" +
-    "<div ng-repeat=\"(limitRangeName, limitRange) in limitRanges\">\n" +
-    "<h2 ng-if=\"(limitRanges | hashSize) > 1\">{{limitRangeName}}</h2>\n" +
+    "<div ng-repeat=\"limitRange in limitRanges\">\n" +
+    "<h2 ng-if=\"limitRanges.length\">{{limitRange.metadata.name}}</h2>\n" +
     "<div ng-if=\"$first\" class=\"help-block mar-bottom-md\">{{limitRangeHelp}}</div>\n" +
     "<div class=\"table-responsive\">\n" +
     "<table class=\"table\">\n" +
@@ -12529,7 +12529,7 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "</thead>\n" +
     "<tbody>\n" +
     "<tr ng-repeat-start=\"limit in limitRange.spec.limits\"></tr>\n" +
-    "<tr ng-repeat=\"(type, typeLimits) in limitsByType[limitRangeName][limit.type]\">\n" +
+    "<tr ng-repeat=\"(type, typeLimits) in limitsByType[limitRange.metadata.name][limit.type]\">\n" +
     "<td>{{limit.type}} {{type | computeResourceLabel : true}}</td>\n" +
     "<td>{{(typeLimits.min | usageWithUnits : type) || \"&mdash;\"}}</td>\n" +
     "<td>{{(typeLimits.max | usageWithUnits : type) || \"&mdash;\"}}</td>\n" +

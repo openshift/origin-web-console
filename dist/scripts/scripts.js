@@ -5109,9 +5109,9 @@ b[a.metadata.name] = d;
 };
 e.get(b.project).then(_.spread(function(a, e) {
 c.project = a, d.list("resourcequotas", e, function(a) {
-c.quotas = a.by("metadata.name"), c.orderedTypesByQuota = k(c.quotas), f.log("quotas", c.quotas);
+c.quotas = _.sortBy(a.by("metadata.name"), "metadata.name"), c.orderedTypesByQuota = k(c.quotas), f.log("quotas", c.quotas);
 }), d.list("appliedclusterresourcequotas", e, function(a) {
-c.clusterQuotas = a.by("metadata.name"), c.orderedTypesByClusterQuota = k(c.clusterQuotas), c.namespaceUsageByClusterQuota = {}, _.each(c.clusterQuotas, function(a, d) {
+c.clusterQuotas = _.sortBy(a.by("metadata.name"), "metadata.name"), c.orderedTypesByClusterQuota = k(c.clusterQuotas), c.namespaceUsageByClusterQuota = {}, _.each(c.clusterQuotas, function(a, d) {
 if (a.status) {
 var e = _.find(a.status.namespaces, {
 namespace:b.project
@@ -5120,7 +5120,8 @@ c.namespaceUsageByClusterQuota[d] = e.status;
 }
 }), f.log("cluster quotas", c.clusterQuotas);
 }), d.list("limitranges", e, function(a) {
-c.limitRanges = a.by("metadata.name"), c.emptyMessageLimitRanges = "There are no limit ranges set on this project.", angular.forEach(c.limitRanges, function(a, b) {
+c.limitRanges = _.sortBy(a.by("metadata.name"), "metadata.name"), c.emptyMessageLimitRanges = "There are no limit ranges set on this project.", angular.forEach(c.limitRanges, function(a) {
+var b = a.metadata.name;
 c.limitsByType[b] = {}, angular.forEach(a.spec.limits, function(a) {
 var d = c.limitsByType[b][a.type] = {};
 angular.forEach(a.max, function(a, b) {
@@ -5949,7 +5950,7 @@ d.unwatchAll(i);
 });
 }));
 } ]), angular.module("openshiftConsole").controller("ImageStreamController", [ "$scope", "$routeParams", "DataService", "ProjectsService", "$filter", "ImageStreamsService", function(a, b, c, d, e, f) {
-a.projectName = b.project, a.imageStream = null, a.tagsByName = {}, a.tagShowOlder = {}, a.alerts = {}, a.renderOptions = a.renderOptions || {}, a.renderOptions.hideFilterWidget = !0, a.breadcrumbs = [ {
+a.projectName = b.project, a.imageStream = null, a.tags = [], a.tagShowOlder = {}, a.alerts = {}, a.renderOptions = a.renderOptions || {}, a.renderOptions.hideFilterWidget = !0, a.breadcrumbs = [ {
 title:"Image Streams",
 link:"project/" + b.project + "/browse/images"
 }, {
@@ -5962,7 +5963,7 @@ a.loaded = !0, a.imageStream = d, a.emptyMessage = "No tags to show", g.push(c.w
 "DELETED" === c && (a.alerts.deleted = {
 type:"warning",
 message:"This image stream has been deleted."
-}), a.imageStream = b, a.tagsByName = f.tagsByName(a.imageStream);
+}), a.imageStream = b, a.tags = _.toArray(f.tagsByName(a.imageStream));
 }));
 }, function(b) {
 a.loaded = !0, a.alerts.load = {

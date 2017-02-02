@@ -10,7 +10,7 @@ angular.module('openshiftConsole')
   .controller('ImageStreamController', function ($scope, $routeParams, DataService, ProjectsService, $filter, ImageStreamsService) {
     $scope.projectName = $routeParams.project;
     $scope.imageStream = null;
-    $scope.tagsByName = {};
+    $scope.tags = [];
     $scope.tagShowOlder = {};
     $scope.alerts = {};
     $scope.renderOptions = $scope.renderOptions || {};
@@ -48,7 +48,7 @@ angular.module('openshiftConsole')
                 };
               }
               $scope.imageStream = imageStream;
-              $scope.tagsByName = ImageStreamsService.tagsByName($scope.imageStream);
+              $scope.tags = _.toArray(ImageStreamsService.tagsByName($scope.imageStream));
             }));
           },
           // failure

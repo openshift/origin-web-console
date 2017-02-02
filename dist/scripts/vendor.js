@@ -20878,7 +20878,7 @@ return c && a(b.prototype, c), d && a(b, d), b;
 };
 }();
 
-if (function(a, b) {
+!function(a, b) {
 var c = function() {
 function c(b) {
 var d = this, e = arguments.length > 1 && void 0 !== arguments[1] ? arguments[1] :{};
@@ -38986,7 +38986,6 @@ dblClick:!1,
 selectionMatchProp:"uuid",
 selectedItems:[],
 checkDisabled:!1,
-useExpandingRows:!1,
 showSelectBox:!0,
 onSelect:null,
 onSelectionChange:null,
@@ -39051,6 +39050,7 @@ dblClick:!1,
 selectionMatchProp:"uuid",
 selectedItems:[],
 checkDisabled:!1,
+useExpandingRows:!1,
 showSelectBox:!0,
 onSelect:null,
 onSelectionChange:null,
@@ -40579,30 +40579,42 @@ c.name && (a[0] = "[" + c.name + "] " + a[0]), c.level === b.WARN && console.war
 }, "function" == typeof define && define.amd ? define(b) :"undefined" != typeof module && module.exports ? module.exports = b :(b._prevLogger = a.Logger, b.noConflict = function() {
 return a.Logger = b._prevLogger, b;
 }, a.Logger = b);
-}(this), Logger.setLevel(Logger.INFO), Logger.storagePrefix = "hawtio", window.LogBuffer = 100, "localStorage" in window) {
-if ("logLevel" in window.localStorage) {
-var logLevel = JSON.parse(window.localStorage.logLevel);
-Logger.setLevel(logLevel);
-} else {
-var logLevel = JSON.stringify(Logger.INFO);
-window.localStorage.logLevel = logLevel;
+}(this), function() {
+"use strict";
+if (Logger.setLevel(Logger.INFO), Logger.storagePrefix = "hawtio", Logger.oldGet = Logger.get, Logger.loggers = {}, Logger.get = function(a) {
+var b = Logger.oldGet(a);
+return Logger.loggers[a] = b, b;
+}, window.LogBuffer = 100, "localStorage" in window) {
+"logLevel" in window.localStorage || (window.localStorage.logLevel = JSON.stringify(Logger.INFO));
+var a = Logger.DEBUG;
+try {
+a = JSON.parse(window.localStorage.logLevel);
+} catch (b) {
+console.error("Failed to parse log level setting: ", b);
 }
-if ("showLog" in window.localStorage) {
-var showLog = window.localStorage.showLog;
-if ("true" === showLog) {
-var container = document.getElementById("log-panel");
-container && container.setAttribute("style", "bottom: 50%;");
+if (Logger.setLevel(a), "showLog" in window.localStorage) {
+var c = window.localStorage.showLog;
+if ("true" === c) {
+var d = document.getElementById("log-panel");
+d && d.setAttribute("style", "bottom: 50%;");
 }
 }
 if ("logBuffer" in window.localStorage) {
-var logBuffer = window.localStorage.logBuffer;
-window.LogBuffer = parseInt(logBuffer);
+var e = window.localStorage.logBuffer;
+window.LogBuffer = parseInt(e, 10);
 } else window.localStorage.logBuffer = window.LogBuffer;
+if ("childLoggers" in window.localStorage) {
+var f = [];
+try {
+f = JSON.parse(localStorage.childLoggers);
+} catch (b) {}
+f.forEach(function(a) {
+Logger.get(a.logger).setLevel(Logger[a.level]);
+});
 }
-
-var consoleLogger = null;
-
-"console" in window && (window.JSConsole = window.console, consoleLogger = function(a, b) {
+}
+var g = null;
+"console" in window && (window.JSConsole = window.console, g = function(a, b) {
 var c = window.JSConsole, d = c.log;
 if (b.name && (a[0] = "[" + b.name + "] " + a[0]), b.level === Logger.WARN && "warn" in c ? d = c.warn :b.level === Logger.ERROR && "error" in c ? d = c.error :b.level === Logger.INFO && "info" in c && (d = c.info), d && d.apply) try {
 d.apply(c, a);
@@ -40632,164 +40644,228 @@ var g = b[f];
 return e += "</div>\n";
 }, Logger.setHandler(function(a, b) {
 function c() {
-e && d && (e.appendChild(d), e.childNodes.length > parseInt(window.LogBuffer) && e.removeChild(e.firstChild), p && (e.scrollTop = e.scrollHeight)), consoleLogger && consoleLogger(a, b);
-for (var c = window.logInterceptors, f = 0; f < c.length; f++) c[f](b.level.name, g);
+e && d && (e.appendChild(d), e.childNodes.length > parseInt(window.LogBuffer) && e.removeChild(e.firstChild), q && (e.scrollTop = e.scrollHeight)), g && g(a, b);
+for (var c = window.logInterceptors, f = 0; f < c.length; f++) c[f](b.level.name, h);
 }
 var d = void 0, e = void 0, f = document.getElementById("hawtio-log-panel");
 f && (e = document.getElementById("hawtio-log-panel-statements"), d = document.createElement("li"));
-var g = "", h = [];
+var h = "", i = [];
 if ("ERROR" === b.level.name && 1 === a.length && Logger.isString(a[0])) {
-var i = a[0], j = i.split(/\n/);
-if (j.length > 1) {
-var k = "Error: Jolokia-Error: ";
-if (0 === j[0].search(k)) {
-var l = j[0].slice(k.length);
-window.JSConsole.info("msg: ", l);
+var j = a[0], k = j.split(/\n/);
+if (k.length > 1) {
+var l = "Error: Jolokia-Error: ";
+if (0 === k[0].search(l)) {
+var m = k[0].slice(l.length);
+window.JSConsole.info("msg: ", m);
 try {
-var m = JSON.parse(l), n = new Error();
-n.message = m.error, n.stack = m.stacktrace.replace("\\t", "&nbsp;&nbsp").replace("\\n", "\n"), a = [ n ];
-} catch (o) {}
+var n = JSON.parse(m), o = new Error();
+o.message = n.error, o.stack = n.stacktrace.replace("\\t", "&nbsp;&nbsp").replace("\\n", "\n"), a = [ o ];
+} catch (p) {}
 } else {
-var n = new Error();
-n.message = j[0], n.stack = i, a = [ n ];
+var o = new Error();
+o.message = k[0], o.stack = j, a = [ o ];
 }
 }
 }
-var p = !1;
+var q = !1;
 if (d) {
-for (var q = 0; q < a.length; q++) {
-var i = a[q];
-if (Logger.isArray(i) || Logger.isObject(i)) {
-var r = "";
+for (var r = 0; r < a.length; r++) {
+var j = a[r];
+if (Logger.isArray(j) || Logger.isObject(j)) {
+var s = "";
 try {
-r = '<pre data-language="javascript">' + JSON.stringify(i, null, 2) + "</pre>";
-} catch (n) {
-r = i + " (failed to convert) ";
+s = '<pre data-language="javascript">' + JSON.stringify(j, null, 2) + "</pre>";
+} catch (o) {
+s = j + " (failed to convert) ";
 }
-g += r;
-} else Logger.isError(i) ? ("message" in i && (g += i.message), "stack" in i && h.push(function() {
-var a = Logger.formatStackTraceString(i.stack), c = Logger;
+h += s;
+} else Logger.isError(j) ? ("message" in j && (h += j.message), "stack" in j && i.push(function() {
+var a = Logger.formatStackTraceString(j.stack), c = Logger;
 b.name && (c = Logger.get(b.name)), c.info("Stack trace: ", a);
-})) :g += i;
+})) :h += j;
 }
-b.name && (g = '[<span class="green">' + b.name + "</span>] " + g), d.innerHTML = g, d.className = b.level.name, f && ((f.scrollHeight = 0) && (p = !0), e.scrollTop > e.scrollHeight - f.scrollHeight - 200 && (p = !0));
+b.name && (h = '[<span class="green">' + b.name + "</span>] " + h), d.innerHTML = h, d.className = b.level.name, f && (0 === f.scrollHeight && (q = !0), e.scrollTop > e.scrollHeight - f.scrollHeight - 200 && (q = !0));
 }
-c(), h.forEach(function(a) {
+c(), i.forEach(function(a) {
 a();
 });
 });
+}();
 
-var hawtioPluginLoader = function(a, b, c) {
-var d = Logger.get("hawtio-loader");
-return a.log = d, a.urls = [], a.modules = [], a.tasks = [], a.registerPreBootstrapTask = function(b, c) {
-c ? a.tasks.unshift(b) :a.tasks.push(b);
+var hawtioPluginLoader = function(a) {
+"use strict";
+function b(a, b) {
+angular.isArray(b) || (b = [ b ]);
+var c = [];
+return b.forEach(function(b) {
+a.forEach(function(a) {
+b === a && c.push(a);
+});
+}), c;
+}
+var c = Logger.get("hawtio-loader"), d = document.documentElement;
+return a.log = c, a.urls = [], a.modules = [], a.tasks = [], a.setBootstrapElement = function(a) {
+c.debug("Setting bootstrap element to: ", a), d = a;
+}, a.getBootstrapElement = function() {
+return d;
+}, a.registerPreBootstrapTask = function(b, d) {
+angular.isFunction(b) && (c.debug("Adding legacy task"), b = {
+task:b
+}), b.name || (b.name = "unnamed-task-" + (a.tasks.length + 1)), b.depends && !angular.isArray(b.depends) && "*" !== b.depends && (b.depends = [ b.depends ]), d ? a.tasks.unshift(b) :a.tasks.push(b);
 }, a.addModule = function(b) {
-d.debug("Adding module: " + b), a.modules.push(b);
+c.debug("Adding module: " + b), a.modules.push(b);
 }, a.addUrl = function(b) {
-d.debug("Adding URL: " + b), a.urls.push(b);
+c.debug("Adding URL: " + b), a.urls.push(b);
 }, a.getModules = function() {
 return a.modules;
 }, a.loaderCallback = null, a.setLoaderCallback = function(b) {
 a.loaderCallback = b;
-}, a.loadPlugins = function(b) {
-var c = a.loaderCallback, e = {}, f = a.urls.length, g = f, h = function() {
-a.tasks.push(b);
-var c = a.tasks.length, d = function() {
-var b = a.tasks.shift();
-b ? (a.log.debug("Executing task ", c - a.tasks.length), b(d)) :a.log.debug("All tasks executed");
+}, a.loadPlugins = function(d) {
+var e = a.loaderCallback, f = {}, g = a.urls.length, h = g, i = function() {
+var c = [], e = [], f = {
+name:"Hawtio Bootstrap",
+depends:"*",
+runs:0,
+task:function(b) {
+function d() {
+e.forEach(function(b) {
+a.log.info("  name: " + b.name + " depends: ", b.depends);
+});
+}
+e.length > 0 && (a.log.info("tasks yet to run: "), d(), f.runs = f.runs + 1, a.log.info("Task list restarted : ", f.runs, " times"), 5 === f.runs ? (a.log.info("Orphaned tasks: "), d(), e.length = 0) :e.push(f)), a.log.debug("Executed tasks: ", c), b();
+}
 };
-d();
-}, i = function() {
+a.registerPreBootstrapTask(f);
+var g = function() {
+var f = null, h = [];
+for (0 === a.tasks.length && (f = e.shift()); !f && e.length > 0; ) {
+var i = e.shift();
+if ("*" === i.depends) a.tasks.length > 0 ? h.push(i) :f = i; else {
+var j = b(c, i.depends);
+j.length === i.depends.length ? f = i :h.push(i);
+}
+}
+if (h.length > 0 && h.forEach(function(a) {
+e.push(a);
+}), f || (f = a.tasks.shift()), f && f.depends && a.tasks.length > 0) if (a.log.debug("Task '" + f.name + "' has dependencies: ", f.depends), "*" === f.depends) {
+if (a.tasks.length > 0) return a.log.debug("Task '" + f.name + "' wants to run after all other tasks, deferring"), e.push(f), void g();
+} else {
+var j = b(c, f.depends);
+if (j.length != f.depends.length) return a.log.debug("Deferring task: '" + f.name + "'"), e.push(f), void g();
+}
+if (f) {
+a.log.debug("Executing task: '" + f.name + "'");
+var k = function() {
+k.notFired && (k.notFired = !1, c.push(f.name), setTimeout(g, 1));
+};
+k.notFired = !0, f.task(k);
+} else a.log.debug("All tasks executed"), setTimeout(d, 1);
+};
+setTimeout(g, 1);
+}, j = function() {
 var a = 0;
-$.each(e, function(b, c) {
+$.each(f, function(b, c) {
 a += c.Scripts.length;
 });
-var b = a, f = function() {
+var b = a, d = function() {
 $.ajaxSetup({
 async:!0
-}), a -= 1, c && c.scriptLoaderCallback(c, b, a + 1), 0 === a && h();
+}), a -= 1, e && e.scriptLoaderCallback(e, b, a + 1), 0 === a && i();
 };
-a > 0 ? $.each(e, function(a, b) {
+a > 0 ? $.each(f, function(a, b) {
 b.Scripts.forEach(function(a) {
-var c = b.Context + "/" + a;
-d.debug("Fetching script: ", c), $.ajaxSetup({
+var e = b.Context + "/" + a;
+c.debug("Fetching script: ", e), $.ajaxSetup({
 async:!1
-}), $.getScript(c).done(function(a) {
-d.debug("Loaded script: ", c);
-}).fail(function(a, b, e) {
-d.info('Failed loading script: "', e.message, '" (<a href="', c, ":", e.lineNumber, '">', c, ":", e.lineNumber, "</a>)");
-}).always(f);
+}), $.getScript(e).done(function(a) {
+c.debug("Loaded script: ", e);
+}).fail(function(a, b, d) {
+c.info('Failed loading script: "', d.message, '" (<a href="', e, ":", d.lineNumber, '">', e, ":", d.lineNumber, "</a>)");
+}).always(d);
 });
 }) :($.ajaxSetup({
 async:!0
-}), h());
+}), i());
 };
-if (0 === f) i(); else {
-var j = function() {
-f -= 1, c && c.urlLoaderCallback(c, g, f + 1), 0 === f && i();
-}, k = new RegExp(/^jolokia:/);
+if (0 === g) j(); else {
+var k = function() {
+g -= 1, e && e.urlLoaderCallback(e, h, g + 1), 0 === g && j();
+}, l = new RegExp(/^jolokia:/);
 $.each(a.urls, function(a, b) {
-if (k.test(b)) {
-var c = b.split(":");
-c = c.reverse(), c.pop(), b = c.pop();
-var f = c.reverse().join(":"), g = new Jolokia(b);
+if (l.test(b)) {
+var d = b.split(":");
+d = d.reverse(), d.pop(), b = d.pop();
+var e = d.reverse().join(":"), g = new Jolokia(b);
 try {
-var h = g.getAttribute(f, null);
-$.extend(e, h);
+var h = g.getAttribute(e, null);
+$.extend(f, h);
 } catch (i) {}
-j();
-} else d.debug("Trying url: ", b), $.get(b, function(a) {
+k();
+} else c.debug("Trying url: ", b), $.get(b, function(a) {
 if (angular.isString(a)) try {
 a = angular.fromJson(a);
 } catch (b) {
 return;
 }
-$.extend(e, a);
+$.extend(f, a);
 }).always(function() {
-j();
+k();
 });
 });
 }
 }, a.debug = function() {
-d.debug("urls and modules"), d.debug(a.urls), d.debug(a.modules);
+c.debug("urls and modules"), c.debug(a.urls), c.debug(a.modules);
 }, a.setLoaderCallback({
-scriptLoaderCallback:function(a, b, c) {
-d.debug("Total scripts: ", b, " Remaining: ", c);
+scriptLoaderCallback:function(a, b, d) {
+c.debug("Total scripts: ", b, " Remaining: ", d);
 },
-urlLoaderCallback:function(a, b, c) {
-d.debug("Total URLs: ", b, " Remaining: ", c);
+urlLoaderCallback:function(a, b, d) {
+c.debug("Total URLs: ", b, " Remaining: ", d);
 }
 }), a;
-}(hawtioPluginLoader || {}, window, void 0), HawtioCore;
-
-!function(a) {
-a.injector = null, a.pluginName = "hawtio-core";
-var b = Logger.get(a.pluginName), c = angular.module(a.pluginName, []);
-c.config([ "$locationProvider", function(a) {
-a.html5Mode(!0);
-} ]), c.run(function() {
-b.debug("loaded");
+}(hawtioPluginLoader || {}, window, void 0), HawtioCore = function() {
+"use strict";
+function a() {}
+Object.defineProperty(a.prototype, "injector", {
+get:function() {
+return b.UpgradeAdapter ? b.UpgradeAdapter.ng1Injector :b._injector;
+},
+enumerable:!0,
+configurable:!0
 });
-var d = {
+var b = new a();
+b.pluginName = "hawtio-core";
+var c = Logger.get(b.pluginName), d = angular.module(b.pluginName, []);
+d.config([ "$locationProvider", function(a) {
+a.html5Mode(!0);
+} ]), d.run([ "documentBase", function(a) {
+c.debug("loaded");
+} ]);
+var e = {
 length:0,
 key:function(a) {},
 getItem:function(a) {
-return dummyStorage[a];
+return e[a];
 },
 setItem:function(a, b) {
-dummyStorage[a] = b;
+e[a] = b;
 },
 removeItem:function(a) {
-var b = dummyStorage[a];
-return delete dummyStorage[a], b;
+var b = e[a];
+return delete e[a], b;
 },
 clear:function() {}
 };
-a.dummyLocalStorage = d, c.factory("localStorage", function() {
-return window.localStorage || d;
-}), c.factory("viewRegistry", function() {
+return b.dummyLocalStorage = e, b.documentBase = function() {
+var a = $("head").find("base"), b = "/";
+return a && a.length > 0 ? b = a.attr("href") :c.warn("Document is missing a 'base' tag, defaulting to '/'"), b;
+}, d.factory("localStorage", function() {
+return window.localStorage || e;
+}), d.factory("documentBase", function() {
+return b.documentBase();
+}), d.factory("viewRegistry", function() {
 return {};
-}), c.factory("helpRegistry", function() {
+}), d.factory("helpRegistry", function() {
 return {
 addUserDoc:function() {},
 addDevDoc:function() {},
@@ -40801,13 +40877,13 @@ getTopics:function() {},
 disableAutodiscover:function() {},
 discoverHelpFiles:function() {}
 };
-}), c.factory("preferencesRegistry", function() {
+}), d.factory("preferencesRegistry", function() {
 return {
 addTab:function() {},
 getTab:function() {},
 getTabs:function() {}
 };
-}), c.factory("pageTitle", function() {
+}), d.factory("pageTitle", function() {
 return {
 addTitleElement:function() {},
 getTitle:function() {},
@@ -40815,25 +40891,50 @@ getTitleWithSeparator:function() {},
 getTitleExcluding:function() {},
 getTitleArrayExcluding:function() {}
 };
-}), c.factory("toastr", [ "$window", function(a) {
+}), d.factory("toastr", [ "$window", function(a) {
 var b = a.toastr;
 return b || (b = {}, a.toastr = b), b;
-} ]), c.factory("branding", function() {
-return {};
-}), c.factory("userDetails", function() {
+} ]), d.factory("HawtioDashboard", function() {
 return {
-logout:function() {
-b.debug("Dummy userDetails.logout()");
+hasDashboard:!1,
+inDashboard:!1,
+getAddLink:function() {
+return "";
 }
 };
-}), hawtioPluginLoader.addModule("ng"), hawtioPluginLoader.addModule("ngSanitize"), hawtioPluginLoader.addModule(a.pluginName), $(function() {
-hawtioPluginLoader.loadPlugins(function() {
-a.injector ? b.debug("Application already bootstrapped") :(a.injector = angular.bootstrap(document, hawtioPluginLoader.getModules()), b.debug("Bootstrapped application"));
+}), d.factory("branding", function() {
+return {};
+}), d.factory("userDetails", function() {
+return {
+logout:function() {
+c.debug("Dummy userDetails.logout()");
+}
+};
+}), hawtioPluginLoader.addModule("ng"), hawtioPluginLoader.addModule("ngSanitize"), hawtioPluginLoader.addModule(b.pluginName), $(function() {
+if (jQuery.uaMatch = function(a) {
+a = a.toLowerCase();
+var b = /(chrome)[ \/]([\w.]+)/.exec(a) || /(webkit)[ \/]([\w.]+)/.exec(a) || /(opera)(?:.*version|)[ \/]([\w.]+)/.exec(a) || /(msie) ([\w.]+)/.exec(a) || a.indexOf("compatible") < 0 && /(mozilla)(?:.*? rv:([\w.]+)|)/.exec(a) || [];
+return {
+browser:b[1] || "",
+version:b[2] || "0"
+};
+}, !jQuery.browser) {
+var a = jQuery.uaMatch(navigator.userAgent), d = {};
+a.browser && (d[a.browser] = !0, d.version = a.version), d.chrome ? d.webkit = !0 :d.webkit && (d.safari = !0), jQuery.browser = d;
+}
+window.ng && window.ng.upgrade && (b.UpgradeAdapter = new ng.upgrade.UpgradeAdapter()), hawtioPluginLoader.loadPlugins(function() {
+if (b.injector || b.UpgradeAdapterRef) return void c.debug("Application already bootstrapped");
+var a = localStorage.hawtioCoreStrictDi || !1;
+a && c.debug("Using strict dependency injection");
+var d = hawtioPluginLoader.getBootstrapElement();
+c.debug("Using bootstrap element: ", d), b.UpgradeAdapter ? (c.debug("ngUpgrade detected, bootstrapping in Angular 1/2 hybrid mode"), b.UpgradeAdapterRef = b.UpgradeAdapter.bootstrap(d, hawtioPluginLoader.getModules(), {
+strictDi:a
+}), b._injector = b.UpgradeAdapterRef.ng1Injector) :b._injector = angular.bootstrap(d, hawtioPluginLoader.getModules(), {
+strictDi:a
+}), c.debug("Bootstrapped application");
 });
-});
-}(HawtioCore || (HawtioCore = {}));
-
-var HawtioExtensionService;
+}), b;
+}(), HawtioExtensionService;
 
 !function(a) {
 a.pluginName = "hawtio-extension-service", a.templatePath = "plugins/hawtio-extension-service/html", a._module = angular.module(a.pluginName, []), a._module.service("HawtioExtension", function() {
