@@ -1172,7 +1172,8 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "Select storage to use.\n" +
     "</div>\n" +
     "<div ng-if=\"project && ('persistentvolumeclaims' | canI : 'create')\" class=\"help-block\">\n" +
-    "Select storage to use or <a ng-href=\"project/{{project.metadata.name}}/create-pvc\">create storage</a>.\n" +
+    "Select storage to use<span ng-if=\"!outOfClaims\"> or <a ng-href=\"project/{{project.metadata.name}}/create-pvc\">create storage</a>.</span>\n" +
+    "<span ng-if=\"outOfClaims\">. You cannot create new storage since you are at quota.</span>\n" +
     "</div>\n" +
     "<h3>Volume</h3>\n" +
     "<div class=\"help-block\">\n" +
@@ -8084,6 +8085,13 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
   $templateCache.put('views/directives/osc-persistent-volume-claim.html',
     "<ng-form name=\"persistentVolumeClaimForm\">\n" +
     "<fieldset ng-disabled=\"claimDisabled\">\n" +
+    "<div ng-if=\"persistentVolumeClaimForm.capacity.$error.outOfClaims\" class=\"has-error\">\n" +
+    "<div class=\"alert alert-danger\">\n" +
+    "<span class=\"pficon pficon-error-circle-o\" aria-hidden=\"true\"></span>\n" +
+    "<strong>Storage quota limit has been reached. You will not be able to create any new storage.</strong>\n" +
+    "<a ng-href=\"project/{{projectName}}/quota\" target=\"_blank\">View Quota&nbsp;</a>\n" +
+    "</div>\n" +
+    "</div>\n" +
     "<div ng-if=\"storageClasses.length\" class=\"form-group\">\n" +
     "\n" +
     "<label>Storage Class</label>\n" +
@@ -8231,6 +8239,11 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "<div ng-if=\"persistentVolumeClaimForm.capacity.$error.limitRangeMax\" class=\"has-error\">\n" +
     "<span class=\"help-block\">\n" +
     "Can't be greater than {{limits.max | usageWithUnits : 'storage'}}.\n" +
+    "</span>\n" +
+    "</div>\n" +
+    "<div ng-if=\"persistentVolumeClaimForm.capacity.$error.willExceedStorage\" class=\"has-error\">\n" +
+    "<span class=\"help-block\">\n" +
+    "Storage quota will be exceeded. <a ng-href=\"project/{{projectName}}/quota\" target=\"_blank\">View Quota&nbsp;</a>\n" +
     "</span>\n" +
     "</div>\n" +
     "</div>\n" +
@@ -14054,11 +14067,11 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "<div class=\"col-md-12\">\n" +
     "<div class=\"section-header page-header-bleed-right page-header-bleed-left\">\n" +
     "<div class=\"hidden-xs pull-right\" ng-if=\"project && ('persistentvolumeclaims' | canI : 'create')\">\n" +
-    "<a ng-href=\"project/{{project.metadata.name}}/create-pvc\" class=\"btn btn-default\">Create Storage</a>\n" +
+    "<a ng-disabled=\"outOfClaims\" ng-href=\"project/{{project.metadata.name}}/create-pvc\" class=\"btn btn-default\">Create Storage</a>\n" +
     "</div>\n" +
     "<h2>Persistent Volume Claims</h2>\n" +
     "<div class=\"visible-xs-block mar-bottom-sm\" ng-if=\"project && ('persistentvolumeclaims' | canI : 'create')\">\n" +
-    "<a ng-href=\"project/{{project.metadata.name}}/create-pvc\" class=\"btn btn-default\">Create Storage</a>\n" +
+    "<a ng-disabled=\"outOfClaims\" ng-href=\"project/{{project.metadata.name}}/create-pvc\" class=\"btn btn-default\">Create Storage</a>\n" +
     "</div>\n" +
     "</div>\n" +
     "<table class=\"table table-bordered table-hover table-mobile table-layout-fixed\" ng-class=\"{ 'table-empty': (pvcs | hashSize) === 0 }\">\n" +
