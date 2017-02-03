@@ -4106,7 +4106,12 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "<div class=\"middle-container\">\n" +
     "<div class=\"middle-header\">\n" +
     "<div class=\"container-fluid\">\n" +
+    "<div row mobile=\"column\" class=\"tech-preview-header\">\n" +
     "<breadcrumbs breadcrumbs=\"breadcrumbs\"></breadcrumbs>\n" +
+    "<span class=\"pad-top-md\">\n" +
+    "<span class=\"label label-warning\">Technology Preview</span>\n" +
+    "</span>\n" +
+    "</div>\n" +
     "<alerts alerts=\"alerts\"></alerts>\n" +
     "<div>\n" +
     "<h1>\n" +
@@ -4231,8 +4236,10 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "<div class=\"middle-container\">\n" +
     "<div class=\"middle-header header-toolbar\">\n" +
     "<div class=\"container-fluid\">\n" +
-    "<breadcrumbs breadcrumbs=\"breadcrumbs\"></breadcrumbs>\n" +
     "<div class=\"page-header page-header-bleed-right page-header-bleed-left\">\n" +
+    "<span class=\"pad-top-xs pull-right\">\n" +
+    "<span class=\"label label-warning\">Technology Preview</span>\n" +
+    "</span>\n" +
     "<h1>\n" +
     "Stateful Sets\n" +
     "\n" +
@@ -5791,7 +5798,7 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
 
 
   $templateCache.put('views/directives/_copy-to-clipboard.html',
-    "<div class=\"input-group copy-to-clipboard\" ng-class=\"{'limit-width': !displayWide, 'copy-to-clipboard-multiline': multiline}\">\n" +
+    "<div class=\"copy-to-clipboard\" ng-class=\"{'limit-width': !displayWide, 'copy-to-clipboard-multiline': multiline, 'input-group': !hidden}\">\n" +
     "<input ng-if=\"!multiline\" id=\"{{id}}\" type=\"text\" class=\"form-control\" value=\"{{inputText || clipboardText}}\" ng-disabled=\"isDisabled\" ng-readonly=\"!isDisabled\" select-on-focus>\n" +
     "<pre ng-if=\"multiline\" id=\"{{id}}\">{{inputText || clipboardText}}</pre>\n" +
     "<span ng-class=\"{ 'input-group-btn': !multiline }\" ng-hide=\"hidden\">\n" +
@@ -9677,7 +9684,7 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "</div>\n" +
     "</div>\n" +
     "</div>\n" +
-    "<div class=\"mar-top-lg\">\n" +
+    "<div class=\"mar-top-lg\" ng-if=\"strategyData.type !== 'Custom'\">\n" +
     "<div ng-if=\"!view.advancedStrategyOptions\">To set additional parameters or edit lifecycle hooks, view <a href=\"\" ng-click=\"view.advancedStrategyOptions = true\">advanced strategy options.</a></div>\n" +
     "<a ng-if=\"view.advancedStrategyOptions\" href=\"\" ng-click=\"view.advancedStrategyOptions = false\">Hide Advanced Strategy Options</a>\n" +
     "</div>\n" +
@@ -13134,7 +13141,9 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "</tbody>\n" +
     "<tbody ng-if=\"(pvcs | hashSize) > 0\">\n" +
     "<tr ng-repeat=\"pvc in pvcs | orderObjectsByDate : true\">\n" +
-    "<td data-title=\"Name\"><a ng-href=\"{{pvc | navigateResourceURL}}\">{{pvc.metadata.name}}</a></td>\n" +
+    "<td data-title=\"Name\"><a ng-href=\"{{pvc | navigateResourceURL}}\">{{pvc.metadata.name}}</a>\n" +
+    "<span ng-if=\"pvc | storageClass\" class=\"text-muted\"> using storage class {{pvc | storageClass}}</span>\n" +
+    "</td>\n" +
     "<td data-title=\"Status\">\n" +
     "<status-icon status=\"pvc.status.phase\" disable-animation></status-icon>\n" +
     "{{pvc.status.phase}}\n" +

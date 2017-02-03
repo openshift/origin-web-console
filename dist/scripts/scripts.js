@@ -13819,6 +13819,10 @@ return null;
 return function(b) {
 return a(b, "openshift.io/description") || a(b, "kubernetes.io/description");
 };
+} ]).filter("storageClass", [ "annotationFilter", function(a) {
+return function(b) {
+return a(b, "volume.beta.kubernetes.io/storage-class");
+};
 } ]).filter("displayName", [ "annotationFilter", function(a) {
 return function(b, c) {
 var d = a(b, "displayName");
