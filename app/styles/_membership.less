@@ -41,9 +41,8 @@
         min-width: 50%;
       }
       .word-break-all;
-      min-width: 225px;
-      max-width: 30%;
-      padding: 0 5px 10px 0;
+      width: 100%;
+      padding: 0 0px 10px 0;
       input {
         max-width: 150px;
       }
@@ -71,7 +70,6 @@
       width: 150px;
     }
     .select-role {
-      width: 150px;
       small {
         color: #999;
       }
@@ -124,7 +122,9 @@
         }
       }
       .col-name {
-        width: 30%;
+        min-width: 225px;
+        max-width: 30%;
+        padding: 0 5px 10px 0;
         input {
           max-width: 175px;
         }
@@ -133,6 +133,9 @@
         .col-roles {
           display: block;
         }
+      }
+      .select-role {
+        width: 150px;
       }
     }
   }

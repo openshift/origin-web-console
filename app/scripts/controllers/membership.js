@@ -70,6 +70,24 @@ angular
         $scope.newBinding.newRole = null;
       };
 
+      var refreshServiceAccountsList = function(ctx) {
+        DataService
+          .list('serviceaccounts', ctx)
+          .then(function(resp) {
+            var serviceAccounts = _.keys(resp.by('metadata.name')).sort();
+            angular.extend($scope, {
+              serviceAccounts: serviceAccounts,
+              refreshServiceAccounts: function(search) {
+                if(search && !_.includes($scope.serviceAccounts, search)) {
+                  $scope.serviceAccounts = [search].concat(serviceAccounts);
+                } else {
+                  $scope.serviceAccounts = serviceAccounts;
+                }
+              }
+            });
+          });
+      };
+
       var refreshRoleBindingList = function(toUpdateOnError) {
         DataService
           .list('rolebindings', requestContext, null , {
@@ -159,6 +177,7 @@ angular
         },
         selectTab: function(selected) {
           $scope.newBinding.kind = selected;
+          $scope.newBinding.name = '';
         }
       });
 
@@ -219,15 +238,18 @@ angular
           $scope.user = resp;
         });
 
-
       DataService
         .list('projects', {})
         .then(function(resp) {
-          var projects = _.map(resp.by('metadata.name'), function(project) {
-            return project.metadata.name;
-          });
+          var projects = _.keys(resp.by('metadata.name')).sort();
           angular.extend($scope, {
             projects: projects,
+            selectProject: function(projectName) {
+              $scope.newBinding.name = '';
+              refreshServiceAccountsList({
+                namespace: projectName
+              });
+            },
             refreshProjects: function(search) {
               if(search && !_.includes($scope.projects, search)) {
                 $scope.projects = [search].concat(projects);
@@ -243,6 +265,7 @@ angular
         .then(_.spread(function(project, context) {
           requestContext = context;
           refreshRoleBindingList();
+          refreshServiceAccountsList(requestContext);
           angular.extend($scope, {
             project: project,
             subjectKinds: subjectKinds,
@@ -364,5 +387,6 @@ angular
                 }
               });
             });
+
         }));
     });
