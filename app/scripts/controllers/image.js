@@ -37,8 +37,6 @@ angular.module('openshiftConsole')
       }
     ];
 
-    $scope.emptyMessage = "Loading...";
-
     var watches = [];
 
     var fetchImageStreamTag = _.debounce(function(tagData, context) {
@@ -84,7 +82,6 @@ angular.module('openshiftConsole')
 
     var imageStreamResolved = function(imageStream, context, action) {
       populateWithImageStream(imageStream, context);
-      $scope.emptyMessage = "";
       if (action === "DELETED") {
         $scope.alerts["deleted"] = {
           type: "warning",

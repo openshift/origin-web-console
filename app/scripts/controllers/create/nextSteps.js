@@ -13,7 +13,6 @@ angular.module("openshiftConsole")
     var displayNameFilter = $filter('displayName');
     var watches = [];
 
-    $scope.emptyMessage = "Loading...";
     $scope.alerts = [];
     $scope.loginBaseUrl = DataService.openshiftAPIBaseUrl();
     $scope.buildConfigs = {};

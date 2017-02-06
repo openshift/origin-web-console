@@ -23,8 +23,6 @@ angular
       namespace: $routeParams.project
     });
 
-    $scope.emptyMessage = "Loading...";
-
     var updateEnvVars = function(statefulSet) {
       // Return a copy so that we don't alter the original object, which is
       // cached by DataService. Normalizing would otherwise modify the original.

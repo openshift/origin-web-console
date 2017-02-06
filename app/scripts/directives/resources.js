@@ -182,8 +182,6 @@ angular.module('openshiftConsole')
         services: '=',
         portsByRoute: '=',
         showNodePorts: '=?',
-        // Optional empty message to display when there are no pods.
-        emptyMessage: '=?',
         // Alternative header text to display in the 'Name' column.
         customNameHeader: '=?',
       },

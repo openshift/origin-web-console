@@ -41,7 +41,6 @@ angular.module('openshiftConsole')
       return;
     }
 
-    $scope.emptyMessage = "Loading...";
     $scope.alerts = {};
     $scope.quotaAlerts = {};
     $scope.projectName = $routeParams.project;
