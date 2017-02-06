@@ -52,6 +52,7 @@
     "less": "2.6.1",
     "load-grunt-tasks": "0.4.0",
     "lodash": "3.10.1",
+    "pre-commit": "1.2.2",
     "protractor": "1.7.0",
     "protractor-screenshot-reporter": "0.0.5",
     "serve-static": "1.10.2",
@@ -62,6 +63,11 @@
   },
   "scripts": {
     "test": "grunt test",
-    "postinstall": "node test/upgrade-selenium.js && node_modules/protractor/bin/webdriver-manager update"
-  }
+    "postinstall": "node test/upgrade-selenium.js && node_modules/protractor/bin/webdriver-manager update",
+    "precommit-eslint": "LIST=`git diff-index --name-only HEAD | grep -f *.js | grep -v json;`; if [ $LIST ]; then eslint $LIST; fi"
+
+  },
+  "pre-commit": [
+    "precommit-eslint"
+  ]
 }

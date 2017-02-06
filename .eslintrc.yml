@@ -48,7 +48,7 @@ rules:
     - property
   dot-notation: 'off'
   eol-last: 'off'
-  eqeqeq: 'warn'
+  eqeqeq: error
   func-call-spacing: error
   func-name-matching: error
   func-names: 'off'
@@ -84,6 +84,7 @@ rules:
   newline-before-return: 'off'
   newline-per-chained-call: 'off'
   no-alert: error
+  no-console: error
   no-array-constructor: error
   no-bitwise: error
   no-caller: error
