@@ -7954,7 +7954,7 @@ details:a("getErrorDetails")(b)
 } ]), angular.module("openshiftConsole").controller("EditYAMLController", [ "$scope", "$filter", "$location", "$routeParams", "$window", "AlertMessageService", "APIService", "AuthorizationService", "BreadcrumbsService", "DataService", "Navigate", "ProjectsService", function(a, b, c, d, e, f, g, h, i, j, k, l) {
 if (!d.kind || !d.name) return void k.toErrorPage("Kind or name parameter missing.");
 var m = b("humanizeKind");
-a.name = d.name, a.resourceURL = k.resourceURL(a.name, d.kind, d.project), a.breadcrumbs = [ {
+a.alerts = {}, a.name = d.name, a.resourceURL = k.resourceURL(a.name, d.kind, d.project), a.breadcrumbs = [ {
 title:d.project,
 link:"project/" + d.project
 }, {
@@ -8005,14 +8005,19 @@ return k ? k.group !== i.group ? void (a.error = {
 message:"Cannot change resource group (original: " + (i.group || "<none>") + ", modified: " + (k.group || "<none>") + ")."
 }) :g.apiInfo(k) ? (a.updatingNow = !0, void j.update(k, a.resource.metadata.name, c, {
 namespace:a.resource.metadata.namespace
-}).then(function() {
-f.addAlert({
+}).then(function(b) {
+var e = _.get(c, "metadata.resourceVersion"), g = _.get(b, "metadata.resourceVersion");
+return g === e ? (a.alerts["no-changes-applied"] = {
+type:"warning",
+message:"No changes were applied to " + m(d.kind) + " " + d.name + ".",
+details:"Make sure any new fields you may have added are supported API fields."
+}, void (a.updatingNow = !1)) :(f.addAlert({
 name:"edit-yaml",
 data:{
 type:"success",
 message:m(d.kind, !0) + " " + d.name + " was successfully updated."
 }
-}), n();
+}), void n());
 }, function(c) {
 a.updatingNow = !1, a.error = {
 message:b("getErrorDetails")(c)

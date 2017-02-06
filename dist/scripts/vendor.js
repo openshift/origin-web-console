@@ -53,6 +53,10 @@ return a.sentinel2 = 0, 0 === Object.getOwnPropertyDescriptor(a, "sentinel2").va
 } catch (b) {}
 }
 
+function _classCallCheck(a, b) {
+if (!(a instanceof b)) throw new TypeError("Cannot call a class as a function");
+}
+
 function mergeDeep(a) {
 "use strict";
 return angular.forEach(arguments, function(b) {
@@ -16424,7 +16428,7 @@ return ab;
 })) :Va && Wa ? $a ? (Wa.exports = ab)._ = ab :Va._ = ab :_a._ = ab;
 }.call(this), "undefined" == typeof jQuery) throw new Error("Bootstrap's JavaScript requires jQuery");
 
-if (+function(a) {
++function(a) {
 "use strict";
 var b = a.fn.jquery.split(" ")[0].split(".");
 if (b[0] < 2 && b[1] < 9 || 1 == b[0] && 9 == b[1] && b[2] < 1 || b[0] > 3) throw new Error("Bootstrap's JavaScript requires jQuery version 1.9.1 or higher, but lower than version 4");
@@ -18823,14 +18827,189 @@ d.call(b, b.data());
 });
 });
 }(a);
-}), function() {
-var a = [].slice;
-!function(b, c) {
-"use strict";
-var d;
-return d = function() {
-function a(a, c) {
-null == c && (c = {}), this.$element = b(a), this.options = b.extend({}, b.fn.bootstrapSwitch.defaults, {
+});
+
+var _createClass = function() {
+function a(a, b) {
+for (var c = 0; c < b.length; c++) {
+var d = b[c];
+d.enumerable = d.enumerable || !1, d.configurable = !0, "value" in d && (d.writable = !0), Object.defineProperty(a, d.key, d);
+}
+}
+return function(b, c, d) {
+return c && a(b.prototype, c), d && a(b, d), b;
+};
+}();
+
+if (function(a, b) {
+var c = function() {
+function c(b) {
+var d = this, e = arguments.length > 1 && void 0 !== arguments[1] ? arguments[1] :{};
+_classCallCheck(this, c), this.$element = a(b), this.options = a.extend({}, a.fn.bootstrapSwitch.defaults, this._getElementOptions(), e), this.prevOptions = {}, this.$wrapper = a("<div>", {
+"class":function() {
+var a = [];
+return a.push(d.options.state ? "on" :"off"), d.options.size && a.push(d.options.size), d.options.disabled && a.push("disabled"), d.options.readonly && a.push("readonly"), d.options.indeterminate && a.push("indeterminate"), d.options.inverse && a.push("inverse"), d.$element.attr("id") && a.push("id-" + d.$element.attr("id")), a.map(d._getClass.bind(d)).concat([ d.options.baseClass ], d._getClasses(d.options.wrapperClass)).join(" ");
+}
+}), this.$container = a("<div>", {
+"class":this._getClass("container")
+}), this.$on = a("<span>", {
+html:this.options.onText,
+"class":this._getClass("handle-on") + " " + this._getClass(this.options.onColor)
+}), this.$off = a("<span>", {
+html:this.options.offText,
+"class":this._getClass("handle-off") + " " + this._getClass(this.options.offColor)
+}), this.$label = a("<span>", {
+html:this.options.labelText,
+"class":this._getClass("label")
+}), this.$element.on("init.bootstrapSwitch", this.options.onInit.bind(this, b)), this.$element.on("switchChange.bootstrapSwitch", function() {
+for (var c = arguments.length, e = Array(c), f = 0; f < c; f++) e[f] = arguments[f];
+d.options.onSwitchChange.apply(b, e) === !1 && (d.$element.is(":radio") ? a('[name="' + d.$element.attr("name") + '"]').trigger("previousState.bootstrapSwitch", !0) :d.$element.trigger("previousState.bootstrapSwitch", !0));
+}), this.$container = this.$element.wrap(this.$container).parent(), this.$wrapper = this.$container.wrap(this.$wrapper).parent(), this.$element.before(this.options.inverse ? this.$off :this.$on).before(this.$label).before(this.options.inverse ? this.$on :this.$off), this.options.indeterminate && this.$element.prop("indeterminate", !0), this._init(), this._elementHandlers(), this._handleHandlers(), this._labelHandlers(), this._formHandler(), this._externalLabelHandler(), this.$element.trigger("init.bootstrapSwitch", this.options.state);
+}
+return _createClass(c, [ {
+key:"setPrevOptions",
+value:function() {
+this.prevOptions = Object.assign({}, this.options);
+}
+}, {
+key:"state",
+value:function(b, c) {
+return "undefined" == typeof b ? this.options.state :this.options.disabled || this.options.readonly || this.options.state && !this.options.radioAllOff && this.$element.is(":radio") ? this.$element :(this.$element.is(":radio") ? a('[name="' + this.$element.attr("name") + '"]').trigger("setPreviousOptions.bootstrapSwitch") :this.$element.trigger("setPreviousOptions.bootstrapSwitch"), this.options.indeterminate && this.indeterminate(!1), this.$element.prop("checked", Boolean(b)).trigger("change.bootstrapSwitch", c), this.$element);
+}
+}, {
+key:"toggleState",
+value:function(a) {
+return this.options.disabled || this.options.readonly ? this.$element :this.options.indeterminate ? (this.indeterminate(!1), this.state(!0)) :this.$element.prop("checked", !this.options.state).trigger("change.bootstrapSwitch", a);
+}
+}, {
+key:"size",
+value:function(a) {
+return "undefined" == typeof a ? this.options.size :(null != this.options.size && this.$wrapper.removeClass(this._getClass(this.options.size)), a && this.$wrapper.addClass(this._getClass(a)), this._width(), this._containerPosition(), this.options.size = a, this.$element);
+}
+}, {
+key:"animate",
+value:function(a) {
+return "undefined" == typeof a ? this.options.animate :this.options.animate === Boolean(a) ? this.$element :this.toggleAnimate();
+}
+}, {
+key:"toggleAnimate",
+value:function() {
+return this.options.animate = !this.options.animate, this.$wrapper.toggleClass(this._getClass("animate")), this.$element;
+}
+}, {
+key:"disabled",
+value:function(a) {
+return "undefined" == typeof a ? this.options.disabled :this.options.disabled === Boolean(a) ? this.$element :this.toggleDisabled();
+}
+}, {
+key:"toggleDisabled",
+value:function() {
+return this.options.disabled = !this.options.disabled, this.$element.prop("disabled", this.options.disabled), this.$wrapper.toggleClass(this._getClass("disabled")), this.$element;
+}
+}, {
+key:"readonly",
+value:function(a) {
+return "undefined" == typeof a ? this.options.readonly :this.options.readonly === Boolean(a) ? this.$element :this.toggleReadonly();
+}
+}, {
+key:"toggleReadonly",
+value:function() {
+return this.options.readonly = !this.options.readonly, this.$element.prop("readonly", this.options.readonly), this.$wrapper.toggleClass(this._getClass("readonly")), this.$element;
+}
+}, {
+key:"indeterminate",
+value:function(a) {
+return "undefined" == typeof a ? this.options.indeterminate :this.options.indeterminate === Boolean(a) ? this.$element :this.toggleIndeterminate();
+}
+}, {
+key:"toggleIndeterminate",
+value:function() {
+return this.options.indeterminate = !this.options.indeterminate, this.$element.prop("indeterminate", this.options.indeterminate), this.$wrapper.toggleClass(this._getClass("indeterminate")), this._containerPosition(), this.$element;
+}
+}, {
+key:"inverse",
+value:function(a) {
+return "undefined" == typeof a ? this.options.inverse :this.options.inverse === Boolean(a) ? this.$element :this.toggleInverse();
+}
+}, {
+key:"toggleInverse",
+value:function() {
+this.$wrapper.toggleClass(this._getClass("inverse"));
+var a = this.$on.clone(!0), b = this.$off.clone(!0);
+return this.$on.replaceWith(b), this.$off.replaceWith(a), this.$on = b, this.$off = a, this.options.inverse = !this.options.inverse, this.$element;
+}
+}, {
+key:"onColor",
+value:function(a) {
+return "undefined" == typeof a ? this.options.onColor :(this.options.onColor && this.$on.removeClass(this._getClass(this.options.onColor)), this.$on.addClass(this._getClass(a)), this.options.onColor = a, this.$element);
+}
+}, {
+key:"offColor",
+value:function(a) {
+return "undefined" == typeof a ? this.options.offColor :(this.options.offColor && this.$off.removeClass(this._getClass(this.options.offColor)), this.$off.addClass(this._getClass(a)), this.options.offColor = a, this.$element);
+}
+}, {
+key:"onText",
+value:function(a) {
+return "undefined" == typeof a ? this.options.onText :(this.$on.html(a), this._width(), this._containerPosition(), this.options.onText = a, this.$element);
+}
+}, {
+key:"offText",
+value:function(a) {
+return "undefined" == typeof a ? this.options.offText :(this.$off.html(a), this._width(), this._containerPosition(), this.options.offText = a, this.$element);
+}
+}, {
+key:"labelText",
+value:function(a) {
+return "undefined" == typeof a ? this.options.labelText :(this.$label.html(a), this._width(), this.options.labelText = a, this.$element);
+}
+}, {
+key:"handleWidth",
+value:function(a) {
+return "undefined" == typeof a ? this.options.handleWidth :(this.options.handleWidth = a, this._width(), this._containerPosition(), this.$element);
+}
+}, {
+key:"labelWidth",
+value:function(a) {
+return "undefined" == typeof a ? this.options.labelWidth :(this.options.labelWidth = a, this._width(), this._containerPosition(), this.$element);
+}
+}, {
+key:"baseClass",
+value:function(a) {
+return this.options.baseClass;
+}
+}, {
+key:"wrapperClass",
+value:function(b) {
+return "undefined" == typeof b ? this.options.wrapperClass :(b || (b = a.fn.bootstrapSwitch.defaults.wrapperClass), this.$wrapper.removeClass(this._getClasses(this.options.wrapperClass).join(" ")), this.$wrapper.addClass(this._getClasses(b).join(" ")), this.options.wrapperClass = b, this.$element);
+}
+}, {
+key:"radioAllOff",
+value:function(a) {
+if ("undefined" == typeof a) return this.options.radioAllOff;
+var b = Boolean(a);
+return this.options.radioAllOff === b ? this.$element :(this.options.radioAllOff = b, this.$element);
+}
+}, {
+key:"onInit",
+value:function(b) {
+return "undefined" == typeof b ? this.options.onInit :(b || (b = a.fn.bootstrapSwitch.defaults.onInit), this.options.onInit = b, this.$element);
+}
+}, {
+key:"onSwitchChange",
+value:function(b) {
+return "undefined" == typeof b ? this.options.onSwitchChange :(b || (b = a.fn.bootstrapSwitch.defaults.onSwitchChange), this.options.onSwitchChange = b, this.$element);
+}
+}, {
+key:"destroy",
+value:function() {
+var a = this.$element.closest("form");
+return a.length && a.off("reset.bootstrapSwitch").removeData("bootstrap-switch"), this.$container.children().not(this.$element).remove(), this.$element.unwrap().unwrap().off(".bootstrapSwitch").removeData("bootstrap-switch"), this.$element;
+}
+}, {
+key:"_getElementOptions",
+value:function() {
+return {
 state:this.$element.is(":checked"),
 size:this.$element.data("size"),
 animate:this.$element.data("animate"),
@@ -18848,215 +19027,147 @@ handleWidth:this.$element.data("handle-width"),
 labelWidth:this.$element.data("label-width"),
 baseClass:this.$element.data("base-class"),
 wrapperClass:this.$element.data("wrapper-class")
-}, c), this.$wrapper = b("<div>", {
-"class":function(a) {
-return function() {
-var b;
-return b = [ "" + a.options.baseClass ].concat(a._getClasses(a.options.wrapperClass)), b.push(a.options.state ? "" + a.options.baseClass + "-on" :"" + a.options.baseClass + "-off"), null != a.options.size && b.push("" + a.options.baseClass + "-" + a.options.size), a.options.disabled && b.push("" + a.options.baseClass + "-disabled"), a.options.readonly && b.push("" + a.options.baseClass + "-readonly"), a.options.indeterminate && b.push("" + a.options.baseClass + "-indeterminate"), a.options.inverse && b.push("" + a.options.baseClass + "-inverse"), a.$element.attr("id") && b.push("" + a.options.baseClass + "-id-" + a.$element.attr("id")), b.join(" ");
 };
-}(this)()
-}), this.$container = b("<div>", {
-"class":"" + this.options.baseClass + "-container"
-}), this.$on = b("<span>", {
-html:this.options.onText,
-"class":"" + this.options.baseClass + "-handle-on " + this.options.baseClass + "-" + this.options.onColor
-}), this.$off = b("<span>", {
-html:this.options.offText,
-"class":"" + this.options.baseClass + "-handle-off " + this.options.baseClass + "-" + this.options.offColor
-}), this.$label = b("<span>", {
-html:this.options.labelText,
-"class":"" + this.options.baseClass + "-label"
-}), this.$element.on("init.bootstrapSwitch", function(b) {
-return function() {
-return b.options.onInit.apply(a, arguments);
-};
-}(this)), this.$element.on("switchChange.bootstrapSwitch", function(b) {
-return function() {
-return b.options.onSwitchChange.apply(a, arguments);
-};
-}(this)), this.$container = this.$element.wrap(this.$container).parent(), this.$wrapper = this.$container.wrap(this.$wrapper).parent(), this.$element.before(this.options.inverse ? this.$off :this.$on).before(this.$label).before(this.options.inverse ? this.$on :this.$off), this.options.indeterminate && this.$element.prop("indeterminate", !0), this._init(), this._elementHandlers(), this._handleHandlers(), this._labelHandlers(), this._formHandler(), this._externalLabelHandler(), this.$element.trigger("init.bootstrapSwitch");
 }
-return a.prototype._constructor = a, a.prototype.state = function(a, b) {
-return "undefined" == typeof a ? this.options.state :this.options.disabled || this.options.readonly ? this.$element :this.options.state && !this.options.radioAllOff && this.$element.is(":radio") ? this.$element :(this.options.indeterminate && this.indeterminate(!1), a = !!a, this.$element.prop("checked", a).trigger("change.bootstrapSwitch", b), this.$element);
-}, a.prototype.toggleState = function(a) {
-return this.options.disabled || this.options.readonly ? this.$element :this.options.indeterminate ? (this.indeterminate(!1), this.state(!0)) :this.$element.prop("checked", !this.options.state).trigger("change.bootstrapSwitch", a);
-}, a.prototype.size = function(a) {
-return "undefined" == typeof a ? this.options.size :(null != this.options.size && this.$wrapper.removeClass("" + this.options.baseClass + "-" + this.options.size), a && this.$wrapper.addClass("" + this.options.baseClass + "-" + a), this._width(), this._containerPosition(), this.options.size = a, this.$element);
-}, a.prototype.animate = function(a) {
-return "undefined" == typeof a ? this.options.animate :(a = !!a, a === this.options.animate ? this.$element :this.toggleAnimate());
-}, a.prototype.toggleAnimate = function() {
-return this.options.animate = !this.options.animate, this.$wrapper.toggleClass("" + this.options.baseClass + "-animate"), this.$element;
-}, a.prototype.disabled = function(a) {
-return "undefined" == typeof a ? this.options.disabled :(a = !!a, a === this.options.disabled ? this.$element :this.toggleDisabled());
-}, a.prototype.toggleDisabled = function() {
-return this.options.disabled = !this.options.disabled, this.$element.prop("disabled", this.options.disabled), this.$wrapper.toggleClass("" + this.options.baseClass + "-disabled"), this.$element;
-}, a.prototype.readonly = function(a) {
-return "undefined" == typeof a ? this.options.readonly :(a = !!a, a === this.options.readonly ? this.$element :this.toggleReadonly());
-}, a.prototype.toggleReadonly = function() {
-return this.options.readonly = !this.options.readonly, this.$element.prop("readonly", this.options.readonly), this.$wrapper.toggleClass("" + this.options.baseClass + "-readonly"), this.$element;
-}, a.prototype.indeterminate = function(a) {
-return "undefined" == typeof a ? this.options.indeterminate :(a = !!a, a === this.options.indeterminate ? this.$element :this.toggleIndeterminate());
-}, a.prototype.toggleIndeterminate = function() {
-return this.options.indeterminate = !this.options.indeterminate, this.$element.prop("indeterminate", this.options.indeterminate), this.$wrapper.toggleClass("" + this.options.baseClass + "-indeterminate"), this._containerPosition(), this.$element;
-}, a.prototype.inverse = function(a) {
-return "undefined" == typeof a ? this.options.inverse :(a = !!a, a === this.options.inverse ? this.$element :this.toggleInverse());
-}, a.prototype.toggleInverse = function() {
-var a, b;
-return this.$wrapper.toggleClass("" + this.options.baseClass + "-inverse"), b = this.$on.clone(!0), a = this.$off.clone(!0), this.$on.replaceWith(a), this.$off.replaceWith(b), this.$on = a, this.$off = b, this.options.inverse = !this.options.inverse, this.$element;
-}, a.prototype.onColor = function(a) {
-var b;
-return b = this.options.onColor, "undefined" == typeof a ? b :(null != b && this.$on.removeClass("" + this.options.baseClass + "-" + b), this.$on.addClass("" + this.options.baseClass + "-" + a), this.options.onColor = a, this.$element);
-}, a.prototype.offColor = function(a) {
-var b;
-return b = this.options.offColor, "undefined" == typeof a ? b :(null != b && this.$off.removeClass("" + this.options.baseClass + "-" + b), this.$off.addClass("" + this.options.baseClass + "-" + a), this.options.offColor = a, this.$element);
-}, a.prototype.onText = function(a) {
-return "undefined" == typeof a ? this.options.onText :(this.$on.html(a), this._width(), this._containerPosition(), this.options.onText = a, this.$element);
-}, a.prototype.offText = function(a) {
-return "undefined" == typeof a ? this.options.offText :(this.$off.html(a), this._width(), this._containerPosition(), this.options.offText = a, this.$element);
-}, a.prototype.labelText = function(a) {
-return "undefined" == typeof a ? this.options.labelText :(this.$label.html(a), this._width(), this.options.labelText = a, this.$element);
-}, a.prototype.handleWidth = function(a) {
-return "undefined" == typeof a ? this.options.handleWidth :(this.options.handleWidth = a, this._width(), this._containerPosition(), this.$element);
-}, a.prototype.labelWidth = function(a) {
-return "undefined" == typeof a ? this.options.labelWidth :(this.options.labelWidth = a, this._width(), this._containerPosition(), this.$element);
-}, a.prototype.baseClass = function(a) {
-return this.options.baseClass;
-}, a.prototype.wrapperClass = function(a) {
-return "undefined" == typeof a ? this.options.wrapperClass :(a || (a = b.fn.bootstrapSwitch.defaults.wrapperClass), this.$wrapper.removeClass(this._getClasses(this.options.wrapperClass).join(" ")), this.$wrapper.addClass(this._getClasses(a).join(" ")), this.options.wrapperClass = a, this.$element);
-}, a.prototype.radioAllOff = function(a) {
-return "undefined" == typeof a ? this.options.radioAllOff :(a = !!a, a === this.options.radioAllOff ? this.$element :(this.options.radioAllOff = a, this.$element));
-}, a.prototype.onInit = function(a) {
-return "undefined" == typeof a ? this.options.onInit :(a || (a = b.fn.bootstrapSwitch.defaults.onInit), this.options.onInit = a, this.$element);
-}, a.prototype.onSwitchChange = function(a) {
-return "undefined" == typeof a ? this.options.onSwitchChange :(a || (a = b.fn.bootstrapSwitch.defaults.onSwitchChange), this.options.onSwitchChange = a, this.$element);
-}, a.prototype.destroy = function() {
-var a;
-return a = this.$element.closest("form"), a.length && a.off("reset.bootstrapSwitch").removeData("bootstrap-switch"), this.$container.children().not(this.$element).remove(), this.$element.unwrap().unwrap().off(".bootstrapSwitch").removeData("bootstrap-switch"), this.$element;
-}, a.prototype._width = function() {
-var a, b;
-return a = this.$on.add(this.$off), a.add(this.$label).css("width", ""), b = "auto" === this.options.handleWidth ? Math.max(this.$on.width(), this.$off.width()) :this.options.handleWidth, a.width(b), this.$label.width(function(a) {
-return function(c, d) {
-return "auto" !== a.options.labelWidth ? a.options.labelWidth :d < b ? b :d;
-};
-}(this)), this._handleWidth = this.$on.outerWidth(), this._labelWidth = this.$label.outerWidth(), this.$container.width(2 * this._handleWidth + this._labelWidth), this.$wrapper.width(this._handleWidth + this._labelWidth);
-}, a.prototype._containerPosition = function(a, b) {
-if (null == a && (a = this.options.state), this.$container.css("margin-left", function(b) {
-return function() {
-var c;
-return c = [ 0, "-" + b._handleWidth + "px" ], b.options.indeterminate ? "-" + b._handleWidth / 2 + "px" :a ? b.options.inverse ? c[1] :c[0] :b.options.inverse ? c[0] :c[1];
-};
-}(this)), b) return setTimeout(function() {
-return b();
+}, {
+key:"_width",
+value:function() {
+var a = this, b = this.$on.add(this.$off).add(this.$label).css("width", ""), c = void 0;
+return c = "auto" === this.options.handleWidth ? Math.round(Math.max(this.$on.width(), this.$off.width())) :this.options.handleWidth, b.width(c), this.$label.width(function(b, d) {
+return "auto" !== a.options.labelWidth ? a.options.labelWidth :d < c ? c :d;
+}), this._handleWidth = this.$on.outerWidth(), this._labelWidth = this.$label.outerWidth(), this.$container.width(2 * this._handleWidth + this._labelWidth), this.$wrapper.width(this._handleWidth + this._labelWidth);
+}
+}, {
+key:"_containerPosition",
+value:function() {
+var a = this, b = arguments.length > 0 && void 0 !== arguments[0] ? arguments[0] :this.options.state;
+arguments[1];
+this.$container.css("margin-left", function() {
+var c = [ 0, "-" + a._handleWidth + "px" ];
+return a.options.indeterminate ? "-" + a._handleWidth / 2 + "px" :b ? a.options.inverse ? c[1] :c[0] :a.options.inverse ? c[0] :c[1];
+});
+}
+}, {
+key:"_init",
+value:function() {
+var a = this, c = function() {
+a.setPrevOptions(), a._width(), a._containerPosition(), setTimeout(function() {
+if (a.options.animate) return a.$wrapper.addClass(a._getClass("animate"));
 }, 50);
-}, a.prototype._init = function() {
-var a, b;
-return a = function(a) {
-return function() {
-return a._width(), a._containerPosition(null, function() {
-if (a.options.animate) return a.$wrapper.addClass("" + a.options.baseClass + "-animate");
-});
 };
-}(this), this.$wrapper.is(":visible") ? a() :b = c.setInterval(function(d) {
-return function() {
-if (d.$wrapper.is(":visible")) return a(), c.clearInterval(b);
-};
-}(this), 50);
-}, a.prototype._elementHandlers = function() {
+if (this.$wrapper.is(":visible")) return void c();
+var d = b.setInterval(function() {
+if (a.$wrapper.is(":visible")) return c(), b.clearInterval(d);
+}, 50);
+}
+}, {
+key:"_elementHandlers",
+value:function() {
+var b = this;
 return this.$element.on({
-"change.bootstrapSwitch":function(a) {
-return function(c, d) {
-var e;
-if (c.preventDefault(), c.stopImmediatePropagation(), e = a.$element.is(":checked"), a._containerPosition(e), e !== a.options.state) return a.options.state = e, a.$wrapper.toggleClass("" + a.options.baseClass + "-off").toggleClass("" + a.options.baseClass + "-on"), d ? void 0 :(a.$element.is(":radio") && b("[name='" + a.$element.attr("name") + "']").not(a.$element).prop("checked", !1).trigger("change.bootstrapSwitch", !0), a.$element.trigger("switchChange.bootstrapSwitch", [ e ]));
-};
-}(this),
+"setPreviousOptions.bootstrapSwitch":this.setPrevOptions.bind(this),
+"previousState.bootstrapSwitch":function() {
+b.options = b.prevOptions, b.options.indeterminate && b.$wrapper.addClass(b._getClass("indeterminate")), b.$element.prop("checked", b.options.state).trigger("change.bootstrapSwitch", !0);
+},
+"change.bootstrapSwitch":function(c, d) {
+c.preventDefault(), c.stopImmediatePropagation();
+var e = b.$element.is(":checked");
+b._containerPosition(e), e !== b.options.state && (b.options.state = e, b.$wrapper.toggleClass(b._getClass("off")).toggleClass(b._getClass("on")), d || (b.$element.is(":radio") && a('[name="' + b.$element.attr("name") + '"]').not(b.$element).prop("checked", !1).trigger("change.bootstrapSwitch", !0), b.$element.trigger("switchChange.bootstrapSwitch", [ e ])));
+},
 "focus.bootstrapSwitch":function(a) {
-return function(b) {
-return b.preventDefault(), a.$wrapper.addClass("" + a.options.baseClass + "-focused");
-};
-}(this),
+a.preventDefault(), b.$wrapper.addClass(b._getClass("focused"));
+},
 "blur.bootstrapSwitch":function(a) {
-return function(b) {
-return b.preventDefault(), a.$wrapper.removeClass("" + a.options.baseClass + "-focused");
-};
-}(this),
+a.preventDefault(), b.$wrapper.removeClass(b._getClass("focused"));
+},
 "keydown.bootstrapSwitch":function(a) {
-return function(b) {
-if (b.which && !a.options.disabled && !a.options.readonly) switch (b.which) {
-case 37:
-return b.preventDefault(), b.stopImmediatePropagation(), a.state(!1);
-
-case 39:
-return b.preventDefault(), b.stopImmediatePropagation(), a.state(!0);
+!a.which || b.options.disabled || b.options.readonly || 37 !== a.which && 39 !== a.which || (a.preventDefault(), a.stopImmediatePropagation(), b.state(39 === a.which));
+}
+});
+}
+}, {
+key:"_handleHandlers",
+value:function() {
+var a = this;
+return this.$on.on("click.bootstrapSwitch", function(b) {
+return b.preventDefault(), b.stopPropagation(), a.state(!1), a.$element.trigger("focus.bootstrapSwitch");
+}), this.$off.on("click.bootstrapSwitch", function(b) {
+return b.preventDefault(), b.stopPropagation(), a.state(!0), a.$element.trigger("focus.bootstrapSwitch");
+});
+}
+}, {
+key:"_labelHandlers",
+value:function() {
+var a = this, b = {
+click:function(a) {
+a.stopPropagation();
+},
+"mousedown.bootstrapSwitch touchstart.bootstrapSwitch":function(b) {
+a._dragStart || a.options.disabled || a.options.readonly || (b.preventDefault(), b.stopPropagation(), a._dragStart = (b.pageX || b.originalEvent.touches[0].pageX) - parseInt(a.$container.css("margin-left"), 10), a.options.animate && a.$wrapper.removeClass(a._getClass("animate")), a.$element.trigger("focus.bootstrapSwitch"));
+},
+"mousemove.bootstrapSwitch touchmove.bootstrapSwitch":function(b) {
+if (null != a._dragStart) {
+var c = (b.pageX || b.originalEvent.touches[0].pageX) - a._dragStart;
+b.preventDefault(), c < -a._handleWidth || c > 0 || (a._dragEnd = c, a.$container.css("margin-left", a._dragEnd + "px"));
+}
+},
+"mouseup.bootstrapSwitch touchend.bootstrapSwitch":function(b) {
+if (a._dragStart) {
+if (b.preventDefault(), a.options.animate && a.$wrapper.addClass(a._getClass("animate")), a._dragEnd) {
+var c = a._dragEnd > -(a._handleWidth / 2);
+a._dragEnd = !1, a.state(a.options.inverse ? !c :c);
+} else a.state(!a.options.state);
+a._dragStart = !1;
+}
+},
+"mouseleave.bootstrapSwitch":function() {
+a.$label.trigger("mouseup.bootstrapSwitch");
 }
 };
-}(this)
+this.$label.on(b);
+}
+}, {
+key:"_externalLabelHandler",
+value:function() {
+var a = this, b = this.$element.closest("label");
+b.on("click", function(c) {
+c.preventDefault(), c.stopImmediatePropagation(), c.target === b[0] && a.toggleState();
 });
-}, a.prototype._handleHandlers = function() {
-return this.$on.on("click.bootstrapSwitch", function(a) {
-return function(b) {
-return b.preventDefault(), b.stopPropagation(), a.state(!1), a.$element.trigger("focus.bootstrapSwitch");
-};
-}(this)), this.$off.on("click.bootstrapSwitch", function(a) {
-return function(b) {
-return b.preventDefault(), b.stopPropagation(), a.state(!0), a.$element.trigger("focus.bootstrapSwitch");
-};
-}(this));
-}, a.prototype._labelHandlers = function() {
-return this.$label.on({
-"mousedown.bootstrapSwitch touchstart.bootstrapSwitch":function(a) {
-return function(b) {
-if (!(a._dragStart || a.options.disabled || a.options.readonly)) return b.preventDefault(), b.stopPropagation(), a._dragStart = (b.pageX || b.originalEvent.touches[0].pageX) - parseInt(a.$container.css("margin-left"), 10), a.options.animate && a.$wrapper.removeClass("" + a.options.baseClass + "-animate"), a.$element.trigger("focus.bootstrapSwitch");
-};
-}(this),
-"mousemove.bootstrapSwitch touchmove.bootstrapSwitch":function(a) {
-return function(b) {
-var c;
-if (null != a._dragStart && (b.preventDefault(), c = (b.pageX || b.originalEvent.touches[0].pageX) - a._dragStart, !(c < -a._handleWidth || c > 0))) return a._dragEnd = c, a.$container.css("margin-left", "" + a._dragEnd + "px");
-};
-}(this),
-"mouseup.bootstrapSwitch touchend.bootstrapSwitch":function(a) {
-return function(b) {
-var c;
-if (a._dragStart) return b.preventDefault(), a.options.animate && a.$wrapper.addClass("" + a.options.baseClass + "-animate"), a._dragEnd ? (c = a._dragEnd > -(a._handleWidth / 2), a._dragEnd = !1, a.state(a.options.inverse ? !c :c)) :a.state(!a.options.state), a._dragStart = !1;
-};
-}(this),
-"mouseleave.bootstrapSwitch":function(a) {
-return function(b) {
-return a.$label.trigger("mouseup.bootstrapSwitch");
-};
-}(this)
-});
-}, a.prototype._externalLabelHandler = function() {
-var a;
-return a = this.$element.closest("label"), a.on("click", function(b) {
-return function(c) {
-if (c.preventDefault(), c.stopImmediatePropagation(), c.target === a[0]) return b.toggleState();
-};
-}(this));
-}, a.prototype._formHandler = function() {
-var a;
-if (a = this.$element.closest("form"), !a.data("bootstrap-switch")) return a.on("reset.bootstrapSwitch", function() {
-return c.setTimeout(function() {
-return a.find("input").filter(function() {
-return b(this).data("bootstrap-switch");
+}
+}, {
+key:"_formHandler",
+value:function() {
+var c = this.$element.closest("form");
+c.data("bootstrap-switch") || c.on("reset.bootstrapSwitch", function() {
+b.setTimeout(function() {
+c.find("input").filter(function() {
+return a(this).data("bootstrap-switch");
 }).each(function() {
-return b(this).bootstrapSwitch("state", this.checked);
+return a(this).bootstrapSwitch("state", this.checked);
 });
 }, 1);
 }).data("bootstrap-switch", !0);
-}, a.prototype._getClasses = function(a) {
-var c, d, e, f;
-if (!b.isArray(a)) return [ "" + this.options.baseClass + "-" + a ];
-for (d = [], e = 0, f = a.length; e < f; e++) c = a[e], d.push("" + this.options.baseClass + "-" + c);
-return d;
-}, a;
-}(), b.fn.bootstrapSwitch = function() {
-var c, e, f;
-return e = arguments[0], c = 2 <= arguments.length ? a.call(arguments, 1) :[], f = this, this.each(function() {
-var a, g;
-if (a = b(this), g = a.data("bootstrap-switch"), g || a.data("bootstrap-switch", g = new d(this, e)), "string" == typeof e) return f = g[e].apply(g, c);
-}), f;
-}, b.fn.bootstrapSwitch.Constructor = d, b.fn.bootstrapSwitch.defaults = {
+}
+}, {
+key:"_getClass",
+value:function(a) {
+return this.options.baseClass + "-" + a;
+}
+}, {
+key:"_getClasses",
+value:function(b) {
+return a.isArray(b) ? b.map(this._getClass.bind(this)) :[ this._getClass(b) ];
+}
+} ]), c;
+}();
+a.fn.bootstrapSwitch = function(b) {
+for (var d = arguments.length, e = Array(d > 1 ? d - 1 :0), f = 1; f < d; f++) e[f - 1] = arguments[f];
+var g = this;
+return this.each(function() {
+var d = a(this), f = d.data("bootstrap-switch");
+f || (f = new c(this, b), d.data("bootstrap-switch", f)), "string" == typeof b && (g = f[b].apply(f, e));
+}), g;
+}, a.fn.bootstrapSwitch.Constructor = c, a.fn.bootstrapSwitch.defaults = {
 state:!0,
 size:null,
 animate:!0,
@@ -19069,7 +19180,7 @@ onColor:"primary",
 offColor:"default",
 onText:"ON",
 offText:"OFF",
-labelText:"&nbsp;",
+labelText:"&nbsp",
 handleWidth:"auto",
 labelWidth:"auto",
 baseClass:"bootstrap-switch",
@@ -19077,8 +19188,7 @@ wrapperClass:"wrapper",
 onInit:function() {},
 onSwitchChange:function() {}
 };
-}(window.jQuery, window);
-}.call(this), function(a) {
+}(window.jQuery, window), function(a) {
 "use strict";
 function b(a, b) {
 return a + ".touchspin_" + b;
