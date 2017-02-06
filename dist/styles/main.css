@@ -5271,13 +5271,13 @@ a.subtle-link:active,a.subtle-link:focus,a.subtle-link:hover{color:#00659c;borde
 .membership .content-pane .col-heading h3,.membership .content-pane .item-row h3{margin:0}
 .membership .content-pane .item-row{padding:5px 10px 5px 5px;margin-bottom:20px}
 .membership .content-pane .col-heading{margin-bottom:20px}
-.membership .content-pane .col-name{word-break:break-all;word-break:break-word;overflow-wrap:break-word;min-width:225px;max-width:30%;padding:0 5px 10px 0}
+.membership .content-pane .col-name{word-break:break-all;word-break:break-word;overflow-wrap:break-word;width:100%;padding:0 0px 10px 0}
 .membership .content-pane .col-name.half-width{min-width:50%}
 .membership .content-pane .col-name input{max-width:150px}
 .membership .content-pane .col-name .new-project{margin-top:2px}
 .membership .content-pane .content-serviceaccount .form-new-role .col-roles{display:block}
 .membership .content-pane .input-name{width:150px;margin-bottom:5px}
-.membership .content-pane .select-project,.membership .content-pane .select-role{width:150px}
+.membership .content-pane .select-project{width:150px}
 .membership .content-pane .select-role small{color:#999}
 .membership .content-pane .select-role .active small{color:#c0e0f0}
 .membership .content-pane .col-add-role,.membership .content-pane .col-heading,.membership .content-pane .col-name,.membership .content-pane .col-roles,.membership .content-pane .item-row,.membership .content-pane [flex-collapse-fix],.membership .content-pane [flex]{flex-shrink:0;flex-basis:auto}
@@ -5286,8 +5286,9 @@ a.subtle-link:active,a.subtle-link:focus,a.subtle-link:hover{color:#00659c;borde
 .membership .content-pane .col-heading,.membership .content-pane .item-row{border-bottom:none;margin-bottom:none}
 .membership .content-pane .item-row.highlight-hover:hover{background-color:#fafafa}
 .membership .content-pane .col-heading .col-add-role a{display:block;padding-left:10px}
-.membership .content-pane .col-name{width:30%}
+.membership .content-pane .col-name{min-width:225px;max-width:30%;padding:0 5px 10px 0}
 .membership .content-pane .col-name input{max-width:175px}
+.membership .content-pane .select-role{width:150px}
 }
 .action-chip{margin:0 5px 2px 0;font-size:12px;display:flex;flex-direction:row}
 .action-chip .item{padding:.2em .6em .3em}

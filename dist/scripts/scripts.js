@@ -5343,6 +5343,16 @@ details:e
 }, v = function() {
 d.disableAddForm = !1, d.newBinding.name = "", d.newBinding.namespace = o, d.newBinding.newRole = null;
 }, w = function(a) {
+i.list("serviceaccounts", a).then(function(a) {
+var b = _.keys(a.by("metadata.name")).sort();
+angular.extend(d, {
+serviceAccounts:b,
+refreshServiceAccounts:function(a) {
+a && !_.includes(d.serviceAccounts, a) ? d.serviceAccounts = [ a ].concat(b) :d.serviceAccounts = b;
+}
+});
+});
+}, x = function(a) {
 i.list("rolebindings", n, null, {
 errorNotification:!1
 }).then(function(a) {
@@ -5354,9 +5364,9 @@ subjectKindsForUI:k.mapRolebindingsForUI(a.by("metadata.name"), s)
 }, function() {
 a && (d.roleBindings[a.metadata.name] = a, d.subjectKindsForUI = k.mapRolebindingsForUI(d.roleBindings, s)), v();
 });
-}, x = function(b, c) {
+}, y = function(b, c) {
 d.disableAddForm = !0, l.create(b, c, o, n).then(function() {
-w(), u("rolebindingCreate", "success", t.update.subject.success({
+x(), u("rolebindingCreate", "success", t.update.subject.success({
 roleName:b.metadata.name,
 subjectName:c.name
 }));
@@ -5368,9 +5378,9 @@ subjectName:c.name
 httpErr:a("getErrorDetails")(d)
 }));
 });
-}, y = function(b, c, e) {
+}, z = function(b, c, e) {
 d.disableAddForm = !0, l.addSubject(b, c, e, n).then(function() {
-w(), u("rolebindingUpdate", "success", t.update.subject.success({
+x(), u("rolebindingUpdate", "success", t.update.subject.success({
 roleName:b.roleRef.name,
 subjectName:c.name
 }));
@@ -5382,16 +5392,16 @@ subjectName:c.name
 httpErr:a("getErrorDetails")(d)
 }));
 });
-}, z = {};
-c.tab && (z[c.tab] = !0);
-var A = k.getSubjectKinds();
+}, A = {};
+c.tab && (A[c.tab] = !0);
+var B = k.getSubjectKinds();
 angular.extend(d, {
-selectedTab:z,
+selectedTab:A,
 projectName:o,
 alerts:{},
 forms:{},
 emptyMessage:"Loading...",
-subjectKinds:A,
+subjectKinds:B,
 newBinding:{
 role:"",
 kind:c.tab || "User",
@@ -5404,7 +5414,7 @@ mode:{
 edit:!1
 },
 selectTab:function(a) {
-d.newBinding.kind = a;
+d.newBinding.kind = a, d.newBinding.name = "";
 }
 }), angular.extend(d, {
 excludeExistingRoles:function(a) {
@@ -5424,7 +5434,7 @@ return a ? e + (q(a, "description") || b) :b;
 }
 }
 });
-var B = function(a, b, c, e) {
+var C = function(a, b, c, e) {
 var f = {
 alerts:{},
 detailsMarkup:t.remove.areYouSure.html.subject({
@@ -5446,22 +5456,25 @@ roleName:c
 g.withUser().then(function(a) {
 d.user = a;
 }), i.list("projects", {}).then(function(a) {
-var b = _.map(a.by("metadata.name"), function(a) {
-return a.metadata.name;
-});
+var b = _.keys(a.by("metadata.name")).sort();
 angular.extend(d, {
 projects:b,
+selectProject:function(a) {
+d.newBinding.name = "", w({
+namespace:a
+});
+},
 refreshProjects:function(a) {
 a && !_.includes(d.projects, a) ? d.projects = [ a ].concat(b) :d.projects = b;
 }
 });
 }), j.get(c.project).then(_.spread(function(c, e) {
-n = e, w(), angular.extend(d, {
+n = e, x(), w(n), angular.extend(d, {
 project:c,
-subjectKinds:A,
+subjectKinds:B,
 canUpdateRolebindings:r("rolebindings", "update", o),
 confirmRemove:function(c, e, g) {
-var i = null, j = B(c, e, g, d.user.metadata.name);
+var i = null, j = C(c, e, g, d.user.metadata.name);
 _.isEqual(c, d.user.metadata.name) && k.isLastRole(d.user.metadata.name, d.roleBindings) && (i = !0), f.open({
 animation:!0,
 templateUrl:"views/modals/confirm.html",
@@ -5474,7 +5487,7 @@ return j;
 }).result.then(function() {
 l.removeSubject(c, g, d.roleBindings, n).then(function(a) {
 i ? b.url("./") :(h.getProjectRules(o, !0).then(function() {
-w(a[0]);
+x(a[0]);
 var b = r("rolebindings", "update", o);
 angular.extend(d, {
 canUpdateRolebindings:b,
@@ -5511,7 +5524,7 @@ name:a
 }) ? u("rolebindingUpdate", "info", t.update.subject.exists({
 roleName:c.metadata.name,
 subjectName:a
-})) :g ? y(g, f, e) :x(c, f, e);
+})) :g ? z(g, f, e) :y(c, f, e);
 }
 }), m.listAllRoles(n, {
 errorNotification:!1
@@ -5524,7 +5537,7 @@ name:a
 }
 });
 };
-w(), angular.extend(d, {
+x(), angular.extend(d, {
 toggle:{
 roles:!1
 },
