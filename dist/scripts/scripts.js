@@ -4648,7 +4648,7 @@ var b = a.spec.scaleRef.name, c = a.spec.scaleRef.kind;
 b && c && (_.has(C, [ c, b ]) || _.set(C, [ c, b ], []), C[c][b].push(a));
 });
 }, $ = function(a) {
-return "Succeeded" !== a.status.phase && "Terminated" !== a.status.phase && (!G(a, "openshift.io/deployer-pod-for.name") && (!F(a, "openshift.io/build.name") && "slave" !== G(a, "jenkins")));
+return "Succeeded" !== a.status.phase && "Failed" !== a.status.phase && (!G(a, "openshift.io/deployer-pod-for.name") && (!F(a, "openshift.io/build.name") && "slave" !== G(a, "jenkins")));
 }, aa = function() {
 if (y && u && w && x) {
 var a = _.toArray(u).concat(_.toArray(w)).concat(_.toArray(x));
@@ -7954,7 +7954,7 @@ details:a("getErrorDetails")(b)
 } ]), angular.module("openshiftConsole").controller("EditYAMLController", [ "$scope", "$filter", "$location", "$routeParams", "$window", "AlertMessageService", "APIService", "AuthorizationService", "BreadcrumbsService", "DataService", "Navigate", "ProjectsService", function(a, b, c, d, e, f, g, h, i, j, k, l) {
 if (!d.kind || !d.name) return void k.toErrorPage("Kind or name parameter missing.");
 var m = b("humanizeKind");
-a.name = d.name, a.resourceURL = k.resourceURL(a.name, d.kind, d.project), a.breadcrumbs = [ {
+a.alerts = {}, a.name = d.name, a.resourceURL = k.resourceURL(a.name, d.kind, d.project), a.breadcrumbs = [ {
 title:d.project,
 link:"project/" + d.project
 }, {
@@ -8005,14 +8005,19 @@ return k ? k.group !== i.group ? void (a.error = {
 message:"Cannot change resource group (original: " + (i.group || "<none>") + ", modified: " + (k.group || "<none>") + ")."
 }) :g.apiInfo(k) ? (a.updatingNow = !0, void j.update(k, a.resource.metadata.name, c, {
 namespace:a.resource.metadata.namespace
-}).then(function() {
-f.addAlert({
+}).then(function(b) {
+var e = _.get(c, "metadata.resourceVersion"), g = _.get(b, "metadata.resourceVersion");
+return g === e ? (a.alerts["no-changes-applied"] = {
+type:"warning",
+message:"No changes were applied to " + m(d.kind) + " " + d.name + ".",
+details:"Make sure any new fields you may have added are supported API fields."
+}, void (a.updatingNow = !1)) :(f.addAlert({
 name:"edit-yaml",
 data:{
 type:"success",
 message:m(d.kind, !0) + " " + d.name + " was successfully updated."
 }
-}), n();
+}), void n());
 }, function(c) {
 a.updatingNow = !1, a.error = {
 message:b("getErrorDetails")(c)
@@ -12283,7 +12288,7 @@ msg:"@"
 },
 templateUrl:"views/directives/_ellipsis-pulser.html"
 };
-} ]), angular.module("openshiftConsole").directive("podDonut", [ "$timeout", "hashSizeFilter", "isPullingImageFilter", "isTerminatingFilter", "podWarningsFilter", "numContainersReadyFilter", "Logger", "ChartsService", function(a, b, c, d, e, f, g, h) {
+} ]), angular.module("openshiftConsole").directive("podDonut", [ "$timeout", "isPullingImageFilter", "isTerminatingFilter", "podWarningsFilter", "numContainersReadyFilter", "Logger", "ChartsService", function(a, b, c, d, e, f, g) {
 return {
 restrict:"E",
 scope:{
@@ -12292,39 +12297,43 @@ desired:"=?",
 idled:"=?"
 },
 templateUrl:"views/directives/pod-donut.html",
-link:function(a, g) {
-function i() {
-var c, d = b(a.pods);
-c = angular.isNumber(a.desired) && a.desired !== d ? "scaling to " + a.desired + "..." :1 === d ? "pod" :"pods", a.idled ? h.updateDonutCenterText(g[0], "Idle") :h.updateDonutCenterText(g[0], d, c);
+link:function(a, f) {
+function h() {
+var b, c = _.reject(a.pods, {
+status:{
+phase:"Failed"
 }
-function j(c) {
-var d = {
+}), d = _.size(c);
+b = angular.isNumber(a.desired) && a.desired !== d ? "scaling to " + a.desired + "..." :1 === d ? "pod" :"pods", a.idled ? g.updateDonutCenterText(f[0], "Idle") :g.updateDonutCenterText(f[0], d, b);
+}
+function i(b) {
+var c = {
 columns:[]
 };
-angular.forEach(p, function(a) {
-d.columns.push([ a, c[a] || 0 ]);
-}), 0 === b(c) ? d.columns.push([ "Empty", 1 ]) :d.unload = "Empty", n ? n.load(d) :(o.data.columns = d.columns, n = c3.generate(o)), a.podStatusData = d.columns;
+angular.forEach(o, function(a) {
+c.columns.push([ a, b[a] || 0 ]);
+}), _.isEmpty(b) ? c.columns.push([ "Empty", 1 ]) :c.unload = "Empty", m ? m.load(c) :(n.data.columns = c.columns, m = c3.generate(n)), a.podStatusData = c.columns;
 }
-function k(a) {
-var b = f(a), c = a.spec.containers.length;
+function j(a) {
+var b = e(a), c = a.spec.containers.length;
 return b === c;
 }
-function l(a) {
-if (d(a)) return "Terminating";
-var b = e(a);
-return _.some(b, {
+function k(a) {
+if (c(a)) return "Terminating";
+var e = d(a);
+return _.some(e, {
 severity:"error"
-}) ? "Failed" :_.isEmpty(b) ? c(a) ? "Pulling" :"Running" !== a.status.phase || k(a) ? _.get(a, "status.phase", "Unknown") :"Not Ready" :"Warning";
+}) ? "Error" :_.isEmpty(e) ? b(a) ? "Pulling" :"Running" !== a.status.phase || j(a) ? _.get(a, "status.phase", "Unknown") :"Not Ready" :"Warning";
 }
-function m() {
+function l() {
 var b = {};
 return angular.forEach(a.pods, function(a) {
-var c = l(a);
+var c = k(a);
 b[c] = (b[c] || 0) + 1;
 }), b;
 }
-var n, o, p = [ "Running", "Not Ready", "Warning", "Failed", "Pulling", "Pending", "Succeeded", "Terminating", "Unknown" ];
-a.chartId = _.uniqueId("pods-donut-chart-"), o = {
+var m, n, o = [ "Running", "Not Ready", "Warning", "Error", "Pulling", "Pending", "Succeeded", "Terminating", "Unknown" ];
+a.chartId = _.uniqueId("pods-donut-chart-"), n = {
 type:"donut",
 bindto:"#" + a.chartId,
 donut:{
@@ -12341,11 +12350,11 @@ width:150
 legend:{
 show:!1
 },
-onrendered:i,
+onrendered:h,
 tooltip:{
 format:{
 value:function(a, b, c) {
-if (a) return "Empty" === c ? "No pods exist" :a;
+if (a && "Empty" !== c) return a;
 }
 }
 },
@@ -12354,14 +12363,14 @@ duration:350
 },
 data:{
 type:"donut",
-groups:[ p ],
+groups:[ o ],
 order:null,
 colors:{
 Empty:"#ffffff",
 Running:"#00b9e4",
 "Not Ready":"#beedf9",
 Warning:"#f39d3c",
-Failed:"#d9534f",
+Error:"#d9534f",
 Pulling:"#d1d1d1",
 Pending:"#ededed",
 Succeeded:"#3f9c35",
@@ -12373,11 +12382,11 @@ enabled:!1
 }
 }
 };
-var q = _.debounce(j, 350, {
+var p = _.debounce(i, 350, {
 maxWait:500
 });
-a.$watch(m, q, !0), a.$watchGroup([ "desired", "idled" ], i), a.$on("destroy", function() {
-n && (n = n.destroy());
+a.$watch(l, p, !0), a.$watchGroup([ "desired", "idled" ], h), a.$on("destroy", function() {
+m && (m = m.destroy());
 });
 }
 };

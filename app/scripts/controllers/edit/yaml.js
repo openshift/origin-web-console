@@ -26,6 +26,7 @@ angular.module('openshiftConsole')
     }
 
     var humanizeKind = $filter('humanizeKind');
+    $scope.alerts = {};
     $scope.name = $routeParams.name;
     $scope.resourceURL = Navigate.resourceURL($scope.name, $routeParams.kind, $routeParams.project);
     $scope.breadcrumbs = [{
@@ -146,7 +147,19 @@ angular.module('openshiftConsole')
                 namespace: $scope.resource.metadata.namespace
               }).then(
                 // success
-                function() {
+                function(response) {
+                  var editedResourceVersion = _.get(updatedResource, 'metadata.resourceVersion');
+                  var newResourceVersion = _.get(response, 'metadata.resourceVersion');
+                  if (newResourceVersion === editedResourceVersion) {
+                    $scope.alerts['no-changes-applied'] = {
+                      type: "warning",
+                      message: "No changes were applied to " + humanizeKind($routeParams.kind) + " " + $routeParams.name + ".",
+                      details: "Make sure any new fields you may have added are supported API fields."
+                    };
+                    $scope.updatingNow = false;
+                    return;
+                  }
+
                   AlertMessageService.addAlert({
                     name: 'edit-yaml',
                     data: {

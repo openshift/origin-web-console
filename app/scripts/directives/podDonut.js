@@ -2,7 +2,6 @@
 
 angular.module('openshiftConsole')
   .directive('podDonut', function($timeout,
-                                  hashSizeFilter,
                                   isPullingImageFilter,
                                   isTerminatingFilter,
                                   podWarningsFilter,
@@ -24,13 +23,15 @@ angular.module('openshiftConsole')
         var chart, config;
 
         // The phases to show (in order).
-        var phases = ["Running", "Not Ready", "Warning", "Failed", "Pulling", "Pending", "Succeeded", "Terminating", "Unknown"];
+        var phases = ["Running", "Not Ready", "Warning", "Error", "Pulling", "Pending", "Succeeded", "Terminating", "Unknown"];
 
         $scope.chartId = _.uniqueId('pods-donut-chart-');
 
         function updateCenterText() {
-          var total = hashSizeFilter($scope.pods);
           var smallText;
+          // Don't show failed pods like evicted pods in the donut.
+          var pods = _.reject($scope.pods, { status: { phase: 'Failed' } });
+          var total = _.size(pods);
           if (!angular.isNumber($scope.desired) || $scope.desired === total) {
             smallText = (total === 1) ? "pod" : "pods";
           } else {
@@ -75,7 +76,7 @@ angular.module('openshiftConsole')
 
                 // Disable the tooltip for empty donuts.
                 if (id === "Empty") {
-                  return "No pods exist";
+                  return undefined;
                 }
 
                 // Show the count rather than a percentage.
@@ -98,7 +99,7 @@ angular.module('openshiftConsole')
               "Not Ready": "#beedf9",
               // Use a shade of orange that looks good with overview alerts for warning pods.
               Warning: "#f39d3c",
-              Failed: "#d9534f",
+              Error: "#d9534f",
               Pulling: "#d1d1d1",
               Pending: "#ededed",
               Succeeded: "#3f9c35",
@@ -119,7 +120,7 @@ angular.module('openshiftConsole')
             data.columns.push([phase, countByPhase[phase] || 0]);
           });
 
-          if (hashSizeFilter(countByPhase) === 0) {
+          if (_.isEmpty(countByPhase)) {
             // Add a dummy group to draw an arc, which we style in CSS.
             data.columns.push(["Empty", 1]);
           } else {
@@ -152,7 +153,7 @@ angular.module('openshiftConsole')
 
           var warnings = podWarningsFilter(pod);
           if (_.some(warnings, { severity: 'error' })) {
-            return 'Failed';
+            return 'Error';
           } else if (!_.isEmpty(warnings)) {
             return 'Warning';
           }
