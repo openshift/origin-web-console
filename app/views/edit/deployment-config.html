@@ -115,7 +115,8 @@
                             </div>
 
                             <div ng-if="strategyData.type === 'Rolling'">
-                              <div ng-if="view.advancedStrategyOptions">
+                              <!-- Use ng-show instead of ng-if so the form is still marked invalid if a hidden field has errors. -->
+                              <div ng-show="view.advancedStrategyOptions">
                                 <div class="form-group">
                                   <label for="updatePeriod">Update Period</label>
                                   <span class="input-group"
@@ -228,7 +229,8 @@
                               </div>
                             </div>
 
-                            <div ng-if="view.advancedStrategyOptions">
+                            <!-- Use ng-show instead of ng-if so the form is still marked invalid if a hidden field has errors. -->
+                            <div ng-show="view.advancedStrategyOptions">
                               <div class="lifecycle-hooks">
                                 <div class="lifecycle-hook" id="pre-lifecycle-hook">
 
@@ -318,7 +320,8 @@
                             </label>
                           </div>
 
-                          <div ng-if="view.advancedImageOptions">
+                          <!-- Use ng-show instead of ng-if so the form is still marked invalid if a hidden field has errors. -->
+                          <div ng-show="view.advancedImageOptions">
                             <div class="mar-top-lg">
                               <osc-secrets model="secrets.pullSecrets"
                                           namespace="projectName"

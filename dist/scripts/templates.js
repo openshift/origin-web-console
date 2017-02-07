@@ -5163,7 +5163,8 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "</div>\n" +
     "</div>\n" +
     "</div>\n" +
-    "<div class=\"col-md-4\" ng-if=\"advancedOptions || advancedSourceOptions\">\n" +
+    "\n" +
+    "<div class=\"col-md-4\" ng-show=\"advancedOptions || advancedSourceOptions\">\n" +
     "<div class=\"form-group\">\n" +
     "<label for=\"gitref\">Git Reference</label>\n" +
     "<div>\n" +
@@ -5173,14 +5174,16 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "</div>\n" +
     "</div>\n" +
     "</div>\n" +
-    "<div ng-if=\"advancedOptions || advancedSourceOptions\" class=\"form-group\">\n" +
+    "\n" +
+    "<div ng-show=\"advancedOptions || advancedSourceOptions\" class=\"form-group\">\n" +
     "<label for=\"contextdir\">Context Dir</label>\n" +
     "<div>\n" +
     "<input id=\"contextdir\" ng-model=\"buildConfig.contextDir\" type=\"text\" placeholder=\"/\" autocorrect=\"off\" autocapitalize=\"off\" spellcheck=\"false\" class=\"form-control\">\n" +
     "</div>\n" +
     "<div class=\"help-block\">Optional subdirectory for the application source code, used as the context directory for the build.</div>\n" +
     "</div>\n" +
-    "<div ng-if=\"advancedOptions\">\n" +
+    "\n" +
+    "<div ng-show=\"advancedOptions\">\n" +
     "<div class=\"form-group\">\n" +
     "<osc-secrets model=\"buildConfig.secrets.gitSecret\" namespace=\"projectName\" display-type=\"source\" type=\"source\" service-account-to-link=\"builder\" secrets-by-type=\"secretsByType\" alerts=\"alerts\" allow-multiple-secrets=\"false\">\n" +
     "</osc-secrets>\n" +
@@ -9252,9 +9255,12 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "</div>\n" +
     "</div>\n" +
     "</div>\n" +
-    "<div class=\"form-group\" ng-if=\"view.advancedOptions && strategyType !== 'JenkinsPipeline'\">\n" +
+    "<div class=\"form-group\" ng-if=\"strategyType !== 'JenkinsPipeline'\">\n" +
+    "\n" +
+    "<div ng-show=\"view.advancedOptions\">\n" +
     "<osc-secrets model=\"secrets.picked.pullSecret\" namespace=\"projectName\" display-type=\"pull\" type=\"image\" secrets-by-type=\"secrets.secretsByType\" service-account-to-link=\"builder\" alerts=\"alerts\">\n" +
     "</osc-secrets>\n" +
+    "</div>\n" +
     "</div>\n" +
     "<div class=\"form-group\" ng-if=\"view.advancedOptions\">\n" +
     "<div class=\"checkbox\">\n" +
@@ -9283,7 +9289,8 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "<input class=\"form-control\" id=\"pushToLink\" name=\"pushToLink\" type=\"text\" ng-model=\"imageOptions.to.dockerImage\" placeholder=\"example: centos/ruby-20-centos7:latest\" autocorrect=\"off\" autocapitalize=\"off\" spellcheck=\"false\" required>\n" +
     "</div>\n" +
     "</div>\n" +
-    "<div class=\"form-group\" ng-if=\"view.advancedOptions\">\n" +
+    "\n" +
+    "<div class=\"form-group\" ng-show=\"view.advancedOptions\">\n" +
     "<osc-secrets model=\"secrets.picked.pushSecret\" namespace=\"projectName\" display-type=\"push\" type=\"image\" disable-input=\"imageOptions.to.type==='None'\" service-account-to-link=\"builder\" secrets-by-type=\"secrets.secretsByType\" alerts=\"alerts\">\n" +
     "</osc-secrets>\n" +
     "</div>\n" +
@@ -9301,7 +9308,8 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "</div>\n" +
     "</div>\n" +
     "<div ng-if=\"sources.git || !(updatedBuildConfig | isJenkinsPipelineStrategy)\" class=\"section\">\n" +
-    "<div ng-if=\"view.advancedOptions\">\n" +
+    "\n" +
+    "<div ng-show=\"view.advancedOptions\">\n" +
     "<h3 class=\"with-divider\">Triggers\n" +
     "<a ng-href=\"{{'build-triggers' | helpLink}}\" target=\"_blank\"><span class=\"learn-more-inline\">Learn More&nbsp;<i class=\"fa fa-external-link\" aria-hidden=\"true\"></i></span></a>\n" +
     "</h3>\n" +
@@ -9334,7 +9342,9 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "</dl>\n" +
     "</div>\n" +
     "</div>\n" +
-    "<div class=\"section\" ng-if=\"!(updatedBuildConfig | isJenkinsPipelineStrategy) && view.advancedOptions\">\n" +
+    "<div class=\"section\" ng-if=\"!(updatedBuildConfig | isJenkinsPipelineStrategy)\">\n" +
+    "\n" +
+    "<div ng-show=\"view.advancedOptions\">\n" +
     "<h3 class=\"with-divider\">\n" +
     "Build Secrets\n" +
     "<a href=\"{{'source_secrets' | helpLink}}\" target=\"_blank\"><span class=\"learn-more-inline\">Learn More&nbsp;<i class=\"fa fa-external-link\" aria-hidden=\"true\"></i></span></a>\n" +
@@ -9342,6 +9352,7 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "<div class=\"form-group\">\n" +
     "<osc-source-secrets model=\"secrets.picked.sourceSecrets\" namespace=\"projectName\" secrets-by-type=\"secrets.secretsByType\" strategy-type=\"strategyType\" service-account-to-link=\"builder\" alerts=\"alerts\" display-type=\"source\" type=\"source\">\n" +
     "</osc-source-secrets>\n" +
+    "</div>\n" +
     "</div>\n" +
     "</div>\n" +
     "<div class=\"section mar-bottom-lg\" ng-if=\"view.advancedOptions\">\n" +
@@ -9368,7 +9379,9 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "<div class=\"help-block\" ng-switch-default>Builds triggered from this Build Configuration will run using the {{updatedBuildConfig.spec.runPolicy | sentenceCase}} policy.</div>\n" +
     "</div>\n" +
     "</div>\n" +
-    "<div ng-if=\"view.advancedOptions && !(updatedBuildConfig | isJenkinsPipelineStrategy)\" class=\"section\">\n" +
+    "<div ng-if=\"!(updatedBuildConfig | isJenkinsPipelineStrategy)\" class=\"section\">\n" +
+    "\n" +
+    "<div ng-show=\"view.advancedOptions\">\n" +
     "<h3 class=\"with-divider\">\n" +
     "Post-Commit Hooks\n" +
     "<span class=\"help action-inline\">\n" +
@@ -9377,16 +9390,16 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "</h3>\n" +
     "<div class=\"checkbox\">\n" +
     "<label>\n" +
-    "<input type=\"checkbox\" ng-model=\"view.hasHooks\" id=\"enable-build-hooks\">\n" +
+    "<input type=\"checkbox\" ng-model=\"view.hasHooks\" aria-describedby=\"build-hooks-help\">\n" +
     "Run build hooks after image is built\n" +
     "</label>\n" +
-    "<div class=\"help-block\">\n" +
+    "<div class=\"help-block\" id=\"build-hooks-help\">\n" +
     "Build hooks allow you to run commands at the end of the build to verify the image.\n" +
     "</div>\n" +
     "</div>\n" +
     "<div ng-if=\"view.hasHooks\">\n" +
     "<div class=\"form-group\">\n" +
-    "<h4>Hook Types</h4>\n" +
+    "<label>Hook Types</label>\n" +
     "<ui-select ng-model=\"buildHookSelection.type\" title=\"Choose a type of build hook\">\n" +
     "<ui-select-match>{{$select.selected.label}}</ui-select-match>\n" +
     "<ui-select-choices repeat=\"type in buildHookTypes\">\n" +
@@ -9396,28 +9409,29 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "</div>\n" +
     "<fieldset>\n" +
     "<div ng-if=\"buildHookSelection.type.id === 'script' || buildHookSelection.type.id === 'scriptArgs'\">\n" +
-    "<h4>Script</h4>\n" +
+    "<label class=\"required\">Script</label>\n" +
     "<div ui-ace=\"{\n" +
-    "                                mode: 'sh',\n" +
-    "                                theme: 'eclipse',\n" +
-    "                                rendererOptions: {\n" +
-    "                                  fadeFoldWidgets: true,\n" +
-    "                                  showPrintMargin: false\n" +
-    "                                }\n" +
-    "                              }\" ng-model=\"updatedBuildConfig.spec.postCommit.script\" required class=\"ace-bordered ace-inline mar-top-md\">\n" +
+    "                                  mode: 'sh',\n" +
+    "                                  theme: 'eclipse',\n" +
+    "                                  rendererOptions: {\n" +
+    "                                    fadeFoldWidgets: true,\n" +
+    "                                    showPrintMargin: false\n" +
+    "                                  }\n" +
+    "                                }\" ng-model=\"updatedBuildConfig.spec.postCommit.script\" required class=\"ace-bordered ace-inline\">\n" +
     "</div>\n" +
     "</div>\n" +
     "<div ng-if=\"buildHookSelection.type.id === 'command' || buildHookSelection.type.id === 'commandArgs'\">\n" +
-    "<h4>Command</h4>\n" +
+    "<label class=\"required\">Command</label>\n" +
     "<edit-command args=\"updatedBuildConfig.spec.postCommit.command\" placeholder=\"Add to command\" is-required=\"true\">\n" +
     "</edit-command>\n" +
     "</div>\n" +
-    "<div ng-if=\"buildHookSelection.type.id === 'args' || buildHookSelection.type.id === 'commandArgs' || buildHookSelection.type.id === 'scriptArgs' \">\n" +
-    "<h4>Arguments</h4>\n" +
+    "<div ng-if=\"buildHookSelection.type.id === 'args' || buildHookSelection.type.id === 'commandArgs' || buildHookSelection.type.id === 'scriptArgs' \" ng-class=\"{ 'mar-top-lg': buildHookSelection.type.id === 'scriptArgs' }\">\n" +
+    "<label class=\"required\">Arguments</label>\n" +
     "<edit-command args=\"updatedBuildConfig.spec.postCommit.args\" type=\"arguments\" description=\"getArgumentsDescription()\" is-required=\"true\">\n" +
     "</edit-command>\n" +
     "</div>\n" +
     "</fieldset>\n" +
+    "</div>\n" +
     "</div>\n" +
     "</div>\n" +
     "<div class=\"gutter-top\">\n" +
@@ -9591,7 +9605,8 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "</div>\n" +
     "</div>\n" +
     "<div ng-if=\"strategyData.type === 'Rolling'\">\n" +
-    "<div ng-if=\"view.advancedStrategyOptions\">\n" +
+    "\n" +
+    "<div ng-show=\"view.advancedStrategyOptions\">\n" +
     "<div class=\"form-group\">\n" +
     "<label for=\"updatePeriod\">Update Period</label>\n" +
     "<span class=\"input-group\" ng-class=\"{ 'has-error': form.updatePeriod.$invalid && form.updatePeriod.$touched }\">\n" +
@@ -9664,7 +9679,8 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "</div>\n" +
     "</div>\n" +
     "</div>\n" +
-    "<div ng-if=\"view.advancedStrategyOptions\">\n" +
+    "\n" +
+    "<div ng-show=\"view.advancedStrategyOptions\">\n" +
     "<div class=\"lifecycle-hooks\">\n" +
     "<div class=\"lifecycle-hook\" id=\"pre-lifecycle-hook\">\n" +
     "<h3>Pre Lifecycle Hook</h3>\n" +
@@ -9724,7 +9740,8 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "Automatically start a new deployment when the deployment configuration changes\n" +
     "</label>\n" +
     "</div>\n" +
-    "<div ng-if=\"view.advancedImageOptions\">\n" +
+    "\n" +
+    "<div ng-show=\"view.advancedImageOptions\">\n" +
     "<div class=\"mar-top-lg\">\n" +
     "<osc-secrets model=\"secrets.pullSecrets\" namespace=\"projectName\" display-type=\"pull\" type=\"image\" secrets-by-type=\"secretsByType\" service-account-to-link=\"default\" alerts=\"alerts\" allow-multiple-secrets=\"true\">\n" +
     "</osc-secrets>\n" +
