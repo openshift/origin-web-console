@@ -109,7 +109,8 @@
                               </div>
                             </div>
 
-                            <div class="col-md-4" ng-if="advancedOptions || advancedSourceOptions">
+                            <!-- Use ng-show instead of ng-if so the form is still marked invalid if a hidden field has errors. -->
+                            <div class="col-md-4" ng-show="advancedOptions || advancedSourceOptions">
                               <div class="form-group">
                                 <label for="gitref">Git Reference</label>
                                 <div>
@@ -128,7 +129,8 @@
                             </div>
                           </div>
 
-                          <div ng-if="advancedOptions || advancedSourceOptions" class="form-group">
+                          <!-- Use ng-show instead of ng-if so the form is still marked invalid if a hidden field has errors. -->
+                          <div ng-show="advancedOptions || advancedSourceOptions" class="form-group">
                             <label for="contextdir">Context Dir</label>
                             <div>
                               <input
@@ -144,7 +146,8 @@
                             <div class="help-block">Optional subdirectory for the application source code, used as the context directory for the build.</div>
                           </div>
 
-                          <div ng-if="advancedOptions">
+                          <!-- Use ng-show instead of ng-if so the form is still marked invalid if a hidden field has errors. -->
+                          <div ng-show="advancedOptions">
                             <div class="form-group">
                               <osc-secrets model="buildConfig.secrets.gitSecret"
                                           namespace="projectName"

@@ -347,15 +347,18 @@
                           </div>
                         </div>
 
-                        <div class="form-group" ng-if="view.advancedOptions && strategyType !== 'JenkinsPipeline'">
-                          <osc-secrets model="secrets.picked.pullSecret"
-                                      namespace="projectName"
-                                      display-type="pull"
-                                      type="image"
-                                      secrets-by-type="secrets.secretsByType"
-                                      service-account-to-link="builder"
-                                      alerts="alerts">
-                          </osc-secrets>
+                        <div class="form-group" ng-if="strategyType !== 'JenkinsPipeline'">
+                          <!-- Use ng-show instead of ng-if so the form is still marked invalid if a hidden field has errors. -->
+                          <div ng-show="view.advancedOptions">
+                            <osc-secrets model="secrets.picked.pullSecret"
+                                        namespace="projectName"
+                                        display-type="pull"
+                                        type="image"
+                                        secrets-by-type="secrets.secretsByType"
+                                        service-account-to-link="builder"
+                                        alerts="alerts">
+                            </osc-secrets>
+                          </div>
                         </div>
 
                         <div class="form-group" ng-if="view.advancedOptions">
@@ -398,7 +401,8 @@
                             </div>
                           </div>
 
-                          <div class="form-group" ng-if="view.advancedOptions">
+                          <!-- Use ng-show instead of ng-if so the form is still marked invalid if a hidden field has errors. -->
+                          <div class="form-group" ng-show="view.advancedOptions">
                             <osc-secrets model="secrets.picked.pushSecret"
                                         namespace="projectName"
                                         display-type="push"
@@ -430,7 +434,8 @@
                       </div>
                     </div>
                     <div ng-if="sources.git || !(updatedBuildConfig | isJenkinsPipelineStrategy)" class="section">
-                      <div ng-if="view.advancedOptions">
+                      <!-- Use ng-show instead of ng-if so the form is still marked invalid if a hidden field has errors. -->
+                      <div ng-show="view.advancedOptions">
                         <h3 class="with-divider">Triggers
                           <a ng-href="{{'build-triggers' | helpLink}}" target="_blank"><span class="learn-more-inline">Learn More&nbsp;<i class="fa fa-external-link" aria-hidden="true"></i></span></a>
                         </h3>
@@ -485,23 +490,25 @@
                         </dl>
                       </div>
                     </div>
-                    <div class="section" ng-if="!(updatedBuildConfig | isJenkinsPipelineStrategy) && view.advancedOptions">
-                      <h3 class="with-divider">
-                        Build Secrets
-                        <a href="{{'source_secrets' | helpLink}}" target="_blank"><span class="learn-more-inline">Learn More&nbsp;<i class="fa fa-external-link" aria-hidden="true"></i></span></a>
-                      </h3>
-                      <div class="form-group">
-                        <osc-source-secrets model="secrets.picked.sourceSecrets"
-                                    namespace="projectName"
-                                    secrets-by-type="secrets.secretsByType"
-                                    strategy-type="strategyType"
-                                    service-account-to-link="builder"
-                                    alerts="alerts"
-                                    display-type="source"
-                                    type="source">
-                        </osc-source-secrets>
+                    <div class="section" ng-if="!(updatedBuildConfig | isJenkinsPipelineStrategy)">
+                      <!-- Use ng-show instead of ng-if so the form is still marked invalid if a hidden field has errors. -->
+                      <div ng-show="view.advancedOptions">
+                        <h3 class="with-divider">
+                          Build Secrets
+                          <a href="{{'source_secrets' | helpLink}}" target="_blank"><span class="learn-more-inline">Learn More&nbsp;<i class="fa fa-external-link" aria-hidden="true"></i></span></a>
+                        </h3>
+                        <div class="form-group">
+                          <osc-source-secrets model="secrets.picked.sourceSecrets"
+                                      namespace="projectName"
+                                      secrets-by-type="secrets.secretsByType"
+                                      strategy-type="strategyType"
+                                      service-account-to-link="builder"
+                                      alerts="alerts"
+                                      display-type="source"
+                                      type="source">
+                          </osc-source-secrets>
+                        </div>
                       </div>
-
                     </div>
                     <div class="section mar-bottom-lg" ng-if="view.advancedOptions">
                       <h3 class="with-divider">Run Policy
@@ -529,74 +536,78 @@
                       </div>
                     </div>
 
-                    <div ng-if="view.advancedOptions && !(updatedBuildConfig | isJenkinsPipelineStrategy)" class="section">
-                      <h3 class="with-divider">
-                        Post-Commit Hooks
-                        <span class="help action-inline">
-                          <a href="{{'build-hooks' | helpLink}}" aria-hidden="true" target="_blank"><span class="learn-more-inline">Learn More&nbsp;<i class="fa fa-external-link"></i></span></a>
-                        </span>
-                      </h3>
+                    <div ng-if="!(updatedBuildConfig | isJenkinsPipelineStrategy)" class="section">
+                      <!-- Use ng-show instead of ng-if so the form is still marked invalid if a hidden field has errors. -->
+                      <div ng-show="view.advancedOptions">
+                        <h3 class="with-divider">
+                          Post-Commit Hooks
+                          <span class="help action-inline">
+                            <a href="{{'build-hooks' | helpLink}}" aria-hidden="true" target="_blank"><span class="learn-more-inline">Learn More&nbsp;<i class="fa fa-external-link"></i></span></a>
+                          </span>
+                        </h3>
 
-                      <div class="checkbox">
-                        <label>
-                          <input type="checkbox" ng-model="view.hasHooks" id="enable-build-hooks">
-                          Run build hooks after image is built
-                        </label>
-                        <div class="help-block">
-                          Build hooks allow you to run commands at the end of the build to verify the image.
-                        </div>
-                      </div>
-
-                      <div ng-if="view.hasHooks">
-                        <div class="form-group">
-                          <h4>Hook Types</h4>
-                          <ui-select
-                             ng-model="buildHookSelection.type"
-                             title="Choose a type of build hook">
-                            <ui-select-match>{{$select.selected.label}}</ui-select-match>
-                            <ui-select-choices repeat="type in buildHookTypes">
-                              {{type.label}}
-                            </ui-select-choices>
-                          </ui-select>
+                        <div class="checkbox">
+                          <label>
+                            <input type="checkbox" ng-model="view.hasHooks" aria-describedby="build-hooks-help">
+                            Run build hooks after image is built
+                          </label>
+                          <div class="help-block" id="build-hooks-help">
+                            Build hooks allow you to run commands at the end of the build to verify the image.
+                          </div>
                         </div>
 
-                        <fieldset>
-                          <div ng-if="buildHookSelection.type.id === 'script' || buildHookSelection.type.id === 'scriptArgs'">
-                            <h4>Script</h4>
-                            <div
-                              ui-ace="{
-                                mode: 'sh',
-                                theme: 'eclipse',
-                                rendererOptions: {
-                                  fadeFoldWidgets: true,
-                                  showPrintMargin: false
-                                }
-                              }"
-                              ng-model="updatedBuildConfig.spec.postCommit.script"
-                              required
-                              class="ace-bordered ace-inline mar-top-md">
+                        <div ng-if="view.hasHooks">
+                          <div class="form-group">
+                            <label>Hook Types</label>
+                            <ui-select
+                               ng-model="buildHookSelection.type"
+                               title="Choose a type of build hook">
+                              <ui-select-match>{{$select.selected.label}}</ui-select-match>
+                              <ui-select-choices repeat="type in buildHookTypes">
+                                {{type.label}}
+                              </ui-select-choices>
+                            </ui-select>
+                          </div>
+
+                          <fieldset>
+                            <div ng-if="buildHookSelection.type.id === 'script' || buildHookSelection.type.id === 'scriptArgs'">
+                              <label class="required">Script</label>
+                              <div
+                                ui-ace="{
+                                  mode: 'sh',
+                                  theme: 'eclipse',
+                                  rendererOptions: {
+                                    fadeFoldWidgets: true,
+                                    showPrintMargin: false
+                                  }
+                                }"
+                                ng-model="updatedBuildConfig.spec.postCommit.script"
+                                required
+                                class="ace-bordered ace-inline">
+                              </div>
                             </div>
-                          </div>
 
-                          <div ng-if="buildHookSelection.type.id === 'command' || buildHookSelection.type.id === 'commandArgs'">
-                            <h4>Command</h4>
-                            <edit-command
-                              args="updatedBuildConfig.spec.postCommit.command"
-                              placeholder="Add to command"
-                              is-required="true">
-                            </edit-command>
-                          </div>
+                            <div ng-if="buildHookSelection.type.id === 'command' || buildHookSelection.type.id === 'commandArgs'">
+                              <label class="required">Command</label>
+                              <edit-command
+                                args="updatedBuildConfig.spec.postCommit.command"
+                                placeholder="Add to command"
+                                is-required="true">
+                              </edit-command>
+                            </div>
 
-                          <div ng-if="buildHookSelection.type.id === 'args' || buildHookSelection.type.id === 'commandArgs' || buildHookSelection.type.id === 'scriptArgs' ">
-                            <h4>Arguments</h4>
-                            <edit-command
-                              args="updatedBuildConfig.spec.postCommit.args"
-                              type="arguments"
-                              description="getArgumentsDescription()"
-                              is-required="true">
-                            </edit-command>
-                          </div>
-                        </fieldset>
+                            <div ng-if="buildHookSelection.type.id === 'args' || buildHookSelection.type.id === 'commandArgs' || buildHookSelection.type.id === 'scriptArgs' "
+                                 ng-class="{ 'mar-top-lg': buildHookSelection.type.id === 'scriptArgs' }">
+                              <label class="required">Arguments</label>
+                              <edit-command
+                                args="updatedBuildConfig.spec.postCommit.args"
+                                type="arguments"
+                                description="getArgumentsDescription()"
+                                is-required="true">
+                              </edit-command>
+                            </div>
+                          </fieldset>
+                        </div>
                       </div>
                     </div>
 
