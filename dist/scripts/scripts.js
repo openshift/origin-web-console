@@ -5519,9 +5519,7 @@ roleRef:{
 name:c.metadata.name
 }
 });
-g && _.some(g.subjects, {
-name:a
-}) ? u("rolebindingUpdate", "info", t.update.subject.exists({
+g && _.some(g.subjects, f) ? u("rolebindingUpdate", "info", t.update.subject.exists({
 roleName:c.metadata.name,
 subjectName:a
 })) :g ? z(g, f, e) :y(c, f, e);
