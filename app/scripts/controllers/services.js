@@ -42,25 +42,6 @@ angular.module('openshiftConsole')
           Logger.log("services (subscribe)", $scope.unfilteredServices);
         }));
 
-        watches.push(DataService.watch("routes", context, function(routes){
-            $scope.routes = routes.by("metadata.name");
-            $scope.emptyMessageRoutes = "No routes to show";
-            $scope.routesByService = routesByService($scope.routes);
-            Logger.log("routes (subscribe)", $scope.routesByService);
-        }));
-
-        function routesByService(routes) {
-            var routeMap = {};
-            angular.forEach(routes, function(route, routeName){
-              var to = route.spec.to;
-              if (to.kind === "Service") {
-                routeMap[to.name] = routeMap[to.name] || {};
-                routeMap[to.name][routeName] = route;
-              }
-            });
-            return routeMap;
-        }
-
         function updateFilterWarning() {
           if (!LabelFilter.getLabelSelector().isEmpty() && $.isEmptyObject($scope.services)  && !$.isEmptyObject($scope.unfilteredServices)) {
             $scope.alerts["services"] = {

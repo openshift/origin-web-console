@@ -6670,26 +6670,17 @@ b.alerts[a.name] = a.data;
 }), c.clearAlerts();
 var i = [];
 e.get(a.project).then(_.spread(function(a, c) {
-function e(a) {
-var b = {};
-return angular.forEach(a, function(a, c) {
-var d = a.spec.to;
-"Service" === d.kind && (b[d.name] = b[d.name] || {}, b[d.name][c] = a);
-}), b;
-}
-function f() {
+function e() {
 g.getLabelSelector().isEmpty() || !$.isEmptyObject(b.services) || $.isEmptyObject(b.unfilteredServices) ? delete b.alerts.services :b.alerts.services = {
 type:"warning",
 details:"The active filters are hiding all services."
 };
 }
 b.project = a, i.push(d.watch("services", c, function(a) {
-b.unfilteredServices = a.by("metadata.name"), g.addLabelSuggestionsFromResources(b.unfilteredServices, b.labelSuggestions), g.setLabelSuggestions(b.labelSuggestions), b.services = g.getLabelSelector().select(b.unfilteredServices), b.emptyMessage = "No services to show", f(), h.log("services (subscribe)", b.unfilteredServices);
-})), i.push(d.watch("routes", c, function(a) {
-b.routes = a.by("metadata.name"), b.emptyMessageRoutes = "No routes to show", b.routesByService = e(b.routes), h.log("routes (subscribe)", b.routesByService);
+b.unfilteredServices = a.by("metadata.name"), g.addLabelSuggestionsFromResources(b.unfilteredServices, b.labelSuggestions), g.setLabelSuggestions(b.labelSuggestions), b.services = g.getLabelSelector().select(b.unfilteredServices), b.emptyMessage = "No services to show", e(), h.log("services (subscribe)", b.unfilteredServices);
 })), g.onActiveFiltersChanged(function(a) {
 b.$apply(function() {
-b.services = a.select(b.unfilteredServices), f();
+b.services = a.select(b.unfilteredServices), e();
 });
 }), b.$on("$destroy", function() {
 d.unwatchAll(i);
