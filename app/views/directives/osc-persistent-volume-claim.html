@@ -89,25 +89,19 @@
     </div>
 
     <div class="form-group" >
-      <label class="required">Access Mode</label>
-      <div class="radio">
-
-        <label class="radio-inline">
-            <input type="radio" name="accessModes" ng-model="claim.accessModes" value="ReadWriteOnce" aria-describedby="access-modes-help" ng-checked="true" >
-            Single User (RWO)
-        </label>
-
-        <label class="radio-inline">
-          <input type="radio" id="accessModes" name="accessModes" ng-model="claim.accessModes" value="ReadWriteMany" aria-describedby="access-modes-help" >
-            Shared Access (RWX)
-        </label>
-
-        <label class="radio-inline">
-            <input type="radio" name="accessModes" ng-model="claim.accessModes" value="ReadOnlyMany" aria-describedby="access-modes-help">
-            Read Only (ROX)
-        </label>
-
-      </div>
+      <label class="required">Access Mode</label><br/>
+      <label class="radio-inline">
+        <input type="radio" name="accessModes" ng-model="claim.accessModes" value="ReadWriteOnce" aria-describedby="access-modes-help" ng-checked="true" >
+        Single User (RWO)
+      </label>
+      <label class="radio-inline">
+        <input type="radio" id="accessModes" name="accessModes" ng-model="claim.accessModes" value="ReadWriteMany" aria-describedby="access-modes-help" >
+        Shared Access (RWX)
+      </label>
+      <label class="radio-inline">
+        <input type="radio" name="accessModes" ng-model="claim.accessModes" value="ReadOnlyMany" aria-describedby="access-modes-help">
+        Read Only (ROX)
+      </label>
       <div>
         <span id="access-modes-help" class="help-block">Permissions to the mounted volume.</span>
       </div>

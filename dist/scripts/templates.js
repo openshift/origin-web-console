@@ -6858,7 +6858,6 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "<fieldset ng-disabled=\"view.isDisabled\">\n" +
     "<div class=\"form-group\">\n" +
     "<label for=\"actionType\" class=\"required\">Lifecycle Action</label><br/>\n" +
-    "<div class=\"radio\">\n" +
     "<label class=\"radio-inline\">\n" +
     "<input type=\"radio\" name=\"{{type}}-action-newpod\" ng-model=\"action.type\" value=\"execNewPod\" aria-describedby=\"action-help\">\n" +
     "Run a specific command in a new pod\n" +
@@ -6867,7 +6866,6 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "<input type=\"radio\" name=\"{{type}}-action-images\" ng-model=\"action.type\" value=\"tagImages\" aria-describedby=\"action-help\">\n" +
     "Tag image if the deployment succeeds\n" +
     "</label>\n" +
-    "</div>\n" +
     "<div id=\"action-help\" class=\"help-block\">\n" +
     "<span ng-if=\"action.type === 'execNewPod'\">Runs a command in a new pod using the container from the deployment template. You can add additional environment variables and volumes.</span>\n" +
     "<span ng-if=\"action.type === 'tagImages'\">Tags the current image as an image stream tag if the deployment succeeds.</span>\n" +
@@ -7995,8 +7993,7 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "</div>\n" +
     "</div>\n" +
     "<div class=\"form-group\">\n" +
-    "<label class=\"required\">Access Mode</label>\n" +
-    "<div class=\"radio\">\n" +
+    "<label class=\"required\">Access Mode</label><br/>\n" +
     "<label class=\"radio-inline\">\n" +
     "<input type=\"radio\" name=\"accessModes\" ng-model=\"claim.accessModes\" value=\"ReadWriteOnce\" aria-describedby=\"access-modes-help\" ng-checked=\"true\">\n" +
     "Single User (RWO)\n" +
@@ -8009,7 +8006,6 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "<input type=\"radio\" name=\"accessModes\" ng-model=\"claim.accessModes\" value=\"ReadOnlyMany\" aria-describedby=\"access-modes-help\">\n" +
     "Read Only (ROX)\n" +
     "</label>\n" +
-    "</div>\n" +
     "<div>\n" +
     "<span id=\"access-modes-help\" class=\"help-block\">Permissions to the mounted volume.</span>\n" +
     "</div>\n" +

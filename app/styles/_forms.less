@@ -86,3 +86,12 @@
   // the sections just above.
   margin-top: @line-height-computed;
 }
+
+// Switch default bootstrap margin from left to the right side to enable left alignment of inputs at mobile
+.radio-inline,
+.radio-inline + .radio-inline,
+.checkbox-inline,
+.checkbox-inline + .checkbox-inline {
+  margin-left: 0;
+  margin-right: 10px;
+}
