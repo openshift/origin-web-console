@@ -10874,7 +10874,7 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "</div>\n" +
     "</div>\n" +
     "<div ng-repeat-end ng-if=\"expanded.pods[pod.metadata.name]\" class=\"list-group-expanded-section\" ng-class=\"{'expanded': expanded.pods[pod.metadata.name]}\">\n" +
-    "<log-viewer ng-if=\"'pods/log' | canI : 'get'\" object=\"pod\" context=\"projectContext\" options=\"logOptions.pods[pod.metadata.name]\" empty=\"logEmpty.pods[pod.metadata.name]\" run=\"logCanRun.pods[pod.metadata.name]\" fixed-height=\"250\" full-log-url=\"(pod | navigateResourceURL) + '?view=chromeless'\">\n" +
+    "<log-viewer ng-if=\"'pods/log' | canI : 'get'\" object=\"pod\" context=\"projectContext\" options=\"logOptions.pods[pod.metadata.name]\" empty=\"logEmpty.pods[pod.metadata.name]\" run=\"logCanRun.pods[pod.metadata.name]\" fixed-height=\"250\" full-log-url=\"(pod | navigateResourceURL) + '?view=chromeless'\" ng-class=\"{'log-viewer-select': pod.spec.containers.length > 1}\">\n" +
     "<span class=\"container-details\">\n" +
     "<label for=\"selectLogContainer\">Container:</label>\n" +
     "<span ng-if=\"pod.spec.containers.length === 1\">\n" +

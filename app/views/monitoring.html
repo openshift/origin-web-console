@@ -116,7 +116,8 @@
                         empty="logEmpty.pods[pod.metadata.name]"
                         run="logCanRun.pods[pod.metadata.name]"
                         fixed-height="250"
-                        full-log-url="(pod | navigateResourceURL) + '?view=chromeless'">
+                        full-log-url="(pod | navigateResourceURL) + '?view=chromeless'"
+                        ng-class="{'log-viewer-select': pod.spec.containers.length > 1}">
 
                         <span class="container-details">
                           <label for="selectLogContainer">Container:</label>
