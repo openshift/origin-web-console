@@ -8,14 +8,12 @@
  * Controller of the openshiftConsole
  */
 angular.module('openshiftConsole')
-  .controller('BuildsController', function ($routeParams, $scope, AlertMessageService, DataService, $filter, LabelFilter, Logger, $location, BuildsService, ProjectsService) {
+  .controller('BuildsController', function ($routeParams, $scope, AlertMessageService, DataService, $filter, LabelFilter, Logger, $location, BuildsService, ProjectsService, Scopes) {
+    angular.extend($scope, Scopes.getControllerDefaults());
     $scope.projectName = $routeParams.project;
     $scope.builds = {};
     $scope.unfilteredBuildConfigs = {};
     $scope.buildConfigs = undefined;
-    $scope.labelSuggestions = {};
-    $scope.alerts = $scope.alerts || {};
-    $scope.emptyMessage = "Loading...";
     $scope.latestByConfig = {};
 
     // get and clear any alerts

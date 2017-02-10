@@ -8,12 +8,10 @@
  * Controller of the openshiftConsole
  */
 angular.module('openshiftConsole')
-  .controller('EventsController', function ($routeParams, $scope, ProjectsService) {
+  .controller('EventsController', function ($routeParams, $scope, ProjectsService, Scopes) {
+    angular.extend($scope, Scopes.getControllerDefaults());
     $scope.projectName = $routeParams.project;
-    $scope.renderOptions = {
-      hideFilterWidget: true
-    };
-
+    $scope.renderOptions.hideFilterWidget = true;
     $scope.breadcrumbs = [
       {
         title: "Monitoring",

@@ -18,14 +18,12 @@ angular.module('openshiftConsole')
                                                  LabelFilter,
                                                  ModalsService,
                                                  ProjectsService,
-                                                 keyValueEditorUtils) {
+                                                 keyValueEditorUtils,
+                                                 Scopes) {
+    angular.extend($scope, Scopes.getControllerDefaults());
     $scope.projectName = $routeParams.project;
     $scope.buildConfigName = $routeParams.buildconfig;
     $scope.buildConfig = null;
-    $scope.labelSuggestions = {};
-    $scope.alerts = {};
-    $scope.breadcrumbs = [];
-    $scope.forms = {};
     $scope.expand = {imageEnv: false};
 
     if ($routeParams.isPipeline) {
@@ -43,7 +41,6 @@ angular.module('openshiftConsole')
       title: $routeParams.buildconfig
     });
 
-    $scope.emptyMessage = "Loading...";
 
     AlertMessageService.getAlerts().forEach(function(alert) {
       $scope.alerts[alert.name] = alert.data;
