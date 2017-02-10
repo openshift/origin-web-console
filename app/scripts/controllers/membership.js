@@ -337,7 +337,7 @@ angular
               // infer this, but isn't clear at the moment.  Will fast-follow PR if
               // a good solution is found.
               var rolebindingToUpdate = _.find($scope.roleBindings, {roleRef: {name: role.metadata.name}});
-              if(rolebindingToUpdate && _.some(rolebindingToUpdate.subjects, {name: subjectName})) {
+              if(rolebindingToUpdate && _.some(rolebindingToUpdate.subjects, subject)) {
                 showAlert('rolebindingUpdate', 'info', messages.update.subject.exists({
                   roleName: role.metadata.name,
                   subjectName: subjectName
