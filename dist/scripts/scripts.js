@@ -4123,35 +4123,48 @@ _.each(e, function(d) {
 h(d, c) && (b[d.id] = b[d.id] || [], b[d.id].push(a), f = !0);
 }), f || (b[""] = b[""] || [], b[""].push(a));
 }), b;
-}, k = a("displayName"), l = function(a, b) {
+}, k = function(a) {
+return a.from && "ImageStreamTag" === a.from.kind && a.from.name.indexOf(":") === -1 && !a.from.namespace;
+}, l = a("displayName"), m = function(a, b) {
 if (!b.length) return a;
 var c = [];
 return _.each(a, function(a) {
-var d = _.get(a, "metadata.name", ""), e = k(a, !0), f = _.indexBy(a.spec.tags, "name");
-_.each(b, function(b) {
-b.test(d) || e && b.test(e) || _.each(a.spec.tags, function(a) {
-var c = _.get(a, "annotations.tags", "");
-if (!/\bbuilder\b/.test(c) || /\bhidden\b/.test(c)) return void delete f[a.name];
-if (!b.test(a.name)) {
-var d = _.get(a, "annotations.description");
-d && b.test(d) || delete f[a.name];
+var d = _.get(a, "metadata.name", ""), e = l(a, !0), f = [], g = {}, h = {};
+_.each(a.spec.tags, function(a) {
+return k(a) ? (g[a.name] = a.from.name, h[a.from.name] = h[a.from.name] || [], void h[a.from.name].push(a.name)) :void f.push(a);
+});
+var i = _.indexBy(f, "name");
+_.each(b, function(a) {
+a.test(d) || e && a.test(e) || _.each(f, function(b) {
+var c = _.get(b, "annotations.tags", "");
+if (!/\bbuilder\b/.test(c) || /\bhidden\b/.test(c)) return void delete i[b.name];
+if (!a.test(b.name)) {
+var d = function(b) {
+return a.test(b);
+};
+if (!_.some(h[b.name], d)) {
+var e = _.get(b, "annotations.description");
+e && a.test(e) || delete i[b.name];
+}
 }
 });
 });
-var g;
-_.isEmpty(f) || (g = angular.copy(a), g.status.tags = _.filter(g.status.tags, function(a) {
-return f[a.tag];
-}), c.push(g));
+var j;
+_.isEmpty(i) || (j = angular.copy(a), j.status.tags = _.filter(j.status.tags, function(a) {
+var b = g[a.tag];
+return b ? i[b] :i[a.tag];
+}), c.push(j));
 }), c;
-}, m = [ "metadata.name", 'metadata.annotations["openshift.io/display-name"]', "metadata.annotations.description" ], n = function(a, b) {
-return c.filterForKeywords(a, m, b);
+}, n = [ "metadata.name", 'metadata.annotations["openshift.io/display-name"]', "metadata.annotations.description" ], o = function(a, b) {
+return c.filterForKeywords(a, n, b);
 };
 return {
 getCategoryItem:f,
 categorizeImageStreams:i,
 categorizeTemplates:j,
-filterImageStreams:l,
-filterTemplates:n
+referencesSameImageStream:k,
+filterImageStreams:m,
+filterTemplates:o
 };
 } ]), angular.module("openshiftConsole").factory("ModalsService", [ "$uibModal", function(a) {
 return {
@@ -11489,7 +11502,7 @@ keyword:""
 }, b.$watch("filter.keyword", e), b.$watchGroup([ "openshiftImageStreams", "projectImageStreams" ], g), b.$watchGroup([ "openshiftTemplates", "projectTemplates" ], i);
 }
 };
-} ]), angular.module("openshiftConsole").directive("catalogImage", [ "$filter", function(a) {
+} ]), angular.module("openshiftConsole").directive("catalogImage", [ "$filter", "CatalogService", function(a, b) {
 return {
 restrict:"E",
 replace:!0,
@@ -11501,25 +11514,25 @@ isBuilder:"=?",
 keywords:"="
 },
 templateUrl:"views/catalog/_image.html",
-link:function(b) {
-var c = a("imageStreamTagTags"), d = {};
-b.referencedBy = {};
-var e = _.get(b, "imageStream.spec.tags", []), f = {};
-_.each(e, function(a) {
-f[a.name] = c(b.imageStream, a.name), a.from && "ImageStreamTag" === a.from.kind && a.from.name.indexOf(":") === -1 && !a.from.namespace && (d[a.name] = !0, b.referencedBy[a.from.name] = b.referencedBy[a.from.name] || [], b.referencedBy[a.from.name].push(a.name));
+link:function(c) {
+var d = a("imageStreamTagTags"), e = {};
+c.referencedBy = {};
+var f = _.get(c, "imageStream.spec.tags", []), g = {};
+_.each(f, function(a) {
+g[a.name] = d(c.imageStream, a.name), b.referencesSameImageStream(a) && (e[a.name] = !0, c.referencedBy[a.from.name] = c.referencedBy[a.from.name] || [], c.referencedBy[a.from.name].push(a.name));
 });
-var g = function(a) {
-var b = _.get(f, [ a ], []);
+var h = function(a) {
+var b = _.get(g, [ a ], []);
 return _.includes(b, "builder") && !_.includes(b, "hidden");
 };
-b.$watch("imageStream.status.tags", function(a) {
-b.tags = _.filter(a, function(a) {
-return g(a.tag) && !d[a.tag];
+c.$watch("imageStream.status.tags", function(a) {
+c.tags = _.filter(a, function(a) {
+return h(a.tag) && !e[a.tag];
 });
-var c = _.get(b, "is.tag.tag");
-c && _.some(b.tags, {
-tag:c
-}) || _.set(b, "is.tag", _.head(b.tags));
+var b = _.get(c, "is.tag.tag");
+b && _.some(c.tags, {
+tag:b
+}) || _.set(c, "is.tag", _.head(c.tags));
 });
 }
 };

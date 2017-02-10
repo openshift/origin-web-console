@@ -1,7 +1,7 @@
 'use strict';
 
 angular.module('openshiftConsole')
-  .directive('catalogImage', function($filter) {
+  .directive('catalogImage', function($filter, CatalogService) {
     return {
       restrict: 'E',
       // Replace the catalog-template element so that the tiles are all equal height as flexbox items.
@@ -23,10 +23,7 @@ angular.module('openshiftConsole')
         var tagTags = {};
         _.each(specTags, function(tag) {
           tagTags[tag.name] = imageStreamTagTags($scope.imageStream, tag.name);
-          if (tag.from &&
-              tag.from.kind === 'ImageStreamTag' &&
-              tag.from.name.indexOf(':') === -1 &&
-             !tag.from.namespace) {
+          if (CatalogService.referencesSameImageStream(tag)) {
             referenceTags[tag.name] = true;
             $scope.referencedBy[tag.from.name] = $scope.referencedBy[tag.from.name] || [];
             $scope.referencedBy[tag.from.name].push(tag.name);
