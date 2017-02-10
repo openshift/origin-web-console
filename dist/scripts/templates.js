@@ -3169,8 +3169,8 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "<tbody ng-if=\"(tagsByName | hashSize) == 0\">\n" +
     "<tr><td colspan=\"5\"><em>{{emptyMessage}}</em></td></tr>\n" +
     "</tbody>\n" +
-    "<tbody ng-if=\"(tagsByName | hashSize) > 0\">\n" +
-    "<tr ng-repeat=\"tag in tagsByName | orderBy : 'name'\">\n" +
+    "<tbody ng-repeat=\"tag in tagsByName | orderBy : 'name'\">\n" +
+    "<tr>\n" +
     "<td data-title=\"Tag\">\n" +
     "<a ng-if=\"tag.status\" ng-href=\"{{imageStream | navigateResourceURL}}/{{tag.name}}\">{{tag.name}}</a>\n" +
     "<span ng-if=\"!tag.status\">{{tag.name}}</span>\n" +
