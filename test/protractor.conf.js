@@ -84,15 +84,15 @@ exports.config = {
   exclude: ['integration/e2e.js'], // We are temporarily excluding the e2e tests while we transition to the split merge queue
 
   // Alternatively, suites may be used. When run without a command line
-  // parameter, all suites will run. If run with --suite=smoke or
-  // --suite=smoke,full only the patterns matched by the specified suites will
-  // run.
+  // parameter, all suites will run. If run with --suite=create-project or
+  // --suite=create-projct,add-template-to-project, only the patterns matched by
+  // the specified suites will run.
   suites: {
-    // smoke: 'spec/smoketests/*.js',
-    'add-to-project': 'integration/features/user_adds_template_to_project.spec.js',
-    'create-project': 'integration/features/user_creates_project.spec.js' // This suite of tests should only require a running master api, it should not require a node
-    //'create-from-url': 'integration/create-from-url/*.js',
-    //e2e: 'integration/e2e.js'
+    'create-project': 'integration/features/user_creates_project.spec.js', // This suite of tests should only require a running master api, it should not require a node
+    'add-template-to-project': 'integration/features/user_adds_template_to_project.spec.js',
+    'add-imagestream-to-project': 'integration/features/user_adds_imagestream_to_project.spec.js',
+    'create-from-url': 'integration/features/user_creates_from_url.spec.js',
+    // e2e: 'integration/e2e.js'
   },
 
   // ---------------------------------------------------------------------------
