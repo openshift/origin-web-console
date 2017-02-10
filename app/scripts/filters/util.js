@@ -69,6 +69,7 @@ angular.module('openshiftConsole')
           multiplier = Math.pow(1000, 2);
           break;
         case 'K':
+        case 'k':
           multiplier = 1000;
           break;
         case 'm':
