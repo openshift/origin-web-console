@@ -14747,6 +14747,7 @@ e = Math.pow(1e3, 2);
 break;
 
 case "K":
+case "k":
 e = 1e3;
 break;
 
