@@ -66,8 +66,8 @@
                 <tbody ng-if="(tagsByName | hashSize) == 0">
                   <tr><td colspan="5"><em>{{emptyMessage}}</em></td></tr>
                 </tbody>
-                <tbody ng-if="(tagsByName | hashSize) > 0">
-                  <tr ng-repeat="tag in tagsByName | orderBy : 'name'">
+                <tbody ng-repeat="tag in tagsByName | orderBy : 'name'">
+                  <tr>
                     <td data-title="Tag">
                       <a ng-if="tag.status" ng-href="{{imageStream | navigateResourceURL}}/{{tag.name}}">{{tag.name}}</a>
                       <span ng-if="!tag.status">{{tag.name}}</span>
