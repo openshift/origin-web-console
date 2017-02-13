@@ -12372,7 +12372,7 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "</div>\n" +
     "</div>\n" +
     "<div class=\"table-responsive\">\n" +
-    "<table class=\"table\">\n" +
+    "<table class=\"table table-bordered\">\n" +
     "<thead>\n" +
     "<th>Resource Type</th>\n" +
     "<th>Used (This Project)</th>\n" +
@@ -12455,7 +12455,7 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "</div>\n" +
     "</div>\n" +
     "<div class=\"table-responsive\">\n" +
-    "<table class=\"table\">\n" +
+    "<table class=\"table table-bordered\">\n" +
     "<thead>\n" +
     "<th>Resource Type</th>\n" +
     "<th>Used</th>\n" +
@@ -12501,7 +12501,7 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "<h2 ng-if=\"limitRanges.length\">{{limitRange.metadata.name}}</h2>\n" +
     "<div ng-if=\"$first\" class=\"help-block mar-bottom-md\">{{limitRangeHelp}}</div>\n" +
     "<div class=\"table-responsive\">\n" +
-    "<table class=\"table\">\n" +
+    "<table class=\"table table-bordered\">\n" +
     "<thead>\n" +
     "<th>Resource Type</th>\n" +
     "<th>\n" +
