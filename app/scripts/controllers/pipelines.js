@@ -119,8 +119,8 @@ angular.module('openshiftConsole')
             var sampleName = Constants.SAMPLE_PIPELINE_TEMPLATE.name;
             var sampleNamespace = Constants.SAMPLE_PIPELINE_TEMPLATE.namespace;
             DataService.get("templates", sampleName, {namespace: sampleNamespace}, {errorNotification: false}).then(
-              function() {
-                $scope.createSampleURL = Navigate.fromTemplateURL($scope.projectName, sampleName, sampleNamespace);
+              function(template) {
+                $scope.createSampleURL = Navigate.createFromTemplateURL(template, $scope.projectName);
               });
           }
           update();

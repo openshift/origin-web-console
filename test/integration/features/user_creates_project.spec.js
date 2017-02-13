@@ -1,8 +1,8 @@
 'use strict';
 /* jshint unused:false */
 
-require('jasmine-beforeall');
 var h = require('../helpers.js');
+var projectHelpers = require('../helpers/project.js');
 
 var goToAddToProjectPage = function(projectName) {
   var uri = 'project/' + projectName + '/create';
@@ -122,19 +122,11 @@ describe('', function() {
 
         it('should be able to show the create project page', goToCreateProjectPage);
 
-        var timestamp = (new Date()).getTime();
-        var project = {
-          name:        'console-test-project-' + timestamp,
-          displayName: 'Console integration test Project ' + timestamp,
-          description: 'Created by assets/test/integration/rest-api/project.js'
-        };
+        var project = projectHelpers.projectDetails();
 
         it('should successfully create a new project', function() {
           goToCreateProjectPage();
-          for (var key in project) {
-            h.setInputValue(key, project[key]);
-          }
-          h.clickAndGo('Create', 'project/' + project['name'] + '/create');
+          projectHelpers.createProject(project, 'project/' + project['name'] + '/create');
           h.waitForPresence('.breadcrumb li a', project['displayName']);
           checkProjectSettings(project['name'], project['displayName'], project['description']);
         });
@@ -184,14 +176,7 @@ describe('', function() {
         });
 
         it('should delete a project', function() {
-          h.goToPage('/');
-          var projectTile = element(by.cssContainingText(".project-info", project.displayName));
-          projectTile.element(by.css('.fa-trash-o')).click();
-          h.setInputValue('confirmName', project.name);
-          var deleteButton = element(by.cssContainingText(".modal-dialog .btn", "Delete"));
-          browser.wait(protractor.ExpectedConditions.elementToBeClickable(deleteButton), 2000);
-          deleteButton.click();
-          h.waitForPresence(".alert-success", "marked for deletion");
+          projectHelpers.deleteProject(project);
         });
 
   /*

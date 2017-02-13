@@ -5623,8 +5623,8 @@ h.get("templates", b, {
 namespace:f
 }, {
 errorNotification:!1
-}).then(function() {
-c.createSampleURL = e.fromTemplateURL(c.projectName, b, f);
+}).then(function(a) {
+c.createSampleURL = e.createFromTemplateURL(a, c.projectName);
 });
 }
 p();
@@ -14747,6 +14747,7 @@ e = Math.pow(1e3, 2);
 break;
 
 case "K":
+case "k":
 e = 1e3;
 break;
 

@@ -25,9 +25,12 @@ let AddTemplateModal = function(project) {
   this.save = function() {
     inputs.uncheck(this.processBox);
     inputs.check(this.saveBox);
-    this.cancel.click();
-    browser.sleep(500);
-    return this;
+    this.continue.click();
+    return browser.sleep(500).then(() => {
+      // lazy require
+      var OverviewPage = require('./overview').OverviewPage;
+      return new OverviewPage(this.project); // automatic redirect
+    });
   };
 };
 
@@ -43,6 +46,18 @@ class CatalogPage extends Page {
     let tabs = element(by.css('.nav-tabs'));
     h.waitForElem(tabs);
     return tabs;
+  }
+  clickTile(heading) {
+    element(by.cssContainingText('.tile', heading)).click();
+  }
+  clickCategory(heading) {
+    return this.clickTile(heading);
+  }
+  findTileBy(heading, namespace) {
+    var tiles = element.all(by.cssContainingText(heading));
+    return namespace ?
+      tiles.all(by.cssContainingText(namespace)).first() :
+      tiles;
   }
   clickBrowseCatalog() {
     return this._findTabs()
@@ -69,19 +84,37 @@ class CatalogPage extends Page {
       return window.ace.edit('add-component-editor').getValue();
     });
   }
-  submitImport() {
+  submitTemplate() {
     element(by.cssContainingText('.btn-primary','Create')).click();
     return browser.sleep(500).then(() => {
       return new AddTemplateModal(this.project);
     });
   }
+  submitImageStream() {
+    element(by.cssContainingText('.btn-primary','Create')).click();
+  }
   processTemplate(templateStr) {
     this.clickImport();
     return this.setImportValue(templateStr).then(() => {
-      return this.submitImport().then((addTemplateModal) => {
+      return this.submitTemplate().then((addTemplateModal) => {
         // implicit nav therefore returns new CreateFromTemplatePage()
         return addTemplateModal.process();
       });
+    });
+  }
+  saveTemplate(templateStr) {
+    this.clickImport();
+    return this.setImportValue(templateStr).then(() => {
+      return this.submitTemplate().then((addTemplateModal) => {
+        // implicit nav therefore returns new CreateFromTemplatePage()
+        return addTemplateModal.save();
+      });
+    });
+  }
+  processImageStream(imageStreamStr) {
+    this.clickImport();
+    return this.setImportValue(imageStreamStr).then(() => {
+      return this.submitImageStream();
     });
   }
 }
