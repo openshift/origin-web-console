@@ -136,18 +136,6 @@ angular.module('openshiftConsole')
       templateUrl: 'views/_volume-claim-templates.html'
     };
   })
-  .directive('environment', function() {
-    return {
-      restrict: 'E',
-      scope: {
-        envVars: '='
-      },
-      templateUrl: 'views/directives/environment.html',
-      controller: function($scope) {
-        $scope.expanded = {};
-      }
-    };
-  })
   .directive('hpa', function() {
     return {
       restrict: 'E',
