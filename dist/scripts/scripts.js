@@ -52,7 +52,7 @@ storage:"architecture/additional_concepts/storage.html",
 "default":"welcome/index.html"
 },
 CLI:{
-"Latest Release":"https://github.com/openshift/origin/releases/latest"
+"Latest Release":"https://access.redhat.com/downloads/content/290"
 },
 DEFAULT_HPA_CPU_TARGET_PERCENT:80,
 DISABLE_OVERVIEW_METRICS:!1,
