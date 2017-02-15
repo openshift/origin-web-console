@@ -1,0 +1,20 @@
+<div class="container-fluid">
+  <div class="row">
+    <div class="col-xs-6">
+      <strong>{{notificationGroup.heading}}</strong>
+    </div>
+    <div class="col-xs-6 text-right small">
+      <a
+        title="All Events"
+        ng-href="project/{{$ctrl.customScope.projectName}}/browse/events"
+        ng-click="$ctrl.customScope.close()">
+        View All Events
+      </a>
+    </div>
+  </div>
+  <div class="row mar-top-md">
+    <div class="col-xs-12">
+      <em>{{notificationGroup.totalUnread}} Unread</em>
+    </div>
+  </div>
+</div>

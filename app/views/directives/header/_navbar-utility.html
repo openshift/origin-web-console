@@ -1,4 +1,7 @@
 <ul class="nav navbar-nav navbar-right navbar-iconic">
+  <li>
+    <notification-counter></notification-counter>
+  </li>
   <li
     extension-point
     extension-name="nav-system-status"
@@ -20,7 +23,6 @@
       extension-name="nav-help-dropdown"
       extension-types="dom html"><!-- extension points generated here --></ul>
   </li>
-
   <li uib-dropdown ng-cloak ng-if="user">
     <a href="" uib-dropdown-toggle id="user-dropdown" class="nav-item-iconic">
       <span class="pf-icon pficon-user" aria-hidden="true"></span>
