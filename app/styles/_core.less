@@ -937,10 +937,24 @@ a.disabled-link {
 }
 
 .actions-dropdown-kebab {
-  .action-button;
-  // Bigger click target for the dropdown icon, which is a narrow ellipsis
+  color: @gray-darker;
   padding: 0 10px;
-  vertical-align: middle;
+  &:active,
+  &:focus,
+  &:hover {
+    color: @link-color;
+  }
+}
+
+@media(max-width: @screen-xs-max) {
+  .contains-actions > .dropdown {
+    // add dropdown-pf-kebab styles
+    .dropdown-kebab-pf;
+    // adjust position of dropdown to account for larger kebab
+    .dropdown-menu.dropdown-menu-right {
+      right: -4px;
+    }
+  }
 }
 
 .header-actions {

@@ -6,7 +6,7 @@
   <a href=""
      class="dropdown-toggle actions-dropdown-kebab visible-xs-inline"
      data-toggle="dropdown"><i class="fa fa-ellipsis-v"></i><span class="sr-only">Actions</span></a>
-  <ul class="dropdown-menu actions action-button">
+  <ul class="dropdown-menu dropdown-menu-right actions action-button">
     <li ng-if="deploymentConfigName && ('deploymentconfigs' | canI : 'update')">
       <a ng-href="project/{{project.metadata.name}}/attach-pvc?kind=DeploymentConfig&name={{deploymentConfigName}}"
          role="button">Add Storage</a>
