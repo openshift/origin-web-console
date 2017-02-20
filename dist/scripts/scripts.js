@@ -4669,7 +4669,7 @@ var d = _.get(c, [ "childServicesByParent", b ], []);
 return !_.isEmpty(d);
 }, ea = function(a, b) {
 var d = r[b];
-ba[b] = d, c.childServicesByParent[a] = c.childServicesByParent[a] || [], c.childServicesByParent[a].push(d);
+d && (ba[b] = d, c.childServicesByParent[a] = c.childServicesByParent[a] || [], c.childServicesByParent[a].push(d));
 }, fa = {};
 c.isDuplicateApp = function(a) {
 return _.size(fa[a]) > 1;
