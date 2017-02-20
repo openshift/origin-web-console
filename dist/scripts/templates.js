@@ -7440,7 +7440,7 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "<span class=\"help-block key-validation-error\" ng-show=\"(forms.keyValueEditor[uniqueForKey(unique, $index)].$error.pattern)\">\n" +
     "<span class=\"validation-text\">{{ entry.keyValidatorError || keyValidatorError }}</span>\n" +
     "<span ng-if=\"entry.keyValidatorErrorTooltip || keyValidatorErrorTooltip\" class=\"help action-inline\">\n" +
-    "<a aria-hidden=\"true\" data-toggle=\"tooltip\" data-placement=\"top\" data-original-title=\"{{entry.keyValidatorErrorTooltip || keyValidatorErrorTooltip}}\" title=\"{{entry.keyValidatorErrorTooltip || keyValidatorErrorTooltip}}\">\n" +
+    "<a aria-hidden=\"true\" data-toggle=\"tooltip\" data-placement=\"top\" data-original-title=\"{{entry.keyValidatorErrorTooltip || keyValidatorErrorTooltip}}\">\n" +
     "<i class=\"{{entry.keyValidatorErrorTooltipIcon || keyValidatorErrorTooltipIcon}}\"></i>\n" +
     "</a>\n" +
     "</span>\n" +
@@ -7459,8 +7459,8 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "<input type=\"text\" class=\"form-control\" ng-class=\"{ '{{setFocusValClass}}' : $last  }\" id=\"{{uniqueForValue(unique, $index)}}\" name=\"{{uniqueForValue(unique, $index)}}\" ng-attr-placeholder=\"{{ (!isReadonlyAny) && valuePlaceholder || ''}}\" ng-minlength=\"{{valueMinlength}}\" maxlength=\"{{valueMaxlength}}\" ng-model=\"entry.value\" ng-readonly=\"isReadonlyAny || isReadonlySome(entry.name) || entry.isReadonly\" ng-pattern=\"validation.val\" ng-required=\"!allowEmptyKeys && entry.value\">\n" +
     "</div>\n" +
     "<div ng-if=\"entry.valueFrom\">\n" +
-    "<div ng-if=\"isReadonlyAny || entry.isReadonlyValue\" class=\"faux-input-group\">\n" +
-    "<span class=\"faux-form-control-addon {{entry.valueIcon}}\" aria-hidden=\"true\" data-toggle=\"tooltip\" data-placement=\"top\" data-original-title=\"{{entry.valueIconTooltip || valueIconTooltip}}\" title=\"{{entry.valueIconTooltip || valueIconTooltip}}\"></span>\n" +
+    "<div ng-if=\"isValueFromReadonly(entry)\" class=\"faux-input-group\">\n" +
+    "<span class=\"faux-form-control-addon {{entry.valueIcon}}\" aria-hidden=\"true\" data-toggle=\"tooltip\" data-placement=\"top\" data-original-title=\"{{entry.valueIconTooltip || valueIconTooltip}}\"></span>\n" +
     "<div class=\"faux-form-control readonly\">\n" +
     "<span ng-switch=\"entry.refType\">\n" +
     "<span ng-switch-when=\"configMapKeyRef\">\n" +
@@ -7490,7 +7490,7 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "</span>\n" +
     "</div>\n" +
     "</div>\n" +
-    "<div ng-if=\"(!isReadonlyAny) && (!entry.isReadonlyValue)\">\n" +
+    "<div ng-if=\"!isValueFromReadonly(entry)\">\n" +
     "<div class=\"ui-select\">\n" +
     "<ui-select ng-model=\"entry.selectedValueFrom\" ng-required=\"true\" on-select=\"valueFromObjectSelected(entry, $select.selected)\">\n" +
     "<ui-select-match placeholder=\"Select a resource\">\n" +
@@ -7520,7 +7520,7 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "<span class=\"help-block value-validation-error\" ng-show=\"(forms.keyValueEditor[uniqueForValue(unique, $index)].$error.pattern)\">\n" +
     "<span class=\"validation-text\">{{ entry.valueValidatorError || valueValidatorError}}</span>\n" +
     "<span ng-if=\"entry.valueValidatorErrorTooltip || valueValidatorErrorTooltip\" class=\"help action-inline\">\n" +
-    "<a aria-hidden=\"true\" data-toggle=\"tooltip\" data-placement=\"top\" data-original-title=\"{{entry.valueValidatorErrorTooltip || valueValidatorErrorTooltip}}\" title=\"{{entry.valueValidatorErrorTooltip || valueValidatorErrorTooltip}}\">\n" +
+    "<a aria-hidden=\"true\" data-toggle=\"tooltip\" data-placement=\"top\" data-original-title=\"{{entry.valueValidatorErrorTooltip || valueValidatorErrorTooltip}}\">\n" +
     "<i class=\"{{entry.valueValidatorErrorTooltipIcon || valueValidatorErrorTooltipIcon}}\"></i>\n" +
     "</a>\n" +
     "</span>\n" +

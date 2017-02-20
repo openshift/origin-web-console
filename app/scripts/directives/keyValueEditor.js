@@ -236,6 +236,13 @@
                 onAddRowWithSelectors: function() {
                   utils.addEntryWithSelectors($scope.entries);
                   utils.setFocusOn('.'+ $scope.setFocusKeyClass);
+                },
+                isValueFromReadonly: function(entry) {
+                  return $scope.isReadonlyAny ||
+                          entry.isReadonlyValue ||
+                          // set to a valueFrom && can find the object in valueFromSelectorOptions
+                          (entry.refType && !entry.selectedValueFrom) ||
+                          !$scope.valueFromSelectorOptions.length;
                 }
               });
 

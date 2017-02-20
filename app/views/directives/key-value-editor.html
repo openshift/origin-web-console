@@ -56,8 +56,7 @@
               aria-hidden="true"
               data-toggle="tooltip"
               data-placement="top"
-              data-original-title="{{entry.keyValidatorErrorTooltip || keyValidatorErrorTooltip}}"
-              title="{{entry.keyValidatorErrorTooltip || keyValidatorErrorTooltip}}">
+              data-original-title="{{entry.keyValidatorErrorTooltip || keyValidatorErrorTooltip}}">
               <i class="{{entry.keyValidatorErrorTooltipIcon || keyValidatorErrorTooltipIcon}}"></i>
             </a>
           </span>
@@ -98,14 +97,13 @@
         </div>
 
         <div ng-if="entry.valueFrom">
-          <div ng-if="isReadonlyAny || entry.isReadonlyValue" class="faux-input-group">
+          <div ng-if="isValueFromReadonly(entry)" class="faux-input-group">
             <span
               class="faux-form-control-addon {{entry.valueIcon}}"
               aria-hidden="true"
               data-toggle="tooltip"
               data-placement="top"
-              data-original-title="{{entry.valueIconTooltip || valueIconTooltip}}"
-              title="{{entry.valueIconTooltip || valueIconTooltip}}"></span>
+              data-original-title="{{entry.valueIconTooltip || valueIconTooltip}}"></span>
             <div
               class="faux-form-control readonly">
               <span ng-switch="entry.refType">
@@ -142,7 +140,7 @@
               </span>
             </div>
           </div>
-          <div ng-if="(!isReadonlyAny) && (!entry.isReadonlyValue)">
+          <div ng-if="!isValueFromReadonly(entry)">
             <div class="ui-select">
               <ui-select ng-model="entry.selectedValueFrom" ng-required="true" on-select="valueFromObjectSelected(entry, $select.selected)">
                 <ui-select-match placeholder="Select a resource">
@@ -181,8 +179,7 @@
               aria-hidden="true"
               data-toggle="tooltip"
               data-placement="top"
-              data-original-title="{{entry.valueValidatorErrorTooltip || valueValidatorErrorTooltip}}"
-              title="{{entry.valueValidatorErrorTooltip || valueValidatorErrorTooltip}}">
+              data-original-title="{{entry.valueValidatorErrorTooltip || valueValidatorErrorTooltip}}">
               <i class="{{entry.valueValidatorErrorTooltipIcon || valueValidatorErrorTooltipIcon}}"></i>
             </a>
           </span>

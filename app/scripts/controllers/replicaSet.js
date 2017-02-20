@@ -165,7 +165,6 @@ angular.module('openshiftConsole')
       };
     };
 
-    var envSecretAndConfigMapAreReadonly = true;
     var configMapDataOrdered = [];
     var secretDataOrdered = [];
     $scope.valueFromObjects = [];
@@ -183,8 +182,6 @@ angular.module('openshiftConsole')
         DataService.list("configmaps", context, null, { errorNotification: false }).then(function(configMapData) {
           configMapDataOrdered = orderByDisplayName(configMapData.by("metadata.name"));
           $scope.valueFromObjects = configMapDataOrdered.concat(secretDataOrdered);
-          envSecretAndConfigMapAreReadonly = false;
-          EnvironmentService.toggleReadonlyForContainerEnvsValueFrom(_.get($scope.updatedReplicaSet, 'spec.template.spec.containers'), envSecretAndConfigMapAreReadonly);
         }, function(e) {
           if (e.code === 403) {
             return;
@@ -196,8 +193,6 @@ angular.module('openshiftConsole')
         DataService.list("secrets", context, null, { errorNotification: false }).then(function(secretData) {
           secretDataOrdered = orderByDisplayName(secretData.by("metadata.name"));
           $scope.valueFromObjects = secretDataOrdered.concat(configMapDataOrdered);
-          envSecretAndConfigMapAreReadonly = false;
-          EnvironmentService.toggleReadonlyForContainerEnvsValueFrom(_.get($scope.updatedReplicaSet, 'spec.template.spec.containers'), envSecretAndConfigMapAreReadonly);
         }, function(e) {
           if (e.code === 403) {
             return;
@@ -426,7 +421,6 @@ angular.module('openshiftConsole')
               break;
             }
             updateHPAWarnings();
-            EnvironmentService.toggleReadonlyForContainerEnvsValueFrom(_.get($scope.updatedReplicaSet, 'spec.template.spec.containers'), envSecretAndConfigMapAreReadonly);
             $scope.breadcrumbs = BreadcrumbsService.getBreadcrumbs({ object: replicaSet });
 
             // If we found the item successfully, watch for changes on it
@@ -450,7 +444,6 @@ angular.module('openshiftConsole')
                 updateEnvironment(replicaSet, previous);
               }
 
-              EnvironmentService.toggleReadonlyForContainerEnvsValueFrom(_.get($scope.updatedReplicaSet, 'spec.template.spec.containers'), envSecretAndConfigMapAreReadonly);
               setLogVars(replicaSet);
               updateHPAWarnings();
               getImageStreamImage();

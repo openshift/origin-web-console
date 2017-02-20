@@ -161,21 +161,6 @@
                   }, {});
         };
 
-        // in the case that an entry has a valueFrom pointing to a secret or config map,
-        // this util will toggle the isReadonlyValue bool. Useful for quick swapping
-        // the UI from ui-select pickers to a simple readonly state.
-        var toggleReadonlyForEntryValueFrom = function(entry, bool) {
-          if(entry.valueFrom && (entry.valueFrom.configMapKeyRef || entry.valueFrom.secretKeyRef)) {
-            entry.isReadonlyValue = bool;
-          }
-        };
-
-        var toggleReadonlyForEntriesValueFrom = function(entries, bool) {
-          _.each(entries, function(entry) {
-            toggleReadonlyForEntryValueFrom(entry, bool);
-          });
-        };
-
         var setFocusOn = function(selector, value) {
           // $timeout just delays enough to ensure event/$digest resolution
           $timeout(function() {
@@ -252,8 +237,6 @@
           cleanEntries: cleanEntries,
           compactEntries: compactEntries,
           mapEntries: mapEntries,
-          toggleReadonlyForEntryValueFrom: toggleReadonlyForEntryValueFrom,
-          toggleReadonlyForEntriesValueFrom: toggleReadonlyForEntriesValueFrom,
           setFocusOn: setFocusOn,
           uniqueForKey: uniqueForKey,
           uniqueForValue: uniqueForValue,

@@ -85,7 +85,6 @@ angular.module('openshiftConsole')
       };
     };
 
-    var envSecretAndConfigMapAreReadonly = true;
     var orderByDisplayName = $filter('orderByDisplayName');
     var getErrorDetails = $filter('getErrorDetails');
 
@@ -124,7 +123,6 @@ angular.module('openshiftConsole')
             $scope.loaded = true;
             $scope.deployment = deployment;
             updateHPAWarnings();
-            EnvironmentService.toggleReadonlyForContainerEnvsValueFrom(_.get($scope.deployment, 'spec.template.spec.containers'), envSecretAndConfigMapAreReadonly);
 
             $scope.saveEnvVars = function() {
               EnvironmentService.compact($scope.updatedDeployment);
@@ -174,8 +172,6 @@ angular.module('openshiftConsole')
               $scope.deployment = deployment;
               $scope.updatingPausedState = false;
               updateHPAWarnings();
-
-              EnvironmentService.toggleReadonlyForContainerEnvsValueFrom(_.get($scope.deployment, 'spec.template.spec.containers'), envSecretAndConfigMapAreReadonly);
 
               updateEnvironment(deployment, previous);
 
@@ -231,8 +227,6 @@ angular.module('openshiftConsole')
         DataService.list("configmaps", context, null, { errorNotification: false }).then(function(configMapData) {
           configMapDataOrdered = orderByDisplayName(configMapData.by("metadata.name"));
           $scope.valueFromObjects = configMapDataOrdered.concat(secretDataOrdered);
-          envSecretAndConfigMapAreReadonly = false;
-          EnvironmentService.toggleReadonlyForContainerEnvsValueFrom(_.get($scope.deployment, 'spec.template.spec.containers'), envSecretAndConfigMapAreReadonly);
         }, function(e) {
           if (e.code === 403) {
             return;
@@ -244,8 +238,6 @@ angular.module('openshiftConsole')
         DataService.list("secrets", context, null, { errorNotification: false }).then(function(secretData) {
           secretDataOrdered = orderByDisplayName(secretData.by("metadata.name"));
           $scope.valueFromObjects = secretDataOrdered.concat(configMapDataOrdered);
-          envSecretAndConfigMapAreReadonly = false;
-          EnvironmentService.toggleReadonlyForContainerEnvsValueFrom(_.get($scope.deployment, 'spec.template.spec.containers'), envSecretAndConfigMapAreReadonly);
         }, function(e) {
           if (e.code === 403) {
             return;

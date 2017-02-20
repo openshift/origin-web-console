@@ -62,7 +62,6 @@ angular.module('openshiftConsole')
 
     var watches = [];
 
-    var envSecretAndConfigMapAreReadonly = true;
     var configMapDataOrdered = [];
     var secretDataOrdered = [];
     $scope.valueFromObjects = [];
@@ -140,7 +139,6 @@ angular.module('openshiftConsole')
               return containerConfigByName;
             };
 
-            EnvironmentService.toggleReadonlyForContainerEnvsValueFrom(_.get($scope.deploymentConfig, 'spec.template.spec.containers'), envSecretAndConfigMapAreReadonly);
             $scope.updatedDeploymentConfig = angular.copy($scope.deploymentConfig);
             $scope.containerNames = _.map($scope.deploymentConfig.spec.template.spec.containers, 'name');
             $scope.containerConfigByName = mapContainerConfigByName($scope.updatedDeploymentConfig.spec.template.spec.containers, $scope.updatedDeploymentConfig.spec.triggers);
@@ -162,8 +160,6 @@ angular.module('openshiftConsole')
               configMapDataOrdered = orderByDisplayName(configMapData.by("metadata.name"));
               $scope.availableConfigMaps = configMapDataOrdered;
               $scope.valueFromObjects = configMapDataOrdered.concat(secretDataOrdered);
-              envSecretAndConfigMapAreReadonly = false;
-              EnvironmentService.toggleReadonlyForContainerEnvsValueFrom(_.get($scope.updatedDeploymentConfig, 'spec.template.spec.containers'), envSecretAndConfigMapAreReadonly);
             }, function(e) {
               if (e.code === 403) {
                 return;
@@ -176,8 +172,6 @@ angular.module('openshiftConsole')
               secretDataOrdered = orderByDisplayName(secretData.by("metadata.name"));
               $scope.availableSecrets = secretDataOrdered;
               $scope.valueFromObjects = secretDataOrdered.concat(configMapDataOrdered);
-              envSecretAndConfigMapAreReadonly = false;
-              EnvironmentService.toggleReadonlyForContainerEnvsValueFrom(_.get($scope.updatedDeploymentConfig, 'spec.template.spec.containers'), envSecretAndConfigMapAreReadonly);
               var secretsByType = SecretsService.groupSecretsByType(secretData);
               var secretNamesByType =_.mapValues(secretsByType, function(secretData) {return _.map(secretData, 'metadata.name');});
               // Add empty option to the image/source secrets
@@ -208,7 +202,6 @@ angular.module('openshiftConsole')
                 $scope.disableInputs = true;
               }
               $scope.deploymentConfig = deploymentConfig;
-              EnvironmentService.toggleReadonlyForContainerEnvsValueFrom(_.get($scope.deploymentConfig, 'spec.template.spec.containers'), envSecretAndConfigMapAreReadonly);
             }));
             $scope.loaded = true;
           },

@@ -76,14 +76,6 @@ angular.module("openshiftConsole")
         }
 
         return copy;
-      },
-
-      // Takes a set of containers and updates each env.isReadonlyValue based on the
-      // existence of the env.valueFrom (secret or configMap).
-      toggleReadonlyForContainerEnvsValueFrom: function(containers, bool) {
-        _.each(containers, function(container) {
-          keyValueEditorUtils.toggleReadonlyForEntriesValueFrom(container.env, bool);
-        });
       }
     };
   });

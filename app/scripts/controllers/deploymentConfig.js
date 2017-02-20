@@ -105,7 +105,6 @@ angular.module('openshiftConsole')
 
     var watches = [];
 
-    var envSecretAndConfigMapAreReadonly = true;
     var configMapDataOrdered = [];
     var secretDataOrdered = [];
     $scope.valueFromObjects = [];
@@ -133,7 +132,6 @@ angular.module('openshiftConsole')
             $scope.deploymentConfig = deploymentConfig;
             $scope.strategyParams = $filter('deploymentStrategyParams')(deploymentConfig);
             updateHPAWarnings();
-            EnvironmentService.toggleReadonlyForContainerEnvsValueFrom(_.get($scope.deploymentConfig, 'spec.template.spec.containers'), envSecretAndConfigMapAreReadonly);
             $scope.updatedDeploymentConfig = EnvironmentService.copyAndNormalize($scope.deploymentConfig);
             $scope.saveEnvVars = function() {
               EnvironmentService.compact($scope.updatedDeploymentConfig);
@@ -179,8 +177,6 @@ angular.module('openshiftConsole')
               $scope.deploymentConfig = deploymentConfig;
               $scope.updatingPausedState = false;
               updateHPAWarnings();
-
-              EnvironmentService.toggleReadonlyForContainerEnvsValueFrom(_.get($scope.deploymentConfig, 'spec.template.spec.containers'), envSecretAndConfigMapAreReadonly);
 
               // Wait for a pending save to complete to avoid a race between the PUT and the watch callbacks.
               if (saveEnvPromise) {
@@ -270,8 +266,6 @@ angular.module('openshiftConsole')
         DataService.list("configmaps", context, null, { errorNotification: false }).then(function(configMapData) {
           configMapDataOrdered = orderByDisplayName(configMapData.by("metadata.name"));
           $scope.valueFromObjects = configMapDataOrdered.concat(secretDataOrdered);
-          envSecretAndConfigMapAreReadonly = false;
-          EnvironmentService.toggleReadonlyForContainerEnvsValueFrom(_.get($scope.deploymentConfig, 'spec.template.spec.containers'), envSecretAndConfigMapAreReadonly);
         }, function(e) {
           if (e.code === 403) {
             return;
@@ -283,8 +277,6 @@ angular.module('openshiftConsole')
         DataService.list("secrets", context, null, { errorNotification: false }).then(function(secretData) {
           secretDataOrdered = orderByDisplayName(secretData.by("metadata.name"));
           $scope.valueFromObjects = secretDataOrdered.concat(configMapDataOrdered);
-          envSecretAndConfigMapAreReadonly = false;
-          EnvironmentService.toggleReadonlyForContainerEnvsValueFrom(_.get($scope.deploymentConfig, 'spec.template.spec.containers'), envSecretAndConfigMapAreReadonly);
         }, function(e) {
           if (e.code === 403) {
             return;
