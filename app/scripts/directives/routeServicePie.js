@@ -10,6 +10,7 @@ angular.module('openshiftConsole')
       template: '<div ng-show="totalWeight" ng-attr-id="{{chartId}}"></div>',
       link: function($scope) {
         var chart, config;
+        var mobile = window.matchMedia("(max-width: 400px)").matches;
 
         $scope.chartId = _.uniqueId('route-service-chart-');
 
@@ -20,7 +21,7 @@ angular.module('openshiftConsole')
           },
           legend: {
             show: true,
-            position: 'right'
+            position: mobile ? 'bottom' : 'right'
           },
           pie: {
             label: {
@@ -28,8 +29,15 @@ angular.module('openshiftConsole')
             }
           },
           size: {
-            height: 115,
-            width: 260
+            height: mobile ? 150 : 115
+          },
+          tooltip: {
+            format: {
+              name: function(name, ratio, id) {
+                // Show the full name on hover, even if name is truncated for the legend.
+                return id;
+              }
+            }
           },
           data: {
             type: "pie",
@@ -69,14 +77,17 @@ angular.module('openshiftConsole')
 
         function updateChart() {
           var data = {
-            columns: []
+            columns: [],
+            names: {}
           };
 
           if ($scope.route) {
             data.columns.push(getData($scope.route.spec.to));
+            data.names[$scope.route.spec.to.name] = _.trunc($scope.route.spec.to.name, { length: 30 });
             $scope.totalWeight = $scope.route.spec.to.weight;
             _.each($scope.route.spec.alternateBackends, function(routeTarget) {
               data.columns.push(getData(routeTarget));
+              data.names[routeTarget.name] = _.trunc(routeTarget.name, { length: 30 });
               $scope.totalWeight += routeTarget.weight;
             });
           }
