@@ -319,6 +319,10 @@ angular.module('openshiftConsole')
 
     var addChildService = function(parentName, childName) {
       var child = services[childName];
+      if (!child) {
+        return;
+      }
+
       childServices[childName] = child;
       $scope.childServicesByParent[parentName] = $scope.childServicesByParent[parentName] || [];
       $scope.childServicesByParent[parentName].push(child);
