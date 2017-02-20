@@ -38,6 +38,17 @@ angular.module('openshiftConsole')
         title: $routeParams.deployment
       }
     ];
+    var canI = $filter('canI');
+    var resourceGroups = {
+      k8sDeployment: { group: 'extensions', resource: 'deployments' },
+      hpa: {resource: 'horizontalpodautoscalers', group: 'extensions'}
+    };
+    $scope.canI = {
+      updatek8sDeployment: canI(resourceGroups.k8sDeployment, 'update', $scope.projectName),
+      deletek8sDeployment: canI(resourceGroups.k8sDeployment, 'delete', $scope.projectName),
+      createHPA: canI(resourceGroups.hpa, 'create', $scope.projectName),
+    };
+    $scope.emptyMessage = "Loading...";
     $scope.healthCheckURL = Navigate.healthCheckURL($routeParams.project,
                                                     "Deployment",
                                                     $routeParams.deployment,

@@ -5085,14 +5085,29 @@ title:"Deployments",
 link:"project/" + c.project + "/browse/deployments"
 }, {
 title:c.deployment
-} ], a.healthCheckURL = k.healthCheckURL(c.project, "Deployment", c.deployment, "extensions"), d.getAlerts().forEach(function(b) {
+} ];
+var p = b("canI"), q = {
+k8sDeployment:{
+group:"extensions",
+resource:"deployments"
+},
+hpa:{
+resource:"horizontalpodautoscalers",
+group:"extensions"
+}
+};
+a.canI = {
+updatek8sDeployment:p(q.k8sDeployment, "update", a.projectName),
+deletek8sDeployment:p(q.k8sDeployment, "delete", a.projectName),
+createHPA:p(q.hpa, "create", a.projectName)
+}, a.emptyMessage = "Loading...", a.healthCheckURL = k.healthCheckURL(c.project, "Deployment", c.deployment, "extensions"), d.getAlerts().forEach(function(b) {
 a.alerts[b.name] = b.data;
 }), d.clearAlerts();
-var p = !1, q = function(b, c) {
-if (!p) {
+var r = !1, s = function(b, c) {
+if (!r) {
 if (!a.forms.deploymentEnvVars || a.forms.deploymentEnvVars.$pristine) return void (a.updatedDeployment = g.copyAndNormalize(b));
 if (g.isEnvironmentEqual(b, c)) return void (a.updatedDeployment = g.mergeEdits(a.updatedDeployment, b));
-p = !0, a.alerts["env-conflict"] = {
+r = !0, a.alerts["env-conflict"] = {
 type:"warning",
 message:"The environment variables for the deployment have been updated in the background. Saving your changes may create a conflict or cause loss of data.",
 links:[ {
@@ -5103,17 +5118,17 @@ return a.clearEnvVarUpdates(), !0;
 } ]
 };
 }
-}, r = b("orderByDisplayName"), s = b("getErrorDetails"), t = function(b, c) {
+}, t = b("orderByDisplayName"), u = b("getErrorDetails"), v = function(b, c) {
 a.alerts["from-value-objects"] = {
 type:"error",
 message:b,
 details:c
 };
-}, u = [];
+}, w = [];
 m.get(c.project).then(_.spread(function(d, k) {
 a.project = d, a.projectContext = k;
-var m, v = {}, w = function() {
-h.getHPAWarnings(a.deployment, a.autoscalers, v, d).then(function(b) {
+var m, p = {}, q = function() {
+h.getHPAWarnings(a.deployment, a.autoscalers, p, d).then(function(b) {
 a.hpaWarnings = b;
 });
 };
@@ -5121,7 +5136,7 @@ e.get({
 group:"extensions",
 resource:"deployments"
 }, c.deployment, k).then(function(d) {
-a.loaded = !0, a.deployment = d, w(), a.saveEnvVars = function() {
+a.loaded = !0, a.deployment = d, q(), a.saveEnvVars = function() {
 g.compact(a.updatedDeployment), m = e.update({
 group:"extensions",
 resource:"deployments"
@@ -5140,8 +5155,8 @@ details:"Reason: " + b("getErrorDetails")(d)
 m = null;
 });
 }, a.clearEnvVarUpdates = function() {
-a.updatedDeployment = g.copyAndNormalize(a.deployment), a.forms.deploymentEnvVars.$setPristine(), p = !1;
-}, u.push(e.watchObject({
+a.updatedDeployment = g.copyAndNormalize(a.deployment), a.forms.deploymentEnvVars.$setPristine(), r = !1;
+}, w.push(e.watchObject({
 group:"extensions",
 resource:"deployments"
 }, c.deployment, k, function(b, c) {
@@ -5150,10 +5165,10 @@ type:"warning",
 message:"This deployment has been deleted."
 });
 var d = a.deployment;
-a.deployment = b, a.updatingPausedState = !1, w(), q(b, d), m ? m["finally"](function() {
-q(b, d);
-}) :q(b, d), i.fetchReferencedImageStreamImages([ b.spec.template ], a.imagesByDockerReference, o, k);
-})), u.push(e.watch({
+a.deployment = b, a.updatingPausedState = !1, q(), s(b, d), m ? m["finally"](function() {
+s(b, d);
+}) :s(b, d), i.fetchReferencedImageStreamImages([ b.spec.template ], a.imagesByDockerReference, o, k);
+})), w.push(e.watch({
 group:"extensions",
 resource:"replicasets"
 }, k, function(b) {
@@ -5169,30 +5184,30 @@ message:404 === c.status ? "This deployment can not be found, it may have been d
 details:404 === c.status ? "Any remaining deployment history for this deployment will be shown." :"Reason: " + b("getErrorDetails")(c)
 };
 }), e.list("limitranges", k, function(a) {
-v = a.by("metadata.name"), w();
+p = a.by("metadata.name"), q();
 });
 var x = [], y = [];
 a.valueFromObjects = [], e.list("configmaps", k, null, {
 errorNotification:!1
 }).then(function(b) {
-x = r(b.by("metadata.name")), a.valueFromObjects = x.concat(y);
+x = t(b.by("metadata.name")), a.valueFromObjects = x.concat(y);
 }, function(a) {
-403 !== a.code && t("Could not load config maps", s(a));
+403 !== a.code && v("Could not load config maps", u(a));
 }), e.list("secrets", k, null, {
 errorNotification:!1
 }).then(function(b) {
-y = r(b.by("metadata.name")), a.valueFromObjects = y.concat(x);
+y = t(b.by("metadata.name")), a.valueFromObjects = y.concat(x);
 }, function(a) {
-403 !== a.code && t("Could not load secrets", s(a));
-}), u.push(e.watch("imagestreams", k, function(b) {
+403 !== a.code && v("Could not load secrets", u(a));
+}), w.push(e.watch("imagestreams", k, function(b) {
 var c = b.by("metadata.name");
 i.buildDockerRefMapForImageStreams(c, o), a.deployment && i.fetchReferencedImageStreamImages([ a.deployment.spec.template ], a.imagesByDockerReference, o, k), l.log("imagestreams (subscribe)", a.imageStreams);
-})), u.push(e.watch({
+})), w.push(e.watch({
 group:"extensions",
 resource:"horizontalpodautoscalers"
 }, k, function(b) {
-a.autoscalers = h.filterHPA(b.by("metadata.name"), "Deployment", c.deployment), w();
-})), u.push(e.watch("builds", k, function(b) {
+a.autoscalers = h.filterHPA(b.by("metadata.name"), "Deployment", c.deployment), q();
+})), w.push(e.watch("builds", k, function(b) {
 a.builds = b.by("metadata.name"), l.log("builds (subscribe)", a.builds);
 })), a.scale = function(c) {
 var d = function(c) {
@@ -5231,7 +5246,7 @@ n.removeVolume(a.deployment, c, k).then(_.noop, f);
 };
 e.then(g);
 }, a.$on("$destroy", function() {
-e.unwatchAll(u);
+e.unwatchAll(w);
 });
 }));
 } ]), angular.module("openshiftConsole").controller("DeploymentConfigController", [ "$scope", "$filter", "$routeParams", "AlertMessageService", "BreadcrumbsService", "DataService", "DeploymentsService", "EnvironmentService", "HPAService", "ImageStreamResolver", "ModalsService", "Navigate", "Logger", "ProjectsService", "StorageService", "LabelFilter", "labelNameFilter", function(a, b, c, d, e, f, g, h, i, j, k, l, m, n, o, p, q) {
