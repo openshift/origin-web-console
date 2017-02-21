@@ -16443,7 +16443,173 @@ a.put("template/timepicker/timepicker.html", '<table>\n  <tbody>\n    <tr class=
 a.put("template/typeahead/typeahead-match.html", '<a href tabindex="-1" ng-bind-html="match.label | uibTypeaheadHighlight:query"></a>\n');
 } ]), angular.module("template/typeahead/typeahead-popup.html", []).run([ "$templateCache", function(a) {
 a.put("template/typeahead/typeahead-popup.html", '<ul class="dropdown-menu" ng-show="isOpen() && !moveInProgress" ng-style="{top: position().top+\'px\', left: position().left+\'px\'}" style="display: block;" role="listbox" aria-hidden="{{!isOpen()}}">\n    <li ng-repeat="match in matches track by $index" ng-class="{active: isActive($index) }" ng-mouseenter="selectActive($index)" ng-click="selectMatch($index)" role="option" id="{{::match.id}}">\n        <div uib-typeahead-match index="$index" match="match" query="query" template-url="templateUrl"></div>\n    </li>\n</ul>\n');
-} ]), !angular.$$csp() && angular.element(document).find("head").prepend('<style type="text/css">.ng-animate.item:not(.left):not(.right){-webkit-transition:0s ease-in-out left;transition:0s ease-in-out left}</style>'), function() {
+} ]), !angular.$$csp() && angular.element(document).find("head").prepend('<style type="text/css">.ng-animate.item:not(.left):not(.right){-webkit-transition:0s ease-in-out left;transition:0s ease-in-out left}</style>'), function(a) {
+var b = "application/x-dnd", c = "application/json", d = "Text";
+a.directive("dndDraggable", [ "$parse", "$timeout", function(a, f) {
+return function(g, h, i) {
+h.attr("draggable", "true"), i.dndDisableIf && g.$watch(i.dndDisableIf, function(a) {
+h.attr("draggable", !a);
+}), h.on("dragstart", function(j) {
+if (j = j.originalEvent || j, "false" == h.attr("draggable")) return !0;
+e.dropEffect = "none", e.isDragging = !0, e.itemType = i.dndType && g.$eval(i.dndType).toLowerCase();
+var k = g.$eval(i.dndDraggable), l = b + (e.itemType ? "-" + e.itemType :"");
+try {
+j.dataTransfer.setData(l, angular.toJson(k));
+} catch (m) {
+var n = angular.toJson({
+item:k,
+type:e.itemType
+});
+try {
+j.dataTransfer.setData(c, n);
+} catch (m) {
+j.dataTransfer.setData(d, n);
+}
+}
+j.dataTransfer.effectAllowed = i.dndEffectAllowed || "move", h.addClass("dndDragging"), f(function() {
+h.addClass("dndDraggingSource");
+}, 0), j._dndHandle && j.dataTransfer.setDragImage && j.dataTransfer.setDragImage(h[0], 0, 0), a(i.dndDragstart)(g, {
+event:j
+}), j.stopPropagation();
+}), h.on("dragend", function(b) {
+b = b.originalEvent || b;
+var c = e.dropEffect;
+g.$apply(function() {
+switch (c) {
+case "move":
+a(i.dndMoved)(g, {
+event:b
+});
+break;
+
+case "copy":
+a(i.dndCopied)(g, {
+event:b
+});
+break;
+
+case "none":
+a(i.dndCanceled)(g, {
+event:b
+});
+}
+a(i.dndDragend)(g, {
+event:b,
+dropEffect:c
+});
+}), h.removeClass("dndDragging"), f(function() {
+h.removeClass("dndDraggingSource");
+}, 0), e.isDragging = !1, b.stopPropagation();
+}), h.on("click", function(b) {
+i.dndSelected && (b = b.originalEvent || b, g.$apply(function() {
+a(i.dndSelected)(g, {
+event:b
+});
+}), b.stopPropagation());
+}), h.on("selectstart", function() {
+this.dragDrop && this.dragDrop();
+});
+};
+} ]), a.directive("dndList", [ "$parse", "$timeout", function(a, f) {
+return function(g, h, i) {
+function j(a) {
+if (!a) return d;
+for (var e = 0; e < a.length; e++) if (a[e] == d || a[e] == c || a[e].substr(0, b.length) == b) return a[e];
+return null;
+}
+function k(a) {
+return e.isDragging ? e.itemType || void 0 :a == d || a == c ? null :a && a.substr(b.length + 1) || void 0;
+}
+function l(a) {
+return !t.disabled && (!(!t.externalSources && !e.isDragging) && (!t.allowedTypes || null === a || a && t.allowedTypes.indexOf(a) != -1));
+}
+function m() {
+return q.remove(), h.removeClass("dndDragover"), !0;
+}
+function n(b, c, d, f, h) {
+return a(b)(g, {
+event:c,
+index:void 0 !== f ? f :o(),
+item:h || void 0,
+external:!e.isDragging,
+type:d
+});
+}
+function o() {
+return Array.prototype.indexOf.call(s.children, r);
+}
+function p() {
+var a;
+return angular.forEach(h.children(), function(b) {
+var c = angular.element(b);
+c.hasClass("dndPlaceholder") && (a = c);
+}), a || angular.element("<li class='dndPlaceholder'></li>");
+}
+var q = p();
+q.remove();
+var r = q[0], s = h[0], t = {};
+h.on("dragenter", function(a) {
+a = a.originalEvent || a;
+var b = i.dndAllowedTypes && g.$eval(i.dndAllowedTypes);
+t = {
+allowedTypes:angular.isArray(b) && b.join("|").toLowerCase().split("|"),
+disabled:i.dndDisableIf && g.$eval(i.dndDisableIf),
+externalSources:i.dndExternalSources && g.$eval(i.dndExternalSources),
+horizontal:i.dndHorizontalList && g.$eval(i.dndHorizontalList)
+};
+var c = j(a.dataTransfer.types);
+return !c || !l(k(c)) || void a.preventDefault();
+}), h.on("dragover", function(a) {
+a = a.originalEvent || a;
+var b = j(a.dataTransfer.types), c = k(b);
+if (!b || !l(c)) return !0;
+if (r.parentNode != s && h.append(q), a.target != s) {
+for (var d = a.target; d.parentNode != s && d.parentNode; ) d = d.parentNode;
+if (d.parentNode == s && d != r) {
+var e = d.getBoundingClientRect();
+if (t.horizontal) var f = a.clientX < e.left + e.width / 2; else var f = a.clientY < e.top + e.height / 2;
+s.insertBefore(r, f ? d :d.nextSibling);
+}
+}
+return i.dndDragover && !n(i.dndDragover, a, c) ? m() :(h.addClass("dndDragover"), a.preventDefault(), a.stopPropagation(), !1);
+}), h.on("drop", function(a) {
+a = a.originalEvent || a;
+var b = j(a.dataTransfer.types), f = k(b);
+if (!b || !l(f)) return !0;
+a.preventDefault();
+try {
+var h = JSON.parse(a.dataTransfer.getData(b));
+} catch (p) {
+return m();
+}
+if ((b == d || b == c) && (f = h.type || void 0, h = h.item, !l(f))) return m();
+var q = o();
+return i.dndDrop && (h = n(i.dndDrop, a, f, q, h), !h) ? m() :(h !== !0 && g.$apply(function() {
+g.$eval(i.dndList).splice(q, 0, h);
+}), n(i.dndInserted, a, f, q, h), "none" === a.dataTransfer.dropEffect ? "copy" === a.dataTransfer.effectAllowed || "move" === a.dataTransfer.effectAllowed ? e.dropEffect = a.dataTransfer.effectAllowed :e.dropEffect = a.ctrlKey ? "copy" :"move" :e.dropEffect = a.dataTransfer.dropEffect, m(), a.stopPropagation(), !1);
+}), h.on("dragleave", function(a) {
+a = a.originalEvent || a, h.removeClass("dndDragover"), f(function() {
+h.hasClass("dndDragover") || q.remove();
+}, 100);
+});
+};
+} ]), a.directive("dndNodrag", function() {
+return function(a, b, c) {
+b.attr("draggable", "true"), b.on("dragstart", function(a) {
+a = a.originalEvent || a, a._dndHandle || (a.dataTransfer.types && a.dataTransfer.types.length || a.preventDefault(), a.stopPropagation());
+}), b.on("dragend", function(a) {
+a = a.originalEvent || a, a._dndHandle || a.stopPropagation();
+});
+};
+}), a.directive("dndHandle", function() {
+return function(a, b, c) {
+b.attr("draggable", "true"), b.on("dragstart dragend", function(a) {
+a = a.originalEvent || a, a._dndHandle = !0;
+});
+};
+});
+var e = {};
+}(angular.module("dndLists", [])), function() {
 function a(a, b) {
 if (a !== b) {
 var c = null === a, d = a === w, e = a === a, f = null === b, g = b === w, h = b === b;
@@ -36876,7 +37042,7 @@ var f = a.data(this, e);
 }(jQuery, window, document), function(a) {
 "use strict";
 var b = {
-version:"3.18.1"
+version:"3.21.0"
 };
 b.pfPaletteColors = {
 black:"#030303",
@@ -37495,121 +37661,109 @@ c(i, j);
 }(jQuery), function(a) {
 "use strict";
 a.fn.setupVerticalNavigation = function(b) {
-var c = a(".nav-pf-vertical"), d = a(".container-pf-nav-pf-vertical"), e = a(".navbar-toggle"), f = !1, g = !1, h = 500, i = h + 200, j = function() {
+var c = a(".nav-pf-vertical"), d = a(".container-pf-nav-pf-vertical"), e = a(".navbar-toggle"), f = !0, g = !1, h = !1, i = 500, j = i + 200, k = function() {
 return d.hasClass("hidden-nav");
-}, k = function(b) {
+}, l = function(b) {
 setTimeout(function() {
 a(window).trigger("resize");
 }, b);
-}, l = function() {
-!j() && g || (c.addClass("secondary-visible-pf"), d.addClass("secondary-visible-pf")), g || k(100);
 }, m = function() {
+!k() && h || (c.addClass("secondary-visible-pf"), d.addClass("secondary-visible-pf")), h || l(100);
+}, n = function() {
 c.removeClass("secondary-visible-pf"), d.removeClass("secondary-visible-pf"), c.find(".mobile-nav-item-pf").each(function(b, c) {
 a(c).removeClass("mobile-nav-item-pf");
 });
-}, n = function(b) {
-a(document).find(".nav-pf-vertical > .list-group > .list-group-item.active").each(function(b, c) {
-a(c).removeClass("active");
-}), b.addClass("active");
-}, o = function(b, c) {
-a(document).find(".nav-pf-secondary-nav > .list-group > .list-group-item.active").each(function(b, c) {
-a(c).removeClass("active");
-}), b.addClass("active"), n(c);
-}, p = function(b, c, d) {
-a(document).find(".nav-pf-tertiary-nav > .list-group > .list-group-item.active").each(function(b, c) {
-a(c).removeClass("active");
-}), b.addClass("active"), o(c, d);
-}, q = function() {
-j() ? (c.removeClass("show-mobile-nav"), m(), c.find(".mobile-nav-item-pf").each(function(b, c) {
+}, o = function(b) {
+a(".nav-pf-vertical .list-group-item.active").removeClass("active"), b.addClass("active").parents(".list-group-item").addClass("active");
+}, p = function() {
+k() ? (c.removeClass("show-mobile-nav"), n(), c.find(".mobile-nav-item-pf").each(function(b, c) {
 a(c).removeClass("mobile-nav-item-pf");
-})) :l();
-}, r = function(b, e) {
+})) :m();
+}, q = function(b, e) {
 b ? (e.addClass("collapsed"), c.addClass("collapsed-secondary-nav-pf"), d.addClass("collapsed-secondary-nav-pf")) :(e ? e.removeClass("collapsed") :c.find('[data-toggle="collapse-secondary-nav"]').each(function(b, c) {
 var d = a(c);
 d.removeClass("collapsed");
 }), c.removeClass("collapsed-secondary-nav-pf"), d.removeClass("collapsed-secondary-nav-pf"));
-}, s = function(b, e) {
-b ? (e.addClass("collapsed"), c.addClass("collapsed-tertiary-nav-pf"), d.addClass("collapsed-tertiary-nav-pf"), r(!1)) :(e ? e.removeClass("collapsed") :c.find('[data-toggle="collapse-tertiary-nav"]').each(function(b, c) {
+}, r = function(b, e) {
+b ? (e.addClass("collapsed"), c.addClass("collapsed-tertiary-nav-pf"), d.addClass("collapsed-tertiary-nav-pf"), q(!1)) :(e ? e.removeClass("collapsed") :c.find('[data-toggle="collapse-tertiary-nav"]').each(function(b, c) {
 var d = a(c);
 d.removeClass("collapsed");
 }), c.removeClass("collapsed-tertiary-nav-pf"), d.removeClass("collapsed-tertiary-nav-pf"));
-}, t = function(b, d) {
+}, s = function(b, d) {
 a(document).find(".list-group-item.mobile-nav-item-pf").each(function(b, c) {
 a(c).removeClass("mobile-nav-item-pf");
 }), a(document).find(".list-group-item.mobile-secondary-item-pf").each(function(b, c) {
 a(c).removeClass("mobile-secondary-item-pf");
 }), b ? (b.addClass("mobile-nav-item-pf"), d ? (d.addClass("mobile-secondary-item-pf"), c.removeClass("show-mobile-secondary"), c.addClass("show-mobile-tertiary")) :(c.addClass("show-mobile-secondary"), c.removeClass("show-mobile-tertiary"))) :(c.removeClass("show-mobile-secondary"), c.removeClass("show-mobile-tertiary"));
+}, t = function() {
+c.hasClass("hidden") || (c.addClass("hidden"), c.removeClass("collapsed"), d.removeClass("collapsed-nav"), d.addClass("hidden-nav"), q(!1), r(!1), g = !1);
 }, u = function() {
-var b, e = a(window).width();
-e < a.pfBreakpoints.tablet ? c.hasClass("hidden") || (c.addClass("hidden"), c.removeClass("collapsed"), d.removeClass("collapsed-nav"), d.addClass("hidden-nav"), r(!1), s(!1), f = !1) :c.hasClass("hidden") && (c.removeClass("hidden show-mobile-nav"), d.removeClass("hidden-nav")), e < a.pfBreakpoints.desktop ? (g || (c.addClass("collapsed"), d.addClass("collapsed-nav")), e >= a.pfBreakpoints.tablet && m(), g = !0) :(b = g && c.find(".secondary-nav-item-pf.active").length > 0, g = !1, b && l()), f ? (c.addClass("collapsed"), d.addClass("collapsed-nav")) :(c.removeClass("collapsed"), d.removeClass("collapsed-nav"));
+c.removeClass("hidden show-mobile-nav"), d.removeClass("hidden-nav");
 }, v = function() {
-c.addClass("collapsed"), d.addClass("collapsed-nav"), g && m(), f = !0;
+var b, e = a(window).width();
+f && (e < a.pfBreakpoints.tablet && !g ? t() :c.hasClass("hidden") && u(), e < a.pfBreakpoints.desktop ? (h || (c.addClass("collapsed"), d.addClass("collapsed-nav")), e >= a.pfBreakpoints.tablet && n(), h = !0) :(b = h && c.find(".secondary-nav-item-pf.active").length > 0, h = !1, b && m()), g ? (c.addClass("collapsed"), d.addClass("collapsed-nav")) :(c.removeClass("collapsed"), d.removeClass("collapsed-nav")));
 }, w = function() {
-a("html").addClass("transitions");
+c.addClass("collapsed"), d.addClass("collapsed-nav"), h && n(), g = !0;
 }, x = function() {
-c.removeClass("collapsed"), d.removeClass("collapsed-nav"), f = !1, g || k(100);
+a("html").addClass("transitions");
 }, y = function() {
-e.on("click", function(a) {
-w(), j() ? c.hasClass("show-mobile-nav") ? c.removeClass("show-mobile-nav") :(t(), c.addClass("show-mobile-nav")) :c.hasClass("collapsed") ? (window.localStorage.setItem("patternfly-navigation-primary", "expanded"), x()) :(window.localStorage.setItem("patternfly-navigation-primary", "collapsed"), v());
-});
+c.removeClass("collapsed"), d.removeClass("collapsed-nav"), g = !1, h || l(100);
 }, z = function() {
+e.on("click", function(a) {
+x(), k() ? c.hasClass("show-mobile-nav") ? c.removeClass("show-mobile-nav") :(s(), c.addClass("show-mobile-nav")) :c.hasClass("collapsed") ? (window.localStorage.setItem("patternfly-navigation-primary", "expanded"), y()) :(window.localStorage.setItem("patternfly-navigation-primary", "collapsed"), w());
+});
+}, A = function() {
 c.addClass("force-hide-secondary-nav-pf"), setTimeout(function() {
 c.removeClass("force-hide-secondary-nav-pf");
 }, 500);
-}, A = function(b) {
-a(document).find(".nav-pf-vertical > .list-group > .list-group-item").each(function(d, e) {
-var f = a(e);
-f.on("click.pf.secondarynav.data-api", function(d) {
-var e, g, h = a(this);
-h.hasClass("secondary-nav-item-pf") ? j() ? t(h) :b && (e = a(f.find(".nav-pf-secondary-nav > .list-group > .list-group-item")[0]), e.hasClass("tertiary-nav-item-pf") ? (g = e.find(".nav-pf-tertiary-nav > .list-group > .list-group-item")[0], p(a(g), e, f)) :o(e, h), d.stopImmediatePropagation()) :(m(), j() && (t(), c.removeClass("show-mobile-nav")), b && (n(h), d.stopImmediatePropagation()));
-}), f.find(".nav-pf-secondary-nav > .list-group > .list-group-item").each(function(d, e) {
-var g = a(e);
-g.on("click.pf.secondarynav.data-api", function(d) {
-var e, h = a(this);
-h.hasClass("tertiary-nav-item-pf") ? j() ? (t(h, f), d.stopImmediatePropagation()) :b && (e = g.find(".nav-pf-tertiary-nav > .list-group > .list-group-item")[0], p(a(e), g, f), d.stopImmediatePropagation()) :(j() && (t(), c.removeClass("show-mobile-nav")), q(), b && (o(g, f), d.stopImmediatePropagation()));
-}), g.find(".nav-pf-tertiary-nav > .list-group > .list-group-item").each(function(d, e) {
-var h = a(e);
-h.on("click.pf.secondarynav.data-api", function(a) {
-j() && (t(), c.removeClass("show-mobile-nav")), q(), b && (p(h, g, f), a.stopImmediatePropagation());
-});
-});
-});
+}, B = function(b) {
+a(document).find(".nav-pf-vertical .list-group-item").each(function(d, e) {
+var f, g = a(e), h = g.closest('[class*="nav-pf-"]');
+h.hasClass("nav-pf-vertical") ? f = function(d) {
+var e, f, h = a(this);
+h.hasClass("secondary-nav-item-pf") ? k() ? s(h) :b && (f = e = g.find(".nav-pf-secondary-nav > .list-group > .list-group-item").eq(0), e.hasClass("tertiary-nav-item-pf") && (f = e.find(".nav-pf-tertiary-nav > .list-group > .list-group-item").eq(0)), o(f), d.stopImmediatePropagation()) :(n(), k() && (s(), c.removeClass("show-mobile-nav")), b && (o(h), d.stopImmediatePropagation()));
+} :h.hasClass("nav-pf-secondary-nav") ? f = function(d) {
+var e, f, h = a(this);
+h.hasClass("tertiary-nav-item-pf") ? k() ? (f = g.parents(".list-group-item"), s(h, f), d.stopImmediatePropagation()) :b && (e = g.find(".nav-pf-tertiary-nav > .list-group > .list-group-item").eq(0), o(e), d.stopImmediatePropagation()) :(k() && (s(), c.removeClass("show-mobile-nav")), p(), b && (o(g), d.stopImmediatePropagation()));
+} :h.hasClass("nav-pf-tertiary-nav") && (f = function(a) {
+k() && (s(), c.removeClass("show-mobile-nav")), p(), b && (o(g), a.stopImmediatePropagation());
+}), g.on("click.pf.secondarynav.data-api", f);
 }), a(document).find(".secondary-nav-item-pf").each(function(d, e) {
 var f = a(e);
 f.on("click.pf.secondarynav.data-api", '[data-toggle="collapse-secondary-nav"]', function(d) {
 var e = a(this);
-j() ? (t(), d.stopImmediatePropagation()) :e.hasClass("collapsed") ? (window.localStorage.setItem("patternfly-navigation-secondary", "expanded"), window.localStorage.setItem("patternfly-navigation-tertiary", "expanded"), r(!1, e), z()) :(window.localStorage.setItem("patternfly-navigation-secondary", "collapsed"), r(!0, e)), c.removeClass("hover-secondary-nav-pf"), b && d.stopImmediatePropagation();
+k() ? (s(), d.stopImmediatePropagation()) :e.hasClass("collapsed") ? (window.localStorage.setItem("patternfly-navigation-secondary", "expanded"), window.localStorage.setItem("patternfly-navigation-tertiary", "expanded"), q(!1, e), A()) :(window.localStorage.setItem("patternfly-navigation-secondary", "collapsed"), q(!0, e)), c.removeClass("hover-secondary-nav-pf"), b && d.stopImmediatePropagation();
 }), f.find(".tertiary-nav-item-pf").each(function(d, e) {
 var g = a(e);
 g.on("click.pf.tertiarynav.data-api", '[data-toggle="collapse-tertiary-nav"]', function(d) {
 var e = a(this);
-j() ? (t(f), d.stopImmediatePropagation()) :e.hasClass("collapsed") ? (window.localStorage.setItem("patternfly-navigation-secondary", "expanded"), window.localStorage.setItem("patternfly-navigation-tertiary", "expanded"), s(!1, e), z()) :(window.localStorage.setItem("patternfly-navigation-tertiary", "collapsed"), s(!0, e)), c.removeClass("hover-secondary-nav-pf"), c.removeClass("hover-tertiary-nav-pf"), b && d.stopImmediatePropagation();
+k() ? (s(f), d.stopImmediatePropagation()) :e.hasClass("collapsed") ? (window.localStorage.setItem("patternfly-navigation-secondary", "expanded"), window.localStorage.setItem("patternfly-navigation-tertiary", "expanded"), r(!1, e), A()) :(window.localStorage.setItem("patternfly-navigation-tertiary", "collapsed"), r(!0, e)), c.removeClass("hover-secondary-nav-pf"), c.removeClass("hover-tertiary-nav-pf"), b && d.stopImmediatePropagation();
 });
 });
 }), a(document).on("mouseenter.pf.tertiarynav.data-api", ".secondary-nav-item-pf", function(b) {
 var d = a(this);
-j() || (void 0 !== d[0].navUnHoverTimeout ? (clearTimeout(d[0].navUnHoverTimeout), d[0].navUnHoverTimeout = void 0) :void 0 === d[0].navHoverTimeout && (d[0].navHoverTimeout = setTimeout(function() {
+k() || (void 0 !== d[0].navUnHoverTimeout ? (clearTimeout(d[0].navUnHoverTimeout), d[0].navUnHoverTimeout = void 0) :void 0 === d[0].navHoverTimeout && (d[0].navHoverTimeout = setTimeout(function() {
 c.addClass("hover-secondary-nav-pf"), d.addClass("is-hover"), d[0].navHoverTimeout = void 0;
-}, h)));
+}, i)));
 }), a(document).on("mouseleave.pf.tertiarynav.data-api", ".secondary-nav-item-pf", function(b) {
 var d = a(this);
 void 0 !== d[0].navHoverTimeout ? (clearTimeout(d[0].navHoverTimeout), d[0].navHoverTimeout = void 0) :void 0 === d[0].navUnHoverTimeout && (d[0].navUnHoverTimeout = setTimeout(function() {
 c.find(".secondary-nav-item-pf.is-hover").length <= 1 && c.removeClass("hover-secondary-nav-pf"), d.removeClass("is-hover"), d[0].navUnHoverTimeout = void 0;
-}, i));
+}, j));
 }), a(document).on("mouseover.pf.tertiarynav.data-api", ".tertiary-nav-item-pf", function(b) {
 var d = a(this);
-j() || (void 0 !== d[0].navUnHoverTimeout ? (clearTimeout(d[0].navUnHoverTimeout), d[0].navUnHoverTimeout = void 0) :void 0 === d[0].navHoverTimeout && (d[0].navHoverTimeout = setTimeout(function() {
+k() || (void 0 !== d[0].navUnHoverTimeout ? (clearTimeout(d[0].navUnHoverTimeout), d[0].navUnHoverTimeout = void 0) :void 0 === d[0].navHoverTimeout && (d[0].navHoverTimeout = setTimeout(function() {
 c.addClass("hover-tertiary-nav-pf"), d.addClass("is-hover"), d[0].navHoverTimeout = void 0;
-}, h)));
+}, i)));
 }), a(document).on("mouseout.pf.tertiarynav.data-api", ".tertiary-nav-item-pf", function(b) {
 var d = a(this);
 void 0 !== d[0].navHoverTimeout ? (clearTimeout(d[0].navHoverTimeout), d[0].navHoverTimeout = void 0) :void 0 === d[0].navUnHoverTimeout && (d[0].navUnHoverTimeout = setTimeout(function() {
 c.find(".tertiary-nav-item-pf.is-hover").length <= 1 && c.removeClass("hover-tertiary-nav-pf"), d.removeClass("is-hover"), d[0].navUnHoverTimeout = void 0;
-}, i));
+}, j));
 });
-}, B = function() {
-j() || ("collapsed" === window.localStorage.getItem("patternfly-navigation-primary") && v(), a(".nav-pf-vertical.nav-pf-vertical-collapsible-menus").length > 0 && ("collapsed" === window.localStorage.getItem("patternfly-navigation-secondary") && r(!0, a(".secondary-nav-item-pf.active [data-toggle=collapse-secondary-nav]")), "collapsed" === window.localStorage.getItem("patternfly-navigation-tertiary") && s(!0, a(".tertiary-nav-item-pf.active [data-toggle=collapse-tertiary-nav]"))));
 }, C = function() {
+k() || ("collapsed" === window.localStorage.getItem("patternfly-navigation-primary") && w(), a(".nav-pf-vertical.nav-pf-vertical-collapsible-menus").length > 0 && ("collapsed" === window.localStorage.getItem("patternfly-navigation-secondary") && q(!0, a(".secondary-nav-item-pf.active [data-toggle=collapse-secondary-nav]")), "collapsed" === window.localStorage.getItem("patternfly-navigation-tertiary") && r(!0, a(".tertiary-nav-item-pf.active [data-toggle=collapse-tertiary-nav]"))));
+}, D = function() {
 var b = {
 container:"body",
 placement:"bottom",
@@ -37622,15 +37776,54 @@ template:'<div class="nav-pf-vertical-tooltip tooltip" role="tooltip"><div class
 a('.nav-pf-vertical [data-toggle="tooltip"]').tooltip(b), a(".nav-pf-vertical").on("show.bs.tooltip", function(b) {
 return a(this).hasClass("collapsed");
 });
-}, D = function(a) {
-c.addClass("hide-nav-pf"), d.addClass("hide-nav-pf"), u(), y(), A(a), C(), B(), c.removeClass("hide-nav-pf"), d.removeClass("hide-nav-pf"), k(250);
+}, E = function(a) {
+c.addClass("hide-nav-pf"), d.addClass("hide-nav-pf"), v(), z(), B(a), D(), C(), c.removeClass("hide-nav-pf"), d.removeClass("hide-nav-pf"), l(250);
+}, F = {
+hideMenu:function() {
+f = !1, t();
+},
+showMenu:function() {
+f = !0, u();
+},
+isVisible:function() {
+return f;
+}
 };
-a(window).on("resize", function() {
-u(), w();
-}), D(b);
+return a.fn.setupVerticalNavigation.self || (a.fn.setupVerticalNavigation.self = F, a(window).on("resize", function() {
+v(), x();
+}), E(b)), a.fn.setupVerticalNavigation.self;
+};
+}(jQuery), function(a) {
+"use strict";
+a.fn.pfList = function() {
+function b(b) {
+b.find("[data-list=expansion], .list-pf-item, .list-pf-expansion").each(function(b, c) {
+var f = a(c), g = f.find(".collapse").first(), h = g.hasClass("in");
+e(f, h), f.hasClass("list-pf-item") && d(f, h);
+}), b.find(".list-pf-container").each(function(b, d) {
+var e = a(d), f = e.find("[data-list=toggle]");
+f.length || (f = e), f.on("keydown", function(a) {
+13 !== a.keyCode && 32 !== a.keyCode || (c(this), a.stopPropagation(), a.preventDefault());
+}), f.on("click", function(a) {
+c(this), a.stopPropagation(), a.preventDefault();
+});
+});
+}
+function c(b) {
+var c, f, g, h;
+c = a(b), f = c.parentsUntil(".list-pf", "[data-list=expansion]").first(), f.length || (f = c.closest(".list-pf-item, .list-pf-expansion")), g = f.find(".collapse").first(), g.toggleClass("in"), e(f, g.hasClass("in")), h = f.closest(".list-pf-item"), d(h, h.find(".collapse").first().hasClass("in"));
+}
+function d(a, b) {
+b ? a.addClass("active") :a.removeClass("active");
+}
+function e(a, b) {
+var c = a.find(".list-pf-chevron .fa").first();
+b ? (c.removeClass("fa-angle-right"), c.addClass("fa-angle-down")) :(c.addClass("fa-angle-right"), c.removeClass("fa-angle-down"));
+}
+return b(this), this;
 };
 }(jQuery), angular.module("patternfly.card", []), angular.module("patternfly.charts", [ "patternfly.utils", "ui.bootstrap", "ngSanitize" ]), angular.module("patternfly.filters", [ "patternfly.select", "ui.bootstrap" ]), angular.module("patternfly.form", []), angular.module("patternfly.modals", [ "ui.bootstrap.modal", "ui.bootstrap.tpls" ]), angular.module("patternfly.navigation", [ "ui.bootstrap" ]), angular.module("patternfly.notification", [ "patternfly.utils" ]), angular.module("patternfly", [ "patternfly.autofocus", "patternfly.card", "patternfly.filters", "patternfly.form", "patternfly.modals", "patternfly.navigation", "patternfly.notification", "patternfly.select", "patternfly.sort", "patternfly.toolbars", "patternfly.utils", "patternfly.validation", "patternfly.views", "patternfly.wizard" ]), angular.module("patternfly.sort", [ "ui.bootstrap" ]), angular.module("patternfly.toolbars", [ "patternfly.utils", "patternfly.filters", "patternfly.sort", "patternfly.views" ]), angular.module("patternfly.utils", [ "ui.bootstrap" ]), 
-angular.module("patternfly.views", [ "patternfly.utils", "patternfly.filters", "patternfly.sort", "patternfly.charts" ]), angular.module("patternfly.wizard", [ "ui.bootstrap.modal", "ui.bootstrap.tpls", "patternfly.form" ]), angular.module("patternfly.autofocus", []).directive("pfFocused", [ "$timeout", function(a) {
+angular.module("patternfly.views", [ "patternfly.utils", "patternfly.filters", "patternfly.sort", "patternfly.charts", "dndLists" ]), angular.module("patternfly.wizard", [ "ui.bootstrap.modal", "ui.bootstrap.tpls", "patternfly.form" ]), angular.module("patternfly.autofocus", []).directive("pfFocused", [ "$timeout", function(a) {
 "use strict";
 return {
 restrict:"A",
@@ -37688,27 +37881,27 @@ link:function(a) {
 a.shouldShowTitlesSeparator = !a.showTitlesSeparator || "true" === a.showTitlesSeparator;
 }
 };
-}), function() {
+}), function(a) {
 "use strict";
-var a = $().c3ChartDefaults();
+var b = a.c3ChartDefaults();
 angular.module("patternfly.charts").constant("c3ChartDefaults", {
-getDefaultColors:a.getDefaultColors,
-getDefaultDonut:a.getDefaultDonut,
-getDefaultDonutSize:a.getDefaultDonutSize,
-getDefaultDonutColor:a.getDefaultDonutColors,
-getDefaultDonutLegend:a.getDefaultDonutLegend,
-getDefaultDonutConfig:a.getDefaultDonutConfig,
-getDefaultSparklineArea:a.getDefaultSparklineArea,
-getDefaultSparklineSize:a.getDefaultSparklineSize,
-getDefaultSparklineAxis:a.getDefaultSparklineAxis,
-getDefaultSparklineColor:a.getDefaultColors,
-getDefaultSparklineLegend:a.getDefaultSparklineLegend,
-getDefaultSparklinePoint:a.getDefaultSparklinePoint,
-getDefaultSparklineTooltip:a.getDefaultSparklineTooltip,
-getDefaultSparklineConfig:a.getDefaultSparklineConfig,
-getDefaultLineConfig:a.getDefaultLineConfig
+getDefaultColors:b.getDefaultColors,
+getDefaultDonut:b.getDefaultDonut,
+getDefaultDonutSize:b.getDefaultDonutSize,
+getDefaultDonutColor:b.getDefaultDonutColors,
+getDefaultDonutLegend:b.getDefaultDonutLegend,
+getDefaultDonutConfig:b.getDefaultDonutConfig,
+getDefaultSparklineArea:b.getDefaultSparklineArea,
+getDefaultSparklineSize:b.getDefaultSparklineSize,
+getDefaultSparklineAxis:b.getDefaultSparklineAxis,
+getDefaultSparklineColor:b.getDefaultColors,
+getDefaultSparklineLegend:b.getDefaultSparklineLegend,
+getDefaultSparklinePoint:b.getDefaultSparklinePoint,
+getDefaultSparklineTooltip:b.getDefaultSparklineTooltip,
+getDefaultSparklineConfig:b.getDefaultSparklineConfig,
+getDefaultLineConfig:b.getDefaultLineConfig
 });
-}(), function() {
+}(patternfly), function(a) {
 "use strict";
 angular.module("patternfly.charts").directive("pfC3Chart", [ "$timeout", function(a) {
 return {
@@ -37729,8 +37922,9 @@ c && (c.bindto = "#" + d.id, a = c3.generate(c), b.getChartCallback && b.getChar
 }
 };
 } ]);
-}(), angular.module("patternfly.charts").directive("pfDonutPctChart", [ "pfUtils", "$timeout", function(a, b) {
+}(patternfly), function(a) {
 "use strict";
+angular.module("patternfly.charts").directive("pfDonutPctChart", [ "pfUtils", "$timeout", function(b, c) {
 return {
 restrict:"A",
 scope:{
@@ -37741,26 +37935,26 @@ centerLabel:"=?"
 },
 replace:!0,
 templateUrl:"charts/donut/donut-pct-chart.html",
-controller:[ "$scope", function(b) {
-var c;
-b.donutChartId = "donutChart", b.config.chartId && (b.donutChartId = b.config.chartId + b.donutChartId), b.updateAvailable = function() {
-b.data.available = b.data.total - b.data.used;
-}, void 0 === b.data.available && b.updateAvailable(), b.getStatusColor = function(b, c) {
-var d = a.colorPalette.blue;
-return c && (d = a.colorPalette.green, b >= c.error ? d = a.colorPalette.red :b >= c.warning && (d = a.colorPalette.orange)), d;
-}, b.statusDonutColor = function(c) {
+controller:[ "$scope", function(c) {
+var d;
+c.donutChartId = "donutChart", c.config.chartId && (c.donutChartId = c.config.chartId + c.donutChartId), c.updateAvailable = function() {
+c.data.available = c.data.total - c.data.used;
+}, void 0 === c.data.available && c.updateAvailable(), c.getStatusColor = function(a, c) {
+var d = b.colorPalette.blue;
+return c && (d = b.colorPalette.green, a >= c.error ? d = b.colorPalette.red :a >= c.warning && (d = b.colorPalette.orange)), d;
+}, c.statusDonutColor = function(a) {
 var d, e;
 return d = {
 pattern:[]
-}, e = c.data.used / c.data.total * 100, d.pattern[0] = b.getStatusColor(e, c.config.thresholds), d.pattern[1] = a.colorPalette.black300, d;
-}, c = function(a) {
+}, e = a.data.used / a.data.total * 100, d.pattern[0] = c.getStatusColor(e, a.config.thresholds), d.pattern[1] = b.colorPalette.black300, d;
+}, d = function(a) {
 return {
-contents:function(c) {
+contents:function(b) {
 var d;
-return d = a.config.tooltipFn ? '<span class="donut-tooltip-pf" style="white-space: nowrap;">' + a.config.tooltipFn(c) + "</span>" :'<span class="donut-tooltip-pf" style="white-space: nowrap;">' + Math.round(100 * c[0].ratio) + "% " + b.config.units + " " + c[0].name + "</span>";
+return d = a.config.tooltipFn ? '<span class="donut-tooltip-pf" style="white-space: nowrap;">' + a.config.tooltipFn(b) + "</span>" :'<span class="donut-tooltip-pf" style="white-space: nowrap;">' + Math.round(100 * b[0].ratio) + "% " + c.config.units + " " + b[0].name + "</span>";
 }
 };
-}, b.getDonutData = function(a) {
+}, c.getDonutData = function(a) {
 return {
 columns:[ [ "Used", a.data.used ], [ "Available", a.data.available ] ],
 type:"donut",
@@ -37772,21 +37966,21 @@ show:!1
 groups:[ [ "used", "available" ] ],
 order:null
 };
-}, b.getCenterLabelText = function() {
+}, c.getCenterLabelText = function() {
 var a;
 return a = {
-bigText:b.data.used,
-smText:b.config.units + " Used"
-}, b.config.centerLabelFn ? (a.bigText = b.config.centerLabelFn(), a.smText = "") :"none" === b.centerLabel ? (a.bigText = "", a.smText = "") :"available" === b.centerLabel ? (a.bigText = b.data.available, a.smText = b.config.units + " Available") :"percent" === b.centerLabel && (a.bigText = Math.round(b.data.used / b.data.total * 100) + "%", a.smText = "of " + b.data.total + " " + b.config.units), a;
-}, b.updateAll = function(d) {
-b.updateAvailable(), b.config.data = a.merge(b.config.data, b.getDonutData(b)), b.config.color = b.statusDonutColor(b), b.config.tooltip = c(d), b.config.data.onclick = b.config.onClickFn;
-}, b.config = a.merge($().c3ChartDefaults().getDefaultDonutConfig(), b.config), b.updateAll(b);
+bigText:c.data.used,
+smText:c.config.units + " Used"
+}, c.config.centerLabelFn ? (a.bigText = c.config.centerLabelFn(), a.smText = "") :"none" === c.centerLabel ? (a.bigText = "", a.smText = "") :"available" === c.centerLabel ? (a.bigText = c.data.available, a.smText = c.config.units + " Available") :"percent" === c.centerLabel && (a.bigText = Math.round(c.data.used / c.data.total * 100) + "%", a.smText = "of " + c.data.total + " " + c.config.units), a;
+}, c.updateAll = function(a) {
+c.updateAvailable(), c.config.data = b.merge(c.config.data, c.getDonutData(c)), c.config.color = c.statusDonutColor(c), c.config.tooltip = d(a), c.config.data.onclick = c.config.onClickFn;
+}, c.config = b.merge(a.c3ChartDefaults().getDefaultDonutConfig(), c.config), c.updateAll(c);
 } ],
-link:function(a, c) {
+link:function(a, b) {
 var d = function() {
-b(function() {
-var b, d;
-b = d3.select(c[0]).select("text.c3-chart-arcs-title"), b && (d = a.getCenterLabelText(), b.selectAll("*").remove(), d.bigText && !d.smText ? b.text(d.bigText) :(b.insert("tspan").text(d.bigText).classed("donut-title-big-pf", !0).attr("dy", 0).attr("x", 0), b.insert("tspan").text(d.smText).classed("donut-title-small-pf", !0).attr("dy", 20).attr("x", 0)));
+c(function() {
+var c, d;
+c = d3.select(b[0]).select("text.c3-chart-arcs-title"), c && (d = a.getCenterLabelText(), c.selectAll("*").remove(), d.bigText && !d.smText ? c.text(d.bigText) :(c.insert("tspan").text(d.bigText).classed("donut-title-big-pf", !0).attr("dy", 0).attr("x", 0), c.insert("tspan").text(d.smText).classed("donut-title-small-pf", !0).attr("dy", 20).attr("x", 0)));
 }, 300);
 };
 a.$watch("config", function() {
@@ -37800,7 +37994,8 @@ d();
 });
 }
 };
-} ]), angular.module("patternfly.charts").directive("pfEmptyChart", function() {
+} ]);
+}(patternfly), angular.module("patternfly.charts").directive("pfEmptyChart", function() {
 "use strict";
 return {
 restrict:"A",
@@ -37934,8 +38129,9 @@ l(), n();
 });
 }
 };
-} ]), angular.module("patternfly.charts").directive("pfLineChart", [ "pfUtils", function(a) {
+} ]), function(a) {
 "use strict";
+angular.module("patternfly.charts").directive("pfLineChart", [ "pfUtils", function(b) {
 return {
 restrict:"A",
 scope:{
@@ -37947,17 +38143,17 @@ setAreaChart:"=?"
 },
 replace:!0,
 templateUrl:"charts/line/line-chart.html",
-controller:[ "$scope", function(b) {
-b.lineChartId = "lineChart", b.config.chartId && (b.lineChartId = b.config.chartId + b.lineChartId), b.getLineData = function(a) {
-var c = {
-type:b.setAreaChart ? "area" :"line"
+controller:[ "$scope", function(c) {
+c.lineChartId = "lineChart", c.config.chartId && (c.lineChartId = c.config.chartId + c.lineChartId), c.getLineData = function(a) {
+var b = {
+type:c.setAreaChart ? "area" :"line"
 };
-return a && a.dataAvailable !== !1 && a.xData && (c.x = a.xData[0], c.columns = Object.keys(a).map(function(b) {
+return a && a.dataAvailable !== !1 && a.xData && (b.x = a.xData[0], b.columns = Object.keys(a).map(function(b) {
 return a[b];
-})), c;
-}, void 0 === b.showXAxis && (b.showXAxis = void 0 !== b.config.showAxis && b.config.showAxis), void 0 === b.showYAxis && (b.showYAxis = void 0 !== b.config.showAxis && b.config.showAxis), b.defaultConfig = $().c3ChartDefaults().getDefaultLineConfig(), b.defaultConfig.axis = {
+})), b;
+}, void 0 === c.showXAxis && (c.showXAxis = void 0 !== c.config.showAxis && c.config.showAxis), void 0 === c.showYAxis && (c.showYAxis = void 0 !== c.config.showAxis && c.config.showAxis), c.defaultConfig = a.c3ChartDefaults().getDefaultLineConfig(), c.defaultConfig.axis = {
 x:{
-show:b.showXAxis === !0,
+show:c.showXAxis === !0,
 type:"timeseries",
 tick:{
 format:function() {
@@ -37966,31 +38162,33 @@ return "";
 }
 },
 y:{
-show:b.showYAxis === !0,
+show:c.showYAxis === !0,
 tick:{
 format:function() {
 return "";
 }
 }
 }
-}, void 0 === b.setAreaChart && (b.setAreaChart = void 0 !== b.config.setAreaChart && b.config.setAreaChart), b.config.data = a.merge(b.config.data, b.getLineData(b.chartData)), b.defaultConfig = a.merge(b.defaultConfig, b.config);
+}, void 0 === c.setAreaChart && (c.setAreaChart = void 0 !== c.config.setAreaChart && c.config.setAreaChart), c.config.data = b.merge(c.config.data, c.getLineData(c.chartData)), c.defaultConfig = b.merge(c.defaultConfig, c.config);
 } ],
-link:function(b) {
-b.$watch("config", function() {
-b.config.data = a.merge(b.config.data, b.getLineData(b.chartData)), b.chartConfig = a.merge(b.defaultConfig, b.config);
-}, !0), b.$watch("showXAxis", function() {
-b.chartConfig.axis.x.show = b.showXAxis === !0;
-}), b.$watch("showYAxis", function() {
-b.chartConfig.axis.y.show = b.showYAxis === !0;
-}), b.$watch("setAreaChart", function() {
-b.chartConfig.data.type = b.setAreaChart ? "area" :"line";
-}), b.$watch("chartData", function() {
-b.chartConfig.data = a.merge(b.chartConfig.data, b.getLineData(b.chartData));
+link:function(a) {
+a.$watch("config", function() {
+a.config.data = b.merge(a.config.data, a.getLineData(a.chartData)), a.chartConfig = b.merge(a.defaultConfig, a.config);
+}, !0), a.$watch("showXAxis", function() {
+a.chartConfig.axis.x.show = a.showXAxis === !0;
+}), a.$watch("showYAxis", function() {
+a.chartConfig.axis.y.show = a.showYAxis === !0;
+}), a.$watch("setAreaChart", function() {
+a.chartConfig.data.type = a.setAreaChart ? "area" :"line";
+}), a.$watch("chartData", function() {
+a.chartConfig.data = a.getLineData(a.chartData);
 }, !0);
 }
 };
-} ]), angular.module("patternfly.charts").directive("pfSparklineChart", [ "pfUtils", function(a) {
+} ]);
+}(patternfly), function(a) {
 "use strict";
+angular.module("patternfly.charts").directive("pfSparklineChart", [ "pfUtils", function(b) {
 return {
 restrict:"A",
 scope:{
@@ -38002,49 +38200,49 @@ showYAxis:"=?"
 },
 replace:!0,
 templateUrl:"charts/sparkline/sparkline-chart.html",
-controller:[ "$scope", function(b) {
-b.sparklineChartId = "sparklineChart", b.config.chartId && (b.sparklineChartId = b.config.chartId + b.sparklineChartId), b.getSparklineData = function(a) {
+controller:[ "$scope", function(c) {
+c.sparklineChartId = "sparklineChart", c.config.chartId && (c.sparklineChartId = c.config.chartId + c.sparklineChartId), c.getSparklineData = function(a) {
 var b = {
 type:"area"
 };
 return a && a.dataAvailable !== !1 && a.xData && a.yData && (b.x = a.xData[0], b.columns = [ a.xData, a.yData ]), b;
-}, b.getTooltipTableHTML = function(a) {
+}, c.getTooltipTableHTML = function(a) {
 return '<div class="module-triangle-bottom">  <table class="c3-tooltip">    <tbody>' + a + "    </tbody>  </table></div>";
-}, b.sparklineTooltip = function() {
+}, c.sparklineTooltip = function() {
 return {
-contents:function(a) {
-var c, d = 0;
-if (b.config.tooltipFn) c = b.config.tooltipFn(a); else switch (b.config.tooltipType) {
+contents:function(b) {
+var d, e = 0;
+if (c.config.tooltipFn) d = c.config.tooltipFn(b); else switch (c.config.tooltipType) {
 case "usagePerDay":
-b.chartData.dataAvailable !== !1 && b.chartData.total > 0 && (d = Math.round(a[0].value / b.chartData.total * 100)), c = '<tr>  <th colspan="2">' + a[0].x.toLocaleDateString() + '</th></tr><tr>  <td class="name">' + d + '%:</td>  <td class="value text-nowrap">' + a[0].value + " " + (b.config.units ? b.config.units + " " :"") + a[0].name + "</td></tr>";
+c.chartData.dataAvailable !== !1 && c.chartData.total > 0 && (e = Math.round(b[0].value / c.chartData.total * 100)), d = '<tr>  <th colspan="2">' + b[0].x.toLocaleDateString() + '</th></tr><tr>  <td class="name">' + e + '%:</td>  <td class="value text-nowrap">' + b[0].value + " " + (c.config.units ? c.config.units + " " :"") + b[0].name + "</td></tr>";
 break;
 
 case "valuePerDay":
-c = '<tr>  <td class="value">' + a[0].x.toLocaleDateString() + '</td>  <td class="value text-nowrap">' + a[0].value + " " + a[0].name + "</td></tr>";
+d = '<tr>  <td class="value">' + b[0].x.toLocaleDateString() + '</td>  <td class="value text-nowrap">' + b[0].value + " " + b[0].name + "</td></tr>";
 break;
 
 case "percentage":
-d = Math.round(a[0].value / b.chartData.total * 100), c = '<tr>  <td class="name">' + d + "%</td></tr>";
+e = Math.round(b[0].value / c.chartData.total * 100), d = '<tr>  <td class="name">' + e + "%</td></tr>";
 break;
 
 default:
-c = $().c3ChartDefaults().getDefaultSparklineTooltip().contents(a);
+d = a.c3ChartDefaults().getDefaultSparklineTooltip().contents(b);
 }
-return b.getTooltipTableHTML(c);
+return c.getTooltipTableHTML(d);
 },
-position:function(a, c, d, e) {
+position:function(a, b, d, e) {
 var f, g, h, i, j;
 try {
-return f = parseInt(e.getAttribute("x")), g = parseInt(e.getAttribute("y")), h = document.querySelector("#" + b.sparklineChartId).getBoundingClientRect(), i = document.querySelector("#" + b.sparklineChartId + " g.c3-axis-y").getBoundingClientRect().right, j = Math.max(0, f + i - h.left - Math.floor(c / 2)), {
+return f = parseInt(e.getAttribute("x")), g = parseInt(e.getAttribute("y")), h = document.querySelector("#" + c.sparklineChartId).getBoundingClientRect(), i = document.querySelector("#" + c.sparklineChartId + " g.c3-axis-y").getBoundingClientRect().right, j = Math.max(0, f + i - h.left - Math.floor(b / 2)), {
 top:g - d,
-left:Math.min(j, h.width - c)
+left:Math.min(j, h.width - b)
 };
 } catch (k) {}
 }
 };
-}, void 0 === b.showXAxis && (b.showXAxis = void 0 !== b.config.showAxis && b.config.showAxis), void 0 === b.showYAxis && (b.showYAxis = void 0 !== b.config.showAxis && b.config.showAxis), b.defaultConfig = $().c3ChartDefaults().getDefaultSparklineConfig(), b.defaultConfig.axis = {
+}, void 0 === c.showXAxis && (c.showXAxis = void 0 !== c.config.showAxis && c.config.showAxis), void 0 === c.showYAxis && (c.showYAxis = void 0 !== c.config.showAxis && c.config.showAxis), c.defaultConfig = a.c3ChartDefaults().getDefaultSparklineConfig(), c.defaultConfig.axis = {
 x:{
-show:b.showXAxis === !0,
+show:c.showXAxis === !0,
 type:"timeseries",
 tick:{
 format:function() {
@@ -38053,30 +38251,31 @@ return "";
 }
 },
 y:{
-show:b.showYAxis === !0,
+show:c.showYAxis === !0,
 tick:{
 format:function() {
 return "";
 }
 }
 }
-}, b.defaultConfig.tooltip = b.sparklineTooltip(), b.chartHeight && (b.defaultConfig.size.height = b.chartHeight), b.defaultConfig.units = "", b.config.data = a.merge(b.config.data, b.getSparklineData(b.chartData)), b.chartConfig = a.merge(b.defaultConfig, b.config);
+}, c.defaultConfig.tooltip = c.sparklineTooltip(), c.chartHeight && (c.defaultConfig.size.height = c.chartHeight), c.defaultConfig.units = "", c.config.data = b.merge(c.config.data, c.getSparklineData(c.chartData)), c.chartConfig = b.merge(c.defaultConfig, c.config);
 } ],
-link:function(b) {
-b.$watch("config", function() {
-b.config.data = a.merge(b.config.data, b.getSparklineData(b.chartData)), b.chartConfig = a.merge(b.defaultConfig, b.config);
-}, !0), b.$watch("chartHeight", function() {
-b.chartHeight && (b.chartConfig.size.height = b.chartHeight);
-}), b.$watch("showXAxis", function() {
-b.chartConfig.axis.x.show = b.showXAxis === !0;
-}), b.$watch("showYAxis", function() {
-b.chartConfig.axis.y.show = b.showYAxis === !0;
-}), b.$watch("chartData", function() {
-b.chartConfig.data = a.merge(b.chartConfig.data, b.getSparklineData(b.chartData));
+link:function(a) {
+a.$watch("config", function() {
+a.config.data = b.merge(a.config.data, a.getSparklineData(a.chartData)), a.chartConfig = b.merge(a.defaultConfig, a.config);
+}, !0), a.$watch("chartHeight", function() {
+a.chartHeight && (a.chartConfig.size.height = a.chartHeight);
+}), a.$watch("showXAxis", function() {
+a.chartConfig.axis.x.show = a.showXAxis === !0;
+}), a.$watch("showYAxis", function() {
+a.chartConfig.axis.y.show = a.showYAxis === !0;
+}), a.$watch("chartData", function() {
+a.chartConfig.data = b.merge(a.chartConfig.data, a.getSparklineData(a.chartData));
 }, !0);
 }
 };
-} ]), angular.module("patternfly.charts").directive("pfTrendsChart", function() {
+} ]);
+}(patternfly), angular.module("patternfly.charts").directive("pfTrendsChart", function() {
 "use strict";
 return {
 restrict:"A",
@@ -39047,6 +39246,10 @@ if (b.defaultConfig = {
 selectItems:!1,
 multiSelect:!1,
 dblClick:!1,
+dragEnabled:!1,
+dragEnd:null,
+dragMoved:null,
+dragStart:null,
 selectionMatchProp:"uuid",
 selectedItems:[],
 checkDisabled:!1,
@@ -39103,6 +39306,14 @@ return a[c] === b[c];
 })), d;
 }, a.checkDisabled = function(b) {
 return a.config.checkDisabled && a.config.checkDisabled(b);
+}, a.dragEnd = function() {
+angular.isFunction(a.config.dragEnd) && a.config.dragEnd();
+}, a.dragMoved = function() {
+angular.isFunction(a.config.dragMoved) && a.config.dragMoved();
+}, a.isDragOriginal = function(b) {
+return b === a.dragItem;
+}, a.dragStart = function(b) {
+a.dragItem = b, angular.isFunction(a.config.dragStart) && a.config.dragStart(b);
 };
 }
 };
@@ -39547,7 +39758,7 @@ a.put("sort/sort.html", '<div class=sort-pf><div uib-dropdown class=btn-group><b
 a.put("toolbars/toolbar.html", '<div class=container-fluid><div class="row toolbar-pf"><div class=col-sm-12><form class=toolbar-pf-actions ng-class="{\'no-filter-results\': !config.filterConfig}"><div class="form-group toolbar-apf-filter"><div pf-filter-fields id={{filterDomId}}_fields config=config.filterConfig ng-if=config.filterConfig add-filter-fn=addFilter></div></div><div class=form-group><div pf-sort id={{sortDomId}} config=config.sortConfig ng-if=config.sortConfig></div></div><div class="form-group toolbar-actions" ng-if="config.actionsConfig &&\n                   ((config.actionsConfig.primaryActions && config.actionsConfig.primaryActions.length > 0) ||\n                    (config.actionsConfig.moreActions && config.actionsConfig.moreActions.length > 0) ||\n                    config.actionsConfig.actionsInclude)"><button class="btn btn-default primary-action" type=button ng-repeat="action in config.actionsConfig.primaryActions" title={{action.title}} ng-click=handleAction(action) ng-disabled="action.isDisabled === true">{{action.name}}</button><div ng-if=config.actionsConfig.actionsInclude pf-transclude class=toolbar-pf-include-actions ng-tranclude=actions></div><div uib-dropdown class=dropdown-kebab-pf ng-if="config.actionsConfig.moreActions && config.actionsConfig.moreActions.length > 0"><button uib-dropdown-toggle class="btn btn-link" type=button id={{filterDomId}}_kebab><span class="fa fa-ellipsis-v"></span></button><ul uib-dropdown-menu aria-labelledby=dropdownKebab><li ng-repeat="action in config.actionsConfig.moreActions" role="{{action.isSeparator === true ? \'separator\' : \'menuitem\'}}" ng-class="{\'divider\': action.isSeparator === true, \'disabled\': action.isDisabled === true}"><a ng-if="action.isSeparator !== true" class=secondary-action title={{action.title}} ng-click=handleAction(action)>{{action.name}}</a></li></ul></div></div><div class=toolbar-pf-action-right><div class="form-group toolbar-pf-view-selector" ng-if="config.viewsConfig && config.viewsConfig.views"><button ng-repeat="view in config.viewsConfig.viewsList" class="btn btn-link" ng-class="{\'active\': isViewSelected(view.id), \'disabled\': checkViewDisabled(view)}" title={{view.title}} ng-click=viewSelected(view.id)><i class={{view.iconClass}}></i></button></div></div></form><div pf-filter-results id={{filterDomId}_results} config=config.filterConfig ng-if=config.filterConfig></div></div><!-- /col --></div><!-- /row --></div><!-- /container -->');
 } ]), angular.module("patternfly.views").run([ "$templateCache", function(a) {
 "use strict";
-a.put("views/cardview/card-view.html", '<div class=card-view-pf><div class=card ng-repeat="item in items" ng-class="{\'pf-selectable\': selectItems, \'active\': isSelected(item), \'disabled\': checkDisabled(item)}"><div class=card-content ng-click="itemClick($event, item)" ng-dblclick="dblClick($event, item)"><div pf-transclude=parent></div></div><div class=card-check-box ng-if=config.showSelectBox><input type=checkbox value=item.selected ng-model=item.selected ng-disabled=checkDisabled(item) ng-change="checkBoxChange(item)"></div></div></div>'), a.put("views/listview/list-view.html", '<div class="list-group list-view-pf"><div class="list-group-item {{item.rowClass}}" ng-repeat="item in items track by $index" ng-class="{\'pf-selectable\': selectItems, \'active\': isSelected(item), \'disabled\': checkDisabled(item), \'list-view-pf-expand-active\': item.isExpanded}"><div class=list-group-item-header><div class=list-view-pf-expand ng-if=config.useExpandingRows><span class="fa fa-angle-right" ng-show=!item.disableRowExpansion ng-click=toggleItemExpansion(item) ng-class="{\'fa-angle-down\': item.isExpanded}"></span> <span class=pf-expand-placeholder ng-show=item.disableRowExpansion></span></div><div class=list-view-pf-checkbox ng-if=config.showSelectBox><input type=checkbox value=item.selected ng-model=item.selected ng-disabled=checkDisabled(item) ng-change="checkBoxChange(item)"></div><div class=list-view-pf-actions ng-if="(actionButtons && actionButtons.length > 0) || (menuActions && menuActions.length > 0)"><button class="btn btn-default {{actionButton.class}}" ng-repeat="actionButton in actionButtons" title={{actionButton.title}} ng-class="{\'disabled\' : checkDisabled(item) || !enableButtonForItem(actionButton, item)}" ng-click="handleButtonAction(actionButton, item)"><div ng-if=actionButton.include class=actionButton.includeClass ng-include src=actionButton.include></div><span ng-if=!actionButton.include>{{actionButton.name}}</span></button><div uib-dropdown class="{{dropdownClass}} pull-right dropdown-kebab-pf {{getMenuClassForItem(item)}} {{hideMenuForItem(item) ? \'invisible\' : \'\'}}" id=kebab_{{$index}} ng-if="menuActions && menuActions.length > 0"><button uib-dropdown-toggle class="btn btn-link" type=button id=dropdownKebabRight_{{$index}} ng-class="{\'disabled\': checkDisabled(item)}" ng-click="setupActions(item, $event)"><span class="fa fa-ellipsis-v"></span></button><ul uib-dropdown-menu class="dropdown-menu dropdown-menu-right {{$index}}" aria-labelledby=dropdownKebabRight_{{$index}}><li ng-repeat="menuAction in menuActions" ng-if="menuAction.isVisible !== false" role="{{menuAction.isSeparator === true ? \'separator\' : \'menuitem\'}}" ng-class="{\'divider\': (menuAction.isSeparator === true), \'disabled\': (menuAction.isDisabled === true)}"><a ng-if="menuAction.isSeparator !== true" title={{menuAction.title}} ng-click="handleMenuAction(menuAction, item)">{{menuAction.name}}</a></li></ul></div></div><div pf-transclude=parent class=list-view-pf-main-info ng-click="itemClick($event, item)" ng-dblclick="dblClick($event, item)"></div></div><div class="list-group-item-container container-fluid" ng-transclude=expandedContent ng-if="config.useExpandingRows && item.isExpanded"></div></div></div>');
+a.put("views/cardview/card-view.html", '<div class=card-view-pf><div class=card ng-repeat="item in items" ng-class="{\'pf-selectable\': selectItems, \'active\': isSelected(item), \'disabled\': checkDisabled(item)}"><div class=card-content ng-click="itemClick($event, item)" ng-dblclick="dblClick($event, item)"><div pf-transclude=parent></div></div><div class=card-check-box ng-if=config.showSelectBox><input type=checkbox value=item.selected ng-model=item.selected ng-disabled=checkDisabled(item) ng-change="checkBoxChange(item)"></div></div></div>'), a.put("views/listview/list-view.html", '<div class="list-group list-view-pf" dnd-list=items ng-class="{\'list-view-pf-dnd\': config.dragEnabled === true}"><div class=dndPlaceholder></div><div class="list-group-item {{item.rowClass}}" ng-repeat="item in items track by $index" dnd-draggable=item dnd-effect-allowed=move dnd-disable-if="config.dragEnabled !== true" dnd-dragstart=dragStart(item) dnd-moved=dragMoved() dnd-dragend=dragEnd() ng-class="{\'drag-original\': isDragOriginal(item), \'pf-selectable\': selectItems, \'active\': isSelected(item), \'disabled\': checkDisabled(item), \'list-view-pf-expand-active\': item.isExpanded}"><div class=list-group-item-header><div class=list-view-pf-dnd-drag-items ng-if="config.dragEnabled === true"><div pf-transclude=parent class=list-view-pf-main-info></div></div><div ng-class="{\'list-view-pf-dnd-original-items\': config.dragEnabled === true}"><div class=list-view-pf-expand ng-if=config.useExpandingRows><span class="fa fa-angle-right" ng-show=!item.disableRowExpansion ng-click=toggleItemExpansion(item) ng-class="{\'fa-angle-down\': item.isExpanded}"></span> <span class=pf-expand-placeholder ng-show=item.disableRowExpansion></span></div><div class=list-view-pf-checkbox ng-if=config.showSelectBox><input type=checkbox value=item.selected ng-model=item.selected ng-disabled=checkDisabled(item) ng-change="checkBoxChange(item)"></div><div class=list-view-pf-actions ng-if="(actionButtons && actionButtons.length > 0) || (menuActions && menuActions.length > 0)"><button class="btn btn-default {{actionButton.class}}" ng-repeat="actionButton in actionButtons" title={{actionButton.title}} ng-class="{\'disabled\' : checkDisabled(item) || !enableButtonForItem(actionButton, item)}" ng-click="handleButtonAction(actionButton, item)"><div ng-if=actionButton.include class=actionButton.includeClass ng-include src=actionButton.include></div><span ng-if=!actionButton.include>{{actionButton.name}}</span></button><div uib-dropdown class="{{dropdownClass}} pull-right dropdown-kebab-pf {{getMenuClassForItem(item)}} {{hideMenuForItem(item) ? \'invisible\' : \'\'}}" id=kebab_{{$index}} ng-if="menuActions && menuActions.length > 0"><button uib-dropdown-toggle class="btn btn-link" type=button id=dropdownKebabRight_{{$index}} ng-class="{\'disabled\': checkDisabled(item)}" ng-click="setupActions(item, $event)"><span class="fa fa-ellipsis-v"></span></button><ul uib-dropdown-menu class="dropdown-menu dropdown-menu-right {{$index}}" aria-labelledby=dropdownKebabRight_{{$index}}><li ng-repeat="menuAction in menuActions" ng-if="menuAction.isVisible !== false" role="{{menuAction.isSeparator === true ? \'separator\' : \'menuitem\'}}" ng-class="{\'divider\': (menuAction.isSeparator === true), \'disabled\': (menuAction.isDisabled === true)}"><a ng-if="menuAction.isSeparator !== true" title={{menuAction.title}} ng-click="handleMenuAction(menuAction, item)">{{menuAction.name}}</a></li></ul></div></div><div pf-transclude=parent class=list-view-pf-main-info ng-click="itemClick($event, item)" ng-dblclick="dblClick($event, item)"></div><div class="list-group-item-container container-fluid" ng-transclude=expandedContent ng-if="config.useExpandingRows && item.isExpanded"></div></div></div></div></div>');
 } ]), angular.module("patternfly.wizard").run([ "$templateCache", function(a) {
 "use strict";
 a.put("wizard/wizard-review-page.html", '<div class=wizard-pf-review-page><div class=wizard-pf-review-steps><ul class=list-group><li class=list-group-item ng-repeat="reviewStep in reviewSteps track by $index"><a class=apf-form-collapse ng-class="{\'collapsed\': !reviewStep.showReviewDetails}" ng-click=toggleShowReviewDetails(reviewStep)>{{reviewStep.stepTitle}}</a><div class=wizard-pf-review-substeps ng-class="{\'collapse\': !reviewStep.showReviewDetails}"><ul class=list-group ng-if=reviewStep.substeps><li class=list-group-item ng-repeat="substep in reviewStep.getReviewSteps()"><a class=apf-form-collapse ng-class="{\'collapsed\': !substep.showReviewDetails}" ng-click=toggleShowReviewDetails(substep)><span class=wizard-pf-substep-number>{{getSubStepNumber(reviewStep, substep)}}</span> <span class=wizard-pf-substep-title>{{substep.stepTitle}}</span></a><div class=wizard-pf-review-content ng-class="{\'collapse\': !substep.showReviewDetails}"><div ng-include=substep.reviewTemplate></div></div></li></ul><div class=wizard-pf-review-content ng-if=reviewStep.reviewTemplate ng-class="{\'collapse\': !reviewStep.showReviewDetails}"><div ng-include=reviewStep.reviewTemplate></div></div></div></li></ul></div></div>'), 
