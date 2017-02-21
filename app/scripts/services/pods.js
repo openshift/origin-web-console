@@ -4,16 +4,17 @@ angular.module("openshiftConsole")
   .factory("PodsService", function() {
     return {
       getImageIDs: function(pods, containerName) {
+        // Use a map so we only ever add the same SHA once.
         var imageIDs = {};
+        var shaPrefixPattern = /^.*sha256:/;
         _.each(pods, function(pod) {
-          var id;
+          var sha;
           var containerStatuses = _.get(pod, 'status.containerStatuses', []);
           var containerStatus = _.find(containerStatuses, { name: containerName });
-          if (containerStatus && containerStatus.imageID) {
-            // Strip the SHA prefix if present. Example imageID:
-            //   docker://sha256:eb96a0f8f2d3e0c2447e45b6b309f9e5d436ccc8eac2817a5ccc9fa022c4ce85
-            id = containerStatus.imageID.replace(/^docker:\/\/sha256:/, '');
-            imageIDs[id] = true;
+          var id = _.get(containerStatus, 'imageID', '');
+          if (shaPrefixPattern.test(id)) {
+            sha = id.replace(shaPrefixPattern, '');
+            imageIDs[sha] = true;
           }
         });
 

@@ -3459,12 +3459,12 @@ getHPAWarnings:s
 } ]), angular.module("openshiftConsole").factory("PodsService", function() {
 return {
 getImageIDs:function(a, b) {
-var c = {};
+var c = {}, d = /^.*sha256:/;
 return _.each(a, function(a) {
-var d, e = _.get(a, "status.containerStatuses", []), f = _.find(e, {
+var e, f = _.get(a, "status.containerStatuses", []), g = _.find(f, {
 name:b
-});
-f && f.imageID && (d = f.imageID.replace(/^docker:\/\/sha256:/, ""), c[d] = !0);
+}), h = _.get(g, "imageID", "");
+d.test(h) && (e = h.replace(d, ""), c[e] = !0);
 }), _.keys(c);
 },
 generateDebugPod:function(a, b) {
