@@ -63,10 +63,10 @@
                     <th>Pull Spec</th>
                   </tr>
                 </thead>
-                <tbody ng-if="(tagsByName | hashSize) == 0">
+                <tbody ng-if="!tags.length">
                   <tr><td colspan="5"><em>{{emptyMessage}}</em></td></tr>
                 </tbody>
-                <tbody ng-repeat="tag in tagsByName | orderBy : 'name'">
+                <tbody ng-repeat="tag in tags">
                   <tr>
                     <td data-title="Tag">
                       <a ng-if="tag.status" ng-href="{{imageStream | navigateResourceURL}}/{{tag.name}}">{{tag.name}}</a>

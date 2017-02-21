@@ -63,7 +63,8 @@ describe('Controller: ProjectsController', function () {
           var deferred = $q.defer();
           deferred.resolve({});
           return deferred.promise;
-        }
+        },
+        unwatchAll: function(watches) {}
       },
       ProjectsService: {
         canCreate: function() {

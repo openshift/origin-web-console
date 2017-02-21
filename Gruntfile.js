@@ -263,7 +263,7 @@ module.exports = function (grunt) {
           '.tmp/styles/main.css': '<%= yeoman.app %>/styles/main.less'
         },
         options: {
-          paths: ['<%= yeoman.app %>/styles'],
+          paths: ['<%= yeoman.app %>/styles', 'bower_components/'],
           sourceMap: true,
           sourceMapFilename: '.tmp/styles/main.css.map',
           sourceMapURL: 'main.css.map',
@@ -276,7 +276,7 @@ module.exports = function (grunt) {
         },
         options: {
           cleancss: true,
-          paths: ['<%= yeoman.app %>/styles']
+          paths: ['<%= yeoman.app %>/styles', 'bower_components/']
         }
       }
     },

@@ -39,7 +39,7 @@ module.exports = function(config) {
       "bower_components/bootstrap-select/dist/js/bootstrap-select.js",
       "bower_components/c3/c3.js",
       "bower_components/js-logger/src/logger.js",
-      "bower_components/hawtio-core/hawtio-core.js",
+      "bower_components/hawtio-core/dist/hawtio-core.js",
       "bower_components/lodash/lodash.js",
       "bower_components/hawtio-extension-service/dist/hawtio-extension-service.js",
       "bower_components/kubernetes-label-selector/labelSelector.js",
