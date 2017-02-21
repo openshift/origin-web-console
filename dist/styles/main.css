@@ -4064,9 +4064,10 @@ status-icon .spinner.spinner-inline{margin-left:.153846em;margin-right:.153846em
 .last-status status-icon .spinner.spinner-inline{margin-left:4px;margin-right:4px}
 pre.clipped{display:inline-block;margin-top:10px;max-width:100%}
 pre.clipped.scroll{max-height:150px;overflow:auto;width:100%}
-.k8s-label{margin-right:5px;margin-top:3px}
+.k8s-label{margin-right:5px;margin-top:3px;width:100%}
 .k8s-label:before{content:' ';white-space:normal}
-.k8s-label .label-pair{margin-bottom:2px}
+.k8s-label .label-pair{margin-bottom:2px;width:100%}
+.k8s-label .label-pair .label{min-width:50px}
 .k8s-label .label-pair .label:first-child{border-radius:2px 0 0 2px}
 .k8s-label .label-pair .label:last-child{border-radius:0 2px 2px 0}
 .k8s-label .label-pair .label-key{background-color:#bee1f4;color:#00659c;padding-top:4px;padding-bottom:4px;margin-left:0;font-size:12px}
