@@ -10,24 +10,24 @@
 
       <div class="form-group">
         <label for="actionType" class="required">Lifecycle Action</label><br/>
-        <div class="radio">
-          <label class="radio-inline">
-            <input type="radio"
-                    name="{{type}}-action-newpod"
-                    ng-model="action.type"
-                    value="execNewPod"
-                    aria-describedby="action-help">
-            Run a specific command in a new pod
-          </label>
-          <label class="radio-inline">
-            <input type="radio"
-                  name="{{type}}-action-images"
-                  ng-model="action.type"
-                  value="tagImages"
-                  aria-describedby="action-help">
-              Tag image if the deployment succeeds
-          </label>
-        </div>
+        <label class="radio-inline">
+          <input
+            type="radio"
+            name="{{type}}-action-newpod"
+            ng-model="action.type"
+            value="execNewPod"
+            aria-describedby="action-help">
+          Run a specific command in a new pod
+        </label>
+        <label class="radio-inline">
+          <input
+            type="radio"
+            name="{{type}}-action-images"
+            ng-model="action.type"
+            value="tagImages"
+            aria-describedby="action-help">
+          Tag image if the deployment succeeds
+        </label>
         <div  id="action-help" class="help-block">
           <span ng-if="action.type === 'execNewPod'">Runs a command in a new pod using the container from the deployment template. You can add additional environment variables and volumes.</span>
           <span ng-if="action.type === 'tagImages'">Tags the current image as an image stream tag if the deployment succeeds.</span>
