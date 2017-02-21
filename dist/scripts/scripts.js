@@ -4271,7 +4271,24 @@ for (c = 0; c < g.length; c++) g[c].env = _.get(f, [ c, "env" ], []);
 return e;
 }
 };
-} ]), angular.module("openshiftConsole").controller("ProjectsController", [ "$scope", "$filter", "$location", "$route", "$timeout", "AlertMessageService", "AuthService", "DataService", "KeywordService", "Logger", "ProjectsService", function(a, b, c, d, e, f, g, h, i, j, k) {
+} ]), angular.module("openshiftConsole").service("Scopes", function() {
+return {
+getControllerDefaults:function() {
+return {
+projectName:"",
+alerts:{},
+loaded:!1,
+emptyMessage:"Loading...",
+labelSuggestions:{},
+breadcrumbs:[],
+forms:{},
+renderOptions:{
+hideFilterWidget:!1
+}
+};
+}
+};
+}), angular.module("openshiftConsole").controller("ProjectsController", [ "$scope", "$filter", "$location", "$route", "$timeout", "AlertMessageService", "AuthService", "DataService", "KeywordService", "Logger", "ProjectsService", function(a, b, c, d, e, f, g, h, i, j, k) {
 var l, m, n = [], o = [];
 a.alerts = a.alerts || {}, a.loading = !0, a.showGetStarted = !1, a.canCreate = void 0, a.search = {
 text:""
@@ -5547,16 +5564,16 @@ d.toggle.roles = !d.toggle.roles, d.toggle.roles ? d.filteredRoles = b :(d.filte
 });
 });
 }));
-} ]), angular.module("openshiftConsole").controller("BuildsController", [ "$routeParams", "$scope", "AlertMessageService", "DataService", "$filter", "LabelFilter", "Logger", "$location", "BuildsService", "ProjectsService", function(a, b, c, d, e, f, g, h, i, j) {
-b.projectName = a.project, b.builds = {}, b.unfilteredBuildConfigs = {}, b.buildConfigs = void 0, b.labelSuggestions = {}, b.alerts = b.alerts || {}, b.emptyMessage = "Loading...", b.latestByConfig = {}, c.getAlerts().forEach(function(a) {
+} ]), angular.module("openshiftConsole").controller("BuildsController", [ "$routeParams", "$scope", "AlertMessageService", "DataService", "$filter", "LabelFilter", "Logger", "$location", "BuildsService", "ProjectsService", "Scopes", function(a, b, c, d, e, f, g, h, i, j, k) {
+angular.extend(b, k.getControllerDefaults()), b.projectName = a.project, b.builds = {}, b.unfilteredBuildConfigs = {}, b.buildConfigs = void 0, b.latestByConfig = {}, c.getAlerts().forEach(function(a) {
 b.alerts[a.name] = a.data;
 }), c.clearAlerts();
-var k = e("buildConfigForBuild"), l = [];
+var l = e("buildConfigForBuild"), m = [];
 j.get(a.project).then(_.spread(function(a, c) {
 function h(a) {
 var c = f.getLabelSelector();
 if (c.isEmpty()) return !0;
-var d = k(a) || "";
+var d = l(a) || "";
 return d && b.unfilteredBuildConfigs[d] ? !!b.buildConfigs[d] :c.matches(a);
 }
 function j() {
@@ -5564,7 +5581,7 @@ b.latestByConfig = i.latestBuildByConfig(b.builds, h), angular.forEach(b.buildCo
 b.latestByConfig[c] = b.latestByConfig[c] || null;
 });
 }
-function m() {
+function k() {
 var a = _.omit(b.latestByConfig, _.isNull);
 !f.getLabelSelector().isEmpty() && _.isEmpty(b.buildConfigs) && _.isEmpty(a) ? b.alerts.builds = {
 type:"warning",
@@ -5573,16 +5590,16 @@ details:"The active filters are hiding all builds."
 }
 b.project = a;
 var n = e("isJenkinsPipelineStrategy");
-l.push(d.watch("builds", c, function(a) {
+m.push(d.watch("builds", c, function(a) {
 b.builds = _.omit(a.by("metadata.name"), n), b.emptyMessage = "No builds to show", j(), f.addLabelSuggestionsFromResources(b.builds, b.labelSuggestions), g.log("builds (subscribe)", b.builds);
-})), l.push(d.watch("buildconfigs", c, function(a) {
-b.unfilteredBuildConfigs = _.omit(a.by("metadata.name"), n), f.addLabelSuggestionsFromResources(b.unfilteredBuildConfigs, b.labelSuggestions), f.setLabelSuggestions(b.labelSuggestions), b.buildConfigs = f.getLabelSelector().select(b.unfilteredBuildConfigs), j(), m(), g.log("buildconfigs (subscribe)", b.buildConfigs);
+})), m.push(d.watch("buildconfigs", c, function(a) {
+b.unfilteredBuildConfigs = _.omit(a.by("metadata.name"), n), f.addLabelSuggestionsFromResources(b.unfilteredBuildConfigs, b.labelSuggestions), f.setLabelSuggestions(b.labelSuggestions), b.buildConfigs = f.getLabelSelector().select(b.unfilteredBuildConfigs), j(), k(), g.log("buildconfigs (subscribe)", b.buildConfigs);
 })), f.onActiveFiltersChanged(function(a) {
 b.$apply(function() {
-b.buildConfigs = a.select(b.unfilteredBuildConfigs), j(), m();
+b.buildConfigs = a.select(b.unfilteredBuildConfigs), j(), k();
 });
 }), b.$on("$destroy", function() {
-d.unwatchAll(l);
+d.unwatchAll(m);
 });
 }));
 } ]), angular.module("openshiftConsole").controller("PipelinesController", [ "$filter", "$routeParams", "$scope", "Constants", "Navigate", "AlertMessageService", "BuildsService", "DataService", "Logger", "ProjectsService", function(a, b, c, d, e, f, g, h, i, j) {
@@ -5641,8 +5658,8 @@ details:a("getErrorDetails")(b)
 h.unwatchAll(k);
 });
 }));
-} ]), angular.module("openshiftConsole").controller("BuildConfigController", [ "$scope", "$filter", "$routeParams", "AlertMessageService", "APIService", "BuildsService", "ImagesService", "DataService", "LabelFilter", "ModalsService", "ProjectsService", "keyValueEditorUtils", function(a, b, c, d, e, f, g, h, i, j, k, l) {
-a.projectName = c.project, a.buildConfigName = c.buildconfig, a.buildConfig = null, a.labelSuggestions = {}, a.alerts = {}, a.breadcrumbs = [], a.forms = {}, a.expand = {
+} ]), angular.module("openshiftConsole").controller("BuildConfigController", [ "$scope", "$filter", "$routeParams", "AlertMessageService", "APIService", "BuildsService", "ImagesService", "DataService", "LabelFilter", "ModalsService", "ProjectsService", "keyValueEditorUtils", "Scopes", function(a, b, c, d, e, f, g, h, i, j, k, l, m) {
+angular.extend(a, m.getControllerDefaults()), a.projectName = c.project, a.buildConfigName = c.buildconfig, a.buildConfig = null, a.expand = {
 imageEnv:!1
 }, c.isPipeline ? a.breadcrumbs.push({
 title:"Pipelines",
@@ -5652,19 +5669,19 @@ title:"Builds",
 link:"project/" + c.project + "/browse/builds"
 }), a.breadcrumbs.push({
 title:c.buildconfig
-}), a.emptyMessage = "Loading...", d.getAlerts().forEach(function(b) {
+}), d.getAlerts().forEach(function(b) {
 a.alerts[b.name] = b.data;
 }), d.clearAlerts(), a.aceLoaded = function(a) {
 var b = a.getSession();
 b.setOption("tabSize", 2), b.setOption("useSoftTabs", !0), a.$blockScrolling = 1 / 0;
 };
-var m, n = b("orderObjectsByDate"), o = b("buildConfigForBuild"), p = b("buildStrategy"), q = [], r = function(c) {
-a.updatedBuildConfig = angular.copy(c), a.envVars = p(a.updatedBuildConfig).env || [], _.each(a.envVars, function(a) {
+var n, o = b("orderObjectsByDate"), p = b("buildConfigForBuild"), q = b("buildStrategy"), r = [], s = function(c) {
+a.updatedBuildConfig = angular.copy(c), a.envVars = q(a.updatedBuildConfig).env || [], _.each(a.envVars, function(a) {
 b("altTextForValueFrom")(a);
 });
 };
 a.saveEnvVars = function() {
-a.envVars = _.filter(a.envVars, "name"), p(a.updatedBuildConfig).env = l.compactEntries(angular.copy(a.envVars)), h.update("buildconfigs", c.buildconfig, a.updatedBuildConfig, m).then(function() {
+a.envVars = _.filter(a.envVars, "name"), q(a.updatedBuildConfig).env = l.compactEntries(angular.copy(a.envVars)), h.update("buildconfigs", c.buildconfig, a.updatedBuildConfig, n).then(function() {
 a.alerts.saveBCEnvVarsSuccess = {
 type:"success",
 message:a.buildConfigName + " was updated."
@@ -5677,14 +5694,14 @@ details:"Reason: " + b("getErrorDetails")(c)
 };
 });
 }, a.clearEnvVarUpdates = function() {
-r(a.buildConfig), a.forms.bcEnvVars.$setPristine();
+s(a.buildConfig), a.forms.bcEnvVars.$setPristine();
 };
-var s, t = function(c, d) {
+var t, u = function(c, d) {
 a.loaded = !0, a.buildConfig = c, a.buildConfigPaused = f.isPaused(a.buildConfig), a.buildConfig.spec.source.images && (a.imageSources = a.buildConfig.spec.source.images, a.imageSourcesPaths = [], a.imageSources.forEach(function(c) {
 a.imageSourcesPaths.push(b("destinationSourcePair")(c.paths));
 }));
-var i = _.get(p(c), "from", {}), j = i.kind + "/" + i.name + "/" + (i.namespace || a.projectName);
-s !== j && (_.includes([ "ImageStreamTag", "ImageStreamImage" ], i.kind) ? (s = j, h.get(e.kindToResource(i.kind), i.name, {
+var i = _.get(q(c), "from", {}), j = i.kind + "/" + i.name + "/" + (i.namespace || a.projectName);
+t !== j && (_.includes([ "ImageStreamTag", "ImageStreamImage" ], i.kind) ? (t = j, h.get(e.kindToResource(i.kind), i.name, {
 namespace:i.namespace || a.projectName
 }, {
 errorNotification:!1
@@ -5692,10 +5709,10 @@ errorNotification:!1
 a.BCEnvVarsFromImage = g.getEnvironment(b);
 }, function() {
 a.BCEnvVarsFromImage = [];
-})) :a.BCEnvVarsFromImage = []), r(c), "DELETED" === d && (a.alerts.deleted = {
+})) :a.BCEnvVarsFromImage = []), s(c), "DELETED" === d && (a.alerts.deleted = {
 type:"warning",
 message:"This build configuration has been deleted."
-}, a.buildConfigDeleted = !0), !a.forms.bcEnvVars || a.forms.bcEnvVars.$pristine ? r(c) :a.alerts.background_update = {
+}, a.buildConfigDeleted = !0), !a.forms.bcEnvVars || a.forms.bcEnvVars.$pristine ? s(c) :a.alerts.background_update = {
 type:"warning",
 message:"This build configuration has been updated in the background. Saving your changes may create a conflict or cause loss of data.",
 links:[ {
@@ -5713,17 +5730,17 @@ type:"warning",
 details:"The active filters are hiding all builds."
 };
 }
-a.project = d, m = e, h.get("buildconfigs", c.buildconfig, e).then(function(a) {
-t(a), q.push(h.watchObject("buildconfigs", c.buildconfig, e, t));
+a.project = d, n = e, h.get("buildconfigs", c.buildconfig, e).then(function(a) {
+u(a), r.push(h.watchObject("buildconfigs", c.buildconfig, e, u));
 }, function(c) {
 a.loaded = !0, a.alerts.load = {
 type:"error",
 message:404 === c.status ? "This build configuration can not be found, it may have been deleted." :"The build configuration details could not be loaded.",
 details:404 === c.status ? "Any remaining build history for this build will be shown." :"Reason: " + b("getErrorDetails")(c)
 };
-}), q.push(h.watch("builds", e, function(b, d, e) {
+}), r.push(h.watch("builds", e, function(b, d, e) {
 if (a.emptyMessage = "No builds to show", d) {
-var h = o(e);
+var h = p(e);
 if (h === c.buildconfig) {
 var j = e.metadata.name;
 switch (d) {
@@ -5737,7 +5754,7 @@ delete a.unfilteredBuilds[j];
 }
 }
 } else a.unfilteredBuilds = f.validatedBuildsForBuildConfig(c.buildconfig, b.by("metadata.name"));
-a.builds = i.getLabelSelector().select(a.unfilteredBuilds), g(), i.addLabelSuggestionsFromResources(a.unfilteredBuilds, a.labelSuggestions), i.setLabelSuggestions(a.labelSuggestions), a.orderedBuilds = n(a.builds, !0), a.latestBuild = a.orderedBuilds.length ? a.orderedBuilds[0] :null;
+a.builds = i.getLabelSelector().select(a.unfilteredBuilds), g(), i.addLabelSuggestionsFromResources(a.unfilteredBuilds, a.labelSuggestions), i.setLabelSuggestions(a.labelSuggestions), a.orderedBuilds = o(a.builds, !0), a.latestBuild = a.orderedBuilds.length ? a.orderedBuilds[0] :null;
 }, {
 http:{
 params:{
@@ -5749,7 +5766,7 @@ omission:""
 }
 })), i.onActiveFiltersChanged(function(b) {
 a.$apply(function() {
-a.builds = b.select(a.unfilteredBuilds), a.orderedBuilds = n(a.builds, !0), a.latestBuild = a.orderedBuilds.length ? a.orderedBuilds[0] :null, g();
+a.builds = b.select(a.unfilteredBuilds), a.orderedBuilds = o(a.builds, !0), a.latestBuild = a.orderedBuilds.length ? a.orderedBuilds[0] :null, g();
 });
 }), a.startBuild = function() {
 f.startBuild(a.buildConfig.metadata.name, e).then(function(b) {
@@ -5767,7 +5784,7 @@ details:b("getErrorDetails")(c)
 }, a.showJenkinsfileExamples = function() {
 j.showJenkinsfileExamples();
 }, a.$on("$destroy", function() {
-h.unwatchAll(q);
+h.unwatchAll(r);
 });
 }));
 } ]), angular.module("openshiftConsole").controller("BuildController", [ "$scope", "$filter", "$routeParams", "BuildsService", "DataService", "ModalsService", "Navigate", "ProjectsService", function(a, b, c, d, e, f, g, h) {
@@ -8557,10 +8574,8 @@ return _.some(a, {
 hasErrors:!0
 });
 };
-} ]), angular.module("openshiftConsole").controller("EventsController", [ "$routeParams", "$scope", "ProjectsService", function(a, b, c) {
-b.projectName = a.project, b.renderOptions = {
-hideFilterWidget:!0
-}, b.breadcrumbs = [ {
+} ]), angular.module("openshiftConsole").controller("EventsController", [ "$routeParams", "$scope", "ProjectsService", "Scopes", function(a, b, c, d) {
+angular.extend(b, d.getControllerDefaults()), b.projectName = a.project, b.renderOptions.hideFilterWidget = !0, b.breadcrumbs = [ {
 title:"Monitoring",
 link:"project/" + a.project + "/monitoring"
 }, {
