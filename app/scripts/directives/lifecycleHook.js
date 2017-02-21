@@ -10,6 +10,8 @@ angular.module("openshiftConsole")
         hookParams: "=model",
         availableVolumes: "=",
         availableContainers: "=",
+        availableSecrets: "=",
+        availableConfigMaps: "=",
         namespace: "="
       },
       templateUrl: 'views/directives/edit-lifecycle-hook.html',
@@ -62,7 +64,7 @@ angular.module("openshiftConsole")
           }
           return istag;
         };
-        
+
         var setOrDefaultHookParams = function() {
           if ($scope.action.type === "execNewPod") {
             if (_.has($scope.removedHookParams, 'execNewPod')) {
@@ -111,13 +113,18 @@ angular.module("openshiftConsole")
           } else if ($scope.action.type === 'tagImages') {
             if ($scope.hookParams.execNewPod) {
               $scope.removedHookParams.execNewPod = $scope.hookParams.execNewPod;
-              delete $scope.hookParams.execNewPod; 
+              delete $scope.hookParams.execNewPod;
             }
             setOrDefaultHookParams();
           }
         };
 
         $scope.$watchGroup(['hookParams', 'action.type'], paramsChange);
+
+        $scope.valueFromObjects = [];
+        $scope.$watchGroup(['availableSecrets', 'availableConfigMaps'], function() {
+          $scope.valueFromObjects = ($scope.availableSecrets || []).concat($scope.availableConfigMaps);
+        });
 
         $scope.$watch("istagHook.tagObject.tag", function() {
           if (!_.has($scope.istagHook, ['tagObject', 'tag'])) {
@@ -126,7 +133,7 @@ angular.module("openshiftConsole")
           // Assamble image name when tag changes
           _.set($scope.hookParams, 'tagImages[0].to.kind', 'ImageStreamTag');
           _.set($scope.hookParams, 'tagImages[0].to.namespace', $scope.istagHook.namespace);
-          _.set($scope.hookParams, 'tagImages[0].to.name', $scope.istagHook.imageStream + ':' + $scope.istagHook.tagObject.tag);         
+          _.set($scope.hookParams, 'tagImages[0].to.name', $scope.istagHook.imageStream + ':' + $scope.istagHook.tagObject.tag);
         });
       }
     };

@@ -2,6 +2,17 @@
 
 angular.module("openshiftConsole")
   .factory("ImagesService", function($filter, ApplicationGenerator, DataService) {
+
+    // maps an env object: { key: 'val', key2: 'val2'}
+    // to an array: [{},{},{}]
+    var makeEnvArray = function(input) {
+      return _.isArray(input) ?
+              input :
+              _.map(input, function(value, key){
+                return {name: key, value: value};
+              });
+    };
+
     var findImage = function(name, projectContext) {
       var importImage = {
         kind: "ImageStreamImport",
@@ -78,10 +89,7 @@ angular.module("openshiftConsole")
       };
 
       // environment variables
-      var env = [];
-      _.forEach(config.env, function(value, key) {
-        env.push({name: key, value: value});
-      });
+      var env = makeEnvArray(config.env);
 
       // volumes and volume mounts
       var volumes = [], volumeMounts = [], volumeNumber = 0;

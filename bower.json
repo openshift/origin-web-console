@@ -41,7 +41,6 @@
     "ng-sortable": "1.3.4",
     "ui-select": "angular-ui-select#0.19.4",
     "matchHeight": "0.7.0",
-    "angular-key-value-editor": "3.0.0",
     "angular-inview": "1.5.7",
     "js-yaml": "3.6.1",
     "angular-moment": "1.0.0",
@@ -55,7 +54,13 @@
   "appPath": "app",
   "resolutions": {
     "angular-bootstrap": "0.14.3",
-    "d3": "3.5.17"
+    "d3": "3.5.17",
+    "patternfly": "3.18.1",
+    "angular-patternfly": "3.18.1",
+    "patternfly-bootstrap-treeview": "2.1.1",
+    "angular": "1.5.11",
+    "kubernetes-object-describer": "1.0.4",
+    "angular-sanitize": "1.5.11"
   },
   "overrides": {
     "angular": {

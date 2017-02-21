@@ -17,6 +17,7 @@ angular.module('openshiftConsole')
                        AuthorizationService,
                        BreadcrumbsService,
                        DataService,
+                       EnvironmentService,
                        Navigate,
                        ProjectsService,
                        SecretsService,
@@ -47,7 +48,23 @@ angular.module('openshiftConsole')
       $scope.alerts[alert.name] = alert.data;
     });
     AlertMessageService.clearAlerts();
+
+    var orderByDisplayName = $filter('orderByDisplayName');
+    var getErrorDetails = $filter('getErrorDetails');
+
+    var displayError = function(errorMessage, errorDetails) {
+      $scope.alerts['from-value-objects'] = {
+        type: "error",
+        message: errorMessage,
+        details: errorDetails
+      };
+    };
+
     var watches = [];
+
+    var configMapDataOrdered = [];
+    var secretDataOrdered = [];
+    $scope.valueFromObjects = [];
 
     var getParamsPropertyName = function(strategyType) {
       switch (strategyType) {
@@ -97,10 +114,6 @@ angular.module('openshiftConsole')
                 });
                 var triggerData = {};
                 container.env = container.env || [];
-                // check valueFrom attribs and set an alt text for display if present
-                _.each(container.env, function(env) {
-                  $filter('altTextForValueFrom')(env);
-                });
                 containerConfigByName[container.name] = {
                   env: container.env,
                   image: container.image,
@@ -143,13 +156,34 @@ angular.module('openshiftConsole')
               $scope.strategyData.customParams.environment = [];
             }
 
-            DataService.list("secrets", context, function(secrets) {
-              var secretsByType = SecretsService.groupSecretsByType(secrets);
-              var secretNamesByType =_.mapValues(secretsByType, function(secrets) {return _.map(secrets, 'metadata.name')});
+            DataService.list("configmaps", context, null, { errorNotification: false }).then(function(configMapData) {
+              configMapDataOrdered = orderByDisplayName(configMapData.by("metadata.name"));
+              $scope.availableConfigMaps = configMapDataOrdered;
+              $scope.valueFromObjects = configMapDataOrdered.concat(secretDataOrdered);
+            }, function(e) {
+              if (e.code === 403) {
+                return;
+              }
+
+              displayError('Could not load config maps', getErrorDetails(e));
+            });
+
+            DataService.list("secrets", context, null, { errorNotification: false }).then(function(secretData) {
+              secretDataOrdered = orderByDisplayName(secretData.by("metadata.name"));
+              $scope.availableSecrets = secretDataOrdered;
+              $scope.valueFromObjects = secretDataOrdered.concat(configMapDataOrdered);
+              var secretsByType = SecretsService.groupSecretsByType(secretData);
+              var secretNamesByType =_.mapValues(secretsByType, function(secretData) {return _.map(secretData, 'metadata.name');});
               // Add empty option to the image/source secrets
               $scope.secretsByType = _.each(secretNamesByType, function(secretsArray) {
                 secretsArray.unshift("");
               });
+            }, function(e) {
+              if (e.code === 403) {
+                return;
+              }
+
+              displayError('Could not load secrets', getErrorDetails(e));
             });
 
             // If we found the item successfully, watch for changes on it

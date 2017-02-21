@@ -154,6 +154,21 @@ angular.module('openshiftConsole')
 
     var limitWatches = $filter('isIE')() || $filter('isEdge')();
 
+    var orderByDisplayName = $filter('orderByDisplayName');
+    var getErrorDetails = $filter('getErrorDetails');
+
+    var displayError = function(errorMessage, errorDetails) {
+      $scope.alerts['from-value-objects'] = {
+        type: "error",
+        message: errorMessage,
+        details: errorDetails
+      };
+    };
+
+    var configMapDataOrdered = [];
+    var secretDataOrdered = [];
+    $scope.valueFromObjects = [];
+
     ProjectsService
       .get($routeParams.project)
       .then(_.spread(function(project, context) {
@@ -162,6 +177,29 @@ angular.module('openshiftConsole')
         // projectPromise rather than just a namespace, so we have to pass the
         // context into the log-viewer directive.
         $scope.projectContext = context;
+
+
+        DataService.list("configmaps", context, null, { errorNotification: false }).then(function(configMapData) {
+          configMapDataOrdered = orderByDisplayName(configMapData.by("metadata.name"));
+          $scope.valueFromObjects = configMapDataOrdered.concat(secretDataOrdered);
+        }, function(e) {
+          if (e.code === 403) {
+            return;
+          }
+
+          displayError('Could not load config maps', getErrorDetails(e));
+        });
+
+        DataService.list("secrets", context, null, { errorNotification: false }).then(function(secretData) {
+          secretDataOrdered = orderByDisplayName(secretData.by("metadata.name"));
+          $scope.valueFromObjects = secretDataOrdered.concat(configMapDataOrdered);
+        }, function(e) {
+          if (e.code === 403) {
+            return;
+          }
+
+          displayError('Could not load secrets', getErrorDetails(e));
+        });
 
         var allHPA = {}, limitRanges = {};
         var updateHPA = function() {
@@ -368,11 +406,11 @@ angular.module('openshiftConsole')
                                                                context);
         };
 
-        DataService.get($scope.resource, $routeParams.replicaSet, context).then(
-          // success
-          function(replicaSet) {
+        DataService.get($scope.resource, $routeParams.replicaSet, context)
+          .then(function(replicaSet) {
             $scope.loaded = true;
             $scope.replicaSet = replicaSet;
+
             setLogVars(replicaSet);
             switch (kind) {
             case 'ReplicationController':
@@ -383,7 +421,6 @@ angular.module('openshiftConsole')
               break;
             }
             updateHPAWarnings();
-
             $scope.breadcrumbs = BreadcrumbsService.getBreadcrumbs({ object: replicaSet });
 
             // If we found the item successfully, watch for changes on it
@@ -426,9 +463,7 @@ angular.module('openshiftConsole')
               pods = podData.by('metadata.name');
               updatePodsForDeployment();
             }));
-          },
-          // failure
-          function(e) {
+          }, function(e) {
             $scope.loaded = true;
             $scope.alerts["load"] = {
               type: "error",

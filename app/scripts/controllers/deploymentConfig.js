@@ -92,7 +92,22 @@ angular.module('openshiftConsole')
       };
     };
 
+    var orderByDisplayName = $filter('orderByDisplayName');
+    var getErrorDetails = $filter('getErrorDetails');
+
+    var displayError = function(errorMessage, errorDetails) {
+      $scope.alerts['from-value-objects'] = {
+        type: "error",
+        message: errorMessage,
+        details: errorDetails
+      };
+    };
+
     var watches = [];
+
+    var configMapDataOrdered = [];
+    var secretDataOrdered = [];
+    $scope.valueFromObjects = [];
 
     ProjectsService
       .get($routeParams.project)
@@ -117,7 +132,7 @@ angular.module('openshiftConsole')
             $scope.deploymentConfig = deploymentConfig;
             $scope.strategyParams = $filter('deploymentStrategyParams')(deploymentConfig);
             updateHPAWarnings();
-            $scope.updatedDeploymentConfig = EnvironmentService.copyAndNormalize(deploymentConfig);
+            $scope.updatedDeploymentConfig = EnvironmentService.copyAndNormalize($scope.deploymentConfig);
             $scope.saveEnvVars = function() {
               EnvironmentService.compact($scope.updatedDeploymentConfig);
               saveEnvPromise = DataService.update("deploymentconfigs",
@@ -246,6 +261,28 @@ angular.module('openshiftConsole')
         DataService.list("limitranges", context, function(response) {
           limitRanges = response.by("metadata.name");
           updateHPAWarnings();
+        });
+
+        DataService.list("configmaps", context, null, { errorNotification: false }).then(function(configMapData) {
+          configMapDataOrdered = orderByDisplayName(configMapData.by("metadata.name"));
+          $scope.valueFromObjects = configMapDataOrdered.concat(secretDataOrdered);
+        }, function(e) {
+          if (e.code === 403) {
+            return;
+          }
+
+          displayError('Could not load config maps', getErrorDetails(e));
+        });
+
+        DataService.list("secrets", context, null, { errorNotification: false }).then(function(secretData) {
+          secretDataOrdered = orderByDisplayName(secretData.by("metadata.name"));
+          $scope.valueFromObjects = secretDataOrdered.concat(configMapDataOrdered);
+        }, function(e) {
+          if (e.code === 403) {
+            return;
+          }
+
+          displayError('Could not load secrets', getErrorDetails(e));
         });
 
         watches.push(DataService.watch("imagestreams", context, function(imageStreamData) {

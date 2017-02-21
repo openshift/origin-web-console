@@ -38,13 +38,48 @@ angular.module("openshiftConsole")
         }];
         $scope.pullSecrets = [{name: ''}];
 
-        DataService.list("secrets", {namespace: $scope.project}, function(secrets) {
-          var secretsByType = SecretsService.groupSecretsByType(secrets);
-          var secretNamesByType =_.mapValues(secretsByType, function(secrets) {return _.map(secrets, 'metadata.name');});
+        var orderByDisplayName = $filter('orderByDisplayName');
+        var getErrorDetails = $filter('getErrorDetails');
+
+        var displayError = function(errorMessage, errorDetails) {
+          $scope.alerts['from-value-objects'] = {
+            type: "error",
+            message: errorMessage,
+            details: errorDetails
+          };
+        };
+
+        var configMapDataOrdered = [];
+        var secretDataOrdered = [];
+        var context = {namespace: $scope.project};
+        $scope.valueFromObjects = [];
+
+        DataService.list("configmaps", context, null, { errorNotification: false }).then(function(configMapData) {
+          configMapDataOrdered = orderByDisplayName(configMapData.by("metadata.name"));
+          $scope.valueFromObjects = configMapDataOrdered.concat(secretDataOrdered);
+        }, function(e) {
+          if (e.code === 403) {
+           return;
+          }
+
+          displayError('Could not load config maps', getErrorDetails(e));
+        });
+
+        DataService.list("secrets", context, null, { errorNotification: false }).then(function(secretData) {
+          secretDataOrdered = orderByDisplayName(secretData.by("metadata.name"));
+          $scope.valueFromObjects = secretDataOrdered.concat(configMapDataOrdered);
+          var secretsByType = SecretsService.groupSecretsByType(secretData);
+          var secretNamesByType =_.mapValues(secretsByType, function(secretData) {return _.map(secretData, 'metadata.name');});
           // Add empty option to the image/source secrets
           $scope.secretsByType = _.each(secretNamesByType, function(secretsArray) {
             secretsArray.unshift("");
           });
+        }, function(e) {
+          if (e.code === 403) {
+            return;
+          }
+
+          displayError('Could not load secrets', getErrorDetails(e));
         });
 
         var stripTag = $filter('stripTag');
@@ -83,7 +118,7 @@ angular.module("openshiftConsole")
             tag: $scope.import.tag || 'latest',
             ports: $scope.ports,
             volumes: $scope.volumes,
-            env: keyValueEditorUtils.mapEntries(keyValueEditorUtils.compactEntries($scope.env)),
+            env: keyValueEditorUtils.compactEntries($scope.env),
             labels: _.extend(systemLabels, userLabels),
             pullSecrets: $scope.pullSecrets
           });

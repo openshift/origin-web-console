@@ -41,16 +41,20 @@
   }
   .ui-select-match-text, .ui-select-placeholder {
     font-weight: normal;
-  }
-  .ui-select-match-text {
     padding-right: 20px;
+  }
+  .ui-select-match-text span {
+    display: block;
+    text-overflow: ellipsis;
     span {
-      display: block;
-      text-overflow: ellipsis;
-      span {
-        display: inline;
-      }
+      display: inline;
     }
+  }
+  .ui-select-placeholder {
+    display: block;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    width: 100%;
   }
   .ui-select-toggle > .caret {
     font-size: (@font-size-base - 1);

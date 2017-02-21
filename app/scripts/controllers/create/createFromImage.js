@@ -64,6 +64,17 @@ angular.module("openshiftConsole")
 
     var appLabel = {name: 'app', value: ''};
 
+    var orderByDisplayName = $filter('orderByDisplayName');
+    var getErrorDetails = $filter('getErrorDetails');
+
+    var displayError = function(errorMessage, errorDetails) {
+      $scope.alerts['from-value-objects'] = {
+        type: "error",
+        message: errorMessage,
+        details: errorDetails
+      };
+    };
+
     ProjectsService
       .get($routeParams.project)
       .then(_.spread(function(project, context) {
@@ -151,14 +162,37 @@ angular.module("openshiftConsole")
             $scope.metricsWarning = !available;
           });
 
-          DataService.list("secrets", context, function(secrets) {
-            var secretsByType = SecretsService.groupSecretsByType(secrets);
-            var secretNamesByType =_.mapValues(secretsByType, function(secrets) {return _.map(secrets, 'metadata.name')});
-            // Add empty option to the image/source secrets
-            $scope.secretsByType = _.each(secretNamesByType, function(secretsArray) {
-              secretsArray.unshift("");
-            });
-          });
+           var configMapDataOrdered = [];
+           var secretDataOrdered = [];
+           $scope.valueFromObjects = [];
+
+           DataService.list("configmaps", context, null, { errorNotification: false }).then(function(configMapData) {
+             configMapDataOrdered = orderByDisplayName(configMapData.by("metadata.name"));
+             $scope.valueFromObjects = configMapDataOrdered.concat(secretDataOrdered);
+           }, function(e) {
+             if (e.code === 403) {
+               return;
+             }
+
+             displayError('Could not load config maps', getErrorDetails(e));
+           });
+
+           DataService.list("secrets", context, null, { errorNotification: false }).then(function(secretData) {
+             secretDataOrdered = orderByDisplayName(secretData.by("metadata.name"));
+             $scope.valueFromObjects = secretDataOrdered.concat(configMapDataOrdered);
+             var secretsByType = SecretsService.groupSecretsByType(secretData);
+             var secretNamesByType =_.mapValues(secretsByType, function(secretData) {return _.map(secretData, 'metadata.name');});
+             // Add empty option to the image/source secrets
+             $scope.secretsByType = _.each(secretNamesByType, function(secretsArray) {
+               secretsArray.unshift("");
+             });
+           }, function(e) {
+             if (e.code === 403) {
+               return;
+             }
+
+             displayError('Could not load secrets', getErrorDetails(e));
+           });
 
           DataService.get("imagestreams", scope.imageName, {namespace: (scope.namespace || $routeParams.project)}).then(function(imageStream){
               scope.imageStream = imageStream;
@@ -340,8 +374,8 @@ angular.module("openshiftConsole")
         $scope.createApp = function(){
           $scope.disableInputs = true;
           $scope.alerts = {};
-          $scope.buildConfig.envVars = keyValueEditorUtils.mapEntries(keyValueEditorUtils.compactEntries($scope.buildConfigEnvVars));
-          $scope.deploymentConfig.envVars = keyValueEditorUtils.mapEntries(keyValueEditorUtils.compactEntries($scope.DCEnvVarsFromUser));
+          $scope.buildConfig.envVars = keyValueEditorUtils.compactEntries($scope.buildConfigEnvVars);
+          $scope.deploymentConfig.envVars = keyValueEditorUtils.compactEntries($scope.DCEnvVarsFromUser);
           var userLabels = keyValueEditorUtils.mapEntries(keyValueEditorUtils.compactEntries($scope.userDefinedLabels));
           var systemLabels = keyValueEditorUtils.mapEntries(keyValueEditorUtils.compactEntries($scope.systemLabels));
           $scope.labels = _.extend(systemLabels, userLabels);

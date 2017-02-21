@@ -4,7 +4,6 @@ angular.module("openshiftConsole")
   .factory("EnvironmentService",
            function($filter,
                     keyValueEditorUtils) {
-    var altTextForValueFrom = $filter('altTextForValueFrom');
     var getContainers = function(set) {
       return _.get(set, 'spec.template.spec.containers', []);
     };
@@ -17,8 +16,6 @@ angular.module("openshiftConsole")
         var containers = getContainers(object);
         _.each(containers, function(container) {
           container.env = container.env || [];
-          // check valueFrom attribs and set an alt text for display if present
-          _.each(container.env, altTextForValueFrom);
         });
       },
 

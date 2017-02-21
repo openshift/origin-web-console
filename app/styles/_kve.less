@@ -1,5 +1,144 @@
-// styles for key-value-editor
+// Angular Key Value Editor styles
+
 .key-value-editor {
+  &.as-sortable-dragging {
+    .as-sortable-item-delete,
+    .input-group-addon,
+    input {
+      opacity: @as-sortable-dragging-opacity;
+    }
+  }
+
+  &.as-sortable-dragging .as-sortable-item-handle,
+  .as-sortable-item-delete:hover,
+  .as-sortable-DISABLED-item-delete:hover,
+  .as-sortable-item-handle:hover {
+    opacity: @as-sortable-item-icon-hover-opacity;
+  }
+
+  .as-sortable-item-delete,
+  .as-sortable-DISABLED-item-delete,
+  .as-sortable-item-handle {
+    display: inline-block;
+    font-size: @as-sortable-item-icon-font-size;
+    opacity: @as-sortable-item-icon-opacity;
+    padding: @as-sortable-item-icon-padding;
+    vertical-align: middle;
+  }
+
+  .as-sortable-item-delete,
+  .as-sortable-DISABLED-item-delete {
+    color: #333; // boostrap's @text-color
+    &:hover,
+    &:focus,
+    &:active {
+      text-decoration: none;
+    }
+  }
+
+  .as-sortable-item-handle {
+    cursor: move;
+  }
+
+  .as-sortable-placeholder {
+    border-top: @as-sortable-placeholder-border-top-width @as-sortable-placeholder-border-top-style @as-sortable-placeholder-border-top-color;
+    clear: left;
+    width: @as-sortable-placeholder-width;
+  }
+
+  // .form-control styles duplicated from bower_components/patternfly/less/lib/boostrap/forms.less and bower_components/patternfly/less/forms.less
+  .faux-form-control {
+    background-color: @input-bg;
+    background-image: none; // Reset unusual Firefox-on-Android default style; see https://github.com/necolas/normalize.css/issues/214
+    border: 1px solid @input-border;
+    border-radius: @input-border-radius; // Note: This has no effect on <select>s in some browsers, due to the limited stylability of <select>s in CSS.
+    .box-shadow(inset 0 1px 1px rgba(0,0,0,.075));
+    color: @input-color;
+    display: table-cell;
+    font-size: @font-size-base;
+    height: @input-height-base; // Make inputs at least the height of their button counterpart (base line-height + padding + border)
+    line-height: @line-height-base;
+    padding: @padding-base-vertical @padding-base-horizontal;
+    .transition(~"border-color ease-in-out .15s, box-shadow ease-in-out .15s");
+    width: 100%;
+    .word-break-all(); // required for Firefox
+    &.readonly {
+      background-color: @input-bg-disabled;
+      .box-shadow(none);
+      color: @color-pf-black-500;
+      opacity: 1; // iOS fix for unreadable disabled content; see https://github.com/twbs/bootstrap/issues/11655
+      &:hover {
+        border-color: @input-border;
+      }
+    }
+  }
+
+  // .form-control-addon styles duplicated from bower_components/patternfly/less/lib/boostrap/forms.less
+  .faux-form-control-addon {
+    background-color: @input-group-addon-bg;
+    border: 1px solid @input-group-addon-border-color;
+    border-radius: @input-border-radius;
+    color: @input-color;
+    display: table-cell;
+    font-size: @font-size-base;
+    font-weight: normal;
+    line-height: 1;
+    margin-right: 2px;
+    padding: @padding-base-vertical @padding-base-horizontal;
+    text-align: center;
+    vertical-align: middle; // Match the inputs
+    white-space: nowrap;
+    width: 1%;
+    &:first-child {
+      border-right: 0;
+    }
+    span[title]:not([data-original-title=""]) {
+      cursor: help;
+    }
+  }
+
+  .faux-input-group {
+    border-collapse: separate;
+    display: table;
+    position: relative;
+  }
+
+  .key-value-editor-buttons {
+    position: absolute;
+    right: 0;
+    top: 0;
+    width: (@as-sortable-item-button-width * 2);
+  }
+
+  .key-value-editor-entry {
+    display: table;
+    padding-right: (@as-sortable-item-button-width * 2);
+    position: relative;
+    table-layout: fixed;
+    width: 100%;
+  }
+
+  .key-value-editor-input,
+  .key-value-editor-header {
+    float: left;
+    padding-right: 5px;
+    width: 50%;
+  }
+
+  .key-value-editor-input .ui-select {
+    @media(min-width: @screen-md-min) {
+      float: left;
+      width: 50%;
+    }
+    + .ui-select {
+      padding-top: 5px;
+      @media(min-width: @screen-md-min) {
+        padding-top: 0;
+        padding-left: 5px;
+      }
+    }
+  }
+
   .key-value-editor-header {
     margin-bottom: 5px;
   }

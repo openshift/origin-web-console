@@ -10,6 +10,16 @@ angular.module("openshiftConsole")
 
     var scope = {};
 
+    // maps an env object: { key: 'val', key2: 'val2'}
+    // to an array: [{},{},{}]
+    var makeEnvArray = function(input) {
+      return _.isArray(input) ?
+              input :
+              _.map(input, function(value, key){
+                return {name: key, value: value};
+              });
+    };
+
     scope._generateSecret = function(){
         //http://stackoverflow.com/questions/105034/create-guid-uuid-in-javascript
         function s4() {
@@ -181,10 +191,8 @@ angular.module("openshiftConsole")
     };
 
     scope._generateDeploymentConfig = function(input, imageSpec, ports){
-      var env = [];
-      angular.forEach(input.deploymentConfig.envVars, function(value, key){
-        env.push({name: key, value: value});
-      });
+      var env = makeEnvArray(input.deploymentConfig.envVars);
+
       var templateLabels = angular.copy(input.labels);
       templateLabels.deploymentconfig = input.name;
 
@@ -276,11 +284,10 @@ angular.module("openshiftConsole")
       return hpa;
     };
 
+
     scope._generateBuildConfig = function(input, imageSpec){
-      var env = [];
-      angular.forEach(input.buildConfig.envVars, function(value, key){
-        env.push({name: key, value: value});
-      });
+      var env = makeEnvArray(input.buildConfig.envVars);
+
       var triggers = [
         {
           generic: {
