@@ -123,6 +123,13 @@ angular.module("openshiftConsole")
       return templatesByCategory;
     };
 
+    var referencesSameImageStream = function(specTag) {
+      return specTag.from &&
+             specTag.from.kind === 'ImageStreamTag' &&
+             specTag.from.name.indexOf(':') === -1 &&
+            !specTag.from.namespace;
+    };
+
     // Don't use KeywordService for image stream filtering so we can add
     // special handling for image stream tags. Match keywords (array of regex)
     // against image streams and image stream tags, returning a copy of the
@@ -137,7 +144,23 @@ angular.module("openshiftConsole")
       _.each(imageStreams, function(imageStream) {
         var name = _.get(imageStream, 'metadata.name', '');
         var displayName = getDisplayName(imageStream, true);
-        var matchingTags = _.indexBy(imageStream.spec.tags, 'name');
+        var specTags = [];
+        var references = {};
+        var referencedBy = {};
+        _.each(imageStream.spec.tags, function(tag) {
+          // If the tag follows another, track the reference.
+          if (referencesSameImageStream(tag)) {
+            references[tag.name] = tag.from.name;
+            referencedBy[tag.from.name] = referencedBy[tag.from.name] || [];
+            referencedBy[tag.from.name].push(tag.name);
+            return;
+          }
+
+          // If the tag doesn't follow another, consider it in the search.
+          specTags.push(tag);
+        });
+
+        var matchingTags = _.indexBy(specTags, 'name');
 
         // Find tags that match every keyword. Search image stream name, image
         // stream display name, and tag names, and tag descriptions. If a
@@ -153,7 +176,7 @@ angular.module("openshiftConsole")
           }
 
           // Check tag descriptions.
-          _.each(imageStream.spec.tags, function(tag) {
+          _.each(specTags, function(tag) {
             // If this is not a builder or is hidden, don't match the tag.
             var tagTags = _.get(tag, 'annotations.tags', '');
             if (!/\bbuilder\b/.test(tagTags) || /\bhidden\b/.test(tagTags)) {
@@ -163,6 +186,16 @@ angular.module("openshiftConsole")
 
             // If the keyword matches the tag name, accept it.
             if (regex.test(tag.name)) {
+              return;
+            }
+
+            // Search any tag names that reference this tag as well.  For
+            // instance, searching for "latest" should match nodejs:4 if
+            // nodejs:latest references nodejs:4
+            var matches = function(referenceName) {
+              return regex.test(referenceName);
+            };
+            if (_.some(referencedBy[tag.name], matches)) {
               return;
             }
 
@@ -178,8 +211,16 @@ angular.module("openshiftConsole")
         if (!_.isEmpty(matchingTags)) {
           imageStreamCopy = angular.copy(imageStream);
           imageStreamCopy.status.tags = _.filter(imageStreamCopy.status.tags, function(tag) {
+            // If this tag follow another tag, include it if the other tag matches the search.
+            var fromTag = references[tag.tag];
+            if (fromTag) {
+              return matchingTags[fromTag];
+            }
+
+            // Otherwise check if this tag was a match.
             return matchingTags[tag.tag];
           });
+
           filteredImageStreams.push(imageStreamCopy);
         }
       });
@@ -201,6 +242,7 @@ angular.module("openshiftConsole")
       getCategoryItem: getCategoryItem,
       categorizeImageStreams: categorizeImageStreams,
       categorizeTemplates: categorizeTemplates,
+      referencesSameImageStream: referencesSameImageStream,
       filterImageStreams: filterImageStreams,
       filterTemplates: filterTemplates
     };
