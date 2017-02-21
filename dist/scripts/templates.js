@@ -6916,47 +6916,6 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
   );
 
 
-  $templateCache.put('views/directives/environment.html',
-    "<div ng-if=\"envVars.length\" class=\"table-responsive\" style=\"margin-top: 5px\">\n" +
-    "<table class=\"table table-bordered environment-variables\">\n" +
-    "<thead>\n" +
-    "<tr>\n" +
-    "<th>Name</th>\n" +
-    "<th>Value</th>\n" +
-    "</tr>\n" +
-    "</thead>\n" +
-    "<tbody>\n" +
-    "<tr ng-repeat=\"env in envVars\">\n" +
-    "<td>{{env.name}}</td>\n" +
-    "<td ng-if=\"!env.valueFrom\">\n" +
-    "<truncate-long-text class=\"env-var-value\" content=\"env.value\" limit=\"200\" newline-limit=\"3\" expandable=\"true\" prettify-json=\"true\"></truncate-long-text>\n" +
-    "</td>\n" +
-    "<td ng-if=\"env.valueFrom\">\n" +
-    "<span class=\"fa fa-external-link-square\" style=\"cursor: help\" data-toggle=\"popover\" data-trigger=\"hover\" data-content=\"This is a referenced value that will be generated when a container is created.  On running pods you can check the resolved values by going to the Terminal tab and echoing the environment variable.\"></span>\n" +
-    "<span ng-repeat=\"(key, value) in env.valueFrom\">\n" +
-    "<span ng-switch on=\"key\">\n" +
-    "<span ng-switch-when=\"configMapKeyRef\">\n" +
-    "Set to the key <b>{{value.key}}</b> in config map <b>{{value.name}}</b>.\n" +
-    "</span>\n" +
-    "<span ng-switch-when=\"secretKeyRef\">\n" +
-    "Set to the key <b>{{value.key}}</b> in secret <b>{{value.name}}</b>.\n" +
-    "</span>\n" +
-    "<span ng-switch-when=\"fieldRef\">\n" +
-    "Set to the field <b>{{value.fieldPath}}</b> in the current object.\n" +
-    "</span>\n" +
-    "<span ng-switch-default>\n" +
-    "Set to a reference on a <b>{{key}}</b>.\n" +
-    "</span>\n" +
-    "</span>\n" +
-    "</span>\n" +
-    "</td>\n" +
-    "</tr>\n" +
-    "</tbody>\n" +
-    "</table>\n" +
-    "</div>"
-  );
-
-
   $templateCache.put('views/directives/events-badge.html',
     "<a ng-href=\"project/{{projectContext.projectName}}/browse/events\" class=\"events-badge visible-xs\"><span class=\"event-label\">Events</span><span ng-if=\"warningCount\" class=\"mar-left-md\"><span class=\"pficon pficon-warning-triangle-o mar-right-sm\" aria-hidden=\"true\"></span><span class=\"sr-only\">Warning</span><span class=\"event-count\">{{warningCount}}</span></span><span ng-if=\"normalCount\" class=\"mar-left-sm\"><span class=\"pficon pficon-info mar-right-sm\" aria-hidden=\"true\"></span><span class=\"sr-only\">Normal</span><span class=\"event-count\">{{normalCount}}</span></span></a>\n" +
     "<a href=\"\" ng-click=\"expandSidebar()\" ng-if=\"sidebarCollapsed\" class=\"events-badge hidden-xs\"><span class=\"events-sidebar-expand fa fa-arrow-circle-o-left mar-right-md\"><span class=\"sr-only\">Expand event sidebar</span></span><span class=\"event-label\">Events</span><span ng-if=\"warningCount\" class=\"mar-left-md\"><span class=\"pficon pficon-warning-triangle-o mar-right-sm\" aria-hidden=\"true\"></span><span class=\"sr-only\">Warning</span><span class=\"event-count\">{{warningCount}}</span></span><span ng-if=\"normalCount\" class=\"mar-left-sm\"><span class=\"pficon pficon-info mar-right-sm\" aria-hidden=\"true\"></span><span class=\"sr-only\">Normal</span><span class=\"event-count\">{{normalCount}}</span></span></a>"

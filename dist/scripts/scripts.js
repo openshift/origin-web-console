@@ -10937,17 +10937,6 @@ templates:"="
 },
 templateUrl:"views/_volume-claim-templates.html"
 };
-}).directive("environment", function() {
-return {
-restrict:"E",
-scope:{
-envVars:"="
-},
-templateUrl:"views/directives/environment.html",
-controller:[ "$scope", function(a) {
-a.expanded = {};
-} ]
-};
 }).directive("hpa", function() {
 return {
 restrict:"E",
