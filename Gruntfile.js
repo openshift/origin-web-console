@@ -234,7 +234,6 @@ module.exports = function (grunt) {
           'bower_components/messenger/build/js/messenger-theme-future.js',
           'bower_components/moment-timezone/builds/moment-timezone-with-data-2010-2020.js',
           'bower_components/fontawesome/css/font-awesome.css',
-          'bower_components/bootstrap-combobox/css/bootstrap-combobox.css',
           'bower_components/bootstrap-datepicker/dist/css/bootstrap-datepicker.css',
           'bower_components/bootstrap-datepicker/dist/css/bootstrap-datepicker3.css',
           'bower_components/bootstrap-select/dist/css/bootstrap-select.css',
@@ -251,7 +250,8 @@ module.exports = function (grunt) {
           'bower_components/google-code-prettify/bin/prettify.min.js',
           'bower_components/google-code-prettify/bin/prettify.min.css',
           'bower_components/patternfly/dist/css/patternfly.css',
-          'bower_components/patternfly/dist/css/patternfly-additions.css'
+          'bower_components/patternfly/dist/css/patternfly-additions.css',
+          'bower_components/patternfly-bootstrap-combobox/css/bootstrap-combobox.css'
         ]
       }
     },
