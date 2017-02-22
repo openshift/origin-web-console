@@ -5102,7 +5102,7 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "<div ng-if=\"imageStream\">\n" +
     "{{ emptyMessage }}\n" +
     "</div>\n" +
-    "<div class=\"osc-form\" ng-if=\"imageStream\">\n" +
+    "<div class=\"osc-form\" ng-show=\"imageStream\">\n" +
     "<alerts alerts=\"alerts\"></alerts>\n" +
     "<div class=\"row\">\n" +
     "<div class=\"col-md-2 icon hidden-sm hidden-xs\">\n" +
@@ -5184,7 +5184,8 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "</div>\n" +
     "\n" +
     "<div ng-show=\"advancedOptions\">\n" +
-    "<div class=\"form-group\">\n" +
+    "\n" +
+    "<div class=\"form-group\" ng-if=\"project\">\n" +
     "<osc-secrets model=\"buildConfig.secrets.gitSecret\" namespace=\"projectName\" display-type=\"source\" type=\"source\" service-account-to-link=\"builder\" secrets-by-type=\"secretsByType\" alerts=\"alerts\" allow-multiple-secrets=\"false\">\n" +
     "</osc-secrets>\n" +
     "</div>\n" +
