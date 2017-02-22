@@ -1056,10 +1056,10 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "</div>\n" +
     "</div>\n" +
     "<div class=\"mar-bottom-md\">\n" +
-    "<a ng-hide=\"attach.items.length === 1\" href=\"\" ng-click=\"removeItem($index)\">Remove item</a>\n" +
+    "<a ng-hide=\"attach.items.length === 1\" href=\"\" ng-click=\"removeItem($index)\">Remove Item</a>\n" +
     "<span ng-if=\"$last\">\n" +
     "<span ng-hide=\"attach.items.length === 1\" class=\"action-divider\" aria-hidden=\"true\">|</span>\n" +
-    "<a href=\"\" ng-click=\"addItem()\">Add item</a>\n" +
+    "<a href=\"\" ng-click=\"addItem()\">Add Item</a>\n" +
     "</span>\n" +
     "</div>\n" +
     "</div>\n" +
