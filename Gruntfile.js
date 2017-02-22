@@ -608,6 +608,15 @@ module.exports = function (grunt) {
             browser: grunt.option('browser') || "firefox"
           } // Target-specific arguments
         }
+      },
+      mac: {
+        options: {
+          configFile: "test/protractor-mac.conf.js", // Target-specific config file
+          args: {
+            baseUrl: grunt.option('baseUrl') || ("https://localhost:9000/" + contextRoot + "/"),
+            browser: grunt.option('browser') || "firefox"
+          } // Target-specific arguments
+        }
       }
     },
 
@@ -695,14 +704,14 @@ module.exports = function (grunt) {
 
   grunt.registerTask('test-integration',
     grunt.option('baseUrl') ?
-    ['protractor:default'] : // if a baseUrl is defined assume we dont want to run the local grunt server
+    [grunt.option('mac') ? 'protractor:mac' : 'protractor:default'] : // if a baseUrl is defined assume we dont want to run the local grunt server
     [
       'clean:server',
       'concurrent:server',
       'autoprefixer',
       'connect:test',
       'add-redirect-uri',
-      'protractor:default',
+      (grunt.option('mac') ? 'protractor:mac' : 'protractor:default'),
       'clean:server'
     ]
   );
