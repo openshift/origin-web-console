@@ -16,7 +16,6 @@ angular.module('openshiftConsole')
     };
 
     $scope.alerts = $scope.alerts || {};
-    $scope.emptyMessage = "Loading...";
 
     $scope.breadcrumbs = [
       {

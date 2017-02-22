@@ -38,7 +38,6 @@ angular.module('openshiftConsole')
         title: $routeParams.deployment
       }
     ];
-    $scope.emptyMessage = "Loading...";
     $scope.healthCheckURL = Navigate.healthCheckURL($routeParams.project,
                                                     "Deployment",
                                                     $routeParams.deployment,

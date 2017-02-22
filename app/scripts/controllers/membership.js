@@ -161,7 +161,6 @@ angular
         projectName: projectName,
         alerts: {},
         forms: {},
-        emptyMessage: 'Loading...',
         subjectKinds: subjectKinds,
         newBinding: {
           role: '',

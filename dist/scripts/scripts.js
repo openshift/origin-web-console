@@ -5558,7 +5558,6 @@ selectedTab:A,
 projectName:o,
 alerts:{},
 forms:{},
-emptyMessage:"Loading...",
 subjectKinds:B,
 newBinding:{
 role:"",
@@ -6036,7 +6035,7 @@ title:b.imagestream,
 link:"project/" + b.project + "/browse/images/" + b.imagestream
 }, {
 title:":" + b.tag
-} ], a.emptyMessage = "Loading...";
+} ];
 var i = [], j = _.debounce(function(d, f) {
 var h = b.imagestream + ":" + b.tag;
 c.get("imagestreamtags", h, f).then(function(b) {
@@ -6049,7 +6048,7 @@ details:"Reason: " + e("getErrorDetails")(b)
 };
 });
 }, 200), k = function(b, c, d) {
-h(b, c), a.emptyMessage = "", "DELETED" === d && (a.alerts.deleted = {
+h(b, c), "DELETED" === d && (a.alerts.deleted = {
 type:"warning",
 message:"This image stream has been deleted."
 });
@@ -6194,7 +6193,7 @@ title:"Deployments",
 link:"project/" + c.project + "/browse/deployments"
 }, {
 title:c.deployment
-} ], a.emptyMessage = "Loading...", a.healthCheckURL = k.healthCheckURL(c.project, "Deployment", c.deployment, "extensions"), d.getAlerts().forEach(function(b) {
+} ], a.healthCheckURL = k.healthCheckURL(c.project, "Deployment", c.deployment, "extensions"), d.getAlerts().forEach(function(b) {
 a.alerts[b.name] = b.data;
 }), d.clearAlerts();
 var p = !1, q = function(b, c) {
@@ -6727,7 +6726,7 @@ kind:s,
 namespace:c.project
 });
 }), x.push(g.watch(a.resource, i, function(c, d, e) {
-a.replicaSets = c.by("metadata.name"), a.emptyMessage = "No deployments to show", "ReplicationController" === s && (a.deploymentsByDeploymentConfig = h.associateDeploymentsToDeploymentConfig(a.replicaSets));
+a.replicaSets = c.by("metadata.name"), "ReplicationController" === s && (a.deploymentsByDeploymentConfig = h.associateDeploymentsToDeploymentConfig(a.replicaSets));
 var f, g;
 e && (f = u(e, "deploymentConfig"), g = e.metadata.name), a.deploymentConfigDeploymentsInProgress = a.deploymentConfigDeploymentsInProgress || {}, d ? "ADDED" === d || "MODIFIED" === d && b("deploymentIsInProgress")(e) ? (a.deploymentConfigDeploymentsInProgress[f] = a.deploymentConfigDeploymentsInProgress[f] || {}, a.deploymentConfigDeploymentsInProgress[f][g] = e) :"MODIFIED" === d && a.deploymentConfigDeploymentsInProgress[f] && delete a.deploymentConfigDeploymentsInProgress[f][g] :a.deploymentConfigDeploymentsInProgress = h.associateRunningDeploymentToDeploymentConfig(a.deploymentsByDeploymentConfig), e ? "DELETED" !== d && (e.causes = b("deploymentCauses")(e)) :angular.forEach(a.replicaSets, function(a) {
 a.causes = b("deploymentCauses")(a);
@@ -6794,7 +6793,7 @@ g.unwatchAll(x);
 });
 }));
 } ]), angular.module("openshiftConsole").controller("StatefulSetsController", [ "$scope", "$routeParams", "AlertMessageService", "DataService", "ProjectsService", "LabelFilter", "LabelsService", function(a, b, c, d, e, f, g) {
-a.projectName = b.project, a.alerts = a.alerts || {}, a.labelSuggestions = {}, a.emptyMessage = "Loading...", c.getAlerts().forEach(function(b) {
+a.projectName = b.project, a.alerts = a.alerts || {}, a.labelSuggestions = {}, c.getAlerts().forEach(function(b) {
 a.alerts[b.name] = b.data;
 }), c.clearAlerts();
 var h = [];
@@ -6831,7 +6830,7 @@ b.projectName = c.project, b.statefulSetName = c.statefulset, b.forms = {}, b.al
 name:b.statefulSetName,
 kind:"StatefulSet",
 namespace:c.project
-}), b.emptyMessage = "Loading...";
+});
 var j = function(a) {
 return g.copyAndNormalize(a);
 };
@@ -6963,7 +6962,7 @@ b.secretsByType = f.groupSecretsByType(a), b.loaded = !0;
 } ]), angular.module("openshiftConsole").controller("SecretController", [ "$routeParams", "$filter", "$scope", "AlertMessageService", "DataService", "ProjectsService", "SecretsService", function(a, b, c, d, e, f, g) {
 c.projectName = a.project, c.secretName = a.secret, c.view = {
 showSecret:!1
-}, c.alerts = c.alerts || {}, c.emptyMessage = "Loading...", c.breadcrumbs = [ {
+}, c.alerts = c.alerts || {}, c.breadcrumbs = [ {
 title:"Secrets",
 link:"project/" + a.project + "/browse/secrets"
 }, {
@@ -8338,7 +8337,7 @@ details:c
 };
 g.get(d.project).then(_.spread(function(e, g) {
 function q(b) {
-b.emptyMessage = "Loading...", b.name = d.name, b.imageName = y, b.imageTag = d.imageTag, b.namespace = d.namespace, b.buildConfig = {
+b.name = d.name, b.imageName = y, b.imageTag = d.imageTag, b.namespace = d.namespace, b.buildConfig = {
 buildOnSourceChange:!0,
 buildOnImageChange:!0,
 buildOnConfigChange:!0,
@@ -8517,7 +8516,7 @@ f.then(j, j).then(J, J);
 }));
 } ]), angular.module("openshiftConsole").controller("NextStepsController", [ "$scope", "$http", "$routeParams", "DataService", "$q", "$location", "ProcessedTemplateService", "TaskList", "$parse", "Navigate", "Logger", "$filter", "imageObjectRefFilter", "failureObjectNameFilter", "ProjectsService", function(a, b, c, d, e, f, g, h, i, j, k, l, m, n, o) {
 var p = (l("displayName"), []);
-a.emptyMessage = "Loading...", a.alerts = [], a.loginBaseUrl = d.openshiftAPIBaseUrl(), a.buildConfigs = {}, a.showParamsTable = !1, a.projectName = c.project, a.fromSampleRepo = c.fromSample, a.breadcrumbs = [ {
+a.alerts = [], a.loginBaseUrl = d.openshiftAPIBaseUrl(), a.buildConfigs = {}, a.showParamsTable = !1, a.projectName = c.project, a.fromSampleRepo = c.fromSample, a.breadcrumbs = [ {
 title:a.projectName,
 link:"project/" + a.projectName
 }, {
@@ -8566,7 +8565,7 @@ d.unwatchAll(p);
 } ]), angular.module("openshiftConsole").controller("NewFromTemplateController", [ "$scope", "$http", "$routeParams", "DataService", "ProcessedTemplateService", "AlertMessageService", "ProjectsService", "QuotaService", "$q", "$location", "TaskList", "$parse", "Navigate", "$filter", "$uibModal", "imageObjectRefFilter", "failureObjectNameFilter", "CachedTemplateService", "keyValueEditorUtils", "Constants", function(a, b, c, d, e, f, g, h, i, j, k, l, m, n, o, p, q, r, s, t) {
 var u = c.template, v = c.namespace || "";
 if (!u) return void m.toErrorPage("Cannot create from template: a template name was not specified.");
-a.emptyMessage = "Loading...", a.alerts = {}, a.quotaAlerts = {}, a.projectName = c.project, a.projectPromise = $.Deferred(), a.labels = [], a.systemLabels = [], a.breadcrumbs = [ {
+a.alerts = {}, a.quotaAlerts = {}, a.projectName = c.project, a.projectPromise = $.Deferred(), a.labels = [], a.systemLabels = [], a.breadcrumbs = [ {
 title:a.projectName,
 link:"project/" + a.projectName
 }, {
@@ -10999,7 +10998,6 @@ routes:"=",
 services:"=",
 portsByRoute:"=",
 showNodePorts:"=?",
-emptyMessage:"=?",
 customNameHeader:"=?"
 },
 templateUrl:"views/directives/traffic-table.html"

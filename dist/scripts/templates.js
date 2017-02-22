@@ -3779,7 +3779,7 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "</tr>\n" +
     "</thead>\n" +
     "<tbody ng-if=\"(routes | hashSize) == 0\">\n" +
-    "<tr><td colspan=\"5\"><em>{{emptyMessage || 'No routes to show'}}</em></td></tr>\n" +
+    "<tr><td colspan=\"5\"><em>{{emptyMessage}}</em></td></tr>\n" +
     "</tbody>\n" +
     "<tbody ng-if=\"(routes | hashSize) > 0\">\n" +
     "<tr ng-repeat=\"route in routes | orderObjectsByDate : true\">\n" +
@@ -5025,8 +5025,8 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "<div class=\"row\">\n" +
     "<div class=\"col-md-12\">\n" +
     "<breadcrumbs breadcrumbs=\"breadcrumbs\"></breadcrumbs>\n" +
-    "<div ng-if=\"imageStream\">\n" +
-    "{{ emptyMessage }}\n" +
+    "<div ng-hide=\"imageStream\">\n" +
+    "Loading...\n" +
     "</div>\n" +
     "<div class=\"osc-form\" ng-if=\"imageStream\">\n" +
     "<alerts alerts=\"alerts\"></alerts>\n" +
@@ -8870,7 +8870,7 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "</tr>\n" +
     "</thead>\n" +
     "<tbody ng-if=\"(portsByRoute | hashSize) == 0\">\n" +
-    "<tr><td colspan=\"7\"><em>{{emptyMessage || 'No routes or ports to show'}}</em></td></tr>\n" +
+    "<tr><td colspan=\"7\"><em>No routes or ports to show</em></td></tr>\n" +
     "</tbody>\n" +
     "<tbody ng-if=\"(portsByRoute | hashSize) > 0\">\n" +
     "<tr ng-repeat-start=\"(routeName,ports) in portsByRoute\" style=\"display: none\"></tr>\n" +
@@ -11142,7 +11142,7 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "<div class=\"col-md-12\">\n" +
     "<breadcrumbs breadcrumbs=\"breadcrumbs\"></breadcrumbs>\n" +
     "<div ng-hide=\"template\">\n" +
-    "{{ emptyMessage }}\n" +
+    "Loading...\n" +
     "</div>\n" +
     "<div class=\"osc-form\" ng-show=\"template\">\n" +
     "<alerts alerts=\"alerts\"></alerts>\n" +

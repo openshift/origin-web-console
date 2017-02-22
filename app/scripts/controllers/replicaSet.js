@@ -480,7 +480,6 @@ angular.module('openshiftConsole')
 
         watches.push(DataService.watch($scope.resource, context, function(replicaSets, action, replicaSet) {
           $scope.replicaSets = replicaSets.by("metadata.name");
-          $scope.emptyMessage = "No deployments to show";
           if (kind === 'ReplicationController') {
             $scope.deploymentsByDeploymentConfig = DeploymentsService.associateDeploymentsToDeploymentConfig($scope.replicaSets);
           }

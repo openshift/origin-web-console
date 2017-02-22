@@ -5,7 +5,6 @@ angular.module('openshiftConsole')
     $scope.projectName = $routeParams.project;
     $scope.alerts = $scope.alerts || {};
     $scope.labelSuggestions = {};
-    $scope.emptyMessage = "Loading...";
 
     // get and clear any alerts
     AlertMessageService.getAlerts().forEach(function(alert) {
