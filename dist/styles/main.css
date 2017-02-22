@@ -404,7 +404,7 @@ dd{margin-left:0}
 @media (min-width:415px){.dl-horizontal dt{float:left;width:160px;clear:left;text-align:right;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
 .dl-horizontal dd{margin-left:180px}
 }
-.btn-group-vertical>.btn-group:after,.btn-toolbar:after,.clearfix:after,.container-fluid:after,.container:after,.dl-horizontal dd:after,.dropdown-menu>li>a,.form-horizontal .form-group:after,.list-view-pf .list-group-item:after,.modal-footer:after,.modal-header:after,.nav:after,.navbar-collapse:after,.navbar-header:after,.navbar:after,.pager:after,.panel-body:after,.row:after,ul.messenger.messenger-theme-flat .messenger-message:after{clear:both}
+.btn-group-vertical>.btn-group:after,.btn-toolbar:after,.clearfix:after,.container-fluid:after,.container:after,.dl-horizontal dd:after,.form-horizontal .form-group:after,.list-view-pf .list-group-item:after,.modal-footer:after,.modal-header:after,.nav:after,.navbar-collapse:after,.navbar-header:after,.navbar:after,.pager:after,.panel-body:after,.row:after{clear:both}
 abbr[data-original-title],abbr[title]{cursor:help;border-bottom:1px dotted #9c9c9c}
 .initialism{font-size:90%;text-transform:uppercase}
 blockquote{padding:10.5px 21px;margin:0 0 21px;font-size:16.25px;border-left:5px solid #f1f1f1}
@@ -829,7 +829,7 @@ tbody.collapse.in{display:table-row-group}
 .btn-group>.btn-group:first-child:not(:last-child)>.btn:last-child,.btn-group>.btn-group:first-child:not(:last-child)>.dropdown-toggle,.btn-group>.btn:first-child:not(:last-child):not(.dropdown-toggle){border-bottom-right-radius:0;border-top-right-radius:0}
 .btn-group>.btn-group:last-child:not(:first-child)>.btn:first-child,.btn-group>.btn:last-child:not(:first-child),.btn-group>.dropdown-toggle:not(:first-child){border-bottom-left-radius:0;border-top-left-radius:0}
 .btn-group-vertical>.btn:not(:first-child):not(:last-child),.btn-group>.btn-group:not(:first-child):not(:last-child)>.btn,.btn-group>.btn:not(:first-child):not(:last-child):not(.dropdown-toggle){border-radius:0}
-.dropdown-menu>li>a{display:block;font-weight:400;color:#363636}
+.dropdown-menu>li>a{display:block;clear:both;font-weight:400;color:#363636}
 .dropdown-menu>li>a:focus,.dropdown-menu>li>a:hover{text-decoration:none;color:#4d5258;background-color:#def3ff}
 .dropdown-menu>.active>a,.dropdown-menu>.active>a:focus,.dropdown-menu>.active>a:hover{color:#fff;text-decoration:none;outline:0}
 .dropdown-menu>.disabled>a,.dropdown-menu>.disabled>a:focus,.dropdown-menu>.disabled>a:hover{color:#9c9c9c}
@@ -4034,7 +4034,7 @@ select:invalid{box-shadow:none}
 .attention-message{border:1px solid #228bc0;position:absolute;left:50%;margin-top:100px;transform:translateX(-50%);padding:1em 1em 2em;min-width:85%}
 .attention-message h1,.attention-message p{text-align:center}
 .attention-message p{max-width:70em;margin:auto}
-.actions-dropdown-btn,.alert .close,.header-actions{margin-left:5px}
+.actions-dropdown-btn,.alert .close{margin-left:5px}
 .short-id{background-color:#f1f1f1;color:#666}
 .input-number{width:60px}
 .alert{margin-bottom:14px;margin-top:7px}
@@ -4044,9 +4044,21 @@ select:invalid{box-shadow:none}
 a.action-button:active,a.action-button:focus,a.action-button:hover{text-decoration:none}
 a.disabled-link{color:#bbb;cursor:not-allowed;opacity:.4}
 a.disabled-link:active,a.disabled-link:focus,a.disabled-link:hover{color:#bbb;text-decoration:none}
-.actions-dropdown-kebab{color:#9c9c9c;cursor:pointer;padding:0 10px;vertical-align:middle}
-.actions-dropdown-kebab:active,.actions-dropdown-kebab:focus,.actions-dropdown-kebab:hover{color:#000}
-.header-actions{font-size:84%}
+.actions-dropdown-kebab{color:#252525;padding:0 10px}
+.actions-dropdown-kebab:active,.actions-dropdown-kebab:focus,.actions-dropdown-kebab:hover{color:#0088ce}
+@media (max-width:767px){.contains-actions>.dropdown .btn-link{color:#252525;font-size:17px;line-height:1;padding:4px 10px;margin-left:-10px;margin-right:-10px}
+.contains-actions>.dropdown .btn-link:active,.contains-actions>.dropdown .btn-link:focus,.contains-actions>.dropdown .btn-link:hover{color:#0088ce}
+.contains-actions>.dropdown .dropdown-menu{left:-15px;margin-top:11px}
+.contains-actions>.dropdown .dropdown-menu.dropdown-menu-right{left:auto}
+.contains-actions>.dropdown .dropdown-menu.dropdown-menu-right:after,.contains-actions>.dropdown .dropdown-menu.dropdown-menu-right:before{left:auto;right:6px}
+.contains-actions>.dropdown .dropdown-menu:after,.contains-actions>.dropdown .dropdown-menu:before{border-bottom-color:#bbb;border-bottom-style:solid;border-bottom-width:10px;border-left:10px solid transparent;border-right:10px solid transparent;content:"";display:inline-block;left:6px;position:absolute;top:-11px}
+.contains-actions>.dropdown .dropdown-menu:after{border-bottom-color:#fff;top:-10px}
+.contains-actions>.dropdown.dropup .dropdown-menu{margin-bottom:11px;margin-top:0}
+.contains-actions>.dropdown.dropup .dropdown-menu:after,.contains-actions>.dropdown.dropup .dropdown-menu:before{border-bottom:none;border-top-color:#bbb;border-top-style:solid;border-top-width:10px;bottom:-11px;top:auto}
+.contains-actions>.dropdown.dropup .dropdown-menu:after{border-top-color:#fff;bottom:-10px}
+.contains-actions>.dropdown .dropdown-menu.dropdown-menu-right{right:-4px}
+}
+.header-actions{font-size:84%;margin-left:5px}
 .modal-resource-action{background-color:#f1f1f1}
 .modal-resource-action h1{font-size:21px;font-weight:500;margin-bottom:20px;overflow-wrap:break-word;min-width:0}
 .modal-resource-action p{font-size:16px}
@@ -4186,6 +4198,7 @@ h2+.list-view-pf{margin-top:20px}
 ul.messenger.messenger-theme-flat{margin:0;padding:0;opacity:1;-webkit-transition:all .2s ease .2s;-o-transition:all .2s ease .2s;transition:all .2s ease .2s}
 ul.messenger.messenger-theme-flat>li{list-style:none;margin:0;padding:0}
 ul.messenger.messenger-theme-flat .messenger-message:after,ul.messenger.messenger-theme-flat .messenger-message:before{content:" ";display:table}
+ul.messenger.messenger-theme-flat .messenger-message:after{clear:both}
 ul.messenger.messenger-theme-flat .messenger-message.messenger-hidden{display:none}
 ul.messenger.messenger-theme-flat .messenger-message .messenger-actions{float:right}
 ul.messenger.messenger-theme-flat .messenger-message .messenger-actions a{cursor:pointer;text-decoration:underline}

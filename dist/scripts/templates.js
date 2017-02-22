@@ -1495,7 +1495,7 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "<span class=\"caret\"></span>\n" +
     "</button>\n" +
     "<a href=\"\" class=\"dropdown-toggle actions-dropdown-kebab visible-xs-inline\" data-toggle=\"dropdown\"><i class=\"fa fa-ellipsis-v\"></i><span class=\"sr-only\">Actions</span></a>\n" +
-    "<ul class=\"dropdown-menu actions action-button\">\n" +
+    "<ul class=\"dropdown-menu dropdown-menu-right actions action-button\">\n" +
     "<li ng-if=\"deployment && ({ group: 'extensions', resource: 'deployments' } | canI : 'update')\">\n" +
     "<a ng-href=\"project/{{project.metadata.name}}/attach-pvc?kind=Deployment&name={{deployment.metadata.name}}&group=extensions\" role=\"button\">Add Storage</a>\n" +
     "</li>\n" +
@@ -1705,7 +1705,7 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "<span class=\"caret\"></span>\n" +
     "</button>\n" +
     "<a href=\"\" class=\"dropdown-toggle actions-dropdown-kebab visible-xs-inline\" data-toggle=\"dropdown\"><i class=\"fa fa-ellipsis-v\"></i><span class=\"sr-only\">Actions</span></a>\n" +
-    "<ul class=\"dropdown-menu actions action-button\">\n" +
+    "<ul class=\"dropdown-menu dropdown-menu-right actions action-button\">\n" +
     "<li ng-if=\"deploymentConfigName && ('deploymentconfigs' | canI : 'update')\">\n" +
     "<a ng-href=\"project/{{project.metadata.name}}/attach-pvc?kind=DeploymentConfig&name={{deploymentConfigName}}\" role=\"button\">Add Storage</a>\n" +
     "</li>\n" +
@@ -1766,7 +1766,7 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "<span class=\"caret\" aria-hidden=\"true\"></span>\n" +
     "</button>\n" +
     "<a href=\"\" class=\"dropdown-toggle actions-dropdown-kebab visible-xs-inline\" data-toggle=\"dropdown\"><i class=\"fa fa-ellipsis-v\"></i><span class=\"sr-only\">Actions</span></a>\n" +
-    "<ul class=\"dropdown-menu actions action-button\">\n" +
+    "<ul class=\"dropdown-menu dropdown-menu-right actions action-button\">\n" +
     "<li class=\"visible-xs-inline\" ng-if=\"'buildconfigs/instantiate' | canI : 'create'\">\n" +
     "<a href=\"\" role=\"button\" ng-click=\"startBuild()\">\n" +
     "<span ng-if=\"!(buildConfig | isJenkinsPipelineStrategy)\">\n" +
@@ -2191,7 +2191,7 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "<span class=\"caret\" aria-hidden=\"true\"></span>\n" +
     "</button>\n" +
     "<a href=\"\" class=\"dropdown-toggle actions-dropdown-kebab visible-xs-inline\" data-toggle=\"dropdown\"><i class=\"fa fa-ellipsis-v\"></i><span class=\"sr-only\">Actions</span></a>\n" +
-    "<ul class=\"dropdown-menu actions action-button\">\n" +
+    "<ul class=\"dropdown-menu dropdown-menu-right actions action-button\">\n" +
     "<li ng-if=\"'buildconfigs' | canI : 'update'\">\n" +
     "<a ng-href=\"{{buildConfig | editResourceURL}}\" role=\"button\">\n" +
     "<span ng-if=\"!(buildConfig | isJenkinsPipelineStrategy)\">\n" +
@@ -2300,7 +2300,7 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "<span class=\"caret\"></span>\n" +
     "</button>\n" +
     "<a href=\"\" class=\"dropdown-toggle actions-dropdown-kebab visible-xs-inline\" data-toggle=\"dropdown\"><i class=\"fa fa-ellipsis-v\"></i><span class=\"sr-only\">Actions</span></a>\n" +
-    "<ul class=\"dropdown-menu actions action-link\">\n" +
+    "<ul class=\"dropdown-menu dropdown-menu-right actions action-button\">\n" +
     "<li ng-if=\"'configmaps' | canI : 'update'\">\n" +
     "<a ng-href=\"{{configMap | editResourceURL}}\" role=\"button\">Edit</a>\n" +
     "</li>\n" +
@@ -2449,7 +2449,7 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "<span class=\"caret\" aria-hidden=\"true\"></span>\n" +
     "</button>\n" +
     "<a href=\"\" class=\"dropdown-toggle actions-dropdown-kebab visible-xs-inline\" data-toggle=\"dropdown\"><i class=\"fa fa-ellipsis-v\"></i><span class=\"sr-only\">Actions</span></a>\n" +
-    "<ul class=\"dropdown-menu actions action-button\">\n" +
+    "<ul class=\"dropdown-menu dropdown-menu-right actions action-button\">\n" +
     "<li class=\"visible-xs-inline\" ng-class=\"{ disabled: !canDeploy() }\" ng-if=\"'deploymentconfigs' | canI : 'update'\">\n" +
     "<a href=\"\" role=\"button\" ng-attr-aria-disabled=\"{{canDeploy() ? undefined : 'true'}}\" ng-class=\"{ 'disabled-link': !canDeploy() }\" ng-click=\"startLatestDeployment()\">Deploy</a>\n" +
     "</li>\n" +
@@ -2757,7 +2757,7 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "<span class=\"caret\" aria-hidden=\"true\"></span>\n" +
     "</button>\n" +
     "<a href=\"\" class=\"dropdown-toggle actions-dropdown-kebab visible-xs-inline\" data-toggle=\"dropdown\"><i class=\"fa fa-ellipsis-v\"></i><span class=\"sr-only\">Actions</span></a>\n" +
-    "<ul class=\"dropdown-menu actions action-button\">\n" +
+    "<ul class=\"dropdown-menu dropdown-menu-right actions action-button\">\n" +
     "<li ng-if=\"!deployment.spec.paused && !updatingPausedState && ({ group: 'extensions', resource: 'deployments' } | canI : 'update')\">\n" +
     "<a href=\"\" ng-click=\"setPaused(true)\" role=\"button\">Pause Rollouts</a>\n" +
     "</li>\n" +
@@ -3047,7 +3047,7 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "<span class=\"caret\" aria-hidden=\"true\"></span>\n" +
     "</button>\n" +
     "<a href=\"\" class=\"dropdown-toggle actions-dropdown-kebab visible-xs-inline\" data-toggle=\"dropdown\"><i class=\"fa fa-ellipsis-v\"></i><span class=\"sr-only\">Actions</span></a>\n" +
-    "<ul class=\"dropdown-menu actions action-button\">\n" +
+    "<ul class=\"dropdown-menu dropdown-menu-right actions action-button\">\n" +
     "<li ng-if=\"'imagestreams' | canI : 'update'\">\n" +
     "<a ng-href=\"{{imageStream | editYamlURL}}\" role=\"button\">Edit YAML</a>\n" +
     "</li>\n" +
@@ -3191,7 +3191,7 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "<span class=\"caret\" aria-hidden=\"true\"></span>\n" +
     "</button>\n" +
     "<a href=\"\" class=\"dropdown-toggle actions-dropdown-kebab visible-xs-inline\" data-toggle=\"dropdown\"><i class=\"fa fa-ellipsis-v\"></i><span class=\"sr-only\">Actions</span></a>\n" +
-    "<ul class=\"dropdown-menu actions action-button\">\n" +
+    "<ul class=\"dropdown-menu dropdown-menu-right actions action-button\">\n" +
     "<li ng-if=\"!pvc.spec.volumeName\">\n" +
     "<a ng-href=\"{{pvc | editYamlURL}}\" role=\"button\">Edit YAML</a>\n" +
     "</li>\n" +
@@ -3273,7 +3273,7 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "<span class=\"caret\"></span>\n" +
     "</button>\n" +
     "<a href=\"\" class=\"dropdown-toggle actions-dropdown-kebab visible-xs-inline\" data-toggle=\"dropdown\"><i class=\"fa fa-ellipsis-v\"></i><span class=\"sr-only\">Actions</span></a>\n" +
-    "<ul class=\"dropdown-menu actions action-button\">\n" +
+    "<ul class=\"dropdown-menu dropdown-menu-right actions action-button\">\n" +
     "<li ng-if=\"(pod | annotation:'deploymentConfig') && ('deploymentconfigs' | canI : 'update')\">\n" +
     "<a ng-href=\"project/{{project.metadata.name}}/attach-pvc?kind=DeploymentConfig&name={{pod | annotation:'deploymentConfig'}}\" role=\"button\">Add Storage</a>\n" +
     "</li>\n" +
@@ -3537,7 +3537,7 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "<span class=\"caret\" aria-hidden=\"true\"></span>\n" +
     "</button>\n" +
     "<a href=\"\" class=\"dropdown-toggle actions-dropdown-kebab visible-xs-inline\" data-toggle=\"dropdown\"><i class=\"fa fa-ellipsis-v\"></i><span class=\"sr-only\">Actions</span></a>\n" +
-    "<ul class=\"dropdown-menu actions action-button\">\n" +
+    "<ul class=\"dropdown-menu dropdown-menu-right actions action-button\">\n" +
     "<li ng-if=\"'routes' | canI : 'update'\">\n" +
     "<a ng-href=\"{{route | editResourceURL}}\" role=\"button\">Edit</a>\n" +
     "</li>\n" +
@@ -3852,7 +3852,7 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "<span class=\"caret\"></span>\n" +
     "</button>\n" +
     "<a href=\"\" class=\"dropdown-toggle actions-dropdown-kebab visible-xs-inline\" data-toggle=\"dropdown\"><i class=\"fa fa-ellipsis-v\"></i><span class=\"sr-only\">Actions</span></a>\n" +
-    "<ul class=\"dropdown-menu actions action-link\">\n" +
+    "<ul class=\"dropdown-menu dropdown-menu-right actions action-button\">\n" +
     "<li ng-if=\"'secrets' | canI : 'update'\">\n" +
     "<a ng-href=\"{{secret | editYamlURL}}\" role=\"button\">Edit YAML</a>\n" +
     "</li>\n" +
@@ -3931,7 +3931,7 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "<span class=\"caret\"></span>\n" +
     "</button>\n" +
     "<a href=\"\" class=\"dropdown-toggle actions-dropdown-kebab visible-xs-inline\" data-toggle=\"dropdown\"><i class=\"fa fa-ellipsis-v\"></i><span class=\"sr-only\">Actions</span></a>\n" +
-    "<ul class=\"dropdown-menu actions action-link\">\n" +
+    "<ul class=\"dropdown-menu dropdown-menu-right actions action-button\">\n" +
     "<li ng-if=\"'routes' | canI : 'create'\">\n" +
     "<a ng-href=\"project/{{project.metadata.name}}/create-route?service={{service.metadata.name}}\" role=\"button\">Create Route</a>\n" +
     "</li>\n" +
@@ -4050,7 +4050,7 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "<a href=\"\" class=\"dropdown-toggle actions-dropdown-kebab visible-xs-inline\" data-toggle=\"dropdown\">\n" +
     "<i class=\"fa fa-ellipsis-v\"></i><span class=\"sr-only\">Actions</span>\n" +
     "</a>\n" +
-    "<ul class=\"dropdown-menu actions action-button\">\n" +
+    "<ul class=\"dropdown-menu dropdown-menu-right actions action-button\">\n" +
     "<li ng-if=\"resourceGroupVersion | canI : 'update'\">\n" +
     "<a ng-href=\"{{statefulSet | editYamlURL}}\" role=\"button\">Edit YAML</a>\n" +
     "</li>\n" +

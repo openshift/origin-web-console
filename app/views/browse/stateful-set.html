@@ -32,7 +32,7 @@
                   data-toggle="dropdown">
                   <i class="fa fa-ellipsis-v"></i><span class="sr-only">Actions</span>
                 </a>
-                <ul class="dropdown-menu actions action-button">
+                <ul class="dropdown-menu dropdown-menu-right actions action-button">
                   <li ng-if="resourceGroupVersion | canI : 'update'">
                     <a ng-href="{{statefulSet | editYamlURL}}" role="button">Edit YAML</a>
                   </li>
