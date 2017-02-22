@@ -6780,7 +6780,7 @@ link:"project/" + d.projectName + "/browse/secrets"
 title:"Create Secret"
 } ];
 var l = function() {
-return c.then ? void b.url(c.then) :void j.toResourceList("secrets", d.projectName);
+return c.then ? void b.url(c.then) :void e.history.back();
 };
 k.get(c.project).then(_.spread(function(b, e) {
 return d.project = b, d.context = e, d.breadcrumbs[0].title = a("displayName")(b), h.canI("secrets", "create", c.project) ? (d.postCreateAction = function(a, b) {
@@ -8939,7 +8939,7 @@ kind:c.kind,
 namespace:c.project,
 subpage:"Add Config Files",
 includeProject:!0
-}), d.returnURL = b.url();
+});
 var p = a("humanizeKind");
 d.groupByKind = function(a) {
 return p(a.kind);

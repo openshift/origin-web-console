@@ -63,9 +63,6 @@ angular.module('openshiftConsole')
       includeProject: true
     });
 
-    // Return URL for creating secrets.
-    $scope.returnURL = $location.url();
-
     var humanizeKind = $filter('humanizeKind');
     $scope.groupByKind = function(object) {
       return humanizeKind(object.kind);
