@@ -14325,7 +14325,7 @@ namespace:e
 };
 } ]).filter("isWebRoute", [ "routeHostFilter", function(a) {
 return function(b) {
-return !!a(b) && "Subdomain" !== _.get(b, "spec.wildcardPolicy");
+return !!a(b, !0) && "Subdomain" !== _.get(b, "spec.wildcardPolicy");
 };
 } ]).filter("routeWebURL", [ "routeHostFilter", function(a) {
 return function(b, c, d) {
@@ -14833,16 +14833,16 @@ type:b
 }) :null;
 };
 }).filter("routeHost", function() {
-return function(a) {
+return function(a, b) {
 if (!_.get(a, "status.ingress")) return _.get(a, "spec.host");
 if (!a.status.ingress) return a.spec.host;
-var b = null;
+var c = null;
 return angular.forEach(a.status.ingress, function(a) {
 _.some(a.conditions, {
 type:"Admitted",
 status:"True"
-}) && (!b || b.lastTransitionTime > a.lastTransitionTime) && (b = a);
-}), b ? b.host :a.spec.host;
+}) && (!c || c.lastTransitionTime > a.lastTransitionTime) && (c = a);
+}), c ? c.host :b ? null :a.spec.host;
 };
 }).filter("isRequestCalculated", [ "LimitRangesService", function(a) {
 return function(b, c) {

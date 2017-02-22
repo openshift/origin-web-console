@@ -366,7 +366,7 @@ angular.module('openshiftConsole')
   })
   .filter('isWebRoute', function(routeHostFilter) {
     return function(route){
-       return !!routeHostFilter(route) &&
+       return !!routeHostFilter(route, true) &&
               _.get(route, 'spec.wildcardPolicy') !== 'Subdomain';
     };
   })
@@ -1273,7 +1273,7 @@ angular.module('openshiftConsole')
     };
   })
   .filter('routeHost', function() {
-    return function (route) {
+    return function (route, onlyAdmitted) {
       if (!_.get(route, 'status.ingress')) {
         return _.get(route, 'spec.host');
       }
@@ -1289,7 +1289,11 @@ angular.module('openshiftConsole')
         }
       });
 
-      return oldestAdmittedIngress ? oldestAdmittedIngress.host : route.spec.host;
+      if (oldestAdmittedIngress) {
+        return oldestAdmittedIngress.host;
+      }
+
+      return onlyAdmitted ? null : route.spec.host;
     };
   })
   .filter('isRequestCalculated', function(LimitRangesService) {
