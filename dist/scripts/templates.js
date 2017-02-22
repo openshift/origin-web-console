@@ -5020,10 +5020,10 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "<div class=\"row\">\n" +
     "<div class=\"col-md-12\">\n" +
     "<breadcrumbs breadcrumbs=\"breadcrumbs\"></breadcrumbs>\n" +
-    "<div ng-hide=\"imageStream\">\n" +
+    "<div ng-if=\"imageStream\">\n" +
     "{{ emptyMessage }}\n" +
     "</div>\n" +
-    "<div class=\"osc-form\" ng-show=\"imageStream\">\n" +
+    "<div class=\"osc-form\" ng-if=\"imageStream\">\n" +
     "<alerts alerts=\"alerts\"></alerts>\n" +
     "<div class=\"row\">\n" +
     "<div class=\"col-md-2 icon hidden-sm hidden-xs\">\n" +
