@@ -1061,7 +1061,7 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "</span>\n" +
     "<span ng-if=\"'secrets' | canI : 'create'\">\n" +
     "<span ng-if=\"'configmaps' | canI : 'create'\" class=\"action-divider\" aria-hidden=\"true\">|</span>\n" +
-    "<a ng-href=\"project/{{project.metadata.name}}/create-secret?then={{returnURL | encodeURIComponent}}\">Create Secret</a>\n" +
+    "<a ng-href=\"project/{{project.metadata.name}}/create-secret\">Create Secret</a>\n" +
     "</span>\n" +
     "</div>\n" +
     "<div class=\"help-block\">\n" +
