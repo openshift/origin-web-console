@@ -1,7 +1,7 @@
 {
   "name": "openshift-jvm",
-  "version": "1.1.4",
-  "commitId": "69bb37390124033fdff239bca0099c7e759963a3",
+  "version": "1.1.6",
+  "commitId": "45c894110dd2045c20a9f3a3625930b6a5fd2a5a",
   "packages": {
     "angular": {
       "version": "1.5.11"
@@ -28,7 +28,7 @@
       "version": "1.10.0"
     },
     "bootstrap-switch": {
-      "version": "3.3.2"
+      "version": "3.3.3"
     },
     "bootstrap-touchspin": {
       "version": "3.1.2"
@@ -124,7 +124,7 @@
       "version": "0.3.6"
     },
     "matchHeight": {
-      "version": "0.7.0"
+      "version": "0.7.2"
     },
     "moment": {
       "version": "2.14.2"
