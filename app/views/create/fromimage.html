@@ -15,7 +15,7 @@
                 <div ng-if="imageStream">
                   {{ emptyMessage }}
                 </div>
-                <div class="osc-form" ng-if="imageStream">
+                <div class="osc-form" ng-show="imageStream">
                   <alerts alerts="alerts"></alerts>
                   <div class="row">
                     <div class="col-md-2 icon hidden-sm hidden-xs">
@@ -148,7 +148,8 @@
 
                           <!-- Use ng-show instead of ng-if so the form is still marked invalid if a hidden field has errors. -->
                           <div ng-show="advancedOptions">
-                            <div class="form-group">
+                            <!-- Wait for project to load since the directive uses `canI` checks that need it. -->
+                            <div class="form-group" ng-if="project">
                               <osc-secrets model="buildConfig.secrets.gitSecret"
                                           namespace="projectName"
                                           display-type="source"
