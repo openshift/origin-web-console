@@ -3350,13 +3350,16 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "No running containers\n" +
     "</h2>\n" +
     "</div>\n" +
-    "<div ng-if=\"!noContainersYet\">\n" +
-    "<div class=\"mar-bottom-md mar-top-xl\">\n" +
+    "<div ng-if=\"!noContainersYet\" class=\"mar-top-xl mar-bottom-xl\">\n" +
+    "<div class=\"mar-bottom-md\">\n" +
     "<span class=\"pficon pficon-info\" aria-hidden=\"true\"></span>\n" +
-    "When you navigate away from this pod, any open terminal connections will be closed. This will kill any foreground processes you started from the terminal.\n" +
+    "<span ng-class=\"{ 'mar-right-md': hasFullscreen }\">\n" +
+    "When you navigate away from this pod, any open terminal connections will be closed. This will kill any foreground processes you started from the&nbsp;terminal.\n" +
+    "</span>\n" +
+    "<a href=\"\" ng-if=\"hasFullscreen\" ng-click=\"fullscreenTerminal()\" class=\"nowrap\" aria-hidden=\"true\">Open Fullscreen Terminal</a>\n" +
     "</div>\n" +
     "<alerts ng-if=\"selectedTerminalContainer.status === 'disconnected'\" alerts=\"terminalDisconnectAlert\"></alerts>\n" +
-    "<div class=\"mar-left-xl mar-bottom-xl\">\n" +
+    "<div class=\"mar-left-xl\">\n" +
     "<div class=\"row\">\n" +
     "<div class=\"pad-left-none pad-bottom-md col-sm-6 col-lg-4\">\n" +
     "<span ng-if=\"pod.spec.containers.length === 1\">\n" +
@@ -3385,13 +3388,15 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "</ui-select>\n" +
     "</div>\n" +
     "</div>\n" +
-    "<div class=\"container-terminal-wrapper\">\n" +
-    "<div class=\"row\" ng-repeat=\"term in containerTerminals\">\n" +
-    "<div class=\"column\">\n" +
+    "</div>\n" +
+    "<div id=\"container-terminal-wrapper\" class=\"container-terminal-wrapper\" ng-class=\"{ disconnected: selectedTerminalContainer.status === 'disconnected' }\">\n" +
+    "<div ng-repeat=\"term in containerTerminals\">\n" +
+    "<div ng-if=\"hasFullscreen\" class=\"fullscreen-toggle\" aria-hidden=\"true\">\n" +
+    "<a ng-href=\"\" ng-click=\"fullscreenTerminal()\" class=\"go-fullscreen\" title=\"Open Fullscreen Terminal\"><i class=\"fa fa-expand\"></i></a>\n" +
+    "<a ng-href=\"\" ng-click=\"exitFullscreen()\" class=\"exit-fullscreen\" title=\"Exit Fullscreen\"><i class=\"fa fa-compress\"></i></a>\n" +
+    "</div>\n" +
     "<kubernetes-container-terminal prevent=\"!terminalTabWasSelected\" ng-if=\"term.isUsed\" ng-show=\"term.isVisible\" pod=\"pod\" container=\"term.containerName\" status=\"term.status\" rows=\"terminalRows\" cols=\"terminalCols\" autofocus=\"true\" command=\"[&quot;/bin/sh&quot;, &quot;-i&quot;, &quot;-c&quot;, &quot;TERM=xterm /bin/sh&quot;]\">\n" +
     "</kubernetes-container-terminal>\n" +
-    "</div>\n" +
-    "</div>\n" +
     "</div>\n" +
     "</div>\n" +
     "</div>\n" +

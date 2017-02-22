@@ -131,16 +131,23 @@
                         </h2>
                       </div>
 
-                      <div ng-if="!noContainersYet">
-                        <div class="mar-bottom-md mar-top-xl">
+                      <div ng-if="!noContainersYet" class="mar-top-xl mar-bottom-xl">
+                        <div class="mar-bottom-md">
                           <span class="pficon pficon-info" aria-hidden="true"></span>
-                          When you navigate away from this pod, any open terminal connections will be closed.
-                          This will kill any foreground processes you started from the terminal.
+                          <span ng-class="{ 'mar-right-md': hasFullscreen }">
+                            When you navigate away from this pod, any open terminal connections will be closed.
+                            This will kill any foreground processes you started from the&nbsp;terminal.
+                          </span>
+                          <a href=""
+                             ng-if="hasFullscreen"
+                             ng-click="fullscreenTerminal()"
+                             class="nowrap"
+                             aria-hidden="true">Open Fullscreen Terminal</a>
                         </div>
 
                         <alerts ng-if="selectedTerminalContainer.status === 'disconnected'" alerts="terminalDisconnectAlert"></alerts>
 
-                        <div class="mar-left-xl mar-bottom-xl">
+                        <div class="mar-left-xl">
                           <div class="row">
                             <div class="pad-left-none pad-bottom-md col-sm-6 col-lg-4">
                               <span ng-if="pod.spec.containers.length === 1">
@@ -182,25 +189,29 @@
                               </ui-select>
                             </div>
                           </div>
+                        </div>
 
-                          <div class="container-terminal-wrapper">
-                            <div class="row" ng-repeat="term in containerTerminals">
-                              <div class="column">
-                                <kubernetes-container-terminal
-                                  prevent="!terminalTabWasSelected"
-                                  ng-if="term.isUsed"
-                                  ng-show="term.isVisible"
-                                  pod="pod"
-                                  container="term.containerName"
-                                  status="term.status"
-                                  rows="terminalRows"
-                                  cols="terminalCols"
-                                  autofocus="true"
-                                  command='["/bin/sh", "-i", "-c", "TERM=xterm /bin/sh"]'
-                                  >
-                                </kubernetes-container-terminal>
-                              </div>
+                        <div id="container-terminal-wrapper"
+                             class="container-terminal-wrapper"
+                             ng-class="{ disconnected: selectedTerminalContainer.status === 'disconnected' }">
+                          <div ng-repeat="term in containerTerminals">
+                            <div ng-if="hasFullscreen" class="fullscreen-toggle" aria-hidden="true">
+                              <a ng-href="" ng-click="fullscreenTerminal()" class="go-fullscreen" title="Open Fullscreen Terminal"><i class="fa fa-expand"></i></a>
+                              <a ng-href="" ng-click="exitFullscreen()" class="exit-fullscreen" title="Exit Fullscreen"><i class="fa fa-compress"></i></a>
                             </div>
+                            <kubernetes-container-terminal
+                              prevent="!terminalTabWasSelected"
+                              ng-if="term.isUsed"
+                              ng-show="term.isVisible"
+                              pod="pod"
+                              container="term.containerName"
+                              status="term.status"
+                              rows="terminalRows"
+                              cols="terminalCols"
+                              autofocus="true"
+                              command='["/bin/sh", "-i", "-c", "TERM=xterm /bin/sh"]'
+                              >
+                            </kubernetes-container-terminal>
                           </div>
                         </div>
                       </div>
