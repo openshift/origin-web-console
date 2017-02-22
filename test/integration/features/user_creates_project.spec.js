@@ -1,11 +1,11 @@
 'use strict';
 /* jshint unused:false */
 
-var h = require('../helpers.js');
-var projectHelpers = require('../helpers/project.js');
+const h = require('../helpers.js');
+const projectHelpers = require('../helpers/project.js');
 
-var goToAddToProjectPage = function(projectName) {
-  var uri = 'project/' + projectName + '/create';
+let goToAddToProjectPage = (projectName) => {
+  let uri = 'project/' + projectName + '/create';
   h.goToPage(uri);
   expect(element(by.cssContainingText('h1', "Create Using Your Code")).isPresent()).toBe(true);
   expect(element(by.cssContainingText('h1', "Create Using a Template")).isPresent()).toBe(true);
@@ -13,7 +13,7 @@ var goToAddToProjectPage = function(projectName) {
   expect(element(by.cssContainingText('.catalog h3 > a', "ruby-helloworld-sample")).isPresent()).toBe(true);
 };
 
-var goToCreateProjectPage = function() {
+let goToCreateProjectPage = () => {
   h.goToPage('create-project');
   expect(element(by.cssContainingText('h1', "New Project")).isPresent()).toBe(true);
   expect(element(by.model('name')).isPresent()).toBe(true);
@@ -21,34 +21,34 @@ var goToCreateProjectPage = function() {
   expect(element(by.model('description')).isPresent()).toBe(true);
 };
 
-var requestCreateFromSource = function(projectName, sourceUrl) {
-  var uri = 'project/' + projectName + '/create';
+let requestCreateFromSource = (projectName, sourceUrl) => {
+  let uri = 'project/' + projectName + '/create';
   h.waitForUri(uri);
   h.setInputValue('from_source_url', sourceUrl);
-  var nextButton = element(by.buttonText('Next'));
+  let nextButton = element(by.buttonText('Next'));
   browser.wait(protractor.ExpectedConditions.elementToBeClickable(nextButton), 2000);
   nextButton.click();
 };
 
-var requestCreateFromTemplate = function(projectName, templateName) {
-  var uri = 'project/' + projectName + '/create';
+let requestCreateFromTemplate = (projectName, templateName) => {
+  let uri = 'project/' + projectName + '/create';
   h.waitForUri(uri);
-  var template = element(by.cssContainingText('.catalog h3 > a', templateName));
+  let template = element(by.cssContainingText('.catalog h3 > a', templateName));
   expect(template.isPresent()).toBe(true);
   template.click();
 };
 
-var attachBuilderImageToSource = function(projectName, builderImageName) {
-  var uri = 'project/' + projectName + '/catalog/images';
+let attachBuilderImageToSource = (projectName, builderImageName) => {
+  let uri = 'project/' + projectName + '/catalog/images';
   h.waitForUri(uri);
   expect(element(by.cssContainingText('h1', "Select a builder image")).isPresent()).toBe(true);
-  var builderImageLink = element(by.cssContainingText('h3 > a', builderImageName));
+  let builderImageLink = element(by.cssContainingText('h3 > a', builderImageName));
   expect(builderImageLink.isPresent()).toBe(true);
   builderImageLink.click();
 };
 
-var createFromSource = function(projectName, builderImageName, appName) {
-  var uri = 'project/' + projectName + '/create/fromimage';
+let createFromSource = (projectName, builderImageName, appName) => {
+  let uri = 'project/' + projectName + '/create/fromimage';
   h.waitForUri(uri);
   expect(element(by.css('.osc-form h1')).getText()).toEqual(builderImageName);
   expect(element(by.cssContainingText('h2', "Name")).isPresent()).toBe(true);
@@ -57,41 +57,41 @@ var createFromSource = function(projectName, builderImageName, appName) {
   expect(element(by.cssContainingText('h2', "Build Configuration")).isPresent()).toBe(true);
   expect(element(by.cssContainingText('h2', "Scaling")).isPresent()).toBe(true);
   expect(element(by.cssContainingText('h2', "Labels")).isPresent()).toBe(true);
-  var appNameInput = element(by.name('appname'));
+  let appNameInput = element(by.name('appname'));
   appNameInput.clear();
   appNameInput.sendKeys(appName);
   h.clickAndGo('Create', 'project/' + projectName + '/overview');
 };
 
-var createFromTemplate = function(projectName, templateName, parameterNames, labelNames) {
-  var uri = 'project/' + projectName + '/create/fromtemplate';
+let createFromTemplate = (projectName, templateName, parameterNames, labelNames) => {
+  let uri = 'project/' + projectName + '/create/fromtemplate';
   h.waitForUri(uri);
   expect(element(by.css('.osc-form h1')).getText()).toEqual(templateName);
   expect(element(by.cssContainingText('h2', "Images")).isPresent()).toBe(true);
   expect(element(by.cssContainingText('h2', "Parameters")).isPresent()).toBe(true);
   expect(element(by.cssContainingText('h2', "Labels")).isPresent()).toBe(true);
   if (parameterNames) {
-    parameterNames.forEach(function(val) {
-      expect(element(by.cssContainingText('.env-variable-list label.key', val)).isPresent()).toBe(true);
+    parameterNames.forEach((val) => {
+      expect(element(by.cssContainingText('.env-letiable-list label.key', val)).isPresent()).toBe(true);
     });
   }
   if (labelNames) {
-    labelNames.forEach(function(val) {
+    labelNames.forEach((val) => {
       expect(element(by.cssContainingText('.label-list span.key', val)).isPresent()).toBe(true);
     });
   }
   h.clickAndGo('Create', 'project/' + projectName + '/overview');
 };
 
-var checkServiceCreated = function(projectName, serviceName) {
+let checkServiceCreated = (projectName, serviceName) => {
   h.goToPage('project/' + projectName + '/overview');
   h.waitForPresence('.component .service', serviceName, 10000);
   h.goToPage('project/' + projectName + '/browse/services');
   h.waitForPresence('h3', serviceName, 10000);
 };
 
-var checkProjectSettings = function(projectName, displayName, description) {
-  var uri = 'project/' + projectName + '/edit';
+let checkProjectSettings = (projectName, displayName, description) => {
+  let uri = 'project/' + projectName + '/edit';
   h.goToPage(uri);
   expect(element(by.css('h1')).getText()).toEqual("Edit Project " + projectName);
   expect(element(by.css('#displayName')).getAttribute('value')).toEqual(displayName);
@@ -99,75 +99,75 @@ var checkProjectSettings = function(projectName, displayName, description) {
 };
 
 
-describe('', function() {
+describe('', () => {
 
   afterAll(function(){
     h.afterAllTeardown();
   });
 
-  describe('authenticated e2e-user', function() {
+  describe('authenticated e2e-user', () => {
 
-    beforeEach(function() {
+    beforeEach(() => {
       h.commonSetup();
       h.login();
     });
 
-    afterEach(function() {
+    afterEach(() => {
       h.commonTeardown();
     });
 
-    describe('new project', function() {
+    describe('new project', () => {
 
-      describe('when creating a new project', function() {
+      describe('when creating a new project', () => {
 
         it('should be able to show the create project page', goToCreateProjectPage);
 
-        var project = projectHelpers.projectDetails();
+        let project = projectHelpers.projectDetails();
 
-        it('should successfully create a new project', function() {
+        it('should successfully create a new project', () => {
           goToCreateProjectPage();
           projectHelpers.createProject(project, 'project/' + project['name'] + '/create');
           h.waitForPresence('.breadcrumb li a', project['displayName']);
           checkProjectSettings(project['name'], project['displayName'], project['description']);
         });
 
-        it('should browse builds', function() {
+        it('should browse builds', () => {
           h.goToPage('project/' + project['name'] + '/browse/builds');
           h.waitForPresence('h1', 'Builds');
           // TODO: validate presented strategies, images, repos
         });
 
-        it('should browse deployments', function() {
+        it('should browse deployments', () => {
           h.goToPage('project/' + project['name'] + '/browse/deployments');
           h.waitForPresence("h1", "Deployments");
           // TODO: validate presented deployments
         });
 
-        it('should browse events', function() {
+        it('should browse events', () => {
           h.goToPage('project/' + project['name'] + '/browse/events');
           h.waitForPresence("h1", "Events");
           // TODO: validate presented events
         });
 
-        it('should browse image streams', function() {
+        it('should browse image streams', () => {
           h.goToPage('project/' + project['name'] + '/browse/images');
           h.waitForPresence("h1", "Image Streams");
           // TODO: validate presented images
         });
 
-        it('should browse pods', function() {
+        it('should browse pods', () => {
           h.goToPage('project/' + project['name'] + '/browse/pods');
           h.waitForPresence("h1", "Pods");
           // TODO: validate presented pods, containers, correlated images, builds, source
         });
 
-        it('should browse services', function() {
+        it('should browse services', () => {
           h.goToPage('project/' + project['name'] + '/browse/services');
           h.waitForPresence("h1", "Services");
           // TODO: validate presented ports, routes, selectors
         });
 
-        it('should validate taken name when trying to create', function() {
+        it('should validate taken name when trying to create', () => {
           goToCreateProjectPage();
           element(by.model('name')).clear().sendKeys(project['name']);
           element(by.buttonText("Create")).click();
@@ -175,7 +175,7 @@ describe('', function() {
           expect(browser.getCurrentUrl()).toMatch(/\/create-project$/);
         });
 
-        it('should delete a project', function() {
+        it('should delete a project', () => {
           projectHelpers.deleteProject(project);
         });
 
@@ -185,10 +185,10 @@ describe('', function() {
             it('should view the create page', function() { goToAddToProjectPage("console-integration-test-project"); });
 
             it('should create from source', function() {
-              var projectName = "console-integration-test-project";
-              var sourceUrl = "https://github.com/openshift/rails-ex#master";
-              var appName = "rails-ex-mine";
-              var builderImage = "ruby";
+              let projectName = "console-integration-test-project";
+              let sourceUrl = "https://github.com/openshift/rails-ex#master";
+              let appName = "rails-ex-mine";
+              let builderImage = "ruby";
 
               goToAddToProjectPage(projectName);
               requestCreateFromSource(projectName, sourceUrl);
@@ -198,16 +198,16 @@ describe('', function() {
             });
 
             it('should create from template', function() {
-              var projectName = "console-integration-test-project";
-              var templateName = "ruby-helloworld-sample";
-              var parameterNames = [
+              let projectName = "console-integration-test-project";
+              let templateName = "ruby-helloworld-sample";
+              let parameterNames = [
                 "ADMIN_USERNAME",
                 "ADMIN_PASSWORD",
                 "MYSQL_USER",
                 "MYSQL_PASSWORD",
                 "MYSQL_DATABASE"
               ];
-              var labelNames = ["template"];
+              let labelNames = ["template"];
 
               goToAddToProjectPage(projectName);
               requestCreateFromTemplate(projectName, templateName);
