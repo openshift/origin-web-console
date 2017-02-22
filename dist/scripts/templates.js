@@ -3629,10 +3629,10 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "This route splits traffic across multiple services.\n" +
     "</div>\n" +
     "</div>\n" +
-    "<div class=\"col-sm-5 col-sm-push-7 mar-bottom-lg\">\n" +
+    "<div class=\"col-sm-12 col-md-5 col-md-push-7 mar-bottom-lg\">\n" +
     "<route-service-pie route=\"route\"></route-service-pie>\n" +
     "</div>\n" +
-    "<div class=\"col-sm-7 col-sm-pull-5\">\n" +
+    "<div class=\"cold-sm-12 col-md-7 col-md-pull-5\">\n" +
     "<table class=\"table table-bordered\">\n" +
     "<thead>\n" +
     "<tr>\n" +

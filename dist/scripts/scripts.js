@@ -12603,13 +12603,18 @@ template:'<div ng-show="totalWeight" ng-attr-id="{{chartId}}"></div>',
 link:function(a) {
 function b() {
 var b = {
-columns:[]
+columns:[],
+names:{}
 };
-a.route && (b.columns.push(f(a.route.spec.to)), a.totalWeight = a.route.spec.to.weight, _.each(a.route.spec.alternateBackends, function(c) {
-b.columns.push(f(c)), a.totalWeight += c.weight;
-})), a.totalWeight && (c ? (h(b), c.load(b)) :(d.data.columns = b.columns, c = c3.generate(d)), e = b);
+a.route && (b.columns.push(g(a.route.spec.to)), b.names[a.route.spec.to.name] = _.trunc(a.route.spec.to.name, {
+length:30
+}), a.totalWeight = a.route.spec.to.weight, _.each(a.route.spec.alternateBackends, function(c) {
+b.columns.push(g(c)), b.names[c.name] = _.trunc(c.name, {
+length:30
+}), a.totalWeight += c.weight;
+})), a.totalWeight && (c ? (i(b), c.load(b)) :(d.data.columns = b.columns, c = c3.generate(d)), f = b);
 }
-var c, d;
+var c, d, e = window.matchMedia("(max-width: 400px)").matches;
 a.chartId = _.uniqueId("route-service-chart-"), d = {
 bindto:"#" + a.chartId,
 color:{
@@ -12617,7 +12622,7 @@ pattern:[ $.pfPaletteColors.blue, $.pfPaletteColors.orange, $.pfPaletteColors.gr
 },
 legend:{
 show:!0,
-position:"right"
+position:e ? "bottom" :"right"
 },
 pie:{
 label:{
@@ -12625,8 +12630,14 @@ show:!1
 }
 },
 size:{
-height:115,
-width:260
+height:e ? 150 :115
+},
+tooltip:{
+format:{
+name:function(a, b, c) {
+return c;
+}
+}
 },
 data:{
 type:"pie",
@@ -12636,21 +12647,21 @@ enabled:!1
 }
 }
 };
-var e, f = function(a) {
+var f, g = function(a) {
 return [ a.name, a.weight ];
-}, g = function(a) {
-return _.head(a);
 }, h = function(a) {
+return _.head(a);
+}, i = function(a) {
 var b = {};
 _.each(a.columns, function(a) {
-var c = g(a);
+var c = h(a);
 b[c] = !0;
 });
-var c = _.get(e, "columns", []);
+var c = _.get(f, "columns", []);
 a.unload = _.chain(c).reject(function(a) {
-var c = g(a);
+var c = h(a);
 return _.has(b, [ c ]);
-}).map(g).value();
+}).map(h).value();
 };
 a.$watch("route", b), a.$on("destroy", function() {
 c && (c = c.destroy());
