@@ -43,7 +43,7 @@ angular.module('openshiftConsole')
         return;
       }
 
-      Navigate.toResourceList('secrets', $scope.projectName);
+      $window.history.back();
     };
 
     ProjectsService
