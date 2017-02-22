@@ -2,56 +2,10 @@
 // Tables
 // --------------------------------------------------
 
-.table {
-  background-color: #fff;
-  &.table-bordered {
-    > thead >tr > th, > tbody > tr > td {
-      border-left: 0;
-      border-right: 0;
-      padding-bottom: @table-cell-padding-bottom;
-      padding-top: @table-cell-padding-top;
-      vertical-align: middle;
-    }
-
-    &.table-bordered-columns {
-      > thead >tr > th, > tbody > tr > td {
-        border: 1px solid @table-border-color;
-      }
-    }
+.config-map-table {
+  .key, .truncated-content {
+    font-family: @font-family-monospace;
   }
-  // use if you have long, unbroken strings in cells you need to wrap
-  // you will probably want to use in conjunction with colgroup to size cols since this will make all cols equal size
-  &.table-layout-fixed {
-    table-layout: fixed;
-    td {
-      .word-break();
-    }
-  }
-}
-
-.table th .pficon-help {
-  color: #999;
-  cursor: help;
-
-  &:not(:first-child) {
-    margin-left: 5px;
-  }
-}
-
-.table {
-  > tbody {
-    + tbody {
-      border-top-width: 1px;
-    }
-  }
-}
-
-.table-borderless>tbody>tr>th,
-.table-borderless>tfoot>tr>th,
-.table-borderless>thead>tr>td,
-.table-borderless>tbody>tr>td,
-.table-borderless>tfoot>tr>td {
-  border-top: none;
 }
 
 .data-toolbar, .table-toolbar {
@@ -95,6 +49,113 @@
       margin-bottom: 0;
       width: 300px;
     }
+  }
+}
+
+.events-table {
+  .pficon {
+    vertical-align: middle;
+  }
+  .severity-icon-td {
+    padding-left: 0;
+    padding-right: 0;
+  }
+  th#kind {
+    width: 160px;
+  }
+  th#kind-name {
+    width: 190px;
+  }
+  th#message {
+    width: 100%;// ensures it gets remaining width
+  }
+  th#reason {
+    width: 150px;
+  }
+  th#severity {
+    padding:0;
+    width:10px;
+  }
+  th#time {
+    width: 90px;
+  }
+}
+
+.key-value-table > tbody > tr > td {
+  &.key {
+    padding-right: 10px;
+    vertical-align: top;
+  }
+  &.value {
+    width: 100%;
+    .truncated-content {
+      white-space: pre;
+    }
+  }
+}
+
+.table {
+  background-color: #fff;
+  &.table-bordered {
+    > tbody, > thead {
+      > tr > {
+        td, th {
+          border-left: 0;
+          border-right: 0;
+          padding-bottom: @table-cell-padding-bottom;
+          padding-top: @table-cell-padding-top;
+          vertical-align: middle;
+        }
+      }
+    }
+    &.table-bordered-columns > {
+      tbody, thead {
+        > tr > {
+          td, th {
+            border-left: 1px solid @table-border-color;
+            border-right: 1px solid @table-border-color;
+          }
+        }
+      }
+    }
+  }
+  // use if you have long, unbroken strings in cells you need to wrap
+  // you will probably want to use in conjunction with colgroup to size cols since this will make all cols equal size
+  &.table-layout-fixed {
+    table-layout: fixed;
+    td {
+      .word-break();
+    }
+  }
+  > tbody + tbody {
+    border-top-width: 1px;
+  }
+  th .pficon-help {
+    color: #999;
+    cursor: help;
+    &:not(:first-child) {
+      margin-left: 5px;
+    }
+  }
+}
+
+.table-borderless > tbody > tr > th,
+.table-borderless > tfoot > tr > th,
+.table-borderless > tbody > tr > td,
+.table-borderless > thead > tr > td,
+.table-borderless > tfoot > tr > td {
+  border-top: none;
+}
+
+.table-filter-wrapper {
+  background-color: #f9f9f9;
+  border-left: 1px solid @table-border-color;
+  border-right: 1px solid @table-border-color;
+  border-top: 1px solid @table-border-color;
+  .flex-display(@display: flex);
+  padding: 10px 10px 5px 10px;
+  .form-group {
+    margin-bottom: 5px;
   }
 }
 
@@ -154,6 +215,38 @@
   }
 }
 
+.table-responsive {
+  margin-bottom: @line-height-computed;
+  @media(max-width: @screen-xs-max) {
+    .table.table-bordered {
+      > tbody, > thead {
+        > tr {
+          &:first-child {
+            > td, > th {
+              border-top: 0;
+            }
+          }
+          > td, > th {
+            &:first-child {
+              border-left: 0;
+            }
+            &:last-child {
+              border-right: 0;
+            }
+          }
+        }
+      }
+    }
+  }
+  @media(min-width: @screen-sm-min) {
+    .table {
+      margin-bottom: 0;
+    }
+  }
+}
+
+.table-row-variant(disabled; @color-pf-black-150);
+
 // swaps direction of arrow in table cell
 td[role="presentation"].arrow:after {
   content: "\2193";
@@ -162,57 +255,3 @@ td[role="presentation"].arrow:after {
     content: "\2192";
   }
 }
-
-.table-filter-wrapper {
-  .flex-display(@display: flex);
-  padding: 10px 10px 5px 10px;
-  border-top: 1px solid @table-border-color;
-  border-left: 1px solid @table-border-color;
-  border-right: 1px solid @table-border-color;
-  background-color: #f9f9f9;
-  .form-group {
-    margin-bottom: 5px;
-  }
-}
-
-// table for events
-.events-table {
-  th#time {width:90px;}
-  th#kind-name {width:190px;}
-  th#kind {width:160px;}
-  th#severity {width:10px;padding:0;}
-  th#reason {width:150px;}
-  th#message   {width:100%;} // ensures it gets remaining width
-  .pficon {
-    vertical-align: middle;
-  }
-  .severity-icon-td {
-    padding-left: 0;
-    padding-right: 0;
-  }
-}
-
-.key-value-table {
-  > tbody {
-    > tr {
-      > td.key {
-        padding-right: 10px;
-        vertical-align: top;
-      }
-      > td.value {
-        width: 100%;
-        .truncated-content {
-          white-space: pre;
-        }
-      }
-    }
-  }
-}
-
-.config-map-table {
-  .key, .truncated-content {
-    font-family: @font-family-monospace;
-  }
-}
-
-.table-row-variant(disabled; @color-pf-black-150);
