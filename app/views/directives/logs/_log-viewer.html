@@ -68,7 +68,8 @@
 
 
 <!-- must be ng-show rather than ng-if, else DOM is not rendered in time to cache nodes -->
-<div ng-show="state=='logs'">
+<!-- Keep invisible until sized to avoid flicker on initial display. -->
+<div ng-show="state=='logs'" ng-class="{ invisible: !sized }">
   <div class="log-view" ng-attr-id="{{logViewerID}}" ng-class="{'log-fixed-height': fixedHeight}">
     <div
       id="{{logViewerID}}-affixedFollow"
@@ -81,7 +82,7 @@
         Go to End
       </a>
     </div>
-    <div class="log-view-output" id="{{logViewerID}}-fixed-scrollable" >
+    <div class="log-view-output" id="{{logViewerID}}-fixed-scrollable">
       <table>
         <tbody id="{{logViewerID}}-logContent"></tbody>
       </table>
