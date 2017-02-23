@@ -5512,9 +5512,10 @@ httpErr:a("getErrorDetails")(b)
 addRoleTo:function(a, b, c, e) {
 var f = {
 name:a,
-kind:b,
-namespace:e
-}, g = _.find(d.roleBindings, {
+kind:b
+};
+"ServiceAccount" === b && (f.namespace = e);
+var g = _.find(d.roleBindings, {
 roleRef:{
 name:c.metadata.name
 }
