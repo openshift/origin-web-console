@@ -327,9 +327,11 @@ angular
             addRoleTo:function(subjectName, subjectKind, role, subjectNamespace) {
               var subject = {
                 name: subjectName,
-                kind: subjectKind,
-                namespace: subjectNamespace
+                kind: subjectKind
               };
+              if(subjectKind === 'ServiceAccount') {
+                subject.namespace = subjectNamespace;
+              }
               // TODO (bpeterse): future. Role/ClusterRole roleRef disambiguation
               // Edge case a user creates a local Role with same name as ClusterRole,
               // roleRef doesn't necessarily contain namespace. There may be a way to
