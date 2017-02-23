@@ -12343,20 +12343,20 @@ var j, n, p, q, r, s = document.documentElement;
 i.logViewerID = _.uniqueId("log-viewer"), i.empty = !0;
 var t, u;
 "ReplicationController" === i.object.kind ? (t = "deploymentconfigs/log", u = d("annotation")(i.object, "deploymentConfig")) :(t = f.kindToResource(i.object.kind) + "/log", u = i.object.metadata.name);
-var v = function() {
+var v, w = function() {
 q = window.innerWidth < l.screenSmMin && !i.fixedHeight ? null :n;
-}, w = function() {
+}, x = function() {
 i.$apply(function() {
 var a = j.getBoundingClientRect();
 i.fixedHeight ? i.showScrollLinks = a && a.height > i.fixedHeight :i.showScrollLinks = a && (a.top < 0 || a.bottom > s.clientHeight);
 });
-}, x = !1, y = function() {
-x ? x = !1 :i.$evalAsync(function() {
+}, y = !1, z = function() {
+y ? y = !1 :i.$evalAsync(function() {
 i.autoScrollActive = !1;
 });
-}, z = function() {
-p.off("scroll", y), m.off("scroll", y), window.innerWidth <= l.screenSmMin && !i.fixedHeight ? m.on("scroll", y) :p.on("scroll", y);
 }, A = function() {
+p.off("scroll", z), m.off("scroll", z), window.innerWidth <= l.screenSmMin && !i.fixedHeight ? m.on("scroll", z) :p.on("scroll", z);
+}, B = function() {
 i.fixedHeight || (window.innerWidth < l.screenSmMin && !i.fixedHeight ? r.removeClass("target-logger-node").affix({
 target:window,
 offset:{
@@ -12368,30 +12368,46 @@ offset:{
 top:i.followAffixTop || 0
 }
 }));
-}, B = function(a) {
-var b = $("#" + i.logViewerID + " .log-view-output"), c = b.offset().top;
+}, C = function() {
+return $("#" + i.logViewerID + " .log-view-output");
+}, D = function(a) {
+var b = C(), c = b.offset().top;
 if (!(c < 0)) {
 var d = $(".ellipsis-pulser").outerHeight(!0), e = i.fixedHeight ? i.fixedHeight :Math.floor($(window).height() - c - d);
 i.chromeless || i.fixedHeight || (e -= 40), a ? b.animate({
 "min-height":e + "px"
 }, "fast") :b.css("min-height", e + "px"), i.fixedHeight && b.css("max-height", e);
 }
-}, C = _.debounce(function() {
-B(!0), v(), z(), w(), A(), y();
+}, E = function() {
+if (!v) {
+var a = function() {
+clearInterval(v), v = null, i.$evalAsync(function() {
+i.sized = !0;
+});
+}, b = 0;
+v = setInterval(function() {
+if (b > 10) return void a();
+b++;
+var c = C();
+c.is(":visible") && (D(), a());
 }, 100);
-m.on("resize", C);
-var D, E = function() {
-x = !0, k.scrollBottom(q);
-}, F = function() {
-i.autoScrollActive = !i.autoScrollActive, i.autoScrollActive && E();
-}, G = document.createDocumentFragment(), H = _.debounce(function() {
-j.appendChild(G), G = document.createDocumentFragment(), i.autoScrollActive && E(), i.showScrollLinks || w();
+}
+}, F = _.debounce(function() {
+D(!0), w(), A(), x(), B(), z();
+}, 100);
+m.on("resize", F);
+var G, H = function() {
+y = !0, k.scrollBottom(q);
+}, I = function() {
+i.autoScrollActive = !i.autoScrollActive, i.autoScrollActive && H();
+}, J = document.createDocumentFragment(), K = _.debounce(function() {
+j.appendChild(J), J = document.createDocumentFragment(), i.autoScrollActive && H(), i.showScrollLinks || x();
 }, 100, {
 maxWait:300
-}), I = function(a) {
-D && (D.stop(), D = null), a || (H.cancel(), j && (j.innerHTML = ""), G = document.createDocumentFragment());
-}, J = function() {
-if (I(), i.run) {
+}), L = function(a) {
+G && (G.stop(), G = null), a || (K.cancel(), j && (j.innerHTML = ""), J = document.createDocumentFragment());
+}, M = function() {
+if (L(), i.run) {
 angular.extend(i, {
 loading:!0,
 autoScrollActive:!0,
@@ -12403,32 +12419,32 @@ follow:!0,
 tailLines:5e3,
 limitBytes:10485760
 }, i.options);
-D = h.createStream(t, u, i.context, a);
+G = h.createStream(t, u, i.context, a);
 var c = 0, d = function(a) {
-c++, G.appendChild(o(c, a)), H();
+c++, J.appendChild(o(c, a)), K();
 };
-D.onMessage(function(b, e, f) {
+G.onMessage(function(b, e, f) {
 i.$evalAsync(function() {
-i.empty = !1, "logs" !== i.state && (i.state = "logs", setTimeout(B));
+i.empty = !1, "logs" !== i.state && (i.state = "logs", E());
 }), b && (a.limitBytes && f >= a.limitBytes && (i.$evalAsync(function() {
 i.limitReached = !0, i.loading = !1;
-}), I(!0)), d(b), !i.largeLog && c >= a.tailLines && i.$evalAsync(function() {
+}), L(!0)), d(b), !i.largeLog && c >= a.tailLines && i.$evalAsync(function() {
 i.largeLog = !0;
 }));
-}), D.onClose(function() {
-D = null, i.$evalAsync(function() {
+}), G.onClose(function() {
+G = null, i.$evalAsync(function() {
 i.autoScrollActive = !1, 0 !== c || i.emptyStateMessage || (i.state = "empty", i.emptyStateMessage = "The logs are no longer available or could not be loaded.");
 }), b(function() {
 i.loading = !1;
 }, 100);
-}), D.onError(function() {
-D = null, i.$evalAsync(function() {
+}), G.onError(function() {
+G = null, i.$evalAsync(function() {
 angular.extend(i, {
 loading:!1,
 autoScrollActive:!1
 }), 0 === c ? (i.state = "empty", i.emptyStateMessage = "The logs are no longer available or could not be loaded.") :i.errorWhileRunning = !0;
 });
-}), D.start();
+}), G.start();
 }
 };
 return g.getLoggingURL().then(function(b) {
@@ -12454,7 +12470,7 @@ j = a;
 }, this.cacheAffixable = function(a) {
 r = $(a);
 }, this.start = function() {
-v(), z(), A();
+w(), A(), B();
 }, angular.extend(i, {
 ready:!0,
 loading:!0,
@@ -12466,12 +12482,12 @@ k.scrollBottom(q);
 onScrollTop:function() {
 i.autoScrollActive = !1, k.scrollTop(q);
 },
-toggleAutoScroll:F,
+toggleAutoScroll:I,
 goChromeless:k.chromelessLink,
-restartLogs:J
+restartLogs:M
 }), i.$on("$destroy", function() {
-I(), m.off("resize", C), m.off("scroll", y), p.off("scroll", y);
-}), "deploymentconfigs/logs" !== t || u ? void i.$watchGroup([ "name", "options.container", "run" ], J) :(i.state = "empty", void (i.emptyStateMessage = "Logs are not available for this replication controller because it was not generated from a deployment configuration."));
+L(), m.off("resize", F), m.off("scroll", z), p.off("scroll", z);
+}), "deploymentconfigs/logs" !== t || u ? void i.$watchGroup([ "name", "options.container", "run" ], M) :(i.state = "empty", void (i.emptyStateMessage = "Logs are not available for this replication controller because it was not generated from a deployment configuration."));
 } ],
 require:"logViewer",
 link:function(a, c, d, e) {

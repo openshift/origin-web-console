@@ -182,8 +182,12 @@ angular.module('openshiftConsole')
               }
             };
 
+            var getLogOutputElement = function() {
+              return $('#' + $scope.logViewerID + ' .log-view-output');
+            };
+
             var fillHeight = function(animate) {
-              var content = $("#" + $scope.logViewerID + ' .log-view-output');
+              var content = getLogOutputElement();
               var contentTop = content.offset().top;
               if (contentTop < 0) {
                 // Content top is off the page already.
@@ -206,6 +210,37 @@ angular.module('openshiftConsole')
               if($scope.fixedHeight) {
                 content.css('max-height', fill);
               }
+            };
+
+            var visibleInterval;
+            var resizeWhenVisible = function() {
+              if (visibleInterval) {
+                return;
+              }
+
+              var done = function() {
+                clearInterval(visibleInterval);
+                visibleInterval = null;
+                // To avoid flicker, the log doesn't display until sized === true
+                $scope.$evalAsync(function() {
+                  $scope.sized = true;
+                });
+              };
+
+              var retries = 0;
+              visibleInterval = setInterval(function() {
+                if (retries > 10) {
+                  done();
+                  return;
+                }
+
+                retries++;
+                var content = getLogOutputElement();
+                if (content.is(':visible')) {
+                  fillHeight();
+                  done();
+                }
+              }, 100);
             };
 
             // roll up & debounce the various fns to call on resize
@@ -318,8 +353,7 @@ angular.module('openshiftConsole')
                   $scope.empty = false;
                   if($scope.state !== 'logs') {
                     $scope.state = 'logs';
-                    // setTimeout so that the log content is visible to correctly calculate fill height.
-                    setTimeout(fillHeight);
+                    resizeWhenVisible();
                   }
                 });
 
