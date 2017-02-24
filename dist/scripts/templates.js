@@ -11378,8 +11378,8 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "<div class=\"overview-tile\" ng-class=\"{ 'deployment-in-progress': inProgressDeployment }\">\n" +
     "<ng-include src=\"'views/overview/_service-header.html'\"></ng-include>\n" +
     "<div class=\"overview-tile-header\">\n" +
-    "<div class=\"rc-header\">\n" +
-    "<div>\n" +
+    "<div class=\"rc-header\" ng-class=\"{ 'rc-header-shield' : activeReplicationController}\">\n" +
+    "<div class=\"truncate\">\n" +
     "Deployment Config\n" +
     "<a ng-href=\"{{deploymentConfig | navigateResourceURL}}\">{{deploymentConfig.metadata.name}}</a>\n" +
     "<small class=\"overview-timestamp\" ng-if=\"activeReplicationController && !inProgressDeployment\">\n" +
@@ -11417,8 +11417,7 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "A new deployment will start automatically when\n" +
     "<span ng-if=\"imageChangeTriggers.length === 1\">\n" +
     "an image is available for\n" +
-    "<a ng-href=\"{{urlForImageChangeTrigger(imageChangeTriggers[0], deploymentConfig)}}\">\n" +
-    "{{imageChangeTriggers[0].imageChangeParams.from | imageObjectRef : deploymentConfig.metadata.namespace}}</a>.\n" +
+    "<a ng-href=\"{{urlForImageChangeTrigger(imageChangeTriggers[0], deploymentConfig)}}\">{{imageChangeTriggers[0].imageChangeParams.from | imageObjectRef : deploymentConfig.metadata.namespace}}</a>.\n" +
     "</span>\n" +
     "<span ng-if=\"imageChangeParams.length > 1\">\n" +
     "one of the images for this deployment config changes.\n" +
@@ -11437,10 +11436,8 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "</div>\n" +
     "</div>\n" +
     "<div ng-if=\"!pipelinesForDC[deploymentConfig.metadata.name].length\">\n" +
-    "<p>\n" +
-    "No deployments have started for\n" +
-    "<a ng-href=\"{{deploymentConfig | navigateResourceURL}}\">{{deploymentConfig.metadata.name}}</a>.\n" +
-    "</p>\n" +
+    "<p>No deployments have started for\n" +
+    "<a ng-href=\"{{deploymentConfig | navigateResourceURL}}\">{{deploymentConfig.metadata.name}}</a>.</p>\n" +
     "<button ng-if=\"'deploymentconfigs' | canI : 'update'\" class=\"btn btn-primary\" ng-click=\"startDeployment(deploymentConfig)\">\n" +
     "Start Deployment\n" +
     "</button>\n" +
@@ -11509,8 +11506,8 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "<div class=\"overview-tile\" ng-class=\"{ 'deployment-in-progress': inProgressDeployment }\">\n" +
     "<ng-include src=\"'views/overview/_service-header.html'\"></ng-include>\n" +
     "<div class=\"overview-tile-header\">\n" +
-    "<div class=\"rc-header\">\n" +
-    "<div>\n" +
+    "<div class=\"rc-header\" ng-class=\"{ 'rc-header-shield' : latestReplicaSet && latestRevision && !inProgressDeployment}\">\n" +
+    "<div class=\"truncate\">\n" +
     "Deployment\n" +
     "<a ng-href=\"{{deployment | navigateResourceURL}}\">{{deploymentName}}</a>\n" +
     "<small class=\"overview-timestamp\" ng-if=\"latestReplicaSet\">\n" +
@@ -11580,7 +11577,7 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "<div class=\"overview-tile\" ng-if=\"pod.kind === 'Pod'\">\n" +
     "<ng-include src=\"'views/overview/_service-header.html'\"></ng-include>\n" +
     "<div class=\"rc-header\"> \n" +
-    "<div>\n" +
+    "<div class=\"truncate\">\n" +
     "Pod\n" +
     "<a ng-href=\"{{pod | navigateResourceURL}}\">{{pod.metadata.name}}</a>\n" +
     "<small class=\"overview-timestamp\">\n" +
@@ -11665,12 +11662,11 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "</overview-service>\n" +
     "<overview-service ng-init=\"isChild = true\" ng-repeat=\"service in childServices\">\n" +
     "</overview-service>\n" +
-    "<div flex column ng-if=\"alternateServices.length === 0 && childServices.length === 0 && service\" class=\"no-child-services-block\">\n" +
+    "<div column ng-if=\"alternateServices.length === 0 && childServices.length === 0 && service\" class=\"no-child-services-block\">\n" +
     "<div class=\"no-child-services-message\">\n" +
     "<div class=\"empty-tile\">\n" +
     "<h2>No grouped services.</h2>\n" +
-    "<p>\n" +
-    "No services are grouped with <a ng-href=\"{{service | navigateResourceURL}}\">{{service.metadata.name}}</a>.\n" +
+    "<p>No services are grouped with <a ng-href=\"{{service | navigateResourceURL}}\">{{service.metadata.name}}</a>.\n" +
     "<span ng-if=\"(services | hashSize) > 1 && ('services' | canI : 'update')\">Add a service to group them together.</span>\n" +
     "</p>\n" +
     "<div ng-if=\"(services | hashSize) > 1 && ('services' | canI : 'update')\">\n" +
@@ -11690,7 +11686,7 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
 
   $templateCache.put('views/overview/_service-header.html',
     "<div row class=\"service-title\" ng-if=\"service\">\n" +
-    "<div class=\"service-name\">\n" +
+    "<div class=\"service-name truncate\">\n" +
     "<span class=\"pficon pficon-service\" aria-hidden=\"true\" title=\"Service\"></span>\n" +
     "<span class=\"sr-only\">Service</span>\n" +
     "<a ng-href=\"{{service | navigateResourceURL}}\">{{service.metadata.name}}</a>\n" +
@@ -11718,13 +11714,12 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
 
   $templateCache.put('views/overview/_service.html',
     "<div ng-if=\"!tileCount\" class=\"no-deployments-block\">\n" +
-    "<div column class=\"no-deployments-message\">\n" +
+    "<div column class=\"no-deployments-message overview-tile\">\n" +
     "<ng-include src=\"'views/overview/_service-header.html'\"></ng-include>\n" +
     "<div class=\"empty-tile\">\n" +
     "<h2>No deployments or pods.</h2>\n" +
     "<p>\n" +
-    "Service\n" +
-    "<a ng-href=\"{{service | navigateResourceURL}}\">{{service.metadata.name}}</a>\n" +
+    "Service <a ng-href=\"{{service | navigateResourceURL}}\">{{service.metadata.name}}</a>\n" +
     "does not route to any deployments or pods.\n" +
     "</p>\n" +
     "</div>\n" +
@@ -11771,7 +11766,7 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "<ng-include src=\"'views/overview/_service-header.html'\"></ng-include>\n" +
     "<div class=\"overview-tile-header\">\n" +
     "<div class=\"rc-header\">\n" +
-    "<div>\n" +
+    "<div class=\"truncate\">\n" +
     "{{set.kind | humanizeKind : true}}\n" +
     "<a ng-href=\"{{set | navigateResourceURL}}\">{{set.metadata.name}}</a>\n" +
     "<small class=\"overview-timestamp\">\n" +

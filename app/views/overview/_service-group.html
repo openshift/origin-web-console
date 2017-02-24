@@ -67,14 +67,13 @@
               ng-repeat="service in childServices">
           </overview-service>
 
-          <div flex column ng-if="alternateServices.length === 0 && childServices.length === 0 && service" class="no-child-services-block">
+          <div column ng-if="alternateServices.length === 0 && childServices.length === 0 && service" class="no-child-services-block">
             <div class="no-child-services-message">
               <div class="empty-tile">
                 <h2>No grouped services.</h2>
-                <p>
-                  No services are grouped with <a ng-href="{{service | navigateResourceURL}}">{{service.metadata.name}}</a>.
-                  <span ng-if="(services | hashSize) > 1 && ('services' | canI : 'update')">Add a service to group them together.</span>
-                </p>
+                  <p>No services are grouped with <a ng-href="{{service | navigateResourceURL}}">{{service.metadata.name}}</a>.
+                    <span ng-if="(services | hashSize) > 1 && ('services' | canI : 'update')">Add a service to group them together.</span>
+                  </p>
                 <div ng-if="(services | hashSize) > 1 && ('services' | canI : 'update')">
                   <button class="btn btn-primary" ng-click="linkService()">
                     Group Service

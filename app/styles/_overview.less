@@ -299,6 +299,8 @@
       .flex-wrap(@wrap: wrap);
       .flex-direction(@direction: column);
       overview-service {
+        // default width needed to enable truncation on elements within
+        width: 100%;
         &:nth-child(n+3) {
           margin-top: @service-group-vertical-margin;
         }
@@ -380,8 +382,10 @@
     .service-name {
       .h3();
       font-weight: @overview-font-weight;
-      margin-top: 3px;
-      margin-bottom: 3px;
+      // minimum line-height to prevent descender clipping since they use truncate
+      line-height: 1.2;
+      margin-top: 2px;
+      margin-bottom: 2px;
       .pficon {
         margin-right: 7px;
         vertical-align: -2px;
@@ -398,8 +402,10 @@
     .rc-header {
       .text-muted();
       padding: 5px 10px;
-      // Prevent the content from overlapping the deployment shield
-      margin-right: @shield-width-lg;
+      &.rc-header-shield {
+        // Prevent the content from overlapping the deployment shield
+        margin-right: @shield-width-lg;
+      }
     }
     image-names {
       // truncate long image names
@@ -570,7 +576,6 @@
     width: 50%;
   }
   .no-child-services-message, .no-deployments-message {
-    .text-center();
     .text-muted();
     .well();
     margin-bottom: 0;
@@ -589,7 +594,7 @@
     }
   }
   .no-deployments-message {
-    .flex(@columns: 1 0 0%); // the parent overview-service is where width with flex-basis is set.
+    width: 100%;
   }
   .no-child-services-message {
     display: none;
@@ -597,15 +602,19 @@
       .flex-display(@display: flex);
       .flex(@columns: 1 0 0%);
       .flex-direction(@direction: column);
+      height: 100%;
     }
   }
   .empty-tile {
-    padding: 50px;
+    .text-center();
+    padding: 50px 20px;
+    .word-break();
   }
   .empty-dc {
     .text-center();
     .text-muted();
-    padding: 0 50px 70px;
+    padding: 0 20px 70px;
+    .word-break();
   }
   @media (min-width: @screen-md-min) {
     .overview-services.single-alternate-service {

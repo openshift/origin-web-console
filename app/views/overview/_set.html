@@ -2,7 +2,7 @@
   <ng-include src="'views/overview/_service-header.html'"></ng-include>
   <div class="overview-tile-header">
     <div class="rc-header">
-      <div>
+      <div class="truncate">
         {{set.kind | humanizeKind : true}}
         <a ng-href="{{set | navigateResourceURL}}">{{set.metadata.name}}</a>
         <small class="overview-timestamp">
