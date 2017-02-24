@@ -8891,15 +8891,15 @@ title:"Add to Project"
 } ], m.get(e.project).then(_.spread(function(c, d) {
 a.project = c, a.context = d, a.breadcrumbs[0].title = b("displayName")(c), j.list("imagestreams", {
 namespace:"openshift"
-}, function(b) {
+}).then(function(b) {
 a.openshiftImageStreams = b.by("metadata.name");
 }), j.list("templates", {
 namespace:"openshift"
-}, function(b) {
+}).then(function(b) {
 a.openshiftTemplates = b.by("metadata.name");
-}), "openshift" === e.project ? (a.projectImageStreams = [], a.projectTemplates = []) :(j.list("imagestreams", d, function(b) {
+}), "openshift" === e.project ? (a.projectImageStreams = [], a.projectTemplates = []) :(j.list("imagestreams", d).then(function(b) {
 a.projectImageStreams = b.by("metadata.name");
-}), j.list("templates", d, function(b) {
+}), j.list("templates", d).then(function(b) {
 a.projectTemplates = b.by("metadata.name");
 }));
 }));
