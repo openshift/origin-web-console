@@ -3844,7 +3844,11 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "<breadcrumbs breadcrumbs=\"breadcrumbs\"></breadcrumbs>\n" +
     "<alerts alerts=\"alerts\"></alerts>\n" +
     "<div ng-if=\"!loaded\" class=\"mar-top-xl\">Loading...</div>\n" +
-    "<div ng-if=\"loaded\">\n" +
+    "<div ng-if=\"loaded && error\" class=\"empty-state-message text-center\">\n" +
+    "<h2>The secret details could not be loaded.</h2>\n" +
+    "<p>{{error | getErrorDetails}}</p>\n" +
+    "</div>\n" +
+    "<div ng-if=\"loaded && !error\">\n" +
     "<h1 class=\"contains-actions\">\n" +
     "<div class=\"pull-right dropdown\" ng-hide=\"!('secrets' | canIDoAny)\">\n" +
     "<button type=\"button\" class=\"dropdown-toggle btn btn-default actions-dropdown-btn hidden-xs\" data-toggle=\"dropdown\">\n" +

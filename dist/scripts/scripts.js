@@ -6970,15 +6970,13 @@ link:"project/" + a.project + "/browse/secrets"
 title:c.secretName
 } ], d.getAlerts().forEach(function(a) {
 c.alerts[a.name] = a.data;
-}), d.clearAlerts(), f.get(a.project).then(_.spread(function(a, d) {
-c.project = a, c.context = d, e.get("secrets", c.secretName, d).then(function(a) {
+}), d.clearAlerts(), f.get(a.project).then(_.spread(function(a, b) {
+c.project = a, c.context = b, e.get("secrets", c.secretName, b, {
+errorNotification:!1
+}).then(function(a) {
 c.secret = a, c.decodedSecretData = g.decodeSecretData(c.secret.data), c.loaded = !0;
 }, function(a) {
-c.loaded = !0, c.alerts.load = {
-type:"error",
-message:"The secret details could not be loaded.",
-details:"Reason: " + b("getErrorDetails")(a)
-};
+c.loaded = !0, c.error = a;
 });
 }));
 } ]), angular.module("openshiftConsole").controller("CreateSecretController", [ "$filter", "$location", "$routeParams", "$scope", "$window", "AlertMessageService", "ApplicationGenerator", "AuthorizationService", "DataService", "Navigate", "ProjectsService", function(a, b, c, d, e, f, g, h, i, j, k) {

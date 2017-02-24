@@ -39,7 +39,7 @@ angular.module('openshiftConsole')
         $scope.project = project;
         $scope.context = context;
 
-        DataService.get("secrets", $scope.secretName, context).then(
+        DataService.get("secrets", $scope.secretName, context, { errorNotification: false }).then(
           function(secret) {
             $scope.secret = secret;
             $scope.decodedSecretData = SecretsService.decodeSecretData($scope.secret.data);
@@ -47,11 +47,7 @@ angular.module('openshiftConsole')
           },
           function(e) {
             $scope.loaded = true;
-            $scope.alerts["load"] = {
-              type: "error",
-              message: "The secret details could not be loaded.",
-              details: "Reason: " + $filter('getErrorDetails')(e)
-            };
+            $scope.error = e;
           });
     }));
   });
