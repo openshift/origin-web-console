@@ -1159,14 +1159,14 @@ pre.clipped {
   margin-right: 5px;
   // A bit more space below the actions button.
   margin-top: 3px;
-  width: 100%; // needed to enable truncation within table
+  max-width: 100%; // needed to enable truncation within table, but still allow inline display if room is available
   &:before {
     content: ' ';
     white-space: normal;
   }
   .label-pair {
     margin-bottom: 2px;
-    width: 100%; // needed to enable truncation within table
+    max-width: 100%; // needed to enable truncation within table, but still allow inline display if room is available
   .label {
     // prevent short label-key or label-value from being truncated less than 4 characters
     min-width: 50px;
