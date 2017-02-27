@@ -5268,12 +5268,12 @@ e.get(b.project).then(_.spread(function(a, e) {
 c.project = a, d.list("resourcequotas", e, function(a) {
 c.quotas = _.sortBy(a.by("metadata.name"), "metadata.name"), c.orderedTypesByQuota = k(c.quotas), f.log("quotas", c.quotas);
 }), d.list("appliedclusterresourcequotas", e, function(a) {
-c.clusterQuotas = _.sortBy(a.by("metadata.name"), "metadata.name"), c.orderedTypesByClusterQuota = k(c.clusterQuotas), c.namespaceUsageByClusterQuota = {}, _.each(c.clusterQuotas, function(a, d) {
+c.clusterQuotas = _.sortBy(a.by("metadata.name"), "metadata.name"), c.orderedTypesByClusterQuota = k(c.clusterQuotas), c.namespaceUsageByClusterQuota = {}, _.each(c.clusterQuotas, function(a) {
 if (a.status) {
-var e = _.find(a.status.namespaces, {
+var d = _.find(a.status.namespaces, {
 namespace:b.project
 });
-c.namespaceUsageByClusterQuota[d] = e.status;
+c.namespaceUsageByClusterQuota[a.metadata.name] = d.status;
 }
 }), f.log("cluster quotas", c.clusterQuotas);
 }), d.list("limitranges", e, function(a) {

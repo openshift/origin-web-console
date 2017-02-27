@@ -111,10 +111,10 @@ angular.module('openshiftConsole')
           $scope.clusterQuotas = _.sortBy(quotas.by("metadata.name"), "metadata.name");
           $scope.orderedTypesByClusterQuota = orderTypes($scope.clusterQuotas);
           $scope.namespaceUsageByClusterQuota = {};
-          _.each($scope.clusterQuotas, function(quota, quotaName) {
+          _.each($scope.clusterQuotas, function(quota) {
             if (quota.status) {
               var namespaceUsage = _.find(quota.status.namespaces, { namespace: $routeParams.project });
-              $scope.namespaceUsageByClusterQuota[quotaName] = namespaceUsage.status;
+              $scope.namespaceUsageByClusterQuota[quota.metadata.name] = namespaceUsage.status;
             }
           });
           Logger.log("cluster quotas", $scope.clusterQuotas);
