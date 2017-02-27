@@ -21,9 +21,9 @@ angular.module("openshiftConsole")
           var lastSecret = _.last($scope.pickedSecrets);
           switch ($scope.strategyType) {
           case 'Custom':
-            return lastSecret.secretSource.name;
+            return _.get(lastSecret, 'secretSource.name');
           default:
-            return lastSecret.secret.name;
+            return _.get(lastSecret, 'secret.name');
           }
         };
 

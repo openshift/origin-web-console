@@ -10783,10 +10783,10 @@ b.canAddSourceSecret = function() {
 var a = _.last(b.pickedSecrets);
 switch (b.strategyType) {
 case "Custom":
-return a.secretSource.name;
+return _.get(a, "secretSource.name");
 
 default:
-return a.secret.name;
+return _.get(a, "secret.name");
 }
 }, b.setLastSecretsName = function(a) {
 var c = _.last(b.pickedSecrets);

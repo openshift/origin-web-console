@@ -347,8 +347,10 @@
                           </div>
                         </div>
 
-                        <div class="form-group" ng-if="strategyType !== 'JenkinsPipeline'">
-                          <!-- Use ng-show instead of ng-if so the form is still marked invalid if a hidden field has errors. -->
+                        <!-- Wait for project to load since the directive uses `canI` checks that need it. -->
+                        <div class="form-group" ng-if="project && strategyType !== 'JenkinsPipeline'">
+                          <!-- Use ng-show instead of ng-if when checking `view.advancedOptions` so
+                               the form is still marked invalid if a hidden field has errors. -->
                           <div ng-show="view.advancedOptions">
                             <osc-secrets model="secrets.picked.pullSecret"
                                         namespace="projectName"
@@ -401,19 +403,21 @@
                             </div>
                           </div>
 
-                          <!-- Use ng-show instead of ng-if so the form is still marked invalid if a hidden field has errors. -->
-                          <div class="form-group" ng-show="view.advancedOptions">
-                            <osc-secrets model="secrets.picked.pushSecret"
-                                        namespace="projectName"
-                                        display-type="push"
-                                        type="image"
-                                        disable-input="imageOptions.to.type==='None'"
-                                        service-account-to-link="builder"
-                                        secrets-by-type="secrets.secretsByType"
-                                        alerts="alerts">
-                            </osc-secrets>
+                          <!-- Wait for project to load since the directive uses `canI` checks that need it. -->
+                          <div ng-if="project">
+                            <!-- Use ng-show instead of ng-if so the form is still marked invalid if a hidden field has errors. -->
+                            <div class="form-group" ng-show="view.advancedOptions">
+                              <osc-secrets model="secrets.picked.pushSecret"
+                                          namespace="projectName"
+                                          display-type="push"
+                                          type="image"
+                                          disable-input="imageOptions.to.type==='None'"
+                                          service-account-to-link="builder"
+                                          secrets-by-type="secrets.secretsByType"
+                                          alerts="alerts">
+                              </osc-secrets>
+                            </div>
                           </div>
-
                         </div>
                       </dl>
                     </div>
