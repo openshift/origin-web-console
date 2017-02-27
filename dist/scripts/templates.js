@@ -9255,7 +9255,8 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "</div>\n" +
     "</div>\n" +
     "</div>\n" +
-    "<div class=\"form-group\" ng-if=\"strategyType !== 'JenkinsPipeline'\">\n" +
+    "\n" +
+    "<div class=\"form-group\" ng-if=\"project && strategyType !== 'JenkinsPipeline'\">\n" +
     "\n" +
     "<div ng-show=\"view.advancedOptions\">\n" +
     "<osc-secrets model=\"secrets.picked.pullSecret\" namespace=\"projectName\" display-type=\"pull\" type=\"image\" secrets-by-type=\"secrets.secretsByType\" service-account-to-link=\"builder\" alerts=\"alerts\">\n" +
@@ -9290,9 +9291,12 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "</div>\n" +
     "</div>\n" +
     "\n" +
+    "<div ng-if=\"project\">\n" +
+    "\n" +
     "<div class=\"form-group\" ng-show=\"view.advancedOptions\">\n" +
     "<osc-secrets model=\"secrets.picked.pushSecret\" namespace=\"projectName\" display-type=\"push\" type=\"image\" disable-input=\"imageOptions.to.type==='None'\" service-account-to-link=\"builder\" secrets-by-type=\"secrets.secretsByType\" alerts=\"alerts\">\n" +
     "</osc-secrets>\n" +
+    "</div>\n" +
     "</div>\n" +
     "</div>\n" +
     "</dl>\n" +
