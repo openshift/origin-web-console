@@ -7,6 +7,7 @@ angular.module('openshiftConsole')
     '$timeout',
     '$window',
     '$filter',
+    '$q',
     'AuthService',
     'APIService',
     'APIDiscovery',
@@ -19,6 +20,7 @@ angular.module('openshiftConsole')
              $timeout,
              $window,
              $filter,
+             $q,
              AuthService,
              APIService,
              APIDiscovery,
@@ -299,9 +301,15 @@ angular.module('openshiftConsole')
             // since the user can (potentially) swap between multiple containers
             var streamer;
             var stopStreaming = function(keepContent) {
+              var deferred = $q.defer();
               if (streamer) {
+                streamer.onClose(function() {
+                  deferred.resolve();
+                });
                 streamer.stop();
-                streamer = null;
+              } else {
+                // Resolve immediately if no active stream.
+                deferred.resolve();
               }
 
               if (!keepContent) {
@@ -310,117 +318,119 @@ angular.module('openshiftConsole')
                 cachedLogNode && (cachedLogNode.innerHTML = '');
                 buffer = document.createDocumentFragment();
               }
+
+              return deferred.promise;
             };
 
             var streamLogs = function() {
               // Stop any active streamer.
-              stopStreaming();
-
-              if(!$scope.run) {
-                return;
-              }
-
-              angular.extend($scope, {
-                loading: true,
-                autoScrollActive: true,
-                limitReached: false,
-                showScrollLinks: false
-              });
-
-              var options = angular.extend({
-                follow: true,
-                tailLines: 5000,
-                // Limit log size to 10 MiB. Note: This can't be more than 500 MiB,
-                // otherwise save log will break because we'll exceed the max Blob
-                // size for some browsers.
-                // https://github.com/eligrey/FileSaver.js#supported-browsers
-                limitBytes: 10 * 1024 * 1024
-              }, $scope.options);
-
-              streamer = DataService.createStream(logSubresource, name, $scope.context, options);
-
-              var lastLineNumber = 0;
-              var addLine = function(text) {
-                lastLineNumber++;
-                // Append the line to the document fragment buffer.
-                buffer.appendChild(buildLogLineNode(lastLineNumber, text));
-                update();
-              };
-
-              streamer.onMessage(function(msg, raw, cumulativeBytes) {
-                // ensures the digest loop will catch the state change.
+              stopStreaming().then(function() {
                 $scope.$evalAsync(function() {
-                  $scope.empty = false;
-                  if($scope.state !== 'logs') {
-                    $scope.state = 'logs';
-                    resizeWhenVisible();
+                  if(!$scope.run) {
+                    return;
                   }
-                });
 
-                // Completely empty messages (without even a newline character) should not add lines
-                if (!msg) {
-                  return;
-                }
-
-                if (options.limitBytes && cumulativeBytes >= options.limitBytes) {
-                  $scope.$evalAsync(function() {
-                    $scope.limitReached = true;
-                    $scope.loading = false;
-                  });
-                  stopStreaming(true);
-                }
-
-                addLine(msg);
-
-                // Warn the user if we might be showing a partial log.
-                if (!$scope.largeLog && lastLineNumber >= options.tailLines) {
-                  $scope.$evalAsync(function() {
-                    $scope.largeLog = true;
-                  });
-                }
-              });
-
-              streamer.onClose(function() {
-                streamer = null;
-                $scope.$evalAsync(function() {
-                  $scope.autoScrollActive = false;
-                  // - if no logs, they have already been archived.
-                  // - if emptyStateMessage has already been set, it means the onError
-                  //   callback has already fired.  onError message takes priority in severity.
-                  // - at present we are using the same error message in both onError and onClose
-                  //   because we dont have enough information to give the user something better.
-                  if((lastLineNumber === 0) && (!$scope.emptyStateMessage)) {
-                    $scope.state = 'empty';
-                    $scope.emptyStateMessage = 'The logs are no longer available or could not be loaded.';
-                  }
-                });
-
-                // Wrap in a timeout so that content displays before we remove the loading ellipses.
-                $timeout(function() {
-                  $scope.loading = false;
-                }, 100);
-              });
-
-              streamer.onError(function() {
-                streamer = null;
-                $scope.$evalAsync(function() {
                   angular.extend($scope, {
-                    loading: false,
-                    autoScrollActive: false
+                    loading: true,
+                    autoScrollActive: true,
+                    largeLog: false,
+                    limitReached: false,
+                    showScrollLinks: false,
+                    state: ''
                   });
-                  // if logs err before we get anything, will show an empty state message
-                  if(lastLineNumber === 0) {
-                    $scope.state = 'empty';
-                    $scope.emptyStateMessage = 'The logs are no longer available or could not be loaded.';
-                  } else {
-                    // if logs were running but something went wrong, will
-                    // show what we have & give option to retry
-                    $scope.errorWhileRunning = true;
-                  }
+
+                  var options = angular.extend({
+                    follow: true,
+                    tailLines: 5000,
+                    // Limit log size to 10 MiB. Note: This can't be more than 500 MiB,
+                    // otherwise save log will break because we'll exceed the max Blob
+                    // size for some browsers.
+                    // https://github.com/eligrey/FileSaver.js#supported-browsers
+                    limitBytes: 10 * 1024 * 1024
+                  }, $scope.options);
+
+                  streamer = DataService.createStream(logSubresource, name, $scope.context, options);
+
+                  var lastLineNumber = 0;
+                  var addLine = function(text) {
+                    lastLineNumber++;
+                    // Append the line to the document fragment buffer.
+                    buffer.appendChild(buildLogLineNode(lastLineNumber, text));
+                    update();
+                  };
+
+                  streamer.onMessage(function(msg, raw, cumulativeBytes) {
+                    // ensures the digest loop will catch the state change.
+                    $scope.$evalAsync(function() {
+                      $scope.empty = false;
+                      if($scope.state !== 'logs') {
+                        $scope.state = 'logs';
+                        resizeWhenVisible();
+                      }
+                    });
+
+                    // Completely empty messages (without even a newline character) should not add lines
+                    if (!msg) {
+                      return;
+                    }
+
+                    if (options.limitBytes && cumulativeBytes >= options.limitBytes) {
+                      $scope.$evalAsync(function() {
+                        $scope.limitReached = true;
+                        $scope.loading = false;
+                      });
+                      stopStreaming(true);
+                    }
+
+                    addLine(msg);
+
+                    // Warn the user if we might be showing a partial log.
+                    if (!$scope.largeLog && lastLineNumber >= options.tailLines) {
+                      $scope.$evalAsync(function() {
+                        $scope.largeLog = true;
+                      });
+                    }
+                  });
+
+                  streamer.onClose(function() {
+                    streamer = null;
+                    $scope.$evalAsync(function() {
+                      $scope.loading = false;
+                      $scope.autoScrollActive = false;
+                      // - if no logs, they have already been archived.
+                      // - if emptyStateMessage has already been set, it means the onError
+                      //   callback has already fired.  onError message takes priority in severity.
+                      // - at present we are using the same error message in both onError and onClose
+                      //   because we dont have enough information to give the user something better.
+                      if((lastLineNumber === 0) && (!$scope.emptyStateMessage)) {
+                        $scope.state = 'empty';
+                        $scope.emptyStateMessage = 'The logs are no longer available or could not be loaded.';
+                      }
+                    });
+                  });
+
+                  streamer.onError(function() {
+                    streamer = null;
+                    $scope.$evalAsync(function() {
+                      angular.extend($scope, {
+                        loading: false,
+                        autoScrollActive: false
+                      });
+                      // if logs err before we get anything, will show an empty state message
+                      if(lastLineNumber === 0) {
+                        $scope.state = 'empty';
+                        $scope.emptyStateMessage = 'The logs are no longer available or could not be loaded.';
+                      } else {
+                        // if logs were running but something went wrong, will
+                        // show what we have & give option to retry
+                        $scope.errorWhileRunning = true;
+                      }
+                    });
+                  });
+
+                  streamer.start();
                 });
               });
-
-              streamer.start();
             };
 
             // Kibana archives -------------------------------------------------
