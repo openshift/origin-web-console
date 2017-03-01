@@ -89,7 +89,8 @@
                       context="projectContext"
                       options="logOptions"
                       empty="logEmpty"
-                      run="logCanRun">
+                      run="logCanRun"
+                      ng-class="{'log-viewer-select': pod.spec.containers.length > 1}">
 
                       <span class="container-details">
                         <label for="selectLogContainer">Container:</label>
