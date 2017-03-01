@@ -59,6 +59,7 @@ module.exports = function(config) {
       "bower_components/angular-moment/angular-moment.js",
       "bower_components/angular-utf8-base64/angular-utf8-base64.js",
       'app/config.js',
+      "bower_components/origin-web-common/dist/origin-web-common.js",
       'app/scripts/**/*.js',
       'app/views/directives/**/*.html',
       //'test/mock/**/*.js',
