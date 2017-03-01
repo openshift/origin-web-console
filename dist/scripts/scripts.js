@@ -2945,10 +2945,7 @@ return k = (a || "").replace(/\/$/, "");
 }
 function g(a) {
 if (a.length) return _.each(a, function(a) {
-if (!a.value || "NaN" === a.value) {
-var b = a.avg;
-a.value = b && "NaN" !== b ? b :null;
-}
+a.empty || !_.isNumber(a.avg) ? a.value = null :a.value = a.avg;
 }), a;
 }
 function h(a) {

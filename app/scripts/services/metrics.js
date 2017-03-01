@@ -25,9 +25,10 @@ angular.module("openshiftConsole")
 
       _.each(data, function(point) {
         // Set point.value to the average or null if no average.
-        if (!point.value || point.value === "NaN") {
-          var avg = point.avg;
-          point.value = (avg && avg !== "NaN") ? avg : null;
+        if (point.empty || !_.isNumber(point.avg)) {
+          point.value = null;
+        } else {
+          point.value = point.avg;
         }
       });
 
