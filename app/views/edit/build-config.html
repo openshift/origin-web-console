@@ -494,7 +494,8 @@
                         </dl>
                       </div>
                     </div>
-                    <div class="section" ng-if="!(updatedBuildConfig | isJenkinsPipelineStrategy)">
+                    <!-- Wait for project to load since the directive uses `canI` checks that need it. -->
+                    <div class="section" ng-if="project && !(updatedBuildConfig | isJenkinsPipelineStrategy)">
                       <!-- Use ng-show instead of ng-if so the form is still marked invalid if a hidden field has errors. -->
                       <div ng-show="view.advancedOptions">
                         <h3 class="with-divider">
