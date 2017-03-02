@@ -9347,7 +9347,8 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "</dl>\n" +
     "</div>\n" +
     "</div>\n" +
-    "<div class=\"section\" ng-if=\"!(updatedBuildConfig | isJenkinsPipelineStrategy)\">\n" +
+    "\n" +
+    "<div class=\"section\" ng-if=\"project && !(updatedBuildConfig | isJenkinsPipelineStrategy)\">\n" +
     "\n" +
     "<div ng-show=\"view.advancedOptions\">\n" +
     "<h3 class=\"with-divider\">\n" +
