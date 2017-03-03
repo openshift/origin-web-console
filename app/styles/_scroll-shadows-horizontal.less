@@ -1,0 +1,36 @@
+// Horizontal scroll drop shadows
+// Adds drop shadows to left and right edges that display when scrollable content is hidden
+// Test cases http://codepen.io/sg00dwin/pen/GWWRLR/
+@scroll-shadows-horizontal-bg:         rgba(255,255,255,1);
+@bg-color:                             @scroll-shadows-horizontal-bg;
+
+.scroll-shadows-horizontal(@bg-color: @scroll-shadows-horizontal-bg) {
+  background:
+    radial-gradient(ellipse at left, rgba(0, 0, 0, 0.25) 0%, rgba(0, 0, 0, 0) 75%) 0 center, // left shadow
+    radial-gradient(ellipse at right, rgba(0, 0, 0, 0.25) 0%, rgba(0, 0, 0, 0) 75%) 100% center, // right shadow
+    @bg-color;
+  background-size:
+    10px 100%,
+    10px 100%;
+  background-attachment:
+    scroll,
+    scroll;
+  background-repeat: no-repeat;
+	// make horizontally scrollable
+	overflow-x: auto;
+  min-height: .01%;
+
+	// White gradient to hide the scroll shadows when at the farthermost scroll positions
+	// change these gradients from white to your background colour if it differs
+  // background-images must be on a different element than the scroll-shadows-horizontal
+	> .scroll-shadows-cover {
+		  overflow: auto;
+			background-image:
+			linear-gradient(to left, rgba(255, 255, 255, .0) 0%, rgba(255, 255, 255, 1) 100%), // left shadow cover
+			linear-gradient(to right, rgba(255, 255, 255, .0) 0%,rgba(255, 255, 255, 1) 100%);  // right shadow cover
+			background-repeat: no-repeat;
+			background-size: 50px 100%, 50px 100%;
+			background-position:  0 center, 100% center;
+			background-attachment: local, local;
+	}
+}
