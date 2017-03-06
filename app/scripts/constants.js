@@ -97,6 +97,36 @@ window.OPENSHIFT_CONSTANTS = {
   // 'openshift' should always be included
   CREATE_FROM_URL_WHITELIST: ['openshift'],
 
+  // Namespaced resources not in this whitelist will be flagged to users as potential concerns in template processing
+  // and Import YAML/JSON.  This typically shouldn't be customized but can be if necessary.
+  SECURITY_CHECK_WHITELIST: [
+    {resource: 'buildconfigs', group: ''},
+    {resource: 'builds', group: ''},
+    {resource: 'configmaps', group: ''},
+    {resource: 'daemonsets', group: 'extensions'},
+    {resource: 'deployments', group: 'extensions'},
+    {resource: 'deploymentconfigs', group: ''},
+    {resource: 'endpoints', group: ''},
+    {resource: 'events', group: ''},
+    {resource: 'horizontalpodautoscalers', group: 'autoscaling'},
+    {resource: 'horizontalpodautoscalers', group: 'extensions'},
+    {resource: 'imagestreamimages', group: ''},
+    {resource: 'imagestreams', group: ''},
+    {resource: 'imagestreamtags', group: ''},
+    {resource: 'ingresses', group: 'extensions'},
+    {resource: 'jobs', group: 'batch'},
+    {resource: 'persistentvolumeclaims', group: ''},
+    {resource: 'pods', group: ''},
+    {resource: 'podtemplates', group: ''},
+    {resource: 'replicasets', group: 'extensions'},
+    {resource: 'replicationcontrollers', group: ''},
+    {resource: 'routes', group: ''},
+    {resource: 'secrets', group: ''},
+    {resource: 'serviceaccounts', group: ''},
+    {resource: 'services', group: ''},
+    {resource: 'statefulsets', group: 'apps'}
+  ],
+
   // href's will be prefixed with /project/{{projectName}} unless they are absolute URLs
   PROJECT_NAVIGATION: [
     {

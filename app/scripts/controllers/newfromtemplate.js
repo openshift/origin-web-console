@@ -18,6 +18,7 @@ angular.module('openshiftConsole')
     AlertMessageService,
     ProjectsService,
     QuotaService,
+    SecurityCheckService,
     $q,
     $location,
     TaskList,
@@ -42,7 +43,7 @@ angular.module('openshiftConsole')
     }
 
     $scope.alerts = {};
-    $scope.quotaAlerts = {};
+    $scope.precheckAlerts = {};
     $scope.projectName = $routeParams.project;
     $scope.projectPromise = $.Deferred();
     $scope.labels = [];
@@ -292,7 +293,7 @@ angular.module('openshiftConsole')
               modalConfig: function() {
                 return {
                   alerts: alerts,
-                  message: "Problems were detected while checking your application configuration.",
+                  message: "We checked your application for potential problems. Please confirm you still want to create this application.",
                   okButtonText: "Create Anyway",
                   okButtonClass: "btn-danger",
                   cancelButtonText: "Cancel"
@@ -305,15 +306,18 @@ angular.module('openshiftConsole')
         };
 
         var showWarningsOrCreate = function(result) {
+          var alerts = SecurityCheckService.getSecurityAlerts(processedResources, $scope.projectName);
+
           // Now that all checks are completed, show any Alerts if we need to
           var quotaAlerts = result.quotaAlerts || [];
-          var errorAlerts = _.filter(quotaAlerts, {type: 'error'});
+          alerts = alerts.concat(quotaAlerts);
+          var errorAlerts = _.filter(alerts, {type: 'error'});
           if (errorAlerts.length) {
             $scope.disableInputs = false;
-            $scope.quotaAlerts = quotaAlerts;
+            $scope.precheckAlerts = alerts;
           }
-          else if (quotaAlerts.length) {
-             launchConfirmationDialog(quotaAlerts);
+          else if (alerts.length) {
+             launchConfirmationDialog(alerts);
              $scope.disableInputs = false;
           }
           else {

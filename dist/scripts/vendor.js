@@ -59557,21 +59557,22 @@ data:a,
 textStatus:b,
 xhr:c
 });
-}), j = e + window.OPENSHIFT_CONFIG.apis.hostPort + window.OPENSHIFT_CONFIG.apis.prefix, k = $.get(j).then(function(a) {
-var b = [];
-return _.each(a.groups, function(a) {
-var e = {
-name:a.name,
-preferredVersion:a.preferredVersion.version,
-versions:{}
+}), j = e + window.OPENSHIFT_CONFIG.apis.hostPort + window.OPENSHIFT_CONFIG.apis.prefix, k = function(a, b, e) {
+var f = [];
+return _.each(e.groups, function(e) {
+var g = {
+name:e.name,
+preferredVersion:e.preferredVersion.version,
+versions:{},
+hostPrefix:b
 };
-c[e.name] = e, _.each(a.versions, function(a) {
-var c = a.version;
-e.versions[c] = {
+c[g.name] = g, _.each(e.versions, function(b) {
+var c = b.version;
+g.versions[c] = {
 version:c,
-groupVersion:a.groupVersion
-}, b.push($.get(j + "/" + a.groupVersion).done(function(a) {
-e.versions[c].resources = _.indexBy(a.resources, "name");
+groupVersion:b.groupVersion
+}, f.push($.get(a + "/" + b.groupVersion).done(function(a) {
+g.versions[c].resources = _.indexBy(a.resources, "name");
 }).fail(function(a, b, c) {
 d.push({
 data:a,
@@ -59580,17 +59581,28 @@ xhr:c
 });
 }));
 });
-}), $.when.apply(this, b);
-}, function(a, b, c) {
+}), $.when.apply(this, f);
+}, l = $.get(j).then(_.partial(k, j, null), function(a, b, c) {
 d.push({
 data:a,
 textStatus:b,
 xhr:c
 });
-}), l = function() {
+}), m = [];
+_.each(window.OPENSHIFT_CONFIG.additionalServers, function(a) {
+var b = (a.protocol ? a.protocol + "://" :e) + a.hostPort + a.prefix;
+m.push($.get(b).then(_.partial(k, b, a), function(a, b, c) {
+d.push({
+data:a,
+textStatus:b,
+xhr:c
+});
+}));
+});
+var n = function() {
 window.OPENSHIFT_CONFIG.api.k8s.resources = b.k8s, window.OPENSHIFT_CONFIG.api.openshift.resources = b.openshift, window.OPENSHIFT_CONFIG.apis.groups = c, d.length && (window.OPENSHIFT_CONFIG.apis.API_DISCOVERY_ERRORS = d), a();
-};
-$.when(g, i, k).always(l);
+}, o = [ g, i, l ];
+o = o.concat(m), $.when.apply(this, o).always(n);
 }), window.OPENSHIFT_CONFIG || (window.OPENSHIFT_CONFIG = {
 apis:{
 hostPort:"localhost:8443",
@@ -59689,21 +59701,25 @@ error:"API_DISCOVERY"
 }).toString());
 }
 d = m(d);
-var f = d.primaryResource();
+var f, g = d.primaryResource();
 if (d.group) {
-if (!_.get(b, [ "groups", d.group, "versions", d.version, "resources", f ])) return;
+if (f = _.get(b, [ "groups", d.group, "versions", d.version, "resources", g ]), !f) return;
+var h = _.get(b, [ "groups", d.group, "hostPrefix" ]) || b;
 return {
-hostPort:b.hostPort,
-prefix:b.prefix,
+protocol:h.protocol,
+hostPort:h.hostPort,
+prefix:h.prefix,
 group:d.group,
-version:d.version
+version:d.version,
+namespaced:f.namespaced
 };
 }
-var g;
-for (var h in a) if (g = a[h], _.get(g, [ "resources", d.version, f ])) return {
-hostPort:g.hostPort,
-prefix:g.prefix,
-version:d.version
+var j;
+for (var k in a) if (j = a[k], f = _.get(j, [ "resources", d.version, g ])) return {
+hostPort:j.hostPort,
+prefix:j.prefix,
+version:d.version,
+namespaced:f.namespaced
 };
 }, r = function(a) {
 var b = "<none>", c = "<none>";
@@ -60440,11 +60456,11 @@ o.prototype._urlForResource = function(a, b, c, d, e) {
 var f = g.apiInfo(a);
 if (!f) return i.error("_urlForResource called with unknown resource", a, arguments), null;
 var h;
-e = e || {}, h = d ? "http:" === window.location.protocol ? "ws" :"wss" :"http:" === window.location.protocol ? "http" :"https", c && c.namespace && !e.namespace && (e.namespace = c.namespace);
-var j = e.namespace, k = null;
+if (e = e || {}, h = d ? "http:" === window.location.protocol ? "ws" :"wss" :"http:" === window.location.protocol ? "http" :"https", c && c.namespace && !e.namespace && (e.namespace = c.namespace), f.namespaced && !e.namespace) return i.error("_urlForResource called for a namespaced resource but no namespace provided", a, arguments), null;
+var j = f.namespaced, k = null;
 j && (k = e.namespace, e = angular.copy(e), delete e.namespace);
 var l, m = {
-protocol:h,
+protocol:f.protocol || h,
 hostPort:f.hostPort,
 prefix:f.prefix,
 group:f.group,

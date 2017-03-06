@@ -11,7 +11,8 @@ angular.module("openshiftConsole")
                                   TaskList,
                                   DataService,
                                   APIService,
-                                  QuotaService) {
+                                  QuotaService,
+                                  SecurityCheckService) {
     return {
       restrict: "E",
       scope: false,
@@ -62,7 +63,7 @@ angular.module("openshiftConsole")
               modalConfig: function() {
                 return {
                   alerts: alerts,
-                  message: "Problems were detected while checking your application configuration.",
+                  message: "We checked your application for potential problems. Please confirm you still want to create this application.",
                   okButtonText: "Create Anyway",
                   okButtonClass: "btn-danger",
                   cancelButtonText: "Cancel"
@@ -75,15 +76,18 @@ angular.module("openshiftConsole")
         };
 
         var showWarningsOrCreate = function(result){
+          var alerts = SecurityCheckService.getSecurityAlerts($scope.createResources, $scope.projectName);
+
           // Now that all checks are completed, show any Alerts if we need to
           var quotaAlerts = result.quotaAlerts || [];
-          var errorAlerts = _.filter(quotaAlerts, {type: 'error'});
+          alerts = alerts.concat(quotaAlerts);
+          var errorAlerts = _.filter(alerts, {type: 'error'});
           if (errorAlerts.length) {
             $scope.disableInputs = false;
-            $scope.alerts = quotaAlerts;
+            $scope.alerts = alerts;
           }
-          else if (quotaAlerts.length) {
-             launchConfirmationDialog(quotaAlerts);
+          else if (alerts.length) {
+             launchConfirmationDialog(alerts);
              $scope.disableInputs = false;
           }
           else {
@@ -155,7 +159,7 @@ angular.module("openshiftConsole")
             if ($scope.errorOccured) {
               return;
             }
-            // If resource if Template and it doesn't exist in the project
+            // If resource is Template and it doesn't exist in the project
             if ($scope.createResources.length === 1 && $scope.resourceList[0].kind === "Template") {
               openTemplateProcessModal();
             // Else if any resources already exist
