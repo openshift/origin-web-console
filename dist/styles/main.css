@@ -4134,6 +4134,8 @@ copy-to-clipboard .input-group.limit-width{max-width:300px}
 .tech-preview-header{justify-content:space-between}
 @media (max-width:479px){.col-xxs-12{width:100%}
 }
+.truncation-block{margin-right:10px}
+.truncation-collapse-link{margin-left:10px;white-space:nowrap}
 .data-toolbar{padding:5px 0}
 .data-toolbar.other-resources-toolbar .data-toolbar-dropdown{min-width:210px}
 .data-toolbar .checkbox{margin-bottom:0;margin-top:10px}

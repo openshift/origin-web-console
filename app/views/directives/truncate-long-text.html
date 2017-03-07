@@ -1,18 +1,18 @@
 <span ng-if="!truncated" ng-bind-html="content | highlightKeywords : keywords" class="truncated-content"></span>
 <span ng-if="truncated">
   <span ng-if="!toggles.expanded">
-    <span ng-attr-title="{{content}}">
+    <span ng-attr-title="{{content}}" class="truncation-block">
       <span ng-bind-html="truncatedContent | highlightKeywords : keywords" class="truncated-content"></span>&hellip;
     </span>
-    <a ng-if="expandable" href="" ng-click="toggles.expanded = true" style="margin-left: 5px; white-space: nowrap;">See all</a>
+    <a ng-if="expandable" href="" ng-click="toggles.expanded = true" class="nowrap">See All</a>
   </span>
   <span ng-if="toggles.expanded">
     <div ng-if="prettifyJson" class="well">
-      <span class="pull-right" style="margin-top: -10px;"><a href="" ng-click="toggles.expanded = false">Collapse</a></span>
+      <span class="pull-right" style="margin-top: -10px;"><a href="" ng-click="toggles.expanded = false" class="truncation-collapse-link">Collapse</a></span>
       <span ng-bind-html="content | prettifyJSON | highlightKeywords : keywords" class="pretty-json truncated-content"></span>
     </div>
     <span ng-if="!prettifyJson">
-      <span class="pull-right"><a href="" ng-click="toggles.expanded = false">Collapse</a></span>
+      <span class="pull-right"><a href="" ng-click="toggles.expanded = false" class="truncation-collapse-link">Collapse</a></span>
       <span ng-bind-html="content | highlightKeywords : keywords" class="truncated-content"></span>
     </span>
   </span>
