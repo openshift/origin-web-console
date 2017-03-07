@@ -14,7 +14,7 @@ const getInputValues = (inputs) => {
   inputs.each((input, i) => {
     input
       .getAttribute('value')
-      .then(function(val) {
+      .then((val) => {
         values.push(val);
         if((i) === count) {
           allValues.fulfill(values);

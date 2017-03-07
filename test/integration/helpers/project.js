@@ -1,15 +1,15 @@
 'use strict';
 
-var h = require('../helpers.js');
+const h = require('../helpers.js');
 
 // TODO: factor this out into a proper page object
-exports.visitCreatePage = function() {
+exports.visitCreatePage = () => {
   h.goToPage('create-project');
 };
 
-exports.projectDetails = function() {
-  var timestamp = (new Date()).getTime();
-  var project = {
+exports.projectDetails = () => {
+  let timestamp = (new Date()).getTime();
+  let project = {
     name:        'console-test-project-' + timestamp,
     displayName: 'Console integration test Project ' + timestamp,
     description: 'Created by integration tests'
@@ -17,19 +17,19 @@ exports.projectDetails = function() {
   return project;
 };
 
-exports.createProject = function(project, uri) {
-  for (var key in project) {
+exports.createProject = (project, uri) => {
+  for (let key in project) {
     h.setInputValue(key, project[key]);
   }
   h.clickAndGo('Create', uri);
 };
 
-exports.deleteProject = function(project) {
+exports.deleteProject = (project) => {
   h.goToPage('/');
-  var projectTile = element(by.cssContainingText(".project-info", project['name']));
+  let projectTile = element(by.cssContainingText(".project-info", project['name']));
   projectTile.element(by.css('.fa-trash-o')).click();
   h.setInputValue('confirmName', project.name);
-  var deleteButton = element(by.cssContainingText(".modal-dialog .btn", "Delete"));
+  let deleteButton = element(by.cssContainingText(".modal-dialog .btn", "Delete"));
   browser.wait(protractor.ExpectedConditions.elementToBeClickable(deleteButton), 2000);
   deleteButton.click();
   h.waitForPresence(".alert-success", "marked for deletion");
@@ -39,13 +39,13 @@ exports.deleteProject = function(project) {
 // This function will click the 'delete' on every project that appears on the project list page.
 // Be careful about using this function if your test gives the e2e-user access
 // to internal projects such as openshift, or openshift-infra
-exports.deleteAllProjects = function() {
+exports.deleteAllProjects = () => {
   h.goToPage('/');
-  var projectTiles = element.all(by.css(".project-info"));
-  var allDeleted = protractor.promise.defer();
-  var numDeleted = 0;
-  var count;
-  projectTiles.count().then(function(num) {
+  let projectTiles = element.all(by.css(".project-info"));
+  let allDeleted = protractor.promise.defer();
+  let numDeleted = 0;
+  let count;
+  projectTiles.count().then((num) => {
     count = num;
     // safely fulfill if there happen to be no projects.
     if(count === 0) {
@@ -53,14 +53,14 @@ exports.deleteAllProjects = function() {
     }
   });
 
-  projectTiles.each(function(elem) {
-    var projectTitle = elem.element(by.css('.tile-target span')).getText();
+  projectTiles.each((elem) => {
+    let projectTitle = elem.element(by.css('.tile-target span')).getText();
     // click trash first
     elem.element(by.css('.fa-trash-o')).click();
     h.setInputValue('confirmName', projectTitle);
     // then click delete
-    var modal = element(by.css('.modal-dialog'));
-    var deleteButton = modal.element(by.cssContainingText(".modal-dialog .btn", "Delete"));
+    let modal = element(by.css('.modal-dialog'));
+    let deleteButton = modal.element(by.cssContainingText(".modal-dialog .btn", "Delete"));
     browser.wait(protractor.ExpectedConditions.elementToBeClickable(deleteButton), 2000);
     deleteButton.click();
     h.waitForElem(element(by.cssContainingText(".alert-success", "marked for deletion")));
