@@ -15,7 +15,7 @@ class CreateFromURLPage extends Page {
   // does not work here, so we have to override.
   visit(qs) {
     this.qs = qs;
-    logger.log('CreateFromURLPage.visit(): url:',this.getUrl(this.qs));
+    logger.log('visiting url:', this.getUrl(this.qs));
     return browser.get('create' + this.qs);
   }
   clickCreateNewProjectTab() {

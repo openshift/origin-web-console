@@ -14,9 +14,9 @@
 //   logger.log('Foo');                           // in Promise queue
 //   element(by.buttonText(buttonText)).click();  // in Promise queue
 //   logger.log('Bar');                           // in Promise queue yay! happens after above.
-['log', 'info', 'warn', 'error'].forEach(function(logType) {
+['log', 'info', 'warn', 'error'].forEach((logType) => {
   exports[logType] = function() {
-    var args = Array.prototype.slice.call(arguments);
+    let args = Array.prototype.slice.call(arguments);
     browser.sleep(0).then(function() {
       console[logType].apply(console, args);
     });
@@ -26,8 +26,8 @@
 
 // use to check the actual browser logs to see if there is a useful error
 // can also browser.pause(), browser.sleep(longTime), browser.debugger()
-exports.getBrowserLogs = function() {
-  return browser.manage().logs().get('browser').then(function(browserLog) {
+exports.getBrowserLogs = () => {
+  return browser.manage().logs().get('browser').then((browserLog) => {
     exports.log('log: ' + require('util').inspect(browserLog));
   });
 };
