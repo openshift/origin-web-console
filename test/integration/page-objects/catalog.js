@@ -1,38 +1,8 @@
 'use strict';
 
 const h = require('../helpers.js');
-const inputs = require('../helpers/inputs');
 const Page = require('./page').Page;
-
-let AddTemplateModal = function(project) {
-  this.project = project;
-  this.modal = element(by.css('.modal-dialog'));
-  this.checkboxes = this.modal.all(by.css('input[type="checkbox"]'));
-  this.processBox = this.checkboxes.get(0);
-  this.saveBox = this.checkboxes.get(1);
-  this.continue = this.modal.element(by.cssContainingText('.btn-primary', 'Continue'));
-  this.cancel = this.modal.element(by.cssContainingText('.btn-default', 'Cancel'));
-  this.process = function() {
-    inputs.check(this.processBox);
-    inputs.uncheck(this.saveBox);
-    this.continue.click();
-    return browser.sleep(500).then(function() {
-      // lazy require to avoid potential of circular dependencies
-      var CreateFromTemplatePage = require('./createFromTemplate').CreateFromTemplatePage;
-      return new CreateFromTemplatePage(this.project);
-    }.bind(this));
-  };
-  this.save = function() {
-    inputs.uncheck(this.processBox);
-    inputs.check(this.saveBox);
-    this.continue.click();
-    return browser.sleep(500).then(() => {
-      // lazy require
-      var OverviewPage = require('./overview').OverviewPage;
-      return new OverviewPage(this.project); // automatic redirect
-    });
-  };
-};
+const AddTemplateModal = require('./modals/addTemplateModal').AddTemplateModal;
 
 class CatalogPage extends Page {
   constructor(project, menu) {
