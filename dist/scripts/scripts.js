@@ -8034,7 +8034,7 @@ var b = _.get(a, "spec.template");
 c.existingVolumeNames = k.getVolumeNames(b);
 }, function(a) {
 p(b.name + " could not be loaded.", m(a));
-}), h.list("persistentvolumeclaims", j, function(a) {
+}), h.list("persistentvolumeclaims", j).then(function(a) {
 c.pvcs = l(a.by("metadata.name")), _.isEmpty(c.pvcs) || c.attach.persistentVolumeClaim || (c.attach.persistentVolumeClaim = _.head(c.pvcs));
 });
 };
