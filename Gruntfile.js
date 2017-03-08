@@ -13,6 +13,7 @@ var serveStatic = require('serve-static');
 
 module.exports = function (grunt) {
   var contextRoot = grunt.option('contextRoot') || "dev-console";
+  var isMac = /^darwin/.test(process.platform) || grunt.option('mac');
 
   // Load grunt tasks automatically
   require('load-grunt-tasks')(grunt, {
@@ -704,14 +705,14 @@ module.exports = function (grunt) {
 
   grunt.registerTask('test-integration',
     grunt.option('baseUrl') ?
-    [grunt.option('mac') ? 'protractor:mac' : 'protractor:default'] : // if a baseUrl is defined assume we dont want to run the local grunt server
+    [isMac ? 'protractor:mac' : 'protractor:default'] : // if a baseUrl is defined assume we dont want to run the local grunt server
     [
       'clean:server',
       'concurrent:server',
       'autoprefixer',
       'connect:test',
       'add-redirect-uri',
-      (grunt.option('mac') ? 'protractor:mac' : 'protractor:default'),
+      (isMac ? 'protractor:mac' : 'protractor:default'),
       'clean:server'
     ]
   );
