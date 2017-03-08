@@ -214,7 +214,7 @@ angular.module('openshiftConsole')
 
         // List limit ranges in this project to determine if there is a default
         // CPU request for autoscaling.
-        DataService.list("limitranges", context, function(response) {
+        DataService.list("limitranges", context).then(function(response) {
           limitRanges = response.by("metadata.name");
           updateHPAWarnings();
         });
