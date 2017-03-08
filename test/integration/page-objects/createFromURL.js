@@ -9,7 +9,7 @@ class CreateFromURLPage extends Page {
     super(project, menu);
   }
   getUrl(qs) {
-    return 'create' + qs;
+    return `create${qs}`;
   }
   // TODO: for some reason, the Page.visit()'s use of helpers.goToPage()
   // does not work here, so we have to override.

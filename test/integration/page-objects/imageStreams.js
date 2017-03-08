@@ -7,7 +7,7 @@ class ImageStreamsPage extends Page {
     super(project, menu);
   }
   getUrl() {
-    return 'project/' + this.project.name + '/browse/images';
+    return `project/${this.project.name}/browse/images`;
   }
 }
 

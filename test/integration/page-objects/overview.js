@@ -8,7 +8,8 @@ class OverviewPage extends Page {
     super(project, menu);
   }
   getUrl() {
-    return 'project/' + this.project.name + '/overview';
+    return `project/${this.project.name}/overview`;
+
   }
   clickAddToProject() {
     let button = element(by.cssContainingText('.project-action-btn', 'Add to project'));

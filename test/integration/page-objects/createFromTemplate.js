@@ -2,18 +2,14 @@
 
 const h = require('../helpers');
 const Page = require('./page').Page;
-const scroller = require('../helpers/scroll'); 
+const scroller = require('../helpers/scroll');
 
 class CreateFromTemplatePage extends Page {
   constructor(project, menu) {
     super(project, menu);
   }
   getUrl() {
-    let url = 'project/' + this.project.name + '/create/fromtemplate';
-    if(this.template) {
-      url += '?template='+this.template.name; //+'&namespace='; may need template namespace...
-    }
-    return url;
+    return `project/${this.project.name}/create/fromtemplate?template=${this.template.name}`;
   }
   clickCreate() {
     scroller.toBottom();

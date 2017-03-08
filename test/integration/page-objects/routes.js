@@ -7,7 +7,7 @@ class RoutesPage extends Page {
     super(project, menu);
   }
   getUrl() {
-    return 'project/' + this.project.name + '/browse/routes';
+    return `project/${this.project.name}/browse/routes`;
   }
 }
 

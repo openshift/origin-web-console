@@ -10,7 +10,7 @@ class CatalogPage extends Page {
   }
   getUrl() {
     // TODO: ?tab=tab=fromFile, ?tab=fromCatalog, ?tab=deployImage
-    return 'project/' + this.project.name + '/create';
+    return `project/${this.project.name}/create`;
   }
   _findTabs() {
     let tabs = element(by.css('.nav-tabs'));
