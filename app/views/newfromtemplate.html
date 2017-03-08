@@ -51,7 +51,7 @@
                               can-toggle="false"
                               help-text="Each label is applied to each created resource.">
                           </label-editor>
-                          <alerts alerts="quotaAlerts"></alerts>
+                          <alerts alerts="precheckAlerts"></alerts>
                           <div class="buttons gutter-top-bottom">
                             <button class="btn btn-primary btn-lg" ng-click="createFromTemplate()" ng-disabled="templateForm.$invalid || disableInputs">Create</button>
                             <a class="btn btn-default btn-lg" href="{{projectName | projectOverviewURL}}">Cancel</a>

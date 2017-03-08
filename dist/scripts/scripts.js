@@ -63,6 +63,82 @@ name:"jenkins-pipeline-example",
 namespace:"openshift"
 },
 CREATE_FROM_URL_WHITELIST:[ "openshift" ],
+SECURITY_CHECK_WHITELIST:[ {
+resource:"buildconfigs",
+group:""
+}, {
+resource:"builds",
+group:""
+}, {
+resource:"configmaps",
+group:""
+}, {
+resource:"daemonsets",
+group:"extensions"
+}, {
+resource:"deployments",
+group:"extensions"
+}, {
+resource:"deploymentconfigs",
+group:""
+}, {
+resource:"endpoints",
+group:""
+}, {
+resource:"events",
+group:""
+}, {
+resource:"horizontalpodautoscalers",
+group:"autoscaling"
+}, {
+resource:"horizontalpodautoscalers",
+group:"extensions"
+}, {
+resource:"imagestreamimages",
+group:""
+}, {
+resource:"imagestreams",
+group:""
+}, {
+resource:"imagestreamtags",
+group:""
+}, {
+resource:"ingresses",
+group:"extensions"
+}, {
+resource:"jobs",
+group:"batch"
+}, {
+resource:"persistentvolumeclaims",
+group:""
+}, {
+resource:"pods",
+group:""
+}, {
+resource:"podtemplates",
+group:""
+}, {
+resource:"replicasets",
+group:"extensions"
+}, {
+resource:"replicationcontrollers",
+group:""
+}, {
+resource:"routes",
+group:""
+}, {
+resource:"secrets",
+group:""
+}, {
+resource:"serviceaccounts",
+group:""
+}, {
+resource:"services",
+group:""
+}, {
+resource:"statefulsets",
+group:"apps"
+} ],
 PROJECT_NAVIGATION:[ {
 label:"Overview",
 iconClass:"fa fa-dashboard",
@@ -2785,6 +2861,62 @@ getResourceLimitAlerts:q,
 getQuotaAlerts:r,
 getLatestQuotaAlerts:s,
 isAnyQuotaExceeded:t
+};
+} ]), angular.module("openshiftConsole").factory("SecurityCheckService", [ "APIService", "$filter", "Constants", function(a, b, c) {
+var d = b("humanizeKind"), e = function(b, e) {
+var f = [], g = [], h = [], i = [], j = [];
+if (_.each(b, function(b) {
+if (_.get(b, "kind")) {
+var d = a.objectToResourceGroupVersion(b), e = a.apiInfo(d);
+if (e.namespaced) if ("rolebindings" !== d.resource || "" !== d.group && "rbac.authorization.k8s.io" !== d.group) "roles" !== d.resource || "" !== d.group && "rbac.authorization.k8s.io" !== d.group ? _.find(c.SECURITY_CHECK_WHITELIST, {
+resource:d.resource,
+group:d.group
+}) || j.push(b) :i.push(b); else {
+var f = _.get(b, "roleRef.name");
+"view" !== f && "system:image-puller" !== f && h.push(b);
+} else g.push(b);
+}
+}), g.length) {
+var k = _.uniq(_.map(g, function(a) {
+return d(a.kind);
+}));
+f.push({
+type:"warning",
+message:"This will create resources outside of the project, which might impact all users of the cluster.",
+details:"Typically only cluster administrators can create these resources. The cluster-level resources being created are: " + k.join(", ")
+});
+}
+if (h.length) {
+var l = [];
+_.each(h, function(a) {
+_.each(a.subjects, function(a) {
+var b = d(a.kind) + " ";
+"ServiceAccount" === a.kind && (b += (a.namespace || e) + "/"), b += a.name, l.push(b);
+});
+}), l = _.uniq(l), f.push({
+type:"warning",
+message:"This will grant permissions to your project.",
+details:"Permissions are being granted to: " + l.join(", ")
+});
+}
+if (i.length && f.push({
+type:"info",
+message:"This will create additional membership roles within the project.",
+details:"Admins will be able to grant these custom roles to users, groups, and service accounts."
+}), j.length) {
+var m = _.uniq(_.map(j, function(a) {
+return d(a.kind);
+}));
+f.push({
+type:"warning",
+message:"This will create resources that may have security or project behavior implications.",
+details:"Make sure you understand what they do before creating them. The resources being created are: " + m.join(", ")
+});
+}
+return f;
+};
+return {
+getSecurityAlerts:e
 };
 } ]), angular.module("openshiftConsole").factory("LabelsService", function() {
 var a = function(a) {
@@ -7320,10 +7452,10 @@ a.showParamsTable = !0;
 d.unwatchAll(p);
 });
 }));
-} ]), angular.module("openshiftConsole").controller("NewFromTemplateController", [ "$scope", "$http", "$routeParams", "DataService", "ProcessedTemplateService", "AlertMessageService", "ProjectsService", "QuotaService", "$q", "$location", "TaskList", "$parse", "Navigate", "$filter", "$uibModal", "imageObjectRefFilter", "failureObjectNameFilter", "CachedTemplateService", "keyValueEditorUtils", "Constants", function(a, b, c, d, e, f, g, h, i, j, k, l, m, n, o, p, q, r, s, t) {
-var u = c.template, v = c.namespace || "";
-if (!u) return void m.toErrorPage("Cannot create from template: a template name was not specified.");
-a.alerts = {}, a.quotaAlerts = {}, a.projectName = c.project, a.projectPromise = $.Deferred(), a.labels = [], a.systemLabels = [], a.breadcrumbs = [ {
+} ]), angular.module("openshiftConsole").controller("NewFromTemplateController", [ "$scope", "$http", "$routeParams", "DataService", "ProcessedTemplateService", "AlertMessageService", "ProjectsService", "QuotaService", "SecurityCheckService", "$q", "$location", "TaskList", "$parse", "Navigate", "$filter", "$uibModal", "imageObjectRefFilter", "failureObjectNameFilter", "CachedTemplateService", "keyValueEditorUtils", "Constants", function(a, b, c, d, e, f, g, h, i, j, k, l, m, n, o, p, q, r, s, t, u) {
+var v = c.template, w = c.namespace || "";
+if (!v) return void n.toErrorPage("Cannot create from template: a template name was not specified.");
+a.alerts = {}, a.precheckAlerts = {}, a.projectName = c.project, a.projectPromise = $.Deferred(), a.labels = [], a.systemLabels = [], a.breadcrumbs = [ {
 title:a.projectName,
 link:"project/" + a.projectName
 }, {
@@ -7333,11 +7465,11 @@ link:"project/" + a.projectName + "/create"
 title:"Catalog",
 link:"project/" + a.projectName + "/create?tab=fromCatalog"
 }, {
-title:u
+title:v
 } ], a.alerts = a.alerts || {}, f.getAlerts().forEach(function(b) {
 a.alerts[b.name] = b.data;
 }), f.clearAlerts();
-var w = n("displayName"), x = n("humanize"), y = l("spec.template.spec.containers"), z = l("spec.strategy.sourceStrategy.from || spec.strategy.dockerStrategy.from || spec.strategy.customStrategy.from"), A = l("spec.output.to"), B = function() {
+var x = o("displayName"), y = o("humanize"), z = m("spec.template.spec.containers"), A = m("spec.strategy.sourceStrategy.from || spec.strategy.dockerStrategy.from || spec.strategy.customStrategy.from"), B = m("spec.output.to"), C = function() {
 try {
 return JSON.parse(c.templateParamsMap);
 } catch (b) {
@@ -7356,22 +7488,22 @@ return _.includes(c, b.name);
 });
 return _.get(d, "imageChangeParams.from.name");
 }
-function l(a) {
-for (var b = [], c = G.exec(a); c; ) b.push(c[1]), c = G.exec(a);
+function m(a) {
+for (var b = [], c = H.exec(a); c; ) b.push(c[1]), c = H.exec(a);
 return b;
 }
-function q() {
+function r() {
 var b = {};
 return _.each(a.template.parameters, function(a) {
 b[a.name] = a.value;
 }), b;
 }
-function t() {
-var b = q();
-a.templateImages = _.map(H, function(a) {
+function u() {
+var b = r();
+a.templateImages = _.map(I, function(a) {
 if (_.isEmpty(a.usesParameters)) return a;
 var c = _.template(a.name, {
-interpolate:G
+interpolate:H
 });
 return {
 name:c(b),
@@ -7379,35 +7511,35 @@ usesParameters:a.usesParameters
 };
 });
 }
-function C(a) {
-var b = [], c = y(a);
+function D(a) {
+var b = [], c = z(a);
 return c && angular.forEach(c, function(c) {
 var d = c.image, e = g(a, c);
 e && (d = e), d && b.push(d);
 }), b;
 }
-function D(b) {
-H = [];
+function E(b) {
+I = [];
 var c = [], d = {};
 angular.forEach(b.objects, function(b) {
 if ("BuildConfig" === b.kind) {
-var e = p(z(b), a.projectName);
-e && H.push({
+var e = q(A(b), a.projectName);
+e && I.push({
 name:e,
-usesParameters:l(e)
+usesParameters:m(e)
 });
-var f = p(A(b), a.projectName);
+var f = q(B(b), a.projectName);
 f && (d[f] = !0);
 }
-"DeploymentConfig" === b.kind && (c = c.concat(C(b)));
+"DeploymentConfig" === b.kind && (c = c.concat(D(b)));
 }), c.forEach(function(a) {
-d[a] || H.push({
+d[a] || I.push({
 name:a,
-usesParameters:l(a)
+usesParameters:m(a)
 });
-}), H = _.uniq(H, !1, "name");
+}), I = _.uniq(I, !1, "name");
 }
-function E(a) {
+function F(a) {
 var b = /^helplink\.(.*)\.title$/, c = /^helplink\.(.*)\.url$/, d = {};
 for (var e in a.annotations) {
 var f, g = e.match(b);
@@ -7415,60 +7547,60 @@ g ? (f = d[g[1]] || {}, f.title = a.annotations[e], d[g[1]] = f) :(g = e.match(c
 }
 return d;
 }
-function F(b) {
+function G(b) {
 if (a.parameterDisplayNames = {}, _.each(a.template.parameters, function(b) {
 a.parameterDisplayNames[b.name] = b.displayName || b.name;
 }), c.templateParamsMap) {
-var d = B();
+var d = C();
 _.each(a.template.parameters, function(a) {
 d[a.name] && (a.value = d[a.name]);
 });
 }
-D(a.template);
+E(a.template);
 var e = function(a) {
 return !_.isEmpty(a.usesParameters);
 };
-_.some(H, e) ? a.$watch("template.parameters", _.debounce(function(b) {
-a.$apply(t);
+_.some(I, e) ? a.$watch("template.parameters", _.debounce(function(b) {
+a.$apply(u);
 }, 50, {
 maxWait:250
-}), !0) :a.templateImages = H, a.systemLabels = _.map(a.template.labels, function(a, b) {
+}), !0) :a.templateImages = I, a.systemLabels = _.map(a.template.labels, function(a, b) {
 return {
 name:b,
 value:a
 };
-}), M() && a.systemLabels.push({
+}), N() && a.systemLabels.push({
 name:"app",
 value:a.template.metadata.name
 });
 }
-a.project = b, a.breadcrumbs[0].title = n("displayName")(b);
-var G = /\${([a-zA-Z0-9\_]+)}/g, H = [];
+a.project = b, a.breadcrumbs[0].title = o("displayName")(b);
+var H = /\${([a-zA-Z0-9\_]+)}/g, I = [];
 a.projectDisplayName = function() {
-return w(this.project) || this.projectName;
+return x(this.project) || this.projectName;
 }, a.templateDisplayName = function() {
-return w(this.template);
+return x(this.template);
 };
-var I, J = function() {
+var J, K = function() {
 var b = {
 started:"Creating " + a.templateDisplayName() + " in project " + a.projectDisplayName(),
 success:"Created " + a.templateDisplayName() + " in project " + a.projectDisplayName(),
 failure:"Failed to create " + a.templateDisplayName() + " in project " + a.projectDisplayName()
-}, e = E(a.template);
-k.clear(), k.add(b, e, c.project, function() {
-var b = i.defer();
-return d.batch(I, f).then(function(c) {
+}, e = F(a.template);
+l.clear(), l.add(b, e, c.project, function() {
+var b = j.defer();
+return d.batch(J, f).then(function(c) {
 var d = [], e = !1;
 c.failure.length > 0 ? (e = !0, c.failure.forEach(function(a) {
 d.push({
 type:"error",
-message:"Cannot create " + x(a.object.kind).toLowerCase() + ' "' + a.object.metadata.name + '". ',
+message:"Cannot create " + y(a.object.kind).toLowerCase() + ' "' + a.object.metadata.name + '". ',
 details:a.data.message
 });
 }), c.success.forEach(function(a) {
 d.push({
 type:"success",
-message:"Created " + x(a.kind).toLowerCase() + ' "' + a.metadata.name + '" successfully. '
+message:"Created " + y(a.kind).toLowerCase() + ' "' + a.metadata.name + '" successfully. '
 });
 })) :d.push({
 type:"success",
@@ -7478,9 +7610,9 @@ alerts:d,
 hasErrors:e
 });
 }), b.promise;
-}), m.toNextSteps(u, a.projectName);
-}, K = function(a) {
-var b = o.open({
+}), n.toNextSteps(v, a.projectName);
+}, L = function(a) {
+var b = p.open({
 animation:!0,
 templateUrl:"views/modals/confirm.html",
 controller:"ConfirmModalController",
@@ -7488,7 +7620,7 @@ resolve:{
 modalConfig:function() {
 return {
 alerts:a,
-message:"Problems were detected while checking your application configuration.",
+message:"We checked your application for potential problems. Please confirm you still want to create this application.",
 okButtonText:"Create Anyway",
 okButtonClass:"btn-danger",
 cancelButtonText:"Cancel"
@@ -7496,18 +7628,20 @@ cancelButtonText:"Cancel"
 }
 }
 });
-b.result.then(J);
-}, L = function(b) {
-var c = b.quotaAlerts || [], d = _.filter(c, {
+b.result.then(K);
+}, M = function(b) {
+var c = i.getSecurityAlerts(J, a.projectName), d = b.quotaAlerts || [];
+c = c.concat(d);
+var e = _.filter(c, {
 type:"error"
 });
-d.length ? (a.disableInputs = !1, a.quotaAlerts = c) :c.length ? (K(c), a.disableInputs = !1) :J();
+e.length ? (a.disableInputs = !1, a.precheckAlerts = c) :c.length ? (L(c), a.disableInputs = !1) :K();
 };
 a.createFromTemplate = function() {
 a.disableInputs = !0;
-var b = s.mapEntries(s.compactEntries(a.labels)), c = s.mapEntries(s.compactEntries(a.systemLabels));
+var b = t.mapEntries(t.compactEntries(a.labels)), c = t.mapEntries(t.compactEntries(a.systemLabels));
 a.template.labels = _.extend(c, b), d.create("processedtemplates", null, a.template, f).then(function(b) {
-e.setTemplateData(b.parameters, a.template.parameters, b.message), I = b.objects, h.getLatestQuotaAlerts(I, f).then(L);
+e.setTemplateData(b.parameters, a.template.parameters, b.message), J = b.objects, h.getLatestQuotaAlerts(J, f).then(M);
 }, function(b) {
 a.disableInputs = !1;
 var c;
@@ -7518,24 +7652,24 @@ details:c
 };
 });
 };
-var M = function() {
+var N = function() {
 return !_.get(a.template, "labels.app") && !_.some(a.template.objects, "metadata.labels.app");
 };
-if (v) d.get("templates", u, {
-namespace:v || a.projectName
+if (w) d.get("templates", v, {
+namespace:w || a.projectName
 }).then(function(b) {
-a.template = b, F(), a.breadcrumbs[3].title = n("displayName")(b);
+a.template = b, G(), a.breadcrumbs[3].title = o("displayName")(b);
 }, function() {
-m.toErrorPage("Cannot create from template: the specified template could not be retrieved.");
+n.toErrorPage("Cannot create from template: the specified template could not be retrieved.");
 }); else {
-if (a.template = r.getTemplate(), _.isEmpty(a.template)) {
-var N = URI("error").query({
+if (a.template = s.getTemplate(), _.isEmpty(a.template)) {
+var O = URI("error").query({
 error:"not_found",
 error_description:"Template wasn't found in cache."
 }).toString();
-j.url(N);
+k.url(O);
 }
-r.clearTemplate(), F();
+s.clearTemplate(), G();
 }
 }));
 } ]), angular.module("openshiftConsole").controller("LabelsController", [ "$scope", function(a) {
@@ -8717,84 +8851,84 @@ b.unwatchAll(e);
 });
 } ]
 };
-} ]), angular.module("openshiftConsole").directive("fromFile", [ "$q", "$uibModal", "$location", "$filter", "CachedTemplateService", "AlertMessageService", "Navigate", "TaskList", "DataService", "APIService", "QuotaService", function(a, b, c, d, e, f, g, h, i, j, k) {
+} ]), angular.module("openshiftConsole").directive("fromFile", [ "$q", "$uibModal", "$location", "$filter", "CachedTemplateService", "AlertMessageService", "Navigate", "TaskList", "DataService", "APIService", "QuotaService", "SecurityCheckService", function(a, b, c, d, e, f, g, h, i, j, k, l) {
 return {
 restrict:"E",
 scope:!1,
 templateUrl:"views/directives/from-file.html",
-controller:[ "$scope", function(l) {
-function m(a) {
-return !!a.kind || (l.error = {
+controller:[ "$scope", function(m) {
+function n(a) {
+return !!a.kind || (m.error = {
 message:"Resource is missing kind field."
 }, !1);
 }
-function n(a) {
-return !!l.isList || (a.metadata ? a.metadata.name ? !a.metadata.namespace || a.metadata.namespace === l.projectName || (l.error = {
+function o(a) {
+return !!m.isList || (a.metadata ? a.metadata.name ? !a.metadata.namespace || a.metadata.namespace === m.projectName || (m.error = {
 message:a.kind + " " + a.metadata.name + " can't be created in project " + a.metadata.namespace + ". Can't create resource in different projects."
-}, !1) :(l.error = {
+}, !1) :(m.error = {
 message:"Resource name is missing in metadata field."
-}, !1) :(l.error = {
+}, !1) :(m.error = {
 message:"Resource is missing metadata field."
 }, !1));
-}
-function o() {
-var a = b.open({
-animation:!0,
-templateUrl:"views/modals/process-template.html",
-controller:"ProcessTemplateModalController",
-scope:l
-});
-a.result.then(function() {
-l.templateOptions.add ? q() :(e.setTemplate(l.resourceList[0]), r());
-});
 }
 function p() {
 var a = b.open({
 animation:!0,
-templateUrl:"views/modals/confirm-replace.html",
-controller:"ConfirmReplaceModalController",
-scope:l
+templateUrl:"views/modals/process-template.html",
+controller:"ProcessTemplateModalController",
+scope:m
 });
 a.result.then(function() {
-k.getLatestQuotaAlerts(l.createResources, l.context).then(C);
+m.templateOptions.add ? r() :(e.setTemplate(m.resourceList[0]), s());
 });
 }
 function q() {
-var b = l.createResources.length, c = l.updateResources.length;
-if (l.resourceKind.endsWith("List")) {
-var d = [];
-c > 0 && d.push(v()), b > 0 && d.push(u()), a.all(d).then(r);
-} else t();
+var a = b.open({
+animation:!0,
+templateUrl:"views/modals/confirm-replace.html",
+controller:"ConfirmReplaceModalController",
+scope:m
+});
+a.result.then(function() {
+k.getLatestQuotaAlerts(m.createResources, m.context).then(D);
+});
 }
 function r() {
+var b = m.createResources.length, c = m.updateResources.length;
+if (m.resourceKind.endsWith("List")) {
+var d = [];
+c > 0 && d.push(w()), b > 0 && d.push(v()), a.all(d).then(s);
+} else u();
+}
+function s() {
 var a;
-if ("Template" === l.resourceKind && l.templateOptions.process && !l.errorOccured) {
-var b = l.templateOptions.add || l.updateResources.length > 0 ? l.projectName :"";
-a = g.createFromTemplateURL(A, l.projectName, {
+if ("Template" === m.resourceKind && m.templateOptions.process && !m.errorOccured) {
+var b = m.templateOptions.add || m.updateResources.length > 0 ? m.projectName :"";
+a = g.createFromTemplateURL(B, m.projectName, {
 namespace:b
 });
-} else a = g.projectOverviewURL(l.projectName);
+} else a = g.projectOverviewURL(m.projectName);
 c.url(a);
 }
-function s(a) {
+function t(a) {
 var b = j.objectToResourceGroupVersion(a);
-return b ? j.apiInfo(b) ? i.get(b, a.metadata.name, l.context, {
+return b ? j.apiInfo(b) ? i.get(b, a.metadata.name, m.context, {
 errorNotification:!1
 }).then(function(b) {
 var c = angular.copy(a), d = angular.copy(b.metadata);
-d.annotations = a.metadata.annotations, d.labels = a.metadata.labels, c.metadata = d, l.updateResources.push(c);
+d.annotations = a.metadata.annotations, d.labels = a.metadata.labels, c.metadata = d, m.updateResources.push(c);
 }, function() {
-l.createResources.push(a);
-}) :(l.errorOccured = !0, void (l.error = {
+m.createResources.push(a);
+}) :(m.errorOccured = !0, void (m.error = {
 message:j.unsupportedObjectKindOrVersion(a)
-})) :(l.errorOccured = !0, void (l.error = {
+})) :(m.errorOccured = !0, void (m.error = {
 message:j.invalidObjectKindOrVersion(a)
 }));
 }
-function t() {
+function u() {
 var a;
-_.isEmpty(l.createResources) ? (a = _.head(l.updateResources), i.update(j.kindToResource(a.kind), a.metadata.name, a, {
-namespace:l.projectName
+_.isEmpty(m.createResources) ? (a = _.head(m.updateResources), i.update(j.kindToResource(a.kind), a.metadata.name, a, {
+namespace:m.projectName
 }).then(function() {
 f.addAlert({
 name:a.metadata.name,
@@ -8802,15 +8936,15 @@ data:{
 type:"success",
 message:a.kind + " " + a.metadata.name + " was successfully updated."
 }
-}), r();
+}), s();
 }, function(b) {
-l.alerts["update" + a.metadata.name] = {
+m.alerts["update" + a.metadata.name] = {
 type:"error",
-message:"Unable to update the " + x(a.kind) + " '" + a.metadata.name + "'.",
+message:"Unable to update the " + y(a.kind) + " '" + a.metadata.name + "'.",
 details:d("getErrorDetails")(b)
 };
-})) :(a = _.head(l.createResources), i.create(j.kindToResource(a.kind), null, a, {
-namespace:l.projectName
+})) :(a = _.head(m.createResources), i.create(j.kindToResource(a.kind), null, a, {
+namespace:m.projectName
 }).then(function() {
 f.addAlert({
 name:a.metadata.name,
@@ -8818,39 +8952,39 @@ data:{
 type:"success",
 message:a.kind + " " + a.metadata.name + " was successfully created."
 }
-}), r();
+}), s();
 }, function(b) {
-l.alerts["create" + a.metadata.name] = {
+m.alerts["create" + a.metadata.name] = {
 type:"error",
-message:"Unable to create the " + x(a.kind) + " '" + a.metadata.name + "'.",
+message:"Unable to create the " + y(a.kind) + " '" + a.metadata.name + "'.",
 details:d("getErrorDetails")(b)
 };
 }));
 }
-function u() {
+function v() {
 var b = {
-started:"Creating resources in project " + l.projectName,
-success:"Creating resources in project " + l.projectName,
-failure:"Failed to create some resources in project " + l.projectName
+started:"Creating resources in project " + m.projectName,
+success:"Creating resources in project " + m.projectName,
+failure:"Failed to create some resources in project " + m.projectName
 }, c = {};
-h.add(b, c, l.projectName, function() {
+h.add(b, c, m.projectName, function() {
 var b = a.defer();
-return i.batch(l.createResources, l.context, "create").then(function(a) {
+return i.batch(m.createResources, m.context, "create").then(function(a) {
 var c = [], d = !1;
-if (a.failure.length > 0) d = !0, l.errorOccured = !0, a.failure.forEach(function(a) {
+if (a.failure.length > 0) d = !0, m.errorOccured = !0, a.failure.forEach(function(a) {
 c.push({
 type:"error",
-message:"Cannot create " + x(a.object.kind) + ' "' + a.object.metadata.name + '". ',
+message:"Cannot create " + y(a.object.kind) + ' "' + a.object.metadata.name + '". ',
 details:a.data.message
 });
 }), a.success.forEach(function(a) {
 c.push({
 type:"success",
-message:"Created " + x(a.kind) + ' "' + a.metadata.name + '" successfully. '
+message:"Created " + y(a.kind) + ' "' + a.metadata.name + '" successfully. '
 });
 }); else {
 var e;
-e = l.isList ? "All items in list were created successfully." :x(l.resourceKind) + " " + l.resourceName + " was successfully created.", c.push({
+e = m.isList ? "All items in list were created successfully." :y(m.resourceKind) + " " + m.resourceName + " was successfully created.", c.push({
 type:"success",
 message:e
 });
@@ -8862,30 +8996,30 @@ hasErrors:d
 }), b.promise;
 });
 }
-function v() {
+function w() {
 var b = {
-started:"Updating resources in project " + l.projectName,
-success:"Updated resources in project " + l.projectName,
-failure:"Failed to update some resources in project " + l.projectName
+started:"Updating resources in project " + m.projectName,
+success:"Updated resources in project " + m.projectName,
+failure:"Failed to update some resources in project " + m.projectName
 }, c = {};
-h.add(b, c, l.projectName, function() {
+h.add(b, c, m.projectName, function() {
 var b = a.defer();
-return i.batch(l.updateResources, l.context, "update").then(function(a) {
+return i.batch(m.updateResources, m.context, "update").then(function(a) {
 var c = [], d = !1;
-if (a.failure.length > 0) d = !0, l.errorOccured = !0, a.failure.forEach(function(a) {
+if (a.failure.length > 0) d = !0, m.errorOccured = !0, a.failure.forEach(function(a) {
 c.push({
 type:"error",
-message:"Cannot update " + x(a.object.kind) + ' "' + a.object.metadata.name + '". ',
+message:"Cannot update " + y(a.object.kind) + ' "' + a.object.metadata.name + '". ',
 details:a.data.message
 });
 }), a.success.forEach(function(a) {
 c.push({
 type:"success",
-message:"Updated " + x(a.kind) + ' "' + a.metadata.name + '" successfully. '
+message:"Updated " + y(a.kind) + ' "' + a.metadata.name + '" successfully. '
 });
 }); else {
 var e;
-e = l.isList ? "All items in list were updated successfully." :x(l.resourceKind) + " " + l.resourceName + " was successfully updated.", c.push({
+e = m.isList ? "All items in list were updated successfully." :y(m.resourceKind) + " " + m.resourceName + " was successfully updated.", c.push({
 type:"success",
 message:e
 });
@@ -8906,27 +9040,27 @@ alerts:c
 }), b.promise;
 });
 }
-var w, x = d("humanizeKind");
-h.clear(), l.aceLoaded = function(a) {
-w = a.getSession(), w.setOption("tabSize", 2), w.setOption("useSoftTabs", !0), a.setDragDelay = 0, a.$blockScrolling = 1 / 0;
+var x, y = d("humanizeKind");
+h.clear(), m.aceLoaded = function(a) {
+x = a.getSession(), x.setOption("tabSize", 2), x.setOption("useSoftTabs", !0), a.setDragDelay = 0, a.$blockScrolling = 1 / 0;
 };
-var y = function() {
-var a = w.getAnnotations();
-l.editorErrorAnnotation = _.some(a, {
+var z = function() {
+var a = x.getAnnotations();
+m.editorErrorAnnotation = _.some(a, {
 type:"error"
 });
-}, z = _.debounce(function() {
+}, A = _.debounce(function() {
 try {
-JSON.parse(l.editorContent), w.setMode("ace/mode/json");
+JSON.parse(m.editorContent), x.setMode("ace/mode/json");
 } catch (a) {
 try {
-jsyaml.safeLoad(l.editorContent), w.setMode("ace/mode/yaml");
+jsyaml.safeLoad(m.editorContent), x.setMode("ace/mode/yaml");
 } catch (a) {}
 }
-l.$apply(y);
+m.$apply(z);
 }, 300);
-l.aceChanged = z;
-var A, B = function(a) {
+m.aceChanged = A;
+var B, C = function(a) {
 var c = b.open({
 animation:!0,
 templateUrl:"views/modals/confirm.html",
@@ -8935,7 +9069,7 @@ resolve:{
 modalConfig:function() {
 return {
 alerts:a,
-message:"Problems were detected while checking your application configuration.",
+message:"We checked your application for potential problems. Please confirm you still want to create this application.",
 okButtonText:"Create Anyway",
 okButtonClass:"btn-danger",
 cancelButtonText:"Cancel"
@@ -8943,34 +9077,36 @@ cancelButtonText:"Cancel"
 }
 }
 });
-c.result.then(q);
-}, C = function(a) {
-var b = a.quotaAlerts || [], c = _.filter(b, {
+c.result.then(r);
+}, D = function(a) {
+var b = l.getSecurityAlerts(m.createResources, m.projectName), c = a.quotaAlerts || [];
+b = b.concat(c);
+var d = _.filter(b, {
 type:"error"
 });
-c.length ? (l.disableInputs = !1, l.alerts = b) :b.length ? (B(b), l.disableInputs = !1) :q();
+d.length ? (m.disableInputs = !1, m.alerts = b) :b.length ? (C(b), m.disableInputs = !1) :r();
 };
-l.create = function() {
-l.alerts = {}, delete l.error;
+m.create = function() {
+m.alerts = {}, delete m.error;
 try {
-A = JSON.parse(l.editorContent);
+B = JSON.parse(m.editorContent);
 } catch (b) {
 try {
-A = jsyaml.safeLoad(l.editorContent);
+B = jsyaml.safeLoad(m.editorContent);
 } catch (b) {
-return void (l.error = b);
+return void (m.error = b);
 }
 }
-if (m(A) && (l.resourceKind = A.kind, l.resourceKind.endsWith("List") ? l.isList = !0 :l.isList = !1, n(A))) {
-l.isList ? (l.resourceList = A.items, l.resourceName = "") :(l.resourceList = [ A ], l.resourceName = A.metadata.name, "Template" === l.resourceKind && (l.templateOptions = {
+if (n(B) && (m.resourceKind = B.kind, m.resourceKind.endsWith("List") ? m.isList = !0 :m.isList = !1, o(B))) {
+m.isList ? (m.resourceList = B.items, m.resourceName = "") :(m.resourceList = [ B ], m.resourceName = B.metadata.name, "Template" === m.resourceKind && (m.templateOptions = {
 process:!0,
 add:!1
-})), l.updateResources = [], l.createResources = [];
+})), m.updateResources = [], m.createResources = [];
 var c = [];
-l.errorOccured = !1, _.forEach(l.resourceList, function(a) {
-return n(a) ? void c.push(s(a)) :(l.errorOccured = !0, !1);
+m.errorOccured = !1, _.forEach(m.resourceList, function(a) {
+return o(a) ? void c.push(t(a)) :(m.errorOccured = !0, !1);
 }), a.all(c).then(function() {
-l.errorOccured || (1 === l.createResources.length && "Template" === l.resourceList[0].kind ? o() :_.isEmpty(l.updateResources) ? k.getLatestQuotaAlerts(l.createResources, l.context).then(C) :(l.updateTemplate = 1 === l.updateResources.length && "Template" === l.updateResources[0].kind, l.updateTemplate ? o() :p()));
+m.errorOccured || (1 === m.createResources.length && "Template" === m.resourceList[0].kind ? p() :_.isEmpty(m.updateResources) ? k.getLatestQuotaAlerts(m.createResources, m.context).then(D) :(m.updateTemplate = 1 === m.updateResources.length && "Template" === m.updateResources[0].kind, m.updateTemplate ? p() :q()));
 });
 }
 };
