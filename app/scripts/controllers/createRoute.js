@@ -60,7 +60,7 @@ angular.module('openshiftConsole')
 
         var orderByDisplayName = $filter('orderByDisplayName');
 
-        DataService.list("services", context, function(services) {
+        DataService.list("services", context).then(function(services) {
           $scope.services = orderByDisplayName(services.by("metadata.name"));
           $scope.routing.to = {};
           $scope.routing.to.service = _.find($scope.services, function(service) {
