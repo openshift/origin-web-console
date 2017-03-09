@@ -5168,7 +5168,7 @@ type:"error",
 message:404 === c.status ? "This deployment can not be found, it may have been deleted." :"The deployment details could not be loaded.",
 details:404 === c.status ? "Any remaining deployment history for this deployment will be shown." :"Reason: " + b("getErrorDetails")(c)
 };
-}), e.list("limitranges", k, function(a) {
+}), e.list("limitranges", k).then(function(a) {
 v = a.by("metadata.name"), w();
 });
 var x = [], y = [];
