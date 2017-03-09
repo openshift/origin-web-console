@@ -7951,7 +7951,7 @@ title:"Create Route"
 } ], i.get(b.project).then(_.spread(function(i, k) {
 if (c.project = i, c.breadcrumbs[0].title = a("displayName")(i), !f.canI("routes", "create", b.project)) return void h.toErrorPage("You do not have authority to create routes in project " + b.project + ".", "access_denied");
 var l = a("orderByDisplayName");
-g.list("services", k, function(a) {
+g.list("services", k).then(function(a) {
 c.services = l(a.by("metadata.name")), c.routing.to = {}, c.routing.to.service = _.find(c.services, function(a) {
 return !c.serviceName || a.metadata.name === c.serviceName;
 });
