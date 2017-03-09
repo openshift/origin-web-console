@@ -56,7 +56,7 @@ DISABLE_CUSTOM_METRICS:!1,
 DISABLE_WILDCARD_ROUTES:!0,
 AVAILABLE_KINDS_BLACKLIST:[ "Binding", "Ingress", "DeploymentConfigRollback" ],
 ENABLE_TECH_PREVIEW_FEATURE:{
-pipelines:!0
+service_catalog_landing_page:!1
 },
 SAMPLE_PIPELINE_TEMPLATE:{
 name:"jenkins-pipeline-example",
@@ -180,10 +180,7 @@ prefixes:[ "/browse/builds/", "/browse/builds-noconfig/" ]
 }, {
 label:"Pipelines",
 href:"/browse/pipelines",
-prefixes:[ "/browse/pipelines/" ],
-isValid:function() {
-return !!_.get(window.OPENSHIFT_CONSTANTS, "ENABLE_TECH_PREVIEW_FEATURE.pipelines");
-}
+prefixes:[ "/browse/pipelines/" ]
 }, {
 label:"Images",
 href:"/browse/images",
