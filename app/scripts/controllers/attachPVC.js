@@ -127,7 +127,7 @@ angular.module('openshiftConsole')
             }
           );
 
-          DataService.list("persistentvolumeclaims", context, function(pvcs) {
+          DataService.list("persistentvolumeclaims", context).then(function(pvcs) {
             $scope.pvcs = orderByDisplayName(pvcs.by("metadata.name"));
             if (!_.isEmpty($scope.pvcs) && !$scope.attach.persistentVolumeClaim) {
               $scope.attach.persistentVolumeClaim = _.head($scope.pvcs);
