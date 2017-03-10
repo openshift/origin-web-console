@@ -767,7 +767,7 @@ return f.resourceURL(c, "ImageStream", e);
 };
 }
 
-window.OPENSHIFT_CONSTANTS = {
+angular.isUndefined(window.OPENSHIFT_CONSTANTS) && (window.OPENSHIFT_CONSTANTS = {}), angular.extend(window.OPENSHIFT_CONSTANTS, {
 HELP_BASE_URL:"https://docs.openshift.org/latest/",
 HELP:{
 cli:"cli_reference/index.html",
@@ -1103,7 +1103,7 @@ label:"Uncategorized",
 description:""
 } ]
 } ]
-}, angular.module("openshiftConsole", [ "ngAnimate", "ngCookies", "ngResource", "ngRoute", "ngSanitize", "openshiftUI", "kubernetesUI", "registryUI.images", "ui.bootstrap", "patternfly.charts", "patternfly.sort", "openshiftConsoleTemplates", "ui.ace", "extension-registry", "as.sortable", "ui.select", "angular-inview", "angularMoment", "ab-base64", "openshiftCommonServices", "openshiftCommonUI" ]).config([ "$routeProvider", function(a) {
+}), angular.module("openshiftConsole", [ "ngAnimate", "ngCookies", "ngResource", "ngRoute", "ngSanitize", "openshiftUI", "kubernetesUI", "registryUI.images", "ui.bootstrap", "patternfly.charts", "patternfly.sort", "openshiftConsoleTemplates", "ui.ace", "extension-registry", "as.sortable", "ui.select", "angular-inview", "angularMoment", "ab-base64", "openshiftCommonServices", "openshiftCommonUI" ]).config([ "$routeProvider", function(a) {
 var b;
 b = window.OPENSHIFT_CONSTANTS.HIDE_NEW_OVERVIEW || "true" === localStorage.getItem("hide-new-overview") ? {
 templateUrl:"views/overview.html",

@@ -61332,4 +61332,584 @@ return !1;
 }
 }, g;
 } ];
-} ]);
+} ]), !function(a) {
+function b(c) {
+if (d[c]) return d[c].exports;
+var e = d[c] = {
+i:c,
+l:!1,
+exports:{}
+};
+return a[c].call(e.exports, e, e.exports, b), e.l = !0, e.exports;
+}
+var c = window.webpackJsonp;
+window.webpackJsonp = function(d, f, g) {
+for (var h, i, j, k = 0, l = []; k < d.length; k++) i = d[k], e[i] && l.push(e[i][0]), e[i] = 0;
+for (h in f) Object.prototype.hasOwnProperty.call(f, h) && (a[h] = f[h]);
+for (c && c(d, f, g); l.length; ) l.shift()();
+if (g) for (k = 0; k < g.length; k++) j = b(b.s = g[k]);
+return j;
+};
+var d = {}, e = {
+1:0
+};
+b.e = function(a) {
+function c() {
+f.onerror = f.onload = null, clearTimeout(g);
+var b = e[a];
+0 !== b && (b && b[1](new Error("Loading chunk " + a + " failed.")), e[a] = void 0);
+}
+if (0 === e[a]) return Promise.resolve();
+if (e[a]) return e[a][2];
+var d = document.getElementsByTagName("head")[0], f = document.createElement("script");
+f.type = "text/javascript", f.charset = "utf-8", f.async = !0, f.timeout = 12e4, b.nc && f.setAttribute("nonce", b.nc), f.src = b.p + "" + a + ".chunk.js";
+var g = setTimeout(c, 12e4);
+f.onerror = f.onload = c;
+var h = new Promise(function(b, c) {
+e[a] = [ b, c ];
+});
+return e[a][2] = h, d.appendChild(f), h;
+}, b.m = a, b.c = d, b.i = function(a) {
+return a;
+}, b.d = function(a, c, d) {
+b.o(a, c) || Object.defineProperty(a, c, {
+configurable:!1,
+enumerable:!0,
+get:d
+});
+}, b.n = function(a) {
+var c = a && a.__esModule ? function() {
+return a["default"];
+} :function() {
+return a;
+};
+return b.d(c, "a", c), c;
+}, b.o = function(a, b) {
+return Object.prototype.hasOwnProperty.call(a, b);
+}, b.p = "/", b.oe = function(a) {
+throw console.error(a), a;
+};
+}([]), webpackJsonp([ 0, 1 ], [ function(a, b) {
+a.exports = angular;
+}, function(a, b) {
+a.exports = _;
+}, function(a, b) {}, function(a, b, c) {
+"use strict";
+b.__esModule = !0;
+var d = c(18);
+b.landingPage = {
+bindings:{
+searchPlaceholder:"@",
+doSearchFn:"<"
+},
+controller:d.LandingPageController,
+template:c(12),
+transclude:{
+landingheader:"landingheader",
+landingbody:"landingbody",
+landingside:"landingside"
+}
+};
+}, function(a, b, c) {
+"use strict";
+b.__esModule = !0;
+var d = c(19);
+b.orderService = {
+bindings:{
+service:"<"
+},
+controller:d.OrderServiceController,
+template:c(13)
+};
+}, function(a, b, c) {
+"use strict";
+b.__esModule = !0;
+var d = c(20);
+b.overlayPanel = {
+bindings:{
+showClose:"<",
+showPanel:"<",
+handleClose:"<"
+},
+controller:d.OverlayPanelController,
+template:c(14),
+transclude:!0
+};
+}, function(a, b, c) {
+"use strict";
+b.__esModule = !0;
+var d = c(21);
+b.projectsSummary = {
+bindings:{},
+controller:d.ProjectsSummaryController,
+template:c(15)
+};
+}, function(a, b, c) {
+"use strict";
+b.__esModule = !0;
+var d = c(22);
+b.rhAppsList = {
+bindings:{
+applications:"<"
+},
+controller:d.RHListController,
+template:c(16)
+};
+}, function(a, b, c) {
+"use strict";
+b.__esModule = !0;
+var d = c(23);
+b.servicesView = {
+bindings:{
+serviceClasses:"<",
+imageStreams:"<"
+},
+controller:d.ServicesViewController,
+template:c(17)
+};
+}, function(a, b, c) {
+"use strict";
+b.__esModule = !0;
+var d = c(1), e = [ {
+id:1,
+title:"Microservices Application",
+icon:"fa fa-cubes",
+url:"https://www.redhat.com/en/technologies/virtualization",
+description:"Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt."
+}, {
+id:2,
+title:"Mobile Application",
+icon:"fa fa-mobile",
+url:"https://www.redhat.com/en/technologies/mobile",
+description:"Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt."
+}, {
+id:3,
+title:"Integration Application",
+icon:"fa fa-plug",
+url:"https://www.redhat.com/en/technologies/cloud-computing",
+description:"Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt."
+}, {
+id:4,
+title:"Business Process Application",
+icon:"fa fa-cubes",
+url:"https://www.redhat.com/en/technologies/management",
+description:"Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt."
+} ], f = [ {
+id:"languages",
+label:"Languages",
+iconClassDefault:"fa fa-code",
+subCategories:[ {
+id:"java",
+label:"Java",
+icon:"font-icon icon-openjdk"
+}, {
+id:"javascript",
+categoryAliases:[ "nodejs", "js" ],
+label:"Javascript",
+icon:"font-icon icon-js"
+}, {
+id:"perl",
+label:"Perl",
+icon:"font-icon icon-perl"
+}, {
+id:"ruby",
+label:"Ruby",
+icon:"font-icon icon-ruby"
+}, {
+id:"php",
+label:"PHP",
+icon:"font-icon icon-php"
+}, {
+id:"python",
+label:"Python",
+icon:"font-icon icon-python"
+} ]
+}, {
+id:"databases",
+label:"Databases",
+subCategories:[ {
+id:"mongodb",
+label:"Mongo",
+icon:"font-icon icon-mongodb"
+}, {
+id:"mysql",
+label:"mySQL",
+icon:"font-icon icon-mysql-database"
+}, {
+id:"postgresql",
+label:"Postgres",
+icon:"font-icon icon-postgresql"
+}, {
+id:"mariadb",
+label:"MariaDB",
+icon:"font-icon icon-mariadb"
+} ]
+}, {
+id:"middleware",
+label:"Middleware",
+subCategories:[ {
+id:"jboss",
+label:"JBoss",
+icon:"font-icon icon-openjdk"
+}, {
+id:"fuse",
+label:"Fuse",
+icon:"font-icon icon-openjdk"
+}, {
+id:"amq",
+label:"A-MQ",
+icon:"font-icon icon-openjdk"
+}, {
+id:"bpm",
+label:"BPM",
+icon:"font-icon icon-openjdk"
+} ]
+}, {
+id:"cicd",
+label:"CI/CD",
+subCategories:[ {
+id:"jenkins",
+label:"Jenkins",
+icon:"font-icon icon-jenkins"
+}, {
+id:"pipelines",
+label:"Pipelines",
+icon:"fa fa-clone"
+} ]
+}, {
+id:"other",
+label:"Other",
+subCategories:[ {
+id:"other",
+label:"Other"
+} ]
+} ];
+b.allCategories = f, d.set(window, "OPENSHIFT_CONSTANTS.SERVICE_CATALOG_CATEGORIES", f), d.set(window, "OPENSHIFT_CONSTANTS.REDHAT_APPLICATIONS", e);
+}, function(a, b, c) {
+"use strict";
+b.__esModule = !0;
+var d = c(0), e = c(1), f = function() {
+function a(a, b) {
+this.constants = a, this.$filter = b, this.categories = this.constants.SERVICE_CATALOG_CATEGORIES;
+}
+return a.prototype.getServiceItem = function(a) {
+return new g(a, this);
+}, a.prototype.getImageItem = function(a) {
+return new h(a, this);
+}, a.prototype.getCategoriesBySubCategories = function(a) {
+var b = this, c = {}, d = "other";
+return e.each(a, function(a) {
+e.each(b.categories, function(b) {
+var d = e.find(b.subCategories, function(b) {
+return b.id === a || e.includes(b.categoryAliases, a);
+});
+if (d) return c[d.id] = b.id, !1;
+});
+}), e.isEmpty(c) && (c[d] = d), c;
+}, a.prototype.hasCategory = function(a, b) {
+return e.includes(a.catsBySubCats, b);
+}, a.prototype.hasSubCategory = function(a, b) {
+return e.has(a, [ "catsBySubCats", b ]);
+}, a.prototype.removeEmptyCategories = function(a) {
+var b = this, c = d.copy(this.categories), f = [];
+return e.each(c, function(c) {
+var g = e.filter(c.subCategories, function(c) {
+return e.some(a, function(a) {
+return b.hasSubCategory(a, c.id);
+});
+});
+if (!e.isEmpty(g)) {
+var h = d.copy(c);
+h.subCategories = g, f.push(h);
+}
+}), f;
+}, a;
+}();
+f.$inject = [ "Constants", "$filter" ], b.CatalogService = f;
+var g = function() {
+function a(a, b) {
+this.resource = a, this.catalogSrv = b, this.imageUrl = this.getImage(), this.iconClass = this.getIcon(), this.name = this.getName(), this.description = this.getDescription(), this.longDescription = this.getLongDescription(), this.catsBySubCats = this.getCategoriesBySubCategories();
+}
+return a.prototype.getImage = function() {
+return e.get(this.resource, "osbMetadata.imageUrl", "");
+}, a.prototype.getIcon = function() {
+return e.get(this.resource, [ "osbMetadata", "console.openshift.io/iconClass" ], "fa fa-cubes");
+}, a.prototype.getName = function() {
+return e.get(this.resource, "osbMetadata.displayName", this.resource.metadata.name);
+}, a.prototype.getDescription = function() {
+return e.get(this.resource, "osbMetadata.description", "");
+}, a.prototype.getLongDescription = function() {
+return e.get(this.resource, "osbMetadata.longDescription", "");
+}, a.prototype.getCategoriesBySubCategories = function() {
+return this.catalogSrv.getCategoriesBySubCategories(this.resource.osbTags);
+}, a;
+}();
+b.ServiceItem = g;
+var h = function() {
+function a(a, b) {
+this.resource = a, this.catalogSrv = b, this.tags = this.catalogSrv.$filter("imageStreamTagTags")(this.resource), this.iconClass = this.getIcon(), this.name = this.getName(), this.description = this.getDescription(), this.longDescription = this.getLongDescription(), this.catsBySubCats = this.getCategoriesBySubCategories(), this.isBuilder = e.includes(this.tags, "builder");
+}
+return a.prototype.getIcon = function() {
+var a = this.catalogSrv.$filter("imageStreamTagIconClass")(this.resource, this.resource.spec.tags[0].name);
+return a = a.indexOf("icon-") !== -1 ? "font-icon " + a :a;
+}, a.prototype.getName = function() {
+var a = this.catalogSrv.$filter("displayName")(this.resource);
+return a || (a = this.resource.metadata.name), a;
+}, a.prototype.getDescription = function() {
+return null;
+}, a.prototype.getLongDescription = function() {
+return null;
+}, a.prototype.getCategoriesBySubCategories = function() {
+return this.catalogSrv.getCategoriesBySubCategories(this.tags);
+}, a;
+}();
+b.ImageItem = h;
+}, function(a, b, c) {
+"use strict";
+function d(a) {
+var b = arguments.length <= 1 || void 0 === arguments[1] ? {} :arguments[1], c = {
+speed:500,
+minDuration:250,
+maxDuration:3e3,
+cancelOnUserAction:!0
+}, d = {};
+Object.keys(c).forEach(function(a) {
+d[a] = b[a] ? b[a] :c[a];
+});
+var e = window.scrollY || document.documentElement.scrollTop, f = Math.max(document.body.scrollHeight, document.documentElement.scrollHeight, document.body.offsetHeight, document.documentElement.offsetHeight, document.body.clientHeight, document.documentElement.clientHeight) - window.innerHeight;
+a > f && (a = f);
+var g = a - e;
+if (0 !== g) {
+var h = Math.abs(Math.round(g / 1e3 * d.speed));
+h < d.minDuration ? h = d.minDuration :h > d.maxDuration && (h = d.maxDuration);
+var i = Date.now(), j = null, k = null;
+d.cancelOnUserAction ? (k = function(a) {
+cancelAnimationFrame(j);
+}, window.addEventListener("keydown", k)) :(k = function(a) {
+a.preventDefault();
+}, window.addEventListener("scroll", k)), window.addEventListener("wheel", k), window.addEventListener("touchstart", k);
+var l = function m() {
+var b = Date.now() - i, c = b / h - 1, f = c * c * c + 1, l = Math.round(e + g * f);
+b < h && l !== a ? (window.scrollTo(0, l), j = requestAnimationFrame(m)) :(window.scrollTo(0, a), cancelAnimationFrame(j), window.removeEventListener("wheel", k), window.removeEventListener("touchstart", k), d.cancelOnUserAction ? window.removeEventListener("keydown", k) :window.removeEventListener("scroll", k));
+};
+j = requestAnimationFrame(l);
+}
+}
+Object.defineProperty(b, "__esModule", {
+value:!0
+}), b["default"] = d;
+}, function(a, b) {
+a.exports = '<div class="landing-page">\n  <div class="landing-page-container" ng-class="{\'snap-up-shown\': $ctrl.showSnapDown}">\n    <div class="landing-main-area">\n      <div class="landing-search-area">\n        <form role="form" class="landing-search-form search-pf has-button">\n          <div class="form-group has-clear">\n            <div class="search-pf-input-group">\n              <label for="search1" class="sr-only">{{$ctrl.searchPlaceholder}}</label>\n              <input id="search1" type="search" class="form-control" placeholder="{{$ctrl.searchPlaceholder}}" ng-model="$ctrl.searchText" ng-keypress="($event.charCode==13)? $ctrl.onSearchButtonClick() : return">\n              <button type="button" ng-if="$ctrl.searchText" class="clear" aria-hidden="true">\n            <span class="pficon pficon-close">\n            </span>\n              </button>\n            </div>\n          </div>\n          <div class="form-group">\n            <button class="btn btn-default" type="button">\n          <span class="fa fa-search"  ng-click="$ctrl.onSearchButtonClick()">\n          </span>\n            </button>\n          </div>\n        </form>\n      </div>\n      <div class="landing-header-area" ng-transclude="landingheader">\n      </div>\n      <div class="snap-container snap-down">\n        <span class="spacer"></span>\n        <a href="#" class="fa fa-arrow-circle-o-down fa-3x" ng-click="$ctrl.snapDown($event)"></a>\n        <span class="spacer"></span>\n      </div>\n      <div class="landing-body-area">\n        <div ng-transclude="landingbody"></div>\n      </div>\n      <div class="snap-container snap-up" ng-class="{\'scrolled-down\': $ctrl.showSnapDown}">\n        <a href="#" class="fa fa-arrow-circle-o-up fa-3x" ng-click="$ctrl.snapUp($event)"></a>\n      </div>\n    </div>\n    <div class="landing-side-bar" ng-transclude="landingside">\n    </div>\n  </div>\n</div>\n';
+}, function(a, b) {
+a.exports = '<span class="order-service">\n  <div class="container">\n    <div class="row">\n      <div class="col-md-5 order-service-details">\n        <div class="order-service-deails-top">\n          <div class="service-title">\n            <span class="icon {{$ctrl.serviceIcon}}"></span>\n            <span class="name">{{$ctrl.serviceName}}</span>\n            <span class="version" ng-if="$ctrl.currentStep.id != 1">{{$ctrl.selectedVersion}}</span>\n          </div>\n          <span ng-if="$ctrl.currentStep.id === 1">\n            <div ng-include="\'components/order-service/order-service-details.html\'"></div>\n          </span>\n           <span ng-if="$ctrl.currentStep.id === 2 || $ctrl.currentStep.id === 3">\n            <div class="long-description">\n              {{$ctrl.serviceLongDescription}}\n            </div>\n          </span>\n        </div>\n        <div class="order-service-deails-bottom">\n          <ul class="wizard-pf-steps-indicator" ng-class="{\'invisible\': !$ctrl.wizardReady}">\n            <li class="wizard-pf-step" ng-class="{active: step.selected, visited: step.visited && !step.selected}" ng-repeat="step in $ctrl.getSteps()" data-tabgroup="{{$index}}">\n              <a ng-click="$ctrl.stepClick(step)"><span class="wizard-pf-step-number">{{$index + 1}}</span></a>\n            </li>\n          </ul>\n        </div>\n      </div>\n      <div class="col-md-7 order-service-config">\n        <div ng-if="$ctrl.currentStep.id === 1" style="height: 100%"\n             ng-include="\'components/order-service/order-service-pricing.html\'"></div>\n        <div ng-if="$ctrl.currentStep.id === 2" style="height: 100%"\n             ng-include="\'components/order-service/order-service-configure.html\'"></div>\n        <div ng-if="$ctrl.currentStep.id === 3" style="height: 100%"\n             ng-include="\'components/order-service/order-service-review.html\'"></div>\n      </div>\n    </div>\n  </div>\n</span>\n';
+}, function(a, b) {
+a.exports = '<div class="catalogs-overlay-modal ng-class="{\'modal-open modal fade in\': $ctrl.showOverlayPanel" role="dialog">\n  <div ng-if="$ctrl.showBackdrop" class="modal-backdrop fade in"></div>\n  <div ng-if="$ctrl.shown" class="catalogs-overlay-panel">\n    <a ng-if="$ctrl.showClose" ng-click="$ctrl.closePanel()">\n      <span class="catalogs-overlay-panel-close pficon pficon-close"></span>\n    </a>\n    <div class="catalogs-overlay-panel-body" ng-transclude>\n    </div>\n  </div>\n</div>\n';
+}, function(a, b) {
+a.exports = '<div class="catalogs-projects-summary-panel">\n  <button class="create-button btn btn-primary">\n    <span class="fa fa-plus"></span>\n    <span class="create-button-text">Create Project</span>\n  </button>\n  <h2>Getting Started</h2>\n  <div class="getting-started-panel">\n    {{$ctrl.gettingStartedText}}\n  </div>\n  <h3>Resources</h3>\n  <span>\n    {{$ctrl.resourcesText}}\n  </span>\n  <div class="resources-panel">\n    <ul>\n      <li ng-repeat="resource in $ctrl.resources">\n        {{resource.text}}\n      </li>\n    </ul>\n  </div>\n</div>\n';
+}, function(a, b) {
+a.exports = '<span class="red-hat-apps-container">\n  <div ng-if="$ctrl.loading" class="spinner-container">\n    <div ng-class="{\'spinner spinner-xl\': $ctrl.loading}"></div>\n  </div>\n  <div ng-if="!$ctrl.loading" pf-card-view config="$ctrl.cardViewConfig" items="$ctrl.applications">\n    <div class="card-container">\n      <div class="card-header">\n        <span class="card-icon {{item.icon}}"></span>\n        <span class="card-title">{{item.title}}</span>\n      </div>\n      <div class="card-footer">\n        <div class="card-description">{{item.description}}</div>\n      </div>\n    </div>\n  </div>\n</span>\n';
+}, function(a, b) {
+a.exports = '\n<div class="services-view">\n\n  <overlay-panel show-panel="$ctrl.orderingPanelvisible" show-close="true" handle-close="$ctrl.closeOrderingPanel">\n    <order-service service="$ctrl.serviceToOrder"></order-service>\n  </overlay-panel>\n\n  <div ng-if="$ctrl.loading" class="spinner-container">\n    <div ng-class="{\'spinner spinner-xl\': $ctrl.loading}"></div>\n  </div>\n  <div ng-if="!$ctrl.loading" class="services-view-container">\n    <h1>Catalog</h1>\n\n    <div class="services-categories">\n      <a id="category-all" ng-class="{\'current-filter\': $ctrl.currentFilter === \'all\'}" ng-click="$ctrl.filterByCategory(\'all\', \'all\', true)">All</a> |\n      <span ng-repeat="category in $ctrl.categories">\n        <a id="{{\'category-\'+category.id}}" ng-class="{\'current-filter\': $ctrl.currentFilter === category.id}"\n           ng-click="$ctrl.filterByCategory(category.id, \'all\', true)">{{category.label}}</a>\n           {{$ctrl.categories.length !== ($index+1) ? \' | \' : \'\'}}\n      </span>\n    </div>\n\n    <div class="services-sub-category-rows">\n      <div ng-repeat="subCategoryRow in $ctrl.subCategories">\n        <div class="services-sub-categories">\n          <div ng-repeat="subCategory in subCategoryRow"\n               ng-if="subCategory.id !== \'other\'"\n               id="{{\'sub-category-\'+subCategory.id}}"\n               class="card" ng-class="{\'current-filter\': $ctrl.currentSubFilter === subCategory.id}"\n               ng-click="$ctrl.toggleExpand(subCategory.id)">\n            <div class="inner-content">\n              <div class="sub-cat-icon {{subCategory.icon}}" ng-if="subCategory.icon"></div>\n              <div class="sub-cat-label">{{subCategory.label}}</div>\n            </div>\n          </div>\n        </div>\n        <div ng-if="$ctrl.expandSubCatRow === $index"\n             class="sub-category-row" ng-class="{\'other\': $ctrl.currentFilter === \'other\'}"\n             pf-card-view config="$ctrl.cardViewConfig" items="$ctrl.filteredItems">\n          <div class="card-container">\n            <div ng-if="!item.imageUrl" class="card-icon {{item.iconClass}}"></div>\n            <div ng-if="item.imageUrl" class="card-img"><img src="{{item.imageUrl}}"></div>\n            <div class="card-name">{{item.name}}</div>\n          </div>\n        </div>\n      </div>\n    </div>\n  </div>\n</div>\n';
+}, function(a, b, c) {
+"use strict";
+b.__esModule = !0;
+var d = c(0), e = c(11), f = c(24), g = c(1), h = function() {
+function a(a, b, c, e) {
+var h = this;
+this.ctrl = this, this.useScrollElement = !1, this.onScrollChange = function(a) {
+h.useScrollElement ? h.ctrl.showSnapDown = h.scrollElement.scrollTop >= h.snapElement.offsetTop :h.ctrl.showSnapDown = h.$window.pageYOffset >= h.snapElement.offsetTop, h.$scope.$apply();
+}, this.setupScrolling = function() {
+h.scrollElement = h.getScrollParent(h.snapElement, null), h.useScrollElement = h.scrollElement && null !== h.scrollElement.parentElement, h.debounceScroll = g.debounce(h.onScrollChange, 250), h.debounceResize = g.debounce(h.onWindowResize, 250), h.useScrollElement ? d.element(h.scrollElement).scroll(h.debounceScroll) :d.element(h.$window).bind("scroll", h.debounceScroll), d.element(h.$window).bind("resize", h.debounceResize), h.onWindowResize();
+}, this.onWindowResize = function() {
+h.$window.innerWidth > f(window)[0].patternfly.pfBreakpoints.tablet ? d.element(h.snapElement).css("min-height", h.$window.innerHeight + "px") :d.element(h.snapElement).css("min-height", "0");
+}, this.$scope = a, this.$element = b, this.$window = c, this.$timeout = e;
+}
+return a.prototype.$onInit = function() {
+this.ctrl.searchText = "", this.scrollOptions = {
+speed:1e3,
+minDuration:250,
+maxDuration:3e3,
+cancelOnUserAction:!0
+}, this.ctrl.showSnapDown = !1;
+}, a.prototype.$postLink = function() {
+this.snapElement = this.$element[0].querySelector(".landing-body-area"), d.element(this.snapElement).css("min-height", this.$window.innerHeight + "px"), this.$timeout(this.setupScrolling, 100);
+}, a.prototype.$onDestroy = function() {
+this.useScrollElement || d.element(this.$window).unbind("scroll", this.debounceScroll), d.element(this.$window).unbind("resize", this.debounceResize);
+}, a.prototype.snapDown = function(a) {
+this.useScrollElement ? this.scrollElementTo(this.snapElement.offsetTop) :e["default"](this.snapElement.offsetTop, this.scrollOptions);
+}, a.prototype.snapUp = function(a) {
+this.useScrollElement ? this.scrollElementTo(0) :e["default"](0, this.scrollOptions);
+}, a.prototype.onSearchButtonClick = function() {
+d.isFunction(this.ctrl.doSearchFn) && this.ctrl.doSearchFn(this.ctrl.searchText);
+}, a.prototype.$onChanges = function(a) {}, a.prototype.$doCheck = function() {}, a.prototype.getScrollParent = function(a, b) {
+return null === a ? b :a.scrollHeight > a.clientHeight ? this.getScrollParent(a.parentNode, a) :this.getScrollParent(a.parentNode, b);
+}, a.prototype.scrollElementTo = function(a) {
+var b = this, c = this.scrollElement.scrollTop, d = Math.abs(c - a) / 2, e = 0, f = performance.now(), g = a < c, h = function(c) {
+var i, j;
+e += Math.PI / (500 / (c - f)), e >= Math.PI && (b.scrollElement.scrollTop = a), b.scrollElement.scrollTop !== a && (i = Math.round(d + d * Math.cos(e)), j = g ? i :a - i, b.scrollElement.scrollTop = j, f = c, b.$window.requestAnimationFrame(h));
+};
+this.$window.requestAnimationFrame(h);
+}, a;
+}();
+h.$inject = [ "$scope", "$element", "$window", "$timeout" ], b.LandingPageController = h;
+}, function(a, b, c) {
+"use strict";
+b.__esModule = !0;
+var d = c(0), e = function() {
+function a(a) {
+this.ctrl = this, this.$scope = a;
+}
+return a.prototype.$onInit = function() {
+this.ctrl.serviceIcon = this.ctrl.service.icon ? this.ctrl.service.icon :"pf pficon-service", this.ctrl.serviceName = this.ctrl.service.name, this.ctrl.description = this.ctrl.service.description, this.ctrl.longDescription = this.ctrl.service.longDescription, this.ctrl.steps = [ {
+id:1,
+selected:!0
+}, {
+id:2
+}, {
+id:3
+} ], this.ctrl.currentStep = this.ctrl.steps[0], this.ctrl.wizardReady = !0;
+}, a.prototype.getSteps = function() {
+return this.ctrl.steps;
+}, a.prototype.stepClick = function(a) {
+a.visited && this.gotoStep(a);
+}, a.prototype.gotoStep = function(a) {
+this.ctrl.steps.forEach(function(a) {
+return a.selected = !1;
+}), this.ctrl.currentStep.visited = !0, this.ctrl.currentStep = a, this.ctrl.currentStep.selected = !0;
+}, a.prototype.configureService = function(a) {
+this.ctrl.serviceLongDescription = a, this.gotoStep(this.ctrl.steps[1]);
+}, a.prototype.orderService = function() {
+this.gotoStep(this.ctrl.steps[2]);
+}, a.prototype.toggleAdvOps = function() {
+var a = document.querySelector("#adv-ops-href"), b = document.querySelector("#adv-ops");
+d.element(a).toggleClass("collapsed"), d.element(b).toggleClass("collapse");
+}, a.prototype.$onChanges = function(a) {}, a.prototype.$doCheck = function() {}, a.prototype.cancelOrder = function() {}, a;
+}();
+e.$inject = [ "$scope" ], b.OrderServiceController = e;
+}, function(a, b, c) {
+"use strict";
+b.__esModule = !0;
+var d = c(0), e = function() {
+function a(a, b) {
+var c = this;
+this.ctrl = this, this.closePanel = function() {
+d.isFunction(c.ctrl.handleClose) && c.ctrl.handleClose();
+}, this.showDialog = function() {
+c.ctrl.shown = !0, c.ctrl.showBackdrop = !0, c.$timeout(function() {
+c.ctrl.showOverlayPanel = !0;
+}, 500);
+}, this.hideDialog = function() {
+c.ctrl.shown = !1, c.$timeout(function() {
+c.ctrl.showBackdrop = !1, c.ctrl.showOverlayPanel = !1;
+}, 500);
+}, this.$element = a, this.$timeout = b, this.ctrl.showOverlayPanel = !1, this.ctrl.showBackdrop = !1, this.ctrl.shown = !1;
+}
+return a.prototype.$postLink = function() {
+this.ctrl.showPanel && this.showDialog();
+}, a.prototype.$onChanges = function(a) {
+a.showPanel && (this.ctrl.showPanel ? this.showDialog() :this.hideDialog());
+}, a;
+}();
+e.$inject = [ "$element", "$timeout" ], b.OverlayPanelController = e;
+}, function(a, b, c) {
+"use strict";
+b.__esModule = !0;
+var d = function() {
+function a(a, b, c, d) {
+this.ctrl = this, this.closePanel = function() {}, this.$element = a, this.$scope = b, this.$document = c, this.$timeout = d;
+}
+return a;
+}();
+d.$inject = [ "$element", "$scope", "$document", "$timeout" ], b.ProjectsSummaryController = d;
+}, function(a, b, c) {
+"use strict";
+b.__esModule = !0;
+var d = c(1), e = function() {
+function a() {
+this.ctrl = this, this.cardViewConfig = {
+selectItems:!1,
+showSelectBox:!1,
+onClick:this.handleClick
+}, this.ctrl.loading = !0;
+}
+return a.prototype.$onInit = function() {
+this.ctrl.loading = d.isEmpty(this.ctrl.applications);
+}, a.prototype.handleClick = function(a, b) {
+window.open(a.url, "_blank");
+}, a.prototype.$onChanges = function(a) {
+a.applications && !a.applications.isFirstChange() && (this.ctrl.applications = a.applications.currentValue, this.ctrl.loading = !1);
+}, a;
+}();
+b.RHListController = e;
+}, function(a, b, c) {
+"use strict";
+b.__esModule = !0;
+var d = c(1), e = function() {
+function a(a, b, c, e) {
+var f = this;
+this.ctrl = this, this.subCatMaxRowLength = 10, this.serviceClassesLoaded = !1, this.imageStreamsLoaded = !1, this.handleClick = function(a, b) {
+f.ctrl.serviceToOrder = a, f.ctrl.openOrderingPanel();
+}, this.closeOrderingPanel = function() {
+f.ctrl.orderingPanelvisible = !1;
+}, this.normalizeData = function(a, b) {
+var c, e = [];
+return d.each(b, function(b) {
+"service" === a ? c = f.catalog.getServiceItem(b) :"image" === a && (c = f.catalog.getImageItem(b)), e.push(c);
+}), e;
+}, this.cardViewConfig = {
+selectItems:!1,
+showSelectBox:!1,
+onClick:this.handleClick
+}, this.constants = a, this.catalog = b, this.$filter = c, this.$scope = e, this.ctrl.loading = !0;
+}
+return a.prototype.$onInit = function() {
+var b = this;
+this.ctrl.allItems = [], this.ctrl.currentFilter = "all", this.ctrl.currentSubFilter = null, this.ctrl.expandSubCatRow = a.NO_SUBCATEGORY_ROW, this.ctrl.orderingPanelvisible = !1, this.updateAll(), this.$scope.$on("cancelOrder", function() {
+b.ctrl.closeOrderingPanel();
+});
+}, a.prototype.$onChanges = function(a) {
+a.serviceClasses && !a.serviceClasses.isFirstChange() && (this.ctrl.serviceClasses = a.serviceClasses.currentValue, this.serviceClassesLoaded = !0, this.updateServiceClasses()), a.imageStreams && !a.imageStreams.isFirstChange() && (this.ctrl.imageStreams = a.imageStreams.currentValue, this.imageStreamsLoaded = !0, this.updateImageStreams());
+}, a.prototype.filterByCategory = function(a, b, c) {
+var e = this;
+this.ctrl.filteredItems = "all" === a && "all" === b ? this.ctrl.allItems :d.filter(this.ctrl.allItems, function(c) {
+return "all" !== a && "all" === b ? e.catalog.hasCategory(c, a) :"all" === a && "all" !== b ? e.catalog.hasSubCategory(c, b) :e.catalog.hasCategory(c, a) && e.catalog.hasSubCategory(c, b);
+}), c && (this.ctrl.subCategories = this.getSubCategories(a)), this.ctrl.expandSubCatRow = this.getRowOfSubCategory(b), this.ctrl.currentFilter = a, this.ctrl.currentSubFilter = b || "all";
+}, a.prototype.toggleExpand = function(b) {
+this.ctrl.currentSubFilter === b ? (this.ctrl.currentSubFilter = null, this.ctrl.expandSubCatRow = a.NO_SUBCATEGORY_ROW) :this.filterByCategory(this.ctrl.currentFilter, b, !1);
+}, a.prototype.getSubCategories = function(a) {
+var b = "other" !== a ? [ {
+id:"all",
+label:"All"
+} ] :[];
+return this.ctrl.categories.map(function(c) {
+"all" !== a && a !== c.id || (b = b.concat(c.subCategories));
+}), b = this.makeRows(b);
+}, a.prototype.openOrderingPanel = function() {
+this.ctrl.orderingPanelvisible = !0;
+}, a.prototype.updateAll = function() {
+this.updateServiceClasses(), this.updateImageStreams();
+}, a.prototype.updateState = function() {
+this.ctrl.loading = d.isEmpty(this.ctrl.serviceClasses) && !this.serviceClassesLoaded || d.isEmpty(this.ctrl.imageStreams) && !this.imageStreamsLoaded, this.ctrl.loading || (this.ctrl.filteredItems = this.ctrl.allItems, this.ctrl.categories = this.catalog.removeEmptyCategories(this.ctrl.filteredItems), this.ctrl.subCategories = this.getSubCategories("all"));
+}, a.prototype.updateServiceClasses = function() {
+this.ctrl.allItems = this.ctrl.allItems.concat(this.normalizeData("service", this.ctrl.serviceClasses)), this.updateState();
+}, a.prototype.updateImageStreams = function() {
+this.ctrl.allItems = this.ctrl.allItems.concat(this.normalizeData("image", this.ctrl.imageStreams)), this.updateState();
+}, a.prototype.makeRows = function(a) {
+for (var b = [], c = 0, d = a.length; c < d; c += this.subCatMaxRowLength) b.push(a.slice(c, c + this.subCatMaxRowLength));
+return b;
+}, a.prototype.getRowOfSubCategory = function(a) {
+for (var b = 0; b < this.ctrl.subCategories.length; b += 1) for (var c = 0; c < this.ctrl.subCategories[b].length; c += 1) if (this.ctrl.subCategories[b][c].id === a) return b;
+return 0;
+}, a;
+}();
+e.$inject = [ "Constants", "Catalog", "$filter", "$scope" ], e.NO_SUBCATEGORY_ROW = -1, b.ServicesViewController = e;
+}, function(a, b) {
+a.exports = $;
+}, function(a, b, c) {
+"use strict";
+b.__esModule = !0;
+var d = c(0);
+c(2), c(9);
+var e = c(3), f = c(4), g = c(5), h = c(6), i = c(7), j = c(8), k = c(10);
+c(2), b.webCatalog = "webCatalog", d.module(b.webCatalog, [ "patternfly", "ngAnimate", "ui.bootstrap" ]).service("Catalog", k.CatalogService).component("landingPage", e.landingPage).component("orderService", f.orderService).component("overlayPanel", g.overlayPanel).component("projectsSummary", h.projectsSummary).component("rhAppsList", i.rhAppsList).component("servicesView", j.servicesView);
+} ], [ 25 ]);
