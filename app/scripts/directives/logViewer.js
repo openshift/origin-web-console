@@ -153,9 +153,6 @@ angular.module('openshiftConsole')
               }
             };
 
-
-            // the class .target-logger-node is needed to adjust some
-            // css when the target is not the window.
             // TODO: resize event breaks the affix, even with this if/else.
             // however, on first load of either mobile or non this works fine.
             var affix = function() {
@@ -165,7 +162,6 @@ angular.module('openshiftConsole')
               }
               if(window.innerWidth < BREAKPOINTS.screenSmMin && !$scope.fixedHeight) {
                 $affixableNode
-                  .removeClass('target-logger-node')
                   .affix({
                     target:  window,
                     offset: {
@@ -174,7 +170,6 @@ angular.module('openshiftConsole')
                   });
               } else {
                 $affixableNode
-                  .addClass('target-logger-node')
                   .affix({
                     target:  $cachedScrollableNode,
                     offset: {
@@ -510,6 +505,7 @@ angular.module('openshiftConsole')
               onScrollTop: function() {
                 $scope.autoScrollActive = false;
                 logLinks.scrollTop(scrollableDOMNode);
+                $('#' + $scope.logViewerID + '-affixedFollow').affix('checkPosition');
               },
               toggleAutoScroll: toggleAutoScroll,
               goChromeless: logLinks.chromelessLink,

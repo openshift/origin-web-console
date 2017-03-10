@@ -12477,12 +12477,12 @@ b.autoScrollActive = !1;
 }, A = function() {
 o.off("scroll", z), n.off("scroll", z), window.innerWidth <= m.screenSmMin && !b.fixedHeight ? n.on("scroll", z) :o.on("scroll", z);
 }, B = function() {
-b.fixedHeight || (window.innerWidth < m.screenSmMin && !b.fixedHeight ? r.removeClass("target-logger-node").affix({
+b.fixedHeight || (window.innerWidth < m.screenSmMin && !b.fixedHeight ? r.affix({
 target:window,
 offset:{
 top:b.followAffixTop || 0
 }
-}) :r.addClass("target-logger-node").affix({
+}) :r.affix({
 target:o,
 offset:{
 top:b.followAffixTop || 0
@@ -12607,7 +12607,7 @@ onScrollBottom:function() {
 l.scrollBottom(q);
 },
 onScrollTop:function() {
-b.autoScrollActive = !1, l.scrollTop(q);
+b.autoScrollActive = !1, l.scrollTop(q), $("#" + b.logViewerID + "-affixedFollow").affix("checkPosition");
 },
 toggleAutoScroll:I,
 goChromeless:l.chromelessLink,
