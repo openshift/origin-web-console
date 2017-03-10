@@ -7593,7 +7593,7 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "\n" +
     "<div ng-show=\"state=='logs'\" ng-class=\"{ invisible: !sized }\">\n" +
     "<div class=\"log-view\" ng-attr-id=\"{{logViewerID}}\" ng-class=\"{'log-fixed-height': fixedHeight}\">\n" +
-    "<div id=\"{{logViewerID}}-affixedFollow\" class=\"log-scroll log-scroll-top\">\n" +
+    "<div id=\"{{logViewerID}}-affixedFollow\" class=\"log-scroll log-scroll-top\" ng-class=\"{'log-has-scroll':showScrollLinks}\">\n" +
     "<a ng-if=\"loading\" href=\"\" ng-click=\"toggleAutoScroll()\">\n" +
     "<span ng-if=\"!autoScrollActive\">Follow</span>\n" +
     "<span ng-if=\"autoScrollActive\">Stop Following</span>\n" +
