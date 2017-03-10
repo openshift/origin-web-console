@@ -8722,6 +8722,7 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "<table class=\"table table-bordered table-hover table-mobile table-layout-fixed\">\n" +
     "<colgroup>\n" +
     "<col class=\"col-sm-4\">\n" +
+    "<col class=\"col-sm-3\">\n" +
     "</colgroup>\n" +
     "<thead>\n" +
     "<tr>\n" +
