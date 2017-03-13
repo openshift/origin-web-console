@@ -4117,7 +4117,7 @@ b.deploymentConfigs = a.by("metadata.name"), x(), B(), E(), l.log("deploymentcon
 var L = p("isJenkinsPipelineStrategy");
 v.push(c.watch("builds", e, function(a) {
 b.builds = a.by("metadata.name"), A(), u.push(q(A, 3e5)), E(), l.log("builds (subscribe)", b.builds);
-})), c.list("limitranges", e, function(a) {
+})), c.list("limitranges", e).then(function(a) {
 b.limitRanges = a.by("metadata.name");
 }), k.onActiveFiltersChanged(function(a) {
 b.$apply(function() {
