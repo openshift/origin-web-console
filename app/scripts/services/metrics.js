@@ -204,6 +204,7 @@ angular.module("openshiftConsole")
         }).then(function(response) {
           return _.map(response.data, function(value) {
             return {
+              id: value.id,
               name: value.tags.metric_name,
               unit: value.tags.units,
               description: value.tags.description,
