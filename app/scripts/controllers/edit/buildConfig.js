@@ -244,7 +244,7 @@ angular.module('openshiftConsole')
               $scope.jenkinsfileOptions.type = 'inline';
             }
 
-            DataService.list("secrets", context, function(secrets) {
+            DataService.list("secrets", context).then(function(secrets) {
               var secretsByType = SecretsService.groupSecretsByType(secrets);
               var secretNamesByType =_.mapValues(secretsByType, function(secrets) {return _.map(secrets, 'metadata.name');});
               // Add empty option to the image/source secrets
