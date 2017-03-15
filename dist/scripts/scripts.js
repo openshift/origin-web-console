@@ -6343,7 +6343,7 @@ a.alerts[b.name] = b.data;
 var p = [], q = b("buildStrategy");
 j.get(d.project).then(_.spread(function(c, e) {
 return a.project = c, a.context = e, a.breadcrumbs[0].title = b("displayName")(c), g.canI("buildconfigs", "update", d.project) ? void h.get("buildconfigs", d.buildconfig, e).then(function(b) {
-a.buildConfig = b, n(), a.updatedBuildConfig = angular.copy(a.buildConfig), a.buildStrategy = q(a.updatedBuildConfig), a.strategyType = a.buildConfig.spec.strategy.type, a.envVars = a.buildStrategy.env || [], a.triggers = r(a.triggers, a.buildConfig.spec.triggers), a.sources = y(a.sources, a.buildConfig.spec.source), _.has(b, "spec.strategy.jenkinsPipelineStrategy.jenkinsfile") && (a.jenkinsfileOptions.type = "inline"), h.list("secrets", e, function(b) {
+a.buildConfig = b, n(), a.updatedBuildConfig = angular.copy(a.buildConfig), a.buildStrategy = q(a.updatedBuildConfig), a.strategyType = a.buildConfig.spec.strategy.type, a.envVars = a.buildStrategy.env || [], a.triggers = r(a.triggers, a.buildConfig.spec.triggers), a.sources = y(a.sources, a.buildConfig.spec.source), _.has(b, "spec.strategy.jenkinsPipelineStrategy.jenkinsfile") && (a.jenkinsfileOptions.type = "inline"), h.list("secrets", e).then(function(b) {
 var c = l.groupSecretsByType(b), d = _.mapValues(c, function(a) {
 return _.map(a, "metadata.name");
 });
