@@ -3,22 +3,24 @@
   <a href="" ng-click="toggleAnnotations()" ng-if="expandAnnotations">Hide Annotations</a>
 </p>
 <div ng-if="expandAnnotations">
-  <div ng-if="annotations" class="table-responsive">
-    <table class="table table-bordered table-bordered-columns key-value-table">
-      <tbody>
-        <tr ng-repeat="(annotationKey, annotationValue) in annotations">
-          <td class="key">{{annotationKey}}</td>
-          <td class="value">
-            <truncate-long-text
+  <div ng-if="annotations" class="table-responsive scroll-shadows-horizontal">
+    <div class="scroll-shadows-cover">
+      <table class="table table-bordered table-bordered-columns key-value-table">
+        <tbody>
+          <tr ng-repeat="(annotationKey, annotationValue) in annotations">
+            <td class="key">{{annotationKey}}</td>
+            <td class="value">
+              <truncate-long-text
                 content="annotationValue | prettifyJSON"
                 limit="500"
                 newlineLimit="20"
                 expandable="true">
-            </truncate-long-text>
-          </td>
-        </tr>
-      </tbody>
-    </table>
+              </truncate-long-text>
+            </td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
   </div>
   <p ng-if="!annotations" class="mar-bottom-xl">
     There are no annotations on this resource.

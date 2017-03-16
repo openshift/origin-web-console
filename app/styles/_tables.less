@@ -108,13 +108,13 @@
         }
       }
     }
-    &.table-bordered-columns > {
-      tbody, thead {
-        > tr > {
-          td, th {
-            border-left: 1px solid @table-border-color;
-            border-right: 1px solid @table-border-color;
-          }
+  }
+  &.table-bordered-columns > {
+    tbody, thead {
+      > tr > {
+        td, th {
+          border-left: 1px solid @table-border-color;
+          border-right: 1px solid @table-border-color;
         }
       }
     }
@@ -215,24 +215,31 @@
   }
 }
 
+// for testing
+.middle { background-color: #def3ff}
 .table-responsive {
   margin-bottom: @line-height-computed;
-  @media(max-width: @screen-xs-max) {
-    .table.table-bordered {
-      > tbody, > thead {
-        > tr {
-          &:first-child {
-            > td, > th {
-              border-top: 0;
-            }
-          }
+  .scroll-shadows-horizontal();
+    .table {
+      // custom background color can be set on scroll-shadows-horizontal() otherwise it will be white
+      background-color: transparent;
+      margin-bottom: 0;
+    }
+  .table.table-bordered {
+    border: 0;
+    > tbody, > thead {
+      > tr {
+        &:first-child {
           > td, > th {
-            &:first-child {
-              border-left: 0;
-            }
-            &:last-child {
-              border-right: 0;
-            }
+            border-top: 0;
+          }
+        }
+        > td, > th {
+          &:first-child {
+            border-left: 0;
+          }
+          &:last-child {
+            border-right: 0;
           }
         }
       }
