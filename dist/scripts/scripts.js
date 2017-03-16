@@ -2688,6 +2688,7 @@ params:f
 }).then(function(a) {
 return _.map(a.data, function(a) {
 return {
+id:a.id,
 name:a.tags.metric_name,
 unit:a.tags.units,
 description:a.tags.description,
@@ -11795,14 +11796,14 @@ delete m.alerts[b], L = 1, A();
 function w() {
 return window.OPENSHIFT_CONSTANTS.DISABLE_CUSTOM_METRICS ? e.when({}) :j.getCustomMetrics(m.pod).then(function(a) {
 angular.forEach(a, function(a) {
-var b = a.description || a.name, c = a.unit || "";
+var b = a.description || a.name, c = a.unit || "", d = "custom/" + a.id.replace(/.*\/custom\//, "");
 m.metrics.push({
 label:b,
 units:c,
 chartPrefix:"custom-" + _.uniqueId("custom-metric-"),
 chartType:"spline",
 datasets:[ {
-id:"custom/" + a.name,
+id:d,
 label:b,
 type:a.type,
 data:[]

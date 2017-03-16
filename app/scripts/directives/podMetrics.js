@@ -358,6 +358,11 @@ angular.module('openshiftConsole')
               // get the unit value if specified
               var unit =  metric.unit || "";
 
+              // A typical metric ID is of the form "pod/<pod-id>/custom/<some-endpoint-info>"
+              // such as "pod/be381d4b-87fc-11e5-b2a3-525400b33d1d/custom/JVM-Heap-Memory-Used".
+              // We only want part of the metric ID - "custom/" and everything after it.
+              var datasetId = "custom/" + metric.id.replace(/.*\/custom\//, '');
+
               scope.metrics.push({
                 label: label,
                 units: unit,
@@ -366,7 +371,7 @@ angular.module('openshiftConsole')
 
                 datasets: [
                   {
-                    id: "custom/" + metric.name,
+                    id: datasetId,
                     label: label,
                     type: metric.type,
                     data: []
