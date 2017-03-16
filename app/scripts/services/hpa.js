@@ -193,11 +193,42 @@ angular.module("openshiftConsole")
       });
     };
 
+    // Group HPAs by the object they scale.
+    //
+    // Returns an hpaByResource map with
+    //   path:   hpaByResource[kind][name]
+    //   value:  array of HPA objects
+    var groupHPAs = function(horizontalPodAutoscalers) {
+      var hpaByResource = {};
+      _.each(horizontalPodAutoscalers, function(hpa) {
+        var name = hpa.spec.scaleRef.name, kind = hpa.spec.scaleRef.kind;
+        if (!name || !kind) {
+          return;
+        }
+
+        // TODO: Handle groups and subresources in hpa.spec.scaleRef
+        // var groupVersion = APIService.parseGroupVersion(hpa.spec.scaleRef.apiVersion) || {};
+        // var group = groupVersion.group || '';
+        // if (!_.has(hpaByResource, [group, kind, name])) {
+        //   _.set(hpaByResource, [group, kind, name], []);
+        // }
+        // hpaByResource[group][kind][name].push(hpa);
+
+        if (!_.has(hpaByResource, [kind, name])) {
+          _.set(hpaByResource, [kind, name], []);
+        }
+        hpaByResource[kind][name].push(hpa);
+      });
+
+      return hpaByResource;
+    };
+
     return {
       convertRequestPercentToLimit: convertRequestPercentToLimit,
       convertLimitPercentToRequest: convertLimitPercentToRequest,
       hasCPURequest: hasCPURequest,
       filterHPA: filterHPA,
-      getHPAWarnings: getHPAWarnings
+      getHPAWarnings: getHPAWarnings,
+      groupHPAs: groupHPAs
     };
   });

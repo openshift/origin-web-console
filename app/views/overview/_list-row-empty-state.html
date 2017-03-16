@@ -1,0 +1,38 @@
+<h2>No deployments.</h2>
+<div ng-if="row.imageChangeTriggers.length">
+  A new deployment will start automatically when
+  <span ng-if="row.imageChangeTriggers.length === 1">
+    an image is available for
+    <a ng-href="{{row.urlForImageChangeTrigger(row.imageChangeTriggers[0])}}">
+      {{row.imageChangeTriggers[0].imageChangeParams.from | imageObjectRef : row.apiObject.metadata.namespace}}</a>.
+  </span>
+  <span ng-if="row.imageChangeParams.length > 1">
+    one of the images referenced by this deployment config changes.
+  </span>
+</div>
+<div ng-if="!row.imageChangeTriggers.length">
+  <p>
+    No deployments for {{row.apiObject.kind | humanizeKind}}
+    <a ng-href="{{row.apiObject | navigateResourceURL}}">{{row.apiObject.metadata.name}}</a>.
+  </p>
+  <div ng-if="row.apiObject.kind === 'DeploymentConfig'">
+    <div ng-if="pipeline = row.pipelines[0]">
+      <p>
+        This deployment config is part of the pipeline
+        <a ng-href="{{pipeline | navigateResourceURL}}">{{pipeline.metadata.name}}</a>.
+      </p>
+      <div ng-if="('buildconfigs/instantiate' | canI : 'create')">
+        <button class="btn btn-primary" ng-click="row.startBuild(pipeline)">
+          Start Pipeline
+        </button>
+      </div>
+    </div>
+    <div ng-if="!row.pipelines.length">
+      <button ng-if="'deploymentconfigs' | canI : 'update'"
+              class="btn btn-primary"
+              ng-click="row.startDeployment()">
+        Start Deployment
+      </button>
+    </div>
+  </div>
+</div>

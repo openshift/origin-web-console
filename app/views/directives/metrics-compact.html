@@ -1,4 +1,4 @@
-<div in-view="updateInView($inview)" in-view-options="{ debounce: 50 }">
+<div in-view="updateInView($inview)" in-view-options="{ throttle: 50 }">
   <div ng-repeat="metric in metrics" ng-if="!metric.compactCombineWith" class="metrics-compact">
     <div ng-attr-id="{{metric.chartID}}" class="metrics-sparkline"></div>
     <div class="metrics-usage">

@@ -1,0 +1,27 @@
+<span ng-if="buildCounts.show" class="animate-if">
+  <span ng-if="buildCounts.label" class="builds-label">
+    {{buildCounts.label}}
+  </span>
+  <span ng-repeat="phase in buildCounts.interestingPhases"
+        ng-if="buildCounts.countByPhase[phase]"
+        class="icon-count">
+    <span dynamic-content="{{buildCounts.countByPhase[phase]}} {{phase}}"
+          data-toggle="tooltip"
+          data-trigger="hover"
+          aria-hidden="true">
+      <span ng-switch="phase" class="hide-ng-leave">
+        <span ng-switch-when="Failed" class="status-icon">
+          <i class="pficon pficon-error-circle-o text-danger"></i>
+        </span>
+        <span ng-switch-default>
+          <status-icon status="phase"></status-icon>
+        </span>
+      </span>
+      {{buildCounts.countByPhase[phase]}}
+      <span class="sr-only">{{phase}}</span>
+    </span>
+  </span>
+  <span ng-if="buildCounts.currentStage" class="running-stage">
+    Stage {{buildCounts.currentStage.name}}
+  </span>
+</span>

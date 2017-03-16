@@ -1,0 +1,21 @@
+<div class="list-pf-item" ng-class="{ active: row.expanded }">
+  <div class="list-pf-container" ng-click="row.toggleExpand($event)">
+    <div class="list-pf-chevron">
+      <a href="" ng-click="row.toggleExpand($event, true)" class="toggle-expand-link">
+        <span ng-if="row.expanded">
+          <span class="fa fa-angle-down" aria-hidden="true"></span>
+          <span class="sr-only">Collapse</span>
+        </span>
+        <span ng-if="!row.expanded">
+          <span class="fa fa-angle-right" aria-hidden="true"></span>
+          <span class="sr-only">Expand</span>
+        </span>
+      </a>
+    </div>
+    <div ng-include src=" 'views/overview/_list-row-content.html' " class="list-pf-content"></div>
+    <div ng-include src=" 'views/overview/_list-row-actions.html' "></div>
+  </div>
+  <div class="list-pf-expansion collapse" ng-if="row.expanded" ng-class="{ in: row.expanded }">
+    <div ng-include src=" 'views/overview/_list-row-expanded.html' "></div>
+  </div>
+</div>

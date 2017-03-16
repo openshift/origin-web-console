@@ -1,4 +1,16 @@
-<div ng-attr-id="{{chartId}}" class="pod-donut"></div>
+<div ng-attr-id="{{chartId}}" class="pod-donut" ng-class="{ mini: mini }"></div>
+
+<div ng-if="mini" class="donut-mini-text">
+  <span ng-if="!idled">
+    {{pods | hashSize}}
+    <span ng-if="(pods | hashSize) === 1">pod</span>
+    <span ng-if="(pods | hashSize) !== 1">pods</span>
+  </span>
+  <span ng-if="idled">
+    Idle
+  </span>
+</div>
+
 <!-- Include text values for screen readers -->
 <div class="sr-only">
   <div ng-if="(pods | hashSize) === 0">No pods.</div>

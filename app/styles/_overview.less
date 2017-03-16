@@ -1,3 +1,5 @@
+@list-pf-border-color: #dcdcdc;
+@list-pf-item-active-border-color: #bbb;
 @overview-border-light-gray: #ededed;
 @overview-border-gray: #d6d6d6;
 @overview-font-weight: 300;
@@ -12,6 +14,394 @@
 @tile-min-height:      256px;
 @tile-min-height-lg:   352px;
 
+
+// NEW OVERVIEW STYLES
+@mini-log-font-size: 11px;
+@mini-log-line-height: (@mini-log-font-size + 2);
+@mini-log-num-lines: 7;
+
+.build-count {
+  .builds,
+  .pipelines {
+    display: block;
+  }
+  .icon-count {
+    display: inline-block;
+    margin-right: 5px;
+    &, [data-toggle="tooltip"] {
+      cursor: help;
+    }
+  }
+  .running-stage {
+    .small();
+    .text-muted();
+  }
+}
+.builds-label {
+  margin-right: 5px;
+}
+.mini-log {
+  background-color: @color-pf-black-100;
+  border: 1px solid @color-pf-black-300;
+  color: @color-pf-black-700;
+  font-family: @font-family-monospace;
+  font-size: @mini-log-font-size;
+  margin-bottom: 5px;
+  margin-top: 5px;
+  padding: 5px;
+  .truncate();
+  .mini-log-content {
+    line-height: @mini-log-line-height;
+    min-height: (@mini-log-num-lines * @mini-log-line-height);
+    .mini-log-line {
+      white-space: pre;
+    }
+  }
+}
+.notification-icon-count {
+  display: inline-block;
+  margin: 0 5px 0 0;
+  [data-toggle="tooltip"] {
+    cursor: help;
+  }
+}
+
+.overview-new {
+  .app-heading {
+    display: flex;
+    justify-content: space-between;
+    // Stack the route at mobile. Use `max-width: @screen-sm-max` to set just
+    // the mobile styles. Otherwise we'd need to reset the default h3 margins
+    // at wider widths.
+    @media (max-width: @screen-sm-max) {
+      flex-direction: column;
+      justify-content: flex-start;
+      .overview-route {
+        .h4();
+        margin-top: -5px;
+        margin-bottom: 15px;
+      }
+    }
+  }
+  .build-pipeline {
+    border-color: @overview-border-gray;
+  }
+  .build-pipelines {
+    margin-top: 10px;
+    margin-bottom: 20px;
+  }
+  .c3-line {
+    stroke-width: 1px;
+  }
+  .component-label {
+    font-size: @component-label;
+    font-weight: 500;
+    padding: 0 0 4px 0;
+    .text-muted();
+    text-transform: uppercase;
+    .sublabel {
+      font-size: (@component-label - 1);
+      margin-left: 2px;
+      text-transform: none;
+    }
+  }
+  .data-toolbar-dropdown {
+    display: inline-block;
+  }
+  .data-toolbar-filter {
+    display: flex;
+    .label-filter,
+    .name-filter {
+      flex-grow: 1;
+    }
+    .label-filter,
+    .name-filter input {
+      // Avoid double border since the input is directly beside the filter select.
+      border-left: 0;
+    }
+    .label-filter .label-filter-key .selectize-input.not-full {
+      // FIXME: temp workaround for problem created by
+      // https://github.com/openshift/origin-web-console/pull/1216
+      width: auto;
+    }
+    .name-filter {
+      form,
+      input {
+        width: 100%;
+      }
+      input {
+        // Extra padding from the filter type combo
+        padding-left: 5px;
+      }
+    }
+    .ui-select-container {
+      width: 100px;
+    }
+    .ui-select-container .ui-select-match .btn,
+    .label-filter-add.btn {
+      box-shadow: none;
+      -webkit-box-shadow: none;
+    }
+  }
+  .data-toolbar-label {
+    margin-right: 7px;
+  }
+  // TODO: improve on this as it's pretty hacky
+  .deployment-connector-arrow {
+    display: inline-block;
+    font-size: 300%;
+    line-height: 1;
+    margin: 50px 0 0 10px;
+    text-align: center;
+    .text-muted();
+    @media (max-width: @screen-xs-max) {
+      margin: -3px auto 0 -4px;
+      transform: rotate(90deg);
+      width: 100%
+    }
+  }
+  .expanded-section {
+    margin-top: 20px;
+    > .row > [class^=col-] {
+      margin-bottom: 10px;
+    }
+    h3 {
+      line-height: 1.4;
+      margin-bottom: 5px;
+      margin-top: 0;
+      width: 100%; // IE
+      .word-break();
+    }
+    .section-title {
+      .h4();
+      border-bottom: 1px solid @list-pf-border-color;
+      padding-bottom: 10px;
+      &.no-border {
+        border-bottom: 0;
+        padding-bottom: 0;
+      }
+    }
+  }
+  .filter-status {
+    margin-bottom: 5px;
+  }
+  h1, h2 {
+    // Don't clip descenders.
+    line-height: normal;
+    min-width: 130px; // prevent name from complete truncation at mobile
+    .truncate();
+  }
+  h2 {
+    margin-top: 0;
+    > .component-label {
+      padding-bottom: 0;
+    }
+  }
+  .list-pf {
+    border-bottom-color: @list-pf-border-color;
+    margin-bottom: 50px;
+  }
+  .list-pf-actions {
+    // if no actions-dropdown-kebab is present, still take up space
+    min-width: 19px;
+  }
+  .list-pf-details {
+    @media (min-width: @screen-sm-min) {
+      justify-content: flex-end;
+    }
+  }
+  .list-pf-expansion.in {
+    .deployment-donut > div[row] {
+      justify-content: center;
+    }
+    .empty-state-message {
+      margin-bottom: 30px;
+      margin-top: 20px;
+      // Avoid breaking long identifiers like image stream names in empty state message.
+      max-width: none;
+      padding: 0;
+      .text-center();
+      p {
+        .word-break();
+      }
+    }
+    .list-pf-content {
+      max-width: 100%;
+    }
+    .list-pf-container {
+      display: block; // so that .word-break() will work in IE
+    }
+    .pod-donut {
+      .text-center();
+    }
+  }
+  .list-pf-item {
+    border-top-color: @list-pf-border-color;
+    &.active {
+      border-top-color: @list-pf-item-active-border-color;
+    }
+    > .list-pf-container {
+      cursor: pointer;
+      > .list-pf-content {
+        @media (max-width: @screen-xs-max) {
+          align-items: stretch;
+          flex-direction: column;
+          width: 100%; // IE
+          .word-break();
+        }
+        @media (min-width: @screen-sm-min) {
+          // Prevent the row from shrinking slightly on expand.
+          min-height: 45px;
+          padding-right: 15px;
+        }
+      }
+      .toggle-expand-link {
+        color: inherit;
+      }
+    }
+  }
+  .list-pf-name {
+    display: flex;
+    flex-direction: column;
+    @media (max-width: @screen-sm-max) {
+      width: auto !important;
+    }
+    @media (min-width: @screen-md-min) {
+      align-items: center;
+      flex-direction: row;
+    }
+    h3 {
+      line-height: 1;
+      margin: 0 15px 0 0;
+      @media (min-width: @screen-md-min) {
+        width: 60%;
+      }
+      a {
+        .word-break();
+      }
+    }
+  }
+  .list-row-tabset {
+    margin-top: 20px;
+    @media (min-width: @screen-sm-min) {
+      margin-top: 0;
+    }
+    .nav-tabs > li.active > a .build-count {
+      color: #4d5258;
+    }
+  }
+  .list-view-pf-actions .actions-dropdown-kebab {
+    font-size: 18px;
+    // Give a bigger click target (fill `list-view-pf-actions` width)
+    width: 100%;
+  }
+  .loading-message {
+    margin-top: 20px;
+  }
+  .metrics-collapsed {
+    flex-grow: 1;
+    .text-center();
+  }
+  .metrics-summary {
+    display: inline-block;
+    .text-center();
+    + .metrics-summary {
+      margin-left: 20px;
+    }
+  }
+  .metrics-compact {
+    white-space : nowrap;
+    .metrics-sparkline {
+      border-bottom: 1px solid #ededed;
+      display: inline-block;
+      height: 28px;
+      max-width: 300px;
+      vertical-align: -6px;
+      width: calc(~"100% - 80px");
+    }
+    .metrics-usage {
+      display: inline-block;
+      margin-left: 10px;
+      max-width: 80px;
+    }
+    .usage-label {
+      // Make sure the labels align with the bottom of the chart.
+      line-height: 1;
+      margin-bottom: -1px;
+    }
+    .usage-value {
+      line-height: 1;
+      margin: 3px 0;
+    }
+  }
+  .middle .middle-container {
+    // FIXME: workaround issue where middle-container usage of flexbox causes content to not fill width
+    > div {
+      width: 100%;
+    }
+    .container-fluid {
+      padding-left: 20px;
+      padding-right: 20px;
+    }
+  }
+  .networking-section .row + .row:before {
+    content: '';
+    display: block;
+    border-top: 1px solid @list-pf-border-color;
+    margin: 0 20px 10px;
+  }
+  overview-list-row + overview-list-row .list-pf-item.active {
+    // avoid double borders when list-pf-item is open
+    margin-top: -1px;
+  }
+  .overview-route {
+    .word-break();
+  }
+  .overview-routes + .overview-routes {
+    .mar-top-md();
+  }
+  .overview-row-inline-actions {
+    .mar-left-md();
+  }
+  pod-donut[mini] {
+    align-items: center;
+    display: flex;
+  }
+  .status-icons {
+    margin-top: 5px;
+    @media (min-width: @screen-md-min) {
+      margin-right: 15px;
+      margin-top: 0;
+      width: 40%;
+    }
+  }
+  :not(.tab-pane) > overview-pipelines > .expanded-section {
+      margin-bottom: 30px;
+    }
+  .toolbar-container {
+    margin-top: 10px;
+    margin-bottom: 5px;
+  }
+  .triggers {
+    margin-bottom: 20px;
+  }
+  .usage-value {
+    font-size: 18px;
+    font-weight: 300;
+    line-height: 1;
+  }
+  .usage-label {
+    .small();
+    .text-muted();
+  }
+  .view-by-options {
+    align-items: center;
+    display: flex;
+    @media (max-width: @screen-xs-max) {
+      margin-top: 10px;
+    }
+  }
+}
 
 .overview {
   font-weight: @overview-font-weight;

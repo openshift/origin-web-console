@@ -33,6 +33,23 @@ angular
     'openshiftCommon'
   ])
   .config(function ($routeProvider) {
+    var overviewRoute;
+    if (window.OPENSHIFT_CONSTANTS.HIDE_NEW_OVERVIEW ||
+        localStorage.getItem('hide-new-overview') === 'true') {
+      overviewRoute = {
+        templateUrl: 'views/overview.html',
+        controller: 'OverviewController'
+      };
+    } else {
+      // TODO Rename new overview controller / view when the old is removed
+      overviewRoute = {
+        templateUrl: 'views/new-overview.html',
+        controller: 'NewOverviewController',
+        controllerAs: 'overview',
+        reloadOnSearch: false
+      };
+    }
+
     $routeProvider
       .when('/', {
         templateUrl: 'views/projects.html',
@@ -47,15 +64,7 @@ angular
           return '/project/' + encodeURIComponent(params.project) + "/overview";
         }
       })
-      .when('/project/:project/overview', {
-        templateUrl: 'views/overview.html',
-        controller: 'OverviewController'
-      })
-      // Old overview, keep for now in case of emergency
-      // .when('/project/:project/overview', {
-      //   templateUrl: 'views/project.html',
-      //   controller: 'TopologyController'
-      // })
+      .when('/project/:project/overview', overviewRoute)
       .when('/project/:project/quota', {
         templateUrl: 'views/quota.html',
         controller: 'QuotaController'

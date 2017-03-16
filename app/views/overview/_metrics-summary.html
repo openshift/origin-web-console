@@ -1,0 +1,16 @@
+<div in-view="metricsSummary.updateInView($inview)" in-view-options="{ throttle: 50 }">
+  <div ng-repeat="metric in metricsSummary.metrics" class="metrics-summary">
+    <div class="usage-value">
+      <span class="fade-inline" ng-hide="metric.currentUsage | isNil">
+        {{metric.formatUsage(metric.currentUsage)}}
+      </span>
+      <span ng-if="metric.currentUsage | isNil" class="text-muted" aria-hidden="true">
+        --
+      </span>
+    </div>
+    <div class="usage-label">
+      {{metric.usageUnits(metric.currentUsage) | capitalize}}
+      {{metric.label}}
+    </div>
+  </div>
+</div>

@@ -6,7 +6,9 @@ angular.module('openshiftConsole')
       restrict: 'E',
       scope: {
         build: '=',
+        // TODO: Remove when the remove the previous overview.
         expandOnlyRunning: '=?',
+        collapsePending: '=?',
         buildConfigNameOnExpanded: '=?'
       },
       // To fill height as flexbox item.

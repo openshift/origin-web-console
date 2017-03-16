@@ -16,7 +16,8 @@ angular.module('openshiftConsole')
       scope: {
         pods: '=',
         desired: '=?',
-        idled: '=?'
+        idled: '=?',
+        mini: '=?'
       },
       templateUrl: 'views/directives/pod-donut.html',
       link: function($scope, element) {
@@ -28,6 +29,9 @@ angular.module('openshiftConsole')
         $scope.chartId = _.uniqueId('pods-donut-chart-');
 
         function updateCenterText() {
+          if ($scope.mini) {
+            return;
+          }
           var smallText;
           // Don't show failed pods like evicted pods in the donut.
           var pods = _.reject($scope.pods, { status: { phase: 'Failed' } });
@@ -55,11 +59,11 @@ angular.module('openshiftConsole')
             label: {
               show: false
             },
-            width: 10
+            width: $scope.mini ? 5 : 10
           },
           size: {
-            height: 150,
-            width: 150
+            height: $scope.mini ? 45 : 150,
+            width: $scope.mini ? 45 : 150
           },
           legend: {
             show: false
@@ -111,6 +115,15 @@ angular.module('openshiftConsole')
             }
           }
         };
+
+        if ($scope.mini) {
+          config.padding = {
+            top: 0,
+            right: 0,
+            bottom: 0,
+            left: 0
+          };
+        }
 
         function updateChart(countByPhase) {
           var data = {

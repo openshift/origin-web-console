@@ -1,8 +1,26 @@
 'use strict';
 
 angular.module("openshiftConsole")
-  .factory("HTMLService", function() {
+  .factory("HTMLService",
+           function(BREAKPOINTS) {
     return {
+      // Ge the breakpoint for the current screen width.
+      getBreakpoint: function() {
+        if (window.innerWidth < BREAKPOINTS.screenSmMin) {
+          return 'xs';
+        }
+
+        if (window.innerWidth < BREAKPOINTS.screenMdMin) {
+          return 'sm';
+        }
+
+        if (window.innerWidth < BREAKPOINTS.screenLgMin) {
+          return 'md';
+        }
+
+        return 'lg';
+      },
+
       // Based on https://github.com/drudru/ansi_up/blob/v1.3.0/ansi_up.js#L93-L97
       // and https://github.com/angular/angular.js/blob/v1.5.8/src/ngSanitize/filter/linky.js#L131-L132
       // The AngularJS `linky` regex will avoid matching special characters like `"` at

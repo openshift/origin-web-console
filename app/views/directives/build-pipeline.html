@@ -3,5 +3,9 @@
     <div class="animate-if" ng-if="build.status.phase === 'Running'" ng-include="'views/directives/_build-pipeline-expanded.html'"></div>
     <div class="animate-if" ng-if="build.status.phase !== 'Running'" ng-include="'views/directives/_build-pipeline-collapsed.html'"></div>
   </div>
-  <div ng-if="!expandOnlyRunning" ng-include="'views/directives/_build-pipeline-expanded.html'"></div>
+  <div ng-if="collapsePending">
+    <div ng-if="build.status.phase === 'New' || build.status.phase === 'Pending'" ng-include="'views/directives/_build-pipeline-collapsed.html'"></div>
+    <div ng-if="build.status.phase !== 'New' && build.status.phase !== 'Pending'" ng-include="'views/directives/_build-pipeline-expanded.html'"></div>
+  </div>
+  <div ng-if="!expandOnlyRunning && !collapsePending" ng-include="'views/directives/_build-pipeline-expanded.html'"></div>
 </div>
