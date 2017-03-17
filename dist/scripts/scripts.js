@@ -6288,7 +6288,7 @@ params:{
 labelSelector:q("deploymentConfig") + "=" + a.deploymentConfigName
 }
 }
-})), f.list("limitranges", e, function(a) {
+})), f.list("limitranges", e).then(function(a) {
 C = a.by("metadata.name"), D();
 }), f.list("configmaps", e, null, {
 errorNotification:!1
