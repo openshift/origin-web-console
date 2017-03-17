@@ -74,8 +74,8 @@ angular.module('openshiftConsole')
               tls: angular.copy(_.get(route, 'spec.tls'))
             };
 
-            DataService.list("services", context, function(services) {
-              var servicesByName = services.by("metadata.name");
+            DataService.list("services", context).then(function(resp) {
+              var servicesByName = resp.by("metadata.name");
               var to = _.get(route, 'spec.to', {});
               $scope.loading = false;
               $scope.services = orderByDisplayName(servicesByName);

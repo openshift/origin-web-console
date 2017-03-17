@@ -7951,7 +7951,7 @@ wildcardPolicy:_.get(l, "spec.wildcardPolicy"),
 path:_.get(l, "spec.path"),
 targetPort:_.get(l, "spec.port.targetPort"),
 tls:angular.copy(_.get(l, "spec.tls"))
-}, g.list("services", k, function(a) {
+}, g.list("services", k).then(function(a) {
 var b = a.by("metadata.name"), c = _.get(l, "spec.to", {});
 d.loading = !1, d.services = m(b), d.routing.to = {
 service:b[c.name],
