@@ -230,9 +230,9 @@ angular.module("openshiftConsole")
           $scope.memoryProblems = LimitRangesService.validatePodLimits($scope.limitRanges, 'memory', [$scope.container], project);
         };
 
-        DataService.list("limitranges", context, function(limitRanges) {
-          $scope.limitRanges = limitRanges.by("metadata.name");
-          if ($filter('hashSize')(limitRanges) !== 0) {
+        DataService.list("limitranges", context).then(function(resp) {
+          $scope.limitRanges = resp.by("metadata.name");
+          if (!_.isEmpty($scope.limitRanges)) {
             $scope.$watch('container', validatePodLimits, true);
           }
         });
@@ -249,13 +249,13 @@ angular.module("openshiftConsole")
 
         var quotas, clusterQuotas;
 
-        DataService.list("resourcequotas", context, function(quotaData) {
-          quotas = quotaData.by("metadata.name");
+        DataService.list("resourcequotas", context).then(function(resp) {
+          quotas = resp.by("metadata.name");
           Logger.log("quotas", quotas);
         });
 
         // TODO clean up anything not needed here
-        DataService.list("appliedclusterresourcequotas", context, function(clusterQuotaData) {
+        DataService.list("appliedclusterresourcequotas", context).then(function(clusterQuotaData) {
           clusterQuotas = clusterQuotaData.by("metadata.name");
           Logger.log("cluster quotas", clusterQuotas);
         });

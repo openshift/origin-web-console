@@ -8260,15 +8260,15 @@ a.project = e, a.breadcrumbs[0].title = r("displayName")(e), d.sourceURI && (a.s
 var s = function() {
 a.hideCPU || (a.cpuProblems = j.validatePodLimits(a.limitRanges, "cpu", [ a.container ], e)), a.memoryProblems = j.validatePodLimits(a.limitRanges, "memory", [ a.container ], e);
 };
-f.list("limitranges", g, function(b) {
-a.limitRanges = b.by("metadata.name"), 0 !== r("hashSize")(b) && a.$watch("container", s, !0);
+f.list("limitranges", g).then(function(b) {
+a.limitRanges = b.by("metadata.name"), _.isEmpty(a.limitRanges) || a.$watch("container", s, !0);
 });
 var u, E, F = function() {
 return a.scaling.autoscale ? void (a.showCPURequestWarning = !l.hasCPURequest([ a.container ], a.limitRanges, e)) :void (a.showCPURequestWarning = !1);
 };
-f.list("resourcequotas", g, function(a) {
+f.list("resourcequotas", g).then(function(a) {
 u = a.by("metadata.name"), b.log("quotas", u);
-}), f.list("appliedclusterresourcequotas", g, function(a) {
+}), f.list("appliedclusterresourcequotas", g).then(function(a) {
 E = a.by("metadata.name"), b.log("cluster quotas", E);
 }), a.$watch("scaling.autoscale", F), a.$watch("container", F, !0), a.$watch("name", function(a) {
 A.value = a;
