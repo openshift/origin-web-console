@@ -7171,8 +7171,8 @@ r(p + " could not be loaded.", q(a));
 var s = function() {
 e.hideCPU || (e.cpuProblems = k.validatePodLimits(e.limitRanges, "cpu", e.containers, c)), e.memoryProblems = k.validatePodLimits(e.limitRanges, "memory", e.containers, c);
 };
-j.list("limitranges", m, function(b) {
-e.limitRanges = b.by("metadata.name"), 0 !== a("hashSize")(b) && e.$watch("containers", s, !0);
+j.list("limitranges", m).then(function(a) {
+e.limitRanges = a.by("metadata.name"), _.isEmpty(e.limitRanges) || e.$watch("containers", s, !0);
 });
 }));
 } ]), angular.module("openshiftConsole").controller("EditBuildConfigController", [ "$scope", "$filter", "$location", "$routeParams", "AlertMessageService", "ApplicationGenerator", "AuthorizationService", "DataService", "Navigate", "ProjectsService", "SOURCE_URL_PATTERN", "SecretsService", "keyValueEditorUtils", function(a, b, c, d, e, f, g, h, i, j, k, l, m) {
