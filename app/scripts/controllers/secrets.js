@@ -25,7 +25,7 @@ angular.module('openshiftConsole')
         $scope.project = project;
         $scope.context = context;
 
-        DataService.list("secrets", context, function(secrets) {
+        DataService.list("secrets", context).then(function(secrets) {
           $scope.secretsByType = SecretsService.groupSecretsByType(secrets);
           $scope.loaded = true;
         });
