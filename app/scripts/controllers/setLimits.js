@@ -129,9 +129,9 @@ angular.module('openshiftConsole')
           $scope.memoryProblems = LimitRangesService.validatePodLimits($scope.limitRanges, 'memory', $scope.containers, project);
         };
 
-        DataService.list("limitranges", context, function(limitRanges) {
-          $scope.limitRanges = limitRanges.by("metadata.name");
-          if ($filter('hashSize')(limitRanges) !== 0) {
+        DataService.list("limitranges", context).then(function(resp) {
+          $scope.limitRanges = resp.by("metadata.name");
+          if (!_.isEmpty($scope.limitRanges)) {
             $scope.$watch('containers', validatePodLimits, true);
           }
         });
