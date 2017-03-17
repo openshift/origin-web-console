@@ -7865,7 +7865,7 @@ var e = {}, f = function() {
 var c = _.get(d, "spec.template.spec.containers", []);
 a.showCPURequestWarning = !i.hasCPURequest(c, e, b);
 };
-h.list("limitranges", j, function(a) {
+h.list("limitranges", j).then(function(a) {
 e = a.by("metadata.name"), f();
 });
 }
