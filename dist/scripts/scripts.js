@@ -6491,7 +6491,7 @@ a.isActive = h.isActiveReplicaSet(a.replicaSet, a.deployment);
 P(a.replicaSet) && g.list({
 group:"extensions",
 resource:"deployments"
-}, i, function(b) {
+}, i).then(function(b) {
 var d = b.by("metadata.name"), e = new LabelSelector(a.replicaSet.spec.selector);
 return a.deployment = _.find(d, function(a) {
 var b = new LabelSelector(a.spec.selector);
@@ -6584,7 +6584,7 @@ r = a.by("metadata.name"), J(), M();
 }, {
 poll:D,
 pollInterval:6e4
-})), g.list("limitranges", i, function(a) {
+})), g.list("limitranges", i).then(function(a) {
 B = a.by("metadata.name"), M();
 });
 var T = b("deploymentIsLatest");

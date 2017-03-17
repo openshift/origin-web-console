@@ -179,8 +179,8 @@ angular.module('openshiftConsole')
         $scope.projectContext = context;
 
 
-        DataService.list("configmaps", context, null, { errorNotification: false }).then(function(configMapData) {
-          configMapDataOrdered = orderByDisplayName(configMapData.by("metadata.name"));
+        DataService.list("configmaps", context, null, { errorNotification: false }).then(function(resp) {
+          configMapDataOrdered = orderByDisplayName(resp.by("metadata.name"));
           $scope.valueFromObjects = configMapDataOrdered.concat(secretDataOrdered);
         }, function(e) {
           if (e.code === 403) {
@@ -190,8 +190,8 @@ angular.module('openshiftConsole')
           displayError('Could not load config maps', getErrorDetails(e));
         });
 
-        DataService.list("secrets", context, null, { errorNotification: false }).then(function(secretData) {
-          secretDataOrdered = orderByDisplayName(secretData.by("metadata.name"));
+        DataService.list("secrets", context, null, { errorNotification: false }).then(function(resp) {
+          secretDataOrdered = orderByDisplayName(resp.by("metadata.name"));
           $scope.valueFromObjects = secretDataOrdered.concat(configMapDataOrdered);
         }, function(e) {
           if (e.code === 403) {
@@ -306,8 +306,8 @@ angular.module('openshiftConsole')
           DataService.list({
             group: 'extensions',
             resource: 'deployments'
-          }, context, function(deploymentData) {
-            var deployments = deploymentData.by('metadata.name');
+          }, context).then(function(resp) {
+            var deployments = resp.by('metadata.name');
             var replicaSetSelector = new LabelSelector($scope.replicaSet.spec.selector);
             $scope.deployment = _.find(deployments, function(deployment) {
               var deploymentSelector = new LabelSelector(deployment.spec.selector);
@@ -542,8 +542,8 @@ angular.module('openshiftConsole')
 
         // List limit ranges in this project to determine if there is a default
         // CPU request for autoscaling.
-        DataService.list("limitranges", context, function(response) {
-          limitRanges = response.by("metadata.name");
+        DataService.list("limitranges", context).then(function(resp) {
+          limitRanges = resp.by("metadata.name");
           updateHPAWarnings();
         });
 
