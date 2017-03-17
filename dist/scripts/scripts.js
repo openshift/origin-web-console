@@ -7021,7 +7021,7 @@ group:a.group || ""
 }, f.list({
 group:a.group,
 resource:k.kindToResource(a.kind)
-}, c.context, function(b) {
+}, c.context).then(function(b) {
 c.unfilteredResources = b.by("metadata.name"), c.labelSuggestions = {}, i.addLabelSuggestionsFromResources(c.unfilteredResources, c.labelSuggestions), i.setLabelSuggestions(c.labelSuggestions), c.resources = i.getLabelSelector().select(c.unfilteredResources), c.emptyMessage = "No " + k.kindToResource(a.kind, !0) + " to show", l();
 });
 }

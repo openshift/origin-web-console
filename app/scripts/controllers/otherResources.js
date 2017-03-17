@@ -129,7 +129,7 @@ angular.module('openshiftConsole')
       DataService.list({
           group: selected.group,
           resource: APIService.kindToResource(selected.kind)
-        }, $scope.context, function(resources) {
+        }, $scope.context).then(function(resources) {
         $scope.unfilteredResources = resources.by("metadata.name");
         // Clear the suggestions since they'll be different for each resource type
         $scope.labelSuggestions = {};
