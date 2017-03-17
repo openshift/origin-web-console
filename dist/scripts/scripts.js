@@ -6795,7 +6795,7 @@ c.unwatchAll(g);
 b.projectName = a.project, b.secretsByType = {}, b.alerts = b.alerts || {}, c.getAlerts().forEach(function(a) {
 b.alerts[a.name] = a.data;
 }), c.clearAlerts(), e.get(a.project).then(_.spread(function(a, c) {
-b.project = a, b.context = c, d.list("secrets", c, function(a) {
+b.project = a, b.context = c, d.list("secrets", c).then(function(a) {
 b.secretsByType = f.groupSecretsByType(a), b.loaded = !0;
 });
 }));
