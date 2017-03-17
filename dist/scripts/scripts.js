@@ -5104,9 +5104,9 @@ b[a.metadata.name] = d;
 }), b;
 };
 e.get(b.project).then(_.spread(function(a, e) {
-c.project = a, d.list("resourcequotas", e, function(a) {
+c.project = a, d.list("resourcequotas", e).then(function(a) {
 c.quotas = _.sortBy(a.by("metadata.name"), "metadata.name"), c.orderedTypesByQuota = k(c.quotas), f.log("quotas", c.quotas);
-}), d.list("appliedclusterresourcequotas", e, function(a) {
+}), d.list("appliedclusterresourcequotas", e).then(function(a) {
 c.clusterQuotas = _.sortBy(a.by("metadata.name"), "metadata.name"), c.orderedTypesByClusterQuota = k(c.clusterQuotas), c.namespaceUsageByClusterQuota = {}, _.each(c.clusterQuotas, function(a) {
 if (a.status) {
 var d = _.find(a.status.namespaces, {
@@ -5115,7 +5115,7 @@ namespace:b.project
 c.namespaceUsageByClusterQuota[a.metadata.name] = d.status;
 }
 }), f.log("cluster quotas", c.clusterQuotas);
-}), d.list("limitranges", e, function(a) {
+}), d.list("limitranges", e).then(function(a) {
 c.limitRanges = _.sortBy(a.by("metadata.name"), "metadata.name"), c.emptyMessageLimitRanges = "There are no limit ranges set on this project.", angular.forEach(c.limitRanges, function(a) {
 var b = a.metadata.name;
 c.limitsByType[b] = {}, angular.forEach(a.spec.limits, function(a) {

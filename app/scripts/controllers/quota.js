@@ -101,14 +101,14 @@ angular.module('openshiftConsole')
       .then(_.spread(function(project, context) {
         $scope.project = project;
 
-        DataService.list("resourcequotas", context, function(quotas) {
-          $scope.quotas = _.sortBy(quotas.by("metadata.name"), "metadata.name");
+        DataService.list("resourcequotas", context).then(function(resp) {
+          $scope.quotas = _.sortBy(resp.by("metadata.name"), "metadata.name");
           $scope.orderedTypesByQuota = orderTypes($scope.quotas);
           Logger.log("quotas", $scope.quotas);
         });
 
-        DataService.list("appliedclusterresourcequotas", context, function(quotas) {
-          $scope.clusterQuotas = _.sortBy(quotas.by("metadata.name"), "metadata.name");
+        DataService.list("appliedclusterresourcequotas", context).then(function(resp) {
+          $scope.clusterQuotas = _.sortBy(resp.by("metadata.name"), "metadata.name");
           $scope.orderedTypesByClusterQuota = orderTypes($scope.clusterQuotas);
           $scope.namespaceUsageByClusterQuota = {};
           _.each($scope.clusterQuotas, function(quota) {
@@ -120,8 +120,8 @@ angular.module('openshiftConsole')
           Logger.log("cluster quotas", $scope.clusterQuotas);
         });
 
-        DataService.list("limitranges", context, function(limitRanges) {
-          $scope.limitRanges = _.sortBy(limitRanges.by("metadata.name"), "metadata.name");
+        DataService.list("limitranges", context).then(function(resp) {
+          $scope.limitRanges = _.sortBy(resp.by("metadata.name"), "metadata.name");
           $scope.emptyMessageLimitRanges = "There are no limit ranges set on this project.";
           // Convert to a sane format for a view to a build a table with rows per resource type
           angular.forEach($scope.limitRanges, function(limitRange){
