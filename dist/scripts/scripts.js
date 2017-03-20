@@ -10820,7 +10820,7 @@ probe:"="
 },
 templateUrl:"views/directives/_probe.html"
 };
-}).directive("podsTable", function() {
+}).directive("podsTable", [ "$filter", function(a) {
 return {
 restrict:"E",
 scope:{
@@ -10830,9 +10830,19 @@ emptyMessage:"=?",
 customNameHeader:"=?",
 podFailureReasons:"=?"
 },
-templateUrl:"views/directives/pods-table.html"
+templateUrl:"views/directives/pods-table.html",
+link:function(b) {
+var c = a("orderObjectsByDate"), d = _.debounce(function(a) {
+b.$evalAsync(function() {
+b.sortedPods = c(a, !0);
+});
+}, 150, {
+maxWait:500
+});
+b.$watch("pods", d);
+}
 };
-}).directive("trafficTable", function() {
+} ]).directive("trafficTable", function() {
 return {
 restrict:"E",
 scope:{

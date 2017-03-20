@@ -13,11 +13,11 @@
       <th ng-if="activePods">Receiving Traffic</th>
     </tr>
   </thead>
-  <tbody ng-if="(pods | hashSize) == 0">
+  <tbody ng-if="!sortedPods.length">
     <tr><td colspan="{{activePods ? 6 : 5}}"><em>{{emptyMessage || 'No pods to show'}}</em></td></tr>
   </tbody>
-  <tbody ng-if="(pods | hashSize) > 0">
-    <tr ng-repeat="pod in pods | orderObjectsByDate : true">
+  <tbody ng-if="sortedPods.length">
+    <tr ng-repeat="pod in sortedPods track by (pod | uid)" class="animate-repeat">
       <td data-title="{{customNameHeader || 'Name'}}">
         <a href="{{pod | navigateResourceURL}}">{{pod.metadata.name}}</a>
         <span ng-if="pod | isDebugPod">
