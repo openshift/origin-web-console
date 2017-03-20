@@ -10389,7 +10389,10 @@ return b ? d3.round(e, 1) + "%" :e;
 };
 var k = !1;
 c.$watch("route.alternateServices.length", function(a) {
-0 === a && _.has(c, "route.to.weight") && delete c.route.to.weight, 1 === a && (k = !0, c.controls.rangeSlider = c.weightAsPercentage(c.route.to.weight));
+if (0 === a && _.has(c, "route.to.weight") && delete c.route.to.weight, 1 === a) {
+if (0 === c.route.to.weight && 0 === c.route.alternateServices[0].weight) return void (c.controls.hideSlider = !0);
+k = !0, c.controls.rangeSlider = c.weightAsPercentage(c.route.to.weight);
+}
 }), c.$watch("controls.rangeSlider", function(a, b) {
 return k ? void (k = !1) :void (a !== b && (a = parseInt(a, 10), _.set(c, "route.to.weight", a), _.set(c, "route.alternateServices[0].weight", 100 - a)));
 });

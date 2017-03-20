@@ -241,6 +241,12 @@ angular.module("openshiftConsole")
           }
 
           if (alternateServicesCount === 1) {
+            // If all weights are 0, don't use the slider.
+            if (scope.route.to.weight === 0 && scope.route.alternateServices[0].weight === 0) {
+              scope.controls.hideSlider = true;
+              return;
+            }
+
             initializingSlider = true;
             scope.controls.rangeSlider = scope.weightAsPercentage(scope.route.to.weight);
           }
