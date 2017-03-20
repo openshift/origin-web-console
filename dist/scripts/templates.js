@@ -8753,11 +8753,11 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "<th ng-if=\"activePods\">Receiving Traffic</th>\n" +
     "</tr>\n" +
     "</thead>\n" +
-    "<tbody ng-if=\"(pods | hashSize) == 0\">\n" +
+    "<tbody ng-if=\"!sortedPods.length\">\n" +
     "<tr><td colspan=\"{{activePods ? 6 : 5}}\"><em>{{emptyMessage || 'No pods to show'}}</em></td></tr>\n" +
     "</tbody>\n" +
-    "<tbody ng-if=\"(pods | hashSize) > 0\">\n" +
-    "<tr ng-repeat=\"pod in pods | orderObjectsByDate : true\">\n" +
+    "<tbody ng-if=\"sortedPods.length\">\n" +
+    "<tr ng-repeat=\"pod in sortedPods track by (pod | uid)\" class=\"animate-repeat\">\n" +
     "<td data-title=\"{{customNameHeader || 'Name'}}\">\n" +
     "<a href=\"{{pod | navigateResourceURL}}\">{{pod.metadata.name}}</a>\n" +
     "<span ng-if=\"pod | isDebugPod\">\n" +

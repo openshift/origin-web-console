@@ -157,7 +157,7 @@ angular.module('openshiftConsole')
       templateUrl: 'views/directives/_probe.html'
     };
   })
-  .directive('podsTable', function() {
+  .directive('podsTable', function($filter) {
     return {
       restrict: 'E',
       scope: {
@@ -171,7 +171,17 @@ angular.module('openshiftConsole')
         // Optional map of explanations or warnings for each phase of a pod
         podFailureReasons: '=?'
       },
-      templateUrl: 'views/directives/pods-table.html'
+      templateUrl: 'views/directives/pods-table.html',
+      link: function($scope) {
+        var orderObjectsByDate = $filter('orderObjectsByDate');
+        var sortPods = _.debounce(function(pods) {
+          $scope.$evalAsync(function() {
+            $scope.sortedPods = orderObjectsByDate(pods, true);
+          });
+        }, 150, { maxWait: 500 });
+
+        $scope.$watch('pods', sortPods);
+      }
     };
   })
   .directive('trafficTable', function() {
