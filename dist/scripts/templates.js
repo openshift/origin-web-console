@@ -1908,7 +1908,7 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "<tr><td colspan=\"3\"><em>{{emptyMessage}}</em></td></tr>\n" +
     "</tbody>\n" +
     "<tbody ng-if=\"(builds | hashSize) > 0\">\n" +
-    "<tr ng-repeat=\"build in orderedBuilds\">\n" +
+    "<tr ng-repeat=\"build in orderedBuilds track by (build | uid)\">\n" +
     "<td data-title=\"Build\">\n" +
     "\n" +
     "<span ng-if=\"build | annotation : 'buildNumber'\">\n" +
