@@ -61,7 +61,7 @@
   </div>
 </div>
 <div ng-if="row.current && !row.isDeploymentInProgress() && !row.expanded" class="list-pf-details">
-  <div ng-if="row.state.showMetrics && row.state.breakpoint === 'md' || row.state.breakpoint === 'lg'" class="truncate metrics-collapsed">
+  <div ng-if="row.state.showMetrics && (row.state.breakpoint === 'md' || row.state.breakpoint === 'lg')" class="truncate metrics-collapsed">
     <div ng-if="row.apiObject.kind === 'Pod'">
       <metrics-summary
         pods="[row.apiObject]"
