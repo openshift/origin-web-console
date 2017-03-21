@@ -57,7 +57,6 @@ angular.module('openshiftConsole')
       editor.$blockScrolling = Infinity;
     };
 
-    var orderByDate = $filter('orderObjectsByDate');
     var buildConfigForBuild = $filter('buildConfigForBuild');
     var buildStrategy = $filter('buildStrategy');
     var watches = [];
@@ -207,7 +206,7 @@ angular.module('openshiftConsole')
         LabelFilter.setLabelSuggestions($scope.labelSuggestions);
 
         // Sort now to avoid sorting on every digest loop.
-        $scope.orderedBuilds = orderByDate($scope.builds, true);
+        $scope.orderedBuilds = BuildsService.sortBuilds($scope.builds, true);
         $scope.latestBuild = $scope.orderedBuilds.length ? $scope.orderedBuilds[0] : null;
       },
       // params object for filtering
@@ -238,7 +237,7 @@ angular.module('openshiftConsole')
           // trigger a digest loop
           $scope.$apply(function() {
             $scope.builds = labelSelector.select($scope.unfilteredBuilds);
-            $scope.orderedBuilds = orderByDate($scope.builds, true);
+            $scope.orderedBuilds = BuildsService.sortBuilds($scope.builds, true);
             $scope.latestBuild = $scope.orderedBuilds.length ? $scope.orderedBuilds[0] : null;
             updateFilterWarning();
           });
