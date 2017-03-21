@@ -3,10 +3,6 @@
 ---------------------------------------------------------------------------- */
 // @screen-md-min - (sidebar-left + left + right margin); 992 - (145 + 30 + 30) = 787
 @data-toolbar-filter-max-width:   (@screen-md-min - (@sidebar-left-width-md + @middle-content-container-padding-lg + @middle-content-container-padding-lg));
-@label-filter-input-width-lg: 730px; // max width available for input at > 992
-@label-filter-input-width-md: 540px; // max width available for input at > 768
-@label-filter-input-width-sm: 400px; // max width available for input at > 480
-@label-filter-input-width-xs: 240px; // 320 - (40 + 40); container - ((left + right margin) + button)
 
 
 .data-toolbar {
@@ -29,6 +25,10 @@
     }
   }
   .data-toolbar-filter {
+    project-filter {
+      .flex-direction(@direction: column);
+      .flex-display(@display: flex);
+    }
     @media (min-width: @screen-sm-min) {
       .flex(@columns: 1 1 0%);
     }
@@ -40,12 +40,17 @@
         font-size: @font-size-base;
       }
     }
-    .label-filter-key .selectize-input.not-full {
-      // Increase default input click target
-      width: @label-filter-input-width-xs;
-      @media (min-width: @screen-xs-min) { width: @label-filter-input-width-sm;}
-      @media (min-width: @screen-sm-min) { width: @label-filter-input-width-md;}
-      @media (min-width: @screen-md-min) { width: @label-filter-input-width-lg;}
+    .label-filter {
+      .selectize-control {
+        &.label-filter-key {
+          // Change from inline-block, allowing the empty input to expand to full width, giving it a large click target.
+          display: inline;
+        }
+        .selectize-input.full {
+          // Now make width match content
+          width: auto;
+        }
+      }
     }
     .form-group {
       margin-bottom: 0;
