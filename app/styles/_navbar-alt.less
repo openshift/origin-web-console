@@ -63,10 +63,10 @@
     }
   }
   .nav.navbar-iconic {
-    margin-right: 20px;
+    margin-right: 10px;
     .dropdown-menu {
       margin-top: -10px;
-      right: -5px;
+      right: 0;
       &:after {
         border: 6px solid transparent;
         border-bottom-color: #fff;
@@ -107,23 +107,12 @@
   }
   .nav .nav-item-iconic {
     // utiltity links
+    color: @navbar-pf-alt-color;
     cursor: pointer;
-    line-height: 1;
+    line-height: normal;
     max-height: none;
     padding-top: @navbar-padding-vertical;
     padding-bottom: @navbar-padding-vertical;
-    position: relative;
-    color: @navbar-pf-alt-color;
-    margin-right: 0;
-    .username, .status-issue {
-      display: inline-block;
-      font-weight: 300;
-      line-height: 1.4; // so letter descenders aren't clipped
-      max-width: 100px;
-      padding: 0 2px;
-      position: relative;
-      top: -2px;
-    }
     &:hover, &:focus {
       background-color: transparent;
       color: @navbar-pf-alt-active-color;
@@ -132,17 +121,36 @@
         color: @navbar-pf-alt-active-color;
       }
     }
-    .caret, .fa, .pf-icon {
-      color: @navbar-pf-alt-color;
-      font-size: @font-size-base + 4;
-      width: auto;
-    }
     .caret {
-      font-size: @font-size-base;
       height: 12px;
     }
-    .status-icon {
-      padding-right: 2px;
+    .caret, .fa, .pf-icon {
+      color: @navbar-pf-alt-color;
+      font-size: @font-size-base + 3;
+      width: auto;
+    }
+    .pficon-user,
+    .username + .caret {
+      display: block;
+      float: left;
+    }
+    .username {
+      float: left;
+      font-weight: 300;
+      max-width: 110px;
+      padding: 0 4px;
+      @media (min-width: @screen-md-min) {
+        max-width: 150px;
+      }
+      @media (min-width: @screen-lg-min) {
+        max-width: 200px;
+      }
+      @media (min-width: @screen-xlg-min) {
+        max-width: 250px;
+      }
+      + .caret {
+        margin-top: 3px;
+      }
     }
   }
   .open > .nav-item-iconic {
@@ -160,14 +168,35 @@
   #header-logo {
     height: @navbar-os-header-height-desktop;
   }
-  .navbar-pf-alt .nav .nav-item-iconic {
-    display: block;
-    padding: 21px 14px;
+  .navbar-pf-alt .nav {
+    .dropdown .nav-item-iconic {
+      padding-right: 20px;
+    }
+    .nav-item-iconic {
+      display: block;
+      float: left;
+      padding: 21px 10px 20px;
+      .status-icon {
+        position: relative;
+        top: 1px;
+      }
+    }
   }
 }
 
 // System status
 .navbar-pf-alt {
+  .system-status .status-issue {
+    display: none;
+    font-weight: 300;
+    max-width: 100px;
+    padding: 0 0 0 5px;
+    position: relative;
+    top: -2px;
+    @media (min-width: @screen-lg-min) {
+      display: inline;
+    }
+  }
   .system-status-mobile {
     @media (min-width: @screen-sm-min) {
       display: none;
@@ -181,24 +210,6 @@
       width: 1px;
       background: @sidebar-os-border-color;
       height: 100%;
-    }
-    .status-icon {
-      font-size: initial;
-    }
-    .status-issue {
-      display: none;
-    }
-  }
-  .system-status {
-    @media (max-width: @screen-xs-max) {
-      &.project-action-btn {
-        padding: 0;
-      }
-    }
-    @media (min-width: @screen-sm-min) and (max-width: @screen-md-max) {
-      .status-issue {
-        display: none;
-      }
     }
   }
 }
@@ -297,15 +308,6 @@
       }
     }
   }
-  .navbar-iconic {
-    .username {
-      // Enable username truncation
-      display: inline-block;
-      line-height: 1.3;
-      margin-bottom: -3px; // prevent font descenders from being clipped
-      max-width: 100px;
-    }
-  }
   .navbar-flex-btn {
     &.toggle-menu {
       display: none;
@@ -318,25 +320,10 @@
     }
   }
 }
-@media (min-width: @screen-md-min) {
-  .navbar-pf-alt {
-    .navbar-iconic {
-      .username {
-        max-width: 150px;
-      }
-    }
-  }
-}
+
 @media (min-width: @screen-lg-min) {
-  .navbar-pf-alt {
-    .navbar-header {
-      width: (@sidebar-left-width-md - @navbar-header-offset);
-    }
-    .navbar-iconic {
-      .username {
-        max-width: 200px;
-      }
-    }
+  .navbar-pf-alt .navbar-header {
+    width: (@sidebar-left-width-md - @navbar-header-offset);
   }
 }
 @media (min-width: @screen-xlg-min) {
