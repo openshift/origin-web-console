@@ -85,7 +85,7 @@ window.OPENSHIFT_CONSTANTS = {
   ],
 
   ENABLE_TECH_PREVIEW_FEATURE: {
-    pipelines: true
+    service_catalog_landing_page: false
   },
 
   SAMPLE_PIPELINE_TEMPLATE: {
@@ -201,10 +201,7 @@ window.OPENSHIFT_CONSTANTS = {
               href: "/browse/pipelines",
               prefixes: [
                 "/browse/pipelines/"
-              ],
-              isValid: function() {
-                return !!_.get(window.OPENSHIFT_CONSTANTS, 'ENABLE_TECH_PREVIEW_FEATURE.pipelines');
-              }
+              ]
             },
             {
               label: "Images",
