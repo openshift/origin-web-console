@@ -3,46 +3,35 @@
 // -----------------------------------------------
 
 .navbar-project-menu {
-  width: 100%;
-  .navbar-project-search {
-    display: inline-block;
-  }
-  .form-group {
-    margin-bottom: 0;
-    .form-control {
-      background-color: transparent;
-      margin-bottom: 0;
-      height: auto;
-    }
-  }
-  .bootstrap-select.open.btn-group {
-    .btn {
-      background-color: @navbar-os-project-menu-active-bg;
+  .flex-display(@display: flex);
+  @media (min-width: @screen-sm-min) {
+    float: left;
+    .bootstrap-select.btn-group .btn:before {
+      color: @gray-light;
+      content: 'Project';
+      font-size: @font-size-xsmall;
+      left: 15px;
+      position: absolute;
+      top: 8px;
     }
   }
   .bootstrap-select.btn-group {
-      .btn {
-      border-color: @sidebar-os-border-color;
-      border-radius: 0;
-      color: @navbar-os-project-menu-color;
-      font-size: @font-size-large + 4;
-      font-weight: 300;
+    .btn {
       background: @navbar-os-project-menu-bg;
       border-bottom: 0;
-      box-shadow: none;
+      border-color: @sidebar-os-border-color;
+      border-radius: 0;
       border-top: 0;
+      box-shadow: none;
+      color: @navbar-os-project-menu-color;
+      font-size: @font-size-large + 3;
+      font-weight: 300;
       line-height: @line-height-base;
-      padding: 7px 50px 7px 20px; // padding so truncated name with ellipsis doesn't extend into down icon
+      padding: 7px 30px 8px 15px; // padding so truncated name with ellipsis doesn't extend into down icon
       transition: none;
-      &:hover, &:focus {
-        background-color: @navbar-os-project-menu-active-bg;
-        color: @navbar-os-project-menu-active-color;
-      }
-      &:focus {
-        .tab-focus();
-        &:active {
-          outline: none !important;
-        }
+      @media (min-width: @screen-sm-min) {
+        padding-bottom: 15px;
+        padding-top: 15px;
       }
       &:after {
         content: '';
@@ -54,10 +43,27 @@
         top: 0;
         width: 1px;
       }
+      &:hover, &:focus {
+        background-color: @navbar-os-project-menu-active-bg;
+        color: @navbar-os-project-menu-active-color;
+      }
+      &:focus {
+        .tab-focus();
+        &:active {
+          outline: none !important;
+        }
+      }
+      .filter-option {
+        .truncate();
+      }
+    }
+    .bootstrap-select.open.btn-group {
+      .btn {
+        background-color: @navbar-os-project-menu-active-bg;
+      }
     }
     .dropdown-toggle .caret {
       font-size: 16px;
-      right: 20px;
     }
     .dropdown-menu {
       background-color: @navbar-os-project-menu-active-bg;
@@ -81,124 +87,50 @@
             background-color: @sidebar-os-active;
           }
         }
-        a {
-          color: @sidebar-os-color;
-          padding: 10px 15px;
-          &:hover, &:focus {
-            background-color: @navbar-os-project-menu-hover-bg;
-            border-color: transparent;
-            color: @sidebar-os-active-color;
-          }
-        }
         &.divider {
           background-color: @sidebar-os-border-inset-color !important;
           border-top: 1px solid @sidebar-os-border-color;
           height: 2px;
           margin: 0 !important;
         }
-      }
-    }
-  }
-}
-
-.navbar-project-menu .btn {
-  width: 100%;
-  .filter-option {
-    // Chrome needs a max-width in order to truncate at mobile and
-    // 200px is the max-width that is available space for the project name at 320px,
-    // if it's longer it will be truncated in order to display the add to project '+' icon.
-    max-width: 200px;
-    // This forces the project title block to fill up the available space within it's container and truncate at mobile
-    min-width: 100%;
-    .truncate();
-  }
-}
-
-@media (max-width: @screen-xs-max) {
-  // Project nav at mobile widths
-  .navbar-project-menu {
-    .form-group {
-      display: inline;
-    }
-    .bootstrap-select.btn-group .dropdown-menu {
-      max-width: 100%;
-    }
-  }
-}
-
-@media (max-width: @screen-xxs-max) {
-  .navbar-project-menu {
-    .bootstrap-select.btn-group {
-      .btn {
-        padding-left: 10px;
-        padding-right: 20px;
-      }
-      .dropdown-toggle .caret {
-        font-size: 14px;
-        right: 10px;
-      }
-    }
-  }
-}
-
-@media (min-width: @screen-xs-min) {
-  .navbar-project-menu .bootstrap-select.btn-group .btn .filter-option {
-    max-width: 310px;
-  }
-}
-
-@media (min-width: @screen-sm-min) {
-  .navbar-project-menu {
-    border-bottom:0;
-    border-top:0;
-    float: left;
-    margin: 0;
-    padding-top: 0;
-    max-width: 360px; // Leave enough space for the status indicator extension point
-    .bootstrap-select.btn-group {
-      .btn {
-        padding: 15px 50px 15px 30px;
-        &:before {
-          color: @gray-light;
-          content: 'Project';
-          font-size: @font-size-xsmall;
-          left: 30px;
-          position: absolute;
-          top: 8px;
-        }
-        .filter-option {
-          max-width: 470px;
+        a {
+          color: @sidebar-os-color;
+          padding: 10px 15px;
+          white-space: normal;
+          &:hover, &:focus {
+            background-color: @navbar-os-project-menu-hover-bg;
+            border-color: transparent;
+            color: @sidebar-os-active-color;
+          }
+          @media (max-width: @screen-xs-max) {
+            span.text {
+              .word-break-all();
+            }
+          }
         }
       }
-      .dropdown-toggle .caret {
-        right: 30px;
-      }
-    }
-    .bootstrap-select .dropdown-toggle {
-      height: 60px;
-      max-width: 240px;
     }
   }
-}
-
-// At 890 there is enough space to make the menu bigger and still have space for the status indicator extension
-@media (min-width: 890px) {
-  .navbar-project-menu .bootstrap-select .dropdown-toggle,
-  .navbar-project-menu {
-    max-width: 380px;
-  }
-}
-
-@media (min-width: @screen-md-min) {
-  .navbar-project-menu .bootstrap-select .dropdown-toggle,
-  .navbar-project-menu {
-    max-width: 470px;
-  }
-}
-
-@media (min-width: @screen-lg-min) {
-  .navbar-project-menu .bootstrap-select .dropdown-toggle,
-  .navbar-project-menu {
-    max-width: 600px;
+  .form-group {
+    margin-bottom: 0;
+    min-width: 0; // so that truncation on .filter-option works
+    width: 100%;
+    @media (min-width: @screen-sm-min) {
+      min-width: 220px; // IE
+      width: 220px;
+    }
+    @media (min-width: @screen-md-min) {
+      min-width: 400px; // IE
+      width: 400px;
+    }
+    @media (min-width: @screen-lg-min) {
+      min-width: 520px; // IE
+      width: 520px;
+    }
+    .form-control {
+      background-color: transparent;
+      margin-bottom: 0;
+      height: auto;
+    }
   }
 }

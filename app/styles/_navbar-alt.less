@@ -137,7 +137,7 @@
     .username {
       float: left;
       font-weight: 300;
-      max-width: 110px;
+      max-width: 100px;
       padding: 0 4px;
       @media (min-width: @screen-md-min) {
         max-width: 150px;
@@ -223,11 +223,6 @@
     .align-items(@align: center);
     .flex(@columns: 1 0 0%);
     .justify-content(@justify: center);
-    // remove ie prefixes when PostCSS Autoprefixer is included for github issue #7559
-    -ms-flex-align: center;
-    -ms-flex-pack: center;
-
-    width: 100%; // fix ie10 issue
     &:hover {
       background-color: @navbar-os-project-menu-active-bg;
       color: @navbar-os-project-menu-active-color;
@@ -312,11 +307,10 @@
     &.toggle-menu {
       display: none;
     }
-    &.project-action {
-      .flex(@columns: 0 0 120px);
-      .project-action-btn {
-        border-right:1px solid @navbar-os-project-menu-border;
-      }
+    .project-action-btn {
+      border-right: 1px solid @navbar-os-project-menu-border;
+      flex-basis: auto; // IE
+      padding: 0 15px;
     }
   }
 }
