@@ -4290,9 +4290,9 @@ ul.messenger-theme-flat .messenger-message.alert-info .messenger-message-inner:b
 .navbar-pf-alt .nav .nav-item-iconic .caret,.navbar-pf-alt .nav .nav-item-iconic .fa,.navbar-pf-alt .nav .nav-item-iconic .pf-icon{color:#d1d1d1;font-size:16px;width:auto}
 .navbar-pf-alt .nav .nav-item-iconic .pficon-user,.navbar-pf-alt .nav .nav-item-iconic .username+.caret{display:block;float:left}
 .navbar-pf-alt .nav .nav-item-iconic .username{float:left;font-weight:300;max-width:100px;padding:0 4px}
-@media (min-width:992px){.navbar-pf-alt .nav .nav-item-iconic .username{max-width:150px}
+@media (min-width:992px){.navbar-pf-alt .nav .nav-item-iconic .username{max-width:130px}
 }
-@media (min-width:1200px){.navbar-pf-alt .nav .nav-item-iconic .username{max-width:200px}
+@media (min-width:1200px){.navbar-pf-alt .nav .nav-item-iconic .username{max-width:150px}
 }
 @media (min-width:1600px){.navbar-pf-alt .nav .nav-item-iconic .username{max-width:250px}
 }
@@ -4944,7 +4944,7 @@ td.visible-md,th.visible-md{display:table-cell!important}
 .visible-md-inline{display:inline!important}
 .visible-md-inline-block{display:inline-block!important}
 }
-@media (min-width:1200px){.navbar-project-menu .form-group{min-width:520px;width:520px}
+@media (min-width:1200px){.navbar-project-menu .form-group{min-width:500px;width:500px}
 .visible-lg{display:block!important}
 table.visible-lg{display:table!important}
 tr.visible-lg{display:table-row!important}
