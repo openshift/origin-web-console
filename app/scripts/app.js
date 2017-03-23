@@ -30,7 +30,8 @@ angular
     'angular-inview',
     'angularMoment',
     'ab-base64',
-    'openshiftCommon'
+    'openshiftCommonServices',
+    'openshiftCommonUI'
   ])
   .config(function ($routeProvider) {
     var overviewRoute;

@@ -2,142 +2,9 @@
 /* jshint unused: false */
 
 angular.module('openshiftConsole')
-  // this filter is intended for use with the "track by" in an ng-repeat
-  // when uid is not defined it falls back to object identity for uniqueness
-  .filter('uid', function() {
-    return function(resource) {
-      if (resource && resource.metadata && resource.metadata.uid) {
-        return resource.metadata.uid;
-      }
-      else {
-        return resource;
-      }
-    };
-  })
-  .filter('annotationName', function() {
-    // This maps an annotation key to all known synonymous keys to insulate
-    // the referring code from key renames across API versions.
-    var annotationMap = {
-      "buildConfig":              ["openshift.io/build-config.name"],
-      "deploymentConfig":         ["openshift.io/deployment-config.name"],
-      "deployment":               ["openshift.io/deployment.name"],
-      "pod":                      ["openshift.io/deployer-pod.name"],
-      "deployerPod":              ["openshift.io/deployer-pod.name"],
-      "deployerPodFor":           ["openshift.io/deployer-pod-for.name"],
-      "deploymentStatus":         ["openshift.io/deployment.phase"],
-      "deploymentStatusReason":   ["openshift.io/deployment.status-reason"],
-      "deploymentCancelled":      ["openshift.io/deployment.cancelled"],
-      "encodedDeploymentConfig":  ["openshift.io/encoded-deployment-config"],
-      "deploymentVersion":        ["openshift.io/deployment-config.latest-version"],
-      "displayName":              ["openshift.io/display-name"],
-      "description":              ["openshift.io/description"],
-      "buildNumber":              ["openshift.io/build.number"],
-      "buildPod":                 ["openshift.io/build.pod-name"],
-      "jenkinsBuildURL":          ["openshift.io/jenkins-build-uri"],
-      "jenkinsLogURL":            ["openshift.io/jenkins-log-url"],
-      "jenkinsStatus":            ["openshift.io/jenkins-status-json"],
-      "idledAt":                  ["idling.alpha.openshift.io/idled-at"],
-      "idledPreviousScale":       ["idling.alpha.openshift.io/previous-scale"],
-      "systemOnly":               ["authorization.openshift.io/system-only"]
-    };
-    return function(annotationKey) {
-      return annotationMap[annotationKey] || null;
-    };
-  })
-  .filter('labelName', function() {
-    var labelMap = {
-      'buildConfig' : ["openshift.io/build-config.name"],
-      'deploymentConfig' : ["openshift.io/deployment-config.name"]
-    };
-    return function(labelKey) {
-      return labelMap[labelKey];
-    };
-  })
-  .filter('annotation', function(annotationNameFilter) {
-    return function(resource, key) {
-      if (resource && resource.metadata && resource.metadata.annotations) {
-        // If the key's already in the annotation map, return it.
-        if (resource.metadata.annotations[key] !== undefined) {
-          return resource.metadata.annotations[key];
-        }
-        // Try and return a value for a mapped key.
-        var mappings = annotationNameFilter(key) || [];
-        for (var i=0; i < mappings.length; i++) {
-          var mappedKey = mappings[i];
-          if (resource.metadata.annotations[mappedKey] !== undefined) {
-            return resource.metadata.annotations[mappedKey];
-          }
-        }
-        // Couldn't find anything.
-        return null;
-      }
-      return null;
-    };
-  })
-  .filter('imageStreamTagAnnotation', function() {
-    // Look up annotations on ImageStream.spec.tags[tag].annotations
-    return function(resource, key, /* optional */ tagName) {
-      tagName = tagName || 'latest';
-      if (resource && resource.spec && resource.spec.tags){
-        var tags = resource.spec.tags;
-        for(var i=0; i < tags.length; ++i){
-          var tag = tags[i];
-          if(tagName === tag.name && tag.annotations){
-            return tag.annotations[key];
-          }
-        }
-      }
-
-      return null;
-    };
-  })
-  .filter('description', function(annotationFilter) {
-    return function(resource) {
-      // Prefer `openshift.io/description`, but fall back to `kubernetes.io/description`.
-      return annotationFilter(resource, 'openshift.io/description') ||
-             annotationFilter(resource, 'kubernetes.io/description');
-    };
-  })
   .filter('storageClass', function(annotationFilter) {
-     return function(pvc) {
-       return annotationFilter(pvc, 'volume.beta.kubernetes.io/storage-class');
-     };
-  })
-  .filter('displayName', function(annotationFilter) {
-    // annotationOnly - if true, don't fall back to using metadata.name when
-    //                  there's no displayName annotation
-    return function(resource, annotationOnly) {
-      var displayName = annotationFilter(resource, "displayName");
-      if (displayName || annotationOnly) {
-        return displayName;
-      }
-
-      if (resource && resource.metadata) {
-        return resource.metadata.name;
-      }
-
-      return null;
-    };
-  })
-  .filter('uniqueDisplayName', function(displayNameFilter){
-    function countNames(projects){
-      var nameCount = {};
-      angular.forEach(projects, function(project, key){
-        var displayName = displayNameFilter(project);
-        nameCount[displayName] = (nameCount[displayName] || 0) + 1;
-      });
-      return nameCount;
-    }
-    return function (resource, projects){
-      if (!resource) {
-        return '';
-      }
-      var displayName = displayNameFilter(resource);
-      var name = resource.metadata.name;
-      if (displayName !== name && countNames(projects)[displayName] > 1 ){
-        return displayName + ' (' + name + ')';
-      }
-      return displayName;
+    return function(pvc) {
+      return annotationFilter(pvc, 'volume.beta.kubernetes.io/storage-class');
     };
   })
   .filter('searchProjects', function(displayNameFilter) {
@@ -172,17 +39,6 @@ angular.module('openshiftConsole')
       return tags.split(/\s*,\s*/);
     };
   })
-  .filter('imageStreamTagTags', function(imageStreamTagAnnotationFilter) {
-    // Return ImageStream.spec.tag[tag].annotation.tags as an array
-    return function(resource, /* optional */ tagName) {
-      var imageTags = imageStreamTagAnnotationFilter(resource, 'tags', tagName);
-      if (!imageTags) {
-        return [];
-      }
-
-      return imageTags.split(/\s*,\s*/);
-    };
-  })
   .filter('imageStreamLastUpdated', function() {
     return function(imageStream) {
       var lastUpdated = imageStream.metadata.creationTimestamp;
@@ -197,14 +53,6 @@ angular.module('openshiftConsole')
         }
       });
       return lastUpdated;
-    };
-  })
-  .filter('label', function() {
-    return function(resource, key) {
-      if (resource && resource.metadata && resource.metadata.labels) {
-        return resource.metadata.labels[key];
-      }
-      return null;
     };
   })
   .filter('buildConfigForBuild', function(annotationFilter, labelNameFilter, labelFilter) {
@@ -236,12 +84,6 @@ angular.module('openshiftConsole')
       }
 
       return icon;
-    };
-  })
-  .filter('imageStreamTagIconClass', function(imageStreamTagAnnotationFilter) {
-    return function(resource, /* optional */ tagName) {
-      var icon = imageStreamTagAnnotationFilter(resource, "iconClass", tagName);
-      return (icon) ? icon : "fa fa-cube";
     };
   })
   .filter('imageName', function() {

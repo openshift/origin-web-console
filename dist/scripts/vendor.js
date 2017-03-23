@@ -59558,11 +59558,11 @@ return b = b || a.name || "download", c || (a = n(a)), navigator.msSaveOrOpenBlo
 
 "undefined" != typeof module && module.exports ? module.exports.saveAs = saveAs :"undefined" != typeof define && null !== define && null !== define.amd && define("FileSaver.js", function() {
 return saveAs;
-}), angular.module("openshiftCommon", [ "ab-base64" ]).config([ "AuthServiceProvider", function(a) {
+}), angular.module("openshiftCommonServices", [ "ab-base64" ]).config([ "AuthServiceProvider", function(a) {
 a.UserStore("MemoryUserStore");
 } ]).constant("API_CFG", _.get(window.OPENSHIFT_CONFIG, "api", {})).constant("APIS_CFG", _.get(window.OPENSHIFT_CONFIG, "apis", {})).constant("AUTH_CFG", _.get(window.OPENSHIFT_CONFIG, "auth", {})).config([ "$httpProvider", "AuthServiceProvider", "RedirectLoginServiceProvider", "AUTH_CFG", function(a, b, c, d) {
 a.interceptors.push("AuthInterceptor"), b.LoginService("RedirectLoginService"), b.LogoutService("DeleteTokenLogoutService"), b.UserStore("LocalStorageUserStore"), c.OAuthClientID(d.oauth_client_id), c.OAuthAuthorizeURI(d.oauth_authorize_uri), c.OAuthRedirectURI(URI(d.oauth_redirect_base).segment("oauth").toString());
-} ]), hawtioPluginLoader.addModule("openshiftCommon"), hawtioPluginLoader.registerPreBootstrapTask(function(a) {
+} ]), hawtioPluginLoader.addModule("openshiftCommonServices"), hawtioPluginLoader.registerPreBootstrapTask(function(a) {
 if (_.get(window, "OPENSHIFT_CONFIG.api.k8s.resources")) return void a();
 var b = {
 k8s:{},
@@ -59629,7 +59629,221 @@ var n = function() {
 window.OPENSHIFT_CONFIG.api.k8s.resources = b.k8s, window.OPENSHIFT_CONFIG.api.openshift.resources = b.openshift, window.OPENSHIFT_CONFIG.apis.groups = c, d.length && (window.OPENSHIFT_CONFIG.apis.API_DISCOVERY_ERRORS = d), a();
 }, o = [ g, i, l ];
 o = o.concat(m), $.when.apply(this, o).always(n);
-}), window.OPENSHIFT_CONFIG || (window.OPENSHIFT_CONFIG = {
+}), angular.module("openshiftCommonUI", []), hawtioPluginLoader.addModule("openshiftCommonUI"), angular.module("openshiftCommonUI").run([ "$templateCache", function(a) {
+"use strict";
+a.put("src/components/create-project/createProject.html", '<form name="createProjectForm">\n  <fieldset ng-disabled="disableInputs">\n    <div class="form-group">\n      <label for="name" class="required">Name</label>\n      <span ng-class="{\'has-error\': (createProjectForm.name.$error.pattern && createProjectForm.name.$touched) || nameTaken}">\n        <input class="form-control input-lg"\n            name="name"\n            id="name"\n            placeholder="my-project"\n            type="text"\n            required\n            take-focus\n            minlength="2"\n            maxlength="63"\n            pattern="[a-z0-9]([-a-z0-9]*[a-z0-9])?"\n            aria-describedby="nameHelp"\n            ng-model="name"\n            ng-model-options="{ updateOn: \'default blur\' }"\n            ng-change="nameTaken = false"\n            autocorrect="off"\n            autocapitalize="off"\n            spellcheck="false">\n      </span>\n      <div>\n        <span class="help-block">A unique name for the project.</span>\n      </div>\n      <div class="has-error">\n        <span id="nameHelp" class="help-block" ng-if="createProjectForm.name.$error.minlength && createProjectForm.name.$touched">\n          Name must have at least two characters.\n        </span>\n      </div>\n      <div class="has-error">\n        <span id="nameHelp" class="help-block" ng-if="createProjectForm.name.$error.pattern && createProjectForm.name.$touched">\n          Project names may only contain lower-case letters, numbers, and dashes.\n          They may not start or end with a dash.\n        </span>\n      </div>\n      <div class="has-error">\n        <span class="help-block" ng-if="nameTaken">\n          This name is already in use. Please choose a different name.\n        </span>\n      </div>\n    </div>\n\n    <div class="form-group">\n      <label for="displayName">Display Name</label>\n      <input class="form-control input-lg"\n          name="displayName"\n          id="displayName"\n          placeholder="My Project"\n          type="text"\n          ng-model="displayName">\n    </div>\n\n    <div class="form-group">\n      <label for="description">Description</label>\n      <textarea class="form-control input-lg"\n          name="description"\n          id="description"\n          placeholder="A short description."\n          ng-model="description"></textarea>\n    </div>\n\n    <div class="button-group">\n      <button type="submit"\n          class="btn btn-primary btn-lg"\n          ng-class="{\'dialog-btn\': isDialog}"\n          ng-click="createProject()"\n          ng-disabled="createProjectForm.$invalid || nameTaken || disableInputs"\n          value="">\n        {{submitButtonLabel}}\n      </button>\n      <button\n          class="btn btn-default btn-lg"\n          ng-class="{\'dialog-btn\': isDialog}"\n          back\n          ng-click="cancelCreateProject()">\n        Cancel\n      </button>\n    </div>\n  </fieldset>\n</form>\n'), 
+a.put("src/components/delete-link/delete-button.html", '<div class="actions">\n  <!-- Avoid whitespace inside the link -->\n  <a href=""\n     ng-click="$event.stopPropagation(); openDeleteModal()"\n     role="button"\n     class="action-button"\n     ng-attr-aria-disabled="{{disableDelete ? \'true\' : undefined}}"\n     ng-class="{ \'disabled-link\': disableDelete }"\n    ><i class="fa fa-trash-o" aria-hidden="true"\n    ></i><span class="sr-only">Delete {{kind | humanizeKind}} {{resourceName}}</span></a>\n</div>\n'), a.put("src/components/delete-link/delete-link.html", '<a href="javascript:void(0)"\n   ng-click="openDeleteModal()"\n   role="button"\n   ng-attr-aria-disabled="{{disableDelete ? \'true\' : undefined}}"\n   ng-class="{ \'disabled-link\': disableDelete }"\n>{{label || \'Delete\'}}</a>\n'), a.put("src/components/delete-link/delete-resource.html", '<div class="delete-resource-modal">\n  <!-- Use a form so that the enter key submits when typing a project name to confirm. -->\n  <form>\n    <div class="modal-body">\n      <h1>Are you sure you want to delete the {{typeDisplayName || (kind | humanizeKind)}}\n        \'<strong>{{displayName ? displayName : resourceName}}</strong>\'?</h1>\n      <div ng-if="replicas" class="alert alert-warning">\n        <span class="pficon pficon-warning-triangle-o" aria-hidden="true"></span>\n        <span class="sr-only">Warning:</span>\n        <strong>{{resourceName}}</strong> has running pods.  Deleting the\n        {{typeDisplayName || (kind | humanizeKind)}} will <strong>not</strong> delete the pods\n        it controls. Consider scaling the {{typeDisplayName || (kind | humanizeKind)}} down to\n        0 before continuing.\n      </div>\n\n      <p>This<span ng-if="isProject"> will <strong>delete all resources</strong> associated with\n      the project {{displayName ? displayName : resourceName}} and</span> <strong>cannot be\n      undone</strong>.  Make sure this is something you really want to do!</p>\n\n      <div ng-show="typeNameToConfirm">\n        <p>Type the name of the {{typeDisplayName || (kind | humanizeKind)}} to confirm.</p>\n        <p>\n          <label class="sr-only" for="resource-to-delete">{{typeDisplayName || (kind | humanizeKind)}} to delete</label>\n          <input\n              ng-model="confirmName"\n              id="resource-to-delete"\n              type="text"\n              class="form-control input-lg"\n              autocorrect="off"\n              autocapitalize="off"\n              spellcheck="false"\n              autofocus>\n        </p>\n      </div>\n\n      <div ng-switch="kind">\n        <div ng-switch-when="Deployment">\n          <strong>Note:</strong> None of the replica sets created by this deployment will be deleted.\n\n          To delete the deployment and all of its replica sets, you can run the command\n          <pre class="code prettyprint mar-top-md">oc delete deployment {{resourceName}} -n {{projectName}}</pre>\n          Learn more about the <a href="command-line">command line tools</a>.\n        </div>\n\n        <div ng-switch-when="DeploymentConfig">\n          <strong>Note:</strong> None of the deployments created by this deployment config will be deleted.\n\n          To delete the deployment config and all of its deployments, you can run the command\n          <pre class="code prettyprint mar-top-md">oc delete dc {{resourceName}} -n {{projectName}}</pre>\n          Learn more about the <a href="command-line">command line tools</a>.\n        </div>\n\n        <div ng-switch-when="BuildConfig">\n          <strong>Note:</strong> None of the builds created by this build config will be deleted.\n\n          To delete the build config and all of its builds, you can run the command\n          <pre class="code prettyprint mar-top-md">oc delete bc {{resourceName}} -n {{projectName}}</pre>\n          Learn more about the <a href="command-line">command line tools</a>.\n        </div>\n      </div>\n\n      <!--\n        If this is a deployment config or replication controller with associated HPAs, prompt to\n        delete the HPAs as well.\n      -->\n      <div ng-if="hpaList.length > 0">\n        <p>\n          <span ng-if="hpaList.length === 1">\n            This resource has an autoscaler associated with it.\n            It is recommended you delete the autoscaler with the resource it scales.\n          </span>\n          <span ng-if="hpaList.length > 1">\n            This resource has autoscalers associated with it.\n            It is recommended you delete the autoscalers with the resource they scale.\n          </span>\n        </p>\n        <label>\n          <input type="checkbox" ng-model="options.deleteHPAs">\n          Delete\n          <span ng-if="hpaList.length === 1">\n            Horizontal Pod Autoscaler \'<strong>{{hpaList[0].metadata.name}}</strong>\'\n          </span>\n          <span ng-if="hpaList.length > 1">\n            {{hpaList.length}} associated Horizontal Pod Autoscalers\n          </span>\n        </label>\n      </div>\n    </div>\n    <div class="modal-footer">\n      <button ng-disabled="typeNameToConfirm && confirmName !== resourceName && confirmName !== displayName" class="btn btn-lg btn-danger" type="submit" ng-click="delete();">Delete</button>\n      <button class="btn btn-lg btn-default" type="button" ng-click="cancel();">Cancel</button>\n    </div>\n  </form>\n</div>\n'), 
+a.put("src/components/edit-project/editProject.html", '<form name="editProjectForm">\n  <fieldset ng-disabled="disableInputs">\n    <div class="form-group">\n      <label for="displayName">Display Name</label>\n      <input class="form-control input-lg"\n             name="displayName"\n             id="displayName"\n             placeholder="My Project"\n             type="text"\n             ng-model="editableFields.displayName">\n    </div>\n\n    <div class="form-group">\n      <label for="description">Description</label>\n                    <textarea class="form-control input-lg"\n                              name="description"\n                              id="description"\n                              placeholder="A short description."\n                              ng-model="editableFields.description"></textarea>\n    </div>\n\n    <div class="button-group">\n      <button type="submit"\n              class="btn btn-primary btn-lg"\n              ng-class="{\'dialog-btn\': isDialog}"\n              ng-click="update()"\n              ng-disabled="editProjectForm.$invalid || disableInputs"\n              value="">{{submitButtonLabel}}</button>\n      <button\n          class="btn btn-default btn-lg"\n          ng-class="{\'dialog-btn\': isDialog}"\n          back\n          ng-click="cancelEditProject()">\n        Cancel\n      </button>\n    </div>\n  </fieldset>\n</form>\n');
+} ]), angular.module("openshiftCommonUI").directive("createProject", function() {
+return {
+restrict:"E",
+scope:{
+alerts:"=",
+submitButtonLabel:"@",
+redirectAction:"&",
+onCancel:"&?",
+isDialog:"@"
+},
+templateUrl:"src/components/create-project/createProject.html",
+controller:[ "$scope", "$filter", "$location", "DataService", function(a, b, c, d) {
+a.submitButtonLabel || (a.submitButtonLabel = "Create"), a.isDialog = "true" === a.isDialog, a.createProject = function() {
+a.disableInputs = !0, a.createProjectForm.$valid && d.create("projectrequests", null, {
+apiVersion:"v1",
+kind:"ProjectRequest",
+metadata:{
+name:a.name
+},
+displayName:a.displayName,
+description:a.description
+}, a).then(function(b) {
+var d = a.redirectAction();
+d ? d(encodeURIComponent(b.metadata.name)) :c.path("project/" + encodeURIComponent(b.metadata.name) + "/create");
+}, function(b) {
+a.disableInputs = !1;
+var c = b.data || {};
+if ("AlreadyExists" === c.reason) a.nameTaken = !0; else {
+var d = c.message || "An error occurred creating the project.";
+a.alerts["error-creating-project"] = {
+type:"error",
+message:d
+};
+}
+});
+}, a.cancelCreateProject = function() {
+if (a.onCancel) {
+var b = a.onCancel();
+b && b();
+}
+};
+} ]
+};
+}), angular.module("openshiftCommonUI").directive("deleteLink", [ "$uibModal", "$location", "$filter", "$q", "hashSizeFilter", "APIService", "DataService", "AlertMessageService", "Logger", function(a, b, c, d, e, f, g, h, i) {
+return {
+restrict:"E",
+scope:{
+kind:"@",
+group:"@?",
+typeDisplayName:"@?",
+resourceName:"@",
+projectName:"@",
+alerts:"=",
+displayName:"@",
+disableDelete:"=?",
+typeNameToConfirm:"=?",
+label:"@?",
+buttonOnly:"@",
+stayOnCurrentPage:"=?",
+replicas:"=?",
+hpaList:"=?",
+success:"=?",
+redirectUrl:"@?"
+},
+templateUrl:function(a, b) {
+return angular.isDefined(b.buttonOnly) ? "src/components/delete-link/delete-button.html" :"src/components/delete-link/delete-link.html";
+},
+replace:!0,
+link:function(e, j, k) {
+"Project" === k.kind && (e.isProject = !0), e.options = {
+deleteHPAs:!0
+};
+var l = function(a) {
+e.stayOnCurrentPage ? e.alerts[a.name] = a.data :h.addAlert(a);
+}, m = function(a) {
+return g["delete"]({
+resource:"horizontalpodautoscalers",
+group:"extensions"
+}, a.metadata.name, {
+namespace:e.projectName
+}).then(function() {
+l({
+name:a.metadata.name,
+data:{
+type:"success",
+message:"Horizontal Pod Autoscaler " + a.metadata.name + " was marked for deletion."
+}
+});
+})["catch"](function(b) {
+l({
+name:a.metadata.name,
+data:{
+type:"error",
+message:"Horizontal Pod Autoscaler " + a.metadata.name + " could not be deleted."
+}
+}), i.error("HPA " + a.metadata.name + " could not be deleted.", b);
+});
+}, n = function() {
+if (!e.stayOnCurrentPage) {
+if (e.redirectUrl) return void b.url(e.redirectUrl);
+if ("Project" !== e.kind) return void b.url(this.resourceListURL(f.kindToResource(e.kind), e.projectName));
+if ("/" === b.path()) return void e.$emit("deleteProject");
+var a = URI("/");
+b.url(a);
+}
+};
+e.openDeleteModal = function() {
+if (!e.disableDelete) {
+var b = a.open({
+animation:!0,
+templateUrl:"src/components/delete-link/delete-resource.html",
+controller:"DeleteModalController",
+scope:e
+});
+b.result.then(function() {
+var a = e.kind, b = e.resourceName, h = e.typeDisplayName || c("humanizeKind")(a), j = h + " '" + (e.displayName ? e.displayName :b) + "'", k = "Project" === e.kind ? {} :{
+namespace:e.projectName
+};
+g["delete"]({
+resource:f.kindToResource(a),
+group:e.group
+}, b, k).then(function() {
+l({
+name:b,
+data:{
+type:"success",
+message:_.capitalize(j) + " was marked for deletion."
+}
+}), e.success && e.success();
+var a = [];
+e.options.deleteHPAs && _.forEach(e.hpaList, function(b) {
+a.push(m(b));
+}), a.length ? d.all(a).then(n) :n();
+})["catch"](function(a) {
+e.alerts[b] = {
+type:"error",
+message:_.capitalize(j) + "' could not be deleted.",
+details:c("getErrorDetails")(a)
+}, i.error(j + " could not be deleted.", a);
+});
+});
+}
+};
+}
+};
+} ]), angular.module("openshiftCommonUI").controller("DeleteModalController", [ "$scope", "$uibModalInstance", function(a, b) {
+a["delete"] = function() {
+b.close("delete");
+}, a.cancel = function() {
+b.dismiss("cancel");
+};
+} ]), angular.module("openshiftCommonUI").directive("editProject", function() {
+return {
+restrict:"E",
+scope:{
+project:"=",
+alerts:"=",
+submitButtonLabel:"@",
+redirectAction:"&",
+onCancel:"&",
+isDialog:"@"
+},
+templateUrl:"src/components/edit-project/editProject.html",
+controller:[ "$scope", "$filter", "$location", "DataService", "annotationNameFilter", function(a, b, c, d, e) {
+a.submitButtonLabel || (a.submitButtonLabel = "Save"), a.isDialog = "true" === a.isDialog;
+var f = b("annotation"), g = b("annotationName"), h = function(a) {
+return {
+description:f(a, "description"),
+displayName:f(a, "displayName")
+};
+}, i = function(a, b) {
+var c = angular.copy(a);
+return c.metadata.annotations[g("description")] = b.description, c.metadata.annotations[g("displayName")] = b.displayName, c;
+}, j = function(a) {
+var b = [ e("description"), e("displayName") ];
+return _.each(b, function(b) {
+a.metadata.annotations[b] || delete a.metadata.annotations[b];
+}), a;
+};
+a.editableFields = h(a.project), a.update = function() {
+a.disableInputs = !0, a.editProjectForm.$valid && d.update("projects", a.project.metadata.name, j(i(a.project, a.editableFields)), {
+projectName:a.project.name
+}, {
+errorNotification:!1
+}).then(function() {
+var b = a.redirectAction();
+b && b(encodeURIComponent(a.project.metadata.name));
+}, function(c) {
+a.disableInputs = !1, a.editableFields = h(a.project), a.alerts.update = {
+type:"error",
+message:"An error occurred while updating the project",
+details:b("getErrorDetails")(c)
+};
+});
+}, a.cancelEditProject = function() {
+var b = a.onCancel();
+b && b();
+};
+} ]
+};
+}), angular.module("openshiftCommonUI").directive("takeFocus", [ "$timeout", function(a) {
+return {
+restrict:"A",
+link:function(b, c) {
+a(function() {
+$(c).focus();
+}, 300);
+}
+};
+} ]), window.OPENSHIFT_CONFIG || (window.OPENSHIFT_CONFIG = {
 apis:{
 hostPort:"localhost:8443",
 prefix:"/apis"
@@ -59655,6 +59869,196 @@ metricsURL:""
 }, window.OPENSHIFT_VERSION = {
 openshift:"dev-mode",
 kubernetes:"dev-mode"
+}), angular.module("openshiftCommonUI").filter("annotationName", function() {
+var a = {
+buildConfig:[ "openshift.io/build-config.name" ],
+deploymentConfig:[ "openshift.io/deployment-config.name" ],
+deployment:[ "openshift.io/deployment.name" ],
+pod:[ "openshift.io/deployer-pod.name" ],
+deployerPod:[ "openshift.io/deployer-pod.name" ],
+deployerPodFor:[ "openshift.io/deployer-pod-for.name" ],
+deploymentStatus:[ "openshift.io/deployment.phase" ],
+deploymentStatusReason:[ "openshift.io/deployment.status-reason" ],
+deploymentCancelled:[ "openshift.io/deployment.cancelled" ],
+encodedDeploymentConfig:[ "openshift.io/encoded-deployment-config" ],
+deploymentVersion:[ "openshift.io/deployment-config.latest-version" ],
+displayName:[ "openshift.io/display-name" ],
+description:[ "openshift.io/description" ],
+buildNumber:[ "openshift.io/build.number" ],
+buildPod:[ "openshift.io/build.pod-name" ],
+jenkinsBuildURL:[ "openshift.io/jenkins-build-uri" ],
+jenkinsLogURL:[ "openshift.io/jenkins-log-url" ],
+jenkinsStatus:[ "openshift.io/jenkins-status-json" ],
+idledAt:[ "idling.alpha.openshift.io/idled-at" ],
+idledPreviousScale:[ "idling.alpha.openshift.io/previous-scale" ],
+systemOnly:[ "authorization.openshift.io/system-only" ]
+};
+return function(b) {
+return a[b] || null;
+};
+}).filter("annotation", [ "annotationNameFilter", function(a) {
+return function(b, c) {
+if (b && b.metadata && b.metadata.annotations) {
+if (void 0 !== b.metadata.annotations[c]) return b.metadata.annotations[c];
+for (var d = a(c) || [], e = 0; e < d.length; e++) {
+var f = d[e];
+if (void 0 !== b.metadata.annotations[f]) return b.metadata.annotations[f];
+}
+return null;
+}
+return null;
+};
+} ]).filter("imageStreamTagAnnotation", function() {
+return function(a, b, c) {
+if (c = c || "latest", a && a.spec && a.spec.tags) for (var d = a.spec.tags, e = 0; e < d.length; ++e) {
+var f = d[e];
+if (c === f.name && f.annotations) return f.annotations[b];
+}
+return null;
+};
+}).filter("imageStreamTagTags", [ "imageStreamTagAnnotationFilter", function(a) {
+return function(b, c) {
+var d = a(b, "tags", c);
+return d ? d.split(/\s*,\s*/) :[];
+};
+} ]).filter("imageStreamTagIconClass", [ "imageStreamTagAnnotationFilter", function(a) {
+return function(b, c) {
+var d = a(b, "iconClass", c);
+return d ? d :"fa fa-cube";
+};
+} ]), angular.module("openshiftCommonUI").filter("canI", [ "AuthorizationService", function(a) {
+return function(b, c, d) {
+return a.canI(b, c, d);
+};
+} ]).filter("canIAddToProject", [ "AuthorizationService", function(a) {
+return function(b) {
+return a.canIAddToProject(b);
+};
+} ]), angular.module("openshiftCommonUI").filter("highlightKeywords", [ "KeywordService", function(a) {
+return function(b, c, d) {
+if (!b) return b;
+if (_.isEmpty(c)) return _.escape(b);
+_.isString(c) && (c = a.generateKeywords(c));
+for (var e, f = _.map(c, function(a) {
+return _.isRegExp(a) ? a.source :_.escapeRegExp(a);
+}).join("|"), g = "", h = 0, i = d ? "g" :"ig", j = new RegExp(f, i); null !== (e = j.exec(b)); ) h < e.index && (g += _.escape(b.substring(h, e.index))), g += "<mark>" + _.escape(e[0]) + "</mark>", h = j.lastIndex;
+return h < b.length && (g += _.escape(b.substring(h))), g;
+};
+} ]), angular.module("openshiftCommonUI").filter("orderObjectsByDate", [ "toArrayFilter", function(a) {
+return function(b, c) {
+return b = a(b), b.sort(function(a, b) {
+if (!(a.metadata && a.metadata.creationTimestamp && b.metadata && b.metadata.creationTimestamp)) throw "orderObjectsByDate expects all objects to have the field metadata.creationTimestamp";
+return a.metadata.creationTimestamp < b.metadata.creationTimestamp ? c ? 1 :-1 :a.metadata.creationTimestamp > b.metadata.creationTimestamp ? c ? -1 :1 :0;
+}), b;
+};
+} ]), angular.module("openshiftCommonUI").filter("uid", function() {
+return function(a) {
+return a && a.metadata && a.metadata.uid ? a.metadata.uid :a;
+};
+}).filter("labelName", function() {
+var a = {
+buildConfig:[ "openshift.io/build-config.name" ],
+deploymentConfig:[ "openshift.io/deployment-config.name" ]
+};
+return function(b) {
+return a[b];
+};
+}).filter("description", [ "annotationFilter", function(a) {
+return function(b) {
+return a(b, "openshift.io/description") || a(b, "kubernetes.io/description");
+};
+} ]).filter("displayName", [ "annotationFilter", function(a) {
+return function(b, c) {
+var d = a(b, "displayName");
+return d || c ? d :b && b.metadata ? b.metadata.name :null;
+};
+} ]).filter("uniqueDisplayName", [ "displayNameFilter", function(a) {
+function b(b) {
+var c = {};
+return angular.forEach(b, function(b, d) {
+var e = a(b);
+c[e] = (c[e] || 0) + 1;
+}), c;
+}
+return function(c, d) {
+if (!c) return "";
+var e = a(c), f = c.metadata.name;
+return e !== f && b(d)[e] > 1 ? e + " (" + f + ")" :e;
+};
+} ]).filter("label", function() {
+return function(a, b) {
+return a && a.metadata && a.metadata.labels ? a.metadata.labels[b] :null;
+};
+}).filter("humanizeKind", [ "startCaseFilter", function(a) {
+return function(a, b) {
+if (!a) return a;
+var c = _.startCase(a);
+return b ? c :c.toLowerCase();
+};
+} ]), angular.module("openshiftCommonUI").filter("camelToLower", function() {
+return function(a) {
+return a ? _.startCase(a).toLowerCase() :a;
+};
+}).filter("upperFirst", function() {
+return function(a) {
+return a ? a.charAt(0).toUpperCase() + a.slice(1) :a;
+};
+}).filter("sentenceCase", [ "camelToLowerFilter", "upperFirstFilter", function(a, b) {
+return function(c) {
+if (!c) return c;
+var d = a(c);
+return b(d);
+};
+} ]).filter("startCase", function() {
+return function(a) {
+return a ? _.startCase(a) :a;
+};
+}).filter("capitalize", function() {
+return function(a) {
+return _.capitalize(a);
+};
+}).filter("isMultiline", function() {
+return function(a, b) {
+if (!a) return !1;
+var c = a.search(/\r|\n/);
+return c !== -1 && (!b || c !== a.length - 1);
+};
+}), angular.module("openshiftCommonUI").filter("toArray", function() {
+return function(a) {
+if (!a) return [];
+if (angular.isArray(a)) return a;
+var b = [];
+return angular.forEach(a, function(a) {
+b.push(a);
+}), b;
+};
+}).filter("hashSize", function() {
+return function(a) {
+return a ? Object.keys(a).length :0;
+};
+}), angular.module("openshiftCommonServices").service("AlertMessageService", function() {
+var a = [], b = function(a, b) {
+return b ? "hide/alert/" + b + "/" + a :"hide/alert/" + a;
+};
+return {
+addAlert:function(b) {
+a.push(b);
+},
+getAlerts:function() {
+return a;
+},
+clearAlerts:function() {
+a = [];
+},
+isAlertPermanentlyHidden:function(a, c) {
+var d = b(a, c);
+return "true" === localStorage.getItem(d);
+},
+permanentlyHideAlert:function(a, c) {
+var d = b(a, c);
+localStorage.setItem(d, "true");
+}
+};
 }), ResourceGroupVersion.prototype.toString = function() {
 var a = this.resource;
 return this.group && (a += "/" + this.group), this.version && (a += "/" + this.version), a;
@@ -59667,7 +60071,7 @@ var a = (this.resource || "").split("/");
 return a.shift(), a;
 }, ResourceGroupVersion.prototype.equals = function(a, b, c) {
 return this.resource === a && (1 === arguments.length || this.group === b && (2 === arguments.length || this.version === c));
-}, angular.module("openshiftCommon").factory("APIService", [ "API_CFG", "APIS_CFG", "AuthService", "Constants", "Logger", "$q", "$http", "$filter", "$window", function(a, b, c, d, e, f, g, h, i) {
+}, angular.module("openshiftCommonServices").factory("APIService", [ "API_CFG", "APIS_CFG", "AuthService", "Constants", "Logger", "$q", "$http", "$filter", "$window", function(a, b, c, d, e, f, g, h, i) {
 function j(a) {
 if (!a) return a;
 var b = a.indexOf("/");
@@ -59789,7 +60193,7 @@ invalidObjectKindOrVersion:r,
 unsupportedObjectKindOrVersion:s,
 availableKinds:w
 };
-} ]), angular.module("openshiftCommon").provider("AuthService", function() {
+} ]), angular.module("openshiftCommonServices").provider("AuthService", function() {
 var a = "";
 this.UserStore = function(b) {
 return b && (a = b), a;
@@ -59900,7 +60304,7 @@ return a.reject(d);
 }
 }
 };
-} ]), angular.module("openshiftCommon").factory("AuthorizationService", [ "$q", "$cacheFactory", "Logger", "$interval", "APIService", "DataService", function(a, b, c, d, e, f) {
+} ]), angular.module("openshiftCommonServices").factory("AuthorizationService", [ "$q", "$cacheFactory", "Logger", "$interval", "APIService", "DataService", function(a, b, c, d, e, f) {
 var g = null, h = b("rulesCache", {
 number:10
 }), i = !1, j = [ "localresourceaccessreviews", "localsubjectaccessreviews", "resourceaccessreviews", "selfsubjectrulesreviews", "subjectaccessreviews" ], k = function(a) {
@@ -59966,7 +60370,7 @@ canI:q,
 canIAddToProject:r,
 getRulesForProject:o
 };
-} ]), angular.module("openshiftCommon").factory("base64util", function() {
+} ]), angular.module("openshiftCommonServices").factory("base64util", function() {
 return {
 pad:function(a) {
 if (!a) return "";
@@ -59985,10 +60389,10 @@ return a;
 }
 }
 };
-}), angular.module("openshiftCommon").factory("Constants", function() {
+}), angular.module("openshiftCommonServices").factory("Constants", function() {
 var a = _.clone(window.OPENSHIFT_CONSTANTS || {}), b = _.clone(window.OPENSHIFT_VERSION || {});
 return a.VERSION = b, a;
-}), angular.module("openshiftCommon").factory("DataService", [ "$cacheFactory", "$http", "$ws", "$rootScope", "$q", "API_CFG", "APIService", "Notification", "Logger", "$timeout", "base64", "base64util", function(a, b, c, d, e, f, g, h, i, j, k, l) {
+}), angular.module("openshiftCommonServices").factory("DataService", [ "$cacheFactory", "$http", "$ws", "$rootScope", "$q", "API_CFG", "APIService", "Notification", "Logger", "$timeout", "base64", "base64util", function(a, b, c, d, e, f, g, h, i, j, k, l) {
 function m(a) {
 this._data = {}, this._objectsByAttribute(a, "metadata.name", this._data);
 }
@@ -60534,7 +60938,7 @@ namespace:a.metadata.name
 });
 }) :d.resolve(null), d.promise;
 }, new o();
-} ]), angular.module("openshiftCommon").provider("DeleteTokenLogoutService", function() {
+} ]), angular.module("openshiftCommonServices").provider("DeleteTokenLogoutService", function() {
 this.$get = [ "$q", "$injector", "Logger", function(a, b, c) {
 var d = c.get("auth");
 return {
@@ -60552,7 +60956,34 @@ return f["delete"]("oauthaccesstokens", e, {}, g);
 }
 };
 } ];
-}), angular.module("openshiftCommon").provider("Logger", function() {
+}), angular.module("openshiftCommonServices").service("KeywordService", function() {
+var a = function(a) {
+if (!a) return [];
+var b = _.uniq(a.match(/\S+/g));
+return b.sort(function(a, b) {
+return b.length - a.length;
+}), _.map(b, function(a) {
+return new RegExp(_.escapeRegExp(a), "i");
+});
+}, b = function(a, b, c) {
+var d = a;
+return _.isEmpty(c) ? d :(angular.forEach(c, function(a) {
+var c = function(c) {
+var d;
+for (d = 0; d < b.length; d++) {
+var e = _.get(c, b[d]);
+if (e && a.test(e)) return !0;
+}
+return !1;
+};
+d = _.filter(d, c);
+}), d);
+};
+return {
+filterForKeywords:b,
+generateKeywords:a
+};
+}), angular.module("openshiftCommonServices").provider("Logger", function() {
 this.$get = function() {
 var a = Logger.get("OpenShift"), b = {
 get:function(a) {
@@ -60577,7 +61008,7 @@ a.error.apply(a, arguments);
 }, c = "ERROR";
 return localStorage && (c = localStorage["OpenShiftLogLevel.main"] || c), a.setLevel(Logger[c]), b;
 };
-}), angular.module("openshiftCommon").provider("MemoryUserStore", function() {
+}), angular.module("openshiftCommonServices").provider("MemoryUserStore", function() {
 this.$get = [ "Logger", function(a) {
 var b = a.get("auth"), c = null, d = null;
 return {
@@ -60688,7 +61119,7 @@ a ? (b.log("LocalStorageUserStore.setToken", a, c), localStorage[d] = a, f(d, c)
 }
 };
 } ];
-}), angular.module("openshiftCommon").factory("Notification", [ "$rootScope", function(a) {
+}), angular.module("openshiftCommonServices").factory("Notification", [ "$rootScope", function(a) {
 function b() {
 this.messenger = Messenger({
 extraClasses:"messenger-fixed messenger-on-bottom messenger-on-right",
@@ -60723,7 +61154,51 @@ this.notify("warning", a, b);
 }, b.prototype.clear = function() {
 this.messenger.hideAll();
 }, new b();
-} ]), angular.module("openshiftCommon").provider("RedirectLoginService", function() {
+} ]), angular.module("openshiftCommonServices").factory("ProjectsService", [ "$location", "$q", "AuthService", "DataService", "annotationNameFilter", "AuthorizationService", function(a, b, c, d, e, f) {
+var g = function(a) {
+var b = [ e("description"), e("displayName") ];
+return _.each(b, function(b) {
+a.metadata.annotations[b] || delete a.metadata.annotations[b];
+}), a;
+};
+return {
+get:function(b) {
+return c.withUser().then(function() {
+var c = {
+projectPromise:$.Deferred(),
+projectName:b,
+project:void 0
+};
+return d.get("projects", b, c, {
+errorNotification:!1
+}).then(function(a) {
+return f.getProjectRules(b).then(function() {
+return c.project = a, c.projectPromise.resolve(a), [ a, c ];
+});
+}, function(b) {
+c.projectPromise.reject(b);
+var d = "The project could not be loaded.", e = "error";
+403 === b.status ? (d = "The project " + c.projectName + " does not exist or you are not authorized to view it.", e = "access_denied") :404 === b.status && (d = "The project " + c.projectName + " does not exist.", e = "not_found"), a.url(URI("error").query({
+error:e,
+error_description:d
+}).toString());
+});
+});
+},
+update:function(a, b) {
+return d.update("projects", a, g(b), {
+projectName:a
+}, {
+errorNotification:!1
+});
+},
+canCreate:function() {
+return d.get("projectrequests", null, {}, {
+errorNotification:!1
+});
+}
+};
+} ]), angular.module("openshiftCommonServices").provider("RedirectLoginService", function() {
 var a = "", b = "", c = "";
 this.OAuthClientID = function(b) {
 return b && (a = b), a;
@@ -60826,7 +61301,7 @@ error_description:"No API token returned"
 }
 };
 } ];
-}), angular.module("openshiftCommon").provider("$ws", [ "$httpProvider", function(a) {
+}), angular.module("openshiftCommonServices").provider("$ws", [ "$httpProvider", function(a) {
 this.$get = [ "$q", "$injector", "Logger", function(b, c, d) {
 var e = d.get("auth");
 e.log("$wsProvider.$get", arguments);

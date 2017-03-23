@@ -19,7 +19,7 @@
                   <div ng-if="validationPassed">
                     <div ng-if="noProjects && canCreateProject">
                       <h2>Create a New Project</h2>
-                      <create-project alerts="alerts" submit-button-label="Next" redirect-action="createWithProject"></create-project>
+                      <create-project alerts="alerts" redirect-action="createWithProject"></create-project>
                     </div>
                     <div ng-if="!noProjects && !canCreateProject">
                       <h2>Choose a Project</h2>
@@ -64,7 +64,7 @@
                         </uib-tab>
                         <uib-tab>
                           <uib-tab-heading>Create a New Project</uib-tab-heading>
-                          <create-project alerts="alerts" submit-button-label="Next" redirect-action="createWithProject"></create-project>
+                          <create-project alerts="alerts" redirect-action="createWithProject"></create-project>
                         </uib-tab>
                       </uib-tabset>
                     </div>
