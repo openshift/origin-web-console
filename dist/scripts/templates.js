@@ -7198,11 +7198,10 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
 
   $templateCache.put('views/directives/header/project-header.html',
     "<nav class=\"navbar navbar-pf-alt\" role=\"navigation\">\n" +
-    "<div row flex class=\"navbar-header hidden-xs\">\n" +
+    "<div class=\"navbar-header hidden-xs\">\n" +
     "<a class=\"navbar-home\" href=\"./\"><span class=\"fa-fw pficon pficon-home\" aria-hidden=\"true\"></span> <span class=\"visible-xlg-inline-block\"> Projects</span></a>\n" +
     "</div>\n" +
     "<div class=\"nav navbar-project-menu\">\n" +
-    "<div row>\n" +
     "\n" +
     "<div row class=\"navbar-flex-btn toggle-menu\">\n" +
     "<button type=\"button\" class=\"navbar-toggle project-action-btn ng-isolate-scope\" data-toggle=\"collapse\" data-target=\".navbar-collapse-1\">\n" +
@@ -7212,8 +7211,7 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "<span class=\"icon-bar\"></span>\n" +
     "</button>\n" +
     "</div>\n" +
-    "<div flex class=\"form-group\">\n" +
-    "\n" +
+    "<div class=\"form-group\">\n" +
     "\n" +
     "<select class=\"selectpicker form-control\" data-selected-text-format=\"count>3\" id=\"boostrapSelect\" title=\"\"></select>\n" +
     "</div>\n" +
@@ -7224,7 +7222,6 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "</a>\n" +
     "</div>\n" +
     "<div row extension-point extension-name=\"nav-system-status-mobile\" extension-types=\"dom\" class=\"navbar-flex-btn hide-if-empty\"></div>\n" +
-    "</div>\n" +
     "</div> \n" +
     "<navbar-utility class=\"hidden-xs\"></navbar-utility>\n" +
     "</nav>"
