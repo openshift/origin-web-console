@@ -1774,7 +1774,9 @@ message:b.invalidObjectKindOrVersion(c)
 }), g.promise;
 }, f;
 } ]), angular.module("openshiftConsole").service("AlertMessageService", function() {
-var a = [], b = function(a, b) {
+var a = [], b = function(a) {
+return _.startsWith(a, "hide/alert/");
+}, c = function(a, b) {
 return b ? "hide/alert/" + b + "/" + a :"hide/alert/" + a;
 };
 return {
@@ -1787,13 +1789,20 @@ return a;
 clearAlerts:function() {
 a = [];
 },
-isAlertPermanentlyHidden:function(a, c) {
-var d = b(a, c);
+isAlertPermanentlyHidden:function(a, b) {
+var d = c(a, b);
 return "true" === localStorage.getItem(d);
 },
-permanentlyHideAlert:function(a, c) {
-var d = b(a, c);
+permanentlyHideAlert:function(a, b) {
+var d = c(a, b);
 localStorage.setItem(d, "true");
+},
+resetHiddenAlerts:function() {
+var a, c, d = [];
+for (a = 0; a < localStorage.length; a++) c = localStorage.key(a), b(c) && d.push(c);
+_.each(d, function(a) {
+localStorage.removeItem(a);
+});
 }
 };
 }), angular.module("openshiftConsole").service("Navigate", [ "$location", "$window", "$timeout", "annotationFilter", "LabelFilter", "$filter", "APIService", function(a, b, c, d, e, f, g) {
@@ -9184,12 +9193,17 @@ b.close("ok");
 a.ok = function() {
 b.close("ok");
 };
-} ]), angular.module("openshiftConsole").controller("AboutController", [ "$scope", "AuthService", "Constants", function(a, b, c) {
-b.withUser(), a.version = {
+} ]), angular.module("openshiftConsole").controller("AboutController", [ "$scope", "AlertMessageService", "AuthService", "Constants", function(a, b, c, d) {
+c.withUser(), a.alerts = {}, a.version = {
 master:{
-openshift:c.VERSION.openshift,
-kubernetes:c.VERSION.kubernetes
+openshift:d.VERSION.openshift,
+kubernetes:d.VERSION.kubernetes
 }
+}, a.resetHiddenAlerts = function() {
+b.resetHiddenAlerts(), a.alerts["hidden-alerts-reset"] = {
+type:"success",
+message:'"Don\'t Show Me Again" alerts have been reset.'
+};
 };
 } ]), angular.module("openshiftConsole").controller("CommandLineController", [ "$scope", "DataService", "AuthService", "Constants", function(a, b, c, d) {
 c.withUser(), a.cliDownloadURL = d.CLI, a.cliDownloadURLPresent = a.cliDownloadURL && !_.isEmpty(a.cliDownloadURL), a.loginBaseURL = b.openshiftAPIBaseUrl(), a.sessionToken = c.UserStore().getToken(), a.showSessionToken = !1, a.toggleShowSessionToken = function() {

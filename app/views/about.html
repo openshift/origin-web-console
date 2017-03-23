@@ -17,6 +17,7 @@
                       <img src="images/openshift-logo.svg" />
                     </div>
                     <div class="col-md-9">
+                      <alerts alerts="alerts"></alerts>
                       <h1>Red Hat OpenShift <span class="about-reg">&reg;</span></h1>
                       <h2>About</h2>
                       <p><a target="_blank" href="https://openshift.com">OpenShift</a> is Red Hat's Platform-as-a-Service (PaaS) that allows developers to quickly develop, host, and scale applications in a cloud environment.</p>
@@ -34,6 +35,10 @@
                       <p>With the OpenShift command line interface (CLI), you can create applications and manage OpenShift projects from a terminal. To get started using the CLI, visit <a href="command-line">Command Line Tools</a>.
                       </p>
 
+                      <div class="small text-muted mar-top-xl">
+                        To see <var>Don't Show Me Again</var> messages that you've previously hidden, you can
+                        <a href="" ng-click="resetHiddenAlerts()" role="button">reset alerts</a>.
+                      </div>
                     </div>
                   </div>
                 </div>
