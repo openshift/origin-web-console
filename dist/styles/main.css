@@ -4524,11 +4524,17 @@ ul.messenger-theme-flat .messenger-message.alert-info .messenger-message-inner:b
 .overview-new .data-toolbar-filter .ui-select-container{width:100px}
 .overview-new .data-toolbar-filter .label-filter-add.btn,.overview-new .data-toolbar-filter .ui-select-container .ui-select-match .btn{box-shadow:none;-webkit-box-shadow:none}
 .overview-new .data-toolbar-label{margin-right:7px}
-.overview-new .deployment-connector-arrow{display:inline-block;font-size:300%;line-height:1;margin:50px 0 0 10px;text-align:center;color:#9c9c9c}
-@media (max-width:767px){.overview-new .deployment-connector-arrow{margin:-3px auto 0 -4px;transform:rotate(90deg);width:100%}
+.overview-new .deployment-connector{align-items:flex-end;display:flex;flex:1 1 auto;justify-content:center}
+@media (min-width:480px){.overview-new .deployment-connector{align-items:center;justify-content:flex-end}
+}
+.overview-new .deployment-connector .deployment-connector-arrow{align-items:center;display:flex;font-size:300%;color:#9c9c9c}
+.overview-new .deployment-connector .deployment-connector-arrow:before{content:'\2192';margin-top:-8px;padding-right:0}
+@media (max-width:479px){.overview-new .deployment-connector .deployment-connector-arrow:before{content:'\2191';margin-top:-20px;padding-right:23px}
 }
 .overview-new .expanded-section{margin-top:20px}
 .overview-new .expanded-section>.row>[class^=col-]{margin-bottom:10px}
+@media (min-width:1200px){.overview-new .expanded-section>.row>[class^=col-].overview-builds-msg,.overview-new .expanded-section>.row>[class^=col-].overview-routes{padding-left:0}
+}
 .overview-new .expanded-section h3{line-height:1.4;margin-bottom:5px;margin-top:0;width:100%;word-wrap:break-word;word-break:break-word;overflow-wrap:break-word;min-width:0}
 .overview-new .expanded-section .section-title{font-family:inherit;font-weight:500;line-height:1.1;color:inherit;margin-top:10.5px;margin-bottom:10.5px;font-size:14px;border-bottom:1px solid #dcdcdc;padding-bottom:10px}
 .overview-new .expanded-section .section-title .small,.overview-new .expanded-section .section-title small{font-weight:400;line-height:1;color:#9c9c9c;font-size:75%}
@@ -4539,16 +4545,22 @@ ul.messenger-theme-flat .messenger-message.alert-info .messenger-message-inner:b
 .overview-new h2>.component-label{padding-bottom:0}
 .overview-new .list-pf{border-bottom-color:#dcdcdc;margin-bottom:50px}
 .overview-new .list-pf-actions{min-width:19px}
-.overview-new .list-pf-expansion.in .empty-state-message p,.overview-new .list-pf-name h3 a,.overview-new .overview-route{word-wrap:break-word;word-break:break-word;overflow-wrap:break-word;min-width:0}
+.overview-new .list-pf-details.ng-enter,.overview-new .list-pf-details.ng-hide-remove{animation:.3s appear cubic-bezier(.55,.055,.675,.19)}
 @media (min-width:768px){.overview-new .list-pf-details{justify-content:flex-end}
 }
 .overview-new .list-pf-expansion.in .deployment-donut>div[row]{justify-content:center}
 .overview-new .list-pf-expansion.in .empty-state-message{margin-bottom:30px;margin-top:20px;max-width:none;padding:0;text-align:center}
+.overview-new .list-pf-expansion.in .empty-state-message p{word-wrap:break-word;word-break:break-word;overflow-wrap:break-word;min-width:0}
 .overview-new .list-pf-expansion.in .list-pf-content{max-width:100%}
 .overview-new .list-pf-expansion.in .list-pf-container{display:block}
+@media (max-width:767px){.overview-new .list-pf-expansion.in .list-pf-container{overflow:hidden}
+}
 .overview-new .list-pf-expansion.in .pod-donut{text-align:center}
 .overview-new .list-pf-item{border-top-color:#dcdcdc}
 .overview-new .list-pf-item.active{border-top-color:#bbb}
+@media (min-width:480px){.overview-new .list-pf-item.active{overflow:hidden}
+}
+.overview-new .list-pf-name h3 a,.overview-new .overview-route{word-wrap:break-word;word-break:break-word;overflow-wrap:break-word;min-width:0}
 .overview-new .list-pf-item>.list-pf-container{cursor:pointer}
 @media (max-width:767px){.overview-new .list-pf-item>.list-pf-container>.list-pf-content{align-items:stretch;flex-direction:column;width:100%;word-wrap:break-word;word-break:break-word;overflow-wrap:break-word;min-width:0}
 }
@@ -4563,7 +4575,6 @@ ul.messenger-theme-flat .messenger-message.alert-info .messenger-message-inner:b
 .overview-new .list-row-tabset{margin-top:20px}
 @media (min-width:768px){.overview-new .list-pf-item>.list-pf-container>.list-pf-content{min-height:45px;padding-right:15px}
 .overview-new .list-row-tabset{margin-top:0}
-.overview .standalone-service .service-group-body .overview-services{min-height:352px}
 }
 .overview-new .list-row-tabset .nav-tabs>li.active>a .build-count{color:#4d5258}
 .overview-new .list-view-pf-actions .actions-dropdown-kebab{font-size:18px;width:100%}
@@ -4579,7 +4590,6 @@ ul.messenger-theme-flat .messenger-message.alert-info .messenger-message-inner:b
 .overview-new .middle .middle-container>div{width:100%}
 .overview-new .middle .middle-container .container-fluid{padding-left:20px;padding-right:20px}
 .overview-new .networking-section .row+.row:before{content:'';display:block;border-top:1px solid #dcdcdc;margin:0 20px 10px}
-.overview-new overview-list-row+overview-list-row .list-pf-item.active{margin-top:-1px}
 .overview-new .overview-routes+.overview-routes{margin-top:10px}
 .overview-new .overview-row-inline-actions{margin-left:10px}
 .overview-new pod-donut[mini]{align-items:center;display:flex}
@@ -4592,6 +4602,47 @@ ul.messenger-theme-flat .messenger-message.alert-info .messenger-message-inner:b
 .overview-new .usage-value{font-size:18px;font-weight:300;line-height:1}
 .overview-new .usage-label{font-size:84%;color:#9c9c9c}
 .overview-new .view-by-options{align-items:baseline;display:flex}
+@keyframes deploymentSlideDown{0%{transform:translateY(-220px)}
+100%{transform:translateX(0)}
+}
+@keyframes deploymentSlideIn{0%{transform:translateX(240px)}
+100%{transform:translateX(0)}
+}
+.overview-new .row-expanded-top{display:flex;flex-wrap:wrap;justify-content:space-between}
+@media (min-width:1200px){.overview-new .row-expanded-top .overview-animation-block,.overview-new .row-expanded-top .overview-pod-template{width:50%}
+}
+.overview-new .row-expanded-top .overview-animation-block{display:flex;flex:1 1 auto;justify-content:center}
+@media (min-width:768px){.overview-new .row-expanded-top .overview-animation-block.animation-in-progress .overview-deployment-donut .latest-donut{justify-content:flex-end}
+.overview .standalone-service .service-group-body .overview-services{min-height:352px}
+}
+@media (min-width:480px){.overview-new .row-expanded-top .overview-animation-block .overview-deployment-donut{display:flex;flex:1 1 auto;height:150px;max-width:450px}
+}
+.overview-new .row-expanded-top .overview-animation-block .overview-deployment-donut.ng-enter{animation:deploymentSlideIn 750ms ease forwards}
+.overview-new .row-expanded-top .overview-animation-block .overview-deployment-donut.stacked-template .overview-pod-template{min-width:100%}
+@media (max-width:479px){.overview-new .row-expanded-top .overview-animation-block .overview-deployment-donut.stacked-template{display:flex;flex-direction:column-reverse}
+.overview-new .row-expanded-top .overview-animation-block .overview-deployment-donut.stacked-template.ng-enter{animation:deploymentSlideDown 750ms ease forwards}
+}
+.overview-new .row-expanded-top .overview-animation-block .overview-deployment-donut .latest-donut{display:flex;flex:1 1 auto;justify-content:flex-end}
+.overview-new .row-expanded-top .overview-animation-block .overview-deployment-donut .previous-donut{display:flex;flex:1 1 auto}
+.overview-new .row-expanded-top .overview-animation-block .overview-deployment-donut .previous-donut.ng-enter-prepare,.overview-new .row-expanded-top.metrics-active .overview-metrics{display:none}
+.overview-new .row-expanded-top .overview-animation-block .overview-deployment-donut .previous-donut.ng-hide-add,.overview-new .row-expanded-top .overview-animation-block .overview-deployment-donut .previous-donut.ng-leave{animation:150ms disappear cubic-bezier(.215,.61,.355,1)}
+@media (max-width:479px){.overview-new .row-expanded-top .overview-animation-block .overview-deployment-donut .previous-donut{flex-direction:column}
+.overview-new .row-expanded-top .overview-animation-block .overview-deployment-donut .previous-donut deployment-donut{order:2}
+}
+@media (max-width:1199px){.overview-new .row-expanded-top.metrics-active{flex-direction:column}
+.overview-new .row-expanded-top.metrics-active .overview-pod-template{min-width:100%;order:3}
+}
+@media (min-width:480px) and (max-width:1199px){.overview-new .row-expanded-top.metrics-active .overview-animation-block{justify-content:space-between;padding-bottom:20px}
+.overview-new .row-expanded-top.metrics-active .overview-animation-block.animation-in-progress{justify-content:center}
+}
+@media (min-width:480px){.overview-new .row-expanded-top.metrics-active .overview-metrics{display:block;width:50%}
+.overview-new .row-expanded-top.metrics-active .overview-metrics.ng-enter,.overview-new .row-expanded-top.metrics-active .overview-metrics.ng-hide-remove{animation:.3s appear cubic-bezier(.55,.055,.675,.19)}
+.overview-new .row-expanded-top.metrics-active .overview-metrics.ng-hide-add,.overview-new .row-expanded-top.metrics-active .overview-metrics.ng-leave{animation:150ms disappear cubic-bezier(.215,.61,.355,1)}
+}
+.overview-new .row-expanded-top.metrics-not-active .overview-pod-template{width:50%}
+.overview-new .row-expanded-top .overview-pod-template{flex:1 1 auto}
+.overview-new .row-expanded-top .overview-pod-template .pod-template-block{padding-right:10px}
+.overview-new .row-expanded-top .overview-pod-template .pod-template-block.ng-leave-prepare{display:none}
 .overview{font-weight:300}
 .overview .middle{background-color:#f2f2f2}
 .overview h2{line-height:1.4}

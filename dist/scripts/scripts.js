@@ -4141,7 +4141,7 @@ getLogsCommand:c
 } ]), angular.module("openshiftConsole").factory("HTMLService", [ "BREAKPOINTS", function(a) {
 return {
 getBreakpoint:function() {
-return window.innerWidth < a.screenSmMin ? "xs" :window.innerWidth < a.screenMdMin ? "sm" :window.innerWidth < a.screenLgMin ? "md" :"lg";
+return window.innerWidth < a.screenXsMin ? "xxs" :window.innerWidth < a.screenSmMin ? "xs" :window.innerWidth < a.screenMdMin ? "sm" :window.innerWidth < a.screenLgMin ? "md" :"lg";
 },
 linkify:function(a, b, c) {
 return a ? (c || (a = _.escape(a)), a.replace(/https?:\/\/[A-Za-z0-9._%+-]+\S*[^\s.;,(){}<>"\u201d\u2019]/gm, function(a) {

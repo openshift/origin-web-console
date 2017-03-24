@@ -1,7 +1,7 @@
 <div ng-if="networking.services | hashSize" class="expanded-section networking-section">
   <div class="section-title hidden-xs">Networking</div>
   <div ng-repeat="service in networking.services" class="row">
-    <div class="col-sm-5">
+    <div class="col-sm-5 col-md-6">
       <div class="component-label">
         Service
         <span class="sublabel">Internal Traffic</span>
@@ -23,7 +23,7 @@
         </span>
       </span>
     </div>
-    <div class="col-sm-7">
+    <div class="col-sm-7 col-md-6 overview-routes">
       <div class="component-label">
         Routes
         <span class="sublabel">External Traffic</span>
