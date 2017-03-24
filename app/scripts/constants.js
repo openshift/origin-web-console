@@ -6,7 +6,11 @@
 
 // NOTE: Update extensions/examples/online-extensions.js if you add a new help link to this map.
 
-window.OPENSHIFT_CONSTANTS = {
+if (angular.isUndefined(window.OPENSHIFT_CONSTANTS)) {
+  window.OPENSHIFT_CONSTANTS = {};
+}
+
+angular.extend(window.OPENSHIFT_CONSTANTS, {
   // Maps links to specific topics in external documentation.
   HELP_BASE_URL: "https://docs.openshift.org/latest/",
   HELP: {
@@ -432,4 +436,4 @@ window.OPENSHIFT_CONSTANTS = {
       ]
     }
   ]
-};
+});
