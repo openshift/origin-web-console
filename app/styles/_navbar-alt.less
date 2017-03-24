@@ -64,23 +64,6 @@
   }
   .nav.navbar-iconic {
     margin-right: 10px;
-    .dropdown-menu {
-      margin-top: -10px;
-      right: 0;
-      &:after {
-        border: 6px solid transparent;
-        border-bottom-color: #fff;
-        border-top-width: 0;
-        content: "";
-        display: block;
-        height: 0;
-        position: absolute;
-        right: 7px;
-        top: -6px;
-        vertical-align: middle;
-        width: 0;
-      }
-    }
   }
   .navbar-brand {
     border: 0;
@@ -162,6 +145,35 @@
       }
     }
   }
+  [uib-dropdown] {
+    .caret {
+      font-size: @font-size-base + 3;
+    }
+    &.project-action .dropdown-menu {
+      right: 8px;
+      @media(max-width: @screen-xs-max) {
+        margin-top: -6px;
+        right: 11px;
+      }
+    }
+    .dropdown-menu {
+      margin-top: -10px;
+      right: 0;
+      &:after {
+        border: 6px solid transparent;
+        border-bottom-color: #fff;
+        border-top-width: 0;
+        content: "";
+        display: block;
+        height: 0;
+        position: absolute;
+        right: 7px;
+        top: -6px;
+        vertical-align: middle;
+        width: 0;
+      }
+    }
+  }
 }
 
 @media (min-width: @screen-sm-min) {
@@ -216,6 +228,15 @@
 
 .navbar-flex-btn {
   position: relative;
+  &.open > a {
+    &,
+    &:hover,
+    &:focus {
+      // Have to override a bootstrap style that makes the background white
+      background: @navbar-os-project-menu-active-bg;
+      color: @navbar-os-project-menu-active-color;
+    }
+  }
   .project-action-btn {
     color: @navbar-os-project-menu-color;
     font-weight: 300;
@@ -223,7 +244,10 @@
     .align-items(@align: center);
     .flex(@columns: 1 0 0%);
     .justify-content(@justify: center);
+    &:active,
+    &:focus,
     &:hover {
+      // TODO:  figure out why active and hover don't work on button.project-action-btn in Fx and Safari
       background-color: @navbar-os-project-menu-active-bg;
       color: @navbar-os-project-menu-active-color;
     }
@@ -271,7 +295,7 @@
   }
   .navbar-flex-btn {
     .flex(@columns: 0 0 50px);
-    a {
+    > a {
       color: lighten(@navbar-os-project-menu-color, 20%);
       cursor: pointer;
       .flex-display(@display: flex);
@@ -281,13 +305,6 @@
         color: @navbar-os-project-menu-color;
       }
     }
-  }
-}
-
-.navbar-flex-btn {
-  &.open > a.project-action-btn {
-   // Have to override a bootstrap style that makes the background white
-   background: @navbar-os-project-menu-bg;
   }
 }
 
@@ -311,11 +328,15 @@
     }
   }
   .navbar-flex-btn {
+    &.open > a {
+      &,
+      &:focus,
+      &:hover {
+        border-right: 1px solid @navbar-os-project-menu-border;
+      }
+    }
     &.toggle-menu {
       display: none;
-    }
-    &.open > a.project-action-btn {
-      border-right: 1px solid @navbar-os-project-menu-border;
     }
     .project-action-btn {
       border-right: 1px solid @navbar-os-project-menu-border;
