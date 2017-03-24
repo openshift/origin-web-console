@@ -284,6 +284,13 @@
   }
 }
 
+.navbar-flex-btn {
+  &.open > a.project-action-btn {
+   // Have to override a bootstrap style that makes the background white
+   background: @navbar-os-project-menu-bg;
+  }
+}
+
 @media (max-width: @screen-xxs-max) {
   .navbar-flex-btn {
     .flex(@columns: 0 0 40px);
@@ -306,6 +313,9 @@
   .navbar-flex-btn {
     &.toggle-menu {
       display: none;
+    }
+    &.open > a.project-action-btn {
+      border-right: 1px solid @navbar-os-project-menu-border;
     }
     .project-action-btn {
       border-right: 1px solid @navbar-os-project-menu-border;
