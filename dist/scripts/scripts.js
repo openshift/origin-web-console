@@ -1103,7 +1103,7 @@ label:"Uncategorized",
 description:""
 } ]
 } ]
-}, angular.module("openshiftConsole", [ "ngAnimate", "ngCookies", "ngResource", "ngRoute", "ngSanitize", "openshiftUI", "kubernetesUI", "registryUI.images", "ui.bootstrap", "patternfly.charts", "patternfly.sort", "openshiftConsoleTemplates", "ui.ace", "extension-registry", "as.sortable", "ui.select", "angular-inview", "angularMoment", "ab-base64", "openshiftCommon" ]).config([ "$routeProvider", function(a) {
+}, angular.module("openshiftConsole", [ "ngAnimate", "ngCookies", "ngResource", "ngRoute", "ngSanitize", "openshiftUI", "kubernetesUI", "registryUI.images", "ui.bootstrap", "patternfly.charts", "patternfly.sort", "openshiftConsoleTemplates", "ui.ace", "extension-registry", "as.sortable", "ui.select", "angular-inview", "angularMoment", "ab-base64", "openshiftCommonServices", "openshiftCommonUI" ]).config([ "$routeProvider", function(a) {
 var b;
 b = window.OPENSHIFT_CONSTANTS.HIDE_NEW_OVERVIEW || "true" === localStorage.getItem("hide-new-overview") ? {
 templateUrl:"views/overview.html",
@@ -1425,76 +1425,13 @@ return h ? b(e, null) || d :a(e, null, f, g) || d;
 }, 1e3);
 } ]).run([ "IS_IOS", function(a) {
 a && $("body").addClass("ios");
-} ]), hawtioPluginLoader.addModule("openshiftConsole"), angular.module("openshiftConsole").factory("base64util", function() {
-return {
-pad:function(a) {
-if (!a) return "";
-switch (a.length % 4) {
-case 1:
-return a + "===";
-
-case 2:
-return a + "==";
-
-case 3:
-return a + "=";
-
-default:
-return a;
-}
-}
-};
-}), angular.module("openshiftConsole").factory("APIDiscovery", [ "LOGGING_URL", "METRICS_URL", "$q", function(a, b, c) {
+} ]), hawtioPluginLoader.addModule("openshiftConsole"), angular.module("openshiftConsole").factory("APIDiscovery", [ "LOGGING_URL", "METRICS_URL", "$q", function(a, b, c) {
 return {
 getLoggingURL:function() {
 return c.when(a);
 },
 getMetricsURL:function() {
 return c.when(b);
-}
-};
-} ]), angular.module("openshiftConsole").factory("ProjectsService", [ "$location", "$q", "$routeParams", "AuthService", "DataService", "annotationNameFilter", "AuthorizationService", function(a, b, c, d, e, f, g) {
-var h = function(a) {
-var b = [ f("description"), f("displayName") ];
-return _.each(b, function(b) {
-a.metadata.annotations[b] || delete a.metadata.annotations[b];
-}), a;
-};
-return {
-get:function(b) {
-return d.withUser().then(function() {
-var c = {
-projectPromise:$.Deferred(),
-projectName:b,
-project:void 0
-};
-return e.get("projects", b, c, {
-errorNotification:!1
-}).then(function(a) {
-return g.getProjectRules(b).then(function() {
-return c.project = a, c.projectPromise.resolve(a), [ a, c ];
-});
-}, function(b) {
-c.projectPromise.reject(b);
-var d = "The project could not be loaded.", e = "error";
-403 === b.status ? (d = "The project " + c.projectName + " does not exist or you are not authorized to view it.", e = "access_denied") :404 === b.status && (d = "The project " + c.projectName + " does not exist.", e = "not_found"), a.url(URI("error").query({
-error:e,
-error_description:d
-}).toString());
-});
-});
-},
-update:function(a, b) {
-return e.update("projects", a, h(b), {
-projectName:a
-}, {
-errorNotification:!1
-});
-},
-canCreate:function() {
-return e.get("projectrequests", null, {}, {
-errorNotification:!1
-});
 }
 };
 } ]), angular.module("openshiftConsole").service("ApplicationGenerator", [ "DataService", "APIService", "Logger", "$parse", "$q", function(a, b, c, d, e) {
@@ -1773,30 +1710,7 @@ message:b.invalidObjectKindOrVersion(c)
 }), j--, void f());
 }), g.promise;
 }, f;
-} ]), angular.module("openshiftConsole").service("AlertMessageService", function() {
-var a = [], b = function(a, b) {
-return b ? "hide/alert/" + b + "/" + a :"hide/alert/" + a;
-};
-return {
-addAlert:function(b) {
-a.push(b);
-},
-getAlerts:function() {
-return a;
-},
-clearAlerts:function() {
-a = [];
-},
-isAlertPermanentlyHidden:function(a, c) {
-var d = b(a, c);
-return "true" === localStorage.getItem(d);
-},
-permanentlyHideAlert:function(a, c) {
-var d = b(a, c);
-localStorage.setItem(d, "true");
-}
-};
-}), angular.module("openshiftConsole").service("Navigate", [ "$location", "$window", "$timeout", "annotationFilter", "LabelFilter", "$filter", "APIService", function(a, b, c, d, e, f, g) {
+} ]), angular.module("openshiftConsole").service("Navigate", [ "$location", "$window", "$timeout", "annotationFilter", "LabelFilter", "$filter", "APIService", function(a, b, c, d, e, f, g) {
 var h = f("annotation"), i = f("buildConfigForBuild"), j = f("isJenkinsPipelineStrategy"), k = f("displayName"), l = function(a, b) {
 return _.get(b, "isPipeline") ? "pipelines" :_.isObject(a) && j(a) ? "pipelines" :"builds";
 };
@@ -3466,34 +3380,7 @@ runsAsRoot:f,
 getResources:h,
 getEnvironment:i
 };
-} ]), angular.module("openshiftConsole").service("KeywordService", function() {
-var a = function(a) {
-if (!a) return [];
-var b = _.uniq(a.match(/\S+/g));
-return b.sort(function(a, b) {
-return b.length - a.length;
-}), _.map(b, function(a) {
-return new RegExp(_.escapeRegExp(a), "i");
-});
-}, b = function(a, b, c) {
-var d = a;
-return _.isEmpty(c) ? d :(angular.forEach(c, function(a) {
-var c = function(c) {
-var d;
-for (d = 0; d < b.length; d++) {
-var e = _.get(c, b[d]);
-if (e && a.test(e)) return !0;
-}
-return !1;
-};
-d = _.filter(d, c);
-}), d);
-};
-return {
-filterForKeywords:b,
-generateKeywords:a
-};
-}), angular.module("openshiftConsole").factory("ConversionService", function() {
+} ]), angular.module("openshiftConsole").factory("ConversionService", function() {
 var a = function(a) {
 return a ? a / 1048576 :a;
 }, b = function(a) {
@@ -9141,12 +9028,6 @@ b.close("save");
 }, a.cancel = function() {
 b.dismiss("cancel");
 };
-} ]), angular.module("openshiftConsole").controller("DeleteModalController", [ "$scope", "$uibModalInstance", function(a, b) {
-a["delete"] = function() {
-b.close("delete");
-}, a.cancel = function() {
-b.dismiss("cancel");
-};
 } ]), angular.module("openshiftConsole").controller("DebugTerminalModalController", [ "$scope", "$filter", "$uibModalInstance", "container", "image", function(a, b, c, d, e) {
 a.container = d, a.image = e, a.$watch("debugPod.status.containerStatuses", function() {
 a.containerState = _.get(a, "debugPod.status.containerStatuses[0].state");
@@ -9270,43 +9151,7 @@ a.hideBuild = c(b);
 },
 templateUrl:"views/directives/_build-close.html"
 };
-} ]), angular.module("openshiftConsole").directive("createProject", function() {
-return {
-restrict:"E",
-scope:{
-alerts:"=",
-submitButtonLabel:"@",
-redirectAction:"&"
-},
-templateUrl:"views/directives/_create-project-form.html",
-controller:[ "$scope", "$filter", "$location", "DataService", function(a, b, c, d) {
-a.submitButtonLabel || (a.submitButtonLabel = "Create"), a.createProject = function() {
-a.disableInputs = !0, a.createProjectForm.$valid && d.create("projectrequests", null, {
-apiVersion:"v1",
-kind:"ProjectRequest",
-metadata:{
-name:a.name
-},
-displayName:a.displayName,
-description:a.description
-}, a).then(function(b) {
-var d = a.redirectAction();
-d ? d(encodeURIComponent(b.metadata.name)) :c.path("project/" + encodeURIComponent(b.metadata.name) + "/create");
-}, function(b) {
-a.disableInputs = !1;
-var c = b.data || {};
-if ("AlreadyExists" === c.reason) a.nameTaken = !0; else {
-var d = c.message || "An error occurred creating the project.";
-a.alerts["error-creating-project"] = {
-type:"error",
-message:d
-};
-}
-});
-};
-} ]
-};
-}), angular.module("openshiftConsole").directive("createSecret", [ "$filter", "AuthorizationService", "DataService", "DNS1123_SUBDOMAIN_VALIDATION", function(a, b, c, d) {
+} ]), angular.module("openshiftConsole").directive("createSecret", [ "$filter", "AuthorizationService", "DataService", "DNS1123_SUBDOMAIN_VALIDATION", function(a, b, c, d) {
 return {
 restrict:"E",
 scope:{
@@ -9491,109 +9336,7 @@ precision:"=?"
 },
 template:'<span data-timestamp="{{timestamp}}" data-omit-single="{{omitSingle}}" data-precision="{{precision}}" class="duration">{{timestamp | duration : null : omitSingle : precision}}</span>'
 };
-}), angular.module("openshiftConsole").directive("deleteLink", [ "$uibModal", "$location", "$filter", "$q", "hashSizeFilter", "APIService", "DataService", "AlertMessageService", "Navigate", "Logger", function(a, b, c, d, e, f, g, h, i, j) {
-return {
-restrict:"E",
-scope:{
-kind:"@",
-group:"@?",
-typeDisplayName:"@?",
-resourceName:"@",
-projectName:"@",
-alerts:"=",
-displayName:"@",
-disableDelete:"=?",
-typeNameToConfirm:"=?",
-label:"@?",
-buttonOnly:"@",
-stayOnCurrentPage:"=?",
-replicas:"=?",
-hpaList:"=?",
-success:"=?",
-redirectUrl:"@?"
-},
-templateUrl:function(a, b) {
-return angular.isDefined(b.buttonOnly) ? "views/directives/delete-button.html" :"views/directives/delete-link.html";
-},
-replace:!0,
-link:function(e, k, l) {
-"Project" === l.kind && (e.isProject = !0), e.options = {
-deleteHPAs:!0
-};
-var m = function(a) {
-e.stayOnCurrentPage ? e.alerts[a.name] = a.data :h.addAlert(a);
-}, n = function(a) {
-return g["delete"]({
-resource:"horizontalpodautoscalers",
-group:"extensions"
-}, a.metadata.name, {
-namespace:e.projectName
-}).then(function() {
-m({
-name:a.metadata.name,
-data:{
-type:"success",
-message:"Horizontal Pod Autoscaler " + a.metadata.name + " was marked for deletion."
-}
-});
-})["catch"](function(b) {
-m({
-name:a.metadata.name,
-data:{
-type:"error",
-message:"Horizontal Pod Autoscaler " + a.metadata.name + " could not be deleted."
-}
-}), j.error("HPA " + a.metadata.name + " could not be deleted.", b);
-});
-}, o = function() {
-if (!e.stayOnCurrentPage) {
-if (e.redirectUrl) return void b.url(e.redirectUrl);
-if ("Project" !== e.kind) return void i.toResourceList(f.kindToResource(e.kind), e.projectName);
-if ("/" === b.path()) return void e.$emit("deleteProject");
-var a = URI("/");
-b.url(a);
-}
-};
-e.openDeleteModal = function() {
-if (!e.disableDelete) {
-var b = a.open({
-animation:!0,
-templateUrl:"views/modals/delete-resource.html",
-controller:"DeleteModalController",
-scope:e
-});
-b.result.then(function() {
-var a = e.kind, b = e.resourceName, h = e.typeDisplayName || c("humanizeKind")(a), i = h + " '" + (e.displayName ? e.displayName :b) + "'", k = "Project" === e.kind ? {} :{
-namespace:e.projectName
-};
-g["delete"]({
-resource:f.kindToResource(a),
-group:e.group
-}, b, k).then(function() {
-m({
-name:b,
-data:{
-type:"success",
-message:_.capitalize(i) + " was marked for deletion."
-}
-}), e.success && e.success();
-var a = [];
-e.options.deleteHPAs && _.forEach(e.hpaList, function(b) {
-a.push(n(b));
-}), a.length ? d.all(a).then(o) :o();
-})["catch"](function(a) {
-e.alerts[b] = {
-type:"error",
-message:_.capitalize(i) + "' could not be deleted.",
-details:c("getErrorDetails")(a)
-}, j.error(i + " could not be deleted.", a);
-});
-});
-}
-};
-}
-};
-} ]), angular.module("openshiftConsole").directive("editWebhookTriggers", [ "ApplicationGenerator", function(a) {
+}), angular.module("openshiftConsole").directive("editWebhookTriggers", [ "ApplicationGenerator", function(a) {
 return {
 restrict:"E",
 scope:{
@@ -14101,13 +13844,6 @@ return _.each(b, function(b) {
 c && !a(b, c) || (c = b);
 }), c;
 };
-} ]).filter("orderObjectsByDate", [ "toArrayFilter", function(a) {
-return function(b, c) {
-return b = a(b), b.sort(function(a, b) {
-if (!(a.metadata && a.metadata.creationTimestamp && b.metadata && b.metadata.creationTimestamp)) throw "orderObjectsByDate expects all objects to have the field metadata.creationTimestamp";
-return a.metadata.creationTimestamp < b.metadata.creationTimestamp ? c ? 1 :-1 :a.metadata.creationTimestamp > b.metadata.creationTimestamp ? c ? -1 :1 :0;
-}), b;
-};
 } ]).filter("humanizeDurationValue", function() {
 return function(a, b) {
 return moment.duration(a, b).humanize();
@@ -14121,90 +13857,9 @@ return function(a) {
 var b = [], c = moment.duration(a), d = Math.floor(c.asHours()), e = c.minutes(), f = c.seconds();
 return (d < 0 || e < 0 || f < 0) && (d = e = f = 0), d && b.push(d + "h"), e && b.push(e + "m"), d || b.push(f + "s"), b.join(" ");
 };
-}), angular.module("openshiftConsole").filter("uid", function() {
-return function(a) {
-return a && a.metadata && a.metadata.uid ? a.metadata.uid :a;
-};
-}).filter("annotationName", function() {
-var a = {
-buildConfig:[ "openshift.io/build-config.name" ],
-deploymentConfig:[ "openshift.io/deployment-config.name" ],
-deployment:[ "openshift.io/deployment.name" ],
-pod:[ "openshift.io/deployer-pod.name" ],
-deployerPod:[ "openshift.io/deployer-pod.name" ],
-deployerPodFor:[ "openshift.io/deployer-pod-for.name" ],
-deploymentStatus:[ "openshift.io/deployment.phase" ],
-deploymentStatusReason:[ "openshift.io/deployment.status-reason" ],
-deploymentCancelled:[ "openshift.io/deployment.cancelled" ],
-encodedDeploymentConfig:[ "openshift.io/encoded-deployment-config" ],
-deploymentVersion:[ "openshift.io/deployment-config.latest-version" ],
-displayName:[ "openshift.io/display-name" ],
-description:[ "openshift.io/description" ],
-buildNumber:[ "openshift.io/build.number" ],
-buildPod:[ "openshift.io/build.pod-name" ],
-jenkinsBuildURL:[ "openshift.io/jenkins-build-uri" ],
-jenkinsLogURL:[ "openshift.io/jenkins-log-url" ],
-jenkinsStatus:[ "openshift.io/jenkins-status-json" ],
-idledAt:[ "idling.alpha.openshift.io/idled-at" ],
-idledPreviousScale:[ "idling.alpha.openshift.io/previous-scale" ],
-systemOnly:[ "authorization.openshift.io/system-only" ]
-};
-return function(b) {
-return a[b] || null;
-};
-}).filter("labelName", function() {
-var a = {
-buildConfig:[ "openshift.io/build-config.name" ],
-deploymentConfig:[ "openshift.io/deployment-config.name" ]
-};
-return function(b) {
-return a[b];
-};
-}).filter("annotation", [ "annotationNameFilter", function(a) {
-return function(b, c) {
-if (b && b.metadata && b.metadata.annotations) {
-if (void 0 !== b.metadata.annotations[c]) return b.metadata.annotations[c];
-for (var d = a(c) || [], e = 0; e < d.length; e++) {
-var f = d[e];
-if (void 0 !== b.metadata.annotations[f]) return b.metadata.annotations[f];
-}
-return null;
-}
-return null;
-};
-} ]).filter("imageStreamTagAnnotation", function() {
-return function(a, b, c) {
-if (c = c || "latest", a && a.spec && a.spec.tags) for (var d = a.spec.tags, e = 0; e < d.length; ++e) {
-var f = d[e];
-if (c === f.name && f.annotations) return f.annotations[b];
-}
-return null;
-};
-}).filter("description", [ "annotationFilter", function(a) {
-return function(b) {
-return a(b, "openshift.io/description") || a(b, "kubernetes.io/description");
-};
-} ]).filter("storageClass", [ "annotationFilter", function(a) {
+}), angular.module("openshiftConsole").filter("storageClass", [ "annotationFilter", function(a) {
 return function(b) {
 return a(b, "volume.beta.kubernetes.io/storage-class");
-};
-} ]).filter("displayName", [ "annotationFilter", function(a) {
-return function(b, c) {
-var d = a(b, "displayName");
-return d || c ? d :b && b.metadata ? b.metadata.name :null;
-};
-} ]).filter("uniqueDisplayName", [ "displayNameFilter", function(a) {
-function b(b) {
-var c = {};
-return angular.forEach(b, function(b, d) {
-var e = a(b);
-c[e] = (c[e] || 0) + 1;
-}), c;
-}
-return function(c, d) {
-if (!c) return "";
-var e = a(c), f = c.metadata.name;
-return e !== f && b(d)[e] > 1 ? e + " (" + f + ")" :e;
 };
 } ]).filter("searchProjects", [ "displayNameFilter", function(a) {
 return function(b, c) {
@@ -14220,11 +13875,6 @@ c = c || "tags";
 var d = a(b, c);
 return d ? d.split(/\s*,\s*/) :[];
 };
-} ]).filter("imageStreamTagTags", [ "imageStreamTagAnnotationFilter", function(a) {
-return function(b, c) {
-var d = a(b, "tags", c);
-return d ? d.split(/\s*,\s*/) :[];
-};
 } ]).filter("imageStreamLastUpdated", function() {
 return function(a) {
 var b = a.metadata.creationTimestamp, c = moment(b);
@@ -14234,10 +13884,6 @@ var d = moment(a.items[0].created);
 d.isAfter(c) && (c = d, b = a.items[0].created);
 }
 }), b;
-};
-}).filter("label", function() {
-return function(a, b) {
-return a && a.metadata && a.metadata.labels ? a.metadata.labels[b] :null;
 };
 }).filter("buildConfigForBuild", [ "annotationFilter", "labelNameFilter", "labelFilter", function(a, b, c) {
 var d = b("buildConfig");
@@ -14253,11 +13899,6 @@ return c ? c :"";
 return function(b, c) {
 var d = a(b, "iconClass");
 return d ? d :"template" === c ? "fa fa-clone" :"";
-};
-} ]).filter("imageStreamTagIconClass", [ "imageStreamTagAnnotationFilter", function(a) {
-return function(b, c) {
-var d = a(b, "iconClass", c);
-return d ? d :"fa fa-cube";
 };
 } ]).filter("imageName", function() {
 return function(a) {
@@ -14936,15 +14577,7 @@ return function(a) {
 var b = _.get(a, "spec.alternateBackends", []);
 return !_.isEmpty(b);
 };
-}), angular.module("openshiftConsole").filter("canI", [ "AuthorizationService", function(a) {
-return function(b, c, d) {
-return a.canI(b, c, d);
-};
-} ]).filter("canIAddToProject", [ "AuthorizationService", function(a) {
-return function(b) {
-return a.canIAddToProject(b);
-};
-} ]).filter("canIDoAny", [ "canIFilter", function(a) {
+}), angular.module("openshiftConsole").filter("canIDoAny", [ "canIFilter", function(a) {
 var b = {
 buildConfigs:[ {
 group:"",
@@ -15076,10 +14709,6 @@ return null === a ? b :("string" != typeof a && (a = String(a)), 0 === a.trim().
 };
 }).filter("keys", function() {
 return _.keys;
-}).filter("hashSize", function() {
-return function(a) {
-return a ? Object.keys(a).length :0;
-};
 }).filter("usageValue", function() {
 return function(a) {
 if (!a) return a;
@@ -15245,15 +14874,6 @@ return angular.forEach(a, function(a, b) {
 c.indexOf(b) === -1 && (d[b] = a);
 }), d;
 };
-}).filter("toArray", function() {
-return function(a) {
-if (!a) return [];
-if (angular.isArray(a)) return a;
-var b = [];
-return angular.forEach(a, function(a) {
-b.push(a);
-}), b;
-};
 }).filter("stripSHAPrefix", function() {
 return function(a) {
 return a ? a.replace(/^sha256:/, "") :a;
@@ -15398,51 +15018,13 @@ return b;
 return function(a) {
 return Math.abs(a);
 };
-}).filter("highlightKeywords", [ "KeywordService", function(a) {
-return function(b, c, d) {
-if (!b) return b;
-if (_.isEmpty(c)) return _.escape(b);
-_.isString(c) && (c = a.generateKeywords(c));
-for (var e, f = _.map(c, function(a) {
-return _.isRegExp(a) ? a.source :_.escapeRegExp(a);
-}).join("|"), g = "", h = 0, i = d ? "g" :"ig", j = new RegExp(f, i); null !== (e = j.exec(b)); ) h < e.index && (g += _.escape(b.substring(h, e.index))), g += "<mark>" + _.escape(e[0]) + "</mark>", h = j.lastIndex;
-return h < b.length && (g += _.escape(b.substring(h))), g;
-};
-} ]).filter("encodeURIComponent", function() {
+}).filter("encodeURIComponent", function() {
 return window.encodeURIComponent;
 }).filter("linkify", [ "HTMLService", function(a) {
 return function(b, c, d) {
 return a.linkify(b, c, d);
 };
-} ]), angular.module("openshiftConsole").filter("camelToLower", function() {
-return function(a) {
-return a ? _.startCase(a).toLowerCase() :a;
-};
-}).filter("upperFirst", function() {
-return function(a) {
-return a ? a.charAt(0).toUpperCase() + a.slice(1) :a;
-};
-}).filter("sentenceCase", [ "camelToLowerFilter", "upperFirstFilter", function(a, b) {
-return function(c) {
-if (!c) return c;
-var d = a(c);
-return b(d);
-};
-} ]).filter("startCase", function() {
-return function(a) {
-return a ? _.startCase(a) :a;
-};
-}).filter("capitalize", function() {
-return function(a) {
-return _.capitalize(a);
-};
-}).filter("isMultiline", function() {
-return function(a, b) {
-if (!a) return !1;
-var c = a.search(/\r|\n/);
-return c !== -1 && (!b || c !== a.length - 1);
-};
-}), angular.module("openshiftConsole").directive("affix", [ "$window", function(a) {
+} ]), angular.module("openshiftConsole").directive("affix", [ "$window", function(a) {
 return {
 restrict:"AE",
 scope:{

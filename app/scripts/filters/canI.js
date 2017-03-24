@@ -2,16 +2,6 @@
 
 angular
   .module('openshiftConsole')
-  .filter('canI', function(AuthorizationService) {
-    return function(resource, verb, projectName) {
-      return AuthorizationService.canI(resource, verb, projectName);
-    };
-  })
-  .filter('canIAddToProject', function(AuthorizationService) {
-    return function(namespace) {
-      return AuthorizationService.canIAddToProject(namespace);
-    };
-  })
   .filter('canIDoAny', function(canIFilter) {
     var resourceRulesMap = {
       'buildConfigs': [

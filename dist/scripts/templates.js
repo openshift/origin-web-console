@@ -4722,7 +4722,7 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "<div ng-if=\"validationPassed\">\n" +
     "<div ng-if=\"noProjects && canCreateProject\">\n" +
     "<h2>Create a New Project</h2>\n" +
-    "<create-project alerts=\"alerts\" submit-button-label=\"Next\" redirect-action=\"createWithProject\"></create-project>\n" +
+    "<create-project alerts=\"alerts\" redirect-action=\"createWithProject\"></create-project>\n" +
     "</div>\n" +
     "<div ng-if=\"!noProjects && !canCreateProject\">\n" +
     "<h2>Choose a Project</h2>\n" +
@@ -4762,7 +4762,7 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "</uib-tab>\n" +
     "<uib-tab>\n" +
     "<uib-tab-heading>Create a New Project</uib-tab-heading>\n" +
-    "<create-project alerts=\"alerts\" submit-button-label=\"Next\" redirect-action=\"createWithProject\"></create-project>\n" +
+    "<create-project alerts=\"alerts\" redirect-action=\"createWithProject\"></create-project>\n" +
     "</uib-tab>\n" +
     "</uib-tabset>\n" +
     "</div>\n" +
@@ -5748,50 +5748,6 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
   );
 
 
-  $templateCache.put('views/directives/_create-project-form.html',
-    "<form name=\"createProjectForm\">\n" +
-    "<fieldset ng-disabled=\"disableInputs\">\n" +
-    "<div class=\"form-group\">\n" +
-    "<label for=\"name\" class=\"required\">Name</label>\n" +
-    "<span ng-class=\"{'has-error': (createProjectForm.name.$error.pattern && createProjectForm.name.$touched) || nameTaken}\">\n" +
-    "<input class=\"form-control input-lg\" name=\"name\" id=\"name\" placeholder=\"my-project\" type=\"text\" required take-focus minlength=\"2\" maxlength=\"63\" pattern=\"[a-z0-9]([-a-z0-9]*[a-z0-9])?\" aria-describedby=\"nameHelp\" ng-model=\"name\" ng-model-options=\"{ updateOn: 'default blur' }\" ng-change=\"nameTaken = false\" autocorrect=\"off\" autocapitalize=\"off\" spellcheck=\"false\">\n" +
-    "</span>\n" +
-    "<div>\n" +
-    "<span class=\"help-block\">A unique name for the project.</span>\n" +
-    "</div>\n" +
-    "<div class=\"has-error\">\n" +
-    "<span id=\"nameHelp\" class=\"help-block\" ng-if=\"createProjectForm.name.$error.minlength && createProjectForm.name.$touched\">\n" +
-    "Name must have at least two characters.\n" +
-    "</span>\n" +
-    "</div>\n" +
-    "<div class=\"has-error\">\n" +
-    "<span id=\"nameHelp\" class=\"help-block\" ng-if=\"createProjectForm.name.$error.pattern && createProjectForm.name.$touched\">\n" +
-    "Project names may only contain lower-case letters, numbers, and dashes. They may not start or end with a dash.\n" +
-    "</span>\n" +
-    "</div>\n" +
-    "<div class=\"has-error\">\n" +
-    "<span class=\"help-block\" ng-if=\"nameTaken\">\n" +
-    "This name is already in use. Please choose a different name.\n" +
-    "</span>\n" +
-    "</div>\n" +
-    "</div>\n" +
-    "<div class=\"form-group\">\n" +
-    "<label for=\"displayName\">Display Name</label>\n" +
-    "<input class=\"form-control input-lg\" name=\"displayName\" id=\"displayName\" placeholder=\"My Project\" type=\"text\" ng-model=\"displayName\">\n" +
-    "</div>\n" +
-    "<div class=\"form-group\">\n" +
-    "<label for=\"description\">Description</label>\n" +
-    "<textarea class=\"form-control input-lg\" name=\"description\" id=\"description\" placeholder=\"A short description.\" ng-model=\"description\"></textarea>\n" +
-    "</div>\n" +
-    "<div class=\"button-group\">\n" +
-    "<button type=\"submit\" class=\"btn btn-primary btn-lg\" ng-click=\"createProject()\" ng-disabled=\"createProjectForm.$invalid || nameTaken || disableInputs\" value=\"\">Create</button>\n" +
-    "<a class=\"btn btn-default btn-lg\" href=\"#\" back>Cancel</a>\n" +
-    "</div>\n" +
-    "</fieldset>\n" +
-    "</form>"
-  );
-
-
   $templateCache.put('views/directives/_custom-icon.html',
     "<span ng-if=\"!isDataIcon\" aria-hidden=\"true\" ng-class=\"icon.contains('fa ') ? icon : 'font-icon ' + icon\"></span>\n" +
     "<img ng-if=\"isDataIcon\" alt=\"\" ng-src=\"{{icon}}\">"
@@ -6409,19 +6365,6 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "<button class=\"btn btn-lg btn-default\" type=\"button\" ng-click=\"cancel()\">Cancel</button>\n" +
     "</div>\n" +
     "</ng-form>"
-  );
-
-
-  $templateCache.put('views/directives/delete-button.html',
-    "<div class=\"actions\">\n" +
-    "\n" +
-    "<a href=\"\" ng-click=\"$event.stopPropagation(); openDeleteModal()\" role=\"button\" class=\"action-button\" ng-attr-aria-disabled=\"{{disableDelete ? 'true' : undefined}}\" ng-class=\"{ 'disabled-link': disableDelete }\"><i class=\"fa fa-trash-o\" aria-hidden=\"true\"></i><span class=\"sr-only\">Delete {{kind | humanizeKind}} {{resourceName}}</span></a>\n" +
-    "</div>"
-  );
-
-
-  $templateCache.put('views/directives/delete-link.html',
-    "<a href=\"javascript:void(0)\" ng-click=\"openDeleteModal()\" role=\"button\" ng-attr-aria-disabled=\"{{disableDelete ? 'true' : undefined}}\" ng-class=\"{ 'disabled-link': disableDelete }\">{{label || 'Delete'}}</a>"
   );
 
 
@@ -10675,87 +10618,6 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "<div class=\"modal-footer\">\n" +
     "<button class=\"btn btn-lg btn-primary\" type=\"button\" ng-click=\"close()\">Close</button>\n" +
     "</div>\n" +
-    "</div>"
-  );
-
-
-  $templateCache.put('views/modals/delete-project.html',
-    "<div class=\"modal-project-delete\">\n" +
-    "<div class=\"modal-body\">\n" +
-    "<h1>Are you sure you want to delete the project '<strong>{{project | displayName}}</strong>'?</h1>\n" +
-    "<p>This will <strong>delete all resources</strong> associated with the project {{project | displayName}} and <strong>cannot be undone</strong>. Make sure this is something you really want to do!</p>\n" +
-    "</div>\n" +
-    "<div class=\"modal-footer\">\n" +
-    "<button class=\"btn btn-lg btn-danger\" type=\"button\" ng-click=\"delete();\">Delete this project</button>\n" +
-    "<button class=\"btn btn-lg btn-default\" type=\"button\" ng-click=\"cancel();\">Cancel</button>\n" +
-    "</div>\n" +
-    "</div>"
-  );
-
-
-  $templateCache.put('views/modals/delete-resource.html',
-    "<div class=\"modal-resource-action\">\n" +
-    "\n" +
-    "<form>\n" +
-    "<div class=\"modal-body\">\n" +
-    "<h1>Are you sure you want to delete the {{typeDisplayName || (kind | humanizeKind)}} '<strong>{{displayName ? displayName : resourceName}}</strong>'?</h1>\n" +
-    "<div ng-if=\"replicas\" class=\"alert alert-warning\">\n" +
-    "<span class=\"pficon pficon-warning-triangle-o\" aria-hidden=\"true\"></span>\n" +
-    "<span class=\"sr-only\">Warning:</span>\n" +
-    "<strong>{{resourceName}}</strong> has running pods. Deleting the {{typeDisplayName || (kind | humanizeKind)}} will <strong>not</strong> delete the pods it controls. Consider scaling the {{typeDisplayName || (kind | humanizeKind)}} down to 0 before continuing.\n" +
-    "</div>\n" +
-    "<p>This<span ng-if=\"isProject\"> will <strong>delete all resources</strong> associated with the project {{displayName ? displayName : resourceName}} and</span> <strong>cannot be undone</strong>. Make sure this is something you really want to do!</p>\n" +
-    "<div ng-show=\"typeNameToConfirm\">\n" +
-    "<p>Type the name of the {{typeDisplayName || (kind | humanizeKind)}} to confirm.</p>\n" +
-    "<p>\n" +
-    "<label class=\"sr-only\" for=\"resource-to-delete\">{{typeDisplayName || (kind | humanizeKind)}} to delete</label>\n" +
-    "<input ng-model=\"confirmName\" id=\"resource-to-delete\" type=\"text\" class=\"form-control input-lg\" autocorrect=\"off\" autocapitalize=\"off\" spellcheck=\"false\" autofocus>\n" +
-    "</p>\n" +
-    "</div>\n" +
-    "<div ng-switch=\"kind\">\n" +
-    "<div ng-switch-when=\"Deployment\">\n" +
-    "<strong>Note:</strong> None of the replica sets created by this deployment will be deleted. To delete the deployment and all of its replica sets, you can run the command\n" +
-    "<pre class=\"code prettyprint mar-top-md\">oc delete deployment {{resourceName}} -n {{projectName}}</pre>\n" +
-    "Learn more about the <a href=\"command-line\">command line tools</a>.\n" +
-    "</div>\n" +
-    "<div ng-switch-when=\"DeploymentConfig\">\n" +
-    "<strong>Note:</strong> None of the deployments created by this deployment config will be deleted. To delete the deployment config and all of its deployments, you can run the command\n" +
-    "<pre class=\"code prettyprint mar-top-md\">oc delete dc {{resourceName}} -n {{projectName}}</pre>\n" +
-    "Learn more about the <a href=\"command-line\">command line tools</a>.\n" +
-    "</div>\n" +
-    "<div ng-switch-when=\"BuildConfig\">\n" +
-    "<strong>Note:</strong> None of the builds created by this build config will be deleted. To delete the build config and all of its builds, you can run the command\n" +
-    "<pre class=\"code prettyprint mar-top-md\">oc delete bc {{resourceName}} -n {{projectName}}</pre>\n" +
-    "Learn more about the <a href=\"command-line\">command line tools</a>.\n" +
-    "</div>\n" +
-    "</div>\n" +
-    "\n" +
-    "<div ng-if=\"hpaList.length > 0\">\n" +
-    "<p>\n" +
-    "<span ng-if=\"hpaList.length === 1\">\n" +
-    "This resource has an autoscaler associated with it. It is recommended you delete the autoscaler with the resource it scales.\n" +
-    "</span>\n" +
-    "<span ng-if=\"hpaList.length > 1\">\n" +
-    "This resource has autoscalers associated with it. It is recommended you delete the autoscalers with the resource they scale.\n" +
-    "</span>\n" +
-    "</p>\n" +
-    "<label>\n" +
-    "<input type=\"checkbox\" ng-model=\"options.deleteHPAs\">\n" +
-    "Delete\n" +
-    "<span ng-if=\"hpaList.length === 1\">\n" +
-    "Horizontal Pod Autoscaler '<strong>{{hpaList[0].metadata.name}}</strong>'\n" +
-    "</span>\n" +
-    "<span ng-if=\"hpaList.length > 1\">\n" +
-    "{{hpaList.length}} associated Horizontal Pod Autoscalers\n" +
-    "</span>\n" +
-    "</label>\n" +
-    "</div>\n" +
-    "</div>\n" +
-    "<div class=\"modal-footer\">\n" +
-    "<button ng-disabled=\"typeNameToConfirm && confirmName !== resourceName && confirmName !== displayName\" class=\"btn btn-lg btn-danger\" type=\"submit\" ng-click=\"delete();\">Delete</button>\n" +
-    "<button class=\"btn btn-lg btn-default\" type=\"button\" ng-click=\"cancel();\">Cancel</button>\n" +
-    "</div>\n" +
-    "</form>\n" +
     "</div>"
   );
 
