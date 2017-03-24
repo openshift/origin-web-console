@@ -1,9 +1,10 @@
 'use strict';
 
-(function() {  
+(function() {
   angular.module('openshiftConsole').component('nextSteps', {
     controller: [
       'ProcessedTemplateService',
+      'Navigate',
       NextSteps
     ],
     bindings: {
@@ -11,12 +12,13 @@
       projectName: '<',
       loginBaseUrl: '<',
       fromSampleRepo: '<',
-      createdBuildConfig: '<'
+      createdBuildConfig: '<',
+      onContinue: '<'
     },
     templateUrl: 'views/directives/next-steps.html'
   });
 
-  function NextSteps(ProcessedTemplateService) {
+  function NextSteps(ProcessedTemplateService, Navigate) {
     var ctrl = this;
     ctrl.showParamsTable = false;
 
@@ -65,8 +67,11 @@
     ctrl.erroredTasks = erroredTasks;
     ctrl.pendingTasks = pendingTasks;
 
-    ctrl.toggleParamsTable = function() {
-      ctrl.showParamsTable = true;
+    ctrl.goToOverview = function() {
+      if (_.isFunction(ctrl.onContinue)) {
+        ctrl.onContinue();
+      }
+      Navigate.toProjectOverview(ctrl.projectName);
     };
   }
 })();

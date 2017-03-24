@@ -58,7 +58,7 @@ angular.module('openshiftConsole')
       }
     };
   })
-  .directive('projectHeader', function($timeout, $location, $filter, DataService, projectOverviewURLFilter) {
+  .directive('projectHeader', function($timeout, $location, $filter, DataService, projectOverviewURLFilter, Constants) {
 
     // cache these to eliminate flicker
     var projects = {};
@@ -68,11 +68,22 @@ angular.module('openshiftConsole')
       restrict: 'EA',
       templateUrl: 'views/directives/header/project-header.html',
       link: function($scope, $elem) {
+        $scope.closeOrderingPanel = function() {
+          _.set($scope, 'ordering.panelName', "");
+        };
+        $scope.showOrderingPanel = function(panelName) {
+          _.set($scope, 'ordering.panelName', panelName);
+        };
+
+        $scope.catalogLandingPageEnabled = _.get(Constants, 'ENABLE_TECH_PREVIEW_FEATURE.service_catalog_landing_page');
         var select = $elem.find('.selectpicker');
         var options = [];
 
         var updateOptions = function() {
           var project = $scope.project || {};
+          $scope.context = {
+            namespace: $scope.projectName
+          };
           var name = $scope.projectName;
           var isRealProject = project.metadata && project.metadata.name;
 

@@ -25,10 +25,19 @@
       <select class="selectpicker form-control" data-selected-text-format="count>3" id="boostrapSelect" title=""></select>
     </div>
     <!-- create buttons show at mobile -->
-    <div row class="navbar-flex-btn project-action" ng-if="project.metadata.name | canIAddToProject">
-      <a row class="project-action-btn" href="project/{{project.metadata.name}}/create" ng-disabled="project.status.phase != 'Active'" title="Add to project">
-        <i class="fa fa-plus visible-xs-inline-block"></i><span class="hidden-xs">Add to project</span>
+    <div row class="dropdown" ng-if="project.metadata.name | canIAddToProject" uib-dropdown>
+      <a row class="nav-item-iconic dropdown-toggle add-to-project-btn" href="" ng-disabled="project.status.phase != 'Active'" title="Add to Project" uib-dropdown-toggle>
+        <i class="fa fa-plus visible-xs-inline-block"></i><span class="hidden-xs add-to-project">Add to Project</span><span class="hidden-xs caret" aria-hidden="true"></span>
       </a>
+      <ul role="menu" class="uib-dropdown-menu dropdown-menu dropdown-menu-right">
+        <li ng-if-start="!catalogLandingPageEnabled" role="menuitem"><a ng-href="project/{{projectName}}/create?tab=fromCatalog">Browse Catalog</a></li>
+        <li role="menuitem"><a ng-href="project/{{projectName}}/create?tab=deployImage">Deploy Image</a></li>
+        <li ng-if-end role="menuitem"><a ng-href="project/{{projectName}}/create?tab=fromFile">Import YAML / JSON</a></li>
+
+        <li ng-if-start="catalogLandingPageEnabled" role="menuitem"><a href="/">Browse Catalog</a></li>
+        <li role="menuitem"><a href="" ng-click="showOrderingPanel('deployImage')">Deploy Image</a></li>
+        <li ng-if-end role="menuitem"><a href="" ng-click="showOrderingPanel('fromFile')">Import YAML / JSON</a></li>
+      </ul>
     </div>
     <div row
       extension-point
@@ -38,3 +47,5 @@
   </div> <!-- /navbar-project-menu -->
   <navbar-utility class="hidden-xs"></navbar-utility>
 </nav>
+<deploy-image-dialog visible="ordering.panelName === 'deployImage'" project="project" context="context" on-dialog-closed="closeOrderingPanel"></deploy-image-dialog>
+<from-file-dialog visible="ordering.panelName === 'fromFile'" project="project" context="context" on-dialog-closed="closeOrderingPanel"></from-file-dialog>
