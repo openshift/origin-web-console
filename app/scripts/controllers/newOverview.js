@@ -355,7 +355,7 @@ function OverviewController($scope,
     }
   });
 
-  if (!window.OPENSHIFT_CONSTANTS.DISABLE_OVERVIEW_METRICS) {
+  if (!Constants.DISABLE_OVERVIEW_METRICS) {
     // Check if a metrics URL has been configured for overview metrics.
     MetricsService.isAvailable(true).then(function(available) {
       state.showMetrics = available;
@@ -1215,11 +1215,40 @@ function OverviewController($scope,
       updateQuotaWarnings();
     }, {poll: true, pollInterval: DEFAULT_POLL_INTERVAL}));
 
+    if(Constants.ENABLE_TECH_PREVIEW_FEATURE.service_catalog_landing_page) {
+      watches.push(DataService.watch({
+        group: 'servicecatalog.k8s.io',
+        resource: 'instances'
+      }, context, function(serviceInstances) {
+        state.serviceInstances = serviceInstances.by('metadata.name');
+      }, {poll: limitWatches, pollInterval: DEFAULT_POLL_INTERVAL}));
+    }
+
+    if(Constants.ENABLE_TECH_PREVIEW_FEATURE.service_catalog_landing_page) {
+      watches.push(DataService.watch({
+        group: 'servicecatalog.k8s.io',
+        resource: 'bindings'
+      }, context, function(serviceBindings) {
+        state.serviceBindings = serviceBindings.by('metadata.name');
+      }, {poll: limitWatches, pollInterval: DEFAULT_POLL_INTERVAL}));
+    }
+
     // List limit ranges in this project to determine if there is a default
     // CPU request for autoscaling.
     DataService.list("limitranges", context, function(response) {
       state.limitRanges = response.by("metadata.name");
     });
+
+    if(Constants.ENABLE_TECH_PREVIEW_FEATURE.service_catalog_landing_page) {
+      // TODO: update to behave like ImageStreamResolver
+      // - we may not even need to list these... perhaps just fetch the ones we need when needed
+      DataService.list({
+        group: 'servicecatalog.k8s.io',
+        resource: 'serviceclasses'
+      }, context, function(serviceClasses) {
+        state.serviceClasses = serviceClasses.by('metadata.name');
+      });
+    }
 
     var samplePipelineTemplate = Constants.SAMPLE_PIPELINE_TEMPLATE;
     if (samplePipelineTemplate) {

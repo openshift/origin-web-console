@@ -123,7 +123,7 @@ v.viewBy = localStorage.getItem(ea) || "app", a.$watch(function() {
 return v.viewBy;
 }, function(a) {
 localStorage.setItem(ea, a), X(), Z = "app" === v.viewBy ? [ "metadata.name", "metadata.labels.app" ] :[ "metadata.name" ], da(), "pipeline" === v.viewBy ? n.setLabelSuggestions(J) :n.setLabelSuggestions(I);
-}), window.OPENSHIFT_CONSTANTS.DISABLE_OVERVIEW_METRICS || (q.isAvailable(!0).then(function(a) {
+}), g.DISABLE_OVERVIEW_METRICS || (q.isAvailable(!0).then(function(a) {
 L.showMetrics = a;
 }), a.$on("metrics-connection-failed", function(a, b) {
 var c = d.isAlertPermanentlyHidden("metrics-connection-failed");
@@ -437,8 +437,29 @@ L.clusterQuotas = a.by("metadata.name"), Ua();
 }, {
 poll:!0,
 pollInterval:x
+})), g.ENABLE_TECH_PREVIEW_FEATURE.service_catalog_landing_page && Va.push(h.watch({
+group:"servicecatalog.k8s.io",
+resource:"instances"
+}, c, function(a) {
+L.serviceInstances = a.by("metadata.name");
+}, {
+poll:w,
+pollInterval:x
+})), g.ENABLE_TECH_PREVIEW_FEATURE.service_catalog_landing_page && Va.push(h.watch({
+group:"servicecatalog.k8s.io",
+resource:"bindings"
+}, c, function(a) {
+L.serviceBindings = a.by("metadata.name");
+}, {
+poll:w,
+pollInterval:x
 })), h.list("limitranges", c, function(a) {
 L.limitRanges = a.by("metadata.name");
+}), g.ENABLE_TECH_PREVIEW_FEATURE.service_catalog_landing_page && h.list({
+group:"servicecatalog.k8s.io",
+resource:"serviceclasses"
+}, c, function(a) {
+L.serviceClasses = a.by("metadata.name");
 });
 var e = g.SAMPLE_PIPELINE_TEMPLATE;
 e && h.get("templates", e.name, {
