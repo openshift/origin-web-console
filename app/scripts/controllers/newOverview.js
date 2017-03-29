@@ -93,6 +93,7 @@ function OverviewController($scope,
     recentPipelinesByDeploymentConfig: {},
     routesByService: {},
     servicesByObjectUID: {},
+    serviceInstances: {},
     // Set to true below when metrics are available.
     showMetrics: false
   };
@@ -156,7 +157,8 @@ function OverviewController($scope,
            _.size(overview.deployments) +
            _.size(overview.vanillaReplicaSets) +
            _.size(overview.statefulSets) +
-           _.size(overview.monopods);
+           _.size(overview.monopods) +
+           _.size(overview.state.serviceInstances);
   };
 
   // The size of all visible top-level items after filtering.
@@ -166,7 +168,8 @@ function OverviewController($scope,
            _.size(overview.filteredDeployments) +
            _.size(overview.filteredReplicaSets) +
            _.size(overview.filteredStatefulSets) +
-           _.size(overview.filteredMonopods);
+           _.size(overview.filteredMonopods) +
+           _.size(overview.state.serviceInstances);
   };
 
   // Show the "Get Started" message if the project is empty.
@@ -183,7 +186,8 @@ function OverviewController($scope,
                  overview.deployments &&
                  overview.replicaSets &&
                  overview.statefulSets &&
-                 overview.pods;
+                 overview.pods &&
+                 overview.state.serviceInstances;
 
     state.expandAll = loaded && overview.size === 1;
 
@@ -1061,6 +1065,33 @@ function OverviewController($scope,
       });
   };
 
+  var refreshSecrets = _.debounce(function(context) {
+    DataService.list("secrets", context, null, { errorNotification: false }).then(function(secretData) {
+      state.secrets = secretData.by("metadata.name");
+    });
+  }, 300);
+
+  // TODO: code duplicated from directives/bindService.js
+  // extract & share 
+  var sortServiceInstances = function() {
+    if(!state.serviceInstances && !state.serviceClasses) {
+      return;
+    }
+    state.orderedServiceInstances = _.toArray(state.serviceInstances).sort(function(left, right) {
+      var leftName = _.get(state.serviceClasses, [left.spec.serviceClassName, 'osbMetadata', 'displayName']) || left.spec.serviceClassName;
+      var rightName = _.get(state.serviceClasses, [left.spec.serviceClassName, 'osbMetadata', 'displayName']) || right.spec.serviceClassName;
+
+      // Fall back to sorting by `metadata.name` if the display names are the
+      // same so that the sort is stable.
+      if (leftName === rightName) {
+        leftName = _.get(left, 'metadata.name', '');
+        rightName = _.get(right, 'metadata.name', '');
+      }
+
+      return leftName.localeCompare(rightName);
+    });
+  };
+
   var watches = [];
   ProjectsService.get($routeParams.project).then(_.spread(function(project, context) {
     // Project must be set on `$scope` for the projects dropdown.
@@ -1221,6 +1252,8 @@ function OverviewController($scope,
         resource: 'instances'
       }, context, function(serviceInstances) {
         state.serviceInstances = serviceInstances.by('metadata.name');
+        sortServiceInstances();
+        updateFilter();
       }, {poll: limitWatches, pollInterval: DEFAULT_POLL_INTERVAL}));
     }
 
@@ -1228,8 +1261,10 @@ function OverviewController($scope,
       watches.push(DataService.watch({
         group: 'servicecatalog.k8s.io',
         resource: 'bindings'
-      }, context, function(serviceBindings) {
-        state.serviceBindings = serviceBindings.by('metadata.name');
+      }, context, function(bindings) {
+        state.bindings = bindings.by('metadata.name');
+        refreshSecrets(context);
+        updateFilter();
       }, {poll: limitWatches, pollInterval: DEFAULT_POLL_INTERVAL}));
     }
 
@@ -1247,6 +1282,8 @@ function OverviewController($scope,
         resource: 'serviceclasses'
       }, context, function(serviceClasses) {
         state.serviceClasses = serviceClasses.by('metadata.name');
+        sortServiceInstances();
+        updateFilter();
       });
     }
 

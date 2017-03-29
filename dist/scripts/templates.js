@@ -11364,6 +11364,15 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "</div>\n" +
     "</div>\n" +
     "</div>\n" +
+    "\n" +
+    "<div ng-if=\"overview.state.serviceInstances | hashSize\">\n" +
+    "<h2 ng-if=\"overview.state.serviceInstances\">\n" +
+    "Provisioned Services\n" +
+    "</h2>\n" +
+    "<div class=\"list-pf\">\n" +
+    "<service-instance-row ng-repeat=\"serviceInstance in overview.state.orderedServiceInstances\" api-object=\"serviceInstance\" state=\"overview.state\"></service-instance-row>\n" +
+    "</div>\n" +
+    "</div>\n" +
     "</div>\n" +
     "</div>\n" +
     "</div>\n" +
@@ -11950,6 +11959,20 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
   );
 
 
+  $templateCache.put('views/overview/_list-row-chevron.html',
+    "<a href=\"\" ng-click=\"row.toggleExpand($event, true)\" class=\"toggle-expand-link\">\n" +
+    "<span ng-if=\"row.expanded\">\n" +
+    "<span class=\"fa fa-angle-down\" aria-hidden=\"true\"></span>\n" +
+    "<span class=\"sr-only\">Collapse</span>\n" +
+    "</span>\n" +
+    "<span ng-if=\"!row.expanded\">\n" +
+    "<span class=\"fa fa-angle-right\" aria-hidden=\"true\"></span>\n" +
+    "<span class=\"sr-only\">Expand</span>\n" +
+    "</span>\n" +
+    "</a>"
+  );
+
+
   $templateCache.put('views/overview/_list-row-content.html',
     "<div class=\"list-pf-name\">\n" +
     "<h3>\n" +
@@ -12197,16 +12220,7 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "<div class=\"list-pf-item\" ng-class=\"{ active: row.expanded }\">\n" +
     "<div class=\"list-pf-container\" ng-click=\"row.toggleExpand($event)\">\n" +
     "<div class=\"list-pf-chevron\">\n" +
-    "<a href=\"\" ng-click=\"row.toggleExpand($event, true)\" class=\"toggle-expand-link\">\n" +
-    "<span ng-if=\"row.expanded\">\n" +
-    "<span class=\"fa fa-angle-down\" aria-hidden=\"true\"></span>\n" +
-    "<span class=\"sr-only\">Collapse</span>\n" +
-    "</span>\n" +
-    "<span ng-if=\"!row.expanded\">\n" +
-    "<span class=\"fa fa-angle-right\" aria-hidden=\"true\"></span>\n" +
-    "<span class=\"sr-only\">Expand</span>\n" +
-    "</span>\n" +
-    "</a>\n" +
+    "<div ng-include src=\" 'views/overview/_list-row-chevron.html' \" class=\"list-pf-content\"></div>\n" +
     "</div>\n" +
     "<div ng-include src=\" 'views/overview/_list-row-content.html' \" class=\"list-pf-content\"></div>\n" +
     "<div ng-include src=\" 'views/overview/_list-row-actions.html' \"></div>\n" +
@@ -12476,6 +12490,84 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "\n" +
     "<div ng-if=\"(!alternateServices.length || isChild) && ('services' | canI : 'update')\">\n" +
     "<ng-include src=\"'views/overview/_service-linking-button.html'\"></ng-include>\n" +
+    "</div>\n" +
+    "</div>"
+  );
+
+
+  $templateCache.put('views/overview/_service-instance-row.html',
+    "<div class=\"list-pf-item\" ng-class=\"{ active: row.expanded }\">\n" +
+    "<div class=\"list-pf-container\" ng-click=\"row.toggleExpand($event)\">\n" +
+    "<div class=\"list-pf-chevron\">\n" +
+    "<div ng-include src=\" 'views/overview/_list-row-chevron.html' \" class=\"list-pf-content\"></div>\n" +
+    "</div>\n" +
+    "<div class=\"list-pf-content\">\n" +
+    "<div class=\"list-pf-name\">\n" +
+    "<h3>\n" +
+    "<span ng-bind-html=\"row.displayName | highlightKeywords : row.state.filterKeywords\"></span>\n" +
+    "<div class=\"component-label tranform-none\">\n" +
+    "{{row.apiObject.metadata.name}}\n" +
+    "</div>\n" +
+    "</h3>\n" +
+    "<div class=\"status-icons\">\n" +
+    "<notification-icon ng-if=\"!row.expanded\" alerts=\"row.notifications\"></notification-icon>\n" +
+    "</div>\n" +
+    "</div>\n" +
+    "</div>\n" +
+    "<div class=\"list-pf-content hidden-xs hidden-sm\">\n" +
+    "<div class=\"list-pf-content-right\">\n" +
+    "<div>\n" +
+    "<strong ng-if=\"!row.instanceBindings.length\">No Bindings</strong>\n" +
+    "<strong ng-if=\"row.instanceBindings.length\">Bindings</strong>\n" +
+    "</div>\n" +
+    "<span ng-if=\"row.instanceBindings.length >= 1\">{{row.instanceBindings[0].metadata.name}}</span><span ng-if=\"row.instanceBindings.length > 1\">,&nbsp;</span>\n" +
+    "<a ng-if=\"row.instanceBindings.length > 1\" ng-click=\"row.toggleExpand($event, true)\">\n" +
+    "{{row.instanceBindings.length -1}} others</a>\n" +
+    "</div>\n" +
+    "</div>\n" +
+    "<div class=\"hidden-xs hidden-sm\" ng-if=\"row.apiObject.spec.osbDashboardURL\">\n" +
+    "<span class=\"page-header-link\">\n" +
+    "<a ng-href=\"{{row.apiObject.spec.osbDashboardURL}}\" target=\"_blank\">\n" +
+    "Console <i class=\"fa fa-external-link\" aria-hidden=\"true\"></i>\n" +
+    "</a>\n" +
+    "</span>\n" +
+    "</div>\n" +
+    "<div class=\"list-pf-actions\">\n" +
+    "<div uib-dropdown>\n" +
+    "<a href=\"\" uib-dropdown-toggle class=\"actions-dropdown-kebab\"><i class=\"fa fa-ellipsis-v\"></i><span class=\"sr-only\">Actions</span></a>\n" +
+    "<ul class=\"dropdown-menu dropdown-menu-right\" uib-dropdown-menu role=\"menu\">\n" +
+    "<li role=\"menuitem\">\n" +
+    "<a href=\"\" ng-click=\"row.deprovision()\" role=\"button\">Deprovision</a>\n" +
+    "</li>\n" +
+    "</ul>\n" +
+    "</div>\n" +
+    "</div>\n" +
+    "</div>\n" +
+    "<div class=\"list-pf-expansion collapse\" ng-if=\"row.expanded\" ng-class=\"{ in: row.expanded }\">\n" +
+    "<div class=\"list-pf-container\">\n" +
+    "\n" +
+    "<div class=\"row\">\n" +
+    "<div class=\"col-sm-12\" ng-if=\"row.description\">\n" +
+    "<p class=\"pre-wrap\" ng-bind-html=\"row.description | linky\"></p>\n" +
+    "</div>\n" +
+    "</div>\n" +
+    "<div class=\"section-title\">\n" +
+    "Bindings\n" +
+    "</div>\n" +
+    "<span ng-if=\"!row.instanceBindings.length\">There are no bindings.</span>\n" +
+    "<div ng-if=\"row.instanceBindings.length\" class=\"row\" ng-repeat=\"binding in row.instanceBindings\">\n" +
+    "<div class=\"col-sm-4\">\n" +
+    "<span>{{binding.metadata.name}}</span>\n" +
+    "</div>\n" +
+    "<div class=\"col-sm-8\">\n" +
+    "\n" +
+    "<a href=\"{{row.getSecretForBinding(binding) | navigateResourceURL}}\">\n" +
+    "View secret\n" +
+    "</a>\n" +
+    "</div>\n" +
+    "</div>\n" +
+    "\n" +
+    "</div>\n" +
     "</div>\n" +
     "</div>"
   );

@@ -4198,6 +4198,7 @@ copy-to-clipboard .input-group.limit-width{max-width:300px}
 .list-pf-chevron+.list-pf-content .list-pf-details,.list-pf-chevron+.list-pf-content .list-pf-name{flex-grow:1}
 .list-pf-chevron+.list-pf-content .list-pf-details{align-items:center;display:flex;width:55%}
 .list-pf-chevron+.list-pf-content .list-pf-name{width:45%}
+.list-pf-content .list-pf-content-right{min-width:300px}
 .list-pf-item:not(.active) .list-pf-chevron+.list-pf-content{border-left-color:#dcdcdc}
 .list-pf-name{margin:0}
 .list-group-expanded-section{border:1px solid #d1d1d1;border-top:0;padding:15px}
@@ -5440,6 +5441,7 @@ a.subtle-link:active,a.subtle-link:focus,a.subtle-link:hover{color:#00659c;borde
 .hide-if-empty:empty{display:none!important}
 .appended-icon{display:inline-block;white-space:nowrap}
 .block{display:block}
+.tranform-none{text-transform:none!important}
 .donut-title-med-pf{font-size:22.5px;font-weight:300}
 .wizard-pf-steps-indicator .wizard-pf-step-number{left:calc(50% - 13px)}
 .col-md-12>.alerts:first-child{margin-top:20px}
