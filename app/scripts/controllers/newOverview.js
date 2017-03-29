@@ -1220,7 +1220,7 @@ function OverviewController($scope,
         group: 'servicecatalog.k8s.io',
         resource: 'instances'
       }, context, function(serviceInstances) {
-        state.serviceInstances = serviceInstances.by('metadata.name');
+        overview.serviceInstances = serviceInstances.by('metadata.name');
       }, {poll: limitWatches, pollInterval: DEFAULT_POLL_INTERVAL}));
     }
 
@@ -1229,7 +1229,7 @@ function OverviewController($scope,
         group: 'servicecatalog.k8s.io',
         resource: 'bindings'
       }, context, function(serviceBindings) {
-        state.serviceBindings = serviceBindings.by('metadata.name');
+        overview.serviceBindings = serviceBindings.by('metadata.name');
       }, {poll: limitWatches, pollInterval: DEFAULT_POLL_INTERVAL}));
     }
 
@@ -1246,7 +1246,7 @@ function OverviewController($scope,
         group: 'servicecatalog.k8s.io',
         resource: 'serviceclasses'
       }, context, function(serviceClasses) {
-        state.serviceClasses = serviceClasses.by('metadata.name');
+        overview.serviceClasses = serviceClasses.by('metadata.name');
       });
     }
 
