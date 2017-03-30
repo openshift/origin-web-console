@@ -348,41 +348,6 @@ angular.module('openshiftConsole')
           .replace(/^./, function(str){ return str.toUpperCase(); });
     };
   })
-  .filter('parseJSON', function() {
-    return function(json) {
-      // return original value if its null or undefined
-      if (!json) {
-        return null;
-      }
-
-      // return the parsed obj if its valid
-      try {
-        var jsonObj = JSON.parse(json);
-        if (typeof jsonObj === "object") {
-          return jsonObj;
-        }
-        else {
-          return null;
-        }
-      }
-      catch (e) {
-        // it wasn't valid json
-        return null;
-      }
-    };
-  })
-  .filter('prettifyJSON', function(parseJSONFilter) {
-    return function(json) {
-      var jsonObj = parseJSONFilter(json);
-      if (jsonObj) {
-        return JSON.stringify(jsonObj, null, 4);
-      }
-      else {
-        // it wasn't a json object, return the original value
-        return json;
-      }
-    };
-  })
   // Resource is either a resource object, or a name.  If resource is a name, kind and namespace must be specified
   // Note that builds and deployments can only have their URL built correctly (including their config in the URL)
   // if resource is an object
@@ -415,18 +380,6 @@ angular.module('openshiftConsole')
       return array.join(separator);
     };
   })
-  .filter('generateName', function() {
-    return function(prefix, length) {
-      if (!prefix) {
-        prefix = "";
-      }
-      if (!length) {
-        length = 5;
-      }
-      var randomString = Math.round((Math.pow(36, length + 1) - Math.random() * Math.pow(36, length))).toString(36).slice(1);
-      return prefix + randomString;
-    };
-  })
   .filter('accessModes', function() {
     return function(value, format) {
       if (!value) {
@@ -452,36 +405,6 @@ angular.module('openshiftConsole')
         accessModes.push(accessModeString);
       });
       return _.uniq(accessModes);
-    };
-  })
-  .filter('truncate', function() {
-    return function(str, charLimit, useWordBoundary, newlineLimit) {
-      if (!str) {
-        return str;
-      }
-
-      var truncated = str;
-
-      if (charLimit) {
-        truncated = truncated.substring(0, charLimit);
-      }
-
-      if (newlineLimit) {
-        var nthNewline = str.split("\n", newlineLimit).join("\n").length;
-        truncated = truncated.substring(0, nthNewline);
-      }
-
-      if (useWordBoundary !== false) {
-        // Find the last word break, but don't look more than 10 characters back.
-        // Make sure we show at least the first 5 characters.
-        var startIndex = Math.max(4, charLimit - 10);
-        var lastSpace = truncated.lastIndexOf(/\s/, startIndex);
-        if (lastSpace !== -1) {
-          truncated = truncated.substring(0, lastSpace);
-        }
-      }
-
-      return truncated;
     };
   })
   .filter('middleEllipses', function() {

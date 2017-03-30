@@ -8919,29 +8919,6 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
   );
 
 
-  $templateCache.put('views/directives/truncate-long-text.html',
-    "<span ng-if=\"!truncated\" ng-bind-html=\"content | highlightKeywords : keywords\" class=\"truncated-content\"></span>\n" +
-    "<span ng-if=\"truncated\">\n" +
-    "<span ng-if=\"!toggles.expanded\">\n" +
-    "<span ng-attr-title=\"{{content}}\" class=\"truncation-block\">\n" +
-    "<span ng-bind-html=\"truncatedContent | highlightKeywords : keywords\" class=\"truncated-content\"></span>&hellip;\n" +
-    "</span>\n" +
-    "<a ng-if=\"expandable\" href=\"\" ng-click=\"toggles.expanded = true\" class=\"nowrap\">See All</a>\n" +
-    "</span>\n" +
-    "<span ng-if=\"toggles.expanded\">\n" +
-    "<div ng-if=\"prettifyJson\" class=\"well\">\n" +
-    "<span class=\"pull-right\" style=\"margin-top: -10px\"><a href=\"\" ng-click=\"toggles.expanded = false\" class=\"truncation-collapse-link\">Collapse</a></span>\n" +
-    "<span ng-bind-html=\"content | prettifyJSON | highlightKeywords : keywords\" class=\"pretty-json truncated-content\"></span>\n" +
-    "</div>\n" +
-    "<span ng-if=\"!prettifyJson\">\n" +
-    "<span class=\"pull-right\"><a href=\"\" ng-click=\"toggles.expanded = false\" class=\"truncation-collapse-link\">Collapse</a></span>\n" +
-    "<span ng-bind-html=\"content | highlightKeywords : keywords\" class=\"truncated-content\"></span>\n" +
-    "</span>\n" +
-    "</span>\n" +
-    "</span>"
-  );
-
-
   $templateCache.put('views/edit/autoscaler.html',
     "<default-header class=\"top-header\"></default-header>\n" +
     "<div class=\"wrap no-sidebar\">\n" +
