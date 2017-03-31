@@ -1267,6 +1267,31 @@ id:"",
 label:"Uncategorized",
 description:""
 } ]
+} ],
+SAAS_OFFERINGS:[ {
+id:1,
+title:"Microservices Application",
+icon:"fa fa-cubes",
+url:"https://www.redhat.com/en/technologies/virtualization",
+description:"Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt."
+}, {
+id:2,
+title:"Mobile Application",
+icon:"fa fa-mobile",
+url:"https://www.redhat.com/en/technologies/mobile",
+description:"Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt."
+}, {
+id:3,
+title:"Integration Application",
+icon:"fa fa-plug",
+url:"https://www.redhat.com/en/technologies/cloud-computing",
+description:"Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt."
+}, {
+id:4,
+title:"Business Process Application",
+icon:"fa fa-cubes",
+url:"https://www.redhat.com/en/technologies/management",
+description:"Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt."
 } ]
 }), angular.module("openshiftConsole", [ "ngAnimate", "ngCookies", "ngResource", "ngRoute", "ngSanitize", "openshiftUI", "kubernetesUI", "registryUI.images", "ui.bootstrap", "patternfly.charts", "patternfly.sort", "openshiftConsoleTemplates", "ui.ace", "extension-registry", "as.sortable", "ui.select", "angular-inview", "angularMoment", "ab-base64", "openshiftCommonServices", "openshiftCommonUI", "webCatalog" ]).config([ "$routeProvider", function(a) {
 var b;
@@ -1278,10 +1303,17 @@ templateUrl:"views/new-overview.html",
 controller:"NewOverviewController",
 controllerAs:"overview",
 reloadOnSearch:!1
-}, a.when("/", {
+};
+var c, d = {
 templateUrl:"views/projects.html",
 controller:"ProjectsController"
-}).when("/create-project", {
+};
+_.get(window, "OPENSHIFT_CONSTANTS.ENABLE_TECH_PREVIEW_FEATURE.service_catalog_landing_page") ? (c = {
+templateUrl:"views/landing-page.html",
+controller:"LandingPageController"
+}, a.when("/projects", d)) :(c = d, a.when("/projects", {
+redirectTo:"/"
+})), a.when("/", c).when("/create-project", {
 templateUrl:"views/create-project.html",
 controller:"CreateProjectController"
 }).when("/project/:project", {
@@ -1892,6 +1924,9 @@ a.path(this.projectOverviewURL(b));
 },
 projectOverviewURL:function(a) {
 return "project/" + encodeURIComponent(a) + "/overview";
+},
+toProjectList:function() {
+a.path("projects");
 },
 quotaURL:function(a) {
 return "project/" + encodeURIComponent(a) + "/quota";
@@ -4337,7 +4372,24 @@ _.set(this, "selectedTab.networking", !0), b(this);
 }
 }
 };
-}), angular.module("openshiftConsole").controller("ProjectsController", [ "$scope", "$filter", "$location", "$route", "$timeout", "AlertMessageService", "AuthService", "DataService", "KeywordService", "Logger", "ProjectsService", function(a, b, c, d, e, f, g, h, i, j, k) {
+}), angular.module("openshiftConsole").controller("LandingPageController", [ "$scope", "AuthService", "Constants", "DataService", "Navigate", function(a, b, c, d, e) {
+a.saasOfferings = c.SAAS_OFFERINGS, a.navToProject = function(a) {
+e.toProjectOverview(a.metadata.name);
+}, a.navToProjectList = function() {
+e.toProjectList();
+}, b.withUser().then(function() {
+d.list({
+group:"servicecatalog.k8s.io",
+resource:"serviceclasses"
+}, a).then(function(b) {
+a.serviceClasses = b.by("metadata.name");
+}), d.list("imagestreams", {
+namespace:"openshift"
+}).then(function(b) {
+a.imageStreams = b.by("metadata.name");
+});
+});
+} ]), angular.module("openshiftConsole").controller("ProjectsController", [ "$scope", "$filter", "$location", "$route", "$timeout", "AlertMessageService", "AuthService", "DataService", "KeywordService", "Logger", "ProjectsService", function(a, b, c, d, e, f, g, h, i, j, k) {
 var l, m, n = [], o = [];
 a.alerts = a.alerts || {}, a.loading = !0, a.showGetStarted = !1, a.canCreate = void 0, a.search = {
 text:""

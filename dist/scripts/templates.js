@@ -10237,6 +10237,38 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
   );
 
 
+  $templateCache.put('views/landing-page.html',
+    "<default-header class=\"top-header\"></default-header>\n" +
+    "<div class=\"wrap no-sidebar\">\n" +
+    "<div class=\"sidebar-left collapse navbar-collapse navbar-collapse-2\">\n" +
+    "<navbar-utility-mobile></navbar-utility-mobile>\n" +
+    "</div>\n" +
+    "<div class=\"middle landing-page\">\n" +
+    "\n" +
+    "<div class=\"middle-section\">\n" +
+    "<div class=\"middle-container\">\n" +
+    "<div class=\"middle-content\">\n" +
+    "<landing-page service-classes=\"serviceClasses\" image-streams=\"imageStreams\">\n" +
+    "<landingheader>\n" +
+    "<div class=\"build-applications-view\">\n" +
+    "<saas-list saas-offerings=\"saasOfferings\"></saas-list>\n" +
+    "</div>\n" +
+    "</landingheader>\n" +
+    "<landingbody>\n" +
+    "<services-view base-project-url=\"project\" service-classes=\"serviceClasses\" image-streams=\"imageStreams\"></services-view>\n" +
+    "</landingbody>\n" +
+    "<landingside>\n" +
+    "<projects-summary base-project-url=\"project\" projects-url=\"projects\"></projects-summary>\n" +
+    "</landingside>\n" +
+    "</landing-page>\n" +
+    "</div>\n" +
+    "</div>\n" +
+    "</div>\n" +
+    "</div>\n" +
+    "</div>"
+  );
+
+
   $templateCache.put('views/logs/chromeless-build-log.html',
     "<default-header class=\"top-header\"></default-header>\n" +
     "<div class=\"sidebar-left collapse navbar-collapse navbar-collapse-2\">\n" +
