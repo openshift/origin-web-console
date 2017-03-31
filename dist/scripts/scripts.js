@@ -11188,28 +11188,7 @@ return {
 restrict:"E",
 templateUrl:"views/_tasks.html"
 };
-}), angular.module("openshiftConsole").directive("truncateLongText", [ "truncateFilter", function(a) {
-return {
-restrict:"E",
-scope:{
-content:"=",
-limit:"=",
-newlineLimit:"=",
-useWordBoundary:"=",
-expandable:"=",
-keywords:"=highlightKeywords",
-prettifyJson:"="
-},
-templateUrl:"views/directives/truncate-long-text.html",
-link:function(b) {
-b.toggles = {
-expanded:!1
-}, b.$watch("content", function(c) {
-c ? (b.truncatedContent = a(c, b.limit, b.useWordBoundary, b.newlineLimit), b.truncated = b.truncatedContent.length !== c.length) :(b.truncatedContent = null, b.truncated = !1);
-});
-}
-};
-} ]), angular.module("openshiftConsole").directive("catalog", [ "CatalogService", "Constants", "KeywordService", "Logger", function(a, b, c, d) {
+}), angular.module("openshiftConsole").directive("catalog", [ "CatalogService", "Constants", "KeywordService", "Logger", function(a, b, c, d) {
 return {
 restrict:"E",
 scope:{
@@ -14916,22 +14895,7 @@ return a.replace(/([a-z])([A-Z])/g, "$1 $2").replace(/\b([A-Z]+)([A-Z])([a-z])/,
 return a.toUpperCase();
 });
 };
-}).filter("parseJSON", function() {
-return function(a) {
-if (!a) return null;
-try {
-var b = JSON.parse(a);
-return "object" == typeof b ? b :null;
-} catch (c) {
-return null;
-}
-};
-}).filter("prettifyJSON", [ "parseJSONFilter", function(a) {
-return function(b) {
-var c = a(b);
-return c ? JSON.stringify(c, null, 4) :b;
-};
-} ]).filter("navigateResourceURL", [ "Navigate", function(a) {
+}).filter("navigateResourceURL", [ "Navigate", function(a) {
 return function(b, c, d, e) {
 return a.resourceURL(b, c, d, null, {
 apiVersion:e
@@ -14953,12 +14917,6 @@ return a.yamlURL(b, c);
 } ]).filter("join", function() {
 return function(a, b) {
 return b || (b = ","), a.join(b);
-};
-}).filter("generateName", function() {
-return function(a, b) {
-a || (a = ""), b || (b = 5);
-var c = Math.round(Math.pow(36, b + 1) - Math.random() * Math.pow(36, b)).toString(36).slice(1);
-return a + c;
 };
 }).filter("accessModes", function() {
 return function(a, b) {
@@ -14984,20 +14942,6 @@ d = a;
 }
 c.push(d);
 }), _.uniq(c);
-};
-}).filter("truncate", function() {
-return function(a, b, c, d) {
-if (!a) return a;
-var e = a;
-if (b && (e = e.substring(0, b)), d) {
-var f = a.split("\n", d).join("\n").length;
-e = e.substring(0, f);
-}
-if (c !== !1) {
-var g = Math.max(4, b - 10), h = e.lastIndexOf(/\s/, g);
-h !== -1 && (e = e.substring(0, h));
-}
-return e;
 };
 }).filter("middleEllipses", function() {
 return function(a, b, c) {
