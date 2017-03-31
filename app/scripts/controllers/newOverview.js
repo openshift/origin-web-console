@@ -156,7 +156,8 @@ function OverviewController($scope,
            _.size(overview.deployments) +
            _.size(overview.vanillaReplicaSets) +
            _.size(overview.statefulSets) +
-           _.size(overview.monopods);
+           _.size(overview.monopods),
+           _.size(overview.state.serviceInstances);
   };
 
   // The size of all visible top-level items after filtering.
@@ -183,7 +184,8 @@ function OverviewController($scope,
                  overview.deployments &&
                  overview.replicaSets &&
                  overview.statefulSets &&
-                 overview.pods;
+                 overview.pods &&
+                 overview.state.serviceInstances;
 
     state.expandAll = loaded && overview.size === 1;
 
@@ -1221,6 +1223,7 @@ function OverviewController($scope,
         resource: 'instances'
       }, context, function(serviceInstances) {
         state.serviceInstances = serviceInstances.by('metadata.name');
+        updateFilter();
       }, {poll: limitWatches, pollInterval: DEFAULT_POLL_INTERVAL}));
     }
 
@@ -1230,6 +1233,7 @@ function OverviewController($scope,
         resource: 'bindings'
       }, context, function(serviceBindings) {
         state.serviceBindings = serviceBindings.by('metadata.name');
+        updateFilter();
       }, {poll: limitWatches, pollInterval: DEFAULT_POLL_INTERVAL}));
     }
 
@@ -1247,6 +1251,7 @@ function OverviewController($scope,
         resource: 'serviceclasses'
       }, context, function(serviceClasses) {
         state.serviceClasses = serviceClasses.by('metadata.name');
+        updateFilter();
       });
     }
 
