@@ -18,7 +18,7 @@ function cmd() {
   while [[ "$tries" -gt 0 ]]; do
     rc="0"
     $cmd &> ${log_file} || rc=$?
-    [[ "$rc" == "0" ]] && return 0
+    [[ "$rc" == "0" ]] && cat ${log_file} && return 0
     ((tries--))
   done
   echo "[ERROR] Command '${cmd}' failed with rc ${rc}, logs:" && cat ${log_file}
