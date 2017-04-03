@@ -12886,8 +12886,8 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "<form role=\"form\" class=\"search-pf has-button\">\n" +
     "<div class=\"form-group has-clear\">\n" +
     "<div class=\"search-pf-input-group\">\n" +
-    "<label for=\"search-projects\" class=\"sr-only\">Search</label>\n" +
-    "<input type=\"search\" class=\"form-control\" placeholder=\"Search\" id=\"search-projects\" ng-model=\"search.text\">\n" +
+    "<label for=\"search-projects\" class=\"sr-only\">Filter by keyword</label>\n" +
+    "<input type=\"search\" class=\"form-control\" placeholder=\"Filter by keyword\" id=\"search-projects\" ng-model=\"search.text\">\n" +
     "<button type=\"button\" class=\"clear\" aria-hidden=\"true\" ng-if=\"search.text\" ng-click=\"search.text = ''\">\n" +
     "<span class=\"pficon pficon-close\"></span>\n" +
     "</button>\n" +
