@@ -16,6 +16,12 @@
     }
   }
   .bootstrap-select.btn-group {
+    &.open {
+      .btn {
+        background-color: @navbar-os-project-menu-active-bg;
+        color: @navbar-os-project-menu-active-color;
+      }
+    }
     .btn {
       background: @navbar-os-project-menu-bg;
       border-bottom: 0;
@@ -55,11 +61,6 @@
       }
       .filter-option {
         .truncate();
-      }
-    }
-    .bootstrap-select.open.btn-group {
-      .btn {
-        background-color: @navbar-os-project-menu-active-bg;
       }
     }
     .dropdown-toggle .caret {
@@ -116,12 +117,12 @@
     min-width: 0; // so that truncation on .filter-option works
     width: 100%;
     @media (min-width: @screen-sm-min) {
-      min-width: 220px; // IE
-      width: 220px;
+      min-width: 200px; // IE
+      width: 200px;
     }
     @media (min-width: @screen-md-min) {
-      min-width: 400px; // IE
-      width: 400px;
+      min-width: 395px; // IE
+      width: 395px;
     }
     @media (min-width: @screen-lg-min) {
       min-width: 500px; // IE

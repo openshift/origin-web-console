@@ -17,10 +17,15 @@
       <select class="selectpicker form-control" data-selected-text-format="count>3" id="boostrapSelect" title=""></select>
     </div>
     <!-- create buttons show at mobile -->
-    <div row class="navbar-flex-btn project-action" ng-if="project.metadata.name | canIAddToProject">
-      <a row class="project-action-btn" href="project/{{project.metadata.name}}/create" ng-disabled="project.status.phase != 'Active'" title="Add to project">
-        <i class="fa fa-plus visible-xs-inline-block"></i><span class="hidden-xs">Add to project</span>
+    <div row class="navbar-flex-btn project-action" ng-if="project.metadata.name | canIAddToProject" uib-dropdown class="dropdown">
+      <a row class="project-action-btn dropdown-toggle" href="" ng-disabled="project.status.phase != 'Active'" title="Add to project" uib-dropdown-toggle>
+        <i class="fa fa-plus visible-xs-inline-block"></i><span class="hidden-xs">Add to project <span class="caret" aria-hidden="true"></span></span>
       </a>
+      <ul class="uib-dropdown-menu dropdown-menu dropdown-menu-right">
+        <li><a ng-href="project/{{projectName}}/create?tab=fromCatalog">Browse Catalog</a></li>
+        <li><a ng-href="project/{{projectName}}/create?tab=deployImage">Deploy Image</a></li>
+        <li><a ng-href="project/{{projectName}}/create?tab=fromFile">Import YAML / JSON</a></li>
+      </ul>
     </div>
     <div row
       extension-point
