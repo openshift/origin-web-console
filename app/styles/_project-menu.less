@@ -19,7 +19,7 @@
     .btn {
       background: @navbar-os-project-menu-bg;
       border-bottom: 0;
-      border-color: @sidebar-os-border-color;
+      border-color: @navbar-os-project-menu-border;
       border-radius: 0;
       border-top: 0;
       box-shadow: none;
@@ -35,7 +35,7 @@
       }
       &:after {
         content: '';
-        background: @sidebar-os-border-inset-color;
+        background: @navbar-os-project-menu-border-inset;
         display: block;
         height: 100%;
         left: 0px;
@@ -57,7 +57,7 @@
         .truncate();
       }
     }
-    .bootstrap-select.open.btn-group {
+    &.open {
       .btn {
         background-color: @navbar-os-project-menu-active-bg;
       }
@@ -88,7 +88,7 @@
           }
         }
         &.divider {
-          background-color: @sidebar-os-border-inset-color !important;
+          background-color: @navbar-os-project-menu-border-inset !important;
           border-top: 1px solid @sidebar-os-border-color;
           height: 2px;
           margin: 0 !important;
