@@ -31,7 +31,8 @@ angular
     'angularMoment',
     'ab-base64',
     'openshiftCommonServices',
-    'openshiftCommonUI'
+    'openshiftCommonUI',
+    'webCatalog'
   ])
   .config(function ($routeProvider) {
     var overviewRoute;
