@@ -50,12 +50,12 @@ return _.get(a, "metadata.name");
 }, O = function(a) {
 return _.get(a, "metadata.uid");
 }, P = function() {
-return _.size(v.deploymentConfigs) + _.size(v.vanillaReplicationControllers) + _.size(v.deployments) + _.size(v.vanillaReplicaSets) + _.size(v.statefulSets) + _.size(v.monopods);
+return _.size(v.deploymentConfigs) + _.size(v.vanillaReplicationControllers) + _.size(v.deployments) + _.size(v.vanillaReplicaSets) + _.size(v.statefulSets) + _.size(v.monopods), _.size(v.state.serviceInstances);
 }, Q = function() {
 return _.size(v.filteredDeploymentConfigs) + _.size(v.filteredReplicationControllers) + _.size(v.filteredDeployments) + _.size(v.filteredReplicaSets) + _.size(v.filteredStatefulSets) + _.size(v.filteredMonopods);
 }, R = function() {
 v.size = P(), v.filteredSize = Q();
-var a = 0 === v.size, b = v.deploymentConfigs && v.replicationControllers && v.deployments && v.replicaSets && v.statefulSets && v.pods;
+var a = 0 === v.size, b = v.deploymentConfigs && v.replicationControllers && v.deployments && v.replicaSets && v.statefulSets && v.pods && v.state.serviceInstances;
 L.expandAll = b && 1 === v.size, v.showGetStarted = b && a, v.showLoading = !b && a, v.everythingFiltered = !a && !v.filteredSize;
 }, S = function(a) {
 return e.groupByApp(a, "metadata.name");
@@ -441,7 +441,7 @@ pollInterval:x
 group:"servicecatalog.k8s.io",
 resource:"instances"
 }, c, function(a) {
-L.serviceInstances = a.by("metadata.name");
+L.serviceInstances = a.by("metadata.name"), da();
 }, {
 poll:w,
 pollInterval:x
@@ -449,7 +449,7 @@ pollInterval:x
 group:"servicecatalog.k8s.io",
 resource:"bindings"
 }, c, function(a) {
-L.serviceBindings = a.by("metadata.name");
+L.serviceBindings = a.by("metadata.name"), da();
 }, {
 poll:w,
 pollInterval:x
@@ -459,7 +459,7 @@ L.limitRanges = a.by("metadata.name");
 group:"servicecatalog.k8s.io",
 resource:"serviceclasses"
 }, c, function(a) {
-L.serviceClasses = a.by("metadata.name");
+L.serviceClasses = a.by("metadata.name"), da();
 });
 var e = g.SAMPLE_PIPELINE_TEMPLATE;
 e && h.get("templates", e.name, {
@@ -844,7 +844,7 @@ DISABLE_CUSTOM_METRICS:!1,
 DISABLE_WILDCARD_ROUTES:!0,
 AVAILABLE_KINDS_BLACKLIST:[ "Binding", "Ingress", "DeploymentConfigRollback" ],
 ENABLE_TECH_PREVIEW_FEATURE:{
-service_catalog_landing_page:!1
+service_catalog_landing_page:!0
 },
 SAMPLE_PIPELINE_TEMPLATE:{
 name:"jenkins-pipeline-example",
