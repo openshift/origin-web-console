@@ -64,6 +64,10 @@ angular.extend(window.OPENSHIFT_CONSTANTS, {
   CLI: {
     "Latest Release":          "https://github.com/openshift/origin/releases/latest"
   },
+  // Maps links to API UI URLs
+  API: {
+    "token-request": "https://api.preview.openshift.com/oauth/token/request"
+  },
   // The default CPU target percentage for horizontal pod autoscalers created or edited in the web console.
   // This value is set in the HPA when the input is left blank.
   DEFAULT_HPA_CPU_TARGET_PERCENT: 80,

@@ -197,6 +197,11 @@ angular.module('openshiftConsole')
       return helpLink;
     };
   })
+  .filter('apiLink', function(Constants) {
+    return function(type) {
+      return Constants.API[type];
+    };
+  })
   .filter('taskTitle', function() {
     return function(task) {
       if (task.status !== "completed") {

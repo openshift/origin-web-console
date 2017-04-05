@@ -838,6 +838,9 @@ storage:"architecture/additional_concepts/storage.html",
 CLI:{
 "Latest Release":"https://github.com/openshift/origin/releases/latest"
 },
+API:{
+"token-request":"https://api.preview.openshift.com/oauth/token/request"
+},
 DEFAULT_HPA_CPU_TARGET_PERCENT:80,
 DISABLE_OVERVIEW_METRICS:!1,
 DISABLE_CUSTOM_METRICS:!1,
@@ -14835,6 +14838,10 @@ return a;
 return function(b) {
 var c = a.HELP[b] || a.HELP["default"];
 return URI(c).is("absolute") || (c = a.HELP_BASE_URL + c), c;
+};
+} ]).filter("apiLink", [ "Constants", function(a) {
+return function(b) {
+return a.API[b];
 };
 } ]).filter("taskTitle", function() {
 return function(a) {
