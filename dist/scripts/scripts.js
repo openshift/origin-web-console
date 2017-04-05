@@ -8056,7 +8056,7 @@ var y = d.imageStream;
 if (!y) return void h.toErrorPage("Cannot create from source: a base image was not specified");
 if (!d.imageTag) return void h.toErrorPage("Cannot create from source: a base image tag was not specified");
 var z = d.displayName || y;
-a.displayName = d.displayName, a.breadcrumbs = [ {
+a.displayName = d.displayName, a.advancedOptions = "true" === d.advanced, a.breadcrumbs = [ {
 title:a.projectName,
 link:"project/" + a.projectName
 }, {
