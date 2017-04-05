@@ -42,6 +42,7 @@ angular.module("openshiftConsole")
 
     var breadcrumbTitle = $routeParams.displayName || imageName;
     $scope.displayName = $routeParams.displayName;
+    $scope.advancedOptions = $routeParams.advanced === 'true';
     $scope.breadcrumbs = [
       {
         title: $scope.projectName,
