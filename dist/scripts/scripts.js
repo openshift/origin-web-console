@@ -13928,21 +13928,7 @@ return e(i, "year", "years"), e(j, "month", "months"), e(k, "day", "days"), e(l,
 return function(a, b, c) {
 return moment().subtract(b, c).diff(moment(a)) < 0;
 };
-}).filter("isNewerResource", function() {
-return function(a, b) {
-var c = _.get(a, "metadata.creationTimestamp");
-if (!c) return !1;
-var d = _.get(b, "metadata.creationTimestamp");
-return !d || c > d;
-};
-}).filter("mostRecent", [ "isNewerResourceFilter", function(a) {
-return function(b) {
-var c = null;
-return _.each(b, function(b) {
-c && !a(b, c) || (c = b);
-}), c;
-};
-} ]).filter("humanizeDurationValue", function() {
+}).filter("humanizeDurationValue", function() {
 return function(a, b) {
 return moment.duration(a, b).humanize();
 };
@@ -13958,14 +13944,6 @@ return (d < 0 || e < 0 || f < 0) && (d = e = f = 0), d && b.push(d + "h"), e && 
 }), angular.module("openshiftConsole").filter("storageClass", [ "annotationFilter", function(a) {
 return function(b) {
 return a(b, "volume.beta.kubernetes.io/storage-class");
-};
-} ]).filter("searchProjects", [ "displayNameFilter", function(a) {
-return function(b, c) {
-return c ? (c = c.toLowerCase(), _.filter(b, function(b) {
-if (_.includes(b.metadata.name, c)) return !0;
-var d = a(b, !0);
-return !(!d || !_.includes(d.toLowerCase(), c));
-})) :b;
 };
 } ]).filter("tags", [ "annotationFilter", function(a) {
 return function(b, c) {

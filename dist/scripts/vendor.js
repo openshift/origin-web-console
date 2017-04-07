@@ -59617,11 +59617,11 @@ xhr:c
 }), m = [];
 _.each(window.OPENSHIFT_CONFIG.additionalServers, function(a) {
 var b = (a.protocol ? a.protocol + "://" :e) + a.hostPort + a.prefix;
-m.push($.get(b).then(_.partial(k, b, a), function(a, b, c) {
-d.push({
-data:a,
-textStatus:b,
-xhr:c
+m.push($.get(b).then(_.partial(k, b, a), function(b, c, e) {
+a.required !== !1 && d.push({
+data:b,
+textStatus:c,
+xhr:e
 });
 }));
 });
@@ -59956,6 +59956,27 @@ return a.canI(b, c, d);
 return function(b) {
 return a.canIAddToProject(b);
 };
+} ]), angular.module("openshiftCommonUI").filter("isNewerResource", function() {
+return function(a, b) {
+var c = _.get(a, "metadata.creationTimestamp");
+if (!c) return !1;
+var d = _.get(b, "metadata.creationTimestamp");
+return !d || c > d;
+};
+}).filter("mostRecent", [ "isNewerResourceFilter", function(a) {
+return function(b) {
+var c = null;
+return _.each(b, function(b) {
+c && !a(b, c) || (c = b);
+}), c;
+};
+} ]).filter("orderObjectsByDate", [ "toArrayFilter", function(a) {
+return function(b, c) {
+return b = a(b), b.sort(function(a, b) {
+if (!(a.metadata && a.metadata.creationTimestamp && b.metadata && b.metadata.creationTimestamp)) throw "orderObjectsByDate expects all objects to have the field metadata.creationTimestamp";
+return a.metadata.creationTimestamp < b.metadata.creationTimestamp ? c ? 1 :-1 :a.metadata.creationTimestamp > b.metadata.creationTimestamp ? c ? -1 :1 :0;
+}), b;
+};
 } ]), angular.module("openshiftCommonUI").filter("highlightKeywords", [ "KeywordService", function(a) {
 return function(b, c, d) {
 if (!b) return b;
@@ -59965,13 +59986,6 @@ for (var e, f = _.map(c, function(a) {
 return _.isRegExp(a) ? a.source :_.escapeRegExp(a);
 }).join("|"), g = "", h = 0, i = d ? "g" :"ig", j = new RegExp(f, i); null !== (e = j.exec(b)); ) h < e.index && (g += _.escape(b.substring(h, e.index))), g += "<mark>" + _.escape(e[0]) + "</mark>", h = j.lastIndex;
 return h < b.length && (g += _.escape(b.substring(h))), g;
-};
-} ]), angular.module("openshiftCommonUI").filter("orderObjectsByDate", [ "toArrayFilter", function(a) {
-return function(b, c) {
-return b = a(b), b.sort(function(a, b) {
-if (!(a.metadata && a.metadata.creationTimestamp && b.metadata && b.metadata.creationTimestamp)) throw "orderObjectsByDate expects all objects to have the field metadata.creationTimestamp";
-return a.metadata.creationTimestamp < b.metadata.creationTimestamp ? c ? 1 :-1 :a.metadata.creationTimestamp > b.metadata.creationTimestamp ? c ? -1 :1 :0;
-}), b;
 };
 } ]), angular.module("openshiftCommonUI").filter("parseJSON", function() {
 return function(a) {
@@ -60021,6 +60035,14 @@ return function(c, d) {
 if (!c) return "";
 var e = a(c), f = c.metadata.name;
 return e !== f && b(d)[e] > 1 ? e + " (" + f + ")" :e;
+};
+} ]).filter("searchProjects", [ "displayNameFilter", function(a) {
+return function(b, c) {
+return c ? (c = c.toLowerCase(), _.filter(b, function(b) {
+if (_.includes(b.metadata.name, c)) return !0;
+var d = a(b, !0);
+return !(!d || !_.includes(d.toLowerCase(), c));
+})) :b;
 };
 } ]).filter("label", function() {
 return function(a, b) {
@@ -60942,12 +60964,12 @@ var t = "{protocol}://{+hostPort}{+prefix}{/group}/{version}/", u = t + "{resour
 o.prototype._urlForResource = function(a, b, c, d, e) {
 var f = g.apiInfo(a);
 if (!f) return i.error("_urlForResource called with unknown resource", a, arguments), null;
-var h;
-if (e = e || {}, h = d ? "http:" === window.location.protocol ? "ws" :"wss" :"http:" === window.location.protocol ? "http" :"https", c && c.namespace && !e.namespace && (e.namespace = c.namespace), f.namespaced && !e.namespace) return i.error("_urlForResource called for a namespaced resource but no namespace provided", a, arguments), null;
-var j = f.namespaced, k = null;
-j && (k = e.namespace, e = angular.copy(e), delete e.namespace);
-var l, m = {
-protocol:f.protocol || h,
+var h, j = f.protocol || window.location.protocol;
+if (e = e || {}, h = d ? "http:" === j ? "ws" :"wss" :"http:" === j ? "http" :"https", c && c.namespace && !e.namespace && (e.namespace = c.namespace), f.namespaced && !e.namespace) return i.error("_urlForResource called for a namespaced resource but no namespace provided", a, arguments), null;
+var k = f.namespaced, l = null;
+k && (l = e.namespace, e = angular.copy(e), delete e.namespace);
+var m, n = {
+protocol:h,
 hostPort:f.hostPort,
 prefix:f.prefix,
 group:f.group,
@@ -60955,10 +60977,10 @@ version:f.version,
 resource:a.primaryResource(),
 subresource:a.subresources(),
 name:b,
-namespace:k,
+namespace:l,
 q:e
 };
-return l = b ? j ? x :v :j ? w :u, URI.expand(l, m).toString();
+return m = b ? k ? x :v :k ? w :u, URI.expand(m, n).toString();
 }, o.prototype.url = function(a) {
 if (a && a.resource) {
 var b = angular.copy(a);
