@@ -6068,6 +6068,102 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
   );
 
 
+  $templateCache.put('views/directives/bind-service.html',
+    "<div class=\"wizard-pf-body\">\n" +
+    "<div class=\"wizard-pf-steps\">\n" +
+    "<ul class=\"wizard-pf-steps-indicator\">\n" +
+    "<li class=\"wizard-pf-step\" ng-class=\"{\n" +
+    "        active: step.selected,\n" +
+    "        visited: step.visited && !step.selected\n" +
+    "      }\" ng-repeat=\"step in ctrl.steps\" data-tabgroup=\"{{$index}}\">\n" +
+    "<a ng-click=\"ctrl.stepClick(step)\"><span class=\"wizard-pf-step-number\">{{$index + 1}}</span><span class=\"wizard-pf-step-title\">{{step.label}}</span></a>\n" +
+    "</li>\n" +
+    "</ul>\n" +
+    "</div>\n" +
+    "<div class=\"container-fluid wizard-pf-main mar-left-none\">\n" +
+    "<div ng-include=\"ctrl.currentStep.view\" class=\"wizard-pf-contents\"></div>\n" +
+    "</div>\n" +
+    "<div class=\"config-bottom modal-footer wizard-pf-footer\">\n" +
+    "<button type=\"button\" class=\"btn btn-default wizard-pf-cancel wizard-pf-dismiss\" ng-class=\"{'btn-cancel': ctrl.steps.length > 2}\" ng-disabled=\"ctrl.currentStep.id === 'results'\" ng-click=\"ctrl.closeWizard()\">\n" +
+    "Cancel\n" +
+    "</button>\n" +
+    "<button type=\"button\" class=\"btn btn-primary wizard-pf-next\" ng-if=\"ctrl.currentStep.id !== 'results'\" ng-click=\"ctrl.bindService()\">\n" +
+    "Bind\n" +
+    "</button>\n" +
+    "<button type=\"button\" class=\"btn btn-primary wizard-pf-close wizard-pf-dismiss\" ng-if=\"ctrl.currentStep.id === 'results'\" ng-click=\"ctrl.closeWizard()\">\n" +
+    "Close\n" +
+    "</button>\n" +
+    "</div>\n" +
+    "</div>"
+  );
+
+
+  $templateCache.put('views/directives/bind-service/results.html',
+    "<div>\n" +
+    "<div ng-if=\"!ctrl.error\">\n" +
+    "<div ng-if=\"(ctrl.binding | statusCondition : 'Ready').status !== 'True'\">\n" +
+    "<h3 class=\"mar-top-none center\">\n" +
+    "<span class=\"fa fa-spinner fa-pulse fa-3x fa-fw\" aria-hidden=\"true\"></span>\n" +
+    "<span class=\"sr-only\">Pending</span>\n" +
+    "<div class=\"mar-top-lg\">The binding was created but is not ready yet.</div>\n" +
+    "</h3>\n" +
+    "</div>\n" +
+    "<div ng-if=\"(ctrl.binding | statusCondition : 'Ready').status === 'True'\">\n" +
+    "<h3 class=\"mar-top-none\">\n" +
+    "<strong>{{ctrl.serviceToBind}}</strong> has been bound to <strong>{{ctrl.target.metadata.name}}</strong> successfully\n" +
+    "</h3>\n" +
+    "<div class=\"sub-title\">\n" +
+    "<h3><span class=\"pficon pficon-ok mar-right-sm\"></span>Configuration Created</h3>\n" +
+    "The binding operation created the secret\n" +
+    "<a ng-if=\"'secrets' | canI : 'list'\" ng-href=\"{{ctrl.generatedSecretName | navigateResourceURL : 'Secret' : ctrl.target.metadata.namespace}}\">{{ctrl.generatedSecretName}}</a>\n" +
+    "<span ng-if=\"!('secrets' | canI : 'list')\">{{ctrl.generatedSecretName}}</span>\n" +
+    "that you may need to reference in your application.\n" +
+    "<span ng-if=\"'pod_presets' | enableTechPreviewFeature\">Its data will be available to your application as environment variables.</span>\n" +
+    "</div>\n" +
+    "<div class=\"alert alert-info mar-top-xxl mar-bottom-xl\">\n" +
+    "<span class=\"pficon pficon-info\" aria-hidden=\"true\"></span>\n" +
+    "<span class=\"sr-only\">Info</span>\n" +
+    "The binding secret will only be available to new pods. You will need to redploy your application.\n" +
+    "</div>\n" +
+    "</div>\n" +
+    "</div>\n" +
+    "<div ng-if=\"ctrl.error\">\n" +
+    "<div class=\"title\">Binding Failed <span class=\"fa fa-times text-danger\"></span></div>\n" +
+    "<div class=\"sub-title\">\n" +
+    "<span ng-if=\"ctrl.error.data.message\">\n" +
+    "{{ctrl.error.data.message | upperFirst}}\n" +
+    "</span>\n" +
+    "<span ng-if=\"!ctrl.error.data.message\">\n" +
+    "An error occurred creating the binding.\n" +
+    "</span>\n" +
+    "</div>\n" +
+    "</div>\n" +
+    "</div>"
+  );
+
+
+  $templateCache.put('views/directives/bind-service/select-service.html',
+    " <h3 class=\"mar-top-none\">Select a service to bind to <strong>{{ctrl.target.metadata.name}}</strong></h3>\n" +
+    "Binding to a provisioned service will create a secret containing the information necessary for your application to use the service.\n" +
+    "<form name=\"serviceSelection\" class=\"mar-bottom-lg\">\n" +
+    "<fieldset ng-disabled=\"ctrl.isDisabled\">\n" +
+    "<div class=\"radio\" ng-repeat=\"serviceInstance in ctrl.orderedServiceInstances\">\n" +
+    "<label>\n" +
+    "<input type=\"radio\" ng-model=\"ctrl.serviceToBind\" value=\"{{serviceInstance.metadata.name}}\">\n" +
+    "{{ctrl.serviceClasses[serviceInstance.spec.serviceClassName].osbMetadata.displayName || serviceInstance.spec.serviceClassName}}\n" +
+    "<span ng-if=\"(serviceInstance | statusCondition : 'Ready').status !== 'True'\" class=\"mar-left-sm\">\n" +
+    "<span class=\"pficon pficon-info\" data-content=\"This service is not yet ready. If you bind to it, then the binding will be pending until the service is ready.\" data-toggle=\"popover\" data-trigger=\"hover\"></span>\n" +
+    "</span>\n" +
+    "<div class=\"help-block mar-top-none\">\n" +
+    "{{serviceInstance.metadata.name}}\n" +
+    "</div>\n" +
+    "</label>\n" +
+    "</div>\n" +
+    "</fieldset>\n" +
+    "</form>"
+  );
+
+
   $templateCache.put('views/directives/breadcrumbs.html',
     "<ol class=\"breadcrumb\" ng-if=\"breadcrumbs.length\">\n" +
     "<li ng-repeat=\"breadcrumb in breadcrumbs\" ng-class=\"{'active': !$last}\">\n" +
@@ -11812,6 +11908,10 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "<li ng-if=\"'deploymentconfigs' | canI : 'update'\" role=\"menuitem\">\n" +
     "<a ng-href=\"{{row.apiObject | editResourceURL}}\">Edit</a>\n" +
     "</li>\n" +
+    "\n" +
+    "<li ng-if=\"('pod_presets' | enableTechPreviewFeature) && (row.state.serviceInstances | hashSize) > 0\" role=\"menuitem\">\n" +
+    "<a href=\"\" ng-click=\"row.showOverlayPanel('bindService', {target: row.apiObject})\">Create Binding</a>\n" +
+    "</li>\n" +
     "<li ng-if=\"row.current && ('deploymentconfigs/log' | canI : 'get')\" role=\"menuitem\">\n" +
     "<a ng-href=\"{{row.current | navigateResourceURL}}?tab=logs\">View Logs</a>\n" +
     "</li>\n" +
@@ -12114,7 +12214,12 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "<div class=\"list-pf-expansion collapse\" ng-if=\"row.expanded\" ng-class=\"{ in: row.expanded }\">\n" +
     "<div ng-include src=\" 'views/overview/_list-row-expanded.html' \"></div>\n" +
     "</div>\n" +
-    "</div>"
+    "</div>\n" +
+    "<overlay-panel show-panel=\"row.overlay.panelVisible\" show-close=\"true\" handle-close=\"row.closeOverlayPanel\">\n" +
+    "<div ng-if=\"row.overlay.panelName === 'bindService'\">\n" +
+    "<bind-service target=\"row.overlay.state.target\" service-instances=\"row.state.serviceInstances\" service-classes=\"row.state.serviceClasses\" on-close=\"row.closeOverlayPanel\"></bind-service>\n" +
+    "</div>\n" +
+    "</overlay-panel>"
   );
 
 

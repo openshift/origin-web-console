@@ -1106,6 +1106,15 @@ angular.module('openshiftConsole')
       return lastFinishTime;
     };
   })
+  .filter('statusCondition', function() {
+    return function(apiObject, type) {
+      if (!apiObject) {
+        return null;
+      }
+
+      return _.find(_.get(apiObject, 'status.conditions'), {type: type});
+    };
+  })
   .filter('routeIngressCondition', function() {
     return function(ingress, type) {
       if (!ingress) {

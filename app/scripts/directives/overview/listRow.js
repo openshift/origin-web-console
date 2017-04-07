@@ -319,4 +319,13 @@ function OverviewListRow($filter,
     var imageStreamNamespace = _.get(imageChangeTrigger, 'imageChangeParams.from.namespace', deploymentConfigNamespace);
     return Navigate.resourceURL(imageStreamName, 'ImageStream', imageStreamNamespace);
   };
+
+  row.closeOverlayPanel = function() {
+    _.set(row, 'overlay.panelVisible', false);
+  };
+  row.showOverlayPanel = function(panelName, state) {
+    _.set(row, 'overlay.panelVisible', true);
+    _.set(row, 'overlay.panelName', panelName);
+    _.set(row, 'overlay.state', state);
+  };
 }

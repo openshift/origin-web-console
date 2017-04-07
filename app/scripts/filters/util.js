@@ -506,4 +506,9 @@ angular.module('openshiftConsole')
     return function(text, target, alreadyEscaped) {
       return HTMLService.linkify(text, target, alreadyEscaped);
     };
+  })
+  .filter('enableTechPreviewFeature', function(Constants) {
+    return function(feature) {
+      return _.get(Constants, ['ENABLE_TECH_PREVIEW_FEATURE', feature], false);
+    };
   });

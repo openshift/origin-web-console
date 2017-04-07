@@ -19,3 +19,11 @@
     <div ng-include src=" 'views/overview/_list-row-expanded.html' "></div>
   </div>
 </div>
+<overlay-panel show-panel="row.overlay.panelVisible" show-close="true" handle-close="row.closeOverlayPanel">
+  <div ng-if="row.overlay.panelName === 'bindService'">
+    <bind-service target="row.overlay.state.target"
+                  service-instances="row.state.serviceInstances"
+                  service-classes="row.state.serviceClasses"
+                  on-close="row.closeOverlayPanel"></bind-service>
+  </div>
+</overlay-panel>

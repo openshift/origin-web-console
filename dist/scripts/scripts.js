@@ -498,6 +498,89 @@ return b.weight / c * 100 + "%";
 };
 }
 
+function BindService(a, b, c) {
+var d = this;
+d.steps = [ {
+id:"services",
+label:"Services",
+view:"views/directives/bind-service/select-service.html"
+}, {
+label:"Results",
+id:"results",
+view:"views/directives/bind-service/results.html"
+} ], d.$onInit = function() {
+d.gotoStep(d.steps[0]);
+};
+var e = a("statusCondition");
+d.$onChanges = function(a) {
+if (a.serviceInstances && !d.serviceToBind) {
+var b, c;
+_.each(d.serviceInstances, function(a) {
+var d = "True" === _.get(e(a, "Ready"), "status");
+d && (!b || a.metadata.creationTimestamp > b.metadata.creationTimestamp) && (b = a), d || c && !(a.metadata.creationTimestamp > c.metadata.creationTimestamp) || (c = a);
+}), d.serviceToBind = _.get(b, "metadata.name") || _.get(c, "metadata.name");
+}
+if ((a.serviceInstances || a.serviceClasses) && d.serviceClasses && d.serviceInstances) {
+var f = _.toArray(d.serviceInstances);
+f.sort(function(a, b) {
+var c = _.get(d.serviceClasses, [ a.spec.serviceClassName, "osbMetadata", "displayName" ]) || a.spec.serviceClassName, e = _.get(d.serviceClasses, [ a.spec.serviceClassName, "osbMetadata", "displayName" ]) || b.spec.serviceClassName;
+return c === e && (c = _.get(a, "metadata.name", ""), e = _.get(b, "metadata.name", "")), c.localeCompare(e);
+}), d.orderedServiceInstances = f;
+}
+};
+var f = function(a) {
+var b = _.find(d.steps, {
+id:a
+});
+d.gotoStep(b);
+};
+d.gotoStep = function(a) {
+_.each(d.steps, function(a) {
+a.selected = !1;
+}), d.currentStep && (d.currentStep.visited = !0), d.currentStep = a, d.currentStep.selected = !0;
+}, d.stepClick = function(a) {
+d.wizardComplete || a.visited && d.gotoStep(a);
+};
+var g = a("generateName"), h = function() {
+var a = _.get(d.serviceInstances[d.serviceToBind], "metadata.name"), b = _.trunc(a, c.maxlength - 6);
+d.generatedSecretName = g(b + "-");
+var e = {
+kind:"Binding",
+apiVersion:"servicecatalog.k8s.io/v1alpha1",
+metadata:{
+generateName:a + "-"
+},
+spec:{
+instanceRef:{
+name:a
+},
+secretName:d.generatedSecretName
+}
+};
+return e;
+};
+d.bindService = function() {
+var a = {
+namespace:_.get(d.serviceInstances[d.serviceToBind], "metadata.namespace")
+};
+b.create({
+group:"servicecatalog.k8s.io",
+resource:"bindings"
+}, null, h(), a).then(function(c) {
+d.binding = c, b.watchObject({
+group:"servicecatalog.k8s.io",
+resource:"bindings"
+}, _.get(d.binding, "metadata.name"), a, function(a) {
+d.binding = a;
+}), d.wizardComplete = !0, d.error = null, f("results");
+}, function(a) {
+d.error = a;
+});
+}, d.closeWizard = function() {
+_.isFunction(d.onClose) && d.onClose();
+};
+}
+
 function BuildCounts(a, b) {
 var c = this;
 c.interestingPhases = [ "New", "Pending", "Running", "Failed", "Error" ];
@@ -785,6 +868,10 @@ message:"Deployment " + c + " is no longer in progress."
 }, g.urlForImageChangeTrigger = function(b) {
 var c = a("stripTag")(_.get(b, "imageChangeParams.from.name")), d = _.get(g, "apiObject.metadata.namespace"), e = _.get(b, "imageChangeParams.from.namespace", d);
 return f.resourceURL(c, "ImageStream", e);
+}, g.closeOverlayPanel = function() {
+_.set(g, "overlay.panelVisible", !1);
+}, g.showOverlayPanel = function(a, b) {
+_.set(g, "overlay.panelVisible", !0), _.set(g, "overlay.panelName", a), _.set(g, "overlay.state", b);
 };
 }
 
@@ -844,7 +931,8 @@ DISABLE_CUSTOM_METRICS:!1,
 DISABLE_WILDCARD_ROUTES:!0,
 AVAILABLE_KINDS_BLACKLIST:[ "Binding", "Ingress", "DeploymentConfigRollback" ],
 ENABLE_TECH_PREVIEW_FEATURE:{
-service_catalog_landing_page:!1
+service_catalog_landing_page:!1,
+pod_presets:!1
 },
 SAMPLE_PIPELINE_TEMPLATE:{
 name:"jenkins-pipeline-example",
@@ -1124,7 +1212,7 @@ label:"Uncategorized",
 description:""
 } ]
 } ]
-}), angular.module("openshiftConsole", [ "ngAnimate", "ngCookies", "ngResource", "ngRoute", "ngSanitize", "openshiftUI", "kubernetesUI", "registryUI.images", "ui.bootstrap", "patternfly.charts", "patternfly.sort", "openshiftConsoleTemplates", "ui.ace", "extension-registry", "as.sortable", "ui.select", "angular-inview", "angularMoment", "ab-base64", "openshiftCommonServices", "openshiftCommonUI" ]).config([ "$routeProvider", function(a) {
+}), angular.module("openshiftConsole", [ "ngAnimate", "ngCookies", "ngResource", "ngRoute", "ngSanitize", "openshiftUI", "kubernetesUI", "registryUI.images", "ui.bootstrap", "patternfly.charts", "patternfly.sort", "openshiftConsoleTemplates", "ui.ace", "extension-registry", "as.sortable", "ui.select", "angular-inview", "angularMoment", "ab-base64", "openshiftCommonServices", "openshiftCommonUI", "webCatalog" ]).config([ "$routeProvider", function(a) {
 var b;
 b = window.OPENSHIFT_CONSTANTS.HIDE_NEW_OVERVIEW || "true" === localStorage.getItem("hide-new-overview") ? {
 templateUrl:"views/overview.html",
@@ -12911,6 +12999,16 @@ route:"<",
 highlightService:"<"
 },
 templateUrl:"views/directives/route-service-bar-chart.html"
+}), angular.module("openshiftConsole").component("bindService", {
+controller:[ "$filter", "DataService", "DNS1123_SUBDOMAIN_VALIDATION", BindService ],
+controllerAs:"ctrl",
+bindings:{
+target:"<",
+serviceInstances:"<",
+serviceClasses:"<",
+onClose:"<"
+},
+templateUrl:"views/directives/bind-service.html"
 }), angular.module("openshiftConsole").directive("serviceGroupNotifications", [ "$filter", "APIService", "DeploymentsService", "Navigate", function(a, b, c, d) {
 return {
 restrict:"E",
@@ -14458,6 +14556,12 @@ var c = _.get(a, "state.terminated");
 c && (b && !moment(c.finishedAt).isAfter(b) || (b = c.finishedAt));
 }), b;
 };
+}).filter("statusCondition", function() {
+return function(a, b) {
+return a ? _.find(_.get(a, "status.conditions"), {
+type:b
+}) :null;
+};
 }).filter("routeIngressCondition", function() {
 return function(a, b) {
 return a ? _.find(a.conditions, {
@@ -14988,6 +15092,10 @@ return window.encodeURIComponent;
 }).filter("linkify", [ "HTMLService", function(a) {
 return function(b, c, d) {
 return a.linkify(b, c, d);
+};
+} ]).filter("enableTechPreviewFeature", [ "Constants", function(a) {
+return function(b) {
+return _.get(a, [ "ENABLE_TECH_PREVIEW_FEATURE", b ], !1);
 };
 } ]), angular.module("openshiftConsole").directive("affix", [ "$window", function(a) {
 return {
