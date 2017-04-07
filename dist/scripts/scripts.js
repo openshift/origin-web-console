@@ -441,7 +441,7 @@ pollInterval:x
 group:"servicecatalog.k8s.io",
 resource:"instances"
 }, c, function(a) {
-L.serviceInstances = a.by("metadata.name");
+v.serviceInstances = a.by("metadata.name");
 }, {
 poll:w,
 pollInterval:x
@@ -449,7 +449,7 @@ pollInterval:x
 group:"servicecatalog.k8s.io",
 resource:"bindings"
 }, c, function(a) {
-L.serviceBindings = a.by("metadata.name");
+v.serviceBindings = a.by("metadata.name");
 }, {
 poll:w,
 pollInterval:x
@@ -459,7 +459,7 @@ L.limitRanges = a.by("metadata.name");
 group:"servicecatalog.k8s.io",
 resource:"serviceclasses"
 }, c, function(a) {
-L.serviceClasses = a.by("metadata.name");
+v.serviceClasses = a.by("metadata.name");
 });
 var e = g.SAMPLE_PIPELINE_TEMPLATE;
 e && h.get("templates", e.name, {
