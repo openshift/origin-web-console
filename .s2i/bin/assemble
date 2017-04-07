@@ -1,10 +1,35 @@
 #!/bin/bash
-/usr/libexec/s2i/assemble
-rc=$?
+# Based on https://github.com/sclorg/httpd-container/blob/master/2.4/s2i/bin/assemble
 
-if [ $rc -eq 0 ]; then
-  bower install
-  rc=$?
+set -e
+
+echo "---> Enabling s2i support in httpd24 image"
+
+sed -i -f /opt/app-root/httpdconf.sed /opt/rh/httpd24/root/etc/httpd/conf/httpd.conf && \
+sed -i -f /opt/app-root/sslconf.sed /opt/rh/httpd24/root/etc/httpd/conf.d/ssl.conf && \
+echo 'IncludeOptional /opt/app-root/etc/httpd.d/*.conf' >> /opt/rh/httpd24/root/etc/httpd/conf/httpd.conf && \
+head -n151 /opt/rh/httpd24/root/etc/httpd/conf/httpd.conf | tail -n1 | grep "AllowOverride All" || exit
+sed -ri ' s!^(\s*CustomLog)\s+\S+!\1 |/usr/bin/cat!g; s!^(\s*ErrorLog)\s+\S+!\1 |/usr/bin/cat!g;' /opt/rh/httpd24/root/etc/httpd/conf/httpd.conf
+sed -ri ' s!^(\s*CustomLog)\s+\S+!\1 |/usr/bin/cat!g; s!^(\s*TransferLog)\s+\S+!\1 |/usr/bin/cat!g; s!^(\s*ErrorLog)\s+\S+!\1 |/usr/bin/cat!g;' /opt/rh/httpd24/root/etc/httpd/conf.d/ssl.conf
+
+echo "---> Installing application source"
+cp -Rf /tmp/src/dist/. ./
+cp -Rf /tmp/src/dist.java/. ./
+
+ if [ -d /tmp/src/httpd-cfg ]; then
+  echo "---> Copying httpd configuration files..."
+  if [ "$(ls -A /tmp/src/httpd-cfg/*.conf)" ]; then
+    cp -v /tmp/src/httpd-cfg/*.conf "${HTTPD_CONFIGURATION_PATH}"
+  fi
 fi
 
-exit $rc
+if [ -d /tmp/src/tls ]; then
+  echo "---> Copying tls files..."
+  if [ "$(ls -A /tmp/src/tls/*.*)" ]; then
+    mkdir -p "${HTTPD_CONFIGURATION_PATH}/tls"
+    cp -v /tmp/src/tls/*.* "${HTTPD_CONFIGURATION_PATH}/tls"
+  fi
+fi
+
+# Fix source directory permissions
+fix-permissions ./
