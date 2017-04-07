@@ -355,6 +355,20 @@
                   </div>
                 </div>
               </div>
+
+              <!-- service instances appear the same way no matter the filter listBy option -->
+              <div ng-if="overview.state.serviceInstances | hashSize">
+                <h2 ng-if="overview.state.serviceInstances">
+                  Provisioned Services
+                </h2>
+                <div class="list-pf">
+                  <service-instance-row
+                    ng-repeat="serviceInstance in overview.state.orderedServiceInstances"
+                    api-object="serviceInstance"
+                    state="overview.state"></service-instance-row>
+                </div>
+              </div>
+
             </div>
           </div>
         </div>

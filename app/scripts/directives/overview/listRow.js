@@ -8,6 +8,7 @@ angular.module('openshiftConsole').component('overviewListRow', {
     'BuildsService',
     'DeploymentsService',
     'Navigate',
+    'ListRowUtils',
     OverviewListRow
   ],
   controllerAs: 'row',
@@ -27,8 +28,11 @@ function OverviewListRow($filter,
                          APIService,
                          BuildsService,
                          DeploymentsService,
-                         Navigate) {
+                         Navigate,
+                         rowMethods) {
   var row = this;
+
+  _.extend(row, rowMethods.ui);
 
   var canI = $filter('canI');
   var deploymentIsInProgress = $filter('deploymentIsInProgress');
@@ -70,14 +74,6 @@ function OverviewListRow($filter,
     }
   };
 
-  var getNotifications = function(object) {
-    var uid = _.get(object, 'metadata.uid');
-    if (!uid) {
-      return null;
-    }
-    return _.get(row, ['state', 'notificationsByObjectUID', uid]);
-  };
-
   // Return the same empty array each time. Otherwise, digest loop errors occur.
   var NO_HPA = [];
   var getHPA = function(object) {
@@ -95,54 +91,9 @@ function OverviewListRow($filter,
     return _.get(row.state.hpaByResource, [kind, name], NO_HPA);
   };
 
-  var expandedKey = function(apiObject) {
-    var uid = _.get(apiObject, 'metadata.uid');
-    if (!uid) {
-      return null;
-    }
-
-    return 'overview/expand/' + uid;
-  };
-
-  row.toggleExpand = function(e, always) {
-    // Don't toggle if clicking on a link inside the row unless `always` is set.
-    if (!always && $(e.target).closest("a").length > 0) {
-      return;
-    }
-
-    var key = expandedKey(row.apiObject);
-    if (!key) {
-      return;
-    }
-
-    row.expanded = !row.expanded;
-    sessionStorage.setItem(key, row.expanded ? 'true' : 'false');
-  };
-
-  var setInitialExpandedState = function() {
-    var key = expandedKey(row.apiObject);
-    if (!key) {
-      row.expanded = false;
-      return;
-    }
-
-    var item = sessionStorage.getItem(key);
-    if (!item && row.state.expandAll) {
-      row.expanded = true;
-      return;
-    }
-
-    row.expanded = item === 'true';
-  };
-
-  row.$onInit = function() {
-    _.set(row, 'selectedTab.networking', true);
-    setInitialExpandedState();
-  };
-
   row.$doCheck = function() {
     // Update notifications.
-    row.notifications = getNotifications(row.apiObject);
+    row.notifications = rowMethods.getNotifications(row.apiObject, row);
 
     // Update HPA.
     row.hpa = getHPA(row.apiObject);
