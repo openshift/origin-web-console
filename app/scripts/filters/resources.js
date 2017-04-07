@@ -7,28 +7,6 @@ angular.module('openshiftConsole')
       return annotationFilter(pvc, 'volume.beta.kubernetes.io/storage-class');
     };
   })
-  .filter('searchProjects', function(displayNameFilter) {
-    return function(projects, text) {
-      if (!text) {
-        return projects;
-      }
-
-      // Lowercase the search string and project display name to perform a case-insensitive search.
-      text = text.toLowerCase();
-      return _.filter(projects, function(project) {
-        if (_.includes(project.metadata.name, text)) {
-          return true;
-        }
-
-        var displayName = displayNameFilter(project, true);
-        if (displayName && _.includes(displayName.toLowerCase(), text)) {
-          return true;
-        }
-
-        return false;
-      });
-    };
-  })
   .filter('tags', function(annotationFilter) {
     return function(resource, /* optional */ annotationKey) {
       annotationKey = annotationKey || "tags";

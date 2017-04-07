@@ -78,36 +78,6 @@ angular.module('openshiftConsole')
       return moment().subtract(amt, unit).diff(moment(timestamp)) < 0;
     };
   })
-  .filter('isNewerResource', function() {
-    // Checks if candidate is newer than other.
-    return function(candidate, other) {
-      var candidateCreation = _.get(candidate, 'metadata.creationTimestamp');
-      if (!candidateCreation) {
-        return false;
-      }
-
-      var otherCreation = _.get(other, 'metadata.creationTimestamp');
-      if (!otherCreation) {
-        return true;
-      }
-
-      // The date format can be compared using straight string comparison.
-      // Example Date: 2016-02-02T21:53:07Z
-      return candidateCreation > otherCreation;
-    };
-  })
-  .filter('mostRecent', function(isNewerResourceFilter) {
-    return function(objects) {
-      var mostRecent = null;
-      _.each(objects, function(object) {
-        if (!mostRecent || isNewerResourceFilter(object, mostRecent)) {
-          mostRecent = object;
-        }
-      });
-
-      return mostRecent;
-    };
-  })
   // Humanize duration values like 300 "seconds" as opposed to timestamps (see duration filter above).
   // http://momentjs.com/docs/#/durations/
   .filter('humanizeDurationValue', function() {
