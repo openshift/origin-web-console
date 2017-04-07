@@ -1,0 +1,28 @@
+<default-header class="top-header"></default-header>
+<div class="wrap no-sidebar">
+  <div class="sidebar-left collapse navbar-collapse navbar-collapse-2">
+    <navbar-utility-mobile></navbar-utility-mobile>
+  </div>
+  <div class="middle landing-page">
+    <!-- Middle section -->
+    <div class="middle-section">
+      <div class="middle-container">
+        <div class="middle-content">
+          <landing-page service-classes="serviceClasses" image-streams="imageStreams">
+            <landingheader>
+              <div class="build-applications-view">
+                <saas-list saas-offerings="saasOfferings"></saas-list>
+              </div>
+            </landingheader>
+            <landingbody>
+              <services-view base-project-url="project" service-classes="serviceClasses" image-streams="imageStreams"></services-view>
+            </landingbody>
+            <landingside>
+              <projects-summary base-project-url="project" projects-url="projects"></projects-summary>
+            </landingside>
+          </landing-page>
+        </div><!-- /middle-content -->
+      </div><!-- /middle-container -->
+    </div><!-- /middle-section -->
+  </div><!-- /middle -->
+</div><!-- /wrap -->

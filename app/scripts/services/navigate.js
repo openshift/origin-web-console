@@ -70,6 +70,10 @@ angular.module("openshiftConsole")
         return "project/" + encodeURIComponent(projectName) + "/overview";
       },
 
+      toProjectList: function(){
+        $location.path('projects');
+      },
+
       quotaURL: function(projectName) {
         return "project/" + encodeURIComponent(projectName) + "/quota";
       },

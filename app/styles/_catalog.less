@@ -1,0 +1,29 @@
+@landing-side-bar-top-offset: @navbar-os-header-height-desktop;
+@landing-side-bar-width-lg: 425px;
+@landing-side-bar-width-md: 375px;
+@landing-side-bar-width-sm: 325px;
+
+.console-os .wrap.no-sidebar .middle.landing-page {
+  background: @panel-shaded;
+  flex: none;
+  h1, .nav-tabs {
+    margin-bottom: 0;
+  }
+  @media(min-width: @screen-sm-min){
+    overflow-y: auto;
+    width: calc(100% ~"-" @landing-side-bar-width-sm);
+  }
+  @media(min-width: @screen-md-min) {
+    width: calc(100% ~"-" @landing-side-bar-width-md);
+  }
+
+  @media(min-width: @screen-lg-min) {
+    width: calc(100% ~"-" @landing-side-bar-width-lg);
+  }
+}
+
+@media(min-width: @screen-sm-min) {
+  .landing-side-bar {
+    top: @landing-side-bar-top-offset;
+  }
+}
