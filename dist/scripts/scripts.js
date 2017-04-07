@@ -9137,6 +9137,12 @@ b.close("save");
 }, a.cancel = function() {
 b.dismiss("cancel");
 };
+} ]), angular.module("openshiftConsole").controller("DeleteModalController", [ "$scope", "$uibModalInstance", function(a, b) {
+a["delete"] = function() {
+b.close("delete");
+}, a.cancel = function() {
+b.dismiss("cancel");
+};
 } ]), angular.module("openshiftConsole").controller("DebugTerminalModalController", [ "$scope", "$filter", "$uibModalInstance", "container", "image", function(a, b, c, d, e) {
 a.container = d, a.image = e, a.$watch("debugPod.status.containerStatuses", function() {
 a.containerState = _.get(a, "debugPod.status.containerStatuses[0].state");
@@ -9445,7 +9451,109 @@ precision:"=?"
 },
 template:'<span data-timestamp="{{timestamp}}" data-omit-single="{{omitSingle}}" data-precision="{{precision}}" class="duration">{{timestamp | duration : null : omitSingle : precision}}</span>'
 };
-}), angular.module("openshiftConsole").directive("editWebhookTriggers", [ "ApplicationGenerator", function(a) {
+}), angular.module("openshiftConsole").directive("deleteLink", [ "$uibModal", "$location", "$filter", "$q", "hashSizeFilter", "APIService", "DataService", "AlertMessageService", "Navigate", "Logger", function(a, b, c, d, e, f, g, h, i, j) {
+return {
+restrict:"E",
+scope:{
+kind:"@",
+group:"@?",
+typeDisplayName:"@?",
+resourceName:"@",
+projectName:"@",
+alerts:"=",
+displayName:"@",
+disableDelete:"=?",
+typeNameToConfirm:"=?",
+label:"@?",
+buttonOnly:"@",
+stayOnCurrentPage:"=?",
+replicas:"=?",
+hpaList:"=?",
+success:"=?",
+redirectUrl:"@?"
+},
+templateUrl:function(a, b) {
+return angular.isDefined(b.buttonOnly) ? "views/directives/delete-button.html" :"views/directives/delete-link.html";
+},
+replace:!0,
+link:function(e, k, l) {
+"Project" === l.kind && (e.isProject = !0), e.options = {
+deleteHPAs:!0
+};
+var m = function(a) {
+e.stayOnCurrentPage ? e.alerts[a.name] = a.data :h.addAlert(a);
+}, n = function(a) {
+return g["delete"]({
+resource:"horizontalpodautoscalers",
+group:"extensions"
+}, a.metadata.name, {
+namespace:e.projectName
+}).then(function() {
+m({
+name:a.metadata.name,
+data:{
+type:"success",
+message:"Horizontal Pod Autoscaler " + a.metadata.name + " was marked for deletion."
+}
+});
+})["catch"](function(b) {
+m({
+name:a.metadata.name,
+data:{
+type:"error",
+message:"Horizontal Pod Autoscaler " + a.metadata.name + " could not be deleted."
+}
+}), j.error("HPA " + a.metadata.name + " could not be deleted.", b);
+});
+}, o = function() {
+if (!e.stayOnCurrentPage) {
+if (e.redirectUrl) return void b.url(e.redirectUrl);
+if ("Project" !== e.kind) return void i.toResourceList(f.kindToResource(e.kind), e.projectName);
+if ("/" === b.path()) return void e.$emit("deleteProject");
+var a = URI("/");
+b.url(a);
+}
+};
+e.openDeleteModal = function() {
+if (!e.disableDelete) {
+var b = a.open({
+animation:!0,
+templateUrl:"views/modals/delete-resource.html",
+controller:"DeleteModalController",
+scope:e
+});
+b.result.then(function() {
+var a = e.kind, b = e.resourceName, h = e.typeDisplayName || c("humanizeKind")(a), i = h + " '" + (e.displayName ? e.displayName :b) + "'", k = "Project" === e.kind ? {} :{
+namespace:e.projectName
+};
+g["delete"]({
+resource:f.kindToResource(a),
+group:e.group
+}, b, k).then(function() {
+m({
+name:b,
+data:{
+type:"success",
+message:_.capitalize(i) + " was marked for deletion."
+}
+}), e.success && e.success();
+var a = [];
+e.options.deleteHPAs && _.forEach(e.hpaList, function(b) {
+a.push(n(b));
+}), a.length ? d.all(a).then(o) :o();
+})["catch"](function(a) {
+e.alerts[b] = {
+type:"error",
+message:_.capitalize(i) + "' could not be deleted.",
+details:c("getErrorDetails")(a)
+}, j.error(i + " could not be deleted.", a);
+});
+});
+}
+};
+}
+};
+} ]), angular.module("openshiftConsole").directive("editWebhookTriggers", [ "ApplicationGenerator", function(a) {
 return {
 restrict:"E",
 scope:{
