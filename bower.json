@@ -47,7 +47,7 @@
     "angular-utf8-base64": "0.0.5",
     "file-saver": "1.3.3",
     "bootstrap-switch": "3.3.3",
-    "origin-web-common": "0.0.11",
+    "origin-web-common": "0.0.12",
     "origin-web-catalog": "0.0.4"
   },
   "devDependencies": {
@@ -64,7 +64,7 @@
     "angular": "1.5.11",
     "kubernetes-object-describer": "1.0.4",
     "angular-sanitize": "1.5.11",
-    "origin-web-common": "0.0.11"
+    "origin-web-common": "0.0.12"
   },
   "overrides": {
     "angular": {
