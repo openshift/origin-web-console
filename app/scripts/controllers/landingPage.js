@@ -5,17 +5,8 @@ angular.module('openshiftConsole')
               function($scope,
                        AuthService,
                        Constants,
-                       DataService,
-                       Navigate) {
+                       DataService) {
     $scope.saasOfferings = Constants.SAAS_OFFERINGS;
-
-    $scope.navToProject = function(project) {
-      Navigate.toProjectOverview(project.metadata.name);
-    };
-
-    $scope.navToProjectList = function() {
-      Navigate.toProjectList();
-    };
 
     AuthService.withUser().then(function() {
       DataService.list({
