@@ -1928,6 +1928,12 @@ return "project/" + encodeURIComponent(a) + "/overview";
 toProjectList:function() {
 a.path("projects");
 },
+membershipURL:function(a) {
+return "project/" + encodeURIComponent(a) + "/membership";
+},
+toProjectMembership:function(b) {
+a.path(this.membershipURL(b));
+},
 quotaURL:function(a) {
 return "project/" + encodeURIComponent(a) + "/quota";
 },
@@ -4372,8 +4378,10 @@ _.set(this, "selectedTab.networking", !0), b(this);
 }
 }
 };
-}), angular.module("openshiftConsole").controller("LandingPageController", [ "$scope", "AuthService", "Constants", "DataService", function(a, b, c, d) {
-a.saasOfferings = c.SAAS_OFFERINGS, b.withUser().then(function() {
+}), angular.module("openshiftConsole").controller("LandingPageController", [ "$scope", "AuthService", "Constants", "DataService", "Navigate", function(a, b, c, d, e) {
+a.saasOfferings = c.SAAS_OFFERINGS, a.viewMembership = function(a) {
+e.toProjectMembership(a.metadata.name);
+}, b.withUser().then(function() {
 d.list({
 group:"servicecatalog.k8s.io",
 resource:"serviceclasses"

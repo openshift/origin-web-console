@@ -74,6 +74,14 @@ angular.module("openshiftConsole")
         $location.path('projects');
       },
 
+      membershipURL: function(projectName) {
+        return "project/" + encodeURIComponent(projectName) + "/membership";
+      },
+
+      toProjectMembership: function(projectName) {
+        $location.path(this.membershipURL(projectName));
+      },
+
       quotaURL: function(projectName) {
         return "project/" + encodeURIComponent(projectName) + "/quota";
       },

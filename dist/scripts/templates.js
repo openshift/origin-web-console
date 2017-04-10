@@ -10255,10 +10255,12 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "</div>\n" +
     "</landingheader>\n" +
     "<landingbody>\n" +
-    "<services-view base-project-url=\"project\" service-classes=\"serviceClasses\" image-streams=\"imageStreams\"></services-view>\n" +
+    "<services-view base-project-url=\"project\" service-classes=\"serviceClasses\" image-streams=\"imageStreams\">\n" +
+    "</services-view>\n" +
     "</landingbody>\n" +
     "<landingside>\n" +
-    "<projects-summary base-project-url=\"project\" projects-url=\"projects\"></projects-summary>\n" +
+    "<projects-summary base-project-url=\"project\" projects-url=\"projects\" view-edit-membership=\"viewMembership\">\n" +
+    "</projects-summary>\n" +
     "</landingside>\n" +
     "</landing-page>\n" +
     "</div>\n" +
