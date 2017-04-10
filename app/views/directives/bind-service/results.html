@@ -1,13 +1,13 @@
 <div>
   <div ng-if="!ctrl.error">
-    <div ng-if="(ctrl.binding | statusCondition : 'Ready').status !== 'True'">
+    <div ng-if="!(ctrl.binding | isBindingReady)">
       <h3 class="mar-top-none center">
         <span class="fa fa-spinner fa-pulse fa-3x fa-fw" aria-hidden="true"></span>
         <span class="sr-only">Pending</span>
         <div class="mar-top-lg">The binding was created but is not ready yet.</div>
       </h3>
     </div>
-    <div ng-if="(ctrl.binding | statusCondition : 'Ready').status === 'True'">
+    <div ng-if="(ctrl.binding | isBindingReady)">
       <h3 class="mar-top-none">
         <strong>{{ctrl.serviceToBind}}</strong> has been bound to <strong>{{ctrl.target.metadata.name}}</strong> successfully
       </h3>

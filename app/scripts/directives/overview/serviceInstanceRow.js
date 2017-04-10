@@ -11,7 +11,8 @@ angular.module('openshiftConsole').component('serviceInstanceRow', {
   controllerAs: 'row',
   bindings: {
     apiObject: '<',
-    state: '<'
+    state: '<',
+    bindings: '<'
   },
   templateUrl: 'views/overview/_service-instance-row.html'
 });
@@ -21,7 +22,7 @@ function ServiceInstanceRow($filter, DataService, rowMethods, $uibModal) {
   _.extend(row, rowMethods.ui);
 
   var getErrorDetails = $filter('getErrorDetails');
-
+  
   var getDisplayName = function() {
     var serviceClassName = row.apiObject.spec.serviceClassName;
     var instanceName = row.apiObject.metadata.name;
@@ -34,17 +35,10 @@ function ServiceInstanceRow($filter, DataService, rowMethods, $uibModal) {
     return _.get(row, ['state','serviceClasses', serviceClassName, 'description']);
   };
 
-  var getBindings = function() {
-    return _.filter(row.state.bindings, function(binding) {
-      return binding.spec.instanceRef.name === row.apiObject.metadata.name;
-    });
-  };
-
   row.$onChanges = function() {
     row.notifications = rowMethods.getNotifications(row.apiObject, row.state);
     row.displayName = getDisplayName();
     row.description = getDescription();
-    row.instanceBindings = getBindings();
   };
 
   row.getSecretForBinding = function(binding) {

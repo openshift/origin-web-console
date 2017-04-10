@@ -19,8 +19,7 @@
       </div>
     </div>
 
-    <div
-      class="list-pf-content hidden-xs hidden-sm">
+    <div class="list-pf-content hidden-xs hidden-sm">
       <div class="list-pf-content-right">
         <div>
           <strong ng-if="!row.instanceBindings.length">No Bindings</strong>
@@ -68,62 +67,68 @@
     ng-class="{ in: row.expanded }">
 
     <div class="list-pf-container">
-
-      <!--
-        TODO: follow-on PR
       <div class="expanded-section">
+        <alerts alerts="row.notifications"></alerts>
+        <!--
+          TODO: follow-on PR
+        <div class="expanded-section">
+          <div class="section-title">
+            Configuration Details
+          </div>
+          <div class="row" ng-repeat="item in [{
+            name: 'password',
+            value: '*****'
+          }, {
+            name: 'lorem ipsum',
+            value: 'dolor sit amet'
+          }]">
+            <div class="col-sm-5">{{item.name}}</div>
+            <div class="col-sm-7">{{item.value}}</div>
+          </div>
+        </div>
+        -->
+
+        <div class="row">
+          <div class="col-sm-12" ng-if="row.description">
+            <p class="pre-wrap" ng-bind-html="row.description | linky"></p>
+          </div>
+        </div>
         <div class="section-title">
-          Configuration Details
+          Bindings
         </div>
-        <div class="row" ng-repeat="item in [{
-          name: 'password',
-          value: '*****'
-        }, {
-          name: 'lorem ipsum',
-          value: 'dolor sit amet'
-        }]">
-          <div class="col-sm-5">{{item.name}}</div>
-          <div class="col-sm-7">{{item.value}}</div>
+        <span ng-if="!row.bindings">There are no bindings.</span>
+        <div
+          ng-if="row.bindings"
+          class="row"
+          ng-repeat="(name, binding) in row.bindings">
+          <div class="col-sm-5">
+            <span>{{binding.metadata.name}}</span>
+          </div>
+          <div class="col-sm-7">
+            <!-- TODO: follow-on PR
+            <a ng-href="{{binding | navigateResourceURL}}">View configuration details</a>
+            -->
+            <span ng-if="!(binding | isBindingReady)">
+              <status-icon status="'Pending'"></status-icon> Pending
+            </span>
+            <a
+              ng-if="(binding | isBindingReady) && ('secrets' | canI : 'get')"
+              href="{{row.getSecretForBinding(binding) | navigateResourceURL}}">
+              View secret
+            </a>
+          </div>
         </div>
+        <!-- TODO: follow-on PR
+        <div class="row">
+          <div class="col-sm-12">
+            <a href="#">
+              <i class="fa fa-plus-circle"></i> Create binding
+            </a>
+          </div>
+        </div>
+        -->
       </div>
-      -->
-
-      <div class="row">
-        <div class="col-sm-12" ng-if="row.description">
-          <p class="pre-wrap" ng-bind-html="row.description | linky"></p>
-        </div>
-      </div>
-      <div class="section-title">
-        Bindings
-      </div>
-      <span ng-if="!row.instanceBindings.length">There are no bindings.</span>
-      <div
-        ng-if="row.instanceBindings.length"
-        class="row"
-        ng-repeat="binding in row.instanceBindings">
-        <div class="col-sm-4">
-          <span>{{binding.metadata.name}}</span>
-        </div>
-        <div class="col-sm-8">
-          <!-- TODO: follow-on PR
-          <a ng-href="{{binding | navigateResourceURL}}">View configuration details</a>
-          -->
-          <a href="{{row.getSecretForBinding(binding) | navigateResourceURL}}">
-            View secret
-          </a>
-        </div>
-      </div>
-      <!-- TODO: follow-on PR
-      <div class="row">
-        <div class="col-sm-12">
-          <a href="#">
-            <i class="fa fa-plus-circle"></i> Create binding
-          </a>
-        </div>
-      </div>
-      -->
     </div>
-
   </div>
 
 </div>

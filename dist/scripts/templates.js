@@ -6007,14 +6007,14 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
   $templateCache.put('views/directives/bind-service/results.html',
     "<div>\n" +
     "<div ng-if=\"!ctrl.error\">\n" +
-    "<div ng-if=\"(ctrl.binding | statusCondition : 'Ready').status !== 'True'\">\n" +
+    "<div ng-if=\"!(ctrl.binding | isBindingReady)\">\n" +
     "<h3 class=\"mar-top-none center\">\n" +
     "<span class=\"fa fa-spinner fa-pulse fa-3x fa-fw\" aria-hidden=\"true\"></span>\n" +
     "<span class=\"sr-only\">Pending</span>\n" +
     "<div class=\"mar-top-lg\">The binding was created but is not ready yet.</div>\n" +
     "</h3>\n" +
     "</div>\n" +
-    "<div ng-if=\"(ctrl.binding | statusCondition : 'Ready').status === 'True'\">\n" +
+    "<div ng-if=\"(ctrl.binding | isBindingReady)\">\n" +
     "<h3 class=\"mar-top-none\">\n" +
     "<strong>{{ctrl.serviceToBind}}</strong> has been bound to <strong>{{ctrl.target.metadata.name}}</strong> successfully\n" +
     "</h3>\n" +
@@ -6093,7 +6093,7 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "<label>\n" +
     "<input type=\"radio\" ng-model=\"ctrl.serviceToBind\" value=\"{{serviceInstance.metadata.name}}\">\n" +
     "{{ctrl.serviceClasses[serviceInstance.spec.serviceClassName].osbMetadata.displayName || serviceInstance.spec.serviceClassName}}\n" +
-    "<span ng-if=\"(serviceInstance | statusCondition : 'Ready').status !== 'True'\" class=\"mar-left-sm\">\n" +
+    "<span ng-if=\"!(serviceInstance | isServiceInstanceReady)\" class=\"mar-left-sm\">\n" +
     "<span class=\"pficon pficon-info\" data-content=\"This service is not yet ready. If you bind to it, then the binding will be pending until the service is ready.\" data-toggle=\"popover\" data-trigger=\"hover\"></span>\n" +
     "</span>\n" +
     "<div class=\"help-block mar-top-none\">\n" +
@@ -11543,7 +11543,7 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "Provisioned Services\n" +
     "</h2>\n" +
     "<div class=\"list-pf\">\n" +
-    "<service-instance-row ng-repeat=\"serviceInstance in overview.state.orderedServiceInstances\" api-object=\"serviceInstance\" state=\"overview.state\"></service-instance-row>\n" +
+    "<service-instance-row ng-repeat=\"serviceInstance in overview.state.orderedServiceInstances\" api-object=\"serviceInstance\" bindings=\"overview.bindingsByInstanceRef[serviceInstance.metadata.name]\" state=\"overview.state\"></service-instance-row>\n" +
     "</div>\n" +
     "</div>\n" +
     "</div>\n" +
@@ -12721,6 +12721,8 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "</div>\n" +
     "<div class=\"list-pf-expansion collapse\" ng-if=\"row.expanded\" ng-class=\"{ in: row.expanded }\">\n" +
     "<div class=\"list-pf-container\">\n" +
+    "<div class=\"expanded-section\">\n" +
+    "<alerts alerts=\"row.notifications\"></alerts>\n" +
     "\n" +
     "<div class=\"row\">\n" +
     "<div class=\"col-sm-12\" ng-if=\"row.description\">\n" +
@@ -12730,19 +12732,23 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "<div class=\"section-title\">\n" +
     "Bindings\n" +
     "</div>\n" +
-    "<span ng-if=\"!row.instanceBindings.length\">There are no bindings.</span>\n" +
-    "<div ng-if=\"row.instanceBindings.length\" class=\"row\" ng-repeat=\"binding in row.instanceBindings\">\n" +
-    "<div class=\"col-sm-4\">\n" +
+    "<span ng-if=\"!row.bindings\">There are no bindings.</span>\n" +
+    "<div ng-if=\"row.bindings\" class=\"row\" ng-repeat=\"(name, binding) in row.bindings\">\n" +
+    "<div class=\"col-sm-5\">\n" +
     "<span>{{binding.metadata.name}}</span>\n" +
     "</div>\n" +
-    "<div class=\"col-sm-8\">\n" +
+    "<div class=\"col-sm-7\">\n" +
     "\n" +
-    "<a href=\"{{row.getSecretForBinding(binding) | navigateResourceURL}}\">\n" +
+    "<span ng-if=\"!(binding | isBindingReady)\">\n" +
+    "<status-icon status=\"'Pending'\"></status-icon> Pending\n" +
+    "</span>\n" +
+    "<a ng-if=\"(binding | isBindingReady) && ('secrets' | canI : 'get')\" href=\"{{row.getSecretForBinding(binding) | navigateResourceURL}}\">\n" +
     "View secret\n" +
     "</a>\n" +
     "</div>\n" +
     "</div>\n" +
     "\n" +
+    "</div>\n" +
     "</div>\n" +
     "</div>\n" +
     "</div>\n" +

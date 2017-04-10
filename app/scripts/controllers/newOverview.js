@@ -94,6 +94,7 @@ function OverviewController($scope,
     routesByService: {},
     servicesByObjectUID: {},
     serviceInstances: {},
+    bindingsByInstanceRef: {},
     // Set to true below when metrics are available.
     showMetrics: false
   };
@@ -1072,7 +1073,7 @@ function OverviewController($scope,
   }, 300);
 
   // TODO: code duplicated from directives/bindService.js
-  // extract & share 
+  // extract & share
   var sortServiceInstances = function() {
     if(!state.serviceInstances && !state.serviceClasses) {
       return;
@@ -1252,6 +1253,10 @@ function OverviewController($scope,
         resource: 'instances'
       }, context, function(serviceInstances) {
         state.serviceInstances = serviceInstances.by('metadata.name');
+        _.each(state.serviceInstances, function(instance) {
+          var notifications = ResourceAlertsService.getServiceInstanceAlerts(instance);
+          setNotifications(instance, notifications);  
+        });
         sortServiceInstances();
         updateFilter();
       }, {poll: limitWatches, pollInterval: DEFAULT_POLL_INTERVAL}));
@@ -1263,6 +1268,7 @@ function OverviewController($scope,
         resource: 'bindings'
       }, context, function(bindings) {
         state.bindings = bindings.by('metadata.name');
+        overview.bindingsByInstanceRef = _.groupBy(state.bindings, 'spec.instanceRef.name');
         refreshSecrets(context);
         updateFilter();
       }, {poll: limitWatches, pollInterval: DEFAULT_POLL_INTERVAL}));
