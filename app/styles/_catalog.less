@@ -1,29 +1,23 @@
-@landing-side-bar-top-offset: @navbar-os-header-height-desktop;
-@landing-side-bar-width-lg: 425px;
-@landing-side-bar-width-md: 375px;
-@landing-side-bar-width-sm: 325px;
+@landing-search-area-height: 52px;
 
-.console-os .wrap.no-sidebar .middle.landing-page {
+.landing {
   background: @panel-shaded;
-  flex: none;
-  h1, .nav-tabs {
-    margin-bottom: 0;
-  }
   @media(min-width: @screen-sm-min){
-    overflow-y: auto;
-    width: calc(100% ~"-" @landing-side-bar-width-sm);
+    top: @landing-search-area-height;
   }
-  @media(min-width: @screen-md-min) {
-    width: calc(100% ~"-" @landing-side-bar-width-md);
+  .catalogs-overlay-modal .wizard-pf-body .wizard-pf-main {
+    .row();
+    padding-left: 0;
+    padding-right: 0;
   }
-
-  @media(min-width: @screen-lg-min) {
-    width: calc(100% ~"-" @landing-side-bar-width-lg);
+  h1, .nav-tabs {
+    margin-bottom: 0 !important;
+    margin-top: 0 !important;
   }
 }
 
 @media(min-width: @screen-sm-min) {
-  .landing-side-bar {
-    top: @landing-side-bar-top-offset;
+  .catalog-search, .landing-side-bar {
+    top: @navbar-os-header-height-desktop;
   }
 }

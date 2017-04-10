@@ -8,7 +8,14 @@
     <div class="middle-section">
       <div class="middle-container">
         <div class="middle-content">
-          <landing-page service-classes="serviceClasses" image-streams="imageStreams">
+          <landing-page>
+            <landingsearch>
+              <catalog-search
+                  service-classes="serviceClasses"
+                  image-streams="imageStreams"
+                  base-project-url="project">
+              </catalog-search>
+            </landingsearch>
             <landingheader>
               <div class="build-applications-view">
                 <saas-list saas-offerings="saasOfferings"></saas-list>

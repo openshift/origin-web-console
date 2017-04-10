@@ -10253,7 +10253,11 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "<div class=\"middle-section\">\n" +
     "<div class=\"middle-container\">\n" +
     "<div class=\"middle-content\">\n" +
-    "<landing-page service-classes=\"serviceClasses\" image-streams=\"imageStreams\">\n" +
+    "<landing-page>\n" +
+    "<landingsearch>\n" +
+    "<catalog-search service-classes=\"serviceClasses\" image-streams=\"imageStreams\" base-project-url=\"project\">\n" +
+    "</catalog-search>\n" +
+    "</landingsearch>\n" +
     "<landingheader>\n" +
     "<div class=\"build-applications-view\">\n" +
     "<saas-list saas-offerings=\"saasOfferings\"></saas-list>\n" +
