@@ -593,6 +593,40 @@ _.isFunction(d.onClose) && d.onClose();
 };
 }
 
+function NextSteps(a) {
+function b(a) {
+var b = [];
+return angular.forEach(a, function(a) {
+"completed" !== a.status && b.push(a);
+}), b;
+}
+function c(a) {
+var b = [];
+return angular.forEach(a, function(a) {
+a.hasErrors && b.push(a);
+}), b;
+}
+var d = this;
+d.showParamsTable = !1;
+var e = a.getTemplateData();
+d.parameters = e.params, d.templateMessage = e.message, a.clearTemplateData();
+var f = function(a) {
+var b = _.get(d, "createdBuildConfig.spec.triggers", []);
+return _.some(b, {
+type:a
+});
+};
+d.createdBuildConfigWithGitHubTrigger = function() {
+return f("GitHub");
+}, d.createdBuildConfigWithConfigChangeTrigger = function() {
+return f("ConfigChange");
+}, d.allTasksSuccessful = function(a) {
+return !b(a).length && !c(a).length;
+}, d.erroredTasks = c, d.pendingTasks = b, d.toggleParamsTable = function() {
+d.showParamsTable = !0;
+};
+}
+
 function BuildCounts(a, b) {
 var c = this;
 c.interestingPhases = [ "New", "Pending", "Running", "Failed", "Error" ];
@@ -8484,9 +8518,9 @@ return a.nameTaken = b.nameTaken, h;
 f.then(j, j).then(J, J);
 };
 }));
-} ]), angular.module("openshiftConsole").controller("NextStepsController", [ "$scope", "$http", "$routeParams", "DataService", "$q", "$location", "ProcessedTemplateService", "TaskList", "$parse", "Navigate", "Logger", "$filter", "imageObjectRefFilter", "failureObjectNameFilter", "ProjectsService", function(a, b, c, d, e, f, g, h, i, j, k, l, m, n, o) {
-var p = (l("displayName"), []);
-a.alerts = [], a.loginBaseUrl = d.openshiftAPIBaseUrl(), a.buildConfigs = {}, a.showParamsTable = !1, a.projectName = c.project, a.fromSampleRepo = c.fromSample, a.breadcrumbs = [ {
+} ]), angular.module("openshiftConsole").controller("NextStepsController", [ "$scope", "$http", "$routeParams", "DataService", "$q", "$location", "TaskList", "$parse", "Navigate", "Logger", "$filter", "imageObjectRefFilter", "failureObjectNameFilter", "ProjectsService", function(a, b, c, d, e, f, g, h, i, j, k, l, m, n) {
+var o = (k("displayName"), []);
+a.alerts = [], a.loginBaseUrl = d.openshiftAPIBaseUrl(), a.buildConfigs = {}, a.projectName = c.project, a.fromSampleRepo = c.fromSample, a.breadcrumbs = [ {
 title:a.projectName,
 link:"project/" + a.projectName
 }, {
@@ -8496,40 +8530,11 @@ link:"project/" + a.projectName + "/create"
 title:c.breadcrumbTitle || c.name
 }, {
 title:"Next Steps"
-} ];
-var q = g.getTemplateData();
-a.parameters = q.params, a.templateMessage = q.message, g.clearTemplateData(), o.get(c.project).then(_.spread(function(b, e) {
-function f(a) {
-var b = [];
-return angular.forEach(a, function(a) {
-a.hasErrors && b.push(a);
-}), b;
-}
-function g(a) {
-var b = [];
-return angular.forEach(a, function(a) {
-"completed" !== a.status && b.push(a);
-}), b;
-}
-a.project = b, a.breadcrumbs[0].title = l("displayName")(b), p.push(d.watch("buildconfigs", e, function(b) {
-a.buildConfigs = b.by("metadata.name"), a.createdBuildConfig = a.buildConfigs[c.name], k.log("buildconfigs (subscribe)", a.buildConfigs);
-}));
-var h = function(b) {
-var c = _.get(a, "createdBuildConfig.spec.triggers", []);
-return _.some(c, {
-type:b
-});
-};
-a.createdBuildConfigWithGitHubTrigger = function() {
-return h("GitHub");
-}, a.createdBuildConfigWithConfigChangeTrigger = function() {
-return h("ConfigChange");
-}, a.allTasksSuccessful = function(a) {
-return !g(a).length && !f(a).length;
-}, a.toggleParamsTable = function() {
-a.showParamsTable = !0;
-}, a.erroredTasks = f, a.pendingTasks = g, a.$on("$destroy", function() {
-d.unwatchAll(p);
+} ], n.get(c.project).then(_.spread(function(b, e) {
+a.project = b, a.breadcrumbs[0].title = k("displayName")(b), o.push(d.watch("buildconfigs", e, function(b) {
+a.buildConfigs = b.by("metadata.name"), a.createdBuildConfig = a.buildConfigs[c.name], j.log("buildconfigs (subscribe)", a.buildConfigs);
+})), a.$on("$destroy", function() {
+d.unwatchAll(o);
 });
 }));
 } ]), angular.module("openshiftConsole").controller("NewFromTemplateController", [ "$scope", "$http", "$routeParams", "DataService", "ProcessedTemplateService", "AlertMessageService", "ProjectsService", "QuotaService", "SecurityCheckService", "$q", "$location", "TaskList", "$parse", "Navigate", "$filter", "$uibModal", "imageObjectRefFilter", "failureObjectNameFilter", "CachedTemplateService", "keyValueEditorUtils", "Constants", function(a, b, c, d, e, f, g, h, i, j, k, l, m, n, o, p, q, r, s, t, u) {
@@ -13256,6 +13261,16 @@ serviceClasses:"<",
 onClose:"<"
 },
 templateUrl:"views/directives/bind-service.html"
+}), angular.module("openshiftConsole").component("nextSteps", {
+controller:[ "ProcessedTemplateService", NextSteps ],
+bindings:{
+project:"<",
+projectName:"<",
+loginBaseUrl:"<",
+fromSampleRepo:"<",
+createdBuildConfig:"<"
+},
+templateUrl:"views/directives/next-steps.html"
 }), angular.module("openshiftConsole").directive("serviceGroupNotifications", [ "$filter", "APIService", "DeploymentsService", "Navigate", function(a, b, c, d) {
 return {
 restrict:"E",

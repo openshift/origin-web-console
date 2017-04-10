@@ -9,14 +9,27 @@
  * Controller of the openshiftConsole
  */
 angular.module("openshiftConsole")
-  .controller("NextStepsController", function($scope, $http, $routeParams, DataService, $q, $location, ProcessedTemplateService, TaskList, $parse, Navigate, Logger, $filter, imageObjectRefFilter, failureObjectNameFilter, ProjectsService) {
+  .controller("NextStepsController", function(
+    $scope,
+    $http,
+    $routeParams,
+    DataService,
+    $q,
+    $location,
+    TaskList,
+    $parse,
+    Navigate,
+    Logger,
+    $filter,
+    imageObjectRefFilter,
+    failureObjectNameFilter,
+    ProjectsService) {
     var displayNameFilter = $filter('displayName');
     var watches = [];
 
     $scope.alerts = [];
     $scope.loginBaseUrl = DataService.openshiftAPIBaseUrl();
     $scope.buildConfigs = {};
-    $scope.showParamsTable = false;
 
     $scope.projectName = $routeParams.project;
     $scope.fromSampleRepo = $routeParams.fromSample;
@@ -39,11 +52,6 @@ angular.module("openshiftConsole")
       }
     ];
 
-    var processedTemplateData = ProcessedTemplateService.getTemplateData();
-    $scope.parameters = processedTemplateData.params;
-    $scope.templateMessage = processedTemplateData.message;
-    ProcessedTemplateService.clearTemplateData();
-
     ProjectsService
       .get($routeParams.project)
       .then(_.spread(function(project, context) {
@@ -55,49 +63,6 @@ angular.module("openshiftConsole")
           $scope.createdBuildConfig = $scope.buildConfigs[$routeParams.name];
           Logger.log("buildconfigs (subscribe)", $scope.buildConfigs);
         }));
-
-        var hasBuildConfigTrigger = function(type) {
-          var triggers = _.get($scope,  'createdBuildConfig.spec.triggers', []);
-          return _.some(triggers, { type: type });
-        };
-
-        $scope.createdBuildConfigWithGitHubTrigger = function() {
-          return hasBuildConfigTrigger('GitHub');
-        };
-
-        $scope.createdBuildConfigWithConfigChangeTrigger = function() {
-          return hasBuildConfigTrigger('ConfigChange');
-        };
-
-        $scope.allTasksSuccessful = function(tasks) {
-          return !pendingTasks(tasks).length && !erroredTasks(tasks).length;
-        };
-
-        $scope.toggleParamsTable = function() {
-          $scope.showParamsTable = true;
-        };
-
-        function erroredTasks(tasks) {
-          var erroredTasks = [];
-          angular.forEach(tasks, function(task) {
-            if (task.hasErrors) {
-              erroredTasks.push(task);
-            }
-          });
-          return erroredTasks;
-        }
-        $scope.erroredTasks = erroredTasks;
-
-        function pendingTasks(tasks) {
-          var pendingTasks = [];
-          angular.forEach(tasks, function(task) {
-            if (task.status !== "completed") {
-              pendingTasks.push(task);
-            }
-          });
-          return pendingTasks;
-        }
-        $scope.pendingTasks = pendingTasks;
 
         $scope.$on('$destroy', function(){
           DataService.unwatchAll(watches);

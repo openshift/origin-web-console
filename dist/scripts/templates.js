@@ -5314,101 +5314,7 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "<div class=\"middle-content\">\n" +
     "<div class=\"container surface-shaded next-steps\">\n" +
     "<breadcrumbs breadcrumbs=\"breadcrumbs\"></breadcrumbs>\n" +
-    "<div ng-controller=\"TasksController\">\n" +
-    "<h1 ng-if=\"!tasks().length\">Completed. <a href=\"project/{{projectName}}/overview\">Go to overview</a>.</h1>\n" +
-    "<h1 ng-if=\"tasks().length && allTasksSuccessful(tasks())\">Application created. <a href=\"project/{{projectName}}/overview\">Continue to overview</a>.</h1>\n" +
-    "<h1 ng-if=\"pendingTasks(tasks()).length\">Creating...</h1>\n" +
-    "<h1 ng-if=\"!pendingTasks(tasks()).length && erroredTasks(tasks()).length\">Completed, with errors</h1>\n" +
-    "<div ng-repeat=\"task in tasks()\" ng-if=\"tasks().length && !allTasksSuccessful(tasks())\">\n" +
-    "<div class=\"tasks\" ng-class=\"hasTaskWithError() ? 'failure' : 'success'\">\n" +
-    "<div class=\"task-content\">\n" +
-    "<i class=\"pficon task-icon\" ng-class=\"task.hasErrors ? 'pficon-error-circle-o' : 'pficon-ok'\"></i>\n" +
-    "<div class=\"task-info\">\n" +
-    "{{ task | taskTitle }}.\n" +
-    "</div>\n" +
-    "</div>\n" +
-    "<div class=\"alerts task-expanded-details\">\n" +
-    "<div ng-repeat=\"alert in task.alerts\">\n" +
-    "<div ng-switch=\"alert.type\">\n" +
-    "<div ng-switch-when=\"error\" class=\"alert alert-danger\">\n" +
-    "<span class=\"pficon pficon-error-circle-o\"></span>\n" +
-    "<span ng-if=\"alert.message\">{{alert.message}}</span><span ng-if=\"alert.details\">{{alert.details}}.</span>\n" +
-    "</div>\n" +
-    "<div ng-switch-when=\"warning\" class=\"alert alert-warning\">\n" +
-    "<span class=\"pficon pficon-warning-triangle-o\"></span>\n" +
-    "<span ng-if=\"alert.message\">{{alert.message}}</span><span ng-if=\"alert.details\">{{alert.details}}.</span>\n" +
-    "</div>\n" +
-    "<div ng-switch-when=\"success\" class=\"alert alert-success\">\n" +
-    "<span class=\"pficon pficon-ok\"></span>\n" +
-    "<span ng-if=\"alert.message\">{{alert.message}}</span><span ng-if=\"alert.details\">{{alert.details}}.</span>\n" +
-    "</div>\n" +
-    "</div>\n" +
-    "</div>\n" +
-    "</div>\n" +
-    "</div>\n" +
-    "</div>\n" +
-    "</div>\n" +
-    "<div class=\"alert alert-info template-message\" ng-if=\"templateMessage.length\">\n" +
-    "<span class=\"pficon pficon-info\" aria-hidden=\"true\"></span>\n" +
-    "<div class=\"resource-description\" ng-bind-html=\"templateMessage | linkify : '_blank'\"></div>\n" +
-    "</div>\n" +
-    "<div class=\"row\" ng-controller=\"TasksController\">\n" +
-    "<div ng-if=\"!pendingTasks(tasks()).length && erroredTasks(tasks()).length\" class=\"col-md-12\">\n" +
-    "<h2>Things you can do</h2>\n" +
-    "<p>Go to the <a href=\"project/{{projectName}}/overview\">overview page</a> to see more details about this project. Make sure you don't already have <a href=\"project/{{projectName}}/browse/services\">services</a>, <a href=\"project/{{projectName}}/browse/builds\">build configs</a>, <a href=\"project/{{projectName}}/browse/deployments\">deployment configs</a>, or other resources with the same names you are trying to create. Refer to the <a target=\"_blank\" href=\"{{'new_app' | helpLink}}\">documentation for creating new applications</a> for more information.</p>\n" +
-    "<h3>Command line tools</h3>\n" +
-    "<p>You may want to use the <code>oc</code> command line tool to help with troubleshooting. After <a target=\"_blank\" href=\"command-line\">downloading and installing</a> it, you can log in, switch to this particular project, and try some commands :</p>\n" +
-    "<pre class=\"code prettyprint\">oc login {{loginBaseUrl}}\n" +
-    "oc project {{projectName}}\n" +
-    "oc logs -h</pre>\n" +
-    "<p>For more information about the command line tools, check the <a target=\"_blank\" href=\"{{'cli' | helpLink}}\">CLI Reference</a> and <a target=\"_blank\" href=\"{{'basic_cli_operations' | helpLink}}\">Basic CLI Operations</a>.</p>\n" +
-    "</div>\n" +
-    "<div ng-if=\"allTasksSuccessful(tasks())\" ng-class=\"createdBuildConfigWithGitHubTrigger() ? 'col-md-6' : 'col-md-12'\">\n" +
-    "<h2>Manage your app</h2>\n" +
-    "<p>The web console is convenient, but if you need deeper control you may want to try our command line tools.</p>\n" +
-    "<h3>Command line tools</h3>\n" +
-    "<p><a target=\"_blank\" href=\"command-line\">Download and install</a> the <code>oc</code> command line tool. After that, you can start by logging in, switching to this particular project, and displaying an overview of it, by doing:</p>\n" +
-    "<pre class=\"code prettyprint\">oc login {{loginBaseUrl}}\n" +
-    "oc project {{projectName}}\n" +
-    "oc status</pre>\n" +
-    "<p>For more information about the command line tools, check the <a target=\"_blank\" href=\"{{'cli' | helpLink}}\">CLI Reference</a> and <a target=\"_blank\" href=\"{{'basic_cli_operations' | helpLink}}\">Basic CLI Operations</a>.</p>\n" +
-    "</div>\n" +
-    "<div ng-if=\"createdBuildConfig\" class=\"col-md-6\">\n" +
-    "<h2>Making code changes</h2>\n" +
-    "<p ng-if=\"fromSampleRepo\">\n" +
-    "You are set up to use the example git repository. If you would like to modify the source code, fork the <osc-git-link uri=\"createdBuildConfig.spec.source.git.uri\">{{createdBuildConfig.spec.source.git.uri}}</osc-git-link> repository to an OpenShift-visible git account and <a href=\"{{createdBuildConfig | editResourceURL}}\">edit the <strong>{{createdBuildConfig.metadata.name}}</strong> build config</a> to point to your fork.\n" +
-    "<span ng-if=\"createdBuildConfigWithConfigChangeTrigger()\">Note that this will start a new build.</span>\n" +
-    "</p>\n" +
-    "<div ng-repeat=\"trigger in createdBuildConfig.spec.triggers\" ng-if=\"trigger.type == 'GitHub'\">\n" +
-    "<p>\n" +
-    "A GitHub <a target=\"_blank\" href=\"{{'webhooks' | helpLink}}\">webhook trigger</a> has been created for the <strong>{{createdBuildConfig.metadata.name}}</strong> build config.\n" +
-    "</p>\n" +
-    "<p ng-if=\"fromSampleRepo\">\n" +
-    "You can configure the webhook in the forked repository's settings, using the following payload URL:\n" +
-    "</p>\n" +
-    "<p ng-if=\"!fromSampleRepo\">\n" +
-    "<span ng-if=\"createdBuildConfig.spec.source.git.uri | isGithubLink\">\n" +
-    "You can now set up the webhook in the GitHub repository settings if you own it, in <a target=\"_blank\" class=\"word-break\" href=\"{{createdBuildConfig.spec.source.git.uri | githubLink}}/settings/hooks\">{{createdBuildConfig.spec.source.git.uri | githubLink}}/settings/hooks</a>, using the following payload URL:\n" +
-    "</span>\n" +
-    "<span ng-if=\"!(createdBuildConfig.spec.source.git.uri | isGithubLink)\">\n" +
-    "Your source does not appear to be a URL to a GitHub repository. If you have a GitHub repository that you want to trigger this build from then use the following payload URL:\n" +
-    "</span>\n" +
-    "</p>\n" +
-    "<copy-to-clipboard clipboard-text=\"createdBuildConfig.metadata.name | webhookURL : trigger.type : trigger.github.secret : projectName\"></copy-to-clipboard>\n" +
-    "</div>\n" +
-    "</div>\n" +
-    "</div>\n" +
-    "<div ng-if=\"parameters.all.length\">\n" +
-    "<h2>Applied Parameter Values</h2>\n" +
-    "<p>These parameters often include things like passwords. If you will need to reference these values later, copy them to a safe location.\n" +
-    "<span ng-if=\"parameters.generated.length > 1\">Parameters <span ng-repeat=\"paramName in parameters.generated\">{{paramName}}<span ng-if=\"!$last\">, </span></span> were generated automatically.</span>\n" +
-    "<span ng-if=\"parameters.generated.length === 1\">Parameter {{parameters.generated[0]}} was generated automatically.</span>\n" +
-    "</p>\n" +
-    "<div ng-if=\"!showParamsTable\" class=\"center\">\n" +
-    "<a href=\"\" ng-click=\"toggleParamsTable()\">Show parameter values</a>\n" +
-    "</div>\n" +
-    "<key-value-editor ng-if=\"showParamsTable\" entries=\"parameters.all\" key-placeholder=\"Name\" value-placeholder=\"Value\" cannot-add cannot-delete cannot-sort show-header is-readonly></key-value-editor>\n" +
-    "</div>\n" +
+    "<next-steps project=\"project\" project-name=\"projectName\" login-base-url=\"loginBaseUrl\" from-sample-repo=\"fromSampleRepo\" created-build-config=\"createdBuildConfig\"></next-steps>\n" +
     "</div>\n" +
     "</div>\n" +
     "</div>\n" +
@@ -7705,6 +7611,105 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "</div>\n" +
     "</div>\n" +
     "</div>\n" +
+    "</div>"
+  );
+
+
+  $templateCache.put('views/directives/next-steps.html',
+    "<div ng-controller=\"TasksController\">\n" +
+    "<h1 ng-if=\"!tasks().length\">Completed. <a href=\"project/{{$ctrl.projectName}}/overview\">Go to overview</a>.</h1>\n" +
+    "<h1 ng-if=\"tasks().length && $ctrl.allTasksSuccessful(tasks())\">Application created. <a href=\"project/{{$ctrl.projectName}}/overview\">Continue to overview</a>.</h1>\n" +
+    "<h1 ng-if=\"$ctrl.pendingTasks(tasks()).length\">Creating...</h1>\n" +
+    "<h1 ng-if=\"!$ctrl.pendingTasks(tasks()).length && $ctrl.erroredTasks(tasks()).length\">Completed, with errors</h1>\n" +
+    "<div ng-repeat=\"task in tasks()\" ng-if=\"tasks().length && !$ctrl.allTasksSuccessful(tasks())\">\n" +
+    "<div class=\"tasks\" ng-class=\"hasTaskWithError() ? 'failure' : 'success'\">\n" +
+    "<div class=\"task-content\">\n" +
+    "<i class=\"pficon task-icon\" ng-class=\"task.hasErrors ? 'pficon-error-circle-o' : 'pficon-ok'\"></i>\n" +
+    "<div class=\"task-info\">\n" +
+    "{{ task | taskTitle }}.\n" +
+    "</div>\n" +
+    "</div>\n" +
+    "<div class=\"alerts task-expanded-details\">\n" +
+    "<div ng-repeat=\"alert in task.alerts\">\n" +
+    "<div ng-switch=\"alert.type\">\n" +
+    "<div ng-switch-when=\"error\" class=\"alert alert-danger\">\n" +
+    "<span class=\"pficon pficon-error-circle-o\"></span>\n" +
+    "<span ng-if=\"alert.message\">{{alert.message}}</span><span ng-if=\"alert.details\">{{alert.details}}.</span>\n" +
+    "</div>\n" +
+    "<div ng-switch-when=\"warning\" class=\"alert alert-warning\">\n" +
+    "<span class=\"pficon pficon-warning-triangle-o\"></span>\n" +
+    "<span ng-if=\"alert.message\">{{alert.message}}</span><span ng-if=\"alert.details\">{{alert.details}}.</span>\n" +
+    "</div>\n" +
+    "<div ng-switch-when=\"success\" class=\"alert alert-success\">\n" +
+    "<span class=\"pficon pficon-ok\"></span>\n" +
+    "<span ng-if=\"alert.message\">{{alert.message}}</span><span ng-if=\"alert.details\">{{alert.details}}.</span>\n" +
+    "</div>\n" +
+    "</div>\n" +
+    "</div>\n" +
+    "</div>\n" +
+    "</div>\n" +
+    "</div>\n" +
+    "</div>\n" +
+    "<div class=\"alert alert-info template-message\" ng-if=\"$ctrl.templateMessage.length\">\n" +
+    "<span class=\"pficon pficon-info\" aria-hidden=\"true\"></span>\n" +
+    "<div class=\"resource-description\" ng-bind-html=\"$ctrl.templateMessage | linkify : '_blank'\"></div>\n" +
+    "</div>\n" +
+    "<div class=\"row\" ng-controller=\"TasksController\">\n" +
+    "<div ng-if=\"!$ctrl.pendingTasks(tasks()).length && $ctrl.erroredTasks(tasks()).length\" class=\"col-md-12\">\n" +
+    "<h2>Things you can do</h2>\n" +
+    "<p>Go to the <a href=\"project/{{$ctrl.projectName}}/overview\">overview page</a> to see more details about this project. Make sure you don't already have <a href=\"project/{{$ctrl.projectName}}/browse/services\">services</a>, <a href=\"project/{{$ctrl.projectName}}/browse/builds\">build configs</a>, <a href=\"project/{{$ctrl.projectName}}/browse/deployments\">deployment configs</a>, or other resources with the same names you are trying to create. Refer to the <a target=\"_blank\" href=\"{{'new_app' | helpLink}}\">documentation for creating new applications</a> for more information.</p>\n" +
+    "<h3>Command line tools</h3>\n" +
+    "<p>You may want to use the <code>oc</code> command line tool to help with troubleshooting. After <a target=\"_blank\" href=\"command-line\">downloading and installing</a> it, you can log in, switch to this particular project, and try some commands :</p>\n" +
+    "<pre class=\"code prettyprint\">oc login {{$ctrl.loginBaseUrl}}\n" +
+    "oc project {{$ctrl.projectName}}\n" +
+    "oc logs -h</pre>\n" +
+    "<p>For more information about the command line tools, check the <a target=\"_blank\" href=\"{{'cli' | helpLink}}\">CLI Reference</a> and <a target=\"_blank\" href=\"{{'basic_cli_operations' | helpLink}}\">Basic CLI Operations</a>.</p>\n" +
+    "</div>\n" +
+    "<div ng-if=\"$ctrl.allTasksSuccessful(tasks())\" ng-class=\"$ctrl.createdBuildConfigWithGitHubTrigger() ? 'col-md-6' : 'col-md-12'\">\n" +
+    "<h2>Manage your app</h2>\n" +
+    "<p>The web console is convenient, but if you need deeper control you may want to try our command line tools.</p>\n" +
+    "<h3>Command line tools</h3>\n" +
+    "<p><a target=\"_blank\" href=\"command-line\">Download and install</a> the <code>oc</code> command line tool. After that, you can start by logging in, switching to this particular project, and displaying an overview of it, by doing:</p>\n" +
+    "<pre class=\"code prettyprint\">oc login {{$ctrl.loginBaseUrl}}\n" +
+    "oc project {{$ctrl.projectName}}\n" +
+    "oc status</pre>\n" +
+    "<p>For more information about the command line tools, check the <a target=\"_blank\" href=\"{{'cli' | helpLink}}\">CLI Reference</a> and <a target=\"_blank\" href=\"{{'basic_cli_operations' | helpLink}}\">Basic CLI Operations</a>.</p>\n" +
+    "</div>\n" +
+    "<div ng-if=\"$ctrl.createdBuildConfig\" class=\"col-md-6\">\n" +
+    "<h2>Making code changes</h2>\n" +
+    "<p ng-if=\"$ctrl.fromSampleRepo\">\n" +
+    "You are set up to use the example git repository. If you would like to modify the source code, fork the <osc-git-link uri=\"$ctrl.createdBuildConfig.spec.source.git.uri\">{{$ctrl.createdBuildConfig.spec.source.git.uri}}</osc-git-link> repository to an OpenShift-visible git account and <a href=\"{{$ctrl.createdBuildConfig | editResourceURL}}\">edit the <strong>{{$ctrl.createdBuildConfig.metadata.name}}</strong> build config</a> to point to your fork.\n" +
+    "<span ng-if=\"$ctrl.createdBuildConfigWithConfigChangeTrigger()\">Note that this will start a new build.</span>\n" +
+    "</p>\n" +
+    "<div ng-repeat=\"trigger in $ctrl.createdBuildConfig.spec.triggers\" ng-if=\"trigger.type == 'GitHub'\">\n" +
+    "<p>\n" +
+    "A GitHub <a target=\"_blank\" href=\"{{'webhooks' | helpLink}}\">webhook trigger</a> has been created for the <strong>{{$ctrl.createdBuildConfig.metadata.name}}</strong> build config.\n" +
+    "</p>\n" +
+    "<p ng-if=\"$ctrl.fromSampleRepo\">\n" +
+    "You can configure the webhook in the forked repository's settings, using the following payload URL:\n" +
+    "</p>\n" +
+    "<p ng-if=\"!$ctrl.fromSampleRepo\">\n" +
+    "<span ng-if=\"$ctrl.createdBuildConfig.spec.source.git.uri | isGithubLink\">\n" +
+    "You can now set up the webhook in the GitHub repository settings if you own it, in <a target=\"_blank\" class=\"word-break\" href=\"{{$ctrl.createdBuildConfig.spec.source.git.uri | githubLink}}/settings/hooks\">{{$ctrl.createdBuildConfig.spec.source.git.uri | githubLink}}/settings/hooks</a>, using the following payload URL:\n" +
+    "</span>\n" +
+    "<span ng-if=\"!($ctrl.createdBuildConfig.spec.source.git.uri | isGithubLink)\">\n" +
+    "Your source does not appear to be a URL to a GitHub repository. If you have a GitHub repository that you want to trigger this build from then use the following payload URL:\n" +
+    "</span>\n" +
+    "</p>\n" +
+    "<copy-to-clipboard clipboard-text=\"$ctrl.createdBuildConfig.metadata.name | webhookURL : trigger.type : trigger.github.secret : $ctrl.projectName\"></copy-to-clipboard>\n" +
+    "</div>\n" +
+    "</div>\n" +
+    "</div>\n" +
+    "<div ng-if=\"$ctrl.parameters.all.length\">\n" +
+    "<h2>Applied Parameter Values</h2>\n" +
+    "<p>These parameters often include things like passwords. If you will need to reference these values later, copy them to a safe location.\n" +
+    "<span ng-if=\"$ctrl.parameters.generated.length > 1\">Parameters <span ng-repeat=\"paramName in $ctrl.parameters.generated\">{{paramName}}<span ng-if=\"!$last\">, </span></span> were generated automatically.</span>\n" +
+    "<span ng-if=\"$ctrl.parameters.generated.length === 1\">Parameter {{$ctrl.parameters.generated[0]}} was generated automatically.</span>\n" +
+    "</p>\n" +
+    "<div ng-if=\"!$ctrl.showParamsTable\" class=\"center\">\n" +
+    "<a href=\"\" ng-click=\"$ctrl.toggleParamsTable()\">Show parameter values</a>\n" +
+    "</div>\n" +
+    "<key-value-editor ng-if=\"$ctrl.showParamsTable\" entries=\"$ctrl.parameters.all\" key-placeholder=\"Name\" value-placeholder=\"Value\" cannot-add cannot-delete cannot-sort show-header is-readonly></key-value-editor>\n" +
     "</div>"
   );
 
