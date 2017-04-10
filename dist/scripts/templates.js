@@ -12355,7 +12355,7 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "<div ng-include src=\" 'views/overview/_list-row-expanded.html' \"></div>\n" +
     "</div>\n" +
     "</div>\n" +
-    "<overlay-panel show-panel=\"row.overlay.panelVisible\" show-close=\"true\" handle-close=\"row.closeOverlayPanel\">\n" +
+    "<overlay-panel single-column=\"true\" show-panel=\"row.overlay.panelVisible\" show-close=\"true\" handle-close=\"row.closeOverlayPanel\">\n" +
     "<div ng-if=\"row.overlay.panelName === 'bindService'\">\n" +
     "<bind-service target=\"row.overlay.state.target\" service-instances=\"row.state.serviceInstances\" service-classes=\"row.state.serviceClasses\" on-close=\"row.closeOverlayPanel\"></bind-service>\n" +
     "</div>\n" +
