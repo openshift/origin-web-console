@@ -10,8 +10,6 @@ angular.module('openshiftConsole').component('bindService', {
   controllerAs: 'ctrl',
   bindings: {
     target: '<',
-    serviceInstances: '<',
-    serviceClasses: '<',
     onClose: '<'
   },
   templateUrl: 'views/directives/bind-service.html'
@@ -22,40 +20,25 @@ function BindService($filter,
                      DNS1123_SUBDOMAIN_VALIDATION) {
   var ctrl = this;
 
-  ctrl.steps = [{
-    id: 'services',
-    label: 'Services',
-    view: 'views/directives/bind-service/select-service.html'
-  }, {
-    label: 'Results',
-    id: 'results',
-    view: 'views/directives/bind-service/results.html'
-  }];
-
-  ctrl.$onInit = function() {
-    // TODO: handle not having any service instances, or handle path where coming into binding from svc instance
-    ctrl.gotoStep(ctrl.steps[0]);
+  var statusCondition = $filter('statusCondition');
+  var preselectService = function(){
+    var newestReady;
+    var newestNotReady;
+    _.each(ctrl.serviceInstances, function(instance) {
+      var ready = _.get(statusCondition(instance, 'Ready'), 'status') === 'True';
+      if (ready && (!newestReady || instance.metadata.creationTimestamp > newestReady.metadata.creationTimestamp)) {
+        newestReady = instance;
+      }
+      if (!ready && (!newestNotReady || instance.metadata.creationTimestamp > newestNotReady.metadata.creationTimestamp)) {
+        newestNotReady = instance;
+      }
+    });
+    ctrl.serviceToBind = _.get(newestReady, 'metadata.name') || _.get(newestNotReady, 'metadata.name');
   };
 
-  var statusCondition = $filter('statusCondition');
-  ctrl.$onChanges = function(changes) {
-    if (changes.serviceInstances && !ctrl.serviceToBind) {
-      var newestReady;
-      var newestNotReady;
-      _.each(ctrl.serviceInstances, function(instance) {
-        var ready = _.get(statusCondition(instance, 'Ready'), 'status') === 'True';
-        if (ready && (!newestReady || instance.metadata.creationTimestamp > newestReady.metadata.creationTimestamp)) {
-          newestReady = instance;
-        }
-        if (!ready && (!newestNotReady || instance.metadata.creationTimestamp > newestNotReady.metadata.creationTimestamp)) {
-          newestNotReady = instance;
-        }
-      });
-      ctrl.serviceToBind = _.get(newestReady, 'metadata.name') || _.get(newestNotReady, 'metadata.name');
-    }
-
+  var sortServiceInstances = function() {
     // wait till both service instances and service classes are available so that the sort is stable and items dont jump around
-    if ((changes.serviceInstances || changes.serviceClasses) && ctrl.serviceClasses && ctrl.serviceInstances) {
+    if (ctrl.serviceClasses && ctrl.serviceInstances) {
       var instances = _.toArray(ctrl.serviceInstances);
       instances.sort(function(left, right) {
         var leftName = _.get(ctrl.serviceClasses, [left.spec.serviceClassName, 'osbMetadata', 'displayName']) || left.spec.serviceClassName;
@@ -72,6 +55,110 @@ function BindService($filter,
       });
       ctrl.orderedServiceInstances = instances;
     }
+  };
+
+
+  var deploymentConfigs, deployments, replicationControllers, replicaSets, statefulSets;
+  var sortApplications = function() {
+    // Don't waste time sorting on each data load, just sort when we have them all
+    if (deploymentConfigs && deployments && replicationControllers && replicaSets && statefulSets) {
+      var apiObjects = deploymentConfigs.concat(deployments)
+                                        .concat(replicationControllers)
+                                        .concat(replicaSets)
+                                        .concat(statefulSets);
+      ctrl.applications = _.sortByAll(apiObjects, ['metadata.name', 'kind']);
+    }
+  };
+
+  ctrl.$onInit = function() {
+    ctrl.steps = [];
+    if (ctrl.target.kind === 'Instance') {
+      ctrl.steps.push({
+        id: 'applications',
+        label: 'Applications',
+        view: 'views/directives/bind-service/select-application.html'
+      });
+    }
+    else {
+      ctrl.steps.push({
+        id: 'services',
+        label: 'Services',
+        view: 'views/directives/bind-service/select-service.html'
+      });
+    }
+    ctrl.steps.push({
+      label: 'Results',
+      id: 'results',
+      view: 'views/directives/bind-service/results.html'
+    });
+
+
+    var context = {
+      namespace: _.get(ctrl.target, 'metadata.namespace')
+    };
+    // We will want ServiceClasses either way for display purposes
+    DataService.list({
+      group: 'servicecatalog.k8s.io',
+      resource: 'serviceclasses'
+    }, {}).then(function(serviceClasses) {
+      ctrl.serviceClasses = serviceClasses.by('metadata.name');
+      sortServiceInstances();
+    });
+
+    // TODO is it ever realistically possible for target to not be defined at this point
+    if (ctrl.target.kind === 'Instance') {
+      ctrl.shouldBindToApp = "true";
+      ctrl.serviceToBind = ctrl.target.metadata.name;
+      // Load all the "application" types
+      DataService.list('deploymentconfigs', context).then(function(deploymentConfigData) {
+        deploymentConfigs = _.toArray(deploymentConfigData.by('metadata.name'));
+        sortApplications();
+      });
+      DataService.list('replicationcontrollers', context).then(function(replicationControllerData) {
+        replicationControllers = _.reject(replicationControllerData.by('metadata.name'), $filter('hasDeploymentConfig'));
+        sortApplications();
+      });
+      DataService.list({
+        group: 'extensions',
+        resource: 'deployments'
+      }, context).then(function(deploymentData) {
+        deployments = _.toArray(deploymentData.by('metadata.name'));
+        sortApplications();
+      });
+      DataService.list({
+        group: 'extensions',
+        resource: 'replicasets'
+      }, context).then(function(replicaSetData) {
+        replicaSets = _.reject(replicaSetData.by('metadata.name'), $filter('hasDeployment'));
+        sortApplications();
+      });
+      DataService.list({
+        group: 'apps',
+        resource: 'statefulsets'
+      }, context).then(function(statefulSetData) {
+        statefulSets = _.toArray(statefulSetData.by('metadata.name'));
+        sortApplications();
+      });
+    }
+    else {
+      DataService.list({
+        group: 'servicecatalog.k8s.io',
+        resource: 'instances'
+      }, context).then(function(instances) {
+        ctrl.serviceInstances = instances.by('metadata.name');
+        if (!ctrl.serviceToBind) {
+          preselectService();
+        }
+        sortServiceInstances();
+      });
+    }
+    // TODO: handle not having any service instances when binding app to service
+    ctrl.gotoStep(ctrl.steps[0]);
+  };
+
+  var humanizeKind = $filter('humanizeKind');
+  ctrl.groupByKind = function(object) {
+    return humanizeKind(object.kind);
   };
 
   var gotoStepID = function(id) {
@@ -105,7 +192,7 @@ function BindService($filter,
 
   var generateName = $filter('generateName');
   var makeBinding = function() {
-    var serviceInstanceName = _.get(ctrl.serviceInstances[ctrl.serviceToBind], 'metadata.name');
+    var serviceInstanceName = ctrl.serviceToBind;
     // TODO - would be better if generateName could take in an optional maxlength
     var truncatedSvcInstanceName = _.trunc(serviceInstanceName, DNS1123_SUBDOMAIN_VALIDATION.maxlength - 6);
     ctrl.generatedSecretName = generateName(truncatedSvcInstanceName + '-');
@@ -127,8 +214,9 @@ function BindService($filter,
   };
 
   ctrl.bindService = function() {
+    var svcToBind = ctrl.target.kind === 'Instance' ? ctrl.target : ctrl.serviceInstances[ctrl.serviceToBind];
     var context = {
-      namespace: _.get(ctrl.serviceInstances[ctrl.serviceToBind], 'metadata.namespace')
+      namespace: _.get(svcToBind, 'metadata.namespace')
     };
     DataService.create({
       group: 'servicecatalog.k8s.io',

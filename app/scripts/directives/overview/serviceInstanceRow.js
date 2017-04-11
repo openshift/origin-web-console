@@ -51,6 +51,14 @@ function ServiceInstanceRow($filter, DataService, rowMethods, $uibModal) {
     return binding && _.get(row, ['state', 'secrets', binding.spec.secretName]);
   };
 
+  row.closeOverlayPanel = function() {
+    _.set(row, 'overlay.panelVisible', false);
+  };
+  row.showOverlayPanel = function(panelName, state) {
+    _.set(row, 'overlay.panelVisible', true);
+    _.set(row, 'overlay.panelName', panelName);
+    _.set(row, 'overlay.state', state);
+  };
 
   row.deprovision = function() {
     var modalScope = {

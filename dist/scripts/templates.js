@@ -5993,7 +5993,7 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "<button type=\"button\" class=\"btn btn-default wizard-pf-cancel wizard-pf-dismiss\" ng-class=\"{'btn-cancel': ctrl.steps.length > 2}\" ng-disabled=\"ctrl.currentStep.id === 'results'\" ng-click=\"ctrl.closeWizard()\">\n" +
     "Cancel\n" +
     "</button>\n" +
-    "<button type=\"button\" class=\"btn btn-primary wizard-pf-next\" ng-if=\"ctrl.currentStep.id !== 'results'\" ng-click=\"ctrl.bindService()\">\n" +
+    "<button type=\"button\" class=\"btn btn-primary wizard-pf-next\" ng-if=\"ctrl.currentStep.id !== 'results'\" ng-disabled=\"ctrl.serviceSelection.$invalid\" ng-click=\"ctrl.bindService()\">\n" +
     "Bind\n" +
     "</button>\n" +
     "<button type=\"button\" class=\"btn btn-primary wizard-pf-close wizard-pf-dismiss\" ng-if=\"ctrl.currentStep.id === 'results'\" ng-click=\"ctrl.closeWizard()\">\n" +
@@ -6045,6 +6045,42 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "</div>\n" +
     "</div>\n" +
     "</div>"
+  );
+
+
+  $templateCache.put('views/directives/bind-service/select-application.html',
+    "<h3 class=\"mar-top-none\">Select an application to bind to service <strong>{{ctrl.serviceClasses[ctrl.target.spec.serviceClassName].osbMetadata.displayName || ctrl.target.spec.serviceClassName}}</strong></h3>\n" +
+    "Binding to a provisioned service will create a secret containing the information necessary for your application to use the service.\n" +
+    "<form name=\"ctrl.serviceSelection\" class=\"mar-bottom-lg\">\n" +
+    "<fieldset ng-disabled=\"ctrl.isDisabled\">\n" +
+    "<div class=\"radio\">\n" +
+    "<label>\n" +
+    "<input type=\"radio\" ng-model=\"ctrl.shouldBindToApp\" value=\"true\">\n" +
+    "Bind to an application\n" +
+    "</label>\n" +
+    "<div class=\"pad-left-xl mar-bottom-md mar-top-sm\">\n" +
+    "<ui-select ng-model=\"ctrl.appToBind\" ng-disabled=\"ctrl.shouldBindToApp !== 'true'\" ng-required=\"ctrl.shouldBindToApp === 'true'\">\n" +
+    "<ui-select-match placeholder=\"Select an application\">\n" +
+    "<span>\n" +
+    "{{$select.selected.metadata.name}}\n" +
+    "<small class=\"text-muted\">&ndash; {{$select.selected.kind | humanizeKind : true}}</small>\n" +
+    "</span>\n" +
+    "</ui-select-match>\n" +
+    "<ui-select-choices repeat=\"application in (ctrl.applications) | filter : { metadata: { name: $select.search } } track by (application | uid)\" group-by=\"ctrl.groupByKind\">\n" +
+    "<span ng-bind-html=\"application.metadata.name | highlight : $select.search\"></span>\n" +
+    "</ui-select-choices>\n" +
+    "</ui-select>\n" +
+    "</div>\n" +
+    "<label>\n" +
+    "<input type=\"radio\" ng-model=\"ctrl.shouldBindToApp\" value=\"false\">\n" +
+    "Create a secret in my project\n" +
+    "<div class=\"help-block\">\n" +
+    "You can reference this secret later from any application either as environment variables or configuration files mounted as volumes.\n" +
+    "</div>\n" +
+    "</label>\n" +
+    "</div>\n" +
+    "</fieldset>\n" +
+    "</form>"
   );
 
 
@@ -12364,7 +12400,7 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "</div>\n" +
     "<overlay-panel single-column=\"true\" show-panel=\"row.overlay.panelVisible\" show-close=\"true\" handle-close=\"row.closeOverlayPanel\">\n" +
     "<div ng-if=\"row.overlay.panelName === 'bindService'\">\n" +
-    "<bind-service target=\"row.overlay.state.target\" service-instances=\"row.state.serviceInstances\" service-classes=\"row.state.serviceClasses\" on-close=\"row.closeOverlayPanel\"></bind-service>\n" +
+    "<bind-service target=\"row.overlay.state.target\" on-close=\"row.closeOverlayPanel\"></bind-service>\n" +
     "</div>\n" +
     "</overlay-panel>"
   );
@@ -12670,6 +12706,9 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "<a href=\"\" uib-dropdown-toggle class=\"actions-dropdown-kebab\"><i class=\"fa fa-ellipsis-v\"></i><span class=\"sr-only\">Actions</span></a>\n" +
     "<ul class=\"dropdown-menu dropdown-menu-right\" uib-dropdown-menu role=\"menu\">\n" +
     "<li role=\"menuitem\">\n" +
+    "<a href=\"\" ng-click=\"row.showOverlayPanel('bindService', {target: row.apiObject})\">Create Binding</a>\n" +
+    "</li>\n" +
+    "<li role=\"menuitem\">\n" +
     "<a href=\"\" ng-click=\"row.deprovision()\" role=\"button\">Deprovision</a>\n" +
     "</li>\n" +
     "</ul>\n" +
@@ -12702,7 +12741,12 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "\n" +
     "</div>\n" +
     "</div>\n" +
-    "</div>"
+    "</div>\n" +
+    "<overlay-panel single-column=\"true\" show-panel=\"row.overlay.panelVisible\" show-close=\"true\" handle-close=\"row.closeOverlayPanel\">\n" +
+    "<div ng-if=\"row.overlay.panelName === 'bindService'\">\n" +
+    "<bind-service target=\"row.overlay.state.target\" on-close=\"row.closeOverlayPanel\"></bind-service>\n" +
+    "</div>\n" +
+    "</overlay-panel>"
   );
 
 

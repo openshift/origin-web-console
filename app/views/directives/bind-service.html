@@ -25,6 +25,7 @@
         type="button"
         class="btn btn-primary wizard-pf-next"
         ng-if="ctrl.currentStep.id !== 'results'"
+        ng-disabled="ctrl.serviceSelection.$invalid"
         ng-click="ctrl.bindService()">
       Bind
     </button>
