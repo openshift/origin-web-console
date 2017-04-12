@@ -59631,11 +59631,11 @@ window.OPENSHIFT_CONFIG.api.k8s.resources = b.k8s, window.OPENSHIFT_CONFIG.api.o
 o = o.concat(m), $.when.apply(this, o).always(n);
 }), angular.module("openshiftCommonUI", []), hawtioPluginLoader.addModule("openshiftCommonUI"), angular.module("openshiftCommonUI").run([ "$templateCache", function(a) {
 "use strict";
-a.put("src/components/create-project/createProject.html", '<form name="createProjectForm">\n  <fieldset ng-disabled="disableInputs">\n    <div class="form-group">\n      <label for="name" class="required">Name</label>\n      <span ng-class="{\'has-error\': (createProjectForm.name.$error.pattern && createProjectForm.name.$touched) || nameTaken}">\n        <input class="form-control input-lg"\n            name="name"\n            id="name"\n            placeholder="my-project"\n            type="text"\n            required\n            take-focus\n            minlength="2"\n            maxlength="63"\n            pattern="[a-z0-9]([-a-z0-9]*[a-z0-9])?"\n            aria-describedby="nameHelp"\n            ng-model="name"\n            ng-model-options="{ updateOn: \'default blur\' }"\n            ng-change="nameTaken = false"\n            autocorrect="off"\n            autocapitalize="off"\n            spellcheck="false">\n      </span>\n      <div>\n        <span class="help-block">A unique name for the project.</span>\n      </div>\n      <div class="has-error">\n        <span id="nameHelp" class="help-block" ng-if="createProjectForm.name.$error.minlength && createProjectForm.name.$touched">\n          Name must have at least two characters.\n        </span>\n      </div>\n      <div class="has-error">\n        <span id="nameHelp" class="help-block" ng-if="createProjectForm.name.$error.pattern && createProjectForm.name.$touched">\n          Project names may only contain lower-case letters, numbers, and dashes.\n          They may not start or end with a dash.\n        </span>\n      </div>\n      <div class="has-error">\n        <span class="help-block" ng-if="nameTaken">\n          This name is already in use. Please choose a different name.\n        </span>\n      </div>\n    </div>\n\n    <div class="form-group">\n      <label for="displayName">Display Name</label>\n      <input class="form-control input-lg"\n          name="displayName"\n          id="displayName"\n          placeholder="My Project"\n          type="text"\n          ng-model="displayName">\n    </div>\n\n    <div class="form-group">\n      <label for="description">Description</label>\n      <textarea class="form-control input-lg"\n          name="description"\n          id="description"\n          placeholder="A short description."\n          ng-model="description"></textarea>\n    </div>\n\n    <div class="button-group">\n      <button type="submit"\n          class="btn btn-primary btn-lg"\n          ng-class="{\'dialog-btn\': isDialog}"\n          ng-click="createProject()"\n          ng-disabled="createProjectForm.$invalid || nameTaken || disableInputs"\n          value="">\n        {{submitButtonLabel}}\n      </button>\n      <button\n          class="btn btn-default btn-lg"\n          ng-class="{\'dialog-btn\': isDialog}"\n          back\n          ng-click="cancelCreateProject()">\n        Cancel\n      </button>\n    </div>\n  </fieldset>\n</form>\n'), 
+a.put("src/components/create-project/createProject.html", '<form name="createProjectForm" novalidate>\n  <fieldset ng-disabled="disableInputs">\n    <div class="form-group">\n      <label for="name" class="required">Name</label>\n      <span ng-class="{\'has-error\': (createProjectForm.name.$error.pattern && createProjectForm.name.$touched) || nameTaken}">\n        <input class="form-control input-lg"\n            name="name"\n            id="name"\n            placeholder="my-project"\n            type="text"\n            required\n            take-focus\n            minlength="2"\n            maxlength="63"\n            pattern="[a-z0-9]([-a-z0-9]*[a-z0-9])?"\n            aria-describedby="nameHelp"\n            ng-model="name"\n            ng-model-options="{ updateOn: \'default blur\' }"\n            ng-change="nameTaken = false"\n            autocorrect="off"\n            autocapitalize="off"\n            spellcheck="false">\n      </span>\n      <div>\n        <span class="help-block">A unique name for the project.</span>\n      </div>\n      <div class="has-error">\n        <span id="nameHelp" class="help-block" ng-if="createProjectForm.name.$error.required && createProjectForm.name.$touched">\n          Name is required.\n        </span>\n      </div>\n      <div class="has-error">\n        <span id="nameHelp" class="help-block" ng-if="createProjectForm.name.$error.minlength && createProjectForm.name.$touched">\n          Name must have at least two characters.\n        </span>\n      </div>\n      <div class="has-error">\n        <span id="nameHelp" class="help-block" ng-if="createProjectForm.name.$error.pattern && createProjectForm.name.$touched">\n          Project names may only contain lower-case letters, numbers, and dashes.\n          They may not start or end with a dash.\n        </span>\n      </div>\n      <div class="has-error">\n        <span class="help-block" ng-if="nameTaken">\n          This name is already in use. Please choose a different name.\n        </span>\n      </div>\n    </div>\n\n    <div class="form-group">\n      <label for="displayName">Display Name</label>\n      <input class="form-control input-lg"\n          name="displayName"\n          id="displayName"\n          placeholder="My Project"\n          type="text"\n          ng-model="displayName">\n    </div>\n\n    <div class="form-group">\n      <label for="description">Description</label>\n      <textarea class="form-control input-lg"\n          name="description"\n          id="description"\n          placeholder="A short description."\n          ng-model="description"></textarea>\n    </div>\n\n    <div class="button-group">\n      <button type="submit"\n          class="btn btn-primary btn-lg"\n          ng-class="{\'dialog-btn\': isDialog}"\n          ng-click="createProject()"\n          ng-disabled="createProjectForm.$invalid || nameTaken || disableInputs"\n          value="">\n        {{submitButtonLabel}}\n      </button>\n      <button\n          class="btn btn-default btn-lg"\n          ng-class="{\'dialog-btn\': isDialog}"\n          ng-click="cancelCreateProject()">\n        Cancel\n      </button>\n    </div>\n  </fieldset>\n</form>\n'), 
 a.put("src/components/delete-project/delete-project-button.html", '<div class="actions">\n  <!-- Avoid whitespace inside the link -->\n  <a href=""\n     ng-click="$event.stopPropagation(); openDeleteModal()"\n     role="button"\n     class="action-button"\n     ng-attr-aria-disabled="{{disableDelete ? \'true\' : undefined}}"\n     ng-class="{ \'disabled-link\': disableDelete }"\n    ><i class="fa fa-trash-o" aria-hidden="true"\n    ></i><span class="sr-only">Delete Project {{projectName}}</span></a>\n</div>\n'), a.put("src/components/delete-project/delete-project-modal.html", '<div class="delete-resource-modal">\n  <!-- Use a form so that the enter key submits when typing a project name to confirm. -->\n  <form>\n    <div class="modal-body">\n      <h1>Are you sure you want to delete the project\n        \'<strong>{{displayName ? displayName : projectName}}</strong>\'?</h1>\n      <p>\n        This will <strong>delete all resources</strong> associated with\n        the project {{displayName ? displayName : projectName}} and <strong>cannot be\n        undone</strong>.  Make sure this is something you really want to do!\n      </p>\n      <div ng-show="typeNameToConfirm">\n        <p>Type the name of the project to confirm.</p>\n        <p>\n          <label class="sr-only" for="resource-to-delete">project to delete</label>\n          <input\n              ng-model="confirmName"\n              id="resource-to-delete"\n              type="text"\n              class="form-control input-lg"\n              autocorrect="off"\n              autocapitalize="off"\n              spellcheck="false"\n              autofocus>\n        </p>\n      </div>\n    </div>\n    <div class="modal-footer">\n      <button ng-disabled="typeNameToConfirm && confirmName !== projectName && confirmName !== displayName" class="btn btn-lg btn-danger" type="submit" ng-click="delete();">Delete</button>\n      <button class="btn btn-lg btn-default" type="button" ng-click="cancel();">Cancel</button>\n    </div>\n  </form>\n</div>\n'), 
-a.put("src/components/delete-project/delete-project.html", '<a href="javascript:void(0)"\n   ng-click="openDeleteModal()"\n   role="button"\n   ng-attr-aria-disabled="{{disableDelete ? \'true\' : undefined}}"\n   ng-class="{ \'disabled-link\': disableDelete }"\n>{{label || \'Delete\'}}</a>\n'), a.put("src/components/edit-project/editProject.html", '<form name="editProjectForm">\n  <fieldset ng-disabled="disableInputs">\n    <div class="form-group">\n      <label for="displayName">Display Name</label>\n      <input class="form-control input-lg"\n             name="displayName"\n             id="displayName"\n             placeholder="My Project"\n             type="text"\n             ng-model="editableFields.displayName">\n    </div>\n\n    <div class="form-group">\n      <label for="description">Description</label>\n                    <textarea class="form-control input-lg"\n                              name="description"\n                              id="description"\n                              placeholder="A short description."\n                              ng-model="editableFields.description"></textarea>\n    </div>\n\n    <div class="button-group">\n      <button type="submit"\n              class="btn btn-primary btn-lg"\n              ng-class="{\'dialog-btn\': isDialog}"\n              ng-click="update()"\n              ng-disabled="editProjectForm.$invalid || disableInputs"\n              value="">{{submitButtonLabel}}</button>\n      <button\n          class="btn btn-default btn-lg"\n          ng-class="{\'dialog-btn\': isDialog}"\n          back\n          ng-click="cancelEditProject()">\n        Cancel\n      </button>\n    </div>\n  </fieldset>\n</form>\n'), 
+a.put("src/components/delete-project/delete-project.html", '<a href="javascript:void(0)"\n   ng-click="openDeleteModal()"\n   role="button"\n   ng-attr-aria-disabled="{{disableDelete ? \'true\' : undefined}}"\n   ng-class="{ \'disabled-link\': disableDelete }"\n>{{label || \'Delete\'}}</a>\n'), a.put("src/components/edit-project/editProject.html", '<form name="editProjectForm">\n  <fieldset ng-disabled="disableInputs">\n    <div class="form-group">\n      <label for="displayName">Display Name</label>\n      <input class="form-control input-lg"\n             name="displayName"\n             id="displayName"\n             placeholder="My Project"\n             type="text"\n             ng-model="editableFields.displayName">\n    </div>\n\n    <div class="form-group">\n      <label for="description">Description</label>\n                    <textarea class="form-control input-lg"\n                              name="description"\n                              id="description"\n                              placeholder="A short description."\n                              ng-model="editableFields.description"></textarea>\n    </div>\n\n    <div class="button-group">\n      <button type="submit"\n              class="btn btn-primary btn-lg"\n              ng-class="{\'dialog-btn\': isDialog}"\n              ng-click="update()"\n              ng-disabled="editProjectForm.$invalid || disableInputs"\n              value="">{{submitButtonLabel}}</button>\n      <button\n          class="btn btn-default btn-lg"\n          ng-class="{\'dialog-btn\': isDialog}"\n          ng-click="cancelEditProject()">\n        Cancel\n      </button>\n    </div>\n  </fieldset>\n</form>\n'), 
 a.put("src/components/truncate-long-text/truncateLongText.html", '<!--\n  Do not remove class `truncated-content` (here or below) even though it\'s not\n  styled directly in origin-web-common.  `truncated-content` is used by\n  origin-web-console in certain contexts.\n-->\n<span ng-if="!truncated" ng-bind-html="content | highlightKeywords : keywords" class="truncated-content"></span>\n<span ng-if="truncated">\n  <span ng-if="!toggles.expanded">\n    <span ng-attr-title="{{content}}" class="truncation-block">\n      <span ng-bind-html="truncatedContent | highlightKeywords : keywords" class="truncated-content"></span>&hellip;\n    </span>\n    <a ng-if="expandable" href="" ng-click="toggles.expanded = true" class="nowrap">See All</a>\n  </span>\n  <span ng-if="toggles.expanded">\n    <div ng-if="prettifyJson" class="well">\n      <span class="pull-right" style="margin-top: -10px;"><a href="" ng-click="toggles.expanded = false" class="truncation-collapse-link">Collapse</a></span>\n      <span ng-bind-html="content | prettifyJSON | highlightKeywords : keywords" class="pretty-json truncated-content"></span>\n    </div>\n    <span ng-if="!prettifyJson">\n      <span class="pull-right"><a href="" ng-click="toggles.expanded = false" class="truncation-collapse-link">Collapse</a></span>\n      <span ng-bind-html="content | highlightKeywords : keywords" class="truncated-content"></span>\n    </span>\n  </span>\n</span>\n');
-} ]), angular.module("openshiftCommonUI").directive("createProject", function() {
+} ]), angular.module("openshiftCommonUI").directive("createProject", [ "$window", function(a) {
 return {
 restrict:"E",
 scope:{
@@ -59646,39 +59646,39 @@ onCancel:"&?",
 isDialog:"@"
 },
 templateUrl:"src/components/create-project/createProject.html",
-controller:[ "$scope", "$filter", "$location", "DataService", function(a, b, c, d) {
-a.submitButtonLabel || (a.submitButtonLabel = "Create"), a.isDialog = "true" === a.isDialog, a.createProject = function() {
-a.disableInputs = !0, a.createProjectForm.$valid && d.create("projectrequests", null, {
+controller:[ "$scope", "$filter", "$location", "DataService", function(b, c, d, e) {
+b.submitButtonLabel || (b.submitButtonLabel = "Create"), b.isDialog = "true" === b.isDialog, b.createProject = function() {
+b.disableInputs = !0, b.createProjectForm.$valid && e.create("projectrequests", null, {
 apiVersion:"v1",
 kind:"ProjectRequest",
 metadata:{
-name:a.name
+name:b.name
 },
-displayName:a.displayName,
-description:a.description
-}, a).then(function(b) {
-var d = a.redirectAction();
-d ? d(encodeURIComponent(b.metadata.name)) :c.path("project/" + encodeURIComponent(b.metadata.name) + "/create");
-}, function(b) {
-a.disableInputs = !1;
-var c = b.data || {};
-if ("AlreadyExists" === c.reason) a.nameTaken = !0; else {
+displayName:b.displayName,
+description:b.description
+}, b).then(function(a) {
+var c = b.redirectAction();
+c ? c(encodeURIComponent(a.metadata.name)) :d.path("project/" + encodeURIComponent(a.metadata.name) + "/create");
+}, function(a) {
+b.disableInputs = !1;
+var c = a.data || {};
+if ("AlreadyExists" === c.reason) b.nameTaken = !0; else {
 var d = c.message || "An error occurred creating the project.";
-a.alerts["error-creating-project"] = {
+b.alerts["error-creating-project"] = {
 type:"error",
 message:d
 };
 }
 });
-}, a.cancelCreateProject = function() {
-if (a.onCancel) {
-var b = a.onCancel();
-b && b();
-}
+}, b.cancelCreateProject = function() {
+if (b.onCancel) {
+var c = b.onCancel();
+c && c();
+} else a.history.back();
 };
 } ]
 };
-}), angular.module("openshiftCommonUI").directive("deleteProject", [ "$uibModal", "$location", "$filter", "$q", "hashSizeFilter", "APIService", "DataService", "AlertMessageService", "Logger", function(a, b, c, d, e, f, g, h, i) {
+} ]), angular.module("openshiftCommonUI").directive("deleteProject", [ "$uibModal", "$location", "$filter", "$q", "hashSizeFilter", "APIService", "DataService", "AlertMessageService", "Logger", function(a, b, c, d, e, f, g, h, i) {
 return {
 restrict:"E",
 scope:{
@@ -59746,7 +59746,7 @@ b.close("delete");
 }, a.cancel = function() {
 b.dismiss("cancel");
 };
-} ]), angular.module("openshiftCommonUI").directive("editProject", function() {
+} ]), angular.module("openshiftCommonUI").directive("editProject", [ "$window", function(a) {
 return {
 restrict:"E",
 scope:{
@@ -59758,44 +59758,44 @@ onCancel:"&",
 isDialog:"@"
 },
 templateUrl:"src/components/edit-project/editProject.html",
-controller:[ "$scope", "$filter", "$location", "DataService", "annotationNameFilter", function(a, b, c, d, e) {
-a.submitButtonLabel || (a.submitButtonLabel = "Save"), a.isDialog = "true" === a.isDialog;
-var f = b("annotation"), g = b("annotationName"), h = function(a) {
+controller:[ "$scope", "$filter", "$location", "DataService", "annotationNameFilter", function(b, c, d, e, f) {
+b.submitButtonLabel || (b.submitButtonLabel = "Save"), b.isDialog = "true" === b.isDialog;
+var g = c("annotation"), h = c("annotationName"), i = function(a) {
 return {
-description:f(a, "description"),
-displayName:f(a, "displayName")
+description:g(a, "description"),
+displayName:g(a, "displayName")
 };
-}, i = function(a, b) {
+}, j = function(a, b) {
 var c = angular.copy(a);
-return c.metadata.annotations[g("description")] = b.description, c.metadata.annotations[g("displayName")] = b.displayName, c;
-}, j = function(a) {
-var b = [ e("description"), e("displayName") ];
+return c.metadata.annotations[h("description")] = b.description, c.metadata.annotations[h("displayName")] = b.displayName, c;
+}, k = function(a) {
+var b = [ f("description"), f("displayName") ];
 return _.each(b, function(b) {
 a.metadata.annotations[b] || delete a.metadata.annotations[b];
 }), a;
 };
-a.editableFields = h(a.project), a.update = function() {
-a.disableInputs = !0, a.editProjectForm.$valid && d.update("projects", a.project.metadata.name, j(i(a.project, a.editableFields)), {
-projectName:a.project.name
+b.editableFields = i(b.project), b.update = function() {
+b.disableInputs = !0, b.editProjectForm.$valid && e.update("projects", b.project.metadata.name, k(j(b.project, b.editableFields)), {
+projectName:b.project.name
 }, {
 errorNotification:!1
 }).then(function() {
-var b = a.redirectAction();
-b && b(encodeURIComponent(a.project.metadata.name));
-}, function(c) {
-a.disableInputs = !1, a.editableFields = h(a.project), a.alerts.update = {
+var a = b.redirectAction();
+a && a(encodeURIComponent(b.project.metadata.name));
+}, function(a) {
+b.disableInputs = !1, b.editableFields = i(b.project), b.alerts.update = {
 type:"error",
 message:"An error occurred while updating the project",
-details:b("getErrorDetails")(c)
+details:c("getErrorDetails")(a)
 };
 });
-}, a.cancelEditProject = function() {
-var b = a.onCancel();
-b && b();
+}, b.cancelEditProject = function() {
+var c = b.onCancel();
+c ? c() :a.history.back();
 };
 } ]
 };
-}), angular.module("openshiftCommonUI").directive("takeFocus", [ "$timeout", function(a) {
+} ]), angular.module("openshiftCommonUI").directive("takeFocus", [ "$timeout", function(a) {
 return {
 restrict:"A",
 link:function(b, c) {
@@ -61589,7 +61589,7 @@ description:"Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do ei
 }, {
 id:2,
 title:"Mobile Application",
-icon:"fa fa-mobile",
+icon:"fa fa-user",
 url:"https://www.redhat.com/en/technologies/mobile",
 description:"Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt."
 }, {
@@ -61991,17 +61991,17 @@ b.ImageItem = h;
 }, function(a, b) {
 a.exports = '<!-- TODO: Should not have two ordering panels, combine with services view -->\n<overlay-panel show-panel="$ctrl.orderingPanelVisible" show-close="true" handle-close="$ctrl.closeOrderingPanel">\n  <order-service\n      ng-if="$ctrl.selectedServiceClass"\n      base-project-url="{{$ctrl.baseProjectUrl}}"\n      service-class="$ctrl.selectedServiceClass"\n      handle-close="$ctrl.closeOrderingPanel">\n  </order-service>\n  <create-from-builder\n      ng-if="$ctrl.selectedImageStream"\n      base-project-url="{{$ctrl.baseProjectUrl}}"\n      image-stream="$ctrl.selectedImageStream"\n      handle-close="$ctrl.closeOrderingPanel">\n  </create-from-builder>\n</overlay-panel>\n<div class="catalog-search">\n  <form role="form" class="landing-search-form search-pf has-button">\n    <div class="form-group has-clear">\n      <div class="search-pf-input-group">\n        <label for="search-input" class="sr-only">Search Catalog</label>\n        <span class="fa fa-search catalog-search-icon" aria-hidden="true"></span>\n        <input\n            id="search-input"\n            type="search"\n            class="form-control catalog-search-input"\n            placeholder="Search Catalog"\n            ng-model="$ctrl.searchText"\n            uib-typeahead="item.name for item in $ctrl.search($viewValue)"\n            typeahead-on-select="$ctrl.itemSelected($item)"\n            typeahead-template-url="catalog-search/catalog-search-result.html">\n        <button\n            type="button"\n            ng-if="$ctrl.searchText"\n            ng-click="$ctrl.searchText = \'\'"\n            class="clear">\n          <span class="sr-only">Clear Search Input</span>\n          <span class="pficon pficon-close" aria-hidden="true"></span>\n        </button>\n      </div>\n    </div>\n  </form>\n</div>\n';
 }, function(a, b) {
-a.exports = '<div class="order-service wizard-pf-body">\n  <div class="wizard-pf-steps">\n    <ul class="wizard-pf-steps-indicator">\n      <li class="wizard-pf-step" ng-class="{\n        active: step.selected,\n        visited: step.visited && !step.selected\n      }" ng-repeat="step in $ctrl.steps" data-tabgroup="{{$index}}">\n        <a ng-click="$ctrl.stepClick(step)"><span class="wizard-pf-step-number">{{$index + 1}}</span><span class="wizard-pf-step-title">{{step.label}}</span></a>\n      </li>\n    </ul>\n  </div>\n  <div class="container-fluid wizard-pf-main">\n    <div class="col-sm-6 order-service-details">\n      <div class="order-service-details-top">\n        <div class="pull-left">\n          <span class="icon {{$ctrl.imageStream.iconClass}}"></span>\n        </div>\n        <div class="service-title-area">\n          <div class="service-title">\n            <span class="name">\n              {{$ctrl.imageStream.name}}\n              {{$ctrl.istag.name}}\n            </span>\n          </div>\n          <div class="order-service-tags">\n            <span ng-repeat="tag in $ctrl.istag.annotations.tags.split(\',\')" class="tag">\n              {{tag}}\n            </span>\n          </div>\n        </div>\n        <div class="order-service-description-block">\n          <p ng-bind-html="$ctrl.istag.annotations.description | linky : \'_blank\'" class="builder-description"></p>\n          <p ng-if="$ctrl.istag.annotations.sampleRepo">\n            Sample Repository:\n            <!-- TODO: Use Git link filter, needs to be added to origin-web-common -->\n            <span ng-bind-html="$ctrl.istag.annotations.sampleRepo | linky : \'_blank\'">\n          </p>\n        </div>\n      </div>\n    </div>\n    <div class="col-sm-6 order-service-config">\n      <div ng-include="$ctrl.currentStep.view" class="wizard-pf-contents"></div>\n    </div>\n  </div>\n  <div class="config-bottom modal-footer wizard-pf-footer">\n    <button\n        type="button"\n        class="btn btn-default wizard-pf-dismiss"\n        ng-disabled="$ctrl.currentStep.id === \'results\'"\n        ng-click="$ctrl.closePanel()">\n      Cancel\n    </button>\n    <button\n        type="button"\n        class="btn btn-primary wizard-pf-next"\n        ng-if="$ctrl.currentStep.id === \'configure\'"\n        ng-disabled="!$ctrl.builderForm.$valid"\n        ng-click="$ctrl.createApp()">\n      Create\n    </button>\n    <button\n        type="button"\n        class="btn btn-primary wizard-pf-close wizard-pf-dismiss"\n        ng-if="$ctrl.currentStep.id === \'results\'"\n        ng-click="$ctrl.closePanel()">\n      Close\n    </button>\n  </div>\n</div>\n';
+a.exports = '<div class="order-service wizard-pf-body">\n  <div class="wizard-pf-steps">\n    <ul class="wizard-pf-steps-indicator">\n      <li class="wizard-pf-step" ng-class="{\n        active: step.selected,\n        visited: step.visited && !step.selected\n      }" ng-repeat="step in $ctrl.steps" data-tabgroup="{{$index}}">\n        <a ng-click="$ctrl.stepClick(step)"><span class="wizard-pf-step-number">{{$index + 1}}</span><span class="wizard-pf-step-title">{{step.label}}</span></a>\n      </li>\n    </ul>\n  </div>\n  <div class="container-fluid wizard-pf-main">\n    <div class="col-sm-6 order-service-details">\n      <div class="order-service-details-top">\n        <div class="service-icon">\n          <span class="icon {{$ctrl.imageStream.iconClass}}"></span>\n        </div>\n        <div class="service-title-area">\n          <div class="service-title">\n            {{$ctrl.imageStream.name}}\n            {{$ctrl.istag.name}}\n          </div>\n          <div class="order-service-tags">\n            <span ng-repeat="tag in $ctrl.istag.annotations.tags.split(\',\')" class="tag">\n              {{tag}}\n            </span>\n          </div>\n        </div>\n      </div>\n      <div class="order-service-description-block">\n        <p ng-bind-html="$ctrl.istag.annotations.description | linky : \'_blank\'" class="description"></p>\n        <p ng-if="$ctrl.istag.annotations.sampleRepo">\n          Sample Repository:\n          <!-- TODO: Use Git link filter, needs to be added to origin-web-common -->\n          <span ng-bind-html="$ctrl.istag.annotations.sampleRepo | linky : \'_blank\'">\n        </p>\n      </div>\n    </div>\n    <div class="col-sm-6 order-service-config">\n      <div ng-include="$ctrl.currentStep.view" class="wizard-pf-contents"></div>\n    </div>\n  </div>\n  <div class="config-bottom modal-footer wizard-pf-footer">\n    <button\n        type="button"\n        class="btn btn-default wizard-pf-dismiss"\n        ng-disabled="$ctrl.currentStep.id === \'results\'"\n        ng-click="$ctrl.closePanel()">\n      Cancel\n    </button>\n    <button\n        type="button"\n        class="btn btn-primary wizard-pf-next"\n        ng-if="$ctrl.currentStep.id === \'configure\'"\n        ng-disabled="!$ctrl.builderForm.$valid"\n        ng-click="$ctrl.createApp()">\n      Create\n    </button>\n    <button\n        type="button"\n        class="btn btn-primary wizard-pf-close wizard-pf-dismiss"\n        ng-if="$ctrl.currentStep.id === \'results\'"\n        ng-click="$ctrl.closePanel()">\n      Close\n    </button>\n  </div>\n</div>\n';
 }, function(a, b) {
 a.exports = '<div class="landing">\n  <div class="landing-search-area" ng-transclude="landingsearch"></div>\n  <div class="landing-main-area">\n    <div class="landing-header-area" ng-transclude="landingheader"></div>\n    <div class="landing-body-area">\n      <div ng-transclude="landingbody"></div>\n    </div>\n  </div>\n  <div class="landing-side-bar" ng-transclude="landingside"></div>\n</div>\n';
 }, function(a, b) {
-a.exports = '<div class="order-service wizard-pf-body">\n  <div class="wizard-pf-steps">\n    <ul class="wizard-pf-steps-indicator" ng-if="$ctrl.wizardReady">\n      <li class="wizard-pf-step" ng-class="{\n        active: step.selected,\n        visited: step.visited && !step.selected\n      }" ng-repeat="step in $ctrl.getSteps()" data-tabgroup="{{$index}}">\n        <a ng-click="$ctrl.stepClick(step)"><span class="wizard-pf-step-number">{{$index + 1}}</span><span class="wizard-pf-step-title">{{step.label}}</span></a>\n      </li>\n    </ul>\n  </div>\n  <div class="container-fluid wizard-pf-main">\n    <div class="col-sm-6 order-service-details">\n      <div class="order-service-details-top">\n        <div class="pull-left">\n          <span ng-if="!$ctrl.imageUrl" class="icon {{$ctrl.iconClass}}"></span>\n          <!-- TODO: Need to size the image -->\n          <span ng-if="$ctrl.imageUrl"><img ng-src="{{$ctrl.imageUrl}}"></span>\n        </div>\n        <div class="service-title-area">\n          <div class="service-title">\n            <span class="name">{{$ctrl.serviceName}}</span>\n          </div>\n          <div ng-if="$ctrl.serviceClass.resource.osbTags" class="order-service-tags">\n            <span ng-repeat="tag in $ctrl.serviceClass.resource.osbTags" class="tag">\n              {{tag}}\n            </span>\n          </div>\n        </div>\n        <div class="order-service-description-block">\n          <div ng-if="$ctrl.currentStep.id !== \'plans\' && $ctrl.selectedPlan" class="h3">\n            Plan {{$ctrl.selectedPlan.osbMetadata.displayName || $ctrl.selectedPlan.name}}\n          </div>\n          <p ng-if="$ctrl.description" ng-bind-html="$ctrl.description | linky : \'_blank\'" class="description"></p>\n          <p ng-if="$ctrl.longDescription" ng-bind-html="$ctrl.longDescription | linky : \'_blank\'" class="description"></p>\n          <p ng-if="$ctrl.serviceClass.resource.osbMetadata.documentationUrl">\n            <a ng-href="{{$ctrl.serviceClass.resource.osbMetadata.documentationUrl}}" target="_blank" class="learn-more-link">Learn More <i class="fa fa-external-link" aria-hidden="true"></i></a>\n          </p>\n        </div>\n      </div>\n    </div>\n    <div class="col-sm-6 order-service-config">\n      <div ng-include="$ctrl.currentStep.view" class="wizard-pf-contents"></div>\n    </div>\n  </div>\n  <div class="config-bottom modal-footer wizard-pf-footer">\n    <!--\n      Only use the `btn-cancel wizard-pf-cancel` classes when there\'s a Back\n      button, otherwise there\'s an odd gap between Cancel and Next when there\n      are only two buttons in the wizard.\n    -->\n    <button\n        type="button"\n        class="btn btn-default wizard-pf-dismiss"\n        ng-class="{ \'btn-cancel wizard-pf-cancel\': $ctrl.plans.length > 1 }"\n        ng-disabled="$ctrl.currentStep.id === \'results\'"\n        ng-click="$ctrl.closePanel()">\n      Cancel\n    </button>\n    <!-- Hide the button when only one plan. It will never be enabled. -->\n    <button\n        type="button"\n        class="btn btn-default wizard-pf-back"\n        ng-if="$ctrl.plans.length > 1"\n        ng-disabled="$ctrl.currentStep.id !== \'configure\'"\n        ng-click="$ctrl.previousStep()">\n      <span class="fa fa-angle-left" aria-hidden="true"></span>\n      Back\n    </button>\n    <button\n        type="button"\n        class="btn btn-primary wizard-pf-next"\n        ng-if="$ctrl.currentStep.id !== \'configure\' && $ctrl.currentStep.id !== \'results\'"\n        ng-click="$ctrl.nextStep()">\n      Next\n      <span class="fa fa-angle-right" aria-hidden="true"></span>\n    </button>\n    <button\n        type="button"\n        class="btn btn-primary wizard-pf-next"\n        ng-if="$ctrl.currentStep.id === \'configure\'"\n        ng-disabled="!$ctrl.selectedProject || $ctrl.currentStep.id === \'results\' || $ctrl.forms.orderConfigureForm.$invalid"\n        ng-click="$ctrl.provisionService()">\n      Create\n    </button>\n    <button\n        type="button"\n        class="btn btn-primary wizard-pf-close wizard-pf-dismiss"\n        ng-if="$ctrl.currentStep.id === \'results\'"\n        ng-click="$ctrl.closePanel()">\n      Close\n    </button>\n  </div>\n</div>\n';
+a.exports = '<div class="order-service wizard-pf-body">\n  <div class="wizard-pf-steps">\n    <ul class="wizard-pf-steps-indicator" ng-if="$ctrl.wizardReady">\n      <li class="wizard-pf-step" ng-class="{\n        active: step.selected,\n        visited: step.visited && !step.selected\n      }" ng-repeat="step in $ctrl.getSteps()" data-tabgroup="{{$index}}">\n        <a ng-click="$ctrl.stepClick(step)"><span class="wizard-pf-step-number">{{$index + 1}}</span><span class="wizard-pf-step-title">{{step.label}}</span></a>\n      </li>\n    </ul>\n  </div>\n  <div class="container-fluid wizard-pf-main">\n    <div class="col-sm-6 order-service-details">\n      <div class="order-service-details-top">\n        <div class="service-icon">\n          <span ng-if="!$ctrl.imageUrl" class="icon {{$ctrl.iconClass}}"></span>\n          <span ng-if="$ctrl.imageUrl" class="image"><img ng-src="{{$ctrl.imageUrl}}" alt=""></span>\n        </div>\n        <div class="service-title-area">\n          <div class="service-title">\n            {{$ctrl.serviceName}}\n          </div>\n          <div ng-if="$ctrl.serviceClass.resource.osbTags" class="order-service-tags">\n            <span ng-repeat="tag in $ctrl.serviceClass.resource.osbTags" class="tag">\n              {{tag}}\n            </span>\n          </div>\n        </div>\n      </div>\n      <div class="order-service-description-block">\n        <p ng-if="$ctrl.currentStep.id !== \'plans\' && ($ctrl.selectedPlan.osbMetadata.displayName || $ctrl.selectedPlan.description)">\n          <span ng-if="$ctrl.selectedPlan.osbMetadata.displayName">\n            Plan {{$ctrl.selectedPlan.osbMetadata.displayName}}\n            <span ng-if="$ctrl.selectedPlan.description">&ndash;</span>\n          </span>\n          <span ng-if="$ctrl.selectedPlan.description">{{$ctrl.selectedPlan.description}}</span>\n        </p>\n        <p ng-if="$ctrl.description" ng-bind-html="$ctrl.description | linky : \'_blank\'" class="description"></p>\n        <p ng-if="$ctrl.longDescription" ng-bind-html="$ctrl.longDescription | linky : \'_blank\'" class="description"></p>\n        <p ng-if="$ctrl.serviceClass.resource.osbMetadata.documentationUrl">\n          <a ng-href="{{$ctrl.serviceClass.resource.osbMetadata.documentationUrl}}" target="_blank" class="learn-more-link">Learn More <i class="fa fa-external-link" aria-hidden="true"></i></a>\n        </p>\n      </div>\n    </div>\n    <div class="col-sm-6 order-service-config">\n      <div ng-include="$ctrl.currentStep.view" class="wizard-pf-contents"></div>\n    </div>\n  </div>\n  <div class="config-bottom modal-footer wizard-pf-footer">\n    <!--\n      Only use the `btn-cancel wizard-pf-cancel` classes when there\'s a Back\n      button, otherwise there\'s an odd gap between Cancel and Next when there\n      are only two buttons in the wizard.\n    -->\n    <button\n        type="button"\n        class="btn btn-default wizard-pf-dismiss"\n        ng-class="{ \'btn-cancel wizard-pf-cancel\': $ctrl.plans.length > 1 }"\n        ng-disabled="$ctrl.currentStep.id === \'results\'"\n        ng-click="$ctrl.closePanel()">\n      Cancel\n    </button>\n    <!-- Hide the button when only one plan. It will never be enabled. -->\n    <button\n        type="button"\n        class="btn btn-default wizard-pf-back"\n        ng-if="$ctrl.plans.length > 1"\n        ng-disabled="$ctrl.currentStep.id !== \'configure\'"\n        ng-click="$ctrl.previousStep()">\n      <span class="fa fa-angle-left" aria-hidden="true"></span>\n      Back\n    </button>\n    <button\n        type="button"\n        class="btn btn-primary wizard-pf-next"\n        ng-if="$ctrl.currentStep.id !== \'configure\' && $ctrl.currentStep.id !== \'results\'"\n        ng-click="$ctrl.nextStep()">\n      Next\n      <span class="fa fa-angle-right" aria-hidden="true"></span>\n    </button>\n    <button\n        type="button"\n        class="btn btn-primary wizard-pf-next"\n        ng-if="$ctrl.currentStep.id === \'configure\'"\n        ng-disabled="!$ctrl.selectedProject || $ctrl.currentStep.id === \'results\' || $ctrl.forms.orderConfigureForm.$invalid"\n        ng-click="$ctrl.provisionService()">\n      Create\n    </button>\n    <button\n        type="button"\n        class="btn btn-primary wizard-pf-close wizard-pf-dismiss"\n        ng-if="$ctrl.currentStep.id === \'results\'"\n        ng-click="$ctrl.closePanel()">\n      Close\n    </button>\n  </div>\n</div>\n';
 }, function(a, b) {
 a.exports = '<div class="catalogs-overlay-modal" role="dialog">\n  <div ng-if="$ctrl.shown" class="modal-backdrop fade in"></div>\n  <div ng-if="$ctrl.shown" class="catalogs-overlay-panel-wrapper">\n    <div class="catalogs-overlay-panel-grow-height">\n      <div class="catalogs-overlay-panel" ng-class="{\'catalogs-overlay-panel-full-height\' : $ctrl.fullHeight, \'catalogs-overlay-panel-single-column\' : $ctrl.singleColumn}">\n        <a ng-if="$ctrl.showClose" ng-click="$ctrl.closePanel()">\n          <span class="catalogs-overlay-panel-close pficon pficon-close"></span>\n        </a>\n        <div class="catalogs-overlay-panel-body" ng-transclude>\n        </div>\n      </div>\n    </div>\n  </div>\n</div>\n';
 }, function(a, b) {
 a.exports = '<div class="catalog-projects-summary-panel">\n  <button ng-if="$ctrl.canCreate" class="create-button btn btn-primary" ng-click="$ctrl.openNewProjectPanel()">\n    <span class="fa fa-plus"></span>\n    <span class="create-button-text">Create Project</span>\n  </button>\n  <h2 class="primary" ng-if="!$ctrl.projects || !$ctrl.projects.length">Getting Started</h2>\n  <h2 class="primary" ng-if="$ctrl.projects && $ctrl.projects.length">My Projects</h2>\n  <div class="catalog-modal catalog-modal-create-project" ng-if="$ctrl.showNewProjectPanel">\n    <h4 class="catalog-modal-title">\n      Create Project\n    </h4>\n    <create-project alerts="$ctrl.alerts" is-dialog="true" redirect-action="$ctrl.onNewProject" on-cancel="$ctrl.closeNewProjectPanel"></create-project>\n    <a href="" class="catalog-modal-close" ng-click="$ctrl.closeNewProjectPanel()">\n      <span class="pficon pficon-close"></span>\n    </a>\n  </div>\n  <div ng-if="$ctrl.projects && $ctrl.projects.length" class="catalog-project-summary-list">\n    <div ng-if="$ctrl.totalProjects > $ctrl.maxDisplayProjects" class="projects-count">\n      <strong>{{$ctrl.maxDisplayProjects}}</strong>\n      of\n      <strong>{{$ctrl.totalProjects}}</strong>\n      Projects\n      <a href="{{$ctrl.projectsUrl}}" class="projects-view-all">View All</a>\n    </div>\n    <div id="catalog-projects-summary-list">\n      <div ng-repeat="project in $ctrl.projects track by (project | uid)" class="project-tile">\n        <div class="dropdown  dropdown-kebab-pf" uib-dropdown="">\n          <button class="btn btn-link uib-dropdown-toggle" type="button" id="dropdownKebab" aria-haspopup="true" aria-expanded="true" uib-dropdown-toggle>\n            <span class="fa fa-ellipsis-v"></span>\n          </button>\n          <ul class="uib-dropdown-menu dropdown-menu-right" aria-labelledby="dropdownKebab">\n            <li><a href="" ng-click="$ctrl.onViewMemebership(project)">View Membership</a></li>\n            <li><a href="" ng-click="$ctrl.editProject(project)">Edit Project</a></li>\n            <li>\n              <delete-project\n                  label="Delete Project"\n                  project-name="{{project.metadata.name}}"\n                  display-name="{{(project | displayName)}}"\n                  type-name-to-confirm="true"\n                  stay-on-current-page="true"\n                  alerts="$ctrl.alerts">\n              </delete-project>\n            </li>\n          </ul>\n        </div>\n        <h3 class="project-tile-header">\n          <span ng-if="project.statusIconClass" class="project-status {{project.statusIconClass}}"></span>\n          <a href="{{project | projectUrl : $ctrl.baseProjectUrl}}" class="project-title">{{project | displayName}}</a>\n        </h3>\n        <p class="project-date">\n          <span ng-if="project | displayName : true"><span ng-bind-html="project.metadata.name"></span> &ndash;</span>\n          created\n          <span ng-if="project | annotation : \'openshift.io/requester\'">by <span ng-bind-html="project | annotation : \'openshift.io/requester\'"></span></span>\n          <span am-time-ago="project.metadata.creationTimestamp"></span>\n        </p>\n        <div class="project-description" ng-if="project | description">\n          <truncate-long-text content="project | description" use-word-boundary="true" limit="120"></truncate-long-text>\n        </div>\n        <div class="catalog-modal catalog-modal-edit-project" ng-if="$ctrl.showEditProjectPanel && $ctrl.edittingProject === project">\n          <h4 class="catalog-modal-title">\n            Edit Project\n          </h4>\n          <edit-project project="$ctrl.edittingProject" is-dialog="true" alerts="$ctrl.alerts" redirect-action="$ctrl.onEditProject" on-cancel="$ctrl.closeEditProjectPanel"></edit-project>\n          <a href="" class="catalog-modal-close" ng-click="$ctrl.closeEditProjectPanel()">\n            <span class="pficon pficon-close"></span>\n          </a>\n        </div>\n      </div>\n    </div>\n  </div>\n  <div ng-if="$ctrl.showGetStarted">\n    <div class="getting-started-panel">\n      <h2 class="secondary" ng-if="$ctrl.projects && $ctrl.projects.length > 0">Getting Started</h2>\n      <button class="getting-started-button btn btn-default" ng-class="{\'with-projects\': $ctrl.projects && $ctrl.projects.length}" ng-click="$ctrl.handleGettingStartedClick()">\n        <span class="fa fa-info-circle fa-2"></span>\n        <span class="getting-started-button-text">Start Guided Tour</span>\n      </button>\n    </div>\n    <div class="resources-panel">\n      <h2 class="secondary">Resources</h2>\n      <p>\n        {{$ctrl.resourceDescription}}\n      </p>\n      <ul>\n        <li ng-repeat="resource in $ctrl.resourceLinks">\n          <a href="{{resource.href}}" target="_blank" title="{{resource.href}}">{{resource.title}}</a>\n        </li>\n      </ul>\n    </div>\n  </div>\n</div>\n';
 }, function(a, b) {
-a.exports = '<span ng-if="$ctrl.hasSaasOfferings()" class="saas-offerings-container">\n  <h1 ng-if="$ctrl.saasTitle">{{$ctrl.saasTitle}}</h1>\n  <div class="saas-list" items="$ctrl.saasOfferings">\n    <div class="card" ng-repeat="item in $ctrl.saasOfferings">\n      <a href="" class="card-content" ng-click="$ctrl.handleClick(item)">\n        <span class="card-icon {{item.icon}}"></span>\n        <span class="card-title">{{item.title}}</span>\n        <truncate-long-text\n                class="card-description hidden-xs"\n                content="item.description"\n                limit="120"\n                use-word-boundary="true">\n        </truncate-long-text>\n      </a>\n    </div>\n  </div>\n</span>\n';
+a.exports = '<span ng-if="$ctrl.hasSaasOfferings()" class="saas-offerings-container">\n  <h1 ng-if="$ctrl.saasTitle">{{$ctrl.saasTitle}}</h1>\n  <div class="saas-list" items="$ctrl.saasOfferings">\n    <div class="card" ng-repeat="item in $ctrl.saasOfferings">\n      <a href="" class="card-content" ng-click="$ctrl.handleClick(item)">\n        <span class="card-icon {{item.icon}}"><img ng-if="item.image" ng-src="{{item.image}}"></span>\n        <span class="card-title">{{item.title}}</span>\n        <truncate-long-text\n                class="card-description hidden-xs"\n                content="item.description"\n                limit="120"\n                use-word-boundary="true">\n        </truncate-long-text>\n      </a>\n    </div>\n  </div>\n</span>\n';
 }, function(a, b) {
 a.exports = '<ng-form>\n    <div class="form-group">\n        <label class="col-sm-4 control-label" for="project">Add to Project</label>\n      <div class="col-sm-8">\n        <ui-select ng-model="$ctrl.selectedProject">\n          <ui-select-match placeholder="Project name">\n            {{$select.selected | displayName}}\n          </ui-select-match>\n          <ui-select-choices repeat="project in $ctrl.projects | searchProjects : $select.search">\n            <span ng-bind-html="project | displayName | highlightKeywords : $select.search"></span>\n                <span ng-if="project | displayName : true" class="small text-muted">\n                  <span ng-if="project.metadata.name">&ndash;</span>\n                  <span ng-bind-html="project.metadata.name | highlightKeywords : $select.search"></span>\n                </span>\n          </ui-select-choices>\n        </ui-select>\n      </div>\n    </div>\n</ng-form>\n\n<ng-form name="$ctrl.forms.createProjectForm"\n    ng-if="$ctrl.isNewProject()">\n  <div class="form-group">\n    <label for="name" class="col-sm-4 control-label required">Project Name</label>\n    <div class="col-sm-8" ng-class="{\'has-error\': ($ctrl.forms.createProjectForm.name.$error.pattern && $ctrl.forms.createProjectForm.name.$touched) || $ctrl.nameTaken}">\n      <input class="form-control"\n          name="name"\n          id="name"\n          placeholder="my-project"\n          type="text"\n          required\n          take-focus\n          minlength="2"\n          maxlength="63"\n          pattern="[a-z0-9]([-a-z0-9]*[a-z0-9])?"\n          aria-describedby="nameHelp"\n          ng-model="$ctrl.selectedProject.metadata.name"\n          ng-model-options="{ updateOn: \'default blur\' }"\n          ng-change="$ctrl.onNewProjectNameChange()"\n          autocorrect="off"\n          autocapitalize="off"\n          spellcheck="false">\n      <div class="help-block">A unique name for the project.</div>\n      <div class="has-error" ng-if="$ctrl.forms.createProjectForm.name.$error.minlength && $ctrl.forms.createProjectForm.name.$touched">\n        <span id="nameHelp" class="help-block">\n          Name must have at least two characters.\n        </span>\n      </div>\n      <div class="has-error" ng-if="$ctrl.forms.createProjectForm.name.$error.pattern && $ctrl.forms.createProjectForm.name.$touched">\n        <span id="nameHelp" class="help-block">\n          Project names may only contain lower-case letters, numbers, and dashes.\n          They may not start or end with a dash.\n        </span>\n      </div>\n      <div class="has-error" ng-if="$ctrl.nameTaken">\n        <span class="help-block">\n          This name is already in use. Please choose a different name.\n        </span>\n      </div>\n    </div>\n  </div>\n\n  <div class="form-group">\n    <label for="displayName" class="col-sm-4 control-label">Project Display Name</label>\n    <div class="col-sm-8">\n      <input class="form-control"\n        name="displayName"\n        id="displayName"\n        placeholder="My Project"\n        type="text"\n        ng-model="$ctrl.selectedProject.metadata.annotations[\'new-display-name\']">\n    </div>\n  </div>\n\n  <div class="form-group">\n    <label for="description" class="col-sm-4 control-label">Project Description</label>\n    <div class="col-sm-8">\n      <textarea class="form-control"\n        name="description"\n        id="description"\n        placeholder="A short description."\n        ng-model="$ctrl.selectedProject.metadata.annotations[\'openshift.io/description\']"></textarea>\n    </div>\n  </div>\n</ng-form>\n';
 }, function(a, b) {
@@ -62039,7 +62039,7 @@ this.searchDeferred.resolve(e), this.searchDeferred = null;
 }, a.prototype.search = function(a) {
 return a ? this.loaded ? this.filterForKeywords(a) :(this.searchDeferred = this.$q.defer(), this.searchDeferred.promise) :[];
 }, a.prototype.filterForKeywords = function(a) {
-var b = this.KeywordService.generateKeywords(a), c = this.KeywordService.filterForKeywords(this.allItems, [ "name", "tags", "resource.osbMetadata.tags" ], b);
+var b = this.KeywordService.generateKeywords(a), c = this.KeywordService.filterForKeywords(this.allItems, [ "name", "tags", "resource.osbTags" ], b);
 return d.take(c, 5);
 }, a;
 }();
@@ -62299,32 +62299,32 @@ f.$inject = [ "$element", "$timeout" ], b.OverlayPanelController = f;
 }, function(a, b, c) {
 "use strict";
 b.__esModule = !0;
-var d = c(1), e = c(0), f = function() {
-function a(a, b, c, f, g, h, i, j, k) {
+var d = c(1), e = c(3), f = c(0), g = function() {
+function a(a, b, c, e, g, h, i, j, k) {
 var l = this;
 this.ctrl = this, this.showNewProjectPanel = !1, this.showEditwProjectPanel = !1, this.alerts = [], this.projects = [], this.watches = [], this.maxDisplayProjects = 5, this.init = function() {
 l.ctrl.loading = !0, l.watches.push(l.DataService.watch("projects", l.$scope, l.onProjectsUpdate)), l.AlertMessageService.getAlerts().forEach(function(a) {
 this.ctrl.alerts[a.name] = a.data;
-}), l.ctrl.resourceDescription = l.Constants.CATALOG_HELP_RESOURCES.description, l.ctrl.resourceLinks = e.clone(l.Constants.CATALOG_HELP_RESOURCES.links), e.forEach(l.ctrl.resourceLinks, function(a) {
+}), l.ctrl.resourceDescription = l.Constants.CATALOG_HELP_RESOURCES.description, l.ctrl.resourceLinks = f.clone(l.Constants.CATALOG_HELP_RESOURCES.links), f.forEach(l.ctrl.resourceLinks, function(a) {
 d.isDefined(a.help) && (a.href = l.Constants.HELP_BASE_URL + l.Constants.HELP[a.help]);
 });
 }, this.onProjectsUpdate = function(a) {
-var b = e.toArray(a.by("metadata.creationTimestamp")), c = l.$filter("orderObjectsByDate");
-l.ctrl.projects = c(b, !0), l.ctrl.totalProjects = l.ctrl.projects.length, l.ctrl.projects = e.take(l.ctrl.projects, l.maxDisplayProjects), l.ctrl.loading = !1, l.ctrl.showGetStarted = !l.ctrl.projects || l.ctrl.projects.length < 2;
+var b = f.toArray(a.by("metadata.creationTimestamp")), c = l.$filter("orderObjectsByDate");
+l.ctrl.projects = c(b, !0), l.ctrl.totalProjects = l.ctrl.projects.length, l.ctrl.projects = f.take(l.ctrl.projects, l.maxDisplayProjects), l.ctrl.loading = !1, l.ctrl.showGetStarted = !l.ctrl.projects || l.ctrl.projects.length < 2;
 }, this.closeNewProjectPanel = function() {
-l.ctrl.showNewProjectPanel = !1;
+l.ctrl.showNewProjectPanel = !1, l.hideModalBackdrop();
 }, this.onNewProject = function(a) {
-l.ctrl.showNewProjectPanel = !1;
+l.ctrl.showNewProjectPanel = !1, l.hideModalBackdrop();
 }, this.onViewMemebership = function(a) {
 var b = l.ctrl.viewEditMembership();
 b && b(a);
 }, this.editProject = function(a) {
-l.ctrl.edittingProject = a, l.ctrl.showEditProjectPanel = !0;
+l.ctrl.edittingProject = a, l.ctrl.showEditProjectPanel = !0, l.showModalBackdrop();
 }, this.closeEditProjectPanel = function() {
-l.ctrl.showEditProjectPanel = !1;
+l.ctrl.showEditProjectPanel = !1, l.hideModalBackdrop();
 }, this.onEditProject = function(a) {
-l.ctrl.showEditProjectPanel = !1;
-}, this.$element = a, this.$scope = b, this.$filter = c, this.ProjectsService = f, this.Logger = g, this.AuthService = h, this.DataService = i, this.Constants = j, this.AlertMessageService = k;
+l.ctrl.showEditProjectPanel = !1, l.hideModalBackdrop();
+}, this.$element = a, this.$scope = b, this.$filter = c, this.ProjectsService = e, this.Logger = g, this.AuthService = h, this.DataService = i, this.Constants = j, this.AlertMessageService = k;
 }
 return a.prototype.$onInit = function() {
 var a = this;
@@ -62338,16 +62338,16 @@ var d = "Failed to determine create project permission";
 return 0 !== b.status && (d += " (" + b.status + ")"), void a.Logger.warn(d);
 }
 if (c.details) {
-var f = [];
-e.forEach(c.details.causes || [], function(a) {
-a.message && f.push(a.message);
-}), f.length > 0 && (a.ctrl.newProjectMessage = f.join("\n"));
+var e = [];
+f.forEach(c.details.causes || [], function(a) {
+a.message && e.push(a.message);
+}), e.length > 0 && (a.ctrl.newProjectMessage = e.join("\n"));
 }
 })["finally"](function() {
 a.init();
 });
 }, a.prototype.openNewProjectPanel = function() {
-this.ctrl.showNewProjectPanel = !0;
+this.ctrl.showNewProjectPanel = !0, this.showModalBackdrop();
 }, a.prototype.handleGettingStartedClick = function() {
 var a = this.ctrl.startGettingStartedTour();
 a && a();
@@ -62357,9 +62357,13 @@ b && b(a);
 }, a.prototype.showAllProjects = function() {
 var a = this.ctrl.showProjects();
 a && a();
+}, a.prototype.showModalBackdrop = function() {
+this.$element.append('<div class="catalog-projects-summary-modal-backrop modal-backdrop fade in"></div>');
+}, a.prototype.hideModalBackdrop = function() {
+e(".catalog-projects-summary-modal-backrop").remove();
 }, a;
 }();
-f.$inject = [ "$element", "$scope", "$filter", "ProjectsService", "Logger", "AuthService", "DataService", "Constants", "AlertMessageService" ], b.ProjectsSummaryController = f;
+g.$inject = [ "$element", "$scope", "$filter", "ProjectsService", "Logger", "AuthService", "DataService", "Constants", "AlertMessageService" ], b.ProjectsSummaryController = g;
 }, function(a, b, c) {
 "use strict";
 b.__esModule = !0;
