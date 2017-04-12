@@ -3706,7 +3706,7 @@ table.dataTable th:active{outline:0}
 .landing{background:#f2f2f2}
 .landing .catalogs-overlay-modal .wizard-pf-body .wizard-pf-main{margin-left:-20px;margin-right:-20px;padding-left:0;padding-right:0}
 .landing .nav-tabs,.landing h1{margin-bottom:0!important;margin-top:0!important}
-@media (min-width:768px){.catalog-search,.landing-side-bar{top:60px}
+@media (min-width:768px){.catalog-search,.landing-side-bar{top:61px}
 }
 .collapse{display:none}
 .collapse.in{display:block}
