@@ -1,0 +1,35 @@
+<h3 class="mar-top-none">Select an application to bind to service <strong>{{ctrl.serviceClasses[ctrl.target.spec.serviceClassName].osbMetadata.displayName || ctrl.target.spec.serviceClassName}}</strong></h3>
+Binding to a provisioned service will create a secret containing the information necessary
+for your application to use the service.
+<form name="ctrl.serviceSelection" class="mar-bottom-lg">
+  <fieldset ng-disabled="ctrl.isDisabled">
+    <div class="radio">
+      <label>
+        <input type="radio" ng-model="ctrl.shouldBindToApp" value="true">
+        Bind to an application
+      </label>
+      <div class="pad-left-xl mar-bottom-md mar-top-sm">
+        <ui-select ng-model="ctrl.appToBind" ng-disabled="ctrl.shouldBindToApp !== 'true'" ng-required="ctrl.shouldBindToApp === 'true'">
+          <ui-select-match placeholder="Select an application">
+            <span>
+              {{$select.selected.metadata.name}}
+              <small class="text-muted">&ndash; {{$select.selected.kind | humanizeKind : true}}</small>
+            </span>
+          </ui-select-match>
+          <ui-select-choices
+              repeat="application in (ctrl.applications) | filter : { metadata: { name: $select.search } } track by (application | uid)"
+              group-by="ctrl.groupByKind">
+            <span ng-bind-html="application.metadata.name | highlight : $select.search"></span>
+          </ui-select-choices>
+        </ui-select>
+      </div>
+      <label>
+        <input type="radio" ng-model="ctrl.shouldBindToApp" value="false">
+        Create a secret in my project
+        <div class="help-block">
+          You can reference this secret later from any application either as environment variables or configuration files mounted as volumes.
+        </div>
+      </label>
+    </div>
+  </fieldset>
+</form>

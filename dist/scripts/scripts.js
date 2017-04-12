@@ -511,52 +511,95 @@ return b.weight / c * 100 + "%";
 }
 
 function BindService(a, b, c) {
-var d = this;
-d.steps = [ {
+var d, e, f, g, h, i = this, j = a("statusCondition"), k = function() {
+var a, b;
+_.each(i.serviceInstances, function(c) {
+var d = "True" === _.get(j(c, "Ready"), "status");
+d && (!a || c.metadata.creationTimestamp > a.metadata.creationTimestamp) && (a = c), d || b && !(c.metadata.creationTimestamp > b.metadata.creationTimestamp) || (b = c);
+}), i.serviceToBind = _.get(a, "metadata.name") || _.get(b, "metadata.name");
+}, l = function() {
+if (i.serviceClasses && i.serviceInstances) {
+var a = _.toArray(i.serviceInstances);
+a.sort(function(a, b) {
+var c = _.get(i.serviceClasses, [ a.spec.serviceClassName, "osbMetadata", "displayName" ]) || a.spec.serviceClassName, d = _.get(i.serviceClasses, [ a.spec.serviceClassName, "osbMetadata", "displayName" ]) || b.spec.serviceClassName;
+return c === d && (c = _.get(a, "metadata.name", ""), d = _.get(b, "metadata.name", "")), c.localeCompare(d);
+}), i.orderedServiceInstances = a;
+}
+}, m = function() {
+if (d && e && f && g && h) {
+var a = d.concat(e).concat(f).concat(g).concat(h);
+i.applications = _.sortByAll(a, [ "metadata.name", "kind" ]);
+}
+};
+i.$onInit = function() {
+i.steps = [], "Instance" === i.target.kind ? i.steps.push({
+id:"applications",
+label:"Applications",
+view:"views/directives/bind-service/select-application.html"
+}) :i.steps.push({
 id:"services",
 label:"Services",
 view:"views/directives/bind-service/select-service.html"
-}, {
+}), i.steps.push({
 label:"Results",
 id:"results",
 view:"views/directives/bind-service/results.html"
-} ], d.$onInit = function() {
-d.gotoStep(d.steps[0]);
+});
+var c = {
+namespace:_.get(i.target, "metadata.namespace")
 };
-var e = a("statusCondition");
-d.$onChanges = function(a) {
-if (a.serviceInstances && !d.serviceToBind) {
-var b, c;
-_.each(d.serviceInstances, function(a) {
-var d = "True" === _.get(e(a, "Ready"), "status");
-d && (!b || a.metadata.creationTimestamp > b.metadata.creationTimestamp) && (b = a), d || c && !(a.metadata.creationTimestamp > c.metadata.creationTimestamp) || (c = a);
-}), d.serviceToBind = _.get(b, "metadata.name") || _.get(c, "metadata.name");
-}
-if ((a.serviceInstances || a.serviceClasses) && d.serviceClasses && d.serviceInstances) {
-var f = _.toArray(d.serviceInstances);
-f.sort(function(a, b) {
-var c = _.get(d.serviceClasses, [ a.spec.serviceClassName, "osbMetadata", "displayName" ]) || a.spec.serviceClassName, e = _.get(d.serviceClasses, [ a.spec.serviceClassName, "osbMetadata", "displayName" ]) || b.spec.serviceClassName;
-return c === e && (c = _.get(a, "metadata.name", ""), e = _.get(b, "metadata.name", "")), c.localeCompare(e);
-}), d.orderedServiceInstances = f;
-}
+b.list({
+group:"servicecatalog.k8s.io",
+resource:"serviceclasses"
+}, {}).then(function(a) {
+i.serviceClasses = a.by("metadata.name"), l();
+}), "Instance" === i.target.kind ? (i.shouldBindToApp = "true", i.serviceToBind = i.target.metadata.name, b.list("deploymentconfigs", c).then(function(a) {
+d = _.toArray(a.by("metadata.name")), m();
+}), b.list("replicationcontrollers", c).then(function(b) {
+f = _.reject(b.by("metadata.name"), a("hasDeploymentConfig")), m();
+}), b.list({
+group:"extensions",
+resource:"deployments"
+}, c).then(function(a) {
+e = _.toArray(a.by("metadata.name")), m();
+}), b.list({
+group:"extensions",
+resource:"replicasets"
+}, c).then(function(b) {
+g = _.reject(b.by("metadata.name"), a("hasDeployment")), m();
+}), b.list({
+group:"apps",
+resource:"statefulsets"
+}, c).then(function(a) {
+h = _.toArray(a.by("metadata.name")), m();
+})) :b.list({
+group:"servicecatalog.k8s.io",
+resource:"instances"
+}, c).then(function(a) {
+i.serviceInstances = a.by("metadata.name"), i.serviceToBind || k(), l();
+}), i.gotoStep(i.steps[0]);
 };
-var f = function(a) {
-var b = _.find(d.steps, {
+var n = a("humanizeKind");
+i.groupByKind = function(a) {
+return n(a.kind);
+};
+var o = function(a) {
+var b = _.find(i.steps, {
 id:a
 });
-d.gotoStep(b);
+i.gotoStep(b);
 };
-d.gotoStep = function(a) {
-_.each(d.steps, function(a) {
+i.gotoStep = function(a) {
+_.each(i.steps, function(a) {
 a.selected = !1;
-}), d.currentStep && (d.currentStep.visited = !0), d.currentStep = a, d.currentStep.selected = !0;
-}, d.stepClick = function(a) {
-d.wizardComplete || a.visited && d.gotoStep(a);
+}), i.currentStep && (i.currentStep.visited = !0), i.currentStep = a, i.currentStep.selected = !0;
+}, i.stepClick = function(a) {
+i.wizardComplete || a.visited && i.gotoStep(a);
 };
-var g = a("generateName"), h = function() {
-var a = _.get(d.serviceInstances[d.serviceToBind], "metadata.name"), b = _.trunc(a, c.maxlength - 6);
-d.generatedSecretName = g(b + "-");
-var e = {
+var p = a("generateName"), q = function() {
+var a = i.serviceToBind, b = _.trunc(a, c.maxlength - 6);
+i.generatedSecretName = p(b + "-");
+var d = {
 kind:"Binding",
 apiVersion:"servicecatalog.k8s.io/v1alpha1",
 metadata:{
@@ -566,30 +609,30 @@ spec:{
 instanceRef:{
 name:a
 },
-secretName:d.generatedSecretName
+secretName:i.generatedSecretName
 }
 };
-return e;
+return d;
 };
-d.bindService = function() {
-var a = {
-namespace:_.get(d.serviceInstances[d.serviceToBind], "metadata.namespace")
+i.bindService = function() {
+var a = "Instance" === i.target.kind ? i.target :i.serviceInstances[i.serviceToBind], c = {
+namespace:_.get(a, "metadata.namespace")
 };
 b.create({
 group:"servicecatalog.k8s.io",
 resource:"bindings"
-}, null, h(), a).then(function(c) {
-d.binding = c, b.watchObject({
+}, null, q(), c).then(function(a) {
+i.binding = a, b.watchObject({
 group:"servicecatalog.k8s.io",
 resource:"bindings"
-}, _.get(d.binding, "metadata.name"), a, function(a) {
-d.binding = a;
-}), d.wizardComplete = !0, d.error = null, f("results");
+}, _.get(i.binding, "metadata.name"), c, function(a) {
+i.binding = a;
+}), i.wizardComplete = !0, i.error = null, o("results");
 }, function(a) {
-d.error = a;
+i.error = a;
 });
-}, d.closeWizard = function() {
-_.isFunction(d.onClose) && d.onClose();
+}, i.closeWizard = function() {
+_.isFunction(i.onClose) && i.onClose();
 };
 }
 
@@ -921,6 +964,10 @@ e.$onChanges = function() {
 e.notifications = c.getNotifications(e.apiObject, e.state), e.displayName = g(), e.description = h(), e.instanceBindings = i();
 }, e.getSecretForBinding = function(a) {
 return a && _.get(e, [ "state", "secrets", a.spec.secretName ]);
+}, e.closeOverlayPanel = function() {
+_.set(e, "overlay.panelVisible", !1);
+}, e.showOverlayPanel = function(a, b) {
+_.set(e, "overlay.panelVisible", !0), _.set(e, "overlay.panelName", a), _.set(e, "overlay.state", b);
 }, e.deprovision = function() {
 var a = {
 alerts:{
@@ -13256,8 +13303,6 @@ controller:[ "$filter", "DataService", "DNS1123_SUBDOMAIN_VALIDATION", BindServi
 controllerAs:"ctrl",
 bindings:{
 target:"<",
-serviceInstances:"<",
-serviceClasses:"<",
 onClose:"<"
 },
 templateUrl:"views/directives/bind-service.html"
