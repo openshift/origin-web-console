@@ -365,6 +365,7 @@
                   <service-instance-row
                     ng-repeat="serviceInstance in overview.state.orderedServiceInstances"
                     api-object="serviceInstance"
+                    bindings="overview.bindingsByInstanceRef[serviceInstance.metadata.name]"
                     state="overview.state"></service-instance-row>
                 </div>
               </div>

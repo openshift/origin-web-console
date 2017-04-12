@@ -147,10 +147,39 @@ angular.module("openshiftConsole")
       return alerts;
     };
 
+    var makeConditionAlert = function(alerts, uid, condition, type) {
+      alerts[uid+'-'+condition.reason] = {
+        type: type,
+        message: condition.message
+      };
+    };
+
+    var getServiceInstanceAlerts = function(instance) {
+      var alerts = {};
+      if(!instance) {
+        return alerts;
+      }
+      var uid = instance.metadata.uid;
+      var namespaceError = _.find(instance.status.conditions, {reason: 'ErrorFindingNamespaceForInstance'});
+      var provisionFail = _.find(instance.status.conditions, {reason: 'ProvisionFailed'});
+      var deprovisionFail = _.find(instance.status.conditions, {reason: 'DeprovisioningFailed'});
+
+      if(namespaceError) {
+        makeConditionAlert(alerts, uid, namespaceError, 'warning');
+      }
+      if(provisionFail) {
+        makeConditionAlert(alerts, uid, provisionFail, 'error');
+      }
+      if(deprovisionFail) {
+        makeConditionAlert(alerts, uid, deprovisionFail, 'error');
+      }
+      return alerts;
+    };
+
     return {
       getPodAlerts: getPodAlerts,
       setGenericQuotaWarning: setGenericQuotaWarning,
-      getDeploymentStatusAlerts: getDeploymentStatusAlerts
+      getDeploymentStatusAlerts: getDeploymentStatusAlerts,
+      getServiceInstanceAlerts: getServiceInstanceAlerts
     };
   });
-

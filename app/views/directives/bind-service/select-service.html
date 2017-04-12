@@ -8,7 +8,7 @@ for your application to use the service.
       <label>
         <input type="radio" ng-model="ctrl.serviceToBind" value="{{serviceInstance.metadata.name}}">
         {{ctrl.serviceClasses[serviceInstance.spec.serviceClassName].osbMetadata.displayName || serviceInstance.spec.serviceClassName}}
-        <span ng-if="(serviceInstance | statusCondition : 'Ready').status !== 'True'" class="mar-left-sm">
+        <span ng-if="!(serviceInstance | isServiceInstanceReady)" class="mar-left-sm">
           <span class="pficon pficon-info" data-content="This service is not yet ready. If you bind to it, then the binding will be pending until the service is ready." data-toggle="popover" data-trigger="hover"></span>
         </span>
         <div class="help-block mar-top-none">
