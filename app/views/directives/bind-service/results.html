@@ -9,10 +9,10 @@
     </div>
     <div ng-if="(ctrl.binding | statusCondition : 'Ready').status === 'True'">
       <h3 class="mar-top-none">
+        <span class="pficon pficon-ok"></span>
         <strong>{{ctrl.serviceToBind}}</strong> has been bound to <strong>{{ctrl.target.metadata.name}}</strong> successfully
       </h3>
       <div class="sub-title">
-        <h3><span class="pficon pficon-ok mar-right-sm"></span>Configuration Created</h3>
         The binding operation created the secret
         <a ng-if="'secrets' | canI : 'list'"
            ng-href="{{ctrl.generatedSecretName | navigateResourceURL : 'Secret' : ctrl.target.metadata.namespace}}">{{ctrl.generatedSecretName}}</a>
