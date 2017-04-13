@@ -6016,10 +6016,10 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "</div>\n" +
     "<div ng-if=\"(ctrl.binding | isBindingReady)\">\n" +
     "<h3 class=\"mar-top-none\">\n" +
+    "<span class=\"pficon pficon-ok\"></span>\n" +
     "<strong>{{ctrl.serviceToBind}}</strong> has been bound to <strong>{{ctrl.target.metadata.name}}</strong> successfully\n" +
     "</h3>\n" +
     "<div class=\"sub-title\">\n" +
-    "<h3><span class=\"pficon pficon-ok mar-right-sm\"></span>Configuration Created</h3>\n" +
     "The binding operation created the secret\n" +
     "<a ng-if=\"'secrets' | canI : 'list'\" ng-href=\"{{ctrl.generatedSecretName | navigateResourceURL : 'Secret' : ctrl.target.metadata.namespace}}\">{{ctrl.generatedSecretName}}</a>\n" +
     "<span ng-if=\"!('secrets' | canI : 'list')\">{{ctrl.generatedSecretName}}</span>\n" +
