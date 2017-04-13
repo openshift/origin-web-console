@@ -5986,8 +5986,10 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "</li>\n" +
     "</ul>\n" +
     "</div>\n" +
-    "<div class=\"container-fluid wizard-pf-main mar-left-none\">\n" +
+    "<div class=\"container-fluid wizard-pf-main\">\n" +
+    "<div class=\"wizard-pf-main-inner-shadow-covers\">\n" +
     "<div ng-include=\"ctrl.currentStep.view\" class=\"wizard-pf-contents\"></div>\n" +
+    "</div>\n" +
     "</div>\n" +
     "<div class=\"config-bottom modal-footer wizard-pf-footer\">\n" +
     "<button type=\"button\" class=\"btn btn-default wizard-pf-cancel wizard-pf-dismiss\" ng-class=\"{'btn-cancel': ctrl.steps.length > 2}\" ng-disabled=\"ctrl.currentStep.id === 'results'\" ng-click=\"ctrl.closeWizard()\">\n" +

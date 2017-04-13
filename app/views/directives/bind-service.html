@@ -9,8 +9,10 @@
       </li>
     </ul>
   </div>
-  <div class="container-fluid wizard-pf-main mar-left-none">
-    <div ng-include="ctrl.currentStep.view" class="wizard-pf-contents"></div>
+  <div class="container-fluid wizard-pf-main">
+    <div class="wizard-pf-main-inner-shadow-covers">
+      <div ng-include="ctrl.currentStep.view" class="wizard-pf-contents"></div>
+    </div>
   </div>
   <div class="config-bottom modal-footer wizard-pf-footer">
     <button
