@@ -865,7 +865,7 @@ var b = _.get(a, "kind"), c = _.get(a, "metadata.name");
 return _.get(h.state.hpaByResource, [ b, c ], q);
 };
 h.$doCheck = function() {
-h.notifications = g.getNotifications(h.apiObject, h), h.hpa = r(h.apiObject), h.current && _.isEmpty(h.hpa) && (h.hpa = r(h.current));
+h.notifications = g.getNotifications(h.apiObject, h.state), h.hpa = r(h.apiObject), h.current && _.isEmpty(h.hpa) && (h.hpa = r(h.current));
 var a = _.get(h, "apiObject.metadata.uid");
 a && (h.services = _.get(h, [ "state", "servicesByObjectUID", a ]), h.buildConfigs = _.get(h, [ "state", "buildConfigsByObjectUID", a ]));
 var b, c = _.get(h, "apiObject.kind");
