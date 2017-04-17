@@ -11288,11 +11288,9 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "<div class=\"middle-section\">\n" +
     "<div class=\"middle-container\">\n" +
     "\n" +
-    "<div ng-if=\"overview.showGetStarted\">\n" +
-    "<div class=\"container-fluid\">\n" +
+    "<div ng-if=\"overview.showGetStarted\" class=\"container-fluid empty-state\">\n" +
     "<tasks></tasks>\n" +
     "<alerts alerts=\"overview.state.alerts\"></alerts>\n" +
-    "</div>\n" +
     "\n" +
     "<div class=\"empty-state-message text-center\">\n" +
     "<div ng-if=\"project.metadata.name | canIAddToProject\">\n" +

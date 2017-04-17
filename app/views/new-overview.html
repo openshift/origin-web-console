@@ -3,11 +3,9 @@
   <div class="middle-section">
     <div class="middle-container">
       <!-- Empty states -->
-      <div ng-if="overview.showGetStarted">
-        <div class="container-fluid">
-          <tasks></tasks>
-          <alerts alerts="overview.state.alerts"></alerts>
-        </div>
+      <div ng-if="overview.showGetStarted" class="container-fluid empty-state">
+        <tasks></tasks>
+        <alerts alerts="overview.state.alerts"></alerts>
         <!-- Getting started -->
         <div class="empty-state-message text-center">
           <div ng-if="project.metadata.name | canIAddToProject">

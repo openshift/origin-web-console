@@ -3866,16 +3866,18 @@ body{padding-right:0px!important}
 .empty-project{margin:10px auto;max-width:500px;padding:30px}
 .empty-project .fa{width:16px}
 .empty-project dd{margin-left:20px;margin-bottom:10px}
-.empty-state-message{margin:60px auto;max-width:600px;padding:0 20px}
+.empty-state-message{margin:40px auto 60px;max-width:600px;padding:0 20px}
 .empty-state-message .h2,.empty-state-message h2{line-height:1.4}
 .empty-state-message .btn{margin:10px 0 20px}
 @media (min-height:600px){.empty-state-message .hero-icon{display:inline-block;font-size:90px}
 }
-@media (min-height:800px){.empty-state-message{margin-top:150px}
+@media (min-height:800px){.empty-state-message{margin-top:130px}
 .empty-state-message .hero-icon{font-size:100px}
+alerts+.empty-state-message{margin-top:90px}
 }
-@media (min-height:1024px){.empty-state-message{margin-top:200px}
+@media (min-height:1024px){.empty-state-message{margin-top:170px}
 .empty-state-message .hero-icon{font-size:120px}
+alerts+.empty-state-message{margin-top:130px}
 }
 mark{padding:0;background-color:rgba(252,248,160,.5)}
 .ui-select-choices-row.active>span mark{background-color:rgba(252,248,160,.75)}
@@ -4503,6 +4505,7 @@ ul.messenger-theme-flat .messenger-message.alert-info .messenger-message-inner:b
 .mini-log .mini-log-content{line-height:13px;min-height:91px}
 .mini-log .mini-log-content .mini-log-line{white-space:pre}
 .notification-icon-count{display:inline-block;margin:0 5px 0 0}
+.overview-new .empty-state{margin-top:20px}
 .overview-new .app-heading{display:flex;justify-content:space-between}
 @media (max-width:991px){.overview-new .app-heading{flex-direction:column;justify-content:flex-start}
 .overview-new .app-heading .overview-route{font-family:inherit;font-weight:500;line-height:1.1;color:inherit;font-size:14px;margin-top:-5px;margin-bottom:15px}
@@ -5415,18 +5418,20 @@ a.subtle-link:active,a.subtle-link:focus,a.subtle-link:hover{color:#00659c;borde
 .table-log-pods{background-color:#fff;border:1px solid #D1D1D1}
 .table-log-pods>tbody+tbody{border-top-width:1px}
 .log-fixed-height.empty-state-message{margin-top:0}
-.chromeless .log-loading-msg{font-family:inherit;line-height:1.1;color:inherit;font-size:19px;font-weight:300;margin:60px auto;max-width:600px;padding:0 20px;text-align:center}
+.chromeless .log-loading-msg{font-family:inherit;line-height:1.1;color:inherit;font-size:19px;font-weight:300;margin:40px auto 60px;max-width:600px;padding:0 20px;text-align:center}
 .chromeless .log-loading-msg .small,.chromeless .log-loading-msg small{font-weight:400;line-height:1;color:#9c9c9c;font-size:65%}
 .chromeless .log-loading-msg .h2,.chromeless .log-loading-msg h2{line-height:1.4}
 .chromeless .log-loading-msg .btn{margin:10px 0 20px}
 .chromeless .log-loading-msg .hero-icon{display:none}
 @media (min-height:600px){.chromeless .log-loading-msg .hero-icon{display:inline-block;font-size:90px}
 }
-@media (min-height:800px){.chromeless .log-loading-msg{margin-top:150px}
+@media (min-height:800px){.chromeless .log-loading-msg{margin-top:130px}
 .chromeless .log-loading-msg .hero-icon{font-size:100px}
+alerts+.chromeless .log-loading-msg{margin-top:90px}
 }
-@media (min-height:1024px){.chromeless .log-loading-msg{margin-top:200px}
+@media (min-height:1024px){.chromeless .log-loading-msg{margin-top:170px}
 .chromeless .log-loading-msg .hero-icon{font-size:120px}
+alerts+.chromeless .log-loading-msg{margin-top:130px}
 }
 .settings-item{margin:4px 8px 4px 0}
 .hide-if-empty:empty{display:none!important}

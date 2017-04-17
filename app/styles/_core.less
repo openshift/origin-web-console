@@ -136,7 +136,7 @@
 }
 
 .empty-state-message {
-  margin: 60px auto;
+  margin: 40px auto 60px;
   max-width: 600px;
   padding: 0 (@grid-gutter-width / 2);
   h2, .h2 {
@@ -155,15 +155,22 @@
     }
   }
   @media (min-height:800px) {
-    margin-top: 150px;
+    margin-top: 130px;
     .hero-icon {
       font-size: 100px;
     }
+    // reduce margin-top when alert is shown
+    alerts+ & {
+      margin-top: 90px;
+    }
   }
   @media (min-height:1024px) {
-    margin-top: 200px;
+    margin-top: 170px;
     .hero-icon {
       font-size: 120px;
+    }
+    alerts+ & {
+      margin-top: 130px;
     }
   }
 }
