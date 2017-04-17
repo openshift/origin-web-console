@@ -8903,6 +8903,51 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
   );
 
 
+  $templateCache.put('views/directives/process-template.html',
+    "<div class=\"osc-form\">\n" +
+    "<alerts alerts=\"$ctrl.alerts\"></alerts>\n" +
+    "<div class=\"row\">\n" +
+    "<div class=\"col-md-2 icon hidden-sm hidden-xs\">\n" +
+    "<custom-icon resource=\"$ctrl.template\" kind=\"template\"></custom-icon>\n" +
+    "</div>\n" +
+    "<div class=\"col-md-8\">\n" +
+    "<fieldset ng-disabled=\"disableInputs\">\n" +
+    "<osc-image-summary resource=\"$ctrl.template\"></osc-image-summary>\n" +
+    "<div ng-if=\"$ctrl.templateImages.length\" class=\"images\">\n" +
+    "<h2>Images</h2>\n" +
+    "<ul class=\"list-unstyled\" ng-repeat=\"image in $ctrl.templateImages\">\n" +
+    "<li>\n" +
+    "<i class=\"pficon pficon-image\" aria-hidden=\"true\"></i>\n" +
+    "<span class=\"name\">\n" +
+    "{{image.name}}\n" +
+    "</span>\n" +
+    "<span ng-if=\"image.usesParameters.length\" class=\"text-muted small\">\n" +
+    "<span ng-if=\"!image.name\">Image value set</span>\n" +
+    "from parameter<span ng-if=\"image.usesParameters.length > 1\">s</span>\n" +
+    "<span ng-repeat=\"parameterName in image.usesParameters\">\n" +
+    "{{$ctrl.parameterDisplayNames[parameterName]}}<span ng-if=\"!$last\">,</span>\n" +
+    "</span>\n" +
+    "</span>\n" +
+    "</li>\n" +
+    "</ul>\n" +
+    "</div>\n" +
+    "<form name=\"$ctrl.templateForm\">\n" +
+    "<template-options parameters=\"$ctrl.template.parameters\" expand=\"true\" can-toggle=\"false\"></template-options>\n" +
+    "<label-editor labels=\"$ctrl.labels\" system-labels=\"$ctrl.systemLabels\" expand=\"true\" can-toggle=\"false\" help-text=\"Each label is applied to each created resource.\">\n" +
+    "</label-editor>\n" +
+    "<alerts alerts=\"$ctrl.precheckAlerts\"></alerts>\n" +
+    "<div class=\"buttons gutter-top-bottom\">\n" +
+    "<button class=\"btn btn-primary btn-lg\" ng-click=\"$ctrl.createFromTemplate()\" ng-disabled=\"$ctrl.templateForm.$invalid || $ctrl.disableInputs\">Create</button>\n" +
+    "<a class=\"btn btn-default btn-lg\" href=\"{{$ctrl.project | projectOverviewURL}}\">Cancel</a>\n" +
+    "</div>\n" +
+    "</form>\n" +
+    "</fieldset>\n" +
+    "</div>\n" +
+    "</div>\n" +
+    "</div>"
+  );
+
+
   $templateCache.put('views/directives/replicas.html',
     "<span ng-show=\"!model.editing\">\n" +
     "<span ng-if=\"status === undefined\">{{spec}} replica<span ng-if=\"spec !== 1\">s</span></span>\n" +
@@ -11593,46 +11638,9 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "<div ng-hide=\"template\">\n" +
     "Loading...\n" +
     "</div>\n" +
-    "<div class=\"osc-form\" ng-show=\"template\">\n" +
-    "<alerts alerts=\"alerts\"></alerts>\n" +
-    "<div class=\"row\">\n" +
-    "<div class=\"col-md-2 icon hidden-sm hidden-xs\">\n" +
-    "<custom-icon resource=\"template\" kind=\"template\"></custom-icon>\n" +
-    "</div>\n" +
-    "<div class=\"col-md-8\">\n" +
-    "<fieldset ng-disabled=\"disableInputs\">\n" +
-    "<osc-image-summary resource=\"template\"></osc-image-summary>\n" +
-    "<div ng-if=\"templateImages.length\" class=\"images\">\n" +
-    "<h2>Images</h2>\n" +
-    "<ul class=\"list-unstyled\" ng-repeat=\"image in templateImages\">\n" +
-    "<li>\n" +
-    "<i class=\"pficon pficon-image\" aria-hidden=\"true\"></i>\n" +
-    "<span class=\"name\">\n" +
-    "{{ image.name }}\n" +
-    "</span>\n" +
-    "<span ng-if=\"image.usesParameters.length\" class=\"text-muted small\">\n" +
-    "<span ng-if=\"!image.name\">Image value set</span>\n" +
-    "from parameter<span ng-if=\"image.usesParameters.length > 1\">s</span>\n" +
-    "<span ng-repeat=\"parameterName in image.usesParameters\">\n" +
-    "{{parameterDisplayNames[parameterName]}}<span ng-if=\"!$last\">,</span>\n" +
-    "</span>\n" +
-    "</span>\n" +
-    "</li>\n" +
-    "</ul>\n" +
-    "</div>\n" +
-    "<form name=\"templateForm\">\n" +
-    "<template-options parameters=\"template.parameters\" expand=\"true\" can-toggle=\"false\"></template-options>\n" +
-    "<label-editor labels=\"labels\" system-labels=\"systemLabels\" expand=\"true\" can-toggle=\"false\" help-text=\"Each label is applied to each created resource.\">\n" +
-    "</label-editor>\n" +
-    "<alerts alerts=\"precheckAlerts\"></alerts>\n" +
-    "<div class=\"buttons gutter-top-bottom\">\n" +
-    "<button class=\"btn btn-primary btn-lg\" ng-click=\"createFromTemplate()\" ng-disabled=\"templateForm.$invalid || disableInputs\">Create</button>\n" +
-    "<a class=\"btn btn-default btn-lg\" href=\"{{projectName | projectOverviewURL}}\">Cancel</a>\n" +
-    "</div>\n" +
-    "</form>\n" +
-    "</fieldset>\n" +
-    "</div>\n" +
-    "</div>\n" +
+    "<div ng-if=\"template\">\n" +
+    "<process-template template=\"template\" project=\"project\" alerts=\"alerts\" prefill-parameters=\"prefillParameters\">\n" +
+    "</process-template>\n" +
     "</div>\n" +
     "</div>\n" +
     "</div>\n" +

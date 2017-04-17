@@ -642,6 +642,181 @@ _.isFunction(i.onClose) && i.onClose();
 };
 }
 
+function ProcessTemplate(a, b, c, d, e, f, g, h, i, j, k, l) {
+function m(a, b) {
+var c = _.get(a, "spec.triggers", []), d = _.find(c, function(a) {
+if ("ImageChange" !== a.type) return !1;
+var c = _.get(a, "imageChangeParams.containerNames", []);
+return _.includes(c, b.name);
+});
+return _.get(d, "imageChangeParams.from.name");
+}
+function n(a) {
+for (var b = [], c = D.exec(a); c; ) b.push(c[1]), c = D.exec(a);
+return b;
+}
+function o() {
+var a = {};
+return _.each(w.template.parameters, function(b) {
+a[b.name] = b.value;
+}), a;
+}
+function p() {
+var a = o();
+w.templateImages = _.map(E, function(b) {
+if (_.isEmpty(b.usesParameters)) return b;
+var c = _.template(b.name, {
+interpolate:D
+});
+return {
+name:c(a),
+usesParameters:b.usesParameters
+};
+});
+}
+function q(a) {
+var b = [], c = x(a);
+return c && angular.forEach(c, function(c) {
+var d = c.image, e = m(a, c);
+e && (d = e), d && b.push(d);
+}), b;
+}
+function r(a) {
+E = [];
+var b = [], c = {};
+angular.forEach(a.objects, function(a) {
+if ("BuildConfig" === a.kind) {
+var d = C(y(a), w.project.metadata.name);
+d && E.push({
+name:d,
+usesParameters:n(d)
+});
+var e = C(z(a), w.project.metadata.name);
+e && (c[e] = !0);
+}
+"DeploymentConfig" === a.kind && (b = b.concat(q(a)));
+}), b.forEach(function(a) {
+c[a] || E.push({
+name:a,
+usesParameters:n(a)
+});
+}), E = _.uniq(E, !1, "name");
+}
+function s(a) {
+var b = /^helplink\.(.*)\.title$/, c = /^helplink\.(.*)\.url$/, d = {};
+for (var e in a.annotations) {
+var f, g = e.match(b);
+g ? (f = d[g[1]] || {}, f.title = a.annotations[e], d[g[1]] = f) :(g = e.match(c), g && (f = d[g[1]] || {}, f.url = a.annotations[e], d[g[1]] = f));
+}
+return d;
+}
+function t() {
+w.parameterDisplayNames = {}, _.each(w.template.parameters, function(a) {
+w.parameterDisplayNames[a.name] = a.displayName || a.name;
+}), w.prefillParameters && _.each(w.template.parameters, function(a) {
+w.prefillParameters[a.name] && (a.value = w.prefillParameters[a.name]);
+}), r(w.template);
+var a = function(a) {
+return !_.isEmpty(a.usesParameters);
+};
+_.some(E, a) ? d.$watch(function() {
+return w.template.parameters;
+}, _.debounce(function() {
+d.$apply(p);
+}, 50, {
+maxWait:250
+}), !0) :w.templateImages = E, w.systemLabels = _.map(w.template.labels, function(a, b) {
+return {
+name:b,
+value:a
+};
+}), J() && w.systemLabels.push({
+name:"app",
+value:w.template.metadata.name
+});
+}
+var u, v, w = this, x = b("spec.template.spec.containers"), y = b("spec.strategy.sourceStrategy.from || spec.strategy.dockerStrategy.from || spec.strategy.customStrategy.from"), z = b("spec.output.to"), A = a("displayName"), B = a("humanize"), C = a("imageObjectRef"), D = /\${([a-zA-Z0-9\_]+)}/g, E = [];
+w.$onInit = function() {
+w.labels = [], w.templateDisplayName = A(w.template), u = {
+namespace:w.project.metadata.name
+}, v = A(w.project), t();
+};
+var F, G = function() {
+var a = {
+started:"Creating " + w.templateDisplayName + " in project " + v,
+success:"Created " + w.templateDisplayName + " in project " + v,
+failure:"Failed to create " + w.templateDisplayName + " in project " + v
+}, b = s(w.template);
+k.clear(), k.add(a, b, w.project.metadata.name, function() {
+var a = c.defer();
+return f.batch(F, u).then(function(b) {
+var c = [], d = !1;
+b.failure.length > 0 ? (d = !0, b.failure.forEach(function(a) {
+c.push({
+type:"error",
+message:"Cannot create " + B(a.object.kind).toLowerCase() + ' "' + a.object.metadata.name + '". ',
+details:a.data.message
+});
+}), b.success.forEach(function(a) {
+c.push({
+type:"success",
+message:"Created " + B(a.kind).toLowerCase() + ' "' + a.metadata.name + '" successfully. '
+});
+})) :c.push({
+type:"success",
+message:"All items in template " + w.templateDisplayName + " were created successfully."
+}), a.resolve({
+alerts:c,
+hasErrors:d
+});
+}), a.promise;
+}), g.toNextSteps(w.templateDisplayName, w.project.metadata.name);
+}, H = function(a) {
+var b = e.open({
+animation:!0,
+templateUrl:"views/modals/confirm.html",
+controller:"ConfirmModalController",
+resolve:{
+modalConfig:function() {
+return {
+alerts:a,
+message:"We checked your application for potential problems. Please confirm you still want to create this application.",
+okButtonText:"Create Anyway",
+okButtonClass:"btn-danger",
+cancelButtonText:"Cancel"
+};
+}
+}
+});
+b.result.then(G);
+}, I = function(a) {
+var b = j.getSecurityAlerts(F, w.project.metadata.name), c = a.quotaAlerts || [];
+b = b.concat(c);
+var d = _.filter(b, {
+type:"error"
+});
+d.length ? (w.disableInputs = !1, w.precheckAlerts = b) :b.length ? (H(b), w.disableInputs = !1) :G();
+};
+w.createFromTemplate = function() {
+w.disableInputs = !0;
+var a = l.mapEntries(l.compactEntries(w.labels)), b = l.mapEntries(l.compactEntries(w.systemLabels));
+w.template.labels = _.extend(b, a), f.create("processedtemplates", null, w.template, u).then(function(a) {
+h.setTemplateData(a.parameters, w.template.parameters, a.message), F = a.objects, i.getLatestQuotaAlerts(F, u).then(I);
+}, function(a) {
+w.disableInputs = !1;
+var b;
+a.data && a.data.message && (b = a.data.message), w.alerts.process = {
+type:"error",
+message:"An error occurred processing the template.",
+details:b
+};
+});
+};
+var J = function() {
+return !_.get(w.template, "labels.app") && !_.some(w.template.objects, "metadata.labels.app");
+};
+}
+
 function NextSteps(a) {
 function b(a) {
 var b = [];
@@ -8611,224 +8786,49 @@ a.buildConfigs = b.by("metadata.name"), a.createdBuildConfig = a.buildConfigs[c.
 d.unwatchAll(o);
 });
 }));
-} ]), angular.module("openshiftConsole").controller("NewFromTemplateController", [ "$scope", "$http", "$routeParams", "DataService", "ProcessedTemplateService", "AlertMessageService", "ProjectsService", "QuotaService", "SecurityCheckService", "$q", "$location", "TaskList", "$parse", "Navigate", "$filter", "$uibModal", "imageObjectRefFilter", "failureObjectNameFilter", "CachedTemplateService", "keyValueEditorUtils", "Constants", function(a, b, c, d, e, f, g, h, i, j, k, l, m, n, o, p, q, r, s, t, u) {
-var v = c.template, w = c.namespace || "";
-if (!v) return void n.toErrorPage("Cannot create from template: a template name was not specified.");
-a.alerts = {}, a.precheckAlerts = {}, a.projectName = c.project, a.projectPromise = $.Deferred(), a.labels = [], a.systemLabels = [], a.breadcrumbs = [ {
-title:a.projectName,
-link:"project/" + a.projectName
+} ]), angular.module("openshiftConsole").controller("NewFromTemplateController", [ "$filter", "$location", "$routeParams", "$scope", "AlertMessageService", "CachedTemplateService", "DataService", "Navigate", "ProjectsService", function(a, b, c, d, e, f, g, h, i) {
+var j = c.template, k = c.namespace || "";
+if (!j) return void h.toErrorPage("Cannot create from template: a template name was not specified.");
+d.alerts = {}, d.precheckAlerts = {}, d.breadcrumbs = [ {
+title:c.project,
+link:"project/" + c.project
 }, {
 title:"Add to Project",
-link:"project/" + a.projectName + "/create"
+link:"project/" + c.project + "/create"
 }, {
 title:"Catalog",
-link:"project/" + a.projectName + "/create?tab=fromCatalog"
+link:"project/" + c.project + "/create?tab=fromCatalog"
 }, {
-title:v
-} ], a.alerts = a.alerts || {}, f.getAlerts().forEach(function(b) {
-a.alerts[b.name] = b.data;
-}), f.clearAlerts();
-var x = o("displayName"), y = o("humanize"), z = m("spec.template.spec.containers"), A = m("spec.strategy.sourceStrategy.from || spec.strategy.dockerStrategy.from || spec.strategy.customStrategy.from"), B = m("spec.output.to"), C = function() {
+title:j
+} ], d.alerts = d.alerts || {}, e.getAlerts().forEach(function(a) {
+d.alerts[a.name] = a.data;
+}), e.clearAlerts();
+var l = a("displayName"), m = function() {
 try {
 return JSON.parse(c.templateParamsMap);
-} catch (b) {
-a.alerts.invalidTemplateParams = {
+} catch (a) {
+d.alerts.invalidTemplateParams = {
 type:"error",
-message:"The templateParamsMap is not valid JSON. " + b
+message:"The templateParamsMap is not valid JSON. " + a
 };
 }
 };
-g.get(c.project).then(_.spread(function(b, f) {
-function g(a, b) {
-var c = _.get(a, "spec.triggers", []), d = _.find(c, function(a) {
-if ("ImageChange" !== a.type) return !1;
-var c = _.get(a, "imageChangeParams.containerNames", []);
-return _.includes(c, b.name);
-});
-return _.get(d, "imageChangeParams.from.name");
-}
-function m(a) {
-for (var b = [], c = H.exec(a); c; ) b.push(c[1]), c = H.exec(a);
-return b;
-}
-function r() {
-var b = {};
-return _.each(a.template.parameters, function(a) {
-b[a.name] = a.value;
-}), b;
-}
-function u() {
-var b = r();
-a.templateImages = _.map(I, function(a) {
-if (_.isEmpty(a.usesParameters)) return a;
-var c = _.template(a.name, {
-interpolate:H
-});
-return {
-name:c(b),
-usesParameters:a.usesParameters
-};
-});
-}
-function D(a) {
-var b = [], c = z(a);
-return c && angular.forEach(c, function(c) {
-var d = c.image, e = g(a, c);
-e && (d = e), d && b.push(d);
-}), b;
-}
-function E(b) {
-I = [];
-var c = [], d = {};
-angular.forEach(b.objects, function(b) {
-if ("BuildConfig" === b.kind) {
-var e = q(A(b), a.projectName);
-e && I.push({
-name:e,
-usesParameters:m(e)
-});
-var f = q(B(b), a.projectName);
-f && (d[f] = !0);
-}
-"DeploymentConfig" === b.kind && (c = c.concat(D(b)));
-}), c.forEach(function(a) {
-d[a] || I.push({
-name:a,
-usesParameters:m(a)
-});
-}), I = _.uniq(I, !1, "name");
-}
-function F(a) {
-var b = /^helplink\.(.*)\.title$/, c = /^helplink\.(.*)\.url$/, d = {};
-for (var e in a.annotations) {
-var f, g = e.match(b);
-g ? (f = d[g[1]] || {}, f.title = a.annotations[e], d[g[1]] = f) :(g = e.match(c), g && (f = d[g[1]] || {}, f.url = a.annotations[e], d[g[1]] = f));
-}
-return d;
-}
-function G(b) {
-if (a.parameterDisplayNames = {}, _.each(a.template.parameters, function(b) {
-a.parameterDisplayNames[b.name] = b.displayName || b.name;
-}), c.templateParamsMap) {
-var d = C();
-_.each(a.template.parameters, function(a) {
-d[a.name] && (a.value = d[a.name]);
-});
-}
-E(a.template);
-var e = function(a) {
-return !_.isEmpty(a.usesParameters);
-};
-_.some(I, e) ? a.$watch("template.parameters", _.debounce(function(b) {
-a.$apply(u);
-}, 50, {
-maxWait:250
-}), !0) :a.templateImages = I, a.systemLabels = _.map(a.template.labels, function(a, b) {
-return {
-name:b,
-value:a
-};
-}), N() && a.systemLabels.push({
-name:"app",
-value:a.template.metadata.name
-});
-}
-a.project = b, a.breadcrumbs[0].title = o("displayName")(b);
-var H = /\${([a-zA-Z0-9\_]+)}/g, I = [];
-a.projectDisplayName = function() {
-return x(this.project) || this.projectName;
-}, a.templateDisplayName = function() {
-return x(this.template);
-};
-var J, K = function() {
-var b = {
-started:"Creating " + a.templateDisplayName() + " in project " + a.projectDisplayName(),
-success:"Created " + a.templateDisplayName() + " in project " + a.projectDisplayName(),
-failure:"Failed to create " + a.templateDisplayName() + " in project " + a.projectDisplayName()
-}, e = F(a.template);
-l.clear(), l.add(b, e, c.project, function() {
-var b = j.defer();
-return d.batch(J, f).then(function(c) {
-var d = [], e = !1;
-c.failure.length > 0 ? (e = !0, c.failure.forEach(function(a) {
-d.push({
-type:"error",
-message:"Cannot create " + y(a.object.kind).toLowerCase() + ' "' + a.object.metadata.name + '". ',
-details:a.data.message
-});
-}), c.success.forEach(function(a) {
-d.push({
-type:"success",
-message:"Created " + y(a.kind).toLowerCase() + ' "' + a.metadata.name + '" successfully. '
-});
-})) :d.push({
-type:"success",
-message:"All items in template " + a.templateDisplayName() + " were created successfully."
-}), b.resolve({
-alerts:d,
-hasErrors:e
-});
-}), b.promise;
-}), n.toNextSteps(v, a.projectName);
-}, L = function(a) {
-var b = p.open({
-animation:!0,
-templateUrl:"views/modals/confirm.html",
-controller:"ConfirmModalController",
-resolve:{
-modalConfig:function() {
-return {
-alerts:a,
-message:"We checked your application for potential problems. Please confirm you still want to create this application.",
-okButtonText:"Create Anyway",
-okButtonClass:"btn-danger",
-cancelButtonText:"Cancel"
-};
-}
-}
-});
-b.result.then(K);
-}, M = function(b) {
-var c = i.getSecurityAlerts(J, a.projectName), d = b.quotaAlerts || [];
-c = c.concat(d);
-var e = _.filter(c, {
-type:"error"
-});
-e.length ? (a.disableInputs = !1, a.precheckAlerts = c) :c.length ? (L(c), a.disableInputs = !1) :K();
-};
-a.createFromTemplate = function() {
-a.disableInputs = !0;
-var b = t.mapEntries(t.compactEntries(a.labels)), c = t.mapEntries(t.compactEntries(a.systemLabels));
-a.template.labels = _.extend(c, b), d.create("processedtemplates", null, a.template, f).then(function(b) {
-e.setTemplateData(b.parameters, a.template.parameters, b.message), J = b.objects, h.getLatestQuotaAlerts(J, f).then(M);
-}, function(b) {
-a.disableInputs = !1;
-var c;
-b.data && b.data.message && (c = b.data.message), a.alerts.process = {
-type:"error",
-message:"An error occurred processing the template.",
-details:c
-};
-});
-};
-var N = function() {
-return !_.get(a.template, "labels.app") && !_.some(a.template.objects, "metadata.labels.app");
-};
-if (w) d.get("templates", v, {
-namespace:w || a.projectName
+c.templateParamsMap && (d.prefillParameters = m()), i.get(c.project).then(_.spread(function(c) {
+if (d.project = c, d.breadcrumbs[0].title = l(c), k) g.get("templates", j, {
+namespace:k || d.project.metadata.name
 }).then(function(b) {
-a.template = b, G(), a.breadcrumbs[3].title = o("displayName")(b);
+d.template = b, d.breadcrumbs[3].title = a("displayName")(b);
 }, function() {
-n.toErrorPage("Cannot create from template: the specified template could not be retrieved.");
+h.toErrorPage("Cannot create from template: the specified template could not be retrieved.");
 }); else {
-if (a.template = s.getTemplate(), _.isEmpty(a.template)) {
-var O = URI("error").query({
+if (d.template = f.getTemplate(), _.isEmpty(d.template)) {
+var e = URI("error").query({
 error:"not_found",
 error_description:"Template wasn't found in cache."
 }).toString();
-k.url(O);
+b.url(e);
 }
-s.clearTemplate(), G();
+f.clearTemplate();
 }
 }));
 } ]), angular.module("openshiftConsole").controller("LabelsController", [ "$scope", function(a) {
@@ -13333,6 +13333,16 @@ target:"<",
 onClose:"<"
 },
 templateUrl:"views/directives/bind-service.html"
+}), angular.module("openshiftConsole").component("processTemplate", {
+controller:[ "$filter", "$parse", "$q", "$scope", "$uibModal", "DataService", "Navigate", "ProcessedTemplateService", "QuotaService", "SecurityCheckService", "TaskList", "keyValueEditorUtils", ProcessTemplate ],
+controllerAs:"$ctrl",
+bindings:{
+template:"<",
+project:"<",
+alerts:"<",
+prefillParameters:"<"
+},
+templateUrl:"views/directives/process-template.html"
 }), angular.module("openshiftConsole").component("nextSteps", {
 controller:[ "ProcessedTemplateService", NextSteps ],
 bindings:{
