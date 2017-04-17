@@ -94,7 +94,7 @@ function OverviewListRow($filter,
 
   row.$doCheck = function() {
     // Update notifications.
-    row.notifications = rowMethods.getNotifications(row.apiObject, row);
+    row.notifications = rowMethods.getNotifications(row.apiObject, row.state);
 
     // Update HPA.
     row.hpa = getHPA(row.apiObject);
