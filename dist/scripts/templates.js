@@ -12701,7 +12701,7 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
 
 
   $templateCache.put('views/overview/_service-instance-row.html',
-    "<div class=\"list-pf-item\" ng-class=\"{ active: row.expanded }\">\n" +
+    "<div class=\"list-pf-item provisioned-service\" ng-class=\"{ active: row.expanded }\">\n" +
     "<div class=\"list-pf-container\" ng-click=\"row.toggleExpand($event)\">\n" +
     "<div class=\"list-pf-chevron\">\n" +
     "<div ng-include src=\" 'views/overview/_list-row-chevron.html' \" class=\"list-pf-content\"></div>\n" +
@@ -12710,7 +12710,7 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "<div class=\"list-pf-name\">\n" +
     "<h3>\n" +
     "<span ng-bind-html=\"row.displayName | highlightKeywords : row.state.filterKeywords\"></span>\n" +
-    "<div class=\"component-label tranform-none\">\n" +
+    "<div class=\"list-row-longname\">\n" +
     "{{row.apiObject.metadata.name}}\n" +
     "</div>\n" +
     "</h3>\n" +
@@ -12718,24 +12718,26 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "<notification-icon ng-if=\"!row.expanded\" alerts=\"row.notifications\"></notification-icon>\n" +
     "</div>\n" +
     "</div>\n" +
-    "</div>\n" +
-    "<div class=\"list-pf-content hidden-xs hidden-sm\">\n" +
-    "<div class=\"list-pf-content-right\">\n" +
-    "<div>\n" +
-    "<strong ng-if=\"!row.bindings.length\">No Bindings</strong>\n" +
-    "<strong ng-if=\"row.bindings.length\">Bindings</strong>\n" +
-    "</div>\n" +
-    "<span ng-if=\"row.bindings.length >= 1\">{{row.bindings[0].metadata.name}}</span><span ng-if=\"row.bindings.length > 1\">,&nbsp;</span>\n" +
-    "<a ng-if=\"row.bindings.length > 1\" ng-click=\"row.toggleExpand($event, true)\">\n" +
-    "{{row.bindings.length -1}} others</a>\n" +
-    "</div>\n" +
-    "</div>\n" +
-    "<div class=\"hidden-xs hidden-sm\" ng-if=\"row.apiObject.spec.osbDashboardURL\">\n" +
-    "<span class=\"page-header-link\">\n" +
-    "<a ng-href=\"{{row.apiObject.spec.osbDashboardURL}}\" target=\"_blank\">\n" +
-    "Console <i class=\"fa fa-external-link\" aria-hidden=\"true\"></i>\n" +
-    "</a>\n" +
+    "<div class=\"list-pf-details\">\n" +
+    "<div ng-if=\"!row.expanded\">\n" +
+    "<div class=\"hidden-xs hidden-sm\">\n" +
+    "<span ng-if=\"!row.bindings.length\">\n" +
+    "<a href=\"\" ng-click=\"row.showOverlayPanel('bindService', {target: row.apiObject})\">Create Binding</a>\n" +
     "</span>\n" +
+    "<span ng-if=\"row.bindings.length\" class=\"component-label\">Bindings</span>\n" +
+    "<p ng-if=\"row.bindings.length >= 1\" class=\"bindings\">\n" +
+    "{{row.bindings[0].metadata.name}}<span ng-if=\"row.bindings.length > 1\">, </span>\n" +
+    "<a ng-if=\"row.bindings.length > 1\" ng-click=\"row.toggleExpand($event, true)\">\n" +
+    "{{row.bindings.length -1}} other<span ng-if=\"row.bindings.length > 2\">s</span></a>\n" +
+    "</p>\n" +
+    "</div>\n" +
+    "</div>\n" +
+    "<div class=\"hidden-xs\" ng-if=\"!row.expanded && row.apiObject.spec.osbDashboardURL\">\n" +
+    "<a ng-href=\"{{row.apiObject.spec.osbDashboardURL}}\" target=\"_blank\">\n" +
+    "Console\n" +
+    "</a> <i class=\"fa fa-external-link small\" aria-hidden=\"true\"></i>\n" +
+    "</div>\n" +
+    "</div>\n" +
     "</div>\n" +
     "<div class=\"list-pf-actions\">\n" +
     "<div uib-dropdown>\n" +
@@ -12764,7 +12766,6 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "<div class=\"section-title\">\n" +
     "Bindings\n" +
     "</div>\n" +
-    "<span ng-if=\"!row.bindings\">There are no bindings.</span>\n" +
     "<div ng-if=\"row.bindings\" class=\"row\" ng-repeat=\"(name, binding) in row.bindings\">\n" +
     "<div class=\"col-sm-5\">\n" +
     "<span>{{binding.metadata.name}}</span>\n" +
@@ -12777,6 +12778,11 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "<a ng-if=\"(binding | isBindingReady) && ('secrets' | canI : 'get')\" href=\"{{row.getSecretForBinding(binding) | navigateResourceURL}}\">\n" +
     "View secret\n" +
     "</a>\n" +
+    "</div>\n" +
+    "</div>\n" +
+    "<div class=\"row\">\n" +
+    "<div class=\"col-sm-12\">\n" +
+    "<a href=\"\" ng-click=\"row.showOverlayPanel('bindService', {target: row.apiObject})\">Create Binding</a>\n" +
     "</div>\n" +
     "</div>\n" +
     "\n" +

@@ -22,7 +22,7 @@ function ServiceInstanceRow($filter, DataService, rowMethods, $uibModal) {
   _.extend(row, rowMethods.ui);
 
   var getErrorDetails = $filter('getErrorDetails');
-  
+
   var getDisplayName = function() {
     var serviceClassName = row.apiObject.spec.serviceClassName;
     var instanceName = row.apiObject.metadata.name;
@@ -101,6 +101,15 @@ function ServiceInstanceRow($filter, DataService, rowMethods, $uibModal) {
         };
       });
     });
+  };
+
+  row.closeOverlayPanel = function() {
+    _.set(row, 'overlay.panelVisible', false);
+  };
+  row.showOverlayPanel = function(panelName, state) {
+    _.set(row, 'overlay.panelVisible', true);
+    _.set(row, 'overlay.panelName', panelName);
+    _.set(row, 'overlay.state', state);
   };
 
 }
