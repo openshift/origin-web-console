@@ -37,6 +37,15 @@ angular.module("openshiftConsole")
         // Check if the istag object contains data about namespace/imageStream/tag so the ui-select will be pre-populated with them
         var shouldPrepopulate = _.get($scope, 'istag.namespace') && _.get($scope, 'istag.imageStream') && _.get($scope, 'istag.tagObject.tag');
 
+        var ensureStatusTags = function(imageStreams) {
+          // Make sure each image stream has a status tags array, even if empty.
+          _.each(imageStreams, function(imageStream) {
+            if (!_.get(imageStream, 'status.tags')) {
+              _.set(imageStream, 'status.tags', []);
+            }
+          });
+        };
+
         var prepopulate = function(ns) {
           $scope.isByNamespace[ns] = {};
           $scope.isNamesByNamespace[ns] = [];
@@ -48,17 +57,22 @@ angular.module("openshiftConsole")
             return;
           }
           DataService.list('imagestreams', { namespace: ns }, function(isData) {
-            $scope.isByNamespace[ns] = isData.by('metadata.name');
-            $scope.isNamesByNamespace[ns] = _.keys( $scope.isByNamespace[ns]).sort();
+            // Make a copy since we modify status tags and don't want to mutate objects that are cached.
+            var imageStreams = angular.copy(isData.by('metadata.name'));
+            ensureStatusTags(imageStreams);
+            $scope.isByNamespace[ns] = imageStreams;
+            $scope.isNamesByNamespace[ns] = _.keys(imageStreams).sort();
 
             //  Image stream is missing
             if (!_.contains($scope.isNamesByNamespace[ns], $scope.istag.imageStream)) {
               $scope.isNamesByNamespace[ns] = $scope.isNamesByNamespace[ns].concat($scope.istag.imageStream);
-              $scope.isByNamespace[ns][$scope.istag.imageStream] = {status: {}};
+              $scope.isByNamespace[ns][$scope.istag.imageStream] = {
+                status: {
+                  tags: {}
+                }
+              };
             }
-            if (!$scope.isByNamespace[ns][$scope.istag.imageStream].status.tags) {
-              $scope.isByNamespace[ns][$scope.istag.imageStream].status = {tags: []};
-            }
+
             // Tag is missing
             if (!_.find( $scope.isByNamespace[ns][$scope.istag.imageStream].status.tags, {tag: $scope.istag.tagObject.tag})) {
               $scope.isByNamespace[ns][$scope.istag.imageStream].status.tags.push({tag: $scope.istag.tagObject.tag});
@@ -88,14 +102,11 @@ angular.module("openshiftConsole")
               return;
             }
             DataService.list('imagestreams', { namespace: namespace }, function(isData) {
-              $scope.isByNamespace[namespace] = isData.by('metadata.name');
-
-              _.each(_.keys($scope.isByNamespace[namespace]), function(imageStream) {
-                if (!$scope.isByNamespace[namespace][imageStream].status.tags) {
-                  $scope.isByNamespace[namespace][imageStream].status = { tags: []};
-                }
-              });
-              $scope.isNamesByNamespace[namespace] = _.keys($scope.isByNamespace[namespace]).sort();
+              // Make a copy since we modify status tags and don't want to mutate objects that are cached.
+              var imageStreams = angular.copy(isData.by('metadata.name'));
+              ensureStatusTags(imageStreams);
+              $scope.isByNamespace[namespace] = imageStreams;
+              $scope.isNamesByNamespace[namespace] = _.keys(imageStreams).sort();
             });
           });
         });
