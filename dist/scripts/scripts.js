@@ -221,7 +221,9 @@ key:"metadata.uid"
 }, za = function(a) {
 if (_.get(a, "status.replicas")) return !0;
 var b = z(a, "deploymentConfig");
-return !b || B(a);
+if (!b) return !0;
+var c = _.get(v, [ "deploymentConfigs", b, "status", "latestVersion" ]);
+return c ? c === Number(z(a, "deploymentVersion")) :B(a);
 }, Aa = function(a) {
 return z(a, "deploymentConfig");
 }, Ba = function() {

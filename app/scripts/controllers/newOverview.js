@@ -647,9 +647,16 @@ function OverviewController($scope,
     if (_.get(replicationController, 'status.replicas')) {
       return true;
     }
+
     var dcName = annotation(replicationController, 'deploymentConfig');
     if (!dcName) {
       return true;
+    }
+
+    // If the deployment is latest, always show it.
+    var latestVersion = _.get(overview, ['deploymentConfigs', dcName, 'status', 'latestVersion']);
+    if (latestVersion) {
+      return latestVersion === Number(annotation(replicationController, 'deploymentVersion'));
     }
 
     return deploymentIsInProgress(replicationController);
