@@ -4300,8 +4300,20 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "<td class=\"hidden-xs\">&nbsp;</td>\n" +
     "<td data-title=\"Type\">{{buildConfigs[buildConfigName].spec.strategy.type | startCase}}</td>\n" +
     "<td ng-if-end data-title=\"Source\" class=\"hidden-sm\">\n" +
-    "<span ng-if=\"buildConfigs[buildConfigName].spec.source.type == 'None'\"><i>none</i></span>\n" +
-    "<span ng-if=\"buildConfigs[buildConfigName].spec.source.type == 'Git'\"><osc-git-link uri=\"buildConfigs[buildConfigName].spec.source.git.uri\" ref=\"buildConfigs[buildConfigName].spec.source.git.ref\" context-dir=\"buildConfigs[buildConfigName].spec.source.contextDir\">{{buildConfigs[buildConfigName].spec.source.git.uri}}</osc-git-link></span></td>\n" +
+    "<span ng-if=\"source = buildConfigs[buildConfigName].spec.source\">\n" +
+    "<span ng-switch=\"source.type\">\n" +
+    "<span ng-switch-when=\"None\">\n" +
+    "<i>None</i>\n" +
+    "</span>\n" +
+    "<span ng-switch-when=\"Git\">\n" +
+    "<osc-git-link uri=\"source.git.uri\" ref=\"source.git.ref\" context-dir=\"source.contextDir\">{{source.git.uri}}</osc-git-link>\n" +
+    "</span>\n" +
+    "<span ng-switch-default>\n" +
+    "{{source.type}}\n" +
+    "</span>\n" +
+    "</span>\n" +
+    "</span>\n" +
+    "</td>\n" +
     "\n" +
     "\n" +
     "<td ng-if-start=\"latestBuild && (buildConfigs[buildConfigName] || !unfilteredBuildConfigs[buildConfigName])\" data-title=\"Name\">\n" +
@@ -4339,10 +4351,17 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "<td data-title=\"Type\">{{latestBuild.spec.strategy.type | startCase}}</td>\n" +
     "<td ng-if-end data-title=\"Source\" class=\"hidden-sm\">\n" +
     "<span ng-if=\"latestBuild.spec.source\">\n" +
-    "<span ng-if=\"latestBuild.spec.source.type == 'None'\">\n" +
+    "<span ng-switch=\"latestBuild.spec.source.type\">\n" +
+    "<span ng-switch-when=\"None\">\n" +
     "<i>none</i>\n" +
     "</span>\n" +
+    "<span ng-switch-when=\"Git\">\n" +
     "<osc-git-link uri=\"latestBuild.spec.source.git.uri\" ref=\"latestBuild.spec.source.git.ref\" context-dir=\"latestBuild.spec.source.contextDir\">{{latestBuild.spec.source.git.uri}}</osc-git-link>\n" +
+    "</span>\n" +
+    "<span ng-switch-default>\n" +
+    "{{latestBuild.spec.source.type}}\n" +
+    "</span>\n" +
+    "</span>\n" +
     "</span>\n" +
     "</td>\n" +
     "</tr>\n" +
