@@ -64,11 +64,23 @@
                     <td class="hidden-xs">&nbsp;</td>
                     <td data-title="Type">{{buildConfigs[buildConfigName].spec.strategy.type | startCase}}</td>
                     <td ng-if-end data-title="Source" class="hidden-sm">
-                      <span ng-if="buildConfigs[buildConfigName].spec.source.type == 'None'"><i>none</i></span>
-                      <span ng-if="buildConfigs[buildConfigName].spec.source.type == 'Git'" ><osc-git-link
-                                            uri="buildConfigs[buildConfigName].spec.source.git.uri"
-                                            ref="buildConfigs[buildConfigName].spec.source.git.ref"
-                                            context-dir="buildConfigs[buildConfigName].spec.source.contextDir">{{buildConfigs[buildConfigName].spec.source.git.uri}}</osc-git-link></span></td>
+                      <span ng-if="source = buildConfigs[buildConfigName].spec.source">
+                        <span ng-switch="source.type">
+                          <span ng-switch-when="None">
+                            <i>None</i>
+                          </span>
+                          <span ng-switch-when="Git">
+                            <osc-git-link
+                              uri="source.git.uri"
+                              ref="source.git.ref"
+                              context-dir="source.contextDir">{{source.git.uri}}</osc-git-link>
+                          </span>
+                          <span ng-switch-default>
+                            {{source.type}}
+                          </span>
+                        </span>
+                      </span>
+                    </td>
                     <!-- Build config with builds, or builds whose build config has since been deleted -->
                     <!-- We only show the first build from a build config for now-->
                     <td ng-if-start="latestBuild && (buildConfigs[buildConfigName] || !unfilteredBuildConfigs[buildConfigName])" data-title="Name">
@@ -106,13 +118,20 @@
                     <td data-title="Type">{{latestBuild.spec.strategy.type | startCase}}</td>
                     <td ng-if-end data-title="Source" class="hidden-sm">
                       <span ng-if="latestBuild.spec.source">
-                        <span ng-if="latestBuild.spec.source.type == 'None'">
-                          <i>none</i>
+                        <span ng-switch="latestBuild.spec.source.type">
+                          <span ng-switch-when="None">
+                            <i>none</i>
+                          </span>
+                          <span ng-switch-when="Git">
+                            <osc-git-link
+                              uri="latestBuild.spec.source.git.uri"
+                              ref="latestBuild.spec.source.git.ref"
+                              context-dir="latestBuild.spec.source.contextDir">{{latestBuild.spec.source.git.uri}}</osc-git-link>
+                          </span>
+                          <span ng-switch-default>
+                            {{latestBuild.spec.source.type}}
+                          </span>
                         </span>
-                        <osc-git-link
-                          uri="latestBuild.spec.source.git.uri"
-                          ref="latestBuild.spec.source.git.ref"
-                          context-dir="latestBuild.spec.source.contextDir">{{latestBuild.spec.source.git.uri}}</osc-git-link>
                       </span>
                     </td>
                   </tr>
