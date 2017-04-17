@@ -37,6 +37,7 @@ function OverviewListRow($filter,
   var canI = $filter('canI');
   var deploymentIsInProgress = $filter('deploymentIsInProgress');
   var getErrorDetails = $filter('getErrorDetails');
+  var isBinaryBuild = $filter('isBinaryBuild');
   var isJenkinsPipelineStrategy = $filter('isJenkinsPipelineStrategy');
 
   var updateTriggers = function(apiObject) {
@@ -157,13 +158,7 @@ function OverviewListRow($filter,
       if (row.current && canI('deploymentconfigs/log', 'get')) {
         return true;
       }
-      // Start pipeline or build is displayed.
-      if ((_.size(row.buildConfigs) === 1 || _.size(row.pipelines) === 1) &&
-           canI('buildconfigs/instantiate')) {
-        return true;
-      }
-
-      return false;
+      return row.showStartPipelineAction() || row.showStartBuildAction();
 
     case 'Pod':
       // View log is displayed.
@@ -189,6 +184,28 @@ function OverviewListRow($filter,
 
       return false;
     }
+  };
+
+  row.showStartBuildAction = function() {
+    // Hide the "Start Build" action if there is a pipeline.
+    if (!_.isEmpty(row.pipelines)) {
+      return false;
+    }
+
+    if (!canI('buildconfigs/instantiate', 'create')) {
+      return false;
+    }
+
+    if (_.size(row.buildConfigs) !== 1) {
+      return false;
+    }
+
+    var buildConfig = _.first(row.buildConfigs);
+    return !isBinaryBuild(buildConfig);
+  };
+
+  row.showStartPipelineAction = function() {
+    return canI('buildconfigs/instantiate', 'create') && _.size(row.pipelines) === 1;
   };
 
   row.startBuild = function(buildConfig) {

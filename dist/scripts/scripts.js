@@ -844,26 +844,26 @@ return moment(c).isAfter(d);
 function OverviewListRow(a, b, c, d, e, f, g) {
 var h = this;
 _.extend(h, g.ui);
-var i = a("canI"), j = a("deploymentIsInProgress"), k = a("getErrorDetails"), l = a("isJenkinsPipelineStrategy"), m = function(a) {
+var i = a("canI"), j = a("deploymentIsInProgress"), k = a("getErrorDetails"), l = a("isBinaryBuild"), m = a("isJenkinsPipelineStrategy"), n = function(a) {
 var b = _.get(a, "spec.triggers");
 _.isEmpty(b) || (h.imageChangeTriggers = _.filter(b, function(a) {
 return "ImageChange" === a.type && _.get(a, "imageChangeParams.automatic");
 }));
-}, n = function(a) {
-a && !h.current && "DeploymentConfig" !== a.kind && "Deployment" !== a.kind && (h.current = a);
 }, o = function(a) {
-h.rgv = c.objectToResourceGroupVersion(a), n(a), m(a);
+a && !h.current && "DeploymentConfig" !== a.kind && "Deployment" !== a.kind && (h.current = a);
+}, p = function(a) {
+h.rgv = c.objectToResourceGroupVersion(a), o(a), n(a);
 };
 h.$onChanges = function(a) {
-a.apiObject && o(a.apiObject.currentValue);
+a.apiObject && p(a.apiObject.currentValue);
 };
-var p = [], q = function(a) {
+var q = [], r = function(a) {
 if (!h.state.hpaByResource) return null;
 var b = _.get(a, "kind"), c = _.get(a, "metadata.name");
-return _.get(h.state.hpaByResource, [ b, c ], p);
+return _.get(h.state.hpaByResource, [ b, c ], q);
 };
 h.$doCheck = function() {
-h.notifications = g.getNotifications(h.apiObject, h), h.hpa = q(h.apiObject), h.current && _.isEmpty(h.hpa) && (h.hpa = q(h.current));
+h.notifications = g.getNotifications(h.apiObject, h), h.hpa = r(h.apiObject), h.current && _.isEmpty(h.hpa) && (h.hpa = r(h.current));
 var a = _.get(h, "apiObject.metadata.uid");
 a && (h.services = _.get(h, [ "state", "servicesByObjectUID", a ]), h.buildConfigs = _.get(h, [ "state", "buildConfigsByObjectUID", a ]));
 var b, c = _.get(h, "apiObject.kind");
@@ -882,7 +882,7 @@ return !(!h.current || !h.previous) || j(h.current);
 var a = _.get(h, "apiObject.kind");
 switch (a) {
 case "DeploymentConfig":
-return !!i("deploymentconfigs", "update") || (!(!h.current || !i("deploymentconfigs/log", "get")) || !(1 !== _.size(h.buildConfigs) && 1 !== _.size(h.pipelines) || !i("buildconfigs/instantiate")));
+return !!i("deploymentconfigs", "update") || (!(!h.current || !i("deploymentconfigs/log", "get")) || (h.showStartPipelineAction() || h.showStartBuildAction()));
 
 case "Pod":
 return !!i("pods/log", "get") || !!i("pods", "update");
@@ -890,11 +890,19 @@ return !!i("pods/log", "get") || !!i("pods", "update");
 default:
 return !(!h.firstPod(h.current) || !i("pods/log", "get")) || !!i(h.rgv, "update");
 }
+}, h.showStartBuildAction = function() {
+if (!_.isEmpty(h.pipelines)) return !1;
+if (!i("buildconfigs/instantiate", "create")) return !1;
+if (1 !== _.size(h.buildConfigs)) return !1;
+var a = _.first(h.buildConfigs);
+return !l(a);
+}, h.showStartPipelineAction = function() {
+return i("buildconfigs/instantiate", "create") && 1 === _.size(h.pipelines);
 }, h.startBuild = function(a) {
 d.startBuild(a.metadata.name, {
 namespace:a.metadata.namespace
 }).then(_.noop, function(b) {
-var c = l(a) ? "pipeline" :"build";
+var c = m(a) ? "pipeline" :"build";
 h.state.alerts["start-build"] = {
 type:"error",
 message:"An error occurred while starting the " + c + ".",
@@ -14693,6 +14701,10 @@ return a.spec.strategy.jenkinsPipelineStrategy;
 default:
 return null;
 }
+};
+}).filter("isBinaryBuild", function() {
+return function(a) {
+return _.has(a, "spec.source.binary");
 };
 }).filter("isJenkinsPipelineStrategy", function() {
 return function(a) {

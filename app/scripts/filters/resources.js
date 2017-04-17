@@ -763,6 +763,12 @@ angular.module('openshiftConsole')
       }
     };
   })
+  .filter('isBinaryBuild', function() {
+    // Accepts a build or build config.
+    return function(build) {
+      return _.has(build, 'spec.source.binary');
+    };
+  })
   .filter('isJenkinsPipelineStrategy', function() {
     return function(/* build or build config */ resource) {
       return _.get(resource, 'spec.strategy.type') === 'JenkinsPipeline';

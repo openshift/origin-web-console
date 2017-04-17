@@ -8,17 +8,14 @@
           uib-dropdown-toggle
           class="actions-dropdown-kebab"><i class="fa fa-ellipsis-v"></i><span class="sr-only">Actions</span></a>
           <ul class="dropdown-menu dropdown-menu-right" uib-dropdown-menu role="menu">
-            <li ng-if="('buildconfigs/instantiate' | canI : 'create') && row.pipelines.length === 1" role="menuitem">
-              <a href=""
-              ng-click="row.startBuild(row.pipelines[0])">Start Pipeline</a>
+            <li ng-if="row.showStartPipelineAction()" role="menuitem">
+              <a href="" ng-click="row.startBuild(row.pipelines[0])">Start Pipeline</a>
             </li>
-            <li ng-if="('buildconfigs/instantiate' | canI : 'create') && row.buildConfigs.length === 1 && !row.pipelines.length" role="menuitem">
-              <a href=""
-              ng-click="row.startBuild(row.buildConfigs[0])">Start Build</a>
+            <li ng-if="row.showStartBuildAction()" role="menuitem">
+              <a href="" ng-click="row.startBuild(row.buildConfigs[0])">Start Build</a>
             </li>
             <li ng-if="'deploymentconfigs' | canI : 'update'" role="menuitem">
-              <a href=""
-              ng-click="row.startDeployment()">Deploy</a>
+              <a href="" ng-click="row.startDeployment()">Deploy</a>
             </li>
             <li ng-if="'deploymentconfigs' | canI : 'update'" role="menuitem">
               <a ng-href="{{row.apiObject | editResourceURL}}">Edit</a>

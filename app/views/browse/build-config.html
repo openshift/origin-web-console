@@ -12,7 +12,7 @@
                 <!-- Primary Actions -->
                 <button
                     class="btn btn-default hidden-xs"
-                    ng-if="'buildconfigs/instantiate' | canI : 'create'"
+                    ng-if="('buildconfigs/instantiate' | canI : 'create') && !(buildConfig | isBinaryBuild)"
                     ng-click="startBuild()">
                   <span ng-if="!(buildConfig | isJenkinsPipelineStrategy)">
                     Start Build
@@ -31,7 +31,7 @@
                    class="dropdown-toggle actions-dropdown-kebab visible-xs-inline"
                    data-toggle="dropdown"><i class="fa fa-ellipsis-v"></i><span class="sr-only">Actions</span></a>
                 <ul class="dropdown-menu dropdown-menu-right actions action-button">
-                  <li class="visible-xs-inline" ng-if="'buildconfigs/instantiate' | canI : 'create'">
+                  <li class="visible-xs-inline" ng-if="('buildconfigs/instantiate' | canI : 'create') && !(buildConfig | isBinaryBuild)">
                     <a href="" role="button" ng-click="startBuild()">
                       <span ng-if="!(buildConfig | isJenkinsPipelineStrategy)">
                         Start Build
@@ -119,7 +119,10 @@
                           </span>
                         </p>
 
-                        <button class="btn btn-primary btn-lg" ng-click="startBuild(buildConfig.metadata.name)" ng-if="'buildconfigs/instantiate' | canI : 'create'">
+                        <button
+                            class="btn btn-primary btn-lg"
+                            ng-click="startBuild(buildConfig.metadata.name)"
+                            ng-if="('buildconfigs/instantiate' | canI : 'create') && !(buildConfig | isBinaryBuild)">
                           <span ng-if="!(buildConfig | isJenkinsPipelineStrategy)">
                             Start Build
                           </span>

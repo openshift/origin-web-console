@@ -21,7 +21,7 @@
         This deployment config is part of the pipeline
         <a ng-href="{{pipeline | navigateResourceURL}}">{{pipeline.metadata.name}}</a>.
       </p>
-      <div ng-if="('buildconfigs/instantiate' | canI : 'create')">
+      <div ng-if="row.showStartPipelineAction()">
         <button class="btn btn-primary" ng-click="row.startBuild(pipeline)">
           Start Pipeline
         </button>

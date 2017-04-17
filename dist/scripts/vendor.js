@@ -34613,33 +34613,35 @@ _fnMouseListener:function(b, c) {
 var d = this;
 a(c).on("mousedown.ColReorder", function(a) {
 a.preventDefault(), d._fnMouseDown.call(d, a, c);
+}).on("touchstart.ColReorder", function(a) {
+d._fnMouseDown.call(d, a, c);
 });
 },
 _fnMouseDown:function(b, e) {
 var f = this, g = a(b.target).closest("th, td"), h = g.offset(), i = parseInt(a(e).attr("data-column-index"), 10);
-i !== d && (this.s.mouse.startX = b.pageX, this.s.mouse.startY = b.pageY, this.s.mouse.offsetX = b.pageX - h.left, this.s.mouse.offsetY = b.pageY - h.top, this.s.mouse.target = this.s.dt.aoColumns[i].nTh, this.s.mouse.targetIndex = i, this.s.mouse.fromIndex = i, this._fnRegions(), a(c).on("mousemove.ColReorder", function(a) {
+i !== d && (this.s.mouse.startX = this._fnCursorPosition(b, "pageX"), this.s.mouse.startY = this._fnCursorPosition(b, "pageY"), this.s.mouse.offsetX = this._fnCursorPosition(b, "pageX") - h.left, this.s.mouse.offsetY = this._fnCursorPosition(b, "pageY") - h.top, this.s.mouse.target = this.s.dt.aoColumns[i].nTh, this.s.mouse.targetIndex = i, this.s.mouse.fromIndex = i, this._fnRegions(), a(c).on("mousemove.ColReorder touchmove.ColReorder", function(a) {
 f._fnMouseMove.call(f, a);
-}).on("mouseup.ColReorder", function(a) {
+}).on("mouseup.ColReorder touchend.ColReorder", function(a) {
 f._fnMouseUp.call(f, a);
 }));
 },
 _fnMouseMove:function(a) {
 if (null === this.dom.drag) {
-if (Math.pow(Math.pow(a.pageX - this.s.mouse.startX, 2) + Math.pow(a.pageY - this.s.mouse.startY, 2), .5) < 5) return;
+if (Math.pow(Math.pow(this._fnCursorPosition(a, "pageX") - this.s.mouse.startX, 2) + Math.pow(this._fnCursorPosition(a, "pageY") - this.s.mouse.startY, 2), .5) < 5) return;
 this._fnCreateDragNode();
 }
 this.dom.drag.css({
-left:a.pageX - this.s.mouse.offsetX,
-top:a.pageY - this.s.mouse.offsetY
+left:this._fnCursorPosition(a, "pageX") - this.s.mouse.offsetX,
+top:this._fnCursorPosition(a, "pageY") - this.s.mouse.offsetY
 });
-for (var b = !1, c = this.s.mouse.toIndex, d = 1, e = this.s.aoTargets.length; d < e; d++) if (a.pageX < this.s.aoTargets[d - 1].x + (this.s.aoTargets[d].x - this.s.aoTargets[d - 1].x) / 2) {
+for (var b = !1, c = this.s.mouse.toIndex, d = 1, e = this.s.aoTargets.length; d < e; d++) if (this._fnCursorPosition(a, "pageX") < this.s.aoTargets[d - 1].x + (this.s.aoTargets[d].x - this.s.aoTargets[d - 1].x) / 2) {
 this.dom.pointer.css("left", this.s.aoTargets[d - 1].x), this.s.mouse.toIndex = this.s.aoTargets[d - 1].to, b = !0;
 break;
 }
 b || (this.dom.pointer.css("left", this.s.aoTargets[this.s.aoTargets.length - 1].x), this.s.mouse.toIndex = this.s.aoTargets[this.s.aoTargets.length - 1].to), this.s.init.bRealtime && c !== this.s.mouse.toIndex && (this.s.dt.oInstance.fnColReorder(this.s.mouse.fromIndex, this.s.mouse.toIndex, !1), this.s.mouse.fromIndex = this.s.mouse.toIndex, this._fnRegions());
 },
 _fnMouseUp:function(b) {
-a(c).off("mousemove.ColReorder mouseup.ColReorder"), null !== this.dom.drag && (this.dom.drag.remove(), this.dom.pointer.remove(), this.dom.drag = null, this.dom.pointer = null, this.s.dt.oInstance.fnColReorder(this.s.mouse.fromIndex, this.s.mouse.toIndex, !0), this._fnSetColumnIndexes(), "" === this.s.dt.oScroll.sX && "" === this.s.dt.oScroll.sY || this.s.dt.oInstance.fnAdjustColumnSizing(!1), this.s.dt.oInstance.oApi._fnSaveState(this.s.dt), null !== this.s.reorderCallback && this.s.reorderCallback.call(this));
+a(c).off(".ColReorder"), null !== this.dom.drag && (this.dom.drag.remove(), this.dom.pointer.remove(), this.dom.drag = null, this.dom.pointer = null, this.s.dt.oInstance.fnColReorder(this.s.mouse.fromIndex, this.s.mouse.toIndex, !0), this._fnSetColumnIndexes(), "" === this.s.dt.oScroll.sX && "" === this.s.dt.oScroll.sY || this.s.dt.oInstance.fnAdjustColumnSizing(!1), this.s.dt.oInstance.oApi._fnSaveState(this.s.dt), null !== this.s.reorderCallback && this.s.reorderCallback.call(this));
 },
 _fnRegions:function() {
 var b = this.s.dt.aoColumns;
@@ -34671,6 +34673,9 @@ _fnSetColumnIndexes:function() {
 a.each(this.s.dt.aoColumns, function(b, c) {
 a(c.nTh).attr("data-column-index", b);
 });
+},
+_fnCursorPosition:function(a, b) {
+return a.type.indexOf("touch") !== -1 ? a.originalEvent.touches[0][b] :a[b];
 }
 }), i.defaults = {
 aiOrder:null,
@@ -34678,7 +34683,7 @@ bRealtime:!0,
 iFixedColumnsLeft:0,
 iFixedColumnsRight:0,
 fnReorderCallback:null
-}, i.version = "1.3.2", a.fn.dataTable.ColReorder = i, a.fn.DataTable.ColReorder = i, "function" == typeof a.fn.dataTable && "function" == typeof a.fn.dataTableExt.fnVersionCheck && a.fn.dataTableExt.fnVersionCheck("1.10.8") ? a.fn.dataTableExt.aoFeatures.push({
+}, i.version = "1.3.3", a.fn.dataTable.ColReorder = i, a.fn.DataTable.ColReorder = i, "function" == typeof a.fn.dataTable && "function" == typeof a.fn.dataTableExt.fnVersionCheck && a.fn.dataTableExt.fnVersionCheck("1.10.8") ? a.fn.dataTableExt.aoFeatures.push({
 fnInit:function(a) {
 var b = a.oInstance;
 if (a._colReorder) b.oApi._fnLog(a, 1, "ColReorder attempted to initialise twice. Ignoring second"); else {
