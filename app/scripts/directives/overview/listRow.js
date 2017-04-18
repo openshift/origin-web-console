@@ -150,6 +150,10 @@ function OverviewListRow($filter,
     var kind = _.get(row, 'apiObject.kind');
     switch (kind) {
     case 'DeploymentConfig':
+      // Deploy is displayed.
+      if (canI('deploymentconfigs/instantiate', 'create')) {
+        return true;
+      }
       // Edit is displayed.
       if (canI('deploymentconfigs', 'update')) {
         return true;

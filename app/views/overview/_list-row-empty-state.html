@@ -28,7 +28,7 @@
       </div>
     </div>
     <div ng-if="!row.pipelines.length">
-      <button ng-if="'deploymentconfigs' | canI : 'update'"
+      <button ng-if="'deploymentconfigs/instantiate' | canI : 'create'"
               class="btn btn-primary"
               ng-click="row.startDeployment()">
         Start Deployment

@@ -13,7 +13,7 @@
                 <div class="pull-right dropdown" ng-if="deploymentConfig" ng-hide="!('deploymentConfigs' | canIDoAny)">
                   <!-- Primary Actions -->
                   <button
-                      ng-if="'deploymentconfigs' | canI : 'update'"
+                      ng-if="'deploymentconfigs/instantiate' | canI : 'create'"
                       class="btn btn-default hidden-xs"
                       ng-click="startLatestDeployment()"
                       ng-disabled="!canDeploy()">
@@ -29,7 +29,7 @@
                      class="dropdown-toggle actions-dropdown-kebab visible-xs-inline"
                      data-toggle="dropdown"><i class="fa fa-ellipsis-v"></i><span class="sr-only">Actions</span></a>
                   <ul class="dropdown-menu dropdown-menu-right actions action-button">
-                    <li class="visible-xs-inline" ng-class="{ disabled: !canDeploy() }" ng-if="'deploymentconfigs' | canI : 'update'">
+                    <li class="visible-xs-inline" ng-class="{ disabled: !canDeploy() }" ng-if="'deploymentconfigs/instantiate' | canI : 'create'">
                       <a href=""
                         role="button"
                         ng-attr-aria-disabled="{{canDeploy() ? undefined : 'true'}}"
