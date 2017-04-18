@@ -653,12 +653,6 @@ function OverviewController($scope,
       return true;
     }
 
-    // If the deployment is latest, always show it.
-    var latestVersion = _.get(overview, ['deploymentConfigs', dcName, 'status', 'latestVersion']);
-    if (latestVersion) {
-      return latestVersion === Number(annotation(replicationController, 'deploymentVersion'));
-    }
-
     return deploymentIsInProgress(replicationController);
   };
 
@@ -681,6 +675,10 @@ function OverviewController($scope,
     overview.currentByDeploymentConfig = {};
     mostRecentByDeploymentConfig = {};
 
+    // The "active" replication controller by deployment config name. This is the
+    // most recent successful deployment.
+    var activeByDeploymentConfig = {};
+
     // Add the replication controllers to a temporary map until we have them all and can sort.
     var rcByDC = {};
     _.each(overview.replicationControllers, function(replicationController) {
@@ -696,11 +694,29 @@ function OverviewController($scope,
         mostRecentByDeploymentConfig[dcName] = replicationController;
       }
 
+      // Also find the most recent successful deployment. We always show that,
+      // even if scaled down. This is not always "latest" since a more recent
+      // deployment might have failed or been cancelled.
+      var active;
+      if (annotation(replicationController, 'deploymentStatus') === 'Complete') {
+        active = activeByDeploymentConfig[dcName];
+        if (!active || isNewerResource(replicationController, active)) {
+          activeByDeploymentConfig[dcName] = replicationController;
+        }
+      }
+
       // Only track the visible replication controllers. This way we only sort
       // and check warnings for things we're showing.
       if (isReplicationControllerVisible(replicationController)) {
         _.set(rcByDC, [dcName, replicationController.metadata.name], replicationController);
       }
+    });
+
+    // Make sure the active replication controllers are in `rcByDC` map. This
+    // isn't checked by `isReplicationControllerVisible` since that function is
+    // called before the loop completes and active is known.
+    _.each(activeByDeploymentConfig, function(replicationController, dcName) {
+      _.set(rcByDC, [dcName, replicationController.metadata.name], replicationController);
     });
 
     // Sort the visible replication controllers.
