@@ -524,7 +524,6 @@ ul.messenger-theme-flat .messenger-message.alert-info .messenger-message-inner:b
 @keyframes modalSlideUp{0%{margin-top:0%;opacity:.5}
 100%{margin-top:-25%;opacity:0}
 }
-.services-view .services-sub-category .services-sub-category-tab:focus .services-sub-category-tab-image img,.services-view .services-sub-category .services-sub-category-tab:hover .services-sub-category-tab-image img,.services-view .services-sub-category.active .services-sub-category-tab .services-sub-category-tab-image img{opacity:1}
 .catalog-search-match .catalog-search-match-info{display:inline-block;vertical-align:top}
 .catalog-search-match .catalog-search-match-label{font-weight:600}
 .catalog-search-match .catalog-search-match-icon{display:inline-block;margin-right:10px;text-align:center;width:30px}
@@ -610,6 +609,8 @@ body.overlay-open{overflow:hidden}
 .catalogs-overlay-panel .wizard-pf-footer{background:#fff;padding-bottom:15px;padding-right:40px}
 .catalogs-overlay-panel .wizard-pf-main{background-attachment:scroll;background-image:radial-gradient(ellipse at top,rgba(0,0,0,.2) 0%,rgba(0,0,0,0) 75%),radial-gradient(ellipse at bottom,rgba(0,0,0,.2) 0%,rgba(0,0,0,0) 75%);background-position:0 0,0 100%;background-repeat:no-repeat;background-size:100% 6px;height:auto;margin-left:0;padding:0}
 .catalogs-overlay-panel .wizard-pf-main-inner-shadow-covers{background-attachment:local;background-image:linear-gradient(#fff 30%,rgba(255,255,255,0)),linear-gradient(rgba(255,255,255,0),#fff 70%);background-position:0 0,0 100%;background-repeat:no-repeat;background-size:100% 12px;max-height:calc(100vh - 248px);min-height:300px;overflow-y:auto;padding:20px}
+@media (min-width:768px){.catalogs-overlay-panel .wizard-pf-main-inner-shadow-covers{display:flex}
+}
 .catalogs-overlay-panel .wizard-pf-main-inner-shadow-covers input.form-control,.catalogs-overlay-panel .wizard-pf-main-inner-shadow-covers textarea.form-control{background-color:transparent}
 .catalogs-overlay-panel .wizard-pf-main-inner-shadow-covers input.form-control[disabled],.catalogs-overlay-panel .wizard-pf-main-inner-shadow-covers input.form-control[readonly],.catalogs-overlay-panel .wizard-pf-main-inner-shadow-covers textarea.form-control[disabled],.catalogs-overlay-panel .wizard-pf-main-inner-shadow-covers textarea.form-control[readonly]{background-color:rgba(234,234,234,.5)}
 .catalogs-overlay-panel .wizard-pf-steps-indicator{height:52px;margin:30px 0;padding:0}
@@ -628,14 +629,24 @@ body.overlay-open{overflow:hidden}
 .catalog-projects-summary-panel .create-button{font-size:13px;float:right}
 .catalog-projects-summary-panel .getting-started-button{width:100%;font-size:13px}
 .catalog-projects-summary-panel .getting-started-button.with-projects{margin-top:15px}
-.catalog-projects-summary-panel .getting-started-panel{margin-top:40px}
+.catalog-projects-summary-panel .getting-started-panel{margin-top:20px}
 .catalog-projects-summary-panel h2.primary{margin-top:0}
 .catalog-projects-summary-panel h2.secondary{font-size:18px}
-.catalog-projects-summary-panel .resources-panel{margin-top:40px;border-top:solid 1px #4d5258}
+.catalog-projects-summary-panel .projects-instructions-link{white-space:pre}
+.catalog-projects-summary-panel .projects-instructions-link code{display:inline-block}
+.catalog-projects-summary-panel .code-block{background:#030303;color:#ededed;margin-right:15px;margin-top:5px;opacity:.5}
+.services-view .services-sub-category .services-sub-category-tab:focus .services-sub-category-tab-image img,.services-view .services-sub-category .services-sub-category-tab:hover .services-sub-category-tab-image img,.services-view .services-sub-category.active .services-sub-category-tab .services-sub-category-tab-image img{opacity:1}
+.catalog-projects-summary-panel code{background:0 0;border:none;color:#fff;white-space:normal}
+.catalog-projects-summary-panel .resources-panel{margin-top:20px}
+.catalog-projects-summary-panel .resources-panel ul{padding-left:20px}
+.catalog-projects-summary-panel .summary-title{margin-top:5px}
+.catalog-projects-summary-panel .summary-title a{color:#fff}
+.catalog-projects-summary-panel .summary-title a:hover{color:#0088ce;text-decoration:underline}
+.saas-offerings-container .saas-list .card-content:focus,.saas-offerings-container .saas-list .card-content:hover,.services-view .services-item:focus,.services-view .services-item:hover{text-decoration:none}
+.catalog-projects-spinner-container{padding-top:60px;padding-bottom:60px}
 .catalog-projects-summary-modal-backrop.modal-backdrop{background-color:transparent;cursor:not-allowed;z-index:1029}
 .catalog-modal{background-color:#fff;bottom:0;color:#363636;left:0;position:fixed;padding:0 20px 20px;right:0;top:0;z-index:1050}
-@media (min-width:768px){.catalogs-overlay-panel .wizard-pf-main-inner-shadow-covers{display:flex}
-.catalog-modal{border:1px solid #bbb;bottom:auto;box-shadow:0 6px 12px rgba(0,0,0,.175);position:absolute;top:auto}
+@media (min-width:768px){.catalog-modal{border:1px solid #bbb;bottom:auto;box-shadow:0 6px 12px rgba(0,0,0,.175);position:absolute;top:auto}
 .catalog-modal:before{content:"";display:block;border-color:transparent transparent #f5f5f5;border-style:solid;border-width:0 7px 7px;height:0;left:10px;position:absolute;top:-7px;width:0}
 .catalog-modal.catalog-modal-create-project{left:20px;margin-top:7px;right:20px}
 .catalog-modal.catalog-modal-create-project:before{left:auto;right:10px}
@@ -676,7 +687,6 @@ body.overlay-open{overflow:hidden}
 .saas-offerings-container .saas-list .card-content{align-items:center;color:#fff;display:flex;flex:1 1 0%;padding:20px}
 @media (min-width:768px){.saas-offerings-container .saas-list .card-content{flex-direction:column;text-align:center}
 }
-.saas-offerings-container .saas-list .card-content:focus,.saas-offerings-container .saas-list .card-content:hover{text-decoration:none}
 .saas-offerings-container .saas-list .card-content .card-description{font-size:12px;max-width:100%}
 .saas-offerings-container .saas-list .card-content .card-icon{align-items:center;display:flex;font-size:24px;text-align:center}
 @media (max-width:767px){.saas-offerings-container .saas-list .card-content .card-icon{width:40px}
@@ -703,7 +713,6 @@ body.overlay-open{overflow:hidden}
 }
 @media (min-width:1800px){.services-view .services-item{width:16.6667%}
 }
-.services-view .services-item:focus,.services-view .services-item:hover{text-decoration:none}
 .services-view .services-item:focus .services-item-icon:after,.services-view .services-item:hover .services-item-icon:after{border:2px solid #0088ce;border-radius:100px;content:"";height:90px;margin:-45px 0 0 -45px;position:absolute;left:50%;top:50%;width:90px}
 .services-view .services-item:focus .services-item-name,.services-view .services-item:hover .services-item-name{color:#0088ce}
 .services-view .services-item .fa-cubes{position:relative;right:-2px}
