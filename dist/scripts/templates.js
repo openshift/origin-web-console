@@ -12709,12 +12709,12 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "<div class=\"list-pf-content hidden-xs hidden-sm\">\n" +
     "<div class=\"list-pf-content-right\">\n" +
     "<div>\n" +
-    "<strong ng-if=\"!row.instanceBindings.length\">No Bindings</strong>\n" +
-    "<strong ng-if=\"row.instanceBindings.length\">Bindings</strong>\n" +
+    "<strong ng-if=\"!row.bindings.length\">No Bindings</strong>\n" +
+    "<strong ng-if=\"row.bindings.length\">Bindings</strong>\n" +
     "</div>\n" +
-    "<span ng-if=\"row.instanceBindings.length >= 1\">{{row.instanceBindings[0].metadata.name}}</span><span ng-if=\"row.instanceBindings.length > 1\">,&nbsp;</span>\n" +
-    "<a ng-if=\"row.instanceBindings.length > 1\" ng-click=\"row.toggleExpand($event, true)\">\n" +
-    "{{row.instanceBindings.length -1}} others</a>\n" +
+    "<span ng-if=\"row.bindings.length >= 1\">{{row.bindings[0].metadata.name}}</span><span ng-if=\"row.bindings.length > 1\">,&nbsp;</span>\n" +
+    "<a ng-if=\"row.bindings.length > 1\" ng-click=\"row.toggleExpand($event, true)\">\n" +
+    "{{row.bindings.length -1}} others</a>\n" +
     "</div>\n" +
     "</div>\n" +
     "<div class=\"hidden-xs hidden-sm\" ng-if=\"row.apiObject.spec.osbDashboardURL\">\n" +
