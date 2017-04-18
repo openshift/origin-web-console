@@ -7985,12 +7985,18 @@ type:"ConfigChange"
 }), b;
 };
 a.save = function() {
-a.disableInputs = !0, _.each(a.containerConfigByName, function(b, c) {
+if (a.disableInputs = !0, _.each(a.containerConfigByName, function(b, c) {
 var d = _.find(a.updatedDeploymentConfig.spec.template.spec.containers, {
 name:c
 });
 d.env = n.compactEntries(b.env);
-}), v() && delete a.strategyData[u(a.originalStrategy)], "Custom" !== a.strategyData.type && _.each([ "pre", "mid", "post" ], function(b) {
+}), v() && delete a.strategyData[u(a.originalStrategy)], "Rolling" === a.strategyData.type) {
+var d = a.strategyData[a.strategyParamsPropertyName].maxSurge, e = Number(d);
+"" === d ? a.strategyData[a.strategyParamsPropertyName].maxSurge = null :_.isFinite(e) && (a.strategyData[a.strategyParamsPropertyName].maxSurge = e);
+var g = a.strategyData[a.strategyParamsPropertyName].maxUnavailable, h = Number(g);
+"" === g ? a.strategyData[a.strategyParamsPropertyName].maxUnavailable = null :_.isFinite(h) && (a.strategyData[a.strategyParamsPropertyName].maxUnavailable = h);
+}
+"Custom" !== a.strategyData.type && _.each([ "pre", "mid", "post" ], function(b) {
 _.has(a.strategyData, [ a.strategyParamsPropertyName, b, "execNewPod", "env" ]) && (a.strategyData[a.strategyParamsPropertyName][b].execNewPod.env = n.compactEntries(a.strategyData[a.strategyParamsPropertyName][b].execNewPod.env));
 }), _.has(a, "strategyData.customParams.environment") && (a.strategyData.customParams.environment = n.compactEntries(a.strategyData.customParams.environment)), a.updatedDeploymentConfig.spec.template.spec.imagePullSecrets = _.filter(a.secrets.pullSecrets, "name"), a.updatedDeploymentConfig.spec.strategy = a.strategyData, a.updatedDeploymentConfig.spec.triggers = y(), i.update("deploymentconfigs", a.updatedDeploymentConfig.metadata.name, a.updatedDeploymentConfig, a.context).then(function() {
 f.addAlert({
