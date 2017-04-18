@@ -317,6 +317,11 @@
       }
     }
   }
+  .list-row-longname {
+    .text-muted();
+    font-size: @component-label;
+    margin-top: 3px;
+  }
   .list-row-tabset {
     margin-top: 20px;
     @media (min-width: @screen-sm-min) {
@@ -398,6 +403,27 @@
   pod-donut[mini] {
     align-items: center;
     display: flex;
+  }
+  .provisioned-service {
+    .expanded-section {
+      margin-top: 0;
+    }
+    .list-pf-details {
+      @media (min-width: @screen-sm-min) {
+        justify-content: space-between;
+      }
+      .bindings {
+        margin-bottom: 0;
+        margin-top: -4px;
+      }
+      .component-label {
+        padding-bottom: 0;
+      }
+      .small {
+        color: #9c9c9c;
+        font-size: 10px;
+      }
+    }
   }
   .status-icons {
     margin-top: 5px;

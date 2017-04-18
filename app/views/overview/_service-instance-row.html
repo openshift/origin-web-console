@@ -1,15 +1,13 @@
-<div class="list-pf-item" ng-class="{ active: row.expanded }">
+<div class="list-pf-item provisioned-service" ng-class="{ active: row.expanded }">
   <div class="list-pf-container" ng-click="row.toggleExpand($event)">
-
     <div class="list-pf-chevron">
       <div ng-include src=" 'views/overview/_list-row-chevron.html' " class="list-pf-content"></div>
     </div>
-
     <div class="list-pf-content">
       <div class="list-pf-name">
         <h3>
           <span ng-bind-html="row.displayName | highlightKeywords : row.state.filterKeywords"></span>
-          <div class="component-label tranform-none">
+          <div class="list-row-longname">
             {{row.apiObject.metadata.name}}
           </div>
         </h3>
@@ -17,32 +15,31 @@
           <notification-icon ng-if="!row.expanded" alerts="row.notifications"></notification-icon>
         </div>
       </div>
-    </div>
-
-    <div class="list-pf-content hidden-xs hidden-sm">
-      <div class="list-pf-content-right">
-        <div>
-          <strong ng-if="!row.bindings.length">No Bindings</strong>
-          <strong ng-if="row.bindings.length">Bindings</strong>
+      <div class="list-pf-details">
+        <div ng-if="!row.expanded">
+          <div class="hidden-xs hidden-sm">
+            <span ng-if="!row.bindings.length">
+              <a href="" ng-click="row.showOverlayPanel('bindService', {target: row.apiObject})">Create Binding</a>
+            </span>
+            <span ng-if="row.bindings.length" class="component-label">Bindings</span>
+            <p ng-if="row.bindings.length >= 1" class="bindings">
+              {{row.bindings[0].metadata.name}}<span ng-if="row.bindings.length > 1">, </span>
+              <a
+                ng-if="row.bindings.length > 1"
+                ng-click="row.toggleExpand($event, true)">
+                {{row.bindings.length -1}} other<span ng-if="row.bindings.length > 2">s</span></a>
+            </p>
+          </div>
         </div>
-        <span ng-if="row.bindings.length >= 1">{{row.bindings[0].metadata.name}}</span><span ng-if="row.bindings.length > 1">,&nbsp;</span>
-        <a
-          ng-if="row.bindings.length > 1"
-          ng-click="row.toggleExpand($event, true)">
-          {{row.bindings.length -1}} others</a>
+        <div
+          class="hidden-xs"
+          ng-if="!row.expanded && row.apiObject.spec.osbDashboardURL">
+          <a ng-href="{{row.apiObject.spec.osbDashboardURL}}" target="_blank">
+            Console
+          </a> <i class="fa fa-external-link small" aria-hidden="true"></i>
+        </div>
       </div>
     </div>
-
-    <div
-      class="hidden-xs hidden-sm"
-      ng-if="row.apiObject.spec.osbDashboardURL">
-      <span class="page-header-link">
-        <a ng-href="{{row.apiObject.spec.osbDashboardURL}}" target="_blank">
-          Console <i class="fa fa-external-link" aria-hidden="true"></i>
-        </a>
-      </span>
-    </div>
-
     <div class="list-pf-actions">
       <div uib-dropdown>
         <a href=""
@@ -58,14 +55,11 @@
         </ul>
       </div>
     </div>
-
   </div>
-
   <div
     class="list-pf-expansion collapse"
     ng-if="row.expanded"
     ng-class="{ in: row.expanded }">
-
     <div class="list-pf-container">
       <div class="expanded-section">
         <alerts alerts="row.notifications"></alerts>
@@ -87,7 +81,6 @@
           </div>
         </div>
         -->
-
         <div class="row">
           <div class="col-sm-12" ng-if="row.description">
             <p class="pre-wrap" ng-bind-html="row.description | linky"></p>
@@ -96,7 +89,6 @@
         <div class="section-title">
           Bindings
         </div>
-        <span ng-if="!row.bindings">There are no bindings.</span>
         <div
           ng-if="row.bindings"
           class="row"
@@ -118,6 +110,11 @@
             </a>
           </div>
         </div>
+        <div class="row">
+          <div class="col-sm-12">
+            <a href="" ng-click="row.showOverlayPanel('bindService', {target: row.apiObject})">Create Binding</a>
+          </div>
+        </div>
         <!-- TODO: follow-on PR
         <div class="row">
           <div class="col-sm-12">
@@ -130,7 +127,6 @@
       </div>
     </div>
   </div>
-
 </div>
 <overlay-panel single-column="true" show-panel="row.overlay.panelVisible" show-close="true" handle-close="row.closeOverlayPanel">
   <div ng-if="row.overlay.panelName === 'bindService'">

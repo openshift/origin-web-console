@@ -4537,12 +4537,12 @@ ul.messenger-theme-flat .messenger-message.alert-info .messenger-message-inner:b
 }
 .overview-new .expanded-section h3{line-height:1.4;margin-bottom:5px;margin-top:0;width:100%;word-wrap:break-word;word-break:break-word;overflow-wrap:break-word;min-width:0}
 .overview-new .expanded-section .section-title{font-family:inherit;font-weight:500;line-height:1.1;color:inherit;margin-top:10.5px;margin-bottom:10.5px;font-size:14px;border-bottom:1px solid #dcdcdc;padding-bottom:10px}
+.overview-new .provisioned-service .list-pf-details .component-label,.overview-new h2>.component-label{padding-bottom:0}
 .overview-new .expanded-section .section-title .small,.overview-new .expanded-section .section-title small{font-weight:400;line-height:1;color:#9c9c9c;font-size:75%}
 .overview-new .expanded-section .section-title.no-border{border-bottom:0;padding-bottom:0}
 .overview-new .filter-status{margin-bottom:5px}
 .overview-new h1,.overview-new h2{line-height:normal;min-width:130px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
 .overview-new h2{margin-top:0}
-.overview-new h2>.component-label{padding-bottom:0}
 .overview-new .list-pf{border-bottom-color:#dcdcdc;margin-bottom:50px}
 .overview-new .list-pf-actions{min-width:19px}
 .overview-new .list-pf-details.ng-enter,.overview-new .list-pf-details.ng-hide-remove{animation:.3s appear cubic-bezier(.55,.055,.675,.19)}
@@ -4573,6 +4573,7 @@ ul.messenger-theme-flat .messenger-message.alert-info .messenger-message-inner:b
 @media (min-width:992px){.overview-new .list-pf-name{align-items:center;flex-direction:row}
 .overview-new .list-pf-name h3{width:60%}
 }
+.overview-new .list-row-longname{color:#9c9c9c;font-size:11px;margin-top:3px}
 .overview-new .list-row-tabset{margin-top:20px}
 @media (min-width:768px){.overview-new .list-pf-item>.list-pf-container>.list-pf-content{min-height:45px;padding-right:15px}
 .overview-new .list-row-tabset{margin-top:0}
@@ -4594,6 +4595,11 @@ ul.messenger-theme-flat .messenger-message.alert-info .messenger-message-inner:b
 .overview-new .overview-routes+.overview-routes{margin-top:10px}
 .overview-new .overview-row-inline-actions{margin-left:10px}
 .overview-new pod-donut[mini]{align-items:center;display:flex}
+.overview-new .provisioned-service .expanded-section{margin-top:0}
+@media (min-width:768px){.overview-new .provisioned-service .list-pf-details{justify-content:space-between}
+}
+.overview-new .provisioned-service .list-pf-details .bindings{margin-bottom:0;margin-top:-4px}
+.overview-new .provisioned-service .list-pf-details .small{color:#9c9c9c;font-size:10px}
 .overview-new .status-icons{margin-top:5px}
 @media (min-width:992px){.overview-new .status-icons{margin-right:15px;margin-top:0;width:40%}
 }
@@ -5492,7 +5498,6 @@ alerts+.chromeless .log-loading-msg{margin-top:130px}
 .hide-if-empty:empty{display:none!important}
 .appended-icon{display:inline-block;white-space:nowrap}
 .block{display:block}
-.tranform-none{text-transform:none!important}
 .donut-title-med-pf{font-size:22.5px;font-weight:300}
 .wizard-pf-steps-indicator .wizard-pf-step-number{left:calc(50% - 13px)}
 .col-md-12>.alerts:first-child{margin-top:20px}
