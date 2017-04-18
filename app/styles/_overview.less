@@ -250,6 +250,13 @@
     }
     .list-pf-content {
       max-width: 100%;
+      // prevent deployment animation from overlaying alerts
+      // TODO set as default for all alerts?
+      alerts {
+        position: relative;
+        z-index: 2;
+        display: block;
+      }
     }
     .list-pf-container {
       display: block; // so that .word-break() will work in IE
@@ -495,8 +502,6 @@
         .latest-donut {
           display: flex;
           flex: 1 1 auto;
-          // right align donut
-          justify-content: flex-end;
         }
         .previous-donut {
           display: flex;
@@ -524,6 +529,9 @@
           order: 3;
         }
       }
+      .latest-donut {
+        justify-content: flex-end;
+      }
       .overview-animation-block {
         @media (min-width: @screen-xs-min) and (max-width: @screen-md-max) {
           justify-content: space-between;
@@ -546,6 +554,13 @@
       }
     }
     &.metrics-not-active {
+      .latest-donut {
+        justify-content: center;
+        @media (min-width: @screen-sm-min) {
+          // right align donut when pod-template is shown
+          justify-content: flex-end;
+        }
+      }
       .overview-pod-template {
         // prevent wrapping of flex containers
         width: 50%;
