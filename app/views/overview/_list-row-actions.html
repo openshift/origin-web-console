@@ -14,7 +14,7 @@
             <li ng-if="row.showStartBuildAction()" role="menuitem">
               <a href="" ng-click="row.startBuild(row.buildConfigs[0])">Start Build</a>
             </li>
-            <li ng-if="'deploymentconfigs' | canI : 'update'" role="menuitem">
+            <li ng-if="'deploymentconfigs/instantiate' | canI : 'create'" role="menuitem">
               <a href="" ng-click="row.startDeployment()">Deploy</a>
             </li>
             <li ng-if="'deploymentconfigs' | canI : 'update'" role="menuitem">

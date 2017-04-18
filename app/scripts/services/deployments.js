@@ -8,25 +8,20 @@ angular.module("openshiftConsole")
     DeploymentsService.prototype.startLatestDeployment = function(deploymentConfig, context, $scope) {
       // increase latest version by one so starts new deployment based on latest
       var req = {
-        kind: "DeploymentConfig",
+        kind: "DeploymentRequest",
         apiVersion: "v1",
-        metadata: deploymentConfig.metadata,
-        spec: deploymentConfig.spec,
-        status: deploymentConfig.status
+        name: deploymentConfig.metadata.name,
+        latest: true,
+        force: true
       };
-      if (!req.status.latestVersion) {
-        req.status.latestVersion = 0;
-      }
-      req.status.latestVersion++;
 
-      // update the deployment config
-      DataService.update("deploymentconfigs", deploymentConfig.metadata.name, req, context).then(
-        function() {
+      DataService.create("deploymentconfigs/instantiate", deploymentConfig.metadata.name, req, context).then(
+        function(updatedDC) {
           $scope.alerts = $scope.alerts || {};
           $scope.alerts["deploy"] =
             {
               type: "success",
-              message: "Deployment #" + req.status.latestVersion + " of " + deploymentConfig.metadata.name + " has started.",
+              message: "Deployment #" + updatedDC.status.latestVersion + " of " + deploymentConfig.metadata.name + " has started.",
             };
         },
         function(result) {

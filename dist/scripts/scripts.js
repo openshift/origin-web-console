@@ -884,7 +884,7 @@ return !(!h.current || !h.previous) || j(h.current);
 var a = _.get(h, "apiObject.kind");
 switch (a) {
 case "DeploymentConfig":
-return !!i("deploymentconfigs", "update") || (!(!h.current || !i("deploymentconfigs/log", "get")) || (h.showStartPipelineAction() || h.showStartBuildAction()));
+return !!i("deploymentconfigs/instantiate", "create") || (!!i("deploymentconfigs", "update") || (!(!h.current || !i("deploymentconfigs/log", "get")) || (h.showStartPipelineAction() || h.showStartBuildAction())));
 
 case "Pod":
 return !!i("pods/log", "get") || !!i("pods", "update");
@@ -2406,16 +2406,16 @@ function f() {}
 var g = c("annotation");
 f.prototype.startLatestDeployment = function(a, d, e) {
 var f = {
-kind:"DeploymentConfig",
+kind:"DeploymentRequest",
 apiVersion:"v1",
-metadata:a.metadata,
-spec:a.spec,
-status:a.status
+name:a.metadata.name,
+latest:!0,
+force:!0
 };
-f.status.latestVersion || (f.status.latestVersion = 0), f.status.latestVersion++, b.update("deploymentconfigs", a.metadata.name, f, d).then(function() {
+b.create("deploymentconfigs/instantiate", a.metadata.name, f, d).then(function(b) {
 e.alerts = e.alerts || {}, e.alerts.deploy = {
 type:"success",
-message:"Deployment #" + f.status.latestVersion + " of " + a.metadata.name + " has started."
+message:"Deployment #" + b.status.latestVersion + " of " + a.metadata.name + " has started."
 };
 }, function(a) {
 e.alerts = e.alerts || {}, e.alerts.deploy = {

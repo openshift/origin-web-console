@@ -64,7 +64,7 @@
         <div ng-if="!pipelinesForDC[deploymentConfig.metadata.name].length">
             <p>No deployments have started for
             <a ng-href="{{deploymentConfig | navigateResourceURL}}">{{deploymentConfig.metadata.name}}</a>.</p>
-          <button ng-if="'deploymentconfigs' | canI : 'update'" class="btn btn-primary" ng-click="startDeployment(deploymentConfig)">
+          <button ng-if="'deploymentconfigs/instantiate' | canI : 'create'" class="btn btn-primary" ng-click="startDeployment(deploymentConfig)">
             Start Deployment
           </button>
         </div>
