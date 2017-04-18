@@ -2,7 +2,7 @@
 <div ng-if="row.imageChangeTriggers.length">
   A new deployment will start automatically when
   <span ng-if="row.imageChangeTriggers.length === 1">
-    an image is available for
+    an image is pushed to
     <a ng-href="{{row.urlForImageChangeTrigger(row.imageChangeTriggers[0])}}">
       {{row.imageChangeTriggers[0].imageChangeParams.from | imageObjectRef : row.apiObject.metadata.namespace}}</a>.
   </span>

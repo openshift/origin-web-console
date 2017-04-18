@@ -12177,7 +12177,7 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "</span>\n" +
     "</div>\n" +
     "<a ng-href=\"{{row.apiObject | navigateResourceURL}}\"><span ng-bind-html=\"row.apiObject.metadata.name | highlightKeywords : row.state.filterKeywords\"></span></a><span ng-if=\"row.apiObject.kind === 'DeploymentConfig' && row.current\">,\n" +
-    "<a ng-href=\"{{row.current | navigateResourceURL}}\">#{{row.apiObject.status.latestVersion}}</a>\n" +
+    "<a ng-href=\"{{row.current | navigateResourceURL}}\">#{{row.current | annotation : 'deploymentVersion'}}</a>\n" +
     "</span><span ng-if=\"row.apiObject.kind === 'Deployment' && row.current\">,\n" +
     "<a ng-href=\"{{row.current | navigateResourceURL}}\">#{{row.current | annotation : 'deployment.kubernetes.io/revision'}}</a>\n" +
     "</span>\n" +
@@ -12252,7 +12252,7 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "<div ng-if=\"row.imageChangeTriggers.length\">\n" +
     "A new deployment will start automatically when\n" +
     "<span ng-if=\"row.imageChangeTriggers.length === 1\">\n" +
-    "an image is available for\n" +
+    "an image is pushed to\n" +
     "<a ng-href=\"{{row.urlForImageChangeTrigger(row.imageChangeTriggers[0])}}\">\n" +
     "{{row.imageChangeTriggers[0].imageChangeParams.from | imageObjectRef : row.apiObject.metadata.namespace}}</a>.\n" +
     "</span>\n" +

@@ -221,22 +221,24 @@ key:"metadata.uid"
 }, za = function(a) {
 if (_.get(a, "status.replicas")) return !0;
 var b = z(a, "deploymentConfig");
-if (!b) return !0;
-var c = _.get(v, [ "deploymentConfigs", b, "status", "latestVersion" ]);
-return c ? c === Number(z(a, "deploymentVersion")) :B(a);
+return !b || B(a);
 }, Aa = function(a) {
 return z(a, "deploymentConfig");
 }, Ba = function() {
 if (v.deploymentConfigs && v.replicationControllers) {
 var a = [];
 v.replicationControllersByDeploymentConfig = {}, v.currentByDeploymentConfig = {}, K = {};
-var b = {};
-_.each(v.replicationControllers, function(c) {
-var d = Aa(c) || "";
-(!d || !v.deploymentConfigs[d] && _.get(c, "status.replicas")) && a.push(c);
-var e = K[d];
-e && !F(c, e) || (K[d] = c), za(c) && _.set(b, [ d, c.metadata.name ], c);
+var b = {}, c = {};
+_.each(v.replicationControllers, function(d) {
+var e = Aa(d) || "";
+(!e || !v.deploymentConfigs[e] && _.get(d, "status.replicas")) && a.push(d);
+var f = K[e];
+f && !F(d, f) || (K[e] = d);
+var g;
+"Complete" === z(d, "deploymentStatus") && (g = b[e], g && !F(d, g) || (b[e] = d)), za(d) && _.set(c, [ e, d.metadata.name ], d);
 }), _.each(b, function(a, b) {
+_.set(c, [ b, a.metadata.name ], a);
+}), _.each(c, function(a, b) {
 var c = i.sortByDeploymentVersion(a, !0);
 v.replicationControllersByDeploymentConfig[b] = c, v.currentByDeploymentConfig[b] = _.head(c);
 }), v.vanillaReplicationControllers = _.sortBy(a, "metadata.name"), oa();

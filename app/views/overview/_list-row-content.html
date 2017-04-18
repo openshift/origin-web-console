@@ -9,7 +9,7 @@
       </span>
     </div>
     <a ng-href="{{row.apiObject | navigateResourceURL}}"><span ng-bind-html="row.apiObject.metadata.name | highlightKeywords : row.state.filterKeywords"></span></a><span ng-if="row.apiObject.kind === 'DeploymentConfig' && row.current">,
-      <a ng-href="{{row.current | navigateResourceURL}}">#{{row.apiObject.status.latestVersion}}</a>
+      <a ng-href="{{row.current | navigateResourceURL}}">#{{row.current | annotation : 'deploymentVersion'}}</a>
     </span><span ng-if="row.apiObject.kind === 'Deployment' && row.current">,
       <a ng-href="{{row.current | navigateResourceURL}}">#{{row.current | annotation : 'deployment.kubernetes.io/revision'}}</a>
     </span>
