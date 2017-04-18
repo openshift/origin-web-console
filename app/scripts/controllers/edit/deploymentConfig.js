@@ -334,6 +334,26 @@ angular.module('openshiftConsole')
         delete $scope.strategyData[getParamsPropertyName($scope.originalStrategy)];
       }
 
+      if ($scope.strategyData.type === 'Rolling') {
+        // Need to normalize to null / number / string depending on what the user sets
+        var maxSurge = $scope.strategyData[$scope.strategyParamsPropertyName].maxSurge;
+        var parsedMaxSurge = Number(maxSurge);
+        if (maxSurge === "") {
+          $scope.strategyData[$scope.strategyParamsPropertyName].maxSurge = null;
+        }
+        else if (_.isFinite(parsedMaxSurge)) {
+          $scope.strategyData[$scope.strategyParamsPropertyName].maxSurge = parsedMaxSurge;
+        }
+        var maxUnavailable = $scope.strategyData[$scope.strategyParamsPropertyName].maxUnavailable;
+        var parsedMaxUnavailable = Number(maxUnavailable);
+        if (maxUnavailable === "") {
+          $scope.strategyData[$scope.strategyParamsPropertyName].maxUnavailable = null;
+        }
+        else if (_.isFinite(parsedMaxUnavailable)) {
+          $scope.strategyData[$scope.strategyParamsPropertyName].maxUnavailable = parsedMaxUnavailable;
+        }
+      }
+
       if ($scope.strategyData.type !== 'Custom') {
         _.each(['pre', 'mid', 'post'], function(hookType) {
           if (_.has($scope.strategyData, [$scope.strategyParamsPropertyName, hookType, 'execNewPod', 'env'])) {
