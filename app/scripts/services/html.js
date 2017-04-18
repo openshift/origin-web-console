@@ -6,6 +6,10 @@ angular.module("openshiftConsole")
     return {
       // Ge the breakpoint for the current screen width.
       getBreakpoint: function() {
+        if (window.innerWidth < BREAKPOINTS.screenXsMin) {
+          return 'xxs';
+        }
+
         if (window.innerWidth < BREAKPOINTS.screenSmMin) {
           return 'xs';
         }

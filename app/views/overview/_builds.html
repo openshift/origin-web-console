@@ -1,12 +1,12 @@
 <div ng-if="overviewBuilds.buildConfigs.length" class="expanded-section">
   <div class="section-title hidden-xs">Builds</div>
   <div ng-repeat="buildConfig in overviewBuilds.buildConfigs track by (buildConfig | uid)" class="row">
-    <div class="col-sm-5">
+    <div class="col-sm-5 col-md-6">
       <h3 class="mar-top-xs">
         <a ng-href="{{buildConfig | navigateResourceURL}}">{{buildConfig.metadata.name}}</a>
       </h3>
     </div>
-    <div class="col-sm-7">
+    <div class="col-sm-7 col-md-6 overview-builds-msg">
       <div ng-if="!(overviewBuilds.recentBuildsByBuildConfig[buildConfig.metadata.name] | hashSize)">
         No builds.
       </div>

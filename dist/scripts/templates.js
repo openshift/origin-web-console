@@ -345,7 +345,7 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "<div class=\"icon-wrap\">\n" +
     "<span class=\"fa fa-code\" aria-hidden=\"true\"></span>\n" +
     "</div>\n" +
-    "<div flex>\n" +
+    "<div flex class=\"word-break\">\n" +
     "<span class=\"pod-template-key\">Source:</span>\n" +
     "<span ng-switch=\"build.spec.source.type\">\n" +
     "<span ng-switch-when=\"Git\">\n" +
@@ -11847,12 +11847,12 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "<div ng-if=\"overviewBuilds.buildConfigs.length\" class=\"expanded-section\">\n" +
     "<div class=\"section-title hidden-xs\">Builds</div>\n" +
     "<div ng-repeat=\"buildConfig in overviewBuilds.buildConfigs track by (buildConfig | uid)\" class=\"row\">\n" +
-    "<div class=\"col-sm-5\">\n" +
+    "<div class=\"col-sm-5 col-md-6\">\n" +
     "<h3 class=\"mar-top-xs\">\n" +
     "<a ng-href=\"{{buildConfig | navigateResourceURL}}\">{{buildConfig.metadata.name}}</a>\n" +
     "</h3>\n" +
     "</div>\n" +
-    "<div class=\"col-sm-7\">\n" +
+    "<div class=\"col-sm-7 col-md-6 overview-builds-msg\">\n" +
     "<div ng-if=\"!(overviewBuilds.recentBuildsByBuildConfig[buildConfig.metadata.name] | hashSize)\">\n" +
     "No builds.\n" +
     "</div>\n" +
@@ -12292,39 +12292,48 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "<div class=\"list-pf-content\">\n" +
     "<alerts alerts=\"row.notifications\"></alerts>\n" +
     "<div ng-if=\"row.current\">\n" +
-    "<div class=\"row\">\n" +
-    "<div ng-if=\"row.state.breakpoint !== 'xs'\">\n" +
-    "<div ng-class=\"{\n" +
-    "                'col-sm-7 col-md-8 col-lg-9': !row.state.showMetrics && !row.previous,\n" +
-    "                'col-sm-12 col-md-4 col-lg-5': row.state.showMetrics && !row.previous,\n" +
-    "                'hidden-sm col-md-5 col-lg-5': row.previous\n" +
-    "              }\">\n" +
+    "<div class=\"row-expanded-top\" ng-class=\"{\n" +
+    "            'metrics-active': row.state.showMetrics,\n" +
+    "            'metrics-not-active': !row.state.showMetrics\n" +
+    "      }\">\n" +
+    "<div ng-if=\"row.state.breakpoint !== 'xxs' && row.state.breakpoint !== 'xs'\" class=\"overview-pod-template\" ng-class=\"{\n" +
+    "          'ng-enter': row.previous,\n" +
+    "          'hidden-sm hidden-md': row.previous\n" +
+    "        }\">\n" +
     "\n" +
-    "<pod-template pod-template=\"row.current | podTemplate\" images-by-docker-reference=\"row.state.imagesByDockerReference\" builds=\"row.state.builds\"></pod-template>\n" +
+    "<pod-template pod-template=\"row.current | podTemplate\" images-by-docker-reference=\"row.state.imagesByDockerReference\" builds=\"row.state.builds\" class=\"hide-ng-leave\">\n" +
+    "</pod-template>\n" +
     "</div>\n" +
-    "<div ng-if=\"row.state.showMetrics && !row.previous\" class=\"col-sm-7 col-md-4 col-lg-4\">\n" +
+    "<div class=\"overview-animation-block\" ng-class=\"{\n" +
+    "        'animation-in-progress': row.previous\n" +
+    "      }\">\n" +
+    "<div ng-if=\"row.state.showMetrics && !row.previous\" class=\"overview-metrics\" ng-class=\"{\n" +
+    "          'ng-enter': row.previous\n" +
+    "        }\">\n" +
     "<div ng-if=\"row.apiObject.kind === 'Pod'\">\n" +
     "<deployment-metrics pods=\"[row.apiObject]\" containers=\"row.apiObject.spec.containers\" profile=\"compact\" alerts=\"row.state.alerts\" class=\"overview-metrics\">\n" +
     "</deployment-metrics>\n" +
     "<h4 class=\"h5\">Usage <small>Last 15 Minutes</small></h4>\n" +
     "</div>\n" +
     "<div ng-if=\"row.apiObject.kind !== 'Pod'\">\n" +
-    "<deployment-metrics pods=\"row.getPods(row.current)\" containers=\"row.current.spec.template.spec.containers\" profile=\"compact\" alerts=\"row.state.alerts\" class=\"overview-metrics\">\n" +
+    "<deployment-metrics pods=\"row.getPods(row.current)\" containers=\"row.current.spec.template.spec.containers\" profile=\"compact\" alerts=\"row.state.alerts\">\n" +
     "</deployment-metrics>\n" +
     "<h4 class=\"h5\">Average Usage <small>Last 15 Minutes</small></h4>\n" +
     "</div>\n" +
     "</div>\n" +
-    "</div>\n" +
-    "<div ng-if=\"row.previous\" class=\"col-sm-5 col-md-3\">\n" +
+    "<div class=\"overview-deployment-donut\" ng-class=\"{\n" +
+    "            'ng-enter': row.previous,\n" +
+    "            'stacked-template': row.state.breakpoint !== 'lg'\n" +
+    "        }\">\n" +
+    "<div ng-if=\"row.previous\" class=\"previous-donut\">\n" +
     "<deployment-donut rc=\"row.previous\" deployment-config=\"row.apiObject\" pods=\"row.getPods(row.previous)\" hpa=\"row.hpa\" limit-ranges=\"row.state.limitRanges\" quotas=\"row.state.quotas\" cluster-quotas=\"row.state.clusterQuotas\" scalable=\"false\" alerts=\"row.state.alerts\">\n" +
     "</deployment-donut>\n" +
-    "</div>\n" +
-    "<div ng-if=\"row.previous\" class=\"col-sm-2 col-md-1 col-lg-1\">\n" +
+    "<div ng-if=\"row.previous\" class=\"deployment-connector\">\n" +
     "<div class=\"deployment-connector-arrow\" aria-hidden=\"true\">\n" +
-    "&rarr;\n" +
     "</div>\n" +
     "</div>\n" +
-    "<div class=\"col-sm-5 col-md-3\">\n" +
+    "</div>\n" +
+    "<div class=\"latest-donut\">\n" +
     "<div ng-if=\"row.apiObject.kind === 'Pod'\">\n" +
     "<a ng-href=\"{{row.apiObject | navigateResourceURL}}\">\n" +
     "<pod-donut pods=\"[row.apiObject]\"></pod-donut>\n" +
@@ -12337,11 +12346,13 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "</div>\n" +
     "</div>\n" +
     "</div>\n" +
+    "</div>\n" +
+    "</div>\n" +
     "\n" +
     "<div ng-if=\"!row.current\" class=\"empty-state-message\">\n" +
     "<div ng-include src=\" 'views/overview/_list-row-empty-state.html' \"></div>\n" +
     "</div>\n" +
-    "<div ng-if=\"row.state.breakpoint === 'xs' && !row.state.previous\" class=\"row\">\n" +
+    "<div ng-if=\"(row.state.breakpoint === 'xxs' || row.state.breakpoint === 'xs') && !row.state.previous\" class=\"row\">\n" +
     "<div class=\"col-sm-12\">\n" +
     "\n" +
     "<uib-tabset ng-if=\"row.current || (row.services | hashSize) || row.recentPipelines.length || row.buildConfigs.length\" class=\"list-row-tabset\">\n" +
@@ -12355,7 +12366,7 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "\n" +
     "<pod-template pod-template=\"row.current | podTemplate\" images-by-docker-reference=\"row.state.imagesByDockerReference\" builds=\"row.state.builds\"></pod-template>\n" +
     "</uib-tab>\n" +
-    "<uib-tab ng-if=\"row.current && row.state.showMetrics\" active=\"row.selectedTab.metrics\">\n" +
+    "<uib-tab ng-if=\"row.current && row.state.showMetrics && row.state.breakpoint === 'xxs'\" active=\"row.selectedTab.metrics\">\n" +
     "<uib-tab-heading>Metrics</uib-tab-heading>\n" +
     "\n" +
     "<div ng-if=\"row.selectedTab.metrics\">\n" +
@@ -12394,15 +12405,17 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "</uib-tabset>\n" +
     "</div>\n" +
     "</div>\n" +
+    "<div ng-if=\"row.state.breakpoint !== 'xxs' && row.state.breakpoint !== 'xs'\">\n" +
     "\n" +
-    "<overview-networking ng-if=\"row.state.breakpoint !== 'xs'\" services=\"row.services\" routes-by-service=\"row.state.routesByService\">\n" +
+    "<overview-networking services=\"row.services\" routes-by-service=\"row.state.routesByService\">\n" +
     "</overview-networking>\n" +
     "\n" +
-    "<overview-pipelines ng-if=\"!row.hidePipelines && row.state.breakpoint !== 'xs'\" recent-pipelines=\"row.recentPipelines\">\n" +
+    "<overview-pipelines ng-if=\"!row.hidePipelines\" recent-pipelines=\"row.recentPipelines\">\n" +
     "</overview-pipelines>\n" +
     "\n" +
-    "<overview-builds ng-if=\"row.state.breakpoint !== 'xs'\" build-configs=\"row.buildConfigs\" recent-builds-by-build-config=\"row.state.recentBuildsByBuildConfig\" context=\"row.state.context\" hide-log=\"row.state.limitWatches\">\n" +
+    "<overview-builds build-configs=\"row.buildConfigs\" recent-builds-by-build-config=\"row.state.recentBuildsByBuildConfig\" context=\"row.state.context\" hide-log=\"row.state.limitWatches\">\n" +
     "</overview-builds>\n" +
+    "</div>\n" +
     "</div>\n" +
     "</div> "
   );
@@ -12461,7 +12474,7 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "<div ng-if=\"networking.services | hashSize\" class=\"expanded-section networking-section\">\n" +
     "<div class=\"section-title hidden-xs\">Networking</div>\n" +
     "<div ng-repeat=\"service in networking.services\" class=\"row\">\n" +
-    "<div class=\"col-sm-5\">\n" +
+    "<div class=\"col-sm-5 col-md-6\">\n" +
     "<div class=\"component-label\">\n" +
     "Service\n" +
     "<span class=\"sublabel\">Internal Traffic</span>\n" +
@@ -12483,7 +12496,7 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "</span>\n" +
     "</span>\n" +
     "</div>\n" +
-    "<div class=\"col-sm-7\">\n" +
+    "<div class=\"col-sm-7 col-md-6 overview-routes\">\n" +
     "<div class=\"component-label\">\n" +
     "Routes\n" +
     "<span class=\"sublabel\">External Traffic</span>\n" +

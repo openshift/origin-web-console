@@ -145,24 +145,47 @@
   .data-toolbar-label {
     margin-right: 7px;
   }
-  // TODO: improve on this as it's pretty hacky
-  .deployment-connector-arrow {
-    display: inline-block;
-    font-size: 300%;
-    line-height: 1;
-    margin: 50px 0 0 10px;
-    text-align: center;
-    .text-muted();
-    @media (max-width: @screen-xs-max) {
-      margin: -3px auto 0 -4px;
-      transform: rotate(90deg);
-      width: 100%
+  .deployment-connector {
+    align-items: flex-end;
+    display: flex;
+    flex: 1 1 auto;
+    justify-content: center;
+    @media (min-width: @screen-xs-min) {
+      align-items: center;
+      justify-content: flex-end;
+    }
+    .deployment-connector-arrow {
+      align-items: center;
+      display: flex;
+      font-size: 300%;
+      .text-muted();
+      &:before {
+        content: '\2192';
+        // center arrow
+        margin-top: -8px;
+        padding-right: 0;
+      }
+      @media (max-width: @screen-xxs-max) {
+        &:before {
+          content: '\2191';
+          // center arrow when donuts stacked
+          margin-top: -20px;
+          padding-right: 23px;
+        }
+      }
     }
   }
   .expanded-section {
     margin-top: 20px;
     > .row > [class^=col-] {
       margin-bottom: 10px;
+      @media (min-width: @screen-lg-min) {
+        // aligns 2nd columns with metrics
+        &.overview-builds-msg,
+        &.overview-routes {
+          padding-left: 0;
+        }
+      }
     }
     h3 {
       line-height: 1.4;
@@ -205,6 +228,7 @@
     min-width: 19px;
   }
   .list-pf-details {
+    .fade-in();
     @media (min-width: @screen-sm-min) {
       justify-content: flex-end;
     }
@@ -229,6 +253,9 @@
     }
     .list-pf-container {
       display: block; // so that .word-break() will work in IE
+      @media (max-width: @screen-xs-max) {
+        overflow: hidden; // so animation offsets are hidden when sliding in vertically
+      }
     }
     .pod-donut {
       .text-center();
@@ -238,6 +265,9 @@
     border-top-color: @list-pf-border-color;
     &.active {
       border-top-color: @list-pf-item-active-border-color;
+      @media (min-width: @screen-xs-min) {
+        overflow: hidden; // so animation offsets are hidden when sliding in horizontally
+      }
     }
     > .list-pf-container {
       cursor: pointer;
@@ -324,7 +354,7 @@
       max-width: 80px;
     }
     .usage-label {
-      // Make sure the labels align with the bottom of the chart.
+    // Make sure the labels align with the bottom of the chart.
       line-height: 1;
       margin-bottom: -1px;
     }
@@ -348,10 +378,6 @@
     display: block;
     border-top: 1px solid @list-pf-border-color;
     margin: 0 20px 10px;
-  }
-  overview-list-row + overview-list-row .list-pf-item.active {
-    // avoid double borders when list-pf-item is open
-    margin-top: -1px;
   }
   .overview-route {
     .word-break();
@@ -400,7 +426,145 @@
       margin-top: 10px;
     }
   }
-}
+
+  // Deployment animations
+  @keyframes deploymentSlideDown {
+    0% {
+      // align previous and latest donut start position
+      transform: translateY(-220px);
+    }
+    100% {
+      transform: translateX(0);
+    }
+  }
+
+  @keyframes deploymentSlideIn {
+    0% {
+      // align previous and latest donut start position
+      transform: translateX(240px);
+    }
+    100% {
+      transform: translateX(0);
+    }
+  }
+
+  .row-expanded-top {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: space-between;
+    @media (min-width: @screen-lg-min) {
+      // width needed to enable flex to trigger word-break on content
+      .overview-animation-block,
+      .overview-pod-template {
+        width: 50%;
+      }
+    }
+    .overview-animation-block {
+      display: flex;
+      flex: 1 1 auto;
+      justify-content: center;
+      @media (min-width: @screen-sm-min) {
+        &.animation-in-progress .overview-deployment-donut .latest-donut {
+          justify-content: flex-end;
+        }
+      }
+      .overview-deployment-donut {
+        @media (min-width: @screen-xs-min) {
+          display: flex;
+          flex: 1 1 auto;
+          // prevents resize jump; set height since the donut isn't displayed exactly when expanded-section is rendered
+          height: 150px;
+          max-width: 450px;
+        }
+        &.ng-enter {
+          animation: deploymentSlideIn 750ms ease forwards;
+        }
+        &.stacked-template {
+          .overview-pod-template {
+            min-width: 100%;
+          }
+          @media (max-width: @screen-xxs-max) {
+            display: flex;
+            // stack latest deployment-donut above previous-donut
+            flex-direction: column-reverse;
+            &.ng-enter {
+              animation: deploymentSlideDown 750ms ease forwards;
+            }
+          }
+        }
+        .latest-donut {
+          display: flex;
+          flex: 1 1 auto;
+          // right align donut
+          justify-content: flex-end;
+        }
+        .previous-donut {
+          display: flex;
+          flex: 1 1 auto;
+          .fade-out();
+          &.ng-enter-prepare {
+            // prevent previous-donut initial "flash" before animation
+            display: none;
+          }
+          @media (max-width: @screen-xxs-max) {
+            flex-direction: column;
+            deployment-donut {
+              // move arrow to point at latest deployment-donut
+              order: 2;
+            }
+          }
+        }
+      }
+    }
+    &.metrics-active {
+      @media (max-width: @screen-md-max) {
+        flex-direction: column;
+        .overview-pod-template {
+          min-width: 100%;
+          order: 3;
+        }
+      }
+      .overview-animation-block {
+        @media (min-width: @screen-xs-min) and (max-width: @screen-md-max) {
+          justify-content: space-between;
+          // add spacing when pod-template-block is stacked beneath
+          padding-bottom: 20px;
+          &.animation-in-progress {
+            justify-content: center;
+          }
+        }
+      }
+      .overview-metrics {
+        display:none;
+        // display metrics beside donut
+        @media (min-width: @screen-xs-min) {
+          display:block;
+          .fade-in();
+          .fade-out();
+          width: 50%;
+        }
+      }
+    }
+    &.metrics-not-active {
+      .overview-pod-template {
+        // prevent wrapping of flex containers
+        width: 50%;
+      }
+    }
+    .overview-pod-template {
+      flex: 1 1 auto;
+      .pod-template-block {
+        // add space so text can't touch metrics or doughnut
+        padding-right: 10px;
+        &.ng-leave-prepare {
+          // prevent previous-donut initial "flash" before animation
+          display: none;
+        }
+      }
+    }
+  }
+
+} // end overview-new
 
 .overview {
   font-weight: @overview-font-weight;
