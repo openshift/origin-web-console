@@ -95,12 +95,3 @@
   margin-left: 0;
   margin-right: 10px;
 }
-
-// Add vendor prefixes for placeholder text, since they where removed from PatternFly
-// https://github.com/patternfly/patternfly/issues/597
-.placeholder(@color: @input-color-placeholder) {
-  &:-moz-placeholder            { color: @color; font-style: italic; } // Firefox 4-18
-  &::-moz-placeholder           { color: @color; font-style: italic; opacity: 1; } // Firefox 19+
-  &:-ms-input-placeholder       { color: @color; font-style: italic; } // Internet Explorer 10+
-  &::-webkit-input-placeholder  { color: @color; font-style: italic; } // Safari and Chrome
-}
