@@ -11540,7 +11540,7 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "</div>\n" +
     "</div>\n" +
     "\n" +
-    "<div class=\"list-pf\" ng-if=\"overview.pipelineBuildConfigs.length && overview.pipelineViewHasOtherResources && !overview.filterActive\">\n" +
+    "<div class=\"list-pf\" ng-if=\"overview.pipelineViewHasOtherResources && !overview.hidePipelineOtherResources\">\n" +
     "<h2>Other Resources</h2>\n" +
     "<overview-list-row ng-repeat=\"deploymentConfig in overview.deploymentConfigsNoPipeline track by (deploymentConfig | uid)\" ng-init=\"dcName = deploymentConfig.metadata.name\" api-object=\"deploymentConfig\" current=\"overview.currentByDeploymentConfig[dcName]\" previous=\"overview.getPreviousReplicationController(deploymentConfig)\" state=\"overview.state\">\n" +
     "</overview-list-row>\n" +
@@ -11557,7 +11557,7 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "</div>\n" +
     "</div>\n" +
     "\n" +
-    "<div ng-if=\"overview.filteredServiceInstances.length\">\n" +
+    "<div ng-if=\"overview.filteredServiceInstances.length && !overview.hidePipelineOtherResources\">\n" +
     "<h2>\n" +
     "Provisioned Services\n" +
     "</h2>\n" +

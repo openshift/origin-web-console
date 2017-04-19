@@ -196,6 +196,8 @@ function OverviewController($scope,
     overview.showLoading = !loaded && projectEmpty;
 
     overview.everythingFiltered = !projectEmpty && !overview.filteredSize;
+    overview.hidePipelineOtherResources = overview.viewBy === 'pipeline' &&
+                                          (overview.filterActive || _.isEmpty(overview.pipelineBuildConfigs));
   };
 
   // Group a collection of resources by app label. Returns a map where the key
