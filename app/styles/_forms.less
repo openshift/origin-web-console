@@ -3,14 +3,24 @@
   margin-top: 3px;
 }
 
-.copy-to-clipboard input.form-control:read-only {
-  background-color: white;
-  color: @text-color;
+// don't allow copy-to-clipboard .input-groups get bigger than 300px so Github webhook secrets aren't revealed within the input-group
+copy-to-clipboard .input-group.limit-width {
+  max-width: 300px;
+}
+
+.copy-to-clipboard {
+  input.form-control[readonly] {
+    background-color: white;
+    color: @text-color;
+  }
+  .jenkinsfile-examples & {
+    margin-top: 3px;
+  }
 }
 
 .copy-to-clipboard-multiline {
-  position: relative;
-  width: 100%;
+  display: block;
+  overflow-x: auto;
   a {
     box-shadow: none;
     position: absolute;
@@ -19,8 +29,8 @@
   }
   pre {
     background-color: #fff;
-    max-width: 100%;
-    overflow-x: auto;
+    word-break: normal;
+    word-wrap: normal;
   }
 }
 
@@ -28,20 +38,14 @@
   padding-left: 10px;
 }
 
+.input-group-btn .btn {
+  line-height: 1.6154em; // 21px; so that .btn isn't larger than .form-input
+}
+
 .editor-examples {
   padding: 19px;
   margin-bottom: 20px;
   border: 1px solid @color-pf-black-300;
-}
-
-.jenkinsfile-examples {
-  p {
-    // Show scrollbars as needed on small screens.
-    overflow: auto;
-  }
-  .copy-to-clipboard {
-    margin-top: 3px;
-  }
 }
 
 .compute-resource {
