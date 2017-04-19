@@ -11538,8 +11538,9 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "<overview-list-row ng-repeat=\"dcName in overview.deploymentConfigsByPipeline[pipeline.metadata.name]\" api-object=\"overview.deploymentConfigs[dcName]\" current=\"overview.currentByDeploymentConfig[dcName]\" previous=\"overview.getPreviousReplicationController(deploymentConfig)\" state=\"overview.state\" hide-pipelines=\"true\">\n" +
     "</overview-list-row>\n" +
     "</div>\n" +
+    "</div>\n" +
     "\n" +
-    "<div class=\"list-pf\" ng-if=\"overview.pipelineViewHasOtherResources && !overview.filterActive\">\n" +
+    "<div class=\"list-pf\" ng-if=\"overview.pipelineBuildConfigs.length && overview.pipelineViewHasOtherResources && !overview.filterActive\">\n" +
     "<h2>Other Resources</h2>\n" +
     "<overview-list-row ng-repeat=\"deploymentConfig in overview.deploymentConfigsNoPipeline track by (deploymentConfig | uid)\" ng-init=\"dcName = deploymentConfig.metadata.name\" api-object=\"deploymentConfig\" current=\"overview.currentByDeploymentConfig[dcName]\" previous=\"overview.getPreviousReplicationController(deploymentConfig)\" state=\"overview.state\">\n" +
     "</overview-list-row>\n" +
@@ -11553,7 +11554,6 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "</overview-list-row>\n" +
     "<overview-list-row ng-repeat=\"pod in overview.monopods track by (pod | uid)\" api-object=\"pod\" state=\"overview.state\">\n" +
     "</overview-list-row>\n" +
-    "</div>\n" +
     "</div>\n" +
     "</div>\n" +
     "\n" +
@@ -12991,7 +12991,7 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "</div>\n" +
     "</div>\n" +
     "<div ng-if=\"buildsLoaded && !(interestingBuildsByConfig[buildConfigName] | hashSize)\">\n" +
-    "<p>\n" +
+    "<p class=\"mar-bottom-xxl\">\n" +
     "No pipeline builds have run for {{buildConfigName}}.\n" +
     "<span ng-if=\"buildConfig.spec.strategy.jenkinsPipelineStrategy.jenkinsfile\">\n" +
     "View the <a ng-href=\"{{(buildConfig | navigateResourceURL) + '?tab=configuration'}}\">Jenkinsfile</a> to see what stages will run.\n" +

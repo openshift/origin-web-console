@@ -310,47 +310,47 @@
                          hide-pipelines="true">
                     </overview-list-row>
                   </div>
+                </div>
 
-                  <!-- Currently we only filter the pipelines. -->
-                  <div class="list-pf" ng-if="overview.pipelineViewHasOtherResources && !overview.filterActive">
-                    <h2>Other Resources</h2>
-                    <overview-list-row
-                         ng-repeat="deploymentConfig in overview.deploymentConfigsNoPipeline track by (deploymentConfig | uid)"
-                         ng-init="dcName = deploymentConfig.metadata.name"
-                         api-object="deploymentConfig"
-                         current="overview.currentByDeploymentConfig[dcName]"
-                         previous="overview.getPreviousReplicationController(deploymentConfig)"
-                         state="overview.state">
-                    </overview-list-row>
-                    <overview-list-row
-                         ng-repeat="deployment in overview.deployments track by (deployment | uid)"
-                         api-object="deployment"
-                         current="overview.currentByDeployment[deployment.metadata.name]"
-                         previous="overview.replicaSetsByDeployment[deployment.metadata.name][1]"
-                         state="overview.state">
-                    </overview-list-row>
-                    <overview-list-row
-                         ng-repeat="replicationController in overview.vanillaReplicationControllers track by (replicationController | uid)"
-                         api-object="replicationController"
-                         current="replicationController"
-                         state="overview.state">
-                    </overview-list-row>
-                    <overview-list-row
-                         ng-repeat="replicaSet in overview.vanillaReplicaSets track by (replicaSet | uid)"
-                         api-object="replicaSet"
-                         state="overview.state">
-                    </overview-list-row>
-                    <overview-list-row
-                         ng-repeat="statefulSet in overview.statefulSets track by (statefulSet | uid)"
-                         api-object="statefulSet"
-                         state="overview.state">
-                    </overview-list-row>
-                    <overview-list-row
-                         ng-repeat="pod in overview.monopods track by (pod | uid)"
-                         api-object="pod"
-                         state="overview.state">
-                    </overview-list-row>
-                  </div>
+                <!-- Currently we only filter the pipelines. Hide "Other Resources" if a pipeline filter is active or if we're showing the pipeline empty state message. -->
+                <div class="list-pf" ng-if="overview.pipelineBuildConfigs.length && overview.pipelineViewHasOtherResources && !overview.filterActive">
+                  <h2>Other Resources</h2>
+                  <overview-list-row
+                       ng-repeat="deploymentConfig in overview.deploymentConfigsNoPipeline track by (deploymentConfig | uid)"
+                       ng-init="dcName = deploymentConfig.metadata.name"
+                       api-object="deploymentConfig"
+                       current="overview.currentByDeploymentConfig[dcName]"
+                       previous="overview.getPreviousReplicationController(deploymentConfig)"
+                       state="overview.state">
+                  </overview-list-row>
+                  <overview-list-row
+                       ng-repeat="deployment in overview.deployments track by (deployment | uid)"
+                       api-object="deployment"
+                       current="overview.currentByDeployment[deployment.metadata.name]"
+                       previous="overview.replicaSetsByDeployment[deployment.metadata.name][1]"
+                       state="overview.state">
+                  </overview-list-row>
+                  <overview-list-row
+                       ng-repeat="replicationController in overview.vanillaReplicationControllers track by (replicationController | uid)"
+                       api-object="replicationController"
+                       current="replicationController"
+                       state="overview.state">
+                  </overview-list-row>
+                  <overview-list-row
+                       ng-repeat="replicaSet in overview.vanillaReplicaSets track by (replicaSet | uid)"
+                       api-object="replicaSet"
+                       state="overview.state">
+                  </overview-list-row>
+                  <overview-list-row
+                       ng-repeat="statefulSet in overview.statefulSets track by (statefulSet | uid)"
+                       api-object="statefulSet"
+                       state="overview.state">
+                  </overview-list-row>
+                  <overview-list-row
+                       ng-repeat="pod in overview.monopods track by (pod | uid)"
+                       api-object="pod"
+                       state="overview.state">
+                  </overview-list-row>
                 </div>
               </div>
 

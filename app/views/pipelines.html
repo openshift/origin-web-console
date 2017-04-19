@@ -84,7 +84,7 @@
                 </div>
               </div>
               <div ng-if="buildsLoaded && !(interestingBuildsByConfig[buildConfigName] | hashSize)">
-                <p>
+                <p class="mar-bottom-xxl">
                   No pipeline builds have run for {{buildConfigName}}.
                   <span ng-if="buildConfig.spec.strategy.jenkinsPipelineStrategy.jenkinsfile">
                     View the <a ng-href="{{(buildConfig | navigateResourceURL) + '?tab=configuration'}}">Jenkinsfile</a> to see what stages will run.
