@@ -313,7 +313,7 @@
                 </div>
 
                 <!-- Currently we only filter the pipelines. Hide "Other Resources" if a pipeline filter is active or if we're showing the pipeline empty state message. -->
-                <div class="list-pf" ng-if="overview.pipelineBuildConfigs.length && overview.pipelineViewHasOtherResources && !overview.filterActive">
+                <div class="list-pf" ng-if="overview.pipelineViewHasOtherResources && !overview.hidePipelineOtherResources">
                   <h2>Other Resources</h2>
                   <overview-list-row
                        ng-repeat="deploymentConfig in overview.deploymentConfigsNoPipeline track by (deploymentConfig | uid)"
@@ -354,8 +354,8 @@
                 </div>
               </div>
 
-              <!-- service instances appear the same way no matter the filter listBy option -->
-              <div ng-if="overview.filteredServiceInstances.length">
+              <!-- Show provisioned services. -->
+              <div ng-if="overview.filteredServiceInstances.length && !overview.hidePipelineOtherResources">
                 <h2>
                   Provisioned Services
                 </h2>
@@ -367,7 +367,6 @@
                     state="overview.state"></service-instance-row>
                 </div>
               </div>
-
             </div>
           </div>
         </div>

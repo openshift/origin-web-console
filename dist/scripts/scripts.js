@@ -58,7 +58,7 @@ return _.size(v.filteredDeploymentConfigs) + _.size(v.filteredReplicationControl
 }, R = function() {
 v.size = P(), v.filteredSize = Q();
 var a = 0 === v.size, b = v.deploymentConfigs && v.replicationControllers && v.deployments && v.replicaSets && v.statefulSets && v.pods && v.state.serviceInstances;
-L.expandAll = b && 1 === v.size, v.showGetStarted = b && a, v.showLoading = !b && a, v.everythingFiltered = !a && !v.filteredSize;
+L.expandAll = b && 1 === v.size, v.showGetStarted = b && a, v.showLoading = !b && a, v.everythingFiltered = !a && !v.filteredSize, v.hidePipelineOtherResources = "pipeline" === v.viewBy && (v.filterActive || _.isEmpty(v.pipelineBuildConfigs));
 }, S = function(a) {
 return e.groupByApp(a, "metadata.name");
 }, T = function(a) {
