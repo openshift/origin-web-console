@@ -42801,10 +42801,7 @@ return $.isEmptyObject(this._conjuncts);
 }, LabelSelector.prototype.each = function(a) {
 angular.forEach(this._conjuncts, a);
 }, LabelSelector.prototype.select = function(a) {
-var b = {}, c = this;
-return angular.forEach(a, function(a, d) {
-c.matches(a) && (b[d] = a);
-}), b;
+return _.isArray(a) ? _.filter(a, this.matches, this) :_.pick(a, this.matches, this);
 }, LabelSelector.prototype.matches = function(a) {
 if (!a) return !1;
 if (this.isEmpty()) return this._emptySelectsAll;
