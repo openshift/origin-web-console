@@ -3703,6 +3703,7 @@ table.dataTable th:active{outline:0}
 .row-cards-pf-flex .card-pf-body-with-version{display:flex;flex-direction:column;justify-content:space-between}
 .row-cards-pf-flex .card-pf-footer .btn{margin-bottom:10px}
 .row-cards-pf-flex .card-pf-title{line-height:1.3;margin:0;overflow:hidden;text-overflow:ellipsis}
+.bind-service-wizard .wizard-pf-contents{display:block;width:100%}
 .landing .nav-tabs,.landing h1{margin-bottom:0!important;margin-top:0!important}
 @media (min-width:768px){.catalog-search,.landing-side-bar{top:61px}
 }
