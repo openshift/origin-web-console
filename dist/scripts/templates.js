@@ -5994,7 +5994,7 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
 
 
   $templateCache.put('views/directives/bind-service.html',
-    "<div class=\"wizard-pf-body\">\n" +
+    "<div class=\"wizard-pf-body bind-service-wizard\">\n" +
     "<div class=\"wizard-pf-steps\">\n" +
     "<ul class=\"wizard-pf-steps-indicator\">\n" +
     "<li class=\"wizard-pf-step\" ng-class=\"{\n" +
@@ -6028,8 +6028,8 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
   $templateCache.put('views/directives/bind-service/results.html',
     "<div>\n" +
     "<div ng-if=\"!ctrl.error\">\n" +
-    "<div ng-if=\"!(ctrl.binding | isBindingReady)\">\n" +
-    "<h3 class=\"mar-top-none center\">\n" +
+    "<div ng-if=\"!(ctrl.binding | isBindingReady)\" class=\"text-center\">\n" +
+    "<h3 class=\"mar-top-none\">\n" +
     "<span class=\"fa fa-spinner fa-pulse fa-3x fa-fw\" aria-hidden=\"true\"></span>\n" +
     "<span class=\"sr-only\">Pending</span>\n" +
     "<div class=\"mar-top-lg\">The binding was created but is not ready yet.</div>\n" +
