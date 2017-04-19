@@ -170,7 +170,7 @@ function OverviewController($scope,
            _.size(overview.filteredReplicaSets) +
            _.size(overview.filteredStatefulSets) +
            _.size(overview.filteredMonopods) +
-           _.size(overview.state.serviceInstances);
+           _.size(overview.filteredServiceInstances);
   };
 
   // Show the "Get Started" message if the project is empty.
@@ -305,7 +305,7 @@ function OverviewController($scope,
   };
 
   // Updated on viewBy changes to include the app label when appropriate.
-  var filterFields = ['metadata.name'];
+  var filterFields = ['metadata.name', 'spec.serviceClassName'];
   var filterByName = function(items) {
     return KeywordService.filterForKeywords(items, filterFields, state.filterKeywords);
   };
@@ -338,6 +338,7 @@ function OverviewController($scope,
     overview.filteredStatefulSets = filterItems(overview.statefulSets);
     overview.filteredMonopods = filterItems(overview.monopods);
     overview.filteredPipelineBuildConfigs = filterItems(overview.pipelineBuildConfigs);
+    overview.filteredServiceInstances = filterItems(state.orderedServiceInstances);
     overview.filterActive = isFilterActive();
     updateApps();
     updateShowGetStarted();
@@ -1281,6 +1282,7 @@ function OverviewController($scope,
           setNotifications(instance, notifications);  
         });
         sortServiceInstances();
+        updateLabelSuggestions(state.serviceInstances);
         updateFilter();
       }, {poll: limitWatches, pollInterval: DEFAULT_POLL_INTERVAL}));
     }
@@ -1293,7 +1295,6 @@ function OverviewController($scope,
         state.bindings = bindings.by('metadata.name');
         overview.bindingsByInstanceRef = _.groupBy(state.bindings, 'spec.instanceRef.name');
         refreshSecrets(context);
-        updateFilter();
       }, {poll: limitWatches, pollInterval: DEFAULT_POLL_INTERVAL}));
     }
 

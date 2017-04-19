@@ -54,7 +54,7 @@ return _.get(a, "metadata.uid");
 }, P = function() {
 return _.size(v.deploymentConfigs) + _.size(v.vanillaReplicationControllers) + _.size(v.deployments) + _.size(v.vanillaReplicaSets) + _.size(v.statefulSets) + _.size(v.monopods) + _.size(v.state.serviceInstances);
 }, Q = function() {
-return _.size(v.filteredDeploymentConfigs) + _.size(v.filteredReplicationControllers) + _.size(v.filteredDeployments) + _.size(v.filteredReplicaSets) + _.size(v.filteredStatefulSets) + _.size(v.filteredMonopods) + _.size(v.state.serviceInstances);
+return _.size(v.filteredDeploymentConfigs) + _.size(v.filteredReplicationControllers) + _.size(v.filteredDeployments) + _.size(v.filteredReplicaSets) + _.size(v.filteredStatefulSets) + _.size(v.filteredMonopods) + _.size(v.filteredServiceInstances);
 }, R = function() {
 v.size = P(), v.filteredSize = Q();
 var a = 0 === v.size, b = v.deploymentConfigs && v.replicationControllers && v.deployments && v.replicaSets && v.statefulSets && v.pods && v.state.serviceInstances;
@@ -99,7 +99,7 @@ v.deploymentConfigsNoPipeline = _.sortBy(a, "metadata.name"), v.pipelineViewHasO
 v.disableFilter = "pipeline" === v.viewBy && _.isEmpty(v.pipelineBuildConfigs);
 }, Y = function(a) {
 return n.getLabelSelector().select(a);
-}, Z = [ "metadata.name" ], aa = function(a) {
+}, Z = [ "metadata.name", "spec.serviceClassName" ], aa = function(a) {
 return m.filterForKeywords(a, Z, L.filterKeywords);
 }, ba = function(a) {
 switch (v.filterBy) {
@@ -119,7 +119,7 @@ case "name":
 return !_.isEmpty(L.filterKeywords);
 }
 }, da = function() {
-v.filteredDeploymentConfigs = ba(v.deploymentConfigs), v.filteredReplicationControllers = ba(v.vanillaReplicationControllers), v.filteredDeployments = ba(v.deployments), v.filteredReplicaSets = ba(v.vanillaReplicaSets), v.filteredStatefulSets = ba(v.statefulSets), v.filteredMonopods = ba(v.monopods), v.filteredPipelineBuildConfigs = ba(v.pipelineBuildConfigs), v.filterActive = ca(), V(), R();
+v.filteredDeploymentConfigs = ba(v.deploymentConfigs), v.filteredReplicationControllers = ba(v.vanillaReplicationControllers), v.filteredDeployments = ba(v.deployments), v.filteredReplicaSets = ba(v.vanillaReplicaSets), v.filteredStatefulSets = ba(v.statefulSets), v.filteredMonopods = ba(v.monopods), v.filteredPipelineBuildConfigs = ba(v.pipelineBuildConfigs), v.filteredServiceInstances = ba(L.orderedServiceInstances), v.filterActive = ca(), V(), R();
 }, ea = c.project + "/overview/view-by";
 v.viewBy = localStorage.getItem(ea) || "app", a.$watch(function() {
 return v.viewBy;
@@ -461,7 +461,7 @@ resource:"instances"
 L.serviceInstances = a.by("metadata.name"), _.each(L.serviceInstances, function(a) {
 var b = t.getServiceInstanceAlerts(a);
 ha(a, b);
-}), Wa(), da();
+}), Wa(), ua(L.serviceInstances), da();
 }, {
 poll:w,
 pollInterval:x
@@ -469,7 +469,7 @@ pollInterval:x
 group:"servicecatalog.k8s.io",
 resource:"bindings"
 }, c, function(a) {
-L.bindings = a.by("metadata.name"), v.bindingsByInstanceRef = _.groupBy(L.bindings, "spec.instanceRef.name"), Va(c), da();
+L.bindings = a.by("metadata.name"), v.bindingsByInstanceRef = _.groupBy(L.bindings, "spec.instanceRef.name"), Va(c);
 }, {
 poll:w,
 pollInterval:x

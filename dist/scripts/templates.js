@@ -11557,12 +11557,12 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "</div>\n" +
     "</div>\n" +
     "\n" +
-    "<div ng-if=\"overview.state.serviceInstances | hashSize\">\n" +
-    "<h2 ng-if=\"overview.state.serviceInstances\">\n" +
+    "<div ng-if=\"overview.filteredServiceInstances.length\">\n" +
+    "<h2>\n" +
     "Provisioned Services\n" +
     "</h2>\n" +
     "<div class=\"list-pf\">\n" +
-    "<service-instance-row ng-repeat=\"serviceInstance in overview.state.orderedServiceInstances\" api-object=\"serviceInstance\" bindings=\"overview.bindingsByInstanceRef[serviceInstance.metadata.name]\" state=\"overview.state\"></service-instance-row>\n" +
+    "<service-instance-row ng-repeat=\"serviceInstance in overview.filteredServiceInstances\" api-object=\"serviceInstance\" bindings=\"overview.bindingsByInstanceRef[serviceInstance.metadata.name]\" state=\"overview.state\"></service-instance-row>\n" +
     "</div>\n" +
     "</div>\n" +
     "</div>\n" +
@@ -12710,9 +12710,7 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "<div class=\"list-pf-name\">\n" +
     "<h3>\n" +
     "<span ng-bind-html=\"row.displayName | highlightKeywords : row.state.filterKeywords\"></span>\n" +
-    "<div class=\"list-row-longname\">\n" +
-    "{{row.apiObject.metadata.name}}\n" +
-    "</div>\n" +
+    "<div ng-bind-html=\"row.apiObject.metadata.name | highlightKeywords : row.state.filterKeywords\" class=\"list-row-longname\"></div>\n" +
     "</h3>\n" +
     "<div class=\"status-icons\">\n" +
     "<notification-icon ng-if=\"!row.expanded\" alerts=\"row.notifications\"></notification-icon>\n" +
