@@ -11229,8 +11229,8 @@ dynamicContent:"@?"
 },
 link:function(a, b, c) {
 var d = {
-container:"body",
-placement:"auto"
+container:c.container || ".middle",
+placement:c.placement || "auto"
 };
 if (c) switch (c.toggle) {
 case "popover":
