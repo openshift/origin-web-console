@@ -348,7 +348,7 @@ return f.sortBuilds(a, !0);
 t.setGenericQuotaWarning(L.quotas, L.clusterQuotaData, c.project, L.alerts);
 };
 v.clearFilter = function() {
-n.getLabelSelector().clearConjuncts(), v.filterText = "";
+n.clear(), v.filterText = "";
 }, a.$watch(function() {
 return v.filterText;
 }, _.debounce(function(b, c) {

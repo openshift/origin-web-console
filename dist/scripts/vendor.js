@@ -42954,7 +42954,7 @@ var d = this, c = c || {};
 this._labelFilterRootElement = a, this._labelFilterActiveFiltersRootElement = b;
 var e = $("<div>").addClass("label-filter").appendTo(a);
 this._labelFilterKeyInput = $("<select>").addClass("label-filter-key").attr("placeholder", "Filter by label ").appendTo(e), this._labelFilterOperatorInput = $("<select>").addClass("label-filter-operator").attr("placeholder", "matching(...)").hide().appendTo(e), this._labelFilterValuesInput = $("<select>").addClass("label-filter-values").attr("placeholder", "Value(s)").attr("multiple", !0).hide().appendTo(e), this._labelFilterAddBtn = $("<button>").addClass("label-filter-add btn btn-default disabled").attr("disabled", !0).appendTo(a).append($("<span>").text(c.addButtonText || "Add Filter")), this._labelFilterActiveFiltersElement = $("<span>").addClass("label-filter-active-filters").appendTo(b), this._labelFilterActiveElement = $("<span>").addClass("label-filter-clear").hide().appendTo(this._labelFilterActiveFiltersElement).append($("<a>").addClass("label-filtering-remove-all label label-primary").prop("href", "javascript:;").append($("<i>").addClass("fa fa-filter")).append($("<span>").text("Clear filters"))).click(function() {
-$(this).hide(), d._labelFilterActiveFiltersElement.find(".label-filter-active-filter").remove(), d._clearActiveFilters();
+d.clear();
 }), this._labelFilterKeyInput.selectize({
 dropdownParent:"body",
 valueField:"key",
@@ -43061,13 +43061,13 @@ this._labelFilterActiveElement.show(), this._addActiveFilter(a, b, c);
 }, b.prototype._addActiveFilter = function(a, b, c) {
 var d = this._labelSelector.addConjunct(a, b, c);
 this._persistState(), this._onActiveFiltersChangedCallbacks.fire(this._labelSelector), this._renderActiveFilter(d);
+}, b.prototype.clear = function() {
+this._labelFilterActiveFiltersElement && this._labelFilterActiveFiltersElement.find(".label-filter-active-filter").remove(), this._labelFilterActiveElement && this._labelFilterActiveElement.hide(), this._labelSelector.clearConjuncts(), this._persistState(), this._onActiveFiltersChangedCallbacks.fire(this._labelSelector);
 }, b.prototype._renderActiveFilter = function(a) {
 $("<a>").addClass("label label-default label-filter-active-filter").prop("href", "javascript:;").prop("filter-label-id", a.id).click($.proxy(this, "_removeActiveFilter")).append($("<span>").text(a.string)).append($("<i>").addClass("fa fa-times")).appendTo(this._labelFilterActiveFiltersElement);
 }, b.prototype._removeActiveFilter = function(a) {
 var b = $(a.target).closest(".label-filter-active-filter"), c = b.prop("filter-label-id");
 b.remove(), 0 == $(".label-filter-active-filter", this._labelFilterActiveFiltersElement).length && this._labelFilterActiveElement.hide(), this._labelSelector.removeConjunct(c), this._persistState(), this._onActiveFiltersChangedCallbacks.fire(this._labelSelector);
-}, b.prototype._clearActiveFilters = function() {
-this._labelSelector.clearConjuncts(), this._persistState(), this._onActiveFiltersChangedCallbacks.fire(this._labelSelector);
 }, b.prototype.toggleFilterWidget = function(a) {
 this._labelFilterRootElement && (a ? this._labelFilterRootElement.show() :this._labelFilterRootElement.hide()), this._labelFilterActiveFiltersRootElement && (a ? this._labelFilterActiveFiltersRootElement.show() :this._labelFilterActiveFiltersRootElement.hide());
 }, new b();
