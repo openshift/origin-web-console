@@ -1053,7 +1053,7 @@ function OverviewController($scope,
   };
 
   overview.clearFilter = function() {
-    LabelFilter.getLabelSelector().clearConjuncts();
+    LabelFilter.clear();
     overview.filterText = '';
   };
 
