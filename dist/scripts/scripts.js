@@ -13833,7 +13833,7 @@ return null;
 };
 }).filter("description", [ "annotationFilter", function(a) {
 return function(b) {
-return a(b, "openshift.io/description") || a(b, "kubernetes.io/description");
+return a(b, "openshift.io/description") || a(b, "kubernetes.io/description") || a(b, "description");
 };
 } ]).filter("storageClass", [ "annotationFilter", function(a) {
 return function(b) {
