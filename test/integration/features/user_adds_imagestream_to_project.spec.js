@@ -20,7 +20,7 @@ describe('User adds an image stream to a project', function() {
   });
 
   describe('after creating a new project', function() {
-    describe('using the "Import YAML/JSON" tab', function() {
+    describe('using the Import YAML/JSON tab', function() {
       it('should process and create the images in the image stream', function() {
         var project = projectHelpers.projectDetails();
         var createProjectPage = new CreateProjectPage(project);
