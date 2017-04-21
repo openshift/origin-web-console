@@ -4554,17 +4554,15 @@ ul.messenger-theme-flat .messenger-message.alert-info .messenger-message-inner:b
 .overview-new .list-pf-expansion.in .list-pf-content{max-width:100%}
 .overview-new .list-pf-expansion.in .list-pf-content alerts{position:relative;z-index:2;display:block}
 .overview-new .list-pf-expansion.in .list-pf-container{display:block}
-@media (max-width:767px){.overview-new .list-pf-expansion.in .list-pf-container{overflow:hidden}
-}
 .overview-new .list-pf-expansion.in .pod-donut{text-align:center}
 .overview-new .list-pf-item{border-top-color:#dcdcdc}
 .overview-new .list-pf-item.active{border-top-color:#bbb}
-@media (min-width:480px){.overview-new .list-pf-item.active{overflow:hidden}
+.overview-new .list-pf-item.deployment-in-progress{overflow:hidden}
+@media (max-width:767px){.overview-new .list-pf-item.deployment-in-progress .list-pf-expansion{overflow:hidden}
+.overview-new .list-pf-item>.list-pf-container>.list-pf-content{align-items:stretch;flex-direction:column;width:100%;word-wrap:break-word;word-break:break-word;overflow-wrap:break-word;min-width:0}
 }
 .overview-new .list-pf-name h3 a,.overview-new .overview-route{word-wrap:break-word;word-break:break-word;overflow-wrap:break-word;min-width:0}
 .overview-new .list-pf-item>.list-pf-container{cursor:pointer}
-@media (max-width:767px){.overview-new .list-pf-item>.list-pf-container>.list-pf-content{align-items:stretch;flex-direction:column;width:100%;word-wrap:break-word;word-break:break-word;overflow-wrap:break-word;min-width:0}
-}
 .overview-new .list-pf-item>.list-pf-container .toggle-expand-link{color:inherit}
 .overview-new .list-pf-name{display:flex;flex-direction:column}
 @media (max-width:991px){.overview-new .list-pf-name{width:auto!important}

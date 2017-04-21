@@ -12422,7 +12422,10 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
 
 
   $templateCache.put('views/overview/_list-row.html',
-    "<div class=\"list-pf-item\" ng-class=\"{ active: row.expanded }\">\n" +
+    "<div class=\"list-pf-item\" ng-class=\"{\n" +
+    "  'active': row.expanded,\n" +
+    "  'deployment-in-progress': row.previous\n" +
+    "}\">\n" +
     "<div class=\"list-pf-container\" ng-click=\"row.toggleExpand($event)\">\n" +
     "<div class=\"list-pf-chevron\">\n" +
     "<div ng-include src=\" 'views/overview/_list-row-chevron.html' \" class=\"list-pf-content\"></div>\n" +
