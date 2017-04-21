@@ -17,17 +17,23 @@ const centosImageStream = require('../fixtures/image-streams-centos7.json');
 describe('authenticated e2e-user', function() {
 
   let project = projectHelpers.projectDetails();
-  let namespaceForFixtures = "template-dumpster";
+  let fixtureNamespaceCount = 0;
+  let fixtureNamespacePrefix = "template-dumpster-";
+
+  var fixtureNamespace;
 
   let setupEnv = function() {
+    fixtureNamespaceCount++;
+    let timestamp = (new Date()).getTime();
+    fixtureNamespace = fixtureNamespacePrefix + timestamp + '-' + fixtureNamespaceCount;
     // add namespace to create whitelist for template and image stream
     addExtension(`
       (function() {
         // Update whilelist:
-        window.OPENSHIFT_CONSTANTS.CREATE_FROM_URL_WHITELIST = ['openshift', '${namespaceForFixtures}'];
+        window.OPENSHIFT_CONSTANTS.CREATE_FROM_URL_WHITELIST = ['openshift', '${fixtureNamespace}'];
       })();
     `);
-    let fixturesProject = {name: namespaceForFixtures};
+    let fixturesProject = {name: fixtureNamespace};
     let createProjectPage = new CreateProjectPage(fixturesProject);
     createProjectPage.visit();
     createProjectPage.createProject();
@@ -61,23 +67,26 @@ describe('authenticated e2e-user', function() {
       let sourceURI = 'https://github.com/openshift/nodejs-ex.git-edited';
       let sourceRef = 'master-edited';
       let contextDir = '/-edited';
-      let qs = `?imageStream=nodejs&imageTag=4&name=${name}&sourceURI=${sourceURI}&sourceRef=${sourceRef}&contextDir=${contextDir}&namespace=${namespaceForFixtures}`;
-      let uri = `project/${project.name}create/fromimage${qs}`;
+      let uri = `project/${project.name}create/fromimage`;
       let heading = 'Node.js 4';
       let words = project.name.split(' ');
       let timestamp = words[words.length - 1];
 
+      function getQueryString() {
+        return `?imageStream=nodejs&imageTag=4&name=${name}&sourceURI=${sourceURI}&sourceRef=${sourceRef}&contextDir=${contextDir}&namespace=${fixtureNamespace}`;
+      }
+
       it('should display details about the the image', function() {
         let createFromURLPage = new CreateFromURLPage();
-        createFromURLPage.visit(qs);
+        createFromURLPage.visit(getQueryString());
         matchersHelpers.expectHeading(heading);
       });
 
       it('should load the image stream in to a newly created project', function(){
         let createFromURLPage = new CreateFromURLPage();
-        createFromURLPage.visit(qs);
+        createFromURLPage.visit(getQueryString());
         createFromURLPage.clickCreateNewProjectTab();
-        projectHelpers.createProject(project, 'project/' + project['name'] + 'create/fromimage' + qs);
+        projectHelpers.createProject(project, 'project/' + project['name'] + 'create/fromimage' + getQueryString());
         matchersHelpers.expectHeading(heading);
         projectHelpers.deleteProject(project);
       });
@@ -86,8 +95,8 @@ describe('authenticated e2e-user', function() {
         let createFromURLPage = new CreateFromURLPage();
         projectHelpers.visitCreatePage();
         projectHelpers.createProject(project);
-        createFromURLPage.visit(qs);
-        createFromURLPage.selectExistingProject(timestamp, uri);
+        createFromURLPage.visit(getQueryString());
+        createFromURLPage.selectExistingProject(timestamp, uri + getQueryString());
         matchersHelpers.expectHeading(heading);
         let nameInput = element(by.model('name'));
         expect(nameInput.getAttribute('value')).toEqual(name);
@@ -106,23 +115,26 @@ describe('authenticated e2e-user', function() {
     describe('using a template supplied as a query string param', function() {
 
       let sourceURL = "https://github.com/openshift/nodejs-ex.git-edited";
-      let qs = '?template=nodejs-mongodb-example&templateParamsMap=%7B"SOURCE_REPOSITORY_URL":"' + sourceURL + '"%7D' + '&namespace=' + namespaceForFixtures;
-      let uri = 'project/' + project.name + 'create/fromtemplate' + qs;
+      let uri = 'project/' + project.name + 'create/fromtemplate';
       let heading = 'Node.js + MongoDB (Ephemeral)';
       let words = project.name.split(' ');
       let timestamp = words[words.length - 1];
 
+      function getQueryString() {
+        return '?template=nodejs-mongodb-example&templateParamsMap=%7B"SOURCE_REPOSITORY_URL":"' + sourceURL + '"%7D' + '&namespace=' + fixtureNamespace;
+      }
+
       it('should display details about the template', function() {
         let createFromURLPage = new CreateFromURLPage();
-        createFromURLPage.visit(qs);
+        createFromURLPage.visit(getQueryString());
         matchersHelpers.expectHeading(heading);
       });
 
       it('should load the template in to a newly created project', function() {
         let createFromURLPage = new CreateFromURLPage();
-        createFromURLPage.visit(qs);
+        createFromURLPage.visit(getQueryString());
         createFromURLPage.clickCreateNewProjectTab();
-        projectHelpers.createProject(project, 'project/' + project['name'] + 'create/fromtemplate' + qs);
+        projectHelpers.createProject(project, 'project/' + project['name'] + 'create/fromtemplate' + getQueryString());
         matchersHelpers.expectHeading(heading);
         projectHelpers.deleteProject(project);
       });
@@ -131,8 +143,8 @@ describe('authenticated e2e-user', function() {
         let createFromURLPage = new CreateFromURLPage();
         projectHelpers.visitCreatePage();
         projectHelpers.createProject(project);
-        createFromURLPage.visit(qs);
-        createFromURLPage.selectExistingProject(timestamp, uri);
+        createFromURLPage.visit(getQueryString());
+        createFromURLPage.selectExistingProject(timestamp, uri + getQueryString());
         matchersHelpers.expectHeading(heading);
         inputsHelpers
           .findValueInInputs(element.all(by.model('parameter.value')), sourceURL)
@@ -163,7 +175,7 @@ describe('authenticated e2e-user', function() {
     describe('using an unavailable image tag supplied as a query string param', function() {
       it('should display an error about the image tag', function() {
         let createFromURLPage = new CreateFromURLPage();
-        createFromURLPage.visit('?imageStream=nodejs&imageTag=unavailable-imageTag' + '&namespace=' + namespaceForFixtures);
+        createFromURLPage.visit('?imageStream=nodejs&imageTag=unavailable-imageTag' + '&namespace=' + fixtureNamespace);
         matchersHelpers.expectAlert('The requested image stream tag "unavailable-imageTag" could not be loaded.');
       });
     });
@@ -186,14 +198,14 @@ describe('authenticated e2e-user', function() {
     describe('using both an image stream and a template', function() {
       it('should display an error about combining resources', function() {
         let createFromURLPage = new CreateFromURLPage();
-        createFromURLPage.visit('?imageStream=nodejs&template=nodejs-mongodb-example' + '&namespace=' + namespaceForFixtures);
+        createFromURLPage.visit('?imageStream=nodejs&template=nodejs-mongodb-example' + '&namespace=' + fixtureNamespace);
         matchersHelpers.expectAlert('Image streams and templates cannot be combined.');
       });
     });
     describe('using an invalid app name as a query string param', function() {
       it('should display an error about the app name', function() {
         let createFromURLPage = new CreateFromURLPage();
-        createFromURLPage.visit('?name=InvalidAppName&imageStream=nodejs' + '&namespace=' + namespaceForFixtures);
+        createFromURLPage.visit('?name=InvalidAppName&imageStream=nodejs' + '&namespace=' + fixtureNamespace);
         matchersHelpers.expectAlert('The app name "InvalidAppName" is not valid. An app name is an alphanumeric (a-z, and 0-9) string with a maximum length of 24 characters, where the first character is a letter (a-z), and the \'-\' character is allowed anywhere except the first or last character.');
       });
     });

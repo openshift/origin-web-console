@@ -22,7 +22,7 @@ describe('User adds a template to a project', function() {
   });
 
   describe('after creating a new project', function() {
-    describe('using the "Import YAML/JSON" tab', function() {
+    describe('using the Import YAML/JSON tab', function() {
       it('should process and create the objects in the template', function() {
         var project = projectHelpers.projectDetails();
         var createProjectPage = new CreateProjectPage(project);

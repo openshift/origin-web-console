@@ -7,11 +7,13 @@ exports.visitCreatePage = function() {
   h.goToPage('create-project');
 };
 
+var projectCount = 0;
 exports.projectDetails = function() {
+  projectCount++;
   var timestamp = (new Date()).getTime();
   var project = {
-    name:        'console-test-project-' + timestamp,
-    displayName: 'Console integration test Project ' + timestamp,
+    name:        'console-test-project-' + timestamp + '-' + projectCount,
+    displayName: 'Console integration test Project ' + timestamp + '-' + projectCount,
     description: 'Created by integration tests'
   };
   return project;
