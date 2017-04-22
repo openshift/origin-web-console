@@ -4858,7 +4858,7 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "<div class=\"middle-content\">\n" +
     "<div class=\"container surface-shaded gutter-top\">\n" +
     "<div class=\"col-md-12\">\n" +
-    "<h1>New Project</h1>\n" +
+    "<h1>Create Project</h1>\n" +
     "<alerts alerts=\"alerts\"></alerts>\n" +
     "<create-project alerts=\"alerts\"></create-project>\n" +
     "</div>\n" +
@@ -13295,11 +13295,11 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "<div ng-if=\"!loading\">\n" +
     "<div class=\"projects-header\">\n" +
     "<div class=\"projects-bar\">\n" +
-    "<h1>Projects</h1>\n" +
+    "<h1>My Projects</h1>\n" +
     "<div class=\"projects-options\">\n" +
     "<div class=\"projects-add\" ng-if=\"canCreate\">\n" +
     "<a href=\"create-project\" class=\"btn btn-md btn-primary\">\n" +
-    "New Project\n" +
+    "Create Project\n" +
     "</a>\n" +
     "</div>\n" +
     "<div class=\"projects-search\">\n" +
@@ -13382,7 +13382,7 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "OpenShift helps you quickly develop, host, and scale applications.<br>\n" +
     "<span ng-if=\"canCreate\">Create a project for your application.</span>\n" +
     "</p>\n" +
-    "<a ng-if=\"canCreate\" href=\"create-project\" class=\"btn btn-lg btn-primary\">New Project</a>\n" +
+    "<a ng-if=\"canCreate\" href=\"create-project\" class=\"btn btn-lg btn-primary\">Create Project</a>\n" +
     "<p>To learn more, visit the OpenShift <a target=\"_blank\" ng-href=\"{{'' | helpLink}}\">documentation</a>.</p>\n" +
     "<p class=\"projects-instructions\" ng-if=\"canCreate === false\" ng-include=\"'views/_cannot-create-project.html'\"></p>\n" +
     "</div>\n" +

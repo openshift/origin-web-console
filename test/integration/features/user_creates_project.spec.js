@@ -15,7 +15,7 @@ let goToAddToProjectPage = (projectName) => {
 
 let goToCreateProjectPage = () => {
   h.goToPage('create-project');
-  expect(element(by.cssContainingText('h1', "New Project")).isPresent()).toBe(true);
+  expect(element(by.cssContainingText('h1', "Create Project")).isPresent()).toBe(true);
   expect(element(by.model('name')).isPresent()).toBe(true);
   expect(element(by.model('displayName')).isPresent()).toBe(true);
   expect(element(by.model('description')).isPresent()).toBe(true);
