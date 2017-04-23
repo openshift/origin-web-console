@@ -12,15 +12,13 @@
       </span>
     </h2>
     <h3 class="route-title truncate">
-      <span ng-if="appName && (displayRoute | isWebRoute)">
-        <i class="fa fa-external-link small" aria-hidden="true"></i>
-      </span>
       <span ng-if="!appName">
         <i class="fa fa-angle-down fa-fw" aria-hidden="true" ng-if="!collapse"></i>
         <i class="fa fa-angle-right fa-fw" aria-hidden="true" ng-if="collapse"></i>
       </span>
-      <a ng-if="displayRoute | isWebRoute" target="_blank"
-         ng-href="{{displayRoute | routeWebURL}}">{{displayRoute | routeLabel}}</a>
+      <a ng-if="displayRoute | isWebRoute" target="_blank" ng-href="{{displayRoute | routeWebURL}}">
+         <i class="fa fa-external-link small" aria-hidden="true"></i>{{displayRoute | routeLabel}}
+      </a>
       <span ng-if="displayRoute && !(displayRoute | isWebRoute)" class="non-web-route">{{displayRoute | routeLabel}}</span>
       <span ng-if="routeWarningsByService[service.metadata.name] && routesByService[service.metadata.name].length === 1">
         <route-warnings warnings="routeWarningsByService[service.metadata.name]"></route-warnings>

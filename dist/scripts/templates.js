@@ -12614,14 +12614,13 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "</span>\n" +
     "</h2>\n" +
     "<h3 class=\"route-title truncate\">\n" +
-    "<span ng-if=\"appName && (displayRoute | isWebRoute)\">\n" +
-    "<i class=\"fa fa-external-link small\" aria-hidden=\"true\"></i>\n" +
-    "</span>\n" +
     "<span ng-if=\"!appName\">\n" +
     "<i class=\"fa fa-angle-down fa-fw\" aria-hidden=\"true\" ng-if=\"!collapse\"></i>\n" +
     "<i class=\"fa fa-angle-right fa-fw\" aria-hidden=\"true\" ng-if=\"collapse\"></i>\n" +
     "</span>\n" +
-    "<a ng-if=\"displayRoute | isWebRoute\" target=\"_blank\" ng-href=\"{{displayRoute | routeWebURL}}\">{{displayRoute | routeLabel}}</a>\n" +
+    "<a ng-if=\"displayRoute | isWebRoute\" target=\"_blank\" ng-href=\"{{displayRoute | routeWebURL}}\">\n" +
+    "<i class=\"fa fa-external-link small\" aria-hidden=\"true\"></i>{{displayRoute | routeLabel}}\n" +
+    "</a>\n" +
     "<span ng-if=\"displayRoute && !(displayRoute | isWebRoute)\" class=\"non-web-route\">{{displayRoute | routeLabel}}</span>\n" +
     "<span ng-if=\"routeWarningsByService[service.metadata.name] && routesByService[service.metadata.name].length === 1\">\n" +
     "<route-warnings warnings=\"routeWarningsByService[service.metadata.name]\"></route-warnings>\n" +
