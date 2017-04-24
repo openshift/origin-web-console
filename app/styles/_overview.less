@@ -260,9 +260,6 @@
     }
     .list-pf-container {
       display: block; // so that .word-break() will work in IE
-      @media (max-width: @screen-xs-max) {
-        overflow: hidden; // so animation offsets are hidden when sliding in vertically
-      }
     }
     .pod-donut {
       .text-center();
@@ -272,8 +269,16 @@
     border-top-color: @list-pf-border-color;
     &.active {
       border-top-color: @list-pf-item-active-border-color;
-      @media (min-width: @screen-xs-min) {
-        overflow: hidden; // so animation offsets are hidden when sliding in horizontally
+    }
+    &.deployment-in-progress {
+      // So animation offsets are hidden when sliding in horizontally
+      // Only use this style when a deployment is in progress so that chart
+      // tooltips aren't clipped.
+      overflow:hidden;
+      .list-pf-expansion {
+        @media (max-width: @screen-xs-max) {
+          overflow: hidden; // Hidden when sliding in vertically
+        }
       }
     }
     > .list-pf-container {

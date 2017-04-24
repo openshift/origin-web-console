@@ -1,4 +1,7 @@
-<div class="list-pf-item" ng-class="{ active: row.expanded }">
+<div class="list-pf-item" ng-class="{
+  'active': row.expanded,
+  'deployment-in-progress': row.previous
+}">
   <div class="list-pf-container" ng-click="row.toggleExpand($event)">
     <div class="list-pf-chevron">
       <div ng-include src=" 'views/overview/_list-row-chevron.html' " class="list-pf-content"></div>
