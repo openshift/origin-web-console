@@ -11229,7 +11229,7 @@ dynamicContent:"@?"
 },
 link:function(a, b, c) {
 var d = {
-container:c.container || ".middle",
+container:c.container || "body",
 placement:c.placement || "auto"
 };
 if (c) switch (c.toggle) {

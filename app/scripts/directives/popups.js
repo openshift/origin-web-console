@@ -24,7 +24,7 @@ angular.module('openshiftConsole')
       },
       link: function($scope, element, attrs) {
         var popupConfig = {
-          container: attrs.container || ".middle",
+          container: attrs.container || "body",
           placement: attrs.placement || "auto"
         };
         if (attrs) {
