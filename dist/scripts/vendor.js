@@ -59571,10 +59571,517 @@ return b = b || a.name || "download", c || (a = n(a)), navigator.msSaveOrOpenBlo
 
 "undefined" != typeof module && module.exports ? module.exports.saveAs = saveAs :"undefined" != typeof define && null !== define && null !== define.amd && define("FileSaver.js", function() {
 return saveAs;
+}), function(a, b) {
+"use strict";
+if ("function" == typeof define && define.amd) define([], b); else if ("object" == typeof exports) module.exports = b(); else {
+var c = "hopscotch";
+if (a[c]) return;
+a[c] = b();
+}
+}(this, function() {
+var a, b, c, d, e, f, g, h, i, j, k, l, m, n = "bubble_default", o = window.Sizzle || null, p = "undefined", q = !1, r = typeof jQuery !== p, s = !1, t = !1, u = window.document, v = /^[a-zA-Z]+[a-zA-Z0-9_-]*$/, w = {
+left:"right",
+right:"left"
+};
+try {
+typeof window.sessionStorage !== p && (s = !0, sessionStorage.setItem("hopscotch.test.storage", "ok"), sessionStorage.removeItem("hopscotch.test.storage"), t = !0);
+} catch (x) {}
+return l = {
+smoothScroll:!0,
+scrollDuration:1e3,
+scrollTopMargin:200,
+showCloseButton:!0,
+showPrevButton:!1,
+showNextButton:!0,
+bubbleWidth:280,
+bubblePadding:15,
+arrowWidth:20,
+skipIfNoElement:!0,
+isRtl:!1,
+cookieName:"hopscotch.tour.state"
+}, Array.isArray || (Array.isArray = function(a) {
+return "[object Array]" === Object.prototype.toString.call(a);
+}), k = function() {
+q && m.startTour();
+}, h = {
+addClass:function(a, b) {
+var c, d, e, f;
+if (a.className) {
+for (d = b.split(/\s+/), c = " " + a.className + " ", e = 0, f = d.length; e < f; ++e) c.indexOf(" " + d[e] + " ") < 0 && (c += d[e] + " ");
+a.className = c.replace(/^\s+|\s+$/g, "");
+} else a.className = b;
+},
+removeClass:function(a, b) {
+var c, d, e, f;
+for (d = b.split(/\s+/), c = " " + a.className + " ", e = 0, f = d.length; e < f; ++e) c = c.replace(" " + d[e] + " ", " ");
+a.className = c.replace(/^\s+|\s+$/g, "");
+},
+hasClass:function(a, b) {
+var c;
+return !!a.className && (c = " " + a.className + " ", c.indexOf(" " + b + " ") !== -1);
+},
+getPixelValue:function(a) {
+var b = typeof a;
+return "number" === b ? a :"string" === b ? parseInt(a, 10) :0;
+},
+valOrDefault:function(a, b) {
+return typeof a !== p ? a :b;
+},
+invokeCallbackArrayHelper:function(a) {
+var b;
+if (Array.isArray(a) && (b = j[a[0]], "function" == typeof b)) return b.apply(this, a.slice(1));
+},
+invokeCallbackArray:function(a) {
+var b, c;
+if (Array.isArray(a)) {
+if ("string" == typeof a[0]) return h.invokeCallbackArrayHelper(a);
+for (b = 0, c = a.length; b < c; ++b) h.invokeCallback(a[b]);
+}
+},
+invokeCallback:function(a) {
+return "function" == typeof a ? a() :"string" == typeof a && j[a] ? j[a]() :h.invokeCallbackArray(a);
+},
+invokeEventCallbacks:function(a, b) {
+var c, d, e = i[a];
+if (b) return this.invokeCallback(b);
+for (c = 0, d = e.length; c < d; ++c) this.invokeCallback(e[c].cb);
+},
+getScrollTop:function() {
+var a;
+return a = typeof window.pageYOffset !== p ? window.pageYOffset :u.documentElement.scrollTop;
+},
+getScrollLeft:function() {
+var a;
+return a = typeof window.pageXOffset !== p ? window.pageXOffset :u.documentElement.scrollLeft;
+},
+getWindowHeight:function() {
+return window.innerHeight || u.documentElement.clientHeight;
+},
+addEvtListener:function(a, b, c) {
+if (a) return a.addEventListener ? a.addEventListener(b, c, !1) :a.attachEvent("on" + b, c);
+},
+removeEvtListener:function(a, b, c) {
+if (a) return a.removeEventListener ? a.removeEventListener(b, c, !1) :a.detachEvent("on" + b, c);
+},
+documentIsReady:function() {
+return "complete" === u.readyState;
+},
+evtPreventDefault:function(a) {
+a.preventDefault ? a.preventDefault() :event && (event.returnValue = !1);
+},
+extend:function(a, b) {
+var c;
+for (c in b) b.hasOwnProperty(c) && (a[c] = b[c]);
+},
+getStepTargetHelper:function(a) {
+var b = u.getElementById(a);
+if (b) return b;
+if (r) return b = jQuery(a), b.length ? b[0] :null;
+if (o) return b = new o(a), b.length ? b[0] :null;
+if (u.querySelector) try {
+return u.querySelector(a);
+} catch (c) {}
+return /^#[a-zA-Z][\w-_:.]*$/.test(a) ? u.getElementById(a.substring(1)) :null;
+},
+getStepTarget:function(a) {
+var b;
+if (!a || !a.target) return null;
+if ("string" == typeof a.target) return h.getStepTargetHelper(a.target);
+if (Array.isArray(a.target)) {
+var c, d;
+for (c = 0, d = a.target.length; c < d; c++) if ("string" == typeof a.target[c] && (b = h.getStepTargetHelper(a.target[c]))) return b;
+return null;
+}
+return a.target;
+},
+getI18NString:function(a) {
+return e[a] || d[a];
+},
+setState:function(a, b, c) {
+var d, e = "";
+if (s && t) try {
+sessionStorage.setItem(a, b);
+} catch (f) {
+t = !1, this.setState(a, b, c);
+} else s && sessionStorage.removeItem(a), c && (d = new Date(), d.setTime(d.getTime() + 24 * c * 60 * 60 * 1e3), e = "; expires=" + d.toGMTString()), u.cookie = a + "=" + b + e + "; path=/";
+},
+getState:function(a) {
+var b, c, d, e = a + "=", f = u.cookie.split(";");
+if (s && (d = sessionStorage.getItem(a))) return d;
+for (b = 0; b < f.length; b++) {
+for (c = f[b]; " " === c.charAt(0); ) c = c.substring(1, c.length);
+if (0 === c.indexOf(e)) {
+d = c.substring(e.length, c.length);
+break;
+}
+}
+return d;
+},
+clearState:function(a) {
+s ? sessionStorage.removeItem(a) :this.setState(a, "", -1);
+},
+normalizePlacement:function(a) {
+!a.placement && a.orientation && (a.placement = a.orientation);
+},
+flipPlacement:function(a) {
+if (a.isRtl && !a._isFlipped) {
+var b, c, d = [ "orientation", "placement" ];
+a.xOffset && (a.xOffset = -1 * this.getPixelValue(a.xOffset));
+for (c in d) b = d[c], a.hasOwnProperty(b) && w.hasOwnProperty(a[b]) && (a[b] = w[a[b]]);
+a._isFlipped = !0;
+}
+}
+}, h.addEvtListener(window, "load", k), i = {
+next:[],
+prev:[],
+start:[],
+end:[],
+show:[],
+error:[],
+close:[]
+}, j = {}, d = {
+stepNums:null,
+nextBtn:"Next",
+prevBtn:"Back",
+doneBtn:"Done",
+skipBtn:"Skip",
+closeTooltip:"Close"
+}, e = {}, b = function(a) {
+this.init(a);
+}, b.prototype = {
+isShowing:!1,
+currStep:void 0,
+setPosition:function(a) {
+var b, c, d, e, f, g, i, j = h.getStepTarget(a), k = this.element, l = this.arrowEl, m = a.isRtl ? "right" :"left";
+if (h.flipPlacement(a), h.normalizePlacement(a), c = k.offsetWidth, b = k.offsetHeight, h.removeClass(k, "fade-in-down fade-in-up fade-in-left fade-in-right"), d = j.getBoundingClientRect(), i = a.isRtl ? d.right - c :d.left, "top" === a.placement) e = d.top - b - this.opt.arrowWidth, f = i; else if ("bottom" === a.placement) e = d.bottom + this.opt.arrowWidth, f = i; else if ("left" === a.placement) e = d.top, f = d.left - c - this.opt.arrowWidth; else {
+if ("right" !== a.placement) throw new Error("Bubble placement failed because step.placement is invalid or undefined!");
+e = d.top, f = d.right + this.opt.arrowWidth;
+}
+g = "center" !== a.arrowOffset ? h.getPixelValue(a.arrowOffset) :a.arrowOffset, g ? "top" === a.placement || "bottom" === a.placement ? (l.style.top = "", "center" === g ? l.style[m] = Math.floor(c / 2 - l.offsetWidth / 2) + "px" :l.style[m] = g + "px") :"left" !== a.placement && "right" !== a.placement || (l.style[m] = "", "center" === g ? l.style.top = Math.floor(b / 2 - l.offsetHeight / 2) + "px" :l.style.top = g + "px") :(l.style.top = "", l.style[m] = ""), "center" === a.xOffset ? f = d.left + j.offsetWidth / 2 - c / 2 :f += h.getPixelValue(a.xOffset), "center" === a.yOffset ? e = d.top + j.offsetHeight / 2 - b / 2 :e += h.getPixelValue(a.yOffset), a.fixedElement || (e += h.getScrollTop(), f += h.getScrollLeft()), k.style.position = a.fixedElement ? "fixed" :"absolute", k.style.top = e + "px", k.style.left = f + "px";
+},
+render:function(a, b, c) {
+var d, e, g, i, j, k, l, o, p, q, r = this.element;
+if (a ? this.currStep = a :this.currStep && (a = this.currStep), this.opt.isTourBubble ? (i = m.getCurrTour(), i && (e = i.customData, d = i.customRenderer, a.isRtl = a.hasOwnProperty("isRtl") ? a.isRtl :i.hasOwnProperty("isRtl") ? i.isRtl :this.opt.isRtl, g = i.unsafe, Array.isArray(i.steps) && (j = i.steps.length, k = this._getStepI18nNum(this._getStepNum(j - 1)), o = this._getStepNum(b) === this._getStepNum(j - 1)))) :(e = a.customData, d = a.customRenderer, g = a.unsafe, a.isRtl = a.hasOwnProperty("isRtl") ? a.isRtl :this.opt.isRtl), l = o ? h.getI18NString("doneBtn") :a.showSkip ? h.getI18NString("skipBtn") :h.getI18NString("nextBtn"), h.flipPlacement(a), h.normalizePlacement(a), this.placement = a.placement, q = {
+i18n:{
+prevBtn:h.getI18NString("prevBtn"),
+nextBtn:l,
+closeTooltip:h.getI18NString("closeTooltip"),
+stepNum:this._getStepI18nNum(this._getStepNum(b)),
+numSteps:k
+},
+buttons:{
+showPrev:h.valOrDefault(a.showPrevButton, this.opt.showPrevButton) && this._getStepNum(b) > 0,
+showNext:h.valOrDefault(a.showNextButton, this.opt.showNextButton),
+showCTA:h.valOrDefault(a.showCTAButton && a.ctaLabel, !1),
+ctaLabel:a.ctaLabel,
+showClose:h.valOrDefault(this.opt.showCloseButton, !0)
+},
+step:{
+num:b,
+isLast:h.valOrDefault(o, !1),
+title:a.title || "",
+content:a.content || "",
+isRtl:a.isRtl,
+placement:a.placement,
+padding:h.valOrDefault(a.padding, this.opt.bubblePadding),
+width:h.getPixelValue(a.width) || this.opt.bubbleWidth,
+customData:a.customData || {}
+},
+tour:{
+isTour:this.opt.isTourBubble,
+numSteps:j,
+unsafe:h.valOrDefault(g, !1),
+customData:e || {}
+}
+}, "function" == typeof d) r.innerHTML = d(q); else if ("string" == typeof d) {
+if (!m.templates || "function" != typeof m.templates[d]) throw new Error('Bubble rendering failed - template "' + d + '" is not a function.');
+r.innerHTML = m.templates[d](q);
+} else if (f) r.innerHTML = f(q); else {
+if (!m.templates || "function" != typeof m.templates[n]) throw new Error('Bubble rendering failed - template "' + n + '" is not a function.');
+r.innerHTML = m.templates[n](q);
+}
+for (children = r.children, numChildren = children.length, p = 0; p < numChildren; p++) node = children[p], h.hasClass(node, "hopscotch-arrow") && (this.arrowEl = node);
+return r.style.zIndex = "number" == typeof a.zindex ? a.zindex :"", this._setArrow(a.placement), this.hide(!1), this.setPosition(a), c && c(!a.fixedElement), this;
+},
+_getStepNum:function(a) {
+var b, c, d = 0, e = m.getSkippedStepsIndexes(), f = e.length;
+for (c = 0; c < f; c++) b = e[c], b < a && d++;
+return a - d;
+},
+_getStepI18nNum:function(a) {
+var b = h.getI18NString("stepNums");
+return b && a < b.length ? a = b[a] :a += 1, a;
+},
+_setArrow:function(a) {
+h.removeClass(this.arrowEl, "down up right left"), "top" === a ? h.addClass(this.arrowEl, "down") :"bottom" === a ? h.addClass(this.arrowEl, "up") :"left" === a ? h.addClass(this.arrowEl, "right") :"right" === a && h.addClass(this.arrowEl, "left");
+},
+_getArrowDirection:function() {
+return "top" === this.placement ? "down" :"bottom" === this.placement ? "up" :"left" === this.placement ? "right" :"right" === this.placement ? "left" :void 0;
+},
+show:function() {
+var a = this, b = "fade-in-" + this._getArrowDirection(), c = 1e3;
+return h.removeClass(this.element, "hide"), h.addClass(this.element, b), setTimeout(function() {
+h.removeClass(a.element, "invisible");
+}, 50), setTimeout(function() {
+h.removeClass(a.element, b);
+}, c), this.isShowing = !0, this;
+},
+hide:function(a) {
+var b = this.element;
+return a = h.valOrDefault(a, !0), b.style.top = "", b.style.left = "", a ? (h.addClass(b, "hide"), h.removeClass(b, "invisible")) :(h.removeClass(b, "hide"), h.addClass(b, "invisible")), h.removeClass(b, "animate fade-in-up fade-in-down fade-in-right fade-in-left"), this.isShowing = !1, this;
+},
+destroy:function() {
+var a = this.element;
+a && a.parentNode.removeChild(a), h.removeEvtListener(a, "click", this.clickCb);
+},
+_handleBubbleClick:function(a) {
+function b(c) {
+return c === a.currentTarget ? null :h.hasClass(c, "hopscotch-cta") ? "cta" :h.hasClass(c, "hopscotch-next") ? "next" :h.hasClass(c, "hopscotch-prev") ? "prev" :h.hasClass(c, "hopscotch-close") ? "close" :b(c.parentElement);
+}
+var c;
+a = a || window.event;
+var d = a.target || a.srcElement;
+if (c = b(d), "cta" === c) this.opt.isTourBubble || m.getCalloutManager().removeCallout(this.currStep.id), this.currStep.onCTA && h.invokeCallback(this.currStep.onCTA); else if ("next" === c) m.nextStep(!0); else if ("prev" === c) m.prevStep(!0); else if ("close" === c) {
+if (this.opt.isTourBubble) {
+var e = m.getCurrStepNum(), f = m.getCurrTour(), g = e === f.steps.length - 1;
+h.invokeEventCallbacks("close"), m.endTour(!0, g);
+} else this.opt.onClose && h.invokeCallback(this.opt.onClose), this.opt.id && !this.opt.isTourBubble ? m.getCalloutManager().removeCallout(this.opt.id) :this.destroy();
+h.evtPreventDefault(a);
+}
+},
+init:function(a) {
+var b, c, d, e, f = u.createElement("div"), g = this, i = !1;
+this.element = f, e = {
+showPrevButton:l.showPrevButton,
+showNextButton:l.showNextButton,
+bubbleWidth:l.bubbleWidth,
+bubblePadding:l.bubblePadding,
+arrowWidth:l.arrowWidth,
+isRtl:l.isRtl,
+showNumber:!0,
+isTourBubble:!0
+}, a = typeof a === p ? {} :a, h.extend(e, a), this.opt = e, f.className = "hopscotch-bubble animated", e.isTourBubble ? (d = m.getCurrTour(), d && h.addClass(f, "tour-" + d.id)) :h.addClass(f, "hopscotch-callout no-number"), b = function() {
+!i && g.isShowing && (i = !0, setTimeout(function() {
+g.setPosition(g.currStep), i = !1;
+}, 100));
+}, h.addEvtListener(window, "resize", b), this.clickCb = function(a) {
+g._handleBubbleClick(a);
+}, h.addEvtListener(f, "click", this.clickCb), this.hide(), h.documentIsReady() ? u.body.appendChild(f) :(u.addEventListener ? (c = function() {
+u.removeEventListener("DOMContentLoaded", c), window.removeEventListener("load", c), u.body.appendChild(f);
+}, u.addEventListener("DOMContentLoaded", c, !1)) :(c = function() {
+"complete" === u.readyState && (u.detachEvent("onreadystatechange", c), window.detachEvent("onload", c), u.body.appendChild(f));
+}, u.attachEvent("onreadystatechange", c)), h.addEvtListener(window, "load", c));
+}
+}, c = function() {
+var a = {}, c = {};
+this.createCallout = function(d) {
+var e;
+if (!d.id) throw new Error("Must specify a callout id.");
+if (!v.test(d.id)) throw new Error("Callout ID is using an invalid format. Use alphanumeric, underscores, and/or hyphens only. First character must be a letter.");
+if (a[d.id]) throw new Error("Callout by that id already exists. Please choose a unique id.");
+if (!h.getStepTarget(d)) throw new Error("Must specify existing target element via 'target' option.");
+return d.showNextButton = d.showPrevButton = !1, d.isTourBubble = !1, e = new b(d), a[d.id] = e, c[d.id] = d, e.render(d, null, function() {
+e.show(), d.onShow && h.invokeCallback(d.onShow);
+}), e;
+}, this.getCallout = function(b) {
+return a[b];
+}, this.removeAllCallouts = function() {
+var b;
+for (b in a) a.hasOwnProperty(b) && this.removeCallout(b);
+}, this.removeCallout = function(b) {
+var d = a[b];
+a[b] = null, c[b] = null, d && d.destroy();
+}, this.refreshCalloutPositions = function() {
+var b, d, e;
+for (b in a) a.hasOwnProperty(b) && c.hasOwnProperty(b) && (d = a[b], e = c[b], d && e && d.setPosition(e));
+};
+}, a = function(a) {
+var d, k, o, s, t, w, x, y, z = this, A = {}, B = [], C = function(a) {
+return d && d.element && d.element.parentNode || (d = new b(o)), a && h.extend(d.opt, {
+bubblePadding:E("bubblePadding"),
+bubbleWidth:E("bubbleWidth"),
+showNextButton:E("showNextButton"),
+showPrevButton:E("showPrevButton"),
+showCloseButton:E("showCloseButton"),
+arrowWidth:E("arrowWidth"),
+isRtl:E("isRtl")
+}), d;
+}, D = function() {
+d && (d.destroy(), d = null);
+}, E = function(a) {
+return "undefined" == typeof o ? l[a] :h.valOrDefault(o[a], l[a]);
+}, F = function() {
+var a;
+return a = !s || t < 0 || t >= s.steps.length ? null :s.steps[t];
+}, G = function() {
+z.nextStep();
+}, H = function(a) {
+var b, c, d, e, f, g, i = C(), j = i.element, k = h.getPixelValue(j.style.top), l = k + h.getPixelValue(j.offsetHeight), m = h.getStepTarget(F()), n = m.getBoundingClientRect(), o = n.top + h.getScrollTop(), q = n.bottom + h.getScrollTop(), s = k < o ? k :o, t = l > q ? l :q, v = h.getScrollTop(), w = v + h.getWindowHeight(), x = s - E("scrollTopMargin");
+s >= v && (s <= v + E("scrollTopMargin") || t <= w) ? a && a() :E("smoothScroll") ? typeof YAHOO !== p && typeof YAHOO.env !== p && typeof YAHOO.env.ua !== p && typeof YAHOO.util !== p && typeof YAHOO.util.Scroll !== p ? (b = YAHOO.env.ua.webkit ? u.body :u.documentElement, d = YAHOO.util.Easing ? YAHOO.util.Easing.easeOut :void 0, c = new YAHOO.util.Scroll(b, {
+scroll:{
+to:[ 0, x ]
+}
+}, E("scrollDuration") / 1e3, d), c.onComplete.subscribe(a), c.animate()) :r ? jQuery("body, html").animate({
+scrollTop:x
+}, E("scrollDuration"), a) :(x < 0 && (x = 0), e = v > s ? -1 :1, f = Math.abs(v - x) / (E("scrollDuration") / 10), (g = function() {
+var b = h.getScrollTop(), c = b + e * f;
+return e > 0 && c >= x || e < 0 && c <= x ? (c = x, a && a(), void window.scrollTo(0, c)) :(window.scrollTo(0, c), h.getScrollTop() === b ? void (a && a()) :void setTimeout(g, 10));
+})()) :(window.scrollTo(0, x), a && a());
+}, I = function(a, b) {
+var c, d, e;
+t + a >= 0 && t + a < s.steps.length ? (t += a, d = F(), e = function() {
+c = h.getStepTarget(d), c ? (A[t] && delete A[t], b(t)) :(A[t] = !0, h.invokeEventCallbacks("error"), I(a, b));
+}, d.delay ? setTimeout(e, d.delay) :e()) :b(-1);
+}, J = function(a, b) {
+var c, d, e, f, g = C(), i = this;
+if (g.hide(), a = h.valOrDefault(a, !0), c = F(), c.nextOnTargetClick && h.removeEvtListener(h.getStepTarget(c), "click", G), d = c, e = b > 0 ? d.multipage :t > 0 && s.steps[t - 1].multipage, f = function(c) {
+var f;
+if (c === -1) return this.endTour(!0);
+if (a && (f = b > 0 ? h.invokeEventCallbacks("next", d.onNext) :h.invokeEventCallbacks("prev", d.onPrev)), c === t) {
+if (e) return void N();
+f = h.valOrDefault(f, !0), f ? this.showStep(c) :this.endTour(!1);
+}
+}, !e && E("skipIfNoElement")) I(b, function(a) {
+f.call(i, a);
+}); else if (t + b >= 0 && t + b < s.steps.length) {
+if (t += b, c = F(), !h.getStepTarget(c) && !e) return h.invokeEventCallbacks("error"), this.endTour(!0, !1);
+f.call(this, t);
+} else if (t + b === s.steps.length) return this.endTour();
+return this;
+}, K = function(a) {
+var b, c, d, e = {};
+for (b in a) a.hasOwnProperty(b) && "id" !== b && "steps" !== b && (e[b] = a[b]);
+return y.call(this, e, !0), c = h.getState(E("cookieName")), c && (d = c.split(":"), w = d[0], x = d[1], d.length > 2 && (B = d[2].split(",")), x = parseInt(x, 10)), this;
+}, L = function(a, b, c) {
+var d, e;
+if (t = a || 0, A = b || {}, d = F(), e = h.getStepTarget(d)) return void c(t);
+if (!e) {
+if (h.invokeEventCallbacks("error"), A[t] = !0, E("skipIfNoElement")) return void I(1, c);
+t = -1, c(t);
+}
+}, M = function(a) {
+function b() {
+d.show(), h.invokeEventCallbacks("show", c.onShow);
+}
+var c = s.steps[a], d = C(), e = h.getStepTarget(c);
+t !== a && F().nextOnTargetClick && h.removeEvtListener(h.getStepTarget(F()), "click", G), t = a, d.hide(!1), d.render(c, a, function(a) {
+a ? H(b) :b(), c.nextOnTargetClick && h.addEvtListener(e, "click", G);
+}), N();
+}, N = function() {
+var a = s.id + ":" + t, b = m.getSkippedStepsIndexes();
+b && b.length > 0 && (a += ":" + b.join(",")), h.setState(E("cookieName"), a, 1);
+}, O = function(a) {
+a && this.configure(a);
+};
+this.getCalloutManager = function() {
+return typeof k === p && (k = new c()), k;
+}, this.startTour = function(a, b) {
+var c, d, e = {}, f = this;
+if (!s) {
+if (!a) throw new Error("Tour data is required for startTour.");
+if (!a.id || !v.test(a.id)) throw new Error("Tour ID is using an invalid format. Use alphanumeric, underscores, and/or hyphens only. First character must be a letter.");
+s = a, K.call(this, a);
+}
+if (typeof b !== p) {
+if (b >= s.steps.length) throw new Error("Specified step number out of bounds.");
+d = b;
+}
+if (!h.documentIsReady()) return q = !0, this;
+if ("undefined" == typeof d && s.id === w && typeof x !== p) {
+if (d = x, B.length > 0) for (var g = 0, i = B.length; g < i; g++) e[B[g]] = !0;
+} else d || (d = 0);
+return L(d, e, function(a) {
+var b = a !== -1 && h.getStepTarget(s.steps[a]);
+return b ? (h.invokeEventCallbacks("start"), c = C(), c.hide(!1), f.isActive = !0, void (h.getStepTarget(F()) ? f.showStep(a) :(h.invokeEventCallbacks("error"), E("skipIfNoElement") && f.nextStep(!1)))) :void f.endTour(!1, !1);
+}), this;
+}, this.showStep = function(a) {
+var b = s.steps[a], c = t;
+return h.getStepTarget(b) ? (b.delay ? setTimeout(function() {
+M(a);
+}, b.delay) :M(a), this) :(t = a, h.invokeEventCallbacks("error"), void (t = c));
+}, this.prevStep = function(a) {
+return J.call(this, a, -1), this;
+}, this.nextStep = function(a) {
+return J.call(this, a, 1), this;
+}, this.endTour = function(a, b) {
+var c, d = C();
+return a = h.valOrDefault(a, !0), b = h.valOrDefault(b, !0), s && (c = F(), c && c.nextOnTargetClick && h.removeEvtListener(h.getStepTarget(c), "click", G)), t = 0, x = void 0, d.hide(), a && h.clearState(E("cookieName")), this.isActive && (this.isActive = !1, s && b && h.invokeEventCallbacks("end")), this.removeCallbacks(null, !0), this.resetDefaultOptions(), D(), s = null, this;
+}, this.getCurrTour = function() {
+return s;
+}, this.getCurrTarget = function() {
+return h.getStepTarget(F());
+}, this.getCurrStepNum = function() {
+return t;
+}, this.getSkippedStepsIndexes = function() {
+var a, b = [];
+for (a in A) b.push(a);
+return b;
+}, this.refreshBubblePosition = function() {
+var a = F();
+return a && C().setPosition(a), this.getCalloutManager().refreshCalloutPositions(), this;
+}, this.listen = function(a, b, c) {
+return a && i[a].push({
+cb:b,
+fromTour:c
+}), this;
+}, this.unlisten = function(a, b) {
+var c, d, e = i[a];
+for (c = 0, d = e.length; c < d; ++c) e[c].cb === b && e.splice(c, 1);
+return this;
+}, this.removeCallbacks = function(a, b) {
+var c, d, e, f;
+for (f in i) if (!a || a === f) if (b) for (c = i[f], d = 0, e = c.length; d < e; ++d) c[d].fromTour && (c.splice(d--, 1), --e); else i[f] = [];
+return this;
+}, this.registerHelper = function(a, b) {
+"string" == typeof a && "function" == typeof b && (j[a] = b);
+}, this.unregisterHelper = function(a) {
+j[a] = null;
+}, this.invokeHelper = function(a) {
+var b, c, d = [];
+for (b = 1, c = arguments.length; b < c; ++b) d.push(arguments[b]);
+j[a] && j[a].call(null, d);
+}, this.setCookieName = function(a) {
+return o.cookieName = a, this;
+}, this.resetDefaultOptions = function() {
+return o = {}, this;
+}, this.resetDefaultI18N = function() {
+return e = {}, this;
+}, this.getState = function() {
+return h.getState(E("cookieName"));
+}, y = function(a, b) {
+var c, d, f, g, i = [ "next", "prev", "start", "end", "show", "error", "close" ];
+for (o || this.resetDefaultOptions(), h.extend(o, a), a && h.extend(e, a.i18n), f = 0, g = i.length; f < g; ++f) d = "on" + i[f].charAt(0).toUpperCase() + i[f].substring(1), a[d] && this.listen(i[f], a[d], b);
+return c = C(!0), this;
+}, this.configure = function(a) {
+return y.call(this, a, !1);
+}, this.setRenderer = function(a) {
+var b = typeof a;
+return "string" === b ? (n = a, f = void 0) :"function" === b && (f = a), this;
+}, this.setEscaper = function(a) {
+return "function" == typeof a && (g = a), this;
+}, O.call(this, a);
+}, m = new a(), function() {
+var a = {};
+a.escape = function(a) {
+return g ? g(a) :null == a ? "" :("" + a).replace(new RegExp("[&<>\"']", "g"), function(a) {
+return "&" == a ? "&amp;" :"<" == a ? "&lt;" :">" == a ? "&gt;" :'"' == a ? "&quot;" :"'" == a ? "&#x27;" :void 0;
+});
+}, this.templates = this.templates || {}, this.templates.bubble_default = function(b) {
+function c(b, c) {
+return c ? a.escape(b) :b;
+}
+var d, e = "";
+a.escape, Array.prototype.join;
+e += "\n";
+var f = b.i18n, g = b.buttons, h = b.step, i = b.tour;
+return e += '\n<div class="hopscotch-bubble-container" style="width: ' + (null == (d = h.width) ? "" :d) + "px; padding: " + (null == (d = h.padding) ? "" :d) + 'px;">\n  ', i.isTour && (e += '<span class="hopscotch-bubble-number">' + (null == (d = f.stepNum) ? "" :d) + "</span>"), e += '\n  <div class="hopscotch-bubble-content">\n    ', "" !== h.title && (e += '<h3 class="hopscotch-title">' + (null == (d = c(h.title, i.unsafe)) ? "" :d) + "</h3>"), e += "\n    ", "" !== h.content && (e += '<div class="hopscotch-content">' + (null == (d = c(h.content, i.unsafe)) ? "" :d) + "</div>"), e += '\n  </div>\n  <div class="hopscotch-actions">\n    ', g.showPrev && (e += '<button class="hopscotch-nav-button prev hopscotch-prev">' + (null == (d = f.prevBtn) ? "" :d) + "</button>"), e += "\n    ", g.showCTA && (e += '<button class="hopscotch-nav-button next hopscotch-cta">' + (null == (d = g.ctaLabel) ? "" :d) + "</button>"), e += "\n    ", g.showNext && (e += '<button class="hopscotch-nav-button next hopscotch-next">' + (null == (d = f.nextBtn) ? "" :d) + "</button>"), 
+e += "\n  </div>\n  ", g.showClose && (e += '<button class="hopscotch-bubble-close hopscotch-close">' + (null == (d = f.closeTooltip) ? "" :d) + "</button>"), e += '\n</div>\n<div class="hopscotch-bubble-arrow-container hopscotch-arrow">\n  <div class="hopscotch-bubble-arrow-border"></div>\n  <div class="hopscotch-bubble-arrow"></div>\n</div>\n';
+};
+}.call(m), m;
 }), angular.module("openshiftCommonServices", [ "ab-base64" ]).config([ "AuthServiceProvider", function(a) {
 a.UserStore("MemoryUserStore");
 } ]).constant("API_CFG", _.get(window.OPENSHIFT_CONFIG, "api", {})).constant("APIS_CFG", _.get(window.OPENSHIFT_CONFIG, "apis", {})).constant("AUTH_CFG", _.get(window.OPENSHIFT_CONFIG, "auth", {})).config([ "$httpProvider", "AuthServiceProvider", "RedirectLoginServiceProvider", "AUTH_CFG", function(a, b, c, d) {
-a.interceptors.push("AuthInterceptor"), b.LoginService("RedirectLoginService"), b.LogoutService("DeleteTokenLogoutService"), b.UserStore("LocalStorageUserStore"), c.OAuthClientID(d.oauth_client_id), c.OAuthAuthorizeURI(d.oauth_authorize_uri), c.OAuthRedirectURI(URI(d.oauth_redirect_base).segment("oauth").toString());
+a.interceptors.push("AuthInterceptor"), b.LoginService("RedirectLoginService"), b.LogoutService("DeleteTokenLogoutService"), b.UserStore("LocalStorageUserStore"), c.OAuthClientID(d.oauth_client_id), c.OAuthAuthorizeURI(d.oauth_authorize_uri), c.OAuthTokenURI(d.oauth_token_uri), c.OAuthRedirectURI(URI(d.oauth_redirect_base).segment("oauth").toString());
 } ]), hawtioPluginLoader.addModule("openshiftCommonServices"), hawtioPluginLoader.registerPreBootstrapTask(function(a) {
 if (_.get(window, "OPENSHIFT_CONFIG.api.k8s.resources")) return void a();
 var b = {
@@ -59644,23 +60151,27 @@ window.OPENSHIFT_CONFIG.api.k8s.resources = b.k8s, window.OPENSHIFT_CONFIG.api.o
 o = o.concat(m), $.when.apply(this, o).always(n);
 }), angular.module("openshiftCommonUI", []), hawtioPluginLoader.addModule("openshiftCommonUI"), angular.module("openshiftCommonUI").run([ "$templateCache", function(a) {
 "use strict";
-a.put("src/components/create-project/createProject.html", '<form name="createProjectForm" novalidate>\n  <fieldset ng-disabled="disableInputs">\n    <div class="form-group">\n      <label for="name" class="required">Name</label>\n      <span ng-class="{\'has-error\': (createProjectForm.name.$error.pattern && createProjectForm.name.$touched) || nameTaken}">\n        <input class="form-control input-lg"\n            name="name"\n            id="name"\n            placeholder="my-project"\n            type="text"\n            required\n            take-focus\n            minlength="2"\n            maxlength="63"\n            pattern="[a-z0-9]([-a-z0-9]*[a-z0-9])?"\n            aria-describedby="nameHelp"\n            ng-model="name"\n            ng-model-options="{ updateOn: \'default blur\' }"\n            ng-change="nameTaken = false"\n            autocorrect="off"\n            autocapitalize="off"\n            spellcheck="false">\n      </span>\n      <div>\n        <span class="help-block">A unique name for the project.</span>\n      </div>\n      <div class="has-error">\n        <span id="nameHelp" class="help-block" ng-if="createProjectForm.name.$error.required && createProjectForm.name.$dirty">\n          Name is required.\n        </span>\n      </div>\n      <div class="has-error">\n        <span id="nameHelp" class="help-block" ng-if="createProjectForm.name.$error.minlength && createProjectForm.name.$touched">\n          Name must have at least two characters.\n        </span>\n      </div>\n      <div class="has-error">\n        <span id="nameHelp" class="help-block" ng-if="createProjectForm.name.$error.pattern && createProjectForm.name.$touched">\n          Project names may only contain lower-case letters, numbers, and dashes.\n          They may not start or end with a dash.\n        </span>\n      </div>\n      <div class="has-error">\n        <span class="help-block" ng-if="nameTaken">\n          This name is already in use. Please choose a different name.\n        </span>\n      </div>\n    </div>\n\n    <div class="form-group">\n      <label for="displayName">Display Name</label>\n      <input class="form-control input-lg"\n          name="displayName"\n          id="displayName"\n          placeholder="My Project"\n          type="text"\n          ng-model="displayName">\n    </div>\n\n    <div class="form-group">\n      <label for="description">Description</label>\n      <textarea class="form-control input-lg"\n          name="description"\n          id="description"\n          placeholder="A short description."\n          ng-model="description"></textarea>\n    </div>\n\n    <div class="button-group">\n      <button type="submit"\n          class="btn btn-primary btn-lg"\n          ng-class="{\'dialog-btn\': isDialog}"\n          ng-click="createProject()"\n          ng-disabled="createProjectForm.$invalid || nameTaken || disableInputs"\n          value="">\n        {{submitButtonLabel}}\n      </button>\n      <button\n          class="btn btn-default btn-lg"\n          ng-class="{\'dialog-btn\': isDialog}"\n          ng-click="cancelCreateProject()">\n        Cancel\n      </button>\n    </div>\n  </fieldset>\n</form>\n'), 
+a.put("src/components/create-project/createProject.html", '<form name="createProjectForm" novalidate>\n  <fieldset ng-disabled="disableInputs">\n    <div class="form-group">\n      <label for="name" class="required">Name</label>\n      <span ng-class="{\'has-error\': (createProjectForm.name.$error.pattern && createProjectForm.name.$touched) || nameTaken}">\n        <input class="form-control input-lg"\n            name="name"\n            id="name"\n            placeholder="my-project"\n            type="text"\n            required\n            take-focus\n            minlength="2"\n            maxlength="63"\n            pattern="[a-z0-9]([-a-z0-9]*[a-z0-9])?"\n            aria-describedby="nameHelp"\n            ng-model="name"\n            ng-model-options="{ updateOn: \'default blur\' }"\n            ng-change="nameTaken = false"\n            autocorrect="off"\n            autocapitalize="off"\n            spellcheck="false">\n      </span>\n      <div>\n        <span class="help-block">A unique name for the project.</span>\n      </div>\n      <div class="has-error">\n        <span id="nameHelp" class="help-block" ng-if="createProjectForm.name.$error.required && createProjectForm.name.$dirty">\n          Name is required.\n        </span>\n      </div>\n      <div class="has-error">\n        <span id="nameHelp" class="help-block" ng-if="createProjectForm.name.$error.minlength && createProjectForm.name.$touched">\n          Name must have at least two characters.\n        </span>\n      </div>\n      <div class="has-error">\n        <span id="nameHelp" class="help-block" ng-if="createProjectForm.name.$error.pattern && createProjectForm.name.$touched">\n          Project names may only contain lower-case letters, numbers, and dashes.\n          They may not start or end with a dash.\n        </span>\n      </div>\n      <div class="has-error">\n        <span class="help-block" ng-if="nameTaken">\n          This name is already in use. Please choose a different name.\n        </span>\n      </div>\n    </div>\n\n    <div class="form-group">\n      <label for="displayName">Display Name</label>\n      <input class="form-control input-lg"\n          name="displayName"\n          id="displayName"\n          placeholder="My Project"\n          type="text"\n          ng-model="displayName">\n    </div>\n\n    <div class="form-group">\n      <label for="description">Description</label>\n      <textarea class="form-control input-lg"\n          name="description"\n          id="description"\n          placeholder="A short description."\n          ng-model="description"></textarea>\n    </div>\n\n    <div class="button-group">\n      <button type="submit"\n          class="btn btn-primary btn-lg"\n          ng-class="{\'dialog-btn\': isDialog}"\n          ng-click="createProject()"\n          ng-disabled="createProjectForm.$invalid || nameTaken || disableInputs"\n          value="">\n        Create\n      </button>\n      <button\n          class="btn btn-default btn-lg"\n          ng-class="{\'dialog-btn\': isDialog}"\n          ng-click="cancelCreateProject()">\n        Cancel\n      </button>\n    </div>\n  </fieldset>\n</form>\n'), 
 a.put("src/components/delete-project/delete-project-button.html", '<div class="actions">\n  <!-- Avoid whitespace inside the link -->\n  <a href=""\n     ng-click="$event.stopPropagation(); openDeleteModal()"\n     role="button"\n     class="action-button"\n     ng-attr-aria-disabled="{{disableDelete ? \'true\' : undefined}}"\n     ng-class="{ \'disabled-link\': disableDelete }"\n    ><i class="fa fa-trash-o" aria-hidden="true"\n    ></i><span class="sr-only">Delete Project {{projectName}}</span></a>\n</div>\n'), a.put("src/components/delete-project/delete-project-modal.html", '<div class="delete-resource-modal">\n  <!-- Use a form so that the enter key submits when typing a project name to confirm. -->\n  <form>\n    <div class="modal-body">\n      <h1>Are you sure you want to delete the project\n        \'<strong>{{displayName ? displayName : projectName}}</strong>\'?</h1>\n      <p>\n        This will <strong>delete all resources</strong> associated with\n        the project {{displayName ? displayName : projectName}} and <strong>cannot be\n        undone</strong>.  Make sure this is something you really want to do!\n      </p>\n      <div ng-show="typeNameToConfirm">\n        <p>Type the name of the project to confirm.</p>\n        <p>\n          <label class="sr-only" for="resource-to-delete">project to delete</label>\n          <input\n              ng-model="confirmName"\n              id="resource-to-delete"\n              type="text"\n              class="form-control input-lg"\n              autocorrect="off"\n              autocapitalize="off"\n              spellcheck="false"\n              autofocus>\n        </p>\n      </div>\n    </div>\n    <div class="modal-footer">\n      <button ng-disabled="typeNameToConfirm && confirmName !== projectName && confirmName !== displayName" class="btn btn-lg btn-danger" type="submit" ng-click="delete();">Delete</button>\n      <button class="btn btn-lg btn-default" type="button" ng-click="cancel();">Cancel</button>\n    </div>\n  </form>\n</div>\n'), 
 a.put("src/components/delete-project/delete-project.html", '<a href="javascript:void(0)"\n   ng-click="openDeleteModal()"\n   role="button"\n   ng-attr-aria-disabled="{{disableDelete ? \'true\' : undefined}}"\n   ng-class="{ \'disabled-link\': disableDelete }"\n>{{label || \'Delete\'}}</a>\n'), a.put("src/components/edit-project/editProject.html", '<form name="editProjectForm">\n  <fieldset ng-disabled="disableInputs">\n    <div class="form-group">\n      <label for="displayName">Display Name</label>\n      <input class="form-control input-lg"\n             name="displayName"\n             id="displayName"\n             placeholder="My Project"\n             type="text"\n             ng-model="editableFields.displayName">\n    </div>\n\n    <div class="form-group">\n      <label for="description">Description</label>\n                    <textarea class="form-control input-lg"\n                              name="description"\n                              id="description"\n                              placeholder="A short description."\n                              ng-model="editableFields.description"></textarea>\n    </div>\n\n    <div class="button-group">\n      <button type="submit"\n              class="btn btn-primary btn-lg"\n              ng-class="{\'dialog-btn\': isDialog}"\n              ng-click="update()"\n              ng-disabled="editProjectForm.$invalid || disableInputs"\n              value="">{{submitButtonLabel}}</button>\n      <button\n          class="btn btn-default btn-lg"\n          ng-class="{\'dialog-btn\': isDialog}"\n          ng-click="cancelEditProject()">\n        Cancel\n      </button>\n    </div>\n  </fieldset>\n</form>\n'), 
+a.put("src/components/toast-notifications/toast-notifications.html", '<div class="toast-notifications-list-pf">\n  <div ng-repeat="(notificationID, notification) in notifications track by (notificationID + (notification.message || notification.details))" ng-if="!notification.hidden"\n       ng-mouseenter="setHover(notification, true)" ng-mouseleave="setHover(notification, false)">\n    <div class="toast-pf alert {{notification.type | alertStatus}}" ng-class="{\'alert-dismissable\': !hideCloseButton}">\n      <button ng-if="!hideCloseButton" type="button" class="close" ng-click="close(notification)">\n        <span class="pficon pficon-close" aria-hidden="true"></span>\n        <span class="sr-only">Close</span>\n      </button>\n      <span class="{{notification.type | alertIcon}}" aria-hidden="true"></span>\n      <span class="sr-only">{{notification.type}}</span>\n      <span class="toast-notification-message" ng-if="notification.message">{{notification.message}}</span>\n      <span ng-if="notification.details">{{notification.details}}</span>\n      <span ng-repeat="link in notification.links">\n        <a ng-if="!link.href" href="" ng-click="onClick(notification, link)" role="button">{{link.label}}</a>\n        <a ng-if="link.href" ng-href="{{link.href}}" ng-attr-target="{{link.target}}">{{link.label}}</a>\n        <span ng-if="!$last" class="toast-action-divider">|</span>\n      </span>\n    </div>\n  </div>\n</div>\n'), 
 a.put("src/components/truncate-long-text/truncateLongText.html", '<!--\n  Do not remove class `truncated-content` (here or below) even though it\'s not\n  styled directly in origin-web-common.  `truncated-content` is used by\n  origin-web-console in certain contexts.\n-->\n<span ng-if="!truncated" ng-bind-html="content | highlightKeywords : keywords" class="truncated-content"></span>\n<span ng-if="truncated">\n  <span ng-if="!toggles.expanded">\n    <span ng-attr-title="{{content}}" class="truncation-block">\n      <span ng-bind-html="truncatedContent | highlightKeywords : keywords" class="truncated-content"></span>&hellip;\n    </span>\n    <a ng-if="expandable" href="" ng-click="toggles.expanded = true" class="nowrap">See All</a>\n  </span>\n  <span ng-if="toggles.expanded">\n    <div ng-if="prettifyJson" class="well">\n      <span class="pull-right" style="margin-top: -10px;"><a href="" ng-click="toggles.expanded = false" class="truncation-collapse-link">Collapse</a></span>\n      <span ng-bind-html="content | prettifyJSON | highlightKeywords : keywords" class="pretty-json truncated-content"></span>\n    </div>\n    <span ng-if="!prettifyJson">\n      <span class="pull-right"><a href="" ng-click="toggles.expanded = false" class="truncation-collapse-link">Collapse</a></span>\n      <span ng-bind-html="content | highlightKeywords : keywords" class="truncated-content"></span>\n    </span>\n  </span>\n</span>\n');
 } ]), angular.module("openshiftCommonUI").directive("createProject", [ "$window", function(a) {
 return {
 restrict:"E",
 scope:{
 alerts:"=",
-submitButtonLabel:"@",
 redirectAction:"&",
 onCancel:"&?",
 isDialog:"@"
 },
 templateUrl:"src/components/create-project/createProject.html",
-controller:[ "$scope", "$filter", "$location", "DataService", function(b, c, d, e) {
-b.submitButtonLabel || (b.submitButtonLabel = "Create"), b.isDialog = "true" === b.isDialog, b.createProject = function() {
+controller:[ "$scope", "$filter", "$location", "DataService", "NotificationsService", "displayNameFilter", function(b, c, d, e, f, g) {
+b.submitButtonLabel || (b.submitButtonLabel = "Create"), b.isDialog = "true" === b.isDialog;
+var h = function(a, c) {
+b.alerts[a] = c, f.addNotification(c);
+};
+b.createProject = function() {
 b.disableInputs = !0, b.createProjectForm.$valid && e.create("projectrequests", null, {
 apiVersion:"v1",
 kind:"ProjectRequest",
@@ -59671,16 +60182,19 @@ displayName:b.displayName,
 description:b.description
 }, b).then(function(a) {
 var c = b.redirectAction();
-c ? c(encodeURIComponent(a.metadata.name)) :d.path("project/" + encodeURIComponent(a.metadata.name) + "/create");
+c ? c(encodeURIComponent(a.metadata.name)) :d.path("project/" + encodeURIComponent(a.metadata.name) + "/create"), h("created-project", {
+type:"success",
+message:"Project '" + g(a) + "' was successfully created."
+});
 }, function(a) {
 b.disableInputs = !1;
 var c = a.data || {};
 if ("AlreadyExists" === c.reason) b.nameTaken = !0; else {
 var d = c.message || "An error occurred creating the project.";
-b.alerts["error-creating-project"] = {
+h("error-creating-project", {
 type:"error",
 message:d
-};
+});
 }
 });
 }, b.cancelCreateProject = function() {
@@ -59691,7 +60205,7 @@ c && c();
 };
 } ]
 };
-} ]), angular.module("openshiftCommonUI").directive("deleteProject", [ "$uibModal", "$location", "$filter", "$q", "hashSizeFilter", "APIService", "DataService", "AlertMessageService", "Logger", function(a, b, c, d, e, f, g, h, i) {
+} ]), angular.module("openshiftCommonUI").directive("deleteProject", [ "$uibModal", "$location", "$filter", "$q", "hashSizeFilter", "APIService", "DataService", "AlertMessageService", "NotificationsService", "Logger", function(a, b, c, d, e, f, g, h, i, j) {
 return {
 restrict:"E",
 scope:{
@@ -59710,10 +60224,10 @@ templateUrl:function(a, b) {
 return angular.isDefined(b.buttonOnly) ? "src/components/delete-project/delete-project-button.html" :"src/components/delete-project/delete-project.html";
 },
 replace:!0,
-link:function(d, e, j) {
-var k = function(a) {
-d.stayOnCurrentPage ? d.alerts[a.name] = a.data :h.addAlert(a);
-}, l = function() {
+link:function(d, e, k) {
+var l = function(a) {
+d.stayOnCurrentPage ? d.alerts[a.name] = a.data :h.addAlert(a), i.addNotification(a.data);
+}, m = function() {
 if (!d.stayOnCurrentPage) {
 if (d.redirectUrl) return void b.url(d.redirectUrl);
 if ("/" === b.path()) return void d.$emit("deleteProject");
@@ -59734,19 +60248,20 @@ var a = d.projectName, b = "Project '" + d.displayName + "'", e = {};
 g["delete"]({
 resource:f.kindToResource("Project")
 }, a, e).then(function() {
-k({
+l({
 name:a,
 data:{
 type:"success",
 message:_.capitalize(b) + " was marked for deletion."
 }
-}), d.success && d.success(), l();
+}), d.success && d.success(), m();
 })["catch"](function(e) {
-d.alerts[a] = {
+var f = {
 type:"error",
 message:_.capitalize(b) + "' could not be deleted.",
 details:c("getErrorDetails")(e)
-}, i.error(b + " could not be deleted.", e);
+};
+d.alerts[a] = f, i.addNotification(f), j.error(b + " could not be deleted.", e);
 });
 });
 }
@@ -59771,36 +60286,41 @@ onCancel:"&",
 isDialog:"@"
 },
 templateUrl:"src/components/edit-project/editProject.html",
-controller:[ "$scope", "$filter", "$location", "DataService", "annotationNameFilter", function(b, c, d, e, f) {
+controller:[ "$scope", "$filter", "$location", "DataService", "NotificationsService", "annotationNameFilter", "displayNameFilter", function(b, c, d, e, f, g, h) {
 b.submitButtonLabel || (b.submitButtonLabel = "Save"), b.isDialog = "true" === b.isDialog;
-var g = c("annotation"), h = c("annotationName"), i = function(a) {
+var i = c("annotation"), j = c("annotationName"), k = function(a) {
 return {
-description:g(a, "description"),
-displayName:g(a, "displayName")
+description:i(a, "description"),
+displayName:i(a, "displayName")
 };
-}, j = function(a, b) {
+}, l = function(a, b) {
 var c = angular.copy(a);
-return c.metadata.annotations[h("description")] = b.description, c.metadata.annotations[h("displayName")] = b.displayName, c;
-}, k = function(a) {
-var b = [ f("description"), f("displayName") ];
+return c.metadata.annotations[j("description")] = b.description, c.metadata.annotations[j("displayName")] = b.displayName, c;
+}, m = function(a) {
+var b = [ g("description"), g("displayName") ];
 return _.each(b, function(b) {
 a.metadata.annotations[b] || delete a.metadata.annotations[b];
 }), a;
+}, n = function(a) {
+b.alerts.update = a, f.addNotification(a);
 };
-b.editableFields = i(b.project), b.update = function() {
-b.disableInputs = !0, b.editProjectForm.$valid && e.update("projects", b.project.metadata.name, k(j(b.project, b.editableFields)), {
+b.editableFields = k(b.project), b.update = function() {
+b.disableInputs = !0, b.editProjectForm.$valid && e.update("projects", b.project.metadata.name, m(l(b.project, b.editableFields)), {
 projectName:b.project.name
 }, {
 errorNotification:!1
-}).then(function() {
-var a = b.redirectAction();
-a && a(encodeURIComponent(b.project.metadata.name));
+}).then(function(a) {
+var c = b.redirectAction();
+c && c(encodeURIComponent(b.project.metadata.name)), n({
+type:"success",
+message:"Project '" + h(a) + "' was successfully updated."
+});
 }, function(a) {
-b.disableInputs = !1, b.editableFields = i(b.project), b.alerts.update = {
+b.disableInputs = !1, b.editableFields = k(b.project), n({
 type:"error",
 message:"An error occurred while updating the project",
 details:c("getErrorDetails")(a)
-};
+});
 });
 }, b.cancelEditProject = function() {
 var c = b.onCancel();
@@ -59815,6 +60335,30 @@ link:function(b, c) {
 a(function() {
 $(c).focus();
 }, 300);
+}
+};
+} ]), angular.module("openshiftCommonUI").directive("toastNotifications", [ "NotificationsService", "$timeout", function(a, b) {
+return {
+restrict:"E",
+scope:{},
+templateUrl:"src/components/toast-notifications/toast-notifications.html",
+link:function(c) {
+c.notifications = a.getNotifications(), c.close = function(a) {
+a.hidden = !0, _.isFunction(a.onClose) && a.onClose();
+}, c.onClick = function(a, b) {
+if (_.isFunction(b.onClick)) {
+var c = b.onClick();
+c && (a.hidden = !0);
+}
+}, c.setHover = function(a, b) {
+a.isHover = b;
+}, c.$watch("notifications", function() {
+_.each(c.notifications, function(c) {
+a.isAutoDismiss(c) && !c.hidden && (c.timerId ? c.timerId !== -1 || c.isHover || (c.hidden = !0) :c.timerId = b(function() {
+c.timerId = -1, c.isHover || (c.hidden = !0);
+}, a.dismissDelay));
+});
+}, !0);
 }
 };
 } ]), angular.module("openshiftCommonUI").directive("truncateLongText", [ "truncateFilter", function(a) {
@@ -59855,6 +60399,7 @@ prefix:"/api"
 },
 auth:{
 oauth_authorize_uri:"https://localhost:8443/oauth/authorize",
+oauth_token_uri:"https://localhost:8443/oauth/token",
 oauth_redirect_base:"https://localhost:9000/dev-console",
 oauth_client_id:"openshift-web-console",
 logout_uri:""
@@ -59864,6 +60409,48 @@ metricsURL:""
 }, window.OPENSHIFT_VERSION = {
 openshift:"dev-mode",
 kubernetes:"dev-mode"
+}), angular.module("openshiftCommonUI").filter("alertStatus", function() {
+return function(a) {
+var b;
+switch (a) {
+case "error":
+b = "alert-danger";
+break;
+
+case "warning":
+b = "alert-warning";
+break;
+
+case "success":
+b = "alert-success";
+break;
+
+default:
+b = "alert-info";
+}
+return b;
+};
+}).filter("alertIcon", function() {
+return function(a) {
+var b;
+switch (a) {
+case "error":
+b = "pficon pficon-error-circle-o";
+break;
+
+case "warning":
+b = "pficon pficon-warning-triangle-o";
+break;
+
+case "success":
+b = "pficon pficon-ok";
+break;
+
+default:
+b = "pficon pficon-info";
+}
+return b;
+};
 }), angular.module("openshiftCommonUI").filter("annotationName", function() {
 var a = {
 buildConfig:[ "openshift.io/build-config.name" ],
@@ -59989,7 +60576,7 @@ return a[b];
 };
 }).filter("description", [ "annotationFilter", function(a) {
 return function(b) {
-return a(b, "openshift.io/description") || a(b, "kubernetes.io/description");
+return a(b, "openshift.io/description") || a(b, "kubernetes.io/description") || a(b, "description");
 };
 } ]).filter("displayName", [ "annotationFilter", function(a) {
 return function(b, c) {
@@ -60070,17 +60657,16 @@ h !== -1 && (e = e.substring(0, h));
 return e;
 };
 }), angular.module("openshiftCommonUI").filter("toArray", function() {
-return function(a) {
-if (!a) return [];
-if (angular.isArray(a)) return a;
-var b = [];
-return angular.forEach(a, function(a) {
-b.push(a);
-}), b;
-};
-}).filter("hashSize", function() {
+return _.toArray;
+}).filter("size", function() {
+return _.size;
+}).filter("hashSize", [ "$log", function(a) {
 return function(a) {
 return a ? Object.keys(a).length :0;
+};
+} ]).filter("filterCollection", function() {
+return function(a, b) {
+return a && b ? _.filter(a, b) :a;
 };
 }).filter("generateName", function() {
 return function(a, b) {
@@ -60088,7 +60674,14 @@ a || (a = ""), b || (b = 5);
 var c = Math.round(Math.pow(36, b + 1) - Math.random() * Math.pow(36, b)).toString(36).slice(1);
 return a + c;
 };
-}), angular.module("openshiftCommonServices").service("AlertMessageService", function() {
+}).filter("getErrorDetails", [ "upperFirstFilter", function(a) {
+return function(b, c) {
+var d = b.data || {};
+if (d.message) return c ? a(d.message) :d.message;
+var e = b.status || d.status;
+return e ? "Status: " + e :"";
+};
+} ]), angular.module("openshiftCommonServices").service("AlertMessageService", function() {
 var a = [], b = function(a, b) {
 return b ? "hide/alert/" + b + "/" + a :"hide/alert/" + a;
 };
@@ -60359,7 +60952,7 @@ return a.reject(d);
 } ]), angular.module("openshiftCommonServices").factory("AuthorizationService", [ "$q", "$cacheFactory", "Logger", "$interval", "APIService", "DataService", function(a, b, c, d, e, f) {
 var g = null, h = b("rulesCache", {
 number:10
-}), i = !1, j = [ "localresourceaccessreviews", "localsubjectaccessreviews", "resourceaccessreviews", "selfsubjectrulesreviews", "subjectaccessreviews" ], k = function(a) {
+}), i = !1, j = [ "localresourceaccessreviews", "localsubjectaccessreviews", "resourceaccessreviews", "selfsubjectaccessreviews", "selfsubjectrulesreviews", "subjectaccessreviews" ], k = function(a) {
 var b = {};
 return _.each(a, function(a) {
 _.each(a.apiGroups, function(c) {
@@ -61251,102 +61844,124 @@ errorNotification:!1
 }
 };
 } ]), angular.module("openshiftCommonServices").provider("RedirectLoginService", function() {
-var a = "", b = "", c = "";
+var a = "", b = "", c = "", d = "";
 this.OAuthClientID = function(b) {
 return b && (a = b), a;
 }, this.OAuthAuthorizeURI = function(a) {
 return a && (b = a), b;
-}, this.OAuthRedirectURI = function(a) {
+}, this.OAuthTokenURI = function(a) {
 return a && (c = a), c;
-}, this.$get = [ "$location", "$q", "Logger", "base64", function(d, e, f, g) {
-var h = f.get("auth"), i = function(a) {
+}, this.OAuthRedirectURI = function(a) {
+return a && (d = a), d;
+}, this.$get = [ "$injector", "$location", "$q", "Logger", "base64", function(e, f, g, h, i) {
+var j = h.get("auth"), k = function(a) {
 var b;
 if (window.crypto && window.Uint32Array) try {
 var c = new Uint32Array(a);
 window.crypto.getRandomValues(c), b = [];
 for (var d = 0; d < a; d++) b.push(c[d]);
 } catch (e) {
-h.debug("RedirectLoginService.getRandomInts: ", e), b = null;
+j.debug("RedirectLoginService.getRandomInts: ", e), b = null;
 }
 if (!b) {
 b = [];
 for (var f = 0; f < a; f++) b.push(Math.floor(4294967296 * Math.random()));
 }
 return b;
-}, j = "RedirectLoginService.nonce", k = function(a) {
-var b = String(new Date().getTime()) + "-" + i(8).join("");
+}, l = "RedirectLoginService.nonce", m = function(a) {
+var b = String(new Date().getTime()) + "-" + k(8).join("");
 try {
-window.localStorage[j] = b;
+window.localStorage[l] = b;
 } catch (c) {
-h.log("RedirectLoginService.makeState, localStorage error: ", c);
+j.log("RedirectLoginService.makeState, localStorage error: ", c);
 }
-return g.urlencode(JSON.stringify({
+return i.urlencode(JSON.stringify({
 then:a,
 nonce:b
 }));
-}, l = function(a) {
+}, n = function(a) {
 var b = {
 then:null,
 verified:!1
 }, c = "";
 try {
-c = window.localStorage[j], window.localStorage.removeItem(j);
+c = window.localStorage[l], window.localStorage.removeItem(l);
 } catch (d) {
-h.log("RedirectLoginService.parseState, localStorage error: ", d);
+j.log("RedirectLoginService.parseState, localStorage error: ", d);
 }
 try {
-var e = a ? JSON.parse(g.urldecode(a)) :{};
+var e = a ? JSON.parse(i.urldecode(a)) :{};
 e && e.nonce && c && e.nonce === c && (b.verified = !0, b.then = e.then);
 } catch (d) {
-h.error("RedirectLoginService.parseState, state error: ", d);
+j.error("RedirectLoginService.parseState, state error: ", d);
 }
-return h.error("RedirectLoginService.parseState", b), b;
+return j.error("RedirectLoginService.parseState", b), b;
 };
 return {
 login:function() {
-if ("" === a) return e.reject({
+if ("" === a) return g.reject({
 error:"invalid_request",
 error_description:"RedirectLoginServiceProvider.OAuthClientID() not set"
 });
-if ("" === b) return e.reject({
+if ("" === b) return g.reject({
 error:"invalid_request",
 error_description:"RedirectLoginServiceProvider.OAuthAuthorizeURI() not set"
 });
-if ("" === c) return e.reject({
+if ("" === d) return g.reject({
 error:"invalid_request",
 error_description:"RedirectLoginServiceProvider.OAuthRedirectURI not set"
 });
-var f = e.defer(), g = new URI(b), i = new URI(d.url()).fragment("");
-return g.query({
+var e = new URI(f.url()).fragment(""), h = {
 client_id:a,
 response_type:"token",
-state:k(i.toString()),
-redirect_uri:c
-}), h.log("RedirectLoginService.login(), redirecting", g.toString()), window.location.href = g.toString(), f.promise;
+state:m(e.toString()),
+redirect_uri:d
+};
+c && (h.response_type = "code");
+var i = g.defer(), k = new URI(b);
+return k.query(h), j.log("RedirectLoginService.login(), redirecting", k.toString()), window.location.href = k.toString(), i.promise;
 },
 finish:function() {
-var a = new URI(d.url()), b = a.query(!0), c = new URI("?" + a.fragment()).query(!0);
-h.log("RedirectLoginService.finish()", b, c);
-var f = b.error || c.error;
-if (f) {
-var g = b.error_description || c.error_description, i = b.error_uri || c.error_uri;
-return h.log("RedirectLoginService.finish(), error", f, g, i), e.reject({
-error:f,
-error_description:g,
-error_uri:i
+var b = e.get("$http"), h = function(a, b) {
+return a.error ? (j.log("RedirectLoginService.finish(), error", a.error, a.error_description, a.error_uri), g.reject({
+error:a.error,
+error_description:a.error_description,
+error_uri:a.error_uri
+})) :a.access_token ? g.when({
+token:a.access_token,
+ttl:a.expires_in,
+then:b.then,
+verified:b.verified
+}) :g.reject({
+error:"invalid_request",
+error_description:"No API token returned"
+});
+}, i = new URI(f.url()), k = i.query(!0), l = new URI("?" + i.fragment()).query(!0);
+if (j.log("RedirectLoginService.finish()", k, l), k.error) return h(k, n(k.state));
+if (l.error) return h(l, n(l.state));
+if (l.access_token) return h(l, n(l.state));
+if (c && k.code) {
+var m = n(k.state);
+if (!m.verified) return g.reject({
+error:"invalid_request",
+error_description:"Client state could not be verified"
+});
+var o = [ "grant_type=authorization_code", "code=" + encodeURIComponent(k.code), "redirect_uri=" + encodeURIComponent(d), "client_id=" + encodeURIComponent(a) ].join("&");
+return b({
+method:"POST",
+url:c,
+headers:{
+Authorization:"Basic " + window.btoa(a + ":"),
+"Content-Type":"application/x-www-form-urlencoded"
+},
+data:o
+}).then(function(a) {
+return h(a.data, m);
+}, function(a) {
+return j.log("RedirectLoginService.finish(), error getting access token", a), h(a.data, m);
 });
 }
-var j = l(c.state);
-if (c.access_token && "bearer" === (c.token_type || "").toLowerCase()) {
-var k = e.defer();
-return k.resolve({
-token:c.access_token,
-ttl:c.expires_in,
-then:j.then,
-verified:j.verified
-}), k.promise;
-}
-return e.reject({
+return g.reject({
 error:"invalid_request",
 error_description:"No API token returned"
 });
@@ -61384,7 +61999,97 @@ return !1;
 }
 }, g;
 } ];
-} ]), !function(a) {
+} ]), angular.module("openshiftCommonUI").factory("GuidedTourService", function() {
+function a() {
+$("#guided_tour_backdrop").click(l);
+}
+function b() {
+$("#guided_tour_backdrop").remove(), angular.isFunction(i.onTourEndCB) && i.onTourEndCB();
+}
+function c() {
+_.forEach(i.steps, function(a) {
+a.onNextOrig = a.onNext, a.onPrevOrig = a.onPrev, a.onNext = d, a.onPrev = e, a.fixedElement = !0, !angular.isUndefined(a.yOffset) || "right" !== a.placement && "left" !== a.placement || (a.yOffset = -45);
+});
+}
+function d() {
+var a = hopscotch.getCurrStepNum() - 1, b = i.steps[a];
+b && (b.onNextOrig && b.onNextOrig(), f(a + 1));
+}
+function e() {
+var a = hopscotch.getCurrStepNum() + 1, b = i.steps[a];
+b && (b.onPrevOrig && b.onPrevOrig(), f(a - 1));
+}
+function f(a) {
+var b = i.steps[a];
+if (b && (b.preShow && b.preShow(), b.targetScrollElement)) {
+var c = $("body").find(b.targetScrollElement)[0], d = $("body").find(b.target)[0];
+if (c && c) {
+var e = g(d, c);
+"top" === b.placement ? e -= j :e += j, e > c.clientHeight ? c.scrollTop = e :c.scrollTop = 0;
+}
+}
+}
+function g(a, b) {
+return a && a !== b ? a.offsetTop + g(a.offsetParent, b) :0;
+}
+var h, i = {}, j = 175, k = function(d, e) {
+$("body").append('<div id="guided_tour_backdrop" class="modal-backdrop fade guided-tour-backdrop"></div>'), h = {
+onTourEndCB:e,
+bubblePadding:5,
+arrowWidth:10,
+onStart:a,
+onEnd:b,
+onClose:b,
+showPrevButton:!0,
+i18n:{
+nextBtn:"Next >",
+prevBtn:"< Back"
+}
+}, i = {}, angular.merge(i, h, d), c(), f(0), hopscotch.startTour(i, 0);
+}, l = function() {
+hopscotch.endTour();
+};
+return {
+startTour:k,
+cancelTour:l
+};
+}), angular.module("openshiftCommonServices").provider("NotificationsService", function() {
+this.dismissDelay = 8e3, this.autoDismissTypes = [ "info", "success" ], this.$get = function() {
+var a = [], b = this.dismissDelay, c = this.autoDismissTypes, d = function(a, b) {
+return b ? "hide/notification/" + b + "/" + a :"hide/notification/" + a;
+}, e = function(b, c, d) {
+c && h(c, d) && (b.hidden = !0), a.push(b);
+}, f = function() {
+return a;
+}, g = function() {
+_.take(a, 0);
+}, h = function(a, b) {
+var c = d(a, b);
+return "true" === localStorage.getItem(c);
+}, i = function(a, b) {
+var c = d(a, b);
+localStorage.setItem(c, "true");
+}, j = function(a) {
+return _.find(c, function(b) {
+return b === a.type;
+});
+};
+return {
+addNotification:e,
+getNotifications:f,
+clearNotifications:g,
+isNotificationPermanentlyHidden:h,
+permanentlyHideNotification:i,
+isAutoDismiss:j,
+dismissDelay:b,
+autoDismissTypes:c
+};
+}, this.setDismissDelay = function(a) {
+this.dismissDelay = a;
+}, this.setAutoDismissTypes = function(a) {
+this.autoDismissTypes = a;
+};
+}), !function(a) {
 function b(c) {
 if (d[c]) return d[c].exports;
 var e = d[c] = {
