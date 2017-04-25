@@ -4667,10 +4667,10 @@ _.set(this, "selectedTab.networking", !0), b(this);
 }
 }
 };
-}), angular.module("openshiftConsole").controller("LandingPageController", [ "$scope", "AuthService", "Constants", "DataService", "Navigate", function(a, b, c, d, e) {
+}), angular.module("openshiftConsole").controller("LandingPageController", [ "$scope", "AuthService", "Constants", "DataService", "Navigate", "NotificationsService", function(a, b, c, d, e, f) {
 a.saasOfferings = c.SAAS_OFFERINGS, a.viewMembership = function(a) {
 e.toProjectMembership(a.metadata.name);
-}, b.withUser().then(function() {
+}, f.clearNotifications(), b.withUser().then(function() {
 d.list({
 group:"servicecatalog.k8s.io",
 resource:"serviceclasses"
