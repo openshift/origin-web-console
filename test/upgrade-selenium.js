@@ -1,9 +1,9 @@
-// Latest Firefox is not compatible with old selenium versions
+// // Latest Firefox is not compatible with old selenium versions
 
-var pconfig = require('protractor/config.json');
+// var pconfig = require('protractor/config.json');
 
-pconfig.webdriverVersions.selenium = '2.53.0';
+// pconfig.webdriverVersions.selenium = '3.4.0';
 
-require('fs').writeFile(
-  'node_modules/protractor/config.json', JSON.stringify(pconfig)
-); 
+// require('fs').writeFile(
+//   'node_modules/protractor/config.json', JSON.stringify(pconfig)
+// );

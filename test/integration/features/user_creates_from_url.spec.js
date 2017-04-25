@@ -1,6 +1,6 @@
 'use strict';
 
-require('jasmine-beforeall');
+//require('jasmine-beforeall');
 
 const h = require('../helpers');
 const addExtension = require('../helpers/extensions').addExtension;
