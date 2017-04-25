@@ -2,13 +2,13 @@
 
 /**
  * @ngdoc function
- * @name openshiftConsole.controller:ProcessTemplateModalController
+ * @name openshiftConsole.controller:ProcessOrSaveTemplateModalController
  * @description
- * # ProcessTemplateModalController
+ * # ProcessOrSaveTemplateModalController
  * Controller of the openshiftConsole
  */
 angular.module('openshiftConsole')
-  .controller('ProcessTemplateModalController', function ($scope, $uibModalInstance) {
+  .controller('ProcessOrSaveTemplateModalController', function ($scope, $uibModalInstance) {
     $scope.continue = function() {
       $uibModalInstance.close('create');
     };

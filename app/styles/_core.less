@@ -597,8 +597,6 @@ label.checkbox {
       }
     }
     .form-group {
-      width: 100%;
-
       .parameter-input-wrapper {
         position: relative;
 
@@ -611,10 +609,11 @@ label.checkbox {
             transform: rotate(90deg);
           }
         }
-
-        input, textarea {
-          padding-right: 20px;
-        }
+      }
+    }
+    &.form-horizontal .form-group .parameter-input-wrapper {
+      .resize-input {
+        right: 26px;
       }
     }
     .help-block {

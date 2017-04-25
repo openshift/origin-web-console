@@ -21,7 +21,8 @@ angular.module('openshiftConsole').component('processTemplate', {
     template: '<',
     project: '<',
     alerts: '<',
-    prefillParameters: '<'
+    prefillParameters: '<',
+    isDialog: '<'
   },
   templateUrl: 'views/directives/process-template.html'
 });
@@ -41,7 +42,6 @@ function ProcessTemplate($filter,
   var ctrl = this;
 
   var context;
-  var projectDisplayName;
 
   var dcContainers = $parse('spec.template.spec.containers');
   var builderImage = $parse('spec.strategy.sourceStrategy.from || spec.strategy.dockerStrategy.from || spec.strategy.customStrategy.from');
@@ -129,16 +129,17 @@ function ProcessTemplate($filter,
     images = [];
     var dcImages = [];
     var outputImages = {};
+    var namespace = _.get(ctrl, 'selectedProject.metadata.name');
     angular.forEach(data.objects, function(item) {
       if (item.kind === "BuildConfig") {
-        var builder = imageObjectRef(builderImage(item), ctrl.project.metadata.name);
+        var builder = imageObjectRef(builderImage(item), namespace);
         if(builder) {
           images.push({
             name: builder,
             usesParameters: getParametersInImage(builder)
           });
         }
-        var output = imageObjectRef(outputImage(item), ctrl.project.metadata.name);
+        var output = imageObjectRef(outputImage(item), namespace);
         if (output) {
           outputImages[output] = true;
         }
@@ -185,23 +186,20 @@ function ProcessTemplate($filter,
   ctrl.$onInit = function() {
     ctrl.labels = [];
     ctrl.templateDisplayName = displayName(ctrl.template);
-    context = {
-      namespace: ctrl.project.metadata.name
-    };
-    projectDisplayName = displayName(ctrl.project);
+    ctrl.selectedProject = ctrl.project;
     setTemplateParams();
   };
 
   var processedResources;
   var createResources = function() {
     var titles = {
-      started: "Creating " + ctrl.templateDisplayName + " in project " + projectDisplayName,
-      success: "Created " + ctrl.templateDisplayName + " in project " + projectDisplayName,
-      failure: "Failed to create " + ctrl.templateDisplayName + " in project " + projectDisplayName
+      started: "Creating " + ctrl.templateDisplayName + " in project " + displayName(ctrl.selectedProject),
+      success: "Created " + ctrl.templateDisplayName + " in project " + displayName(ctrl.selectedProject),
+      failure: "Failed to create " + ctrl.templateDisplayName + " in project " + displayName(ctrl.selectedProject)
     };
     var helpLinks = getHelpLinks(ctrl.template);
     TaskList.clear();
-    TaskList.add(titles, helpLinks, ctrl.project.metadata.name, function() {
+    TaskList.add(titles, helpLinks, ctrl.selectedProject.metadata.name, function() {
       var d = $q.defer();
       DataService.batch(processedResources, context).then(
         function(result) {
@@ -235,7 +233,15 @@ function ProcessTemplate($filter,
       );
       return d.promise;
     });
-    Navigate.toNextSteps(ctrl.templateDisplayName, ctrl.project.metadata.name);
+
+    if (ctrl.isDialog) {
+      $scope.$emit('templateInstantiated', {
+        project: ctrl.selectedProject,
+        template: ctrl.template
+      });
+    } else {
+      Navigate.toNextSteps(ctrl.templateDisplayName, ctrl.selectedProject.metadata.name);
+    }
   };
 
   var launchConfirmationDialog = function(alerts) {
@@ -260,7 +266,7 @@ function ProcessTemplate($filter,
   };
 
   var showWarningsOrCreate = function(result) {
-    var alerts = SecurityCheckService.getSecurityAlerts(processedResources, ctrl.project.metadata.name);
+    var alerts = SecurityCheckService.getSecurityAlerts(processedResources, ctrl.selectedProject.metadata.name);
 
     // Now that all checks are completed, show any Alerts if we need to
     var quotaAlerts = result.quotaAlerts || [];
@@ -279,35 +285,76 @@ function ProcessTemplate($filter,
     }
   };
 
+  var createProjectIfNecessary = function() {
+    if (_.has(ctrl.selectedProject, 'metadata.uid')) {
+      return $q.when();
+    }
+
+    var newProjName = ctrl.selectedProject.metadata.name;
+    var newProjDisplayName = ctrl.selectedProject.metadata.annotations['new-display-name'];
+    var newProjDesc = $filter('description')(ctrl.selectedProject);
+    var projReqObj = {
+      apiVersion: "v1",
+      kind: "ProjectRequest",
+      metadata: {
+        name: newProjName
+      },
+      displayName: newProjDisplayName,
+      description: newProjDesc
+    };
+    return DataService.create('projectrequests', null, projReqObj, $scope);
+  };
+
   ctrl.createFromTemplate = function() {
     ctrl.disableInputs = true;
-    var userLabels = keyValueEditorUtils.mapEntries(keyValueEditorUtils.compactEntries(ctrl.labels));
-    var systemLabels = keyValueEditorUtils.mapEntries(keyValueEditorUtils.compactEntries(ctrl.systemLabels));
-    ctrl.template.labels = _.extend(systemLabels, userLabels);
+    createProjectIfNecessary().then(function() {
+      context = {
+        namespace: ctrl.selectedProject.metadata.name
+      };
+      var userLabels = keyValueEditorUtils.mapEntries(keyValueEditorUtils.compactEntries(ctrl.labels));
+      var systemLabels = keyValueEditorUtils.mapEntries(keyValueEditorUtils.compactEntries(ctrl.systemLabels));
+      ctrl.template.labels = _.extend(systemLabels, userLabels);
 
-    DataService.create("processedtemplates", null, ctrl.template, context).then(
-      function(config) { // success
-        // Cache template parameters and message so they can be displayed in the nexSteps page
-        ProcessedTemplateService.setTemplateData(config.parameters, ctrl.template.parameters, config.message);
-        processedResources = config.objects;
+      DataService.create("processedtemplates", null, ctrl.template, context).then(
+        function(config) { // success
+          // Cache template parameters and message so they can be displayed in the nexSteps page
+          ProcessedTemplateService.setTemplateData(config.parameters, ctrl.template.parameters, config.message);
+          processedResources = config.objects;
 
-        QuotaService.getLatestQuotaAlerts(processedResources, context).then(showWarningsOrCreate);
-      },
-      function(result) { // failure
-        ctrl.disableInputs = false;
-        var details;
-        if (result.data && result.data.message) {
-          details = result.data.message;
+          QuotaService.getLatestQuotaAlerts(processedResources, context).then(showWarningsOrCreate);
+        },
+        function(result) { // failure
+          ctrl.disableInputs = false;
+          var details;
+          if (result.data && result.data.message) {
+            details = result.data.message;
+          }
+          ctrl.alerts["process"] =
+            {
+              type: "error",
+              message: "An error occurred processing the template.",
+              details: details
+            };
         }
-        ctrl.alerts["process"] =
-          {
-            type: "error",
-            message: "An error occurred processing the template.",
-            details: details
-          };
+      );
+    }, function(result) {
+      ctrl.disableInputs = false;
+      var details;
+      if (result.data && result.data.message) {
+        details = result.data.message;
       }
-    );
+      ctrl.alerts["create-project"] = {
+        type: "error",
+        message: "An error occurred creating the project.",
+        details: details
+      };
+    });
   };
+
+  // When the process-template component is displayed in a dialog, the create
+  // button is outside the component since it is in the wizard footer. Listen
+  // for an event for when the button is clicked.
+  $scope.$on('instantiateTemplate', ctrl.createFromTemplate);
 
   var shouldAddAppLabel = function() {
     // If the template defines its own app label, we don't need to add one at all

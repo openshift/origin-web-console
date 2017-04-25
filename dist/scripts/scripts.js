@@ -655,21 +655,21 @@ return _.includes(c, b.name);
 return _.get(d, "imageChangeParams.from.name");
 }
 function n(a) {
-for (var b = [], c = D.exec(a); c; ) b.push(c[1]), c = D.exec(a);
+for (var b = [], c = C.exec(a); c; ) b.push(c[1]), c = C.exec(a);
 return b;
 }
 function o() {
 var a = {};
-return _.each(w.template.parameters, function(b) {
+return _.each(v.template.parameters, function(b) {
 a[b.name] = b.value;
 }), a;
 }
 function p() {
 var a = o();
-w.templateImages = _.map(E, function(b) {
+v.templateImages = _.map(D, function(b) {
 if (_.isEmpty(b.usesParameters)) return b;
 var c = _.template(b.name, {
-interpolate:D
+interpolate:C
 });
 return {
 name:c(a),
@@ -678,32 +678,32 @@ usesParameters:b.usesParameters
 });
 }
 function q(a) {
-var b = [], c = x(a);
+var b = [], c = w(a);
 return c && angular.forEach(c, function(c) {
 var d = c.image, e = m(a, c);
 e && (d = e), d && b.push(d);
 }), b;
 }
 function r(a) {
-E = [];
-var b = [], c = {};
+D = [];
+var b = [], c = {}, d = _.get(v, "selectedProject.metadata.name");
 angular.forEach(a.objects, function(a) {
 if ("BuildConfig" === a.kind) {
-var d = C(y(a), w.project.metadata.name);
-d && E.push({
-name:d,
-usesParameters:n(d)
+var e = B(x(a), d);
+e && D.push({
+name:e,
+usesParameters:n(e)
 });
-var e = C(z(a), w.project.metadata.name);
-e && (c[e] = !0);
+var f = B(y(a), d);
+f && (c[f] = !0);
 }
 "DeploymentConfig" === a.kind && (b = b.concat(q(a)));
 }), b.forEach(function(a) {
-c[a] || E.push({
+c[a] || D.push({
 name:a,
 usesParameters:n(a)
 });
-}), E = _.uniq(E, !1, "name");
+}), D = _.uniq(D, !1, "name");
 }
 function s(a) {
 var b = /^helplink\.(.*)\.title$/, c = /^helplink\.(.*)\.url$/, d = {};
@@ -714,67 +714,68 @@ g ? (f = d[g[1]] || {}, f.title = a.annotations[e], d[g[1]] = f) :(g = e.match(c
 return d;
 }
 function t() {
-w.parameterDisplayNames = {}, _.each(w.template.parameters, function(a) {
-w.parameterDisplayNames[a.name] = a.displayName || a.name;
-}), w.prefillParameters && _.each(w.template.parameters, function(a) {
-w.prefillParameters[a.name] && (a.value = w.prefillParameters[a.name]);
-}), r(w.template);
+v.parameterDisplayNames = {}, _.each(v.template.parameters, function(a) {
+v.parameterDisplayNames[a.name] = a.displayName || a.name;
+}), v.prefillParameters && _.each(v.template.parameters, function(a) {
+v.prefillParameters[a.name] && (a.value = v.prefillParameters[a.name]);
+}), r(v.template);
 var a = function(a) {
 return !_.isEmpty(a.usesParameters);
 };
-_.some(E, a) ? d.$watch(function() {
-return w.template.parameters;
+_.some(D, a) ? d.$watch(function() {
+return v.template.parameters;
 }, _.debounce(function() {
 d.$apply(p);
 }, 50, {
 maxWait:250
-}), !0) :w.templateImages = E, w.systemLabels = _.map(w.template.labels, function(a, b) {
+}), !0) :v.templateImages = D, v.systemLabels = _.map(v.template.labels, function(a, b) {
 return {
 name:b,
 value:a
 };
-}), J() && w.systemLabels.push({
+}), J() && v.systemLabels.push({
 name:"app",
-value:w.template.metadata.name
+value:v.template.metadata.name
 });
 }
-var u, v, w = this, x = b("spec.template.spec.containers"), y = b("spec.strategy.sourceStrategy.from || spec.strategy.dockerStrategy.from || spec.strategy.customStrategy.from"), z = b("spec.output.to"), A = a("displayName"), B = a("humanize"), C = a("imageObjectRef"), D = /\${([a-zA-Z0-9\_]+)}/g, E = [];
-w.$onInit = function() {
-w.labels = [], w.templateDisplayName = A(w.template), u = {
-namespace:w.project.metadata.name
-}, v = A(w.project), t();
+var u, v = this, w = b("spec.template.spec.containers"), x = b("spec.strategy.sourceStrategy.from || spec.strategy.dockerStrategy.from || spec.strategy.customStrategy.from"), y = b("spec.output.to"), z = a("displayName"), A = a("humanize"), B = a("imageObjectRef"), C = /\${([a-zA-Z0-9\_]+)}/g, D = [];
+v.$onInit = function() {
+v.labels = [], v.templateDisplayName = z(v.template), v.selectedProject = v.project, t();
 };
-var F, G = function() {
+var E, F = function() {
 var a = {
-started:"Creating " + w.templateDisplayName + " in project " + v,
-success:"Created " + w.templateDisplayName + " in project " + v,
-failure:"Failed to create " + w.templateDisplayName + " in project " + v
-}, b = s(w.template);
-k.clear(), k.add(a, b, w.project.metadata.name, function() {
+started:"Creating " + v.templateDisplayName + " in project " + z(v.selectedProject),
+success:"Created " + v.templateDisplayName + " in project " + z(v.selectedProject),
+failure:"Failed to create " + v.templateDisplayName + " in project " + z(v.selectedProject)
+}, b = s(v.template);
+k.clear(), k.add(a, b, v.selectedProject.metadata.name, function() {
 var a = c.defer();
-return f.batch(F, u).then(function(b) {
+return f.batch(E, u).then(function(b) {
 var c = [], d = !1;
 b.failure.length > 0 ? (d = !0, b.failure.forEach(function(a) {
 c.push({
 type:"error",
-message:"Cannot create " + B(a.object.kind).toLowerCase() + ' "' + a.object.metadata.name + '". ',
+message:"Cannot create " + A(a.object.kind).toLowerCase() + ' "' + a.object.metadata.name + '". ',
 details:a.data.message
 });
 }), b.success.forEach(function(a) {
 c.push({
 type:"success",
-message:"Created " + B(a.kind).toLowerCase() + ' "' + a.metadata.name + '" successfully. '
+message:"Created " + A(a.kind).toLowerCase() + ' "' + a.metadata.name + '" successfully. '
 });
 })) :c.push({
 type:"success",
-message:"All items in template " + w.templateDisplayName + " were created successfully."
+message:"All items in template " + v.templateDisplayName + " were created successfully."
 }), a.resolve({
 alerts:c,
 hasErrors:d
 });
 }), a.promise;
-}), g.toNextSteps(w.templateDisplayName, w.project.metadata.name);
-}, H = function(a) {
+}), v.isDialog ? d.$emit("templateInstantiated", {
+project:v.selectedProject,
+template:v.template
+}) :g.toNextSteps(v.templateDisplayName, v.selectedProject.metadata.name);
+}, G = function(a) {
 var b = e.open({
 animation:!0,
 templateUrl:"views/modals/confirm.html",
@@ -791,32 +792,91 @@ cancelButtonText:"Cancel"
 }
 }
 });
-b.result.then(G);
-}, I = function(a) {
-var b = j.getSecurityAlerts(F, w.project.metadata.name), c = a.quotaAlerts || [];
+b.result.then(F);
+}, H = function(a) {
+var b = j.getSecurityAlerts(E, v.selectedProject.metadata.name), c = a.quotaAlerts || [];
 b = b.concat(c);
 var d = _.filter(b, {
 type:"error"
 });
-d.length ? (w.disableInputs = !1, w.precheckAlerts = b) :b.length ? (H(b), w.disableInputs = !1) :G();
+d.length ? (v.disableInputs = !1, v.precheckAlerts = b) :b.length ? (G(b), v.disableInputs = !1) :F();
+}, I = function() {
+if (_.has(v.selectedProject, "metadata.uid")) return c.when();
+var b = v.selectedProject.metadata.name, e = v.selectedProject.metadata.annotations["new-display-name"], g = a("description")(v.selectedProject), h = {
+apiVersion:"v1",
+kind:"ProjectRequest",
+metadata:{
+name:b
+},
+displayName:e,
+description:g
 };
-w.createFromTemplate = function() {
-w.disableInputs = !0;
-var a = l.mapEntries(l.compactEntries(w.labels)), b = l.mapEntries(l.compactEntries(w.systemLabels));
-w.template.labels = _.extend(b, a), f.create("processedtemplates", null, w.template, u).then(function(a) {
-h.setTemplateData(a.parameters, w.template.parameters, a.message), F = a.objects, i.getLatestQuotaAlerts(F, u).then(I);
+return f.create("projectrequests", null, h, d);
+};
+v.createFromTemplate = function() {
+v.disableInputs = !0, I().then(function() {
+u = {
+namespace:v.selectedProject.metadata.name
+};
+var a = l.mapEntries(l.compactEntries(v.labels)), b = l.mapEntries(l.compactEntries(v.systemLabels));
+v.template.labels = _.extend(b, a), f.create("processedtemplates", null, v.template, u).then(function(a) {
+h.setTemplateData(a.parameters, v.template.parameters, a.message), E = a.objects, i.getLatestQuotaAlerts(E, u).then(H);
 }, function(a) {
-w.disableInputs = !1;
+v.disableInputs = !1;
 var b;
-a.data && a.data.message && (b = a.data.message), w.alerts.process = {
+a.data && a.data.message && (b = a.data.message), v.alerts.process = {
 type:"error",
 message:"An error occurred processing the template.",
 details:b
 };
 });
+}, function(a) {
+v.disableInputs = !1;
+var b;
+a.data && a.data.message && (b = a.data.message), v.alerts["create-project"] = {
+type:"error",
+message:"An error occurred creating the project.",
+details:b
 };
+});
+}, d.$on("instantiateTemplate", v.createFromTemplate);
 var J = function() {
-return !_.get(w.template, "labels.app") && !_.some(w.template.objects, "metadata.labels.app");
+return !_.get(v.template, "labels.app") && !_.some(v.template.objects, "metadata.labels.app");
+};
+}
+
+function ProcessTemplateDialog(a, b) {
+var c = this, d = function() {
+c.steps = [ {
+id:"configuration",
+label:"Configuration",
+selected:!0,
+visited:!0
+}, {
+id:"results",
+label:"Results"
+} ], c.currentStep = c.steps[0];
+};
+c.$onInit = function() {
+c.alerts = {}, c.loginBaseUrl = b.openshiftAPIBaseUrl();
+};
+var e = function() {
+var a = _.get(c, "template.metadata.annotations.iconClass", "fa fa-cubes");
+return a.indexOf("icon-") !== -1 ? "font-icon " + a :a;
+};
+c.$onChanges = function(a) {
+a.template && (d(), c.iconClass = e());
+};
+var f = function() {
+c.steps[0].selected = !1, c.currentStep = c.steps[1], c.currentStep.selected = !0, c.currentStep.visited = !0;
+};
+c.instantiateTemplate = function() {
+a.$broadcast("instantiateTemplate");
+}, a.$on("templateInstantiated", function(a, b) {
+c.selectedProject = b.project, f();
+}), c.close = function() {
+var a = c.onDialogClosed();
+_.isFunction(a) && a();
 };
 }
 
@@ -4669,8 +4729,12 @@ _.set(this, "selectedTab.networking", !0), b(this);
 }), angular.module("openshiftConsole").controller("LandingPageController", [ "$scope", "AuthService", "Catalog", "Constants", "Navigate", "NotificationsService", function(a, b, c, d, e, f) {
 a.saasOfferings = d.SAAS_OFFERINGS, a.viewMembership = function(a) {
 e.toProjectMembership(a.metadata.name);
-}, f.clearNotifications(), b.withUser().then(function() {
-c.getCatalogItems().then(function(b) {
+}, f.clearNotifications(), a.templateSelected = function(b) {
+a.template = b;
+}, a.templateDialogClosed = function() {
+a.template = null;
+}, b.withUser().then(function() {
+c.getCatalogItems(!0).then(function(b) {
 a.catalogItems = b;
 });
 });
@@ -9382,7 +9446,7 @@ b.close("replace");
 }, a.cancel = function() {
 b.dismiss("cancel");
 };
-} ]), angular.module("openshiftConsole").controller("ProcessTemplateModalController", [ "$scope", "$uibModalInstance", function(a, b) {
+} ]), angular.module("openshiftConsole").controller("ProcessOrSaveTemplateModalController", [ "$scope", "$uibModalInstance", function(a, b) {
 a["continue"] = function() {
 b.close("create");
 }, a.cancel = function() {
@@ -10006,8 +10070,8 @@ message:"Resource is missing metadata field."
 function p() {
 var a = b.open({
 animation:!0,
-templateUrl:"views/modals/process-template.html",
-controller:"ProcessTemplateModalController",
+templateUrl:"views/modals/process-or-save-template.html",
+controller:"ProcessOrSaveTemplateModalController",
 scope:m
 });
 a.result.then(function() {
@@ -11577,17 +11641,23 @@ templateUrl:"views/directives/action-chip.html"
 return {
 restrict:"E",
 templateUrl:"views/_templateopt.html",
+transclude:!0,
 scope:{
 parameters:"=",
 expand:"=?",
-canToggle:"=?"
+canToggle:"=?",
+isDialog:"=?"
 },
 link:function(a, b, c) {
 angular.isDefined(c.canToggle) || (a.canToggle = !0), a.isOnlyWhitespace = function(a) {
 return /^\s+$/.test(a);
 }, a.focus = function(a) {
 angular.element("#" + a).focus();
-};
+}, a.isDialog ? a.$watch("parameters", function(b) {
+a.visibleParameters = _.reject(b, function(a) {
+return !a.required || a.value || a.generate;
+});
+}) :a.visibleParameters = a.parameters;
 }
 };
 }), angular.module("openshiftConsole").directive("tasks", function() {
@@ -13333,9 +13403,18 @@ bindings:{
 template:"<",
 project:"<",
 alerts:"<",
-prefillParameters:"<"
+prefillParameters:"<",
+isDialog:"<"
 },
 templateUrl:"views/directives/process-template.html"
+}), angular.module("openshiftConsole").component("processTemplateDialog", {
+controller:[ "$scope", "DataService", ProcessTemplateDialog ],
+controllerAs:"$ctrl",
+bindings:{
+template:"<",
+onDialogClosed:"&"
+},
+templateUrl:"views/directives/process-template-dialog.html"
 }), angular.module("openshiftConsole").component("nextSteps", {
 controller:[ "ProcessedTemplateService", NextSteps ],
 bindings:{
