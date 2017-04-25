@@ -10,11 +10,7 @@
         <div class="middle-content">
           <landing-page>
             <landingsearch>
-              <catalog-search
-                  service-classes="serviceClasses"
-                  image-streams="imageStreams"
-                  base-project-url="project">
-              </catalog-search>
+              <catalog-search catalog-items="catalogItems" base-project-url="project"></catalog-search>
             </landingsearch>
             <landingheader>
               <div class="build-applications-view">
@@ -22,18 +18,10 @@
               </div>
             </landingheader>
             <landingbody>
-              <services-view
-                  base-project-url="project"
-                  service-classes="serviceClasses"
-                  image-streams="imageStreams">
-              </services-view>
+              <services-view catalog-items="catalogItems" base-project-url="project"></services-view>
             </landingbody>
             <landingside>
-              <projects-summary
-                  base-project-url="project"
-                  projects-url="projects"
-                  view-edit-membership="viewMembership">
-              </projects-summary>
+              <projects-summary base-project-url="project" projects-url="projects" view-edit-membership="viewMembership"></projects-summary>
             </landingside>
           </landing-page>
         </div><!-- /middle-content -->

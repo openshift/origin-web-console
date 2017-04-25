@@ -715,7 +715,7 @@ body.overlay-open{overflow:hidden}
 .catalogs-overlay-modal{display:block}
 .catalogs-overlay-modal .modal-backdrop.ng-enter{animation:modalBackdropIn .15s ease-out forwards}
 .catalogs-overlay-modal .modal-backdrop.ng-leave{animation:modalBackdropOut .45s ease-out forwards}
-.catalogs-overlay-panel{background:#fff;border:1px solid rgba(0,0,0,.2);box-shadow:0 3px 9px rgba(0,0,0,.5);margin:0 auto;max-width:1200px;padding-bottom:56px;position:relative}
+.catalogs-overlay-panel{background:#fff;color:#363636;border:1px solid rgba(0,0,0,.2);box-shadow:0 3px 9px rgba(0,0,0,.5);margin:0 auto;max-width:1200px;padding-bottom:56px;position:relative}
 .catalogs-overlay-panel.catalogs-overlay-panel-single-column{max-width:800px}
 .catalogs-overlay-panel .wizard-pf-footer{background:#fff;padding-bottom:15px;padding-right:40px}
 .catalogs-overlay-panel .wizard-pf-main{background-attachment:scroll;background-image:radial-gradient(ellipse at top,rgba(0,0,0,.2) 0%,rgba(0,0,0,0) 75%),radial-gradient(ellipse at bottom,rgba(0,0,0,.2) 0%,rgba(0,0,0,0) 75%);background-position:0 0,0 100%;background-repeat:no-repeat;background-size:100% 6px;height:auto;margin-left:0;padding:0}
@@ -754,6 +754,8 @@ body.overlay-open{overflow:hidden}
 .catalog-projects-summary-panel .summary-title a{color:#fff}
 .catalog-projects-summary-panel .summary-title a:hover{color:#0088ce;text-decoration:underline}
 .saas-offerings-container .saas-list .card-content:focus,.saas-offerings-container .saas-list .card-content:hover,.services-view .services-item:focus,.services-view .services-item:hover{text-decoration:none}
+.catalog-projects-summary-panel .services-view .services-item{color:#fff;flex:0 1 33%;padding-left:0px}
+.catalog-projects-summary-panel .services-view .services-items-inner,.catalog-projects-summary-panel .services-view .services-items-inner-shadow-covers{background-image:none}
 .catalog-projects-spinner-container{padding-top:60px;padding-bottom:60px}
 .catalog-projects-summary-modal-backrop.modal-backdrop{background-color:transparent;cursor:not-allowed;z-index:1029}
 .catalog-modal{background-color:#fff;bottom:0;color:#363636;left:0;position:fixed;padding:0 20px 20px;right:0;top:0;z-index:1050}
