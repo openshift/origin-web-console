@@ -210,12 +210,14 @@ exports.config = {
     //       console.log('Executing capability', config.capabilities);
     //     });
 
-    var SpecReporter = require('jasmine-spec-reporter');
+    var SpecReporter = require('jasmine-spec-reporter').SpecReporter;
     // add jasmine spec reporter
     jasmine.getEnv().addReporter(new SpecReporter({
-      displayStacktrace: true,
-      displaySuccessfulSpec: false,  // display each successful spec
-      displayFailedSpec: false      // display each failed spec
+      spec: {
+        displayStacktrace: true,
+        displaySuccessfulSpec: false,  // display each successful spec
+        displayFailedSpec: false      // display each failed spec
+      }
     }));
 
     var ScreenShotReporter = require('protractor-screenshot-reporter');
