@@ -1147,7 +1147,7 @@ return c || a || b;
 var a = e.apiObject.spec.serviceClassName;
 return _.get(e, [ "state", "serviceClasses", a, "description" ]);
 };
-e.$onChanges = function() {
+e.$doCheck = function() {
 e.notifications = c.getNotifications(e.apiObject, e.state), e.displayName = g(), e.description = h();
 }, e.getSecretForBinding = function(a) {
 return a && _.get(e, [ "state", "secrets", a.spec.secretName ]);

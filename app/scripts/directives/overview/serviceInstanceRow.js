@@ -35,7 +35,7 @@ function ServiceInstanceRow($filter, DataService, rowMethods, $uibModal) {
     return _.get(row, ['state','serviceClasses', serviceClassName, 'description']);
   };
 
-  row.$onChanges = function() {
+  row.$doCheck = function() {
     row.notifications = rowMethods.getNotifications(row.apiObject, row.state);
     row.displayName = getDisplayName();
     row.description = getDescription();
