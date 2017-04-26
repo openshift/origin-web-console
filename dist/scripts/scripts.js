@@ -1558,7 +1558,7 @@ icon:"fa fa-cubes",
 url:"https://www.redhat.com/en/technologies/management",
 description:"Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt."
 } ]
-}), angular.module("openshiftConsole", [ "ngAnimate", "ngCookies", "ngResource", "ngRoute", "ngSanitize", "openshiftUI", "kubernetesUI", "registryUI.images", "ui.bootstrap", "patternfly.charts", "patternfly.sort", "openshiftConsoleTemplates", "ui.ace", "extension-registry", "as.sortable", "ui.select", "angular-inview", "angularMoment", "ab-base64", "openshiftCommonServices", "openshiftCommonUI", "webCatalog" ]).config([ "$routeProvider", function(a) {
+}), angular.module("openshiftConsole", [ "ngAnimate", "ngCookies", "ngResource", "ngRoute", "ngSanitize", "openshiftUI", "kubernetesUI", "registryUI.images", "ui.bootstrap", "patternfly.charts", "patternfly.navigation", "patternfly.sort", "openshiftConsoleTemplates", "ui.ace", "extension-registry", "as.sortable", "ui.select", "angular-inview", "angularMoment", "ab-base64", "openshiftCommonServices", "openshiftCommonUI", "webCatalog" ]).config([ "$routeProvider", function(a) {
 var b;
 b = window.OPENSHIFT_CONSTANTS.HIDE_NEW_OVERVIEW || "true" === localStorage.getItem("hide-new-overview") ? {
 templateUrl:"views/overview.html",
@@ -11302,7 +11302,10 @@ templateUrl:"views/_project-page.html"
 return {
 restrict:"E",
 transclude:!0,
-templateUrl:"views/directives/header/_navbar-utility.html"
+templateUrl:"views/directives/header/_navbar-utility.html",
+controller:[ "$scope", "Constants", function(a, b) {
+a.launcherApps = b.APP_LAUNCHER_NAVIGATION;
+} ]
 };
 }).directive("navbarUtilityMobile", function() {
 return {
@@ -15740,9 +15743,16 @@ type:"dom",
 node:'<li><a href="logout">Log out</a></li>'
 } ];
 });
-} ]), angular.module("openshiftConsole").run([ "extensionRegistry", function(a) {
+} ]), angular.module("openshiftConsole").run([ "extensionRegistry", "Constants", function(a, b) {
 a.add("nav-dropdown-mobile", _.spread(function(a) {
-return [ {
+var c = [], d = b.APP_LAUNCHER_NAVIGATION;
+return _.each(d, function(a) {
+var b = {
+type:"dom",
+node:[ "<li>", '<a href="' + _.escape(a.href) + '">', '<span class="' + _.escape(a.iconClass) + ' fa-fw" aria-hidden="true"></span> ' + _.escape(a.title), "</a>", "</li>" ].join("")
+};
+c.push(b);
+}), c = c.concat([ {
 type:"dom",
 node:[ "<li>", "<a href=\"{{'default' | helpLink}}\">", '<span class="fa fa-book fa-fw" aria-hidden="true"></span> Documentation', "</a>", "</li>" ].join("")
 }, {
@@ -15756,6 +15766,6 @@ type:"dom",
 node:_.template([ "<li>", '<a href="logout">', '<span class="pficon pficon-user fa-fw" aria-hidden="true"></span>', 'Log out <span class="username"><%= userName %></span>', "</a>", "</li>" ].join(""))({
 userName:a ? a.fullName || a.metadata.name :""
 })
-} ];
+} ]);
 }));
 } ]);

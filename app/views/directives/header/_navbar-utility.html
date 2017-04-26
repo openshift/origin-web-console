@@ -4,6 +4,8 @@
     extension-name="nav-system-status"
     extension-types="dom"></li>
 
+  <li ng-if="launcherApps.length > 0" pf-application-launcher items="launcherApps" is-list="true"></li>
+
   <li uib-dropdown>
     <a uib-dropdown-toggle class="nav-item-iconic" id="help-dropdown" href="">
       <span title="Help" class="fa pficon-help" aria-hidden="true"></span>

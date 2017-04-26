@@ -78,6 +78,8 @@ accordion>.panel-group .panel-open .panel-title>a:before{content:"\f107"}
 .wizard-pf-footer-inline{text-align:left}
 .wizard-pf-cancel-inline{margin-left:25px}
 .pf-expand-placeholder{margin-right:15px}
+.wizard-pf-steps-indicator li a.disabled{cursor:default}
+.wizard-pf-steps-indicator li a.disabled:hover .wizard-pf-step-number{background-color:#fff;border-color:#bbb;color:#bbb}
 @-webkit-keyframes ui-spinner-rotate-right{0%{-webkit-transform:rotate(0deg)}
 25%,50%{-webkit-transform:rotate(180deg)}
 100%,75%{-webkit-transform:rotate(360deg)}

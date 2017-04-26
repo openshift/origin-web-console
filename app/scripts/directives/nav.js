@@ -166,7 +166,10 @@ angular.module('openshiftConsole')
     return {
       restrict: 'E',
       transclude: true,
-      templateUrl: 'views/directives/header/_navbar-utility.html'
+      templateUrl: 'views/directives/header/_navbar-utility.html',
+      controller: function($scope, Constants) {
+        $scope.launcherApps = Constants.APP_LAUNCHER_NAVIGATION;
+      }
     };
   })
   .directive('navbarUtilityMobile', function() {
