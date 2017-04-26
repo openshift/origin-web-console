@@ -6050,7 +6050,7 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "<div class=\"alert alert-info mar-top-xxl mar-bottom-xl\">\n" +
     "<span class=\"pficon pficon-info\" aria-hidden=\"true\"></span>\n" +
     "<span class=\"sr-only\">Info</span>\n" +
-    "The binding secret will only be available to new pods. You will need to redploy your application.\n" +
+    "The binding secret will only be available to new pods. You will need to redeploy your application.\n" +
     "</div>\n" +
     "</div>\n" +
     "</div>\n" +
