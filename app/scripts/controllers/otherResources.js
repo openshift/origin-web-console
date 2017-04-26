@@ -57,6 +57,14 @@ angular.module('openshiftConsole')
       }).toString();
     };
 
+    var counts;
+    $scope.isDuplicateKind = function(kind) {
+      if(!counts) {
+        counts = _.countBy($scope.kinds, 'kind');
+      }
+      return counts[kind] > 1;
+    };
+
     // get and clear any alerts
     AlertMessageService.getAlerts().forEach(function(alert) {
       $scope.alerts[alert.name] = alert.data;
