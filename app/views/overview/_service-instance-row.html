@@ -6,8 +6,8 @@
     <div class="list-pf-content">
       <div class="list-pf-name">
         <h3>
-          <span ng-bind-html="row.displayName | highlightKeywords : row.state.filterKeywords"></span>
-          <div ng-bind-html="row.apiObject.metadata.name | highlightKeywords : row.state.filterKeywords" class="list-row-longname"></div>
+          <div ng-bind-html="row.displayName | highlightKeywords : row.state.filterKeywords" class="component-label"></div>
+          <span ng-bind-html="row.apiObject.metadata.name | highlightKeywords : row.state.filterKeywords"></span>
         </h3>
         <div class="status-icons">
           <notification-icon ng-if="!row.expanded" alerts="row.notifications"></notification-icon>

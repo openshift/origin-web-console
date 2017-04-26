@@ -12720,8 +12720,8 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "<div class=\"list-pf-content\">\n" +
     "<div class=\"list-pf-name\">\n" +
     "<h3>\n" +
-    "<span ng-bind-html=\"row.displayName | highlightKeywords : row.state.filterKeywords\"></span>\n" +
-    "<div ng-bind-html=\"row.apiObject.metadata.name | highlightKeywords : row.state.filterKeywords\" class=\"list-row-longname\"></div>\n" +
+    "<div ng-bind-html=\"row.displayName | highlightKeywords : row.state.filterKeywords\" class=\"component-label\"></div>\n" +
+    "<span ng-bind-html=\"row.apiObject.metadata.name | highlightKeywords : row.state.filterKeywords\"></span>\n" +
     "</h3>\n" +
     "<div class=\"status-icons\">\n" +
     "<notification-icon ng-if=\"!row.expanded\" alerts=\"row.notifications\"></notification-icon>\n" +

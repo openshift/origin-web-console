@@ -4571,7 +4571,6 @@ ul.messenger-theme-flat .messenger-message.alert-info .messenger-message-inner:b
 @media (min-width:992px){.overview-new .list-pf-name{align-items:center;flex-direction:row}
 .overview-new .list-pf-name h3{width:60%}
 }
-.overview-new .list-row-longname{color:#9c9c9c;font-size:11px;margin-top:3px}
 .overview-new .list-row-tabset{margin-top:20px}
 @media (min-width:768px){.overview-new .list-pf-item>.list-pf-container>.list-pf-content{min-height:45px;padding-right:15px}
 .overview-new .list-row-tabset{margin-top:0}
