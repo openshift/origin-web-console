@@ -36537,7 +36537,7 @@ bsVersion:"3",
 menu:'<ul class="typeahead typeahead-long dropdown-menu"></ul>',
 item:'<li><a href="#"></a></li>'
 }, a.fn.combobox.Constructor = b;
-}(window.jQuery), !function(a, b, c, d) {
+}(window.jQuery), function(a, b, c, d) {
 "use strict";
 var e = "treeview", f = {};
 f.settings = {
@@ -36552,6 +36552,7 @@ selectedIcon:"",
 checkedIcon:"glyphicon glyphicon-check",
 partiallyCheckedIcon:"glyphicon glyphicon-expand",
 uncheckedIcon:"glyphicon glyphicon-unchecked",
+tagsClass:"badge",
 color:d,
 backColor:d,
 borderColor:d,
@@ -36794,7 +36795,7 @@ var e = this._template.text.clone();
 b.$el.append(e), e.append(b.text);
 } else b.$el.append(b.text);
 this._options.showTags && b.tags && a.each(b.tags, a.proxy(function(a, c) {
-b.$el.append(this._template.badge.clone().append(c));
+b.$el.append(this._template.badge.clone().addClass("string" == typeof b.tagsClass[a] ? b.tagsClass[a] :this._options.tagsClass).append(c));
 }, this)), this._setSelected(b, b.state.selected), this._setChecked(b, b.state.checked), this._setSearchResult(b, b.searchResult), this._setExpanded(b, b.state.expanded), this._setDisabled(b, b.state.disabled), this._setVisible(b, b.state.visible), this._triggerEvent("nodeRendered", b, f.options);
 }
 }, g.prototype._addCheckbox = function(a) {
@@ -36847,7 +36848,7 @@ check:a('<span class="icon check-icon"></span>'),
 empty:a('<span class="icon"></span>')
 },
 image:a('<span class="image"></span>'),
-badge:a('<span class="badge"></span>'),
+badge:a("<span></span>"),
 text:a('<span class="text"></span>')
 }, g.prototype._css = ".treeview .list-group-item{cursor:pointer}.treeview span.indent{margin-left:10px;margin-right:10px}.treeview span.icon{width:12px;margin-right:5px}.treeview .node-disabled{color:silver;cursor:not-allowed}", g.prototype.findNodes = function(a, b) {
 return this._findNodes(a, b);
@@ -37054,6 +37055,7 @@ b.console && b.console.error(a);
 };
 a.fn[e] = function(b, c) {
 var d;
+if (0 == this.length) throw "No element has been found!";
 return this.each(function() {
 var f = a.data(this, e);
 "string" == typeof b ? f ? a.isFunction(f[b]) && "_" !== b.charAt(0) ? (c instanceof Array || (c = [ c ]), d = f[b].apply(f, c)) :h("No such method : " + b) :h("Not initialized, can not call method : " + b) :"boolean" == typeof b ? d = f :a.data(this, e, new g(this, a.extend(!0, {}, b)));
