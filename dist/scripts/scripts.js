@@ -9944,18 +9944,22 @@ type:"Warning"
 })), b.log("events (subscribe)", d.events);
 })), d.highlightedEvents = {}, d.collapseSidebar = function() {
 d.collapsed = !0;
-}, c.$on("event.resource.highlight", function(a, b) {
+};
+var f = [];
+f.push(c.$on("event.resource.highlight", function(a, b) {
 var c = _.get(b, "kind"), e = _.get(b, "metadata.name");
 c && e && _.each(d.events, function(a) {
 a.involvedObject.kind === c && a.involvedObject.name === e && (d.highlightedEvents[c + "/" + e] = !0);
 });
-}), c.$on("event.resource.clear-highlight", function(a, b) {
+})), f.push(c.$on("event.resource.clear-highlight", function(a, b) {
 var c = _.get(b, "kind"), e = _.get(b, "metadata.name");
 c && e && _.each(d.events, function(a) {
 a.involvedObject.kind === c && a.involvedObject.name === e && (d.highlightedEvents[c + "/" + e] = !1);
 });
-}), d.$on("$destroy", function() {
-a.unwatchAll(e);
+})), d.$on("$destroy", function() {
+a.unwatchAll(e), _.each(f, function(a) {
+a();
+}), f = null;
 });
 } ]
 };
@@ -11927,9 +11931,9 @@ containerName:a.containerMetric ? m.options.selectedContainer.name :"pod"
 }) :null;
 }
 function u() {
-L = 0, _.each(m.metrics, function(a) {
+H || (L = 0, _.each(m.metrics, function(a) {
 p(a), o(a);
-});
+}));
 }
 function v(a) {
 if (!H) {
@@ -12095,10 +12099,12 @@ delete a.data;
 });
 }), delete m.metricsError, A();
 }, !0), B = b(A, i.getDefaultUpdateInterval(), !1);
-}), f.$on("metrics.charts.resize", function() {
+});
+var M = f.$on("metrics.charts.resize", function() {
 i.redraw(C), i.redraw(D);
-}), m.$on("$destroy", function() {
-B && (b.cancel(B), B = null), angular.forEach(C, function(a) {
+});
+m.$on("$destroy", function() {
+B && (b.cancel(B), B = null), M && (M(), M = null), angular.forEach(C, function(a) {
 a.destroy();
 }), C = null, angular.forEach(D, function(a) {
 a.destroy();
@@ -12308,10 +12314,12 @@ b.$watch("options", function() {
 A = {}, y = null, delete b.metricsError, s();
 }, !0), t = a(s, h.getDefaultUpdateInterval(), !1), b.updateInView = function(a) {
 B = !a, a && (!z || Date.now() > z + h.getDefaultUpdateInterval()) && s();
-}, e.$on("metrics.charts.resize", function() {
+};
+var G = e.$on("metrics.charts.resize", function() {
 h.redraw(u);
-}), b.$on("$destroy", function() {
-t && (a.cancel(t), t = null), angular.forEach(u, function(a) {
+});
+b.$on("$destroy", function() {
+t && (a.cancel(t), t = null), G && (G(), G = null), angular.forEach(u, function(a) {
 a.destroy();
 }), u = null, x = !0;
 });
