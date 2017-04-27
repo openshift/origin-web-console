@@ -68,7 +68,7 @@ angular.module("openshiftConsole")
         var deleteHPA = function(hpa) {
           return DataService.delete({
             resource: 'horizontalpodautoscalers',
-            group: 'extensions'
+            group: 'autoscaling'
           }, hpa.metadata.name, { namespace: scope.projectName })
           .then(function() {
             showAlert({

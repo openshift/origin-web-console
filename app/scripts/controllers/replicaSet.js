@@ -532,8 +532,9 @@ angular.module('openshiftConsole')
         }));
 
         watches.push(DataService.watch({
-          group: "extensions",
-          resource: "horizontalpodautoscalers"
+          group: "autoscaling",
+          resource: "horizontalpodautoscalers",
+          version: "v1"
         }, context, function(data) {
           allHPA = data.by("metadata.name");
           updateHPA();

@@ -81,7 +81,7 @@ angular.module('openshiftConsole')
         $scope.project = project;
 
         var verb = $routeParams.kind === 'HorizontalPodAutoscaler' ? 'update' : 'create';
-        if (!AuthorizationService.canI({ resource: 'horizontalpodautoscalers', group: 'extensions' }, verb, $routeParams.project)) {
+        if (!AuthorizationService.canI({ resource: 'horizontalpodautoscalers', group: 'autoscaling' }, verb, $routeParams.project)) {
           Navigate.toErrorPage('You do not have authority to ' + verb + ' horizontal pod autoscalers in project ' + $routeParams.project + '.', 'access_denied');
           return;
         }
@@ -89,14 +89,14 @@ angular.module('openshiftConsole')
         var createHPA = function() {
           $scope.disableInputs = true;
           var hpa = {
-            apiVersion: "extensions/v1beta1",
+            apiVersion: "autoscaling/v1",
             kind: "HorizontalPodAutoscaler",
             metadata: {
               name: $scope.autoscaling.name,
               labels: keyValueEditorUtils.mapEntries(keyValueEditorUtils.compactEntries($scope.labels))
             },
             spec: {
-              scaleRef: {
+              scaleTargetRef: {
                 kind: $routeParams.kind,
                 name: $routeParams.name,
                 apiVersion: "extensions/v1beta1",
@@ -104,15 +104,13 @@ angular.module('openshiftConsole')
               },
               minReplicas: $scope.autoscaling.minReplicas,
               maxReplicas: $scope.autoscaling.maxReplicas,
-              cpuUtilization: {
-                targetPercentage: $scope.autoscaling.targetCPU || $scope.autoscaling.defaultTargetCPU
-              }
+              targetCPUUtilizationPercentage: $scope.autoscaling.targetCPU || $scope.autoscaling.defaultTargetCPU || null
             }
           };
 
           DataService.create({
             resource: 'horizontalpodautoscalers',
-            group: 'extensions'
+            group: 'autoscaling'
           }, null, hpa, context)
             .then(function() { // Success
               // Return to the previous page
@@ -130,13 +128,11 @@ angular.module('openshiftConsole')
           hpa.metadata.labels = keyValueEditorUtils.mapEntries(keyValueEditorUtils.compactEntries($scope.labels));
           hpa.spec.minReplicas = $scope.autoscaling.minReplicas;
           hpa.spec.maxReplicas = $scope.autoscaling.maxReplicas;
-          hpa.spec.cpuUtilization = {
-            targetPercentage: $scope.autoscaling.targetCPU || $scope.autoscaling.defaultTargetCPU
-          };
+          hpa.spec.targetCPUUtilizationPercentage = $scope.autoscaling.targetCPU || $scope.autoscaling.defaultTargetCPU || null;
 
           DataService.update({
             resource: 'horizontalpodautoscalers',
-            group: 'extensions'
+            group: 'autoscaling'
           }, hpa.metadata.name, hpa, context)
             .then(function() { // Success
               // Return to the previous page
@@ -147,10 +143,21 @@ angular.module('openshiftConsole')
             });
         };
 
-        var resourceGroup = {
-          resource: APIService.kindToResource($routeParams.kind),
-          group: $routeParams.group
-        };
+        var resourceGroup = {};
+        if ($routeParams.kind === "HorizontalPodAutoscaler") {
+          // Fetch the HPA we're editing. This form knows how to edit autoscaling/v1 HPA objects
+          resourceGroup = {
+            resource: "horizontalpodautoscalers",
+            group: "autoscaling",
+            version: "v1"
+          };
+        } else {
+          // Fetch the resource we're going to create an HPA for
+          resourceGroup = {
+            resource: APIService.kindToResource($routeParams.kind),
+            group: $routeParams.group
+          };
+        }
 
         DataService.get(resourceGroup, $routeParams.name, context).then(function(resource) {
           $scope.labels = _.map(
@@ -164,12 +171,12 @@ angular.module('openshiftConsole')
 
           // Are we editing an existing HPA?
           if ($routeParams.kind === "HorizontalPodAutoscaler") {
-            $scope.targetKind = _.get(resource, 'spec.scaleRef.kind');
-            $scope.targetName = _.get(resource, 'spec.scaleRef.name');
+            $scope.targetKind = _.get(resource, 'spec.scaleTargetRef.kind');
+            $scope.targetName = _.get(resource, 'spec.scaleTargetRef.name');
             _.assign($scope.autoscaling, {
               minReplicas: _.get(resource, 'spec.minReplicas'),
               maxReplicas: _.get(resource, 'spec.maxReplicas'),
-              targetCPU: _.get(resource, 'spec.cpuUtilization.targetPercentage')
+              targetCPU: _.get(resource, 'spec.targetCPUUtilizationPercentage')
             });
             $scope.disableInputs = false;
 

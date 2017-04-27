@@ -238,13 +238,13 @@ angular.module('openshiftConsole')
     var groupHPAs = function() {
       hpaByResource = {};
       _.each(horizontalPodAutoscalers, function(hpa) {
-        var name = hpa.spec.scaleRef.name, kind = hpa.spec.scaleRef.kind;
+        var name = hpa.spec.scaleTargetRef.name, kind = hpa.spec.scaleTargetRef.kind;
         if (!name || !kind) {
           return;
         }
 
-        // TODO: Handle groups and subresources in hpa.spec.scaleRef
-        // var groupVersion = APIService.parseGroupVersion(hpa.spec.scaleRef.apiVersion) || {};
+        // TODO: Handle groups and subresources in hpa.spec.scaleTargetRef
+        // var groupVersion = APIService.parseGroupVersion(hpa.spec.scaleTargetRef.apiVersion) || {};
         // var group = groupVersion.group || '';
         // if (!_.has(hpaByResource, [group, kind, name])) {
         //   _.set(hpaByResource, [group, kind, name], []);
@@ -703,8 +703,9 @@ angular.module('openshiftConsole')
         }));
 
         watches.push(DataService.watch({
-          group: "extensions",
-          resource: "horizontalpodautoscalers"
+          group: "autoscaling",
+          resource: "horizontalpodautoscalers",
+          version: "v1"
         }, context, function(hpaData) {
           horizontalPodAutoscalers = hpaData.by("metadata.name");
           groupHPAs();

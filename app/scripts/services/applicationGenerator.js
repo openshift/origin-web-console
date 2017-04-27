@@ -259,7 +259,7 @@ angular.module("openshiftConsole")
 
     scope._generateHPA = function(input, dc) {
       var hpa = {
-        apiVersion: "extensions/v1beta1",
+        apiVersion: "autoscaling/v1",
         kind: "HorizontalPodAutoscaler",
         metadata: {
           name: input.name,
@@ -267,7 +267,7 @@ angular.module("openshiftConsole")
           annotations: input.annotations
         },
         spec: {
-          scaleRef: {
+          scaleTargetRef: {
             kind: "DeploymentConfig",
             name: dc.metadata.name,
             apiVersion: "extensions/v1beta1",
@@ -275,9 +275,7 @@ angular.module("openshiftConsole")
           },
           minReplicas: input.scaling.minReplicas,
           maxReplicas: input.scaling.maxReplicas,
-          cpuUtilization: {
-            targetPercentage: input.scaling.targetCPU || input.scaling.defaultTargetCPU
-          }
+          targetCPUUtilizationPercentage: input.scaling.targetCPU || input.scaling.defaultTargetCPU || null
         }
       };
 

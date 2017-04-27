@@ -124,7 +124,7 @@
       <span ng-if="!isRequestCalculated">request</span>
       that each pod should ideally be using. Pods will be added or removed
       periodically when CPU usage exceeds or drops below this target value.
-      Defaults to {{defaultTargetCPUDisplayValue}}%.
+      <span ng-if="defaultTargetCPUDisplayValue">Defaults to {{defaultTargetCPUDisplayValue}}%.</span>
     </div>
     <div class="learn-more-block">
       <a href="{{'compute_resources' | helpLink}}" target="_blank">Learn More&nbsp;<i class="fa fa-external-link" aria-hidden="true"></i></a>

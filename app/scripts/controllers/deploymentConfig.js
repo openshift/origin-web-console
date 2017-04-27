@@ -301,8 +301,9 @@ angular.module('openshiftConsole')
         }));
 
         watches.push(DataService.watch({
-          group: "extensions",
-          resource: "horizontalpodautoscalers"
+          group: "autoscaling",
+          resource: "horizontalpodautoscalers",
+          version: "v1"
         }, context, function(hpa) {
           $scope.autoscalers =
             HPAService.filterHPA(hpa.by("metadata.name"), 'DeploymentConfig', $routeParams.deploymentconfig);

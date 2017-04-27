@@ -224,13 +224,14 @@ angular.module('openshiftConsole')
         };
 
         watches.push(DataService.watch({
-          group: "extensions",
-          resource: "horizontalpodautoscalers"
+          group: "autoscaling",
+          resource: "horizontalpodautoscalers",
+          version: "v1"
         }, context, function(horizontalPodAutoscalers) {
           hpaByDC = {};
           hpaByRC = {};
           angular.forEach(horizontalPodAutoscalers.by("metadata.name"), function(hpa) {
-            var name = hpa.spec.scaleRef.name, kind = hpa.spec.scaleRef.kind;
+            var name = hpa.spec.scaleTargetRef.name, kind = hpa.spec.scaleTargetRef.kind;
             if (!name || !kind) {
               return;
             }
@@ -245,7 +246,7 @@ angular.module('openshiftConsole')
               hpaByRC[name].push(hpa);
               break;
             default:
-              Logger.warn("Unexpected HPA scaleRef kind", kind);
+              Logger.warn("Unexpected HPA scaleTargetRef kind", kind);
             }
           });
         }));

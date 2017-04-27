@@ -180,7 +180,7 @@
 
   <!-- Create autoscaler -->
   <div ng-if="!autoscalers.length">
-    <span ng-if="{resource: 'horizontalpodautoscalers', group: 'extensions'} | canI : 'create'">
+    <span ng-if="{resource: 'horizontalpodautoscalers', group: 'autoscaling'} | canI : 'create'">
       <a ng-if="replicaSet.kind === 'ReplicaSet' && !deployment"
          ng-href="project/{{projectName}}/edit/autoscaler?kind=ReplicaSet&name={{replicaSet.metadata.name}}&group=extensions"
          role="button">Add Autoscaler</a>
@@ -194,7 +194,7 @@
          ng-href="project/{{projectName}}/edit/autoscaler?kind=DeploymentConfig&name={{deploymentConfigName}}"
          role="button">Add Autoscaler</a>
     </span>
-    <span ng-if="!({resource: 'horizontalpodautoscalers', group: 'extensions'} | canI : 'create')">
+    <span ng-if="!({resource: 'horizontalpodautoscalers', group: 'autoscaling'} | canI : 'create')">
       Autoscaling is not enabled. There are no autoscalers for this
       <span ng-if="deploymentConfigName">deployment config or deployment.</span>
       <span ng-if="!deploymentConfigName">{{replicaSet.kind | humanizeKind}}.</span>
@@ -204,7 +204,7 @@
   <!-- HPA details -->
   <div ng-repeat="hpa in autoscalers | orderBy : 'name'">
     <hpa hpa="hpa"
-         show-scale-target="hpa.spec.scaleRef.kind !== 'ReplicationController'"
+         show-scale-target="hpa.spec.scaleTargetRef.kind !== 'ReplicationController'"
          alerts="alerts">
     </hpa>
   </div>

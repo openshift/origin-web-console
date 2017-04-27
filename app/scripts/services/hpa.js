@@ -110,7 +110,7 @@ angular.module("openshiftConsole")
     // Filters the HPAs for those referencing kind/name.
     var filterHPA = function(hpaResources, kind, name) {
       return _.filter(hpaResources, function(hpa) {
-        return hpa.spec.scaleRef.kind === kind && hpa.spec.scaleRef.name === name;
+        return hpa.spec.scaleTargetRef.kind === kind && hpa.spec.scaleTargetRef.name === name;
       });
     };
 
@@ -175,7 +175,7 @@ angular.module("openshiftConsole")
         // not its parent DC.
         var targetsRC = function() {
           return _.some(hpaResources, function(hpa) {
-            return _.get(hpa, 'spec.scaleRef.kind') === 'ReplicationController';
+            return _.get(hpa, 'spec.scaleTargetRef.kind') === 'ReplicationController';
           });
         };
 
@@ -201,13 +201,13 @@ angular.module("openshiftConsole")
     var groupHPAs = function(horizontalPodAutoscalers) {
       var hpaByResource = {};
       _.each(horizontalPodAutoscalers, function(hpa) {
-        var name = hpa.spec.scaleRef.name, kind = hpa.spec.scaleRef.kind;
+        var name = hpa.spec.scaleTargetRef.name, kind = hpa.spec.scaleTargetRef.kind;
         if (!name || !kind) {
           return;
         }
 
-        // TODO: Handle groups and subresources in hpa.spec.scaleRef
-        // var groupVersion = APIService.parseGroupVersion(hpa.spec.scaleRef.apiVersion) || {};
+        // TODO: Handle groups and subresources in hpa.spec.scaleTargetRef
+        // var groupVersion = APIService.parseGroupVersion(hpa.spec.scaleTargetRef.apiVersion) || {};
         // var group = groupVersion.group || '';
         // if (!_.has(hpaByResource, [group, kind, name])) {
         //   _.set(hpaByResource, [group, kind, name], []);
