@@ -4667,19 +4667,12 @@ _.set(this, "selectedTab.networking", !0), b(this);
 }
 }
 };
-}), angular.module("openshiftConsole").controller("LandingPageController", [ "$scope", "AuthService", "Constants", "DataService", "Navigate", "NotificationsService", function(a, b, c, d, e, f) {
-a.saasOfferings = c.SAAS_OFFERINGS, a.viewMembership = function(a) {
+}), angular.module("openshiftConsole").controller("LandingPageController", [ "$scope", "AuthService", "Catalog", "Constants", "Navigate", "NotificationsService", function(a, b, c, d, e, f) {
+a.saasOfferings = d.SAAS_OFFERINGS, a.viewMembership = function(a) {
 e.toProjectMembership(a.metadata.name);
 }, f.clearNotifications(), b.withUser().then(function() {
-d.list({
-group:"servicecatalog.k8s.io",
-resource:"serviceclasses"
-}, a).then(function(b) {
-a.serviceClasses = b.by("metadata.name");
-}), d.list("imagestreams", {
-namespace:"openshift"
-}).then(function(b) {
-a.imageStreams = b.by("metadata.name");
+c.getCatalogItems().then(function(b) {
+a.catalogItems = b;
 });
 });
 } ]), angular.module("openshiftConsole").controller("ProjectsController", [ "$scope", "$filter", "$location", "$route", "$timeout", "AlertMessageService", "AuthService", "DataService", "KeywordService", "Logger", "ProjectsService", function(a, b, c, d, e, f, g, h, i, j, k) {

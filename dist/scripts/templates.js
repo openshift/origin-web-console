@@ -10357,8 +10357,7 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "<div class=\"middle-content\">\n" +
     "<landing-page>\n" +
     "<landingsearch>\n" +
-    "<catalog-search service-classes=\"serviceClasses\" image-streams=\"imageStreams\" base-project-url=\"project\">\n" +
-    "</catalog-search>\n" +
+    "<catalog-search catalog-items=\"catalogItems\" base-project-url=\"project\"></catalog-search>\n" +
     "</landingsearch>\n" +
     "<landingheader>\n" +
     "<div class=\"build-applications-view\">\n" +
@@ -10366,12 +10365,10 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "</div>\n" +
     "</landingheader>\n" +
     "<landingbody>\n" +
-    "<services-view base-project-url=\"project\" service-classes=\"serviceClasses\" image-streams=\"imageStreams\">\n" +
-    "</services-view>\n" +
+    "<services-view catalog-items=\"catalogItems\" base-project-url=\"project\"></services-view>\n" +
     "</landingbody>\n" +
     "<landingside>\n" +
-    "<projects-summary base-project-url=\"project\" projects-url=\"projects\" view-edit-membership=\"viewMembership\">\n" +
-    "</projects-summary>\n" +
+    "<projects-summary base-project-url=\"project\" projects-url=\"projects\" view-edit-membership=\"viewMembership\"></projects-summary>\n" +
     "</landingside>\n" +
     "</landing-page>\n" +
     "</div>\n" +

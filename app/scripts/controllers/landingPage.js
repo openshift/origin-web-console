@@ -4,8 +4,8 @@ angular.module('openshiftConsole')
   .controller('LandingPageController',
               function($scope,
                        AuthService,
+                       Catalog,
                        Constants,
-                       DataService,
                        Navigate,
                        NotificationsService) {
     $scope.saasOfferings = Constants.SAAS_OFFERINGS;
@@ -19,15 +19,8 @@ angular.module('openshiftConsole')
     NotificationsService.clearNotifications();
 
     AuthService.withUser().then(function() {
-      DataService.list({
-        group: 'servicecatalog.k8s.io',
-        resource: 'serviceclasses'
-      }, $scope).then(function(resp) {
-        $scope.serviceClasses = resp.by('metadata.name');
-      });
-
-      DataService.list('imagestreams', { namespace: 'openshift' }).then(function(resp) {
-        $scope.imageStreams = resp.by('metadata.name');
+      Catalog.getCatalogItems().then(function(items) {
+        $scope.catalogItems = items;
       });
     });
   });
