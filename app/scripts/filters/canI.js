@@ -16,15 +16,15 @@ angular
         {group: '', resource: 'configmaps', verbs: ['update', 'delete']}
       ],
       'deployments': [
-        {group: 'extensions', resource: 'horizontalpodautoscalers', verbs: ['create', 'update']},
-        {group: 'extensions', resource: 'deployments',              verbs: ['create', 'update']}
+        {group: 'autoscaling', resource: 'horizontalpodautoscalers', verbs: ['create', 'update']},
+        {group: 'extensions',  resource: 'deployments',              verbs: ['create', 'update']}
       ],
       'deploymentConfigs': [
-        {group: 'extensions', resource: 'horizontalpodautoscalers', verbs: ['create', 'update']},
-        {group: '',            resource: 'deploymentconfigs',       verbs: ['create', 'update']}
+        {group: 'autoscaling', resource: 'horizontalpodautoscalers', verbs: ['create', 'update']},
+        {group: '',            resource: 'deploymentconfigs',        verbs: ['create', 'update']}
       ],
       'horizontalPodAutoscalers': [
-        {group: 'extensions', resource: 'horizontalpodautoscalers', verbs: ['update', 'delete']}
+        {group: 'autoscaling', resource: 'horizontalpodautoscalers', verbs: ['update', 'delete']}
       ],
       'imageStreams': [
         {group: '', resource: 'imagestreams', verbs: ['update', 'delete']}
@@ -37,8 +37,8 @@ angular
         {group: '', resource: 'deploymentconfigs', verbs: ['update']}
       ],
       'replicaSets': [
-        {group: 'extensions', resource: 'horizontalpodautoscalers', verbs: ['create', 'update']},
-        {group: 'extensions', resource: 'replicasets',              verbs: ['update', 'delete']}
+        {group: 'autoscaling', resource: 'horizontalpodautoscalers', verbs: ['create', 'update']},
+        {group: 'extensions',  resource: 'replicasets',              verbs: ['update', 'delete']}
       ],
       'replicationControllers': [
         {group: '',           resource: 'replicationcontrollers',   verbs: ['update', 'delete']}

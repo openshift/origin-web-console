@@ -1246,8 +1246,9 @@ function OverviewController($scope,
     }, {poll: limitWatches, pollInterval: DEFAULT_POLL_INTERVAL}));
 
     watches.push(DataService.watch({
-      group: "extensions",
-      resource: "horizontalpodautoscalers"
+      group: "autoscaling",
+      resource: "horizontalpodautoscalers",
+      version: "v1"
     }, context, function(hpaData) {
       overview.horizontalPodAutoscalers = hpaData.by("metadata.name");
       groupHPAs();

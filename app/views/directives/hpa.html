@@ -2,13 +2,13 @@
   {{hpa.metadata.name}}
   <!-- HPA actions -->
   <span ng-if="'horizontalPodAutoscalers' | canIDoAny" class="header-actions">
-    <a ng-if="{resource: 'horizontalpodautoscalers', group: 'extensions'} | canI : 'update'" ng-href="project/{{hpa.metadata.namespace}}/edit/autoscaler?kind=HorizontalPodAutoscaler&group=extensions&name={{hpa.metadata.name}}"
+    <a ng-if="{resource: 'horizontalpodautoscalers', group: 'autoscaling'} | canI : 'update'" ng-href="project/{{hpa.metadata.namespace}}/edit/autoscaler?kind=HorizontalPodAutoscaler&group=autoscaling&name={{hpa.metadata.name}}"
        role="button">Edit</a>
     <span class="action-divider">|</span>
     <delete-link
-        ng-if="{resource: 'horizontalpodautoscalers', group: 'extensions'} | canI : 'delete'"
+        ng-if="{resource: 'horizontalpodautoscalers', group: 'autoscaling'} | canI : 'delete'"
         kind="HorizontalPodAutoscaler"
-        group="extensions"
+        group="autoscaling"
         resource-name="{{hpa.metadata.name}}"
         project-name="{{hpa.metadata.namespace}}"
         label="Remove"
@@ -18,21 +18,21 @@
   </span>
 </h4>
 <dl class="dl-horizontal left" style="margin-bottom: 10px;">
-  <dt ng-if-start="showScaleTarget && hpa.spec.scaleRef.kind && hpa.spec.scaleRef.name">{{hpa.spec.scaleRef.kind | humanizeKind : true}}:</dt>
+  <dt ng-if-start="showScaleTarget && hpa.spec.scaleTargetRef.kind && hpa.spec.scaleTargetRef.name">{{hpa.spec.scaleTargetRef.kind | humanizeKind : true}}:</dt>
   <dd ng-if-end>
-    <a ng-href="{{hpa.spec.scaleRef.name | navigateResourceURL : hpa.spec.scaleRef.kind : hpa.metadata.namespace}}">{{hpa.spec.scaleRef.name}}</a>
+    <a ng-href="{{hpa.spec.scaleTargetRef.name | navigateResourceURL : hpa.spec.scaleTargetRef.kind : hpa.metadata.namespace}}">{{hpa.spec.scaleTargetRef.name}}</a>
   </dd>
   <dt>Min Pods:</dt>
   <dd>{{hpa.spec.minReplicas || 1}}</dd>
   <dt>Max Pods:</dt>
   <dd>{{hpa.spec.maxReplicas}}</dd>
-  <dt ng-if-start="hpa.spec.cpuUtilization.targetPercentage">
+  <dt ng-if-start="hpa.spec.targetCPUUtilizationPercentage">
       CPU
       <span ng-if="'cpu' | isRequestCalculated : project">Limit</span>
       <span ng-if="!('cpu' | isRequestCalculated : project)">Request</span>
       Target:
   </dt>
-  <dd ng-if-end>{{hpa.spec.cpuUtilization.targetPercentage | hpaCPUPercent : project}}%</dd>
+  <dd ng-if-end>{{hpa.spec.targetCPUUtilizationPercentage | hpaCPUPercent : project}}%</dd>
   <dt>
     Current Usage:
   </dt>

@@ -432,8 +432,9 @@ v.buildConfigs = a.by("metadata.name"), La(), Ra(), Ta(), da(), p.log("buildconf
 poll:w,
 pollInterval:x
 })), Xa.push(h.watch({
-group:"extensions",
-resource:"horizontalpodautoscalers"
+group:"autoscaling",
+resource:"horizontalpodautoscalers",
+version:"v1"
 }, c, function(a) {
 v.horizontalPodAutoscalers = a.by("metadata.name"), Ia(), p.log("autoscalers (subscribe)", v.horizontalPodAutoscalers);
 }, {
@@ -2035,7 +2036,7 @@ type:"ConfigChange"
 }), i;
 }, f._generateHPA = function(a, b) {
 var c = {
-apiVersion:"extensions/v1beta1",
+apiVersion:"autoscaling/v1",
 kind:"HorizontalPodAutoscaler",
 metadata:{
 name:a.name,
@@ -2043,7 +2044,7 @@ labels:a.labels,
 annotations:a.annotations
 },
 spec:{
-scaleRef:{
+scaleTargetRef:{
 kind:"DeploymentConfig",
 name:b.metadata.name,
 apiVersion:"extensions/v1beta1",
@@ -2051,9 +2052,7 @@ subresource:"scale"
 },
 minReplicas:a.scaling.minReplicas,
 maxReplicas:a.scaling.maxReplicas,
-cpuUtilization:{
-targetPercentage:a.scaling.targetCPU || a.scaling.defaultTargetCPU
-}
+targetCPUUtilizationPercentage:a.scaling.targetCPU || a.scaling.defaultTargetCPU || null
 }
 };
 return c;
@@ -3472,7 +3471,7 @@ return l(a, "defaultLimit", b, c);
 return !(!j("cpu", a) && !m("cpu", b, d)) || (!(!k("cpu", a) && !n("cpu", b, a)) || !!c.isLimitCalculated("cpu", d) && (k("memory", a) || n("memory", b, d)));
 }, p = function(a, b, c) {
 return _.filter(a, function(a) {
-return a.spec.scaleRef.kind === b && a.spec.scaleRef.name === c;
+return a.spec.scaleTargetRef.kind === b && a.spec.scaleTargetRef.name === c;
 });
 }, q = a("humanizeKind"), r = a("hasDeploymentConfig"), s = function(a, e, f, g) {
 return !a || _.isEmpty(e) ? b.when([]) :d.isAvailable().then(function(b) {
@@ -3491,7 +3490,7 @@ reason:"MultipleHPA"
 });
 var k = function() {
 return _.some(e, function(a) {
-return "ReplicationController" === _.get(a, "spec.scaleRef.kind");
+return "ReplicationController" === _.get(a, "spec.scaleTargetRef.kind");
 });
 };
 return "ReplicationController" === a.kind && r(a) && _.some(e, k) && d.push({
@@ -3502,7 +3501,7 @@ reason:"DeploymentHasHPA"
 }, t = function(a) {
 var b = {};
 return _.each(a, function(a) {
-var c = a.spec.scaleRef.name, d = a.spec.scaleRef.kind;
+var c = a.spec.scaleTargetRef.name, d = a.spec.scaleTargetRef.kind;
 c && d && (_.has(b, [ d, c ]) || _.set(b, [ d, c ], []), b[d][c].push(a));
 }), b;
 };
@@ -5054,7 +5053,7 @@ matchTemplate:!0
 }));
 }, Z = function() {
 C = {}, _.each(B, function(a) {
-var b = a.spec.scaleRef.name, c = a.spec.scaleRef.kind;
+var b = a.spec.scaleTargetRef.name, c = a.spec.scaleTargetRef.kind;
 b && c && (_.has(C, [ c, b ]) || _.set(C, [ c, b ], []), C[c][b].push(a));
 });
 }, $ = function(a) {
@@ -5235,8 +5234,9 @@ resource:"deployments"
 }, b, function(a) {
 s = a.by("metadata.name"), Q(), X(), ma(), i.log("deployments (subscribe)", s);
 })), D.push(f.watch({
-group:"extensions",
-resource:"horizontalpodautoscalers"
+group:"autoscaling",
+resource:"horizontalpodautoscalers",
+version:"v1"
 }, b, function(a) {
 B = a.by("metadata.name"), Z();
 }, {
@@ -5445,11 +5445,12 @@ return !_.isEmpty(b);
 b.getHPA = function(a, b) {
 return G && H ? b ? (G[b] = G[b] || [], G[b]) :(H[a] = H[a] || [], H[a]) :null;
 }, v.push(c.watch({
-group:"extensions",
-resource:"horizontalpodautoscalers"
+group:"autoscaling",
+resource:"horizontalpodautoscalers",
+version:"v1"
 }, e, function(a) {
 G = {}, H = {}, angular.forEach(a.by("metadata.name"), function(a) {
-var b = a.spec.scaleRef.name, c = a.spec.scaleRef.kind;
+var b = a.spec.scaleTargetRef.name, c = a.spec.scaleTargetRef.kind;
 if (b && c) switch (c) {
 case "DeploymentConfig":
 G[b] = G[b] || [], G[b].push(a);
@@ -5460,7 +5461,7 @@ H[b] = H[b] || [], H[b].push(a);
 break;
 
 default:
-l.warn("Unexpected HPA scaleRef kind", c);
+l.warn("Unexpected HPA scaleTargetRef kind", c);
 }
 });
 })), b.isScalable = function(a, c) {
@@ -6550,8 +6551,9 @@ y = r(b.by("metadata.name")), a.valueFromObjects = y.concat(x);
 var c = b.by("metadata.name");
 i.buildDockerRefMapForImageStreams(c, o), a.deployment && i.fetchReferencedImageStreamImages([ a.deployment.spec.template ], a.imagesByDockerReference, o, k), l.log("imagestreams (subscribe)", a.imageStreams);
 })), u.push(e.watch({
-group:"extensions",
-resource:"horizontalpodautoscalers"
+group:"autoscaling",
+resource:"horizontalpodautoscalers",
+version:"v1"
 }, k, function(b) {
 a.autoscalers = h.filterHPA(b.by("metadata.name"), "Deployment", c.deployment), w();
 })), u.push(e.watch("builds", k, function(b) {
@@ -6722,8 +6724,9 @@ j.buildDockerRefMapForImageStreams(c, r), a.deploymentConfig && j.fetchReference
 })), z.push(f.watch("builds", e, function(b) {
 a.builds = b.by("metadata.name"), m.log("builds (subscribe)", a.builds);
 })), z.push(f.watch({
-group:"extensions",
-resource:"horizontalpodautoscalers"
+group:"autoscaling",
+resource:"horizontalpodautoscalers",
+version:"v1"
 }, e, function(b) {
 a.autoscalers = i.filterHPA(b.by("metadata.name"), "DeploymentConfig", c.deploymentconfig), D();
 })), p.onActiveFiltersChanged(function(b) {
@@ -6991,8 +6994,9 @@ k.buildDockerRefMapForImageStreams(b, w), S(), l.log("imagestreams (subscribe)",
 })), x.push(g.watch("builds", i, function(b) {
 a.builds = b.by("metadata.name"), l.log("builds (subscribe)", a.builds);
 })), x.push(g.watch({
-group:"extensions",
-resource:"horizontalpodautoscalers"
+group:"autoscaling",
+resource:"horizontalpodautoscalers",
+version:"v1"
 }, i, function(a) {
 r = a.by("metadata.name"), J(), M();
 }, {
@@ -8207,19 +8211,19 @@ a.project = b;
 var l = "HorizontalPodAutoscaler" === c.kind ? "update" :"create";
 if (!f.canI({
 resource:"horizontalpodautoscalers",
-group:"extensions"
+group:"autoscaling"
 }, l, c.project)) return void k.toErrorPage("You do not have authority to " + l + " horizontal pod autoscalers in project " + c.project + ".", "access_denied");
 var n = function() {
 a.disableInputs = !0;
 var b = {
-apiVersion:"extensions/v1beta1",
+apiVersion:"autoscaling/v1",
 kind:"HorizontalPodAutoscaler",
 metadata:{
 name:a.autoscaling.name,
 labels:m.mapEntries(m.compactEntries(a.labels))
 },
 spec:{
-scaleRef:{
+scaleTargetRef:{
 kind:c.kind,
 name:c.name,
 apiVersion:"extensions/v1beta1",
@@ -8227,44 +8231,44 @@ subresource:"scale"
 },
 minReplicas:a.autoscaling.minReplicas,
 maxReplicas:a.autoscaling.maxReplicas,
-cpuUtilization:{
-targetPercentage:a.autoscaling.targetCPU || a.autoscaling.defaultTargetCPU
-}
+targetCPUUtilizationPercentage:a.autoscaling.targetCPU || a.autoscaling.defaultTargetCPU || null
 }
 };
 h.create({
 resource:"horizontalpodautoscalers",
-group:"extensions"
+group:"autoscaling"
 }, null, b, j).then(function() {
 d.history.back();
 }, function(b) {
 a.disableInputs = !1, p("An error occurred creating the horizontal pod autoscaler.", b);
 });
 }, o = function(b) {
-a.disableInputs = !0, b = angular.copy(b), b.metadata.labels = m.mapEntries(m.compactEntries(a.labels)), b.spec.minReplicas = a.autoscaling.minReplicas, b.spec.maxReplicas = a.autoscaling.maxReplicas, b.spec.cpuUtilization = {
-targetPercentage:a.autoscaling.targetCPU || a.autoscaling.defaultTargetCPU
-}, h.update({
+a.disableInputs = !0, b = angular.copy(b), b.metadata.labels = m.mapEntries(m.compactEntries(a.labels)), b.spec.minReplicas = a.autoscaling.minReplicas, b.spec.maxReplicas = a.autoscaling.maxReplicas, b.spec.targetCPUUtilizationPercentage = a.autoscaling.targetCPU || a.autoscaling.defaultTargetCPU || null, h.update({
 resource:"horizontalpodautoscalers",
-group:"extensions"
+group:"autoscaling"
 }, b.metadata.name, b, j).then(function() {
 d.history.back();
 }, function(c) {
 a.disableInputs = !1, p('An error occurred updating horizontal pod autoscaler "' + b.metadata.name + '".', c);
 });
-}, q = {
+}, q = {};
+q = "HorizontalPodAutoscaler" === c.kind ? {
+resource:"horizontalpodautoscalers",
+group:"autoscaling",
+version:"v1"
+} :{
 resource:e.kindToResource(c.kind),
 group:c.group
-};
-h.get(q, c.name, j).then(function(d) {
+}, h.get(q, c.name, j).then(function(d) {
 if (a.labels = _.map(_.get(d, "metadata.labels", {}), function(a, b) {
 return {
 name:b,
 value:a
 };
-}), "HorizontalPodAutoscaler" === c.kind) a.targetKind = _.get(d, "spec.scaleRef.kind"), a.targetName = _.get(d, "spec.scaleRef.name"), _.assign(a.autoscaling, {
+}), "HorizontalPodAutoscaler" === c.kind) a.targetKind = _.get(d, "spec.scaleTargetRef.kind"), a.targetName = _.get(d, "spec.scaleTargetRef.name"), _.assign(a.autoscaling, {
 minReplicas:_.get(d, "spec.minReplicas"),
 maxReplicas:_.get(d, "spec.maxReplicas"),
-targetCPU:_.get(d, "spec.cpuUtilization.targetPercentage")
+targetCPU:_.get(d, "spec.targetCPUUtilizationPercentage")
 }), a.disableInputs = !1, a.save = function() {
 o(d);
 }, a.breadcrumbs = g.getBreadcrumbs({
@@ -9708,7 +9712,7 @@ e.stayOnCurrentPage ? e.alerts[a.name] = a.data :h.addAlert(a);
 }, n = function(a) {
 return g["delete"]({
 resource:"horizontalpodautoscalers",
-group:"extensions"
+group:"autoscaling"
 }, a.metadata.name, {
 namespace:e.projectName
 }).then(function() {
@@ -15055,7 +15059,7 @@ resource:"configmaps",
 verbs:[ "update", "delete" ]
 } ],
 deployments:[ {
-group:"extensions",
+group:"autoscaling",
 resource:"horizontalpodautoscalers",
 verbs:[ "create", "update" ]
 }, {
@@ -15064,7 +15068,7 @@ resource:"deployments",
 verbs:[ "create", "update" ]
 } ],
 deploymentConfigs:[ {
-group:"extensions",
+group:"autoscaling",
 resource:"horizontalpodautoscalers",
 verbs:[ "create", "update" ]
 }, {
@@ -15073,7 +15077,7 @@ resource:"deploymentconfigs",
 verbs:[ "create", "update" ]
 } ],
 horizontalPodAutoscalers:[ {
-group:"extensions",
+group:"autoscaling",
 resource:"horizontalpodautoscalers",
 verbs:[ "update", "delete" ]
 } ],
@@ -15097,7 +15101,7 @@ resource:"deploymentconfigs",
 verbs:[ "update" ]
 } ],
 replicaSets:[ {
-group:"extensions",
+group:"autoscaling",
 resource:"horizontalpodautoscalers",
 verbs:[ "create", "update" ]
 }, {
