@@ -4496,7 +4496,7 @@ ul.messenger-theme-flat .messenger-message.alert-info .messenger-message-inner:b
 .icon-elastic:before{content:"\f141"}
 .icon-dotnet:before{content:"\f140"}
 .icon-apache:before{content:"\f138"}
-.icon-casadra:before{content:"\f139"}
+.icon-casadra:before,.icon-cassandra:before{content:"\f139"}
 .build-count .builds,.build-count .pipelines{display:block}
 .build-count .icon-count{display:inline-block;margin-right:5px}
 .build-count .running-stage{font-size:84%;color:#9c9c9c}
