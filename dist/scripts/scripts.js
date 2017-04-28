@@ -10693,23 +10693,7 @@ f.$watchGroup([ "claim.amount", "claim.unit" ], i);
 });
 }
 };
-} ]), angular.module("openshiftConsole").directive("oscUnique", function() {
-return {
-restrict:"A",
-scope:{
-oscUnique:"="
-},
-require:"ngModel",
-link:function(a, b, c, d) {
-var e = [];
-a.$watchCollection("oscUnique", function(a) {
-e = _.isArray(a) ? a :_.keys(a);
-}), d.$parsers.unshift(function(a) {
-return d.$setValidity("oscUnique", !_.includes(e, a)), a;
-});
-}
-};
-}), angular.module("openshiftConsole").directive("oscAutoscaling", [ "HPAService", "LimitRangesService", "DNS1123_SUBDOMAIN_VALIDATION", function(a, b, c) {
+} ]), angular.module("openshiftConsole").directive("oscAutoscaling", [ "HPAService", "LimitRangesService", "DNS1123_SUBDOMAIN_VALIDATION", function(a, b, c) {
 return {
 restrict:"E",
 scope:{
