@@ -60330,7 +60330,23 @@ c ? c() :a.history.back();
 };
 } ]
 };
-} ]), angular.module("openshiftCommonUI").directive("takeFocus", [ "$timeout", function(a) {
+} ]), angular.module("openshiftCommonUI").directive("oscUnique", function() {
+return {
+restrict:"A",
+scope:{
+oscUnique:"="
+},
+require:"ngModel",
+link:function(a, b, c, d) {
+var e = [];
+a.$watchCollection("oscUnique", function(a) {
+e = _.isArray(a) ? a :_.keys(a);
+}), d.$parsers.unshift(function(a) {
+return d.$setValidity("oscUnique", !_.includes(e, a)), a;
+});
+}
+};
+}), angular.module("openshiftCommonUI").directive("takeFocus", [ "$timeout", function(a) {
 return {
 restrict:"A",
 link:function(b, c) {
@@ -60818,7 +60834,7 @@ kind:a.kind
 }), _.each(b.groups, function(a) {
 var b = l[a.name] || a.preferredVersion;
 _.each(a.versions[b].resources, function(b) {
-b.name.indexOf("/") >= 0 || _.contains(f, b.kind) || "autoscaling" === a.name && "HorizontalPodAutoscaler" === b.kind || "batch" === a.name && "Job" === b.kind || (b.namespaced || c) && e.push({
+b.name.indexOf("/") >= 0 || _.contains(f, b.kind) || "extensions" === a.name && "HorizontalPodAutoscaler" === b.kind || "batch" === a.name && "Job" === b.kind || (b.namespaced || c) && e.push({
 kind:b.kind,
 group:a.name
 });
