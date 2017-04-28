@@ -7,7 +7,10 @@
       <div class="list-pf-name">
         <h3>
           <div ng-bind-html="row.displayName | highlightKeywords : row.state.filterKeywords" class="component-label"></div>
-          <span ng-bind-html="row.apiObject.metadata.name | highlightKeywords : row.state.filterKeywords"></span>
+          <span ng-if="!row.apiObject.status.dashboardURL" ng-bind-html="row.apiObject.metadata.name | highlightKeywords : row.state.filterKeywords"></span>
+          <span ng-if="row.apiObject.status.dashboardURL">
+            <a ng-href="{{row.apiObject.status.dashboardURL}}" target="_blank">
+              <span ng-bind-html="row.apiObject.metadata.name | highlightKeywords : row.state.filterKeywords"></span></a></span>
         </h3>
         <div class="status-icons">
           <notification-icon ng-if="!row.expanded" alerts="row.notifications"></notification-icon>
