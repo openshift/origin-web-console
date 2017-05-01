@@ -103,13 +103,4 @@ function ServiceInstanceRow($filter, DataService, rowMethods, $uibModal) {
     });
   };
 
-  row.closeOverlayPanel = function() {
-    _.set(row, 'overlay.panelVisible', false);
-  };
-  row.showOverlayPanel = function(panelName, state) {
-    _.set(row, 'overlay.panelVisible', true);
-    _.set(row, 'overlay.panelName', panelName);
-    _.set(row, 'overlay.state', state);
-  };
-
 }
