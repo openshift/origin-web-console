@@ -73,7 +73,8 @@
   <div class="log-view" ng-attr-id="{{logViewerID}}" ng-class="{'log-fixed-height': fixedHeight}">
     <div
       id="{{logViewerID}}-affixedFollow"
-      class="log-scroll log-scroll-top">
+      class="log-scroll log-scroll-top"
+      ng-class="{'log-has-scroll':showScrollLinks}">
       <a ng-if="loading" href="" ng-click="toggleAutoScroll()">
         <span ng-if="!autoScrollActive">Follow</span>
         <span ng-if="autoScrollActive">Stop Following</span>

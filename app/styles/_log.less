@@ -203,18 +203,25 @@
   bottom: 5px;
   left: 10px;
 }
+
 .chromeless {
   background-color:  @log-bg-color;
   color: #d1d1d1;
-  .log-pending-ellipsis {
-    background-color: @log-bg-color;
-    padding: @grid-gutter-width 0 0 (@grid-gutter-width - 10px);
+  .log-view {
+    .log-pending-ellipsis {
+      background-color: @log-bg-color;
+      padding: @grid-gutter-width 0 0 (@grid-gutter-width - 10px);
+    }
+    .log-scroll-top.affix {
+      right: 0px; // align to edge of log-view when showScrollLinks is false
+      &.log-has-scroll {
+        right: @scrollbar-width; // align to edge of scrollbar when showScrollLinks is true
+      }
+    }
   }
-  .log-scroll-top.affix {
-    right: 0px; // override
-  }
-  .log-scroll-top.affix.target-logger-node {
-    right: @scrollbar-width;  // override
+  ::-webkit-scrollbar-track {
+    // add border to dark scrollbar-track since it's so close in color to log-view background
+    border-left: 1px solid lighten(@log-bg-color, 10%);
   }
 }
 

@@ -5045,9 +5045,9 @@ td.visible-print,th.visible-print{display:table-cell!important}
 ::-webkit-scrollbar-thumb{background-color:rgba(0,0,0,.08);background-clip:padding-box;border:solid transparent;border-width:1px;min-height:28px;max-height:60px;padding:100px 0 0;-webkit-box-shadow:inset 1px 1px 0 rgba(0,0,0,.1),inset 0 -1px 0 rgba(0,0,0,.07);box-shadow:inset 1px 1px 0 rgba(0,0,0,.1),inset 0 -1px 0 rgba(0,0,0,.07)}
 ::-webkit-scrollbar-thumb:active,::-webkit-scrollbar-thumb:hover{background-color:rgba(0,0,0,.18)}
 ::-webkit-scrollbar-track{background-clip:padding-box;background-color:rgba(0,0,0,.03)}
-.log-view.log-fixed-height ::-webkit-scrollbar-thumb,.navbar-project-menu ::-webkit-scrollbar-thumb{background-color:rgba(255,255,255,.25);-webkit-box-shadow:inset 1px 1px 0 rgba(255,255,255,.1),inset 0 -1px 0 rgba(255,255,255,.07);box-shadow:inset 1px 1px 0 rgba(255,255,255,.1),inset 0 -1px 0 rgba(255,255,255,.07)}
-.log-view.log-fixed-height ::-webkit-scrollbar-thumb:active,.log-view.log-fixed-height ::-webkit-scrollbar-thumb:hover,.navbar-project-menu ::-webkit-scrollbar-thumb:active,.navbar-project-menu ::-webkit-scrollbar-thumb:hover{background-color:rgba(255,255,255,.35)}
-.log-view.log-fixed-height ::-webkit-scrollbar-track,.navbar-project-menu ::-webkit-scrollbar-track{background-color:#050505}
+.chromeless ::-webkit-scrollbar-thumb,.log-view.log-fixed-height ::-webkit-scrollbar-thumb,.navbar-project-menu ::-webkit-scrollbar-thumb{background-color:rgba(255,255,255,.25);-webkit-box-shadow:inset 1px 1px 0 rgba(255,255,255,.1),inset 0 -1px 0 rgba(255,255,255,.07);box-shadow:inset 1px 1px 0 rgba(255,255,255,.1),inset 0 -1px 0 rgba(255,255,255,.07)}
+.chromeless ::-webkit-scrollbar-thumb:active,.chromeless ::-webkit-scrollbar-thumb:hover,.log-view.log-fixed-height ::-webkit-scrollbar-thumb:active,.log-view.log-fixed-height ::-webkit-scrollbar-thumb:hover,.navbar-project-menu ::-webkit-scrollbar-thumb:active,.navbar-project-menu ::-webkit-scrollbar-thumb:hover{background-color:rgba(255,255,255,.35)}
+.chromeless ::-webkit-scrollbar-track,.log-view.log-fixed-height ::-webkit-scrollbar-track,.navbar-project-menu ::-webkit-scrollbar-track{background-color:#050505}
 .log-view.log-fixed-height ::-webkit-scrollbar{width:17px}
 .log-view.log-fixed-height ::-webkit-scrollbar-track{background-color:rgba(255,255,255,.1)}
 .osc-secrets-form .advanced-secrets .help-blocks,.osc-secrets-form .advanced-secrets .input-labels,.osc-secrets-form .basic-secrets .help-blocks,.osc-secrets-form .basic-secrets .input-labels{display:table;padding-right:30px;position:relative;width:100%}
@@ -5462,9 +5462,10 @@ a.subtle-link:active,a.subtle-link:focus,a.subtle-link:hover{color:#00659c;borde
 .log-end-msg{font-size:12px;color:#72767b;position:absolute;bottom:5px;left:10px}
 .chromeless,.log-line{color:#d1d1d1}
 .chromeless{background-color:#101214}
-.chromeless .log-pending-ellipsis{background-color:#101214;padding:40px 0 0 30px}
-.chromeless .log-scroll-top.affix{right:0px}
-.chromeless .log-scroll-top.affix.target-logger-node{right:15px}
+.chromeless .log-view .log-pending-ellipsis{background-color:#101214;padding:40px 0 0 30px}
+.chromeless .log-view .log-scroll-top.affix{right:0px}
+.chromeless .log-view .log-scroll-top.affix.log-has-scroll{right:15px}
+.chromeless ::-webkit-scrollbar-track{border-left:1px solid #272b30}
 .log-link-external a{margin-left:20px;margin-right:10px;white-space:nowrap}
 .log-link-external i{font-size:10px;margin-left:5px}
 .log-line:hover{background-color:#22262b;color:#ededed}
