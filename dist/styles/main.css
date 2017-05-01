@@ -5045,9 +5045,11 @@ td.visible-print,th.visible-print{display:table-cell!important}
 ::-webkit-scrollbar-thumb{background-color:rgba(0,0,0,.08);background-clip:padding-box;border:solid transparent;border-width:1px;min-height:28px;max-height:60px;padding:100px 0 0;-webkit-box-shadow:inset 1px 1px 0 rgba(0,0,0,.1),inset 0 -1px 0 rgba(0,0,0,.07);box-shadow:inset 1px 1px 0 rgba(0,0,0,.1),inset 0 -1px 0 rgba(0,0,0,.07)}
 ::-webkit-scrollbar-thumb:active,::-webkit-scrollbar-thumb:hover{background-color:rgba(0,0,0,.18)}
 ::-webkit-scrollbar-track{background-clip:padding-box;background-color:rgba(0,0,0,.03)}
-.log-view.log-fixed-height ::-webkit-scrollbar-thumb,.navbar-project-menu ::-webkit-scrollbar-thumb{background-color:rgba(255,255,255,.25);-webkit-box-shadow:inset 1px 1px 0 rgba(255,255,255,.1),inset 0 -1px 0 rgba(255,255,255,.07);box-shadow:inset 1px 1px 0 rgba(255,255,255,.1),inset 0 -1px 0 rgba(255,255,255,.07)}
-.log-view.log-fixed-height ::-webkit-scrollbar-thumb:active,.log-view.log-fixed-height ::-webkit-scrollbar-thumb:hover,.navbar-project-menu ::-webkit-scrollbar-thumb:active,.navbar-project-menu ::-webkit-scrollbar-thumb:hover{background-color:rgba(255,255,255,.35)}
-.log-view.log-fixed-height ::-webkit-scrollbar-track,.navbar-project-menu ::-webkit-scrollbar-track{background-color:#050505}
+.log-view.log-fixed-height ::-webkit-scrollbar-thumb,.navbar-project-menu ::-webkit-scrollbar-thumb,landing-page ::-webkit-scrollbar-thumb{background-color:rgba(255,255,255,.25);-webkit-box-shadow:inset 1px 1px 0 rgba(255,255,255,.1),inset 0 -1px 0 rgba(255,255,255,.07);box-shadow:inset 1px 1px 0 rgba(255,255,255,.1),inset 0 -1px 0 rgba(255,255,255,.07)}
+.log-view.log-fixed-height ::-webkit-scrollbar-thumb:active,.log-view.log-fixed-height ::-webkit-scrollbar-thumb:hover,.navbar-project-menu ::-webkit-scrollbar-thumb:active,.navbar-project-menu ::-webkit-scrollbar-thumb:hover,landing-page ::-webkit-scrollbar-thumb:active,landing-page ::-webkit-scrollbar-thumb:hover{background-color:rgba(255,255,255,.35)}
+.log-view.log-fixed-height ::-webkit-scrollbar-track,.navbar-project-menu ::-webkit-scrollbar-track,landing-page ::-webkit-scrollbar-track{background-color:#050505}
+.landing::-webkit-scrollbar-track{background-color:#042e43}
+.landing-side-bar::-webkit-scrollbar-track{background-color:#21272e}
 .log-view.log-fixed-height ::-webkit-scrollbar{width:17px}
 .log-view.log-fixed-height ::-webkit-scrollbar-track{background-color:rgba(255,255,255,.1)}
 .osc-secrets-form .advanced-secrets .help-blocks,.osc-secrets-form .advanced-secrets .input-labels,.osc-secrets-form .basic-secrets .help-blocks,.osc-secrets-form .basic-secrets .input-labels{display:table;padding-right:30px;position:relative;width:100%}
