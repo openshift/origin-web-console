@@ -53,7 +53,7 @@
               <div ng-if="!(configMap.data | hashSize)" class="empty-state-message text-center">
                 <h2>The config map has no items.</h2>
               </div>
-              <div ng-if="configMap.data | hashSize" class="table-responsive">
+              <div ng-if="configMap.data | hashSize" class="table-responsive scroll-shadows-horizontal">
                 <table class="table table-bordered table-bordered-columns config-map-table key-value-table">
                   <tbody>
                     <tr ng-repeat="(prop, value) in configMap.data">

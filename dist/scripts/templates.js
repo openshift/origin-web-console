@@ -2341,7 +2341,7 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "<div ng-if=\"!(configMap.data | hashSize)\" class=\"empty-state-message text-center\">\n" +
     "<h2>The config map has no items.</h2>\n" +
     "</div>\n" +
-    "<div ng-if=\"configMap.data | hashSize\" class=\"table-responsive\">\n" +
+    "<div ng-if=\"configMap.data | hashSize\" class=\"table-responsive scroll-shadows-horizontal\">\n" +
     "<table class=\"table table-bordered table-bordered-columns config-map-table key-value-table\">\n" +
     "<tbody>\n" +
     "<tr ng-repeat=\"(prop, value) in configMap.data\">\n" +
@@ -5982,7 +5982,7 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "<a href=\"\" ng-click=\"toggleAnnotations()\" ng-if=\"expandAnnotations\">Hide Annotations</a>\n" +
     "</p>\n" +
     "<div ng-if=\"expandAnnotations\">\n" +
-    "<div ng-if=\"annotations\" class=\"table-responsive\">\n" +
+    "<div ng-if=\"annotations\" class=\"table-responsive scroll-shadows-horizontal\">\n" +
     "<table class=\"table table-bordered table-bordered-columns key-value-table\">\n" +
     "<tbody>\n" +
     "<tr ng-repeat=\"(annotationKey, annotationValue) in annotations\">\n" +
@@ -13572,7 +13572,7 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "</div>\n" +
     "</div>\n" +
     "</div>\n" +
-    "<div class=\"table-responsive\">\n" +
+    "<div class=\"table-responsive scroll-shadows-horizontal\">\n" +
     "<table class=\"table table-bordered\">\n" +
     "<thead>\n" +
     "<th>Resource Type</th>\n" +
@@ -13655,7 +13655,7 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "</div>\n" +
     "</div>\n" +
     "</div>\n" +
-    "<div class=\"table-responsive\">\n" +
+    "<div class=\"table-responsive scroll-shadows-horizontal\">\n" +
     "<table class=\"table table-bordered\">\n" +
     "<thead>\n" +
     "<th>Resource Type</th>\n" +
@@ -13701,7 +13701,7 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "<div ng-repeat=\"limitRange in limitRanges\">\n" +
     "<h2 ng-if=\"limitRanges.length\">{{limitRange.metadata.name}}</h2>\n" +
     "<div ng-if=\"$first\" class=\"help-block mar-bottom-md\">{{limitRangeHelp}}</div>\n" +
-    "<div class=\"table-responsive\">\n" +
+    "<div class=\"table-responsive scroll-shadows-horizontal\">\n" +
     "<table class=\"table table-bordered\">\n" +
     "<thead>\n" +
     "<th>Resource Type</th>\n" +
