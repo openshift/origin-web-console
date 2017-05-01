@@ -1197,10 +1197,6 @@ details:"Reason: " + f(a)
 };
 });
 });
-}, e.closeOverlayPanel = function() {
-_.set(e, "overlay.panelVisible", !1);
-}, e.showOverlayPanel = function(a, b) {
-_.set(e, "overlay.panelVisible", !0), _.set(e, "overlay.panelName", a), _.set(e, "overlay.state", b);
 };
 }
 
