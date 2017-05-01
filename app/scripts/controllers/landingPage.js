@@ -18,8 +18,16 @@ angular.module('openshiftConsole')
     // Once all pages show notifications this should be removed.
     NotificationsService.clearNotifications();
 
+    $scope.templateSelected = function(template) {
+      $scope.template = template;
+    };
+
+    $scope.templateDialogClosed = function() {
+      $scope.template = null;
+    };
+
     AuthService.withUser().then(function() {
-      Catalog.getCatalogItems().then(function(items) {
+      Catalog.getCatalogItems(true).then(function(items) {
         $scope.catalogItems = items;
       });
     });

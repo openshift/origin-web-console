@@ -1,5 +1,9 @@
-<div class="template-options" ng-show="parameters.length" ng-form="paramForm">
-  <div class="flow">
+<div
+    class="template-options"
+    ng-class="{ 'form-horizontal': isDialog }"
+    ng-show="parameters.length"
+    ng-form="paramForm">
+  <div ng-if="!isDialog" class="flow">
     <div class="flow-block">
       <h2>Parameters</h2>
     </div>
@@ -8,13 +12,26 @@
       <a class="action action-inline" href="" ng-click="expand = true" ng-hide="expand"><i class="pficon pficon-edit"></i> Edit Parameters</a>
     </div>
   </div>
+  <div ng-transclude></div>
   <div
       class="form-group options"
-      ng-repeat="parameter in parameters"
+      ng-repeat="parameter in visibleParameters"
       ng-show="expand"
       ng-init="paramID = 'param-' + $index">
-    <label ng-attr-for="{{paramID}}" ng-attr-title="{{parameter.name}}" ng-class="{required: parameter.required}">{{parameter.displayName || parameter.name}}</label>
-    <div class="parameter-input-wrapper" ng-class="{'has-error': (paramForm[paramID].$error.required && paramForm[paramID].$touched && !cleared), 'has-warning': isOnlyWhitespace(parameter.value)}">
+    <label
+      ng-attr-for="{{paramID}}"
+      ng-attr-title="{{parameter.name}}"
+      ng-class="{
+        required: parameter.required,
+        'col-sm-4 control-label': isDialog
+      }">{{parameter.displayName || parameter.name}}</label>
+    <div
+        class="parameter-input-wrapper"
+        ng-class="{
+          'has-error': (paramForm[paramID].$error.required && paramForm[paramID].$touched && !cleared),
+          'has-warning': isOnlyWhitespace(parameter.value),
+          'col-sm-8': isDialog
+        }">
       <input
           ng-if="!expandedParameter"
           ng-attr-id="{{paramID}}"
@@ -57,16 +74,16 @@
           spellcheck="false"
           rows="6"
           ng-attr-aria-describedby="{{parameter.description ? (paramID + '-description') : undefined}}"></textarea>
-    </div>
-    <div class="help-block" ng-if="parameter.description" ng-attr-id="{{paramID}}-description">{{parameter.description}}</div>
-    <div ng-show="paramForm[paramID].$error.required && paramForm[paramID].$touched && !cleared" class="has-error">
-      <div class="help-block">{{parameter.displayName || parameter.name}} is required.</div>
-    </div>
-    <div ng-show="isOnlyWhitespace(parameter.value)" class="has-warning help-block">
-      The current value is "{{parameter.value}}", which is not empty.
-      <span ng-if="parameter.generate">This will prevent a value from being generated.</span>
-      If this isn't what you want,
-        <a href="" ng-click="parameter.value=''; cleared = true; focus(paramID)">clear the value</a>.
+      <div class="help-block" ng-if="parameter.description" ng-attr-id="{{paramID}}-description">{{parameter.description}}</div>
+      <div ng-show="paramForm[paramID].$error.required && paramForm[paramID].$touched && !cleared" class="has-error">
+        <div class="help-block">{{parameter.displayName || parameter.name}} is required.</div>
+      </div>
+      <div ng-show="isOnlyWhitespace(parameter.value)" class="has-warning help-block">
+        The current value is "{{parameter.value}}", which is not empty.
+        <span ng-if="parameter.generate">This will prevent a value from being generated.</span>
+        If this isn't what you want,
+          <a href="" ng-click="parameter.value=''; cleared = true; focus(paramID)">clear the value</a>.
+      </div>
     </div>
   </div>
   <ul class="list-unstyled env-variable-list" ng-hide="expand">

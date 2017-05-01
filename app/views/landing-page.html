@@ -8,7 +8,8 @@
     <div class="middle-section">
       <div class="middle-container">
         <div class="middle-content">
-          <landing-page>
+          <process-template-dialog template="template" on-dialog-closed="templateDialogClosed"></process-template-dialog>
+          <landing-page on-template-selected="templateSelected">
             <landingsearch>
               <catalog-search catalog-items="catalogItems" base-project-url="project"></catalog-search>
             </landingsearch>

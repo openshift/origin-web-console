@@ -647,8 +647,8 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
 
 
   $templateCache.put('views/_templateopt.html',
-    "<div class=\"template-options\" ng-show=\"parameters.length\" ng-form=\"paramForm\">\n" +
-    "<div class=\"flow\">\n" +
+    "<div class=\"template-options\" ng-class=\"{ 'form-horizontal': isDialog }\" ng-show=\"parameters.length\" ng-form=\"paramForm\">\n" +
+    "<div ng-if=\"!isDialog\" class=\"flow\">\n" +
     "<div class=\"flow-block\">\n" +
     "<h2>Parameters</h2>\n" +
     "</div>\n" +
@@ -657,13 +657,20 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "<a class=\"action action-inline\" href=\"\" ng-click=\"expand = true\" ng-hide=\"expand\"><i class=\"pficon pficon-edit\"></i> Edit Parameters</a>\n" +
     "</div>\n" +
     "</div>\n" +
-    "<div class=\"form-group options\" ng-repeat=\"parameter in parameters\" ng-show=\"expand\" ng-init=\"paramID = 'param-' + $index\">\n" +
-    "<label ng-attr-for=\"{{paramID}}\" ng-attr-title=\"{{parameter.name}}\" ng-class=\"{required: parameter.required}\">{{parameter.displayName || parameter.name}}</label>\n" +
-    "<div class=\"parameter-input-wrapper\" ng-class=\"{'has-error': (paramForm[paramID].$error.required && paramForm[paramID].$touched && !cleared), 'has-warning': isOnlyWhitespace(parameter.value)}\">\n" +
+    "<div ng-transclude></div>\n" +
+    "<div class=\"form-group options\" ng-repeat=\"parameter in visibleParameters\" ng-show=\"expand\" ng-init=\"paramID = 'param-' + $index\">\n" +
+    "<label ng-attr-for=\"{{paramID}}\" ng-attr-title=\"{{parameter.name}}\" ng-class=\"{\n" +
+    "        required: parameter.required,\n" +
+    "        'col-sm-4 control-label': isDialog\n" +
+    "      }\">{{parameter.displayName || parameter.name}}</label>\n" +
+    "<div class=\"parameter-input-wrapper\" ng-class=\"{\n" +
+    "          'has-error': (paramForm[paramID].$error.required && paramForm[paramID].$touched && !cleared),\n" +
+    "          'has-warning': isOnlyWhitespace(parameter.value),\n" +
+    "          'col-sm-8': isDialog\n" +
+    "        }\">\n" +
     "<input ng-if=\"!expandedParameter\" ng-attr-id=\"{{paramID}}\" ng-attr-name=\"{{paramID}}\" class=\"form-control hide-ng-leave\" type=\"text\" placeholder=\"{{ parameter | parameterPlaceholder }}\" ng-model=\"parameter.value\" ng-required=\"parameter.required && !parameter.generate\" ng-blur=\"cleared = false\" ng-trim=\"false\" autocorrect=\"off\" autocapitalize=\"off\" spellcheck=\"false\" ng-attr-aria-describedby=\"{{parameter.description ? (paramID + '-description') : undefined}}\">\n" +
     "<a href=\"\" ng-click=\"expandedParameter = !expandedParameter\" class=\"resize-input action-button\" data-toggle=\"tooltip\" data-trigger=\"hover\" dynamic-content=\"{{expandedParameter ? 'Collapse to a single line input. This may strip any new lines you have entered.' : 'Expand to enter multiple lines of content. This is required if you need to include newline characters.'}}\"><i class=\"fa\" ng-class=\"{'fa-expand': !expandedParemeter, 'fa-compress': expandedParameter}\" aria-hidden=\"true\" role=\"presentation\"/><span class=\"sr-only\" ng-if=\"expandedParameter\">Collapse to a single line input</span><span class=\"sr-only\" ng-if=\"!expandedParameter\">Expand to enter multiline input</span></a>\n" +
     "<textarea ng-if=\"expandedParameter\" ng-attr-id=\"{{paramID}}\" ng-attr-name=\"{{paramID}}\" class=\"form-control hide-ng-leave\" placeholder=\"{{ parameter | parameterPlaceholder }}\" ng-model=\"parameter.value\" ng-required=\"parameter.required && !parameter.generate\" ng-blur=\"cleared = false\" ng-trim=\"false\" autocorrect=\"off\" autocapitalize=\"off\" spellcheck=\"false\" rows=\"6\" ng-attr-aria-describedby=\"{{parameter.description ? (paramID + '-description') : undefined}}\"></textarea>\n" +
-    "</div>\n" +
     "<div class=\"help-block\" ng-if=\"parameter.description\" ng-attr-id=\"{{paramID}}-description\">{{parameter.description}}</div>\n" +
     "<div ng-show=\"paramForm[paramID].$error.required && paramForm[paramID].$touched && !cleared\" class=\"has-error\">\n" +
     "<div class=\"help-block\">{{parameter.displayName || parameter.name}} is required.</div>\n" +
@@ -673,6 +680,7 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "<span ng-if=\"parameter.generate\">This will prevent a value from being generated.</span>\n" +
     "If this isn't what you want,\n" +
     "<a href=\"\" ng-click=\"parameter.value=''; cleared = true; focus(paramID)\">clear the value</a>.\n" +
+    "</div>\n" +
     "</div>\n" +
     "</div>\n" +
     "<ul class=\"list-unstyled env-variable-list\" ng-hide=\"expand\">\n" +
@@ -8904,48 +8912,91 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
   );
 
 
-  $templateCache.put('views/directives/process-template.html',
-    "<div class=\"osc-form\">\n" +
-    "<alerts alerts=\"$ctrl.alerts\"></alerts>\n" +
-    "<div class=\"row\">\n" +
-    "<div class=\"col-md-2 icon hidden-sm hidden-xs\">\n" +
-    "<custom-icon resource=\"$ctrl.template\" kind=\"template\"></custom-icon>\n" +
-    "</div>\n" +
-    "<div class=\"col-md-8\">\n" +
-    "<fieldset ng-disabled=\"disableInputs\">\n" +
-    "<osc-image-summary resource=\"$ctrl.template\"></osc-image-summary>\n" +
-    "<div ng-if=\"$ctrl.templateImages.length\" class=\"images\">\n" +
-    "<h2>Images</h2>\n" +
-    "<ul class=\"list-unstyled\" ng-repeat=\"image in $ctrl.templateImages\">\n" +
-    "<li>\n" +
-    "<i class=\"pficon pficon-image\" aria-hidden=\"true\"></i>\n" +
-    "<span class=\"name\">\n" +
-    "{{image.name}}\n" +
-    "</span>\n" +
-    "<span ng-if=\"image.usesParameters.length\" class=\"text-muted small\">\n" +
-    "<span ng-if=\"!image.name\">Image value set</span>\n" +
-    "from parameter<span ng-if=\"image.usesParameters.length > 1\">s</span>\n" +
-    "<span ng-repeat=\"parameterName in image.usesParameters\">\n" +
-    "{{$ctrl.parameterDisplayNames[parameterName]}}<span ng-if=\"!$last\">,</span>\n" +
-    "</span>\n" +
-    "</span>\n" +
+  $templateCache.put('views/directives/process-template-dialog.html',
+    "<overlay-panel show-panel=\"$ctrl.template\" handle-close=\"$ctrl.close\" show-close=\"true\">\n" +
+    "<div class=\"wizard-pf-steps\">\n" +
+    "<ul class=\"wizard-pf-steps-indicator\">\n" +
+    "<li class=\"wizard-pf-step\" ng-class=\"{\n" +
+    "        active: step.selected,\n" +
+    "        visited: step.visited && !step.selected\n" +
+    "      }\" ng-repeat=\"step in $ctrl.steps\" data-tabgroup=\"{{$index}}\">\n" +
+    "\n" +
+    "<a href=\"\"><span class=\"wizard-pf-step-number\">{{$index + 1}}</span><span class=\"wizard-pf-step-title\">{{step.label}}</span></a>\n" +
     "</li>\n" +
     "</ul>\n" +
     "</div>\n" +
+    "<div ng-if=\"$ctrl.template\" class=\"container-fluid wizard-pf-main\">\n" +
+    "<div class=\"wizard-pf-main-inner-shadow-covers\">\n" +
+    "<div class=\"order-service-details\">\n" +
+    "<div class=\"order-service-details-top\">\n" +
+    "<div class=\"service-icon\">\n" +
+    "<span class=\"icon {{$ctrl.iconClass}}\"></span>\n" +
+    "</div>\n" +
+    "<div class=\"service-title-area\">\n" +
+    "<div class=\"service-title\">\n" +
+    "{{$ctrl.template | displayName}}\n" +
+    "</div>\n" +
+    "<div class=\"order-service-tags\">\n" +
+    "<span ng-repeat=\"tag in $ctrl.template.metadata.annotations.tags.split(',')\" class=\"tag\">\n" +
+    "{{tag}}\n" +
+    "</span>\n" +
+    "</div>\n" +
+    "</div>\n" +
+    "</div>\n" +
+    "<div class=\"order-service-description-block\">\n" +
+    "<p ng-bind-html=\"$ctrl.template | description | linky : '_blank'\" class=\"description\"></p>\n" +
+    "</div>\n" +
+    "</div>\n" +
+    "<div ng-if=\"$ctrl.currentStep.id === 'configuration'\" class=\"order-service-config osc-form\">\n" +
+    "<alerts alerts=\"$ctrl.alerts\"></alerts>\n" +
+    "<form name=\"$ctrl.form\">\n" +
+    "<process-template template=\"$ctrl.template\" alerts=\"$ctrl.alerts\" is-dialog=\"true\"></process-template>\n" +
+    "</form>\n" +
+    "</div>\n" +
+    "<div ng-if=\"$ctrl.currentStep.id === 'results'\" class=\"order-service-config\">\n" +
+    "<next-steps project=\"$ctrl.selectedProject\" project-name=\"$ctrl.selectedProject.metadata.name\" login-base-url=\"$ctrl.loginBaseUrl\">\n" +
+    "</next-steps>\n" +
+    "</div>\n" +
+    "</div>\n" +
+    "<div class=\"config-bottom modal-footer wizard-pf-footer\">\n" +
+    "<button type=\"button\" ng-disabled=\"$ctrl.currentStep.id === 'results'\" class=\"btn btn-default wizard-pf-dismiss\" ng-click=\"$ctrl.close()\">\n" +
+    "Cancel\n" +
+    "</button>\n" +
+    "<button type=\"button\" ng-disabled=\"$ctrl.form.$invalid\" ng-if=\"$ctrl.currentStep.id === 'configuration'\" class=\"btn btn-primary wizard-pf-next\" ng-click=\"$ctrl.instantiateTemplate()\">\n" +
+    "Create\n" +
+    "</button>\n" +
+    "<button type=\"button\" ng-if=\"$ctrl.currentStep.id === 'results'\" class=\"btn btn-primary wizard-pf-next\" ng-click=\"$ctrl.close()\">\n" +
+    "Close\n" +
+    "</button>\n" +
+    "</div>\n" +
+    "</div>\n" +
+    "</overlay-panel>"
+  );
+
+
+  $templateCache.put('views/directives/process-template.html',
+    "<fieldset ng-disabled=\"disableInputs\">\n" +
     "<form name=\"$ctrl.templateForm\">\n" +
-    "<template-options parameters=\"$ctrl.template.parameters\" expand=\"true\" can-toggle=\"false\"></template-options>\n" +
-    "<label-editor labels=\"$ctrl.labels\" system-labels=\"$ctrl.systemLabels\" expand=\"true\" can-toggle=\"false\" help-text=\"Each label is applied to each created resource.\">\n" +
+    "<template-options is-dialog=\"$ctrl.isDialog\" parameters=\"$ctrl.template.parameters\" expand=\"true\" can-toggle=\"false\">\n" +
+    "<select-project ng-if=\"!$ctrl.project\" selected-project=\"$ctrl.selectedProject\" name-taken=\"$ctrl.projectNameTaken\"></select-project>\n" +
+    "</template-options>\n" +
+    "\n" +
+    "<div ng-if=\"$ctrl.selectedProject.metadata.uid\" class=\"row\">\n" +
+    "<div ng-if=\"$ctrl.selectedProject.metadata.uid\" class=\"col-sm-8 col-sm-offset-4\">\n" +
+    "\n" +
+    "To set optional parameters or labels, view\n" +
+    "<a ng-href=\"{{$ctrl.template | createFromTemplateURL : $ctrl.selectedProject.metadata.name}}\">advanced options</a>.\n" +
+    "</div>\n" +
+    "</div>\n" +
+    "<label-editor ng-if=\"!$ctrl.isDialog\" labels=\"$ctrl.labels\" system-labels=\"$ctrl.systemLabels\" expand=\"true\" can-toggle=\"false\" help-text=\"Each label is applied to each created resource.\">\n" +
     "</label-editor>\n" +
     "<alerts alerts=\"$ctrl.precheckAlerts\"></alerts>\n" +
-    "<div class=\"buttons gutter-top-bottom\">\n" +
+    "<div ng-if=\"!$ctrl.isDialog\" class=\"buttons gutter-top-bottom\">\n" +
     "<button class=\"btn btn-primary btn-lg\" ng-click=\"$ctrl.createFromTemplate()\" ng-disabled=\"$ctrl.templateForm.$invalid || $ctrl.disableInputs\">Create</button>\n" +
     "<a class=\"btn btn-default btn-lg\" href=\"{{$ctrl.project | projectOverviewURL}}\">Cancel</a>\n" +
     "</div>\n" +
     "</form>\n" +
-    "</fieldset>\n" +
-    "</div>\n" +
-    "</div>\n" +
-    "</div>"
+    "</fieldset>"
   );
 
 
@@ -10356,7 +10407,8 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "<div class=\"middle-section\">\n" +
     "<div class=\"middle-container\">\n" +
     "<div class=\"middle-content\">\n" +
-    "<landing-page>\n" +
+    "<process-template-dialog template=\"template\" on-dialog-closed=\"templateDialogClosed\"></process-template-dialog>\n" +
+    "<landing-page on-template-selected=\"templateSelected\">\n" +
     "<landingsearch>\n" +
     "<catalog-search catalog-items=\"catalogItems\" base-project-url=\"project\"></catalog-search>\n" +
     "</landingsearch>\n" +
@@ -10970,7 +11022,7 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
   );
 
 
-  $templateCache.put('views/modals/process-template.html',
+  $templateCache.put('views/modals/process-or-save-template.html',
     "<div class=\"modal-resource-action\">\n" +
     "<div class=\"modal-body\">\n" +
     "<h1>{{updateTemplate ? \"Update\" : \"Add\"}} Template</h1>\n" +
@@ -11636,9 +11688,34 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "<div ng-hide=\"template\">\n" +
     "Loading...\n" +
     "</div>\n" +
-    "<div ng-if=\"template\">\n" +
-    "<process-template template=\"template\" project=\"project\" alerts=\"alerts\" prefill-parameters=\"prefillParameters\">\n" +
+    "<div ng-if=\"template\" class=\"row osc-form\">\n" +
+    "<alerts alerts=\"alerts\"></alerts>\n" +
+    "<div class=\"col-md-2 icon hidden-sm hidden-xs\">\n" +
+    "<custom-icon resource=\"$ctrl.template\" kind=\"template\"></custom-icon>\n" +
+    "</div>\n" +
+    "<div class=\"col-md-8\">\n" +
+    "<osc-image-summary resource=\"template\"></osc-image-summary>\n" +
+    "<div ng-if=\"$ctrl.templateImages.length\" class=\"images\">\n" +
+    "<h2>Images</h2>\n" +
+    "<ul class=\"list-unstyled\" ng-repeat=\"image in $ctrl.templateImages\">\n" +
+    "<li>\n" +
+    "<i class=\"pficon pficon-image\" aria-hidden=\"true\"></i>\n" +
+    "<span class=\"name\">\n" +
+    "{{image.name}}\n" +
+    "</span>\n" +
+    "<span ng-if=\"image.usesParameters.length\" class=\"text-muted small\">\n" +
+    "<span ng-if=\"!image.name\">Image value set</span>\n" +
+    "from parameter<span ng-if=\"image.usesParameters.length > 1\">s</span>\n" +
+    "<span ng-repeat=\"parameterName in image.usesParameters\">\n" +
+    "{{$ctrl.parameterDisplayNames[parameterName]}}<span ng-if=\"!$last\">,</span>\n" +
+    "</span>\n" +
+    "</span>\n" +
+    "</li>\n" +
+    "</ul>\n" +
+    "</div>\n" +
+    "<process-template project=\"project\" template=\"template\" alerts=\"alerts\" prefill-parameters=\"prefillParameters\">\n" +
     "</process-template>\n" +
+    "</div>\n" +
     "</div>\n" +
     "</div>\n" +
     "</div>\n" +

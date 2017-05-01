@@ -3943,7 +3943,6 @@ mark{padding:0;background-color:rgba(252,248,160,.5)}
 .route-service-bar-chart .service-name{overflow:hidden;text-overflow:ellipsis;white-space:nowrap;width:125px}
 .route-service-bar-chart .service-weight{margin-left:5px}
 .route-service-bar-chart .progress{background:0 0;box-shadow:none;display:inline-block;margin:0;width:125px;-webkit-box-shadow:none}
-.about .about-icon img,.command-line .about-icon img,.osc-form .template-options .form-group{width:100%}
 .route-service-bar-chart .progress:not(.highlight) .progress-bar{background-color:#d1d1d1}
 label.checkbox{font-weight:400}
 .form-group .checkbox{margin-bottom:inherit}
@@ -3962,6 +3961,7 @@ label.checkbox{font-weight:400}
 @media (max-width:767px){.istag-separator{display:none!important}
 .osc-form .flow>.flow-block.right .action-inline{margin-left:0}
 }
+.about .about-icon img,.command-line .about-icon img{width:100%}
 .about .about-reg{font-size:65%;vertical-align:5px}
 .lifecycle-hook{padding-bottom:20px}
 .lifecycle-hook:first-of-type{padding-top:20px}
@@ -3981,7 +3981,7 @@ label.checkbox{font-weight:400}
 .osc-form .template-options .form-group .parameter-input-wrapper{position:relative}
 .osc-form .template-options .form-group .parameter-input-wrapper .resize-input{position:absolute;right:6px;top:5px}
 .osc-form .template-options .form-group .parameter-input-wrapper .resize-input .fa-compress,.osc-form .template-options .form-group .parameter-input-wrapper .resize-input .fa-expand{transform:rotate(90deg)}
-.osc-form .template-options .form-group .parameter-input-wrapper input,.osc-form .template-options .form-group .parameter-input-wrapper textarea{padding-right:20px}
+.osc-form .template-options.form-horizontal .form-group .parameter-input-wrapper .resize-input{right:26px}
 .osc-form .template-options .help-block{margin-bottom:5px}
 .compute-resource .resource-size{display:flex;height:27px}
 .compute-resource .resource-size .resource-amount{width:70%}
