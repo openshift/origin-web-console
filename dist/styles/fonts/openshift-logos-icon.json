@@ -1573,7 +1573,7 @@
         "isMulticolor2": false,
         "grid": 16,
         "tags": [
-          "logo-casadra"
+          "logo-cassandra"
         ],
         "defaultCode": 61753
       },
@@ -1583,7 +1583,7 @@
       "properties": {
         "order": 258,
         "id": 50,
-        "name": "casadra",
+        "name": "cassandra",
         "prevSize": 32,
         "code": 61753
       },
