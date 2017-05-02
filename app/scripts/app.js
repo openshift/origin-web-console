@@ -373,7 +373,7 @@ angular
         templateUrl: 'views/create/category.html',
         controller: 'BrowseCategoryController'
       })
-      .when('/project/:project/create/fromtemplate', {
+      .when('/process-template', {
         templateUrl: 'views/newfromtemplate.html',
         controller: 'NewFromTemplateController'
       })
@@ -439,6 +439,10 @@ angular
       })
       .when('/project/:project/browse/deployments-replicationcontrollers/:rc', {
         redirectTo: '/project/:project/browse/rc/:rc'
+      })
+      .when('/project/:project/create/fromtemplate', {
+        // `redirectTo` will preserve `:project` route param
+        redirectTo: '/process-template'
       })
       .otherwise({
         redirectTo: '/'
