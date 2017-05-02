@@ -1317,6 +1317,7 @@ DISABLE_WILDCARD_ROUTES:!0,
 AVAILABLE_KINDS_BLACKLIST:[ "Binding", "Ingress", "DeploymentConfigRollback" ],
 ENABLE_TECH_PREVIEW_FEATURE:{
 service_catalog_landing_page:!1,
+template_service_broker:!1,
 pod_presets:!1
 },
 SAMPLE_PIPELINE_TEMPLATE:{
@@ -4730,7 +4731,8 @@ a.template = b;
 }, a.templateDialogClosed = function() {
 a.template = null;
 }, b.withUser().then(function() {
-c.getCatalogItems(!0).then(function(b) {
+var b = !_.get(d, "ENABLE_TECH_PREVIEW_FEATURE.template_service_broker");
+c.getCatalogItems(b).then(function(b) {
 a.catalogItems = b;
 });
 });
