@@ -464,7 +464,7 @@ angular.module('openshiftConsole')
           }
         };
 
-        $rootScope.$on('metrics.charts.resize', function(){
+        var unbindResizeHandler = $rootScope.$on('metrics.charts.resize', function(){
           MetricsCharts.redraw(chartByMetric);
         });
 
@@ -472,6 +472,11 @@ angular.module('openshiftConsole')
           if (intervalPromise) {
             $interval.cancel(intervalPromise);
             intervalPromise = null;
+          }
+
+          if (unbindResizeHandler) {
+            unbindResizeHandler();
+            unbindResizeHandler = null;
           }
 
           angular.forEach(chartByMetric, function(chart) {

@@ -24,7 +24,8 @@ angular.module('openshiftConsole')
           $scope.collapsed = true;
         };
 
-        $rootScope.$on('event.resource.highlight', function(evt, data) {
+        var messageHandlers = [];
+        messageHandlers.push($rootScope.$on('event.resource.highlight', function(evt, data) {
           var targetKind = _.get(data, 'kind');
           var targetName = _.get(data, 'metadata.name');
           if (!targetKind || !targetName) {
@@ -35,9 +36,9 @@ angular.module('openshiftConsole')
               $scope.highlightedEvents[targetKind + "/" + targetName] = true;
             }
           });
-        });
+        }));
 
-        $rootScope.$on('event.resource.clear-highlight', function(event, data) {
+        messageHandlers.push($rootScope.$on('event.resource.clear-highlight', function(event, data) {
           var targetKind = _.get(data, 'kind');
           var targetName = _.get(data, 'metadata.name');
           if (!targetKind || !targetName) {
@@ -48,10 +49,14 @@ angular.module('openshiftConsole')
               $scope.highlightedEvents[targetKind + "/" + targetName] = false;
             }
           });
-        });        
+        }));
 
         $scope.$on('$destroy', function() {
           DataService.unwatchAll(watches);
+          _.each(messageHandlers, function(unbind) {
+            unbind();
+          });
+          messageHandlers = null;
         });
       },
     };

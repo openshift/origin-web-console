@@ -290,6 +290,10 @@ angular.module('openshiftConsole')
         var failureCount = 0;
 
         function metricsSucceeded() {
+          if (destroyed) {
+            return;
+          }
+
           // Reset the number of failures on a successful request.
           failureCount = 0;
 
@@ -519,7 +523,7 @@ angular.module('openshiftConsole')
           intervalPromise = $interval(update, MetricsCharts.getDefaultUpdateInterval(), false);
         });
 
-        $rootScope.$on('metrics.charts.resize', function() {
+        var unbindResizeHandler = $rootScope.$on('metrics.charts.resize', function() {
           MetricsCharts.redraw(donutByMetric);
           MetricsCharts.redraw(sparklineByMetric);
         });
@@ -528,6 +532,11 @@ angular.module('openshiftConsole')
           if (intervalPromise) {
             $interval.cancel(intervalPromise);
             intervalPromise = null;
+          }
+
+          if (unbindResizeHandler) {
+            unbindResizeHandler();
+            unbindResizeHandler = null;
           }
 
           angular.forEach(donutByMetric, function(chart) {
