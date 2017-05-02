@@ -60822,7 +60822,9 @@ var b = "<none>", c = "<none>";
 return a && a.kind && (b = a.kind), a && a.apiVersion && (c = a.apiVersion), "The API version " + c + " for kind " + b + " is not supported by this server";
 }, t = function(c) {
 var e = [], f = d.AVAILABLE_KINDS_BLACKLIST;
-return _.each(a, function(a) {
+return _.each(_.pick(a, function(a, b) {
+return "openshift" !== b;
+}), function(a) {
 _.each(a.resources.v1, function(a) {
 if (a.namespaced || c) {
 if (a.name.indexOf("/") >= 0 || _.contains(f, a.kind)) return;
