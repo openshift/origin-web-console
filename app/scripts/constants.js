@@ -89,7 +89,10 @@ angular.extend(window.OPENSHIFT_CONSTANTS, {
   ],
 
   ENABLE_TECH_PREVIEW_FEATURE: {
+    // Enable the new landing page and service catalog experience
     service_catalog_landing_page: false,
+    // Set to `true` when the template service broker is enabled for the cluster in master-config.yaml
+    template_service_broker: false,
     pod_presets: false
   },
 

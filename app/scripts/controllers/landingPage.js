@@ -27,7 +27,8 @@ angular.module('openshiftConsole')
     };
 
     AuthService.withUser().then(function() {
-      Catalog.getCatalogItems(true).then(function(items) {
+      var includeTemplates = !_.get(Constants, 'ENABLE_TECH_PREVIEW_FEATURE.template_service_broker');
+      Catalog.getCatalogItems(includeTemplates).then(function(items) {
         $scope.catalogItems = items;
       });
     });
