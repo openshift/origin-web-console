@@ -11691,13 +11691,13 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "<div ng-if=\"template\" class=\"row osc-form\">\n" +
     "<alerts alerts=\"alerts\"></alerts>\n" +
     "<div class=\"col-md-2 icon hidden-sm hidden-xs\">\n" +
-    "<custom-icon resource=\"$ctrl.template\" kind=\"template\"></custom-icon>\n" +
+    "<custom-icon resource=\"template\" kind=\"template\"></custom-icon>\n" +
     "</div>\n" +
     "<div class=\"col-md-8\">\n" +
     "<osc-image-summary resource=\"template\"></osc-image-summary>\n" +
-    "<div ng-if=\"$ctrl.templateImages.length\" class=\"images\">\n" +
+    "<div ng-if=\"templateImages.length\" class=\"images\">\n" +
     "<h2>Images</h2>\n" +
-    "<ul class=\"list-unstyled\" ng-repeat=\"image in $ctrl.templateImages\">\n" +
+    "<ul class=\"list-unstyled\" ng-repeat=\"image in templateImages\">\n" +
     "<li>\n" +
     "<i class=\"pficon pficon-image\" aria-hidden=\"true\"></i>\n" +
     "<span class=\"name\">\n" +
@@ -11707,7 +11707,7 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "<span ng-if=\"!image.name\">Image value set</span>\n" +
     "from parameter<span ng-if=\"image.usesParameters.length > 1\">s</span>\n" +
     "<span ng-repeat=\"parameterName in image.usesParameters\">\n" +
-    "{{$ctrl.parameterDisplayNames[parameterName]}}<span ng-if=\"!$last\">,</span>\n" +
+    "{{parameterDisplayNames[parameterName]}}<span ng-if=\"!$last\">,</span>\n" +
     "</span>\n" +
     "</span>\n" +
     "</li>\n" +

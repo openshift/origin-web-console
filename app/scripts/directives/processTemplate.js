@@ -3,7 +3,6 @@
 angular.module('openshiftConsole').component('processTemplate', {
   controller: [
     '$filter',
-    '$parse',
     '$q',
     '$scope',
     '$uibModal',
@@ -28,7 +27,6 @@ angular.module('openshiftConsole').component('processTemplate', {
 });
 
 function ProcessTemplate($filter,
-                         $parse,
                          $q,
                          $scope,
                          $uibModal,
@@ -43,121 +41,8 @@ function ProcessTemplate($filter,
 
   var context;
 
-  var dcContainers = $parse('spec.template.spec.containers');
-  var builderImage = $parse('spec.strategy.sourceStrategy.from || spec.strategy.dockerStrategy.from || spec.strategy.customStrategy.from');
-  var outputImage = $parse('spec.output.to');
-
   var displayName = $filter('displayName');
   var humanize = $filter('humanize');
-  var imageObjectRef = $filter('imageObjectRef');
-
-  function findImageFromTrigger(dc, container) {
-    var triggers = _.get(dc, 'spec.triggers', []);
-    // Find an image change trigger whose container name matches.
-    var matchingTrigger = _.find(triggers, function(trigger) {
-      if (trigger.type !== 'ImageChange') {
-        return false;
-      }
-
-      var containerNames = _.get(trigger, 'imageChangeParams.containerNames', []);
-      return _.includes(containerNames, container.name);
-    });
-
-    return _.get(matchingTrigger, 'imageChangeParams.from.name');
-  }
-
-  // Test for variable expressions like ${MY_PARAMETER} in the image.
-  var TEMPLATE_VARIABLE_EXPRESSION = /\${([a-zA-Z0-9\_]+)}/g;
-  function getParametersInImage(image) {
-    var parameters = [];
-    var match = TEMPLATE_VARIABLE_EXPRESSION.exec(image);
-    while (match) {
-      parameters.push(match[1]);
-      match = TEMPLATE_VARIABLE_EXPRESSION.exec(image);
-    }
-
-    return parameters;
-  }
-
-  function getParameterValues() {
-    var values = {};
-    _.each(ctrl.template.parameters, function(parameter) {
-      values[parameter.name] = parameter.value;
-    });
-
-    return values;
-  }
-
-  var images = [];
-  function resolveParametersInImages() {
-    var values = getParameterValues();
-    ctrl.templateImages = _.map(images, function(image) {
-      if (_.isEmpty(image.usesParameters)) {
-        return image;
-      }
-
-      var template = _.template(image.name, { interpolate: TEMPLATE_VARIABLE_EXPRESSION });
-      return {
-        name: template(values),
-        usesParameters: image.usesParameters
-      };
-    });
-  }
-
-  function deploymentConfigImages(dc) {
-    var dcImages = [];
-    var containers = dcContainers(dc);
-    if (containers) {
-      angular.forEach(containers, function(container) {
-        var image = container.image;
-        // Look to see if `container.image` is set from an image change trigger.
-        var imageFromTrigger = findImageFromTrigger(dc, container);
-        if (imageFromTrigger) {
-          image = imageFromTrigger;
-        }
-
-        if (image) {
-          dcImages.push(image);
-        }
-      });
-    }
-
-    return dcImages;
-  }
-
-  function findTemplateImages(data) {
-    images = [];
-    var dcImages = [];
-    var outputImages = {};
-    var namespace = _.get(ctrl, 'selectedProject.metadata.name');
-    angular.forEach(data.objects, function(item) {
-      if (item.kind === "BuildConfig") {
-        var builder = imageObjectRef(builderImage(item), namespace);
-        if(builder) {
-          images.push({
-            name: builder,
-            usesParameters: getParametersInImage(builder)
-          });
-        }
-        var output = imageObjectRef(outputImage(item), namespace);
-        if (output) {
-          outputImages[output] = true;
-        }
-      }
-      if (item.kind === "DeploymentConfig") {
-        dcImages = dcImages.concat(deploymentConfigImages(item));
-      }
-    });
-    dcImages.forEach(function(image) {
-      if (!outputImages[image]) {
-        images.push({
-          name: image,
-          usesParameters: getParametersInImage(image)
-        });
-      }
-    });
-    images = _.uniq(images, false, 'name');
-  }
 
   function getHelpLinks(template) {
     var helpLinkName = /^helplink\.(.*)\.title$/;
@@ -367,31 +252,12 @@ function ProcessTemplate($filter,
   };
 
   function setTemplateParams() {
-    ctrl.parameterDisplayNames = {};
-    _.each(ctrl.template.parameters, function(parameter) {
-      ctrl.parameterDisplayNames[parameter.name] = parameter.displayName || parameter.name;
-    });
-
     if(ctrl.prefillParameters) {
       _.each(ctrl.template.parameters, function(parameter) {
         if (ctrl.prefillParameters[parameter.name]) {
           parameter.value = ctrl.prefillParameters[parameter.name];
         }
       });
-    }
-
-    findTemplateImages(ctrl.template);
-    var imageUsesParameters = function(image) {
-      return !_.isEmpty(image.usesParameters);
-    };
-    if (_.some(images, imageUsesParameters)) {
-      $scope.$watch(function() {
-        return ctrl.template.parameters;
-      }, _.debounce(function() {
-        $scope.$apply(resolveParametersInImages);
-      }, 50, { maxWait: 250 }), true);
-    } else {
-      ctrl.templateImages = images;
     }
 
     ctrl.systemLabels = _.map(ctrl.template.labels, function(value, key) {

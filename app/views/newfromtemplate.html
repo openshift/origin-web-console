@@ -18,13 +18,13 @@
                 <div ng-if="template" class="row osc-form">
                   <alerts alerts="alerts"></alerts>
                   <div class="col-md-2 icon hidden-sm hidden-xs">
-                    <custom-icon resource="$ctrl.template" kind="template"></custom-icon>
+                    <custom-icon resource="template" kind="template"></custom-icon>
                   </div>
                   <div class="col-md-8">
                     <osc-image-summary resource="template"></osc-image-summary>
-                    <div ng-if="$ctrl.templateImages.length" class="images">
+                    <div ng-if="templateImages.length" class="images">
                       <h2>Images</h2>
-                      <ul class="list-unstyled" ng-repeat="image in $ctrl.templateImages">
+                      <ul class="list-unstyled" ng-repeat="image in templateImages">
                         <li>
                           <i class="pficon pficon-image" aria-hidden="true"></i>
                           <span class="name">
@@ -34,7 +34,7 @@
                             <span ng-if="!image.name">Image value set</span>
                             from parameter<span ng-if="image.usesParameters.length > 1">s</span>
                             <span ng-repeat="parameterName in image.usesParameters">
-                              {{$ctrl.parameterDisplayNames[parameterName]}}<span ng-if="!$last">,</span>
+                              {{parameterDisplayNames[parameterName]}}<span ng-if="!$last">,</span>
                             </span>
                           </span>
                         </li>
