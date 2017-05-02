@@ -7542,10 +7542,14 @@ projectName:a.project,
 kind:b,
 group:_.get(c, "kindSelector.selected.group", "")
 }).toString() :"";
+};
+var n;
+c.isDuplicateKind = function(a) {
+return n || (n = _.countBy(c.kinds, "kind")), n[a] > 1;
 }, d.getAlerts().forEach(function(a) {
 c.alerts[a.name] = a.data;
 }), d.clearAlerts();
-var n = function(a, b) {
+var o = function(a, b) {
 return _.some(c.kinds, function(c) {
 return c.kind === a && (!c.group && !b || c.group === b);
 });
@@ -7557,13 +7561,13 @@ resource:k.kindToResource(a.kind),
 group:a.group || ""
 };
 return !!e.checkResource(b.resource) && e.canI(b, "list", c.projectName);
-}), c.project = b, c.context = d, c.kindSelector.disabled = !1, a.kind && n(a.kind, a.group) && (_.set(c, "kindSelector.selected.kind", a.kind), _.set(c, "kindSelector.selected.group", a.group || ""));
+}), c.project = b, c.context = d, c.kindSelector.disabled = !1, a.kind && o(a.kind, a.group) && (_.set(c, "kindSelector.selected.kind", a.kind), _.set(c, "kindSelector.selected.group", a.group || ""));
 })), c.loadKind = m, c.$watch("kindSelector.selected", function() {
 c.alerts = {}, m();
 });
-var o = h("humanizeKind");
+var p = h("humanizeKind");
 c.matchKind = function(a, b) {
-return o(a).toLowerCase().indexOf(b.toLowerCase()) !== -1;
+return p(a).toLowerCase().indexOf(b.toLowerCase()) !== -1;
 }, i.onActiveFiltersChanged(function(a) {
 c.$apply(function() {
 c.resources = a.select(c.unfilteredResources), l();
