@@ -8981,8 +8981,8 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "<select-project ng-if=\"!$ctrl.project\" selected-project=\"$ctrl.selectedProject\" name-taken=\"$ctrl.projectNameTaken\"></select-project>\n" +
     "</template-options>\n" +
     "\n" +
-    "<div ng-if=\"$ctrl.selectedProject.metadata.uid\" class=\"row\">\n" +
-    "<div ng-if=\"$ctrl.selectedProject.metadata.uid\" class=\"col-sm-8 col-sm-offset-4\">\n" +
+    "<div ng-if=\"$ctrl.isDialog && $ctrl.selectedProject.metadata.uid\" class=\"row\">\n" +
+    "<div class=\"col-sm-8 col-sm-offset-4\">\n" +
     "\n" +
     "To set optional parameters or labels, view\n" +
     "<a ng-href=\"{{$ctrl.template | createFromTemplateURL : $ctrl.selectedProject.metadata.name}}\">advanced options</a>.\n" +
