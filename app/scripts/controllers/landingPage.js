@@ -7,7 +7,8 @@ angular.module('openshiftConsole')
                        Catalog,
                        Constants,
                        Navigate,
-                       NotificationsService) {
+                       NotificationsService,
+                       RecentlyViewedServiceItems) {
     $scope.saasOfferings = Constants.SAAS_OFFERINGS;
 
     $scope.viewMembership = function(project) {
@@ -18,11 +19,19 @@ angular.module('openshiftConsole')
     // Once all pages show notifications this should be removed.
     NotificationsService.clearNotifications();
 
+    var addTemplateToRecentlyViewed = function() {
+      var templateUID = _.get($scope, 'template.metadata.uid');
+      if (templateUID) {
+        RecentlyViewedServiceItems.addItem(templateUID);
+      }
+    };
+
     $scope.templateSelected = function(template) {
       $scope.template = template;
     };
 
     $scope.templateDialogClosed = function() {
+      addTemplateToRecentlyViewed();
       $scope.template = null;
     };
 
@@ -31,5 +40,11 @@ angular.module('openshiftConsole')
       Catalog.getCatalogItems(includeTemplates).then(function(items) {
         $scope.catalogItems = items;
       });
+    });
+
+    $scope.$on('$destroy', function() {
+      // If the template dialog was open when the scope was destroyed, still
+      // add the item to recently-viewed. No-op if the dialog is not open.
+      addTemplateToRecentlyViewed();
     });
   });

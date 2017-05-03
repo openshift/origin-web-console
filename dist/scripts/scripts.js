@@ -4652,18 +4652,25 @@ _.set(this, "selectedTab.networking", !0), b(this);
 }
 }
 };
-}), angular.module("openshiftConsole").controller("LandingPageController", [ "$scope", "AuthService", "Catalog", "Constants", "Navigate", "NotificationsService", function(a, b, c, d, e, f) {
+}), angular.module("openshiftConsole").controller("LandingPageController", [ "$scope", "AuthService", "Catalog", "Constants", "Navigate", "NotificationsService", "RecentlyViewedServiceItems", function(a, b, c, d, e, f, g) {
 a.saasOfferings = d.SAAS_OFFERINGS, a.viewMembership = function(a) {
 e.toProjectMembership(a.metadata.name);
-}, f.clearNotifications(), a.templateSelected = function(b) {
+}, f.clearNotifications();
+var h = function() {
+var b = _.get(a, "template.metadata.uid");
+b && g.addItem(b);
+};
+a.templateSelected = function(b) {
 a.template = b;
 }, a.templateDialogClosed = function() {
-a.template = null;
+h(), a.template = null;
 }, b.withUser().then(function() {
 var b = !_.get(d, "ENABLE_TECH_PREVIEW_FEATURE.template_service_broker");
 c.getCatalogItems(b).then(function(b) {
 a.catalogItems = b;
 });
+}), a.$on("$destroy", function() {
+h();
 });
 } ]), angular.module("openshiftConsole").controller("ProjectsController", [ "$scope", "$filter", "$location", "$route", "$timeout", "AlertMessageService", "AuthService", "DataService", "KeywordService", "Logger", "ProjectsService", function(a, b, c, d, e, f, g, h, i, j, k) {
 var l, m, n = [], o = [];
