@@ -1,5 +1,13 @@
 @bower-components-path: "../../bower_components";
+@catalog-less-path: "@{bower-components-path}/origin-web-catalog/dist/less";
+@common-less-path: "@{bower-components-path}/origin-web-common/dist/less";
 @pf-less-path: "@{bower-components-path}/patternfly/dist/less";
+
+// origin-web-catalog
+@import "@{catalog-less-path}/catalog.less";
+
+// origin-web-common
+@import "@{common-less-path}/common.less";
 
 // PatternFly
 @import "@{pf-less-path}/patternfly.less";
