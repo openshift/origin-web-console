@@ -18,4 +18,10 @@
     <bind-service target="row.overlay.state.target"
                   on-close="row.closeOverlayPanel"></bind-service>
   </div>
+  <div ng-if="row.overlay.panelName === 'unbindService'">
+    <unbind-service
+      target="row.overlay.state.target"
+      bindings="row.bindings"
+      on-close="row.closeOverlayPanel"></unbind-service>
+  </div>
 </overlay-panel>

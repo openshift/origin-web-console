@@ -12186,7 +12186,7 @@ return _.get(a, "metadata.name", "");
 }));
 }, p = function() {
 if (g && h && i && j && k) {
-var a = g.concat(h).concat(i).concat(j).concat(k);
+var a = [].concat(g).concat(h).concat(i).concat(j).concat(k);
 l.applications = _.sortByAll(a, [ "metadata.name", "kind" ]), l.bindType = l.applications.length ? "application" :"secret-only";
 }
 }, q = function() {
@@ -12276,6 +12276,61 @@ target:"<",
 onClose:"<"
 },
 templateUrl:"views/directives/bind-service.html"
+});
+}(), function() {
+function a(a, b, c) {
+var d, e, f = this, g = b("serviceInstanceDisplayName"), h = function() {
+c["delete"]({
+group:"servicecatalog.k8s.io",
+resource:"bindings"
+}, f.selectedBinding, e).then(_.noop, function(a) {
+f.error = a;
+});
+}, i = function() {
+var b = _.first(f.steps);
+b.valid = !1, d = a.$watch("ctrl.selectedBinding", function(a) {
+b.valid = !!a;
+});
+}, j = function() {
+d && (d(), d = void 0);
+}, k = function() {
+f.nextTitle = "Delete", i();
+}, l = function() {
+f.nextTitle = "Close", f.wizardComplete = !0, h(), j();
+};
+f.$onInit = function() {
+var a = "Instance" === f.target.kind ? "Applications" :"Services";
+f.displayName = g(f.target), f.steps = [ {
+id:"deleteForm",
+label:a,
+view:"views/directives/bind-service/delete-binding-select-form.html",
+onShow:k
+}, {
+id:"results",
+label:"Results",
+view:"views/directives/bind-service/delete-binding-result.html",
+onShow:l
+} ], e = {
+namespace:_.get(f.target, "metadata.namespace")
+};
+}, f.appsForBinding = function(a) {
+return _.get(f.applicationsByBinding, a);
+}, f.closeWizard = function() {
+_.isFunction(f.onClose) && f.onClose();
+}, f.$onDestroy = function() {
+j();
+};
+}
+angular.module("openshiftConsole").component("unbindService", {
+controller:[ "$scope", "$filter", "DataService", a ],
+controllerAs:"ctrl",
+bindings:{
+target:"<",
+bindings:"<",
+applicationsByBinding:"<",
+onClose:"<"
+},
+templateUrl:"views/directives/unbind-service.html"
 });
 }(), function() {
 function a(a, b, c, d, e, f, g, h, i, j, k, l) {
@@ -12967,15 +13022,12 @@ templateUrl:"views/overview/_list-row.html"
 function a(a, b, c, d, e, f) {
 var g = this;
 _.extend(g, e.ui);
-var h = a("getErrorDetails"), i = function() {
-var a = g.apiObject.spec.serviceClassName, b = g.apiObject.metadata.name, c = _.get(g, [ "state", "serviceClasses", a, "externalMetadata", "displayName" ]);
-return c || a || b;
-}, j = function() {
+var h = a("getErrorDetails"), i = a("serviceInstanceDisplayName"), j = function() {
 var a = g.apiObject.spec.serviceClassName;
 return _.get(g, [ "state", "serviceClasses", a, "description" ]);
 };
 g.$doCheck = function() {
-g.notifications = e.getNotifications(g.apiObject, g.state), g.displayName = i(), g.description = j();
+g.notifications = e.getNotifications(g.apiObject, g.state), g.displayName = i(g.apiObject, g.serviceClasses), g.description = j();
 }, g.getSecretForBinding = function(a) {
 return a && _.get(g, [ "state", "secrets", a.spec.secretName ]);
 }, g.isBindable = d.isServiceBindable(g.apiObject, g.state.serviceClasses), g.closeOverlayPanel = function() {
@@ -14268,6 +14320,11 @@ return "deploymentconfigs" === c.resource && !c.group || "deployments" === c.res
 return function(a) {
 var b = _.get(a, "spec.alternateBackends", []);
 return !_.isEmpty(b);
+};
+}).filter("serviceInstanceDisplayName", function() {
+return function(a, b) {
+var c = a.spec.serviceClassName, d = a.metadata.name, e = _.get(b, [ c, "externalMetadata", "displayName" ]);
+return e || c || d;
 };
 }), angular.module("openshiftConsole").filter("canIDoAny", [ "canIFilter", function(a) {
 var b = {

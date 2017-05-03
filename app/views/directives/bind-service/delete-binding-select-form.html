@@ -1,0 +1,24 @@
+<h3 class="mar-top-none">
+  Select a binding to delete from <strong>{{ctrl.displayName}}</strong>
+</h3>
+<form name="ctrl.bindingSelection" class="mar-bottom-lg">
+  <fieldset ng-disabled="ctrl.isDisabled">
+    <div ng-repeat="binding in ctrl.bindings" class="radio">
+      <label>
+          <input
+            type="radio"
+            ng-model="ctrl.selectedBinding"
+            value="{{binding.metadata.name}}">
+          <div
+            ng-if="ctrl.appsForBinding(binding.metadata.name)"
+            ng-repeat="appForBinding in ctrl.appsForBinding(binding.metadata.name)">
+            {{appForBinding.metadata.name}} <small class="text-muted">&ndash; {{ appForBinding.kind | humanizeKind : true}}</small>
+          </div>
+          <div ng-if="!(ctrl.appsForBinding(binding.metadata.name))">
+            {{binding.spec.secretName}} <small class="text-muted">&ndash; Secret</small>
+          </div>
+
+      </label>
+    </div>
+  </fieldset>
+</form>

@@ -30,13 +30,7 @@
     _.extend(row, ListRowUtils.ui);
 
     var getErrorDetails = $filter('getErrorDetails');
-
-    var getDisplayName = function() {
-      var serviceClassName = row.apiObject.spec.serviceClassName;
-      var instanceName = row.apiObject.metadata.name;
-      var serviceClassDisplayName = _.get(row, ['state','serviceClasses', serviceClassName, 'externalMetadata', 'displayName']);
-      return serviceClassDisplayName || serviceClassName || instanceName;
-    };
+    var serviceInstanceDisplayName = $filter('serviceInstanceDisplayName');
 
     var getDescription = function() {
       var serviceClassName = row.apiObject.spec.serviceClassName;
@@ -45,7 +39,7 @@
 
     row.$doCheck = function() {
       row.notifications = ListRowUtils.getNotifications(row.apiObject, row.state);
-      row.displayName = getDisplayName();
+      row.displayName = serviceInstanceDisplayName(row.apiObject, row.serviceClasses);
       row.description = getDescription();
     };
 
