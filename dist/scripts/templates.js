@@ -5733,9 +5733,53 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
   );
 
 
+  $templateCache.put('views/directives/bind-service/remove-binding-confirm.html',
+    "<div>\n" +
+    "<div ng-if=\"!ctrl.error\">\n" +
+    "<h3 class=\"mar-top-none\">\n" +
+    "<strong>{{ctrl.selectedBinding}}</strong> has been unbound\n" +
+    "\n" +
+    "\n" +
+    "</h3>\n" +
+    "<p class=\"mar-top-lg\">\n" +
+    "<span class=\"pficon pficon-info\"></span> You will need to redeploy your pods for the un-binding to take effect.\n" +
+    "</p>\n" +
+    "</div>\n" +
+    "<div ng-if=\"ctrl.error\">\n" +
+    "<div class=\"title\">Deletion of Binding Failed <span class=\"fa fa-times text-danger\"></span></div>\n" +
+    "<div class=\"sub-title\">\n" +
+    "<span ng-if=\"ctrl.error.data.message\">\n" +
+    "{{ctrl.error.data.message | upperFirst}}\n" +
+    "</span>\n" +
+    "<span ng-if=\"!ctrl.error.data.message\">\n" +
+    "An error occurred deleting the binding.\n" +
+    "</span>\n" +
+    "</div>\n" +
+    "</div>\n" +
+    "</div>"
+  );
+
+
   $templateCache.put('views/directives/bind-service/results.html',
     "<bind-results error=\"ctrl.error\" binding=\"ctrl.binding\" service-to-bind=\"ctrl.serviceToBind\" bind-type=\"{{ctrl.bindType}}\" application-to-bind=\"ctrl.appToBind.metadata.name\" generated-secret-name=\"ctrl.generatedSecretName\" show-pod-presets=\"'pod_presets' | enableTechPreviewFeature\" secret-href=\"ctrl.generatedSecretName | navigateResourceURL : 'Secret' : ctrl.target.metadata.namespace\">\n" +
     "</bind-results>"
+  );
+
+
+  $templateCache.put('views/directives/bind-service/select-binding.html',
+    "<h3 class=\"mar-top-none\">\n" +
+    "Select a service to delete from <strong>{{ctrl.displayName}}</strong>\n" +
+    "</h3>\n" +
+    "<form name=\"ctrl.bindingSelection\" class=\"mar-bottom-lg\">\n" +
+    "<fieldset ng-disabled=\"ctrl.isDisabled\">\n" +
+    "<div ng-repeat=\"binding in ctrl.bindings\" class=\"radio\">\n" +
+    "<label>\n" +
+    "<input type=\"radio\" ng-model=\"ctrl.selectedBinding\" value=\"{{binding.metadata.name}}\">\n" +
+    "{{binding.metadata.name}}\n" +
+    "</label>\n" +
+    "</div>\n" +
+    "</fieldset>\n" +
+    "</form>"
   );
 
 
@@ -8671,6 +8715,21 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "</tr>\n" +
     "</tbody>\n" +
     "</table>"
+  );
+
+
+  $templateCache.put('views/directives/unbind-service.html',
+    "<div class=\"bind-service-wizard unbind-service\">\n" +
+    "<div pf-wizard hide-header=\"true\" hide-sidebar=\"true\" hide-back-button=\"true\" step-class=\"bind-service-wizard-step\" wizard-ready=\"ctrl.wizardReady\" next-title=\"ctrl.nextTitle\" on-finish=\"ctrl.closeWizard()\" on-cancel=\"ctrl.closeWizard()\" wizard-done=\"ctrl.wizardComplete\" class=\"pf-wizard-no-back\">\n" +
+    "<div pf-wizard-step ng-repeat=\"step in ctrl.steps track by $index\" step-title=\"{{step.label}}\" next-enabled=\"step.valid\" on-show=\"step.onShow\" step-id=\"{{step.id}}\" step-priority=\"{{$index}}\">\n" +
+    "<div class=\"wizard-pf-main-inner-shadow-covers\">\n" +
+    "<div class=\"bind-service-config\">\n" +
+    "<div ng-include=\"step.view\" class=\"wizard-pf-main-form-contents\"></div>\n" +
+    "</div>\n" +
+    "</div>\n" +
+    "</div>\n" +
+    "</div>\n" +
+    "</div>"
   );
 
 
@@ -11905,6 +11964,9 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "<li role=\"menuitem\" ng-if=\"row.isBindable\">\n" +
     "<a href=\"\" ng-click=\"row.showOverlayPanel('bindService', {target: row.apiObject})\">Create Binding</a>\n" +
     "</li>\n" +
+    "<li role=\"menuitem\" ng-if=\"row.bindings.length\">\n" +
+    "<a href=\"\" ng-click=\"row.showOverlayPanel('unbindService', {target: row.apiObject})\">Delete Binding</a>\n" +
+    "</li>\n" +
     "<li role=\"menuitem\">\n" +
     "<a href=\"\" ng-click=\"row.deprovision()\" role=\"button\">Deprovision</a>\n" +
     "</li>\n" +
@@ -11952,6 +12014,9 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "<overlay-panel single-column=\"true\" show-panel=\"row.overlay.panelVisible\" show-close=\"true\" handle-close=\"row.closeOverlayPanel\">\n" +
     "<div ng-if=\"row.overlay.panelName === 'bindService'\">\n" +
     "<bind-service target=\"row.overlay.state.target\" on-close=\"row.closeOverlayPanel\"></bind-service>\n" +
+    "</div>\n" +
+    "<div ng-if=\"row.overlay.panelName === 'unbindService'\">\n" +
+    "<unbind-service target=\"row.overlay.state.target\" bindings=\"row.bindings\" on-close=\"row.closeOverlayPanel\"></unbind-service>\n" +
     "</div>\n" +
     "</overlay-panel>"
   );

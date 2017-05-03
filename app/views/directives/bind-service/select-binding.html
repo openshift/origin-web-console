@@ -1,0 +1,13 @@
+<h3 class="mar-top-none">
+  Select a service to delete from <strong>{{ctrl.displayName}}</strong>
+</h3>
+<form name="ctrl.bindingSelection" class="mar-bottom-lg">
+  <fieldset ng-disabled="ctrl.isDisabled">
+    <div ng-repeat="binding in ctrl.bindings" class="radio">
+      <label>
+          <input type="radio" ng-model="ctrl.selectedBinding" value="{{binding.metadata.name}}">
+          {{binding.metadata.name}}
+      </label>
+    </div>
+  </fieldset>
+</form>

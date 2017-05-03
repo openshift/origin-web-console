@@ -47,6 +47,9 @@
           <li role="menuitem" ng-if="row.isBindable">
             <a href="" ng-click="row.showOverlayPanel('bindService', {target: row.apiObject})">Create Binding</a>
           </li>
+          <li role="menuitem" ng-if="row.bindings.length">
+            <a href="" ng-click="row.showOverlayPanel('unbindService', {target: row.apiObject})">Delete Binding</a>
+          </li>
           <li role="menuitem">
             <a href="" ng-click="row.deprovision()" role="button">Deprovision</a>
           </li>
@@ -130,5 +133,11 @@
   <div ng-if="row.overlay.panelName === 'bindService'">
     <bind-service target="row.overlay.state.target"
                   on-close="row.closeOverlayPanel"></bind-service>
+  </div>
+  <div ng-if="row.overlay.panelName === 'unbindService'">
+    <unbind-service
+      target="row.overlay.state.target"
+      bindings="row.bindings"
+      on-close="row.closeOverlayPanel"></unbind-service>
   </div>
 </overlay-panel>
