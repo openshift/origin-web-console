@@ -252,7 +252,9 @@ module.exports = function (grunt) {
           'bower_components/google-code-prettify/bin/prettify.min.css',
           'bower_components/patternfly/dist/css/patternfly.css',
           'bower_components/patternfly/dist/css/patternfly-additions.css',
-          'bower_components/patternfly-bootstrap-combobox/css/bootstrap-combobox.css'
+          'bower_components/patternfly-bootstrap-combobox/css/bootstrap-combobox.css',
+          'bower_components/origin-web-common/dist/origin-web-common.css',
+          'bower_components/origin-web-catalog/dist/origin-web-catalogs.css'
         ]
       }
     },
