@@ -4,8 +4,8 @@
       <select-project ng-if="!$ctrl.project" selected-project="$ctrl.selectedProject" name-taken="$ctrl.projectNameTaken"></select-project>
     </template-options>
     <!-- TODO: Also support advanced options for new projects. -->
-    <div ng-if="$ctrl.selectedProject.metadata.uid" class="row">
-      <div ng-if="$ctrl.selectedProject.metadata.uid" class="col-sm-8 col-sm-offset-4">
+    <div ng-if="$ctrl.isDialog && $ctrl.selectedProject.metadata.uid" class="row">
+      <div class="col-sm-8 col-sm-offset-4">
         <!-- TODO: Preserve entered form values. -->
         To set optional parameters or labels, view
         <a ng-href="{{$ctrl.template | createFromTemplateURL : $ctrl.selectedProject.metadata.name}}">advanced options</a>.
