@@ -4652,25 +4652,43 @@ _.set(this, "selectedTab.networking", !0), b(this);
 }
 }
 };
-}), angular.module("openshiftConsole").controller("LandingPageController", [ "$scope", "AuthService", "Catalog", "Constants", "Navigate", "NotificationsService", "RecentlyViewedServiceItems", function(a, b, c, d, e, f, g) {
-a.saasOfferings = d.SAAS_OFFERINGS, a.viewMembership = function(a) {
-e.toProjectMembership(a.metadata.name);
-}, f.clearNotifications();
-var h = function() {
+}), angular.module("openshiftConsole").controller("LandingPageController", [ "$scope", "$rootScope", "AuthService", "Catalog", "Constants", "Navigate", "NotificationsService", "RecentlyViewedServiceItems", "GuidedTourService", "$timeout", "$routeParams", "$location", function(a, b, c, d, e, f, g, h, i, j, k, l) {
+function m() {
+if (p) if (k.startTour) j(function() {
+a.startGuidedTour(n);
+}, 500); else if (_.get(o, "auto_launch")) {
+var c = "openshift/viewedHomePage/" + b.user.metadata.name;
+"true" !== localStorage.getItem(c) && j(function() {
+localStorage.setItem(c, "true"), a.startGuidedTour();
+}, 500);
+}
+}
+function n() {
+j(function() {
+l.replace(), l.search("startTour", null);
+});
+}
+var o = _.get(e, "GUIDED_TOURS.landing_page_tour"), p = o && o.enabled && o.steps;
+a.saasOfferings = e.SAAS_OFFERINGS, a.viewMembership = function(a) {
+f.toProjectMembership(a.metadata.name);
+}, p && (a.startGuidedTour = function(a) {
+i.startTour(o.steps, a);
+}), g.clearNotifications();
+var q = function() {
 var b = _.get(a, "template.metadata.uid");
-b && g.addItem(b);
+b && h.addItem(b);
 };
 a.templateSelected = function(b) {
 a.template = b;
 }, a.templateDialogClosed = function() {
-h(), a.template = null;
-}, b.withUser().then(function() {
-var b = !_.get(d, "ENABLE_TECH_PREVIEW_FEATURE.template_service_broker");
-c.getCatalogItems(b).then(function(b) {
-a.catalogItems = b;
+q(), a.template = null;
+}, c.withUser().then(function() {
+var b = !_.get(e, "ENABLE_TECH_PREVIEW_FEATURE.template_service_broker");
+d.getCatalogItems(b).then(function(b) {
+a.catalogItems = b, m();
 });
 }), a.$on("$destroy", function() {
-h();
+q();
 });
 } ]), angular.module("openshiftConsole").controller("ProjectsController", [ "$scope", "$filter", "$location", "$route", "$timeout", "AlertMessageService", "AuthService", "DataService", "KeywordService", "Logger", "ProjectsService", function(a, b, c, d, e, f, g, h, i, j, k) {
 var l, m, n = [], o = [];
@@ -15612,16 +15630,24 @@ url:l
 } ]), hawtioPluginLoader.addModule(a);
 }(), angular.module("openshiftConsole").run([ "extensionRegistry", function(a) {
 a.add("nav-help-dropdown", function() {
-return [ {
+var a = [];
+if (a.push({
 type:"dom",
 node:'<li><a target="_blank" href="{{\'default\' | helpLink}}">Documentation</a></li>'
-}, {
+}), _.get(window, "OPENSHIFT_CONSTANTS.ENABLE_TECH_PREVIEW_FEATURE.service_catalog_landing_page")) {
+var b = _.get(window, "OPENSHIFT_CONSTANTS.GUIDED_TOURS.landing_page_tour");
+b && b.enabled && b.steps && a.push({
+type:"dom",
+node:'<li><a href="./?startTour=true">Tour Home Page</a></li>'
+});
+}
+return a.push({
 type:"dom",
 node:'<li><a href="command-line">Command Line Tools</a></li>'
-}, {
+}), a.push({
 type:"dom",
 node:'<li><a href="about">About</a></li>'
-} ];
+}), a;
 });
 } ]), angular.module("openshiftConsole").run([ "extensionRegistry", function(a) {
 a.add("nav-user-dropdown", function() {

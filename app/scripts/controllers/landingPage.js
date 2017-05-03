@@ -3,17 +3,31 @@
 angular.module('openshiftConsole')
   .controller('LandingPageController',
               function($scope,
+                       $rootScope,
                        AuthService,
                        Catalog,
                        Constants,
                        Navigate,
                        NotificationsService,
-                       RecentlyViewedServiceItems) {
+                       RecentlyViewedServiceItems,
+                       GuidedTourService,
+                       $timeout,
+                       $routeParams,
+                       $location) {
+    var tourConfig = _.get(Constants, 'GUIDED_TOURS.landing_page_tour');
+    var tourEnabled = tourConfig && tourConfig.enabled && tourConfig.steps;
+
     $scope.saasOfferings = Constants.SAAS_OFFERINGS;
 
     $scope.viewMembership = function(project) {
       Navigate.toProjectMembership(project.metadata.name);
     };
+
+    if (tourEnabled) {
+      $scope.startGuidedTour = function (onDone) {
+        GuidedTourService.startTour(tourConfig.steps, onDone);
+      };
+    }
 
     // Currently this is the only page showing notifications, clear any that came previous pages.
     // Once all pages show notifications this should be removed.
@@ -39,6 +53,7 @@ angular.module('openshiftConsole')
       var includeTemplates = !_.get(Constants, 'ENABLE_TECH_PREVIEW_FEATURE.template_service_broker');
       Catalog.getCatalogItems(includeTemplates).then(function(items) {
         $scope.catalogItems = items;
+        dataLoaded();
       });
     });
 
@@ -47,4 +62,33 @@ angular.module('openshiftConsole')
       // add the item to recently-viewed. No-op if the dialog is not open.
       addTemplateToRecentlyViewed();
     });
+
+    function dataLoaded() {
+      if (!tourEnabled) {
+        return;
+      }
+
+      if ($routeParams.startTour) {
+        $timeout(function() {
+          $scope.startGuidedTour(resetRouteParams);
+        }, 500);
+      } else if (_.get(tourConfig, 'auto_launch')) {
+        // Check if this is the first time this user has visited the home page, if so launch the tour
+        var viewedHomePageKey = "openshift/viewedHomePage/" + $rootScope.user.metadata.name;
+        if (localStorage.getItem(viewedHomePageKey) !== 'true') {
+          $timeout(function() {
+            localStorage.setItem(viewedHomePageKey, 'true');
+            $scope.startGuidedTour();
+          }, 500);
+        }
+      }
+    }
+
+    function resetRouteParams() {
+      // Reset the route params in the next digest cycle
+      $timeout(function() {
+        $location.replace();
+        $location.search('startTour', null);
+      });
+    }
   });
