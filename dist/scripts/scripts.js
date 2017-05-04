@@ -13986,6 +13986,7 @@ restrict:"E",
 scope:{
 istag:"=model",
 selectDisabled:"=",
+selectRequired:"=",
 includeSharedNamespace:"=",
 allowCustomTag:"="
 },
