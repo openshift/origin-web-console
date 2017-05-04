@@ -40,7 +40,7 @@ angular.module("openshiftConsole")
       });
       if (unrecognizedResources.length) {
         var unrecognizedStrs = _.uniq(_.map(unrecognizedResources, function(resource) {
-          var apiVersion = _.get(resource, 'apiVersion', '<unknown-version>');
+          var apiVersion = _.get(resource, 'apiVersion', '<none>');
           return 'API version ' + apiVersion + ' for kind ' + humanizeKind(resource.kind);
         }));
         alerts.push({

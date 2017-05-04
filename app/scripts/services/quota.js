@@ -194,6 +194,10 @@ angular.module("openshiftConsole")
         var filteredClusterQuotas = filterQuotasForResource(resource, clusterQuotas);
 
         var rgv = APIService.objectToResourceGroupVersion(resource);
+        if (!rgv) {
+          return;
+        }
+
         var humanizedResource = APIService.kindToResource(resource.kind, true);
         var humanizedKind = humanizeKind(resource.kind);
         var quotaKey = "";
