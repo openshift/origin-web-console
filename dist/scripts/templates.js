@@ -7785,7 +7785,7 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "<div ng-show=\"showNameInput\" class=\"form-group\">\n" +
     "<label for=\"hpa-name\" class=\"required\">Autoscaler Name</label>\n" +
     "<span ng-class=\"{ 'has-error': form.name.$touched && form.name.$invalid }\">\n" +
-    "<input id=\"hpa-name\" class=\"form-control\" type=\"text\" name=\"name\" ng-model=\"autoscaling.name\" ng-required=\"showNameInput\" ng-readonly=\"nameReadOnly\" ng-pattern=\"nameValidation.pattern\" ng-maxlength=\"nameValidation.maxlength\" placeholder=\"my-hpa\" select-on-focus autocorrect=\"off\" autocapitalize=\"off\" spellcheck=\"false\" aria-describedby=\"hpa-name-help\">\n" +
+    "<input id=\"hpa-name\" class=\"form-control\" type=\"text\" name=\"name\" ng-model=\"autoscaling.name\" ng-required=\"showNameInput\" ng-readonly=\"nameReadOnly\" ng-pattern=\"nameValidation.pattern\" ng-maxlength=\"nameValidation.maxlength\" select-on-focus autocorrect=\"off\" autocapitalize=\"off\" spellcheck=\"false\" aria-describedby=\"hpa-name-help\">\n" +
     "</span>\n" +
     "<div>\n" +
     "<span id=\"hpa-name-help\" class=\"help-block\">\n" +
@@ -7809,7 +7809,7 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "<div class=\"form-group\">\n" +
     "<label>Min Pods</label>\n" +
     "<span ng-class=\"{ 'has-error': form.minReplicas.$dirty && form.minReplicas.$invalid }\">\n" +
-    "<input type=\"number\" class=\"form-control\" min=\"1\" name=\"minReplicas\" placeholder=\"1\" ng-model=\"autoscaling.minReplicas\" ng-pattern=\"/^\\d+$/\" aria-describedby=\"min-replicas-help\">\n" +
+    "<input type=\"number\" class=\"form-control\" min=\"1\" name=\"minReplicas\" ng-model=\"autoscaling.minReplicas\" ng-pattern=\"/^\\d+$/\" aria-describedby=\"min-replicas-help\">\n" +
     "</span>\n" +
     "<div id=\"min-replicas-help\" class=\"help-block\">\n" +
     "The lower limit for the number of pods that can be set by the autoscaler. If not specified, defaults to 1.\n" +
@@ -7829,7 +7829,7 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "<div class=\"form-group\">\n" +
     "<label class=\"required\">Max Pods</label>\n" +
     "<span ng-class=\"{ 'has-error': (form.minReplicas.$dirty || form.maxReplicas.$dirty) && form.maxReplicas.$invalid }\">\n" +
-    "<input type=\"number\" class=\"form-control\" name=\"maxReplicas\" placeholder=\"4\" required min=\"{{autoscaling.minReplicas || 1}}\" ng-model=\"autoscaling.maxReplicas\" ng-pattern=\"/^\\d+$/\" aria-describedby=\"max-replicas-help\">\n" +
+    "<input type=\"number\" class=\"form-control\" name=\"maxReplicas\" required min=\"{{autoscaling.minReplicas || 1}}\" ng-model=\"autoscaling.maxReplicas\" ng-pattern=\"/^\\d+$/\" aria-describedby=\"max-replicas-help\">\n" +
     "</span>\n" +
     "<div id=\"max-replicas-help\" class=\"help-block\">\n" +
     "The upper limit for the number of pods that can be set by the autoscaler.\n" +
@@ -7859,7 +7859,7 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "Target\n" +
     "</label>\n" +
     "<div class=\"input-group\" ng-class=\"{ 'has-error': form.targetCPU.$invalid && form.targetCPU.$touched }\">\n" +
-    "<input type=\"number\" class=\"form-control\" min=\"1\" name=\"targetCPU\" ng-attr-placeholder=\"{{defaultTargetCPUDisplayValue}}\" ng-model=\"targetCPUInput.percent\" ng-pattern=\"/^\\d+$/\" aria-describedby=\"target-cpu-help\">\n" +
+    "<input type=\"number\" class=\"form-control\" min=\"1\" name=\"targetCPU\" ng-model=\"targetCPUInput.percent\" ng-pattern=\"/^\\d+$/\" aria-describedby=\"target-cpu-help\">\n" +
     "<span class=\"input-group-addon\">%</span>\n" +
     "</div>\n" +
     "<div id=\"target-cpu-help\" class=\"help-block\">\n" +
