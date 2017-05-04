@@ -1,6 +1,14 @@
 <nav class="navbar navbar-pf-alt" role="navigation">
   <div class="navbar-header hidden-xs">
-    <a class="navbar-home" href="./"><span class="fa-fw pficon pficon-home" aria-hidden="true"></span> <span class="visible-xlg-inline-block"> Projects</span></a>
+    <a class="navbar-home" href="./"><span class="fa-fw pficon pficon-home" aria-hidden="true"></span>
+      <span class="visible-xlg-inline-block">
+        <span ng-if="'service_catalog_landing_page' | enableTechPreviewFeature">
+          Home
+        </span>
+        <span ng-if="!('service_catalog_landing_page' | enableTechPreviewFeature)">
+          Projects
+        </span>
+      </span></a>
   </div>
   <div class="nav navbar-project-menu">
     <!-- mobile nav menu -->
