@@ -297,7 +297,7 @@
                             </div>
                             <div ng-if="containerConfig.hasDeploymentTrigger">
                               <label class="required">Image Stream Tag</label>
-                              <istag-select model="containerConfig.triggerData.istag" select-disabled="disableInputs" include-shared-namespace="true"></istag-select>
+                              <istag-select model="containerConfig.triggerData.istag" select-required="true" select-disabled="disableInputs" include-shared-namespace="true"></istag-select>
 
                               <div class="checkbox form-group">
                                 <label>

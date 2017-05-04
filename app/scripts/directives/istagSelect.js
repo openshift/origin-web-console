@@ -26,6 +26,7 @@ angular.module("openshiftConsole")
       scope: {
         istag: '=model',
         selectDisabled: '=',
+        selectRequired: '=',
         includeSharedNamespace: '=',
         allowCustomTag: '='
       },

@@ -6462,7 +6462,7 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "</label>\n" +
     "</div>\n" +
     "<fieldset>\n" +
-    "<istag-select model=\"istag\" select-disabled=\"mode !== 'istag'\" include-shared-namespace=\"true\"></istag-select>\n" +
+    "<istag-select model=\"istag\" select-required=\"mode === 'istag'\" select-disabled=\"mode !== 'istag'\" include-shared-namespace=\"true\"></istag-select>\n" +
     "<div ng-if=\"mode == 'istag' && istag.namespace && istag.namespace !== 'openshift' && istag.namespace !== project\" class=\"alert alert-warning\">\n" +
     "<span class=\"pficon pficon-warning-triangle-o\" aria-hidden=\"true\"></span>\n" +
     "Service account <strong>default</strong> will need image pull authority to deploy images from <strong>{{istag.namespace}}</strong>. You can grant authority with the command:\n" +
@@ -6885,7 +6885,7 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "</div>\n" +
     "<div class=\"form-group\">\n" +
     "<label class=\"required\">Tag As</label>\n" +
-    "<istag-select model=\"istagHook\" allow-custom-tag=\"true\" select-disabled=\"view.isDisabled\"></istag-select>\n" +
+    "<istag-select model=\"istagHook\" allow-custom-tag=\"true\" select-required=\"true\" select-disabled=\"view.isDisabled\"></istag-select>\n" +
     "</div>\n" +
     "</div>\n" +
     "<div class=\"read-only-tag-image\" ng-if=\"hookParams.tagImages.length > 1\">\n" +
@@ -7299,7 +7299,7 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "<div class=\"row\">\n" +
     "<div class=\"form-group col-sm-4\">\n" +
     "<label class=\"sr-only\">Namespace</label>\n" +
-    "<ui-select required ng-model=\"istag.namespace\" ng-disabled=\"selectDisabled\" ng-change=\"istag.imageStream = null; istag.tagObject = null;\">\n" +
+    "<ui-select ng-required=\"selectRequired\" ng-model=\"istag.namespace\" ng-disabled=\"selectDisabled\" ng-change=\"istag.imageStream = null; istag.tagObject = null;\">\n" +
     "<ui-select-match placeholder=\"Namespace\">{{$select.selected}}</ui-select-match>\n" +
     "<ui-select-choices repeat=\"namespace in (namespaces | filter : $select.search)\">\n" +
     "<div ng-bind-html=\"namespace | highlight : $select.search\"></div>\n" +
@@ -7309,7 +7309,7 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "</div>\n" +
     "<div class=\"form-group col-sm-4\">\n" +
     "<label class=\"sr-only\">Image Stream</label>\n" +
-    "<ui-select required ng-model=\"istag.imageStream\" ng-disabled=\"!istag.namespace || selectDisabled\" ng-change=\"istag.tagObject = null\">\n" +
+    "<ui-select ng-required=\"selectRequired\" ng-model=\"istag.imageStream\" ng-disabled=\"!istag.namespace || selectDisabled\" ng-change=\"istag.tagObject = null\">\n" +
     "<ui-select-match placeholder=\"Image Stream\">{{$select.selected}}</ui-select-match>\n" +
     "<ui-select-choices repeat=\"imageStream in (isNamesByNamespace[istag.namespace] | filter : $select.search)\">\n" +
     "<div ng-bind-html=\"imageStream | highlight : $select.search\"></div>\n" +
@@ -7319,7 +7319,7 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "</div>\n" +
     "<div class=\"form-group col-sm-4\">\n" +
     "<label class=\"sr-only\">Tag</label>\n" +
-    "<ui-select required ng-model=\"istag.tagObject\" ng-disabled=\"!istag.imageStream || selectDisabled\">\n" +
+    "<ui-select ng-required=\"selectRequired\" ng-model=\"istag.tagObject\" ng-disabled=\"!istag.imageStream || selectDisabled\">\n" +
     "<ui-select-match placeholder=\"Tag\">{{$select.selected.tag}}</ui-select-match>\n" +
     "<ui-select-choices group-by=\"groupTags\" repeat=\"statusTag in (isByNamespace[istag.namespace][istag.imageStream].status.tags | filter : { tag: $select.search })\" refresh=\"getTags($select.search)\" refresh-delay=\"200\">\n" +
     "<div ng-bind-html=\"statusTag.tag | highlight : $select.search\"></div>\n" +
@@ -9377,7 +9377,7 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "</ui-select>\n" +
     "</div>\n" +
     "<div class=\"form-group\" ng-if=\"imageOptions.fromSource.type==='ImageStreamTag'\">\n" +
-    "<istag-select include-shared-namespace=\"true\" model=\"imageOptions.fromSource.imageStreamTag\"></istag-select>\n" +
+    "<istag-select include-shared-namespace=\"true\" select-required=\"true\" model=\"imageOptions.fromSource.imageStreamTag\"></istag-select>\n" +
     "</div>\n" +
     "<div ng-if=\"imageOptions.fromSource.type==='ImageStreamImage'\" class=\"form-group\">\n" +
     "<label for=\"imageSourceImage\">Image Stream Image</label>\n" +
@@ -9479,7 +9479,7 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "</ui-select>\n" +
     "</div>\n" +
     "<div class=\"form-group\" ng-if=\"imageOptions.from.type==='ImageStreamTag'\">\n" +
-    "<istag-select include-shared-namespace=\"true\" model=\"imageOptions.from.imageStreamTag\"></istag-select>\n" +
+    "<istag-select include-shared-namespace=\"true\" select-required=\"true\" model=\"imageOptions.from.imageStreamTag\"></istag-select>\n" +
     "</div>\n" +
     "<div ng-if=\"imageOptions.from.type==='DockerImage'\" class=\"form-group\">\n" +
     "<label for=\"FromTypeLink\">Docker Image Repository</label>\n" +
@@ -9521,7 +9521,7 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "</ui-select>\n" +
     "</div>\n" +
     "<div class=\"form-group\" ng-if=\"imageOptions.to.type==='ImageStreamTag'\">\n" +
-    "<istag-select model=\"imageOptions.to.imageStreamTag\" allow-custom-tag=\"true\"></istag-select>\n" +
+    "<istag-select model=\"imageOptions.to.imageStreamTag\" select-required=\"true\" allow-custom-tag=\"true\"></istag-select>\n" +
     "</div>\n" +
     "<div ng-if=\"imageOptions.to.type==='DockerImage'\" class=\"form-group\">\n" +
     "<label for=\"pushToLink\">Docker Image Repository</label>\n" +
@@ -9965,7 +9965,7 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "</div>\n" +
     "<div ng-if=\"containerConfig.hasDeploymentTrigger\">\n" +
     "<label class=\"required\">Image Stream Tag</label>\n" +
-    "<istag-select model=\"containerConfig.triggerData.istag\" select-disabled=\"disableInputs\" include-shared-namespace=\"true\"></istag-select>\n" +
+    "<istag-select model=\"containerConfig.triggerData.istag\" select-required=\"true\" select-disabled=\"disableInputs\" include-shared-namespace=\"true\"></istag-select>\n" +
     "<div class=\"checkbox form-group\">\n" +
     "<label>\n" +
     "<input type=\"checkbox\" ng-model=\"containerConfig.triggerData.automatic\">\n" +

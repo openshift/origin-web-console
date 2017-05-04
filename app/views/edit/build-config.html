@@ -167,6 +167,7 @@
 
                             <div class="form-group" ng-if="imageOptions.fromSource.type==='ImageStreamTag'" >
                               <istag-select include-shared-namespace="true"
+                                            select-required="true"
                                             model="imageOptions.fromSource.imageStreamTag"></istag-select>
                             </div>
 
@@ -315,6 +316,7 @@
 
                           <div class="form-group" ng-if="imageOptions.from.type==='ImageStreamTag'">
                             <istag-select include-shared-namespace="true"
+                                          select-required="true"
                                           model="imageOptions.from.imageStreamTag"></istag-select>
                           </div>
 
@@ -384,6 +386,7 @@
                           </div>
                           <div class="form-group" ng-if="imageOptions.to.type==='ImageStreamTag'">
                             <istag-select model="imageOptions.to.imageStreamTag"
+                                          select-required="true"
                                           allow-custom-tag="true"></istag-select>
                           </div>
 
