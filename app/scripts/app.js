@@ -60,7 +60,8 @@ angular
     if (_.get(window, 'OPENSHIFT_CONSTANTS.ENABLE_TECH_PREVIEW_FEATURE.service_catalog_landing_page')) {
       landingPageRoute = {
         templateUrl: 'views/landing-page.html',
-        controller: 'LandingPageController'
+        controller: 'LandingPageController',
+        reloadOnSearch: false
       };
       $routeProvider.when('/projects', projectsPageRoute);
     } else {

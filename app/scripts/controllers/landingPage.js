@@ -24,8 +24,8 @@ angular.module('openshiftConsole')
     };
 
     if (tourEnabled) {
-      $scope.startGuidedTour = function (onDone) {
-        GuidedTourService.startTour(tourConfig.steps, onDone);
+      $scope.startGuidedTour = function () {
+        GuidedTourService.startTour(tourConfig.steps);
       };
     }
 
@@ -70,7 +70,9 @@ angular.module('openshiftConsole')
 
       if ($routeParams.startTour) {
         $timeout(function() {
-          $scope.startGuidedTour(resetRouteParams);
+          $location.replace();
+          $location.search('startTour', null);
+          $scope.startGuidedTour();
         }, 500);
       } else if (_.get(tourConfig, 'auto_launch')) {
         // Check if this is the first time this user has visited the home page, if so launch the tour
@@ -84,11 +86,14 @@ angular.module('openshiftConsole')
       }
     }
 
-    function resetRouteParams() {
-      // Reset the route params in the next digest cycle
-      $timeout(function() {
-        $location.replace();
-        $location.search('startTour', null);
+    if (tourEnabled) {
+      $scope.$on('$locationChangeStart', function(event) {
+        if ($location.search().startTour) {
+          $scope.startGuidedTour();
+
+          // Prevent the URL change in the location bar
+          event.preventDefault();
+        }
       });
     }
   });
