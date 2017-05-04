@@ -127,7 +127,7 @@ angular.module('openshiftConsole')
           })
           .change(function() {
             var val = $(this).val();
-            var newURL = (val === "") ? "/" : projectOverviewURLFilter(val);
+            var newURL = (val === "") ? "projects" : projectOverviewURLFilter(val);
             $scope.$apply(function() {
               $location.url(newURL);
             });

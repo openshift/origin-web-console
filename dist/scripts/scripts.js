@@ -11200,7 +11200,7 @@ f = a.by("metadata.name"), k();
 iconBase:"fa",
 tickIcon:"fa-check"
 }).change(function() {
-var c = $(this).val(), d = "" === c ? "/" :e(c);
+var c = $(this).val(), d = "" === c ? "projects" :e(c);
 a.$apply(function() {
 b.url(d);
 });
