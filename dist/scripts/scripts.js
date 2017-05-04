@@ -3994,7 +3994,9 @@ i && c.push(i);
 }, r = function(b, c, d) {
 var e = [];
 return b && c ? (_.each(b, function(b) {
-var h = k(b, c), i = k(b, d), j = a.objectToResourceGroupVersion(b), l = a.kindToResource(b.kind, !0), n = m(b.kind), o = "";
+var h = k(b, c), i = k(b, d), j = a.objectToResourceGroupVersion(b);
+if (j) {
+var l = a.kindToResource(b.kind, !0), n = m(b.kind), o = "";
 j.group && (o = j.group + "/"), o += j.resource;
 var p = function(a) {
 var c = a.status.total || a.status;
@@ -4010,6 +4012,7 @@ target:"_blank"
 }), e = e.concat(q(b, a));
 };
 _.each(h, p), _.each(i, p);
+}
 }), e) :e;
 }, s = function(a, b) {
 var f, g, h = [];
@@ -4061,7 +4064,7 @@ var f = _.get(b, "roleRef.name");
 }
 }), g.length) {
 var l = _.uniq(_.map(g, function(a) {
-var b = _.get(a, "apiVersion", "<unknown-version>");
+var b = _.get(a, "apiVersion", "<none>");
 return "API version " + b + " for kind " + d(a.kind);
 }));
 f.push({
