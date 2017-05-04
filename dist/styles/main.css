@@ -5340,19 +5340,19 @@ td.visible-print,th.visible-print{display:table-cell!important}
 @media print{.visible-print-inline-block{display:inline-block!important}
 .hidden-print{display:none!important}
 }
-::-webkit-scrollbar-corner{background:0 0}
 ::-webkit-scrollbar{height:10px;overflow:visible;width:15px}
 .events-sidebar .right-content .event .event-details,.events-sidebar .right-content .event .event-details .event-message,.events-sidebar .right-content .event .event-details .event-object,.events-sidebar .right-content .event .event-details .event-reason{overflow:hidden;white-space:nowrap;text-overflow:ellipsis}
-::-webkit-scrollbar-thumb{background-color:rgba(0,0,0,.08);background-clip:padding-box;border:solid transparent;border-width:1px;min-height:28px;max-height:60px;padding:100px 0 0;-webkit-box-shadow:inset 1px 1px 0 rgba(0,0,0,.1),inset 0 -1px 0 rgba(0,0,0,.07);box-shadow:inset 1px 1px 0 rgba(0,0,0,.1),inset 0 -1px 0 rgba(0,0,0,.07)}
+::-webkit-scrollbar-corner{background:0 0}
+::-webkit-scrollbar-thumb{background-clip:padding-box;background-color:rgba(0,0,0,.08);border:solid transparent;border-width:1px;box-shadow:inset 1px 1px 0 rgba(0,0,0,.1),inset 0 -1px 0 rgba(0,0,0,.07);max-height:60px;min-height:28px;padding:100px 0 0}
 ::-webkit-scrollbar-thumb:active,::-webkit-scrollbar-thumb:hover{background-color:rgba(0,0,0,.18)}
 ::-webkit-scrollbar-track{background-clip:padding-box;background-color:rgba(0,0,0,.03)}
-.log-view.log-fixed-height ::-webkit-scrollbar-thumb,.navbar-project-menu ::-webkit-scrollbar-thumb,landing-page ::-webkit-scrollbar-thumb{background-color:rgba(255,255,255,.25);-webkit-box-shadow:inset 1px 1px 0 rgba(255,255,255,.1),inset 0 -1px 0 rgba(255,255,255,.07);box-shadow:inset 1px 1px 0 rgba(255,255,255,.1),inset 0 -1px 0 rgba(255,255,255,.07)}
-.log-view.log-fixed-height ::-webkit-scrollbar-thumb:active,.log-view.log-fixed-height ::-webkit-scrollbar-thumb:hover,.navbar-project-menu ::-webkit-scrollbar-thumb:active,.navbar-project-menu ::-webkit-scrollbar-thumb:hover,landing-page ::-webkit-scrollbar-thumb:active,landing-page ::-webkit-scrollbar-thumb:hover{background-color:rgba(255,255,255,.35)}
-.log-view.log-fixed-height ::-webkit-scrollbar-track,.navbar-project-menu ::-webkit-scrollbar-track,landing-page ::-webkit-scrollbar-track{background-color:#050505}
+.landing-side-bar::-webkit-scrollbar-thumb,.landing::-webkit-scrollbar-thumb,.log-view.log-fixed-height .log-view-output::-webkit-scrollbar-thumb,.navbar-project-menu .dropdown-menu::-webkit-scrollbar-thumb{background-color:rgba(255,255,255,.25);box-shadow:inset 1px 1px 0 rgba(255,255,255,.1),inset 0 -1px 0 rgba(255,255,255,.07)}
+.landing-side-bar::-webkit-scrollbar-thumb:active,.landing-side-bar::-webkit-scrollbar-thumb:hover,.landing::-webkit-scrollbar-thumb:active,.landing::-webkit-scrollbar-thumb:hover,.log-view.log-fixed-height .log-view-output::-webkit-scrollbar-thumb:active,.log-view.log-fixed-height .log-view-output::-webkit-scrollbar-thumb:hover,.navbar-project-menu .dropdown-menu::-webkit-scrollbar-thumb:active,.navbar-project-menu .dropdown-menu::-webkit-scrollbar-thumb:hover{background-color:rgba(255,255,255,.35)}
 .landing::-webkit-scrollbar-track{background-color:#042e43}
 .landing-side-bar::-webkit-scrollbar-track{background-color:#21272e}
-.log-view.log-fixed-height ::-webkit-scrollbar{width:17px}
-.log-view.log-fixed-height ::-webkit-scrollbar-track{background-color:rgba(255,255,255,.1)}
+.log-view.log-fixed-height .log-view-output::-webkit-scrollbar{width:17px}
+.log-view.log-fixed-height .log-view-output::-webkit-scrollbar-track{background-color:rgba(255,255,255,.1)}
+.navbar-project-menu ::-webkit-scrollbar-track{background-color:#050505}
 .osc-secrets-form .advanced-secrets .help-blocks,.osc-secrets-form .advanced-secrets .input-labels,.osc-secrets-form .basic-secrets .help-blocks,.osc-secrets-form .basic-secrets .input-labels{display:table;padding-right:30px;position:relative;width:100%}
 .osc-secrets-form .advanced-secrets .help-blocks .help-block,.osc-secrets-form .advanced-secrets .help-blocks .input-label,.osc-secrets-form .advanced-secrets .input-labels .help-block,.osc-secrets-form .advanced-secrets .input-labels .input-label,.osc-secrets-form .basic-secrets .help-blocks .help-block,.osc-secrets-form .basic-secrets .help-blocks .input-label,.osc-secrets-form .basic-secrets .input-labels .help-block,.osc-secrets-form .basic-secrets .input-labels .input-label{width:100%;float:left;padding-right:5px}
 .osc-secrets-form .advanced-secrets .secret-row,.osc-secrets-form .basic-secrets .secret-row{display:table;padding-right:30px;position:relative;width:100%;margin-bottom:15px}

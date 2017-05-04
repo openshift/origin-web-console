@@ -2,49 +2,47 @@
 // Scrollbars for main flex containers
 // ------------------------------------------------------
 
-::-webkit-scrollbar-corner {
-  background: transparent;
-}
 ::-webkit-scrollbar {
   height: 10px;
   overflow: visible;
   width: @scrollbar-width;
 }
+
+::-webkit-scrollbar-corner {
+  background: transparent;
+}
+
 ::-webkit-scrollbar-thumb {
-  background-color: @scrollbar-thumb;
   background-clip: padding-box;
+  background-color: @scrollbar-thumb;
   border: solid transparent;
   border-width: 1px 1px 1px 1px;
-  min-height: 28px;
-  max-height: 60px;
-  padding: 100px 0 0;
-  -webkit-box-shadow: inset 1px 1px 0 rgba(0,0,0,.1),inset 0 -1px 0 rgba(0,0,0,.07);
   box-shadow: inset 1px 1px 0 rgba(0,0,0,.1),inset 0 -1px 0 rgba(0,0,0,.07);
+  max-height: 60px;
+  min-height: 28px;
+  padding: 100px 0 0;
+  &:active,
+  &:hover {
+    background-color: @scrollbar-thumb-hover;
+  }
 }
-::-webkit-scrollbar-thumb:hover,
-::-webkit-scrollbar-thumb:active {
-  background-color: @scrollbar-thumb-hover;
-}
+
 ::-webkit-scrollbar-track {
   background-clip:padding-box;
   background-color: @scrollbar-track;
-  // box-shadow: inset 1px 0 0 rgba(0,0,0,.1);
 }
 
-landing-page,
-.log-view.log-fixed-height,
-.navbar-project-menu {
-  ::-webkit-scrollbar-thumb {
+.landing,
+.landing-side-bar,
+.log-view.log-fixed-height .log-view-output,
+.navbar-project-menu .dropdown-menu {
+  &::-webkit-scrollbar-thumb {
     background-color: @scrollbar-thumb-inverse;
-    -webkit-box-shadow: inset 1px 1px 0 rgba(255,255,255,.1),inset 0 -1px 0 rgba(255,255,255,.07);
     box-shadow: inset 1px 1px 0 rgba(255,255,255,.1),inset 0 -1px 0 rgba(255,255,255,.07);
-  }
-  ::-webkit-scrollbar-thumb:hover,
-  ::-webkit-scrollbar-thumb:active {
-    background-color: @scrollbar-thumb-hover-inverse;
-  }
-  ::-webkit-scrollbar-track {
-    background-color: @scrollbar-track-inverse;
+    &:active,
+    &:hover {
+      background-color: @scrollbar-thumb-hover-inverse;
+    }
   }
 }
 
@@ -56,11 +54,15 @@ landing-page,
   background-color: @scrollbar-track-landing-side-bar;
 }
 
-.log-view.log-fixed-height {
-  ::-webkit-scrollbar {
+.log-view.log-fixed-height .log-view-output {
+  &::-webkit-scrollbar {
     width: @scrollbar-width-log-viewer;
   }
-  ::-webkit-scrollbar-track {
+  &::-webkit-scrollbar-track {
     background-color: @scrollbar-track-inverse-alt;
   }
+}
+
+.navbar-project-menu ::-webkit-scrollbar-track {
+  background-color: @scrollbar-track-inverse;
 }
