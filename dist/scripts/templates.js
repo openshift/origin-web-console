@@ -7222,7 +7222,15 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
   $templateCache.put('views/directives/header/project-header.html',
     "<nav class=\"navbar navbar-pf-alt\" role=\"navigation\">\n" +
     "<div class=\"navbar-header hidden-xs\">\n" +
-    "<a class=\"navbar-home\" href=\"./\"><span class=\"fa-fw pficon pficon-home\" aria-hidden=\"true\"></span> <span class=\"visible-xlg-inline-block\"> Projects</span></a>\n" +
+    "<a class=\"navbar-home\" href=\"./\"><span class=\"fa-fw pficon pficon-home\" aria-hidden=\"true\"></span>\n" +
+    "<span class=\"visible-xlg-inline-block\">\n" +
+    "<span ng-if=\"'service_catalog_landing_page' | enableTechPreviewFeature\">\n" +
+    "Home\n" +
+    "</span>\n" +
+    "<span ng-if=\"!('service_catalog_landing_page' | enableTechPreviewFeature)\">\n" +
+    "Projects\n" +
+    "</span>\n" +
+    "</span></a>\n" +
     "</div>\n" +
     "<div class=\"nav navbar-project-menu\">\n" +
     "\n" +
