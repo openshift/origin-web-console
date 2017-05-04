@@ -13,7 +13,6 @@
           ng-readonly="nameReadOnly"
           ng-pattern="nameValidation.pattern"
           ng-maxlength="nameValidation.maxlength"
-          placeholder="my-hpa"
           select-on-focus
           autocorrect="off"
           autocapitalize="off"
@@ -46,7 +45,6 @@
              class="form-control"
              min="1"
              name="minReplicas"
-             placeholder="1"
              ng-model="autoscaling.minReplicas"
              ng-pattern="/^\d+$/"
              aria-describedby="min-replicas-help">
@@ -73,7 +71,6 @@
       <input type="number"
              class="form-control"
              name="maxReplicas"
-             placeholder="4"
              required
              min="{{autoscaling.minReplicas || 1}}"
              ng-model="autoscaling.maxReplicas"
@@ -112,7 +109,6 @@
              class="form-control"
              min="1"
              name="targetCPU"
-             ng-attr-placeholder="{{defaultTargetCPUDisplayValue}}"
              ng-model="targetCPUInput.percent"
              ng-pattern="/^\d+$/"
              aria-describedby="target-cpu-help">
