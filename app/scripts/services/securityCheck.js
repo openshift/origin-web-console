@@ -5,6 +5,7 @@ angular.module("openshiftConsole")
     var humanizeKind = $filter('humanizeKind');
     var getSecurityAlerts = function(resources, project) {
       var alerts = [];
+      var unrecognizedResources = [];
       var clusterScopedResources = [];
       var roleBindingResources = [];
       var roleResources = [];
@@ -16,6 +17,10 @@ angular.module("openshiftConsole")
         }
         var rgv = APIService.objectToResourceGroupVersion(resource);
         var apiInfo = APIService.apiInfo(rgv);
+        if (!apiInfo) {
+          unrecognizedResources.push(resource);
+          return;
+        }
         if (!apiInfo.namespaced) {
           clusterScopedResources.push(resource);
         }
@@ -33,6 +38,17 @@ angular.module("openshiftConsole")
           notWhitelistedResources.push(resource);
         }
       });
+      if (unrecognizedResources.length) {
+        var unrecognizedStrs = _.uniq(_.map(unrecognizedResources, function(resource) {
+          var apiVersion = _.get(resource, 'apiVersion', '<unknown-version>');
+          return 'API version ' + apiVersion + ' for kind ' + humanizeKind(resource.kind);
+        }));
+        alerts.push({
+          type: 'warning',
+          message: "Some resources will not be created.",
+          details: "The following resource versions are not supported by the server: " + unrecognizedStrs.join(", ")
+        });
+      }
       if (clusterScopedResources.length) {
         var clusterStrs = _.uniq(_.map(clusterScopedResources, function(resource) {
           return humanizeKind(resource.kind);
