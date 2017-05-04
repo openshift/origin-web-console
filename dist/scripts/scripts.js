@@ -541,52 +541,50 @@ i.applications = _.sortByAll(a, [ "metadata.name", "kind" ]);
 }
 };
 i.$onInit = function() {
-i.steps = [], "Instance" === i.target.kind ? i.steps.push({
-id:"applications",
-label:"Applications",
-view:"views/directives/bind-service/select-application.html"
-}) :i.steps.push({
-id:"services",
-label:"Services",
-view:"views/directives/bind-service/select-service.html"
-}), i.steps.push({
+i.serviceSelection = {};
+var c = "Instance" === i.target.kind ? "applications" :"services", j = "Instance" === i.target.kind ? "Applications" :"Services";
+i.steps = [ {
+id:c,
+label:j,
+view:"views/directives/bind-service/bind-service-form.html"
+}, {
 label:"Results",
 id:"results",
 view:"views/directives/bind-service/results.html"
-});
-var c = {
+} ];
+var n = {
 namespace:_.get(i.target, "metadata.namespace")
 };
 b.list({
 group:"servicecatalog.k8s.io",
 resource:"serviceclasses"
 }, {}).then(function(a) {
-i.serviceClasses = a.by("metadata.name"), l();
-}), "Instance" === i.target.kind ? (i.shouldBindToApp = "true", i.serviceToBind = i.target.metadata.name, b.list("deploymentconfigs", c).then(function(a) {
+i.serviceClasses = a.by("metadata.name"), "Instance" === i.target.kind && (i.serviceClass = i.serviceClasses[i.target.spec.serviceClassName], i.serviceClassName = i.target.spec.serviceClassName), l();
+}), "Instance" === i.target.kind ? (i.shouldBindToApp = "true", i.appToBind = null, i.serviceToBind = i.target.metadata.name, b.list("deploymentconfigs", n).then(function(a) {
 d = _.toArray(a.by("metadata.name")), m();
-}), b.list("replicationcontrollers", c).then(function(b) {
+}), b.list("replicationcontrollers", n).then(function(b) {
 f = _.reject(b.by("metadata.name"), a("hasDeploymentConfig")), m();
 }), b.list({
 group:"extensions",
 resource:"deployments"
-}, c).then(function(a) {
+}, n).then(function(a) {
 e = _.toArray(a.by("metadata.name")), m();
 }), b.list({
 group:"extensions",
 resource:"replicasets"
-}, c).then(function(b) {
+}, n).then(function(b) {
 g = _.reject(b.by("metadata.name"), a("hasDeployment")), m();
 }), b.list({
 group:"apps",
 resource:"statefulsets"
-}, c).then(function(a) {
+}, n).then(function(a) {
 h = _.toArray(a.by("metadata.name")), m();
-})) :b.list({
+})) :(b.list({
 group:"servicecatalog.k8s.io",
 resource:"instances"
-}, c).then(function(a) {
+}, n).then(function(a) {
 i.serviceInstances = a.by("metadata.name"), i.serviceToBind || k(), l();
-}), i.gotoStep(i.steps[0]);
+}), i.appToBind = i.target), i.gotoStep(i.steps[0]);
 };
 var n = a("humanizeKind");
 i.groupByKind = function(a) {
@@ -15010,19 +15008,7 @@ var c = _.get(a, "state.terminated");
 c && (b && !moment(c.finishedAt).isAfter(b) || (b = c.finishedAt));
 }), b;
 };
-}).filter("statusCondition", function() {
-return function(a, b) {
-return a ? _.find(_.get(a, "status.conditions"), {
-type:b
-}) :null;
-};
-}).filter("isServiceInstanceReady", [ "statusConditionFilter", function(a) {
-return function(b) {
-return "True" === _.get(a(b, "Ready"), "status");
-};
-} ]).filter("isBindingReady", [ "isServiceInstanceReadyFilter", function(a) {
-return a;
-} ]).filter("routeIngressCondition", function() {
+}).filter("routeIngressCondition", function() {
 return function(a, b) {
 return a ? _.find(a.conditions, {
 type:b

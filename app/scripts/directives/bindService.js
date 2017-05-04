@@ -71,27 +71,23 @@ function BindService($filter,
   };
 
   ctrl.$onInit = function() {
-    ctrl.steps = [];
-    if (ctrl.target.kind === 'Instance') {
-      ctrl.steps.push({
-        id: 'applications',
-        label: 'Applications',
-        view: 'views/directives/bind-service/select-application.html'
-      });
-    }
-    else {
-      ctrl.steps.push({
-        id: 'services',
-        label: 'Services',
-        view: 'views/directives/bind-service/select-service.html'
-      });
-    }
-    ctrl.steps.push({
-      label: 'Results',
-      id: 'results',
-      view: 'views/directives/bind-service/results.html'
-    });
+    ctrl.serviceSelection = {};
+    var formStepId = (ctrl.target.kind === 'Instance') ? 'applications' : 'services';
+    var formStepLabel = (ctrl.target.kind === 'Instance') ? 'Applications' : 'Services';
 
+
+    ctrl.steps = [
+      {
+        id: formStepId,
+        label: formStepLabel,
+        view: 'views/directives/bind-service/bind-service-form.html'
+      },
+      {
+        label: 'Results',
+        id: 'results',
+        view: 'views/directives/bind-service/results.html'
+      }
+    ];
 
     var context = {
       namespace: _.get(ctrl.target, 'metadata.namespace')
@@ -102,12 +98,17 @@ function BindService($filter,
       resource: 'serviceclasses'
     }, {}).then(function(serviceClasses) {
       ctrl.serviceClasses = serviceClasses.by('metadata.name');
+      if (ctrl.target.kind === 'Instance') {
+        ctrl.serviceClass = ctrl.serviceClasses[ctrl.target.spec.serviceClassName];
+        ctrl.serviceClassName = ctrl.target.spec.serviceClassName;
+      }
       sortServiceInstances();
     });
 
     // TODO is it ever realistically possible for target to not be defined at this point
     if (ctrl.target.kind === 'Instance') {
       ctrl.shouldBindToApp = "true";
+      ctrl.appToBind = null;
       ctrl.serviceToBind = ctrl.target.metadata.name;
       // Load all the "application" types
       DataService.list('deploymentconfigs', context).then(function(deploymentConfigData) {
@@ -151,6 +152,7 @@ function BindService($filter,
         }
         sortServiceInstances();
       });
+      ctrl.appToBind = ctrl.target;
     }
     // TODO: handle not having any service instances when binding app to service
     ctrl.gotoStep(ctrl.steps[0]);

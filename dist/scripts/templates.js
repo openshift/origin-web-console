@@ -6033,105 +6033,21 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
   );
 
 
-  $templateCache.put('views/directives/bind-service/results.html',
-    "<div>\n" +
-    "<div ng-if=\"!ctrl.error\">\n" +
-    "<div ng-if=\"!(ctrl.binding | isBindingReady)\" class=\"text-center\">\n" +
-    "<h3 class=\"mar-top-none\">\n" +
-    "<span class=\"fa fa-spinner fa-pulse fa-3x fa-fw\" aria-hidden=\"true\"></span>\n" +
-    "<span class=\"sr-only\">Pending</span>\n" +
-    "<div class=\"mar-top-lg\">The binding was created but is not ready yet.</div>\n" +
-    "</h3>\n" +
+  $templateCache.put('views/directives/bind-service/bind-service-form.html',
+    "<div ng-if=\"ctrl.target.kind !== 'Instance'\">\n" +
+    "<bind-application-form application-name=\"ctrl.target.metadata.name\" form-name=\"ctrl.serviceSelection\" service-classes=\"ctrl.serviceClasses\" ordered-service-instances=\"ctrl.orderedServiceInstances\" service-to-bind=\"ctrl.serviceToBind\">\n" +
+    "</bind-application-form>\n" +
     "</div>\n" +
-    "<div ng-if=\"(ctrl.binding | isBindingReady)\">\n" +
-    "<h3 class=\"mar-top-none\">\n" +
-    "<span class=\"pficon pficon-ok\"></span>\n" +
-    "<strong>{{ctrl.serviceToBind}}</strong> has been bound to <strong>{{ctrl.target.metadata.name}}</strong> successfully\n" +
-    "</h3>\n" +
-    "<div class=\"sub-title\">\n" +
-    "The binding operation created the secret\n" +
-    "<a ng-if=\"'secrets' | canI : 'list'\" ng-href=\"{{ctrl.generatedSecretName | navigateResourceURL : 'Secret' : ctrl.target.metadata.namespace}}\">{{ctrl.generatedSecretName}}</a>\n" +
-    "<span ng-if=\"!('secrets' | canI : 'list')\">{{ctrl.generatedSecretName}}</span>\n" +
-    "that you may need to reference in your application.\n" +
-    "<span ng-if=\"'pod_presets' | enableTechPreviewFeature\">Its data will be available to your application as environment variables.</span>\n" +
-    "</div>\n" +
-    "<div class=\"alert alert-info mar-top-xxl mar-bottom-xl\">\n" +
-    "<span class=\"pficon pficon-info\" aria-hidden=\"true\"></span>\n" +
-    "<span class=\"sr-only\">Info</span>\n" +
-    "The binding secret will only be available to new pods. You will need to redeploy your application.\n" +
-    "</div>\n" +
-    "</div>\n" +
-    "</div>\n" +
-    "<div ng-if=\"ctrl.error\">\n" +
-    "<div class=\"title\">Binding Failed <span class=\"fa fa-times text-danger\"></span></div>\n" +
-    "<div class=\"sub-title\">\n" +
-    "<span ng-if=\"ctrl.error.data.message\">\n" +
-    "{{ctrl.error.data.message | upperFirst}}\n" +
-    "</span>\n" +
-    "<span ng-if=\"!ctrl.error.data.message\">\n" +
-    "An error occurred creating the binding.\n" +
-    "</span>\n" +
-    "</div>\n" +
-    "</div>\n" +
+    "<div ng-if=\"ctrl.target.kind === 'Instance'\">\n" +
+    "<bind-service-form selected-project=\"ctrl.project\" service-class=\"ctrl.serviceClass\" service-class-name=\"ctrl.serviceClassName\" form-name=\"ctrl.serviceSelection\" applications=\"ctrl.applications\" app-to-bind=\"ctrl.appToBind\" should-bind-to-app=\"ctrl.shouldBindToApp\" group-by-kind=\"ctrl.groupByKind\">\n" +
+    "</bind-service-form>\n" +
     "</div>"
   );
 
 
-  $templateCache.put('views/directives/bind-service/select-application.html',
-    "<h3 class=\"mar-top-none\">Select an application to bind to service <strong>{{ctrl.serviceClasses[ctrl.target.spec.serviceClassName].osbMetadata.displayName || ctrl.target.spec.serviceClassName}}</strong></h3>\n" +
-    "Binding to a provisioned service will create a secret containing the information necessary for your application to use the service.\n" +
-    "<form name=\"ctrl.serviceSelection\" class=\"mar-bottom-lg\">\n" +
-    "<fieldset ng-disabled=\"ctrl.isDisabled\">\n" +
-    "<div class=\"radio\">\n" +
-    "<label>\n" +
-    "<input type=\"radio\" ng-model=\"ctrl.shouldBindToApp\" value=\"true\">\n" +
-    "Bind to an application\n" +
-    "</label>\n" +
-    "<div class=\"pad-left-xl mar-bottom-md mar-top-sm\">\n" +
-    "<ui-select ng-model=\"ctrl.appToBind\" ng-disabled=\"ctrl.shouldBindToApp !== 'true'\" ng-required=\"ctrl.shouldBindToApp === 'true'\">\n" +
-    "<ui-select-match placeholder=\"Select an application\">\n" +
-    "<span>\n" +
-    "{{$select.selected.metadata.name}}\n" +
-    "<small class=\"text-muted\">&ndash; {{$select.selected.kind | humanizeKind : true}}</small>\n" +
-    "</span>\n" +
-    "</ui-select-match>\n" +
-    "<ui-select-choices repeat=\"application in (ctrl.applications) | filter : { metadata: { name: $select.search } } track by (application | uid)\" group-by=\"ctrl.groupByKind\">\n" +
-    "<span ng-bind-html=\"application.metadata.name | highlight : $select.search\"></span>\n" +
-    "</ui-select-choices>\n" +
-    "</ui-select>\n" +
-    "</div>\n" +
-    "<label>\n" +
-    "<input type=\"radio\" ng-model=\"ctrl.shouldBindToApp\" value=\"false\">\n" +
-    "Create a secret in my project\n" +
-    "<div class=\"help-block\">\n" +
-    "You can reference this secret later from any application either as environment variables or configuration files mounted as volumes.\n" +
-    "</div>\n" +
-    "</label>\n" +
-    "</div>\n" +
-    "</fieldset>\n" +
-    "</form>"
-  );
-
-
-  $templateCache.put('views/directives/bind-service/select-service.html',
-    " <h3 class=\"mar-top-none\">Select a service to bind to <strong>{{ctrl.target.metadata.name}}</strong></h3>\n" +
-    "Binding to a provisioned service will create a secret containing the information necessary for your application to use the service.\n" +
-    "<form name=\"serviceSelection\" class=\"mar-bottom-lg\">\n" +
-    "<fieldset ng-disabled=\"ctrl.isDisabled\">\n" +
-    "<div class=\"radio\" ng-repeat=\"serviceInstance in ctrl.orderedServiceInstances\">\n" +
-    "<label>\n" +
-    "<input type=\"radio\" ng-model=\"ctrl.serviceToBind\" value=\"{{serviceInstance.metadata.name}}\">\n" +
-    "{{ctrl.serviceClasses[serviceInstance.spec.serviceClassName].osbMetadata.displayName || serviceInstance.spec.serviceClassName}}\n" +
-    "<span ng-if=\"!(serviceInstance | isServiceInstanceReady)\" class=\"mar-left-sm\">\n" +
-    "<span class=\"pficon pficon-info\" data-content=\"This service is not yet ready. If you bind to it, then the binding will be pending until the service is ready.\" data-toggle=\"popover\" data-trigger=\"hover\"></span>\n" +
-    "</span>\n" +
-    "<div class=\"help-block mar-top-none\">\n" +
-    "{{serviceInstance.metadata.name}}\n" +
-    "</div>\n" +
-    "</label>\n" +
-    "</div>\n" +
-    "</fieldset>\n" +
-    "</form>"
+  $templateCache.put('views/directives/bind-service/results.html',
+    "<bind-results error=\"ctrl.error\" binding=\"ctrl.binding\" service-to-bind=\"ctrl.serviceToBind\" application-to-bind=\"ctrl.appToBind.metadata.name\" generated-secret-name=\"ctrl.generatedSecretName\" show-pod-presets=\"'pod_presets' | enableTechPreviewFeature\" secret-href=\"ctrl.generatedSecretName | navigateResourceURL : 'Secret' : ctrl.target.metadata.namespace\">\n" +
+    "</bind-results>"
   );
 
 
