@@ -4046,53 +4046,65 @@ isAnyQuotaExceeded:t
 };
 } ]), angular.module("openshiftConsole").factory("SecurityCheckService", [ "APIService", "$filter", "Constants", function(a, b, c) {
 var d = b("humanizeKind"), e = function(b, e) {
-var f = [], g = [], h = [], i = [], j = [];
+var f = [], g = [], h = [], i = [], j = [], k = [];
 if (_.each(b, function(b) {
 if (_.get(b, "kind")) {
 var d = a.objectToResourceGroupVersion(b), e = a.apiInfo(d);
+if (!e) return void g.push(b);
 if (e.namespaced) if ("rolebindings" !== d.resource || "" !== d.group && "rbac.authorization.k8s.io" !== d.group) "roles" !== d.resource || "" !== d.group && "rbac.authorization.k8s.io" !== d.group ? _.find(c.SECURITY_CHECK_WHITELIST, {
 resource:d.resource,
 group:d.group
-}) || j.push(b) :i.push(b); else {
+}) || k.push(b) :j.push(b); else {
 var f = _.get(b, "roleRef.name");
-"view" !== f && "system:image-puller" !== f && h.push(b);
-} else g.push(b);
+"view" !== f && "system:image-puller" !== f && i.push(b);
+} else h.push(b);
 }
 }), g.length) {
-var k = _.uniq(_.map(g, function(a) {
+var l = _.uniq(_.map(g, function(a) {
+var b = _.get(a, "apiVersion", "<unknown-version>");
+return "API version " + b + " for kind " + d(a.kind);
+}));
+f.push({
+type:"warning",
+message:"Some resources will not be created.",
+details:"The following resource versions are not supported by the server: " + l.join(", ")
+});
+}
+if (h.length) {
+var m = _.uniq(_.map(h, function(a) {
 return d(a.kind);
 }));
 f.push({
 type:"warning",
 message:"This will create resources outside of the project, which might impact all users of the cluster.",
-details:"Typically only cluster administrators can create these resources. The cluster-level resources being created are: " + k.join(", ")
+details:"Typically only cluster administrators can create these resources. The cluster-level resources being created are: " + m.join(", ")
 });
 }
-if (h.length) {
-var l = [];
-_.each(h, function(a) {
+if (i.length) {
+var n = [];
+_.each(i, function(a) {
 _.each(a.subjects, function(a) {
 var b = d(a.kind) + " ";
-"ServiceAccount" === a.kind && (b += (a.namespace || e) + "/"), b += a.name, l.push(b);
+"ServiceAccount" === a.kind && (b += (a.namespace || e) + "/"), b += a.name, n.push(b);
 });
-}), l = _.uniq(l), f.push({
+}), n = _.uniq(n), f.push({
 type:"warning",
 message:"This will grant permissions to your project.",
-details:"Permissions are being granted to: " + l.join(", ")
+details:"Permissions are being granted to: " + n.join(", ")
 });
 }
-if (i.length && f.push({
+if (j.length && f.push({
 type:"info",
 message:"This will create additional membership roles within the project.",
 details:"Admins will be able to grant these custom roles to users, groups, and service accounts."
-}), j.length) {
-var m = _.uniq(_.map(j, function(a) {
+}), k.length) {
+var o = _.uniq(_.map(k, function(a) {
 return d(a.kind);
 }));
 f.push({
 type:"warning",
 message:"This will create resources that may have security or project behavior implications.",
-details:"Make sure you understand what they do before creating them. The resources being created are: " + m.join(", ")
+details:"Make sure you understand what they do before creating them. The resources being created are: " + o.join(", ")
 });
 }
 return f;
