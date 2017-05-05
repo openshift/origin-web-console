@@ -6,7 +6,7 @@
         <div uib-dropdown>
           <a href=""
           uib-dropdown-toggle
-          class="actions-dropdown-kebab"><i class="fa fa-ellipsis-v"></i><span class="sr-only">Actions</span></a>
+          class="actions-dropdown-kebab"><i class="fa fa-ellipsis-v" aria-hidden="true"></i><span class="sr-only">Actions</span></a>
           <ul class="dropdown-menu dropdown-menu-right" uib-dropdown-menu role="menu">
             <li ng-if="row.showStartPipelineAction()" role="menuitem">
               <a href="" ng-click="row.startBuild(row.pipelines[0])">Start Pipeline</a>

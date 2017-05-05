@@ -5802,13 +5802,8 @@ alerts+.chromeless .log-loading-msg{margin-top:130px}
 .wizard-pf-steps-indicator .wizard-pf-step-number{left:calc(50% - 13px)}
 .col-md-12>.alerts:first-child{margin-top:20px}
 .empty-state-message .projects-instructions code{display:inline-block}
-.project-actions{margin:20px 0 0}
-.project-actions .project-action-item{margin-left:12px}
-@media (min-width:768px){.project-actions .project-action-item{margin-left:17px}
-}
 .project-additional-info.list-view-pf-additional-info{display:block}
-@media (min-width:992px){.project-actions{margin-top:0}
-.project-additional-info.list-view-pf-additional-info{width:55%}
+@media (min-width:992px){.project-additional-info.list-view-pf-additional-info{width:55%}
 }
 .project-description.list-group-item-text,.project-info .list-view-pf-description{width:100%}
 .project-description.list-group-item-text .highlighted-content,.project-description.list-group-item-text .truncated-content{display:block;white-space:pre-line;word-wrap:break-word;word-break:break-word;overflow-wrap:break-word;min-width:0}
