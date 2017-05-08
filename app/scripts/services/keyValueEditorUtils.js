@@ -141,7 +141,12 @@
                     entries,
                     function(entry) {
                       entry = cleanEntry(entry);
-                      return (entry.name || entry.value || entry.valueFrom) ? entry : undefined;
+                      var hasValueFrom = entry.valueFrom;
+                      if(!hasValueFrom) {
+                        return (entry.name || entry.value) ? entry : undefined;
+                      }
+                      // if the valueFrom is an empty object, this entry is invalid and should be discarded
+                      return _.keys(entry.valueFrom).length ? entry : undefined;
                     }));
         };
 
