@@ -20,7 +20,7 @@ describe('User adds an image stream to a project', () => {
   });
 
   describe('after creating a new project', () => {
-    describe('using the "Import YAML/JSON" tab', () => {
+    describe('using the Import YAML tab', () => {
       it('should process and create the images in the image stream', () => {
         let project = projectHelpers.projectDetails();
         let createProjectPage = new CreateProjectPage(project);
