@@ -81,9 +81,8 @@ angular.extend(window.OPENSHIFT_CONSTANTS, {
   // This blacklist hides certain kinds from the "Other Resources" page because they are unpersisted, disallowed for most end users, or not supported by openshift but exist in kubernetes
   AVAILABLE_KINDS_BLACKLIST: [
       // These are k8s kinds that are not supported in the current release of OpenShift
-      "Binding",
+      { kind: "Binding", group: "servicecatalog.k8s.io" },
       "Ingress",
-
       // These are things like DCPs that aren't actually persisted resources
       "DeploymentConfigRollback"
   ],
