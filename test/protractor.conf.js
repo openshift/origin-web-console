@@ -226,7 +226,7 @@ exports.config = {
       pathBuilder: function pathBuilder(spec, descriptions, results, capabilities) {
         // Return '<specname>' as path for screenshots:
         // Example: 'list-should work'.
-        return descriptions.reverse().join(' ');
+        return descriptions.reverse().join(' ').replace(/[^a-zA-Z0-9 ]/g, "").trim();
       }
     }));
   },
