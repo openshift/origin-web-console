@@ -10944,22 +10944,10 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "<input ng-model=\"confirmName\" id=\"resource-to-delete\" type=\"text\" class=\"form-control input-lg\" autocorrect=\"off\" autocapitalize=\"off\" spellcheck=\"false\" autofocus>\n" +
     "</p>\n" +
     "</div>\n" +
-    "<div ng-switch=\"kind\">\n" +
-    "<div ng-switch-when=\"Deployment\">\n" +
-    "<strong>Note:</strong> None of the replica sets created by this deployment will be deleted. To delete the deployment and all of its replica sets, you can run the command\n" +
-    "<pre class=\"code prettyprint mar-top-md\">oc delete deployment {{resourceName}} -n {{projectName}}</pre>\n" +
-    "Learn more about the <a href=\"command-line\">command line tools</a>.\n" +
-    "</div>\n" +
-    "<div ng-switch-when=\"DeploymentConfig\">\n" +
+    "<div ng-if=\"kind === 'DeploymentConfig'\">\n" +
     "<strong>Note:</strong> None of the deployments created by this deployment config will be deleted. To delete the deployment config and all of its deployments, you can run the command\n" +
     "<pre class=\"code prettyprint mar-top-md\">oc delete dc {{resourceName}} -n {{projectName}}</pre>\n" +
     "Learn more about the <a href=\"command-line\">command line tools</a>.\n" +
-    "</div>\n" +
-    "<div ng-switch-when=\"BuildConfig\">\n" +
-    "<strong>Note:</strong> None of the builds created by this build config will be deleted. To delete the build config and all of its builds, you can run the command\n" +
-    "<pre class=\"code prettyprint mar-top-md\">oc delete bc {{resourceName}} -n {{projectName}}</pre>\n" +
-    "Learn more about the <a href=\"command-line\">command line tools</a>.\n" +
-    "</div>\n" +
     "</div>\n" +
     "\n" +
     "<div ng-if=\"hpaList.length > 0\">\n" +
