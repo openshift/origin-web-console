@@ -3161,6 +3161,9 @@ value:60
 label:"Last 4 hours",
 value:240
 }, {
+label:"Last 12 hours",
+value:720
+}, {
 label:"Last day",
 value:1440
 }, {
