@@ -5802,17 +5802,16 @@ alerts+.chromeless .log-loading-msg{margin-top:130px}
 .wizard-pf-steps-indicator .wizard-pf-step-number{left:calc(50% - 13px)}
 .col-md-12>.alerts:first-child{margin-top:20px}
 .empty-state-message .projects-instructions code{display:inline-block}
-.project-additional-info.list-view-pf-additional-info{display:block}
+.project-additional-info.list-view-pf-additional-info,.project-info .list-view-pf-main-info{display:block}
 @media (min-width:992px){.project-additional-info.list-view-pf-additional-info{width:55%}
 }
 .project-description.list-group-item-text,.project-info .list-view-pf-description{width:100%}
 .project-description.list-group-item-text .highlighted-content,.project-description.list-group-item-text .truncated-content{display:block;white-space:pre-line;word-wrap:break-word;word-break:break-word;overflow-wrap:break-word;min-width:0}
 .project-info.list-group-item{border-bottom:0;border-color:#e0e0e0;padding:10px 20px}
-.project-info .list-view-pf-main-info{display:block}
 @media (min-width:992px){.project-name-item.list-group-item-heading{white-space:normal;width:45%}
 }
-.project-name-item.list-group-item-heading .h1{margin-bottom:0;margin-top:0}
-.project-name-item.list-group-item-heading .h1 [data-toggle=tooltip]{cursor:help;margin-left:5px}
+.project-name-item.list-group-item-heading .h1{align-items:center;display:flex;margin-bottom:0;margin-top:0}
+.project-name-item.list-group-item-heading .h1 [data-toggle=tooltip]{cursor:help;margin:0 0 -5px 7px}
 .project-name-item.list-group-item-heading .h1 a{display:block;line-height:normal;overflow:hidden;text-overflow:ellipsis}
 .project-name-item.list-group-item-heading p{margin-bottom:0;margin-top:5px}
 .projects-bar{display:flex;flex-direction:column}
