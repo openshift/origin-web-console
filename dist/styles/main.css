@@ -257,6 +257,12 @@ div.hopscotch-bubble .hopscotch-bubble-arrow-container.left,div.hopscotch-bubble
 .services-view .services-view-container .nav-tabs-pf a:hover:before{display:none}
 .services-view .services-view-container .nav-tabs-pf li.active>a:before{background:#39a5dc;bottom:0;display:block}
 .services-view .spinner-container{background:#f2f2f2;padding-top:100px;padding-bottom:100px}
+@keyframes toastSlideIn{0%{opacity:0;transform:translateX(150px)}
+100%{opacity:1;transform:translateX(0)}
+}
+@keyframes toastSlideOut{0%{opacity:.75;transform:translateX(0)}
+100%{opacity:0;transform:translateX(150px)}
+}
 .delete-resource-modal{background-color:#f1f1f1}
 .delete-resource-modal h1{font-size:21px;font-weight:500;margin-bottom:20px;word-wrap:break-word}
 .delete-resource-modal p{font-size:16px}
@@ -294,6 +300,9 @@ div.hopscotch-bubble .hopscotch-nav-button.prev{color:#030303}
 .word-break-all{word-break:break-all;word-break:break-word;overflow-wrap:break-word}
 .toast-action-divider{color:#9c9c9c}
 .toast-notification-message{font-weight:700;margin-right:5px}
+.toast-notifications-list-pf>div.ng-enter{animation:toastSlideIn .2s ease-out}
+.toast-notifications-list-pf>div.ng-leave{animation:toastSlideOut .2s ease-in}
+.toast-notifications-list-pf>div .toast-pf{border-color:#fff;margin-bottom:5px;width:100%}
 .ui-select-bootstrap .ui-select-choices-row>span{border-color:transparent;border-style:solid;border-width:1px 0;line-height:1.66666667;padding:1px 10px}
 .ui-select-bootstrap .ui-select-choices-row>span:focus,.ui-select-bootstrap .ui-select-choices-row>span:hover{background-color:#def3ff;border-color:#bee1f4;color:#4d5258}
 .ui-select-bootstrap .ui-select-choices-row.active>span{background-color:#0088ce!important;border-color:#0088ce!important;color:#fff}
@@ -4355,6 +4364,7 @@ select:invalid{box-shadow:none}
 .short-id{background-color:#f1f1f1;color:#666}
 .input-number{width:60px}
 .alert{margin-bottom:14px;margin-top:7px}
+.alert.toast-pf{margin-top:0}
 .alert code{background-color:inherit;padding:0}
 .action-button{color:#9c9c9c}
 .action-button:active,.action-button:focus,.action-button:hover{color:#000}

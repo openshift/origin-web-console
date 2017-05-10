@@ -60207,12 +60207,11 @@ c && c();
 };
 } ]
 };
-} ]), angular.module("openshiftCommonUI").directive("deleteProject", [ "$uibModal", "$location", "$filter", "$q", "hashSizeFilter", "APIService", "DataService", "AlertMessageService", "NotificationsService", "Logger", function(a, b, c, d, e, f, g, h, i, j) {
+} ]), angular.module("openshiftCommonUI").directive("deleteProject", [ "$uibModal", "$location", "$filter", "$q", "hashSizeFilter", "APIService", "DataService", "NotificationsService", "Logger", function(a, b, c, d, e, f, g, h, i) {
 return {
 restrict:"E",
 scope:{
 projectName:"@",
-alerts:"=",
 displayName:"@",
 disableDelete:"=?",
 typeNameToConfirm:"=?",
@@ -60226,10 +60225,10 @@ templateUrl:function(a, b) {
 return angular.isDefined(b.buttonOnly) ? "src/components/delete-project/delete-project-button.html" :"src/components/delete-project/delete-project.html";
 },
 replace:!0,
-link:function(d, e, k) {
-var l = function(a) {
-d.stayOnCurrentPage ? d.alerts[a.name] = a.data :h.addAlert(a), i.addNotification(a.data);
-}, m = function() {
+link:function(d, e, j) {
+var k = function(a) {
+h.addNotification(a.data);
+}, l = function() {
 if (!d.stayOnCurrentPage) {
 if (d.redirectUrl) return void b.url(d.redirectUrl);
 if ("/" === b.path()) return void d.$emit("deleteProject");
@@ -60250,20 +60249,20 @@ var a = d.projectName, b = "Project '" + d.displayName + "'", e = {};
 g["delete"]({
 resource:f.kindToResource("Project")
 }, a, e).then(function() {
-l({
+k({
 name:a,
 data:{
 type:"success",
 message:_.capitalize(b) + " was marked for deletion."
 }
-}), d.success && d.success(), m();
-})["catch"](function(e) {
-var f = {
+}), d.success && d.success(), l();
+})["catch"](function(a) {
+var d = {
 type:"error",
 message:_.capitalize(b) + "' could not be deleted.",
-details:c("getErrorDetails")(e)
+details:c("getErrorDetails")(a)
 };
-d.alerts[a] = f, i.addNotification(f), j.error(b + " could not be deleted.", e);
+h.addNotification(d), i.error(b + " could not be deleted.", a);
 });
 });
 }
@@ -60400,34 +60399,7 @@ c ? (b.truncatedContent = a(c, b.limit, b.useWordBoundary, b.newlineLimit), b.tr
 });
 }
 };
-} ]), window.OPENSHIFT_CONFIG || (window.OPENSHIFT_CONFIG = {
-apis:{
-hostPort:"localhost:8443",
-prefix:"/apis"
-},
-api:{
-openshift:{
-hostPort:"localhost:8443",
-prefix:"/oapi"
-},
-k8s:{
-hostPort:"localhost:8443",
-prefix:"/api"
-}
-},
-auth:{
-oauth_authorize_uri:"https://localhost:8443/oauth/authorize",
-oauth_token_uri:"https://localhost:8443/oauth/token",
-oauth_redirect_base:"https://localhost:9000/dev-console",
-oauth_client_id:"openshift-web-console",
-logout_uri:""
-},
-loggingURL:"",
-metricsURL:""
-}, window.OPENSHIFT_VERSION = {
-openshift:"dev-mode",
-kubernetes:"dev-mode"
-}), angular.module("openshiftCommonUI").filter("alertStatus", function() {
+} ]), angular.module("openshiftCommonUI").filter("alertStatus", function() {
 return function(a) {
 var b;
 switch (a) {
@@ -60821,22 +60793,34 @@ return a && a.kind && (b = a.kind), a && a.apiVersion && (c = a.apiVersion), "In
 var b = "<none>", c = "<none>";
 return a && a.kind && (b = a.kind), a && a.apiVersion && (c = a.apiVersion), "The API version " + c + " for kind " + b + " is not supported by this server";
 }, t = function(c) {
-var e = [], f = d.AVAILABLE_KINDS_BLACKLIST;
+var e = [], f = _.map(d.AVAILABLE_KINDS_BLACKLIST, function(a) {
+return _.isString(a) ? {
+kind:a,
+group:""
+} :a;
+});
 return _.each(_.pick(a, function(a, b) {
 return "openshift" !== b;
 }), function(a) {
 _.each(a.resources.v1, function(a) {
 if (a.namespaced || c) {
-if (a.name.indexOf("/") >= 0 || _.contains(f, a.kind)) return;
+if (_.contains(a.name, "/") || _.find(f, {
+kind:a.kind,
+group:""
+})) return;
 e.push({
-kind:a.kind
+kind:a.kind,
+group:""
 });
 }
 });
 }), _.each(b.groups, function(a) {
 var b = l[a.name] || a.preferredVersion;
 _.each(a.versions[b].resources, function(b) {
-b.name.indexOf("/") >= 0 || _.contains(f, b.kind) || "extensions" === a.name && "HorizontalPodAutoscaler" === b.kind || "batch" === a.name && "Job" === b.kind || (b.namespaced || c) && e.push({
+_.contains(b.name, "/") || _.find(f, {
+kind:b.kind,
+group:a.name
+}) || "extensions" === a.name && "HorizontalPodAutoscaler" === b.kind || "batch" === a.name && "Job" === b.kind || (b.namespaced || c) && e.push({
 kind:b.kind,
 group:a.name
 });
@@ -61057,18 +61041,18 @@ return a;
 }), angular.module("openshiftCommonServices").factory("Constants", function() {
 var a = _.clone(window.OPENSHIFT_CONSTANTS || {}), b = _.clone(window.OPENSHIFT_VERSION || {});
 return a.VERSION = b, a;
-}), angular.module("openshiftCommonServices").factory("DataService", [ "$cacheFactory", "$http", "$ws", "$rootScope", "$q", "API_CFG", "APIService", "Notification", "Logger", "$timeout", "base64", "base64util", function(a, b, c, d, e, f, g, h, i, j, k, l) {
-function m(a) {
+}), angular.module("openshiftCommonServices").factory("DataService", [ "$cacheFactory", "$http", "$ws", "$rootScope", "$q", "API_CFG", "APIService", "Logger", "$timeout", "base64", "base64util", function(a, b, c, d, e, f, g, h, i, j, k) {
+function l(a) {
 this._data = {}, this._objectsByAttribute(a, "metadata.name", this._data);
 }
-function n(a, b, c, d) {
+function m(a, b, c, d) {
 for (var e = b.split("."), f = a, g = 0; g < e.length; g++) if (f = f[e[g]], void 0 === f) return;
 if ($.isArray(f)) ; else if ($.isPlainObject(f)) for (var h in f) {
 var i = f[h];
 c[h] || (c[h] = {}), "DELETED" === d ? delete c[h][i] :c[h][i] = a;
 } else "DELETED" === d ? delete c[f] :c[f] = a;
 }
-function o() {
+function n() {
 this._listDeferredMap = {}, this._watchCallbacksMap = {}, this._watchObjectCallbacksMap = {}, this._watchOperationMap = {}, this._listOperationMap = {}, this._resourceVersionMap = {}, this._dataCache = a("dataCache", {
 number:25
 }), this._immutableDataCache = a("immutableDataCache", {
@@ -61079,39 +61063,41 @@ d.$on("$routeChangeStart", function(a, c, d) {
 b._websocketEventsMap = {};
 });
 }
-function p(a) {
+function o(a) {
 var b = 3e4;
-return a.length >= r && Date.now() - a[0].time < b;
+return a.length >= q && Date.now() - a[0].time < b;
 }
-function q(a) {
+function p(a) {
 var b = 5;
 if (a.length < b) return !1;
 for (var c = a.length - b; c < a.length; c++) if ("close" !== a[c].type) return !1;
 return !0;
 }
-m.prototype.by = function(a) {
+l.prototype.by = function(a) {
 if ("metadata.name" === a) return this._data;
 var b = {};
-for (var c in this._data) n(this._data[c], a, b, null);
+for (var c in this._data) m(this._data[c], a, b, null);
 return b;
-}, m.prototype.update = function(a, b) {
-n(a, "metadata.name", this._data, b);
-}, m.prototype._objectsByAttribute = function(a, b, c, d) {
+}, l.prototype.update = function(a, b) {
+m(a, "metadata.name", this._data, b);
+}, l.prototype._objectsByAttribute = function(a, b, c, d) {
 angular.forEach(a, function(a, e) {
-n(a, b, c, d ? d[e] :null);
+m(a, b, c, d ? d[e] :null);
 });
-}, o.prototype.list = function(a, b, c, d) {
+}, n.prototype.list = function(a, b, c, d) {
 a = g.toResourceGroupVersion(a);
 var e = this._uniqueKey(a, null, b, _.get(d, "http.params")), f = this._listDeferred(e);
 return c && f.promise.then(c), this._isCached(e) ? f.resolve(this._data(e)) :this._listInFlight(e) || this._startListOp(a, b, d), f.promise;
-}, o.prototype["delete"] = function(a, c, d, f) {
+}, n.prototype["delete"] = function(a, c, d, f) {
 a = g.toResourceGroupVersion(a), f = f || {};
-var h, i = e.defer(), j = this, k = {};
-return _.has(f, "gracePeriodSeconds") && (h = {
+var h, i = e.defer(), j = this, k = {}, h = {
 kind:"DeleteOptions",
 apiVersion:"v1",
-gracePeriodSeconds:f.gracePeriodSeconds
-}, k["Content-Type"] = "application/json"), this._getNamespace(a, d, f).then(function(e) {
+propagationPolicy:f.propagationPolicy || "Foreground"
+}, k = {
+"Content-Type":"application/json"
+};
+return _.has(f, "gracePeriodSeconds") && (h.gracePeriodSeconds = f.gracePeriodSeconds), this._getNamespace(a, d, f).then(function(e) {
 b(angular.extend({
 method:"DELETE",
 auth:{},
@@ -61129,7 +61115,7 @@ config:d
 });
 });
 }), i.promise;
-}, o.prototype.update = function(a, c, d, f, h) {
+}, n.prototype.update = function(a, c, d, f, h) {
 a = g.deriveTargetResource(a, d), h = h || {};
 var i = e.defer(), j = this;
 return this._getNamespace(a, f, h).then(function(e) {
@@ -61149,7 +61135,7 @@ config:d
 });
 });
 }), i.promise;
-}, o.prototype.create = function(a, c, d, f, h) {
+}, n.prototype.create = function(a, c, d, f, h) {
 a = g.deriveTargetResource(a, d), h = h || {};
 var i = e.defer(), j = this;
 return this._getNamespace(a, f, h).then(function(e) {
@@ -61169,7 +61155,7 @@ config:d
 });
 });
 }), i.promise;
-}, o.prototype.batch = function(a, b, c, d) {
+}, n.prototype.batch = function(a, b, c, d) {
 function f() {
 0 === l && h.resolve({
 success:i,
@@ -61217,46 +61203,49 @@ object:a
 });
 }
 }), h.promise;
-}, o.prototype.get = function(a, c, d, f) {
-a = g.toResourceGroupVersion(a), f = f || {};
-var i = this._uniqueKey(a, c, d, _.get(f, "http.params"));
-!!f.force;
-delete f.force;
-var k = e.defer(), l = this._immutableData(i);
-if (this._hasImmutable(a, l, c)) j(function() {
+}, n.prototype.get = function(a, c, f, h) {
+a = g.toResourceGroupVersion(a), h = h || {};
+var j = this._uniqueKey(a, c, f, _.get(h, "http.params"));
+!!h.force;
+delete h.force;
+var k = e.defer(), l = this._immutableData(j);
+if (this._hasImmutable(a, l, c)) i(function() {
 k.resolve(l.by("metadata.name")[c]);
 }, 0); else {
 var m = this;
-this._getNamespace(a, d, f).then(function(e) {
+this._getNamespace(a, f, h).then(function(e) {
 b(angular.extend({
 method:"GET",
 auth:{},
-url:m._urlForResource(a, c, d, !1, e)
-}, f.http || {})).success(function(b, c, d, e, f) {
-m._isImmutable(a) && (l ? l.update(b, "ADDED") :m._immutableData(i, [ b ])), k.resolve(b);
-}).error(function(b, d, e, g) {
-if (f.errorNotification !== !1) {
+url:m._urlForResource(a, c, f, !1, e)
+}, h.http || {})).success(function(b, c, d, e, f) {
+m._isImmutable(a) && (l ? l.update(b, "ADDED") :m._immutableData(j, [ b ])), k.resolve(b);
+}).error(function(b, e, f, g) {
+if (h.errorNotification !== !1) {
 var i = "Failed to get " + a + "/" + c;
-0 !== d && (i += " (" + d + ")"), h.error(i);
+0 !== e && (i += " (" + e + ")"), d.$emit("addNotification", {
+type:"error",
+message:i
+});
 }
 k.reject({
 data:b,
-status:d,
-headers:e,
+status:e,
+headers:f,
 config:g
 });
 });
 });
 }
 return k.promise;
-}, o.prototype.createStream = function(a, b, d, e, f) {
-var h = this;
+}, n.prototype.createStream = function(a, b, d, e, f) {
+var i = this;
 a = g.toResourceGroupVersion(a);
-var j, m = f ? "binary.k8s.io" :"base64.binary.k8s.io", n = "stream_", o = {}, p = {}, q = {}, r = {}, s = function() {
-return h._getNamespace(a, d, {}).then(function(g) {
-var j = 0;
+var l, m = f ? "binary.k8s.io" :"base64.binary.k8s.io", n = "stream_", o = {}, p = {}, q = {}, r = {}, s = function() {
+return i._getNamespace(a, d, {}).then(function(g) {
+var l = 0;
 return c({
-url:h._urlForResource(a, b, d, !0, _.extend(g, e)),
+url:i._urlForResource(a, b, d, !0, _.extend(g, e)),
 auth:{},
 onopen:function(a) {
 _.each(o, function(b) {
@@ -61264,10 +61253,10 @@ b(a);
 });
 },
 onmessage:function(a) {
-if (!_.isString(a.data)) return void i.log("log stream response is not a string", a.data);
+if (!_.isString(a.data)) return void h.log("log stream response is not a string", a.data);
 var b;
-f || (b = k.decode(l.pad(a.data)), j += b.length), _.each(p, function(c) {
-f ? c(a.data) :c(b, a.data, j);
+f || (b = j.decode(k.pad(a.data)), l += b.length), _.each(p, function(c) {
+f ? c(a.data) :c(b, a.data, l);
 });
 },
 onclose:function(a) {
@@ -61282,7 +61271,7 @@ b(a);
 },
 protocols:m
 }).then(function(a) {
-return i.log("Streaming pod log", a), a;
+return h.log("Streaming pod log", a), a;
 });
 });
 };
@@ -61315,15 +61304,15 @@ remove:function(a) {
 o[a] && delete o[a], p[a] && delete p[a], q[a] && delete q[a], r[a] && delete r[a];
 },
 start:function() {
-return j = s();
+return l = s();
 },
 stop:function() {
-j.then(function(a) {
+l.then(function(a) {
 a.close();
 });
 }
 };
-}, o.prototype.watch = function(a, b, c, d) {
+}, n.prototype.watch = function(a, b, c, d) {
 a = g.toResourceGroupVersion(a), d = d || {};
 var e = this._uniqueKey(a, null, b, _.get(d, "http.params"));
 if (c) this._watchCallbacks(e).add(c); else if (!this._watchCallbacks(e).has()) return {};
@@ -61332,13 +61321,13 @@ if (f) {
 if (!!f.poll != !!d.poll) throw "A watch already exists for " + a + " with a different polling option.";
 } else this._watchOptions(e, d);
 var h = this;
-if (this._isCached(e)) c && j(function() {
+if (this._isCached(e)) c && i(function() {
 c(h._data(e));
 }, 0); else {
 if (c) {
-var i = this._resourceVersion(e);
-this._data(e) && j(function() {
-i === h._resourceVersion(e) && c(h._data(e));
+var j = this._resourceVersion(e);
+this._data(e) && i(function() {
+j === h._resourceVersion(e) && c(h._data(e));
 }, 0);
 }
 this._listInFlight(e) || this._startListOp(a, b, d);
@@ -61349,7 +61338,7 @@ context:b,
 callback:c,
 opts:d
 };
-}, o.prototype.watchObject = function(a, b, c, d, e) {
+}, n.prototype.watchObject = function(a, b, c, d, e) {
 a = g.toResourceGroupVersion(a), e = e || {};
 var f, h = this._uniqueKey(a, b, c, _.get(e, "http.params"));
 if (d) {
@@ -61364,7 +61353,7 @@ e[b] && i._watchObjectCallbacks(h).fire(e[b]);
 } else if (!this._watchObjectCallbacks(h).has()) return {};
 var j = this.watch(a, c, f, e);
 return j.objectCallback = d, j.objectName = b, j;
-}, o.prototype.unwatch = function(a) {
+}, n.prototype.unwatch = function(a) {
 var b = a.resource, c = a.objectName, d = a.context, e = a.callback, f = a.objectCallback, g = a.opts, h = this._uniqueKey(b, null, d, _.get(g, "http.params"));
 if (f && c) {
 var i = this._uniqueKey(b, c, d, _.get(g, "http.params")), j = this._watchObjectCallbacks(i);
@@ -61378,92 +61367,98 @@ l.shouldClose = !0, l.close(), this._watchWebsockets(h, null);
 }
 this._watchInFlight(h, !1), this._watchOptions(h, null);
 }
-}, o.prototype.unwatchAll = function(a) {
+}, n.prototype.unwatchAll = function(a) {
 for (var b = 0; b < a.length; b++) this.unwatch(a[b]);
-}, o.prototype._watchCallbacks = function(a) {
+}, n.prototype._watchCallbacks = function(a) {
 return this._watchCallbacksMap[a] || (this._watchCallbacksMap[a] = $.Callbacks()), this._watchCallbacksMap[a];
-}, o.prototype._watchObjectCallbacks = function(a) {
+}, n.prototype._watchObjectCallbacks = function(a) {
 return this._watchObjectCallbacksMap[a] || (this._watchObjectCallbacksMap[a] = $.Callbacks()), this._watchObjectCallbacksMap[a];
-}, o.prototype._listDeferred = function(a) {
+}, n.prototype._listDeferred = function(a) {
 return this._listDeferredMap[a] || (this._listDeferredMap[a] = e.defer()), this._listDeferredMap[a];
-}, o.prototype._watchInFlight = function(a, b) {
+}, n.prototype._watchInFlight = function(a, b) {
 return b || b === !1 ? void (this._watchOperationMap[a] = b) :this._watchOperationMap[a];
-}, o.prototype._listInFlight = function(a, b) {
+}, n.prototype._listInFlight = function(a, b) {
 return b || b === !1 ? void (this._listOperationMap[a] = b) :this._listOperationMap[a];
-}, o.prototype._resourceVersion = function(a, b) {
+}, n.prototype._resourceVersion = function(a, b) {
 return b ? void (this._resourceVersionMap[a] = b) :this._resourceVersionMap[a];
-}, o.prototype._data = function(a, b) {
-return b ? this._dataCache.put(a, new m(b)) :this._dataCache.get(a);
-}, o.prototype._immutableData = function(a, b) {
-return b ? this._immutableDataCache.put(a, new m(b)) :this._immutableDataCache.get(a);
-}, o.prototype._isCached = function(a) {
+}, n.prototype._data = function(a, b) {
+return b ? this._dataCache.put(a, new l(b)) :this._dataCache.get(a);
+}, n.prototype._immutableData = function(a, b) {
+return b ? this._immutableDataCache.put(a, new l(b)) :this._immutableDataCache.get(a);
+}, n.prototype._isCached = function(a) {
 return this._watchInFlight(a) && this._resourceVersion(a) && !!this._data(a);
-}, o.prototype._watchOptions = function(a, b) {
+}, n.prototype._watchOptions = function(a, b) {
 return void 0 === b ? this._watchOptionsMap[a] :void (this._watchOptionsMap[a] = b);
-}, o.prototype._watchPollTimeouts = function(a, b) {
+}, n.prototype._watchPollTimeouts = function(a, b) {
 return b ? void (this._watchPollTimeoutsMap[a] = b) :this._watchPollTimeoutsMap[a];
-}, o.prototype._watchWebsockets = function(a, b) {
+}, n.prototype._watchWebsockets = function(a, b) {
 return b ? void (this._watchWebsocketsMap[a] = b) :this._watchWebsocketsMap[a];
 };
-var r = 10;
-o.prototype._addWebsocketEvent = function(a, b) {
+var q = 10;
+n.prototype._addWebsocketEvent = function(a, b) {
 var c = this._websocketEventsMap[a];
 for (c || (c = this._websocketEventsMap[a] = []), c.push({
 type:b,
 time:Date.now()
-}); c.length > r; ) c.shift();
-}, o.prototype._isTooManyWebsocketRetries = function(a) {
+}); c.length > q; ) c.shift();
+}, n.prototype._isTooManyWebsocketRetries = function(a) {
 var b = this._websocketEventsMap[a];
-return !!b && (p(b) ? (i.log("Too many websocket open or close events for resource/context in a short period", a, b), !0) :!!q(b) && (i.log("Too many consecutive websocket close events for resource/context", a, b), !0));
+return !!b && (o(b) ? (h.log("Too many websocket open or close events for resource/context in a short period", a, b), !0) :!!p(b) && (h.log("Too many consecutive websocket close events for resource/context", a, b), !0));
 };
-var s = function(a) {
+var r = function(a) {
 var b = _.keysIn(_.pick(a, [ "fieldSelector", "labelSelector" ])).sort();
 return _.reduce(b, function(c, d, e) {
 return c + d + "=" + encodeURIComponent(a[d]) + (e < b.length - 1 ? "&" :"");
 }, "?");
 };
-o.prototype._uniqueKey = function(a, b, c, d) {
+n.prototype._uniqueKey = function(a, b, c, d) {
 var e = c && c.namespace || _.get(c, "project.metadata.name") || c.projectName;
 return this._urlForResource(a, b, c, null, angular.extend({}, {}, {
 namespace:e
-})).toString() + s(d || {});
-}, o.prototype._startListOp = function(a, c, d) {
-d = d || {};
-var e = this._uniqueKey(a, null, c, _.get(d, "http.params"));
-this._listInFlight(e, !0);
-var f = this;
-c.projectPromise && !a.equals("projects") ? c.projectPromise.done(function(g) {
+})).toString() + r(d || {});
+}, n.prototype._startListOp = function(a, c, e) {
+e = e || {};
+var f = this._uniqueKey(a, null, c, _.get(e, "http.params"));
+this._listInFlight(f, !0);
+var g = this;
+c.projectPromise && !a.equals("projects") ? c.projectPromise.done(function(h) {
 b(angular.extend({
 method:"GET",
 auth:{},
-url:f._urlForResource(a, null, c, !1, {
-namespace:g.metadata.name
+url:g._urlForResource(a, null, c, !1, {
+namespace:h.metadata.name
 })
-}, d.http || {})).success(function(b, g, h, i, j) {
-f._listOpComplete(e, a, c, d, b);
-}).error(function(b, c, g, i) {
-f._listInFlight(e, !1);
-var j = f._listDeferred(e);
-if (delete f._listDeferredMap[e], j.reject(b, c, g, i), _.get(d, "errorNotification", !0)) {
+}, e.http || {})).success(function(b, d, h, i, j) {
+g._listOpComplete(f, a, c, e, b);
+}).error(function(b, c, h, i) {
+g._listInFlight(f, !1);
+var j = g._listDeferred(f);
+if (delete g._listDeferredMap[f], j.reject(b, c, h, i), _.get(e, "errorNotification", !0)) {
 var k = "Failed to list " + a;
-0 !== c && (k += " (" + c + ")"), h.error(k);
+0 !== c && (k += " (" + c + ")"), d.$emit("addNotification", {
+type:"error",
+message:k
+});
 }
 });
 }) :b({
 method:"GET",
 auth:{},
 url:this._urlForResource(a, null, c)
-}).success(function(b, g, h, i, j) {
-f._listOpComplete(e, a, c, d, b);
-}).error(function(b, c, g, i) {
-f._listInFlight(e, !1);
-var j = f._listDeferred(e);
-if (delete f._listDeferredMap[e], j.reject(b, c, g, i), _.get(d, "errorNotification", !0)) {
+}).success(function(b, d, h, i, j) {
+g._listOpComplete(f, a, c, e, b);
+}).error(function(b, c, h, i) {
+g._listInFlight(f, !1);
+var j = g._listDeferred(f);
+if (delete g._listDeferredMap[f], j.reject(b, c, h, i), _.get(e, "errorNotification", !0)) {
 var k = "Failed to list " + a;
-0 !== c && (k += " (" + c + ")"), h.error(k);
+0 !== c && (k += " (" + c + ")"), d.$emit("addNotification", {
+type:"error",
+message:k
+});
 }
 });
-}, o.prototype._listOpComplete = function(a, b, c, d, e) {
+}, n.prototype._listOpComplete = function(a, b, c, d, e) {
 e.items || console.warn("List request for " + b + " returned a null items array.  This is an invalid API response.");
 var f = e.items || [];
 e.kind && e.kind.indexOf("List") === e.kind.length - 4 && angular.forEach(f, function(a) {
@@ -61474,88 +61469,87 @@ if (delete this._listDeferredMap[a], this._resourceVersion(a, e.resourceVersion 
 var h = this._watchOptions(a) || {};
 h.poll ? (this._watchInFlight(a, !0), this._watchPollTimeouts(a, setTimeout($.proxy(this, "_startListOp", b, c), h.pollInterval || 5e3))) :this._watchInFlight(a) || this._startWatchOp(a, b, c, d, this._resourceVersion(a));
 }
-}, o.prototype._startWatchOp = function(a, b, d, e, f) {
+}, n.prototype._startWatchOp = function(a, b, d, e, f) {
 if (this._watchInFlight(a, !0), c.available()) {
-var g = this, h = _.get(e, "http.params") || {};
-h.watch = !0, f && (h.resourceVersion = f), d.projectPromise && !b.equals("projects") ? d.projectPromise.done(function(f) {
-h.namespace = f.metadata.name, c({
+var g = this, i = _.get(e, "http.params") || {};
+i.watch = !0, f && (i.resourceVersion = f), d.projectPromise && !b.equals("projects") ? d.projectPromise.done(function(f) {
+i.namespace = f.metadata.name, c({
 method:"WATCH",
-url:g._urlForResource(b, null, d, !0, h),
+url:g._urlForResource(b, null, d, !0, i),
 auth:{},
 onclose:$.proxy(g, "_watchOpOnClose", b, d, e),
 onmessage:$.proxy(g, "_watchOpOnMessage", b, d, e),
 onopen:$.proxy(g, "_watchOpOnOpen", b, d, e)
 }).then(function(b) {
-i.log("Watching", b), g._watchWebsockets(a, b);
+h.log("Watching", b), g._watchWebsockets(a, b);
 });
 }) :c({
 method:"WATCH",
-url:g._urlForResource(b, null, d, !0, h),
+url:g._urlForResource(b, null, d, !0, i),
 auth:{},
 onclose:$.proxy(g, "_watchOpOnClose", b, d, e),
 onmessage:$.proxy(g, "_watchOpOnMessage", b, d, e),
 onopen:$.proxy(g, "_watchOpOnOpen", b, d, e)
 }).then(function(b) {
-i.log("Watching", b), g._watchWebsockets(a, b);
+h.log("Watching", b), g._watchWebsockets(a, b);
 });
 }
-}, o.prototype._watchOpOnOpen = function(a, b, c, d) {
-i.log("Websocket opened for resource/context", a, b);
+}, n.prototype._watchOpOnOpen = function(a, b, c, d) {
+h.log("Websocket opened for resource/context", a, b);
 var e = this._uniqueKey(a, null, b, _.get(c, "http.params"));
 this._addWebsocketEvent(e, "open");
-}, o.prototype._watchOpOnMessage = function(a, b, c, d) {
+}, n.prototype._watchOpOnMessage = function(a, b, c, d) {
 var e = this._uniqueKey(a, null, b, _.get(c, "http.params"));
 try {
 var f = $.parseJSON(d.data);
-if ("ERROR" == f.type) return i.log("Watch window expired for resource/context", a, b), void (d.target && (d.target.shouldRelist = !0));
+if ("ERROR" == f.type) return h.log("Watch window expired for resource/context", a, b), void (d.target && (d.target.shouldRelist = !0));
 "DELETED" === f.type && f.object && f.object.metadata && !f.object.metadata.deletionTimestamp && (f.object.metadata.deletionTimestamp = new Date().toISOString()), f.object && this._resourceVersion(e, f.object.resourceVersion || f.object.metadata.resourceVersion), this._data(e).update(f.object, f.type);
 var g = this;
-j(function() {
+i(function() {
 g._watchCallbacks(e).fire(g._data(e), f.type, f.object);
 }, 0);
-} catch (h) {
-i.error("Error processing message", a, d.data);
+} catch (j) {
+h.error("Error processing message", a, d.data);
 }
-}, o.prototype._watchOpOnClose = function(a, b, c, d) {
-var e = d.target, f = this._uniqueKey(a, null, b, _.get(c, "http.params"));
-if (!e) return void i.log("Skipping reopen, no eventWS in event", d);
-var g = this._watchWebsockets(f);
-if (!g) return void i.log("Skipping reopen, no registeredWS for resource/context", a, b);
-if (e !== g) return void i.log("Skipping reopen, eventWS does not match registeredWS", e, g);
-if (this._watchInFlight(f, !1), e.shouldClose) return void i.log("Skipping reopen, eventWS was explicitly closed", e);
-if (d.wasClean) return void i.log("Skipping reopen, clean close", d);
-if (!this._watchCallbacks(f).has()) return void i.log("Skipping reopen, no listeners registered for resource/context", a, b);
-if (this._isTooManyWebsocketRetries(f)) return void (_.get(c, "errorNotification", !0) && h.error("Server connection interrupted.", {
+}, n.prototype._watchOpOnClose = function(a, b, c, e) {
+var f = e.target, g = this._uniqueKey(a, null, b, _.get(c, "http.params"));
+if (!f) return void h.log("Skipping reopen, no eventWS in event", e);
+var i = this._watchWebsockets(g);
+if (!i) return void h.log("Skipping reopen, no registeredWS for resource/context", a, b);
+if (f !== i) return void h.log("Skipping reopen, eventWS does not match registeredWS", f, i);
+if (this._watchInFlight(g, !1), f.shouldClose) return void h.log("Skipping reopen, eventWS was explicitly closed", f);
+if (e.wasClean) return void h.log("Skipping reopen, clean close", e);
+if (!this._watchCallbacks(g).has()) return void h.log("Skipping reopen, no listeners registered for resource/context", a, b);
+if (this._isTooManyWebsocketRetries(g)) return void (_.get(c, "errorNotification", !0) && d.$emit("addNotification", {
 id:"websocket_retry_halted",
-mustDismiss:!0,
-actions:{
-refresh:{
+type:"error",
+message:"Server connection interrupted.",
+links:[ {
 label:"Refresh",
-action:function() {
+onClick:function() {
 window.location.reload();
 }
-}
-}
+} ]
 }));
-if (this._addWebsocketEvent(f, "close"), e.shouldRelist) {
-i.log("Relisting for resource/context", a, b);
+if (this._addWebsocketEvent(g, "close"), f.shouldRelist) {
+h.log("Relisting for resource/context", a, b);
 var j = this;
 return void setTimeout(function() {
 j.watch(a, b);
 }, 2e3);
 }
-i.log("Rewatching for resource/context", a, b), this._watchInFlight(f, !0), setTimeout($.proxy(this, "_startWatchOp", f, a, b, c, this._resourceVersion(f)), 2e3);
+h.log("Rewatching for resource/context", a, b), this._watchInFlight(g, !0), setTimeout($.proxy(this, "_startWatchOp", g, a, b, c, this._resourceVersion(g)), 2e3);
 };
-var t = "{protocol}://{+hostPort}{+prefix}{/group}/{version}/", u = t + "{resource}{?q*}", v = t + "{resource}/{name}{/subresource*}{?q*}", w = t + "namespaces/{namespace}/{resource}{?q*}", x = t + "namespaces/{namespace}/{resource}/{name}{/subresource*}{?q*}";
-o.prototype._urlForResource = function(a, b, c, d, e) {
+var s = "{protocol}://{+hostPort}{+prefix}{/group}/{version}/", t = s + "{resource}{?q*}", u = s + "{resource}/{name}{/subresource*}{?q*}", v = s + "namespaces/{namespace}/{resource}{?q*}", w = s + "namespaces/{namespace}/{resource}/{name}{/subresource*}{?q*}";
+n.prototype._urlForResource = function(a, b, c, d, e) {
 var f = g.apiInfo(a);
-if (!f) return i.error("_urlForResource called with unknown resource", a, arguments), null;
-var h, j = f.protocol || window.location.protocol;
-if (e = e || {}, h = d ? "http:" === j ? "ws" :"wss" :"http:" === j ? "http" :"https", c && c.namespace && !e.namespace && (e.namespace = c.namespace), f.namespaced && !e.namespace) return i.error("_urlForResource called for a namespaced resource but no namespace provided", a, arguments), null;
+if (!f) return h.error("_urlForResource called with unknown resource", a, arguments), null;
+var i, j = f.protocol || window.location.protocol;
+if (e = e || {}, i = d ? "http:" === j ? "ws" :"wss" :"http:" === j ? "http" :"https", c && c.namespace && !e.namespace && (e.namespace = c.namespace), f.namespaced && !e.namespace) return h.error("_urlForResource called for a namespaced resource but no namespace provided", a, arguments), null;
 var k = f.namespaced, l = null;
 k && (l = e.namespace, e = angular.copy(e), delete e.namespace);
 var m, n = {
-protocol:h,
+protocol:i,
 hostPort:f.hostPort,
 prefix:f.prefix,
 group:f.group,
@@ -61566,8 +61560,8 @@ name:b,
 namespace:l,
 q:e
 };
-return m = b ? k ? x :v :k ? w :u, URI.expand(m, n).toString();
-}, o.prototype.url = function(a) {
+return m = b ? k ? w :u :k ? v :t, URI.expand(m, n).toString();
+}, n.prototype.url = function(a) {
 if (a && a.resource) {
 var b = angular.copy(a);
 delete b.resource, delete b.group, delete b.version, delete b.name, delete b.isWebsocket;
@@ -61579,21 +61573,21 @@ version:a.version
 return this._urlForResource(c, a.name, null, !!a.isWebsocket, b);
 }
 return null;
-}, o.prototype.openshiftAPIBaseUrl = function() {
+}, n.prototype.openshiftAPIBaseUrl = function() {
 var a = "http:" === window.location.protocol ? "http" :"https", b = f.openshift.hostPort;
 return new URI({
 protocol:a,
 hostname:b
 }).toString();
 };
-var y = {
+var x = {
 imagestreamimages:!0
 };
-return o.prototype._isImmutable = function(a) {
-return !!y[a.resource];
-}, o.prototype._hasImmutable = function(a, b, c) {
+return n.prototype._isImmutable = function(a) {
+return !!x[a.resource];
+}, n.prototype._hasImmutable = function(a, b, c) {
 return this._isImmutable(a) && b && b.by("metadata.name")[c];
-}, o.prototype._getNamespace = function(a, b, c) {
+}, n.prototype._getNamespace = function(a, b, c) {
 var d = e.defer();
 return c.namespace ? d.resolve({
 namespace:c.namespace
@@ -61602,7 +61596,7 @@ d.resolve({
 namespace:a.metadata.name
 });
 }) :d.resolve(null), d.promise;
-}, new o();
+}, new n();
 } ]), angular.module("openshiftCommonServices").provider("DeleteTokenLogoutService", function() {
 this.$get = [ "$q", "$injector", "Logger", function(a, b, c) {
 var d = c.get("auth");
@@ -61784,42 +61778,7 @@ a ? (b.log("LocalStorageUserStore.setToken", a, c), localStorage[d] = a, f(d, c)
 }
 };
 } ];
-}), angular.module("openshiftCommonServices").factory("Notification", [ "$rootScope", function(a) {
-function b() {
-this.messenger = Messenger({
-extraClasses:"messenger-fixed messenger-on-bottom messenger-on-right",
-theme:"flat",
-messageDefaults:{
-showCloseButton:!0,
-hideAfter:10
-}
-});
-var b = this;
-a.$on("$routeChangeStart", function(a, c, d) {
-b.clear();
-});
-}
-return b.prototype.notify = function(a, b, c) {
-c = c || {};
-var d = {
-type:a,
-message:$("<div/>").text(b).html(),
-id:c.id,
-actions:c.actions
-};
-c.mustDismiss && (d.hideAfter = !1), this.messenger.post(d);
-}, b.prototype.success = function(a, b) {
-this.notify("success", a, b);
-}, b.prototype.info = function(a, b) {
-this.notify("info", a, b);
-}, b.prototype.error = function(a, b) {
-this.notify("error", a, b);
-}, b.prototype.warning = function(a, b) {
-this.notify("warning", a, b);
-}, b.prototype.clear = function() {
-this.messenger.hideAll();
-}, new b();
-} ]), angular.module("openshiftCommonServices").factory("ProjectsService", [ "$location", "$q", "AuthService", "DataService", "annotationNameFilter", "AuthorizationService", function(a, b, c, d, e, f) {
+}), angular.module("openshiftCommonServices").factory("ProjectsService", [ "$location", "$q", "AuthService", "DataService", "annotationNameFilter", "AuthorizationService", function(a, b, c, d, e, f) {
 var g = function(a) {
 var b = [ e("description"), e("displayName") ];
 return _.each(b, function(b) {
@@ -62074,37 +62033,44 @@ startTour:k,
 cancelTour:l
 };
 }), angular.module("openshiftCommonUI").provider("NotificationsService", function() {
-this.dismissDelay = 8e3, this.autoDismissTypes = [ "info", "success" ], this.$get = function() {
-var a = [], b = this.dismissDelay, c = this.autoDismissTypes, d = function(a, b) {
+this.dismissDelay = 8e3, this.autoDismissTypes = [ "info", "success" ], this.$get = [ "$rootScope", function(a) {
+var b = [], c = this.dismissDelay, d = this.autoDismissTypes, e = function(a, b) {
 return b ? "hide/notification/" + b + "/" + a :"hide/notification/" + a;
-}, e = function(b, c, d) {
-c && h(c, d) && (b.hidden = !0), a.push(b);
-}, f = function() {
-return a;
+}, f = function(a) {
+i(a) || k(a) || b.push(a);
 }, g = function() {
-_.take(a, 0);
-}, h = function(a, b) {
-var c = d(a, b);
-return "true" === localStorage.getItem(c);
-}, i = function(a, b) {
-var c = d(a, b);
+return b;
+}, h = function() {
+_.take(b, 0);
+}, i = function(a) {
+if (!a.id) return !1;
+var b = e(a.id, a.namespace);
+return "true" === localStorage.getItem(b);
+}, j = function(a, b) {
+var c = e(a, b);
 localStorage.setItem(c, "true");
-}, j = function(a) {
-return _.find(c, function(b) {
+}, k = function(a) {
+return !!a.id && _.some(b, function(b) {
+return !b.hidden && a.id === b.id;
+});
+}, l = function(a) {
+return _.find(d, function(b) {
 return b === a.type;
 });
 };
-return {
-addNotification:e,
-getNotifications:f,
-clearNotifications:g,
-isNotificationPermanentlyHidden:h,
-permanentlyHideNotification:i,
-isAutoDismiss:j,
-dismissDelay:b,
-autoDismissTypes:c
+return a.$on("addNotification", function(a, b) {
+f(b);
+}), {
+addNotification:f,
+getNotifications:g,
+clearNotifications:h,
+isNotificationPermanentlyHidden:i,
+permanentlyHideNotification:j,
+isAutoDismiss:l,
+dismissDelay:c,
+autoDismissTypes:d
 };
-}, this.setDismissDelay = function(a) {
+} ], this.setDismissDelay = function(a) {
 this.dismissDelay = a;
 }, this.setAutoDismissTypes = function(a) {
 this.autoDismissTypes = a;
