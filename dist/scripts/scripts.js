@@ -2974,7 +2974,7 @@ return a.join("|");
 }
 function i() {
 return f().then(function(a) {
-return a ? a + "/metrics/stats/query" :a;
+return a ? a + "/m/stats/query" :a;
 });
 }
 function j(a) {
@@ -3050,7 +3050,7 @@ _.assign(b, a);
 var c = a.metadata.namespace, d = a.metadata.uid;
 return f().then(function(a) {
 if (!a) return null;
-var e = a + "/metrics", f = {
+var e = a + "/m", f = {
 tags:"custom_metric:true,pod_id:" + d
 };
 return b.get(e, {

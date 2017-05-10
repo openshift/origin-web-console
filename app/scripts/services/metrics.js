@@ -46,7 +46,7 @@ angular.module("openshiftConsole")
         if (!metricsURL) {
           return metricsURL;
         }
-        return metricsURL + "/metrics/stats/query";
+        return metricsURL + "/m/stats/query";
       });
     }
 
@@ -188,7 +188,7 @@ angular.module("openshiftConsole")
           return null;
         }
 
-        var url = metricsURL + "/metrics";
+        var url = metricsURL + "/m";
 
         var params = {
           tags: "custom_metric:true,pod_id:" + podId
