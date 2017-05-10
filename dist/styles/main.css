@@ -5272,6 +5272,7 @@ to{background-color:transparent}
 .navbar-project-menu .bootstrap-select.btn-group .dropdown-menu li.selected a{background-color:#1c2127!important;border-color:transparent!important;color:#fcfcfc}
 .navbar-project-menu .bootstrap-select.btn-group .dropdown-menu li.selected a:after{content:'';width:2px;height:100%;left:0;top:0;display:block;position:absolute;background-color:#00a8e1}
 .navbar-project-menu .bootstrap-select.btn-group .dropdown-menu li.divider{background-color:rgba(255,255,255,.1)!important;border-top:1px solid #050505;height:2px;margin:0!important}
+.navbar-project-menu .bootstrap-select.btn-group .dropdown-menu li:last-child>a{color:#00a8e1!important}
 .navbar-project-menu .bootstrap-select.btn-group .dropdown-menu li a{color:#dbdada;padding:10px 15px;white-space:normal}
 .navbar-project-menu .bootstrap-select.btn-group .dropdown-menu li a:focus,.navbar-project-menu .bootstrap-select.btn-group .dropdown-menu li a:hover{background-color:#383f47;border-color:transparent;color:#fcfcfc}
 .navbar-project-menu .form-group{margin-bottom:0;min-width:0;width:100%}
