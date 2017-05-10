@@ -198,9 +198,11 @@ module.exports = function (grunt) {
     },
 
     // Add vendor prefixed styles
-    autoprefixer: {
+    postcss: {
       options: {
-        browsers: ['last 1 version']
+        processors: [
+          require('autoprefixer')({browsers: ['last 1 version']})
+        ]
       },
       dist: {
         files: [{
@@ -649,7 +651,7 @@ module.exports = function (grunt) {
       'clean:server',
       'wiredep',
       'concurrent:server',
-      'autoprefixer',
+      'postcss',
       'connect:livereload',
       'watch'
     ]);
@@ -699,7 +701,7 @@ module.exports = function (grunt) {
   grunt.registerTask('test', [
     'clean:server',
     'concurrent:test',
-    'autoprefixer',
+    'postcss',
     'connect:test',
     'karma'
     // 'coverage' - add back if we want to enforce coverage percentages
@@ -711,7 +713,7 @@ module.exports = function (grunt) {
     [
       'clean:server',
       'concurrent:server',
-      'autoprefixer',
+      'postcss',
       'connect:test',
       'add-redirect-uri',
       (isMac ? 'protractor:mac' : 'protractor:default'),
@@ -727,7 +729,7 @@ module.exports = function (grunt) {
     'useminPrepare',
     'ngtemplates',
     'concurrent:dist',
-    'autoprefixer',
+    'postcss',
     'concat',
     'ngAnnotate',
     'copy:dist',
