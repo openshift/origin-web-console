@@ -66,33 +66,34 @@
                     </div>
                     <div class="list-group list-view-pf projects-list">
                       <div ng-repeat="project in projects" class="list-group-item project-info tile-click">
-                        <div row class="list-view-pf-actions project-actions" ng-if="project.status.phase == 'Active'">
-                          <span class="fa-lg project-action-item" title="View and Edit Membership">
-                            <a ng-href="project/{{project.metadata.name}}/membership" class="action-button">
-                              <i class="pficon pficon-users" aria-hidden="true"></i>
-                              <span class="sr-only">View and Edit Membership</span>
-                            </a>
-                          </span>
-                          <span class="fa-lg project-action-item" title="Edit Display Name and Description">
-                            <!-- Return to the web console root URL (this page) after editing. -->
-                            <a ng-href="project/{{project.metadata.name}}/edit?then=./" class="action-button">
-                              <i class="fa fa-pencil" aria-hidden="true"></i>
-                              <span class="sr-only">Edit Display Name and Description</span>
-                            </a>
-                          </span>
-                          <span title="Delete Project">
-                            <delete-link
-                              class="fa-lg project-action-item"
-                              kind="Project"
-                              resource-name="{{project.metadata.name}}"
-                              project-name="{{project.metadata.name}}"
-                              display-name="{{(project | displayName)}}"
-                              type-name-to-confirm="true"
-                              stay-on-current-page="true"
-                              alerts="alerts"
-                              button-only>
-                            </delete-link>
-                          </span>
+                        <div row class="list-view-pf-actions list-pf-actions" ng-if="project.status.phase == 'Active'">
+                          <div uib-dropdown>
+                            <a href="" uib-dropdown-toggle class="actions-dropdown-kebab"><i class="fa fa-ellipsis-v" aria-hidden="true"></i><span class="sr-only">Actions</span></a>
+                            <ul class="dropdown-menu dropdown-menu-right" uib-dropdown-menu role="menu">
+                              <li role="menuitem">
+                                <a ng-href="project/{{project.metadata.name}}/membership">
+                                  View Membership
+                                </a>
+                              </li>
+                              <li role="menuitem">
+                                <a ng-href="project/{{project.metadata.name}}/edit?then=./">
+                                  Edit Project
+                                </a>
+                              </li>
+                              <li role="menuitem">
+                                <delete-link
+                                  kind="Project"
+                                  label="Delete Project"
+                                  resource-name="{{project.metadata.name}}"
+                                  project-name="{{project.metadata.name}}"
+                                  display-name="{{(project | displayName)}}"
+                                  type-name-to-confirm="true"
+                                  stay-on-current-page="true"
+                                  alerts="alerts">
+                                </delete-link>
+                              </li>
+                            </ul>
+                          </div>
                         </div>
                         <div class="list-view-pf-main-info">
                           <div class="list-view-pf-description project-names">

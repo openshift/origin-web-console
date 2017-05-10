@@ -12175,7 +12175,7 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "<div ng-switch=\"row.apiObject.kind\">\n" +
     "<div ng-switch-when=\"DeploymentConfig\">\n" +
     "<div uib-dropdown>\n" +
-    "<a href=\"\" uib-dropdown-toggle class=\"actions-dropdown-kebab\"><i class=\"fa fa-ellipsis-v\"></i><span class=\"sr-only\">Actions</span></a>\n" +
+    "<a href=\"\" uib-dropdown-toggle class=\"actions-dropdown-kebab\"><i class=\"fa fa-ellipsis-v\" aria-hidden=\"true\"></i><span class=\"sr-only\">Actions</span></a>\n" +
     "<ul class=\"dropdown-menu dropdown-menu-right\" uib-dropdown-menu role=\"menu\">\n" +
     "<li ng-if=\"row.showStartPipelineAction()\" role=\"menuitem\">\n" +
     "<a href=\"\" ng-click=\"row.startBuild(row.pipelines[0])\">Start Pipeline</a>\n" +
@@ -13412,24 +13412,26 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "</div>\n" +
     "<div class=\"list-group list-view-pf projects-list\">\n" +
     "<div ng-repeat=\"project in projects\" class=\"list-group-item project-info tile-click\">\n" +
-    "<div row class=\"list-view-pf-actions project-actions\" ng-if=\"project.status.phase == 'Active'\">\n" +
-    "<span class=\"fa-lg project-action-item\" title=\"View and Edit Membership\">\n" +
-    "<a ng-href=\"project/{{project.metadata.name}}/membership\" class=\"action-button\">\n" +
-    "<i class=\"pficon pficon-users\" aria-hidden=\"true\"></i>\n" +
-    "<span class=\"sr-only\">View and Edit Membership</span>\n" +
+    "<div row class=\"list-view-pf-actions list-pf-actions\" ng-if=\"project.status.phase == 'Active'\">\n" +
+    "<div uib-dropdown>\n" +
+    "<a href=\"\" uib-dropdown-toggle class=\"actions-dropdown-kebab\"><i class=\"fa fa-ellipsis-v\" aria-hidden=\"true\"></i><span class=\"sr-only\">Actions</span></a>\n" +
+    "<ul class=\"dropdown-menu dropdown-menu-right\" uib-dropdown-menu role=\"menu\">\n" +
+    "<li role=\"menuitem\">\n" +
+    "<a ng-href=\"project/{{project.metadata.name}}/membership\">\n" +
+    "View Membership\n" +
     "</a>\n" +
-    "</span>\n" +
-    "<span class=\"fa-lg project-action-item\" title=\"Edit Display Name and Description\">\n" +
-    "\n" +
-    "<a ng-href=\"project/{{project.metadata.name}}/edit?then=./\" class=\"action-button\">\n" +
-    "<i class=\"fa fa-pencil\" aria-hidden=\"true\"></i>\n" +
-    "<span class=\"sr-only\">Edit Display Name and Description</span>\n" +
+    "</li>\n" +
+    "<li role=\"menuitem\">\n" +
+    "<a ng-href=\"project/{{project.metadata.name}}/edit?then=./\">\n" +
+    "Edit Project\n" +
     "</a>\n" +
-    "</span>\n" +
-    "<span title=\"Delete Project\">\n" +
-    "<delete-link class=\"fa-lg project-action-item\" kind=\"Project\" resource-name=\"{{project.metadata.name}}\" project-name=\"{{project.metadata.name}}\" display-name=\"{{(project | displayName)}}\" type-name-to-confirm=\"true\" stay-on-current-page=\"true\" alerts=\"alerts\" button-only>\n" +
+    "</li>\n" +
+    "<li role=\"menuitem\">\n" +
+    "<delete-link kind=\"Project\" label=\"Delete Project\" resource-name=\"{{project.metadata.name}}\" project-name=\"{{project.metadata.name}}\" display-name=\"{{(project | displayName)}}\" type-name-to-confirm=\"true\" stay-on-current-page=\"true\" alerts=\"alerts\">\n" +
     "</delete-link>\n" +
-    "</span>\n" +
+    "</li>\n" +
+    "</ul>\n" +
+    "</div>\n" +
     "</div>\n" +
     "<div class=\"list-view-pf-main-info\">\n" +
     "<div class=\"list-view-pf-description project-names\">\n" +

@@ -27,7 +27,8 @@ exports.createProject = (project, uri) => {
 exports.deleteProject = (project) => {
   h.goToPage('/');
   let projectTile = element(by.cssContainingText(".project-info", project['name']));
-  projectTile.element(by.css('.fa-trash-o')).click();
+  projectTile.element(by.css('.dropdown-toggle')).click();
+  projectTile.element(by.linkText('Delete Project')).click();
   h.setInputValue('confirmName', project.name);
   let deleteButton = element(by.cssContainingText(".modal-dialog .btn", "Delete"));
   browser.wait(protractor.ExpectedConditions.elementToBeClickable(deleteButton), 2000);
@@ -55,15 +56,15 @@ exports.deleteAllProjects = () => {
 
   projectTiles.each((elem) => {
     let projectTitle = elem.element(by.css('.tile-target span')).getText();
-    // click trash first
-    elem.element(by.css('.fa-trash-o')).click();
+    elem.element(by.css('.dropdown-toggle')).click();
+    elem.element(by.linkText('Delete Project')).click();
     h.setInputValue('confirmName', projectTitle);
     // then click delete
     let modal = element(by.css('.modal-dialog'));
     let deleteButton = modal.element(by.cssContainingText(".modal-dialog .btn", "Delete"));
     browser.wait(protractor.ExpectedConditions.elementToBeClickable(deleteButton), 2000);
     deleteButton.click();
-    h.waitForElem(element(by.cssContainingText(".alert-success", "marked for deletion")));
+    h.waitForPresence(".alert-success", "marked for deletion");
     h.waitForElemRemoval(element(by.css('.modal-dialog')));
     numDeleted++;
     if(numDeleted >= count) {
