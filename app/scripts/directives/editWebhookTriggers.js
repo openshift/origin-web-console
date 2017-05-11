@@ -2,7 +2,7 @@
 
 angular.module('openshiftConsole')
   // Element directive edit BC webhook triggers
-  .directive('editWebhookTriggers', function(ApplicationGenerator) {
+  .directive('editWebhookTriggers', function() {
     return {
       restrict: 'E',
       scope: {
@@ -13,21 +13,6 @@ angular.module('openshiftConsole')
         projectName: "=",
         form: "="
       },
-      templateUrl: 'views/directives/edit-webhook-triggers.html',
-      controller: function($scope) {
-        $scope.addWebhookTrigger = function(type) {
-          var webhook = {
-            disabled: false,
-            data: {
-              type: type
-            }
-          };
-          webhook.data[(type === "GitHub") ? "github" : "generic"] = {
-            secret: ApplicationGenerator._generateSecret()
-          };
-          $scope.triggers.push(webhook);
-          $scope.form.$setDirty();
-        };
-      }
+      templateUrl: 'views/directives/edit-webhook-triggers.html'
     };
   });

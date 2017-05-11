@@ -6611,10 +6611,11 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
 
 
   $templateCache.put('views/directives/edit-webhook-triggers.html',
-    "<h5>{{type}} webhooks\n" +
+    "<div class=\"display-webhooks\">\n" +
+    "<h5>{{type}} Webhooks\n" +
     "<span class=\"help action-inline\">\n" +
-    "<a href=\"\" aria-hidden=\"true\">\n" +
     "<span class=\"sr-only\">{{typeInfo}}</span>\n" +
+    "<a href=\"\" aria-hidden=\"true\">\n" +
     "<i class=\"pficon pficon-help\" data-toggle=\"tooltip\" aria-hidden=\"true\" data-original-title=\"{{typeInfo}}\"></i>\n" +
     "</a>\n" +
     "</span>\n" +
@@ -6622,7 +6623,7 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "<div ng-repeat=\"trigger in triggers\">\n" +
     "<div class=\"trigger-info\">\n" +
     "<span class=\"trigger-url\">\n" +
-    "<copy-to-clipboard is-disabled=\"trigger.disabled\" clipboard-text=\"bcName | webhookURL : trigger.data.type : trigger.data[(type === 'GitHub') ? 'github' : 'generic'].secret : projectName\"></copy-to-clipboard>\n" +
+    "<copy-to-clipboard is-disabled=\"trigger.disabled\" clipboard-text=\"bcName | webhookURL : trigger.data.type : trigger.data[webhookType].secret : projectName\"></copy-to-clipboard>\n" +
     "</span>\n" +
     "<span class=\"visible-xs-inline trigger-actions\">\n" +
     "<a href=\"\" ng-if=\"!trigger.disabled\" class=\"action-icon\" ng-click=\"trigger.disabled = true; form.$setDirty()\" role=\"button\">\n" +
@@ -6640,9 +6641,7 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "</span>\n" +
     "</div>\n" +
     "</div>\n" +
-    "<span>\n" +
-    "<a href=\"\" role=\"button\" ng-click=\"addWebhookTrigger(type)\">Add {{type}} Webhook</a>\n" +
-    "</span>"
+    "</div>"
   );
 
 
@@ -9139,10 +9138,38 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "<dl class=\"dl-horizontal left\">\n" +
     "<div>\n" +
     "<div ng-if=\"sources.git\">\n" +
-    "<edit-webhook-triggers type=\"GitHub\" type-info=\"The GitHub source repository must be configured to use the webhook to trigger a build when source is committed.\" triggers=\"triggers.githubWebhooks\" form=\"form\" bc-name=\"buildConfig.metadata.name\" project-name=\"project.metadata.name\">\n" +
+    "<edit-webhook-triggers ng-if=\"triggers.githubWebhooks.length\" type=\"GitHub\" type-info=\"The GitHub source repository must be configured to use the webhook to trigger a build when source is committed.\" triggers=\"triggers.githubWebhooks\" form=\"form\" bc-name=\"buildConfig.metadata.name\" project-name=\"project.metadata.name\">\n" +
     "</edit-webhook-triggers>\n" +
-    "<edit-webhook-triggers type=\"Generic\" type-info=\"A generic webhook can be triggered by any system capable of making a web request.\" triggers=\"triggers.genericWebhooks\" form=\"form\" bc-name=\"buildConfig.metadata.name\" project-name=\"project.metadata.name\">\n" +
+    "<edit-webhook-triggers ng-if=\"triggers.genericWebhooks.length\" type=\"Generic\" type-info=\"A generic webhook can be triggered by any system capable of making a web request.\" triggers=\"triggers.genericWebhooks\" form=\"form\" bc-name=\"buildConfig.metadata.name\" project-name=\"project.metadata.name\">\n" +
     "</edit-webhook-triggers>\n" +
+    "<edit-webhook-triggers ng-if=\"triggers.gitlabWebhooks.length\" type=\"GitLab\" type-info=\"The GitLab source repository must be configured to use the webhook to trigger a build when source is committed.\" triggers=\"triggers.gitlabWebhooks\" form=\"form\" bc-name=\"buildConfig.metadata.name\" project-name=\"project.metadata.name\">\n" +
+    "</edit-webhook-triggers>\n" +
+    "<edit-webhook-triggers ng-if=\"triggers.bitbucketWebhooks.length\" type=\"Bitbucket\" type-info=\"The Bitbucket source repository must be configured to use the webhook to trigger a build when source is committed.\" triggers=\"triggers.bitbucketWebhooks\" form=\"form\" bc-name=\"buildConfig.metadata.name\" project-name=\"project.metadata.name\">\n" +
+    "</edit-webhook-triggers>\n" +
+    "<div class=\"add-webhook\">\n" +
+    "<h5>Add Webhook</h5>\n" +
+    "<div class=\"trigger-info\">\n" +
+    "<span class=\"trigger-url\">\n" +
+    "<ui-select ng-model=\"createTriggerSelect.selectedType\" search-enabled=\"false\" title=\"Select a webhooke type\" class=\"select-webhook-type\" flex>\n" +
+    "<ui-select-match placeholder=\"Select a webhook type\">\n" +
+    "{{ $select.selected.label }}\n" +
+    "</ui-select-match>\n" +
+    "<ui-select-choices repeat=\"option.label as option in createTriggerSelect.options\">\n" +
+    "{{ option.label }}\n" +
+    "</ui-select-choices>\n" +
+    "</ui-select>\n" +
+    "</span>\n" +
+    "<span class=\"visible-xs-inline trigger-actions\">\n" +
+    "<a href=\"\" ng-class=\"{disabled: !createTriggerSelect.selectedType}\" class=\"action-icon\" ng-click=\"addWebhookTrigger(createTriggerSelect.selectedType)\" role=\"button\">\n" +
+    "<span class=\"fa fa-plus\" aria-hidden=\"true\" title=\"Add\"></span>\n" +
+    "<span class=\"sr-only\">Add</span>\n" +
+    "</a>\n" +
+    "</span>\n" +
+    "<span class=\"hidden-xs trigger-actions\">\n" +
+    "<a href=\"\" ng-class=\"{disabled: !createTriggerSelect.selectedType}\" ng-click=\"addWebhookTrigger(createTriggerSelect.selectedType)\" role=\"button\">Add</a>\n" +
+    "</span>\n" +
+    "</div>\n" +
+    "</div>\n" +
     "</div>\n" +
     "\n" +
     "\n" +

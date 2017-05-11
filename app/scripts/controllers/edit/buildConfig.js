@@ -107,10 +107,29 @@ angular.module('openshiftConsole')
 
     $scope.triggers = {
       githubWebhooks: [],
+      gitlabWebhooks: [],
+      bitbucketWebhooks: [],
       genericWebhooks: [],
       imageChangeTriggers: [],
       builderImageChangeTrigger: {},
       configChangeTrigger: {}
+    };
+
+    $scope.createTriggerSelect = {
+      selectedType: "",
+      options: [{
+        type: 'github',
+        label: 'GitHub'
+      }, {
+        type: 'gitlab',
+        label: 'GitLab'
+      }, {
+        type: 'bitbucket',
+        label: 'Bitbucket'
+      }, {
+        type: 'generic',
+        label: 'Generic'
+      }]
     };
 
     $scope.runPolicyTypes = [
@@ -381,6 +400,12 @@ angular.module('openshiftConsole')
           case "GitHub":
             triggerMap.githubWebhooks.push({disabled: false, data: trigger});
             break;
+          case "GitLab":
+            triggerMap.gitlabWebhooks.push({disabled: false, data: trigger});
+            break;
+          case "Bitbucket":
+            triggerMap.bitbucketWebhooks.push({disabled: false, data: trigger});
+            break;
           case "ImageChange":
             var imageChangeFrom = trigger.imageChange.from;
             if (!imageChangeFrom) {
@@ -460,6 +485,8 @@ angular.module('openshiftConsole')
 
     var updateTriggers = function() {
       var triggers = [].concat($scope.triggers.githubWebhooks,
+                              $scope.triggers.gitlabWebhooks,
+                              $scope.triggers.bitbucketWebhooks,
                               $scope.triggers.genericWebhooks,
                               $scope.triggers.imageChangeTriggers,
                               $scope.triggers.builderImageChangeTrigger,
@@ -520,6 +547,23 @@ angular.module('openshiftConsole')
         sourceMap[key] = true;
       });
       return sourceMap;
+    };
+
+    $scope.addWebhookTrigger = function(webhookLabel) {
+      if (!webhookLabel) {
+        return;
+      }
+      var webhook = {
+        disabled: false,
+        data: {
+          type: webhookLabel
+        }
+      };
+      var webhookType = _.find($scope.createTriggerSelect.options, function(o) {return o.label === webhookLabel}).type
+      webhook.data[webhookType] = {
+        secret: ApplicationGenerator._generateSecret()
+      };
+      $scope.triggers[webhookType + "Webhooks"].push(webhook);
     };
 
     $scope.save = function() {
