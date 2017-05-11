@@ -77,10 +77,14 @@
   </div>
   <div class="pods hidden-xs">
     <div ng-if="row.apiObject.kind === 'Pod'">
-      <pod-donut pods="[row.apiObject]" mini="true"></pod-donut>
+      <a ng-href="{{row.apiObject | navigateResourceURL}}" class="mini-donut-link">
+        <pod-donut pods="[row.apiObject]" mini="true"></pod-donut>
+      </a>
     </div>
     <div ng-if="row.apiObject.kind !== 'Pod'">
-      <pod-donut pods="row.getPods(row.current)" mini="true"></pod-donut>
+      <a href="" ng-click="row.navigateToPods()" class="mini-donut-link" ng-class="{ 'disabled-link': !(row.getPods(row.current) | size) }">
+        <pod-donut pods="row.getPods(row.current)" mini="true"></pod-donut>
+      </a>
     </div>
   </div>
 </div>
