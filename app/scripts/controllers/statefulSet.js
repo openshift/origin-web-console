@@ -2,16 +2,17 @@
 
 angular
   .module('openshiftConsole')
-  .controller('StatefulSetController', function(
-    $filter,
-    $scope,
-    $routeParams,
-    AlertMessageService,
-    BreadcrumbsService,
-    DataService,
-    EnvironmentService,
-    MetricsService,
-    ProjectsService) {
+  .controller('StatefulSetController',
+              function($filter,
+                       $scope,
+                       $routeParams,
+                       AlertMessageService,
+                       BreadcrumbsService,
+                       DataService,
+                       EnvironmentService,
+                       MetricsService,
+                       ProjectsService,
+                       PodsService) {
 
     $scope.projectName = $routeParams.project;
     $scope.statefulSetName = $routeParams.statefulset;
@@ -36,13 +37,6 @@ angular
 
     var watches = [];
     var projectContext;
-
-    var updatePods = function(pods, selector) {
-      if (!pods || !selector) {
-        return;
-      }
-      return selector.select(pods);
-    };
 
     var resourceGroupVersion = {
       resource: 'statefulsets',
@@ -82,18 +76,10 @@ angular
               });
             }));
 
-            var pods;
-            var selector;
-            $scope.$watch('statefulSet.spec.selector', function() {
-              selector = new LabelSelector($scope.statefulSet.spec.selector);
-              $scope.podsForStatefulSet = updatePods(pods, selector);
-            }, true);
-
             watches.push(DataService.watch('pods', context, function(podData) {
-              pods = podData.by('metadata.name');
-              $scope.podsForStatefulSet = updatePods(pods, selector);
+              var pods = podData.by('metadata.name');
+              $scope.podsForStatefulSet = PodsService.filterForOwner(pods, statefulSet);
             }));
-
           });
       }));
 
