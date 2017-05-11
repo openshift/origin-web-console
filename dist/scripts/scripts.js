@@ -1243,7 +1243,10 @@ DEFAULT_HPA_CPU_TARGET_PERCENT:80,
 DISABLE_OVERVIEW_METRICS:!1,
 DISABLE_CUSTOM_METRICS:!1,
 DISABLE_WILDCARD_ROUTES:!0,
-AVAILABLE_KINDS_BLACKLIST:[ "Binding", "Ingress", "DeploymentConfigRollback" ],
+AVAILABLE_KINDS_BLACKLIST:[ {
+kind:"Binding",
+group:""
+}, "Ingress", "DeploymentConfigRollback" ],
 ENABLE_TECH_PREVIEW_FEATURE:{
 service_catalog_landing_page:!1,
 template_service_broker:!1,
