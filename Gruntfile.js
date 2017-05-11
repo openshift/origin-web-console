@@ -558,13 +558,6 @@ module.exports = function (grunt) {
 
     // Run some tasks in parallel to speed up the build process
     concurrent: {
-      server: [
-        'less:development',
-        'copy:styles',
-        'copy:extensions',
-        'copy:localConfig',
-        'replace:index'
-      ],
       test: [
         'less:development'
       ],
@@ -573,8 +566,8 @@ module.exports = function (grunt) {
         // remove imagemin from build, since it doesn't tend to behave well cross-platform
         // 'imagemin',
         'svgmin',
-        // Also do everything we do in concurrent server so that you can leave grunt server running while doing a build
-        'concurrent:server'
+        // Also do everything we do in the development build so that you can leave grunt server running while doing a build
+        'development-build'
       ]
     },
 
@@ -642,6 +635,14 @@ module.exports = function (grunt) {
   });
 
 
+  grunt.registerTask('development-build', [
+    'less:development',
+    'copy:styles',
+    'copy:extensions',
+    'copy:localConfig',
+    'replace:index'
+  ]);
+
   grunt.registerTask('serve', 'Compile then start a connect web server', function (target) {
     if (target === 'dist') {
       return grunt.task.run(['build', 'connect:dist:keepalive']);
@@ -650,7 +651,7 @@ module.exports = function (grunt) {
     grunt.task.run([
       'clean:server',
       'wiredep',
-      'concurrent:server',
+      'development-build',
       'postcss',
       'connect:livereload',
       'watch'
@@ -712,7 +713,7 @@ module.exports = function (grunt) {
     [isMac ? 'protractor:mac' : 'protractor:default'] : // if a baseUrl is defined assume we dont want to run the local grunt server
     [
       'clean:server',
-      'concurrent:server',
+      'development-build',
       'postcss',
       'connect:test',
       'add-redirect-uri',
