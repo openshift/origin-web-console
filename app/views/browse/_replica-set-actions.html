@@ -44,7 +44,6 @@
         group="extensions"
         resource-name="{{replicaSet.metadata.name}}"
         project-name="{{replicaSet.metadata.namespace}}"
-        replicas="replicaSet.status.replicas"
         hpa-list="hpaForRS"
         alerts="alerts">
       </delete-link>

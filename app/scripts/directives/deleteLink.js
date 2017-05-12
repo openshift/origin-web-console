@@ -1,7 +1,17 @@
 'use strict';
 
 angular.module("openshiftConsole")
-  .directive("deleteLink", function ($uibModal, $location, $filter, $q, hashSizeFilter, APIService, DataService, AlertMessageService, Navigate, Logger) {
+  .directive("deleteLink",
+             function($uibModal,
+                      $location,
+                      $filter,
+                      $q,
+                      hashSizeFilter,
+                      APIService,
+                      DataService,
+                      Navigate,
+                      NotificationsService,
+                      Logger) {
     return {
       restrict: "E",
       scope: {
@@ -29,8 +39,6 @@ angular.module("openshiftConsole")
         buttonOnly: "@",
         // Stay on the current page without redirecting to the resource list.
         stayOnCurrentPage: "=?",
-        // Optional replica count for a resource like a ReplicationController or ReplicaSet to display a warning.
-        replicas: '=?',
         // Array of associated HPAs for this resource. If set, prompts the user to delete the HPA resources as well.
         hpaList: "=?",
         // Optional callback when the delete succeeds
@@ -61,7 +69,7 @@ angular.module("openshiftConsole")
           if (scope.stayOnCurrentPage) {
             scope.alerts[alert.name] = alert.data;
           } else {
-            AlertMessageService.addAlert(alert);
+            NotificationsService.addNotification(alert.data);
           }
         };
 
@@ -155,21 +163,11 @@ angular.module("openshiftConsole")
               }
 
               // Delete any associated HPAs if requested.
-              var promises = [];
               if (scope.options.deleteHPAs) {
-                _.forEach(scope.hpaList, function(hpa) {
-                  promises.push(deleteHPA(hpa));
-                });
+                _.each(scope.hpaList, deleteHPA);
               }
 
-              if (!promises.length) {
-                navigateToList();
-              } else {
-                // Wait until all promises resolve so that we can add alerts to
-                // AlertMessageService before navigating, otherwise they aren't
-                // displayed.
-                $q.all(promises).then(navigateToList);
-              }
+              navigateToList();
             })
             .catch(function(err) {
               // called if failure to delete

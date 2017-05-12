@@ -9788,7 +9788,7 @@ precision:"=?"
 },
 template:'<span data-timestamp="{{timestamp}}" data-omit-single="{{omitSingle}}" data-precision="{{precision}}" class="duration">{{timestamp | duration : null : omitSingle : precision}}</span>'
 };
-}), angular.module("openshiftConsole").directive("deleteLink", [ "$uibModal", "$location", "$filter", "$q", "hashSizeFilter", "APIService", "DataService", "AlertMessageService", "Navigate", "Logger", function(a, b, c, d, e, f, g, h, i, j) {
+}), angular.module("openshiftConsole").directive("deleteLink", [ "$uibModal", "$location", "$filter", "$q", "hashSizeFilter", "APIService", "DataService", "Navigate", "NotificationsService", "Logger", function(a, b, c, d, e, f, g, h, i, j) {
 return {
 restrict:"E",
 scope:{
@@ -9804,7 +9804,6 @@ typeNameToConfirm:"=?",
 label:"@?",
 buttonOnly:"@",
 stayOnCurrentPage:"=?",
-replicas:"=?",
 hpaList:"=?",
 success:"=?",
 redirectUrl:"@?"
@@ -9813,20 +9812,20 @@ templateUrl:function(a, b) {
 return angular.isDefined(b.buttonOnly) ? "views/directives/delete-button.html" :"views/directives/delete-link.html";
 },
 replace:!0,
-link:function(e, k, l) {
-"Project" === l.kind && (e.isProject = !0), e.options = {
+link:function(d, e, k) {
+"Project" === k.kind && (d.isProject = !0), d.options = {
 deleteHPAs:!0
 };
-var m = function(a) {
-e.stayOnCurrentPage ? e.alerts[a.name] = a.data :h.addAlert(a);
-}, n = function(a) {
+var l = function(a) {
+d.stayOnCurrentPage ? d.alerts[a.name] = a.data :i.addNotification(a.data);
+}, m = function(a) {
 return g["delete"]({
 resource:"horizontalpodautoscalers",
 group:"autoscaling"
 }, a.metadata.name, {
-namespace:e.projectName
+namespace:d.projectName
 }).then(function() {
-m({
+l({
 name:a.metadata.name,
 data:{
 type:"success",
@@ -9834,7 +9833,7 @@ message:"Horizontal Pod Autoscaler " + a.metadata.name + " was marked for deleti
 }
 });
 })["catch"](function(b) {
-m({
+l({
 name:a.metadata.name,
 data:{
 type:"error",
@@ -9842,48 +9841,44 @@ message:"Horizontal Pod Autoscaler " + a.metadata.name + " could not be deleted.
 }
 }), j.error("HPA " + a.metadata.name + " could not be deleted.", b);
 });
-}, o = function() {
-if (!e.stayOnCurrentPage) {
-if (e.redirectUrl) return void b.url(e.redirectUrl);
-if ("Project" !== e.kind) return void i.toResourceList(f.kindToResource(e.kind), e.projectName);
-if ("/" === b.path()) return void e.$emit("deleteProject");
+}, n = function() {
+if (!d.stayOnCurrentPage) {
+if (d.redirectUrl) return void b.url(d.redirectUrl);
+if ("Project" !== d.kind) return void h.toResourceList(f.kindToResource(d.kind), d.projectName);
+if ("/" === b.path()) return void d.$emit("deleteProject");
 var a = URI("/");
 b.url(a);
 }
 };
-e.openDeleteModal = function() {
-if (!e.disableDelete) {
+d.openDeleteModal = function() {
+if (!d.disableDelete) {
 var b = a.open({
 animation:!0,
 templateUrl:"views/modals/delete-resource.html",
 controller:"DeleteModalController",
-scope:e
+scope:d
 });
 b.result.then(function() {
-var a = e.kind, b = e.resourceName, h = e.typeDisplayName || c("humanizeKind")(a), i = h + " '" + (e.displayName ? e.displayName :b) + "'", k = "Project" === e.kind ? {} :{
-namespace:e.projectName
+var a = d.kind, b = d.resourceName, e = d.typeDisplayName || c("humanizeKind")(a), h = e + " '" + (d.displayName ? d.displayName :b) + "'", i = "Project" === d.kind ? {} :{
+namespace:d.projectName
 };
 g["delete"]({
 resource:f.kindToResource(a),
-group:e.group
-}, b, k).then(function() {
-m({
+group:d.group
+}, b, i).then(function() {
+l({
 name:b,
 data:{
 type:"success",
-message:_.capitalize(i) + " was marked for deletion."
+message:_.capitalize(h) + " was marked for deletion."
 }
-}), e.success && e.success();
-var a = [];
-e.options.deleteHPAs && _.forEach(e.hpaList, function(b) {
-a.push(n(b));
-}), a.length ? d.all(a).then(o) :o();
+}), d.success && d.success(), d.options.deleteHPAs && _.each(d.hpaList, m), n();
 })["catch"](function(a) {
-e.alerts[b] = {
+d.alerts[b] = {
 type:"error",
-message:_.capitalize(i) + "' could not be deleted.",
+message:_.capitalize(h) + "' could not be deleted.",
 details:c("getErrorDetails")(a)
-}, j.error(i + " could not be deleted.", a);
+}, j.error(h + " could not be deleted.", a);
 });
 });
 }
