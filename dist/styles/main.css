@@ -5504,6 +5504,7 @@ body,html{margin:0;padding:0}
 .console-os .middle,.console-os .sidebar-left,.console-os .sidebar-right{-webkit-overflow-scrolling:touch}
 .console-os .sidebar-left{-webkit-flex:0 0 145px;-moz-flex:0 0 145px;-ms-flex:0 0 145px;flex:0 0 145px;overflow-y:visible}
 .console-os .middle{-webkit-flex:1 1 0%;-moz-flex:1 1 0%;-ms-flex:1 1 0%;flex:1 1 0%;position:relative;overflow-x:hidden;overflow-y:auto}
+.console-os .middle.landing-page{-webkit-overflow-scrolling:auto}
 .console-os .sidebar-right{border-left:1px solid #dadada;-webkit-flex:0 0 210px;-moz-flex:0 0 210px;-ms-flex:0 0 210px;flex:0 0 210px;position:relative}
 .middle-section .middle-container{display:-webkit-flex;display:-moz-flex;display:-ms-flexbox;display:-ms-flex;display:flex;-webkit-flex-direction:column;-moz-flex-direction:column;-ms-flex-direction:column;flex-direction:column;-webkit-flex-wrap:nowrap;-moz-flex-wrap:nowrap;-ms-flex-wrap:nowrap;flex-wrap:nowrap;-webkit-align-items:flex-start;-moz-align-items:flex-start;align-items:flex-start;-webkit-justify-content:flex-start;-moz-justify-content:flex-start;justify-content:flex-start;-ms-flex-align:start;-ms-flex-pack:start;height:100%;position:absolute;top:0;right:0;bottom:0;left:0}
 .middle-section .middle-container .middle-header{-webkit-flex:0 0 auto;-moz-flex:0 0 auto;-ms-flex:0 0 auto;flex:0 0 auto;width:100%}
