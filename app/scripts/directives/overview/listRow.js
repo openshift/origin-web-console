@@ -225,6 +225,30 @@ function OverviewListRow($filter,
       });
   };
 
+  row.canDeploy = function() {
+    if (!row.apiObject) {
+      return false;
+    }
+
+    if (row.apiObject.metadata.deletionTimestamp) {
+      return false;
+    }
+
+    if (row.deploymentInProgress) {
+      return false;
+    }
+
+    if (row.apiObject.spec.paused) {
+      return false;
+    }
+
+    return true;
+  };
+
+  row.isPaused = function() {
+    return row.apiObject.spec.paused;
+  };
+
   row.startDeployment = function() {
     DeploymentsService.startLatestDeployment(row.apiObject, {
       namespace: row.apiObject.metadata.namespace

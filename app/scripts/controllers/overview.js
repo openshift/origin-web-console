@@ -501,7 +501,11 @@ function OverviewController($scope,
 
     // Add any failed / canceled deployment notifications.
     var mostRecent = getMostRecentReplicationController(deploymentConfig);
-    notifications = ResourceAlertsService.getDeploymentStatusAlerts(deploymentConfig, mostRecent);
+    _.assign(
+      notifications,
+      ResourceAlertsService.getDeploymentStatusAlerts(deploymentConfig, mostRecent),
+      ResourceAlertsService.getPausedDeploymentAlerts(deploymentConfig)
+    );
 
     // Roll up notifications like pod warnings for any visible replication controller.
     var visibleReplicationControllers = getVisibleReplicationControllers(deploymentConfig);
@@ -534,7 +538,7 @@ function OverviewController($scope,
   //   key: object UID
   //   value: alerts object
   var updateDeploymentWarnings = function(deployment) {
-    var notifications = {};
+    var notifications = ResourceAlertsService.getPausedDeploymentAlerts(deployment);
 
     // Roll up notifications like pod warnings for any visible replica set.
     var visibleReplicaSets = getVisibleReplicaSets(deployment);

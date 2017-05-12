@@ -177,7 +177,7 @@ return _.size(b) < 2 ? null :b[1];
 };
 var pa = function(a) {
 var b = {}, c = na(a);
-b = u.getDeploymentStatusAlerts(a, c);
+_.assign(b, u.getDeploymentStatusAlerts(a, c), u.getPausedDeploymentAlerts(a));
 var d = oa(a);
 _.each(d, function(a) {
 var c = ka(a);
@@ -189,7 +189,7 @@ _.each(w.deploymentConfigs, pa);
 var b = Q(a);
 return b ? _.get(w, [ "replicaSetsByDeploymentUID", b ]) :{};
 }, sa = function(a) {
-var b = {}, c = ra(a);
+var b = u.getPausedDeploymentAlerts(a), c = ra(a);
 _.each(c, function(a) {
 var c = ka(a);
 _.assign(b, c);
@@ -1068,6 +1068,10 @@ message:"An error occurred while starting the " + c + ".",
 details:k(b)
 };
 });
+}, h.canDeploy = function() {
+return !!h.apiObject && (!h.apiObject.metadata.deletionTimestamp && (!h.deploymentInProgress && !h.apiObject.spec.paused));
+}, h.isPaused = function() {
+return h.apiObject.spec.paused;
 }, h.startDeployment = function() {
 e.startLatestDeployment(h.apiObject, {
 namespace:h.apiObject.metadata.namespace
@@ -4548,10 +4552,10 @@ sortAppNames:function(a) {
 a.sort(b);
 }
 };
-}), angular.module("openshiftConsole").factory("ResourceAlertsService", [ "$filter", "AlertMessageService", "Navigate", "QuotaService", function(a, b, c, d) {
-var e = a("annotation"), f = a("deploymentStatus"), g = a("groupedPodWarnings"), h = function(a, d) {
+}), angular.module("openshiftConsole").factory("ResourceAlertsService", [ "$filter", "AlertMessageService", "DeploymentsService", "Navigate", "QuotaService", function(a, b, c, d, e) {
+var f = a("annotation"), g = a("humanizeKind"), h = a("deploymentStatus"), i = a("groupedPodWarnings"), j = function(a, c) {
 if (_.isEmpty(a)) return {};
-var e = {}, f = g(a);
+var e = {}, f = i(a);
 return _.each(f, function(a, f) {
 var g = _.head(a);
 if (g) {
@@ -4562,7 +4566,7 @@ message:g.message
 switch (g.reason) {
 case "Looping":
 case "NonZeroExit":
-var j = c.resourceURL(g.pod, "Pod", d), k = URI(j).addSearch({
+var j = d.resourceURL(g.pod, "Pod", c), k = URI(j).addSearch({
 tab:"logs",
 container:g.container
 }).toString();
@@ -4573,27 +4577,27 @@ label:"View Log"
 break;
 
 case "NonZeroExitTerminatingPod":
-if (b.isAlertPermanentlyHidden(h, d)) return;
+if (b.isAlertPermanentlyHidden(h, c)) return;
 i.links = [ {
 href:"",
 label:"Don't Show Me Again",
 onClick:function() {
-return b.permanentlyHideAlert(h, d), !0;
+return b.permanentlyHideAlert(h, c), !0;
 }
 } ];
 }
 e[h] = i;
 }
 }), e;
-}, i = function(a, e, f, g) {
+}, k = function(a, c, f, g) {
 var h = b.isAlertPermanentlyHidden("overview-quota-limit-reached", f);
-if (!h && d.isAnyQuotaExceeded(a, e)) {
+if (!h && e.isAnyQuotaExceeded(a, c)) {
 if (g.quotaExceeded) return;
 g.quotaExceeded = {
 type:"warning",
 message:"Quota limit has been reached.",
 links:[ {
-href:c.quotaURL(),
+href:d.quotaURL(),
 label:"View Quota"
 }, {
 href:"",
@@ -4604,12 +4608,34 @@ return b.permanentlyHideAlert("overview-quota-limit-reached", f), !0;
 } ]
 };
 } else delete g.quotaExceeded;
-}, j = function(a, b) {
+}, l = function(b) {
+var d = {};
+return _.get(b, "spec.paused") && (d[b.metadata.uid + "-paused"] = {
+type:"info",
+message:b.metadata.name + " is paused.",
+detail:"This will stop any new rollouts or triggers from running until resumed.",
+links:[ {
+href:"",
+label:"Resume Rollouts",
+onClick:function() {
+c.setPaused(b, !1, {
+namespace:b.metadata.namespace
+}).then(_.noop, function(c) {
+d[b.metadata.uid + "-pause-error"] = {
+type:"error",
+message:"An error occurred resuming the " + g(b.kind) + ".",
+details:a("getErrorDetails")(c)
+};
+});
+}
+} ]
+}), d;
+}, m = function(a, b) {
 if (!a || !b) return {};
-var d, g = {}, h = _.get(a, "metadata.name"), i = f(b), j = e(b, "deploymentVersion"), k = j ? h + " #" + j :b.metadata.name, l = c.resourceURL(b);
+var c, e = {}, g = _.get(a, "metadata.name"), i = h(b), j = f(b, "deploymentVersion"), k = j ? g + " #" + j :b.metadata.name, l = d.resourceURL(b);
 switch (i) {
 case "Cancelled":
-g[b.metadata.uid + "-cancelled"] = {
+e[b.metadata.uid + "-cancelled"] = {
 type:"info",
 message:"Deployment " + k + " was cancelled.",
 links:[ {
@@ -4620,14 +4646,14 @@ label:"View Deployment"
 break;
 
 case "Failed":
-d = URI(l).addSearch({
+c = URI(l).addSearch({
 tab:"logs"
-}).toString(), g[b.metadata.uid + "-failed"] = {
+}).toString(), e[b.metadata.uid + "-failed"] = {
 type:"error",
 message:"Deployment " + k + " failed.",
-reason:e(b, "openshift.io/deployment.status-reason"),
+reason:f(b, "openshift.io/deployment.status-reason"),
 links:[ {
-href:d,
+href:c,
 label:"View Log"
 }, {
 href:"project/" + b.metadata.namespace + "/browse/events",
@@ -4635,13 +4661,13 @@ label:"View Events"
 } ]
 };
 }
-return g;
-}, k = function(a, b, c, d) {
+return e;
+}, n = function(a, b, c, d) {
 a[b + "-" + c.reason] = {
 type:d,
 message:c.message
 };
-}, l = function(a) {
+}, o = function(a) {
 var b = {};
 if (!a) return b;
 var c = a.metadata.uid, d = _.find(a.status.conditions, {
@@ -4651,13 +4677,14 @@ reason:"ProvisionFailed"
 }), f = _.find(a.status.conditions, {
 reason:"DeprovisioningFailed"
 });
-return d && k(b, c, d, "warning"), e && k(b, c, e, "error"), f && k(b, c, f, "error"), b;
+return d && n(b, c, d, "warning"), e && n(b, c, e, "error"), f && n(b, c, f, "error"), b;
 };
 return {
-getPodAlerts:h,
-setGenericQuotaWarning:i,
-getDeploymentStatusAlerts:j,
-getServiceInstanceAlerts:l
+getPodAlerts:j,
+setGenericQuotaWarning:k,
+getDeploymentStatusAlerts:m,
+getPausedDeploymentAlerts:l,
+getServiceInstanceAlerts:o
 };
 } ]), angular.module("openshiftConsole").factory("ListRowUtils", function() {
 var a = function(a) {
