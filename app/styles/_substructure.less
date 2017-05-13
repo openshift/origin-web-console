@@ -11,6 +11,9 @@ html,body {
 }
 .console-os {
   background-color: @body-bg;
+  .console-os-wrap {
+    overflow-x: hidden;
+  }
   .top-header {
     .flex-display(@display: flex);
     position:relative;
@@ -150,6 +153,9 @@ html,body {
       // make scrollable
       overflow-x: hidden;
       overflow-y: auto;
+      &.landing-page {
+        -webkit-overflow-scrolling: auto;  // resolves iOS bug where .landing-search-area and .landing-side-bar disappear
+      }
     }
     .sidebar-right {
       border-left: 1px solid #dadada;

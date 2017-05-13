@@ -32,9 +32,10 @@
   background-color: @scrollbar-track;
 }
 
+.chromeless .middle,
 .landing,
 .landing-side-bar,
-.log-view.log-fixed-height .log-view-output,
+.log-view .log-view-output,
 .navbar-project-menu .dropdown-menu {
   &::-webkit-scrollbar-thumb {
     background-color: @scrollbar-thumb-inverse;
@@ -52,15 +53,6 @@
 
 .landing-side-bar::-webkit-scrollbar-track {
   background-color: @scrollbar-track-landing-side-bar;
-}
-
-.log-view.log-fixed-height .log-view-output {
-  &::-webkit-scrollbar {
-    width: @scrollbar-width-log-viewer;
-  }
-  &::-webkit-scrollbar-track {
-    background-color: @scrollbar-track-inverse-alt;
-  }
 }
 
 .navbar-project-menu ::-webkit-scrollbar-track {

@@ -45,6 +45,9 @@ angular.module("openshiftConsole")
           label: "Last 4 hours",
           value: 4 * 60
         }, {
+          label: "Last 12 hours",
+          value: 12 * 60
+        }, {
           label: "Last day",
           value: 24 * 60
         }, {

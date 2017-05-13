@@ -42,11 +42,10 @@
     <li ng-if="'replicationcontrollers' | canI : 'delete'">
       <delete-link
         kind="ReplicationController"
-        type-display-name="deployment"
+        type-display-name="{{deploymentConfigName ? 'deployment' : 'replication controller'}}"
         resource-name="{{replicaSet.metadata.name}}"
         project-name="{{replicaSet.metadata.namespace}}"
         alerts="alerts"
-        replicas="replicaSet.status.replicas"
         hpa-list="hpaForRS"
         redirect-url="{{replicaSet | configURLForResource}}">
       </delete-link>

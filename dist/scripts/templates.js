@@ -1533,7 +1533,7 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "</li>\n" +
     "<li ng-if=\"{ group: 'extensions', resource: 'replicasets' } | canI : 'delete'\">\n" +
     "\n" +
-    "<delete-link kind=\"ReplicaSet\" group=\"extensions\" resource-name=\"{{replicaSet.metadata.name}}\" project-name=\"{{replicaSet.metadata.namespace}}\" replicas=\"replicaSet.status.replicas\" hpa-list=\"hpaForRS\" alerts=\"alerts\">\n" +
+    "<delete-link kind=\"ReplicaSet\" group=\"extensions\" resource-name=\"{{replicaSet.metadata.name}}\" project-name=\"{{replicaSet.metadata.namespace}}\" hpa-list=\"hpaForRS\" alerts=\"alerts\">\n" +
     "</delete-link>\n" +
     "</li>\n" +
     "</ul>\n" +
@@ -1744,7 +1744,7 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "<a ng-href=\"{{replicaSet | editYamlURL}}\" role=\"button\">Edit YAML</a>\n" +
     "</li>\n" +
     "<li ng-if=\"'replicationcontrollers' | canI : 'delete'\">\n" +
-    "<delete-link kind=\"ReplicationController\" type-display-name=\"deployment\" resource-name=\"{{replicaSet.metadata.name}}\" project-name=\"{{replicaSet.metadata.namespace}}\" alerts=\"alerts\" replicas=\"replicaSet.status.replicas\" hpa-list=\"hpaForRS\" redirect-url=\"{{replicaSet | configURLForResource}}\">\n" +
+    "<delete-link kind=\"ReplicationController\" type-display-name=\"{{deploymentConfigName ? 'deployment' : 'replication controller'}}\" resource-name=\"{{replicaSet.metadata.name}}\" project-name=\"{{replicaSet.metadata.namespace}}\" alerts=\"alerts\" hpa-list=\"hpaForRS\" redirect-url=\"{{replicaSet | configURLForResource}}\">\n" +
     "</delete-link>\n" +
     "</li>\n" +
     "</ul>\n" +
@@ -4072,7 +4072,7 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "<a ng-href=\"{{statefulSet | editYamlURL}}\" role=\"button\">Edit YAML</a>\n" +
     "</li>\n" +
     "<li ng-if=\"resourceGroupVersion | canI : 'delete'\">\n" +
-    "<delete-link kind=\"StatefulSet\" group=\"apps\" resource-name=\"{{statefulSet.metadata.name}}\" project-name=\"{{statefulSet.metadata.namespace}}\" replicas=\"statefulSet.spec.replicas\" alerts=\"alerts\">\n" +
+    "<delete-link kind=\"StatefulSet\" group=\"apps\" resource-name=\"{{statefulSet.metadata.name}}\" project-name=\"{{statefulSet.metadata.namespace}}\" alerts=\"alerts\">\n" +
     "</delete-link>\n" +
     "</li>\n" +
     "</ul>\n" +
@@ -4866,7 +4866,7 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "<div class=\"middle-content\">\n" +
     "<div class=\"container surface-shaded gutter-top\">\n" +
     "<div class=\"col-md-12\">\n" +
-    "<h1>New Project</h1>\n" +
+    "<h1>Create Project</h1>\n" +
     "<alerts alerts=\"alerts\"></alerts>\n" +
     "<create-project alerts=\"alerts\"></create-project>\n" +
     "</div>\n" +
@@ -10931,12 +10931,21 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "<form>\n" +
     "<div class=\"modal-body\">\n" +
     "<h1>Are you sure you want to delete the {{typeDisplayName || (kind | humanizeKind)}} '<strong>{{displayName ? displayName : resourceName}}</strong>'?</h1>\n" +
-    "<div ng-if=\"replicas\" class=\"alert alert-warning\">\n" +
-    "<span class=\"pficon pficon-warning-triangle-o\" aria-hidden=\"true\"></span>\n" +
-    "<span class=\"sr-only\">Warning:</span>\n" +
-    "<strong>{{resourceName}}</strong> has running pods. Deleting the {{typeDisplayName || (kind | humanizeKind)}} will <strong>not</strong> delete the pods it controls. Consider scaling the {{typeDisplayName || (kind | humanizeKind)}} down to 0 before continuing.\n" +
-    "</div>\n" +
-    "<p>This<span ng-if=\"isProject\"> will <strong>delete all resources</strong> associated with the project {{displayName ? displayName : resourceName}} and</span> <strong>cannot be undone</strong>. Make sure this is something you really want to do!</p>\n" +
+    "<p>\n" +
+    "<span ng-if=\"kind === 'Deployment'\">\n" +
+    "This will delete the deployment, all rollout history, and any running pods.\n" +
+    "</span>\n" +
+    "<span ng-if=\"kind === 'BuildConfig'\">\n" +
+    "This will delete the build config and all build history.\n" +
+    "</span>\n" +
+    "<span ng-if=\"kind === 'ReplicationController' || kind === 'ReplicaSet' || kind === 'StatefulSet'\">\n" +
+    "This will delete the {{typeDisplayName || (kind | humanizeKind)}} and any running pods.\n" +
+    "</span>\n" +
+    "<span ng-if=\"isProject\">\n" +
+    "This will <strong>delete all resources</strong> associated with the project {{displayName ? displayName : resourceName}}.\n" +
+    "</span>\n" +
+    "<strong>It cannot be undone.</strong> Make sure this is something you really want to do!\n" +
+    "</p>\n" +
     "<div ng-show=\"typeNameToConfirm\">\n" +
     "<p>Type the name of the {{typeDisplayName || (kind | humanizeKind)}} to confirm.</p>\n" +
     "<p>\n" +
@@ -10944,22 +10953,10 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "<input ng-model=\"confirmName\" id=\"resource-to-delete\" type=\"text\" class=\"form-control input-lg\" autocorrect=\"off\" autocapitalize=\"off\" spellcheck=\"false\" autofocus>\n" +
     "</p>\n" +
     "</div>\n" +
-    "<div ng-switch=\"kind\">\n" +
-    "<div ng-switch-when=\"Deployment\">\n" +
-    "<strong>Note:</strong> None of the replica sets created by this deployment will be deleted. To delete the deployment and all of its replica sets, you can run the command\n" +
-    "<pre class=\"code prettyprint mar-top-md\">oc delete deployment {{resourceName}} -n {{projectName}}</pre>\n" +
-    "Learn more about the <a href=\"command-line\">command line tools</a>.\n" +
-    "</div>\n" +
-    "<div ng-switch-when=\"DeploymentConfig\">\n" +
+    "<div ng-if=\"kind === 'DeploymentConfig'\">\n" +
     "<strong>Note:</strong> None of the deployments created by this deployment config will be deleted. To delete the deployment config and all of its deployments, you can run the command\n" +
     "<pre class=\"code prettyprint mar-top-md\">oc delete dc {{resourceName}} -n {{projectName}}</pre>\n" +
     "Learn more about the <a href=\"command-line\">command line tools</a>.\n" +
-    "</div>\n" +
-    "<div ng-switch-when=\"BuildConfig\">\n" +
-    "<strong>Note:</strong> None of the builds created by this build config will be deleted. To delete the build config and all of its builds, you can run the command\n" +
-    "<pre class=\"code prettyprint mar-top-md\">oc delete bc {{resourceName}} -n {{projectName}}</pre>\n" +
-    "Learn more about the <a href=\"command-line\">command line tools</a>.\n" +
-    "</div>\n" +
     "</div>\n" +
     "\n" +
     "<div ng-if=\"hpaList.length > 0\">\n" +
@@ -12187,7 +12184,7 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "<div ng-switch=\"row.apiObject.kind\">\n" +
     "<div ng-switch-when=\"DeploymentConfig\">\n" +
     "<div uib-dropdown>\n" +
-    "<a href=\"\" uib-dropdown-toggle class=\"actions-dropdown-kebab\"><i class=\"fa fa-ellipsis-v\"></i><span class=\"sr-only\">Actions</span></a>\n" +
+    "<a href=\"\" uib-dropdown-toggle class=\"actions-dropdown-kebab\"><i class=\"fa fa-ellipsis-v\" aria-hidden=\"true\"></i><span class=\"sr-only\">Actions</span></a>\n" +
     "<ul class=\"dropdown-menu dropdown-menu-right\" uib-dropdown-menu role=\"menu\">\n" +
     "<li ng-if=\"row.showStartPipelineAction()\" role=\"menuitem\">\n" +
     "<a href=\"\" ng-click=\"row.startBuild(row.pipelines[0])\">Start Pipeline</a>\n" +
@@ -13390,11 +13387,11 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "<div ng-if=\"!loading\">\n" +
     "<div class=\"projects-header\">\n" +
     "<div class=\"projects-bar\">\n" +
-    "<h1>Projects</h1>\n" +
+    "<h1>My Projects</h1>\n" +
     "<div class=\"projects-options\">\n" +
     "<div class=\"projects-add\" ng-if=\"canCreate\">\n" +
     "<a href=\"create-project\" class=\"btn btn-md btn-primary\">\n" +
-    "New Project\n" +
+    "Create Project\n" +
     "</a>\n" +
     "</div>\n" +
     "<div class=\"projects-search\">\n" +
@@ -13424,24 +13421,26 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "</div>\n" +
     "<div class=\"list-group list-view-pf projects-list\">\n" +
     "<div ng-repeat=\"project in projects\" class=\"list-group-item project-info tile-click\">\n" +
-    "<div row class=\"list-view-pf-actions project-actions\" ng-if=\"project.status.phase == 'Active'\">\n" +
-    "<span class=\"fa-lg project-action-item\" title=\"View and Edit Membership\">\n" +
-    "<a ng-href=\"project/{{project.metadata.name}}/membership\" class=\"action-button\">\n" +
-    "<i class=\"pficon pficon-users\" aria-hidden=\"true\"></i>\n" +
-    "<span class=\"sr-only\">View and Edit Membership</span>\n" +
+    "<div row class=\"list-view-pf-actions list-pf-actions\" ng-if=\"project.status.phase == 'Active'\">\n" +
+    "<div uib-dropdown>\n" +
+    "<a href=\"\" uib-dropdown-toggle class=\"actions-dropdown-kebab\"><i class=\"fa fa-ellipsis-v\" aria-hidden=\"true\"></i><span class=\"sr-only\">Actions</span></a>\n" +
+    "<ul class=\"dropdown-menu dropdown-menu-right\" uib-dropdown-menu role=\"menu\">\n" +
+    "<li role=\"menuitem\">\n" +
+    "<a ng-href=\"project/{{project.metadata.name}}/membership\">\n" +
+    "View Membership\n" +
     "</a>\n" +
-    "</span>\n" +
-    "<span class=\"fa-lg project-action-item\" title=\"Edit Display Name and Description\">\n" +
-    "\n" +
-    "<a ng-href=\"project/{{project.metadata.name}}/edit?then=./\" class=\"action-button\">\n" +
-    "<i class=\"fa fa-pencil\" aria-hidden=\"true\"></i>\n" +
-    "<span class=\"sr-only\">Edit Display Name and Description</span>\n" +
+    "</li>\n" +
+    "<li role=\"menuitem\">\n" +
+    "<a ng-href=\"project/{{project.metadata.name}}/edit?then=./\">\n" +
+    "Edit Project\n" +
     "</a>\n" +
-    "</span>\n" +
-    "<span title=\"Delete Project\">\n" +
-    "<delete-link class=\"fa-lg project-action-item\" kind=\"Project\" resource-name=\"{{project.metadata.name}}\" project-name=\"{{project.metadata.name}}\" display-name=\"{{(project | displayName)}}\" type-name-to-confirm=\"true\" stay-on-current-page=\"true\" alerts=\"alerts\" button-only>\n" +
+    "</li>\n" +
+    "<li role=\"menuitem\">\n" +
+    "<delete-link kind=\"Project\" label=\"Delete Project\" resource-name=\"{{project.metadata.name}}\" project-name=\"{{project.metadata.name}}\" display-name=\"{{(project | displayName)}}\" type-name-to-confirm=\"true\" stay-on-current-page=\"true\" alerts=\"alerts\">\n" +
     "</delete-link>\n" +
-    "</span>\n" +
+    "</li>\n" +
+    "</ul>\n" +
+    "</div>\n" +
     "</div>\n" +
     "<div class=\"list-view-pf-main-info\">\n" +
     "<div class=\"list-view-pf-description project-names\">\n" +
@@ -13477,7 +13476,7 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "OpenShift helps you quickly develop, host, and scale applications.<br>\n" +
     "<span ng-if=\"canCreate\">Create a project for your application.</span>\n" +
     "</p>\n" +
-    "<a ng-if=\"canCreate\" href=\"create-project\" class=\"btn btn-lg btn-primary\">New Project</a>\n" +
+    "<a ng-if=\"canCreate\" href=\"create-project\" class=\"btn btn-lg btn-primary\">Create Project</a>\n" +
     "<p>To learn more, visit the OpenShift <a target=\"_blank\" ng-href=\"{{'' | helpLink}}\">documentation</a>.</p>\n" +
     "<p class=\"projects-instructions\" ng-if=\"canCreate === false\" ng-include=\"'views/_cannot-create-project.html'\"></p>\n" +
     "</div>\n" +
