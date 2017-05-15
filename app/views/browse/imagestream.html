@@ -44,15 +44,10 @@
         <div class="container-fluid">
           <div class="row" ng-if="imageStream">
             <div class="col-md-12">
-              <div class="resource-details">
-                <dl class="dl-horizontal left">
-                  <dt ng-if-start="imageStream.spec.dockerImageRepository">Follows docker repo:</dt>
-                  <dd ng-if-end>{{imageStream.spec.dockerImageRepository}}</dd>
-                  <dt>Docker pull spec:</dt>
-                  <dd>{{imageStream.status.dockerImageRepository}}</dd>
-                </dl>
-                <annotations annotations="imageStream.metadata.annotations"></annotations>
-              </div>
+              <registry-imagestream-body imagestream="imageStream">
+              </registry-imagestream-body>
+              <registry-imagestream-meta imagestream="imageStream">
+              </registry-imagestream-meta>
               <table class="table table-bordered table-hover table-mobile mar-top-xl">
                 <thead>
                   <tr>
@@ -143,6 +138,8 @@
                   </tr>
                 </tbody>
               </table>
+              <registry-imagestream-push settings="settings" imagestream="imageStream">
+              </registry-imagestream-push>
             </div><!-- /col-* -->
           </div>
         </div>

@@ -4201,7 +4201,8 @@ mark{padding:0;background-color:rgba(252,248,160,.5)}
 .route-status .h3{margin-top:0;margin-bottom:5px}
 .deployment-config-summary{padding-bottom:20px}
 .deployment-config-summary.gutter-bottom-2x{padding-bottom:40px}
-.registry-image-pull{margin-bottom:20px}
+registry-image-pull{margin-bottom:20px}
+registry-imagestream-push{margin-top:40px}
 .image-sources .destination-dir:before,.image-sources .source-path:after{content:"\00a0 "}
 @media (max-width:767px){.pipelines-page h2 small{display:block;margin-top:3px}
 .pipelines-page .source-repo{display:block}

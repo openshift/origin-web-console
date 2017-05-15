@@ -39785,7 +39785,285 @@ a.put("views/cardview/card-view.html", '<div class=card-view-pf><div class=card 
 "use strict";
 a.put("wizard/wizard-review-page.html", '<div class=wizard-pf-review-page><div class=wizard-pf-review-steps><ul class=list-group><li class=list-group-item ng-repeat="reviewStep in reviewSteps track by $index"><a class=apf-form-collapse ng-class="{\'collapsed\': !reviewStep.showReviewDetails}" ng-click=toggleShowReviewDetails(reviewStep)>{{reviewStep.stepTitle}}</a><div class=wizard-pf-review-substeps ng-class="{\'collapse\': !reviewStep.showReviewDetails}"><ul class=list-group ng-if=reviewStep.substeps><li class=list-group-item ng-repeat="substep in reviewStep.getReviewSteps()"><a class=apf-form-collapse ng-class="{\'collapsed\': !substep.showReviewDetails}" ng-click=toggleShowReviewDetails(substep)><span class=wizard-pf-substep-number>{{getSubStepNumber(reviewStep, substep)}}</span> <span class=wizard-pf-substep-title>{{substep.stepTitle}}</span></a><div class=wizard-pf-review-content ng-class="{\'collapse\': !substep.showReviewDetails}"><div ng-include=substep.reviewTemplate></div></div></li></ul><div class=wizard-pf-review-content ng-if=reviewStep.reviewTemplate ng-class="{\'collapse\': !reviewStep.showReviewDetails}"><div ng-include=reviewStep.reviewTemplate></div></div></div></li></ul></div></div>'), 
 a.put("wizard/wizard-step.html", '<section ng-show=selected ng-class="{current: selected, done: completed}"><div class=wizard-pf-sidebar ng-style=contentStyle ng-if="substeps === true"><ul class=list-group><li class=list-group-item ng-class="{active: step.selected}" ng-repeat="step in getEnabledSteps()"><a ng-click=stepClick(step)><span class=wizard-pf-substep-number>{{getStepDisplayNumber(step)}}</span> <span class=wizard-pf-substep-title>{{step.title}}</span></a></li></ul></div><div class=wizard-pf-main ng-class="{\'wizard-pf-singlestep\': !substeps}" ng-style=contentStyle><div class=wizard-pf-contents ng-transclude></div></div></section>'), a.put("wizard/wizard-substep.html", '<subsection ng-show=selected ng-class="{current: selected, done: completed}" class=wizard-pf-step ng-transclude></subsection>'), a.put("wizard/wizard.html", '<div><div class=modal-header><button type=button class="close wizard-pf-dismiss" aria-label=Close ng-click=onCancel() ng-if=!embedInPage><span aria-hidden=true>&times;</span></button><dt class=modal-title>{{title}}</dt></div><div class="modal-body wizard-pf-body clearfix"><!-- step area --><div class=wizard-pf-steps ng-class="{\'invisible\': !wizardReady}"><ul class=wizard-pf-steps-indicator ng-if=!hideIndicators ng-class="{\'invisible\': !wizardReady}"><li class=wizard-pf-step ng-class="{active: step.selected}" ng-repeat="step in getEnabledSteps()" data-tabgroup="{{$index }}"><a ng-click=stepClick(step)><span class=wizard-pf-step-number>{{$index + 1}}</span><span class=wizard-pf-step-title>{{step.title}}</span></a></li></ul></div><!-- loading wizard placeholder --><div ng-if=!wizardReady class=wizard-pf-main style="margin-left: 0px"><div class="wizard-pf-loading blank-slate-pf"><div class="spinner spinner-lg blank-slate-pf-icon"></div><h3 class=blank-slate-pf-main-action>{{loadingWizardTitle}}</h3><p class=blank-slate-pf-secondary-action>{{loadingSecondaryInformation}}</p></div></div><div class=wizard-pf-position-override ng-transclude></div></div><div class="modal-footer wizard-pf-footer wizard-pf-position-override" ng-class="{\'wizard-pf-footer-inline\': embedInPage}"><button pf-wiz-cancel class="btn btn-default btn-cancel wizard-pf-cancel" ng-disabled=wizardDone ng-click=onCancel() ng-if=!embedInPage>{{cancelTitle}}</button><div class=tooltip-wrapper uib-tooltip={{prevTooltip}} tooltip-placement=left><button id=backButton pf-wiz-previous class="btn btn-default" ng-disabled="!wizardReady || wizardDone || !prevEnabled || firstStep" callback=backCallback><span class="i fa fa-angular-left"></span> {{backTitle}}</button></div><div class=tooltip-wrapper uib-tooltip={{nextTooltip}} tooltip-placement=left><button id=nextButton pf-wiz-next class="btn btn-primary wizard-pf-next" ng-disabled="!wizardReady || !nextEnabled" callback=nextCallback>{{nextTitle}} <span class="i fa fa-angular-right"></span></button></div><button pf-wiz-cancel class="btn btn-default btn-cancel wizard-pf-cancel wizard-pf-cancel-inline" ng-disabled=wizardDone ng-click=onCancel() ng-if=embedInPage>{{cancelTitle}}</button></div></div>');
-} ]), function(a, b) {
+} ]), angular.module("gettext", []), angular.module("gettext").constant("gettext", function(a) {
+return a;
+}), angular.module("gettext").factory("gettextCatalog", [ "gettextPlurals", "gettextFallbackLanguage", "$http", "$cacheFactory", "$interpolate", "$rootScope", function(a, b, c, d, e, f) {
+function g() {
+f.$broadcast("gettextLanguageChanged");
+}
+var h, i = "$$noContext", j = '<span id="test" title="test" class="tested">test</span>', k = angular.element("<span>" + j + "</span>").html() !== j, l = function(a) {
+return h.debug && h.currentLanguage !== h.baseLanguage ? h.debugPrefix + a :a;
+}, m = function(a) {
+return h.showTranslatedMarkers ? h.translatedMarkerPrefix + a + h.translatedMarkerSuffix :a;
+};
+return h = {
+debug:!1,
+debugPrefix:"[MISSING]: ",
+showTranslatedMarkers:!1,
+translatedMarkerPrefix:"[",
+translatedMarkerSuffix:"]",
+strings:{},
+baseLanguage:"en",
+currentLanguage:"en",
+cache:d("strings"),
+setCurrentLanguage:function(a) {
+this.currentLanguage = a, g();
+},
+getCurrentLanguage:function() {
+return this.currentLanguage;
+},
+setStrings:function(b, c) {
+this.strings[b] || (this.strings[b] = {});
+var d = a(b, 1);
+for (var e in c) {
+var f = c[e];
+if (k && (e = angular.element("<span>" + e + "</span>").html()), angular.isString(f) || angular.isArray(f)) {
+var h = {};
+h[i] = f, f = h;
+}
+this.strings[b][e] || (this.strings[b][e] = {});
+for (var j in f) {
+var l = f[j];
+angular.isArray(l) ? this.strings[b][e][j] = l :(this.strings[b][e][j] = [], this.strings[b][e][j][d] = l);
+}
+}
+g();
+},
+getStringFormFor:function(b, c, d, e) {
+if (!b) return null;
+var f = this.strings[b] || {}, g = f[c] || {}, h = g[e || i] || [];
+return h[a(b, d)];
+},
+getString:function(a, c, d) {
+var f = b(this.currentLanguage);
+return a = this.getStringFormFor(this.currentLanguage, a, 1, d) || this.getStringFormFor(f, a, 1, d) || l(a), a = c ? e(a)(c) :a, m(a);
+},
+getPlural:function(a, c, d, f, g) {
+var h = b(this.currentLanguage);
+return c = this.getStringFormFor(this.currentLanguage, c, a, g) || this.getStringFormFor(h, c, a, g) || l(1 === a ? c :d), f && (f.$count = a, c = e(c)(f)), m(c);
+},
+loadRemote:function(a) {
+return c({
+method:"GET",
+url:a,
+cache:h.cache
+}).then(function(a) {
+var b = a.data;
+for (var c in b) h.setStrings(c, b[c]);
+return a;
+});
+}
+};
+} ]), angular.module("gettext").directive("translate", [ "gettextCatalog", "$parse", "$animate", "$compile", "$window", "gettextUtil", function(a, b, c, d, e, f) {
+function g(a) {
+return f.lcFirst(a.replace(j, ""));
+}
+function h(a, b, c) {
+var d = Object.keys(b).filter(function(a) {
+return f.startsWith(a, j) && a !== j;
+});
+if (!d.length) return null;
+var e = angular.extend({}, a), h = [];
+return d.forEach(function(d) {
+var f = a.$watch(b[d], function(a) {
+var b = g(d);
+e[b] = a, c(e);
+});
+h.push(f);
+}), a.$on("$destroy", function() {
+h.forEach(function(a) {
+a();
+});
+}), e;
+}
+var i = parseInt((/msie (\d+)/.exec(angular.lowercase(e.navigator.userAgent)) || [])[1], 10), j = "translateParams";
+return {
+restrict:"AE",
+terminal:!0,
+compile:function(e, g) {
+f.assert(!g.translatePlural || g.translateN, "translate-n", "translate-plural"), f.assert(!g.translateN || g.translatePlural, "translate-plural", "translate-n");
+var j = f.trim(e.html()), k = g.translatePlural, l = g.translateContext;
+return i <= 8 && "<!--IE fix-->" === j.slice(-13) && (j = j.slice(0, -13)), {
+post:function(e, g, i) {
+function m(b) {
+b = b || null;
+var h;
+k ? (e = o || (o = e.$new()), e.$count = n(e), h = a.getPlural(e.$count, j, k, b, l)) :h = a.getString(j, b, l);
+var i = g.contents();
+if (0 !== i.length) {
+if (h === f.trim(i.html())) return void (p && d(i)(e));
+var m = angular.element("<span>" + h + "</span>");
+d(m.contents())(e);
+var q = m.contents();
+c.enter(q, g), c.leave(i);
+}
+}
+var n = b(i.translateN), o = null, p = !0, q = h(e, i, m);
+m(q), p = !1, i.translateN && e.$watch(i.translateN, function() {
+m(q);
+}), e.$on("gettextLanguageChanged", function() {
+m(q);
+});
+}
+};
+}
+};
+} ]), angular.module("gettext").factory("gettextFallbackLanguage", function() {
+var a = {}, b = /([^_]+)_[^_]+$/;
+return function(c) {
+if (a[c]) return a[c];
+var d = b.exec(c);
+return d ? (a[c] = d[1], d[1]) :null;
+};
+}), angular.module("gettext").filter("translate", [ "gettextCatalog", function(a) {
+function b(b, c) {
+return a.getString(b, null, c);
+}
+return b.$stateful = !0, b;
+} ]), angular.module("gettext").factory("gettextPlurals", function() {
+function a(a) {
+return b[a] || (b[a] = a.split(/\-|_/).shift()), b[a];
+}
+var b = {
+pt_BR:"pt_BR",
+"pt-BR":"pt_BR"
+};
+return function(b, c) {
+switch (a(b)) {
+case "ay":
+case "bo":
+case "cgg":
+case "dz":
+case "fa":
+case "id":
+case "ja":
+case "jbo":
+case "ka":
+case "kk":
+case "km":
+case "ko":
+case "ky":
+case "lo":
+case "ms":
+case "my":
+case "sah":
+case "su":
+case "th":
+case "tt":
+case "ug":
+case "vi":
+case "wo":
+case "zh":
+return 0;
+
+case "is":
+return c % 10 != 1 || c % 100 == 11 ? 1 :0;
+
+case "jv":
+return 0 != c ? 1 :0;
+
+case "mk":
+return 1 == c || c % 10 == 1 ? 0 :1;
+
+case "ach":
+case "ak":
+case "am":
+case "arn":
+case "br":
+case "fil":
+case "fr":
+case "gun":
+case "ln":
+case "mfe":
+case "mg":
+case "mi":
+case "oc":
+case "pt_BR":
+case "tg":
+case "ti":
+case "tr":
+case "uz":
+case "wa":
+case "zh":
+return c > 1 ? 1 :0;
+
+case "lv":
+return c % 10 == 1 && c % 100 != 11 ? 0 :0 != c ? 1 :2;
+
+case "lt":
+return c % 10 == 1 && c % 100 != 11 ? 0 :c % 10 >= 2 && (c % 100 < 10 || c % 100 >= 20) ? 1 :2;
+
+case "be":
+case "bs":
+case "hr":
+case "ru":
+case "sr":
+case "uk":
+return c % 10 == 1 && c % 100 != 11 ? 0 :c % 10 >= 2 && c % 10 <= 4 && (c % 100 < 10 || c % 100 >= 20) ? 1 :2;
+
+case "mnk":
+return 0 == c ? 0 :1 == c ? 1 :2;
+
+case "ro":
+return 1 == c ? 0 :0 == c || c % 100 > 0 && c % 100 < 20 ? 1 :2;
+
+case "pl":
+return 1 == c ? 0 :c % 10 >= 2 && c % 10 <= 4 && (c % 100 < 10 || c % 100 >= 20) ? 1 :2;
+
+case "cs":
+case "sk":
+return 1 == c ? 0 :c >= 2 && c <= 4 ? 1 :2;
+
+case "sl":
+return c % 100 == 1 ? 1 :c % 100 == 2 ? 2 :c % 100 == 3 || c % 100 == 4 ? 3 :0;
+
+case "mt":
+return 1 == c ? 0 :0 == c || c % 100 > 1 && c % 100 < 11 ? 1 :c % 100 > 10 && c % 100 < 20 ? 2 :3;
+
+case "gd":
+return 1 == c || 11 == c ? 0 :2 == c || 12 == c ? 1 :c > 2 && c < 20 ? 2 :3;
+
+case "cy":
+return 1 == c ? 0 :2 == c ? 1 :8 != c && 11 != c ? 2 :3;
+
+case "kw":
+return 1 == c ? 0 :2 == c ? 1 :3 == c ? 2 :3;
+
+case "ga":
+return 1 == c ? 0 :2 == c ? 1 :c < 7 ? 2 :c < 11 ? 3 :4;
+
+case "ar":
+return 0 == c ? 0 :1 == c ? 1 :2 == c ? 2 :c % 100 >= 3 && c % 100 <= 10 ? 3 :c % 100 >= 11 ? 4 :5;
+
+default:
+return 1 != c ? 1 :0;
+}
+};
+}), angular.module("gettext").factory("gettextUtil", function() {
+function a(a, b, c) {
+if (!a) throw new Error("You should add a " + b + " attribute whenever you add a " + c + " attribute.");
+}
+function b(a, b) {
+return 0 === a.indexOf(b);
+}
+function c(a) {
+var b = a.charAt(0).toLowerCase();
+return b + a.substr(1);
+}
+var d = function() {
+return String.prototype.trim ? function(a) {
+return "string" == typeof a ? a.trim() :a;
+} :function(a) {
+return "string" == typeof a ? a.replace(/^\s*/, "").replace(/\s*$/, "") :a;
+};
+}();
+return {
+trim:d,
+assert:a,
+startsWith:b,
+lcFirst:c
+};
+}), function(a, b) {
 "use strict";
 "object" == typeof exports ? module.exports = b(require("./punycode"), require("./IPv6"), require("./SecondLevelDomains")) :"function" == typeof define && define.amd ? define([ "./punycode", "./IPv6", "./SecondLevelDomains" ], b) :a.URI = b(a.punycode, a.IPv6, a.SecondLevelDomains, a);
 }(this, function(a, b, c, d) {
@@ -45096,11 +45374,11 @@ return a[d].call(e.exports, e, e.exports, b), e.loaded = !0, e.exports;
 var c = {};
 return b.m = a, b.c = c, b.p = "", b(0);
 }([ function(a, b, c) {
-c(4), c(5), c(6), c(7), c(8), c(10), c(11), c(12), c(13), c(14), a.exports = c(15);
-}, , , , function(a, b) {
+c(6), c(7), c(8), c(9), c(10), c(12), c(13), c(14), c(15), c(16), c(17), c(18), c(19), c(20), a.exports = c(21);
+}, , , , , , function(a, b) {
 !function() {
 "use strict";
-angular.module("registryUI.images", [ "registryUI.client", "registryUI.date" ]).factory("imageDockerManifest", [ "WeakMap", function(a) {
+angular.module("registryUI.images", [ "registryUI.client", "registryUI.date", "gettext" ]).factory("imageDockerManifest", [ "WeakMap", function(a) {
 var b = new a();
 return function(a) {
 if (!a) return {};
@@ -45122,6 +45400,33 @@ return function(a) {
 if (!a) return [];
 var d, e = c.get(a);
 return e || (d = b(a), e = d.history ? d.history :a.dockerImageLayers ? a.dockerImageLayers :[], c.set(a, e)), e;
+};
+} ]).factory("imagestreamTags", [ "WeakMap", function(a) {
+var b = new a();
+return function(a) {
+if (!a) return [];
+var c, d, e = b.get(a);
+if (!e) {
+d = {}, angular.forEach(a.spec.tags, function(b) {
+d[b.name] = d[b.name] || {
+name:b.name,
+imagestream:a
+}, d[b.name].spec = angular.copy(b);
+}), angular.forEach(a.status.tags, function(b) {
+d[b.tag] = d[b.tag] || {
+name:b.tag,
+imagestream:a
+}, d[b.tag].status = angular.copy(b);
+}), e = [];
+for (c in d) e.push(d[c]);
+b.set(a, e);
+}
+return e;
+};
+} ]).factory("imagestreamTagFromName", [ function() {
+return function(a, b) {
+var c, d = [];
+return b && "ImageStreamImage" === b.kind ? d.delimiter = "@" :b && "ImageStreamTag" === b.kind && (d.delimiter = ":"), d.delimiter && (c = b.name.split(d.delimiter), 1 === c.length ? d.push(a.spec.name, c[0]) :(d.push(c.shift()), d.push(c.join(d.delimiter))), d.qualified = d.join(d.delimiter)), d;
 };
 } ]).directive("registryImageBody", [ "imageLayers", "imageDockerConfig", function(a, b) {
 return {
@@ -45176,6 +45481,63 @@ link:function(b, c, d) {
 b.$watch("image", function(c) {
 b.config = a(c), b.labels = b.config.Labels, angular.equals({}, b.labels) && (b.labels = null);
 });
+}
+};
+} ]).directive("registryImagestreamBody", [ function() {
+return {
+restrict:"E",
+scope:{
+imagestream:"=",
+imagestreamFunc:"&imagestreamModify",
+projectFunc:"&projectModify",
+sharingFunc:"&projectSharing"
+},
+templateUrl:"registry-image-widgets/views/imagestream-body.html",
+link:function(a, b, c) {
+a.projectModify = a.projectFunc(), a.projectSharing = a.sharingFunc(), a.imagestreamModify = a.imagestreamFunc();
+}
+};
+} ]).directive("registryImagestreamPush", [ function(a) {
+return {
+restrict:"E",
+scope:{
+imagestream:"=",
+settings:"="
+},
+templateUrl:"registry-image-widgets/views/imagestream-push.html"
+};
+} ]).directive("registryImagestreamMeta", [ function(a) {
+return {
+restrict:"E",
+scope:{
+imagestream:"="
+},
+templateUrl:"registry-image-widgets/views/imagestream-meta.html"
+};
+} ]).directive("registryImagestreamListing", [ "imagestreamTags", "$location", function(a, b) {
+return {
+restrict:"E",
+scope:{
+imagestream:"=",
+imagestreamFunc:"&imagestreamPath"
+},
+templateUrl:"registry-image-widgets/views/imagestream-listing.html",
+link:function(c, d, e) {
+function f(a, b) {
+var c = a.metadata.namespace + "/" + a.metadata.name;
+return b && (c += "/" + b.name), c;
+}
+c.imagestreamTags = a, c.imagestreamPath = c.imagestreamFunc(), c.imagestreamActivate = function(a, d, e) {
+var f;
+c.imagestreamExpanded(a, d) ? c.imagestreamToggle(a, d, e) :(f = c.$emit("activate", a, d, e), !f.defaultPrevented && c.imagestreamPath && b.path(c.imagestreamPath(a, d))), e.preventDefault();
+};
+var g = {};
+c.imagestreamExpanded = function(a, b) {
+return f(a, b) in g;
+}, c.imagestreamToggle = function(a, b, c) {
+var d = f(a, b);
+d in g ? delete g[d] :g[d] = !0, c.stopPropagation();
+};
 }
 };
 } ]);
@@ -45240,23 +45602,24 @@ function a(a, b) {
 var c, d;
 return a.v1Compatibility.container_config && (c = a.v1Compatibility.container_config.Cmd) ? (d = c[c.length - 1], 0 === d.indexOf("#(nop)") ? d.substring(6).trim() :1 == c.length && 0 === c[0].indexOf("/bin/sh -c #(nop)") ? c[0].substring(17).trim() :c.join(" ")) :a.v1Compatibility.id;
 }
-function b(b, c, d) {
-var e;
-return e = b.v1Compatibility ? {
-id:b.v1Compatibility.id,
-size:b.v1Compatibility.Size || 0,
-label:a(b, d[c + 1])
-} :b.name && b.size ? {
-id:b.name,
-size:b.size || 0,
-label:b.name
+angular.module("registryUI.images").factory("prepareLayer", [ "gettextCatalog", function(b) {
+return function(c, d, e) {
+var f;
+return f = c.v1Compatibility ? {
+id:c.v1Compatibility.id,
+size:c.v1Compatibility.Size || 0,
+label:a(c, e[d + 1])
+} :c.name && c.size ? {
+id:c.name,
+size:c.size || 0,
+label:c.name
 } :{
 size:0,
-id:c,
-label:"Unknown layer"
-}, 0 === e.label.indexOf("RUN ") ? e.hint = "run" :0 === e.label.indexOf("ADD ") || e.size > 8192 ? e.hint = "add" :e.hint = "other", e;
-}
-angular.module("registryUI.images").directive("registryImageLayers", [ "imageLayers", function(a) {
+id:d,
+label:b.getString("Unknown layer")
+}, 0 === f.label.indexOf("RUN ") ? f.hint = "run" :0 === f.label.indexOf("ADD ") || f.size > 8192 ? f.hint = "add" :f.hint = "other", f;
+};
+} ]).directive("registryImageLayers", [ "imageLayers", "prepareLayer", "gettextCatalog", function(a, b, c) {
 return {
 restrict:"E",
 scope:{
@@ -45264,13 +45627,14 @@ image:"=",
 data:"=?layers"
 },
 templateUrl:"registry-image-widgets/views/image-layers.html",
-link:function(c, d, e) {
-c.formatSize = function(a) {
-return a ? a > 1024 && "undefined" != typeof cockpit ? cockpit.format_bytes(a) :a > 1048576 ? (a / 1048576).toFixed(1) + " MB" :a + " B" :"";
-}, c.$watch("data", function(a) {
-a && a.length && (a = a.map(b).reverse()), c.layers = a;
-}), c.$watch("image", function(b) {
-angular.isUndefined(b) || (c.data = a(b));
+link:function(d, e, f) {
+d.formatSize = function(a) {
+var b;
+return a ? a > 1024 && "undefined" != typeof cockpit ? cockpit.format_bytes(a) :a > 1048576 ? (b = (a / 1048576).toFixed(1), c.getPlural(b, d, "{0} MB", "{0} MB").replace("{0}", b)) :c.getPlural(b, d, "{0} byte", "{0} bytes").replace("{0}", a) :"";
+}, d.$watch("data", function(a) {
+a && a.length && (a = a.map(b).reverse()), d.layers = a;
+}), d.$watch("image", function(b) {
+angular.isUndefined(b) || (d.data = a(b));
 });
 }
 };
@@ -45294,7 +45658,7 @@ c = d.module([ "ng" ]);
 } catch (e) {
 c = d.module("ng", []);
 }
-var f = '<dl class="dl-horizontal"> <dt translate>Command:</dt> <dd><code>{{ configCommand(config) }}</code></dd> </dl> <div class="row"> <dl class="col-xs-12 col-sm-12 col-md-4 dl-horizontal"> <dt translate>Run as</dt> <dd ng-if="config.User">{{config.User}}</dd> <dd ng-if="!config.User"><em translate>Default</em></dd> <dt translate>Directory</dt> <dd ng-if="config.WorkingDir">{{config.WorkingDir}}</dd> <dd ng-if="!config.WorkingDir">/</dd> <dt ng-if="config.StopSignal" translate>Stop with</dt> <dd ng-if="config.StopSignal">{{config.StopSignal}}</dd> <dt translate>Architecture</dt> <dd ng-if="config.architecture">{{config.architecture}}</dd> <dd ng-if="!config.architecture">{{image.dockerImageMetadata.Architecture}}</dd> </dl> <dl class="col-xs-12 col-sm-12 col-md-8 dl-horizontal full-width"> <dt ng-if="config.Env.length" translate>Environment</dt> <dd ng-repeat="env in config.Env"><tt>{{env}}</tt></dd> </dl> </div> <div class="row"> <dl class="col-xs-12 col-sm-12 col-md-4 dl-horizontal"> <dt translate>Ports</dt> <dd ng-repeat="(port, data) in config.ExposedPorts">{{port}}</dd> <dd ng-if="!config.ExposedPorts"><em translate>None</em></dd> </dl> <dl class="col-xs-12 col-sm-12 col-md-8 dl-horizontal full-width"> <dt ng-if="config.Volumes" translate>Volumes</dt> <dd ng-repeat="(volume, data) in config.Volumes">{{volume}}</dd> </dl> </div>';
+var f = '<dl class="dl-horizontal"> <dt translate>Command</dt> <dd><code>{{ configCommand(config) }}</code></dd> </dl> <div class="row"> <dl class="col-xs-12 col-sm-12 col-md-4 dl-horizontal"> <dt translate>Run as</dt> <dd ng-if="config.User">{{config.User}}</dd> <dd ng-if="!config.User"><em translate>Default</em></dd> <dt translate>Directory</dt> <dd ng-if="config.WorkingDir">{{config.WorkingDir}}</dd> <dd ng-if="!config.WorkingDir">/</dd> <dt ng-if="config.StopSignal" translate>Stop with</dt> <dd ng-if="config.StopSignal">{{config.StopSignal}}</dd> <dt translate>Architecture</dt> <dd ng-if="config.architecture">{{config.architecture}}</dd> <dd ng-if="!config.architecture">{{image.dockerImageMetadata.Architecture}}</dd> </dl> <dl class="col-xs-12 col-sm-12 col-md-8 dl-horizontal full-width"> <dt ng-if="config.Env.length" translate>Environment</dt> <dd ng-repeat="env in config.Env"><tt>{{env}}</tt></dd> </dl> </div> <div class="row"> <dl class="col-xs-12 col-sm-12 col-md-4 dl-horizontal"> <dt translate>Ports</dt> <dd ng-repeat="(port, data) in config.ExposedPorts">{{port}}</dd> <dd ng-if="!config.ExposedPorts"><em translate>None</em></dd> </dl> <dl class="col-xs-12 col-sm-12 col-md-8 dl-horizontal full-width"> <dt ng-if="config.Volumes" translate>Volumes</dt> <dd ng-repeat="(volume, data) in config.Volumes">{{volume}}</dd> </dl> </div>';
 c.run([ "$templateCache", function(a) {
 a.put("registry-image-widgets/views/image-config.html", f);
 } ]), a.exports = f;
@@ -45330,6 +45694,50 @@ c = d.module("ng", []);
 var f = '<div ng-if="names" class="registry-image-pull"> <p> <i class="fa fa-info-circle"></i>\n<span translate>To pull this image:</span> </p> <code ng-if="!settings.registry.host">$ sudo docker pull <span class="placeholder">registry</span>/{{names[0]}}</code>\n<code ng-if="settings.registry.host">$ sudo docker pull <span>{{settings.registry.host}}</span>/{{names[0]}}</code> </div>';
 c.run([ "$templateCache", function(a) {
 a.put("registry-image-widgets/views/image-pull.html", f);
+} ]), a.exports = f;
+}, function(a, b) {
+var c, d = window.angular;
+try {
+c = d.module([ "ng" ]);
+} catch (e) {
+c = d.module("ng", []);
+}
+var f = '<div ng-repeat="statustags in imagestream.status.tags"> <div ng-repeat="condition in statustags.conditions" ng-if="condition.type == \'ImportSuccess\' && condition.status == \'False\'" class="alert alert-danger"> <span class="pficon pficon-error-circle-o"></span>\n<span translate>{{ condition.message }}. Timestamp: {{ condition.lastTransitionTime }} Error count: {{ condition.generation }}</span>\n<a translate ng-if="imagestreamModify" ng-click="imagestreamModify(imagestream)" class="alert-link">Edit image stream</a> </div> </div> <dl class="dl-horizontal left"> <dt translate ng-if="projectSharing">Access Policy</dt> <dd ng-if="projectSharing" ng-switch="projectSharing(imagestream.metadata.namespace)"> <div ng-switch-when="anonymous"> <a translate ng-if="projectModify" ng-click="projectModify(imagestream.metadata.namespace)">Images may be pulled by anonymous users</a>\n<span translate ng-if="!projectModify">Images may be pulled by anonymous users</span>\n<i title="Images accessible to anonymous users" class="fa fa-unlock registry-imagestream-lock"></i> </div> <div ng-switch-when="shared"> <a translate ng-if="projectModify" ng-click="projectModify(imagestream.metadata.namespace)">Images may be pulled by any authenticated user or group</a>\n<span translate ng-if="!projectModify">Images may be pulled by any authenticated user or group</span>\n<i title="Images accessible to authenticated users" class="fa fa-lock registry-imagestream-lock"></i> </div> <div ng-switch-when="private"> <a translate ng-if="projectModify" ng-click="projectModify(imagestream.metadata.namespace)">Images may only be pulled by specific users or groups</a>\n<span translate ng-if="!projectModify">Images may only be pulled by specific users or groups</span>\n<i title="Images only accessible to members" class="fa fa-lock registry-imagestream-lock"></i> </div> <div ng-switch-default> <a translate ng-if="projectModify" ng-click="projectModify(imagestream.metadata.namespace)">Unknown</a>\n<span translate ng-if="!projectModify">Unknown</span>\n<i title="Unknown or invalid image access policy" class="fa fa-lock registry-imagestream-lock"></i> </div> </dd> <dt translate ng-if-start="imagestream.spec.dockerImageRepository">Follows docker repo</dt> <dd ng-if-end><tt>{{imagestream.spec.dockerImageRepository}}</tt></dd> <dt>Pulling repository</dt> <dd><tt>{{imagestream.status.dockerImageRepository}}</tt></dd> <dt translate>Image count</dt> <dd ng-if="imagestream.status.tags.length">{{imagestream.status.tags.length}}</dd> <dd ng-if="!imagestream.status.tags.length">0</dd> </dl>';
+c.run([ "$templateCache", function(a) {
+a.put("registry-image-widgets/views/imagestream-body.html", f);
+} ]), a.exports = f;
+}, function(a, b) {
+var c, d = window.angular;
+try {
+c = d.module([ "ng" ]);
+} catch (e) {
+c = d.module("ng", []);
+}
+var f = '<table class="listing-ct"> <thead> <tr> <th class="listing-ct-toggle"></th> <th translate="yes" width="20%">Tags</th> <th translate="yes">Originates From</th> <th translate="yes">Last Updated</th> </tr> </thead> <tbody ng-repeat-start="(link, stream) in (imagestreams || { \'one\': imagestream }) track by link" ng-if="imagestreams" data-id="{{ stream.metadata.namespace + \'/\' + stream.metadata.name }}" class="active" ng-class="{open: imagestreamExpanded(imagestream)}"> <tr ng-click="imagestreamActivate(imagestream, null, $event)" class="listing-ct-item imagestream-item"> <td ng-click="imagestreamToggle(imagestream, null, $event)" class="listing-ct-toggle"> <i class="fa fa-fw"></i> </td> <th colspan="4"> {{ stream.metadata.namespace + \'/\' + stream.metadata.name }} <div ng-repeat="statustags in stream.status.tags"> <span ng-repeat="condition in statustags.conditions" ng-if="condition.type == \'ImportSuccess\' &amp;&amp; condition.status == \'False\'" class="pficon pficon-warning-triangle-o"></span> </div> </th> </tr> <tr class="listing-ct-panel" ng-if="imagestreamExpanded(imagestream)"> <td colspan="4"> <registry-imagestream-panel></registry-imagestream-panel> </td> </tr> </tbody> <tbody ng-repeat="tag in imagestreamTags(stream) | orderBy : \'tag.name\'" data-id="{{ stream.metadata.namespace + \'/\' + stream.metadata.name + \':\' + tag.name }}" ng-class="{open: imagestreamExpanded(stream, tag), last: $last, first: $first}"> <tr ng-click="imagestreamActivate(stream, tag, $event)" class="listing-ct-item registry-listing-top"> <td ng-click="imagestreamToggle(stream, tag, $event)" class="listing-ct-toggle" rowspan="2"> <i class="fa fa-fw"></i> </td> <td class="registry-tag-label" rowspan="2"> <a class="registry-image-tag" ng-href="{{ imagestreamPath(stream, tag) }}">:{{ tag.name }}</a> </td> <td colspan="2" class="container"> <div class="row" ng-init="annotations = stream.metadata.annotations"> <div class="col col-xs-12" ng-if="!tag.status"> <div ng-if="annotations[\'openshift.io/image.dockerRepositoryCheck\']"> <span class="pficon pficon-warning-triangle-o" style="margin-right: 5px" ng-attr-title="{{annotations[\'openshift.io/image.dockerRepositoryCheck\']}}"></span>\n<span translate="yes">Unable to resolve</span> </div> <div ng-if="!annotations[\'openshift.io/image.dockerRepositoryCheck\']"> <span ng-if="!tag.spec.from" translate="yes">Not yet synced</span> \n<span ng-if="tag.spec.from" translate="yes">Unresolved</span> </div> </div> <div class="col col-xs-12" ng-if="tag.status"> <span ng-if="tag.status.items.length &amp;&amp; tag.status.items[0].image"> <tt>{{tag.status.items[0].image}}</tt> </span>\n<span ng-if="!tag.status.items.length"><em translate="yes">none</em></span> </div> </div> </td> </tr> <tr ng-click="imagestreamActivate(stream, tag, $event)" class="listing-ct-item registry-listing-bottom"> <td ng-init="name = imagestreamTagFromName(stream, tag.spec.from)"> <div ng-if="!name"><em>pushed image</em></div> <div ng-if="name" title="{{tag.spec.from.name}}"> <span ng-if="!name[0]">{{tag.spec.from.name}}</span>\n<span ng-if="name[0]"> <span ng-if="name[0] === stream.metadata.name">{{name.qualified}}</span>\n<span ng-if="name[0] !== stream.metadata.name"> <a ng-href="imagestreamPath({ metadata: { namespace: tag.spec.from.namespace, name: name[0] }})"><span ng-if="tag.spec.from.namespace &amp;&amp; tag.spec.from.namespace !== imageStream.metadata.namespace">{{tag.spec.from.namespace}}/</span>{{tag.spec.from._imageStreamName}}</a>{{name.delimiter}}{{name[1]}} </span> </span> </div> </td> <td> <div title="{{ tag.items[0].created }}"> <span ng-if="tag.status.items.length &amp;&amp; tag.status.items[0].image" title="{{ tag.items[0].created }}"> {{ tag.status.items[0].created | dateRelative }} </span> </div> </td> </tr> <tr class="listing-ct-panel" ng-if="imagestreamExpanded(stream, tag)" ng-repeat-end=""> <td colspan="4"> <registry-image-panel></registry-image-panel> </td> </tr> </tbody> <tbody data-ng-rubbish="" ng-if="0" ng-repeat-end="1"> </tbody> <thead class="listing-ct-empty" ng-if="!quiet"> <tr> <td colspan="4" ng-if="!failure && imagestreams" translate="yes">No image streams are present.</td> <td colspan="4" ng-if="!failure && !imagestreams" translate="yes">No tags are present.</td> <td colspan="4" ng-if="failure">{{failure}}</td> </tr> </thead> </table>';
+c.run([ "$templateCache", function(a) {
+a.put("registry-image-widgets/views/imagestream-listing.html", f);
+} ]), a.exports = f;
+}, function(a, b) {
+var c, d = window.angular;
+try {
+c = d.module([ "ng" ]);
+} catch (e) {
+c = d.module("ng", []);
+}
+var f = '<dl class="dl-horizontal left"> <dt ng-if="imagestream.metadata.annotations" translate>Annotations</dt> <dd ng-repeat="(name, value) in imagestream.metadata.annotations">{{name}}: {{value}}</dd> </dl>';
+c.run([ "$templateCache", function(a) {
+a.put("registry-image-widgets/views/imagestream-meta.html", f);
+} ]), a.exports = f;
+}, function(a, b) {
+var c, d = window.angular;
+try {
+c = d.module([ "ng" ]);
+} catch (e) {
+c = d.module("ng", []);
+}
+var f = '<div class="registry-imagestream-push"> <p> <i class="fa fa-info-circle"></i>\n<span translate>To push an image to this image stream:</span> </p> <code ng-if="settings.registry.host">$ sudo docker tag <em>myimage</em> <span>{{settings.registry.host}}</span>/{{ imagestream.metadata.namespace }}/{{ imagestream.metadata.name}}:<em>tag</em>\n$ sudo docker push <span>{{settings.registry.host}}</span>/{{ imagestream.metadata.namespace }}/{{ imagestream.metadata.name}}</code>\n<code ng-if="!settings.registry.host">$ sudo docker tag <em>myimage</em> <span class="placeholder">registry</span>/{{ imagestream.metadata.namespace }}/{{ imagestream.metadata.name}}:<em>tag</em>\n$ sudo docker push <span class="placeholder">registry</span>/{{ imagestream.metadata.namespace }}/{{ imagestream.metadata.name}}</code> </div>';
+c.run([ "$templateCache", function(a) {
+a.put("registry-image-widgets/views/imagestream-push.html", f);
 } ]), a.exports = f;
 } ]);
 
