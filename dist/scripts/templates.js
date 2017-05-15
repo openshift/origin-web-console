@@ -2887,15 +2887,10 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "<div class=\"container-fluid\">\n" +
     "<div class=\"row\" ng-if=\"imageStream\">\n" +
     "<div class=\"col-md-12\">\n" +
-    "<div class=\"resource-details\">\n" +
-    "<dl class=\"dl-horizontal left\">\n" +
-    "<dt ng-if-start=\"imageStream.spec.dockerImageRepository\">Follows docker repo:</dt>\n" +
-    "<dd ng-if-end>{{imageStream.spec.dockerImageRepository}}</dd>\n" +
-    "<dt>Docker pull spec:</dt>\n" +
-    "<dd>{{imageStream.status.dockerImageRepository}}</dd>\n" +
-    "</dl>\n" +
-    "<annotations annotations=\"imageStream.metadata.annotations\"></annotations>\n" +
-    "</div>\n" +
+    "<registry-imagestream-body imagestream=\"imageStream\">\n" +
+    "</registry-imagestream-body>\n" +
+    "<registry-imagestream-meta imagestream=\"imageStream\">\n" +
+    "</registry-imagestream-meta>\n" +
     "<table class=\"table table-bordered table-hover table-mobile mar-top-xl\">\n" +
     "<thead>\n" +
     "<tr>\n" +
@@ -2981,6 +2976,8 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "</tr>\n" +
     "</tbody>\n" +
     "</table>\n" +
+    "<registry-imagestream-push settings=\"settings\" imagestream=\"imageStream\">\n" +
+    "</registry-imagestream-push>\n" +
     "</div>\n" +
     "</div>\n" +
     "</div>\n" +
