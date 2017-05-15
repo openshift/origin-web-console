@@ -5,6 +5,7 @@ angular.module("openshiftConsole")
              function($filter,
                       DataService,
                       LimitRangesService,
+                      QuotaService,
                       ModalsService,
                       DNS1123_SUBDOMAIN_VALIDATION) {
     return {
@@ -85,6 +86,13 @@ angular.module("openshiftConsole")
           scope.persistentVolumeClaimForm.capacity.$setValidity('limitRangeMax', maxValid);
         };
 
+        var validateQuota = function() {
+          var outOfClaims = QuotaService.isAnyStorageQuotaExceeded(scope.quotas, scope.clusterQuotas);
+          var willExceedStorage = QuotaService.willRequestExceedQuota(scope.quotas, scope.clusterQuotas, 'requests.storage', (scope.claim.amount + scope.claim.unit));
+          scope.persistentVolumeClaimForm.capacity.$setValidity('willExceedStorage', !willExceedStorage);
+          scope.persistentVolumeClaimForm.capacity.$setValidity('outOfClaims', !outOfClaims);
+        };
+
         DataService.list({group: 'storage.k8s.io', resource: 'storageclasses'}, {}, function(storageClassData) {
            var storageClasses = storageClassData.by('metadata.name');
            if (_.isEmpty(storageClasses)) {
@@ -133,6 +141,14 @@ angular.module("openshiftConsole")
           }
 
           scope.$watchGroup(['claim.amount', 'claim.unit'], validateLimitRange);
+        });
+
+        DataService.list('resourcequotas', { namespace: scope.projectName }, function(quotaData) {
+          scope.quotas = quotaData.by('metadata.name');
+          scope.$watchGroup(['claim.amount', 'claim.unit'], validateQuota);
+        });
+        DataService.list('appliedclusterresourcequotas', { namespace: scope.projectName }, function(quotaData) {
+          scope.clusterQuotas = quotaData.by('metadata.name');
         });
       }
     };

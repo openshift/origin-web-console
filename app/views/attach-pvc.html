@@ -74,7 +74,8 @@
                         Select storage to use.
                       </div>
                       <div ng-if="project && ('persistentvolumeclaims' | canI : 'create')" class="help-block">
-                        Select storage to use or <a ng-href="project/{{project.metadata.name}}/create-pvc" >create storage</a>.
+                        Select storage to use<span ng-if="!outOfClaims"> or <a ng-href="project/{{project.metadata.name}}/create-pvc" >create storage</a>.</span>
+                        <span ng-if="outOfClaims">. You cannot create new storage since you are at quota.</span>
                       </div>
 
                       <h3>Volume</h3>

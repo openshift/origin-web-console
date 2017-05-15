@@ -1,5 +1,12 @@
 <ng-form name="persistentVolumeClaimForm">
   <fieldset ng-disabled="claimDisabled">
+    <div ng-if="persistentVolumeClaimForm.capacity.$error.outOfClaims" class="has-error">
+      <div class="alert alert-danger">
+        <span class="pficon pficon-error-circle-o" aria-hidden="true"></span>
+        <strong>Storage quota limit has been reached. You will not be able to create any new storage.</strong>
+        <a ng-href="project/{{projectName}}/quota" target="_blank">View Quota&nbsp;</a>
+      </div>
+    </div>
     <div ng-if="storageClasses.length" class="form-group">
       <!--storage class-->
       <label>Storage Class</label>
@@ -178,6 +185,11 @@
            <div ng-if="persistentVolumeClaimForm.capacity.$error.limitRangeMax" class="has-error">
              <span class="help-block">
                Can't be greater than {{limits.max | usageWithUnits : 'storage'}}.
+             </span>
+           </div>
+           <div ng-if="persistentVolumeClaimForm.capacity.$error.willExceedStorage" class="has-error">
+             <span class="help-block">
+               Storage quota will be exceeded. <a ng-href="project/{{projectName}}/quota" target="_blank">View Quota&nbsp;</a>
              </span>
            </div>
          </div>

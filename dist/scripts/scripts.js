@@ -3969,7 +3969,9 @@ cpu:"resources.requests.cpu",
 "limits.cpu":"resources.limits.cpu",
 memory:"resources.requests.memory",
 "requests.memory":"resources.requests.memory",
-"limits.memory":"resources.limits.memory"
+"limits.memory":"resources.limits.memory",
+persistentvolumeclaims:"resources.limits.persistentvolumeclaims",
+"requests.storage":"resources.request.storage"
 }, p = function(a, b, c, d) {
 var e = a.status.total || a.status, f = o[d], h = 0;
 if (_.each(c.spec.containers, function(a) {
@@ -4035,17 +4037,31 @@ return {
 quotaAlerts:b
 };
 });
-}, t = function(a, b) {
-var c = function(a) {
+}, t = function(a, b, c) {
+var d = function(a) {
 var b = a.status.total || a.status;
-return _.some(b.hard, function(a, c) {
-if ("resourcequotas" === c) return !1;
+return _.some(b.hard, function(a, d) {
+if ("resourcequotas" === d) return !1;
+if (!c || _.includes(c, d)) {
 if (a = g(a), !a) return !1;
-var d = g(_.get(b, [ "used", c ]));
-return !!d && a <= d;
+var e = g(_.get(b, [ "used", d ]));
+return !!e && a <= e;
+}
 });
 };
-return _.some(a, c) || _.some(b, c);
+return _.some(a, d) || _.some(b, d);
+}, u = function(a, b) {
+return t(a, b, [ "requests.storage", "persistentvolumeclaims" ]);
+}, v = function(a, b, c, d) {
+var e = function(a) {
+var b = a.status.total || a.status, e = g(d);
+if (!c) return !1;
+var f = _.get(b.hard, c);
+if (f = g(f), !f) return !1;
+var h = g(_.get(b, [ "used", c ]));
+return h ? f <= h + e :f <= e;
+};
+return _.some(a, e) || _.some(b, e);
 };
 return {
 filterQuotasForResource:k,
@@ -4054,7 +4070,9 @@ isTerminatingPod:i,
 getResourceLimitAlerts:q,
 getQuotaAlerts:r,
 getLatestQuotaAlerts:s,
-isAnyQuotaExceeded:t
+isAnyQuotaExceeded:t,
+isAnyStorageQuotaExceeded:u,
+willRequestExceedQuota:v
 };
 } ]), angular.module("openshiftConsole").factory("SecurityCheckService", [ "APIService", "$filter", "Constants", function(a, b, c) {
 var d = b("humanizeKind"), e = function(b, e) {
@@ -7438,26 +7456,53 @@ a.services = b.by("metadata.name");
 e.unwatchAll(i);
 });
 }));
-} ]), angular.module("openshiftConsole").controller("StorageController", [ "$routeParams", "$scope", "AlertMessageService", "DataService", "ProjectsService", "$filter", "LabelFilter", "Logger", function(a, b, c, d, e, f, g, h) {
-b.projectName = a.project, b.pvcs = {}, b.unfilteredPVCs = {}, b.labelSuggestions = {}, b.alerts = b.alerts || {}, b.emptyMessage = "Loading...", c.getAlerts().forEach(function(a) {
+} ]), angular.module("openshiftConsole").controller("StorageController", [ "$routeParams", "$scope", "AlertMessageService", "DataService", "ProjectsService", "QuotaService", "$filter", "LabelFilter", "Logger", function(a, b, c, d, e, f, g, h, i) {
+b.projectName = a.project, b.pvcs = {}, b.unfilteredPVCs = {}, b.labelSuggestions = {}, b.alerts = b.alerts || {}, b.outOfClaims = !1, b.emptyMessage = "Loading...", c.getAlerts().forEach(function(a) {
 b.alerts[a.name] = a.data;
 }), c.clearAlerts();
-var i = [];
+var j = function() {
+var a = c.isAlertPermanentlyHidden("storage-quota-limit-reached", b.projectName);
+if (b.outOfClaims = f.isAnyStorageQuotaExceeded(b.quotas, b.clusterQuotas), !a && b.outOfClaims) {
+if (b.alerts.quotaExceeded) return;
+b.alerts.quotaExceeded = {
+type:"warning",
+message:"Storage quota limit has been reached. You will not be able to create any new storage.",
+links:[ {
+href:"project/" + b.projectName + "/quota",
+label:"View Quota"
+}, {
+href:"",
+label:"Don't Show Me Again",
+onClick:function() {
+return c.permanentlyHideAlert("storage-quota-limit-reached", b.projectName), !0;
+}
+} ]
+};
+} else delete b.alerts.quotaExceeded;
+}, k = [];
 e.get(a.project).then(_.spread(function(a, c) {
 function e() {
-g.getLabelSelector().isEmpty() || !$.isEmptyObject(b.pvcs) || $.isEmptyObject(b.unfilteredPVCs) ? delete b.alerts.storage :b.alerts.storage = {
+h.getLabelSelector().isEmpty() || !$.isEmptyObject(b.pvcs) || $.isEmptyObject(b.unfilteredPVCs) ? delete b.alerts.storage :b.alerts.storage = {
 type:"warning",
 details:"The active filters are hiding all persistent volume claims."
 };
 }
-b.project = a, i.push(d.watch("persistentvolumeclaims", c, function(a) {
-b.unfilteredPVCs = a.by("metadata.name"), g.addLabelSuggestionsFromResources(b.unfilteredPVCs, b.labelSuggestions), g.setLabelSuggestions(b.labelSuggestions), b.pvcs = g.getLabelSelector().select(b.unfilteredPVCs), b.emptyMessage = "No persistent volume claims to show", e(), h.log("pvcs (subscribe)", b.unfilteredPVCs);
-})), g.onActiveFiltersChanged(function(a) {
+b.project = a, k.push(d.watch("persistentvolumeclaims", c, function(a) {
+b.unfilteredPVCs = a.by("metadata.name"), h.addLabelSuggestionsFromResources(b.unfilteredPVCs, b.labelSuggestions), h.setLabelSuggestions(b.labelSuggestions), b.pvcs = h.getLabelSelector().select(b.unfilteredPVCs), b.emptyMessage = "No persistent volume claims to show", e(), i.log("pvcs (subscribe)", b.unfilteredPVCs);
+})), h.onActiveFiltersChanged(function(a) {
 b.$apply(function() {
 b.pvcs = a.select(b.unfilteredPVCs), e();
 });
 }), b.$on("$destroy", function() {
-d.unwatchAll(i);
+d.unwatchAll(k);
+}), d.list("resourcequotas", {
+namespace:b.projectName
+}, function(a) {
+b.quotas = a.by("metadata.name"), j();
+}), d.list("appliedclusterresourcequotas", {
+namespace:b.projectName
+}, function(a) {
+b.clusterQuotas = a.by("metadata.name"), j();
 });
 }));
 } ]), angular.module("openshiftConsole").controller("OtherResourcesController", [ "$routeParams", "$location", "$scope", "AlertMessageService", "AuthorizationService", "DataService", "ProjectsService", "$filter", "LabelFilter", "Logger", "APIService", function(a, b, c, d, e, f, g, h, i, j, k) {
@@ -9266,17 +9311,17 @@ details:a("getErrorDetails")(b)
 }
 };
 }));
-} ]), angular.module("openshiftConsole").controller("AttachPVCController", [ "$filter", "$routeParams", "$scope", "$window", "APIService", "AuthorizationService", "BreadcrumbsService", "DataService", "Navigate", "ProjectsService", "StorageService", "RELATIVE_PATH_PATTERN", function(a, b, c, d, e, f, g, h, i, j, k, l) {
-if (!b.kind || !b.name) return void i.toErrorPage("Kind or name parameter missing.");
-var m = [ "Deployment", "DeploymentConfig", "ReplicaSet", "ReplicationController" ];
-if (!_.includes(m, b.kind)) return void i.toErrorPage("Storage is not supported for kind " + b.kind + ".");
-var n = {
+} ]), angular.module("openshiftConsole").controller("AttachPVCController", [ "$filter", "$routeParams", "$scope", "$window", "APIService", "AuthorizationService", "BreadcrumbsService", "DataService", "QuotaService", "Navigate", "ProjectsService", "StorageService", "RELATIVE_PATH_PATTERN", function(a, b, c, d, e, f, g, h, i, j, k, l, m) {
+if (!b.kind || !b.name) return void j.toErrorPage("Kind or name parameter missing.");
+var n = [ "Deployment", "DeploymentConfig", "ReplicaSet", "ReplicationController" ];
+if (!_.includes(n, b.kind)) return void j.toErrorPage("Storage is not supported for kind " + b.kind + ".");
+var o = {
 resource:e.kindToResource(b.kind),
 group:b.group
 };
 c.alerts = {}, c.renderOptions = {
 hideFilterWidget:!0
-}, c.projectName = b.project, c.kind = b.kind, c.name = b.name, c.RELATIVE_PATH_PATTERN = l, c.attach = {
+}, c.projectName = b.project, c.kind = b.kind, c.name = b.name, c.RELATIVE_PATH_PATTERN = m, c.outOfClaims = !1, c.attach = {
 persistentVolumeClaim:null,
 volumeName:null,
 mountPath:null,
@@ -9288,23 +9333,23 @@ kind:b.kind,
 namespace:b.project,
 subpage:"Add Storage",
 includeProject:!0
-}), j.get(b.project).then(_.spread(function(e, j) {
-if (c.project = e, c.breadcrumbs[0].title = a("displayName")(e), !f.canI(n, "update", b.project)) return void i.toErrorPage("You do not have authority to update " + a("humanizeKind")(b.kind) + " " + b.name + ".", "access_denied");
-var l = a("orderByDisplayName"), m = a("getErrorDetails"), o = a("generateName"), p = function(a, b) {
+}), k.get(b.project).then(_.spread(function(e, k) {
+if (c.project = e, c.breadcrumbs[0].title = a("displayName")(e), !f.canI(o, "update", b.project)) return void j.toErrorPage("You do not have authority to update " + a("humanizeKind")(b.kind) + " " + b.name + ".", "access_denied");
+var m = a("orderByDisplayName"), n = a("getErrorDetails"), p = a("generateName"), q = function(a, b) {
 c.disableInputs = !0, c.alerts["attach-persistent-volume-claim"] = {
 type:"error",
 message:a,
 details:b
 };
-}, q = function(a) {
+}, r = function(a) {
 return c.attach.allContainers || c.attach.containers[a.name];
-}, r = function() {
+}, s = function() {
 var a = _.get(c, "attach.resource.spec.template");
-c.existingMountPaths = k.getMountPaths(a, q);
+c.existingMountPaths = l.getMountPaths(a, r);
 };
-c.$watchGroup([ "attach.resource", "attach.allContainers" ], r), c.$watch("attach.containers", r, !0);
-var s = function() {
-h.get(n, b.name, j).then(function(a) {
+c.$watchGroup([ "attach.resource", "attach.allContainers" ], s), c.$watch("attach.containers", s, !0);
+var t = function() {
+h.get(o, b.name, k).then(function(a) {
 c.attach.resource = a, c.breadcrumbs = g.getBreadcrumbs({
 object:a,
 project:e,
@@ -9312,28 +9357,36 @@ subpage:"Add Storage",
 includeProject:!0
 });
 var b = _.get(a, "spec.template");
-c.existingVolumeNames = k.getVolumeNames(b);
+c.existingVolumeNames = l.getVolumeNames(b);
 }, function(a) {
-p(b.name + " could not be loaded.", m(a));
-}), h.list("persistentvolumeclaims", j).then(function(a) {
-c.pvcs = l(a.by("metadata.name")), _.isEmpty(c.pvcs) || c.attach.persistentVolumeClaim || (c.attach.persistentVolumeClaim = _.head(c.pvcs));
+q(b.name + " could not be loaded.", n(a));
+}), h.list("persistentvolumeclaims", k).then(function(a) {
+c.pvcs = m(a.by("metadata.name")), _.isEmpty(c.pvcs) || c.attach.persistentVolumeClaim || (c.attach.persistentVolumeClaim = _.head(c.pvcs));
+}), h.list("resourcequotas", {
+namespace:c.projectName
+}, function(a) {
+c.quotas = a.by("metadata.name"), c.outOfClaims = i.isAnyStorageQuotaExceeded(c.quotas, c.clusterQuotas);
+}), h.list("appliedclusterresourcequotas", {
+namespace:c.projectName
+}, function(a) {
+c.clusterQuotas = a.by("metadata.name"), c.outOfClaims = i.isAnyStorageQuotaExceeded(c.quotas, c.clusterQuotas);
 });
 };
-s(), c.attachPVC = function() {
+t(), c.attachPVC = function() {
 if (c.disableInputs = !0, c.attachPVCForm.$valid) {
-c.attach.volumeName || (c.attach.volumeName = o("volume-"));
-var e = c.attach.resource, f = _.get(e, "spec.template"), g = c.attach.persistentVolumeClaim, i = c.attach.volumeName, l = c.attach.mountPath, r = c.attach.subPath, s = c.attach.readOnly;
-l && angular.forEach(f.spec.containers, function(a) {
-if (q(a)) {
-var b = k.createVolumeMount(i, l, r, s);
+c.attach.volumeName || (c.attach.volumeName = p("volume-"));
+var e = c.attach.resource, f = _.get(e, "spec.template"), g = c.attach.persistentVolumeClaim, i = c.attach.volumeName, j = c.attach.mountPath, m = c.attach.subPath, s = c.attach.readOnly;
+j && angular.forEach(f.spec.containers, function(a) {
+if (r(a)) {
+var b = l.createVolumeMount(i, j, m, s);
 a.volumeMounts || (a.volumeMounts = []), a.volumeMounts.push(b);
 }
 });
-var t = k.createVolume(i, g);
-f.spec.volumes || (f.spec.volumes = []), f.spec.volumes.push(t), c.alerts = {}, h.update(n, e.metadata.name, c.attach.resource, j).then(function() {
+var t = l.createVolume(i, g);
+f.spec.volumes || (f.spec.volumes = []), f.spec.volumes.push(t), c.alerts = {}, h.update(o, e.metadata.name, c.attach.resource, k).then(function() {
 d.history.back();
 }, function(d) {
-p("An error occurred attaching the persistent volume claim to the " + a("humanizeKind")(b.kind) + ".", m(d)), c.disableInputs = !1;
+q("An error occurred attaching the persistent volume claim to the " + a("humanizeKind")(b.kind) + ".", n(d)), c.disableInputs = !1;
 });
 }
 };
@@ -10716,7 +10769,7 @@ _.set(a, "model.service", c);
 });
 }
 };
-}), angular.module("openshiftConsole").directive("oscPersistentVolumeClaim", [ "$filter", "DataService", "LimitRangesService", "ModalsService", "DNS1123_SUBDOMAIN_VALIDATION", function(a, b, c, d, e) {
+}), angular.module("openshiftConsole").directive("oscPersistentVolumeClaim", [ "$filter", "DataService", "LimitRangesService", "QuotaService", "ModalsService", "DNS1123_SUBDOMAIN_VALIDATION", function(a, b, c, d, e, f) {
 return {
 restrict:"E",
 scope:{
@@ -10724,9 +10777,9 @@ claim:"=model",
 projectName:"="
 },
 templateUrl:"views/directives/osc-persistent-volume-claim.html",
-link:function(f) {
-var g = a("amountAndUnit"), h = a("usageValue");
-f.nameValidation = e, f.storageClasses = [], f.defaultStorageClass = "", f.claim.unit = "Gi", f.units = [ {
+link:function(g) {
+var h = a("amountAndUnit"), i = a("usageValue");
+g.nameValidation = f, g.storageClasses = [], g.defaultStorageClass = "", g.claim.unit = "Gi", g.units = [ {
 value:"Mi",
 label:"MiB"
 }, {
@@ -10744,7 +10797,7 @@ label:"GB"
 }, {
 value:"T",
 label:"TB"
-} ], f.claim.selectedLabels = [], f.groupUnits = function(a) {
+} ], g.claim.selectedLabels = [], g.groupUnits = function(a) {
 switch (a.value) {
 case "Mi":
 case "Gi":
@@ -10757,12 +10810,15 @@ case "T":
 return "Decimal Units";
 }
 return "";
-}, f.showComputeUnitsHelp = function() {
-d.showComputeUnitsHelp();
+}, g.showComputeUnitsHelp = function() {
+e.showComputeUnitsHelp();
 };
-var i = function() {
-var a = f.claim.amount && h(f.claim.amount + f.claim.unit), b = _.has(f, "limits.min") && h(f.limits.min), c = _.has(f, "limits.max") && h(f.limits.max), d = !0, e = !0;
-a && b && (d = a >= b), a && c && (e = a <= c), f.persistentVolumeClaimForm.capacity.$setValidity("limitRangeMin", d), f.persistentVolumeClaimForm.capacity.$setValidity("limitRangeMax", e);
+var j = function() {
+var a = g.claim.amount && i(g.claim.amount + g.claim.unit), b = _.has(g, "limits.min") && i(g.limits.min), c = _.has(g, "limits.max") && i(g.limits.max), d = !0, e = !0;
+a && b && (d = a >= b), a && c && (e = a <= c), g.persistentVolumeClaimForm.capacity.$setValidity("limitRangeMin", d), g.persistentVolumeClaimForm.capacity.$setValidity("limitRangeMax", e);
+}, k = function() {
+var a = d.isAnyStorageQuotaExceeded(g.quotas, g.clusterQuotas), b = d.willRequestExceedQuota(g.quotas, g.clusterQuotas, "requests.storage", g.claim.amount + g.claim.unit);
+g.persistentVolumeClaimForm.capacity.$setValidity("willExceedStorage", !b), g.persistentVolumeClaimForm.capacity.$setValidity("outOfClaims", !a);
 };
 b.list({
 group:"storage.k8s.io",
@@ -10770,11 +10826,11 @@ resource:"storageclasses"
 }, {}, function(b) {
 var c = b.by("metadata.name");
 if (!_.isEmpty(c)) {
-f.storageClasses = _.sortBy(c, "metadata.name");
+g.storageClasses = _.sortBy(c, "metadata.name");
 var d = a("annotation");
-if (f.defaultStorageClass = _.find(f.storageClasses, function(a) {
+if (g.defaultStorageClass = _.find(g.storageClasses, function(a) {
 return "true" === d(a, "storageclass.beta.kubernetes.io/is-default-class");
-}), f.defaultStorageClass) f.claim.storageClass = f.defaultStorageClass; else {
+}), g.defaultStorageClass) g.claim.storageClass = g.defaultStorageClass; else {
 var e = {
 metadata:{
 name:"No Storage Class",
@@ -10784,24 +10840,32 @@ description:"No storage class will be assigned"
 }
 }
 };
-f.storageClasses.unshift(e);
+g.storageClasses.unshift(e);
 }
 }
 }, {
 errorNotification:!1
 }), b.list("limitranges", {
-namespace:f.projectName
+namespace:g.projectName
 }, function(a) {
 var b = a.by("metadata.name");
 if (!_.isEmpty(b)) {
-f.limits = c.getEffectiveLimitRange(b, "storage", "PersistentVolumeClaim");
+g.limits = c.getEffectiveLimitRange(b, "storage", "PersistentVolumeClaim");
 var d;
-if (f.limits.min && f.limits.max) {
-var e = h(f.limits.min), j = h(f.limits.max);
-e === j && (d = g(f.limits.max), f.claim.amount = Number(d[0]), f.claim.unit = d[1], f.capacityReadOnly = !0);
+if (g.limits.min && g.limits.max) {
+var e = i(g.limits.min), f = i(g.limits.max);
+e === f && (d = h(g.limits.max), g.claim.amount = Number(d[0]), g.claim.unit = d[1], g.capacityReadOnly = !0);
 }
-f.$watchGroup([ "claim.amount", "claim.unit" ], i);
+g.$watchGroup([ "claim.amount", "claim.unit" ], j);
 }
+}), b.list("resourcequotas", {
+namespace:g.projectName
+}, function(a) {
+g.quotas = a.by("metadata.name"), g.$watchGroup([ "claim.amount", "claim.unit" ], k);
+}), b.list("appliedclusterresourcequotas", {
+namespace:g.projectName
+}, function(a) {
+g.clusterQuotas = a.by("metadata.name");
 });
 }
 };
@@ -14953,6 +15017,7 @@ memory:"Memory (Request)",
 "openshift.io/imagestreamsize":"Image Stream Size",
 "openshift.io/projectimagessize":"Project Image Size",
 persistentvolumeclaims:"Persistent Volume Claims",
+"requests.storage":"Storage (Request)",
 pods:"Pods",
 replicationcontrollers:"Replication Controllers",
 "requests.cpu":"CPU (Request)",
@@ -14972,6 +15037,7 @@ memory:"memory (request)",
 "openshift.io/imagestreamsize":"image stream size",
 "openshift.io/projectimagessize":"project image size",
 persistentvolumeclaims:"persistent volume claims",
+"requests.storage":"storage (request)",
 replicationcontrollers:"replication controllers",
 "requests.cpu":"CPU (request)",
 "requests.memory":"memory (request)",
