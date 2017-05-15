@@ -1120,6 +1120,9 @@ message:"Deployment " + c + " is no longer in progress."
 }, h.urlForImageChangeTrigger = function(b) {
 var c = a("stripTag")(_.get(b, "imageChangeParams.from.name")), d = _.get(h, "apiObject.metadata.namespace"), e = _.get(b, "imageChangeParams.from.namespace", d);
 return f.resourceURL(c, "ImageStream", e);
+}, h.navigateToPods = function() {
+var a = h.getPods(h.current);
+_.isEmpty(a) || f.toPodsForDeployment(h.current, a);
 }, h.closeOverlayPanel = function() {
 _.set(h, "overlay.panelVisible", !1);
 }, h.showOverlayPanel = function(a, b) {
@@ -2226,10 +2229,10 @@ name:b
 };
 _.isObject(d) && _.extend(e, d), a.path("project/" + encodeURIComponent(c) + "/create/next").search(e);
 },
-toPodsForDeployment:function(b) {
-a.url("/project/" + b.metadata.namespace + "/browse/pods"), c(function() {
+toPodsForDeployment:function(b, d) {
+return 1 === _.size(d) ? void this.toResourceURL(_.sample(d)) :(a.url("/project/" + b.metadata.namespace + "/browse/pods"), void c(function() {
 e.setLabelSelector(new LabelSelector(b.spec.selector, (!0)));
-}, 1);
+}, 1));
 },
 resourceURL:function(a, b, c, d, e) {
 if (d = d || "browse", !(a && (a.metadata || b && c))) return null;
@@ -12871,7 +12874,7 @@ return _.escape(a.message);
 });
 };
 b.$watchGroup([ "limitRanges", "hpa", "project" ], h), b.$watch("rc.spec.template.spec.containers", h, !0);
-var l = function() {
+var j = function() {
 if (_.get(b.rc, "spec.replicas", 1) > _.get(b.rc, "status.replicas", 0)) {
 var a = g.filterQuotasForResource(b.rc, b.quotas), c = g.filterQuotasForResource(b.rc, b.clusterQuotas), d = function(a) {
 return !!g.getResourceLimitAlerts(b.rc, a).length;
@@ -12879,25 +12882,25 @@ return !!g.getResourceLimitAlerts(b.rc, a).length;
 b.showQuotaWarning = _.some(a, d) || _.some(c, d);
 } else b.showQuotaWarning = !1;
 };
-b.$watchGroup([ "rc.spec.replicas", "rc.status.replicas", "quotas", "clusterQuotas" ], l);
-var m = function(c) {
+b.$watchGroup([ "rc.spec.replicas", "rc.status.replicas", "quotas", "clusterQuotas" ], j);
+var l = function(c) {
 b.alerts = b.alerts || {}, b.desiredReplicas = null, b.alerts.scale = {
 type:"error",
 message:"An error occurred scaling the deployment.",
 details:a("getErrorDetails")(c)
 };
-}, n = function() {
+}, m = function() {
 return b.deploymentConfig || b.deployment || b.rc;
-}, o = function() {
+}, n = function() {
 if (c = !1, angular.isNumber(b.desiredReplicas)) {
-var a = n();
-return e.scale(a, b.desiredReplicas).then(_.noop, m);
+var a = m();
+return e.scale(a, b.desiredReplicas).then(_.noop, l);
 }
-}, p = _.debounce(o, 650);
+}, o = _.debounce(n, 650);
 b.viewPodsForDeployment = function(a) {
-0 !== j(b.pods) && (1 === j(b.pods) ? i.toResourceURL(_.sample(b.pods)) :i.toPodsForDeployment(a));
+_.isEmpty(b.pods) || i.toPodsForDeployment(a, b.pods);
 }, b.scaleUp = function() {
-b.scalable && (b.desiredReplicas = b.getDesiredReplicas(), b.desiredReplicas++, p(), c = !0);
+b.scalable && (b.desiredReplicas = b.getDesiredReplicas(), b.desiredReplicas++, o(), c = !0);
 }, b.scaleDown = function() {
 if (b.scalable && (b.desiredReplicas = b.getDesiredReplicas(), 0 !== b.desiredReplicas)) {
 if (1 === b.desiredReplicas) {
@@ -12915,10 +12918,10 @@ return k(b.rc) ? "deployment" :"replication controller";
 }
 });
 return void a.result.then(function() {
-b.desiredReplicas = b.getDesiredReplicas() - 1, p(), c = !0;
+b.desiredReplicas = b.getDesiredReplicas() - 1, o(), c = !0;
 });
 }
-b.desiredReplicas--, p();
+b.desiredReplicas--, o();
 }
 }, b.getDesiredReplicas = function() {
 return angular.isDefined(b.desiredReplicas) && null !== b.desiredReplicas ? b.desiredReplicas :b.rc && b.rc.spec && angular.isDefined(b.rc.spec.replicas) ? b.rc.spec.replicas :1;
@@ -12927,9 +12930,9 @@ return !_.get(b.rc, "spec.replicas") && !!(b.deploymentConfig ? a("annotation")(
 }, function(a) {
 b.isIdled = !!a;
 }), b.unIdle = function() {
-b.desiredReplicas = a("unidleTargetReplicas")(b.deploymentConfig || b.rc, b.hpa), o().then(function() {
+b.desiredReplicas = a("unidleTargetReplicas")(b.deploymentConfig || b.rc, b.hpa), n().then(function() {
 b.isIdled = !1;
-}, m);
+}, l);
 };
 } ]
 };
