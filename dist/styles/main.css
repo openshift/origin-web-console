@@ -5553,7 +5553,7 @@ body,html{margin:0;padding:0}
 .key-value-table>tbody>tr>td.value .truncated-content{white-space:pre}
 .table{background-color:#fff}
 .table.table-bordered>tbody>tr td,.table.table-bordered>tbody>tr th,.table.table-bordered>thead>tr td,.table.table-bordered>thead>tr th{border-left:0;border-right:0;padding-bottom:8px;padding-top:8px;vertical-align:middle}
-.table-filter-wrapper,.table.table-bordered.table-bordered-columns tbody>tr td,.table.table-bordered.table-bordered-columns tbody>tr th,.table.table-bordered.table-bordered-columns thead>tr td,.table.table-bordered.table-bordered-columns thead>tr th{border-left:1px solid #d1d1d1;border-right:1px solid #d1d1d1}
+.table-filter-wrapper,.table.table-bordered-columns tbody>tr td,.table.table-bordered-columns tbody>tr th,.table.table-bordered-columns thead>tr td,.table.table-bordered-columns thead>tr th{border-left:1px solid #d1d1d1;border-right:1px solid #d1d1d1}
 .table.table-layout-fixed{table-layout:fixed}
 .table.table-layout-fixed td{word-wrap:break-word;word-break:break-word;overflow-wrap:break-word;min-width:0}
 .table>tbody+tbody{border-top-width:1px}
@@ -5573,17 +5573,23 @@ body,html{margin:0;padding:0}
 .table-mobile>tbody>tr>td{border:none;border-bottom:1px solid #dedede;min-height:37.67px;padding-left:35%;position:relative}
 .table-mobile>tbody>tr>td:last-child{border-bottom:none}
 .table-mobile>tbody>tr>td:before{content:attr(data-title);position:absolute;top:8px;left:6px;width:35%;padding-right:10px;white-space:nowrap}
-.table-responsive .table.table-bordered>tbody>tr:first-child>td,.table-responsive .table.table-bordered>tbody>tr:first-child>th,.table-responsive .table.table-bordered>thead>tr:first-child>td,.table-responsive .table.table-bordered>thead>tr:first-child>th{border-top:0}
-.table-responsive .table.table-bordered>tbody>tr>td:first-child,.table-responsive .table.table-bordered>tbody>tr>th:first-child,.table-responsive .table.table-bordered>thead>tr>td:first-child,.table-responsive .table.table-bordered>thead>tr>th:first-child{border-left:0}
-.table-responsive .table.table-bordered>tbody>tr>td:last-child,.table-responsive .table.table-bordered>tbody>tr>th:last-child,.table-responsive .table.table-bordered>thead>tr>td:last-child,.table-responsive .table.table-bordered>thead>tr>th:last-child{border-right:0}
 }
 .tooltip-inner,h1.contains-actions{overflow-wrap:break-word;min-width:0;word-wrap:break-word;word-break:break-word}
 .table-responsive{margin-bottom:21px}
+.table-responsive.scroll-shadows-horizontal{border-left:1px solid #d1d1d1;border-right:1px solid #d1d1d1;background-attachment:scroll;background-color:#fff;background-image:radial-gradient(ellipse at left,rgba(0,0,0,.25) 0%,rgba(0,0,0,0) 75%),radial-gradient(ellipse at right,rgba(0,0,0,.25) 0%,rgba(0,0,0,0) 75%);background-position:0 0,100% 0;background-repeat:no-repeat;background-size:8px 100%;-ms-overflow-style:auto;overflow-x:auto}
+.table-responsive.scroll-shadows-horizontal .table{background-color:transparent}
+.table-responsive.scroll-shadows-horizontal td,.table-responsive.scroll-shadows-horizontal th{background-attachment:local;background-repeat:no-repeat;background-size:20px 100%}
+.table-responsive.scroll-shadows-horizontal td:first-child,.table-responsive.scroll-shadows-horizontal th:first-child{background-image:linear-gradient(to left,rgba(255,255,255,0) 30%,#fff 70%);background-position:0 0}
+.table-responsive.scroll-shadows-horizontal td:last-child,.table-responsive.scroll-shadows-horizontal th:last-child{background-image:linear-gradient(to right,rgba(255,255,255,0) 30%,#fff 70%);background-position:100% 0}
+.table-responsive.scroll-shadows-horizontal .table.table-bordered{border-left:0;border-right:0}
+.table-responsive.scroll-shadows-horizontal .table.table-bordered td:first-child,.table-responsive.scroll-shadows-horizontal .table.table-bordered th:first-child{border-left:0}
+.table-responsive.scroll-shadows-horizontal .table.table-bordered td:last-child,.table-responsive.scroll-shadows-horizontal .table.table-bordered th:last-child{border-right:0}
+.table-responsive .table{margin-bottom:0}
+.table-responsive .table.table-bordered>tbody>tr:first-child>td,.table-responsive .table.table-bordered>tbody>tr:first-child>th,.table-responsive .table.table-bordered>thead>tr:first-child>td,.table-responsive .table.table-bordered>thead>tr:first-child>th{border-top:0}
 .table>tbody>tr.disabled>td,.table>tbody>tr.disabled>th,.table>tbody>tr>td.disabled,.table>tbody>tr>th.disabled,.table>tfoot>tr.disabled>td,.table>tfoot>tr.disabled>th,.table>tfoot>tr>td.disabled,.table>tfoot>tr>th.disabled,.table>thead>tr.disabled>td,.table>thead>tr.disabled>th,.table>thead>tr>td.disabled,.table>thead>tr>th.disabled{background-color:#f5f5f5}
 .table-hover>tbody>tr.disabled:hover>td,.table-hover>tbody>tr.disabled:hover>th,.table-hover>tbody>tr:hover>.disabled,.table-hover>tbody>tr>td.disabled:hover,.table-hover>tbody>tr>th.disabled:hover{background-color:#e8e8e8}
 td[role=presentation].arrow:after{content:"\2193"}
-@media (min-width:768px){.table-responsive .table{margin-bottom:0}
-td[role=presentation].arrow:after{content:"\2192"}
+@media (min-width:768px){td[role=presentation].arrow:after{content:"\2192"}
 }
 .tile{background:#fff;padding:20px;margin-bottom:20px;word-wrap:break-word;-webkit-box-sizing:border-box;-moz-box-sizing:border-box;box-sizing:border-box;overflow-x:hidden}
 .tile h1,.tile h2,.tile h3{margin:10.5px 0px}
