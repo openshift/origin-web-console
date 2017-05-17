@@ -13,11 +13,11 @@
     "angular-touch": "1.5.11",
     "angular-route": "1.5.11",
     "angular-bootstrap": "0.14.3",
-    "angular-patternfly": "3.21.0",
+    "angular-patternfly": "3.24.0",
     "uri.js": "1.18.0",
     "moment": "2.14.2",
     "moment-timezone": "0.5.3",
-    "patternfly": "3.21.0",
+    "patternfly": "3.24.0",
     "hawtio-core": "2.0.37",
     "hawtio-extension-service": "2.0.2",
     "jquery": "2.1.4",
@@ -58,12 +58,14 @@
   "resolutions": {
     "angular-bootstrap": "0.14.3",
     "d3": "3.5.17",
-    "patternfly": "3.21.0",
-    "angular-patternfly": "3.21.0",
+    "patternfly": "3.24.0",
+    "angular-patternfly": "3.24.0",
     "patternfly-bootstrap-treeview": "2.1.1",
     "angular": "1.5.11",
     "kubernetes-object-describer": "1.0.4",
-    "angular-sanitize": "1.5.11"
+    "angular-sanitize": "1.5.11",
+    "moment": "2.14.2",
+    "font-awesome": "4.7.0"
   },
   "overrides": {
     "angular": {

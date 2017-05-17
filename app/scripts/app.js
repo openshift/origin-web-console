@@ -21,6 +21,7 @@ angular
     'registryUI.images',
     'ui.bootstrap',
     'patternfly.charts',
+    'patternfly.navigation',
     'patternfly.sort',
     'openshiftConsoleTemplates',
     'ui.ace',

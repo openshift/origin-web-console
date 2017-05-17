@@ -7175,6 +7175,7 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
   $templateCache.put('views/directives/header/_navbar-utility.html',
     "<ul class=\"nav navbar-nav navbar-right navbar-iconic\">\n" +
     "<li extension-point extension-name=\"nav-system-status\" extension-types=\"dom\"></li>\n" +
+    "<li ng-if=\"launcherApps.length > 0\" pf-application-launcher items=\"launcherApps\" is-list=\"true\"></li>\n" +
     "<li uib-dropdown>\n" +
     "<a uib-dropdown-toggle class=\"nav-item-iconic\" id=\"help-dropdown\" href=\"\">\n" +
     "<span title=\"Help\" class=\"fa pficon-help\" aria-hidden=\"true\"></span>\n" +
