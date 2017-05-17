@@ -63,7 +63,7 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
 
   $templateCache.put('views/_cannot-create-project.html',
     "<span ng-if=\"!newProjectMessage\">A cluster admin can create a project for you by running the command\n" +
-    "<code>oadm new-project &lt;projectname&gt; --admin={{user.metadata.name || '&lt;YourUsername&gt;'}}</code></span>\n" +
+    "<code>oc adm new-project &lt;projectname&gt; --admin={{user.metadata.name || '&lt;YourUsername&gt;'}}</code></span>\n" +
     "<span ng-if=\"newProjectMessage\" ng-bind-html=\"newProjectMessage | linkify : '_blank'\" class=\"projects-instructions-link\"></span>"
   );
 
