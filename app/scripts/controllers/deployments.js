@@ -15,8 +15,8 @@ angular.module('openshiftConsole')
                                                  DataService,
                                                  DeploymentsService,
                                                  LabelFilter,
-                                                 LabelsService,
                                                  Logger,
+                                                 OwnerReferencesService,
                                                  ProjectsService) {
     $scope.projectName = $routeParams.project;
     $scope.replicationControllers = {};
@@ -36,24 +36,28 @@ angular.module('openshiftConsole')
     });
     AlertMessageService.clearAlerts();
 
-    var replicaSets, deployments;
+    var replicaSets, deploymentsByUID;
     var annotation = $filter('annotation');
 
     var groupReplicaSets = function() {
-      $scope.replicaSetsByDeployment = LabelsService.groupBySelector(replicaSets, deployments, { matchSelector: true });
-      $scope.unfilteredReplicaSets = _.get($scope, ['replicaSetsByDeployment', ''], {});
+      if (!replicaSets || !deploymentsByUID) {
+        return;
+      }
+
+      $scope.replicaSetsByDeploymentUID = OwnerReferencesService.groupByControllerUID(replicaSets);
+      $scope.unfilteredReplicaSets = _.get($scope, ['replicaSetsByDeploymentUID', ''], {});
       LabelFilter.addLabelSuggestionsFromResources($scope.unfilteredReplicaSets, $scope.labelSuggestions);
       LabelFilter.setLabelSuggestions($scope.labelSuggestions);
       $scope.replicaSets = LabelFilter.getLabelSelector().select($scope.unfilteredReplicaSets);
 
-      $scope.latestReplicaSetByDeployment = {};
-      _.each($scope.replicaSetsByDeployment, function(replicaSets, deploymentName) {
-        if (!deploymentName) {
+      $scope.latestReplicaSetByDeploymentUID = {};
+      _.each($scope.replicaSetsByDeploymentUID, function(replicaSets, deploymentUID) {
+        if (!deploymentUID) {
           return;
         }
 
-        $scope.latestReplicaSetByDeployment[deploymentName] =
-          DeploymentsService.getActiveReplicaSet(replicaSets, deployments[deploymentName]);
+        $scope.latestReplicaSetByDeploymentUID[deploymentUID] =
+          DeploymentsService.getActiveReplicaSet(replicaSets, deploymentsByUID[deploymentUID]);
       });
     };
 
@@ -139,7 +143,7 @@ angular.module('openshiftConsole')
           group: "extensions",
           resource: "deployments"
         }, context, function(deploymentData) {
-          deployments = $scope.unfilteredDeployments = deploymentData.by("metadata.name");
+          deploymentsByUID = $scope.unfilteredDeployments = deploymentData.by("metadata.uid");
           LabelFilter.addLabelSuggestionsFromResources($scope.unfilteredDeployments, $scope.labelSuggestions);
           LabelFilter.setLabelSuggestions($scope.labelSuggestions);
           $scope.deployments = LabelFilter.getLabelSelector().select($scope.unfilteredDeployments);
