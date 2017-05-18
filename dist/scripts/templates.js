@@ -11548,10 +11548,10 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "<div ng-if=\"overview.viewBy === 'resource'\">\n" +
     "<div ng-if=\"overview.filteredDeploymentConfigs | hashSize\">\n" +
     "<h2>\n" +
-    "<span ng-if=\"overview.deploymentsByUID | hashSize\">\n" +
+    "<span ng-if=\"overview.deployments | hashSize\">\n" +
     "Deployment Configs\n" +
     "</span>\n" +
-    "<span ng-if=\"!(overview.deploymentsByUID | hashSize)\">\n" +
+    "<span ng-if=\"!(overview.deployments | hashSize)\">\n" +
     "Deployments\n" +
     "</span>\n" +
     "</h2>\n" +
@@ -11658,7 +11658,7 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "<h2>Other Resources</h2>\n" +
     "<overview-list-row ng-repeat=\"deploymentConfig in overview.deploymentConfigsNoPipeline track by (deploymentConfig | uid)\" ng-init=\"dcName = deploymentConfig.metadata.name\" api-object=\"deploymentConfig\" current=\"overview.currentByDeploymentConfig[dcName]\" previous=\"overview.getPreviousReplicationController(deploymentConfig)\" state=\"overview.state\">\n" +
     "</overview-list-row>\n" +
-    "<overview-list-row ng-repeat=\"deployment in overview.deploymentsByUID track by (deployment | uid)\" api-object=\"deployment\" current=\"overview.currentByDeployment[deployment.metadata.name]\" previous=\"overview.replicaSetsByDeploymentUID[deployment.metadata.uid][1]\" state=\"overview.state\">\n" +
+    "<overview-list-row ng-repeat=\"deployment in overview.deployments track by (deployment | uid)\" api-object=\"deployment\" current=\"overview.currentByDeploymentUID[deployment.metadata.uid]\" previous=\"overview.replicaSetsByDeploymentUID[deployment.metadata.uid][1]\" state=\"overview.state\">\n" +
     "</overview-list-row>\n" +
     "<overview-list-row ng-repeat=\"replicationController in overview.vanillaReplicationControllers track by (replicationController | uid)\" api-object=\"replicationController\" current=\"replicationController\" state=\"overview.state\">\n" +
     "</overview-list-row>\n" +

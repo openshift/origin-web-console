@@ -173,10 +173,10 @@
               <div ng-if="overview.viewBy === 'resource'">
                 <div ng-if="overview.filteredDeploymentConfigs | hashSize">
                   <h2>
-                    <span ng-if="overview.deploymentsByUID | hashSize">
+                    <span ng-if="overview.deployments | hashSize">
                       Deployment Configs
                     </span>
-                    <span ng-if="!(overview.deploymentsByUID | hashSize)">
+                    <span ng-if="!(overview.deployments | hashSize)">
                       Deployments
                     </span>
                   </h2>
@@ -324,9 +324,9 @@
                        state="overview.state">
                   </overview-list-row>
                   <overview-list-row
-                       ng-repeat="deployment in overview.deploymentsByUID track by (deployment | uid)"
+                       ng-repeat="deployment in overview.deployments track by (deployment | uid)"
                        api-object="deployment"
-                       current="overview.currentByDeployment[deployment.metadata.name]"
+                       current="overview.currentByDeploymentUID[deployment.metadata.uid]"
                        previous="overview.replicaSetsByDeploymentUID[deployment.metadata.uid][1]"
                        state="overview.state">
                   </overview-list-row>

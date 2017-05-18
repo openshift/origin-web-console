@@ -66,6 +66,7 @@ function OverviewController($scope,
   var label = $filter('label');
   var getPodTemplate = $filter('podTemplate');
 
+  var deploymentsByUID;
   var imageStreams;
   var labelSuggestions = {};
   var pipelineLabelSuggestions = {};
@@ -157,7 +158,7 @@ function OverviewController($scope,
   var size = function() {
     return _.size(overview.deploymentConfigs) +
            _.size(overview.vanillaReplicationControllers) +
-           _.size(overview.deploymentsByUID) +
+           _.size(overview.deployments) +
            _.size(overview.vanillaReplicaSets) +
            _.size(overview.statefulSets) +
            _.size(overview.monopods) +
@@ -186,7 +187,7 @@ function OverviewController($scope,
     // Check if we've loaded the top-level items we show on the overview.
     var loaded = overview.deploymentConfigs &&
                  overview.replicationControllers &&
-                 overview.deploymentsByUID &&
+                 overview.deployments &&
                  overview.replicaSets &&
                  overview.statefulSets &&
                  overview.pods &&
@@ -294,7 +295,7 @@ function OverviewController($scope,
     overview.pipelineViewHasOtherResources =
       !_.isEmpty(overview.deploymentConfigsNoPipeline) ||
       !_.isEmpty(overview.vanillaReplicationControllers) ||
-      !_.isEmpty(overview.deploymentsByUID) ||
+      !_.isEmpty(overview.deployments) ||
       !_.isEmpty(overview.vanillaReplicaSets) ||
       !_.isEmpty(overview.statefulSets) ||
       !_.isEmpty(overview.monopods);
@@ -337,7 +338,7 @@ function OverviewController($scope,
   var updateFilter = function() {
     overview.filteredDeploymentConfigs = filterItems(overview.deploymentConfigs);
     overview.filteredReplicationControllers = filterItems(overview.vanillaReplicationControllers);
-    overview.filteredDeployments = filterItems(overview.deploymentsByUID);
+    overview.filteredDeployments = filterItems(overview.deployments);
     overview.filteredReplicaSets = filterItems(overview.vanillaReplicaSets);
     overview.filteredStatefulSets = filterItems(overview.statefulSets);
     overview.filteredMonopods = filterItems(overview.monopods);
@@ -548,7 +549,7 @@ function OverviewController($scope,
 
   // Update warnings for all Kubernetes deployments.
   var updateAllDeploymentWarnings = function() {
-    _.each(overview.deploymentsByUID, updateDeploymentWarnings);
+    _.each(overview.deployments, updateDeploymentWarnings);
   };
 
   // Update all pod warnings, indexing the errors by owner UID.
@@ -749,7 +750,7 @@ function OverviewController($scope,
 
   // Group replica sets by deployment and filter the visible replica sets.
   var groupReplicaSets = function() {
-    if (!overview.replicaSets || !overview.deploymentsByUID) {
+    if (!overview.replicaSets || !deploymentsByUID) {
       return;
     }
 
@@ -762,7 +763,7 @@ function OverviewController($scope,
         return;
       }
 
-      var deployment = overview.deploymentsByUID[deploymentUID];
+      var deployment = deploymentsByUID[deploymentUID];
       var visibleReplicaSets = _.filter(replicaSets, function(replicaSet) {
         return isReplicaSetVisible(replicaSet, deployment);
       });
@@ -818,7 +819,7 @@ function OverviewController($scope,
     var toUpdate = [
       overview.deploymentConfigs,
       overview.vanillaReplicationControllers,
-      overview.deploymentsByUID,
+      overview.deployments,
       overview.vanillaReplicaSets,
       overview.statefulSets,
       overview.monopods
@@ -1178,7 +1179,8 @@ function OverviewController($scope,
       group: "extensions",
       resource: "deployments"
     }, context, function(deploymentData) {
-      overview.deploymentsByUID = deploymentData.by('metadata.uid');
+      deploymentsByUID = deploymentData.by('metadata.uid');
+      overview.deployments = _.sortBy(deploymentsByUID, 'metadata.name');
       groupReplicaSets();
       updateServicesForObjects(overview.deploymentsByUID);
       updateServicesForObjects(overview.vanillaReplicaSets);
