@@ -20,6 +20,7 @@ angular.module('openshiftConsole').controller('NewOverviewController', [
   'Logger',
   'MetricsService',
   'Navigate',
+  'OwnerReferencesService',
   'ProjectsService',
   'ResourceAlertsService',
   'RoutesService',
@@ -44,6 +45,7 @@ function OverviewController($scope,
                             Logger,
                             MetricsService,
                             Navigate,
+                            OwnerReferencesService,
                             ProjectsService,
                             ResourceAlertsService,
                             RoutesService) {
@@ -155,7 +157,7 @@ function OverviewController($scope,
   var size = function() {
     return _.size(overview.deploymentConfigs) +
            _.size(overview.vanillaReplicationControllers) +
-           _.size(overview.deployments) +
+           _.size(overview.deploymentsByUID) +
            _.size(overview.vanillaReplicaSets) +
            _.size(overview.statefulSets) +
            _.size(overview.monopods) +
@@ -184,7 +186,7 @@ function OverviewController($scope,
     // Check if we've loaded the top-level items we show on the overview.
     var loaded = overview.deploymentConfigs &&
                  overview.replicationControllers &&
-                 overview.deployments &&
+                 overview.deploymentsByUID &&
                  overview.replicaSets &&
                  overview.statefulSets &&
                  overview.pods &&
@@ -292,7 +294,7 @@ function OverviewController($scope,
     overview.pipelineViewHasOtherResources =
       !_.isEmpty(overview.deploymentConfigsNoPipeline) ||
       !_.isEmpty(overview.vanillaReplicationControllers) ||
-      !_.isEmpty(overview.deployments) ||
+      !_.isEmpty(overview.deploymentsByUID) ||
       !_.isEmpty(overview.vanillaReplicaSets) ||
       !_.isEmpty(overview.statefulSets) ||
       !_.isEmpty(overview.monopods);
@@ -335,7 +337,7 @@ function OverviewController($scope,
   var updateFilter = function() {
     overview.filteredDeploymentConfigs = filterItems(overview.deploymentConfigs);
     overview.filteredReplicationControllers = filterItems(overview.vanillaReplicationControllers);
-    overview.filteredDeployments = filterItems(overview.deployments);
+    overview.filteredDeployments = filterItems(overview.deploymentsByUID);
     overview.filteredReplicaSets = filterItems(overview.vanillaReplicaSets);
     overview.filteredStatefulSets = filterItems(overview.statefulSets);
     overview.filteredMonopods = filterItems(overview.monopods);
@@ -519,11 +521,11 @@ function OverviewController($scope,
   // Get the replica sets that are displayed for a deployment. This will return
   // only the active replica set unless a deployment is in progress.
   var getVisibleReplicaSets = function(deployment) {
-    var name = getName(deployment);
-    if (!name) {
+    var uid = getUID(deployment);
+    if (!uid) {
       return {};
     }
-    return _.get(overview, ['replicaSetsByDeployment', name]);
+    return _.get(overview, ['replicaSetsByDeploymentUID', uid]);
   };
 
   // Set warnings for a Kubernetes deployment, including any active replica sets.
@@ -546,7 +548,7 @@ function OverviewController($scope,
 
   // Update warnings for all Kubernetes deployments.
   var updateAllDeploymentWarnings = function() {
-    _.each(overview.deployments, updateDeploymentWarnings);
+    _.each(overview.deploymentsByUID, updateDeploymentWarnings);
   };
 
   // Update all pod warnings, indexing the errors by owner UID.
@@ -764,28 +766,28 @@ function OverviewController($scope,
 
   // Group replica sets by deployment and filter the visible replica sets.
   var groupReplicaSets = function() {
-    if (!overview.replicaSets || !overview.deployments) {
+    if (!overview.replicaSets || !overview.deploymentsByUID) {
       return;
     }
 
-    overview.replicaSetsByDeployment = LabelsService.groupBySelector(overview.replicaSets, overview.deployments, { matchSelector: true });
-    overview.currentByDeployment = {};
+    overview.replicaSetsByDeploymentUID = OwnerReferencesService.groupByControllerUID(overview.replicaSets);
+    overview.currentByDeploymentUID = {};
 
     // Sort the visible replica sets.
-    _.each(overview.replicaSetsByDeployment, function(replicaSets, deploymentName) {
-      if (!deploymentName) {
+    _.each(overview.replicaSetsByDeploymentUID, function(replicaSets, deploymentUID) {
+      if (!deploymentUID) {
         return;
       }
 
-      var deployment = overview.deployments[deploymentName];
+      var deployment = overview.deploymentsByUID[deploymentUID];
       var visibleReplicaSets = _.filter(replicaSets, function(replicaSet) {
         return isReplicaSetVisible(replicaSet, deployment);
       });
       var ordered = DeploymentsService.sortByRevision(visibleReplicaSets);
-      overview.replicaSetsByDeployment[deploymentName] = ordered;
-      overview.currentByDeployment[deploymentName] = _.head(ordered);
+      overview.replicaSetsByDeploymentUID[deploymentUID] = ordered;
+      overview.currentByDeploymentUID[deploymentUID] = _.head(ordered);
     });
-    overview.vanillaReplicaSets = _.sortBy(overview.replicaSetsByDeployment[''], 'metadata.name');
+    overview.vanillaReplicaSets = _.sortBy(overview.replicaSetsByDeploymentUID[''], 'metadata.name');
 
     // Since the visible replica sets for each deployment have changed, update
     // the deployment warnings.
@@ -833,7 +835,7 @@ function OverviewController($scope,
     var toUpdate = [
       overview.deploymentConfigs,
       overview.vanillaReplicationControllers,
-      overview.deployments,
+      overview.deploymentsByUID,
       overview.vanillaReplicaSets,
       overview.statefulSets,
       overview.monopods
@@ -1195,13 +1197,13 @@ function OverviewController($scope,
       group: "extensions",
       resource: "deployments"
     }, context, function(deploymentData) {
-      overview.deployments = deploymentData.by('metadata.name');
+      overview.deploymentsByUID = deploymentData.by('metadata.uid');
       groupReplicaSets();
-      updateServicesForObjects(overview.deployments);
+      updateServicesForObjects(overview.deploymentsByUID);
       updateServicesForObjects(overview.vanillaReplicaSets);
-      updateLabelSuggestions(overview.deployments);
+      updateLabelSuggestions(overview.deploymentsByUID);
       updateFilter();
-      Logger.log("deployments (subscribe)", overview.deployments);
+      Logger.log("deployments (subscribe)", overview.deploymentsByUID);
     }));
 
     watches.push(DataService.watch("builds", context, function(buildData) {

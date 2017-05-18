@@ -5382,7 +5382,7 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "<alerts alerts=\"alerts\"></alerts>\n" +
     "<div class=\"row\">\n" +
     "<div class=\"col-md-12\">\n" +
-    "<h3 ng-if=\"(deployments | hashSize) || (replicaSets | hashSize)\">Deployment Configurations</h3>\n" +
+    "<h3 ng-if=\"(deployments | size) || (replicaSets | size)\">Deployment Configurations</h3>\n" +
     "<table class=\"table table-bordered table-hover table-mobile table-layout-fixed\">\n" +
     "<colgroup>\n" +
     "<col class=\"col-sm-3\">\n" +
@@ -5467,7 +5467,7 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "<tr ng-repeat-end style=\"display: none\"></tr>\n" +
     "</tbody>\n" +
     "</table>\n" +
-    "<div ng-if=\"deployments | hashSize\">\n" +
+    "<div ng-if=\"deployments | size\">\n" +
     "<h3>Deployments</h3>\n" +
     "<table class=\"table table-bordered table-hover table-mobile table-layout-fixed\">\n" +
     "<colgroup>\n" +
@@ -5492,15 +5492,15 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "<a ng-href=\"{{deployment | navigateResourceURL}}\">{{deployment.metadata.name}}</a>\n" +
     "</td>\n" +
     "<td data-title=\"Last Version\">\n" +
-    "<span ng-if=\"latestReplicaSetByDeployment[deployment.metadata.name]\">\n" +
-    "<a ng-href=\"{{latestReplicaSetByDeployment[deployment.metadata.name] | navigateResourceURL}}\">{{deployment | lastDeploymentRevision}}</a>\n" +
+    "<span ng-if=\"latestReplicaSetByDeploymentUID[deployment.metadata.uid]\">\n" +
+    "<a ng-href=\"{{latestReplicaSetByDeploymentUID[deployment.metadata.uid] | navigateResourceURL}}\">{{deployment | lastDeploymentRevision}}</a>\n" +
     "</span>\n" +
-    "<span ng-if=\"!latestReplicaSetByDeployment[deployment.metadata.name]\">\n" +
+    "<span ng-if=\"!latestReplicaSetByDeploymentUID[deployment.metadata.uid]\">\n" +
     "{{deployment | lastDeploymentRevision}}\n" +
     "</span>\n" +
     "</td>\n" +
     "<td data-title=\"Replicas\">\n" +
-    "<span ng-if=\"deployment.status.replicas !== deployment.spec.replicas\">{{deployment.status.replicas}}/</span>{{deployment.spec.replicas}} replica<span ng-if=\"deployment.spec.replicas != 1\">s</span>\n" +
+    "<span ng-if=\"!(deployment.status.replicas | isNil) && deployment.status.replicas !== deployment.spec.replicas\">{{deployment.status.replicas}}/</span>{{deployment.spec.replicas}} replica<span ng-if=\"deployment.spec.replicas != 1\">s</span>\n" +
     "</td>\n" +
     "<td data-title=\"Created\">\n" +
     "<span am-time-ago=\"deployment.metadata.creationTimestamp\"></span>\n" +
@@ -11533,7 +11533,7 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "<div class=\"list-pf\">\n" +
     "<overview-list-row ng-repeat=\"deploymentConfig in overview.filteredDeploymentConfigsByApp[app] track by (deploymentConfig | uid)\" ng-init=\"dcName = deploymentConfig.metadata.name\" api-object=\"deploymentConfig\" current=\"overview.currentByDeploymentConfig[dcName]\" previous=\"overview.getPreviousReplicationController(deploymentConfig)\" state=\"overview.state\">\n" +
     "</overview-list-row>\n" +
-    "<overview-list-row ng-repeat=\"deployment in overview.filteredDeploymentsByApp[app] track by (deployment | uid)\" api-object=\"deployment\" current=\"overview.currentByDeployment[deployment.metadata.name]\" previous=\"overview.replicaSetsByDeployment[deployment.metadata.name][1]\" state=\"overview.state\">\n" +
+    "<overview-list-row ng-repeat=\"deployment in overview.filteredDeploymentsByApp[app] track by (deployment | uid)\" api-object=\"deployment\" current=\"overview.currentByDeploymentUID[deployment.metadata.uid]\" previous=\"overview.replicaSetsByDeploymentUID[deployment.metadata.uid][1]\" state=\"overview.state\">\n" +
     "</overview-list-row>\n" +
     "<overview-list-row ng-repeat=\"replicationController in overview.filteredReplicationControllersByApp[app] track by (replicationController | uid)\" api-object=\"replicationController\" current=\"replicationController\" state=\"overview.state\">\n" +
     "</overview-list-row>\n" +
@@ -11548,10 +11548,10 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "<div ng-if=\"overview.viewBy === 'resource'\">\n" +
     "<div ng-if=\"overview.filteredDeploymentConfigs | hashSize\">\n" +
     "<h2>\n" +
-    "<span ng-if=\"overview.deployments | hashSize\">\n" +
+    "<span ng-if=\"overview.deploymentsByUID | hashSize\">\n" +
     "Deployment Configs\n" +
     "</span>\n" +
-    "<span ng-if=\"!(overview.deployments | hashSize)\">\n" +
+    "<span ng-if=\"!(overview.deploymentsByUID | hashSize)\">\n" +
     "Deployments\n" +
     "</span>\n" +
     "</h2>\n" +
@@ -11563,7 +11563,7 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "<div ng-if=\"overview.filteredDeployments | hashSize\">\n" +
     "<h2>Deployments</h2>\n" +
     "<div class=\"list-pf\">\n" +
-    "<overview-list-row ng-repeat=\"deployment in overview.filteredDeployments track by (deployment | uid)\" api-object=\"deployment\" current=\"overview.currentByDeployment[deployment.metadata.name]\" previous=\"overview.replicaSetsByDeployment[deployment.metadata.name][1]\" state=\"overview.state\">\n" +
+    "<overview-list-row ng-repeat=\"deployment in overview.filteredDeployments track by (deployment | uid)\" api-object=\"deployment\" current=\"overview.currentByDeploymentUID[deployment.metadata.uid]\" previous=\"overview.replicaSetsByDeploymentUID[deployment.metadata.uid][1]\" state=\"overview.state\">\n" +
     "</overview-list-row>\n" +
     "</div>\n" +
     "</div>\n" +
@@ -11658,7 +11658,7 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "<h2>Other Resources</h2>\n" +
     "<overview-list-row ng-repeat=\"deploymentConfig in overview.deploymentConfigsNoPipeline track by (deploymentConfig | uid)\" ng-init=\"dcName = deploymentConfig.metadata.name\" api-object=\"deploymentConfig\" current=\"overview.currentByDeploymentConfig[dcName]\" previous=\"overview.getPreviousReplicationController(deploymentConfig)\" state=\"overview.state\">\n" +
     "</overview-list-row>\n" +
-    "<overview-list-row ng-repeat=\"deployment in overview.deployments track by (deployment | uid)\" api-object=\"deployment\" current=\"overview.currentByDeployment[deployment.metadata.name]\" previous=\"overview.replicaSetsByDeployment[deployment.metadata.name][1]\" state=\"overview.state\">\n" +
+    "<overview-list-row ng-repeat=\"deployment in overview.deploymentsByUID track by (deployment | uid)\" api-object=\"deployment\" current=\"overview.currentByDeployment[deployment.metadata.name]\" previous=\"overview.replicaSetsByDeploymentUID[deployment.metadata.uid][1]\" state=\"overview.state\">\n" +
     "</overview-list-row>\n" +
     "<overview-list-row ng-repeat=\"replicationController in overview.vanillaReplicationControllers track by (replicationController | uid)\" api-object=\"replicationController\" current=\"replicationController\" state=\"overview.state\">\n" +
     "</overview-list-row>\n" +

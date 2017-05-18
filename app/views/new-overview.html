@@ -143,8 +143,8 @@
                   <overview-list-row
                        ng-repeat="deployment in overview.filteredDeploymentsByApp[app] track by (deployment | uid)"
                        api-object="deployment"
-                       current="overview.currentByDeployment[deployment.metadata.name]"
-                       previous="overview.replicaSetsByDeployment[deployment.metadata.name][1]"
+                       current="overview.currentByDeploymentUID[deployment.metadata.uid]"
+                       previous="overview.replicaSetsByDeploymentUID[deployment.metadata.uid][1]"
                        state="overview.state">
                   </overview-list-row>
                   <overview-list-row
@@ -173,10 +173,10 @@
               <div ng-if="overview.viewBy === 'resource'">
                 <div ng-if="overview.filteredDeploymentConfigs | hashSize">
                   <h2>
-                    <span ng-if="overview.deployments | hashSize">
+                    <span ng-if="overview.deploymentsByUID | hashSize">
                       Deployment Configs
                     </span>
-                    <span ng-if="!(overview.deployments | hashSize)">
+                    <span ng-if="!(overview.deploymentsByUID | hashSize)">
                       Deployments
                     </span>
                   </h2>
@@ -197,8 +197,8 @@
                     <overview-list-row
                          ng-repeat="deployment in overview.filteredDeployments track by (deployment | uid)"
                          api-object="deployment"
-                         current="overview.currentByDeployment[deployment.metadata.name]"
-                         previous="overview.replicaSetsByDeployment[deployment.metadata.name][1]"
+                         current="overview.currentByDeploymentUID[deployment.metadata.uid]"
+                         previous="overview.replicaSetsByDeploymentUID[deployment.metadata.uid][1]"
                          state="overview.state">
                     </overview-list-row>
                   </div>
@@ -324,10 +324,10 @@
                        state="overview.state">
                   </overview-list-row>
                   <overview-list-row
-                       ng-repeat="deployment in overview.deployments track by (deployment | uid)"
+                       ng-repeat="deployment in overview.deploymentsByUID track by (deployment | uid)"
                        api-object="deployment"
                        current="overview.currentByDeployment[deployment.metadata.name]"
-                       previous="overview.replicaSetsByDeployment[deployment.metadata.name][1]"
+                       previous="overview.replicaSetsByDeploymentUID[deployment.metadata.uid][1]"
                        state="overview.state">
                   </overview-list-row>
                   <overview-list-row
