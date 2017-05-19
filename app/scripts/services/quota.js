@@ -305,10 +305,10 @@ angular.module("openshiftConsole")
         }
         var used = usageValue(_.get(q, ['used', requestedQuotaKey]));
         if (!used) {
-          return hard <= value;
+          return hard < value;
         }
 
-        return hard <= (used + value);
+        return hard < (used + value);
       };
       return _.some(quotas, isExceeded) || _.some(clusterQuotas, isExceeded);
     };

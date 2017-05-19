@@ -30,11 +30,13 @@
             <div class="col-md-12">
               <div class="section-header page-header-bleed-right page-header-bleed-left">
                 <div class="hidden-xs pull-right" ng-if="project && ('persistentvolumeclaims' | canI : 'create')">
-                  <a ng-disabled="outOfClaims" ng-href="project/{{project.metadata.name}}/create-pvc" class="btn btn-default">Create Storage</a>
+                  <a ng-if="!outOfClaims" ng-href="project/{{project.metadata.name}}/create-pvc" class="btn btn-default">Create Storage</a>
+                  <a ng-if="outOfClaims" href="" class="btn btn-default disabled" aria-disabled="true">Create Storage</a>
                 </div>
                 <h2>Persistent Volume Claims</h2>
                 <div class="visible-xs-block mar-bottom-sm" ng-if="project && ('persistentvolumeclaims' | canI : 'create')">
-                  <a ng-disabled="outOfClaims" ng-href="project/{{project.metadata.name}}/create-pvc" class="btn btn-default">Create Storage</a>
+                  <a ng-if="!outOfClaims" ng-href="project/{{project.metadata.name}}/create-pvc" class="btn btn-default">Create Storage</a>
+                  <a ng-if="outOfClaims" href="" class="btn btn-default disabled" aria-disabled="true">Create Storage</a>
                 </div>
               </div>
               <table class="table table-bordered table-hover table-mobile table-layout-fixed" ng-class="{ 'table-empty': (pvcs | hashSize) === 0 }">

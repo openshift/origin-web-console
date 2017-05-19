@@ -4057,7 +4057,7 @@ if (!c) return !1;
 var f = _.get(b.hard, c);
 if (f = g(f), !f) return !1;
 var h = g(_.get(b, [ "used", c ]));
-return h ? f <= h + e :f <= e;
+return h ? f < h + e :f < e;
 };
 return _.some(a, e) || _.some(b, e);
 };
