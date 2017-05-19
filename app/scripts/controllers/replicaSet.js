@@ -23,6 +23,7 @@ angular.module('openshiftConsole')
                         MetricsService,
                         ModalsService,
                         Navigate,
+                        PodsService,
                         ProjectsService,
                         StorageService,
                         keyValueEditorUtils,
@@ -235,17 +236,6 @@ angular.module('openshiftConsole')
           }));
         };
 
-        var pods, selector;
-        var updatePodsForDeployment = function() {
-          if (!pods || !selector) {
-            return;
-          }
-
-          $scope.podsForDeployment = _.filter(pods, function(pod) {
-            return selector.matches(pod);
-          });
-        };
-
         var updateHPAWarnings = function() {
             HPAService.getHPAWarnings($scope.replicaSet, $scope.autoscalers, limitRanges, project)
                       .then(function(warnings) {
@@ -454,14 +444,9 @@ angular.module('openshiftConsole')
               watchActiveDeployment();
             }
 
-            $scope.$watch('replicaSet.spec.selector', function() {
-              selector = new LabelSelector($scope.replicaSet.spec.selector);
-              updatePodsForDeployment();
-            }, true);
-
             watches.push(DataService.watch("pods", context, function(podData) {
-              pods = podData.by('metadata.name');
-              updatePodsForDeployment();
+              var pods = podData.by('metadata.name');
+              $scope.podsForDeployment = PodsService.filterForOwner(pods, $scope.replicaSet);
             }));
           }, function(e) {
             $scope.loaded = true;

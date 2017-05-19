@@ -1,7 +1,14 @@
 'use strict';
 
 angular.module('openshiftConsole')
-  .controller('StatefulSetsController', function($scope, $routeParams, AlertMessageService, DataService, ProjectsService, LabelFilter, LabelsService) {
+  .controller('StatefulSetsController',
+              function($scope,
+                       $routeParams,
+                       AlertMessageService,
+                       DataService,
+                       ProjectsService,
+                       LabelFilter,
+                       PodsService) {
     $scope.projectName = $routeParams.project;
     $scope.alerts = $scope.alerts || {};
     $scope.labelSuggestions = {};
@@ -37,7 +44,7 @@ angular.module('openshiftConsole')
         // we are just using to fix the fact that the replicas count in inaccurate
         watches.push(DataService.watch('pods', context, function(podData) {
           $scope.pods = podData.by('metadata.name');
-          $scope.podsByOwnerUID = LabelsService.groupBySelector($scope.pods, $scope.statefulSets, { key: 'metadata.uid' });
+          $scope.podsByOwnerUID = PodsService.groupByOwnerUID($scope.pods);
         }));
 
         function updateFilterWarning() {

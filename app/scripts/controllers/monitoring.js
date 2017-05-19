@@ -17,7 +17,6 @@ angular.module('openshiftConsole')
                                                 DataService,
                                                 ImageStreamResolver,
                                                 KeywordService,
-                                                LabelsService,
                                                 Logger,
                                                 MetricsService,
                                                 Navigate,
@@ -275,15 +274,6 @@ angular.module('openshiftConsole')
       Navigate.toPodsForDeployment(replicaSet);
     };
 
-    var groupPods = function() {
-      if (!$scope.pods || !$scope.replicationControllers || !$scope.replicaSets || !$scope.statefulSets) {
-        return;
-      }
-
-      var allOwners = _.toArray($scope.replicationControllers).concat(_.toArray($scope.replicaSets)).concat(_.toArray($scope.statefulSets));
-      $scope.podsByOwnerUID = LabelsService.groupBySelector($scope.pods, allOwners, { key: 'metadata.uid' });
-    };
-
     ProjectsService
       .get($routeParams.project)
       .then(_.spread(function(project, context) {
@@ -293,7 +283,7 @@ angular.module('openshiftConsole')
         DataService.watch("pods", context, function(pods) {
           $scope.podsByName = pods.by("metadata.name");
           $scope.pods = orderByDate($scope.podsByName, true);
-          groupPods();
+          $scope.podsByOwnerUID = PodsService.groupByOwnerUID($scope.pods);
           $scope.podsLoaded = true;
           _.each($scope.pods, setPodLogVars);
           filterPods();
@@ -306,7 +296,6 @@ angular.module('openshiftConsole')
           version: 'v1beta1'
         }, context, function(statefulSets) {
           $scope.statefulSets = statefulSets.by("metadata.name");
-          groupPods();
           $scope.statefulSetsLoaded = true;
           // _.each($scope.statefulSets, setStatefulSetLogVars); // TODO: enable when we have the endpoint
           filterStatefulSets();
@@ -315,7 +304,6 @@ angular.module('openshiftConsole')
 
         DataService.watch("replicationcontrollers", context, function(replicationControllers) {
           $scope.replicationControllers = orderByDate(replicationControllers.by("metadata.name"), true);
-          groupPods();
           $scope.replicationControllersLoaded = true;
           _.each($scope.replicationControllers, setDeploymentLogVars);
           filterDeployments();
@@ -333,7 +321,6 @@ angular.module('openshiftConsole')
 
         DataService.watch({ group: "extensions", resource: "replicasets" }, context, function(replicaSets) {
           $scope.replicaSets = orderByDate(replicaSets.by("metadata.name"), true);
-          groupPods();
           $scope.replicaSetsLoaded = true;
           filterReplicaSets();
           Logger.log("replicasets", $scope.replicaSets);

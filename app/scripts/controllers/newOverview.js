@@ -16,11 +16,11 @@ angular.module('openshiftConsole').controller('NewOverviewController', [
   'ImageStreamResolver',
   'KeywordService',
   'LabelFilter',
-  'LabelsService',
   'Logger',
   'MetricsService',
   'Navigate',
   'OwnerReferencesService',
+  'PodsService',
   'ProjectsService',
   'ResourceAlertsService',
   'RoutesService',
@@ -41,11 +41,11 @@ function OverviewController($scope,
                             ImageStreamResolver,
                             KeywordService,
                             LabelFilter,
-                            LabelsService,
                             Logger,
                             MetricsService,
                             Navigate,
                             OwnerReferencesService,
+                            PodsService,
                             ProjectsService,
                             ResourceAlertsService,
                             RoutesService) {
@@ -593,16 +593,6 @@ function OverviewController($scope,
     }
   };
 
-  // Get all resources that own pods (replication controllers, replica sets,
-  // and stateful sets).
-  var getPodOwners = function() {
-    var replicationControllers = _.toArray(overview.replicationControllers);
-    var replicaSets = _.toArray(overview.replicaSets);
-    var statefulSets = _.toArray(overview.statefulSets);
-
-    return replicationControllers.concat(replicaSets, statefulSets);
-  };
-
   // Filter out monopods we know we don't want to see.
   var showMonopod = function(pod) {
     // Hide pods in the succeeded and failed phases since these are run once
@@ -635,14 +625,7 @@ function OverviewController($scope,
 
   // Group all pods by owner, tracked in the `state.podsByOwnerUID` map.
   var groupPods = function() {
-    // Make sure the pod owners have loaded before grouping the pods. Otherwise
-    // the pods themselves appear briefly in separate rows as the page loads.
-    if (!overview.pods || !overview.replicationControllers || !overview.replicaSets || !overview.statefulSets) {
-      return;
-    }
-
-    var podOwners = getPodOwners();
-    state.podsByOwnerUID = LabelsService.groupBySelector(overview.pods, podOwners, { key: 'metadata.uid' });
+    state.podsByOwnerUID = PodsService.groupByOwnerUID(overview.pods);
     overview.monopods = _.filter(state.podsByOwnerUID[''], showMonopod);
   };
 
@@ -1152,7 +1135,6 @@ function OverviewController($scope,
 
     watches.push(DataService.watch("replicationcontrollers", context, function(rcData) {
       overview.replicationControllers = rcData.by("metadata.name");
-      groupPods();
       groupReplicationControllers();
       updateServicesForObjects(overview.vanillaReplicationControllers);
       updateServicesForObjects(overview.monopods);
@@ -1183,7 +1165,6 @@ function OverviewController($scope,
       resource: "replicasets"
     }, context, function(replicaSetData) {
       overview.replicaSets = replicaSetData.by('metadata.name');
-      groupPods();
       groupReplicaSets();
       updateServicesForObjects(overview.vanillaReplicaSets);
       updateServicesForObjects(overview.monopods);
@@ -1217,7 +1198,6 @@ function OverviewController($scope,
       resource: "statefulsets"
     }, context, function(statefulSetData) {
       overview.statefulSets = statefulSetData.by('metadata.name');
-      groupPods();
       updateServicesForObjects(overview.statefulSets);
       updateServicesForObjects(overview.monopods);
       updatePodWarnings(overview.statefulSets);
