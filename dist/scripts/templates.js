@@ -138,15 +138,6 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
   );
 
 
-  $templateCache.put('views/_deployment-config-metadata.html',
-    "<div ng-if=\"deploymentConfigId != ''\" class=\"metadata\">\n" +
-    "<span>Created from deployment config {{deploymentConfigId}}</span>\n" +
-    "<span ng-if=\"!exists\" data-toggle=\"tooltip\" title=\"Deployment config no longer exists\" class=\"pficon pficon-error-circle-o\" style=\"cursor: help\"></span>\n" +
-    "<span ng-if=\"exists && differentService\" data-toggle=\"tooltip\" title=\"The template for this deployment config has changed. New deployments will not be included in this list.\" class=\"pficon pficon-error-circle-o\" style=\"cursor: help\"></span>\n" +
-    "</div>"
-  );
-
-
   $templateCache.put('views/_edit-request-limit.html',
     "<ng-form name=\"form\" ng-if=\"!requestCalculated || !limitCalculated\">\n" +
     "<h3>\n" +
@@ -175,113 +166,12 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
   );
 
 
-  $templateCache.put('views/_overview-deployment.html',
-    " <div class=\"osc-object components-panel deployment-block\" kind=\"ReplicationController\" resource=\"rc\" ng-init=\"hasDeploymentConfig = (deploymentConfigId && (rc | annotation:'deploymentConfig') && (rc | annotation:'deploymentVersion'))\">\n" +
-    "\n" +
-    "<div class=\"connector\">\n" +
-    "<i class=\"fa fa-search\"></i>\n" +
-    "</div>\n" +
-    "\n" +
-    "<div class=\"component-block component-meta\" ng-if=\"hasDeploymentConfig\">\n" +
-    "<div class=\"component\">\n" +
-    "<div class=\"component-label\">\n" +
-    "<span>Deployment: </span>\n" +
-    "<span class=\"nowrap\">\n" +
-    "<a class=\"subtle-link\" ng-href=\"{{deploymentConfigId | navigateResourceURL : 'DeploymentConfig' : rc.metadata.namespace}}\">{{deploymentConfigId}}</a>,\n" +
-    "<a class=\"subtle-link\" ng-href=\"{{rc | navigateResourceURL}}\">#{{rc | annotation:'deploymentVersion'}}</a>\n" +
+  $templateCache.put('views/_image-names.html',
+    "<span>{{podTemplate.spec.containers[0].image | imageStreamName}}</span>\n" +
+    "<span ng-repeat=\"id in imageIDs\" title=\"{{id}}\">\n" +
+    "<span class=\"hash\">{{id | stripSHAPrefix | limitTo: 7}}</span><span ng-if=\"!$last\">,</span>\n" +
     "</span>\n" +
-    "<span ng-if=\"deploymentConfigMissing\" data-toggle=\"tooltip\" title=\"The deployment config this deployment was created from no longer exists.\" class=\"pficon pficon-warning-triangle-o\" style=\"cursor: help\"></span>\n" +
-    "<span ng-if=\"deploymentConfigDifferentService\" data-toggle=\"tooltip\" title=\"The deployment config this deployment was created from has changed. New deployments will not be included in this list.\" class=\"pficon pficon-warning-triangle-o\" style=\"cursor: help\"></span>\n" +
-    "\n" +
-    "<span ng-if=\"rc | deploymentIsInProgress\">&mdash; <i class=\"fa fa-refresh\" aria-hidden=\"true\"></i> In progress</span>\n" +
-    "<span ng-switch=\"rc | deploymentStatus\" class=\"hide-ng-leave\">\n" +
-    "<span ng-switch-when=\"Cancelled\">&mdash; <span class=\"text-warning\"><i class=\"fa fa-ban\" aria-hidden=\"true\"></i> Cancelled</span></span>\n" +
-    "<span ng-switch-when=\"Failed\">&mdash; <span class=\"text-danger\"><i class=\"fa fa-times\" aria-hidden=\"true\"></i> Failed</span></span>\n" +
-    "</span>\n" +
-    "</div>\n" +
-    "</div>\n" +
-    "<div class=\"component meta-data\">\n" +
-    "<span am-time-ago=\"rc.metadata.creationTimestamp\"></span><span ng-if=\"rc.causes.length\"><span>\n" +
-    "<span class=\"deployment-trigger\" ng-repeat=\"cause in rc.causes\">\n" +
-    "<span ng-switch=\"cause.type\">\n" +
-    "<span ng-switch-when=\"ImageChange\">\n" +
-    "<span ng-if=\"cause.imageTrigger.from\">\n" +
-    "from <abbr title=\"{{cause.imageTrigger.from | imageObjectRef : null : true}}\">image</abbr> change\n" +
-    "</span>\n" +
-    "</span>\n" +
-    "<span ng-switch-when=\"ConfigChange\">from config change</span>\n" +
-    "<span ng-switch-default>{{cause.type}}</span>\n" +
-    "</span>\n" +
-    "</span>\n" +
-    "</span>\n" +
-    "</span>\n" +
-    "</div>\n" +
-    "</div>\n" +
-    "\n" +
-    "<div class=\"component-block component-meta\" ng-if=\"!hasDeploymentConfig\">\n" +
-    "<div class=\"component\">\n" +
-    "<div class=\"component-label\">\n" +
-    "Replication Controller:\n" +
-    "<a class=\"subtle-link nowrap\" ng-href=\"{{rc | navigateResourceURL}}\">{{rc.metadata.name}}</a>\n" +
-    "</div>\n" +
-    "</div>\n" +
-    "<div class=\"component meta-data\">\n" +
-    "created <span am-time-ago=\"rc.metadata.creationTimestamp\"></span>\n" +
-    "</div>\n" +
-    "</div>\n" +
-    "<div row mobile=\"column\" axis=\"center center\" class=\"pod-block\">\n" +
-    "<div column class=\"deployment-pods\" axis=\"center center\">\n" +
-    "<deployment-donut rc=\"rc\" deployment-config=\"deploymentConfig\" pods=\"pods\" hpa=\"hpa\" quotas=\"quotas\" cluster-quotas=\"clusterQuotas\" limit-ragnes=\"limitRanges\" scalable=\"scalable\" alerts=\"alerts\">\n" +
-    "</deployment-donut>\n" +
-    "</div>\n" +
-    "\n" +
-    "<div column grow=\"2\" class=\"pod-template-column\">\n" +
-    "\n" +
-    "<div flex></div>\n" +
-    "<pod-template pod-template=\"rc.spec.template\" images-by-docker-reference=\"imagesByDockerReference\" builds=\"builds\">\n" +
-    "</pod-template>\n" +
-    "\n" +
-    "<div flex></div>\n" +
-    "</div>\n" +
-    "</div>\n" +
-    "</div>"
-  );
-
-
-  $templateCache.put('views/_overview-monopod.html',
-    " <div class=\"tile-container components-panel deployment-block osc-object\" kind=\"Pod\" resource=\"pod\">\n" +
-    "<div class=\"connector\">\n" +
-    "<i class=\"fa fa-search\"></i>\n" +
-    "</div>\n" +
-    "<div class=\"component-block component-meta\">\n" +
-    "<div class=\"component\">\n" +
-    "<span class=\"component-label\">Pod: {{pod.metadata.name}}</span>\n" +
-    "</div>\n" +
-    "<div class=\"component meta-data\">\n" +
-    "created <span am-time-ago=\"pod.metadata.creationTimestamp\"></span>\n" +
-    "</div>\n" +
-    "</div>\n" +
-    "<div row mobile=\"column\" axis=\"center center\" class=\"pod-block\">\n" +
-    "<div row>\n" +
-    "\n" +
-    "<div flex class=\"visible-xs-block\"></div>\n" +
-    "<div column class=\"overview-pods\">\n" +
-    "<div column>\n" +
-    "<pod-donut pods=\"[pod]\" ng-click=\"viewPod()\"></pod-donut>\n" +
-    "</div>\n" +
-    "</div>\n" +
-    "\n" +
-    "<div flex class=\"visible-xs-block\"></div>\n" +
-    "</div>\n" +
-    "<div column grow=\"2\">\n" +
-    "\n" +
-    "<div flex></div>\n" +
-    "<pod-template pod-template=\"pod\"></pod-template>\n" +
-    "\n" +
-    "<div flex></div>\n" +
-    "</div>\n" +
-    "</div>\n" +
-    "</div>"
+    "<span ng-if=\"podTemplate.spec.containers.length > 1\"> and {{podTemplate.spec.containers.length - 1}} other image<span ng-if=\"podTemplate.spec.containers.length > 2\">s</span></span>"
   );
 
 
@@ -474,62 +364,6 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
   );
 
 
-  $templateCache.put('views/_pods.html',
-    " <div class=\"component-block\" ng-if=\"(pods | hashSize) > 3\">\n" +
-    "<div class=\"pod-container\">\n" +
-    "<div class=\"pod pod-{{phase.toLowerCase()}} pod-multiple osc-object osc-object-stacked\" ng-repeat-start=\"phase in phases\" ng-if=\"(phasePods = (pods | podsForPhase : phase)).length && (troublePods = (phasePods | troubledPods)) && (expandedPhase != phase || warningsExpanded) && (phasePods.length - troublePods.length > 0)\" ng-click=\"expandPhase(phase, false, $event)\" title=\"Expand to see individual pods\">\n" +
-    "<div style=\"font-size:24px; line-height: 19px\">\n" +
-    "<span>{{phasePods.length - troublePods.length}}</span>\n" +
-    "</div>\n" +
-    "<div class=\"pod-text\">{{phase}}</div>\n" +
-    "<i class=\"fa fa-ellipsis-h\"></i>\n" +
-    "</div>\n" +
-    "<div class=\"pod pod-warning pod-multiple osc-object osc-object-stacked\" ng-repeat-end ng-if=\"(expandedPhase != phase || !warningsExpanded) && (phasePods = (pods | podsForPhase : phase)).length && (troublePods = (phasePods | troubledPods)).length\" ng-click=\"expandPhase(phase, true, $event)\" title=\"Expand to see individual pods\">\n" +
-    "<div style=\"font-size:24px; line-height: 19px\">\n" +
-    "<span>{{troublePods.length}}</span>\n" +
-    "<span ng-if=\"troublePods.length\" data-content=\"These pods are having problems, view a pod to see more details.\" class=\"pficon pficon-warning-triangle-o\" style=\"font-size: 14px; margin-right: -24px\" data-toggle=\"popover\" data-trigger=\"hover\"></span>\n" +
-    "</div>\n" +
-    "<div class=\"pod-text\">{{phase}}</div>\n" +
-    "<i class=\"fa fa-ellipsis-h\"></i>\n" +
-    "</div>\n" +
-    "</div>\n" +
-    "</div>\n" +
-    "<div class=\"component-block\" ng-if=\"(pods | hashSize) > 3\">\n" +
-    "<div ng-if=\"expandedPhase\">\n" +
-    "<div ng-if=\"!warningsExpanded\">\n" +
-    "<div class=\"pod-container\">\n" +
-    "<div class=\"pod pod-{{pod.status.phase.toLowerCase()}} osc-object\" ng-repeat=\"pod in (phasePods = (pods | podsForPhase : expandedPhase | notTroubledPods)) | limitTo : 3 track by (pod | uid)\" kind=\"Pod\" resource=\"pod\">\n" +
-    "<pod-content pod=\"pod\" troubled=\"false\"></pod-content>\n" +
-    "</div>\n" +
-    "</div>\n" +
-    "<div class=\"pull-right small\" style=\"margin-top: -7px\" ng-if=\"(phasePods = (pods | podsForPhase : expandedPhase | notTroubledPods)).length > 0\">\n" +
-    "<span ng-if=\"phasePods.length > 3\" style=\"margin-right: 5px; color: #999\">... and {{phasePods.length - 3}} more</span>\n" +
-    "<a href=\"javascript:;\" ng-click=\"expandPhase(null)\" style=\"margin-top: -10px\">Collapse</a>\n" +
-    "</div>\n" +
-    "</div>\n" +
-    "<div ng-if=\"warningsExpanded\">\n" +
-    "<div class=\"pod-container\">\n" +
-    "<div class=\"pod pod-warning osc-object\" ng-repeat=\"pod in (phasePods = (pods | podsForPhase : expandedPhase | troubledPods)) | limitTo : 3 track by (pod | uid)\" kind=\"Pod\" resource=\"pod\">\n" +
-    "<pod-content pod=\"pod\" troubled=\"true\"></pod-content>\n" +
-    "</div>\n" +
-    "</div>\n" +
-    "<div class=\"pull-right small\" style=\"margin-top: -7px\" ng-if=\"(phasePods = (pods | podsForPhase : expandedPhase | troubledPods)).length > 0\">\n" +
-    "<span ng-if=\"phasePods.length > 3\" style=\"margin-right: 5px; color: #999\">... and {{phasePods.length - 3}} more</span>\n" +
-    "<a href=\"javascript:;\" ng-click=\"expandPhase(null)\" style=\"margin-top: -10px\">Collapse</a>\n" +
-    "</div>\n" +
-    "</div>\n" +
-    "</div>\n" +
-    "</div>\n" +
-    "<div class=\"component-block\" ng-if=\"(pods | hashSize) <= 3\">\n" +
-    "<div class=\"pod-container\">\n" +
-    "<div class=\"animate-repeat pod osc-object\" ng-repeat=\"pod in pods track by (pod | uid)\" kind=\"Pod\" resource=\"pod\" ng-class=\"(isTroubled = (pod | isTroubledPod)) ? 'pod-warning' : ('pod-' + pod.status.phase.toLowerCase())\">\n" +
-    "<pod-content pod=\"pod\" troubled=\"isTroubled\"></pod-content>\n" +
-    "</div>\n" +
-    "</div>\n" +
-    "</div>"
-  );
-
-
   $templateCache.put('views/_project-page.html',
     "<div ng-class=\"{'show-sidebar-right': renderOptions.showEventsSidebar}\" class=\"wrap\">\n" +
     "<div class=\"sidebar-left collapse navbar-collapse navbar-collapse-1\">\n" +
@@ -693,41 +527,6 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "</div>\n" +
     "</li>\n" +
     "</ul>\n" +
-    "</div>"
-  );
-
-
-  $templateCache.put('views/_triggers.html',
-    "<div class=\"triggers\">\n" +
-    "<div class=\"builds\" ng-repeat=\"trigger in triggers\">\n" +
-    "<div ng-if=\"trigger.type === 'ImageChange'\">\n" +
-    "<div ng-repeat=\"build in buildsByOutputImage[(trigger.imageChangeParams.from | imageObjectRef : namespace)] | orderObjectsByDate : true track by (build | uid)\" ng-show=\"!(hideBuild)\" class=\"build animate-show animate-hide animate-slide\" kind=\"Build\" resource=\"build\">\n" +
-    "<div class=\"build-summary\" ng-class=\"{'dismissible' : !(build | isIncompleteBuild)}\">\n" +
-    "<div class=\"build-name\">\n" +
-    "Build\n" +
-    "<span ng-if=\"build | annotation : 'buildNumber'\">\n" +
-    "<span ng-if=\"build | buildConfigForBuild\"><a ng-href=\"{{build | configURLForResource}}\">{{build | buildConfigForBuild}}</a>,</span>\n" +
-    "<a ng-href=\"{{build | navigateResourceURL}}\">#{{build | annotation : 'buildNumber'}}</a>\n" +
-    "</span>\n" +
-    "<span ng-if=\"!(build | annotation : 'buildNumber')\">\n" +
-    "{{build.metadata.name}}\n" +
-    "</span>\n" +
-    "</div>\n" +
-    "<div class=\"build-phase\">\n" +
-    "<status-icon status=\"build.status.phase\"></status-icon>\n" +
-    "<span ng-if=\"!build.status.message || build.status.phase === 'Cancelled'\">{{build.status.phase}}.</span>\n" +
-    "<span ng-if=\"build.status.message && build.status.phase !== 'Cancelled'\">{{build.status.message}}.</span>\n" +
-    "<span ng-if=\"(build | isIncompleteBuild) && trigger.imageChangeParams.automatic\">A new deployment will be created automatically once the build completes.</span>\n" +
-    "</div>\n" +
-    "<span am-time-ago=\"build.metadata.creationTimestamp\" class=\"build-timestamp\"></span>\n" +
-    "<div ng-if=\"'builds/log' | canI : 'get'\" class=\"build-links\">\n" +
-    "<a ng-if=\"!!['New', 'Pending'].indexOf(build.status.phase) && (build | buildLogURL)\" ng-href=\"{{build | buildLogURL}}\">View Log</a>\n" +
-    "</div>\n" +
-    "<build-close build=\"build\" hide-build=\"hideBuild\"></build-close>\n" +
-    "</div>\n" +
-    "</div>\n" +
-    "</div>\n" +
-    "</div>\n" +
     "</div>"
   );
 
@@ -5859,27 +5658,6 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
   );
 
 
-  $templateCache.put('views/directives/_pod-content.html',
-    "<div class=\"pod-text\" ng-switch=\"pod.status.phase\">\n" +
-    "<strong class=\"pod-status-label\">{{pod.status.phase}}</strong>\n" +
-    "<span ng-if=\"troubled\">\n" +
-    "<pod-warnings pod=\"pod\" style=\"margin-right: -15px\"></pod-warnings>\n" +
-    "</span>\n" +
-    "<div ng-switch-when=\"Pending\">\n" +
-    "<span ng-if=\"!pod.spec.nodeName\">scheduling...</span>\n" +
-    "<span ng-if=\"pod.spec.nodeName && !pod.status.startTime\">scheduled</span>\n" +
-    "<span ng-if=\"pod.spec.nodeName && pod.status.startTime\">pulling...</span>\n" +
-    "</div>\n" +
-    "<div ng-switch-default>\n" +
-    "&nbsp;\n" +
-    "<span ng-if=\"pod.status.podIP\">{{pod.status.podIP}}</span>\n" +
-    "<span am-time-ago-if=\"!pod.status.podIP\" timestamp=\"pod.status.startTime\"></span>\n" +
-    "&nbsp;\n" +
-    "</div>\n" +
-    "</div>"
-  );
-
-
   $templateCache.put('views/directives/_probe.html',
     " <span ng-if=\"probe.httpGet\">\n" +
     "GET {{probe.httpGet.path || '/'}} on port {{probe.httpGet.port || 'unknown'}} ({{probe.httpGet.scheme || 'HTTP'}})\n" +
@@ -8068,21 +7846,6 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
   );
 
 
-  $templateCache.put('views/directives/osc-object-describer.html',
-    "<div>\n" +
-    "<div ng-if=\"!resource\">\n" +
-    "<p>Select an object to see more details.</p>\n" +
-    "<span class=\"sidebar-help\">\n" +
-    "<p>A <strong>pod</strong> contains one or more Docker containers that run together on a node, containing your application code.</p>\n" +
-    "<p>A <strong>service</strong> groups pods and provides a common DNS name and an optional, load-balanced IP address to access them.</p>\n" +
-    "<p>A <strong>deployment</strong> is an update to your application, triggered by a changed image or configuration.</p>\n" +
-    "</span>\n" +
-    "</div>\n" +
-    "<kubernetes-object-describer kind=\"{{kind}}\" resource=\"resource\" ng-if=\"resource\"></kubernetes-object-describer>\n" +
-    "</div>"
-  );
-
-
   $templateCache.put('views/directives/osc-persistent-volume-claim.html',
     "<ng-form name=\"persistentVolumeClaimForm\">\n" +
     "<fieldset ng-disabled=\"claimDisabled\">\n" +
@@ -9122,11 +8885,6 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "</div>\n" +
     "</div>\n" +
     "</div>"
-  );
-
-
-  $templateCache.put('views/directives/service-group-notifications.html',
-    "<alerts alerts=\"alerts\" filter=\"showAlert\" toast=\"true\" animate-slide=\"true\"></alerts>"
   );
 
 
@@ -11016,31 +10774,6 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
   );
 
 
-  $templateCache.put('views/modals/link-service.html',
-    "<div class=\"modal-resource-action\">\n" +
-    "<div class=\"modal-body\">\n" +
-    "<h4>Group Service to {{service.metadata.name}}</h4>\n" +
-    "<div class=\"help-block mar-bottom-md\">\n" +
-    "Choose a service that <strong>{{service.metadata.name}}</strong> uses. This groups the services together in the overview.\n" +
-    "</div>\n" +
-    "<form>\n" +
-    "<label class=\"sr-only\" for=\"childService\">Service:</label>\n" +
-    "<ui-select ng-model=\"link.selectedService\" autofocus theme=\"bootstrap\" title=\"Choose a service\">\n" +
-    "<ui-select-match placeholder=\"Choose a service...\">{{$select.selected.metadata.name}}</ui-select-match>\n" +
-    "<ui-select-choices repeat=\"service in options | toArray | filter : { metadata: { name: $select.search } } | orderBy : 'metadata.name'\">\n" +
-    "<div ng-bind-html=\"service.metadata.name | highlight : $select.search\"></div>\n" +
-    "</ui-select-choices>\n" +
-    "</ui-select>\n" +
-    "</form>\n" +
-    "</div>\n" +
-    "<div class=\"modal-footer\">\n" +
-    "<button class=\"btn btn-lg btn-primary\" type=\"button\" ng-click=\"link()\" ng-disabled=\"!link.selectedService\">OK</button>\n" +
-    "<button class=\"btn btn-lg btn-default\" type=\"button\" ng-click=\"cancel()\">Cancel</button>\n" +
-    "</div>\n" +
-    "</div>"
-  );
-
-
   $templateCache.put('views/modals/process-or-save-template.html',
     "<div class=\"modal-resource-action\">\n" +
     "<div class=\"modal-body\">\n" +
@@ -11415,9 +11148,153 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
   );
 
 
-  $templateCache.put('views/new-overview.html',
+  $templateCache.put('views/newfromtemplate.html',
+    "<default-header class=\"top-header\"></default-header>\n" +
+    "<div class=\"wrap no-sidebar\">\n" +
+    "<div class=\"sidebar-left collapse navbar-collapse navbar-collapse-2\">\n" +
+    "<navbar-utility-mobile></navbar-utility-mobile>\n" +
+    "</div>\n" +
+    "<div class=\"middle surface-shaded\">\n" +
+    "\n" +
+    "<div class=\"middle-section\">\n" +
+    "<div class=\"middle-container\">\n" +
+    "<div class=\"middle-content\">\n" +
+    "<div class=\"container surface-shaded\">\n" +
+    "<div class=\"row\">\n" +
+    "<div class=\"col-md-12\">\n" +
+    "<breadcrumbs breadcrumbs=\"breadcrumbs\"></breadcrumbs>\n" +
+    "<div ng-hide=\"template\">\n" +
+    "Loading...\n" +
+    "</div>\n" +
+    "<div ng-if=\"template\" class=\"row osc-form\">\n" +
+    "<alerts alerts=\"alerts\"></alerts>\n" +
+    "<div class=\"col-md-2 icon hidden-sm hidden-xs\">\n" +
+    "<custom-icon resource=\"template\" kind=\"template\"></custom-icon>\n" +
+    "</div>\n" +
+    "<div class=\"col-md-8\">\n" +
+    "<osc-image-summary resource=\"template\"></osc-image-summary>\n" +
+    "<div ng-if=\"templateImages.length\" class=\"images\">\n" +
+    "<h2>Images</h2>\n" +
+    "<ul class=\"list-unstyled\" ng-repeat=\"image in templateImages\">\n" +
+    "<li>\n" +
+    "<i class=\"pficon pficon-image\" aria-hidden=\"true\"></i>\n" +
+    "<span class=\"name\">\n" +
+    "{{image.name}}\n" +
+    "</span>\n" +
+    "<span ng-if=\"image.usesParameters.length\" class=\"text-muted small\">\n" +
+    "<span ng-if=\"!image.name\">Image value set</span>\n" +
+    "from parameter<span ng-if=\"image.usesParameters.length > 1\">s</span>\n" +
+    "<span ng-repeat=\"parameterName in image.usesParameters\">\n" +
+    "{{parameterDisplayNames[parameterName]}}<span ng-if=\"!$last\">,</span>\n" +
+    "</span>\n" +
+    "</span>\n" +
+    "</li>\n" +
+    "</ul>\n" +
+    "</div>\n" +
+    "<process-template project=\"project\" template=\"template\" alerts=\"alerts\" prefill-parameters=\"prefillParameters\">\n" +
+    "</process-template>\n" +
+    "</div>\n" +
+    "</div>\n" +
+    "</div>\n" +
+    "</div>\n" +
+    "</div>\n" +
+    "</div>\n" +
+    "</div>\n" +
+    "</div>\n" +
+    "</div>\n" +
+    "</div>"
+  );
+
+
+  $templateCache.put('views/other-resources.html',
     "<project-header class=\"top-header\"></project-header>\n" +
-    "<project-page class=\"overview-new\">\n" +
+    "<project-page>\n" +
+    "\n" +
+    "<div class=\"middle-section\">\n" +
+    "<div class=\"middle-container\">\n" +
+    "<div class=\"middle-header header-toolbar\">\n" +
+    "<div class=\"container-fluid\">\n" +
+    "<div class=\"page-header page-header-bleed-right page-header-bleed-left\">\n" +
+    "<h1>Other Resources</h1>\n" +
+    "</div>\n" +
+    "<div class=\"data-toolbar other-resources-toolbar\">\n" +
+    "<ui-select class=\"data-toolbar-dropdown\" ng-model=\"kindSelector.selected\" theme=\"bootstrap\" search-enabled=\"true\" ng-disabled=\"kindSelector.disabled\" title=\"Choose a resource\">\n" +
+    "<ui-select-match placeholder=\"Choose a resource to list...\">{{$select.selected.kind | humanizeKind : true}}</ui-select-match>\n" +
+    "<ui-select-choices repeat=\"kind in kinds | filter : {kind: $select.search} : matchKind | orderBy : 'kind'\">\n" +
+    "<div ng-bind-html=\"(kind.kind | humanizeKind : true) | highlight: $select.search\"></div>\n" +
+    "<small ng-if=\"isDuplicateKind(kind.kind)\" ng-bind-html=\"kind.group | highlight: $select.search\" class=\"text-muted\"></small>\n" +
+    "</ui-select-choices>\n" +
+    "</ui-select>\n" +
+    "<div class=\"vertical-divider\"></div>\n" +
+    "<div class=\"data-toolbar-filter\">\n" +
+    "<project-filter></project-filter>\n" +
+    "</div>\n" +
+    "</div>\n" +
+    "</div>\n" +
+    "</div>\n" +
+    "<div class=\"middle-content\">\n" +
+    "<div class=\"container-fluid\">\n" +
+    "<alerts alerts=\"alerts\"></alerts>\n" +
+    "<div class=\"row\">\n" +
+    "<div class=\"col-md-12\">\n" +
+    "<table class=\"table table-bordered table-mobile table-layout-fixed\" ng-class=\"{ 'table-empty': (resources | hashSize) === 0 }\">\n" +
+    "<colgroup>\n" +
+    "<col class=\"col-sm-3\">\n" +
+    "<col class=\"col-sm-2\">\n" +
+    "<col class=\"col-sm-5\">\n" +
+    "<col class=\"col-sm-2\">\n" +
+    "</colgroup>\n" +
+    "<thead>\n" +
+    "<tr>\n" +
+    "<th>Name</th>\n" +
+    "<th>Created</th>\n" +
+    "<th>Labels</th>\n" +
+    "<th><span class=\"sr-only\">Actions</span></th>\n" +
+    "</tr>\n" +
+    "</thead>\n" +
+    "<tbody ng-if=\"(resources | hashSize) == 0\">\n" +
+    "<tr><td colspan=\"4\"><em>{{emptyMessage}}</em></td></tr>\n" +
+    "</tbody>\n" +
+    "<tbody ng-if=\"(resources | hashSize) > 0\">\n" +
+    "<tr ng-repeat=\"resource in resources | orderObjectsByDate : true\">\n" +
+    "<td data-title=\"Name\">{{resource.metadata.name}}</td>\n" +
+    "<td data-title=\"Created\"><span am-time-ago=\"resource.metadata.creationTimestamp\"></span></td>\n" +
+    "<td data-title=\"Labels\">\n" +
+    "<em ng-if=\"(resource.metadata.labels | hashSize) === 0\">none</em>\n" +
+    "<labels labels=\"resource.metadata.labels\" clickable=\"true\" kind=\"{{kindSelector.selected.kind | kindToResource : true }}\" project-name=\"{{resource.metadata.namespace}}\" limit=\"3\" filter-current-page=\"true\"></labels></td>\n" +
+    "<td data-title=\"Actions\" class=\"text-xs-left text-right\">\n" +
+    "<span uib-dropdown ng-hide=\"!(selectedResource | canI : 'update') && !(selectedResource | canI : 'delete')\">\n" +
+    "<button type=\"button\" class=\"dropdown-toggle btn btn-default\" data-toggle=\"dropdown\">\n" +
+    "Actions\n" +
+    "<span class=\"caret\"></span>\n" +
+    "</button>\n" +
+    "<ul class=\"uib-dropdown-menu dropdown-menu-right\" aria-labelledby=\"{{resource.metadata.name}}_actions\">\n" +
+    "<li ng-if=\"selectedResource | canI : 'update'\">\n" +
+    "<a ng-href=\"{{resource | editYamlURL : getReturnURL()}}\" role=\"button\">Edit YAML</a>\n" +
+    "</li>\n" +
+    "<li ng-if=\"selectedResource | canI : 'delete'\">\n" +
+    "<delete-link kind=\"{{kindSelector.selected.kind}}\" group=\"{{kindSelector.selected.group}}\" resource-name=\"{{resource.metadata.name}}\" project-name=\"{{resource.metadata.namespace}}\" alerts=\"alerts\" stay-on-current-page=\"true\" success=\"loadKind\">\n" +
+    "</delete-link>\n" +
+    "</li>\n" +
+    "</ul>\n" +
+    "</span>\n" +
+    "</td>\n" +
+    "</tr>\n" +
+    "</tbody>\n" +
+    "</table>\n" +
+    "</div>\n" +
+    "</div>\n" +
+    "</div>\n" +
+    "</div>\n" +
+    "</div>\n" +
+    "</div>\n" +
+    "</project-page>"
+  );
+
+
+  $templateCache.put('views/overview.html',
+    "<project-header class=\"top-header\"></project-header>\n" +
+    "<project-page class=\"overview\">\n" +
     "<div class=\"middle-section\">\n" +
     "<div class=\"middle-container\">\n" +
     "\n" +
@@ -11689,237 +11566,6 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
   );
 
 
-  $templateCache.put('views/newfromtemplate.html',
-    "<default-header class=\"top-header\"></default-header>\n" +
-    "<div class=\"wrap no-sidebar\">\n" +
-    "<div class=\"sidebar-left collapse navbar-collapse navbar-collapse-2\">\n" +
-    "<navbar-utility-mobile></navbar-utility-mobile>\n" +
-    "</div>\n" +
-    "<div class=\"middle surface-shaded\">\n" +
-    "\n" +
-    "<div class=\"middle-section\">\n" +
-    "<div class=\"middle-container\">\n" +
-    "<div class=\"middle-content\">\n" +
-    "<div class=\"container surface-shaded\">\n" +
-    "<div class=\"row\">\n" +
-    "<div class=\"col-md-12\">\n" +
-    "<breadcrumbs breadcrumbs=\"breadcrumbs\"></breadcrumbs>\n" +
-    "<div ng-hide=\"template\">\n" +
-    "Loading...\n" +
-    "</div>\n" +
-    "<div ng-if=\"template\" class=\"row osc-form\">\n" +
-    "<alerts alerts=\"alerts\"></alerts>\n" +
-    "<div class=\"col-md-2 icon hidden-sm hidden-xs\">\n" +
-    "<custom-icon resource=\"template\" kind=\"template\"></custom-icon>\n" +
-    "</div>\n" +
-    "<div class=\"col-md-8\">\n" +
-    "<osc-image-summary resource=\"template\"></osc-image-summary>\n" +
-    "<div ng-if=\"templateImages.length\" class=\"images\">\n" +
-    "<h2>Images</h2>\n" +
-    "<ul class=\"list-unstyled\" ng-repeat=\"image in templateImages\">\n" +
-    "<li>\n" +
-    "<i class=\"pficon pficon-image\" aria-hidden=\"true\"></i>\n" +
-    "<span class=\"name\">\n" +
-    "{{image.name}}\n" +
-    "</span>\n" +
-    "<span ng-if=\"image.usesParameters.length\" class=\"text-muted small\">\n" +
-    "<span ng-if=\"!image.name\">Image value set</span>\n" +
-    "from parameter<span ng-if=\"image.usesParameters.length > 1\">s</span>\n" +
-    "<span ng-repeat=\"parameterName in image.usesParameters\">\n" +
-    "{{parameterDisplayNames[parameterName]}}<span ng-if=\"!$last\">,</span>\n" +
-    "</span>\n" +
-    "</span>\n" +
-    "</li>\n" +
-    "</ul>\n" +
-    "</div>\n" +
-    "<process-template project=\"project\" template=\"template\" alerts=\"alerts\" prefill-parameters=\"prefillParameters\">\n" +
-    "</process-template>\n" +
-    "</div>\n" +
-    "</div>\n" +
-    "</div>\n" +
-    "</div>\n" +
-    "</div>\n" +
-    "</div>\n" +
-    "</div>\n" +
-    "</div>\n" +
-    "</div>\n" +
-    "</div>"
-  );
-
-
-  $templateCache.put('views/other-resources.html',
-    "<project-header class=\"top-header\"></project-header>\n" +
-    "<project-page>\n" +
-    "\n" +
-    "<div class=\"middle-section\">\n" +
-    "<div class=\"middle-container\">\n" +
-    "<div class=\"middle-header header-toolbar\">\n" +
-    "<div class=\"container-fluid\">\n" +
-    "<div class=\"page-header page-header-bleed-right page-header-bleed-left\">\n" +
-    "<h1>Other Resources</h1>\n" +
-    "</div>\n" +
-    "<div class=\"data-toolbar other-resources-toolbar\">\n" +
-    "<ui-select class=\"data-toolbar-dropdown\" ng-model=\"kindSelector.selected\" theme=\"bootstrap\" search-enabled=\"true\" ng-disabled=\"kindSelector.disabled\" title=\"Choose a resource\">\n" +
-    "<ui-select-match placeholder=\"Choose a resource to list...\">{{$select.selected.kind | humanizeKind : true}}</ui-select-match>\n" +
-    "<ui-select-choices repeat=\"kind in kinds | filter : {kind: $select.search} : matchKind | orderBy : 'kind'\">\n" +
-    "<div ng-bind-html=\"(kind.kind | humanizeKind : true) | highlight: $select.search\"></div>\n" +
-    "<small ng-if=\"isDuplicateKind(kind.kind)\" ng-bind-html=\"kind.group | highlight: $select.search\" class=\"text-muted\"></small>\n" +
-    "</ui-select-choices>\n" +
-    "</ui-select>\n" +
-    "<div class=\"vertical-divider\"></div>\n" +
-    "<div class=\"data-toolbar-filter\">\n" +
-    "<project-filter></project-filter>\n" +
-    "</div>\n" +
-    "</div>\n" +
-    "</div>\n" +
-    "</div>\n" +
-    "<div class=\"middle-content\">\n" +
-    "<div class=\"container-fluid\">\n" +
-    "<alerts alerts=\"alerts\"></alerts>\n" +
-    "<div class=\"row\">\n" +
-    "<div class=\"col-md-12\">\n" +
-    "<table class=\"table table-bordered table-mobile table-layout-fixed\" ng-class=\"{ 'table-empty': (resources | hashSize) === 0 }\">\n" +
-    "<colgroup>\n" +
-    "<col class=\"col-sm-3\">\n" +
-    "<col class=\"col-sm-2\">\n" +
-    "<col class=\"col-sm-5\">\n" +
-    "<col class=\"col-sm-2\">\n" +
-    "</colgroup>\n" +
-    "<thead>\n" +
-    "<tr>\n" +
-    "<th>Name</th>\n" +
-    "<th>Created</th>\n" +
-    "<th>Labels</th>\n" +
-    "<th><span class=\"sr-only\">Actions</span></th>\n" +
-    "</tr>\n" +
-    "</thead>\n" +
-    "<tbody ng-if=\"(resources | hashSize) == 0\">\n" +
-    "<tr><td colspan=\"4\"><em>{{emptyMessage}}</em></td></tr>\n" +
-    "</tbody>\n" +
-    "<tbody ng-if=\"(resources | hashSize) > 0\">\n" +
-    "<tr ng-repeat=\"resource in resources | orderObjectsByDate : true\">\n" +
-    "<td data-title=\"Name\">{{resource.metadata.name}}</td>\n" +
-    "<td data-title=\"Created\"><span am-time-ago=\"resource.metadata.creationTimestamp\"></span></td>\n" +
-    "<td data-title=\"Labels\">\n" +
-    "<em ng-if=\"(resource.metadata.labels | hashSize) === 0\">none</em>\n" +
-    "<labels labels=\"resource.metadata.labels\" clickable=\"true\" kind=\"{{kindSelector.selected.kind | kindToResource : true }}\" project-name=\"{{resource.metadata.namespace}}\" limit=\"3\" filter-current-page=\"true\"></labels></td>\n" +
-    "<td data-title=\"Actions\" class=\"text-xs-left text-right\">\n" +
-    "<span uib-dropdown ng-hide=\"!(selectedResource | canI : 'update') && !(selectedResource | canI : 'delete')\">\n" +
-    "<button type=\"button\" class=\"dropdown-toggle btn btn-default\" data-toggle=\"dropdown\">\n" +
-    "Actions\n" +
-    "<span class=\"caret\"></span>\n" +
-    "</button>\n" +
-    "<ul class=\"uib-dropdown-menu dropdown-menu-right\" aria-labelledby=\"{{resource.metadata.name}}_actions\">\n" +
-    "<li ng-if=\"selectedResource | canI : 'update'\">\n" +
-    "<a ng-href=\"{{resource | editYamlURL : getReturnURL()}}\" role=\"button\">Edit YAML</a>\n" +
-    "</li>\n" +
-    "<li ng-if=\"selectedResource | canI : 'delete'\">\n" +
-    "<delete-link kind=\"{{kindSelector.selected.kind}}\" group=\"{{kindSelector.selected.group}}\" resource-name=\"{{resource.metadata.name}}\" project-name=\"{{resource.metadata.namespace}}\" alerts=\"alerts\" stay-on-current-page=\"true\" success=\"loadKind\">\n" +
-    "</delete-link>\n" +
-    "</li>\n" +
-    "</ul>\n" +
-    "</span>\n" +
-    "</td>\n" +
-    "</tr>\n" +
-    "</tbody>\n" +
-    "</table>\n" +
-    "</div>\n" +
-    "</div>\n" +
-    "</div>\n" +
-    "</div>\n" +
-    "</div>\n" +
-    "</div>\n" +
-    "</project-page>"
-  );
-
-
-  $templateCache.put('views/overview.html',
-    "<project-header class=\"top-header\"></project-header>\n" +
-    "<project-page class=\"overview\">\n" +
-    "\n" +
-    "<div class=\"middle-section\">\n" +
-    "<div class=\"middle-container\">\n" +
-    "<div class=\"middle-content surface-shaded\">\n" +
-    "<div class=\"container-fluid surface-shaded\">\n" +
-    "<tasks></tasks>\n" +
-    "<alerts alerts=\"alerts\"></alerts>\n" +
-    "<div class=\"row\">\n" +
-    "<div class=\"col-md-12\">\n" +
-    "\n" +
-    "<div ng-if=\"renderOptions.showGetStarted\">\n" +
-    "\n" +
-    "<div class=\"empty-project text-center\">\n" +
-    "<div ng-if=\"project.metadata.name | canIAddToProject\">\n" +
-    "<h2>Get started with your project.</h2>\n" +
-    "<p class=\"gutter-top\">\n" +
-    "Use your source or an example repository to build an application image, or add components like databases and message queues.\n" +
-    "</p>\n" +
-    "<p class=\"gutter-top\">\n" +
-    "<a ng-href=\"project/{{projectName}}/create\" class=\"btn btn-lg btn-primary\">\n" +
-    "Add to Project\n" +
-    "</a>\n" +
-    "</p>\n" +
-    "</div>\n" +
-    "<div ng-if=\"!(project.metadata.name | canIAddToProject)\">\n" +
-    "<h2>Welcome to project {{projectName}}.</h2>\n" +
-    "<ng-include src=\"'views/_request-access.html'\"></ng-include>\n" +
-    "</div>\n" +
-    "</div>\n" +
-    "</div>\n" +
-    "<div ng-if=\"renderOptions.showLoading\" class=\"loading-message\">\n" +
-    "Loading...\n" +
-    "</div>\n" +
-    "<div class=\"service-group-with-route-row\" ng-repeat=\"service in topLevelServices\" ng-if=\"service.metadata.labels.app || routesByService[service.metadata.name].length || childServicesByParent[service.metadata.name].length\">\n" +
-    "<overview-service-group></overview-service-group>\n" +
-    "</div>\n" +
-    "<div row wrap class=\"standalone-service-row\">\n" +
-    "<div ng-repeat=\"service in topLevelServices\" ng-if=\"!service.metadata.labels.app && !routesByService[service.metadata.name].length && !childServicesByParent[service.metadata.name].length\" class=\"standalone-service\">\n" +
-    "<overview-service-group></overview-service-group>\n" +
-    "</div>\n" +
-    "</div>\n" +
-    "\n" +
-    "<div row wrap ng-if=\"hasUnservicedContent()\" class=\"unserviced-row\">\n" +
-    "\n" +
-    "<div ng-repeat=\"(dcName, deploymentConfig) in deploymentConfigsByService[''] track by (deploymentConfig | uid)\" class=\"no-service\">\n" +
-    "<overview-deployment-config class=\"overview-tile-wrapper\"></overview-deployment-config>\n" +
-    "</div>\n" +
-    "\n" +
-    "\n" +
-    "<div ng-repeat=\"(deploymentName, deployment) in deploymentsByService[''] track by (deployment | uid)\" class=\"no-service\" ng-if=\"replicaSets = visibleRSByDeploymentAndService[''][deploymentName]\"> \n" +
-    "<overview-deployment class=\"overview-tile-wrapper\"></overview-deployment>\n" +
-    "</div>\n" +
-    "\n" +
-    "\n" +
-    "<div ng-repeat=\"set in replicationControllersByService[''] | toArray | orderBy : 'metadata.name' track by (set | uid)\" ng-if=\"!(set | annotation : 'deploymentConfig') || !deploymentConfigs[(set | annotation : 'deploymentConfig')]\" class=\"no-service\">\n" +
-    "<overview-set class=\"overview-tile-wrapper\"></overview-set>\n" +
-    "</div>\n" +
-    "\n" +
-    "\n" +
-    "<div ng-repeat=\"set in replicaSetsByService[''] | toArray | orderBy : 'metadata.name' track by (set | uid)\" ng-if=\"!(set | annotation : 'deployment.kubernetes.io/revision')\" class=\"no-service\">\n" +
-    "<overview-set class=\"overview-tile-wrapper\"></overview-set>\n" +
-    "</div>\n" +
-    "\n" +
-    "\n" +
-    "<div ng-repeat=\"set in statefulSetsByService[''] | toArray | orderBy : 'metadata.name' track by (set | uid)\" class=\"no-service\">\n" +
-    "<overview-set class=\"overview-tile-wrapper\"></overview-set>\n" +
-    "</div>\n" +
-    "\n" +
-    "\n" +
-    "<div ng-repeat=\"pod in monopodsByService[''] | toArray | orderBy : 'metadata.name' track by (pod | uid)\" class=\"no-service\">\n" +
-    "<overview-pod class=\"overview-tile-wrapper\"></overview-pod>\n" +
-    "</div>\n" +
-    "\n" +
-    "</div>\n" +
-    "</div>\n" +
-    "</div>\n" +
-    "</div>\n" +
-    "</div>\n" +
-    "</div>\n" +
-    "</div>\n" +
-    "</project-page>"
-  );
-
-
   $templateCache.put('views/overview/_build-counts.html',
     "<span ng-if=\"buildCounts.show\" class=\"animate-if\">\n" +
     "<span ng-if=\"buildCounts.label\" class=\"builds-label\">\n" +
@@ -11990,205 +11636,6 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "</div>\n" +
     "</div>\n" +
     "</div>"
-  );
-
-
-  $templateCache.put('views/overview/_dc.html',
-    "<div class=\"overview-tile\" ng-class=\"{ 'deployment-in-progress': inProgressDeployment }\">\n" +
-    "<ng-include src=\"'views/overview/_service-header.html'\"></ng-include>\n" +
-    "<div class=\"overview-tile-header\">\n" +
-    "<div class=\"rc-header\" ng-class=\"{ 'rc-header-shield' : activeReplicationController}\">\n" +
-    "<div class=\"truncate\">\n" +
-    "Deployment Config\n" +
-    "<a ng-href=\"{{deploymentConfig | navigateResourceURL}}\">{{deploymentConfig.metadata.name}}</a>\n" +
-    "<small class=\"overview-timestamp\" ng-if=\"activeReplicationController && !inProgressDeployment\">\n" +
-    "<span class=\"hidden-xs\">&ndash;</span>\n" +
-    "<span am-time-ago=\"activeReplicationController.metadata.creationTimestamp\"></span>\n" +
-    "</small>\n" +
-    "</div>\n" +
-    "<div>\n" +
-    "<div class=\"small\">\n" +
-    "<image-names ng-if=\"activeReplicationController && !inProgressDeployment && showMetrics\" pod-template=\"activeReplicationController.spec.template\" pods=\"podsByOwnerUID[activeReplicationController.metadata.uid]\">\n" +
-    "</image-names>\n" +
-    "</div>\n" +
-    "<div ng-if=\"inProgressDeployment\" class=\"small\">\n" +
-    "{{deploymentConfig.spec.strategy.type}} <ellipsis-pulser color=\"dark\" size=\"sm\" display=\"inline\" msg=\"deployment in progress\"></ellipsis-pulser>\n" +
-    "<span ng-if=\"'deploymentconfigs/log' | canI : 'get'\" class=\"deployment-log-link\">\n" +
-    "<a ng-href=\"{{inProgressDeployment | navigateResourceURL}}?tab=logs\">View Log</a>\n" +
-    "<span ng-if=\"'replicationcontrollers' | canI: 'update'\" class=\"action-divider\">|</span>\n" +
-    "</span>\n" +
-    "<span ng-if=\"'replicationcontrollers' | canI : 'update'\" class=\"deployment-log-link\">\n" +
-    "<a href=\"\" ng-click=\"cancelDeployment()\" role=\"button\">Cancel</a>\n" +
-    "</span>\n" +
-    "</div>\n" +
-    "<div ng-if=\"deploymentConfig.spec.paused\" class=\"small\">\n" +
-    "<span class=\"pficon pficon-info\" aria-hidden=\"true\"></span>\n" +
-    "Deployment is paused.\n" +
-    "<span ng-if=\"'deploymentconfigs' | canI : 'update'\">\n" +
-    "<a href=\"\" ng-click=\"resumeDeployment()\" role=\"button\">Resume</a>\n" +
-    "</span>\n" +
-    "</div>\n" +
-    "</div>\n" +
-    "</div>\n" +
-    "<div ng-if=\"!(orderedReplicationControllers | hashSize)\" class=\"empty-dc\">\n" +
-    "<h2>No deployments.</h2>\n" +
-    "<div ng-if=\"imageChangeTriggers.length\">\n" +
-    "A new deployment will start automatically when\n" +
-    "<span ng-if=\"imageChangeTriggers.length === 1\">\n" +
-    "an image is available for\n" +
-    "<a ng-href=\"{{urlForImageChangeTrigger(imageChangeTriggers[0], deploymentConfig)}}\">{{imageChangeTriggers[0].imageChangeParams.from | imageObjectRef : deploymentConfig.metadata.namespace}}</a>.\n" +
-    "</span>\n" +
-    "<span ng-if=\"imageChangeParams.length > 1\">\n" +
-    "one of the images for this deployment config changes.\n" +
-    "</span>\n" +
-    "</div>\n" +
-    "<div ng-if=\"!imageChangeTriggers.length\">\n" +
-    "<div ng-if=\"pipeline = pipelinesForDC[deploymentConfig.metadata.name][0]\">\n" +
-    "<p>\n" +
-    "This deployment config is part of pipeline\n" +
-    "<a ng-href=\"{{pipeline | navigateResourceURL}}\">{{pipeline.metadata.name}}</a>.\n" +
-    "</p>\n" +
-    "<div ng-if=\"('buildconfigs/instantiate' | canI : 'create')\">\n" +
-    "<button class=\"btn btn-primary\" ng-click=\"startPipeline(pipeline)\">\n" +
-    "Start Pipeline\n" +
-    "</button>\n" +
-    "</div>\n" +
-    "</div>\n" +
-    "<div ng-if=\"!pipelinesForDC[deploymentConfig.metadata.name].length\">\n" +
-    "<p>No deployments have started for\n" +
-    "<a ng-href=\"{{deploymentConfig | navigateResourceURL}}\">{{deploymentConfig.metadata.name}}</a>.</p>\n" +
-    "<button ng-if=\"'deploymentconfigs/instantiate' | canI : 'create'\" class=\"btn btn-primary\" ng-click=\"startDeployment(deploymentConfig)\">\n" +
-    "Start Deployment\n" +
-    "</button>\n" +
-    "</div>\n" +
-    "</div>\n" +
-    "</div>\n" +
-    "<div column flex class=\"shield\" ng-if=\"activeReplicationController\" ng-class=\"{ 'shield-lg': (activeReplicationController | annotation: 'deploymentVersion').length > 3 }\">\n" +
-    "<a ng-href=\"{{activeReplicationController | navigateResourceURL}}\">\n" +
-    "<span class=\"shield-number\">#{{activeReplicationController | annotation: 'deploymentVersion'}}</span>\n" +
-    "</a>\n" +
-    "</div>\n" +
-    "</div>\n" +
-    "<div row class=\"overview-tile-body\">\n" +
-    "\n" +
-    "<div column class=\"overview-donut\" ng-repeat=\"replicationController in orderedReplicationControllers track by (replicationController | uid)\" ng-class=\"{ latest: isDeploymentLatest(replicationController) }\" ng-if=\"!activeReplicationController || !(isDeploymentLatest(replicationController) && ((replicationController | deploymentStatus) == 'Cancelled' || (replicationController | deploymentStatus) == 'Failed'))\">\n" +
-    "<deployment-donut rc=\"replicationController\" deployment-config=\"deploymentConfig\" pods=\"podsByOwnerUID[replicationController.metadata.uid]\" hpa=\"getHPA(deploymentConfig) || getHPA(replicationController)\" limit-ranges=\"limitRanges\" quotas=\"quotas\" cluster-quotas=\"clusterQuotas\" scalable=\"isScalableReplicationController(replicationController)\" alerts=\"alerts\">\n" +
-    "</deployment-donut>\n" +
-    "</div>\n" +
-    "\n" +
-    "\n" +
-    "<div column class=\"overview-donut-connector\" ng-class=\"{'contains-deployment-status-msg':orderedReplicationControllers.length === 1}\" ng-if=\"inProgressDeployment\">\n" +
-    "<div ng-if=\"orderedReplicationControllers.length > 1\" class=\"deployment-connector-arrow\">\n" +
-    "</div>\n" +
-    "<div ng-if=\"orderedReplicationControllers.length === 1\" class=\"deployment-status-msg\">\n" +
-    "<status-icon status=\"orderedReplicationControllers[0] | deploymentStatus\"></status-icon>\n" +
-    "Deployment&nbsp;#{{orderedReplicationControllers[0] | annotation : 'deploymentVersion'}} {{orderedReplicationControllers[0] | deploymentStatus | lowercase}}\n" +
-    "</div>\n" +
-    "</div>\n" +
-    "\n" +
-    "\n" +
-    "<div column class=\"overview-unsuccessful-state\" ng-if=\"!activeReplicationController && !inProgressDeployment\" ng-switch=\"orderedReplicationControllers[0] | deploymentStatus\">\n" +
-    "<div ng-switch-when=\"Cancelled\">\n" +
-    "<span class=\"deployment-status-msg\">\n" +
-    "<i class=\"fa fa-ban\" aria-hidden=\"true\"></i>\n" +
-    "{{deploymentConfig.metadata.name}}\n" +
-    "<a ng-href=\"{{orderedReplicationControllers[0] | navigateResourceURL}}\">#{{orderedReplicationControllers[0] | annotation: 'deploymentVersion'}}</a>\n" +
-    "cancelled\n" +
-    "</span>\n" +
-    "</div>\n" +
-    "<div ng-switch-when=\"Failed\">\n" +
-    "<span class=\"text-danger deployment-status-msg\">\n" +
-    "<i class=\"fa fa-times\" aria-hidden=\"true\"></i>\n" +
-    "{{deploymentConfig.metadata.name}}\n" +
-    "<a ng-href=\"{{orderedReplicationControllers[0] | navigateResourceURL}}\">#{{orderedReplicationControllers[0] | annotation: 'deploymentVersion'}}</a>\n" +
-    "failed\n" +
-    "</span>\n" +
-    "</div>\n" +
-    "</div>\n" +
-    "\n" +
-    "\n" +
-    "<div column class=\"overview-tile-details\" ng-if=\"activeReplicationController && !inProgressDeployment\">\n" +
-    "\n" +
-    "\n" +
-    "<deployment-metrics ng-if=\"showMetrics && !collapse\" pods=\"podsByOwnerUID[activeReplicationController.metadata.uid]\" containers=\"activeReplicationController.spec.template.spec.containers\" profile=\"compact\" class=\"overview-metrics\">\n" +
-    "</deployment-metrics>\n" +
-    "<pod-template ng-if=\"!showMetrics\" pod-template=\"activeReplicationController.spec.template\"></pod-template>\n" +
-    "\n" +
-    "</div>\n" +
-    "\n" +
-    "</div>\n" +
-    "</div>"
-  );
-
-
-  $templateCache.put('views/overview/_deployment.html',
-    "<div class=\"overview-tile\" ng-class=\"{ 'deployment-in-progress': inProgressDeployment }\">\n" +
-    "<ng-include src=\"'views/overview/_service-header.html'\"></ng-include>\n" +
-    "<div class=\"overview-tile-header\">\n" +
-    "<div class=\"rc-header\" ng-class=\"{ 'rc-header-shield' : latestReplicaSet && latestRevision && !inProgressDeployment}\">\n" +
-    "<div class=\"truncate\">\n" +
-    "Deployment\n" +
-    "<a ng-href=\"{{deployment | navigateResourceURL}}\">{{deploymentName}}</a>\n" +
-    "<small class=\"overview-timestamp\" ng-if=\"latestReplicaSet\">\n" +
-    "<span class=\"hidden-xs\">&ndash;</span>\n" +
-    "<span am-time-ago=\"latestReplicaSet.metadata.creationTimestamp\"></span>\n" +
-    "</small>\n" +
-    "</div>\n" +
-    "<div class=\"small truncate\">\n" +
-    "<image-names ng-if=\"latestReplicaSet && !inProgressDeployment && showMetrics\" pod-template=\"latestReplicaSet.spec.template\" pods=\"podsByOwnerUID[latestReplicaSet.metadata.uid]\">\n" +
-    "</image-names>\n" +
-    "</div>\n" +
-    "<div ng-if=\"inProgressDeployment\" class=\"small\">\n" +
-    "{{deployment.spec.strategy.type | sentenceCase}}\n" +
-    "<ellipsis-pulser color=\"dark\" size=\"sm\" display=\"inline\" msg=\"in progress\"></ellipsis-pulser>\n" +
-    "</div>\n" +
-    "<div ng-if=\"deployment.spec.paused\" class=\"small\">\n" +
-    "<span class=\"pficon pficon-info\" aria-hidden=\"true\"></span>\n" +
-    "Deployment is paused.\n" +
-    "<span ng-if=\"{ group: 'extensions', resource: 'deployments' } | canI : 'update'\">\n" +
-    "<a href=\"\" ng-click=\"resumeDeployment()\" role=\"button\">Resume</a>\n" +
-    "</span>\n" +
-    "</div>\n" +
-    "</div>\n" +
-    "<div column flex class=\"shield\" ng-if=\"latestReplicaSet && latestRevision && !inProgressDeployment\" ng-class=\"{ 'shield-lg': latestRevision.length > 3 }\">\n" +
-    "<a ng-href=\"{{latestReplicaSet | navigateResourceURL}}\">\n" +
-    "<span class=\"shield-number\">#{{latestRevision}}</span>\n" +
-    "</a>\n" +
-    "</div>\n" +
-    "</div>\n" +
-    "<div row class=\"overview-tile-body\">\n" +
-    "\n" +
-    "<div column class=\"overview-donut\" ng-repeat=\"replicaSet in replicaSets | limitTo : 2 track by (replicaSet | uid)\" ng-class=\"{ latest: replicaSet === latestReplicaSet }\">\n" +
-    "<deployment-donut deployment=\"deployment\" rc=\"replicaSet\" pods=\"podsByOwnerUID[replicaSet.metadata.uid]\" hpa=\"getHPA(deployment) || getHPA(replicaSet)\" limit-ranges=\"limitRanges\" scalable=\"replicaSet === latestReplicaSet && !inProgressDeployment\" alerts=\"alerts\">\n" +
-    "</deployment-donut>\n" +
-    "</div>\n" +
-    "\n" +
-    "\n" +
-    "<div column class=\"overview-donut-connector\" ng-if=\"inProgressDeployment\">\n" +
-    "<div class=\"deployment-connector-arrow\"></div>\n" +
-    "</div>\n" +
-    "\n" +
-    "\n" +
-    "<div column class=\"overview-tile-details\" ng-if=\"latestReplicaSet && !inProgressDeployment\">\n" +
-    "\n" +
-    "\n" +
-    "<deployment-metrics ng-if=\"showMetrics && !collapse\" pods=\"podsByOwnerUID[latestReplicaSet.metadata.uid]\" containers=\"latestReplicaSet.spec.template.spec.containers\" profile=\"compact\" class=\"overview-metrics\">\n" +
-    "</deployment-metrics>\n" +
-    "<pod-template ng-if=\"!showMetrics\" pod-template=\"latestReplicaSet.spec.template\"></pod-template>\n" +
-    "\n" +
-    "</div>\n" +
-    "\n" +
-    "</div>\n" +
-    "</div>"
-  );
-
-
-  $templateCache.put('views/overview/_image-names.html',
-    "<span>{{podTemplate.spec.containers[0].image | imageStreamName}}</span>\n" +
-    "<span ng-repeat=\"id in imageIDs\" title=\"{{id}}\">\n" +
-    "<span class=\"hash\">{{id | stripSHAPrefix | limitTo: 7}}</span><span ng-if=\"!$last\">,</span>\n" +
-    "</span>\n" +
-    "<span ng-if=\"podTemplate.spec.containers.length > 1\"> and {{podTemplate.spec.containers.length - 1}} other image<span ng-if=\"podTemplate.spec.containers.length > 2\">s</span></span>"
   );
 
 
@@ -12677,117 +12124,6 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
   );
 
 
-  $templateCache.put('views/overview/_pod.html',
-    "<div class=\"overview-tile\" ng-if=\"pod.kind === 'Pod'\">\n" +
-    "<ng-include src=\"'views/overview/_service-header.html'\"></ng-include>\n" +
-    "<div class=\"rc-header\"> \n" +
-    "<div class=\"truncate\">\n" +
-    "Pod\n" +
-    "<a ng-href=\"{{pod | navigateResourceURL}}\">{{pod.metadata.name}}</a>\n" +
-    "<small class=\"overview-timestamp\">\n" +
-    "<span class=\"hidden-xs\">&ndash;</span>\n" +
-    "<span am-time-ago=\"pod.metadata.creationTimestamp\"></span>\n" +
-    "</small>\n" +
-    "</div>\n" +
-    "<div class=\"small\">\n" +
-    "<image-names ng-if=\"showMetrics\" pod-template=\"pod\" pods=\"[pod]\"></image-names>\n" +
-    "</div>\n" +
-    "</div>\n" +
-    "<div row class=\"overview-tile-body\">\n" +
-    "<div column class=\"overview-donut\">\n" +
-    "<pod-donut pods=\"[pod]\" class=\"clickable\" ng-click=\"viewPod()\">\n" +
-    "</pod-donut>\n" +
-    "\n" +
-    "<a href=\"\" class=\"sr-only\" ng-click=\"viewPod()\" role=\"button\">\n" +
-    "View pod\n" +
-    "</a>\n" +
-    "</div>\n" +
-    "<div column class=\"overview-tile-details\">\n" +
-    "<deployment-metrics ng-if=\"showMetrics && !collapse\" pods=\"[pod]\" containers=\"pod.spec.containers\" profile=\"compact\" class=\"overview-metrics\">\n" +
-    "</deployment-metrics>\n" +
-    "<pod-template ng-if=\"!showMetrics\" pod-template=\"pod\"></pod-template>\n" +
-    "</div>\n" +
-    "</div>\n" +
-    "</div>"
-  );
-
-
-  $templateCache.put('views/overview/_service-group.html',
-    "<div class=\"service-group\">\n" +
-    "<div class=\"service-group-header\" ng-if=\"service.metadata.labels.app || displayRoute\" ng-click=\"toggleCollapse($event)\" ng-class=\"{ 'has-app-label': appName }\">\n" +
-    "<h2 ng-if=\"appName\" class=\"app-name\">\n" +
-    "<i class=\"fa fa-angle-down fa-fw\" aria-hidden=\"true\" ng-if=\"!collapse\"></i>\n" +
-    "<i class=\"fa fa-angle-right fa-fw\" aria-hidden=\"true\" ng-if=\"collapse\"></i>\n" +
-    "{{appName | startCase}}\n" +
-    "<span ng-if=\"isDuplicateApp(appName)\" class=\"small\">\n" +
-    "{{service.metadata.name}}\n" +
-    "</span>\n" +
-    "</h2>\n" +
-    "<h3 class=\"route-title truncate\">\n" +
-    "<span ng-if=\"appName && (displayRoute | isWebRoute)\">\n" +
-    "<i class=\"fa fa-external-link small\" aria-hidden=\"true\"></i>\n" +
-    "</span>\n" +
-    "<span ng-if=\"!appName\">\n" +
-    "<i class=\"fa fa-angle-down fa-fw\" aria-hidden=\"true\" ng-if=\"!collapse\"></i>\n" +
-    "<i class=\"fa fa-angle-right fa-fw\" aria-hidden=\"true\" ng-if=\"collapse\"></i>\n" +
-    "</span>\n" +
-    "<a ng-if=\"displayRoute | isWebRoute\" target=\"_blank\" ng-href=\"{{displayRoute | routeWebURL}}\">{{displayRoute | routeLabel}}</a>\n" +
-    "<span ng-if=\"displayRoute && !(displayRoute | isWebRoute)\" class=\"non-web-route\">{{displayRoute | routeLabel}}</span>\n" +
-    "<span ng-if=\"routeWarningsByService[service.metadata.name] && routesByService[service.metadata.name].length === 1\">\n" +
-    "<route-warnings warnings=\"routeWarningsByService[service.metadata.name]\"></route-warnings>\n" +
-    "</span>\n" +
-    "<small ng-if=\"(primaryServiceRoutes | hashSize) > 1\" class=\"other-routes-msg\">\n" +
-    "and\n" +
-    "<a ng-href=\"project/{{projectName}}/browse/routes\">{{(primaryServiceRoutes | hashSize) - 1}} other route<span ng-if=\"(primaryServiceRoutes | hashSize) > 2\">s</span></a>\n" +
-    "</small>\n" +
-    "</h3>\n" +
-    "<span ng-if=\"!displayRoute\" class=\"create-route-link\">\n" +
-    "<a ng-if=\"'routes' | canI : 'create'\" ng-href=\"project/{{service.metadata.namespace}}/create-route?service={{service.metadata.name}}\">Create Route</a>\n" +
-    "</span>\n" +
-    "</div>\n" +
-    "<div>\n" +
-    "<div class=\"service-group-triggers\">\n" +
-    "<div ng-repeat=\"dc in allDeploymentConfigsInGroup\">\n" +
-    "<div row ng-repeat=\"pipeline in recentPipelinesByDC[dc.metadata.name] | orderObjectsByDate : true track by (pipeline | uid)\" class=\"build-pipeline-wrapper animate-repeat animate-slide\">\n" +
-    "<build-pipeline flex build=\"pipeline\" expand-only-running=\"true\" build-config-name-on-expanded=\"true\"></build-pipeline>\n" +
-    "</div>\n" +
-    "<div>\n" +
-    "<triggers triggers=\"dc.spec.triggers\" builds-by-output-image=\"recentBuildsByOutputImage\" namespace=\"dc.metadata.namespace\"></triggers>\n" +
-    "</div>\n" +
-    "</div>\n" +
-    "</div>\n" +
-    "\n" +
-    "<service-group-notifications ng-if=\"service\"></service-group-notifications>\n" +
-    "<div uib-collapse=\"collapse\" class=\"service-group-body\">\n" +
-    "\n" +
-    "<div class=\"overview-services\" ng-class=\"{ 'single-alternate-service': (alternateServices | hashSize) === 1 && totalWeight }\">\n" +
-    "<overview-service ng-init=\"isPrimary = true\" class=\"primary-service\"></overview-service>\n" +
-    "<overview-service ng-init=\"isAlternate = true\" ng-repeat=\"service in alternateServices\" class=\"alternate-service\">\n" +
-    "</overview-service>\n" +
-    "<overview-service ng-init=\"isChild = true\" ng-repeat=\"service in childServices\">\n" +
-    "</overview-service>\n" +
-    "<div column ng-if=\"alternateServices.length === 0 && childServices.length === 0 && service\" class=\"no-child-services-block\">\n" +
-    "<div class=\"no-child-services-message\">\n" +
-    "<div class=\"empty-tile\">\n" +
-    "<h2>No grouped services.</h2>\n" +
-    "<p>No services are grouped with <a ng-href=\"{{service | navigateResourceURL}}\">{{service.metadata.name}}</a>.\n" +
-    "<span ng-if=\"(services | hashSize) > 1 && ('services' | canI : 'update')\">Add a service to group them together.</span>\n" +
-    "</p>\n" +
-    "<div ng-if=\"(services | hashSize) > 1 && ('services' | canI : 'update')\">\n" +
-    "<button class=\"btn btn-primary\" ng-click=\"linkService()\">\n" +
-    "Group Service\n" +
-    "</button>\n" +
-    "</div>\n" +
-    "</div>\n" +
-    "</div>\n" +
-    "</div>\n" +
-    "</div>\n" +
-    "</div>\n" +
-    "</div>\n" +
-    "</div>"
-  );
-
-
   $templateCache.put('views/overview/_service-header.html',
     "<div row class=\"service-title\" ng-if=\"service\">\n" +
     "<div class=\"service-name truncate\">\n" +
@@ -12909,92 +12245,6 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
   $templateCache.put('views/overview/_service-linking-button.html',
     " <a href=\"\" ng-if=\"isPrimary && (services | hashSize) > ((childServices | hashSize) + 1)\" ng-click=\"linkService()\" role=\"button\" ng-attr-title=\"Group service to {{service.metadata.name}}\"><i class=\"fa fa-chain action-button link-service-button\" aria-hidden=\"true\"></i><span class=\"sr-only\">Group service to {{service.metadata.name}}</span></a>\n" +
     "<a href=\"\" ng-if=\"isChild\" ng-click=\"removeLink(service)\" role=\"button\" ng-attr-title=\"Remove {{service.metadata.name}} from service group\"><i class=\"fa fa-chain-broken action-button link-service-button\" aria-hidden=\"true\"></i><span class=\"sr-only\">Remove {{service.metadata.name}} from service group</span></a>"
-  );
-
-
-  $templateCache.put('views/overview/_service.html',
-    "<div ng-if=\"!tileCount\" class=\"no-deployments-block\">\n" +
-    "<div column class=\"no-deployments-message overview-tile\">\n" +
-    "<ng-include src=\"'views/overview/_service-header.html'\"></ng-include>\n" +
-    "<div class=\"empty-tile\">\n" +
-    "<h2>No deployments or pods.</h2>\n" +
-    "<p>\n" +
-    "Service <a ng-href=\"{{service | navigateResourceURL}}\">{{service.metadata.name}}</a>\n" +
-    "does not route to any deployments or pods.\n" +
-    "</p>\n" +
-    "</div>\n" +
-    "</div>\n" +
-    "</div>\n" +
-    "<div ng-attr-row=\"{{!service ? '' : undefined}}\" ng-attr-wrap=\"{{!service ? '' : undefined}}\" ng-if=\"tileCount\" class=\"deployment-block\" ng-class=\"{\n" +
-    "       'no-service': !service,\n" +
-    "       'service-multiple-targets': tileCount > 1\n" +
-    "     }\">\n" +
-    "<div ng-repeat=\"deploymentConfig in deploymentConfigs track by (deploymentConfig | uid)\" class=\"overview-tile-wrapper\">\n" +
-    "\n" +
-    "<overview-deployment-config></overview-deployment-config>\n" +
-    "\n" +
-    "</div>\n" +
-    "<div ng-repeat=\"set in replicationControllers track by (set | uid)\" class=\"overview-tile-wrapper\">\n" +
-    "\n" +
-    "<overview-set></overview-set>\n" +
-    "\n" +
-    "</div>\n" +
-    "<div ng-repeat=\"(deploymentName, replicaSets) in visibleReplicaSetsByDeployment track by deploymentName\" class=\"overview-tile-wrapper\">\n" +
-    "\n" +
-    "<overview-deployment ng-if=\"deploymentName\"></overview-deployment>\n" +
-    "\n" +
-    "\n" +
-    "<div ng-if=\"!deploymentName\" ng-repeat=\"set in replicaSets | orderObjectsByDate : true track by (set | uid)\" class=\"overview-tile-wrapper\">\n" +
-    "<overview-set></overview-set>\n" +
-    "</div>\n" +
-    "\n" +
-    "</div>\n" +
-    "<div class=\"overview-tile-wrapper\" ng-repeat=\"set in statefulSetsByService[service.metadata.name] track by (set | uid)\">\n" +
-    "<overview-set></overview-set>\n" +
-    "</div>\n" +
-    "\n" +
-    "<div ng-repeat=\"pod in monopodsByService[service.metadata.name || ''] | orderObjectsByDate : true track by (pod | uid)\" class=\"overview-tile-wrapper\">\n" +
-    "<overview-pod></overview-pod>\n" +
-    "</div>\n" +
-    "\n" +
-    "</div>"
-  );
-
-
-  $templateCache.put('views/overview/_set.html',
-    "<div class=\"overview-tile\">\n" +
-    "<ng-include src=\"'views/overview/_service-header.html'\"></ng-include>\n" +
-    "<div class=\"overview-tile-header\">\n" +
-    "<div class=\"rc-header\">\n" +
-    "<div class=\"truncate\">\n" +
-    "{{set.kind | humanizeKind : true}}\n" +
-    "<a ng-href=\"{{set | navigateResourceURL}}\">{{set.metadata.name}}</a>\n" +
-    "<small class=\"overview-timestamp\">\n" +
-    "<span class=\"hidden-xs\">&ndash;</span>\n" +
-    "<span am-time-ago=\"set.metadata.creationTimestamp\"></span>\n" +
-    "</small>\n" +
-    "</div>\n" +
-    "<div class=\"small\">\n" +
-    "<image-names ng-if=\"showMetrics\" pod-template=\"set.spec.template\" pods=\"podsByOwnerUID[set.metadata.uid]\">\n" +
-    "</image-names>\n" +
-    "</div>\n" +
-    "</div>\n" +
-    "</div>\n" +
-    "<div row class=\"overview-tile-body\">\n" +
-    "<div column class=\"overview-donut\" ng-class=\"{ latest: isDeploymentLatest(set) }\">\n" +
-    "<deployment-donut rc=\"set\" deployment-config=\"deploymentConfigs[dcName]\" pods=\"podsByOwnerUID[set.metadata.uid]\" hpa=\"getHPA(set)\" limit-ranges=\"limitRanges\" quotas=\"quotas\" cluster-quotas=\"clusterQuotas\" scalable=\"isScalableReplicationController(set)\" alerts=\"alerts\">\n" +
-    "</deployment-donut>\n" +
-    "</div>\n" +
-    "\n" +
-    "\n" +
-    "<div column class=\"overview-tile-details\">\n" +
-    "<deployment-metrics ng-if=\"showMetrics && !collapse\" pods=\"podsByOwnerUID[set.metadata.uid]\" containers=\"set.spec.template.spec.containers\" profile=\"compact\" class=\"overview-metrics\">\n" +
-    "</deployment-metrics>\n" +
-    "<pod-template ng-if=\"!showMetrics\" pod-template=\"set.spec.template\"></pod-template>\n" +
-    "</div>\n" +
-    "\n" +
-    "</div>\n" +
-    "</div>"
   );
 
 
@@ -13175,202 +12425,6 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "<div class=\"row\">\n" +
     "<div class=\"col-md-12\">\n" +
     "<pods-table pods=\"pods\" empty-message=\"emptyMessage\"></pods-table>\n" +
-    "</div>\n" +
-    "</div>\n" +
-    "</div>\n" +
-    "</div>\n" +
-    "</div>\n" +
-    "</div>\n" +
-    "</project-page>"
-  );
-
-
-  $templateCache.put('views/project.html',
-    "<project-header class=\"top-header\"></project-header>\n" +
-    "<project-page class=\"project-overview-page\">\n" +
-    "\n" +
-    "<div class=\"middle-section\">\n" +
-    "<div class=\"middle-container\">\n" +
-    "<div class=\"middle-header header-toolbar\">\n" +
-    "<div class=\"container-fluid\">\n" +
-    "<tasks></tasks>\n" +
-    "<div ng-if=\"renderOptions.showToolbar\" class=\"page-header page-header-bleed-right page-header-bleed-left\">\n" +
-    "<h1 title=\"Overview\">Overview</h1>\n" +
-    "</div>\n" +
-    "\n" +
-    "<alerts alerts=\"alerts\"></alerts>\n" +
-    "<div ng-if=\"renderOptions.showToolbar\" class=\"data-toolbar\">\n" +
-    "<div class=\"data-toolbar-filter\">\n" +
-    "<project-filter></project-filter>\n" +
-    "</div>\n" +
-    "<div class=\"data-toolbar-views pad-left-lg\">\n" +
-    "<div class=\"actions\">\n" +
-    "<div class=\"btn-group\">\n" +
-    "<label class=\"btn btn-default\" ng-model=\"$parent.overviewMode\" uib-btn-radio=\"'tiles'\" title=\"Tile View\">\n" +
-    "<i class=\"fa fa-list\"></i>\n" +
-    "</label>\n" +
-    "<label class=\"btn btn-default\" ng-model=\"$parent.overviewMode\" uib-btn-radio=\"'topology'\" title=\"Topology View\">\n" +
-    "<i class=\"pficon pficon-topology\"></i>\n" +
-    "</label>\n" +
-    "</div>\n" +
-    "</div>\n" +
-    "</div>\n" +
-    "</div>\n" +
-    "</div>\n" +
-    "</div>\n" +
-    "<div class=\"middle-content surface-shaded\">\n" +
-    "<div class=\"container-fluid surface-shaded\">\n" +
-    "<div class=\"row\">\n" +
-    "<div class=\"col-md-12\">\n" +
-    "\n" +
-    "<div ng-if=\"(services | hashSize) === 0 && (monopodsByService[''] | hashSize) === 0 && (deploymentsByServiceByDeploymentConfig[''] | hashSize) === 0\">\n" +
-    "\n" +
-    "<div ng-if=\"renderOptions.showGetStarted\" class=\"empty-project text-center\">\n" +
-    "<h2>Get started with your project.</h2>\n" +
-    "<p class=\"gutter-top\">\n" +
-    "Use your source or an example repository to build an application image, or add components like databases and message queues.\n" +
-    "</p>\n" +
-    "<p class=\"gutter-top\">\n" +
-    "<a ng-href=\"project/{{projectName}}/create\" class=\"btn btn-lg btn-primary\">\n" +
-    "Add to Project\n" +
-    "</a>\n" +
-    "</p>\n" +
-    "</div>\n" +
-    "\n" +
-    "<div ng-if=\"!renderOptions.showGetStarted\">\n" +
-    "<em>{{emptyMessage}}</em>\n" +
-    "</div>\n" +
-    "</div>\n" +
-    "<div ng-if=\"overviewMode == 'topology' && !renderOptions.showGetStarted\" class=\"kube-topology-block\">\n" +
-    "<kubernetes-topology-graph bottom-of-window=\"1\" items=\"topologyItems\" relations=\"topologyRelations\" kinds=\"topologyKinds\" selection=\"topologySelection\">\n" +
-    "</kubernetes-topology-graph>\n" +
-    "<svg class=\"kube-topology\" hidden>\n" +
-    "<defs>\n" +
-    "<g class=\"Pod\" id=\"vertex-Pod\">\n" +
-    "<circle r=\"16\"></circle>\n" +
-    "<text y=\"6\" x=\"0.5\">&#xf1b3;</text>\n" +
-    "</g>\n" +
-    "<g class=\"Service\" id=\"vertex-Service\">\n" +
-    "<circle r=\"16\"></circle>\n" +
-    "<text y=\"10\" x=\"1\">&#xe61e;</text>\n" +
-    "</g>\n" +
-    "<g class=\"ReplicationController\" id=\"vertex-ReplicationController\">\n" +
-    "<circle r=\"16\"></circle>\n" +
-    "<text y=\"9\">&#xe624;</text>\n" +
-    "</g>\n" +
-    "<g class=\"DeploymentConfig\" id=\"vertex-DeploymentConfig\">\n" +
-    "<circle r=\"16\"></circle>\n" +
-    "<text y=\"8\">&#xf013;</text>\n" +
-    "</g>\n" +
-    "<g class=\"Route\" id=\"vertex-Route\">\n" +
-    "<circle r=\"16\"></circle>\n" +
-    "<text y=\"9\">&#xe625;</text>\n" +
-    "</g>\n" +
-    "</defs>\n" +
-    "</svg>\n" +
-    "</div>\n" +
-    "<div ng-if=\"overviewMode == 'tiles'\">\n" +
-    "\n" +
-    "<section ng-repeat=\"(serviceId, service) in services\" class=\"components components-group\" ng-attr-id=\"service-{{serviceId}}\">\n" +
-    "<div class=\"osc-object components-panel service\" ng-init=\"numPorts = service.spec.ports.length\" kind=\"Service\" resource=\"service\">\n" +
-    "<div class=\"component-block\">\n" +
-    "<div class=\"component\">\n" +
-    "<div ng-attr-title=\"{{service | serviceImplicitDNSName}}\" class=\"component-label\">\n" +
-    "\n" +
-    "Service <span ng-if=\"displayRouteByService[serviceId]\">: <a class=\"subtle-link service\" href=\"{{service | navigateResourceURL}}\">{{serviceId}}</a></span>\n" +
-    "</div>\n" +
-    "\n" +
-    "<h2 ng-if=\"displayRouteByService[serviceId]\" ng-init=\"otherRoutes = (routesByService[serviceId] | hashSize) - 1\">\n" +
-    "<span ng-if=\"(displayRouteByService[serviceId] | isWebRoute)\">\n" +
-    "\n" +
-    "<a href=\"{{displayRouteByService[serviceId] | routeWebURL}}\" class=\"route\" target=\"_blank\">{{displayRouteByService[serviceId] | routeLabel}}</a>\n" +
-    "</span>\n" +
-    "\n" +
-    "<span ng-if=\"!(displayRouteByService[serviceId] | isWebRoute)\" class=\"route\">\n" +
-    "{{displayRouteByService[serviceId] | routeLabel}}\n" +
-    "</span>\n" +
-    "<span class=\"small\" ng-if=\"otherRoutes\">\n" +
-    "(and\n" +
-    "<a href=\"project/{{projectName}}/browse/routes\"><span ng-if=\"otherRoutes === 1\">one other route</span><span ng-if=\"otherRoutes > 1\">{{otherRoutes}} other routes</span></a>)\n" +
-    "</span>\n" +
-    "<span ng-if=\"!otherRoutes\">\n" +
-    "<route-warnings warnings=\"routeWarningsByService[serviceId][displayRouteByService[serviceId].metadata.name]\"></route-warnings>\n" +
-    "</span>\n" +
-    "<div ng-if=\"(routeWarningsByService[serviceId] | hashSize) > 0 && otherRoutes\">\n" +
-    "<small>\n" +
-    "<span class=\"pficon pficon-warning-triangle-o\" aria-hidden=\"true\"></span>\n" +
-    "This service has <a href=\"project/{{projectName}}/browse/routes\">routes</a> with warnings.\n" +
-    "</small>\n" +
-    "</div>\n" +
-    "</h2>\n" +
-    "\n" +
-    "\n" +
-    "<h2 ng-if=\"!displayRouteByService[serviceId]\">\n" +
-    "<a class=\"service\" href=\"{{service | navigateResourceURL}}\">{{serviceId}}</a>\n" +
-    "</h2>\n" +
-    "</div>\n" +
-    "<div class=\"component meta-data\">\n" +
-    "<span ng-if=\"numPorts\" class=\"ports\">\n" +
-    "\n" +
-    "<span ng-repeat=\"portMapping in service.spec.ports | orderBy:'port' | limitTo:2\">\n" +
-    "\n" +
-    "<span class=\"port-mappings\">\n" +
-    "\n" +
-    "<span ng-attr-title=\"{{portMapping.name}}\">{{portMapping.port}}/{{portMapping.protocol}}</span>&#8201;&#8594;&#8201;{{portMapping.targetPort}}<span ng-if=\"$index < (numPorts - 1)\">, </span></span>\n" +
-    "</span>\n" +
-    "<span ng-if=\"numPorts > 2\" ng-init=\"numRemaining = numPorts - 2\" class=\"more-ports\">\n" +
-    "and {{numRemaining}} {{numRemaining == 1 ? \"other\" : \"others\"}}\n" +
-    "</span>\n" +
-    "</span>\n" +
-    "<div ng-if=\"!displayRouteByService[serviceId]\" class=\"add-route-link\">\n" +
-    "<a ng-href=\"project/{{project.metadata.name}}/create-route?service={{service.metadata.name}}\">Create Route</a>\n" +
-    "</div>\n" +
-    "</div>\n" +
-    "</div>\n" +
-    "</div>\n" +
-    "\n" +
-    "<div ng-repeat=\"(deploymentConfigId, deploymentConfig) in deploymentConfigsByService[serviceId]\" ng-if=\"!deploymentsByServiceByDeploymentConfig[serviceId][deploymentConfigId]\">\n" +
-    "\n" +
-    "<triggers triggers=\"deploymentConfig.spec.triggers\" builds-by-output-image=\"recentBuildsByOutputImage\" namespace=\"projectName\"></triggers>\n" +
-    "</div>\n" +
-    "\n" +
-    "<div ng-repeat=\"(deploymentConfigId, deployments) in deploymentsByServiceByDeploymentConfig[serviceId]\">\n" +
-    "\n" +
-    "<div ng-if=\"deploymentConfigsByService[serviceId][deploymentConfigId]\">\n" +
-    "\n" +
-    "<triggers triggers=\"deploymentConfigsByService[serviceId][deploymentConfigId].spec.triggers\" builds-by-output-image=\"recentBuildsByOutputImage\" namespace=\"projectName\"></triggers>\n" +
-    "</div>\n" +
-    "<div ng-repeat=\"deployment in deployments | orderObjectsByDate : true track by (deployment | uid)\" ng-if=\"isVisibleDeployment(deployment)\" class=\"animate-repeat\">\n" +
-    "\n" +
-    "<topology-deployment rc=\"deployment\" deployment-config-id=\"deploymentConfigId\" deployment-config-missing=\"deploymentConfigs && !deploymentConfigs[deploymentConfigId]\" deployment-config-different-service=\"deploymentConfigs[deploymentConfigId] && !deploymentConfigsByService[serviceId][deploymentConfigId]\" deployment-config=\"deploymentConfigs[deploymentConfigId]\" scalable=\"isScalable(deployment, deploymentConfigId)\" hpa=\"getHPA(deployment.metadata.name, deploymentConfigId)\" limit-ranges=\"limitRanges\" project=\"project\" images-by-docker-reference=\"imagesByDockerReference\" builds=\"builds\" pods=\"podsByDeployment[deployment.metadata.name]\" alerts=\"alerts\">\n" +
-    "</topology-deployment>\n" +
-    "</div>\n" +
-    "</div>\n" +
-    "\n" +
-    "<div ng-repeat=\"pod in monopodsByService[serviceId] track by (pod | uid)\">\n" +
-    "<overview-monopod pod=\"pod\"></overview-monopod>\n" +
-    "</div>\n" +
-    "\n" +
-    "<div ng-if=\"(podsByService[serviceId] | hashSize) === 0 && (deploymentsByServiceByDeploymentConfig[serviceId] | hashSize) === 0\" class=\"osc-object components-panel deployment-block deployments none\">\n" +
-    "<span class=\"pficon pficon-info\"></span> There are no pods or deployments for this service.\n" +
-    "</div>\n" +
-    "</section>\n" +
-    "\n" +
-    "<section ng-repeat=\"(deploymentConfigId, deployments) in deploymentsByServiceByDeploymentConfig['']\" class=\"components\">\n" +
-    "<div ng-repeat=\"(deploymentId, deployment) in deploymentsByServiceByDeploymentConfig[''][deploymentConfigId] track by (deployment | uid)\" ng-if=\"isVisibleDeployment(deployment)\">\n" +
-    "<div class=\"builds-no-service\" ng-if=\"deploymentConfigs[deploymentConfigId] && deploymentConfigsByService[''][deploymentConfigId]\">\n" +
-    "\n" +
-    "<triggers triggers=\"deploymentConfigs[deploymentConfigId].spec.triggers\" builds-by-output-image=\"recentBuildsByOutputImage\" namespace=\"projectName\"></triggers>\n" +
-    "</div>\n" +
-    "\n" +
-    "<topology-deployment rc=\"deployment\" deployment-config-id=\"deploymentConfigId\" deployment-config-missing=\"deploymentConfigs && !deploymentConfigs[deploymentConfigId]\" deployment-config-different-service=\"deploymentConfigs[deploymentConfigId] && !deploymentConfigsByService[''][deploymentConfigId]\" scalable=\"isScalable(deployment, deploymentConfigId)\" hpa=\"getHPA(deployment.metadata.name, deploymentConfigId)\" limit-ranges=\"limitRanges\" project=\"project\" images-by-docker-reference=\"imagesByDockerReference\" builds=\"builds\" pods=\"podsByDeployment[deployment.metadata.name]\">\n" +
-    "</topology-deployment>\n" +
-    "</div>\n" +
-    "</section>\n" +
-    "<section ng-repeat=\"pod in monopodsByService[''] track by (pod | uid)\" class=\"components\">\n" +
-    "<overview-monopod pod=\"pod\"></overview-monopod>\n" +
-    "</section>\n" +
-    "</div>\n" +
     "</div>\n" +
     "</div>\n" +
     "</div>\n" +

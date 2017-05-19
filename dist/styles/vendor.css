@@ -230,24 +230,6 @@ ul.messenger-theme-flat .messenger-spinner{display:block;position:absolute;left:
 .active-filters .label-filter-active-filters .label-filter-clear{display:-ms-inline-flexbox;display:inline-flex;margin:3px 3px 0 0;-ms-flex-align:center;align-items:center}
 .active-filters .label-filter-active-filters .label-filter-clear .label-filtering-remove-all{background:#39a5dc;margin:0}
 .active-filters .label-filter-active-filters .label-filter-clear .label-filtering-remove-all i.fa.fa-filter{padding-right:5px}
-kubernetes-topology-graph{display:block;user-select:none}
-.kube-topology g{font-family:PatternFlyIcons-webfont;font-size:18px;text-anchor:middle;cursor:pointer}
-.kube-topology g text{stroke:none;stroke-width:0px}
-.kube-topology g.weak use{opacity:.6}
-.kube-topology g.Pod text{font-family:FontAwesome;font-size:16px;fill:#1186C1}
-.kube-topology g.Node text{fill:#636363}
-.kube-topology g.Service text{fill:#ff7f0e;transform:translate(-3px,-1px)}
-.kube-topology g.ReplicationController text{fill:#9467bd;font-size:20px}
-.kube-topology g circle{stroke:#aaa;fill:#fff}
-.kube-topology g.fixed use{stroke-width:2px}
-.kube-topology g.selected circle,.kube-topology g.selected use{stroke-width:4px}
-.kube-topology line{stroke:#aaa;stroke-width:1}
-.kube-topology line.ReplicationControllerPod{stroke-linecap:round;stroke-dasharray:5,2}
-kubernetes-topology-icon{display:inline-block;vertical-align:middle;cursor:pointer;padding:10px;user-select:none}
-kubernetes-topology-icon svg{width:32px;height:32px;display:block}
-kubernetes-topology-icon use{opacity:.4}
-kubernetes-topology-icon.active use{opacity:1}
-kubernetes-topology-icon:hover use{opacity:.7}
 kubernetes-container-terminal{position:relative;display:block}
 kubernetes-container-terminal .terminal{font-family:"Monospace Regular","DejaVu Sans Mono",Menlo,Monaco,Consolas,monospace;font-size:10px;color:#F0F0F0;text-align:left;outline:0;background-color:#000;border:1px solid #000;padding:10px;display:inline-block;line-height:1em}
 @media (min-width:568px){kubernetes-container-terminal .terminal{font-size:12px}
