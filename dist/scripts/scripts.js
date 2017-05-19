@@ -1234,10 +1234,7 @@ DEFAULT_HPA_CPU_TARGET_PERCENT:80,
 DISABLE_OVERVIEW_METRICS:!1,
 DISABLE_CUSTOM_METRICS:!1,
 DISABLE_WILDCARD_ROUTES:!0,
-AVAILABLE_KINDS_BLACKLIST:[ {
-kind:"Binding",
-group:""
-}, "Ingress", "DeploymentConfigRollback" ],
+AVAILABLE_KINDS_BLACKLIST:[],
 ENABLE_TECH_PREVIEW_FEATURE:{
 service_catalog_landing_page:!1,
 template_service_broker:!1,
@@ -7016,7 +7013,14 @@ return !1;
 default:
 return !0;
 }
-}), c.getReturnURL = function() {
+});
+var n = function(a) {
+if (a) {
+var b = k.kindToResourceGroupVersion(a), c = k.apiInfo(b);
+return !c || !c.verbs || _.contains(c.verbs, "list");
+}
+};
+c.getReturnURL = function() {
 var b = _.get(c, "kindSelector.selected.kind");
 return b ? URI.expand("project/{projectName}/browse/other?kind={kind}&group={group}", {
 projectName:a.project,
@@ -7024,13 +7028,13 @@ kind:b,
 group:_.get(c, "kindSelector.selected.group", "")
 }).toString() :"";
 };
-var n;
+var o;
 c.isDuplicateKind = function(a) {
-return n || (n = _.countBy(c.kinds, "kind")), n[a] > 1;
+return o || (o = _.countBy(c.kinds, "kind")), o[a] > 1;
 }, d.getAlerts().forEach(function(a) {
 c.alerts[a.name] = a.data;
 }), d.clearAlerts();
-var o = function(a, b) {
+var p = function(a, b) {
 return _.some(c.kinds, function(c) {
 return c.kind === a && (!c.group && !b || c.group === b);
 });
@@ -7041,14 +7045,14 @@ var b = {
 resource:k.kindToResource(a.kind),
 group:a.group || ""
 };
-return !!e.checkResource(b.resource) && e.canI(b, "list", c.projectName);
-}), c.project = b, c.context = d, c.kindSelector.disabled = !1, a.kind && o(a.kind, a.group) && (_.set(c, "kindSelector.selected.kind", a.kind), _.set(c, "kindSelector.selected.group", a.group || ""));
+return !!n(a) && (!!e.checkResource(b.resource) && e.canI(b, "list", c.projectName));
+}), c.project = b, c.context = d, c.kindSelector.disabled = !1, a.kind && p(a.kind, a.group) && (_.set(c, "kindSelector.selected.kind", a.kind), _.set(c, "kindSelector.selected.group", a.group || ""));
 })), c.loadKind = m, c.$watch("kindSelector.selected", function() {
 c.alerts = {}, m();
 });
-var p = h("humanizeKind");
+var q = h("humanizeKind");
 c.matchKind = function(a, b) {
-return p(a).toLowerCase().indexOf(b.toLowerCase()) !== -1;
+return q(a).toLowerCase().indexOf(b.toLowerCase()) !== -1;
 }, i.onActiveFiltersChanged(function(a) {
 c.$apply(function() {
 c.resources = a.select(c.unfilteredResources), l();
