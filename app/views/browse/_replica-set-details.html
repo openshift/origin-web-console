@@ -47,6 +47,7 @@
       <dd ng-if-end>
         <a ng-href="{{replicaSet | configURLForResource}}">{{deploymentConfigName}}</a>
       </dd>
+      <owner-references ng-if="!(replicaSet | hasDeploymentConfig)" api-object="replicaSet"></owner-references>
       <dt ng-if-start="replicaSet | annotation:'deploymentStatusReason'">Status Reason:</dt>
       <dd ng-if-end>
         {{replicaSet | annotation:'deploymentStatusReason'}}

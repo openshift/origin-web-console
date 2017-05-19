@@ -25,6 +25,7 @@
           <a ng-href="{{rcName | navigateResourceURL : 'ReplicationController' : pod.metadata.namespace}}"
             ><span ng-if="deploymentVersion">#{{deploymentVersion}}</span><span ng-if="!deploymentVersion">{{rcName}}</span></a></span>
         </dd>
+        <owner-references ng-if="!dcName" api-object="pod"></owner-references>
         <dt ng-if-start="pod.metadata.deletionTimestamp && pod.spec.terminationGracePeriodSeconds">Grace Period:</dt>
         <dd ng-if-end>
           <!-- Don't show "a few seconds" for small values. -->
