@@ -261,7 +261,7 @@ Fa = _.mapValues(w.services, function(a) {
 return new LabelSelector(a.spec.selector);
 });
 var a = [ w.deploymentConfigs, w.vanillaReplicationControllers, w.deployments, w.vanillaReplicaSets, w.statefulSets, w.monopods ];
-_.each(a, Ga);
+_.each(a, Ga), W();
 }
 }, Ia = function() {
 var a = v.groupByService(w.routes, !0);
@@ -395,7 +395,7 @@ w.replicaSets = a.by("metadata.name"), Ea(), Ga(w.vanillaReplicaSets), Ga(w.mono
 group:"extensions",
 resource:"deployments"
 }, c, function(a) {
-z = a.by("metadata.uid"), w.deployments = _.sortBy(z, "metadata.name"), Ea(), Ga(w.deploymentsByUID), Ga(w.vanillaReplicaSets), wa(w.deploymentsByUID), fa(), o.log("deployments (subscribe)", w.deploymentsByUID);
+z = a.by("metadata.uid"), w.deployments = _.sortBy(z, "metadata.name"), Ea(), Ga(w.deployments), Ga(w.vanillaReplicaSets), wa(w.deployments), fa(), o.log("deployments (subscribe)", w.deploymentsByUID);
 })), Ya.push(h.watch("builds", c, function(a) {
 N.builds = a.by("metadata.name"), Ua(), o.log("builds (subscribe)", N.builds);
 })), Ya.push(h.watch({
