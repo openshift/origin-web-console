@@ -314,6 +314,11 @@ angular.module('openshiftConsole')
       return containerStatus.state.terminated && containerStatus.state.terminated.exitCode !== 0;
     };
   })
+  .filter('isContainerTerminatedSuccessfully', function() {
+    return function(containerStatus) {
+      return containerStatus.state.terminated && containerStatus.state.terminated.exitCode === 0;
+    };
+  })
   .filter('isContainerUnprepared', function() {
     return function(containerStatus) {
       if (!containerStatus.state.running ||
