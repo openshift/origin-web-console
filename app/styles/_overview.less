@@ -43,11 +43,11 @@
   margin-bottom: 5px;
   margin-top: 5px;
   padding: 5px;
-  .truncate();
   .mini-log-content {
     line-height: @mini-log-line-height;
     min-height: (@mini-log-num-lines * @mini-log-line-height);
     .mini-log-line {
+      .truncate();
       white-space: pre;
     }
   }
@@ -457,6 +457,10 @@
     @media (max-width: @screen-xs-max) {
       margin-top: 10px;
     }
+  }
+  .view-full-log {
+    position: relative;
+    top: 2px;
   }
 
   // Deployment animations
