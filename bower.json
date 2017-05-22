@@ -61,7 +61,8 @@
     "angular": "1.5.11",
     "angular-sanitize": "1.5.11",
     "moment": "2.14.2",
-    "font-awesome": "4.7.0"
+    "font-awesome": "4.7.0",
+    "jquery": "2.1.4"
   },
   "overrides": {
     "angular": {
