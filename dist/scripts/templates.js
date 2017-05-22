@@ -11606,7 +11606,7 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "No builds.\n" +
     "</div>\n" +
     "<div ng-repeat=\"build in overviewBuilds.recentBuildsByBuildConfig[buildConfig.metadata.name] track by (build | uid)\" class=\"mar-bottom-sm animate-repeat\">\n" +
-    "<span ng-if=\"overviewBuilds.showLogs(build)\" class=\"small pull-right\">\n" +
+    "<span ng-if=\"overviewBuilds.showLogs(build)\" class=\"small pull-right view-full-log\">\n" +
     "<a ng-if=\"!!['New', 'Pending'].indexOf(build.status.phase) && (build | buildLogURL)\" ng-href=\"{{build | buildLogURL}}\">View Full Log</a>\n" +
     "</span>\n" +
     "<span ng-switch=\"build.status.phase\" class=\"hide-ng-leave\">\n" +

@@ -4836,9 +4836,9 @@ h2+.list-view-pf{margin-top:20px}
 .builds-label{margin-right:5px}
 .mini-donut-link{color:#252525}
 .mini-donut-link:active,.mini-donut-link:focus,.mini-donut-link:hover{color:#0088ce;text-decoration:none}
-.mini-log{background-color:#fafafa;border:1px solid #d1d1d1;color:#4d5258;font-family:Menlo,Monaco,Consolas,monospace;font-size:11px;margin-bottom:5px;margin-top:5px;padding:5px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.mini-log{background-color:#fafafa;border:1px solid #d1d1d1;color:#4d5258;font-family:Menlo,Monaco,Consolas,monospace;font-size:11px;margin-bottom:5px;margin-top:5px;padding:5px}
 .mini-log .mini-log-content{line-height:13px;min-height:91px}
-.mini-log .mini-log-content .mini-log-line{white-space:pre}
+.mini-log .mini-log-content .mini-log-line{overflow:hidden;text-overflow:ellipsis;white-space:nowrap;white-space:pre}
 .notification-icon-count{display:inline-block;margin:0 5px 0 0}
 .overview .empty-state{margin-top:20px}
 .overview .app-heading{display:flex;justify-content:space-between}
@@ -4945,6 +4945,7 @@ h2+.list-view-pf{margin-top:20px}
 .overview .view-by-options{align-items:baseline;display:flex}
 @media (max-width:767px){.overview .view-by-options{margin-top:10px}
 }
+.overview .view-full-log{position:relative;top:2px}
 @keyframes deploymentSlideDown{0%{transform:translateY(-220px)}
 100%{transform:translateX(0)}
 }
