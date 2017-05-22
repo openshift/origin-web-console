@@ -8,7 +8,7 @@ angular.module('openshiftConsole')
         podTemplate: '=',
         pods: '='
       },
-      templateUrl: 'views/overview/_image-names.html',
+      templateUrl: 'views/_image-names.html',
       link: function($scope) {
         var imageSHA = $filter('imageSHA');
         var updateImageDetails = function() {
