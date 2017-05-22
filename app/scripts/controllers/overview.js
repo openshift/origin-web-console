@@ -824,6 +824,8 @@ function OverviewController($scope,
       overview.monopods
     ];
     _.each(toUpdate, updateServicesForObjects);
+
+    updateRoutesByApp();
   };
 
   // Group routes by the services they route to (either as a primary service or
@@ -1181,9 +1183,9 @@ function OverviewController($scope,
       deploymentsByUID = deploymentData.by('metadata.uid');
       overview.deployments = _.sortBy(deploymentsByUID, 'metadata.name');
       groupReplicaSets();
-      updateServicesForObjects(overview.deploymentsByUID);
+      updateServicesForObjects(overview.deployments);
       updateServicesForObjects(overview.vanillaReplicaSets);
-      updateLabelSuggestions(overview.deploymentsByUID);
+      updateLabelSuggestions(overview.deployments);
       updateFilter();
       Logger.log("deployments (subscribe)", overview.deploymentsByUID);
     }));
