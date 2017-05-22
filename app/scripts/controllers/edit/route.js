@@ -17,9 +17,9 @@ angular.module('openshiftConsole')
                        AuthorizationService,
                        DataService,
                        Navigate,
+                       NotificationsService,
                        ProjectsService,
                        RoutesService) {
-    $scope.alerts = {};
     $scope.renderOptions = {
       hideFilterWidget: true
     };
@@ -165,21 +165,18 @@ angular.module('openshiftConsole')
             var updated = updateRouteFields();
             DataService.update('routes', $scope.routeName, updated, context)
               .then(function() { // Success
-                AlertMessageService.addAlert({
-                  name: $scope.routeName,
-                  data: {
+                NotificationsService.addNotification({
                     type: "success",
                     message: "Route " + $scope.routeName + " was successfully updated."
-                  }
                 });
                 $location.path($scope.routeURL);
               }, function(response) { // Failure
                 $scope.disableInputs = false;
-                $scope.alerts['update-route'] = {
+                NotificationsService.addNotification({
                   type: "error",
                   message: "An error occurred updating route " + $scope.routeName + ".",
                   details: $filter('getErrorDetails')(response)
-                };
+                });
               });
           }
         };
