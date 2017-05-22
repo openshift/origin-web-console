@@ -1523,31 +1523,7 @@ label:"Uncategorized",
 description:""
 } ]
 } ],
-SAAS_OFFERINGS:[ {
-id:1,
-title:"Microservices Application",
-icon:"fa fa-cubes",
-url:"https://www.redhat.com/en/technologies/virtualization",
-description:"Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt."
-}, {
-id:2,
-title:"Mobile Application",
-icon:"fa fa-mobile",
-url:"https://www.redhat.com/en/technologies/mobile",
-description:"Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt."
-}, {
-id:3,
-title:"Integration Application",
-icon:"fa fa-plug",
-url:"https://www.redhat.com/en/technologies/cloud-computing",
-description:"Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt."
-}, {
-id:4,
-title:"Business Process Application",
-icon:"fa fa-cubes",
-url:"https://www.redhat.com/en/technologies/management",
-description:"Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt."
-} ]
+SAAS_OFFERINGS:[]
 }), angular.module("openshiftConsole", [ "ngAnimate", "ngCookies", "ngResource", "ngRoute", "ngSanitize", "kubernetesUI", "registryUI.images", "ui.bootstrap", "patternfly.charts", "patternfly.navigation", "patternfly.sort", "openshiftConsoleTemplates", "ui.ace", "extension-registry", "as.sortable", "ui.select", "angular-inview", "angularMoment", "ab-base64", "openshiftCommonServices", "openshiftCommonUI", "webCatalog" ]).config([ "$routeProvider", function(a) {
 var b, c = {
 templateUrl:"views/projects.html",
