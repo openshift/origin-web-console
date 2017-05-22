@@ -59,8 +59,6 @@ module.exports = function(config) {
       "bower_components/sifter/sifter.js",
       "bower_components/microplugin/src/microplugin.js",
       "bower_components/selectize/dist/js/selectize.js",
-      "bower_components/messenger/build/js/messenger.js",
-      "bower_components/messenger/build/js/messenger-theme-flat.js",
       "bower_components/kubernetes-label-selector/labelSelector.js",
       "bower_components/kubernetes-label-selector/labelFilter.js",
       "bower_components/term.js/src/term.js",

@@ -31,7 +31,6 @@
     "LabelSelector": false,
     "ResourceGroupVersion": false,
     "moment": false,
-    "Messenger" : false,
     "URI": false,
     "Clipboard": false,
     "$": false,
