@@ -11654,7 +11654,10 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "<a href=\"\" ng-click=\"row.startBuild(row.buildConfigs[0])\">Start Build</a>\n" +
     "</li>\n" +
     "<li ng-if=\"'deploymentconfigs/instantiate' | canI : 'create'\" role=\"menuitem\">\n" +
-    "<a href=\"\" ng-click=\"row.startDeployment()\">Deploy</a>\n" +
+    "<a href=\"\" ng-if=\"row.canDeploy()\" ng-click=\"row.startDeployment()\">Deploy</a>\n" +
+    "<a href=\"\" ng-if=\"!(row.canDeploy())\" class=\"disabled-link\" aria-disabled=\"true\">\n" +
+    "Deploy <span ng-if=\"row.isPaused()\">(Paused)</span>\n" +
+    "</a>\n" +
     "</li>\n" +
     "<li ng-if=\"'deploymentconfigs' | canI : 'update'\" role=\"menuitem\">\n" +
     "<a ng-href=\"{{row.apiObject | editResourceURL}}\">Edit</a>\n" +
@@ -12108,6 +12111,18 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "</span>\n" +
     "<span ng-if=\"notification.countByType.warning !== 1\">\n" +
     "Warnings\n" +
+    "</span>\n" +
+    "</span>\n" +
+    "</div>\n" +
+    "<div ng-if=\"notification.byType.info\" class=\"notification-icon-count animate-if\">\n" +
+    "<span dynamic-content=\"{{notification.byType.info}}\" data-toggle=\"tooltip\" data-trigger=\"hover\">\n" +
+    "<span class=\"pficon pficon-info\" aria-hidden=\"true\"></span>\n" +
+    "{{notification.countByType.info}}\n" +
+    "<span ng-if=\"notification.countByType.info === 1\">\n" +
+    "Message\n" +
+    "</span>\n" +
+    "<span ng-if=\"notification.countByType.info !== 1\">\n" +
+    "Messages\n" +
     "</span>\n" +
     "</span>\n" +
     "</div>"

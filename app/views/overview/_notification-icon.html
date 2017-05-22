@@ -32,3 +32,20 @@
     </span>
   </span>
 </div>
+<div ng-if="notification.byType.info" class="notification-icon-count animate-if">
+  <span
+    dynamic-content="{{notification.byType.info}}"
+    data-toggle="tooltip"
+    data-trigger="hover">
+    <span
+      class="pficon pficon-info"
+      aria-hidden="true"></span>
+    {{notification.countByType.info}}
+    <span ng-if="notification.countByType.info === 1">
+      Message
+    </span>
+    <span ng-if="notification.countByType.info !== 1">
+      Messages
+    </span>
+  </span>
+</div>
