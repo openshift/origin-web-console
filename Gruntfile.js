@@ -229,12 +229,6 @@ module.exports = function (grunt) {
           'bower_components/uri.js/src/URI.fragmentQuery.js',
           // bower registration error? we get 2x versions of uri.js/urijs
           'bower_components/urijs/',
-          'bower_components/messenger/build/css/messenger.css',
-          'bower_components/messenger/build/css/messenger-theme-future.css',
-          'bower_components/messenger/build/css/messenger-theme-block.css',
-          'bower_components/messenger/build/css/messenger-theme-air.css',
-          'bower_components/messenger/build/css/messenger-theme-ice.css',
-          'bower_components/messenger/build/js/messenger-theme-future.js',
           'bower_components/moment-timezone/builds/moment-timezone-with-data-2010-2020.js',
           'bower_components/fontawesome/css/font-awesome.css',
           'bower_components/bootstrap-datepicker/dist/css/bootstrap-datepicker.css',
