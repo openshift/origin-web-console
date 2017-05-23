@@ -10884,17 +10884,7 @@ $(c).focus();
 });
 }
 };
-} ]).directive("tileClick", function() {
-return {
-restrict:"AC",
-link:function(a, b) {
-$(b).click(function(a) {
-var c = $(a.target);
-c && c.closest("a", b).length || $("a.tile-target", b).trigger("click");
-});
-}
-};
-}).directive("clickToReveal", function() {
+} ]).directive("clickToReveal", function() {
 return {
 restrict:"A",
 transclude:!0,
