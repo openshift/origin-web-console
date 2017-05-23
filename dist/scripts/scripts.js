@@ -518,129 +518,97 @@ return b.weight / c * 100 + "%";
 };
 }
 
-function BindService(a, b, c) {
-var d, e, f, g, h, i = this, j = a("statusCondition"), k = function() {
+function BindService(a, b, c, d) {
+var e, f, g, h, i, j, k = this, l = b("statusCondition"), m = function() {
 var a, b;
-_.each(i.serviceInstances, function(c) {
-var d = "True" === _.get(j(c, "Ready"), "status");
+_.each(k.serviceInstances, function(c) {
+var d = "True" === _.get(l(c, "Ready"), "status");
 d && (!a || c.metadata.creationTimestamp > a.metadata.creationTimestamp) && (a = c), d || b && !(c.metadata.creationTimestamp > b.metadata.creationTimestamp) || (b = c);
-}), i.serviceToBind = _.get(a, "metadata.name") || _.get(b, "metadata.name");
-}, l = function() {
-if (i.serviceClasses && i.serviceInstances) {
-var a = _.toArray(i.serviceInstances);
+}), k.serviceToBind = _.get(a, "metadata.name") || _.get(b, "metadata.name");
+}, n = function() {
+if (k.serviceClasses && k.serviceInstances) {
+var a = _.toArray(k.serviceInstances);
 a.sort(function(a, b) {
-var c = _.get(i.serviceClasses, [ a.spec.serviceClassName, "osbMetadata", "displayName" ]) || a.spec.serviceClassName, d = _.get(i.serviceClasses, [ a.spec.serviceClassName, "osbMetadata", "displayName" ]) || b.spec.serviceClassName;
+var c = _.get(k.serviceClasses, [ a.spec.serviceClassName, "osbMetadata", "displayName" ]) || a.spec.serviceClassName, d = _.get(k.serviceClasses, [ a.spec.serviceClassName, "osbMetadata", "displayName" ]) || b.spec.serviceClassName;
 return c === d && (c = _.get(a, "metadata.name", ""), d = _.get(b, "metadata.name", "")), c.localeCompare(d);
-}), i.orderedServiceInstances = a;
+}), k.orderedServiceInstances = a;
 }
-}, m = function() {
-if (d && e && f && g && h) {
-var a = d.concat(e).concat(f).concat(g).concat(h);
-i.applications = _.sortByAll(a, [ "metadata.name", "kind" ]);
+}, o = function() {
+if (f && g && h && i && j) {
+var a = f.concat(g).concat(h).concat(i).concat(j);
+k.applications = _.sortByAll(a, [ "metadata.name", "kind" ]);
 }
+}, p = function() {
+k.nextTitle = "Bind", e = a.$watch("ctrl.selectionForm.$valid", function(a) {
+k.steps[0].valid = a;
+});
+}, q = function() {
+e && (e(), e = void 0), k.nextTitle = "Close", k.wizardComplete = !0, k.bindService();
 };
-i.$onInit = function() {
-i.steps = [], "Instance" === i.target.kind ? i.steps.push({
-id:"applications",
-label:"Applications",
-view:"views/directives/bind-service/select-application.html"
-}) :i.steps.push({
-id:"services",
-label:"Services",
-view:"views/directives/bind-service/select-service.html"
-}), i.steps.push({
+k.$onInit = function() {
+k.serviceSelection = {};
+var a = "Instance" === k.target.kind ? "applications" :"services", d = "Instance" === k.target.kind ? "Applications" :"Services";
+k.steps = [ {
+id:a,
+label:d,
+view:"views/directives/bind-service/bind-service-form.html",
+valid:!0,
+onShow:p
+}, {
 label:"Results",
 id:"results",
-view:"views/directives/bind-service/results.html"
-});
-var c = {
-namespace:_.get(i.target, "metadata.namespace")
+view:"views/directives/bind-service/results.html",
+valid:!0,
+onShow:q
+} ];
+var e = {
+namespace:_.get(k.target, "metadata.namespace")
 };
-b.list({
+c.list({
 group:"servicecatalog.k8s.io",
 resource:"serviceclasses"
 }, {}).then(function(a) {
-i.serviceClasses = a.by("metadata.name"), l();
-}), "Instance" === i.target.kind ? (i.shouldBindToApp = "true", i.serviceToBind = i.target.metadata.name, b.list("deploymentconfigs", c).then(function(a) {
-d = _.toArray(a.by("metadata.name")), m();
-}), b.list("replicationcontrollers", c).then(function(b) {
-f = _.reject(b.by("metadata.name"), a("hasDeploymentConfig")), m();
-}), b.list({
+k.serviceClasses = a.by("metadata.name"), "Instance" === k.target.kind && (k.serviceClass = k.serviceClasses[k.target.spec.serviceClassName], k.serviceClassName = k.target.spec.serviceClassName), n();
+}), "Instance" === k.target.kind ? (k.shouldBindToApp = "true", k.appToBind = null, k.serviceToBind = k.target.metadata.name, c.list("deploymentconfigs", e).then(function(a) {
+f = _.toArray(a.by("metadata.name")), o();
+}), c.list("replicationcontrollers", e).then(function(a) {
+h = _.reject(a.by("metadata.name"), b("hasDeploymentConfig")), o();
+}), c.list({
 group:"extensions",
 resource:"deployments"
-}, c).then(function(a) {
-e = _.toArray(a.by("metadata.name")), m();
-}), b.list({
+}, e).then(function(a) {
+g = _.toArray(a.by("metadata.name")), o();
+}), c.list({
 group:"extensions",
 resource:"replicasets"
-}, c).then(function(b) {
-g = _.reject(b.by("metadata.name"), a("hasDeployment")), m();
-}), b.list({
+}, e).then(function(a) {
+i = _.reject(a.by("metadata.name"), b("hasDeployment")), o();
+}), c.list({
 group:"apps",
 resource:"statefulsets"
-}, c).then(function(a) {
-h = _.toArray(a.by("metadata.name")), m();
-})) :b.list({
+}, e).then(function(a) {
+j = _.toArray(a.by("metadata.name")), o();
+})) :(c.list({
 group:"servicecatalog.k8s.io",
 resource:"instances"
-}, c).then(function(a) {
-i.serviceInstances = a.by("metadata.name"), i.serviceToBind || k(), l();
-}), i.gotoStep(i.steps[0]);
-};
-var n = a("humanizeKind");
-i.groupByKind = function(a) {
-return n(a.kind);
-};
-var o = function(a) {
-var b = _.find(i.steps, {
-id:a
-});
-i.gotoStep(b);
-};
-i.gotoStep = function(a) {
-_.each(i.steps, function(a) {
-a.selected = !1;
-}), i.currentStep && (i.currentStep.visited = !0), i.currentStep = a, i.currentStep.selected = !0;
-}, i.stepClick = function(a) {
-i.wizardComplete || a.visited && i.gotoStep(a);
-};
-var p = a("generateName"), q = function() {
-var a = i.serviceToBind, b = _.trunc(a, c.maxlength - 6);
-i.generatedSecretName = p(b + "-");
-var d = {
-kind:"Binding",
-apiVersion:"servicecatalog.k8s.io/v1alpha1",
-metadata:{
-generateName:a + "-"
-},
-spec:{
-instanceRef:{
-name:a
-},
-secretName:i.generatedSecretName
-}
-};
-return d;
-};
-i.bindService = function() {
-var a = "Instance" === i.target.kind ? i.target :i.serviceInstances[i.serviceToBind], c = {
+}, e).then(function(a) {
+k.serviceInstances = a.by("metadata.name"), k.serviceToBind || m(), n();
+}), k.appToBind = k.target);
+}, k.$onDestroy = function() {
+e && (e(), e = void 0);
+}, k.bindService = function() {
+var a = "Instance" === k.target.kind ? k.target :k.serviceInstances[k.serviceToBind], b = "Instance" !== k.target.kind ? k.target :k.appToBind, e = {
 namespace:_.get(a, "metadata.namespace")
 };
-b.create({
-group:"servicecatalog.k8s.io",
-resource:"bindings"
-}, null, q(), c).then(function(a) {
-i.binding = a, b.watchObject({
-group:"servicecatalog.k8s.io",
-resource:"bindings"
-}, _.get(i.binding, "metadata.name"), c, function(a) {
-i.binding = a;
-}), i.wizardComplete = !0, i.error = null, o("results");
-}, function(a) {
-i.error = a;
+d.bindService(e, _.get(a, "metadata.name"), _.get(b, "metadata.name")).then(function(a) {
+k.binding = a, k.error = null, c.watchObject(d.bindingResource, _.get(k.binding, "metadata.name"), e, function(a) {
+k.binding = a;
 });
-}, i.closeWizard = function() {
-_.isFunction(i.onClose) && i.onClose();
+}, function(a) {
+k.error = a;
+});
+}, k.closeWizard = function() {
+_.isFunction(k.onClose) && k.onClose();
 };
 }
 
@@ -1839,10 +1807,6 @@ screenSmMin:768,
 screenMdMin:992,
 screenLgMin:1200,
 screenXlgMin:1600
-}).constant("DNS1123_SUBDOMAIN_VALIDATION", {
-pattern:/^[a-z0-9]([-a-z0-9]*[a-z0-9])?(\.[a-z0-9]([-a-z0-9]*[a-z0-9])?)*$/,
-maxlength:253,
-description:"Name must consist of lower-case letters, numbers, periods, and hyphens. It must start and end with a letter or a number."
 }).constant("SOURCE_URL_PATTERN", /^[a-z][a-z0-9+.-@]*:(\/\/)?[0-9a-z_-]+/i).constant("RELATIVE_PATH_PATTERN", /^(?!\/)(?!\.\.(\/|$))(?!.*\/\.\.(\/|$)).*$/).constant("IS_IOS", /iPad|iPhone|iPod/.test(navigator.userAgent) && !window.MSStream).constant("IS_SAFARI", /Version\/[\d\.]+.*Safari/.test(navigator.userAgent)).constant("amTimeAgoConfig", {
 titleFormat:"LLL"
 }).config([ "kubernetesContainerSocketProvider", function(a) {
@@ -4723,40 +4687,50 @@ controller:!0
 });
 }
 };
-}), angular.module("openshiftConsole").controller("LandingPageController", [ "$scope", "$rootScope", "AuthService", "Catalog", "Constants", "Navigate", "NotificationsService", "RecentlyViewedServiceItems", "GuidedTourService", "$timeout", "$routeParams", "$location", function(a, b, c, d, e, f, g, h, i, j, k, l) {
-function m() {
-if (o) if (k.startTour) j(function() {
-l.replace(), l.search("startTour", null), a.startGuidedTour();
-}, 500); else if (_.get(n, "auto_launch")) {
+}), angular.module("openshiftConsole").controller("LandingPageController", [ "$scope", "$rootScope", "AuthService", "Catalog", "Constants", "Navigate", "AlertMessageService", "NotificationsService", "RecentlyViewedServiceItems", "GuidedTourService", "$timeout", "$routeParams", "$location", function(a, b, c, d, e, f, g, h, i, j, k, l, m) {
+function n() {
+if (p) if (l.startTour) k(function() {
+m.replace(), m.search("startTour", null), a.startGuidedTour();
+}, 500); else if (_.get(o, "auto_launch")) {
 var c = "openshift/viewedHomePage/" + b.user.metadata.name;
-"true" !== localStorage.getItem(c) && j(function() {
+"true" !== localStorage.getItem(c) && k(function() {
 localStorage.setItem(c, "true"), a.startGuidedTour();
 }, 500);
 }
 }
-var n = _.get(e, "GUIDED_TOURS.landing_page_tour"), o = n && n.enabled && n.steps;
+var o = _.get(e, "GUIDED_TOURS.landing_page_tour"), p = o && o.enabled && o.steps;
 a.saasOfferings = e.SAAS_OFFERINGS, a.viewMembership = function(a) {
 f.toProjectMembership(a.metadata.name);
-}, o && (a.startGuidedTour = function() {
-i.startTour(n.steps);
-}), g.clearNotifications();
-var p = function() {
+}, p && (a.startGuidedTour = function() {
+j.startTour(o.steps);
+}), h.clearNotifications();
+var q = function() {
 var b = _.get(a, "template.metadata.uid");
-b && h.addItem(b);
+b && i.addItem(b);
 };
 a.templateSelected = function(b) {
 a.template = b;
 }, a.templateDialogClosed = function() {
-p(), a.template = null;
+q(), a.template = null;
 }, c.withUser().then(function() {
 var b = !_.get(e, "ENABLE_TECH_PREVIEW_FEATURE.template_service_broker");
-d.getCatalogItems(b).then(function(b) {
-a.catalogItems = b, m();
-});
+d.getCatalogItems(b).then(_.spread(function(b, c) {
+if (c) {
+var d = {
+name:"error-loading-catalog-items",
+data:{
+type:"warning",
+message:c
+}
+};
+g.addAlert(d), h.addNotification(d.data);
+}
+a.catalogItems = b, n();
+}));
 }), a.$on("$destroy", function() {
-p();
-}), o && a.$on("$locationChangeStart", function(b) {
-l.search().startTour && (a.startGuidedTour(), b.preventDefault());
+q();
+}), p && a.$on("$locationChangeStart", function(b) {
+m.search().startTour && (a.startGuidedTour(), b.preventDefault());
 });
 } ]), angular.module("openshiftConsole").controller("ProjectsController", [ "$scope", "$filter", "$location", "$route", "$timeout", "AlertMessageService", "AuthService", "DataService", "KeywordService", "Logger", "ProjectsService", function(a, b, c, d, e, f, g, h, i, j, k) {
 var l, m, n = [], o = [];
@@ -12721,7 +12695,7 @@ highlightService:"<"
 },
 templateUrl:"views/directives/route-service-bar-chart.html"
 }), angular.module("openshiftConsole").component("bindService", {
-controller:[ "$filter", "DataService", "DNS1123_SUBDOMAIN_VALIDATION", BindService ],
+controller:[ "$scope", "$filter", "DataService", "BindingService", BindService ],
 controllerAs:"ctrl",
 bindings:{
 target:"<",
@@ -13784,13 +13758,7 @@ default:
 return a;
 }
 };
-}).filter("humanizeKind", [ "startCaseFilter", function(a) {
-return function(a, b) {
-if (!a) return a;
-var c = _.startCase(a);
-return b ? c :c.toLowerCase();
-};
-} ]).filter("kindToResource", [ "APIService", function(a) {
+}).filter("kindToResource", [ "APIService", function(a) {
 return a.kindToResource;
 } ]).filter("abbreviateResource", [ "APIService", function(a) {
 var b = {
@@ -13886,19 +13854,7 @@ var c = _.get(a, "state.terminated");
 c && (b && !moment(c.finishedAt).isAfter(b) || (b = c.finishedAt));
 }), b;
 };
-}).filter("statusCondition", function() {
-return function(a, b) {
-return a ? _.find(_.get(a, "status.conditions"), {
-type:b
-}) :null;
-};
-}).filter("isServiceInstanceReady", [ "statusConditionFilter", function(a) {
-return function(b) {
-return "True" === _.get(a(b, "Ready"), "status");
-};
-} ]).filter("isBindingReady", [ "isServiceInstanceReadyFilter", function(a) {
-return a;
-} ]).filter("routeIngressCondition", function() {
+}).filter("routeIngressCondition", function() {
 return function(a, b) {
 return a ? _.find(a.conditions, {
 type:b
@@ -14017,7 +13973,17 @@ return function(a) {
 var b = _.get(a, "spec.alternateBackends", []);
 return !_.isEmpty(b);
 };
-}), angular.module("openshiftConsole").filter("canIDoAny", [ "canIFilter", function(a) {
+}).filter("applicationHasDeployment", [ "$filter", function(a) {
+var b = a("annotation");
+return function(a) {
+return b(a, "deployment.kubernetes.io/revision");
+};
+} ]).filter("applicationHasDeploymentConfig", [ "$filter", function(a) {
+var b = a("annotation");
+return function(a) {
+return b(a, "deploymentConfig");
+};
+} ]), angular.module("openshiftConsole").filter("canIDoAny", [ "canIFilter", function(a) {
 var b = {
 buildConfigs:[ {
 group:"",
