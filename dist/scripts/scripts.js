@@ -7937,7 +7937,9 @@ title:d.routeName,
 link:d.routeURL
 }, {
 title:"Edit"
-} ], j.get(c.project).then(_.spread(function(e, j) {
+} ], d.hideErrorNotifications = function() {
+i.hideNotification("edit-route-error");
+}, j.get(c.project).then(_.spread(function(e, j) {
 if (d.project = e, d.breadcrumbs[0].title = a("displayName")(e), !f.canI("routes", "update", c.project)) return void h.toErrorPage("You do not have authority to update route " + c.routeName + ".", "access_denied");
 var l, m = a("orderByDisplayName"), n = function() {
 h.toErrorPage('Editing routes with non-service targets is unsupported. You can edit the route with the "Edit YAML" action instead.');
@@ -7980,7 +7982,7 @@ weight:a.weight
 };
 d.updateRoute = function() {
 if (d.form.$valid) {
-d.disableInputs = !0;
+d.hideErrorNotifications(), d.disableInputs = !0;
 var c = o();
 g.update("routes", d.routeName, c, j).then(function() {
 i.addNotification({
@@ -7990,6 +7992,7 @@ message:"Route " + d.routeName + " was successfully updated."
 }, function(b) {
 d.disableInputs = !1, i.addNotification({
 type:"error",
+id:"edit-route-error",
 message:"An error occurred updating route " + d.routeName + ".",
 details:a("getErrorDetails")(b)
 });
@@ -8756,15 +8759,21 @@ title:"Routes",
 link:"project/" + c.projectName + "/browse/routes"
 }, {
 title:"Create Route"
-} ], j.get(b.project).then(_.spread(function(j, l) {
+} ];
+var l = function() {
+i.hideNotification("create-route-error");
+};
+c.cancel = function() {
+l(), d.history.back();
+}, j.get(b.project).then(_.spread(function(j, m) {
 if (c.project = j, c.breadcrumbs[0].title = a("displayName")(j), !f.canI("routes", "create", b.project)) return void h.toErrorPage("You do not have authority to create routes in project " + b.project + ".", "access_denied");
-var m = a("orderByDisplayName");
+var n = a("orderByDisplayName");
 c.routing.to = {
 kind:"Service",
 name:c.serviceName,
 weight:1
-}, g.list("services", l).then(function(a) {
-c.services = m(a.by("metadata.name"));
+}, g.list("services", m).then(function(a) {
+c.services = n(a.by("metadata.name"));
 }), c.copyServiceLabels = function() {
 var a = _.get(c, "routing.to.service.metadata.labels", {}), b = k.mapEntries(k.compactEntries(c.labels)), d = _.assign(b, a);
 c.labels = _.map(d, function(a, b) {
@@ -8775,7 +8784,7 @@ value:a
 });
 }, c.createRoute = function() {
 if (c.createRouteForm.$valid) {
-c.disableInputs = !0;
+l(), c.disableInputs = !0;
 var b = c.routing.to.name, f = k.mapEntries(k.compactEntries(c.labels)), h = e.createRoute(c.routing, b, f), j = _.get(c, "routing.alternateServices", []);
 _.isEmpty(j) || (h.spec.to.weight = _.get(c, "routing.to.weight"), h.spec.alternateBackends = _.map(j, function(a) {
 return {
@@ -8783,7 +8792,7 @@ kind:"Service",
 name:a.name,
 weight:a.weight
 };
-})), g.create("routes", null, h, l).then(function() {
+})), g.create("routes", null, h, m).then(function() {
 i.addNotification({
 type:"success",
 message:"Route " + h.metadata.name + " was successfully created."
@@ -8791,6 +8800,7 @@ message:"Route " + h.metadata.name + " was successfully created."
 }, function(b) {
 c.disableInputs = !1, i.addNotification({
 type:"error",
+id:"create-route-error",
 message:"An error occurred creating the route.",
 details:a("getErrorDetails")(b)
 });

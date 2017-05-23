@@ -46,6 +46,15 @@ angular.module('openshiftConsole')
       }
     ];
 
+    var hideErrorNotifications = function() {
+      NotificationsService.hideNotification("create-route-error");
+    };
+
+    $scope.cancel = function() {
+      hideErrorNotifications();
+      $window.history.back();
+    };
+
     ProjectsService
       .get($routeParams.project)
       .then(_.spread(function(project, context) {
@@ -83,6 +92,7 @@ angular.module('openshiftConsole')
 
         $scope.createRoute = function() {
           if ($scope.createRouteForm.$valid) {
+            hideErrorNotifications();
             $scope.disableInputs = true;
             var serviceName = $scope.routing.to.name;
             var labels = keyValueEditorUtils.mapEntries(keyValueEditorUtils.compactEntries($scope.labels));
@@ -112,6 +122,7 @@ angular.module('openshiftConsole')
                 $scope.disableInputs = false;
                 NotificationsService.addNotification({
                   type: "error",
+                  id: "create-route-error",
                   message: "An error occurred creating the route.",
                   details: $filter('getErrorDetails')(result)
                 });
