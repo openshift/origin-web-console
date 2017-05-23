@@ -4589,7 +4589,7 @@ var d = {};
 return _.get(b, "spec.paused") && (d[b.metadata.uid + "-paused"] = {
 type:"info",
 message:b.metadata.name + " is paused.",
-detail:"This will stop any new rollouts or triggers from running until resumed.",
+details:"This will stop any new rollouts or triggers from running until resumed.",
 links:[ {
 href:"",
 label:"Resume Rollouts",
