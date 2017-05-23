@@ -57,8 +57,6 @@ angular.module('openshiftConsole')
         systemLabels: "=",
         expand: "=?",
         canToggle: "=?",
-        // Delete policy for osc-key-values (default: "added")
-        deletePolicy: "@?",
         // Optional help text to show with the label controls
         helpText: "@?"
       },

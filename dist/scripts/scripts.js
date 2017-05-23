@@ -10004,118 +10004,6 @@ tag:"="
 },
 templateUrl:"views/directives/osc-image-summary.html"
 };
-}), angular.module("openshiftConsole").controller("KeyValuesEntryController", [ "$scope", function(a) {
-a.editing = !1, a.edit = function() {
-a.originalValue = a.value, a.editing = !0;
-}, a.cancel = function() {
-a.value = a.originalValue, a.editing = !1;
-}, a.update = function(b, c, d) {
-c && (d[b] = c, a.editing = !1);
-};
-} ]).directive("oscInputValidator", function() {
-var a = {
-always:function(a, b) {
-return !0;
-},
-env:function(a, b) {
-var c = /^[A-Za-z_][A-Za-z0-9_]*$/i;
-return void 0 === a || null === a || 0 === a.trim().length || c.test(b);
-},
-label:function(a, b) {
-function c(a) {
-return !(a.length > h) && g.test(a);
-}
-function d(a) {
-return !(a.length > f) && e.test(a);
-}
-var e = /^(([A-Za-z0-9][-A-Za-z0-9_.]*)?[A-Za-z0-9])?$/, f = 63, g = /^[a-z0-9]([-a-z0-9]*[a-z0-9])?(\.[a-z0-9]([-a-z0-9]*[a-z0-9])?)*$/, h = 253;
-if (void 0 === a || null === a || 0 === a.trim().length) return !0;
-var i = b.split("/");
-switch (i.length) {
-case 1:
-return d(i[0]);
-
-case 2:
-return c(i[0]) && d(i[1]);
-}
-return !1;
-},
-path:function(a, b) {
-var c = /^\//;
-return void 0 === a || null === a || 0 === a.trim().length || c.test(b);
-}
-};
-return {
-require:[ "ngModel", "^oscKeyValues" ],
-restrict:"A",
-link:function(b, c, d, e) {
-var f = e[0], g = e[1];
-"key" === d.oscInputValidator ? f.$validators.oscKeyValid = a[g.scope.keyValidator] :"value" === d.oscInputValidator && (f.$validators.oscValueValid = a[g.scope.valueValidator]);
-}
-};
-}).directive("oscKeyValues", function() {
-return {
-restrict:"E",
-scope:{
-keyTitle:"@",
-valueTitle:"@",
-entries:"=",
-delimiter:"@",
-editable:"@",
-keyValidator:"@",
-valueValidator:"@",
-deletePolicy:"@",
-readonlyKeys:"@",
-keyValidationTooltip:"@",
-valueValidationTooltip:"@",
-preventEmpty:"=?"
-},
-controller:[ "$scope", function(a) {
-var b, c = {}, d = function() {
-return !!a.key || !!a.value;
-}, e = function() {
-d() ? a.showCommmitWarning = !0 :a.showCommmitWarning = !1;
-}, f = _.debounce(function() {
-a.$applyAsync(function() {
-a.key ? a.clean.isClean.$setValidity("isClean", !1) :a.value ? a.clean.isClean.$setValidity("isClean", !1) :a.clean.isClean.$setValidity("isClean", !0);
-});
-}, 200), g = function(b) {
-return function(c) {
-a.$applyAsync(function() {
-_.includes(b, document.activeElement) || (e(), f());
-});
-};
-};
-a.isClean = f, a.clear = function() {
-a.key = "", a.value = "", e(), f();
-}, a.allowDelete = function(b) {
-return (!a.preventEmpty || 1 !== Object.keys(a.entries).length) && ("never" !== a.deletePolicy && ("added" !== a.deletePolicy || void 0 !== c[b]));
-}, a.addEntry = function() {
-if (a.key && a.value) {
-var d = a.readonlyKeys.split(",");
-if (d.indexOf(a.key) !== -1) return;
-c[a.key] = "", a.entries[a.key] = a.value, a.key = null, a.value = null, a.form.$setPristine(), a.form.$setUntouched(), e(), f(), b.focus();
-}
-}, a.deleteEntry = function(b) {
-a.entries[b] && (delete a.entries[b], delete c[b], a.form.$setDirty());
-}, a.setErrorText = function(a) {
-return "path" === a ? "absolute path" :"label" === a ? "label" :"key";
-}, this.scope = a, this.init = function(c, d, e) {
-var f = [ c[0], d[0], e[0] ], h = g(f);
-b = c, c.on("blur", h), d.on("blur", h), e.on("blur", h), a.$on("$destroy", function() {
-c.off("blur", h), d.off("blur", h), e.off("blur", h);
-});
-};
-} ],
-templateUrl:"views/directives/osc-key-values.html",
-compile:function(a, b) {
-return b.delimiter || (b.delimiter = ":"), b.keyTitle || (b.keyTitle = "Name"), b.valueTitle || (b.valueTitle = "Value"), b.editable && "true" !== b.editable ? b.editable = !1 :b.editable = !0, b.keyValidator || (b.keyValidator = "always"), b.valueValidator || (b.valueValidator = "always"), [ "always", "added", "none" ].indexOf(b.deletePolicy) === -1 && (b.deletePolicy = "always"), b.readonlyKeys || (b.readonlyKeys = ""), {
-post:function(a, b, c, d) {
-d.init(b.find('input[name="key"]'), b.find('input[name="value"]'), b.find("a.add-key-value"));
-}
-};
-}
-};
 }), angular.module("openshiftConsole").directive("oscRouting", [ "Constants", "DNS1123_SUBDOMAIN_VALIDATION", function(a, b) {
 return {
 require:"^form",
@@ -11034,7 +10922,6 @@ labels:"=",
 systemLabels:"=",
 expand:"=?",
 canToggle:"=?",
-deletePolicy:"@?",
 helpText:"@?"
 },
 templateUrl:"views/directives/label-editor.html",
