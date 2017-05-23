@@ -4212,14 +4212,16 @@ copy-to-clipboard .input-group.limit-width{max-width:300px}
 .row-cards-pf-flex .card-pf-footer .btn{margin-bottom:10px}
 .row-cards-pf-flex .card-pf-title{line-height:1.3;margin:0;overflow:hidden;text-overflow:ellipsis}
 .bind-service-config{padding:0 20px;width:100%}
-@media (min-width:768px){.wizard-pf-main.bind-service-wizard-step{height:350px;max-height:calc(100vh - 300px);min-height:200px;overflow-y:auto}
-.bind-service-config{margin-bottom:-20px;margin-top:-20px;overflow-y:auto;padding-right:0;background-attachment:scroll;background-image:radial-gradient(ellipse at top,rgba(0,0,0,.25) 0%,rgba(0,0,0,0) 65%),radial-gradient(ellipse at bottom,rgba(0,0,0,.25) 0%,rgba(0,0,0,0) 65%);background-position:0 0,0 100%;background-repeat:no-repeat;background-size:100% 6px}
+@media (min-width:768px){.bind-service-config{margin-bottom:-20px;margin-top:-20px;overflow-y:auto;padding-right:0;background-attachment:scroll;background-image:radial-gradient(ellipse at top,rgba(0,0,0,.25) 0%,rgba(0,0,0,0) 65%),radial-gradient(ellipse at bottom,rgba(0,0,0,.25) 0%,rgba(0,0,0,0) 65%);background-position:0 0,0 100%;background-repeat:no-repeat;background-size:100% 6px}
 .bind-service-config _::-webkit-full-page-media,.bind-service-config _:future,:root .bind-service-config{background-attachment:local,local,scroll,scroll;background-image:linear-gradient(#fff 30%,rgba(255,255,255,0)),linear-gradient(rgba(255,255,255,0),#fff 70%),radial-gradient(ellipse at top,rgba(0,0,0,.25) 0%,rgba(0,0,0,0) 65%),radial-gradient(ellipse at bottom,rgba(0,0,0,.25) 0%,rgba(0,0,0,0) 65%);background-position:0 0,0 100%;background-repeat:no-repeat;background-size:100% 12px,100% 12px,100% 6px,100% 6px}
 .bind-service-config .form-horizontal .control-label{padding-right:0}
 .landing{top:52px}
-.catalog-search,.landing-side-bar{top:61px}
+.wizard-pf-main.bind-service-wizard-step{height:350px;max-height:calc(100vh - 300px);min-height:200px;overflow-y:auto}
 }
 .landing .nav-tabs,.landing h1{margin-bottom:0!important;margin-top:0!important}
+.pf-wizard-no-back .wizard-pf-footer .btn-cancel{margin-right:0}
+@media (min-width:768px){.catalog-search,.landing-side-bar{top:61px}
+}
 .collapse{display:none}
 .collapse.in{display:block}
 .collapsing{height:0;overflow:hidden;-webkit-transition:height 150ms ease;-o-transition:height 150ms ease;transition:height 150ms ease}

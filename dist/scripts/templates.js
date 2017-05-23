@@ -5782,7 +5782,7 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
 
   $templateCache.put('views/directives/bind-service.html',
     "<div class=\"bind-service-wizard\">\n" +
-    "<div pf-wizard hide-header=\"true\" hide-sidebar=\"true\" hide-back-button=\"true\" step-class=\"bind-service-wizard-step\" wizard-ready=\"ctrl.wizardReady\" next-title=\"ctrl.nextTitle\" on-finish=\"ctrl.closeWizard()\" on-cancel=\"ctrl.closeWizard()\" wizard-done=\"ctrl.wizardComplete\">\n" +
+    "<div pf-wizard hide-header=\"true\" hide-sidebar=\"true\" hide-back-button=\"true\" step-class=\"bind-service-wizard-step\" wizard-ready=\"ctrl.wizardReady\" next-title=\"ctrl.nextTitle\" on-finish=\"ctrl.closeWizard()\" on-cancel=\"ctrl.closeWizard()\" wizard-done=\"ctrl.wizardComplete\" class=\"pf-wizard-no-back\">\n" +
     "<div pf-wizard-step ng-repeat=\"step in ctrl.steps track by $index\" step-title=\"{{step.label}}\" next-enabled=\"step.valid\" on-show=\"step.onShow\" step-id=\"{{step.id}}\" step-priority=\"{{$index}}\">\n" +
     "<div class=\"wizard-pf-main-inner-shadow-covers\">\n" +
     "<div class=\"bind-service-config\">\n" +
@@ -8491,19 +8491,9 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
 
 
   $templateCache.put('views/directives/process-template-dialog.html',
-    "<overlay-panel show-panel=\"$ctrl.template\" handle-close=\"$ctrl.close\" show-close=\"true\">\n" +
-    "<div class=\"wizard-pf-steps\">\n" +
-    "<ul class=\"wizard-pf-steps-indicator\">\n" +
-    "<li class=\"wizard-pf-step\" ng-class=\"{\n" +
-    "        active: step.selected,\n" +
-    "        visited: step.visited && !step.selected\n" +
-    "      }\" ng-repeat=\"step in $ctrl.steps\" data-tabgroup=\"{{$index}}\">\n" +
-    "\n" +
-    "<a href=\"\"><span class=\"wizard-pf-step-number\">{{$index + 1}}</span><span class=\"wizard-pf-step-title\">{{step.label}}</span></a>\n" +
-    "</li>\n" +
-    "</ul>\n" +
-    "</div>\n" +
-    "<div ng-if=\"$ctrl.template\" class=\"container-fluid wizard-pf-main\">\n" +
+    "<div class=\"order-service\">\n" +
+    "<div pf-wizard hide-header=\"true\" hide-sidebar=\"true\" hide-back-button=\"true\" step-class=\"order-service-wizard-step\" wizard-ready=\"$ctrl.wizardReady\" next-title=\"$ctrl.nextTitle\" on-finish=\"$ctrl.close()\" on-cancel=\"$ctrl.close()\" wizard-done=\"$ctrl.wizardDone\" class=\"pf-wizard-no-back\">\n" +
+    "<div pf-wizard-step ng-repeat=\"step in $ctrl.steps track by step.id\" step-title=\"{{step.label}}\" wz-disabled=\"{{step.hidden}}\" allow-click-nav=\"step.allowed\" next-enabled=\"step.valid\" prev-enabled=\"step.prevEnabled\" on-show=\"step.onShow\" step-id=\"{{step.id}}\" step-priority=\"{{$index}}\">\n" +
     "<div class=\"wizard-pf-main-inner-shadow-covers\">\n" +
     "<div class=\"order-service-details\">\n" +
     "<div class=\"order-service-details-top\">\n" +
@@ -8525,30 +8515,29 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "<p ng-bind-html=\"$ctrl.template | description | linky : '_blank'\" class=\"description\"></p>\n" +
     "</div>\n" +
     "</div>\n" +
-    "<div ng-if=\"$ctrl.currentStep.id === 'configuration'\" class=\"order-service-config osc-form\">\n" +
+    "<div class=\"order-service-config\">\n" +
+    "<div ng-include=\"step.view\" class=\"wizard-pf-main-form-contents\"></div>\n" +
+    "</div>\n" +
+    "</div>\n" +
+    "</div>\n" +
+    "</div>\n" +
+    "</div>"
+  );
+
+
+  $templateCache.put('views/directives/process-template-dialog/process-template-config.html',
+    "<div class=\"osc-form\">\n" +
     "<alerts alerts=\"$ctrl.alerts\"></alerts>\n" +
     "<form name=\"$ctrl.form\">\n" +
     "<process-template template=\"$ctrl.template\" alerts=\"$ctrl.alerts\" is-dialog=\"true\"></process-template>\n" +
     "</form>\n" +
-    "</div>\n" +
-    "<div ng-if=\"$ctrl.currentStep.id === 'results'\" class=\"order-service-config\">\n" +
+    "</div>"
+  );
+
+
+  $templateCache.put('views/directives/process-template-dialog/process-template-results.html',
     "<next-steps project=\"$ctrl.selectedProject\" project-name=\"$ctrl.selectedProject.metadata.name\" login-base-url=\"$ctrl.loginBaseUrl\">\n" +
-    "</next-steps>\n" +
-    "</div>\n" +
-    "</div>\n" +
-    "<div class=\"config-bottom modal-footer wizard-pf-footer\">\n" +
-    "<button type=\"button\" ng-disabled=\"$ctrl.currentStep.id === 'results'\" class=\"btn btn-default wizard-pf-dismiss\" ng-click=\"$ctrl.close()\">\n" +
-    "Cancel\n" +
-    "</button>\n" +
-    "<button type=\"button\" ng-disabled=\"$ctrl.form.$invalid\" ng-if=\"$ctrl.currentStep.id === 'configuration'\" class=\"btn btn-primary wizard-pf-next\" ng-click=\"$ctrl.instantiateTemplate()\">\n" +
-    "Create\n" +
-    "</button>\n" +
-    "<button type=\"button\" ng-if=\"$ctrl.currentStep.id === 'results'\" class=\"btn btn-primary wizard-pf-next\" ng-click=\"$ctrl.close()\">\n" +
-    "Close\n" +
-    "</button>\n" +
-    "</div>\n" +
-    "</div>\n" +
-    "</overlay-panel>"
+    "</next-steps>"
   );
 
 
@@ -8559,7 +8548,7 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "<select-project ng-if=\"!$ctrl.project\" selected-project=\"$ctrl.selectedProject\" name-taken=\"$ctrl.projectNameTaken\"></select-project>\n" +
     "</template-options>\n" +
     "\n" +
-    "<div ng-if=\"$ctrl.isDialog && $ctrl.selectedProject.metadata.uid\" class=\"row\">\n" +
+    "<div ng-if=\"$ctrl.isDialog && $ctrl.selectedProject.metadata.uid && $ctrl.template\" class=\"row\">\n" +
     "<div class=\"col-sm-8 col-sm-offset-4\">\n" +
     "\n" +
     "To set optional parameters or labels, view\n" +
@@ -9980,7 +9969,9 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "<div class=\"middle-section\">\n" +
     "<div class=\"middle-container\">\n" +
     "<div class=\"middle-content\">\n" +
+    "<overlay-panel show-panel=\"template\" show-close=\"true\" handle-close=\"templateDialogClosed\">\n" +
     "<process-template-dialog template=\"template\" on-dialog-closed=\"templateDialogClosed\"></process-template-dialog>\n" +
+    "</overlay-panel>\n" +
     "<landing-page base-project-url=\"project\" on-template-selected=\"templateSelected\">\n" +
     "<landingsearch>\n" +
     "<catalog-search catalog-items=\"catalogItems\" base-project-url=\"project\"></catalog-search>\n" +

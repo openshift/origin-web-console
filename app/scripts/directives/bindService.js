@@ -22,6 +22,7 @@ function BindService($scope,
                      BindingService) {
   var ctrl = this;
   var validityWatcher;
+  var bindingWatch;
   var statusCondition = $filter('statusCondition');
 
   var preselectService = function(){
@@ -94,12 +95,11 @@ function BindService($scope,
 
   ctrl.$onInit = function() {
     ctrl.serviceSelection = {};
-    var formStepId = (ctrl.target.kind === 'Instance') ? 'applications' : 'services';
     var formStepLabel = (ctrl.target.kind === 'Instance') ? 'Applications' : 'Services';
 
     ctrl.steps = [
       {
-        id: formStepId,
+        id: 'bindForm',
         label: formStepLabel,
         view: 'views/directives/bind-service/bind-service-form.html',
         valid: true,
@@ -187,6 +187,9 @@ function BindService($scope,
       validityWatcher();
       validityWatcher = undefined;
     }
+    if (bindingWatch) {
+      DataService.unwatch(bindingWatch);
+    }
   };
 
   ctrl.bindService = function() {
@@ -201,7 +204,7 @@ function BindService($scope,
       ctrl.binding = binding;
       ctrl.error = null;
 
-      DataService.watchObject(BindingService.bindingResource, _.get(ctrl.binding, 'metadata.name'), context, function(binding) {
+      bindingWatch = DataService.watchObject(BindingService.bindingResource, _.get(ctrl.binding, 'metadata.name'), context, function(binding) {
         ctrl.binding = binding;
       });
     }, function(e) {

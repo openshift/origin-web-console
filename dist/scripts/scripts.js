@@ -519,96 +519,96 @@ return b.weight / c * 100 + "%";
 }
 
 function BindService(a, b, c, d) {
-var e, f, g, h, i, j, k = this, l = b("statusCondition"), m = function() {
+var e, f, g, h, i, j, k, l = this, m = b("statusCondition"), n = function() {
 var a, b;
-_.each(k.serviceInstances, function(c) {
-var d = "True" === _.get(l(c, "Ready"), "status");
+_.each(l.serviceInstances, function(c) {
+var d = "True" === _.get(m(c, "Ready"), "status");
 d && (!a || c.metadata.creationTimestamp > a.metadata.creationTimestamp) && (a = c), d || b && !(c.metadata.creationTimestamp > b.metadata.creationTimestamp) || (b = c);
-}), k.serviceToBind = _.get(a, "metadata.name") || _.get(b, "metadata.name");
-}, n = function() {
-if (k.serviceClasses && k.serviceInstances) {
-var a = _.toArray(k.serviceInstances);
-a.sort(function(a, b) {
-var c = _.get(k.serviceClasses, [ a.spec.serviceClassName, "osbMetadata", "displayName" ]) || a.spec.serviceClassName, d = _.get(k.serviceClasses, [ a.spec.serviceClassName, "osbMetadata", "displayName" ]) || b.spec.serviceClassName;
-return c === d && (c = _.get(a, "metadata.name", ""), d = _.get(b, "metadata.name", "")), c.localeCompare(d);
-}), k.orderedServiceInstances = a;
-}
+}), l.serviceToBind = _.get(a, "metadata.name") || _.get(b, "metadata.name");
 }, o = function() {
-if (f && g && h && i && j) {
-var a = f.concat(g).concat(h).concat(i).concat(j);
-k.applications = _.sortByAll(a, [ "metadata.name", "kind" ]);
+if (l.serviceClasses && l.serviceInstances) {
+var a = _.toArray(l.serviceInstances);
+a.sort(function(a, b) {
+var c = _.get(l.serviceClasses, [ a.spec.serviceClassName, "osbMetadata", "displayName" ]) || a.spec.serviceClassName, d = _.get(l.serviceClasses, [ a.spec.serviceClassName, "osbMetadata", "displayName" ]) || b.spec.serviceClassName;
+return c === d && (c = _.get(a, "metadata.name", ""), d = _.get(b, "metadata.name", "")), c.localeCompare(d);
+}), l.orderedServiceInstances = a;
 }
 }, p = function() {
-k.nextTitle = "Bind", e = a.$watch("ctrl.selectionForm.$valid", function(a) {
-k.steps[0].valid = a;
-});
+if (g && h && i && j && k) {
+var a = g.concat(h).concat(i).concat(j).concat(k);
+l.applications = _.sortByAll(a, [ "metadata.name", "kind" ]);
+}
 }, q = function() {
-e && (e(), e = void 0), k.nextTitle = "Close", k.wizardComplete = !0, k.bindService();
+l.nextTitle = "Bind", e = a.$watch("ctrl.selectionForm.$valid", function(a) {
+l.steps[0].valid = a;
+});
+}, r = function() {
+e && (e(), e = void 0), l.nextTitle = "Close", l.wizardComplete = !0, l.bindService();
 };
-k.$onInit = function() {
-k.serviceSelection = {};
-var a = "Instance" === k.target.kind ? "applications" :"services", d = "Instance" === k.target.kind ? "Applications" :"Services";
-k.steps = [ {
-id:a,
-label:d,
+l.$onInit = function() {
+l.serviceSelection = {};
+var a = "Instance" === l.target.kind ? "Applications" :"Services";
+l.steps = [ {
+id:"bindForm",
+label:a,
 view:"views/directives/bind-service/bind-service-form.html",
 valid:!0,
-onShow:p
+onShow:q
 }, {
 label:"Results",
 id:"results",
 view:"views/directives/bind-service/results.html",
 valid:!0,
-onShow:q
+onShow:r
 } ];
-var e = {
-namespace:_.get(k.target, "metadata.namespace")
+var d = {
+namespace:_.get(l.target, "metadata.namespace")
 };
 c.list({
 group:"servicecatalog.k8s.io",
 resource:"serviceclasses"
 }, {}).then(function(a) {
-k.serviceClasses = a.by("metadata.name"), "Instance" === k.target.kind && (k.serviceClass = k.serviceClasses[k.target.spec.serviceClassName], k.serviceClassName = k.target.spec.serviceClassName), n();
-}), "Instance" === k.target.kind ? (k.shouldBindToApp = "true", k.appToBind = null, k.serviceToBind = k.target.metadata.name, c.list("deploymentconfigs", e).then(function(a) {
-f = _.toArray(a.by("metadata.name")), o();
-}), c.list("replicationcontrollers", e).then(function(a) {
-h = _.reject(a.by("metadata.name"), b("hasDeploymentConfig")), o();
+l.serviceClasses = a.by("metadata.name"), "Instance" === l.target.kind && (l.serviceClass = l.serviceClasses[l.target.spec.serviceClassName], l.serviceClassName = l.target.spec.serviceClassName), o();
+}), "Instance" === l.target.kind ? (l.shouldBindToApp = "true", l.appToBind = null, l.serviceToBind = l.target.metadata.name, c.list("deploymentconfigs", d).then(function(a) {
+g = _.toArray(a.by("metadata.name")), p();
+}), c.list("replicationcontrollers", d).then(function(a) {
+i = _.reject(a.by("metadata.name"), b("hasDeploymentConfig")), p();
 }), c.list({
 group:"extensions",
 resource:"deployments"
-}, e).then(function(a) {
-g = _.toArray(a.by("metadata.name")), o();
+}, d).then(function(a) {
+h = _.toArray(a.by("metadata.name")), p();
 }), c.list({
 group:"extensions",
 resource:"replicasets"
-}, e).then(function(a) {
-i = _.reject(a.by("metadata.name"), b("hasDeployment")), o();
+}, d).then(function(a) {
+j = _.reject(a.by("metadata.name"), b("hasDeployment")), p();
 }), c.list({
 group:"apps",
 resource:"statefulsets"
-}, e).then(function(a) {
-j = _.toArray(a.by("metadata.name")), o();
+}, d).then(function(a) {
+k = _.toArray(a.by("metadata.name")), p();
 })) :(c.list({
 group:"servicecatalog.k8s.io",
 resource:"instances"
-}, e).then(function(a) {
-k.serviceInstances = a.by("metadata.name"), k.serviceToBind || m(), n();
-}), k.appToBind = k.target);
-}, k.$onDestroy = function() {
-e && (e(), e = void 0);
-}, k.bindService = function() {
-var a = "Instance" === k.target.kind ? k.target :k.serviceInstances[k.serviceToBind], b = "Instance" !== k.target.kind ? k.target :k.appToBind, e = {
+}, d).then(function(a) {
+l.serviceInstances = a.by("metadata.name"), l.serviceToBind || n(), o();
+}), l.appToBind = l.target);
+}, l.$onDestroy = function() {
+e && (e(), e = void 0), f && c.unwatch(f);
+}, l.bindService = function() {
+var a = "Instance" === l.target.kind ? l.target :l.serviceInstances[l.serviceToBind], b = "Instance" !== l.target.kind ? l.target :l.appToBind, e = {
 namespace:_.get(a, "metadata.namespace")
 };
 d.bindService(e, _.get(a, "metadata.name"), _.get(b, "metadata.name")).then(function(a) {
-k.binding = a, k.error = null, c.watchObject(d.bindingResource, _.get(k.binding, "metadata.name"), e, function(a) {
-k.binding = a;
+l.binding = a, l.error = null, f = c.watchObject(d.bindingResource, _.get(l.binding, "metadata.name"), e, function(a) {
+l.binding = a;
 });
 }, function(a) {
-k.error = a;
+l.error = a;
 });
-}, k.closeWizard = function() {
-_.isFunction(k.onClose) && k.onClose();
+}, l.closeWizard = function() {
+_.isFunction(l.onClose) && l.onClose();
 };
 }
 
@@ -742,36 +742,53 @@ return !_.get(o.template, "labels.app") && !_.some(o.template.objects, "metadata
 }
 
 function ProcessTemplateDialog(a, b) {
-var c = this, d = function() {
-c.steps = [ {
+function c() {
+var a = _.get(j, "template.metadata.annotations.iconClass", "fa fa-cubes");
+return a.indexOf("icon-") !== -1 ? "font-icon " + a :a;
+}
+function d() {
+j.steps = [ j.configStep, j.resultsStep ];
+}
+function e() {
+i && (i(), i = void 0);
+}
+function f() {
+j.configStep.selected = !0, j.resultsStep.selected = !1, j.nextTitle = "Create", j.resultsStep.allowed = j.configStep.valid, i = a.$watch("$ctrl.form.$valid", function(a) {
+j.configStep.valid = a, j.resultsStep.allowed = a;
+});
+}
+function g() {
+j.configStep.selected = !1, j.resultsStep.selected = !0, j.nextTitle = "Close", e(), h(), j.wizardDone = !0;
+}
+function h() {
+a.$broadcast("instantiateTemplate");
+}
+var i, j = this;
+j.configStep = {
 id:"configuration",
 label:"Configuration",
-selected:!0,
-visited:!0
-}, {
+view:"views/directives/process-template-dialog/process-template-config.html",
+valid:!0,
+allowed:!0,
+onShow:f
+}, j.resultsStep = {
 id:"results",
-label:"Results"
-} ], c.currentStep = c.steps[0];
-};
-c.$onInit = function() {
-c.alerts = {}, c.loginBaseUrl = b.openshiftAPIBaseUrl();
-};
-var e = function() {
-var a = _.get(c, "template.metadata.annotations.iconClass", "fa fa-cubes");
-return a.indexOf("icon-") !== -1 ? "font-icon " + a :a;
-};
-c.$onChanges = function(a) {
-a.template && (d(), c.iconClass = e());
-};
-var f = function() {
-c.steps[0].selected = !1, c.currentStep = c.steps[1], c.currentStep.selected = !0, c.currentStep.visited = !0;
-};
-c.instantiateTemplate = function() {
-a.$broadcast("instantiateTemplate");
+label:"Results",
+view:"views/directives/process-template-dialog/process-template-results.html",
+valid:!0,
+allowed:!1,
+prevEnabled:!1,
+onShow:g
+}, j.$onInit = function() {
+j.alerts = {}, j.loginBaseUrl = b.openshiftAPIBaseUrl();
+}, j.$onChanges = function(a) {
+a.template && j.template && (d(), j.iconClass = c());
+}, j.$onDestroy = function() {
+e();
 }, a.$on("templateInstantiated", function(a, b) {
-c.selectedProject = b.project, f();
-}), c.close = function() {
-var a = c.onDialogClosed();
+j.selectedProject = b.project;
+}), j.close = function() {
+var a = j.onDialogClosed();
 _.isFunction(a) && a();
 };
 }
@@ -4687,50 +4704,47 @@ controller:!0
 });
 }
 };
-}), angular.module("openshiftConsole").controller("LandingPageController", [ "$scope", "$rootScope", "AuthService", "Catalog", "Constants", "Navigate", "AlertMessageService", "NotificationsService", "RecentlyViewedServiceItems", "GuidedTourService", "$timeout", "$routeParams", "$location", function(a, b, c, d, e, f, g, h, i, j, k, l, m) {
-function n() {
-if (p) if (l.startTour) k(function() {
-m.replace(), m.search("startTour", null), a.startGuidedTour();
-}, 500); else if (_.get(o, "auto_launch")) {
+}), angular.module("openshiftConsole").controller("LandingPageController", [ "$scope", "$rootScope", "AuthService", "Catalog", "Constants", "Navigate", "NotificationsService", "RecentlyViewedServiceItems", "GuidedTourService", "$timeout", "$routeParams", "$location", function(a, b, c, d, e, f, g, h, i, j, k, l) {
+function m() {
+if (o) if (k.startTour) j(function() {
+l.replace(), l.search("startTour", null), a.startGuidedTour();
+}, 500); else if (_.get(n, "auto_launch")) {
 var c = "openshift/viewedHomePage/" + b.user.metadata.name;
-"true" !== localStorage.getItem(c) && k(function() {
+"true" !== localStorage.getItem(c) && j(function() {
 localStorage.setItem(c, "true"), a.startGuidedTour();
 }, 500);
 }
 }
-var o = _.get(e, "GUIDED_TOURS.landing_page_tour"), p = o && o.enabled && o.steps;
+var n = _.get(e, "GUIDED_TOURS.landing_page_tour"), o = n && n.enabled && n.steps;
 a.saasOfferings = e.SAAS_OFFERINGS, a.viewMembership = function(a) {
 f.toProjectMembership(a.metadata.name);
-}, p && (a.startGuidedTour = function() {
-j.startTour(o.steps);
-}), h.clearNotifications();
-var q = function() {
+}, o && (a.startGuidedTour = function() {
+i.startTour(n.steps);
+}), g.clearNotifications();
+var p = function() {
 var b = _.get(a, "template.metadata.uid");
-b && i.addItem(b);
+b && h.addItem(b);
 };
 a.templateSelected = function(b) {
 a.template = b;
 }, a.templateDialogClosed = function() {
-q(), a.template = null;
+p(), a.template = null;
 }, c.withUser().then(function() {
 var b = !_.get(e, "ENABLE_TECH_PREVIEW_FEATURE.template_service_broker");
 d.getCatalogItems(b).then(_.spread(function(b, c) {
 if (c) {
 var d = {
-name:"error-loading-catalog-items",
-data:{
-type:"warning",
+type:"error",
 message:c
-}
 };
-g.addAlert(d), h.addNotification(d.data);
+g.addNotification(d);
 }
-a.catalogItems = b, n();
+a.catalogItems = b, m();
 }));
 }), a.$on("$destroy", function() {
-q();
-}), p && a.$on("$locationChangeStart", function(b) {
-m.search().startTour && (a.startGuidedTour(), b.preventDefault());
+p();
+}), o && a.$on("$locationChangeStart", function(b) {
+l.search().startTour && (a.startGuidedTour(), b.preventDefault());
 });
 } ]), angular.module("openshiftConsole").controller("ProjectsController", [ "$scope", "$filter", "$location", "$route", "$timeout", "AlertMessageService", "AuthService", "DataService", "KeywordService", "Logger", "ProjectsService", function(a, b, c, d, e, f, g, h, i, j, k) {
 var l, m, n = [], o = [];
