@@ -105,7 +105,9 @@ angular.module("openshiftConsole")
       'limits.cpu': "resources.limits.cpu",
       'memory': "resources.requests.memory",
       'requests.memory': "resources.requests.memory",
-      'limits.memory': "resources.limits.memory"
+      'limits.memory': "resources.limits.memory",
+      'persistentvolumeclaims':"resources.limits.persistentvolumeclaims",
+      'requests.storage':"resources.request.storage"
     };
 
     var getRequestedResourceQuotaAlert = function(quota, resource, podTemplate, type) {
@@ -255,7 +257,7 @@ angular.module("openshiftConsole")
     // Warn if you are at quota or over any quota for any resource. Do *not*
     // warn about quota for 'resourcequotas' or resources whose hard limit is
     // 0, however.
-    var isAnyQuotaExceeded = function(quotas, clusterQuotas) {
+    var isAnyQuotaExceeded = function(quotas, clusterQuotas, typesToCheck) {
         var isExceeded = function(quota) {
           var q = quota.status.total || quota.status;
           return _.some(q.hard, function(hard, quotaKey) {
@@ -264,21 +266,51 @@ angular.module("openshiftConsole")
             if (quotaKey === 'resourcequotas') {
               return false;
             }
+            if (!typesToCheck || _.includes(typesToCheck, quotaKey)) {
+              hard = usageValue(hard);
+              if (!hard) {
+                return false;
+              }
 
-            hard = usageValue(hard);
-            if (!hard) {
-              return false;
+              var used = usageValue(_.get(q, ['used', quotaKey]));
+              if (!used) {
+                return false;
+              }
+
+              return hard <= used;
             }
-
-            var used = usageValue(_.get(q, ['used', quotaKey]));
-            if (!used) {
-              return false;
-            }
-
-            return hard <= used;
           });
         };
         return _.some(quotas, isExceeded) || _.some(clusterQuotas, isExceeded);
+    };
+
+    // Same as above but only looking at storage items: requests.storage, persistentvolumeclaims
+    //   Warn if you are at quota or over any storage quota for any resource.
+    var isAnyStorageQuotaExceeded = function(quotas, clusterQuotas) {
+      return isAnyQuotaExceeded(quotas, clusterQuotas, ['requests.storage', 'persistentvolumeclaims']);
+    };
+
+   // Check if requested quota will exceed any quotas if attempted
+    var willRequestExceedQuota = function(quotas, clusterQuotas, requestedQuotaKey, request) {
+      var isExceeded = function(quota) {
+        var q = quota.status.total || quota.status;
+        var value = usageValue(request);
+        if (!requestedQuotaKey) {
+          return false;
+        }
+        var hard = _.get(q.hard, requestedQuotaKey);
+        hard = usageValue(hard);
+        if (!hard) {
+          return false;
+        }
+        var used = usageValue(_.get(q, ['used', requestedQuotaKey]));
+        if (!used) {
+          return hard < value;
+        }
+
+        return hard < (used + value);
+      };
+      return _.some(quotas, isExceeded) || _.some(clusterQuotas, isExceeded);
     };
 
     return {
@@ -290,6 +322,8 @@ angular.module("openshiftConsole")
       // Returns: Array of alerts
       getQuotaAlerts: getQuotaAlerts,
       getLatestQuotaAlerts: getLatestQuotaAlerts,
-      isAnyQuotaExceeded: isAnyQuotaExceeded
+      isAnyQuotaExceeded: isAnyQuotaExceeded,
+      isAnyStorageQuotaExceeded: isAnyStorageQuotaExceeded,
+      willRequestExceedQuota: willRequestExceedQuota
     };
   });

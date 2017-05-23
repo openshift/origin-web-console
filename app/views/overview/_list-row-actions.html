@@ -15,7 +15,10 @@
               <a href="" ng-click="row.startBuild(row.buildConfigs[0])">Start Build</a>
             </li>
             <li ng-if="'deploymentconfigs/instantiate' | canI : 'create'" role="menuitem">
-              <a href="" ng-click="row.startDeployment()">Deploy</a>
+              <a href="" ng-if="row.canDeploy()" ng-click="row.startDeployment()">Deploy</a>
+              <a href="" ng-if="!(row.canDeploy())" class="disabled-link" aria-disabled="true">
+                Deploy <span ng-if="row.isPaused()">(Paused)</span>
+              </a>
             </li>
             <li ng-if="'deploymentconfigs' | canI : 'update'" role="menuitem">
               <a ng-href="{{row.apiObject | editResourceURL}}">Edit</a>

@@ -114,25 +114,8 @@
   }
 }
 
-
 .hide-tabs .nav-tabs {
   display: none;
-}
-
-.empty-project {
-  margin: 10px auto;
-  max-width: 500px;
-  padding: 30px;
-
-  // Make sure icons are the same size so text aligns.
-  .fa {
-    width: 16px;
-    text-align: center;
-  }
-  dd {
-    margin-left: 20px;
-    margin-bottom: 10px;
-  }
 }
 
 .empty-state-message {
@@ -348,66 +331,6 @@ mark {
 @media (max-width: 950px) {
   .monitoring-page.sidebar-open .metrics-sparkline .c3-axis-x .tick {
     display: none;
-  }
-}
-
-.overview .metrics-compact {
-  margin-bottom: 10px;
-  white-space : nowrap;
-  @media (min-width: @screen-lg-min) {
-    margin-bottom: 5px;
-  }
-  .metrics-sparkline {
-    display: none;
-    height: 27px;
-    border-bottom: 1px solid #ededed;
-    @media (min-width: @screen-lg-min) {
-      display: inline-block;
-      width: 150px;
-      vertical-align: -6px;
-    }
-    @media (min-width: 1400px) {
-      width: 230px;
-    }
-  }
-  .metrics-usage {
-    display: block;
-    margin-left: 10px;
-    @media (min-width: @screen-lg-min) {
-      display: inline-block;
-    }
-  }
-  .usage-value {
-    font-size: 22px;
-    font-weight: 300;
-    line-height: 1;
-    margin: 3px 0;
-    .fa {
-      .text-muted();
-      font-size: 10px;
-      vertical-align: 2px;
-    }
-  }
-  .usage-label {
-    .small();
-    .text-muted();
-    // Make sure the labels align with the bottom of the chart.
-    line-height: 1;
-    margin-bottom: -1px;
-  }
-  .c3-line {
-    stroke-width: 1px;
-  }
-
-  @media (max-width: @screen-sm-max) {
-    .text-center();
-    display: inline-block;
-    margin: 10px;
-    .metrics-usage {
-      .usage-value {
-        font-size: 22px;
-      }
-    }
   }
 }
 

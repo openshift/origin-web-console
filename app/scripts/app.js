@@ -16,11 +16,11 @@ angular
     'ngResource',
     'ngRoute',
     'ngSanitize',
-    'openshiftUI',
     'kubernetesUI',
     'registryUI.images',
     'ui.bootstrap',
     'patternfly.charts',
+    'patternfly.navigation',
     'patternfly.sort',
     'openshiftConsoleTemplates',
     'ui.ace',
@@ -35,23 +35,6 @@ angular
     'webCatalog'
   ])
   .config(function ($routeProvider) {
-    var overviewRoute;
-    if (window.OPENSHIFT_CONSTANTS.HIDE_NEW_OVERVIEW ||
-        localStorage.getItem('hide-new-overview') === 'true') {
-      overviewRoute = {
-        templateUrl: 'views/overview.html',
-        controller: 'OverviewController'
-      };
-    } else {
-      // TODO Rename new overview controller / view when the old is removed
-      overviewRoute = {
-        templateUrl: 'views/new-overview.html',
-        controller: 'NewOverviewController',
-        controllerAs: 'overview',
-        reloadOnSearch: false
-      };
-    }
-
     var landingPageRoute;
     var projectsPageRoute = {
       templateUrl: 'views/projects.html',
@@ -82,7 +65,12 @@ angular
           return '/project/' + encodeURIComponent(params.project) + "/overview";
         }
       })
-      .when('/project/:project/overview', overviewRoute)
+      .when('/project/:project/overview', {
+        templateUrl: 'views/overview.html',
+        controller: 'OverviewController',
+        controllerAs: 'overview',
+        reloadOnSearch: false
+      })
       .when('/project/:project/quota', {
         templateUrl: 'views/quota.html',
         controller: 'QuotaController'

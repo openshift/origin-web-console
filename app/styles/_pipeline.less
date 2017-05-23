@@ -122,9 +122,6 @@
   .flex-wrap(@wrap: wrap);
   height: 100%;
   padding: 0 (@pipeline-padding / 2);
-  .overview & {
-    background-color: #fff;
-  }
   .pipeline-stage {
     // need to use flex-basis: auto and width because of IE11 bug
     .flex(@columns: 0 0 auto);
@@ -190,9 +187,6 @@
   &.IN_PROGRESS {
     color: @gray;
   }
-  .overview & {
-    background-color: #fff;
-  }
 }
 
 [class^="build-pipeline"] {
@@ -241,9 +235,6 @@
   .justify-content(@justify: space-around);
   padding: 5px;
   position: relative;
-  .overview & {
-    background-color: #fff;
-  }
 }
 
 .build-timestamp {
@@ -507,13 +498,8 @@
 // Collapsed stages on completion
 // ------------------------------
 
-.build-pipeline-collapsed, .triggers .build {
+.build-pipeline-collapsed {
   border: 1px solid @overview-border-gray;
-  .overview & {
-    background-color: #fff;
-    border-left: 0;
-    border-top: 0;
-  }
   .build-links, .build-timestamp {
     padding-top: 2px;
   }

@@ -1,7 +1,7 @@
 'use strict';
 
 angular.module("openshiftConsole")
-  .factory("PodsService", function() {
+  .factory("PodsService", function(OwnerReferencesService) {
     return {
       getImageIDs: function(pods, containerName) {
         // Use a map so we only ever add the same SHA once.
@@ -56,6 +56,14 @@ angular.module("openshiftConsole")
         debugPod.spec.containers = [container];
 
         return debugPod;
+      },
+
+      groupByOwnerUID: function(pods) {
+        return OwnerReferencesService.groupByControllerUID(pods);
+      },
+
+      filterForOwner: function(pods, owner) {
+        return OwnerReferencesService.filterForController(pods, owner);
       }
     };
   });

@@ -225,6 +225,30 @@ function OverviewListRow($filter,
       });
   };
 
+  row.canDeploy = function() {
+    if (!row.apiObject) {
+      return false;
+    }
+
+    if (row.apiObject.metadata.deletionTimestamp) {
+      return false;
+    }
+
+    if (row.deploymentInProgress) {
+      return false;
+    }
+
+    if (row.apiObject.spec.paused) {
+      return false;
+    }
+
+    return true;
+  };
+
+  row.isPaused = function() {
+    return row.apiObject.spec.paused;
+  };
+
   row.startDeployment = function() {
     DeploymentsService.startLatestDeployment(row.apiObject, {
       namespace: row.apiObject.metadata.namespace
@@ -290,6 +314,14 @@ function OverviewListRow($filter,
     var deploymentConfigNamespace = _.get(row, 'apiObject.metadata.namespace');
     var imageStreamNamespace = _.get(imageChangeTrigger, 'imageChangeParams.from.namespace', deploymentConfigNamespace);
     return Navigate.resourceURL(imageStreamName, 'ImageStream', imageStreamNamespace);
+  };
+
+  row.navigateToPods = function() {
+    var pods = row.getPods(row.current);
+    if (_.isEmpty(pods)) {
+      return;
+    }
+    Navigate.toPodsForDeployment(row.current, pods);
   };
 
   row.closeOverlayPanel = function() {

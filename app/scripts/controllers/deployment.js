@@ -19,6 +19,7 @@ angular.module('openshiftConsole')
                         ImageStreamResolver,
                         ModalsService,
                         Navigate,
+                        OwnerReferencesService,
                         Logger,
                         ProjectsService,
                         StorageService) {
@@ -187,16 +188,12 @@ angular.module('openshiftConsole')
             }));
 
             // Watch replica sets for this deployment
-            // TODO: Use controller ref
             watches.push(DataService.watch({
               group: 'extensions',
               resource: 'replicasets'
             }, context, function(replicaSetData) {
               var replicaSets = replicaSetData.by('metadata.name');
-              var deploymentSelector = new LabelSelector(deployment.spec.selector);
-              replicaSets = _.filter(replicaSets, function(replicaSet) {
-                return deploymentSelector.covers(new LabelSelector(replicaSet.spec.selector));
-              });
+              replicaSets = OwnerReferencesService.filterForController(replicaSets, deployment);
               $scope.inProgressDeployment = _.chain(replicaSets).filter('status.replicas').size() > 1;
               $scope.replicaSetsForDeployment = DeploymentsService.sortByRevision(replicaSets);
             }));
@@ -207,7 +204,7 @@ angular.module('openshiftConsole')
             $scope.alerts["load"] = {
               type: "error",
               message: e.status === 404 ? "This deployment can not be found, it may have been deleted." : "The deployment details could not be loaded.",
-              details: e.status === 404 ? "Any remaining deployment history for this deployment will be shown." : "Reason: " + $filter('getErrorDetails')(e)
+              details: $filter('getErrorDetails')(e)
             };
           }
         );

@@ -17,7 +17,9 @@
 }
 
 .list-pf-content {
-  flex-grow: 1;
+  // Make block element to override bug introduced in PF v3.23.1 where list-pf-content was changed to display: flex
+  // TODO: remove if reverted in PF
+  display: block;
   .alert:first-child {
     margin-top: 0;
   }

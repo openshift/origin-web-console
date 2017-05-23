@@ -17,6 +17,7 @@ angular.module('openshiftConsole')
                        AuthorizationService,
                        BreadcrumbsService,
                        DataService,
+                       QuotaService,
                        Navigate,
                        ProjectsService,
                        StorageService,
@@ -52,6 +53,7 @@ angular.module('openshiftConsole')
     $scope.kind = $routeParams.kind;
     $scope.name = $routeParams.name;
     $scope.RELATIVE_PATH_PATTERN = RELATIVE_PATH_PATTERN;
+    $scope.outOfClaims = false;
 
     $scope.attach = {
       persistentVolumeClaim: null,
@@ -133,6 +135,16 @@ angular.module('openshiftConsole')
               $scope.attach.persistentVolumeClaim = _.head($scope.pvcs);
             }
           });
+
+          DataService.list('resourcequotas', { namespace: $scope.projectName }, function(quotaData) {
+            $scope.quotas = quotaData.by('metadata.name');
+            $scope.outOfClaims = QuotaService.isAnyStorageQuotaExceeded($scope.quotas, $scope.clusterQuotas);
+          });
+          DataService.list('appliedclusterresourcequotas', { namespace: $scope.projectName }, function(quotaData) {
+            $scope.clusterQuotas = quotaData.by('metadata.name');
+            $scope.outOfClaims = QuotaService.isAnyStorageQuotaExceeded($scope.quotas, $scope.clusterQuotas);
+          });
+
         };
 
         load();

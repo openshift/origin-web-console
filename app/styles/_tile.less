@@ -4,39 +4,24 @@
 
 .tile {
   background: @console-panel-color;
-  .panel_default_boxshadow();
   padding: 20px;
+  .panel_default_boxshadow();
   margin-bottom: 20px;
   word-wrap: break-word;
-  .box-sizing(border-box);
   // Prevent long, unbroken words from extending outside the tile.
   overflow-x: hidden;
   h1, h2, h3 {
     margin: (@line-height-computed / 2) 0px;
   }
-  &:hover {
-    // give primary tile link hover state
-    a.tile-target {
-      color: @link-hover-color;
-    }
-  }
 }
 
 .tile-click {
-  cursor: pointer;
-  position: relative;
   &:hover {
-    .image-icon, .template-icon {
+    .image-icon {
       opacity: .75;
     }
-    .tile-target {
-      color: @link-hover-color;
-      &:hover {
-        text-decoration: none;
-      }
-    }
   }
-  .image-icon, .template-icon {
+  .image-icon {
     font-size: 48px;
     line-height: 1;
     margin-bottom: 15px;

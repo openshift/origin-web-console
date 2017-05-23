@@ -103,14 +103,11 @@ angular.module('openshiftConsole')
         var debouncedScale = _.debounce(scale, 650);
 
         $scope.viewPodsForDeployment = function(deployment) {
-          if (hashSizeFilter($scope.pods) === 0) {
+          if (_.isEmpty($scope.pods)) {
             return;
-          } else if (hashSizeFilter($scope.pods) === 1) {
-            // there should only be 1 pod, so navigate to it
-            Navigate.toResourceURL(_.sample($scope.pods));
-          } else {
-            Navigate.toPodsForDeployment(deployment);
           }
+
+          Navigate.toPodsForDeployment(deployment, $scope.pods);
         };
 
         $scope.scaleUp = function() {

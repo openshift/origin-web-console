@@ -4,9 +4,11 @@ angular.module("openshiftConsole")
   .factory("ResourceAlertsService",
            function($filter,
                     AlertMessageService,
+                    DeploymentsService,
                     Navigate,
                     QuotaService) {
     var annotation = $filter('annotation');
+    var humanizeKind = $filter('humanizeKind');
     var deploymentStatus = $filter('deploymentStatus');
     var getGroupedPodWarnings = $filter('groupedPodWarnings');
 
@@ -100,6 +102,34 @@ angular.module("openshiftConsole")
       }
     };
 
+    // deploymentConfig, k8s deployment
+    var getPausedDeploymentAlerts = function(deployment) {
+      var alerts = {};
+      if(_.get(deployment, 'spec.paused')) {
+        alerts[deployment.metadata.uid + '-paused'] = {
+          type: 'info',
+          message: deployment.metadata.name + ' is paused.',
+          detail: 'This will stop any new rollouts or triggers from running until resumed.',
+          links: [{
+            href: "",
+            label: 'Resume Rollouts',
+            onClick: function() {
+              DeploymentsService.setPaused(deployment, false, {namespace: deployment.metadata.namespace}).then(
+                _.noop,
+                function(e) {
+                  alerts[deployment.metadata.uid + '-pause-error'] = {
+                    type: "error",
+                    message: "An error occurred resuming the " + humanizeKind(deployment.kind) + ".",
+                    details: $filter('getErrorDetails')(e)
+                  };
+                });
+            }
+          }]
+        };
+      }
+      return alerts;
+    };
+
     var getDeploymentStatusAlerts = function(deploymentConfig, mostRecentRC) {
       if (!deploymentConfig || !mostRecentRC) {
         return {};
@@ -143,7 +173,6 @@ angular.module("openshiftConsole")
         };
         break;
       }
-
       return alerts;
     };
 
@@ -180,6 +209,7 @@ angular.module("openshiftConsole")
       getPodAlerts: getPodAlerts,
       setGenericQuotaWarning: setGenericQuotaWarning,
       getDeploymentStatusAlerts: getDeploymentStatusAlerts,
+      getPausedDeploymentAlerts: getPausedDeploymentAlerts,
       getServiceInstanceAlerts: getServiceInstanceAlerts
     };
   });

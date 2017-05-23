@@ -10,30 +10,6 @@
   transition: .3s cubic-bezier(.25,.8,.25,1);
 }
 
-
-.osc-object-highlight() {
-  @media (min-width: @screen-sm-min) {
-    &.osc-object {
-      &.osc-object-hover {
-        cursor: pointer;
-        border-color: @osc-object-hover-color;
-      }
-      &.osc-object-active {
-        border-color: @osc-object-active-color;
-      }
-    }
-  }
-}
-
-.pod-multiple-box-shadow(@color) {
-  box-shadow:
-    1px 1px 0 rgba(0, 0, 0, 0.2),
-    3px 3px 0 @color,
-    4px 4px 0 rgba(0, 0, 0, 0.2),
-    6px 6px 0 @color,
-    7px 7px 0 rgba(0, 0, 0, 0.2);
-}
-
 .font-family-monospace() {
   font-family: Menlo, Monaco, "Liberation Mono", Consolas, monospace;
 }

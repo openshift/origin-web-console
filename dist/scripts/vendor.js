@@ -8062,7 +8062,7 @@ delete c[b.id], delete d[a];
 http:80,
 https:443,
 ftp:21
-}, sf = b("$location"), tf = /^\s*[\\/]{2,}/, uf = {
+}, sf = b("$location"), tf = /^\s*[\\\/]{2,}/, uf = {
 $$absUrl:"",
 $$html5:!1,
 $$replace:!1,
@@ -37064,7 +37064,7 @@ var f = a.data(this, e);
 }(jQuery, window, document), function(a) {
 "use strict";
 var b = {
-version:"3.21.0"
+version:"3.24.0"
 };
 b.pfPaletteColors = {
 black:"#030303",
@@ -37935,10 +37935,11 @@ getChartCallback:"="
 template:'<div id=""></div>',
 replace:!0,
 link:function(b, c, d) {
+var e = void 0;
 b.$watch("config", function() {
 a(function() {
-var a, c = b.config;
-c && (c.bindto = "#" + d.id, a = c3.generate(c), b.getChartCallback && b.getChartCallback(a));
+var a = b.config;
+a && (a.bindto = "#" + d.id, e ? e.load(b.config.data) :e = c3.generate(a), b.getChartCallback && b.getChartCallback(e));
 });
 }, !0);
 }
@@ -38432,7 +38433,7 @@ a.currentField = b, a.config.currentValue = null;
 }, a.selectValue = function(b) {
 a.addFilterFn(a.currentField, b), a.config.currentValue = null;
 }, a.onValueKeyPress = function(b) {
-13 === b.which && (a.addFilterFn(a.currentField, a.config.currentValue), a.config.currentValue = void 0);
+13 === b.which && (b.preventDefault(), a.addFilterFn(a.currentField, a.config.currentValue), a.config.currentValue = void 0);
 };
 }
 };
@@ -38627,7 +38628,20 @@ b === !0 && a.openModal();
 a.$on("$destroy", d);
 }
 };
-}), angular.module("patternfly.navigation").directive("pfVerticalNavigation", [ "$location", "$rootScope", "$window", "$document", "$timeout", "$injector", function(a, b, c, d, e, f) {
+}), angular.module("patternfly.navigation").directive("pfApplicationLauncher", [ function() {
+"use strict";
+return {
+restrict:"A",
+scope:{
+items:"&",
+label:"@?",
+isDisabled:"&?",
+isList:"&?",
+hiddenIcons:"&?"
+},
+templateUrl:"navigation/application-launcher.html"
+};
+} ]), angular.module("patternfly.navigation").directive("pfVerticalNavigation", [ "$location", "$rootScope", "$window", "$document", "$timeout", "$injector", function(a, b, c, d, e, f) {
 "use strict";
 var g;
 return f.has("$state") && (g = f.get("$state")), {
@@ -39238,7 +39252,7 @@ return b.config.checkDisabled && b.config.checkDisabled(a);
 };
 }
 };
-} ]), angular.module("patternfly.views").directive("pfListView", [ "$timeout", "$window", "pfUtils", function(a, b, c) {
+} ]), angular.module("patternfly.views").directive("pfListView", [ "$window", "pfUtils", function(a, b) {
 "use strict";
 return {
 restrict:"A",
@@ -39259,12 +39273,12 @@ transclude:{
 expandedContent:"?listExpandedContent"
 },
 templateUrl:"views/listview/list-view.html",
-controller:[ "$scope", "$element", function(b, d) {
+controller:[ "$scope", "$element", function(c, d) {
 var e = function(a) {
-var c = a.querySelector(".dropdown-toggle"), e = a.querySelector(".dropdown-menu"), f = d[0].getBoundingClientRect(), g = c.getBoundingClientRect(), h = e.getBoundingClientRect(), i = g.top - h.height, j = g.top + g.height + h.height;
-j <= f.top + f.height || i < f.top ? b.dropdownClass = "dropdown" :b.dropdownClass = "dropup";
+var b = a.querySelector(".dropdown-toggle"), e = a.querySelector(".dropdown-menu"), f = d[0].getBoundingClientRect(), g = b.getBoundingClientRect(), h = e.getBoundingClientRect(), i = g.top - h.height, j = g.top + g.height + h.height;
+j <= f.top + f.height || i < f.top ? c.dropdownClass = "dropdown" :c.dropdownClass = "dropup";
 };
-if (b.defaultConfig = {
+if (c.defaultConfig = {
 selectItems:!1,
 multiSelect:!1,
 dblClick:!1,
@@ -39282,41 +39296,41 @@ onSelectionChange:null,
 onCheckBoxChange:null,
 onClick:null,
 onDblClick:null
-}, b.config = c.merge(b.defaultConfig, b.config), b.config.selectItems && b.config.showSelectBox) throw new Error("pfListView - Illegal use of pListView directive! Cannot allow both select box and click selection in the same list view.");
-b.dropdownClass = "dropdown", b.handleButtonAction = function(a, c) {
-!b.checkDisabled(c) && a && a.actionFn && b.enableButtonForItem(a, c) && a.actionFn(a, c);
-}, b.handleMenuAction = function(a, c) {
-!b.checkDisabled(c) && a && a.actionFn && a.isDisabled !== !0 && a.actionFn(a, c);
-}, b.enableButtonForItem = function(a, c) {
+}, c.config = b.merge(c.defaultConfig, c.config), c.config.selectItems && c.config.showSelectBox) throw new Error("pfListView - Illegal use of pListView directive! Cannot allow both select box and click selection in the same list view.");
+c.dropdownClass = "dropdown", c.handleButtonAction = function(a, b) {
+!c.checkDisabled(b) && a && a.actionFn && c.enableButtonForItem(a, b) && a.actionFn(a, b);
+}, c.handleMenuAction = function(a, b) {
+!c.checkDisabled(b) && a && a.actionFn && a.isDisabled !== !0 && a.actionFn(a, b);
+}, c.enableButtonForItem = function(a, b) {
 var d = !0;
-return "function" == typeof b.enableButtonForItemFn ? b.enableButtonForItemFn(a, c) :d;
-}, b.updateActions = function(a) {
-"function" == typeof b.updateMenuActionForItemFn && b.menuActions.forEach(function(c) {
-b.updateMenuActionForItemFn(c, a);
+return "function" == typeof c.enableButtonForItemFn ? c.enableButtonForItemFn(a, b) :d;
+}, c.updateActions = function(a) {
+"function" == typeof c.updateMenuActionForItemFn && c.menuActions.forEach(function(b) {
+c.updateMenuActionForItemFn(b, a);
 });
-}, b.getMenuClassForItem = function(a) {
-var c = "";
-return angular.isFunction(b.menuClassForItemFn) && (c = b.menuClassForItemFn(a)), c;
-}, b.hideMenuForItem = function(a) {
-var c = !1;
-return angular.isFunction(b.hideMenuForItemFn) && (c = b.hideMenuForItemFn(a)), c;
-}, b.toggleItemExpansion = function(a) {
+}, c.getMenuClassForItem = function(a) {
+var b = "";
+return angular.isFunction(c.menuClassForItemFn) && (b = c.menuClassForItemFn(a)), b;
+}, c.hideMenuForItem = function(a) {
+var b = !1;
+return angular.isFunction(c.hideMenuForItemFn) && (b = c.hideMenuForItemFn(a)), b;
+}, c.toggleItemExpansion = function(a) {
 a.isExpanded = !a.isExpanded;
-}, b.setupActions = function(c, d) {
-b.checkDisabled(c) || (b.updateActions(c), a(function() {
+}, c.setupActions = function(b, d) {
+c.checkDisabled(b) || (c.updateActions(b), a.requestAnimationFrame(function() {
 var a, b = void 0;
 for (a = d.target; a && !b; ) a.className.indexOf("dropdown-kebab-pf") !== -1 && (b = a, a.className.indexOf("open") !== -1 && e(b)), a = a.parentElement;
 }));
 };
 } ],
-link:function(a, b, d) {
+link:function(a, c, d) {
 d.$observe("config", function() {
-a.config = c.merge(a.defaultConfig, a.config), a.config.selectItems || (a.config.selectedItems = []), !a.config.multiSelect && a.config.selectedItems && a.config.selectedItems.length > 0 && (a.config.selectedItems = [ a.config.selectedItems[0] ]);
+a.config = b.merge(a.defaultConfig, a.config), a.config.selectItems || (a.config.selectedItems = []), !a.config.multiSelect && a.config.selectedItems && a.config.selectedItems.length > 0 && (a.config.selectedItems = [ a.config.selectedItems[0] ]);
 }), a.itemClick = function(b, c) {
-var d, e = !1, f = !0;
+var d, e = !1, f = !0, g = a.config && a.config.useExpandingRows && c && !c.disableRowExpansion;
 return a.checkDisabled(c) ? f :(a.config && a.config.selectItems && c && (a.config.multiSelect && !a.config.dblClick ? (d = _.find(a.config.selectedItems, function(a) {
 return a === c;
-}), d ? a.config.selectedItems = _.without(a.config.selectedItems, c) :(a.config.selectedItems.push(c), e = !0)) :a.config.selectedItems[0] === c ? (a.config.dblClick || (a.config.selectedItems = [], e = !0), f = !1) :(a.config.selectedItems = [ c ], e = !0), e && a.config.onSelect && a.config.onSelect(c, b), e && a.config.onSelectionChange && a.config.onSelectionChange(a.config.selectedItems, b)), a.config.onClick && a.config.onClick(c, b), f);
+}), d ? a.config.selectedItems = _.without(a.config.selectedItems, c) :(a.config.selectedItems.push(c), e = !0)) :a.config.selectedItems[0] === c ? (a.config.dblClick || (a.config.selectedItems = [], e = !0), f = !1) :(a.config.selectedItems = [ c ], e = !0), e && a.config.onSelect && a.config.onSelect(c, b), e && a.config.onSelectionChange && a.config.onSelectionChange(a.config.selectedItems, b)), a.config.onClick ? a.config.onClick(c, b) !== !1 && g && a.toggleItemExpansion(c) :g && a.toggleItemExpansion(c), f);
 }, a.dblClick = function(b, c) {
 return a.checkDisabled(c) ? continueEvent :void (a.config.onDblClick && a.config.onDblClick(c, b));
 }, a.checkBoxChange = function(b) {
@@ -39384,14 +39398,20 @@ function a(a) {
 angular.module("patternfly.wizard").directive(a, function() {
 return {
 restrict:"A",
-require:"^pf-wizard",
 scope:{
 callback:"=?"
 },
-link:function(b, c, d, e) {
+controller:[ "$scope", function(a) {
+var b = function(a) {
+var c;
+return a && (c = angular.isDefined(a.wizard) ? a.wizard :b(a.$parent)), c;
+};
+a.wizard = b(a);
+} ],
+link:function(b, c, d) {
 c.on("click", function(c) {
 c.preventDefault(), b.$apply(function() {
-b.$eval(d[a]), e[a.replace("pfWiz", "").toLowerCase()](b.callback);
+b.$eval(d[a]), b.wizard[a.replace("pfWiz", "").toLowerCase()](b.callback);
 });
 });
 }
@@ -39407,6 +39427,12 @@ transclude:!0,
 scope:{
 title:"@",
 hideIndicators:"=?",
+hideSidebar:"@",
+hideHeader:"@",
+hideBackButton:"@",
+sidebarClass:"@",
+stepClass:"@",
+contentHeight:"=?",
 currentStep:"=?",
 cancelTitle:"=?",
 backTitle:"=?",
@@ -39419,7 +39445,6 @@ wizardReady:"=?",
 wizardDone:"=?",
 loadingWizardTitle:"=?",
 loadingSecondaryInformation:"=?",
-contentHeight:"=?",
 embedInPage:"=?"
 },
 templateUrl:"wizard/wizard.html",
@@ -39449,11 +39474,11 @@ return angular.forEach(a.getEnabledSteps(), function(a) {
 a.title === b && (c = a);
 }), c;
 };
-a.steps = [], a.context = {}, this.context = a.context, angular.isUndefined(a.wizardReady) && (a.wizardReady = !0), angular.isUndefined(a.contentHeight) && (a.contentHeight = "300px"), this.contentHeight = a.contentHeight, a.contentStyle = {
+a.steps = [], a.context = {}, this.context = a.context, a.hideHeader = "true" === a.hideHeader, this.hideSidebar = "true" === a.hideSidebar, a.hideBaackButton = "true" === a.hideBackButton, angular.isDefined(a.stepClass) ? (this.stepClass = a.stepClass, angular.isDefined(a.sidebarClass) ? this.sidebarClass = a.sidebarClass :this.sidebarClass = a.stepClass) :(angular.isUndefined(a.contentHeight) && (a.contentHeight = "300px"), this.contentHeight = a.contentHeight, a.contentStyle = {
 height:a.contentHeight,
 "max-height":a.contentHeight,
 "overflow-y":"auto"
-}, this.contentStyle = a.contentStyle, a.nextEnabled = !1, a.prevEnabled = !1, a.cancelTitle || (a.cancelTitle = "Cancel"), a.backTitle || (a.backTitle = "< Back"), a.nextTitle || (a.nextTitle = "Next >"), a.getEnabledSteps = function() {
+}, this.contentStyle = a.contentStyle), angular.isUndefined(a.wizardReady) && (a.wizardReady = !0), a.nextEnabled = !1, a.prevEnabled = !1, a.cancelTitle || (a.cancelTitle = "Cancel"), a.backTitle || (a.backTitle = "< Back"), a.nextTitle || (a.nextTitle = "Next >"), a.getEnabledSteps = function() {
 return a.steps.filter(function(a) {
 return "true" !== a.disabled;
 });
@@ -39481,6 +39506,8 @@ angular.isFunction(g.onShow) && g.onShow();
 step:g,
 index:d(g)
 }), c = !1), a.selectedStep.substeps ? a.firstStep = 0 === d(a.selectedStep) && 1 === a.selectedStep.currentStepNumber() :a.firstStep = 0 === d(a.selectedStep));
+}, a.allowStepIndicatorClick = function(b) {
+return b.allowClickNav && !a.wizardDone && a.selectedStep.okToNavAway && (a.selectedStep.nextEnabled || b.stepPriority < a.selectedStep.stepPriority) && (a.selectedStep.prevEnabled || b.stepPriority > a.selectedStep.stepPriority);
 }, a.stepClick = function(b) {
 b.allowClickNav && a.goTo(b, !0);
 }, this.addStep = function(b) {
@@ -39514,13 +39541,19 @@ var c = a.getEnabledSteps(), e = d(a.selectedStep);
 if (!a.selectedStep.substeps || !a.selectedStep.next(b)) {
 if (angular.isFunction(b)) {
 if (!b(a.selectedStep)) return;
-e === c.length - 1 ? this.finish() :c[e + 1].substeps && c[e + 1].resetNav();
+if (!(e <= c.length - 1)) return void this.finish();
+c[e + 1].substeps && c[e + 1].resetNav();
 }
 a.selectedStep.completed = !0, e === c.length - 1 ? this.finish() :a.goTo(c[e + 1]);
 }
 }, this.previous = function(b) {
 var c = d(a.selectedStep);
-if ((!a.selectedStep.substeps || !a.selectedStep.previous(b)) && angular.isFunction(b) && b(a.selectedStep)) {
+if (!a.selectedStep.substeps || !a.selectedStep.previous(b)) if (angular.isFunction(b)) {
+if (b(a.selectedStep)) {
+if (0 === c) throw new Error("Can't go back. It's already in step 0");
+a.goTo(a.getEnabledSteps()[c - 1]);
+}
+} else {
 if (0 === c) throw new Error("Can't go back. It's already in step 0");
 a.goTo(a.getEnabledSteps()[c - 1]);
 }
@@ -39532,7 +39565,7 @@ a.onCancel && a.onCancel() !== !1 && this.reset();
 angular.forEach(a.getEnabledSteps(), function(a) {
 a.completed = !1;
 }), this.goTo(0);
-};
+}, a.wizard = this;
 } ],
 link:function(a) {
 a.$watch("wizardReady", function() {
@@ -39548,10 +39581,13 @@ scope:{
 shown:"=",
 wizardData:"="
 },
-require:"^pf-wizard",
 templateUrl:"wizard/wizard-review-page.html",
 controller:[ "$scope", function(a) {
-a.toggleShowReviewDetails = function(a) {
+var b = function(a) {
+var c;
+return a && (c = angular.isDefined(a.wizard) ? a.wizard :b(a.$parent)), c;
+};
+a.wizard = b(a.$parent), a.toggleShowReviewDetails = function(a) {
 a.showReviewDetails === !0 ? a.showReviewDetails = !1 :a.showReviewDetails = !0;
 }, a.getSubStepNumber = function(a, b) {
 return a.getStepDisplayNumber(b);
@@ -39561,9 +39597,9 @@ return a.getReviewSteps();
 a.reviewSteps = b.getReviewSteps();
 };
 } ],
-link:function(a, b, c, d) {
+link:function(a, b, c) {
 a.$watch("shown", function(b) {
-b && a.updateReviewSteps(d);
+b && a.updateReviewSteps(a.wizard);
 });
 }
 };
@@ -39591,7 +39627,6 @@ showReview:"@?",
 showReviewDetails:"@?",
 reviewTemplate:"@?"
 },
-require:"^pf-wizard",
 templateUrl:"wizard/wizard-step.html",
 controller:[ "$scope", "$timeout", function(a, b) {
 var c = !0, d = function(b) {
@@ -39618,8 +39653,11 @@ var c = null;
 return angular.forEach(a.getEnabledSteps(), function(a) {
 a.stepTitle === b && (c = a);
 }), c;
+}, h = function(a) {
+var b;
+return a && (b = angular.isDefined(a.wizard) ? a.wizard :h(a.$parent)), b;
 };
-a.steps = [], a.context = {}, this.context = a.context, angular.isUndefined(a.nextEnabled) && (a.nextEnabled = !0), angular.isUndefined(a.prevEnabled) && (a.prevEnabled = !0), angular.isUndefined(a.showReview) && (a.showReview = !1), angular.isUndefined(a.showReviewDetails) && (a.showReviewDetails = !1), angular.isUndefined(a.stepPriority) ? a.stepPriority = 999 :a.stepPriority = parseInt(a.stepPriority), angular.isUndefined(a.okToNavAway) && (a.okToNavAway = !0), angular.isUndefined(a.allowClickNav) && (a.allowClickNav = !0), a.getEnabledSteps = function() {
+a.steps = [], a.context = {}, a.wizard = h(a.$parent), this.wizard = a.wizard, this.context = a.context, angular.isUndefined(a.nextEnabled) && (a.nextEnabled = !0), angular.isUndefined(a.prevEnabled) && (a.prevEnabled = !0), angular.isUndefined(a.showReview) && (a.showReview = !1), angular.isUndefined(a.showReviewDetails) && (a.showReviewDetails = !1), angular.isUndefined(a.stepPriority) ? a.stepPriority = 999 :a.stepPriority = parseInt(a.stepPriority), angular.isUndefined(a.okToNavAway) && (a.okToNavAway = !0), angular.isUndefined(a.allowClickNav) && (a.allowClickNav = !0), a.getEnabledSteps = function() {
 return a.steps.filter(function(a) {
 return "true" !== a.disabled;
 });
@@ -39692,7 +39730,7 @@ return a.currentStepNumber();
 }, this.goTo = function(b) {
 var c, d = a.getEnabledSteps();
 c = angular.isNumber(b) ? d[b] :g(b), a.goTo(c);
-}, a.next = function(b) {
+}, a.wizardStep = this, a.next = function(b) {
 var c = a.getEnabledSteps(), e = d(a.selectedStep);
 return angular.isFunction(b) ? !b(a.selectedStep) || e !== c.length - 1 && (a.goTo(c[e + 1]), !0) :(a.selectedStep.completed = !0, e !== c.length - 1 && (a.goTo(c[e + 1]), !0));
 }, a.previous = function(b) {
@@ -39704,10 +39742,10 @@ a.selectedStep || a.goTo(a.getEnabledSteps()[0]);
 }, 10);
 });
 } ],
-link:function(a, b, c, d) {
+link:function(a, b, c) {
 a.$watch(c.ngShow, function(b) {
-a.pageNumber = d.getStepNumber(a);
-}), a.title = a.stepTitle, a.contentStyle = d.contentStyle, d.addStep(a), a.wizard = d;
+a.pageNumber = a.wizard.getStepNumber(a);
+}), a.title = a.stepTitle, a.contentStyle = a.wizard.contentStyle, a.wizard.addStep(a);
 }
 };
 }), angular.module("patternfly.wizard").directive("pfWizardSubstep", function() {
@@ -39730,18 +39768,21 @@ onShow:"=?",
 showReviewDetails:"@?",
 reviewTemplate:"@?"
 },
-require:"^pf-wizard-step",
 templateUrl:"wizard/wizard-substep.html",
 controller:[ "$scope", function(a) {
-angular.isUndefined(a.nextEnabled) && (a.nextEnabled = !0), angular.isUndefined(a.prevEnabled) && (a.prevEnabled = !0), angular.isUndefined(a.showReviewDetails) && (a.showReviewDetails = !1), angular.isUndefined(a.stepPriority) ? a.stepPriority = 999 :a.stepPriority = parseInt(a.stepPriority), angular.isUndefined(a.okToNavAway) && (a.okToNavAway = !0), angular.isUndefined(a.allowClickNav) && (a.allowClickNav = !0), a.isPrevEnabled = function() {
+var b = function(a) {
+var c;
+return a && (c = angular.isDefined(a.wizardStep) ? a.wizardStep :b(a.$parent)), c;
+};
+a.wizardStep = b(a), angular.isUndefined(a.nextEnabled) && (a.nextEnabled = !0), angular.isUndefined(a.prevEnabled) && (a.prevEnabled = !0), angular.isUndefined(a.showReviewDetails) && (a.showReviewDetails = !1), angular.isUndefined(a.stepPriority) ? a.stepPriority = 999 :a.stepPriority = parseInt(a.stepPriority), angular.isUndefined(a.okToNavAway) && (a.okToNavAway = !0), angular.isUndefined(a.allowClickNav) && (a.allowClickNav = !0), a.isPrevEnabled = function() {
 var b = angular.isUndefined(a.prevEnabled) || a.prevEnabled;
 return a.substeps && angular.forEach(a.getEnabledSteps(), function(a) {
 b = b && a.prevEnabled;
 }), b;
 };
 } ],
-link:function(a, b, c, d) {
-a.title = a.stepTitle, d.addStep(a);
+link:function(a, b, c) {
+a.title = a.stepTitle, a.wizardStep.addStep(a);
 }
 };
 }), angular.module("patternfly.card").run([ "$templateCache", function(a) {
@@ -39756,7 +39797,7 @@ a.put("charts/utilization-bar/utilization-bar-chart.html", '<div class=utilizati
 a.put("charts/utilization-trend/utilization-trend-chart.html", '<div class=utilization-trend-chart-pf ng-class="{\'data-unavailable-pf\': chartData.dataAvailable === false}"><h3>{{config.title}}</h3><div class=current-values><h1 class="available-count pull-left">{{currentValue}}</h1><div class="available-text pull-left"><div><span>{{currentText}}</span></div><div><span>of {{chartData.total}} {{config.units}}</span></div></div></div><div class=donut-chart-pf><div pf-donut-pct-chart ng-if="chartData.dataAvailable !== false" config=donutConfig data=chartData center-label=centerLabel></div><div pf-empty-chart ng-if="chartData.dataAvailable === false" chart-height=231></div></div><div ng-if="chartData.dataAvailable !== false" class=sparkline-chart><div pf-sparkline-chart config=sparklineConfig chart-data=chartData chart-height=sparklineChartHeight show-x-axis=showSparklineXAxis show-y-axis=showSparklineYAxis></div></div><span class="pull-left legend-text">{{legendLeftText}}</span> <span class="pull-right legend-text">{{legendRightText}}</span></div>');
 } ]), angular.module("patternfly.filters").run([ "$templateCache", function(a) {
 "use strict";
-a.put("filters/filter-fields.html", '<div class="filter-pf filter-fields"><div class="input-group form-group"><div uib-dropdown class=input-group-btn><button uib-dropdown-toggle type=button class="btn btn-default filter-fields" uib-tooltip="Filter by" tooltip-placement=top>{{currentField.title}} <span class=caret></span></button><ul uib-dropdown-menu><li ng-repeat="item in config.fields"><a class=filter-field role=menuitem tabindex=-1 ng-click=selectField(item)>{{item.title}}</a></li></ul></div><div ng-if="currentField.filterType !== \'select\'"><input class=form-control type={{currentField.filterType}} ng-model=config.currentValue placeholder={{currentField.placeholder}} ng-keypress="onValueKeyPress($event)"></div><div ng-if="currentField.filterType === \'select\'"><select pf-select class="form-control filter-select" id=currentValue ng-model=config.currentValue ng-options="filterValue for filterValue in currentField.filterValues" ng-change=selectValue(config.currentValue)><option value="">{{currentField.placeholder}}</option></select></div></div></div>'), 
+a.put("filters/filter-fields.html", '<div class="filter-pf filter-fields"><div class="input-group form-group"><div uib-dropdown class=input-group-btn><button uib-dropdown-toggle type=button class="btn btn-default filter-fields" uib-tooltip="Filter by" tooltip-placement=top tooltip-append-to-body=true>{{currentField.title}} <span class=caret></span></button><ul uib-dropdown-menu><li ng-repeat="item in config.fields"><a class=filter-field role=menuitem tabindex=-1 ng-click=selectField(item)>{{item.title}}</a></li></ul></div><div ng-if="currentField.filterType !== \'select\'"><input class=form-control type={{currentField.filterType}} ng-model=config.currentValue placeholder={{currentField.placeholder}} ng-keypress="onValueKeyPress($event)"></div><div ng-if="currentField.filterType === \'select\'"><select pf-select class="form-control filter-select" id=currentValue ng-model=config.currentValue ng-options="filterValue for filterValue in currentField.filterValues" ng-change=selectValue(config.currentValue)><option value="">{{currentField.placeholder}}</option></select></div></div></div>'), 
 a.put("filters/filter-results.html", '<div class=filter-pf><div class="row toolbar-pf-results"><div class=col-sm-12><h5>{{config.resultsCount}} Results</h5><p ng-if="config.appliedFilters.length > 0">Active filters:</p><ul class=list-inline><li ng-repeat="filter in config.appliedFilters"><span class="active-filter label label-info">{{filter.title}}: {{filter.value}} <a><span class="pficon pficon-close" ng-click=clearFilter(filter)></span></a></span></li></ul><p><a class=clear-filters ng-click=clearAllFilters() ng-if="config.appliedFilters.length > 0">Clear All Filters</a></p></div><!-- /col --></div><!-- /row --></div>'), a.put("filters/filter.html", "<div class=filter-pf><div pf-filter-fields config=config add-filter-fn=addFilter></div><div pf-filter-results config=config></div></div>");
 } ]), angular.module("patternfly.form").run([ "$templateCache", function(a) {
 "use strict";
@@ -39766,6 +39807,7 @@ a.put("form/datepicker/datepicker.html", '<div class="input-group date"><input c
 a.put("modals/about-modal.html", '<script type=text/ng-template id=about-modal-template.html><div class="about-modal-pf">\n    <div class="modal-header">\n      <button type="button" class="close" ng-click="close()" aria-hidden="true">\n        <span class="pficon pficon-close"></span>\n      </button>\n    </div>\n    <div class="modal-body">\n      <h1 ng-if="title">{{title}}</h1>\n      <div ng-if="productInfo && productInfo.length > 0" class="product-versions-pf">\n        <ul class="list-unstyled">\n          <li ng-repeat="info in productInfo"><strong>{{info.name}}</strong> {{info.value}}</li>\n        </ul>\n      </div>\n      <div pf-about-modal-transclude="template" class="product-versions-pf"></div>\n      <div ng-if="additionalInfo" class="product-versions-pf">{{additionalInfo}}</div>\n      <div ng-if="copyright" class="trademark-pf">{{copyright}}</div>\n    </div>\n    <div class="modal-footer">\n      <img ng-if="imgSrc" ng-src="{{imgSrc}}" alt="{{imgAlt}}"/>\n    </div>\n  </div></script>');
 } ]), angular.module("patternfly.navigation").run([ "$templateCache", function(a) {
 "use strict";
+a.put("navigation/application-launcher.html", '<div><div class="applauncher-pf dropdown dropdown-kebab-pf" ng-class="{\'applauncher-pf-block-list\': !isList()}" uib-dropdown uib-keyboard-nav=true><a id=domain-switcher-{{$id}} class="dropdown-toggle drawer-pf-trigger-icon" uib-dropdown-toggle ng-class="{\'disabled\': isDisabled() || !items().length}" href><i class="fa fa-th applauncher-pf-icon" aria-hidden=true></i> <span class=applauncher-pf-title>{{label || \'Application Launcher\'}} <span class=caret aria-hidden=true></span></span></a><ul class="dropdown-menu dropdown-menu-right" uib-dropdown-menu role=menu aria-labelledby=domain-switcher-{{$id}}><li class=applauncher-pf-item role=menuitem ng-repeat="item in items()"><a class=applauncher-pf-link ng-href={{item.href}} target="{{item.target || \'_blank\'}}" title={{item.tooltip}}><i class="applauncher-pf-link-icon pficon" ng-class=item.iconClass ng-if=!hiddenIcons() aria-hidden=true></i> <span class=applauncher-pf-link-title>{{item.title}}</span></a></li></ul></div></div>'), 
 a.put("navigation/vertical-navigation.html", "<div><nav class=\"navbar navbar-pf-vertical\"><div class=navbar-header><button type=button class=navbar-toggle ng-click=handleNavBarToggleClick()><span class=sr-only>Toggle navigation</span> <span class=icon-bar></span> <span class=icon-bar></span> <span class=icon-bar></span></button> <span class=navbar-brand><img class=navbar-brand-icon ng-if=brandSrc ng-src={{brandSrc}} alt=\"{{brandAlt}}\"> <span class=navbar-brand-txt ng-if=!brandSrc>{{brandAlt}}</span></span></div><nav class=\"collapse navbar-collapse\" ng-transclude></nav><div class=nav-pf-vertical ng-class=\"{'nav-pf-persistent-secondary': persistentSecondary,\n                    'nav-pf-vertical-collapsible-menus': pinnableMenus,\n                    'hidden-icons-pf': hiddenIcons,\n                    'nav-pf-vertical-with-badges': showBadges,\n                    'secondary-visible-pf': activeSecondary,\n                    'show-mobile-secondary': showMobileSecondary,\n                    'show-mobile-tertiary': showMobileTertiary,\n                    'hover-secondary-nav-pf': hoverSecondaryNav,\n                    'hover-tertiary-nav-pf': hoverTertiaryNav,\n                    'collapsed-secondary-nav-pf': collapsedSecondaryNav,\n                    'collapsed-tertiary-nav-pf': collapsedTertiaryNav,\n                    'hidden': inMobileState,\n                    'collapsed': navCollapsed,\n                    'force-hide-secondary-nav-pf': forceHidden,\n                    'show-mobile-nav': showMobileNav}\"><ul class=list-group><li ng-repeat=\"item in items\" class=list-group-item ng-class=\"{'secondary-nav-item-pf': item.children && item.children.length > 0,\n                       'active': item.isActive,\n                       'is-hover': item.isHover,\n                       'mobile-nav-item-pf': item.isMobileItem && showMobileSecondary,\n" + '                       \'mobile-secondary-item-pf\': item.isMobileItem && showMobileTertiary}" ng-mouseenter=handlePrimaryHover(item) ng-mouseleave=handlePrimaryUnHover(item)><a ng-click="handlePrimaryClick(item, $event)"><span class={{item.iconClass}} ng-if=item.iconClass ng-class="{hidden: hiddenIcons}" uib-tooltip={{item.title}} tooltip-append-to-body=true tooltip-enable={{navCollapsed}} tooltip-placement=bottom tooltip-class=nav-pf-vertical-tooltip></span> <span class=list-group-item-value>{{item.title}}</span><div ng-if="showBadges && item.badges" class=badge-container-pf><div class="badge {{badge.badgeClass}}" ng-repeat="badge in item.badges" uib-tooltip={{badge.tooltip}} tooltip-append-to-body=true tooltip-placement=right><span ng-if="badge.count && badge.iconClass" class={{badge.iconClass}}></span> <span ng-if=badge.count>{{badge.count}}</span></div></div></a><div ng-if="item.children && item.children.length > 0" class=nav-pf-secondary-nav><div class=nav-item-pf-header><a class=secondary-collapse-toggle-pf ng-click="collapseSecondaryNav(item, $event)" ng-class="{\'collapsed\': item.secondaryCollapsed}"></a> <span>{{item.title}}</span></div><ul class=list-group><li ng-repeat="secondaryItem in item.children" class=list-group-item ng-class="{\'tertiary-nav-item-pf\': secondaryItem.children && secondaryItem.children.length > 0,\n                             \'active\': secondaryItem.isActive,\n                             \'is-hover\': secondaryItem.isHover,\n                             \'mobile-nav-item-pf\': secondaryItem.isMobileItem}" ng-mouseenter=handleSecondaryHover(secondaryItem) ng-mouseleave=handleSecondaryUnHover(secondaryItem)><a ng-click="handleSecondaryClick(item, secondaryItem, $event)"><span class=list-group-item-value>{{secondaryItem.title}}</span><div ng-if="showBadges && secondaryItem.badges" class=badge-container-pf><div class="badge {{badge.badgeClass}}" ng-repeat="badge in secondaryItem.badges" uib-tooltip={{badge.tooltip}} tooltip-append-to-body=true tooltip-placement=right><span ng-if="badge.count && badge.iconClass" class={{badge.iconClass}}></span> <span ng-if=badge.count>{{badge.count}}</span></div></div></a><div ng-if="secondaryItem.children && secondaryItem.children.length > 0" class=nav-pf-tertiary-nav><div class=nav-item-pf-header><a class=tertiary-collapse-toggle-pf ng-click="collapseTertiaryNav(secondaryItem, $event)" ng-class="{\'collapsed\': secondaryItem.tertiaryCollapsed}"></a> <span>{{secondaryItem.title}}</span></div><ul class=list-group><li ng-repeat="tertiaryItem in secondaryItem.children" class=list-group-item ng-class="{\'active\': tertiaryItem.isActive}"><a ng-click="handleTertiaryClick(item, secondaryItem, tertiaryItem, $event)"><span class=list-group-item-value>{{tertiaryItem.title}}</span><div ng-if="showBadges && tertiaryItem.badges" class=badge-container-pf><div class="badge {{badge.badgeClass}}" ng-repeat="badge in tertiaryItem.badges" uib-tooltip={{badge.tooltip}} tooltip-append-to-body=true tooltip-placement=right><span ng-if="badge.count && badge.iconClass" class={{badge.iconClass}}></span> <span ng-if=badge.count>{{badge.count}}</span></div></div></a></li></ul></div></li></ul></div></li></ul></div></nav></div>');
 } ]), angular.module("patternfly.notification").run([ "$templateCache", function(a) {
 "use strict";
@@ -39780,11 +39822,11 @@ a.put("sort/sort.html", '<div class=sort-pf><div uib-dropdown class=btn-group><b
 a.put("toolbars/toolbar.html", '<div class=container-fluid><div class="row toolbar-pf"><div class=col-sm-12><form class=toolbar-pf-actions ng-class="{\'no-filter-results\': !config.filterConfig}"><div class="form-group toolbar-apf-filter"><div pf-filter-fields id={{filterDomId}}_fields config=config.filterConfig ng-if=config.filterConfig add-filter-fn=addFilter></div></div><div class=form-group><div pf-sort id={{sortDomId}} config=config.sortConfig ng-if=config.sortConfig></div></div><div class="form-group toolbar-actions" ng-if="config.actionsConfig &&\n                   ((config.actionsConfig.primaryActions && config.actionsConfig.primaryActions.length > 0) ||\n                    (config.actionsConfig.moreActions && config.actionsConfig.moreActions.length > 0) ||\n                    config.actionsConfig.actionsInclude)"><button class="btn btn-default primary-action" type=button ng-repeat="action in config.actionsConfig.primaryActions" title={{action.title}} ng-click=handleAction(action) ng-disabled="action.isDisabled === true">{{action.name}}</button><div ng-if=config.actionsConfig.actionsInclude pf-transclude class=toolbar-pf-include-actions ng-tranclude=actions></div><div uib-dropdown class=dropdown-kebab-pf ng-if="config.actionsConfig.moreActions && config.actionsConfig.moreActions.length > 0"><button uib-dropdown-toggle class="btn btn-link" type=button id={{filterDomId}}_kebab><span class="fa fa-ellipsis-v"></span></button><ul uib-dropdown-menu aria-labelledby=dropdownKebab><li ng-repeat="action in config.actionsConfig.moreActions" role="{{action.isSeparator === true ? \'separator\' : \'menuitem\'}}" ng-class="{\'divider\': action.isSeparator === true, \'disabled\': action.isDisabled === true}"><a ng-if="action.isSeparator !== true" class=secondary-action title={{action.title}} ng-click=handleAction(action)>{{action.name}}</a></li></ul></div></div><div class=toolbar-pf-action-right><div class="form-group toolbar-pf-view-selector" ng-if="config.viewsConfig && config.viewsConfig.views"><button ng-repeat="view in config.viewsConfig.viewsList" class="btn btn-link" ng-class="{\'active\': isViewSelected(view.id), \'disabled\': checkViewDisabled(view)}" title={{view.title}} ng-click=viewSelected(view.id)><i class={{view.iconClass}}></i></button></div></div></form><div pf-filter-results id={{filterDomId}_results} config=config.filterConfig ng-if=config.filterConfig></div></div><!-- /col --></div><!-- /row --></div><!-- /container -->');
 } ]), angular.module("patternfly.views").run([ "$templateCache", function(a) {
 "use strict";
-a.put("views/cardview/card-view.html", '<div class=card-view-pf><div class=card ng-repeat="item in items" ng-class="{\'pf-selectable\': selectItems, \'active\': isSelected(item), \'disabled\': checkDisabled(item)}"><div class=card-content ng-click="itemClick($event, item)" ng-dblclick="dblClick($event, item)"><div pf-transclude=parent></div></div><div class=card-check-box ng-if=config.showSelectBox><input type=checkbox value=item.selected ng-model=item.selected ng-disabled=checkDisabled(item) ng-change="checkBoxChange(item)"></div></div></div>'), a.put("views/listview/list-view.html", '<div class="list-group list-view-pf" dnd-list=items ng-class="{\'list-view-pf-dnd\': config.dragEnabled === true}"><div class=dndPlaceholder></div><div class="list-group-item {{item.rowClass}}" ng-repeat="item in items track by $index" dnd-draggable=item dnd-effect-allowed=move dnd-disable-if="config.dragEnabled !== true" dnd-dragstart=dragStart(item) dnd-moved=dragMoved() dnd-dragend=dragEnd() ng-class="{\'drag-original\': isDragOriginal(item), \'pf-selectable\': selectItems, \'active\': isSelected(item), \'disabled\': checkDisabled(item), \'list-view-pf-expand-active\': item.isExpanded}"><div class=list-group-item-header><div class=list-view-pf-dnd-drag-items ng-if="config.dragEnabled === true"><div pf-transclude=parent class=list-view-pf-main-info></div></div><div ng-class="{\'list-view-pf-dnd-original-items\': config.dragEnabled === true}"><div class=list-view-pf-expand ng-if=config.useExpandingRows><span class="fa fa-angle-right" ng-show=!item.disableRowExpansion ng-click=toggleItemExpansion(item) ng-class="{\'fa-angle-down\': item.isExpanded}"></span> <span class=pf-expand-placeholder ng-show=item.disableRowExpansion></span></div><div class=list-view-pf-checkbox ng-if=config.showSelectBox><input type=checkbox value=item.selected ng-model=item.selected ng-disabled=checkDisabled(item) ng-change="checkBoxChange(item)"></div><div class=list-view-pf-actions ng-if="(actionButtons && actionButtons.length > 0) || (menuActions && menuActions.length > 0)"><button class="btn btn-default {{actionButton.class}}" ng-repeat="actionButton in actionButtons" title={{actionButton.title}} ng-class="{\'disabled\' : checkDisabled(item) || !enableButtonForItem(actionButton, item)}" ng-click="handleButtonAction(actionButton, item)"><div ng-if=actionButton.include class=actionButton.includeClass ng-include src=actionButton.include></div><span ng-if=!actionButton.include>{{actionButton.name}}</span></button><div uib-dropdown class="{{dropdownClass}} pull-right dropdown-kebab-pf {{getMenuClassForItem(item)}} {{hideMenuForItem(item) ? \'invisible\' : \'\'}}" id=kebab_{{$index}} ng-if="menuActions && menuActions.length > 0"><button uib-dropdown-toggle class="btn btn-link" type=button id=dropdownKebabRight_{{$index}} ng-class="{\'disabled\': checkDisabled(item)}" ng-click="setupActions(item, $event)"><span class="fa fa-ellipsis-v"></span></button><ul uib-dropdown-menu class="dropdown-menu dropdown-menu-right {{$index}}" aria-labelledby=dropdownKebabRight_{{$index}}><li ng-repeat="menuAction in menuActions" ng-if="menuAction.isVisible !== false" role="{{menuAction.isSeparator === true ? \'separator\' : \'menuitem\'}}" ng-class="{\'divider\': (menuAction.isSeparator === true), \'disabled\': (menuAction.isDisabled === true)}"><a ng-if="menuAction.isSeparator !== true" title={{menuAction.title}} ng-click="handleMenuAction(menuAction, item)">{{menuAction.name}}</a></li></ul></div></div><div pf-transclude=parent class=list-view-pf-main-info ng-click="itemClick($event, item)" ng-dblclick="dblClick($event, item)"></div><div class="list-group-item-container container-fluid" ng-transclude=expandedContent ng-if="config.useExpandingRows && item.isExpanded"></div></div></div></div></div>');
+a.put("views/cardview/card-view.html", '<div class=card-view-pf><div class=card ng-repeat="item in items" ng-class="{\'pf-selectable\': selectItems, \'active\': isSelected(item), \'disabled\': checkDisabled(item)}"><div class=card-content ng-click="itemClick($event, item)" ng-dblclick="dblClick($event, item)"><div pf-transclude=parent></div></div><div class=card-check-box ng-if=config.showSelectBox><input type=checkbox value=item.selected ng-model=item.selected ng-disabled=checkDisabled(item) ng-change="checkBoxChange(item)"></div></div></div>'), a.put("views/listview/list-view.html", '<div class="list-group list-view-pf list-view-pf-view" dnd-list=items ng-class="{\'list-view-pf-dnd\': config.dragEnabled === true}"><div class=dndPlaceholder></div><div class="list-group-item {{item.rowClass}}" ng-repeat="item in items track by $index" dnd-draggable=item dnd-effect-allowed=move dnd-disable-if="config.dragEnabled !== true" dnd-dragstart=dragStart(item) dnd-moved=dragMoved() dnd-dragend=dragEnd() ng-class="{\'drag-original\': isDragOriginal(item), \'pf-selectable\': selectItems, \'active\': isSelected(item), \'disabled\': checkDisabled(item), \'list-view-pf-expand-active\': item.isExpanded}"><div class=list-group-item-header><div class=list-view-pf-dnd-drag-items ng-if="config.dragEnabled === true"><div pf-transclude=parent class=list-view-pf-main-info></div></div><div ng-class="{\'list-view-pf-dnd-original-items\': config.dragEnabled === true}"><div class=list-view-pf-expand ng-if=config.useExpandingRows><span class="fa fa-angle-right" ng-show=!item.disableRowExpansion ng-click=toggleItemExpansion(item) ng-class="{\'fa-angle-down\': item.isExpanded}"></span> <span class=pf-expand-placeholder ng-show=item.disableRowExpansion></span></div><div class=list-view-pf-checkbox ng-if=config.showSelectBox><input type=checkbox value=item.selected ng-model=item.selected ng-disabled=checkDisabled(item) ng-change="checkBoxChange(item)"></div><div class=list-view-pf-actions ng-if="(actionButtons && actionButtons.length > 0) || (menuActions && menuActions.length > 0)"><button class="btn btn-default {{actionButton.class}}" ng-repeat="actionButton in actionButtons" title={{actionButton.title}} ng-class="{\'disabled\' : checkDisabled(item) || !enableButtonForItem(actionButton, item)}" ng-click="handleButtonAction(actionButton, item)"><div ng-if=actionButton.include class=actionButton.includeClass ng-include src=actionButton.include></div><span ng-if=!actionButton.include>{{actionButton.name}}</span></button><div uib-dropdown class="{{dropdownClass}} pull-right dropdown-kebab-pf {{getMenuClassForItem(item)}} {{hideMenuForItem(item) ? \'invisible\' : \'\'}}" id=kebab_{{$index}} ng-if="menuActions && menuActions.length > 0"><button uib-dropdown-toggle class="btn btn-link" type=button id=dropdownKebabRight_{{$index}} ng-class="{\'disabled\': checkDisabled(item)}" ng-click="setupActions(item, $event)"><span class="fa fa-ellipsis-v"></span></button><ul uib-dropdown-menu class="dropdown-menu dropdown-menu-right {{$index}}" aria-labelledby=dropdownKebabRight_{{$index}}><li ng-repeat="menuAction in menuActions" ng-if="menuAction.isVisible !== false" role="{{menuAction.isSeparator === true ? \'separator\' : \'menuitem\'}}" ng-class="{\'divider\': (menuAction.isSeparator === true), \'disabled\': (menuAction.isDisabled === true)}"><a ng-if="menuAction.isSeparator !== true" title={{menuAction.title}} ng-click="handleMenuAction(menuAction, item)">{{menuAction.name}}</a></li></ul></div></div><div pf-transclude=parent class=list-view-pf-main-info ng-click="itemClick($event, item)" ng-dblclick="dblClick($event, item)"></div><div class="list-group-item-container container-fluid" ng-transclude=expandedContent ng-if="config.useExpandingRows && item.isExpanded"></div></div></div></div></div>');
 } ]), angular.module("patternfly.wizard").run([ "$templateCache", function(a) {
 "use strict";
 a.put("wizard/wizard-review-page.html", '<div class=wizard-pf-review-page><div class=wizard-pf-review-steps><ul class=list-group><li class=list-group-item ng-repeat="reviewStep in reviewSteps track by $index"><a class=apf-form-collapse ng-class="{\'collapsed\': !reviewStep.showReviewDetails}" ng-click=toggleShowReviewDetails(reviewStep)>{{reviewStep.stepTitle}}</a><div class=wizard-pf-review-substeps ng-class="{\'collapse\': !reviewStep.showReviewDetails}"><ul class=list-group ng-if=reviewStep.substeps><li class=list-group-item ng-repeat="substep in reviewStep.getReviewSteps()"><a class=apf-form-collapse ng-class="{\'collapsed\': !substep.showReviewDetails}" ng-click=toggleShowReviewDetails(substep)><span class=wizard-pf-substep-number>{{getSubStepNumber(reviewStep, substep)}}</span> <span class=wizard-pf-substep-title>{{substep.stepTitle}}</span></a><div class=wizard-pf-review-content ng-class="{\'collapse\': !substep.showReviewDetails}"><div ng-include=substep.reviewTemplate></div></div></li></ul><div class=wizard-pf-review-content ng-if=reviewStep.reviewTemplate ng-class="{\'collapse\': !reviewStep.showReviewDetails}"><div ng-include=reviewStep.reviewTemplate></div></div></div></li></ul></div></div>'), 
-a.put("wizard/wizard-step.html", '<section ng-show=selected ng-class="{current: selected, done: completed}"><div class=wizard-pf-sidebar ng-style=contentStyle ng-if="substeps === true"><ul class=list-group><li class=list-group-item ng-class="{active: step.selected}" ng-repeat="step in getEnabledSteps()"><a ng-click=stepClick(step)><span class=wizard-pf-substep-number>{{getStepDisplayNumber(step)}}</span> <span class=wizard-pf-substep-title>{{step.title}}</span></a></li></ul></div><div class=wizard-pf-main ng-class="{\'wizard-pf-singlestep\': !substeps}" ng-style=contentStyle><div class=wizard-pf-contents ng-transclude></div></div></section>'), a.put("wizard/wizard-substep.html", '<subsection ng-show=selected ng-class="{current: selected, done: completed}" class=wizard-pf-step ng-transclude></subsection>'), a.put("wizard/wizard.html", '<div><div class=modal-header><button type=button class="close wizard-pf-dismiss" aria-label=Close ng-click=onCancel() ng-if=!embedInPage><span aria-hidden=true>&times;</span></button><dt class=modal-title>{{title}}</dt></div><div class="modal-body wizard-pf-body clearfix"><!-- step area --><div class=wizard-pf-steps ng-class="{\'invisible\': !wizardReady}"><ul class=wizard-pf-steps-indicator ng-if=!hideIndicators ng-class="{\'invisible\': !wizardReady}"><li class=wizard-pf-step ng-class="{active: step.selected}" ng-repeat="step in getEnabledSteps()" data-tabgroup="{{$index }}"><a ng-click=stepClick(step)><span class=wizard-pf-step-number>{{$index + 1}}</span><span class=wizard-pf-step-title>{{step.title}}</span></a></li></ul></div><!-- loading wizard placeholder --><div ng-if=!wizardReady class=wizard-pf-main style="margin-left: 0px"><div class="wizard-pf-loading blank-slate-pf"><div class="spinner spinner-lg blank-slate-pf-icon"></div><h3 class=blank-slate-pf-main-action>{{loadingWizardTitle}}</h3><p class=blank-slate-pf-secondary-action>{{loadingSecondaryInformation}}</p></div></div><div class=wizard-pf-position-override ng-transclude></div></div><div class="modal-footer wizard-pf-footer wizard-pf-position-override" ng-class="{\'wizard-pf-footer-inline\': embedInPage}"><button pf-wiz-cancel class="btn btn-default btn-cancel wizard-pf-cancel" ng-disabled=wizardDone ng-click=onCancel() ng-if=!embedInPage>{{cancelTitle}}</button><div class=tooltip-wrapper uib-tooltip={{prevTooltip}} tooltip-placement=left><button id=backButton pf-wiz-previous class="btn btn-default" ng-disabled="!wizardReady || wizardDone || !prevEnabled || firstStep" callback=backCallback><span class="i fa fa-angular-left"></span> {{backTitle}}</button></div><div class=tooltip-wrapper uib-tooltip={{nextTooltip}} tooltip-placement=left><button id=nextButton pf-wiz-next class="btn btn-primary wizard-pf-next" ng-disabled="!wizardReady || !nextEnabled" callback=nextCallback>{{nextTitle}} <span class="i fa fa-angular-right"></span></button></div><button pf-wiz-cancel class="btn btn-default btn-cancel wizard-pf-cancel wizard-pf-cancel-inline" ng-disabled=wizardDone ng-click=onCancel() ng-if=embedInPage>{{cancelTitle}}</button></div></div>');
+a.put("wizard/wizard-step.html", '<section ng-show=selected ng-class="{current: selected, done: completed}"><div ng-if=!wizard.hideSidebar class=wizard-pf-sidebar ng-style=contentStyle ng-class=wizard.sidebarClass ng-if="substeps === true"><ul class=list-group><li class=list-group-item ng-class="{active: step.selected}" ng-repeat="step in getEnabledSteps()"><a ng-click=stepClick(step)><span class=wizard-pf-substep-number>{{getStepDisplayNumber(step)}}</span> <span class=wizard-pf-substep-title>{{step.title}}</span></a></li></ul></div><div class="wizard-pf-main {{wizard.stepClass}}" ng-style=contentStyle ng-class="{\'wizard-pf-singlestep\': !substeps || wizard.hideSidebar}"><div class=wizard-pf-contents ng-transclude></div></div></section>'), a.put("wizard/wizard-substep.html", '<subsection ng-show=selected ng-class="{current: selected, done: completed}" class=wizard-pf-step ng-transclude></subsection>'), a.put("wizard/wizard.html", '<div><div class=modal-header ng-if=!hideHeader><button type=button class="close wizard-pf-dismiss" aria-label=Close ng-click=onCancel() ng-if=!embedInPage><span aria-hidden=true>&times;</span></button><dt class=modal-title>{{title}}</dt></div><div class="modal-body wizard-pf-body clearfix"><!-- step area --><div class=wizard-pf-steps ng-class="{\'invisible\': !wizardReady}"><ul class=wizard-pf-steps-indicator ng-if=!hideIndicators ng-class="{\'invisible\': !wizardReady}"><li class=wizard-pf-step ng-class="{active: step.selected}" ng-repeat="step in getEnabledSteps()" data-tabgroup="{{$index }}"><a ng-click=stepClick(step) ng-class="{\'disabled\': !allowStepIndicatorClick(step)}"><span class=wizard-pf-step-number>{{$index + 1}}</span> <span class=wizard-pf-step-title>{{step.title}}</span></a></li></ul></div><!-- loading wizard placeholder --><div ng-if=!wizardReady class=wizard-pf-main style="margin-left: 0px"><div class="wizard-pf-loading blank-slate-pf"><div class="spinner spinner-lg blank-slate-pf-icon"></div><h3 class=blank-slate-pf-main-action>{{loadingWizardTitle}}</h3><p class=blank-slate-pf-secondary-action>{{loadingSecondaryInformation}}</p></div></div><div class=wizard-pf-position-override ng-transclude></div></div><div class="modal-footer wizard-pf-footer wizard-pf-position-override" ng-class="{\'wizard-pf-footer-inline\': embedInPage}"><button pf-wiz-cancel class="btn btn-default btn-cancel wizard-pf-cancel" ng-disabled=wizardDone ng-click=onCancel() ng-if=!embedInPage>{{cancelTitle}}</button><div ng-if=!hideBackButton class=tooltip-wrapper uib-tooltip={{prevTooltip}} tooltip-placement=left><button id=backButton pf-wiz-previous class="btn btn-default" ng-disabled="!wizardReady || wizardDone || !prevEnabled || firstStep" callback=backCallback><span class="i fa fa-angular-left"></span> {{backTitle}}</button></div><div class=tooltip-wrapper uib-tooltip={{nextTooltip}} tooltip-placement=left><button id=nextButton pf-wiz-next class="btn btn-primary wizard-pf-next" ng-disabled="!wizardReady || !nextEnabled" callback=nextCallback>{{nextTitle}} <span class="i fa fa-angular-right"></span></button></div><button pf-wiz-cancel class="btn btn-default btn-cancel wizard-pf-cancel wizard-pf-cancel-inline" ng-disabled=wizardDone ng-click=onCancel() ng-if=embedInPage>{{cancelTitle}}</button></div></div>');
 } ]), function(a, b) {
 "use strict";
 "object" == typeof exports ? module.exports = b(require("./punycode"), require("./IPv6"), require("./SecondLevelDomains")) :"function" == typeof define && define.amd ? define([ "./punycode", "./IPv6", "./SecondLevelDomains" ], b) :a.URI = b(a.punycode, a.IPv6, a.SecondLevelDomains, a);
@@ -42306,488 +42348,7 @@ return b.keyCode === p && "" === this.$control_input.val() && !this.$activeItems
 };
 }();
 }), L;
-}), function() {
-var a, b = window.Messenger;
-a = window.Messenger = function() {
-return a._call.apply(this, arguments);
-}, window.Messenger.noConflict = function() {
-return window.Messenger = b, a;
-};
-}(), window.Messenger._ = function() {
-if (window._) return window._;
-var a = Array.prototype, b = Object.prototype, c = Function.prototype, d = (a.push, a.slice), e = (a.concat, b.toString), f = (b.hasOwnProperty, a.forEach), g = (a.map, a.reduce, a.reduceRight, a.filter), h = (a.every, a.some, a.indexOf, a.lastIndexOf, Array.isArray, Object.keys), i = c.bind, j = {}, k = {}, l = j.each = j.forEach = function(a, b, c) {
-if (null != a) if (f && a.forEach === f) a.forEach(b, c); else if (a.length === +a.length) {
-for (var d = 0, e = a.length; d < e; d++) if (b.call(c, a[d], d, a) === k) return;
-} else for (var g in a) if (j.has(a, g) && b.call(c, a[g], g, a) === k) return;
-};
-j.result = function(a, b) {
-if (null == a) return null;
-var c = a[b];
-return j.isFunction(c) ? c.call(a) :c;
-}, j.once = function(a) {
-var b, c = !1;
-return function() {
-return c ? b :(c = !0, b = a.apply(this, arguments), a = null, b);
-};
-};
-var m = 0;
-return j.uniqueId = function(a) {
-var b = ++m + "";
-return a ? a + b :b;
-}, j.filter = j.select = function(a, b, c) {
-var d = [];
-return null == a ? d :g && a.filter === g ? a.filter(b, c) :(l(a, function(a, e, f) {
-b.call(c, a, e, f) && (d[d.length] = a);
-}), d);
-}, l([ "Arguments", "Function", "String", "Number", "Date", "RegExp" ], function(a) {
-j["is" + a] = function(b) {
-return e.call(b) == "[object " + a + "]";
-};
-}), j.defaults = function(a) {
-return l(d.call(arguments, 1), function(b) {
-if (b) for (var c in b) null == a[c] && (a[c] = b[c]);
-}), a;
-}, j.extend = function(a) {
-return l(d.call(arguments, 1), function(b) {
-if (b) for (var c in b) a[c] = b[c];
-}), a;
-}, j.keys = h || function(a) {
-if (a !== Object(a)) throw new TypeError("Invalid object");
-var b = [];
-for (var c in a) j.has(a, c) && (b[b.length] = c);
-return b;
-}, j.bind = function(a, b) {
-if (a.bind === i && i) return i.apply(a, d.call(arguments, 1));
-var c = d.call(arguments, 2);
-return function() {
-return a.apply(b, c.concat(d.call(arguments)));
-};
-}, j.isObject = function(a) {
-return a === Object(a);
-}, j;
-}(), window.Messenger.Events = function() {
-if (window.Backbone && Backbone.Events) return Backbone.Events;
-var a = function() {
-var a = /\s+/, b = function(b, c, d, e) {
-if (!d) return !0;
-if ("object" == typeof d) for (var f in d) b[c].apply(b, [ f, d[f] ].concat(e)); else {
-if (!a.test(d)) return !0;
-for (var g = d.split(a), h = 0, i = g.length; h < i; h++) b[c].apply(b, [ g[h] ].concat(e));
-}
-}, c = function(a, b) {
-var c, d = -1, e = a.length;
-switch (b.length) {
-case 0:
-for (;++d < e; ) (c = a[d]).callback.call(c.ctx);
-return;
-
-case 1:
-for (;++d < e; ) (c = a[d]).callback.call(c.ctx, b[0]);
-return;
-
-case 2:
-for (;++d < e; ) (c = a[d]).callback.call(c.ctx, b[0], b[1]);
-return;
-
-case 3:
-for (;++d < e; ) (c = a[d]).callback.call(c.ctx, b[0], b[1], b[2]);
-return;
-
-default:
-for (;++d < e; ) (c = a[d]).callback.apply(c.ctx, b);
-}
-}, d = {
-on:function(a, c, d) {
-if (!b(this, "on", a, [ c, d ]) || !c) return this;
-this._events || (this._events = {});
-var e = this._events[a] || (this._events[a] = []);
-return e.push({
-callback:c,
-context:d,
-ctx:d || this
-}), this;
-},
-once:function(a, c, d) {
-if (!b(this, "once", a, [ c, d ]) || !c) return this;
-var e = this, f = _.once(function() {
-e.off(a, f), c.apply(this, arguments);
-});
-return f._callback = c, this.on(a, f, d), this;
-},
-off:function(a, c, d) {
-var e, f, g, h, i, j, k, l;
-if (!this._events || !b(this, "off", a, [ c, d ])) return this;
-if (!a && !c && !d) return this._events = {}, this;
-for (h = a ? [ a ] :_.keys(this._events), i = 0, j = h.length; i < j; i++) if (a = h[i], e = this._events[a]) {
-if (g = [], c || d) for (k = 0, l = e.length; k < l; k++) f = e[k], (c && c !== f.callback && c !== f.callback._callback || d && d !== f.context) && g.push(f);
-this._events[a] = g;
-}
-return this;
-},
-trigger:function(a) {
-if (!this._events) return this;
-var d = Array.prototype.slice.call(arguments, 1);
-if (!b(this, "trigger", a, d)) return this;
-var e = this._events[a], f = this._events.all;
-return e && c(e, d), f && c(f, arguments), this;
-},
-listenTo:function(a, b, c) {
-var d = this._listeners || (this._listeners = {}), e = a._listenerId || (a._listenerId = _.uniqueId("l"));
-return d[e] = a, a.on(b, "object" == typeof b ? this :c, this), this;
-},
-stopListening:function(a, b, c) {
-var d = this._listeners;
-if (d) {
-if (a) a.off(b, "object" == typeof b ? this :c, this), b || c || delete d[a._listenerId]; else {
-"object" == typeof b && (c = this);
-for (var e in d) d[e].off(b, c, this);
-this._listeners = {};
-}
-return this;
-}
-}
-};
-return d.bind = d.on, d.unbind = d.off, d;
-};
-return a();
-}(), function() {
-var a, b, c, d, e, f, g, h, i, j, k, l = {}.hasOwnProperty, m = function(a, b) {
-function c() {
-this.constructor = a;
-}
-for (var d in b) l.call(b, d) && (a[d] = b[d]);
-return c.prototype = b.prototype, a.prototype = new c(), a.__super__ = b.prototype, a;
-}, n = [].slice, o = [].indexOf || function(a) {
-for (var b = 0, c = this.length; b < c; b++) if (b in this && this[b] === a) return b;
-return -1;
-};
-a = jQuery, f = null != (i = window._) ? i :window.Messenger._, d = null != (j = "undefined" != typeof Backbone && null !== Backbone ? Backbone.Events :void 0) ? j :window.Messenger.Events, c = function() {
-function b(b) {
-a.extend(this, d), f.isObject(b) && (b.el && this.setElement(b.el), this.model = b.model), this.initialize.apply(this, arguments);
-}
-return b.prototype.setElement = function(b) {
-return this.$el = a(b), this.el = this.$el[0];
-}, b.prototype.delegateEvents = function(a) {
-var b, c, d, e, g, h, i;
-if (a || (a = f.result(this, "events"))) {
-this.undelegateEvents(), b = /^(\S+)\s*(.*)$/, i = [];
-for (d in a) {
-if (g = a[d], f.isFunction(g) || (g = this[a[d]]), !g) throw new Error('Method "' + a[d] + '" does not exist');
-e = d.match(b), c = e[1], h = e[2], g = f.bind(g, this), c += ".delegateEvents" + this.cid, "" === h ? i.push(this.jqon(c, g)) :i.push(this.jqon(c, h, g));
-}
-return i;
-}
-}, b.prototype.jqon = function(a, b, c) {
-var d;
-return null != this.$el.on ? (d = this.$el).on.apply(d, arguments) :(null == c && (c = b, b = void 0), null != b ? this.$el.delegate(b, a, c) :this.$el.bind(a, c));
-}, b.prototype.jqoff = function(a) {
-var b;
-return null != this.$el.off ? (b = this.$el).off.apply(b, arguments) :(this.$el.undelegate(), this.$el.unbind(a));
-}, b.prototype.undelegateEvents = function() {
-return this.jqoff(".delegateEvents" + this.cid);
-}, b.prototype.remove = function() {
-return this.undelegateEvents(), this.$el.remove();
-}, b;
-}(), g = function(b) {
-function c() {
-return c.__super__.constructor.apply(this, arguments);
-}
-return m(c, b), c.prototype.defaults = {
-hideAfter:10,
-scroll:!0,
-closeButtonText:"&times;"
-}, c.prototype.initialize = function(b) {
-return null == b && (b = {}), this.shown = !1, this.rendered = !1, this.messenger = b.messenger, this.options = a.extend({}, this.options, b, this.defaults);
-}, c.prototype.show = function() {
-var a;
-if (this.rendered || this.render(), this.$message.removeClass("messenger-hidden"), a = this.shown, this.shown = !0, !a) return this.trigger("show");
-}, c.prototype.hide = function() {
-var a;
-if (this.rendered) return this.$message.addClass("messenger-hidden"), a = this.shown, this.shown = !1, a ? this.trigger("hide") :void 0;
-}, c.prototype.cancel = function() {
-return this.hide();
-}, c.prototype.update = function(b) {
-var c, d = this;
-return f.isString(b) && (b = {
-message:b
-}), a.extend(this.options, b), this.lastUpdate = new Date(), this.rendered = !1, this.events = null != (c = this.options.events) ? c :{}, this.render(), this.actionsToEvents(), this.delegateEvents(), this.checkClickable(), this.options.hideAfter ? (this.$message.addClass("messenger-will-hide-after"), null != this._hideTimeout && clearTimeout(this._hideTimeout), this._hideTimeout = setTimeout(function() {
-return d.hide();
-}, 1e3 * this.options.hideAfter)) :this.$message.removeClass("messenger-will-hide-after"), this.options.hideOnNavigate ? (this.$message.addClass("messenger-will-hide-on-navigate"), null != ("undefined" != typeof Backbone && null !== Backbone ? Backbone.history :void 0) && Backbone.history.on("route", function() {
-return d.hide();
-})) :this.$message.removeClass("messenger-will-hide-on-navigate"), this.trigger("update", this);
-}, c.prototype.scrollTo = function() {
-if (this.options.scroll) return a.scrollTo(this.$el, {
-duration:400,
-offset:{
-left:0,
-top:-20
-}
-});
-}, c.prototype.timeSinceUpdate = function() {
-return this.lastUpdate ? new Date() - this.lastUpdate :null;
-}, c.prototype.actionsToEvents = function() {
-var a, b, c, d, e = this;
-c = this.options.actions, d = [];
-for (b in c) a = c[b], d.push(this.events['click [data-action="' + b + '"] a'] = function(a) {
-return function(c) {
-return c.preventDefault(), c.stopPropagation(), e.trigger("action:" + b, a, c), a.action.call(e, c, e);
-};
-}(a));
-return d;
-}, c.prototype.checkClickable = function() {
-var a, b, c, d;
-c = this.events, d = [];
-for (b in c) a = c[b], "click" === b ? d.push(this.$message.addClass("messenger-clickable")) :d.push(void 0);
-return d;
-}, c.prototype.undelegateEvents = function() {
-var a;
-return c.__super__.undelegateEvents.apply(this, arguments), null != (a = this.$message) ? a.removeClass("messenger-clickable") :void 0;
-}, c.prototype.parseActions = function() {
-var b, c, d, e, f, g;
-c = [], f = this.options.actions;
-for (e in f) b = f[e], d = a.extend({}, b), d.name = e, null == (g = d.label) && (d.label = e), c.push(d);
-return c;
-}, c.prototype.template = function(b) {
-var c, d, e, f, g, h, i, j, k, l, m = this;
-for (g = a("<div class='messenger-message message alert " + b.type + " message-" + b.type + " alert-" + b.type + "'>"), b.showCloseButton && (e = a('<button type="button" class="messenger-close" data-dismiss="alert">'), e.html(b.closeButtonText), e.click(function() {
-return m.cancel(), !0;
-}), g.append(e)), h = a('<div class="messenger-message-inner">' + b.message + "</div>"), g.append(h), b.actions.length && (d = a('<div class="messenger-actions">')), l = b.actions, j = 0, k = l.length; j < k; j++) i = l[j], c = a("<span>"), c.attr("data-action", "" + i.name), f = a("<a>"), f.html(i.label), c.append(a('<span class="messenger-phrase">')), c.append(f), d.append(c);
-return g.append(d), g;
-}, c.prototype.render = function() {
-var b;
-if (!this.rendered) return this._hasSlot || (this.setElement(this.messenger._reserveMessageSlot(this)), this._hasSlot = !0), b = a.extend({}, this.options, {
-actions:this.parseActions()
-}), this.$message = a(this.template(b)), this.$el.html(this.$message), this.shown = !0, this.rendered = !0, this.trigger("render");
-}, c;
-}(c), e = function(a) {
-function b() {
-return b.__super__.constructor.apply(this, arguments);
-}
-return m(b, a), b.prototype.initialize = function() {
-return b.__super__.initialize.apply(this, arguments), this._timers = {};
-}, b.prototype.cancel = function() {
-if (this.clearTimers(), this.hide(), null != this._actionInstance && null != this._actionInstance.abort) return this._actionInstance.abort();
-}, b.prototype.clearTimers = function() {
-var a, b, c, d;
-c = this._timers;
-for (a in c) b = c[a], clearTimeout(b);
-return this._timers = {}, null != (d = this.$message) ? d.removeClass("messenger-retry-soon messenger-retry-later") :void 0;
-}, b.prototype.render = function() {
-var a, c, d, e;
-b.__super__.render.apply(this, arguments), this.clearTimers(), d = this.options.actions, e = [];
-for (c in d) a = d[c], a.auto ? e.push(this.startCountdown(c, a)) :e.push(void 0);
-return e;
-}, b.prototype.renderPhrase = function(a, b) {
-var c;
-return c = a.phrase.replace("TIME", this.formatTime(b));
-}, b.prototype.formatTime = function(a) {
-var b;
-return b = function(a, b) {
-return a = Math.floor(a), 1 !== a && (b += "s"), "in " + a + " " + b;
-}, 0 === Math.floor(a) ? "now..." :a < 60 ? b(a, "second") :(a /= 60, a < 60 ? b(a, "minute") :(a /= 60, b(a, "hour")));
-}, b.prototype.startCountdown = function(a, b) {
-var c, d, e, f, g = this;
-if (null == this._timers[a]) return c = this.$message.find("[data-action='" + a + "'] .messenger-phrase"), d = null != (f = b.delay) ? f :3, d <= 10 ? (this.$message.removeClass("messenger-retry-later"), this.$message.addClass("messenger-retry-soon")) :(this.$message.removeClass("messenger-retry-soon"), this.$message.addClass("messenger-retry-later")), (e = function() {
-var f;
-return c.text(g.renderPhrase(b, d)), d > 0 ? (f = Math.min(d, 1), d -= f, g._timers[a] = setTimeout(e, 1e3 * f)) :(g.$message.removeClass("messenger-retry-soon messenger-retry-later"), delete g._timers[a], b.action());
-})();
-}, b;
-}(g), h = function(b) {
-function c() {
-return c.__super__.constructor.apply(this, arguments);
-}
-return m(c, b), c.prototype.tagName = "ul", c.prototype.className = "messenger", c.prototype.messageDefaults = {
-type:"info"
-}, c.prototype.initialize = function(b) {
-return this.options = null != b ? b :{}, this.history = [], this.messageDefaults = a.extend({}, this.messageDefaults, this.options.messageDefaults);
-}, c.prototype.render = function() {
-return this.updateMessageSlotClasses();
-}, c.prototype.findById = function(a) {
-return f.filter(this.history, function(b) {
-return b.msg.options.id === a;
-});
-}, c.prototype._reserveMessageSlot = function(b) {
-var c, d, e = this;
-for (c = a("<li>"), c.addClass("messenger-message-slot"), this.$el.prepend(c), this.history.push({
-msg:b,
-$slot:c
-}), this._enforceIdConstraint(b), b.on("update", function() {
-return e._enforceIdConstraint(b);
-}); this.options.maxMessages && this.history.length > this.options.maxMessages; ) d = this.history.shift(), d.msg.remove(), d.$slot.remove();
-return c;
-}, c.prototype._enforceIdConstraint = function(a) {
-var b, c, d, e, f;
-if (null != a.options.id) for (f = this.history, c = 0, d = f.length; c < d; c++) if (b = f[c], e = b.msg, null != e.options.id && e.options.id === a.options.id && a !== e) {
-if (a.options.singleton) return void a.hide();
-e.hide();
-}
-}, c.prototype.newMessage = function(a) {
-var b, c, d, f, h = this;
-return null == a && (a = {}), a.messenger = this, g = null != (c = null != (d = Messenger.themes[null != (f = a.theme) ? f :this.options.theme]) ? d.Message :void 0) ? c :e, b = new g(a), b.on("show", function() {
-if (a.scrollTo && "fixed" !== h.$el.css("position")) return b.scrollTo();
-}), b.on("hide show render", this.updateMessageSlotClasses, this), b;
-}, c.prototype.updateMessageSlotClasses = function() {
-var a, b, c, d, e, f, g;
-for (d = !0, b = null, a = !1, g = this.history, e = 0, f = g.length; e < f; e++) c = g[e], c.$slot.removeClass("messenger-first messenger-last messenger-shown"), c.msg.shown && c.msg.rendered && (c.$slot.addClass("messenger-shown"), a = !0, b = c, d && (d = !1, c.$slot.addClass("messenger-first")));
-return null != b && b.$slot.addClass("messenger-last"), this.$el["" + (a ? "remove" :"add") + "Class"]("messenger-empty");
-}, c.prototype.hideAll = function() {
-var a, b, c, d, e;
-for (d = this.history, e = [], b = 0, c = d.length; b < c; b++) a = d[b], e.push(a.msg.hide());
-return e;
-}, c.prototype.post = function(b) {
-var c;
-return f.isString(b) && (b = {
-message:b
-}), b = a.extend(!0, {}, this.messageDefaults, b), c = this.newMessage(b), c.update(b), c;
-}, c;
-}(c), b = function(b) {
-function c() {
-return c.__super__.constructor.apply(this, arguments);
-}
-return m(c, b), c.prototype.doDefaults = {
-progressMessage:null,
-successMessage:null,
-errorMessage:"Error connecting to the server.",
-showSuccessWithoutError:!0,
-retry:{
-auto:!0,
-allow:!0
-},
-action:a.ajax
-}, c.prototype.hookBackboneAjax = function(b) {
-var c, d = this;
-if (null == b && (b = {}), null == window.Backbone) throw "Expected Backbone to be defined";
-return b = f.defaults(b, {
-id:"BACKBONE_ACTION",
-errorMessage:!1,
-successMessage:"Request completed successfully.",
-showSuccessWithoutError:!1
-}), c = function(a) {
-var c;
-return c = f.extend({}, b, a.messenger), d["do"](c, a);
-}, null != Backbone.ajax ? (Backbone.ajax._withoutMessenger && (Backbone.ajax = Backbone.ajax._withoutMessenger), null != b.action && b.action !== this.doDefaults.action || (b.action = Backbone.ajax), c._withoutMessenger = Backbone.ajax, Backbone.ajax = c) :Backbone.sync = f.wrap(Backbone.sync, function() {
-var b, d, e;
-return e = arguments[0], b = 2 <= arguments.length ? n.call(arguments, 1) :[], d = a.ajax, a.ajax = c, e.call.apply(e, [ this ].concat(n.call(b))), a.ajax = d;
-});
-}, c.prototype._getHandlerResponse = function(a) {
-return a !== !1 && (a === !0 || null == a || a);
-}, c.prototype._parseEvents = function(a) {
-var b, c, d, e, f, g, h;
-null == a && (a = {}), f = {};
-for (e in a) d = a[e], c = e.indexOf(" "), g = e.substring(0, c), b = e.substring(c + 1), null == (h = f[g]) && (f[g] = {}), f[g][b] = d;
-return f;
-}, c.prototype._normalizeResponse = function() {
-var a, b, c, d, e, g, h;
-for (c = 1 <= arguments.length ? n.call(arguments, 0) :[], d = null, e = null, a = null, g = 0, h = c.length; g < h; g++) b = c[g], "success" === b || "timeout" === b || "abort" === b ? d = b :null != (null != b ? b.readyState :void 0) && null != (null != b ? b.responseText :void 0) ? e = b :f.isObject(b) && (a = b);
-return [ d, a, e ];
-}, c.prototype.run = function() {
-var b, c, d, e, g, h, i, j, k, l, m, p = this;
-if (h = arguments[0], k = arguments[1], b = 3 <= arguments.length ? n.call(arguments, 2) :[], null == k && (k = {}), h = a.extend(!0, {}, this.messageDefaults, this.doDefaults, null != h ? h :{}), c = this._parseEvents(h.events), d = function(a, b) {
-var c;
-return c = h[a + "Message"], f.isFunction(c) ? c.call(p, a, b) :c;
-}, i = null != (m = h.messageInstance) ? m :this.newMessage(h), null != h.id && (i.options.id = h.id), null != h.progressMessage && i.update(a.extend({}, h, {
-message:d("progress", null),
-type:"info"
-})), g = {}, f.each([ "error", "success" ], function(e) {
-var j;
-return j = k[e], g[e] = function() {
-var g, l, m, q, r, s, t, u, v, w, x, y, z, A, B;
-return s = 1 <= arguments.length ? n.call(arguments, 0) :[], v = p._normalizeResponse.apply(p, s), r = v[0], g = v[1], u = v[2], "success" === e && null == i.errorCount && h.showSuccessWithoutError === !1 && (h.successMessage = null), "error" === e && (null == (w = h.errorCount) && (h.errorCount = 0), h.errorCount += 1), m = h.returnsPromise ? s[0] :"function" == typeof j ? j.apply(null, s) :void 0, t = p._getHandlerResponse(m), f.isString(t) && (t = {
-message:t
-}), "error" !== e || 0 !== (null != u ? u.status :void 0) && "abort" !== r ? "error" === e && null != h.ignoredErrorCodes && (x = null != u ? u.status :void 0, o.call(h.ignoredErrorCodes, x) >= 0) ? void i.hide() :(l = {
-message:d(e, u),
-type:e,
-events:null != (y = c[e]) ? y :{},
-hideOnNavigate:"success" === e
-}, q = a.extend({}, h, l, t), "number" == typeof (null != (z = q.retry) ? z.allow :void 0) && q.retry.allow--, "error" === e && (null != u ? u.status :void 0) >= 500 && (null != (A = q.retry) ? A.allow :void 0) ? (null == q.retry.delay && (q.errorCount < 4 ? q.retry.delay = 10 :q.retry.delay = 300), q.hideAfter && (null == (B = q._hideAfter) && (q._hideAfter = q.hideAfter), q.hideAfter = q._hideAfter + q.retry.delay), q._retryActions = !0, q.actions = {
-retry:{
-label:"retry now",
-phrase:"Retrying TIME",
-auto:q.retry.auto,
-delay:q.retry.delay,
-action:function() {
-return q.messageInstance = i, setTimeout(function() {
-return p["do"].apply(p, [ q, k ].concat(n.call(b)));
-}, 0);
-}
-},
-cancel:{
-action:function() {
-return i.cancel();
-}
-}
-}) :q._retryActions && (delete q.actions.retry, delete q.actions.cancel, delete h._retryActions), i.update(q), t && q.message ? (Messenger(f.extend({}, p.options, {
-instance:p
-})), i.show()) :i.hide()) :void i.hide();
-};
-}), !h.returnsPromise) for (l in g) e = g[l], j = k[l], k[l] = e;
-return i._actionInstance = h.action.apply(h, [ k ].concat(n.call(b))), h.returnsPromise && i._actionInstance.then(g.success, g.error), i;
-}, c.prototype["do"] = c.prototype.run, c.prototype.ajax = function() {
-var b, c;
-return c = arguments[0], b = 2 <= arguments.length ? n.call(arguments, 1) :[], c.action = a.ajax, this.run.apply(this, [ c ].concat(n.call(b)));
-}, c.prototype.expectPromise = function(a, b) {
-return b = f.extend({}, b, {
-action:a,
-returnsPromise:!0
-}), this.run(b);
-}, c.prototype.error = function(a) {
-return null == a && (a = {}), "string" == typeof a && (a = {
-message:a
-}), a.type = "error", this.post(a);
-}, c.prototype.info = function(a) {
-return null == a && (a = {}), "string" == typeof a && (a = {
-message:a
-}), a.type = "info", this.post(a);
-}, c.prototype.success = function(a) {
-return null == a && (a = {}), "string" == typeof a && (a = {
-message:a
-}), a.type = "success", this.post(a);
-}, c;
-}(h), a.fn.messenger = function() {
-var c, d, e, g, i, j, k, l;
-return e = arguments[0], d = 2 <= arguments.length ? n.call(arguments, 1) :[], null == e && (e = {}), c = this, null != e && f.isString(e) ? (l = c.data("messenger"))[e].apply(l, d) :(i = e, null == c.data("messenger") && (h = null != (j = null != (k = Messenger.themes[i.theme]) ? k.Messenger :void 0) ? j :b, c.data("messenger", g = new h(a.extend({
-el:c
-}, i))), g.render()), c.data("messenger"));
-}, window.Messenger._call = function(b) {
-var c, d, e, f, g, h, i, j, k, l, m;
-if (h = {
-extraClasses:"messenger-fixed messenger-on-bottom messenger-on-right",
-theme:"future",
-maxMessages:9,
-parentLocations:[ "body" ]
-}, b = a.extend(h, a._messengerDefaults, Messenger.options, b), null != b.theme && (b.extraClasses += " messenger-theme-" + b.theme), i = b.instance || Messenger.instance, null == b.instance) {
-for (k = b.parentLocations, d = null, e = null, l = 0, m = k.length; l < m; l++) if (j = k[l], d = a(j), d.length) {
-f = j;
-break;
-}
-i ? a(i._location).is(a(f)) || (i.$el.detach(), d.prepend(i.$el)) :(c = a("<ul>"), d.prepend(c), i = c.messenger(b), i._location = f, Messenger.instance = i);
-}
-return null != i._addedClasses && i.$el.removeClass(i._addedClasses), i.$el.addClass(g = "" + i.className + " " + b.extraClasses), i._addedClasses = g, i;
-}, a.extend(Messenger, {
-Message:e,
-Messenger:b,
-themes:null != (k = Messenger.themes) ? k :{}
-}), a.globalMessenger = window.Messenger = Messenger;
-}.call(this), function() {
-var a, b, c, d = {}.hasOwnProperty, e = function(a, b) {
-function c() {
-this.constructor = a;
-}
-for (var e in b) d.call(b, e) && (a[e] = b[e]);
-return c.prototype = b.prototype, a.prototype = new c(), a.__super__ = b.prototype, a;
-};
-a = jQuery, c = '<div class="messenger-spinner">\n    <span class="messenger-spinner-side messenger-spinner-side-left">\n        <span class="messenger-spinner-fill"></span>\n    </span>\n    <span class="messenger-spinner-side messenger-spinner-side-right">\n        <span class="messenger-spinner-fill"></span>\n    </span>\n</div>', b = function(b) {
-function d() {
-return d.__super__.constructor.apply(this, arguments);
-}
-return e(d, b), d.prototype.template = function(b) {
-var e;
-return e = d.__super__.template.apply(this, arguments), e.append(a(c)), e;
-}, d;
-}(window.Messenger.Message), window.Messenger.themes.flat = {
-Message:b
-};
-}.call(this), LabelSelector.prototype.addConjunct = function(a, b, c) {
+}), LabelSelector.prototype.addConjunct = function(a, b, c) {
 var d = {
 key:a,
 operator:b,
@@ -43073,167 +42634,7 @@ b.remove(), 0 == $(".label-filter-active-filter", this._labelFilterActiveFilters
 }, b.prototype.toggleFilterWidget = function(a) {
 this._labelFilterRootElement && (a ? this._labelFilterRootElement.show() :this._labelFilterRootElement.hide()), this._labelFilterActiveFiltersRootElement && (a ? this._labelFilterActiveFiltersRootElement.show() :this._labelFilterActiveFiltersRootElement.hide());
 }, new b();
-} ]), function(a, b) {
-"function" == typeof define && define.amd ? define([ "angular", "d3" ], b) :b(a.angular, a.d3);
-}(this, function(a, b) {
-"use strict";
-function c(a, c, e) {
-function f(a) {
-v = a, y.selectAll("g").classed("selected", function(b) {
-return b.item === a;
-});
-}
-function g() {
-r = null, k = m.node().clientWidth, l = m.node().clientHeight, w.size([ k, l ]), y.attr("viewBox", "0 0 " + k + " " + l), h();
-}
-function h() {
-A = y.selectAll("line").data(t), A.exit().remove(), A.enter().insert("line", ":first-child"), A.attr("class", function(a) {
-return a.kinds;
-}), z = y.selectAll("g").data(s, function(a) {
-return a.id;
-}), z.exit().remove();
-var a = z.enter().append("g").call(x);
-return f(v), w.nodes(s).links(t).start(), a;
-}
-function i() {
-var a = s, c = u;
-s = [], t = [], u = {};
-var e, f, g, i;
-for (f in o) e = o[f], g = e.kind, n && !n[g] || (i = a[c[f]], i || (i = d[f], delete d[f], i || (i = {})), i.id = f, i.item = e, u[f] = s.length, s.push(i));
-var j, m, q, r, v;
-for (j = 0, m = p.length; j < m; j++) q = p[j], r = u[q.source], v = u[q.target], void 0 !== r && void 0 !== v && t.push({
-source:r,
-target:v,
-kinds:s[r].item.kind + s[v].item.kind
-});
-return k && l ? h() :b.select();
-}
-function j() {
-window.clearTimeout(r), r = window.setTimeout(g, 150);
-}
-var k, l, m = b.select(a), n = null, o = {}, p = [], q = 20;
-e.radius && (q = e.radius);
-var r, s = [], t = [], u = {}, v = null, w = e.force;
-w || (w = b.layout.force().charge(-800).gravity(.2).linkDistance(80));
-var x = w.drag(), y = m.append("svg").attr("viewBox", "0 0 1600 1200").attr("preserveAspectRatio", "xMidYMid meet").attr("class", "kube-topology"), z = b.select(), A = b.select();
-return w.on("tick", function() {
-A.attr("x1", function(a) {
-return a.source.x;
-}).attr("y1", function(a) {
-return a.source.y;
-}).attr("x2", function(a) {
-return a.target.x;
-}).attr("y2", function(a) {
-return a.target.y;
-}), z.attr("cx", function(a) {
-return a.x = a.fixed ? a.x :Math.max(q, Math.min(k - q, a.x)), a.x;
-}).attr("cy", function(a) {
-return a.y = a.fixed ? a.y :Math.max(q, Math.min(l - q, a.y)), a.y;
-}).attr("transform", function(a) {
-return "translate(" + a.x + "," + a.y + ")";
-});
-}), x.on("dragstart", function(a) {
-c(a.item), a.fixed !== !0 && (a.floatpoint = [ a.x, a.y ]), a.fixed = !0, b.select(this).classed("fixed", !0);
-}).on("dragend", function(a) {
-var c = !0;
-a.floatpoint && (c = a.x < a.floatpoint[0] - 5 || a.x > a.floatpoint[0] + 5 || a.y < a.floatpoint[1] - 5 || a.y > a.floatpoint[1] + 5, delete a.floatpoint), a.fixed = c && a.x > 3 && a.x < k - 3 && a.y >= 3 && a.y < l - 3, b.select(this).classed("fixed", a.fixed);
-}), y.on("dblclick", function() {
-y.selectAll("g").classed("fixed", !1).each(function(a) {
-a.fixed = !1;
-}), w.start();
-}).on("click", function(a) {
-b.select(b.event.target).datum() || c(null);
-}), window.addEventListener("resize", j), g(), j(), {
-select:f,
-kinds:function(a) {
-n = a;
-var b = i();
-return [ z, b ];
-},
-data:function(a, b) {
-o = a || {}, p = b || [];
-var c = i();
-return [ z, c ];
-},
-close:function() {
-window.removeEventListener("resize", j), window.clearTimeout(r);
-var a, b;
-d = {};
-for (a in u) b = s[u[a]], delete b.item, d[a] = b;
-s = [], u = {};
-}
-};
-}
-var d = {};
-try {
-a.module("kubernetesUI");
-} catch (e) {
-a.module("kubernetesUI", []);
-}
-return a.module("kubernetesUI").directive("kubernetesTopologyGraph", [ function() {
-return {
-restrict:"E",
-scope:{
-items:"=",
-relations:"=",
-kinds:"=",
-selection:"=",
-force:"=",
-radius:"="
-},
-link:function(a, b, d) {
-function e(b) {
-var c = a.$emit("select", b);
-void 0 !== d.selection || c.defaultPrevented || j.select(b);
-}
-function f(b) {
-var c, d = a.kinds;
-return d && (c = d[b.item.kind]), c || "";
-}
-function g(a) {
-var b = a.item.status;
-return !(!b || !b.phase || "Running" === b.phase);
-}
-function h(b) {
-var c = b[0], d = b[1], e = a.$emit("render", c, d);
-e.defaultPrevented || (d.attr("class", function(a) {
-return a.item.kind;
-}), d.append("use").attr("xlink:href", f), d.append("title"), c.selectAll("title").text(function(a) {
-return a.item.metadata.name;
-}), c.classed("weak", g));
-}
-b.css("display", "block");
-var i = {
-force:a.force,
-radius:a.radius
-}, j = c(b[0], e, i);
-a.$watchCollection("kinds", function(a) {
-h(j.kinds(a));
-}), a.$watchCollection("[items, relations]", function(a) {
-h(j.data(a[0], a[1]));
-}), a.$watch("selection", function(a) {
-j.select(a);
-}), b.on("$destroy", function() {
-j.close();
-});
-}
-};
-} ]).directive("kubernetesTopologyIcon", function() {
-return {
-restrict:"E",
-transclude:!0,
-template:"<ng-transclude></ng-transclude>",
-link:function(a, b, c) {
-var d = c.kind, e = a.kinds[d];
-a.$watchCollection("kinds", function() {
-b.toggleClass("active", d in a.kinds);
-}), b.on("click", function() {
-d in a.kinds ? (e = a.kinds[d], delete a.kinds[d]) :a.kinds[d] = e, a.$parent && a.$parent.$digest(), a.$digest();
-});
-}
-};
-});
-}), function() {
+} ]), function() {
 "use strict";
 function a() {
 this._events = this._events || {};
@@ -45491,26 +44892,6 @@ a.put("views/pod-template.html", '<h3>Pod Template</h3>\n<dl class="dl-horizonta
 a.put("views/replication-controller.html", '<div>\n  <kubernetes-object-describe-header resource="resource" kind="kind"></kubernetes-object-describe-header>\n  <dl class="dl-horizontal">\n    <dt>Name</dt>\n    <dd>{{resource.metadata.name}}</dd>\n    <dt>Namespace</dt>\n    <dd>{{resource.metadata.namespace}}</dd>\n    <dt>Created</dt>\n    <dd>{{resource.metadata.creationTimestamp | date:\'medium\'}}</dd>\n    <dt>Replicas</dt>\n    <dd>{{(resource.spec.replicas === undefined) ? 1 : resource.spec.replicas}}</dd>\n  </dl>\n  <h3>Selector</h3>\n  <dl class="dl-horizontal">\n    <dt ng-repeat-start="(selectorKey, selectorValue) in resource.spec.selector" title="{{selectorKey}}">{{selectorKey}}</dt>\n    <dd ng-repeat-end>{{selectorValue}}</dd>\n  </dl>\n  <kubernetes-object-describe-pod-template template="resource.spec.template.spec"></kubernetes-object-describe-pod-template>\n  <kubernetes-object-describe-labels resource="resource"></kubernetes-object-describe-labels>\n  <kubernetes-object-describe-annotations resource="resource"></kubernetes-object-describe-annotations>\n  <kubernetes-object-describe-footer resource="resource"></kubernetes-object-describe-footer>\n</div>\n'), 
 a.put("views/service.html", '<div>\n  <kubernetes-object-describe-header resource="resource" kind="kind"></kubernetes-object-describe-header>\n  <dl class="dl-horizontal">\n    <dt>Name</dt>\n    <dd>{{resource.metadata.name}}</dd>\n    <dt>Namespace</dt>\n    <dd>{{resource.metadata.namespace}}</dd>\n    <dt>Created</dt>\n    <dd>{{resource.metadata.creationTimestamp | date:\'medium\'}}</dd>\n    <dt>Type</dt>\n    <dd>{{resource.spec.type}}</dd>\n    <dt>IP</dt>\n    <dd>{{resource.spec.clusterIP}}</dd>\n    <dt>Ports</dt>\n    <dd>\n      <div ng-if="!resource.spec.ports.length">None</div>\n      <div ng-repeat="portMapping in resource.spec.ports | orderBy:\'port\'">\n        {{portMapping.port}}/{{portMapping.protocol}} &#8594; {{portMapping.targetPort}}\n      </div>\n    </dd>\n    <dt>Session affinity</dt>\n    <dd>{{resource.spec.sessionAffinity}}</dd>    \n    <dt ng-if="resource.status.loadBalancer.ingress.length">Ingress points</dt>\n    <dd ng-if="resource.status.loadBalancer.ingress.length">\n      <span ng-repeat="ingress in resource.status.loadBalancer.ingress"\n        >{{ingress.ip}}<span ng-if="!$last">, </span></span>\n    </dd>\n  </dl>\n  <h3>Selector</h3>\n  <dl class="dl-horizontal">\n    <dt ng-repeat-start="(selectorKey, selectorValue) in resource.spec.selector">{{selectorKey}}</dt>\n    <dd ng-repeat-end>{{selectorValue}}</dd>\n  </dl>\n  <kubernetes-object-describe-labels resource="resource"></kubernetes-object-describe-labels>\n  <kubernetes-object-describe-annotations resource="resource"></kubernetes-object-describe-annotations>\n  <kubernetes-object-describe-footer resource="resource"></kubernetes-object-describe-footer>\n</div>\n'), 
 a.put("views/volumes.html", '<p ng-if="!volumes.length"><em>none</em></p>\n<dl class="dl-horizontal" ng-repeat="volume in volumes">\n<dt>Name</dt>\n<dd>{{volume.name}}</dd>\n<!-- Type = host path -->\n<dt ng-if-start="volume.hostPath">Type</dt>\n<dd>host path</dd>\n<dt>Path</dt>\n<dd ng-if-end>{{volume.hostPath.path}}</dd>\n<!-- Type = empty dir -->\n<dt ng-if-start="volume.emptyDir">Type</dt>\n<dd ng-if-end>empty directory</dd>\n<!-- Type = GCE persistent disk - TODO fill out details -->\n<dt ng-if-start="volume.gcePersistentDisk">Type</dt>\n<dd ng-if-end>GCE persistent disk</dd>\n<!-- Type = git repo -->\n<dt ng-if-start="volume.gitRepo">Type</dt>\n<dd>Git repository</dd>\n<dt>Repository</dt>\n<dd>{{volume.gitRepo.repository}}</dd>\n<dt>Revision</dt>\n<dd ng-if-end>\n  <span ng-if="volume.gitRepo.revision">{{volume.gitRepo.revision}}</span>\n  <span ng-if="!volume.gitRepo.revision"><em>not specified</em></span>\n</dd>\n</dl>\n');
-} ]);
-
-try {
-angular.module("openshiftUI");
-} catch (e) {
-angular.module("openshiftUI", []);
-}
-
-angular.module("openshiftUI").requires.push("kubernetesUI"), angular.module("openshiftUI").filter("imageObjectRef", function() {
-return function(a, b) {
-var c = a.namespace || b;
-return c && "DockerImage" !== a.kind ? c + "/" + a.name :a.name;
-};
-}).run([ "KubernetesObjectDescriber", function(a) {
-a.registerKind("Build", "views/build.html"), a.registerKind("DeploymentConfig", "views/deployment-config.html"), a.registerKind("Route", "views/route.html");
-} ]), angular.module("kubernetesUI").run([ "$templateCache", function(a) {
-"use strict";
-a.put("views/build.html", '<div>\n  <kubernetes-object-describe-header resource="resource" kind="kind"></kubernetes-object-describe-header>\n  <dl class="dl-horizontal">\n    <dt>Name</dt>\n    <dd>{{resource.metadata.name}}</dd>\n    <dt>Namespace</dt>\n    <dd>{{resource.metadata.namespace}}</dd>\n    <dt>Created</dt>\n    <dd>{{resource.metadata.creationTimestamp | date:\'medium\'}}</dd>\n  </dl>\n  <h3>Build Configuration</h3>\n  <dl class="dl-horizontal" style="margin-bottom: 0;">\n    <dt>Strategy</dt>\n    <dd>{{resource.spec.strategy.type}}</dd>\n  </dl>\n  <div ng-switch="resource.spec.strategy.type">\n    <div ng-switch-when="Source">\n      <div ng-if="resource.spec.strategy.sourceStrategy.from">\n        <dl class="dl-horizontal" style="margin-bottom: 0;">\n          <dt>Kind</dt>\n          <dd>{{resource.spec.strategy.sourceStrategy.from.kind}}</dd>\n          <dt>Builder image</dt>\n          <dd>{{resource.spec.strategy.sourceStrategy.from | imageObjectRef : resource.metadata.namespace}}</dd>\n        </dl>\n      </div>\n    </div>\n    <div ng-switch-when="Docker">\n      <div ng-if="resource.spec.strategy.dockerStrategy.from">\n        <dl class="dl-horizontal" style="margin-bottom: 0;">\n          <dt>Kind</dt>\n          <dd>{{resource.spec.strategy.dockerStrategy.from.kind}}</dd>\n          <dt>Builder image</dt>\n          <dd>{{resource.spec.strategy.dockerStrategy.from | imageObjectRef : resource.metadata.namespace}}</dd>\n        </dl>\n      </div>\n    </div>\n    <div ng-switch-when="Custom">\n      <dl class="dl-horizontal" style="margin-bottom: 0;">\n        <dt>Kind</dt>\n        <dd>{{resource.spec.strategy.customStrategy.from.kind}}</dd>\n        <dt>Builder image</dt>\n        <dd>{{resource.spec.strategy.customStrategy.from | imageObjectRef : resource.metadata.namespace}}</dd>\n      </dl>\n    </div>\n  </div>\n  <div ng-if="resource.spec.source">\n    <div ng-if="resource.spec.source.type == \'Git\'">\n      <dl class="dl-horizontal" style="margin-bottom: 0;">\n        <dt>Source repo</dt>\n        <dd>{{resource.spec.source.git.uri}}</dd>\n        <dt>Source branch/tag/ref</dt>\n        <dd>{{resource.spec.source.git.ref || \'master\'}}</dd>\n      </dl>\n    </div>\n  </div>\n  <h3>Status</h3>\n  <dl class="dl-horizontal">\n    <dt>Phase</dt>\n    <dd>{{resource.status.phase}}</dd>\n    <dt>Started</dt>\n    <dd>\n      <span ng-if="resource.status.startTimestamp">{{resource.status.startTimestamp | date:\'medium\'}}</span>\n      <span ng-if="!resource.status.startTimestamp"><em>not started</em></span>\n    </dd>\n    <dt>Completed</dt>\n    <dd>\n      <span ng-if="resource.status.completionTimestamp">{{resource.status.completionTimestamp | date:\'medium\'}}</span>\n      <span ng-if="!resource.status.completionTimestamp"><em>not complete</em></span>\n    </dd>\n  </dl>\n  <kubernetes-object-describe-labels resource="resource"></kubernetes-object-describe-labels>\n  <kubernetes-object-describe-annotations resource="resource"></kubernetes-object-describe-annotations>\n  <kubernetes-object-describe-footer resource="resource"></kubernetes-object-describe-footer>\n</div>\n'), 
-a.put("views/deployment-config.html", '<div>\n  <kubernetes-object-describe-header resource="resource" kind="kind"></kubernetes-object-describe-header>\n  <dl class="dl-horizontal">\n    <dt>Name</dt>\n    <dd>{{resource.metadata.name}}</dd>\n    <dt>Namespace</dt>\n    <dd>{{resource.metadata.namespace}}</dd>\n    <dt>Created</dt>\n    <dd>{{resource.metadata.creationTimestamp | date:\'medium\'}}</dd>\n  </dl>\n  <h3>Triggers</h3>\n  <dl class="dl-horizontal" ng-repeat="trigger in resource.spec.triggers">\n    <dt>Type</dt>\n    <dd>{{trigger.type}}</dd>\n    <dt ng-if-start="trigger.type == \'ImageChange\' && trigger.imageChangeParams.from">Image</dt>\n    <dd ng-if-end>{{trigger.imageChangeParams.from | imageObjectRef : resource.metadata.namespace}}</dd>\n  </dl>\n  <h3>Replication Settings</h3>\n  <dl class="dl-horizontal">\n    <dt>Replicas</dt>\n    <dd>{{resource.spec.replicas}}</dd>\n  </dl>\n  <h4>Selector</h4>\n  <dl class="dl-horizontal">\n    <dt ng-repeat-start="(selectorKey, selectorValue) in resource.spec.selector">{{selectorKey}}</dt>\n    <dd ng-repeat-end>{{selectorValue}}</dd>\n  </dl>\n  <kubernetes-object-describe-pod-template template="resource.spec.template.spec"></kubernetes-object-describe-pod-template>\n  <kubernetes-object-describe-labels resource="resource"></kubernetes-object-describe-labels>\n  <kubernetes-object-describe-annotations resource="resource"></kubernetes-object-describe-annotations>\n  <kubernetes-object-describe-footer resource="resource"></kubernetes-object-describe-footer>\n</div>\n'), 
-a.put("views/route.html", '<div>\n  <kubernetes-object-describe-header resource="resource" kind="kind"></kubernetes-object-describe-header>\n  <dl class="dl-horizontal">\n    <dt>Name</dt>\n    <dd>{{resource.metadata.name}}</dd>\n    <dt>Namespace</dt>\n    <dd>{{resource.metadata.namespace}}</dd>\n    <dt>Created</dt>\n    <dd>{{resource.metadata.creationTimestamp | date:\'medium\'}}</dd>\n    <dt>Host</dt>\n    <dd>{{resource.spec.host}}</dd>\n    <dt>Path</dt>\n    <dd>{{resource.spec.path || \'None\'}}</dd>\n    <dt>To</dt>\n    <dd>{{resource.spec.to.kind}} {{resource.spec.to.name}}</dd>\n  </dl>\n  <div ng-if="resource.spec.tls.termination">\n    <dl class="dl-horizontal">\n      <dt>TLS Termination</dt>\n      <dd>{{resource.spec.tls.termination}}</dd>\n      <dt>Certificate</dt>\n' + "      <dd>{{(resource.spec.tls.certificate) ? '*****' : 'None'}}</dd>\n      <dt>Key</dt>\n      <dd>{{(resource.spec.tls.key) ? '*****' : 'None'}}</dd>\n      <dt>CA Certificate</dt>\n      <dd>{{(resource.spec.tls.caCertificate) ? '*****' : 'None'}}</dd>\n      <dt>Destination CA Cert</dt>\n      <dd>{{(resource.spec.tls.destinationCACertificate) ? '*****' : 'None'}}</dd>\n    </dl>\n  </div>\n  <kubernetes-object-describe-labels resource=\"resource\"></kubernetes-object-describe-labels>\n  <kubernetes-object-describe-annotations resource=\"resource\"></kubernetes-object-describe-annotations>\n  <kubernetes-object-describe-footer resource=\"resource\"></kubernetes-object-describe-footer>\n</div>\n");
 } ]), !function(a, b) {
 var c = a();
 a.fn.dropdownHover = function(d) {
@@ -60151,14 +59532,71 @@ var n = function() {
 window.OPENSHIFT_CONFIG.api.k8s.resources = b.k8s, window.OPENSHIFT_CONFIG.api.openshift.resources = b.openshift, window.OPENSHIFT_CONFIG.apis.groups = c, d.length && (window.OPENSHIFT_CONFIG.apis.API_DISCOVERY_ERRORS = d), a();
 }, o = [ g, i, l ];
 o = o.concat(m), $.when.apply(this, o).always(n);
-}), angular.module("openshiftCommonUI", []), hawtioPluginLoader.addModule("openshiftCommonUI"), angular.module("openshiftCommonUI").run([ "$templateCache", function(a) {
+}), angular.module("openshiftCommonUI", []).constant("DNS1123_SUBDOMAIN_VALIDATION", {
+pattern:/^[a-z0-9]([-a-z0-9]*[a-z0-9])?(\.[a-z0-9]([-a-z0-9]*[a-z0-9])?)*$/,
+maxlength:253,
+description:"Name must consist of lower-case letters, numbers, periods, and hyphens. It must start and end with a letter or a number."
+}), hawtioPluginLoader.addModule("openshiftCommonUI"), angular.module("openshiftCommonUI").run([ "$templateCache", function(a) {
 "use strict";
+a.put("src/components/binding/bindApplicationForm.html", '<div class="bind-form">\n  <form>\n    <div class="form-group">\n      <label>\n        <h3>Bind a service to <strong>{{ctrl.applicationName}}</strong></h3>\n      </label>\n      <span class="help-block">\n        Binding to a provisioned service will create a secret containing the information necessary for your application to use the service.\n      </span>\n    </div>\n  </form>\n\n  <form name="ctrl.formName">\n    <fieldset>\n      <div class="radio">\n        <label ng-if="ctrl.allowNoBinding">\n          <input type="radio" ng-model="ctrl.serviceToBind" value="">\n          Do not bind at this time.\n        </label>\n        <div ng-if="ctrl.allowNoBinding" class="bind-description">\n          <span class="help-block service-instance-name">\n            You can create the binding later from your project.\n          </span>\n        </div>\n        <div ng-repeat="serviceInstance in ctrl.serviceInstances">\n          <label>\n            <input type="radio" ng-model="ctrl.serviceToBind" value="{{serviceInstance.metadata.name}}">\n            {{ctrl.serviceClasses[serviceInstance.spec.serviceClassName].osbMetadata.displayName || serviceInstance.spec.serviceClassName}}\n          </label>\n          <div class="bind-description">\n            <span class="pficon pficon-info"\n                  ng-if="!(serviceInstance | isServiceInstanceReady)"\n                  data-content="This service is not yet ready. If you bind to it, then the binding will be pending until the service is ready."\n                  data-toggle="popover"\n                  data-trigger="hover">\n            </span>\n            <span class="help-block service-instance-name">\n              {{serviceInstance.metadata.name}}\n            </span>\n          </div>\n        </div>\n      </div>\n    </fieldset>\n  </form>\n</div>\n'), 
+a.put("src/components/binding/bindResults.html", '<div ng-if="!ctrl.error">\n  <div ng-if="!(ctrl.binding | isBindingReady)" class="bind-status" ng-class="{\'text-center\': !ctrl.progressInline, \'show-progress\': !ctrl.progressInline}">\n    <div class="spinner" ng-class="{\'spinner-sm\': ctrl.progressInline, \'spinner-inline\': ctrl.progressInline, \'spinner-lg\': !ctrl.progressInline}" aria-hidden="true"></div>\n    <h3 class="bind-message">\n      <span class="sr-only">Pending</span>\n      <div class="bind-pending-message" ng-class="{\'progress-inline\': ctrl.progressInline}">The binding was created but is not ready yet.</div>\n    </h3>\n  </div>\n  <div ng-if="(ctrl.binding | isBindingReady)">\n    <div class="bind-status">\n      <span class="pficon pficon-ok" aria-hidden="true"></span>\n      <span class="sr-only">Success</span>\n      <h3 class="bind-message">\n        <strong>{{ctrl.serviceToBind}}</strong>\n        <span>&nbsp;has been bound</span>\n        <span ng-if="ctrl.applicationToBind">&nbsp;to <strong>{{ctrl.applicationToBind}}</strong> successfully</span>\n      </h3>\n    </div>\n    <div class="sub-title">\n      The binding operation created the secret\n      <a ng-if="ctrl.secretHref && \'secrets\' | canI : \'list\'"\n         ng-href="{{ctrl.secretHref}}">{{ctrl.binding.spec.secretName}}</a>\n      <span ng-if="!ctrl.secretHref || !(\'secrets\' | canI : \'list\')">{{ctrl.binding.spec.secretName}}</span>\n      that you may need to reference in your application.\n      <span ng-if="ctrl.showPodPresets">Its data will be available to your application as environment variables.</span>\n    </div>\n    <div class="alert alert-info bind-info">\n      <span class="pficon pficon-info" aria-hidden="true"></span>\n      <span class="sr-only">Info</span>\n      The binding secret will only be available to new pods. You will need to redeploy your application.\n    </div>\n  </div>\n</div>\n<div ng-if="ctrl.error">\n  <div class="bind-status">\n    <span class="pficon pficon-error-circle-o text-danger" aria-hidden="true"></span>\n    <span class="sr-only">Error</span>\n    <h3 class="bind-message">\n      <span>Binding Failed</span>\n    </h3>\n  </div>\n  <div class="sub-title">\n    <span ng-if="ctrl.error.data.message">\n      {{ctrl.error.data.message | upperFirst}}\n    </span>\n    <span ng-if="!ctrl.error.data.message">\n      An error occurred creating the binding.\n    </span>\n  </div>\n</div>\n'), 
+a.put("src/components/binding/bindServiceForm.html", '<div class="bind-form">\n  <form>\n    <div class="form-group">\n        <label>\n          <h3>Bind <strong>{{ctrl.serviceClass.osbMetadata.displayName || ctrl.serviceClassName}}</strong> to an existing application</strong></h3>\n        </label>\n        <span class="help-block">Binding to a provisioned service will create a secret containing the information necessary for your application to use the service.</span>\n    </div>\n  </form>\n\n  <form name="ctrl.formName" class="mar-bottom-lg">\n    <fieldset>\n      <div class="radio">\n        <label class="bind-choice">\n          <input type="radio" ng-model="ctrl.shouldBindToApp" value="true">\n          Bind to an application\n        </label>\n        <div class="application-select">\n          <ui-select ng-model="ctrl.appToBind"\n                     ng-disabled="ctrl.shouldBindToApp !== \'true\'"\n                     ng-required="ctrl.shouldBindToApp === \'true\'">\n            <ui-select-match placeholder="Select an application">\n            <span>\n              {{$select.selected.metadata.name}}\n              <small class="text-muted">&ndash; {{$select.selected.kind | humanizeKind : true}}</small>\n            </span>\n            </ui-select-match>\n            <ui-select-choices\n              repeat="application in (ctrl.applications) | filter : { metadata: { name: $select.search } } track by (application | uid)"\n              group-by="ctrl.groupByKind">\n              <span ng-bind-html="application.metadata.name | highlight : $select.search"></span>\n            </ui-select-choices>\n          </ui-select>\n        </div>\n        <label class="bind-choice">\n          <input type="radio" ng-model="ctrl.shouldBindToApp" value="false">\n          Create a secret in my project\n        </label>\n        <div class="help-block bind-description">\n          You can reference this secret later from any application either as environment variables or configuration files mounted as volumes.\n        </div>\n        <label ng-if="ctrl.allowNoBinding" class="bind-choice">\n          <input type="radio" ng-model="ctrl.shouldBindToApp" value="none">\n          Do not bind at this time\n        </label>\n        <div ng-if="ctrl.allowNoBinding" class="help-block bind-description">\n          You can create the binding later from your project.\n        </div>\n      </div>\n    </fieldset>\n  </form>\n</div>\n'), 
 a.put("src/components/create-project/createProject.html", '<form name="createProjectForm" novalidate>\n  <fieldset ng-disabled="disableInputs">\n    <div class="form-group">\n      <label for="name" class="required">Name</label>\n      <span ng-class="{\'has-error\': (createProjectForm.name.$error.pattern && createProjectForm.name.$touched) || nameTaken}">\n        <input class="form-control input-lg"\n            name="name"\n            id="name"\n            placeholder="my-project"\n            type="text"\n            required\n            take-focus\n            minlength="2"\n            maxlength="63"\n            pattern="[a-z0-9]([-a-z0-9]*[a-z0-9])?"\n            aria-describedby="nameHelp"\n            ng-model="name"\n            ng-model-options="{ updateOn: \'default blur\' }"\n            ng-change="nameTaken = false"\n            autocorrect="off"\n            autocapitalize="off"\n            spellcheck="false">\n      </span>\n      <div>\n        <span class="help-block">A unique name for the project.</span>\n      </div>\n      <div class="has-error">\n        <span id="nameHelp" class="help-block" ng-if="createProjectForm.name.$error.required && createProjectForm.name.$dirty">\n          Name is required.\n        </span>\n      </div>\n      <div class="has-error">\n        <span id="nameHelp" class="help-block" ng-if="createProjectForm.name.$error.minlength && createProjectForm.name.$touched">\n          Name must have at least two characters.\n        </span>\n      </div>\n      <div class="has-error">\n        <span id="nameHelp" class="help-block" ng-if="createProjectForm.name.$error.pattern && createProjectForm.name.$touched">\n          Project names may only contain lower-case letters, numbers, and dashes.\n          They may not start or end with a dash.\n        </span>\n      </div>\n      <div class="has-error">\n        <span class="help-block" ng-if="nameTaken">\n          This name is already in use. Please choose a different name.\n        </span>\n      </div>\n    </div>\n\n    <div class="form-group">\n      <label for="displayName">Display Name</label>\n      <input class="form-control input-lg"\n          name="displayName"\n          id="displayName"\n          placeholder="My Project"\n          type="text"\n          ng-model="displayName">\n    </div>\n\n    <div class="form-group">\n      <label for="description">Description</label>\n      <textarea class="form-control input-lg"\n          name="description"\n          id="description"\n          placeholder="A short description."\n          ng-model="description"></textarea>\n    </div>\n\n    <div class="button-group">\n      <button type="submit"\n          class="btn btn-primary btn-lg"\n          ng-class="{\'dialog-btn\': isDialog}"\n          ng-click="createProject()"\n          ng-disabled="createProjectForm.$invalid || nameTaken || disableInputs"\n          value="">\n        Create\n      </button>\n      <button\n          class="btn btn-default btn-lg"\n          ng-class="{\'dialog-btn\': isDialog}"\n          ng-click="cancelCreateProject()">\n        Cancel\n      </button>\n    </div>\n  </fieldset>\n</form>\n'), 
 a.put("src/components/delete-project/delete-project-button.html", '<div class="actions">\n  <!-- Avoid whitespace inside the link -->\n  <a href=""\n     ng-click="$event.stopPropagation(); openDeleteModal()"\n     role="button"\n     class="action-button"\n     ng-attr-aria-disabled="{{disableDelete ? \'true\' : undefined}}"\n     ng-class="{ \'disabled-link\': disableDelete }"\n    ><i class="fa fa-trash-o" aria-hidden="true"\n    ></i><span class="sr-only">Delete Project {{projectName}}</span></a>\n</div>\n'), a.put("src/components/delete-project/delete-project-modal.html", '<div class="delete-resource-modal">\n  <!-- Use a form so that the enter key submits when typing a project name to confirm. -->\n  <form>\n    <div class="modal-body">\n      <h1>Are you sure you want to delete the project\n        \'<strong>{{displayName ? displayName : projectName}}</strong>\'?</h1>\n      <p>\n        This will <strong>delete all resources</strong> associated with\n        the project {{displayName ? displayName : projectName}} and <strong>cannot be\n        undone</strong>.  Make sure this is something you really want to do!\n      </p>\n      <div ng-show="typeNameToConfirm">\n        <p>Type the name of the project to confirm.</p>\n        <p>\n          <label class="sr-only" for="resource-to-delete">project to delete</label>\n          <input\n              ng-model="confirmName"\n              id="resource-to-delete"\n              type="text"\n              class="form-control input-lg"\n              autocorrect="off"\n              autocapitalize="off"\n              spellcheck="false"\n              autofocus>\n        </p>\n      </div>\n    </div>\n    <div class="modal-footer">\n      <button ng-disabled="typeNameToConfirm && confirmName !== projectName && confirmName !== displayName" class="btn btn-lg btn-danger" type="submit" ng-click="delete();">Delete</button>\n      <button class="btn btn-lg btn-default" type="button" ng-click="cancel();">Cancel</button>\n    </div>\n  </form>\n</div>\n'), 
 a.put("src/components/delete-project/delete-project.html", '<a href="javascript:void(0)"\n   ng-click="openDeleteModal()"\n   role="button"\n   ng-attr-aria-disabled="{{disableDelete ? \'true\' : undefined}}"\n   ng-class="{ \'disabled-link\': disableDelete }"\n>{{label || \'Delete\'}}</a>\n'), a.put("src/components/edit-project/editProject.html", '<form name="editProjectForm">\n  <fieldset ng-disabled="disableInputs">\n    <div class="form-group">\n      <label for="displayName">Display Name</label>\n      <input class="form-control input-lg"\n             name="displayName"\n             id="displayName"\n             placeholder="My Project"\n             type="text"\n             ng-model="editableFields.displayName">\n    </div>\n\n    <div class="form-group">\n      <label for="description">Description</label>\n                    <textarea class="form-control input-lg"\n                              name="description"\n                              id="description"\n                              placeholder="A short description."\n                              ng-model="editableFields.description"></textarea>\n    </div>\n\n    <div class="button-group">\n      <button type="submit"\n              class="btn btn-primary btn-lg"\n              ng-class="{\'dialog-btn\': isDialog}"\n              ng-click="update()"\n              ng-disabled="editProjectForm.$invalid || disableInputs"\n              value="">{{submitButtonLabel}}</button>\n      <button\n          class="btn btn-default btn-lg"\n          ng-class="{\'dialog-btn\': isDialog}"\n          ng-click="cancelEditProject()">\n        Cancel\n      </button>\n    </div>\n  </fieldset>\n</form>\n'), 
 a.put("src/components/toast-notifications/toast-notifications.html", '<div class="toast-notifications-list-pf">\n  <div ng-repeat="(notificationID, notification) in notifications track by (notificationID + (notification.message || notification.details))" ng-if="!notification.hidden"\n       ng-mouseenter="setHover(notification, true)" ng-mouseleave="setHover(notification, false)">\n    <div class="toast-pf alert {{notification.type | alertStatus}}" ng-class="{\'alert-dismissable\': !hideCloseButton}">\n      <button ng-if="!hideCloseButton" type="button" class="close" ng-click="close(notification)">\n        <span class="pficon pficon-close" aria-hidden="true"></span>\n        <span class="sr-only">Close</span>\n      </button>\n      <span class="{{notification.type | alertIcon}}" aria-hidden="true"></span>\n      <span class="sr-only">{{notification.type}}</span>\n      <span class="toast-notification-message" ng-if="notification.message">{{notification.message}}</span>\n      <span ng-if="notification.details">{{notification.details}}</span>\n      <span ng-repeat="link in notification.links">\n        <a ng-if="!link.href" href="" ng-click="onClick(notification, link)" role="button">{{link.label}}</a>\n        <a ng-if="link.href" ng-href="{{link.href}}" ng-attr-target="{{link.target}}">{{link.label}}</a>\n        <span ng-if="!$last" class="toast-action-divider">|</span>\n      </span>\n    </div>\n  </div>\n</div>\n'), 
 a.put("src/components/truncate-long-text/truncateLongText.html", '<!--\n  Do not remove class `truncated-content` (here or below) even though it\'s not\n  styled directly in origin-web-common.  `truncated-content` is used by\n  origin-web-console in certain contexts.\n-->\n<span ng-if="!truncated" ng-bind-html="content | highlightKeywords : keywords" class="truncated-content"></span>\n<span ng-if="truncated">\n  <span ng-if="!toggles.expanded">\n    <span ng-attr-title="{{content}}" class="truncation-block">\n      <span ng-bind-html="truncatedContent | highlightKeywords : keywords" class="truncated-content"></span>&hellip;\n    </span>\n    <a ng-if="expandable" href="" ng-click="toggles.expanded = true" class="nowrap">See All</a>\n  </span>\n  <span ng-if="toggles.expanded">\n    <div ng-if="prettifyJson" class="well">\n      <span class="pull-right" style="margin-top: -10px;"><a href="" ng-click="toggles.expanded = false" class="truncation-collapse-link">Collapse</a></span>\n      <span ng-bind-html="content | prettifyJSON | highlightKeywords : keywords" class="pretty-json truncated-content"></span>\n    </div>\n    <span ng-if="!prettifyJson">\n      <span class="pull-right"><a href="" ng-click="toggles.expanded = false" class="truncation-collapse-link">Collapse</a></span>\n      <span ng-bind-html="content | highlightKeywords : keywords" class="truncated-content"></span>\n    </span>\n  </span>\n</span>\n');
-} ]), angular.module("openshiftCommonUI").directive("createProject", [ "$window", function(a) {
+} ]), angular.module("openshiftCommonUI").component("bindApplicationForm", {
+controllerAs:"ctrl",
+bindings:{
+allowNoBinding:"<?",
+createBinding:"=",
+applicationName:"=",
+formName:"=",
+serviceClasses:"<",
+serviceInstances:"<",
+serviceToBind:"="
+},
+templateUrl:"src/components/binding/bindApplicationForm.html",
+controller:function() {
+}
+}), angular.module("openshiftCommonUI").component("bindResults", {
+controllerAs:"ctrl",
+bindings:{
+error:"<",
+binding:"<",
+progressInline:"@",
+serviceToBind:"<",
+applicationToBind:"<",
+showPodPresets:"<",
+secretHref:"<"
+},
+templateUrl:"src/components/binding/bindResults.html",
+controller:function() {
+var a = this;
+a.$onInit = function() {
+a.progressInline = "true" === a.progressInline;
+}, a.$onChanges = function(b) {
+b.progressInline && (a.progressInline = "true" === a.progressInline);
+};
+}
+}), angular.module("openshiftCommonUI").component("bindServiceForm", {
+controllerAs:"ctrl",
+bindings:{
+serviceClass:"<",
+serviceClassName:"<",
+formName:"=",
+applications:"<",
+appToBind:"=",
+createBinding:"=?",
+allowNoBinding:"<?",
+shouldBindToApp:"=",
+groupByKind:"<"
+},
+templateUrl:"src/components/binding/bindServiceForm.html",
+controller:function() {
+}
+}), angular.module("openshiftCommonUI").directive("createProject", [ "$window", function(a) {
 return {
 restrict:"E",
 scope:{
@@ -60253,13 +59691,13 @@ k({
 name:a,
 data:{
 type:"success",
-message:_.capitalize(b) + " was marked for deletion."
+message:b + " was marked for deletion."
 }
 }), d.success && d.success(), l();
 })["catch"](function(a) {
 var d = {
 type:"error",
-message:_.capitalize(b) + "' could not be deleted.",
+message:b + " could not be deleted.",
 details:c("getErrorDetails")(a)
 };
 h.addNotification(d), i.error(b + " could not be deleted.", a);
@@ -60354,7 +59792,17 @@ $(c).focus();
 }, 300);
 }
 };
-} ]), angular.module("openshiftCommonUI").directive("toastNotifications", [ "NotificationsService", "$timeout", function(a, b) {
+} ]), angular.module("openshiftCommonUI").directive("tileClick", function() {
+return {
+restrict:"AC",
+link:function(a, b) {
+$(b).click(function(a) {
+var c = $(a.target);
+c && c.closest("a", b).length || $("a.tile-target", b).trigger("click");
+});
+}
+};
+}), angular.module("openshiftCommonUI").directive("toastNotifications", [ "NotificationsService", "$timeout", function(a, b) {
 return {
 restrict:"E",
 scope:{},
@@ -60604,6 +60052,18 @@ if (!a) return a;
 var c = _.startCase(a);
 return b ? c :c.toLowerCase();
 };
+} ]).filter("statusCondition", function() {
+return function(a, b) {
+return a ? _.find(_.get(a, "status.conditions"), {
+type:b
+}) :null;
+};
+}).filter("isServiceInstanceReady", [ "statusConditionFilter", function(a) {
+return function(b) {
+return "True" === _.get(a(b, "Ready"), "status");
+};
+} ]).filter("isBindingReady", [ "isServiceInstanceReadyFilter", function(a) {
+return a;
 } ]), angular.module("openshiftCommonUI").filter("camelToLower", function() {
 return function(a) {
 return a ? _.startCase(a).toLowerCase() :a;
@@ -61038,7 +60498,34 @@ return a;
 }
 }
 };
-}), angular.module("openshiftCommonServices").factory("Constants", function() {
+}), angular.module("openshiftCommonServices").service("BindingService", [ "$filter", "$q", "DataService", "DNS1123_SUBDOMAIN_VALIDATION", function(a, b, c, d) {
+var e = {
+group:"servicecatalog.k8s.io",
+resource:"bindings"
+}, f = function(b) {
+var c = a("generateName");
+return {
+kind:"Binding",
+apiVersion:"servicecatalog.k8s.io/v1alpha1",
+metadata:{
+generateName:b + "-"
+},
+spec:{
+instanceRef:{
+name:b
+},
+secretName:c(_.trunc(b, d.maxlength - 6) + "-")
+}
+};
+};
+return {
+bindingResource:e,
+bindService:function(a, b, d) {
+var g = f(b);
+return c.create(e, null, g, a);
+}
+};
+} ]), angular.module("openshiftCommonServices").factory("Constants", function() {
 var a = _.clone(window.OPENSHIFT_CONSTANTS || {}), b = _.clone(window.OPENSHIFT_VERSION || {});
 return a.VERSION = b, a;
 }), angular.module("openshiftCommonServices").factory("DataService", [ "$cacheFactory", "$http", "$ws", "$rootScope", "$q", "API_CFG", "APIService", "Logger", "$timeout", "base64", "base64util", function(a, b, c, d, e, f, g, h, i, j, k) {

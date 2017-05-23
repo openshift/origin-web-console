@@ -1,21 +1,6 @@
 'use strict';
 
 angular.module('openshiftConsole')
-  .directive('overviewMonopod', function(Navigate, $location) {
-    return {
-      restrict: 'E',
-      scope: {
-        pod: '='
-      },
-      templateUrl: 'views/_overview-monopod.html',
-      link: function(scope) {
-        scope.viewPod = function() {
-          var url = Navigate.resourceURL(scope.pod, "Pod", scope.pod.metadata.namespace);
-          $location.url(url);
-        };
-      }
-    };
-  })
   .directive('podTemplate', function() {
     return {
       restrict: 'E',
@@ -28,76 +13,6 @@ angular.module('openshiftConsole')
         addHealthCheckUrl: '@?'
       },
       templateUrl: 'views/_pod-template.html'
-    };
-  })
-
-  /*
-   * This directive is not currently used since we've switched to a donut chart on the overview.
-   */
-  //.directive('pods', function() {
-  //  return {
-  //    restrict: 'E',
-  //    scope: {
-  //      pods: '=',
-  //      projectName: '@?' //TODO optional for now
-  //    },
-  //    templateUrl: 'views/_pods.html',
-  //    controller: function($scope) {
-  //      $scope.phases = [
-  //        "Failed",
-  //        "Pending",
-  //        "Running",
-  //        "Succeeded",
-  //        "Unknown"
-  //      ];
-  //      $scope.expandedPhase = null;
-  //      $scope.warningsExpanded = false;
-  //      $scope.expandPhase = function(phase, warningsExpanded, $event) {
-  //        $scope.expandedPhase = phase;
-  //        $scope.warningsExpanded = warningsExpanded;
-  //        if ($event) {
-  //          $event.stopPropagation();
-  //        }
-  //      };
-  //    }
-  //  };
-  //})
-
-  /*
-   * This directive is not currently used since we've switched to a donut chart on the overview.
-   */
-  //.directive('podContent', function() {
-  //  // sub-directive used by the pods directive
-  //  return {
-  //    restrict: 'E',
-  //    scope: {
-  //      pod: '=',
-  //      troubled: '='
-  //    },
-  //    templateUrl: 'views/directives/_pod-content.html'
-  //  };
-  //})
-
-  .directive('triggers', function() {
-    return {
-      restrict: 'E',
-      scope: {
-        triggers: '=',
-        buildsByOutputImage: '=',
-        namespace: '='
-      },
-      templateUrl: 'views/_triggers.html'
-    };
-  })
-  .directive('deploymentConfigMetadata', function() {
-    return {
-      restrict: 'E',
-      scope: {
-        deploymentConfigId: '=',
-        exists: '=',
-        differentService: '='
-      },
-      templateUrl: 'views/_deployment-config-metadata.html'
     };
   })
   .directive('annotations', function() {
