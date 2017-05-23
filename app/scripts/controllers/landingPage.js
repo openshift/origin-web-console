@@ -8,6 +8,7 @@ angular.module('openshiftConsole')
                        Catalog,
                        Constants,
                        Navigate,
+                       AlertMessageService,
                        NotificationsService,
                        RecentlyViewedServiceItems,
                        GuidedTourService,
@@ -51,10 +52,21 @@ angular.module('openshiftConsole')
 
     AuthService.withUser().then(function() {
       var includeTemplates = !_.get(Constants, 'ENABLE_TECH_PREVIEW_FEATURE.template_service_broker');
-      Catalog.getCatalogItems(includeTemplates).then(function(items) {
+      Catalog.getCatalogItems(includeTemplates).then(_.spread(function(items, errorMessage) {
+        if (errorMessage) {
+          var alert = {
+            name: 'error-loading-catalog-items',
+            data: {
+              type: 'warning',
+              message: errorMessage
+            }
+          };
+          AlertMessageService.addAlert(alert);
+          NotificationsService.addNotification(alert.data);
+        }
         $scope.catalogItems = items;
         dataLoaded();
-      });
+      }));
     });
 
     $scope.$on('$destroy', function() {

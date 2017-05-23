@@ -892,22 +892,6 @@ angular.module('openshiftConsole')
       }
     };
   })
-  .filter('humanizeKind', function (startCaseFilter) {
-    // Changes "ReplicationController" to "replication controller".
-    // If useTitleCase, returns "Replication Controller".
-    return function(kind, useTitleCase) {
-      if (!kind) {
-        return kind;
-      }
-
-      var humanized = _.startCase(kind);
-      if (useTitleCase) {
-        return humanized;
-      }
-
-      return humanized.toLowerCase();
-    };
-  })
   .filter('kindToResource', function (APIService) {
     return APIService.kindToResource;
   })
@@ -1091,25 +1075,6 @@ angular.module('openshiftConsole')
       });
       return lastFinishTime;
     };
-  })
-  // gets the status condition that matches provided type
-  // statusCondition(object, 'Ready')
-  .filter('statusCondition', function() {
-    return function(apiObject, type) {
-      if (!apiObject) {
-        return null;
-      }
-
-      return _.find(_.get(apiObject, 'status.conditions'), {type: type});
-    };
-  })
-  .filter('isServiceInstanceReady', function(statusConditionFilter) {
-    return function(apiObject) {
-      return _.get(statusConditionFilter(apiObject, 'Ready'), 'status') === 'True';
-    };
-  })
-  .filter('isBindingReady', function(isServiceInstanceReadyFilter) {
-    return isServiceInstanceReadyFilter;
   })
   .filter('routeIngressCondition', function() {
     return function(ingress, type) {
