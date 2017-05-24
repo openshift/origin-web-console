@@ -2,9 +2,10 @@
 
 angular.module('openshiftConsole').component('bindService', {
   controller: [
+    '$scope',
     '$filter',
     'DataService',
-    'DNS1123_SUBDOMAIN_VALIDATION',
+    'BindingService',
     BindService
   ],
   controllerAs: 'ctrl',
@@ -15,12 +16,15 @@ angular.module('openshiftConsole').component('bindService', {
   templateUrl: 'views/directives/bind-service.html'
 });
 
-function BindService($filter,
+function BindService($scope,
+                     $filter,
                      DataService,
-                     DNS1123_SUBDOMAIN_VALIDATION) {
+                     BindingService) {
   var ctrl = this;
-
+  var validityWatcher;
+  var bindingWatch;
   var statusCondition = $filter('statusCondition');
+
   var preselectService = function(){
     var newestReady;
     var newestNotReady;
@@ -70,28 +74,45 @@ function BindService($filter,
     }
   };
 
-  ctrl.$onInit = function() {
-    ctrl.steps = [];
-    if (ctrl.target.kind === 'Instance') {
-      ctrl.steps.push({
-        id: 'applications',
-        label: 'Applications',
-        view: 'views/directives/bind-service/select-application.html'
-      });
-    }
-    else {
-      ctrl.steps.push({
-        id: 'services',
-        label: 'Services',
-        view: 'views/directives/bind-service/select-service.html'
-      });
-    }
-    ctrl.steps.push({
-      label: 'Results',
-      id: 'results',
-      view: 'views/directives/bind-service/results.html'
-    });
+  var showBind = function() {
+    ctrl.nextTitle = 'Bind';
 
+    validityWatcher = $scope.$watch("ctrl.selectionForm.$valid", function(isValid) {
+      ctrl.steps[0].valid = isValid;
+    });
+  };
+
+  var showResults = function() {
+    if (validityWatcher) {
+      validityWatcher();
+      validityWatcher = undefined;
+    }
+    ctrl.nextTitle = "Close";
+    ctrl.wizardComplete = true;
+
+    ctrl.bindService();
+  };
+
+  ctrl.$onInit = function() {
+    ctrl.serviceSelection = {};
+    var formStepLabel = (ctrl.target.kind === 'Instance') ? 'Applications' : 'Services';
+
+    ctrl.steps = [
+      {
+        id: 'bindForm',
+        label: formStepLabel,
+        view: 'views/directives/bind-service/bind-service-form.html',
+        valid: true,
+        onShow: showBind
+      },
+      {
+        label: 'Results',
+        id: 'results',
+        view: 'views/directives/bind-service/results.html',
+        valid: true,
+        onShow: showResults
+      }
+    ];
 
     var context = {
       namespace: _.get(ctrl.target, 'metadata.namespace')
@@ -102,12 +123,17 @@ function BindService($filter,
       resource: 'serviceclasses'
     }, {}).then(function(serviceClasses) {
       ctrl.serviceClasses = serviceClasses.by('metadata.name');
+      if (ctrl.target.kind === 'Instance') {
+        ctrl.serviceClass = ctrl.serviceClasses[ctrl.target.spec.serviceClassName];
+        ctrl.serviceClassName = ctrl.target.spec.serviceClassName;
+      }
       sortServiceInstances();
     });
 
     // TODO is it ever realistically possible for target to not be defined at this point
     if (ctrl.target.kind === 'Instance') {
       ctrl.shouldBindToApp = "true";
+      ctrl.appToBind = null;
       ctrl.serviceToBind = ctrl.target.metadata.name;
       // Load all the "application" types
       DataService.list('deploymentconfigs', context).then(function(deploymentConfigData) {
@@ -151,89 +177,36 @@ function BindService($filter,
         }
         sortServiceInstances();
       });
+      ctrl.appToBind = ctrl.target;
     }
     // TODO: handle not having any service instances when binding app to service
-    ctrl.gotoStep(ctrl.steps[0]);
   };
 
-  var humanizeKind = $filter('humanizeKind');
-  ctrl.groupByKind = function(object) {
-    return humanizeKind(object.kind);
-  };
-
-  var gotoStepID = function(id) {
-    var step = _.find(ctrl.steps, { id: id });
-    ctrl.gotoStep(step);
-  };
-
-  ctrl.gotoStep = function(step) {
-    _.each(ctrl.steps, function(st) {
-      st.selected = false;
-    });
-    if (ctrl.currentStep) {
-      ctrl.currentStep.visited = true;
+  ctrl.$onDestroy = function() {
+    if (validityWatcher) {
+      validityWatcher();
+      validityWatcher = undefined;
     }
-    ctrl.currentStep = step;
-    ctrl.currentStep.selected = true;
-  };
-
-  ctrl.stepClick = function(step) {
-    // Prevent returning to previous steps if the order is complete.
-    if (ctrl.wizardComplete) {
-      return;
+    if (bindingWatch) {
+      DataService.unwatch(bindingWatch);
     }
-
-    if (!step.visited) {
-      return;
-    }
-
-    ctrl.gotoStep(step);
-  };
-
-  var generateName = $filter('generateName');
-  var makeBinding = function() {
-    var serviceInstanceName = ctrl.serviceToBind;
-    // TODO - would be better if generateName could take in an optional maxlength
-    var truncatedSvcInstanceName = _.trunc(serviceInstanceName, DNS1123_SUBDOMAIN_VALIDATION.maxlength - 6);
-    ctrl.generatedSecretName = generateName(truncatedSvcInstanceName + '-');
-    var binding = {
-      kind: 'Binding',
-      apiVersion: 'servicecatalog.k8s.io/v1alpha1',
-      metadata: {
-        generateName: serviceInstanceName + '-'
-      },
-      spec: {
-        instanceRef: {
-          name: serviceInstanceName
-        },
-        secretName: ctrl.generatedSecretName
-      }
-    };
-
-    return binding;
   };
 
   ctrl.bindService = function() {
     var svcToBind = ctrl.target.kind === 'Instance' ? ctrl.target : ctrl.serviceInstances[ctrl.serviceToBind];
+    var appToBind = ctrl.target.kind !== 'Instance' ? ctrl.target : ctrl.appToBind;
+
     var context = {
       namespace: _.get(svcToBind, 'metadata.namespace')
     };
-    DataService.create({
-      group: 'servicecatalog.k8s.io',
-      resource: 'bindings'
-    }, null, makeBinding(), context).then(function(binding) {
-      ctrl.binding = binding;
 
-      DataService.watchObject({
-        group: 'servicecatalog.k8s.io',
-        resource: 'bindings'
-      }, _.get(ctrl.binding, 'metadata.name'), context, function(binding) {
+    BindingService.bindService(context, _.get(svcToBind, 'metadata.name'), _.get(appToBind, 'metadata.name')).then(function(binding){
+      ctrl.binding = binding;
+      ctrl.error = null;
+
+      bindingWatch = DataService.watchObject(BindingService.bindingResource, _.get(ctrl.binding, 'metadata.name'), context, function(binding) {
         ctrl.binding = binding;
       });
-
-      ctrl.wizardComplete = true;
-      ctrl.error = null;
-      gotoStepID('results');
     }, function(e) {
       ctrl.error = e;
     });

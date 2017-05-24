@@ -51,10 +51,17 @@ angular.module('openshiftConsole')
 
     AuthService.withUser().then(function() {
       var includeTemplates = !_.get(Constants, 'ENABLE_TECH_PREVIEW_FEATURE.template_service_broker');
-      Catalog.getCatalogItems(includeTemplates).then(function(items) {
+      Catalog.getCatalogItems(includeTemplates).then(_.spread(function(items, errorMessage) {
+        if (errorMessage) {
+          var alertData = {
+            type: 'error',
+            message: errorMessage
+          };
+          NotificationsService.addNotification(alertData);
+        }
         $scope.catalogItems = items;
         dataLoaded();
-      });
+      }));
     });
 
     $scope.$on('$destroy', function() {

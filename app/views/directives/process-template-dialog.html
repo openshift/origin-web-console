@@ -1,74 +1,49 @@
-<overlay-panel show-panel="$ctrl.template" handle-close="$ctrl.close" show-close="true">
-  <div class="wizard-pf-steps">
-    <ul class="wizard-pf-steps-indicator">
-      <li class="wizard-pf-step" ng-class="{
-        active: step.selected,
-        visited: step.visited && !step.selected
-      }" ng-repeat="step in $ctrl.steps" data-tabgroup="{{$index}}">
-        <!-- TODO: Disable styles for steps that can't be clicked. (None of them can in this dialog.) -->
-        <a href=""><span class="wizard-pf-step-number">{{$index + 1}}</span><span class="wizard-pf-step-title">{{step.label}}</span></a>
-      </li>
-    </ul>
-  </div>
-  <div ng-if="$ctrl.template" class="container-fluid wizard-pf-main">
-    <div class="wizard-pf-main-inner-shadow-covers">
-      <div class="order-service-details">
-        <div class="order-service-details-top">
-          <div class="service-icon">
-            <span class="icon {{$ctrl.iconClass}}"></span>
+<div class="order-service">
+  <div pf-wizard
+       hide-header="true"
+       hide-sidebar="true"
+       hide-back-button="true"
+       step-class="order-service-wizard-step"
+       wizard-ready="$ctrl.wizardReady"
+       next-title="$ctrl.nextTitle"
+       on-finish="$ctrl.close()"
+       on-cancel="$ctrl.close()"
+       wizard-done="$ctrl.wizardDone"
+       class="pf-wizard-no-back">
+    <div pf-wizard-step ng-repeat="step in $ctrl.steps track by step.id"
+         step-title="{{step.label}}"
+         wz-disabled="{{step.hidden}}"
+         allow-click-nav="step.allowed"
+         next-enabled="step.valid"
+         prev-enabled="step.prevEnabled"
+         on-show="step.onShow"
+         step-id="{{step.id}}"
+         step-priority="{{$index}}">
+      <div class="wizard-pf-main-inner-shadow-covers">
+        <div class="order-service-details">
+          <div class="order-service-details-top">
+            <div class="service-icon">
+              <span class="icon {{$ctrl.iconClass}}"></span>
+            </div>
+            <div class="service-title-area">
+              <div class="service-title">
+                {{$ctrl.template | displayName}}
+              </div>
+              <div class="order-service-tags">
+                <span ng-repeat="tag in $ctrl.template.metadata.annotations.tags.split(',')" class="tag">
+                  {{tag}}
+                </span>
+              </div>
+            </div>
           </div>
-          <div class="service-title-area">
-            <div class="service-title">
-              {{$ctrl.template | displayName}}
-            </div>
-            <div class="order-service-tags">
-              <span ng-repeat="tag in $ctrl.template.metadata.annotations.tags.split(',')" class="tag">
-                {{tag}}
-              </span>
-            </div>
+          <div class="order-service-description-block">
+            <p ng-bind-html="$ctrl.template | description | linky : '_blank'" class="description"></p>
           </div>
         </div>
-        <div class="order-service-description-block">
-          <p ng-bind-html="$ctrl.template | description | linky : '_blank'" class="description"></p>
+        <div class="order-service-config">
+          <div ng-include="step.view" class="wizard-pf-main-form-contents"></div>
         </div>
       </div>
-      <div ng-if="$ctrl.currentStep.id === 'configuration'" class="order-service-config osc-form">
-        <alerts alerts="$ctrl.alerts"></alerts>
-        <form name="$ctrl.form">
-          <process-template template="$ctrl.template" alerts="$ctrl.alerts" is-dialog="true"></process-template>
-        </form>
-      </div>
-      <div ng-if="$ctrl.currentStep.id === 'results'" class="order-service-config">
-        <next-steps
-            project="$ctrl.selectedProject"
-            project-name="$ctrl.selectedProject.metadata.name"
-            login-base-url="$ctrl.loginBaseUrl">
-        </next-steps>
-      </div>
-    </div>
-    <div class="config-bottom modal-footer wizard-pf-footer">
-      <button
-          type="button"
-          ng-disabled="$ctrl.currentStep.id === 'results'"
-          class="btn btn-default wizard-pf-dismiss"
-          ng-click="$ctrl.close()">
-        Cancel
-      </button>
-      <button
-          type="button"
-          ng-disabled="$ctrl.form.$invalid"
-          ng-if="$ctrl.currentStep.id === 'configuration'"
-          class="btn btn-primary wizard-pf-next"
-          ng-click="$ctrl.instantiateTemplate()">
-        Create
-      </button>
-      <button
-          type="button"
-          ng-if="$ctrl.currentStep.id === 'results'"
-          class="btn btn-primary wizard-pf-next"
-          ng-click="$ctrl.close()">
-        Close
-      </button>
     </div>
   </div>
-</overlay-panel>
+</div>
