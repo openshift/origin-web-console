@@ -5,6 +5,7 @@ angular.module('openshiftConsole').controller('OverviewController', [
   '$filter',
   '$routeParams',
   'AlertMessageService',
+  'APIService',
   'AppsService',
   'BuildsService',
   'Constants',
@@ -30,6 +31,7 @@ function OverviewController($scope,
                             $filter,
                             $routeParams,
                             AlertMessageService,
+                            APIService,
                             AppsService,
                             BuildsService,
                             Constants,
@@ -51,6 +53,14 @@ function OverviewController($scope,
   var overview = this;
   var limitWatches = $filter('isIE')() || $filter('isEdge')();
   var DEFAULT_POLL_INTERVAL = 60 * 1000; // milliseconds
+
+  // Enable service catalog features if the new experience is enabled and the
+  // servicecatalog.k8s.io resources are available.
+  var SERVICE_CATALOG_ENABLED =
+    _.get(Constants, 'ENABLE_TECH_PREVIEW_FEATURE.service_catalog_landing_page') &&
+    APIService.apiInfo({ group: 'servicecatalog.k8s.io', resource: 'serviceclasses' }) &&
+    APIService.apiInfo({ group: 'servicecatalog.k8s.io', resource: 'instances' }) &&
+    APIService.apiInfo({ group: 'servicecatalog.k8s.io', resource: 'bindings' });
 
   $scope.projectName = $routeParams.project;
 
@@ -1263,7 +1273,7 @@ function OverviewController($scope,
       updateQuotaWarnings();
     }, {poll: true, pollInterval: DEFAULT_POLL_INTERVAL}));
 
-    if(Constants.ENABLE_TECH_PREVIEW_FEATURE.service_catalog_landing_page) {
+    if (SERVICE_CATALOG_ENABLED) {
       watches.push(DataService.watch({
         group: 'servicecatalog.k8s.io',
         resource: 'instances'
@@ -1279,7 +1289,7 @@ function OverviewController($scope,
       }, {poll: limitWatches, pollInterval: DEFAULT_POLL_INTERVAL}));
     }
 
-    if(Constants.ENABLE_TECH_PREVIEW_FEATURE.service_catalog_landing_page) {
+    if (SERVICE_CATALOG_ENABLED) {
       watches.push(DataService.watch({
         group: 'servicecatalog.k8s.io',
         resource: 'bindings'
@@ -1296,7 +1306,7 @@ function OverviewController($scope,
       state.limitRanges = response.by("metadata.name");
     });
 
-    if(Constants.ENABLE_TECH_PREVIEW_FEATURE.service_catalog_landing_page) {
+    if (SERVICE_CATALOG_ENABLED) {
       // TODO: update to behave like ImageStreamResolver
       // - we may not even need to list these... perhaps just fetch the ones we need when needed
       DataService.list({
