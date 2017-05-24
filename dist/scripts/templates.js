@@ -4461,7 +4461,7 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "<div class=\"alert alert-warning\">\n" +
     "<span class=\"pficon pficon-warning-triangle-o\" aria-hidden=\"true\"></span>\n" +
     "<strong>A token is a form of a password.</strong>\n" +
-    "Do not share your API token.\n" +
+    "Do not share your API token. To reveal your token, press the copy to clipboard button and then paste the clipboard contents.\n" +
     "</div>\n" +
     "<p>After you login to your account you will get a list of projects that you can switch between:\n" +
     "<copy-to-clipboard display-wide=\"true\" clipboard-text=\"'oc project <project-name>'\"></copy-to-clipboard>\n" +
