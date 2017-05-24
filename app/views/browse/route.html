@@ -39,7 +39,7 @@
               {{route.metadata.name}}
               <route-warnings ng-if="route.spec.to.kind !== 'Service' || services"
                               route="route"
-                              service="services[route.spec.to.name]">
+                              services="services">
               </route-warnings>
               <small class="meta">created <span am-time-ago="route.metadata.creationTimestamp"></span></small>
             </h1>

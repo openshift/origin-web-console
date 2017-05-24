@@ -3,8 +3,8 @@
     <alerts alerts="row.notifications"></alerts>
     <div ng-if="row.current">
       <div class="row-expanded-top" ng-class="{
-            'metrics-active': row.state.showMetrics,
-            'metrics-not-active': !row.state.showMetrics
+        'metrics-active': row.state.showMetrics,
+        'metrics-not-active': !row.state.showMetrics
       }">
         <div ng-if="row.state.breakpoint !== 'xxs' && row.state.breakpoint !== 'xs'" class="overview-pod-template" ng-class="{
           'ng-enter': row.previous,
@@ -102,11 +102,12 @@
     <div ng-if="(row.state.breakpoint === 'xxs' || row.state.breakpoint === 'xs') && !row.state.previous" class="row">
       <div class="col-sm-12">
         <!-- Only show the tabset if any of the tabs are visible. -->
-        <uib-tabset ng-if="row.current || (row.services | hashSize) || row.recentPipelines.length || row.buildConfigs.length" class="list-row-tabset">
-          <uib-tab active="row.selectedTab.networking" ng-if="row.services | hashSize">
+        <uib-tabset ng-if="row.current || (row.services | size) || row.recentPipelines.length || row.buildConfigs.length" class="list-row-tabset">
+          <uib-tab active="row.selectedTab.networking" ng-if="row.services | size">
             <uib-tab-heading>Networking</uib-tab-heading>
             <overview-networking
-              services="row.services"
+              row-services="row.services"
+              all-services="row.state.allServices"
               routes-by-service="row.state.routesByService">
             </overview-networking>
           </uib-tab>
@@ -177,7 +178,8 @@
     <div ng-if="row.state.breakpoint !== 'xxs' && row.state.breakpoint !== 'xs'">
       <!-- Networking Section -->
       <overview-networking
-        services="row.services"
+        row-services="row.services"
+        all-services="row.state.allServices"
         routes-by-service="row.state.routesByService">
       </overview-networking>
 

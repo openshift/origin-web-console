@@ -1,6 +1,6 @@
-<div ng-if="networking.services | hashSize" class="expanded-section networking-section">
+<div ng-if="networking.rowServices | size" class="expanded-section networking-section">
   <div class="section-title hidden-xs">Networking</div>
-  <div ng-repeat="service in networking.services" class="row">
+  <div ng-repeat="service in networking.rowServices" class="row">
     <div class="col-sm-5 col-md-6">
       <div class="component-label">
         Service
@@ -28,7 +28,7 @@
         Routes
         <span class="sublabel">External Traffic</span>
       </div>
-      <div ng-if="networking.routesByService[service.metadata.name] | hashSize">
+      <div ng-if="networking.routesByService[service.metadata.name] | size">
         <div ng-repeat="route in networking.routesByService[service.metadata.name] | limitTo : 2 track by (route | uid)" class="overview-routes">
           <h3>
             <span ng-if="route | isWebRoute">
@@ -36,7 +36,7 @@
               <i class="fa fa-external-link small" aria-hidden="true"></i>
             </span>
             <span ng-if="!(route | isWebRoute)">{{route | routeLabel}}</span>
-            <route-warnings route="route" service="service"></route-warnings>
+            <route-warnings route="route" services="networking.allServices"></route-warnings>
           </h3>
           <div class="overview-route">
             Route <a ng-href="{{route | navigateResourceURL}}">{{route.metadata.name}}</a><span ng-if="route.spec.port.targetPort">,
@@ -47,7 +47,7 @@
           </div>
         </div>
       </div>
-      <div ng-if="!(networking.routesByService[service.metadata.name] | hashSize)">
+      <div ng-if="!(networking.routesByService[service.metadata.name] | size)">
         <a ng-if="'routes' | canI : 'create'" ng-href="project/{{service.metadata.namespace}}/create-route?service={{service.metadata.name}}">Create Route</a>
         <span ng-if="!('routes' | canI : 'create')" class="text-muted">No Routes</span>
       </div>
