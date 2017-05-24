@@ -19,6 +19,7 @@ angular.module('openshiftConsole')
                                               BreadcrumbsService,
                                               DataService,
                                               Navigate,
+                                              NotificationsService,
                                               ProjectsService) {
     if (!$routeParams.kind || !$routeParams.name) {
       Navigate.toErrorPage("Kind or name parameter missing.");
@@ -160,13 +161,9 @@ angular.module('openshiftConsole')
                     $scope.updatingNow = false;
                     return;
                   }
-
-                  AlertMessageService.addAlert({
-                    name: 'edit-yaml',
-                    data: {
+                  NotificationsService.addNotification({
                       type: "success",
                       message: humanizeKind($routeParams.kind, true) + " " + $routeParams.name + " was successfully updated."
-                    }
                   });
                   navigateBack();
                 },

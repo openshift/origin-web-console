@@ -19,6 +19,7 @@ angular.module('openshiftConsole')
                        DataService,
                        EnvironmentService,
                        Navigate,
+                       NotificationsService,
                        ProjectsService,
                        SecretsService,
                        keyValueEditorUtils) {
@@ -371,12 +372,9 @@ angular.module('openshiftConsole')
 
       DataService.update("deploymentconfigs", $scope.updatedDeploymentConfig.metadata.name, $scope.updatedDeploymentConfig, $scope.context).then(
         function() {
-          AlertMessageService.addAlert({
-            name: $scope.updatedDeploymentConfig.metadata.name,
-            data: {
-              type: "success",
-              message: "Deployment config " + $scope.updatedDeploymentConfig.metadata.name + " was successfully updated."
-            }
+          NotificationsService.addNotification({
+            type: "success",
+            message: "Deployment config " + $scope.updatedDeploymentConfig.metadata.name + " was successfully updated."
           });
           _.set($scope, 'confirm.doneEditing', true);
           var returnURL = Navigate.resourceURL($scope.updatedDeploymentConfig);
@@ -384,11 +382,11 @@ angular.module('openshiftConsole')
         },
         function(result) {
           $scope.disableInputs = false;
-          $scope.alerts["save"] = {
+          NotificationsService.addNotification({
             type: "error",
             message: "An error occurred updating deployment config " + $scope.updatedDeploymentConfig.metadata.name + ".",
             details: $filter('getErrorDetails')(result)
-          };
+          });
         }
       );
     };
