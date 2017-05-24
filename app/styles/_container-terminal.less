@@ -1,44 +1,49 @@
-.terminal-font {
-  font-family: "Monospace Regular", "DejaVu Sans Mono", Menlo, Monaco, Consolas, monospace;
-  line-height: 1em;
-  font-size: 12px;
+// note this is mixin, so it needs to be at the top
+.fullscreen() {
+  background: #000;
+  height: 100%;
+  width: 100%;
+  .fullscreen-toggle {
+    .exit-fullscreen {
+      display: block;
+    }
+    .go-fullscreen {
+      display: none;
+    }
+  }
 }
 
-// Control what fonts are used in the container terminal since we need the terminal-font class for row/col character calculations
-kubernetes-container-terminal .terminal {
-  .terminal-font();
-}
-
-.pod-container-terminal {
-  margin-top: 15px;
-  margin-bottom: 15px;
-  kubernetes-container-terminal .terminal-wrapper {
-    max-width: 100%;
-    overflow-x: auto;
+// note this is mixin, so it needs to be at the top
+.style-terminal-action() {
+  color: @gray-light;
+  cursor: pointer;
+  font-size: 18px;
+  padding: 5px;
+  &:hover, &:active, &:focus {
+    color: #fff;
+    text-decoration: none;
   }
 }
 
 .container-terminal-wrapper {
-  .style-terminal-action() {
-    color: @gray-light;
-    cursor: pointer;
-    font-size: 18px;
-    &:hover, &:active, &:focus {
-      color: #fff;
-      text-decoration: none;
+  position: relative;
+  @media(min-width: @screen-sm-min) {
+    // Show the expand to fullscreen action when hovering over the terminal.
+    &:hover {
+      .fullscreen-toggle {
+        display: block;
+      }
     }
   }
-  position: relative;
-  .terminal-actions .btn {
-    .btn-link();
-    .style-terminal-action();
-    background: none;
+  &.disconnected .fullscreen-toggle {
+    display: none;
   }
   .fullscreen-toggle {
     display: none;
+    line-height: 1;
     position: absolute;
-    top: 7px;
-    right: 15px;
+    right: 5px;
+    top: 0;
     z-index: 1;
     a {
       .style-terminal-action();
@@ -46,40 +51,46 @@ kubernetes-container-terminal .terminal {
     .exit-fullscreen {
       display: none;
     }
-  }
-  &.disconnected .go-fullscreen {
-    display: none;
-  }
-  .fullscreen() {
-    width: 100%;
-    height: 100%;
     .go-fullscreen {
-      display: none;
-    }
-    .exit-fullscreen {
-      display: inline;
+      display: block;
     }
   }
-  &:-webkit-full-screen {
-    .fullscreen();
+  .terminal-actions .btn {
+    background: none;
+    .btn-link();
+    .style-terminal-action();
   }
+  // so that &-:ms-fullscreen works correctly, these need to come after .fullscreen-toggle
   &:-moz-full-screen {
     .fullscreen();
   }
-  &:-ms-full-screen {
+  &:-ms-fullscreen {
+    .fullscreen();
+  }
+  &:-webkit-full-screen {
     .fullscreen();
   }
   &:-fullscreen {
     .fullscreen();
   }
-  @media(min-width: @screen-sm-min) {
-    // Fill the extra right border we get when we cant quite fit the last col so it lines up with the Actions dropdown button
-    background-color: #000;
-    // Show the expand to fullscreen action when hovering over the terminal.
-    &:hover {
-      .fullscreen-toggle {
-        display: inline-block;
-      }
+}
+
+kubernetes-container-terminal {
+  // Control what fonts are used in the container terminal since we need the terminal-font class for row/col character calculations
+  .terminal {
+    .terminal-font();
+  }
+  .terminal-actions {
+    top: 0;
+    right: 30px;
+    .spinner {
+      top: 5px;
     }
   }
+}
+
+.terminal-font {
+  font-family: "Monospace Regular", "DejaVu Sans Mono", Menlo, Monaco, Consolas, monospace;
+  font-size: 12px;
+  line-height: 1em;
 }
