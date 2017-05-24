@@ -79,12 +79,9 @@ angular.module("openshiftConsole")
             group: 'autoscaling'
           }, hpa.metadata.name, { namespace: scope.projectName })
           .then(function() {
-            showAlert({
-              name: hpa.metadata.name,
-              data: {
+            NotificationsService.addNotification({
                 type: "success",
                 message: "Horizontal Pod Autoscaler " + hpa.metadata.name + " was marked for deletion."
-              }
             });
           })
           .catch(function(err) {
@@ -150,12 +147,9 @@ angular.module("openshiftConsole")
               group: scope.group
             }, resourceName, context)
             .then(function() {
-              showAlert({
-                name: resourceName,
-                data: {
+              NotificationsService.addNotification({
                   type: "success",
                   message: _.capitalize(formattedResource) + " was marked for deletion."
-                }
               });
 
               if (scope.success) {
@@ -183,4 +177,3 @@ angular.module("openshiftConsole")
       }
     };
   });
-

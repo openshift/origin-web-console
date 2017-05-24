@@ -19,6 +19,7 @@ angular.module('openshiftConsole')
                         APIService,
                         DataService,
                         Navigate,
+                        NotificationsService,
                         ProjectsService) {
     if (!$routeParams.kind || !$routeParams.name) {
       Navigate.toErrorPage("Kind or name parameter missing.");
@@ -112,12 +113,9 @@ angular.module('openshiftConsole')
                                  object,
                                  context).then(
                 function() {
-                  AlertMessageService.addAlert({
-                    name: $scope.name,
-                    data: {
+                  NotificationsService.addNotification({
                       type: "success",
                       message: displayName + " was updated."
-                    }
                   });
                   $location.url($scope.resourceURL);
                 },
@@ -133,4 +131,3 @@ angular.module('openshiftConsole')
         );
     }));
   });
-
