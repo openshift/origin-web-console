@@ -1,41 +1,8 @@
-<div>
-  <div ng-if="!ctrl.error">
-    <div ng-if="!(ctrl.binding | isBindingReady)" class="text-center">
-      <h3 class="mar-top-none">
-        <span class="fa fa-spinner fa-pulse fa-3x fa-fw" aria-hidden="true"></span>
-        <span class="sr-only">Pending</span>
-        <div class="mar-top-lg">The binding was created but is not ready yet.</div>
-      </h3>
-    </div>
-    <div ng-if="(ctrl.binding | isBindingReady)">
-      <h3 class="mar-top-none">
-        <span class="pficon pficon-ok"></span>
-        <strong>{{ctrl.serviceToBind}}</strong> has been bound to <strong>{{ctrl.target.metadata.name}}</strong> successfully
-      </h3>
-      <div class="sub-title">
-        The binding operation created the secret
-        <a ng-if="'secrets' | canI : 'list'"
-           ng-href="{{ctrl.generatedSecretName | navigateResourceURL : 'Secret' : ctrl.target.metadata.namespace}}">{{ctrl.generatedSecretName}}</a>
-        <span ng-if="!('secrets' | canI : 'list')">{{ctrl.generatedSecretName}}</span>
-        that you may need to reference in your application.
-        <span ng-if="'pod_presets' | enableTechPreviewFeature">Its data will be available to your application as environment variables.</span>
-      </div>
-      <div class="alert alert-info mar-top-xxl mar-bottom-xl">
-        <span class="pficon pficon-info" aria-hidden="true"></span>
-        <span class="sr-only">Info</span>
-        The binding secret will only be available to new pods. You will need to redeploy your application.
-      </div>
-    </div>
-  </div>
-  <div ng-if="ctrl.error">
-    <div class="title">Binding Failed <span class="fa fa-times text-danger"></span></div>
-    <div class="sub-title">
-      <span ng-if="ctrl.error.data.message">
-        {{ctrl.error.data.message | upperFirst}}
-      </span>
-      <span ng-if="!ctrl.error.data.message">
-        An error occurred creating the binding.
-      </span>
-    </div>
-  </div>
-</div>
+<bind-results error="ctrl.error"
+              binding="ctrl.binding"
+              service-to-bind="ctrl.serviceToBind"
+              application-to-bind="ctrl.appToBind.metadata.name"
+              generated-secret-name="ctrl.generatedSecretName"
+              show-pod-presets="'pod_presets' | enableTechPreviewFeature"
+              secret-href="ctrl.generatedSecretName | navigateResourceURL : 'Secret' : ctrl.target.metadata.namespace">
+</bind-results>
