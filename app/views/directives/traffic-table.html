@@ -21,7 +21,7 @@
         <a href="{{routes[routeName] | navigateResourceURL}}">{{routes[routeName].metadata.name}}</a>
         <route-warnings ng-if="routes[routeName].spec.to.kind !== 'Service' || services"
                         route="routes[routeName]"
-                        service="services[routes[routeName].spec.to.name]">
+                        services="services">
         </route-warnings>
         <span ng-if="showNodePorts">
           <span ng-if="port.nodePort"> / {{port.nodePort}}</span>

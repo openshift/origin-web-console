@@ -57,7 +57,7 @@
                       <a href="{{route | navigateResourceURL}}">{{route.metadata.name}}</a>
                       <route-warnings ng-if="route.spec.to.kind !== 'Service' || services"
                                       route="route"
-                                      service="services[route.spec.to.name]">
+                                      services="services">
                       </route-warnings>
                     </td>
                     <td data-title="Hostname">

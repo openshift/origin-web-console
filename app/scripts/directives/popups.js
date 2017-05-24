@@ -114,17 +114,14 @@ angular.module('openshiftConsole')
       restrict: 'E',
       scope: {
         route: '=',
-        service: '=',
-        warnings: '=' // instead of route and service, can provide an existing set of warnings
+        services: '='
       },
       link: function($scope) {
         var updateWarnings = function() {
-          var warnings = $scope.warnings || RoutesService.getRouteWarnings($scope.route, $scope.service);
+          var warnings = RoutesService.getRouteWarnings($scope.route, $scope.services);
           $scope.content = _.map(warnings, _.escape).join('<br>');
         };
-        $scope.$watch('route', updateWarnings, true);
-        $scope.$watch('service', updateWarnings, true);
-        $scope.$watch('warnings', updateWarnings, true);
+        $scope.$watchGroup(['route', 'services'], updateWarnings);
       },
       templateUrl: 'views/directives/_warnings-popover.html'
     };

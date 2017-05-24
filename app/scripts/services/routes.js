@@ -19,10 +19,15 @@ angular.module("openshiftConsole")
       });
     };
 
-    var addRouteTargetWarnings = function(route, service, warnings) {
+    var addRouteTargetWarnings = function(route, target, services, warnings) {
+      if (target.kind !== 'Service') {
+        return;
+      }
+
+      var service = _.get(services, [target.name]);
       // Has the service been deleted?
       if (!service) {
-        warnings.push('Routes to service "' + route.spec.to.name + '", but service does not exist.');
+        warnings.push('Routes to service "' + target.name + '", but service does not exist.');
         return;
       }
 
@@ -170,21 +175,23 @@ angular.module("openshiftConsole")
       // Gets warnings about a route.
       //
       // Parameters:
-      //   route   - the route (required)
-      //   service - the service routed to
-      //             If null, assumes service does not exist.
+      //   route    - the route (required)
+      //   services - map of services in the namespace by name
+      //              If empty, assumes service does not exist.
       //
       // Returns: Array of warning messages.
-      getRouteWarnings: function(route, service) {
+      getRouteWarnings: function(route, services) {
         var warnings = [];
 
         if (!route) {
           return warnings;
         }
 
-        if (route.spec.to.kind === 'Service') {
-          addRouteTargetWarnings(route, service, warnings);
-        }
+        addRouteTargetWarnings(route, route.spec.to, services, warnings);
+        _.each(route.spec.alternateBackends, function(alternateBackend) {
+          addRouteTargetWarnings(route, alternateBackend, services, warnings);
+        });
+
         addTLSWarnings(route, warnings);
 
         addIngressWarnings(route, warnings);

@@ -258,15 +258,15 @@ x.replicaSetsByDeploymentUID[b] = e, x.currentByDeploymentUID[b] = _.head(e);
 }
 }), x.vanillaReplicaSets = _.sortBy(x.replicaSetsByDeploymentUID[""], "metadata.name"), va());
 }, Ha = {}, Ia = function(a) {
-a && x.services && _.each(a, function(a) {
+a && P.allServices && _.each(a, function(a) {
 var b = [], c = S(a), d = L(a);
 _.each(Ha, function(a, c) {
-a.matches(d) && b.push(x.services[c]);
+a.matches(d) && b.push(P.allServices[c]);
 }), P.servicesByObjectUID[c] = _.sortBy(b, "metadata.name");
 });
 }, Ja = function() {
-if (x.services) {
-Ha = _.mapValues(x.services, function(a) {
+if (P.allServices) {
+Ha = _.mapValues(P.allServices, function(a) {
 return new LabelSelector(a.spec.selector);
 });
 var a = [ x.deploymentConfigs, x.vanillaReplicationControllers, x.deployments, x.vanillaReplicaSets, x.statefulSets, x.monopods ];
@@ -416,7 +416,7 @@ x.statefulSets = a.by("metadata.name"), Ia(x.statefulSets), Ia(x.monopods), oa(x
 poll:y,
 pollInterval:z
 })), $a.push(i.watch("services", c, function(a) {
-x.services = a.by("metadata.name"), Ja(), p.log("services (subscribe)", x.services);
+P.allServices = a.by("metadata.name"), Ja(), p.log("services (subscribe)", P.allServices);
 }, {
 poll:y,
 pollInterval:z
@@ -3331,12 +3331,15 @@ return angular.isString(a);
 return _.find(c.spec.ports, function(c) {
 return b(a) ? c.name === a :c.targetPort === a;
 });
-}, d = function(a, d, e) {
-if (!d) return void e.push('Routes to service "' + a.spec.to.name + '", but service does not exist.');
-var f = a.spec.port ? a.spec.port.targetPort :null;
-if (!f) return void (d.spec.ports.length > 1 && e.push('Route has no target port, but service "' + d.metadata.name + '" has multiple ports. The route will round robin traffic across all exposed ports on the service.'));
-var g = c(f, d);
-g || (b(f) ? e.push('Route target port is set to "' + f + '", but service "' + d.metadata.name + '" has no port with that name.') :e.push('Route target port is set to "' + f + '", but service "' + d.metadata.name + '" does not expose that port.'));
+}, d = function(a, d, e, f) {
+if ("Service" === d.kind) {
+var g = _.get(e, [ d.name ]);
+if (!g) return void f.push('Routes to service "' + d.name + '", but service does not exist.');
+var h = a.spec.port ? a.spec.port.targetPort :null;
+if (!h) return void (g.spec.ports.length > 1 && f.push('Route has no target port, but service "' + g.metadata.name + '" has multiple ports. The route will round robin traffic across all exposed ports on the service.'));
+var i = c(h, g);
+i || (b(h) ? f.push('Route target port is set to "' + h + '", but service "' + g.metadata.name + '" has no port with that name.') :f.push('Route target port is set to "' + h + '", but service "' + g.metadata.name + '" does not expose that port.'));
+}
 }, e = function(a, b) {
 a.spec.tls && (a.spec.tls.termination || b.push("Route has a TLS configuration, but no TLS termination type is specified. TLS will not be enabled until a termination type is set."), "passthrough" === a.spec.tls.termination && a.spec.path && b.push('Route path "' + a.spec.path + '" will be ignored since the route uses passthrough termination.'));
 }, f = function(a, b) {
@@ -3391,7 +3394,9 @@ return b.replace(/^[a-z0-9]([-a-z0-9]*[a-z0-9])\./, "");
 return {
 getRouteWarnings:function(a, b) {
 var c = [];
-return a ? ("Service" === a.spec.to.kind && d(a, b, c), e(a, c), f(a, c), c) :c;
+return a ? (d(a, a.spec.to, b, c), _.each(a.spec.alternateBackends, function(e) {
+d(a, e, b, c);
+}), e(a, c), f(a, c), c) :c;
 },
 getServicePortForRoute:c,
 getPreferredDisplayRoute:l,
@@ -10737,15 +10742,14 @@ return {
 restrict:"E",
 scope:{
 route:"=",
-service:"=",
-warnings:"="
+services:"="
 },
 link:function(b) {
 var c = function() {
-var c = b.warnings || a.getRouteWarnings(b.route, b.service);
+var c = a.getRouteWarnings(b.route, b.services);
 b.content = _.map(c, _.escape).join("<br>");
 };
-b.$watch("route", c, !0), b.$watch("service", c, !0), b.$watch("warnings", c, !0);
+b.$watchGroup([ "route", "services" ], c);
 },
 templateUrl:"views/directives/_warnings-popover.html"
 };
@@ -12842,7 +12846,8 @@ templateUrl:"views/overview/_service-instance-row.html"
 }), angular.module("openshiftConsole").component("overviewNetworking", {
 controllerAs:"networking",
 bindings:{
-services:"<",
+rowServices:"<",
+allServices:"<",
 routesByService:"<"
 },
 templateUrl:"views/overview/_networking.html"

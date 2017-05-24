@@ -3364,7 +3364,7 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "</ul>\n" +
     "</div>\n" +
     "{{route.metadata.name}}\n" +
-    "<route-warnings ng-if=\"route.spec.to.kind !== 'Service' || services\" route=\"route\" service=\"services[route.spec.to.name]\">\n" +
+    "<route-warnings ng-if=\"route.spec.to.kind !== 'Service' || services\" route=\"route\" services=\"services\">\n" +
     "</route-warnings>\n" +
     "<small class=\"meta\">created <span am-time-ago=\"route.metadata.creationTimestamp\"></span></small>\n" +
     "</h1>\n" +
@@ -3598,7 +3598,7 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "<tr ng-repeat=\"route in routes | orderObjectsByDate : true\">\n" +
     "<td data-title=\"{{ customNameHeader || 'Name' }}\">\n" +
     "<a href=\"{{route | navigateResourceURL}}\">{{route.metadata.name}}</a>\n" +
-    "<route-warnings ng-if=\"route.spec.to.kind !== 'Service' || services\" route=\"route\" service=\"services[route.spec.to.name]\">\n" +
+    "<route-warnings ng-if=\"route.spec.to.kind !== 'Service' || services\" route=\"route\" services=\"services\">\n" +
     "</route-warnings>\n" +
     "</td>\n" +
     "<td data-title=\"Hostname\">\n" +
@@ -8803,7 +8803,7 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "<tr ng-repeat=\"port in ports\" ng-if=\"routeName !== ''\">\n" +
     "<td data-title=\"{{customNameHeader || 'Route'}}{{ showNodePorts ? ' / Node Port' : '' }}\">\n" +
     "<a href=\"{{routes[routeName] | navigateResourceURL}}\">{{routes[routeName].metadata.name}}</a>\n" +
-    "<route-warnings ng-if=\"routes[routeName].spec.to.kind !== 'Service' || services\" route=\"routes[routeName]\" service=\"services[routes[routeName].spec.to.name]\">\n" +
+    "<route-warnings ng-if=\"routes[routeName].spec.to.kind !== 'Service' || services\" route=\"routes[routeName]\" services=\"services\">\n" +
     "</route-warnings>\n" +
     "<span ng-if=\"showNodePorts\">\n" +
     "<span ng-if=\"port.nodePort\"> / {{port.nodePort}}</span>\n" +
@@ -11744,8 +11744,8 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "<alerts alerts=\"row.notifications\"></alerts>\n" +
     "<div ng-if=\"row.current\">\n" +
     "<div class=\"row-expanded-top\" ng-class=\"{\n" +
-    "            'metrics-active': row.state.showMetrics,\n" +
-    "            'metrics-not-active': !row.state.showMetrics\n" +
+    "        'metrics-active': row.state.showMetrics,\n" +
+    "        'metrics-not-active': !row.state.showMetrics\n" +
     "      }\">\n" +
     "<div ng-if=\"row.state.breakpoint !== 'xxs' && row.state.breakpoint !== 'xs'\" class=\"overview-pod-template\" ng-class=\"{\n" +
     "          'ng-enter': row.previous,\n" +
@@ -11806,10 +11806,10 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "<div ng-if=\"(row.state.breakpoint === 'xxs' || row.state.breakpoint === 'xs') && !row.state.previous\" class=\"row\">\n" +
     "<div class=\"col-sm-12\">\n" +
     "\n" +
-    "<uib-tabset ng-if=\"row.current || (row.services | hashSize) || row.recentPipelines.length || row.buildConfigs.length\" class=\"list-row-tabset\">\n" +
-    "<uib-tab active=\"row.selectedTab.networking\" ng-if=\"row.services | hashSize\">\n" +
+    "<uib-tabset ng-if=\"row.current || (row.services | size) || row.recentPipelines.length || row.buildConfigs.length\" class=\"list-row-tabset\">\n" +
+    "<uib-tab active=\"row.selectedTab.networking\" ng-if=\"row.services | size\">\n" +
     "<uib-tab-heading>Networking</uib-tab-heading>\n" +
-    "<overview-networking services=\"row.services\" routes-by-service=\"row.state.routesByService\">\n" +
+    "<overview-networking row-services=\"row.services\" all-services=\"row.state.allServices\" routes-by-service=\"row.state.routesByService\">\n" +
     "</overview-networking>\n" +
     "</uib-tab>\n" +
     "<uib-tab ng-if=\"row.current\" active=\"row.selectedTab.containers\">\n" +
@@ -11858,7 +11858,7 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "</div>\n" +
     "<div ng-if=\"row.state.breakpoint !== 'xxs' && row.state.breakpoint !== 'xs'\">\n" +
     "\n" +
-    "<overview-networking services=\"row.services\" routes-by-service=\"row.state.routesByService\">\n" +
+    "<overview-networking row-services=\"row.services\" all-services=\"row.state.allServices\" routes-by-service=\"row.state.routesByService\">\n" +
     "</overview-networking>\n" +
     "\n" +
     "<overview-pipelines ng-if=\"!row.hidePipelines\" recent-pipelines=\"row.recentPipelines\">\n" +
@@ -11925,9 +11925,9 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
 
 
   $templateCache.put('views/overview/_networking.html',
-    "<div ng-if=\"networking.services | hashSize\" class=\"expanded-section networking-section\">\n" +
+    "<div ng-if=\"networking.rowServices | size\" class=\"expanded-section networking-section\">\n" +
     "<div class=\"section-title hidden-xs\">Networking</div>\n" +
-    "<div ng-repeat=\"service in networking.services\" class=\"row\">\n" +
+    "<div ng-repeat=\"service in networking.rowServices\" class=\"row\">\n" +
     "<div class=\"col-sm-5 col-md-6\">\n" +
     "<div class=\"component-label\">\n" +
     "Service\n" +
@@ -11955,7 +11955,7 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "Routes\n" +
     "<span class=\"sublabel\">External Traffic</span>\n" +
     "</div>\n" +
-    "<div ng-if=\"networking.routesByService[service.metadata.name] | hashSize\">\n" +
+    "<div ng-if=\"networking.routesByService[service.metadata.name] | size\">\n" +
     "<div ng-repeat=\"route in networking.routesByService[service.metadata.name] | limitTo : 2 track by (route | uid)\" class=\"overview-routes\">\n" +
     "<h3>\n" +
     "<span ng-if=\"route | isWebRoute\">\n" +
@@ -11963,7 +11963,7 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "<i class=\"fa fa-external-link small\" aria-hidden=\"true\"></i>\n" +
     "</span>\n" +
     "<span ng-if=\"!(route | isWebRoute)\">{{route | routeLabel}}</span>\n" +
-    "<route-warnings route=\"route\" service=\"service\"></route-warnings>\n" +
+    "<route-warnings route=\"route\" services=\"networking.allServices\"></route-warnings>\n" +
     "</h3>\n" +
     "<div class=\"overview-route\">\n" +
     "Route <a ng-href=\"{{route | navigateResourceURL}}\">{{route.metadata.name}}</a><span ng-if=\"route.spec.port.targetPort\">, target port {{route.spec.port.targetPort}}</span>\n" +
@@ -11973,7 +11973,7 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "</div>\n" +
     "</div>\n" +
     "</div>\n" +
-    "<div ng-if=\"!(networking.routesByService[service.metadata.name] | hashSize)\">\n" +
+    "<div ng-if=\"!(networking.routesByService[service.metadata.name] | size)\">\n" +
     "<a ng-if=\"'routes' | canI : 'create'\" ng-href=\"project/{{service.metadata.namespace}}/create-route?service={{service.metadata.name}}\">Create Route</a>\n" +
     "<span ng-if=\"!('routes' | canI : 'create')\" class=\"text-muted\">No Routes</span>\n" +
     "</div>\n" +
