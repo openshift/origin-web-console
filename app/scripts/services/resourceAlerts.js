@@ -109,7 +109,7 @@ angular.module("openshiftConsole")
         alerts[deployment.metadata.uid + '-paused'] = {
           type: 'info',
           message: deployment.metadata.name + ' is paused.',
-          detail: 'This will stop any new rollouts or triggers from running until resumed.',
+          details: 'This will stop any new rollouts or triggers from running until resumed.',
           links: [{
             href: "",
             label: 'Resume Rollouts',
