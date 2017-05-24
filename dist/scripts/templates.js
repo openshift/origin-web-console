@@ -1231,6 +1231,7 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "<a ng-href=\"{{dcName | navigateResourceURL : 'DeploymentConfig' : pod.metadata.namespace}}\">{{dcName}}</a><span ng-if=\"rcName\">,\n" +
     "<a ng-href=\"{{rcName | navigateResourceURL : 'ReplicationController' : pod.metadata.namespace}}\"><span ng-if=\"deploymentVersion\">#{{deploymentVersion}}</span><span ng-if=\"!deploymentVersion\">{{rcName}}</span></a></span>\n" +
     "</dd>\n" +
+    "<owner-references ng-if=\"!dcName\" api-object=\"pod\"></owner-references>\n" +
     "<dt ng-if-start=\"pod.metadata.deletionTimestamp && pod.spec.terminationGracePeriodSeconds\">Grace Period:</dt>\n" +
     "<dd ng-if-end>\n" +
     "\n" +
@@ -1382,6 +1383,7 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "<dd ng-if-end>\n" +
     "<a ng-href=\"{{replicaSet | configURLForResource}}\">{{deploymentConfigName}}</a>\n" +
     "</dd>\n" +
+    "<owner-references ng-if=\"!(replicaSet | hasDeploymentConfig)\" api-object=\"replicaSet\"></owner-references>\n" +
     "<dt ng-if-start=\"replicaSet | annotation:'deploymentStatusReason'\">Status Reason:</dt>\n" +
     "<dd ng-if-end>\n" +
     "{{replicaSet | annotation:'deploymentStatusReason'}}\n" +
@@ -1759,6 +1761,7 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "\n" +
     "<h3 class=\"hidden visible-lg visible-xl\">Details</h3>\n" +
     "<dl class=\"dl-horizontal left\">\n" +
+    "<owner-references api-object=\"buildConfig\"></owner-references>\n" +
     "<div>\n" +
     "<dt>Build Strategy:</dt>\n" +
     "<dd>{{buildConfig.spec.strategy.type | startCase}}</dd>\n" +
@@ -3418,6 +3421,7 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "</div>\n" +
     "<h4 class=\"mar-top-xl\">Details</h4>\n" +
     "<dl class=\"dl-horizontal left\">\n" +
+    "<owner-references api-object=\"route\"></owner-references>\n" +
     "<dt ng-if-start=\"route.spec.wildcardPolicy && route.spec.wildcardPolicy !== 'None' && route.spec.wildcardPolicy !== 'Subdomain'\">Wildcard Policy:</dt>\n" +
     "<dd ng-if-end>{{route.spec.wildcardPolicy}}</dd>\n" +
     "<dt>Path:</dt>\n" +
@@ -3777,6 +3781,7 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "<uib-tab-heading>Details</uib-tab-heading>\n" +
     "<div class=\"resource-details\">\n" +
     "<dl class=\"dl-horizontal left\">\n" +
+    "<owner-references api-object=\"service\"></owner-references>\n" +
     "<dt>Selectors:</dt>\n" +
     "<dd>\n" +
     "<span ng-if=\"!service.spec.selector\"><em>none</em></span>\n" +
@@ -3903,6 +3908,7 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "<status-icon status=\"statefulSet | deploymentStatus\"></status-icon>\n" +
     "{{statefulSet | deploymentStatus}}\n" +
     "</dd>\n" +
+    "<owner-references api-object=\"statefulSet\"></owner-references>\n" +
     "<dt>Replicas:</dt>\n" +
     "<dd>\n" +
     "\n" +
@@ -8382,6 +8388,21 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "<a href=\"\" ng-if=\"'secrets' | canI : 'create'\" role=\"button\" ng-click=\"openCreateSecretModal()\">Create New Secret</a>\n" +
     "</div>\n" +
     "</ng-form>"
+  );
+
+
+  $templateCache.put('views/directives/owner-references.html',
+    "<dt ng-repeat-start=\"ownerReference in (ctrl.apiObject | ownerReferences) track by ownerReference.uid\">\n" +
+    "{{ownerReference.kind | humanizeKind : true}}:\n" +
+    "</dt>\n" +
+    "<dd ng-repeat-end>\n" +
+    "<span ng-if=\"url = (ownerReference | urlForOwnerRef : ctrl.apiObject.metadata.namespace)\">\n" +
+    "<a ng-href=\"{{url}}\">{{ownerReference.name}}</a>\n" +
+    "</span>\n" +
+    "<span ng-if=\"!url\">\n" +
+    "{{ownerReference.name}}\n" +
+    "</span>\n" +
+    "</dd>"
   );
 
 

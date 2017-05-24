@@ -95,6 +95,7 @@
 
                 <h4 class="mar-top-xl">Details</h4>
                 <dl class="dl-horizontal left">
+                  <owner-references api-object="route"></owner-references>
                   <dt ng-if-start="route.spec.wildcardPolicy && route.spec.wildcardPolicy !== 'None' && route.spec.wildcardPolicy !== 'Subdomain'">Wildcard Policy:</dt>
                   <dd ng-if-end>{{route.spec.wildcardPolicy}}</dd>
                   <dt>Path:</dt>

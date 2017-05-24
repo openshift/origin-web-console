@@ -13263,6 +13263,16 @@ e.findReferenceValueForEntries(b.entries, b.valueFromSelectorOptions);
 } ]
 };
 } ]);
+}(), function() {
+function a() {}
+angular.module("openshiftConsole").component("ownerReferences", {
+controller:[ a ],
+controllerAs:"ctrl",
+bindings:{
+apiObject:"<"
+},
+templateUrl:"views/directives/owner-references.html"
+});
 }(), angular.module("openshiftConsole").filter("duration", function() {
 return function(a, b, c, d) {
 function e(a, b, d) {
@@ -14022,7 +14032,9 @@ return function(a) {
 var b = _.get(a, "spec.alternateBackends", []);
 return !_.isEmpty(b);
 };
-}), angular.module("openshiftConsole").filter("canIDoAny", [ "canIFilter", function(a) {
+}).filter("ownerReferences", [ "OwnerReferencesService", function(a) {
+return a.getOwnerReferences;
+} ]), angular.module("openshiftConsole").filter("canIDoAny", [ "canIFilter", function(a) {
 var b = {
 buildConfigs:[ {
 group:"",
@@ -14340,26 +14352,7 @@ return a.replace(/([a-z])([A-Z])/g, "$1 $2").replace(/\b([A-Z]+)([A-Z])([a-z])/,
 return a.toUpperCase();
 });
 };
-}).filter("navigateResourceURL", [ "Navigate", function(a) {
-return function(b, c, d, e) {
-return a.resourceURL(b, c, d, null, {
-apiVersion:e
-});
-};
-} ]).filter("configURLForResource", [ "Navigate", function(a) {
-return function(b, c) {
-return a.configURLForResource(b, c);
-};
-} ]).filter("editResourceURL", [ "Navigate", function(a) {
-return function(b, c, d) {
-var e = a.resourceURL(b, c, d, "edit");
-return e;
-};
-} ]).filter("editYamlURL", [ "Navigate", function(a) {
-return function(b, c) {
-return a.yamlURL(b, c);
-};
-} ]).filter("join", function() {
+}).filter("join", function() {
 return function(a, b) {
 return b || (b = ","), a.join(b);
 };
@@ -14437,6 +14430,29 @@ return a.linkify(b, c, d);
 } ]).filter("enableTechPreviewFeature", [ "Constants", function(a) {
 return function(b) {
 return _.get(a, [ "ENABLE_TECH_PREVIEW_FEATURE", b ], !1);
+};
+} ]), angular.module("openshiftConsole").filter("navigateResourceURL", [ "Navigate", function(a) {
+return function(b, c, d, e) {
+return a.resourceURL(b, c, d, null, {
+apiVersion:e
+});
+};
+} ]).filter("configURLForResource", [ "Navigate", function(a) {
+return function(b, c) {
+return a.configURLForResource(b, c);
+};
+} ]).filter("editResourceURL", [ "Navigate", function(a) {
+return function(b, c, d) {
+var e = a.resourceURL(b, c, d, "edit");
+return e;
+};
+} ]).filter("editYamlURL", [ "Navigate", function(a) {
+return function(b, c) {
+return a.yamlURL(b, c);
+};
+} ]).filter("urlForOwnerRef", [ "Navigate", function(a) {
+return function(b, c) {
+return b ? a.resourceURL(b.name, b.kind, c) :null;
 };
 } ]), angular.module("openshiftConsole").directive("affix", [ "$window", function(a) {
 return {

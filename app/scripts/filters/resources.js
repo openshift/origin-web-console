@@ -1355,4 +1355,7 @@ angular.module('openshiftConsole')
       var alternateBackends = _.get(route, 'spec.alternateBackends', []);
       return !_.isEmpty(alternateBackends);
     };
+  })
+  .filter('ownerReferences', function(OwnerReferencesService) {
+    return OwnerReferencesService.getOwnerReferences;
   });

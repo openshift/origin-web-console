@@ -90,6 +90,7 @@
                           <status-icon status="statefulSet | deploymentStatus"></status-icon>
                           {{statefulSet | deploymentStatus}}
                         </dd>
+                        <owner-references api-object="statefulSet"></owner-references>
                         <dt>Replicas:</dt>
                         <dd>
                           <!-- TODO: swap back in 1.6

@@ -1,0 +1,11 @@
+<dt ng-repeat-start="ownerReference in (ctrl.apiObject | ownerReferences) track by ownerReference.uid">
+  {{ownerReference.kind | humanizeKind : true}}:
+</dt>
+<dd ng-repeat-end>
+  <span ng-if="url = (ownerReference | urlForOwnerRef : ctrl.apiObject.metadata.namespace)">
+    <a ng-href="{{url}}">{{ownerReference.name}}</a>
+  </span>
+  <span ng-if="!url">
+    {{ownerReference.name}}
+  </span>
+</dd>
