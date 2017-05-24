@@ -155,7 +155,28 @@ module.exports = function (grunt) {
       dist: {
         options: {
           open: true,
-          base: '<%= yeoman.dist %>'
+          livereload: false,
+          middleware: function (connect) {
+            return [
+              modRewrite([
+                '^/styles/extensions\.css$ /' + contextRoot + '/extensions/extensions.css [R]',
+                '^/scripts/extensions\.js$ /' + contextRoot + '/extensions/extensions.js [R]',
+                '^/$ /' + contextRoot + '/ [R=302]',
+                '^/' + contextRoot + '(.*)$ $1',
+                '!^/(config.js|(bower_components|scripts|images|styles|views|extensions)(/.*)?)$ /index.html [L]'
+              ]),
+              serveStatic('dist'),
+              connect().use(
+                '/bower_components',
+                serveStatic('./bower_components')
+              ),
+              connect().use(
+                '/extensions',
+                serveStatic('./extensions')
+              ),
+              serveStatic(appConfig.app)
+            ];
+          }
         }
       }
     },

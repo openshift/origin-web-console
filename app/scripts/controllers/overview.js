@@ -798,7 +798,7 @@ function OverviewController($scope,
   //   value: array of sorted services
   var selectorsByService = {};
   var updateServicesForObjects = function(apiObjects) {
-    if (!apiObjects || !overview.services) {
+    if (!apiObjects || !state.allServices) {
       return;
     }
 
@@ -808,7 +808,7 @@ function OverviewController($scope,
       var podTemplate = getPodTemplate(apiObject);
       _.each(selectorsByService, function(selector, serviceName) {
         if (selector.matches(podTemplate)) {
-          services.push(overview.services[serviceName]);
+          services.push(state.allServices[serviceName]);
         }
       });
       state.servicesByObjectUID[uid] = _.sortBy(services, 'metadata.name');
@@ -821,11 +821,11 @@ function OverviewController($scope,
   //   key: object UID
   //   value: array of sorted services
   var groupServices = function() {
-    if (!overview.services) {
+    if (!state.allServices) {
       return;
     }
 
-    selectorsByService = _.mapValues(overview.services, function(service) {
+    selectorsByService = _.mapValues(state.allServices, function(service) {
       return new LabelSelector(service.spec.selector);
     });
 
@@ -1224,9 +1224,9 @@ function OverviewController($scope,
     }, {poll: limitWatches, pollInterval: DEFAULT_POLL_INTERVAL}));
 
     watches.push(DataService.watch("services", context, function(serviceData) {
-      overview.services = serviceData.by("metadata.name");
+      state.allServices = serviceData.by("metadata.name");
       groupServices();
-      Logger.log("services (subscribe)", overview.services);
+      Logger.log("services (subscribe)", state.allServices);
     }, {poll: limitWatches, pollInterval: DEFAULT_POLL_INTERVAL}));
 
     watches.push(DataService.watch("routes", context, function(routesData) {
