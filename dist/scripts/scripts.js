@@ -7072,7 +7072,7 @@ message:"This persistent volume claim has been deleted."
 });
 };
 d.get(b.project).then(_.spread(function(d, h) {
-a.project = d, c.get("persistentvolumeclaims", b.pvc, h).then(function(a) {
+a.project = d, a.projectContext = h, c.get("persistentvolumeclaims", b.pvc, h).then(function(a) {
 g(a), f.push(c.watchObject("persistentvolumeclaims", b.pvc, h, g));
 }, function(b) {
 a.loaded = !0, a.alerts.load = {
