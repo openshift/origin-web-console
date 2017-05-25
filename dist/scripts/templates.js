@@ -3139,7 +3139,7 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "<span ng-if=\"pod.spec.containers.length === 1\">\n" +
     "{{pod.spec.containers[0].name}}\n" +
     "</span>\n" +
-    "<ui-select ng-init=\"logOptions.container = pod.spec.containers[0].name\" ng-show=\"pod.spec.containers.length > 1\" ng-model=\"logOptions.container\" input-id=\"selectLogContainer\">\n" +
+    "<ui-select ng-show=\"pod.spec.containers.length > 1\" ng-model=\"logOptions.container\" input-id=\"selectLogContainer\">\n" +
     "<ui-select-match>{{$select.selected.name}}</ui-select-match>\n" +
     "<ui-select-choices repeat=\"container.name as container in pod.spec.containers\">\n" +
     "<div ng-bind-html=\"container.name | highlight : $select.search\"></div>\n" +
