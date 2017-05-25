@@ -41,6 +41,7 @@ angular.module('openshiftConsole')
     .get($routeParams.project)
     .then(_.spread(function(project, context) {
       $scope.project = project;
+      $scope.projectContext = context;
       DataService
         .get("persistentvolumeclaims", $routeParams.pvc, context)
         .then(function(pvc) {

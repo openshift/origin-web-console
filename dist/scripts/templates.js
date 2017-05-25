@@ -3232,6 +3232,9 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "<div class=\"container-fluid\">\n" +
     "<div class=\"row\" ng-if=\"pvc\">\n" +
     "<div class=\"col-md-12\">\n" +
+    "<uib-tabset>\n" +
+    "<uib-tab heading=\"Details\" active=\"selectedTab.details\">\n" +
+    "<uib-tab-heading>Details</uib-tab-heading>\n" +
     "<div class=\"resource-details\">\n" +
     "<dl class=\"dl-horizontal left\">\n" +
     "<dt>Status:</dt>\n" +
@@ -3258,6 +3261,12 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "<dd>{{pvc.spec.accessModes | accessModes:'long' | join}}</dd>\n" +
     "</dl>\n" +
     "</div>\n" +
+    "</uib-tab>\n" +
+    "<uib-tab active=\"selectedTab.events\" ng-if=\"'events' | canI : 'watch'\">\n" +
+    "<uib-tab-heading>Events</uib-tab-heading>\n" +
+    "<events resource-kind=\"PersistentVolumeClaim\" resource-name=\"{{pvc.metadata.name}}\" project-context=\"projectContext\" ng-if=\"selectedTab.events\"></events>\n" +
+    "</uib-tab>\n" +
+    "</uib-tabset>\n" +
     "</div>\n" +
     "</div>\n" +
     "</div>\n" +

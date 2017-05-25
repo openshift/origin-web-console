@@ -51,32 +51,41 @@
         <div class="container-fluid">
           <div class="row" ng-if="pvc" >
             <div class="col-md-12">
-              <div class="resource-details">
-                <dl class="dl-horizontal left">
-                  <dt>Status:</dt>
-                  <dd>
-                    <status-icon status="pvc.status.phase" disable-animation></status-icon>
-                    {{pvc.status.phase}}
-                    <span ng-if="pvc.spec.volumeName">to volume <strong>{{pvc.spec.volumeName}}</strong></span>
-                  </dd>
-                  <dt ng-if="pvc.spec.volumeName">Capacity:</dt>
-                  <dd ng-if="pvc.spec.volumeName">
-                    <span ng-if="pvc.status.capacity['storage']">
-                      allocated {{pvc.status.capacity['storage'] | usageWithUnits: 'storage'}}
-                    </span>
-                    <span ng-if="!pvc.status.capacity['storage']">allocated unknown size</span>
-                  </dd>
-                  <dt>Requested Capacity:</dt>
-                  <dd>
-                    <span ng-if="pvc.spec.resources.requests['storage']">
-                      {{pvc.spec.resources.requests['storage'] | usageWithUnits: 'storage'}}
-                    </span>
-                    <span ng-if="!pvc.spec.resources.requests['storage']"><em>none</em></span>
-                  </dd>
-                  <dt>Access Modes:</dt>
-                  <dd>{{pvc.spec.accessModes | accessModes:'long' | join}}</dd>
-                </dl>
-              </div>
+              <uib-tabset>
+                <uib-tab heading="Details" active="selectedTab.details">
+                  <uib-tab-heading>Details</uib-tab-heading>
+                    <div class="resource-details">
+                    <dl class="dl-horizontal left">
+                      <dt>Status:</dt>
+                      <dd>
+                        <status-icon status="pvc.status.phase" disable-animation></status-icon>
+                        {{pvc.status.phase}}
+                        <span ng-if="pvc.spec.volumeName">to volume <strong>{{pvc.spec.volumeName}}</strong></span>
+                      </dd>
+                      <dt ng-if="pvc.spec.volumeName">Capacity:</dt>
+                      <dd ng-if="pvc.spec.volumeName">
+                        <span ng-if="pvc.status.capacity['storage']">
+                          allocated {{pvc.status.capacity['storage'] | usageWithUnits: 'storage'}}
+                        </span>
+                        <span ng-if="!pvc.status.capacity['storage']">allocated unknown size</span>
+                      </dd>
+                      <dt>Requested Capacity:</dt>
+                      <dd>
+                        <span ng-if="pvc.spec.resources.requests['storage']">
+                          {{pvc.spec.resources.requests['storage'] | usageWithUnits: 'storage'}}
+                        </span>
+                        <span ng-if="!pvc.spec.resources.requests['storage']"><em>none</em></span>
+                      </dd>
+                      <dt>Access Modes:</dt>
+                      <dd>{{pvc.spec.accessModes | accessModes:'long' | join}}</dd>
+                    </dl>
+                  </div>
+                </uib-tab>
+                <uib-tab active="selectedTab.events" ng-if="'events' | canI : 'watch'">
+                  <uib-tab-heading>Events</uib-tab-heading>
+                  <events resource-kind="PersistentVolumeClaim" resource-name="{{pvc.metadata.name}}" project-context="projectContext" ng-if="selectedTab.events"></events>
+                </uib-tab>
+              </uib-tabset>
             </div><!-- /col-* -->
           </div>
         </div>
