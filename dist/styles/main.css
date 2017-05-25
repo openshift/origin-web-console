@@ -76,7 +76,6 @@
 @media (min-width:768px){.order-service-details{border-right:1px solid #bbb;width:50%}
 .order-service-config{margin-bottom:-20px;margin-top:-20px;overflow-y:auto;padding-right:0;background-attachment:scroll;background-image:radial-gradient(ellipse at top,rgba(0,0,0,.25) 0%,rgba(0,0,0,0) 65%),radial-gradient(ellipse at bottom,rgba(0,0,0,.25) 0%,rgba(0,0,0,0) 65%);background-position:0 0,0 100%;background-repeat:no-repeat;background-size:100% 6px;width:50%}
 .order-service-config _::-webkit-full-page-media,.order-service-config _:future,:root .order-service-config{background-attachment:local,local,scroll,scroll;background-image:linear-gradient(#fff 30%,rgba(255,255,255,0)),linear-gradient(rgba(255,255,255,0),#fff 70%),radial-gradient(ellipse at top,rgba(0,0,0,.25) 0%,rgba(0,0,0,0) 65%),radial-gradient(ellipse at bottom,rgba(0,0,0,.25) 0%,rgba(0,0,0,0) 65%);background-position:0 0,0 100%;background-repeat:no-repeat;background-size:100% 12px,100% 12px,100% 6px,100% 6px}
-.order-service-config .form-horizontal .control-label{padding-right:0}
 .order-service-config .config-top{flex:1 1 auto}
 }
 .order-service-config h3{line-height:1.4;margin-top:0}
@@ -110,12 +109,12 @@ body.overlay-open,body.overlay-open .landing,body.overlay-open .landing-side-bar
 .catalogs-overlay-panel{background:#fff;color:#363636;border:1px solid rgba(0,0,0,.2);box-shadow:0 3px 9px rgba(0,0,0,.5);margin:0 auto;max-width:1200px;position:relative}
 .catalogs-overlay-panel.catalogs-overlay-panel-single-column{max-width:800px}
 .catalogs-overlay-panel .wizard-pf-main{margin-left:0;padding:0}
-@media (max-width:767px){.catalogs-overlay-panel .wizard-pf-main{max-height:calc(100vh - 248px);background-attachment:scroll;background-image:radial-gradient(ellipse at top,rgba(0,0,0,.2) 0%,rgba(0,0,0,0) 75%),radial-gradient(ellipse at bottom,rgba(0,0,0,.2) 0%,rgba(0,0,0,0) 75%);background-position:0 0,0 100%;background-repeat:no-repeat;background-size:100% 6px}
+@media (max-width:767px){.order-service-config{position:relative}
+.catalogs-overlay-panel .wizard-pf-main{max-height:calc(100vh - 248px);background-attachment:scroll;background-image:radial-gradient(ellipse at top,rgba(0,0,0,.2) 0%,rgba(0,0,0,0) 75%),radial-gradient(ellipse at bottom,rgba(0,0,0,.2) 0%,rgba(0,0,0,0) 75%);background-position:0 0,0 100%;background-repeat:no-repeat;background-size:100% 6px}
 }
 @media (min-width:768px){.catalogs-overlay-panel .wizard-pf-contents{display:flex;flex:1 1 auto;width:100%}
 .catalogs-overlay-panel .wizard-pf-main{display:flex}
-.catalogs-overlay-panel .wizard-pf-main-form-contents{min-height:100%;padding:20px 40px 20px 20px;background-attachment:local;background-image:linear-gradient(#fff 30%,rgba(255,255,255,0)),linear-gradient(rgba(255,255,255,0),#fff 70%);background-position:0 0,0 100%;background-repeat:no-repeat;background-size:100% 12px}
-.catalogs-overlay-panel .wizard-pf-main-form-contents .form-horizontal .control-label{padding-right:0}
+.catalogs-overlay-panel .wizard-pf-main-form-contents{min-height:100%;padding:20px 40px 20px 20px;position:relative;background-attachment:local;background-image:linear-gradient(#fff 30%,rgba(255,255,255,0)),linear-gradient(rgba(255,255,255,0),#fff 70%);background-position:0 0,0 100%;background-repeat:no-repeat;background-size:100% 12px}
 .catalogs-overlay-panel .wizard-pf-main-form-contents _::-webkit-full-page-media,.catalogs-overlay-panel .wizard-pf-main-form-contents _:future,:root .catalogs-overlay-panel .wizard-pf-main-form-contents{background:0 0}
 }
 .catalogs-overlay-panel .wizard-pf-main-inner-shadow-covers{padding:20px}
