@@ -477,7 +477,7 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
 
 
   $templateCache.put('views/_templateopt.html',
-    "<div class=\"template-options\" ng-class=\"{ 'form-horizontal': isDialog }\" ng-show=\"parameters.length\" ng-form=\"paramForm\">\n" +
+    "<div class=\"template-options\" ng-show=\"parameters.length\" ng-form=\"paramForm\">\n" +
     "<div ng-if=\"!isDialog\" class=\"flow\">\n" +
     "<div class=\"flow-block\">\n" +
     "<h2>Parameters</h2>\n" +
@@ -489,14 +489,10 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "</div>\n" +
     "<div ng-transclude></div>\n" +
     "<div class=\"form-group options\" ng-repeat=\"parameter in visibleParameters\" ng-show=\"expand\" ng-init=\"paramID = 'param-' + $index\">\n" +
-    "<label ng-attr-for=\"{{paramID}}\" ng-attr-title=\"{{parameter.name}}\" ng-class=\"{\n" +
-    "        required: parameter.required,\n" +
-    "        'col-sm-4 control-label': isDialog\n" +
-    "      }\">{{parameter.displayName || parameter.name}}</label>\n" +
+    "<label ng-attr-for=\"{{paramID}}\" ng-attr-title=\"{{parameter.name}}\" ng-class=\"{required: parameter.required}\">{{parameter.displayName || parameter.name}}</label>\n" +
     "<div class=\"parameter-input-wrapper\" ng-class=\"{\n" +
     "          'has-error': (paramForm[paramID].$error.required && paramForm[paramID].$touched && !cleared),\n" +
-    "          'has-warning': isOnlyWhitespace(parameter.value),\n" +
-    "          'col-sm-8': isDialog\n" +
+    "          'has-warning': isOnlyWhitespace(parameter.value)\n" +
     "        }\">\n" +
     "<input ng-if=\"!expandedParameter\" ng-attr-id=\"{{paramID}}\" ng-attr-name=\"{{paramID}}\" class=\"form-control hide-ng-leave\" type=\"text\" placeholder=\"{{ parameter | parameterPlaceholder }}\" ng-model=\"parameter.value\" ng-required=\"parameter.required && !parameter.generate\" ng-blur=\"cleared = false\" ng-trim=\"false\" autocorrect=\"off\" autocapitalize=\"off\" spellcheck=\"false\" ng-attr-aria-describedby=\"{{parameter.description ? (paramID + '-description') : undefined}}\">\n" +
     "<a href=\"\" ng-click=\"expandedParameter = !expandedParameter\" class=\"resize-input action-button\" data-toggle=\"tooltip\" data-trigger=\"hover\" dynamic-content=\"{{expandedParameter ? 'Collapse to a single line input. This may strip any new lines you have entered.' : 'Expand to enter multiple lines of content. This is required if you need to include newline characters.'}}\"><i class=\"fa\" ng-class=\"{'fa-expand': !expandedParemeter, 'fa-compress': expandedParameter}\" aria-hidden=\"true\" role=\"presentation\"/><span class=\"sr-only\" ng-if=\"expandedParameter\">Collapse to a single line input</span><span class=\"sr-only\" ng-if=\"!expandedParameter\">Expand to enter multiline input</span></a>\n" +
@@ -8553,12 +8549,10 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "<select-project ng-if=\"!$ctrl.project\" selected-project=\"$ctrl.selectedProject\" name-taken=\"$ctrl.projectNameTaken\"></select-project>\n" +
     "</template-options>\n" +
     "\n" +
-    "<div ng-if=\"$ctrl.isDialog && $ctrl.selectedProject.metadata.uid && $ctrl.template\" class=\"row\">\n" +
-    "<div class=\"col-sm-8 col-sm-offset-4\">\n" +
+    "<div ng-if=\"$ctrl.isDialog && $ctrl.selectedProject.metadata.uid && $ctrl.template\" class=\"form-group\">\n" +
     "\n" +
     "To set optional parameters or labels, view\n" +
     "<a ng-href=\"{{$ctrl.template | createFromTemplateURL : $ctrl.selectedProject.metadata.name}}\">advanced options</a>.\n" +
-    "</div>\n" +
     "</div>\n" +
     "<label-editor ng-if=\"!$ctrl.isDialog\" labels=\"$ctrl.labels\" system-labels=\"$ctrl.systemLabels\" expand=\"true\" can-toggle=\"false\" help-text=\"Each label is applied to each created resource.\">\n" +
     "</label-editor>\n" +

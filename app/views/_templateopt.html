@@ -1,6 +1,5 @@
 <div
     class="template-options"
-    ng-class="{ 'form-horizontal': isDialog }"
     ng-show="parameters.length"
     ng-form="paramForm">
   <div ng-if="!isDialog" class="flow">
@@ -21,16 +20,12 @@
     <label
       ng-attr-for="{{paramID}}"
       ng-attr-title="{{parameter.name}}"
-      ng-class="{
-        required: parameter.required,
-        'col-sm-4 control-label': isDialog
-      }">{{parameter.displayName || parameter.name}}</label>
+      ng-class="{required: parameter.required}">{{parameter.displayName || parameter.name}}</label>
     <div
         class="parameter-input-wrapper"
         ng-class="{
           'has-error': (paramForm[paramID].$error.required && paramForm[paramID].$touched && !cleared),
-          'has-warning': isOnlyWhitespace(parameter.value),
-          'col-sm-8': isDialog
+          'has-warning': isOnlyWhitespace(parameter.value)
         }">
       <input
           ng-if="!expandedParameter"
