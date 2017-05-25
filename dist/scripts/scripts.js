@@ -4861,9 +4861,7 @@ var n = [], o = null;
 k.isAvailable().then(function(b) {
 a.metricsAvailable = b;
 });
-var p = function(b) {
-a.logOptions.container = c.container || b.spec.containers[0].name, a.logCanRun = !_.includes([ "New", "Pending", "Unknown" ], b.status.phase);
-}, q = function() {
+var p = function() {
 if (a.pod) {
 var b = _.find(a.pod.status.containerStatuses, {
 name:a.logOptions.container
@@ -4880,7 +4878,7 @@ containerStartTime:_.get(c, [ d, "startedAt" ]),
 containerEndTime:_.get(c, [ d, "finishedAt" ])
 });
 }
-}, r = function() {
+}, q = function() {
 var a = $("<span>").css({
 position:"absolute",
 top:"-100px"
@@ -4889,36 +4887,36 @@ width:a.width() / 10,
 height:a.height()
 };
 return a.remove(), b;
-}, s = r(), t = $(window), u = function(b) {
-b || (b = 0), s.height && s.width && a.selectedTab.terminal && !(b > 10) && a.$apply(function() {
+}, r = q(), s = $(window), t = function(b) {
+b || (b = 0), r.height && r.width && a.selectedTab.terminal && !(b > 10) && a.$apply(function() {
 var c = $(".container-terminal-wrapper").get(0);
 if (!c) return void d(function() {
-u(b + 1);
+t(b + 1);
 }, 50);
 var e = c.getBoundingClientRect();
 if (0 === e.left && 0 === e.top && 0 === e.width && 0 === e.height) return void d(function() {
-u(b + 1);
+t(b + 1);
 }, 50);
-var f = t.width(), g = t.height(), h = f - e.left - 40, i = g - e.top - 50;
-a.terminalCols = Math.max(_.floor(h / s.width), 80), a.terminalRows = Math.max(_.floor(i / s.height), 24);
+var f = s.width(), g = s.height(), h = f - e.left - 40, i = g - e.top - 50;
+a.terminalCols = Math.max(_.floor(h / r.width), 80), a.terminalRows = Math.max(_.floor(i / r.height), 24);
 });
 };
 a.$watch("selectedTab.terminal", function(a) {
-a ? (s.height && s.width ? $(window).on("resize.terminalsize", _.debounce(u, 100)) :f.warn("Unable to calculate the bounding box for a character.  Terminal will not be able to resize."), d(u, 0)) :$(window).off("resize.terminalsize");
+a ? (r.height && r.width ? $(window).on("resize.terminalsize", _.debounce(t, 100)) :f.warn("Unable to calculate the bounding box for a character.  Terminal will not be able to resize."), d(t, 0)) :$(window).off("resize.terminalsize");
 }), a.onTerminalSelectChange = function(b) {
 _.each(a.containerTerminals, function(a) {
 a.isVisible = !1;
 }), b.isVisible = !0, b.isUsed = !0, a.selectedTerminalContainer = b;
 };
-var v = function(a) {
+var u = function(a) {
 var b = _.get(a, "state", {});
 return _.head(_.keys(b));
-}, w = function() {
+}, v = function() {
 var b = [];
 _.each(a.pod.spec.containers, function(c) {
 var d = _.find(a.pod.status.containerStatuses, {
 name:c.name
-}), e = v(d);
+}), e = u(d);
 b.push({
 containerName:c.name,
 isVisible:!1,
@@ -4928,32 +4926,32 @@ containerState:e
 });
 var c = _.head(b);
 return c.isVisible = !0, c.isUsed = !0, a.selectedTerminalContainer = c, b;
-}, x = function(b) {
+}, w = function(b) {
 a.noContainersYet && (a.noContainersYet = 0 === a.containersRunning(b.status.containerStatuses));
-}, y = function(b) {
+}, x = function(b) {
 _.each(b, function(b) {
 var c = _.find(a.pod.status.containerStatuses, {
 name:b.containerName
-}), d = v(c);
+}), d = u(c);
 b.containerState = d;
 });
-}, z = function() {
+}, y = function() {
 var b = angular.copy(_.get(a, "pod.spec.containers", []));
 _.each(b, function(a) {
 a.env = a.env || [];
 }), a.containersEnv = b;
-}, A = b("annotation"), B = function(b, c) {
-a.loaded = !0, a.pod = b, a.dcName = A(b, "deploymentConfig"), a.rcName = A(b, "deployment"), a.deploymentVersion = A(b, "deploymentVersion"), p(b), q(), z(), "DELETED" === c && (a.alerts.deleted = {
+}, z = b("annotation"), A = function(b, c) {
+a.loaded = !0, a.pod = b, a.dcName = z(b, "deploymentConfig"), a.rcName = z(b, "deployment"), a.deploymentVersion = z(b, "deploymentVersion"), a.logCanRun = !_.includes([ "New", "Pending", "Unknown" ], b.status.phase), p(), y(), "DELETED" === c && (a.alerts.deleted = {
 type:"warning",
 message:"This pod has been deleted."
 });
 };
 m.get(c.project).then(_.spread(function(d, h) {
 o = h, a.project = d, a.projectContext = h, g.get("pods", c.pod, h).then(function(b) {
-B(b);
+A(b);
 var d = {};
-d[b.metadata.name] = b, a.containerTerminals = w(), x(b), j.fetchReferencedImageStreamImages(d, a.imagesByDockerReference, a.imageStreamImageRefByDockerReference, o), n.push(g.watchObject("pods", c.pod, h, function(b, c) {
-B(b, c), y(a.containerTerminals), x(b);
+d[b.metadata.name] = b, a.logOptions.container = c.container || b.spec.containers[0].name, a.containerTerminals = v(), w(b), j.fetchReferencedImageStreamImages(d, a.imagesByDockerReference, a.imageStreamImageRefByDockerReference, o), n.push(g.watchObject("pods", c.pod, h, function(b, c) {
+A(b, c), x(a.containerTerminals), w(b);
 }));
 }, function(c) {
 a.loaded = !0, a.alerts.load = {
@@ -4961,7 +4959,7 @@ type:"error",
 message:"The pod details could not be loaded.",
 details:"Reason: " + b("getErrorDetails")(c)
 };
-}), a.$watch("logOptions.container", q), n.push(g.watch("imagestreams", h, function(b) {
+}), a.$watch("logOptions.container", p), n.push(g.watch("imagestreams", h, function(b) {
 a.imageStreams = b.by("metadata.name"), j.buildDockerRefMapForImageStreams(a.imageStreams, a.imageStreamImageRefByDockerReference), j.fetchReferencedImageStreamImages(a.pods, a.imagesByDockerReference, a.imageStreamImageRefByDockerReference, h), f.log("imagestreams (subscribe)", a.imageStreams);
 })), n.push(g.watch("builds", h, function(b) {
 a.builds = b.by("metadata.name"), f.log("builds (subscribe)", a.builds);
@@ -4977,11 +4975,11 @@ message:"Could not delete pod " + c.metadata.name,
 details:"Reason: " + b("getErrorDetails")(d)
 };
 }), a.debugPod = null);
-}, p = function() {
+}, q = function() {
 $(".terminal:visible").focus();
 };
 a.hasFullscreen = i.hasFullscreen(!0), a.fullscreenTerminal = function() {
-i.requestFullscreen("#container-terminal-wrapper"), setTimeout(p);
+i.requestFullscreen("#container-terminal-wrapper"), setTimeout(q);
 }, a.exitFullscreen = function() {
 i.exitFullscreen();
 }, a.debugTerminal = function(c) {
@@ -5028,7 +5026,7 @@ a.state && a.state.running && b++;
 }), b;
 }, a.showDebugAction = function(c) {
 if ("Completed" === _.get(a, "pod.status.phase")) return !1;
-if (A(a.pod, "openshift.io/build.name")) return !1;
+if (z(a.pod, "openshift.io/build.name")) return !1;
 if (b("isDebugPod")(a.pod)) return !1;
 var d = _.get(c, "state.waiting.reason");
 return "ImagePullBackOff" !== d && "ErrImagePull" !== d && (!_.get(c, "state.running") || !c.ready);
