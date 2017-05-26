@@ -13664,14 +13664,6 @@ return [ "New", "Pending", "Running" ].indexOf(a(b)) > -1;
 return function(b) {
 return _.some(b, a);
 };
-} ]).filter("hasDeployment", [ "DeploymentsService", function(a) {
-return function(b) {
-return !!a.getRevision(b);
-};
-} ]).filter("hasDeploymentConfig", [ "annotationFilter", function(a) {
-return function(b) {
-return !!a(b, "deploymentConfig");
-};
 } ]).filter("getActiveDeployment", [ "DeploymentsService", function(a) {
 return function(b) {
 return a.getActiveDeployment(b);

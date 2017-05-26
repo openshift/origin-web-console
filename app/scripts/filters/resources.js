@@ -716,16 +716,6 @@ angular.module('openshiftConsole')
       return _.some(deployments, deploymentIsInProgressFilter);
     };
   })
-  .filter('hasDeployment', function(DeploymentsService) {
-    return function(replicaSet) {
-      return !!DeploymentsService.getRevision(replicaSet);
-    };
-  })
-  .filter('hasDeploymentConfig', function(annotationFilter) {
-    return function(deployment) {
-      return (annotationFilter(deployment, 'deploymentConfig')) ? true : false;
-    };
-  })
   .filter('getActiveDeployment', function(DeploymentsService) {
     return function(deployments) {
       return DeploymentsService.getActiveDeployment(deployments);
