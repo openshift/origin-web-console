@@ -59,11 +59,6 @@ angular.module('openshiftConsole')
       $scope.metricsAvailable = available;
     });
 
-    var setLogVars = function(pod) {
-      $scope.logOptions.container = $routeParams.container || pod.spec.containers[0].name;
-      $scope.logCanRun = !(_.includes(['New', 'Pending', 'Unknown'], pod.status.phase));
-    };
-
     var setContainerVars = function() {
       if(!$scope.pod) {
         return;
@@ -240,7 +235,7 @@ angular.module('openshiftConsole')
       $scope.dcName = annotation(pod, 'deploymentConfig');
       $scope.rcName = annotation(pod, 'deployment');
       $scope.deploymentVersion = annotation(pod, 'deploymentVersion');
-      setLogVars(pod);
+      $scope.logCanRun = !(_.includes(['New', 'Pending', 'Unknown'], pod.status.phase));
       setContainerVars();
       updateEnv();
       if (action === "DELETED") {
@@ -266,6 +261,7 @@ angular.module('openshiftConsole')
             podResolved(pod);
             var pods = {};
             pods[pod.metadata.name] = pod;
+            $scope.logOptions.container = $routeParams.container || pod.spec.containers[0].name;
             $scope.containerTerminals = makeTerminals();
             updateContainersYet(pod);
             ImageStreamResolver.fetchReferencedImageStreamImages(pods, $scope.imagesByDockerReference, $scope.imageStreamImageRefByDockerReference, requestContext);

@@ -280,11 +280,7 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "<div flex class=\"word-break\">\n" +
     "<span class=\"pod-template-key\">Ports:</span>\n" +
     "<span ng-repeat=\"port in container.ports | orderBy: 'containerPort' | limitToOrAll : detailed ? undefined : 1\">\n" +
-    "<span><span class=\"nowrap\">{{port.containerPort}}/{{port.protocol}}</span>\n" +
-    "<span ng-if=\"port.name\"> <span class=\"nowrap\">({{port.name}})</span></span>\n" +
-    "<span ng-if=\"port.hostPort\"> <span class=\"nowrap\"><span class=\"port-icon\">&#8594;</span> {{port.hostPort}}</span></span>\n" +
-    "</span>\n" +
-    "<span ng-if=\"!$last\">, </span>\n" +
+    "<span class=\"nowrap\">{{port.containerPort}}/{{port.protocol}}</span><span ng-if=\"port.name\"><span class=\"nowrap\"> ({{port.name}})</span></span><span ng-if=\"port.hostPort\"><span class=\"nowrap\"><span class=\"port-icon\"> &#8594;</span> {{port.hostPort}}</span></span><span ng-if=\"!$last\">, </span>\n" +
     "</span>\n" +
     "<span ng-if=\"!detailed && container.ports.length >= 2\">\n" +
     "and {{container.ports.length - 1}}\n" +
@@ -481,7 +477,7 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
 
 
   $templateCache.put('views/_templateopt.html',
-    "<div class=\"template-options\" ng-class=\"{ 'form-horizontal': isDialog }\" ng-show=\"parameters.length\" ng-form=\"paramForm\">\n" +
+    "<div class=\"template-options\" ng-show=\"parameters.length\" ng-form=\"paramForm\">\n" +
     "<div ng-if=\"!isDialog\" class=\"flow\">\n" +
     "<div class=\"flow-block\">\n" +
     "<h2>Parameters</h2>\n" +
@@ -493,14 +489,10 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "</div>\n" +
     "<div ng-transclude></div>\n" +
     "<div class=\"form-group options\" ng-repeat=\"parameter in visibleParameters\" ng-show=\"expand\" ng-init=\"paramID = 'param-' + $index\">\n" +
-    "<label ng-attr-for=\"{{paramID}}\" ng-attr-title=\"{{parameter.name}}\" ng-class=\"{\n" +
-    "        required: parameter.required,\n" +
-    "        'col-sm-4 control-label': isDialog\n" +
-    "      }\">{{parameter.displayName || parameter.name}}</label>\n" +
+    "<label ng-attr-for=\"{{paramID}}\" ng-attr-title=\"{{parameter.name}}\" ng-class=\"{required: parameter.required}\">{{parameter.displayName || parameter.name}}</label>\n" +
     "<div class=\"parameter-input-wrapper\" ng-class=\"{\n" +
     "          'has-error': (paramForm[paramID].$error.required && paramForm[paramID].$touched && !cleared),\n" +
-    "          'has-warning': isOnlyWhitespace(parameter.value),\n" +
-    "          'col-sm-8': isDialog\n" +
+    "          'has-warning': isOnlyWhitespace(parameter.value)\n" +
     "        }\">\n" +
     "<input ng-if=\"!expandedParameter\" ng-attr-id=\"{{paramID}}\" ng-attr-name=\"{{paramID}}\" class=\"form-control hide-ng-leave\" type=\"text\" placeholder=\"{{ parameter | parameterPlaceholder }}\" ng-model=\"parameter.value\" ng-required=\"parameter.required && !parameter.generate\" ng-blur=\"cleared = false\" ng-trim=\"false\" autocorrect=\"off\" autocapitalize=\"off\" spellcheck=\"false\" ng-attr-aria-describedby=\"{{parameter.description ? (paramID + '-description') : undefined}}\">\n" +
     "<a href=\"\" ng-click=\"expandedParameter = !expandedParameter\" class=\"resize-input action-button\" data-toggle=\"tooltip\" data-trigger=\"hover\" dynamic-content=\"{{expandedParameter ? 'Collapse to a single line input. This may strip any new lines you have entered.' : 'Expand to enter multiple lines of content. This is required if you need to include newline characters.'}}\"><i class=\"fa\" ng-class=\"{'fa-expand': !expandedParemeter, 'fa-compress': expandedParameter}\" aria-hidden=\"true\" role=\"presentation\"/><span class=\"sr-only\" ng-if=\"expandedParameter\">Collapse to a single line input</span><span class=\"sr-only\" ng-if=\"!expandedParameter\">Expand to enter multiline input</span></a>\n" +
@@ -722,7 +714,7 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "<dt>Kubernetes Master:</dt>\n" +
     "<dd>{{version.master.kubernetes || 'unknown'}}</dd>\n" +
     "</dl>\n" +
-    "<p>The <a target=\"_blank\" href=\"{{'welcome' | helpLink}}\">documentation</a> contains information and guides to help you learn about OpenShift and start exploring its features. From getting started with creating your first application, to trying out more advanced build and deployment techniques, it provides what you need to set up and manage your OpenShift environment as an application developer.</p>\n" +
+    "<p>The <a target=\"_blank\" ng-href=\"{{'welcome' | helpLink}}\">documentation</a> helps you learn about OpenShift and start exploring its features. From getting started with creating your first application to trying out more advanced build and deployment techniques, it provides guidance on setting up and managing your OpenShift environment as an application developer.</p>\n" +
     "<p>With the OpenShift command line interface (CLI), you can create applications and manage OpenShift projects from a terminal. To get started using the CLI, visit <a href=\"command-line\">Command Line Tools</a>.\n" +
     "</p>\n" +
     "</div>\n" +
@@ -3031,6 +3023,9 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "<div class=\"container-fluid\">\n" +
     "<div class=\"row\" ng-if=\"pvc\">\n" +
     "<div class=\"col-md-12\">\n" +
+    "<uib-tabset>\n" +
+    "<uib-tab heading=\"Details\" active=\"selectedTab.details\">\n" +
+    "<uib-tab-heading>Details</uib-tab-heading>\n" +
     "<div class=\"resource-details\">\n" +
     "<dl class=\"dl-horizontal left\">\n" +
     "<dt>Status:</dt>\n" +
@@ -3057,6 +3052,12 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "<dd>{{pvc.spec.accessModes | accessModes:'long' | join}}</dd>\n" +
     "</dl>\n" +
     "</div>\n" +
+    "</uib-tab>\n" +
+    "<uib-tab active=\"selectedTab.events\" ng-if=\"'events' | canI : 'watch'\">\n" +
+    "<uib-tab-heading>Events</uib-tab-heading>\n" +
+    "<events resource-kind=\"PersistentVolumeClaim\" resource-name=\"{{pvc.metadata.name}}\" project-context=\"projectContext\" ng-if=\"selectedTab.events\"></events>\n" +
+    "</uib-tab>\n" +
+    "</uib-tabset>\n" +
     "</div>\n" +
     "</div>\n" +
     "</div>\n" +
@@ -3139,7 +3140,7 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "<span ng-if=\"pod.spec.containers.length === 1\">\n" +
     "{{pod.spec.containers[0].name}}\n" +
     "</span>\n" +
-    "<ui-select ng-init=\"logOptions.container = pod.spec.containers[0].name\" ng-show=\"pod.spec.containers.length > 1\" ng-model=\"logOptions.container\" input-id=\"selectLogContainer\">\n" +
+    "<ui-select ng-show=\"pod.spec.containers.length > 1\" ng-model=\"logOptions.container\" input-id=\"selectLogContainer\">\n" +
     "<ui-select-match>{{$select.selected.name}}</ui-select-match>\n" +
     "<ui-select-choices repeat=\"container.name as container in pod.spec.containers\">\n" +
     "<div ng-bind-html=\"container.name | highlight : $select.search\"></div>\n" +
@@ -4461,7 +4462,7 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "<div class=\"alert alert-warning\">\n" +
     "<span class=\"pficon pficon-warning-triangle-o\" aria-hidden=\"true\"></span>\n" +
     "<strong>A token is a form of a password.</strong>\n" +
-    "Do not share your API token.\n" +
+    "Do not share your API token. To reveal your token, press the copy to clipboard button and then paste the clipboard contents.\n" +
     "</div>\n" +
     "<p>After you login to your account you will get a list of projects that you can switch between:\n" +
     "<copy-to-clipboard display-wide=\"true\" clipboard-text=\"'oc project <project-name>'\"></copy-to-clipboard>\n" +
@@ -8548,12 +8549,10 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "<select-project ng-if=\"!$ctrl.project\" selected-project=\"$ctrl.selectedProject\" name-taken=\"$ctrl.projectNameTaken\"></select-project>\n" +
     "</template-options>\n" +
     "\n" +
-    "<div ng-if=\"$ctrl.isDialog && $ctrl.selectedProject.metadata.uid && $ctrl.template\" class=\"row\">\n" +
-    "<div class=\"col-sm-8 col-sm-offset-4\">\n" +
+    "<div ng-if=\"$ctrl.isDialog && $ctrl.selectedProject.metadata.uid && $ctrl.template\" class=\"form-group\">\n" +
     "\n" +
     "To set optional parameters or labels, view\n" +
     "<a ng-href=\"{{$ctrl.template | createFromTemplateURL : $ctrl.selectedProject.metadata.name}}\">advanced options</a>.\n" +
-    "</div>\n" +
     "</div>\n" +
     "<label-editor ng-if=\"!$ctrl.isDialog\" labels=\"$ctrl.labels\" system-labels=\"$ctrl.systemLabels\" expand=\"true\" can-toggle=\"false\" help-text=\"Each label is applied to each created resource.\">\n" +
     "</label-editor>\n" +

@@ -72,6 +72,9 @@
     .select-role {
       small {
         color: #999;
+        display: inline-block;
+        line-height: 1.4;
+        white-space: pre-line;
       }
       .active {
         small {
@@ -92,6 +95,10 @@
       flex-shrink: 0;
       flex-basis: auto;
     }
+  }
+  .ui-select-bootstrap > .ui-select-choices {
+    // allow for taller select due to role help text
+    max-height: 300px;
   }
 }
 

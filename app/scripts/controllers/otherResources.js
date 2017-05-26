@@ -1,14 +1,18 @@
 'use strict';
 
-/**
- * @ngdoc function
- * @name openshiftConsole.controller:OtherResourcesController
- * @description
- * # ProjectController
- * Controller of the openshiftConsole
- */
 angular.module('openshiftConsole')
-  .controller('OtherResourcesController', function ($routeParams, $location, $scope, AlertMessageService, AuthorizationService, DataService, ProjectsService, $filter, LabelFilter, Logger, APIService ) {
+  .controller('OtherResourcesController', function (
+    $routeParams,
+    $location,
+    $scope,
+    AlertMessageService,
+    AuthorizationService,
+    DataService,
+    ProjectsService,
+    $filter,
+    LabelFilter,
+    Logger,
+    APIService) {
     $scope.projectName = $routeParams.project;
     $scope.labelSuggestions = {};
     $scope.alerts = $scope.alerts || {};
@@ -43,6 +47,19 @@ angular.module('openshiftConsole')
           return true;
       }
     });
+
+    var isListable = function(kind) {
+      if(!kind) {
+        return;
+      }
+      var rgv = APIService.kindToResourceGroupVersion(kind);
+      var apiInfo = APIService.apiInfo(rgv);
+      return apiInfo && apiInfo.verbs ?
+              _.contains(apiInfo.verbs, 'list') :
+              // if we don't have apiInfo, default to show the item
+              // this can happen if the api server is not current
+              true;
+    };
 
     $scope.getReturnURL = function() {
       var kind = _.get($scope, 'kindSelector.selected.kind');
@@ -93,6 +110,9 @@ angular.module('openshiftConsole')
             resource: APIService.kindToResource(kind.kind),
             group: kind.group || ''
           };
+          if(!isListable(kind)) {
+            return false;
+          }
           // exclude 'projectrequests', subresources, and REVIEW_RESOURCES from the list
           if (AuthorizationService.checkResource(resourceAndGroup.resource)) {
             return AuthorizationService.canI(resourceAndGroup, "list", $scope.projectName);

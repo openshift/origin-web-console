@@ -111,11 +111,7 @@
         <div flex class="word-break">
           <span class="pod-template-key">Ports:</span>
           <span ng-repeat="port in container.ports | orderBy: 'containerPort' | limitToOrAll : detailed ? undefined : 1">
-            <span><span class="nowrap">{{port.containerPort}}/{{port.protocol}}</span>
-              <span ng-if="port.name"> <span class="nowrap">({{port.name}})</span></span>
-              <span ng-if="port.hostPort"> <span class="nowrap"><span class="port-icon">&#8594;</span> {{port.hostPort}}</span></span>
-            </span>
-            <span ng-if="!$last">, </span>
+            <span class="nowrap">{{port.containerPort}}/{{port.protocol}}</span><span ng-if="port.name"><span class="nowrap"> ({{port.name}})</span></span><span ng-if="port.hostPort"><span class="nowrap"><span class="port-icon"> &#8594;</span> {{port.hostPort}}</span></span><span ng-if="!$last">, </span>
           </span>
           <span ng-if="!detailed && container.ports.length >= 2">
             and {{container.ports.length - 1}}
