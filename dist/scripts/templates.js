@@ -5813,14 +5813,14 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "</bind-application-form>\n" +
     "</div>\n" +
     "<div ng-if=\"ctrl.target.kind === 'Instance'\">\n" +
-    "<bind-service-form selected-project=\"ctrl.project\" service-class=\"ctrl.serviceClass\" service-class-name=\"ctrl.serviceClassName\" form-name=\"ctrl.selectionForm\" applications=\"ctrl.applications\" app-to-bind=\"ctrl.appToBind\" should-bind-to-app=\"ctrl.shouldBindToApp\" group-by-kind=\"ctrl.groupByKind\">\n" +
+    "<bind-service-form selected-project=\"ctrl.project\" service-class=\"ctrl.serviceClass\" service-class-name=\"ctrl.serviceClassName\" form-name=\"ctrl.selectionForm\" applications=\"ctrl.applications\" bind-type=\"ctrl.bindType\" app-to-bind=\"ctrl.appToBind\">\n" +
     "</bind-service-form>\n" +
     "</div>"
   );
 
 
   $templateCache.put('views/directives/bind-service/results.html',
-    "<bind-results error=\"ctrl.error\" binding=\"ctrl.binding\" service-to-bind=\"ctrl.serviceToBind\" application-to-bind=\"ctrl.appToBind.metadata.name\" generated-secret-name=\"ctrl.generatedSecretName\" show-pod-presets=\"'pod_presets' | enableTechPreviewFeature\" secret-href=\"ctrl.generatedSecretName | navigateResourceURL : 'Secret' : ctrl.target.metadata.namespace\">\n" +
+    "<bind-results error=\"ctrl.error\" binding=\"ctrl.binding\" service-to-bind=\"ctrl.serviceToBind\" bind-type=\"{{ctrl.bindType}}\" application-to-bind=\"ctrl.appToBind.metadata.name\" generated-secret-name=\"ctrl.generatedSecretName\" show-pod-presets=\"'pod_presets' | enableTechPreviewFeature\" secret-href=\"ctrl.generatedSecretName | navigateResourceURL : 'Secret' : ctrl.target.metadata.namespace\">\n" +
     "</bind-results>"
   );
 
@@ -11466,7 +11466,7 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "<a ng-href=\"{{row.apiObject | editResourceURL}}\">Edit</a>\n" +
     "</li>\n" +
     "\n" +
-    "<li ng-if=\"('pod_presets' | enableTechPreviewFeature) && (row.state.serviceInstances | hashSize) > 0\" role=\"menuitem\">\n" +
+    "<li ng-if=\"('pod_presets' | enableTechPreviewFeature) && row.state.bindableServiceInstances.length\" role=\"menuitem\">\n" +
     "<a href=\"\" ng-click=\"row.showOverlayPanel('bindService', {target: row.apiObject})\">Create Binding</a>\n" +
     "</li>\n" +
     "<li ng-if=\"row.current && ('deploymentconfigs/log' | canI : 'get')\" role=\"menuitem\">\n" +
@@ -11983,7 +11983,7 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "<div class=\"list-pf-details\">\n" +
     "<div ng-if=\"!row.expanded\">\n" +
     "<div class=\"hidden-xs hidden-sm\">\n" +
-    "<span ng-if=\"!row.bindings.length\">\n" +
+    "<span ng-if=\"!row.bindings.length && row.isBindable\">\n" +
     "<a href=\"\" ng-click=\"row.showOverlayPanel('bindService', {target: row.apiObject})\">Create Binding</a>\n" +
     "</span>\n" +
     "<span ng-if=\"row.bindings.length\" class=\"component-label\">Bindings</span>\n" +
@@ -12005,7 +12005,7 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "<div uib-dropdown>\n" +
     "<a href=\"\" uib-dropdown-toggle class=\"actions-dropdown-kebab\"><i class=\"fa fa-ellipsis-v\"></i><span class=\"sr-only\">Actions</span></a>\n" +
     "<ul class=\"dropdown-menu dropdown-menu-right\" uib-dropdown-menu role=\"menu\">\n" +
-    "<li role=\"menuitem\">\n" +
+    "<li role=\"menuitem\" ng-if=\"row.isBindable\">\n" +
     "<a href=\"\" ng-click=\"row.showOverlayPanel('bindService', {target: row.apiObject})\">Create Binding</a>\n" +
     "</li>\n" +
     "<li role=\"menuitem\">\n" +
@@ -12025,7 +12025,7 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "<p class=\"pre-wrap\" ng-bind-html=\"row.description | linky\"></p>\n" +
     "</div>\n" +
     "</div>\n" +
-    "<div class=\"section-title\">\n" +
+    "<div class=\"section-title\" ng-if=\"row.isBindable || row.bindings\">\n" +
     "Bindings\n" +
     "</div>\n" +
     "<div ng-if=\"row.bindings\" class=\"row\" ng-repeat=\"(name, binding) in row.bindings\">\n" +
@@ -12042,7 +12042,7 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "</a>\n" +
     "</div>\n" +
     "</div>\n" +
-    "<div class=\"row\">\n" +
+    "<div class=\"row\" ng-if=\"row.isBindable\">\n" +
     "<div class=\"col-sm-12\">\n" +
     "<a href=\"\" ng-click=\"row.showOverlayPanel('bindService', {target: row.apiObject})\">Create Binding</a>\n" +
     "</div>\n" +
