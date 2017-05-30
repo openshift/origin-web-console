@@ -25,6 +25,7 @@
     "sifter": "0.4.1",
     "microplugin": "0.0.3",
     "selectize": "0.12.1",
+    "c3": "0.4.11",
     "kubernetes-label-selector": "1.4.4",
     "kubernetes-container-terminal": "1.0.3",
     "registry-image-widgets": "0.0.2",
