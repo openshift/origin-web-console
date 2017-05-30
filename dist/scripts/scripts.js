@@ -5310,7 +5310,7 @@ roleName:b.metadata.name,
 subjectName:c.name
 }));
 }, function(d) {
-v(), u("rolebindingCreateFail", "error", t.update.subject.error({
+v(), x(), u("rolebindingCreateFail", "error", t.update.subject.error({
 roleName:b.metadata.name,
 subjectName:c.name
 }), t.errorReason({
@@ -5324,7 +5324,7 @@ roleName:b.roleRef.name,
 subjectName:c.name
 }));
 }, function(d) {
-v(), u("rolebindingUpdateFail", "error", t.update.subject.error({
+v(), x(), u("rolebindingUpdateFail", "error", t.update.subject.error({
 roleName:b.roleRef.name,
 subjectName:c.name
 }), t.errorReason({
