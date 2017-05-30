@@ -5712,16 +5712,16 @@ alerts+.chromeless .log-loading-msg{margin-top:130px}
 .project-name-item.list-group-item-heading .h1 a{display:block;line-height:normal;overflow:hidden;text-overflow:ellipsis}
 .project-name-item.list-group-item-heading p{margin-bottom:0;margin-top:5px}
 .projects-bar{display:flex;flex-direction:column}
-@media (min-width:650px){.projects-bar{flex-direction:row;justify-content:space-between}
+@media (min-width:660px){.projects-bar{flex-direction:row;justify-content:space-between}
 }
 .projects-bar h1{margin-bottom:0!important;margin-top:0!important}
 .projects-bar .projects-add{display:flex;justify-content:flex-end;margin:-27px 0 0}
 .projects-bar .projects-options{display:flex;flex-direction:column}
-@media (min-width:650px){.projects-bar .projects-add{margin-bottom:20px;margin-left:40px;margin-top:0;order:2}
+@media (min-width:660px){.projects-bar .projects-add{margin-bottom:20px;margin-left:40px;margin-top:0;order:2}
 .projects-bar .projects-options{flex-direction:row}
 }
 .projects-bar .projects-search{display:flex;margin-bottom:20px;margin-top:20px}
-@media (min-width:650px){.projects-bar .projects-search{margin-top:0}
+@media (min-width:660px){.projects-bar .projects-search{margin-top:0}
 }
 .projects-bar .projects-search .search-pf{display:block;flex:0 1 auto}
 .projects-bar .projects-search .search-pf.has-button .form-group{display:block}
