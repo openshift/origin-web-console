@@ -12291,27 +12291,6 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "</div>\n" +
     "<div class=\"list-group list-view-pf projects-list\">\n" +
     "<div ng-repeat=\"project in projects\" class=\"list-group-item project-info tile-click\">\n" +
-    "<div row class=\"list-view-pf-actions list-pf-actions\" ng-if=\"project.status.phase == 'Active'\">\n" +
-    "<div uib-dropdown>\n" +
-    "<a href=\"\" uib-dropdown-toggle class=\"actions-dropdown-kebab\"><i class=\"fa fa-ellipsis-v\" aria-hidden=\"true\"></i><span class=\"sr-only\">Actions</span></a>\n" +
-    "<ul class=\"dropdown-menu dropdown-menu-right\" uib-dropdown-menu role=\"menu\">\n" +
-    "<li role=\"menuitem\">\n" +
-    "<a ng-href=\"project/{{project.metadata.name}}/membership\">\n" +
-    "View Membership\n" +
-    "</a>\n" +
-    "</li>\n" +
-    "<li role=\"menuitem\">\n" +
-    "<a ng-href=\"project/{{project.metadata.name}}/edit?then=./\">\n" +
-    "Edit Project\n" +
-    "</a>\n" +
-    "</li>\n" +
-    "<li role=\"menuitem\">\n" +
-    "<delete-link kind=\"Project\" label=\"Delete Project\" resource-name=\"{{project.metadata.name}}\" project-name=\"{{project.metadata.name}}\" display-name=\"{{(project | displayName)}}\" type-name-to-confirm=\"true\" stay-on-current-page=\"true\" alerts=\"alerts\">\n" +
-    "</delete-link>\n" +
-    "</li>\n" +
-    "</ul>\n" +
-    "</div>\n" +
-    "</div>\n" +
     "<div class=\"list-view-pf-main-info\">\n" +
     "<div class=\"list-view-pf-description project-names\">\n" +
     "<div class=\"list-group-item-heading project-name-item\">\n" +
@@ -12332,6 +12311,27 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "<span class=\"highlighted-content\" ng-if=\"keywords.length\" ng-bind-html=\"project | description | truncate : 1000 | highlightKeywords : keywords\"></span>\n" +
     "</span>\n" +
     "</div>\n" +
+    "</div>\n" +
+    "</div>\n" +
+    "<div row class=\"list-view-pf-actions list-pf-actions\" ng-if=\"project.status.phase == 'Active'\">\n" +
+    "<div uib-dropdown>\n" +
+    "<a href=\"\" uib-dropdown-toggle class=\"actions-dropdown-kebab\"><i class=\"fa fa-ellipsis-v\" aria-hidden=\"true\"></i><span class=\"sr-only\">Actions</span></a>\n" +
+    "<ul class=\"dropdown-menu dropdown-menu-right\" uib-dropdown-menu role=\"menu\">\n" +
+    "<li role=\"menuitem\">\n" +
+    "<a ng-href=\"project/{{project.metadata.name}}/membership\">\n" +
+    "View Membership\n" +
+    "</a>\n" +
+    "</li>\n" +
+    "<li role=\"menuitem\">\n" +
+    "<a ng-href=\"project/{{project.metadata.name}}/edit?then=./\">\n" +
+    "Edit Project\n" +
+    "</a>\n" +
+    "</li>\n" +
+    "<li role=\"menuitem\">\n" +
+    "<delete-link kind=\"Project\" label=\"Delete Project\" resource-name=\"{{project.metadata.name}}\" project-name=\"{{project.metadata.name}}\" display-name=\"{{(project | displayName)}}\" type-name-to-confirm=\"true\" stay-on-current-page=\"true\" alerts=\"alerts\">\n" +
+    "</delete-link>\n" +
+    "</li>\n" +
+    "</ul>\n" +
     "</div>\n" +
     "</div>\n" +
     "</div>\n" +

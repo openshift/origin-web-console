@@ -66,6 +66,31 @@
                     </div>
                     <div class="list-group list-view-pf projects-list">
                       <div ng-repeat="project in projects" class="list-group-item project-info tile-click">
+                        <div class="list-view-pf-main-info">
+                          <div class="list-view-pf-description project-names">
+                            <div class="list-group-item-heading project-name-item">
+                              <h2 class="h1">
+                                <a class="tile-target" ng-href="project/{{project.metadata.name}}" title="{{project | displayName}}"><span ng-bind-html="project | displayName | highlightKeywords : keywords"></span></a>
+                                <span ng-if="project.status.phase != 'Active'"
+                                  data-toggle="tooltip"
+                                  title="This project has been marked for deletion."
+                                  class="pficon pficon-warning-triangle-o"></span>
+                              </h2>
+                              <small>
+                                <span ng-if="project | displayName : true"><span ng-bind-html="project.metadata.name | highlightKeywords : keywords"></span> &ndash;</span>
+                                created
+                                <span ng-if="project | annotation : 'openshift.io/requester'">by <span ng-bind-html="project | annotation : 'openshift.io/requester' | highlightKeywords : keywords"></span></span>
+                                <span am-time-ago="project.metadata.creationTimestamp"></span>
+                              </small>
+                            </div>
+                            <div class="list-view-pf-additional-info project-additional-info">
+                              <span class="list-group-item-text project-description">
+                                <truncate-long-text ng-if="!keywords.length" content="project | description" limit="265" newline-limit="10" use-word-boundary="true"></truncate-long-text>
+                                <span class="highlighted-content" ng-if="keywords.length" ng-bind-html="project | description | truncate : 1000 | highlightKeywords : keywords"></span>
+                              </span>
+                            </div>
+                          </div>
+                        </div>
                         <div row class="list-view-pf-actions list-pf-actions" ng-if="project.status.phase == 'Active'">
                           <div uib-dropdown>
                             <a href="" uib-dropdown-toggle class="actions-dropdown-kebab"><i class="fa fa-ellipsis-v" aria-hidden="true"></i><span class="sr-only">Actions</span></a>
@@ -93,31 +118,6 @@
                                 </delete-link>
                               </li>
                             </ul>
-                          </div>
-                        </div>
-                        <div class="list-view-pf-main-info">
-                          <div class="list-view-pf-description project-names">
-                            <div class="list-group-item-heading project-name-item">
-                              <h2 class="h1">
-                                <a class="tile-target" ng-href="project/{{project.metadata.name}}" title="{{project | displayName}}"><span ng-bind-html="project | displayName | highlightKeywords : keywords"></span></a>
-                                <span ng-if="project.status.phase != 'Active'"
-                                  data-toggle="tooltip"
-                                  title="This project has been marked for deletion."
-                                  class="pficon pficon-warning-triangle-o"></span>
-                              </h2>
-                              <small>
-                                <span ng-if="project | displayName : true"><span ng-bind-html="project.metadata.name | highlightKeywords : keywords"></span> &ndash;</span>
-                                created
-                                <span ng-if="project | annotation : 'openshift.io/requester'">by <span ng-bind-html="project | annotation : 'openshift.io/requester' | highlightKeywords : keywords"></span></span>
-                                <span am-time-ago="project.metadata.creationTimestamp"></span>
-                              </small>
-                            </div>
-                            <div class="list-view-pf-additional-info project-additional-info">
-                              <span class="list-group-item-text project-description">
-                                <truncate-long-text ng-if="!keywords.length" content="project | description" limit="265" newline-limit="10" use-word-boundary="true"></truncate-long-text>
-                                <span class="highlighted-content" ng-if="keywords.length" ng-bind-html="project | description | truncate : 1000 | highlightKeywords : keywords"></span>
-                              </span>
-                            </div>
                           </div>
                         </div>
                       </div>
