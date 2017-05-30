@@ -1075,15 +1075,17 @@ alerts:h.state.alerts
 }, h.cancelDeployment = function() {
 var a = h.current;
 if (a) {
-var c = a.metadata.name, d = _.get(h, "apiObject.status.latestVersion"), f = b.open({
+var c, d = a.metadata.name, f = _.get(h, "apiObject.status.latestVersion");
+c = 1 === f ? "This will attempt to stop the in-progress deployment. It may take some time to complete." :"This will attempt to stop the in-progress deployment and rollback to the last successful deployment. It may take some time to complete.";
+var g = b.open({
 animation:!0,
 templateUrl:"views/modals/confirm.html",
 controller:"ConfirmModalController",
 resolve:{
 modalConfig:function() {
 return {
-message:"Cancel deployment " + c + "?",
-details:d ? "This will attempt to stop the in-progress deployment and rollback to the previous deployment, #" + d + ". It may take some time to complete." :"This will attempt to stop the in-progress deployment and may take some time to complete.",
+message:"Cancel deployment " + d + "?",
+details:c,
 okButtonText:"Yes, cancel",
 okButtonClass:"btn-danger",
 cancelButtonText:"No, don't cancel"
@@ -1091,17 +1093,17 @@ cancelButtonText:"No, don't cancel"
 }
 }
 });
-f.result.then(function() {
+g.result.then(function() {
 return a.metadata.uid !== h.current.metadata.uid ? void (h.state.alerts["cancel-deployment"] = {
 type:"error",
-message:"Deployment #" + d + " is no longer the latest."
+message:"Deployment #" + f + " is no longer the latest."
 }) :(a = h.current, j(a) ? void e.cancelRunningDeployment(a, {
 namespace:a.metadata.namespace
 }, {
 alerts:h.state.alerts
 }) :void (h.state.alerts["cancel-deployment"] = {
 type:"error",
-message:"Deployment " + c + " is no longer in progress."
+message:"Deployment " + d + " is no longer in progress."
 }));
 });
 }

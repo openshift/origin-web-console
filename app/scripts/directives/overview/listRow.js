@@ -264,6 +264,13 @@ function OverviewListRow($filter,
 
     var rcName = replicationController.metadata.name;
     var latestVersion = _.get(row, 'apiObject.status.latestVersion');
+    var details;
+    if (latestVersion === 1) {
+      details = "This will attempt to stop the in-progress deployment. It may take some time to complete.";
+    } else {
+      details = "This will attempt to stop the in-progress deployment and rollback to the last successful deployment. It may take some time to complete.";
+    }
+
     var modalInstance = $uibModal.open({
       animation: true,
       templateUrl: 'views/modals/confirm.html',
@@ -272,8 +279,7 @@ function OverviewListRow($filter,
         modalConfig: function() {
           return {
             message: "Cancel deployment " + rcName + "?",
-            details: latestVersion ? ("This will attempt to stop the in-progress deployment and rollback to the previous deployment, #" + latestVersion + ". It may take some time to complete.") :
-                                      "This will attempt to stop the in-progress deployment and may take some time to complete.",
+            details: details,
             okButtonText: "Yes, cancel",
             okButtonClass: "btn-danger",
             cancelButtonText: "No, don't cancel"
