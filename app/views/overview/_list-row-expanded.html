@@ -51,17 +51,18 @@
             'stacked-template': row.state.breakpoint !== 'lg'
         }">
           <div ng-if="row.previous" class="previous-donut">
-              <deployment-donut
-                rc="row.previous"
-                deployment-config="row.apiObject"
-                pods="row.getPods(row.previous)"
-                hpa="row.hpa"
-                limit-ranges="row.state.limitRanges"
-                quotas="row.state.quotas"
-                cluster-quotas="row.state.clusterQuotas"
-                scalable="false"
-                alerts="row.state.alerts">
-              </deployment-donut>
+            <deployment-donut
+              rc="row.previous"
+              deployment-config="row.apiObject"
+              pods="row.getPods(row.previous)"
+              hpa="row.hpa"
+              limit-ranges="row.state.limitRanges"
+              project="row.state.project"
+              quotas="row.state.quotas"
+              cluster-quotas="row.state.clusterQuotas"
+              scalable="false"
+              alerts="row.state.alerts">
+            </deployment-donut>
             <div ng-if="row.previous" class="deployment-connector">
               <div class="deployment-connector-arrow" aria-hidden="true">
               </div>
@@ -81,6 +82,7 @@
                 pods="row.getPods(row.current)"
                 hpa="row.hpa"
                 limit-ranges="row.state.limitRanges"
+                project="row.state.project"
                 quotas="row.state.quotas"
                 cluster-quotas="row.state.clusterQuotas"
                 scalable="row.isScalable()"

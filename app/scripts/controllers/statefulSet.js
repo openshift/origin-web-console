@@ -80,6 +80,16 @@ angular
               var pods = podData.by('metadata.name');
               $scope.podsForStatefulSet = PodsService.filterForOwner(pods, statefulSet);
             }));
+
+            // Watch quotas and cluster quotas to warn about problems in the deployment donut.
+            var QUOTA_POLL_INTERVAL = 60 * 1000;
+            watches.push(DataService.watch('resourcequotas', context, function(quotaData) {
+              $scope.quotas = quotaData.by("metadata.name");
+            }, {poll: true, pollInterval: QUOTA_POLL_INTERVAL}));
+
+            watches.push(DataService.watch('appliedclusterresourcequotas', context, function(clusterQuotaData) {
+              $scope.clusterQuotas = clusterQuotaData.by("metadata.name");
+            }, {poll: true, pollInterval: QUOTA_POLL_INTERVAL}));
           });
       }));
 
