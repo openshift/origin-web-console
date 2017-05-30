@@ -46,7 +46,7 @@ label:"Name"
 }, {
 id:"label",
 label:"Label"
-} ], x.filterBy = "name", x.viewByOptions = [ {
+} ], x.filterBy = o.getLabelSelector().isEmpty() ? "name" :"label", x.viewByOptions = [ {
 id:"app",
 label:"Application"
 }, {
@@ -356,8 +356,8 @@ b !== c && (P.filterKeywords = n.generateKeywords(b), a.$evalAsync(ha));
 maxWait:250
 })), a.$watch(function() {
 return x.filterBy;
-}, function() {
-x.clearFilter(), ha();
+}, function(a, b) {
+a !== b && (x.clearFilter(), ha());
 }), o.onActiveFiltersChanged(function() {
 a.$evalAsync(ha);
 }), x.startBuild = function(a) {

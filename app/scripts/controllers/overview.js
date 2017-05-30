@@ -142,7 +142,9 @@ function OverviewController($scope,
     id: 'label',
     label: 'Label'
   }];
-  overview.filterBy = 'name';
+
+  // If there is a label filter persisted (such as in the URL), default to filtering by label.
+  overview.filterBy = LabelFilter.getLabelSelector().isEmpty() ? 'name' : 'label';
 
   overview.viewByOptions = [{
     id: 'app',
@@ -1070,7 +1072,12 @@ function OverviewController($scope,
 
   $scope.$watch(function() {
     return overview.filterBy;
-  }, function() {
+  }, function(newValue, oldValue) {
+    // Avoid clearing label filter values set from the URL on controller initialization.
+    if (newValue === oldValue) {
+      return;
+    }
+
     // Clear any existing filter when switching filter types.
     overview.clearFilter();
     updateFilter();
