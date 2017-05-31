@@ -22,7 +22,9 @@ function ProcessTemplateDialog($scope, DataService) {
     id: 'configuration',
     label: 'Configuration',
     view: 'views/directives/process-template-dialog/process-template-config.html',
-    valid: true,
+    // Start initially as invalid so the button doesn't flicker when the dialog
+    // is displayed and the template has required fields.
+    valid: false,
     allowed: true,
     onShow: showConfig
   };
@@ -52,13 +54,29 @@ function ProcessTemplateDialog($scope, DataService) {
     }
   };
 
+  $scope.$on('templateInstantiated', function(event, message) {
+    ctrl.selectedProject = message.project;
+    ctrl.currentStep = ctrl.resultsStep.label;
+  });
+
   ctrl.$onDestroy = function() {
     clearValidityWatcher();
   };
 
-  $scope.$on('templateInstantiated', function(event, message) {
-    ctrl.selectedProject = message.project;
-  });
+  ctrl.next = function(step) {
+    if (step.stepId === ctrl.configStep.id) {
+      instantiateTemplate();
+      // Don't advance wizard automatically. Wait for template validation to complete.
+      return false;
+    }
+
+    if (step.stepId === ctrl.resultsStep.id) {
+      ctrl.close();
+      return false;
+    }
+
+    return true;
+  };
 
   ctrl.close = function() {
     var cb = ctrl.onDialogClosed();
@@ -100,7 +118,6 @@ function ProcessTemplateDialog($scope, DataService) {
     ctrl.resultsStep.selected = true;
     ctrl.nextTitle = "Close";
     clearValidityWatcher();
-    instantiateTemplate();
     ctrl.wizardDone = true;
   }
 
