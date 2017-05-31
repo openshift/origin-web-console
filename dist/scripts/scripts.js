@@ -1268,13 +1268,7 @@ redirectTo:"/project/:project/browse/rc/:rc"
 }).otherwise({
 redirectTo:"/"
 });
-} ]).constant("LOGGING_URL", _.get(window.OPENSHIFT_CONFIG, "loggingURL")).constant("METRICS_URL", _.get(window.OPENSHIFT_CONFIG, "metricsURL")).constant("LIMIT_REQUEST_OVERRIDES", _.get(window.OPENSHIFT_CONFIG, "limitRequestOverrides")).constant("BREAKPOINTS", {
-screenXsMin:480,
-screenSmMin:768,
-screenMdMin:992,
-screenLgMin:1200,
-screenXlgMin:1600
-}).constant("SOURCE_URL_PATTERN", /^[a-z][a-z0-9+.-@]*:(\/\/)?[0-9a-z_-]+/i).constant("RELATIVE_PATH_PATTERN", /^(?!\/)(?!\.\.(\/|$))(?!.*\/\.\.(\/|$)).*$/).constant("IS_IOS", /iPad|iPhone|iPod/.test(navigator.userAgent) && !window.MSStream).constant("IS_SAFARI", /Version\/[\d\.]+.*Safari/.test(navigator.userAgent)).constant("amTimeAgoConfig", {
+} ]).constant("LOGGING_URL", _.get(window.OPENSHIFT_CONFIG, "loggingURL")).constant("METRICS_URL", _.get(window.OPENSHIFT_CONFIG, "metricsURL")).constant("LIMIT_REQUEST_OVERRIDES", _.get(window.OPENSHIFT_CONFIG, "limitRequestOverrides")).constant("SOURCE_URL_PATTERN", /^[a-z][a-z0-9+.-@]*:(\/\/)?[0-9a-z_-]+/i).constant("RELATIVE_PATH_PATTERN", /^(?!\/)(?!\.\.(\/|$))(?!.*\/\.\.(\/|$)).*$/).constant("IS_IOS", /iPad|iPhone|iPod/.test(navigator.userAgent) && !window.MSStream).constant("IS_SAFARI", /Version\/[\d\.]+.*Safari/.test(navigator.userAgent)).constant("amTimeAgoConfig", {
 titleFormat:"LLL"
 }).config([ "kubernetesContainerSocketProvider", function(a) {
 a.WebSocketFactory = "ContainerWebSocket";
@@ -3765,17 +3759,6 @@ return d += " -n " + a.metadata.namespace;
 };
 return {
 getLogsCommand:c
-};
-} ]), angular.module("openshiftConsole").factory("HTMLService", [ "BREAKPOINTS", function(a) {
-return {
-getBreakpoint:function() {
-return window.innerWidth < a.screenXsMin ? "xxs" :window.innerWidth < a.screenSmMin ? "xs" :window.innerWidth < a.screenMdMin ? "sm" :window.innerWidth < a.screenLgMin ? "md" :"lg";
-},
-linkify:function(a, b, c) {
-return a ? (c || (a = _.escape(a)), a.replace(/https?:\/\/[A-Za-z0-9._%+-]+\S*[^\s.;,(){}<>"\u201d\u2019]/gm, function(a) {
-return b ? '<a href="' + a + '" target="' + b + '">' + a + "</a>" :'<a href="' + a + '">' + a + "</a>";
-})) :a;
-}
 };
 } ]), angular.module("openshiftConsole").factory("EnvironmentService", [ "$filter", "keyValueEditorUtils", function(a, b) {
 var c = function(a) {
@@ -14485,11 +14468,7 @@ return Math.abs(a);
 };
 }).filter("encodeURIComponent", function() {
 return window.encodeURIComponent;
-}).filter("linkify", [ "HTMLService", function(a) {
-return function(b, c, d) {
-return a.linkify(b, c, d);
-};
-} ]).filter("enableTechPreviewFeature", [ "Constants", function(a) {
+}).filter("enableTechPreviewFeature", [ "Constants", function(a) {
 return function(b) {
 return _.get(a, [ "ENABLE_TECH_PREVIEW_FEATURE", b ], !1);
 };

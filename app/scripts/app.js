@@ -436,15 +436,6 @@ angular
   .constant("LOGGING_URL", _.get(window.OPENSHIFT_CONFIG, "loggingURL"))
   .constant("METRICS_URL", _.get(window.OPENSHIFT_CONFIG, "metricsURL"))
   .constant("LIMIT_REQUEST_OVERRIDES", _.get(window.OPENSHIFT_CONFIG, "limitRequestOverrides"))
-  // Sometimes we need to know the css breakpoints, make sure to update this
-  // if they ever change!
-  .constant("BREAKPOINTS", {
-    screenXsMin:  480,   // screen-xs
-    screenSmMin:  768,   // screen-sm
-    screenMdMin:  992,   // screen-md
-    screenLgMin:  1200,  // screen-lg
-    screenXlgMin: 1600   // screen-xlg
-  })
   // A (very) basic regex to determine if a URL is an absolute URL, enough to
   // warn the user the Git URL probably won't work. This should only be used
   // as a sanity test and shouldn't block submitting the form. Rely on the API
