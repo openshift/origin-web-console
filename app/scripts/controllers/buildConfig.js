@@ -207,7 +207,7 @@ angular.module('openshiftConsole')
 
         // Sort now to avoid sorting on every digest loop.
         $scope.orderedBuilds = BuildsService.sortBuilds($scope.builds, true);
-        $scope.latestBuild = $scope.orderedBuilds.length ? $scope.orderedBuilds[0] : null;
+        $scope.latestBuild = _.first($scope.orderedBuilds);
       },
       // params object for filtering
       {
@@ -238,7 +238,7 @@ angular.module('openshiftConsole')
           $scope.$apply(function() {
             $scope.builds = labelSelector.select($scope.unfilteredBuilds);
             $scope.orderedBuilds = BuildsService.sortBuilds($scope.builds, true);
-            $scope.latestBuild = $scope.orderedBuilds.length ? $scope.orderedBuilds[0] : null;
+            $scope.latestBuild = _.first($scope.orderedBuilds);
             updateFilterWarning();
           });
         });
