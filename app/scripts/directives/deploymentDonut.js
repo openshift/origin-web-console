@@ -63,7 +63,7 @@ angular.module('openshiftConsole')
             var filteredQuotas = QuotaService.filterQuotasForResource($scope.rc, $scope.quotas);
             var filteredClusterQuotas = QuotaService.filterQuotasForResource($scope.rc, $scope.clusterQuotas);
             var checkQuota = function(quota) {
-              return !!(QuotaService.getResourceLimitAlerts($scope.rc, quota).length);
+              return !_.isEmpty(QuotaService.getResourceLimitAlerts($scope.rc, quota));
             };
             $scope.showQuotaWarning = _.some(filteredQuotas, checkQuota) || _.some(filteredClusterQuotas, checkQuota);
           }
