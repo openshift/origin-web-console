@@ -10,7 +10,7 @@ angular.module("openshiftConsole")
    *       name: "",
    *       host: "",
    *       path: "",
-   *       to: {}, // object with service and weight properties
+   *       to: {}, // object with service and weight properties, service may be a dummy object if it's been deleted
    *       alternateServices: [], // alternate backend objects, each with service and weight properties
    *       tls.termination: "",
    *       tls.insecureEdgeTerminationPolicy: "",
@@ -93,14 +93,15 @@ angular.module("openshiftConsole")
             return;
           }
 
-          scope.unnamedServicePort = service.spec.ports.length === 1 && !service.spec.ports[0].name;
+          var ports = _.get(service, 'spec.ports', []);
+          scope.unnamedServicePort = ports.length === 1 && !ports[0].name;
 
           // Only show port options when there is more than one port or when a
           // single service port has a name. We want to use the service port
           // name when creating a route. (Port name is required for services
           // with more than one port.)
-          if (service.spec.ports.length && !scope.unnamedServicePort) {
-            scope.route.portOptions = _.map(service.spec.ports, function(portMapping) {
+          if (ports.length && !scope.unnamedServicePort) {
+            scope.route.portOptions = _.map(ports, function(portMapping) {
               return {
                 port: portMapping.name,
                 // \u2192 is a Unicode right arrow.
@@ -118,6 +119,7 @@ angular.module("openshiftConsole")
           scope.route.service = _.find(scope.services);
         }
 
+        // Note: route.to.service may be a dummy object if the service has been deleted
         scope.$watch('route.to.service', function(newValue, oldValue) {
           updatePortOptions(newValue);
           // Don't overwrite the target port when editing an existing route unless the user picked a
@@ -298,15 +300,12 @@ angular.module("openshiftConsole")
             return;
           }
 
-          // If the selected item is in the list, do nothing.
-          var selected = _.get(scope, 'model.service');
-          if (selected && _.includes(scope.services, selected)) {
-            return;
+          // If there is no selected item, select the first item in services.
+          var firstService;
+          if (!_.get(scope, 'model.service')) {
+            firstService = _.find(scope.services);
+            _.set(scope, 'model.service', firstService);
           }
-
-          // Use _.find to get the first item.
-          var firstService = _.find(scope.services);
-          _.set(scope, 'model.service', firstService);
         });
       }
     };

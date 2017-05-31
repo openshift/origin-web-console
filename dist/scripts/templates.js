@@ -7842,7 +7842,7 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "</label>\n" +
     "<ui-select ng-model=\"model.service\" input-id=\"{{id}}-service-select\" aria-describedby=\"{{id}}-service-help\" required>\n" +
     "<ui-select-match>{{$select.selected.metadata.name}}</ui-select-match>\n" +
-    "<ui-select-choices repeat=\"service in (services | filter : {metadata: { name: $select.search }}) track by (service | uid)\">\n" +
+    "<ui-select-choices repeat=\"service in (services | filter : {metadata: { name: $select.search }}) track by service.metadata.name\">\n" +
     "<div ng-bind-html=\"service.metadata.name | highlight : $select.search\"></div>\n" +
     "</ui-select-choices>\n" +
     "</ui-select>\n" +
@@ -7850,6 +7850,11 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "<span ng-attr-id=\"{{id}}-service-help\" class=\"help-block\">\n" +
     "<span ng-if=\"!isAlternate\">Service to route to.</span>\n" +
     "<span ng-if=\"isAlternate\">Alternate service for route traffic.</span>\n" +
+    "</span>\n" +
+    "</div>\n" +
+    "<div ng-if=\"model.service && !model.service.metadata.uid\" class=\"has-warning\">\n" +
+    "<span class=\"help-block\">\n" +
+    "Service {{model.service.metadata.name}} does not exist.\n" +
     "</span>\n" +
     "</div>\n" +
     "<div ng-if=\"(services | hashSize) === 0\" class=\"has-error\">\n" +

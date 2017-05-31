@@ -75,14 +75,40 @@ angular.module('openshiftConsole')
             };
 
             DataService.list("services", context).then(function(resp) {
+              $scope.loading = false;
+
               var servicesByName = resp.by("metadata.name");
               var to = _.get(route, 'spec.to', {});
-              $scope.loading = false;
-              $scope.services = orderByDisplayName(servicesByName);
+
+              // Make sure there is an option in the route editor for a service
+              // even if it doesn't exist. The editor will warn if the service
+              // is not found.
+              var ensureService = function(objectReference) {
+                if (servicesByName[objectReference.name]) {
+                  return;
+                }
+
+                // Make a copy to avoid mutating the DataService cache.
+                servicesByName = angular.copy(servicesByName);
+
+                // Add a dummy service since the `osc-routing` directive
+                // expects an object, not just a name. TODO: Update the
+                // osc-routing directive to take in a name rather than an
+                // object.
+                servicesByName[objectReference.name] = {
+                  metadata: {
+                    name: objectReference.name
+                  }
+                };
+              };
+
+
+              ensureService(to);
               $scope.routing.to = {
                 service: servicesByName[to.name],
                 weight: to.weight
               };
+
               $scope.routing.alternateServices = [];
               _.each(_.get(route, 'spec.alternateBackends'), function(alternateBackend) {
                 if (alternateBackend.kind !== 'Service') {
@@ -90,11 +116,14 @@ angular.module('openshiftConsole')
                   return false;
                 }
 
+                ensureService(alternateBackend);
                 $scope.routing.alternateServices.push({
                   service: servicesByName[alternateBackend.name],
                   weight: alternateBackend.weight
                 });
               });
+
+              $scope.services = orderByDisplayName(servicesByName);
             });
           },
           function() {

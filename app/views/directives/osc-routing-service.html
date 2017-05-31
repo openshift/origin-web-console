@@ -6,14 +6,19 @@
       </label>
       <ui-select ng-model="model.service" input-id="{{id}}-service-select" aria-describedby="{{id}}-service-help" required>
         <ui-select-match>{{$select.selected.metadata.name}}</ui-select-match>
-        <ui-select-choices repeat="service in (services | filter : {metadata: { name: $select.search }}) track by (service | uid)">
-           <div ng-bind-html="service.metadata.name | highlight : $select.search"></div>
+        <ui-select-choices repeat="service in (services | filter : {metadata: { name: $select.search }}) track by service.metadata.name">
+          <div ng-bind-html="service.metadata.name | highlight : $select.search"></div>
         </ui-select-choices>
       </ui-select>
       <div>
         <span ng-attr-id="{{id}}-service-help" class="help-block">
           <span ng-if="!isAlternate">Service to route to.</span>
           <span ng-if="isAlternate">Alternate service for route traffic.</span>
+        </span>
+      </div>
+      <div ng-if="model.service && !model.service.metadata.uid" class="has-warning">
+        <span class="help-block">
+          Service {{model.service.metadata.name}} does not exist.
         </span>
       </div>
       <div ng-if="(services | hashSize) === 0" class="has-error">

@@ -7927,16 +7927,23 @@ path:_.get(l, "spec.path"),
 targetPort:_.get(l, "spec.port.targetPort"),
 tls:angular.copy(_.get(l, "spec.tls"))
 }, g.list("services", k).then(function(a) {
-var b = a.by("metadata.name"), c = _.get(l, "spec.to", {});
-d.loading = !1, d.services = m(b), d.routing.to = {
+d.loading = !1;
+var b = a.by("metadata.name"), c = _.get(l, "spec.to", {}), e = function(a) {
+b[a.name] || (b = angular.copy(b), b[a.name] = {
+metadata:{
+name:a.name
+}
+});
+};
+e(c), d.routing.to = {
 service:b[c.name],
 weight:c.weight
 }, d.routing.alternateServices = [], _.each(_.get(l, "spec.alternateBackends"), function(a) {
-return "Service" !== a.kind ? (h.toErrorPage('Editing routes with non-service targets is unsupported. You can edit the route with the "Edit YAML" action instead.'), !1) :void d.routing.alternateServices.push({
+return "Service" !== a.kind ? (h.toErrorPage('Editing routes with non-service targets is unsupported. You can edit the route with the "Edit YAML" action instead.'), !1) :(e(a), void d.routing.alternateServices.push({
 service:b[a.name],
 weight:a.weight
-});
-});
+}));
+}), d.services = m(b);
 });
 }, function() {
 h.toErrorPage("Could not load route " + d.routeName + ".");
@@ -10038,12 +10045,15 @@ c.routeForm.insecureTraffic.$setValidity("passthrough", a);
 };
 c.$watchGroup([ "route.tls.termination", "route.tls.insecureEdgeTerminationPolicy" ], g), c.nameValidation = b, c.disableWildcards ? c.hostnamePattern = b.pattern :c.hostnamePattern = /^(\*(\.[a-z0-9]([-a-z0-9]*[a-z0-9]))+|[a-z0-9]([-a-z0-9]*[a-z0-9])?(\.[a-z0-9]([-a-z0-9]*[a-z0-9])?)*)$/, c.hostnameMaxLength = b.maxlength;
 var h = function(a) {
-a && (c.unnamedServicePort = 1 === a.spec.ports.length && !a.spec.ports[0].name, a.spec.ports.length && !c.unnamedServicePort ? c.route.portOptions = _.map(a.spec.ports, function(a) {
+if (a) {
+var b = _.get(a, "spec.ports", []);
+c.unnamedServicePort = 1 === b.length && !b[0].name, b.length && !c.unnamedServicePort ? c.route.portOptions = _.map(b, function(a) {
 return {
 port:a.name,
 label:a.port + " → " + a.targetPort + " (" + a.protocol + ")"
 };
-}) :c.route.portOptions = []);
+}) :c.route.portOptions = [];
+}
 };
 c.services && !c.route.service && (c.route.service = _.find(c.services)), c.$watch("route.to.service", function(a, b) {
 h(a), a === b && c.route.targetPort || (c.route.targetPort = _.get(c, "route.portOptions[0].port")), c.services && (c.alternateServiceOptions = _.reject(c.services, function(b) {
@@ -10112,11 +10122,8 @@ templateUrl:"views/directives/osc-routing-service.html",
 link:function(a, b, c, d) {
 a.form = d, a.id = _.uniqueId("osc-routing-service-"), a.$watchGroup([ "model.service", "services" ], function() {
 if (!_.isEmpty(a.services)) {
-var b = _.get(a, "model.service");
-if (!b || !_.includes(a.services, b)) {
-var c = _.find(a.services);
-_.set(a, "model.service", c);
-}
+var b;
+_.get(a, "model.service") || (b = _.find(a.services), _.set(a, "model.service", b));
 }
 });
 }
