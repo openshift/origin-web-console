@@ -13298,9 +13298,9 @@ return d ? d.split(/\s*,\s*/) :[];
 return function(a) {
 var b = a.metadata.creationTimestamp, c = moment(b);
 return angular.forEach(a.status.tags, function(a) {
-if (a.items && a.items.length > 0) {
-var d = moment(a.items[0].created);
-d.isAfter(c) && (c = d, b = a.items[0].created);
+if (!_.isEmpty(a.items)) {
+var d = moment(_.first(a.items).created);
+d.isAfter(c) && (c = d, b = _.first(a.items).created);
 }
 }), b;
 };
@@ -13345,7 +13345,7 @@ return b.length > 1 ? b[1] :"";
 };
 }).filter("imageEnv", function() {
 return function(a, b) {
-for (var c = a.dockerImageMetadata.Config.Env, d = 0; d < c.length; d++) {
+for (var c = a.dockerImageMetadata.Config.Env, d = 0; d < _.size(c); d++) {
 var e = c[d].split("=");
 if (e[0] === b) return e[1];
 }
@@ -13401,7 +13401,7 @@ return !a.value && a.generate ? "(generated)" :a.value;
 return function(a, b, c) {
 if (!a) return "";
 var d = a.namespace || b || "";
-d.length > 0 && (d += "/");
+_.isEmpty(d) || (d += "/");
 var e = a.kind;
 if ("ImageStreamTag" === e || "ImageStreamImage" === e) return d + a.name;
 if ("DockerImage" === e) {
@@ -13445,7 +13445,7 @@ if ("Unknown" === e.status.phase) return !0;
 if (a(e)) return !0;
 if ("Running" === e.status.phase && e.status.containerStatuses) {
 var f;
-for (f = 0; f < e.status.containerStatuses.length; ++f) {
+for (f = 0; f < _.size(e.status.containerStatuses); ++f) {
 var g = e.status.containerStatuses[f];
 if (g.state) {
 if (c(g)) return !0;
