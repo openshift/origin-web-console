@@ -154,7 +154,7 @@ angular.module('openshiftConsole')
 
         function isReady(pod) {
           var numReady = numContainersReadyFilter(pod);
-          var total = pod.spec.containers.length;
+          var total = _.size(pod.spec.containers);
 
           return numReady === total;
         }

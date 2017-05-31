@@ -11965,7 +11965,7 @@ c.columns.push([ a, b[a] || 0 ]);
 }), _.isEmpty(b) ? c.columns.push([ "Empty", 1 ]) :c.unload = "Empty", m ? m.load(c) :(n.data.columns = c.columns, m = c3.generate(n)), a.podStatusData = c.columns;
 }
 function j(a) {
-var b = e(a), c = a.spec.containers.length;
+var b = e(a), c = _.size(a.spec.containers);
 return b === c;
 }
 function k(a) {
