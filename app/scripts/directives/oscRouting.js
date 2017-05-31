@@ -10,7 +10,7 @@ angular.module("openshiftConsole")
    *       name: "",
    *       host: "",
    *       path: "",
-   *       to: {}, // object with service and weight properties, service may be a dummy object if it's been deleted
+   *       to: {}, // object with name and weight properties, kind is assumed to be 'Service'
    *       alternateServices: [], // alternate backend objects, each with service and weight properties
    *       tls.termination: "",
    *       tls.insecureEdgeTerminationPolicy: "",
@@ -119,9 +119,15 @@ angular.module("openshiftConsole")
           scope.route.service = _.find(scope.services);
         }
 
-        // Note: route.to.service may be a dummy object if the service has been deleted
-        scope.$watch('route.to.service', function(newValue, oldValue) {
-          updatePortOptions(newValue);
+        scope.servicesByName;
+        if (scope.services) {
+          scope.servicesByName = _.indexBy(scope.services, 'metadata.name');
+        } else {
+          scope.servicesByName = {};
+        }
+
+        scope.$watch('route.to.name', function(newValue, oldValue) {
+          updatePortOptions(scope.servicesByName[newValue]);
           // Don't overwrite the target port when editing an existing route unless the user picked a
           // different service.
           if (newValue !== oldValue || !scope.route.targetPort) {
@@ -131,14 +137,14 @@ angular.module("openshiftConsole")
           if (scope.services) {
             // Update the options for alternate services.
             scope.alternateServiceOptions = _.reject(scope.services, function(service) {
-              return newValue === service;
+              return newValue === service.metadata.name;
             });
           }
         });
 
         scope.$watch('route.alternateServices', function(alternateServices) {
           // Find any duplicates.
-          scope.duplicateServices = _(alternateServices).map('service').filter(function(value, index, iteratee) {
+          scope.duplicateServices = _(alternateServices).map('name').filter(function(value, index, iteratee) {
             return _.includes(iteratee, value, index + 1);
           }).value();
           formCtl.$setValidity("duplicateServices", !scope.duplicateServices.length);
@@ -205,7 +211,8 @@ angular.module("openshiftConsole")
         scope.addAlternateService = function() {
           scope.route.alternateServices = scope.route.alternateServices || [];
           var firstUnselected = _.find(scope.services, function(service) {
-            return service !== scope.route.to.service && !_.some(scope.route.alternateServices, { service: service });
+            return service.metadata.name !== scope.route.to.service &&
+                   !_.some(scope.route.alternateServices, { service: service.metadata.name });
           });
 
           if (!_.has(scope, 'route.to.weight')) {
@@ -214,7 +221,7 @@ angular.module("openshiftConsole")
 
           // Add a new value.
           scope.route.alternateServices.push({
-            service: firstUnselected,
+            service: firstUnselected.metadata.name,
             weight: 1
           });
         };
@@ -282,7 +289,11 @@ angular.module("openshiftConsole")
         // The model, an object with properties `service` and `weight`
         model: "=",
         // Collection of service objects
-        services: "=",
+        serviceOptions: "=",
+        // All services that exist, even those that aren't valid options. This
+        // lets us correctly warn when editing a route that references a
+        // service that doesn't exist.
+        allServices: "=",
         // `true` if this is an alternate route target for A/B traffic
         // (optional). Changes the labels and help text.
         isAlternate: "=?",
@@ -295,16 +306,23 @@ angular.module("openshiftConsole")
         scope.id = _.uniqueId('osc-routing-service-');
 
         // Set an initial value for `model.service` if not set.
-        scope.$watchGroup(['model.service', 'services'], function() {
-          if (_.isEmpty(scope.services)) {
+        scope.$watchGroup(['model.name', 'serviceOptions'], function() {
+          if (_.isEmpty(scope.serviceOptions)) {
+            scope.optionsNames = [];
             return;
           }
 
+          var selected = _.get(scope, 'model.name');
+          scope.optionNames = [];
+          scope.selectedExists = false;
+          scope.optionNames = _.map(scope.serviceOptions, 'metadata.name');
+          if (selected && !scope.allServices[selected]) {
+            scope.optionNames.push(selected);
+          }
+
           // If there is no selected item, select the first item in services.
-          var firstService;
-          if (!_.get(scope, 'model.service')) {
-            firstService = _.find(scope.services);
-            _.set(scope, 'model.service', firstService);
+          if (!selected) {
+            _.set(scope, 'model.name', _.first(scope.optionNames));
           }
         });
       }

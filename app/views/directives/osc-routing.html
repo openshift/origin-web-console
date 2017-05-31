@@ -121,7 +121,8 @@
     <!-- Service -->
     <div ng-if="services">
       <osc-routing-service model="route.to"
-                           services="services"
+                           service-options="services"
+                           all-services="servicesByName"
                            show-weight="route.alternateServices.length > 1 || (controls.hideSlider && route.alternateServices.length)">
       </osc-routing-service>
     </div>
@@ -161,7 +162,8 @@
 
       <div ng-repeat="alternate in route.alternateServices" class="form-group">
         <osc-routing-service model="alternate"
-                             services="alternateServiceOptions"
+                             service-options="alternateServiceOptions"
+                             all-services="servicesByName"
                              is-alternate="true"
                              show-weight="route.alternateServices.length > 1 || controls.hideSlider">
         </osc-routing-service>
@@ -184,12 +186,12 @@
       <div class="form-group">
         <div class="weight-slider-values">
           <div>
-            <span class="service-name">{{route.to.service.metadata.name}}</span>
+            <span class="service-name">{{route.to.name}}</span>
             <span class="weight-percentage">{{weightAsPercentage(route.to.weight, true)}}</span>
           </div>
           <div>
             <span class="weight-percentage hidden-xs">{{weightAsPercentage(route.alternateServices[0].weight, true)}}</span>
-            <span class="service-name">{{route.alternateServices[0].service.metadata.name}}</span>
+            <span class="service-name">{{route.alternateServices[0].name}}</span>
             <span class="weight-percentage visible-xs-inline">{{weightAsPercentage(route.alternateServices[0].weight, true)}}</span>
           </div>
         </div>

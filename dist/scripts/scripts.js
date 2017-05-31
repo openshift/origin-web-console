@@ -7915,12 +7915,14 @@ link:d.routeURL
 title:"Edit"
 } ], i.get(c.project).then(_.spread(function(i, k) {
 if (d.project = i, d.breadcrumbs[0].title = a("displayName")(i), !f.canI("routes", "update", c.project)) return void h.toErrorPage("You do not have authority to update route " + c.routeName + ".", "access_denied");
-var l, m = a("orderByDisplayName");
+var l, m = a("orderByDisplayName"), n = function() {
+h.toErrorPage('Editing routes with non-service targets is unsupported. You can edit the route with the "Edit YAML" action instead.');
+};
 g.get("routes", d.routeName, k).then(function(a) {
+if ("Service" !== a.spec.to.kind) return void n();
 l = angular.copy(a);
 var b = _.get(l, "spec.host"), c = "Subdomain" === _.get(l, "spec.wildcardPolicy");
 c && (b = "*." + j.getSubdomain(l)), d.routing = {
-service:_.get(l, "spec.to.name"),
 host:b,
 wildcardPolicy:_.get(l, "spec.wildcardPolicy"),
 path:_.get(l, "spec.path"),
@@ -7928,28 +7930,16 @@ targetPort:_.get(l, "spec.port.targetPort"),
 tls:angular.copy(_.get(l, "spec.tls"))
 }, g.list("services", k).then(function(a) {
 d.loading = !1;
-var b = a.by("metadata.name"), c = _.get(l, "spec.to", {}), e = function(a) {
-b[a.name] || (b = angular.copy(b), b[a.name] = {
-metadata:{
-name:a.name
-}
-});
-};
-e(c), d.routing.to = {
-service:b[c.name],
-weight:c.weight
-}, d.routing.alternateServices = [], _.each(_.get(l, "spec.alternateBackends"), function(a) {
-return "Service" !== a.kind ? (h.toErrorPage('Editing routes with non-service targets is unsupported. You can edit the route with the "Edit YAML" action instead.'), !1) :(e(a), void d.routing.alternateServices.push({
-service:b[a.name],
-weight:a.weight
-}));
+var b = a.by("metadata.name");
+d.routing.to = l.spec.to, d.routing.alternateServices = [], _.each(_.get(l, "spec.alternateBackends"), function(a) {
+return "Service" !== a.kind ? (n(), !1) :void d.routing.alternateServices.push(a);
 }), d.services = m(b);
 });
 }, function() {
 h.toErrorPage("Could not load route " + d.routeName + ".");
 });
-var n = function() {
-var a = angular.copy(l), b = _.get(d, "routing.to.service.metadata.name");
+var o = function() {
+var a = angular.copy(l), b = _.get(d, "routing.to.name");
 _.set(a, "spec.to.name", b);
 var c = _.get(d, "routing.to.weight");
 isNaN(c) || _.set(a, "spec.to.weight", c), a.spec.path = d.routing.path;
@@ -7959,7 +7949,7 @@ var f = _.get(d, "routing.alternateServices", []);
 return _.isEmpty(f) ? delete a.spec.alternateBackends :a.spec.alternateBackends = _.map(f, function(a) {
 return {
 kind:"Service",
-name:_.get(a, "service.metadata.name"),
+name:a.name,
 weight:a.weight
 };
 }), a;
@@ -7967,7 +7957,7 @@ weight:a.weight
 d.updateRoute = function() {
 if (d.form.$valid) {
 d.disableInputs = !0;
-var c = n();
+var c = o();
 g.update("routes", d.routeName, c, k).then(function() {
 e.addAlert({
 name:d.routeName,
@@ -8748,10 +8738,12 @@ title:"Create Route"
 } ], i.get(b.project).then(_.spread(function(i, k) {
 if (c.project = i, c.breadcrumbs[0].title = a("displayName")(i), !f.canI("routes", "create", b.project)) return void h.toErrorPage("You do not have authority to create routes in project " + b.project + ".", "access_denied");
 var l = a("orderByDisplayName");
-g.list("services", k).then(function(a) {
-c.services = l(a.by("metadata.name")), c.routing.to = {}, c.routing.to.service = _.find(c.services, function(a) {
-return !c.serviceName || a.metadata.name === c.serviceName;
-});
+c.routing.to = {
+kind:"Service",
+name:c.serviceName,
+weight:1
+}, g.list("services", k).then(function(a) {
+c.services = l(a.by("metadata.name"));
 }), c.copyServiceLabels = function() {
 var a = _.get(c, "routing.to.service.metadata.labels", {}), b = j.mapEntries(j.compactEntries(c.labels)), d = _.assign(b, a);
 c.labels = _.map(d, function(a, b) {
@@ -8763,11 +8755,11 @@ value:a
 }, c.createRoute = function() {
 if (c.createRouteForm.$valid) {
 c.disableInputs = !0;
-var b = c.routing.to.service.metadata.name, f = j.mapEntries(j.compactEntries(c.labels)), h = e.createRoute(c.routing, b, f), i = _.get(c, "routing.alternateServices", []);
+var b = c.routing.to.name, f = j.mapEntries(j.compactEntries(c.labels)), h = e.createRoute(c.routing, b, f), i = _.get(c, "routing.alternateServices", []);
 _.isEmpty(i) || (h.spec.to.weight = _.get(c, "routing.to.weight"), h.spec.alternateBackends = _.map(i, function(a) {
 return {
 kind:"Service",
-name:_.get(a, "service.metadata.name"),
+name:a.name,
 weight:a.weight
 };
 })), g.create("routes", null, h, k).then(function() {
@@ -10055,12 +10047,12 @@ label:a.port + " → " + a.targetPort + " (" + a.protocol + ")"
 }) :c.route.portOptions = [];
 }
 };
-c.services && !c.route.service && (c.route.service = _.find(c.services)), c.$watch("route.to.service", function(a, b) {
-h(a), a === b && c.route.targetPort || (c.route.targetPort = _.get(c, "route.portOptions[0].port")), c.services && (c.alternateServiceOptions = _.reject(c.services, function(b) {
-return a === b;
+c.services && !c.route.service && (c.route.service = _.find(c.services)), c.servicesByName, c.services ? c.servicesByName = _.indexBy(c.services, "metadata.name") :c.servicesByName = {}, c.$watch("route.to.name", function(a, b) {
+h(c.servicesByName[a]), a === b && c.route.targetPort || (c.route.targetPort = _.get(c, "route.portOptions[0].port")), c.services && (c.alternateServiceOptions = _.reject(c.services, function(b) {
+return a === b.metadata.name;
 }));
 }), c.$watch("route.alternateServices", function(a) {
-c.duplicateServices = _(a).map("service").filter(function(a, b, c) {
+c.duplicateServices = _(a).map("name").filter(function(a, b, c) {
 return _.includes(c, a, b + 1);
 }).value(), f.$setValidity("duplicateServices", !c.duplicateServices.length), c.options.alternateServices = !_.isEmpty(a);
 }, !0);
@@ -10081,12 +10073,12 @@ a !== b && (a || (c.route.alternateServices = []), a && _.isEmpty(c.route.altern
 }), c.addAlternateService = function() {
 c.route.alternateServices = c.route.alternateServices || [];
 var a = _.find(c.services, function(a) {
-return a !== c.route.to.service && !_.some(c.route.alternateServices, {
-service:a
+return a.metadata.name !== c.route.to.service && !_.some(c.route.alternateServices, {
+service:a.metadata.name
 });
 });
 _.has(c, "route.to.weight") || _.set(c, "route.to.weight", 1), c.route.alternateServices.push({
-service:a,
+service:a.metadata.name,
 weight:1
 });
 }, c.weightAsPercentage = function(a, b) {
@@ -10114,17 +10106,17 @@ return {
 restrict:"E",
 scope:{
 model:"=",
-services:"=",
+serviceOptions:"=",
+allServices:"=",
 isAlternate:"=?",
 showWeight:"=?"
 },
 templateUrl:"views/directives/osc-routing-service.html",
 link:function(a, b, c, d) {
-a.form = d, a.id = _.uniqueId("osc-routing-service-"), a.$watchGroup([ "model.service", "services" ], function() {
-if (!_.isEmpty(a.services)) {
-var b;
-_.get(a, "model.service") || (b = _.find(a.services), _.set(a, "model.service", b));
-}
+a.form = d, a.id = _.uniqueId("osc-routing-service-"), a.$watchGroup([ "model.name", "serviceOptions" ], function() {
+if (_.isEmpty(a.serviceOptions)) return void (a.optionsNames = []);
+var b = _.get(a, "model.name");
+a.optionNames = [], a.selectedExists = !1, a.optionNames = _.map(a.serviceOptions, "metadata.name"), b && !a.allServices[b] && a.optionNames.push(b), b || _.set(a, "model.name", _.first(a.optionNames));
 });
 }
 };
