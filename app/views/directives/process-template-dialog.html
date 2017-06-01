@@ -6,9 +6,11 @@
        step-class="order-service-wizard-step"
        wizard-ready="$ctrl.wizardReady"
        next-title="$ctrl.nextTitle"
+       next-callback="$ctrl.next"
        on-finish="$ctrl.close()"
        on-cancel="$ctrl.close()"
        wizard-done="$ctrl.wizardDone"
+       current-step="$ctrl.currentStep"
        class="pf-wizard-no-back">
     <div pf-wizard-step ng-repeat="step in $ctrl.steps track by step.id"
          step-title="{{step.label}}"
@@ -41,7 +43,7 @@
           </div>
         </div>
         <div class="order-service-config">
-          <div ng-include="step.view" class="wizard-pf-main-form-contents"></div>
+          <div ng-if="step.selected" ng-include="step.view" class="wizard-pf-main-form-contents"></div>
         </div>
       </div>
     </div>

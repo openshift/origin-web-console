@@ -9,7 +9,7 @@
       <div class="middle-container">
         <div class="middle-content">
           <overlay-panel show-panel="template" show-close="true" handle-close="templateDialogClosed">
-            <process-template-dialog  template="template" on-dialog-closed="templateDialogClosed"></process-template-dialog>
+            <process-template-dialog ng-if="template" template="template" on-dialog-closed="templateDialogClosed"></process-template-dialog>
           </overlay-panel>
           <landing-page base-project-url="project" on-template-selected="templateSelected">
             <landingsearch>

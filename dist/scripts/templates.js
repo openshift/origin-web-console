@@ -477,8 +477,8 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
 
 
   $templateCache.put('views/_templateopt.html',
-    "<div class=\"template-options\" ng-show=\"parameters.length\" ng-form=\"paramForm\">\n" +
-    "<div ng-if=\"!isDialog\" class=\"flow\">\n" +
+    "<div class=\"template-options\" ng-form=\"paramForm\">\n" +
+    "<div ng-if=\"!isDialog && parameters.length\" class=\"flow\">\n" +
     "<div class=\"flow-block\">\n" +
     "<h2>Parameters</h2>\n" +
     "</div>\n" +
@@ -8493,7 +8493,7 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
 
   $templateCache.put('views/directives/process-template-dialog.html',
     "<div class=\"order-service\">\n" +
-    "<div pf-wizard hide-header=\"true\" hide-sidebar=\"true\" hide-back-button=\"true\" step-class=\"order-service-wizard-step\" wizard-ready=\"$ctrl.wizardReady\" next-title=\"$ctrl.nextTitle\" on-finish=\"$ctrl.close()\" on-cancel=\"$ctrl.close()\" wizard-done=\"$ctrl.wizardDone\" class=\"pf-wizard-no-back\">\n" +
+    "<div pf-wizard hide-header=\"true\" hide-sidebar=\"true\" hide-back-button=\"true\" step-class=\"order-service-wizard-step\" wizard-ready=\"$ctrl.wizardReady\" next-title=\"$ctrl.nextTitle\" next-callback=\"$ctrl.next\" on-finish=\"$ctrl.close()\" on-cancel=\"$ctrl.close()\" wizard-done=\"$ctrl.wizardDone\" current-step=\"$ctrl.currentStep\" class=\"pf-wizard-no-back\">\n" +
     "<div pf-wizard-step ng-repeat=\"step in $ctrl.steps track by step.id\" step-title=\"{{step.label}}\" wz-disabled=\"{{step.hidden}}\" allow-click-nav=\"step.allowed\" next-enabled=\"step.valid\" prev-enabled=\"step.prevEnabled\" on-show=\"step.onShow\" step-id=\"{{step.id}}\" step-priority=\"{{$index}}\">\n" +
     "<div class=\"wizard-pf-main-inner-shadow-covers\">\n" +
     "<div class=\"order-service-details\">\n" +
@@ -8517,7 +8517,7 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "</div>\n" +
     "</div>\n" +
     "<div class=\"order-service-config\">\n" +
-    "<div ng-include=\"step.view\" class=\"wizard-pf-main-form-contents\"></div>\n" +
+    "<div ng-if=\"step.selected\" ng-include=\"step.view\" class=\"wizard-pf-main-form-contents\"></div>\n" +
     "</div>\n" +
     "</div>\n" +
     "</div>\n" +
@@ -8549,7 +8549,7 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "<select-project ng-if=\"!$ctrl.project\" selected-project=\"$ctrl.selectedProject\" name-taken=\"$ctrl.projectNameTaken\"></select-project>\n" +
     "</template-options>\n" +
     "\n" +
-    "<div ng-if=\"$ctrl.isDialog && $ctrl.selectedProject.metadata.uid && $ctrl.template\" class=\"form-group\">\n" +
+    "<div ng-if=\"$ctrl.isDialog && $ctrl.selectedProject.metadata.uid\" class=\"form-group\">\n" +
     "\n" +
     "To set optional parameters or labels, view\n" +
     "<a ng-href=\"{{$ctrl.template | createFromTemplateURL : $ctrl.selectedProject.metadata.name}}\">advanced options</a>.\n" +
@@ -9969,7 +9969,7 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "<div class=\"middle-container\">\n" +
     "<div class=\"middle-content\">\n" +
     "<overlay-panel show-panel=\"template\" show-close=\"true\" handle-close=\"templateDialogClosed\">\n" +
-    "<process-template-dialog template=\"template\" on-dialog-closed=\"templateDialogClosed\"></process-template-dialog>\n" +
+    "<process-template-dialog ng-if=\"template\" template=\"template\" on-dialog-closed=\"templateDialogClosed\"></process-template-dialog>\n" +
     "</overlay-panel>\n" +
     "<landing-page base-project-url=\"project\" on-template-selected=\"templateSelected\">\n" +
     "<landingsearch>\n" +

@@ -758,7 +758,7 @@ j.configStep.valid = a, j.resultsStep.allowed = a;
 });
 }
 function g() {
-j.configStep.selected = !1, j.resultsStep.selected = !0, j.nextTitle = "Close", e(), h(), j.wizardDone = !0;
+j.configStep.selected = !1, j.resultsStep.selected = !0, j.nextTitle = "Close", e(), j.wizardDone = !0;
 }
 function h() {
 a.$broadcast("instantiateTemplate");
@@ -768,7 +768,7 @@ j.configStep = {
 id:"configuration",
 label:"Configuration",
 view:"views/directives/process-template-dialog/process-template-config.html",
-valid:!0,
+valid:!1,
 allowed:!0,
 onShow:f
 }, j.resultsStep = {
@@ -783,11 +783,13 @@ onShow:g
 j.alerts = {}, j.loginBaseUrl = b.openshiftAPIBaseUrl();
 }, j.$onChanges = function(a) {
 a.template && j.template && (d(), j.iconClass = c());
-}, j.$onDestroy = function() {
-e();
 }, a.$on("templateInstantiated", function(a, b) {
-j.selectedProject = b.project;
-}), j.close = function() {
+j.selectedProject = b.project, j.currentStep = j.resultsStep.label;
+}), j.$onDestroy = function() {
+e();
+}, j.next = function(a) {
+return a.stepId === j.configStep.id ? (h(), !1) :a.stepId !== j.resultsStep.id || (j.close(), !1);
+}, j.close = function() {
 var a = j.onDialogClosed();
 _.isFunction(a) && a();
 };
