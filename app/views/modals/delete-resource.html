@@ -6,6 +6,10 @@
         '<strong>{{displayName ? displayName : resourceName}}</strong>'?</h1>
 
       <p>
+        <span ng-if="kind === 'DeploymentConfig'">
+          This will delete the deployment config, all rollout history, and any running pods.
+        </span>
+
         <span ng-if="kind === 'Deployment'">
           This will delete the deployment, all rollout history, and any running pods.
         </span>
@@ -40,14 +44,6 @@
               spellcheck="false"
               autofocus>
         </p>
-      </div>
-
-      <div ng-if="kind === 'DeploymentConfig'">
-        <strong>Note:</strong> None of the deployments created by this deployment config will be deleted.
-
-        To delete the deployment config and all of its deployments, you can run the command
-        <pre class="code prettyprint mar-top-md">oc delete dc {{resourceName}} -n {{projectName}}</pre>
-        Learn more about the <a href="command-line">command line tools</a>.
       </div>
 
       <!--

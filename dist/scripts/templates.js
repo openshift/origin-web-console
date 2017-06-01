@@ -10487,6 +10487,9 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "<div class=\"modal-body\">\n" +
     "<h1>Are you sure you want to delete the {{typeDisplayName || (kind | humanizeKind)}} '<strong>{{displayName ? displayName : resourceName}}</strong>'?</h1>\n" +
     "<p>\n" +
+    "<span ng-if=\"kind === 'DeploymentConfig'\">\n" +
+    "This will delete the deployment config, all rollout history, and any running pods.\n" +
+    "</span>\n" +
     "<span ng-if=\"kind === 'Deployment'\">\n" +
     "This will delete the deployment, all rollout history, and any running pods.\n" +
     "</span>\n" +
@@ -10507,11 +10510,6 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "<label class=\"sr-only\" for=\"resource-to-delete\">{{typeDisplayName || (kind | humanizeKind)}} to delete</label>\n" +
     "<input ng-model=\"confirmName\" id=\"resource-to-delete\" type=\"text\" class=\"form-control input-lg\" autocorrect=\"off\" autocapitalize=\"off\" spellcheck=\"false\" autofocus>\n" +
     "</p>\n" +
-    "</div>\n" +
-    "<div ng-if=\"kind === 'DeploymentConfig'\">\n" +
-    "<strong>Note:</strong> None of the deployments created by this deployment config will be deleted. To delete the deployment config and all of its deployments, you can run the command\n" +
-    "<pre class=\"code prettyprint mar-top-md\">oc delete dc {{resourceName}} -n {{projectName}}</pre>\n" +
-    "Learn more about the <a href=\"command-line\">command line tools</a>.\n" +
     "</div>\n" +
     "\n" +
     "<div ng-if=\"hpaList.length > 0\">\n" +
