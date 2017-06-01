@@ -60306,7 +60306,7 @@ _.each(a.versions[b].resources, function(b) {
 _.contains(b.name, "/") || _.find(f, {
 kind:b.kind,
 group:a.name
-}) || "extensions" === a.name && "HorizontalPodAutoscaler" === b.kind || "batch" === a.name && "Job" === b.kind || (b.namespaced || c) && e.push({
+}) || "extensions" === a.name && "HorizontalPodAutoscaler" === b.kind || (b.namespaced || c) && e.push({
 kind:b.kind,
 group:a.name
 });
