@@ -27,8 +27,7 @@
           with a route.
         </span>
       </div>
-      <!-- FIXME: Not ever displayed! -->
-      <div ng-if="unnamedServicePort" class="has-warning">
+      <div ng-if="warnUnnamedPort" class="has-warning">
         <span class="help-block">
           Service {{model.name}} has a single, unnamed port. A route cannot specifically target
           an unnamed service port. If more service ports are added later, the route will also direct

@@ -298,7 +298,9 @@ angular.module("openshiftConsole")
         // (optional). Changes the labels and help text.
         isAlternate: "=?",
         // Show a weight field (optional)
-        showWeight: "=?"
+        showWeight: "=?",
+        // Show a warning when a service has a single, unnamed port.
+        warnUnnamedPort: "=?"
       },
       templateUrl: 'views/directives/osc-routing-service.html',
       link: function(scope, element, attrs, formCtl) {

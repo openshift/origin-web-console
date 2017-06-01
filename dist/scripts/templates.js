@@ -7862,8 +7862,7 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "There are no <span ng-if=\"is-alternate\">additional</span> services in your project to expose with a route.\n" +
     "</span>\n" +
     "</div>\n" +
-    "\n" +
-    "<div ng-if=\"unnamedServicePort\" class=\"has-warning\">\n" +
+    "<div ng-if=\"warnUnnamedPort\" class=\"has-warning\">\n" +
     "<span class=\"help-block\">\n" +
     "Service {{model.name}} has a single, unnamed port. A route cannot specifically target an unnamed service port. If more service ports are added later, the route will also direct traffic to them.\n" +
     "</span>\n" +
@@ -7971,7 +7970,7 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "</div>\n" +
     "\n" +
     "<div ng-if=\"services\">\n" +
-    "<osc-routing-service model=\"route.to\" service-options=\"services\" all-services=\"servicesByName\" show-weight=\"route.alternateServices.length > 1 || (controls.hideSlider && route.alternateServices.length)\">\n" +
+    "<osc-routing-service model=\"route.to\" service-options=\"services\" all-services=\"servicesByName\" show-weight=\"route.alternateServices.length > 1 || (controls.hideSlider && route.alternateServices.length)\" warn-unnamed-port=\"unnamedServicePort\">\n" +
     "</osc-routing-service>\n" +
     "</div>\n" +
     "\n" +

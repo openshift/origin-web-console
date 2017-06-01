@@ -10109,7 +10109,8 @@ model:"=",
 serviceOptions:"=",
 allServices:"=",
 isAlternate:"=?",
-showWeight:"=?"
+showWeight:"=?",
+warnUnnamedPort:"=?"
 },
 templateUrl:"views/directives/osc-routing-service.html",
 link:function(a, b, c, d) {
