@@ -3867,7 +3867,7 @@ table.dataTable th:active{outline:0}
 .toast-pf-max-width{max-width:31.1%}
 .toast-pf-top-right{left:auto}
 }
-.toast-notifications-list-pf{margin-left:20px;position:fixed;right:20px;top:20px;z-index:1050}
+.toast-notifications-list-pf{margin-left:20px;position:fixed;right:20px;top:20px}
 .toast-notifications-list-pf .toast-pf{clear:both;float:right}
 @media (min-width:768px){.toast-notifications-list-pf{max-width:calc(50%)}
 }
@@ -4575,6 +4575,7 @@ pre.clipped.scroll{max-height:150px;overflow:auto;width:100%}
 .tech-preview-header{justify-content:space-between}
 @media (max-width:479px){.col-xxs-12{width:100%}
 }
+.toast-notifications-list-pf{z-index:1055}
 .data-toolbar{padding:5px 0}
 .data-toolbar.other-resources-toolbar .data-toolbar-dropdown{min-width:210px}
 .data-toolbar .checkbox{margin-bottom:0;margin-top:10px}
