@@ -494,124 +494,6 @@ i.unwatchAll($a), $(window).off("resize.overview", Q);
 }));
 }
 
-function RouteServiceBarChart() {
-var a = this, b = function(b, c) {
-return b.name === a.highlightService ? -1 :c.name === a.highlightService ? 1 :c.weight === b.weight ? b.name.localeCompare(c.name) :c.weight - b.weight;
-}, c = function(b) {
-a.total += b.weight, a.max = Math.max(b.weight, a.max || 0), a.backends.push({
-name:b.name,
-weight:b.weight
-});
-};
-a.$onChanges = function() {
-if (a.backends = [], a.total = 0, a.route) {
-c(a.route.spec.to);
-var d = _.get(a, "route.spec.alternateBackends", []);
-_.each(d, c), a.backends.sort(b);
-}
-}, a.getPercentage = function(b) {
-var c = a.total || 100, d = b.weight / c * 100;
-return _.round(d) + "%";
-}, a.barWidth = function(b) {
-var c = a.max || 100;
-return b.weight / c * 100 + "%";
-};
-}
-
-function BindService(a, b, c, d) {
-var e, f, g, h, i, j, k, l = this, m = b("statusCondition"), n = function() {
-var a, b;
-_.each(l.serviceInstances, function(c) {
-var d = "True" === _.get(m(c, "Ready"), "status");
-d && (!a || c.metadata.creationTimestamp > a.metadata.creationTimestamp) && (a = c), d || b && !(c.metadata.creationTimestamp > b.metadata.creationTimestamp) || (b = c);
-}), l.serviceToBind = _.get(a, "metadata.name") || _.get(b, "metadata.name");
-}, o = function() {
-if (l.serviceClasses && l.serviceInstances) {
-var a = _.toArray(l.serviceInstances);
-a.sort(function(a, b) {
-var c = _.get(l.serviceClasses, [ a.spec.serviceClassName, "osbMetadata", "displayName" ]) || a.spec.serviceClassName, d = _.get(l.serviceClasses, [ a.spec.serviceClassName, "osbMetadata", "displayName" ]) || b.spec.serviceClassName;
-return c === d && (c = _.get(a, "metadata.name", ""), d = _.get(b, "metadata.name", "")), c.localeCompare(d);
-}), l.orderedServiceInstances = a;
-}
-}, p = function() {
-if (g && h && i && j && k) {
-var a = g.concat(h).concat(i).concat(j).concat(k);
-l.applications = _.sortByAll(a, [ "metadata.name", "kind" ]);
-}
-}, q = function() {
-l.nextTitle = "Bind", e = a.$watch("ctrl.selectionForm.$valid", function(a) {
-l.steps[0].valid = a;
-});
-}, r = function() {
-e && (e(), e = void 0), l.nextTitle = "Close", l.wizardComplete = !0, l.bindService();
-};
-l.$onInit = function() {
-l.serviceSelection = {};
-var a = "Instance" === l.target.kind ? "Applications" :"Services";
-l.steps = [ {
-id:"bindForm",
-label:a,
-view:"views/directives/bind-service/bind-service-form.html",
-valid:!0,
-onShow:q
-}, {
-label:"Results",
-id:"results",
-view:"views/directives/bind-service/results.html",
-valid:!0,
-onShow:r
-} ];
-var d = {
-namespace:_.get(l.target, "metadata.namespace")
-};
-c.list({
-group:"servicecatalog.k8s.io",
-resource:"serviceclasses"
-}, {}).then(function(a) {
-l.serviceClasses = a.by("metadata.name"), "Instance" === l.target.kind && (l.serviceClass = l.serviceClasses[l.target.spec.serviceClassName], l.serviceClassName = l.target.spec.serviceClassName), o();
-}), "Instance" === l.target.kind ? (l.shouldBindToApp = "true", l.appToBind = null, l.serviceToBind = l.target.metadata.name, c.list("deploymentconfigs", d).then(function(a) {
-g = _.toArray(a.by("metadata.name")), p();
-}), c.list("replicationcontrollers", d).then(function(a) {
-i = _.reject(a.by("metadata.name"), b("hasDeploymentConfig")), p();
-}), c.list({
-group:"extensions",
-resource:"deployments"
-}, d).then(function(a) {
-h = _.toArray(a.by("metadata.name")), p();
-}), c.list({
-group:"extensions",
-resource:"replicasets"
-}, d).then(function(a) {
-j = _.reject(a.by("metadata.name"), b("hasDeployment")), p();
-}), c.list({
-group:"apps",
-resource:"statefulsets"
-}, d).then(function(a) {
-k = _.toArray(a.by("metadata.name")), p();
-})) :(c.list({
-group:"servicecatalog.k8s.io",
-resource:"instances"
-}, d).then(function(a) {
-l.serviceInstances = a.by("metadata.name"), l.serviceToBind || n(), o();
-}), l.appToBind = l.target);
-}, l.$onDestroy = function() {
-e && (e(), e = void 0), f && c.unwatch(f);
-}, l.bindService = function() {
-var a = "Instance" === l.target.kind ? l.target :l.serviceInstances[l.serviceToBind], b = "Instance" !== l.target.kind ? l.target :l.appToBind, e = {
-namespace:_.get(a, "metadata.namespace")
-};
-d.bindService(e, _.get(a, "metadata.name"), _.get(b, "metadata.name")).then(function(a) {
-l.binding = a, l.error = null, f = c.watchObject(d.bindingResource, _.get(l.binding, "metadata.name"), e, function(a) {
-l.binding = a;
-});
-}, function(a) {
-l.error = a;
-});
-}, l.closeWizard = function() {
-_.isFunction(l.onClose) && l.onClose();
-};
-}
-
 function ProcessTemplate(a, b, c, d, e, f, g, h, i, j, k) {
 function l(a) {
 var b = /^helplink\.(.*)\.title$/, c = /^helplink\.(.*)\.url$/, d = {};
@@ -738,449 +620,6 @@ details:b
 }, c.$on("instantiateTemplate", o.createFromTemplate);
 var w = function() {
 return !_.get(o.template, "labels.app") && !_.some(o.template.objects, "metadata.labels.app");
-};
-}
-
-function ProcessTemplateDialog(a, b) {
-function c() {
-var a = _.get(j, "template.metadata.annotations.iconClass", "fa fa-cubes");
-return a.indexOf("icon-") !== -1 ? "font-icon " + a :a;
-}
-function d() {
-j.steps = [ j.configStep, j.resultsStep ];
-}
-function e() {
-i && (i(), i = void 0);
-}
-function f() {
-j.configStep.selected = !0, j.resultsStep.selected = !1, j.nextTitle = "Create", j.resultsStep.allowed = j.configStep.valid, i = a.$watch("$ctrl.form.$valid", function(a) {
-j.configStep.valid = a, j.resultsStep.allowed = a;
-});
-}
-function g() {
-j.configStep.selected = !1, j.resultsStep.selected = !0, j.nextTitle = "Close", e(), j.wizardDone = !0;
-}
-function h() {
-a.$broadcast("instantiateTemplate");
-}
-var i, j = this;
-j.configStep = {
-id:"configuration",
-label:"Configuration",
-view:"views/directives/process-template-dialog/process-template-config.html",
-valid:!1,
-allowed:!0,
-onShow:f
-}, j.resultsStep = {
-id:"results",
-label:"Results",
-view:"views/directives/process-template-dialog/process-template-results.html",
-valid:!0,
-allowed:!1,
-prevEnabled:!1,
-onShow:g
-}, j.$onInit = function() {
-j.alerts = {}, j.loginBaseUrl = b.openshiftAPIBaseUrl();
-}, j.$onChanges = function(a) {
-a.template && j.template && (d(), j.iconClass = c());
-}, a.$on("templateInstantiated", function(a, b) {
-j.selectedProject = b.project, j.currentStep = j.resultsStep.label;
-}), j.$onDestroy = function() {
-e();
-}, j.next = function(a) {
-return a.stepId === j.configStep.id ? (h(), !1) :a.stepId !== j.resultsStep.id || (j.close(), !1);
-}, j.close = function() {
-var a = j.onDialogClosed();
-_.isFunction(a) && a();
-};
-}
-
-function NextSteps(a) {
-function b(a) {
-var b = [];
-return angular.forEach(a, function(a) {
-"completed" !== a.status && b.push(a);
-}), b;
-}
-function c(a) {
-var b = [];
-return angular.forEach(a, function(a) {
-a.hasErrors && b.push(a);
-}), b;
-}
-var d = this;
-d.showParamsTable = !1;
-var e = a.getTemplateData();
-d.parameters = e.params, d.templateMessage = e.message, a.clearTemplateData();
-var f = function(a) {
-var b = _.get(d, "createdBuildConfig.spec.triggers", []);
-return _.some(b, {
-type:a
-});
-};
-d.createdBuildConfigWithGitHubTrigger = function() {
-return f("GitHub");
-}, d.createdBuildConfigWithConfigChangeTrigger = function() {
-return f("ConfigChange");
-}, d.allTasksSuccessful = function(a) {
-return !b(a).length && !c(a).length;
-}, d.erroredTasks = c, d.pendingTasks = b, d.toggleParamsTable = function() {
-d.showParamsTable = !0;
-};
-}
-
-function BuildCounts(a, b) {
-var c = this;
-c.interestingPhases = [ "New", "Pending", "Running", "Failed", "Error" ];
-var d = function(a) {
-var b = _.get(a, "status.phase");
-return _.includes(c.interestingPhases, b);
-};
-c.$onChanges = _.debounce(function() {
-a.$apply(function() {
-var a = _.groupBy(c.builds, "status.phase");
-if (c.countByPhase = _.mapValues(a, _.size), c.show = _.some(c.builds, d), !c.showRunningStage || 1 !== c.countByPhase.Running) return void (c.currentStage = null);
-var e = _.head(a.Running);
-c.currentStage = b.getCurrentStage(e);
-});
-}, 200);
-}
-
-function MetricsSummary(a, b, c, d) {
-var e, f = this, g = !0, h = function(a) {
-return a >= 1024;
-};
-f.metrics = [ {
-label:"Memory",
-convert:b.bytesToMiB,
-formatUsage:function(a) {
-return h(a) && (a /= 1024), c.formatUsage(a);
-},
-usageUnits:function(a) {
-return h(a) ? "GiB" :"MiB";
-},
-datasets:[ "memory/usage" ],
-type:"pod_container"
-}, {
-label:"CPU",
-convert:b.millicoresToCores,
-usageUnits:function() {
-return "cores";
-},
-formatUsage:function(a) {
-return a < .01 ? "< 0.01" :c.formatUsage(a);
-},
-datasets:[ "cpu/usage_rate" ],
-type:"pod_container"
-}, {
-label:"Network",
-units:"KiB/s",
-convert:b.bytesToKiB,
-formatUsage:function(a) {
-return a < .01 ? "< 0.01" :c.formatUsage(a);
-},
-usageUnits:function() {
-return "KiB/s";
-},
-datasets:[ "network/tx_rate", "network/rx_rate" ],
-type:"pod"
-} ];
-var i = function() {
-var a = _.find(f.pods, "metadata.namespace");
-if (!a) return null;
-var b = {
-pods:f.pods,
-containerName:_.head(a.spec.containers).name,
-namespace:a.metadata.namespace,
-start:"-1mn",
-bucketDuration:"1mn"
-};
-return b;
-}, j = function(a) {
-return null === a.value || void 0 === a.value;
-}, k = function(a, b) {
-var c = null, d = {};
-_.each(a.datasets, function(e) {
-_.each(b[e], function(b, e) {
-var f = _.last(b);
-if (!j(f)) {
-d[e] = !0;
-var g = a.convert(f.value);
-c = (c || 0) + g;
-}
-});
-}), null === c ? delete a.currentUsage :a.currentUsage = c / _.size(d);
-}, l = function(a) {
-_.each(f.metrics, function(b) {
-k(b, a);
-});
-}, m = function() {
-f.error = !0;
-}, n = function() {
-if (!f.error && !g) {
-var a = i();
-a && (e = Date.now(), d.getPodMetrics(a).then(l, m));
-}
-};
-f.updateInView = function(a) {
-g = !a, a && (!e || Date.now() > e + c.getDefaultUpdateInterval()) && n();
-};
-var o;
-f.$onInit = function() {
-o = a(n, c.getDefaultUpdateInterval(), !1), n();
-}, f.$onDestroy = function() {
-o && (a.cancel(o), o = null);
-};
-}
-
-function MiniLogController(a, b, c, d, e) {
-var f, g, h, i = this, j = b("annotation"), k = i.numLines || 7, l = [];
-i.lines = [];
-var m = _.throttle(function() {
-a.$evalAsync(function() {
-i.lines = _.clone(l);
-});
-}, 200), n = 0, o = function(a) {
-if (a) {
-var b = ansi_up.escape_for_html(a), c = ansi_up.ansi_to_html(b), d = e.linkify(c, "_blank", !0);
-n++, l.push({
-markup:d,
-id:n
-}), l.length > k && (l = _.takeRight(l, k)), m();
-}
-}, p = function() {
-h && (h.stop(), h = null);
-}, q = function() {
-var a = {
-follow:!0,
-tailLines:k
-};
-h = d.createStream(g, f, i.context, a), h.start(), h.onMessage(o), h.onClose(function() {
-h = null;
-});
-};
-i.$onInit = function() {
-"ReplicationController" === i.apiObject.kind ? (g = "deploymentconfigs/log", f = j(i.apiObject, "deploymentConfig")) :(g = c.kindToResource(i.apiObject.kind) + "/log", f = i.apiObject.metadata.name), q();
-}, i.$onDestroy = function() {
-p();
-};
-}
-
-function NotificationIcon(a) {
-var b = this;
-b.$onChanges = _.debounce(function() {
-a.$apply(function() {
-var a = _.groupBy(b.alerts, "type");
-b.countByType = _.mapValues(a, _.size), b.byType = _.mapValues(a, function(a) {
-return _.map(a, function(a) {
-return _.escape(a.message);
-}).join("<br>");
-});
-});
-}, 200);
-}
-
-function OverviewBuilds(a) {
-var b, c = a("canI");
-this.$onInit = function() {
-b = c("builds/log", "get");
-}, this.showLogs = function(a) {
-if (this.hideLog) return !1;
-if (!b) return !1;
-if (!_.get(a, "status.startTimestamp")) return !1;
-if ("Complete" !== _.get(a, "status.phase")) return !0;
-var c = _.get(a, "status.completionTimestamp");
-if (!c) return !1;
-var d = moment().subtract(3, "m");
-return moment(c).isAfter(d);
-};
-}
-
-function OverviewListRow(a, b, c, d, e, f, g) {
-var h = this;
-_.extend(h, g.ui);
-var i = a("canI"), j = a("deploymentIsInProgress"), k = a("getErrorDetails"), l = a("isBinaryBuild"), m = a("isJenkinsPipelineStrategy"), n = function(a) {
-var b = _.get(a, "spec.triggers");
-_.isEmpty(b) || (h.imageChangeTriggers = _.filter(b, function(a) {
-return "ImageChange" === a.type && _.get(a, "imageChangeParams.automatic");
-}));
-}, o = function(a) {
-a && !h.current && "DeploymentConfig" !== a.kind && "Deployment" !== a.kind && (h.current = a);
-}, p = function(a) {
-h.rgv = c.objectToResourceGroupVersion(a), o(a), n(a);
-};
-h.$onChanges = function(a) {
-a.apiObject && p(a.apiObject.currentValue);
-};
-var q = [], r = function(a) {
-if (!h.state.hpaByResource) return null;
-var b = _.get(a, "kind"), c = _.get(a, "metadata.name");
-return _.get(h.state.hpaByResource, [ b, c ], q);
-};
-h.$doCheck = function() {
-h.notifications = g.getNotifications(h.apiObject, h.state), h.hpa = r(h.apiObject), h.current && _.isEmpty(h.hpa) && (h.hpa = r(h.current));
-var a = _.get(h, "apiObject.metadata.uid");
-a && (h.services = _.get(h, [ "state", "servicesByObjectUID", a ]), h.buildConfigs = _.get(h, [ "state", "buildConfigsByObjectUID", a ]));
-var b, c = _.get(h, "apiObject.kind");
-"DeploymentConfig" === c && (b = _.get(h, "apiObject.metadata.name"), h.pipelines = _.get(h, [ "state", "pipelinesByDeploymentConfig", b ]), h.recentBuilds = _.get(h, [ "state", "recentBuildsByDeploymentConfig", b ]), h.recentPipelines = _.get(h, [ "state", "recentPipelinesByDeploymentConfig", b ]));
-}, h.getPods = function(a) {
-var b = _.get(a, "metadata.uid");
-return _.get(h, [ "state", "podsByOwnerUID", b ]);
-}, h.firstPod = function(a) {
-var b = h.getPods(a);
-return _.find(b);
-}, h.isScalable = function() {
-return !!_.isEmpty(h.hpa) && !h.isDeploymentInProgress();
-}, h.isDeploymentInProgress = function() {
-return !(!h.current || !h.previous) || j(h.current);
-}, h.canIDoAny = function() {
-var a = _.get(h, "apiObject.kind");
-switch (a) {
-case "DeploymentConfig":
-return !!i("deploymentconfigs/instantiate", "create") || (!!i("deploymentconfigs", "update") || (!(!h.current || !i("deploymentconfigs/log", "get")) || (h.showStartPipelineAction() || h.showStartBuildAction())));
-
-case "Pod":
-return !!i("pods/log", "get") || !!i("pods", "update");
-
-default:
-return !(!h.firstPod(h.current) || !i("pods/log", "get")) || !!i(h.rgv, "update");
-}
-}, h.showStartBuildAction = function() {
-if (!_.isEmpty(h.pipelines)) return !1;
-if (!i("buildconfigs/instantiate", "create")) return !1;
-if (1 !== _.size(h.buildConfigs)) return !1;
-var a = _.first(h.buildConfigs);
-return !l(a);
-}, h.showStartPipelineAction = function() {
-return i("buildconfigs/instantiate", "create") && 1 === _.size(h.pipelines);
-}, h.startBuild = function(a) {
-d.startBuild(a.metadata.name, {
-namespace:a.metadata.namespace
-}).then(_.noop, function(b) {
-var c = m(a) ? "pipeline" :"build";
-h.state.alerts["start-build"] = {
-type:"error",
-message:"An error occurred while starting the " + c + ".",
-details:k(b)
-};
-});
-}, h.canDeploy = function() {
-return !!h.apiObject && (!h.apiObject.metadata.deletionTimestamp && (!h.deploymentInProgress && !h.apiObject.spec.paused));
-}, h.isPaused = function() {
-return h.apiObject.spec.paused;
-}, h.startDeployment = function() {
-e.startLatestDeployment(h.apiObject, {
-namespace:h.apiObject.metadata.namespace
-}, {
-alerts:h.state.alerts
-});
-}, h.cancelDeployment = function() {
-var a = h.current;
-if (a) {
-var c, d = a.metadata.name, f = _.get(h, "apiObject.status.latestVersion");
-c = 1 === f ? "This will attempt to stop the in-progress deployment. It may take some time to complete." :"This will attempt to stop the in-progress deployment and rollback to the last successful deployment. It may take some time to complete.";
-var g = b.open({
-animation:!0,
-templateUrl:"views/modals/confirm.html",
-controller:"ConfirmModalController",
-resolve:{
-modalConfig:function() {
-return {
-message:"Cancel deployment " + d + "?",
-details:c,
-okButtonText:"Yes, cancel",
-okButtonClass:"btn-danger",
-cancelButtonText:"No, don't cancel"
-};
-}
-}
-});
-g.result.then(function() {
-return a.metadata.uid !== h.current.metadata.uid ? void (h.state.alerts["cancel-deployment"] = {
-type:"error",
-message:"Deployment #" + f + " is no longer the latest."
-}) :(a = h.current, j(a) ? void e.cancelRunningDeployment(a, {
-namespace:a.metadata.namespace
-}, {
-alerts:h.state.alerts
-}) :void (h.state.alerts["cancel-deployment"] = {
-type:"error",
-message:"Deployment " + d + " is no longer in progress."
-}));
-});
-}
-}, h.urlForImageChangeTrigger = function(b) {
-var c = a("stripTag")(_.get(b, "imageChangeParams.from.name")), d = _.get(h, "apiObject.metadata.namespace"), e = _.get(b, "imageChangeParams.from.namespace", d);
-return f.resourceURL(c, "ImageStream", e);
-}, h.navigateToPods = function() {
-var a = h.getPods(h.current);
-_.isEmpty(a) || f.toPodsForDeployment(h.current, a);
-}, h.closeOverlayPanel = function() {
-_.set(h, "overlay.panelVisible", !1);
-}, h.showOverlayPanel = function(a, b) {
-_.set(h, "overlay.panelVisible", !0), _.set(h, "overlay.panelName", a), _.set(h, "overlay.state", b);
-};
-}
-
-function ServiceInstanceRow(a, b, c, d) {
-var e = this;
-_.extend(e, c.ui);
-var f = a("getErrorDetails"), g = function() {
-var a = e.apiObject.spec.serviceClassName, b = e.apiObject.metadata.name, c = _.get(e, [ "state", "serviceClasses", a, "osbMetadata", "displayName" ]);
-return c || a || b;
-}, h = function() {
-var a = e.apiObject.spec.serviceClassName;
-return _.get(e, [ "state", "serviceClasses", a, "description" ]);
-};
-e.$doCheck = function() {
-e.notifications = c.getNotifications(e.apiObject, e.state), e.displayName = g(), e.description = h();
-}, e.getSecretForBinding = function(a) {
-return a && _.get(e, [ "state", "secrets", a.spec.secretName ]);
-}, e.closeOverlayPanel = function() {
-_.set(e, "overlay.panelVisible", !1);
-}, e.showOverlayPanel = function(a, b) {
-_.set(e, "overlay.panelVisible", !0), _.set(e, "overlay.panelName", a), _.set(e, "overlay.state", b);
-}, e.deprovision = function() {
-var a = {
-alerts:{
-deprovision:{
-type:"error",
-message:"Service '" + e.apiObject.spec.serviceClassName + "' will be deleted and no longer available."
-}
-},
-detailsMarkup:"Deprovision Service?",
-okButtonText:"Deprovision",
-okButtonClass:"btn-danger",
-cancelButtonText:"Cancel"
-};
-d.open({
-animation:!0,
-templateUrl:"views/modals/confirm.html",
-controller:"ConfirmModalController",
-resolve:{
-modalConfig:function() {
-return a;
-}
-}
-}).result.then(function() {
-b["delete"]({
-group:"servicecatalog.k8s.io",
-resource:"instances"
-}, e.apiObject.metadata.name, {
-namespace:e.apiObject.metadata.namespace
-}).then(function() {
-e.state.alerts["start-build"] = {
-type:"success",
-message:"Successfully deprovisioned " + e.apiObject.metadata.name
-};
-}, function(a) {
-e.state.alerts["start-build"] = {
-type:"error",
-message:"An error occurred while deprovisioning " + e.apiObject.metadata.name,
-details:"Reason: " + f(a)
-};
-});
-});
 };
 }
 
@@ -12710,23 +12149,143 @@ build:"="
 },
 templateUrl:"views/directives/build-status.html"
 };
-}), angular.module("openshiftConsole").component("routeServiceBarChart", {
-controller:RouteServiceBarChart,
+}), function() {
+function a() {
+var a = this, b = function(b, c) {
+return b.name === a.highlightService ? -1 :c.name === a.highlightService ? 1 :c.weight === b.weight ? b.name.localeCompare(c.name) :c.weight - b.weight;
+}, c = function(b) {
+a.total += b.weight, a.max = Math.max(b.weight, a.max || 0), a.backends.push({
+name:b.name,
+weight:b.weight
+});
+};
+a.$onChanges = function() {
+if (a.backends = [], a.total = 0, a.route) {
+c(a.route.spec.to);
+var d = _.get(a, "route.spec.alternateBackends", []);
+_.each(d, c), a.backends.sort(b);
+}
+}, a.getPercentage = function(b) {
+var c = a.total || 100, d = b.weight / c * 100;
+return _.round(d) + "%";
+}, a.barWidth = function(b) {
+var c = a.max || 100;
+return b.weight / c * 100 + "%";
+};
+}
+angular.module("openshiftConsole").component("routeServiceBarChart", {
+controller:a,
 controllerAs:"routeServices",
 bindings:{
 route:"<",
 highlightService:"<"
 },
 templateUrl:"views/directives/route-service-bar-chart.html"
-}), angular.module("openshiftConsole").component("bindService", {
-controller:[ "$scope", "$filter", "DataService", "BindingService", BindService ],
+});
+}(), function() {
+function a(a, b, c, d) {
+var e, f, g, h, i, j, k, l = this, m = b("statusCondition"), n = function() {
+var a, b;
+_.each(l.serviceInstances, function(c) {
+var d = "True" === _.get(m(c, "Ready"), "status");
+d && (!a || c.metadata.creationTimestamp > a.metadata.creationTimestamp) && (a = c), d || b && !(c.metadata.creationTimestamp > b.metadata.creationTimestamp) || (b = c);
+}), l.serviceToBind = _.get(a, "metadata.name") || _.get(b, "metadata.name");
+}, o = function() {
+if (l.serviceClasses && l.serviceInstances) {
+var a = _.toArray(l.serviceInstances);
+a.sort(function(a, b) {
+var c = _.get(l.serviceClasses, [ a.spec.serviceClassName, "osbMetadata", "displayName" ]) || a.spec.serviceClassName, d = _.get(l.serviceClasses, [ a.spec.serviceClassName, "osbMetadata", "displayName" ]) || b.spec.serviceClassName;
+return c === d && (c = _.get(a, "metadata.name", ""), d = _.get(b, "metadata.name", "")), c.localeCompare(d);
+}), l.orderedServiceInstances = a;
+}
+}, p = function() {
+if (g && h && i && j && k) {
+var a = g.concat(h).concat(i).concat(j).concat(k);
+l.applications = _.sortByAll(a, [ "metadata.name", "kind" ]);
+}
+}, q = function() {
+l.nextTitle = "Bind", e = a.$watch("ctrl.selectionForm.$valid", function(a) {
+l.steps[0].valid = a;
+});
+}, r = function() {
+e && (e(), e = void 0), l.nextTitle = "Close", l.wizardComplete = !0, l.bindService();
+};
+l.$onInit = function() {
+l.serviceSelection = {};
+var a = "Instance" === l.target.kind ? "Applications" :"Services";
+l.steps = [ {
+id:"bindForm",
+label:a,
+view:"views/directives/bind-service/bind-service-form.html",
+valid:!0,
+onShow:q
+}, {
+label:"Results",
+id:"results",
+view:"views/directives/bind-service/results.html",
+valid:!0,
+onShow:r
+} ];
+var d = {
+namespace:_.get(l.target, "metadata.namespace")
+};
+c.list({
+group:"servicecatalog.k8s.io",
+resource:"serviceclasses"
+}, {}).then(function(a) {
+l.serviceClasses = a.by("metadata.name"), "Instance" === l.target.kind && (l.serviceClass = l.serviceClasses[l.target.spec.serviceClassName], l.serviceClassName = l.target.spec.serviceClassName), o();
+}), "Instance" === l.target.kind ? (l.shouldBindToApp = "true", l.appToBind = null, l.serviceToBind = l.target.metadata.name, c.list("deploymentconfigs", d).then(function(a) {
+g = _.toArray(a.by("metadata.name")), p();
+}), c.list("replicationcontrollers", d).then(function(a) {
+i = _.reject(a.by("metadata.name"), b("hasDeploymentConfig")), p();
+}), c.list({
+group:"extensions",
+resource:"deployments"
+}, d).then(function(a) {
+h = _.toArray(a.by("metadata.name")), p();
+}), c.list({
+group:"extensions",
+resource:"replicasets"
+}, d).then(function(a) {
+j = _.reject(a.by("metadata.name"), b("hasDeployment")), p();
+}), c.list({
+group:"apps",
+resource:"statefulsets"
+}, d).then(function(a) {
+k = _.toArray(a.by("metadata.name")), p();
+})) :(c.list({
+group:"servicecatalog.k8s.io",
+resource:"instances"
+}, d).then(function(a) {
+l.serviceInstances = a.by("metadata.name"), l.serviceToBind || n(), o();
+}), l.appToBind = l.target);
+}, l.$onDestroy = function() {
+e && (e(), e = void 0), f && c.unwatch(f);
+}, l.bindService = function() {
+var a = "Instance" === l.target.kind ? l.target :l.serviceInstances[l.serviceToBind], b = "Instance" !== l.target.kind ? l.target :l.appToBind, e = {
+namespace:_.get(a, "metadata.namespace")
+};
+d.bindService(e, _.get(a, "metadata.name"), _.get(b, "metadata.name")).then(function(a) {
+l.binding = a, l.error = null, f = c.watchObject(d.bindingResource, _.get(l.binding, "metadata.name"), e, function(a) {
+l.binding = a;
+});
+}, function(a) {
+l.error = a;
+});
+}, l.closeWizard = function() {
+_.isFunction(l.onClose) && l.onClose();
+};
+}
+angular.module("openshiftConsole").component("bindService", {
+controller:[ "$scope", "$filter", "DataService", "BindingService", a ],
 controllerAs:"ctrl",
 bindings:{
 target:"<",
 onClose:"<"
 },
 templateUrl:"views/directives/bind-service.html"
-}), angular.module("openshiftConsole").component("processTemplate", {
+});
+}(), angular.module("openshiftConsole").component("processTemplate", {
 controller:[ "$filter", "$q", "$scope", "$uibModal", "DataService", "Navigate", "ProcessedTemplateService", "QuotaService", "SecurityCheckService", "TaskList", "keyValueEditorUtils", ProcessTemplate ],
 controllerAs:"$ctrl",
 bindings:{
@@ -12737,16 +12296,105 @@ prefillParameters:"<",
 isDialog:"<"
 },
 templateUrl:"views/directives/process-template.html"
-}), angular.module("openshiftConsole").component("processTemplateDialog", {
-controller:[ "$scope", "DataService", ProcessTemplateDialog ],
+}), function() {
+function a(a, b) {
+function c() {
+var a = _.get(j, "template.metadata.annotations.iconClass", "fa fa-cubes");
+return a.indexOf("icon-") !== -1 ? "font-icon " + a :a;
+}
+function d() {
+j.steps = [ j.configStep, j.resultsStep ];
+}
+function e() {
+i && (i(), i = void 0);
+}
+function f() {
+j.configStep.selected = !0, j.resultsStep.selected = !1, j.nextTitle = "Create", j.resultsStep.allowed = j.configStep.valid, i = a.$watch("$ctrl.form.$valid", function(a) {
+j.configStep.valid = a, j.resultsStep.allowed = a;
+});
+}
+function g() {
+j.configStep.selected = !1, j.resultsStep.selected = !0, j.nextTitle = "Close", e(), j.wizardDone = !0;
+}
+function h() {
+a.$broadcast("instantiateTemplate");
+}
+var i, j = this;
+j.configStep = {
+id:"configuration",
+label:"Configuration",
+view:"views/directives/process-template-dialog/process-template-config.html",
+valid:!1,
+allowed:!0,
+onShow:f
+}, j.resultsStep = {
+id:"results",
+label:"Results",
+view:"views/directives/process-template-dialog/process-template-results.html",
+valid:!0,
+allowed:!1,
+prevEnabled:!1,
+onShow:g
+}, j.$onInit = function() {
+j.alerts = {}, j.loginBaseUrl = b.openshiftAPIBaseUrl();
+}, j.$onChanges = function(a) {
+a.template && j.template && (d(), j.iconClass = c());
+}, a.$on("templateInstantiated", function(a, b) {
+j.selectedProject = b.project, j.currentStep = j.resultsStep.label;
+}), j.$onDestroy = function() {
+e();
+}, j.next = function(a) {
+return a.stepId === j.configStep.id ? (h(), !1) :a.stepId !== j.resultsStep.id || (j.close(), !1);
+}, j.close = function() {
+var a = j.onDialogClosed();
+_.isFunction(a) && a();
+};
+}
+angular.module("openshiftConsole").component("processTemplateDialog", {
+controller:[ "$scope", "DataService", a ],
 controllerAs:"$ctrl",
 bindings:{
 template:"<",
 onDialogClosed:"&"
 },
 templateUrl:"views/directives/process-template-dialog.html"
-}), angular.module("openshiftConsole").component("nextSteps", {
-controller:[ "ProcessedTemplateService", NextSteps ],
+});
+}(), function() {
+function a(a) {
+function b(a) {
+var b = [];
+return angular.forEach(a, function(a) {
+"completed" !== a.status && b.push(a);
+}), b;
+}
+function c(a) {
+var b = [];
+return angular.forEach(a, function(a) {
+a.hasErrors && b.push(a);
+}), b;
+}
+var d = this;
+d.showParamsTable = !1;
+var e = a.getTemplateData();
+d.parameters = e.params, d.templateMessage = e.message, a.clearTemplateData();
+var f = function(a) {
+var b = _.get(d, "createdBuildConfig.spec.triggers", []);
+return _.some(b, {
+type:a
+});
+};
+d.createdBuildConfigWithGitHubTrigger = function() {
+return f("GitHub");
+}, d.createdBuildConfigWithConfigChangeTrigger = function() {
+return f("ConfigChange");
+}, d.allTasksSuccessful = function(a) {
+return !b(a).length && !c(a).length;
+}, d.erroredTasks = c, d.pendingTasks = b, d.toggleParamsTable = function() {
+d.showParamsTable = !0;
+};
+}
+angular.module("openshiftConsole").component("nextSteps", {
+controller:[ "ProcessedTemplateService", a ],
 bindings:{
 project:"<",
 projectName:"<",
@@ -12755,7 +12403,8 @@ fromSampleRepo:"<",
 createdBuildConfig:"<"
 },
 templateUrl:"views/directives/next-steps.html"
-}), angular.module("openshiftConsole").directive("imageNames", [ "$filter", "PodsService", function(a, b) {
+});
+}(), angular.module("openshiftConsole").directive("imageNames", [ "$filter", "PodsService", function(a, b) {
 return {
 restrict:"E",
 scope:{
@@ -12774,8 +12423,25 @@ return e ? void (c.imageIDs = [ e ]) :void (c.imageIDs = b.getImageIDs(c.pods, a
 c.$watchGroup([ "podTemplate", "pods" ], e);
 }
 };
-} ]), angular.module("openshiftConsole").component("buildCounts", {
-controller:[ "$scope", "BuildsService", BuildCounts ],
+} ]), function() {
+function a(a, b) {
+var c = this;
+c.interestingPhases = [ "New", "Pending", "Running", "Failed", "Error" ];
+var d = function(a) {
+var b = _.get(a, "status.phase");
+return _.includes(c.interestingPhases, b);
+};
+c.$onChanges = _.debounce(function() {
+a.$apply(function() {
+var a = _.groupBy(c.builds, "status.phase");
+if (c.countByPhase = _.mapValues(a, _.size), c.show = _.some(c.builds, d), !c.showRunningStage || 1 !== c.countByPhase.Running) return void (c.currentStage = null);
+var e = _.head(a.Running);
+c.currentStage = b.getCurrentStage(e);
+});
+}, 200);
+}
+angular.module("openshiftConsole").component("buildCounts", {
+controller:[ "$scope", "BuildsService", a ],
 controllerAs:"buildCounts",
 bindings:{
 builds:"<",
@@ -12783,32 +12449,186 @@ showRunningStage:"<",
 label:"@"
 },
 templateUrl:"views/overview/_build-counts.html"
-}), angular.module("openshiftConsole").component("metricsSummary", {
-controller:[ "$interval", "ConversionService", "MetricsCharts", "MetricsService", MetricsSummary ],
+});
+}(), function() {
+function a(a, b, c, d) {
+var e, f = this, g = !0, h = function(a) {
+return a >= 1024;
+};
+f.metrics = [ {
+label:"Memory",
+convert:b.bytesToMiB,
+formatUsage:function(a) {
+return h(a) && (a /= 1024), c.formatUsage(a);
+},
+usageUnits:function(a) {
+return h(a) ? "GiB" :"MiB";
+},
+datasets:[ "memory/usage" ],
+type:"pod_container"
+}, {
+label:"CPU",
+convert:b.millicoresToCores,
+usageUnits:function() {
+return "cores";
+},
+formatUsage:function(a) {
+return a < .01 ? "< 0.01" :c.formatUsage(a);
+},
+datasets:[ "cpu/usage_rate" ],
+type:"pod_container"
+}, {
+label:"Network",
+units:"KiB/s",
+convert:b.bytesToKiB,
+formatUsage:function(a) {
+return a < .01 ? "< 0.01" :c.formatUsage(a);
+},
+usageUnits:function() {
+return "KiB/s";
+},
+datasets:[ "network/tx_rate", "network/rx_rate" ],
+type:"pod"
+} ];
+var i = function() {
+var a = _.find(f.pods, "metadata.namespace");
+if (!a) return null;
+var b = {
+pods:f.pods,
+containerName:_.head(a.spec.containers).name,
+namespace:a.metadata.namespace,
+start:"-1mn",
+bucketDuration:"1mn"
+};
+return b;
+}, j = function(a) {
+return null === a.value || void 0 === a.value;
+}, k = function(a, b) {
+var c = null, d = {};
+_.each(a.datasets, function(e) {
+_.each(b[e], function(b, e) {
+var f = _.last(b);
+if (!j(f)) {
+d[e] = !0;
+var g = a.convert(f.value);
+c = (c || 0) + g;
+}
+});
+}), null === c ? delete a.currentUsage :a.currentUsage = c / _.size(d);
+}, l = function(a) {
+_.each(f.metrics, function(b) {
+k(b, a);
+});
+}, m = function() {
+f.error = !0;
+}, n = function() {
+if (!f.error && !g) {
+var a = i();
+a && (e = Date.now(), d.getPodMetrics(a).then(l, m));
+}
+};
+f.updateInView = function(a) {
+g = !a, a && (!e || Date.now() > e + c.getDefaultUpdateInterval()) && n();
+};
+var o;
+f.$onInit = function() {
+o = a(n, c.getDefaultUpdateInterval(), !1), n();
+}, f.$onDestroy = function() {
+o && (a.cancel(o), o = null);
+};
+}
+angular.module("openshiftConsole").component("metricsSummary", {
+controller:[ "$interval", "ConversionService", "MetricsCharts", "MetricsService", a ],
 controllerAs:"metricsSummary",
 bindings:{
 pods:"<",
 containers:"<"
 },
 templateUrl:"views/overview/_metrics-summary.html"
-}), angular.module("openshiftConsole").component("miniLog", {
+});
+}(), function() {
+function a(a, b, c, d, e) {
+var f, g, h, i = this, j = b("annotation"), k = i.numLines || 7, l = [];
+i.lines = [];
+var m = _.throttle(function() {
+a.$evalAsync(function() {
+i.lines = _.clone(l);
+});
+}, 200), n = 0, o = function(a) {
+if (a) {
+var b = ansi_up.escape_for_html(a), c = ansi_up.ansi_to_html(b), d = e.linkify(c, "_blank", !0);
+n++, l.push({
+markup:d,
+id:n
+}), l.length > k && (l = _.takeRight(l, k)), m();
+}
+}, p = function() {
+h && (h.stop(), h = null);
+}, q = function() {
+var a = {
+follow:!0,
+tailLines:k
+};
+h = d.createStream(g, f, i.context, a), h.start(), h.onMessage(o), h.onClose(function() {
+h = null;
+});
+};
+i.$onInit = function() {
+"ReplicationController" === i.apiObject.kind ? (g = "deploymentconfigs/log", f = j(i.apiObject, "deploymentConfig")) :(g = c.kindToResource(i.apiObject.kind) + "/log", f = i.apiObject.metadata.name), q();
+}, i.$onDestroy = function() {
+p();
+};
+}
+angular.module("openshiftConsole").component("miniLog", {
 controllerAs:"miniLog",
-controller:[ "$scope", "$filter", "APIService", "DataService", "HTMLService", MiniLogController ],
+controller:[ "$scope", "$filter", "APIService", "DataService", "HTMLService", a ],
 bindings:{
 apiObject:"<",
 numLines:"<",
 context:"<"
 },
 templateUrl:"views/overview/_mini-log.html"
-}), angular.module("openshiftConsole").component("notificationIcon", {
-controller:[ "$scope", NotificationIcon ],
+});
+}(), function() {
+function a(a) {
+var b = this;
+b.$onChanges = _.debounce(function() {
+a.$apply(function() {
+var a = _.groupBy(b.alerts, "type");
+b.countByType = _.mapValues(a, _.size), b.byType = _.mapValues(a, function(a) {
+return _.map(a, function(a) {
+return _.escape(a.message);
+}).join("<br>");
+});
+});
+}, 200);
+}
+angular.module("openshiftConsole").component("notificationIcon", {
+controller:[ "$scope", a ],
 controllerAs:"notification",
 bindings:{
 alerts:"<"
 },
 templateUrl:"views/overview/_notification-icon.html"
-}), angular.module("openshiftConsole").component("overviewBuilds", {
-controller:[ "$filter", OverviewBuilds ],
+});
+}(), function() {
+function a(a) {
+var b, c = a("canI");
+this.$onInit = function() {
+b = c("builds/log", "get");
+}, this.showLogs = function(a) {
+if (this.hideLog) return !1;
+if (!b) return !1;
+if (!_.get(a, "status.startTimestamp")) return !1;
+if ("Complete" !== _.get(a, "status.phase")) return !0;
+var c = _.get(a, "status.completionTimestamp");
+if (!c) return !1;
+var d = moment().subtract(3, "m");
+return moment(c).isAfter(d);
+};
+}
+angular.module("openshiftConsole").component("overviewBuilds", {
+controller:[ "$filter", a ],
 controllerAs:"overviewBuilds",
 bindings:{
 buildConfigs:"<",
@@ -12817,8 +12637,135 @@ context:"<",
 hideLog:"<"
 },
 templateUrl:"views/overview/_builds.html"
-}), angular.module("openshiftConsole").component("overviewListRow", {
-controller:[ "$filter", "$uibModal", "APIService", "BuildsService", "DeploymentsService", "Navigate", "ListRowUtils", OverviewListRow ],
+});
+}(), function() {
+function a(a, b, c, d, e, f, g) {
+var h = this;
+_.extend(h, g.ui);
+var i = a("canI"), j = a("deploymentIsInProgress"), k = a("getErrorDetails"), l = a("isBinaryBuild"), m = a("isJenkinsPipelineStrategy"), n = function(a) {
+var b = _.get(a, "spec.triggers");
+_.isEmpty(b) || (h.imageChangeTriggers = _.filter(b, function(a) {
+return "ImageChange" === a.type && _.get(a, "imageChangeParams.automatic");
+}));
+}, o = function(a) {
+a && !h.current && "DeploymentConfig" !== a.kind && "Deployment" !== a.kind && (h.current = a);
+}, p = function(a) {
+h.rgv = c.objectToResourceGroupVersion(a), o(a), n(a);
+};
+h.$onChanges = function(a) {
+a.apiObject && p(a.apiObject.currentValue);
+};
+var q = [], r = function(a) {
+if (!h.state.hpaByResource) return null;
+var b = _.get(a, "kind"), c = _.get(a, "metadata.name");
+return _.get(h.state.hpaByResource, [ b, c ], q);
+};
+h.$doCheck = function() {
+h.notifications = g.getNotifications(h.apiObject, h.state), h.hpa = r(h.apiObject), h.current && _.isEmpty(h.hpa) && (h.hpa = r(h.current));
+var a = _.get(h, "apiObject.metadata.uid");
+a && (h.services = _.get(h, [ "state", "servicesByObjectUID", a ]), h.buildConfigs = _.get(h, [ "state", "buildConfigsByObjectUID", a ]));
+var b, c = _.get(h, "apiObject.kind");
+"DeploymentConfig" === c && (b = _.get(h, "apiObject.metadata.name"), h.pipelines = _.get(h, [ "state", "pipelinesByDeploymentConfig", b ]), h.recentBuilds = _.get(h, [ "state", "recentBuildsByDeploymentConfig", b ]), h.recentPipelines = _.get(h, [ "state", "recentPipelinesByDeploymentConfig", b ]));
+}, h.getPods = function(a) {
+var b = _.get(a, "metadata.uid");
+return _.get(h, [ "state", "podsByOwnerUID", b ]);
+}, h.firstPod = function(a) {
+var b = h.getPods(a);
+return _.find(b);
+}, h.isScalable = function() {
+return !!_.isEmpty(h.hpa) && !h.isDeploymentInProgress();
+}, h.isDeploymentInProgress = function() {
+return !(!h.current || !h.previous) || j(h.current);
+}, h.canIDoAny = function() {
+var a = _.get(h, "apiObject.kind");
+switch (a) {
+case "DeploymentConfig":
+return !!i("deploymentconfigs/instantiate", "create") || (!!i("deploymentconfigs", "update") || (!(!h.current || !i("deploymentconfigs/log", "get")) || (h.showStartPipelineAction() || h.showStartBuildAction())));
+
+case "Pod":
+return !!i("pods/log", "get") || !!i("pods", "update");
+
+default:
+return !(!h.firstPod(h.current) || !i("pods/log", "get")) || !!i(h.rgv, "update");
+}
+}, h.showStartBuildAction = function() {
+if (!_.isEmpty(h.pipelines)) return !1;
+if (!i("buildconfigs/instantiate", "create")) return !1;
+if (1 !== _.size(h.buildConfigs)) return !1;
+var a = _.first(h.buildConfigs);
+return !l(a);
+}, h.showStartPipelineAction = function() {
+return i("buildconfigs/instantiate", "create") && 1 === _.size(h.pipelines);
+}, h.startBuild = function(a) {
+d.startBuild(a.metadata.name, {
+namespace:a.metadata.namespace
+}).then(_.noop, function(b) {
+var c = m(a) ? "pipeline" :"build";
+h.state.alerts["start-build"] = {
+type:"error",
+message:"An error occurred while starting the " + c + ".",
+details:k(b)
+};
+});
+}, h.canDeploy = function() {
+return !!h.apiObject && (!h.apiObject.metadata.deletionTimestamp && (!h.deploymentInProgress && !h.apiObject.spec.paused));
+}, h.isPaused = function() {
+return h.apiObject.spec.paused;
+}, h.startDeployment = function() {
+e.startLatestDeployment(h.apiObject, {
+namespace:h.apiObject.metadata.namespace
+}, {
+alerts:h.state.alerts
+});
+}, h.cancelDeployment = function() {
+var a = h.current;
+if (a) {
+var c, d = a.metadata.name, f = _.get(h, "apiObject.status.latestVersion");
+c = 1 === f ? "This will attempt to stop the in-progress deployment. It may take some time to complete." :"This will attempt to stop the in-progress deployment and rollback to the last successful deployment. It may take some time to complete.";
+var g = b.open({
+animation:!0,
+templateUrl:"views/modals/confirm.html",
+controller:"ConfirmModalController",
+resolve:{
+modalConfig:function() {
+return {
+message:"Cancel deployment " + d + "?",
+details:c,
+okButtonText:"Yes, cancel",
+okButtonClass:"btn-danger",
+cancelButtonText:"No, don't cancel"
+};
+}
+}
+});
+g.result.then(function() {
+return a.metadata.uid !== h.current.metadata.uid ? void (h.state.alerts["cancel-deployment"] = {
+type:"error",
+message:"Deployment #" + f + " is no longer the latest."
+}) :(a = h.current, j(a) ? void e.cancelRunningDeployment(a, {
+namespace:a.metadata.namespace
+}, {
+alerts:h.state.alerts
+}) :void (h.state.alerts["cancel-deployment"] = {
+type:"error",
+message:"Deployment " + d + " is no longer in progress."
+}));
+});
+}
+}, h.urlForImageChangeTrigger = function(b) {
+var c = a("stripTag")(_.get(b, "imageChangeParams.from.name")), d = _.get(h, "apiObject.metadata.namespace"), e = _.get(b, "imageChangeParams.from.namespace", d);
+return f.resourceURL(c, "ImageStream", e);
+}, h.navigateToPods = function() {
+var a = h.getPods(h.current);
+_.isEmpty(a) || f.toPodsForDeployment(h.current, a);
+}, h.closeOverlayPanel = function() {
+_.set(h, "overlay.panelVisible", !1);
+}, h.showOverlayPanel = function(a, b) {
+_.set(h, "overlay.panelVisible", !0), _.set(h, "overlay.panelName", a), _.set(h, "overlay.state", b);
+};
+}
+angular.module("openshiftConsole").component("overviewListRow", {
+controller:[ "$filter", "$uibModal", "APIService", "BuildsService", "DeploymentsService", "Navigate", "ListRowUtils", a ],
 controllerAs:"row",
 bindings:{
 apiObject:"<",
@@ -12828,8 +12775,71 @@ state:"<",
 hidePipelines:"<"
 },
 templateUrl:"views/overview/_list-row.html"
-}), angular.module("openshiftConsole").component("serviceInstanceRow", {
-controller:[ "$filter", "DataService", "ListRowUtils", "$uibModal", ServiceInstanceRow ],
+});
+}(), function() {
+function a(a, b, c, d) {
+var e = this;
+_.extend(e, c.ui);
+var f = a("getErrorDetails"), g = function() {
+var a = e.apiObject.spec.serviceClassName, b = e.apiObject.metadata.name, c = _.get(e, [ "state", "serviceClasses", a, "osbMetadata", "displayName" ]);
+return c || a || b;
+}, h = function() {
+var a = e.apiObject.spec.serviceClassName;
+return _.get(e, [ "state", "serviceClasses", a, "description" ]);
+};
+e.$doCheck = function() {
+e.notifications = c.getNotifications(e.apiObject, e.state), e.displayName = g(), e.description = h();
+}, e.getSecretForBinding = function(a) {
+return a && _.get(e, [ "state", "secrets", a.spec.secretName ]);
+}, e.closeOverlayPanel = function() {
+_.set(e, "overlay.panelVisible", !1);
+}, e.showOverlayPanel = function(a, b) {
+_.set(e, "overlay.panelVisible", !0), _.set(e, "overlay.panelName", a), _.set(e, "overlay.state", b);
+}, e.deprovision = function() {
+var a = {
+alerts:{
+deprovision:{
+type:"error",
+message:"Service '" + e.apiObject.spec.serviceClassName + "' will be deleted and no longer available."
+}
+},
+detailsMarkup:"Deprovision Service?",
+okButtonText:"Deprovision",
+okButtonClass:"btn-danger",
+cancelButtonText:"Cancel"
+};
+d.open({
+animation:!0,
+templateUrl:"views/modals/confirm.html",
+controller:"ConfirmModalController",
+resolve:{
+modalConfig:function() {
+return a;
+}
+}
+}).result.then(function() {
+b["delete"]({
+group:"servicecatalog.k8s.io",
+resource:"instances"
+}, e.apiObject.metadata.name, {
+namespace:e.apiObject.metadata.namespace
+}).then(function() {
+e.state.alerts["start-build"] = {
+type:"success",
+message:"Successfully deprovisioned " + e.apiObject.metadata.name
+};
+}, function(a) {
+e.state.alerts["start-build"] = {
+type:"error",
+message:"An error occurred while deprovisioning " + e.apiObject.metadata.name,
+details:"Reason: " + f(a)
+};
+});
+});
+};
+}
+angular.module("openshiftConsole").component("serviceInstanceRow", {
+controller:[ "$filter", "DataService", "ListRowUtils", "$uibModal", a ],
 controllerAs:"row",
 bindings:{
 apiObject:"<",
@@ -12837,7 +12847,8 @@ state:"<",
 bindings:"<"
 },
 templateUrl:"views/overview/_service-instance-row.html"
-}), angular.module("openshiftConsole").component("overviewNetworking", {
+});
+}(), angular.module("openshiftConsole").component("overviewNetworking", {
 controllerAs:"networking",
 bindings:{
 rowServices:"<",
