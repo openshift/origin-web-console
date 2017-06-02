@@ -216,6 +216,10 @@
 
 .navbar-flex-btn {
   position: relative;
+  + .navbar-flex-btn .project-action-btn:before,
+  .navbar-toggle.project-action-btn:before {
+    display: none; // remove inset border
+  }
   .project-action-btn {
     color: @navbar-os-project-menu-color;
     font-weight: 300;
@@ -243,10 +247,6 @@
     &:after {
       right: -1px;
     }
-  }
-  .navbar-toggle.project-action-btn:before {
-    // remove inset border
-    width: 0;
   }
 }
 
