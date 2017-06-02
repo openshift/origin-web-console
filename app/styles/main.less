@@ -3,15 +3,15 @@
 @common-less-path: "@{bower-components-path}/origin-web-common/dist/less";
 @pf-less-path: "@{bower-components-path}/patternfly/dist/less";
 
-// origin-web-catalog
-@import "@{catalog-less-path}/catalog.less";
-
-// origin-web-common
-@import "@{common-less-path}/common.less";
-
 // PatternFly
 @import "@{pf-less-path}/patternfly.less";
 @import "@{pf-less-path}/patternfly-additions.less";
+
+// origin-web-common - after patternfly to gain any overrides
+@import "@{common-less-path}/common.less";
+
+// origin-web-catalog - after patternfly to gain any overrides
+@import "@{catalog-less-path}/catalog.less";
 
 /* OpenShift V3
 ------------------------------------------------- */
