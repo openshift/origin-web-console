@@ -197,7 +197,7 @@ angular.module("openshiftConsole")
       resources.push(deploymentConfig);
 
       var service;
-      if (config.ports.length) {
+      if (!_.isEmpty(config.ports)) {
         service = {
           kind: "Service",
           apiVersion: "v1",
@@ -229,7 +229,7 @@ angular.module("openshiftConsole")
                 var value = "";
                 if (ind > 0) {
                   key = entry.substring(0, ind);
-                  if (ind + 1 < entry.length) {
+                  if (ind + 1 < _.size(entry)) {
                     value = entry.substring(ind + 1);
                   }
                 }

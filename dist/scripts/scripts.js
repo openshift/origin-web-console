@@ -3787,7 +3787,7 @@ status:{}
 };
 _.first(a.pullSecrets).name && (k.spec.template.spec.imagePullSecrets = a.pullSecrets), c.push(k);
 var l;
-return a.ports.length && (l = {
+return _.isEmpty(a.ports) || (l = {
 kind:"Service",
 apiVersion:"v1",
 metadata:{
@@ -3807,7 +3807,7 @@ return b.getServicePort(a);
 }, i = function(a) {
 return _.map(_.get(a, "image.dockerImageMetadata.Config.Env"), function(a) {
 var b = a.indexOf("="), c = "", d = "";
-return b > 0 ? (c = a.substring(0, b), b + 1 < a.length && (d = a.substring(b + 1))) :c = a, {
+return b > 0 ? (c = a.substring(0, b), b + 1 < _.size(a) && (d = a.substring(b + 1))) :c = a, {
 name:c,
 value:d
 };
