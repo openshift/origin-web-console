@@ -10726,7 +10726,7 @@ pod:"="
 },
 link:function(b) {
 var c, d = "", e = a(b.pod);
-for (c = 0; c < e.length; c++) d && (d += "<br>"), "error" === e[c].severity && (b.hasError = !0), d += e[c].message;
+for (c = 0; c < _.size(e); c++) d && (d += "<br>"), "error" === e[c].severity && (b.hasError = !0), d += e[c].message;
 b.content = d;
 },
 templateUrl:"views/directives/_warnings-popover.html"
