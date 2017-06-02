@@ -172,7 +172,7 @@ function ProcessTemplate($filter,
 
   var createProjectIfNecessary = function() {
     if (_.has(ctrl.selectedProject, 'metadata.uid')) {
-      return $q.when();
+      return $q.when(ctrl.selectedProject);
     }
 
     var newProjName = ctrl.selectedProject.metadata.name;
@@ -192,7 +192,8 @@ function ProcessTemplate($filter,
 
   ctrl.createFromTemplate = function() {
     ctrl.disableInputs = true;
-    createProjectIfNecessary().then(function() {
+    createProjectIfNecessary().then(function(project) {
+      ctrl.selectedProject = project;
       context = {
         namespace: ctrl.selectedProject.metadata.name
       };

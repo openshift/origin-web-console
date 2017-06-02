@@ -697,7 +697,7 @@ type:"error"
 });
 d.length ? (o.disableInputs = !1, o.precheckAlerts = b) :b.length ? (t(b), o.disableInputs = !1) :s();
 }, v = function() {
-if (_.has(o.selectedProject, "metadata.uid")) return b.when();
+if (_.has(o.selectedProject, "metadata.uid")) return b.when(o.selectedProject);
 var d = o.selectedProject.metadata.name, f = o.selectedProject.metadata.annotations["new-display-name"], g = a("description")(o.selectedProject), h = {
 apiVersion:"v1",
 kind:"ProjectRequest",
@@ -710,12 +710,12 @@ description:g
 return e.create("projectrequests", null, h, c);
 };
 o.createFromTemplate = function() {
-o.disableInputs = !0, v().then(function() {
-n = {
+o.disableInputs = !0, v().then(function(a) {
+o.selectedProject = a, n = {
 namespace:o.selectedProject.metadata.name
 };
-var a = k.mapEntries(k.compactEntries(o.labels)), b = k.mapEntries(k.compactEntries(o.systemLabels));
-o.template.labels = _.extend(b, a), e.create("processedtemplates", null, o.template, n).then(function(a) {
+var b = k.mapEntries(k.compactEntries(o.labels)), c = k.mapEntries(k.compactEntries(o.systemLabels));
+o.template.labels = _.extend(c, b), e.create("processedtemplates", null, o.template, n).then(function(a) {
 g.setTemplateData(a.parameters, o.template.parameters, a.message), r = a.objects, h.getLatestQuotaAlerts(r, n).then(u);
 }, function(a) {
 o.disableInputs = !1;
