@@ -7479,10 +7479,9 @@ a.resource = g;
 var j = function(a) {
 return _.get(a, "metadata.resourceVersion");
 };
-g = angular.extend({
-apiVersion:g.apiVersion,
-kind:g.kind
-}, g), _.set(a, "editor.model", jsyaml.safeDump(g)), a.save = function() {
+_.set(a, "editor.model", jsyaml.safeDump(g, {
+sortKeys:!0
+})), a.save = function() {
 a.modified = !1;
 var c;
 try {

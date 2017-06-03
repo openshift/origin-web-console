@@ -96,20 +96,7 @@ angular.module('openshiftConsole')
               return _.get(resource, 'metadata.resourceVersion');
             };
 
-            // Hack to make `apiVersion` and `kind` appear at the top.
-            //
-            // Since these properties are inserted by DataService for list operations,
-            // they're inserted last. yamljs serializes using Object.keys() ordering
-            // with no option to control order. Most browsers return keys in insertion
-            // order, however, so if we add apiVersion and kind first, they appear at
-            // the top of the serialized YAML. The rest of the properties are in the
-            // order returned from the API that we want (metadata, spec, status).
-            resource = angular.extend({
-              apiVersion: resource.apiVersion,
-              kind: resource.kind
-            }, resource);
-
-            _.set($scope, 'editor.model', jsyaml.safeDump(resource));
+            _.set($scope, 'editor.model', jsyaml.safeDump(resource, {'sortKeys': true}));
 
             $scope.save = function() {
               $scope.modified = false;
