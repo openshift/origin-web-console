@@ -1,5 +1,8 @@
 <nav class="navbar navbar-sidebar">
     <ul class="nav nav-sidenav-primary">
+      <li ng-if="'service_catalog_landing_page' | enableTechPreviewFeature" class="visible-xs-block">
+        <a href="./"><span class="pficon pficon-home" aria-hidden="true"></span> Home</a>
+      </li>
       <li
         ng-repeat="primaryItem in navItems"
         ng-class="{ active: primaryItem === activePrimary }"
