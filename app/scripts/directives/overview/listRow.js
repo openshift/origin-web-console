@@ -8,8 +8,9 @@
       'APIService',
       'BuildsService',
       'DeploymentsService',
-      'Navigate',
       'ListRowUtils',
+      'Navigate',
+      'NotificationsService',
       OverviewListRow
     ],
     controllerAs: 'row',
@@ -29,17 +30,16 @@
                            APIService,
                            BuildsService,
                            DeploymentsService,
+                           ListRowUtils,
                            Navigate,
-                           rowMethods) {
+                           NotificationsService) {
     var row = this;
 
-    _.extend(row, rowMethods.ui);
+    _.extend(row, ListRowUtils.ui);
 
     var canI = $filter('canI');
     var deploymentIsInProgress = $filter('deploymentIsInProgress');
-    var getErrorDetails = $filter('getErrorDetails');
     var isBinaryBuild = $filter('isBinaryBuild');
-    var isJenkinsPipelineStrategy = $filter('isJenkinsPipelineStrategy');
 
     var updateTriggers = function(apiObject) {
       var triggers = _.get(apiObject, 'spec.triggers');
@@ -95,7 +95,7 @@
 
     row.$doCheck = function() {
       // Update notifications.
-      row.notifications = rowMethods.getNotifications(row.apiObject, row.state);
+      row.notifications = ListRowUtils.getNotifications(row.apiObject, row.state);
 
       // Update HPA.
       row.hpa = getHPA(row.apiObject);
@@ -213,18 +213,8 @@
       return canI('buildconfigs/instantiate', 'create') && _.size(row.pipelines) === 1;
     };
 
-    row.startBuild = function(buildConfig) {
-      BuildsService
-        .startBuild(buildConfig.metadata.name, { namespace: buildConfig.metadata.namespace })
-        .then(_.noop, function(result) {
-          var buildType = isJenkinsPipelineStrategy(buildConfig) ? 'pipeline' : 'build';
-          row.state.alerts["start-build"] = {
-            type: "error",
-            message: "An error occurred while starting the " + buildType + ".",
-            details: getErrorDetails(result)
-          };
-        });
-    };
+    // Resuse the function from the overview controller.
+    row.startBuild = row.state.startBuild;
 
     row.canDeploy = function() {
       if (!row.apiObject) {
@@ -291,10 +281,10 @@
 
       modalInstance.result.then(function() {
         if (replicationController.metadata.uid !== row.current.metadata.uid) {
-          row.state.alerts["cancel-deployment"] = {
+          NotificationsService.addNotification({
             type: "error",
             message: "Deployment #" + latestVersion + " is no longer the latest."
-          };
+          });
           return;
         }
 
@@ -303,10 +293,10 @@
 
         // Make sure it's still running.
         if (!deploymentIsInProgress(replicationController)) {
-          row.state.alerts["cancel-deployment"] = {
+          NotificationsService.addNotification({
             type: "error",
             message: "Deployment " + rcName + " is no longer in progress."
-          };
+          });
           return;
         }
 

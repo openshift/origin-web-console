@@ -4,9 +4,10 @@
   angular.module('openshiftConsole').component('serviceInstanceRow', {
     controller: [
       '$filter',
+      '$uibModal',
       'DataService',
       'ListRowUtils',
-      '$uibModal',
+      'NotificationsService',
       ServiceInstanceRow
     ],
     controllerAs: 'row',
@@ -18,9 +19,13 @@
     templateUrl: 'views/overview/_service-instance-row.html'
   });
 
-  function ServiceInstanceRow($filter, DataService, rowMethods, $uibModal) {
+  function ServiceInstanceRow($filter,
+                              $uibModal,
+                              DataService,
+                              ListRowUtils,
+                              NotificationsService) {
     var row = this;
-    _.extend(row, rowMethods.ui);
+    _.extend(row, ListRowUtils.ui);
 
     var getErrorDetails = $filter('getErrorDetails');
 
@@ -37,7 +42,7 @@
     };
 
     row.$doCheck = function() {
-      row.notifications = rowMethods.getNotifications(row.apiObject, row.state);
+      row.notifications = ListRowUtils.getNotifications(row.apiObject, row.state);
       row.displayName = getDisplayName();
       row.description = getDescription();
     };
@@ -83,6 +88,7 @@
         }
       })
       .result.then(function() {
+        NotificationsService.hideNotification("deprovision-service-error");
         DataService.delete({
           group: 'servicecatalog.k8s.io',
           resource: 'instances'
@@ -90,16 +96,17 @@
         row.apiObject.metadata.name,
         { namespace: row.apiObject.metadata.namespace })
         .then(function() {
-          row.state.alerts["start-build"] = {
+          NotificationsService.addNotification({
             type: "success",
-            message: "Successfully deprovisioned " + row.apiObject.metadata.name
-          };
+            message: "Successfully deprovisioned " + row.apiObject.metadata.name + "."
+          });
         }, function(err) {
-          row.state.alerts["start-build"] = {
+          NotificationsService.addNotification({
+            id: "deprovision-service-error",
             type: "error",
-            message: "An error occurred while deprovisioning " + row.apiObject.metadata.name,
-            details: "Reason: " + getErrorDetails(err)
-          };
+            message: "An error occurred while deprovisioning " + row.apiObject.metadata.name + ".",
+            details: getErrorDetails(err)
+          });
         });
       });
     };
