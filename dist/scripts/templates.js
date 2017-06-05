@@ -395,6 +395,9 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
   $templateCache.put('views/_sidebar.html',
     "<nav class=\"navbar navbar-sidebar\">\n" +
     "<ul class=\"nav nav-sidenav-primary\">\n" +
+    "<li ng-if=\"'service_catalog_landing_page' | enableTechPreviewFeature\" class=\"visible-xs-block\">\n" +
+    "<a href=\"./\"><span class=\"pficon pficon-home\" aria-hidden=\"true\"></span> Home</a>\n" +
+    "</li>\n" +
     "<li ng-repeat=\"primaryItem in navItems\" ng-class=\"{ active: primaryItem === activePrimary }\" ng-if=\"show(primaryItem)\">\n" +
     "<a ng-if=\"primaryItem.href\" ng-href=\"{{navURL(primaryItem.href)}}\">\n" +
     "<span class=\"{{primaryItem.iconClass}}\"></span> {{primaryItem.label}}\n" +
