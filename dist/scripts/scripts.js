@@ -2757,7 +2757,7 @@ if ("Service" === d.kind) {
 var g = _.get(e, [ d.name ]);
 if (!g) return void f.push('Routes to service "' + d.name + '", but service does not exist.');
 var h = a.spec.port ? a.spec.port.targetPort :null;
-if (!h) return void (g.spec.ports.length > 1 && f.push('Route has no target port, but service "' + g.metadata.name + '" has multiple ports. The route will round robin traffic across all exposed ports on the service.'));
+if (!h) return void (_.size(g.spec.ports) > 1 && f.push('Route has no target port, but service "' + g.metadata.name + '" has multiple ports. The route will round robin traffic across all exposed ports on the service.'));
 var i = c(h, g);
 i || (b(h) ? f.push('Route target port is set to "' + h + '", but service "' + g.metadata.name + '" has no port with that name.') :f.push('Route target port is set to "' + h + '", but service "' + g.metadata.name + '" does not expose that port.'));
 }
