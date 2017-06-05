@@ -12,7 +12,6 @@
             <div class="row">
               <div class="col-md-10 col-md-offset-1">
                 <breadcrumbs breadcrumbs="breadcrumbs"></breadcrumbs>
-                <alerts alerts="alerts"></alerts>
                 <div class="mar-top-xl">
                   <h1>Create Route</h1>
                   <div class="help-block">
@@ -40,7 +39,7 @@
                               ng-click="createRoute()"
                               ng-disabled="createRouteForm.$invalid || disableInputs || !createRoute"
                               value="">Create</button>
-                          <a class="btn btn-default btn-lg" href="#" back>Cancel</a>
+                          <a class="btn btn-default btn-lg" href="" ng-click="cancel()">Cancel</a>
                         </div>
                       </fieldset>
                     </div>

@@ -4698,7 +4698,6 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "<div class=\"row\">\n" +
     "<div class=\"col-md-10 col-md-offset-1\">\n" +
     "<breadcrumbs breadcrumbs=\"breadcrumbs\"></breadcrumbs>\n" +
-    "<alerts alerts=\"alerts\"></alerts>\n" +
     "<div class=\"mar-top-xl\">\n" +
     "<h1>Create Route</h1>\n" +
     "<div class=\"help-block\">\n" +
@@ -4715,7 +4714,7 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "<a href=\"\" ng-click=\"copyServiceLabels()\">Copy Service Labels</a>\n" +
     "<div class=\"button-group gutter-top gutter-bottom\">\n" +
     "<button type=\"submit\" class=\"btn btn-primary btn-lg\" ng-click=\"createRoute()\" ng-disabled=\"createRouteForm.$invalid || disableInputs || !createRoute\" value=\"\">Create</button>\n" +
-    "<a class=\"btn btn-default btn-lg\" href=\"#\" back>Cancel</a>\n" +
+    "<a class=\"btn btn-default btn-lg\" href=\"\" ng-click=\"cancel()\">Cancel</a>\n" +
     "</div>\n" +
     "</fieldset>\n" +
     "</div>\n" +
@@ -9796,7 +9795,7 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "</osc-routing>\n" +
     "<div class=\"button-group gutter-top gutter-bottom\">\n" +
     "<button type=\"submit\" class=\"btn btn-primary btn-lg\" ng-click=\"updateRoute()\" ng-disabled=\"form.$invalid || disableInputs\" value=\"\">Save</button>\n" +
-    "<a class=\"btn btn-default btn-lg\" ng-href=\"{{routeURL}}\">Cancel</a>\n" +
+    "<a class=\"btn btn-default btn-lg\" ng-click=\"hideErrorNotifications()\" ng-href=\"{{routeURL}}\">Cancel</a>\n" +
     "</div>\n" +
     "</fieldset>\n" +
     "</form>\n" +

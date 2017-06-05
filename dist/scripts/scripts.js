@@ -7362,8 +7362,8 @@ d.disableInputs = !1, n(o + " could not be updated.", m(a));
 n(o + " could not be loaded.", m(a));
 }) :void j.toErrorPage("You do not have authority to update " + o + ".", "access_denied");
 }));
-} ]), angular.module("openshiftConsole").controller("EditRouteController", [ "$filter", "$location", "$routeParams", "$scope", "AlertMessageService", "AuthorizationService", "DataService", "Navigate", "ProjectsService", "RoutesService", function(a, b, c, d, e, f, g, h, i, j) {
-d.alerts = {}, d.renderOptions = {
+} ]), angular.module("openshiftConsole").controller("EditRouteController", [ "$filter", "$location", "$routeParams", "$scope", "AlertMessageService", "AuthorizationService", "DataService", "Navigate", "NotificationsService", "ProjectsService", "RoutesService", function(a, b, c, d, e, f, g, h, i, j, k) {
+d.renderOptions = {
 hideFilterWidget:!0
 }, d.projectName = c.project, d.routeName = c.route, d.loading = !0, d.routeURL = h.resourceURL(d.routeName, "Route", d.projectName), d.breadcrumbs = [ {
 title:d.projectName,
@@ -7376,22 +7376,24 @@ title:d.routeName,
 link:d.routeURL
 }, {
 title:"Edit"
-} ], i.get(c.project).then(_.spread(function(i, k) {
-if (d.project = i, d.breadcrumbs[0].title = a("displayName")(i), !f.canI("routes", "update", c.project)) return void h.toErrorPage("You do not have authority to update route " + c.routeName + ".", "access_denied");
+} ], d.hideErrorNotifications = function() {
+i.hideNotification("edit-route-error");
+}, j.get(c.project).then(_.spread(function(e, j) {
+if (d.project = e, d.breadcrumbs[0].title = a("displayName")(e), !f.canI("routes", "update", c.project)) return void h.toErrorPage("You do not have authority to update route " + c.routeName + ".", "access_denied");
 var l, m = a("orderByDisplayName"), n = function() {
 h.toErrorPage('Editing routes with non-service targets is unsupported. You can edit the route with the "Edit YAML" action instead.');
 };
-g.get("routes", d.routeName, k).then(function(a) {
+g.get("routes", d.routeName, j).then(function(a) {
 if ("Service" !== a.spec.to.kind) return void n();
 l = angular.copy(a);
 var b = _.get(l, "spec.host"), c = "Subdomain" === _.get(l, "spec.wildcardPolicy");
-c && (b = "*." + j.getSubdomain(l)), d.routing = {
+c && (b = "*." + k.getSubdomain(l)), d.routing = {
 host:b,
 wildcardPolicy:_.get(l, "spec.wildcardPolicy"),
 path:_.get(l, "spec.path"),
 targetPort:_.get(l, "spec.port.targetPort"),
 tls:angular.copy(_.get(l, "spec.tls"))
-}, g.list("services", k).then(function(a) {
+}, g.list("services", j).then(function(a) {
 d.loading = !1;
 var b = a.by("metadata.name");
 d.routing.to = l.spec.to, d.routing.alternateServices = [], _.each(_.get(l, "spec.alternateBackends"), function(a) {
@@ -7419,22 +7421,20 @@ weight:a.weight
 };
 d.updateRoute = function() {
 if (d.form.$valid) {
-d.disableInputs = !0;
+d.hideErrorNotifications(), d.disableInputs = !0;
 var c = o();
-g.update("routes", d.routeName, c, k).then(function() {
-e.addAlert({
-name:d.routeName,
-data:{
+g.update("routes", d.routeName, c, j).then(function() {
+i.addNotification({
 type:"success",
 message:"Route " + d.routeName + " was successfully updated."
-}
 }), b.path(d.routeURL);
 }, function(b) {
-d.disableInputs = !1, d.alerts["update-route"] = {
+d.disableInputs = !1, i.addNotification({
 type:"error",
+id:"edit-route-error",
 message:"An error occurred updating route " + d.routeName + ".",
 details:a("getErrorDetails")(b)
-};
+});
 });
 }
 };
@@ -8185,8 +8185,8 @@ details:c("getErrorDetails")(b)
 }
 });
 }));
-} ]), angular.module("openshiftConsole").controller("CreateRouteController", [ "$filter", "$routeParams", "$scope", "$window", "ApplicationGenerator", "AuthorizationService", "DataService", "Navigate", "ProjectsService", "keyValueEditorUtils", function(a, b, c, d, e, f, g, h, i, j) {
-c.alerts = {}, c.renderOptions = {
+} ]), angular.module("openshiftConsole").controller("CreateRouteController", [ "$filter", "$routeParams", "$scope", "$window", "ApplicationGenerator", "AuthorizationService", "DataService", "Navigate", "NotificationsService", "ProjectsService", "keyValueEditorUtils", function(a, b, c, d, e, f, g, h, i, j, k) {
+c.renderOptions = {
 hideFilterWidget:!0
 }, c.projectName = b.project, c.serviceName = b.service, c.labels = [], c.routing = {
 name:c.serviceName || ""
@@ -8198,17 +8198,23 @@ title:"Routes",
 link:"project/" + c.projectName + "/browse/routes"
 }, {
 title:"Create Route"
-} ], i.get(b.project).then(_.spread(function(i, k) {
-if (c.project = i, c.breadcrumbs[0].title = a("displayName")(i), !f.canI("routes", "create", b.project)) return void h.toErrorPage("You do not have authority to create routes in project " + b.project + ".", "access_denied");
-var l = a("orderByDisplayName");
+} ];
+var l = function() {
+i.hideNotification("create-route-error");
+};
+c.cancel = function() {
+l(), d.history.back();
+}, j.get(b.project).then(_.spread(function(j, m) {
+if (c.project = j, c.breadcrumbs[0].title = a("displayName")(j), !f.canI("routes", "create", b.project)) return void h.toErrorPage("You do not have authority to create routes in project " + b.project + ".", "access_denied");
+var n = a("orderByDisplayName");
 c.routing.to = {
 kind:"Service",
 name:c.serviceName,
 weight:1
-}, g.list("services", k).then(function(a) {
-c.services = l(a.by("metadata.name"));
+}, g.list("services", m).then(function(a) {
+c.services = n(a.by("metadata.name"));
 }), c.copyServiceLabels = function() {
-var a = _.get(c, "routing.to.service.metadata.labels", {}), b = j.mapEntries(j.compactEntries(c.labels)), d = _.assign(b, a);
+var a = _.get(c, "routing.to.service.metadata.labels", {}), b = k.mapEntries(k.compactEntries(c.labels)), d = _.assign(b, a);
 c.labels = _.map(d, function(a, b) {
 return {
 name:b,
@@ -8217,22 +8223,26 @@ value:a
 });
 }, c.createRoute = function() {
 if (c.createRouteForm.$valid) {
-c.disableInputs = !0;
-var b = c.routing.to.name, f = j.mapEntries(j.compactEntries(c.labels)), h = e.createRoute(c.routing, b, f), i = _.get(c, "routing.alternateServices", []);
-_.isEmpty(i) || (h.spec.to.weight = _.get(c, "routing.to.weight"), h.spec.alternateBackends = _.map(i, function(a) {
+l(), c.disableInputs = !0;
+var b = c.routing.to.name, f = k.mapEntries(k.compactEntries(c.labels)), h = e.createRoute(c.routing, b, f), j = _.get(c, "routing.alternateServices", []);
+_.isEmpty(j) || (h.spec.to.weight = _.get(c, "routing.to.weight"), h.spec.alternateBackends = _.map(j, function(a) {
 return {
 kind:"Service",
 name:a.name,
 weight:a.weight
 };
-})), g.create("routes", null, h, k).then(function() {
-d.history.back();
+})), g.create("routes", null, h, m).then(function() {
+i.addNotification({
+type:"success",
+message:"Route " + h.metadata.name + " was successfully created."
+}), d.history.back();
 }, function(b) {
-c.disableInputs = !1, c.alerts["create-route"] = {
+c.disableInputs = !1, i.addNotification({
 type:"error",
+id:"create-route-error",
 message:"An error occurred creating the route.",
 details:a("getErrorDetails")(b)
-};
+});
 });
 }
 };

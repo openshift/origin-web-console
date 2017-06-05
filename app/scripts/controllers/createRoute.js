@@ -17,9 +17,9 @@ angular.module('openshiftConsole')
                        AuthorizationService,
                        DataService,
                        Navigate,
+                       NotificationsService,
                        ProjectsService,
                        keyValueEditorUtils) {
-    $scope.alerts = {};
     $scope.renderOptions = {
       hideFilterWidget: true
     };
@@ -45,6 +45,15 @@ angular.module('openshiftConsole')
         title: "Create Route"
       }
     ];
+
+    var hideErrorNotifications = function() {
+      NotificationsService.hideNotification("create-route-error");
+    };
+
+    $scope.cancel = function() {
+      hideErrorNotifications();
+      $window.history.back();
+    };
 
     ProjectsService
       .get($routeParams.project)
@@ -83,6 +92,7 @@ angular.module('openshiftConsole')
 
         $scope.createRoute = function() {
           if ($scope.createRouteForm.$valid) {
+            hideErrorNotifications();
             $scope.disableInputs = true;
             var serviceName = $scope.routing.to.name;
             var labels = keyValueEditorUtils.mapEntries(keyValueEditorUtils.compactEntries($scope.labels));
@@ -102,15 +112,20 @@ angular.module('openshiftConsole')
 
             DataService.create('routes', null, route, context)
               .then(function() { // Success
+                NotificationsService.addNotification({
+                    type: "success",
+                    message: "Route " + route.metadata.name + " was successfully created."
+                });
                 // Return to the previous page
                 $window.history.back();
               }, function(result) { // Failure
                 $scope.disableInputs = false;
-                $scope.alerts['create-route'] = {
+                NotificationsService.addNotification({
                   type: "error",
+                  id: "create-route-error",
                   message: "An error occurred creating the route.",
                   details: $filter('getErrorDetails')(result)
-                };
+                });
               });
           }
         };

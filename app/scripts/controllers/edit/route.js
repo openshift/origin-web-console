@@ -17,9 +17,9 @@ angular.module('openshiftConsole')
                        AuthorizationService,
                        DataService,
                        Navigate,
+                       NotificationsService,
                        ProjectsService,
                        RoutesService) {
-    $scope.alerts = {};
     $scope.renderOptions = {
       hideFilterWidget: true
     };
@@ -40,6 +40,10 @@ angular.module('openshiftConsole')
     }, {
       title: "Edit"
     }];
+
+    $scope.hideErrorNotifications = function() {
+      NotificationsService.hideNotification("edit-route-error");
+    };
 
     ProjectsService
       .get($routeParams.project)
@@ -161,25 +165,24 @@ angular.module('openshiftConsole')
 
         $scope.updateRoute = function() {
           if ($scope.form.$valid) {
+            $scope.hideErrorNotifications();
             $scope.disableInputs = true;
             var updated = updateRouteFields();
             DataService.update('routes', $scope.routeName, updated, context)
               .then(function() { // Success
-                AlertMessageService.addAlert({
-                  name: $scope.routeName,
-                  data: {
-                    type: "success",
-                    message: "Route " + $scope.routeName + " was successfully updated."
-                  }
+                NotificationsService.addNotification({
+                  type: "success",
+                  message: "Route " + $scope.routeName + " was successfully updated."
                 });
                 $location.path($scope.routeURL);
               }, function(response) { // Failure
                 $scope.disableInputs = false;
-                $scope.alerts['update-route'] = {
+                NotificationsService.addNotification({
                   type: "error",
+                  id: "edit-route-error",
                   message: "An error occurred updating route " + $scope.routeName + ".",
                   details: $filter('getErrorDetails')(response)
-                };
+                });
               });
           }
         };

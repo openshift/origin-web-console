@@ -30,7 +30,9 @@
                         ng-click="updateRoute()"
                         ng-disabled="form.$invalid || disableInputs"
                         value="">Save</button>
-                    <a class="btn btn-default btn-lg" ng-href="{{routeURL}}">Cancel</a>
+                    <a class="btn btn-default btn-lg"
+                        ng-click="hideErrorNotifications()"
+                        ng-href="{{routeURL}}">Cancel</a>
                   </div>
                 </fieldset>
               </form>
