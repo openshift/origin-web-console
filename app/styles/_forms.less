@@ -60,8 +60,8 @@ copy-to-clipboard .input-group.limit-width {
 }
 
 .weight-slider-values {
-  .flex-display(@display: flex);
-  .flex-direction(@direction: column);
+  display: flex;
+  flex-direction: column;
   .service-name {
     font-weight: 600;
   }
@@ -70,7 +70,7 @@ copy-to-clipboard .input-group.limit-width {
     margin-left: 5px;
   }
   @media (min-width: @screen-sm-min) {
-    .flex-direction(@direction: row);
+    flex-direction: row;
     justify-content: space-between;
     .weight-percentage {
       margin-right: 5px;

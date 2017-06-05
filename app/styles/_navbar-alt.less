@@ -37,20 +37,16 @@
     }
   }
   .navbar-header {
-    .flex(@columns: 1 1 0%);
-    .flex-display(@display: flex);
+    display: flex;
+    flex: 1 1 0%;
     text-decoration: none;
     .navbar-home {
-      .align-items(@align: center);
-      .flex(@columns: 1 0 0%);
-      .flex-display(@display: flex);
-      .justify-content(@justify: center);
-      // remove ie prefixes when PostCSS Autoprefixer is included for github issue #7559
-      -ms-flex-align: center;
-      -ms-flex-pack: center;
-
+      align-items: center;
       color: @sidebar-os-color;
+      display: flex;
+      flex: 1 0 0%;
       font-weight: 300;
+      justify-content: center;
       text-decoration: none;
       .pficon {
         color: #A8A9AA;
@@ -221,12 +217,12 @@
     display: none; // remove inset border
   }
   .project-action-btn {
+    align-items: center;
     color: @navbar-os-project-menu-color;
+    flex: 1 0 0%;
     font-weight: 300;
+    justify-content: center;
     text-decoration: none;
-    .align-items(@align: center);
-    .flex(@columns: 1 0 0%);
-    .justify-content(@justify: center);
     &:hover {
       background-color: @navbar-os-project-menu-active-bg;
       color: @navbar-os-project-menu-active-color;
@@ -270,11 +266,11 @@
     }
   }
   .navbar-flex-btn {
-    .flex(@columns: 0 0 50px);
+    flex: 0 0 50px;
     a {
       color: lighten(@navbar-os-project-menu-color, 20%);
       cursor: pointer;
-      .flex-display(@display: flex);
+      display: flex;
       font-size: 18px;
       &:hover, &:active, &:focus {
         background-color: @sidebar-os-active-bg;
@@ -286,7 +282,7 @@
 
 @media (max-width: @screen-xxs-max) {
   .navbar-flex-btn {
-    .flex(@columns: 0 0 40px);
+    flex: 0 0 40px;
   }
 }
 
@@ -325,11 +321,8 @@
     .navbar-header {
       width: (@sidebar-left-width-lg - @navbar-header-offset);
       .navbar-home {
-        .justify-content(@justify: flex-start);
-        // remove ie prefixes when PostCSS Autoprefixer is included for github issue #7559
-        -ms-flex-pack: start;
-
         font-size: @font-size-base + 1;
+        justify-content: flex-start;
         margin-top: 0;
         padding-left: 20px;
         .pficon {

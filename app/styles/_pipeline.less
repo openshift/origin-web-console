@@ -25,17 +25,17 @@
 // Animations
 @keyframes flexGrow {
   to {
-    .flex-grow(@grow: 1);
-    .flex-shrink(@shrink: 1);
-    .flex-basis(@width: auto);
+    flex-basis: auto;
+    flex-grow: 1;
+    flex-shrink: 1;
   }
 }
 
 @keyframes flexShrink {
   to {
-    .flex-basis(@width: 1);
-    .flex-grow(@grow: 0.000001);
-    .flex-shrink(@shrink: 1);
+    flex-basis: 1;
+    flex-grow: 0.000001;
+    flex-shrink: 1;
   }
 }
 
@@ -114,17 +114,17 @@
 }
 
 .pipeline-container {
-  .flex(@columns: 1 1 auto);
+  flex: 1 1 auto;
   overflow: hidden;
 }
 .pipeline {
-  .flex-display(@display: flex);
-  .flex-wrap(@wrap: wrap);
+  display: flex;
+  flex-wrap: wrap;
   height: 100%;
   padding: 0 (@pipeline-padding / 2);
   .pipeline-stage {
     // need to use flex-basis: auto and width because of IE11 bug
-    .flex(@columns: 0 0 auto);
+    flex: 0 0 auto;
     min-height: 96px;
     padding: (@pipeline-padding + 5) @pipeline-padding  (@pipeline-padding * 3) @pipeline-padding;
     position: relative;
@@ -162,14 +162,14 @@
 
 .new-stage {
   animation: flexGrow @line-grow-animation-time ease forwards;
-  .flex-basis(@width: 1);
-  .flex-grow(@grow: 0.000001);
-  .flex-shrink(@shrink: 1);
+  flex-basis: 1;
+  flex-grow: 0.000001;
+  flex-shrink: 1;
 }
 
 .remove-stage {
   animation: flexShrink @line-grow-animation-time ease forwards;
-  .flex(@columns: 1 1 0%);
+  flex: 1 1 0%;
 }
 
 .pipeline-stage-name, .pipeline-time, .pipeline-actions {
@@ -229,10 +229,10 @@
 
 .build-summary {
   border-bottom: 1px solid @build-pipeline-border-color;
-  .flex-display(flex);
-  .flex-direction(@direction: row);
-  .flex-wrap(@wrap: wrap);
-  .justify-content(@justify: space-around);
+  display: flex;
+  flex-direction: row;
+  flex-wrap: wrap;
+  justify-content: space-around;
   padding: 5px;
   position: relative;
 }
@@ -261,8 +261,8 @@
     padding-top: 0;
   }
   .build-pipeline {
-    .flex-direction(@direction: row);
-    .flex-display(@display: flex);
+    display: flex;
+    flex-direction: row;
     .build-name {
       white-space: nowrap;
     }
@@ -270,9 +270,9 @@
   .build-summary {
     border-bottom-width: 0;
     border-right: 1px solid @build-pipeline-border-color;
-    .flex(@columns: 0 0 125px);
-    .flex-direction(@direction: column);
-    .justify-content(@justify: center);
+    flex: 0 0 125px;
+    flex-direction: column;
+    justify-content: center;
   }
 }
 
@@ -410,9 +410,9 @@
 }
 
 .pipeline-status-bar {
-  .flex-display(@display: flex);
-  .align-items(@align: center);
-  .flex-direction(@direction: column);
+  align-items: center;
+  display: flex;
+  flex-direction: column;
   margin-bottom: -(@circle-diameter / 2);
   .pipeline-line {
     width: @progress-line;
@@ -515,8 +515,8 @@
   .build-summary {
     border-bottom: 0;
     border-right: 0;
-    .flex-direction(@direction: row);
-    .justify-content(@justify: flex-start);
+    flex-direction: row;
+    justify-content: flex-start;
     position: relative;
     text-align: left;
     &.dismissible {
