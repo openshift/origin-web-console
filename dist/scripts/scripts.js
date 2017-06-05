@@ -385,7 +385,7 @@ return c === d && (c = _.get(a, "metadata.name", ""), d = _.get(b, "metadata.nam
 }));
 }, $a = [];
 u.get(c.project).then(_.spread(function(b, c) {
-a.project = b, P.context = c;
+P.project = a.project = b, P.context = c;
 var d = function() {
 x.pods && m.fetchReferencedImageStreamImages(x.pods, P.imagesByDockerReference, P.imageStreamImageRefByDockerReference, c);
 };
@@ -6386,7 +6386,7 @@ J = F(b.by("metadata.name")), a.valueFromObjects = J.concat(I);
 }, function(a) {
 403 !== a.code && H("Could not load secrets", G(a));
 });
-var m = {}, q = {}, s = function() {
+var m = {}, q = function() {
 if (a.hpaForRS = j.filterHPA(m, t, c.replicaSet), a.deploymentConfigName && a.isActive) {
 var b = j.filterHPA(m, "DeploymentConfig", a.deploymentConfigName);
 a.autoscalers = a.hpaForRS.concat(b);
@@ -6394,19 +6394,19 @@ a.autoscalers = a.hpaForRS.concat(b);
 var d = j.filterHPA(m, "Deployment", a.deployment.metadata.name);
 a.autoscalers = a.hpaForRS.concat(d);
 } else a.autoscalers = a.hpaForRS;
-}, C = function() {
+}, s = function() {
 y.push(g.watch(a.resource, i, function(b) {
 var c, d = [];
 angular.forEach(b.by("metadata.name"), function(b) {
 var c = v(b, "deploymentConfig") || "";
 c === a.deploymentConfigName && d.push(b);
-}), c = h.getActiveDeployment(d), a.isActive = c && c.metadata.uid === a.replicaSet.metadata.uid, s();
+}), c = h.getActiveDeployment(d), a.isActive = c && c.metadata.uid === a.replicaSet.metadata.uid, q();
 }));
-}, K = function() {
-j.getHPAWarnings(a.replicaSet, a.autoscalers, q, d).then(function(b) {
+}, C = function() {
+j.getHPAWarnings(a.replicaSet, a.autoscalers, a.limitRanges, d).then(function(b) {
 a.hpaWarnings = b;
 });
-}, L = function(d) {
+}, K = function(d) {
 var e = v(d, "deploymentConfig");
 if (e) {
 u = !0, a.deploymentConfigName = e;
@@ -6423,10 +6423,10 @@ details:"Reason: " + b("getErrorDetails")(c)
 });
 });
 }
-}, M = function() {
+}, L = function() {
 a.isActive = h.isActiveReplicaSet(a.replicaSet, a.deployment);
-}, N = b("hasDeployment"), O = !1, P = function() {
-N(a.replicaSet) && g.list({
+}, M = b("hasDeployment"), N = !1, O = function() {
+M(a.replicaSet) && g.list({
 group:"extensions",
 resource:"deployments"
 }, i).then(function(b) {
@@ -6449,20 +6449,20 @@ title:a.deployment.metadata.name,
 link:o.resourceURL(a.deployment)
 },
 humanizedKind:"Deployments"
-}), M(), void s());
+}), L(), void q());
 })), void y.push(g.watch({
 group:"extensions",
 resource:"replicasets"
 }, i, function(b) {
 var c = new LabelSelector(a.deployment.spec.selector);
-O = !1;
+N = !1;
 var d = 0;
 _.each(b.by("metadata.name"), function(a) {
-if (a.status.replicas && c.covers(new LabelSelector(a.spec.selector))) return d++, d > 1 ? (O = !0, !1) :void 0;
+if (a.status.replicas && c.covers(new LabelSelector(a.spec.selector))) return d++, d > 1 ? (N = !0, !1) :void 0;
 });
 }))) :void (a.deploymentMissing = !0);
 });
-}, Q = function() {
+}, P = function() {
 if (!_.isEmpty(x)) {
 var b = _.get(a, "replicaSet.spec.template");
 b && k.fetchReferencedImageStreamImages([ b ], a.imagesByDockerReference, x, i);
@@ -6471,13 +6471,13 @@ b && k.fetchReferencedImageStreamImages([ b ], a.imagesByDockerReference, x, i);
 g.get(a.resource, c.replicaSet, i).then(function(b) {
 switch (a.loaded = !0, a.replicaSet = b, B(b), t) {
 case "ReplicationController":
-L(b);
+K(b);
 break;
 
 case "ReplicaSet":
-P();
+O();
 }
-K(), a.breadcrumbs = f.getBreadcrumbs({
+C(), a.breadcrumbs = f.getBreadcrumbs({
 object:b
 }), y.push(g.watchObject(a.resource, c.replicaSet, i, function(b, c) {
 "DELETED" === c && (a.alerts.deleted = {
@@ -6487,8 +6487,8 @@ message:"This " + w + " has been deleted."
 var d = a.replicaSet;
 a.replicaSet = b, z ? z["finally"](function() {
 D(b, d);
-}) :D(b, d), B(b), K(), Q();
-})), a.deploymentConfigName && C(), y.push(g.watch("pods", i, function(b) {
+}) :D(b, d), B(b), C(), P();
+})), a.deploymentConfigName && s(), y.push(g.watch("pods", i, function(b) {
 var c = b.by("metadata.name");
 a.podsForDeployment = p.filterForOwner(c, a.replicaSet);
 }));
@@ -6510,7 +6510,7 @@ a.causes = b("deploymentCauses")(a);
 });
 })), y.push(g.watch("imagestreams", i, function(a) {
 var b = a.by("metadata.name");
-k.buildDockerRefMapForImageStreams(b, x), Q(), l.log("imagestreams (subscribe)", b);
+k.buildDockerRefMapForImageStreams(b, x), P(), l.log("imagestreams (subscribe)", b);
 })), y.push(g.watch("builds", i, function(b) {
 a.builds = b.by("metadata.name"), l.log("builds (subscribe)", a.builds);
 })), y.push(g.watch({
@@ -6518,13 +6518,25 @@ group:"autoscaling",
 resource:"horizontalpodautoscalers",
 version:"v1"
 }, i, function(a) {
-m = a.by("metadata.name"), s(), K();
+m = a.by("metadata.name"), q(), C();
 }, {
 poll:E,
 pollInterval:6e4
-})), g.list("limitranges", i).then(function(a) {
-q = a.by("metadata.name"), K();
+})), g.list("limitranges", i).then(function(b) {
+a.limitRanges = b.by("metadata.name"), C();
 });
+var Q = 6e4;
+y.push(g.watch("resourcequotas", i, function(b) {
+a.quotas = b.by("metadata.name");
+}, {
+poll:!0,
+pollInterval:Q
+})), y.push(g.watch("appliedclusterresourcequotas", i, function(b) {
+a.clusterQuotas = b.by("metadata.name");
+}, {
+poll:!0,
+pollInterval:Q
+}));
 var R = b("deploymentIsLatest");
 a.showRollbackAction = function() {
 return "Complete" === A(a.replicaSet) && !R(a.replicaSet, a.deploymentConfig) && !a.replicaSet.metadata.deletionTimestamp && e.canI("deploymentconfigrollbacks", "create");
@@ -6546,7 +6558,7 @@ h.scale(e, c).then(_.noop, d);
 };
 var S = b("hasDeploymentConfig");
 a.isScalable = function() {
-return !!_.isEmpty(a.autoscalers) && (!S(a.replicaSet) && !N(a.replicaSet) || (!(!a.deploymentConfigMissing && !a.deploymentMissing) || !(!a.deploymentConfig && !a.deployment) && (a.isActive && !O)));
+return !!_.isEmpty(a.autoscalers) && (!S(a.replicaSet) && !M(a.replicaSet) || (!(!a.deploymentConfigMissing && !a.deploymentMissing) || !(!a.deploymentConfig && !a.deployment) && (a.isActive && !N)));
 }, a.removeVolume = function(c) {
 var d = "This will remove the volume from the " + b("humanizeKind")(a.replicaSet.kind) + ".";
 c.persistentVolumeClaim ? d += " It will not delete the persistent volume claim." :c.secret ? d += " It will not delete the secret." :c.configMap && (d += " It will not delete the config map.");
@@ -6639,6 +6651,18 @@ statefulSet:k(a)
 })), m.push(f.watch("pods", c, function(a) {
 var c = a.by("metadata.name");
 b.podsForStatefulSet = j.filterForOwner(c, d);
+}));
+var e = 6e4;
+m.push(f.watch("resourcequotas", c, function(a) {
+b.quotas = a.by("metadata.name");
+}, {
+poll:!0,
+pollInterval:e
+})), m.push(f.watch("appliedclusterresourcequotas", c, function(a) {
+b.clusterQuotas = a.by("metadata.name");
+}, {
+poll:!0,
+pollInterval:e
 }));
 });
 })), b.$on("$destroy", function() {
