@@ -4708,13 +4708,13 @@ h2+.list-view-pf{margin-top:20px}
 }
 .navbar-pf-alt .system-status-mobile:before{content:'';display:block;position:absolute;top:0;left:-1px;width:1px;background:#050505;height:100%}
 .navbar-flex-btn{position:relative}
+.navbar-flex-btn .navbar-toggle.project-action-btn:before,.navbar-flex-btn+.navbar-flex-btn .project-action-btn:before{display:none}
 .navbar-flex-btn .project-action-btn{color:#dbdada;font-weight:300;text-decoration:none;-webkit-align-items:center;-moz-align-items:center;align-items:center;-webkit-flex:1 0 0%;-moz-flex:1 0 0%;-ms-flex:1 0 0%;flex:1 0 0%;-webkit-justify-content:center;-moz-justify-content:center;justify-content:center}
 .font-icon,[data-icon]:before{speak:none;font-weight:400;font-variant:normal;text-transform:none;line-height:1;-webkit-font-smoothing:antialiased;-moz-osx-font-smoothing:grayscale}
 .navbar-flex-btn .project-action-btn:hover{background-color:#0b0d0f;color:#fcfcfc}
 .navbar-flex-btn .project-action-btn:after,.navbar-flex-btn .project-action-btn:before{content:'';display:block;position:absolute;top:0;width:1px;background:rgba(255,255,255,.1);height:100%}
 .navbar-flex-btn .project-action-btn:before{left:0px}
 .navbar-flex-btn .project-action-btn:after{right:-1px}
-.navbar-flex-btn .navbar-toggle.project-action-btn:before{width:0}
 @media (max-width:767px){.layout-pf-alt-fixed .navbar-pf-alt{position:absolute}
 .layout-pf-alt-fixed .navbar-pf-alt .navbar-brand:after{content:'';background:#050505;display:block;height:100%;left:-1px;position:absolute;top:0;width:1px}
 .top-header.logged-out .toggle-menu{display:none}
