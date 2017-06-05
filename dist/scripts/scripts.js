@@ -518,7 +518,7 @@ value:o.template.metadata.name
 }
 var n, o = this, p = a("displayName"), q = a("humanize");
 o.$onInit = function() {
-o.labels = [], o.templateDisplayName = p(o.template), o.selectedProject = o.project, m();
+o.labels = [], o.template = angular.copy(o.template), o.templateDisplayName = p(o.template), o.selectedProject = o.project, m();
 };
 var r, s = function() {
 var a = {

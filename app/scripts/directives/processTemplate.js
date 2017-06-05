@@ -70,6 +70,8 @@ function ProcessTemplate($filter,
 
   ctrl.$onInit = function() {
     ctrl.labels = [];
+    // Make a copy of the template to avoid modifying the original if it's cached.
+    ctrl.template = angular.copy(ctrl.template);
     ctrl.templateDisplayName = displayName(ctrl.template);
     ctrl.selectedProject = ctrl.project;
     setTemplateParams();
