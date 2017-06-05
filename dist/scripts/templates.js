@@ -12960,11 +12960,11 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "</td>\n" +
     "<td data-title=\"Capacity\">\n" +
     "<span ng-if=\"pvc.spec.volumeName\">\n" +
-    "<span ng-if=\"pvc.status.capacity['storage']\">{{pvc.status.capacity['storage'] | usageWithUnits: 'storage'}}</span>\n" +
-    "<span ng-if=\"!pvc.status.capacity['storage']\">unknown</span>\n" +
+    "<span ng-if=\"pvc.spec.resources.requests['storage']\">{{pvc.spec.resources.requests['storage']}}</span>\n" +
+    "<span ng-if=\"!pvc.spec.resources.requests['storage']\">unknown</span>\n" +
     "</span>\n" +
     "<span ng-if=\"!pvc.spec.volumeName\">\n" +
-    "<span>-</span>\n" +
+    "<span ng-if=\"pvc.spec.resources.requests['storage']\">{{pvc.spec.resources.requests['storage']}} Requested</span>\n" +
     "</span>\n" +
     "</td>\n" +
     "<td data-title=\"Access Modes\">{{pvc.spec.accessModes | accessModes:'long' | join}}</td>\n" +
