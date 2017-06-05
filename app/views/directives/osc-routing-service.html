@@ -4,10 +4,10 @@
       <label for="{{id}}-service-select" class="required">
         Service
       </label>
-      <ui-select ng-model="model.service" input-id="{{id}}-service-select" aria-describedby="{{id}}-service-help" required>
-        <ui-select-match>{{$select.selected.metadata.name}}</ui-select-match>
-        <ui-select-choices repeat="service in (services | filter : {metadata: { name: $select.search }}) track by (service | uid)">
-           <div ng-bind-html="service.metadata.name | highlight : $select.search"></div>
+      <ui-select ng-model="model.name" input-id="{{id}}-service-select" aria-describedby="{{id}}-service-help" required>
+        <ui-select-match>{{$select.selected}}</ui-select-match>
+        <ui-select-choices repeat="serviceName in (optionNames | filter : $select.search)">
+          <div ng-bind-html="serviceName | highlight : $select.search"></div>
         </ui-select-choices>
       </ui-select>
       <div>
@@ -16,15 +16,20 @@
           <span ng-if="isAlternate">Alternate service for route traffic.</span>
         </span>
       </div>
-      <div ng-if="(services | hashSize) === 0" class="has-error">
+      <div ng-if="model.name && !allServices[model.name]" class="has-warning">
+        <span class="help-block">
+          Service {{model.name}} does not exist.
+        </span>
+      </div>
+      <div ng-if="(optionNames | size) === 0" class="has-error">
         <span class="help-block">
           There are no <span ng-if="is-alternate">additional</span> services in your project to expose
           with a route.
         </span>
       </div>
-      <div ng-if="unnamedServicePort" class="has-warning">
+      <div ng-if="warnUnnamedPort" class="has-warning">
         <span class="help-block">
-          Service {{route.service.metadata.name}} has a single, unnamed port. A route cannot specifically target
+          Service {{model.name}} has a single, unnamed port. A route cannot specifically target
           an unnamed service port. If more service ports are added later, the route will also direct
           traffic to them.
         </span>

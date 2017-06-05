@@ -55,9 +55,18 @@ angular.module('openshiftConsole')
 
         var orderByDisplayName = $filter('orderByDisplayName');
 
+        var showNonServiceTargetError = function() {
+          Navigate.toErrorPage('Editing routes with non-service targets is unsupported. You can edit the route with the "Edit YAML" action instead.');
+        };
+
         var route;
         DataService.get("routes", $scope.routeName, context).then(
           function(original) {
+            if (original.spec.to.kind !== 'Service') {
+              showNonServiceTargetError();
+              return;
+            }
+
             route = angular.copy(original);
             var host = _.get(route, 'spec.host');
             var isWildcard = _.get(route, 'spec.wildcardPolicy') === 'Subdomain';
@@ -66,7 +75,6 @@ angular.module('openshiftConsole')
               host = '*.' + RoutesService.getSubdomain(route);
             }
             $scope.routing = {
-              service: _.get(route, 'spec.to.name'),
               host: host,
               wildcardPolicy: _.get(route, 'spec.wildcardPolicy'),
               path: _.get(route, 'spec.path'),
@@ -75,26 +83,21 @@ angular.module('openshiftConsole')
             };
 
             DataService.list("services", context).then(function(resp) {
-              var servicesByName = resp.by("metadata.name");
-              var to = _.get(route, 'spec.to', {});
               $scope.loading = false;
-              $scope.services = orderByDisplayName(servicesByName);
-              $scope.routing.to = {
-                service: servicesByName[to.name],
-                weight: to.weight
-              };
+
+              var servicesByName = resp.by("metadata.name");
+              $scope.routing.to = route.spec.to;
               $scope.routing.alternateServices = [];
               _.each(_.get(route, 'spec.alternateBackends'), function(alternateBackend) {
                 if (alternateBackend.kind !== 'Service') {
-                  Navigate.toErrorPage('Editing routes with non-service targets is unsupported. You can edit the route with the "Edit YAML" action instead.');
+                  showNonServiceTargetError();
                   return false;
                 }
 
-                $scope.routing.alternateServices.push({
-                  service: servicesByName[alternateBackend.name],
-                  weight: alternateBackend.weight
-                });
+                $scope.routing.alternateServices.push(alternateBackend);
               });
+
+              $scope.services = orderByDisplayName(servicesByName);
             });
           },
           function() {
@@ -107,7 +110,7 @@ angular.module('openshiftConsole')
           // This way if the PUT fails and the user switches termination types,
           // we haven't lost the previously-entered certificates values.
           var updated = angular.copy(route);
-          var serviceName = _.get($scope, 'routing.to.service.metadata.name');
+          var serviceName = _.get($scope, 'routing.to.name');
           _.set(updated, 'spec.to.name', serviceName);
           var weight = _.get($scope, 'routing.to.weight');
           if (!isNaN(weight)) {
@@ -147,7 +150,7 @@ angular.module('openshiftConsole')
             updated.spec.alternateBackends = _.map(alternateServices, function(alternate) {
               return {
                 kind: 'Service',
-                name: _.get(alternate, 'service.metadata.name'),
+                name: alternate.name,
                 weight: alternate.weight
               };
             });

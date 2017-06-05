@@ -7840,10 +7840,10 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "<label for=\"{{id}}-service-select\" class=\"required\">\n" +
     "Service\n" +
     "</label>\n" +
-    "<ui-select ng-model=\"model.service\" input-id=\"{{id}}-service-select\" aria-describedby=\"{{id}}-service-help\" required>\n" +
-    "<ui-select-match>{{$select.selected.metadata.name}}</ui-select-match>\n" +
-    "<ui-select-choices repeat=\"service in (services | filter : {metadata: { name: $select.search }}) track by (service | uid)\">\n" +
-    "<div ng-bind-html=\"service.metadata.name | highlight : $select.search\"></div>\n" +
+    "<ui-select ng-model=\"model.name\" input-id=\"{{id}}-service-select\" aria-describedby=\"{{id}}-service-help\" required>\n" +
+    "<ui-select-match>{{$select.selected}}</ui-select-match>\n" +
+    "<ui-select-choices repeat=\"serviceName in (optionNames | filter : $select.search)\">\n" +
+    "<div ng-bind-html=\"serviceName | highlight : $select.search\"></div>\n" +
     "</ui-select-choices>\n" +
     "</ui-select>\n" +
     "<div>\n" +
@@ -7852,14 +7852,19 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "<span ng-if=\"isAlternate\">Alternate service for route traffic.</span>\n" +
     "</span>\n" +
     "</div>\n" +
-    "<div ng-if=\"(services | hashSize) === 0\" class=\"has-error\">\n" +
+    "<div ng-if=\"model.name && !allServices[model.name]\" class=\"has-warning\">\n" +
+    "<span class=\"help-block\">\n" +
+    "Service {{model.name}} does not exist.\n" +
+    "</span>\n" +
+    "</div>\n" +
+    "<div ng-if=\"(optionNames | size) === 0\" class=\"has-error\">\n" +
     "<span class=\"help-block\">\n" +
     "There are no <span ng-if=\"is-alternate\">additional</span> services in your project to expose with a route.\n" +
     "</span>\n" +
     "</div>\n" +
-    "<div ng-if=\"unnamedServicePort\" class=\"has-warning\">\n" +
+    "<div ng-if=\"warnUnnamedPort\" class=\"has-warning\">\n" +
     "<span class=\"help-block\">\n" +
-    "Service {{route.service.metadata.name}} has a single, unnamed port. A route cannot specifically target an unnamed service port. If more service ports are added later, the route will also direct traffic to them.\n" +
+    "Service {{model.name}} has a single, unnamed port. A route cannot specifically target an unnamed service port. If more service ports are added later, the route will also direct traffic to them.\n" +
     "</span>\n" +
     "</div>\n" +
     "</div>\n" +
@@ -7965,7 +7970,7 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "</div>\n" +
     "\n" +
     "<div ng-if=\"services\">\n" +
-    "<osc-routing-service model=\"route.to\" services=\"services\" show-weight=\"route.alternateServices.length > 1 || (controls.hideSlider && route.alternateServices.length)\">\n" +
+    "<osc-routing-service model=\"route.to\" service-options=\"services\" all-services=\"servicesByName\" show-weight=\"route.alternateServices.length > 1 || (controls.hideSlider && route.alternateServices.length)\" warn-unnamed-port=\"unnamedServicePort\">\n" +
     "</osc-routing-service>\n" +
     "</div>\n" +
     "\n" +
@@ -7998,7 +8003,7 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "</div>\n" +
     "</div>\n" +
     "<div ng-repeat=\"alternate in route.alternateServices\" class=\"form-group\">\n" +
-    "<osc-routing-service model=\"alternate\" services=\"alternateServiceOptions\" is-alternate=\"true\" show-weight=\"route.alternateServices.length > 1 || controls.hideSlider\">\n" +
+    "<osc-routing-service model=\"alternate\" service-options=\"alternateServiceOptions\" all-services=\"servicesByName\" is-alternate=\"true\" show-weight=\"route.alternateServices.length > 1 || controls.hideSlider\">\n" +
     "</osc-routing-service>\n" +
     "<a href=\"\" ng-click=\"route.alternateServices.splice($index, 1)\">Remove Service</a>\n" +
     "<span ng-if=\"$last && route.alternateServices.length < alternateServiceOptions.length\">\n" +
@@ -8018,12 +8023,12 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "<div class=\"form-group\">\n" +
     "<div class=\"weight-slider-values\">\n" +
     "<div>\n" +
-    "<span class=\"service-name\">{{route.to.service.metadata.name}}</span>\n" +
+    "<span class=\"service-name\">{{route.to.name}}</span>\n" +
     "<span class=\"weight-percentage\">{{weightAsPercentage(route.to.weight, true)}}</span>\n" +
     "</div>\n" +
     "<div>\n" +
     "<span class=\"weight-percentage hidden-xs\">{{weightAsPercentage(route.alternateServices[0].weight, true)}}</span>\n" +
-    "<span class=\"service-name\">{{route.alternateServices[0].service.metadata.name}}</span>\n" +
+    "<span class=\"service-name\">{{route.alternateServices[0].name}}</span>\n" +
     "<span class=\"weight-percentage visible-xs-inline\">{{weightAsPercentage(route.alternateServices[0].weight, true)}}</span>\n" +
     "</div>\n" +
     "</div>\n" +
