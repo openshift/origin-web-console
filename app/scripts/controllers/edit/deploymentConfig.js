@@ -13,6 +13,7 @@ angular.module('openshiftConsole')
                        $location,
                        $routeParams,
                        $uibModal,
+                       $window,
                        AlertMessageService,
                        AuthorizationService,
                        BreadcrumbsService,
@@ -321,6 +322,14 @@ angular.module('openshiftConsole')
       return updatedTriggers;
     };
 
+    var doneEditing = function() {
+      _.set($scope, 'confirm.doneEditing', true);
+    }
+
+    var hideErrorNotifications = function() {
+      NotificationsService.hideNotification("edit-deployment-config-error");
+    };
+
     $scope.save = function() {
       $scope.disableInputs = true;
 
@@ -370,25 +379,33 @@ angular.module('openshiftConsole')
       $scope.updatedDeploymentConfig.spec.strategy = $scope.strategyData;
       $scope.updatedDeploymentConfig.spec.triggers = updateTriggers();
 
+      hideErrorNotifications();
       DataService.update("deploymentconfigs", $scope.updatedDeploymentConfig.metadata.name, $scope.updatedDeploymentConfig, $scope.context).then(
         function() {
           NotificationsService.addNotification({
             type: "success",
             message: "Deployment config " + $scope.updatedDeploymentConfig.metadata.name + " was successfully updated."
           });
-          _.set($scope, 'confirm.doneEditing', true);
+          doneEditing();
           var returnURL = Navigate.resourceURL($scope.updatedDeploymentConfig);
           $location.url(returnURL);
         },
         function(result) {
           $scope.disableInputs = false;
           NotificationsService.addNotification({
+            id: "edit-deployment-config-error",
             type: "error",
             message: "An error occurred updating deployment config " + $scope.updatedDeploymentConfig.metadata.name + ".",
             details: $filter('getErrorDetails')(result)
           });
         }
       );
+    };
+
+    $scope.cancel = function() {
+      hideErrorNotifications();
+      doneEditing();
+      $window.history.back();
     };
 
     $scope.$on('$destroy', function(){

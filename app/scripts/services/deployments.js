@@ -89,7 +89,7 @@ angular.module("openshiftConsole")
       );
     };
 
-    DeploymentsService.prototype.rollbackToDeployment = function(deployment, changeScaleSettings, changeStrategy, changeTriggers, context, $scope) {
+    DeploymentsService.prototype.rollbackToDeployment = function(deployment, changeScaleSettings, changeStrategy, changeTriggers, context) {
       var deploymentName = deployment.metadata.name;
       var deploymentConfigName = annotation(deployment, 'deploymentConfig');
       // put together a new rollback request
@@ -121,29 +121,27 @@ angular.module("openshiftConsole")
               });
             },
             function(result) {
-              $scope.alerts = $scope.alerts || {};
-              $scope.alerts["rollback"] =
-                {
-                  type: "error",
-                  message: "An error occurred while rolling back the deployment.",
-                  details: $filter('getErrorDetails')(result)
-                };
+              NotificationsService.addNotification({
+                id: "rollback-deployment-error",
+                type: "error",
+                message: "An error occurred while rolling back the deployment.",
+                details: $filter('getErrorDetails')(result)
+              });
             }
           );
         },
         function(result) {
-          $scope.alerts = $scope.alerts || {};
-          $scope.alerts["rollback"] =
-            {
-              type: "error",
-              message: "An error occurred while rolling back the deployment.",
-              details: $filter('getErrorDetails')(result)
-            };
+          NotificationsService.addNotification({
+            id: "rollback-deployment-error",
+            type: "error",
+            message: "An error occurred while rolling back the deployment.",
+            details: $filter('getErrorDetails')(result)
+          });
         }
       );
     };
 
-    DeploymentsService.prototype.cancelRunningDeployment = function(deployment, context, $scope) {
+    DeploymentsService.prototype.cancelRunningDeployment = function(deployment, context) {
       var deploymentName = deployment.metadata.name;
       var deploymentConfigName = $filter('annotation')(deployment, 'deploymentConfig');
       var req = angular.copy(deployment);
@@ -165,13 +163,12 @@ angular.module("openshiftConsole")
             });
         },
         function(result) {
-          $scope.alerts = $scope.alerts || {};
-          $scope.alerts["cancel"] =
-            {
-              type: "error",
-              message: "An error occurred while cancelling the deployment.",
-              details: $filter('getErrorDetails')(result)
-            };
+          NotificationsService.addNotification({
+            id: "cancel-deployment-error",
+            type: "error",
+            message: "An error occurred while cancelling the deployment.",
+            details: $filter('getErrorDetails')(result)
+          });
         }
       );
     };

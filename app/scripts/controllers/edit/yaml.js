@@ -13,7 +13,6 @@ angular.module('openshiftConsole')
                                               $location,
                                               $routeParams,
                                               $window,
-                                              AlertMessageService,
                                               APIService,
                                               AuthorizationService,
                                               BreadcrumbsService,

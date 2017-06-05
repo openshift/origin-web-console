@@ -2022,13 +2022,13 @@ message:"An error occurred while retrying the deployment.",
 details:d("getErrorDetails")(a)
 });
 });
-}, g.prototype.rollbackToDeployment = function(a, e, f, g, i, j) {
-var k = a.metadata.name, l = h(a, "deploymentConfig"), m = {
+}, g.prototype.rollbackToDeployment = function(a, e, f, g, i) {
+var j = a.metadata.name, k = h(a, "deploymentConfig"), l = {
 kind:"DeploymentConfigRollback",
 apiVersion:"v1",
 spec:{
 from:{
-name:k
+name:j
 },
 includeTemplate:!0,
 includeReplicationMeta:e,
@@ -2036,39 +2036,42 @@ includeStrategy:f,
 includeTriggers:g
 }
 };
-c.create("deploymentconfigrollbacks", null, m, i).then(function(a) {
-c.update("deploymentconfigs", l, a, i).then(function(a) {
+c.create("deploymentconfigrollbacks", null, l, i).then(function(a) {
+c.update("deploymentconfigs", k, a, i).then(function(a) {
 b.addNotification({
 type:"success",
-message:"Deployment #" + a.status.latestVersion + " is rolling back " + l + " to " + k + "."
+message:"Deployment #" + a.status.latestVersion + " is rolling back " + k + " to " + j + "."
 });
 }, function(a) {
-j.alerts = j.alerts || {}, j.alerts.rollback = {
+b.addNotification({
+id:"rollback-deployment-error",
 type:"error",
 message:"An error occurred while rolling back the deployment.",
 details:d("getErrorDetails")(a)
-};
+});
 });
 }, function(a) {
-j.alerts = j.alerts || {}, j.alerts.rollback = {
+b.addNotification({
+id:"rollback-deployment-error",
 type:"error",
 message:"An error occurred while rolling back the deployment.",
 details:d("getErrorDetails")(a)
-};
 });
-}, g.prototype.cancelRunningDeployment = function(a, e, f) {
-var g = a.metadata.name, h = d("annotation")(a, "deploymentConfig"), i = angular.copy(a), j = d("annotationName")("deploymentCancelled"), k = d("annotationName")("deploymentStatusReason");
-i.metadata.annotations[j] = "true", i.metadata.annotations[k] = "The deployment was cancelled by the user", c.update("replicationcontrollers", g, i, e).then(function() {
+});
+}, g.prototype.cancelRunningDeployment = function(a, e) {
+var f = a.metadata.name, g = d("annotation")(a, "deploymentConfig"), h = angular.copy(a), i = d("annotationName")("deploymentCancelled"), j = d("annotationName")("deploymentStatusReason");
+h.metadata.annotations[i] = "true", h.metadata.annotations[j] = "The deployment was cancelled by the user", c.update("replicationcontrollers", f, h, e).then(function() {
 b.addNotification({
 type:"success",
-message:"Cancelled deployment " + g + " of " + h + "."
+message:"Cancelled deployment " + f + " of " + g + "."
 });
 }, function(a) {
-f.alerts = f.alerts || {}, f.alerts.cancel = {
+b.addNotification({
+id:"cancel-deployment-error",
 type:"error",
 message:"An error occurred while cancelling the deployment.",
 details:d("getErrorDetails")(a)
-};
+});
 });
 }, g.prototype.associateDeploymentsToDeploymentConfig = function(a, b, c) {
 var e = {}, g = f.getLabelSelector();
@@ -5608,16 +5611,17 @@ a.hpaWarnings = b;
 };
 f.get("deploymentconfigs", c.deploymentconfig, e).then(function(d) {
 a.loaded = !0, a.deploymentConfig = d, a.strategyParams = b("deploymentStrategyParams")(d), E(), a.updatedDeploymentConfig = h.copyAndNormalize(a.deploymentConfig), a.saveEnvVars = function() {
-h.compact(a.updatedDeploymentConfig), o = f.update("deploymentconfigs", c.deploymentconfig, a.updatedDeploymentConfig, e), o.then(function() {
+m.hideNotification("save-dc-env-error"), h.compact(a.updatedDeploymentConfig), o = f.update("deploymentconfigs", c.deploymentconfig, a.updatedDeploymentConfig, e), o.then(function() {
 m.addNotification({
 type:"success",
-message:a.deploymentConfigName + " was updated."
+message:"Environment variables for deployment config " + a.deploymentConfigName + " were successfully updated."
 }), a.forms.dcEnvVars.$setPristine();
 }, function(c) {
 m.addNotification({
+id:"save-dc-env-error",
 type:"error",
-message:a.deploymentConfigName + " was not updated.",
-details:"Reason: " + b("getErrorDetails")(c)
+message:"An error occurred updating environment variables for deployment config " + a.deploymentConfigName + ".",
+details:b("getErrorDetails")(c)
 });
 })["finally"](function() {
 o = null;
@@ -5700,7 +5704,7 @@ a.deployments = b.select(a.unfilteredDeployments), a.orderedDeployments = t(a.de
 }), a.canDeploy = function() {
 return !!a.deploymentConfig && (!a.deploymentConfig.metadata.deletionTimestamp && (!a.deploymentInProgress && !a.deploymentConfig.spec.paused));
 }, a.startLatestDeployment = function() {
-a.canDeploy() && g.startLatestDeployment(a.deploymentConfig, e, a);
+a.canDeploy() && g.startLatestDeployment(a.deploymentConfig, e);
 }, a.scale = function(c) {
 var d = function(c) {
 a.alerts["scale-error"] = {
@@ -5983,8 +5987,8 @@ return "Complete" === A(a.replicaSet) && !R(a.replicaSet, a.deploymentConfig) &&
 h.retryFailedDeployment(b, i, a);
 }, a.rollbackToDeployment = function(b, c, d, e) {
 h.rollbackToDeployment(b, c, d, e, i, a);
-}, a.cancelRunningDeployment = function(b) {
-h.cancelRunningDeployment(b, i, a);
+}, a.cancelRunningDeployment = function(a) {
+h.cancelRunningDeployment(a, i);
 }, a.scale = function(c) {
 var d = function(c) {
 a.alerts = a.alerts || {}, a.alerts.scale = {
@@ -6549,59 +6553,66 @@ details:"Reason: " + e("getErrorDetails")(b)
 c.unwatchAll(f);
 });
 }));
-} ]), angular.module("openshiftConsole").controller("SetLimitsController", [ "$filter", "$location", "$parse", "$routeParams", "$scope", "AlertMessageService", "APIService", "AuthorizationService", "BreadcrumbsService", "DataService", "LimitRangesService", "Navigate", "NotificationsService", "ProjectsService", function(a, b, c, d, e, f, g, h, i, j, k, l, m, n) {
-if (!d.kind || !d.name) return void l.toErrorPage("Kind or name parameter missing.");
-var o = [ "Deployment", "DeploymentConfig", "ReplicaSet", "ReplicationController" ];
-if (!_.includes(o, d.kind)) return void l.toErrorPage("Health checks are not supported for kind " + d.kind + ".");
-var p = a("humanizeKind"), q = p(d.kind, !0) + " " + d.name;
-e.name = d.name, "ReplicationController" !== d.kind && "ReplicaSet" !== d.kind || (e.showPodWarning = !0), e.alerts = {}, e.renderOptions = {
+} ]), angular.module("openshiftConsole").controller("SetLimitsController", [ "$filter", "$location", "$parse", "$routeParams", "$scope", "APIService", "AuthorizationService", "BreadcrumbsService", "DataService", "LimitRangesService", "Navigate", "NotificationsService", "ProjectsService", function(a, b, c, d, e, f, g, h, i, j, k, l, m) {
+if (!d.kind || !d.name) return void k.toErrorPage("Kind or name parameter missing.");
+var n = [ "Deployment", "DeploymentConfig", "ReplicaSet", "ReplicationController" ];
+if (!_.includes(n, d.kind)) return void k.toErrorPage("Health checks are not supported for kind " + d.kind + ".");
+var o = a("humanizeKind"), p = o(d.kind, !0) + " " + d.name;
+e.name = d.name, "ReplicationController" !== d.kind && "ReplicaSet" !== d.kind || (e.showPodWarning = !0), e.renderOptions = {
 hideFilterWidget:!0
-}, e.breadcrumbs = i.getBreadcrumbs({
+}, e.breadcrumbs = h.getBreadcrumbs({
 name:d.name,
 kind:d.kind,
 namespace:d.project,
 subpage:"Edit Resource Limits",
 includeProject:!0
 });
-var r = a("getErrorDetails"), s = function(a, b) {
-e.alerts["set-compute-limits"] = {
+var q = a("getErrorDetails"), r = function(a, b) {
+l.addNotification({
+id:"set-compute-limits-error",
 type:"error",
 message:a,
 details:b
+});
+}, s = function() {
+_.set(e, "confirm.doneEditing", !0), b.url(e.resourceURL);
+}, t = function() {
+l.hideNotification("set-compute-limits-error");
 };
-};
-n.get(d.project).then(_.spread(function(c, f) {
-e.breadcrumbs[0].title = a("displayName")(c);
-var n = {
-resource:g.kindToResource(d.kind),
+e.cancel = function() {
+t(), s();
+}, m.get(d.project).then(_.spread(function(b, c) {
+e.breadcrumbs[0].title = a("displayName")(b);
+var m = {
+resource:f.kindToResource(d.kind),
 group:d.group
 };
-if (!h.canI(n, "update", d.project)) return void l.toErrorPage("You do not have authority to update " + p(d.kind) + " " + d.name + ".", "access_denied");
-j.get(n, e.name, f).then(function(a) {
+if (!g.canI(m, "update", d.project)) return void k.toErrorPage("You do not have authority to update " + o(d.kind) + " " + d.name + ".", "access_denied");
+i.get(m, e.name, c).then(function(a) {
 var d = e.object = angular.copy(a);
-e.breadcrumbs = i.getBreadcrumbs({
+e.breadcrumbs = h.getBreadcrumbs({
 object:d,
-project:c,
+project:b,
 subpage:"Edit Resource Limits",
 includeProject:!0
-}), e.resourceURL = l.resourceURL(d), e.containers = _.get(d, "spec.template.spec.containers"), e.save = function() {
-e.disableInputs = !0, j.update(n, e.name, d, f).then(function() {
-m.addNotification({
+}), e.resourceURL = k.resourceURL(d), e.containers = _.get(d, "spec.template.spec.containers"), e.save = function() {
+e.disableInputs = !0, t(), i.update(m, e.name, d, c).then(function() {
+l.addNotification({
 type:"success",
-message:q + " was updated."
-}), _.set(e, "confirm.doneEditing", !0), b.url(e.resourceURL);
+message:p + " was updated."
+}), s();
 }, function(a) {
-e.disableInputs = !1, s(q + " could not be updated.", r(a));
+e.disableInputs = !1, r(p + " could not be updated.", q(a));
 });
 };
 }, function(a) {
-s(q + " could not be loaded.", r(a));
+r(p + " could not be loaded.", q(a));
 });
-var o = function() {
-e.hideCPU || (e.cpuProblems = k.validatePodLimits(e.limitRanges, "cpu", e.containers, c)), e.memoryProblems = k.validatePodLimits(e.limitRanges, "memory", e.containers, c);
+var n = function() {
+e.hideCPU || (e.cpuProblems = j.validatePodLimits(e.limitRanges, "cpu", e.containers, b)), e.memoryProblems = j.validatePodLimits(e.limitRanges, "memory", e.containers, b);
 };
-j.list("limitranges", f).then(function(a) {
-e.limitRanges = a.by("metadata.name"), _.isEmpty(e.limitRanges) || e.$watch("containers", o, !0);
+i.list("limitranges", c).then(function(a) {
+e.limitRanges = a.by("metadata.name"), _.isEmpty(e.limitRanges) || e.$watch("containers", n, !0);
 });
 }));
 } ]), angular.module("openshiftConsole").controller("EditBuildConfigController", [ "$scope", "$filter", "$location", "$routeParams", "AlertMessageService", "ApplicationGenerator", "AuthorizationService", "DataService", "Navigate", "ProjectsService", "SOURCE_URL_PATTERN", "SecretsService", "keyValueEditorUtils", function(a, b, c, d, e, f, g, h, i, j, k, l, m) {
@@ -6982,28 +6993,28 @@ details:a("getErrorDetails")(b)
 e.unwatchAll(i);
 });
 }));
-} ]), angular.module("openshiftConsole").controller("EditDeploymentConfigController", [ "$scope", "$filter", "$location", "$routeParams", "$uibModal", "AlertMessageService", "AuthorizationService", "BreadcrumbsService", "DataService", "EnvironmentService", "Navigate", "NotificationsService", "ProjectsService", "SecretsService", "keyValueEditorUtils", function(a, b, c, d, e, f, g, h, i, j, k, l, m, n, o) {
+} ]), angular.module("openshiftConsole").controller("EditDeploymentConfigController", [ "$scope", "$filter", "$location", "$routeParams", "$uibModal", "$window", "AlertMessageService", "AuthorizationService", "BreadcrumbsService", "DataService", "EnvironmentService", "Navigate", "NotificationsService", "ProjectsService", "SecretsService", "keyValueEditorUtils", function(a, b, c, d, e, f, g, h, i, j, k, l, m, n, o, p) {
 a.projectName = d.project, a.deploymentConfig = null, a.alerts = {}, a.view = {
 advancedStrategyOptions:!1,
 advancedImageOptions:!1
-}, a.triggers = {}, a.breadcrumbs = h.getBreadcrumbs({
+}, a.triggers = {}, a.breadcrumbs = i.getBreadcrumbs({
 name:d.name,
 kind:d.kind,
 namespace:d.project,
 subpage:"Edit Deployment Config",
 includeProject:!0
-}), a.deploymentConfigStrategyTypes = [ "Recreate", "Rolling", "Custom" ], f.getAlerts().forEach(function(b) {
+}), a.deploymentConfigStrategyTypes = [ "Recreate", "Rolling", "Custom" ], g.getAlerts().forEach(function(b) {
 a.alerts[b.name] = b.data;
-}), f.clearAlerts();
-var p = b("orderByDisplayName"), q = b("getErrorDetails"), r = function(b, c) {
+}), g.clearAlerts();
+var q = b("orderByDisplayName"), r = b("getErrorDetails"), s = function(b, c) {
 a.alerts["from-value-objects"] = {
 type:"error",
 message:b,
 details:c
 };
-}, s = [], t = [], u = [];
+}, t = [], u = [], v = [];
 a.valueFromObjects = [];
-var v = function(a) {
+var w = function(a) {
 switch (a) {
 case "Recreate":
 return "recreateParams";
@@ -7018,9 +7029,9 @@ default:
 return void Logger.error("Unknown deployment strategy type: " + a);
 }
 };
-m.get(d.project).then(_.spread(function(c, e) {
-return a.project = c, a.context = e, g.canI("deploymentconfigs", "update", d.project) ? void i.get("deploymentconfigs", d.deploymentconfig, e).then(function(b) {
-a.deploymentConfig = b, a.breadcrumbs = h.getBreadcrumbs({
+n.get(d.project).then(_.spread(function(c, e) {
+return a.project = c, a.context = e, h.canI("deploymentconfigs", "update", d.project) ? void j.get("deploymentconfigs", d.deploymentconfig, e).then(function(b) {
+a.deploymentConfig = b, a.breadcrumbs = i.getBreadcrumbs({
 object:b,
 project:c,
 subpage:"Edit",
@@ -7065,27 +7076,27 @@ a.updatedDeploymentConfig = angular.copy(a.deploymentConfig), a.containerNames =
 pullSecrets:angular.copy(a.deploymentConfig.spec.template.spec.imagePullSecrets) || [ {
 name:""
 } ]
-}, a.volumeNames = _.map(a.deploymentConfig.spec.template.spec.volumes, "name"), a.strategyData = angular.copy(a.deploymentConfig.spec.strategy), a.originalStrategy = a.strategyData.type, a.strategyParamsPropertyName = v(a.strategyData.type), a.triggers.hasConfigTrigger = _.some(a.updatedDeploymentConfig.spec.triggers, {
+}, a.volumeNames = _.map(a.deploymentConfig.spec.template.spec.volumes, "name"), a.strategyData = angular.copy(a.deploymentConfig.spec.strategy), a.originalStrategy = a.strategyData.type, a.strategyParamsPropertyName = w(a.strategyData.type), a.triggers.hasConfigTrigger = _.some(a.updatedDeploymentConfig.spec.triggers, {
 type:"ConfigChange"
-}), "Custom" !== a.strategyData.type || _.has(a.strategyData, "customParams.environment") || (a.strategyData.customParams.environment = []), i.list("configmaps", e, null, {
+}), "Custom" !== a.strategyData.type || _.has(a.strategyData, "customParams.environment") || (a.strategyData.customParams.environment = []), j.list("configmaps", e, null, {
 errorNotification:!1
 }).then(function(b) {
-t = p(b.by("metadata.name")), a.availableConfigMaps = t, a.valueFromObjects = t.concat(u);
+u = q(b.by("metadata.name")), a.availableConfigMaps = u, a.valueFromObjects = u.concat(v);
 }, function(a) {
-403 !== a.code && r("Could not load config maps", q(a));
-}), i.list("secrets", e, null, {
+403 !== a.code && s("Could not load config maps", r(a));
+}), j.list("secrets", e, null, {
 errorNotification:!1
 }).then(function(b) {
-u = p(b.by("metadata.name")), a.availableSecrets = u, a.valueFromObjects = u.concat(t);
-var c = n.groupSecretsByType(b), d = _.mapValues(c, function(a) {
+v = q(b.by("metadata.name")), a.availableSecrets = v, a.valueFromObjects = v.concat(u);
+var c = o.groupSecretsByType(b), d = _.mapValues(c, function(a) {
 return _.map(a, "metadata.name");
 });
 a.secretsByType = _.each(d, function(a) {
 a.unshift("");
 });
 }, function(a) {
-403 !== a.code && r("Could not load secrets", q(a));
-}), s.push(i.watchObject("deploymentconfigs", d.deploymentconfig, e, function(b, c) {
+403 !== a.code && s("Could not load secrets", r(a));
+}), t.push(j.watchObject("deploymentconfigs", d.deploymentconfig, e, function(b, c) {
 "MODIFIED" === c && (a.alerts["updated/deleted"] = {
 type:"warning",
 message:"This deployment configuration has changed since you started editing it. You'll need to copy any changes you've made and edit again."
@@ -7100,11 +7111,11 @@ type:"error",
 message:"The deployment configuration details could not be loaded.",
 details:b("getErrorDetails")(c)
 };
-}) :void k.toErrorPage("You do not have authority to update deployment config " + d.deploymentconfig + ".", "access_denied");
+}) :void l.toErrorPage("You do not have authority to update deployment config " + d.deploymentconfig + ".", "access_denied");
 }));
-var w = function() {
+var x = function() {
 return "Custom" !== a.strategyData.type && "Custom" !== a.originalStrategy && a.strategyData.type !== a.originalStrategy;
-}, x = function(b) {
+}, y = function(b) {
 if (!_.has(a.strategyData, b)) {
 var c = e.open({
 animation:!0,
@@ -7124,21 +7135,21 @@ cancelButtonText:"No"
 }
 });
 c.result.then(function() {
-a.strategyData[b] = angular.copy(a.strategyData[v(a.originalStrategy)]);
+a.strategyData[b] = angular.copy(a.strategyData[w(a.originalStrategy)]);
 }, function() {
 a.strategyData[b] = {};
 });
 }
 };
 a.strategyChanged = function() {
-var b = v(a.strategyData.type);
-w() ? x(b) :_.has(a.strategyData, b) || ("Custom" !== a.strategyData.type ? a.strategyData[b] = {} :a.strategyData[b] = {
+var b = w(a.strategyData.type);
+x() ? y(b) :_.has(a.strategyData, b) || ("Custom" !== a.strategyData.type ? a.strategyData[b] = {} :a.strategyData[b] = {
 image:"",
 command:[],
 environment:[]
 }), a.strategyParamsPropertyName = b;
 };
-var y = function(a, b, c, d) {
+var z = function(a, b, c, d) {
 var e = {
 kind:"ImageStreamTag",
 namespace:b.namespace,
@@ -7152,12 +7163,12 @@ containerNames:[ a ],
 from:e
 }
 }, c;
-}, z = function() {
+}, A = function() {
 var b = _.reject(a.updatedDeploymentConfig.spec.triggers, function(a) {
 return "ImageChange" === a.type || "ConfigChange" === a.type;
 });
 return _.each(a.containerConfigByName, function(c, d) {
-if (c.hasDeploymentTrigger) b.push(y(d, c.triggerData.istag, c.triggerData.data, c.triggerData.automatic)); else {
+if (c.hasDeploymentTrigger) b.push(z(d, c.triggerData.istag, c.triggerData.data, c.triggerData.automatic)); else {
 var e = _.find(a.updatedDeploymentConfig.spec.template.spec.containers, {
 name:d
 });
@@ -7166,37 +7177,44 @@ e.image = c.image;
 }), a.triggers.hasConfigTrigger && b.push({
 type:"ConfigChange"
 }), b;
+}, B = function() {
+_.set(a, "confirm.doneEditing", !0);
+}, C = function() {
+m.hideNotification("edit-deployment-config-error");
 };
 a.save = function() {
 if (a.disableInputs = !0, _.each(a.containerConfigByName, function(b, c) {
 var d = _.find(a.updatedDeploymentConfig.spec.template.spec.containers, {
 name:c
 });
-d.env = o.compactEntries(b.env);
-}), w() && delete a.strategyData[v(a.originalStrategy)], "Rolling" === a.strategyData.type) {
+d.env = p.compactEntries(b.env);
+}), x() && delete a.strategyData[w(a.originalStrategy)], "Rolling" === a.strategyData.type) {
 var d = a.strategyData[a.strategyParamsPropertyName].maxSurge, e = Number(d);
 "" === d ? a.strategyData[a.strategyParamsPropertyName].maxSurge = null :_.isFinite(e) && (a.strategyData[a.strategyParamsPropertyName].maxSurge = e);
 var f = a.strategyData[a.strategyParamsPropertyName].maxUnavailable, g = Number(f);
 "" === f ? a.strategyData[a.strategyParamsPropertyName].maxUnavailable = null :_.isFinite(g) && (a.strategyData[a.strategyParamsPropertyName].maxUnavailable = g);
 }
 "Custom" !== a.strategyData.type && _.each([ "pre", "mid", "post" ], function(b) {
-_.has(a.strategyData, [ a.strategyParamsPropertyName, b, "execNewPod", "env" ]) && (a.strategyData[a.strategyParamsPropertyName][b].execNewPod.env = o.compactEntries(a.strategyData[a.strategyParamsPropertyName][b].execNewPod.env));
-}), _.has(a, "strategyData.customParams.environment") && (a.strategyData.customParams.environment = o.compactEntries(a.strategyData.customParams.environment)), a.updatedDeploymentConfig.spec.template.spec.imagePullSecrets = _.filter(a.secrets.pullSecrets, "name"), a.updatedDeploymentConfig.spec.strategy = a.strategyData, a.updatedDeploymentConfig.spec.triggers = z(), i.update("deploymentconfigs", a.updatedDeploymentConfig.metadata.name, a.updatedDeploymentConfig, a.context).then(function() {
-l.addNotification({
+_.has(a.strategyData, [ a.strategyParamsPropertyName, b, "execNewPod", "env" ]) && (a.strategyData[a.strategyParamsPropertyName][b].execNewPod.env = p.compactEntries(a.strategyData[a.strategyParamsPropertyName][b].execNewPod.env));
+}), _.has(a, "strategyData.customParams.environment") && (a.strategyData.customParams.environment = p.compactEntries(a.strategyData.customParams.environment)), a.updatedDeploymentConfig.spec.template.spec.imagePullSecrets = _.filter(a.secrets.pullSecrets, "name"), a.updatedDeploymentConfig.spec.strategy = a.strategyData, a.updatedDeploymentConfig.spec.triggers = A(), C(), j.update("deploymentconfigs", a.updatedDeploymentConfig.metadata.name, a.updatedDeploymentConfig, a.context).then(function() {
+m.addNotification({
 type:"success",
 message:"Deployment config " + a.updatedDeploymentConfig.metadata.name + " was successfully updated."
-}), _.set(a, "confirm.doneEditing", !0);
-var b = k.resourceURL(a.updatedDeploymentConfig);
+}), B();
+var b = l.resourceURL(a.updatedDeploymentConfig);
 c.url(b);
 }, function(c) {
-a.disableInputs = !1, l.addNotification({
+a.disableInputs = !1, m.addNotification({
+id:"edit-deployment-config-error",
 type:"error",
 message:"An error occurred updating deployment config " + a.updatedDeploymentConfig.metadata.name + ".",
 details:b("getErrorDetails")(c)
 });
 });
+}, a.cancel = function() {
+C(), B(), f.history.back();
 }, a.$on("$destroy", function() {
-i.unwatchAll(s);
+j.unwatchAll(t);
 });
 } ]), angular.module("openshiftConsole").controller("EditAutoscalerController", [ "$scope", "$filter", "$routeParams", "$window", "APIService", "AuthorizationService", "BreadcrumbsService", "DataService", "HPAService", "MetricsService", "Navigate", "ProjectsService", "keyValueEditorUtils", function(a, b, c, d, e, f, g, h, i, j, k, l, m) {
 if (!c.kind || !c.name) return void k.toErrorPage("Kind or name parameter missing.");
@@ -7303,55 +7321,60 @@ e = a.by("metadata.name"), f();
 }
 });
 }));
-} ]), angular.module("openshiftConsole").controller("EditHealthChecksController", [ "$filter", "$location", "$routeParams", "$scope", "AlertMessageService", "AuthorizationService", "BreadcrumbsService", "APIService", "DataService", "Navigate", "NotificationsService", "ProjectsService", function(a, b, c, d, e, f, g, h, i, j, k, l) {
-if (!c.kind || !c.name) return void j.toErrorPage("Kind or name parameter missing.");
-var m = [ "Deployment", "DeploymentConfig", "ReplicaSet", "ReplicationController" ];
-if (!_.includes(m, c.kind)) return void j.toErrorPage("Health checks are not supported for kind " + c.kind + ".");
-d.name = c.name, d.resourceURL = j.resourceURL(d.name, c.kind, c.project), d.alerts = {}, d.renderOptions = {
-hideFilterWidget:!0
-}, d.breadcrumbs = g.getBreadcrumbs({
+} ]), angular.module("openshiftConsole").controller("EditHealthChecksController", [ "$filter", "$location", "$routeParams", "$scope", "AuthorizationService", "BreadcrumbsService", "APIService", "DataService", "Navigate", "NotificationsService", "ProjectsService", function(a, b, c, d, e, f, g, h, i, j, k) {
+if (!c.kind || !c.name) return void i.toErrorPage("Kind or name parameter missing.");
+var l = [ "Deployment", "DeploymentConfig", "ReplicaSet", "ReplicationController" ];
+if (!_.includes(l, c.kind)) return void i.toErrorPage("Health checks are not supported for kind " + c.kind + ".");
+d.name = c.name, d.resourceURL = i.resourceURL(d.name, c.kind, c.project), d.breadcrumbs = f.getBreadcrumbs({
 name:c.name,
 kind:c.kind,
 namespace:c.project,
 subpage:"Edit Health Checks",
 includeProject:!0
 }), d.previousProbes = {};
-var n = a("getErrorDetails"), o = function(a, b) {
-d.alerts["add-health-check"] = {
+var m = a("getErrorDetails"), n = a("upperFirst"), o = function(a, b) {
+j.addNotification({
+id:"add-health-check-error",
 type:"error",
 message:a,
 details:b
+});
+}, p = function() {
+_.set(d, "confirm.doneEditing", !0), b.url(d.resourceURL);
+}, q = function() {
+j.hideNotification("add-health-check-error");
 };
-};
-l.get(c.project).then(_.spread(function(e, l) {
-var m = a("humanizeKind")(c.kind) + ' "' + d.name + '"', p = {
-resource:h.kindToResource(c.kind),
+d.cancel = function() {
+q(), p();
+}, k.get(c.project).then(_.spread(function(b, k) {
+var l = a("humanizeKind")(c.kind) + ' "' + d.name + '"', r = {
+resource:g.kindToResource(c.kind),
 group:c.group
 };
-return f.canI(p, "update", c.project) ? void i.get(p, d.name, l).then(function(a) {
-var f = d.object = angular.copy(a);
-d.breadcrumbs = g.getBreadcrumbs({
-object:f,
-project:e,
+return e.canI(r, "update", c.project) ? void h.get(r, d.name, k).then(function(a) {
+var e = d.object = angular.copy(a);
+d.breadcrumbs = f.getBreadcrumbs({
+object:e,
+project:b,
 subpage:"Edit Health Checks",
 includeProject:!0
-}), d.containers = _.get(f, "spec.template.spec.containers"), d.addProbe = function(a, b) {
+}), d.containers = _.get(e, "spec.template.spec.containers"), d.addProbe = function(a, b) {
 a[b] = _.get(d.previousProbes, [ a.name, b ], {}), d.form.$setDirty();
 }, d.removeProbe = function(a, b) {
 _.set(d.previousProbes, [ a.name, b ], a[b]), delete a[b], d.form.$setDirty();
 }, d.save = function() {
-d.disableInputs = !0, i.update(h.kindToResource(c.kind), d.name, f, l).then(function() {
-k.addNotification({
+d.disableInputs = !0, q(), h.update(g.kindToResource(c.kind), d.name, e, k).then(function() {
+j.addNotification({
 type:"success",
-message:m + " was updated."
-}), _.set(d, "confirm.doneEditing", !0), b.url(d.resourceURL);
+message:n(l) + " was updated."
+}), p();
 }, function(a) {
-d.disableInputs = !1, o(m + " could not be updated.", n(a));
+d.disableInputs = !1, o(n(l) + " could not be updated.", m(a));
 });
 };
 }, function(a) {
-o(m + " could not be loaded.", n(a));
-}) :void j.toErrorPage("You do not have authority to update " + m + ".", "access_denied");
+o(n(l) + " could not be loaded.", m(a));
+}) :void i.toErrorPage("You do not have authority to update " + l + ".", "access_denied");
 }));
 } ]), angular.module("openshiftConsole").controller("EditRouteController", [ "$filter", "$location", "$routeParams", "$scope", "AlertMessageService", "AuthorizationService", "DataService", "Navigate", "NotificationsService", "ProjectsService", "RoutesService", function(a, b, c, d, e, f, g, h, i, j, k) {
 d.renderOptions = {
@@ -7436,10 +7459,10 @@ details:a("getErrorDetails")(b)
 }
 };
 }));
-} ]), angular.module("openshiftConsole").controller("EditYAMLController", [ "$scope", "$filter", "$location", "$routeParams", "$window", "AlertMessageService", "APIService", "AuthorizationService", "BreadcrumbsService", "DataService", "Navigate", "NotificationsService", "ProjectsService", function(a, b, c, d, e, f, g, h, i, j, k, l, m) {
-if (!d.kind || !d.name) return void k.toErrorPage("Kind or name parameter missing.");
-var n = b("humanizeKind");
-a.alerts = {}, a.name = d.name, a.resourceURL = k.resourceURL(a.name, d.kind, d.project), a.breadcrumbs = [ {
+} ]), angular.module("openshiftConsole").controller("EditYAMLController", [ "$scope", "$filter", "$location", "$routeParams", "$window", "APIService", "AuthorizationService", "BreadcrumbsService", "DataService", "Navigate", "NotificationsService", "ProjectsService", function(a, b, c, d, e, f, g, h, i, j, k, l) {
+if (!d.kind || !d.name) return void j.toErrorPage("Kind or name parameter missing.");
+var m = b("humanizeKind");
+a.alerts = {}, a.name = d.name, a.resourceURL = j.resourceURL(a.name, d.kind, d.project), a.breadcrumbs = [ {
 title:d.project,
 link:"project/" + d.project
 }, {
@@ -7448,33 +7471,33 @@ link:d.returnURL
 }, {
 title:"Edit YAML"
 } ];
-var o = function() {
+var n = function() {
 return a.modified = !1, d.returnURL ? void c.url(d.returnURL) :void e.history.back();
-}, p = _.throttle(function() {
+}, o = _.throttle(function() {
 a.$eval(function() {
 a.modified = !0;
 });
 }, 1e3);
 a.aceLoaded = function(a) {
 var b = a.getSession();
-b.setOption("tabSize", 2), b.setOption("useSoftTabs", !0), b.on("change", p);
+b.setOption("tabSize", 2), b.setOption("useSoftTabs", !0), b.on("change", o);
 };
-var q = [];
-m.get(d.project).then(_.spread(function(c, e) {
-var f = {
-resource:g.kindToResource(d.kind),
+var p = [];
+l.get(d.project).then(_.spread(function(c, e) {
+var h = {
+resource:f.kindToResource(d.kind),
 group:d.group
 };
-return h.canI(f, "update", d.project) ? (j.get(f, a.name, e).then(function(c) {
-var h = angular.copy(c);
-a.resource = h;
-var i = function(a) {
+return g.canI(h, "update", d.project) ? (i.get(h, a.name, e).then(function(c) {
+var g = angular.copy(c);
+a.resource = g;
+var j = function(a) {
 return _.get(a, "metadata.resourceVersion");
 };
-h = angular.extend({
-apiVersion:h.apiVersion,
-kind:h.kind
-}, h), _.set(a, "editor.model", jsyaml.safeDump(h)), a.save = function() {
+g = angular.extend({
+apiVersion:g.apiVersion,
+kind:g.kind
+}, g), _.set(a, "editor.model", jsyaml.safeDump(g)), a.save = function() {
 a.modified = !1;
 var c;
 try {
@@ -7482,45 +7505,45 @@ c = jsyaml.safeLoad(a.editor.model);
 } catch (e) {
 return void (a.error = e);
 }
-if (c.kind !== h.kind) return void (a.error = {
-message:"Cannot change resource kind (original: " + h.kind + ", modified: " + (c.kind || "<unspecified>") + ")."
+if (c.kind !== g.kind) return void (a.error = {
+message:"Cannot change resource kind (original: " + g.kind + ", modified: " + (c.kind || "<unspecified>") + ")."
 });
-var f = g.objectToResourceGroupVersion(h), i = g.objectToResourceGroupVersion(c);
-return i ? i.group !== f.group ? void (a.error = {
-message:"Cannot change resource group (original: " + (f.group || "<none>") + ", modified: " + (i.group || "<none>") + ")."
-}) :g.apiInfo(i) ? (a.updatingNow = !0, void j.update(i, a.resource.metadata.name, c, {
+var h = f.objectToResourceGroupVersion(g), j = f.objectToResourceGroupVersion(c);
+return j ? j.group !== h.group ? void (a.error = {
+message:"Cannot change resource group (original: " + (h.group || "<none>") + ", modified: " + (j.group || "<none>") + ")."
+}) :f.apiInfo(j) ? (a.updatingNow = !0, void i.update(j, a.resource.metadata.name, c, {
 namespace:a.resource.metadata.namespace
 }).then(function(b) {
 var e = _.get(c, "metadata.resourceVersion"), f = _.get(b, "metadata.resourceVersion");
 return f === e ? (a.alerts["no-changes-applied"] = {
 type:"warning",
-message:"No changes were applied to " + n(d.kind) + " " + d.name + ".",
+message:"No changes were applied to " + m(d.kind) + " " + d.name + ".",
 details:"Make sure any new fields you may have added are supported API fields."
-}, void (a.updatingNow = !1)) :(l.addNotification({
+}, void (a.updatingNow = !1)) :(k.addNotification({
 type:"success",
-message:n(d.kind, !0) + " " + d.name + " was successfully updated."
-}), void o());
+message:m(d.kind, !0) + " " + d.name + " was successfully updated."
+}), void n());
 }, function(c) {
 a.updatingNow = !1, a.error = {
 message:b("getErrorDetails")(c)
 };
 })) :void (a.error = {
-message:g.unsupportedObjectKindOrVersion(c)
+message:f.unsupportedObjectKindOrVersion(c)
 }) :void (a.error = {
-message:g.invalidObjectKindOrVersion(c)
+message:f.invalidObjectKindOrVersion(c)
 });
 }, a.cancel = function() {
-o();
-}, q.push(j.watchObject(f, a.name, e, function(b, c) {
-a.resourceChanged = i(b) !== i(h), a.resourceDeleted = "DELETED" === c;
+n();
+}, p.push(i.watchObject(h, a.name, e, function(b, c) {
+a.resourceChanged = j(b) !== j(g), a.resourceDeleted = "DELETED" === c;
 }, {
 errorNotification:!1
 }));
 }, function(a) {
-k.toErrorPage("Could not load " + n(d.kind) + " '" + d.name + "'. " + b("getErrorDetails")(a, !0));
+j.toErrorPage("Could not load " + m(d.kind) + " '" + d.name + "'. " + b("getErrorDetails")(a, !0));
 }), void a.$on("$destroy", function() {
-j.unwatchAll(q);
-})) :void k.toErrorPage("You do not have authority to update " + n(d.kind) + " " + d.name + ".", "access_denied");
+i.unwatchAll(p);
+})) :void j.toErrorPage("You do not have authority to update " + m(d.kind) + " " + d.name + ".", "access_denied");
 }));
 } ]), angular.module("openshiftConsole").controller("BrowseCategoryController", [ "$scope", "$filter", "$location", "$q", "$routeParams", "$uibModal", "AlertMessageService", "Constants", "DataService", "LabelFilter", "Navigate", "ProjectsService", function(a, b, c, d, e, f, g, h, i, j, k, l) {
 a.projectName = e.project;
@@ -8816,14 +8839,14 @@ namespace:d.projectName
 }).then(function() {
 i.addNotification({
 type:"success",
-message:"Horizontal Pod Autoscaler " + a.metadata.name + " was marked for deletion."
+message:"Horizontal pod autoscaler " + a.metadata.name + " was marked for deletion."
 });
 })["catch"](function(b) {
 l({
 name:a.metadata.name,
 data:{
 type:"error",
-message:"Horizontal Pod Autoscaler " + a.metadata.name + " could not be deleted."
+message:"Horizontal pod autoscaler " + a.metadata.name + " could not be deleted."
 }
 }), j.error("HPA " + a.metadata.name + " could not be deleted.", b);
 });
@@ -12740,8 +12763,6 @@ return h.apiObject.spec.paused;
 }, h.startDeployment = function() {
 e.startLatestDeployment(h.apiObject, {
 namespace:h.apiObject.metadata.namespace
-}, {
-alerts:h.state.alerts
 });
 }, h.cancelDeployment = function() {
 var a = h.current;
@@ -12770,8 +12791,6 @@ type:"error",
 message:"Deployment #" + f + " is no longer the latest."
 }) :(a = h.current, j(a) ? void e.cancelRunningDeployment(a, {
 namespace:a.metadata.namespace
-}, {
-alerts:h.state.alerts
 }) :void (h.state.alerts["cancel-deployment"] = {
 type:"error",
 message:"Deployment " + d + " is no longer in progress."

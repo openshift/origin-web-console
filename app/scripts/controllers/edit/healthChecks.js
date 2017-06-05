@@ -13,7 +13,6 @@ angular.module('openshiftConsole')
                         $location,
                         $routeParams,
                         $scope,
-                        AlertMessageService,
                         AuthorizationService,
                         BreadcrumbsService,
                         APIService,
@@ -40,10 +39,6 @@ angular.module('openshiftConsole')
 
     $scope.name = $routeParams.name;
     $scope.resourceURL = Navigate.resourceURL($scope.name, $routeParams.kind, $routeParams.project);
-    $scope.alerts = {};
-    $scope.renderOptions = {
-      hideFilterWidget: true
-    };
 
     $scope.breadcrumbs = BreadcrumbsService.getBreadcrumbs({
       name: $routeParams.name,
@@ -57,13 +52,29 @@ angular.module('openshiftConsole')
     $scope.previousProbes = {};
 
     var getErrorDetails = $filter('getErrorDetails');
+    var upperFirst = $filter('upperFirst');
 
     var displayError = function(errorMessage, errorDetails) {
-      $scope.alerts['add-health-check'] = {
+      NotificationsService.addNotification({
+        id: "add-health-check-error",
         type: "error",
         message: errorMessage,
         details: errorDetails
-      };
+      });
+    };
+
+    var navigateBack = function() {
+      _.set($scope, 'confirm.doneEditing', true);
+      $location.url($scope.resourceURL);
+    };
+
+    var hideErrorNotifications = function() {
+      NotificationsService.hideNotification("add-health-check-error");
+    };
+
+    $scope.cancel = function() {
+      hideErrorNotifications();
+      navigateBack();
     };
 
     ProjectsService
@@ -108,6 +119,7 @@ angular.module('openshiftConsole')
 
             $scope.save = function() {
               $scope.disableInputs = true;
+              hideErrorNotifications();
               DataService.update(APIService.kindToResource($routeParams.kind),
                                  $scope.name,
                                  object,
@@ -115,19 +127,18 @@ angular.module('openshiftConsole')
                 function() {
                   NotificationsService.addNotification({
                       type: "success",
-                      message: displayName + " was updated."
+                      message: upperFirst(displayName) + " was updated."
                   });
-                  _.set($scope, 'confirm.doneEditing', true);
-                  $location.url($scope.resourceURL);
+                  navigateBack();
                 },
                 function(result) {
                   $scope.disableInputs = false;
-                  displayError(displayName + ' could not be updated.', getErrorDetails(result));
+                  displayError(upperFirst(displayName) + ' could not be updated.', getErrorDetails(result));
                 });
             };
           },
           function(result) {
-            displayError(displayName + ' could not be loaded.', getErrorDetails(result));
+            displayError(upperFirst(displayName) + ' could not be loaded.', getErrorDetails(result));
           }
         );
     }));

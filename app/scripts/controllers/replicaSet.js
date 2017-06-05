@@ -561,7 +561,7 @@ angular.module('openshiftConsole')
         };
 
         $scope.cancelRunningDeployment = function(replicaSet) {
-          DeploymentsService.cancelRunningDeployment(replicaSet, context, $scope);
+          DeploymentsService.cancelRunningDeployment(replicaSet, context);
         };
 
         $scope.scale = function(replicas) {

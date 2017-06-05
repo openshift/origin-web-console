@@ -81,7 +81,7 @@ angular.module("openshiftConsole")
           .then(function() {
             NotificationsService.addNotification({
                 type: "success",
-                message: "Horizontal Pod Autoscaler " + hpa.metadata.name + " was marked for deletion."
+                message: "Horizontal pod autoscaler " + hpa.metadata.name + " was marked for deletion."
             });
           })
           .catch(function(err) {
@@ -89,7 +89,7 @@ angular.module("openshiftConsole")
               name: hpa.metadata.name,
               data: {
                 type: "error",
-                message: "Horizontal Pod Autoscaler " + hpa.metadata.name + " could not be deleted."
+                message: "Horizontal pod autoscaler " + hpa.metadata.name + " could not be deleted."
               }
             });
             Logger.error("HPA " + hpa.metadata.name + " could not be deleted.", err);

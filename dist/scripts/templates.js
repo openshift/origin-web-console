@@ -9597,9 +9597,7 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "<button type=\"submit\" class=\"btn btn-primary btn-lg\" ng-disabled=\"form.$invalid || form.$pristine || disableInputs\">\n" +
     "Save\n" +
     "</button>\n" +
-    "<a class=\"btn btn-default btn-lg\" ng-click=\"confirm.doneEditing = true\" back>\n" +
-    "Cancel\n" +
-    "</a>\n" +
+    "<button ng-click=\"cancel()\" class=\"btn btn-default btn-lg\">Cancel</button>\n" +
     "</div>\n" +
     "</div>\n" +
     "</div>\n" +
@@ -9630,7 +9628,6 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "<breadcrumbs breadcrumbs=\"breadcrumbs\"></breadcrumbs>\n" +
     "<div class=\"row\">\n" +
     "<div class=\"col-md-12\">\n" +
-    "<alerts alerts=\"alerts\"></alerts>\n" +
     "<div ng-show=\"!containers.length\" class=\"mar-top-md\">Loading...</div>\n" +
     "<form ng-show=\"containers.length\" name=\"form\" class=\"health-checks-form\">\n" +
     "<confirm-on-exit dirty=\"form.$dirty && !confirm.doneEditing\"></confirm-on-exit>\n" +
@@ -9677,7 +9674,7 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "</pause-rollouts-checkbox>\n" +
     "<div class=\"button-group gutter-top gutter-bottom\">\n" +
     "<button type=\"submit\" class=\"btn btn-primary btn-lg\" ng-click=\"save()\" ng-disabled=\"form.$invalid || form.$pristine || disableInputs\" value=\"\">Save</button>\n" +
-    "<a class=\"btn btn-default btn-lg\" ng-click=\"confirm.doneEditing = true\" ng-href=\"{{resourceURL}}\">Cancel</a>\n" +
+    "<button class=\"btn btn-default btn-lg\" ng-click=\"cancel()\">Cancel</button>\n" +
     "</div>\n" +
     "</fieldset>\n" +
     "</form>\n" +
@@ -12867,7 +12864,6 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "<breadcrumbs breadcrumbs=\"breadcrumbs\"></breadcrumbs>\n" +
     "<div class=\"row\">\n" +
     "<div class=\"col-md-12\">\n" +
-    "<alerts alerts=\"alerts\"></alerts>\n" +
     "<div ng-show=\"!containers.length\">Loading...</div>\n" +
     "<form ng-if=\"containers.length\" name=\"form\" class=\"set-limits-form\">\n" +
     "<confirm-on-exit dirty=\"form.$dirty && !confirm.doneEditing\"></confirm-on-exit>\n" +
@@ -12900,7 +12896,7 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "</pause-rollouts-checkbox>\n" +
     "<div class=\"button-group gutter-top gutter-bottom\">\n" +
     "<button type=\"submit\" class=\"btn btn-primary btn-lg\" ng-click=\"save()\" ng-disabled=\"form.$pristine || form.$invalid || disableInputs || cpuProblems.length || memoryProblems.length\" value=\"\">Save</button>\n" +
-    "<a class=\"btn btn-default btn-lg\" ng-click=\"confirm.doneEditing = true\" ng-href=\"{{resourceURL}}\">Cancel</a>\n" +
+    "<button class=\"btn btn-default btn-lg\" ng-click=\"cancel()\">Cancel</button>\n" +
     "</div>\n" +
     "</fieldset>\n" +
     "</form>\n" +
