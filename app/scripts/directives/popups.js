@@ -95,7 +95,7 @@ angular.module('openshiftConsole')
       },
       link: function($scope) {
         var i, content = '', warnings = podWarningsFilter($scope.pod);
-        for (i = 0; i < warnings.length; i++) {
+        for (i = 0; i < _.size(warnings); i++) {
           if (content) {
             content += '<br>';
           }
