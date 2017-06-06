@@ -45,7 +45,7 @@ cmd "npm install --unsafe-perm"
 
 # In case upstream components change things without incrementing versions
 cmd "bower cache clean --allow-root"
-cmd "rm -rf bower_components/*"
+cmd "rm -rf bower_components/* node_modules/*"
 cmd "bower update --allow-root" 3
 
 cmd "rm -rf openshift-jvm"
