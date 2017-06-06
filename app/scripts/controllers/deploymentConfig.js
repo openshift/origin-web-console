@@ -20,6 +20,7 @@ angular.module('openshiftConsole')
                         ImageStreamResolver,
                         ModalsService,
                         Navigate,
+                        NotificationsService,
                         Logger,
                         ProjectsService,
                         StorageService,
@@ -143,18 +144,18 @@ angular.module('openshiftConsole')
                 // TODO:  de-duplicate success and error messages.
                 // as it stands, multiple messages appear based on how edit
                 // is made.
-                $scope.alerts['saveDCEnvVarsSuccess'] = {
+                NotificationsService.addNotification({
                   type: "success",
                   // TODO:  improve success alert
                   message: $scope.deploymentConfigName + " was updated."
-                };
+                });
                 $scope.forms.dcEnvVars.$setPristine();
               }, function error(e){
-                $scope.alerts['saveDCEnvVarsError'] = {
+                NotificationsService.addNotification({
                   type: "error",
                   message: $scope.deploymentConfigName + " was not updated.",
                   details: "Reason: " + $filter('getErrorDetails')(e)
-                };
+                });
               }).finally(function() {
                 saveEnvPromise = null;
               });

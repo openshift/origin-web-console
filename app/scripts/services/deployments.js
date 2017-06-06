@@ -1,11 +1,11 @@
 'use strict';
 
 angular.module("openshiftConsole")
-  .factory("DeploymentsService", function(APIService, DataService, $filter, $q, LabelFilter){
+  .factory("DeploymentsService", function(APIService, NotificationsService, DataService, $filter, $q, LabelFilter){
     function DeploymentsService() {}
     var annotation = $filter('annotation');
 
-    DeploymentsService.prototype.startLatestDeployment = function(deploymentConfig, context, $scope) {
+    DeploymentsService.prototype.startLatestDeployment = function(deploymentConfig, context) {
       // increase latest version by one so starts new deployment based on latest
       var req = {
         kind: "DeploymentRequest",
@@ -17,21 +17,17 @@ angular.module("openshiftConsole")
 
       DataService.create("deploymentconfigs/instantiate", deploymentConfig.metadata.name, req, context).then(
         function(updatedDC) {
-          $scope.alerts = $scope.alerts || {};
-          $scope.alerts["deploy"] =
-            {
+          NotificationsService.addNotification({
               type: "success",
               message: "Deployment #" + updatedDC.status.latestVersion + " of " + deploymentConfig.metadata.name + " has started.",
-            };
+            });
         },
         function(result) {
-          $scope.alerts = $scope.alerts || {};
-          $scope.alerts["deploy"] =
-            {
-              type: "error",
-              message: "An error occurred while starting the deployment.",
-              details: $filter('getErrorDetails')(result)
-            };
+          NotificationsService.addNotification({
+            type: "error",
+            message: "An error occurred while starting the deployment.",
+            details: $filter('getErrorDetails')(result)
+          });
         }
       );
     };
@@ -78,21 +74,17 @@ angular.module("openshiftConsole")
       // update the deployment
       DataService.update("replicationcontrollers", deploymentName, req, context).then(
         function() {
-          $scope.alerts = $scope.alerts || {};
-          $scope.alerts["retry"] =
-            {
+          NotificationsService.addNotification({
               type: "success",
               message: "Retrying deployment " + deploymentName + " of " + deploymentConfigName + ".",
-            };
+            });
         },
         function(result) {
-          $scope.alerts = $scope.alerts || {};
-          $scope.alerts["retry"] =
-            {
-              type: "error",
-              message: "An error occurred while retrying the deployment.",
-              details: $filter('getErrorDetails')(result)
-            };
+          NotificationsService.addNotification({
+            type: "error",
+            message: "An error occurred while retrying the deployment.",
+            details: $filter('getErrorDetails')(result)
+          });
         }
       );
     };
@@ -123,12 +115,10 @@ angular.module("openshiftConsole")
           // update the deployment config based on the one returned by the rollback
           DataService.update("deploymentconfigs", deploymentConfigName, newDeploymentConfig, context).then(
             function(rolledBackDeploymentConfig) {
-              $scope.alerts = $scope.alerts || {};
-              $scope.alerts["rollback"] =
-                {
-                  type: "success",
-                  message: "Deployment #" + rolledBackDeploymentConfig.status.latestVersion + " is rolling back " + deploymentConfigName + " to " + deploymentName + ".",
-                };
+              NotificationsService.addNotification({
+                type: "success",
+                message: "Deployment #" + rolledBackDeploymentConfig.status.latestVersion + " is rolling back " + deploymentConfigName + " to " + deploymentName + ".",
+              });
             },
             function(result) {
               $scope.alerts = $scope.alerts || {};
@@ -169,12 +159,10 @@ angular.module("openshiftConsole")
       // update the deployment with cancellation annotations
       DataService.update("replicationcontrollers", deploymentName, req, context).then(
         function() {
-          $scope.alerts = $scope.alerts || {};
-          $scope.alerts["cancel"] =
-            {
+          NotificationsService.addNotification({
               type: "success",
               message: "Cancelled deployment " + deploymentName + " of " + deploymentConfigName + ".",
-            };
+            });
         },
         function(result) {
           $scope.alerts = $scope.alerts || {};
