@@ -19,6 +19,7 @@ angular.module('openshiftConsole').controller('OverviewController', [
   'Logger',
   'MetricsService',
   'Navigate',
+  'NotificationsService',
   'OwnerReferencesService',
   'PodsService',
   'ProjectsService',
@@ -45,6 +46,7 @@ function OverviewController($scope,
                             Logger,
                             MetricsService,
                             Navigate,
+                            NotificationsService,
                             OwnerReferencesService,
                             PodsService,
                             ProjectsService,
@@ -1087,16 +1089,36 @@ function OverviewController($scope,
     $scope.$evalAsync(updateFilter);
   });
 
-  overview.startBuild = function(buildConfig) {
+  // This is used by the overview empty state message and also the list row,
+  // which is why it's assigned to the `state` object.
+  overview.startBuild = state.startBuild = function(buildConfig) {
+    var buildType = isJenkinsPipelineStrategy(buildConfig) ? 'pipeline' : 'build';
     BuildsService
       .startBuild(buildConfig.metadata.name, { namespace: buildConfig.metadata.namespace })
-      .then(_.noop, function(result) {
-        var buildType = isJenkinsPipelineStrategy(buildConfig) ? 'pipeline' : 'build';
-        state.alerts["start-build"] = {
+      .then(function(build) {
+        var buildName;
+        var buildNumber = annotation(build, 'buildNumber');
+        var buildURL = Navigate.resourceURL(build);
+        if (buildNumber) {
+          buildName = buildConfig.metadata.name + " #" + buildNumber;
+        } else {
+          buildName = build.metadata.name;
+        }
+
+        NotificationsService.addNotification({
+          type: "success",
+          message: _.capitalize(buildType) + " " + buildName + " successfully created.",
+          links: [{
+            href: buildURL,
+            label: 'View ' + _.capitalize(buildType)
+          }]
+        });
+      }, function(result) {
+        NotificationsService.addNotification({
           type: "error",
           message: "An error occurred while starting the " + buildType + ".",
           details: getErrorDetails(result)
-        };
+        });
       });
   };
 
