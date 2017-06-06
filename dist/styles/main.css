@@ -3759,7 +3759,7 @@ table.dataTable th:active{outline:0}
 .wizard-pf-steps-indicator li:only-of-type:before{background-color:transparent}
 .wizard-pf-steps-indicator li a{color:#030303;font-size:16px;cursor:pointer;margin-left:1em;margin-right:1em;text-decoration:none}
 .wizard-pf-steps-indicator li a:hover .wizard-pf-step-number{background-color:#bbb;border-color:#bbb;color:#fff}
-.wizard-pf-steps-indicator .wizard-pf-step-number{background-color:#fff;border-radius:50%;border:2px solid #bbb;color:#bbb;font-size:13px;font-weight:700;height:25px;left:calc(50% - 13px);line-height:22px;position:absolute;top:27px;width:25px}
+.wizard-pf-steps-indicator .wizard-pf-step-number{background-color:#fff;border-radius:50%;border:2px solid #bbb;color:#bbb;font-weight:700;height:25px;left:calc(50% - 13px);line-height:22px;position:absolute;top:27px;width:25px}
 .wizard-pf-steps-indicator .active .wizard-pf-step-number{cursor:default;background-color:#39a5dc;border-color:#39a5dc;color:#fff}
 .wizard-pf-steps-indicator .viewed-pf .wizard-pf-step-number{background-color:#fff;border-color:#39a5dc;color:#030303}
 .wizard-pf-main{height:100%;margin-left:253px;overflow:auto;padding:3em;vertical-align:top}
@@ -4220,7 +4220,6 @@ copy-to-clipboard .input-group.limit-width{max-width:300px}
 .wizard-pf-main.bind-service-wizard-step{height:350px;max-height:calc(100vh - 300px);min-height:200px;overflow-y:auto}
 }
 .landing .nav-tabs,.landing h1{margin-bottom:0!important;margin-top:0!important}
-.pf-wizard-no-back .wizard-pf-footer .btn-cancel{margin-right:0}
 @media (min-width:768px){.catalog-search,.landing-side-bar{top:61px}
 }
 .collapse{display:none}
@@ -5833,3 +5832,5 @@ kubernetes-container-terminal .terminal-actions .spinner{top:5px}
 .navbar-iconic .applauncher-pf .dropdown-toggle,.navbar-iconic .applauncher-pf.dropdown>.dropdown-toggle{border-left-width:0;padding:20px;line-height:inherit}
 }
 .navbar-iconic .dropdown-kebab-pf .dropdown-menu:after,.navbar-iconic .dropdown-kebab-pf .dropdown-menu:before{border-color:transparent}
+.pf-wizard-no-back .wizard-pf-footer .btn-cancel{margin-right:0}
+.wizard-pf-steps-indicator .wizard-pf-step-number{font-size:12px}
