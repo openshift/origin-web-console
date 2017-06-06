@@ -57,10 +57,11 @@ angular.module('openshiftConsole')
             $scope.actions.canSubmit = bool;
           },
           update: function() {
-            $scope.disableInputs = true;            
+            $scope.disableInputs = true;
             ProjectsService
               .update($routeParams.project, mergeEditable(project, $scope.editableFields))
               .then(function() {
+                _.set($scope, 'confirm.doneEditing', true);
                 if ($routeParams.then) {
                   $location.path($routeParams.then);
                 }

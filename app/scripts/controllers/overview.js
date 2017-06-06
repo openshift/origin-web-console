@@ -19,6 +19,7 @@ angular.module('openshiftConsole').controller('OverviewController', [
   'Logger',
   'MetricsService',
   'Navigate',
+  'NotificationsService',
   'OwnerReferencesService',
   'PodsService',
   'ProjectsService',
@@ -45,6 +46,7 @@ function OverviewController($scope,
                             Logger,
                             MetricsService,
                             Navigate,
+                            NotificationsService,
                             OwnerReferencesService,
                             PodsService,
                             ProjectsService,
@@ -142,7 +144,9 @@ function OverviewController($scope,
     id: 'label',
     label: 'Label'
   }];
-  overview.filterBy = 'name';
+
+  // If there is a label filter persisted (such as in the URL), default to filtering by label.
+  overview.filterBy = LabelFilter.getLabelSelector().isEmpty() ? 'name' : 'label';
 
   overview.viewByOptions = [{
     id: 'app',
@@ -1070,7 +1074,12 @@ function OverviewController($scope,
 
   $scope.$watch(function() {
     return overview.filterBy;
-  }, function() {
+  }, function(newValue, oldValue) {
+    // Avoid clearing label filter values set from the URL on controller initialization.
+    if (newValue === oldValue) {
+      return;
+    }
+
     // Clear any existing filter when switching filter types.
     overview.clearFilter();
     updateFilter();
@@ -1080,16 +1089,36 @@ function OverviewController($scope,
     $scope.$evalAsync(updateFilter);
   });
 
-  overview.startBuild = function(buildConfig) {
+  // This is used by the overview empty state message and also the list row,
+  // which is why it's assigned to the `state` object.
+  overview.startBuild = state.startBuild = function(buildConfig) {
+    var buildType = isJenkinsPipelineStrategy(buildConfig) ? 'pipeline' : 'build';
     BuildsService
       .startBuild(buildConfig.metadata.name, { namespace: buildConfig.metadata.namespace })
-      .then(_.noop, function(result) {
-        var buildType = isJenkinsPipelineStrategy(buildConfig) ? 'pipeline' : 'build';
-        state.alerts["start-build"] = {
+      .then(function(build) {
+        var buildName;
+        var buildNumber = annotation(build, 'buildNumber');
+        var buildURL = Navigate.resourceURL(build);
+        if (buildNumber) {
+          buildName = buildConfig.metadata.name + " #" + buildNumber;
+        } else {
+          buildName = build.metadata.name;
+        }
+
+        NotificationsService.addNotification({
+          type: "success",
+          message: _.capitalize(buildType) + " " + buildName + " successfully created.",
+          links: [{
+            href: buildURL,
+            label: 'View ' + _.capitalize(buildType)
+          }]
+        });
+      }, function(result) {
+        NotificationsService.addNotification({
           type: "error",
           message: "An error occurred while starting the " + buildType + ".",
           details: getErrorDetails(result)
-        };
+        });
       });
   };
 
@@ -1123,7 +1152,7 @@ function OverviewController($scope,
   var watches = [];
   ProjectsService.get($routeParams.project).then(_.spread(function(project, context) {
     // Project must be set on `$scope` for the projects dropdown.
-    $scope.project = project;
+    state.project = $scope.project = project;
     state.context = context;
 
     var updateReferencedImageStreams = function() {

@@ -14,13 +14,13 @@ angular.module('openshiftConsole')
                        $parse,
                        $routeParams,
                        $scope,
-                       AlertMessageService,
                        APIService,
                        AuthorizationService,
                        BreadcrumbsService,
                        DataService,
                        LimitRangesService,
                        Navigate,
+                       NotificationsService,
                        ProjectsService) {
     if (!$routeParams.kind || !$routeParams.name) {
       Navigate.toErrorPage("Kind or name parameter missing.");
@@ -47,7 +47,6 @@ angular.module('openshiftConsole')
       $scope.showPodWarning = true;
     }
 
-    $scope.alerts = {};
     $scope.renderOptions = {
       hideFilterWidget: true
     };
@@ -63,11 +62,26 @@ angular.module('openshiftConsole')
     var getErrorDetails = $filter('getErrorDetails');
 
     var displayError = function(errorMessage, errorDetails) {
-      $scope.alerts['set-compute-limits'] = {
+      NotificationsService.addNotification({
+        id: "set-compute-limits-error",
         type: "error",
         message: errorMessage,
         details: errorDetails
-      };
+      });
+    };
+
+    var navigateBack = function() {
+      _.set($scope, 'confirm.doneEditing', true);
+      $location.url($scope.resourceURL);
+    };
+
+    var hideErrorNotifications = function() {
+      NotificationsService.hideNotification("set-compute-limits-error");
+    };
+
+    $scope.cancel = function() {
+      hideErrorNotifications();
+      navigateBack();
     };
 
     ProjectsService
@@ -100,16 +114,14 @@ angular.module('openshiftConsole')
             $scope.containers = _.get(object, 'spec.template.spec.containers');
             $scope.save = function() {
               $scope.disableInputs = true;
+              hideErrorNotifications();
               DataService.update(resourceGroupVersion, $scope.name, object, context).then(
                 function() {
-                  AlertMessageService.addAlert({
-                    name: $scope.name,
-                    data: {
+                  NotificationsService.addNotification({
                       type: "success",
                       message: displayName + " was updated."
-                    }
                   });
-                  $location.url($scope.resourceURL);
+                  navigateBack();
                 },
                 function(result) {
                   $scope.disableInputs = false;

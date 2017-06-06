@@ -17,9 +17,9 @@ angular.module('openshiftConsole')
                        AuthorizationService,
                        DataService,
                        Navigate,
+                       NotificationsService,
                        ProjectsService,
                        RoutesService) {
-    $scope.alerts = {};
     $scope.renderOptions = {
       hideFilterWidget: true
     };
@@ -41,6 +41,21 @@ angular.module('openshiftConsole')
       title: "Edit"
     }];
 
+    var hideErrorNotifications = function() {
+      NotificationsService.hideNotification("edit-route-error");
+    };
+
+    var navigateBack = function() {
+      _.set($scope, 'confirm.doneEditing', true);
+      $scope.doneEditing = true;
+      $location.path($scope.routeURL);
+    };
+
+    $scope.cancel = function() {
+      hideErrorNotifications();
+      navigateBack();
+    };
+
     ProjectsService
       .get($routeParams.project)
       .then(_.spread(function(project, context) {
@@ -55,9 +70,18 @@ angular.module('openshiftConsole')
 
         var orderByDisplayName = $filter('orderByDisplayName');
 
+        var showNonServiceTargetError = function() {
+          Navigate.toErrorPage('Editing routes with non-service targets is unsupported. You can edit the route with the "Edit YAML" action instead.');
+        };
+
         var route;
         DataService.get("routes", $scope.routeName, context).then(
           function(original) {
+            if (original.spec.to.kind !== 'Service') {
+              showNonServiceTargetError();
+              return;
+            }
+
             route = angular.copy(original);
             var host = _.get(route, 'spec.host');
             var isWildcard = _.get(route, 'spec.wildcardPolicy') === 'Subdomain';
@@ -66,7 +90,6 @@ angular.module('openshiftConsole')
               host = '*.' + RoutesService.getSubdomain(route);
             }
             $scope.routing = {
-              service: _.get(route, 'spec.to.name'),
               host: host,
               wildcardPolicy: _.get(route, 'spec.wildcardPolicy'),
               path: _.get(route, 'spec.path'),
@@ -75,26 +98,21 @@ angular.module('openshiftConsole')
             };
 
             DataService.list("services", context).then(function(resp) {
-              var servicesByName = resp.by("metadata.name");
-              var to = _.get(route, 'spec.to', {});
               $scope.loading = false;
-              $scope.services = orderByDisplayName(servicesByName);
-              $scope.routing.to = {
-                service: servicesByName[to.name],
-                weight: to.weight
-              };
+
+              var servicesByName = resp.by("metadata.name");
+              $scope.routing.to = route.spec.to;
               $scope.routing.alternateServices = [];
               _.each(_.get(route, 'spec.alternateBackends'), function(alternateBackend) {
                 if (alternateBackend.kind !== 'Service') {
-                  Navigate.toErrorPage('Editing routes with non-service targets is unsupported. You can edit the route with the "Edit YAML" action instead.');
+                  showNonServiceTargetError();
                   return false;
                 }
 
-                $scope.routing.alternateServices.push({
-                  service: servicesByName[alternateBackend.name],
-                  weight: alternateBackend.weight
-                });
+                $scope.routing.alternateServices.push(alternateBackend);
               });
+
+              $scope.services = orderByDisplayName(servicesByName);
             });
           },
           function() {
@@ -107,7 +125,7 @@ angular.module('openshiftConsole')
           // This way if the PUT fails and the user switches termination types,
           // we haven't lost the previously-entered certificates values.
           var updated = angular.copy(route);
-          var serviceName = _.get($scope, 'routing.to.service.metadata.name');
+          var serviceName = _.get($scope, 'routing.to.name');
           _.set(updated, 'spec.to.name', serviceName);
           var weight = _.get($scope, 'routing.to.weight');
           if (!isNaN(weight)) {
@@ -147,7 +165,7 @@ angular.module('openshiftConsole')
             updated.spec.alternateBackends = _.map(alternateServices, function(alternate) {
               return {
                 kind: 'Service',
-                name: _.get(alternate, 'service.metadata.name'),
+                name: alternate.name,
                 weight: alternate.weight
               };
             });
@@ -158,25 +176,24 @@ angular.module('openshiftConsole')
 
         $scope.updateRoute = function() {
           if ($scope.form.$valid) {
+            hideErrorNotifications();
             $scope.disableInputs = true;
             var updated = updateRouteFields();
             DataService.update('routes', $scope.routeName, updated, context)
               .then(function() { // Success
-                AlertMessageService.addAlert({
-                  name: $scope.routeName,
-                  data: {
-                    type: "success",
-                    message: "Route " + $scope.routeName + " was successfully updated."
-                  }
+                NotificationsService.addNotification({
+                  type: "success",
+                  message: "Route " + $scope.routeName + " was successfully updated."
                 });
-                $location.path($scope.routeURL);
+                navigateBack();
               }, function(response) { // Failure
                 $scope.disableInputs = false;
-                $scope.alerts['update-route'] = {
+                NotificationsService.addNotification({
                   type: "error",
+                  id: "edit-route-error",
                   message: "An error occurred updating route " + $scope.routeName + ".",
                   details: $filter('getErrorDetails')(response)
-                };
+                });
               });
           }
         };

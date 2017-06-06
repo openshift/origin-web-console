@@ -202,7 +202,7 @@ angular.module('openshiftConsole')
           displayError('Could not load secrets', getErrorDetails(e));
         });
 
-        var allHPA = {}, limitRanges = {};
+        var allHPA = {};
         var updateHPA = function() {
           $scope.hpaForRS = HPAService.filterHPA(allHPA, kind, $routeParams.replicaSet);
           if ($scope.deploymentConfigName && $scope.isActive) {
@@ -237,7 +237,7 @@ angular.module('openshiftConsole')
         };
 
         var updateHPAWarnings = function() {
-            HPAService.getHPAWarnings($scope.replicaSet, $scope.autoscalers, limitRanges, project)
+            HPAService.getHPAWarnings($scope.replicaSet, $scope.autoscalers, $scope.limitRanges, project)
                       .then(function(warnings) {
               $scope.hpaWarnings = warnings;
             });
@@ -529,9 +529,19 @@ angular.module('openshiftConsole')
         // List limit ranges in this project to determine if there is a default
         // CPU request for autoscaling.
         DataService.list("limitranges", context).then(function(resp) {
-          limitRanges = resp.by("metadata.name");
+          $scope.limitRanges = resp.by("metadata.name");
           updateHPAWarnings();
         });
+
+        // Watch quotas and cluster quotas to warn about problems in the deployment donut.
+        var QUOTA_POLL_INTERVAL = 60 * 1000;
+        watches.push(DataService.watch('resourcequotas', context, function(quotaData) {
+          $scope.quotas = quotaData.by("metadata.name");
+        }, {poll: true, pollInterval: QUOTA_POLL_INTERVAL}));
+
+        watches.push(DataService.watch('appliedclusterresourcequotas', context, function(clusterQuotaData) {
+          $scope.clusterQuotas = clusterQuotaData.by("metadata.name");
+        }, {poll: true, pollInterval: QUOTA_POLL_INTERVAL}));
 
         var deploymentIsLatest = $filter('deploymentIsLatest');
 
@@ -551,7 +561,7 @@ angular.module('openshiftConsole')
         };
 
         $scope.cancelRunningDeployment = function(replicaSet) {
-          DeploymentsService.cancelRunningDeployment(replicaSet, context, $scope);
+          DeploymentsService.cancelRunningDeployment(replicaSet, context);
         };
 
         $scope.scale = function(replicas) {

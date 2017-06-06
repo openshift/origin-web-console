@@ -20,6 +20,7 @@ angular.module('openshiftConsole')
                         ImageStreamResolver,
                         ModalsService,
                         Navigate,
+                        NotificationsService,
                         Logger,
                         ProjectsService,
                         StorageService,
@@ -134,27 +135,25 @@ angular.module('openshiftConsole')
             updateHPAWarnings();
             $scope.updatedDeploymentConfig = EnvironmentService.copyAndNormalize($scope.deploymentConfig);
             $scope.saveEnvVars = function() {
+              NotificationsService.hideNotification("save-dc-env-error");
               EnvironmentService.compact($scope.updatedDeploymentConfig);
               saveEnvPromise = DataService.update("deploymentconfigs",
                                                   $routeParams.deploymentconfig,
                                                   $scope.updatedDeploymentConfig,
                                                   context);
               saveEnvPromise.then(function success(){
-                // TODO:  de-duplicate success and error messages.
-                // as it stands, multiple messages appear based on how edit
-                // is made.
-                $scope.alerts['saveDCEnvVarsSuccess'] = {
+                NotificationsService.addNotification({
                   type: "success",
-                  // TODO:  improve success alert
-                  message: $scope.deploymentConfigName + " was updated."
-                };
+                  message: "Environment variables for deployment config " + $scope.deploymentConfigName + " were successfully updated."
+                });
                 $scope.forms.dcEnvVars.$setPristine();
               }, function error(e){
-                $scope.alerts['saveDCEnvVarsError'] = {
+                NotificationsService.addNotification({
+                  id: "save-dc-env-error",
                   type: "error",
-                  message: $scope.deploymentConfigName + " was not updated.",
-                  details: "Reason: " + $filter('getErrorDetails')(e)
-                };
+                  message: "An error occurred updating environment variables for deployment config " + $scope.deploymentConfigName + ".",
+                  details: $filter('getErrorDetails')(e)
+                });
               }).finally(function() {
                 saveEnvPromise = null;
               });
@@ -353,7 +352,7 @@ angular.module('openshiftConsole')
 
         $scope.startLatestDeployment = function() {
           if ($scope.canDeploy()) {
-            DeploymentsService.startLatestDeployment($scope.deploymentConfig, context, $scope);
+            DeploymentsService.startLatestDeployment($scope.deploymentConfig, context);
           }
         };
 

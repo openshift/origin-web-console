@@ -122,6 +122,7 @@ angular
             }));
           }, function(err) {
             resetForm();
+            refreshRoleBindingList();
             showAlert('rolebindingCreateFail', 'error', messages.update.subject.error({
               roleName: role.metadata.name,
               subjectName: newSubject.name
@@ -141,6 +142,7 @@ angular
             }));
           }, function(err) {
             resetForm();
+            refreshRoleBindingList();
             showAlert('rolebindingUpdateFail', 'error', messages.update.subject.error({
               roleName: rb.roleRef.name,
               subjectName: newSubject.name

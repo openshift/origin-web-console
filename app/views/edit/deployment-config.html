@@ -17,7 +17,8 @@
                 Edit Deployment Config {{deploymentConfig.metadata.name}}
               </h1>
               <fieldset ng-disabled="disableInputs">
-                <form class="edit-form" name="form" novalidate ng-submit="save()">
+                <form class="edit-form" name="form" novalidate>
+                  <confirm-on-exit dirty="form.$dirty && !confirm.doneEditing"></confirm-on-exit>
                   <div class="row">
                     <div class="col-lg-12">
                       <div class="section">
@@ -375,12 +376,10 @@
                       </pause-rollouts-checkbox>
 
                       <div class="buttons gutter-top-bottom">
-                        <button type="submit" class="btn btn-primary btn-lg" ng-disabled="form.$invalid || form.$pristine || disableInputs">
+                        <button ng-click="save()" class="btn btn-primary btn-lg" ng-disabled="form.$invalid || form.$pristine || disableInputs">
                           Save
                         </button>
-                        <a class="btn btn-default btn-lg" back>
-                          Cancel
-                        </a>
+                        <button ng-click="cancel()" class="btn btn-default btn-lg">Cancel</button>
                       </div>
                     </div>
                   </div>

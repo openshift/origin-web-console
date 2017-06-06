@@ -26,6 +26,7 @@
                         <osc-image-summary resource="image" name="displayName || imageName" tag="imageTag"></osc-image-summary>
                         <div class="clearfix visible-xs-block"></div>
                         <form class="" ng-show="imageStream" novalidate name="form" ng-submit="createApp()">
+                          <confirm-on-exit dirty="form.$dirty && !confirm.doneEditing"></confirm-on-exit>
                           <div style="margin-bottom: 15px;">
                             <div class="form-group">
                              <label for="appname" class="required">Name</label>
@@ -418,7 +419,9 @@
                                 class="btn btn-primary btn-lg"
                                 ng-disabled="form.$invalid || nameTaken || cpuProblems.length || memoryProblems.length || disableInputs"
                                 >Create</button>
-                            <a class="btn btn-default btn-lg" href="{{projectName | projectOverviewURL}}">Cancel</a>
+                            <a class="btn btn-default btn-lg"
+                              ng-click="confirm.doneEditing = true"
+                              ng-href="{{projectName | projectOverviewURL}}">Cancel</a>
                           </div>
                         </form>
                       </fieldset>

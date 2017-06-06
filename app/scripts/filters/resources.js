@@ -22,11 +22,11 @@ angular.module('openshiftConsole')
       var lastUpdated = imageStream.metadata.creationTimestamp;
       var lastUpdatedMoment = moment(lastUpdated);
       angular.forEach(imageStream.status.tags, function(tag) {
-        if (tag.items && tag.items.length > 0) {
-          var tagUpdatedMoment = moment(tag.items[0].created);
+        if (!_.isEmpty(tag.items)) {
+          var tagUpdatedMoment = moment(_.first(tag.items).created);
           if (tagUpdatedMoment.isAfter(lastUpdatedMoment)) {
             lastUpdatedMoment = tagUpdatedMoment;
-            lastUpdated = tag.items[0].created;
+            lastUpdated = _.first(tag.items).created;
           }
         }
       });
@@ -140,7 +140,7 @@ angular.module('openshiftConsole')
   .filter('imageEnv', function() {
     return function(image, envKey) {
       var envVars = image.dockerImageMetadata.Config.Env;
-      for (var i = 0; i < envVars.length; i++) {
+      for (var i = 0; i < _.size(envVars); i++) {
         var keyValue = envVars[i].split("=");
         if (keyValue[0] === envKey) {
           return keyValue[1];
@@ -250,7 +250,7 @@ angular.module('openshiftConsole')
       }
 
       var ns = objectRef.namespace || nsIfUnspecified || "";
-      if (ns.length > 0) {
+      if (!_.isEmpty(ns)) {
         ns = ns + "/";
       }
       var kind = objectRef.kind;
@@ -342,7 +342,7 @@ angular.module('openshiftConsole')
       if (pod.status.phase === 'Running' && pod.status.containerStatuses) {
         // Check container statuses and short circuit when we find any problem.
         var i;
-        for (i = 0; i < pod.status.containerStatuses.length; ++i) {
+        for (i = 0; i < _.size(pod.status.containerStatuses); ++i) {
           var containerStatus = pod.status.containerStatuses[i];
           if (!containerStatus.state) {
             continue;

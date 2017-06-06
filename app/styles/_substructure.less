@@ -12,19 +12,19 @@ html,body {
 .console-os {
   background-color: @body-bg;
   .top-header {
-    .flex-display(@display: flex);
+    display: flex;
     position:relative;
     height: @navbar-os-header-height-mobile;
   }
   .wrap {
+    display: flex;
+    flex-direction: column;
     height:100vh;
     margin-top:-@navbar-os-header-height-mobile; /* top offset height */
     padding-top:@navbar-os-header-height-mobile; /* top offset height */
     position:relative;
     width:100%;
     .backface-visibility(hidden);
-    .flex-direction(@direction: column);
-    .flex-display(@display: flex);
     &.no-sidebar {
         h1 {
           margin: 10px 0 20px;
@@ -43,7 +43,7 @@ html,body {
     }
   }
   .sidebar-left,.middle,.sidebar-right {
-    .flex(@columns: 0 0 auto);
+    flex: 0 0 auto;
     width: 100%;
     position: relative;
   }
@@ -70,15 +70,15 @@ html,body {
       height: 100%;
       width: 100%;
       .middle-container {
-        .flex-display(@display: flex);
-        .flex-direction(@direction: column);
+        display: flex;
+        flex-direction: column;
         height: 100%;
         .middle-header {
-          .flex(@columns: 0 0 auto);
+          flex: 0 0 auto;
           margin-bottom: @grid-gutter-width / 2;
         }
         .middle-content {
-          .flex(@columns: 1 1 auto);
+          flex: 1 1 auto;
           position: relative;
           width: 100%;
         }
@@ -107,10 +107,10 @@ html,body {
   }
   .console-os {
     .wrap {
+      flex-direction: row;
       margin-top:-@navbar-os-header-height-desktop; /* top offset height */
-      padding-top:@navbar-os-header-height-desktop; /* top offset height */
-      .flex-direction(@direction: row);
       overflow:hidden;
+      padding-top:@navbar-os-header-height-desktop; /* top offset height */
       &.no-sidebar {
         .sidebar-left {
           display: none !important;
@@ -141,11 +141,11 @@ html,body {
       -webkit-overflow-scrolling:touch;
     }
     .sidebar-left {
-      .flex(@columns: 0 0 @sidebar-left-width-md);
+      flex: 0 0 @sidebar-left-width-md;
       overflow-y: visible;
     }
     .middle{
-      .flex(@columns: 1 1 0%);
+      flex: 1 1 0%;
       position: relative;
       // make scrollable
       overflow-x: hidden;
@@ -156,7 +156,7 @@ html,body {
     }
     .sidebar-right {
       border-left: 1px solid #dadada;
-      .flex(@columns: 0 0 @sidebar-right-width-sm);
+      flex: 0 0 @sidebar-right-width-sm;
       position: relative;
     }
   }
@@ -164,27 +164,23 @@ html,body {
   // ---------------------------------
   .middle-section {
     .middle-container {
-      .flex-display(@display: flex);
-      .flex-direction(@direction: column);
-      .flex-wrap(@wrap: nowrap);
-      .align-items(@align: flex-start);
-      .justify-content(@justify: flex-start);
-      // remove ie prefixes when PostCSS Autoprefixer is included for github issue #7559
-      -ms-flex-align: start;
-      -ms-flex-pack: start;
-
-      height: 100%;
-      position: absolute;
-      top: 0;
-      right: 0;
+      align-items: flex-start;
       bottom: 0;
+      display: flex;
+      flex-direction: column;
+      flex-wrap: nowrap;
+      height: 100%;
+      justify-content: flex-start;
       left: 0;
+      position: absolute;
+      right: 0;
+      top: 0;
       .middle-header {
-        .flex(@columns: 0 0 auto);
+        flex: 0 0 auto;
         width: 100%;
       }
       .middle-content {
-        .flex(@columns: 1 1 auto);
+        flex: 1 1 auto;
         position: relative;
         width: 100%;
       }
@@ -197,28 +193,24 @@ html,body {
     width: @sidebar-right-width-sm;
     height: 100%;
     .right-container {
-      .flex-display(@display: flex);
-      .flex-direction(@direction: column);
-      .flex-wrap(@wrap: nowrap);
-      .align-items(@align: flex-start);
-      .justify-content(@justify: flex-start);
-      // remove ie prefixes when PostCSS Autoprefixer is included for github issue #7559
-      -ms-flex-align: start;
-      -ms-flex-pack: start;
-
-      height: 100%;
-      position: absolute;
-      overflow: hidden;
-      top: 0;
-      right: 0;
+      align-items: flex-start;
       bottom: 0;
+      display: flex;
+      flex-direction: column;
+      flex-wrap: nowrap;
+      justify-content: flex-start;
+      height: 100%;
       left: 0;
+      overflow: hidden;
+      position: absolute;
+      right: 0;
+      top: 0;
       .right-header  {
-        .flex(@columns: 0 0 auto);
+        flex: 0 0 auto;
         width: 100%;
       }
       .right-content {
-        .flex(@columns: 1 1 auto);
+        flex: 1 1 auto;
         position: relative;
         overflow-x: hidden;
         overflow-y: auto;
@@ -237,7 +229,7 @@ html,body {
       padding-right: @middle-content-container-padding-lg;
     }
     .sidebar-right {
-      .flex(@columns: 0 0 @sidebar-right-width-md);
+      flex: 0 0 @sidebar-right-width-md;
       .right-section {
         width: @sidebar-right-width-md;
       }
@@ -248,14 +240,14 @@ html,body {
 @media (min-width: @screen-lg-min) {
   .console-os {
     .sidebar-left {
-      .flex(@columns: 0 0 @sidebar-left-width-md);
+      flex: 0 0 @sidebar-left-width-md;
       .navbar-sidebar {
         width: @sidebar-left-width-md;
       }
     }
     .wrap.show-sidebar-right {
       .sidebar-right {
-        .flex(@columns: 0 0 @sidebar-right-width-lg);
+        flex: 0 0 @sidebar-right-width-lg;
         .right-section {
           width: @sidebar-right-width-lg;
         }
@@ -267,14 +259,14 @@ html,body {
 @media (min-width: @screen-xl-min) {
   .console-os {
     .sidebar-left {
-      .flex(@columns: 0 0 @sidebar-left-width-lg);
+      flex: 0 0 @sidebar-left-width-lg;
       .navbar-sidebar {
         width: @sidebar-left-width-lg;
       }
     }
     .wrap.show-sidebar-right {
       .sidebar-right {
-        .flex(@columns: 0 0 @sidebar-right-width-xlg);
+        flex: 0 0 @sidebar-right-width-xlg;
         .right-section {
           width: @sidebar-right-width-xlg;
         }

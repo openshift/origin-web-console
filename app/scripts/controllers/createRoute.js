@@ -17,9 +17,9 @@ angular.module('openshiftConsole')
                        AuthorizationService,
                        DataService,
                        Navigate,
+                       NotificationsService,
                        ProjectsService,
                        keyValueEditorUtils) {
-    $scope.alerts = {};
     $scope.renderOptions = {
       hideFilterWidget: true
     };
@@ -46,6 +46,20 @@ angular.module('openshiftConsole')
       }
     ];
 
+    var hideErrorNotifications = function() {
+      NotificationsService.hideNotification("create-route-error");
+    };
+
+    var navigateBack = function() {
+      _.set($scope, 'confirm.doneEditing', true);
+      $window.history.back();
+    };
+
+    $scope.cancel = function() {
+      hideErrorNotifications();
+      navigateBack();
+    };
+
     ProjectsService
       .get($routeParams.project)
       .then(_.spread(function(project, context) {
@@ -60,12 +74,13 @@ angular.module('openshiftConsole')
 
         var orderByDisplayName = $filter('orderByDisplayName');
 
+        $scope.routing.to = {
+          kind: 'Service',
+          name: $scope.serviceName,
+          weight: 1
+        };
         DataService.list("services", context).then(function(services) {
           $scope.services = orderByDisplayName(services.by("metadata.name"));
-          $scope.routing.to = {};
-          $scope.routing.to.service = _.find($scope.services, function(service) {
-            return !$scope.serviceName || service.metadata.name === $scope.serviceName;
-          });
         });
 
         $scope.copyServiceLabels = function() {
@@ -82,8 +97,9 @@ angular.module('openshiftConsole')
 
         $scope.createRoute = function() {
           if ($scope.createRouteForm.$valid) {
+            hideErrorNotifications();
             $scope.disableInputs = true;
-            var serviceName = $scope.routing.to.service.metadata.name;
+            var serviceName = $scope.routing.to.name;
             var labels = keyValueEditorUtils.mapEntries(keyValueEditorUtils.compactEntries($scope.labels));
 
             var route = ApplicationGenerator.createRoute($scope.routing, serviceName, labels);
@@ -93,7 +109,7 @@ angular.module('openshiftConsole')
               route.spec.alternateBackends = _.map(alternateServices, function(alternate) {
                 return {
                   kind: 'Service',
-                  name: _.get(alternate, 'service.metadata.name'),
+                  name: alternate.name,
                   weight: alternate.weight
                 };
               });
@@ -101,15 +117,21 @@ angular.module('openshiftConsole')
 
             DataService.create('routes', null, route, context)
               .then(function() { // Success
+                NotificationsService.addNotification({
+                    type: "success",
+                    message: "Route " + route.metadata.name + " was successfully created."
+                });
+
                 // Return to the previous page
-                $window.history.back();
+                navigateBack();
               }, function(result) { // Failure
                 $scope.disableInputs = false;
-                $scope.alerts['create-route'] = {
+                NotificationsService.addNotification({
                   type: "error",
+                  id: "create-route-error",
                   message: "An error occurred creating the route.",
                   details: $filter('getErrorDetails')(result)
-                };
+                });
               });
           }
         };

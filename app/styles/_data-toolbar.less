@@ -8,7 +8,7 @@
 .data-toolbar {
   padding: 5px 0;
   @media (min-width: @screen-sm-min) {
-    .flex-display(@display: flex);
+    display: flex;
   }
   // Set min-widths to prevent clipping when option lengths are known
   &.other-resources-toolbar .data-toolbar-dropdown {
@@ -18,7 +18,7 @@
     margin-bottom: 0;
     margin-top: 10px;
     @media (min-width: @screen-sm-min) {
-      .flex(@columns: 1 1 0%);
+      flex: 1 1 0%;
       margin-left: 20px;
       margin-top: 3px;
       text-align: right;
@@ -26,11 +26,11 @@
   }
   .data-toolbar-filter {
     project-filter {
-      .flex-direction(@direction: column);
-      .flex-display(@display: flex);
+      display: flex;
+      flex-direction: column;
     }
     @media (min-width: @screen-sm-min) {
-      .flex(@columns: 1 1 0%);
+      flex: 1 1 0%;
     }
     @media (min-width: @screen-md-min) {
       max-width: @data-toolbar-filter-max-width;

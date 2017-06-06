@@ -395,6 +395,9 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
   $templateCache.put('views/_sidebar.html',
     "<nav class=\"navbar navbar-sidebar\">\n" +
     "<ul class=\"nav nav-sidenav-primary\">\n" +
+    "<li ng-if=\"'service_catalog_landing_page' | enableTechPreviewFeature\" class=\"visible-xs-block\">\n" +
+    "<a href=\"./\"><span class=\"pficon pficon-home\" aria-hidden=\"true\"></span> Home</a>\n" +
+    "</li>\n" +
     "<li ng-repeat=\"primaryItem in navItems\" ng-class=\"{ active: primaryItem === activePrimary }\" ng-if=\"show(primaryItem)\">\n" +
     "<a ng-if=\"primaryItem.href\" ng-href=\"{{navURL(primaryItem.href)}}\">\n" +
     "<span class=\"{{primaryItem.iconClass}}\"></span> {{primaryItem.label}}\n" +
@@ -477,8 +480,8 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
 
 
   $templateCache.put('views/_templateopt.html',
-    "<div class=\"template-options\" ng-show=\"parameters.length\" ng-form=\"paramForm\">\n" +
-    "<div ng-if=\"!isDialog\" class=\"flow\">\n" +
+    "<div class=\"template-options\" ng-form=\"paramForm\">\n" +
+    "<div ng-if=\"!isDialog && parameters.length\" class=\"flow\">\n" +
     "<div class=\"flow-block\">\n" +
     "<h2>Parameters</h2>\n" +
     "</div>\n" +
@@ -766,6 +769,7 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "Add values from a config map or secret as volume. This will make the data available as files for {{kind | humanizeKind}} {{name}}.\n" +
     "</div>\n" +
     "<form name=\"forms.addConfigVolumeForm\" class=\"mar-top-lg\">\n" +
+    "<confirm-on-exit dirty=\"forms.addConfigVolumeForm.$dirty && !confirm.doneEditing\"></confirm-on-exit>\n" +
     "<fieldset ng-disabled=\"disableInputs\">\n" +
     "<div class=\"form-group\">\n" +
     "<label class=\"required\">Source</label>\n" +
@@ -883,7 +887,7 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "</div>\n" +
     "<div class=\"button-group gutter-top gutter-bottom\">\n" +
     "<button type=\"submit\" class=\"btn btn-primary btn-lg\" ng-click=\"addVolume()\" ng-disabled=\"forms.addConfigVolumeForm.$invalid || disableInputs\">Add</button>\n" +
-    "<a class=\"btn btn-default btn-lg\" role=\"button\" href=\"#\" back>Cancel</a>\n" +
+    "<a class=\"btn btn-default btn-lg\" role=\"button\" href=\"#\" ng-click=\"confirm.doneEditing = true\" back>Cancel</a>\n" +
     "</div>\n" +
     "</fieldset>\n" +
     "</form>\n" +
@@ -936,6 +940,7 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "Add an existing persistent volume claim to the template of {{kind | humanizeKind}} {{name}}.\n" +
     "</div>\n" +
     "<form name=\"attachPVCForm\" class=\"mar-top-lg\">\n" +
+    "<confirm-on-exit dirty=\"attachPVCForm.$dirty && !confirm.doneEditing\"></confirm-on-exit>\n" +
     "<fieldset ng-disabled=\"disableInputs\">\n" +
     "<div class=\"form-group\">\n" +
     "<label for=\"persistentVolumeClaim\" class=\"required\">Storage</label>\n" +
@@ -1050,7 +1055,7 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "</pause-rollouts-checkbox>\n" +
     "<div class=\"button-group gutter-top gutter-bottom\">\n" +
     "<button type=\"submit\" class=\"btn btn-primary btn-lg\" ng-click=\"attachPVC()\" ng-disabled=\"attachPVCForm.$invalid || disableInputs || !attachPVC\">Add</button>\n" +
-    "<a class=\"btn btn-default btn-lg\" role=\"button\" href=\"#\" back>Cancel</a>\n" +
+    "<a class=\"btn btn-default btn-lg\" role=\"button\" ng-click=\"confirm.doneEditing = true\" href=\"#\" back>Cancel</a>\n" +
     "</div>\n" +
     "</fieldset>\n" +
     "</form>\n" +
@@ -1336,7 +1341,7 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
   $templateCache.put('views/browse/_replica-set-details.html',
     "<div class=\"row\" style=\"max-width: 650px\">\n" +
     "<div class=\"col-sm-4 col-sm-push-8 browse-deployment-donut\">\n" +
-    "<deployment-donut rc=\"replicaSet\" deployment=\"deployment\" deployment-config=\"deploymentConfig\" pods=\"podsForDeployment\" hpa=\"autoscalers\" scalable=\"isScalable()\" alerts=\"alerts\">\n" +
+    "<deployment-donut rc=\"replicaSet\" deployment=\"deployment\" deployment-config=\"deploymentConfig\" pods=\"podsForDeployment\" hpa=\"autoscalers\" scalable=\"isScalable()\" limit-ranges=\"limitRanges\" project=\"project\" quotas=\"quotas\" cluster-quotas=\"clusterQuotas\" alerts=\"alerts\">\n" +
     "</deployment-donut>\n" +
     "</div>\n" +
     "<div class=\"col-sm-8 col-sm-pull-4\">\n" +
@@ -1955,6 +1960,7 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "<key-value-editor ng-if=\"expand.imageEnv\" entries=\"BCEnvVarsFromImage\" key-placeholder=\"Name\" value-placeholder=\"Value\" is-readonly cannot-add cannot-sort cannot-delete show-header></key-value-editor>\n" +
     "<ng-form name=\"forms.bcEnvVars\" class=\"mar-bottom-xl block\">\n" +
     "<div ng-if=\"'buildconfigs' | canI : 'update'\">\n" +
+    "<confirm-on-exit dirty=\"forms.bcEnvVars.$dirty\"></confirm-on-exit>\n" +
     "<key-value-editor entries=\"envVars\" key-placeholder=\"Name\" value-placeholder=\"Value\" key-validator=\"[A-Za-z_][A-Za-z0-9_]*\" key-validator-error=\"Please enter a valid key\" key-validator-error-tooltip=\"A valid environment variable name is an alphanumeric (a-z and 0-9) string beginning with a letter that may contain underscores.\" add-row-link=\"Add Environment Variable\" show-header></key-value-editor>\n" +
     "<button class=\"btn btn-default\" ng-click=\"saveEnvVars()\" ng-disabled=\"forms.bcEnvVars.$pristine || forms.bcEnvVars.$invalid\">Save</button>\n" +
     "<a ng-if=\"!forms.bcEnvVars.$pristine\" href=\"\" ng-click=\"clearEnvVarUpdates()\" class=\"mar-left-sm\" style=\"vertical-align: -2px\">Clear Changes</a>\n" +
@@ -2520,6 +2526,8 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "<uib-tab heading=\"Environment\" active=\"selectedTab.environment\" ng-if=\"deploymentConfig\">\n" +
     "<uib-tab-heading>Environment</uib-tab-heading>\n" +
     "<ng-form name=\"forms.dcEnvVars\" class=\"mar-bottom-xl block\">\n" +
+    "<confirm-on-exit ng-if=\"'deploymentconfigs' | canI : 'update'\" dirty=\"forms.dcEnvVars.$dirty\">\n" +
+    "</confirm-on-exit>\n" +
     "<div ng-repeat=\"container in updatedDeploymentConfig.spec.template.spec.containers\">\n" +
     "<h3>Container {{container.name}} Environment Variables</h3>\n" +
     "<key-value-editor ng-if=\"!('deploymentconfigs' | canI : 'update')\" entries=\"container.env\" key-placeholder=\"Name\" value-placeholder=\"Value\" cannot-add cannot-sort cannot-delete is-readonly show-header></key-value-editor>\n" +
@@ -3289,6 +3297,7 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "</div>\n" +
     "</div>\n" +
     "<ng-form ng-if=\"!(replicaSet | hasDeployment) && !(replicaSet | hasDeploymentConfig)\" name=\"forms.envForm\">\n" +
+    "<confirm-on-exit dirty=\"forms.envForm.$dirty\"></confirm-on-exit>\n" +
     "<div ng-repeat=\"container in updatedReplicaSet.spec.template.spec.containers\">\n" +
     "<div ng-if=\"resource | canI : 'update'\">\n" +
     "<key-value-editor entries=\"container.env\" key-placeholder=\"Name\" value-placeholder=\"Value\" value-from-selector-options=\"valueFromObjects\" key-validator=\"[A-Za-z_][A-Za-z0-9_]*\" key-validator-error=\"Please enter a valid key\" key-validator-error-tooltip=\"A valid environment variable name is an alphanumeric (a-z and 0-9) string beginning with a letter that may contain underscores.\" add-row-link=\"Add Environment Variable\" add-row-with-selectors-link=\"Add Environment Variable Using a Config Map or Secret\" show-header></key-value-editor>\n" +
@@ -3894,7 +3903,7 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "<div class=\"row\" style=\"max-width: 650px\">\n" +
     "<div class=\"col-sm-4 col-sm-push-8 browse-deployment-donut\">\n" +
     "\n" +
-    "<deployment-donut rc=\"statefulSet\" pods=\"podsForStatefulSet\" scalable=\"isScalable()\" alerts=\"alerts\">\n" +
+    "<deployment-donut rc=\"statefulSet\" pods=\"podsForStatefulSet\" scalable=\"isScalable()\" quotas=\"quotas\" cluster-quotas=\"clusterQuotas\" alerts=\"alerts\">\n" +
     "</deployment-donut>\n" +
     "</div>\n" +
     "<div class=\"col-sm-8 col-sm-pull-4\">\n" +
@@ -4634,11 +4643,12 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "<a href=\"{{'persistent_volumes' | helpLink}}\" target=\"_blank\"><span class=\"learn-more-inline\">Learn More&nbsp;<i class=\"fa fa-external-link\" aria-hidden=\"true\"></i></span></a>\n" +
     "</div>\n" +
     "<form name=\"createPersistentVolumeClaimForm\" class=\"mar-top-lg\">\n" +
+    "<confirm-on-exit dirty=\"createPersistentVolumeClaimForm.$dirty && !confirm.doneEditing\"></confirm-on-exit>\n" +
     "<fieldset ng-disabled=\"disableInputs\">\n" +
     "<osc-persistent-volume-claim model=\"claim\" project-name=\"projectName\"></osc-persistent-volume-claim>\n" +
     "<div class=\"button-group gutter-bottom\">\n" +
     "<button type=\"submit\" class=\"btn btn-primary btn-lg\" ng-click=\"createPersistentVolumeClaim()\" ng-disabled=\"createPersistentVolumeClaimForm.$invalid || disableInputs\" value=\"\">Create</button>\n" +
-    "<a class=\"btn btn-default btn-lg\" href=\"\" back>Cancel</a>\n" +
+    "<a class=\"btn btn-default btn-lg\" href=\"\" ng-click=\"confirm.doneEditing = true\" back>Cancel</a>\n" +
     "</div>\n" +
     "</fieldset>\n" +
     "</form>\n" +
@@ -4695,13 +4705,13 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "<div class=\"row\">\n" +
     "<div class=\"col-md-10 col-md-offset-1\">\n" +
     "<breadcrumbs breadcrumbs=\"breadcrumbs\"></breadcrumbs>\n" +
-    "<alerts alerts=\"alerts\"></alerts>\n" +
     "<div class=\"mar-top-xl\">\n" +
     "<h1>Create Route</h1>\n" +
     "<div class=\"help-block\">\n" +
     "Routing is a way to make your application publicly visible.\n" +
     "</div>\n" +
     "<form name=\"createRouteForm\" class=\"mar-top-xl osc-form\">\n" +
+    "<confirm-on-exit dirty=\"createRouteForm.$dirty && !confirm.doneEditing\"></confirm-on-exit>\n" +
     "<div ng-if=\"!services\">Loading...</div>\n" +
     "<div ng-if=\"services\">\n" +
     "<fieldset ng-disabled=\"disableInputs\">\n" +
@@ -4712,7 +4722,7 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "<a href=\"\" ng-click=\"copyServiceLabels()\">Copy Service Labels</a>\n" +
     "<div class=\"button-group gutter-top gutter-bottom\">\n" +
     "<button type=\"submit\" class=\"btn btn-primary btn-lg\" ng-click=\"createRoute()\" ng-disabled=\"createRouteForm.$invalid || disableInputs || !createRoute\" value=\"\">Create</button>\n" +
-    "<a class=\"btn btn-default btn-lg\" href=\"#\" back>Cancel</a>\n" +
+    "<a class=\"btn btn-default btn-lg\" href=\"\" ng-click=\"cancel()\">Cancel</a>\n" +
     "</div>\n" +
     "</fieldset>\n" +
     "</div>\n" +
@@ -4876,6 +4886,7 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "<osc-image-summary resource=\"image\" name=\"displayName || imageName\" tag=\"imageTag\"></osc-image-summary>\n" +
     "<div class=\"clearfix visible-xs-block\"></div>\n" +
     "<form class=\"\" ng-show=\"imageStream\" novalidate name=\"form\" ng-submit=\"createApp()\">\n" +
+    "<confirm-on-exit dirty=\"form.$dirty && !confirm.doneEditing\"></confirm-on-exit>\n" +
     "<div style=\"margin-bottom: 15px\">\n" +
     "<div class=\"form-group\">\n" +
     "<label for=\"appname\" class=\"required\">Name</label>\n" +
@@ -5111,7 +5122,7 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "<div class=\"buttons gutter-bottom\" ng-class=\"{'gutter-top': !alerts.length}\">\n" +
     "\n" +
     "<button type=\"submit\" class=\"btn btn-primary btn-lg\" ng-disabled=\"form.$invalid || nameTaken || cpuProblems.length || memoryProblems.length || disableInputs\">Create</button>\n" +
-    "<a class=\"btn btn-default btn-lg\" href=\"{{projectName | projectOverviewURL}}\">Cancel</a>\n" +
+    "<a class=\"btn btn-default btn-lg\" ng-click=\"confirm.doneEditing = true\" ng-href=\"{{projectName | projectOverviewURL}}\">Cancel</a>\n" +
     "</div>\n" +
     "</form>\n" +
     "</fieldset>\n" +
@@ -5886,6 +5897,7 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
   $templateCache.put('views/directives/create-secret.html',
     "<alerts alerts=\"alerts\"></alerts>\n" +
     "<ng-form name=\"secretForm\" class=\"create-secret-form\">\n" +
+    "<confirm-on-exit dirty=\"secretForm.$dirty && !confirm.doneEditing\"></confirm-on-exit>\n" +
     "<div for=\"secretType\" ng-if=\"!type\" class=\"form-group mar-top-lg\">\n" +
     "<label>Secret Type</label>\n" +
     "<ui-select required ng-model=\"newSecret.type\" search-enabled=\"false\" ng-change=\"newSecret.authType = secretAuthTypeMap[newSecret.type].authTypes[0].id\">\n" +
@@ -6108,7 +6120,7 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "</div>\n" +
     "<div class=\"buttons gutter-top-bottom\">\n" +
     "<button class=\"btn btn-lg btn-primary\" type=\"button\" ng-disabled=\"secretForm.$invalid || secretForm.$pristine || invalidConfigFormat\" ng-click=\"create()\">Create</button>\n" +
-    "<button class=\"btn btn-lg btn-default\" type=\"button\" ng-click=\"cancel()\">Cancel</button>\n" +
+    "<button class=\"btn btn-lg btn-default\" type=\"button\" ng-click=\"confirm.doneEditing = true; cancel()\">Cancel</button>\n" +
     "</div>\n" +
     "</ng-form>"
   );
@@ -6220,6 +6232,7 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "<div class=\"row\" ng-if-end>\n" +
     "<div class=\"col-sm-12\">\n" +
     "<form name=\"form\" class=\"osc-form\">\n" +
+    "<confirm-on-exit dirty=\"form.$dirty && !confirm.doneEditing\"></confirm-on-exit>\n" +
     "<div class=\"form-group\">\n" +
     "<label for=\"name\" class=\"required\">Name</label>\n" +
     "<div ng-class=\"{'has-error': form.name.$invalid || nameTaken}\">\n" +
@@ -6254,7 +6267,7 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "<alerts alerts=\"alerts\"></alerts>\n" +
     "<div class=\"button-group gutter-bottom\" ng-class=\"{'gutter-top': !alerts.length}\">\n" +
     "<button type=\"submit\" class=\"btn btn-primary btn-lg\" ng-click=\"create()\" value=\"\" ng-disabled=\"form.$invalid || nameTaken || disableInputs\">Create</button>\n" +
-    "<a class=\"btn btn-default btn-lg\" href=\"#\" back>Cancel</a>\n" +
+    "<a class=\"btn btn-default btn-lg\" ng-click=\"confirm.doneEditing = true\" href=\"#\" back>Cancel</a>\n" +
     "</div>\n" +
     "</form>\n" +
     "</div>\n" +
@@ -6815,6 +6828,7 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "<div class=\"row\">\n" +
     "<div class=\"col-sm-12 pod-bottom-xl\">\n" +
     "<form name=\"form\">\n" +
+    "<confirm-on-exit dirty=\"form.$dirty && !confirm.doneEditing\"></confirm-on-exit>\n" +
     "<div class=\"form-group\" id=\"from-file\">\n" +
     "<osc-file-input model=\"editorContent\" drop-zone-id=\"from-file\" help-text=\"Upload file by dragging & dropping, selecting it, or pasting from the clipboard.\" ng-disabled=\"false\"></osc-file-input>\n" +
     "<div ui-ace=\"{\n" +
@@ -6833,7 +6847,7 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "<button type=\"submit\" ng-click=\"create()\" ng-disabled=\"editorErrorAnnotation || !editorContent\" class=\"btn btn-primary btn-lg\">\n" +
     "Create\n" +
     "</button>\n" +
-    "<a class=\"btn btn-default btn-lg\" href=\"{{projectName | projectOverviewURL}}\">\n" +
+    "<a class=\"btn btn-default btn-lg\" ng-click=\"confirm.doneEditing = true\" ng-href=\"{{projectName | projectOverviewURL}}\">\n" +
     "Cancel\n" +
     "</a>\n" +
     "</div>\n" +
@@ -7840,10 +7854,10 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "<label for=\"{{id}}-service-select\" class=\"required\">\n" +
     "Service\n" +
     "</label>\n" +
-    "<ui-select ng-model=\"model.service\" input-id=\"{{id}}-service-select\" aria-describedby=\"{{id}}-service-help\" required>\n" +
-    "<ui-select-match>{{$select.selected.metadata.name}}</ui-select-match>\n" +
-    "<ui-select-choices repeat=\"service in (services | filter : {metadata: { name: $select.search }}) track by (service | uid)\">\n" +
-    "<div ng-bind-html=\"service.metadata.name | highlight : $select.search\"></div>\n" +
+    "<ui-select ng-model=\"model.name\" input-id=\"{{id}}-service-select\" aria-describedby=\"{{id}}-service-help\" required>\n" +
+    "<ui-select-match>{{$select.selected}}</ui-select-match>\n" +
+    "<ui-select-choices repeat=\"serviceName in (optionNames | filter : $select.search)\">\n" +
+    "<div ng-bind-html=\"serviceName | highlight : $select.search\"></div>\n" +
     "</ui-select-choices>\n" +
     "</ui-select>\n" +
     "<div>\n" +
@@ -7852,14 +7866,19 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "<span ng-if=\"isAlternate\">Alternate service for route traffic.</span>\n" +
     "</span>\n" +
     "</div>\n" +
-    "<div ng-if=\"(services | hashSize) === 0\" class=\"has-error\">\n" +
+    "<div ng-if=\"model.name && !allServices[model.name]\" class=\"has-warning\">\n" +
+    "<span class=\"help-block\">\n" +
+    "Service {{model.name}} does not exist.\n" +
+    "</span>\n" +
+    "</div>\n" +
+    "<div ng-if=\"(optionNames | size) === 0\" class=\"has-error\">\n" +
     "<span class=\"help-block\">\n" +
     "There are no <span ng-if=\"is-alternate\">additional</span> services in your project to expose with a route.\n" +
     "</span>\n" +
     "</div>\n" +
-    "<div ng-if=\"unnamedServicePort\" class=\"has-warning\">\n" +
+    "<div ng-if=\"warnUnnamedPort\" class=\"has-warning\">\n" +
     "<span class=\"help-block\">\n" +
-    "Service {{route.service.metadata.name}} has a single, unnamed port. A route cannot specifically target an unnamed service port. If more service ports are added later, the route will also direct traffic to them.\n" +
+    "Service {{model.name}} has a single, unnamed port. A route cannot specifically target an unnamed service port. If more service ports are added later, the route will also direct traffic to them.\n" +
     "</span>\n" +
     "</div>\n" +
     "</div>\n" +
@@ -7965,7 +7984,7 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "</div>\n" +
     "\n" +
     "<div ng-if=\"services\">\n" +
-    "<osc-routing-service model=\"route.to\" services=\"services\" show-weight=\"route.alternateServices.length > 1 || (controls.hideSlider && route.alternateServices.length)\">\n" +
+    "<osc-routing-service model=\"route.to\" service-options=\"services\" all-services=\"servicesByName\" show-weight=\"route.alternateServices.length > 1 || (controls.hideSlider && route.alternateServices.length)\" warn-unnamed-port=\"unnamedServicePort\">\n" +
     "</osc-routing-service>\n" +
     "</div>\n" +
     "\n" +
@@ -7998,7 +8017,7 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "</div>\n" +
     "</div>\n" +
     "<div ng-repeat=\"alternate in route.alternateServices\" class=\"form-group\">\n" +
-    "<osc-routing-service model=\"alternate\" services=\"alternateServiceOptions\" is-alternate=\"true\" show-weight=\"route.alternateServices.length > 1 || controls.hideSlider\">\n" +
+    "<osc-routing-service model=\"alternate\" service-options=\"alternateServiceOptions\" all-services=\"servicesByName\" is-alternate=\"true\" show-weight=\"route.alternateServices.length > 1 || controls.hideSlider\">\n" +
     "</osc-routing-service>\n" +
     "<a href=\"\" ng-click=\"route.alternateServices.splice($index, 1)\">Remove Service</a>\n" +
     "<span ng-if=\"$last && route.alternateServices.length < alternateServiceOptions.length\">\n" +
@@ -8018,12 +8037,12 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "<div class=\"form-group\">\n" +
     "<div class=\"weight-slider-values\">\n" +
     "<div>\n" +
-    "<span class=\"service-name\">{{route.to.service.metadata.name}}</span>\n" +
+    "<span class=\"service-name\">{{route.to.name}}</span>\n" +
     "<span class=\"weight-percentage\">{{weightAsPercentage(route.to.weight, true)}}</span>\n" +
     "</div>\n" +
     "<div>\n" +
     "<span class=\"weight-percentage hidden-xs\">{{weightAsPercentage(route.alternateServices[0].weight, true)}}</span>\n" +
-    "<span class=\"service-name\">{{route.alternateServices[0].service.metadata.name}}</span>\n" +
+    "<span class=\"service-name\">{{route.alternateServices[0].name}}</span>\n" +
     "<span class=\"weight-percentage visible-xs-inline\">{{weightAsPercentage(route.alternateServices[0].weight, true)}}</span>\n" +
     "</div>\n" +
     "</div>\n" +
@@ -8493,7 +8512,7 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
 
   $templateCache.put('views/directives/process-template-dialog.html',
     "<div class=\"order-service\">\n" +
-    "<div pf-wizard hide-header=\"true\" hide-sidebar=\"true\" hide-back-button=\"true\" step-class=\"order-service-wizard-step\" wizard-ready=\"$ctrl.wizardReady\" next-title=\"$ctrl.nextTitle\" on-finish=\"$ctrl.close()\" on-cancel=\"$ctrl.close()\" wizard-done=\"$ctrl.wizardDone\" class=\"pf-wizard-no-back\">\n" +
+    "<div pf-wizard hide-header=\"true\" hide-sidebar=\"true\" hide-back-button=\"true\" step-class=\"order-service-wizard-step\" wizard-ready=\"$ctrl.wizardReady\" next-title=\"$ctrl.nextTitle\" next-callback=\"$ctrl.next\" on-finish=\"$ctrl.close()\" on-cancel=\"$ctrl.close()\" wizard-done=\"$ctrl.wizardDone\" current-step=\"$ctrl.currentStep\" class=\"pf-wizard-no-back\">\n" +
     "<div pf-wizard-step ng-repeat=\"step in $ctrl.steps track by step.id\" step-title=\"{{step.label}}\" wz-disabled=\"{{step.hidden}}\" allow-click-nav=\"step.allowed\" next-enabled=\"step.valid\" prev-enabled=\"step.prevEnabled\" on-show=\"step.onShow\" step-id=\"{{step.id}}\" step-priority=\"{{$index}}\">\n" +
     "<div class=\"wizard-pf-main-inner-shadow-covers\">\n" +
     "<div class=\"order-service-details\">\n" +
@@ -8517,7 +8536,7 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "</div>\n" +
     "</div>\n" +
     "<div class=\"order-service-config\">\n" +
-    "<div ng-include=\"step.view\" class=\"wizard-pf-main-form-contents\"></div>\n" +
+    "<div ng-if=\"step.selected\" ng-include=\"step.view\" class=\"wizard-pf-main-form-contents\"></div>\n" +
     "</div>\n" +
     "</div>\n" +
     "</div>\n" +
@@ -8544,24 +8563,25 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
 
   $templateCache.put('views/directives/process-template.html',
     "<fieldset ng-disabled=\"disableInputs\">\n" +
-    "<form name=\"$ctrl.templateForm\">\n" +
+    "<ng-form name=\"$ctrl.templateForm\">\n" +
+    "<confirm-on-exit dirty=\"$ctrl.templateForm.$dirty && !$ctrl.confirm.doneEditing\"></confirm-on-exit>\n" +
     "<template-options is-dialog=\"$ctrl.isDialog\" parameters=\"$ctrl.template.parameters\" expand=\"true\" can-toggle=\"false\">\n" +
     "<select-project ng-if=\"!$ctrl.project\" selected-project=\"$ctrl.selectedProject\" name-taken=\"$ctrl.projectNameTaken\"></select-project>\n" +
     "</template-options>\n" +
     "\n" +
-    "<div ng-if=\"$ctrl.isDialog && $ctrl.selectedProject.metadata.uid && $ctrl.template\" class=\"form-group\">\n" +
+    "<div ng-if=\"$ctrl.isDialog && $ctrl.selectedProject.metadata.uid\" class=\"form-group\">\n" +
     "\n" +
     "To set optional parameters or labels, view\n" +
-    "<a ng-href=\"{{$ctrl.template | createFromTemplateURL : $ctrl.selectedProject.metadata.name}}\">advanced options</a>.\n" +
+    "<a ng-click=\"$ctrl.confirm.doneEditing = true\" ng-href=\"{{$ctrl.template | createFromTemplateURL : $ctrl.selectedProject.metadata.name}}\">advanced options</a>.\n" +
     "</div>\n" +
     "<label-editor ng-if=\"!$ctrl.isDialog\" labels=\"$ctrl.labels\" system-labels=\"$ctrl.systemLabels\" expand=\"true\" can-toggle=\"false\" help-text=\"Each label is applied to each created resource.\">\n" +
     "</label-editor>\n" +
     "<alerts alerts=\"$ctrl.precheckAlerts\"></alerts>\n" +
     "<div ng-if=\"!$ctrl.isDialog\" class=\"buttons gutter-top-bottom\">\n" +
     "<button class=\"btn btn-primary btn-lg\" ng-click=\"$ctrl.createFromTemplate()\" ng-disabled=\"$ctrl.templateForm.$invalid || $ctrl.disableInputs\">Create</button>\n" +
-    "<a class=\"btn btn-default btn-lg\" href=\"{{$ctrl.project | projectOverviewURL}}\">Cancel</a>\n" +
+    "<a class=\"btn btn-default btn-lg\" ng-href=\"{{$ctrl.project | projectOverviewURL}}\" ng-click=\"$ctrl.confirm.doneEditing = true\">Cancel</a>\n" +
     "</div>\n" +
-    "</form>\n" +
+    "</ng-form>\n" +
     "</fieldset>"
   );
 
@@ -8768,6 +8788,7 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "Loading...\n" +
     "</div>\n" +
     "<form name=\"form\" ng-submit=\"save()\" class=\"osc-form\" ng-show=\"targetKind && targetName\">\n" +
+    "<confirm-on-exit dirty=\"form.$dirty && !confirm.doneEditing\"></confirm-on-exit>\n" +
     "<h1>\n" +
     "Autoscale {{targetKind | humanizeKind : true}} {{targetName}}\n" +
     "</h1>\n" +
@@ -8802,7 +8823,7 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "<button type=\"submit\" class=\"btn btn-primary btn-lg\" ng-disabled=\"form.$invalid || form.$pristine\">\n" +
     "Save\n" +
     "</button>\n" +
-    "<a href=\"\" class=\"btn btn-default btn-lg\" back>Cancel</a>\n" +
+    "<a href=\"\" ng-click=\"confirm.doneEditing = true\" class=\"btn btn-default btn-lg\" back>Cancel</a>\n" +
     "</div>\n" +
     "</fieldset>\n" +
     "</form>\n" +
@@ -8838,6 +8859,7 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "</h1>\n" +
     "<fieldset ng-disabled=\"disableInputs\">\n" +
     "<form class=\"edit-form\" name=\"form\" novalidate ng-submit=\"save()\">\n" +
+    "<confirm-on-exit dirty=\"form.$dirty && !confirm.doneEditing\"></confirm-on-exit>\n" +
     "<div class=\"row\">\n" +
     "<div class=\"col-lg-12\">\n" +
     "<div ng-if=\"buildConfig.spec.source.type !== 'None'\" class=\"section\">\n" +
@@ -9246,7 +9268,7 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "<button type=\"submit\" class=\"btn btn-primary btn-lg\" ng-disabled=\"form.$invalid || form.$pristine || disableInputs\">\n" +
     "Save\n" +
     "</button>\n" +
-    "<a class=\"btn btn-default btn-lg\" href=\"{{updatedBuildConfig | navigateResourceURL}}\">\n" +
+    "<a class=\"btn btn-default btn-lg\" ng-click=\"confirm.doneEditing = true\" ng-href=\"{{updatedBuildConfig | navigateResourceURL}}\">\n" +
     "Cancel\n" +
     "</a>\n" +
     "</div>\n" +
@@ -9287,6 +9309,7 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "<div class=\"mar-top-xl\">\n" +
     "<div ng-if=\"!loaded\">Loading...</div>\n" +
     "<form ng-if=\"loaded\" name=\"forms.editConfigMapForm\">\n" +
+    "<confirm-on-exit dirty=\"forms.editConfigMapForm.$dirty && !confirm.doneEditing\"></confirm-on-exit>\n" +
     "<div ng-if=\"resourceChanged && !resourceDeleted && !updatingNow\" class=\"alert alert-warning\">\n" +
     "<span class=\"pficon pficon-warning-triangle-o\" aria-hidden=\"true\"></span>\n" +
     "<span class=\"sr-only\">Warning:</span>\n" +
@@ -9301,7 +9324,7 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "<edit-config-map model=\"configMap\"></edit-config-map>\n" +
     "<div class=\"button-group gutter-top gutter-bottom\">\n" +
     "<button type=\"submit\" class=\"btn btn-primary btn-lg\" ng-click=\"updateConfigMap()\" ng-disabled=\"forms.editConfigMapForm.$invalid || forms.editConfigMapForm.$pristine || disableInputs || resourceChanged || resourceDeleted\" value=\"\">Save</button>\n" +
-    "<a class=\"btn btn-default btn-lg\" href=\"#\" back>Cancel</a>\n" +
+    "<a class=\"btn btn-default btn-lg\" href=\"#\" ng-click=\"confirm.doneEditing = true\" back>Cancel</a>\n" +
     "</div>\n" +
     "</fieldset>\n" +
     "</form>\n" +
@@ -9338,7 +9361,8 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "Edit Deployment Config {{deploymentConfig.metadata.name}}\n" +
     "</h1>\n" +
     "<fieldset ng-disabled=\"disableInputs\">\n" +
-    "<form class=\"edit-form\" name=\"form\" novalidate ng-submit=\"save()\">\n" +
+    "<form class=\"edit-form\" name=\"form\" novalidate>\n" +
+    "<confirm-on-exit dirty=\"form.$dirty && !confirm.doneEditing\"></confirm-on-exit>\n" +
     "<div class=\"row\">\n" +
     "<div class=\"col-lg-12\">\n" +
     "<div class=\"section\">\n" +
@@ -9570,12 +9594,10 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "<pause-rollouts-checkbox deployment=\"updatedDeploymentConfig\" always-visible=\"true\">\n" +
     "</pause-rollouts-checkbox>\n" +
     "<div class=\"buttons gutter-top-bottom\">\n" +
-    "<button type=\"submit\" class=\"btn btn-primary btn-lg\" ng-disabled=\"form.$invalid || form.$pristine || disableInputs\">\n" +
+    "<button ng-click=\"save()\" class=\"btn btn-primary btn-lg\" ng-disabled=\"form.$invalid || form.$pristine || disableInputs\">\n" +
     "Save\n" +
     "</button>\n" +
-    "<a class=\"btn btn-default btn-lg\" back>\n" +
-    "Cancel\n" +
-    "</a>\n" +
+    "<button ng-click=\"cancel()\" class=\"btn btn-default btn-lg\">Cancel</button>\n" +
     "</div>\n" +
     "</div>\n" +
     "</div>\n" +
@@ -9606,9 +9628,9 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "<breadcrumbs breadcrumbs=\"breadcrumbs\"></breadcrumbs>\n" +
     "<div class=\"row\">\n" +
     "<div class=\"col-md-12\">\n" +
-    "<alerts alerts=\"alerts\"></alerts>\n" +
     "<div ng-show=\"!containers.length\" class=\"mar-top-md\">Loading...</div>\n" +
     "<form ng-show=\"containers.length\" name=\"form\" class=\"health-checks-form\">\n" +
+    "<confirm-on-exit dirty=\"form.$dirty && !confirm.doneEditing\"></confirm-on-exit>\n" +
     "<h1>Health Checks: {{name}}</h1>\n" +
     "<div class=\"help-block\">\n" +
     "Container health is periodically checked using readiness and liveness probes.\n" +
@@ -9652,7 +9674,7 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "</pause-rollouts-checkbox>\n" +
     "<div class=\"button-group gutter-top gutter-bottom\">\n" +
     "<button type=\"submit\" class=\"btn btn-primary btn-lg\" ng-click=\"save()\" ng-disabled=\"form.$invalid || form.$pristine || disableInputs\" value=\"\">Save</button>\n" +
-    "<a class=\"btn btn-default btn-lg\" ng-href=\"{{resourceURL}}\">Cancel</a>\n" +
+    "<button class=\"btn btn-default btn-lg\" ng-click=\"cancel()\">Cancel</button>\n" +
     "</div>\n" +
     "</fieldset>\n" +
     "</form>\n" +
@@ -9738,6 +9760,7 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "<div class=\"help-block mar-bottom-lg\">Update the display name and description of your project. The project's unique name cannot be modified.</div>\n" +
     "<alerts alerts=\"alerts\"></alerts>\n" +
     "<form name=\"editProjectForm\">\n" +
+    "<confirm-on-exit dirty=\"editProjectForm && !confirm.doneEditing\"></confirm-on-exit>\n" +
     "<fieldset ng-disabled=\"disableInputs\">\n" +
     "<div class=\"form-group\">\n" +
     "<label for=\"displayName\">Display Name</label>\n" +
@@ -9749,7 +9772,7 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "</div>\n" +
     "<div class=\"button-group\">\n" +
     "<button type=\"submit\" class=\"btn btn-primary btn-lg\" ng-click=\"update()\" ng-disabled=\"editProjectForm.$invalid || disableInputs\" value=\"\">Save</button>\n" +
-    "<a class=\"btn btn-default btn-lg\" href=\"#\" back>Cancel</a>\n" +
+    "<a class=\"btn btn-default btn-lg\" href=\"#\" ng-click=\"confirm.doneEditing = true\" back>Cancel</a>\n" +
     "</div>\n" +
     "</fieldset>\n" +
     "</form>\n" +
@@ -9784,11 +9807,12 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "</div>\n" +
     "<form name=\"form\">\n" +
     "<fieldset ng-disabled=\"disableInputs\" ng-if=\"!loading\">\n" +
+    "<confirm-on-exit dirty=\"form.$dirty && !confirm.doneEditing\"></confirm-on-exit>\n" +
     "<osc-routing model=\"routing\" services=\"services\" show-name-input=\"false\" host-read-only=\"true\">\n" +
     "</osc-routing>\n" +
     "<div class=\"button-group gutter-top gutter-bottom\">\n" +
     "<button type=\"submit\" class=\"btn btn-primary btn-lg\" ng-click=\"updateRoute()\" ng-disabled=\"form.$invalid || disableInputs\" value=\"\">Save</button>\n" +
-    "<a class=\"btn btn-default btn-lg\" ng-href=\"{{routeURL}}\">Cancel</a>\n" +
+    "<button class=\"btn btn-default btn-lg\" ng-click=\"cancel()\">Cancel</button>\n" +
     "</div>\n" +
     "</fieldset>\n" +
     "</form>\n" +
@@ -9830,6 +9854,7 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "<span class=\"sr-only\">Warning:</span>\n" +
     "{{resource.kind | humanizeKind | upperFirst}} <strong>{{resource.metadata.name}}</strong> has been deleted since you started editing it.\n" +
     "</div>\n" +
+    "<confirm-on-exit dirty=\"modified\"></confirm-on-exit>\n" +
     "\n" +
     "<div ui-ace=\"{\n" +
     "                mode: 'yaml',\n" +
@@ -9969,7 +9994,7 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "<div class=\"middle-container\">\n" +
     "<div class=\"middle-content\">\n" +
     "<overlay-panel show-panel=\"template\" show-close=\"true\" handle-close=\"templateDialogClosed\">\n" +
-    "<process-template-dialog template=\"template\" on-dialog-closed=\"templateDialogClosed\"></process-template-dialog>\n" +
+    "<process-template-dialog ng-if=\"template\" template=\"template\" on-dialog-closed=\"templateDialogClosed\"></process-template-dialog>\n" +
     "</overlay-panel>\n" +
     "<landing-page base-project-url=\"project\" on-template-selected=\"templateSelected\">\n" +
     "<landingsearch>\n" +
@@ -10487,6 +10512,9 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "<div class=\"modal-body\">\n" +
     "<h1>Are you sure you want to delete the {{typeDisplayName || (kind | humanizeKind)}} '<strong>{{displayName ? displayName : resourceName}}</strong>'?</h1>\n" +
     "<p>\n" +
+    "<span ng-if=\"kind === 'DeploymentConfig'\">\n" +
+    "This will delete the deployment config, all rollout history, and any running pods.\n" +
+    "</span>\n" +
     "<span ng-if=\"kind === 'Deployment'\">\n" +
     "This will delete the deployment, all rollout history, and any running pods.\n" +
     "</span>\n" +
@@ -10507,11 +10535,6 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "<label class=\"sr-only\" for=\"resource-to-delete\">{{typeDisplayName || (kind | humanizeKind)}} to delete</label>\n" +
     "<input ng-model=\"confirmName\" id=\"resource-to-delete\" type=\"text\" class=\"form-control input-lg\" autocorrect=\"off\" autocapitalize=\"off\" spellcheck=\"false\" autofocus>\n" +
     "</p>\n" +
-    "</div>\n" +
-    "<div ng-if=\"kind === 'DeploymentConfig'\">\n" +
-    "<strong>Note:</strong> None of the deployments created by this deployment config will be deleted. To delete the deployment config and all of its deployments, you can run the command\n" +
-    "<pre class=\"code prettyprint mar-top-md\">oc delete dc {{resourceName}} -n {{projectName}}</pre>\n" +
-    "Learn more about the <a href=\"command-line\">command line tools</a>.\n" +
     "</div>\n" +
     "\n" +
     "<div ng-if=\"hpaList.length > 0\">\n" +
@@ -11666,7 +11689,7 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "            'stacked-template': row.state.breakpoint !== 'lg'\n" +
     "        }\">\n" +
     "<div ng-if=\"row.previous\" class=\"previous-donut\">\n" +
-    "<deployment-donut rc=\"row.previous\" deployment-config=\"row.apiObject\" pods=\"row.getPods(row.previous)\" hpa=\"row.hpa\" limit-ranges=\"row.state.limitRanges\" quotas=\"row.state.quotas\" cluster-quotas=\"row.state.clusterQuotas\" scalable=\"false\" alerts=\"row.state.alerts\">\n" +
+    "<deployment-donut rc=\"row.previous\" deployment-config=\"row.apiObject\" pods=\"row.getPods(row.previous)\" hpa=\"row.hpa\" limit-ranges=\"row.state.limitRanges\" project=\"row.state.project\" quotas=\"row.state.quotas\" cluster-quotas=\"row.state.clusterQuotas\" scalable=\"false\" alerts=\"row.state.alerts\">\n" +
     "</deployment-donut>\n" +
     "<div ng-if=\"row.previous\" class=\"deployment-connector\">\n" +
     "<div class=\"deployment-connector-arrow\" aria-hidden=\"true\">\n" +
@@ -11680,7 +11703,7 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "</a>\n" +
     "</div>\n" +
     "<div ng-if=\"row.apiObject.kind !== 'Pod'\">\n" +
-    "<deployment-donut rc=\"row.current\" deployment-config=\"row.apiObject\" pods=\"row.getPods(row.current)\" hpa=\"row.hpa\" limit-ranges=\"row.state.limitRanges\" quotas=\"row.state.quotas\" cluster-quotas=\"row.state.clusterQuotas\" scalable=\"row.isScalable()\" alerts=\"row.state.alerts\">\n" +
+    "<deployment-donut rc=\"row.current\" deployment-config=\"row.apiObject\" pods=\"row.getPods(row.current)\" hpa=\"row.hpa\" limit-ranges=\"row.state.limitRanges\" project=\"row.state.project\" quotas=\"row.state.quotas\" cluster-quotas=\"row.state.clusterQuotas\" scalable=\"row.isScalable()\" alerts=\"row.state.alerts\">\n" +
     "</deployment-donut>\n" +
     "</div>\n" +
     "</div>\n" +
@@ -12425,7 +12448,7 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "</div>\n" +
     "</div>\n" +
     "</div>\n" +
-    "<div class=\"table-responsive scroll-shadows-horizontal\">\n" +
+    "<div class=\"table-responsive\">\n" +
     "<table class=\"table table-bordered\">\n" +
     "<thead>\n" +
     "<th>Resource Type</th>\n" +
@@ -12508,7 +12531,7 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "</div>\n" +
     "</div>\n" +
     "</div>\n" +
-    "<div class=\"table-responsive scroll-shadows-horizontal\">\n" +
+    "<div class=\"table-responsive\">\n" +
     "<table class=\"table table-bordered\">\n" +
     "<thead>\n" +
     "<th>Resource Type</th>\n" +
@@ -12554,7 +12577,7 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "<div ng-repeat=\"limitRange in limitRanges\">\n" +
     "<h2 ng-if=\"limitRanges.length\">{{limitRange.metadata.name}}</h2>\n" +
     "<div ng-if=\"$first\" class=\"help-block mar-bottom-md\">{{limitRangeHelp}}</div>\n" +
-    "<div class=\"table-responsive scroll-shadows-horizontal\">\n" +
+    "<div class=\"table-responsive\">\n" +
     "<table class=\"table table-bordered\">\n" +
     "<thead>\n" +
     "<th>Resource Type</th>\n" +
@@ -12841,9 +12864,9 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "<breadcrumbs breadcrumbs=\"breadcrumbs\"></breadcrumbs>\n" +
     "<div class=\"row\">\n" +
     "<div class=\"col-md-12\">\n" +
-    "<alerts alerts=\"alerts\"></alerts>\n" +
     "<div ng-show=\"!containers.length\">Loading...</div>\n" +
     "<form ng-if=\"containers.length\" name=\"form\" class=\"set-limits-form\">\n" +
+    "<confirm-on-exit dirty=\"form.$dirty && !confirm.doneEditing\"></confirm-on-exit>\n" +
     "<h1>Resource Limits: {{name}}</h1>\n" +
     "<div class=\"help-block\">\n" +
     "Resource limits control how much <span ng-if=\"!hideCPU\">CPU and</span> memory a container will consume on a node.\n" +
@@ -12873,7 +12896,7 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "</pause-rollouts-checkbox>\n" +
     "<div class=\"button-group gutter-top gutter-bottom\">\n" +
     "<button type=\"submit\" class=\"btn btn-primary btn-lg\" ng-click=\"save()\" ng-disabled=\"form.$pristine || form.$invalid || disableInputs || cpuProblems.length || memoryProblems.length\" value=\"\">Save</button>\n" +
-    "<a class=\"btn btn-default btn-lg\" ng-href=\"{{resourceURL}}\">Cancel</a>\n" +
+    "<button class=\"btn btn-default btn-lg\" ng-click=\"cancel()\">Cancel</button>\n" +
     "</div>\n" +
     "</fieldset>\n" +
     "</form>\n" +

@@ -285,7 +285,7 @@ angular.module('openshiftConsole')
             if ($scope.sources.images) {
               $scope.sourceImages = $scope.buildConfig.spec.source.images;
               // If only one Image Source is present in the buildConfig make it editable, if more then one show them as readonly.
-              if ($scope.sourceImages.length === 1) {
+              if (_.size($scope.sourceImages) === 1) {
                 $scope.imageSourceTypes = angular.copy($scope.buildFromTypes);
                 setImageOptions($scope.imageOptions.fromSource, $scope.sourceImages[0].from);
                 $scope.imageSourcePaths = _.map($scope.sourceImages[0].paths, function(path) {
@@ -429,7 +429,7 @@ angular.module('openshiftConsole')
           kind: optionsModel.type,
           name: _.last(namespaceAndName)
         };
-        imageObject.namespace = (namespaceAndName.length !== 1) ? namespaceAndName[0] : $scope.buildConfig.metadata.namespace;
+        imageObject.namespace = (_.size(namespaceAndName) !== 1) ? _.first(namespaceAndName) : $scope.buildConfig.metadata.namespace;
         break;
       }
       return imageObject;
@@ -570,6 +570,7 @@ angular.module('openshiftConsole')
               message: "Build Config " + $scope.updatedBuildConfig.metadata.name + " was successfully updated."
             }
           });
+          _.set($scope, 'confirm.doneEditing', true);
           $location.path(Navigate.resourceURL($scope.updatedBuildConfig, "BuildConfig", $scope.updatedBuildConfig.metadata.namespace));
         },
         function(result) {

@@ -70,6 +70,8 @@ function ProcessTemplate($filter,
 
   ctrl.$onInit = function() {
     ctrl.labels = [];
+    // Make a copy of the template to avoid modifying the original if it's cached.
+    ctrl.template = angular.copy(ctrl.template);
     ctrl.templateDisplayName = displayName(ctrl.template);
     ctrl.selectedProject = ctrl.project;
     setTemplateParams();
@@ -119,6 +121,7 @@ function ProcessTemplate($filter,
       return d.promise;
     });
 
+    _.set($scope, 'confirm.doneEditing', true);
     if (ctrl.isDialog) {
       $scope.$emit('templateInstantiated', {
         project: ctrl.selectedProject,
@@ -172,7 +175,7 @@ function ProcessTemplate($filter,
 
   var createProjectIfNecessary = function() {
     if (_.has(ctrl.selectedProject, 'metadata.uid')) {
-      return $q.when();
+      return $q.when(ctrl.selectedProject);
     }
 
     var newProjName = ctrl.selectedProject.metadata.name;
@@ -192,7 +195,8 @@ function ProcessTemplate($filter,
 
   ctrl.createFromTemplate = function() {
     ctrl.disableInputs = true;
-    createProjectIfNecessary().then(function() {
+    createProjectIfNecessary().then(function(project) {
+      ctrl.selectedProject = project;
       context = {
         namespace: ctrl.selectedProject.metadata.name
       };
