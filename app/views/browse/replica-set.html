@@ -80,6 +80,7 @@
                       </div>
                     </div>
                     <ng-form ng-if="!(replicaSet | hasDeployment) && !(replicaSet | hasDeploymentConfig)" name="forms.envForm">
+                      <confirm-on-exit dirty="forms.envForm.$dirty"></confirm-on-exit>
                       <div ng-repeat="container in updatedReplicaSet.spec.template.spec.containers">
                         <div ng-if="resource | canI : 'update'">
                           <key-value-editor

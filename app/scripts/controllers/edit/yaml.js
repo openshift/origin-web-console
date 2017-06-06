@@ -41,6 +41,7 @@ angular.module('openshiftConsole')
     }];
 
     var navigateBack = function() {
+      $scope.modified = false;
       if ($routeParams.returnURL) {
         $location.url($routeParams.returnURL);
         return;

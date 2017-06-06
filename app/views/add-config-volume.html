@@ -39,6 +39,7 @@
                       Add values from a config map or secret as volume. This will make the data available as files for {{kind | humanizeKind}} {{name}}.
                     </div>
                     <form name="forms.addConfigVolumeForm" class="mar-top-lg">
+                      <confirm-on-exit dirty="forms.addConfigVolumeForm.$dirty && !confirm.doneEditing"></confirm-on-exit>
                       <fieldset ng-disabled="disableInputs">
                         <div class="form-group">
                           <label class="required">Source</label>
@@ -206,7 +207,11 @@
                               class="btn btn-primary btn-lg"
                               ng-click="addVolume()"
                               ng-disabled="forms.addConfigVolumeForm.$invalid || disableInputs">Add</button>
-                          <a class="btn btn-default btn-lg" role="button" href="#" back>Cancel</a>
+                          <a class="btn btn-default btn-lg"
+                            role="button"
+                            href="#"
+                            ng-click="confirm.doneEditing = true"
+                            back>Cancel</a>
                         </div>
                       </fieldset>
                     </form>

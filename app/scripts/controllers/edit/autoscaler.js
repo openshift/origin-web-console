@@ -113,6 +113,7 @@ angular.module('openshiftConsole')
             group: 'autoscaling'
           }, null, hpa, context)
             .then(function() { // Success
+              _.set($scope, 'confirm.doneEditing', true);
               // Return to the previous page
               $window.history.back();
             }, function(result) { // Failure
@@ -135,6 +136,7 @@ angular.module('openshiftConsole')
             group: 'autoscaling'
           }, hpa.metadata.name, hpa, context)
             .then(function() { // Success
+              _.set($scope, 'confirm.doneEditing', true);
               // Return to the previous page
               $window.history.back();
             }, function(result) { // Failure

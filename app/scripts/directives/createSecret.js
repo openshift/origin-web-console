@@ -201,6 +201,7 @@ angular.module("openshiftConsole")
           $scope.alerts = {};
           var newSecret = constructSecretObject($scope.newSecret.data, $scope.newSecret.authType);
           DataService.create('secrets', null, newSecret, $scope).then(function(secret) { // Success
+            _.set($scope, 'confirm.doneEditing', true);
             var alert = [{
               name: 'create',
               data: {

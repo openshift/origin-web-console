@@ -570,6 +570,7 @@ angular.module('openshiftConsole')
               message: "Build Config " + $scope.updatedBuildConfig.metadata.name + " was successfully updated."
             }
           });
+          _.set($scope, 'confirm.doneEditing', true);
           $location.path(Navigate.resourceURL($scope.updatedBuildConfig, "BuildConfig", $scope.updatedBuildConfig.metadata.namespace));
         },
         function(result) {

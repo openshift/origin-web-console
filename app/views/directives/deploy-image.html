@@ -109,6 +109,7 @@
   <div class="row" ng-if-end>
     <div class="col-sm-12">
       <form name="form" class="osc-form">
+        <confirm-on-exit dirty="form.$dirty && !confirm.doneEditing"></confirm-on-exit>
         <div class="form-group">
          <label for="name" class="required">Name</label>
          <div ng-class="{'has-error': form.name.$invalid || nameTaken}">
@@ -189,7 +190,10 @@
               ng-click="create()"
               value=""
               ng-disabled="form.$invalid || nameTaken || disableInputs">Create</button>
-          <a class="btn btn-default btn-lg" href="#" back>Cancel</a>
+          <a class="btn btn-default btn-lg"
+              ng-click="confirm.doneEditing = true"
+              href="#"
+              back>Cancel</a>
         </div>
       </form>
     </div>

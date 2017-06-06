@@ -337,6 +337,11 @@
                   <uib-tab heading="Environment" active="selectedTab.environment" ng-if="deploymentConfig">
                     <uib-tab-heading>Environment</uib-tab-heading>
                     <ng-form name="forms.dcEnvVars" class="mar-bottom-xl block">
+                      <confirm-on-exit
+                        ng-if="'deploymentconfigs' | canI : 'update'"
+                        dirty="forms.dcEnvVars.$dirty">
+                      </confirm-on-exit>
+
                       <div ng-repeat="container in updatedDeploymentConfig.spec.template.spec.containers">
                         <h3>Container {{container.name}} Environment Variables</h3>
                         <key-value-editor

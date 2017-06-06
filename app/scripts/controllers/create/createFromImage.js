@@ -323,6 +323,7 @@ angular.module("openshiftConsole")
                   };
               }
             );
+          _.set($scope, 'confirm.doneEditing', true);
           Navigate.toNextSteps($scope.name, $scope.projectName, {
             usingSampleRepo: $scope.usingSampleRepo(),
             breadcrumbTitle: breadcrumbTitle

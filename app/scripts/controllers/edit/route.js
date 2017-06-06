@@ -41,8 +41,19 @@ angular.module('openshiftConsole')
       title: "Edit"
     }];
 
-    $scope.hideErrorNotifications = function() {
+    var hideErrorNotifications = function() {
       NotificationsService.hideNotification("edit-route-error");
+    };
+
+    var navigateBack = function() {
+      _.set($scope, 'confirm.doneEditing', true);
+      $scope.doneEditing = true;
+      $location.path($scope.routeURL);
+    };
+
+    $scope.cancel = function() {
+      hideErrorNotifications();
+      navigateBack();
     };
 
     ProjectsService
@@ -165,7 +176,7 @@ angular.module('openshiftConsole')
 
         $scope.updateRoute = function() {
           if ($scope.form.$valid) {
-            $scope.hideErrorNotifications();
+            hideErrorNotifications();
             $scope.disableInputs = true;
             var updated = updateRouteFields();
             DataService.update('routes', $scope.routeName, updated, context)
@@ -174,7 +185,7 @@ angular.module('openshiftConsole')
                   type: "success",
                   message: "Route " + $scope.routeName + " was successfully updated."
                 });
-                $location.path($scope.routeURL);
+                navigateBack();
               }, function(response) { // Failure
                 $scope.disableInputs = false;
                 NotificationsService.addNotification({

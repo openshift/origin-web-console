@@ -456,6 +456,7 @@
                       show-header></key-value-editor>
                     <ng-form name="forms.bcEnvVars" class="mar-bottom-xl block">
                       <div ng-if="'buildconfigs' | canI : 'update'">
+                        <confirm-on-exit dirty="forms.bcEnvVars.$dirty"></confirm-on-exit>
                         <key-value-editor
                           entries="envVars"
                           key-placeholder="Name"
