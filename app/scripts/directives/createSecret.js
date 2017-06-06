@@ -6,6 +6,7 @@ angular.module("openshiftConsole")
              function($filter,
                       AuthorizationService,
                       DataService,
+                      NotificationsService,
                       DNS1123_SUBDOMAIN_VALIDATION) {
     return {
       restrict: 'E',
@@ -13,12 +14,11 @@ angular.module("openshiftConsole")
         type: '=',
         serviceAccountToLink: '=?',
         namespace: '=',
-        postCreateAction: '&',
-        cancel: '&'
+        onCreate: '&',
+        onCancel: '&'
       },
       templateUrl: 'views/directives/create-secret.html',
       link: function($scope) {
-        $scope.alerts = {};
         $scope.nameValidation = DNS1123_SUBDOMAIN_VALIDATION;
 
         $scope.secretAuthTypeMap = {
@@ -150,7 +150,11 @@ angular.module("openshiftConsole")
           return secret;
         };
 
-        var linkSecretToServiceAccount = function(secret, alerts) {
+        var hideErrorNotifications = function() {
+          NotificationsService.hideNotification("create-secret-error");
+        };
+
+        var linkSecretToServiceAccount = function(secret) {
           var updatedSA = angular.copy($scope.serviceAccounts[$scope.newSecret.pickedServiceAccountToLink]);
           switch ($scope.newSecret.type) {
           case 'source':
@@ -160,27 +164,31 @@ angular.module("openshiftConsole")
             updatedSA.imagePullSecrets.push({name: secret.metadata.name});
             break;
           }
-          // Don't show any error related to linking to SA when linking is done automatically 
-          var options = $scope.serviceAccountToLink ? {errorNotification: false} : {};
-          DataService.update('serviceaccounts', $scope.newSecret.pickedServiceAccountToLink, updatedSA, $scope, options).then(function(sa) {
-            alerts.push({
-              name: 'create',
-              data: {
-                type: "success",
-                message: "Secret " + secret.metadata.name + " was created and linked with service account " + sa.metadata.name + "."
-              }
+
+          DataService.update('serviceaccounts', $scope.newSecret.pickedServiceAccountToLink, updatedSA, $scope).then(function(sa) {
+            // Show a single success message saying the secret was both created and linked.
+            NotificationsService.addNotification({
+              type: "success",
+              message: "Secret " + secret.metadata.name + " was created and linked with service account " + sa.metadata.name + "."
             });
-            $scope.postCreateAction({newSecret: secret, creationAlert: alerts});
+            $scope.onCreate({newSecret: secret});
           }, function(result){
-            alerts.push({
-              name: 'createAndLink',
-              data: {
+            // Show a success message that the secret was created and a separate error message saying it couldn't be linked.
+            NotificationsService.addNotification({
+              type: "success",
+              message: "Secret " + secret.metadata.name + " was created."
+            });
+
+            // Don't show any error related to linking to SA when linking is done automatically.
+            if (!$scope.serviceAccountToLink) {
+              NotificationsService.addNotification({
+                id: "secret-sa-link-error",
                 type: "error",
                 message: "An error occurred while linking the secret with service account " + $scope.newSecret.pickedServiceAccountToLink + ".",
                 details: $filter('getErrorDetails')(result)
-              }
-            });
-            $scope.postCreateAction({newSecret: secret, creationAlert: alerts});
+              });
+            }
+            $scope.onCreate({newSecret: secret});
           });
         };
 
@@ -197,27 +205,28 @@ angular.module("openshiftConsole")
 
         $scope.aceChanged = updateEditorMode;
 
+        $scope.nameChanged = function() {
+          $scope.nameTaken = false;
+        };
+
         $scope.create = function() {
-          $scope.alerts = {};
+          hideErrorNotifications();
           var newSecret = constructSecretObject($scope.newSecret.data, $scope.newSecret.authType);
           DataService.create('secrets', null, newSecret, $scope).then(function(secret) { // Success
             _.set($scope, 'confirm.doneEditing', true);
-            var alert = [{
-              name: 'create',
-              data: {
-                type: "success",
-                message: "Secret " + newSecret.metadata.name + " was created."
-              }
-            }];
             // In order to link:
             // - the SA has to be defined
             // - defined SA has to be present in the obtained SA list
             // - user can update SA
             // Else the linking will be skipped
             if ($scope.newSecret.linkSecret && $scope.serviceAccountsNames.contains($scope.newSecret.pickedServiceAccountToLink) && AuthorizationService.canI('serviceaccounts', 'update')) {
-              linkSecretToServiceAccount(secret, alert);
+              linkSecretToServiceAccount(secret);
             } else {
-              $scope.postCreateAction({newSecret: secret, creationAlert: alert});
+              NotificationsService.addNotification({
+                type: "success",
+                message: "Secret " + newSecret.metadata.name + " was created."
+              });
+              $scope.onCreate({newSecret: secret});
             }
           }, function(result) { // Failure
             var data = result.data || {};
@@ -225,13 +234,20 @@ angular.module("openshiftConsole")
               $scope.nameTaken = true;
               return;
             }
-            $scope.alerts["create"] = {
+            NotificationsService.addNotification({
+              id: "create-secret-error",
               type: "error",
               message: "An error occurred while creating the secret.",
               details: $filter('getErrorDetails')(result)
-            };
+            });
           });
         };
-      },
+
+        $scope.cancel = function() {
+          _.set($scope, 'confirm.doneEditing', true);
+          hideErrorNotifications();
+          $scope.onCancel();
+        };
+      }
     };
   });

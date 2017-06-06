@@ -13,7 +13,6 @@ angular.module('openshiftConsole')
                        $location,
                        $routeParams,
                        $window,
-                       AlertMessageService,
                        ApplicationGenerator,
                        AuthorizationService,
                        DataService,
@@ -207,10 +206,6 @@ angular.module('openshiftConsole')
       }
     };
 
-    AlertMessageService.getAlerts().forEach(function(alert) {
-      $scope.alerts[alert.name] = alert.data;
-    });
-    AlertMessageService.clearAlerts();
     $scope.secrets = {};
     var watches = [];
     var buildStrategy = $filter('buildStrategy');
