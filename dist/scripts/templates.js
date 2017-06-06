@@ -9361,7 +9361,7 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "Edit Deployment Config {{deploymentConfig.metadata.name}}\n" +
     "</h1>\n" +
     "<fieldset ng-disabled=\"disableInputs\">\n" +
-    "<form class=\"edit-form\" name=\"form\" novalidate ng-submit=\"save()\">\n" +
+    "<form class=\"edit-form\" name=\"form\" novalidate>\n" +
     "<confirm-on-exit dirty=\"form.$dirty && !confirm.doneEditing\"></confirm-on-exit>\n" +
     "<div class=\"row\">\n" +
     "<div class=\"col-lg-12\">\n" +
@@ -9594,7 +9594,7 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "<pause-rollouts-checkbox deployment=\"updatedDeploymentConfig\" always-visible=\"true\">\n" +
     "</pause-rollouts-checkbox>\n" +
     "<div class=\"buttons gutter-top-bottom\">\n" +
-    "<button type=\"submit\" class=\"btn btn-primary btn-lg\" ng-disabled=\"form.$invalid || form.$pristine || disableInputs\">\n" +
+    "<button ng-click=\"save()\" class=\"btn btn-primary btn-lg\" ng-disabled=\"form.$invalid || form.$pristine || disableInputs\">\n" +
     "Save\n" +
     "</button>\n" +
     "<button ng-click=\"cancel()\" class=\"btn btn-default btn-lg\">Cancel</button>\n" +
