@@ -157,7 +157,7 @@ angular.module('openshiftConsole')
         _.forEach(data.details.causes || [], function(cause) {
           if (cause.message) { messages.push(cause.message); }
         });
-        if (messages.length > 0) {
+        if (!_.isEmpty(messages)) {
           $scope.newProjectMessage = messages.join("\n");
         }
       }

@@ -89,7 +89,7 @@ angular.module('openshiftConsole')
     createDetails.namespace = createDetails.namespace || 'openshift';
 
     var validateName = function (name) {
-      return name.length < 25 && /^[a-z]([-a-z0-9]*[a-z0-9])?$/.test(name);
+      return _.size(name) < 25 && /^[a-z]([-a-z0-9]*[a-z0-9])?$/.test(name);
     };
 
     var getResources = function() {

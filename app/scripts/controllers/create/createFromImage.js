@@ -201,7 +201,7 @@ angular.module("openshiftConsole")
                   scope.image = imageStreamTag.image;
                   scope.DCEnvVarsFromImage = ImagesService.getEnvironment(imageStreamTag);
                   var ports = ApplicationGenerator.parsePorts(imageStreamTag.image);
-                  if (ports.length === 0) {
+                  if (_.isEmpty(ports)) {
                     scope.routing.include = false;
                     scope.routing.portOptions = [];
                   } else {
@@ -286,7 +286,7 @@ angular.module("openshiftConsole")
               .then(function(result) {
                     var alerts = [];
                     var hasErrors = false;
-                    if (result.failure.length > 0) {
+                    if (!_.isEmpty(result.failure)) {
                       hasErrors = true;
                       result.failure.forEach(
                         function(failure) {
@@ -355,11 +355,11 @@ angular.module("openshiftConsole")
           // Now that all checks are completed, show any Alerts if we need to
           var quotaAlerts = result.quotaAlerts || [];
           var errorAlerts = _.filter(quotaAlerts, {type: 'error'});
-          if ($scope.nameTaken || errorAlerts.length) {
+          if ($scope.nameTaken || !_.isEmpty(errorAlerts)) {
             $scope.disableInputs = false;
             $scope.quotaAlerts = quotaAlerts;
           }
-          else if (quotaAlerts.length) {
+          else if (!_.isEmpty(quotaAlerts)) {
              launchConfirmationDialog(quotaAlerts);
              $scope.disableInputs = false;
           }

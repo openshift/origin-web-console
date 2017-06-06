@@ -4263,7 +4263,7 @@ if (c.details) {
 var e = [];
 _.forEach(c.details.causes || [], function(a) {
 a.message && e.push(a.message);
-}), e.length > 0 && (a.newProjectMessage = e.join("\n"));
+}), _.isEmpty(e) || (a.newProjectMessage = e.join("\n"));
 }
 }), a.$on("$destroy", function() {
 h.unwatchAll(n);
@@ -5114,7 +5114,7 @@ delete a.unfilteredBuilds[j];
 }
 }
 } else a.unfilteredBuilds = f.validatedBuildsForBuildConfig(c.buildconfig, b.by("metadata.name"));
-a.builds = i.getLabelSelector().select(a.unfilteredBuilds), g(), i.addLabelSuggestionsFromResources(a.unfilteredBuilds, a.labelSuggestions), i.setLabelSuggestions(a.labelSuggestions), a.orderedBuilds = f.sortBuilds(a.builds, !0), a.latestBuild = a.orderedBuilds.length ? a.orderedBuilds[0] :null;
+a.builds = i.getLabelSelector().select(a.unfilteredBuilds), g(), i.addLabelSuggestionsFromResources(a.unfilteredBuilds, a.labelSuggestions), i.setLabelSuggestions(a.labelSuggestions), a.orderedBuilds = f.sortBuilds(a.builds, !0), a.latestBuild = _.first(a.orderedBuilds);
 }, {
 http:{
 params:{
@@ -5126,7 +5126,7 @@ omission:""
 }
 })), i.onActiveFiltersChanged(function(b) {
 a.$apply(function() {
-a.builds = b.select(a.unfilteredBuilds), a.orderedBuilds = f.sortBuilds(a.builds, !0), a.latestBuild = a.orderedBuilds.length ? a.orderedBuilds[0] :null, g();
+a.builds = b.select(a.unfilteredBuilds), a.orderedBuilds = f.sortBuilds(a.builds, !0), a.latestBuild = _.first(a.orderedBuilds), g();
 });
 }), a.startBuild = function() {
 f.startBuild(a.buildConfig.metadata.name, e).then(function(b) {
@@ -6748,7 +6748,7 @@ tag:""
 }
 }, e = "ImageStreamImage" === a.type ? (c.namespace || b.metadata.namespace) + "/" + c.name :"", f = "DockerImage" === a.type ? c.name :"", a.imageStreamTag = d, a.imageStreamImage = e, a.dockerImage = f;
 };
-c(a.imageOptions.from, a.buildStrategy.from), c(a.imageOptions.to, a.updatedBuildConfig.spec.output.to), a.sources.images && (a.sourceImages = a.buildConfig.spec.source.images, 1 === a.sourceImages.length ? (a.imageSourceTypes = angular.copy(a.buildFromTypes), c(a.imageOptions.fromSource, a.sourceImages[0].from), a.imageSourcePaths = _.map(a.sourceImages[0].paths, function(a) {
+c(a.imageOptions.from, a.buildStrategy.from), c(a.imageOptions.to, a.updatedBuildConfig.spec.output.to), a.sources.images && (a.sourceImages = a.buildConfig.spec.source.images, 1 === _.size(a.sourceImages) ? (a.imageSourceTypes = angular.copy(a.buildFromTypes), c(a.imageOptions.fromSource, a.sourceImages[0].from), a.imageSourcePaths = _.map(a.sourceImages[0].paths, function(a) {
 return {
 name:a.sourcePath,
 value:a.destinationDir
@@ -6856,7 +6856,7 @@ var d = b.imageStreamImage.split("/");
 c = {
 kind:b.type,
 name:_.last(d)
-}, c.namespace = 1 !== d.length ? d[0] :a.buildConfig.metadata.namespace;
+}, c.namespace = 1 !== _.size(d) ? _.first(d) :a.buildConfig.metadata.namespace;
 }
 return c;
 }, u = function() {
@@ -7683,7 +7683,7 @@ namespace:b.namespace
 }).then(function(a) {
 b.image = a.image, b.DCEnvVarsFromImage = o.getEnvironment(a);
 var c = i.parsePorts(a.image);
-0 === c.length ? (b.routing.include = !1, b.routing.portOptions = []) :(b.routing.portOptions = _.map(c, function(a) {
+_.isEmpty(c) ? (b.routing.include = !1, b.routing.portOptions = []) :(b.routing.portOptions = _.map(c, function(a) {
 var b = i.getServicePort(a);
 return {
 port:b.name,
@@ -7724,7 +7724,10 @@ p.clear(), p.add(b, e, d.project, function() {
 var b = c.defer();
 return f.batch(G, g).then(function(c) {
 var d = [], e = !1;
-c.failure.length > 0 ? (e = !0, c.failure.forEach(function(a) {
+_.isEmpty(c.failure) ? d.push({
+type:"success",
+message:"All resources for application " + a.name + " were created successfully."
+}) :(e = !0, c.failure.forEach(function(a) {
 d.push({
 type:"error",
 message:"Cannot create " + x(a.object.kind).toLowerCase() + ' "' + a.object.metadata.name + '". ',
@@ -7735,10 +7738,7 @@ d.push({
 type:"success",
 message:"Created " + x(a.kind).toLowerCase() + ' "' + a.metadata.name + '" successfully. '
 });
-})) :d.push({
-type:"success",
-message:"All resources for application " + a.name + " were created successfully."
-}), b.resolve({
+})), b.resolve({
 alerts:d,
 hasErrors:e
 });
@@ -7775,7 +7775,7 @@ b.result.then(H);
 var c = b.quotaAlerts || [], d = _.filter(c, {
 type:"error"
 });
-a.nameTaken || d.length ? (a.disableInputs = !1, a.quotaAlerts = c) :c.length ? (I(c), a.disableInputs = !1) :H();
+a.nameTaken || !_.isEmpty(d) ? (a.disableInputs = !1, a.quotaAlerts = c) :_.isEmpty(c) ? H() :(I(c), a.disableInputs = !1);
 };
 a.projectDisplayName = function() {
 return w(this.project) || this.projectName;
@@ -8105,7 +8105,7 @@ return _.contains(s, b) && _.isString(a);
 });
 t.namespace = t.namespace || "openshift";
 var u = function(a) {
-return a.length < 25 && /^[a-z]([-a-z0-9]*[a-z0-9])?$/.test(a);
+return _.size(a) < 25 && /^[a-z]([-a-z0-9]*[a-z0-9])?$/.test(a);
 }, v = function() {
 t.imageStream && f.get("imagestreams", t.imageStream, {
 namespace:t.namespace
