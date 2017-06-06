@@ -8781,7 +8781,6 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "<breadcrumbs breadcrumbs=\"breadcrumbs\"></breadcrumbs>\n" +
     "<div class=\"row\">\n" +
     "<div class=\"col-md-12\">\n" +
-    "<alerts alerts=\"alerts\"></alerts>\n" +
     "<div ng-if=\"!targetKind || !targetName || !project\" class=\"mar-top-md\">\n" +
     "Loading...\n" +
     "</div>\n" +
@@ -8820,7 +8819,7 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "<button type=\"submit\" class=\"btn btn-primary btn-lg\" ng-disabled=\"form.$invalid || form.$pristine\">\n" +
     "Save\n" +
     "</button>\n" +
-    "<a href=\"\" class=\"btn btn-default btn-lg\" back>Cancel</a>\n" +
+    "<a href=\"\" ng-click=\"cancel()\" class=\"btn btn-default btn-lg\" role=\"button\">Cancel</a>\n" +
     "</div>\n" +
     "</fieldset>\n" +
     "</form>\n" +
