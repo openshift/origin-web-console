@@ -33,7 +33,7 @@ angular.module("openshiftConsole")
 
       var targetPort = route.spec.port ? route.spec.port.targetPort : null;
       if (!targetPort) {
-        if (service.spec.ports.length > 1) {
+        if (_.size(service.spec.ports) > 1) {
           warnings.push('Route has no target port, but service "' + service.metadata.name + '" has multiple ports. ' +
                        'The route will round robin traffic across all exposed ports on the service.');
         }
