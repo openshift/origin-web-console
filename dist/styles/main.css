@@ -3505,7 +3505,7 @@ table.dataTable th:active{outline:0}
 .toast-pf-max-width{max-width:31.1%}
 .toast-pf-top-right{left:auto}
 }
-.toast-notifications-list-pf{margin-left:20px;position:fixed;right:20px;z-index:1050}
+.toast-notifications-list-pf{margin-left:20px;position:fixed;right:20px}
 .toast-notifications-list-pf .toast-pf{clear:both;float:right}
 @media (min-width:768px){.toast-notifications-list-pf{max-width:calc(50%)}
 }
@@ -3851,7 +3851,7 @@ div.hopscotch-bubble .hopscotch-nav-button.prev{color:#030303}
 .word-break-all{word-break:break-all;word-break:break-word;overflow-wrap:break-word}
 .toast-action-divider{color:#9c9c9c}
 .toast-notification-message{font-weight:700;margin-right:5px}
-.toast-notifications-list-pf{top:28px}
+.toast-notifications-list-pf{top:28px;z-index:1055}
 .toast-notifications-list-pf>div.ng-enter{animation:toastSlideIn .2s ease-out}
 .toast-notifications-list-pf>div.ng-leave{animation:toastSlideOut .2s ease-in}
 .toast-notifications-list-pf>div .toast-pf{border-color:#fff;margin-bottom:5px;width:100%}
@@ -4062,6 +4062,7 @@ body.overlay-open,body.overlay-open .landing,body.overlay-open .landing-side-bar
 .catalog-project-summary-list .dropdown-kebab-pf .dropdown-menu.dropdown-menu-right{margin-top:5px;right:-14px}
 .catalog-project-summary-list .project-date{color:#8b8d8f;margin-bottom:0}
 .catalog-project-summary-list .project-date+.project-description{margin-top:7px}
+.catalog-project-summary-list .project-date+.project-description .truncated-content{white-space:pre-line;word-wrap:break-word;word-break:break-word;overflow-wrap:break-word;min-width:0}
 .catalog-project-summary-list .project-tile{border-bottom:solid 1px #4d5258;border-top:solid 1px #4d5258;margin:-1px 0 0;padding:10px;position:relative}
 .catalog-project-summary-list .project-tile.tile-click:hover{background:rgba(255,255,255,.03)}
 .catalog-project-summary-list .project-tile.tile-click:hover .tile-target{color:#64b9e4}
@@ -4110,6 +4111,8 @@ body.overlay-open,body.overlay-open .landing,body.overlay-open .landing-side-bar
 .saas-offerings-container .sass-list-expander:focus,.saas-offerings-container .sass-list-expander:hover{color:#fff;text-decoration:none}
 .saas-offerings-container .sass-list-expander:after{content:"\f107";font-family:FontAwesome;font-size:15px;padding:0 5px}
 .saas-offerings-container .sass-list-expander.expanded:after{content:"\f106"}
+.saas-offerings-container .sass-list-expander.expanded .less{display:inline}
+.saas-offerings-container .sass-list-expander .less,.saas-offerings-container .sass-list-expander.expanded .more{display:none}
 .saas-offerings-container .sass-list-expander-container{margin-bottom:10px;text-align:center}
 .saas-offerings-container .spinner-container{padding-top:60px;padding-bottom:60px}
 .services-view .services-item{color:#363636;min-height:160px;overflow:hidden;padding:5px 10px 20px;position:relative;text-align:center;width:50%;word-break:break-word}
