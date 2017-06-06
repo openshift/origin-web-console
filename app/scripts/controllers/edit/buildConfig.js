@@ -12,11 +12,13 @@ angular.module('openshiftConsole')
                        $filter,
                        $location,
                        $routeParams,
+                       $window,
                        AlertMessageService,
                        ApplicationGenerator,
                        AuthorizationService,
                        DataService,
                        Navigate,
+                       NotificationsService,
                        ProjectsService,
                        SOURCE_URL_PATTERN,
                        SecretsService,
@@ -213,6 +215,30 @@ angular.module('openshiftConsole')
     var watches = [];
     var buildStrategy = $filter('buildStrategy');
 
+    var navigateBack = function() {
+      _.set($scope, 'confirm.doneEditing', true);
+
+      var buildConfigURL;
+      if ($scope.buildConfig) {
+        buildConfigURL = Navigate.resourceURL($scope.buildConfig);
+        $location.path(buildConfigURL);
+      } else {
+        $window.history.back();
+      }
+    };
+
+    var hideErrorNotifications = function() {
+      // TODO: Add method to NotificationsService for passing a list of IDs.
+      NotificationsService.hideNotification("edit-build-config-error");
+      NotificationsService.hideNotification("edit-build-config-conflict");
+      NotificationsService.hideNotification("edit-build-config-deleted");
+    };
+
+    $scope.cancel = function() {
+      hideErrorNotifications();
+      navigateBack();
+    };
+
     ProjectsService
       .get($routeParams.project)
       .then(_.spread(function(project, context) {
@@ -312,16 +338,18 @@ angular.module('openshiftConsole')
             // If we found the item successfully, watch for changes on it
             watches.push(DataService.watchObject("buildconfigs", $routeParams.buildconfig, context, function(buildConfig, action) {
               if (action === 'MODIFIED') {
-                $scope.alerts["updated/deleted"] = {
+                NotificationsService.addNotification({
+                  id: "edit-build-config-conflict",
                   type: "warning",
                   message: "This build configuration has changed since you started editing it. You'll need to copy any changes you've made and edit again."
-                };
+                });
               }
               if (action === "DELETED") {
-                $scope.alerts["updated/deleted"] = {
+                NotificationsService.addNotification({
+                  id: "edit-build-config-deleted",
                   type: "warning",
                   message: "This build configuration has been deleted."
-                };
+                });
                 $scope.disableInputs = true;
               }
               $scope.buildConfig = buildConfig;
@@ -561,26 +589,24 @@ angular.module('openshiftConsole')
 
       // Update triggers
       $scope.updatedBuildConfig.spec.triggers = updateTriggers();
+      hideErrorNotifications();
       DataService.update("buildconfigs", $scope.updatedBuildConfig.metadata.name, $scope.updatedBuildConfig, $scope.context).then(
         function() {
-          AlertMessageService.addAlert({
-            name: $scope.updatedBuildConfig.metadata.name,
-            data: {
-              type: "success",
-              message: "Build Config " + $scope.updatedBuildConfig.metadata.name + " was successfully updated."
-            }
+          NotificationsService.addNotification({
+            type: "success",
+            message: "Build config " + $scope.updatedBuildConfig.metadata.name + " was successfully updated."
           });
-          _.set($scope, 'confirm.doneEditing', true);
-          $location.path(Navigate.resourceURL($scope.updatedBuildConfig, "BuildConfig", $scope.updatedBuildConfig.metadata.namespace));
+          navigateBack();
         },
         function(result) {
           $scope.disableInputs = false;
 
-          $scope.alerts["save"] = {
+          NotificationsService.addNotification({
+            id: "edit-build-config-error",
             type: "error",
-            message: "An error occurred updating the build " + $scope.updatedBuildConfig.metadata.name + "Build Config",
+            message: "An error occurred updating build config " + $scope.updatedBuildConfig.metadata.name + ".",
             details: $filter('getErrorDetails')(result)
-          };
+          });
         }
       );
     };

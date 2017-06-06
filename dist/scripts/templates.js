@@ -9268,9 +9268,7 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "<button type=\"submit\" class=\"btn btn-primary btn-lg\" ng-disabled=\"form.$invalid || form.$pristine || disableInputs\">\n" +
     "Save\n" +
     "</button>\n" +
-    "<a class=\"btn btn-default btn-lg\" ng-click=\"confirm.doneEditing = true\" ng-href=\"{{updatedBuildConfig | navigateResourceURL}}\">\n" +
-    "Cancel\n" +
-    "</a>\n" +
+    "<button class=\"btn btn-default btn-lg\" ng-click=\"cancel()\">Cancel</button>\n" +
     "</div>\n" +
     "</div>\n" +
     "</div>\n" +
