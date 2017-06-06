@@ -11638,7 +11638,7 @@ b.$watchGroup([ "limitRanges", "hpa", "project" ], h), b.$watch("rc.spec.templat
 var j = function() {
 if (_.get(b.rc, "spec.replicas", 1) > _.get(b.rc, "status.replicas", 0)) {
 var a = g.filterQuotasForResource(b.rc, b.quotas), c = g.filterQuotasForResource(b.rc, b.clusterQuotas), d = function(a) {
-return !!g.getResourceLimitAlerts(b.rc, a).length;
+return !_.isEmpty(g.getResourceLimitAlerts(b.rc, a));
 };
 b.showQuotaWarning = _.some(a, d) || _.some(c, d);
 } else b.showQuotaWarning = !1;
