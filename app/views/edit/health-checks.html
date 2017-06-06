@@ -12,7 +12,6 @@
             <breadcrumbs breadcrumbs="breadcrumbs"></breadcrumbs>
             <div class="row">
               <div class="col-md-12">
-                <alerts alerts="alerts"></alerts>
                 <div ng-show="!containers.length" class="mar-top-md">Loading...</div>
                 <form ng-show="containers.length" name="form" class="health-checks-form">
                   <confirm-on-exit dirty="form.$dirty && !confirm.doneEditing"></confirm-on-exit>
@@ -75,9 +74,7 @@
                         ng-click="save()"
                         ng-disabled="form.$invalid || form.$pristine || disableInputs"
                         value="">Save</button>
-                      <a class="btn btn-default btn-lg"
-                        ng-click="confirm.doneEditing = true"
-                        ng-href="{{resourceURL}}">Cancel</a>
+                      <button class="btn btn-default btn-lg" ng-click="cancel()">Cancel</button>
                     </div>
                   </fieldset>
                 </form>

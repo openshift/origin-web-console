@@ -12,7 +12,6 @@
             <breadcrumbs breadcrumbs="breadcrumbs"></breadcrumbs>
             <div class="row">
               <div class="col-md-12">
-                <alerts alerts="alerts"></alerts>
                 <div ng-show="!containers.length">Loading...</div>
                 <form ng-if="containers.length" name="form" class="set-limits-form">
                   <confirm-on-exit dirty="form.$dirty && !confirm.doneEditing"></confirm-on-exit>
@@ -62,9 +61,7 @@
                         ng-click="save()"
                         ng-disabled="form.$pristine || form.$invalid || disableInputs || cpuProblems.length || memoryProblems.length"
                         value="">Save</button>
-                      <a class="btn btn-default btn-lg"
-                        ng-click="confirm.doneEditing = true"
-                        ng-href="{{resourceURL}}">Cancel</a>
+                      <button class="btn btn-default btn-lg" ng-click="cancel()">Cancel</button>
                     </div>
                   </fieldset>
                 </form>

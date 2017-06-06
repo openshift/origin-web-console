@@ -253,7 +253,7 @@
     row.startDeployment = function() {
       DeploymentsService.startLatestDeployment(row.apiObject, {
         namespace: row.apiObject.metadata.namespace
-      }, { alerts: row.state.alerts });
+      });
     };
 
     // TODO: Pulled from dc.js, but we should probably make the dialog generic and reuse for the deployment config page.
@@ -312,7 +312,7 @@
 
         DeploymentsService.cancelRunningDeployment(replicationController, {
           namespace: replicationController.metadata.namespace
-        }, { alerts: row.state.alerts });
+        });
       });
     };
 
