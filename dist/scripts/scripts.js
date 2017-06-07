@@ -8341,49 +8341,56 @@ s("An error occurred attaching the persistent volume claim to the " + p(b.kind) 
 t(), u();
 };
 }));
-} ]), angular.module("openshiftConsole").controller("AddConfigVolumeController", [ "$filter", "$location", "$routeParams", "$scope", "$window", "APIService", "AuthorizationService", "BreadcrumbsService", "DataService", "Navigate", "ProjectsService", "StorageService", "RELATIVE_PATH_PATTERN", function(a, b, c, d, e, f, g, h, i, j, k, l, m) {
+} ]), angular.module("openshiftConsole").controller("AddConfigVolumeController", [ "$filter", "$location", "$routeParams", "$scope", "$window", "APIService", "AuthorizationService", "BreadcrumbsService", "DataService", "Navigate", "NotificationsService", "ProjectsService", "StorageService", "RELATIVE_PATH_PATTERN", function(a, b, c, d, e, f, g, h, i, j, k, l, m, n) {
 if (!c.kind || !c.name) return void j.toErrorPage("Kind or name parameter missing.");
-var n = [ "Deployment", "DeploymentConfig", "ReplicaSet", "ReplicationController" ];
-if (!_.includes(n, c.kind)) return void j.toErrorPage("Volumes are not supported for kind " + c.kind + ".");
-var o = {
+var o = [ "Deployment", "DeploymentConfig", "ReplicaSet", "ReplicationController" ];
+if (!_.includes(o, c.kind)) return void j.toErrorPage("Volumes are not supported for kind " + c.kind + ".");
+var p = {
 resource:f.kindToResource(c.kind),
 group:c.group
 };
-d.alerts = {}, d.projectName = c.project, d.kind = c.kind, d.name = c.name, d.attach = {
+d.projectName = c.project, d.kind = c.kind, d.name = c.name, d.attach = {
 allContainers:!0,
 pickKeys:!1
-}, d.forms = {}, d.RELATIVE_PATH_PATTERN = m, d.breadcrumbs = h.getBreadcrumbs({
+}, d.forms = {}, d.RELATIVE_PATH_PATTERN = n, d.breadcrumbs = h.getBreadcrumbs({
 name:c.name,
 kind:c.kind,
 namespace:c.project,
 subpage:"Add Config Files",
 includeProject:!0
 });
-var p = a("humanizeKind");
+var q = a("humanizeKind");
 d.groupByKind = function(a) {
-return p(a.kind);
+return q(a.kind);
 };
-var q = function() {
+var r = function() {
 _.set(d, "attach.items", [ {} ]);
 };
-d.$watch("attach.source", q);
-var r = function() {
+d.$watch("attach.source", r);
+var s = function() {
 d.forms.addConfigVolumeForm.$setDirty();
-};
-d.addItem = function() {
-d.attach.items.push({}), r();
-}, d.removeItem = function(a) {
-d.attach.items.splice(a, 1), r();
-}, k.get(c.project).then(_.spread(function(b, f) {
-if (d.project = b, !g.canI(o, "update", c.project)) return void j.toErrorPage("You do not have authority to update " + p(c.kind) + " " + c.name + ".", "access_denied");
-var k = a("orderByDisplayName"), m = a("getErrorDetails"), n = a("generateName"), q = function(a, b) {
-d.alerts["attach-persistent-volume-claim"] = {
+}, t = function() {
+_.set(d, "confirm.doneEditing", !0), e.history.back();
+}, u = function(a, b) {
+k.addNotification({
+id:"add-config-volume-error",
 type:"error",
 message:a,
 details:b
+});
+}, v = function() {
+k.hideNotification("add-config-volume-error");
 };
-};
-i.get(o, c.name, f, {
+d.addItem = function() {
+d.attach.items.push({}), s();
+}, d.removeItem = function(a) {
+d.attach.items.splice(a, 1), s();
+}, d.cancel = function() {
+v(), t();
+}, l.get(c.project).then(_.spread(function(b, e) {
+if (d.project = b, !g.canI(p, "update", c.project)) return void j.toErrorPage("You do not have authority to update " + q(c.kind) + " " + c.name + ".", "access_denied");
+var f = a("orderByDisplayName"), l = a("getErrorDetails"), n = a("generateName");
+i.get(p, c.name, e, {
 errorNotification:!1
 }).then(function(a) {
 d.targetObject = a, d.breadcrumbs = h.getBreadcrumbs({
@@ -8394,62 +8401,65 @@ includeProject:!0
 });
 }, function(a) {
 d.error = a;
-}), i.list("configmaps", f, null, {
+}), i.list("configmaps", e, null, {
 errorNotification:!1
 }).then(function(a) {
-d.configMaps = k(a.by("metadata.name"));
+d.configMaps = f(a.by("metadata.name"));
 }, function(a) {
-return 403 === a.code ? void (d.configMaps = []) :void q("Could not load config maps", m(a));
-}), i.list("secrets", f, null, {
+return 403 === a.code ? void (d.configMaps = []) :void u("Could not load config maps", l(a));
+}), i.list("secrets", e, null, {
 errorNotification:!1
 }).then(function(a) {
-d.secrets = k(a.by("metadata.name"));
+d.secrets = f(a.by("metadata.name"));
 }, function(a) {
-return 403 === a.code ? void (d.secrets = []) :void q("Could not load secrets", m(a));
+return 403 === a.code ? void (d.secrets = []) :void u("Could not load secrets", l(a));
 });
-var r = function(a) {
+var o = function(a) {
 return d.attach.allContainers || d.attach.containers[a.name];
-}, s = function() {
+}, r = function() {
 var a = _.get(d, "targetObject.spec.template");
-d.existingMountPaths = l.getMountPaths(a, r);
+d.existingMountPaths = m.getMountPaths(a, o);
 };
-d.$watchGroup([ "targetObject", "attach.allContainers" ], s), d.$watch("attach.containers", s, !0);
-var t = function() {
+d.$watchGroup([ "targetObject", "attach.allContainers" ], r), d.$watch("attach.containers", r, !0);
+var s = function() {
 var a = _.map(d.attach.items, "path");
 d.itemPaths = _.compact(a);
 };
-d.$watch("attach.items", t, !0), d.addVolume = function() {
+d.$watch("attach.items", s, !0), d.addVolume = function() {
 if (!d.forms.addConfigVolumeForm.$invalid) {
-var b = d.targetObject, g = _.get(d, "attach.source"), h = _.get(b, "spec.template"), j = n("volume-"), k = _.get(d, "attach.mountPath"), l = {
-name:j,
-mountPath:k
+var b = d.targetObject, f = _.get(d, "attach.source"), g = _.get(b, "spec.template"), h = n("volume-"), j = _.get(d, "attach.mountPath"), m = {
+name:h,
+mountPath:j
 };
-"Secret" === g.kind && (l.readOnly = !0), _.each(h.spec.containers, function(a) {
-r(a) && (a.volumeMounts = a.volumeMounts || [], a.volumeMounts.push(l));
+"Secret" === f.kind && (m.readOnly = !0), _.each(g.spec.containers, function(a) {
+o(a) && (a.volumeMounts = a.volumeMounts || [], a.volumeMounts.push(m));
 });
-var p, s = {
-name:j
+var q, r = {
+name:h
 };
-switch (d.attach.pickKeys && (p = d.attach.items), g.kind) {
+switch (d.attach.pickKeys && (q = d.attach.items), f.kind) {
 case "ConfigMap":
-s.configMap = {
-name:g.metadata.name,
-items:p
+r.configMap = {
+name:f.metadata.name,
+items:q
 };
 break;
 
 case "Secret":
-s.secret = {
-secretName:g.metadata.name,
-items:p
+r.secret = {
+secretName:f.metadata.name,
+items:q
 };
 }
-h.spec.volumes = h.spec.volumes || [], h.spec.volumes.push(s), d.alerts = {}, d.disableInputs = !0, i.update(o, b.metadata.name, d.targetObject, f).then(function() {
-_.set(d, "confirm.doneEditing", !0), e.history.back();
-}, function(b) {
-d.disableInputs = !1;
-var e = a("humanizeKind"), f = e(g.kind), h = e(c.kind);
-q("An error occurred attaching the " + f + " to the " + h + ".", m(b));
+g.spec.volumes = g.spec.volumes || [], g.spec.volumes.push(r), d.disableInputs = !0, v();
+var s = a("humanizeKind"), w = s(f.kind), x = s(c.kind);
+i.update(p, b.metadata.name, d.targetObject, e).then(function() {
+k.addNotification({
+type:"success",
+message:"Succesfully added " + w + " " + f.metadata.name + " to " + x + " " + c.name + "."
+}), t();
+}, function(a) {
+d.disableInputs = !1, u("An error occurred attaching the " + w + " to the " + x + ".", l(a));
 });
 }
 };
