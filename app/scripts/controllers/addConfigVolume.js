@@ -19,6 +19,7 @@ angular.module('openshiftConsole')
                        BreadcrumbsService,
                        DataService,
                        Navigate,
+                       NotificationsService,
                        ProjectsService,
                        StorageService,
                        RELATIVE_PATH_PATTERN) {
@@ -44,7 +45,6 @@ angular.module('openshiftConsole')
       group: $routeParams.group
     };
 
-    $scope.alerts = {};
     $scope.projectName = $routeParams.project;
     $scope.kind = $routeParams.kind;
     $scope.name = $routeParams.name;
@@ -80,6 +80,24 @@ angular.module('openshiftConsole')
       $scope.forms.addConfigVolumeForm.$setDirty();
     };
 
+    var navigateBack = function() {
+      _.set($scope, 'confirm.doneEditing', true);
+      $window.history.back();
+    };
+
+    var displayError = function(errorMessage, errorDetails) {
+      NotificationsService.addNotification({
+        id: "add-config-volume-error",
+        type: "error",
+        message: errorMessage,
+        details: errorDetails
+      });
+    };
+
+    var hideErrorNotifications = function() {
+      NotificationsService.hideNotification("add-config-volume-error");
+    };
+
     $scope.addItem = function() {
       $scope.attach.items.push({});
       setDirty();
@@ -88,6 +106,11 @@ angular.module('openshiftConsole')
     $scope.removeItem = function(index) {
       $scope.attach.items.splice(index, 1);
       setDirty();
+    };
+
+    $scope.cancel = function() {
+      hideErrorNotifications();
+      navigateBack();
     };
 
     ProjectsService
@@ -104,14 +127,6 @@ angular.module('openshiftConsole')
         var orderByDisplayName = $filter('orderByDisplayName');
         var getErrorDetails = $filter('getErrorDetails');
         var generateName = $filter('generateName');
-
-        var displayError = function(errorMessage, errorDetails) {
-          $scope.alerts['attach-persistent-volume-claim'] = {
-            type: "error",
-            message: errorMessage,
-            details: errorDetails
-          };
-        };
 
         DataService.get(resourceGroupVersion, $routeParams.name, context, { errorNotification: false }).then(
           function(object) {
@@ -226,20 +241,24 @@ angular.module('openshiftConsole')
           podTemplate.spec.volumes = podTemplate.spec.volumes || [];
           podTemplate.spec.volumes.push(newVolume);
 
-          // Clear any previous alerts.
-          $scope.alerts = {};
-
           $scope.disableInputs = true;
+          hideErrorNotifications();
+
+          var humanizeKind = $filter('humanizeKind');
+          var sourceKind = humanizeKind(source.kind);
+          var targetKind = humanizeKind($routeParams.kind);
+
           DataService.update(resourceGroupVersion, resource.metadata.name, $scope.targetObject, context).then(
             function() {
-              _.set($scope, 'confirm.doneEditing', true);
-              $window.history.back();
+              NotificationsService.addNotification({
+                type: "success",
+                message: "Succesfully added " + sourceKind + " " + source.metadata.name + " to " + targetKind + " " + $routeParams.name + "."
+              });
+
+              navigateBack();
             },
             function(result) {
               $scope.disableInputs = false;
-              var humanizeKind = $filter('humanizeKind');
-              var sourceKind = humanizeKind(source.kind);
-              var targetKind = humanizeKind($routeParams.kind);
               displayError("An error occurred attaching the " + sourceKind + " to the " + targetKind + ".", getErrorDetails(result));
             }
           );

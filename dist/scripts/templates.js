@@ -749,7 +749,6 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "<div class=\"row\">\n" +
     "<div class=\"col-md-10 col-md-offset-1\">\n" +
     "<breadcrumbs breadcrumbs=\"breadcrumbs\"></breadcrumbs>\n" +
-    "<alerts alerts=\"alerts\"></alerts>\n" +
     "<div ng-if=\"!error && (!targetObject || !configMaps || !secrets)\">Loading...</div>\n" +
     "<div ng-if=\"error\" class=\"empty-state-message text-center\">\n" +
     "<h2>The {{kind | humanizeKind}} could not be loaded.</h2>\n" +
@@ -887,7 +886,7 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "</div>\n" +
     "<div class=\"button-group gutter-top gutter-bottom\">\n" +
     "<button type=\"submit\" class=\"btn btn-primary btn-lg\" ng-click=\"addVolume()\" ng-disabled=\"forms.addConfigVolumeForm.$invalid || disableInputs\">Add</button>\n" +
-    "<a class=\"btn btn-default btn-lg\" role=\"button\" href=\"#\" ng-click=\"confirm.doneEditing = true\" back>Cancel</a>\n" +
+    "<a class=\"btn btn-default btn-lg\" role=\"button\" href=\"\" ng-click=\"cancel()\">Cancel</a>\n" +
     "</div>\n" +
     "</fieldset>\n" +
     "</form>\n" +
