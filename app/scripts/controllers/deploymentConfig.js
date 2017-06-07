@@ -416,19 +416,8 @@ angular.module('openshiftConsole')
             cancelButtonText: "Cancel"
           });
 
-          var showError = function(e) {
-            $scope.alerts["remove-volume-error"] = {
-              type: "error",
-              message: "An error occurred removing the volume.",
-              details: $filter('getErrorDetails')(e)
-            };
-          };
-
           var removeVolume = function() {
-            // No-op on success since the page updates.
-            StorageService
-              .removeVolume($scope.deploymentConfig, volume, context)
-              .then(_.noop, showError);
+            StorageService.removeVolume($scope.deploymentConfig, volume, context);
           };
 
           confirm.then(removeVolume);
