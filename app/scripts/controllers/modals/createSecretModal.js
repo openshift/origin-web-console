@@ -1,5 +1,4 @@
 'use strict';
-/* jshint unused: false */
 
 /**
  * @ngdoc function
@@ -11,15 +10,11 @@
 angular.module('openshiftConsole')
   .controller('CreateSecretModalController', function ($scope, $uibModalInstance) {
 
-    $scope.postCreateAction = function(newSecret, creationAlerts) {
+    $scope.onCreate = function(newSecret) {
       $uibModalInstance.close(newSecret);
-      // Add creation alert into scope
-      _.each(creationAlerts, function(alert) {
-        $scope.alerts[alert.name] = alert.data;
-      });
     };
 
-    $scope.cancel = function() {
+    $scope.onCancel = function() {
       $uibModalInstance.dismiss('cancel');
     };
   });

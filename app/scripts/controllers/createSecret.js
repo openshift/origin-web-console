@@ -37,15 +37,6 @@ angular.module('openshiftConsole')
       }
     ];
 
-    var navigateBack = function() {
-      if ($routeParams.then) {
-        $location.url($routeParams.then);
-        return;
-      }
-
-      $window.history.back();
-    };
-
     ProjectsService
       .get($routeParams.project)
       .then(_.spread(function(project, context) {
@@ -58,13 +49,13 @@ angular.module('openshiftConsole')
           return;
         }
 
-        $scope.postCreateAction = function(newSecret, creationAlerts) {
-          _.each(creationAlerts, function(alert) {
-            AlertMessageService.addAlert(alert);
-          });
-          navigateBack();
-        };
+        $scope.navigateBack = function() {
+          if ($routeParams.then) {
+            $location.url($routeParams.then);
+            return;
+          }
 
-        $scope.cancel = navigateBack;
+          $window.history.back();
+        };
     }));
   });
