@@ -919,7 +919,6 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "<div class=\"row\">\n" +
     "<div class=\"col-md-10 col-md-offset-1\">\n" +
     "<breadcrumbs breadcrumbs=\"breadcrumbs\"></breadcrumbs>\n" +
-    "<alerts alerts=\"alerts\"></alerts>\n" +
     "<div ng-show=\"!pvcs || !attach.resource\">Loading...</div>\n" +
     "<div ng-show=\"pvcs && !pvcs.length && attach.resource\" class=\"empty-state-message empty-state-full-page\">\n" +
     "<h2 class=\"text-center\">No persistent volume claims.</h2>\n" +
@@ -1055,7 +1054,7 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "</pause-rollouts-checkbox>\n" +
     "<div class=\"button-group gutter-top gutter-bottom\">\n" +
     "<button type=\"submit\" class=\"btn btn-primary btn-lg\" ng-click=\"attachPVC()\" ng-disabled=\"attachPVCForm.$invalid || disableInputs || !attachPVC\">Add</button>\n" +
-    "<a class=\"btn btn-default btn-lg\" role=\"button\" ng-click=\"confirm.doneEditing = true\" href=\"#\" back>Cancel</a>\n" +
+    "<a class=\"btn btn-default btn-lg\" role=\"button\" ng-click=\"cancel()\">Cancel</a>\n" +
     "</div>\n" +
     "</fieldset>\n" +
     "</form>\n" +

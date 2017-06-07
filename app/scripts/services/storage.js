@@ -1,7 +1,14 @@
 'use strict';
 
 angular.module("openshiftConsole")
-  .factory("StorageService", function(APIService, DataService) {
+  .factory("StorageService",
+           function($filter,
+                    APIService,
+                    DataService,
+                    NotificationsService) {
+    var getErrorDetails = $filter('getErrorDetails');
+    var humanizeKind = $filter('humanizeKind');
+
     return {
       createVolume: function(name, persistentVolumeClaim) {
         return {
@@ -64,7 +71,19 @@ angular.module("openshiftConsole")
         });
 
         var resource = APIService.objectToResourceGroupVersion(copy);
-        return DataService.update(resource, copy.metadata.name, copy, context);
+        return DataService.update(resource, copy.metadata.name, copy, context)
+          .then(function() {
+            NotificationsService.addNotification({
+              type: "success",
+              message: "Volume " + volume.name + " removed from " + humanizeKind(object.kind) + " " + object.metadata.name + "."
+            });
+          }, function(e) {
+            NotificationsService.addNotification({
+              type: "error",
+              message: "An error occurred removing volume " + volume.name + " from " + humanizeKind(object.kind) + " " + object.metadata.name + ".",
+              details: getErrorDetails(e)
+            });
+          });
       }
     };
   });

@@ -2649,7 +2649,8 @@ a.flush();
 }, 0);
 }
 };
-} ]), angular.module("openshiftConsole").factory("StorageService", [ "APIService", "DataService", function(a, b) {
+} ]), angular.module("openshiftConsole").factory("StorageService", [ "$filter", "APIService", "DataService", "NotificationsService", function(a, b, c, d) {
+var e = a("getErrorDetails"), f = a("humanizeKind");
 return {
 createVolume:function(a, b) {
 return {
@@ -2682,19 +2683,30 @@ c.push(a.mountPath);
 }
 }), c;
 },
-removeVolume:function(c, d, e) {
-var f = angular.copy(c), g = _.get(f, "spec.template.spec.volumes");
-_.remove(g, {
-name:d.name
+removeVolume:function(a, g, h) {
+var i = angular.copy(a), j = _.get(i, "spec.template.spec.volumes");
+_.remove(j, {
+name:g.name
 });
-var h = _.get(f, "spec.template.spec.containers");
-_.each(h, function(a) {
+var k = _.get(i, "spec.template.spec.containers");
+_.each(k, function(a) {
 _.remove(a.volumeMounts, {
-name:d.name
+name:g.name
 });
 });
-var i = a.objectToResourceGroupVersion(f);
-return b.update(i, f.metadata.name, f, e);
+var l = b.objectToResourceGroupVersion(i);
+return c.update(l, i.metadata.name, i, h).then(function() {
+d.addNotification({
+type:"success",
+message:"Volume " + g.name + " removed from " + f(a.kind) + " " + a.metadata.name + "."
+});
+}, function(b) {
+d.addNotification({
+type:"error",
+message:"An error occurred removing volume " + g.name + " from " + f(a.kind) + " " + a.metadata.name + ".",
+details:e(b)
+});
+});
 }
 };
 } ]), angular.module("openshiftConsole").factory("LimitRangesService", [ "$filter", "LIMIT_REQUEST_OVERRIDES", function(a, b) {
@@ -5535,25 +5547,19 @@ message:"An error occurred " + (c ? "pausing" :"resuming") + " the deployment.",
 details:b("getErrorDetails")(d)
 };
 });
-}, a.removeVolume = function(c) {
-var d;
-d = _.get(a, "deployment.spec.paused") ? "This will remove the volume from the deployment." :"This will remove the volume from the deployment and start a new rollout.", c.persistentVolumeClaim ? d += " It will not delete the persistent volume claim." :c.secret ? d += " It will not delete the secret." :c.configMap && (d += " It will not delete the config map.");
-var e = j.confirm({
-message:"Remove volume " + c.name + "?",
-details:d,
+}, a.removeVolume = function(b) {
+var c;
+c = _.get(a, "deployment.spec.paused") ? "This will remove the volume from the deployment." :"This will remove the volume from the deployment and start a new rollout.", b.persistentVolumeClaim ? c += " It will not delete the persistent volume claim." :b.secret ? c += " It will not delete the secret." :b.configMap && (c += " It will not delete the config map.");
+var d = j.confirm({
+message:"Remove volume " + b.name + "?",
+details:c,
 okButtonText:"Remove",
 okButtonClass:"btn-danger",
 cancelButtonText:"Cancel"
-}), f = function(c) {
-a.alerts["remove-volume-error"] = {
-type:"error",
-message:"An error occurred removing the volume.",
-details:b("getErrorDetails")(c)
+}), e = function() {
+o.removeVolume(a.deployment, b, k);
 };
-}, g = function() {
-o.removeVolume(a.deployment, c, k).then(_.noop, f);
-};
-e.then(g);
+d.then(e);
 }, a.$on("$destroy", function() {
 e.unwatchAll(v);
 });
@@ -5723,25 +5729,19 @@ return _.some(b, {
 type:"ConfigChange"
 });
 };
-a.removeVolume = function(c) {
-var d;
-d = F() ? "This will remove the volume from the deployment config and trigger a new deployment." :"This will remove the volume from the deployment config.", c.persistentVolumeClaim ? d += " It will not delete the persistent volume claim." :c.secret ? d += " It will not delete the secret." :c.configMap && (d += " It will not delete the config map.");
-var f = k.confirm({
-message:"Remove volume " + c.name + "?",
-details:d,
+a.removeVolume = function(b) {
+var c;
+c = F() ? "This will remove the volume from the deployment config and trigger a new deployment." :"This will remove the volume from the deployment config.", b.persistentVolumeClaim ? c += " It will not delete the persistent volume claim." :b.secret ? c += " It will not delete the secret." :b.configMap && (c += " It will not delete the config map.");
+var d = k.confirm({
+message:"Remove volume " + b.name + "?",
+details:c,
 okButtonText:"Remove",
 okButtonClass:"btn-danger",
 cancelButtonText:"Cancel"
-}), g = function(c) {
-a.alerts["remove-volume-error"] = {
-type:"error",
-message:"An error occurred removing the volume.",
-details:b("getErrorDetails")(c)
+}), f = function() {
+p.removeVolume(a.deploymentConfig, b, e);
 };
-}, h = function() {
-p.removeVolume(a.deploymentConfig, c, e).then(_.noop, g);
-};
-f.then(h);
+d.then(f);
 }, a.$on("$destroy", function() {
 f.unwatchAll(A);
 });
@@ -6004,16 +6004,10 @@ details:d,
 okButtonText:"Remove",
 okButtonClass:"btn-danger",
 cancelButtonText:"Cancel"
-}), f = function(c) {
-a.alerts["remove-volume-error"] = {
-type:"error",
-message:"An error occurred removing the volume.",
-details:b("getErrorDetails")(c)
+}), f = function() {
+r.removeVolume(a.replicaSet, c, i);
 };
-}, g = function() {
-r.removeVolume(a.replicaSet, c, i).then(_.noop, f);
-};
-e.then(g);
+e.then(f);
 }, a.$on("$destroy", function() {
 g.unwatchAll(y);
 });
@@ -8257,17 +8251,15 @@ details:a("getErrorDetails")(b)
 }
 };
 }));
-} ]), angular.module("openshiftConsole").controller("AttachPVCController", [ "$filter", "$routeParams", "$scope", "$window", "APIService", "AuthorizationService", "BreadcrumbsService", "DataService", "QuotaService", "Navigate", "ProjectsService", "StorageService", "RELATIVE_PATH_PATTERN", function(a, b, c, d, e, f, g, h, i, j, k, l, m) {
+} ]), angular.module("openshiftConsole").controller("AttachPVCController", [ "$filter", "$routeParams", "$scope", "$window", "APIService", "AuthorizationService", "BreadcrumbsService", "DataService", "QuotaService", "Navigate", "NotificationsService", "ProjectsService", "StorageService", "RELATIVE_PATH_PATTERN", function(a, b, c, d, e, f, g, h, i, j, k, l, m, n) {
 if (!b.kind || !b.name) return void j.toErrorPage("Kind or name parameter missing.");
-var n = [ "Deployment", "DeploymentConfig", "ReplicaSet", "ReplicationController" ];
-if (!_.includes(n, b.kind)) return void j.toErrorPage("Storage is not supported for kind " + b.kind + ".");
-var o = {
+var o = [ "Deployment", "DeploymentConfig", "ReplicaSet", "ReplicationController" ], p = a("humanizeKind");
+if (!_.includes(o, b.kind)) return void j.toErrorPage("Storage is not supported for kind " + p(b.kind) + ".");
+var q = {
 resource:e.kindToResource(b.kind),
 group:b.group
 };
-c.alerts = {}, c.renderOptions = {
-hideFilterWidget:!0
-}, c.projectName = b.project, c.kind = b.kind, c.name = b.name, c.RELATIVE_PATH_PATTERN = m, c.outOfClaims = !1, c.attach = {
+c.projectName = b.project, c.kind = b.kind, c.name = b.name, c.RELATIVE_PATH_PATTERN = n, c.outOfClaims = !1, c.attach = {
 persistentVolumeClaim:null,
 volumeName:null,
 mountPath:null,
@@ -8279,23 +8271,28 @@ kind:b.kind,
 namespace:b.project,
 subpage:"Add Storage",
 includeProject:!0
-}), k.get(b.project).then(_.spread(function(e, k) {
-if (c.project = e, c.breadcrumbs[0].title = a("displayName")(e), !f.canI(o, "update", b.project)) return void j.toErrorPage("You do not have authority to update " + a("humanizeKind")(b.kind) + " " + b.name + ".", "access_denied");
-var m = a("orderByDisplayName"), n = a("getErrorDetails"), p = a("generateName"), q = function(a, b) {
-c.disableInputs = !0, c.alerts["attach-persistent-volume-claim"] = {
+}), l.get(b.project).then(_.spread(function(e, l) {
+if (c.project = e, c.breadcrumbs[0].title = a("displayName")(e), !f.canI(q, "update", b.project)) return void j.toErrorPage("You do not have authority to update " + p(b.kind) + " " + b.name + ".", "access_denied");
+var n = a("orderByDisplayName"), o = a("getErrorDetails"), r = a("generateName"), s = function(a, b) {
+c.disableInputs = !0, k.addNotification({
+id:"attach-pvc-error",
 type:"error",
 message:a,
 details:b
-};
-}, r = function(a) {
+});
+}, t = function() {
+k.hideNotification("attach-pvc-error");
+}, u = function() {
+_.set(c, "confirm.doneEditing", !0), d.history.back();
+}, v = function(a) {
 return c.attach.allContainers || c.attach.containers[a.name];
-}, s = function() {
+}, w = function() {
 var a = _.get(c, "attach.resource.spec.template");
-c.existingMountPaths = l.getMountPaths(a, r);
+c.existingMountPaths = m.getMountPaths(a, v);
 };
-c.$watchGroup([ "attach.resource", "attach.allContainers" ], s), c.$watch("attach.containers", s, !0);
-var t = function() {
-h.get(o, b.name, k).then(function(a) {
+c.$watchGroup([ "attach.resource", "attach.allContainers" ], w), c.$watch("attach.containers", w, !0);
+var x = function() {
+h.get(q, b.name, l).then(function(a) {
 c.attach.resource = a, c.breadcrumbs = g.getBreadcrumbs({
 object:a,
 project:e,
@@ -8303,11 +8300,11 @@ subpage:"Add Storage",
 includeProject:!0
 });
 var b = _.get(a, "spec.template");
-c.existingVolumeNames = l.getVolumeNames(b);
+c.existingVolumeNames = m.getVolumeNames(b);
 }, function(a) {
-q(b.name + " could not be loaded.", n(a));
-}), h.list("persistentvolumeclaims", k).then(function(a) {
-c.pvcs = m(a.by("metadata.name")), _.isEmpty(c.pvcs) || c.attach.persistentVolumeClaim || (c.attach.persistentVolumeClaim = _.head(c.pvcs));
+s(b.name + " could not be loaded.", o(a));
+}), h.list("persistentvolumeclaims", l).then(function(a) {
+c.pvcs = n(a.by("metadata.name")), _.isEmpty(c.pvcs) || c.attach.persistentVolumeClaim || (c.attach.persistentVolumeClaim = _.head(c.pvcs));
 }), h.list("resourcequotas", {
 namespace:c.projectName
 }, function(a) {
@@ -8318,23 +8315,30 @@ namespace:c.projectName
 c.clusterQuotas = a.by("metadata.name"), c.outOfClaims = i.isAnyStorageQuotaExceeded(c.quotas, c.clusterQuotas);
 });
 };
-t(), c.attachPVC = function() {
-if (c.disableInputs = !0, c.attachPVCForm.$valid) {
-c.attach.volumeName || (c.attach.volumeName = p("volume-"));
-var e = c.attach.resource, f = _.get(e, "spec.template"), g = c.attach.persistentVolumeClaim, i = c.attach.volumeName, j = c.attach.mountPath, m = c.attach.subPath, s = c.attach.readOnly;
-j && angular.forEach(f.spec.containers, function(a) {
-if (r(a)) {
-var b = l.createVolumeMount(i, j, m, s);
+x(), c.attachPVC = function() {
+if (c.disableInputs = !0, t(), c.attachPVCForm.$valid) {
+c.attach.volumeName || (c.attach.volumeName = r("volume-"));
+var a = c.attach.resource, d = _.get(a, "spec.template"), e = c.attach.persistentVolumeClaim, f = c.attach.volumeName, g = c.attach.mountPath, i = c.attach.subPath, j = c.attach.readOnly;
+g && angular.forEach(d.spec.containers, function(a) {
+if (v(a)) {
+var b = m.createVolumeMount(f, g, i, j);
 a.volumeMounts || (a.volumeMounts = []), a.volumeMounts.push(b);
 }
 });
-var t = l.createVolume(i, g);
-f.spec.volumes || (f.spec.volumes = []), f.spec.volumes.push(t), c.alerts = {}, h.update(o, e.metadata.name, c.attach.resource, k).then(function() {
-d.history.back();
-}, function(d) {
-q("An error occurred attaching the persistent volume claim to the " + a("humanizeKind")(b.kind) + ".", n(d)), c.disableInputs = !1;
+var n = m.createVolume(f, e);
+d.spec.volumes || (d.spec.volumes = []), d.spec.volumes.push(n), h.update(q, a.metadata.name, c.attach.resource, l).then(function() {
+var a;
+g || (a = "No mount path was provided. The volume reference was added to the configuration, but it will not be mounted into running pods."), k.addNotification({
+type:"success",
+message:"Persistent volume claim " + e.metadata.name + " added to " + p(b.kind) + " " + b.name + ".",
+details:a
+}), u();
+}, function(a) {
+s("An error occurred attaching the persistent volume claim to the " + p(b.kind) + ".", o(a)), c.disableInputs = !1;
 });
 }
+}, c.cancel = function() {
+t(), u();
 };
 }));
 } ]), angular.module("openshiftConsole").controller("AddConfigVolumeController", [ "$filter", "$location", "$routeParams", "$scope", "$window", "APIService", "AuthorizationService", "BreadcrumbsService", "DataService", "Navigate", "ProjectsService", "StorageService", "RELATIVE_PATH_PATTERN", function(a, b, c, d, e, f, g, h, i, j, k, l, m) {

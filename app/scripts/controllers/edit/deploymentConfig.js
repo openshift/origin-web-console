@@ -318,7 +318,7 @@ angular.module('openshiftConsole')
 
     var doneEditing = function() {
       _.set($scope, 'confirm.doneEditing', true);
-    }
+    };
 
     var hideErrorNotifications = function() {
       NotificationsService.hideNotification("edit-deployment-config-error");
