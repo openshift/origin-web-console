@@ -562,7 +562,7 @@ alerts:c,
 hasErrors:d
 });
 }), a.promise;
-}), _.set(c, "confirm.doneEditing", !0), o.isDialog ? c.$emit("templateInstantiated", {
+}), _.set(o, "confirm.doneEditing", !0), o.isDialog ? c.$emit("templateInstantiated", {
 project:o.selectedProject,
 template:o.template
 }) :f.toNextSteps(o.templateDisplayName, o.selectedProject.metadata.name);
