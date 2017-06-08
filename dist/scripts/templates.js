@@ -7454,10 +7454,10 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "</p>\n" +
     "<p ng-if=\"!$ctrl.fromSampleRepo\">\n" +
     "<span ng-if=\"$ctrl.createdBuildConfig.spec.source.git.uri | isGithubLink\">\n" +
-    "You can now set up the webhook in the GitHub repository settings if you own it, in <a target=\"_blank\" class=\"word-break\" href=\"{{$ctrl.createdBuildConfig.spec.source.git.uri | githubLink}}/settings/hooks\">{{$ctrl.createdBuildConfig.spec.source.git.uri | githubLink}}/settings/hooks</a>, using the following payload URL:\n" +
+    "You can now set up the webhook in the GitHub repository settings if you own it, in <a target=\"_blank\" class=\"word-break\" href=\"{{$ctrl.createdBuildConfig.spec.source.git.uri | githubLink}}/settings/hooks\">{{$ctrl.createdBuildConfig.spec.source.git.uri | githubLink}}/settings/hooks</a>, using the following payload URL and specifying a <i>Content type</i> of <code>application/json</code>:\n" +
     "</span>\n" +
     "<span ng-if=\"!($ctrl.createdBuildConfig.spec.source.git.uri | isGithubLink)\">\n" +
-    "Your source does not appear to be a URL to a GitHub repository. If you have a GitHub repository that you want to trigger this build from then use the following payload URL:\n" +
+    "Your source does not appear to be a URL to a GitHub repository. If you have a GitHub repository that you want to trigger this build from then use the following payload URL and specifying a <i>Content type</i> of <code>application/json</code>:\n" +
     "</span>\n" +
     "</p>\n" +
     "<copy-to-clipboard clipboard-text=\"$ctrl.createdBuildConfig.metadata.name | webhookURL : trigger.type : trigger.github.secret : $ctrl.projectName\"></copy-to-clipboard>\n" +
