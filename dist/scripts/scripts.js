@@ -7465,7 +7465,9 @@ a.modified = !0;
 }, 1e3);
 a.aceLoaded = function(a) {
 var b = a.getSession();
-b.setOption("tabSize", 2), b.setOption("useSoftTabs", !0), b.on("change", o);
+b.setOption("tabSize", 2), b.setOption("useSoftTabs", !0), setTimeout(function() {
+b.on("change", o);
+});
 };
 var p = [];
 l.get(d.project).then(_.spread(function(c, e) {
