@@ -1268,13 +1268,7 @@ redirectTo:"/project/:project/browse/rc/:rc"
 }).otherwise({
 redirectTo:"/"
 });
-} ]).constant("LOGGING_URL", _.get(window.OPENSHIFT_CONFIG, "loggingURL")).constant("METRICS_URL", _.get(window.OPENSHIFT_CONFIG, "metricsURL")).constant("LIMIT_REQUEST_OVERRIDES", _.get(window.OPENSHIFT_CONFIG, "limitRequestOverrides")).constant("BREAKPOINTS", {
-screenXsMin:480,
-screenSmMin:768,
-screenMdMin:992,
-screenLgMin:1200,
-screenXlgMin:1600
-}).constant("SOURCE_URL_PATTERN", /^[a-z][a-z0-9+.-@]*:(\/\/)?[0-9a-z_-]+/i).constant("RELATIVE_PATH_PATTERN", /^(?!\/)(?!\.\.(\/|$))(?!.*\/\.\.(\/|$)).*$/).constant("IS_IOS", /iPad|iPhone|iPod/.test(navigator.userAgent) && !window.MSStream).constant("IS_SAFARI", /Version\/[\d\.]+.*Safari/.test(navigator.userAgent)).constant("amTimeAgoConfig", {
+} ]).constant("LOGGING_URL", _.get(window.OPENSHIFT_CONFIG, "loggingURL")).constant("METRICS_URL", _.get(window.OPENSHIFT_CONFIG, "metricsURL")).constant("LIMIT_REQUEST_OVERRIDES", _.get(window.OPENSHIFT_CONFIG, "limitRequestOverrides")).constant("SOURCE_URL_PATTERN", /^[a-z][a-z0-9+.-@]*:(\/\/)?[0-9a-z_-]+/i).constant("RELATIVE_PATH_PATTERN", /^(?!\/)(?!\.\.(\/|$))(?!.*\/\.\.(\/|$)).*$/).constant("IS_IOS", /iPad|iPhone|iPod/.test(navigator.userAgent) && !window.MSStream).constant("IS_SAFARI", /Version\/[\d\.]+.*Safari/.test(navigator.userAgent)).constant("amTimeAgoConfig", {
 titleFormat:"LLL"
 }).config([ "kubernetesContainerSocketProvider", function(a) {
 a.WebSocketFactory = "ContainerWebSocket";
@@ -2655,7 +2649,8 @@ a.flush();
 }, 0);
 }
 };
-} ]), angular.module("openshiftConsole").factory("StorageService", [ "APIService", "DataService", function(a, b) {
+} ]), angular.module("openshiftConsole").factory("StorageService", [ "$filter", "APIService", "DataService", "NotificationsService", function(a, b, c, d) {
+var e = a("getErrorDetails"), f = a("humanizeKind");
 return {
 createVolume:function(a, b) {
 return {
@@ -2688,19 +2683,30 @@ c.push(a.mountPath);
 }
 }), c;
 },
-removeVolume:function(c, d, e) {
-var f = angular.copy(c), g = _.get(f, "spec.template.spec.volumes");
-_.remove(g, {
-name:d.name
+removeVolume:function(a, g, h) {
+var i = angular.copy(a), j = _.get(i, "spec.template.spec.volumes");
+_.remove(j, {
+name:g.name
 });
-var h = _.get(f, "spec.template.spec.containers");
-_.each(h, function(a) {
+var k = _.get(i, "spec.template.spec.containers");
+_.each(k, function(a) {
 _.remove(a.volumeMounts, {
-name:d.name
+name:g.name
 });
 });
-var i = a.objectToResourceGroupVersion(f);
-return b.update(i, f.metadata.name, f, e);
+var l = b.objectToResourceGroupVersion(i);
+return c.update(l, i.metadata.name, i, h).then(function() {
+d.addNotification({
+type:"success",
+message:"Volume " + g.name + " removed from " + f(a.kind) + " " + a.metadata.name + "."
+});
+}, function(b) {
+d.addNotification({
+type:"error",
+message:"An error occurred removing volume " + g.name + " from " + f(a.kind) + " " + a.metadata.name + ".",
+details:e(b)
+});
+});
 }
 };
 } ]), angular.module("openshiftConsole").factory("LimitRangesService", [ "$filter", "LIMIT_REQUEST_OVERRIDES", function(a, b) {
@@ -3765,17 +3771,6 @@ return d += " -n " + a.metadata.namespace;
 };
 return {
 getLogsCommand:c
-};
-} ]), angular.module("openshiftConsole").factory("HTMLService", [ "BREAKPOINTS", function(a) {
-return {
-getBreakpoint:function() {
-return window.innerWidth < a.screenXsMin ? "xxs" :window.innerWidth < a.screenSmMin ? "xs" :window.innerWidth < a.screenMdMin ? "sm" :window.innerWidth < a.screenLgMin ? "md" :"lg";
-},
-linkify:function(a, b, c) {
-return a ? (c || (a = _.escape(a)), a.replace(/https?:\/\/[A-Za-z0-9._%+-]+\S*[^\s.;,(){}<>"\u201d\u2019]/gm, function(a) {
-return b ? '<a href="' + a + '" target="' + b + '">' + a + "</a>" :'<a href="' + a + '">' + a + "</a>";
-})) :a;
-}
 };
 } ]), angular.module("openshiftConsole").factory("EnvironmentService", [ "$filter", "keyValueEditorUtils", function(a, b) {
 var c = function(a) {
@@ -5552,25 +5547,19 @@ message:"An error occurred " + (c ? "pausing" :"resuming") + " the deployment.",
 details:b("getErrorDetails")(d)
 };
 });
-}, a.removeVolume = function(c) {
-var d;
-d = _.get(a, "deployment.spec.paused") ? "This will remove the volume from the deployment." :"This will remove the volume from the deployment and start a new rollout.", c.persistentVolumeClaim ? d += " It will not delete the persistent volume claim." :c.secret ? d += " It will not delete the secret." :c.configMap && (d += " It will not delete the config map.");
-var e = j.confirm({
-message:"Remove volume " + c.name + "?",
-details:d,
+}, a.removeVolume = function(b) {
+var c;
+c = _.get(a, "deployment.spec.paused") ? "This will remove the volume from the deployment." :"This will remove the volume from the deployment and start a new rollout.", b.persistentVolumeClaim ? c += " It will not delete the persistent volume claim." :b.secret ? c += " It will not delete the secret." :b.configMap && (c += " It will not delete the config map.");
+var d = j.confirm({
+message:"Remove volume " + b.name + "?",
+details:c,
 okButtonText:"Remove",
 okButtonClass:"btn-danger",
 cancelButtonText:"Cancel"
-}), f = function(c) {
-a.alerts["remove-volume-error"] = {
-type:"error",
-message:"An error occurred removing the volume.",
-details:b("getErrorDetails")(c)
+}), e = function() {
+o.removeVolume(a.deployment, b, k);
 };
-}, g = function() {
-o.removeVolume(a.deployment, c, k).then(_.noop, f);
-};
-e.then(g);
+d.then(e);
 }, a.$on("$destroy", function() {
 e.unwatchAll(v);
 });
@@ -5740,25 +5729,19 @@ return _.some(b, {
 type:"ConfigChange"
 });
 };
-a.removeVolume = function(c) {
-var d;
-d = F() ? "This will remove the volume from the deployment config and trigger a new deployment." :"This will remove the volume from the deployment config.", c.persistentVolumeClaim ? d += " It will not delete the persistent volume claim." :c.secret ? d += " It will not delete the secret." :c.configMap && (d += " It will not delete the config map.");
-var f = k.confirm({
-message:"Remove volume " + c.name + "?",
-details:d,
+a.removeVolume = function(b) {
+var c;
+c = F() ? "This will remove the volume from the deployment config and trigger a new deployment." :"This will remove the volume from the deployment config.", b.persistentVolumeClaim ? c += " It will not delete the persistent volume claim." :b.secret ? c += " It will not delete the secret." :b.configMap && (c += " It will not delete the config map.");
+var d = k.confirm({
+message:"Remove volume " + b.name + "?",
+details:c,
 okButtonText:"Remove",
 okButtonClass:"btn-danger",
 cancelButtonText:"Cancel"
-}), g = function(c) {
-a.alerts["remove-volume-error"] = {
-type:"error",
-message:"An error occurred removing the volume.",
-details:b("getErrorDetails")(c)
+}), f = function() {
+p.removeVolume(a.deploymentConfig, b, e);
 };
-}, h = function() {
-p.removeVolume(a.deploymentConfig, c, e).then(_.noop, g);
-};
-f.then(h);
+d.then(f);
 }, a.$on("$destroy", function() {
 f.unwatchAll(A);
 });
@@ -6021,16 +6004,10 @@ details:d,
 okButtonText:"Remove",
 okButtonClass:"btn-danger",
 cancelButtonText:"Cancel"
-}), f = function(c) {
-a.alerts["remove-volume-error"] = {
-type:"error",
-message:"An error occurred removing the volume.",
-details:b("getErrorDetails")(c)
+}), f = function() {
+r.removeVolume(a.replicaSet, c, i);
 };
-}, g = function() {
-r.removeVolume(a.replicaSet, c, i).then(_.noop, f);
-};
-e.then(g);
+e.then(f);
 }, a.$on("$destroy", function() {
 g.unwatchAll(y);
 });
@@ -6235,16 +6212,10 @@ title:"Secrets",
 link:"project/" + d.projectName + "/browse/secrets"
 }, {
 title:"Create Secret"
-} ];
-var l = function() {
+} ], k.get(c.project).then(_.spread(function(f, g) {
+return d.project = f, d.context = g, d.breadcrumbs[0].title = a("displayName")(f), h.canI("secrets", "create", c.project) ? void (d.navigateBack = function() {
 return c.then ? void b.url(c.then) :void e.history.back();
-};
-k.get(c.project).then(_.spread(function(b, e) {
-return d.project = b, d.context = e, d.breadcrumbs[0].title = a("displayName")(b), h.canI("secrets", "create", c.project) ? (d.postCreateAction = function(a, b) {
-_.each(b, function(a) {
-f.addAlert(a);
-}), l();
-}, void (d.cancel = l)) :void j.toErrorPage("You do not have authority to create secrets in project " + c.project + ".", "access_denied");
+}) :void j.toErrorPage("You do not have authority to create secrets in project " + c.project + ".", "access_denied");
 }));
 } ]), angular.module("openshiftConsole").controller("ConfigMapsController", [ "$scope", "$routeParams", "AlertMessageService", "DataService", "LabelFilter", "ProjectsService", function(a, b, c, d, e, f) {
 a.projectName = b.project, a.alerts = a.alerts || {}, a.loaded = !1, a.labelSuggestions = {}, c.getAlerts().forEach(function(b) {
@@ -6625,8 +6596,8 @@ i.list("limitranges", c).then(function(a) {
 e.limitRanges = a.by("metadata.name"), _.isEmpty(e.limitRanges) || e.$watch("containers", n, !0);
 });
 }));
-} ]), angular.module("openshiftConsole").controller("EditBuildConfigController", [ "$scope", "$filter", "$location", "$routeParams", "$window", "AlertMessageService", "ApplicationGenerator", "AuthorizationService", "DataService", "Navigate", "NotificationsService", "ProjectsService", "SOURCE_URL_PATTERN", "SecretsService", "keyValueEditorUtils", function(a, b, c, d, e, f, g, h, i, j, k, l, m, n, o) {
-a.projectName = d.project, a.buildConfig = null, a.alerts = {}, a.sourceURLPattern = m, a.options = {}, a.jenkinsfileOptions = {
+} ]), angular.module("openshiftConsole").controller("EditBuildConfigController", [ "$scope", "$filter", "$location", "$routeParams", "$window", "ApplicationGenerator", "AuthorizationService", "DataService", "Navigate", "NotificationsService", "ProjectsService", "SOURCE_URL_PATTERN", "SecretsService", "keyValueEditorUtils", function(a, b, c, d, e, f, g, h, i, j, k, l, m, n) {
+a.projectName = d.project, a.buildConfig = null, a.alerts = {}, a.sourceURLPattern = l, a.options = {}, a.jenkinsfileOptions = {
 type:"path"
 }, a.selectTypes = {
 ImageStreamTag:"Image Stream Tag",
@@ -6706,14 +6677,14 @@ return "Enter the arguments that will be appended to the script.";
 }
 return null;
 };
-var p = function() {
+var o = function() {
 var b = !_.isEmpty(_.get(a, "buildConfig.spec.postCommit.args")), c = !_.isEmpty(_.get(a, "buildConfig.spec.postCommit.command")), d = !!_.get(a, "buildConfig.spec.postCommit.script");
 a.view.hasHooks = b || c || d;
 var e;
 e = b && c ? "commandArgs" :b && d ? "scriptArgs" :b ? "args" :d ? "script" :"command", a.buildHookSelection.type = _.find(a.buildHookTypes, {
 id:e
 });
-}, q = function() {
+}, p = function() {
 if (a.view.hasHooks) switch (a.buildHookSelection.type.id) {
 case "script":
 delete a.updatedBuildConfig.spec.postCommit.command, delete a.updatedBuildConfig.spec.postCommit.args;
@@ -6735,27 +6706,25 @@ case "commandArgs":
 delete a.updatedBuildConfig.spec.postCommit.script;
 } else delete a.updatedBuildConfig.spec.postCommit.command, delete a.updatedBuildConfig.spec.postCommit.args, delete a.updatedBuildConfig.spec.postCommit.script;
 };
-f.getAlerts().forEach(function(b) {
-a.alerts[b.name] = b.data;
-}), f.clearAlerts(), a.secrets = {};
-var r = [], s = b("buildStrategy"), t = function() {
+a.secrets = {};
+var q = [], r = b("buildStrategy"), s = function() {
 _.set(a, "confirm.doneEditing", !0);
 var b;
-a.buildConfig ? (b = j.resourceURL(a.buildConfig), c.path(b)) :e.history.back();
-}, u = function() {
-k.hideNotification("edit-build-config-error"), k.hideNotification("edit-build-config-conflict"), k.hideNotification("edit-build-config-deleted");
+a.buildConfig ? (b = i.resourceURL(a.buildConfig), c.path(b)) :e.history.back();
+}, t = function() {
+j.hideNotification("edit-build-config-error"), j.hideNotification("edit-build-config-conflict"), j.hideNotification("edit-build-config-deleted");
 };
 a.cancel = function() {
-u(), t();
-}, l.get(d.project).then(_.spread(function(c, e) {
-return a.project = c, a.context = e, a.breadcrumbs[0].title = b("displayName")(c), h.canI("buildconfigs", "update", d.project) ? void i.get("buildconfigs", d.buildconfig, e).then(function(b) {
-a.buildConfig = b, p(), a.updatedBuildConfig = angular.copy(a.buildConfig), a.buildStrategy = s(a.updatedBuildConfig), a.strategyType = a.buildConfig.spec.strategy.type, a.envVars = a.buildStrategy.env || [], a.triggers = v(a.triggers, a.buildConfig.spec.triggers), a.sources = C(a.sources, a.buildConfig.spec.source), _.has(b, "spec.strategy.jenkinsPipelineStrategy.jenkinsfile") && (a.jenkinsfileOptions.type = "inline"), i.list("secrets", e).then(function(b) {
-var c = n.groupSecretsByType(b), d = _.mapValues(c, function(a) {
+t(), s();
+}, k.get(d.project).then(_.spread(function(c, e) {
+return a.project = c, a.context = e, a.breadcrumbs[0].title = b("displayName")(c), g.canI("buildconfigs", "update", d.project) ? void h.get("buildconfigs", d.buildconfig, e).then(function(b) {
+a.buildConfig = b, o(), a.updatedBuildConfig = angular.copy(a.buildConfig), a.buildStrategy = r(a.updatedBuildConfig), a.strategyType = a.buildConfig.spec.strategy.type, a.envVars = a.buildStrategy.env || [], a.triggers = u(a.triggers, a.buildConfig.spec.triggers), a.sources = B(a.sources, a.buildConfig.spec.source), _.has(b, "spec.strategy.jenkinsPipelineStrategy.jenkinsfile") && (a.jenkinsfileOptions.type = "inline"), h.list("secrets", e).then(function(b) {
+var c = m.groupSecretsByType(b), d = _.mapValues(c, function(a) {
 return _.map(a, "metadata.name");
 });
 a.secrets.secretsByType = _.each(d, function(a) {
 a.unshift("");
-}), z();
+}), y();
 });
 var c = function(a, c) {
 a.type = c && c.kind ? c.kind :"None";
@@ -6781,12 +6750,12 @@ value:a.destinationDir
 };
 })) :(a.imageSourceFromObjects = [], a.sourceImages.forEach(function(b) {
 a.imageSourceFromObjects.push(b.from);
-}))), a.options.forcePull = !!a.buildStrategy.forcePull, "Docker" === a.strategyType && (a.options.noCache = !!a.buildConfig.spec.strategy.dockerStrategy.noCache, a.buildFromTypes.push("None")), r.push(i.watchObject("buildconfigs", d.buildconfig, e, function(b, c) {
-"MODIFIED" === c && k.addNotification({
+}))), a.options.forcePull = !!a.buildStrategy.forcePull, "Docker" === a.strategyType && (a.options.noCache = !!a.buildConfig.spec.strategy.dockerStrategy.noCache, a.buildFromTypes.push("None")), q.push(h.watchObject("buildconfigs", d.buildconfig, e, function(b, c) {
+"MODIFIED" === c && j.addNotification({
 id:"edit-build-config-conflict",
 type:"warning",
 message:"This build configuration has changed since you started editing it. You'll need to copy any changes you've made and edit again."
-}), "DELETED" === c && (k.addNotification({
+}), "DELETED" === c && (j.addNotification({
 id:"edit-build-config-deleted",
 type:"warning",
 message:"This build configuration has been deleted."
@@ -6798,14 +6767,14 @@ type:"error",
 message:"The build configuration details could not be loaded.",
 details:"Reason: " + b("getErrorDetails")(c)
 };
-}) :void j.toErrorPage("You do not have authority to update build config " + d.buildconfig + ".", "access_denied");
+}) :void i.toErrorPage("You do not have authority to update build config " + d.buildconfig + ".", "access_denied");
 }));
-var v = function(c, d) {
+var u = function(c, d) {
 function e(c, d) {
 var e = b("imageObjectRef")(c, a.projectName), f = b("imageObjectRef")(d, a.projectName);
 return e === f;
 }
-var f = s(a.buildConfig).from;
+var f = r(a.buildConfig).from;
 return d.forEach(function(a) {
 switch (a.type) {
 case "Generic":
@@ -6855,14 +6824,14 @@ a.aceLoaded = function(a) {
 var b = a.getSession();
 b.setOption("tabSize", 2), b.setOption("useSoftTabs", !0), a.$blockScrolling = 1 / 0;
 };
-var w = function(a) {
-return _.map(o.compactEntries(a), function(a) {
+var v = function(a) {
+return _.map(n.compactEntries(a), function(a) {
 return {
 sourcePath:a.name,
 destinationDir:a.value
 };
 });
-}, x = function(b) {
+}, w = function(b) {
 var c = {};
 switch (b.type) {
 case "ImageStreamTag":
@@ -6887,17 +6856,17 @@ name:_.last(d)
 }, c.namespace = 1 !== _.size(d) ? _.first(d) :a.buildConfig.metadata.namespace;
 }
 return c;
-}, y = function() {
+}, x = function() {
 var b = [].concat(a.triggers.githubWebhooks, a.triggers.genericWebhooks, a.triggers.imageChangeTriggers, a.triggers.builderImageChangeTrigger, a.triggers.configChangeTrigger);
 return b = _.filter(b, function(a) {
 return _.has(a, "disabled") && !a.disabled || a.present;
 }), b = _.map(b, "data");
-}, z = function() {
+}, y = function() {
 switch (a.secrets.picked = {
 gitSecret:a.buildConfig.spec.source.sourceSecret ? [ a.buildConfig.spec.source.sourceSecret ] :[ {
 name:""
 } ],
-pullSecret:s(a.buildConfig).pullSecret ? [ s(a.buildConfig).pullSecret ] :[ {
+pullSecret:r(a.buildConfig).pullSecret ? [ r(a.buildConfig).pullSecret ] :[ {
 name:""
 } ],
 pushSecret:a.buildConfig.spec.output.pushSecret ? [ a.buildConfig.spec.output.pushSecret ] :[ {
@@ -6915,50 +6884,50 @@ destinationDir:""
 break;
 
 case "Custom":
-a.secrets.picked.sourceSecrets = s(a.buildConfig).secrets || [ {
+a.secrets.picked.sourceSecrets = r(a.buildConfig).secrets || [ {
 secretSource:{
 name:""
 },
 mountPath:""
 } ];
 }
-}, A = function(a, b, c) {
+}, z = function(a, b, c) {
 b.name ? a[c] = b :delete a[c];
-}, B = function(b, c) {
+}, A = function(b, c) {
 var d = "Custom" === a.strategyType ? "secretSource" :"secret", e = _.filter(c, function(a) {
 return a[d].name;
 });
 _.isEmpty(e) ? delete b.secrets :b.secrets = e;
-}, C = function(a, b) {
+}, B = function(a, b) {
 return "None" === b.type ? a :(a.none = !1, angular.forEach(b, function(b, c) {
 a[c] = !0;
 }), a);
 };
 a.save = function() {
-switch (a.disableInputs = !0, q(), s(a.updatedBuildConfig).forcePull = a.options.forcePull, a.strategyType) {
+switch (a.disableInputs = !0, p(), r(a.updatedBuildConfig).forcePull = a.options.forcePull, a.strategyType) {
 case "Docker":
-s(a.updatedBuildConfig).noCache = a.options.noCache;
+r(a.updatedBuildConfig).noCache = a.options.noCache;
 break;
 
 case "JenkinsPipeline":
 "path" === a.jenkinsfileOptions.type ? delete a.updatedBuildConfig.spec.strategy.jenkinsPipelineStrategy.jenkinsfile :delete a.updatedBuildConfig.spec.strategy.jenkinsPipelineStrategy.jenkinsfilePath;
 }
-switch (a.sources.images && !_.isEmpty(a.sourceImages) && (a.updatedBuildConfig.spec.source.images[0].paths = w(a.imageSourcePaths), a.updatedBuildConfig.spec.source.images[0].from = x(a.imageOptions.fromSource)), "None" === a.imageOptions.from.type ? delete s(a.updatedBuildConfig).from :s(a.updatedBuildConfig).from = x(a.imageOptions.from), "None" === a.imageOptions.to.type ? delete a.updatedBuildConfig.spec.output.to :a.updatedBuildConfig.spec.output.to = x(a.imageOptions.to), s(a.updatedBuildConfig).env = o.compactEntries(a.envVars), A(a.updatedBuildConfig.spec.source, _.head(a.secrets.picked.gitSecret), "sourceSecret"), A(s(a.updatedBuildConfig), _.head(a.secrets.picked.pullSecret), "pullSecret"), A(a.updatedBuildConfig.spec.output, _.head(a.secrets.picked.pushSecret), "pushSecret"), a.strategyType) {
+switch (a.sources.images && !_.isEmpty(a.sourceImages) && (a.updatedBuildConfig.spec.source.images[0].paths = v(a.imageSourcePaths), a.updatedBuildConfig.spec.source.images[0].from = w(a.imageOptions.fromSource)), "None" === a.imageOptions.from.type ? delete r(a.updatedBuildConfig).from :r(a.updatedBuildConfig).from = w(a.imageOptions.from), "None" === a.imageOptions.to.type ? delete a.updatedBuildConfig.spec.output.to :a.updatedBuildConfig.spec.output.to = w(a.imageOptions.to), r(a.updatedBuildConfig).env = n.compactEntries(a.envVars), z(a.updatedBuildConfig.spec.source, _.head(a.secrets.picked.gitSecret), "sourceSecret"), z(r(a.updatedBuildConfig), _.head(a.secrets.picked.pullSecret), "pullSecret"), z(a.updatedBuildConfig.spec.output, _.head(a.secrets.picked.pushSecret), "pushSecret"), a.strategyType) {
 case "Source":
 case "Docker":
-B(a.updatedBuildConfig.spec.source, a.secrets.picked.sourceSecrets);
+A(a.updatedBuildConfig.spec.source, a.secrets.picked.sourceSecrets);
 break;
 
 case "Custom":
-B(s(a.updatedBuildConfig), a.secrets.picked.sourceSecrets);
+A(r(a.updatedBuildConfig), a.secrets.picked.sourceSecrets);
 }
-a.updatedBuildConfig.spec.triggers = y(), u(), i.update("buildconfigs", a.updatedBuildConfig.metadata.name, a.updatedBuildConfig, a.context).then(function() {
-k.addNotification({
+a.updatedBuildConfig.spec.triggers = x(), t(), h.update("buildconfigs", a.updatedBuildConfig.metadata.name, a.updatedBuildConfig, a.context).then(function() {
+j.addNotification({
 type:"success",
 message:"Build config " + a.updatedBuildConfig.metadata.name + " was successfully updated."
-}), t();
+}), s();
 }, function(c) {
-a.disableInputs = !1, k.addNotification({
+a.disableInputs = !1, j.addNotification({
 id:"edit-build-config-error",
 type:"error",
 message:"An error occurred updating build config " + a.updatedBuildConfig.metadata.name + ".",
@@ -6966,7 +6935,7 @@ details:b("getErrorDetails")(c)
 });
 });
 }, a.$on("$destroy", function() {
-i.unwatchAll(r);
+h.unwatchAll(q);
 });
 } ]), angular.module("openshiftConsole").controller("EditConfigMapController", [ "$filter", "$routeParams", "$scope", "$window", "DataService", "BreadcrumbsService", "Navigate", "ProjectsService", function(a, b, c, d, e, f, g, h) {
 var i = [];
@@ -7011,28 +6980,26 @@ details:a("getErrorDetails")(b)
 e.unwatchAll(i);
 });
 }));
-} ]), angular.module("openshiftConsole").controller("EditDeploymentConfigController", [ "$scope", "$filter", "$location", "$routeParams", "$uibModal", "$window", "AlertMessageService", "AuthorizationService", "BreadcrumbsService", "DataService", "EnvironmentService", "Navigate", "NotificationsService", "ProjectsService", "SecretsService", "keyValueEditorUtils", function(a, b, c, d, e, f, g, h, i, j, k, l, m, n, o, p) {
+} ]), angular.module("openshiftConsole").controller("EditDeploymentConfigController", [ "$scope", "$filter", "$location", "$routeParams", "$uibModal", "$window", "AuthorizationService", "BreadcrumbsService", "DataService", "EnvironmentService", "Navigate", "NotificationsService", "ProjectsService", "SecretsService", "keyValueEditorUtils", function(a, b, c, d, e, f, g, h, i, j, k, l, m, n, o) {
 a.projectName = d.project, a.deploymentConfig = null, a.alerts = {}, a.view = {
 advancedStrategyOptions:!1,
 advancedImageOptions:!1
-}, a.triggers = {}, a.breadcrumbs = i.getBreadcrumbs({
+}, a.triggers = {}, a.breadcrumbs = h.getBreadcrumbs({
 name:d.name,
 kind:d.kind,
 namespace:d.project,
 subpage:"Edit Deployment Config",
 includeProject:!0
-}), a.deploymentConfigStrategyTypes = [ "Recreate", "Rolling", "Custom" ], g.getAlerts().forEach(function(b) {
-a.alerts[b.name] = b.data;
-}), g.clearAlerts();
-var q = b("orderByDisplayName"), r = b("getErrorDetails"), s = function(b, c) {
+}), a.deploymentConfigStrategyTypes = [ "Recreate", "Rolling", "Custom" ];
+var p = b("orderByDisplayName"), q = b("getErrorDetails"), r = function(b, c) {
 a.alerts["from-value-objects"] = {
 type:"error",
 message:b,
 details:c
 };
-}, t = [], u = [], v = [];
+}, s = [], t = [], u = [];
 a.valueFromObjects = [];
-var w = function(a) {
+var v = function(a) {
 switch (a) {
 case "Recreate":
 return "recreateParams";
@@ -7047,9 +7014,9 @@ default:
 return void Logger.error("Unknown deployment strategy type: " + a);
 }
 };
-n.get(d.project).then(_.spread(function(c, e) {
-return a.project = c, a.context = e, h.canI("deploymentconfigs", "update", d.project) ? void j.get("deploymentconfigs", d.deploymentconfig, e).then(function(b) {
-a.deploymentConfig = b, a.breadcrumbs = i.getBreadcrumbs({
+m.get(d.project).then(_.spread(function(c, e) {
+return a.project = c, a.context = e, g.canI("deploymentconfigs", "update", d.project) ? void i.get("deploymentconfigs", d.deploymentconfig, e).then(function(b) {
+a.deploymentConfig = b, a.breadcrumbs = h.getBreadcrumbs({
 object:b,
 project:c,
 subpage:"Edit",
@@ -7094,27 +7061,27 @@ a.updatedDeploymentConfig = angular.copy(a.deploymentConfig), a.containerNames =
 pullSecrets:angular.copy(a.deploymentConfig.spec.template.spec.imagePullSecrets) || [ {
 name:""
 } ]
-}, a.volumeNames = _.map(a.deploymentConfig.spec.template.spec.volumes, "name"), a.strategyData = angular.copy(a.deploymentConfig.spec.strategy), a.originalStrategy = a.strategyData.type, a.strategyParamsPropertyName = w(a.strategyData.type), a.triggers.hasConfigTrigger = _.some(a.updatedDeploymentConfig.spec.triggers, {
+}, a.volumeNames = _.map(a.deploymentConfig.spec.template.spec.volumes, "name"), a.strategyData = angular.copy(a.deploymentConfig.spec.strategy), a.originalStrategy = a.strategyData.type, a.strategyParamsPropertyName = v(a.strategyData.type), a.triggers.hasConfigTrigger = _.some(a.updatedDeploymentConfig.spec.triggers, {
 type:"ConfigChange"
-}), "Custom" !== a.strategyData.type || _.has(a.strategyData, "customParams.environment") || (a.strategyData.customParams.environment = []), j.list("configmaps", e, null, {
+}), "Custom" !== a.strategyData.type || _.has(a.strategyData, "customParams.environment") || (a.strategyData.customParams.environment = []), i.list("configmaps", e, null, {
 errorNotification:!1
 }).then(function(b) {
-u = q(b.by("metadata.name")), a.availableConfigMaps = u, a.valueFromObjects = u.concat(v);
+t = p(b.by("metadata.name")), a.availableConfigMaps = t, a.valueFromObjects = t.concat(u);
 }, function(a) {
-403 !== a.code && s("Could not load config maps", r(a));
-}), j.list("secrets", e, null, {
+403 !== a.code && r("Could not load config maps", q(a));
+}), i.list("secrets", e, null, {
 errorNotification:!1
 }).then(function(b) {
-v = q(b.by("metadata.name")), a.availableSecrets = v, a.valueFromObjects = v.concat(u);
-var c = o.groupSecretsByType(b), d = _.mapValues(c, function(a) {
+u = p(b.by("metadata.name")), a.availableSecrets = u, a.valueFromObjects = u.concat(t);
+var c = n.groupSecretsByType(b), d = _.mapValues(c, function(a) {
 return _.map(a, "metadata.name");
 });
 a.secretsByType = _.each(d, function(a) {
 a.unshift("");
 });
 }, function(a) {
-403 !== a.code && s("Could not load secrets", r(a));
-}), t.push(j.watchObject("deploymentconfigs", d.deploymentconfig, e, function(b, c) {
+403 !== a.code && r("Could not load secrets", q(a));
+}), s.push(i.watchObject("deploymentconfigs", d.deploymentconfig, e, function(b, c) {
 "MODIFIED" === c && (a.alerts["updated/deleted"] = {
 type:"warning",
 message:"This deployment configuration has changed since you started editing it. You'll need to copy any changes you've made and edit again."
@@ -7129,11 +7096,11 @@ type:"error",
 message:"The deployment configuration details could not be loaded.",
 details:b("getErrorDetails")(c)
 };
-}) :void l.toErrorPage("You do not have authority to update deployment config " + d.deploymentconfig + ".", "access_denied");
+}) :void k.toErrorPage("You do not have authority to update deployment config " + d.deploymentconfig + ".", "access_denied");
 }));
-var x = function() {
+var w = function() {
 return "Custom" !== a.strategyData.type && "Custom" !== a.originalStrategy && a.strategyData.type !== a.originalStrategy;
-}, y = function(b) {
+}, x = function(b) {
 if (!_.has(a.strategyData, b)) {
 var c = e.open({
 animation:!0,
@@ -7153,21 +7120,21 @@ cancelButtonText:"No"
 }
 });
 c.result.then(function() {
-a.strategyData[b] = angular.copy(a.strategyData[w(a.originalStrategy)]);
+a.strategyData[b] = angular.copy(a.strategyData[v(a.originalStrategy)]);
 }, function() {
 a.strategyData[b] = {};
 });
 }
 };
 a.strategyChanged = function() {
-var b = w(a.strategyData.type);
-x() ? y(b) :_.has(a.strategyData, b) || ("Custom" !== a.strategyData.type ? a.strategyData[b] = {} :a.strategyData[b] = {
+var b = v(a.strategyData.type);
+w() ? x(b) :_.has(a.strategyData, b) || ("Custom" !== a.strategyData.type ? a.strategyData[b] = {} :a.strategyData[b] = {
 image:"",
 command:[],
 environment:[]
 }), a.strategyParamsPropertyName = b;
 };
-var z = function(a, b, c, d) {
+var y = function(a, b, c, d) {
 var e = {
 kind:"ImageStreamTag",
 namespace:b.namespace,
@@ -7181,12 +7148,12 @@ containerNames:[ a ],
 from:e
 }
 }, c;
-}, A = function() {
+}, z = function() {
 var b = _.reject(a.updatedDeploymentConfig.spec.triggers, function(a) {
 return "ImageChange" === a.type || "ConfigChange" === a.type;
 });
 return _.each(a.containerConfigByName, function(c, d) {
-if (c.hasDeploymentTrigger) b.push(z(d, c.triggerData.istag, c.triggerData.data, c.triggerData.automatic)); else {
+if (c.hasDeploymentTrigger) b.push(y(d, c.triggerData.istag, c.triggerData.data, c.triggerData.automatic)); else {
 var e = _.find(a.updatedDeploymentConfig.spec.template.spec.containers, {
 name:d
 });
@@ -7195,34 +7162,34 @@ e.image = c.image;
 }), a.triggers.hasConfigTrigger && b.push({
 type:"ConfigChange"
 }), b;
-}, B = function() {
+}, A = function() {
 _.set(a, "confirm.doneEditing", !0);
-}, C = function() {
-m.hideNotification("edit-deployment-config-error");
+}, B = function() {
+l.hideNotification("edit-deployment-config-error");
 };
 a.save = function() {
 if (a.disableInputs = !0, _.each(a.containerConfigByName, function(b, c) {
 var d = _.find(a.updatedDeploymentConfig.spec.template.spec.containers, {
 name:c
 });
-d.env = p.compactEntries(b.env);
-}), x() && delete a.strategyData[w(a.originalStrategy)], "Rolling" === a.strategyData.type) {
+d.env = o.compactEntries(b.env);
+}), w() && delete a.strategyData[v(a.originalStrategy)], "Rolling" === a.strategyData.type) {
 var d = a.strategyData[a.strategyParamsPropertyName].maxSurge, e = Number(d);
 "" === d ? a.strategyData[a.strategyParamsPropertyName].maxSurge = null :_.isFinite(e) && (a.strategyData[a.strategyParamsPropertyName].maxSurge = e);
 var f = a.strategyData[a.strategyParamsPropertyName].maxUnavailable, g = Number(f);
 "" === f ? a.strategyData[a.strategyParamsPropertyName].maxUnavailable = null :_.isFinite(g) && (a.strategyData[a.strategyParamsPropertyName].maxUnavailable = g);
 }
 "Custom" !== a.strategyData.type && _.each([ "pre", "mid", "post" ], function(b) {
-_.has(a.strategyData, [ a.strategyParamsPropertyName, b, "execNewPod", "env" ]) && (a.strategyData[a.strategyParamsPropertyName][b].execNewPod.env = p.compactEntries(a.strategyData[a.strategyParamsPropertyName][b].execNewPod.env));
-}), _.has(a, "strategyData.customParams.environment") && (a.strategyData.customParams.environment = p.compactEntries(a.strategyData.customParams.environment)), a.updatedDeploymentConfig.spec.template.spec.imagePullSecrets = _.filter(a.secrets.pullSecrets, "name"), a.updatedDeploymentConfig.spec.strategy = a.strategyData, a.updatedDeploymentConfig.spec.triggers = A(), C(), j.update("deploymentconfigs", a.updatedDeploymentConfig.metadata.name, a.updatedDeploymentConfig, a.context).then(function() {
-m.addNotification({
+_.has(a.strategyData, [ a.strategyParamsPropertyName, b, "execNewPod", "env" ]) && (a.strategyData[a.strategyParamsPropertyName][b].execNewPod.env = o.compactEntries(a.strategyData[a.strategyParamsPropertyName][b].execNewPod.env));
+}), _.has(a, "strategyData.customParams.environment") && (a.strategyData.customParams.environment = o.compactEntries(a.strategyData.customParams.environment)), a.updatedDeploymentConfig.spec.template.spec.imagePullSecrets = _.filter(a.secrets.pullSecrets, "name"), a.updatedDeploymentConfig.spec.strategy = a.strategyData, a.updatedDeploymentConfig.spec.triggers = z(), B(), i.update("deploymentconfigs", a.updatedDeploymentConfig.metadata.name, a.updatedDeploymentConfig, a.context).then(function() {
+l.addNotification({
 type:"success",
 message:"Deployment config " + a.updatedDeploymentConfig.metadata.name + " was successfully updated."
-}), B();
-var b = l.resourceURL(a.updatedDeploymentConfig);
+}), A();
+var b = k.resourceURL(a.updatedDeploymentConfig);
 c.url(b);
 }, function(c) {
-a.disableInputs = !1, m.addNotification({
+a.disableInputs = !1, l.addNotification({
 id:"edit-deployment-config-error",
 type:"error",
 message:"An error occurred updating deployment config " + a.updatedDeploymentConfig.metadata.name + ".",
@@ -7230,9 +7197,9 @@ details:b("getErrorDetails")(c)
 });
 });
 }, a.cancel = function() {
-C(), B(), f.history.back();
+B(), A(), f.history.back();
 }, a.$on("$destroy", function() {
-j.unwatchAll(t);
+i.unwatchAll(s);
 });
 } ]), angular.module("openshiftConsole").controller("EditAutoscalerController", [ "$scope", "$filter", "$routeParams", "$window", "APIService", "AuthorizationService", "BreadcrumbsService", "DataService", "HPAService", "MetricsService", "Navigate", "ProjectsService", "keyValueEditorUtils", function(a, b, c, d, e, f, g, h, i, j, k, l, m) {
 if (!c.kind || !c.name) return void k.toErrorPage("Kind or name parameter missing.");
@@ -7512,10 +7479,9 @@ a.resource = g;
 var j = function(a) {
 return _.get(a, "metadata.resourceVersion");
 };
-g = angular.extend({
-apiVersion:g.apiVersion,
-kind:g.kind
-}, g), _.set(a, "editor.model", jsyaml.safeDump(g)), a.save = function() {
+_.set(a, "editor.model", jsyaml.safeDump(g, {
+sortKeys:!0
+})), a.save = function() {
 a.modified = !1;
 var c;
 try {
@@ -8284,17 +8250,15 @@ details:a("getErrorDetails")(b)
 }
 };
 }));
-} ]), angular.module("openshiftConsole").controller("AttachPVCController", [ "$filter", "$routeParams", "$scope", "$window", "APIService", "AuthorizationService", "BreadcrumbsService", "DataService", "QuotaService", "Navigate", "ProjectsService", "StorageService", "RELATIVE_PATH_PATTERN", function(a, b, c, d, e, f, g, h, i, j, k, l, m) {
+} ]), angular.module("openshiftConsole").controller("AttachPVCController", [ "$filter", "$routeParams", "$scope", "$window", "APIService", "AuthorizationService", "BreadcrumbsService", "DataService", "QuotaService", "Navigate", "NotificationsService", "ProjectsService", "StorageService", "RELATIVE_PATH_PATTERN", function(a, b, c, d, e, f, g, h, i, j, k, l, m, n) {
 if (!b.kind || !b.name) return void j.toErrorPage("Kind or name parameter missing.");
-var n = [ "Deployment", "DeploymentConfig", "ReplicaSet", "ReplicationController" ];
-if (!_.includes(n, b.kind)) return void j.toErrorPage("Storage is not supported for kind " + b.kind + ".");
-var o = {
+var o = [ "Deployment", "DeploymentConfig", "ReplicaSet", "ReplicationController" ], p = a("humanizeKind");
+if (!_.includes(o, b.kind)) return void j.toErrorPage("Storage is not supported for kind " + p(b.kind) + ".");
+var q = {
 resource:e.kindToResource(b.kind),
 group:b.group
 };
-c.alerts = {}, c.renderOptions = {
-hideFilterWidget:!0
-}, c.projectName = b.project, c.kind = b.kind, c.name = b.name, c.RELATIVE_PATH_PATTERN = m, c.outOfClaims = !1, c.attach = {
+c.projectName = b.project, c.kind = b.kind, c.name = b.name, c.RELATIVE_PATH_PATTERN = n, c.outOfClaims = !1, c.attach = {
 persistentVolumeClaim:null,
 volumeName:null,
 mountPath:null,
@@ -8306,23 +8270,28 @@ kind:b.kind,
 namespace:b.project,
 subpage:"Add Storage",
 includeProject:!0
-}), k.get(b.project).then(_.spread(function(e, k) {
-if (c.project = e, c.breadcrumbs[0].title = a("displayName")(e), !f.canI(o, "update", b.project)) return void j.toErrorPage("You do not have authority to update " + a("humanizeKind")(b.kind) + " " + b.name + ".", "access_denied");
-var m = a("orderByDisplayName"), n = a("getErrorDetails"), p = a("generateName"), q = function(a, b) {
-c.disableInputs = !0, c.alerts["attach-persistent-volume-claim"] = {
+}), l.get(b.project).then(_.spread(function(e, l) {
+if (c.project = e, c.breadcrumbs[0].title = a("displayName")(e), !f.canI(q, "update", b.project)) return void j.toErrorPage("You do not have authority to update " + p(b.kind) + " " + b.name + ".", "access_denied");
+var n = a("orderByDisplayName"), o = a("getErrorDetails"), r = a("generateName"), s = function(a, b) {
+c.disableInputs = !0, k.addNotification({
+id:"attach-pvc-error",
 type:"error",
 message:a,
 details:b
-};
-}, r = function(a) {
+});
+}, t = function() {
+k.hideNotification("attach-pvc-error");
+}, u = function() {
+_.set(c, "confirm.doneEditing", !0), d.history.back();
+}, v = function(a) {
 return c.attach.allContainers || c.attach.containers[a.name];
-}, s = function() {
+}, w = function() {
 var a = _.get(c, "attach.resource.spec.template");
-c.existingMountPaths = l.getMountPaths(a, r);
+c.existingMountPaths = m.getMountPaths(a, v);
 };
-c.$watchGroup([ "attach.resource", "attach.allContainers" ], s), c.$watch("attach.containers", s, !0);
-var t = function() {
-h.get(o, b.name, k).then(function(a) {
+c.$watchGroup([ "attach.resource", "attach.allContainers" ], w), c.$watch("attach.containers", w, !0);
+var x = function() {
+h.get(q, b.name, l).then(function(a) {
 c.attach.resource = a, c.breadcrumbs = g.getBreadcrumbs({
 object:a,
 project:e,
@@ -8330,11 +8299,11 @@ subpage:"Add Storage",
 includeProject:!0
 });
 var b = _.get(a, "spec.template");
-c.existingVolumeNames = l.getVolumeNames(b);
+c.existingVolumeNames = m.getVolumeNames(b);
 }, function(a) {
-q(b.name + " could not be loaded.", n(a));
-}), h.list("persistentvolumeclaims", k).then(function(a) {
-c.pvcs = m(a.by("metadata.name")), _.isEmpty(c.pvcs) || c.attach.persistentVolumeClaim || (c.attach.persistentVolumeClaim = _.head(c.pvcs));
+s(b.name + " could not be loaded.", o(a));
+}), h.list("persistentvolumeclaims", l).then(function(a) {
+c.pvcs = n(a.by("metadata.name")), _.isEmpty(c.pvcs) || c.attach.persistentVolumeClaim || (c.attach.persistentVolumeClaim = _.head(c.pvcs));
 }), h.list("resourcequotas", {
 namespace:c.projectName
 }, function(a) {
@@ -8345,68 +8314,82 @@ namespace:c.projectName
 c.clusterQuotas = a.by("metadata.name"), c.outOfClaims = i.isAnyStorageQuotaExceeded(c.quotas, c.clusterQuotas);
 });
 };
-t(), c.attachPVC = function() {
-if (c.disableInputs = !0, c.attachPVCForm.$valid) {
-c.attach.volumeName || (c.attach.volumeName = p("volume-"));
-var e = c.attach.resource, f = _.get(e, "spec.template"), g = c.attach.persistentVolumeClaim, i = c.attach.volumeName, j = c.attach.mountPath, m = c.attach.subPath, s = c.attach.readOnly;
-j && angular.forEach(f.spec.containers, function(a) {
-if (r(a)) {
-var b = l.createVolumeMount(i, j, m, s);
+x(), c.attachPVC = function() {
+if (c.disableInputs = !0, t(), c.attachPVCForm.$valid) {
+c.attach.volumeName || (c.attach.volumeName = r("volume-"));
+var a = c.attach.resource, d = _.get(a, "spec.template"), e = c.attach.persistentVolumeClaim, f = c.attach.volumeName, g = c.attach.mountPath, i = c.attach.subPath, j = c.attach.readOnly;
+g && angular.forEach(d.spec.containers, function(a) {
+if (v(a)) {
+var b = m.createVolumeMount(f, g, i, j);
 a.volumeMounts || (a.volumeMounts = []), a.volumeMounts.push(b);
 }
 });
-var t = l.createVolume(i, g);
-f.spec.volumes || (f.spec.volumes = []), f.spec.volumes.push(t), c.alerts = {}, h.update(o, e.metadata.name, c.attach.resource, k).then(function() {
-d.history.back();
-}, function(d) {
-q("An error occurred attaching the persistent volume claim to the " + a("humanizeKind")(b.kind) + ".", n(d)), c.disableInputs = !1;
+var n = m.createVolume(f, e);
+d.spec.volumes || (d.spec.volumes = []), d.spec.volumes.push(n), h.update(q, a.metadata.name, c.attach.resource, l).then(function() {
+var a;
+g || (a = "No mount path was provided. The volume reference was added to the configuration, but it will not be mounted into running pods."), k.addNotification({
+type:"success",
+message:"Persistent volume claim " + e.metadata.name + " added to " + p(b.kind) + " " + b.name + ".",
+details:a
+}), u();
+}, function(a) {
+s("An error occurred attaching the persistent volume claim to the " + p(b.kind) + ".", o(a)), c.disableInputs = !1;
 });
 }
+}, c.cancel = function() {
+t(), u();
 };
 }));
-} ]), angular.module("openshiftConsole").controller("AddConfigVolumeController", [ "$filter", "$location", "$routeParams", "$scope", "$window", "APIService", "AuthorizationService", "BreadcrumbsService", "DataService", "Navigate", "ProjectsService", "StorageService", "RELATIVE_PATH_PATTERN", function(a, b, c, d, e, f, g, h, i, j, k, l, m) {
+} ]), angular.module("openshiftConsole").controller("AddConfigVolumeController", [ "$filter", "$location", "$routeParams", "$scope", "$window", "APIService", "AuthorizationService", "BreadcrumbsService", "DataService", "Navigate", "NotificationsService", "ProjectsService", "StorageService", "RELATIVE_PATH_PATTERN", function(a, b, c, d, e, f, g, h, i, j, k, l, m, n) {
 if (!c.kind || !c.name) return void j.toErrorPage("Kind or name parameter missing.");
-var n = [ "Deployment", "DeploymentConfig", "ReplicaSet", "ReplicationController" ];
-if (!_.includes(n, c.kind)) return void j.toErrorPage("Volumes are not supported for kind " + c.kind + ".");
-var o = {
+var o = [ "Deployment", "DeploymentConfig", "ReplicaSet", "ReplicationController" ];
+if (!_.includes(o, c.kind)) return void j.toErrorPage("Volumes are not supported for kind " + c.kind + ".");
+var p = {
 resource:f.kindToResource(c.kind),
 group:c.group
 };
-d.alerts = {}, d.projectName = c.project, d.kind = c.kind, d.name = c.name, d.attach = {
+d.projectName = c.project, d.kind = c.kind, d.name = c.name, d.attach = {
 allContainers:!0,
 pickKeys:!1
-}, d.forms = {}, d.RELATIVE_PATH_PATTERN = m, d.breadcrumbs = h.getBreadcrumbs({
+}, d.forms = {}, d.RELATIVE_PATH_PATTERN = n, d.breadcrumbs = h.getBreadcrumbs({
 name:c.name,
 kind:c.kind,
 namespace:c.project,
 subpage:"Add Config Files",
 includeProject:!0
 });
-var p = a("humanizeKind");
+var q = a("humanizeKind");
 d.groupByKind = function(a) {
-return p(a.kind);
+return q(a.kind);
 };
-var q = function() {
+var r = function() {
 _.set(d, "attach.items", [ {} ]);
 };
-d.$watch("attach.source", q);
-var r = function() {
+d.$watch("attach.source", r);
+var s = function() {
 d.forms.addConfigVolumeForm.$setDirty();
-};
-d.addItem = function() {
-d.attach.items.push({}), r();
-}, d.removeItem = function(a) {
-d.attach.items.splice(a, 1), r();
-}, k.get(c.project).then(_.spread(function(b, f) {
-if (d.project = b, !g.canI(o, "update", c.project)) return void j.toErrorPage("You do not have authority to update " + p(c.kind) + " " + c.name + ".", "access_denied");
-var k = a("orderByDisplayName"), m = a("getErrorDetails"), n = a("generateName"), q = function(a, b) {
-d.alerts["attach-persistent-volume-claim"] = {
+}, t = function() {
+_.set(d, "confirm.doneEditing", !0), e.history.back();
+}, u = function(a, b) {
+k.addNotification({
+id:"add-config-volume-error",
 type:"error",
 message:a,
 details:b
+});
+}, v = function() {
+k.hideNotification("add-config-volume-error");
 };
-};
-i.get(o, c.name, f, {
+d.addItem = function() {
+d.attach.items.push({}), s();
+}, d.removeItem = function(a) {
+d.attach.items.splice(a, 1), s();
+}, d.cancel = function() {
+v(), t();
+}, l.get(c.project).then(_.spread(function(b, e) {
+if (d.project = b, !g.canI(p, "update", c.project)) return void j.toErrorPage("You do not have authority to update " + q(c.kind) + " " + c.name + ".", "access_denied");
+var f = a("orderByDisplayName"), l = a("getErrorDetails"), n = a("generateName");
+i.get(p, c.name, e, {
 errorNotification:!1
 }).then(function(a) {
 d.targetObject = a, d.breadcrumbs = h.getBreadcrumbs({
@@ -8417,72 +8400,73 @@ includeProject:!0
 });
 }, function(a) {
 d.error = a;
-}), i.list("configmaps", f, null, {
+}), i.list("configmaps", e, null, {
 errorNotification:!1
 }).then(function(a) {
-d.configMaps = k(a.by("metadata.name"));
+d.configMaps = f(a.by("metadata.name"));
 }, function(a) {
-return 403 === a.code ? void (d.configMaps = []) :void q("Could not load config maps", m(a));
-}), i.list("secrets", f, null, {
+return 403 === a.code ? void (d.configMaps = []) :void u("Could not load config maps", l(a));
+}), i.list("secrets", e, null, {
 errorNotification:!1
 }).then(function(a) {
-d.secrets = k(a.by("metadata.name"));
+d.secrets = f(a.by("metadata.name"));
 }, function(a) {
-return 403 === a.code ? void (d.secrets = []) :void q("Could not load secrets", m(a));
+return 403 === a.code ? void (d.secrets = []) :void u("Could not load secrets", l(a));
 });
-var r = function(a) {
+var o = function(a) {
 return d.attach.allContainers || d.attach.containers[a.name];
-}, s = function() {
+}, r = function() {
 var a = _.get(d, "targetObject.spec.template");
-d.existingMountPaths = l.getMountPaths(a, r);
+d.existingMountPaths = m.getMountPaths(a, o);
 };
-d.$watchGroup([ "targetObject", "attach.allContainers" ], s), d.$watch("attach.containers", s, !0);
-var t = function() {
+d.$watchGroup([ "targetObject", "attach.allContainers" ], r), d.$watch("attach.containers", r, !0);
+var s = function() {
 var a = _.map(d.attach.items, "path");
 d.itemPaths = _.compact(a);
 };
-d.$watch("attach.items", t, !0), d.addVolume = function() {
+d.$watch("attach.items", s, !0), d.addVolume = function() {
 if (!d.forms.addConfigVolumeForm.$invalid) {
-var b = d.targetObject, g = _.get(d, "attach.source"), h = _.get(b, "spec.template"), j = n("volume-"), k = _.get(d, "attach.mountPath"), l = {
-name:j,
-mountPath:k
+var b = d.targetObject, f = _.get(d, "attach.source"), g = _.get(b, "spec.template"), h = n("volume-"), j = _.get(d, "attach.mountPath"), m = {
+name:h,
+mountPath:j
 };
-"Secret" === g.kind && (l.readOnly = !0), _.each(h.spec.containers, function(a) {
-r(a) && (a.volumeMounts = a.volumeMounts || [], a.volumeMounts.push(l));
+"Secret" === f.kind && (m.readOnly = !0), _.each(g.spec.containers, function(a) {
+o(a) && (a.volumeMounts = a.volumeMounts || [], a.volumeMounts.push(m));
 });
-var p, s = {
-name:j
+var q, r = {
+name:h
 };
-switch (d.attach.pickKeys && (p = d.attach.items), g.kind) {
+switch (d.attach.pickKeys && (q = d.attach.items), f.kind) {
 case "ConfigMap":
-s.configMap = {
-name:g.metadata.name,
-items:p
+r.configMap = {
+name:f.metadata.name,
+items:q
 };
 break;
 
 case "Secret":
-s.secret = {
-secretName:g.metadata.name,
-items:p
+r.secret = {
+secretName:f.metadata.name,
+items:q
 };
 }
-h.spec.volumes = h.spec.volumes || [], h.spec.volumes.push(s), d.alerts = {}, d.disableInputs = !0, i.update(o, b.metadata.name, d.targetObject, f).then(function() {
-_.set(d, "confirm.doneEditing", !0), e.history.back();
-}, function(b) {
-d.disableInputs = !1;
-var e = a("humanizeKind"), f = e(g.kind), h = e(c.kind);
-q("An error occurred attaching the " + f + " to the " + h + ".", m(b));
+g.spec.volumes = g.spec.volumes || [], g.spec.volumes.push(r), d.disableInputs = !0, v();
+var s = a("humanizeKind"), w = s(f.kind), x = s(c.kind);
+i.update(p, b.metadata.name, d.targetObject, e).then(function() {
+k.addNotification({
+type:"success",
+message:"Succesfully added " + w + " " + f.metadata.name + " to " + x + " " + c.name + "."
+}), t();
+}, function(a) {
+d.disableInputs = !1, u("An error occurred attaching the " + w + " to the " + x + ".", l(a));
 });
 }
 };
 }));
 } ]), angular.module("openshiftConsole").controller("CreateSecretModalController", [ "$scope", "$uibModalInstance", function(a, b) {
-a.postCreateAction = function(c, d) {
-b.close(c), _.each(d, function(b) {
-a.alerts[b.name] = b.data;
-});
-}, a.cancel = function() {
+a.onCreate = function(a) {
+b.close(a);
+}, a.onCancel = function() {
 b.dismiss("cancel");
 };
 } ]), angular.module("openshiftConsole").controller("ConfirmModalController", [ "$scope", "$uibModalInstance", "modalConfig", function(a, b, c) {
@@ -8632,19 +8616,19 @@ a.hideBuild = c(b);
 },
 templateUrl:"views/directives/_build-close.html"
 };
-} ]), angular.module("openshiftConsole").directive("createSecret", [ "$filter", "AuthorizationService", "DataService", "DNS1123_SUBDOMAIN_VALIDATION", function(a, b, c, d) {
+} ]), angular.module("openshiftConsole").directive("createSecret", [ "$filter", "AuthorizationService", "DataService", "NotificationsService", "DNS1123_SUBDOMAIN_VALIDATION", function(a, b, c, d, e) {
 return {
 restrict:"E",
 scope:{
 type:"=",
 serviceAccountToLink:"=?",
 namespace:"=",
-postCreateAction:"&",
-cancel:"&"
+onCreate:"&",
+onCancel:"&"
 },
 templateUrl:"views/directives/create-secret.html",
-link:function(e) {
-e.alerts = {}, e.nameValidation = d, e.secretAuthTypeMap = {
+link:function(f) {
+f.nameValidation = e, f.secretAuthTypeMap = {
 image:{
 label:"Image Secret",
 authTypes:[ {
@@ -8665,30 +8649,30 @@ id:"kubernetes.io/ssh-auth",
 label:"SSH Key"
 } ]
 }
-}, e.secretTypes = _.keys(e.secretAuthTypeMap), e.type ? e.newSecret = {
-type:e.type,
-authType:e.secretAuthTypeMap[e.type].authTypes[0].id,
+}, f.secretTypes = _.keys(f.secretAuthTypeMap), f.type ? f.newSecret = {
+type:f.type,
+authType:f.secretAuthTypeMap[f.type].authTypes[0].id,
 data:{},
-linkSecret:!_.isEmpty(e.serviceAccountToLink),
-pickedServiceAccountToLink:e.serviceAccountToLink || ""
-} :e.newSecret = {
+linkSecret:!_.isEmpty(f.serviceAccountToLink),
+pickedServiceAccountToLink:f.serviceAccountToLink || ""
+} :f.newSecret = {
 type:"source",
 authType:"kubernetes.io/basic-auth",
 data:{},
 linkSecret:!1,
 pickedServiceAccountToLink:""
-}, e.add = {
+}, f.add = {
 gitconfig:!1,
 cacert:!1
-}, b.canI("serviceaccounts", "list") && b.canI("serviceaccounts", "update") && c.list("serviceaccounts", e, function(a) {
-e.serviceAccounts = a.by("metadata.name"), e.serviceAccountsNames = _.keys(e.serviceAccounts);
+}, b.canI("serviceaccounts", "list") && b.canI("serviceaccounts", "update") && c.list("serviceaccounts", f, function(a) {
+f.serviceAccounts = a.by("metadata.name"), f.serviceAccountsNames = _.keys(f.serviceAccounts);
 });
-var f = function(a, b) {
+var g = function(a, b) {
 var c = {
 apiVersion:"v1",
 kind:"Secret",
 metadata:{
-name:e.newSecret.data.secretName
+name:f.newSecret.data.secretName
 },
 type:b,
 data:{}
@@ -8712,89 +8696,83 @@ JSON.parse(a.dockerConfig).auths ? c.data[".dockerconfigjson"] = d :(c.type = "k
 break;
 
 case "kubernetes.io/dockercfg":
-var f = window.btoa(a.dockerUsername + ":" + a.dockerPassword), g = {};
+var e = window.btoa(a.dockerUsername + ":" + a.dockerPassword), g = {};
 g[a.dockerServer] = {
 username:a.dockerUsername,
 password:a.dockerPassword,
 email:a.dockerMail,
-auth:f
+auth:e
 }, c.data[".dockercfg"] = window.btoa(JSON.stringify(g));
 }
 return c;
-}, g = function(b, d) {
-var f = angular.copy(e.serviceAccounts[e.newSecret.pickedServiceAccountToLink]);
-switch (e.newSecret.type) {
+}, h = function() {
+d.hideNotification("create-secret-error");
+}, i = function(b) {
+var e = angular.copy(f.serviceAccounts[f.newSecret.pickedServiceAccountToLink]);
+switch (f.newSecret.type) {
 case "source":
-f.secrets.push({
+e.secrets.push({
 name:b.metadata.name
 });
 break;
 
 case "image":
-f.imagePullSecrets.push({
+e.imagePullSecrets.push({
 name:b.metadata.name
 });
 }
-var g = e.serviceAccountToLink ? {
-errorNotification:!1
-} :{};
-c.update("serviceaccounts", e.newSecret.pickedServiceAccountToLink, f, e, g).then(function(a) {
-d.push({
-name:"create",
-data:{
+c.update("serviceaccounts", f.newSecret.pickedServiceAccountToLink, e, f).then(function(a) {
+d.addNotification({
 type:"success",
 message:"Secret " + b.metadata.name + " was created and linked with service account " + a.metadata.name + "."
-}
-}), e.postCreateAction({
-newSecret:b,
-creationAlert:d
+}), f.onCreate({
+newSecret:b
 });
 }, function(c) {
-d.push({
-name:"createAndLink",
-data:{
+d.addNotification({
+type:"success",
+message:"Secret " + b.metadata.name + " was created."
+}), f.serviceAccountToLink || d.addNotification({
+id:"secret-sa-link-error",
 type:"error",
-message:"An error occurred while linking the secret with service account " + e.newSecret.pickedServiceAccountToLink + ".",
+message:"An error occurred while linking the secret with service account " + f.newSecret.pickedServiceAccountToLink + ".",
 details:a("getErrorDetails")(c)
-}
-}), e.postCreateAction({
-newSecret:b,
-creationAlert:d
+}), f.onCreate({
+newSecret:b
 });
 });
-}, h = _.debounce(function() {
+}, j = _.debounce(function() {
 try {
-JSON.parse(e.newSecret.data.dockerConfig), e.invalidConfigFormat = !1;
+JSON.parse(f.newSecret.data.dockerConfig), f.invalidConfigFormat = !1;
 } catch (a) {
-e.invalidConfigFormat = !0;
+f.invalidConfigFormat = !0;
 }
 }, 300, {
 leading:!0
 });
-e.aceChanged = h, e.create = function() {
-e.alerts = {};
-var d = f(e.newSecret.data, e.newSecret.authType);
-c.create("secrets", null, d, e).then(function(a) {
-_.set(e, "confirm.doneEditing", !0);
-var c = [ {
-name:"create",
-data:{
+f.aceChanged = j, f.nameChanged = function() {
+f.nameTaken = !1;
+}, f.create = function() {
+h();
+var e = g(f.newSecret.data, f.newSecret.authType);
+c.create("secrets", null, e, f).then(function(a) {
+_.set(f, "confirm.doneEditing", !0), f.newSecret.linkSecret && f.serviceAccountsNames.contains(f.newSecret.pickedServiceAccountToLink) && b.canI("serviceaccounts", "update") ? i(a) :(d.addNotification({
 type:"success",
-message:"Secret " + d.metadata.name + " was created."
-}
-} ];
-e.newSecret.linkSecret && e.serviceAccountsNames.contains(e.newSecret.pickedServiceAccountToLink) && b.canI("serviceaccounts", "update") ? g(a, c) :e.postCreateAction({
-newSecret:a,
-creationAlert:c
-});
+message:"Secret " + e.metadata.name + " was created."
+}), f.onCreate({
+newSecret:a
+}));
 }, function(b) {
 var c = b.data || {};
-return "AlreadyExists" === c.reason ? void (e.nameTaken = !0) :void (e.alerts.create = {
+return "AlreadyExists" === c.reason ? void (f.nameTaken = !0) :void d.addNotification({
+id:"create-secret-error",
 type:"error",
 message:"An error occurred while creating the secret.",
 details:a("getErrorDetails")(b)
 });
 });
+}, f.cancel = function() {
+_.set(f, "confirm.doneEditing", !0), h(), f.onCancel();
 };
 }
 };
@@ -14493,11 +14471,7 @@ return Math.abs(a);
 };
 }).filter("encodeURIComponent", function() {
 return window.encodeURIComponent;
-}).filter("linkify", [ "HTMLService", function(a) {
-return function(b, c, d) {
-return a.linkify(b, c, d);
-};
-} ]).filter("enableTechPreviewFeature", [ "Constants", function(a) {
+}).filter("enableTechPreviewFeature", [ "Constants", function(a) {
 return function(b) {
 return _.get(a, [ "ENABLE_TECH_PREVIEW_FEATURE", b ], !1);
 };

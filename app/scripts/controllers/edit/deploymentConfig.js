@@ -14,7 +14,6 @@ angular.module('openshiftConsole')
                        $routeParams,
                        $uibModal,
                        $window,
-                       AlertMessageService,
                        AuthorizationService,
                        BreadcrumbsService,
                        DataService,
@@ -45,11 +44,6 @@ angular.module('openshiftConsole')
       "Rolling",
       "Custom"
     ];
-
-    AlertMessageService.getAlerts().forEach(function(alert) {
-      $scope.alerts[alert.name] = alert.data;
-    });
-    AlertMessageService.clearAlerts();
 
     var orderByDisplayName = $filter('orderByDisplayName');
     var getErrorDetails = $filter('getErrorDetails');
@@ -324,7 +318,7 @@ angular.module('openshiftConsole')
 
     var doneEditing = function() {
       _.set($scope, 'confirm.doneEditing', true);
-    }
+    };
 
     var hideErrorNotifications = function() {
       NotificationsService.hideNotification("edit-deployment-config-error");

@@ -19,6 +19,7 @@ angular.module('openshiftConsole')
                        DataService,
                        QuotaService,
                        Navigate,
+                       NotificationsService,
                        ProjectsService,
                        StorageService,
                        RELATIVE_PATH_PATTERN) {
@@ -34,19 +35,15 @@ angular.module('openshiftConsole')
       'ReplicationController'
     ];
 
+    var humanizeKind = $filter('humanizeKind');
     if (!_.includes(supportedKinds, $routeParams.kind)) {
-      Navigate.toErrorPage("Storage is not supported for kind " + $routeParams.kind + ".");
+      Navigate.toErrorPage("Storage is not supported for kind " + humanizeKind($routeParams.kind) + ".");
       return;
     }
 
     var resourceGroupVersion = {
       resource: APIService.kindToResource($routeParams.kind),
       group: $routeParams.group
-    };
-
-    $scope.alerts = {};
-    $scope.renderOptions = {
-      hideFilterWidget: true
     };
 
     $scope.projectName = $routeParams.project;
@@ -81,7 +78,7 @@ angular.module('openshiftConsole')
 
         if (!AuthorizationService.canI(resourceGroupVersion, 'update', $routeParams.project)) {
           Navigate.toErrorPage('You do not have authority to update ' +
-                               $filter('humanizeKind')($routeParams.kind) + ' ' + $routeParams.name + '.', 'access_denied');
+                               humanizeKind($routeParams.kind) + ' ' + $routeParams.name + '.', 'access_denied');
           return;
         }
 
@@ -91,11 +88,21 @@ angular.module('openshiftConsole')
 
         var displayError = function(errorMessage, errorDetails) {
           $scope.disableInputs = true;
-          $scope.alerts['attach-persistent-volume-claim'] = {
+          NotificationsService.addNotification({
+            id: "attach-pvc-error",
             type: "error",
             message: errorMessage,
             details: errorDetails
-          };
+          });
+        };
+
+        var hideErrorNotifications = function() {
+          NotificationsService.hideNotification("attach-pvc-error");
+        };
+
+        var navigateBack = function() {
+          _.set($scope, 'confirm.doneEditing', true);
+          $window.history.back();
         };
 
         var isContainerSelected = function(container) {
@@ -151,6 +158,7 @@ angular.module('openshiftConsole')
 
         $scope.attachPVC = function() {
           $scope.disableInputs = true;
+          hideErrorNotifications();
 
           if ($scope.attachPVCForm.$valid) {
             // generate a volume name if not provided
@@ -185,18 +193,32 @@ angular.module('openshiftConsole')
               podTemplate.spec.volumes = [];
             }
             podTemplate.spec.volumes.push(newVolume);
-            $scope.alerts = {};
 
             DataService.update(resourceGroupVersion, resource.metadata.name, $scope.attach.resource, context).then(
               function() {
-                $window.history.back();
+                var details;
+                if (!mountPath) {
+                  // FIXME: This seems like a bad experience since we don't give users a way to mount it later.
+                  details = "No mount path was provided. The volume reference was added to the configuration, but it will not be mounted into running pods.";
+                }
+                NotificationsService.addNotification({
+                  type: "success",
+                  message: "Persistent volume claim " + persistentVolumeClaim.metadata.name + " added to " + humanizeKind($routeParams.kind) + " " + $routeParams.name + ".",
+                  details: details
+                });
+                navigateBack();
               },
               function(result) {
-                displayError("An error occurred attaching the persistent volume claim to the " + $filter('humanizeKind')($routeParams.kind) + ".", getErrorDetails(result));
+                displayError("An error occurred attaching the persistent volume claim to the " + humanizeKind($routeParams.kind) + ".", getErrorDetails(result));
                 $scope.disableInputs = false;
               }
             );
           }
+        };
+
+        $scope.cancel = function() {
+          hideErrorNotifications();
+          navigateBack();
         };
     }));
   });
