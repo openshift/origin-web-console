@@ -60542,9 +60542,8 @@ return a;
 var e = {
 group:"servicecatalog.k8s.io",
 resource:"bindings"
-}, f = function(b) {
-var c = a("generateName");
-return {
+}, f = function(b, c) {
+var e = a("generateName"), f = e(_.trunc(b, d.maxlength - 6) + "-"), g = {
 kind:"Binding",
 apiVersion:"servicecatalog.k8s.io/v1alpha1",
 metadata:{
@@ -60554,14 +60553,20 @@ spec:{
 instanceRef:{
 name:b
 },
-secretName:c(_.trunc(b, d.maxlength - 6) + "-")
+secretName:f
 }
-};
+}, h = _.get(c, "spec.selector");
+return h && (h.matchLabels || h.matchExpressions || (h = {
+matchLabels:h
+}), g.spec.alphaPodPresetTemplate = {
+name:f,
+selector:h
+}), g;
 };
 return {
 bindingResource:e,
 bindService:function(a, b, d) {
-var g = f(b);
+var g = f(b, d);
 return c.create(e, null, g, a);
 },
 isServiceBindable:function(a, b) {
@@ -64564,7 +64569,9 @@ repository:a.ctrl.repository,
 namespace:a.ctrl.selectedProject.metadata.name,
 imageStreamTag:b
 });
-a.createAPIObjects(c), a.ctrl.serviceToBind && a.bindService();
+a.createAPIObjects(c), a.ctrl.serviceToBind && a.bindService(e.find(c, {
+kind:"DeploymentConfig"
+}));
 }, function(b) {
 a.ctrl.error = b;
 });
@@ -64592,18 +64599,18 @@ a.failure.length ? b.ctrl.error = a :b.ctrl.success = !0;
 }, function(a) {
 b.ctrl.error = a;
 });
-}, a.prototype.bindService = function() {
-var a = this;
+}, a.prototype.bindService = function(a) {
+var b = this;
 this.ctrl.bindInProgress = !0, this.ctrl.bindError = !1;
-var b = {
+var c = {
 namespace:e.get(this.ctrl.selectedProject, "metadata.name")
 };
-this.BindingService.bindService(b, this.ctrl.serviceToBind, this.ctrl.name).then(function(c) {
-a.ctrl.binding = c, a.ctrl.bindInProgress = !1, a.ctrl.bindComplete = !0, a.ctrl.bindError = null, a.DataService.watchObject(a.BindingService.bindingResource, e.get(a.ctrl.binding, "metadata.name"), b, function(b) {
-a.ctrl.binding = b;
+this.BindingService.bindService(c, this.ctrl.serviceToBind, a).then(function(a) {
+b.ctrl.binding = a, b.ctrl.bindInProgress = !1, b.ctrl.bindComplete = !0, b.ctrl.bindError = null, b.DataService.watchObject(b.BindingService.bindingResource, e.get(b.ctrl.binding, "metadata.name"), c, function(a) {
+b.ctrl.binding = a;
 });
-}, function(b) {
-a.ctrl.bindInProgress = !1, a.ctrl.bindComplete = !0, a.ctrl.bindError = b;
+}, function(a) {
+b.ctrl.bindInProgress = !1, b.ctrl.bindComplete = !0, b.ctrl.bindError = a;
 });
 }, a.prototype.getServiceClasses = function() {
 var a = this, b = {

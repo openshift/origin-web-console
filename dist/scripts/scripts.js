@@ -12316,7 +12316,7 @@ l.serviceClasses = a.by("metadata.name"), "Instance" === l.target.kind && (l.ser
 }, l.$onDestroy = function() {
 e && (e(), e = void 0), f && c.unwatch(f);
 }, l.bindService = function() {
-var a = "Instance" === l.target.kind ? l.target :l.serviceInstances[l.serviceToBind], b = "application" === l.bindType ? _.get(l.appToBind, "metadata.name") :void 0, e = {
+var a = "Instance" === l.target.kind ? l.target :l.serviceInstances[l.serviceToBind], b = "application" === l.bindType ? l.appToBind :void 0, e = {
 namespace:_.get(a, "metadata.namespace")
 };
 d.bindService(e, _.get(a, "metadata.name"), b).then(function(a) {
