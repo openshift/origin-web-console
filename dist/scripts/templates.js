@@ -1142,6 +1142,14 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "<dd ng-if-end>{{build.spec.source.git.ref}}</dd>\n" +
     "<dt ng-if-start=\"build.spec.source.contextDir\">Source Context Dir:</dt>\n" +
     "<dd ng-if-end>{{build.spec.source.contextDir}}</dd>\n" +
+    "<dt ng-if-start=\"build.spec.revision.git.commit\">Source Commit:</dt>\n" +
+    "<dd ng-if-end>\n" +
+    "{{build.spec.revision.git.message}}\n" +
+    "<osc-git-link class=\"hash\" uri=\"build.spec.source.git.uri\" ref=\"build.spec.revision.git.commit\">{{build.spec.revision.git.commit | limitTo:7}}</osc-git-link>\n" +
+    "<span ng-if=\"build.spec.revision.git.author\">\n" +
+    "authored by {{build.spec.revision.git.author.name}}\n" +
+    "</span>\n" +
+    "</dd>\n" +
     "<dt ng-if-start=\"outputTo = build.spec.output.to\">Output Image:</dt>\n" +
     "<dd ng-if-end>\n" +
     "<a ng-if=\"outputTo.kind === 'ImageStreamTag' && (!outputTo.namespace || build.metadata.namespace === outputTo.namespace)\" ng-href=\"{{outputTo.name | navigateResourceURL : 'ImageStreamTag' : build.metadata.namespace}}\">\n" +

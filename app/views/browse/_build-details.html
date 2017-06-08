@@ -73,6 +73,17 @@
         <dd ng-if-end>{{build.spec.source.git.ref}}</dd>
         <dt ng-if-start="build.spec.source.contextDir">Source Context Dir:</dt>
         <dd ng-if-end>{{build.spec.source.contextDir}}</dd>
+        <dt ng-if-start="build.spec.revision.git.commit">Source Commit:</dt>
+        <dd ng-if-end>
+          {{build.spec.revision.git.message}}
+          <osc-git-link
+            class="hash"
+            uri="build.spec.source.git.uri"
+            ref="build.spec.revision.git.commit">{{build.spec.revision.git.commit | limitTo:7}}</osc-git-link>
+          <span ng-if="build.spec.revision.git.author">
+            authored by {{build.spec.revision.git.author.name}}
+          </span>
+        </dd>
         <dt ng-if-start="outputTo = build.spec.output.to">Output Image:</dt>
         <dd ng-if-end>
           <a ng-if="outputTo.kind === 'ImageStreamTag' && (!outputTo.namespace || build.metadata.namespace === outputTo.namespace)"
