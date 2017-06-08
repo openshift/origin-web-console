@@ -202,7 +202,7 @@
 
     ctrl.bindService = function() {
       var svcToBind = ctrl.target.kind === 'Instance' ? ctrl.target : ctrl.serviceInstances[ctrl.serviceToBind];
-      var application = ctrl.bindType === 'application' ? _.get(ctrl.appToBind, 'metadata.name') : undefined;
+      var application = ctrl.bindType === 'application' ? ctrl.appToBind : undefined;
 
       var context = {
         namespace: _.get(svcToBind, 'metadata.namespace')
