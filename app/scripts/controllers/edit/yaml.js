@@ -61,7 +61,12 @@ angular.module('openshiftConsole')
       var session = editor.getSession();
       session.setOption('tabSize', 2);
       session.setOption('useSoftTabs', true);
-      session.on('change', onChange);
+
+      // Wait for the editor to initialize before adding the on change handler
+      // so it's not immediately marked as modified.
+      setTimeout(function() {
+        session.on('change', onChange);
+      });
     };
 
     var watches = [];

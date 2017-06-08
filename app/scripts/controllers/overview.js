@@ -23,6 +23,7 @@ angular.module('openshiftConsole').controller('OverviewController', [
   'OwnerReferencesService',
   'PodsService',
   'ProjectsService',
+  'BindingService',
   'ResourceAlertsService',
   'RoutesService',
   OverviewController
@@ -50,6 +51,7 @@ function OverviewController($scope,
                             OwnerReferencesService,
                             PodsService,
                             ProjectsService,
+                            BindingService,
                             ResourceAlertsService,
                             RoutesService) {
   var overview = this;
@@ -1132,21 +1134,22 @@ function OverviewController($scope,
   // extract & share
   var sortServiceInstances = function() {
     if(!state.serviceInstances && !state.serviceClasses) {
+      state.bindableServiceInstances = null;
       return;
     }
-    state.orderedServiceInstances = _.toArray(state.serviceInstances).sort(function(left, right) {
-      var leftName = _.get(state.serviceClasses, [left.spec.serviceClassName, 'osbMetadata', 'displayName']) || left.spec.serviceClassName;
-      var rightName = _.get(state.serviceClasses, [left.spec.serviceClassName, 'osbMetadata', 'displayName']) || right.spec.serviceClassName;
 
-      // Fall back to sorting by `metadata.name` if the display names are the
-      // same so that the sort is stable.
-      if (leftName === rightName) {
-        leftName = _.get(left, 'metadata.name', '');
-        rightName = _.get(right, 'metadata.name', '');
-      }
-
-      return leftName.localeCompare(rightName);
+    state.bindableServiceInstances = _.filter(state.serviceInstances, function(serviceInstance) {
+      return BindingService.isServiceBindable(serviceInstance, state.serviceClasses);
     });
+
+    state.orderedServiceInstances = _.sortByAll(state.serviceInstances,
+      function(item) {
+        return _.get(state.serviceClasses, [item.spec.serviceClassName, 'osbMetadata', 'displayName']) || item.spec.serviceClassName;
+      },
+      function(item) {
+        return _.get(item, 'metadata.name', '');
+      }
+    );
   };
 
   var watches = [];

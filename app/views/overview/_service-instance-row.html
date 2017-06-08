@@ -16,7 +16,7 @@
       <div class="list-pf-details">
         <div ng-if="!row.expanded">
           <div class="hidden-xs hidden-sm">
-            <span ng-if="!row.bindings.length">
+            <span ng-if="!row.bindings.length && row.isBindable">
               <a href="" ng-click="row.showOverlayPanel('bindService', {target: row.apiObject})">Create Binding</a>
             </span>
             <span ng-if="row.bindings.length" class="component-label">Bindings</span>
@@ -44,7 +44,7 @@
         uib-dropdown-toggle
         class="actions-dropdown-kebab"><i class="fa fa-ellipsis-v"></i><span class="sr-only">Actions</span></a>
         <ul class="dropdown-menu dropdown-menu-right" uib-dropdown-menu role="menu">
-          <li role="menuitem">
+          <li role="menuitem" ng-if="row.isBindable">
             <a href="" ng-click="row.showOverlayPanel('bindService', {target: row.apiObject})">Create Binding</a>
           </li>
           <li role="menuitem">
@@ -84,7 +84,7 @@
             <p class="pre-wrap" ng-bind-html="row.description | linky"></p>
           </div>
         </div>
-        <div class="section-title">
+        <div class="section-title" ng-if="row.isBindable || row.bindings">
           Bindings
         </div>
         <div
@@ -108,7 +108,7 @@
             </a>
           </div>
         </div>
-        <div class="row">
+        <div class="row" ng-if="row.isBindable">
           <div class="col-sm-12">
             <a href="" ng-click="row.showOverlayPanel('bindService', {target: row.apiObject})">Create Binding</a>
           </div>
