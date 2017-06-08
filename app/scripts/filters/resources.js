@@ -1310,17 +1310,4 @@ angular.module('openshiftConsole')
       var alternateBackends = _.get(route, 'spec.alternateBackends', []);
       return !_.isEmpty(alternateBackends);
     };
-  })
-  // TODO: these two filters are defined in origin-web-catalog but are not available, need to figure out why or move to common
-  .filter('applicationHasDeployment', function ($filter) {
-    var annotation = $filter('annotation');
-    return function (replicaSet) {
-      return annotation(replicaSet, 'deployment.kubernetes.io/revision');
-    };
-  })
-  .filter('applicationHasDeploymentConfig', function($filter) {
-    var annotationFilter = $filter('annotation');
-    return function (deployment) {
-      return annotationFilter(deployment, 'deploymentConfig');
-    };
   });

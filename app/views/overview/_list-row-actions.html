@@ -25,7 +25,7 @@
             </li>
             <!-- FIXME: Can't enable canI checks on svc cat resources until we have aggregation
             <li ng-if="(row.state.serviceInstances | hashSize) > 0 && {resource: 'bindings', group: 'servicecatalog.k8s.io'} | canI : 'create'" role="menuitem"> -->
-            <li ng-if="('pod_presets' | enableTechPreviewFeature) && (row.state.serviceInstances | hashSize) > 0" role="menuitem">
+            <li ng-if="('pod_presets' | enableTechPreviewFeature) && row.state.bindableServiceInstances.length" role="menuitem">
               <a href="" ng-click="row.showOverlayPanel('bindService', {target: row.apiObject})">Create Binding</a>
             </li>
             <li ng-if="row.current && ('deploymentconfigs/log' | canI : 'get')" role="menuitem">

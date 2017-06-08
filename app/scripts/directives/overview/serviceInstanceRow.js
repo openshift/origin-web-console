@@ -1,11 +1,12 @@
 'use strict';
 
-(function() {  
+(function() {
   angular.module('openshiftConsole').component('serviceInstanceRow', {
     controller: [
       '$filter',
       '$uibModal',
       'DataService',
+      'BindingService',
       'ListRowUtils',
       'NotificationsService',
       ServiceInstanceRow
@@ -22,6 +23,7 @@
   function ServiceInstanceRow($filter,
                               $uibModal,
                               DataService,
+                              BindingService,
                               ListRowUtils,
                               NotificationsService) {
     var row = this;
@@ -50,6 +52,8 @@
     row.getSecretForBinding = function(binding) {
       return binding && _.get(row, ['state', 'secrets', binding.spec.secretName]);
     };
+
+    row.isBindable = BindingService.isServiceBindable(row.apiObject, row.state.serviceClasses);
 
     row.closeOverlayPanel = function() {
       _.set(row, 'overlay.panelVisible', false);
