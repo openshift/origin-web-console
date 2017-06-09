@@ -14,7 +14,6 @@
               <div class="col-md-12">
                 <div ng-show="!containers.length" class="mar-top-md">Loading...</div>
                 <form ng-show="containers.length" name="form" class="health-checks-form">
-                  <confirm-on-exit dirty="form.$dirty && !confirm.doneEditing"></confirm-on-exit>
                   <h1>Health Checks: {{name}}</h1>
                   <div class="help-block">
                     Container health is periodically checked using readiness and liveness probes.

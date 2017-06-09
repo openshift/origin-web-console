@@ -14,7 +14,6 @@
               <div class="help-block mar-bottom-lg">Update the display name and description of your project. The project's unique name cannot be modified.</div>
               <alerts alerts="alerts"></alerts>
               <form name="editProjectForm">
-                <confirm-on-exit dirty="editProjectForm && !confirm.doneEditing"></confirm-on-exit>
                 <fieldset ng-disabled="disableInputs">
                   <div class="form-group">
                     <label for="displayName">Display Name</label>
@@ -41,10 +40,7 @@
                         ng-click="update()"
                         ng-disabled="editProjectForm.$invalid || disableInputs"
                         value="">Save</button>
-                    <a class="btn btn-default btn-lg"
-                      href="#"
-                      ng-click="confirm.doneEditing = true"
-                      back>Cancel</a>
+                    <a class="btn btn-default btn-lg" href="#" back>Cancel</a>
                   </div>
                 </fieldset>
               </form>

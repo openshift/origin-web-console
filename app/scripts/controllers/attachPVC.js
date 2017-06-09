@@ -101,7 +101,6 @@ angular.module('openshiftConsole')
         };
 
         var navigateBack = function() {
-          _.set($scope, 'confirm.doneEditing', true);
           $window.history.back();
         };
 

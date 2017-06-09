@@ -20,7 +20,6 @@
                     <a href="{{'persistent_volumes' | helpLink}}" target="_blank"><span class="learn-more-inline">Learn More&nbsp;<i class="fa fa-external-link" aria-hidden="true"></i></span></a>
                   </div>
                   <form name="createPersistentVolumeClaimForm" class="mar-top-lg">
-                    <confirm-on-exit dirty="createPersistentVolumeClaimForm.$dirty && !confirm.doneEditing"></confirm-on-exit>
                     <fieldset ng-disabled="disableInputs">
                       <osc-persistent-volume-claim model="claim" project-name="projectName"></osc-persistent-volume-claim>
                       <div class="button-group gutter-bottom">
@@ -29,10 +28,7 @@
                                 ng-click="createPersistentVolumeClaim()"
                                 ng-disabled="createPersistentVolumeClaimForm.$invalid || disableInputs"
                                 value="">Create</button>
-                        <a class="btn btn-default btn-lg"
-                           href=""
-                           ng-click="confirm.doneEditing = true"
-                           back>Cancel</a>
+                        <a class="btn btn-default btn-lg" href="" back>Cancel</a>
                       </div>
                     </fieldset>
                   </form>

@@ -56,7 +56,6 @@ angular.module('openshiftConsole')
             var claim = generatePersistentVolumeClaim();
             DataService.create('persistentvolumeclaims', null, claim, context)
               .then(function() { // Success
-                _.set($scope, 'confirm.doneEditing', true);
                 // Return to the previous page
                 $window.history.back();
               },

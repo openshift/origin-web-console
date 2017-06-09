@@ -316,10 +316,6 @@ angular.module('openshiftConsole')
       return updatedTriggers;
     };
 
-    var doneEditing = function() {
-      _.set($scope, 'confirm.doneEditing', true);
-    };
-
     var hideErrorNotifications = function() {
       NotificationsService.hideNotification("edit-deployment-config-error");
     };
@@ -380,7 +376,6 @@ angular.module('openshiftConsole')
             type: "success",
             message: "Deployment config " + $scope.updatedDeploymentConfig.metadata.name + " was successfully updated."
           });
-          doneEditing();
           var returnURL = Navigate.resourceURL($scope.updatedDeploymentConfig);
           $location.url(returnURL);
         },
@@ -398,7 +393,6 @@ angular.module('openshiftConsole')
 
     $scope.cancel = function() {
       hideErrorNotifications();
-      doneEditing();
       $window.history.back();
     };
 
