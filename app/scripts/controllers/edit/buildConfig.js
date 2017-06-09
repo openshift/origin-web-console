@@ -211,8 +211,6 @@ angular.module('openshiftConsole')
     var buildStrategy = $filter('buildStrategy');
 
     var navigateBack = function() {
-      _.set($scope, 'confirm.doneEditing', true);
-
       var buildConfigURL;
       if ($scope.buildConfig) {
         buildConfigURL = Navigate.resourceURL($scope.buildConfig);

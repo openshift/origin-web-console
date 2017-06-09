@@ -213,7 +213,6 @@ angular.module("openshiftConsole")
           hideErrorNotifications();
           var newSecret = constructSecretObject($scope.newSecret.data, $scope.newSecret.authType);
           DataService.create('secrets', null, newSecret, $scope).then(function(secret) { // Success
-            _.set($scope, 'confirm.doneEditing', true);
             // In order to link:
             // - the SA has to be defined
             // - defined SA has to be present in the obtained SA list
@@ -244,7 +243,6 @@ angular.module("openshiftConsole")
         };
 
         $scope.cancel = function() {
-          _.set($scope, 'confirm.doneEditing', true);
           hideErrorNotifications();
           $scope.onCancel();
         };

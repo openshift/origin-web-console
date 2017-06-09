@@ -41,7 +41,6 @@
                     Add an existing persistent volume claim to the template of {{kind | humanizeKind}} {{name}}.
                   </div>
                   <form name="attachPVCForm" class="mar-top-lg">
-                    <confirm-on-exit dirty="attachPVCForm.$dirty && !confirm.doneEditing"></confirm-on-exit>
                     <fieldset ng-disabled="disableInputs">
                       <div class="form-group">
                         <label for="persistentVolumeClaim" class="required">Storage</label>

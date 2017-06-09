@@ -562,7 +562,7 @@ alerts:c,
 hasErrors:d
 });
 }), a.promise;
-}), _.set(o, "confirm.doneEditing", !0), o.isDialog ? c.$emit("templateInstantiated", {
+}), o.isDialog ? c.$emit("templateInstantiated", {
 project:o.selectedProject,
 template:o.template
 }) :f.toNextSteps(o.templateDisplayName, o.selectedProject.metadata.name);
@@ -6559,7 +6559,7 @@ message:a,
 details:b
 });
 }, s = function() {
-_.set(e, "confirm.doneEditing", !0), b.url(e.resourceURL);
+b.url(e.resourceURL);
 }, t = function() {
 l.hideNotification("set-compute-limits-error");
 };
@@ -6711,7 +6711,6 @@ delete a.updatedBuildConfig.spec.postCommit.script;
 };
 a.secrets = {};
 var q = [], r = b("buildStrategy"), s = function() {
-_.set(a, "confirm.doneEditing", !0);
 var b;
 a.buildConfig ? (b = i.resourceURL(a.buildConfig), c.path(b)) :e.history.back();
 }, t = function() {
@@ -7166,8 +7165,6 @@ e.image = c.image;
 type:"ConfigChange"
 }), b;
 }, A = function() {
-_.set(a, "confirm.doneEditing", !0);
-}, B = function() {
 l.hideNotification("edit-deployment-config-error");
 };
 a.save = function() {
@@ -7184,11 +7181,11 @@ var f = a.strategyData[a.strategyParamsPropertyName].maxUnavailable, g = Number(
 }
 "Custom" !== a.strategyData.type && _.each([ "pre", "mid", "post" ], function(b) {
 _.has(a.strategyData, [ a.strategyParamsPropertyName, b, "execNewPod", "env" ]) && (a.strategyData[a.strategyParamsPropertyName][b].execNewPod.env = o.compactEntries(a.strategyData[a.strategyParamsPropertyName][b].execNewPod.env));
-}), _.has(a, "strategyData.customParams.environment") && (a.strategyData.customParams.environment = o.compactEntries(a.strategyData.customParams.environment)), a.updatedDeploymentConfig.spec.template.spec.imagePullSecrets = _.filter(a.secrets.pullSecrets, "name"), a.updatedDeploymentConfig.spec.strategy = a.strategyData, a.updatedDeploymentConfig.spec.triggers = z(), B(), i.update("deploymentconfigs", a.updatedDeploymentConfig.metadata.name, a.updatedDeploymentConfig, a.context).then(function() {
+}), _.has(a, "strategyData.customParams.environment") && (a.strategyData.customParams.environment = o.compactEntries(a.strategyData.customParams.environment)), a.updatedDeploymentConfig.spec.template.spec.imagePullSecrets = _.filter(a.secrets.pullSecrets, "name"), a.updatedDeploymentConfig.spec.strategy = a.strategyData, a.updatedDeploymentConfig.spec.triggers = z(), A(), i.update("deploymentconfigs", a.updatedDeploymentConfig.metadata.name, a.updatedDeploymentConfig, a.context).then(function() {
 l.addNotification({
 type:"success",
 message:"Deployment config " + a.updatedDeploymentConfig.metadata.name + " was successfully updated."
-}), A();
+});
 var b = k.resourceURL(a.updatedDeploymentConfig);
 c.url(b);
 }, function(c) {
@@ -7200,7 +7197,7 @@ details:b("getErrorDetails")(c)
 });
 });
 }, a.cancel = function() {
-B(), A(), f.history.back();
+A(), f.history.back();
 }, a.$on("$destroy", function() {
 i.unwatchAll(s);
 });
@@ -7252,7 +7249,7 @@ h.create({
 resource:"horizontalpodautoscalers",
 group:"autoscaling"
 }, null, b, j).then(function() {
-_.set(a, "confirm.doneEditing", !0), d.history.back();
+d.history.back();
 }, function(b) {
 a.disableInputs = !1, p("An error occurred creating the horizontal pod autoscaler.", b);
 });
@@ -7261,7 +7258,7 @@ a.disableInputs = !0, b = angular.copy(b), b.metadata.labels = m.mapEntries(m.co
 resource:"horizontalpodautoscalers",
 group:"autoscaling"
 }, b.metadata.name, b, j).then(function() {
-_.set(a, "confirm.doneEditing", !0), d.history.back();
+d.history.back();
 }, function(c) {
 a.disableInputs = !1, p('An error occurred updating horizontal pod autoscaler "' + b.metadata.name + '".', c);
 });
@@ -7328,7 +7325,7 @@ message:a,
 details:b
 });
 }, p = function() {
-_.set(d, "confirm.doneEditing", !0), b.url(d.resourceURL);
+b.url(d.resourceURL);
 }, q = function() {
 j.hideNotification("add-health-check-error");
 };
@@ -7382,7 +7379,7 @@ title:"Edit"
 var l = function() {
 i.hideNotification("edit-route-error");
 }, m = function() {
-_.set(d, "confirm.doneEditing", !0), d.doneEditing = !0, b.path(d.routeURL);
+b.path(d.routeURL);
 };
 d.cancel = function() {
 l(), m();
@@ -7749,7 +7746,7 @@ type:"error",
 message:"An error occurred creating the application.",
 details:"Status: " + b.status + ". " + b.data
 };
-}), _.set(a, "confirm.doneEditing", !0), h.toNextSteps(a.name, a.projectName, {
+}), h.toNextSteps(a.name, a.projectName, {
 usingSampleRepo:a.usingSampleRepo(),
 breadcrumbTitle:z
 });
@@ -8180,7 +8177,7 @@ a.actions.canSubmit = b;
 },
 update:function() {
 a.disableInputs = !0, g.update(b.project, k(e, a.editableFields)).then(function() {
-_.set(a, "confirm.doneEditing", !0), b.then ? d.path(b.then) :h.toProjectOverview(e.metadata.name);
+b.then ? d.path(b.then) :h.toProjectOverview(e.metadata.name);
 }, function(b) {
 a.disableInputs = !1, a.editableFields = f(e), a.alerts.update = {
 type:"error",
@@ -8208,7 +8205,7 @@ title:"Create Route"
 var l = function() {
 i.hideNotification("create-route-error");
 }, m = function() {
-_.set(c, "confirm.doneEditing", !0), d.history.back();
+d.history.back();
 };
 c.cancel = function() {
 l(), m();
@@ -8287,7 +8284,7 @@ details:b
 }, t = function() {
 k.hideNotification("attach-pvc-error");
 }, u = function() {
-_.set(c, "confirm.doneEditing", !0), d.history.back();
+d.history.back();
 }, v = function(a) {
 return c.attach.allContainers || c.attach.containers[a.name];
 }, w = function() {
@@ -8374,7 +8371,7 @@ d.$watch("attach.source", r);
 var s = function() {
 d.forms.addConfigVolumeForm.$setDirty();
 }, t = function() {
-_.set(d, "confirm.doneEditing", !0), e.history.back();
+e.history.back();
 }, u = function(a, b) {
 k.addNotification({
 id:"add-config-volume-error",
@@ -8584,7 +8581,7 @@ if (c.createPersistentVolumeClaimForm.$valid) {
 c.disableInputs = !0;
 var b = k();
 g.create("persistentvolumeclaims", null, b, i).then(function() {
-_.set(c, "confirm.doneEditing", !0), d.history.back();
+d.history.back();
 }, function(b) {
 c.disableInputs = !1, c.alerts["create-persistent-volume-claim"] = {
 type:"error",
@@ -8761,7 +8758,7 @@ f.nameTaken = !1;
 h();
 var e = g(f.newSecret.data, f.newSecret.authType);
 c.create("secrets", null, e, f).then(function(a) {
-_.set(f, "confirm.doneEditing", !0), f.newSecret.linkSecret && f.serviceAccountsNames.contains(f.newSecret.pickedServiceAccountToLink) && b.canI("serviceaccounts", "update") ? i(a) :(d.addNotification({
+f.newSecret.linkSecret && f.serviceAccountsNames.contains(f.newSecret.pickedServiceAccountToLink) && b.canI("serviceaccounts", "update") ? i(a) :(d.addNotification({
 type:"success",
 message:"Secret " + e.metadata.name + " was created."
 }), f.onCreate({
@@ -8777,7 +8774,7 @@ details:a("getErrorDetails")(b)
 });
 });
 }, f.cancel = function() {
-_.set(f, "confirm.doneEditing", !0), h(), f.onCancel();
+h(), f.onCancel();
 };
 }
 };
@@ -9149,7 +9146,6 @@ c > 0 && d.push(w()), b > 0 && d.push(v()), a.all(d).then(s);
 } else u();
 }
 function s() {
-_.set(m, "confirm.doneEditing", !0);
 var a;
 if ("Template" === m.resourceKind && m.templateOptions.process && !m.errorOccured) {
 var b = m.templateOptions.add || m.updateResources.length > 0 ? m.projectName :"";
@@ -13088,7 +13084,7 @@ alerts:d,
 hasErrors:e
 });
 }), a.promise;
-}), _.set(c, "confirm.doneEditing", !0), h.toNextSteps(c.app.name, c.project);
+}), h.toNextSteps(c.app.name, c.project);
 }, A = function(a) {
 var b = d.open({
 animation:!0,

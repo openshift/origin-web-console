@@ -61,7 +61,6 @@ angular.module('openshiftConsole')
             ProjectsService
               .update($routeParams.project, mergeEditable(project, $scope.editableFields))
               .then(function() {
-                _.set($scope, 'confirm.doneEditing', true);
                 if ($routeParams.then) {
                   $location.path($routeParams.then);
                 }

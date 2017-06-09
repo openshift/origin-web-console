@@ -250,7 +250,6 @@ angular.module("openshiftConsole")
               return d.promise;
             });
 
-            _.set($scope, 'confirm.doneEditing', true);
             Navigate.toNextSteps($scope.app.name, $scope.project);
           };
 
