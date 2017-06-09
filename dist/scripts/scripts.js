@@ -690,6 +690,7 @@ DEFAULT_HPA_CPU_TARGET_PERCENT:80,
 DISABLE_OVERVIEW_METRICS:!1,
 DISABLE_CUSTOM_METRICS:!1,
 DISABLE_WILDCARD_ROUTES:!0,
+DISABLE_CONFIRM_ON_EXIT:!1,
 AVAILABLE_KINDS_BLACKLIST:[],
 ENABLE_TECH_PREVIEW_FEATURE:{
 service_catalog_landing_page:!1,
@@ -13304,28 +13305,36 @@ e.findReferenceValueForEntries(b.entries, b.valueFromSelectorOptions);
 } ]
 };
 } ]);
-}(), angular.module("openshiftConsole").directive("confirmOnExit", function() {
+}(), angular.module("openshiftConsole").directive("confirmOnExit", [ "Logger", function(a) {
 return {
 scope:{
 dirty:"=",
 message:"="
 },
-link:function(a) {
-var b = function() {
-return a.message || "You have unsaved changes. Leave this page anyway?";
-}, c = function() {
-if (a.dirty) return b();
+link:function(b) {
+if (!_.get(window, "OPENSHIFT_CONSTANTS.DISABLE_CONFIRM_ON_EXIT") && !_.get(window, "OPENSHIFT_CONSTANTS.CONFIRM_DIALOG_BLOCKED")) {
+var c = function() {
+return b.message || "You have unsaved changes. Leave this page anyway?";
+}, d = function() {
+if (b.dirty) return c();
 };
-$(window).on("beforeunload", c);
-var d = a.$on("$locationChangeStart", function(c) {
-a.dirty && (confirm(b()) || c.preventDefault());
+$(window).on("beforeunload", d);
+var e = b.$on("$locationChangeStart", function(d) {
+if (b.dirty) {
+var e = new Date().getTime(), f = confirm(c());
+if (!f) {
+var g = new Date().getTime();
+g - e < 50 ? (_.set(window, "OPENSHIFT_CONSTANTS.CONFIRM_DIALOG_BLOCKED", !0), a.warn("Confirm on exit prompt appears to have been blocked by the browser.")) :d.preventDefault();
+}
+}
 });
-a.$on("$destroy", function() {
-$(window).off("beforeunload", c), d && d();
+b.$on("$destroy", function() {
+$(window).off("beforeunload", d), e && e();
 });
 }
+}
 };
-}), angular.module("openshiftConsole").filter("duration", function() {
+} ]), angular.module("openshiftConsole").filter("duration", function() {
 return function(a, b, c, d) {
 function e(a, b, d) {
 if (0 !== a) return 1 === a ? void (c ? h.push(b) :h.push("1 " + b)) :void h.push(a + " " + d);

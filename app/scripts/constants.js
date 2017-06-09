@@ -78,6 +78,10 @@ angular.extend(window.OPENSHIFT_CONSTANTS, {
   // removes the option from the route creation form.
   DISABLE_WILDCARD_ROUTES: true,
 
+  // true indicates that the web console should not show confirmation prompts
+  // when users navigate away from a page without saving.
+  DISABLE_CONFIRM_ON_EXIT: false,
+
   // This blacklist hides certain kinds from the "Other Resources" page because they are unpersisted, disallowed for most end users, or not supported by openshift but exist in kubernetes
   AVAILABLE_KINDS_BLACKLIST: [],
 
