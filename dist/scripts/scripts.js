@@ -1260,7 +1260,7 @@ redirectTo:"/project/:project/browse/rc/:rc"
 }).otherwise({
 redirectTo:"/"
 });
-} ]).constant("LOGGING_URL", _.get(window.OPENSHIFT_CONFIG, "loggingURL")).constant("METRICS_URL", _.get(window.OPENSHIFT_CONFIG, "metricsURL")).constant("LIMIT_REQUEST_OVERRIDES", _.get(window.OPENSHIFT_CONFIG, "limitRequestOverrides")).constant("SOURCE_URL_PATTERN", /^[a-z][a-z0-9+.-@]*:(\/\/)?[0-9a-z_-]+/i).constant("RELATIVE_PATH_PATTERN", /^(?!\/)(?!\.\.(\/|$))(?!.*\/\.\.(\/|$)).*$/).constant("IS_IOS", /iPad|iPhone|iPod/.test(navigator.userAgent) && !window.MSStream).constant("IS_SAFARI", /Version\/[\d\.]+.*Safari/.test(navigator.userAgent)).constant("amTimeAgoConfig", {
+} ]).constant("LOGGING_URL", _.get(window.OPENSHIFT_CONFIG, "loggingURL")).constant("METRICS_URL", _.get(window.OPENSHIFT_CONFIG, "metricsURL")).constant("LIMIT_REQUEST_OVERRIDES", _.get(window.OPENSHIFT_CONFIG, "limitRequestOverrides")).constant("SOURCE_URL_PATTERN", /^[a-z][a-z0-9+.-@]*:(\/\/)?[0-9a-z_-]+/i).constant("RELATIVE_PATH_PATTERN", /^(?!\/)(?!\.\.(\/|$))(?!.*\/\.\.(\/|$)).*$/).constant("IS_SAFARI", /Version\/[\d\.]+.*Safari/.test(navigator.userAgent)).constant("amTimeAgoConfig", {
 titleFormat:"LLL"
 }).config([ "kubernetesContainerSocketProvider", function(a) {
 a.WebSocketFactory = "ContainerWebSocket";
@@ -10175,49 +10175,7 @@ a.hidden = !1;
 });
 }
 };
-}), angular.module("openshiftConsole").directive("toggle", [ "IS_IOS", function(a) {
-var b = function(a) {
-$("body").css("cursor", a);
-}, c = _.partial(b, "pointer"), d = _.partial(b, "auto");
-return a && ($(document).on("shown.bs.popover", c), $(document).on("shown.bs.tooltip", c), $(document).on("hide.bs.popover", d), $(document).on("hide.bs.tooltip", d)), {
-restrict:"A",
-scope:{
-dynamicContent:"@?"
-},
-link:function(a, b, c) {
-var d = {
-container:c.container || "body",
-placement:c.placement || "auto"
-};
-if (c) switch (c.toggle) {
-case "popover":
-(c.dynamicContent || "" === c.dynamicContent) && a.$watch("dynamicContent", function() {
-$(b).popover("destroy"), setTimeout(function() {
-$(b).attr("data-content", a.dynamicContent).popover(d);
-}, 200);
-}), $(b).popover(d), a.$on("$destroy", function() {
-$(b).popover("destroy");
-});
-break;
-
-case "tooltip":
-(c.dynamicContent || "" === c.dynamicContent) && a.$watch("dynamicContent", function() {
-$(b).tooltip("destroy"), setTimeout(function() {
-$(b).attr("title", a.dynamicContent).tooltip(d);
-}, 200);
-}), $(b).tooltip(d), a.$on("$destroy", function() {
-$(b).tooltip("destroy");
-});
-break;
-
-case "dropdown":
-"dropdown" === c.hover && ($(b).dropdownHover({
-delay:200
-}), $(b).dropdown());
-}
-}
-};
-} ]).directive("podWarnings", [ "podWarningsFilter", function(a) {
+}), angular.module("openshiftConsole").directive("podWarnings", [ "podWarningsFilter", function(a) {
 return {
 restrict:"E",
 scope:{
