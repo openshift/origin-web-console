@@ -46,8 +46,6 @@ angular.module('openshiftConsole')
     };
 
     var navigateBack = function() {
-      _.set($scope, 'confirm.doneEditing', true);
-      $scope.doneEditing = true;
       $location.path($scope.routeURL);
     };
 

@@ -22,7 +22,6 @@
                   <div class="mar-top-xl">
                     <div ng-if="!loaded">Loading...</div>
                     <form ng-if="loaded" name="forms.editConfigMapForm">
-                      <confirm-on-exit dirty="forms.editConfigMapForm.$dirty && !confirm.doneEditing"></confirm-on-exit>
                       <div ng-if="resourceChanged && !resourceDeleted && !updatingNow" class="alert alert-warning">
                         <span class="pficon pficon-warning-triangle-o" aria-hidden="true"></span>
                         <span class="sr-only">Warning:</span>
@@ -42,7 +41,7 @@
                               ng-click="updateConfigMap()"
                               ng-disabled="forms.editConfigMapForm.$invalid || forms.editConfigMapForm.$pristine || disableInputs || resourceChanged || resourceDeleted"
                               value="">Save</button>
-                          <a class="btn btn-default btn-lg" href="#" ng-click="confirm.doneEditing = true" back>Cancel</a>
+                          <a class="btn btn-default btn-lg" href="#" back>Cancel</a>
                         </div>
                       </fieldset>
                     </form>

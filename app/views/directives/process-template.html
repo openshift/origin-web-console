@@ -1,6 +1,5 @@
 <fieldset ng-disabled="disableInputs">
   <ng-form name="$ctrl.templateForm">
-    <confirm-on-exit dirty="$ctrl.templateForm.$dirty && !$ctrl.confirm.doneEditing"></confirm-on-exit>
     <template-options is-dialog="$ctrl.isDialog" parameters="$ctrl.template.parameters" expand="true" can-toggle="false">
       <select-project ng-if="!$ctrl.project" selected-project="$ctrl.selectedProject" name-taken="$ctrl.projectNameTaken"></select-project>
     </template-options>
@@ -8,8 +7,7 @@
     <div ng-if="$ctrl.isDialog && $ctrl.selectedProject.metadata.uid" class="form-group">
       <!-- TODO: Preserve entered form values. -->
       To set optional parameters or labels, view
-      <a ng-click="$ctrl.confirm.doneEditing = true"
-         ng-href="{{$ctrl.template | createFromTemplateURL : $ctrl.selectedProject.metadata.name}}">advanced options</a>.
+      <a ng-href="{{$ctrl.template | createFromTemplateURL : $ctrl.selectedProject.metadata.name}}">advanced options</a>.
     </div>
     <label-editor
         ng-if="!$ctrl.isDialog"
@@ -22,9 +20,7 @@
     <alerts alerts="$ctrl.precheckAlerts"></alerts>
     <div ng-if="!$ctrl.isDialog" class="buttons gutter-top-bottom">
       <button class="btn btn-primary btn-lg" ng-click="$ctrl.createFromTemplate()" ng-disabled="$ctrl.templateForm.$invalid || $ctrl.disableInputs">Create</button>
-      <a class="btn btn-default btn-lg"
-         ng-href="{{$ctrl.project | projectOverviewURL}}"
-         ng-click="$ctrl.confirm.doneEditing = true">Cancel</a>
+      <a class="btn btn-default btn-lg" ng-href="{{$ctrl.project | projectOverviewURL}}">Cancel</a>
     </div>
   </ng-form>
 </fieldset>

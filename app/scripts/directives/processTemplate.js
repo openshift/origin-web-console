@@ -121,7 +121,6 @@ function ProcessTemplate($filter,
       return d.promise;
     });
 
-    _.set(ctrl, 'confirm.doneEditing', true);
     if (ctrl.isDialog) {
       $scope.$emit('templateInstantiated', {
         project: ctrl.selectedProject,
