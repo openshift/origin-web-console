@@ -4029,7 +4029,7 @@ g.quotaExceeded = {
 type:"warning",
 message:"Quota limit has been reached.",
 links:[ {
-href:d.quotaURL(),
+href:d.quotaURL(f),
 label:"View Quota"
 }, {
 href:"",
