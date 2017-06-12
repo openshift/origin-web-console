@@ -8,7 +8,7 @@
  * Controller of the openshiftConsole
  */
 angular.module('openshiftConsole')
-  .controller('SecretController', function ($routeParams, $filter, $scope, AlertMessageService, DataService, ProjectsService, SecretsService) {
+  .controller('SecretController', function ($routeParams, $filter, $scope, DataService, ProjectsService, SecretsService) {
     $scope.projectName = $routeParams.project;
     $scope.secretName = $routeParams.secret;
     $scope.view = {
@@ -26,12 +26,6 @@ angular.module('openshiftConsole')
         title: $scope.secretName
       }
     ];
-
-    AlertMessageService.getAlerts().forEach(function(alert) {
-      $scope.alerts[alert.name] = alert.data;
-    });
-
-    AlertMessageService.clearAlerts();
 
     ProjectsService
       .get($routeParams.project)

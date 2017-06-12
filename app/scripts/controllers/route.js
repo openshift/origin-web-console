@@ -30,12 +30,6 @@ angular.module('openshiftConsole')
       }
     ];
 
-    AlertMessageService.getAlerts().forEach(function(alert) {
-      $scope.alerts[alert.name] = alert.data;
-    });
-
-    AlertMessageService.clearAlerts();
-
     var watches = [];
 
     var isCustomHost;

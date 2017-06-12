@@ -8,7 +8,7 @@
  * Controller of the openshiftConsole
  */
 angular.module('openshiftConsole')
-  .controller('ImagesController', function ($routeParams, $scope, AlertMessageService, DataService, ProjectsService, $filter, LabelFilter, Logger) {
+  .controller('ImagesController', function ($routeParams, $scope, DataService, ProjectsService, $filter, LabelFilter, Logger) {
     $scope.projectName = $routeParams.project;
     $scope.imageStreams = {};
     $scope.unfilteredImageStreams = {};
@@ -17,12 +17,6 @@ angular.module('openshiftConsole')
     $scope.labelSuggestions = {};
     $scope.alerts = $scope.alerts || {};
     $scope.emptyMessage = "Loading...";
-
-    // get and clear any alerts
-    AlertMessageService.getAlerts().forEach(function(alert) {
-      $scope.alerts[alert.name] = alert.data;
-    });
-    AlertMessageService.clearAlerts();
 
     var watches = [];
 

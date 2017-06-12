@@ -13,7 +13,6 @@ angular.module('openshiftConsole')
                        $location,
                        $routeParams,
                        $scope,
-                       AlertMessageService,
                        AuthorizationService,
                        DataService,
                        Navigate,

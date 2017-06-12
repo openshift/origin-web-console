@@ -11,7 +11,6 @@ angular.module('openshiftConsole')
   .controller('DeploymentsController', function ($scope,
                                                  $filter,
                                                  $routeParams,
-                                                 AlertMessageService,
                                                  DataService,
                                                  DeploymentsService,
                                                  LabelFilter,
@@ -29,12 +28,6 @@ angular.module('openshiftConsole')
     $scope.expandedDeploymentConfigRow = {};
     $scope.unfilteredReplicaSets = {};
     $scope.unfilteredReplicationControllers = {};
-
-    // get and clear any alerts
-    AlertMessageService.getAlerts().forEach(function(alert) {
-      $scope.alerts[alert.name] = alert.data;
-    });
-    AlertMessageService.clearAlerts();
 
     var replicaSets, deploymentsByUID;
     var annotation = $filter('annotation');

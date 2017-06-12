@@ -11,7 +11,6 @@ angular.module('openshiftConsole')
               function ($scope,
                         $filter,
                         $routeParams,
-                        AlertMessageService,
                         BreadcrumbsService,
                         DataService,
                         DeploymentsService,
@@ -47,12 +46,6 @@ angular.module('openshiftConsole')
     $scope.healthCheckURL = Navigate.healthCheckURL($routeParams.project,
                                                     "DeploymentConfig",
                                                     $routeParams.deploymentconfig);
-
-    // get and clear any alerts
-    AlertMessageService.getAlerts().forEach(function(alert) {
-      $scope.alerts[alert.name] = alert.data;
-    });
-    AlertMessageService.clearAlerts();
 
     var orderByDate = $filter('orderObjectsByDate');
     var mostRecent = $filter('mostRecent');

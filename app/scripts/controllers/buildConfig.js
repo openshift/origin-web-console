@@ -10,7 +10,6 @@ angular.module('openshiftConsole')
   .controller('BuildConfigController', function ($scope,
                                                  $filter,
                                                  $routeParams,
-                                                 AlertMessageService,
                                                  APIService,
                                                  BuildsService,
                                                  ImagesService,
@@ -44,11 +43,6 @@ angular.module('openshiftConsole')
     });
 
     $scope.emptyMessage = "Loading...";
-
-    AlertMessageService.getAlerts().forEach(function(alert) {
-      $scope.alerts[alert.name] = alert.data;
-    });
-    AlertMessageService.clearAlerts();
 
     $scope.aceLoaded = function(editor) {
       var session = editor.getSession();

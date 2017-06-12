@@ -14,7 +14,6 @@ angular.module('openshiftConsole')
                                             $q,
                                             $routeParams,
                                             $uibModal,
-                                            AlertMessageService,
                                             CatalogService,
                                             Constants,
                                             DataService,
@@ -26,11 +25,6 @@ angular.module('openshiftConsole')
     $scope.categories = Constants.CATALOG_CATEGORIES;
 
     $scope.alerts = $scope.alerts || {};
-
-    AlertMessageService.getAlerts().forEach(function(alert) {
-      $scope.alerts[alert.name] = alert.data;
-    });
-    AlertMessageService.clearAlerts();
 
     $scope.breadcrumbs = [
       {

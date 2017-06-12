@@ -115,11 +115,6 @@ function OverviewController($scope,
     showMetrics: false
   };
 
-  AlertMessageService.getAlerts().forEach(function(alert) {
-    state.alerts[alert.name] = alert.data;
-  });
-  AlertMessageService.clearAlerts();
-
   // Track the breakpoint ourselves so we can remove elements from the page,
   // rather than hiding them using CSS. This avoids rendering charts more than
   // once for the responsive layout, which switches to tabs at smaller screen

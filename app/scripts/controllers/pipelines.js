@@ -13,7 +13,6 @@ angular.module('openshiftConsole')
                                                $scope,
                                                Constants,
                                                Navigate,
-                                               AlertMessageService,
                                                BuildsService,
                                                DataService,
                                                Logger,
@@ -21,12 +20,6 @@ angular.module('openshiftConsole')
     $scope.projectName = $routeParams.project;
     $scope.alerts = $scope.alerts || {};
     $scope.buildConfigs = {};
-
-    // get and clear any alerts
-    AlertMessageService.getAlerts().forEach(function(alert) {
-      $scope.alerts[alert.name] = alert.data;
-    });
-    AlertMessageService.clearAlerts();
 
     var watches = [];
 
