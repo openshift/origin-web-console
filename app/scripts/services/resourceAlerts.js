@@ -82,7 +82,7 @@ angular.module("openshiftConsole")
           type: 'warning',
           message: 'Quota limit has been reached.',
           links: [{
-            href: Navigate.quotaURL(),
+            href: Navigate.quotaURL(projectName),
             label: "View Quota"
           },{
             href: "",
