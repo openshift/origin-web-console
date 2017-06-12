@@ -411,14 +411,13 @@
                             <a href="" ng-click="advancedOptions = !advancedOptions" role="button">advanced options</a>
                             for source, routes, builds, and deployments.
                           </div>
-                          <alerts alerts="quotaAlerts"></alerts>
                           <div class="buttons gutter-bottom" ng-class="{'gutter-top': !alerts.length}">
                             <!-- unable to use form.valid.  need to fix validators in labels and key values directive -->
                             <button type="submit"
                                 class="btn btn-primary btn-lg"
                                 ng-disabled="form.$invalid || nameTaken || cpuProblems.length || memoryProblems.length || disableInputs"
                                 >Create</button>
-                            <a class="btn btn-default btn-lg" ng-href="{{projectName | projectOverviewURL}}">Cancel</a>
+                            <a class="btn btn-default btn-lg" href="" ng-click="cancel()" role="button">Cancel</a>
                           </div>
                         </form>
                       </fieldset>
