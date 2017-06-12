@@ -5119,11 +5119,10 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "<a href=\"\" ng-click=\"advancedOptions = !advancedOptions\" role=\"button\">advanced options</a>\n" +
     "for source, routes, builds, and deployments.\n" +
     "</div>\n" +
-    "<alerts alerts=\"quotaAlerts\"></alerts>\n" +
     "<div class=\"buttons gutter-bottom\" ng-class=\"{'gutter-top': !alerts.length}\">\n" +
     "\n" +
     "<button type=\"submit\" class=\"btn btn-primary btn-lg\" ng-disabled=\"form.$invalid || nameTaken || cpuProblems.length || memoryProblems.length || disableInputs\">Create</button>\n" +
-    "<a class=\"btn btn-default btn-lg\" ng-href=\"{{projectName | projectOverviewURL}}\">Cancel</a>\n" +
+    "<a class=\"btn btn-default btn-lg\" href=\"\" ng-click=\"cancel()\" role=\"button\">Cancel</a>\n" +
     "</div>\n" +
     "</form>\n" +
     "</fieldset>\n" +
