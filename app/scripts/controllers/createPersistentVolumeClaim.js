@@ -17,9 +17,9 @@ angular.module('openshiftConsole')
                        AuthorizationService,
                        DataService,
                        Navigate,
+                       NotificationsService,
                        ProjectsService,
                        keyValueEditorUtils) {
-    $scope.alerts = {};
     $scope.projectName = $routeParams.project;
     $scope.accessModes="ReadWriteOnce";
     $scope.claim = {};
@@ -38,6 +38,19 @@ angular.module('openshiftConsole')
       }
     ];
 
+    var hideErrorNotifications = function() {
+      NotificationsService.hideNotification("create-pvc-error");
+    };
+
+    var navigateBack = function() {
+      $window.history.back();
+    };
+
+    $scope.cancel = function() {
+      hideErrorNotifications();
+      navigateBack();
+    };
+
     ProjectsService
       .get($routeParams.project)
       .then(_.spread(function(project, context) {
@@ -51,21 +64,27 @@ angular.module('openshiftConsole')
         }
 
         $scope.createPersistentVolumeClaim = function() {
+          hideErrorNotifications();
           if ($scope.createPersistentVolumeClaimForm.$valid) {
             $scope.disableInputs = true;
             var claim = generatePersistentVolumeClaim();
             DataService.create('persistentvolumeclaims', null, claim, context)
-              .then(function() { // Success
-                // Return to the previous page
-                $window.history.back();
+              .then(function(claim) { // Success
+                NotificationsService.addNotification({
+                  type: "success",
+                  message: "Persistent volume claim " + claim.metadata.name + " successfully created."
+                });
+
+                navigateBack();
               },
               function(result) { // Failure
                 $scope.disableInputs = false;
-                $scope.alerts['create-persistent-volume-claim'] = {
-                    type: "error",
-                    message: "An error occurred requesting storage claim.",
-                    details: $filter('getErrorDetails')(result)
-                };
+                NotificationsService.addNotification({
+                  id: "create-pvc-error",
+                  type: "error",
+                  message: "An error occurred requesting storage.",
+                  details: $filter('getErrorDetails')(result)
+                });
               });
           }
         };
