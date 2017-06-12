@@ -6243,8 +6243,8 @@ a.loaded = !0, a.error = b;
 d.unwatchAll(f);
 });
 }));
-} ]), angular.module("openshiftConsole").controller("CreateConfigMapController", [ "$filter", "$routeParams", "$scope", "$window", "AuthorizationService", "DataService", "Navigate", "ProjectsService", function(a, b, c, d, e, f, g, h) {
-c.alerts = {}, c.projectName = b.project, c.breadcrumbs = [ {
+} ]), angular.module("openshiftConsole").controller("CreateConfigMapController", [ "$filter", "$routeParams", "$scope", "$window", "AuthorizationService", "DataService", "Navigate", "NotificationsService", "ProjectsService", function(a, b, c, d, e, f, g, h, i) {
+c.projectName = b.project, c.breadcrumbs = [ {
 title:c.projectName,
 link:"project/" + c.projectName
 }, {
@@ -6252,8 +6252,16 @@ title:"Config Maps",
 link:"project/" + c.projectName + "/browse/config-maps"
 }, {
 title:"Create Config Map"
-} ], h.get(b.project).then(_.spread(function(h, i) {
-return c.project = h, c.breadcrumbs[0].title = a("displayName")(h), e.canI("configmaps", "create", b.project) ? (c.configMap = {
+} ];
+var j = function() {
+h.hideNotification("create-config-map-error");
+}, k = function() {
+d.history.back();
+};
+c.cancel = function() {
+j(), k();
+}, i.get(b.project).then(_.spread(function(d, i) {
+return c.project = d, c.breadcrumbs[0].title = a("displayName")(d), e.canI("configmaps", "create", b.project) ? (c.configMap = {
 apiVersion:"v1",
 kind:"ConfigMap",
 metadata:{
@@ -6261,14 +6269,18 @@ namespace:b.project
 },
 data:{}
 }, void (c.createConfigMap = function() {
-c.createConfigMapForm.$valid && (c.disableInputs = !0, f.create("configmaps", null, c.configMap, i).then(function() {
-d.history.back();
+c.createConfigMapForm.$valid && (j(), c.disableInputs = !0, f.create("configmaps", null, c.configMap, i).then(function() {
+h.addNotification({
+type:"success",
+message:"Config map " + c.configMap.metadata.name + " successfully created."
+}), k();
 }, function(b) {
-c.disableInputs = !1, c.alerts["create-config-map"] = {
+c.disableInputs = !1, h.addNotification({
+id:"create-config-map-error",
 type:"error",
 message:"An error occurred creating the config map.",
 details:a("getErrorDetails")(b)
-};
+});
 }));
 })) :void g.toErrorPage("You do not have authority to create config maps in project " + b.project + ".", "access_denied");
 }));
@@ -6905,47 +6917,53 @@ details:b("getErrorDetails")(c)
 }, a.$on("$destroy", function() {
 h.unwatchAll(q);
 });
-} ]), angular.module("openshiftConsole").controller("EditConfigMapController", [ "$filter", "$routeParams", "$scope", "$window", "DataService", "BreadcrumbsService", "Navigate", "ProjectsService", function(a, b, c, d, e, f, g, h) {
-var i = [];
-c.alerts = {}, c.forms = {}, c.projectName = b.project, c.breadcrumbs = f.getBreadcrumbs({
+} ]), angular.module("openshiftConsole").controller("EditConfigMapController", [ "$filter", "$routeParams", "$scope", "$window", "DataService", "BreadcrumbsService", "Navigate", "NotificationsService", "ProjectsService", function(a, b, c, d, e, f, g, h, i) {
+var j = [];
+c.forms = {}, c.projectName = b.project, c.breadcrumbs = f.getBreadcrumbs({
 name:b.configMap,
 kind:"ConfigMap",
 namespace:b.project,
 includeProject:!0,
 subpage:"Edit Config Map"
 });
-var j = function(a) {
+var k = function(a) {
 return _.get(a, "metadata.resourceVersion");
+}, l = function() {
+h.hideNotification("edit-config-map-error");
+}, m = function() {
+d.history.back();
 };
-h.get(b.project).then(_.spread(function(g, h) {
-e.get("configmaps", b.configMap, h).then(function(a) {
+c.cancel = function() {
+l(), m();
+}, i.get(b.project).then(_.spread(function(d, i) {
+e.get("configmaps", b.configMap, i).then(function(a) {
 c.loaded = !0, c.breadcrumbs = f.getBreadcrumbs({
 name:b.configMap,
 object:a,
 includeProject:!0,
-project:g,
+project:d,
 subpage:"Edit Config Map"
-}), c.configMap = a, i.push(e.watchObject("configmaps", b.configMap, h, function(a, b) {
-c.resourceChanged = j(a) !== j(c.configMap), c.resourceDeleted = "DELETED" === b;
+}), c.configMap = a, j.push(e.watchObject("configmaps", b.configMap, i, function(a, b) {
+c.resourceChanged = k(a) !== k(c.configMap), c.resourceDeleted = "DELETED" === b;
 }));
-}, function(b) {
-c.loaded = !0, c.alerts.load = {
-type:"error",
-message:"The config map details could not be loaded.",
-details:a("getErrorDetails")(b)
-};
+}, function(c) {
+g.toErrorPage("Could not load config map " + b.configMap + ". " + a("getErrorDetails")(c));
 }), c.updateConfigMap = function() {
-c.forms.editConfigMapForm.$valid && (c.disableInputs = !0, e.update("configmaps", c.configMap.metadata.name, c.configMap, h).then(function() {
-d.history.back();
+c.forms.editConfigMapForm.$valid && (l(), c.disableInputs = !0, e.update("configmaps", c.configMap.metadata.name, c.configMap, i).then(function() {
+h.addNotification({
+type:"success",
+message:"Config map " + c.configMap.metadata.name + " successfully updated."
+}), m();
 }, function(b) {
-c.disableInputs = !1, c.alerts["create-config-map"] = {
+c.disableInputs = !1, h.addNotification({
+id:"edit-config-map-error",
 type:"error",
 message:"An error occurred updating the config map.",
 details:a("getErrorDetails")(b)
-};
+});
 }));
 }, c.$on("$destroy", function() {
-e.unwatchAll(i);
+e.unwatchAll(j);
 });
 }));
 } ]), angular.module("openshiftConsole").controller("EditDeploymentConfigController", [ "$scope", "$filter", "$location", "$routeParams", "$uibModal", "$window", "AuthorizationService", "BreadcrumbsService", "DataService", "EnvironmentService", "Navigate", "NotificationsService", "ProjectsService", "SecretsService", "keyValueEditorUtils", function(a, b, c, d, e, f, g, h, i, j, k, l, m, n, o) {

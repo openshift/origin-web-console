@@ -16,8 +16,8 @@ angular.module('openshiftConsole')
                         AuthorizationService,
                         DataService,
                         Navigate,
+                        NotificationsService,
                         ProjectsService) {
-    $scope.alerts = {};
     $scope.projectName = $routeParams.project;
 
     // TODO: Update BreadcrumbsService to handle create pages.
@@ -34,6 +34,19 @@ angular.module('openshiftConsole')
         title: "Create Config Map"
       }
     ];
+
+    var hideErrorNotifications = function() {
+      NotificationsService.hideNotification("create-config-map-error");
+    };
+
+    var navigateBack = function() {
+      $window.history.back();
+    };
+
+    $scope.cancel = function() {
+      hideErrorNotifications();
+      navigateBack();
+    };
 
     ProjectsService
       .get($routeParams.project)
@@ -58,19 +71,24 @@ angular.module('openshiftConsole')
 
         $scope.createConfigMap = function() {
           if ($scope.createConfigMapForm.$valid) {
+            hideErrorNotifications();
             $scope.disableInputs = true;
-
             DataService.create('configmaps', null, $scope.configMap, context)
               .then(function() { // Success
+                NotificationsService.addNotification({
+                  type: "success",
+                  message: "Config map " + $scope.configMap.metadata.name + " successfully created."
+                });
                 // Return to the previous page.
-                $window.history.back();
+                navigateBack();
               }, function(result) { // Failure
                 $scope.disableInputs = false;
-                $scope.alerts['create-config-map'] = {
+                NotificationsService.addNotification({
+                  id: "create-config-map-error",
                   type: "error",
                   message: "An error occurred creating the config map.",
                   details: $filter('getErrorDetails')(result)
-                };
+                });
               });
           }
         };
