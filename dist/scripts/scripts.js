@@ -9097,7 +9097,7 @@ b.unwatchAll(e);
 });
 } ]
 };
-} ]), angular.module("openshiftConsole").directive("fromFile", [ "$q", "$uibModal", "$location", "$filter", "CachedTemplateService", "AlertMessageService", "Navigate", "TaskList", "DataService", "APIService", "QuotaService", "SecurityCheckService", function(a, b, c, d, e, f, g, h, i, j, k, l) {
+} ]), angular.module("openshiftConsole").directive("fromFile", [ "$filter", "$location", "$q", "$uibModal", "APIService", "CachedTemplateService", "DataService", "Navigate", "NotificationsService", "QuotaService", "SecurityCheckService", "TaskList", function(a, b, c, d, e, f, g, h, i, j, k, l) {
 return {
 restrict:"E",
 scope:!1,
@@ -9118,47 +9118,43 @@ message:"Resource is missing metadata field."
 }, !1));
 }
 function p() {
-var a = b.open({
+var a = d.open({
 animation:!0,
 templateUrl:"views/modals/process-or-save-template.html",
 controller:"ProcessOrSaveTemplateModalController",
 scope:m
 });
 a.result.then(function() {
-m.templateOptions.add ? r() :(e.setTemplate(m.resourceList[0]), s());
+m.templateOptions.add ? r() :(f.setTemplate(m.resourceList[0]), s());
 });
 }
 function q() {
-var a = b.open({
+var a = d.open({
 animation:!0,
 templateUrl:"views/modals/confirm-replace.html",
 controller:"ConfirmReplaceModalController",
 scope:m
 });
 a.result.then(function() {
-k.getLatestQuotaAlerts(m.createResources, m.context).then(D);
+j.getLatestQuotaAlerts(m.createResources, m.context).then(F);
 });
 }
 function r() {
-var b = m.createResources.length, c = m.updateResources.length;
+var a = m.createResources.length, b = m.updateResources.length;
 if (m.resourceKind.endsWith("List")) {
 var d = [];
-c > 0 && d.push(w()), b > 0 && d.push(v()), a.all(d).then(s);
+b > 0 && d.push(w()), a > 0 && d.push(v()), c.all(d).then(s);
 } else u();
 }
 function s() {
-var a;
-if ("Template" === m.resourceKind && m.templateOptions.process && !m.errorOccured) {
-var b = m.templateOptions.add || m.updateResources.length > 0 ? m.projectName :"";
-a = g.createFromTemplateURL(B, m.projectName, {
-namespace:b
-});
-} else a = g.projectOverviewURL(m.projectName);
-c.url(a);
+var a, c;
+E(), "Template" === m.resourceKind && m.templateOptions.process && !m.errorOccured ? (c = m.templateOptions.add || m.updateResources.length > 0 ? m.projectName :"", a = h.createFromTemplateURL(B, m.projectName, {
+namespace:c
+})) :a = h.projectOverviewURL(m.projectName), b.url(a);
 }
 function t(a) {
-var b = j.objectToResourceGroupVersion(a);
-return b ? j.apiInfo(b) ? i.get(b, a.metadata.name, m.context, {
+var b = e.objectToResourceGroupVersion(a);
+return b ? e.apiInfo(b) ? g.get(b, a.metadata.name, m.context, {
 errorNotification:!1
 }).then(function(b) {
 var c = angular.copy(a), d = angular.copy(b.metadata);
@@ -9166,64 +9162,62 @@ d.annotations = a.metadata.annotations, d.labels = a.metadata.labels, c.metadata
 }, function() {
 m.createResources.push(a);
 }) :(m.errorOccured = !0, void (m.error = {
-message:j.unsupportedObjectKindOrVersion(a)
+message:e.unsupportedObjectKindOrVersion(a)
 })) :(m.errorOccured = !0, void (m.error = {
-message:j.invalidObjectKindOrVersion(a)
+message:e.invalidObjectKindOrVersion(a)
 }));
 }
 function u() {
-var a;
-_.isEmpty(m.createResources) ? (a = _.head(m.updateResources), i.update(j.kindToResource(a.kind), a.metadata.name, a, {
+var b;
+_.isEmpty(m.createResources) ? (b = _.head(m.updateResources), g.update(e.kindToResource(b.kind), b.metadata.name, b, {
 namespace:m.projectName
 }).then(function() {
-f.addAlert({
-name:a.metadata.name,
-data:{
+var a = y(b.kind);
+i.addNotification({
 type:"success",
-message:a.kind + " " + a.metadata.name + " was successfully updated."
-}
+message:_.capitalize(a) + " " + b.metadata.name + " was successfully updated."
 }), s();
-}, function(b) {
-m.alerts["update" + a.metadata.name] = {
+}, function(c) {
+i.addNotification({
+id:"from-file-error",
 type:"error",
-message:"Unable to update the " + y(a.kind) + " '" + a.metadata.name + "'.",
-details:d("getErrorDetails")(b)
-};
-})) :(a = _.head(m.createResources), i.create(j.kindToResource(a.kind), null, a, {
+message:"Unable to update the " + y(b.kind) + " '" + b.metadata.name + "'.",
+details:a("getErrorDetails")(c)
+});
+})) :(b = _.head(m.createResources), g.create(e.kindToResource(b.kind), null, b, {
 namespace:m.projectName
 }).then(function() {
-f.addAlert({
-name:a.metadata.name,
-data:{
+var a = y(b.kind);
+i.addNotification({
 type:"success",
-message:a.kind + " " + a.metadata.name + " was successfully created."
-}
+message:_.capitalize(a) + " " + b.metadata.name + " was successfully created."
 }), s();
-}, function(b) {
-m.alerts["create" + a.metadata.name] = {
+}, function(c) {
+i.addNotification({
+id:"from-file-error",
 type:"error",
-message:"Unable to create the " + y(a.kind) + " '" + a.metadata.name + "'.",
-details:d("getErrorDetails")(b)
-};
+message:"Unable to create the " + y(b.kind) + " '" + b.metadata.name + "'.",
+details:a("getErrorDetails")(c)
+});
 }));
 }
 function v() {
-var b = {
+var a = {
 started:"Creating resources in project " + m.projectName,
 success:"Creating resources in project " + m.projectName,
 failure:"Failed to create some resources in project " + m.projectName
-}, c = {};
-h.add(b, c, m.projectName, function() {
-var b = a.defer();
-return i.batch(m.createResources, m.context, "create").then(function(a) {
+}, b = {};
+l.add(a, b, m.projectName, function() {
+var a = c.defer();
+return g.batch(m.createResources, m.context, "create").then(function(b) {
 var c = [], d = !1;
-if (a.failure.length > 0) d = !0, m.errorOccured = !0, a.failure.forEach(function(a) {
+if (b.failure.length > 0) d = !0, m.errorOccured = !0, b.failure.forEach(function(a) {
 c.push({
 type:"error",
 message:"Cannot create " + y(a.object.kind) + ' "' + a.object.metadata.name + '". ',
 details:a.data.message
 });
-}), a.success.forEach(function(a) {
+}), b.success.forEach(function(a) {
 c.push({
 type:"success",
 message:"Created " + y(a.kind) + ' "' + a.metadata.name + '" successfully. '
@@ -9235,30 +9229,30 @@ type:"success",
 message:e
 });
 }
-b.resolve({
+a.resolve({
 alerts:c,
 hasErrors:d
 });
-}), b.promise;
+}), a.promise;
 });
 }
 function w() {
-var b = {
+var a = {
 started:"Updating resources in project " + m.projectName,
 success:"Updated resources in project " + m.projectName,
 failure:"Failed to update some resources in project " + m.projectName
-}, c = {};
-h.add(b, c, m.projectName, function() {
-var b = a.defer();
-return i.batch(m.updateResources, m.context, "update").then(function(a) {
+}, b = {};
+l.add(a, b, m.projectName, function() {
+var a = c.defer();
+return g.batch(m.updateResources, m.context, "update").then(function(b) {
 var c = [], d = !1;
-if (a.failure.length > 0) d = !0, m.errorOccured = !0, a.failure.forEach(function(a) {
+if (b.failure.length > 0) d = !0, m.errorOccured = !0, b.failure.forEach(function(a) {
 c.push({
 type:"error",
 message:"Cannot update " + y(a.object.kind) + ' "' + a.object.metadata.name + '". ',
 details:a.data.message
 });
-}), a.success.forEach(function(a) {
+}), b.success.forEach(function(a) {
 c.push({
 type:"success",
 message:"Updated " + y(a.kind) + ' "' + a.metadata.name + '" successfully. '
@@ -9270,24 +9264,24 @@ type:"success",
 message:e
 });
 }
-b.resolve({
+a.resolve({
 alerts:c,
 hasErrors:d
 });
-}, function(a) {
+}, function(b) {
 var c = [];
 c.push({
 type:"error",
 message:"An error occurred updating the resources.",
-details:"Status: " + a.status + ". " + a.data
-}), b.resolve({
+details:"Status: " + b.status + ". " + b.data
+}), a.resolve({
 alerts:c
 });
-}), b.promise;
+}), a.promise;
 });
 }
-var x, y = d("humanizeKind");
-h.clear(), m.aceLoaded = function(a) {
+var x, y = a("humanizeKind");
+l.clear(), m.aceLoaded = function(a) {
 x = a.getSession(), x.setOption("tabSize", 2), x.setOption("useSoftTabs", !0), a.setDragDelay = 0, a.$blockScrolling = 1 / 0;
 };
 var z = function() {
@@ -9307,7 +9301,7 @@ m.$apply(z);
 }, 300);
 m.aceChanged = A;
 var B, C = function(a) {
-var c = b.open({
+var b = d.open({
 animation:!0,
 templateUrl:"views/modals/confirm.html",
 controller:"ConfirmModalController",
@@ -9323,24 +9317,31 @@ cancelButtonText:"Cancel"
 }
 }
 });
-c.result.then(r);
-}, D = function(a) {
-var b = l.getSecurityAlerts(m.createResources, m.projectName), c = a.quotaAlerts || [];
-b = b.concat(c);
-var d = _.filter(b, {
+b.result.then(r);
+}, D = {}, E = function() {
+i.hideNotification("from-file-error"), _.each(D, function(a) {
+!a.id || "error" !== a.type && "warning" !== a.type || i.hideNotification(a.id);
+});
+}, F = function(a) {
+E(), D = k.getSecurityAlerts(m.createResources, m.projectName);
+var b = a.quotaAlerts || [];
+D = D.concat(b);
+var c = _.filter(D, {
 type:"error"
 });
-d.length ? (m.disableInputs = !1, m.alerts = b) :b.length ? (C(b), m.disableInputs = !1) :r();
+c.length ? (_.each(D, function(a) {
+a.id = _.uniqueId("from-file-alert-"), i.addNotification(a);
+}), m.disableInputs = !1) :D.length ? (C(D), m.disableInputs = !1) :r();
 };
 m.create = function() {
-m.alerts = {}, delete m.error;
+delete m.error;
 try {
 B = JSON.parse(m.editorContent);
-} catch (b) {
+} catch (a) {
 try {
 B = jsyaml.safeLoad(m.editorContent);
-} catch (b) {
-return void (m.error = b);
+} catch (a) {
+return void (m.error = a);
 }
 }
 if (n(B) && (m.resourceKind = B.kind, m.resourceKind.endsWith("List") ? m.isList = !0 :m.isList = !1, o(B))) {
@@ -9348,13 +9349,15 @@ m.isList ? (m.resourceList = B.items, m.resourceName = "") :(m.resourceList = [ 
 process:!0,
 add:!1
 })), m.updateResources = [], m.createResources = [];
-var c = [];
+var b = [];
 m.errorOccured = !1, _.forEach(m.resourceList, function(a) {
-return o(a) ? void c.push(t(a)) :(m.errorOccured = !0, !1);
-}), a.all(c).then(function() {
-m.errorOccured || (1 === m.createResources.length && "Template" === m.resourceList[0].kind ? p() :_.isEmpty(m.updateResources) ? k.getLatestQuotaAlerts(m.createResources, m.context).then(D) :(m.updateTemplate = 1 === m.updateResources.length && "Template" === m.updateResources[0].kind, m.updateTemplate ? p() :q()));
+return o(a) ? void b.push(t(a)) :(m.errorOccured = !0, !1);
+}), c.all(b).then(function() {
+m.errorOccured || (1 === m.createResources.length && "Template" === m.resourceList[0].kind ? p() :_.isEmpty(m.updateResources) ? j.getLatestQuotaAlerts(m.createResources, m.context).then(F) :(m.updateTemplate = 1 === m.updateResources.length && "Template" === m.updateResources[0].kind, m.updateTemplate ? p() :q()));
 });
 }
+}, m.cancel = function() {
+E(), h.toProjectOverview(m.projectName);
 };
 } ]
 };
