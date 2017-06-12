@@ -11,7 +11,6 @@ angular.module('openshiftConsole')
               function ($scope,
                         $filter,
                         $routeParams,
-                        AlertMessageService,
                         AuthorizationService,
                         BreadcrumbsService,
                         DataService,
@@ -67,12 +66,6 @@ angular.module('openshiftConsole')
     $scope.forms = {};
 
     $scope.logOptions = {};
-
-    // get and clear any alerts
-    AlertMessageService.getAlerts().forEach(function(alert) {
-      $scope.alerts[alert.name] = alert.data;
-    });
-    AlertMessageService.clearAlerts();
 
     var watches = [];
 

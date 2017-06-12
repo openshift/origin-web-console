@@ -4,7 +4,6 @@ angular.module('openshiftConsole')
   .controller('StatefulSetsController',
               function($scope,
                        $routeParams,
-                       AlertMessageService,
                        DataService,
                        ProjectsService,
                        LabelFilter,
@@ -12,12 +11,6 @@ angular.module('openshiftConsole')
     $scope.projectName = $routeParams.project;
     $scope.alerts = $scope.alerts || {};
     $scope.labelSuggestions = {};
-
-    // get and clear any alerts
-    AlertMessageService.getAlerts().forEach(function(alert) {
-      $scope.alerts[alert.name] = alert.data;
-    });
-    AlertMessageService.clearAlerts();
 
     var watches = [];
     ProjectsService

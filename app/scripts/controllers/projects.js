@@ -13,7 +13,6 @@ angular.module('openshiftConsole')
                                               $location,
                                               $route,
                                               $timeout,
-                                              AlertMessageService,
                                               AuthService,
                                               DataService,
                                               KeywordService,
@@ -109,11 +108,6 @@ angular.module('openshiftConsole')
       isAscending: true,
       onSortChange: update
     };
-
-    AlertMessageService.getAlerts().forEach(function(alert) {
-      $scope.alerts[alert.name] = alert.data;
-    });
-    AlertMessageService.clearAlerts();
 
     $scope.$watch('search.text', _.debounce(function(searchText) {
       $scope.keywords = filterKeywords = KeywordService.generateKeywords(searchText);

@@ -11,7 +11,6 @@ angular.module('openshiftConsole')
               function ($scope,
                         $filter,
                         $routeParams,
-                        AlertMessageService,
                         DataService,
                         DeploymentsService,
                         EnvironmentService,
@@ -43,12 +42,6 @@ angular.module('openshiftConsole')
                                                     "Deployment",
                                                     $routeParams.deployment,
                                                     "extensions");
-
-    // get and clear any alerts
-    AlertMessageService.getAlerts().forEach(function(alert) {
-      $scope.alerts[alert.name] = alert.data;
-    });
-    AlertMessageService.clearAlerts();
 
     var previousEnvConflict = false;
     var updateEnvironment = function(current, previous) {

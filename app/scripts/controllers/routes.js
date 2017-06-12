@@ -8,19 +8,13 @@
  * Controller of the openshiftConsole
  */
 angular.module('openshiftConsole')
-  .controller('RoutesController', function ($routeParams, $scope, AlertMessageService, DataService, $filter, LabelFilter, ProjectsService) {
+  .controller('RoutesController', function ($routeParams, $scope, DataService, $filter, LabelFilter, ProjectsService) {
     $scope.projectName = $routeParams.project;
     $scope.unfilteredRoutes = {};
     $scope.routes = {};
     $scope.labelSuggestions = {};
     $scope.alerts = $scope.alerts || {};
     $scope.emptyMessage = "Loading...";
-
-    AlertMessageService.getAlerts().forEach(function(alert) {
-      $scope.alerts[alert.name] = alert.data;
-    });
-
-    AlertMessageService.clearAlerts();
 
     var watches = [];
 

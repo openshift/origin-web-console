@@ -11,7 +11,6 @@ angular.module('openshiftConsole')
   .controller('ConfigMapController',
               function ($scope,
                         $routeParams,
-                        AlertMessageService,
                         BreadcrumbsService,
                         DataService,
                         ProjectsService) {
@@ -24,12 +23,6 @@ angular.module('openshiftConsole')
       kind: 'ConfigMap',
       namespace: $routeParams.project
     });
-
-    AlertMessageService.getAlerts().forEach(function(alert) {
-      $scope.alerts[alert.name] = alert.data;
-    });
-
-    AlertMessageService.clearAlerts();
 
     var watches = [];
 

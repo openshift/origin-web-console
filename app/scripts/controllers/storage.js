@@ -17,11 +17,6 @@ angular.module('openshiftConsole')
     $scope.outOfClaims = false;
     $scope.emptyMessage = "Loading...";
 
-    // get and clear any alerts
-    AlertMessageService.getAlerts().forEach(function(alert) {
-      $scope.alerts[alert.name] = alert.data;
-    });
-    AlertMessageService.clearAlerts();
     var setOutOfClaimsWarning = function() {
       var isHidden = AlertMessageService.isAlertPermanentlyHidden("storage-quota-limit-reached", $scope.projectName);
       $scope.outOfClaims = QuotaService.isAnyStorageQuotaExceeded($scope.quotas, $scope.clusterQuotas);

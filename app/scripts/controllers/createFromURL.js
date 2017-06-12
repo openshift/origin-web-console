@@ -7,13 +7,8 @@
  * Controller of the openshiftConsole
  */
 angular.module('openshiftConsole')
-  .controller('CreateFromURLController', function ($scope, $routeParams, $location, $filter, AuthService, DataService, AlertMessageService, Navigate, ProjectsService ) {
+  .controller('CreateFromURLController', function ($scope, $routeParams, $location, $filter, AuthService, DataService, Navigate, ProjectsService ) {
     AuthService.withUser();
-
-    AlertMessageService.getAlerts().forEach(function(alert) {
-      $scope.alerts[alert.name] = alert.data;
-    });
-    AlertMessageService.clearAlerts();
 
     $scope.alerts = {};
     $scope.selected = {};
