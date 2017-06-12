@@ -25,9 +25,9 @@
       <select class="selectpicker form-control" data-selected-text-format="count>3" id="boostrapSelect" title=""></select>
     </div>
     <!-- create buttons show at mobile -->
-    <div row class="dropdown" ng-if="project.metadata.name | canIAddToProject" uib-dropdown>
+    <div row class="dropdown navbar-flex-btn" ng-if="project.metadata.name | canIAddToProject" uib-dropdown>
       <a row class="nav-item-iconic dropdown-toggle add-to-project-btn" href="" ng-disabled="project.status.phase != 'Active'" title="Add to Project" uib-dropdown-toggle>
-        <i class="fa fa-plus visible-xs-inline-block"></i><span class="hidden-xs add-to-project">Add to Project</span><span class="hidden-xs caret" aria-hidden="true"></span>
+        <i class="fa fa-plus visible-xs-inline-block" aria-hidden="true" title="Add to Project"></i><span class="hidden-xs add-to-project">Add to Project</span><span class="hidden-xs caret" aria-hidden="true" title="Add to Project"></span>
       </a>
       <ul role="menu" class="uib-dropdown-menu dropdown-menu dropdown-menu-right">
         <li ng-if-start="!catalogLandingPageEnabled" role="menuitem"><a ng-href="project/{{projectName}}/create?tab=fromCatalog">Browse Catalog</a></li>

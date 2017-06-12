@@ -64,7 +64,10 @@
   .nav {
     .dropdown-menu {
       margin-top: -10px;
-      right: 0;
+      right: 5px;
+      @media(min-width: @screen-sm-min) {
+        right: 0;
+      }
       &:after {
         border: 6px solid transparent;
         border-bottom-color: #fff;
@@ -129,18 +132,15 @@
       font-weight: 300;
       padding: 0 4px;
     }
-    .add-to-project + .caret,
-    .username + .caret {
-      margin-top: 3px;
+    // align nav-item-iconic vertically with project menu
+    .caret {
+      margin-top: 5px;
     }
     .add-to-project + .caret,
     .pficon-user,
     .username + .caret {
       display: block;
       float: left;
-    }
-    .caret {
-      height: 12px;
     }
     .caret, .fa, .pf-icon {
       color: @navbar-pf-alt-color;
@@ -223,6 +223,27 @@
 
 .navbar-flex-btn {
   position: relative;
+  + .navbar-flex-btn .add-to-project-btn:before,
+  .navbar-toggle.project-action-btn:before {
+    display: none; // remove inset border
+  }
+  .add-to-project-btn {
+    align-items: center;
+    justify-content: center;
+    flex: 1 0 0%;
+    font-weight: 300;
+    &:before {
+        background: @navbar-os-project-menu-border-inset;
+        content: '';
+        display: block;
+        height: 100%;
+        left: 0px;
+        position: absolute;
+        top: 0;
+        width: 1px;
+
+    }
+  }
 }
 
 @media (max-width: @screen-xs-max) {
@@ -246,7 +267,7 @@
   }
   .navbar-flex-btn {
     flex: 0 0 50px;
-    a {
+    > a {
       color: lighten(@navbar-os-project-menu-color, 20%);
       cursor: pointer;
       display: flex;
