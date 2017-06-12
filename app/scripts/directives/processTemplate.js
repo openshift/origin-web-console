@@ -8,6 +8,7 @@ angular.module('openshiftConsole').component('processTemplate', {
     '$uibModal',
     'DataService',
     'Navigate',
+    'NotificationsService',
     'ProcessedTemplateService',
     'QuotaService',
     'SecurityCheckService',
@@ -19,7 +20,6 @@ angular.module('openshiftConsole').component('processTemplate', {
   bindings: {
     template: '<',
     project: '<',
-    alerts: '<',
     prefillParameters: '<',
     isDialog: '<'
   },
@@ -32,6 +32,7 @@ function ProcessTemplate($filter,
                          $uibModal,
                          DataService,
                          Navigate,
+                         NotificationsService,
                          ProcessedTemplateService,
                          QuotaService,
                          SecurityCheckService,
@@ -152,8 +153,21 @@ function ProcessTemplate($filter,
     modalInstance.result.then(createResources);
   };
 
+  var alerts = {};
+  var hideNotificationErrors = function() {
+    NotificationsService.hideNotification("process-template-error");
+    _.each(alerts, function(alert) {
+      if (alert.id && (alert.type === 'error' || alert.type === 'warning')) {
+        NotificationsService.hideNotification(alert.id);
+      }
+    });
+  };
+
   var showWarningsOrCreate = function(result) {
-    var alerts = SecurityCheckService.getSecurityAlerts(processedResources, ctrl.selectedProject.metadata.name);
+    // Hide any previous notifications when form is resubmitted.
+    hideNotificationErrors();
+
+    alerts = SecurityCheckService.getSecurityAlerts(processedResources, ctrl.selectedProject.metadata.name);
 
     // Now that all checks are completed, show any Alerts if we need to
     var quotaAlerts = result.quotaAlerts || [];
@@ -161,7 +175,10 @@ function ProcessTemplate($filter,
     var errorAlerts = _.filter(alerts, {type: 'error'});
     if (errorAlerts.length) {
       ctrl.disableInputs = false;
-      ctrl.precheckAlerts = alerts;
+      _.each(alerts, function(alert) {
+        alert.id = _.uniqueId('process-template-alert-');
+        NotificationsService.addNotification(alert);
+      });
     }
     else if (alerts.length) {
        launchConfirmationDialog(alerts);
@@ -217,12 +234,12 @@ function ProcessTemplate($filter,
           if (result.data && result.data.message) {
             details = result.data.message;
           }
-          ctrl.alerts["process"] =
-            {
-              type: "error",
-              message: "An error occurred processing the template.",
-              details: details
-            };
+          NotificationsService.addNotification({
+            id: "process-template-error",
+            type: "error",
+            message: "An error occurred processing the template.",
+            details: details
+          });
         }
       );
     }, function(result) {
@@ -231,18 +248,26 @@ function ProcessTemplate($filter,
       if (result.data && result.data.message) {
         details = result.data.message;
       }
-      ctrl.alerts["create-project"] = {
+      NotificationsService.addNotification({
+        id: "process-template-error",
         type: "error",
         message: "An error occurred creating the project.",
         details: details
-      };
+      });
     });
+  };
+
+  // Only called when not in a dialog.
+  ctrl.cancel = function() {
+    hideNotificationErrors();
+    Navigate.toProjectOverview(ctrl.project.metadata.name);
   };
 
   // When the process-template component is displayed in a dialog, the create
   // button is outside the component since it is in the wizard footer. Listen
   // for an event for when the button is clicked.
   $scope.$on('instantiateTemplate', ctrl.createFromTemplate);
+  $scope.$on('hideTemplateNotificationErrors', hideNotificationErrors);
 
   var shouldAddAppLabel = function() {
     // If the template defines its own app label, we don't need to add one at all
