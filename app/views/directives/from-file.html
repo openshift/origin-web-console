@@ -24,8 +24,7 @@
         }" ng-model="editorContent" class="editor ace-bordered yaml-mode" id="add-component-editor" required></div>
       </div>
 
-      <alerts alerts="alerts"></alerts>
-      <div class="buttons gutter-bottom" ng-class="{'gutter-top': !alerts.length}">
+      <div class="buttons gutter-bottom">
         <button
           type="submit"
           ng-click="create()"
@@ -34,7 +33,9 @@
           Create
         </button>
         <a class="btn btn-default btn-lg"
-          ng-href="{{projectName | projectOverviewURL}}">
+          href=""
+          role="button"
+          ng-click="cancel()">
           Cancel
         </a>
       </div>
