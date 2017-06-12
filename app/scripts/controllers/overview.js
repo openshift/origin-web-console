@@ -72,7 +72,6 @@ function OverviewController($scope,
   var annotation = $filter('annotation');
   var getBuildConfigName = $filter('buildConfigForBuild');
   var deploymentIsInProgress = $filter('deploymentIsInProgress');
-  var getErrorDetails = $filter('getErrorDetails');
   var imageObjectRef = $filter('imageObjectRef');
   var isJenkinsPipelineStrategy = $filter('isJenkinsPipelineStrategy');
   var isNewerResource = $filter('isNewerResource');
@@ -1086,38 +1085,7 @@ function OverviewController($scope,
     $scope.$evalAsync(updateFilter);
   });
 
-  // This is used by the overview empty state message and also the list row,
-  // which is why it's assigned to the `state` object.
-  overview.startBuild = state.startBuild = function(buildConfig) {
-    var buildType = isJenkinsPipelineStrategy(buildConfig) ? 'pipeline' : 'build';
-    BuildsService
-      .startBuild(buildConfig.metadata.name, { namespace: buildConfig.metadata.namespace })
-      .then(function(build) {
-        var buildName;
-        var buildNumber = annotation(build, 'buildNumber');
-        var buildURL = Navigate.resourceURL(build);
-        if (buildNumber) {
-          buildName = buildConfig.metadata.name + " #" + buildNumber;
-        } else {
-          buildName = build.metadata.name;
-        }
-
-        NotificationsService.addNotification({
-          type: "success",
-          message: _.capitalize(buildType) + " " + buildName + " successfully created.",
-          links: [{
-            href: buildURL,
-            label: 'View ' + _.capitalize(buildType)
-          }]
-        });
-      }, function(result) {
-        NotificationsService.addNotification({
-          type: "error",
-          message: "An error occurred while starting the " + buildType + ".",
-          details: getErrorDetails(result)
-        });
-      });
-  };
+  overview.startBuild = BuildsService.startBuild;
 
   var refreshSecrets = _.debounce(function(context) {
     DataService.list("secrets", context, null, { errorNotification: false }).then(function(secretData) {

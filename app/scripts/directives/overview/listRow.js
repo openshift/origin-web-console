@@ -213,8 +213,7 @@
       return canI('buildconfigs/instantiate', 'create') && _.size(row.pipelines) === 1;
     };
 
-    // Resuse the function from the overview controller.
-    row.startBuild = row.state.startBuild;
+    row.startBuild = BuildsService.startBuild;
 
     row.canDeploy = function() {
       if (!row.apiObject) {

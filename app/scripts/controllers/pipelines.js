@@ -119,21 +119,7 @@ angular.module('openshiftConsole')
           update();
         }));
 
-        $scope.startBuild = function(buildConfigName) {
-          BuildsService
-            .startBuild(buildConfigName, context)
-            .then(
-              // success, don't show a message since the build will appear directly below on the page
-              _.noop,
-              // failure
-              function reject(result) {
-                $scope.alerts["start-build"] = {
-                  type: "error",
-                  message: "An error occurred while starting the build.",
-                  details: $filter('getErrorDetails')(result)
-                };
-              });
-        };
+        $scope.startBuild = BuildsService.startBuild;
 
         $scope.$on('$destroy', function(){
           DataService.unwatchAll(watches);
