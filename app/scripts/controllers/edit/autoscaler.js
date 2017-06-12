@@ -20,6 +20,7 @@ angular.module('openshiftConsole')
                         HPAService,
                         MetricsService,
                         Navigate,
+                        NotificationsService,
                         ProjectsService,
                         keyValueEditorUtils) {
     if (!$routeParams.kind || !$routeParams.name) {
@@ -62,16 +63,19 @@ angular.module('openshiftConsole')
       $scope.metricsWarning = !available;
     });
 
-    $scope.alerts = {};
-
     var getErrorDetails = $filter('getErrorDetails');
 
-    var displayError = function(errorMessage, result) {
-      $scope.alerts['autoscaling'] = {
-        type: "error",
-        message: errorMessage,
-        details: getErrorDetails(result)
-      };
+    var navigateBack = function() {
+      $window.history.back();
+    };
+
+    var hideErrorNotifications = function() {
+      NotificationsService.hideNotification('edit-hpa-error');
+    };
+
+    $scope.cancel = function() {
+      hideErrorNotifications();
+      navigateBack();
     };
 
     ProjectsService
@@ -88,6 +92,7 @@ angular.module('openshiftConsole')
 
         var createHPA = function() {
           $scope.disableInputs = true;
+          hideErrorNotifications();
           var hpa = {
             apiVersion: "autoscaling/v1",
             kind: "HorizontalPodAutoscaler",
@@ -112,12 +117,21 @@ angular.module('openshiftConsole')
             resource: 'horizontalpodautoscalers',
             group: 'autoscaling'
           }, null, hpa, context)
-            .then(function() { // Success
-              // Return to the previous page
-              $window.history.back();
+            .then(function(hpa) { // Success
+              NotificationsService.addNotification({
+                type: 'success',
+                message: 'Horizontal pod autoscaler ' + hpa.metadata.name + ' successfully created.'
+              });
+
+              navigateBack();
             }, function(result) { // Failure
               $scope.disableInputs = false;
-              displayError('An error occurred creating the horizontal pod autoscaler.', result);
+              NotificationsService.addNotification({
+                id: 'edit-hpa-error',
+                type: 'error',
+                message: 'An error occurred creating the horizontal pod autoscaler.',
+                details: getErrorDetails(result)
+              });
             });
         };
 
@@ -134,12 +148,21 @@ angular.module('openshiftConsole')
             resource: 'horizontalpodautoscalers',
             group: 'autoscaling'
           }, hpa.metadata.name, hpa, context)
-            .then(function() { // Success
-              // Return to the previous page
-              $window.history.back();
+            .then(function(hpa) { // Success
+              NotificationsService.addNotification({
+                type: 'success',
+                message: 'Horizontal pod autoscaler ' + hpa.metadata.name + ' successfully updated.'
+              });
+
+              navigateBack();
             }, function(result) { // Failure
               $scope.disableInputs = false;
-              displayError('An error occurred updating horizontal pod autoscaler "' + hpa.metadata.name + '".', result);
+              NotificationsService.addNotification({
+                id: 'edit-hpa-error',
+                type: 'error',
+                message: 'An error occurred creating the horizontal pod autoscaler.',
+                details: getErrorDetails(result)
+              });
             });
         };
 

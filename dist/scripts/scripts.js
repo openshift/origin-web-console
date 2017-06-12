@@ -7213,37 +7213,37 @@ A(), f.history.back();
 }, a.$on("$destroy", function() {
 i.unwatchAll(s);
 });
-} ]), angular.module("openshiftConsole").controller("EditAutoscalerController", [ "$scope", "$filter", "$routeParams", "$window", "APIService", "AuthorizationService", "BreadcrumbsService", "DataService", "HPAService", "MetricsService", "Navigate", "ProjectsService", "keyValueEditorUtils", function(a, b, c, d, e, f, g, h, i, j, k, l, m) {
+} ]), angular.module("openshiftConsole").controller("EditAutoscalerController", [ "$scope", "$filter", "$routeParams", "$window", "APIService", "AuthorizationService", "BreadcrumbsService", "DataService", "HPAService", "MetricsService", "Navigate", "NotificationsService", "ProjectsService", "keyValueEditorUtils", function(a, b, c, d, e, f, g, h, i, j, k, l, m, n) {
 if (!c.kind || !c.name) return void k.toErrorPage("Kind or name parameter missing.");
-var n = [ "Deployment", "DeploymentConfig", "HorizontalPodAutoscaler", "ReplicaSet", "ReplicationController" ];
-if (!_.includes(n, c.kind)) return void k.toErrorPage("Autoscaling not supported for kind " + c.kind + ".");
+var o = [ "Deployment", "DeploymentConfig", "HorizontalPodAutoscaler", "ReplicaSet", "ReplicationController" ];
+if (!_.includes(o, c.kind)) return void k.toErrorPage("Autoscaling not supported for kind " + c.kind + ".");
 a.kind = c.kind, a.name = c.name, "HorizontalPodAutoscaler" === c.kind ? a.disableInputs = !0 :(a.targetKind = c.kind, a.targetName = c.name), a.autoscaling = {
 name:a.name
 }, a.labels = [], j.isAvailable().then(function(b) {
 a.metricsWarning = !b;
-}), a.alerts = {};
-var o = b("getErrorDetails"), p = function(b, c) {
-a.alerts.autoscaling = {
-type:"error",
-message:b,
-details:o(c)
+});
+var p = b("getErrorDetails"), q = function() {
+d.history.back();
+}, r = function() {
+l.hideNotification("edit-hpa-error");
 };
-};
-l.get(c.project).then(_.spread(function(b, j) {
+a.cancel = function() {
+r(), q();
+}, m.get(c.project).then(_.spread(function(b, d) {
 a.project = b;
-var l = "HorizontalPodAutoscaler" === c.kind ? "update" :"create";
+var j = "HorizontalPodAutoscaler" === c.kind ? "update" :"create";
 if (!f.canI({
 resource:"horizontalpodautoscalers",
 group:"autoscaling"
-}, l, c.project)) return void k.toErrorPage("You do not have authority to " + l + " horizontal pod autoscalers in project " + c.project + ".", "access_denied");
-var n = function() {
-a.disableInputs = !0;
+}, j, c.project)) return void k.toErrorPage("You do not have authority to " + j + " horizontal pod autoscalers in project " + c.project + ".", "access_denied");
+var m = function() {
+a.disableInputs = !0, r();
 var b = {
 apiVersion:"autoscaling/v1",
 kind:"HorizontalPodAutoscaler",
 metadata:{
 name:a.autoscaling.name,
-labels:m.mapEntries(m.compactEntries(a.labels))
+labels:n.mapEntries(n.compactEntries(a.labels))
 },
 spec:{
 scaleTargetRef:{
@@ -7260,40 +7260,56 @@ targetCPUUtilizationPercentage:a.autoscaling.targetCPU || a.autoscaling.defaultT
 h.create({
 resource:"horizontalpodautoscalers",
 group:"autoscaling"
-}, null, b, j).then(function() {
-d.history.back();
+}, null, b, d).then(function(a) {
+l.addNotification({
+type:"success",
+message:"Horizontal pod autoscaler " + a.metadata.name + " successfully created."
+}), q();
 }, function(b) {
-a.disableInputs = !1, p("An error occurred creating the horizontal pod autoscaler.", b);
+a.disableInputs = !1, l.addNotification({
+id:"edit-hpa-error",
+type:"error",
+message:"An error occurred creating the horizontal pod autoscaler.",
+details:p(b)
+});
 });
 }, o = function(b) {
-a.disableInputs = !0, b = angular.copy(b), b.metadata.labels = m.mapEntries(m.compactEntries(a.labels)), b.spec.minReplicas = a.autoscaling.minReplicas, b.spec.maxReplicas = a.autoscaling.maxReplicas, b.spec.targetCPUUtilizationPercentage = a.autoscaling.targetCPU || a.autoscaling.defaultTargetCPU || null, h.update({
+a.disableInputs = !0, b = angular.copy(b), b.metadata.labels = n.mapEntries(n.compactEntries(a.labels)), b.spec.minReplicas = a.autoscaling.minReplicas, b.spec.maxReplicas = a.autoscaling.maxReplicas, b.spec.targetCPUUtilizationPercentage = a.autoscaling.targetCPU || a.autoscaling.defaultTargetCPU || null, h.update({
 resource:"horizontalpodautoscalers",
 group:"autoscaling"
-}, b.metadata.name, b, j).then(function() {
-d.history.back();
-}, function(c) {
-a.disableInputs = !1, p('An error occurred updating horizontal pod autoscaler "' + b.metadata.name + '".', c);
+}, b.metadata.name, b, d).then(function(a) {
+l.addNotification({
+type:"success",
+message:"Horizontal pod autoscaler " + a.metadata.name + " successfully updated."
+}), q();
+}, function(b) {
+a.disableInputs = !1, l.addNotification({
+id:"edit-hpa-error",
+type:"error",
+message:"An error occurred creating the horizontal pod autoscaler.",
+details:p(b)
 });
-}, q = {};
-q = "HorizontalPodAutoscaler" === c.kind ? {
+});
+}, s = {};
+s = "HorizontalPodAutoscaler" === c.kind ? {
 resource:"horizontalpodautoscalers",
 group:"autoscaling",
 version:"v1"
 } :{
 resource:e.kindToResource(c.kind),
 group:c.group
-}, h.get(q, c.name, j).then(function(d) {
-if (a.labels = _.map(_.get(d, "metadata.labels", {}), function(a, b) {
+}, h.get(s, c.name, d).then(function(e) {
+if (a.labels = _.map(_.get(e, "metadata.labels", {}), function(a, b) {
 return {
 name:b,
 value:a
 };
-}), "HorizontalPodAutoscaler" === c.kind) a.targetKind = _.get(d, "spec.scaleTargetRef.kind"), a.targetName = _.get(d, "spec.scaleTargetRef.name"), _.assign(a.autoscaling, {
-minReplicas:_.get(d, "spec.minReplicas"),
-maxReplicas:_.get(d, "spec.maxReplicas"),
-targetCPU:_.get(d, "spec.targetCPUUtilizationPercentage")
+}), "HorizontalPodAutoscaler" === c.kind) a.targetKind = _.get(e, "spec.scaleTargetRef.kind"), a.targetName = _.get(e, "spec.scaleTargetRef.name"), _.assign(a.autoscaling, {
+minReplicas:_.get(e, "spec.minReplicas"),
+maxReplicas:_.get(e, "spec.maxReplicas"),
+targetCPU:_.get(e, "spec.targetCPUUtilizationPercentage")
 }), a.disableInputs = !1, a.save = function() {
-o(d);
+o(e);
 }, a.breadcrumbs = g.getBreadcrumbs({
 name:a.targetName,
 kind:a.targetKind,
@@ -7303,17 +7319,17 @@ subpage:"Autoscale",
 includeProject:!0
 }); else {
 a.breadcrumbs = g.getBreadcrumbs({
-object:d,
+object:e,
 project:b,
 subpage:"Autoscale",
 includeProject:!0
-}), a.save = n;
-var e = {}, f = function() {
-var c = _.get(d, "spec.template.spec.containers", []);
-a.showCPURequestWarning = !i.hasCPURequest(c, e, b);
+}), a.save = m;
+var f = {}, j = function() {
+var c = _.get(e, "spec.template.spec.containers", []);
+a.showCPURequestWarning = !i.hasCPURequest(c, f, b);
 };
-h.list("limitranges", j).then(function(a) {
-e = a.by("metadata.name"), f();
+h.list("limitranges", d).then(function(a) {
+f = a.by("metadata.name"), j();
 });
 }
 });
