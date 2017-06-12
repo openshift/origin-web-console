@@ -8546,9 +8546,8 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
 
   $templateCache.put('views/directives/process-template-dialog/process-template-config.html',
     "<div class=\"osc-form\">\n" +
-    "<alerts alerts=\"$ctrl.alerts\"></alerts>\n" +
     "<form name=\"$ctrl.form\">\n" +
-    "<process-template template=\"$ctrl.template\" alerts=\"$ctrl.alerts\" is-dialog=\"true\"></process-template>\n" +
+    "<process-template template=\"$ctrl.template\" is-dialog=\"true\"></process-template>\n" +
     "</form>\n" +
     "</div>"
   );
@@ -8574,10 +8573,9 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "</div>\n" +
     "<label-editor ng-if=\"!$ctrl.isDialog\" labels=\"$ctrl.labels\" system-labels=\"$ctrl.systemLabels\" expand=\"true\" can-toggle=\"false\" help-text=\"Each label is applied to each created resource.\">\n" +
     "</label-editor>\n" +
-    "<alerts alerts=\"$ctrl.precheckAlerts\"></alerts>\n" +
     "<div ng-if=\"!$ctrl.isDialog\" class=\"buttons gutter-top-bottom\">\n" +
     "<button class=\"btn btn-primary btn-lg\" ng-click=\"$ctrl.createFromTemplate()\" ng-disabled=\"$ctrl.templateForm.$invalid || $ctrl.disableInputs\">Create</button>\n" +
-    "<a class=\"btn btn-default btn-lg\" ng-href=\"{{$ctrl.project | projectOverviewURL}}\">Cancel</a>\n" +
+    "<a class=\"btn btn-default btn-lg\" href=\"\" ng-click=\"$ctrl.cancel()\" role=\"button\">Cancel</a>\n" +
     "</div>\n" +
     "</ng-form>\n" +
     "</fieldset>"
@@ -10962,7 +10960,6 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "Loading...\n" +
     "</div>\n" +
     "<div ng-if=\"template\" class=\"row osc-form\">\n" +
-    "<alerts alerts=\"alerts\"></alerts>\n" +
     "<div class=\"col-md-2 icon hidden-sm hidden-xs\">\n" +
     "<custom-icon resource=\"template\" kind=\"template\"></custom-icon>\n" +
     "</div>\n" +
@@ -10986,7 +10983,7 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "</li>\n" +
     "</ul>\n" +
     "</div>\n" +
-    "<process-template project=\"project\" template=\"template\" alerts=\"alerts\" prefill-parameters=\"prefillParameters\">\n" +
+    "<process-template project=\"project\" template=\"template\" prefill-parameters=\"prefillParameters\">\n" +
     "</process-template>\n" +
     "</div>\n" +
     "</div>\n" +

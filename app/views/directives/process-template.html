@@ -17,10 +17,9 @@
         can-toggle="false"
         help-text="Each label is applied to each created resource.">
     </label-editor>
-    <alerts alerts="$ctrl.precheckAlerts"></alerts>
     <div ng-if="!$ctrl.isDialog" class="buttons gutter-top-bottom">
       <button class="btn btn-primary btn-lg" ng-click="$ctrl.createFromTemplate()" ng-disabled="$ctrl.templateForm.$invalid || $ctrl.disableInputs">Create</button>
-      <a class="btn btn-default btn-lg" ng-href="{{$ctrl.project | projectOverviewURL}}">Cancel</a>
+      <a class="btn btn-default btn-lg" href="" ng-click="$ctrl.cancel()" role="button">Cancel</a>
     </div>
   </ng-form>
 </fieldset>

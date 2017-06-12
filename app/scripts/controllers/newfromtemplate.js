@@ -14,10 +14,10 @@ angular.module('openshiftConsole')
                        $parse,
                        $routeParams,
                        $scope,
-                       AlertMessageService,
                        CachedTemplateService,
                        DataService,
                        Navigate,
+                       NotificationsService,
                        ProjectsService) {
     var name = $routeParams.template;
 
@@ -33,9 +33,6 @@ angular.module('openshiftConsole')
       Navigate.toErrorPage("Cannot create from template: a template name was not specified.");
       return;
     }
-
-    $scope.alerts = {};
-    $scope.precheckAlerts = {};
 
     $scope.breadcrumbs = [
       {
@@ -55,25 +52,21 @@ angular.module('openshiftConsole')
       }
     ];
 
-    $scope.alerts = $scope.alerts || {};
-    AlertMessageService.getAlerts().forEach(function(alert) {
-      $scope.alerts[alert.name] = alert.data;
-    });
-    AlertMessageService.clearAlerts();
-
     var displayName = $filter('displayName');
     var getValidTemplateParamsMap = function() {
       try {
         return JSON.parse($routeParams.templateParamsMap);
       } catch (e) {
-        $scope.alerts.invalidTemplateParams = {
+        NotificationsService.addNotification({
+          id: "template-params-invalid-json",
           type: "error",
-          message: "The templateParamsMap is not valid JSON. " + e
-        };
+          message: "Could not prefill parameter values.",
+          details: "The `templateParamsMap` URL parameter is not valid JSON. " + e
+        });
       }
     };
 
-    if($routeParams.templateParamsMap) {
+    if ($routeParams.templateParamsMap) {
       $scope.prefillParameters = getValidTemplateParamsMap();
     }
 
