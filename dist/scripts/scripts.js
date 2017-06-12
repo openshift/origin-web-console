@@ -4417,7 +4417,7 @@ A(b, c), x(a.containerTerminals), w(b);
 a.loaded = !0, a.alerts.load = {
 type:"error",
 message:"The pod details could not be loaded.",
-details:"Reason: " + b("getErrorDetails")(c)
+details:b("getErrorDetails")(c)
 };
 }), a.$watch("logOptions.container", p), n.push(g.watch("imagestreams", h, function(b) {
 a.imageStreams = b.by("metadata.name"), j.buildDockerRefMapForImageStreams(a.imageStreams, a.imageStreamImageRefByDockerReference), j.fetchReferencedImageStreamImages(a.pods, a.imagesByDockerReference, a.imageStreamImageRefByDockerReference, h), f.log("imagestreams (subscribe)", a.imageStreams);
@@ -4432,7 +4432,7 @@ gracePeriodSeconds:0
 a.alerts["debug-container-error"] = {
 type:"error",
 message:"Could not delete pod " + c.metadata.name,
-details:"Reason: " + b("getErrorDetails")(d)
+details:b("getErrorDetails")(d)
 };
 }), a.debugPod = null);
 }, q = function() {
@@ -4473,7 +4473,7 @@ i.result.then(m);
 a.alerts["debug-container-error"] = {
 type:"error",
 message:"Could not debug container " + c,
-details:"Reason: " + b("getErrorDetails")(d)
+details:b("getErrorDetails")(d)
 };
 }) :void (a.alerts["debug-container-error"] = {
 type:"error",
@@ -5061,7 +5061,7 @@ message:a.buildConfigName + " was updated."
 a.alerts.saveBCEnvVarsError = {
 type:"error",
 message:a.buildConfigName + " was not updated.",
-details:"Reason: " + b("getErrorDetails")(c)
+details:b("getErrorDetails")(c)
 };
 });
 }, a.clearEnvVarUpdates = function() {
@@ -5107,7 +5107,7 @@ r(a), o.push(g.watchObject("buildconfigs", c.buildconfig, f, r));
 a.loaded = !0, a.alerts.load = {
 type:"error",
 message:404 === c.status ? "This build configuration can not be found, it may have been deleted." :"The build configuration details could not be loaded.",
-details:404 === c.status ? "Any remaining build history for this build will be shown." :"Reason: " + b("getErrorDetails")(c)
+details:404 === c.status ? "Any remaining build history for this build will be shown." :b("getErrorDetails")(c)
 };
 }), o.push(g.watch("builds", f, function(b, d, f) {
 if (a.emptyMessage = "No builds to show", d) {
@@ -5191,7 +5191,7 @@ message:"This build has been deleted."
 a.loaded = !0, a.alerts.load = {
 type:"error",
 message:"The build details could not be loaded.",
-details:"Reason: " + b("getErrorDetails")(c)
+details:b("getErrorDetails")(c)
 };
 }, n = function(b, c) {
 "DELETED" === c && (a.alerts.deleted = {
@@ -5278,7 +5278,7 @@ a.loaded = !0, a.image = b.image, a.layers = g(a.image);
 a.loaded = !0, a.alerts.load = {
 type:"error",
 message:"The image details could not be loaded.",
-details:"Reason: " + e("getErrorDetails")(b)
+details:e("getErrorDetails")(b)
 };
 });
 }, 200), k = function(b, c, d) {
@@ -5296,7 +5296,7 @@ k(a, f, b);
 a.loaded = !0, a.alerts.load = {
 type:"error",
 message:"The image stream details could not be loaded.",
-details:"Reason: " + e("getErrorDetails")(b)
+details:e("getErrorDetails")(b)
 };
 }), a.$on("$destroy", function() {
 c.unwatchAll(i);
@@ -5355,7 +5355,7 @@ message:"This image stream has been deleted."
 a.loaded = !0, a.alerts.load = {
 type:"error",
 message:"The image stream details could not be loaded.",
-details:"Reason: " + e("getErrorDetails")(b)
+details:e("getErrorDetails")(b)
 };
 }), a.$on("$destroy", function() {
 c.unwatchAll(g);
@@ -5468,7 +5468,7 @@ message:c.deployment + " was updated."
 a.alerts.saveEnvError = {
 type:"error",
 message:c.deployment + " was not updated.",
-details:"Reason: " + b("getErrorDetails")(d)
+details:b("getErrorDetails")(d)
 };
 })["finally"](function() {
 v = null;
@@ -5636,7 +5636,7 @@ v(b, d);
 a.loaded = !0, a.alerts.load = {
 type:"error",
 message:404 === c.status ? "This deployment configuration can not be found, it may have been deleted." :"The deployment configuration details could not be loaded.",
-details:404 === c.status ? "Any remaining deployment history for this deployment will be shown." :"Reason: " + b("getErrorDetails")(c)
+details:404 === c.status ? "Any remaining deployment history for this deployment will be shown." :b("getErrorDetails")(c)
 };
 }), z.push(e.watch("replicationcontrollers", k, function(d, e, g) {
 var h = c.deploymentconfig;
@@ -5788,7 +5788,7 @@ message:a.replicaSet.metadata.name + " was updated."
 a.alerts.saveEnvError = {
 type:"error",
 message:a.replicaSet.metadata.name + " was not updated.",
-details:"Reason: " + b("getErrorDetails")(c)
+details:b("getErrorDetails")(c)
 };
 });
 }, a.clearEnvVarUpdates = function() {
@@ -5848,7 +5848,7 @@ a.deploymentConfig = b;
 return 404 === c.status ? void (a.deploymentConfigMissing = !0) :void (a.alerts.load = {
 type:"error",
 message:"The deployment configuration details could not be loaded.",
-details:"Reason: " + b("getErrorDetails")(c)
+details:b("getErrorDetails")(c)
 });
 });
 }
@@ -5925,7 +5925,7 @@ a.podsForDeployment = o.filterForOwner(c, a.replicaSet);
 a.loaded = !0, a.alerts.load = {
 type:"error",
 message:"The " + v + " details could not be loaded.",
-details:"Reason: " + b("getErrorDetails")(d)
+details:b("getErrorDetails")(d)
 }, a.breadcrumbs = e.getBreadcrumbs({
 name:c.replicaSet,
 kind:s,
@@ -6139,7 +6139,7 @@ j(a), g.push(c.watchObject("services", b.service, k, j));
 a.loaded = !0, a.alerts.load = {
 type:"error",
 message:"The service details could not be loaded.",
-details:"Reason: " + e("getErrorDetails")(b)
+details:e("getErrorDetails")(b)
 };
 }), g.push(c.watch("services", k, function(b) {
 a.services = b.by("metadata.name");
@@ -6326,7 +6326,7 @@ j(a), i.push(e.watchObject("routes", c.route, f, j));
 a.loaded = !0, a.alerts.load = {
 type:"error",
 message:"The route details could not be loaded.",
-details:"Reason: " + b("getErrorDetails")(c)
+details:b("getErrorDetails")(c)
 };
 }), i.push(e.watch("services", f, function(b) {
 a.services = b.by("metadata.name");
@@ -6497,7 +6497,7 @@ g(a), f.push(c.watchObject("persistentvolumeclaims", b.pvc, h, g));
 a.loaded = !0, a.alerts.load = {
 type:"error",
 message:"The persistent volume claim details could not be loaded.",
-details:"Reason: " + e("getErrorDetails")(b)
+details:e("getErrorDetails")(b)
 };
 }), a.$on("$destroy", function() {
 c.unwatchAll(f);
@@ -7508,7 +7508,7 @@ a.resourceChanged = j(b) !== j(g), a.resourceDeleted = "DELETED" === c;
 errorNotification:!1
 }));
 }, function(a) {
-j.toErrorPage("Could not load " + m(d.kind) + " '" + d.name + "'. " + b("getErrorDetails")(a, !0));
+j.toErrorPage("Could not load " + m(d.kind) + " '" + d.name + "'. " + b("getErrorDetails")(a));
 }), void a.$on("$destroy", function() {
 i.unwatchAll(p);
 })) :void j.toErrorPage("You do not have authority to update " + m(d.kind) + " " + d.name + ".", "access_denied");
@@ -14358,14 +14358,14 @@ return a ? a.replace(/^sha256:/, "") :a;
 return function(b, c) {
 return isNaN(c) ? b :a(b, c);
 };
-} ]).filter("getErrorDetails", [ "upperFirstFilter", function(a) {
-return function(b, c) {
-var d = b.data || {};
-if (d.message) return c ? a(d.message) :d.message;
-var e = b.status || d.status;
-return e ? "Status: " + e :"";
+} ]).filter("getErrorDetails", function() {
+return function(a) {
+var b = a.data || {};
+if (b.message) return "Reason: " + b.message;
+var c = a.status || b.status;
+return c ? "Status: " + c :"";
 };
-} ]).filter("humanize", function() {
+}).filter("humanize", function() {
 return function(a) {
 return a.replace(/([a-z])([A-Z])/g, "$1 $2").replace(/\b([A-Z]+)([A-Z])([a-z])/, "$1 $2$3").replace(/^./, function(a) {
 return a.toUpperCase();

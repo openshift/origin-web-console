@@ -136,7 +136,7 @@ angular.module('openshiftConsole')
                 $scope.alerts['saveEnvError'] = {
                   type: "error",
                   message: $routeParams.deployment + " was not updated.",
-                  details: "Reason: " + $filter('getErrorDetails')(e)
+                  details: $filter('getErrorDetails')(e)
                 };
               }).finally(function() {
                 saveEnvPromise = null;

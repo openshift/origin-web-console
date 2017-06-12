@@ -135,7 +135,7 @@ angular.module('openshiftConsole')
         $scope.alerts['saveEnvError'] = {
           type: "error",
           message: $scope.replicaSet.metadata.name + " was not updated.",
-          details: "Reason: " + $filter('getErrorDetails')(e)
+          details: $filter('getErrorDetails')(e)
         };
       });
     };
@@ -269,7 +269,7 @@ angular.module('openshiftConsole')
               $scope.alerts["load"] = {
                 type: "error",
                 message: "The deployment configuration details could not be loaded.",
-                details: "Reason: " + $filter('getErrorDetails')(e)
+                details: $filter('getErrorDetails')(e)
               };
             }
           );
@@ -446,7 +446,7 @@ angular.module('openshiftConsole')
             $scope.alerts["load"] = {
               type: "error",
               message: "The " + displayKind + " details could not be loaded.",
-              details: "Reason: " + $filter('getErrorDetails')(e)
+              details: $filter('getErrorDetails')(e)
             };
             $scope.breadcrumbs = BreadcrumbsService.getBreadcrumbs({
               name: $routeParams.replicaSet,

@@ -275,7 +275,7 @@ angular.module('openshiftConsole')
             $scope.alerts["load"] = {
               type: "error",
               message: "The pod details could not be loaded.",
-              details: "Reason: " + $filter('getErrorDetails')(e)
+              details: $filter('getErrorDetails')(e)
             };
           });
 
@@ -320,7 +320,7 @@ angular.module('openshiftConsole')
                 $scope.alerts['debug-container-error'] = {
                   type: "error",
                   message: "Could not delete pod " + debugPod.metadata.name,
-                  details: "Reason: " + $filter('getErrorDetails')(result)
+                  details: $filter('getErrorDetails')(result)
                 };
               });
             $scope.debugPod = null;
@@ -398,7 +398,7 @@ angular.module('openshiftConsole')
               $scope.alerts['debug-container-error'] = {
                 type: "error",
                 message: "Could not debug container " + containerName,
-                details: "Reason: " + $filter('getErrorDetails')(result)
+                details: $filter('getErrorDetails')(result)
               };
             });
         };

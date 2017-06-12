@@ -188,7 +188,7 @@ angular.module('openshiftConsole')
             $scope.alerts["load"] = {
               type: "error",
               message: e.status === 404 ? "This deployment configuration can not be found, it may have been deleted." : "The deployment configuration details could not be loaded.",
-              details: e.status === 404 ? "Any remaining deployment history for this deployment will be shown." : "Reason: " + $filter('getErrorDetails')(e)
+              details: e.status === 404 ? "Any remaining deployment history for this deployment will be shown." : $filter('getErrorDetails')(e)
             };
           }
         );

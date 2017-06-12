@@ -182,7 +182,7 @@ angular.module('openshiftConsole')
           },
           // GET failure
           function(e) {
-            Navigate.toErrorPage("Could not load " + humanizeKind($routeParams.kind) + " '" + $routeParams.name + "'. " + $filter('getErrorDetails')(e, true));
+            Navigate.toErrorPage("Could not load " + humanizeKind($routeParams.kind) + " '" + $routeParams.name + "'. " + $filter('getErrorDetails')(e));
           });
 
           $scope.$on('$destroy', function(){

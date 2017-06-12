@@ -92,7 +92,7 @@ angular.module('openshiftConsole')
             $scope.alerts["load"] = {
               type: "error",
               message: "The route details could not be loaded.",
-              details: "Reason: " + $filter('getErrorDetails')(e)
+              details: $filter('getErrorDetails')(e)
             };
           });
 
