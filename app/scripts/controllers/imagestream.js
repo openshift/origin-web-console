@@ -7,7 +7,7 @@
  * Controller of the openshiftConsole
  */
 angular.module('openshiftConsole')
-  .controller('ImageStreamController', function ($scope, $routeParams, DataService, ProjectsService, $filter, ImageStreamsService) {
+  .controller('ImageStreamController', function ($scope, $routeParams, DataService, ProjectsService, $filter, ImageStreamsService, Navigate) {
     $scope.projectName = $routeParams.project;
     $scope.imageStream = null;
     $scope.tags = [];
@@ -66,4 +66,15 @@ angular.module('openshiftConsole')
         });
 
       }));
+
+      $scope.imagestreamPath = function imagestreamPath(imagestream, tag) {
+        if (!tag.status) {
+          return "";
+        }
+        var url = Navigate.resourceURL(imagestream.metadata.name, "ImageStream", imagestream.metadata.namespace);
+        if (tag) {
+          url += "/" + tag.name;
+        }
+        return url;
+      };
   });

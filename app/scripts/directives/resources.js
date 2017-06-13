@@ -30,6 +30,23 @@ angular.module('openshiftConsole')
       }
     };
   })
+  .directive('registryAnnotations', function() {
+    return {
+      restrict: 'E',
+      priority: 1,
+      terminal: true,
+      scope: {
+        annotations: '='
+      },
+      templateUrl: 'views/directives/annotations.html',
+      link: function(scope) {
+        scope.expandAnnotations = false;
+        scope.toggleAnnotations = function() {
+          scope.expandAnnotations = !scope.expandAnnotations;
+        };
+      }
+    };
+  })
   .directive('volumes', function() {
     return {
       restrict: 'E',

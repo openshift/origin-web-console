@@ -5320,17 +5320,17 @@ b.imageStreams = a.select(b.unfilteredImageStreams), i();
 c.unwatchAll(h);
 });
 }));
-} ]), angular.module("openshiftConsole").controller("ImageStreamController", [ "$scope", "$routeParams", "DataService", "ProjectsService", "$filter", "ImageStreamsService", function(a, b, c, d, e, f) {
+} ]), angular.module("openshiftConsole").controller("ImageStreamController", [ "$scope", "$routeParams", "DataService", "ProjectsService", "$filter", "ImageStreamsService", "Navigate", function(a, b, c, d, e, f, g) {
 a.projectName = b.project, a.imageStream = null, a.tags = [], a.tagShowOlder = {}, a.alerts = {}, a.renderOptions = a.renderOptions || {}, a.renderOptions.hideFilterWidget = !0, a.breadcrumbs = [ {
 title:"Image Streams",
 link:"project/" + b.project + "/browse/images"
 }, {
 title:b.imagestream
 } ], a.emptyMessage = "Loading...";
-var g = [];
-d.get(b.project).then(_.spread(function(d, h) {
-a.project = d, c.get("imagestreams", b.imagestream, h).then(function(d) {
-a.loaded = !0, a.imageStream = d, a.emptyMessage = "No tags to show", g.push(c.watchObject("imagestreams", b.imagestream, h, function(b, c) {
+var h = [];
+d.get(b.project).then(_.spread(function(d, g) {
+a.project = d, c.get("imagestreams", b.imagestream, g).then(function(d) {
+a.loaded = !0, a.imageStream = d, a.emptyMessage = "No tags to show", h.push(c.watchObject("imagestreams", b.imagestream, g, function(b, c) {
 "DELETED" === c && (a.alerts.deleted = {
 type:"warning",
 message:"This image stream has been deleted."
@@ -5343,9 +5343,13 @@ message:"The image stream details could not be loaded.",
 details:e("getErrorDetails")(b)
 };
 }), a.$on("$destroy", function() {
-c.unwatchAll(g);
+c.unwatchAll(h);
 });
-}));
+})), a.imagestreamPath = function(a, b) {
+if (!b.status) return "";
+var c = g.resourceURL(a.metadata.name, "ImageStream", a.metadata.namespace);
+return b && (c += "/" + b.name), c;
+};
 } ]), angular.module("openshiftConsole").controller("DeploymentsController", [ "$scope", "$filter", "$routeParams", "DataService", "DeploymentsService", "LabelFilter", "Logger", "OwnerReferencesService", "ProjectsService", function(a, b, c, d, e, f, g, h, i) {
 a.projectName = c.project, a.replicationControllers = {}, a.unfilteredDeploymentConfigs = {}, a.unfilteredDeployments = {}, a.replicationControllersByDC = {}, a.labelSuggestions = {}, a.alerts = a.alerts || {}, a.emptyMessage = "Loading...", a.expandedDeploymentConfigRow = {}, a.unfilteredReplicaSets = {}, a.unfilteredReplicationControllers = {};
 var j, k, l = b("annotation"), m = function() {
@@ -9917,6 +9921,21 @@ templateUrl:"views/_pod-template.html"
 }).directive("annotations", function() {
 return {
 restrict:"E",
+scope:{
+annotations:"="
+},
+templateUrl:"views/directives/annotations.html",
+link:function(a) {
+a.expandAnnotations = !1, a.toggleAnnotations = function() {
+a.expandAnnotations = !a.expandAnnotations;
+};
+}
+};
+}).directive("registryAnnotations", function() {
+return {
+restrict:"E",
+priority:1,
+terminal:!0,
 scope:{
 annotations:"="
 },

@@ -2887,100 +2887,14 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "<div class=\"container-fluid\">\n" +
     "<div class=\"row\" ng-if=\"imageStream\">\n" +
     "<div class=\"col-md-12\">\n" +
-    "<div class=\"resource-details\">\n" +
-    "<dl class=\"dl-horizontal left\">\n" +
-    "<dt ng-if-start=\"imageStream.spec.dockerImageRepository\">Follows docker repo:</dt>\n" +
-    "<dd ng-if-end>{{imageStream.spec.dockerImageRepository}}</dd>\n" +
-    "<dt>Docker pull spec:</dt>\n" +
-    "<dd>{{imageStream.status.dockerImageRepository}}</dd>\n" +
-    "</dl>\n" +
-    "<annotations annotations=\"imageStream.metadata.annotations\"></annotations>\n" +
-    "</div>\n" +
-    "<table class=\"table table-bordered table-hover table-mobile mar-top-xl\">\n" +
-    "<thead>\n" +
-    "<tr>\n" +
-    "<th>Tag</th>\n" +
-    "<th>From</th>\n" +
-    "<th>Latest Image</th>\n" +
-    "<th>Created</th>\n" +
-    "<th>Pull Spec</th>\n" +
-    "</tr>\n" +
-    "</thead>\n" +
-    "<tbody ng-if=\"!tags.length\">\n" +
-    "<tr><td colspan=\"5\"><em>{{emptyMessage}}</em></td></tr>\n" +
-    "</tbody>\n" +
-    "<tbody ng-repeat=\"tag in tags\">\n" +
-    "<tr>\n" +
-    "<td data-title=\"Tag\">\n" +
-    "<a ng-if=\"tag.status\" ng-href=\"{{imageStream | navigateResourceURL}}/{{tag.name}}\">{{tag.name}}</a>\n" +
-    "<span ng-if=\"!tag.status\">{{tag.name}}</span>\n" +
-    "</td>\n" +
-    "<td data-title=\"From\">\n" +
-    "\n" +
-    "<span ng-if=\"!tag.spec.from\"><em>pushed</em></span>\n" +
-    "<div ng-if=\"tag.spec.from\" ng-attr-title=\"{{tag.spec.from.name}}\" class=\"td-long-string\">\n" +
-    "<span ng-if=\"!tag.spec.from._imageStreamName\">\n" +
-    "{{tag.spec.from.name}}\n" +
-    "</span>\n" +
-    "<span ng-if=\"tag.spec.from._imageStreamName\">\n" +
-    "<span ng-if=\"tag.spec.from._imageStreamName === imageStream.metadata.name\">{{tag.spec.from._completeName}}</span>\n" +
-    "<span ng-if=\"tag.spec.from._imageStreamName !== imageStream.metadata.name\">\n" +
-    "<a ng-href=\"{{tag.spec.from._imageStreamName | navigateResourceURL : 'ImageStream' : (tag.spec.from.namespace || imageStream.metadata.namespace)}}\"><span ng-if=\"tag.spec.from.namespace && tag.spec.from.namespace !== imageStream.metadata.namespace\">{{tag.spec.from.namespace}}/</span>{{tag.spec.from._imageStreamName}}</a>{{tag.spec.from._nameConnector}}{{tag.spec.from._idOrTag}}\n" +
-    "</span>\n" +
-    "</span>\n" +
-    "</div>\n" +
-    "</td>\n" +
-    "<td data-title=\"Latest Image\">\n" +
-    "<div ng-if=\"!tag.status\">\n" +
-    "<div ng-if=\"imageStream | annotation : 'openshift.io/image.dockerRepositoryCheck'\">\n" +
-    "<span class=\"pficon pficon-warning-triangle-o\" style=\"margin-right: 5px\" ng-attr-title=\"{{imageStream | annotation : 'openshift.io/image.dockerRepositoryCheck'}}\"></span>\n" +
-    "<span>Unable to resolve</span>\n" +
-    "</div>\n" +
-    "<div ng-if=\"!(imageStream | annotation : 'openshift.io/image.dockerRepositoryCheck')\">\n" +
-    "<span ng-if=\"!tag.spec.from\">Not yet synced</span>\n" +
-    "\n" +
-    "<span ng-if=\"tag.spec.from\">Unresolved</span>\n" +
-    "</div>\n" +
-    "</div>\n" +
-    "<div ng-if=\"tag.status\">\n" +
-    "<span ng-if=\"tag.status.items.length && tag.status.items[0].image\" class=\"nowrap\">\n" +
-    "<short-id id=\"{{tag.status.items[0].image | imageName}}\"></short-id>\n" +
-    "<a href=\"\" ng-if=\"tag.status.items.length > 1\" ng-click=\"tagShowOlder[tag.name] = !tagShowOlder[tag.name]\" ng-attr-title=\"{{tagShowOlder[tag.name] ? 'Hide Older Images' : 'Show Older Images'}}\"><span class=\"fa fa-clock-o\"></span><span class=\"fa fa-caret-up\" ng-if=\"tagShowOlder[tag.name]\" style=\"margin-left: 3px\"></span></a>\n" +
-    "</span>\n" +
-    "<span ng-if=\"!tag.status.items.length\"><em>none</em></span>\n" +
-    "</div>\n" +
-    "</td>\n" +
-    "<td data-title=\"Created\">\n" +
-    "<span ng-if=\"tag.status.items.length && tag.status.items[0].image\">\n" +
-    "<span am-time-ago=\"tag.status.items[0].created\"></span>\n" +
-    "</span>\n" +
-    "</td>\n" +
-    "<td data-title=\"Pull Spec\">\n" +
-    "\n" +
-    "<div ng-if=\"tag.status.items.length && tag.status.items[0].dockerImageReference\">\n" +
-    "<div ng-attr-title=\"{{tag.status.items[0].dockerImageReference}}\" class=\"td-long-string\">\n" +
-    "{{tag.status.items[0].dockerImageReference}}\n" +
-    "</div>\n" +
-    "</div>\n" +
-    "</td>\n" +
-    "</tr>\n" +
-    "<tr ng-repeat=\"item in tag.status.items\" ng-if=\"tagShowOlder[tag.name] && !$first && item.image\">\n" +
-    "<td data-title=\"Tag\"><span class=\"hidden-xs\">&nbsp;</span><span class=\"visible-xs\">{{tag.name}}</span></td>\n" +
-    "<td class=\"hidden-xs\">&nbsp;</td>\n" +
-    "<td data-title=\"Older Image\">\n" +
-    "<short-id id=\"{{item.image | imageName}}\"></short-id>\n" +
-    "</td>\n" +
-    "<td data-title=\"Created\">\n" +
-    "<span am-time-ago=\"item.created\"></span>\n" +
-    "</td>\n" +
-    "<td data-title=\"Pull Spec\">\n" +
-    "<div ng-if=\"item.dockerImageReference\" ng-attr-title=\"{{item.dockerImageReference}}\" class=\"td-long-string\">\n" +
-    "{{item.dockerImageReference}}\n" +
-    "</div>\n" +
-    "</td>\n" +
-    "</tr>\n" +
-    "</tbody>\n" +
-    "</table>\n" +
+    "<registry-imagestream-body imagestream=\"imageStream\">\n" +
+    "</registry-imagestream-body>\n" +
+    "<registry-imagestream-meta imagestream=\"imageStream\">\n" +
+    "</registry-imagestream-meta>\n" +
+    "<registry-imagestream-listing imagestream=\"imageStream\" imagestream-path=\"imagestreamPath\">\n" +
+    "</registry-imagestream-listing>\n" +
+    "<registry-imagestream-push settings=\"settings\" imagestream=\"imageStream\">\n" +
+    "</registry-imagestream-push>\n" +
     "</div>\n" +
     "</div>\n" +
     "</div>\n" +
