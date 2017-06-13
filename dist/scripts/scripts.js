@@ -6612,10 +6612,27 @@ contextDir:!1,
 none:!0
 }, a.triggers = {
 githubWebhooks:[],
+gitlabWebhooks:[],
+bitbucketWebhooks:[],
 genericWebhooks:[],
 imageChangeTriggers:[],
 builderImageChangeTrigger:{},
 configChangeTrigger:{}
+}, a.createTriggerSelect = {
+selectedType:"",
+options:[ {
+type:"github",
+label:"GitHub"
+}, {
+type:"gitlab",
+label:"GitLab"
+}, {
+type:"bitbucket",
+label:"Bitbucket"
+}, {
+type:"generic",
+label:"Generic"
+} ]
 }, a.runPolicyTypes = [ "Serial", "Parallel", "SerialLatestOnly" ], a.buildHookTypes = [ {
 id:"command",
 label:"Command"
@@ -6760,6 +6777,20 @@ data:a
 });
 break;
 
+case "GitLab":
+c.gitlabWebhooks.push({
+disabled:!1,
+data:a
+});
+break;
+
+case "Bitbucket":
+c.bitbucketWebhooks.push({
+disabled:!1,
+data:a
+});
+break;
+
 case "ImageChange":
 var b = a.imageChange.from;
 b || (b = f);
@@ -6826,7 +6857,7 @@ name:_.last(d)
 }
 return c;
 }, x = function() {
-var b = [].concat(a.triggers.githubWebhooks, a.triggers.genericWebhooks, a.triggers.imageChangeTriggers, a.triggers.builderImageChangeTrigger, a.triggers.configChangeTrigger);
+var b = [].concat(a.triggers.githubWebhooks, a.triggers.gitlabWebhooks, a.triggers.bitbucketWebhooks, a.triggers.genericWebhooks, a.triggers.imageChangeTriggers, a.triggers.builderImageChangeTrigger, a.triggers.configChangeTrigger);
 return b = _.filter(b, function(a) {
 return _.has(a, "disabled") && !a.disabled || a.present;
 }), b = _.map(b, "data");
@@ -6872,7 +6903,21 @@ return "None" === b.type ? a :(a.none = !1, angular.forEach(b, function(b, c) {
 a[c] = !0;
 }), a);
 };
-a.save = function() {
+a.addWebhookTrigger = function(b) {
+if (b) {
+var c = {
+disabled:!1,
+data:{
+type:b
+}
+}, d = _.find(a.createTriggerSelect.options, function(a) {
+return a.label === b;
+}).type;
+c.data[d] = {
+secret:f._generateSecret()
+}, a.triggers[d + "Webhooks"].push(c);
+}
+}, a.save = function() {
 switch (a.disableInputs = !0, p(), r(a.updatedBuildConfig).forcePull = a.options.forcePull, a.strategyType) {
 case "Docker":
 r(a.updatedBuildConfig).noCache = a.options.noCache;
@@ -8885,7 +8930,7 @@ details:c("getErrorDetails")(a)
 };
 }
 };
-} ]), angular.module("openshiftConsole").directive("editWebhookTriggers", [ "ApplicationGenerator", function(a) {
+} ]), angular.module("openshiftConsole").directive("editWebhookTriggers", function() {
 return {
 restrict:"E",
 scope:{
@@ -8896,22 +8941,9 @@ bcName:"=",
 projectName:"=",
 form:"="
 },
-templateUrl:"views/directives/edit-webhook-triggers.html",
-controller:[ "$scope", function(b) {
-b.addWebhookTrigger = function(c) {
-var d = {
-disabled:!1,
-data:{
-type:c
-}
+templateUrl:"views/directives/edit-webhook-triggers.html"
 };
-d.data["GitHub" === c ? "github" :"generic"] = {
-secret:a._generateSecret()
-}, b.triggers.push(d), b.form.$setDirty();
-};
-} ]
-};
-} ]), angular.module("openshiftConsole").directive("editConfigMap", [ "DNS1123_SUBDOMAIN_VALIDATION", function(a) {
+}), angular.module("openshiftConsole").directive("editConfigMap", [ "DNS1123_SUBDOMAIN_VALIDATION", function(a) {
 return {
 require:"^form",
 restrict:"E",
