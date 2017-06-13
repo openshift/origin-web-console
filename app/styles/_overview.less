@@ -267,8 +267,10 @@
     &.deployment-in-progress {
       // So animation offsets are hidden when sliding in horizontally
       // Only use this style when a deployment is in progress so that chart
-      // tooltips aren't clipped.
-      overflow:hidden;
+      // tooltips aren't clipped and only when expanded(.active), so that kebab dropdown menu isn't clipped.
+      &.active {
+        overflow: hidden;
+      }
       .list-pf-expansion {
         @media (max-width: @screen-xs-max) {
           overflow: hidden; // Hidden when sliding in vertically
