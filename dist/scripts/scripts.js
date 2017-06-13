@@ -11617,7 +11617,7 @@ c && (c = c.destroy());
 });
 }
 };
-}), angular.module("openshiftConsole").directive("deploymentDonut", [ "$filter", "$location", "$timeout", "$uibModal", "DeploymentsService", "HPAService", "QuotaService", "LabelFilter", "Navigate", "hashSizeFilter", "hasDeploymentConfigFilter", function(a, b, c, d, e, f, g, h, i, j, k) {
+}), angular.module("openshiftConsole").directive("deploymentDonut", [ "$filter", "$location", "$timeout", "$uibModal", "DeploymentsService", "HPAService", "QuotaService", "LabelFilter", "Navigate", "NotificationsService", "hashSizeFilter", "hasDeploymentConfigFilter", function(a, b, c, d, e, f, g, h, i, j, k, l) {
 return {
 restrict:"E",
 scope:{
@@ -11630,82 +11630,83 @@ limitRanges:"=",
 quotas:"=",
 clusterQuotas:"=",
 project:"=",
-pods:"=",
-alerts:"="
+pods:"="
 },
 templateUrl:"views/directives/deployment-donut.html",
-controller:[ "$scope", function(b) {
-var c = !1;
-b.$watch("rc.spec.replicas", function() {
-c || (b.desiredReplicas = null);
+controller:[ "$scope", "$filter", "$q", function(a, b, c) {
+var h = !1, k = b("humanizeKind");
+a.$watch("rc.spec.replicas", function() {
+h || (a.desiredReplicas = null);
 });
-var h = function() {
-f.getHPAWarnings(b.rc, b.hpa, b.limitRanges, b.project).then(function(a) {
-b.hpaWarnings = _.map(a, function(a) {
+var m = function() {
+f.getHPAWarnings(a.rc, a.hpa, a.limitRanges, a.project).then(function(b) {
+a.hpaWarnings = _.map(b, function(a) {
 return _.escape(a.message);
 }).join("<br>");
 });
 };
-b.$watchGroup([ "limitRanges", "hpa", "project" ], h), b.$watch("rc.spec.template.spec.containers", h, !0);
-var j = function() {
-if (_.get(b.rc, "spec.replicas", 1) > _.get(b.rc, "status.replicas", 0)) {
-var a = g.filterQuotasForResource(b.rc, b.quotas), c = g.filterQuotasForResource(b.rc, b.clusterQuotas), d = function(a) {
-return !_.isEmpty(g.getResourceLimitAlerts(b.rc, a));
+a.$watchGroup([ "limitRanges", "hpa", "project" ], m), a.$watch("rc.spec.template.spec.containers", m, !0);
+var n = function() {
+if (_.get(a.rc, "spec.replicas", 1) > _.get(a.rc, "status.replicas", 0)) {
+var b = g.filterQuotasForResource(a.rc, a.quotas), c = g.filterQuotasForResource(a.rc, a.clusterQuotas), d = function(b) {
+return !_.isEmpty(g.getResourceLimitAlerts(a.rc, b));
 };
-b.showQuotaWarning = _.some(a, d) || _.some(c, d);
-} else b.showQuotaWarning = !1;
+a.showQuotaWarning = _.some(b, d) || _.some(c, d);
+} else a.showQuotaWarning = !1;
 };
-b.$watchGroup([ "rc.spec.replicas", "rc.status.replicas", "quotas", "clusterQuotas" ], j);
-var l = function(c) {
-b.alerts = b.alerts || {}, b.desiredReplicas = null, b.alerts.scale = {
+a.$watchGroup([ "rc.spec.replicas", "rc.status.replicas", "quotas", "clusterQuotas" ], n);
+var o = function() {
+return a.deploymentConfig || a.deployment || a.rc;
+}, p = function() {
+if (h = !1, angular.isNumber(a.desiredReplicas)) {
+var d = o();
+return e.scale(d, a.desiredReplicas).then(_.noop, function(a) {
+var e = k(d.kind);
+return j.addNotification({
+id:"deployment-scale-error",
 type:"error",
-message:"An error occurred scaling the deployment.",
-details:a("getErrorDetails")(c)
-};
-}, m = function() {
-return b.deploymentConfig || b.deployment || b.rc;
-}, n = function() {
-if (c = !1, angular.isNumber(b.desiredReplicas)) {
-var a = m();
-return e.scale(a, b.desiredReplicas).then(_.noop, l);
+message:"An error occurred scaling " + e + " " + d.metadata.name + ".",
+details:b("getErrorDetails")(a)
+}), c.reject(a);
+});
 }
-}, o = _.debounce(n, 650);
-b.viewPodsForDeployment = function(a) {
-_.isEmpty(b.pods) || i.toPodsForDeployment(a, b.pods);
-}, b.scaleUp = function() {
-b.scalable && (b.desiredReplicas = b.getDesiredReplicas(), b.desiredReplicas++, o(), c = !0);
-}, b.scaleDown = function() {
-if (b.scalable && (b.desiredReplicas = b.getDesiredReplicas(), 0 !== b.desiredReplicas)) {
-if (1 === b.desiredReplicas) {
-var a = d.open({
+}, q = _.debounce(p, 650);
+a.viewPodsForDeployment = function(b) {
+_.isEmpty(a.pods) || i.toPodsForDeployment(b, a.pods);
+}, a.scaleUp = function() {
+a.scalable && (a.desiredReplicas = a.getDesiredReplicas(), a.desiredReplicas++, q(), h = !0);
+}, a.scaleDown = function() {
+if (a.scalable && (a.desiredReplicas = a.getDesiredReplicas(), 0 !== a.desiredReplicas)) {
+if (1 === a.desiredReplicas) {
+var b = d.open({
 animation:!0,
 templateUrl:"views/modals/confirmScale.html",
 controller:"ConfirmScaleController",
 resolve:{
 resource:function() {
-return b.rc;
+return a.rc;
 },
 type:function() {
-return k(b.rc) ? "deployment" :"replication controller";
+return l(a.rc) ? "deployment" :"replication controller";
 }
 }
 });
-return void a.result.then(function() {
-b.desiredReplicas = b.getDesiredReplicas() - 1, o(), c = !0;
+return void b.result.then(function() {
+a.desiredReplicas = a.getDesiredReplicas() - 1, q(), h = !0;
 });
 }
-b.desiredReplicas--, o();
+a.desiredReplicas--, q();
 }
-}, b.getDesiredReplicas = function() {
-return angular.isDefined(b.desiredReplicas) && null !== b.desiredReplicas ? b.desiredReplicas :b.rc && b.rc.spec && angular.isDefined(b.rc.spec.replicas) ? b.rc.spec.replicas :1;
-}, b.$watch(function() {
-return !_.get(b.rc, "spec.replicas") && !!(b.deploymentConfig ? a("annotation")(b.deploymentConfig, "idledAt") :a("annotation")(b.rc, "idledAt"));
-}, function(a) {
-b.isIdled = !!a;
-}), b.unIdle = function() {
-b.desiredReplicas = a("unidleTargetReplicas")(b.deploymentConfig || b.rc, b.hpa), n().then(function() {
-b.isIdled = !1;
-}, l);
+}, a.getDesiredReplicas = function() {
+return angular.isDefined(a.desiredReplicas) && null !== a.desiredReplicas ? a.desiredReplicas :a.rc && a.rc.spec && angular.isDefined(a.rc.spec.replicas) ? a.rc.spec.replicas :1;
+}, a.$watch(function() {
+return !_.get(a.rc, "spec.replicas") && !!(a.deploymentConfig ? b("annotation")(a.deploymentConfig, "idledAt") :b("annotation")(a.rc, "idledAt"));
+}, function(b) {
+a.isIdled = !!b;
+}), a.unIdle = function() {
+a.desiredReplicas = b("unidleTargetReplicas")(a.deploymentConfig || a.rc, a.hpa), p().then(function() {
+a.isIdled = !1;
+});
 };
 } ]
 };

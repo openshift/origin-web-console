@@ -1345,7 +1345,7 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
   $templateCache.put('views/browse/_replica-set-details.html',
     "<div class=\"row\" style=\"max-width: 650px\">\n" +
     "<div class=\"col-sm-4 col-sm-push-8 browse-deployment-donut\">\n" +
-    "<deployment-donut rc=\"replicaSet\" deployment=\"deployment\" deployment-config=\"deploymentConfig\" pods=\"podsForDeployment\" hpa=\"autoscalers\" scalable=\"isScalable()\" limit-ranges=\"limitRanges\" project=\"project\" quotas=\"quotas\" cluster-quotas=\"clusterQuotas\" alerts=\"alerts\">\n" +
+    "<deployment-donut rc=\"replicaSet\" deployment=\"deployment\" deployment-config=\"deploymentConfig\" pods=\"podsForDeployment\" hpa=\"autoscalers\" scalable=\"isScalable()\" limit-ranges=\"limitRanges\" project=\"project\" quotas=\"quotas\" cluster-quotas=\"clusterQuotas\">\n" +
     "</deployment-donut>\n" +
     "</div>\n" +
     "<div class=\"col-sm-8 col-sm-pull-4\">\n" +
@@ -3909,7 +3909,7 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "<div class=\"row\" style=\"max-width: 650px\">\n" +
     "<div class=\"col-sm-4 col-sm-push-8 browse-deployment-donut\">\n" +
     "\n" +
-    "<deployment-donut rc=\"statefulSet\" pods=\"podsForStatefulSet\" scalable=\"isScalable()\" quotas=\"quotas\" cluster-quotas=\"clusterQuotas\" alerts=\"alerts\">\n" +
+    "<deployment-donut rc=\"statefulSet\" pods=\"podsForStatefulSet\" scalable=\"isScalable()\" quotas=\"quotas\" cluster-quotas=\"clusterQuotas\">\n" +
     "</deployment-donut>\n" +
     "</div>\n" +
     "<div class=\"col-sm-8 col-sm-pull-4\">\n" +
@@ -11669,7 +11669,7 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "            'stacked-template': row.state.breakpoint !== 'lg'\n" +
     "        }\">\n" +
     "<div ng-if=\"row.previous\" class=\"previous-donut\">\n" +
-    "<deployment-donut rc=\"row.previous\" deployment-config=\"row.apiObject\" pods=\"row.getPods(row.previous)\" hpa=\"row.hpa\" limit-ranges=\"row.state.limitRanges\" project=\"row.state.project\" quotas=\"row.state.quotas\" cluster-quotas=\"row.state.clusterQuotas\" scalable=\"false\" alerts=\"row.state.alerts\">\n" +
+    "<deployment-donut rc=\"row.previous\" deployment-config=\"row.apiObject\" pods=\"row.getPods(row.previous)\" hpa=\"row.hpa\" limit-ranges=\"row.state.limitRanges\" project=\"row.state.project\" quotas=\"row.state.quotas\" cluster-quotas=\"row.state.clusterQuotas\" scalable=\"false\">\n" +
     "</deployment-donut>\n" +
     "<div ng-if=\"row.previous\" class=\"deployment-connector\">\n" +
     "<div class=\"deployment-connector-arrow\" aria-hidden=\"true\">\n" +
@@ -11683,7 +11683,7 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "</a>\n" +
     "</div>\n" +
     "<div ng-if=\"row.apiObject.kind !== 'Pod'\">\n" +
-    "<deployment-donut rc=\"row.current\" deployment-config=\"row.apiObject\" pods=\"row.getPods(row.current)\" hpa=\"row.hpa\" limit-ranges=\"row.state.limitRanges\" project=\"row.state.project\" quotas=\"row.state.quotas\" cluster-quotas=\"row.state.clusterQuotas\" scalable=\"row.isScalable()\" alerts=\"row.state.alerts\">\n" +
+    "<deployment-donut rc=\"row.current\" deployment-config=\"row.apiObject\" pods=\"row.getPods(row.current)\" hpa=\"row.hpa\" limit-ranges=\"row.state.limitRanges\" project=\"row.state.project\" quotas=\"row.state.quotas\" cluster-quotas=\"row.state.clusterQuotas\" scalable=\"row.isScalable()\">\n" +
     "</deployment-donut>\n" +
     "</div>\n" +
     "</div>\n" +
