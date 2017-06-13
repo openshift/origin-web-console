@@ -108,6 +108,7 @@
       if (uid) {
         row.services = _.get(row, ['state', 'servicesByObjectUID', uid]);
         row.buildConfigs = _.get(row, ['state', 'buildConfigsByObjectUID', uid]);
+        row.bindings = _.get(row, ['state', 'bindingsByApplicationUID', uid]);
       }
 
       var name;
@@ -323,6 +324,7 @@
     row.closeOverlayPanel = function() {
       _.set(row, 'overlay.panelVisible', false);
     };
+
     row.showOverlayPanel = function(panelName, state) {
       _.set(row, 'overlay.panelVisible', true);
       _.set(row, 'overlay.panelName', panelName);

@@ -29,6 +29,8 @@ routesByService:{},
 servicesByObjectUID:{},
 serviceInstances:{},
 bindingsByInstanceRef:{},
+bindingsByApplicationUID:{},
+applicationsByBinding:{},
 showMetrics:!1
 };
 z.state.breakpoint = l.getBreakpoint();
@@ -366,6 +368,26 @@ errorNotification:!1
 Q.secrets = a.by("metadata.name");
 });
 }, 300), $a = function() {
+if (Q.bindingsByApplicationUID = {}, Q.applicationsByBinding = {}, !_.isEmpty(Q.bindings)) {
+var a = [ z.deploymentConfigs, z.vanillaReplicationControllers, z.deployments, z.vanillaReplicaSets, z.statefulSets ];
+if (!_.some(a, function(a) {
+return !a;
+})) {
+var b = {};
+_.each(Q.bindings, function(a) {
+var c = _.get(a, "spec.alphaPodPresetTemplate.selector");
+c && (b[a.metadata.name] = new LabelSelector(c));
+}), _.each(a, function(a) {
+_.each(a, function(a) {
+var c = T(a), d = new LabelSelector(_.get(a, "spec.selector"));
+Q.bindingsByApplicationUID[c] = [], _.each(b, function(b, e) {
+b.covers(d) && (Q.bindingsByApplicationUID[c].push(Q.bindings[e]), Q.applicationsByBinding[e] = Q.applicationsByBinding[e] || [], Q.applicationsByBinding[e].push(a));
+});
+});
+});
+}
+}
+}, _a = function() {
 return Q.serviceInstances || Q.serviceClasses ? (Q.bindableServiceInstances = _.filter(Q.serviceInstances, function(a) {
 return w.isServiceBindable(a, Q.serviceClasses);
 }), void (Q.orderedServiceInstances = _.sortByAll(Q.serviceInstances, function(a) {
@@ -373,54 +395,54 @@ return _.get(Q.serviceClasses, [ a.spec.serviceClassName, "osbMetadata", "displa
 }, function(a) {
 return _.get(a, "metadata.name", "");
 }))) :void (Q.bindableServiceInstances = null);
-}, _a = [];
+}, ab = [];
 v.get(c.project).then(_.spread(function(b, c) {
 Q.project = a.project = b, Q.context = c;
 var d = function() {
 z.pods && m.fetchReferencedImageStreamImages(z.pods, Q.imagesByDockerReference, Q.imageStreamImageRefByDockerReference, c);
 };
-_a.push(i.watch("pods", c, function(a) {
+ab.push(i.watch("pods", c, function(a) {
 z.pods = a.by("metadata.name"), Ca(), d(), ya(), Ja(z.monopods), pa(z.monopods), za(z.monopods), ia(), p.log("pods (subscribe)", z.pods);
-})), _a.push(i.watch("replicationcontrollers", c, function(a) {
-z.replicationControllers = a.by("metadata.name"), Fa(), Ja(z.vanillaReplicationControllers), Ja(z.monopods), pa(z.vanillaReplicationControllers), za(z.vanillaReplicationControllers), ia(), p.log("replicationcontrollers (subscribe)", z.replicationControllers);
-})), _a.push(i.watch("deploymentconfigs", c, function(a) {
-z.deploymentConfigs = a.by("metadata.name"), Fa(), Ja(z.deploymentConfigs), Ja(z.vanillaReplicationControllers), za(z.deploymentConfigs), wa(), Va(), Wa(), ia(), p.log("deploymentconfigs (subscribe)", z.deploymentConfigs);
-})), _a.push(i.watch({
+})), ab.push(i.watch("replicationcontrollers", c, function(a) {
+z.replicationControllers = a.by("metadata.name"), Fa(), Ja(z.vanillaReplicationControllers), Ja(z.monopods), pa(z.vanillaReplicationControllers), za(z.vanillaReplicationControllers), $a(), ia(), p.log("replicationcontrollers (subscribe)", z.replicationControllers);
+})), ab.push(i.watch("deploymentconfigs", c, function(a) {
+z.deploymentConfigs = a.by("metadata.name"), Fa(), Ja(z.deploymentConfigs), Ja(z.vanillaReplicationControllers), za(z.deploymentConfigs), wa(), Va(), Wa(), $a(), ia(), p.log("deploymentconfigs (subscribe)", z.deploymentConfigs);
+})), ab.push(i.watch({
 group:"extensions",
 resource:"replicasets"
 }, c, function(a) {
-z.replicaSets = a.by("metadata.name"), Ha(), Ja(z.vanillaReplicaSets), Ja(z.monopods), pa(z.vanillaReplicaSets), za(z.vanillaReplicaSets), ia(), p.log("replicasets (subscribe)", z.replicaSets);
-})), _a.push(i.watch({
+z.replicaSets = a.by("metadata.name"), Ha(), Ja(z.vanillaReplicaSets), Ja(z.monopods), pa(z.vanillaReplicaSets), za(z.vanillaReplicaSets), $a(), ia(), p.log("replicasets (subscribe)", z.replicaSets);
+})), ab.push(i.watch({
 group:"extensions",
 resource:"deployments"
 }, c, function(a) {
-D = a.by("metadata.uid"), z.deployments = _.sortBy(D, "metadata.name"), Ha(), Ja(z.deployments), Ja(z.vanillaReplicaSets), za(z.deployments), ia(), p.log("deployments (subscribe)", z.deploymentsByUID);
-})), _a.push(i.watch("builds", c, function(a) {
+D = a.by("metadata.uid"), z.deployments = _.sortBy(D, "metadata.name"), Ha(), Ja(z.deployments), Ja(z.vanillaReplicaSets), za(z.deployments), $a(), ia(), p.log("deployments (subscribe)", z.deploymentsByUID);
+})), ab.push(i.watch("builds", c, function(a) {
 Q.builds = a.by("metadata.name"), Xa(), p.log("builds (subscribe)", Q.builds);
-})), _a.push(i.watch({
+})), ab.push(i.watch({
 group:"apps",
 resource:"statefulsets"
 }, c, function(a) {
-z.statefulSets = a.by("metadata.name"), Ja(z.statefulSets), Ja(z.monopods), pa(z.statefulSets), za(z.statefulSets), ia(), p.log("statefulsets (subscribe)", z.statefulSets);
+z.statefulSets = a.by("metadata.name"), Ja(z.statefulSets), Ja(z.monopods), pa(z.statefulSets), za(z.statefulSets), $a(), ia(), p.log("statefulsets (subscribe)", z.statefulSets);
 }, {
 poll:A,
 pollInterval:B
-})), _a.push(i.watch("services", c, function(a) {
+})), ab.push(i.watch("services", c, function(a) {
 Q.allServices = a.by("metadata.name"), Ka(), p.log("services (subscribe)", Q.allServices);
 }, {
 poll:A,
 pollInterval:B
-})), _a.push(i.watch("routes", c, function(a) {
+})), ab.push(i.watch("routes", c, function(a) {
 z.routes = a.by("metadata.name"), La(), p.log("routes (subscribe)", z.routes);
 }, {
 poll:A,
 pollInterval:B
-})), _a.push(i.watch("buildConfigs", c, function(a) {
+})), ab.push(i.watch("buildConfigs", c, function(a) {
 z.buildConfigs = a.by("metadata.name"), Pa(), Va(), Xa(), ia(), p.log("buildconfigs (subscribe)", z.buildConfigs);
 }, {
 poll:A,
 pollInterval:B
-})), _a.push(i.watch({
+})), ab.push(i.watch({
 group:"autoscaling",
 resource:"horizontalpodautoscalers",
 version:"v1"
@@ -429,37 +451,37 @@ z.horizontalPodAutoscalers = a.by("metadata.name"), Ma(), p.log("autoscalers (su
 }, {
 poll:A,
 pollInterval:B
-})), _a.push(i.watch("imagestreams", c, function(a) {
+})), ab.push(i.watch("imagestreams", c, function(a) {
 E = a.by("metadata.name"), m.buildDockerRefMapForImageStreams(E, Q.imageStreamImageRefByDockerReference), d(), p.log("imagestreams (subscribe)", E);
 }, {
 poll:A,
 pollInterval:B
-})), _a.push(i.watch("resourcequotas", c, function(a) {
+})), ab.push(i.watch("resourcequotas", c, function(a) {
 Q.quotas = a.by("metadata.name"), Ya();
 }, {
 poll:!0,
 pollInterval:B
-})), _a.push(i.watch("appliedclusterresourcequotas", c, function(a) {
+})), ab.push(i.watch("appliedclusterresourcequotas", c, function(a) {
 Q.clusterQuotas = a.by("metadata.name"), Ya();
 }, {
 poll:!0,
 pollInterval:B
-})), C && _a.push(i.watch({
+})), C && ab.push(i.watch({
 group:"servicecatalog.k8s.io",
 resource:"instances"
 }, c, function(a) {
 Q.serviceInstances = a.by("metadata.name"), _.each(Q.serviceInstances, function(a) {
 var b = x.getServiceInstanceAlerts(a);
 ma(a, b);
-}), $a(), za(Q.serviceInstances), ia();
+}), _a(), za(Q.serviceInstances), ia();
 }, {
 poll:A,
 pollInterval:B
-})), C && _a.push(i.watch({
+})), C && ab.push(i.watch({
 group:"servicecatalog.k8s.io",
 resource:"bindings"
 }, c, function(a) {
-Q.bindings = a.by("metadata.name"), z.bindingsByInstanceRef = _.groupBy(Q.bindings, "spec.instanceRef.name"), Za(c);
+Q.bindings = a.by("metadata.name"), z.bindingsByInstanceRef = _.groupBy(Q.bindings, "spec.instanceRef.name"), $a(), Za(c);
 }, {
 poll:A,
 pollInterval:B
@@ -469,7 +491,7 @@ Q.limitRanges = a.by("metadata.name");
 group:"servicecatalog.k8s.io",
 resource:"serviceclasses"
 }, c, function(a) {
-Q.serviceClasses = a.by("metadata.name"), $a(), ia();
+Q.serviceClasses = a.by("metadata.name"), _a(), ia();
 });
 var e = h.SAMPLE_PIPELINE_TEMPLATE;
 e && i.get("templates", e.name, {
@@ -479,7 +501,7 @@ errorNotification:!1
 }).then(function(b) {
 z.samplePipelineURL = r.createFromTemplateURL(b, a.projectName);
 }), a.$on("$destroy", function() {
-i.unwatchAll(_a), $(window).off("resize.overview", R);
+i.unwatchAll(ab), $(window).off("resize.overview", R);
 });
 }));
 }
@@ -12704,7 +12726,7 @@ return _.get(i.state.hpaByResource, [ b, c ], p);
 i.$doCheck = function() {
 i.notifications = f.getNotifications(i.apiObject, i.state), i.hpa = q(i.apiObject), i.current && _.isEmpty(i.hpa) && (i.hpa = q(i.current));
 var a = _.get(i, "apiObject.metadata.uid");
-a && (i.services = _.get(i, [ "state", "servicesByObjectUID", a ]), i.buildConfigs = _.get(i, [ "state", "buildConfigsByObjectUID", a ]));
+a && (i.services = _.get(i, [ "state", "servicesByObjectUID", a ]), i.buildConfigs = _.get(i, [ "state", "buildConfigsByObjectUID", a ]), i.bindings = _.get(i, [ "state", "bindingsByApplicationUID", a ]));
 var b, c = _.get(i, "apiObject.kind");
 "DeploymentConfig" === c && (b = _.get(i, "apiObject.metadata.name"), i.pipelines = _.get(i, [ "state", "pipelinesByDeploymentConfig", b ]), i.recentBuilds = _.get(i, [ "state", "recentBuildsByDeploymentConfig", b ]), i.recentPipelines = _.get(i, [ "state", "recentPipelinesByDeploymentConfig", b ]));
 }, i.getPods = function(a) {
@@ -12807,7 +12829,7 @@ function a(a, b, c, d, e, f) {
 var g = this;
 _.extend(g, e.ui);
 var h = a("getErrorDetails"), i = function() {
-var a = g.apiObject.spec.serviceClassName, b = g.apiObject.metadata.name, c = _.get(g, [ "state", "serviceClasses", a, "osbMetadata", "displayName" ]);
+var a = g.apiObject.spec.serviceClassName, b = g.apiObject.metadata.name, c = _.get(g, [ "state", "serviceClasses", a, "externalMetadata", "displayName" ]);
 return c || a || b;
 }, j = function() {
 var a = g.apiObject.spec.serviceClassName;
@@ -12889,7 +12911,39 @@ bindings:{
 recentPipelines:"<"
 },
 templateUrl:"views/overview/_pipelines.html"
-}), angular.module("openshiftConsole").directive("istagSelect", [ "DataService", function(a) {
+}), angular.module("openshiftConsole").component("overviewServiceBindings", {
+controllerAs:"$ctrl",
+bindings:{
+bindings:"<",
+bindableServiceInstances:"<",
+serviceClasses:"<",
+serviceInstances:"<",
+secrets:"<",
+createBinding:"&"
+},
+templateUrl:"views/overview/_service-bindings.html"
+}), function() {
+function a() {
+var a = this, b = function() {
+var b = _.get(a.binding, "spec.instanceRef.name"), c = _.get(a.serviceInstances, [ b ]), d = _.get(c, "spec.serviceClassName");
+a.serviceClass = _.get(a.serviceClasses, [ d ]);
+};
+this.$onChanges = function(a) {
+(a.binding || a.serviceInstances || a.serviceClasses) && b();
+};
+}
+angular.module("openshiftConsole").component("overviewServiceBinding", {
+controller:[ a ],
+controllerAs:"$ctrl",
+bindings:{
+binding:"<",
+serviceClasses:"<",
+serviceInstances:"<",
+secrets:"<"
+},
+templateUrl:"views/overview/_service-binding.html"
+});
+}(), angular.module("openshiftConsole").directive("istagSelect", [ "DataService", function(a) {
 return {
 require:"^form",
 restrict:"E",

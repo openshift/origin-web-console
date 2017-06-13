@@ -4930,8 +4930,8 @@ h2+.list-view-pf{margin-top:20px}
 @media (max-width:479px){.overview .deployment-connector .deployment-connector-arrow:before{content:'\2191';margin-top:-20px;padding-right:23px}
 }
 .overview .expanded-section{margin-top:20px}
-.overview .expanded-section>.row>[class^=col-]{margin-bottom:10px}
-@media (min-width:1200px){.overview .expanded-section>.row>[class^=col-].overview-builds-msg,.overview .expanded-section>.row>[class^=col-].overview-routes{padding-left:0}
+.overview .expanded-section .row>[class^=col-]{margin-bottom:10px}
+@media (min-width:1200px){.overview .expanded-section .row>[class^=col-].overview-bindings,.overview .expanded-section .row>[class^=col-].overview-builds-msg,.overview .expanded-section .row>[class^=col-].overview-routes{padding-left:0}
 }
 .overview .expanded-section h3{line-height:1.4;margin-bottom:5px;margin-top:0;width:100%;word-wrap:break-word;word-break:break-word;overflow-wrap:break-word;min-width:0}
 .overview .expanded-section .section-title{font-family:inherit;font-weight:500;line-height:1.1;color:inherit;margin-top:10.5px;margin-bottom:10.5px;font-size:14px;border-bottom:1px solid #dcdcdc;padding-bottom:10px}
@@ -5000,6 +5000,7 @@ h2+.list-view-pf{margin-top:20px}
 @media (min-width:992px){.overview .status-icons{margin-right:15px;margin-top:0;width:40%}
 }
 .overview :not(.tab-pane)>overview-pipelines>.expanded-section{margin-bottom:30px}
+.overview .service-binding h3 small{display:block}
 .overview .toolbar-container{margin-top:10px;margin-bottom:5px}
 .overview .triggers{margin-bottom:20px}
 .overview .usage-value{font-size:18px;font-weight:300;line-height:1}

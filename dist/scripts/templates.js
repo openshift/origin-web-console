@@ -11745,6 +11745,11 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "<overview-builds build-configs=\"row.buildConfigs\" recent-builds-by-build-config=\"row.state.recentBuildsByBuildConfig\" context=\"row.state.context\" hide-log=\"row.state.limitWatches\">\n" +
     "</overview-builds>\n" +
     "</uib-tab>\n" +
+    "<uib-tab ng-if=\"row.bindings | size\" active=\"row.selectedTab.bindings\">\n" +
+    "<uib-tab-heading>Bindings</uib-tab-heading>\n" +
+    "<overview-service-bindings bindings=\"row.bindings\" bindable-service-instances=\"row.state.bindableServiceInstances\" service-classes=\"row.state.serviceClasses\" service-instances=\"row.state.serviceInstances\" secrets=\"row.state.secrets\" create-binding=\"row.showOverlayPanel('bindService', {target: row.apiObject})\">\n" +
+    "</overview-service-bindings>\n" +
+    "</uib-tab>\n" +
     "</uib-tabset>\n" +
     "</div>\n" +
     "</div>\n" +
@@ -11758,6 +11763,8 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "\n" +
     "<overview-builds build-configs=\"row.buildConfigs\" recent-builds-by-build-config=\"row.state.recentBuildsByBuildConfig\" context=\"row.state.context\" hide-log=\"row.state.limitWatches\">\n" +
     "</overview-builds>\n" +
+    "<overview-service-bindings bindings=\"row.bindings\" bindable-service-instances=\"row.state.bindableServiceInstances\" service-classes=\"row.state.serviceClasses\" service-instances=\"row.state.serviceInstances\" secrets=\"row.state.secrets\" create-binding=\"row.showOverlayPanel('bindService', {target: row.apiObject})\">\n" +
+    "</overview-service-bindings>\n" +
     "</div>\n" +
     "</div>\n" +
     "</div> "
@@ -11925,6 +11932,41 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
   );
 
 
+  $templateCache.put('views/overview/_service-binding.html',
+    "<div class=\"row service-binding\">\n" +
+    "<div class=\"col-sm-5 col-md-6\">\n" +
+    "<h3 ng-if=\"$ctrl.serviceClass\">\n" +
+    "{{$ctrl.serviceClass.externalMetadata.displayName || $ctrl.serviceClass.metadata.name}}\n" +
+    "<small>{{$ctrl.binding.spec.instanceRef.name}}</small>\n" +
+    "</h3>\n" +
+    "<h3 ng-if=\"!$ctrl.serviceClass\">\n" +
+    "{{$ctrl.binding.spec.instanceRef.name}}\n" +
+    "</h3>\n" +
+    "</div>\n" +
+    "<div class=\"col-sm-7 col-md-6 overview-bindings\">\n" +
+    "<span ng-if=\"!($ctrl.binding | isBindingReady)\">\n" +
+    "<status-icon status=\"'Pending'\"></status-icon> Pending\n" +
+    "</span>\n" +
+    "<a ng-if=\"($ctrl.binding | isBindingReady) && ('secrets' | canI : 'get')\" ng-href=\"{{$ctrl.secrets[$ctrl.binding.spec.secretName] | navigateResourceURL}}\">\n" +
+    "View Secret\n" +
+    "</a>\n" +
+    "</div>\n" +
+    "</div>"
+  );
+
+
+  $templateCache.put('views/overview/_service-bindings.html',
+    "<div ng-if=\"($ctrl.bindings | size)\" class=\"expanded-section\">\n" +
+    "<div class=\"section-title hidden-xs\">Service Bindings</div>\n" +
+    "<overview-service-binding ng-repeat=\"binding in $ctrl.bindings track by (binding | uid)\" binding=\"binding\" service-classes=\"$ctrl.serviceClasses\" service-instances=\"$ctrl.serviceInstances\" secrets=\"$ctrl.secrets\">\n" +
+    "</overview-service-binding>\n" +
+    "<div ng-if=\"$ctrl.bindableServiceInstances | size\">\n" +
+    "<a href=\"\" ng-click=\"$ctrl.createBinding()\" role=\"button\">Create Binding</a>\n" +
+    "</div>\n" +
+    "</div>"
+  );
+
+
   $templateCache.put('views/overview/_service-header.html',
     "<div row class=\"service-title\" ng-if=\"service\">\n" +
     "<div class=\"service-name truncate\">\n" +
@@ -11970,15 +12012,23 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "<a href=\"\" ng-click=\"row.showOverlayPanel('bindService', {target: row.apiObject})\">Create Binding</a>\n" +
     "</span>\n" +
     "<span ng-if=\"row.bindings.length\" class=\"component-label\">Bindings</span>\n" +
-    "<p ng-if=\"row.bindings.length >= 1\" class=\"bindings\">\n" +
-    "{{row.bindings[0].metadata.name}}<span ng-if=\"row.bindings.length > 1\">, </span>\n" +
+    "<p ng-if=\"firstBinding = row.bindings[0]\" class=\"bindings\">\n" +
+    "<span ng-if=\"application = row.state.applicationsByBinding[firstBinding.metadata.name][0]\">\n" +
+    "{{application.metadata.name}}\n" +
+    "</span>\n" +
+    "<span ng-if=\"!application\">\n" +
+    "{{firstBinding.spec.secretName}}\n" +
+    "</span>\n" +
+    "<span ng-if=\"row.bindings.length > 1\">\n" +
+    "and\n" +
     "<a ng-if=\"row.bindings.length > 1\" ng-click=\"row.toggleExpand($event, true)\">\n" +
     "{{row.bindings.length -1}} other<span ng-if=\"row.bindings.length > 2\">s</span></a>\n" +
+    "</span>\n" +
     "</p>\n" +
     "</div>\n" +
     "</div>\n" +
-    "<div class=\"hidden-xs\" ng-if=\"!row.expanded && row.apiObject.spec.osbDashboardURL\">\n" +
-    "<a ng-href=\"{{row.apiObject.spec.osbDashboardURL}}\" target=\"_blank\">\n" +
+    "<div class=\"hidden-xs\" ng-if=\"!row.expanded && row.apiObject.status.dashboardURL\">\n" +
+    "<a ng-href=\"{{row.apiObject.status.dashboardURL}}\" target=\"_blank\">\n" +
     "Console\n" +
     "</a> <i class=\"fa fa-external-link small\" aria-hidden=\"true\"></i>\n" +
     "</div>\n" +
@@ -12009,19 +12059,40 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "</div>\n" +
     "</div>\n" +
     "<div class=\"section-title\" ng-if=\"row.isBindable || row.bindings\">\n" +
-    "Bindings\n" +
+    "Application Bindings\n" +
     "</div>\n" +
-    "<div ng-if=\"row.bindings\" class=\"row\" ng-repeat=\"(name, binding) in row.bindings\">\n" +
-    "<div class=\"col-sm-5\">\n" +
-    "<span>{{binding.metadata.name}}</span>\n" +
+    "<div class=\"row overview-bindings\" ng-repeat=\"(name, binding) in row.bindings\">\n" +
+    "<div class=\"col-sm-5 col-md-6\">\n" +
+    "<div ng-if=\"!(row.state.applicationsByBinding[binding.metadata.name] | size)\">\n" +
+    "<h3>\n" +
+    "<div class=\"component-label\">\n" +
+    "Secret\n" +
     "</div>\n" +
-    "<div class=\"col-sm-7\">\n" +
-    "\n" +
+    "<span ng-if=\"(binding | isBindingReady) && ('secrets' | canI : 'get')\">\n" +
+    "<a ng-if=\"(binding | isBindingReady) && ('secrets' | canI : 'get')\" ng-href=\"{{row.getSecretForBinding(binding) | navigateResourceURL}}\">\n" +
+    "{{binding.spec.secretName}}\n" +
+    "</a>\n" +
+    "</span>\n" +
+    "<span ng-if=\"!(binding | isBindingReady) || !('secrets' | canI : 'get')\">\n" +
+    "{{binding.spec.secretName}}\n" +
+    "</span>\n" +
+    "</h3>\n" +
+    "</div>\n" +
+    "<div ng-repeat=\"target in row.state.applicationsByBinding[binding.metadata.name] track by (target | uid)\">\n" +
+    "<h3>\n" +
+    "<div class=\"component-label\">\n" +
+    "{{target.kind | humanizeKind : true}}\n" +
+    "</div>\n" +
+    "<a ng-href=\"{{target | navigateResourceURL}}\">{{target.metadata.name}}</a>\n" +
+    "</h3>\n" +
+    "</div>\n" +
+    "</div>\n" +
+    "<div class=\"col-sm-7 col-md-6 overview-bindings\">\n" +
     "<span ng-if=\"!(binding | isBindingReady)\">\n" +
     "<status-icon status=\"'Pending'\"></status-icon> Pending\n" +
     "</span>\n" +
-    "<a ng-if=\"(binding | isBindingReady) && ('secrets' | canI : 'get')\" href=\"{{row.getSecretForBinding(binding) | navigateResourceURL}}\">\n" +
-    "View secret\n" +
+    "<a ng-if=\"(binding | isBindingReady) && ('secrets' | canI : 'get')\" ng-href=\"{{row.getSecretForBinding(binding) | navigateResourceURL}}\">\n" +
+    "View Secret\n" +
     "</a>\n" +
     "</div>\n" +
     "</div>\n" +
@@ -12030,7 +12101,6 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "<a href=\"\" ng-click=\"row.showOverlayPanel('bindService', {target: row.apiObject})\">Create Binding</a>\n" +
     "</div>\n" +
     "</div>\n" +
-    "\n" +
     "</div>\n" +
     "</div>\n" +
     "</div>\n" +

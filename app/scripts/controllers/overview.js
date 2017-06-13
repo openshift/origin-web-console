@@ -110,6 +110,8 @@ function OverviewController($scope,
     servicesByObjectUID: {},
     serviceInstances: {},
     bindingsByInstanceRef: {},
+    bindingsByApplicationUID: {},
+    applicationsByBinding: {},
     // Set to true below when metrics are available.
     showMetrics: false
   };
@@ -1093,6 +1095,66 @@ function OverviewController($scope,
     });
   }, 300);
 
+  var groupBindings = function() {
+    // Build two maps:
+    // - Bindings by the UID of the target object
+    // - API objects by binding name
+    state.bindingsByApplicationUID = {};
+    state.applicationsByBinding = {};
+
+    // If there are no bindings, nothing to do.
+    if (_.isEmpty(state.bindings)) {
+      return;
+    }
+
+    // All objects that can be a target for bindings.
+    var objectsByKind = [
+      overview.deploymentConfigs,
+      overview.vanillaReplicationControllers,
+      overview.deployments,
+      overview.vanillaReplicaSets,
+      overview.statefulSets
+    ];
+
+    // Make sure all the binding targets have loaded first.
+    if (_.some(objectsByKind, function(collection) { return !collection; })) {
+      return;
+    }
+
+    // Build a map of pod preset selectors by binding name.
+    var podPresetSelectors = {};
+    _.each(state.bindings, function(binding) {
+      var podPresetSelector = _.get(binding, 'spec.alphaPodPresetTemplate.selector');
+      if (podPresetSelector) {
+        podPresetSelectors[binding.metadata.name] = new LabelSelector(podPresetSelector);
+      }
+    });
+
+    _.each(objectsByKind, function(collection) {
+      _.each(collection, function(apiObject) {
+        // Key by UID since name is not unique across different kinds.
+        var applicationUID = getUID(apiObject);
+
+        // Create a selector for the potential binding target to check if the
+        // pod preset covers the selector.
+        var applicationSelector = new LabelSelector(_.get(apiObject, 'spec.selector'));
+        state.bindingsByApplicationUID[applicationUID] = [];
+
+        // Look at each pod preset selector to see if it covers this API object selector.
+        _.each(podPresetSelectors, function(podPresetSelector, bindingName) {
+          if (podPresetSelector.covers(applicationSelector)) {
+            // Keep a map of the target UID to the binding and the binding to
+            // the target. We want to show bindings both in the "application"
+            // object rows and the service instance rows.
+            state.bindingsByApplicationUID[applicationUID].push(state.bindings[bindingName]);
+            state.applicationsByBinding[bindingName] = state.applicationsByBinding[bindingName] || [];
+            state.applicationsByBinding[bindingName].push(apiObject);
+          }
+        });
+      });
+    });
+  };
+
   // TODO: code duplicated from directives/bindService.js
   // extract & share
   var sortServiceInstances = function() {
@@ -1151,6 +1213,7 @@ function OverviewController($scope,
       updateServicesForObjects(overview.monopods);
       updatePodWarnings(overview.vanillaReplicationControllers);
       updateLabelSuggestions(overview.vanillaReplicationControllers);
+      groupBindings();
       updateFilter();
       Logger.log("replicationcontrollers (subscribe)", overview.replicationControllers);
     }));
@@ -1167,6 +1230,7 @@ function OverviewController($scope,
       updateAllDeploymentWarnings();
       groupBuildConfigsByDeploymentConfig();
       groupRecentBuildsByDeploymentConfig();
+      groupBindings();
       updateFilter();
       Logger.log("deploymentconfigs (subscribe)", overview.deploymentConfigs);
     }));
@@ -1181,6 +1245,7 @@ function OverviewController($scope,
       updateServicesForObjects(overview.monopods);
       updatePodWarnings(overview.vanillaReplicaSets);
       updateLabelSuggestions(overview.vanillaReplicaSets);
+      groupBindings();
       updateFilter();
       Logger.log("replicasets (subscribe)", overview.replicaSets);
     }));
@@ -1195,6 +1260,7 @@ function OverviewController($scope,
       updateServicesForObjects(overview.deployments);
       updateServicesForObjects(overview.vanillaReplicaSets);
       updateLabelSuggestions(overview.deployments);
+      groupBindings();
       updateFilter();
       Logger.log("deployments (subscribe)", overview.deploymentsByUID);
     }));
@@ -1214,6 +1280,7 @@ function OverviewController($scope,
       updateServicesForObjects(overview.monopods);
       updatePodWarnings(overview.statefulSets);
       updateLabelSuggestions(overview.statefulSets);
+      groupBindings();
       updateFilter();
       Logger.log("statefulsets (subscribe)", overview.statefulSets);
     }, {poll: limitWatches, pollInterval: DEFAULT_POLL_INTERVAL}));
@@ -1291,6 +1358,7 @@ function OverviewController($scope,
       }, context, function(bindings) {
         state.bindings = bindings.by('metadata.name');
         overview.bindingsByInstanceRef = _.groupBy(state.bindings, 'spec.instanceRef.name');
+        groupBindings();
         refreshSecrets(context);
       }, {poll: limitWatches, pollInterval: DEFAULT_POLL_INTERVAL}));
     }
