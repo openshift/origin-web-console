@@ -34,7 +34,7 @@
     var getDisplayName = function() {
       var serviceClassName = row.apiObject.spec.serviceClassName;
       var instanceName = row.apiObject.metadata.name;
-      var serviceClassDisplayName = _.get(row, ['state','serviceClasses', serviceClassName, 'osbMetadata', 'displayName']);
+      var serviceClassDisplayName = _.get(row, ['state','serviceClasses', serviceClassName, 'externalMetadata', 'displayName']);
       return serviceClassDisplayName || serviceClassName || instanceName;
     };
 
