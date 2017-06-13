@@ -135,68 +135,12 @@ angular.module('openshiftConsole')
         };
 
         $scope.cancelBuild = function() {
-          BuildsService
-            .cancelBuild($scope.build, $scope.buildConfigName, context)
-            .then(function resolve(build) {
-              // TODO: common alerts service to eliminate duplication
-              $scope.alerts["cancel"] = {
-                type: "success",
-                message: "Cancelled build " + build.metadata.name + " of " + $scope.buildConfigName + "."
-              };
-            }, function reject(result) {
-              // TODO: common alerts service to eliminate duplication
-              $scope.alerts["cancel"] = {
-                type: "error",
-                message: "An error occurred cancelling the build.",
-                details: $filter('getErrorDetails')(result)
-              };
-            });
-        };
-
-        var getLinksClonedBuild = function(build) {
-          // When the build is first cloned, the Jenkins annotations are not
-          // yet updated, so the Jenkins log link is wrong. Give a link to the
-          // build instead of the log. Also link to the build if the user
-          // doesn't have authority to view the log.
-          if ($filter('isJenkinsPipelineStrategy')($scope.build) ||
-              !$filter('canI')('builds/log', 'get')) {
-            return [{
-              href: Navigate.resourceURL(build),
-              label: "View Build"
-            }];
-          }
-
-          var logLink = $filter('buildLogURL')(build);
-          if (!logLink) {
-            return [];
-          }
-
-          return [{
-            href: logLink,
-            label: "View Log"
-          }];
+          BuildsService.cancelBuild($scope.build, $scope.buildConfigName);
         };
 
         $scope.cloneBuild = function() {
-          var name = _.get($scope, 'build.metadata.name');
-          if (name && $scope.canBuild) {
-            BuildsService
-              .cloneBuild(name, context)
-              .then(function resolve(build) {
-                // Add a view log link.
-                var links = getLinksClonedBuild(build);
-                $scope.alerts["rebuild"] = {
-                  type: "success",
-                  message: "Build " + name + " is being rebuilt as " + build.metadata.name + ".",
-                  links: links
-                };
-              }, function reject(result) {
-                $scope.alerts["rebuild"] = {
-                  type: "error",
-                  message: "An error occurred while rerunning the build.",
-                  details: $filter('getErrorDetails')(result)
-                };
-              });
+          if ($scope.build && $scope.canBuild) {
+            BuildsService.cloneBuild($scope.build, $scope.buildConfigName);
           }
         };
 

@@ -1654,7 +1654,7 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "</span>\n" +
     "</span>\n" +
     "</p>\n" +
-    "<button class=\"btn btn-primary btn-lg\" ng-click=\"startBuild(buildConfig.metadata.name)\" ng-if=\"('buildconfigs/instantiate' | canI : 'create') && !(buildConfig | isBinaryBuild)\">\n" +
+    "<button class=\"btn btn-primary btn-lg\" ng-click=\"startBuild()\" ng-if=\"('buildconfigs/instantiate' | canI : 'create') && !(buildConfig | isBinaryBuild)\">\n" +
     "<span ng-if=\"!(buildConfig | isJenkinsPipelineStrategy)\">\n" +
     "Start Build\n" +
     "</span>\n" +
@@ -12126,7 +12126,7 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "<div ng-repeat=\"(buildConfigName, buildConfig) in buildConfigs\" ng-if=\"!buildConfig || (buildConfig | isJenkinsPipelineStrategy)\" class=\"animate-repeat\">\n" +
     "<div ng-if=\"buildConfig\">\n" +
     "<div class=\"pull-right\">\n" +
-    "<button class=\"btn btn-default\" ng-if=\"'buildconfigs/instantiate' | canI : 'create'\" ng-click=\"startBuild(buildConfigName)\">\n" +
+    "<button class=\"btn btn-default\" ng-if=\"'buildconfigs/instantiate' | canI : 'create'\" ng-click=\"startBuild(buildConfig)\">\n" +
     "Start Pipeline\n" +
     "</button>\n" +
     "</div>\n" +
