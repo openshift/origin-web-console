@@ -4973,7 +4973,7 @@ h2+.list-view-pf{margin-top:20px}
 .overview .list-pf-expansion.in .pod-donut{text-align:center}
 .overview .list-pf-item{border-top-color:#dcdcdc}
 .overview .list-pf-item.active{border-top-color:#bbb}
-.overview .list-pf-item.deployment-in-progress{overflow:hidden}
+.overview .list-pf-item.deployment-in-progress.active{overflow:hidden}
 @media (max-width:767px){.overview .list-pf-item.deployment-in-progress .list-pf-expansion{overflow:hidden}
 .overview .list-pf-item>.list-pf-container>.list-pf-content{align-items:stretch;flex-direction:column;width:100%;word-wrap:break-word;word-break:break-word;overflow-wrap:break-word;min-width:0}
 }
