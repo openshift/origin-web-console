@@ -4181,6 +4181,13 @@ _.set(this, "selectedTab.networking", !0), b(this);
 }
 }
 };
+}), angular.module("openshiftConsole").factory("ServiceInstancesService", function() {
+return {
+getDisplayName:function(a, b) {
+var c = a.spec.serviceClassName, d = a.metadata.name, e = _.get(b, [ c, "osbMetadata", "displayName" ]);
+return e || c || d;
+}
+};
 }), angular.module("openshiftConsole").factory("OwnerReferencesService", function() {
 var a = function(a) {
 return _.get(a, "metadata.ownerReferences");
@@ -4206,7 +4213,17 @@ controller:!0
 });
 }
 };
-}), angular.module("openshiftConsole").controller("LandingPageController", [ "$scope", "$rootScope", "AuthService", "Catalog", "Constants", "Navigate", "NotificationsService", "RecentlyViewedServiceItems", "GuidedTourService", "$timeout", "$routeParams", "$location", function(a, b, c, d, e, f, g, h, i, j, k, l) {
+}), angular.module("openshiftConsole").factory("BindingModalUtils", [ function() {
+return {
+sortApplications:function(a, b, c, d, e) {
+if (a && b && c && d && e) {
+var f = a.concat(b).concat(c).concat(d).concat(e);
+return _.sortByAll(f, [ "metadata.name", "kind" ]);
+}
+return null;
+}
+};
+} ]), angular.module("openshiftConsole").controller("LandingPageController", [ "$scope", "$rootScope", "AuthService", "Catalog", "Constants", "Navigate", "NotificationsService", "RecentlyViewedServiceItems", "GuidedTourService", "$timeout", "$routeParams", "$location", function(a, b, c, d, e, f, g, h, i, j, k, l) {
 function m() {
 if (o) if (k.startTour) j(function() {
 l.replace(), l.search("startTour", null), a.startGuidedTour();
@@ -12234,111 +12251,148 @@ highlightService:"<"
 templateUrl:"views/directives/route-service-bar-chart.html"
 });
 }(), function() {
-function a(a, b, c, d) {
-var e, f, g, h, i, j, k, l = this, m = b("statusCondition"), n = function() {
+function a(a, b, c, d, e) {
+var f, g, h, i, j, k, l, m = this, n = b("statusCondition"), o = e.sortApplications, p = function() {
 var a, b;
-_.each(l.serviceInstances, function(c) {
-var d = "True" === _.get(m(c, "Ready"), "status");
+_.each(m.serviceInstances, function(c) {
+var d = "True" === _.get(n(c, "Ready"), "status");
 d && (!a || c.metadata.creationTimestamp > a.metadata.creationTimestamp) && (a = c), d || b && !(c.metadata.creationTimestamp > b.metadata.creationTimestamp) || (b = c);
-}), l.serviceToBind = _.get(a, "metadata.name") || _.get(b, "metadata.name");
-}, o = function() {
-l.serviceClasses && l.serviceInstances && (l.orderedServiceInstances = _.sortByAll(l.serviceInstances, function(a) {
-return _.get(l.serviceClasses, [ a.spec.serviceClassName, "osbMetadata", "displayName" ]) || a.spec.serviceClassName;
+}), m.serviceToBind = _.get(a, "metadata.name") || _.get(b, "metadata.name");
+}, q = function() {
+m.serviceClasses && m.serviceInstances && (m.orderedServiceInstances = _.sortByAll(m.serviceInstances, function(a) {
+return _.get(m.serviceClasses, [ a.spec.serviceClassName, "osbMetadata", "displayName" ]) || a.spec.serviceClassName;
 }, function(a) {
 return _.get(a, "metadata.name", "");
 }));
-}, p = function() {
-if (g && h && i && j && k) {
-var a = g.concat(h).concat(i).concat(j).concat(k);
-l.applications = _.sortByAll(a, [ "metadata.name", "kind" ]), l.bindType = l.applications.length ? "application" :"secret-only";
-}
-}, q = function() {
-l.nextTitle = "Bind", e = a.$watch("ctrl.selectionForm.$valid", function(a) {
-l.steps[0].valid = a;
-});
 }, r = function() {
-e && (e(), e = void 0), l.nextTitle = "Close", l.wizardComplete = !0, l.bindService();
+m.nextTitle = "Bind", f = a.$watch("ctrl.selectionForm.$valid", function(a) {
+m.steps[0].valid = a;
+});
 }, s = function() {
+f && (f(), f = void 0), m.nextTitle = "Close", m.wizardComplete = !0, m.bindService();
+}, t = function() {
 var a = {
-namespace:_.get(l.target, "metadata.namespace")
+namespace:_.get(m.target, "metadata.namespace")
 };
 c.list("deploymentconfigs", a).then(function(a) {
-g = _.toArray(a.by("metadata.name")), p();
+h = _.toArray(a.by("metadata.name")), m.applications = o(h, i, j, k, l);
 }), c.list("replicationcontrollers", a).then(function(a) {
-i = _.reject(a.by("metadata.name"), b("hasDeploymentConfig")), p();
+j = _.reject(a.by("metadata.name"), b("hasDeploymentConfig")), m.applications = o(h, i, j, k, l);
 }), c.list({
 group:"extensions",
 resource:"deployments"
 }, a).then(function(a) {
-h = _.toArray(a.by("metadata.name")), p();
+i = _.toArray(a.by("metadata.name")), m.applications = o(h, i, j, k, l);
 }), c.list({
 group:"extensions",
 resource:"replicasets"
 }, a).then(function(a) {
-j = _.reject(a.by("metadata.name"), b("hasDeployment")), p();
+k = _.reject(a.by("metadata.name"), b("hasDeployment")), m.applications = o(h, i, j, k, l);
 }), c.list({
 group:"apps",
 resource:"statefulsets"
 }, a).then(function(a) {
-k = _.toArray(a.by("metadata.name")), p();
+l = _.toArray(a.by("metadata.name")), m.applications = o(h, i, j, k, l);
 });
-}, t = function() {
+}, u = function() {
 var a = {
-namespace:_.get(l.target, "metadata.namespace")
+namespace:_.get(m.target, "metadata.namespace")
 };
 c.list({
 group:"servicecatalog.k8s.io",
 resource:"instances"
 }, a).then(function(a) {
-l.serviceInstances = a.by("metadata.name"), l.serviceToBind || n(), o();
+m.serviceInstances = a.by("metadata.name"), m.serviceToBind || p(), q();
 });
 };
-l.$onInit = function() {
-l.serviceSelection = {};
-var a = "Instance" === l.target.kind ? "Applications" :"Services";
-l.steps = [ {
+m.$onInit = function() {
+m.serviceSelection = {};
+var a = "Instance" === m.target.kind ? "Applications" :"Services";
+m.steps = [ {
 id:"bindForm",
 label:a,
 view:"views/directives/bind-service/bind-service-form.html",
 valid:!0,
-onShow:q
+onShow:r
 }, {
 label:"Results",
 id:"results",
 view:"views/directives/bind-service/results.html",
 valid:!0,
-onShow:r
+onShow:s
 } ], c.list({
 group:"servicecatalog.k8s.io",
 resource:"serviceclasses"
 }, {}).then(function(a) {
-l.serviceClasses = a.by("metadata.name"), "Instance" === l.target.kind && (l.serviceClass = l.serviceClasses[l.target.spec.serviceClassName], l.serviceClassName = l.target.spec.serviceClassName), o();
-}), "Instance" === l.target.kind ? (l.bindType = "secret-only", l.appToBind = null, l.serviceToBind = l.target.metadata.name, s()) :(l.bindType = "application", l.appToBind = l.target, t());
-}, l.$onDestroy = function() {
-e && (e(), e = void 0), f && c.unwatch(f);
-}, l.bindService = function() {
-var a = "Instance" === l.target.kind ? l.target :l.serviceInstances[l.serviceToBind], b = "application" === l.bindType ? l.appToBind :void 0, e = {
+m.serviceClasses = a.by("metadata.name"), "Instance" === m.target.kind && (m.serviceClass = m.serviceClasses[m.target.spec.serviceClassName], m.serviceClassName = m.target.spec.serviceClassName), q();
+}), "Instance" === m.target.kind ? (m.bindType = "secret-only", m.appToBind = null, m.serviceToBind = m.target.metadata.name, t()) :(m.bindType = "application", m.appToBind = m.target, u());
+}, m.$onDestroy = function() {
+f && (f(), f = void 0), g && c.unwatch(g);
+}, m.bindService = function() {
+var a = "Instance" === m.target.kind ? m.target :m.serviceInstances[m.serviceToBind], b = "application" === m.bindType ? m.appToBind :void 0, e = {
 namespace:_.get(a, "metadata.namespace")
 };
 d.bindService(e, _.get(a, "metadata.name"), b).then(function(a) {
-l.binding = a, l.error = null, f = c.watchObject(d.bindingResource, _.get(l.binding, "metadata.name"), e, function(a) {
-l.binding = a;
+m.binding = a, m.error = null, g = c.watchObject(d.bindingResource, _.get(m.binding, "metadata.name"), e, function(a) {
+m.binding = a;
 });
 }, function(a) {
-l.error = a;
+m.error = a;
 });
-}, l.closeWizard = function() {
-_.isFunction(l.onClose) && l.onClose();
+}, m.closeWizard = function() {
+_.isFunction(m.onClose) && m.onClose();
 };
 }
 angular.module("openshiftConsole").component("bindService", {
-controller:[ "$scope", "$filter", "DataService", "BindingService", a ],
+controller:[ "$scope", "$filter", "DataService", "BindingService", "BindingModalUtils", a ],
 controllerAs:"ctrl",
 bindings:{
 target:"<",
 onClose:"<"
 },
 templateUrl:"views/directives/bind-service.html"
+});
+}(), function() {
+function a(a, b, c, d) {
+var e, f = this, g = d.getDisplayName, h = function() {
+c["delete"]({
+group:"servicecatalog.k8s.io",
+resource:"bindings"
+}, f.selectedBinding, e).then(_.noop, function(a) {
+f.error = a;
+});
+}, i = function() {
+f.nextTitle = "Unbind";
+}, j = function() {
+f.nextTitle = "Close", f.wizardComplete = !0, h();
+};
+f.$onInit = function() {
+f.displayName = g(f.target), f.steps = [ {
+id:"service",
+label:"Service",
+view:"views/directives/bind-service/select-binding.html",
+onShow:i
+}, {
+id:"confirmation",
+label:"Confirmation",
+view:"views/directives/bind-service/remove-binding-confirm.html",
+onShow:j
+} ], e = {
+namespace:_.get(f.target, "metadata.namespace")
+};
+}, f.closeWizard = function() {
+_.isFunction(f.onClose) && f.onClose();
+};
+}
+angular.module("openshiftConsole").component("unbindService", {
+controller:[ "$filter", "BindingModalUtils", "DataService", "ServiceInstancesService", a ],
+controllerAs:"ctrl",
+bindings:{
+target:"<",
+bindings:"<",
+onClose:"<"
+},
+templateUrl:"views/directives/unbind-service.html"
 });
 }(), angular.module("openshiftConsole").component("processTemplate", {
 controller:[ "$filter", "$q", "$scope", "$uibModal", "DataService", "Navigate", "NotificationsService", "ProcessedTemplateService", "QuotaService", "SecurityCheckService", "TaskList", "keyValueEditorUtils", ProcessTemplate ],
@@ -12817,30 +12871,27 @@ hidePipelines:"<"
 templateUrl:"views/overview/_list-row.html"
 });
 }(), function() {
-function a(a, b, c, d, e, f) {
-var g = this;
-_.extend(g, e.ui);
-var h = a("getErrorDetails"), i = function() {
-var a = g.apiObject.spec.serviceClassName, b = g.apiObject.metadata.name, c = _.get(g, [ "state", "serviceClasses", a, "osbMetadata", "displayName" ]);
-return c || a || b;
-}, j = function() {
-var a = g.apiObject.spec.serviceClassName;
-return _.get(g, [ "state", "serviceClasses", a, "description" ]);
+function a(a, b, c, d, e, f, g) {
+var h = this;
+_.extend(h, e.ui);
+var i = a("getErrorDetails"), j = g.getDisplayName, k = function() {
+var a = h.apiObject.spec.serviceClassName;
+return _.get(h, [ "state", "serviceClasses", a, "description" ]);
 };
-g.$doCheck = function() {
-g.notifications = e.getNotifications(g.apiObject, g.state), g.displayName = i(), g.description = j();
-}, g.getSecretForBinding = function(a) {
-return a && _.get(g, [ "state", "secrets", a.spec.secretName ]);
-}, g.isBindable = d.isServiceBindable(g.apiObject, g.state.serviceClasses), g.closeOverlayPanel = function() {
-_.set(g, "overlay.panelVisible", !1);
-}, g.showOverlayPanel = function(a, b) {
-_.set(g, "overlay.panelVisible", !0), _.set(g, "overlay.panelName", a), _.set(g, "overlay.state", b);
-}, g.deprovision = function() {
+h.$doCheck = function() {
+h.notifications = e.getNotifications(h.apiObject, h.state), h.displayName = j(h.apiObject, h.serviceClasses), h.description = k();
+}, h.getSecretForBinding = function(a) {
+return a && _.get(h, [ "state", "secrets", a.spec.secretName ]);
+}, h.isBindable = d.isServiceBindable(h.apiObject, h.state.serviceClasses), h.closeOverlayPanel = function() {
+_.set(h, "overlay.panelVisible", !1);
+}, h.showOverlayPanel = function(a, b) {
+_.set(h, "overlay.panelVisible", !0), _.set(h, "overlay.panelName", a), _.set(h, "overlay.state", b);
+}, h.deprovision = function() {
 var a = {
 alerts:{
 deprovision:{
 type:"error",
-message:"Service '" + g.apiObject.spec.serviceClassName + "' will be deleted and no longer available."
+message:"Service '" + h.apiObject.spec.serviceClassName + "' will be deleted and no longer available."
 }
 },
 detailsMarkup:"Deprovision Service?",
@@ -12861,26 +12912,26 @@ return a;
 f.hideNotification("deprovision-service-error"), c["delete"]({
 group:"servicecatalog.k8s.io",
 resource:"instances"
-}, g.apiObject.metadata.name, {
-namespace:g.apiObject.metadata.namespace
+}, h.apiObject.metadata.name, {
+namespace:h.apiObject.metadata.namespace
 }).then(function() {
 f.addNotification({
 type:"success",
-message:"Successfully deprovisioned " + g.apiObject.metadata.name + "."
+message:"Successfully deprovisioned " + h.apiObject.metadata.name + "."
 });
 }, function(a) {
 f.addNotification({
 id:"deprovision-service-error",
 type:"error",
-message:"An error occurred while deprovisioning " + g.apiObject.metadata.name + ".",
-details:h(a)
+message:"An error occurred while deprovisioning " + h.apiObject.metadata.name + ".",
+details:i(a)
 });
 });
 });
 };
 }
 angular.module("openshiftConsole").component("serviceInstanceRow", {
-controller:[ "$filter", "$uibModal", "DataService", "BindingService", "ListRowUtils", "NotificationsService", a ],
+controller:[ "$filter", "$uibModal", "DataService", "BindingService", "ListRowUtils", "NotificationsService", "ServiceInstancesService", a ],
 controllerAs:"row",
 bindings:{
 apiObject:"<",

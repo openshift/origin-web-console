@@ -9,6 +9,7 @@
       'BindingService',
       'ListRowUtils',
       'NotificationsService',
+      'ServiceInstancesService',
       ServiceInstanceRow
     ],
     controllerAs: 'row',
@@ -25,18 +26,13 @@
                               DataService,
                               BindingService,
                               ListRowUtils,
-                              NotificationsService) {
+                              NotificationsService,
+                              ServiceInstancesService) {
     var row = this;
     _.extend(row, ListRowUtils.ui);
 
     var getErrorDetails = $filter('getErrorDetails');
-
-    var getDisplayName = function() {
-      var serviceClassName = row.apiObject.spec.serviceClassName;
-      var instanceName = row.apiObject.metadata.name;
-      var serviceClassDisplayName = _.get(row, ['state','serviceClasses', serviceClassName, 'osbMetadata', 'displayName']);
-      return serviceClassDisplayName || serviceClassName || instanceName;
-    };
+    var getDisplayName = ServiceInstancesService.getDisplayName;
 
     var getDescription = function() {
       var serviceClassName = row.apiObject.spec.serviceClassName;
@@ -45,7 +41,7 @@
 
     row.$doCheck = function() {
       row.notifications = ListRowUtils.getNotifications(row.apiObject, row.state);
-      row.displayName = getDisplayName();
+      row.displayName = getDisplayName(row.apiObject, row.serviceClasses);
       row.description = getDescription();
     };
 

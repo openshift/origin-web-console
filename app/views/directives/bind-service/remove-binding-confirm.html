@@ -1,0 +1,23 @@
+<div>
+  <div ng-if="!ctrl.error">
+    <h3 class="mar-top-none">
+      <strong>{{ctrl.selectedBinding}}</strong> has been unbound
+      <!-- TODO: will need to share the sortApplications() function from bindService (and the resource requests block) -->
+      <!-- from <strong>{{ctrl.target.metadata.name}}</strong>-->
+    </h3>
+    <p class="mar-top-lg">
+      <span class="pficon pficon-info"></span> You will need to redeploy your pods for the un-binding to take effect.
+    </p>
+  </div>
+  <div ng-if="ctrl.error">
+    <div class="title">Deletion of Binding Failed <span class="fa fa-times text-danger"></span></div>
+    <div class="sub-title">
+      <span ng-if="ctrl.error.data.message">
+        {{ctrl.error.data.message | upperFirst}}
+      </span>
+      <span ng-if="!ctrl.error.data.message">
+        An error occurred deleting the binding.
+      </span>
+    </div>
+  </div>
+</div>
