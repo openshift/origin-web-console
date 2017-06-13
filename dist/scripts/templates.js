@@ -11933,7 +11933,7 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "<a href=\"\" ng-click=\"row.showOverlayPanel('bindService', {target: row.apiObject})\">Create Binding</a>\n" +
     "</li>\n" +
     "<li role=\"menuitem\">\n" +
-    "<a href=\"\" ng-click=\"row.deprovision()\" role=\"button\">Deprovision</a>\n" +
+    "<a href=\"\" ng-click=\"row.deprovision()\" role=\"button\">Delete</a>\n" +
     "</li>\n" +
     "</ul>\n" +
     "</div>\n" +

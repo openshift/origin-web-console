@@ -72,8 +72,8 @@
             message: 'Service \'' + row.apiObject.spec.serviceClassName + '\' will be deleted and no longer available.'
           }
         },
-        detailsMarkup: 'Deprovision Service?',
-        okButtonText: 'Deprovision',
+        detailsMarkup: 'Delete Service?',
+        okButtonText: 'Delete',
         okButtonClass: 'btn-danger',
         cancelButtonText: 'Cancel'
       };
@@ -102,13 +102,13 @@
         .then(function() {
           NotificationsService.addNotification({
             type: "success",
-            message: "Successfully deprovisioned " + row.apiObject.metadata.name + "."
+            message: "Successfully deleted " + row.apiObject.metadata.name + "."
           });
         }, function(err) {
           NotificationsService.addNotification({
             id: "deprovision-service-error",
             type: "error",
-            message: "An error occurred while deprovisioning " + row.apiObject.metadata.name + ".",
+            message: "An error occurred while deleting " + row.apiObject.metadata.name + ".",
             details: getErrorDetails(err)
           });
         });
