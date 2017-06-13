@@ -11,9 +11,12 @@ class OverviewPage extends Page {
     return 'project/' + this.project.name + '/overview';
   }
   clickAddToProject() {
-    let button = element(by.cssContainingText('.project-action-btn', 'Add to project'));
+    let button = element(by.cssContainingText('.add-to-project-btn', 'Add to Project'));
     h.waitForElem(button);
     button.click();
+    let menuItem = element(by.cssContainingText('.uib-dropdown-menu a', 'Browse Catalog'));
+    h.waitForElem(menuItem);
+    menuItem.click();
     // lazy load to avoid future circular dependencies
     let CatalogPage = require('./catalog').CatalogPage;
     return new CatalogPage(this.project);

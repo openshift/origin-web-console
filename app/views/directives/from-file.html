@@ -24,7 +24,7 @@
         }" ng-model="editorContent" class="editor ace-bordered yaml-mode" id="add-component-editor" required></div>
       </div>
 
-      <div class="buttons gutter-bottom">
+      <div ng-if="!isDialog" class="buttons gutter-bottom">
         <button
           type="submit"
           ng-click="create()"

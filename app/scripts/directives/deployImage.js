@@ -19,7 +19,8 @@ angular.module("openshiftConsole")
       scope: {
         project: '=',
         context: '=',
-        alerts: '='
+        alerts: '=',
+        isDialog: '='
       },
       templateUrl: 'views/directives/deploy-image.html',
       link: function($scope) {
@@ -51,7 +52,7 @@ angular.module("openshiftConsole")
 
         var configMapDataOrdered = [];
         var secretDataOrdered = [];
-        var context = {namespace: $scope.project};
+        var context = {namespace: $scope.project.metadata.name};
         $scope.valueFromObjects = [];
 
         DataService.list("configmaps", context, null, { errorNotification: false }).then(function(configMapData) {
@@ -138,6 +139,8 @@ angular.module("openshiftConsole")
                   return;
                 }
 
+                $scope.forms.imageSelection.imageName.$setValidity("imageLoaded", true);
+
                 var image = $scope.import.image;
                 if (image) {
                   $scope.app.name = getName();
@@ -169,6 +172,14 @@ angular.module("openshiftConsole")
 
             delete $scope.import;
             $scope.istag = {};
+
+            if (newMode === 'dockerImage') {
+              $scope.forms.imageSelection.imageName.$setValidity("imageLoaded", false);
+            }
+            else {
+              // reset this to true so it doesn't block form submission
+              $scope.forms.imageSelection.imageName.$setValidity("imageLoaded", true);
+            }
           });
 
           $scope.$watch('istag', function(istag, old) {
@@ -209,15 +220,16 @@ angular.module("openshiftConsole")
             });
           }, true);
 
+          var displayName = $filter('displayName');
           var generatedResources;
           var createResources = function() {
             var titles = {
-              started: "Deploying image " + $scope.app.name + " to project " + $scope.project + ".",
-              success: "Deployed image " + $scope.app.name + " to project " + $scope.project + ".",
-              failure: "Failed to deploy image " + $scope.app.name + " to project " + $scope.project + "."
+              started: "Deploying image " + $scope.app.name + " to project " + displayName($scope.project),
+              success: "Deployed image " + $scope.app.name + " to project " + displayName($scope.project),
+              failure: "Failed to deploy image " + $scope.app.name + " to project " + displayName($scope.project)
             };
             TaskList.clear();
-            TaskList.add(titles, {}, $scope.project, function() {
+            TaskList.add(titles, {}, $scope.project.metadata.name, function() {
               var d = $q.defer();
               DataService.batch(generatedResources, $scope.context).then(function(result) {
                 var alerts, hasErrors = !_.isEmpty(result.failure);
@@ -250,7 +262,14 @@ angular.module("openshiftConsole")
               return d.promise;
             });
 
-            Navigate.toNextSteps($scope.app.name, $scope.project);
+            if ($scope.isDialog) {
+              $scope.$emit('deployImageNewAppCreated', {
+                project: $scope.project,
+                appName: $scope.app.name
+              });
+            } else {
+              Navigate.toNextSteps($scope.app.name, $scope.project.metadata.name);
+            }
           };
 
           var launchConfirmationDialog = function(alerts) {
@@ -296,7 +315,7 @@ angular.module("openshiftConsole")
             $scope.alerts = {};
             generatedResources = getResources();
 
-            var nameTakenPromise = ApplicationGenerator.ifResourcesDontExist(generatedResources, $scope.project);
+            var nameTakenPromise = ApplicationGenerator.ifResourcesDontExist(generatedResources, $scope.project.metadata.name);
             var checkQuotaPromise = QuotaService.getLatestQuotaAlerts(generatedResources, $scope.context);
             // Don't want to wait for the name checks to finish before making the calls to quota
             // so kick off the requests above and then chain the promises here
@@ -306,6 +325,11 @@ angular.module("openshiftConsole")
             };
             nameTakenPromise.then(setNameTaken, setNameTaken).then(showWarningsOrCreate, showWarningsOrCreate);
           };
+
+          // When the deploy-image component is displayed in a dialog, the create
+          // button is outside the component since it is in the wizard footer. Listen
+          // for an event for when the button is clicked.
+          $scope.$on('newAppFromDeployImage', $scope.create);
       }
     };
   });

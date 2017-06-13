@@ -58,11 +58,16 @@
       }
     }
   }
-  .nav.navbar-iconic {
+  .navbar-iconic {
     margin-right: 10px;
+  }
+  .nav {
     .dropdown-menu {
       margin-top: -10px;
-      right: 0;
+      right: 5px;
+      @media(min-width: @screen-sm-min) {
+        right: 0;
+      }
       &:after {
         border: 6px solid transparent;
         border-bottom-color: #fff;
@@ -75,6 +80,10 @@
         top: -6px;
         vertical-align: middle;
         width: 0;
+
+        @media (max-width: @screen-xs-max) {
+          right: 13px;
+        }
       }
     }
   }
@@ -117,24 +126,29 @@
         color: @navbar-pf-alt-active-color;
       }
     }
+    .add-to-project,
+    .username {
+      float: left;
+      font-weight: 300;
+      padding: 0 4px;
+    }
+    // align nav-item-iconic vertically with project menu
     .caret {
-      height: 12px;
+      margin-top: 5px;
+    }
+    .add-to-project + .caret,
+    .pficon-user,
+    .username + .caret {
+      display: block;
+      float: left;
     }
     .caret, .fa, .pf-icon {
       color: @navbar-pf-alt-color;
       font-size: @font-size-base + 3;
       width: auto;
     }
-    .pficon-user,
-    .username + .caret {
-      display: block;
-      float: left;
-    }
     .username {
-      float: left;
-      font-weight: 300;
       max-width: 100px;
-      padding: 0 4px;
       @media (min-width: @screen-md-min) {
         max-width: 130px;
       }
@@ -143,9 +157,6 @@
       }
       @media (min-width: @screen-xl-min) {
         max-width: 250px;
-      }
-      + .caret {
-        margin-top: 3px;
       }
     }
   }
@@ -212,36 +223,25 @@
 
 .navbar-flex-btn {
   position: relative;
-  + .navbar-flex-btn .project-action-btn:before,
+  + .navbar-flex-btn .add-to-project-btn:before,
   .navbar-toggle.project-action-btn:before {
     display: none; // remove inset border
   }
-  .project-action-btn {
+  .add-to-project-btn {
     align-items: center;
-    color: @navbar-os-project-menu-color;
+    justify-content: center;
     flex: 1 0 0%;
     font-weight: 300;
-    justify-content: center;
-    text-decoration: none;
-    &:hover {
-      background-color: @navbar-os-project-menu-active-bg;
-      color: @navbar-os-project-menu-active-color;
-    }
-    // inset borders
-    &:before, &:after {
-      content: '';
-      display: block;
-      position: absolute;
-      top: 0;
-      width: 1px;
-      background: @navbar-os-project-menu-border-inset;
-      height: 100%;
-    }
     &:before {
-      left: 0px;
-    }
-    &:after {
-      right: -1px;
+        background: @navbar-os-project-menu-border-inset;
+        content: '';
+        display: block;
+        height: 100%;
+        left: 0px;
+        position: absolute;
+        top: 0;
+        width: 1px;
+
     }
   }
 }
@@ -267,7 +267,7 @@
   }
   .navbar-flex-btn {
     flex: 0 0 50px;
-    a {
+    > a {
       color: lighten(@navbar-os-project-menu-color, 20%);
       cursor: pointer;
       display: flex;
@@ -277,6 +277,9 @@
         color: @navbar-os-project-menu-color;
       }
     }
+  }
+  .navbar-pf-alt .nav .add-to-project-btn.nav-item-iconic {
+    padding: 14px;
   }
 }
 
@@ -299,15 +302,8 @@
       }
     }
   }
-  .navbar-flex-btn {
-    &.toggle-menu {
+  .navbar-flex-btn.toggle-menu {
       display: none;
-    }
-    .project-action-btn {
-      border-right: 1px solid @navbar-os-project-menu-border;
-      flex-basis: auto; // IE
-      padding: 0 15px;
-    }
   }
 }
 
