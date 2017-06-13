@@ -668,7 +668,7 @@ routes:"architecture/core_concepts/routes.html",
 builds:"architecture/core_concepts/builds_and_image_streams.html#builds",
 "image-streams":"architecture/core_concepts/builds_and_image_streams.html#image-streams",
 storage:"architecture/additional_concepts/storage.html",
-"build-hooks":"dev_guide/builds.html#build-hooks",
+"build-hooks":"dev_guide/builds/build_hooks.html",
 "default":"welcome/index.html"
 },
 CLI:{
