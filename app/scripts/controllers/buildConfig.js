@@ -82,7 +82,7 @@ angular.module('openshiftConsole')
           $scope.alerts['saveBCEnvVarsError'] = {
             type: "error",
             message: $scope.buildConfigName + " was not updated.",
-            details: "Reason: " + $filter('getErrorDetails')(e)
+            details: $filter('getErrorDetails')(e)
           };
         });
     };
@@ -169,7 +169,7 @@ angular.module('openshiftConsole')
             $scope.alerts["load"] = {
               type: "error",
               message: e.status === 404 ? "This build configuration can not be found, it may have been deleted." : "The build configuration details could not be loaded.",
-              details: e.status === 404 ? "Any remaining build history for this build will be shown." : "Reason: " + $filter('getErrorDetails')(e)
+              details: e.status === 404 ? "Any remaining build history for this build will be shown." : $filter('getErrorDetails')(e)
             };
           }
         );

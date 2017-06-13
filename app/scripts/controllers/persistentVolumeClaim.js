@@ -52,7 +52,7 @@ angular.module('openshiftConsole')
           $scope.alerts["load"] = {
             type: "error",
             message: "The persistent volume claim details could not be loaded.",
-            details: "Reason: " + $filter('getErrorDetails')(e)
+            details: $filter('getErrorDetails')(e)
           };
         });
 
