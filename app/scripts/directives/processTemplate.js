@@ -268,7 +268,7 @@
     // button is outside the component since it is in the wizard footer. Listen
     // for an event for when the button is clicked.
     $scope.$on('instantiateTemplate', ctrl.createFromTemplate);
-    $scope.$on('hideTemplateNotificationErrors', hideNotificationErrors);
+    $scope.$on('$destroy', hideNotificationErrors);
 
     var shouldAddAppLabel = function() {
       // If the template defines its own app label, we don't need to add one at all

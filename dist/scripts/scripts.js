@@ -484,146 +484,6 @@ i.unwatchAll(_a), $(window).off("resize.overview", R);
 }));
 }
 
-function ProcessTemplate(a, b, c, d, e, f, g, h, i, j, k, l) {
-function m(a) {
-var b = /^helplink\.(.*)\.title$/, c = /^helplink\.(.*)\.url$/, d = {};
-for (var e in a.annotations) {
-var f, g = e.match(b);
-g ? (f = d[g[1]] || {}, f.title = a.annotations[e], d[g[1]] = f) :(g = e.match(c), g && (f = d[g[1]] || {}, f.url = a.annotations[e], d[g[1]] = f));
-}
-return d;
-}
-function n() {
-p.prefillParameters && _.each(p.template.parameters, function(a) {
-p.prefillParameters[a.name] && (a.value = p.prefillParameters[a.name]);
-}), p.systemLabels = _.map(p.template.labels, function(a, b) {
-return {
-name:b,
-value:a
-};
-}), z() && p.systemLabels.push({
-name:"app",
-value:p.template.metadata.name
-});
-}
-var o, p = this, q = a("displayName"), r = a("humanize");
-p.$onInit = function() {
-p.labels = [], p.template = angular.copy(p.template), p.templateDisplayName = q(p.template), p.selectedProject = p.project, n();
-};
-var s, t = function() {
-var a = {
-started:"Creating " + p.templateDisplayName + " in project " + q(p.selectedProject),
-success:"Created " + p.templateDisplayName + " in project " + q(p.selectedProject),
-failure:"Failed to create " + p.templateDisplayName + " in project " + q(p.selectedProject)
-}, d = m(p.template);
-k.clear(), k.add(a, d, p.selectedProject.metadata.name, function() {
-var a = b.defer();
-return e.batch(s, o).then(function(b) {
-var c = [], d = !1;
-b.failure.length > 0 ? (d = !0, b.failure.forEach(function(a) {
-c.push({
-type:"error",
-message:"Cannot create " + r(a.object.kind).toLowerCase() + ' "' + a.object.metadata.name + '". ',
-details:a.data.message
-});
-}), b.success.forEach(function(a) {
-c.push({
-type:"success",
-message:"Created " + r(a.kind).toLowerCase() + ' "' + a.metadata.name + '" successfully. '
-});
-})) :c.push({
-type:"success",
-message:"All items in template " + p.templateDisplayName + " were created successfully."
-}), a.resolve({
-alerts:c,
-hasErrors:d
-});
-}), a.promise;
-}), p.isDialog ? c.$emit("templateInstantiated", {
-project:p.selectedProject,
-template:p.template
-}) :f.toNextSteps(p.templateDisplayName, p.selectedProject.metadata.name);
-}, u = function(a) {
-var b = d.open({
-animation:!0,
-templateUrl:"views/modals/confirm.html",
-controller:"ConfirmModalController",
-resolve:{
-modalConfig:function() {
-return {
-alerts:a,
-message:"We checked your application for potential problems. Please confirm you still want to create this application.",
-okButtonText:"Create Anyway",
-okButtonClass:"btn-danger",
-cancelButtonText:"Cancel"
-};
-}
-}
-});
-b.result.then(t);
-}, v = {}, w = function() {
-g.hideNotification("process-template-error"), _.each(v, function(a) {
-!a.id || "error" !== a.type && "warning" !== a.type || g.hideNotification(a.id);
-});
-}, x = function(a) {
-w(), v = j.getSecurityAlerts(s, p.selectedProject.metadata.name);
-var b = a.quotaAlerts || [];
-v = v.concat(b);
-var c = _.filter(v, {
-type:"error"
-});
-c.length ? (p.disableInputs = !1, _.each(v, function(a) {
-a.id = _.uniqueId("process-template-alert-"), g.addNotification(a);
-})) :v.length ? (u(v), p.disableInputs = !1) :t();
-}, y = function() {
-if (_.has(p.selectedProject, "metadata.uid")) return b.when(p.selectedProject);
-var d = p.selectedProject.metadata.name, f = p.selectedProject.metadata.annotations["new-display-name"], g = a("description")(p.selectedProject), h = {
-apiVersion:"v1",
-kind:"ProjectRequest",
-metadata:{
-name:d
-},
-displayName:f,
-description:g
-};
-return e.create("projectrequests", null, h, c);
-};
-p.createFromTemplate = function() {
-p.disableInputs = !0, y().then(function(a) {
-p.selectedProject = a, o = {
-namespace:p.selectedProject.metadata.name
-};
-var b = l.mapEntries(l.compactEntries(p.labels)), c = l.mapEntries(l.compactEntries(p.systemLabels));
-p.template.labels = _.extend(c, b), e.create("processedtemplates", null, p.template, o).then(function(a) {
-h.setTemplateData(a.parameters, p.template.parameters, a.message), s = a.objects, i.getLatestQuotaAlerts(s, o).then(x);
-}, function(a) {
-p.disableInputs = !1;
-var b;
-a.data && a.data.message && (b = a.data.message), g.addNotification({
-id:"process-template-error",
-type:"error",
-message:"An error occurred processing the template.",
-details:b
-});
-});
-}, function(a) {
-p.disableInputs = !1;
-var b;
-a.data && a.data.message && (b = a.data.message), g.addNotification({
-id:"process-template-error",
-type:"error",
-message:"An error occurred creating the project.",
-details:b
-});
-});
-}, p.cancel = function() {
-w(), f.toProjectOverview(p.project.metadata.name);
-}, c.$on("instantiateTemplate", p.createFromTemplate), c.$on("hideTemplateNotificationErrors", w);
-var z = function() {
-return !_.get(p.template, "labels.app") && !_.some(p.template.objects, "metadata.labels.app");
-};
-}
-
 angular.isUndefined(window.OPENSHIFT_CONSTANTS) && (window.OPENSHIFT_CONSTANTS = {}), angular.extend(window.OPENSHIFT_CONSTANTS, {
 HELP_BASE_URL:"https://docs.openshift.org/latest/",
 HELP:{
@@ -9086,7 +8946,11 @@ b.unwatchAll(e);
 } ]), angular.module("openshiftConsole").directive("fromFile", [ "$filter", "$location", "$q", "$uibModal", "APIService", "CachedTemplateService", "DataService", "Navigate", "NotificationsService", "QuotaService", "SecurityCheckService", "TaskList", function(a, b, c, d, e, f, g, h, i, j, k, l) {
 return {
 restrict:"E",
-scope:!1,
+scope:{
+context:"=",
+project:"=",
+isDialog:"="
+},
 templateUrl:"views/directives/from-file.html",
 controller:[ "$scope", function(m) {
 function n(a) {
@@ -9095,7 +8959,7 @@ message:"Resource is missing kind field."
 }, !1);
 }
 function o(a) {
-return !!m.isList || (a.metadata ? a.metadata.name ? !a.metadata.namespace || a.metadata.namespace === m.projectName || (m.error = {
+return !!m.isList || (a.metadata ? a.metadata.name ? !a.metadata.namespace || a.metadata.namespace === m.project.metadata.name || (m.error = {
 message:a.kind + " " + a.metadata.name + " can't be created in project " + a.metadata.namespace + ". Can't create resource in different projects."
 }, !1) :(m.error = {
 message:"Resource name is missing in metadata field."
@@ -9134,9 +8998,14 @@ b > 0 && d.push(w()), a > 0 && d.push(v()), c.all(d).then(s);
 }
 function s() {
 var a, c;
-E(), "Template" === m.resourceKind && m.templateOptions.process && !m.errorOccured ? (c = m.templateOptions.add || m.updateResources.length > 0 ? m.projectName :"", a = h.createFromTemplateURL(B, m.projectName, {
+E(), "Template" === m.resourceKind && m.templateOptions.process && !m.errorOccured ? m.isDialog ? m.$emit("fileImportedFromYAMLOrJSON", {
+project:m.project,
+template:B
+}) :(c = m.templateOptions.add || m.updateResources.length > 0 ? m.project.metadata.name :"", a = h.createFromTemplateURL(B, m.project.metadata.name, {
 namespace:c
-})) :a = h.projectOverviewURL(m.projectName), b.url(a);
+}), b.url(a)) :m.isDialog ? m.$emit("fileImportedFromYAMLOrJSON", {
+project:m.project
+}) :(a = h.projectOverviewURL(m.project.metadata.name), b.url(a));
 }
 function t(a) {
 var b = e.objectToResourceGroupVersion(a);
@@ -9156,7 +9025,7 @@ message:e.invalidObjectKindOrVersion(a)
 function u() {
 var b;
 _.isEmpty(m.createResources) ? (b = _.head(m.updateResources), g.update(e.kindToResource(b.kind), b.metadata.name, b, {
-namespace:m.projectName
+namespace:m.project.metadata.name
 }).then(function() {
 var a = y(b.kind);
 i.addNotification({
@@ -9171,7 +9040,7 @@ message:"Unable to update the " + y(b.kind) + " '" + b.metadata.name + "'.",
 details:a("getErrorDetails")(c)
 });
 })) :(b = _.head(m.createResources), g.create(e.kindToResource(b.kind), null, b, {
-namespace:m.projectName
+namespace:m.project.metadata.name
 }).then(function() {
 var a = y(b.kind);
 i.addNotification({
@@ -9189,11 +9058,11 @@ details:a("getErrorDetails")(c)
 }
 function v() {
 var a = {
-started:"Creating resources in project " + m.projectName,
-success:"Creating resources in project " + m.projectName,
-failure:"Failed to create some resources in project " + m.projectName
+started:"Creating resources in project " + G(m.project),
+success:"Creating resources in project " + G(m.project),
+failure:"Failed to create some resources in project " + G(m.project)
 }, b = {};
-l.add(a, b, m.projectName, function() {
+l.add(a, b, m.project.metadata.name, function() {
 var a = c.defer();
 return g.batch(m.createResources, m.context, "create").then(function(b) {
 var c = [], d = !1;
@@ -9224,11 +9093,11 @@ hasErrors:d
 }
 function w() {
 var a = {
-started:"Updating resources in project " + m.projectName,
-success:"Updated resources in project " + m.projectName,
-failure:"Failed to update some resources in project " + m.projectName
+started:"Updating resources in project " + G(m.project),
+success:"Updated resources in project " + G(m.project),
+failure:"Failed to update some resources in project " + G(m.project)
 }, b = {};
-l.add(a, b, m.projectName, function() {
+l.add(a, b, m.project.metadata.name, function() {
 var a = c.defer();
 return g.batch(m.updateResources, m.context, "update").then(function(b) {
 var c = [], d = !1;
@@ -9309,7 +9178,7 @@ i.hideNotification("from-file-error"), _.each(D, function(a) {
 !a.id || "error" !== a.type && "warning" !== a.type || i.hideNotification(a.id);
 });
 }, F = function(a) {
-E(), D = k.getSecurityAlerts(m.createResources, m.projectName);
+E(), D = k.getSecurityAlerts(m.createResources, m.project.metadata.name);
 var b = a.quotaAlerts || [];
 D = D.concat(b);
 var c = _.filter(D, {
@@ -9345,6 +9214,8 @@ m.errorOccured || (1 === m.createResources.length && "Template" === m.resourceLi
 }, m.cancel = function() {
 E(), h.toProjectOverview(m.projectName);
 };
+var G = a("displayName");
+m.$on("importFileFromYAMLOrJSON", m.create), m.$on("$destroy", E);
 } ]
 };
 } ]), angular.module("openshiftConsole").directive("oscFileInput", [ "Logger", function(a) {
@@ -10022,25 +9893,34 @@ return c;
 };
 } ]
 };
-} ]).directive("projectHeader", [ "$timeout", "$location", "$filter", "DataService", "projectOverviewURLFilter", function(a, b, c, d, e) {
-var f = {}, g = [];
+} ]).directive("projectHeader", [ "$timeout", "$location", "$filter", "DataService", "projectOverviewURLFilter", "Constants", function(a, b, c, d, e, f) {
+var g = {}, h = [];
 return {
 restrict:"EA",
 templateUrl:"views/directives/header/project-header.html",
-link:function(a, h) {
-var i = h.find(".selectpicker"), j = [], k = function() {
-var b = a.project || {}, d = a.projectName, e = b.metadata && b.metadata.name;
+link:function(a, i) {
+a.closeOrderingPanel = function() {
+_.set(a, "ordering.panelName", "");
+}, a.showOrderingPanel = function(b) {
+_.set(a, "ordering.panelName", b);
+}, a.catalogLandingPageEnabled = _.get(f, "ENABLE_TECH_PREVIEW_FEATURE.service_catalog_landing_page");
+var j = i.find(".selectpicker"), k = [], l = function() {
+var b = a.project || {};
+a.context = {
+namespace:a.projectName
+};
+var d = a.projectName, e = b.metadata && b.metadata.name;
 (d || e) && (d || (d = b.metadata.name), e || (b = {
 metadata:{
 name:d
 }
-}), f[d] || (f[d] = b), g = c("orderByDisplayName")(f), j = _.map(g, function(a) {
-return $("<option>").attr("value", a.metadata.name).attr("selected", a.metadata.name === d).text(c("uniqueDisplayName")(a, g));
-}), i.empty(), i.append(j), i.append($('<option data-divider="true"></option>')), i.append($('<option value="">View all projects</option>')), i.selectpicker("refresh"));
+}), g[d] || (g[d] = b), h = c("orderByDisplayName")(g), k = _.map(h, function(a) {
+return $("<option>").attr("value", a.metadata.name).attr("selected", a.metadata.name === d).text(c("uniqueDisplayName")(a, h));
+}), j.empty(), j.append(k), j.append($('<option data-divider="true"></option>')), j.append($('<option value="">View all projects</option>')), j.selectpicker("refresh"));
 };
 d.list("projects", a, function(a) {
-f = a.by("metadata.name"), k();
-}), k(), i.selectpicker({
+g = a.by("metadata.name"), l();
+}), l(), j.selectpicker({
 iconBase:"fa",
 tickIcon:"fa-check"
 }).change(function() {
@@ -10049,7 +9929,7 @@ a.$apply(function() {
 b.url(d);
 });
 }), a.$on("project.settings.update", function(a, b) {
-f[b.metadata.name] = b, k();
+g[b.metadata.name] = b, l();
 });
 }
 };
@@ -12326,8 +12206,148 @@ onClose:"<"
 },
 templateUrl:"views/directives/bind-service.html"
 });
-}(), angular.module("openshiftConsole").component("processTemplate", {
-controller:[ "$filter", "$q", "$scope", "$uibModal", "DataService", "Navigate", "NotificationsService", "ProcessedTemplateService", "QuotaService", "SecurityCheckService", "TaskList", "keyValueEditorUtils", ProcessTemplate ],
+}(), function() {
+function a(a, b, c, d, e, f, g, h, i, j, k, l) {
+function m(a) {
+var b = /^helplink\.(.*)\.title$/, c = /^helplink\.(.*)\.url$/, d = {};
+for (var e in a.annotations) {
+var f, g = e.match(b);
+g ? (f = d[g[1]] || {}, f.title = a.annotations[e], d[g[1]] = f) :(g = e.match(c), g && (f = d[g[1]] || {}, f.url = a.annotations[e], d[g[1]] = f));
+}
+return d;
+}
+function n() {
+p.prefillParameters && _.each(p.template.parameters, function(a) {
+p.prefillParameters[a.name] && (a.value = p.prefillParameters[a.name]);
+}), p.systemLabels = _.map(p.template.labels, function(a, b) {
+return {
+name:b,
+value:a
+};
+}), z() && p.systemLabels.push({
+name:"app",
+value:p.template.metadata.name
+});
+}
+var o, p = this, q = a("displayName"), r = a("humanize");
+p.$onInit = function() {
+p.labels = [], p.template = angular.copy(p.template), p.templateDisplayName = q(p.template), p.selectedProject = p.project, n();
+};
+var s, t = function() {
+var a = {
+started:"Creating " + p.templateDisplayName + " in project " + q(p.selectedProject),
+success:"Created " + p.templateDisplayName + " in project " + q(p.selectedProject),
+failure:"Failed to create " + p.templateDisplayName + " in project " + q(p.selectedProject)
+}, d = m(p.template);
+k.clear(), k.add(a, d, p.selectedProject.metadata.name, function() {
+var a = b.defer();
+return e.batch(s, o).then(function(b) {
+var c = [], d = !1;
+b.failure.length > 0 ? (d = !0, b.failure.forEach(function(a) {
+c.push({
+type:"error",
+message:"Cannot create " + r(a.object.kind).toLowerCase() + ' "' + a.object.metadata.name + '". ',
+details:a.data.message
+});
+}), b.success.forEach(function(a) {
+c.push({
+type:"success",
+message:"Created " + r(a.kind).toLowerCase() + ' "' + a.metadata.name + '" successfully. '
+});
+})) :c.push({
+type:"success",
+message:"All items in template " + p.templateDisplayName + " were created successfully."
+}), a.resolve({
+alerts:c,
+hasErrors:d
+});
+}), a.promise;
+}), p.isDialog ? c.$emit("templateInstantiated", {
+project:p.selectedProject,
+template:p.template
+}) :f.toNextSteps(p.templateDisplayName, p.selectedProject.metadata.name);
+}, u = function(a) {
+var b = d.open({
+animation:!0,
+templateUrl:"views/modals/confirm.html",
+controller:"ConfirmModalController",
+resolve:{
+modalConfig:function() {
+return {
+alerts:a,
+message:"We checked your application for potential problems. Please confirm you still want to create this application.",
+okButtonText:"Create Anyway",
+okButtonClass:"btn-danger",
+cancelButtonText:"Cancel"
+};
+}
+}
+});
+b.result.then(t);
+}, v = {}, w = function() {
+g.hideNotification("process-template-error"), _.each(v, function(a) {
+!a.id || "error" !== a.type && "warning" !== a.type || g.hideNotification(a.id);
+});
+}, x = function(a) {
+w(), v = j.getSecurityAlerts(s, p.selectedProject.metadata.name);
+var b = a.quotaAlerts || [];
+v = v.concat(b);
+var c = _.filter(v, {
+type:"error"
+});
+c.length ? (p.disableInputs = !1, _.each(v, function(a) {
+a.id = _.uniqueId("process-template-alert-"), g.addNotification(a);
+})) :v.length ? (u(v), p.disableInputs = !1) :t();
+}, y = function() {
+if (_.has(p.selectedProject, "metadata.uid")) return b.when(p.selectedProject);
+var d = p.selectedProject.metadata.name, f = p.selectedProject.metadata.annotations["new-display-name"], g = a("description")(p.selectedProject), h = {
+apiVersion:"v1",
+kind:"ProjectRequest",
+metadata:{
+name:d
+},
+displayName:f,
+description:g
+};
+return e.create("projectrequests", null, h, c);
+};
+p.createFromTemplate = function() {
+p.disableInputs = !0, y().then(function(a) {
+p.selectedProject = a, o = {
+namespace:p.selectedProject.metadata.name
+};
+var b = l.mapEntries(l.compactEntries(p.labels)), c = l.mapEntries(l.compactEntries(p.systemLabels));
+p.template.labels = _.extend(c, b), e.create("processedtemplates", null, p.template, o).then(function(a) {
+h.setTemplateData(a.parameters, p.template.parameters, a.message), s = a.objects, i.getLatestQuotaAlerts(s, o).then(x);
+}, function(a) {
+p.disableInputs = !1;
+var b;
+a.data && a.data.message && (b = a.data.message), g.addNotification({
+id:"process-template-error",
+type:"error",
+message:"An error occurred processing the template.",
+details:b
+});
+});
+}, function(a) {
+p.disableInputs = !1;
+var b;
+a.data && a.data.message && (b = a.data.message), g.addNotification({
+id:"process-template-error",
+type:"error",
+message:"An error occurred creating the project.",
+details:b
+});
+});
+}, p.cancel = function() {
+w(), f.toProjectOverview(p.project.metadata.name);
+}, c.$on("instantiateTemplate", p.createFromTemplate), c.$on("$destroy", w);
+var z = function() {
+return !_.get(p.template, "labels.app") && !_.some(p.template.objects, "metadata.labels.app");
+};
+}
+angular.module("openshiftConsole").component("processTemplate", {
+controller:[ "$filter", "$q", "$scope", "$uibModal", "DataService", "Navigate", "NotificationsService", "ProcessedTemplateService", "QuotaService", "SecurityCheckService", "TaskList", "keyValueEditorUtils", a ],
 controllerAs:"$ctrl",
 bindings:{
 template:"<",
@@ -12336,7 +12356,8 @@ prefillParameters:"<",
 isDialog:"<"
 },
 templateUrl:"views/directives/process-template.html"
-}), function() {
+});
+}(), function() {
 function a(a, b) {
 function c() {
 var a = _.get(j, "template.metadata.annotations.iconClass", "fa fa-cubes");
@@ -12386,9 +12407,8 @@ e();
 }, j.next = function(a) {
 return a.stepId === j.configStep.id ? (h(), !1) :a.stepId !== j.resultsStep.id || (j.close(), !1);
 }, j.close = function() {
-a.$broadcast("hideTemplateNotificationErrors");
-var b = j.onDialogClosed();
-_.isFunction(b) && b();
+var a = j.onDialogClosed();
+_.isFunction(a) && a();
 };
 }
 angular.module("openshiftConsole").component("processTemplateDialog", {
@@ -12401,47 +12421,117 @@ onDialogClosed:"&"
 templateUrl:"views/directives/process-template-dialog.html"
 });
 }(), function() {
-function a(a) {
-function b(a) {
+function a(a, b) {
+var c = this;
+c.$onInit = function() {
+c.alerts = {}, c.loginBaseUrl = b.openshiftAPIBaseUrl(), c.currentStep = "Image";
+}, c.deployImage = function() {
+a.$broadcast("newAppFromDeployImage");
+}, a.$on("deployImageNewAppCreated", function(a, b) {
+c.selectedProject = b.project, c.currentStep = "Results";
+}), c.close = function() {
+var a = c.onDialogClosed();
+return _.isFunction(a) && a(), c.wizardDone = !1, !0;
+}, a.$on("wizard:stepChanged", function(a, b) {
+"results" === b.step.stepId ? (c.nextButtonTitle = "Close", c.wizardDone = !0) :c.nextButtonTitle = "Deploy";
+}), c.nextCallback = function(a) {
+return "image" === a.stepId ? (c.deployImage(), !1) :("results" === a.stepId && c.close(), !0);
+};
+}
+angular.module("openshiftConsole").component("deployImageDialog", {
+controller:[ "$scope", "DataService", a ],
+controllerAs:"$ctrl",
+bindings:{
+visible:"<",
+project:"<",
+context:"<",
+onDialogClosed:"&"
+},
+templateUrl:"views/directives/deploy-image-dialog.html"
+});
+}(), function() {
+function a(a, b, c) {
+function d() {
+var a = _.get(e, "template.metadata.annotations.iconClass", "fa fa-cubes");
+return a.indexOf("icon-") !== -1 ? "font-icon " + a :a;
+}
+var e = this;
+e.$onInit = function() {
+e.alerts = {}, e.loginBaseUrl = c.openshiftAPIBaseUrl();
+}, e.importFile = function() {
+a.$broadcast("importFileFromYAMLOrJSON");
+}, e.instantiateTemplate = function() {
+a.$broadcast("instantiateTemplate");
+}, a.$on("fileImportedFromYAMLOrJSON", function(a, c) {
+e.selectedProject = c.project, e.template = c.template, e.iconClass = d(), b(function() {
+e.currentStep = e.template ? "Template Configuration" :"Results";
+}, 0);
+}), a.$on("templateInstantiated", function(a, b) {
+e.selectedProject = b.project, e.currentStep = "Results";
+}), e.close = function() {
+e.template = null;
+var a = e.onDialogClosed();
+return _.isFunction(a) && a(), e.wizardDone = !1, !0;
+}, a.$on("wizard:stepChanged", function(a, b) {
+"results" === b.step.stepId ? (e.nextButtonTitle = "Close", e.wizardDone = !0) :e.nextButtonTitle = "Create";
+}), e.currentStep = "JSON / YAML", e.nextCallback = function(a) {
+return "file" === a.stepId ? (e.importFile(), !1) :"template" === a.stepId ? (e.instantiateTemplate(), !1) :"results" !== a.stepId || (e.close(), !1);
+};
+}
+angular.module("openshiftConsole").component("fromFileDialog", {
+controller:[ "$scope", "$timeout", "DataService", a ],
+controllerAs:"$ctrl",
+bindings:{
+visible:"<",
+project:"<",
+context:"<",
+onDialogClosed:"&"
+},
+templateUrl:"views/directives/from-file-dialog.html"
+});
+}(), function() {
+function a(a, b) {
+function c(a) {
 var b = [];
 return angular.forEach(a, function(a) {
 "completed" !== a.status && b.push(a);
 }), b;
 }
-function c(a) {
+function d(a) {
 var b = [];
 return angular.forEach(a, function(a) {
 a.hasErrors && b.push(a);
 }), b;
 }
-var d = this;
-d.showParamsTable = !1;
-var e = a.getTemplateData();
-d.parameters = e.params, d.templateMessage = e.message, a.clearTemplateData();
-var f = function(a) {
-var b = _.get(d, "createdBuildConfig.spec.triggers", []);
+var e = this;
+e.showParamsTable = !1;
+var f = a.getTemplateData();
+e.parameters = f.params, e.templateMessage = f.message, a.clearTemplateData();
+var g = function(a) {
+var b = _.get(e, "createdBuildConfig.spec.triggers", []);
 return _.some(b, {
 type:a
 });
 };
-d.createdBuildConfigWithGitHubTrigger = function() {
-return f("GitHub");
-}, d.createdBuildConfigWithConfigChangeTrigger = function() {
-return f("ConfigChange");
-}, d.allTasksSuccessful = function(a) {
-return !b(a).length && !c(a).length;
-}, d.erroredTasks = c, d.pendingTasks = b, d.toggleParamsTable = function() {
-d.showParamsTable = !0;
+e.createdBuildConfigWithGitHubTrigger = function() {
+return g("GitHub");
+}, e.createdBuildConfigWithConfigChangeTrigger = function() {
+return g("ConfigChange");
+}, e.allTasksSuccessful = function(a) {
+return !c(a).length && !d(a).length;
+}, e.erroredTasks = d, e.pendingTasks = c, e.goToOverview = function() {
+_.isFunction(e.onContinue) && e.onContinue(), b.toProjectOverview(e.projectName);
 };
 }
 angular.module("openshiftConsole").component("nextSteps", {
-controller:[ "ProcessedTemplateService", a ],
+controller:[ "ProcessedTemplateService", "Navigate", a ],
 bindings:{
 project:"<",
 projectName:"<",
 loginBaseUrl:"<",
 fromSampleRepo:"<",
-createdBuildConfig:"<"
+createdBuildConfig:"<",
+onContinue:"<"
 },
 templateUrl:"views/directives/next-steps.html"
 });
@@ -12957,7 +13047,8 @@ restrict:"E",
 scope:{
 project:"=",
 context:"=",
-alerts:"="
+alerts:"=",
+isDialog:"="
 },
 templateUrl:"views/directives/deploy-image.html",
 link:function(c) {
@@ -12988,7 +13079,7 @@ message:a,
 details:b
 };
 }, q = [], r = [], s = {
-namespace:c.project
+namespace:c.project.metadata.name
 };
 c.valueFromObjects = [], f.list("configmaps", s, null, {
 errorNotification:!1
@@ -13018,6 +13109,7 @@ return a = u(a), a = t(a), a = w(a);
 c.findImage = function() {
 c.loading = !0, g.findImage(c.imageName, c.context).then(function(a) {
 if (c["import"] = a, c.loading = !1, "Success" !== _.get(a, "result.status")) return void (c["import"].error = _.get(a, "result.message", "An error occurred finding the image."));
+c.forms.imageSelection.imageName.$setValidity("imageLoaded", !0);
 var b = c["import"].image;
 b && (c.app.name = x(), c.runsAsRoot = g.runsAsRoot(b), c.ports = e.parsePorts(b), c.volumes = g.getVolumes(b), c.createImageStream = !0);
 }, function(b) {
@@ -13028,7 +13120,7 @@ c.nameTaken = !1, _.set(_.find(c.systemLabels, {
 name:"app"
 }), "value", c.app.name);
 }), c.$watch("mode", function(a, b) {
-a !== b && (delete c["import"], c.istag = {});
+a !== b && (delete c["import"], c.istag = {}, "dockerImage" === a ? c.forms.imageSelection.imageName.$setValidity("imageLoaded", !1) :c.forms.imageSelection.imageName.$setValidity("imageLoaded", !0));
 }), c.$watch("istag", function(b, d) {
 if (b !== d) {
 if (!b.namespace || !b.imageStream || !b.tagObject) return void delete c["import"];
@@ -13046,13 +13138,13 @@ c["import"].error = a("getErrorDetails")(b) || "An error occurred.", c.loading =
 }));
 }
 }, !0);
-var y, z = function() {
+var y, z = a("displayName"), A = function() {
 var a = {
-started:"Deploying image " + c.app.name + " to project " + c.project + ".",
-success:"Deployed image " + c.app.name + " to project " + c.project + ".",
-failure:"Failed to deploy image " + c.app.name + " to project " + c.project + "."
+started:"Deploying image " + c.app.name + " to project " + z(c.project),
+success:"Deployed image " + c.app.name + " to project " + z(c.project),
+failure:"Failed to deploy image " + c.app.name + " to project " + z(c.project)
 };
-k.clear(), k.add(a, {}, c.project, function() {
+k.clear(), k.add(a, {}, c.project.metadata.name, function() {
 var a = b.defer();
 return f.batch(y, c.context).then(function(b) {
 var d, e = !_.isEmpty(b.failure);
@@ -13075,8 +13167,11 @@ alerts:d,
 hasErrors:e
 });
 }), a.promise;
-}), h.toNextSteps(c.app.name, c.project);
-}, A = function(a) {
+}), c.isDialog ? c.$emit("deployImageNewAppCreated", {
+project:c.project,
+appName:c.app.name
+}) :h.toNextSteps(c.app.name, c.project.metadata.name);
+}, B = function(a) {
 var b = d.open({
 animation:!0,
 templateUrl:"views/modals/confirm.html",
@@ -13093,20 +13188,20 @@ cancelButtonText:"Cancel"
 }
 }
 });
-b.result.then(z);
-}, B = function(a) {
+b.result.then(A);
+}, C = function(a) {
 var b = a.quotaAlerts || [], d = _.filter(b, {
 type:"error"
 });
-c.nameTaken || d.length ? (c.disableInputs = !1, c.alerts = b) :b.length ? (A(b), c.disableInputs = !1) :z();
+c.nameTaken || d.length ? (c.disableInputs = !1, c.alerts = b) :b.length ? (B(b), c.disableInputs = !1) :A();
 };
 c.create = function() {
 c.disableInputs = !0, c.alerts = {}, y = i();
-var a = e.ifResourcesDontExist(y, c.project), b = j.getLatestQuotaAlerts(y, c.context), d = function(a) {
+var a = e.ifResourcesDontExist(y, c.project.metadata.name), b = j.getLatestQuotaAlerts(y, c.context), d = function(a) {
 return c.nameTaken = a.nameTaken, b;
 };
-a.then(d, d).then(B, B);
-};
+a.then(d, d).then(C, C);
+}, c.$on("newAppFromDeployImage", c.create);
 }
 };
 } ]), angular.module("openshiftConsole").directive("selector", function() {

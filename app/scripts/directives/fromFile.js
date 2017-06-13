@@ -513,6 +513,7 @@ angular.module("openshiftConsole")
         // button is outside the component since it is in the wizard footer. Listen
         // for an event for when the button is clicked.
         $scope.$on('importFileFromYAMLOrJSON', $scope.create);
+        $scope.$on('$destroy', hideErrorNotifications);
       }
     };
   });

@@ -3288,7 +3288,6 @@ a.disabled{color:#8b8d8f;cursor:not-allowed;text-decoration:none}
 @media (max-width:480px){.navbar-pf-alt .navbar-brand .navbar-brand-name{display:none}
 }
 .navbar-pf-alt .navbar-brand .navbar-brand-icon{display:inline;margin-left:0 15px 0 0;margin-right:0 15px 0 0}
-.navbar-pf-alt .navbar-iconic{margin-right:0}
 .navbar-pf-vertical{background-color:#1d1d1d;border:none;border-radius:0;border-top:2px solid #39a5dc;margin-bottom:0}
 .layout-pf-fixed .navbar-pf-vertical{left:0;position:fixed;right:0;top:0;z-index:1030}
 .navbar-pf-vertical .nav.navbar-nav>li>.dropdown-menu.infotip{margin-top:0}
@@ -4674,9 +4673,11 @@ h2+.list-view-pf{margin-top:20px}
 .navbar-pf-alt .navbar-header .navbar-home{align-items:center;color:#dbdada;display:flex;flex:1 0 0%;font-weight:300;justify-content:center;text-decoration:none}
 .navbar-pf-alt .navbar-header .navbar-home .pficon{color:#A8A9AA;font-size:20px}
 .navbar-pf-alt .navbar-header .navbar-home:focus,.navbar-pf-alt .navbar-header .navbar-home:focus .pficon,.navbar-pf-alt .navbar-header .navbar-home:hover,.navbar-pf-alt .navbar-header .navbar-home:hover .pficon{background-color:#0b0d0f;color:#fcfcfc}
-.navbar-pf-alt .nav.navbar-iconic{margin-right:10px}
-.navbar-pf-alt .nav.navbar-iconic .dropdown-menu{margin-top:-10px;right:0}
-.navbar-pf-alt .nav.navbar-iconic .dropdown-menu:after{border:6px solid transparent;border-bottom-color:#fff;border-top-width:0;content:"";display:block;height:0;position:absolute;right:7px;top:-6px;vertical-align:middle;width:0}
+.navbar-pf-alt .navbar-iconic{margin-right:10px}
+.navbar-pf-alt .nav .dropdown-menu{margin-top:-10px;right:5px}
+@media (min-width:768px){.navbar-pf-alt .nav .dropdown-menu{right:0}
+}
+.navbar-pf-alt .nav .dropdown-menu:after{border:6px solid transparent;border-bottom-color:#fff;border-top-width:0;content:"";display:block;height:0;position:absolute;right:7px;top:-6px;vertical-align:middle;width:0}
 .navbar-pf-alt .navbar-brand{border:0;height:auto;margin-left:0;padding:0 0 0 10px;position:relative}
 .navbar-pf-alt .navbar-toggle{border:0;display:block;float:left}
 .navbar-pf-alt .navbar-toggle:focus .icon-bar,.navbar-pf-alt .navbar-toggle:hover .icon-bar{background:#fff}
@@ -4685,17 +4686,17 @@ h2+.list-view-pf{margin-top:20px}
 .navbar-pf-alt .nav .nav-item-iconic{color:#d1d1d1;cursor:pointer;line-height:normal;max-height:none;padding-top:25.5px;padding-bottom:25.5px}
 .navbar-pf-alt .nav .nav-item-iconic:focus,.navbar-pf-alt .nav .nav-item-iconic:hover{color:#fff;text-decoration:none}
 .navbar-pf-alt .nav .nav-item-iconic:focus .caret,.navbar-pf-alt .nav .nav-item-iconic:focus .fa,.navbar-pf-alt .nav .nav-item-iconic:focus .glyphicon,.navbar-pf-alt .nav .nav-item-iconic:focus .pf-icon,.navbar-pf-alt .nav .nav-item-iconic:hover .caret,.navbar-pf-alt .nav .nav-item-iconic:hover .fa,.navbar-pf-alt .nav .nav-item-iconic:hover .glyphicon,.navbar-pf-alt .nav .nav-item-iconic:hover .pf-icon{color:#fff}
-.navbar-pf-alt .nav .nav-item-iconic .caret{height:12px}
+.navbar-pf-alt .nav .nav-item-iconic .add-to-project,.navbar-pf-alt .nav .nav-item-iconic .username{float:left;font-weight:300;padding:0 4px}
+.navbar-pf-alt .nav .nav-item-iconic .caret{margin-top:5px}
+.navbar-pf-alt .nav .nav-item-iconic .add-to-project+.caret,.navbar-pf-alt .nav .nav-item-iconic .pficon-user,.navbar-pf-alt .nav .nav-item-iconic .username+.caret{display:block;float:left}
 .navbar-pf-alt .nav .nav-item-iconic .caret,.navbar-pf-alt .nav .nav-item-iconic .fa,.navbar-pf-alt .nav .nav-item-iconic .pf-icon{color:#d1d1d1;font-size:16px;width:auto}
-.navbar-pf-alt .nav .nav-item-iconic .pficon-user,.navbar-pf-alt .nav .nav-item-iconic .username+.caret{display:block;float:left}
-.navbar-pf-alt .nav .nav-item-iconic .username{float:left;font-weight:300;max-width:100px;padding:0 4px}
+.navbar-pf-alt .nav .nav-item-iconic .username{max-width:100px}
 @media (min-width:992px){.navbar-pf-alt .nav .nav-item-iconic .username{max-width:130px}
 }
 @media (min-width:1200px){.navbar-pf-alt .nav .nav-item-iconic .username{max-width:150px}
 }
 @media (min-width:1600px){.navbar-pf-alt .nav .nav-item-iconic .username{max-width:250px}
 }
-.navbar-pf-alt .nav .nav-item-iconic .username+.caret{margin-top:3px}
 .navbar-pf-alt .open>.nav-item-iconic,.navbar-pf-alt .open>.nav-item-iconic:focus,.navbar-pf-alt .open>.nav-item-iconic:hover{background:0 0}
 .navbar-pf-alt .open>.nav-item-iconic .caret,.navbar-pf-alt .open>.nav-item-iconic .fa,.navbar-pf-alt .open>.nav-item-iconic .pf-icon,.navbar-pf-alt .open>.nav-item-iconic:focus .caret,.navbar-pf-alt .open>.nav-item-iconic:focus .fa,.navbar-pf-alt .open>.nav-item-iconic:focus .pf-icon,.navbar-pf-alt .open>.nav-item-iconic:hover .caret,.navbar-pf-alt .open>.nav-item-iconic:hover .fa,.navbar-pf-alt .open>.nav-item-iconic:hover .pf-icon{color:#fff}
 @media (min-width:768px){#header-logo{height:60px}
@@ -4710,19 +4711,18 @@ h2+.list-view-pf{margin-top:20px}
 }
 .navbar-pf-alt .system-status-mobile:before{content:'';display:block;position:absolute;top:0;left:-1px;width:1px;background:#050505;height:100%}
 .navbar-flex-btn{position:relative}
-.navbar-flex-btn .navbar-toggle.project-action-btn:before,.navbar-flex-btn+.navbar-flex-btn .project-action-btn:before{display:none}
-.navbar-flex-btn .project-action-btn{align-items:center;color:#dbdada;flex:1 0 0%;font-weight:300;justify-content:center;text-decoration:none}
+.navbar-flex-btn .navbar-toggle.project-action-btn:before,.navbar-flex-btn+.navbar-flex-btn .add-to-project-btn:before{display:none}
+.navbar-flex-btn .add-to-project-btn{align-items:center;justify-content:center;flex:1 0 0%;font-weight:300}
 .font-icon,[data-icon]:before{speak:none;font-weight:400;font-variant:normal;text-transform:none;line-height:1;-webkit-font-smoothing:antialiased;-moz-osx-font-smoothing:grayscale}
-.navbar-flex-btn .project-action-btn:hover{background-color:#0b0d0f;color:#fcfcfc}
-.navbar-flex-btn .project-action-btn:after,.navbar-flex-btn .project-action-btn:before{content:'';display:block;position:absolute;top:0;width:1px;background:rgba(255,255,255,.1);height:100%}
-.navbar-flex-btn .project-action-btn:before{left:0px}
-.navbar-flex-btn .project-action-btn:after{right:-1px}
-@media (max-width:767px){.layout-pf-alt-fixed .navbar-pf-alt{position:absolute}
+.navbar-flex-btn .add-to-project-btn:before{background:rgba(255,255,255,.1);content:'';display:block;height:100%;left:0px;position:absolute;top:0;width:1px}
+@media (max-width:767px){.navbar-pf-alt .nav .dropdown-menu:after{right:13px}
+.layout-pf-alt-fixed .navbar-pf-alt{position:absolute}
 .layout-pf-alt-fixed .navbar-pf-alt .navbar-brand:after{content:'';background:#050505;display:block;height:100%;left:-1px;position:absolute;top:0;width:1px}
 .top-header.logged-out .toggle-menu{display:none}
 .navbar-flex-btn{flex:0 0 50px}
-.navbar-flex-btn a{color:#fff;cursor:pointer;display:flex;font-size:18px}
-.navbar-flex-btn a:active,.navbar-flex-btn a:focus,.navbar-flex-btn a:hover{background-color:#383f47;color:#dbdada}
+.navbar-flex-btn>a{color:#fff;cursor:pointer;display:flex;font-size:18px}
+.navbar-flex-btn>a:active,.navbar-flex-btn>a:focus,.navbar-flex-btn>a:hover{background-color:#383f47;color:#dbdada}
+.navbar-pf-alt .nav .add-to-project-btn.nav-item-iconic{padding:14px}
 }
 .build-count .icon-count,.build-count .icon-count [data-toggle=tooltip],.notification-icon-count [data-toggle=tooltip]{cursor:help}
 @media (max-width:479px){.navbar-flex-btn{flex:0 0 40px}
@@ -4730,7 +4730,6 @@ h2+.list-view-pf{margin-top:20px}
 @media (min-width:768px){.navbar-pf-alt .navbar-header{height:60px;width:143px}
 .navbar-pf-alt .navbar-header .navbar-brand{padding:0;margin-left:30px;margin-right:75px;margin-top:0}
 .navbar-flex-btn.toggle-menu{display:none}
-.navbar-flex-btn .project-action-btn{border-right:1px solid #000;flex-basis:auto;padding:0 15px}
 }
 @media (min-width:1200px){.navbar-pf-alt .navbar-header{width:143px}
 }
@@ -4892,6 +4891,10 @@ h2+.list-view-pf{margin-top:20px}
 .icon-dotnet:before{content:"\f140"}
 .icon-apache:before{content:"\f138"}
 .icon-casadra:before,.icon-cassandra:before{content:"\f139"}
+.wizard-pf-main .deploy-image .empty-state-message{margin:30px auto}
+.wizard-pf-main #from-file .editor{height:285px}
+@media (min-width:768px){.order-service-config-single-column{margin-bottom:-20px;margin-top:-20px;overflow-y:auto}
+}
 .build-count .builds,.build-count .pipelines{display:block}
 .build-count .icon-count{display:inline-block;margin-right:5px}
 .build-count .running-stage{font-size:84%;color:#9c9c9c}
