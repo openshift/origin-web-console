@@ -11,6 +11,7 @@ angular.module('openshiftConsole')
                                          QuotaService,
                                          LabelFilter,
                                          Navigate,
+                                         NotificationsService,
                                          hashSizeFilter,
                                          hasDeploymentConfigFilter) {
     return {
@@ -28,14 +29,12 @@ angular.module('openshiftConsole')
         project: '=',
 
         // Pods
-        pods: '=',
-
-        // To display scaling errors
-        alerts: '='
+        pods: '='
       },
       templateUrl: 'views/directives/deployment-donut.html',
-      controller: function($scope) {
+      controller: function($scope, $filter, $q) {
         var scaleRequestPending = false;
+        var humanizeKind = $filter('humanizeKind');
 
         $scope.$watch("rc.spec.replicas", function() {
           // Only reset desiredReplicas if we've already requested that value.
@@ -74,17 +73,6 @@ angular.module('openshiftConsole')
 
         $scope.$watchGroup(['rc.spec.replicas', 'rc.status.replicas', 'quotas', 'clusterQuotas'], updateQuotaWarning);
 
-        var showScalingError = function(result) {
-          $scope.alerts = $scope.alerts || {};
-          $scope.desiredReplicas = null;
-          $scope.alerts["scale"] =
-            {
-              type: "error",
-              message: "An error occurred scaling the deployment.",
-              details: $filter('getErrorDetails')(result)
-            };
-        };
-
         var getScaleTarget = function() {
           return $scope.deploymentConfig || $scope.deployment || $scope.rc;
         };
@@ -96,7 +84,17 @@ angular.module('openshiftConsole')
             return;
           }
           var scaleTarget = getScaleTarget();
-          return DeploymentsService.scale(scaleTarget, $scope.desiredReplicas).then(_.noop, showScalingError);
+          return DeploymentsService.scale(scaleTarget, $scope.desiredReplicas).then(_.noop, function(result) {
+            var kind = humanizeKind(scaleTarget.kind);
+            NotificationsService.addNotification({
+              id: "deployment-scale-error",
+              type: "error",
+              message: "An error occurred scaling " + kind + " " + scaleTarget.metadata.name + ".",
+              details: $filter('getErrorDetails')(result)
+            });
+
+            return $q.reject(result);
+          });
         };
 
         // Debounce scaling so multiple consecutive clicks only result in one request
@@ -192,12 +190,10 @@ angular.module('openshiftConsole')
 
         $scope.unIdle = function() {
           $scope.desiredReplicas = $filter('unidleTargetReplicas')($scope.deploymentConfig || $scope.rc, $scope.hpa);
-          scale()
-            .then(function() {
-              $scope.isIdled = false;
-            },showScalingError);
+          scale().then(function() {
+            $scope.isIdled = false;
+          });
         };
-
       }
     };
   });
