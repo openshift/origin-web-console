@@ -13,15 +13,9 @@ angular.module('openshiftConsole')
                                                  $filter,
                                                  $location,
                                                  DataService,
-                                                 AlertMessageService,
                                                  ProjectsService,
                                                  Navigate) {
     $scope.alerts = {};
-
-    AlertMessageService.getAlerts().forEach(function(alert) {
-      $scope.alerts[alert.name] = alert.data;
-    });
-    AlertMessageService.clearAlerts();
 
     var annotation = $filter('annotation');
     var annotationName = $filter('annotationName');

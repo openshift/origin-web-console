@@ -1,29 +1,30 @@
 "use strict";
 
 angular.module("openshiftConsole")
-  .controller("CreateFromImageController", function ($scope,
-      Logger,
-      $q,
-      $routeParams,
-      APIService,
-      DataService,
-      ProjectsService,
-      Navigate,
-      ApplicationGenerator,
-      LimitRangesService,
-      MetricsService,
-      HPAService,
-      QuotaService,
-      SecretsService,
-      ImagesService,
-      TaskList,
-      failureObjectNameFilter,
-      $filter,
-      $parse,
-      $uibModal,
-      SOURCE_URL_PATTERN,
-      keyValueEditorUtils
-    ){
+  .controller("CreateFromImageController",
+              function($scope,
+                       $filter,
+                       $parse,
+                       $q,
+                       $routeParams,
+                       $uibModal,
+                       APIService,
+                       ApplicationGenerator,
+                       DataService,
+                       HPAService,
+                       ImagesService,
+                       LimitRangesService,
+                       Logger,
+                       MetricsService,
+                       Navigate,
+                       NotificationsService,
+                       ProjectsService,
+                       QuotaService,
+                       SOURCE_URL_PATTERN,
+                       SecretsService,
+                       TaskList,
+                       failureObjectNameFilter,
+                       keyValueEditorUtils) {
     var displayNameFilter = $filter('displayName');
     var humanize = $filter('humanize');
 
@@ -60,20 +61,21 @@ angular.module("openshiftConsole")
         title: breadcrumbTitle
       }
     ];
-    $scope.alerts = {};
-    $scope.quotaAlerts = {};
 
     var appLabel = {name: 'app', value: ''};
 
     var orderByDisplayName = $filter('orderByDisplayName');
     var getErrorDetails = $filter('getErrorDetails');
 
-    var displayError = function(errorMessage, errorDetails) {
-      $scope.alerts['from-value-objects'] = {
-        type: "error",
-        message: errorMessage,
-        details: errorDetails
-      };
+    var quotaAlerts = {};
+    var hideErrorNotifications = function() {
+      NotificationsService.hideNotification("create-builder-list-config-maps-error");
+      NotificationsService.hideNotification("create-builder-list-secrets-error");
+      _.each(quotaAlerts, function(alert) {
+        if (alert.id && (alert.type === 'error' || alert.type === 'warning')) {
+          NotificationsService.hideNotification(alert.id);
+        }
+      });
     };
 
     ProjectsService
@@ -174,7 +176,12 @@ angular.module("openshiftConsole")
                return;
              }
 
-             displayError('Could not load config maps', getErrorDetails(e));
+             NotificationsService.addNotification({
+               id: "create-builder-list-config-maps-error",
+               type: "error",
+               message: "Could not load config maps.",
+               details: getErrorDetails(e)
+             });
            });
 
            DataService.list("secrets", context, null, { errorNotification: false }).then(function(secretData) {
@@ -191,7 +198,12 @@ angular.module("openshiftConsole")
                return;
              }
 
-             displayError('Could not load secrets', getErrorDetails(e));
+             NotificationsService.addNotification({
+               id: "create-builder-list-secrets-error",
+               type: "error",
+               message: "Could not load secrets.",
+               details: getErrorDetails(e)
+             });
            });
 
           DataService.get("imagestreams", scope.imageName, {namespace: (scope.namespace || $routeParams.project)}).then(function(imageStream){
@@ -279,7 +291,7 @@ angular.module("openshiftConsole")
           var helpLinks = {};
 
           TaskList.clear();
-          TaskList.add(titles, helpLinks, $routeParams.project, function(){
+          TaskList.add(titles, helpLinks, $routeParams.project, function() {
             var d = $q.defer();
             DataService.batch(generatedResources, context)
               //refactor these helpers to be common for 'newfromtemplate'
@@ -313,16 +325,7 @@ angular.module("openshiftConsole")
                   }
                 );
                 return d.promise;
-              },
-              function(result) { // failure
-                $scope.alerts["create"] =
-                  {
-                    type: "error",
-                    message: "An error occurred creating the application.",
-                    details: "Status: " + result.status + ". " + result.data
-                  };
-              }
-            );
+              });
           Navigate.toNextSteps($scope.name, $scope.projectName, {
             usingSampleRepo: $scope.usingSampleRepo(),
             breadcrumbTitle: breadcrumbTitle
@@ -351,12 +354,16 @@ angular.module("openshiftConsole")
         };
 
         var showWarningsOrCreate = function(result){
+          // Hide any previous notifications.
+          hideErrorNotifications();
           // Now that all checks are completed, show any Alerts if we need to
-          var quotaAlerts = result.quotaAlerts || [];
-          var errorAlerts = _.filter(quotaAlerts, {type: 'error'});
-          if ($scope.nameTaken || !_.isEmpty(errorAlerts)) {
+          quotaAlerts = result.quotaAlerts || [];
+          if ($scope.nameTaken || _.some(quotaAlerts, { type: 'error' })) {
             $scope.disableInputs = false;
-            $scope.quotaAlerts = quotaAlerts;
+            _.each(quotaAlerts, function(alert) {
+              alert.id = _.uniqueId('create-builder-alert-');
+              NotificationsService.addNotification(alert);
+            });
           }
           else if (!_.isEmpty(quotaAlerts)) {
              launchConfirmationDialog(quotaAlerts);
@@ -373,7 +380,7 @@ angular.module("openshiftConsole")
 
         $scope.createApp = function(){
           $scope.disableInputs = true;
-          $scope.alerts = {};
+          hideErrorNotifications();
           $scope.buildConfig.envVars = keyValueEditorUtils.compactEntries($scope.buildConfigEnvVars);
           $scope.deploymentConfig.envVars = keyValueEditorUtils.compactEntries($scope.DCEnvVarsFromUser);
           var userLabels = keyValueEditorUtils.mapEntries(keyValueEditorUtils.compactEntries($scope.userDefinedLabels));
@@ -401,4 +408,9 @@ angular.module("openshiftConsole")
           nameTakenPromise.then(setNameTaken, setNameTaken).then(showWarningsOrCreate, showWarningsOrCreate);
         };
       }));
+
+      $scope.cancel = function() {
+        hideErrorNotifications();
+        Navigate.toProjectOverview($scope.projectName);
+      };
   });

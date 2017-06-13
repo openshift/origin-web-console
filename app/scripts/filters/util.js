@@ -322,11 +322,11 @@ angular.module('openshiftConsole')
       return limitToFilter(input, limit);
     };
   })
-  .filter("getErrorDetails", function(upperFirstFilter) {
-    return function(result, capitalize) {
+  .filter("getErrorDetails", function() {
+    return function(result) {
       var error = result.data || {};
       if (error.message) {
-        return capitalize ? upperFirstFilter(error.message) : error.message;
+        return "Reason: " + error.message;
       }
 
       var status = result.status || error.status;

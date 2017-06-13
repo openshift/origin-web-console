@@ -1345,7 +1345,7 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
   $templateCache.put('views/browse/_replica-set-details.html',
     "<div class=\"row\" style=\"max-width: 650px\">\n" +
     "<div class=\"col-sm-4 col-sm-push-8 browse-deployment-donut\">\n" +
-    "<deployment-donut rc=\"replicaSet\" deployment=\"deployment\" deployment-config=\"deploymentConfig\" pods=\"podsForDeployment\" hpa=\"autoscalers\" scalable=\"isScalable()\" limit-ranges=\"limitRanges\" project=\"project\" quotas=\"quotas\" cluster-quotas=\"clusterQuotas\" alerts=\"alerts\">\n" +
+    "<deployment-donut rc=\"replicaSet\" deployment=\"deployment\" deployment-config=\"deploymentConfig\" pods=\"podsForDeployment\" hpa=\"autoscalers\" scalable=\"isScalable()\" limit-ranges=\"limitRanges\" project=\"project\" quotas=\"quotas\" cluster-quotas=\"clusterQuotas\">\n" +
     "</deployment-donut>\n" +
     "</div>\n" +
     "<div class=\"col-sm-8 col-sm-pull-4\">\n" +
@@ -3909,7 +3909,7 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "<div class=\"row\" style=\"max-width: 650px\">\n" +
     "<div class=\"col-sm-4 col-sm-push-8 browse-deployment-donut\">\n" +
     "\n" +
-    "<deployment-donut rc=\"statefulSet\" pods=\"podsForStatefulSet\" scalable=\"isScalable()\" quotas=\"quotas\" cluster-quotas=\"clusterQuotas\" alerts=\"alerts\">\n" +
+    "<deployment-donut rc=\"statefulSet\" pods=\"podsForStatefulSet\" scalable=\"isScalable()\" quotas=\"quotas\" cluster-quotas=\"clusterQuotas\">\n" +
     "</deployment-donut>\n" +
     "</div>\n" +
     "<div class=\"col-sm-8 col-sm-pull-4\">\n" +
@@ -4516,7 +4516,6 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "<div class=\"row\">\n" +
     "<div class=\"col-md-10 col-md-offset-1\">\n" +
     "<breadcrumbs breadcrumbs=\"breadcrumbs\"></breadcrumbs>\n" +
-    "<alerts alerts=\"alerts\"></alerts>\n" +
     "<div class=\"mar-top-xl\">\n" +
     "<h1>Create Config Map</h1>\n" +
     "<div class=\"help-block\">\n" +
@@ -4527,7 +4526,7 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "<edit-config-map model=\"configMap\" show-name-input=\"true\"></edit-config-map>\n" +
     "<div class=\"button-group gutter-top gutter-bottom\">\n" +
     "<button type=\"submit\" class=\"btn btn-primary btn-lg\" ng-click=\"createConfigMap()\" ng-disabled=\"createConfigMapForm.$invalid || disableInputs\" value=\"\">Create</button>\n" +
-    "<a class=\"btn btn-default btn-lg\" href=\"#\" back>Cancel</a>\n" +
+    "<a class=\"btn btn-default btn-lg\" href=\"\" ng-click=\"cancel()\" role=\"button\">Cancel</a>\n" +
     "</div>\n" +
     "</fieldset>\n" +
     "</form>\n" +
@@ -4641,7 +4640,6 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "<div class=\"row\">\n" +
     "<div class=\"col-md-10 col-md-offset-1\">\n" +
     "<breadcrumbs breadcrumbs=\"breadcrumbs\"></breadcrumbs>\n" +
-    "<alerts alerts=\"alerts\"></alerts>\n" +
     "<div class=\"mar-top-xl\">\n" +
     "<h1>Create Storage</h1>\n" +
     "<div class=\"help-block\">\n" +
@@ -4653,7 +4651,7 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "<osc-persistent-volume-claim model=\"claim\" project-name=\"projectName\"></osc-persistent-volume-claim>\n" +
     "<div class=\"button-group gutter-bottom\">\n" +
     "<button type=\"submit\" class=\"btn btn-primary btn-lg\" ng-click=\"createPersistentVolumeClaim()\" ng-disabled=\"createPersistentVolumeClaimForm.$invalid || disableInputs\" value=\"\">Create</button>\n" +
-    "<a class=\"btn btn-default btn-lg\" href=\"\" back>Cancel</a>\n" +
+    "<a class=\"btn btn-default btn-lg\" href=\"\" ng-click=\"cancel()\" role=\"button\">Cancel</a>\n" +
     "</div>\n" +
     "</fieldset>\n" +
     "</form>\n" +
@@ -5121,11 +5119,10 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "<a href=\"\" ng-click=\"advancedOptions = !advancedOptions\" role=\"button\">advanced options</a>\n" +
     "for source, routes, builds, and deployments.\n" +
     "</div>\n" +
-    "<alerts alerts=\"quotaAlerts\"></alerts>\n" +
     "<div class=\"buttons gutter-bottom\" ng-class=\"{'gutter-top': !alerts.length}\">\n" +
     "\n" +
     "<button type=\"submit\" class=\"btn btn-primary btn-lg\" ng-disabled=\"form.$invalid || nameTaken || cpuProblems.length || memoryProblems.length || disableInputs\">Create</button>\n" +
-    "<a class=\"btn btn-default btn-lg\" ng-href=\"{{projectName | projectOverviewURL}}\">Cancel</a>\n" +
+    "<a class=\"btn btn-default btn-lg\" href=\"\" ng-click=\"cancel()\" role=\"button\">Cancel</a>\n" +
     "</div>\n" +
     "</form>\n" +
     "</fieldset>\n" +
@@ -6841,12 +6838,11 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "          }\n" +
     "        }\" ng-model=\"editorContent\" class=\"editor ace-bordered yaml-mode\" id=\"add-component-editor\" required></div>\n" +
     "</div>\n" +
-    "<alerts alerts=\"alerts\"></alerts>\n" +
-    "<div class=\"buttons gutter-bottom\" ng-class=\"{'gutter-top': !alerts.length}\">\n" +
+    "<div class=\"buttons gutter-bottom\">\n" +
     "<button type=\"submit\" ng-click=\"create()\" ng-disabled=\"editorErrorAnnotation || !editorContent\" class=\"btn btn-primary btn-lg\">\n" +
     "Create\n" +
     "</button>\n" +
-    "<a class=\"btn btn-default btn-lg\" ng-href=\"{{projectName | projectOverviewURL}}\">\n" +
+    "<a class=\"btn btn-default btn-lg\" href=\"\" role=\"button\" ng-click=\"cancel()\">\n" +
     "Cancel\n" +
     "</a>\n" +
     "</div>\n" +
@@ -7707,7 +7703,7 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "<div class=\"form-group\">\n" +
     "<label for=\"claim-name\" class=\"required\">Name</label>\n" +
     "<span ng-class=\"{ 'has-error': persistentVolumeClaimForm.name.$invalid && persistentVolumeClaimForm.name.$touched && !claimDisabled }\">\n" +
-    "<input id=\"claim-name\" class=\"form-control\" type=\"text\" name=\"name\" ng-model=\"claim.name\" ng-required=\"true\" ng-pattern=\"nameValidation.pattern\" ng-maxlength=\"nameValidation.maxlength\" placeholder=\"my-storage-claim\" select-on-focus autocorrect=\"off\" autocapitalize=\"off\" spellcheck=\"false\" aria-describedby=\"claim-name-help\">\n" +
+    "<input id=\"claim-name\" class=\"form-control\" type=\"text\" name=\"name\" ng-model=\"claim.name\" ng-required=\"true\" ng-pattern=\"nameValidation.pattern\" ng-maxlength=\"nameValidation.maxlength\" placeholder=\"my-storage-claim\" take-focus select-on-focus autocorrect=\"off\" autocapitalize=\"off\" spellcheck=\"false\" aria-describedby=\"claim-name-help\">\n" +
     "</span>\n" +
     "<div>\n" +
     "<span id=\"claim-name-help\" class=\"help-block\">A unique name for the storage claim within the project.</span>\n" +
@@ -8546,9 +8542,8 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
 
   $templateCache.put('views/directives/process-template-dialog/process-template-config.html',
     "<div class=\"osc-form\">\n" +
-    "<alerts alerts=\"$ctrl.alerts\"></alerts>\n" +
     "<form name=\"$ctrl.form\">\n" +
-    "<process-template template=\"$ctrl.template\" alerts=\"$ctrl.alerts\" is-dialog=\"true\"></process-template>\n" +
+    "<process-template template=\"$ctrl.template\" is-dialog=\"true\"></process-template>\n" +
     "</form>\n" +
     "</div>"
   );
@@ -8574,10 +8569,9 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "</div>\n" +
     "<label-editor ng-if=\"!$ctrl.isDialog\" labels=\"$ctrl.labels\" system-labels=\"$ctrl.systemLabels\" expand=\"true\" can-toggle=\"false\" help-text=\"Each label is applied to each created resource.\">\n" +
     "</label-editor>\n" +
-    "<alerts alerts=\"$ctrl.precheckAlerts\"></alerts>\n" +
     "<div ng-if=\"!$ctrl.isDialog\" class=\"buttons gutter-top-bottom\">\n" +
     "<button class=\"btn btn-primary btn-lg\" ng-click=\"$ctrl.createFromTemplate()\" ng-disabled=\"$ctrl.templateForm.$invalid || $ctrl.disableInputs\">Create</button>\n" +
-    "<a class=\"btn btn-default btn-lg\" ng-href=\"{{$ctrl.project | projectOverviewURL}}\">Cancel</a>\n" +
+    "<a class=\"btn btn-default btn-lg\" href=\"\" ng-click=\"$ctrl.cancel()\" role=\"button\">Cancel</a>\n" +
     "</div>\n" +
     "</ng-form>\n" +
     "</fieldset>"
@@ -8781,7 +8775,6 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "<breadcrumbs breadcrumbs=\"breadcrumbs\"></breadcrumbs>\n" +
     "<div class=\"row\">\n" +
     "<div class=\"col-md-12\">\n" +
-    "<alerts alerts=\"alerts\"></alerts>\n" +
     "<div ng-if=\"!targetKind || !targetName || !project\" class=\"mar-top-md\">\n" +
     "Loading...\n" +
     "</div>\n" +
@@ -8820,7 +8813,7 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "<button type=\"submit\" class=\"btn btn-primary btn-lg\" ng-disabled=\"form.$invalid || form.$pristine\">\n" +
     "Save\n" +
     "</button>\n" +
-    "<a href=\"\" class=\"btn btn-default btn-lg\" back>Cancel</a>\n" +
+    "<a href=\"\" ng-click=\"cancel()\" class=\"btn btn-default btn-lg\" role=\"button\">Cancel</a>\n" +
     "</div>\n" +
     "</fieldset>\n" +
     "</form>\n" +
@@ -9294,7 +9287,6 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "<div class=\"row\">\n" +
     "<div class=\"col-md-10 col-md-offset-1\">\n" +
     "<breadcrumbs breadcrumbs=\"breadcrumbs\"></breadcrumbs>\n" +
-    "<alerts alerts=\"alerts\"></alerts>\n" +
     "<div class=\"mar-top-xl\">\n" +
     "<h1>Edit Config Map {{configMap.metadata.name}}</h1>\n" +
     "<div class=\"help-block\">\n" +
@@ -9317,7 +9309,7 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "<edit-config-map model=\"configMap\"></edit-config-map>\n" +
     "<div class=\"button-group gutter-top gutter-bottom\">\n" +
     "<button type=\"submit\" class=\"btn btn-primary btn-lg\" ng-click=\"updateConfigMap()\" ng-disabled=\"forms.editConfigMapForm.$invalid || forms.editConfigMapForm.$pristine || disableInputs || resourceChanged || resourceDeleted\" value=\"\">Save</button>\n" +
-    "<a class=\"btn btn-default btn-lg\" href=\"#\" back>Cancel</a>\n" +
+    "<a class=\"btn btn-default btn-lg\" href=\"\" ng-click=\"cancel()\" role=\"button\">Cancel</a>\n" +
     "</div>\n" +
     "</fieldset>\n" +
     "</form>\n" +
@@ -10962,7 +10954,6 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "Loading...\n" +
     "</div>\n" +
     "<div ng-if=\"template\" class=\"row osc-form\">\n" +
-    "<alerts alerts=\"alerts\"></alerts>\n" +
     "<div class=\"col-md-2 icon hidden-sm hidden-xs\">\n" +
     "<custom-icon resource=\"template\" kind=\"template\"></custom-icon>\n" +
     "</div>\n" +
@@ -10986,7 +10977,7 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "</li>\n" +
     "</ul>\n" +
     "</div>\n" +
-    "<process-template project=\"project\" template=\"template\" alerts=\"alerts\" prefill-parameters=\"prefillParameters\">\n" +
+    "<process-template project=\"project\" template=\"template\" prefill-parameters=\"prefillParameters\">\n" +
     "</process-template>\n" +
     "</div>\n" +
     "</div>\n" +
@@ -11678,7 +11669,7 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "            'stacked-template': row.state.breakpoint !== 'lg'\n" +
     "        }\">\n" +
     "<div ng-if=\"row.previous\" class=\"previous-donut\">\n" +
-    "<deployment-donut rc=\"row.previous\" deployment-config=\"row.apiObject\" pods=\"row.getPods(row.previous)\" hpa=\"row.hpa\" limit-ranges=\"row.state.limitRanges\" project=\"row.state.project\" quotas=\"row.state.quotas\" cluster-quotas=\"row.state.clusterQuotas\" scalable=\"false\" alerts=\"row.state.alerts\">\n" +
+    "<deployment-donut rc=\"row.previous\" deployment-config=\"row.apiObject\" pods=\"row.getPods(row.previous)\" hpa=\"row.hpa\" limit-ranges=\"row.state.limitRanges\" project=\"row.state.project\" quotas=\"row.state.quotas\" cluster-quotas=\"row.state.clusterQuotas\" scalable=\"false\">\n" +
     "</deployment-donut>\n" +
     "<div ng-if=\"row.previous\" class=\"deployment-connector\">\n" +
     "<div class=\"deployment-connector-arrow\" aria-hidden=\"true\">\n" +
@@ -11692,7 +11683,7 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "</a>\n" +
     "</div>\n" +
     "<div ng-if=\"row.apiObject.kind !== 'Pod'\">\n" +
-    "<deployment-donut rc=\"row.current\" deployment-config=\"row.apiObject\" pods=\"row.getPods(row.current)\" hpa=\"row.hpa\" limit-ranges=\"row.state.limitRanges\" project=\"row.state.project\" quotas=\"row.state.quotas\" cluster-quotas=\"row.state.clusterQuotas\" scalable=\"row.isScalable()\" alerts=\"row.state.alerts\">\n" +
+    "<deployment-donut rc=\"row.current\" deployment-config=\"row.apiObject\" pods=\"row.getPods(row.current)\" hpa=\"row.hpa\" limit-ranges=\"row.state.limitRanges\" project=\"row.state.project\" quotas=\"row.state.quotas\" cluster-quotas=\"row.state.clusterQuotas\" scalable=\"row.isScalable()\">\n" +
     "</deployment-donut>\n" +
     "</div>\n" +
     "</div>\n" +

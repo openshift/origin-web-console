@@ -11,7 +11,6 @@ angular.module('openshiftConsole')
               function ($scope,
                         $filter,
                         $routeParams,
-                        AlertMessageService,
                         DataService,
                         DeploymentsService,
                         EnvironmentService,
@@ -43,12 +42,6 @@ angular.module('openshiftConsole')
                                                     "Deployment",
                                                     $routeParams.deployment,
                                                     "extensions");
-
-    // get and clear any alerts
-    AlertMessageService.getAlerts().forEach(function(alert) {
-      $scope.alerts[alert.name] = alert.data;
-    });
-    AlertMessageService.clearAlerts();
 
     var previousEnvConflict = false;
     var updateEnvironment = function(current, previous) {
@@ -143,7 +136,7 @@ angular.module('openshiftConsole')
                 $scope.alerts['saveEnvError'] = {
                   type: "error",
                   message: $routeParams.deployment + " was not updated.",
-                  details: "Reason: " + $filter('getErrorDetails')(e)
+                  details: $filter('getErrorDetails')(e)
                 };
               }).finally(function() {
                 saveEnvPromise = null;

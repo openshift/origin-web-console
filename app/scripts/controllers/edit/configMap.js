@@ -16,9 +16,9 @@ angular.module('openshiftConsole')
                         DataService,
                         BreadcrumbsService,
                         Navigate,
+                        NotificationsService,
                         ProjectsService) {
     var watches = [];
-    $scope.alerts = {};
     $scope.forms = {};
     $scope.projectName = $routeParams.project;
 
@@ -32,6 +32,19 @@ angular.module('openshiftConsole')
 
     var getVersion = function(resource) {
       return _.get(resource, 'metadata.resourceVersion');
+    };
+
+    var hideErrorNotifications = function() {
+      NotificationsService.hideNotification("edit-config-map-error");
+    };
+
+    var navigateBack = function() {
+      $window.history.back();
+    };
+
+    $scope.cancel = function() {
+      hideErrorNotifications();
+      navigateBack();
     };
 
     ProjectsService
@@ -54,29 +67,30 @@ angular.module('openshiftConsole')
               $scope.resourceDeleted = action === "DELETED";
             }));
           }, function(e) {
-            $scope.loaded = true;
-            $scope.alerts["load"] = {
-              type: "error",
-              message: "The config map details could not be loaded.",
-              details: $filter('getErrorDetails')(e)
-            };
+            Navigate.toErrorPage("Could not load config map " + $routeParams.configMap + ". " +
+                                 $filter('getErrorDetails')(e));
           });
 
         $scope.updateConfigMap = function() {
           if ($scope.forms.editConfigMapForm.$valid) {
+            hideErrorNotifications();
             $scope.disableInputs = true;
 
             DataService.update('configmaps', $scope.configMap.metadata.name, $scope.configMap, context)
               .then(function() { // Success
-                // Return to the previous page
-                $window.history.back();
+                NotificationsService.addNotification({
+                  type: "success",
+                  message: "Config map " + $scope.configMap.metadata.name + " successfully updated."
+                });
+                navigateBack();
               }, function(result) { // Failure
                 $scope.disableInputs = false;
-                $scope.alerts['create-config-map'] = {
+                NotificationsService.addNotification({
+                  id: "edit-config-map-error",
                   type: "error",
                   message: "An error occurred updating the config map.",
                   details: $filter('getErrorDetails')(result)
-                };
+                });
               });
           }
         };

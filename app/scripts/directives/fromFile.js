@@ -1,18 +1,18 @@
 'use strict';
 
 angular.module("openshiftConsole")
-  .directive("fromFile", function($q,
-                                  $uibModal,
+  .directive("fromFile", function($filter,
                                   $location,
-                                  $filter,
-                                  CachedTemplateService,
-                                  AlertMessageService,
-                                  Navigate,
-                                  TaskList,
-                                  DataService,
+                                  $q,
+                                  $uibModal,
                                   APIService,
+                                  CachedTemplateService,
+                                  DataService,
+                                  Navigate,
+                                  NotificationsService,
                                   QuotaService,
-                                  SecurityCheckService) {
+                                  SecurityCheckService,
+                                  TaskList) {
     return {
       restrict: "E",
       scope: false,
@@ -34,7 +34,6 @@ angular.module("openshiftConsole")
           var editorAnnotations = aceEditorSession.getAnnotations();
           $scope.editorErrorAnnotation = _.some(editorAnnotations, { type: 'error' });
         };
-
 
         // Determine whats the input format (JSON/YAML) and set appropriate view mode
         var updateEditorMode = _.debounce(function(){
@@ -75,16 +74,31 @@ angular.module("openshiftConsole")
           modalInstance.result.then(createAndUpdate);
         };
 
+        var alerts = {};
+        var hideErrorNotifications = function() {
+          NotificationsService.hideNotification("from-file-error");
+          _.each(alerts, function(alert) {
+            if (alert.id && (alert.type === 'error' || alert.type === 'warning')) {
+              NotificationsService.hideNotification(alert.id);
+            }
+          });
+        };
+
         var showWarningsOrCreate = function(result){
-          var alerts = SecurityCheckService.getSecurityAlerts($scope.createResources, $scope.projectName);
+          // Hide any previous notifications when form is resubmitted.
+          hideErrorNotifications();
+          alerts = SecurityCheckService.getSecurityAlerts($scope.createResources, $scope.projectName);
 
           // Now that all checks are completed, show any Alerts if we need to
           var quotaAlerts = result.quotaAlerts || [];
           alerts = alerts.concat(quotaAlerts);
           var errorAlerts = _.filter(alerts, {type: 'error'});
           if (errorAlerts.length) {
+            _.each(alerts, function(alert) {
+              alert.id = _.uniqueId('from-file-alert-');
+              NotificationsService.addNotification(alert);
+            });
             $scope.disableInputs = false;
-            $scope.alerts = alerts;
           }
           else if (alerts.length) {
              launchConfirmationDialog(alerts);
@@ -98,7 +112,6 @@ angular.module("openshiftConsole")
         var resource;
 
         $scope.create = function() {
-          $scope.alerts = {};
           delete $scope.error;
 
           // Trying to auto-detect what format the input is in. Since parsing JSON throws only SyntexError
@@ -174,6 +187,11 @@ angular.module("openshiftConsole")
               QuotaService.getLatestQuotaAlerts($scope.createResources, $scope.context).then(showWarningsOrCreate);
             }
           });
+        };
+
+        $scope.cancel = function() {
+          hideErrorNotifications();
+          Navigate.toProjectOverview($scope.projectName);
         };
 
         // Takes item that will be inspect kind field.
@@ -264,9 +282,11 @@ angular.module("openshiftConsole")
         // When redirecting to newFromTemplate page, use the cached Template if user doesn't adds it into the
         // namespace by the create process or if the template is being updated.
         function redirect() {
-          var path;
+          var path, namespace;
+
+          hideErrorNotifications();
           if ($scope.resourceKind === "Template" && $scope.templateOptions.process && !$scope.errorOccured) {
-            var namespace = ($scope.templateOptions.add || $scope.updateResources.length > 0) ? $scope.projectName : "";
+            namespace = ($scope.templateOptions.add || $scope.updateResources.length > 0) ? $scope.projectName : "";
             path = Navigate.createFromTemplateURL(resource, $scope.projectName, {namespace: namespace});
           } else {
             path = Navigate.projectOverviewURL($scope.projectName);
@@ -319,47 +339,44 @@ angular.module("openshiftConsole")
             DataService.create(APIService.kindToResource(resource.kind), null, resource, {namespace: $scope.projectName}).then(
               // create resource success
               function() {
-                AlertMessageService.addAlert({
-                  name: resource.metadata.name,
-                  data: {
-                    type: "success",
-                    message: resource.kind + " " + resource.metadata.name + " was successfully created."
-                  }
+                var kind = humanizeKind(resource.kind);
+                NotificationsService.addNotification({
+                  type: "success",
+                  message: _.capitalize(kind) + " " + resource.metadata.name + " was successfully created."
                 });
                 redirect();
               },
               // create resource failure
               function(result) {
-                $scope.alerts["create"+resource.metadata.name] = {
+                NotificationsService.addNotification({
+                  id: "from-file-error",
                   type: "error",
                   message: "Unable to create the " + humanizeKind(resource.kind) + " '" + resource.metadata.name + "'.",
                   details: $filter('getErrorDetails')(result)
-                };
+                });
               });
           } else {
             resource = _.head($scope.updateResources);
             DataService.update(APIService.kindToResource(resource.kind), resource.metadata.name, resource, {namespace: $scope.projectName}).then(
               // update resource success
               function() {
-                AlertMessageService.addAlert({
-                  name: resource.metadata.name,
-                  data: {
-                    type: "success",
-                    message: resource.kind + " " + resource.metadata.name + " was successfully updated."
-                  }
+                var kind = humanizeKind(resource.kind);
+                NotificationsService.addNotification({
+                  type: "success",
+                  message: _.capitalize(kind) + " " + resource.metadata.name + " was successfully updated."
                 });
                 redirect();
               },
               // update resource failure
               function(result) {
-                $scope.alerts["update"+resource.metadata.name] = {
+                NotificationsService.addNotification({
+                  id: "from-file-error",
                   type: "error",
                   message: "Unable to update the " + humanizeKind(resource.kind) + " '" + resource.metadata.name + "'.",
                   details: $filter('getErrorDetails')(result)
-                };
+                });
               });
           }
-
         }
 
         function createResourceList(){

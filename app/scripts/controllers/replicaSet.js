@@ -11,7 +11,6 @@ angular.module('openshiftConsole')
               function ($scope,
                         $filter,
                         $routeParams,
-                        AlertMessageService,
                         AuthorizationService,
                         BreadcrumbsService,
                         DataService,
@@ -67,12 +66,6 @@ angular.module('openshiftConsole')
     $scope.forms = {};
 
     $scope.logOptions = {};
-
-    // get and clear any alerts
-    AlertMessageService.getAlerts().forEach(function(alert) {
-      $scope.alerts[alert.name] = alert.data;
-    });
-    AlertMessageService.clearAlerts();
 
     var watches = [];
 
@@ -142,7 +135,7 @@ angular.module('openshiftConsole')
         $scope.alerts['saveEnvError'] = {
           type: "error",
           message: $scope.replicaSet.metadata.name + " was not updated.",
-          details: "Reason: " + $filter('getErrorDetails')(e)
+          details: $filter('getErrorDetails')(e)
         };
       });
     };
@@ -276,7 +269,7 @@ angular.module('openshiftConsole')
               $scope.alerts["load"] = {
                 type: "error",
                 message: "The deployment configuration details could not be loaded.",
-                details: "Reason: " + $filter('getErrorDetails')(e)
+                details: $filter('getErrorDetails')(e)
               };
             }
           );
@@ -453,7 +446,7 @@ angular.module('openshiftConsole')
             $scope.alerts["load"] = {
               type: "error",
               message: "The " + displayKind + " details could not be loaded.",
-              details: "Reason: " + $filter('getErrorDetails')(e)
+              details: $filter('getErrorDetails')(e)
             };
             $scope.breadcrumbs = BreadcrumbsService.getBreadcrumbs({
               name: $routeParams.replicaSet,

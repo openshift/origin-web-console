@@ -5,7 +5,6 @@ angular.module('openshiftConsole')
     $routeParams,
     $location,
     $scope,
-    AlertMessageService,
     AuthorizationService,
     DataService,
     ProjectsService,
@@ -81,12 +80,6 @@ angular.module('openshiftConsole')
       }
       return counts[kind] > 1;
     };
-
-    // get and clear any alerts
-    AlertMessageService.getAlerts().forEach(function(alert) {
-      $scope.alerts[alert.name] = alert.data;
-    });
-    AlertMessageService.clearAlerts();
 
     var kindExists = function(kind, group) {
       return _.some($scope.kinds, function(next) {

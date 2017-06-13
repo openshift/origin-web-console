@@ -6,7 +6,6 @@ angular
               function($filter,
                        $scope,
                        $routeParams,
-                       AlertMessageService,
                        BreadcrumbsService,
                        DataService,
                        EnvironmentService,
@@ -29,11 +28,6 @@ angular
       // cached by DataService. Normalizing would otherwise modify the original.
       return EnvironmentService.copyAndNormalize(statefulSet);
     };
-
-    AlertMessageService.getAlerts().forEach(function(alert) {
-      $scope.alerts[alert.name] = alert.data;
-    });
-    AlertMessageService.clearAlerts();
 
     var watches = [];
     var projectContext;

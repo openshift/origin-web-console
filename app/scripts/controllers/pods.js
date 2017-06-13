@@ -8,7 +8,7 @@
  * Controller of the openshiftConsole
  */
 angular.module('openshiftConsole')
-  .controller('PodsController', function ($routeParams, $scope, DataService, ProjectsService, AlertMessageService, $filter, LabelFilter, Logger) {
+  .controller('PodsController', function ($routeParams, $scope, DataService, ProjectsService, $filter, LabelFilter, Logger) {
     $scope.projectName = $routeParams.project;
     $scope.pods = {};
     $scope.unfilteredPods = {};
@@ -19,12 +19,6 @@ angular.module('openshiftConsole')
     $scope.labelSuggestions = {};
     $scope.alerts = $scope.alerts || {};
     $scope.emptyMessage = "Loading...";
-
-    // get and clear any alerts
-    AlertMessageService.getAlerts().forEach(function(alert) {
-      $scope.alerts[alert.name] = alert.data;
-    });
-    AlertMessageService.clearAlerts();
 
     var watches = [];
 

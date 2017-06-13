@@ -42,7 +42,6 @@
 
 
     ctrl.$onInit = function() {
-      ctrl.alerts = {};
       ctrl.loginBaseUrl = DataService.openshiftAPIBaseUrl();
     };
 
@@ -80,6 +79,8 @@
     };
 
     ctrl.close = function() {
+      $scope.$broadcast('hideTemplateNotificationErrors');
+
       var cb = ctrl.onDialogClosed();
       if (_.isFunction(cb)) {
         cb();
