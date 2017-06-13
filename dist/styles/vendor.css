@@ -168,6 +168,7 @@ accordion>.panel-group .panel-open .panel-title>a:before{content:"\f107"}
 .active-filters{line-height:0;display:-ms-flexbox;display:flex;-ms-flex-direction:column;flex-direction:column}
 .active-filters .label-filter-active-filters{display:-ms-inline-flexbox;display:inline-flex;-ms-flex-wrap:wrap;flex-wrap:wrap}
 .active-filters .label-filter-active-filters .label{-ms-flex-align:center;align-items:center;background:#006e9c;border-radius:2px;display:-ms-inline-flexbox;display:inline-flex;-ms-flex:0 1 auto;flex:0 1 auto;font-size:12px;font-weight:400;line-height:13px;padding:.3em 6px;margin:3px 3px 0 0;text-shadow:0 1px 0 rgba(0,0,0,.2);word-break:break-all;word-break:break-word;overflow-wrap:break-word;white-space:normal}
+[break-word],dd.indentifier{word-break:break-all}
 .active-filters .label-filter-active-filters .label:hover{background:#006e9c}
 .active-filters .label-filter-active-filters .label i.fa-times{font-size:10px;padding-left:10px}
 .active-filters .label-filter-active-filters .label-filter-clear{display:-ms-inline-flexbox;display:inline-flex;margin:3px 3px 0 0;-ms-flex-align:center;align-items:center}
@@ -269,20 +270,23 @@ tbody tr.listing-ct-noexpand{cursor:default}
 dl.registry-image-tags dt{line-height:30px}
 dl.registry-image-tags .registry-image-tag{padding:2px 5px;line-height:30px}
 .registry-image-tag{border:1px solid #ccc;border-radius:2px;white-space:nowrap;text-overflow:ellipsis;overflow:hidden;background-color:#fff}
-a.registry-image-tag{width:76px;height:22px;display:block;text-align:center;padding:0 2px}
+a.registry-image-tag{max-width:76px;height:22px;display:block;text-align:center;padding:0 2px;margin-left:2px}
+@media (max-width:768px){a.registry-image-tag{max-width:50px}
+}
 registry-imagestream-body a[ng-click]{cursor:pointer}
 registry-image-pull,registry-imagestream-push{display:block}
-registry-image-pull code,registry-imagestream-push code{display:block;white-space:pre}
+registry-image-pull code,registry-imagestream-push code{display:block;white-space:pre;overflow-x:auto}
 registry-image-pull code em,registry-image-pull code span.placeholder,registry-imagestream-push code em,registry-imagestream-push code span.placeholder{font-weight:700;font-style:normal;color:#888}
 registry-image-pull .fa-info-circle,registry-imagestream-push .fa-info-circle{font-size:15px;color:#888;padding:0px 5px}
 .registry-imagestream-lock{color:#deaa87;font-size:1.5em;vertical-align:middle}
 registry-imagestream-listing table{max-width:2000px;min-width:85%}
 registry-imagestream-listing table tbody:hover{background-color:#d4edfa}
-registry-imagestream-listing table td.image-identifier div{max-width:200px;text-overflow:ellipsis;overflow:hidden}
+registry-imagestream-listing table td.image-identifier{max-width:0;width:50%}
+registry-imagestream-listing table td.image-identifier div.col{max-width:250px;text-overflow:ellipsis;overflow:hidden}
+registry-imagestream-listing table td.image-identifier div.col tt{color:inherit}
 registry-imagestream-listing table tbody.open .listing-ct-panel .listing-ct-body,registry-imagestream-listing table tbody.open tr.listing-ct-panel td div.listing-ct-head{border-right:1px solid #ccc}
 registry-imagestream-listing table thead th{border-top:none}
 registry-imagestream-listing table tr.listing-ct-item td{padding-bottom:10px}
-registry-imagestream-listing table tr.listing-ct-item td tt{color:inherit}
 registry-imagestream-listing table tr.registry-listing-imagestream-item{border-top:1px solid #eee}
 registry-imagestream-listing table tr.registry-listing-imagestream-item td,registry-imagestream-listing table tr.registry-listing-imagestream-item th{border-bottom:2px solid #ccc;font-size:14px;padding-bottom:5px}
 registry-image-layers{border:1px solid #d1d1d1;display:block;overflow-y:auto;max-height:200px}
@@ -413,7 +417,7 @@ ul.registry-image-layers p{font-family:monospace;margin-bottom:0px;overflow:hidd
 [overflow-hidden]{overflow:hidden}
 [scrollable]{overflow:scroll}
 [truncate]{overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
-[break-word]{word-break:break-all;word-break:break-word}
+[break-word]{word-break:break-word}
 [nowrap]{white-space:nowrap}
 .as-sortable-item,.as-sortable-placeholder,[block]{display:block}
 [inline]{display:inline-block}
