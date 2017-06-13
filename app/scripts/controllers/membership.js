@@ -15,6 +15,7 @@ angular
       DataService,
       ProjectsService,
       MembershipService,
+      NotificationsService,
       RoleBindingsService,
       RolesService) {
 
@@ -53,14 +54,12 @@ angular
         errorReason: _.template('Reason: "<%= httpErr %>"')
       };
 
-      // NOTE: alert service?
-      var showAlert = function(name, type, msg, detail, scope) {
-        scope = scope || $scope;
-        scope.alerts[name] = {
+      var showToast = function(type, message, details) {
+        NotificationsService.addNotification({
           type: type,
-          message: msg,
-          details: detail
-        };
+          message: message,
+          details: details
+        });
       };
 
       var resetForm = function() {
@@ -116,14 +115,14 @@ angular
           .create(role, newSubject, projectName, requestContext)
           .then(function() {
             refreshRoleBindingList();
-            showAlert('rolebindingCreate', 'success', messages.update.subject.success({
+            showToast('success', messages.update.subject.success({
               roleName: role.metadata.name,
               subjectName: newSubject.name
             }));
           }, function(err) {
             resetForm();
             refreshRoleBindingList();
-            showAlert('rolebindingCreateFail', 'error', messages.update.subject.error({
+            showToast('error', messages.update.subject.error({
               roleName: role.metadata.name,
               subjectName: newSubject.name
             }), messages.errorReason({httpErr: $filter('getErrorDetails')(err)}));
@@ -136,14 +135,14 @@ angular
           .addSubject(rb, newSubject, projectName, requestContext)
           .then(function() {
             refreshRoleBindingList();
-            showAlert('rolebindingUpdate', 'success', messages.update.subject.success({
+            showToast('success', messages.update.subject.success({
               roleName: rb.roleRef.name,
               subjectName: newSubject.name
             }));
           }, function(err) {
             resetForm();
             refreshRoleBindingList();
-            showAlert('rolebindingUpdateFail', 'error', messages.update.subject.error({
+            showToast('error', messages.update.subject.error({
               roleName: rb.roleRef.name,
               subjectName: newSubject.name
             }), messages.errorReason({httpErr: $filter('getErrorDetails')(err)}));
@@ -161,7 +160,6 @@ angular
       angular.extend($scope, {
         selectedTab: selectedTab,
         projectName: projectName,
-        alerts: {},
         forms: {},
         subjectKinds: subjectKinds,
         newBinding: {
@@ -224,11 +222,17 @@ angular
             subjectName: subjectName
           });
           if(MembershipService.isLastRole($scope.user.metadata.name, $scope.roleBindings)) {
-            showAlert('currentUserLastRole', 'error', messages.notice.yourLastRole({roleName: roleName}), null, modalScope);
+            modalScope.alerts['currentUserLabelRole'] = {
+              type: 'error',
+              message: messages.notice.yourLastRole({roleName: roleName})
+            };
           }
         }
         if(_.isEqual(kind, 'ServiceAccount') && _.startsWith(roleName, 'system:')) {
-          showAlert('editingServiceAccountRole', 'error', messages.warning.serviceAccount(), null, modalScope);
+          modalScope.alerts['editingServiceAccountRole'] = {
+            type: 'error',
+            message: messages.warning.serviceAccount()
+          };
         }
         return modalScope;
       };
@@ -310,13 +314,13 @@ angular
                             }
                           });
                         });
-                      showAlert('rolebindingUpdate', 'success', messages.remove.success({
+                      showToast('success', messages.remove.success({
                         roleName: roleName,
                         subjectName: subjectName
                       }));
                     }
                   }, function(err) {
-                    showAlert('rolebindingUpdateFail', 'error', messages.remove.error({
+                    showToast('error', messages.remove.error({
                       roleName: roleName,
                       subjectName: subjectName
                     }),  messages.errorReason({
@@ -341,7 +345,7 @@ angular
               // a good solution is found.
               var rolebindingToUpdate = _.find($scope.roleBindings, {roleRef: {name: role.metadata.name}});
               if(rolebindingToUpdate && _.some(rolebindingToUpdate.subjects, subject)) {
-                showAlert('rolebindingUpdate', 'info', messages.update.subject.exists({
+                showToast('error', messages.update.subject.exists({
                   roleName: role.metadata.name,
                   subjectName: subjectName
                 }));

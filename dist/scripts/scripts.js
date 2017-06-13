@@ -4741,8 +4741,8 @@ maxWait:250
 a !== b && (localStorage.setItem("monitoring.eventsidebar.collapsed", c.renderOptions.collapseEventsSidebar ? "true" :"false"), n.$emit("metrics.charts.resize"));
 });
 }));
-} ]), angular.module("openshiftConsole").controller("MembershipController", [ "$filter", "$location", "$routeParams", "$scope", "$timeout", "$uibModal", "AuthService", "AuthorizationService", "DataService", "ProjectsService", "MembershipService", "RoleBindingsService", "RolesService", function(a, b, c, d, e, f, g, h, i, j, k, l, m) {
-var n, o = c.project, p = a("humanizeKind"), q = a("annotation"), r = a("canI"), s = [], t = {
+} ]), angular.module("openshiftConsole").controller("MembershipController", [ "$filter", "$location", "$routeParams", "$scope", "$timeout", "$uibModal", "AuthService", "AuthorizationService", "DataService", "ProjectsService", "MembershipService", "NotificationsService", "RoleBindingsService", "RolesService", function(a, b, c, d, e, f, g, h, i, j, k, l, m, n) {
+var o, p = c.project, q = a("humanizeKind"), r = a("annotation"), s = a("canI"), t = [], u = {
 notice:{
 yourLastRole:_.template('Removing the role "<%= roleName %>" may completely remove your ability to see this project.')
 },
@@ -4767,15 +4767,15 @@ exists:_.template('The role "<%= roleName %>" has already been granted to "<%= s
 }
 },
 errorReason:_.template('Reason: "<%= httpErr %>"')
-}, u = function(a, b, c, e, f) {
-f = f || d, f.alerts[a] = {
-type:b,
-message:c,
-details:e
-};
-}, v = function() {
-d.disableAddForm = !1, d.newBinding.name = "", d.newBinding.namespace = o, d.newBinding.newRole = null;
-}, w = function(a) {
+}, v = function(a, b, c) {
+l.addNotification({
+type:a,
+message:b,
+details:c
+});
+}, w = function() {
+d.disableAddForm = !1, d.newBinding.name = "", d.newBinding.namespace = p, d.newBinding.newRole = null;
+}, x = function(a) {
 i.list("serviceaccounts", a).then(function(a) {
 var b = _.keys(a.by("metadata.name")).sort();
 angular.extend(d, {
@@ -4785,62 +4785,61 @@ a && !_.includes(d.serviceAccounts, a) ? d.serviceAccounts = [ a ].concat(b) :d.
 }
 });
 });
-}, x = function(a) {
-i.list("rolebindings", n, null, {
+}, y = function(a) {
+i.list("rolebindings", o, null, {
 errorNotification:!1
 }).then(function(a) {
 angular.extend(d, {
 canShowRoles:!0,
 roleBindings:a.by("metadata.name"),
-subjectKindsForUI:k.mapRolebindingsForUI(a.by("metadata.name"), s)
-}), v();
+subjectKindsForUI:k.mapRolebindingsForUI(a.by("metadata.name"), t)
+}), w();
 }, function() {
-a && (d.roleBindings[a.metadata.name] = a, d.subjectKindsForUI = k.mapRolebindingsForUI(d.roleBindings, s)), v();
+a && (d.roleBindings[a.metadata.name] = a, d.subjectKindsForUI = k.mapRolebindingsForUI(d.roleBindings, t)), w();
 });
-}, y = function(b, c) {
-d.disableAddForm = !0, l.create(b, c, o, n).then(function() {
-x(), u("rolebindingCreate", "success", t.update.subject.success({
+}, z = function(b, c) {
+d.disableAddForm = !0, m.create(b, c, p, o).then(function() {
+y(), v("success", u.update.subject.success({
 roleName:b.metadata.name,
 subjectName:c.name
 }));
 }, function(d) {
-v(), x(), u("rolebindingCreateFail", "error", t.update.subject.error({
+w(), y(), v("error", u.update.subject.error({
 roleName:b.metadata.name,
 subjectName:c.name
-}), t.errorReason({
+}), u.errorReason({
 httpErr:a("getErrorDetails")(d)
 }));
 });
-}, z = function(b, c, e) {
-d.disableAddForm = !0, l.addSubject(b, c, e, n).then(function() {
-x(), u("rolebindingUpdate", "success", t.update.subject.success({
+}, A = function(b, c, e) {
+d.disableAddForm = !0, m.addSubject(b, c, e, o).then(function() {
+y(), v("success", u.update.subject.success({
 roleName:b.roleRef.name,
 subjectName:c.name
 }));
 }, function(d) {
-v(), x(), u("rolebindingUpdateFail", "error", t.update.subject.error({
+w(), y(), v("error", u.update.subject.error({
 roleName:b.roleRef.name,
 subjectName:c.name
-}), t.errorReason({
+}), u.errorReason({
 httpErr:a("getErrorDetails")(d)
 }));
 });
-}, A = {};
-c.tab && (A[c.tab] = !0);
-var B = k.getSubjectKinds();
+}, B = {};
+c.tab && (B[c.tab] = !0);
+var C = k.getSubjectKinds();
 angular.extend(d, {
-selectedTab:A,
-projectName:o,
-alerts:{},
+selectedTab:B,
+projectName:p,
 forms:{},
-subjectKinds:B,
+subjectKinds:C,
 newBinding:{
 role:"",
 kind:c.tab || "User",
 name:""
 },
 toggleEditMode:function() {
-v(), d.mode.edit = !d.mode.edit;
+w(), d.mode.edit = !d.mode.edit;
 },
 mode:{
 edit:!1
@@ -4862,28 +4861,34 @@ name:b.metadata.name
 roleHelp:function(a) {
 if (a) {
 var b = "", c = _.get(a, "metadata.namespace"), d = _.get(a, "metadata.name"), e = c ? c + " / " + d + ": " :"";
-return a ? e + (q(a, "description") || b) :b;
+return a ? e + (r(a, "description") || b) :b;
 }
 }
 });
-var C = function(a, b, c, e) {
+var D = function(a, b, c, e) {
 var f = {
 alerts:{},
-detailsMarkup:t.remove.areYouSure.html.subject({
+detailsMarkup:u.remove.areYouSure.html.subject({
 roleName:c,
-kindName:p(b),
+kindName:q(b),
 subjectName:a
 }),
 okButtonText:"Remove",
 okButtonClass:"btn-danger",
 cancelButtonText:"Cancel"
 };
-return _.isEqual(a, e) && (f.detailsMarkup = t.remove.areYouSure.html.self({
+return _.isEqual(a, e) && (f.detailsMarkup = u.remove.areYouSure.html.self({
 roleName:c,
 subjectName:a
-}), k.isLastRole(d.user.metadata.name, d.roleBindings) && u("currentUserLastRole", "error", t.notice.yourLastRole({
+}), k.isLastRole(d.user.metadata.name, d.roleBindings) && (f.alerts.currentUserLabelRole = {
+type:"error",
+message:u.notice.yourLastRole({
 roleName:c
-}), null, f)), _.isEqual(b, "ServiceAccount") && _.startsWith(c, "system:") && u("editingServiceAccountRole", "error", t.warning.serviceAccount(), null, f), f;
+})
+})), _.isEqual(b, "ServiceAccount") && _.startsWith(c, "system:") && (f.alerts.editingServiceAccountRole = {
+type:"error",
+message:u.warning.serviceAccount()
+}), f;
 };
 g.withUser().then(function(a) {
 d.user = a;
@@ -4892,7 +4897,7 @@ var b = _.keys(a.by("metadata.name")).sort();
 angular.extend(d, {
 projects:b,
 selectProject:function(a) {
-d.newBinding.name = "", w({
+d.newBinding.name = "", x({
 namespace:a
 });
 },
@@ -4901,12 +4906,12 @@ a && !_.includes(d.projects, a) ? d.projects = [ a ].concat(b) :d.projects = b;
 }
 });
 }), j.get(c.project).then(_.spread(function(c, e) {
-n = e, x(), w(n), angular.extend(d, {
+o = e, y(), x(o), angular.extend(d, {
 project:c,
-subjectKinds:B,
-canUpdateRolebindings:r("rolebindings", "update", o),
+subjectKinds:C,
+canUpdateRolebindings:s("rolebindings", "update", p),
 confirmRemove:function(c, e, g) {
-var i = null, j = C(c, e, g, d.user.metadata.name);
+var i = null, j = D(c, e, g, d.user.metadata.name);
 _.isEqual(c, d.user.metadata.name) && k.isLastRole(d.user.metadata.name, d.roleBindings) && (i = !0), f.open({
 animation:!0,
 templateUrl:"views/modals/confirm.html",
@@ -4917,25 +4922,25 @@ return j;
 }
 }
 }).result.then(function() {
-l.removeSubject(c, g, d.roleBindings, n).then(function(a) {
-i ? b.url("./") :(h.getProjectRules(o, !0).then(function() {
-x(a[0]);
-var b = r("rolebindings", "update", o);
+m.removeSubject(c, g, d.roleBindings, o).then(function(a) {
+i ? b.url("./") :(h.getProjectRules(p, !0).then(function() {
+y(a[0]);
+var b = s("rolebindings", "update", p);
 angular.extend(d, {
 canUpdateRolebindings:b,
 mode:{
 edit:!!d.mode.edit && b
 }
 });
-}), u("rolebindingUpdate", "success", t.remove.success({
+}), v("success", u.remove.success({
 roleName:g,
 subjectName:c
 })));
 }, function(b) {
-u("rolebindingUpdateFail", "error", t.remove.error({
+v("error", u.remove.error({
 roleName:g,
 subjectName:c
-}), t.errorReason({
+}), u.errorReason({
 httpErr:a("getErrorDetails")(b)
 }));
 });
@@ -4952,23 +4957,23 @@ roleRef:{
 name:c.metadata.name
 }
 });
-g && _.some(g.subjects, f) ? u("rolebindingUpdate", "info", t.update.subject.exists({
+g && _.some(g.subjects, f) ? v("error", u.update.subject.exists({
 roleName:c.metadata.name,
 subjectName:a
-})) :g ? z(g, f, e) :y(c, f, e);
+})) :g ? A(g, f, e) :z(c, f, e);
 }
-}), m.listAllRoles(n, {
+}), n.listAllRoles(o, {
 errorNotification:!1
 }).then(function(a) {
-s = k.mapRolesForUI(_.first(a).by("metadata.name"), _.last(a).by("metadata.name"));
-var b = k.sortRoles(s), c = k.filterRoles(s), e = function(a, b) {
+t = k.mapRolesForUI(_.first(a).by("metadata.name"), _.last(a).by("metadata.name"));
+var b = k.sortRoles(t), c = k.filterRoles(t), e = function(a, b) {
 return _.some(b, {
 metadata:{
 name:a
 }
 });
 };
-x(), angular.extend(d, {
+y(), angular.extend(d, {
 toggle:{
 roles:!1
 },
