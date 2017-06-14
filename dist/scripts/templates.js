@@ -6156,7 +6156,7 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "<span class=\"pficon pficon-warning-triangle-o\" aria-hidden=\"true\"></span>\n" +
     "Service account <strong>default</strong> will need image pull authority to deploy images from <strong>{{istag.namespace}}</strong>. You can grant authority with the command:\n" +
     "<p>\n" +
-    "<code>oc policy add-role-to-user system:image-puller system:serviceaccount:{{projectName}}:default -n {{istag.namespace}}</code>\n" +
+    "<code>oc policy add-role-to-user system:image-puller system:serviceaccount:{{project.metadata.name}}:default -n {{istag.namespace}}</code>\n" +
     "</p>\n" +
     "</div>\n" +
     "</fieldset>\n" +
@@ -6254,7 +6254,7 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "<span class=\"help-block\">This name is already in use within the project. Please choose a different name.</span>\n" +
     "</div>\n" +
     "</div>\n" +
-    "<osc-secrets model=\"pullSecrets\" namespace=\"projectName\" display-type=\"pull\" type=\"image\" secrets-by-type=\"secretsByType\" service-account-to-link=\"default\" alerts=\"alerts\" allow-multiple-secrets=\"true\">\n" +
+    "<osc-secrets model=\"pullSecrets\" namespace=\"project.metadata.name\" display-type=\"pull\" type=\"image\" secrets-by-type=\"secretsByType\" service-account-to-link=\"default\" alerts=\"alerts\" allow-multiple-secrets=\"true\">\n" +
     "</osc-secrets>\n" +
     "<osc-form-section header=\"Environment Variables\" about-title=\"Environment Variables\" about=\"Environment variables are used to configure and pass information to running containers.\" expand=\"true\" can-toggle=\"false\" class=\"first-section\">\n" +
     "<key-value-editor entries=\"env\" key-placeholder=\"Name\" key-validator=\"[A-Za-z_][A-Za-z0-9_]*\" key-validator-error=\"A valid environment variable name is an alphanumeric (a-z and 0-9) string beginning with a letter that may contain underscores.\" value-placeholder=\"Value\" value-from-selector-options=\"valueFromObjects\" add-row-link=\"Add Environment Variable\" add-row-with-selectors-link=\"Add Environment Variable Using a Config Map or Secret\"></key-value-editor>\n" +

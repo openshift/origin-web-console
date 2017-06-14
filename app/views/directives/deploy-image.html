@@ -18,7 +18,7 @@
           from <strong>{{istag.namespace}}</strong>. You can grant authority with the command:
 
           <p>
-            <code>oc policy add-role-to-user system:image-puller system:serviceaccount:{{projectName}}:default -n {{istag.namespace}}</code>
+            <code>oc policy add-role-to-user system:image-puller system:serviceaccount:{{project.metadata.name}}:default -n {{istag.namespace}}</code>
           </p>
         </div>
       </fieldset>
@@ -149,7 +149,7 @@
           </div>
         </div>
         <osc-secrets model="pullSecrets"
-                    namespace="projectName"
+                    namespace="project.metadata.name"
                     display-type="pull"
                     type="image"
                     secrets-by-type="secretsByType"
