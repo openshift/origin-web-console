@@ -4774,7 +4774,7 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "</uib-tab>\n" +
     "<uib-tab active=\"selectedTab.deployImage\">\n" +
     "<uib-tab-heading>Deploy Image</uib-tab-heading>\n" +
-    "<deploy-image project=\"project\" context=\"context\" alerts=\"alerts\"></deploy-image>\n" +
+    "<deploy-image project=\"project\" context=\"context\"></deploy-image>\n" +
     "</uib-tab>\n" +
     "<uib-tab active=\"selectedTab.fromFile\">\n" +
     "<uib-tab-heading>Import YAML / JSON</uib-tab-heading>\n" +
@@ -6116,7 +6116,7 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "<div class=\"order-service-config-single-column\">\n" +
     "<div class=\"wizard-pf-main-form-contents\">\n" +
     "<form name=\"$ctrl.deployForm\">\n" +
-    "<deploy-image is-dialog=\"true\" project=\"$ctrl.project\" context=\"$ctrl.context\" alerts=\"$ctrl.alerts\"></deploy-image>\n" +
+    "<deploy-image is-dialog=\"true\" project=\"$ctrl.project\" context=\"$ctrl.context\"></deploy-image>\n" +
     "</form>\n" +
     "</div>\n" +
     "</div>\n" +

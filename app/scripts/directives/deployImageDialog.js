@@ -21,7 +21,6 @@
     var ctrl = this;
 
     ctrl.$onInit = function() {
-      ctrl.alerts = {};
       ctrl.loginBaseUrl = DataService.openshiftAPIBaseUrl();
       ctrl.currentStep = "Image";
     };
