@@ -1315,4 +1315,17 @@ angular.module('openshiftConsole')
       var alternateBackends = _.get(route, 'spec.alternateBackends', []);
       return !_.isEmpty(alternateBackends);
     };
+  })
+  // .filter('serviceClassDisplayName', function() {
+  //   return function(serviceClass) {
+  //    TODO: this filter may also be useful.
+  //   };
+  // })
+  .filter('serviceInstanceDisplayName', function() {
+    return function(instance, serviceClasses) {
+      var serviceClassName = instance.spec.serviceClassName;
+      var instanceName = instance.metadata.name;
+      var serviceClassDisplayName = _.get(serviceClasses, [serviceClassName, 'externalMetadata', 'displayName']);
+      return serviceClassDisplayName || serviceClassName || instanceName;
+    };
   });

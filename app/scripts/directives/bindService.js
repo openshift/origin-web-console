@@ -55,15 +55,15 @@
       }
     };
 
-
     var deploymentConfigs, deployments, replicationControllers, replicaSets, statefulSets;
     var sortApplications = function() {
       // Don't waste time sorting on each data load, just sort when we have them all
       if (deploymentConfigs && deployments && replicationControllers && replicaSets && statefulSets) {
-        var apiObjects = deploymentConfigs.concat(deployments)
-                                          .concat(replicationControllers)
-                                          .concat(replicaSets)
-                                          .concat(statefulSets);
+        var apiObjects =  [].concat(deploymentConfigs)
+                            .concat(deployments)
+                            .concat(replicationControllers)
+                            .concat(replicaSets)
+                            .concat(statefulSets);
         ctrl.applications = _.sortByAll(apiObjects, ['metadata.name', 'kind']);
         ctrl.bindType = ctrl.applications.length ? "application" : "secret-only";
       }
