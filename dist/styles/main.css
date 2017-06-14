@@ -4255,6 +4255,7 @@ copy-to-clipboard .input-group.limit-width{max-width:300px}
 }
 .landing .nav-tabs,.landing h1{margin-bottom:0!important;margin-top:0!important}
 @media (min-width:768px){.catalog-search,.landing-side-bar{top:61px}
+.tech-preview .catalog-search,.tech-preview .landing-side-bar{top:81px}
 }
 .collapse{display:none}
 .collapse.in{display:block}
@@ -4704,6 +4705,7 @@ h2+.list-view-pf{margin-top:20px}
 #header-logo{background-image:url(../images/logo-origin-thin.svg);background-repeat:no-repeat;background-position:center left;background-size:initial;height:46px;width:230px}
 .navbar-pf-alt{background:#1c2127;border-bottom:1px solid #050505;border-left:1px solid transparent;border-right:1px solid transparent;border-top:0;min-height:inherit}
 .layout-pf-alt-fixed .navbar-pf-alt{left:0;position:fixed;right:0;top:0;z-index:1030}
+.layout-pf-alt-fixed .tech-preview .navbar-pf-alt{top:20px}
 .navbar-pf-alt .navbar-toggle{margin:0;padding:9px 14px}
 @media (max-width:479px){.navbar-pf-alt .navbar-toggle{padding-left:8px;padding-right:8px}
 }
@@ -4771,6 +4773,7 @@ h2+.list-view-pf{margin-top:20px}
 @media (min-width:768px){.navbar-pf-alt .navbar-header{height:60px;width:143px}
 .navbar-pf-alt .navbar-header .navbar-brand{padding:0;margin-left:30px;margin-right:75px;margin-top:0}
 .navbar-flex-btn.toggle-menu{display:none}
+.tech-preview-banner{position:fixed}
 }
 @media (min-width:1200px){.navbar-pf-alt .navbar-header{width:143px}
 }
@@ -4779,6 +4782,7 @@ h2+.list-view-pf{margin-top:20px}
 .navbar-pf-alt .navbar-header .navbar-home .pficon{display:inline-block;width:25px;margin-right:10px}
 .navbar-pf-alt .navbar-header .navbar-home .visible-xlg-inline-block{margin-left:3px}
 }
+.tech-preview-banner{background:#ec7a08;color:#fff;font-size:12px;text-align:center;text-transform:uppercase;width:100%;z-index:1030}
 @font-face{font-family:openshift-logos-icon;src:url(../styles/fonts/openshift-logos-icon.ttf) format('truetype'),url(../styles/fonts/openshift-logos-icon.woff) format('woff'),url(../styles/fonts/openshift-logos-icon.svg#openshift-logos-icon) format('svg');font-weight:400;font-style:normal}
 .font-icon{font-family:openshift-logos-icon!important;speak:none;font-style:normal;font-weight:400;font-variant:normal;text-transform:none;line-height:1;-webkit-font-smoothing:antialiased}
 .icon-mediawiki:before{content:"\f158"}
@@ -5325,6 +5329,7 @@ dl.secret-data pre{margin-bottom:0}
 body,html{margin:0;padding:0}
 .layout-pf-alt.layout-pf-alt-fixed body{padding-top:0}
 .console-os{background-color:#fff}
+.console-os.tech-preview .top-header{height:66px}
 .console-os .top-header{display:flex;position:relative;height:46px}
 .console-os .wrap{display:flex;flex-direction:column;height:100vh;margin-top:-46px;padding-top:46px;position:relative;width:100%;-webkit-backface-visibility:hidden;-moz-backface-visibility:hidden;backface-visibility:hidden}
 .console-os .wrap.no-sidebar h1{margin:10px 0 20px}
@@ -5344,6 +5349,8 @@ body,html{margin:0;padding:0}
 .header-toolbar{background-color:#fff;border-bottom:1px solid #e4e4e4}
 .surface-shaded{background-color:#f2f2f2}
 @media (min-width:768px){.layout-pf-alt-fixed .nav-pf-vertical-alt{position:fixed;bottom:0;overflow:visible}
+.console-os.tech-preview .top-header{height:80px}
+.console-os.tech-preview .wrap{margin-top:-80px;padding-top:80px}
 .console-os .wrap{flex-direction:row;margin-top:-60px;overflow:hidden;padding-top:60px}
 .console-os .wrap.no-sidebar .sidebar-left{display:none!important}
 .console-os .wrap.show-sidebar-right .sidebar-right{display:block}
@@ -5608,6 +5615,7 @@ alerts+.chromeless .log-loading-msg{margin-top:130px}
 .log-view .log-scroll-top{position:absolute;right:25px;top:10px}
 .log-view .log-scroll-top.affix{position:fixed;right:45px}
 @media (min-width:768px){.log-view .log-scroll-top.affix{right:60px;top:70px}
+.tech-preview .log-view .log-scroll-top.affix{top:90px}
 }
 @media (min-width:992px){.log-view .log-scroll-top.affix{right:70px}
 }

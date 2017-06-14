@@ -7021,7 +7021,13 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
   );
 
 
+  $templateCache.put('views/directives/header/_tech-preview-banner.html',
+    "Technology preview is enabled"
+  );
+
+
   $templateCache.put('views/directives/header/default-header.html',
+    "<ng-include ng-if=\"globalTechPreviewIndicator\" src=\"'views/directives/header/_tech-preview-banner.html'\" class=\"tech-preview-banner\"></ng-include>\n" +
     "<nav class=\"navbar navbar-pf-alt\" role=\"navigation\">\n" +
     "<div row>\n" +
     "<div class=\"navbar-header\">\n" +
@@ -7048,6 +7054,7 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
 
 
   $templateCache.put('views/directives/header/project-header.html',
+    "<ng-include ng-if=\"globalTechPreviewIndicator\" src=\"'views/directives/header/_tech-preview-banner.html'\" class=\"tech-preview-banner\"></ng-include>\n" +
     "<nav class=\"navbar navbar-pf-alt\" role=\"navigation\">\n" +
     "<div class=\"navbar-header hidden-xs\">\n" +
     "<a class=\"navbar-home\" href=\"./\"><span class=\"fa-fw pficon pficon-home\" aria-hidden=\"true\"></span>\n" +
