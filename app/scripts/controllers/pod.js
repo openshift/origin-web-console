@@ -415,27 +415,6 @@ angular.module('openshiftConsole')
           return running;
         };
 
-        $scope.showDebugAction = function(containerStatus) {
-          if (_.get($scope, 'pod.status.phase') === 'Completed') {
-            return false;
-          }
-
-          if (annotation($scope.pod, 'openshift.io/build.name')) {
-            return false;
-          }
-
-          if ($filter('isDebugPod')($scope.pod)) {
-            return false;
-          }
-
-          var waitingReason = _.get(containerStatus, 'state.waiting.reason');
-          if (waitingReason === 'ImagePullBackOff' || waitingReason === 'ErrImagePull') {
-            return false;
-          }
-
-          return !_.get(containerStatus, 'state.running') || !containerStatus.ready;
-        };
-
         $scope.$on('$destroy', function(){
           DataService.unwatchAll(watches);
           cleanUpDebugPod();

@@ -4402,12 +4402,6 @@ var b = 0;
 return a && a.forEach(function(a) {
 a.state && a.state.running && b++;
 }), b;
-}, a.showDebugAction = function(c) {
-if ("Completed" === _.get(a, "pod.status.phase")) return !1;
-if (z(a.pod, "openshift.io/build.name")) return !1;
-if (b("isDebugPod")(a.pod)) return !1;
-var d = _.get(c, "state.waiting.reason");
-return "ImagePullBackOff" !== d && "ErrImagePull" !== d && (!_.get(c, "state.running") || !c.ready);
 }, a.$on("$destroy", function() {
 g.unwatchAll(n), m(), $(window).off("resize.terminalsize");
 });
@@ -9831,7 +9825,36 @@ a.model.editing = !1;
 };
 }
 };
-}), angular.module("openshiftConsole").directive("podTemplate", function() {
+}), angular.module("openshiftConsole").directive("containerStatuses", [ "$filter", function(a) {
+return {
+restrict:"E",
+scope:{
+pod:"=",
+onDebugTerminal:"=?",
+detailed:"=?"
+},
+templateUrl:"views/_container-statuses.html",
+link:function(b) {
+b.hasDebugTerminal = angular.isFunction(b.onDebugTerminal);
+var c = a("isContainerTerminatedSuccessfully"), d = function(a) {
+return _.every(a, c);
+};
+b.$watch("pod", function(a) {
+b.initContainersTerminated = d(a.status.initContainerStatuses), b.expandInitContainers !== !1 && (b.expandInitContainers = !b.initContainersTerminated);
+}), b.toggleInitContainer = function() {
+b.expandInitContainers = !b.expandInitContainers;
+}, b.showDebugAction = function(c) {
+if ("Completed" === _.get(b.pod, "status.phase")) return !1;
+if (a("annotation")(b.pod, "openshift.io/build.name")) return !1;
+if (a("isDebugPod")(b.pod)) return !1;
+var d = _.get(c, "state.waiting.reason");
+return "ImagePullBackOff" !== d && "ErrImagePull" !== d && (!_.get(c, "state.running") || !c.ready);
+}, b.debugTerminal = function(a) {
+if (b.hasDebugTerminal) return b.onDebugTerminal.call(this, a);
+};
+}
+};
+} ]).directive("podTemplate", function() {
 return {
 restrict:"E",
 scope:{
@@ -9842,6 +9865,18 @@ detailed:"=?",
 addHealthCheckUrl:"@?"
 },
 templateUrl:"views/_pod-template.html"
+};
+}).directive("podTemplateContainer", function() {
+return {
+restrict:"E",
+scope:{
+container:"=podTemplateContainer",
+imagesByDockerReference:"=",
+builds:"=",
+detailed:"=?",
+labelPrefix:"@?"
+},
+templateUrl:"views/_pod-template-container.html"
 };
 }).directive("annotations", function() {
 return {
@@ -13664,6 +13699,10 @@ return a.state.waiting && "CrashLoopBackOff" === a.state.waiting.reason;
 }).filter("isContainerFailed", function() {
 return function(a) {
 return a.state.terminated && 0 !== a.state.terminated.exitCode;
+};
+}).filter("isContainerTerminatedSuccessfully", function() {
+return function(a) {
+return a.state.terminated && 0 === a.state.terminated.exitCode;
 };
 }).filter("isContainerUnprepared", function() {
 return function(a) {

@@ -1,6 +1,65 @@
 'use strict';
 
 angular.module('openshiftConsole')
+  .directive('containerStatuses', function($filter) {
+    return {
+      restrict: 'E',
+      scope: {
+        pod: '=',
+        onDebugTerminal: '=?',
+        detailed: '=?'
+      },
+      templateUrl: 'views/_container-statuses.html',
+      link: function(scope) {
+        scope.hasDebugTerminal = angular.isFunction(scope.onDebugTerminal);
+
+        var isContainerTerminatedSuccessfully = $filter('isContainerTerminatedSuccessfully');
+        var haveAllContainersTerminatedSuccessfully = function(containerStatuses) {
+          return _.every(containerStatuses, isContainerTerminatedSuccessfully);
+        };
+
+        scope.$watch('pod', function(updatedPod) {
+          scope.initContainersTerminated = haveAllContainersTerminatedSuccessfully(updatedPod.status.initContainerStatuses);
+
+          if (scope.expandInitContainers !== false) {
+            scope.expandInitContainers = !scope.initContainersTerminated;
+          }
+        });
+
+        scope.toggleInitContainer = function() {
+          scope.expandInitContainers = !scope.expandInitContainers;
+        };
+
+        scope.showDebugAction = function (containerStatus) {
+
+          if (_.get(scope.pod, 'status.phase') === 'Completed') {
+            return false;
+          }
+
+          if ($filter('annotation')(scope.pod, 'openshift.io/build.name')) {
+            return false;
+          }
+
+          if ($filter('isDebugPod')(scope.pod)) {
+            return false;
+          }
+
+          var waitingReason = _.get(containerStatus, 'state.waiting.reason');
+          if (waitingReason === 'ImagePullBackOff' || waitingReason === 'ErrImagePull') {
+            return false;
+          }
+
+          return !_.get(containerStatus, 'state.running') || !containerStatus.ready;
+        };
+
+        scope.debugTerminal = function(containerStatusName) {
+          if (scope.hasDebugTerminal) {
+            return scope.onDebugTerminal.call(this, containerStatusName);
+          }
+        };
+      }
+    };
+  })
   .directive('podTemplate', function() {
     return {
       restrict: 'E',
@@ -13,6 +72,19 @@ angular.module('openshiftConsole')
         addHealthCheckUrl: '@?'
       },
       templateUrl: 'views/_pod-template.html'
+    };
+  })
+  .directive('podTemplateContainer', function() {
+    return {
+      restrict: 'E',
+      scope: {
+        container: '=podTemplateContainer',
+        imagesByDockerReference: '=',
+        builds: '=',
+        detailed: '=?',
+        labelPrefix: '@?'
+      },
+      templateUrl: 'views/_pod-template-container.html'
     };
   })
   .directive('annotations', function() {

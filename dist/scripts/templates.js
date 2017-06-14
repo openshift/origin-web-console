@@ -138,6 +138,64 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
   );
 
 
+  $templateCache.put('views/_container-statuses.html',
+    " <div ng-if=\"detailed && pod.status.initContainerStatuses.length\">\n" +
+    "<h4 class=\"mar-bottom-xl\" row ng-if=\"initContainersTerminated\">\n" +
+    "<span><i class=\"fa fa-check text-success\"></i></span>\n" +
+    "<span flex>\n" +
+    "<ng-pluralize count=\"pod.status.initContainerStatuses.length\" when=\"{'1': '&nbsp;Init container {{pod.status.initContainerStatuses[0].name}}','other': '&nbsp;{} init containers'}\">\n" +
+    "</ng-pluralize>\n" +
+    "completed successfully\n" +
+    "</span>\n" +
+    "<span ng-if=\"initContainersTerminated\">\n" +
+    "<a class=\"page-header-link\" href=\"\" ng-click=\"toggleInitContainer()\">\n" +
+    "<span ng-if=\"!expandInitContainers\">Show</span>\n" +
+    "<span ng-if=\"expandInitContainers\">Hide</span>\n" +
+    "Details\n" +
+    "</a>\n" +
+    "</span>\n" +
+    "</h4>\n" +
+    "<div class=\"animate-if\" ng-if=\"expandInitContainers\" ng-repeat=\"containerStatus in pod.status.initContainerStatuses track by containerStatus.name\">\n" +
+    "<h4 class=\"component-label\">Init container {{containerStatus.name}}</h4>\n" +
+    "<dl class=\"dl-horizontal left\">\n" +
+    "<dt>State:</dt>\n" +
+    "<dd>\n" +
+    "<kubernetes-object-describe-container-state container-state=\"containerStatus.state\"></kubernetes-object-describe-container-state>\n" +
+    "</dd>\n" +
+    "<dt ng-if=\"!(containerStatus.lastState | isEmptyObj)\">Last State</dt>\n" +
+    "<dd ng-if=\"!(containerStatus.lastState | isEmptyObj)\">\n" +
+    "<kubernetes-object-describe-container-state container-state=\"containerStatus.lastState\"></kubernetes-object-describe-container-state>\n" +
+    "</dd>\n" +
+    "<dt>Ready:</dt>\n" +
+    "<dd>{{containerStatus.ready}}</dd>\n" +
+    "<dt>Restart Count:</dt>\n" +
+    "<dd>{{containerStatus.restartCount}}</dd>\n" +
+    "</dl>\n" +
+    "</div>\n" +
+    "</div>\n" +
+    "<div ng-repeat=\"containerStatus in pod.status.containerStatuses track by containerStatus.name\">\n" +
+    "<h4>Container {{containerStatus.name}}</h4>\n" +
+    "<dl class=\"dl-horizontal left\">\n" +
+    "<dt>State:</dt>\n" +
+    "<dd>\n" +
+    "<kubernetes-object-describe-container-state container-state=\"containerStatus.state\"></kubernetes-object-describe-container-state>\n" +
+    "</dd>\n" +
+    "<dt ng-if=\"!(containerStatus.lastState | isEmptyObj)\">Last State</dt>\n" +
+    "<dd ng-if=\"!(containerStatus.lastState | isEmptyObj)\">\n" +
+    "<kubernetes-object-describe-container-state container-state=\"containerStatus.lastState\"></kubernetes-object-describe-container-state>\n" +
+    "</dd>\n" +
+    "<dt>Ready:</dt>\n" +
+    "<dd>{{containerStatus.ready}}</dd>\n" +
+    "<dt>Restart Count:</dt>\n" +
+    "<dd>{{containerStatus.restartCount}}</dd>\n" +
+    "<div ng-if=\"hasDebugTerminal && showDebugAction(containerStatus) && ('pods' | canI : 'create')\" class=\"debug-pod-action\">\n" +
+    "<a href=\"\" ng-click=\"debugTerminal(containerStatus.name)\" role=\"button\">Debug in Terminal</a>\n" +
+    "</div>\n" +
+    "</dl>\n" +
+    "</div>"
+  );
+
+
   $templateCache.put('views/_edit-request-limit.html',
     "<ng-form name=\"form\" ng-if=\"!requestCalculated || !limitCalculated\">\n" +
     "<h3>\n" +
@@ -187,18 +245,9 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
   );
 
 
-  $templateCache.put('views/_pod-template.html',
-    " <div ng-if=\"detailed && addHealthCheckUrl && !(podTemplate | hasHealthChecks)\" class=\"alert alert-info\">\n" +
-    "<span class=\"pficon pficon-info\" aria-hidden=\"true\"></span>\n" +
-    "<span ng-if=\"podTemplate.spec.containers.length === 1\">This container has no health checks</span>\n" +
-    "<span ng-if=\"podTemplate.spec.containers.length > 1\">Not all containers have health checks</span>\n" +
-    "to ensure your application is running correctly.\n" +
-    "<a ng-href=\"{{addHealthCheckUrl}}\" class=\"nowrap\">Add Health Checks</a>\n" +
-    "</div>\n" +
-    "<div class=\"pod-template-container\">\n" +
-    "<div class=\"pod-template-block\" ng-repeat=\"container in podTemplate.spec.containers\">\n" +
-    "<div class=\"pod-template\">\n" +
-    "<div class=\"component-label\">Container: {{container.name}}</div>\n" +
+  $templateCache.put('views/_pod-template-container.html',
+    " <div class=\"pod-template\">\n" +
+    "<div class=\"component-label\"><span ng-bind-template=\"{{labelPrefix||'Container'}}:\"></span> {{container.name}}</div>\n" +
     "<div row ng-if=\"container.image\" class=\"pod-template-image icon-row\">\n" +
     "<div class=\"icon-wrap\">\n" +
     "<span class=\"pficon pficon-image\" aria-hidden=\"true\"></span>\n" +
@@ -353,6 +402,31 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "<probe probe=\"container.livenessProbe\"></probe>\n" +
     "</div>\n" +
     "</div>\n" +
+    "</div>"
+  );
+
+
+  $templateCache.put('views/_pod-template.html',
+    " <div ng-if=\"detailed && addHealthCheckUrl && !(podTemplate | hasHealthChecks)\" class=\"alert alert-info\">\n" +
+    "<span class=\"pficon pficon-info\" aria-hidden=\"true\"></span>\n" +
+    "<span ng-if=\"podTemplate.spec.containers.length === 1\">Container {{podTemplate.spec.containers[0].name}} does not have health checks</span>\n" +
+    "<span ng-if=\"podTemplate.spec.containers.length > 1\">Not all containers have health checks</span>\n" +
+    "to ensure your application is running correctly.\n" +
+    "<a ng-href=\"{{addHealthCheckUrl}}\" class=\"nowrap\">Add Health Checks</a>\n" +
+    "</div>\n" +
+    "<div ng-if=\"detailed && podTemplate.spec.initContainers.length\">\n" +
+    "<h4>Init Containers</h4>\n" +
+    "<div class=\"pod-template-container\">\n" +
+    "<div class=\"pod-template-block\" ng-repeat=\"container in podTemplate.spec.initContainers\">\n" +
+    "<pod-template-container pod-template-container=\"container\" images-by-docker-reference=\"imagesByDockerReference\" builds=\"builds\" detailed=\"detailed\" label-prefix=\"Init Container\"></pod-template-container>\n" +
+    "</div>\n" +
+    "</div>\n" +
+    "</div>\n" +
+    "<div>\n" +
+    "<h4 ng-if=\"detailed\">Containers</h4>\n" +
+    "<div class=\"pod-template-container\">\n" +
+    "<div class=\"pod-template-block\" ng-repeat=\"container in podTemplate.spec.containers\">\n" +
+    "<pod-template-container pod-template-container=\"container\" images-by-docker-reference=\"imagesByDockerReference\" builds=\"builds\" detailed=\"detailed\"></pod-template-container>\n" +
     "<div extension-point extension-name=\"container-links\" extension-types=\"link dom\" extension-args=\"[container, podTemplate]\"></div>\n" +
     "</div>\n" +
     "</div>\n" +
@@ -1262,25 +1336,8 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "</span>\n" +
     "</dd>\n" +
     "</dl>\n" +
-    "<div ng-repeat=\"containerStatus in pod.status.containerStatuses | orderBy:'name'\">\n" +
-    "<h4>Container {{containerStatus.name}}</h4>\n" +
-    "<dl class=\"dl-horizontal left\">\n" +
-    "<dt>State:</dt>\n" +
-    "<dd>\n" +
-    "<kubernetes-object-describe-container-state container-state=\"containerStatus.state\"></kubernetes-object-describe-container-state>\n" +
-    "</dd>\n" +
-    "<dt ng-if=\"!(containerStatus.lastState | isEmptyObj)\">Last State</dt>\n" +
-    "<dd ng-if=\"!(containerStatus.lastState | isEmptyObj)\">\n" +
-    "<kubernetes-object-describe-container-state container-state=\"containerStatus.lastState\"></kubernetes-object-describe-container-state>\n" +
-    "</dd>\n" +
-    "<dt>Ready:</dt>\n" +
-    "<dd>{{containerStatus.ready}}</dd>\n" +
-    "<dt>Restart Count:</dt>\n" +
-    "<dd>{{containerStatus.restartCount}}</dd>\n" +
-    "<div ng-if=\"showDebugAction(containerStatus) && ('pods' | canI : 'create')\" class=\"debug-pod-action\">\n" +
-    "<a href=\"\" ng-click=\"debugTerminal(containerStatus.name)\" role=\"button\">Debug in Terminal</a>\n" +
-    "</div>\n" +
-    "</dl>\n" +
+    "<div>\n" +
+    "<container-statuses pod=\"pod\" on-debug-terminal=\"debugTerminal\" detailed=\"true\"></container-statuses>\n" +
     "</div>\n" +
     "</div>\n" +
     "<div class=\"col-lg-6\">\n" +
