@@ -41,15 +41,12 @@ angular.module('openshiftConsole')
     var hideErrorNotifications = function() {
       NotificationsService.hideNotification("create-pvc-error");
     };
+    $scope.$on('$destroy', hideErrorNotifications);
 
     var navigateBack = function() {
       $window.history.back();
     };
-
-    $scope.cancel = function() {
-      hideErrorNotifications();
-      navigateBack();
-    };
+    $scope.cancel = navigateBack;
 
     ProjectsService
       .get($routeParams.project)

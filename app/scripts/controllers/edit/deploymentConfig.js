@@ -392,11 +392,11 @@ angular.module('openshiftConsole')
     };
 
     $scope.cancel = function() {
-      hideErrorNotifications();
       $window.history.back();
     };
 
     $scope.$on('$destroy', function(){
       DataService.unwatchAll(watches);
+      hideErrorNotifications();
     });
   });

@@ -68,15 +68,12 @@ angular.module('openshiftConsole')
     var navigateBack = function() {
       $window.history.back();
     };
+    $scope.cancel = navigateBack;
 
     var hideErrorNotifications = function() {
       NotificationsService.hideNotification('edit-hpa-error');
     };
-
-    $scope.cancel = function() {
-      hideErrorNotifications();
-      navigateBack();
-    };
+    $scope.$on('$destroy', hideErrorNotifications);
 
     ProjectsService
       .get($routeParams.project)

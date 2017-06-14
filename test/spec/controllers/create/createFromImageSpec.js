@@ -4,7 +4,8 @@ describe("CreateFromImageController", function(){
   var controller;
   var $scope = {
     name: "apPname",
-    projectName: "aProjectName"
+    projectName: "aProjectName",
+    $on: _.noop
   };
   var $routeParams = {
     imageStream: "anImageName",

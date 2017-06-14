@@ -78,10 +78,8 @@ angular.module('openshiftConsole')
       NotificationsService.hideNotification("set-compute-limits-error");
     };
 
-    $scope.cancel = function() {
-      hideErrorNotifications();
-      navigateBack();
-    };
+    $scope.cancel = navigateBack;
+    $scope.$on('$destroy', hideErrorNotifications);
 
     ProjectsService
       .get($routeParams.project)

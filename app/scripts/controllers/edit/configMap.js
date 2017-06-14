@@ -41,11 +41,7 @@ angular.module('openshiftConsole')
     var navigateBack = function() {
       $window.history.back();
     };
-
-    $scope.cancel = function() {
-      hideErrorNotifications();
-      navigateBack();
-    };
+    $scope.cancel = navigateBack;
 
     ProjectsService
       .get($routeParams.project)
@@ -97,6 +93,7 @@ angular.module('openshiftConsole')
 
         $scope.$on('$destroy', function(){
           DataService.unwatchAll(watches);
+          hideErrorNotifications();
         });
     }));
   });
