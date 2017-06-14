@@ -1,0 +1,13 @@
+<div ng-if="($ctrl.bindings | size)" class="expanded-section">
+  <div class="section-title hidden-xs">Service Bindings</div>
+  <overview-service-binding
+    ng-repeat="binding in $ctrl.bindings track by (binding | uid)"
+    binding="binding"
+    service-classes="$ctrl.serviceClasses"
+    service-instances="$ctrl.serviceInstances"
+    secrets="$ctrl.secrets">
+  </overview-service-binding>
+  <div ng-if="$ctrl.bindableServiceInstances | size">
+    <a href="" ng-click="$ctrl.createBinding()" role="button">Create Binding</a>
+  </div>
+</div>

@@ -449,8 +449,6 @@ angular
   //   (?!\.\.(\/|$))        do not match strings starting with `../` or exactly `..`
   //   (?!.*\/\.\.(\/|$))    do not match strings containing `/../` or ending in `/..`
   .constant('RELATIVE_PATH_PATTERN', /^(?!\/)(?!\.\.(\/|$))(?!.*\/\.\.(\/|$)).*$/)
-  // http://stackoverflow.com/questions/9038625/detect-if-device-is-ios
-  .constant('IS_IOS', /iPad|iPhone|iPod/.test(navigator.userAgent) && !window.MSStream)
   // http://stackoverflow.com/questions/5899783/detect-safari-using-jquery
   .constant('IS_SAFARI', /Version\/[\d\.]+.*Safari/.test(navigator.userAgent))
   .constant('amTimeAgoConfig', {

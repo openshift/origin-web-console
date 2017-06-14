@@ -1,0 +1,69 @@
+<!--
+  Expects the following variables:
+  containerStatuses
+  onDebugTerminal (optional)
+  detailed (optional)
+ -->
+
+<div ng-if="detailed && pod.status.initContainerStatuses.length">
+  <h4 class="mar-bottom-xl" row ng-if="initContainersTerminated">
+    <span><i class="fa fa-check text-success"></i></span>
+    <span flex>
+      <ng-pluralize count="pod.status.initContainerStatuses.length"
+                      when="{'1': '&nbsp;Init container {{pod.status.initContainerStatuses[0].name}}','other': '&nbsp;{} init containers'}">
+      </ng-pluralize>
+      completed successfully
+    </span>
+    <span ng-if="initContainersTerminated">
+      <a class="page-header-link" href="" ng-click="toggleInitContainer()">
+        <span ng-if="!expandInitContainers">Show</span>
+        <span ng-if="expandInitContainers">Hide</span>
+        Details
+      </a>
+    </span>
+  </h4>
+
+  <div class="animate-if"
+       ng-if="expandInitContainers"
+       ng-repeat="containerStatus in pod.status.initContainerStatuses track by containerStatus.name" >
+    <h4 class="component-label">Init container {{containerStatus.name}}</h4>
+
+    <dl class="dl-horizontal left">
+      <dt>State:</dt>
+      <dd>
+        <kubernetes-object-describe-container-state container-state="containerStatus.state"></kubernetes-object-describe-container-state>
+      </dd>
+      <dt ng-if="!(containerStatus.lastState | isEmptyObj)">Last State</dt>
+      <dd ng-if="!(containerStatus.lastState | isEmptyObj)">
+        <kubernetes-object-describe-container-state container-state="containerStatus.lastState"></kubernetes-object-describe-container-state>
+      </dd>
+      <dt>Ready:</dt>
+      <dd>{{containerStatus.ready}}</dd>
+      <dt>Restart Count:</dt>
+      <dd>{{containerStatus.restartCount}}</dd>
+    </dl>
+  </div>
+</div>
+
+<div ng-repeat="containerStatus in pod.status.containerStatuses track by containerStatus.name" >
+  <h4>Container {{containerStatus.name}}</h4>
+
+  <dl class="dl-horizontal left">
+    <dt>State:</dt>
+    <dd>
+      <kubernetes-object-describe-container-state container-state="containerStatus.state"></kubernetes-object-describe-container-state>
+    </dd>
+    <dt ng-if="!(containerStatus.lastState | isEmptyObj)">Last State</dt>
+    <dd ng-if="!(containerStatus.lastState | isEmptyObj)">
+      <kubernetes-object-describe-container-state container-state="containerStatus.lastState"></kubernetes-object-describe-container-state>
+    </dd>
+    <dt>Ready:</dt>
+    <dd>{{containerStatus.ready}}</dd>
+    <dt>Restart Count:</dt>
+    <dd>{{containerStatus.restartCount}}</dd>
+
+    <div ng-if="hasDebugTerminal && showDebugAction(containerStatus) && ('pods' | canI : 'create')" class="debug-pod-action">
+      <a href="" ng-click="debugTerminal(containerStatus.name)" role="button">Debug in Terminal</a>
+    </div>
+  </dl>
+</div>

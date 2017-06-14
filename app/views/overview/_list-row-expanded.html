@@ -171,6 +171,17 @@
               hide-log="row.state.limitWatches">
             </overview-builds>
           </uib-tab>
+          <uib-tab ng-if="row.bindings | size" active="row.selectedTab.bindings">
+            <uib-tab-heading>Bindings</uib-tab-heading>
+            <overview-service-bindings
+              bindings="row.bindings"
+              bindable-service-instances="row.state.bindableServiceInstances"
+              service-classes="row.state.serviceClasses"
+              service-instances="row.state.serviceInstances"
+              secrets="row.state.secrets"
+              create-binding="row.showOverlayPanel('bindService', {target: row.apiObject})">
+            </overview-service-bindings>
+          </uib-tab>
         </uib-tabset>
       </div>
     </div>
@@ -196,7 +207,15 @@
         context="row.state.context"
         hide-log="row.state.limitWatches">
       </overview-builds>
-    </div>
 
+      <overview-service-bindings
+        bindings="row.bindings"
+        bindable-service-instances="row.state.bindableServiceInstances"
+        service-classes="row.state.serviceClasses"
+        service-instances="row.state.serviceInstances"
+        secrets="row.state.secrets"
+        create-binding="row.showOverlayPanel('bindService', {target: row.apiObject})">
+      </overview-service-bindings>
+    </div>
   </div><!-- /list-pf-content -->
 </div> <!-- /list-pf-container -->

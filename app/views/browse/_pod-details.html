@@ -55,28 +55,15 @@
           </span>
         </dd>
       </dl>
-      <div ng-repeat="containerStatus in pod.status.containerStatuses | orderBy:'name'" >
-        <h4>Container {{containerStatus.name}}</h4>
-        <dl class="dl-horizontal left">
-          <dt>State:</dt>
-          <dd>
-            <kubernetes-object-describe-container-state container-state="containerStatus.state"></kubernetes-object-describe-container-state>
-          </dd>
-          <dt ng-if="!(containerStatus.lastState | isEmptyObj)">Last State</dt>
-          <dd ng-if="!(containerStatus.lastState | isEmptyObj)">
-            <kubernetes-object-describe-container-state container-state="containerStatus.lastState"></kubernetes-object-describe-container-state>
-          </dd>
-          <dt>Ready:</dt>
-          <dd>{{containerStatus.ready}}</dd>
-          <dt>Restart Count:</dt>
-          <dd>{{containerStatus.restartCount}}</dd>
-          <div ng-if="showDebugAction(containerStatus) && ('pods' | canI : 'create')" class="debug-pod-action">
-            <a href="" ng-click="debugTerminal(containerStatus.name)" role="button">Debug in Terminal</a>
-          </div>
-        </dl>
+      <div>
+        <container-statuses
+          pod="pod"
+          on-debug-terminal="debugTerminal"
+          detailed="true"></container-statuses>
       </div>
     </div>
     <div class="col-lg-6">
+
       <h3>Template</h3>
       <pod-template
         pod-template="pod"

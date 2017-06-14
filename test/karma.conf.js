@@ -68,6 +68,7 @@ module.exports = function(config) {
       "bower_components/kubernetes-label-selector/labelFilter.js",
       "bower_components/term.js/src/term.js",
       "bower_components/kubernetes-container-terminal/dist/container-terminal.js",
+      "bower_components/angular-gettext/dist/angular-gettext.js",
       "bower_components/registry-image-widgets/dist/image-widgets.js",
       "bower_components/kubernetes-object-describer/dist/object-describer.js",
       "bower_components/bootstrap-hover-dropdown/bootstrap-hover-dropdown.min.js",

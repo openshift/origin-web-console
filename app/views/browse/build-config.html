@@ -121,7 +121,7 @@
 
                         <button
                             class="btn btn-primary btn-lg"
-                            ng-click="startBuild(buildConfig.metadata.name)"
+                            ng-click="startBuild()"
                             ng-if="('buildconfigs/instantiate' | canI : 'create') && !(buildConfig | isBinaryBuild)">
                           <span ng-if="!(buildConfig | isJenkinsPipelineStrategy)">
                             Start Build

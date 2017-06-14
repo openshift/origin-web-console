@@ -1,0 +1,21 @@
+<div class="row service-binding">
+  <div class="col-sm-5 col-md-6">
+    <h3 ng-if="$ctrl.serviceClass">
+      {{$ctrl.serviceClass.externalMetadata.displayName || $ctrl.serviceClass.metadata.name}}
+      <small>{{$ctrl.binding.spec.instanceRef.name}}</small>
+    </h3>
+    <h3 ng-if="!$ctrl.serviceClass">
+      {{$ctrl.binding.spec.instanceRef.name}}
+    </h3>
+  </div>
+  <div class="col-sm-7 col-md-6 overview-bindings">
+    <span ng-if="!($ctrl.binding | isBindingReady)">
+      <status-icon status="'Pending'"></status-icon> Pending
+    </span>
+    <a
+      ng-if="($ctrl.binding | isBindingReady) && ('secrets' | canI : 'get')"
+      ng-href="{{$ctrl.secrets[$ctrl.binding.spec.secretName] | navigateResourceURL}}">
+      View Secret
+    </a>
+  </div>
+</div>

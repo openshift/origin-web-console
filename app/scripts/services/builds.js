@@ -1,39 +1,145 @@
 'use strict';
 
 angular.module("openshiftConsole")
-  .factory("BuildsService", function(DataService, $filter){
-
+  .factory("BuildsService",
+           function($filter,
+                    $q,
+                    DataService,
+                    Navigate,
+                    NotificationsService) {
     var annotation = $filter('annotation');
     var buildConfigForBuild = $filter('buildConfigForBuild');
+    var buildLogURL = $filter('buildLogURL');
+    var canI = $filter('canI');
+    var getErrorDetails = $filter('getErrorDetails');
     var isIncompleteBuild = $filter('isIncompleteBuild');
+    var isJenkinsPipelineStrategy = $filter('isJenkinsPipelineStrategy');
     var isNewer = $filter('isNewerResource');
 
-    var startBuild = function(buildConfigName, context) {
+    var getBuildNumber = function(build) {
+      var buildNumber = annotation(build, 'buildNumber') || parseInt(build.metadata.name.match(/(\d+)$/), 10);
+      if (isNaN(buildNumber)) {
+        return null;
+      }
+
+      return buildNumber;
+    };
+
+    var getBuildDisplayName = function(build, buildConfigName) {
+      var buildNumber = getBuildNumber(build);
+      if (buildConfigName && buildNumber) {
+        return buildConfigName + " #" + buildNumber;
+      }
+
+      return build.metadata.name;
+    };
+
+    var getNewBuildLinks = function(build) {
+      // When the build is first created or cloned, the Jenkins annotations are
+      // not yet updated, so the Jenkins log link is wrong. Give a link to the
+      // build instead of the log. Also link to the build if the user doesn't
+      // have authority to view the log.
+      if (isJenkinsPipelineStrategy(build) || !canI('builds/log', 'get')) {
+        return [{
+          href: Navigate.resourceURL(build),
+          label: "View Build"
+        }];
+      }
+
+      var logLink = buildLogURL(build);
+      if (!logLink) {
+        return [];
+      }
+
+      return [{
+        href: logLink,
+        label: "View Log"
+      }];
+    };
+
+    var startBuild = function(buildConfig) {
+      var buildType = isJenkinsPipelineStrategy(buildConfig) ? 'pipeline' : 'build';
       var req = {
         kind: "BuildRequest",
         apiVersion: "v1",
         metadata: {
-          name: buildConfigName
+          name: buildConfig.metadata.name
         }
       };
-      return DataService.create("buildconfigs/instantiate", buildConfigName, req, context);
+      var context = {
+        namespace: buildConfig.metadata.namespace
+      };
+      return DataService.create("buildconfigs/instantiate", buildConfig.metadata.name, req, context).then(function(build) {
+        var displayName = getBuildDisplayName(build, buildConfig.metadata.name);
+        NotificationsService.addNotification({
+          type: "success",
+          message: _.capitalize(buildType) + " " + displayName + " successfully created.",
+          links: getNewBuildLinks(build)
+        });
+      }, function(result) {
+        NotificationsService.addNotification({
+          type: "error",
+          message: "An error occurred while starting the " + buildType + ".",
+          details: getErrorDetails(result)
+        });
+
+        return $q.reject(result);
+      });
     };
 
-    var cancelBuild = function(build, buildConfigName, context) {
+    var cancelBuild = function(build, buildConfigName) {
+      var buildType = isJenkinsPipelineStrategy(build) ? 'pipeline' : 'build';
+      var displayName = getBuildDisplayName(build, buildConfigName);
+      var context = {
+        namespace: build.metadata.namespace
+      };
       var canceledBuild = angular.copy(build);
       canceledBuild.status.cancelled = true;
-      return DataService.update("builds", canceledBuild.metadata.name, canceledBuild, context);
+      return DataService.update("builds", canceledBuild.metadata.name, canceledBuild, context).then(function() {
+        NotificationsService.addNotification({
+          type: "success",
+          message: _.capitalize(buildType) + " " + displayName + " successfully cancelled."
+        });
+      }), function(result) {
+        NotificationsService.addNotification({
+          type: "error",
+          message: "An error occurred cancelling " + buildType + " " + displayName + ".",
+          details: getErrorDetails(result)
+        });
+
+        return $q.reject(result);
+      };
     };
 
-    var cloneBuild = function(buildName, context) {
+    var cloneBuild = function(originalBuild, buildConfigName) {
+      var buildType = isJenkinsPipelineStrategy(originalBuild) ? 'pipeline' : 'build';
+      var originalDisplayName = getBuildDisplayName(originalBuild, buildConfigName);
       var req = {
         kind: "BuildRequest",
         apiVersion: "v1",
         metadata: {
-          name: buildName
+          name: originalBuild.metadata.name
         }
       };
-      return DataService.create("builds/clone", buildName, req, context);
+      var context = {
+        namespace: originalBuild.metadata.namespace
+      };
+      return DataService.create("builds/clone", originalBuild.metadata.name, req, context).then(function(clonedBuild) {
+        var clonedDisplayName = getBuildDisplayName(clonedBuild, buildConfigName);
+        NotificationsService.addNotification({
+          type: "success",
+          message: _.capitalize(buildType) + " " + originalDisplayName + " is being rebuilt as " + clonedDisplayName + ".",
+          links: getNewBuildLinks(clonedBuild)
+        });
+      }, function(result) {
+        NotificationsService.addNotification({
+          type: "error",
+          message: "An error occurred while rerunning " + buildType + " " + originalDisplayName + ".",
+          details: getErrorDetails(result)
+        });
+
+        return $q.reject();
+      });
     };
 
     var isPaused = function(buildConfig) {
@@ -107,15 +213,6 @@ angular.module("openshiftConsole")
       });
 
       return latestByConfig;
-    };
-
-    var getBuildNumber = function(build) {
-      var buildNumber = annotation(build, 'buildNumber') || parseInt(build.metadata.name.match(/(\d+)$/), 10);
-      if (isNaN(buildNumber)) {
-        return null;
-      }
-
-      return buildNumber;
     };
 
     var getStartTimestsamp = function(build) {
@@ -303,6 +400,7 @@ angular.module("openshiftConsole")
       validatedBuildsForBuildConfig: validatedBuildsForBuildConfig,
       latestBuildByConfig: latestBuildByConfig,
       getBuildNumber: getBuildNumber,
+      getBuildDisplayName: getBuildDisplayName,
       getStartTimestsamp: getStartTimestsamp,
       getDuration: getDuration,
       incompleteBuilds: incompleteBuilds,

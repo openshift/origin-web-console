@@ -171,12 +171,13 @@
   }
   .expanded-section {
     margin-top: 20px;
-    > .row > [class^=col-] {
+    .row > [class^=col-] {
       margin-bottom: 10px;
       @media (min-width: @screen-lg-min) {
         // aligns 2nd columns with metrics
         &.overview-builds-msg,
-        &.overview-routes {
+        &.overview-routes,
+        &.overview-bindings {
           padding-left: 0;
         }
       }
@@ -267,8 +268,10 @@
     &.deployment-in-progress {
       // So animation offsets are hidden when sliding in horizontally
       // Only use this style when a deployment is in progress so that chart
-      // tooltips aren't clipped.
-      overflow:hidden;
+      // tooltips aren't clipped and only when expanded(.active), so that kebab dropdown menu isn't clipped.
+      &.active {
+        overflow: hidden;
+      }
       .list-pf-expansion {
         @media (max-width: @screen-xs-max) {
           overflow: hidden; // Hidden when sliding in vertically
@@ -433,8 +436,11 @@
     }
   }
   :not(.tab-pane) > overview-pipelines > .expanded-section {
-      margin-bottom: 30px;
-    }
+    margin-bottom: 30px;
+  }
+  .service-binding h3 small {
+    display: block;
+  }
   .toolbar-container {
     margin-top: 10px;
     margin-bottom: 5px;

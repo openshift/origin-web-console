@@ -108,6 +108,7 @@
       if (uid) {
         row.services = _.get(row, ['state', 'servicesByObjectUID', uid]);
         row.buildConfigs = _.get(row, ['state', 'buildConfigsByObjectUID', uid]);
+        row.bindings = _.get(row, ['state', 'bindingsByApplicationUID', uid]);
       }
 
       var name;
@@ -213,8 +214,7 @@
       return canI('buildconfigs/instantiate', 'create') && _.size(row.pipelines) === 1;
     };
 
-    // Resuse the function from the overview controller.
-    row.startBuild = row.state.startBuild;
+    row.startBuild = BuildsService.startBuild;
 
     row.canDeploy = function() {
       if (!row.apiObject) {
@@ -324,6 +324,7 @@
     row.closeOverlayPanel = function() {
       _.set(row, 'overlay.panelVisible', false);
     };
+
     row.showOverlayPanel = function(panelName, state) {
       _.set(row, 'overlay.panelVisible', true);
       _.set(row, 'overlay.panelName', panelName);

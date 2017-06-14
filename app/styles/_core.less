@@ -205,8 +205,29 @@ mark {
   .gutter-bottom();
 }
 
-.registry-image-pull {
+registry-image-pull {
   margin-bottom: @grid-gutter-width / 2;
+}
+
+registry-imagestream-push {
+  margin-top: @grid-gutter-width;
+}
+
+/* No expandable listing when shown in the Openshift Web Console */
+registry-imagestream-listing .listing-ct-toggle {
+  display: none;
+}
+
+registry-imagestream-listing table {
+  width: 100%;
+}
+
+registry-image-body dt:after,
+registry-image-config dt:after,
+registry-image-meta dt:after,
+registry-imagestream-body dt:after,
+registry-imagestream-meta dt:after {
+  content: ':';
 }
 
 .image-sources {
@@ -1037,19 +1058,29 @@ a.disabled-link {
     margin: 10px 0;
   }
 
+  .select-webhook-type {
+    width: 300px;
+  }
+
+  .add-webhook {
+    padding-bottom: 10px;
+    padding-top: 5px;
+  }
+
   .trigger-info {
     margin: 10px 0px 10px 0px;
     .trigger-url {
       display: inline-block;
       vertical-align: middle;
     }
-    .trigger-actions {
-      display: inline-block;
-      margin-left: 5px;
-      .action-icon,
-      .action-icon:hover {
-        color: @color-pf-black-700;
-      }
+  }
+
+  .trigger-actions {
+    display: inline-block;
+    margin-left: 5px;
+    .action-icon,
+    .action-icon:hover {
+      color: @color-pf-black-700;
     }
   }
 

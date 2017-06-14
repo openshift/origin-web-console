@@ -13,7 +13,7 @@
             <alerts alerts="alerts"></alerts>
             <div class="row">
               <div class="col-md-12">
-                <uib-tabset class="mar-top-none">
+                <uib-tabset class="mar-top-none" ng-if="project">
                   <uib-tab active="selectedTab.fromCatalog">
                     <uib-tab-heading>Browse Catalog</uib-tab-heading>
                     <catalog
@@ -27,12 +27,12 @@
 
                   <uib-tab active="selectedTab.deployImage">
                     <uib-tab-heading>Deploy Image</uib-tab-heading>
-                    <deploy-image project="projectName" context="context" alerts="alerts"></deploy-image>
+                    <deploy-image project="project" context="context"></deploy-image>
                   </uib-tab>
 
                   <uib-tab active="selectedTab.fromFile">
                     <uib-tab-heading>Import YAML / JSON</uib-tab-heading>
-                    <from-file></from-file>
+                    <from-file project="project" context="context" ></from-file>
                   </uib-tab>
 
                 </uib-tabset>

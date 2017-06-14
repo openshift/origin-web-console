@@ -20,19 +20,27 @@
               <a href="" ng-click="row.showOverlayPanel('bindService', {target: row.apiObject})">Create Binding</a>
             </span>
             <span ng-if="row.bindings.length" class="component-label">Bindings</span>
-            <p ng-if="row.bindings.length >= 1" class="bindings">
-              {{row.bindings[0].metadata.name}}<span ng-if="row.bindings.length > 1">, </span>
-              <a
-                ng-if="row.bindings.length > 1"
-                ng-click="row.toggleExpand($event, true)">
-                {{row.bindings.length -1}} other<span ng-if="row.bindings.length > 2">s</span></a>
+            <p ng-if="firstBinding = row.bindings[0]" class="bindings">
+              <span ng-if="application = row.state.applicationsByBinding[firstBinding.metadata.name][0]">
+                {{application.metadata.name}}
+              </span>
+              <span ng-if="!application">
+                {{firstBinding.spec.secretName}}
+              </span>
+              <span ng-if="row.bindings.length > 1">
+                and
+                <a
+                  ng-if="row.bindings.length > 1"
+                  ng-click="row.toggleExpand($event, true)">
+                  {{row.bindings.length -1}} other<span ng-if="row.bindings.length > 2">s</span></a>
+              </span>
             </p>
           </div>
         </div>
         <div
           class="hidden-xs"
-          ng-if="!row.expanded && row.apiObject.spec.osbDashboardURL">
-          <a ng-href="{{row.apiObject.spec.osbDashboardURL}}" target="_blank">
+          ng-if="!row.expanded && row.apiObject.status.dashboardURL">
+          <a ng-href="{{row.apiObject.status.dashboardURL}}" target="_blank">
             Console
           </a> <i class="fa fa-external-link small" aria-hidden="true"></i>
         </div>
@@ -85,26 +93,44 @@
           </div>
         </div>
         <div class="section-title" ng-if="row.isBindable || row.bindings">
-          Bindings
+          Application Bindings
         </div>
-        <div
-          ng-if="row.bindings"
-          class="row"
-          ng-repeat="(name, binding) in row.bindings">
-          <div class="col-sm-5">
-            <span>{{binding.metadata.name}}</span>
+        <div class="row overview-bindings" ng-repeat="(name, binding) in row.bindings">
+          <div class="col-sm-5 col-md-6">
+            <div ng-if="!(row.state.applicationsByBinding[binding.metadata.name] | size)">
+              <h3>
+                <div class="component-label">
+                  Secret
+                </div>
+                <span ng-if="(binding | isBindingReady) && ('secrets' | canI : 'get')">
+                  <a
+                    ng-if="(binding | isBindingReady) && ('secrets' | canI : 'get')"
+                    ng-href="{{row.getSecretForBinding(binding) | navigateResourceURL}}">
+                    {{binding.spec.secretName}}
+                  </a>
+                </span>
+                <span ng-if="!(binding | isBindingReady) || !('secrets' | canI : 'get')">
+                  {{binding.spec.secretName}}
+                </span>
+              </h3>
+            </div>
+            <div ng-repeat="target in row.state.applicationsByBinding[binding.metadata.name] track by (target | uid)">
+              <h3>
+                <div class="component-label">
+                  {{target.kind | humanizeKind : true}}
+                </div>
+                <a ng-href="{{target | navigateResourceURL}}">{{target.metadata.name}}</a>
+              </h3>
+            </div>
           </div>
-          <div class="col-sm-7">
-            <!-- TODO: follow-on PR
-            <a ng-href="{{binding | navigateResourceURL}}">View configuration details</a>
-            -->
+          <div class="col-sm-7 col-md-6 overview-bindings">
             <span ng-if="!(binding | isBindingReady)">
               <status-icon status="'Pending'"></status-icon> Pending
             </span>
             <a
               ng-if="(binding | isBindingReady) && ('secrets' | canI : 'get')"
-              href="{{row.getSecretForBinding(binding) | navigateResourceURL}}">
-              View secret
+              ng-href="{{row.getSecretForBinding(binding) | navigateResourceURL}}">
+              View Secret
             </a>
           </div>
         </div>
@@ -113,15 +139,6 @@
             <a href="" ng-click="row.showOverlayPanel('bindService', {target: row.apiObject})">Create Binding</a>
           </div>
         </div>
-        <!-- TODO: follow-on PR
-        <div class="row">
-          <div class="col-sm-12">
-            <a href="#">
-              <i class="fa fa-plus-circle"></i> Create binding
-            </a>
-          </div>
-        </div>
-        -->
       </div>
     </div>
   </div>
