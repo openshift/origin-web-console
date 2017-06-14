@@ -264,9 +264,6 @@ div.listing-ct-head{overflow:visible}
 .listing-ct-head .btn-group,.listing-ct-head button:not(.dropdown-toggle){margin-left:.3em}
 table.listing-ct>caption a{font-size:16px}
 tbody tr.listing-ct-noexpand{cursor:default}
-.nav-tabs-pf>li:first-child a{margin-left:0px!important;padding-left:15px!important}
-.nav-tabs-pf>li a:before{right:0px!important}
-.nav-tabs-pf>li.active a:before,.nav-tabs-pf>li>a:active:before,.nav-tabs-pf>li>a:focus:before,.nav-tabs-pf>li>a:hover:before{height:3px;left:0px}
 dl.registry-image-tags dt{line-height:30px}
 dl.registry-image-tags .registry-image-tag{padding:2px 5px;line-height:30px}
 .registry-image-tag{border:1px solid #ccc;border-radius:2px;white-space:nowrap;text-overflow:ellipsis;overflow:hidden;background-color:#fff}
