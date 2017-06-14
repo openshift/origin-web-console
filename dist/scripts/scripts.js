@@ -9275,7 +9275,7 @@ m.errorOccured || (1 === m.createResources.length && "Template" === m.resourceLi
 });
 }
 }, m.cancel = function() {
-E(), h.toProjectOverview(m.projectName);
+E(), h.toProjectOverview(m.project.metadata.name);
 };
 var G = a("displayName");
 m.$on("importFileFromYAMLOrJSON", m.create), m.$on("$destroy", E);

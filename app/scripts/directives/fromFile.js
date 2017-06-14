@@ -195,7 +195,7 @@ angular.module("openshiftConsole")
 
         $scope.cancel = function() {
           hideErrorNotifications();
-          Navigate.toProjectOverview($scope.projectName);
+          Navigate.toProjectOverview($scope.project.metadata.name);
         };
 
         // Takes item that will be inspect kind field.
