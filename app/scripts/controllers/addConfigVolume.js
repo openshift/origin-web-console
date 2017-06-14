@@ -83,6 +83,7 @@ angular.module('openshiftConsole')
     var navigateBack = function() {
       $window.history.back();
     };
+    $scope.cancel = navigateBack;
 
     var displayError = function(errorMessage, errorDetails) {
       NotificationsService.addNotification({
@@ -96,6 +97,7 @@ angular.module('openshiftConsole')
     var hideErrorNotifications = function() {
       NotificationsService.hideNotification("add-config-volume-error");
     };
+    $scope.$on('$destroy', hideErrorNotifications);
 
     $scope.addItem = function() {
       $scope.attach.items.push({});
@@ -105,11 +107,6 @@ angular.module('openshiftConsole')
     $scope.removeItem = function(index) {
       $scope.attach.items.splice(index, 1);
       setDirty();
-    };
-
-    $scope.cancel = function() {
-      hideErrorNotifications();
-      navigateBack();
     };
 
     ProjectsService

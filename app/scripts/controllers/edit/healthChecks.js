@@ -66,15 +66,12 @@ angular.module('openshiftConsole')
     var navigateBack = function() {
       $location.url($scope.resourceURL);
     };
+    $scope.cancel = navigateBack;
 
     var hideErrorNotifications = function() {
       NotificationsService.hideNotification("add-health-check-error");
     };
-
-    $scope.cancel = function() {
-      hideErrorNotifications();
-      navigateBack();
-    };
+    $scope.$on('$destroy', hideErrorNotifications);
 
     ProjectsService
       .get($routeParams.project)

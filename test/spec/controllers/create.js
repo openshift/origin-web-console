@@ -3,8 +3,7 @@
 
 describe("CreateController", function(){
   var controller, form;
-  var $scope = {
-  };
+  var $scope = {};
 
   beforeEach(function(){
     inject(function(_$controller_, $q){

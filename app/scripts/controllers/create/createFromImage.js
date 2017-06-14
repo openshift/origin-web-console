@@ -77,6 +77,7 @@ angular.module("openshiftConsole")
         }
       });
     };
+    $scope.$on('$destroy', hideErrorNotifications);
 
     ProjectsService
       .get($routeParams.project)
@@ -410,7 +411,6 @@ angular.module("openshiftConsole")
       }));
 
       $scope.cancel = function() {
-        hideErrorNotifications();
         Navigate.toProjectOverview($scope.projectName);
       };
   });

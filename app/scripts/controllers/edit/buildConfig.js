@@ -238,6 +238,7 @@ angular.module('openshiftConsole')
         $window.history.back();
       }
     };
+    $scope.cancel = navigateBack;
 
     var hideErrorNotifications = function() {
       // TODO: Add method to NotificationsService for passing a list of IDs.
@@ -245,11 +246,7 @@ angular.module('openshiftConsole')
       NotificationsService.hideNotification("edit-build-config-conflict");
       NotificationsService.hideNotification("edit-build-config-deleted");
     };
-
-    $scope.cancel = function() {
-      hideErrorNotifications();
-      navigateBack();
-    };
+    $scope.$on('$destroy', hideErrorNotifications);
 
     ProjectsService
       .get($routeParams.project)

@@ -99,10 +99,12 @@ angular.module('openshiftConsole')
         var hideErrorNotifications = function() {
           NotificationsService.hideNotification("attach-pvc-error");
         };
+        $scope.$on('$destroy', hideErrorNotifications);
 
         var navigateBack = function() {
           $window.history.back();
         };
+        $scope.cancel = navigateBack;
 
         var isContainerSelected = function(container) {
           return $scope.attach.allContainers || $scope.attach.containers[container.name];
@@ -213,11 +215,6 @@ angular.module('openshiftConsole')
               }
             );
           }
-        };
-
-        $scope.cancel = function() {
-          hideErrorNotifications();
-          navigateBack();
         };
     }));
   });
