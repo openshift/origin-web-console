@@ -12495,7 +12495,7 @@ templateUrl:"views/directives/process-template-dialog.html"
 function a(a, b) {
 var c = this;
 c.$onInit = function() {
-c.alerts = {}, c.loginBaseUrl = b.openshiftAPIBaseUrl(), c.currentStep = "Image";
+c.loginBaseUrl = b.openshiftAPIBaseUrl(), c.currentStep = "Image";
 }, c.deployImage = function() {
 a.$broadcast("newAppFromDeployImage");
 }, a.$on("deployImageNewAppCreated", function(a, b) {
@@ -13144,19 +13144,18 @@ return b.allowCustomTag ? a.items ? "Current Tags" :"New Tag" :"";
 };
 } ]
 };
-} ]), angular.module("openshiftConsole").directive("deployImage", [ "$filter", "$q", "$window", "$uibModal", "ApplicationGenerator", "DataService", "ImagesService", "Navigate", "ProjectsService", "QuotaService", "TaskList", "SecretsService", "keyValueEditorUtils", function(a, b, c, d, e, f, g, h, i, j, k, l, m) {
+} ]), angular.module("openshiftConsole").directive("deployImage", [ "$filter", "$q", "$window", "$uibModal", "ApplicationGenerator", "DataService", "ImagesService", "Navigate", "NotificationsService", "ProjectsService", "QuotaService", "TaskList", "SecretsService", "keyValueEditorUtils", function(a, b, c, d, e, f, g, h, i, j, k, l, m, n) {
 return {
 restrict:"E",
 scope:{
 project:"=",
 context:"=",
-alerts:"=",
 isDialog:"="
 },
 templateUrl:"views/directives/deploy-image.html",
 link:function(c) {
-function i() {
-var a = m.mapEntries(m.compactEntries(c.labels)), b = m.mapEntries(m.compactEntries(c.systemLabels));
+function j() {
+var a = n.mapEntries(n.compactEntries(c.labels)), b = n.mapEntries(n.compactEntries(c.systemLabels));
 return g.getResources({
 name:c.app.name,
 image:c["import"].name,
@@ -13164,7 +13163,7 @@ namespace:c["import"].namespace,
 tag:c["import"].tag || "latest",
 ports:c.ports,
 volumes:c.volumes,
-env:m.compactEntries(c.env),
+env:n.compactEntries(c.env),
 labels:_.extend(b, a),
 pullSecrets:c.pullSecrets
 });
@@ -13175,46 +13174,54 @@ value:""
 } ], c.pullSecrets = [ {
 name:""
 } ];
-var n = a("orderByDisplayName"), o = a("getErrorDetails"), p = function(a, b) {
-c.alerts["from-value-objects"] = {
-type:"error",
-message:a,
-details:b
-};
-}, q = [], r = [], s = {
+var o = a("orderByDisplayName"), p = a("getErrorDetails"), q = {}, r = function() {
+i.hideNotification("deploy-image-list-config-maps-error"), i.hideNotification("deploy-image-list-secrets-error"), _.each(q, function(a) {
+!a.id || "error" !== a.type && "warning" !== a.type || i.hideNotification(a.id);
+});
+}, s = [], t = [], u = {
 namespace:c.project.metadata.name
 };
-c.valueFromObjects = [], f.list("configmaps", s, null, {
+c.valueFromObjects = [], f.list("configmaps", u, null, {
 errorNotification:!1
 }).then(function(a) {
-q = n(a.by("metadata.name")), c.valueFromObjects = q.concat(r);
+s = o(a.by("metadata.name")), c.valueFromObjects = s.concat(t);
 }, function(a) {
-403 !== a.code && p("Could not load config maps", o(a));
-}), f.list("secrets", s, null, {
+403 !== a.code && i.addAlert({
+id:"deploy-image-list-config-maps-error",
+type:"error",
+message:"Could not load config maps.",
+details:p(a)
+});
+}), f.list("secrets", u, null, {
 errorNotification:!1
 }).then(function(a) {
-r = n(a.by("metadata.name")), c.valueFromObjects = r.concat(q);
-var b = l.groupSecretsByType(a), d = _.mapValues(b, function(a) {
+t = o(a.by("metadata.name")), c.valueFromObjects = t.concat(s);
+var b = m.groupSecretsByType(a), d = _.mapValues(b, function(a) {
 return _.map(a, "metadata.name");
 });
 c.secretsByType = _.each(d, function(a) {
 a.unshift("");
 });
 }, function(a) {
-403 !== a.code && p("Could not load secrets", o(a));
+403 !== a.code && i.addAlert({
+id:"deploy-image-list-secrets-error",
+type:"error",
+message:"Could not load secrets.",
+details:p(a)
 });
-var t = a("stripTag"), u = a("stripSHA"), v = a("humanizeKind"), w = function(a) {
+});
+var v = a("stripTag"), w = a("stripSHA"), x = a("humanizeKind"), y = function(a) {
 return a.length > 24 ? a.substring(0, 24) :a;
-}, x = function() {
+}, z = function() {
 var a = _.last(c["import"].name.split("/"));
-return a = u(a), a = t(a), a = w(a);
+return a = w(a), a = v(a), a = y(a);
 };
 c.findImage = function() {
 c.loading = !0, g.findImage(c.imageName, c.context).then(function(a) {
 if (c["import"] = a, c.loading = !1, "Success" !== _.get(a, "result.status")) return void (c["import"].error = _.get(a, "result.message", "An error occurred finding the image."));
 c.forms.imageSelection.imageName.$setValidity("imageLoaded", !0);
 var b = c["import"].image;
-b && (c.app.name = x(), c.runsAsRoot = g.runsAsRoot(b), c.ports = e.parsePorts(b), c.volumes = g.getVolumes(b), c.createImageStream = !0);
+b && (c.app.name = z(), c.runsAsRoot = g.runsAsRoot(b), c.ports = e.parsePorts(b), c.volumes = g.getVolumes(b), c.createImageStream = !0);
 }, function(b) {
 c["import"].error = a("getErrorDetails")(b) || "An error occurred finding the image.", c.loading = !1;
 });
@@ -13228,7 +13235,7 @@ a !== b && (delete c["import"], c.istag = {}, "dockerImage" === a ? c.forms.imag
 if (b !== d) {
 if (!b.namespace || !b.imageStream || !b.tagObject) return void delete c["import"];
 var h, i = _.get(b, "tagObject.items[0].image");
-c.app.name = w(b.imageStream), c["import"] = {
+c.app.name = y(b.imageStream), c["import"] = {
 name:b.imageStream,
 tag:b.tagObject.tag,
 namespace:b.namespace
@@ -13241,26 +13248,26 @@ c["import"].error = a("getErrorDetails")(b) || "An error occurred.", c.loading =
 }));
 }
 }, !0);
-var y, z = a("displayName"), A = function() {
+var A, B = a("displayName"), C = function() {
 var a = {
-started:"Deploying image " + c.app.name + " to project " + z(c.project),
-success:"Deployed image " + c.app.name + " to project " + z(c.project),
-failure:"Failed to deploy image " + c.app.name + " to project " + z(c.project)
+started:"Deploying image " + c.app.name + " to project " + B(c.project),
+success:"Deployed image " + c.app.name + " to project " + B(c.project),
+failure:"Failed to deploy image " + c.app.name + " to project " + B(c.project)
 };
-k.clear(), k.add(a, {}, c.project.metadata.name, function() {
+l.clear(), l.add(a, {}, c.project.metadata.name, function() {
 var a = b.defer();
-return f.batch(y, c.context).then(function(b) {
+return f.batch(A, c.context).then(function(b) {
 var d, e = !_.isEmpty(b.failure);
 e ? (d = _.map(b.failure, function(a) {
 return {
 type:"error",
-message:"Cannot create " + v(a.object.kind).toLowerCase() + ' "' + a.object.metadata.name + '". ',
+message:"Cannot create " + x(a.object.kind).toLowerCase() + ' "' + a.object.metadata.name + '". ',
 details:a.data.message
 };
 }), d = d.concat(_.map(b.success, function(a) {
 return {
 type:"success",
-message:"Created " + v(a.kind).toLowerCase() + ' "' + a.metadata.name + '" successfully. '
+message:"Created " + x(a.kind).toLowerCase() + ' "' + a.metadata.name + '" successfully. '
 };
 }))) :d = [ {
 type:"success",
@@ -13274,7 +13281,7 @@ hasErrors:e
 project:c.project,
 appName:c.app.name
 }) :h.toNextSteps(c.app.name, c.project.metadata.name);
-}, B = function(a) {
+}, D = function(a) {
 var b = d.open({
 animation:!0,
 templateUrl:"views/modals/confirm.html",
@@ -13291,20 +13298,23 @@ cancelButtonText:"Cancel"
 }
 }
 });
-b.result.then(A);
-}, C = function(a) {
-var b = a.quotaAlerts || [], d = _.filter(b, {
+b.result.then(C);
+}, E = function(a) {
+q = a.quotaAlerts || [];
+var b = _.filter(q, {
 type:"error"
 });
-c.nameTaken || d.length ? (c.disableInputs = !1, c.alerts = b) :b.length ? (B(b), c.disableInputs = !1) :A();
+c.nameTaken || b.length ? (c.disableInputs = !1, _.each(q, function(a) {
+a.id = _.uniqueId("deploy-image-alert-"), i.addNotification(a);
+})) :q.length ? (D(q), c.disableInputs = !1) :C();
 };
 c.create = function() {
-c.disableInputs = !0, c.alerts = {}, y = i();
-var a = e.ifResourcesDontExist(y, c.project.metadata.name), b = j.getLatestQuotaAlerts(y, c.context), d = function(a) {
+c.disableInputs = !0, r(), A = j();
+var a = e.ifResourcesDontExist(A, c.project.metadata.name), b = k.getLatestQuotaAlerts(A, c.context), d = function(a) {
 return c.nameTaken = a.nameTaken, b;
 };
-a.then(d, d).then(C, C);
-}, c.$on("newAppFromDeployImage", c.create);
+a.then(d, d).then(E, E);
+}, c.$on("newAppFromDeployImage", c.create), c.$on("$destroy", r);
 }
 };
 } ]), angular.module("openshiftConsole").directive("selector", function() {

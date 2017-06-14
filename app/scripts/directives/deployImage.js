@@ -9,6 +9,7 @@ angular.module("openshiftConsole")
                                      DataService,
                                      ImagesService,
                                      Navigate,
+                                     NotificationsService,
                                      ProjectsService,
                                      QuotaService,
                                      TaskList,
@@ -19,7 +20,6 @@ angular.module("openshiftConsole")
       scope: {
         project: '=',
         context: '=',
-        alerts: '=',
         isDialog: '='
       },
       templateUrl: 'views/directives/deploy-image.html',
@@ -42,12 +42,15 @@ angular.module("openshiftConsole")
         var orderByDisplayName = $filter('orderByDisplayName');
         var getErrorDetails = $filter('getErrorDetails');
 
-        var displayError = function(errorMessage, errorDetails) {
-          $scope.alerts['from-value-objects'] = {
-            type: "error",
-            message: errorMessage,
-            details: errorDetails
-          };
+        var quotaAlerts = {};
+        var hideErrorNotifications = function() {
+          NotificationsService.hideNotification("deploy-image-list-config-maps-error");
+          NotificationsService.hideNotification("deploy-image-list-secrets-error");
+          _.each(quotaAlerts, function(alert) {
+            if (alert.id && (alert.type === 'error' || alert.type === 'warning')) {
+              NotificationsService.hideNotification(alert.id);
+            }
+          });
         };
 
         var configMapDataOrdered = [];
@@ -63,7 +66,12 @@ angular.module("openshiftConsole")
            return;
           }
 
-          displayError('Could not load config maps', getErrorDetails(e));
+          NotificationsService.addAlert({
+            id: "deploy-image-list-config-maps-error",
+            type: "error",
+            message: "Could not load config maps.",
+            details: getErrorDetails(e)
+          });
         });
 
         DataService.list("secrets", context, null, { errorNotification: false }).then(function(secretData) {
@@ -80,7 +88,12 @@ angular.module("openshiftConsole")
             return;
           }
 
-          displayError('Could not load secrets', getErrorDetails(e));
+          NotificationsService.addAlert({
+            id: "deploy-image-list-secrets-error",
+            type: "error",
+            message: "Could not load secrets.",
+            details: getErrorDetails(e)
+          });
         });
 
         var stripTag = $filter('stripTag');
@@ -295,11 +308,14 @@ angular.module("openshiftConsole")
 
           var showWarningsOrCreate = function(result){
             // Now that all checks are completed, show any warnings if we need to
-            var quotaAlerts = result.quotaAlerts || [];
+            quotaAlerts = result.quotaAlerts || [];
             var errorAlerts = _.filter(quotaAlerts, {type: 'error'});
             if ($scope.nameTaken || errorAlerts.length) {
               $scope.disableInputs = false;
-              $scope.alerts = quotaAlerts;
+              _.each(quotaAlerts, function(alert) {
+                alert.id = _.uniqueId('deploy-image-alert-');
+                NotificationsService.addNotification(alert);
+              });
             }
             else if (quotaAlerts.length) {
               launchConfirmationDialog(quotaAlerts);
@@ -312,7 +328,7 @@ angular.module("openshiftConsole")
 
           $scope.create = function() {
             $scope.disableInputs = true;
-            $scope.alerts = {};
+            hideErrorNotifications();
             generatedResources = getResources();
 
             var nameTakenPromise = ApplicationGenerator.ifResourcesDontExist(generatedResources, $scope.project.metadata.name);
@@ -330,6 +346,7 @@ angular.module("openshiftConsole")
           // button is outside the component since it is in the wizard footer. Listen
           // for an event for when the button is clicked.
           $scope.$on('newAppFromDeployImage', $scope.create);
+          $scope.$on('$destroy', hideErrorNotifications);
       }
     };
   });
