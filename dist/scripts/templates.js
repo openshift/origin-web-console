@@ -1910,20 +1910,20 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "<div ng-if=\"buildConfig.spec.source.dockerfile\">\n" +
     "<dt>Dockerfile:</dt><dd></dd>\n" +
     "<div ui-ace=\"{\n" +
-    "                                  mode: 'dockerfile',\n" +
-    "                                  theme: 'dreamweaver',\n" +
-    "                                  onLoad: aceLoaded,\n" +
+    "                                mode: 'dockerfile',\n" +
+    "                                theme: 'dreamweaver',\n" +
+    "                                onLoad: aceLoaded,\n" +
+    "                                highlightActiveLine: false,\n" +
+    "                                showGutter: false,\n" +
+    "                                rendererOptions: {\n" +
+    "                                  fadeFoldWidgets: true,\n" +
     "                                  highlightActiveLine: false,\n" +
-    "                                  showGutter: false,\n" +
-    "                                  rendererOptions: {\n" +
-    "                                    fadeFoldWidgets: true,\n" +
-    "                                    highlightActiveLine: false,\n" +
-    "                                    showPrintMargin: false\n" +
-    "                                  },\n" +
-    "                                  advanced: {\n" +
-    "                                    highlightActiveLine: false\n" +
-    "                                  }\n" +
-    "                                }\" readonly=\"readonly\" ng-model=\"buildConfig.spec.source.dockerfile\" class=\"ace-bordered ace-read-only ace-inline dockerfile-mode mar-top-md\"></div>\n" +
+    "                                  showPrintMargin: false\n" +
+    "                                },\n" +
+    "                                advanced: {\n" +
+    "                                  highlightActiveLine: false\n" +
+    "                                }\n" +
+    "                              }\" readonly=\"readonly\" ng-model=\"buildConfig.spec.source.dockerfile\" class=\"ace-bordered ace-read-only ace-inline dockerfile-mode mar-top-md\"></div>\n" +
     "</div>\n" +
     "<div ng-if=\"buildConfig.spec.strategy.jenkinsPipelineStrategy.jenkinsfile\">\n" +
     "<div class=\"small pull-right mar-top-sm\">\n" +
@@ -1933,18 +1933,18 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "Jenkinsfile:\n" +
     "</dt><dd></dd>\n" +
     "<div ui-ace=\"{\n" +
-    "                                  mode: 'groovy',\n" +
-    "                                  theme: 'eclipse',\n" +
-    "                                  showGutter: false,\n" +
-    "                                  rendererOptions: {\n" +
-    "                                    fadeFoldWidgets: true,\n" +
-    "                                    highlightActiveLine: false,\n" +
-    "                                    showPrintMargin: false\n" +
-    "                                  },\n" +
-    "                                  advanced: {\n" +
-    "                                    highlightActiveLine: false\n" +
-    "                                  }\n" +
-    "                                }\" readonly=\"readonly\" ng-model=\"buildConfig.spec.strategy.jenkinsPipelineStrategy.jenkinsfile\" class=\"ace-bordered ace-inline ace-read-only\"></div>\n" +
+    "                                mode: 'groovy',\n" +
+    "                                theme: 'eclipse',\n" +
+    "                                showGutter: false,\n" +
+    "                                rendererOptions: {\n" +
+    "                                  fadeFoldWidgets: true,\n" +
+    "                                  highlightActiveLine: false,\n" +
+    "                                  showPrintMargin: false\n" +
+    "                                },\n" +
+    "                                advanced: {\n" +
+    "                                  highlightActiveLine: false\n" +
+    "                                }\n" +
+    "                              }\" readonly=\"readonly\" ng-model=\"buildConfig.spec.strategy.jenkinsPipelineStrategy.jenkinsfile\" class=\"ace-bordered ace-inline ace-read-only\"></div>\n" +
     "</div>\n" +
     "</dl>\n" +
     "<div ng-if=\"buildConfig | hasPostCommitHook\">\n" +
@@ -1953,21 +1953,33 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "</div>\n" +
     "</div>\n" +
     "<div class=\"col-lg-6\">\n" +
-    "<h3>Triggers</h3>\n" +
-    "<dl class=\"dl-horizontal left\">\n" +
-    "<div ng-repeat=\"trigger in buildConfig.spec.triggers\">\n" +
+    "<h3>Triggers <a href=\"{{'build-triggers' | helpLink}}\" target=\"_blank\"><span class=\"learn-more-inline\">Learn More&nbsp;<i class=\"fa fa-external-link\" aria-hidden=\"true\"></i></span></a></h3>\n" +
+    "<dl class=\"dl-horizontal left build-triggers\">\n" +
+    "<div ng-repeat=\"trigger in buildConfig.spec.triggers | orderBy : 'type' : false : compareTriggers\">\n" +
     "<div ng-switch=\"trigger.type\">\n" +
+    "<div ng-switch-when=\"Bitbucket\">\n" +
+    "<dt>Bitbucket Webhook URL:\n" +
+    "</dt>\n" +
+    "<dd>\n" +
+    "<copy-to-clipboard clipboard-text=\"buildConfig.metadata.name | webhookURL : trigger.type : trigger.bitbucket.secret : project.metadata.name\"></copy-to-clipboard>\n" +
+    "</dd>\n" +
+    "</div>\n" +
     "<div ng-switch-when=\"GitHub\">\n" +
     "<dt>GitHub Webhook URL:\n" +
-    "<a href=\"{{'webhooks' | helpLink}}\" target=\"_blank\"><span class=\"learn-more-block\">Learn More&nbsp;<i class=\"fa fa-external-link\" aria-hidden=\"true\"></i></span></a>\n" +
     "</dt>\n" +
     "<dd>\n" +
     "<copy-to-clipboard clipboard-text=\"buildConfig.metadata.name | webhookURL : trigger.type : trigger.github.secret : project.metadata.name\"></copy-to-clipboard>\n" +
     "</dd>\n" +
     "</div>\n" +
+    "<div ng-switch-when=\"GitLab\">\n" +
+    "<dt>GitLab Webhook URL:\n" +
+    "</dt>\n" +
+    "<dd>\n" +
+    "<copy-to-clipboard clipboard-text=\"buildConfig.metadata.name | webhookURL : trigger.type : trigger.gitlab.secret : project.metadata.name\"></copy-to-clipboard>\n" +
+    "</dd>\n" +
+    "</div>\n" +
     "<div ng-switch-when=\"Generic\">\n" +
     "<dt>Generic Webhook URL:\n" +
-    "<a href=\"{{'webhooks' | helpLink}}\" target=\"_blank\"><span class=\"learn-more-block\">Learn More&nbsp;<i class=\"fa fa-external-link\" aria-hidden=\"true\"></i></span></a>\n" +
     "</dt>\n" +
     "<dd>\n" +
     "<copy-to-clipboard clipboard-text=\"buildConfig.metadata.name | webhookURL : trigger.type : trigger.generic.secret : project.metadata.name\"></copy-to-clipboard>\n" +
@@ -1997,9 +2009,6 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "</div>\n" +
     "</div>\n" +
     "<dt>Manual (CLI):\n" +
-    "<a href=\"{{'start-build' | helpLink}}\" target=\"_blank\">\n" +
-    "<span class=\"learn-more-block\">Learn More&nbsp;<i class=\"fa fa-external-link\" aria-hidden=\"true\"> </i></span>\n" +
-    "</a>\n" +
     "</dt>\n" +
     "<dd>\n" +
     "<copy-to-clipboard clipboard-text=\"'oc start-build ' + buildConfig.metadata.name + ' -n ' + project.metadata.name\"></copy-to-clipboard>\n" +

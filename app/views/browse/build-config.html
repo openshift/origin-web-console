@@ -228,171 +228,183 @@
                   </uib-tab>
                   <uib-tab active="selectedTab.configuration" ng-if="buildConfig">
                     <uib-tab-heading>Configuration</uib-tab-heading>
-                      <div class="resource-details">
-                        <div class="row">
-                          <div class="col-lg-6">
-                            <!--
-                              Show a header at lg and xl screen sizes to balance the columns, but hide
-                              it at smaller widths since "Details" is not very meaningful.
-                            -->
-                            <h3 class="hidden visible-lg visible-xl">Details</h3>
-                            <dl class="dl-horizontal left">
-                              <div>
-                                <dt>Build Strategy:</dt>
-                                <dd>{{buildConfig.spec.strategy.type | startCase}}</dd>
+                    <div class="resource-details">
+                      <div class="row">
+                        <div class="col-lg-6">
+                          <!--
+                            Show a header at lg and xl screen sizes to balance the columns, but hide
+                            it at smaller widths since "Details" is not very meaningful.
+                          -->
+                          <h3 class="hidden visible-lg visible-xl">Details</h3>
+                          <dl class="dl-horizontal left">
+                            <div>
+                              <dt>Build Strategy:</dt>
+                              <dd>{{buildConfig.spec.strategy.type | startCase}}</dd>
+                            </div>
+                            <div ng-if="buildConfig.spec.source">
+                              <div ng-if="buildConfig.spec.source.type == 'Git'">
+                                <dt>Source Repo:</dt>
+                                <dd><span class="word-break"><osc-git-link
+                                          uri="buildConfig.spec.source.git.uri"
+                                          ref="buildConfig.spec.source.git.ref"
+                                          context-dir="buildConfig.spec.source.contextDir">{{buildConfig.spec.source.git.uri}}</osc-git-link></span></dd>
+                                <dt ng-if="buildConfig.spec.source.git.ref">Source Ref:</dt>
+                                <dd ng-if="buildConfig.spec.source.git.ref">{{buildConfig.spec.source.git.ref}}</dd>
+                                <dt ng-if="buildConfig.spec.source.contextDir">Source Context Dir:</dt>
+                                <dd ng-if="buildConfig.spec.source.contextDir">{{buildConfig.spec.source.contextDir}}</dd>
                               </div>
-                              <div ng-if="buildConfig.spec.source">
-                                <div ng-if="buildConfig.spec.source.type == 'Git'">
-                                  <dt>Source Repo:</dt>
-                                  <dd><span class="word-break"><osc-git-link
-                                            uri="buildConfig.spec.source.git.uri"
-                                            ref="buildConfig.spec.source.git.ref"
-                                            context-dir="buildConfig.spec.source.contextDir">{{buildConfig.spec.source.git.uri}}</osc-git-link></span></dd>
-                                  <dt ng-if="buildConfig.spec.source.git.ref">Source Ref:</dt>
-                                  <dd ng-if="buildConfig.spec.source.git.ref">{{buildConfig.spec.source.git.ref}}</dd>
-                                  <dt ng-if="buildConfig.spec.source.contextDir">Source Context Dir:</dt>
-                                  <dd ng-if="buildConfig.spec.source.contextDir">{{buildConfig.spec.source.contextDir}}</dd>
-                                </div>
-                                <div ng-if="buildConfig.spec.strategy.jenkinsPipelineStrategy.jenkinsfilePath">
-                                  <dt>Jenkinsfile Path:</dt>
-                                  <dd ng-if="buildConfig | jenkinsfileLink">
-                                    <a ng-href="{{buildConfig | jenkinsfileLink}}">{{buildConfig.spec.strategy.jenkinsPipelineStrategy.jenkinsfilePath}}</a>
-                                  </dd>
-                                  <dd ng-if="!(buildConfig | jenkinsfileLink)">
-                                    {{buildConfig.spec.strategy.jenkinsPipelineStrategy.jenkinsfilePath}}
-                                  </dd>
-                                  <div class="small">
-                                    <a href="" ng-click="showJenkinsfileExamples()">What's a Jenkinsfile?</a>
-                                  </div>
-                                </div>
-                                <dt ng-if-start="buildConfig.spec.source.binary.asFile">Binary Input as File:</dt>
-                                <dd ng-if-end>{{buildConfig.spec.source.binary.asFile}}</dd>
-                                <div ng-if="buildConfig.spec.source.type == 'None' && !(buildConfig | isJenkinsPipelineStrategy)">
-                                  <dt>Source:</dt>
-                                  <dd>
-                                    <i>none</i>
-                                    <span class="help action-inline">
-                                      <a href>
-                                        <i class="pficon pficon-help" data-toggle="tooltip" aria-hidden="true" data-original-title="No source inputs have been defined for this build configuration.">
-                                        </i>
-                                      </a>
-                                    </span>
-                                  </dd>
-                                </div>
-                                <div ng-if="buildConfig.spec.source.images" class="image-sources">
-                                  <dt>Image Sources:</dt>
-                                  <dd></dd>
-                                  <div ng-repeat="imageSource in imageSources" class="image-source-item">
-                                    <h4>{{imageSource.from | imageObjectRef : buildConfig.metadata.namespace}}</h4>
-                                    <dl class="dl-horizontal left">
-                                      <div class="is-item-description">
-                                        <dt>Paths:</dt>
-                                        <div ng-repeat="(source, destination) in imageSourcesPaths[$index]" class="image-source-paths">
-                                          <dd><span class="source-path">{{source}}</span><i class="fa fa-long-arrow-right"></i><span class="destination-dir">{{destination}}</span></dd>
-                                        </div>
-                                      </div>
-                                    </dl>
-                                  </div>
-                                </div>
-                              </div>
-                              <dt ng-if-start="buildFrom = (buildConfig | buildStrategy).from">Builder Image:</dt>
-                              <dd ng-if-end>
-                                <a ng-if="buildFrom.kind === 'ImageStreamTag' && (!buildFrom.namespace || buildConfig.metadata.namespace === buildFrom.namespace)"
-                                    ng-href="{{buildFrom.name | navigateResourceURL : 'ImageStreamTag' : buildConfig.metadata.namespace}}">
-                                  {{buildFrom | imageObjectRef : buildConfig.metadata.namespace}}
-                                </a>
-                                <span ng-if="buildFrom.kind !== 'ImageStreamTag' || (buildFrom.namespace && buildConfig.metadata.namespace !== buildFrom.namespace)">
-                                  {{buildFrom | imageObjectRef : buildConfig.metadata.namespace}}
-                                </span>
-                              </dd>
-                              <div ng-if="outputTo = buildConfig.spec.output.to">
-                                <dt>Output To:</dt>
-                                <dd>
-                                  <a ng-if="outputTo.kind === 'ImageStreamTag' && (!outputTo.namespace || buildConfig.metadata.namespace === outputTo.namespace)"
-                                     ng-href="{{outputTo.name | navigateResourceURL : 'ImageStreamTag' : buildConfig.metadata.namespace}}">
-                                    {{outputTo | imageObjectRef : buildConfig.metadata.namespace}}
-                                  </a>
-                                  <span ng-if="outputTo.kind !== 'ImageStreamTag' || (outputTo.namespace && buildConfig.metadata.namespace !== outputTo.namespace)">
-                                    {{outputTo | imageObjectRef : buildConfig.metadata.namespace}}
-                                  </span>
+                              <div ng-if="buildConfig.spec.strategy.jenkinsPipelineStrategy.jenkinsfilePath">
+                                <dt>Jenkinsfile Path:</dt>
+                                <dd ng-if="buildConfig | jenkinsfileLink">
+                                  <a ng-href="{{buildConfig | jenkinsfileLink}}">{{buildConfig.spec.strategy.jenkinsPipelineStrategy.jenkinsfilePath}}</a>
                                 </dd>
+                                <dd ng-if="!(buildConfig | jenkinsfileLink)">
+                                  {{buildConfig.spec.strategy.jenkinsPipelineStrategy.jenkinsfilePath}}
+                                </dd>
+                                <div class="small">
+                                  <a href="" ng-click="showJenkinsfileExamples()">What's a Jenkinsfile?</a>
+                                </div>
                               </div>
-                              <div class="run-policy">
-                                <dt>Run Policy:</dt>
+                              <dt ng-if-start="buildConfig.spec.source.binary.asFile">Binary Input as File:</dt>
+                              <dd ng-if-end>{{buildConfig.spec.source.binary.asFile}}</dd>
+                              <div ng-if="buildConfig.spec.source.type == 'None' && !(buildConfig | isJenkinsPipelineStrategy)">
+                                <dt>Source:</dt>
                                 <dd>
-                                  {{buildConfig.spec.runPolicy | sentenceCase}}
+                                  <i>none</i>
                                   <span class="help action-inline">
-                                    <a href ng-switch="buildConfig.spec.runPolicy">
-                                      <i ng-switch-when="Serial" class="pficon pficon-help" data-toggle="tooltip" aria-hidden="true" data-original-title="Builds triggered from this Build Configuration will run one at the time, in the order they have been triggered."></i>
-                                      <i ng-switch-when="Parallel" class="pficon pficon-help" data-toggle="tooltip" aria-hidden="true" data-original-title="Builds triggered from this Build Configuration will run all at the same time. The order in which they will finish is not guaranteed."></i>
-                                      <i ng-switch-when="SerialLatestOnly" class="pficon pficon-help" data-toggle="tooltip" aria-hidden="true" data-original-title="Builds triggered from this Build Configuration will run one at the time. When a currently running build completes, the next build that will run is the latest build created. Other queued builds will be cancelled."></i>
-                                      <i ng-switch-default class="pficon pficon-help" data-toggle="tooltip" aria-hidden="true" data-original-title="Builds triggered from this Build Configuration will run using the {{buildConfig.spec.runPolicy | sentenceCase}} policy."></i>
+                                    <a href>
+                                      <i class="pficon pficon-help" data-toggle="tooltip" aria-hidden="true" data-original-title="No source inputs have been defined for this build configuration.">
+                                      </i>
                                     </a>
                                   </span>
                                 </dd>
                               </div>
-                              <!-- Put the field values that use full editors last so that they don't interrupt the flow of other <dl> items. -->
-                              <div ng-if="buildConfig.spec.source.dockerfile">
-                                <dt>Dockerfile:</dt><dd></dd>
-                                <div ui-ace="{
-                                  mode: 'dockerfile',
-                                  theme: 'dreamweaver',
-                                  onLoad: aceLoaded,
-                                  highlightActiveLine: false,
-                                  showGutter: false,
-                                  rendererOptions: {
-                                    fadeFoldWidgets: true,
-                                    highlightActiveLine: false,
-                                    showPrintMargin: false
-                                  },
-                                  advanced: {
-                                    highlightActiveLine: false
-                                  }
-                                }" readonly ng-model="buildConfig.spec.source.dockerfile" class="ace-bordered ace-read-only ace-inline dockerfile-mode mar-top-md"></div>
-                              </div>
-                              <div ng-if="buildConfig.spec.strategy.jenkinsPipelineStrategy.jenkinsfile">
-                                <div class="small pull-right mar-top-sm">
-                                  <a href="" ng-click="showJenkinsfileExamples()">What's a Jenkinsfile?</a>
+                              <div ng-if="buildConfig.spec.source.images" class="image-sources">
+                                <dt>Image Sources:</dt>
+                                <dd></dd>
+                                <div ng-repeat="imageSource in imageSources" class="image-source-item">
+                                  <h4>{{imageSource.from | imageObjectRef : buildConfig.metadata.namespace}}</h4>
+                                  <dl class="dl-horizontal left">
+                                    <div class="is-item-description">
+                                      <dt>Paths:</dt>
+                                      <div ng-repeat="(source, destination) in imageSourcesPaths[$index]" class="image-source-paths">
+                                        <dd><span class="source-path">{{source}}</span><i class="fa fa-long-arrow-right"></i><span class="destination-dir">{{destination}}</span></dd>
+                                      </div>
+                                    </div>
+                                  </dl>
                                 </div>
-                                <dt>
-                                  Jenkinsfile:
-                                </dt><dd></dd>
-                                <div ui-ace="{
-                                  mode: 'groovy',
-                                  theme: 'eclipse',
-                                  showGutter: false,
-                                  rendererOptions: {
-                                    fadeFoldWidgets: true,
-                                    highlightActiveLine: false,
-                                    showPrintMargin: false
-                                  },
-                                  advanced: {
-                                    highlightActiveLine: false
-                                  }
-                                }" readonly ng-model="buildConfig.spec.strategy.jenkinsPipelineStrategy.jenkinsfile" class="ace-bordered ace-inline ace-read-only"></div>
                               </div>
-                            </dl>
-                            <div ng-if="buildConfig | hasPostCommitHook">
-                              <h3>Post-Commit Hooks</h3>
-                              <build-hooks build="buildConfig"></build-hooks>
                             </div>
+                            <dt ng-if-start="buildFrom = (buildConfig | buildStrategy).from">Builder Image:</dt>
+                            <dd ng-if-end>
+                              <a ng-if="buildFrom.kind === 'ImageStreamTag' && (!buildFrom.namespace || buildConfig.metadata.namespace === buildFrom.namespace)"
+                                  ng-href="{{buildFrom.name | navigateResourceURL : 'ImageStreamTag' : buildConfig.metadata.namespace}}">
+                                {{buildFrom | imageObjectRef : buildConfig.metadata.namespace}}
+                              </a>
+                              <span ng-if="buildFrom.kind !== 'ImageStreamTag' || (buildFrom.namespace && buildConfig.metadata.namespace !== buildFrom.namespace)">
+                                {{buildFrom | imageObjectRef : buildConfig.metadata.namespace}}
+                              </span>
+                            </dd>
+                            <div ng-if="outputTo = buildConfig.spec.output.to">
+                              <dt>Output To:</dt>
+                              <dd>
+                                <a ng-if="outputTo.kind === 'ImageStreamTag' && (!outputTo.namespace || buildConfig.metadata.namespace === outputTo.namespace)"
+                                    ng-href="{{outputTo.name | navigateResourceURL : 'ImageStreamTag' : buildConfig.metadata.namespace}}">
+                                  {{outputTo | imageObjectRef : buildConfig.metadata.namespace}}
+                                </a>
+                                <span ng-if="outputTo.kind !== 'ImageStreamTag' || (outputTo.namespace && buildConfig.metadata.namespace !== outputTo.namespace)">
+                                  {{outputTo | imageObjectRef : buildConfig.metadata.namespace}}
+                                </span>
+                              </dd>
+                            </div>
+                            <div class="run-policy">
+                              <dt>Run Policy:</dt>
+                              <dd>
+                                {{buildConfig.spec.runPolicy | sentenceCase}}
+                                <span class="help action-inline">
+                                  <a href ng-switch="buildConfig.spec.runPolicy">
+                                    <i ng-switch-when="Serial" class="pficon pficon-help" data-toggle="tooltip" aria-hidden="true" data-original-title="Builds triggered from this Build Configuration will run one at the time, in the order they have been triggered."></i>
+                                    <i ng-switch-when="Parallel" class="pficon pficon-help" data-toggle="tooltip" aria-hidden="true" data-original-title="Builds triggered from this Build Configuration will run all at the same time. The order in which they will finish is not guaranteed."></i>
+                                    <i ng-switch-when="SerialLatestOnly" class="pficon pficon-help" data-toggle="tooltip" aria-hidden="true" data-original-title="Builds triggered from this Build Configuration will run one at the time. When a currently running build completes, the next build that will run is the latest build created. Other queued builds will be cancelled."></i>
+                                    <i ng-switch-default class="pficon pficon-help" data-toggle="tooltip" aria-hidden="true" data-original-title="Builds triggered from this Build Configuration will run using the {{buildConfig.spec.runPolicy | sentenceCase}} policy."></i>
+                                  </a>
+                                </span>
+                              </dd>
+                            </div>
+                            <!-- Put the field values that use full editors last so that they don't interrupt the flow of other <dl> items. -->
+                            <div ng-if="buildConfig.spec.source.dockerfile">
+                              <dt>Dockerfile:</dt><dd></dd>
+                              <div ui-ace="{
+                                mode: 'dockerfile',
+                                theme: 'dreamweaver',
+                                onLoad: aceLoaded,
+                                highlightActiveLine: false,
+                                showGutter: false,
+                                rendererOptions: {
+                                  fadeFoldWidgets: true,
+                                  highlightActiveLine: false,
+                                  showPrintMargin: false
+                                },
+                                advanced: {
+                                  highlightActiveLine: false
+                                }
+                              }" readonly ng-model="buildConfig.spec.source.dockerfile" class="ace-bordered ace-read-only ace-inline dockerfile-mode mar-top-md"></div>
+                            </div>
+                            <div ng-if="buildConfig.spec.strategy.jenkinsPipelineStrategy.jenkinsfile">
+                              <div class="small pull-right mar-top-sm">
+                                <a href="" ng-click="showJenkinsfileExamples()">What's a Jenkinsfile?</a>
+                              </div>
+                              <dt>
+                                Jenkinsfile:
+                              </dt><dd></dd>
+                              <div ui-ace="{
+                                mode: 'groovy',
+                                theme: 'eclipse',
+                                showGutter: false,
+                                rendererOptions: {
+                                  fadeFoldWidgets: true,
+                                  highlightActiveLine: false,
+                                  showPrintMargin: false
+                                },
+                                advanced: {
+                                  highlightActiveLine: false
+                                }
+                              }" readonly ng-model="buildConfig.spec.strategy.jenkinsPipelineStrategy.jenkinsfile" class="ace-bordered ace-inline ace-read-only"></div>
+                            </div>
+                          </dl>
+                          <div ng-if="buildConfig | hasPostCommitHook">
+                            <h3>Post-Commit Hooks</h3>
+                            <build-hooks build="buildConfig"></build-hooks>
                           </div>
-                          <div class="col-lg-6">
-                            <h3>Triggers</h3>
-                            <dl class="dl-horizontal left">
-                            <div ng-repeat="trigger in buildConfig.spec.triggers">
+                        </div>
+                        <div class="col-lg-6">
+                          <h3>Triggers <a href="{{'build-triggers' | helpLink}}" target="_blank"><span class="learn-more-inline">Learn More&nbsp;<i class="fa fa-external-link" aria-hidden="true"></i></span></a></h3>
+                          <dl class="dl-horizontal left build-triggers">
+                            <div ng-repeat="trigger in buildConfig.spec.triggers | orderBy : 'type' : false : compareTriggers">
                               <div ng-switch="trigger.type">
+                                <div ng-switch-when="Bitbucket">
+                                    <dt>Bitbucket Webhook URL:
+                                    </dt>
+                                    <dd>
+                                      <copy-to-clipboard clipboard-text="buildConfig.metadata.name | webhookURL : trigger.type : trigger.bitbucket.secret : project.metadata.name"></copy-to-clipboard>
+                                    </dd>
+                                </div>
                                 <div ng-switch-when="GitHub">
                                     <dt>GitHub Webhook URL:
-                                      <a href="{{'webhooks' | helpLink}}" target="_blank"><span class="learn-more-block">Learn More&nbsp;<i class="fa fa-external-link" aria-hidden="true"></i></span></a>
                                     </dt>
                                     <dd>
                                       <copy-to-clipboard clipboard-text="buildConfig.metadata.name | webhookURL : trigger.type : trigger.github.secret : project.metadata.name"></copy-to-clipboard>
                                     </dd>
                                 </div>
+                                <div ng-switch-when="GitLab">
+                                    <dt>GitLab Webhook URL:
+                                    </dt>
+                                    <dd>
+                                      <copy-to-clipboard clipboard-text="buildConfig.metadata.name | webhookURL : trigger.type : trigger.gitlab.secret : project.metadata.name"></copy-to-clipboard>
+                                    </dd>
+                                </div>
                                 <div ng-switch-when="Generic">
                                     <dt>Generic Webhook URL:
-                                      <a href="{{'webhooks' | helpLink}}" target="_blank"><span class="learn-more-block">Learn More&nbsp;<i class="fa fa-external-link" aria-hidden="true"></i></span></a>
                                     </dt>
                                     <dd>
                                       <copy-to-clipboard clipboard-text="buildConfig.metadata.name | webhookURL : trigger.type : trigger.generic.secret : project.metadata.name"></copy-to-clipboard>
@@ -423,9 +435,6 @@
                               </div>
                             </div>
                             <dt>Manual (CLI):
-                              <a href="{{'start-build' | helpLink}}" target="_blank">
-                                <span class="learn-more-block">Learn More&nbsp;<i class="fa fa-external-link" aria-hidden="true"> </i></span>
-                              </a>
                             </dt>
                             <dd>
                               <copy-to-clipboard clipboard-text="'oc start-build ' + buildConfig.metadata.name + ' -n ' + project.metadata.name"></copy-to-clipboard>

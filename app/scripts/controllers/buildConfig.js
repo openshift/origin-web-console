@@ -63,6 +63,22 @@ angular.module('openshiftConsole')
       $scope.envVars = buildStrategy($scope.updatedBuildConfig).env || [];
     };
 
+    $scope.compareTriggers = function(lhs, rhs) {
+      if (lhs.value === "ConfigChange") {
+        return -1;
+      }
+      if (rhs.value === "ConfigChange") {
+        return 1;
+      }
+      if (lhs.value === "ImageChange") {
+        return -1;
+      }
+      if (rhs.value === "ImageChange") {
+        return 1;
+      }
+      return lhs.value.localeCompare(rhs.value);
+    };
+
     $scope.saveEnvVars = function() {
       $scope.envVars = _.filter($scope.envVars, 'name');
       buildStrategy($scope.updatedBuildConfig).env = keyValueEditorUtils.compactEntries(angular.copy($scope.envVars));
