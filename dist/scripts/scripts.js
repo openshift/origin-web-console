@@ -14838,11 +14838,12 @@ type:"dom",
 node:'<li><a href="about">About</a></li>'
 }), a;
 });
-} ]), angular.module("openshiftConsole").run([ "extensionRegistry", function(a) {
+} ]), angular.module("openshiftConsole").run([ "extensionRegistry", "$rootScope", function(a, b) {
 a.add("nav-user-dropdown", function() {
-return [ {
+var a = "Log out";
+return b.user.fullName && b.user.fullName !== b.user.metadata.name && (a += " (" + b.user.metadata.name + ")"), [ {
 type:"dom",
-node:'<li><a href="logout">Log out</a></li>'
+node:'<li><a href="logout">' + _.escape(a) + "</a></li>"
 } ];
 });
 } ]), angular.module("openshiftConsole").run([ "extensionRegistry", "Constants", function(a, b) {
