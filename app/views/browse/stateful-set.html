@@ -63,7 +63,7 @@
         <div class="container-fluid">
          <div ng-if="!loaded">Loading...</div>
 
-          <div class="row" ng-if="loaded">
+          <div class="row" ng-if="loaded && statefulSet">
             <div class="col-md-12">
               <uib-tabset>
                 <uib-tab active="selectedTab.details">

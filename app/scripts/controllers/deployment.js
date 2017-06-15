@@ -110,7 +110,7 @@ angular.module('openshiftConsole')
         DataService.get({
           group: 'extensions',
           resource: 'deployments'
-        }, $routeParams.deployment, context).then(
+        }, $routeParams.deployment, context, { errorNotification: false }).then(
           // success
           function(deployment) {
             $scope.loaded = true;

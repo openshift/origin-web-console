@@ -3872,7 +3872,7 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "<div class=\"middle-content\" persist-tab-state>\n" +
     "<div class=\"container-fluid\">\n" +
     "<div ng-if=\"!loaded\">Loading...</div>\n" +
-    "<div class=\"row\" ng-if=\"loaded\">\n" +
+    "<div class=\"row\" ng-if=\"loaded && statefulSet\">\n" +
     "<div class=\"col-md-12\">\n" +
     "<uib-tabset>\n" +
     "<uib-tab active=\"selectedTab.details\">\n" +

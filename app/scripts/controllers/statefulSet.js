@@ -48,7 +48,7 @@ angular
         projectContext = context;
 
         DataService
-          .get(resourceGroupVersion, $scope.statefulSetName, context)
+          .get(resourceGroupVersion, $scope.statefulSetName, context, { errorNotification: false })
           .then(function(statefulSet) {
 
             angular.extend($scope, {
@@ -84,6 +84,13 @@ angular
             watches.push(DataService.watch('appliedclusterresourcequotas', context, function(clusterQuotaData) {
               $scope.clusterQuotas = clusterQuotaData.by("metadata.name");
             }, {poll: true, pollInterval: QUOTA_POLL_INTERVAL}));
+          }, function(e) {
+            $scope.loaded = true;
+            $scope.alerts["load"] = {
+              type: "error",
+              message: "The stateful set details could not be loaded.",
+              details: $filter('getErrorDetails')(e)
+            };
           });
       }));
 

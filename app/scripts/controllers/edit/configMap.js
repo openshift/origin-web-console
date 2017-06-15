@@ -47,7 +47,7 @@ angular.module('openshiftConsole')
       .get($routeParams.project)
       .then(_.spread(function(project, context) {
         DataService
-          .get("configmaps", $routeParams.configMap, context)
+          .get("configmaps", $routeParams.configMap, context, { errorNotification: false })
           .then(function(configMap) {
             $scope.loaded = true;
             $scope.breadcrumbs = BreadcrumbsService.getBreadcrumbs({

@@ -4325,7 +4325,9 @@ message:"This pod has been deleted."
 });
 };
 m.get(c.project).then(_.spread(function(d, h) {
-o = h, a.project = d, a.projectContext = h, g.get("pods", c.pod, h).then(function(b) {
+o = h, a.project = d, a.projectContext = h, g.get("pods", c.pod, h, {
+errorNotification:!1
+}).then(function(b) {
 A(b);
 var d = {};
 d[b.metadata.name] = b, a.logOptions.container = c.container || b.spec.containers[0].name, a.containerTerminals = v(), w(b), j.fetchReferencedImageStreamImages(d, a.imagesByDockerReference, a.imageStreamImageRefByDockerReference, o), n.push(g.watchObject("pods", c.pod, h, function(b, c) {
@@ -5010,7 +5012,9 @@ type:"warning",
 details:"The active filters are hiding all builds."
 };
 }
-a.project = d, l = f, g.get("buildconfigs", c.buildconfig, f).then(function(a) {
+a.project = d, l = f, g.get("buildconfigs", c.buildconfig, f, {
+errorNotification:!1
+}).then(function(a) {
 r(a), o.push(g.watchObject("buildconfigs", c.buildconfig, f, r));
 }, function(c) {
 a.loaded = !0, a.alerts.load = {
@@ -5098,7 +5102,9 @@ message:"Build configuration " + a.buildConfigName + " has been deleted."
 }, a.buildConfigDeleted = !0), a.buildConfig = b, a.buildConfigPaused = d.isPaused(a.buildConfig), k();
 };
 h.get(c.project).then(_.spread(function(b, g) {
-a.project = b, a.projectContext = g, a.logOptions = {}, e.get("builds", c.build, g).then(function(a) {
+a.project = b, a.projectContext = g, a.logOptions = {}, e.get("builds", c.build, g, {
+errorNotification:!1
+}).then(function(a) {
 l(a), i.push(e.watchObject("builds", c.build, g, l)), i.push(e.watchObject("buildconfigs", c.buildconfig, g, n));
 }, m), a.toggleSecret = function() {
 a.showSecret = !0;
@@ -5149,7 +5155,9 @@ message:"This image stream has been deleted."
 });
 };
 d.get(b.project).then(_.spread(function(d, f) {
-a.project = d, c.get("imagestreams", b.imagestream, f).then(function(a) {
+a.project = d, c.get("imagestreams", b.imagestream, f, {
+errorNotification:!1
+}).then(function(a) {
 k(a, f), i.push(c.watchObject("imagestreams", b.imagestream, f, function(a, b) {
 k(a, f, b);
 }));
@@ -5205,7 +5213,9 @@ title:b.imagestream
 } ], a.emptyMessage = "Loading...";
 var h = [];
 d.get(b.project).then(_.spread(function(d, g) {
-a.project = d, c.get("imagestreams", b.imagestream, g).then(function(d) {
+a.project = d, c.get("imagestreams", b.imagestream, g, {
+errorNotification:!1
+}).then(function(d) {
 a.loaded = !0, a.imageStream = d, a.emptyMessage = "No tags to show", h.push(c.watchObject("imagestreams", b.imagestream, g, function(b, c) {
 "DELETED" === c && (a.alerts.deleted = {
 type:"warning",
@@ -5319,7 +5329,9 @@ a.hpaWarnings = b;
 d.get({
 group:"extensions",
 resource:"deployments"
-}, c.deployment, m).then(function(g) {
+}, c.deployment, m, {
+errorNotification:!1
+}).then(function(g) {
 a.loaded = !0, a.deployment = g, x(), a.saveEnvVars = function() {
 f.compact(a.updatedDeployment), v = d.update({
 group:"extensions",
@@ -5468,7 +5480,9 @@ h.getHPAWarnings(a.deploymentConfig, a.autoscalers, D, d).then(function(b) {
 a.hpaWarnings = b;
 });
 };
-e.get("deploymentconfigs", c.deploymentconfig, k).then(function(d) {
+e.get("deploymentconfigs", c.deploymentconfig, k, {
+errorNotification:!1
+}).then(function(d) {
 a.loaded = !0, a.deploymentConfig = d, a.strategyParams = b("deploymentStrategyParams")(d), E(), a.updatedDeploymentConfig = g.copyAndNormalize(a.deploymentConfig), a.saveEnvVars = function() {
 l.hideNotification("save-dc-env-error"), g.compact(a.updatedDeploymentConfig), C = e.update("deploymentconfigs", c.deploymentconfig, a.updatedDeploymentConfig, k), C.then(function() {
 l.addNotification({
@@ -5762,7 +5776,9 @@ var b = _.get(a, "replicaSet.spec.template");
 b && j.fetchReferencedImageStreamImages([ b ], a.imagesByDockerReference, w, l);
 }
 };
-f.get(a.resource, c.replicaSet, l).then(function(b) {
+f.get(a.resource, c.replicaSet, l, {
+errorNotification:!1
+}).then(function(b) {
 switch (a.loaded = !0, a.replicaSet = b, A(b), s) {
 case "ReplicationController":
 K(b);
@@ -5914,38 +5930,46 @@ version:"v1beta1"
 };
 g.isAvailable().then(function(a) {
 b.metricsAvailable = a;
-}), h.get(c.project).then(_.spread(function(a, c) {
-j = c, e.get(m, b.statefulSetName, c).then(function(d) {
+}), h.get(c.project).then(_.spread(function(c, d) {
+j = d, e.get(m, b.statefulSetName, d, {
+errorNotification:!1
+}).then(function(a) {
 angular.extend(b, {
-statefulSet:k(d),
-project:a,
-projectContext:c,
+statefulSet:k(a),
+project:c,
+projectContext:d,
 loaded:!0,
 isScalable:function() {
 return !1;
 },
 scale:function() {}
-}), l.push(e.watchObject(m, b.statefulSetName, c, function(a) {
+}), l.push(e.watchObject(m, b.statefulSetName, d, function(a) {
 angular.extend(b, {
 resourceGroupVersion:m,
 statefulSet:k(a)
 });
-})), l.push(e.watch("pods", c, function(a) {
-var c = a.by("metadata.name");
-b.podsForStatefulSet = i.filterForOwner(c, d);
+})), l.push(e.watch("pods", d, function(c) {
+var d = c.by("metadata.name");
+b.podsForStatefulSet = i.filterForOwner(d, a);
 }));
 var f = 6e4;
-l.push(e.watch("resourcequotas", c, function(a) {
+l.push(e.watch("resourcequotas", d, function(a) {
 b.quotas = a.by("metadata.name");
 }, {
 poll:!0,
 pollInterval:f
-})), l.push(e.watch("appliedclusterresourcequotas", c, function(a) {
+})), l.push(e.watch("appliedclusterresourcequotas", d, function(a) {
 b.clusterQuotas = a.by("metadata.name");
 }, {
 poll:!0,
 pollInterval:f
 }));
+}, function(c) {
+b.loaded = !0, b.alerts.load = {
+type:"error",
+message:"The stateful set details could not be loaded.",
+details:a("getErrorDetails")(c)
+};
 });
 })), b.$on("$destroy", function() {
 e.unwatchAll(l);
@@ -5998,7 +6022,9 @@ message:"This service has been deleted."
 });
 };
 d.get(b.project).then(_.spread(function(d, k) {
-a.project = d, a.projectContext = k, c.get("services", b.service, k).then(function(a) {
+a.project = d, a.projectContext = k, c.get("services", b.service, k, {
+errorNotification:!1
+}).then(function(a) {
 j(a), g.push(c.watchObject("services", b.service, k, j));
 }, function(b) {
 a.loaded = !0, a.alerts.load = {
@@ -6197,7 +6223,9 @@ return !d.isAlertPermanentlyHidden(e, a.projectName);
 var c = k(b);
 d.permanentlyHideAlert(c, a.projectName);
 }, f.get(c.project).then(_.spread(function(d, f) {
-a.project = d, e.get("routes", c.route, f).then(function(a) {
+a.project = d, e.get("routes", c.route, f, {
+errorNotification:!1
+}).then(function(a) {
 j(a), i.push(e.watchObject("routes", c.route, f, j));
 }, function(c) {
 a.loaded = !0, a.alerts.load = {
@@ -6368,7 +6396,9 @@ message:"This persistent volume claim has been deleted."
 });
 };
 d.get(b.project).then(_.spread(function(d, h) {
-a.project = d, a.projectContext = h, c.get("persistentvolumeclaims", b.pvc, h).then(function(a) {
+a.project = d, a.projectContext = h, c.get("persistentvolumeclaims", b.pvc, h, {
+errorNotification:!1
+}).then(function(a) {
 g(a), f.push(c.watchObject("persistentvolumeclaims", b.pvc, h, g));
 }, function(b) {
 a.loaded = !0, a.alerts.load = {
@@ -6577,7 +6607,9 @@ var t = function() {
 j.hideNotification("edit-build-config-error"), j.hideNotification("edit-build-config-conflict"), j.hideNotification("edit-build-config-deleted");
 };
 a.$on("$destroy", t), k.get(d.project).then(_.spread(function(c, e) {
-return a.project = c, a.context = e, a.breadcrumbs[0].title = b("displayName")(c), g.canI("buildconfigs", "update", d.project) ? void h.get("buildconfigs", d.buildconfig, e).then(function(b) {
+return a.project = c, a.context = e, a.breadcrumbs[0].title = b("displayName")(c), g.canI("buildconfigs", "update", d.project) ? void h.get("buildconfigs", d.buildconfig, e, {
+errorNotification:!1
+}).then(function(b) {
 a.buildConfig = b, o(), a.updatedBuildConfig = angular.copy(a.buildConfig), a.buildStrategy = r(a.updatedBuildConfig), a.strategyType = a.buildConfig.spec.strategy.type, a.envVars = a.buildStrategy.env || [], a.triggers = u(a.triggers, a.buildConfig.spec.triggers), a.sources = B(a.sources, a.buildConfig.spec.source), _.has(b, "spec.strategy.jenkinsPipelineStrategy.jenkinsfile") && (a.jenkinsfileOptions.type = "inline"), h.list("secrets", e).then(function(b) {
 var c = m.groupSecretsByType(b), d = _.mapValues(c, function(a) {
 return _.map(a, "metadata.name");
@@ -6842,7 +6874,9 @@ h.hideNotification("edit-config-map-error");
 d.history.back();
 };
 c.cancel = m, i.get(b.project).then(_.spread(function(d, i) {
-e.get("configmaps", b.configMap, i).then(function(a) {
+e.get("configmaps", b.configMap, i, {
+errorNotification:!1
+}).then(function(a) {
 c.loaded = !0, c.breadcrumbs = f.getBreadcrumbs({
 name:b.configMap,
 object:a,
@@ -6907,7 +6941,9 @@ return void Logger.error("Unknown deployment strategy type: " + a);
 }
 };
 m.get(d.project).then(_.spread(function(c, e) {
-return a.project = c, a.context = e, g.canI("deploymentconfigs", "update", d.project) ? void i.get("deploymentconfigs", d.deploymentconfig, e).then(function(b) {
+return a.project = c, a.context = e, g.canI("deploymentconfigs", "update", d.project) ? void i.get("deploymentconfigs", d.deploymentconfig, e, {
+errorNotification:!1
+}).then(function(b) {
 a.deploymentConfig = b, a.breadcrumbs = h.getBreadcrumbs({
 object:b,
 project:c,
@@ -7381,7 +7417,9 @@ var h = {
 resource:f.kindToResource(d.kind),
 group:d.group
 };
-return g.canI(h, "update", d.project) ? (i.get(h, a.name, e).then(function(c) {
+return g.canI(h, "update", d.project) ? (i.get(h, a.name, e, {
+errorNotification:!1
+}).then(function(c) {
 var g = angular.copy(c);
 a.resource = g;
 var j = function(a) {

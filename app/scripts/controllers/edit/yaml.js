@@ -84,7 +84,7 @@ angular.module('openshiftConsole')
           return;
         }
 
-        DataService.get(resourceGroupVersion, $scope.name, context).then(
+        DataService.get(resourceGroupVersion, $scope.name, context, { errorNotification: false }).then(
           function(result) {
             // Modify a copy of the resource.
             var resource = angular.copy(result);

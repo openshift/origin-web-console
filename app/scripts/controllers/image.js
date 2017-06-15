@@ -95,7 +95,7 @@ angular.module('openshiftConsole')
       .then(_.spread(function(project, context) {
         $scope.project = project;
         DataService
-          .get("imagestreams", $routeParams.imagestream, context)
+          .get("imagestreams", $routeParams.imagestream, context, { errorNotification: false })
           .then(function(imageStream) {
             imageStreamResolved(imageStream, context);
             watches.push(DataService.watchObject("imagestreams", $routeParams.imagestream, context, function(imageStream, action) {
