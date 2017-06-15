@@ -794,6 +794,8 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "<p>The <a target=\"_blank\" ng-href=\"{{'welcome' | helpLink}}\">documentation</a> helps you learn about OpenShift and start exploring its features. From getting started with creating your first application to trying out more advanced build and deployment techniques, it provides guidance on setting up and managing your OpenShift environment as an application developer.</p>\n" +
     "<p>With the OpenShift command line interface (CLI), you can create applications and manage OpenShift projects from a terminal. To get started using the CLI, visit <a href=\"command-line\">Command Line Tools</a>.\n" +
     "</p>\n" +
+    "<h2>Account</h2>\n" +
+    "<p>You are currently logged in under the user account <strong>{{user.metadata.name}}</strong>.</p>\n" +
     "</div>\n" +
     "</div>\n" +
     "</div>\n" +
@@ -4439,7 +4441,7 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "</div>\n" +
     "</p>\n" +
     "<p>\n" +
-    "After downloading and installing it, you can start by logging in using<span ng-if=\"sessionToken\"> this current session token</span>:\n" +
+    "After downloading and installing it, you can start by logging in. You are currently logged into this console as <strong>{{user.metadata.name}}</strong>. If you want to log into the CLI using the same session token:\n" +
     "<copy-to-clipboard display-wide=\"true\" clipboard-text=\"'oc login ' + loginBaseURL + ' --token=' + sessionToken\" input-text=\"'oc login ' + loginBaseURL + ' --token=<hidden>'\"></copy-to-clipboard>\n" +
     "<pre class=\"code prettyprint ng-binding\" ng-if=\"!sessionToken\">\n" +
     "                      oc login {{loginBaseURL}}\n" +
