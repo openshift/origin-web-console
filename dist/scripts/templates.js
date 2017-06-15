@@ -4774,7 +4774,9 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "</uib-tab>\n" +
     "<uib-tab active=\"selectedTab.deployImage\">\n" +
     "<uib-tab-heading>Deploy Image</uib-tab-heading>\n" +
+    "<form>\n" +
     "<deploy-image project=\"project\" context=\"context\"></deploy-image>\n" +
+    "</form>\n" +
     "</uib-tab>\n" +
     "<uib-tab active=\"selectedTab.fromFile\">\n" +
     "<uib-tab-heading>Import YAML / JSON</uib-tab-heading>\n" +
@@ -11147,8 +11149,10 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "</li>\n" +
     "</ul>\n" +
     "</div>\n" +
+    "<form>\n" +
     "<process-template project=\"project\" template=\"template\" prefill-parameters=\"prefillParameters\">\n" +
     "</process-template>\n" +
+    "</form>\n" +
     "</div>\n" +
     "</div>\n" +
     "</div>\n" +
