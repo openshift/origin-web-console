@@ -1,0 +1,32 @@
+<div>
+  <div ng-if="!ctrl.error">
+    <h3 class="mar-top-none">
+      Binding for the following has been deleted:
+    </h3>
+
+    <div
+      ng-if="ctrl.appsForBinding(ctrl.selectedBinding)"
+      ng-repeat="appForBinding in ctrl.appsForBinding(ctrl.selectedBinding)">
+      {{appForBinding.metadata.name}} <small class="text-muted">&ndash; {{ appForBinding.kind | humanizeKind : true}}</small>
+    </div>
+    <div ng-if="!(ctrl.appsForBinding(ctrl.selectedBinding))">
+      <!-- TODO: selected a secret name in the form, but see a binding name in the result. -->
+      {{ctrl.selectedBinding}} <small class="text-muted">&ndash; Binding</small>
+    </div>
+
+    <p class="mar-top-lg">
+      <span class="pficon pficon-info"></span> You will need to redeploy your pods for this to take effect.
+    </p>
+  </div>
+  <div ng-if="ctrl.error">
+    <div class="title">Deletion of Binding Failed <span class="fa fa-times text-danger"></span></div>
+    <div class="sub-title">
+      <span ng-if="ctrl.error.data.message">
+        {{ctrl.error.data.message | upperFirst}}
+      </span>
+      <span ng-if="!ctrl.error.data.message">
+        An error occurred deleting the binding.
+      </span>
+    </div>
+  </div>
+</div>

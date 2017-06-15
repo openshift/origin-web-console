@@ -6120,12 +6120,12 @@ title:"Create Config Map"
 } ];
 var j = function() {
 h.hideNotification("create-config-map-error");
-}, k = function() {
+};
+c.$on("$destroy", j);
+var k = function() {
 d.history.back();
 };
-c.cancel = function() {
-j(), k();
-}, i.get(b.project).then(_.spread(function(d, i) {
+c.cancel = k, i.get(b.project).then(_.spread(function(d, i) {
 return c.project = d, c.breadcrumbs[0].title = a("displayName")(d), e.canI("configmaps", "create", b.project) ? (c.configMap = {
 apiVersion:"v1",
 kind:"ConfigMap",
@@ -6406,9 +6406,7 @@ b.url(e.resourceURL);
 }, t = function() {
 l.hideNotification("set-compute-limits-error");
 };
-e.cancel = function() {
-t(), s();
-}, m.get(d.project).then(_.spread(function(b, c) {
+e.cancel = s, e.$on("$destroy", t), m.get(d.project).then(_.spread(function(b, c) {
 e.breadcrumbs[0].title = a("displayName")(b);
 var m = {
 resource:f.kindToResource(d.kind),
@@ -6573,12 +6571,12 @@ a.secrets = {};
 var q = [], r = b("buildStrategy"), s = function() {
 var b;
 a.buildConfig ? (b = i.resourceURL(a.buildConfig), c.path(b)) :e.history.back();
-}, t = function() {
+};
+a.cancel = s;
+var t = function() {
 j.hideNotification("edit-build-config-error"), j.hideNotification("edit-build-config-conflict"), j.hideNotification("edit-build-config-deleted");
 };
-a.cancel = function() {
-t(), s();
-}, k.get(d.project).then(_.spread(function(c, e) {
+a.$on("$destroy", t), k.get(d.project).then(_.spread(function(c, e) {
 return a.project = c, a.context = e, a.breadcrumbs[0].title = b("displayName")(c), g.canI("buildconfigs", "update", d.project) ? void h.get("buildconfigs", d.buildconfig, e).then(function(b) {
 a.buildConfig = b, o(), a.updatedBuildConfig = angular.copy(a.buildConfig), a.buildStrategy = r(a.updatedBuildConfig), a.strategyType = a.buildConfig.spec.strategy.type, a.envVars = a.buildStrategy.env || [], a.triggers = u(a.triggers, a.buildConfig.spec.triggers), a.sources = B(a.sources, a.buildConfig.spec.source), _.has(b, "spec.strategy.jenkinsPipelineStrategy.jenkinsfile") && (a.jenkinsfileOptions.type = "inline"), h.list("secrets", e).then(function(b) {
 var c = m.groupSecretsByType(b), d = _.mapValues(c, function(a) {
@@ -6843,9 +6841,7 @@ h.hideNotification("edit-config-map-error");
 }, m = function() {
 d.history.back();
 };
-c.cancel = function() {
-l(), m();
-}, i.get(b.project).then(_.spread(function(d, i) {
+c.cancel = m, i.get(b.project).then(_.spread(function(d, i) {
 e.get("configmaps", b.configMap, i).then(function(a) {
 c.loaded = !0, c.breadcrumbs = f.getBreadcrumbs({
 name:b.configMap,
@@ -6873,7 +6869,7 @@ details:a("getErrorDetails")(b)
 });
 }));
 }, c.$on("$destroy", function() {
-e.unwatchAll(j);
+e.unwatchAll(j), l();
 });
 }));
 } ]), angular.module("openshiftConsole").controller("EditDeploymentConfigController", [ "$scope", "$filter", "$location", "$routeParams", "$uibModal", "$window", "AuthorizationService", "BreadcrumbsService", "DataService", "EnvironmentService", "Navigate", "NotificationsService", "ProjectsService", "SecretsService", "keyValueEditorUtils", function(a, b, c, d, e, f, g, h, i, j, k, l, m, n, o) {
@@ -7091,9 +7087,9 @@ details:b("getErrorDetails")(c)
 });
 });
 }, a.cancel = function() {
-A(), f.history.back();
+f.history.back();
 }, a.$on("$destroy", function() {
-i.unwatchAll(s);
+i.unwatchAll(s), A();
 });
 } ]), angular.module("openshiftConsole").controller("EditAutoscalerController", [ "$scope", "$filter", "$routeParams", "$window", "APIService", "AuthorizationService", "BreadcrumbsService", "DataService", "HPAService", "MetricsService", "Navigate", "NotificationsService", "ProjectsService", "keyValueEditorUtils", function(a, b, c, d, e, f, g, h, i, j, k, l, m, n) {
 if (!c.kind || !c.name) return void k.toErrorPage("Kind or name parameter missing.");
@@ -7106,12 +7102,12 @@ a.metricsWarning = !b;
 });
 var p = b("getErrorDetails"), q = function() {
 d.history.back();
-}, r = function() {
+};
+a.cancel = q;
+var r = function() {
 l.hideNotification("edit-hpa-error");
 };
-a.cancel = function() {
-r(), q();
-}, m.get(c.project).then(_.spread(function(b, d) {
+a.$on("$destroy", r), m.get(c.project).then(_.spread(function(b, d) {
 a.project = b;
 var j = "HorizontalPodAutoscaler" === c.kind ? "update" :"create";
 if (!f.canI({
@@ -7236,12 +7232,12 @@ details:b
 });
 }, p = function() {
 b.url(d.resourceURL);
-}, q = function() {
+};
+d.cancel = p;
+var q = function() {
 j.hideNotification("add-health-check-error");
 };
-d.cancel = function() {
-q(), p();
-}, k.get(c.project).then(_.spread(function(b, k) {
+d.$on("$destroy", q), k.get(c.project).then(_.spread(function(b, k) {
 var l = a("humanizeKind")(c.kind) + ' "' + d.name + '"', r = {
 resource:g.kindToResource(c.kind),
 group:c.group
@@ -7288,12 +7284,12 @@ title:"Edit"
 } ];
 var k = function() {
 h.hideNotification("edit-route-error");
-}, l = function() {
+};
+d.$on("$destroy", k);
+var l = function() {
 b.path(d.routeURL);
 };
-d.cancel = function() {
-k(), l();
-}, i.get(c.project).then(_.spread(function(b, i) {
+d.cancel = l, i.get(c.project).then(_.spread(function(b, i) {
 if (d.project = b, d.breadcrumbs[0].title = a("displayName")(b), !e.canI("routes", "update", c.project)) return void g.toErrorPage("You do not have authority to update route " + c.routeName + ".", "access_denied");
 var m, n = a("orderByDisplayName"), o = function() {
 g.toErrorPage('Editing routes with non-service targets is unsupported. You can edit the route with the "Edit YAML" action instead.');
@@ -7517,7 +7513,7 @@ p.hideNotification("create-builder-list-config-maps-error"), p.hideNotification(
 !a.id || "error" !== a.type && "warning" !== a.type || p.hideNotification(a.id);
 });
 };
-q.get(e.project).then(_.spread(function(c, g) {
+a.$on("$destroy", F), q.get(e.project).then(_.spread(function(c, g) {
 function q(b) {
 b.name = e.name, b.imageName = z, b.imageTag = e.imageTag, b.namespace = e.namespace, b.buildConfig = {
 buildOnSourceChange:!0,
@@ -7701,7 +7697,7 @@ return a.nameTaken = b.nameTaken, f;
 e.then(i, i).then(L, L);
 };
 })), a.cancel = function() {
-F(), o.toProjectOverview(a.projectName);
+o.toProjectOverview(a.projectName);
 };
 } ]), angular.module("openshiftConsole").controller("NextStepsController", [ "$scope", "$http", "$routeParams", "DataService", "$q", "$location", "TaskList", "$parse", "Navigate", "Logger", "$filter", "imageObjectRefFilter", "failureObjectNameFilter", "ProjectsService", function(a, b, c, d, e, f, g, h, i, j, k, l, m, n) {
 var o = (k("displayName"), []);
@@ -8109,12 +8105,12 @@ title:"Create Route"
 } ];
 var l = function() {
 i.hideNotification("create-route-error");
-}, m = function() {
+};
+c.$on("$destroy", l);
+var m = function() {
 d.history.back();
 };
-c.cancel = function() {
-l(), m();
-}, j.get(b.project).then(_.spread(function(d, j) {
+c.cancel = m, j.get(b.project).then(_.spread(function(d, j) {
 if (c.project = d, c.breadcrumbs[0].title = a("displayName")(d), !f.canI("routes", "create", b.project)) return void h.toErrorPage("You do not have authority to create routes in project " + b.project + ".", "access_denied");
 var n = a("orderByDisplayName");
 c.routing.to = {
@@ -8188,9 +8184,13 @@ details:b
 });
 }, t = function() {
 k.hideNotification("attach-pvc-error");
-}, u = function() {
+};
+c.$on("$destroy", t);
+var u = function() {
 d.history.back();
-}, v = function(a) {
+};
+c.cancel = u;
+var v = function(a) {
 return c.attach.allContainers || c.attach.containers[a.name];
 }, w = function() {
 var a = _.get(c, "attach.resource.spec.template");
@@ -8243,8 +8243,6 @@ details:a
 s("An error occurred attaching the persistent volume claim to the " + p(b.kind) + ".", o(a)), c.disableInputs = !1;
 });
 }
-}, c.cancel = function() {
-t(), u();
 };
 }));
 } ]), angular.module("openshiftConsole").controller("AddConfigVolumeController", [ "$filter", "$location", "$routeParams", "$scope", "$window", "APIService", "AuthorizationService", "BreadcrumbsService", "DataService", "Navigate", "NotificationsService", "ProjectsService", "StorageService", "RELATIVE_PATH_PATTERN", function(a, b, c, d, e, f, g, h, i, j, k, l, m, n) {
@@ -8277,7 +8275,9 @@ var s = function() {
 d.forms.addConfigVolumeForm.$setDirty();
 }, t = function() {
 e.history.back();
-}, u = function(a, b) {
+};
+d.cancel = t;
+var u = function(a, b) {
 k.addNotification({
 id:"add-config-volume-error",
 type:"error",
@@ -8287,12 +8287,10 @@ details:b
 }, v = function() {
 k.hideNotification("add-config-volume-error");
 };
-d.addItem = function() {
+d.$on("$destroy", v), d.addItem = function() {
 d.attach.items.push({}), s();
 }, d.removeItem = function(a) {
 d.attach.items.splice(a, 1), s();
-}, d.cancel = function() {
-v(), t();
 }, l.get(c.project).then(_.spread(function(b, e) {
 if (d.project = b, !g.canI(p, "update", c.project)) return void j.toErrorPage("You do not have authority to update " + q(c.kind) + " " + c.name + ".", "access_denied");
 var f = a("orderByDisplayName"), l = a("getErrorDetails"), n = a("generateName");
@@ -8460,12 +8458,12 @@ title:"Create Storage"
 } ];
 var l = function() {
 i.hideNotification("create-pvc-error");
-}, m = function() {
+};
+c.$on("$destroy", l);
+var m = function() {
 d.history.back();
 };
-c.cancel = function() {
-l(), m();
-}, j.get(b.project).then(_.spread(function(d, e) {
+c.cancel = m, j.get(b.project).then(_.spread(function(d, e) {
 function j() {
 var a = {
 kind:"PersistentVolumeClaim",
@@ -12186,7 +12184,7 @@ return _.get(a, "metadata.name", "");
 }));
 }, p = function() {
 if (g && h && i && j && k) {
-var a = g.concat(h).concat(i).concat(j).concat(k);
+var a = [].concat(g).concat(h).concat(i).concat(j).concat(k);
 l.applications = _.sortByAll(a, [ "metadata.name", "kind" ]), l.bindType = l.applications.length ? "application" :"secret-only";
 }
 }, q = function() {
@@ -12276,6 +12274,61 @@ target:"<",
 onClose:"<"
 },
 templateUrl:"views/directives/bind-service.html"
+});
+}(), function() {
+function a(a, b, c) {
+var d, e, f = this, g = b("serviceInstanceDisplayName"), h = function() {
+c["delete"]({
+group:"servicecatalog.k8s.io",
+resource:"bindings"
+}, f.selectedBinding, e).then(_.noop, function(a) {
+f.error = a;
+});
+}, i = function() {
+var b = _.first(f.steps);
+b.valid = !1, d = a.$watch("ctrl.selectedBinding", function(a) {
+b.valid = !!a;
+});
+}, j = function() {
+d && (d(), d = void 0);
+}, k = function() {
+f.nextTitle = "Delete", i();
+}, l = function() {
+f.nextTitle = "Close", f.wizardComplete = !0, h(), j();
+};
+f.$onInit = function() {
+var a = "Instance" === f.target.kind ? "Applications" :"Services";
+f.displayName = g(f.target), f.steps = [ {
+id:"deleteForm",
+label:a,
+view:"views/directives/bind-service/delete-binding-select-form.html",
+onShow:k
+}, {
+id:"results",
+label:"Results",
+view:"views/directives/bind-service/delete-binding-result.html",
+onShow:l
+} ], e = {
+namespace:_.get(f.target, "metadata.namespace")
+};
+}, f.appsForBinding = function(a) {
+return _.get(f.applicationsByBinding, a);
+}, f.closeWizard = function() {
+_.isFunction(f.onClose) && f.onClose();
+}, f.$onDestroy = function() {
+j();
+};
+}
+angular.module("openshiftConsole").component("unbindService", {
+controller:[ "$scope", "$filter", "DataService", a ],
+controllerAs:"ctrl",
+bindings:{
+target:"<",
+bindings:"<",
+applicationsByBinding:"<",
+onClose:"<"
+},
+templateUrl:"views/directives/unbind-service.html"
 });
 }(), function() {
 function a(a, b, c, d, e, f, g, h, i, j, k, l) {
@@ -12967,15 +13020,12 @@ templateUrl:"views/overview/_list-row.html"
 function a(a, b, c, d, e, f) {
 var g = this;
 _.extend(g, e.ui);
-var h = a("getErrorDetails"), i = function() {
-var a = g.apiObject.spec.serviceClassName, b = g.apiObject.metadata.name, c = _.get(g, [ "state", "serviceClasses", a, "externalMetadata", "displayName" ]);
-return c || a || b;
-}, j = function() {
+var h = a("getErrorDetails"), i = a("serviceInstanceDisplayName"), j = function() {
 var a = g.apiObject.spec.serviceClassName;
 return _.get(g, [ "state", "serviceClasses", a, "description" ]);
 };
 g.$doCheck = function() {
-g.notifications = e.getNotifications(g.apiObject, g.state), g.displayName = i(), g.description = j();
+g.notifications = e.getNotifications(g.apiObject, g.state), g.displayName = i(g.apiObject, g.serviceClasses), g.description = j();
 }, g.getSecretForBinding = function(a) {
 return a && _.get(g, [ "state", "secrets", a.spec.secretName ]);
 }, g.isBindable = d.isServiceBindable(g.apiObject, g.state.serviceClasses), g.closeOverlayPanel = function() {
@@ -14268,6 +14318,11 @@ return "deploymentconfigs" === c.resource && !c.group || "deployments" === c.res
 return function(a) {
 var b = _.get(a, "spec.alternateBackends", []);
 return !_.isEmpty(b);
+};
+}).filter("serviceInstanceDisplayName", function() {
+return function(a, b) {
+var c = a.spec.serviceClassName, d = a.metadata.name, e = _.get(b, [ c, "externalMetadata", "displayName" ]);
+return e || c || d;
 };
 }), angular.module("openshiftConsole").filter("canIDoAny", [ "canIFilter", function(a) {
 var b = {

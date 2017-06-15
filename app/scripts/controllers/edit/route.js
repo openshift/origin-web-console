@@ -43,15 +43,12 @@ angular.module('openshiftConsole')
     var hideErrorNotifications = function() {
       NotificationsService.hideNotification("edit-route-error");
     };
+    $scope.$on('$destroy', hideErrorNotifications);
 
     var navigateBack = function() {
       $location.path($scope.routeURL);
     };
-
-    $scope.cancel = function() {
-      hideErrorNotifications();
-      navigateBack();
-    };
+    $scope.cancel = navigateBack;
 
     ProjectsService
       .get($routeParams.project)
