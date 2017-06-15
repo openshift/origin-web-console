@@ -1716,64 +1716,14 @@ auth:{}
 } ]), angular.module("openshiftConsole").factory("BaseHref", [ "$document", function(a) {
 return a.find("base").attr("href") || "/";
 } ]), angular.module("openshiftConsole").factory("BuildsService", [ "$filter", "$q", "DataService", "Navigate", "NotificationsService", function(a, b, c, d, e) {
-var f = a("annotation"), g = a("buildConfigForBuild"), h = a("buildLogURL"), i = a("canI"), j = a("getErrorDetails"), k = a("isIncompleteBuild"), l = a("isJenkinsPipelineStrategy"), m = a("isNewerResource"), n = function(a) {
+var f = a("annotation"), g = a("buildConfigForBuild"), h = a("getErrorDetails"), i = a("isIncompleteBuild"), j = a("isJenkinsPipelineStrategy"), k = a("isNewerResource"), l = function(a) {
 var b = f(a, "buildNumber") || parseInt(a.metadata.name.match(/(\d+)$/), 10);
 return isNaN(b) ? null :b;
-}, o = function(a, b) {
-var c = n(a);
+}, m = function(a, b) {
+var c = l(a);
 return b && c ? b + " #" + c :a.metadata.name;
-}, p = function(a) {
-if (l(a) || !i("builds/log", "get")) return [ {
-href:d.resourceURL(a),
-label:"View Build"
-} ];
-var b = h(a);
-return b ? [ {
-href:b,
-label:"View Log"
-} ] :[];
-}, q = function(a) {
-var d = l(a) ? "pipeline" :"build", f = {
-kind:"BuildRequest",
-apiVersion:"v1",
-metadata:{
-name:a.metadata.name
-}
-}, g = {
-namespace:a.metadata.namespace
-};
-return c.create("buildconfigs/instantiate", a.metadata.name, f, g).then(function(b) {
-var c = o(b, a.metadata.name);
-e.addNotification({
-type:"success",
-message:_.capitalize(d) + " " + c + " successfully created.",
-links:p(b)
-});
-}, function(a) {
-return e.addNotification({
-type:"error",
-message:"An error occurred while starting the " + d + ".",
-details:j(a)
-}), b.reject(a);
-});
-}, r = function(a, d) {
-var f = l(a) ? "pipeline" :"build", g = o(a, d), h = {
-namespace:a.metadata.namespace
-}, i = angular.copy(a);
-return i.status.cancelled = !0, c.update("builds", i.metadata.name, i, h).then(function() {
-e.addNotification({
-type:"success",
-message:_.capitalize(f) + " " + g + " successfully cancelled."
-});
-}), function(a) {
-return e.addNotification({
-type:"error",
-message:"An error occurred cancelling " + f + " " + g + ".",
-details:j(a)
-}), b.reject(a);
-};
-}, s = function(a, d) {
-var f = l(a) ? "pipeline" :"build", g = o(a, d), h = {
+}, n = function(a) {
+var f = j(a) ? "pipeline" :"build", g = {
 kind:"BuildRequest",
 apiVersion:"v1",
 metadata:{
@@ -1782,25 +1732,72 @@ name:a.metadata.name
 }, i = {
 namespace:a.metadata.namespace
 };
-return c.create("builds/clone", a.metadata.name, h, i).then(function(a) {
-var b = o(a, d);
-e.addNotification({
+return c.create("buildconfigs/instantiate", a.metadata.name, g, i).then(function(b) {
+var c, g, h = m(b, a.metadata.name), i = _.get(a, "spec.runPolicy");
+"Serial" === i || "SerialLatestOnly" === i ? (c = _.capitalize(f) + " " + h + " successfully queued.", g = "Builds for " + a.metadata.name + " are configured to run one at a time.") :c = _.capitalize(f) + " " + h + " successfully created.", e.addNotification({
 type:"success",
-message:_.capitalize(f) + " " + g + " is being rebuilt as " + b + ".",
-links:p(a)
+message:c,
+details:g,
+links:[ {
+href:d.resourceURL(b),
+label:"View Build"
+} ]
 });
 }, function(a) {
 return e.addNotification({
 type:"error",
-message:"An error occurred while rerunning " + f + " " + g + ".",
-details:j(a)
+message:"An error occurred while starting the " + f + ".",
+details:h(a)
+}), b.reject(a);
+});
+}, o = function(a, d) {
+var f = j(a) ? "pipeline" :"build", g = m(a, d), i = {
+namespace:a.metadata.namespace
+}, k = angular.copy(a);
+return k.status.cancelled = !0, c.update("builds", k.metadata.name, k, i).then(function() {
+e.addNotification({
+type:"success",
+message:_.capitalize(f) + " " + g + " successfully cancelled."
+});
+}), function(a) {
+return e.addNotification({
+type:"error",
+message:"An error occurred cancelling " + f + " " + g + ".",
+details:h(a)
+}), b.reject(a);
+};
+}, p = function(a, f) {
+var g = j(a) ? "pipeline" :"build", i = m(a, f), k = {
+kind:"BuildRequest",
+apiVersion:"v1",
+metadata:{
+name:a.metadata.name
+}
+}, l = {
+namespace:a.metadata.namespace
+};
+return c.create("builds/clone", a.metadata.name, k, l).then(function(a) {
+var b = m(a, f);
+e.addNotification({
+type:"success",
+message:_.capitalize(g) + " " + i + " is being rebuilt as " + b + ".",
+links:[ {
+href:d.resourceURL(a),
+label:"View Build"
+} ]
+});
+}, function(a) {
+return e.addNotification({
+type:"error",
+message:"An error occurred while rerunning " + g + " " + i + ".",
+details:h(a)
 }), b.reject();
 });
-}, t = function(a) {
+}, q = function(a) {
 return "true" === f(a, "openshift.io/build-config.paused");
-}, u = function(a) {
-return !!a && (!a.metadata.deletionTimestamp && !t(a));
-}, v = function(a) {
+}, r = function(a) {
+return !!a && (!a.metadata.deletionTimestamp && !q(a));
+}, s = function(a) {
 var b = f(a, "pipeline.alpha.openshift.io/uses");
 if (!b) return [];
 try {
@@ -1812,65 +1809,65 @@ var d = [];
 return _.each(b, function(b) {
 b.name && (b.namespace && b.namespace !== _.get(a, "metadata.namespace") || "DeploymentConfig" === b.kind && d.push(b.name));
 }), d;
-}, w = function(a, b) {
+}, t = function(a, b) {
 return _.pick(b, function(b) {
 var c = f(b, "buildConfig");
 return !c || c === a;
 });
-}, x = function(a, b) {
+}, u = function(a, b) {
 var c = {};
 return _.each(a, function(a) {
 var d = g(a) || "";
-b && !b(a) || m(a, c[d]) && (c[d] = a);
+b && !b(a) || k(a, c[d]) && (c[d] = a);
 }), c;
-}, y = function(a) {
+}, v = function(a) {
 return a.status.startTimestamp || a.metadata.creationTimestamp;
-}, z = function(a) {
+}, w = function(a) {
 return _.round(a / 1e3 / 1e3);
-}, A = function(a) {
+}, x = function(a) {
 var b = _.get(a, "status.duration");
-if (b) return z(b);
-var c = y(a), d = a.status.completionTimestamp;
+if (b) return w(b);
+var c = v(a), d = a.status.completionTimestamp;
 return c && d ? moment(d).diff(moment(c)) :0;
-}, B = function(a) {
+}, y = function(a) {
 return _.map(a, function(a) {
-return k(a);
+return i(a);
 });
-}, C = function(a) {
+}, z = function(a) {
 return _.map(a, function(a) {
-return !k(a);
+return !i(a);
 });
-}, D = function(b) {
+}, A = function(b) {
 return _.reduce(b, function(b, c) {
-if (k(c)) return b;
+if (i(c)) return b;
 var d = a("annotation")(c, "buildConfig");
-return m(c, b[d]) && (b[d] = c), b;
+return k(c, b[d]) && (b[d] = c), b;
 }, {});
-}, E = function(b) {
+}, B = function(b) {
 var c = {}, d = _.filter(b, function(b) {
-if (k(b)) return !0;
+if (i(b)) return !0;
 var d = a("annotation")(b, "buildConfig");
-m(b, c[d]) && (c[d] = b);
+k(b, c[d]) && (c[d] = b);
 });
 return d.concat(_.map(c, function(a) {
 return a;
 }));
-}, F = a("imageObjectRef"), G = function(a) {
+}, C = a("imageObjectRef"), D = function(a) {
 var b = {};
 return _.each(a, function(a) {
-var c = _.get(a, "spec.output.to"), d = F(c, a.metadata.namespace);
+var c = _.get(a, "spec.output.to"), d = C(c, a.metadata.namespace);
 d && (b[d] = b[d] || [], b[d].push(a));
 }), b;
-}, H = function(a, b) {
+}, E = function(a, b) {
 var c = function(a, c) {
-var d, e, f = n(a), g = n(c);
+var d, e, f = l(a), g = l(c);
 return f || g ? f ? g ? b ? g - f :f - g :b ? -1 :1 :b ? 1 :-1 :(d = _.get(a, "metadata.name", ""), e = _.get(c, "metadata.name", ""), b ? e.localeCompare(d) :d.localeCompare(e));
 }, d = function(a, d) {
 var e = _.get(a, "metadata.creationTimestamp", ""), f = _.get(d, "metadata.creationTimestamp", "");
 return e === f ? c(a, d) :b ? f.localeCompare(e) :e.localeCompare(f);
 };
 return _.toArray(a).sort(d);
-}, I = function(a) {
+}, F = function(a) {
 var b = f(a, "jenkinsStatus");
 if (!b) return null;
 try {
@@ -1878,31 +1875,31 @@ return JSON.parse(b);
 } catch (c) {
 return Logger.error("Could not parse Jenkins status as JSON", b), null;
 }
-}, J = function(a) {
-var b = I(a), c = _.get(b, "stages", []);
+}, G = function(a) {
+var b = F(a), c = _.get(b, "stages", []);
 return _.last(c);
 };
 return {
-startBuild:q,
-cancelBuild:r,
-cloneBuild:s,
-isPaused:t,
-canBuild:u,
-usesDeploymentConfigs:v,
-validatedBuildsForBuildConfig:w,
-latestBuildByConfig:x,
-getBuildNumber:n,
-getBuildDisplayName:o,
-getStartTimestsamp:y,
-getDuration:A,
-incompleteBuilds:B,
-completeBuilds:C,
-lastCompleteByBuildConfig:D,
-interestingBuilds:E,
-groupBuildConfigsByOutputImage:G,
-sortBuilds:H,
-getJenkinsStatus:I,
-getCurrentStage:J
+startBuild:n,
+cancelBuild:o,
+cloneBuild:p,
+isPaused:q,
+canBuild:r,
+usesDeploymentConfigs:s,
+validatedBuildsForBuildConfig:t,
+latestBuildByConfig:u,
+getBuildNumber:l,
+getBuildDisplayName:m,
+getStartTimestsamp:v,
+getDuration:x,
+incompleteBuilds:y,
+completeBuilds:z,
+lastCompleteByBuildConfig:A,
+interestingBuilds:B,
+groupBuildConfigsByOutputImage:D,
+sortBuilds:E,
+getJenkinsStatus:F,
+getCurrentStage:G
 };
 } ]), angular.module("openshiftConsole").factory("DeploymentsService", [ "APIService", "NotificationsService", "DataService", "$filter", "$q", "LabelFilter", function(a, b, c, d, e, f) {
 function g() {}
@@ -12719,7 +12716,7 @@ c.$watchGroup([ "podTemplate", "pods" ], e);
 } ]), function() {
 function a(a, b) {
 var c = this;
-c.interestingPhases = [ "New", "Pending", "Running", "Failed", "Error" ];
+c.interestingPhases = [ "Pending", "Running", "Failed", "Error" ];
 var d = function(a) {
 var b = _.get(a, "status.phase");
 return _.includes(c.interestingPhases, b);

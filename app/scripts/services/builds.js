@@ -9,8 +9,6 @@ angular.module("openshiftConsole")
                     NotificationsService) {
     var annotation = $filter('annotation');
     var buildConfigForBuild = $filter('buildConfigForBuild');
-    var buildLogURL = $filter('buildLogURL');
-    var canI = $filter('canI');
     var getErrorDetails = $filter('getErrorDetails');
     var isIncompleteBuild = $filter('isIncompleteBuild');
     var isJenkinsPipelineStrategy = $filter('isJenkinsPipelineStrategy');
@@ -34,29 +32,6 @@ angular.module("openshiftConsole")
       return build.metadata.name;
     };
 
-    var getNewBuildLinks = function(build) {
-      // When the build is first created or cloned, the Jenkins annotations are
-      // not yet updated, so the Jenkins log link is wrong. Give a link to the
-      // build instead of the log. Also link to the build if the user doesn't
-      // have authority to view the log.
-      if (isJenkinsPipelineStrategy(build) || !canI('builds/log', 'get')) {
-        return [{
-          href: Navigate.resourceURL(build),
-          label: "View Build"
-        }];
-      }
-
-      var logLink = buildLogURL(build);
-      if (!logLink) {
-        return [];
-      }
-
-      return [{
-        href: logLink,
-        label: "View Log"
-      }];
-    };
-
     var startBuild = function(buildConfig) {
       var buildType = isJenkinsPipelineStrategy(buildConfig) ? 'pipeline' : 'build';
       var req = {
@@ -70,11 +45,23 @@ angular.module("openshiftConsole")
         namespace: buildConfig.metadata.namespace
       };
       return DataService.create("buildconfigs/instantiate", buildConfig.metadata.name, req, context).then(function(build) {
+        var message, details;
         var displayName = getBuildDisplayName(build, buildConfig.metadata.name);
+        var runPolicy = _.get(buildConfig, 'spec.runPolicy');
+        if (runPolicy === 'Serial' || runPolicy === 'SerialLatestOnly') {
+          message = _.capitalize(buildType) + " " + displayName + " successfully queued.";
+          details = "Builds for " + buildConfig.metadata.name + " are configured to run one at a time.";
+        } else {
+          message = _.capitalize(buildType) + " " + displayName + " successfully created.";
+        }
         NotificationsService.addNotification({
           type: "success",
-          message: _.capitalize(buildType) + " " + displayName + " successfully created.",
-          links: getNewBuildLinks(build)
+          message: message,
+          details: details,
+          links: [{
+            href: Navigate.resourceURL(build),
+            label: "View Build"
+          }]
         });
       }, function(result) {
         NotificationsService.addNotification({
@@ -129,7 +116,10 @@ angular.module("openshiftConsole")
         NotificationsService.addNotification({
           type: "success",
           message: _.capitalize(buildType) + " " + originalDisplayName + " is being rebuilt as " + clonedDisplayName + ".",
-          links: getNewBuildLinks(clonedBuild)
+          links: [{
+            href: Navigate.resourceURL(clonedBuild),
+            label: "View Build"
+          }]
         });
       }, function(result) {
         NotificationsService.addNotification({

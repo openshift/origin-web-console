@@ -19,7 +19,7 @@
   function BuildCounts($scope, BuildsService) {
     var buildCounts = this;
 
-    buildCounts.interestingPhases = ['New', 'Pending', 'Running', 'Failed', 'Error'];
+    buildCounts.interestingPhases = ['Pending', 'Running', 'Failed', 'Error'];
     var isInteresting = function(build) {
       var phase = _.get(build, 'status.phase');
       return _.includes(buildCounts.interestingPhases, phase);
