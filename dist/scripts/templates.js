@@ -12902,7 +12902,6 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "<div ng-if=\"!loaded\" class=\"mar-top-xl\">Loading...</div>\n" +
     "<div ng-if=\"loaded\" class=\"row\">\n" +
     "<div class=\"col-md-12\">\n" +
-    "<h2>Source Secrets</h2>\n" +
     "<table class=\"table table-bordered table-hover table-mobile secrets-table table-layout-fixed\">\n" +
     "<colgroup>\n" +
     "<col class=\"col-sm-5\">\n" +
@@ -12916,12 +12915,12 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "</tr>\n" +
     "</thead>\n" +
     "\n" +
-    "<tbody ng-if=\"secretsByType.source.length === 0\">\n" +
+    "<tbody ng-if=\"!secrets.length\">\n" +
     "\n" +
     "<tr><td colspan=\"3\"><em>No secrets</em></td></tr>\n" +
     "</tbody>\n" +
-    "<tbody ng-if=\"secretsByType.source.length > 0\">\n" +
-    "<tr ng-if=\"secret\" ng-repeat=\"secret in secretsByType.source | orderBy : 'metadata.name'\">\n" +
+    "<tbody ng-if=\"secrets.length\">\n" +
+    "<tr ng-repeat=\"secret in secrets track by (secret | uid)\">\n" +
     "<td data-title=\"Name\">\n" +
     "<a ng-href=\"{{secret | navigateResourceURL}}\">{{secret.metadata.name}}</a>\n" +
     "</td>\n" +
@@ -12934,64 +12933,6 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "</tr>\n" +
     "</tbody>\n" +
     "</table>\n" +
-    "<div ng-if=\"secretsByType.images.length !== 0\">\n" +
-    "<h2>Image Secrets</h2>\n" +
-    "<table class=\"table table-bordered table-hover table-mobile secrets-table table-layout-fixed\">\n" +
-    "<colgroup>\n" +
-    "<col class=\"col-sm-5\">\n" +
-    "<col class=\"col-sm-5\">\n" +
-    "</colgroup>\n" +
-    "<thead>\n" +
-    "<tr>\n" +
-    "<th>Name</th>\n" +
-    "<th>Type</th>\n" +
-    "<th>Created</th>\n" +
-    "</tr>\n" +
-    "</thead>\n" +
-    "<tbody>\n" +
-    "<tr ng-repeat=\"secret in secretsByType.image | orderBy : 'metadata.name'\">\n" +
-    "<td data-title=\"Name\">\n" +
-    "<a ng-href=\"{{secret | navigateResourceURL}}\">{{secret.metadata.name}}</a>\n" +
-    "</td>\n" +
-    "<td data-title=\"Type\">\n" +
-    "{{secret.type}}\n" +
-    "</td>\n" +
-    "<td data-title=\"Created\">\n" +
-    "<span am-time-ago=\"secret.metadata.creationTimestamp\"></span>\n" +
-    "</td>\n" +
-    "</tr>\n" +
-    "</tbody>\n" +
-    "</table>\n" +
-    "</div>\n" +
-    "<div ng-if=\"secretsByType.other.length !== 0\">\n" +
-    "<h2>Other Secrets</h2>\n" +
-    "<table class=\"table table-bordered table-hover table-mobile secrets-table table-layout-fixed\">\n" +
-    "<colgroup>\n" +
-    "<col class=\"col-sm-5\">\n" +
-    "<col class=\"col-sm-5\">\n" +
-    "</colgroup>\n" +
-    "<thead>\n" +
-    "<tr>\n" +
-    "<th>Name</th>\n" +
-    "<th>Type</th>\n" +
-    "<th>Created</th>\n" +
-    "</tr>\n" +
-    "</thead>\n" +
-    "<tbody>\n" +
-    "<tr ng-repeat=\"secret in secretsByType.other | orderBy : 'metadata.name'\">\n" +
-    "<td data-title=\"Name\">\n" +
-    "<a ng-href=\"{{secret | navigateResourceURL}}\">{{secret.metadata.name}}</a>\n" +
-    "</td>\n" +
-    "<td data-title=\"Type\">\n" +
-    "{{secret.type}}\n" +
-    "</td>\n" +
-    "<td data-title=\"Created\">\n" +
-    "<span am-time-ago=\"secret.metadata.creationTimestamp\"></span>\n" +
-    "</td>\n" +
-    "</tr>\n" +
-    "</tbody>\n" +
-    "</table>\n" +
-    "</div>\n" +
     "</div>\n" +
     "</div>\n" +
     "</div>\n" +
