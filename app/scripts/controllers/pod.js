@@ -256,7 +256,7 @@ angular.module('openshiftConsole')
         // context into the log-viewer directive.
         $scope.projectContext = context;
         DataService
-          .get("pods", $routeParams.pod, context)
+          .get("pods", $routeParams.pod, context, { errorNotification: false })
           .then(function(pod) {
             podResolved(pod);
             var pods = {};

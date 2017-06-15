@@ -43,7 +43,7 @@ angular.module('openshiftConsole')
       $scope.project = project;
       $scope.projectContext = context;
       DataService
-        .get("persistentvolumeclaims", $routeParams.pvc, context)
+        .get("persistentvolumeclaims", $routeParams.pvc, context, { errorNotification: false })
         .then(function(pvc) {
           pvcResolved(pvc);
           watches.push(DataService.watchObject("persistentvolumeclaims", $routeParams.pvc, context, pvcResolved));

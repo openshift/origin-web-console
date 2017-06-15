@@ -83,7 +83,7 @@ angular.module('openshiftConsole')
         $scope.project = project;
 
         DataService
-          .get("routes", $routeParams.route, context)
+          .get("routes", $routeParams.route, context, { errorNotification: false })
           .then(function(route) {
             routeResolved(route);
             watches.push(DataService.watchObject("routes", $routeParams.route, context, routeResolved));

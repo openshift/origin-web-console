@@ -123,7 +123,7 @@ angular.module('openshiftConsole')
         $scope.projectContext = context;
         $scope.logOptions = {};
         DataService
-          .get("builds", $routeParams.build, context)
+          .get("builds", $routeParams.build, context, { errorNotification: false })
           .then(function(build) {
             buildResolved(build);
             watches.push(DataService.watchObject("builds", $routeParams.build, context, buildResolved));

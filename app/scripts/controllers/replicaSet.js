@@ -389,7 +389,7 @@ angular.module('openshiftConsole')
                                                                context);
         };
 
-        DataService.get($scope.resource, $routeParams.replicaSet, context)
+        DataService.get($scope.resource, $routeParams.replicaSet, context, { errorNotification: false })
           .then(function(replicaSet) {
             $scope.loaded = true;
             $scope.replicaSet = replicaSet;

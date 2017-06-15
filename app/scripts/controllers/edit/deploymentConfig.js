@@ -88,7 +88,7 @@ angular.module('openshiftConsole')
           return;
         }
 
-        DataService.get("deploymentconfigs", $routeParams.deploymentconfig, context).then(
+        DataService.get("deploymentconfigs", $routeParams.deploymentconfig, context, { errorNotification: false }).then(
           // success
           function(deploymentConfig) {
             $scope.deploymentConfig = deploymentConfig;
