@@ -8,7 +8,7 @@
  * Controller of the openshiftConsole
  */
 angular.module('openshiftConsole')
-  .controller('SecretsController', function ($routeParams, $scope, DataService, ProjectsService, SecretsService) {
+  .controller('SecretsController', function ($routeParams, $scope, DataService, ProjectsService) {
     $scope.projectName = $routeParams.project;
     $scope.secretsByType = {};
     $scope.alerts = $scope.alerts || {};
@@ -20,7 +20,7 @@ angular.module('openshiftConsole')
         $scope.context = context;
 
         DataService.list("secrets", context).then(function(secrets) {
-          $scope.secretsByType = SecretsService.groupSecretsByType(secrets);
+          $scope.secrets = _.sortByAll(secrets.by("metadata.name"), ["type", "metadata.name"]);
           $scope.loaded = true;
         });
     }));

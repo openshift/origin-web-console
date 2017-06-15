@@ -6026,10 +6026,10 @@ a.routesForService = {}, angular.forEach(c.by("metadata.name"), function(c) {
 c.unwatchAll(g);
 });
 }));
-} ]), angular.module("openshiftConsole").controller("SecretsController", [ "$routeParams", "$scope", "DataService", "ProjectsService", "SecretsService", function(a, b, c, d, e) {
+} ]), angular.module("openshiftConsole").controller("SecretsController", [ "$routeParams", "$scope", "DataService", "ProjectsService", function(a, b, c, d) {
 b.projectName = a.project, b.secretsByType = {}, b.alerts = b.alerts || {}, d.get(a.project).then(_.spread(function(a, d) {
 b.project = a, b.context = d, c.list("secrets", d).then(function(a) {
-b.secretsByType = e.groupSecretsByType(a), b.loaded = !0;
+b.secrets = _.sortByAll(a.by("metadata.name"), [ "type", "metadata.name" ]), b.loaded = !0;
 });
 }));
 } ]), angular.module("openshiftConsole").controller("SecretController", [ "$routeParams", "$filter", "$scope", "DataService", "ProjectsService", "SecretsService", function(a, b, c, d, e, f) {
