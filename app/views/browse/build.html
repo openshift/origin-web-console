@@ -142,7 +142,7 @@
                     </uib-tab>
                     <uib-tab active="selectedTab.events" ng-if="('events' | canI : 'watch')">
                       <uib-tab-heading>Events</uib-tab-heading>
-                      <events resource-kind="Pod" resource-name="{{build | annotation : 'buildPod'}}" project-context="projectContext" ng-if="selectedTab.events"></events>
+                      <events api-objects="eventObjects" project-context="projectContext" ng-if="selectedTab.events"></events>
                     </uib-tab>
                   </uib-tabset>
 

@@ -186,11 +186,7 @@
                 <uib-tab active="selectedTab.events">
                   <uib-tab-heading>Events</uib-tab-heading>
                   <div class="resource-events">
-                      <events
-                        resource-kind="StatefulSet"
-                        resource-name="{{statefulSet.metadata.name}}"
-                        project-context="projectContext"
-                        ng-if="selectedTab.events"></events>
+                    <events api-objects="[ statefulSet ]" project-context="projectContext" ng-if="selectedTab.events"></events>
                   </div>
                 </uib-tab>
 
