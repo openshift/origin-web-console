@@ -66,9 +66,13 @@
   }
   .nav {
     .dropdown-menu {
-      margin-top: -10px;
-      right: 5px;
+      margin-top: -5px;
+      right: 0;
+      @media(min-width: @screen-xs-min) {
+        right: 5px;
+      }
       @media(min-width: @screen-sm-min) {
+        margin-top: -10px;
         right: 0;
       }
       &:after {

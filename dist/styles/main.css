@@ -4707,8 +4707,10 @@ h2+.list-view-pf{margin-top:20px}
 .navbar-pf-alt .navbar-header .navbar-home .pficon{color:#A8A9AA;font-size:20px}
 .navbar-pf-alt .navbar-header .navbar-home:focus,.navbar-pf-alt .navbar-header .navbar-home:focus .pficon,.navbar-pf-alt .navbar-header .navbar-home:hover,.navbar-pf-alt .navbar-header .navbar-home:hover .pficon{background-color:#0b0d0f;color:#fcfcfc}
 .navbar-pf-alt .navbar-iconic{margin-right:10px}
-.navbar-pf-alt .nav .dropdown-menu{margin-top:-10px;right:5px}
-@media (min-width:768px){.navbar-pf-alt .nav .dropdown-menu{right:0}
+.navbar-pf-alt .nav .dropdown-menu{margin-top:-5px;right:0}
+@media (min-width:480px){.navbar-pf-alt .nav .dropdown-menu{right:5px}
+}
+@media (min-width:768px){.navbar-pf-alt .nav .dropdown-menu{margin-top:-10px;right:0}
 }
 .navbar-pf-alt .nav .dropdown-menu:after{border:6px solid transparent;border-bottom-color:#fff;border-top-width:0;content:"";display:block;height:0;position:absolute;right:7px;top:-6px;vertical-align:middle;width:0}
 .navbar-pf-alt .navbar-brand{border:0;height:auto;margin-left:0;padding:0 0 0 10px;position:relative}
