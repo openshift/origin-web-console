@@ -12,7 +12,7 @@ grunt build
 
 echo "Verifying that checked in built files under dist match the source..."
 if [[ $(git status -s -u dist*) ]]; then
-    git status -vv -u dist*
+    git diff --exit-code dist*
     echo "Built dist does not match what is committed, run 'grunt build' and include the results in your commit."
     exit 1
 else

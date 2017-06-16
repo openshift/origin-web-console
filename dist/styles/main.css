@@ -5874,3 +5874,4 @@ kubernetes-container-terminal .terminal-actions .spinner{top:5px}
 .navbar-iconic .dropdown-kebab-pf .dropdown-menu:after,.navbar-iconic .dropdown-kebab-pf .dropdown-menu:before{border-color:transparent}
 .pf-wizard-no-back .wizard-pf-footer .btn-cancel{margin-right:0}
 .wizard-pf-steps-indicator .wizard-pf-step-number{font-size:12px}
+.build-triggers .copy-to-clipboard{margin-bottom:10px}
