@@ -4867,6 +4867,7 @@ h2+.list-view-pf{margin-top:20px}
 .font-icon.font-icon-inline{position:relative}
 .icon-row .icon-wrap{text-align:center;width:30px}
 @font-face{font-family:openshift-logos-icon;src:url(../styles/fonts/openshift-logos-icon.ttf) format('truetype'),url(../styles/fonts/openshift-logos-icon.woff) format('woff'),url(../styles/fonts/openshift-logos-icon.svg#openshift-logos-icon) format('svg');font-weight:400;font-style:normal}
+.icon-mediawiki:before{content:"\f158"}
 .icon-js:before{content:"\f157"}
 .icon-symfony:before{content:"\f156"}
 .icon-phalcon:before{content:"\f155"}
