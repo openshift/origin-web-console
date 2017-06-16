@@ -12332,7 +12332,7 @@ var d, e, f = this, g = b("serviceInstanceDisplayName"), h = function() {
 c["delete"]({
 group:"servicecatalog.k8s.io",
 resource:"bindings"
-}, f.selectedBinding, e).then(_.noop, function(a) {
+}, f.selectedBinding.metadata.name, e).then(_.noop, function(a) {
 f.error = a;
 });
 }, i = function() {
@@ -12362,6 +12362,9 @@ onShow:l
 } ], e = {
 namespace:_.get(f.target, "metadata.namespace")
 };
+}, f.firstAppForBindingName = function(a) {
+var b = a && _.sortBy(f.appsForBinding(a.metadata.name), "metadata.name");
+return _.get(_.first(b), [ "metadata", "name" ]);
 }, f.appsForBinding = function(a) {
 return _.get(f.applicationsByBinding, a);
 }, f.closeWizard = function() {
