@@ -13619,7 +13619,7 @@ return b.message || "You have unsaved changes. Leave this page anyway?";
 if (b.dirty) return c();
 };
 $(window).on("beforeunload", d);
-var e = b.$on("$locationChangeStart", function(d) {
+var e = b.$on("$routeChangeStart", function(d) {
 if (b.dirty) {
 var e = new Date().getTime(), f = confirm(c());
 if (!f) {
