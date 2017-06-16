@@ -63,7 +63,7 @@
         <div class="container-fluid">
          <div ng-if="!loaded">Loading...</div>
 
-          <div class="row" ng-if="loaded">
+          <div class="row" ng-if="loaded && statefulSet">
             <div class="col-md-12">
               <uib-tabset>
                 <uib-tab active="selectedTab.details">
@@ -186,11 +186,7 @@
                 <uib-tab active="selectedTab.events">
                   <uib-tab-heading>Events</uib-tab-heading>
                   <div class="resource-events">
-                      <events
-                        resource-kind="StatefulSet"
-                        resource-name="{{statefulSet.metadata.name}}"
-                        project-context="projectContext"
-                        ng-if="selectedTab.events"></events>
+                    <events api-objects="[ statefulSet ]" project-context="projectContext" ng-if="selectedTab.events"></events>
                   </div>
                 </uib-tab>
 

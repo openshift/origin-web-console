@@ -262,7 +262,7 @@ angular.module('openshiftConsole')
           return;
         }
 
-        DataService.get("buildconfigs", $routeParams.buildconfig, context).then(
+        DataService.get("buildconfigs", $routeParams.buildconfig, context, { errorNotification: false }).then(
           // success
           function(buildConfig) {
             $scope.buildConfig = buildConfig;

@@ -157,7 +157,7 @@ angular.module('openshiftConsole')
         $scope.project = project;
         requestContext = context;
         DataService
-          .get("buildconfigs", $routeParams.buildconfig, context)
+          .get("buildconfigs", $routeParams.buildconfig, context, { errorNotification: false })
           .then(function(buildConfig) {
             buildConfigResolved(buildConfig);
             // If we found the item successfully, watch for changes on it

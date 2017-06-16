@@ -32,7 +32,7 @@ angular.module('openshiftConsole')
       .get($routeParams.project)
       .then(_.spread(function(project, context) {
         $scope.project = project;
-        DataService.get("imagestreams", $routeParams.imagestream, context).then(
+        DataService.get("imagestreams", $routeParams.imagestream, context, { errorNotification: false }).then(
           // success
           function(imageStream) {
             $scope.loaded = true;

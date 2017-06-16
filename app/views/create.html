@@ -27,7 +27,9 @@
 
                   <uib-tab active="selectedTab.deployImage">
                     <uib-tab-heading>Deploy Image</uib-tab-heading>
-                    <deploy-image project="project" context="context"></deploy-image>
+                    <form><!-- wrapping form element is necessary for the enter key to trigger the submit button -->
+                      <deploy-image project="project" context="context"></deploy-image>
+                    </form>
                   </uib-tab>
 
                   <uib-tab active="selectedTab.fromFile">
