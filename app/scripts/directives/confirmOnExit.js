@@ -29,7 +29,11 @@ angular.module("openshiftConsole")
         };
         $(window).on('beforeunload', confirmBeforeUnload);
 
-        var removeLocationChangeListener = $scope.$on('$locationChangeStart', function(event) {
+        // Use $routeChangeStart instead of $locationChangeStart. Otherwise the
+        // user is incorrectly prompted when switching tabs with
+        // `persist-tab-state` on since this changes the URL, but doesn not
+        // leave the page.
+        var removeRouteChangeListener = $scope.$on('$routeChangeStart', function(event) {
           if (!$scope.dirty) {
             return;
           }
@@ -61,8 +65,8 @@ angular.module("openshiftConsole")
 
         $scope.$on('$destroy', function() {
           $(window).off('beforeunload', confirmBeforeUnload);
-          if (removeLocationChangeListener) {
-            removeLocationChangeListener();
+          if (removeRouteChangeListener) {
+            removeRouteChangeListener();
           }
         });
       }
