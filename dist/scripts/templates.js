@@ -2138,7 +2138,7 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "</uib-tab>\n" +
     "<uib-tab active=\"selectedTab.events\" ng-if=\"('events' | canI : 'watch')\">\n" +
     "<uib-tab-heading>Events</uib-tab-heading>\n" +
-    "<events resource-kind=\"Pod\" resource-name=\"{{build | annotation : 'buildPod'}}\" project-context=\"projectContext\" ng-if=\"selectedTab.events\"></events>\n" +
+    "<events api-objects=\"eventObjects\" project-context=\"projectContext\" ng-if=\"selectedTab.events\"></events>\n" +
     "</uib-tab>\n" +
     "</uib-tabset>\n" +
     "</div>\n" +
@@ -2602,7 +2602,7 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "</uib-tab>\n" +
     "<uib-tab active=\"selectedTab.events\" ng-if=\"'events' | canI : 'watch'\">\n" +
     "<uib-tab-heading>Events</uib-tab-heading>\n" +
-    "<events resource-kind=\"DeploymentConfig\" resource-name=\"{{deploymentConfig.metadata.name}}\" project-context=\"projectContext\" ng-if=\"selectedTab.events\"></events>\n" +
+    "<events api-objects=\"[ deploymentConfig ]\" project-context=\"projectContext\" ng-if=\"selectedTab.events\"></events>\n" +
     "</uib-tab>\n" +
     "</uib-tabset>\n" +
     "</div>\n" +
@@ -2838,7 +2838,7 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "</uib-tab>\n" +
     "<uib-tab active=\"selectedTab.events\" ng-if=\"'events' | canI : 'watch'\">\n" +
     "<uib-tab-heading>Events</uib-tab-heading>\n" +
-    "<events resource-kind=\"Deployment\" resource-name=\"{{deployment.metadata.name}}\" project-context=\"projectContext\" ng-if=\"selectedTab.events\"></events>\n" +
+    "<events api-objects=\"[ deployment ]\" project-context=\"projectContext\" ng-if=\"selectedTab.events\"></events>\n" +
     "</uib-tab>\n" +
     "</uib-tabset>\n" +
     "</div>\n" +
@@ -3042,7 +3042,7 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "</uib-tab>\n" +
     "<uib-tab active=\"selectedTab.events\" ng-if=\"'events' | canI : 'watch'\">\n" +
     "<uib-tab-heading>Events</uib-tab-heading>\n" +
-    "<events resource-kind=\"PersistentVolumeClaim\" resource-name=\"{{pvc.metadata.name}}\" project-context=\"projectContext\" ng-if=\"selectedTab.events\"></events>\n" +
+    "<events api-objects=\"[ pvc ] \" project-context=\"projectContext\" ng-if=\"selectedTab.events\"></events>\n" +
     "</uib-tab>\n" +
     "</uib-tabset>\n" +
     "</div>\n" +
@@ -3204,7 +3204,7 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "</uib-tab>\n" +
     "<uib-tab active=\"selectedTab.events\" ng-if=\"'events' | canI : 'watch'\">\n" +
     "<uib-tab-heading>Events</uib-tab-heading>\n" +
-    "<events resource-kind=\"Pod\" resource-name=\"{{pod.metadata.name}}\" project-context=\"projectContext\" ng-if=\"selectedTab.events\"></events>\n" +
+    "<events api-objects=\"[ pod ]\" project-context=\"projectContext\" ng-if=\"selectedTab.events\"></events>\n" +
     "</uib-tab>\n" +
     "</uib-tabset>\n" +
     "</div>\n" +
@@ -3307,7 +3307,7 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "</uib-tab>\n" +
     "<uib-tab active=\"selectedTab.events\" ng-if=\"'events' | canI : 'watch'\">\n" +
     "<uib-tab-heading>Events</uib-tab-heading>\n" +
-    "<events resource-kind=\"{{kind}}\" resource-name=\"{{replicaSet.metadata.name}}\" project-context=\"projectContext\" ng-if=\"selectedTab.events\"></events>\n" +
+    "<events api-objects=\"[ replicaSet ]\" project-context=\"projectContext\" ng-if=\"selectedTab.events\"></events>\n" +
     "</uib-tab>\n" +
     "</uib-tabset>\n" +
     "</div>\n" +
@@ -3818,7 +3818,7 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "</uib-tab>\n" +
     "<uib-tab active=\"selectedTab.events\" ng-if=\"'events' | canI : 'watch'\">\n" +
     "<uib-tab-heading>Events</uib-tab-heading>\n" +
-    "<events resource-kind=\"Service\" resource-name=\"{{service.metadata.name}}\" project-context=\"projectContext\" ng-if=\"selectedTab.events\"></events>\n" +
+    "<events api-objects=\"[ service ]\" project-context=\"projectContext\" ng-if=\"selectedTab.events\"></events>\n" +
     "</uib-tab>\n" +
     "</uib-tabset>\n" +
     "</div>\n" +
@@ -3947,7 +3947,7 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "<uib-tab active=\"selectedTab.events\">\n" +
     "<uib-tab-heading>Events</uib-tab-heading>\n" +
     "<div class=\"resource-events\">\n" +
-    "<events resource-kind=\"StatefulSet\" resource-name=\"{{statefulSet.metadata.name}}\" project-context=\"projectContext\" ng-if=\"selectedTab.events\"></events>\n" +
+    "<events api-objects=\"[ statefulSet ]\" project-context=\"projectContext\" ng-if=\"selectedTab.events\"></events>\n" +
     "</div>\n" +
     "</uib-tab>\n" +
     "</uib-tabset>\n" +
@@ -6803,11 +6803,11 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "<tr>\n" +
     "<th id=\"time\">Time</th>\n" +
     "\n" +
-    "<th id=\"kind-name\" ng-if=\"!resourceKind || !resourceName\">\n" +
+    "<th id=\"kind-name\" ng-if=\"showKindAndName\">\n" +
     "<span class=\"hidden-xs-inline visible-sm-inline visible-md-inline hidden-lg-inline\">Kind and Name</span>\n" +
     "<span class=\"visible-lg-inline\">Name</span>\n" +
     "</th>\n" +
-    "<th id=\"kind\" ng-if=\"!resourceKind || !resourceName\" class=\"hidden-sm hidden-md\">\n" +
+    "<th id=\"kind\" ng-if=\"showKindAndName\" class=\"hidden-sm hidden-md\">\n" +
     "<span class=\"visible-lg-inline\">Kind</span>\n" +
     "</th>\n" +
     "<th id=\"severity\" class=\"hidden-xs hidden-sm hidden-md\"><span class=\"sr-only\">Severity</span></th>\n" +
@@ -6817,14 +6817,14 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "</thead>\n" +
     "<tbody ng-if=\"(filteredEvents | hashSize) === 0\">\n" +
     "<tr>\n" +
-    "<td class=\"hidden-lg\" colspan=\"{{!resourceKind || !resourceName ? 3 : 2}}\">\n" +
+    "<td class=\"hidden-lg\" colspan=\"{{showKindAndName ? 3 : 2}}\">\n" +
     "<span ng-if=\"(events | hashSize) === 0\"><em>No events to show.</em></span>\n" +
     "<span ng-if=\"(events | hashSize) > 0\">\n" +
     "All events hidden by filter.\n" +
     "<a href=\"\" ng-click=\"filter.text = ''\" role=\"button\">Clear Filter</a>\n" +
     "</span>\n" +
     "</td>\n" +
-    "<td class=\"hidden-xs hidden-sm hidden-md\" colspan=\"{{!resourceKind || !resourceName ? 6 : 4}}\">\n" +
+    "<td class=\"hidden-xs hidden-sm hidden-md\" colspan=\"{{showKindAndName ? 6 : 4}}\">\n" +
     "<span ng-if=\"(events | hashSize) === 0\"><em>No events to show.</em></span>\n" +
     "<span ng-if=\"(events | hashSize) > 0\">\n" +
     "All events hidden by filter.\n" +
@@ -6836,7 +6836,7 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "<tbody ng-if=\"(filteredEvents | hashSize) > 0\">\n" +
     "<tr ng-repeat=\"event in filteredEvents\">\n" +
     "<td data-title=\"Time\" class=\"nowrap\">{{event.lastTimestamp | date:'mediumTime'}}</td>\n" +
-    "<td ng-if=\"!resourceKind || !resourceName\" data-title=\"Name\">\n" +
+    "<td ng-if=\"showKindAndName\" data-title=\"Name\">\n" +
     "<div class=\"hidden-xs-block visible-sm-block visible-md-block hidden-lg-block\">\n" +
     "<span ng-bind-html=\"event.involvedObject.kind | humanizeKind : true | highlightKeywords : filterExpressions\"></span>\n" +
     "</div>\n" +
@@ -6845,7 +6845,7 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "<span ng-if=\"!resourceURL\" ng-bind-html=\"event.involvedObject.name | highlightKeywords : filterExpressions\"></span>\n" +
     "</span>\n" +
     "</td>\n" +
-    "<td ng-if=\"!resourceKind || !resourceName\" class=\"hidden-sm hidden-md\" data-title=\"Kind\">\n" +
+    "<td ng-if=\"showKindAndName\" class=\"hidden-sm hidden-md\" data-title=\"Kind\">\n" +
     "<span ng-bind-html=\"event.involvedObject.kind | humanizeKind : true | highlightKeywords : filterExpressions\"></span>\n" +
     "</td>\n" +
     "<td data-title=\"Severity\" class=\"hidden-xs hidden-sm hidden-md text-center severity-icon-td\">\n" +

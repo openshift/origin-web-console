@@ -382,7 +382,7 @@
                   </uib-tab>
                   <uib-tab active="selectedTab.events" ng-if="'events' | canI : 'watch'">
                     <uib-tab-heading>Events</uib-tab-heading>
-                    <events resource-kind="DeploymentConfig" resource-name="{{deploymentConfig.metadata.name}}" project-context="projectContext" ng-if="selectedTab.events"></events>
+                    <events api-objects="[ deploymentConfig ]" project-context="projectContext" ng-if="selectedTab.events"></events>
                   </uib-tab>
                 </uib-tabset>
               </div><!-- /col-* -->

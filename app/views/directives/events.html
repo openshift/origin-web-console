@@ -37,11 +37,11 @@
       <tr>
         <th id="time">Time</th>
         <!-- Only show Name and Kind columns if not passed to the directive. -->
-        <th id="kind-name" ng-if="!resourceKind || !resourceName">
+        <th id="kind-name" ng-if="showKindAndName">
           <span class="hidden-xs-inline visible-sm-inline visible-md-inline hidden-lg-inline">Kind and Name</span>
           <span class="visible-lg-inline">Name</span>
         </th>
-        <th id="kind" ng-if="!resourceKind || !resourceName" class="hidden-sm hidden-md">
+        <th id="kind" ng-if="showKindAndName" class="hidden-sm hidden-md">
           <span class="visible-lg-inline">Kind</span>
         </th>
         <th id="severity" class="hidden-xs hidden-sm hidden-md"><span class="sr-only">Severity</span></th>
@@ -51,14 +51,14 @@
     </thead>
     <tbody ng-if="(filteredEvents | hashSize) === 0">
       <tr>
-        <td class="hidden-lg" colspan="{{!resourceKind || !resourceName ? 3 : 2}}">
+        <td class="hidden-lg" colspan="{{showKindAndName ? 3 : 2}}">
           <span ng-if="(events | hashSize) === 0"><em>No events to show.</em></span>
           <span ng-if="(events | hashSize) > 0">
             All events hidden by filter.
             <a href="" ng-click="filter.text = ''" role="button">Clear Filter</a>
           </span>
         </td>
-          <td class="hidden-xs hidden-sm hidden-md" colspan="{{!resourceKind || !resourceName ? 6 : 4}}">
+          <td class="hidden-xs hidden-sm hidden-md" colspan="{{showKindAndName ? 6 : 4}}">
           <span ng-if="(events | hashSize) === 0"><em>No events to show.</em></span>
           <span ng-if="(events | hashSize) > 0">
             All events hidden by filter.
@@ -70,7 +70,7 @@
     <tbody ng-if="(filteredEvents | hashSize) > 0">
       <tr ng-repeat="event in filteredEvents">
         <td data-title="Time" class="nowrap">{{event.lastTimestamp | date:'mediumTime'}}</td>
-        <td ng-if="!resourceKind || !resourceName" data-title="Name">
+        <td ng-if="showKindAndName" data-title="Name">
           <div class="hidden-xs-block visible-sm-block visible-md-block hidden-lg-block">
             <span ng-bind-html="event.involvedObject.kind | humanizeKind : true | highlightKeywords : filterExpressions"></span>
           </div>
@@ -81,7 +81,7 @@
             <span ng-if="!resourceURL" ng-bind-html="event.involvedObject.name | highlightKeywords : filterExpressions"></span>
           </span>
         </td>
-        <td ng-if="!resourceKind || !resourceName" class="hidden-sm hidden-md" data-title="Kind">
+        <td ng-if="showKindAndName" class="hidden-sm hidden-md" data-title="Kind">
           <span ng-bind-html="event.involvedObject.kind | humanizeKind : true | highlightKeywords : filterExpressions"></span>
         </td>
         <td data-title="Severity" class="hidden-xs hidden-sm hidden-md text-center severity-icon-td">

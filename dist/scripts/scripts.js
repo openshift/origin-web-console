@@ -5075,35 +5075,45 @@ link:"project/" + c.project + "/browse/builds/" + c.buildconfig
 })), a.breadcrumbs.push({
 title:c.build
 });
-var i = [], j = function(b) {
+var i, j = b("annotation"), k = [], l = function(b) {
 a.logCanRun = !_.includes([ "New", "Pending", "Error" ], b.status.phase);
-}, k = function() {
+}, m = function() {
 a.buildConfig ? a.canBuild = d.canBuild(a.buildConfig) :a.canBuild = !1;
-}, l = function(c, d) {
-a.loaded = !0, a.build = c, j(c);
-var e = b("annotation")(c, "buildNumber");
-e && (a.breadcrumbs[2].title = "#" + e), "DELETED" === d && (a.alerts.deleted = {
+};
+h.get(c.project).then(_.spread(function(g, h) {
+a.project = g, a.projectContext = h, a.logOptions = {};
+var n = function() {
+i ? a.eventObjects = [ a.build, i ] :a.eventObjects = [ a.build ];
+}, o = function(b, c) {
+a.loaded = !0, a.build = b, l(b), n();
+var d = j(b, "buildNumber");
+d && (a.breadcrumbs[2].title = "#" + d), "DELETED" === c && (a.alerts.deleted = {
 type:"warning",
 message:"This build has been deleted."
 });
-}, m = function(c) {
+var f;
+i || (f = j(b, "buildPod"), f && e.get("pods", f, h, {
+errorNotification:!1
+}).then(function(a) {
+i = a, n();
+}));
+}, p = function(c) {
 a.loaded = !0, a.alerts.load = {
 type:"error",
 message:"The build details could not be loaded.",
 details:b("getErrorDetails")(c)
 };
-}, n = function(b, c) {
+}, q = function(b, c) {
 "DELETED" === c && (a.alerts.deleted = {
 type:"warning",
 message:"Build configuration " + a.buildConfigName + " has been deleted."
-}, a.buildConfigDeleted = !0), a.buildConfig = b, a.buildConfigPaused = d.isPaused(a.buildConfig), k();
+}, a.buildConfigDeleted = !0), a.buildConfig = b, a.buildConfigPaused = d.isPaused(a.buildConfig), m();
 };
-h.get(c.project).then(_.spread(function(b, g) {
-a.project = b, a.projectContext = g, a.logOptions = {}, e.get("builds", c.build, g, {
+e.get("builds", c.build, h, {
 errorNotification:!1
 }).then(function(a) {
-l(a), i.push(e.watchObject("builds", c.build, g, l)), i.push(e.watchObject("buildconfigs", c.buildconfig, g, n));
-}, m), a.toggleSecret = function() {
+o(a), k.push(e.watchObject("builds", c.build, h, o)), k.push(e.watchObject("buildconfigs", c.buildconfig, h, q));
+}, p), a.toggleSecret = function() {
 a.showSecret = !0;
 }, a.cancelBuild = function() {
 d.cancelBuild(a.build, a.buildConfigName);
@@ -5112,7 +5122,7 @@ a.build && a.canBuild && d.cloneBuild(a.build, a.buildConfigName);
 }, a.showJenkinsfileExamples = function() {
 f.showJenkinsfileExamples();
 }, a.$on("$destroy", function() {
-e.unwatchAll(i);
+e.unwatchAll(k);
 });
 }));
 } ]), angular.module("openshiftConsole").controller("ImageController", [ "$scope", "$routeParams", "DataService", "ProjectsService", "$filter", "ImageStreamsService", "imageLayers", function(a, b, c, d, e, f, g) {
@@ -8891,47 +8901,55 @@ c[a.key] = a.value;
 return {
 restrict:"E",
 scope:{
-resourceKind:"@?",
-resourceName:"@?",
+apiObjects:"=?",
 projectContext:"="
 },
 templateUrl:"views/directives/events.html",
 controller:[ "$scope", function(a) {
+var b, e = {}, g = [];
 a.filter = {
 text:""
 };
-var b = function(b) {
-return a.resourceKind ? _.filter(b, function(b) {
-return b.involvedObject.kind === a.resourceKind && b.involvedObject.name === a.resourceName;
-}) :b;
-}, e = [], g = _.get(a, "sortConfig.currentField.id"), h = {
+var h = function(a) {
+return _.isEmpty(e) ? a :_.filter(a, function(a) {
+return e[a.involvedObject.uid];
+});
+}, i = [], j = _.get(a, "sortConfig.currentField.id"), k = {
 lastTimestamp:!0
-}, i = function() {
+}, l = function() {
 var b = _.get(a, "sortConfig.currentField.id", "lastTimestamp");
-g !== b && (g = b, a.sortConfig.isAscending = !h[g]);
+j !== b && (j = b, a.sortConfig.isAscending = !k[j]);
 var c = a.sortConfig.isAscending ? "asc" :"desc";
-e = _.sortByOrder(a.events, [ b ], [ c ]);
-}, j = [], k = function() {
-a.filterExpressions = j = d.generateKeywords(_.get(a, "filter.text"));
-}, l = [ "reason", "message", "type" ];
-a.resourceKind && a.resourceName || l.splice(0, 0, "involvedObject.name", "involvedObject.kind");
-var m = function() {
-a.filteredEvents = d.filterForKeywords(e, l, j);
+i = _.sortByOrder(a.events, [ b ], [ c ]);
+}, m = [], n = function() {
+a.filterExpressions = m = d.generateKeywords(_.get(a, "filter.text"));
+}, o = [ "reason", "message", "type" ];
+a.resourceKind && a.resourceName || o.splice(0, 0, "involvedObject.name", "involvedObject.kind");
+var p = function() {
+a.filteredEvents = d.filterForKeywords(i, o, m);
 };
 a.$watch("filter.text", _.debounce(function() {
-k(), a.$apply(m);
+n(), a.$evalAsync(p);
 }, 50, {
 maxWait:250
 }));
-var n = function() {
-i(), m();
-}, o = _.debounce(function() {
-a.$evalAsync(n);
+var q = function() {
+l(), p();
+}, r = _.debounce(function() {
+b && a.$evalAsync(function() {
+a.events = h(b), q();
+});
 }, 250, {
 leading:!0,
-trailing:!1,
+trailing:!0,
 maxWait:1e3
 });
+a.$watch("apiObjects", function(c) {
+e = {}, _.each(c, function(a) {
+var b = _.get(a, "metadata.uid");
+b && (e[a.metadata.uid] = !0);
+}), a.showKindAndName = 1 !== _.size(e), b && r();
+}), a.$watch("showKindAndName", function(b) {
 a.sortConfig = {
 fields:[ {
 id:"lastTimestamp",
@@ -8955,8 +8973,8 @@ title:"Count",
 sortType:"numeric"
 } ],
 isAscending:!0,
-onSortChange:n
-}, a.resourceKind && a.resourceName || a.sortConfig.fields.splice(1, 0, {
+onSortChange:q
+}, b && a.sortConfig.fields.splice(1, 0, {
 id:"involvedObject.name",
 title:"Name",
 sortType:"alpha"
@@ -8965,11 +8983,10 @@ id:"involvedObject.kind",
 title:"Kind",
 sortType:"alpha"
 });
-var p = [];
-p.push(c.watch("events", a.projectContext, function(c) {
-a.events = b(c.by("metadata.name")), o(), f.log("events (subscribe)", a.filteredEvents);
+}), g.push(c.watch("events", a.projectContext, function(c) {
+b = c.by("metadata.name"), r(), f.log("events (subscribe)", a.filteredEvents);
 })), a.$on("$destroy", function() {
-c.unwatchAll(p);
+c.unwatchAll(g);
 });
 } ]
 };
