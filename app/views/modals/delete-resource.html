@@ -47,6 +47,16 @@
       </div>
 
       <!--
+        If this is a pod, give the user the option of deleting it immediately with no grace period.
+      -->
+      <div ng-if="kind === 'Pod'" class="checkbox">
+        <label>
+          <input type="checkbox" ng-model="options.deleteImmediately">
+          Delete pod immediately without waiting for the processes to terminate gracefully
+        </label>
+      </div>
+
+      <!--
         If this is a deployment config or replication controller with associated HPAs, prompt to
         delete the HPAs as well.
       -->
@@ -61,17 +71,20 @@
             It is recommended you delete the autoscalers with the resource they scale.
           </span>
         </p>
-        <label>
-          <input type="checkbox" ng-model="options.deleteHPAs">
-          Delete
-          <span ng-if="hpaList.length === 1">
-            Horizontal Pod Autoscaler '<strong>{{hpaList[0].metadata.name}}</strong>'
-          </span>
-          <span ng-if="hpaList.length > 1">
-            {{hpaList.length}} associated Horizontal Pod Autoscalers
-          </span>
-        </label>
+        <div class="checkbox">
+          <label>
+            <input type="checkbox" ng-model="options.deleteHPAs">
+            Delete
+            <span ng-if="hpaList.length === 1">
+              Horizontal Pod Autoscaler '<strong>{{hpaList[0].metadata.name}}</strong>'
+            </span>
+            <span ng-if="hpaList.length > 1">
+              {{hpaList.length}} associated Horizontal Pod Autoscalers
+            </span>
+          </label>
+        </div>
       </div>
+
     </div>
     <div class="modal-footer">
       <button ng-disabled="typeNameToConfirm && confirmName !== resourceName && confirmName !== displayName" class="btn btn-lg btn-danger" type="submit" ng-click="delete();">Delete</button>

@@ -8786,7 +8786,8 @@ return angular.isDefined(b.buttonOnly) ? "views/directives/delete-button.html" :
 replace:!0,
 link:function(d, e, k) {
 "Project" === k.kind && (d.isProject = !0), d.options = {
-deleteHPAs:!0
+deleteHPAs:!0,
+deleteImmediately:!1
 };
 var l = function(a) {
 d.stayOnCurrentPage ? d.alerts[a.name] = a.data :i.addNotification(a.data);
@@ -8830,11 +8831,11 @@ scope:d
 b.result.then(function() {
 var a = d.kind, b = d.resourceName, e = d.typeDisplayName || c("humanizeKind")(a), h = e + " '" + (d.displayName ? d.displayName :b) + "'", k = "Project" === d.kind ? {} :{
 namespace:d.projectName
-};
-g["delete"]({
+}, l = {};
+d.options.deleteImmediately && (l.gracePeriodSeconds = 0), g["delete"]({
 resource:f.kindToResource(a),
 group:d.group
-}, b, k).then(function() {
+}, b, k, l).then(function() {
 i.addNotification({
 type:"success",
 message:_.capitalize(h) + " was marked for deletion."

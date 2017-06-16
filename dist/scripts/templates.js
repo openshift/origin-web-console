@@ -10701,6 +10701,13 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "</p>\n" +
     "</div>\n" +
     "\n" +
+    "<div ng-if=\"kind === 'Pod'\" class=\"checkbox\">\n" +
+    "<label>\n" +
+    "<input type=\"checkbox\" ng-model=\"options.deleteImmediately\">\n" +
+    "Delete pod immediately without waiting for the processes to terminate gracefully\n" +
+    "</label>\n" +
+    "</div>\n" +
+    "\n" +
     "<div ng-if=\"hpaList.length > 0\">\n" +
     "<p>\n" +
     "<span ng-if=\"hpaList.length === 1\">\n" +
@@ -10710,6 +10717,7 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "This resource has autoscalers associated with it. It is recommended you delete the autoscalers with the resource they scale.\n" +
     "</span>\n" +
     "</p>\n" +
+    "<div class=\"checkbox\">\n" +
     "<label>\n" +
     "<input type=\"checkbox\" ng-model=\"options.deleteHPAs\">\n" +
     "Delete\n" +
@@ -10720,6 +10728,7 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "{{hpaList.length}} associated Horizontal Pod Autoscalers\n" +
     "</span>\n" +
     "</label>\n" +
+    "</div>\n" +
     "</div>\n" +
     "</div>\n" +
     "<div class=\"modal-footer\">\n" +

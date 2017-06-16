@@ -62,7 +62,8 @@ angular.module("openshiftConsole")
 
         // Checkbox value
         scope.options = {
-          deleteHPAs: true
+          deleteHPAs: true,
+          deleteImmediately: false
         };
 
         var showAlert = function(alert) {
@@ -141,11 +142,16 @@ angular.module("openshiftConsole")
             var formattedResource = typeDisplayName + ' ' + "\'"  + (scope.displayName ? scope.displayName : resourceName) + "\'";
             var context = (scope.kind === 'Project') ? {} : {namespace: scope.projectName};
 
+            var deleteOptions = {};
+            if (scope.options.deleteImmediately) {
+              deleteOptions.gracePeriodSeconds = 0;
+            }
+
             DataService.delete({
               resource: APIService.kindToResource(kind),
               // group or undefined
               group: scope.group
-            }, resourceName, context)
+            }, resourceName, context, deleteOptions)
             .then(function() {
               NotificationsService.addNotification({
                   type: "success",
