@@ -512,21 +512,21 @@ HELP:{
 cli:"cli_reference/index.html",
 get_started_cli:"cli_reference/get_started_cli.html",
 basic_cli_operations:"cli_reference/basic_cli_operations.html",
-"build-triggers":"dev_guide/builds.html#build-triggers",
-webhooks:"dev_guide/builds.html#webhook-triggers",
+"build-triggers":"dev_guide/builds/triggering_builds.html",
+webhooks:"dev_guide/builds/triggering_builds.html#webhook-triggers",
 new_app:"dev_guide/application_lifecycle/new_app.html",
-"start-build":"dev_guide/builds.html#starting-a-build",
+"start-build":"dev_guide/builds/basic_build_operations.html#starting-a-build",
 "deployment-operations":"cli_reference/basic_cli_operations.html#build-and-deployment-cli-operations",
 "route-types":"architecture/core_concepts/routes.html#route-types",
 persistent_volumes:"dev_guide/persistent_volumes.html",
 compute_resources:"dev_guide/compute_resources.html",
 pod_autoscaling:"dev_guide/pod_autoscaling.html",
 application_health:"dev_guide/application_health.html",
-source_secrets:"dev_guide/builds.html#using-secrets",
-git_secret:"dev_guide/builds.html#source-secrets",
+source_secrets:"dev_guide/builds/build_inputs.html#using-secrets-during-build",
+git_secret:"dev_guide/builds/build_inputs.html#source-clone-secrets",
 pull_secret:"dev_guide/managing_images.html#using-image-pull-secrets",
 managing_secrets:"dev_guide/service_accounts.html#managing-allowed-secrets",
-creating_secrets:"dev_guide/secrets.html#creating-and-using-secrets",
+creating_secrets:"dev_guide/secrets.html#creating-secrets",
 storage_classes:"install_config/persistent_storage/dynamically_provisioning_pvs.html",
 selector_label:"install_config/persistent_storage/selector_label_binding.html",
 rolling_strategy:"dev_guide/deployments/deployment_strategies.html#rolling-strategy",
@@ -4959,7 +4959,9 @@ b.setOption("tabSize", 2), b.setOption("useSoftTabs", !0), a.$blockScrolling = 1
 var l, m = b("buildConfigForBuild"), n = b("buildStrategy"), o = [], p = function(b) {
 a.updatedBuildConfig = angular.copy(b), a.envVars = n(a.updatedBuildConfig).env || [];
 };
-a.saveEnvVars = function() {
+a.compareTriggers = function(a, b) {
+return "ConfigChange" === a.value ? -1 :"ConfigChange" === b.value ? 1 :"ImageChange" === a.value ? -1 :"ImageChange" === b.value ? 1 :a.value.localeCompare(b.value);
+}, a.saveEnvVars = function() {
 a.envVars = _.filter(a.envVars, "name"), n(a.updatedBuildConfig).env = k.compactEntries(angular.copy(a.envVars)), g.update("buildconfigs", c.buildconfig, a.updatedBuildConfig, l).then(function() {
 a.alerts.saveBCEnvVarsSuccess = {
 type:"success",
@@ -8784,7 +8786,8 @@ return angular.isDefined(b.buttonOnly) ? "views/directives/delete-button.html" :
 replace:!0,
 link:function(d, e, k) {
 "Project" === k.kind && (d.isProject = !0), d.options = {
-deleteHPAs:!0
+deleteHPAs:!0,
+deleteImmediately:!1
 };
 var l = function(a) {
 d.stayOnCurrentPage ? d.alerts[a.name] = a.data :i.addNotification(a.data);
@@ -8828,11 +8831,11 @@ scope:d
 b.result.then(function() {
 var a = d.kind, b = d.resourceName, e = d.typeDisplayName || c("humanizeKind")(a), h = e + " '" + (d.displayName ? d.displayName :b) + "'", k = "Project" === d.kind ? {} :{
 namespace:d.projectName
-};
-g["delete"]({
+}, l = {};
+d.options.deleteImmediately && (l.gracePeriodSeconds = 0), g["delete"]({
 resource:f.kindToResource(a),
 group:d.group
-}, b, k).then(function() {
+}, b, k, l).then(function() {
 i.addNotification({
 type:"success",
 message:_.capitalize(h) + " was marked for deletion."
@@ -13619,7 +13622,7 @@ return b.message || "You have unsaved changes. Leave this page anyway?";
 if (b.dirty) return c();
 };
 $(window).on("beforeunload", d);
-var e = b.$on("$locationChangeStart", function(d) {
+var e = b.$on("$routeChangeStart", function(d) {
 if (b.dirty) {
 var e = new Date().getTime(), f = confirm(c());
 if (!f) {
