@@ -55,7 +55,7 @@
           <li role="menuitem" ng-if="('pod_presets' | enableTechPreviewFeature) && row.isBindable">
             <a href="" ng-click="row.showOverlayPanel('bindService', {target: row.apiObject})">Create Binding</a>
           </li>
-          <li role="menuitem" ng-if="('pod_presets' | enableTechPreviewFeature) && row.bindings.length">
+          <li role="menuitem" ng-if="('pod_presets' | enableTechPreviewFeature) && row.deleteableBindings.length">
             <a href="" ng-click="row.showOverlayPanel('unbindService', {target: row.apiObject})">Delete Binding</a>
           </li>
           <li role="menuitem">
@@ -127,7 +127,10 @@
             </div>
           </div>
           <div class="col-sm-7 col-md-6 overview-bindings">
-            <span ng-if="!(binding | isBindingReady)">
+            <span ng-if="binding.metadata.deletionTimestamp">
+              <status-icon status="'Pending'"></status-icon> Deleting
+            </span>
+            <span ng-if="!(binding | isBindingReady) && !binding.metadata.deletionTimestamp">
               <status-icon status="'Pending'"></status-icon> Pending
             </span>
             <a
@@ -154,7 +157,7 @@
   <div ng-if="row.overlay.panelName === 'unbindService'">
     <unbind-service
       target="row.overlay.state.target"
-      bindings="row.bindings"
+      bindings="row.deleteableBindings"
       applications-by-binding="row.state.applicationsByBinding"
       on-close="row.closeOverlayPanel"></unbind-service>
   </div>

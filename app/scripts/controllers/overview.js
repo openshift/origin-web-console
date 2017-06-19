@@ -1101,6 +1101,7 @@ function OverviewController($scope,
     // - API objects by binding name
     state.bindingsByApplicationUID = {};
     state.applicationsByBinding = {};
+    state.deleteableBindingsByApplicationUID = {};
 
     // If there are no bindings, nothing to do.
     if (_.isEmpty(state.bindings)) {
@@ -1139,6 +1140,7 @@ function OverviewController($scope,
         // pod preset covers the selector.
         var applicationSelector = new LabelSelector(_.get(apiObject, 'spec.selector'));
         state.bindingsByApplicationUID[applicationUID] = [];
+        state.deleteableBindingsByApplicationUID[applicationUID] = [];
 
         // Look at each pod preset selector to see if it covers this API object selector.
         _.each(podPresetSelectors, function(podPresetSelector, bindingName) {
@@ -1147,6 +1149,9 @@ function OverviewController($scope,
             // the target. We want to show bindings both in the "application"
             // object rows and the service instance rows.
             state.bindingsByApplicationUID[applicationUID].push(state.bindings[bindingName]);
+            if (!_.get(state.bindings[bindingName], 'metadata.deletionTimestamp')) {
+              state.deleteableBindingsByApplicationUID[applicationUID].push(state.bindings[bindingName]);
+            }
             state.applicationsByBinding[bindingName] = state.applicationsByBinding[bindingName] || [];
             state.applicationsByBinding[bindingName].push(apiObject);
           }
