@@ -8727,11 +8727,11 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "<input type=\"number\" name=\"desired\" ng-model=\"model.desired\" ng-required=\"true\" min=\"0\" ng-pattern=\"/^\\-?\\d+$/\" focus-when=\"{{model.editing}}\" select-on-focus class=\"input-number\">\n" +
     "</span>\n" +
     "<a href=\"\" title=\"Scale\" class=\"action-button\" ng-attr-aria-disabled=\"{{form.scaling.$invalid ? 'true' : undefined}}\" ng-click=\"scale()\" role=\"button\">\n" +
-    "<i class=\"icon icon-ok\" style=\"margin-left: 5px\"></i>\n" +
+    "<i class=\"fa fa-check\" style=\"margin-left: 5px\"></i>\n" +
     "<span class=\"sr-only\">Scale</span>\n" +
     "</a>\n" +
     "<a href=\"\" title=\"Cancel\" class=\"action-button\" ng-click=\"cancel()\" role=\"button\">\n" +
-    "<i class=\"icon icon-remove\" style=\"margin-left: 5px\"></i>\n" +
+    "<i class=\"fa fa-times\" style=\"margin-left: 5px\"></i>\n" +
     "<span class=\"sr-only\">Cancel</span>\n" +
     "</a>\n" +
     "<div ng-if=\"form.scaling.$invalid\" class=\"has-error\">\n" +
