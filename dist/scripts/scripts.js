@@ -10533,11 +10533,7 @@ angular.isDefined(c.canToggle) || (a.canToggle = !0), a.isOnlyWhitespace = funct
 return /^\s+$/.test(a);
 }, a.focus = function(a) {
 angular.element("#" + a).focus();
-}, a.isDialog ? a.$watch("parameters", function(b) {
-a.visibleParameters = _.reject(b, function(a) {
-return !a.required || a.value || a.generate;
-});
-}) :a.visibleParameters = a.parameters;
+};
 }
 };
 }), angular.module("openshiftConsole").directive("tasks", function() {
@@ -12700,6 +12696,8 @@ return g("ConfigChange");
 return !c(a).length && !d(a).length;
 }, e.erroredTasks = d, e.pendingTasks = c, e.goToOverview = function() {
 _.isFunction(e.onContinue) && e.onContinue(), b.toProjectOverview(e.projectName);
+}, e.toggleParamsTable = function() {
+e.showParamsTable = !e.showParamsTable;
 };
 }
 angular.module("openshiftConsole").component("nextSteps", {

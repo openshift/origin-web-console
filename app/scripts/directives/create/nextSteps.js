@@ -73,5 +73,9 @@
       }
       Navigate.toProjectOverview(ctrl.projectName);
     };
+
+    ctrl.toggleParamsTable = function() {
+      ctrl.showParamsTable = !ctrl.showParamsTable;
+    };
   }
 })();
