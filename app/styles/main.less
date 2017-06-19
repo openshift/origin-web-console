@@ -1,11 +1,15 @@
 @bower-components-path: "../../bower_components";
 @catalog-less-path: "@{bower-components-path}/origin-web-catalog/dist/less";
 @common-less-path: "@{bower-components-path}/origin-web-common/dist/less";
+@oli-less-path: "@{bower-components-path}/openshift-logos-icon/less";
 @pf-less-path: "@{bower-components-path}/patternfly/dist/less";
 
 // PatternFly
 @import "@{pf-less-path}/patternfly.less";
 @import "@{pf-less-path}/patternfly-additions.less";
+
+// Openshift Logos Icon Font
+@import "@{oli-less-path}/openshift-logos-icon.less";
 
 // origin-web-common - after patternfly to gain any overrides
 @import "@{common-less-path}/common.less";
@@ -29,7 +33,6 @@
 @import "_list-pf.less";
 @import "_list-view.less";
 @import "_navbar-alt.less";
-@import "_openshift-logos-icon.less";
 @import "_overlay-forms.less";
 @import "_overview.less";
 @import "_pipeline.less";

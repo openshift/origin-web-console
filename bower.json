@@ -51,7 +51,8 @@
   },
   "devDependencies": {
     "angular-mocks": "1.5.11",
-    "angular-scenario": "1.5.11"
+    "angular-scenario": "1.5.11",
+    "openshift-logos-icon": "^1.1.0"
   },
   "appPath": "app",
   "resolutions": {
