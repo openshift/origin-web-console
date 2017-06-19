@@ -18,6 +18,7 @@ angular.module('openshiftConsole')
                                          FullscreenService,
                                          ImageStreamResolver,
                                          MetricsService,
+                                         OwnerReferencesService,
                                          PodsService,
                                          ProjectsService) {
     $scope.projectName = $routeParams.project;
@@ -238,6 +239,19 @@ angular.module('openshiftConsole')
       $scope.logCanRun = !(_.includes(['New', 'Pending', 'Unknown'], pod.status.phase));
       setContainerVars();
       updateEnv();
+
+      // Show owner ref if owned by a replication controller, replica set, or build.
+      // Deployment configs are handled specially in the view.
+      delete $scope.controllerRef;
+      if (!$scope.dcName) {
+        var controllerReferences = OwnerReferencesService.getControllerReferences(pod);
+        $scope.controllerRef = _.find(controllerReferences, function(ref) {
+          return ref.kind === 'ReplicationController' ||
+                 ref.kind === 'ReplicaSet' ||
+                 ref.kind === 'Build';
+        });
+      }
+
       if (action === "DELETED") {
         $scope.alerts["deleted"] = {
           type: "warning",
