@@ -29,7 +29,7 @@
       DataService.delete({
         group: 'servicecatalog.k8s.io',
         resource: 'bindings'
-      }, ctrl.selectedBinding, context).then(_.noop, function(err) {
+      }, ctrl.selectedBinding.metadata.name, context).then(_.noop, function(err) {
         ctrl.error = err;
       });
     };
@@ -85,6 +85,12 @@
       context = {
         namespace: _.get(ctrl.target, 'metadata.namespace')
       };
+    };
+
+    // TODO: sort bindings by app in overview && eliminate this filter function
+    ctrl.firstAppForBindingName = function(binding) {
+      var sorted = binding && _.sortBy(ctrl.appsForBinding(binding.metadata.name), 'metadata.name');
+      return _.get(_.first(sorted), ['metadata', 'name']);
     };
 
     ctrl.appsForBinding = function(bindingName) {

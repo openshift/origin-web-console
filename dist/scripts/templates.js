@@ -5809,12 +5809,11 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "<h3 class=\"mar-top-none\">\n" +
     "Binding for the following has been deleted:\n" +
     "</h3>\n" +
-    "<div ng-if=\"ctrl.appsForBinding(ctrl.selectedBinding)\" ng-repeat=\"appForBinding in ctrl.appsForBinding(ctrl.selectedBinding)\">\n" +
+    "<div ng-if=\"ctrl.appsForBinding(ctrl.selectedBinding.metadata.name) | size\" ng-repeat=\"appForBinding in ctrl.appsForBinding(ctrl.selectedBinding.metadata.name)\">\n" +
     "{{appForBinding.metadata.name}} <small class=\"text-muted\">&ndash; {{ appForBinding.kind | humanizeKind : true}}</small>\n" +
     "</div>\n" +
-    "<div ng-if=\"!(ctrl.appsForBinding(ctrl.selectedBinding))\">\n" +
-    "\n" +
-    "{{ctrl.selectedBinding}} <small class=\"text-muted\">&ndash; Binding</small>\n" +
+    "<div ng-if=\"!(ctrl.appsForBinding(ctrl.selectedBinding.metadata.name)  | size)\">\n" +
+    "{{ctrl.selectedBinding.spec.secretName}} <small class=\"text-muted\">&ndash; Secret</small>\n" +
     "</div>\n" +
     "<p class=\"mar-top-lg\">\n" +
     "<span class=\"pficon pficon-info\"></span> You will need to redeploy your pods for this to take effect.\n" +
@@ -5841,13 +5840,13 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "</h3>\n" +
     "<form name=\"ctrl.bindingSelection\" class=\"mar-bottom-lg\">\n" +
     "<fieldset ng-disabled=\"ctrl.isDisabled\">\n" +
-    "<div ng-repeat=\"binding in ctrl.bindings\" class=\"radio\">\n" +
+    "<div ng-repeat=\"binding in ctrl.bindings | orderBy: ctrl.firstAppForBindingName\" class=\"radio\">\n" +
     "<label>\n" +
-    "<input type=\"radio\" ng-model=\"ctrl.selectedBinding\" value=\"{{binding.metadata.name}}\">\n" +
-    "<div ng-if=\"ctrl.appsForBinding(binding.metadata.name)\" ng-repeat=\"appForBinding in ctrl.appsForBinding(binding.metadata.name)\">\n" +
+    "<input type=\"radio\" ng-model=\"ctrl.selectedBinding\" ng-value=\"{{binding}}\">\n" +
+    "<div ng-if=\"ctrl.appsForBinding(binding.metadata.name) | size\" ng-repeat=\"appForBinding in ctrl.appsForBinding(binding.metadata.name)\">\n" +
     "{{appForBinding.metadata.name}} <small class=\"text-muted\">&ndash; {{ appForBinding.kind | humanizeKind : true}}</small>\n" +
     "</div>\n" +
-    "<div ng-if=\"!(ctrl.appsForBinding(binding.metadata.name))\">\n" +
+    "<div ng-if=\"!(ctrl.appsForBinding(binding.metadata.name)  | size)\">\n" +
     "{{binding.spec.secretName}} <small class=\"text-muted\">&ndash; Secret</small>\n" +
     "</div>\n" +
     "</label>\n" +
