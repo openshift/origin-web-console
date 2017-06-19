@@ -13,7 +13,7 @@
   <div ng-transclude></div>
   <div
       class="form-group options"
-      ng-repeat="parameter in visibleParameters"
+      ng-repeat="parameter in parameters"
       ng-show="expand"
       ng-init="paramID = 'param-' + $index">
     <label

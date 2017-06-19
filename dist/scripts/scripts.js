@@ -10533,11 +10533,7 @@ angular.isDefined(c.canToggle) || (a.canToggle = !0), a.isOnlyWhitespace = funct
 return /^\s+$/.test(a);
 }, a.focus = function(a) {
 angular.element("#" + a).focus();
-}, a.isDialog ? a.$watch("parameters", function(b) {
-a.visibleParameters = _.reject(b, function(a) {
-return !a.required || a.value || a.generate;
-});
-}) :a.visibleParameters = a.parameters;
+};
 }
 };
 }), angular.module("openshiftConsole").directive("tasks", function() {

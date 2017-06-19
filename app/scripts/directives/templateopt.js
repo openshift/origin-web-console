@@ -25,17 +25,6 @@ angular.module('openshiftConsole')
         scope.focus = function(id) {
           angular.element('#' + id).focus();
         };
-
-        if (!scope.isDialog) {
-          scope.visibleParameters = scope.parameters;
-        } else {
-          scope.$watch('parameters', function(parameters) {
-            // Only show parameters that the user has to fill in a value when in a dialog.
-            scope.visibleParameters = _.reject(parameters, function(parameter) {
-              return !parameter.required || parameter.value || parameter.generate;
-            });
-          });
-        }
       }
     };
   });
