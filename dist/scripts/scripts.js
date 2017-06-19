@@ -12700,6 +12700,8 @@ return g("ConfigChange");
 return !c(a).length && !d(a).length;
 }, e.erroredTasks = d, e.pendingTasks = c, e.goToOverview = function() {
 _.isFunction(e.onContinue) && e.onContinue(), b.toProjectOverview(e.projectName);
+}, e.toggleParamsTable = function() {
+e.showParamsTable = !e.showParamsTable;
 };
 }
 angular.module("openshiftConsole").component("nextSteps", {
