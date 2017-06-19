@@ -13093,8 +13093,8 @@ type:"error",
 message:"Service '" + g.apiObject.spec.serviceClassName + "' will be deleted and no longer available."
 }
 },
-detailsMarkup:"Deprovision Service?",
-okButtonText:"Deprovision",
+detailsMarkup:"Delete Service?",
+okButtonText:"Delete",
 okButtonClass:"btn-danger",
 cancelButtonText:"Cancel"
 };
@@ -13116,13 +13116,13 @@ namespace:g.apiObject.metadata.namespace
 }).then(function() {
 f.addNotification({
 type:"success",
-message:"Successfully deprovisioned " + g.apiObject.metadata.name + "."
+message:"Successfully deleted " + g.apiObject.metadata.name + "."
 });
 }, function(a) {
 f.addNotification({
 id:"deprovision-service-error",
 type:"error",
-message:"An error occurred while deprovisioning " + g.apiObject.metadata.name + ".",
+message:"An error occurred while deleting " + g.apiObject.metadata.name + ".",
 details:h(a)
 });
 });
